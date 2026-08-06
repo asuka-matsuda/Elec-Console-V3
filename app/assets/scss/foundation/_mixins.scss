@@ -98,6 +98,11 @@
         var(--shadow-sink);
     transform: scale(0.985);
 
+    // Override transition specifically for the "sinking down" phase
+    transition: transform var(--duration-slow) var(--ease-out),
+                box-shadow var(--duration-slow) var(--ease-out),
+                border-color var(--duration-slow) var(--ease-out);
+
     svg {
         filter: drop-shadow(0 0 2px $color);
         stroke: $color;
@@ -130,5 +135,22 @@
     &::-webkit-scrollbar-thumb {
         background: glass-color(20%);
         border-radius: 9999px;
+    }
+}
+
+// ==========================================================================
+// Cursor & Indicators
+// ==========================================================================
+
+/// Adds a blinking cyber cursor element at the end of the content
+@mixin ui-blinking-cursor($width: 6px, $height: 14px, $color: currentcolor) {
+    &::after {
+        display: inline-block;
+        width: $width;
+        height: $height;
+        content: '';
+        background-color: $color;
+        animation: ui-cursor-blink 1s step-end infinite;
+        margin-left: auto;
     }
 }

@@ -8,23 +8,16 @@ export interface RadioOption {
   color?: string
 }
 
+const model = defineModel<string | number | boolean>()
+
 const props = defineProps<{
-  modelValue?: string | number | boolean
   options: RadioOption[]
   name?: string
-}>()
-
-const emit = defineEmits<{
-  'update:modelValue': [value: string | number | boolean]
 }>()
 
 // ユニークなname属性を自動生成（複数グループが配置された際の干渉を防ぐため）
 const uniqueName = useId()
 const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
-
-const handleChange = (value: string | number | boolean) => {
-  emit('update:modelValue', value)
-}
 </script>
 
 <template>
@@ -39,10 +32,9 @@ const handleChange = (value: string | number | boolean) => {
         type="radio"
         :name="groupName"
         :value="option.value"
-        :checked="modelValue === option.value"
+        v-model="model"
         :disabled="option.disabled"
         class="c-segmented-control__input"
-        @change="handleChange(option.value)"
       >
       <span class="c-segmented-control__text">{{ option.label }}</span>
     </label>
@@ -80,6 +72,12 @@ const handleChange = (value: string | number | boolean) => {
     &:checked + .c-segmented-control__text {
       color: var(--radio-color);
       @include ui-active(var(--radio-color));
+      @include cyber-text-glow(60%, 8px, var(--radio-color));
+    }
+
+    // Keyboard Focus state
+    &:focus-visible + .c-segmented-control__text {
+      @include ui-focus(var(--radio-color));
       @include cyber-text-glow(60%, 8px, var(--radio-color));
     }
 

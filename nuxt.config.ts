@@ -4,6 +4,13 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['~/assets/scss/style.scss'],
 
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false,
+    },
+  ],
+
   app: {
     head: {
       script: [

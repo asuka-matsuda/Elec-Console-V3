@@ -7,16 +7,13 @@ export interface SelectOption {
   disabled?: boolean
 }
 
+const model = defineModel<string | number | boolean>()
+
 const props = defineProps<{
-  modelValue?: string | number | boolean
   options: SelectOption[]
   placeholder?: string
   disabled?: boolean
   error?: boolean
-}>()
-
-const emit = defineEmits<{
-  'update:modelValue': [value: string | number | boolean]
 }>()
 
 const isOpen = ref(false)
@@ -24,7 +21,7 @@ const selectRef = ref<HTMLElement | null>(null)
 const focusedIndex = ref(-1)
 
 const selectedOption = computed(() => {
-  return props.options.find(opt => opt.value === props.modelValue)
+  return props.options.find(opt => opt.value === model.value)
 })
 
 const displayLabel = computed(() => {
@@ -39,7 +36,7 @@ const toggleDropdown = () => {
 
 const selectOption = (option: SelectOption) => {
   if (option.disabled) return
-  emit('update:modelValue', option.value)
+  model.value = option.value
   isOpen.value = false
 }
 
@@ -111,7 +108,7 @@ const handleKeydown = (event: KeyboardEvent) => {
 // Reset focus state when dropdown opens
 watch(isOpen, (newVal) => {
   if (newVal) {
-    const index = props.options.findIndex(opt => opt.value === props.modelValue)
+    const index = props.options.findIndex(opt => opt.value === model.value)
     if (index >= 0) {
       focusedIndex.value = index
     } else {
@@ -171,7 +168,7 @@ onUnmounted(() => {
             :key="String(option.value)"
             class="c-custom-select__option"
             :class="{
-              'is-selected': modelValue === option.value,
+              'is-selected': model === option.value,
               'is-focused': index === focusedIndex,
               'is-disabled': option.disabled
             }"
@@ -242,8 +239,8 @@ onUnmounted(() => {
   }
 
   // --- States ---
-  &:hover:not(:disabled) {
-    @include ui-hover-float;
+  &:hover:not(:disabled):not(.is-active) {
+    @include ui-hover-glow;
   }
 
   &:focus,
@@ -253,14 +250,17 @@ onUnmounted(() => {
     @include cyber-text-glow(50%, 8px, var(--color-category-main));
   }
 
+  &:active:not(:disabled) {
+    @include ui-press(var(--color-category-main));
+  }
+
   &.is-placeholder {
     color: var(--color-text-muted);
   }
 
   &.is-active {
-    text-shadow: 0 0 var(--size-2) theme-color(currentcolor, 50%);
-    border-color: var(--color-category-main);
-    box-shadow: 0 0 var(--size-4) theme-color(var(--color-category-main), 20%);
+    @include ui-press(var(--color-category-main));
+    @include cyber-text-glow(50%, 8px, var(--color-category-main));
 
     &::after {
       transform: translateY(-50%) rotate(180deg);

@@ -76,3 +76,10 @@ html[data-animations='false'] {
         animation-play-state: paused !important; //jsで動いているものも一時停止
     }
 }
+
+// --- Global Animations ---
+@keyframes ui-cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+

@@ -1,0 +1,136 @@
+<script setup lang="ts">
+import { useId } from 'vue'
+
+const model = defineModel<boolean | any[]>()
+
+const props = withDefaults(defineProps<{
+  value?: any
+  label?: string
+  disabled?: boolean
+  color?: 'primary' | 'success' | 'danger' | 'warning'
+}>(), {
+  color: 'primary'
+})
+
+const inputId = useId()
+</script>
+
+<template>
+  <label class="c-checkbox" :class="[ `c-checkbox--${color}`, { 'is-disabled': disabled } ]" :for="inputId">
+    <input 
+      :id="inputId"
+      type="checkbox" 
+      class="c-checkbox__input" 
+      v-model="model"
+      :value="value"
+      :disabled="disabled"
+    >
+    <div class="c-checkbox__box">
+      <!-- Checkmark SVG: Animated via stroke-dashoffset -->
+      <svg class="c-checkbox__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    <span class="c-checkbox__label" v-if="label || $slots.default">
+      <slot>{{ label }}</slot>
+    </span>
+  </label>
+</template>
+
+<style scoped lang="scss">
+.c-checkbox {
+  --checkbox-color: var(--color-category-main);
+  
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  position: relative;
+  font-size: var(--text-sm);
+  color: var(--color-text-main);
+  user-select: none;
+
+  &--success { --checkbox-color: var(--color-status-success); }
+  &--danger { --checkbox-color: var(--color-status-danger); }
+  &--warning { --checkbox-color: var(--color-status-warning); }
+
+  &.is-disabled {
+    cursor: not-allowed;
+    @extend %disabled;
+  }
+
+  &__input {
+    // Hide native input visually, but keep accessible for keyboard focus
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    margin: 0;
+    
+    // 1. Keyboard Focus State
+    &:focus-visible + .c-checkbox__box {
+      @include ui-focus(var(--checkbox-color));
+      @include cyber-text-glow(50%, 8px, var(--checkbox-color));
+      transition: box-shadow var(--duration-slow) var(--ease-out),
+                  border-color var(--duration-slow) var(--ease-out);
+    }
+
+    // 2. Checked State
+    &:checked + .c-checkbox__box {
+      @include ui-active(var(--checkbox-color));
+      background-color: theme-color(var(--checkbox-color), 10%);
+      
+      .c-checkbox__icon {
+        stroke-dashoffset: 0;
+        opacity: 1;
+        filter: drop-shadow(0 0 4px var(--checkbox-color));
+      }
+    }
+  }
+
+  &__box {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: glass-color(10%);
+    border: var(--border-width-base) solid glass-color(30%);
+    box-shadow: var(--edge-reflex-base), var(--shadow-sink);
+    transition: var(--transition-base);
+    // Explicitly NO border-radius to ensure sharp corners
+    
+    // Icon animation setup
+    .c-checkbox__icon {
+      width: 14px;
+      height: 14px;
+      stroke: var(--checkbox-color);
+      opacity: 0;
+      stroke-dasharray: 24;
+      stroke-dashoffset: 24;
+      transition: all 0.3s cubic-bezier(0.65, 0, 0.45, 1);
+    }
+  }
+
+  // 3. Hover State
+  &:hover:not(.is-disabled) {
+    .c-checkbox__input:not(:focus-visible):not(:active) + .c-checkbox__box {
+      @include ui-hover-glow(var(--checkbox-color));
+    }
+    
+    // Label slightly glows on hover
+    .c-checkbox__label {
+      color: theme-color(var(--checkbox-color), 90%);
+      @include cyber-text-glow(20%, 4px, var(--checkbox-color));
+    }
+  }
+
+  // 4. Active (Press) State
+  &:active:not(.is-disabled) {
+    .c-checkbox__box {
+      @include ui-press(var(--checkbox-color));
+    }
+  }
+}
+</style>
