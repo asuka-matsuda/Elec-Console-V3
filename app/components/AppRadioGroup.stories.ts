@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3'
 import AppRadioGroup from './AppRadioGroup.vue'
 import { ref } from 'vue'
-import { TOGGLE_OPTIONS, PHASE_STATUS_OPTIONS } from '../../utils/constants'
+import { TOGGLE_OPTIONS, PHASE_STATUS_OPTIONS } from '../utils/constants'
 
 const meta = {
   title: 'Components/AppRadioGroup',

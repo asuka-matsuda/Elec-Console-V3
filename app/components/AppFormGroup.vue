@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import AppBadge from '../elements/AppBadge.vue'
 
 const props = withDefaults(defineProps<{
   label?: string

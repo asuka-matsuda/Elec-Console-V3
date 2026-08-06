@@ -23,7 +23,7 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-import { menuData } from '../../utils/menuData'
+import { menuData } from '../utils/menuData'
 
 export const Default: Story = {
   render: (args) => ({

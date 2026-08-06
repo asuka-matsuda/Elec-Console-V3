@@ -1,9 +1,4 @@
 <script setup lang="ts">
-import AppPanel from '../components/layout/AppPanel.vue'
-import AppCard from '../components/layout/AppCard.vue'
-import AppIcon from '../components/elements/AppIcon.vue'
-import AppDivider from '../components/layout/AppDivider.vue'
-import AppBadge from '../components/elements/AppBadge.vue'
 import { menuData } from '../utils/menuData'
 
 // Extract just the sections to show on the dashboard

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { BreadcrumbItem } from '../elements/AppBreadcrumb.vue'
+import type { BreadcrumbItem } from './AppBreadcrumb.vue'
 
 const props = defineProps<{
   breadcrumbs?: BreadcrumbItem[]

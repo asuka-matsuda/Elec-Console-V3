@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import AppIcon from '../elements/AppIcon.vue'
 
 export type MenuItem = {
   text: string

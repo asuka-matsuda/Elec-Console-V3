@@ -45,7 +45,6 @@ withDefaults(defineProps<{
   display: flex;
   flex-direction: column;
   padding: var(--pad-card, var(--space-4));
-  background-color: #{glass-color(3%)}; 
   
   // Apply visual base
   border: var(--border-width-base) solid var(--p-border-color);
