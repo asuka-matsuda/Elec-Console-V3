@@ -1,28 +1,28 @@
 <script setup lang="ts">
-withDefaults(defineProps<{
-  title?: string
-  bracketColor?: 'main' | 'tool' | 'database' | 'reference' | 'management'
-  variant?: 'hud' | 'simple' | 'gradient' | 'hybrid'
-}>(), {
-  bracketColor: 'main',
-  variant: 'hud'
-})
+withDefaults(
+  defineProps<{
+    title?: string;
+    bracketColor?: "main" | "tool" | "database" | "reference" | "management";
+    variant?: "hud" | "simple" | "gradient" | "hybrid";
+  }>(),
+  {
+    bracketColor: "main",
+    variant: "hud",
+  },
+);
 </script>
 
 <template>
-  <section 
+  <section
     class="c-panel"
-    :class="[
-      `c-panel--${variant}`,
-      `c-panel--color-${bracketColor}`
-    ]"
+    :class="[`c-panel--${variant}`, `c-panel--color-${bracketColor}`]"
   >
     <header v-if="title || $slots.header" class="c-panel__header">
       <slot name="header">
         <h2 class="c-panel__title">{{ title }}</h2>
       </slot>
     </header>
-    
+
     <div class="c-panel__content">
       <slot />
     </div>
@@ -40,12 +40,12 @@ withDefaults(defineProps<{
   --p-bracket-color: #{glass-color(60%)};
   --p-bracket-glow: none;
   --p-theme-color: var(--color-category-main);
-  
+
   position: relative;
   display: flex;
   flex-direction: column;
   padding: var(--pad-card, var(--space-4));
-  
+
   // Apply visual base
   border: var(--border-width-base) solid var(--p-border-color);
   border-image: var(--p-border-image);
@@ -62,7 +62,7 @@ withDefaults(defineProps<{
     width: var(--p-bracket-size);
     height: var(--p-bracket-size);
     pointer-events: none;
-    content: '';
+    content: "";
     border: var(--border-width-base) solid var(--p-bracket-color);
     filter: var(--p-bracket-glow);
   }
@@ -95,7 +95,7 @@ withDefaults(defineProps<{
     color: #{theme-color(var(--p-theme-color), 100%)};
     text-shadow: 0 0 8px #{theme-color(var(--p-theme-color), 40%)};
   }
-  
+
   &__content {
     flex: 1;
     display: flex;
@@ -106,21 +106,30 @@ withDefaults(defineProps<{
   // ---------------------------------------------------------
   // Color Variants
   // ---------------------------------------------------------
-  &--color-main { --p-theme-color: var(--color-category-main); }
-  &--color-tool { --p-theme-color: var(--color-category-tool); }
-  &--color-database { --p-theme-color: var(--color-category-database); }
-  &--color-reference { --p-theme-color: var(--color-category-reference); }
-  &--color-management { --p-theme-color: var(--color-category-management); }
+  &--color-main {
+    --p-theme-color: var(--color-category-main);
+  }
+  &--color-tool {
+    --p-theme-color: var(--color-category-tool);
+  }
+  &--color-database {
+    --p-theme-color: var(--color-category-database);
+  }
+  &--color-reference {
+    --p-theme-color: var(--color-category-reference);
+  }
+  &--color-management {
+    --p-theme-color: var(--color-category-management);
+  }
 
   // ---------------------------------------------------------
   // Style Variants (Ported from original _themes.scss)
   // ---------------------------------------------------------
   &--hud {
     --p-border-color: #{glass-color(15%)};
-    --p-box-shadow: 
-      inset 0 0 0 1px var(--color-main-bg), 
-      inset 0 0 0 2px #{glass-color(15%)},
-      inset 0 0 0 1px color-mix(in srgb, black 8%, transparent), 
+    --p-box-shadow:
+      inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px #{glass-color(15%)},
+      inset 0 0 0 1px color-mix(in srgb, black 8%, transparent),
       var(--shadow-elevation-base);
     --p-bracket-display: block;
     --p-bracket-size: 16px;
@@ -129,10 +138,10 @@ withDefaults(defineProps<{
 
   &--simple {
     --p-border-color: #{glass-color(15%)};
-    --p-box-shadow: 
-      inset 1px 1px 2px #{glass-color(15%)}, 
+    --p-box-shadow:
+      inset 1px 1px 2px #{glass-color(15%)},
       inset -1px -1px 2px #{glass-color(2%)},
-      inset 0 0 0 1px color-mix(in srgb, black 8%, transparent), 
+      inset 0 0 0 1px color-mix(in srgb, black 8%, transparent),
       var(--shadow-elevation-base);
     --p-bracket-display: none;
   }
@@ -140,14 +149,15 @@ withDefaults(defineProps<{
   &--gradient {
     --p-border-color: transparent;
     --p-border-image: linear-gradient(
-      135deg,
-      #{glass-color(40%)} 0%,
-      #{glass-color(5%)} 100%
-    ) 1;
-    --p-box-shadow: 
-      inset 1px 1px 2px #{glass-color(15%)}, 
+        135deg,
+        #{glass-color(40%)} 0%,
+        #{glass-color(5%)} 100%
+      )
+      1;
+    --p-box-shadow:
+      inset 1px 1px 2px #{glass-color(15%)},
       inset -1px -1px 2px #{glass-color(2%)},
-      inset 0 0 0 1px color-mix(in srgb, black 8%, transparent), 
+      inset 0 0 0 1px color-mix(in srgb, black 8%, transparent),
       var(--shadow-elevation-base);
     --p-bracket-display: block;
     --p-bracket-size: 12px;
@@ -157,19 +167,21 @@ withDefaults(defineProps<{
   &--hybrid {
     --p-border-color: transparent;
     --p-border-image: linear-gradient(
-      135deg,
-      #{glass-color(50%)} 0%,
-      #{glass-color(5%)} 100%
-    ) 1;
-    --p-box-shadow: 
-      inset 0 0 0 1px var(--color-main-bg), 
-      inset 0 0 0 2px #{glass-color(15%)},
-      inset 0 0 0 1px color-mix(in srgb, black 8%, transparent), 
+        135deg,
+        #{glass-color(50%)} 0%,
+        #{glass-color(5%)} 100%
+      )
+      1;
+    --p-box-shadow:
+      inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px #{glass-color(15%)},
+      inset 0 0 0 1px color-mix(in srgb, black 8%, transparent),
       var(--shadow-elevation-base);
     --p-bracket-display: block;
     --p-bracket-size: 18px;
     --p-bracket-color: #{theme-color(var(--p-theme-color), 80%)};
-    --p-bracket-glow: drop-shadow(0 0 6px #{theme-color(var(--p-theme-color), 60%)});
+    --p-bracket-glow: drop-shadow(
+      0 0 6px #{theme-color(var(--p-theme-color), 60%)}
+    );
   }
 }
 </style>

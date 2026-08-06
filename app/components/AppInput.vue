@@ -1,22 +1,33 @@
 <script setup lang="ts">
-import { useId } from 'vue'
+import { useId } from "vue";
 
-const model = defineModel<string | number>()
+const model = defineModel<string | number>();
 
-const props = withDefaults(defineProps<{
-  type?: 'text' | 'password' | 'email' | 'number' | 'search' | 'tel' | 'url' | 'textarea'
-  placeholder?: string
-  disabled?: boolean
-  error?: boolean
-  size?: 'sm' | 'md' | 'lg'
-  rows?: number
-}>(), {
-  type: 'text',
-  size: 'md',
-  rows: 4
-})
+const props = withDefaults(
+  defineProps<{
+    type?:
+      | "text"
+      | "password"
+      | "email"
+      | "number"
+      | "search"
+      | "tel"
+      | "url"
+      | "textarea";
+    placeholder?: string;
+    disabled?: boolean;
+    error?: boolean;
+    size?: "sm" | "md" | "lg";
+    rows?: number;
+  }>(),
+  {
+    type: "text",
+    size: "md",
+    rows: 4,
+  },
+);
 
-const inputId = useId()
+const inputId = useId();
 </script>
 
 <template>
@@ -24,28 +35,24 @@ const inputId = useId()
     v-if="type === 'textarea'"
     :id="inputId"
     class="c-form-control c-form-control--textarea"
-    :class="[
-      `c-form-control--${size}`,
-      { 'is-error': error }
-    ]"
+    :class="[`c-form-control--${size}`, { 'is-error': error }]"
     v-model="model"
     :placeholder="placeholder"
     :disabled="disabled"
     :rows="rows"
+    :aria-invalid="error"
   ></textarea>
   <input
     v-else
     :id="inputId"
     :type="type"
     class="c-form-control"
-    :class="[
-      `c-form-control--${size}`,
-      { 'is-error': error }
-    ]"
+    :class="[`c-form-control--${size}`, { 'is-error': error }]"
     v-model="model"
     :placeholder="placeholder"
     :disabled="disabled"
-  >
+    :aria-invalid="error"
+  />
 </template>
 
 <style scoped lang="scss">
@@ -59,10 +66,7 @@ const inputId = useId()
   font-family: var(--font-mono);
   font-size: var(--text-sm);
   color: var(--color-text-main);
-  background-color: transparent;
-  border: var(--border-width-base) solid glass-color(25%);
-  box-shadow: var(--edge-reflex-base), var(--shadow-sink);
-  transition: var(--transition-base);
+  @include form-control-base;
 
   &::placeholder {
     color: var(--color-text-muted);
@@ -101,48 +105,6 @@ const inputId = useId()
     &:disabled {
       resize: none;
     }
-  }
-
-  /* Interaction States */
-  &:hover:not(:disabled):not(.is-error):not(:focus) {
-    @include ui-hover-glow;
-  }
-
-  &:focus,
-  &:focus-visible {
-    outline: none;
-    @include ui-focus(var(--color-category-main));
-    @include cyber-text-glow(50%, 8px, var(--color-category-main));
-    
-    // 発光（フォーカス）のアニメーションを遅くして高級感を出す
-    transition: box-shadow var(--duration-slow) var(--ease-out),
-                border-color var(--duration-slow) var(--ease-out);
-  }
-
-  /* Error State */
-  &.is-error {
-    color: var(--color-status-danger);
-    border-color: var(--color-status-danger);
-    box-shadow:
-      inset 0 0 var(--blur-sm) theme-color(var(--color-status-danger), 30%),
-      0 0 6px theme-color(var(--color-status-danger), 50%);
-
-    &:hover:not(:disabled):not(:focus) {
-      @include ui-hover-glow(var(--color-status-danger));
-    }
-
-    &:focus,
-    &:focus-visible {
-      @include cyber-text-glow(50%, 8px, var(--color-status-danger));
-      transition: box-shadow var(--duration-slow) var(--ease-out),
-                  border-color var(--duration-slow) var(--ease-out);
-    }
-  }
-
-  /* Disabled State */
-  &:disabled {
-    @extend %disabled;
-    background-color: glass-color(5%);
   }
 }
 </style>

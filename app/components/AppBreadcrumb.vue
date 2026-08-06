@@ -1,20 +1,20 @@
 <script setup lang="ts">
 export type BreadcrumbItem = {
-  text: string
-  href?: string
-}
+  text: string;
+  href?: string;
+};
 
 const props = defineProps<{
-  items: BreadcrumbItem[]
-}>()
+  items: BreadcrumbItem[];
+}>();
 </script>
 
 <template>
   <nav class="c-breadcrumb" aria-label="Breadcrumb">
     <ol class="c-breadcrumb__list">
-      <li 
-        v-for="(item, index) in items" 
-        :key="index" 
+      <li
+        v-for="(item, index) in items"
+        :key="index"
         class="c-breadcrumb__item"
       >
         <!-- Not the last item -->
@@ -24,7 +24,7 @@ const props = defineProps<{
           </NuxtLink>
           <span v-else class="c-breadcrumb__text">{{ item.text }}</span>
         </template>
-        
+
         <!-- Last item (Current Page) -->
         <span v-else class="c-breadcrumb__current" aria-current="page">
           {{ item.text }}
@@ -48,7 +48,7 @@ const props = defineProps<{
     padding: var(--space-4) var(--space-5) var(--space-2) var(--space-4);
     margin: 0;
     list-style: none;
-    
+
     @include ui-surface();
 
     // The SYS.LOC label
@@ -59,7 +59,7 @@ const props = defineProps<{
       font-size: 9px;
       font-weight: var(--font-weight-bold);
       color: var(--color-category-main);
-      content: 'SYS.LOC';
+      content: "SYS.LOC";
       opacity: 0.9;
       @include cyber-text-glow(50%, 4px, var(--color-category-main));
     }
@@ -74,11 +74,12 @@ const props = defineProps<{
       margin: 0 var(--space-3);
       font-size: 12px;
       color: color-mix(in srgb, var(--color-category-main) 60%, transparent);
-      content: '»'; 
+      content: "»";
     }
   }
 
-  &__link, &__text {
+  &__link,
+  &__text {
     display: flex;
     align-items: center;
     font-size: var(--text-xs);

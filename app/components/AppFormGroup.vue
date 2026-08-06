@@ -1,15 +1,17 @@
 <script setup lang="ts">
-
-const props = withDefaults(defineProps<{
-  label?: string
-  required?: boolean
-  error?: string
-  help?: string
-  horizontal?: boolean
-}>(), {
-  required: false,
-  horizontal: false
-})
+const props = withDefaults(
+  defineProps<{
+    label?: string;
+    required?: boolean;
+    error?: string;
+    help?: string;
+    horizontal?: boolean;
+  }>(),
+  {
+    required: false,
+    horizontal: false,
+  },
+);
 </script>
 
 <template>
@@ -19,7 +21,12 @@ const props = withDefaults(defineProps<{
       <label class="c-form-label">
         <slot name="label">{{ label }}</slot>
       </label>
-      <AppBadge v-if="required" variant="danger" size="sm" class="c-form-group__required">
+      <AppBadge
+        v-if="required"
+        variant="danger"
+        size="sm"
+        class="c-form-group__required"
+      >
         REQUIRED
       </AppBadge>
     </div>
@@ -27,7 +34,7 @@ const props = withDefaults(defineProps<{
     <!-- Input Control Area -->
     <div class="c-form-group__control">
       <slot />
-      
+
       <!-- Error Message -->
       <transition name="fade-slide">
         <div v-if="error" class="c-form-group__error">
@@ -59,7 +66,9 @@ const props = withDefaults(defineProps<{
       flex-shrink: 0;
       width: 140px;
       // Align label with the text inside a medium input control
-      padding-top: calc((var(--size-control-md) - var(--line-height-base) * var(--text-sm)) / 2);
+      padding-top: calc(
+        (var(--size-control-md) - var(--line-height-base) * var(--text-sm)) / 2
+      );
     }
 
     .c-form-group__control {
@@ -115,21 +124,9 @@ const props = withDefaults(defineProps<{
     display: inline-block;
     width: var(--size-1);
     height: var(--size-1);
-    content: '';
+    content: "";
     background-color: var(--color-category-main);
     box-shadow: 0 0 var(--blur-sm) var(--color-category-main);
   }
-}
-
-// Transition for error messages
-.fade-slide-enter-active,
-.fade-slide-leave-active {
-  transition: opacity var(--duration-fast) var(--ease-out),
-              transform var(--duration-fast) var(--ease-out);
-}
-.fade-slide-enter-from,
-.fade-slide-leave-to {
-  opacity: 0;
-  transform: translateY(-4px);
 }
 </style>

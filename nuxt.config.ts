@@ -13,10 +13,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      script: [
-        { src: 'https://unpkg.com/feather-icons' },
-        { innerHTML: 'window.onload = function() { feather.replace(); }', type: 'text/javascript' }
-      ]
+      script: []
     }
   },
 

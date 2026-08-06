@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { menuData } from '../utils/menuData'
 
-// Mobile sidebar toggle state
-const isSidebarOpen = ref(false)
+// Mobile sidebar toggle state (Global)
+const isSidebarOpen = useState('sidebar-open', () => false)
 
 // Dynamic breadcrumbs based on current route
 const breadcrumbs = useBreadcrumbs()

@@ -820,4 +820,28 @@ body[data-border-style=hybrid] {
   --panel-bracket-size: 18px;
   --panel-bracket-color: color-mix(in srgb, var(--color-overlay) 60%, transparent);
   --panel-bracket-glow: drop-shadow(0 0 4px color-mix(in srgb, var(--color-overlay) 30%, transparent));
+}
+
+/* Transitions
+   ========================================================================== */
+.dropdown-fade-enter-active,
+.dropdown-fade-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.dropdown-fade-enter-from,
+.dropdown-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-5px);
+}
+
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+}
+
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
 }/*# sourceMappingURL=style.css.map */

@@ -1,152 +1,154 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, watch, useId } from "vue";
 
 export interface SelectOption {
-  label: string
-  value: string | number | boolean
-  disabled?: boolean
+  label: string;
+  value: string | number | boolean;
+  disabled?: boolean;
 }
 
-const model = defineModel<string | number | boolean>()
+const model = defineModel<string | number | boolean>();
 
 const props = defineProps<{
-  options: SelectOption[]
-  placeholder?: string
-  disabled?: boolean
-  error?: boolean
-}>()
+  options: SelectOption[];
+  placeholder?: string;
+  disabled?: boolean;
+  error?: boolean;
+}>();
 
-const isOpen = ref(false)
-const selectRef = ref<HTMLElement | null>(null)
-const focusedIndex = ref(-1)
+const isOpen = ref(false);
+const selectRef = ref<HTMLElement | null>(null);
+const focusedIndex = ref(-1);
 
 const selectedOption = computed(() => {
-  return props.options.find(opt => opt.value === model.value)
-})
+  return props.options.find((opt) => opt.value === model.value);
+});
 
 const displayLabel = computed(() => {
-  if (selectedOption.value) return selectedOption.value.label
-  return props.placeholder || ''
-})
+  if (selectedOption.value) return selectedOption.value.label;
+  return props.placeholder || "";
+});
 
 const toggleDropdown = () => {
-  if (props.disabled) return
-  isOpen.value = !isOpen.value
-}
+  if (props.disabled) return;
+  isOpen.value = !isOpen.value;
+};
 
 const selectOption = (option: SelectOption) => {
-  if (option.disabled) return
-  model.value = option.value
-  isOpen.value = false
-}
+  if (option.disabled) return;
+  model.value = option.value;
+  isOpen.value = false;
+};
 
 // --- Keyboard Navigation ---
 const focusNext = () => {
-  let nextIndex = focusedIndex.value + 1
+  let nextIndex = focusedIndex.value + 1;
   while (nextIndex < props.options.length) {
     if (!props.options[nextIndex].disabled) {
-      focusedIndex.value = nextIndex
-      return
+      focusedIndex.value = nextIndex;
+      return;
     }
-    nextIndex++
+    nextIndex++;
   }
-}
+};
 
 const focusPrev = () => {
-  let prevIndex = focusedIndex.value - 1
+  let prevIndex = focusedIndex.value - 1;
   while (prevIndex >= 0) {
     if (!props.options[prevIndex].disabled) {
-      focusedIndex.value = prevIndex
-      return
+      focusedIndex.value = prevIndex;
+      return;
     }
-    prevIndex--
+    prevIndex--;
   }
-}
+};
 
 const handleKeydown = (event: KeyboardEvent) => {
-  if (props.disabled) return
+  if (props.disabled) return;
 
   switch (event.key) {
-    case 'Enter':
-    case ' ':
-      event.preventDefault()
+    case "Enter":
+    case " ":
+      event.preventDefault();
       if (isOpen.value) {
-        if (focusedIndex.value >= 0 && focusedIndex.value < props.options.length) {
-          selectOption(props.options[focusedIndex.value])
+        if (
+          focusedIndex.value >= 0 &&
+          focusedIndex.value < props.options.length
+        ) {
+          selectOption(props.options[focusedIndex.value]);
         } else {
-          isOpen.value = false
+          isOpen.value = false;
         }
       } else {
-        isOpen.value = true
+        isOpen.value = true;
       }
-      break
-    case 'Escape':
+      break;
+    case "Escape":
       if (isOpen.value) {
-        isOpen.value = false
-        event.stopPropagation()
+        isOpen.value = false;
+        event.stopPropagation();
       }
-      break
-    case 'ArrowDown':
-      event.preventDefault()
+      break;
+    case "ArrowDown":
+      event.preventDefault();
       if (!isOpen.value) {
-        isOpen.value = true
+        isOpen.value = true;
       } else {
-        focusNext()
+        focusNext();
       }
-      break
-    case 'ArrowUp':
-      event.preventDefault()
+      break;
+    case "ArrowUp":
+      event.preventDefault();
       if (!isOpen.value) {
-        isOpen.value = true
+        isOpen.value = true;
       } else {
-        focusPrev()
+        focusPrev();
       }
-      break
+      break;
   }
-}
+};
 
 // Reset focus state when dropdown opens
 watch(isOpen, (newVal) => {
   if (newVal) {
-    const index = props.options.findIndex(opt => opt.value === model.value)
+    const index = props.options.findIndex((opt) => opt.value === model.value);
     if (index >= 0) {
-      focusedIndex.value = index
+      focusedIndex.value = index;
     } else {
-      focusedIndex.value = -1
-      focusNext()
+      focusedIndex.value = -1;
+      focusNext();
     }
   } else {
-    focusedIndex.value = -1
+    focusedIndex.value = -1;
   }
-})
+});
 
 // --- Click Outside ---
-const handleClickOutside = (event: MouseEvent) => {
-  if (selectRef.value && !selectRef.value.contains(event.target as Node)) {
-    isOpen.value = false
-  }
-}
+useClickOutside(selectRef, () => {
+  isOpen.value = false;
+});
 
-onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
-})
-
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
-})
+const listboxId = useId();
 </script>
 
 <template>
-  <div class="c-custom-select" ref="selectRef" :class="{ 'is-disabled': disabled, 'is-error': error }">
+  <div
+    class="c-custom-select"
+    ref="selectRef"
+    :class="{ 'is-disabled': disabled, 'is-error': error }"
+  >
     <!-- Trigger Element (Changed to button for native focus handling) -->
     <button
       type="button"
       class="c-custom-select__value"
       :class="{
         'is-placeholder': !selectedOption && placeholder,
-        'is-active': isOpen
+        'is-active': isOpen,
       }"
       :disabled="disabled"
+      aria-haspopup="listbox"
+      :aria-expanded="isOpen"
+      :aria-controls="listboxId"
       @click="toggleDropdown"
       @keydown="handleKeydown"
     >
@@ -156,10 +158,12 @@ onUnmounted(() => {
     <!-- Dropdown Menu -->
     <transition name="dropdown-fade">
       <div v-if="isOpen" class="c-custom-select__dropdown">
-        <ul class="c-custom-select__list">
+        <ul class="c-custom-select__list" role="listbox" :id="listboxId">
           <li
             v-if="placeholder && !selectedOption"
             class="c-custom-select__option is-placeholder"
+            role="option"
+            aria-selected="false"
           >
             {{ placeholder }}
           </li>
@@ -167,10 +171,12 @@ onUnmounted(() => {
             v-for="(option, index) in options"
             :key="String(option.value)"
             class="c-custom-select__option"
+            role="option"
+            :aria-selected="model === option.value"
             :class="{
               'is-selected': model === option.value,
               'is-focused': index === focusedIndex,
-              'is-disabled': option.disabled
+              'is-disabled': option.disabled,
             }"
             @click="selectOption(option)"
           >
@@ -215,10 +221,11 @@ onUnmounted(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  border: var(--border-width-base) solid glass-color(25%);
-  box-shadow: var(--edge-reflex-base), var(--shadow-sink);
-  transition: var(--transition-base);
-  background-color: transparent;
+  @include form-control-base(
+    $is-error: ".c-custom-select.is-error &",
+    $is-active: "&.is-active, &:focus, &:focus-visible",
+    $is-hover: "&:hover:not(:disabled):not(.is-active)"
+  );
   appearance: none; // Reset button styles
   text-align: left;
 
@@ -229,7 +236,7 @@ onUnmounted(() => {
     right: var(--space-4);
     width: var(--size-4);
     height: var(--size-3);
-    content: '';
+    content: "";
     background-image: var(--icon-select-arrow);
     background-repeat: no-repeat;
     background-position: center;
@@ -238,46 +245,13 @@ onUnmounted(() => {
     transition: var(--transition-base);
   }
 
-  // --- States ---
-  &:hover:not(:disabled):not(.is-active) {
-    @include ui-hover-glow;
-  }
-
-  &:focus,
-  &:focus-visible {
-    outline: none;
-    @include ui-focus(var(--color-category-main));
-    @include cyber-text-glow(50%, 8px, var(--color-category-main));
-  }
-
-  &:active:not(:disabled) {
-    @include ui-press(var(--color-category-main));
-  }
-
   &.is-placeholder {
     color: var(--color-text-muted);
   }
 
   &.is-active {
-    @include ui-press(var(--color-category-main));
-    @include cyber-text-glow(50%, 8px, var(--color-category-main));
-
     &::after {
       transform: translateY(-50%) rotate(180deg);
-    }
-  }
-
-  // Error State inherited from wrapper
-  .c-custom-select.is-error & {
-    color: var(--color-status-danger);
-    border-color: var(--color-status-danger);
-    box-shadow:
-      inset 0 0 var(--blur-sm) theme-color(var(--color-status-danger), 30%),
-      0 0 6px theme-color(var(--color-status-danger), 50%);
-
-    &.is-active,
-    &:focus {
-      @include cyber-text-glow(50%, 8px, var(--color-status-danger));
     }
   }
 }
@@ -291,7 +265,8 @@ onUnmounted(() => {
   min-width: 100%;
   max-width: 90vw;
   background-color: var(--color-main-bg);
-  border: var(--border-width-base) solid theme-color(var(--color-category-main), 50%);
+  border: var(--border-width-base) solid
+    theme-color(var(--color-category-main), 50%);
   box-shadow:
     var(--shadow-elevation-hover),
     inset 0 0 10px theme-color(var(--color-category-main), 20%);
@@ -336,7 +311,8 @@ onUnmounted(() => {
     color: var(--color-category-main);
     border-left-color: var(--color-category-main);
     background-color: glass-color(5%);
-    box-shadow: inset 0 0 var(--size-3) theme-color(var(--color-category-main), 30%);
+    box-shadow: inset 0 0 var(--size-3)
+      theme-color(var(--color-category-main), 30%);
     transform: translateX(2px);
   }
 
@@ -345,7 +321,8 @@ onUnmounted(() => {
     color: var(--color-category-main);
     border-left-color: var(--color-category-main);
     background-color: glass-color(10%);
-    box-shadow: inset 0 0 var(--size-4) theme-color(var(--color-category-main), 40%);
+    box-shadow: inset 0 0 var(--size-4)
+      theme-color(var(--color-category-main), 40%);
   }
 
   &.is-disabled {
@@ -360,17 +337,5 @@ onUnmounted(() => {
     font-style: italic;
     cursor: default;
   }
-}
-
-// Transition
-.dropdown-fade-enter-active,
-.dropdown-fade-leave-active {
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.dropdown-fade-enter-from,
-.dropdown-fade-leave-to {
-  opacity: 0;
-  transform: translateY(-5px);
 }
 </style>

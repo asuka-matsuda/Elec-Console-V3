@@ -1,33 +1,36 @@
 <script setup lang="ts">
 export type TabOption = {
-  label: string
-  value: string | number
-  disabled?: boolean
-}
+  label: string;
+  value: string | number;
+  disabled?: boolean;
+};
 
-const model = defineModel<string | number>()
+const model = defineModel<string | number>();
 
-const props = withDefaults(defineProps<{
-  options: TabOption[]
-  vertical?: boolean
-  grid?: boolean
-}>(), {
-  vertical: false,
-  grid: false
-})
+const props = withDefaults(
+  defineProps<{
+    options: TabOption[];
+    vertical?: boolean;
+    grid?: boolean;
+  }>(),
+  {
+    vertical: false,
+    grid: false,
+  },
+);
 
 const selectTab = (option: TabOption) => {
-  if (option.disabled) return
-  model.value = option.value
-}
+  if (option.disabled) return;
+  model.value = option.value;
+};
 </script>
 
 <template>
-  <div 
+  <div
     class="c-tabs"
     :class="{
       'c-tabs--vertical': vertical,
-      'c-tabs--grid': grid
+      'c-tabs--grid': grid,
     }"
     role="tablist"
     :aria-orientation="vertical ? 'vertical' : 'horizontal'"
@@ -38,7 +41,7 @@ const selectTab = (option: TabOption) => {
       class="c-tabs__item"
       :class="{
         'is-active': model === option.value,
-        'is-disabled': option.disabled
+        'is-disabled': option.disabled,
       }"
       role="tab"
       :aria-selected="model === option.value"
@@ -63,7 +66,7 @@ const selectTab = (option: TabOption) => {
   &--grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    
+
     .c-tabs__item {
       width: 100%;
       padding-right: 0;

@@ -1,30 +1,33 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed } from "vue";
 
 // ① withDefaults を使って「初期値」を定義する
-const props = withDefaults(defineProps<{
-  to?: string
-  href?: string
-  type?: 'button' | 'submit' | 'reset'
-  _variant?: 'primary' | 'secondary' | 'success' | 'danger'
-  size?: 'sm' | 'md' | 'lg'
-  block?: boolean
-  iconOnly?: boolean
-  align?: 'center' | 'right' | 'left'
-  disabled?: boolean
-}>(), {
-  type: 'button',
-  _variant: 'primary',
-  size: 'sm',
-  align: 'center'
-})
+const props = withDefaults(
+  defineProps<{
+    to?: string;
+    href?: string;
+    type?: "button" | "submit" | "reset";
+    _variant?: "primary" | "secondary" | "success" | "danger";
+    size?: "sm" | "md" | "lg";
+    block?: boolean;
+    iconOnly?: boolean;
+    align?: "center" | "right" | "left";
+    disabled?: boolean;
+  }>(),
+  {
+    type: "button",
+    _variant: "primary",
+    size: "sm",
+    align: "center",
+  },
+);
 
 // ② タグ判定を独立させ、ネストした三項演算子を排除
 const componentTag = computed(() => {
-  if (props.to) return 'NuxtLink'
-  if (props.href) return 'a'
-  return 'button'
-})
+  if (props.to) return "NuxtLink";
+  if (props.href) return "a";
+  return "button";
+});
 </script>
 
 <template>
@@ -43,8 +46,8 @@ const componentTag = computed(() => {
       {
         'c-btn--block': block,
         'c-btn--icon-only': iconOnly,
-        'is-disabled': disabled
-      }
+        'is-disabled': disabled,
+      },
     ]"
     @click="disabled && $event.preventDefault()"
   >
@@ -103,17 +106,25 @@ const componentTag = computed(() => {
   }
 
   /* Color Modifiers */
-  &--primary { --btn-color: var(--color-category-main); }
-  &--secondary { --btn-color: var(--color-status-neutral); }
-  &--success { --btn-color: var(--color-status-success); }
-  &--danger { --btn-color: var(--color-status-danger); }
+  &--primary {
+    --btn-color: var(--color-category-main);
+  }
+  &--secondary {
+    --btn-color: var(--color-status-neutral);
+  }
+  &--success {
+    --btn-color: var(--color-status-success);
+  }
+  &--danger {
+    --btn-color: var(--color-status-danger);
+  }
 
   /* Size Modifiers */
   &--sm {
     height: var(--size-control-sm);
     padding: 0 var(--space-3);
     font-size: var(--text-xs);
-    
+
     // Minimum touch target (48x48) for accessibility
     &::after {
       position: absolute;
@@ -123,7 +134,7 @@ const componentTag = computed(() => {
       min-width: var(--size-control-lg);
       height: 100%;
       min-height: var(--size-control-lg);
-      content: '';
+      content: "";
       transform: translate(-50%, -50%);
     }
   }
@@ -142,7 +153,7 @@ const componentTag = computed(() => {
   &--icon-only {
     width: var(--size-control-md);
     padding: 0;
-    
+
     &.c-btn--sm {
       width: var(--size-control-sm);
     }

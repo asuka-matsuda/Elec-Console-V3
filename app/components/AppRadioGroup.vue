@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import { useId, computed } from 'vue'
+import { useId, computed } from "vue";
 
 export interface RadioOption {
-  label: string
-  value: string | number | boolean
-  disabled?: boolean
-  color?: string
+  label: string;
+  value: string | number | boolean;
+  disabled?: boolean;
+  color?: string;
 }
 
-const model = defineModel<string | number | boolean>()
+const model = defineModel<string | number | boolean>();
 
 const props = defineProps<{
-  options: RadioOption[]
-  name?: string
-}>()
+  options: RadioOption[];
+  name?: string;
+}>();
 
 // ユニークなname属性を自動生成（複数グループが配置された際の干渉を防ぐため）
-const uniqueName = useId()
-const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
+const uniqueName = useId();
+const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
 </script>
 
 <template>
@@ -26,7 +26,9 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
       v-for="option in options"
       :key="String(option.value)"
       class="c-segmented-control__label"
-      :style="option.color ? { '--radio-color': option.color } as any : undefined"
+      :style="
+        option.color ? ({ '--radio-color': option.color } as any) : undefined
+      "
     >
       <input
         type="radio"
@@ -35,7 +37,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
         v-model="model"
         :disabled="option.disabled"
         class="c-segmented-control__input"
-      >
+      />
       <span class="c-segmented-control__text">{{ option.label }}</span>
     </label>
   </div>
@@ -58,7 +60,8 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
     cursor: pointer;
 
     &:hover {
-      .c-segmented-control__input:not(:disabled):not(:checked) + .c-segmented-control__text {
+      .c-segmented-control__input:not(:disabled):not(:checked)
+        + .c-segmented-control__text {
         color: var(--color-text-main);
         background-color: glass-color(10%);
       }

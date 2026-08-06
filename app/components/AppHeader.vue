@@ -1,21 +1,21 @@
 <script setup lang="ts">
-import type { BreadcrumbItem } from './AppBreadcrumb.vue'
+import type { BreadcrumbItem } from "./AppBreadcrumb.vue";
 
 const props = defineProps<{
-  breadcrumbs?: BreadcrumbItem[]
-}>()
+  breadcrumbs?: BreadcrumbItem[];
+}>();
 
 const emit = defineEmits<{
-  (e: 'toggle-sidebar'): void
-}>()
+  (e: "toggle-sidebar"): void;
+}>();
 </script>
 
 <template>
   <header class="l-header">
     <div class="l-header__left">
       <!-- Mobile Sidebar Toggle -->
-      <AppButton 
-        variant="tool" 
+      <AppButton
+        variant="tool"
         class="l-header__menu-btn"
         @click="emit('toggle-sidebar')"
       >
@@ -23,10 +23,7 @@ const emit = defineEmits<{
       </AppButton>
 
       <!-- Breadcrumbs / Page Title -->
-      <AppBreadcrumb 
-        v-if="breadcrumbs?.length" 
-        :items="breadcrumbs" 
-      />
+      <AppBreadcrumb v-if="breadcrumbs?.length" :items="breadcrumbs" />
     </div>
 
     <div class="l-header__actions">
@@ -45,9 +42,9 @@ const emit = defineEmits<{
   padding: 0 var(--space-6);
   background-color: transparent;
   border-bottom: var(--border-width-base) solid #{glass-color(15%)};
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4); // Drop shadow over main content
+  box-shadow: var(--shadow-elevation-hover); // Replaced hardcoded shadow
 
-  @include mq('md') {
+  @include mq("md") {
     padding: 0 var(--space-4);
   }
 
@@ -60,7 +57,7 @@ const emit = defineEmits<{
   &__menu-btn {
     display: none; // Hidden on desktop
 
-    @include mq('lg') {
+    @include mq("lg") {
       display: inline-flex;
     }
   }
