@@ -1,0 +1,35 @@
+{
+  "name": "elec-console-v2",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "feather-icons": "^4.29.2",
+    "nuxt": "^4.5.1",
+    "vue": "^3.5.40",
+    "vue-router": "^5.2.0"
+  },
+  "devDependencies": {
+    "@nuxtjs/storybook": "^8.1.1",
+    "@storybook/addon-a11y": "^8.2.9",
+    "@storybook/addon-docs": "^8.2.9",
+    "@storybook/addon-essentials": "^8.2.9",
+    "@storybook/addon-interactions": "^8.2.9",
+    "@storybook/addon-links": "^8.2.9",
+    "@storybook/test": "^8.2.9",
+    "@storybook/vue3": "^8.2.9",
+    "@storybook/vue3-vite": "^8.2.9",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "jsdoc-type-pratt-parser": "^8.0.0",
+    "sass": "^1.102.0",
+    "storybook": "^8.2.9"
+  }
+}

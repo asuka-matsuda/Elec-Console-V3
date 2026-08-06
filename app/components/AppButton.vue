@@ -1,0 +1,158 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+
+// ① withDefaults を使って「初期値」を定義する
+const props = withDefaults(defineProps<{
+  to?: string
+  href?: string
+  type?: 'button' | 'submit' | 'reset'
+  _variant?: 'primary' | 'secondary' | 'success' | 'danger'
+  size?: 'sm' | 'md' | 'lg'
+  block?: boolean
+  iconOnly?: boolean
+  align?: 'center' | 'right' | 'left'
+  disabled?: boolean
+}>(), {
+  type: 'button',
+  _variant: 'primary',
+  size: 'sm',
+  align: 'center'
+})
+
+// ② タグ判定を独立させ、ネストした三項演算子を排除
+const componentTag = computed(() => {
+  if (props.to) return 'NuxtLink'
+  if (props.href) return 'a'
+  return 'button'
+})
+</script>
+
+<template>
+  <component
+    :is="componentTag"
+    :to="!disabled ? to : null"
+    :href="!disabled ? href : null"
+    :type="componentTag === 'button' ? type : null"
+    :disabled="componentTag === 'button' ? disabled : null"
+    class="c-btn"
+    :class="[
+      /* ③ Vueの配列＋オブジェクト構文でクラス付与をDRYに */
+      _variant && `c-btn--${_variant}`,
+      size !== 'md' && `c-btn--${size}`,
+      align !== 'center' && `c-btn--${align}`,
+      {
+        'c-btn--block': block,
+        'c-btn--icon-only': iconOnly,
+        'is-disabled': disabled
+      }
+    ]"
+    @click="disabled && $event.preventDefault()"
+  >
+    <slot />
+  </component>
+</template>
+
+<style scoped lang="scss">
+.c-btn {
+  @extend %click-enabled;
+
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: center;
+  height: var(--size-control-md);
+  padding: 0 var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui);
+  color: var(--color-text-main);
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  transition: var(--transition-base), var(--transition-colors);
+
+  // Base glass panel style
+  @include ui-surface;
+
+  /* State Variables */
+  --btn-color: var(--color-category-main); // Default interaction color
+
+  /* Interaction States */
+  &:hover:not(:disabled):not(.is-disabled) {
+    z-index: 1;
+    @include ui-hover-float(var(--btn-color));
+  }
+
+  &:focus-visible {
+    z-index: 1;
+    @include ui-focus(var(--btn-color));
+  }
+
+  &:active:not(:disabled):not(.is-disabled) {
+    z-index: 1;
+    @include ui-press(var(--btn-color));
+    @include cyber-text-glow(50%, 8px, var(--btn-color));
+  }
+
+  /* Disabled State */
+  &:disabled,
+  &.is-disabled {
+    @extend %disabled;
+  }
+
+  /* Color Modifiers */
+  &--primary { --btn-color: var(--color-category-main); }
+  &--secondary { --btn-color: var(--color-status-neutral); }
+  &--success { --btn-color: var(--color-status-success); }
+  &--danger { --btn-color: var(--color-status-danger); }
+
+  /* Size Modifiers */
+  &--sm {
+    height: var(--size-control-sm);
+    padding: 0 var(--space-3);
+    font-size: var(--text-xs);
+    
+    // Minimum touch target (48x48) for accessibility
+    &::after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 100%;
+      min-width: var(--size-control-lg);
+      height: 100%;
+      min-height: var(--size-control-lg);
+      content: '';
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  &--lg {
+    height: var(--size-control-lg);
+    padding: 0 var(--space-5);
+    font-size: var(--text-base);
+  }
+
+  /* Layout Modifiers */
+  &--block {
+    width: 100%;
+  }
+
+  &--icon-only {
+    width: var(--size-control-md);
+    padding: 0;
+    
+    &.c-btn--sm {
+      width: var(--size-control-sm);
+    }
+  }
+
+  &--left {
+    justify-content: flex-start;
+  }
+
+  &--right {
+    justify-content: flex-end;
+  }
+}
+</style>

@@ -1,0 +1,131 @@
+@use 'sass:map';
+@use 'functions' as *;
+@use 'variables' as *;
+
+/* Media Queries
+   ========================================================================== */
+@mixin mq($breakpoint, $direction: 'down') {
+    @if map.has-key($breakpoints, $breakpoint) {
+        $value: map.get($breakpoints, $breakpoint);
+
+        @if $direction == 'down' {
+            @media (width <= $value) {
+                @content;
+            }
+        } @else if $direction == 'up' {
+            @media (width >= $value) {
+                @content;
+            }
+        } @else if $direction == 'up-strict' {
+            @media (width > $value) {
+                @content;
+            }
+        }
+    } @else {
+        @warn "Invalid breakpoint: #{$breakpoint}.";
+    }
+}
+
+/* Base / Common Placeholders
+   ========================================================================== */
+%card-base {
+    position: relative;
+    padding: var(--pad-card);
+}
+
+%badge-base {
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--text-xs);
+}
+
+%click-enabled {
+    cursor: pointer;
+    user-select: none;
+}
+
+%disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Visual Effects & Glassmorphism
+   ========================================================================== */
+@mixin cyber-text-glow($opacity: 40%, $blur: 8px, $color: currentcolor) {
+    text-shadow: 0 0 $blur theme-color($color, $opacity);
+}
+
+@mixin ui-surface($border-opacity: 10%) {
+    border: var(--border-width-base) solid glass-color($border-opacity);
+    box-shadow: var(--edge-reflex-base), var(--shadow-elevation-base);
+}
+
+/* Interactive States (Focus, Hover, Active, Disabled)
+   ========================================================================== */
+
+@mixin ui-focus($color: var(--color-category-main), $shadow-spread: 12px) {
+    outline: none;
+    border-color: $color;
+    box-shadow:
+        inset 0 0 var(--blur-sm) theme-color($color, 20%),
+        0 0 var(--blur-sm) theme-color($color, 50%),
+        0 0 $shadow-spread theme-color($color, 30%);
+}
+
+@mixin ui-hover-float($color: null) {
+    @if $color {
+        border-color: $color;
+        box-shadow:
+            var(--edge-reflex-hover),
+            0 0 16px theme-color($color, 30%),
+            var(--shadow-elevation-hover);
+    } @else {
+        border-color: glass-color(30%);
+        box-shadow: var(--edge-reflex-hover), var(--shadow-elevation-hover);
+    }
+}
+
+@mixin ui-press($color: var(--color-category-main)) {
+    border-color: theme-color($color, 90%);
+    box-shadow:
+        var(--edge-reflex-press),
+        inset 0 var(--blur-sm) var(--blur-lg) theme-color(#000, 60%),
+        inset 0 -var(--blur-sm) 10px theme-color($color, 30%),
+        inset 0 0 0 1px theme-color($color, 30%),
+        var(--shadow-sink);
+    transform: scale(0.985);
+
+    svg {
+        filter: drop-shadow(0 0 2px $color);
+        stroke: $color;
+    }
+}
+
+@mixin ui-active($color: var(--color-category-main)) {
+    border-color: $color;
+    box-shadow:
+        inset 0 0 var(--blur-lg) theme-color($color, 40%),
+        inset 0 0 2px theme-color($color, 50%),
+        0 0 var(--blur-lg) theme-color($color, 40%);
+}
+
+%ui-disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.4;
+    filter: grayscale(80%);
+}
+
+/* Misc Utilities
+   ========================================================================== */
+@mixin custom-scrollbar() {
+    &::-webkit-scrollbar {
+        width: var(--size-2);
+        height: var(--size-2);
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: glass-color(20%);
+        border-radius: 9999px;
+    }
+}

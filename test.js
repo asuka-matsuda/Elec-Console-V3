@@ -1,0 +1,1 @@
+import { mount } from '@vue/test-utils'; import AppButtonSuccess from './app/components/AppButtonSuccess.vue'; console.log(mount(AppButtonSuccess).html());
