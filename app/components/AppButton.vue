@@ -81,12 +81,13 @@ const componentTag = computed(() => {
   /* Interaction States */
   &:hover:not(:disabled):not(.is-disabled) {
     z-index: 1;
-    @include ui-hover-float(var(--btn-color));
+    @include ui-hover-glow(var(--btn-color));
   }
 
   &:focus-visible {
     z-index: 1;
     @include ui-focus(var(--btn-color));
+    @include cyber-text-glow(50%, 8px, var(--btn-color));
   }
 
   &:active:not(:disabled):not(.is-disabled) {

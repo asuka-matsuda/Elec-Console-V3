@@ -83,6 +83,12 @@ const handleChange = (value: string | number | boolean) => {
       @include cyber-text-glow(60%, 8px, var(--radio-color));
     }
 
+    // Keyboard Focus state
+    &:focus-visible + .c-segmented-control__text {
+      @include ui-focus(var(--radio-color));
+      @include cyber-text-glow(60%, 8px, var(--radio-color));
+    }
+
     // Disabled state
     &:disabled + .c-segmented-control__text {
       @extend %disabled;
@@ -101,7 +107,6 @@ const handleChange = (value: string | number | boolean) => {
     color: var(--color-text-muted);
     user-select: none;
     border: var(--border-width-base) solid transparent;
-    border-radius: var(--radius-xs);
     transition: var(--transition-base);
   }
 }

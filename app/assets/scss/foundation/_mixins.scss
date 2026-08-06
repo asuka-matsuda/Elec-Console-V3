@@ -72,16 +72,19 @@
         0 0 $shadow-spread theme-color($color, 30%);
 }
 
-@mixin ui-hover-float($color: null) {
+@mixin ui-hover-glow($color: null) {
     @if $color {
-        border-color: $color;
+        border-color: theme-color($color, 80%);
+        background-color: glass-color(5%);
         box-shadow:
             var(--edge-reflex-hover),
-            0 0 16px theme-color($color, 30%),
-            var(--shadow-elevation-hover);
+            inset 0 0 8px theme-color($color, 20%),
+            0 0 12px theme-color($color, 30%),
+            var(--shadow-elevation-base);
     } @else {
-        border-color: glass-color(30%);
-        box-shadow: var(--edge-reflex-hover), var(--shadow-elevation-hover);
+        border-color: glass-color(40%);
+        background-color: glass-color(5%);
+        box-shadow: var(--edge-reflex-hover), var(--shadow-elevation-base);
     }
 }
 

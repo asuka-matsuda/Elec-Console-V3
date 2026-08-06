@@ -40,11 +40,9 @@
     --color-overlay-light: hsl(0deg 0% 100% / 50%);
 
     // --- Shadows ---
-    --shadow-elevation-base: 0 8px 24px -4px
-        color-mix(in srgb, hsl(220deg 25% 15%) 12%, transparent);
-    --shadow-elevation-hover: 0 16px 40px -8px
-        color-mix(in srgb, hsl(220deg 25% 15%) 20%, transparent);
-    --shadow-sink: inset 0 2px 4px color-mix(in srgb, black 15%, transparent);
+    --shadow-color-base: color-mix(in srgb, hsl(220deg 25% 15%) 12%, transparent);
+    --shadow-color-hover: color-mix(in srgb, hsl(220deg 25% 15%) 20%, transparent);
+    --shadow-color-sink: color-mix(in srgb, black 15%, transparent);
 
     // --- Edge Reflex ---
     --edge-reflex-base: inset 0 0 0 1px color-mix(in srgb, black 8%, transparent);
