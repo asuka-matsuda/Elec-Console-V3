@@ -18,37 +18,37 @@ const closeSidebar = () => {
   <div>
     <!-- Mobile Overlay -->
     <div
-      class="l-sidebar-overlay"
+      class="l-global-nav-overlay"
       :class="{ 'is-open': isOpen }"
       @click="closeSidebar"
     />
 
     <!-- Sidebar -->
-    <aside class="l-sidebar" :class="{ 'is-open': isOpen }">
+    <aside class="l-global-nav" :class="{ 'is-open': isOpen }">
       <!-- Logo Header -->
-      <header class="l-sidebar__header">
+      <header class="l-global-nav__header">
         <AppLogo @click="closeSidebar" />
       </header>
 
       <!-- Navigation Content -->
-      <nav class="l-sidebar__nav custom-scrollbar">
+      <nav class="l-global-nav__nav custom-scrollbar">
         <section
           v-for="section in menuData"
           :key="section.id || section.heading || section.globalNavHeading"
-          class="l-sidebar__section"
+          class="l-global-nav__section"
           :class="section.accent ? `has-accent-${section.accent}` : ''"
         >
           <header
             v-if="section.globalNavHeading || section.heading"
-            class="l-sidebar__section-header"
+            class="l-global-nav__section-header"
           >
-            <h3 class="l-sidebar__heading">
+            <h3 class="l-global-nav__heading">
               {{ section.globalNavHeading || section.heading }}
             </h3>
             <AppDivider
               type="fade-side"
               :variant="section.accent || 'main'"
-              class="l-sidebar__divider"
+              class="l-global-nav__divider"
             />
           </header>
 
@@ -56,16 +56,16 @@ const closeSidebar = () => {
             <NuxtLink
               v-if="!item.disabled"
               :to="item.href"
-              class="l-sidebar__link"
+              class="l-global-nav__link"
               @click="closeSidebar"
             >
-              <AppIcon :name="item.icon" class="l-sidebar__link-icon" />
-              <span class="l-sidebar__link-text">{{ item.text }}</span>
+              <AppIcon :name="item.icon" class="l-global-nav__link-icon" />
+              <span class="l-global-nav__link-text">{{ item.text }}</span>
             </NuxtLink>
 
-            <div v-else class="l-sidebar__link is-disabled">
-              <AppIcon :name="item.icon" class="l-sidebar__link-icon" />
-              <span class="l-sidebar__link-text">{{ item.text }}</span>
+            <div v-else class="l-global-nav__link is-disabled">
+              <AppIcon :name="item.icon" class="l-global-nav__link-icon" />
+              <span class="l-global-nav__link-text">{{ item.text }}</span>
             </div>
           </template>
         </section>
