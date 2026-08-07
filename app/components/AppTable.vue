@@ -37,7 +37,18 @@
   border-spacing: 0;
   text-align: left;
   
-  :deep(th),
+  :deep(th) {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: transparent;
+    backdrop-filter: blur(8px);
+    padding: var(--space-3) var(--space-4);
+    border-bottom: var(--border-width-base) solid var(--color-border-base);
+    color: var(--color-text-main);
+    vertical-align: middle;
+  }
+  
   :deep(td) {
     padding: var(--space-3) var(--space-4);
     border-bottom: var(--border-width-base) solid var(--color-border-base);
@@ -46,7 +57,6 @@
   }
 
   :deep(th) {
-    background-color: glass-color(15%);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
     font-size: var(--text-sm);
