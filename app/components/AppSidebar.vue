@@ -76,7 +76,7 @@ const closeSidebar = () => {
 
 <style scoped lang="scss">
 .l-sidebar {
-  --sidebar-width: 260px;
+  --sidebar-width: 280px;
   --sidebar-bg: #{glass-color(20%)};
   --sidebar-border: #{glass-color(30%)};
 

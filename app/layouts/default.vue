@@ -56,9 +56,9 @@ const breadcrumbs = useBreadcrumbs()
   flex-direction: column;
   min-width: 0; // Prevent flex item from blowing out
 
-  // On desktop, the sidebar takes up 260px. We push the main content over.
+  // On desktop, the sidebar takes up 280px. We push the main content over.
   @include mq('lg', 'up-strict') {
-    margin-left: 260px;
+    margin-left: 280px;
   }
 }
 

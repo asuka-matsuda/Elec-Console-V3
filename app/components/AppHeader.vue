@@ -51,7 +51,9 @@ const emit = defineEmits<{
     gap: var(--space-4);
   }
 
-  &__menu-btn {
+  // Use class chaining (.c-btn) to increase specificity over AppButton's default styles
+  // without relying on !important.
+  &__menu-btn.c-btn {
     display: none; // Hidden on desktop
 
     @include mq("lg") {
