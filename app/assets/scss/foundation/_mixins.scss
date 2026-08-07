@@ -167,8 +167,12 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background: glass-color(20%);
+    background-color: transparent;
+    border: var(--border-width-base) solid var(--color-border-base);
     border-radius: 0;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
   }
 }
 

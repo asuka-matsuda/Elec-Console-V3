@@ -1,0 +1,32 @@
+@use '../../foundation' as *;
+
+.l-sidebar-layout {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--space-4) 0;
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    align-items: start;
+    gap: var(--space-6);
+
+    @include mq("md") {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__sidebar {
+    position: sticky;
+    top: var(--space-6);
+
+    @include mq("md") {
+      position: static;
+    }
+  }
+
+  &__main {
+    min-width: 0;
+  }
+}

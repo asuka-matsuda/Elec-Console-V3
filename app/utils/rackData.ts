@@ -1,0 +1,39 @@
+/**
+ * @fileoverview Rack Data Master
+ * ケーブルラック規格データ（ネグロス電工 SR / QR / 15R 等）の寸法・重量データを格納します。
+ * ※重量値は標準的な鋼製の目安値です。
+ */
+export const rackData = [
+    // --- SRタイプ (親桁高さ: 70mm, 長さ: 3000mm) ---
+    { category: 'SR', size: '100', height: 70, weightPiece: 4.8, weightMeter: 1.6 },
+    { category: 'SR', size: '200', height: 70, weightPiece: 6.0, weightMeter: 2.0 },
+    { category: 'SR', size: '300', height: 70, weightPiece: 7.2, weightMeter: 2.4 },
+    { category: 'SR', size: '400', height: 70, weightPiece: 8.4, weightMeter: 2.8 },
+    { category: 'SR', size: '500', height: 70, weightPiece: 9.6, weightMeter: 3.2 },
+    { category: 'SR', size: '600', height: 70, weightPiece: 10.8, weightMeter: 3.6 },
+    { category: 'SR', size: '800', height: 70, weightPiece: 13.2, weightMeter: 4.4 },
+    { category: 'SR', size: '1000', height: 70, weightPiece: 15.6, weightMeter: 5.2 },
+    { category: 'SR', size: '1200', height: 70, weightPiece: 18.0, weightMeter: 6.0 },
+
+    // --- QRタイプ (親桁高さ: 100mm, 長さ: 3000mm) ---
+    { category: 'QR', size: '100', height: 100, weightPiece: 6.6, weightMeter: 2.2 },
+    { category: 'QR', size: '200', height: 100, weightPiece: 8.1, weightMeter: 2.7 },
+    { category: 'QR', size: '300', height: 100, weightPiece: 9.6, weightMeter: 3.2 },
+    { category: 'QR', size: '400', height: 100, weightPiece: 11.1, weightMeter: 3.7 },
+    { category: 'QR', size: '500', height: 100, weightPiece: 12.6, weightMeter: 4.2 },
+    { category: 'QR', size: '600', height: 100, weightPiece: 14.1, weightMeter: 4.7 },
+    { category: 'QR', size: '800', height: 100, weightPiece: 17.1, weightMeter: 5.7 },
+    { category: 'QR', size: '1000', height: 100, weightPiece: 20.1, weightMeter: 6.7 },
+    { category: 'QR', size: '1200', height: 100, weightPiece: 23.1, weightMeter: 7.7 },
+
+    // --- 15Rタイプ (親桁高さ: 150mm, 長さ: 3000mm) ---
+    { category: '15R', size: '100', height: 150, weightPiece: 9.6, weightMeter: 3.2 },
+    { category: '15R', size: '200', height: 150, weightPiece: 11.4, weightMeter: 3.8 },
+    { category: '15R', size: '300', height: 150, weightPiece: 13.2, weightMeter: 4.4 },
+    { category: '15R', size: '400', height: 150, weightPiece: 15.0, weightMeter: 5.0 },
+    { category: '15R', size: '500', height: 150, weightPiece: 16.8, weightMeter: 5.6 },
+    { category: '15R', size: '600', height: 150, weightPiece: 18.6, weightMeter: 6.2 },
+    { category: '15R', size: '800', height: 150, weightPiece: 22.2, weightMeter: 7.4 },
+    { category: '15R', size: '1000', height: 150, weightPiece: 25.8, weightMeter: 8.6 },
+    { category: '15R', size: '1200', height: 150, weightPiece: 29.4, weightMeter: 9.8 }
+];

@@ -1,0 +1,43 @@
+@use '../../foundation' as *;
+
+.p-db {
+  // Styles for the database specific elements
+
+  &__filter-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-muted);
+    border-bottom: var(--border-width-base) solid var(--color-border-base);
+    padding-bottom: var(--space-2);
+    margin-bottom: var(--space-4);
+  }
+
+  &__filters {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  &__filter-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  &__table-panel {
+    padding: 0; // Remove padding so table spans full width of panel
+    overflow: hidden; // Ensure rounded corners from panel apply to table
+  }
+
+  &__empty {
+    padding: var(--space-10);
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: var(--text-base);
+    background-color: transparent;
+    border: var(--border-width-base) dashed var(--color-border-base);
+  }
+}

@@ -58,7 +58,17 @@ body:not([data-bg-theme='none']) .c-bg-canvas {
 
 // --- 無地 ---
 html[data-base-bg='solid'] body {
+    background-color: var(--bg-solid-color);
     background-image: none;
+}
+
+// --- gradient ---
+html[data-base-bg='gradient'] body {
+    background-image: linear-gradient(
+        135deg,
+        var(--bg-gradient-c1),
+        var(--bg-gradient-c2)
+    );
 }
 
 // --- aurora ---
@@ -66,22 +76,22 @@ html[data-base-bg='aurora'] body {
     background-image:
         radial-gradient(
             ellipse at top left,
-            theme-color(var(--color-category-main), 35%) 0%,
+            color-mix(in srgb, var(--bg-aurora-c1) 35%, transparent) 0%,
             transparent 70%
         ),
         radial-gradient(
             ellipse at bottom right,
-            theme-color(var(--color-category-tool), 25%) 0%,
+            color-mix(in srgb, var(--bg-aurora-c2) 25%, transparent) 0%,
             transparent 70%
         ),
         radial-gradient(
             ellipse at top right,
-            theme-color(var(--color-category-database), 25%) 0%,
+            color-mix(in srgb, var(--bg-aurora-c3) 25%, transparent) 0%,
             transparent 70%
         ),
         radial-gradient(
             ellipse at bottom left,
-            theme-color(var(--color-category-reference), 25%) 0%,
+            color-mix(in srgb, var(--bg-aurora-c4) 25%, transparent) 0%,
             transparent 70%
         );
     background-size: 100% 100%;
@@ -90,10 +100,10 @@ html[data-base-bg='aurora'] body {
 // --- grid ---
 html[data-base-bg='grid'] body {
     background-image:
-        linear-gradient(to right, glass-color(5%) 2px, transparent 2px),
-        linear-gradient(to bottom, glass-color(5%) 2px, transparent 2px);
+        linear-gradient(to right, color-mix(in srgb, var(--bg-grid-color) 50%, transparent) 1px, transparent 1px),
+        linear-gradient(to bottom, color-mix(in srgb, var(--bg-grid-color) 50%, transparent) 1px, transparent 1px);
     background-repeat: repeat;
-    background-size: 40px 40px;
+    background-size: var(--bg-grid-spacing) var(--bg-grid-spacing);
 }
 
 // --- Overrides ---
