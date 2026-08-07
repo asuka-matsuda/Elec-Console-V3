@@ -122,10 +122,11 @@ withDefaults(
   // Cyber glowing dot
   &::before {
     display: inline-block;
-    width: var(--size-1);
-    height: var(--size-1);
+    width: var(--size-2);
+    height: var(--size-2);
     content: "";
-    background-color: var(--color-category-main);
+    border: 2px solid var(--color-category-main);
+    border-radius: 50%;
     box-shadow: 0 0 var(--blur-sm) var(--color-category-main);
   }
 }

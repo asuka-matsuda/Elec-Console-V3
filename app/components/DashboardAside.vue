@@ -93,7 +93,7 @@ const history = computed(() => dashboardData.value?.history || []);
     color: var(--color-text-muted);
     font-size: var(--text-sm);
     @include ui-surface(5%);
-    border-radius: var(--radius-base);
+    border-radius: 0;
   }
 }
 

@@ -91,7 +91,6 @@ const inputId = useId();
     width: var(--track-w);
     height: var(--track-h);
     position: relative;
-    background-color: transparent;
     border: 1px solid glass-color(30%);
     box-shadow: var(--shadow-sink);
     transition: var(--transition-base);
@@ -103,7 +102,6 @@ const inputId = useId();
     left: -1px;
     width: var(--thumb-w);
     height: var(--track-h);
-    background-color: transparent;
     border: 1px solid glass-color(80%);
     box-shadow: var(--shadow-elevation-base);
     transition:

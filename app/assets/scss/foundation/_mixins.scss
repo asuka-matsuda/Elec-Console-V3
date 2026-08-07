@@ -56,8 +56,7 @@
     $is-active: '&:focus, &:focus-visible',
     $is-hover: '&:hover:not(:disabled):not(.is-error):not(:focus)'
 ) {
-    background-color: transparent;
-    border: var(--border-width-base) solid glass-color(25%);
+    border: var(--border-width-base) solid var(--color-category-main);
     box-shadow: var(--edge-reflex-base), var(--shadow-sink);
     transition: var(--transition-base);
 
@@ -96,7 +95,6 @@
 
     &:disabled, &.is-disabled {
         @extend %disabled;
-        background-color: glass-color(5%);
     }
 }
 
@@ -116,7 +114,6 @@
 @mixin ui-hover-glow($color: null) {
     @if $color {
         border-color: theme-color($color, 80%);
-        background-color: glass-color(5%);
         box-shadow:
             var(--edge-reflex-hover),
             inset 0 0 8px theme-color($color, 20%),
@@ -124,7 +121,6 @@
             var(--shadow-elevation-base);
     } @else {
         border-color: glass-color(40%);
-        background-color: glass-color(5%);
         box-shadow: var(--edge-reflex-hover), var(--shadow-elevation-base);
     }
 }
@@ -170,7 +166,7 @@
 
     &::-webkit-scrollbar-thumb {
         background: glass-color(20%);
-        border-radius: 9999px;
+        border-radius: 0;
     }
 }
 

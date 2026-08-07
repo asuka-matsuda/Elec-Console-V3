@@ -1,7 +1,19 @@
 <script setup lang="ts">
 import { useSettings } from '~/composables/useSettings'
 
-const { themeMode, baseBgStyle } = useSettings()
+const { 
+  themeMode, 
+  baseBgStyle,
+  solidColor,
+  gradientColor1,
+  gradientColor2,
+  auroraColor1,
+  auroraColor2,
+  auroraColor3,
+  auroraColor4,
+  gridColor,
+  gridSpacing
+} = useSettings()
 
 const themeOptions = [
   { label: 'ダークモード (標準)', value: 'dark' },
@@ -9,10 +21,10 @@ const themeOptions = [
 ]
 
 const bgOptions = [
-  { label: 'オーロラ (標準)', value: 'aurora' },
-  { label: 'グラデーション', value: 'gradient' },
-  { label: 'サイバーグリッド', value: 'grid' },
   { label: '単色', value: 'solid' },
+  { label: 'グラデーション', value: 'gradient' },
+  { label: 'オーロラ', value: 'aurora' },
+  { label: 'サイバーグリッド', value: 'grid' },
 ]
 </script>
 
@@ -40,15 +52,39 @@ const bgOptions = [
             画面の演出効果を切り替えることができます。動作が重い場合はシンプルなものに変更してください。
           </p>
 
-          <AppFormGroup 
-            label="ベース背景スタイル" 
-            help="下地となる背景の柄を変更します"
-          >
+          <AppFormGroup label="ベース背景スタイル">
             <AppSelect 
               v-model="baseBgStyle"
               :options="bgOptions"
             />
           </AppFormGroup>
+
+          <!-- Solid Settings -->
+          <div v-if="baseBgStyle === 'solid'" class="p-settings__sub-group">
+            <AppColorPicker v-model="solidColor" label="背景色" />
+          </div>
+
+          <!-- Gradient Settings -->
+          <div v-if="baseBgStyle === 'gradient'" class="p-settings__sub-group">
+            <AppColorPicker v-model="gradientColor1" label="開始色" />
+            <AppColorPicker v-model="gradientColor2" label="終了色" />
+          </div>
+
+          <!-- Aurora Settings -->
+          <div v-if="baseBgStyle === 'aurora'" class="p-settings__sub-group">
+            <AppColorPicker v-model="auroraColor1" label="カラー 1" />
+            <AppColorPicker v-model="auroraColor2" label="カラー 2" />
+            <AppColorPicker v-model="auroraColor3" label="カラー 3" />
+            <AppColorPicker v-model="auroraColor4" label="カラー 4" />
+          </div>
+
+          <!-- Grid Settings -->
+          <div v-if="baseBgStyle === 'grid'" class="p-settings__sub-group">
+            <AppFormGroup label="グリッド間隔 (px)">
+              <AppInput type="number" v-model.number="gridSpacing" />
+            </AppFormGroup>
+            <AppColorPicker v-model="gridColor" label="グリッド線色" />
+          </div>
         </AppPanel>
 
         <!-- テーマ・カラー設定 -->
@@ -112,6 +148,16 @@ const bgOptions = [
     display: flex;
     flex-direction: column;
     gap: var(--space-8);
+  }
+
+  &__sub-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+    padding: var(--space-4);
+    border-radius: 0;
+    border: 1px solid glass-color(20%);
   }
 }
 

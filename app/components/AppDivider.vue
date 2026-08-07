@@ -58,7 +58,6 @@ withDefaults(
   // Types
   // ==========================================
   &--default {
-    background-color: transparent;
     box-shadow: var(--shadow-sink); // 彫り込まれた溝の影
     overflow: hidden; // アニメーションの光がはみ出さないようにする
 

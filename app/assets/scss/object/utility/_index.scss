@@ -1,0 +1,20 @@
+/* Object - Utility
+   ========================================================================== */
+
+/*
+  ヘルパークラス
+*/
+
+.u-circle {
+  border-radius: 50% !important;
+  aspect-ratio: 1 / 1;
+}
+
+.u-rect {
+  border-radius: 0 !important;
+}
+
+
+.u-glass-overlay {
+  backdrop-filter: blur(var(--blur-md));
+}

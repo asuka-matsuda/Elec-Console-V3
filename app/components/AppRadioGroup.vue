@@ -63,7 +63,8 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
       .c-segmented-control__input:not(:disabled):not(:checked)
         + .c-segmented-control__text {
         color: var(--color-text-main);
-        background-color: glass-color(10%);
+        border-color: glass-color(50%);
+        box-shadow: inset 0 0 var(--blur-sm) glass-color(20%);
       }
     }
   }

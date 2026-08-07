@@ -87,7 +87,7 @@ const breadcrumbs = useBreadcrumbs()
     justify-content: center;
     width: 32px;
     height: 32px;
-    background-color: var(--color-category-main);
+    border: 2px solid var(--color-category-main);
     border-radius: 50%;
     box-shadow: 0 0 12px theme-color(var(--color-category-main), 50%);
   }

@@ -103,7 +103,6 @@ const inputId = useId();
     // 2. Checked State
     &:checked + .c-checkbox__box {
       @include ui-active(var(--checkbox-color));
-      background-color: theme-color(var(--checkbox-color), 10%);
 
       .c-checkbox__icon {
         stroke-dashoffset: 0;
@@ -115,21 +114,20 @@ const inputId = useId();
 
   &__box {
     flex-shrink: 0;
-    width: 20px;
-    height: 20px;
+    width: 1.4em;
+    height: 1.4em;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: glass-color(10%);
-    border: var(--border-width-base) solid glass-color(30%);
+    border: var(--border-width-base) solid glass-color(40%);
     box-shadow: var(--edge-reflex-base), var(--shadow-sink);
     transition: var(--transition-base);
     // Explicitly NO border-radius to ensure sharp corners
 
     // Icon animation setup
     .c-checkbox__icon {
-      width: 14px;
-      height: 14px;
+      width: 70%;
+      height: 70%;
       stroke: var(--checkbox-color);
       opacity: 0;
       stroke-dasharray: 24;

@@ -88,7 +88,6 @@ const closeSidebar = () => {
   flex-direction: column;
   width: var(--sidebar-width);
   height: 100dvh;
-  background-color: transparent;
   border-right: var(--border-width-base) solid var(--sidebar-border);
   box-shadow: var(--shadow-elevation-hover); // Replaced hardcoded shadow
   transition: transform var(--duration-normal) var(--ease-out-back);
@@ -189,8 +188,7 @@ const closeSidebar = () => {
     color: var(--color-text-secondary);
     font-size: var(--text-sm);
     font-weight: var(--font-weight-medium);
-    border-radius: var(--radius-sm);
-    border: 1px solid transparent;
+    border-radius: 0;
     transition: var(--transition-base);
 
     &-text {
@@ -227,7 +225,6 @@ const closeSidebar = () => {
     // Active
     &.router-link-active {
       color: var(--section-accent, var(--color-category-main));
-      background-color: transparent;
       border-color: transparent;
       transform: translateX(0);
       @include ui-active(var(--section-accent, var(--color-category-main)));
@@ -266,8 +263,7 @@ const closeSidebar = () => {
     z-index: 90; // Just below sidebar (100)
     width: 100vw;
     height: 100dvh;
-    background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(4px) brightness(0.4);
     opacity: 0;
     visibility: hidden;
     transition:
