@@ -51,14 +51,14 @@ const inputId = useId();
   }
 
   &__input {
-    // Hide native input visually, but keep accessible for keyboard focus
+    /* Hide native input visually, but keep accessible for keyboard focus */
     position: absolute;
     opacity: 0;
     width: 0;
     height: 0;
     margin: 0;
 
-    // 1. Keyboard Focus State
+    /* 1. Keyboard Focus State */
     &:focus-visible + .c-toggle__track {
       @include ui-focus(var(--toggle-color));
       @include cyber-text-glow(50%, var(--blur-md), var(--toggle-color));
@@ -67,14 +67,14 @@ const inputId = useId();
         border-color var(--duration-slow) var(--ease-out);
     }
 
-    // 2. Checked State (ON)
+    /* 2. Checked State (ON) */
     &:checked + .c-toggle__track {
       border-color: theme-color(var(--toggle-color), 80%);
       box-shadow:
         0 0 10px theme-color(var(--toggle-color), 60%),
         inset 0 0 var(--blur-sm) theme-color(var(--toggle-color), 40%);
 
-      // Slide and glow the thumb
+      /* Slide and glow the thumb */
       .c-toggle__thumb {
         transform: translateX(calc(var(--track-w) - var(--thumb-w)));
         border-color: theme-color(white, 80%);
@@ -112,7 +112,7 @@ const inputId = useId();
     z-index: 1;
   }
 
-  // 3. Hover State
+  /* 3. Hover State */
   &:hover:not(.is-disabled) {
     .c-toggle__input:not(:focus-visible):not(:active) + .c-toggle__track {
       border-color: theme-color(var(--toggle-color), 50%);
@@ -121,14 +121,14 @@ const inputId = useId();
         inset 0 0 var(--blur-sm) theme-color(var(--toggle-color), 20%);
     }
 
-    // Label slightly glows on hover
+    /* Label slightly glows on hover */
     .c-toggle__label {
       color: theme-color(var(--toggle-color), 90%);
       @include cyber-text-glow(20%, var(--blur-sm), var(--toggle-color));
     }
   }
 
-  // 4. Active (Press) State
+  /* 4. Active (Press) State */
   &:active:not(.is-disabled) {
     .c-toggle__track {
       transform: scale(0.95);

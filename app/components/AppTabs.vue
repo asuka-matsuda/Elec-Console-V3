@@ -62,7 +62,7 @@ const selectTab = (option: TabOption) => {
   align-items: center;
   justify-content: flex-start;
 
-  // --- Modifiers ---
+  /* --- Modifiers --- */
   &--grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -103,14 +103,14 @@ const selectTab = (option: TabOption) => {
   user-select: none;
   transition: var(--transition-base);
 
-  // --- Hover State ---
+  /* --- Hover State --- */
   &:hover:not(.is-disabled):not(.is-active) {
     color: var(--color-text-main);
     @include ui-hover-glow();
     transform: translateY(-2px);
   }
 
-  // --- Active State ---
+  /* --- Active State --- */
   &.is-active {
     color: var(--color-category-main);
     @include ui-active(var(--color-category-main));
@@ -121,7 +121,7 @@ const selectTab = (option: TabOption) => {
     }
   }
 
-  // --- Disabled State ---
+  /* --- Disabled State --- */
   &.is-disabled {
     cursor: not-allowed;
     opacity: 0.5;

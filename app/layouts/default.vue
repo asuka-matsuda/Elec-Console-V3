@@ -54,9 +54,9 @@ const breadcrumbs = useBreadcrumbs()
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-width: 0; // Prevent flex item from blowing out
+  min-width: 0; /* Prevent flex item from blowing out */
 
-  // On desktop, the sidebar takes up 280px. We push the main content over.
+  /* On desktop, the sidebar takes up 280px. We push the main content over. */
   @include mq('lg', 'up-strict') {
     margin-left: 280px;
   }
@@ -73,7 +73,7 @@ const breadcrumbs = useBreadcrumbs()
   }
 }
 
-// Temporary user bar styles for demo
+/* Temporary user bar styles for demo */
 .l-header-user {
   display: flex;
   align-items: center;

@@ -50,7 +50,7 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
 <style scoped lang="scss">
 .p-dashboard {
   display: flex;
-  flex-direction: row; // Desktop default
+  flex-direction: row; /* Desktop default */
   align-items: flex-start;
   gap: var(--space-8);
   padding-bottom: var(--space-8);
@@ -80,7 +80,7 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
   }
 }
 
-// Inner Card Styles
+/* Inner Card Styles */
 .p-dashboard-card {
   &__header {
     display: flex;

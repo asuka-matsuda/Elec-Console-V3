@@ -65,7 +65,7 @@
 
   :deep(tbody tr) {
     transition: var(--transition-base);
-    position: relative; // Required for z-index and box-shadow to appear correctly on rows
+    position: relative; /* Required for z-index and box-shadow to appear correctly on rows */
 
     &:last-child td {
       border-bottom: none;
@@ -73,9 +73,9 @@
 
     &:hover {
       z-index: 1;
-      // テーブル行ホバー時の発光エフェクト
-      @include ui-hover-glow(var(--color-category-main));
-      // 行全体を光らせるため、セルの背景を上書きさせない
+      /* テーブル行ホバー時の発光エフェクト */
+      @include ui-hover-glow(var(--color-border));
+      /* 行全体を光らせるため、セルの背景を上書きさせない */
       outline: var(--border-width-base) solid theme-color(var(--color-category-main), 80%);
       outline-offset: calc(var(--border-width-base) * -1);
     }

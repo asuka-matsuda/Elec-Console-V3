@@ -45,7 +45,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
 
 <style scoped lang="scss">
 .c-segmented-control {
-  --radio-color: var(--color-category-main); // デフォルトの色
+  --radio-color: var(--color-category-main); /* デフォルトの色 */
 
   display: inline-flex;
   flex-shrink: 0;
@@ -54,7 +54,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
   border: var(--border-width-base) solid var(--color-border);
   box-shadow: none;
 
-  // --- Elements ---
+  /* --- Elements --- */
   &__label {
     margin: 0;
     cursor: pointer;
@@ -72,20 +72,20 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
   &__input {
     display: none;
 
-    // Checked state
+    /* Checked state */
     &:checked + .c-segmented-control__text {
       color: var(--radio-color);
       @include ui-active(var(--radio-color));
       @include cyber-text-glow(60%, var(--blur-md), var(--radio-color));
     }
 
-    // Keyboard Focus state
+    /* Keyboard Focus state */
     &:focus-visible + .c-segmented-control__text {
       @include ui-focus(var(--radio-color));
       @include cyber-text-glow(60%, var(--blur-md), var(--radio-color));
     }
 
-    // Disabled state
+    /* Disabled state */
     &:disabled + .c-segmented-control__text {
       @extend %disabled;
       opacity: 0.3;

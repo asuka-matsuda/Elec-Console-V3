@@ -222,10 +222,10 @@ const listboxId = useId();
     $is-active: "&.is-active, &:focus, &:focus-visible",
     $is-hover: "&:hover:not(:disabled):not(.is-active)"
   );
-  appearance: none; // Reset button styles
+  appearance: none; /* Reset button styles */
   text-align: left;
 
-  // Arrow icon (down)
+  /* Arrow icon (down) */
   &::after {
     position: absolute;
     top: 50%;
@@ -268,7 +268,7 @@ const listboxId = useId();
     var(--shadow-elevation-hover),
     inset 0 0 10px theme-color(var(--color-category-main), 20%);
 
-  // Error state dropdown border
+  /* Error state dropdown border */
   .c-custom-select.is-error & {
     border-color: theme-color(var(--color-status-danger), 50%);
     box-shadow:
@@ -302,7 +302,7 @@ const listboxId = useId();
   border-left: var(--border-width-thick) solid transparent;
   transition: var(--transition-base);
 
-  // --- States ---
+  /* --- States --- */
   &:hover:not(.is-disabled):not(.is-placeholder),
   &.is-focused:not(.is-disabled) {
     color: var(--color-category-main);

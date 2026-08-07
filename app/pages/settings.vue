@@ -136,7 +136,7 @@ const bgOptions = [
 
   &__grid {
     display: grid;
-    grid-template-columns: 2fr 1fr; // Desktop default
+    grid-template-columns: 2fr 1fr; /* Desktop default */
     gap: var(--space-8);
     
     @include mq('lg') {
@@ -161,7 +161,7 @@ const bgOptions = [
   }
 }
 
-// Utility classes for temporary use
+/* Utility classes for temporary use */
 .u-text-sm { font-size: var(--text-sm); }
 .u-text-muted { color: var(--color-text-muted); }
 </style>

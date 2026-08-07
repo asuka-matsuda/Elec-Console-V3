@@ -97,7 +97,7 @@ const history = computed(() => dashboardData.value?.history || []);
   }
 }
 
-// List Item Card Styles
+/* List Item Card Styles */
 .p-dashboard-list-item {
   padding: var(--space-3) var(--space-4);
 
