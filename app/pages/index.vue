@@ -4,7 +4,9 @@ import { menuData } from "../utils/menuData";
 // Extract just the sections to show on the dashboard
 const dashboardSections = menuData.filter((section) => section.showInDashboard);
 
-const { data: dashboardData } = await useFetch("/api/dashboard");
+const { data: dashboardData, pending } = await useFetch("/api/dashboard", {
+  lazy: true // Prevent blocking navigation while loading
+});
 const announcements = computed(() => dashboardData.value?.announcements || []);
 const history = computed(() => dashboardData.value?.history || []);
 </script>
@@ -15,7 +17,7 @@ const history = computed(() => dashboardData.value?.history || []);
     <div class="p-dashboard__main">
       <section
         v-for="section in dashboardSections"
-        :key="section.id"
+        :key="section.heading"
         class="p-dashboard__section"
       >
         <AppSectionHeader
@@ -26,8 +28,8 @@ const history = computed(() => dashboardData.value?.history || []);
 
         <div class="p-dashboard__grid">
           <AppCard
-            v-for="(item, index) in section.items"
-            :key="index"
+            v-for="item in section.items"
+            :key="item.text"
             :variant="section.accent"
             :to="item.disabled ? undefined : item.href"
             :disabled="item.disabled"
@@ -57,10 +59,13 @@ const history = computed(() => dashboardData.value?.history || []);
           variant="tool"
           size="md"
         />
-        <div class="p-dashboard__list">
+        <div v-if="pending" class="p-dashboard__loading">
+          データを読み込み中...
+        </div>
+        <div v-else class="p-dashboard__list">
           <AppCard
-            v-for="(item, idx) in announcements"
-            :key="idx"
+            v-for="item in announcements"
+            :key="item.title"
             class="p-dashboard-list-item"
           >
             <div class="p-dashboard-list-item__title">{{ item.title }}</div>
@@ -79,19 +84,19 @@ const history = computed(() => dashboardData.value?.history || []);
           variant="management"
           size="md"
         />
-        <div class="p-dashboard__list">
+        <div v-if="pending" class="p-dashboard__loading">
+          データを読み込み中...
+        </div>
+        <div v-else class="p-dashboard__list">
           <AppCard
-            v-for="(item, idx) in history"
-            :key="idx"
+            v-for="item in history"
+            :key="item.version"
             class="p-dashboard-list-item"
           >
             <div class="p-dashboard-list-item__header">
-              <AppBadge
-                v-if="item.badgeClass === 'c-badge--success'"
-                variant="success"
-                >{{ item.version }}</AppBadge
-              >
-              <AppBadge v-else variant="neutral">{{ item.version }}</AppBadge>
+              <AppBadge :variant="item.status === 'success' ? 'success' : 'neutral'">
+                {{ item.version }}
+              </AppBadge>
               <span class="p-dashboard-list-item__title">{{ item.title }}</span>
             </div>
             <div class="p-dashboard-list-item__meta">
@@ -161,6 +166,15 @@ const history = computed(() => dashboardData.value?.history || []);
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
+  }
+
+  &__loading {
+    padding: var(--space-4);
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    @include ui-surface(5%);
+    border-radius: var(--radius-base);
   }
 }
 
