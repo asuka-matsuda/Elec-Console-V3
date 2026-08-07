@@ -97,8 +97,8 @@ const selectTab = (option: TabOption) => {
   font-size: var(--text-sm);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
-  border: var(--border-width-base) solid #{glass-color(20%)};
-  box-shadow: inset 0 0 var(--blur-sm) #{glass-color(5%)};
+  border: var(--border-width-base) solid var(--color-border-base);
+  box-shadow: inset 0 0 var(--blur-sm) var(--color-border-base);
   cursor: pointer;
   user-select: none;
   transition: var(--transition-base);

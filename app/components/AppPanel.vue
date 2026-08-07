@@ -32,12 +32,12 @@ withDefaults(
 <style scoped lang="scss">
 .c-panel {
   // Base properties (overridden by variants)
-  --p-border-color: #{glass-color(15%)};
+  --p-border-color: var(--color-border-base);
   --p-border-image: none;
   --p-box-shadow: none;
   --p-bracket-display: none;
   --p-bracket-size: 16px;
-  --p-bracket-color: #{glass-color(60%)};
+  --p-bracket-color: var(--color-border-base);
   --p-bracket-glow: none;
   --p-theme-color: var(--color-category-main);
 
@@ -126,9 +126,9 @@ withDefaults(
   // Style Variants (Ported from original _themes.scss)
   // ---------------------------------------------------------
   &--hud {
-    --p-border-color: #{glass-color(15%)};
+    --p-border-color: var(--color-border-base);
     --p-box-shadow:
-      inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px #{glass-color(15%)},
+      inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border-base),
       inset 0 0 0 1px color-mix(in srgb, black 8%, transparent),
       var(--shadow-elevation-base);
     --p-bracket-display: block;
@@ -137,10 +137,10 @@ withDefaults(
   }
 
   &--simple {
-    --p-border-color: #{glass-color(15%)};
+    --p-border-color: var(--color-border-base);
     --p-box-shadow:
-      inset 1px 1px 2px #{glass-color(15%)},
-      inset -1px -1px 2px #{glass-color(2%)},
+      inset 1px 1px 2px var(--color-border-base),
+      inset -1px -1px 2px transparent,
       inset 0 0 0 1px color-mix(in srgb, black 8%, transparent),
       var(--shadow-elevation-base);
     --p-bracket-display: none;
@@ -150,13 +150,13 @@ withDefaults(
     --p-border-color: transparent;
     --p-border-image: linear-gradient(
         135deg,
-        #{glass-color(40%)} 0%,
-        #{glass-color(5%)} 100%
+        var(--color-border-base) 0%,
+        transparent 100%
       )
       1;
     --p-box-shadow:
-      inset 1px 1px 2px #{glass-color(15%)},
-      inset -1px -1px 2px #{glass-color(2%)},
+      inset 1px 1px 2px var(--color-border-base),
+      inset -1px -1px 2px transparent,
       inset 0 0 0 1px color-mix(in srgb, black 8%, transparent),
       var(--shadow-elevation-base);
     --p-bracket-display: block;
@@ -168,12 +168,12 @@ withDefaults(
     --p-border-color: transparent;
     --p-border-image: linear-gradient(
         135deg,
-        #{glass-color(50%)} 0%,
-        #{glass-color(5%)} 100%
+        var(--color-border-base) 0%,
+        transparent 100%
       )
       1;
     --p-box-shadow:
-      inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px #{glass-color(15%)},
+      inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border-base),
       inset 0 0 0 1px color-mix(in srgb, black 8%, transparent),
       var(--shadow-elevation-base);
     --p-bracket-display: block;

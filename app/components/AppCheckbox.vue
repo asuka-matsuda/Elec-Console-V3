@@ -119,7 +119,7 @@ const inputId = useId();
     display: flex;
     align-items: center;
     justify-content: center;
-    border: var(--border-width-base) solid glass-color(40%);
+    border: var(--border-width-base) solid var(--color-border-base);
     box-shadow: var(--edge-reflex-base), var(--shadow-sink);
     transition: var(--transition-base);
     // Explicitly NO border-radius to ensure sharp corners

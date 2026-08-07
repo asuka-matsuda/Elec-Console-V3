@@ -63,21 +63,21 @@
    ========================================================================== */
 :root,
 body[data-border-style='hud'] {
-    --panel-border-color: #{glass-color(15%)};
+    --panel-border-color: var(--color-border-base);
     --panel-border-image: none;
     --panel-box-shadow:
-        inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px #{glass-color(15%)},
+        inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border-base),
         var(--edge-reflex-base), var(--shadow-elevation-base);
     --panel-bracket-display: block;
     --panel-bracket-size: 16px;
-    --panel-bracket-color: #{glass-color(60%)};
+    --panel-bracket-color: var(--color-border-base);
 }
 
 body[data-border-style='simple'] {
-    --panel-border-color: #{glass-color(15%)};
+    --panel-border-color: var(--color-border-base);
     --panel-border-image: none;
     --panel-box-shadow:
-        inset 1px 1px 2px #{glass-color(15%)}, inset -1px -1px 2px #{glass-color(2%)},
+        inset 1px 1px 2px var(--color-border-base), inset -1px -1px 2px transparent,
         var(--edge-reflex-base), var(--shadow-elevation-base);
     --panel-bracket-display: none;
 }
@@ -86,30 +86,30 @@ body[data-border-style='gradient'] {
     --panel-border-color: transparent;
     --panel-border-image: linear-gradient(
         135deg,
-        #{glass-color(40%)} 0%,
-        #{glass-color(5%)} 100%
+        var(--color-border-base) 0%,
+        transparent 100%
     ) 1;
     --panel-box-shadow:
-        inset 1px 1px 2px #{glass-color(15%)}, inset -1px -1px 2px #{glass-color(2%)},
+        inset 1px 1px 2px var(--color-border-base), inset -1px -1px 2px transparent,
         var(--edge-reflex-base), var(--shadow-elevation-base);
     --panel-bracket-display: block;
     --panel-bracket-size: 12px;
-    --panel-bracket-color: #{glass-color(40%)};
+    --panel-bracket-color: var(--color-border-base);
 }
 
 body[data-border-style='hybrid'] {
     --panel-border-color: transparent;
     --panel-border-image: linear-gradient(
         135deg,
-        #{glass-color(50%)} 0%,
-        #{glass-color(5%)} 100%
+        var(--color-border-base) 0%,
+        transparent 100%
     ) 1;
     --panel-box-shadow:
-        inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px #{glass-color(15%)},
+        inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border-base),
         var(--edge-reflex-base), var(--shadow-elevation-base); // Revert shadow elevation to base
 
     --panel-bracket-display: block;
     --panel-bracket-size: 18px;
-    --panel-bracket-color: #{glass-color(60%)};
-    --panel-bracket-glow: drop-shadow(0 0 4px #{glass-color(30%)});
+    --panel-bracket-color: var(--color-border-base);
+    --panel-bracket-glow: drop-shadow(0 0 4px var(--color-border-base));
 }

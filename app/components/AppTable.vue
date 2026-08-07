@@ -41,8 +41,7 @@
     position: sticky;
     top: 0;
     z-index: 2;
-    background-color: transparent;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(var(--blur-md));
     padding: var(--space-3) var(--space-4);
     border-bottom: var(--border-width-base) solid var(--color-border-base);
     color: var(--color-text-main);

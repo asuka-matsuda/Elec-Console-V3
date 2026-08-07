@@ -32,8 +32,8 @@ withDefaults(
 .c-badge {
   // CSS Custom Properties for theme values
   --badge-color: var(--color-text-main);
-  --badge-border: #{glass-color(30%)};
-  --badge-shadow: #{glass-color(10%)};
+  --badge-border: var(--color-border-base);
+  --badge-shadow: transparent;
 
   display: inline-flex;
   align-items: center;

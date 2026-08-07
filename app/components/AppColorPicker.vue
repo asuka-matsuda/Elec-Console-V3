@@ -57,7 +57,7 @@ const inputId = useId();
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-2) var(--space-3);
-  border: var(--border-width-base) solid glass-color(40%);
+  border: var(--border-width-base) solid var(--color-border-base);
   border-radius: 0;
   cursor: pointer;
   position: relative;
@@ -78,7 +78,7 @@ const inputId = useId();
     width: 24px;
     height: 24px;
     border-radius: 50%; // Circular swatch
-    border: 1px solid glass-color(30%);
+    border: 1px solid var(--color-border-base);
     box-shadow: var(--shadow-sink);
     flex-shrink: 0;
   }

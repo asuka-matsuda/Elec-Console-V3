@@ -77,17 +77,16 @@ const closeSidebar = () => {
 <style scoped lang="scss">
 .l-global-nav {
   --sidebar-width: 280px;
-  --sidebar-bg: #{glass-color(20%)};
-  --sidebar-border: #{glass-color(30%)};
+  --sidebar-border: var(--color-border-base);
 
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 100;
   display: flex;
   flex-direction: column;
   width: var(--sidebar-width);
   height: 100dvh;
+  z-index: var(--z-index-nav);
   border-right: var(--border-width-base) solid var(--sidebar-border);
   box-shadow: var(--shadow-elevation-hover); // Replaced hardcoded shadow
   transition: transform var(--duration-normal) var(--ease-out-back);

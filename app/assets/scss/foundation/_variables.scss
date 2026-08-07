@@ -287,10 +287,10 @@ $color-input-focus-base: 217 91% 60%;
 
     /* 2. Edge Reflex (Glass Highlights)
        ========================================================================== */
-    --edge-reflex-base: inset 0 1px 0 #{glass-color(25%)}, inset 0 0 0 1px #{glass-color(4%)};
-    --edge-reflex-hover: inset 0 2px 1px #{glass-color(40%)}, inset 1px 0 1px #{glass-color(20%)};
+    --edge-reflex-base: inset 0 1px 0 var(--color-border-base), inset 0 0 0 1px var(--color-border-base);
+    --edge-reflex-hover: inset 0 2px 1px var(--color-border-base), inset 1px 0 1px var(--color-border-base);
     --edge-reflex-press:
-        inset 1px 1px 2px #{glass-color(15%)}, inset -1px -1px 2px #{glass-color(2%)};
+        inset 1px 1px 2px var(--color-border-base), inset -1px -1px 2px var(--color-border-base);
 
     /* 3. Animation & Transition
        ========================================================================== */

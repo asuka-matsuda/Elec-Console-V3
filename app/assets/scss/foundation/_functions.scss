@@ -1,9 +1,6 @@
 /* SCSS Functions
    ========================================================================== */
-//不透明度15%のガラス色
-@function glass-color($opacity: 15%) {
-    @return color-mix(in srgb, var(--color-overlay) $opacity, transparent);
-}
+
 //不透明度20%のテーマカラー
 @function theme-color($color, $opacity: 20%) {
     @return color-mix(in srgb, #{$color} $opacity, transparent);

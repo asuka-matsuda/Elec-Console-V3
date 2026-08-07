@@ -51,7 +51,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
   flex-shrink: 0;
   gap: var(--space-1);
   padding: var(--space-1);
-  border: var(--border-width-base) solid glass-color(15%);
+  border: var(--border-width-base) solid var(--color-border-base);
   box-shadow: none;
 
   // --- Elements ---
@@ -63,8 +63,8 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
       .c-segmented-control__input:not(:disabled):not(:checked)
         + .c-segmented-control__text {
         color: var(--color-text-main);
-        border-color: glass-color(50%);
-        box-shadow: inset 0 0 var(--blur-sm) glass-color(20%);
+        border-color: var(--color-border-base);
+        box-shadow: inset 0 0 var(--blur-sm) var(--color-border-base);
       }
     }
   }

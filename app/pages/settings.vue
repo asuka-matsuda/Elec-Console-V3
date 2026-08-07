@@ -157,7 +157,7 @@ const bgOptions = [
     margin-top: var(--space-4);
     padding: var(--space-4);
     border-radius: 0;
-    border: 1px solid glass-color(20%);
+    border: 1px solid var(--color-border-base);
   }
 }
 

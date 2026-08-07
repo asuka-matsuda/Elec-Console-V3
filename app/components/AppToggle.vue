@@ -91,7 +91,7 @@ const inputId = useId();
     width: var(--track-w);
     height: var(--track-h);
     position: relative;
-    border: 1px solid glass-color(30%);
+    border: 1px solid var(--color-border-base);
     box-shadow: var(--shadow-sink);
     transition: var(--transition-base);
   }
@@ -102,7 +102,7 @@ const inputId = useId();
     left: -1px;
     width: var(--thumb-w);
     height: var(--track-h);
-    border: 1px solid glass-color(80%);
+    border: 1px solid var(--color-border-base);
     box-shadow: var(--shadow-elevation-base);
     transition:
       transform var(--duration-base) var(--ease-float),

@@ -64,8 +64,8 @@ withDefaults(
     &.c-divider--horizontal {
       width: 100%;
       height: 2px;
-      border-top: 1px solid glass-color(30%);
-      border-bottom: 1px solid glass-color(5%); // 立体感を強調
+      border-top: 1px solid var(--color-border-base);
+      border-bottom: 1px solid transparent;
       margin: var(--space-4) 0;
 
       transform-origin: center;
@@ -90,7 +90,7 @@ withDefaults(
     background: linear-gradient(
       90deg,
       transparent 0%,
-      var(--divider-accent, #{glass-color(20%)}) 50%,
+      var(--divider-accent, var(--color-border-base)) 50%,
       transparent 100%
     );
   }
@@ -126,8 +126,8 @@ withDefaults(
       width: 2px;
       height: auto;
       min-height: 100%;
-      border-left: 1px solid glass-color(30%);
-      border-right: 1px solid glass-color(5%);
+      border-left: 1px solid var(--color-border-base);
+      border-right: 1px solid transparent;
       margin: 0 var(--space-4);
 
       // Entrance Animation (縦に伸びる)

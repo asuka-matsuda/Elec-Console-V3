@@ -47,7 +47,7 @@
 }
 
 @mixin ui-surface($border-opacity: 10%) {
-  border: var(--border-width-base) solid glass-color($border-opacity);
+  border: var(--border-width-base) solid var(--color-border-base);
   box-shadow: var(--edge-reflex-base), var(--shadow-elevation-base);
 }
 
@@ -123,7 +123,7 @@
       0 0 12px theme-color($color, 30%),
       var(--shadow-elevation-base);
   } @else {
-    border-color: glass-color(40%);
+    border-color: var(--color-border-base);
     box-shadow: var(--edge-reflex-hover), var(--shadow-elevation-base);
   }
 }
