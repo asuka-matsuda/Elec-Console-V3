@@ -29,18 +29,6 @@
   width: 100%;
   overflow-x: auto;
   border: var(--border-width-base) solid var(--color-border-base);
-  
-  // Custom scrollbar provided by global mixin if needed, or inline here
-  &::-webkit-scrollbar {
-    height: var(--space-2);
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: transparent;
-    box-shadow: inset 0 0 0 var(--border-width-base) var(--color-border-base);
-  }
-  &::-webkit-scrollbar-track {
-    background-color: transparent;
-  }
 }
 
 .c-table {
