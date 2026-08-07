@@ -20,11 +20,11 @@ const inputId = useId();
       :for="inputId"
     >
       <!-- Visual Swatch -->
-      <div 
-        class="c-color-picker__swatch" 
+      <div
+        class="c-color-picker__swatch"
         :style="{ backgroundColor: modelValue }"
       ></div>
-      
+
       <!-- Hex Value Display -->
       <div class="c-color-picker__value">{{ modelValue.toUpperCase() }}</div>
 
@@ -77,7 +77,7 @@ const inputId = useId();
   &__swatch {
     width: var(--icon-size-md);
     height: var(--icon-size-md);
-    border-radius: 50%; // Circular swatch
+    border-radius: 50%;
     border: var(--border-width-base) solid var(--color-border);
     box-shadow: var(--shadow-sink);
     flex-shrink: 0;
@@ -97,7 +97,7 @@ const inputId = useId();
     height: 0;
     padding: 0;
     margin: 0;
-    pointer-events: none; // Let the label handle the click
+    pointer-events: none;
   }
 }
 </style>
