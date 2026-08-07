@@ -123,7 +123,7 @@ $color-input-focus-base: 217 91% 60%;
         --text-#{$name}: #{$size};
     }
 
-    // Responsive Typography (Fluid Scale)
+    /* Responsive Typography (Fluid Scale) */
     @media (width >= 1600px) {
         --text-2xs: 12px;
         --text-xs: 13px;
@@ -161,7 +161,7 @@ $color-input-focus-base: 217 91% 60%;
     @each $name, $value in $z-index {
         --z-index-#{$name}: #{$value};
     }
-    // Alias for nav to match AppGlobalNav.vue
+    /* Alias for nav to match AppGlobalNav.vue */
     --z-index-nav: #{map-get($z-index, 'sidebar-container')};
 
     @each $name, $size in $spacing-scale {

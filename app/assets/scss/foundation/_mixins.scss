@@ -138,7 +138,7 @@
     var(--shadow-sink);
   transform: scale(0.985);
 
-  // Override transition specifically for the "sinking down" phase
+  /* Override transition specifically for the "sinking down" phase */
   transition:
     transform var(--duration-slow) var(--ease-out),
     box-shadow var(--duration-slow) var(--ease-out),
@@ -176,11 +176,11 @@
   }
 }
 
-// ==========================================================================
-// Cursor & Indicators
-// ==========================================================================
+/* ========================================================================== */
+/* Cursor & Indicators */
+/* ========================================================================== */
 
-/// Adds a blinking cyber cursor element at the end of the content
+/* Adds a blinking cyber cursor element at the end of the content */
 @mixin ui-blinking-cursor($width: 6px, $height: 14px, $color: currentcolor) {
   &::after {
     display: inline-block;
