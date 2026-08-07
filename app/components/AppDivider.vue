@@ -29,7 +29,7 @@ withDefaults(
     ]"
     role="separator"
     :aria-orientation="vertical ? 'vertical' : 'horizontal'"
-  ></div>
+  />
 </template>
 
 <style scoped lang="scss">

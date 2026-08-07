@@ -2,11 +2,16 @@
 import { computed } from "vue";
 
 const props = defineProps<{
-  variant?: "default" | "tool" | "database" | "reference" | "management";
+  variant?:
+    | "default"
+    | "main"
+    | "tool"
+    | "database"
+    | "reference"
+    | "management";
   to?: string;
   href?: string;
   disabled?: boolean;
-  elevated?: boolean;
 }>();
 
 const rootTag = computed(() => {
@@ -29,7 +34,6 @@ const rootProps = computed(() => {
     class="c-card"
     :class="[
       variant ? `c-card--${variant}` : '',
-      elevated ? 'c-card--elevated' : 'c-card--flat',
       { 'is-disabled': disabled },
     ]"
   >
@@ -47,17 +51,6 @@ const rootProps = computed(() => {
   color: var(--color-text-main);
   transition: var(--transition-base);
   @include ui-surface(15%);
-
-  // Elevation (浮き上がり) / Flat (平坦)
-  &--flat {
-    box-shadow: none;
-  }
-
-  &--elevated {
-    box-shadow: var(--shadow-elevation-base);
-    // 浮き上がっている感強調のため、上部のボーダーを少し明るくする
-    border-top-color: glass-color(30%);
-  }
 
   // Interactive link styles
   &:is(a, button) {

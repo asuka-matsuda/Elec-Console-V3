@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useId } from "vue";
 
-const model = defineModel<boolean | any[]>();
+const model = defineModel<boolean | unknown[]>();
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     value?: unknown;
     label?: string;
@@ -27,9 +27,9 @@ const inputId = useId();
   >
     <input
       :id="inputId"
+      v-model="model"
       type="checkbox"
       class="c-checkbox__input"
-      v-model="model"
       :value="value"
       :disabled="disabled"
       :aria-invalid="error"
@@ -46,10 +46,10 @@ const inputId = useId();
         stroke-linecap="square"
         stroke-linejoin="miter"
       >
-        <polyline points="20 6 9 17 4 12"></polyline>
+        <polyline points="20 6 9 17 4 12" />
       </svg>
     </div>
-    <span class="c-checkbox__label" v-if="label || $slots.default">
+    <span v-if="label || $slots.default" class="c-checkbox__label">
       <slot>{{ label }}</slot>
     </span>
   </label>

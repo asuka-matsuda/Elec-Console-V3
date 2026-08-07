@@ -1,19 +1,16 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
 import { useHead } from "#app";
+import { useSettings } from "~/composables/useSettings";
+
+const { themeMode, baseBgStyle } = useSettings();
 
 useHead({
   htmlAttrs: {
-    "data-theme": "dark",
-    "data-base-bg": "aurora",
+    "data-theme": themeMode,
+    "data-base-bg": baseBgStyle,
   },
 });
 
-onMounted(() => {
-  if (typeof window !== "undefined" && (window as any).feather) {
-    (window as any).feather.replace();
-  }
-});
 </script>
 
 <template>

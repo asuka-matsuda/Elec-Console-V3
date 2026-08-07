@@ -12,8 +12,8 @@ const breadcrumbs = useBreadcrumbs()
   <div class="l-app">
     <!-- Sidebar -->
     <AppSidebar 
-      v-model:isOpen="isSidebarOpen" 
-      :menuData="menuData" 
+      v-model:is-open="isSidebarOpen" 
+      :menu-data="menuData" 
     />
 
     <!-- Main Content Area -->
@@ -46,7 +46,8 @@ const breadcrumbs = useBreadcrumbs()
 <style scoped lang="scss">
 .l-app {
   display: flex;
-  min-height: 100vh;
+  flex: 1;
+  min-height: 0;
 }
 
 .l-main {

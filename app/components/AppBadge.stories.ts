@@ -14,9 +14,6 @@ const meta = {
       control: 'select',
       options: ['sm', 'md']
     },
-    glow: {
-      control: 'boolean'
-    },
     default: {
       control: 'text',
       description: 'Slot content'
@@ -44,7 +41,6 @@ export const Default: Story = {
   args: {
     variant: 'neutral',
     size: 'md',
-    glow: false,
     default: 'Default Badge',
   },
 }
@@ -72,17 +68,6 @@ export const Sizes: Story = {
     template: `
       <AppBadge size="sm">Small Badge</AppBadge>
       <AppBadge size="md">Medium Badge</AppBadge>
-    `,
-  }),
-}
-
-export const GlowEffect: Story = {
-  render: () => ({
-    components: { AppBadge },
-    template: `
-      <AppBadge variant="primary" glow>Glowing Primary</AppBadge>
-      <AppBadge variant="danger" glow>Glowing Danger</AppBadge>
-      <AppBadge variant="success" glow>Glowing Success</AppBadge>
     `,
   }),
 }

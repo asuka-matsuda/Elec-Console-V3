@@ -5,9 +5,6 @@ const meta = {
   title: 'Components/AppCard',
   component: AppCard,
   tags: ['autodocs'],
-  argTypes: {
-    elevated: { control: 'boolean' },
-  },
   decorators: [
     (story) => ({
       components: { story },
@@ -35,30 +32,7 @@ export const DefaultFlat: Story = {
       </AppCard>
     `,
   }),
-  args: {
-    elevated: false,
-  },
 }
 
-export const Elevated: Story = {
-  render: (args) => ({
-    components: { AppCard },
-    setup() {
-      return { args }
-    },
-    template: `
-      <AppCard v-bind="args">
-        <h3 style="margin-top: 0; color: var(--color-text-main);">Elevated Card</h3>
-        <p style="color: var(--color-text-muted);">
-          This card uses an elevation shadow, making it float above the surface.
-          Useful for main content blocks, prominent information, or popovers.
-        </p>
-      </AppCard>
-    `,
-  }),
-  args: {
-    elevated: true,
-  },
-}
 
 

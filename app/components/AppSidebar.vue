@@ -1,29 +1,7 @@
 <script setup lang="ts">
-export type MenuItem = {
-  text: string;
-  href: string;
-  icon: string;
-  disabled?: boolean;
-};
+import type { MenuSection } from "../utils/menuData";
 
-export type MenuSection = {
-  id?: string;
-  heading?: string;
-  globalNavHeading?: string;
-  accent?:
-    | "tool"
-    | "database"
-    | "reference"
-    | "management"
-    | "main"
-    | "primary"
-    | "success"
-    | "warning"
-    | "danger";
-  items: MenuItem[];
-};
-
-const props = defineProps<{
+defineProps<{
   menuData: MenuSection[];
 }>();
 
@@ -43,7 +21,7 @@ const closeSidebar = () => {
       class="l-sidebar-overlay"
       :class="{ 'is-open': isOpen }"
       @click="closeSidebar"
-    ></div>
+    />
 
     <!-- Sidebar -->
     <aside class="l-sidebar" :class="{ 'is-open': isOpen }">
@@ -215,9 +193,17 @@ const closeSidebar = () => {
     border: 1px solid transparent;
     transition: var(--transition-base);
 
+    &-text {
+      word-break: keep-all; // 句読点やスペース、記号（・など）の区切りでのみ改行を許可
+      overflow-wrap: anywhere; // 万が一収まらない場合は強制改行
+      line-break: strict;
+      line-height: 1.4;
+    }
+
     &-icon {
       width: 18px;
       height: 18px;
+      flex-shrink: 0; // アイコンが潰れないように
       transition: var(--transition-base);
     }
 

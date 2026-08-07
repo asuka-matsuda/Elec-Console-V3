@@ -1,36 +1,37 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
-import { ref } from 'vue'
-import AppSidebar from './AppSidebar.vue'
+import type { Meta, StoryObj } from "@storybook/vue3";
+import { ref } from "vue";
+import AppSidebar from "./AppSidebar.vue";
+
+import { menuData } from "../utils/menuData";
 
 const meta = {
-  title: 'Layout/AppSidebar',
+  title: "Layout/AppSidebar",
   component: AppSidebar,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
-    isOpen: { control: 'boolean' }
+    isOpen: { control: "boolean" },
   },
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
   },
   decorators: [
     (story) => ({
       components: { story },
-      template: '<div style="min-height: 100vh; background: var(--color-bg-base);"><story /></div>',
+      template:
+        '<div style="min-height: 100vh; background: var(--color-bg-base);"><story /></div>',
     }),
   ],
-} satisfies Meta<typeof AppSidebar>
+} satisfies Meta<typeof AppSidebar>;
 
-export default meta
-type Story = StoryObj<typeof meta>
-
-import { menuData } from '../utils/menuData'
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: (args) => ({
     components: { AppSidebar },
     setup() {
-      const isOpen = ref(true) // For storybook, default it to true so it can be seen
-      return { args, isOpen }
+      const isOpen = ref(true); // For storybook, default it to true so it can be seen
+      return { args, isOpen };
     },
     template: `
       <AppSidebar v-model:isOpen="isOpen" :menuData="args.menuData" />
@@ -39,4 +40,4 @@ export const Default: Story = {
   args: {
     menuData: menuData,
   },
-}
+};

@@ -31,10 +31,10 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
       "
     >
       <input
+        v-model="model"
         type="radio"
         :name="groupName"
         :value="option.value"
-        v-model="model"
         :disabled="option.disabled"
         class="c-segmented-control__input"
       />

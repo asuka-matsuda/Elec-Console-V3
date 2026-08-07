@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { BreadcrumbItem } from "./AppBreadcrumb.vue";
 
-const props = defineProps<{
+defineProps<{
   breadcrumbs?: BreadcrumbItem[];
 }>();
 
@@ -28,7 +28,7 @@ const emit = defineEmits<{
 
     <div class="l-header__actions">
       <!-- User profile, notifications, etc. will go here -->
-      <slot name="actions"></slot>
+      <slot name="actions" />
     </div>
   </header>
 </template>
@@ -40,9 +40,6 @@ const emit = defineEmits<{
   justify-content: space-between;
   height: 72px;
   padding: 0 var(--space-6);
-  background-color: transparent;
-  border-bottom: var(--border-width-base) solid #{glass-color(15%)};
-  box-shadow: var(--shadow-elevation-hover); // Replaced hardcoded shadow
 
   @include mq("md") {
     padding: 0 var(--space-4);

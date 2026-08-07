@@ -4,7 +4,7 @@ export type BreadcrumbItem = {
   href?: string;
 };
 
-const props = defineProps<{
+defineProps<{
   items: BreadcrumbItem[];
 }>();
 </script>

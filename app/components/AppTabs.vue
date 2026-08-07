@@ -7,7 +7,7 @@ export type TabOption = {
 
 const model = defineModel<string | number>();
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     options: TabOption[];
     vertical?: boolean;

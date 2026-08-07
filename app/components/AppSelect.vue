@@ -44,7 +44,7 @@ const selectOption = (option: SelectOption) => {
 const focusNext = () => {
   let nextIndex = focusedIndex.value + 1;
   while (nextIndex < props.options.length) {
-    if (!props.options[nextIndex].disabled) {
+    if (!props.options[nextIndex]?.disabled) {
       focusedIndex.value = nextIndex;
       return;
     }
@@ -55,7 +55,7 @@ const focusNext = () => {
 const focusPrev = () => {
   let prevIndex = focusedIndex.value - 1;
   while (prevIndex >= 0) {
-    if (!props.options[prevIndex].disabled) {
+    if (!props.options[prevIndex]?.disabled) {
       focusedIndex.value = prevIndex;
       return;
     }
@@ -75,7 +75,7 @@ const handleKeydown = (event: KeyboardEvent) => {
           focusedIndex.value >= 0 &&
           focusedIndex.value < props.options.length
         ) {
-          selectOption(props.options[focusedIndex.value]);
+          selectOption(props.options[focusedIndex.value]!);
         } else {
           isOpen.value = false;
         }
@@ -133,8 +133,8 @@ const listboxId = useId();
 
 <template>
   <div
-    class="c-custom-select"
     ref="selectRef"
+    class="c-custom-select"
     :class="{ 'is-disabled': disabled, 'is-error': error }"
   >
     <!-- Trigger Element (Changed to button for native focus handling) -->
@@ -158,7 +158,7 @@ const listboxId = useId();
     <!-- Dropdown Menu -->
     <transition name="dropdown-fade">
       <div v-if="isOpen" class="c-custom-select__dropdown">
-        <ul class="c-custom-select__list" role="listbox" :id="listboxId">
+        <ul :id="listboxId" class="c-custom-select__list" role="listbox">
           <li
             v-if="placeholder && !selectedOption"
             class="c-custom-select__option is-placeholder"

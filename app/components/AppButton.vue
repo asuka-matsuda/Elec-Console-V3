@@ -7,6 +7,7 @@ const props = withDefaults(
     to?: string;
     href?: string;
     type?: "button" | "submit" | "reset";
+    // eslint-disable-next-line vue/prop-name-casing
     _variant?: "primary" | "secondary" | "success" | "danger";
     size?: "sm" | "md" | "lg";
     block?: boolean;

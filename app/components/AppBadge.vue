@@ -14,25 +14,16 @@ withDefaults(
   defineProps<{
     variant?: BadgeVariant;
     size?: "sm" | "md";
-    glow?: boolean;
   }>(),
   {
     variant: "neutral",
     size: "sm",
-    glow: false,
   },
 );
 </script>
 
 <template>
-  <span
-    class="c-badge"
-    :class="[
-      `c-badge--${variant}`,
-      `c-badge--${size}`,
-      { 'c-badge--glow': glow },
-    ]"
-  >
+  <span class="c-badge" :class="[`c-badge--${variant}`, `c-badge--${size}`]">
     <slot />
   </span>
 </template>
@@ -54,27 +45,20 @@ withDefaults(
   text-transform: uppercase;
   color: var(--badge-color);
   border: var(--border-width-base) solid var(--badge-border);
-  box-shadow: inset 0 0 var(--blur-sm) var(--badge-shadow);
+  box-shadow:
+    inset 0 0 var(--blur-sm) var(--badge-shadow),
+    0 0 var(--blur-md) var(--badge-shadow);
+  @include cyber-text-glow(100%, 4px, var(--badge-color));
   user-select: none;
   line-height: var(--line-height-tight);
   white-space: nowrap;
   transition: var(--transition-base);
 
-  // --- Sizes ---
-  &--sm {
+  &--md {
     padding: var(--space-1) var(--space-2);
     font-size: var(--text-xs);
   }
 
-  // --- Glow Effect ---
-  &--glow {
-    box-shadow:
-      inset 0 0 var(--blur-sm) var(--badge-shadow),
-      0 0 var(--blur-md) var(--badge-shadow);
-    text-shadow: 0 0 4px var(--badge-color);
-  }
-
-  // --- Variants (using interpolation for SCSS functions inside custom properties) ---
   $variants: (
     "primary": "--color-category-main",
     "success": "--color-status-success",

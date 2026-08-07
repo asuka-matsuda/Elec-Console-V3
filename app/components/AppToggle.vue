@@ -3,7 +3,7 @@ import { useId } from "vue";
 
 const model = defineModel<boolean>();
 
-const props = defineProps<{
+defineProps<{
   label?: string;
   disabled?: boolean;
 }>();
@@ -15,15 +15,15 @@ const inputId = useId();
   <label class="c-toggle" :class="{ 'is-disabled': disabled }" :for="inputId">
     <input
       :id="inputId"
+      v-model="model"
       type="checkbox"
       class="c-toggle__input"
-      v-model="model"
       :disabled="disabled"
-    />
+    >
     <div class="c-toggle__track">
-      <div class="c-toggle__thumb"></div>
+      <div class="c-toggle__thumb"/>
     </div>
-    <span class="c-toggle__label" v-if="label || $slots.default">
+    <span v-if="label || $slots.default" class="c-toggle__label">
       <slot>{{ label }}</slot>
     </span>
   </label>

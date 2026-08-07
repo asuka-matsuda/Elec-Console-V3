@@ -1,26 +1,26 @@
-import type { Meta, StoryObj } from '@storybook/vue3'
-import AppRadioGroup from './AppRadioGroup.vue'
-import { ref } from 'vue'
-import { TOGGLE_OPTIONS, PHASE_STATUS_OPTIONS } from '../utils/constants'
+import type { Meta, StoryObj } from "@storybook/vue3";
+import AppRadioGroup from "./AppRadioGroup.vue";
+import { ref } from "vue";
+import { TOGGLE_OPTIONS, PHASE_STATUS_OPTIONS } from "../utils/constants";
 
 const meta = {
-  title: 'Components/AppRadioGroup',
+  title: "Components/AppRadioGroup",
   component: AppRadioGroup,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
-    modelValue: { control: 'text' },
+    modelValue: { control: "text" },
   },
-} satisfies Meta<typeof AppRadioGroup>
+} satisfies Meta<typeof AppRadioGroup>;
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: (args) => ({
     components: { AppRadioGroup },
     setup() {
-      const selectedValue = ref(args.options[0].value)
-      return { args, selectedValue }
+      const selectedValue = ref(args.options?.[0]?.value);
+      return { args, selectedValue };
     },
     template: `
       <div>
@@ -34,14 +34,14 @@ export const Default: Story = {
   args: {
     options: TOGGLE_OPTIONS,
   },
-}
+};
 
 export const ThreeOptions: Story = {
   render: (args) => ({
     components: { AppRadioGroup },
     setup() {
-      const selectedValue = ref(args.options[0].value)
-      return { args, selectedValue }
+      const selectedValue = ref(args.options?.[0]?.value);
+      return { args, selectedValue };
     },
     template: `
       <div>
@@ -55,14 +55,14 @@ export const ThreeOptions: Story = {
   args: {
     options: PHASE_STATUS_OPTIONS,
   },
-}
+};
 
 export const WithDisabledOption: Story = {
   render: (args) => ({
     components: { AppRadioGroup },
     setup() {
-      const selectedValue = ref(args.options[0].value)
-      return { args, selectedValue }
+      const selectedValue = ref(args.options?.[0]?.value);
+      return { args, selectedValue };
     },
     template: `
       <div>
@@ -75,9 +75,9 @@ export const WithDisabledOption: Story = {
   }),
   args: {
     options: [
-      { label: 'Option A', value: 'a' },
-      { label: 'Option B (Disabled)', value: 'b', disabled: true },
-      { label: 'Option C', value: 'c' },
+      { label: "Option A", value: "a" },
+      { label: "Option B (Disabled)", value: "b", disabled: true },
+      { label: "Option C", value: "c" },
     ],
   },
-}
+};

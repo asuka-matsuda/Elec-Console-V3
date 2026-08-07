@@ -1,45 +1,46 @@
 <script setup lang="ts">
-import { menuData } from '../utils/menuData'
+import { menuData } from "../utils/menuData";
 
 // Extract just the sections to show on the dashboard
-const dashboardSections = menuData.filter(section => section.showInDashboard)
+const dashboardSections = menuData.filter((section) => section.showInDashboard);
 
-const { data: dashboardData } = await useFetch('/api/dashboard')
-const announcements = computed(() => dashboardData.value?.announcements || [])
-const history = computed(() => dashboardData.value?.history || [])
+const { data: dashboardData } = await useFetch("/api/dashboard");
+const announcements = computed(() => dashboardData.value?.announcements || []);
+const history = computed(() => dashboardData.value?.history || []);
 </script>
 
 <template>
   <div class="p-dashboard">
     <!-- Left Column: Menu Cards -->
     <div class="p-dashboard__main">
-      <section 
-        v-for="section in dashboardSections" 
-        :key="section.id" 
+      <section
+        v-for="section in dashboardSections"
+        :key="section.id"
         class="p-dashboard__section"
       >
-        <header class="p-dashboard__section-header">
-          <h2 class="p-dashboard__section-title" :style="`--section-color: var(--color-category-${section.accent})`">
-            <AppIcon v-if="section.icon" :name="section.icon" />
-            {{ section.heading }}
-          </h2>
-          <AppDivider :variant="section.accent || 'default'" />
-        </header>
+        <AppSectionHeader
+          :title="section.heading"
+          :icon="section.icon"
+          :variant="section.accent || 'main'"
+        />
 
         <div class="p-dashboard__grid">
-          <AppCard 
-            v-for="(item, index) in section.items" 
+          <AppCard
+            v-for="(item, index) in section.items"
             :key="index"
             :variant="section.accent"
             :to="item.disabled ? undefined : item.href"
             :disabled="item.disabled"
           >
-            <div class="p-dashboard-card__header" :style="`--card-accent: var(--color-category-${section.accent})`">
+            <div
+              class="p-dashboard-card__header"
+              :style="`--card-accent: var(--color-category-${section.accent})`"
+            >
               <AppIcon :name="item.icon" class="p-dashboard-card__icon" />
               <span>{{ item.text }}</span>
             </div>
             <div class="p-dashboard-card__desc">
-              {{ item.desc || '※準備中…' }}
+              {{ item.desc || "※準備中…" }}
             </div>
           </AppCard>
         </div>
@@ -50,36 +51,52 @@ const history = computed(() => dashboardData.value?.history || [])
     <aside class="p-dashboard__aside">
       <!-- Announcements -->
       <section class="p-dashboard__aside-block">
-        <header class="p-dashboard__aside-header">
-          <h2 class="p-dashboard__aside-title" style="--section-color: var(--color-category-tool)">
-            <AppIcon name="bell" /> お知らせ
-          </h2>
-          <AppDivider variant="tool" />
-        </header>
+        <AppSectionHeader
+          title="お知らせ"
+          icon="bell"
+          variant="tool"
+          size="md"
+        />
         <div class="p-dashboard__list">
-          <AppCard v-for="(item, idx) in announcements" :key="idx" class="p-dashboard-list-item">
+          <AppCard
+            v-for="(item, idx) in announcements"
+            :key="idx"
+            class="p-dashboard-list-item"
+          >
             <div class="p-dashboard-list-item__title">{{ item.title }}</div>
-            <div class="p-dashboard-list-item__meta">{{ item.date }} {{ item.desc }}</div>
+            <div class="p-dashboard-list-item__meta">
+              {{ item.date }} {{ item.desc }}
+            </div>
           </AppCard>
         </div>
       </section>
 
       <!-- History -->
       <section class="p-dashboard__aside-block">
-        <header class="p-dashboard__aside-header">
-          <h2 class="p-dashboard__aside-title" style="--section-color: var(--color-category-management)">
-            <AppIcon name="clock" /> 更新履歴
-          </h2>
-          <AppDivider variant="management" />
-        </header>
+        <AppSectionHeader
+          title="更新履歴"
+          icon="clock"
+          variant="management"
+          size="md"
+        />
         <div class="p-dashboard__list">
-          <AppCard v-for="(item, idx) in history" :key="idx" class="p-dashboard-list-item">
+          <AppCard
+            v-for="(item, idx) in history"
+            :key="idx"
+            class="p-dashboard-list-item"
+          >
             <div class="p-dashboard-list-item__header">
-              <AppBadge variant="success" v-if="item.badgeClass === 'c-badge--success'">{{ item.version }}</AppBadge>
-              <AppBadge variant="default" v-else>{{ item.version }}</AppBadge>
+              <AppBadge
+                v-if="item.badgeClass === 'c-badge--success'"
+                variant="success"
+                >{{ item.version }}</AppBadge
+              >
+              <AppBadge v-else variant="neutral">{{ item.version }}</AppBadge>
               <span class="p-dashboard-list-item__title">{{ item.title }}</span>
             </div>
-            <div class="p-dashboard-list-item__meta">{{ item.date }} {{ item.desc }}</div>
+            <div class="p-dashboard-list-item__meta">
+              {{ item.date }} {{ item.desc }}
+            </div>
           </AppCard>
         </div>
       </section>
@@ -90,13 +107,14 @@ const history = computed(() => dashboardData.value?.history || [])
 <style scoped lang="scss">
 .p-dashboard {
   display: flex;
-  flex-direction: column;
+  flex-direction: row; // Desktop default
+  align-items: flex-start;
   gap: var(--space-8);
   padding-bottom: var(--space-8);
 
-  @include mq('lg') {
-    flex-direction: row;
-    align-items: flex-start;
+  @include mq("lg") {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   &__main {
@@ -107,16 +125,17 @@ const history = computed(() => dashboardData.value?.history || [])
   }
 
   &__aside {
-    width: 100%;
+    width: 320px; // Desktop default
+    flex-shrink: 0;
+    position: sticky;
+    top: var(--space-6);
     display: flex;
     flex-direction: column;
     gap: var(--space-8);
 
-    @include mq('lg') {
-      width: 320px;
-      flex-shrink: 0;
-      position: sticky;
-      top: var(--space-6);
+    @include mq("lg") {
+      width: 100%;
+      position: static;
     }
   }
 
@@ -124,29 +143,6 @@ const history = computed(() => dashboardData.value?.history || [])
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
-  }
-
-  &__section-header, &__aside-header {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-  }
-
-  &__section-title, &__aside-title {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    font-size: var(--text-xl);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-main);
-
-    .c-icon {
-      color: var(--section-color);
-    }
-  }
-
-  &__aside-title {
-    font-size: var(--text-lg);
   }
 
   &__grid {
@@ -172,12 +168,15 @@ const history = computed(() => dashboardData.value?.history || [])
 .p-dashboard-card {
   &__header {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--space-3);
     font-size: var(--text-base);
     font-weight: var(--font-weight-bold);
     color: var(--card-accent, var(--color-text-main));
     margin-bottom: var(--space-2);
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+    line-break: strict;
   }
 
   &__desc {
@@ -189,7 +188,7 @@ const history = computed(() => dashboardData.value?.history || [])
 // List Item Card Styles
 .p-dashboard-list-item {
   padding: var(--space-3) var(--space-4);
-  
+
   &__header {
     display: flex;
     align-items: center;

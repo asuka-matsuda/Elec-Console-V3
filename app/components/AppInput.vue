@@ -3,7 +3,7 @@ import { useId } from "vue";
 
 const model = defineModel<string | number>();
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     type?:
       | "text"
@@ -34,21 +34,21 @@ const inputId = useId();
   <textarea
     v-if="type === 'textarea'"
     :id="inputId"
+    v-model="model"
     class="c-form-control c-form-control--textarea"
     :class="[`c-form-control--${size}`, { 'is-error': error }]"
-    v-model="model"
     :placeholder="placeholder"
     :disabled="disabled"
     :rows="rows"
     :aria-invalid="error"
-  ></textarea>
+  />
   <input
     v-else
     :id="inputId"
+    v-model="model"
     :type="type"
     class="c-form-control"
     :class="[`c-form-control--${size}`, { 'is-error': error }]"
-    v-model="model"
     :placeholder="placeholder"
     :disabled="disabled"
     :aria-invalid="error"

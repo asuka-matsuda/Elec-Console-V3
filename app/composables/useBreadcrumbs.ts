@@ -6,7 +6,7 @@ export function useBreadcrumbs() {
   const route = useRoute()
 
   return computed(() => {
-    const base = [{ text: 'ホーム', href: '/' }]
+    const base: Array<{ text: string, href?: string }> = [{ text: 'ホーム', href: '/' }]
     
     if (route.path === '/') {
       return base
