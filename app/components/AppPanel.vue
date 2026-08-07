@@ -139,8 +139,7 @@ withDefaults(
   &--simple {
     --p-border-color: #{theme-color(var(--color-border), 50%)};
     --p-box-shadow:
-      inset 1px 1px 2px var(--color-border),
-      inset -1px -1px 2px transparent,
+      inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent,
       inset 0 0 0 1px color-mix(in srgb, black 8%, transparent),
       var(--shadow-elevation-base);
     --p-bracket-display: none;
@@ -155,8 +154,7 @@ withDefaults(
       )
       1;
     --p-box-shadow:
-      inset 1px 1px 2px var(--color-border),
-      inset -1px -1px 2px transparent,
+      inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent,
       inset 0 0 0 1px color-mix(in srgb, black 8%, transparent),
       var(--shadow-elevation-base);
     --p-bracket-display: block;

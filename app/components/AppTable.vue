@@ -27,7 +27,7 @@
 <style scoped lang="scss">
 .c-table-wrapper {
   width: 100%;
-  max-height: 75dvh;
+  max-height: 70dvh;
   overflow: auto;
   border: var(--border-width-base) solid var(--color-border);
 }

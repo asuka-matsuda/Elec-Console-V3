@@ -1,33 +1,44 @@
 <script setup lang="ts">
-import { menuData } from '../utils/menuData'
+import { menuData } from "../utils/menuData";
 
 // Mobile sidebar toggle state (Global)
-const isSidebarOpen = useState('sidebar-open', () => false)
+const isSidebarOpen = useState("sidebar-open", () => false);
 
 // Dynamic breadcrumbs based on current route
-const breadcrumbs = useBreadcrumbs()
+const breadcrumbs = useBreadcrumbs();
 </script>
 
 <template>
   <div class="l-app">
     <!-- Sidebar -->
-    <AppGlobalNav 
-      v-model:is-open="isSidebarOpen" 
-      :menu-data="menuData" 
-    />
+    <AppGlobalNav v-model:is-open="isSidebarOpen" :menu-data="menuData" />
 
     <!-- Main Content Area -->
     <div class="l-main">
-      <AppHeader 
+      <AppHeader
         :breadcrumbs="breadcrumbs"
-        @toggle-sidebar="isSidebarOpen = !isSidebarOpen" 
+        @toggle-sidebar="isSidebarOpen = !isSidebarOpen"
       >
         <template #actions>
           <!-- User Profile / Actions -->
           <div class="l-header-user">
-            <AppIcon name="bell" style="color: var(--color-text-secondary); width: var(--icon-size-md); height: var(--icon-size-md);" />
+            <AppIcon
+              name="bell"
+              style="
+                color: var(--color-text-secondary);
+                width: var(--icon-size-md);
+                height: var(--icon-size-md);
+              "
+            />
             <div class="l-header-user__avatar">
-              <AppIcon name="user" style="width: var(--icon-size-sm); height: var(--icon-size-sm); color: var(--color-bg-base);" />
+              <AppIcon
+                name="user"
+                style="
+                  width: var(--icon-size-sm);
+                  height: var(--icon-size-sm);
+                  color: var(--color-bg-base);
+                "
+              />
             </div>
             <span class="l-header-user__name">Admin</span>
           </div>
@@ -57,19 +68,19 @@ const breadcrumbs = useBreadcrumbs()
   min-width: 0; /* Prevent flex item from blowing out */
 
   /* On desktop, the sidebar takes up 280px. We push the main content over. */
-  @include mq('lg', 'up-strict') {
+  @include mq("lg", "up-strict") {
     margin-left: 280px;
   }
 }
 
 .l-content {
   flex: 1;
-  padding: var(--space-6);
+  padding: var(--space-4);
   overflow-y: auto;
   @include custom-scrollbar();
 
-  @include mq('md') {
-    padding: var(--space-4);
+  @include mq("md") {
+    padding: var(--space-3);
   }
 }
 
