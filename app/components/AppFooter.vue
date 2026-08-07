@@ -25,7 +25,7 @@ const currentYear = new Date().getFullYear();
 
   &__divider {
     width: 100%;
-    max-width: 600px;
+    max-width: var(--width-md);
   }
 
   &__copyright {
@@ -37,7 +37,7 @@ const currentYear = new Date().getFullYear();
 
     &:hover {
       color: var(--color-text-secondary);
-      @include cyber-text-glow(30%, 4px, var(--color-text-secondary));
+      @include cyber-text-glow(30%, var(--blur-sm), var(--color-text-secondary));
     }
   }
 }

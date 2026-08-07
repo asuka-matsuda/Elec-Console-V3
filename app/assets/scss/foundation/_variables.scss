@@ -156,6 +156,14 @@ $color-input-focus-base: 217 91% 60%;
     --base-spacing: #{$base-spacing};
     --base-size: #{$base-size};
 
+    /* Z-index
+       ========================================================================== */
+    @each $name, $value in $z-index {
+        --z-index-#{$name}: #{$value};
+    }
+    // Alias for nav to match AppGlobalNav.vue
+    --z-index-nav: #{map-get($z-index, 'sidebar-container')};
+
     @each $name, $size in $spacing-scale {
         --space-#{$name}: #{$size};
     }
@@ -287,10 +295,10 @@ $color-input-focus-base: 217 91% 60%;
 
     /* 2. Edge Reflex (Glass Highlights)
        ========================================================================== */
-    --edge-reflex-base: inset 0 1px 0 var(--color-border-base), inset 0 0 0 1px var(--color-border-base);
-    --edge-reflex-hover: inset 0 2px 1px var(--color-border-base), inset 1px 0 1px var(--color-border-base);
+    --edge-reflex-base: inset 0 1px 0 var(--color-border), inset 0 0 0 1px var(--color-border);
+    --edge-reflex-hover: inset 0 2px 1px var(--color-border), inset 1px 0 1px var(--color-border);
     --edge-reflex-press:
-        inset 1px 1px 2px var(--color-border-base), inset -1px -1px 2px var(--color-border-base);
+        inset 1px 1px 2px var(--color-border), inset -1px -1px 2px var(--color-border);
 
     /* 3. Animation & Transition
        ========================================================================== */

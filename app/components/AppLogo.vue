@@ -22,15 +22,15 @@ const emit = defineEmits<{
 
   &:hover {
     .c-logo__icon {
-      @include cyber-text-glow(60%, 8px, var(--color-category-main));
+      @include cyber-text-glow(60%, var(--blur-md), var(--color-category-main));
       transform: scale(1.1);
     }
   }
 
   &__icon {
     color: var(--color-category-main);
-    width: 24px;
-    height: 24px;
+    width: var(--icon-size-md);
+    height: var(--icon-size-md);
     transition: var(--transition-base);
   }
 

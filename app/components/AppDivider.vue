@@ -63,8 +63,8 @@ withDefaults(
 
     &.c-divider--horizontal {
       width: 100%;
-      height: 2px;
-      border-top: 1px solid var(--color-border-base);
+      height: var(--border-width-thick);
+      border-top: var(--border-width-base) solid var(--color-border);
       border-bottom: 1px solid transparent;
       margin: var(--space-4) 0;
 
@@ -75,7 +75,7 @@ withDefaults(
 
   &--fade-side {
     width: 100%;
-    height: 1px;
+    height: var(--border-width-base);
     background: linear-gradient(
       90deg,
       var(--divider-accent, var(--color-border)) 0%,
@@ -86,11 +86,11 @@ withDefaults(
 
   &--fade-center {
     width: 100%;
-    height: 1px;
+    height: var(--border-width-base);
     background: linear-gradient(
       90deg,
       transparent 0%,
-      var(--divider-accent, var(--color-border-base)) 50%,
+      var(--divider-accent, var(--color-border)) 50%,
       transparent 100%
     );
   }
@@ -113,7 +113,7 @@ withDefaults(
         theme-color(var(--divider-accent, var(--color-category-main)), 80%),
         transparent
       );
-      box-shadow: 0 0 8px var(--divider-accent, var(--color-category-main));
+      box-shadow: 0 0 var(--blur-md) var(--divider-accent, var(--color-category-main));
       animation: data-pulse-x 3s ease-in-out infinite;
     }
   }
@@ -123,10 +123,10 @@ withDefaults(
   // ==========================================
   &--vertical {
     &.c-divider--default {
-      width: 2px;
+      width: var(--border-width-thick);
       height: auto;
       min-height: 100%;
-      border-left: 1px solid var(--color-border-base);
+      border-left: var(--border-width-base) solid var(--color-border);
       border-right: 1px solid transparent;
       margin: 0 var(--space-4);
 
@@ -149,7 +149,7 @@ withDefaults(
         theme-color(var(--divider-accent, var(--color-category-main)), 80%),
         transparent
       );
-      box-shadow: 0 0 8px var(--divider-accent, var(--color-category-main));
+      box-shadow: 0 0 var(--blur-md) var(--divider-accent, var(--color-category-main));
       animation: data-pulse-y 3s ease-in-out infinite;
     }
   }

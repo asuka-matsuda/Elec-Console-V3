@@ -32,7 +32,7 @@ withDefaults(
 .c-badge {
   // CSS Custom Properties for theme values
   --badge-color: var(--color-text-main);
-  --badge-border: var(--color-border-base);
+  --badge-border: var(--color-border);
   --badge-shadow: transparent;
 
   display: inline-flex;
@@ -48,7 +48,7 @@ withDefaults(
   box-shadow:
     inset 0 0 var(--blur-sm) var(--badge-shadow),
     0 0 var(--blur-md) var(--badge-shadow);
-  @include cyber-text-glow(100%, 4px, var(--badge-color));
+  @include cyber-text-glow(100%, var(--blur-sm), var(--badge-color));
   user-select: none;
   line-height: var(--line-height-tight);
   white-space: nowrap;

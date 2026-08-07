@@ -25,9 +25,9 @@ const breadcrumbs = useBreadcrumbs()
         <template #actions>
           <!-- User Profile / Actions -->
           <div class="l-header-user">
-            <AppIcon name="bell" style="color: var(--color-text-secondary); width: 20px; height: 20px;" />
+            <AppIcon name="bell" style="color: var(--color-text-secondary); width: var(--icon-size-md); height: var(--icon-size-md);" />
             <div class="l-header-user__avatar">
-              <AppIcon name="user" style="width: 16px; height: 16px; color: var(--color-bg-base);" />
+              <AppIcon name="user" style="width: var(--icon-size-sm); height: var(--icon-size-sm); color: var(--color-bg-base);" />
             </div>
             <span class="l-header-user__name">Admin</span>
           </div>
@@ -85,10 +85,11 @@ const breadcrumbs = useBreadcrumbs()
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    border: 2px solid var(--color-category-main);
+    width: var(--size-control-sm);
+    height: var(--size-control-sm);
     border-radius: 50%;
+    border: var(--border-width-thick) solid var(--color-category-main);
+    background: var(--color-category-main);
     box-shadow: 0 0 12px theme-color(var(--color-category-main), 50%);
   }
 

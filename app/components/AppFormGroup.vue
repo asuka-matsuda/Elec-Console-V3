@@ -94,7 +94,7 @@ withDefaults(
   &__error {
     font-size: var(--text-xs);
     color: var(--color-status-danger);
-    @include cyber-text-glow(30%, 4px, var(--color-status-danger));
+    @include cyber-text-glow(30%, var(--blur-sm), var(--color-status-danger));
     margin-top: var(--space-1);
   }
 
@@ -125,7 +125,7 @@ withDefaults(
     width: var(--size-2);
     height: var(--size-2);
     content: "";
-    border: 2px solid var(--color-category-main);
+    border: var(--border-width-thick) solid var(--color-category-main);
     border-radius: 50%;
     box-shadow: 0 0 var(--blur-sm) var(--color-category-main);
   }

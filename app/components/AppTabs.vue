@@ -97,8 +97,8 @@ const selectTab = (option: TabOption) => {
   font-size: var(--text-sm);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
-  border: var(--border-width-base) solid var(--color-border-base);
-  box-shadow: inset 0 0 var(--blur-sm) var(--color-border-base);
+  border: var(--border-width-base) solid var(--color-border);
+  box-shadow: inset 0 0 var(--blur-sm) var(--color-border);
   cursor: pointer;
   user-select: none;
   transition: var(--transition-base);
@@ -117,7 +117,7 @@ const selectTab = (option: TabOption) => {
     transform: translateY(0);
 
     .c-tabs__item-text {
-      @include cyber-text-glow(50%, 8px, var(--color-category-main));
+      @include cyber-text-glow(50%, var(--blur-md), var(--color-category-main));
     }
   }
 

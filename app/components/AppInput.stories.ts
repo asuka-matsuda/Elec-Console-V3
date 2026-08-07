@@ -123,7 +123,7 @@ export const Textarea: Story = {
       return { args, inputValue }
     },
     template: `
-      <div style="width: 400px;">
+      <div style="width: var(--width-md);">
         <AppInput v-bind="args" v-model="inputValue" />
       </div>
     `,

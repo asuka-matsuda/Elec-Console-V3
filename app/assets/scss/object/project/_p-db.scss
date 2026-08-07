@@ -10,7 +10,7 @@
     font-size: var(--text-base);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
-    border-bottom: var(--border-width-base) solid var(--color-border-base);
+    border-bottom: var(--border-width-base) solid var(--color-border);
     padding-bottom: var(--space-2);
     margin-bottom: var(--space-4);
   }
@@ -38,6 +38,6 @@
     color: var(--color-text-muted);
     font-size: var(--text-base);
     background-color: transparent;
-    border: var(--border-width-base) dashed var(--color-border-base);
+    border: var(--border-width-base) dashed var(--color-border);
   }
 }

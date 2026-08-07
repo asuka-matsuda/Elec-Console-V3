@@ -32,12 +32,12 @@ withDefaults(
 <style scoped lang="scss">
 .c-panel {
   // Base properties (overridden by variants)
-  --p-border-color: var(--color-border-base);
+  --p-border-color: var(--color-border);
   --p-border-image: none;
   --p-box-shadow: none;
   --p-bracket-display: none;
-  --p-bracket-size: 16px;
-  --p-bracket-color: var(--color-border-base);
+  --p-bracket-size: var(--space-4);
+  --p-bracket-color: var(--color-border);
   --p-bracket-glow: none;
   --p-theme-color: var(--color-category-main);
 
@@ -93,7 +93,7 @@ withDefaults(
     font-size: var(--text-lg);
     font-weight: var(--font-weight-bold);
     color: #{theme-color(var(--p-theme-color), 100%)};
-    text-shadow: 0 0 8px #{theme-color(var(--p-theme-color), 40%)};
+    text-shadow: 0 0 var(--blur-md) #{theme-color(var(--p-theme-color), 40%)};
   }
 
   &__content {
@@ -126,20 +126,20 @@ withDefaults(
   // Style Variants (Ported from original _themes.scss)
   // ---------------------------------------------------------
   &--hud {
-    --p-border-color: var(--color-border-base);
+    --p-border-color: var(--color-border);
     --p-box-shadow:
-      inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border-base),
+      inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border),
       inset 0 0 0 1px color-mix(in srgb, black 8%, transparent),
       var(--shadow-elevation-base);
     --p-bracket-display: block;
-    --p-bracket-size: 16px;
+    --p-bracket-size: var(--space-4);
     --p-bracket-color: #{theme-color(var(--p-theme-color), 60%)};
   }
 
   &--simple {
-    --p-border-color: var(--color-border-base);
+    --p-border-color: var(--color-border);
     --p-box-shadow:
-      inset 1px 1px 2px var(--color-border-base),
+      inset 1px 1px 2px var(--color-border),
       inset -1px -1px 2px transparent,
       inset 0 0 0 1px color-mix(in srgb, black 8%, transparent),
       var(--shadow-elevation-base);
@@ -150,17 +150,17 @@ withDefaults(
     --p-border-color: transparent;
     --p-border-image: linear-gradient(
         135deg,
-        var(--color-border-base) 0%,
+        var(--color-border) 0%,
         transparent 100%
       )
       1;
     --p-box-shadow:
-      inset 1px 1px 2px var(--color-border-base),
+      inset 1px 1px 2px var(--color-border),
       inset -1px -1px 2px transparent,
       inset 0 0 0 1px color-mix(in srgb, black 8%, transparent),
       var(--shadow-elevation-base);
     --p-bracket-display: block;
-    --p-bracket-size: 12px;
+    --p-bracket-size: var(--space-3);
     --p-bracket-color: #{theme-color(var(--p-theme-color), 40%)};
   }
 
@@ -168,16 +168,16 @@ withDefaults(
     --p-border-color: transparent;
     --p-border-image: linear-gradient(
         135deg,
-        var(--color-border-base) 0%,
+        var(--color-border) 0%,
         transparent 100%
       )
       1;
     --p-box-shadow:
-      inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border-base),
+      inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border),
       inset 0 0 0 1px color-mix(in srgb, black 8%, transparent),
       var(--shadow-elevation-base);
     --p-bracket-display: block;
-    --p-bracket-size: 18px;
+    --p-bracket-size: var(--space-4);
     --p-bracket-color: #{theme-color(var(--p-theme-color), 80%)};
     --p-bracket-glow: drop-shadow(
       0 0 6px #{theme-color(var(--p-theme-color), 60%)}

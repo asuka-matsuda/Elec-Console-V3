@@ -80,10 +80,10 @@ const componentTag = computed(() => {
   border-radius: 0; // 角丸禁止（直角）
   
   /* 視認性確保のための枠線と影（アウトラインスタイル） */
-  border: 1px solid var(--btn-color, var(--color-category-main));
+  border: var(--border-width-base) solid var(--btn-color, var(--color-category-main));
   box-shadow: 
-    inset 0 0 8px theme-color(var(--btn-color, var(--color-category-main)), 10%),
-    0 4px 12px rgba(0, 0, 0, 0.2);
+    inset 0 0 var(--blur-md) theme-color(var(--btn-color, var(--color-category-main)), 10%),
+    0 var(--space-1) var(--space-3) rgba(0, 0, 0, 0.2);
 
   // 以前の ui-surface は枠線を上書きしてしまうため今回は無効化
   // @include ui-surface;

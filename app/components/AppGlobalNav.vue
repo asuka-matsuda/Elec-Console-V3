@@ -77,7 +77,7 @@ const closeSidebar = () => {
 <style scoped lang="scss">
 .l-global-nav {
   --sidebar-width: 280px;
-  --sidebar-border: var(--color-border-base);
+  --sidebar-border: var(--color-border);
 
   position: fixed;
   top: 0;
@@ -198,8 +198,8 @@ const closeSidebar = () => {
     }
 
     &-icon {
-      width: 18px;
-      height: 18px;
+      width: var(--icon-size-md);
+      height: var(--icon-size-md);
       flex-shrink: 0; // アイコンが潰れないように
       transition: var(--transition-base);
     }
@@ -210,13 +210,13 @@ const closeSidebar = () => {
       // Replaced hardcoded shadow with cyber-text-glow or simplified shadow
       box-shadow: 0 0 var(--blur-sm)
         theme-color(var(--section-accent, var(--color-category-main)), 20%);
-      transform: translateX(4px);
+      transform: translateX(var(--space-1));
 
       .l-global-nav__link-icon {
         color: var(--section-accent, var(--color-category-main));
         filter: drop-shadow(
-          0 0 4px
-            theme-color(var(--section-accent, var(--color-category-main)), 80%)
+          0 0 var(--blur-sm)
+          theme-color(var(--section-accent, var(--color-category-main)), 80%)
         );
       }
     }
@@ -227,7 +227,7 @@ const closeSidebar = () => {
       border-color: transparent;
       transform: translateX(0);
       @include ui-active(var(--section-accent, var(--color-category-main)));
-      @include ui-blinking-cursor(6px, 14px, currentcolor);
+      @include ui-blinking-cursor(var(--space-1), var(--text-base), currentcolor);
 
       .l-global-nav__link-text {
         font-weight: var(--font-weight-bold);
@@ -236,7 +236,7 @@ const closeSidebar = () => {
       .l-global-nav__link-icon {
         color: var(--section-accent, var(--color-category-main));
         filter: drop-shadow(
-          0 0 4px var(--section-accent, var(--color-category-main))
+          0 0 var(--blur-sm) var(--section-accent, var(--color-category-main))
         );
       }
     }

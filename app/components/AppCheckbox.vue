@@ -94,7 +94,7 @@ const inputId = useId();
     // 1. Keyboard Focus State
     &:focus-visible + .c-checkbox__box {
       @include ui-focus(var(--checkbox-color));
-      @include cyber-text-glow(50%, 8px, var(--checkbox-color));
+      @include cyber-text-glow(50%, var(--blur-md), var(--checkbox-color));
       transition:
         box-shadow var(--duration-slow) var(--ease-out),
         border-color var(--duration-slow) var(--ease-out);
@@ -107,7 +107,7 @@ const inputId = useId();
       .c-checkbox__icon {
         stroke-dashoffset: 0;
         opacity: 1;
-        filter: drop-shadow(0 0 4px var(--checkbox-color));
+        filter: drop-shadow(0 0 var(--blur-sm) var(--checkbox-color));
       }
     }
   }
@@ -119,7 +119,7 @@ const inputId = useId();
     display: flex;
     align-items: center;
     justify-content: center;
-    border: var(--border-width-base) solid var(--color-border-base);
+    border: var(--border-width-base) solid var(--color-border);
     box-shadow: var(--edge-reflex-base), var(--shadow-sink);
     transition: var(--transition-base);
     // Explicitly NO border-radius to ensure sharp corners
@@ -132,7 +132,7 @@ const inputId = useId();
       opacity: 0;
       stroke-dasharray: 24;
       stroke-dashoffset: 24;
-      transition: all 0.3s cubic-bezier(0.65, 0, 0.45, 1);
+      transition: var(--transition-base);
     }
   }
 
@@ -145,7 +145,7 @@ const inputId = useId();
     // Label slightly glows on hover
     .c-checkbox__label {
       color: theme-color(var(--checkbox-color), 90%);
-      @include cyber-text-glow(20%, 4px, var(--checkbox-color));
+      @include cyber-text-glow(20%, var(--blur-sm), var(--checkbox-color));
     }
   }
 

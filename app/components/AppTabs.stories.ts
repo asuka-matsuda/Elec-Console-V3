@@ -14,7 +14,7 @@ const meta = {
   decorators: [
     (story) => ({
       components: { story },
-      template: '<div style="padding: 2rem; background: var(--color-bg-base); max-width: 600px;"><story /></div>',
+      template: '<div style="padding: 2rem; background: var(--color-main-bg); max-width: var(--width-md);"><story /></div>',
     }),
   ],
 } satisfies Meta<typeof AppTabs>

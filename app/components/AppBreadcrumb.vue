@@ -61,7 +61,7 @@ defineProps<{
       color: var(--color-category-main);
       content: "SYS.LOC";
       opacity: 0.9;
-      @include cyber-text-glow(50%, 4px, var(--color-category-main));
+      @include cyber-text-glow(50%, var(--blur-sm), var(--color-category-main));
     }
   }
 
@@ -72,7 +72,7 @@ defineProps<{
     // The separator »
     &:not(:last-child)::after {
       margin: 0 var(--space-3);
-      font-size: 12px;
+      font-size: var(--text-xs);
       color: color-mix(in srgb, var(--color-category-main) 60%, transparent);
       content: "»";
     }
@@ -107,8 +107,8 @@ defineProps<{
     line-height: 1;
     margin-left: var(--space-1);
 
-    @include cyber-text-glow(60%, 10px, var(--color-category-main));
-    @include ui-blinking-cursor(8px, 20px, currentcolor);
+    @include cyber-text-glow(60%, var(--blur-md), var(--color-category-main));
+    @include ui-blinking-cursor(var(--space-2), var(--space-5), currentcolor);
   }
 }
 </style>

@@ -51,7 +51,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
   flex-shrink: 0;
   gap: var(--space-1);
   padding: var(--space-1);
-  border: var(--border-width-base) solid var(--color-border-base);
+  border: var(--border-width-base) solid var(--color-border);
   box-shadow: none;
 
   // --- Elements ---
@@ -63,8 +63,8 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
       .c-segmented-control__input:not(:disabled):not(:checked)
         + .c-segmented-control__text {
         color: var(--color-text-main);
-        border-color: var(--color-border-base);
-        box-shadow: inset 0 0 var(--blur-sm) var(--color-border-base);
+        border-color: var(--color-border);
+        box-shadow: inset 0 0 var(--blur-sm) var(--color-border);
       }
     }
   }
@@ -76,13 +76,13 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
     &:checked + .c-segmented-control__text {
       color: var(--radio-color);
       @include ui-active(var(--radio-color));
-      @include cyber-text-glow(60%, 8px, var(--radio-color));
+      @include cyber-text-glow(60%, var(--blur-md), var(--radio-color));
     }
 
     // Keyboard Focus state
     &:focus-visible + .c-segmented-control__text {
       @include ui-focus(var(--radio-color));
-      @include cyber-text-glow(60%, 8px, var(--radio-color));
+      @include cyber-text-glow(60%, var(--blur-md), var(--radio-color));
     }
 
     // Disabled state

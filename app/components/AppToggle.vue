@@ -33,8 +33,8 @@ const inputId = useId();
 .c-toggle {
   --toggle-color: var(--color-category-main);
   --track-w: 44px;
-  --track-h: 20px;
-  --thumb-w: 20px;
+  --track-h: var(--space-5);
+  --thumb-w: var(--space-5);
 
   display: inline-flex;
   align-items: center;
@@ -61,7 +61,7 @@ const inputId = useId();
     // 1. Keyboard Focus State
     &:focus-visible + .c-toggle__track {
       @include ui-focus(var(--toggle-color));
-      @include cyber-text-glow(50%, 8px, var(--toggle-color));
+      @include cyber-text-glow(50%, var(--blur-md), var(--toggle-color));
       transition:
         box-shadow var(--duration-slow) var(--ease-out),
         border-color var(--duration-slow) var(--ease-out);
@@ -72,16 +72,16 @@ const inputId = useId();
       border-color: theme-color(var(--toggle-color), 80%);
       box-shadow:
         0 0 10px theme-color(var(--toggle-color), 60%),
-        inset 0 0 4px theme-color(var(--toggle-color), 40%);
+        inset 0 0 var(--blur-sm) theme-color(var(--toggle-color), 40%);
 
       // Slide and glow the thumb
       .c-toggle__thumb {
         transform: translateX(calc(var(--track-w) - var(--thumb-w)));
         border-color: theme-color(white, 80%);
         box-shadow:
-          0 0 12px var(--toggle-color),
-          inset 0 0 8px var(--toggle-color),
-          0 0 4px white;
+          0 0 var(--blur-lg) var(--toggle-color),
+          inset 0 0 var(--blur-md) var(--toggle-color),
+          0 0 var(--blur-sm) white;
       }
     }
   }
@@ -91,7 +91,7 @@ const inputId = useId();
     width: var(--track-w);
     height: var(--track-h);
     position: relative;
-    border: 1px solid var(--color-border-base);
+    border: var(--border-width-base) solid var(--color-border);
     box-shadow: var(--shadow-sink);
     transition: var(--transition-base);
   }
@@ -102,7 +102,7 @@ const inputId = useId();
     left: -1px;
     width: var(--thumb-w);
     height: var(--track-h);
-    border: 1px solid var(--color-border-base);
+    border: var(--border-width-base) solid var(--color-border);
     box-shadow: var(--shadow-elevation-base);
     transition:
       transform var(--duration-base) var(--ease-float),
@@ -117,14 +117,14 @@ const inputId = useId();
     .c-toggle__input:not(:focus-visible):not(:active) + .c-toggle__track {
       border-color: theme-color(var(--toggle-color), 50%);
       box-shadow:
-        0 0 8px theme-color(var(--toggle-color), 40%),
-        inset 0 0 4px theme-color(var(--toggle-color), 20%);
+        0 0 var(--blur-md) theme-color(var(--toggle-color), 40%),
+        inset 0 0 var(--blur-sm) theme-color(var(--toggle-color), 20%);
     }
 
     // Label slightly glows on hover
     .c-toggle__label {
       color: theme-color(var(--toggle-color), 90%);
-      @include cyber-text-glow(20%, 4px, var(--toggle-color));
+      @include cyber-text-glow(20%, var(--blur-sm), var(--toggle-color));
     }
   }
 

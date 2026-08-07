@@ -28,7 +28,7 @@
 .c-table-wrapper {
   width: 100%;
   overflow-x: auto;
-  border: var(--border-width-base) solid var(--color-border-base);
+  border: var(--border-width-base) solid var(--color-border);
 }
 
 .c-table {
@@ -43,14 +43,14 @@
     z-index: 2;
     backdrop-filter: blur(var(--blur-md));
     padding: var(--space-3) var(--space-4);
-    border-bottom: var(--border-width-base) solid var(--color-border-base);
+    border-bottom: var(--border-width-base) solid var(--color-border);
     color: var(--color-text-main);
     vertical-align: middle;
   }
   
   :deep(td) {
     padding: var(--space-3) var(--space-4);
-    border-bottom: var(--border-width-base) solid var(--color-border-base);
+    border-bottom: var(--border-width-base) solid var(--color-border);
     color: var(--color-text-main);
     vertical-align: middle;
   }

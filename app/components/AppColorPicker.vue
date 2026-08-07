@@ -57,7 +57,7 @@ const inputId = useId();
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-2) var(--space-3);
-  border: var(--border-width-base) solid var(--color-border-base);
+  border: var(--border-width-base) solid var(--color-border);
   border-radius: 0;
   cursor: pointer;
   position: relative;
@@ -66,7 +66,7 @@ const inputId = useId();
 
   &:hover:not(.is-disabled) {
     border-color: var(--color-category-main);
-    box-shadow: 0 0 8px theme-color(var(--color-category-main), 20%);
+    box-shadow: 0 0 var(--blur-md) theme-color(var(--color-category-main), 20%);
   }
 
   &.is-disabled {
@@ -75,10 +75,10 @@ const inputId = useId();
   }
 
   &__swatch {
-    width: 24px;
-    height: 24px;
+    width: var(--icon-size-md);
+    height: var(--icon-size-md);
     border-radius: 50%; // Circular swatch
-    border: 1px solid var(--color-border-base);
+    border: var(--border-width-base) solid var(--color-border);
     box-shadow: var(--shadow-sink);
     flex-shrink: 0;
   }
