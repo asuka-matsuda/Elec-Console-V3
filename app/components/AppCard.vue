@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, resolveComponent } from "vue";
 
 const props = defineProps<{
   variant?:
@@ -15,7 +15,7 @@ const props = defineProps<{
 }>();
 
 const rootTag = computed(() => {
-  if (props.to) return "NuxtLink";
+  if (props.to) return resolveComponent("NuxtLink");
   if (props.href) return "a";
   return "div";
 });

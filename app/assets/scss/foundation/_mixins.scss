@@ -1,173 +1,175 @@
-@use 'sass:map';
-@use 'functions' as *;
-@use 'variables' as *;
+@use "sass:map";
+@use "functions" as *;
+@use "variables" as *;
 
 /* Media Queries
    ========================================================================== */
-@mixin mq($breakpoint, $direction: 'down') {
-    @if map.has-key($breakpoints, $breakpoint) {
-        $value: map.get($breakpoints, $breakpoint);
+@mixin mq($breakpoint, $direction: "down") {
+  @if map.has-key($breakpoints, $breakpoint) {
+    $value: map.get($breakpoints, $breakpoint);
 
-        @if $direction == 'down' {
-            @media (width <= $value) {
-                @content;
-            }
-        } @else if $direction == 'up' {
-            @media (width >= $value) {
-                @content;
-            }
-        } @else if $direction == 'up-strict' {
-            @media (width > $value) {
-                @content;
-            }
-        }
-    } @else {
-        @warn "Invalid breakpoint: #{$breakpoint}.";
+    @if $direction == "down" {
+      @media (width <= $value) {
+        @content;
+      }
+    } @else if $direction == "up" {
+      @media (width >= $value) {
+        @content;
+      }
+    } @else if $direction == "up-strict" {
+      @media (width > $value) {
+        @content;
+      }
     }
+  } @else {
+    @warn "Invalid breakpoint: #{$breakpoint}.";
+  }
 }
 
 /* Base / Common Placeholders
    ========================================================================== */
 
 %click-enabled {
-    cursor: pointer;
-    user-select: none;
+  cursor: pointer;
+  user-select: none;
 }
 
 %disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    pointer-events: none;
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 /* Visual Effects & Glassmorphism
    ========================================================================== */
 @mixin cyber-text-glow($opacity: 40%, $blur: 8px, $color: currentcolor) {
-    text-shadow: 0 0 $blur theme-color($color, $opacity);
+  text-shadow: 0 0 $blur theme-color($color, $opacity);
 }
 
 @mixin ui-surface($border-opacity: 10%) {
-    border: var(--border-width-base) solid glass-color($border-opacity);
-    box-shadow: var(--edge-reflex-base), var(--shadow-elevation-base);
+  border: var(--border-width-base) solid glass-color($border-opacity);
+  box-shadow: var(--edge-reflex-base), var(--shadow-elevation-base);
 }
 
 @mixin form-control-base(
-    $is-error: '&.is-error',
-    $is-active: '&:focus, &:focus-visible',
-    $is-hover: '&:hover:not(:disabled):not(.is-error):not(:focus)'
+  $is-error: "&.is-error",
+  $is-active: "&:focus, &:focus-visible",
+  $is-hover: "&:hover:not(:disabled):not(.is-error):not(:focus)"
 ) {
-    border: var(--border-width-base) solid var(--color-category-main);
-    box-shadow: var(--edge-reflex-base), var(--shadow-sink);
-    transition: var(--transition-base);
+  background-color: transparent;
+  border: var(--border-width-base) solid var(--color-category-main);
+  box-shadow: var(--edge-reflex-base), var(--shadow-sink);
+  transition: var(--transition-base);
 
-    #{$is-hover} {
-        @include ui-hover-glow;
+  #{$is-hover} {
+    @include ui-hover-glow;
+  }
+
+  #{$is-active} {
+    outline: none;
+    @include ui-focus(var(--color-category-main));
+    @include cyber-text-glow(50%, 8px, var(--color-category-main));
+    transition:
+      box-shadow var(--duration-slow) var(--ease-out),
+      border-color var(--duration-slow) var(--ease-out);
+  }
+
+  #{$is-error} {
+    color: var(--color-status-danger);
+    border-color: var(--color-status-danger);
+    box-shadow:
+      inset 0 0 var(--blur-sm) theme-color(var(--color-status-danger), 30%),
+      0 0 6px theme-color(var(--color-status-danger), 50%);
+
+    &:hover:not(:disabled):not(:focus) {
+      @include ui-hover-glow(var(--color-status-danger));
     }
 
-    #{$is-active} {
-        outline: none;
-        @include ui-focus(var(--color-category-main));
-        @include cyber-text-glow(50%, 8px, var(--color-category-main));
-        transition: box-shadow var(--duration-slow) var(--ease-out),
-                    border-color var(--duration-slow) var(--ease-out);
+    &:-moz-focusring,
+    &:focus,
+    &:focus-visible,
+    &.is-active {
+      @include cyber-text-glow(50%, 8px, var(--color-status-danger));
+      transition:
+        box-shadow var(--duration-slow) var(--ease-out),
+        border-color var(--duration-slow) var(--ease-out);
     }
+  }
 
-    #{$is-error} {
-        color: var(--color-status-danger);
-        border-color: var(--color-status-danger);
-        box-shadow:
-            inset 0 0 var(--blur-sm) theme-color(var(--color-status-danger), 30%),
-            0 0 6px theme-color(var(--color-status-danger), 50%);
-
-        &:hover:not(:disabled):not(:focus) {
-            @include ui-hover-glow(var(--color-status-danger));
-        }
-
-        &:-moz-focusring,
-        &:focus,
-        &:focus-visible,
-        &.is-active {
-            @include cyber-text-glow(50%, 8px, var(--color-status-danger));
-            transition: box-shadow var(--duration-slow) var(--ease-out),
-                        border-color var(--duration-slow) var(--ease-out);
-        }
-    }
-
-    &:disabled, &.is-disabled {
-        @extend %disabled;
-    }
+  &:disabled,
+  &.is-disabled {
+    @extend %disabled;
+  }
 }
-
 
 /* Interactive States (Focus, Hover, Active, Disabled)
    ========================================================================== */
 
 @mixin ui-focus($color: var(--color-category-main), $shadow-spread: 12px) {
-    outline: none;
-    border-color: $color;
-    box-shadow:
-        inset 0 0 var(--blur-sm) theme-color($color, 20%),
-        0 0 var(--blur-sm) theme-color($color, 50%),
-        0 0 $shadow-spread theme-color($color, 30%);
+  outline: none;
+  border-color: $color;
+  box-shadow:
+    inset 0 0 var(--blur-sm) theme-color($color, 20%),
+    0 0 var(--blur-sm) theme-color($color, 50%),
+    0 0 $shadow-spread theme-color($color, 30%);
 }
 
 @mixin ui-hover-glow($color: null) {
-    @if $color {
-        border-color: theme-color($color, 80%);
-        box-shadow:
-            var(--edge-reflex-hover),
-            inset 0 0 8px theme-color($color, 20%),
-            0 0 12px theme-color($color, 30%),
-            var(--shadow-elevation-base);
-    } @else {
-        border-color: glass-color(40%);
-        box-shadow: var(--edge-reflex-hover), var(--shadow-elevation-base);
-    }
+  @if $color {
+    border-color: theme-color($color, 80%);
+    box-shadow:
+      var(--edge-reflex-hover),
+      inset 0 0 8px theme-color($color, 20%),
+      0 0 12px theme-color($color, 30%),
+      var(--shadow-elevation-base);
+  } @else {
+    border-color: glass-color(40%);
+    box-shadow: var(--edge-reflex-hover), var(--shadow-elevation-base);
+  }
 }
 
 @mixin ui-press($color: var(--color-category-main)) {
-    border-color: theme-color($color, 90%);
-    box-shadow:
-        var(--edge-reflex-press),
-        inset 0 var(--blur-sm) var(--blur-lg) theme-color(#000, 60%),
-        inset 0 -var(--blur-sm) 10px theme-color($color, 30%),
-        inset 0 0 0 1px theme-color($color, 30%),
-        var(--shadow-sink);
-    transform: scale(0.985);
+  border-color: theme-color($color, 90%);
+  box-shadow:
+    var(--edge-reflex-press),
+    inset 0 var(--blur-sm) var(--blur-lg) theme-color(#000, 60%),
+    inset 0 -var(--blur-sm) 10px theme-color($color, 30%),
+    inset 0 0 0 1px theme-color($color, 30%),
+    var(--shadow-sink);
+  transform: scale(0.985);
 
-    // Override transition specifically for the "sinking down" phase
-    transition: transform var(--duration-slow) var(--ease-out),
-                box-shadow var(--duration-slow) var(--ease-out),
-                border-color var(--duration-slow) var(--ease-out);
+  // Override transition specifically for the "sinking down" phase
+  transition:
+    transform var(--duration-slow) var(--ease-out),
+    box-shadow var(--duration-slow) var(--ease-out),
+    border-color var(--duration-slow) var(--ease-out);
 
-    svg {
-        filter: drop-shadow(0 0 2px $color);
-        stroke: $color;
-    }
+  svg {
+    filter: drop-shadow(0 0 2px $color);
+    stroke: $color;
+  }
 }
 
 @mixin ui-active($color: var(--color-category-main)) {
-    border-color: $color;
-    box-shadow:
-        inset 0 0 var(--blur-lg) theme-color($color, 40%),
-        inset 0 0 2px theme-color($color, 50%),
-        0 0 var(--blur-lg) theme-color($color, 40%);
+  border-color: $color;
+  box-shadow:
+    inset 0 0 var(--blur-lg) theme-color($color, 40%),
+    inset 0 0 2px theme-color($color, 50%),
+    0 0 var(--blur-lg) theme-color($color, 40%);
 }
-
-
 
 /* Misc Utilities
    ========================================================================== */
 @mixin custom-scrollbar() {
-    &::-webkit-scrollbar {
-        width: var(--size-2);
-        height: var(--size-2);
-    }
+  &::-webkit-scrollbar {
+    width: var(--size-2);
+    height: var(--size-2);
+  }
 
-    &::-webkit-scrollbar-thumb {
-        background: glass-color(20%);
-        border-radius: 0;
-    }
+  &::-webkit-scrollbar-thumb {
+    background: glass-color(20%);
+    border-radius: 0;
+  }
 }
 
 // ==========================================================================
@@ -176,13 +178,13 @@
 
 /// Adds a blinking cyber cursor element at the end of the content
 @mixin ui-blinking-cursor($width: 6px, $height: 14px, $color: currentcolor) {
-    &::after {
-        display: inline-block;
-        width: $width;
-        height: $height;
-        content: '';
-        background-color: $color;
-        animation: ui-cursor-blink 1s step-end infinite;
-        margin-left: auto;
-    }
+  &::after {
+    display: inline-block;
+    width: $width;
+    height: $height;
+    content: "";
+    background-color: $color;
+    animation: ui-cursor-blink 1s step-end infinite;
+    margin-left: auto;
+  }
 }
