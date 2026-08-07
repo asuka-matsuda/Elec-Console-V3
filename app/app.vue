@@ -39,7 +39,7 @@ useHead({
     "data-base-bg": baseBgStyle,
   },
   style: [
-    { children: dynamicStyles }
+    { innerHTML: dynamicStyles }
   ]
 });
 

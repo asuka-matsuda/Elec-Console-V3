@@ -49,19 +49,10 @@ export function useDbFilter<T extends Record<string, any>>(options: FilterOption
     return result
   })
 
-  function toggleCat(cat: string) {
-    if (activeCats.value.includes(cat)) {
-      activeCats.value = activeCats.value.filter(c => c !== cat)
-    } else {
-      activeCats.value.push(cat)
-    }
-  }
-
   return {
     searchQuery,
     activeCats,
     categoryOptions,
-    filteredData,
-    toggleCat
+    filteredData
   }
 }

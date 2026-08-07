@@ -3,29 +3,7 @@
 .p-db {
   // Styles for the database specific elements
 
-  &__filter-header {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
-    font-size: var(--text-base);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-muted);
-    border-bottom: var(--border-width-base) solid var(--color-border);
-    padding-bottom: var(--space-2);
-    margin-bottom: var(--space-4);
-  }
 
-  &__filters {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-5);
-  }
-
-  &__filter-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
-  }
 
   &__table-panel {
     padding: 0; // Remove padding so table spans full width of panel

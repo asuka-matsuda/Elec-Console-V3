@@ -6,8 +6,7 @@ const {
   searchQuery, 
   activeCats, 
   categoryOptions, 
-  filteredData: filteredCables, 
-  toggleCat 
+  filteredData: filteredCables
 } = useDbFilter({
   data: cableData,
   searchMapper: item => `${item.category} ${item.cores} ${item.size}${item.unit} ${item.standard || ''}`
@@ -21,8 +20,7 @@ const {
         <AppFilterPanel
           v-model:searchQuery="searchQuery"
           :category-options="categoryOptions"
-          :active-cats="activeCats"
-          @toggleCat="toggleCat"
+          v-model:activeCats="activeCats"
           placeholder="種類、サイズなどを検索... (例: CVT 22)"
         />
       </template>

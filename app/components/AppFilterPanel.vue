@@ -1,63 +1,92 @@
 <script setup lang="ts">
 /**
- * AppDbFilterPanel
- * 
- * データベース画面用の検索・カテゴリ絞り込みパネルを提供します。
+ * AppFilterPanel
+ *
+ * データベース画面や一覧画面用の検索・カテゴリ絞り込みパネルを提供します。
  */
 
 interface CategoryOption {
-  label: string
-  value: string
+  label: string;
+  value: string;
 }
 
-defineProps<{
-  /** 検索キーワード（v-model） */
-  searchQuery: string
-  /** 検索プレースホルダー */
-  placeholder?: string
-  /** カテゴリ選択肢の配列 */
-  categoryOptions: CategoryOption[]
-  /** 現在選択されているカテゴリの配列 */
-  activeCats: string[]
-}>()
+const searchQuery = defineModel<string>('searchQuery', { default: '' });
+const activeCats = defineModel<string[]>('activeCats', { default: () => [] });
 
-const emit = defineEmits<{
-  (e: 'update:searchQuery', value: string): void
-  (e: 'toggleCat', value: string): void
-}>()
+defineProps<{
+  /** 検索プレースホルダー */
+  placeholder?: string;
+  /** カテゴリ選択肢の配列 */
+  categoryOptions: CategoryOption[];
+}>();
+
+const toggleCat = (value: string) => {
+  if (activeCats.value.includes(value)) {
+    activeCats.value = activeCats.value.filter(c => c !== value);
+  } else {
+    activeCats.value = [...activeCats.value, value];
+  }
+};
 </script>
 
 <template>
   <AppPanel>
-    <div class="p-db__filter-header">
+    <div class="c-filter-panel__header">
       <AppIcon name="search" />
       <span>絞り込み・検索</span>
     </div>
 
-    <div class="p-db__filters">
+    <div class="c-filter-panel__filters">
       <AppFormGroup label="Keyword">
-        <AppInput 
-          :model-value="searchQuery"
-          @update:model-value="emit('update:searchQuery', $event)"
-          :placeholder="placeholder" 
+        <AppInput
+          v-model="searchQuery"
+          :placeholder="placeholder"
         />
       </AppFormGroup>
 
       <AppFormGroup v-if="categoryOptions.length > 0" label="Category">
-        <div class="p-db__filter-grid">
+        <div class="c-filter-panel__grid">
           <AppCheckbox
             v-for="cat in categoryOptions"
             :key="cat.value"
             :model-value="activeCats.includes(cat.value)"
-            @update:model-value="emit('toggleCat', cat.value)"
+            @update:model-value="toggleCat(cat.value)"
           >
             {{ cat.label }}
           </AppCheckbox>
         </div>
       </AppFormGroup>
-      
+
       <!-- スロットを追加して、特有のフィルター（五十音など）を拡張可能にする -->
       <slot name="extra-filters" />
     </div>
   </AppPanel>
 </template>
+
+<style scoped lang="scss">
+.c-filter-panel {
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-muted);
+    border-bottom: var(--border-width-base) solid var(--color-border);
+    padding-bottom: var(--space-2);
+    margin-bottom: var(--space-4);
+  }
+
+  &__filters {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+  }
+
+  &__grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+}
+</style>

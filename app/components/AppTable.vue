@@ -37,17 +37,7 @@
   border-spacing: 0;
   text-align: left;
   
-  :deep(th) {
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    backdrop-filter: blur(var(--blur-md));
-    padding: var(--space-3) var(--space-4);
-    border-bottom: var(--border-width-base) solid var(--color-border);
-    color: var(--color-text-main);
-    vertical-align: middle;
-  }
-  
+  :deep(th),
   :deep(td) {
     padding: var(--space-3) var(--space-4);
     border-bottom: var(--border-width-base) solid var(--color-border);
@@ -56,6 +46,10 @@
   }
 
   :deep(th) {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    backdrop-filter: blur(var(--blur-md));
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
     font-size: var(--text-sm);
@@ -74,7 +68,7 @@
     &:hover {
       z-index: 1;
       /* テーブル行ホバー時の発光エフェクト */
-      @include ui-hover-glow(var(--color-border));
+      @include ui-hover-glow;
       /* 行全体を光らせるため、セルの背景を上書きさせない */
       outline: var(--border-width-base) solid theme-color(var(--color-category-main), 80%);
       outline-offset: calc(var(--border-width-base) * -1);

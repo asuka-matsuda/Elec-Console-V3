@@ -7,8 +7,7 @@ const {
   searchQuery,
   activeCats,
   categoryOptions,
-  filteredData: baseFilteredGlossary,
-  toggleCat
+  filteredData: baseFilteredGlossary
 } = useDbFilter({
   data: glossaryData,
   searchMapper: item => `${item.term} ${item.kana || ""}`
@@ -101,8 +100,7 @@ const categoryColorMap: Record<string, string> = {
         <AppFilterPanel
           v-model:searchQuery="searchQuery"
           :category-options="categoryOptions"
-          :active-cats="activeCats"
-          @toggleCat="toggleCat"
+          v-model:activeCats="activeCats"
           placeholder="用語名や説明を検索..."
         >
           <template #extra-filters>

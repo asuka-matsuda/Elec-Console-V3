@@ -27,5 +27,5 @@ export default defineNuxtConfig({
     }
   },
 
-  modules: ['@nuxtjs/storybook', '@nuxt/eslint', '@vueuse/nuxt']
+  modules: ['@nuxt/eslint', '@vueuse/nuxt']
 })

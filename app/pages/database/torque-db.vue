@@ -18,8 +18,7 @@ const {
   searchQuery, 
   activeCats, 
   categoryOptions, 
-  filteredData: filteredTorques, 
-  toggleCat 
+  filteredData: filteredTorques
 } = useDbFilter({
   data: flattenedData.value,
   searchMapper: item => `${item.category} ${item.size} ${item.note}`
@@ -33,8 +32,7 @@ const {
         <AppFilterPanel
           v-model:searchQuery="searchQuery"
           :category-options="categoryOptions"
-          :active-cats="activeCats"
-          @toggleCat="toggleCat"
+          v-model:activeCats="activeCats"
           placeholder="種類、サイズなどを検索... (例: M8)"
         />
       </template>

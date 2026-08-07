@@ -6,8 +6,7 @@ const {
   searchQuery, 
   activeCats, 
   categoryOptions, 
-  filteredData: filteredDrums, 
-  toggleCat 
+  filteredData: filteredDrums
 } = useDbFilter({
   data: drumData,
   searchMapper: item => `${item.category} ${item.id}`
@@ -21,8 +20,7 @@ const {
         <AppFilterPanel
           v-model:searchQuery="searchQuery"
           :category-options="categoryOptions"
-          :active-cats="activeCats"
-          @toggleCat="toggleCat"
+          v-model:activeCats="activeCats"
           placeholder="種類、サイズなどを検索... (例: L1)"
         />
       </template>
