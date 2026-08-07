@@ -25,7 +25,7 @@ withDefaults(
       <AppIcon v-if="icon" :name="icon" class="c-section-header__icon" />
       <slot>{{ title }}</slot>
     </h2>
-    <AppDivider :variant="variant" />
+    <AppDivider :variant="variant" type="default" />
   </header>
 </template>
 

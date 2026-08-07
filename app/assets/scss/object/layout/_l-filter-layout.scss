@@ -5,6 +5,8 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: var(--space-4) 0;
+  container-type: inline-size;
+  container-name: filter-layout;
 
   &__grid {
     display: grid;
@@ -12,7 +14,7 @@
     align-items: start;
     gap: var(--space-6);
 
-    @include mq("md") {
+    @container filter-layout (max-width: 1024px) {
       grid-template-columns: 1fr;
     }
   }
@@ -21,7 +23,7 @@
     position: sticky;
     top: var(--space-6);
 
-    @include mq("md") {
+    @container filter-layout (max-width: 1024px) {
       position: static;
     }
   }

@@ -17,32 +17,25 @@ const {
   gridSpacing
 } = useSettings();
 
-const dynamicStyles = computed(() => {
-  return `
-    :root {
-      --bg-solid-color: ${solidColor.value};
-      --bg-gradient-c1: ${gradientColor1.value};
-      --bg-gradient-c2: ${gradientColor2.value};
-      --bg-aurora-c1: ${auroraColor1.value};
-      --bg-aurora-c2: ${auroraColor2.value};
-      --bg-aurora-c3: ${auroraColor3.value};
-      --bg-aurora-c4: ${auroraColor4.value};
-      --bg-grid-color: ${gridColor.value};
-      --bg-grid-spacing: ${gridSpacing.value}px;
-    }
-  `;
-});
+import { watchEffect, onMounted } from 'vue';
 
-useHead({
-  htmlAttrs: {
-    "data-theme": themeMode,
-    "data-base-bg": baseBgStyle,
-  },
-  style: [
-    { innerHTML: dynamicStyles }
-  ]
-});
-
+if (import.meta.client) {
+  watchEffect(() => {
+    document.documentElement.setAttribute('data-theme', themeMode.value);
+    document.documentElement.setAttribute('data-base-bg', baseBgStyle.value);
+    
+    const rootStyle = document.documentElement.style;
+    rootStyle.setProperty('--bg-solid-color', solidColor.value);
+    rootStyle.setProperty('--bg-gradient-c1', gradientColor1.value);
+    rootStyle.setProperty('--bg-gradient-c2', gradientColor2.value);
+    rootStyle.setProperty('--bg-aurora-c1', auroraColor1.value);
+    rootStyle.setProperty('--bg-aurora-c2', auroraColor2.value);
+    rootStyle.setProperty('--bg-aurora-c3', auroraColor3.value);
+    rootStyle.setProperty('--bg-aurora-c4', auroraColor4.value);
+    rootStyle.setProperty('--bg-grid-color', gridColor.value);
+    rootStyle.setProperty('--bg-grid-spacing', gridSpacing.value + 'px');
+  });
+}
 </script>
 
 <template>

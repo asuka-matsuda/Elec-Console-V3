@@ -5,18 +5,17 @@ withDefaults(
     required?: boolean;
     error?: string;
     help?: string;
-    horizontal?: boolean;
   }>(),
   {
     required: false,
-    horizontal: false,
   },
 );
 </script>
 
 <template>
-  <div class="c-form-group" :class="{ 'c-form-group--horizontal': horizontal }">
-    <!-- Label Area -->
+  <div class="c-form-group">
+    <div class="c-form-group__inner">
+      <!-- Label Area -->
     <div v-if="label || $slots.label" class="c-form-group__label-wrapper">
       <label class="c-form-label">
         <slot name="label">{{ label }}</slot>
@@ -47,33 +46,40 @@ withDefaults(
         {{ help }}
       </div>
     </div>
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 .c-form-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
   width: 100%;
+  container-type: inline-size;
 
-  // --- Horizontal Layout ---
-  &--horizontal {
-    flex-direction: row;
-    align-items: flex-start;
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    width: 100%;
 
-    .c-form-group__label-wrapper {
-      flex-shrink: 0;
-      width: 140px;
-      // Align label with the text inside a medium input control
-      padding-top: calc(
-        (var(--size-control-md) - var(--line-height-base) * var(--text-sm)) / 2
-      );
-    }
+    // --- Responsive Layout ---
+    // If the .c-form-group container is wide enough (>= 480px), switch to horizontal layout
+    @container (min-width: 480px) {
+      flex-direction: row;
+      align-items: flex-start;
 
-    .c-form-group__control {
-      flex: 1;
-      min-width: 0;
+      .c-form-group__label-wrapper {
+        flex-shrink: 0;
+        width: 140px;
+        // Align label with the text inside a medium input control
+        padding-top: calc(
+          (var(--size-control-md) - var(--line-height-base) * var(--text-sm)) / 2
+        );
+      }
+
+      .c-form-group__control {
+        flex: 1;
+        min-width: 0;
+      }
     }
   }
 
@@ -95,13 +101,11 @@ withDefaults(
     font-size: var(--text-xs);
     color: var(--color-status-danger);
     @include cyber-text-glow(30%, var(--blur-sm), var(--color-status-danger));
-    margin-top: var(--space-1);
   }
 
   &__help {
     font-size: var(--text-xs);
     color: var(--color-text-muted);
-    margin-top: var(--space-1);
   }
 }
 

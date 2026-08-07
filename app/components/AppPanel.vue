@@ -126,7 +126,7 @@ withDefaults(
   /* Style Variants (Ported from original _themes.scss) */
   /* --------------------------------------------------------- */
   &--hud {
-    --p-border-color: var(--color-border);
+    --p-border-color: #{theme-color(var(--color-border), 50%)};
     --p-box-shadow:
       inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border),
       inset 0 0 0 1px color-mix(in srgb, black 8%, transparent),
@@ -137,7 +137,7 @@ withDefaults(
   }
 
   &--simple {
-    --p-border-color: var(--color-border);
+    --p-border-color: #{theme-color(var(--color-border), 50%)};
     --p-box-shadow:
       inset 1px 1px 2px var(--color-border),
       inset -1px -1px 2px transparent,

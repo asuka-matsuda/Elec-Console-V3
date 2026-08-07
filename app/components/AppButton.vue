@@ -80,7 +80,7 @@ const componentTag = computed(() => {
   border-radius: 0; // 角丸禁止（直角）
   
   /* 視認性確保のための枠線と影（アウトラインスタイル） */
-  border: var(--border-width-base) solid var(--btn-color, var(--color-category-main));
+  @include ui-border-dim(var(--btn-color, var(--color-category-main)), 50%);
   box-shadow: 
     inset 0 0 var(--blur-md) theme-color(var(--btn-color, var(--color-category-main)), 10%),
     0 var(--space-1) var(--space-3) rgba(0, 0, 0, 0.2);
@@ -92,7 +92,7 @@ const componentTag = computed(() => {
   --btn-color: var(--color-category-main); // Default interaction color
 
   /* Interaction States */
-  &:hover:not(:disabled):not(.is-disabled) {
+  &:hover:not(:disabled, .is-disabled) {
     z-index: 1;
     @include ui-hover-glow(var(--btn-color));
   }
@@ -103,15 +103,14 @@ const componentTag = computed(() => {
     @include cyber-text-glow(50%, 8px, var(--btn-color));
   }
 
-  &:active:not(:disabled):not(.is-disabled) {
+  &:active:not(:disabled, .is-disabled) {
     z-index: 1;
     @include ui-press(var(--btn-color));
     @include cyber-text-glow(50%, 8px, var(--btn-color));
   }
 
   /* Disabled State */
-  &:disabled,
-  &.is-disabled {
+  &:is(:disabled, .is-disabled) {
     @extend %disabled;
   }
 

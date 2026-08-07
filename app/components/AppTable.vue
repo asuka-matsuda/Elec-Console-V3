@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * AppTable
- * 
+ *
  * 汎用的なデータテーブル用コンポーネントです。
  * ヘッダー（th）のみglass-colorを使用し、ボディは透明。
  * 行（tr）ホバー時には発光エフェクト（ui-hover-glow）が適用されます。
@@ -27,7 +27,8 @@
 <style scoped lang="scss">
 .c-table-wrapper {
   width: 100%;
-  overflow-x: auto;
+  max-height: 75dvh;
+  overflow: auto;
   border: var(--border-width-base) solid var(--color-border);
 }
 
@@ -36,7 +37,7 @@
   border-collapse: separate;
   border-spacing: 0;
   text-align: left;
-  
+
   :deep(th),
   :deep(td) {
     padding: var(--space-3) var(--space-4);
@@ -70,7 +71,8 @@
       /* テーブル行ホバー時の発光エフェクト */
       @include ui-hover-glow;
       /* 行全体を光らせるため、セルの背景を上書きさせない */
-      outline: var(--border-width-base) solid theme-color(var(--color-category-main), 80%);
+      outline: var(--border-width-base) solid
+        theme-color(var(--color-category-main), 80%);
       outline-offset: calc(var(--border-width-base) * -1);
     }
   }

@@ -303,7 +303,7 @@ const listboxId = useId();
   transition: var(--transition-base);
 
   /* --- States --- */
-  &:hover:not(.is-disabled):not(.is-placeholder),
+  &:hover:not(.is-disabled, .is-placeholder),
   &.is-focused:not(.is-disabled) {
     color: var(--color-category-main);
     border-left-color: var(--color-category-main);

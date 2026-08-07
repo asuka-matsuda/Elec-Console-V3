@@ -22,7 +22,7 @@ const inputId = useId();
 <template>
   <label
     class="c-checkbox"
-    :class="[`c-checkbox--${color}`, { 'is-disabled': disabled }]"
+    :class="`c-checkbox--${color}`"
     :for="inputId"
   >
     <input
@@ -78,7 +78,7 @@ const inputId = useId();
     --checkbox-color: var(--color-status-warning);
   }
 
-  &.is-disabled {
+  &:has(.c-checkbox__input:disabled) {
     cursor: not-allowed;
     @extend %disabled;
   }
@@ -90,25 +90,25 @@ const inputId = useId();
     width: 0;
     height: 0;
     margin: 0;
+  }
 
-    // 1. Keyboard Focus State
-    &:focus-visible + .c-checkbox__box {
-      @include ui-focus(var(--checkbox-color));
-      @include cyber-text-glow(50%, var(--blur-md), var(--checkbox-color));
-      transition:
-        box-shadow var(--duration-slow) var(--ease-out),
-        border-color var(--duration-slow) var(--ease-out);
-    }
+  // 1. Keyboard Focus State
+  &:has(.c-checkbox__input:focus-visible) .c-checkbox__box {
+    @include ui-focus(var(--checkbox-color));
+    @include cyber-text-glow(50%, var(--blur-md), var(--checkbox-color));
+    transition:
+      box-shadow var(--duration-slow) var(--ease-out),
+      border-color var(--duration-slow) var(--ease-out);
+  }
 
-    // 2. Checked State
-    &:checked + .c-checkbox__box {
-      @include ui-active(var(--checkbox-color));
+  // 2. Checked State
+  &:has(.c-checkbox__input:checked) .c-checkbox__box {
+    @include ui-active(var(--checkbox-color));
 
-      .c-checkbox__icon {
-        stroke-dashoffset: 0;
-        opacity: 1;
-        filter: drop-shadow(0 0 var(--blur-sm) var(--checkbox-color));
-      }
+    .c-checkbox__icon {
+      stroke-dashoffset: 0;
+      opacity: 1;
+      filter: drop-shadow(0 0 var(--blur-sm) var(--checkbox-color));
     }
   }
 
@@ -119,7 +119,7 @@ const inputId = useId();
     display: flex;
     align-items: center;
     justify-content: center;
-    border: var(--border-width-base) solid var(--color-border);
+    @include ui-border-dim(var(--color-border), 50%);
     box-shadow: var(--edge-reflex-base), var(--shadow-sink);
     transition: var(--transition-base);
     // Explicitly NO border-radius to ensure sharp corners
@@ -137,8 +137,8 @@ const inputId = useId();
   }
 
   // 3. Hover State
-  &:hover:not(.is-disabled) {
-    .c-checkbox__input:not(:focus-visible):not(:active) + .c-checkbox__box {
+  &:hover:not(:has(.c-checkbox__input:disabled)) {
+    &:has(.c-checkbox__input:not(:focus-visible, :active)) .c-checkbox__box {
       @include ui-hover-glow(var(--checkbox-color));
     }
 
@@ -150,10 +150,8 @@ const inputId = useId();
   }
 
   // 4. Active (Press) State
-  &:active:not(.is-disabled) {
-    .c-checkbox__box {
-      @include ui-press(var(--checkbox-color));
-    }
+  &:active:not(:has(.c-checkbox__input:disabled)) .c-checkbox__box {
+    @include ui-press(var(--checkbox-color));
   }
 }
 </style>

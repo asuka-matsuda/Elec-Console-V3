@@ -97,9 +97,7 @@ const inputId = useId();
     resize: vertical;
     min-height: calc(var(--size-control-md) * 2);
     // Override fixed heights so rows/min-height can take over
-    &.c-form-control--sm,
-    &.c-form-control--md,
-    &.c-form-control--lg {
+    &:is(.c-form-control--sm, .c-form-control--md, .c-form-control--lg) {
       height: auto;
     }
     &:disabled {

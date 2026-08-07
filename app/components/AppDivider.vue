@@ -7,7 +7,7 @@ withDefaults(
     animated?: boolean;
   }>(),
   {
-    type: "default",
+    type: "fade-center",
     variant: "main",
     vertical: false,
     animated: true,
@@ -93,6 +93,7 @@ withDefaults(
       var(--divider-accent, var(--color-border)) 50%,
       transparent 100%
     );
+    box-shadow: 0 0 var(--blur-sm) theme-color(var(--divider-accent, var(--color-border)), 30%);
   }
 
   // ==========================================

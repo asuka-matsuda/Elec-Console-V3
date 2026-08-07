@@ -10,8 +10,8 @@ interface CategoryOption {
   value: string;
 }
 
-const searchQuery = defineModel<string>('searchQuery', { default: '' });
-const activeCats = defineModel<string[]>('activeCats', { default: () => [] });
+const searchQuery = defineModel<string>("searchQuery", { default: "" });
+const activeCats = defineModel<string[]>("activeCats", { default: () => [] });
 
 defineProps<{
   /** 検索プレースホルダー */
@@ -22,7 +22,7 @@ defineProps<{
 
 const toggleCat = (value: string) => {
   if (activeCats.value.includes(value)) {
-    activeCats.value = activeCats.value.filter(c => c !== value);
+    activeCats.value = activeCats.value.filter((c) => c !== value);
   } else {
     activeCats.value = [...activeCats.value, value];
   }
@@ -38,10 +38,7 @@ const toggleCat = (value: string) => {
 
     <div class="c-filter-panel__filters">
       <AppFormGroup label="Keyword">
-        <AppInput
-          v-model="searchQuery"
-          :placeholder="placeholder"
-        />
+        <AppInput v-model="searchQuery" :placeholder="placeholder" />
       </AppFormGroup>
 
       <AppFormGroup v-if="categoryOptions.length > 0" label="Category">
@@ -72,9 +69,8 @@ const toggleCat = (value: string) => {
     font-size: var(--text-base);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
-    border-bottom: var(--border-width-base) solid var(--color-border);
+    @include ui-border-fade(bottom, var(--color-border));
     padding-bottom: var(--space-2);
-    margin-bottom: var(--space-4);
   }
 
   &__filters {
@@ -84,8 +80,8 @@ const toggleCat = (value: string) => {
   }
 
   &__grid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: var(--space-3);
   }
 }

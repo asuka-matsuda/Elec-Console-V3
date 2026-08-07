@@ -87,7 +87,7 @@ const closeSidebar = () => {
   width: var(--sidebar-width);
   height: 100dvh;
   z-index: var(--z-index-nav);
-  border-right: var(--border-width-base) solid var(--sidebar-border);
+  @include ui-border-fade(right, var(--sidebar-border));
   box-shadow: var(--shadow-elevation-hover); // Replaced hardcoded shadow
   transition: transform var(--duration-normal) var(--ease-out-back);
 
@@ -107,7 +107,7 @@ const closeSidebar = () => {
     align-items: center;
     height: 72px; // Match standard header height
     padding: 0 var(--space-4);
-    border-bottom: var(--border-width-base) solid var(--sidebar-border);
+    @include ui-border-fade(bottom, var(--sidebar-border));
     box-shadow: var(--shadow-elevation-base); // Replaced hardcoded shadow
   }
 

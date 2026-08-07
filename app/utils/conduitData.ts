@@ -4,7 +4,7 @@
  */
 export const conduitData = [
     {
-        category: '厚鋼電線管(G)',
+        category: 'G',
         size: 'G16',
         innerDiameter: '16.4',
         outerDiameter: '21.0',
@@ -14,7 +14,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: '厚鋼電線管(G)',
+        category: 'G',
         size: 'G22',
         innerDiameter: '21.9',
         outerDiameter: '26.5',
@@ -24,7 +24,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: '厚鋼電線管(G)',
+        category: 'G',
         size: 'G28',
         innerDiameter: '28.3',
         outerDiameter: '33.3',
@@ -34,7 +34,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: '厚鋼電線管(G)',
+        category: 'G',
         size: 'G36',
         innerDiameter: '36.9',
         outerDiameter: '41.9',
@@ -44,7 +44,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: '厚鋼電線管(G)',
+        category: 'G',
         size: 'G42',
         innerDiameter: '42.8',
         outerDiameter: '47.8',
@@ -54,7 +54,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: '厚鋼電線管(G)',
+        category: 'G',
         size: 'G54',
         innerDiameter: '54.0',
         outerDiameter: '59.6',
@@ -64,7 +64,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: '厚鋼電線管(G)',
+        category: 'G',
         size: 'G70',
         innerDiameter: '69.6',
         outerDiameter: '75.2',
@@ -74,7 +74,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: '厚鋼電線管(G)',
+        category: 'G',
         size: 'G82',
         innerDiameter: '82.3',
         outerDiameter: '87.9',
@@ -84,7 +84,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: '厚鋼電線管(G)',
+        category: 'G',
         size: 'G92',
         innerDiameter: '92.4',
         outerDiameter: '100.7',
@@ -94,7 +94,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: '厚鋼電線管(G)',
+        category: 'G',
         size: 'G104',
         innerDiameter: '104.8',
         outerDiameter: '113.4',
@@ -104,7 +104,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: '薄鋼電線管(C)',
+        category: 'C',
         size: 'C15',
         innerDiameter: '16.7',
         outerDiameter: '19.1',
@@ -114,7 +114,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: '薄鋼電線管(C)',
+        category: 'C',
         size: 'C19',
         innerDiameter: '19.9',
         outerDiameter: '22.2',
@@ -124,7 +124,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: '薄鋼電線管(C)',
+        category: 'C',
         size: 'C25',
         innerDiameter: '23.0',
         outerDiameter: '25.4',
@@ -134,7 +134,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: '薄鋼電線管(C)',
+        category: 'C',
         size: 'C31',
         innerDiameter: '29.4',
         outerDiameter: '31.8',
@@ -144,7 +144,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: '薄鋼電線管(C)',
+        category: 'C',
         size: 'C39',
         innerDiameter: '35.7',
         outerDiameter: '38.1',
@@ -154,7 +154,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: '薄鋼電線管(C)',
+        category: 'C',
         size: 'C51',
         innerDiameter: '48.3',
         outerDiameter: '50.8',
@@ -164,7 +164,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: '薄鋼電線管(C)',
+        category: 'C',
         size: 'C63',
         innerDiameter: '61.0',
         outerDiameter: '63.5',
@@ -174,7 +174,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: '薄鋼電線管(C)',
+        category: 'C',
         size: 'C75',
         innerDiameter: '73.6',
         outerDiameter: '76.2',
@@ -184,7 +184,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: 'ねじなし電線管(E)',
+        category: 'E',
         size: 'E19',
         innerDiameter: '16.7',
         outerDiameter: '19.1',
@@ -194,7 +194,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: 'ねじなし電線管(E)',
+        category: 'E',
         size: 'E25',
         innerDiameter: '22.2',
         outerDiameter: '25.4',
@@ -204,7 +204,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: 'ねじなし電線管(E)',
+        category: 'E',
         size: 'E31',
         innerDiameter: '28.6',
         outerDiameter: '31.8',
@@ -214,7 +214,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: 'ねじなし電線管(E)',
+        category: 'E',
         size: 'E39',
         innerDiameter: '34.9',
         outerDiameter: '38.1',
@@ -224,7 +224,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: 'ねじなし電線管(E)',
+        category: 'E',
         size: 'E51',
         innerDiameter: '47.6',
         outerDiameter: '50.8',
@@ -234,7 +234,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: 'ねじなし電線管(E)',
+        category: 'E',
         size: 'E63',
         innerDiameter: '60.3',
         outerDiameter: '63.5',
@@ -244,7 +244,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: 'ねじなし電線管(E)',
+        category: 'E',
         size: 'E75',
         innerDiameter: '73.0',
         outerDiameter: '76.2',
@@ -254,7 +254,7 @@ export const conduitData = [
         standard: 'JIS C 8305'
     },
     {
-        category: '硬質塩化ビニル電線管(VE)',
+        category: 'VE',
         size: 'VE14',
         innerDiameter: '14.0',
         outerDiameter: '18.0',
@@ -264,7 +264,7 @@ export const conduitData = [
         standard: 'JIS C 8430'
     },
     {
-        category: '硬質塩化ビニル電線管(VE)',
+        category: 'VE',
         size: 'VE16',
         innerDiameter: '18.0',
         outerDiameter: '22.0',
@@ -274,7 +274,7 @@ export const conduitData = [
         standard: 'JIS C 8430'
     },
     {
-        category: '硬質塩化ビニル電線管(VE)',
+        category: 'VE',
         size: 'VE22',
         innerDiameter: '22.0',
         outerDiameter: '26.0',
@@ -284,7 +284,7 @@ export const conduitData = [
         standard: 'JIS C 8430'
     },
     {
-        category: '硬質塩化ビニル電線管(VE)',
+        category: 'VE',
         size: 'VE28',
         innerDiameter: '28.0',
         outerDiameter: '34.0',
@@ -294,7 +294,7 @@ export const conduitData = [
         standard: 'JIS C 8430'
     },
     {
-        category: '硬質塩化ビニル電線管(VE)',
+        category: 'VE',
         size: 'VE36',
         innerDiameter: '35.0',
         outerDiameter: '42.0',
@@ -304,7 +304,7 @@ export const conduitData = [
         standard: 'JIS C 8430'
     },
     {
-        category: '硬質塩化ビニル電線管(VE)',
+        category: 'VE',
         size: 'VE42',
         innerDiameter: '40.0',
         outerDiameter: '48.0',
@@ -314,7 +314,7 @@ export const conduitData = [
         standard: 'JIS C 8430'
     },
     {
-        category: '硬質塩化ビニル電線管(VE)',
+        category: 'VE',
         size: 'VE54',
         innerDiameter: '51.0',
         outerDiameter: '60.0',
@@ -324,7 +324,7 @@ export const conduitData = [
         standard: 'JIS C 8430'
     },
     {
-        category: '硬質塩化ビニル電線管(VE)',
+        category: 'VE',
         size: 'VE70',
         innerDiameter: '67.0',
         outerDiameter: '76.0',
@@ -334,7 +334,7 @@ export const conduitData = [
         standard: 'JIS C 8430'
     },
     {
-        category: '硬質塩化ビニル電線管(VE)',
+        category: 'VE',
         size: 'VE82',
         innerDiameter: '77.0',
         outerDiameter: '89.0',
@@ -344,7 +344,7 @@ export const conduitData = [
         standard: 'JIS C 8430'
     },
     {
-        category: '合成樹脂製可とう電線管(PF)',
+        category: 'PF',
         size: 'PF14',
         innerDiameter: '14.0',
         outerDiameter: '21.5',
@@ -354,7 +354,7 @@ export const conduitData = [
         standard: 'JIS C 8411'
     },
     {
-        category: '合成樹脂製可とう電線管(PF)',
+        category: 'PF',
         size: 'PF16',
         innerDiameter: '16.0',
         outerDiameter: '23.0',
@@ -364,7 +364,7 @@ export const conduitData = [
         standard: 'JIS C 8411'
     },
     {
-        category: '合成樹脂製可とう電線管(PF)',
+        category: 'PF',
         size: 'PF22',
         innerDiameter: '22.0',
         outerDiameter: '30.5',
@@ -374,7 +374,7 @@ export const conduitData = [
         standard: 'JIS C 8411'
     },
     {
-        category: '合成樹脂製可とう電線管(PF)',
+        category: 'PF',
         size: 'PF28',
         innerDiameter: '28.0',
         outerDiameter: '36.5',
@@ -384,7 +384,7 @@ export const conduitData = [
         standard: 'JIS C 8411'
     },
     {
-        category: '合成樹脂製可とう電線管(PF)',
+        category: 'PF',
         size: 'PF36',
         innerDiameter: '36.0',
         outerDiameter: '45.5',
@@ -394,7 +394,7 @@ export const conduitData = [
         standard: 'JIS C 8411'
     },
     {
-        category: '合成樹脂製可とう電線管(PF)',
+        category: 'PF',
         size: 'PF42',
         innerDiameter: '42.0',
         outerDiameter: '52.0',
@@ -404,7 +404,7 @@ export const conduitData = [
         standard: 'JIS C 8411'
     },
     {
-        category: '合成樹脂製可とう電線管(PF)',
+        category: 'PF',
         size: 'PF54',
         innerDiameter: '54.0',
         outerDiameter: '64.5',
@@ -414,7 +414,7 @@ export const conduitData = [
         standard: 'JIS C 8411'
     },
     {
-        category: '波付硬質合成樹脂管(FEP)',
+        category: 'FEP',
         size: 'FEP30',
         innerDiameter: '30.0',
         outerDiameter: '40.0',
@@ -424,7 +424,7 @@ export const conduitData = [
         standard: 'JIS C 3653'
     },
     {
-        category: '波付硬質合成樹脂管(FEP)',
+        category: 'FEP',
         size: 'FEP40',
         innerDiameter: '40.0',
         outerDiameter: '53.0',
@@ -434,7 +434,7 @@ export const conduitData = [
         standard: 'JIS C 3653'
     },
     {
-        category: '波付硬質合成樹脂管(FEP)',
+        category: 'FEP',
         size: 'FEP50',
         innerDiameter: '50.0',
         outerDiameter: '65.0',
@@ -444,7 +444,7 @@ export const conduitData = [
         standard: 'JIS C 3653'
     },
     {
-        category: '波付硬質合成樹脂管(FEP)',
+        category: 'FEP',
         size: 'FEP65',
         innerDiameter: '65.0',
         outerDiameter: '82.0',
@@ -454,7 +454,7 @@ export const conduitData = [
         standard: 'JIS C 3653'
     },
     {
-        category: '波付硬質合成樹脂管(FEP)',
+        category: 'FEP',
         size: 'FEP80',
         innerDiameter: '80.0',
         outerDiameter: '103.0',
@@ -464,7 +464,7 @@ export const conduitData = [
         standard: 'JIS C 3653'
     },
     {
-        category: '波付硬質合成樹脂管(FEP)',
+        category: 'FEP',
         size: 'FEP100',
         innerDiameter: '100.0',
         outerDiameter: '130.0',
@@ -474,7 +474,7 @@ export const conduitData = [
         standard: 'JIS C 3653'
     },
     {
-        category: '波付硬質合成樹脂管(FEP)',
+        category: 'FEP',
         size: 'FEP125',
         innerDiameter: '125.0',
         outerDiameter: '160.0',
@@ -484,7 +484,7 @@ export const conduitData = [
         standard: 'JIS C 3653'
     },
     {
-        category: '波付硬質合成樹脂管(FEP)',
+        category: 'FEP',
         size: 'FEP150',
         innerDiameter: '150.0',
         outerDiameter: '190.0',
@@ -494,7 +494,7 @@ export const conduitData = [
         standard: 'JIS C 3653'
     },
     {
-        category: '波付硬質合成樹脂管(FEP)',
+        category: 'FEP',
         size: 'FEP200',
         innerDiameter: '200.0',
         outerDiameter: '254.0',

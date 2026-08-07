@@ -57,7 +57,7 @@ const inputId = useId();
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-2) var(--space-3);
-  border: var(--border-width-base) solid var(--color-border);
+  @include ui-border-dim(var(--color-border), 50%);
   border-radius: 0;
   cursor: pointer;
   position: relative;
@@ -78,7 +78,7 @@ const inputId = useId();
     width: var(--icon-size-md);
     height: var(--icon-size-md);
     border-radius: 50%;
-    border: var(--border-width-base) solid var(--color-border);
+    @include ui-border-dim(var(--color-border), 50%);
     box-shadow: var(--shadow-sink);
     flex-shrink: 0;
   }

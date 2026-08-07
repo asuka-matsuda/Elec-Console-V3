@@ -32,7 +32,7 @@ withDefaults(
 .c-badge {
   // CSS Custom Properties for theme values
   --badge-color: var(--color-text-main);
-  --badge-border: var(--color-border);
+  --badge-border: theme-color(var(--color-border), 50%);
   --badge-shadow: transparent;
 
   display: inline-flex;
