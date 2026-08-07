@@ -8,15 +8,15 @@
 </script>
 
 <template>
-  <div class="l-sidebar-layout">
-    <div class="l-sidebar-layout__grid">
+  <div class="l-filter-layout">
+    <div class="l-filter-layout__grid">
       <!-- Sidebar -->
-      <aside class="l-sidebar-layout__sidebar">
+      <aside class="l-filter-layout__sidebar">
         <slot name="sidebar" />
       </aside>
 
       <!-- Main Content -->
-      <main class="l-sidebar-layout__main">
+      <main class="l-filter-layout__main">
         <slot name="main" />
       </main>
     </div>

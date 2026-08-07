@@ -75,7 +75,7 @@ const closeSidebar = () => {
 </template>
 
 <style scoped lang="scss">
-.l-sidebar {
+.l-global-nav {
   --sidebar-width: 280px;
   --sidebar-bg: #{glass-color(20%)};
   --sidebar-border: #{glass-color(30%)};
@@ -213,7 +213,7 @@ const closeSidebar = () => {
         theme-color(var(--section-accent, var(--color-category-main)), 20%);
       transform: translateX(4px);
 
-      .l-sidebar__link-icon {
+      .l-global-nav__link-icon {
         color: var(--section-accent, var(--color-category-main));
         filter: drop-shadow(
           0 0 4px
@@ -230,11 +230,11 @@ const closeSidebar = () => {
       @include ui-active(var(--section-accent, var(--color-category-main)));
       @include ui-blinking-cursor(6px, 14px, currentcolor);
 
-      .l-sidebar__link-text {
+      .l-global-nav__link-text {
         font-weight: var(--font-weight-bold);
       }
 
-      .l-sidebar__link-icon {
+      .l-global-nav__link-icon {
         color: var(--section-accent, var(--color-category-main));
         filter: drop-shadow(
           0 0 4px var(--section-accent, var(--color-category-main))
@@ -252,7 +252,7 @@ const closeSidebar = () => {
 }
 
 // --- Mobile Overlay ---
-.l-sidebar-overlay {
+.l-global-nav-overlay {
   display: none; // Hidden on desktop
 
   @include mq("lg") {

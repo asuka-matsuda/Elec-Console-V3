@@ -96,9 +96,9 @@ const categoryColorMap: Record<string, string> = {
 
 <template>
   <div class="p-glossary">
-    <AppDbLayout>
+    <AppFilterLayout>
       <template #sidebar>
-        <AppDbFilterPanel
+        <AppFilterPanel
           v-model:searchQuery="searchQuery"
           :category-options="categoryOptions"
           :active-cats="activeCats"
@@ -120,7 +120,7 @@ const categoryColorMap: Record<string, string> = {
               </div>
             </AppFormGroup>
           </template>
-        </AppDbFilterPanel>
+        </AppFilterPanel>
       </template>
 
       <template #main>
@@ -166,7 +166,7 @@ const categoryColorMap: Record<string, string> = {
           <p>条件に一致する用語が見つかりません。</p>
         </div>
       </template>
-    </AppDbLayout>
+    </AppFilterLayout>
   </div>
 </template>
 

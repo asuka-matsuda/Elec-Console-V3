@@ -11,7 +11,7 @@ const breadcrumbs = useBreadcrumbs()
 <template>
   <div class="l-app">
     <!-- Sidebar -->
-    <AppSidebar 
+    <AppGlobalNav 
       v-model:is-open="isSidebarOpen" 
       :menu-data="menuData" 
     />

@@ -16,9 +16,9 @@ const {
 
 <template>
   <div class="p-db">
-    <AppDbLayout>
+    <AppFilterLayout>
       <template #sidebar>
-        <AppDbFilterPanel
+        <AppFilterPanel
           v-model:searchQuery="searchQuery"
           :category-options="categoryOptions"
           :active-cats="activeCats"
@@ -61,7 +61,7 @@ const {
           <p>条件に一致するデータが見つかりません。</p>
         </div>
       </template>
-    </AppDbLayout>
+    </AppFilterLayout>
   </div>
 </template>
 
