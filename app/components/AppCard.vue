@@ -3,12 +3,7 @@ import { computed, resolveComponent } from "vue";
 
 const props = defineProps<{
   variant?:
-    | "default"
-    | "main"
-    | "tool"
-    | "database"
-    | "reference"
-    | "management";
+    "default" | "main" | "tool" | "database" | "reference" | "management";
   to?: string;
   href?: string;
   disabled?: boolean;
@@ -32,10 +27,7 @@ const rootProps = computed(() => {
     :is="rootTag"
     v-bind="rootProps"
     class="c-card"
-    :class="[
-      variant ? `c-card--${variant}` : '',
-      { 'is-disabled': disabled },
-    ]"
+    :class="[variant ? `c-card--${variant}` : '', { 'is-disabled': disabled }]"
   >
     <slot />
   </component>
@@ -45,14 +37,14 @@ const rootProps = computed(() => {
 .c-card {
   position: relative;
   padding: var(--pad-card, var(--space-4));
-  text-decoration: none; // Reset for links
+  text-decoration: none; /* Reset for links */
   display: flex;
   flex-direction: column;
   color: var(--color-text-main);
   transition: var(--transition-base);
   @include ui-surface(15%);
 
-  // Interactive link styles
+  /* Interactive link styles */
   &:is(a, button) {
     cursor: pointer;
 
@@ -71,7 +63,7 @@ const rootProps = computed(() => {
     filter: grayscale(100%);
   }
 
-  // Variants
+  /* Variants */
   &--tool {
     --card-accent: var(--color-category-tool);
   }
