@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { useHead } from "#app";
+import { watchEffect } from "vue";
 import { useSettings } from "~/composables/useSettings";
+
 
 const { 
   themeMode, 
@@ -16,8 +16,6 @@ const {
   gridColor,
   gridSpacing
 } = useSettings();
-
-import { watchEffect, onMounted } from 'vue';
 
 if (import.meta.client) {
   watchEffect(() => {

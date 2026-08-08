@@ -43,12 +43,12 @@ const bgOptions = [
     <div class="p-settings__grid">
       <div class="p-settings__stack">
         <!-- エフェクト設定 -->
-        <AppPanel title="エフェクト設定" variant="hybrid" bracketColor="tool">
+        <AppPanel title="エフェクト設定" variant="hybrid" bracket-color="tool">
           <template #header>
             <AppSectionHeader title="エフェクト設定" icon="monitor" variant="tool" size="md" />
           </template>
           
-          <p class="u-text-sm u-text-muted">
+          <p class="p-settings__desc">
             画面の演出効果を切り替えることができます。動作が重い場合はシンプルなものに変更してください。
           </p>
 
@@ -81,19 +81,19 @@ const bgOptions = [
           <!-- Grid Settings -->
           <div v-if="baseBgStyle === 'grid'" class="p-settings__sub-group">
             <AppFormGroup label="グリッド間隔 (px)">
-              <AppInput type="number" v-model.number="gridSpacing" />
+              <AppInput v-model.number="gridSpacing" type="number" />
             </AppFormGroup>
             <AppColorPicker v-model="gridColor" label="グリッド線色" />
           </div>
         </AppPanel>
 
         <!-- テーマ・カラー設定 -->
-        <AppPanel title="テーマ・カラー設定" variant="hybrid" bracketColor="tool">
+        <AppPanel title="テーマ・カラー設定" variant="hybrid" bracket-color="tool">
           <template #header>
             <AppSectionHeader title="テーマ・カラー設定" icon="moon" variant="tool" size="md" />
           </template>
           
-          <p class="u-text-sm u-text-muted">
+          <p class="p-settings__desc">
             画面のテーマ（ライト/ダーク）を変更します。
           </p>
 
@@ -159,9 +159,10 @@ const bgOptions = [
     border-radius: 0;
     border: var(--border-width-base) solid var(--color-border);
   }
-}
 
-/* Utility classes for temporary use */
-.u-text-sm { font-size: var(--text-sm); }
-.u-text-muted { color: var(--color-text-muted); }
+  &__desc {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+}
 </style>

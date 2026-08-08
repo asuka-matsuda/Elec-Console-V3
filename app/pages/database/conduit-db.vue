@@ -1,73 +1,30 @@
 <script setup lang="ts">
 import { conduitData } from '~/utils/conduitData'
-import { useDbFilter } from '~/composables/useDbFilter'
+import type { TableColumn } from '~/components/AppTable.vue'
 
-const { 
-  searchQuery, 
-  activeCats, 
-  categoryOptions, 
-  filteredData: filteredConduits
-} = useDbFilter({
-  data: conduitData,
-  searchMapper: item => `${item.category} ${item.size} ${item.standard || ''}`
-})
+const tableColumns: TableColumn[] = [
+  { key: 'category', label: '配管種類' },
+  { key: 'size', label: '呼び径' },
+  { key: 'innerDiameter', label: '内径 (mm)' },
+  { key: 'outerDiameter', label: '外径 (mm)' },
+  { key: 'area', label: '断面積 (mm²)' },
+  { key: 'standard', label: '規格' }
+]
 </script>
 
 <template>
-  <div class="p-db">
-    <AppFilterLayout>
-      <template #sidebar>
-        <AppFilterPanel
-          v-model:searchQuery="searchQuery"
-          :category-options="categoryOptions"
-          v-model:activeCats="activeCats"
-          placeholder="種類、サイズなどを検索... (例: G22)"
-        />
-      </template>
-
-      <template #main>
-        <AppPanel v-if="filteredConduits.length > 0" class="p-db__table-panel">
-          <AppTable>
-            <template #header>
-              <tr>
-                <th>配管種類</th>
-                <th>呼び径</th>
-                <th>内径 (mm)</th>
-                <th>外径 (mm)</th>
-                <th>断面積 (mm²)</th>
-                <th>占積率 32% (mm²)</th>
-                <th>占積率 48% (mm²)</th>
-                <th>規格</th>
-              </tr>
-            </template>
-            <template #body>
-              <tr v-for="(item, index) in filteredConduits" :key="`${item.category}-${item.size}-${index}`">
-                <td><strong>{{ item.category }}</strong></td>
-                <td>{{ item.size }}</td>
-                <td>{{ item.innerDiameter }}</td>
-                <td>{{ item.outerDiameter }}</td>
-                <td>{{ item.area }}</td>
-                <td>{{ item.area32 }}</td>
-                <td>{{ item.area48 }}</td>
-                <td class="u-text-sm u-text-muted">{{ item.standard }}</td>
-              </tr>
-            </template>
-          </AppTable>
-        </AppPanel>
-        
-        <div v-else class="p-db__empty">
-          <p>条件に一致するデータが見つかりません。</p>
-        </div>
-      </template>
-    </AppFilterLayout>
-  </div>
+  <AppDbViewer
+    :data="conduitData"
+    :columns="tableColumns"
+    :search-mapper="item => `${item.category} ${item.size} ${item.standard || ''}`"
+    placeholder="種類、サイズなどを検索... (例: G22)"
+  >
+    <template #cell-category="{ value }">
+      <strong>{{ value }}</strong>
+    </template>
+    
+    <template #cell-standard="{ value }">
+      <span class="p-db__meta">{{ value }}</span>
+    </template>
+  </AppDbViewer>
 </template>
-
-<style scoped lang="scss">
-.u-text-sm {
-  font-size: var(--text-sm);
-}
-.u-text-muted {
-  color: var(--color-text-muted);
-}
-</style>

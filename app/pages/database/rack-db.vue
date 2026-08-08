@@ -1,62 +1,25 @@
 <script setup lang="ts">
 import { rackData } from '~/utils/rackData'
-import { useDbFilter } from '~/composables/useDbFilter'
+import type { TableColumn } from '~/components/AppTable.vue'
 
-const { 
-  searchQuery, 
-  activeCats, 
-  categoryOptions, 
-  filteredData: filteredRacks
-} = useDbFilter({
-  data: rackData,
-  searchMapper: item => `${item.category} ${item.size}`
-})
+const tableColumns: TableColumn[] = [
+  { key: 'category', label: 'カテゴリ' },
+  { key: 'size', label: 'サイズ (呼び幅 mm)' },
+  { key: 'height', label: '親桁高さ (mm)' },
+  { key: 'weightPiece', label: '1本あたり質量 (kg/3m)' },
+  { key: 'weightMeter', label: '1mあたり質量 (kg/m)' }
+]
 </script>
 
 <template>
-  <div class="p-db">
-    <AppFilterLayout>
-      <template #sidebar>
-        <AppFilterPanel
-          v-model:searchQuery="searchQuery"
-          :category-options="categoryOptions"
-          v-model:activeCats="activeCats"
-          placeholder="種類、サイズなどを検索... (例: SR 300)"
-        />
-      </template>
-
-      <template #main>
-        <AppPanel v-if="filteredRacks.length > 0" class="p-db__table-panel">
-          <AppTable>
-            <template #header>
-              <tr>
-                <th>カテゴリ</th>
-                <th>サイズ (呼び幅 mm)</th>
-                <th>親桁高さ (mm)</th>
-                <th>1本あたり質量 (kg/3m)</th>
-                <th>1mあたり質量 (kg/m)</th>
-              </tr>
-            </template>
-            <template #body>
-              <tr v-for="(item, index) in filteredRacks" :key="`${item.category}-${item.size}-${index}`">
-                <td><strong>{{ item.category }}</strong></td>
-                <td>{{ item.size }}</td>
-                <td>{{ item.height }}</td>
-                <td>{{ item.weightPiece }}</td>
-                <td>{{ item.weightMeter }}</td>
-              </tr>
-            </template>
-          </AppTable>
-        </AppPanel>
-        
-        <div v-else class="p-db__empty">
-          <p>条件に一致するデータが見つかりません。</p>
-        </div>
-      </template>
-    </AppFilterLayout>
-  </div>
+  <AppDbViewer
+    :data="rackData"
+    :columns="tableColumns"
+    :search-mapper="item => `${item.category} ${item.size}`"
+    placeholder="種類、サイズなどを検索... (例: SR 300)"
+  >
+    <template #cell-category="{ value }">
+      <strong>{{ value }}</strong>
+    </template>
+  </AppDbViewer>
 </template>
-
-<style scoped lang="scss">
-/* No specific scoped styles needed anymore */
-</style>

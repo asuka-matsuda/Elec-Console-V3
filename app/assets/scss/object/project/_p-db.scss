@@ -1,11 +1,16 @@
-@use '../../foundation' as *;
+@use "../../foundation" as *;
 
 .p-db {
-  // Styles for the database specific elements
-
-
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 
   &__table-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
     padding: 0; // Remove padding so table spans full width of panel
     overflow: hidden; // Ensure rounded corners from panel apply to table
   }
@@ -15,7 +20,12 @@
     text-align: center;
     color: var(--color-text-muted);
     font-size: var(--text-base);
-    background-color: transparent;
-    border: var(--border-width-base) dotted theme-color(var(--color-border), 50%);
+    border: var(--border-width-base) dotted
+      theme-color(var(--color-border), 50%);
+  }
+
+  &__meta {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
   }
 }

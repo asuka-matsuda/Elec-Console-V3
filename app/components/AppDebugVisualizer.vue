@@ -45,8 +45,8 @@ onUnmounted(() => {
   <button 
     class="c-debug-visualizer-btn" 
     :class="{ 'is-active': isActive }"
-    @click="toggleVisualizer"
     title="Toggle Layout Visualizer"
+    @click="toggleVisualizer"
   >
     <AppIcon name="bug" class="c-debug-visualizer-btn__icon" />
   </button>

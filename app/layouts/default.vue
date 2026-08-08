@@ -75,6 +75,9 @@ const breadcrumbs = useBreadcrumbs();
 
 .l-content {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
   padding: var(--space-4);
   overflow-y: auto;
   @include custom-scrollbar();

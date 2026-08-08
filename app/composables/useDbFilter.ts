@@ -1,5 +1,4 @@
 import { ref, computed } from 'vue'
-import type { Ref } from 'vue'
 
 export interface FilterOptions<T> {
   data: T[]
@@ -14,7 +13,7 @@ export interface FilterOptions<T> {
   categoryMapper?: (item: T) => string
 }
 
-export function useDbFilter<T extends Record<string, any>>(options: FilterOptions<T>) {
+export function useDbFilter<T extends Record<string, unknown>>(options: FilterOptions<T>) {
   const { data, searchMapper } = options
   const categoryMapper = options.categoryMapper || ((item: T) => item.category as string)
 

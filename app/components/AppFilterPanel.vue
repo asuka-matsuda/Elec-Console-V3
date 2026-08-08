@@ -74,14 +74,19 @@ const toggleCat = (value: string) => {
   }
 
   &__filters {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr; /* スマホ時は縦積み */
     gap: var(--space-5);
+
+    /* PC時は横並び（キーワード入力幅を固定、残りをカテゴリに） */
+    @media (min-width: 768px) {
+      grid-template-columns: 280px 1fr;
+    }
   }
 
   &__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
     gap: var(--space-3);
   }
 }

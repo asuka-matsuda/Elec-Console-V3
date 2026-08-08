@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends Record<string, unknown>">
 /**
  * AppTable
  *
@@ -6,17 +6,45 @@
  * ヘッダー（th）のみglass-colorを使用し、ボディは透明。
  * 行（tr）ホバー時には発光エフェクト（ui-hover-glow）が適用されます。
  */
+
+export interface TableColumn {
+  key: string;
+  label: string;
+}
+
+defineProps<{
+  columns?: TableColumn[];
+  data?: T[];
+}>();
 </script>
 
 <template>
   <div class="c-table-wrapper">
     <table class="c-table">
-      <thead v-if="$slots.header">
-        <slot name="header" />
+      <!-- 従来の手書き用スロットまたはcolumns propによる自動生成 -->
+      <thead v-if="$slots.header || columns">
+        <slot name="header">
+          <tr v-if="columns">
+            <th v-for="col in columns" :key="col.key">{{ col.label }}</th>
+          </tr>
+        </slot>
       </thead>
-      <tbody v-if="$slots.body">
-        <slot name="body" />
+      
+      <!-- 従来の手書き用スロットまたはdata propによる自動生成 -->
+      <tbody v-if="$slots.body || (data && columns)">
+        <slot name="body">
+          <template v-if="data && columns">
+            <tr v-for="(row, index) in data" :key="index">
+              <td v-for="col in columns" :key="col.key">
+                <slot :name="`cell-${col.key}`" :value="row[col.key]" :row="row">
+                  {{ row[col.key] }}
+                </slot>
+              </td>
+            </tr>
+          </template>
+        </slot>
       </tbody>
+
       <tfoot v-if="$slots.footer">
         <slot name="footer" />
       </tfoot>
@@ -27,7 +55,8 @@
 <style scoped lang="scss">
 .c-table-wrapper {
   width: 100%;
-  max-height: 70dvh;
+  flex: 1;
+  min-height: 0;
   overflow: auto;
   border: var(--border-width-base) solid var(--color-border);
 }
@@ -40,10 +69,11 @@
 
   :deep(th),
   :deep(td) {
-    padding: var(--space-3) var(--space-4);
+    padding: var(--space-2) var(--space-4);
     border-bottom: var(--border-width-base) solid var(--color-border);
     color: var(--color-text-main);
     vertical-align: middle;
+    white-space: nowrap;
   }
 
   :deep(th) {
@@ -54,7 +84,6 @@
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
     font-size: var(--text-sm);
-    white-space: nowrap;
     border-bottom-width: calc(var(--border-width-base) * 2);
   }
 
