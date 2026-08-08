@@ -93,7 +93,8 @@ withDefaults(
       var(--divider-accent, var(--color-border)) 50%,
       transparent 100%
     );
-    box-shadow: 0 0 var(--blur-sm) theme-color(var(--divider-accent, var(--color-border)), 30%);
+    box-shadow: 0 0 var(--blur-sm)
+      theme-color(var(--divider-accent, var(--color-border)), 30%);
   }
 
   // ==========================================
@@ -114,7 +115,8 @@ withDefaults(
         theme-color(var(--divider-accent, var(--color-category-main)), 80%),
         transparent
       );
-      box-shadow: 0 0 var(--blur-md) var(--divider-accent, var(--color-category-main));
+      box-shadow: 0 0 var(--blur-md)
+        var(--divider-accent, var(--color-category-main));
       animation: data-pulse-x 3s ease-in-out infinite;
     }
   }
@@ -150,7 +152,8 @@ withDefaults(
         theme-color(var(--divider-accent, var(--color-category-main)), 80%),
         transparent
       );
-      box-shadow: 0 0 var(--blur-md) var(--divider-accent, var(--color-category-main));
+      box-shadow: 0 0 var(--blur-md)
+        var(--divider-accent, var(--color-category-main));
       animation: data-pulse-y 3s ease-in-out infinite;
     }
   }

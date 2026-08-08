@@ -19,9 +19,9 @@ const inputId = useId();
       type="checkbox"
       class="c-toggle__input"
       :disabled="disabled"
-    >
+    />
     <div class="c-toggle__track">
-      <div class="c-toggle__thumb"/>
+      <div class="c-toggle__thumb" />
     </div>
     <span v-if="label || $slots.default" class="c-toggle__label">
       <slot>{{ label }}</slot>

@@ -50,19 +50,21 @@
   @if $direction == bottom {
     border-bottom: var(--border-width-base) solid transparent;
     border-image: linear-gradient(
-      to right,
-      transparent 0%,
-      $color 50%,
-      transparent 100%
-    ) 1;
+        to right,
+        transparent 0%,
+        $color 50%,
+        transparent 100%
+      )
+      1;
   } @else if $direction == right {
     border-right: var(--border-width-base) solid transparent;
     border-image: linear-gradient(
-      to bottom,
-      transparent 0%,
-      $color 50%,
-      transparent 100%
-    ) 1;
+        to bottom,
+        transparent 0%,
+        $color 50%,
+        transparent 100%
+      )
+      1;
   }
 }
 
@@ -81,7 +83,8 @@
   $is-hover: "&:hover:not(:disabled, .is-error, :focus)"
 ) {
   background-color: transparent;
-  border: var(--border-width-base) solid theme-color(var(--color-category-main), 50%);
+  border: var(--border-width-base) solid
+    theme-color(var(--color-category-main), 50%);
   box-shadow: var(--edge-reflex-base), var(--shadow-sink);
   transition: var(--transition-base);
 

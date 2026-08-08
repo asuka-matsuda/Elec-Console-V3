@@ -3,5 +3,5 @@
 
 /* 不透明度20%のテーマカラー */
 @function theme-color($color, $opacity: 20%) {
-    @return color-mix(in srgb, #{$color} $opacity, transparent);
+  @return color-mix(in srgb, #{$color} $opacity, transparent);
 }

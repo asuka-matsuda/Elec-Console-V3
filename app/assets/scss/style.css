@@ -16,8 +16,8 @@
 html {
   line-height: 1.15;
   -webkit-text-size-adjust: 100%;
-     -moz-text-size-adjust: 100%;
-          text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -107,7 +107,7 @@ a {
 
 abbr[title] {
   -webkit-text-decoration: underline dotted;
-          text-decoration: underline dotted;
+  text-decoration: underline dotted;
 }
 
 b,
@@ -167,34 +167,34 @@ textarea {
   text-align: inherit;
   text-transform: inherit;
   -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   border-radius: 0;
 }
 
-[type=checkbox] {
+[type="checkbox"] {
   -webkit-appearance: auto;
-     -moz-appearance: auto;
-          appearance: auto;
+  -moz-appearance: auto;
+  appearance: auto;
 }
 
-[type=radio] {
+[type="radio"] {
   -webkit-appearance: auto;
-     -moz-appearance: auto;
-          appearance: auto;
+  -moz-appearance: auto;
+  appearance: auto;
 }
 
 button,
-[type=button],
-[type=reset],
-[type=submit] {
+[type="button"],
+[type="reset"],
+[type="submit"] {
   cursor: pointer;
 }
 
 button:disabled,
-[type=button]:disabled,
-[type=reset]:disabled,
-[type=submit]:disabled {
+[type="button"]:disabled,
+[type="reset"]:disabled,
+[type="submit"]:disabled {
   cursor: default;
 }
 
@@ -228,24 +228,24 @@ textarea {
   overflow: auto;
 }
 
-[type=number]::-webkit-inner-spin-button,
-[type=number]::-webkit-outer-spin-button {
+[type="number"]::-webkit-inner-spin-button,
+[type="number"]::-webkit-outer-spin-button {
   height: auto;
 }
 
-[type=search] {
+[type="search"] {
   outline-offset: -2px;
 }
 
-[type=search]::-webkit-search-decoration {
+[type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
-          appearance: none;
+  appearance: none;
 }
 
 ::-webkit-file-upload-button {
   font: inherit;
   -webkit-appearance: auto;
-          appearance: auto;
+  appearance: auto;
 }
 
 /* Interactive
@@ -471,15 +471,21 @@ template {
   --blur-xl: 16px;
   /* 1. Elevation (Physical Shadows)
      ========================================================================== */
-  --shadow-elevation-base: 0 8px 24px -4px color-mix(in srgb, black 90%, transparent);
+  --shadow-elevation-base: 0 8px 24px -4px
+    color-mix(in srgb, black 90%, transparent);
   --shadow-elevation-hover: 0 16px 40px -8px black;
   --shadow-sink: inset 0 2px 8px color-mix(in srgb, black 50%, transparent);
   /* 2. Edge Reflex (Glass Highlights)
      ========================================================================== */
-  --edge-reflex-base: inset 0 1px 0 color-mix(in srgb, var(--color-overlay) 25%, transparent), inset 0 0 0 1px color-mix(in srgb, var(--color-overlay) 4%, transparent);
-  --edge-reflex-hover: inset 0 2px 1px color-mix(in srgb, var(--color-overlay) 40%, transparent), inset 1px 0 1px color-mix(in srgb, var(--color-overlay) 20%, transparent);
+  --edge-reflex-base:
+    inset 0 1px 0 color-mix(in srgb, var(--color-overlay) 25%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, var(--color-overlay) 4%, transparent);
+  --edge-reflex-hover:
+    inset 0 2px 1px color-mix(in srgb, var(--color-overlay) 40%, transparent),
+    inset 1px 0 1px color-mix(in srgb, var(--color-overlay) 20%, transparent);
   --edge-reflex-press:
-      inset 1px 1px 2px color-mix(in srgb, var(--color-overlay) 15%, transparent), inset -1px -1px 2px color-mix(in srgb, var(--color-overlay) 2%, transparent);
+    inset 1px 1px 2px color-mix(in srgb, var(--color-overlay) 15%, transparent),
+    inset -1px -1px 2px color-mix(in srgb, var(--color-overlay) 2%, transparent);
   /* 3. Animation & Transition
      ========================================================================== */
   --duration-fast: 0.15s;
@@ -489,12 +495,12 @@ template {
   --ease-float: cubic-bezier(0.16, 1, 0.3, 1);
   --transition-base: all var(--duration-base) var(--ease-out);
   --transition-float:
-      transform var(--duration-slow) var(--ease-float),
-      box-shadow var(--duration-slow) var(--ease-float);
+    transform var(--duration-slow) var(--ease-float),
+    box-shadow var(--duration-slow) var(--ease-float);
   --transition-colors:
-      background-color var(--duration-fast) var(--ease-out),
-      border-color var(--duration-fast) var(--ease-out),
-      color var(--duration-fast) var(--ease-out);
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
   --icon-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A1A1AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   --icon-checkbox-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
 }
@@ -515,10 +521,22 @@ template {
    ========================================================================== */
 body {
   background-color: var(--color-main-bg);
-  background-image: radial-gradient(circle at 10% -10%, color-mix(in srgb, var(--color-category-main) 15%, transparent) 0%, transparent 70%), radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--color-category-tool) 10%, transparent) 0%, transparent 60%);
+  background-image:
+    radial-gradient(
+      circle at 10% -10%,
+      color-mix(in srgb, var(--color-category-main) 15%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      color-mix(in srgb, var(--color-category-tool) 10%, transparent) 0%,
+      transparent 60%
+    );
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-size: 100% 100%, 100% 100%;
+  background-size:
+    100% 100%,
+    100% 100%;
   transition: background 0.5s ease;
 }
 
@@ -536,28 +554,58 @@ body {
   transition: opacity 0.5s ease;
 }
 
-body:not([data-bg-theme=none]) .c-bg-canvas {
+body:not([data-bg-theme="none"]) .c-bg-canvas {
   opacity: 0.25;
 }
 
 /* Modifiers
    ========================================================================== */
-html[data-base-bg=solid] body {
+html[data-base-bg="solid"] body {
   background-image: none;
 }
 
-html[data-base-bg=aurora] body {
-  background-image: radial-gradient(ellipse at top left, color-mix(in srgb, var(--color-category-main) 35%, transparent) 0%, transparent 70%), radial-gradient(ellipse at bottom right, color-mix(in srgb, var(--color-category-tool) 25%, transparent) 0%, transparent 70%), radial-gradient(ellipse at top right, color-mix(in srgb, var(--color-category-database) 25%, transparent) 0%, transparent 70%), radial-gradient(ellipse at bottom left, color-mix(in srgb, var(--color-category-reference) 25%, transparent) 0%, transparent 70%);
+html[data-base-bg="aurora"] body {
+  background-image:
+    radial-gradient(
+      ellipse at top left,
+      color-mix(in srgb, var(--color-category-main) 35%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse at bottom right,
+      color-mix(in srgb, var(--color-category-tool) 25%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse at top right,
+      color-mix(in srgb, var(--color-category-database) 25%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse at bottom left,
+      color-mix(in srgb, var(--color-category-reference) 25%, transparent) 0%,
+      transparent 70%
+    );
   background-size: 100% 100%;
 }
 
-html[data-base-bg=grid] body {
-  background-image: linear-gradient(to right, color-mix(in srgb, var(--color-overlay) 5%, transparent) 2px, transparent 2px), linear-gradient(to bottom, color-mix(in srgb, var(--color-overlay) 5%, transparent) 2px, transparent 2px);
+html[data-base-bg="grid"] body {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in srgb, var(--color-overlay) 5%, transparent) 2px,
+      transparent 2px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--color-overlay) 5%, transparent) 2px,
+      transparent 2px
+    );
   background-repeat: repeat;
   background-size: 40px 40px;
 }
 
-html[data-theme=light] body {
+html[data-theme="light"] body {
   background-image: none;
 }
 
@@ -592,7 +640,7 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   margin: 0;
   -webkit-appearance: none;
-          appearance: none;
+  appearance: none;
 }
 
 /* Global Utilities
@@ -625,15 +673,16 @@ body.p-management {
 
 /* User Preferences (Reduced Motion / Disable Animations)
    ========================================================================== */
-html[data-animations=false] *,
-html[data-animations=false] *::before,
-html[data-animations=false] *::after {
+html[data-animations="false"] *,
+html[data-animations="false"] *::before,
+html[data-animations="false"] *::after {
   animation: none !important;
   animation-play-state: paused !important;
 }
 
 @keyframes ui-cursor-blink {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -654,15 +703,18 @@ html[data-animations=false] *::after {
 }
 
 ::-webkit-scrollbar-thumb {
-  border: 1px solid color-mix(in srgb, var(--color-category-main) 40%, transparent);
+  border: 1px solid
+    color-mix(in srgb, var(--color-category-main) 40%, transparent);
 }
 ::-webkit-scrollbar-thumb:hover {
   border-color: var(--color-category-main);
-  box-shadow: inset 0 0 8px color-mix(in srgb, var(--color-category-main) 40%, transparent);
+  box-shadow: inset 0 0 8px
+    color-mix(in srgb, var(--color-category-main) 40%, transparent);
 }
 ::-webkit-scrollbar-thumb:active {
   border-color: var(--color-category-main);
-  box-shadow: inset 0 0 12px color-mix(in srgb, var(--color-category-main) 80%, transparent);
+  box-shadow: inset 0 0 12px
+    color-mix(in srgb, var(--color-category-main) 80%, transparent);
 }
 
 /* Scrollbar Buttons
@@ -728,7 +780,7 @@ html[data-animations=false] *::after {
 
 /* Light Theme Variables
    ========================================================================== */
-[data-theme=light] {
+[data-theme="light"] {
   --color-main-bg-base: 0 0% 100%;
   --color-surface-bg-base: 0 0% 100%;
   --color-overlay-base: 220 25% 15%;
@@ -750,13 +802,18 @@ html[data-animations=false] *::after {
   --color-overlay-dark: hsl(240deg 10% 15% / 40%);
   --color-overlay-light: hsl(0deg 0% 100% / 50%);
   --shadow-color-base: color-mix(in srgb, hsl(220deg 25% 15%) 12%, transparent);
-  --shadow-color-hover: color-mix(in srgb, hsl(220deg 25% 15%) 20%, transparent);
+  --shadow-color-hover: color-mix(
+    in srgb,
+    hsl(220deg 25% 15%) 20%,
+    transparent
+  );
   --shadow-color-sink: color-mix(in srgb, black 15%, transparent);
   --edge-reflex-base: inset 0 0 0 1px color-mix(in srgb, black 8%, transparent);
-  --edge-reflex-hover: inset 0 0 0 1px color-mix(in srgb, black 15%, transparent);
+  --edge-reflex-hover: inset 0 0 0 1px
+    color-mix(in srgb, black 15%, transparent);
   --edge-reflex-press:
-      inset 0 1px 3px color-mix(in srgb, black 10%, transparent),
-      inset 0 0 0 1px color-mix(in srgb, black 15%, transparent);
+    inset 0 1px 3px color-mix(in srgb, black 10%, transparent),
+    inset 0 0 0 1px color-mix(in srgb, black 15%, transparent);
 }
 
 /* Accent Color Variations
@@ -764,62 +821,92 @@ html[data-animations=false] *::after {
 /* Border Style Themes
    ========================================================================== */
 :root,
-body[data-border-style=hud] {
-  --panel-border-color: color-mix(in srgb, var(--color-overlay) 15%, transparent);
+body[data-border-style="hud"] {
+  --panel-border-color: color-mix(
+    in srgb,
+    var(--color-overlay) 15%,
+    transparent
+  );
   --panel-border-image: none;
   --panel-box-shadow:
-      inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px color-mix(in srgb, var(--color-overlay) 15%, transparent),
-      var(--edge-reflex-base), var(--shadow-elevation-base);
+    inset 0 0 0 1px var(--color-main-bg),
+    inset 0 0 0 2px color-mix(in srgb, var(--color-overlay) 15%, transparent),
+    var(--edge-reflex-base), var(--shadow-elevation-base);
   --panel-bracket-display: block;
   --panel-bracket-size: 16px;
-  --panel-bracket-color: color-mix(in srgb, var(--color-overlay) 60%, transparent);
+  --panel-bracket-color: color-mix(
+    in srgb,
+    var(--color-overlay) 60%,
+    transparent
+  );
 }
 
-body[data-border-style=simple] {
-  --panel-border-color: color-mix(in srgb, var(--color-overlay) 15%, transparent);
+body[data-border-style="simple"] {
+  --panel-border-color: color-mix(
+    in srgb,
+    var(--color-overlay) 15%,
+    transparent
+  );
   --panel-border-image: none;
   --panel-box-shadow:
-      inset 1px 1px 2px color-mix(in srgb, var(--color-overlay) 15%, transparent), inset -1px -1px 2px color-mix(in srgb, var(--color-overlay) 2%, transparent),
-      var(--edge-reflex-base), var(--shadow-elevation-base);
+    inset 1px 1px 2px color-mix(in srgb, var(--color-overlay) 15%, transparent),
+    inset -1px -1px 2px color-mix(in srgb, var(--color-overlay) 2%, transparent),
+    var(--edge-reflex-base), var(--shadow-elevation-base);
   --panel-bracket-display: none;
 }
 
-body[data-border-style=gradient] {
+body[data-border-style="gradient"] {
   --panel-border-color: transparent;
   --panel-border-image: linear-gradient(
       135deg,
       color-mix(in srgb, var(--color-overlay) 40%, transparent) 0%,
       color-mix(in srgb, var(--color-overlay) 5%, transparent) 100%
-  ) 1;
+    )
+    1;
   --panel-box-shadow:
-      inset 1px 1px 2px color-mix(in srgb, var(--color-overlay) 15%, transparent), inset -1px -1px 2px color-mix(in srgb, var(--color-overlay) 2%, transparent),
-      var(--edge-reflex-base), var(--shadow-elevation-base);
+    inset 1px 1px 2px color-mix(in srgb, var(--color-overlay) 15%, transparent),
+    inset -1px -1px 2px color-mix(in srgb, var(--color-overlay) 2%, transparent),
+    var(--edge-reflex-base), var(--shadow-elevation-base);
   --panel-bracket-display: block;
   --panel-bracket-size: 12px;
-  --panel-bracket-color: color-mix(in srgb, var(--color-overlay) 40%, transparent);
+  --panel-bracket-color: color-mix(
+    in srgb,
+    var(--color-overlay) 40%,
+    transparent
+  );
 }
 
-body[data-border-style=hybrid] {
+body[data-border-style="hybrid"] {
   --panel-border-color: transparent;
   --panel-border-image: linear-gradient(
       135deg,
       color-mix(in srgb, var(--color-overlay) 50%, transparent) 0%,
       color-mix(in srgb, var(--color-overlay) 5%, transparent) 100%
-  ) 1;
+    )
+    1;
   --panel-box-shadow:
-      inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px color-mix(in srgb, var(--color-overlay) 15%, transparent),
-      var(--edge-reflex-base), var(--shadow-elevation-base);
+    inset 0 0 0 1px var(--color-main-bg),
+    inset 0 0 0 2px color-mix(in srgb, var(--color-overlay) 15%, transparent),
+    var(--edge-reflex-base), var(--shadow-elevation-base);
   --panel-bracket-display: block;
   --panel-bracket-size: 18px;
-  --panel-bracket-color: color-mix(in srgb, var(--color-overlay) 60%, transparent);
-  --panel-bracket-glow: drop-shadow(0 0 4px color-mix(in srgb, var(--color-overlay) 30%, transparent));
+  --panel-bracket-color: color-mix(
+    in srgb,
+    var(--color-overlay) 60%,
+    transparent
+  );
+  --panel-bracket-glow: drop-shadow(
+    0 0 4px color-mix(in srgb, var(--color-overlay) 30%, transparent)
+  );
 }
 
 /* Transitions
    ========================================================================== */
 .dropdown-fade-enter-active,
 .dropdown-fade-leave-active {
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .dropdown-fade-enter-from,
@@ -830,11 +917,13 @@ body[data-border-style=hybrid] {
 
 .fade-slide-enter-active,
 .fade-slide-leave-active {
-  transition: opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+  transition:
+    opacity var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
 }
 
 .fade-slide-enter-from,
 .fade-slide-leave-to {
   opacity: 0;
   transform: translateY(-4px);
-}/*# sourceMappingURL=style.css.map */
+} /*# sourceMappingURL=style.css.map */

@@ -29,14 +29,18 @@ defineProps<{
           </tr>
         </slot>
       </thead>
-      
+
       <!-- 従来の手書き用スロットまたはdata propによる自動生成 -->
       <tbody v-if="$slots.body || (data && columns)">
         <slot name="body">
           <template v-if="data && columns">
             <tr v-for="(row, index) in data" :key="index">
               <td v-for="col in columns" :key="col.key">
-                <slot :name="`cell-${col.key}`" :value="row[col.key]" :row="row">
+                <slot
+                  :name="`cell-${col.key}`"
+                  :value="row[col.key]"
+                  :row="row"
+                >
                   {{ row[col.key] }}
                 </slot>
               </td>

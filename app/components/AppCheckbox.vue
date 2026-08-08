@@ -20,11 +20,7 @@ const inputId = useId();
 </script>
 
 <template>
-  <label
-    class="c-checkbox"
-    :class="`c-checkbox--${color}`"
-    :for="inputId"
-  >
+  <label class="c-checkbox" :class="`c-checkbox--${color}`" :for="inputId">
     <input
       :id="inputId"
       v-model="model"

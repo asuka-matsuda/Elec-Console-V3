@@ -1,49 +1,52 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from "vue";
 
-const isActive = ref(false)
-const hoveredClass = ref('')
-const mousePos = ref({ x: 0, y: 0 })
+const isActive = ref(false);
+const hoveredClass = ref("");
+const mousePos = ref({ x: 0, y: 0 });
 
 const toggleVisualizer = () => {
-  isActive.value = !isActive.value
-}
+  isActive.value = !isActive.value;
+};
 
 const handleMouseMove = (e: MouseEvent) => {
-  if (!isActive.value) return
-  
-  mousePos.value = { x: e.clientX, y: e.clientY }
-  
-  const el = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement
-  if (el && typeof el.className === 'string' && el.className.trim() !== '') {
+  if (!isActive.value) return;
+
+  mousePos.value = { x: e.clientX, y: e.clientY };
+
+  const el = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
+  if (el && typeof el.className === "string" && el.className.trim() !== "") {
     // ツールチップやボタン自体は除外
-    if (!el.closest('.c-debug-visualizer-btn') && !el.closest('.c-debug-tooltip')) {
-      const classes = el.className.trim().split(/\s+/).join('.')
-      hoveredClass.value = '.' + classes
+    if (
+      !el.closest(".c-debug-visualizer-btn") &&
+      !el.closest(".c-debug-tooltip")
+    ) {
+      const classes = el.className.trim().split(/\s+/).join(".");
+      hoveredClass.value = "." + classes;
     } else {
-      hoveredClass.value = ''
+      hoveredClass.value = "";
     }
   } else if (el && el.tagName) {
     // クラスがない場合はタグ名を表示
-    hoveredClass.value = '<' + el.tagName.toLowerCase() + '>'
+    hoveredClass.value = "<" + el.tagName.toLowerCase() + ">";
   } else {
-    hoveredClass.value = ''
+    hoveredClass.value = "";
   }
-}
+};
 
 onMounted(() => {
-  window.addEventListener('mousemove', handleMouseMove)
-})
+  window.addEventListener("mousemove", handleMouseMove);
+});
 
 onUnmounted(() => {
-  window.removeEventListener('mousemove', handleMouseMove)
-})
+  window.removeEventListener("mousemove", handleMouseMove);
+});
 </script>
 
 <template>
   <!-- Floating Action Button -->
-  <button 
-    class="c-debug-visualizer-btn" 
+  <button
+    class="c-debug-visualizer-btn"
     :class="{ 'is-active': isActive }"
     title="Toggle Layout Visualizer"
     @click="toggleVisualizer"
@@ -54,8 +57,8 @@ onUnmounted(() => {
   <!-- Global Styles & Tooltip Injected on Active -->
   <Teleport to="body">
     <!-- Class Name Tooltip -->
-    <div 
-      v-if="isActive && hoveredClass" 
+    <div
+      v-if="isActive && hoveredClass"
       class="c-debug-tooltip"
       :style="{ left: mousePos.x + 15 + 'px', top: mousePos.y + 15 + 'px' }"
     >
@@ -63,19 +66,11 @@ onUnmounted(() => {
     </div>
 
     <component :is="'style'" v-if="isActive">
-      /* 
-       * ==========================================
-       * Layout Visualizer Styles 
-       * ==========================================
-       */
-      * {
-        outline: 1px solid rgba(255, 0, 0, 0.4) !important;
-      }
-      
-      /* Hover highlight for specific elements */
-      *:hover {
-        outline: 2px solid rgba(0, 255, 255, 0.8) !important;
-      }
+      /* * ========================================== * Layout Visualizer Styles
+      * ========================================== */ * { outline: 1px solid
+      rgba(255, 0, 0, 0.4) !important; } /* Hover highlight for specific
+      elements */ *:hover { outline: 2px solid rgba(0, 255, 255, 0.8)
+      !important; }
     </component>
   </Teleport>
 </template>
@@ -93,7 +88,7 @@ onUnmounted(() => {
   pointer-events: none;
   white-space: nowrap;
   border: 1px solid rgba(0, 255, 255, 0.3);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .c-debug-visualizer-btn {

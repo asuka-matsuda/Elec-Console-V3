@@ -1,4 +1,4 @@
-@use 'functions' as *;
+@use "functions" as *;
 @use "sass:map";
 
 /* SCSS VARIABLES (Design Tokens)
@@ -6,45 +6,46 @@
 
 /* Typography
    ========================================================================== */
-$font-base: 'Inter', 'Noto Sans JP', 'Segoe UI', 'Yu Gothic UI', 'Meiryo', sans-serif;
-$font-mono: 'Roboto Mono', 'Cascadia Code', 'Consolas', monospace;
+$font-base:
+  "Inter", "Noto Sans JP", "Segoe UI", "Yu Gothic UI", "Meiryo", sans-serif;
+$font-mono: "Roboto Mono", "Cascadia Code", "Consolas", monospace;
 $text-sizes: (
-    '2xs': 10px,
-    'xs': 12px,
-    'sm': 13px,
-    'base': 14px,
-    'lg': 16px,
-    'xl': 18px,
-    '2xl': 20px,
-    '3xl': 24px,
-    '4xl': 32px
+  "2xs": 10px,
+  "xs": 12px,
+  "sm": 13px,
+  "base": 14px,
+  "lg": 16px,
+  "xl": 18px,
+  "2xl": 20px,
+  "3xl": 24px,
+  "4xl": 32px,
 );
 
 /* Layout & Breakpoints
    ========================================================================== */
 $breakpoints: (
-    'md': 768px,
-    'lg': 1024px,
-    'xl': 1200px,
-    'xxl': 1600px
+  "md": 768px,
+  "lg": 1024px,
+  "xl": 1200px,
+  "xxl": 1600px,
 );
 $sidebar-width: 340px;
 
 /* Z-index
    ========================================================================== */
 $z-index: (
-    'bg-canvas': -3,
-    'footer': 10,
-    'table-header': 10,
-    'header': 99,
-    'dropdown': 100,
-    'fab': 100,
-    'sidebar-container': 100,
-    'sidebar-overlay': 101,
-    'sidebar': 102,
-    'modal': 1000,
-    'theme-switcher': 1000,
-    'click-effect': 9999
+  "bg-canvas": -3,
+  "footer": 10,
+  "table-header": 10,
+  "header": 99,
+  "dropdown": 100,
+  "fab": 100,
+  "sidebar-container": 100,
+  "sidebar-overlay": 101,
+  "sidebar": 102,
+  "modal": 1000,
+  "theme-switcher": 1000,
+  "click-effect": 9999,
 );
 
 /* Spacing & Sizing
@@ -52,25 +53,25 @@ $z-index: (
 $base-spacing: 8px;
 $base-size: 8px;
 $spacing-scale: (
-    '1': $base-spacing * 0.5,
-    '2': $base-spacing * 1,
-    '3': $base-spacing * 1.5,
-    '4': $base-spacing * 2,
-    '5': $base-spacing * 2.5,
-    '6': $base-spacing * 3,
-    '8': $base-spacing * 4,
-    '10': $base-spacing * 5,
-    '12': $base-spacing * 6,
-    '16': $base-spacing * 8
+  "1": $base-spacing * 0.5,
+  "2": $base-spacing * 1,
+  "3": $base-spacing * 1.5,
+  "4": $base-spacing * 2,
+  "5": $base-spacing * 2.5,
+  "6": $base-spacing * 3,
+  "8": $base-spacing * 4,
+  "10": $base-spacing * 5,
+  "12": $base-spacing * 6,
+  "16": $base-spacing * 8,
 );
 $size-scale: (
-    '1': $base-size * 0.5,
-    '2': $base-size * 1,
-    '3': $base-size * 1.5,
-    '4': $base-size * 2,
-    '5': $base-size * 2.5,
-    '6': $base-size * 3,
-    '8': $base-size * 4
+  "1": $base-size * 0.5,
+  "2": $base-size * 1,
+  "3": $base-size * 1.5,
+  "4": $base-size * 2,
+  "5": $base-size * 2.5,
+  "6": $base-size * 3,
+  "8": $base-size * 4,
 );
 
 /* Colors (Semantic HSL Bases)
@@ -108,214 +109,218 @@ $color-input-focus-base: 217 91% 60%;
 /* CSS CUSTOM PROPERTIES (:root)
    ========================================================================== */
 :root {
-    /* Typography
+  /* Typography
        ========================================================================== */
-    --font-base: #{$font-base};
-    --font-mono: #{$font-mono};
-    --font-weight-normal: 400;
-    --font-weight-medium: 500;
-    --font-weight-semibold: 600;
-    --font-weight-bold: 700;
-    --line-height-base: 1.6;
-    --line-height-ui: 1.4;
-    --line-height-tight: 1.2;
+  --font-base: #{$font-base};
+  --font-mono: #{$font-mono};
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --line-height-base: 1.6;
+  --line-height-ui: 1.4;
+  --line-height-tight: 1.2;
 
-    @each $name, $size in $text-sizes {
-        --text-#{$name}: #{$size};
-    }
+  @each $name, $size in $text-sizes {
+    --text-#{$name}: #{$size};
+  }
 
-    /* Responsive Typography (Fluid Scale) */
-    @media (width >= 1600px) {
-        --text-2xs: 12px;
-        --text-xs: 13px;
-        --text-sm: 14px;
-        --text-base: 16px;
-        --text-lg: 18px;
-        --text-xl: 20px;
-        --text-2xl: 24px;
-        --text-3xl: 28px;
-        --text-4xl: 36px;
-    }
+  /* Responsive Typography (Fluid Scale) */
+  @media (width >= 1600px) {
+    --text-2xs: 12px;
+    --text-xs: 13px;
+    --text-sm: 14px;
+    --text-base: 16px;
+    --text-lg: 18px;
+    --text-xl: 20px;
+    --text-2xl: 24px;
+    --text-3xl: 28px;
+    --text-4xl: 36px;
+  }
 
-    @media (width <= 1024px) {
-        --text-2xl: 18px;
-        --text-3xl: 24px;
-        --text-4xl: 28px;
-    }
+  @media (width <= 1024px) {
+    --text-2xl: 18px;
+    --text-3xl: 24px;
+    --text-4xl: 28px;
+  }
 
-    @media (width <= 768px) {
-        --text-lg: 15px;
-        --text-xl: 16px;
-        --text-2xl: 18px;
-        --text-3xl: 20px;
-        --text-4xl: 24px;
-    }
+  @media (width <= 768px) {
+    --text-lg: 15px;
+    --text-xl: 16px;
+    --text-2xl: 18px;
+    --text-3xl: 20px;
+    --text-4xl: 24px;
+  }
 
-    /* Layout, Spacing & Sizing
+  /* Layout, Spacing & Sizing
        ========================================================================== */
-    --sidebar-width: #{$sidebar-width};
-    --base-spacing: #{$base-spacing};
-    --base-size: #{$base-size};
+  --sidebar-width: #{$sidebar-width};
+  --base-spacing: #{$base-spacing};
+  --base-size: #{$base-size};
 
-    /* Z-index
+  /* Z-index
        ========================================================================== */
-    @each $name, $value in $z-index {
-        --z-index-#{$name}: #{$value};
-    }
-    /* Alias for nav to match AppGlobalNav.vue */
-    --z-index-nav: #{map.get($z-index, 'sidebar-container')};
+  @each $name, $value in $z-index {
+    --z-index-#{$name}: #{$value};
+  }
+  /* Alias for nav to match AppGlobalNav.vue */
+  --z-index-nav: #{map.get($z-index, "sidebar-container")};
 
-    @each $name, $size in $spacing-scale {
-        --space-#{$name}: #{$size};
-    }
+  @each $name, $size in $spacing-scale {
+    --space-#{$name}: #{$size};
+  }
 
-    @each $name, $size in $size-scale {
-        --size-#{$name}: #{$size};
-    }
+  @each $name, $size in $size-scale {
+    --size-#{$name}: #{$size};
+  }
 
-    /* Semantic Spacing
+  /* Semantic Spacing
        ========================================================================== */
-    --gap-component: var(--space-4);
-    --gap-element: var(--space-2);
-    --gap-section: var(--space-8);
-    --pad-card: var(--space-6);
+  --gap-component: var(--space-4);
+  --gap-element: var(--space-2);
+  --gap-section: var(--space-8);
+  --pad-card: var(--space-6);
 
-    @media (width <= 1024px) {
-        --gap-section: var(--space-6);
-        --pad-card: var(--space-4);
-    }
+  @media (width <= 1024px) {
+    --gap-section: var(--space-6);
+    --pad-card: var(--space-4);
+  }
 
-    @media (width <= 768px) {
-        --gap-component: var(--space-3);
-        --gap-section: var(--space-4);
-        --pad-card: var(--space-3);
-    }
+  @media (width <= 768px) {
+    --gap-component: var(--space-3);
+    --gap-section: var(--space-4);
+    --pad-card: var(--space-3);
+  }
 
-    /* Component Specific Sizes
+  /* Component Specific Sizes
        ========================================================================== */
-    --size-control-sm: 32px;
-    --size-control-md: 40px;
-    --size-control-lg: 48px;
-    --width-sm: 150px;
-    --width-md: 250px;
-    --table-cell-min-height: 36px;
+  --size-control-sm: 32px;
+  --size-control-md: 40px;
+  --size-control-lg: 48px;
+  --width-sm: 150px;
+  --width-md: 250px;
+  --table-cell-min-height: 36px;
 
-    /* Icon Sizes
+  /* Icon Sizes
        ========================================================================== */
-    --icon-size-sm: 16px;
-    --icon-size-md: 24px;
-    --icon-size-lg: 32px;
-    --icon-size-xl: 44px;
-    --icon-size-xxl: 48px;
+  --icon-size-sm: 16px;
+  --icon-size-md: 24px;
+  --icon-size-lg: 32px;
+  --icon-size-xl: 44px;
+  --icon-size-xxl: 48px;
 
-    /* Colors (Bases)
-       ========================================================================== */
-
-    /* Semantic HSL Bases
-       ========================================================================== */
-    --color-category-main-base: #{$color-category-main-base};
-    --color-category-tool-base: #{$color-category-tool-base};
-    --color-category-database-base: #{$color-category-database-base};
-    --color-category-reference-base: #{$color-category-reference-base};
-    --color-category-management-base: #{$color-category-management-base};
-    --color-accent-main-base: #{$color-accent-main-base};
-    --color-status-success-base: #{$color-status-success-base};
-    --color-status-warning-base: #{$color-status-warning-base};
-    --color-status-danger-base: #{$color-status-danger-base};
-    --color-status-stopped-base: #{$color-status-stopped-base};
-    --color-status-neutral-base: #{$color-status-neutral-base};
-    --color-status-emphasis-base: #{$color-status-emphasis-base};
-    --color-main-bg-base: #{$color-main-bg-base};
-    --color-surface-bg-base: #{$color-surface-bg-base};
-    --color-overlay-base: #{$color-overlay-base};
-    --color-text-main-base: #{$color-text-main-base};
-    --color-text-secondary-base: #{$color-text-secondary-base};
-    --color-text-muted-base: #{$color-text-muted-base};
-    --color-text-disabled-base: #{$color-text-disabled-base};
-    --color-border-base: #{$color-border-main-base};
-    --color-scroll-base: #{$color-scroll-base};
-    --color-table-header-bg-base: #{$color-table-header-bg-base};
-    --color-table-hover-bg-base: #{$color-table-hover-bg-base};
-    --color-input-bg-base: #{$color-input-bg-base};
-    --color-input-border-base: #{$color-input-border-base};
-    --color-input-focus-base: #{$color-input-focus-base};
-
-    /* Colors (Applied)
+  /* Colors (Bases)
        ========================================================================== */
 
-    /* Semantics
+  /* Semantic HSL Bases
        ========================================================================== */
-    --color-category-main: hsl(var(--color-category-main-base));
-    --color-category-tool: hsl(var(--color-category-tool-base));
-    --color-category-database: hsl(var(--color-category-database-base));
-    --color-category-reference: hsl(var(--color-category-reference-base));
-    --color-category-management: hsl(var(--color-category-management-base));
-    --color-status-success: hsl(var(--color-status-success-base));
-    --color-status-warning: hsl(var(--color-status-warning-base));
-    --color-status-danger: hsl(var(--color-status-danger-base));
-    --color-status-stopped: hsl(var(--color-status-stopped-base));
-    --color-status-neutral: hsl(var(--color-status-neutral-base));
-    --color-status-emphasis: hsl(var(--color-status-emphasis-base));
-    --color-main-bg: hsl(var(--color-main-bg-base));
-    --color-surface-bg: hsl(var(--color-surface-bg-base));
-    --color-overlay: hsl(var(--color-overlay-base));
-    --color-text-main: hsl(var(--color-text-main-base));
-    --color-text-secondary: hsl(var(--color-text-secondary-base));
-    --color-text-muted: hsl(var(--color-text-muted-base));
-    --color-text-disabled: hsl(var(--color-text-disabled-base));
-    --color-border: hsl(var(--color-border-base));
+  --color-category-main-base: #{$color-category-main-base};
+  --color-category-tool-base: #{$color-category-tool-base};
+  --color-category-database-base: #{$color-category-database-base};
+  --color-category-reference-base: #{$color-category-reference-base};
+  --color-category-management-base: #{$color-category-management-base};
+  --color-accent-main-base: #{$color-accent-main-base};
+  --color-status-success-base: #{$color-status-success-base};
+  --color-status-warning-base: #{$color-status-warning-base};
+  --color-status-danger-base: #{$color-status-danger-base};
+  --color-status-stopped-base: #{$color-status-stopped-base};
+  --color-status-neutral-base: #{$color-status-neutral-base};
+  --color-status-emphasis-base: #{$color-status-emphasis-base};
+  --color-main-bg-base: #{$color-main-bg-base};
+  --color-surface-bg-base: #{$color-surface-bg-base};
+  --color-overlay-base: #{$color-overlay-base};
+  --color-text-main-base: #{$color-text-main-base};
+  --color-text-secondary-base: #{$color-text-secondary-base};
+  --color-text-muted-base: #{$color-text-muted-base};
+  --color-text-disabled-base: #{$color-text-disabled-base};
+  --color-border-base: #{$color-border-main-base};
+  --color-scroll-base: #{$color-scroll-base};
+  --color-table-header-bg-base: #{$color-table-header-bg-base};
+  --color-table-hover-bg-base: #{$color-table-hover-bg-base};
+  --color-input-bg-base: #{$color-input-bg-base};
+  --color-input-border-base: #{$color-input-border-base};
+  --color-input-focus-base: #{$color-input-focus-base};
 
-    /* Components
+  /* Colors (Applied)
        ========================================================================== */
-    --color-scroll: hsl(var(--color-scroll-base));
-    --color-table-header-bg: hsl(var(--color-table-header-bg-base));
-    --color-table-hover-bg: hsl(var(--color-table-hover-bg-base));
-    --color-input-bg: hsl(var(--color-input-bg-base));
-    --color-input-border: hsl(var(--color-input-border-base));
-    --color-input-focus: hsl(var(--color-input-focus-base));
 
-    /* Borders
+  /* Semantics
        ========================================================================== */
-    --border-width-base: 1px;
-    --border-width-thick: 2px;
+  --color-category-main: hsl(var(--color-category-main-base));
+  --color-category-tool: hsl(var(--color-category-tool-base));
+  --color-category-database: hsl(var(--color-category-database-base));
+  --color-category-reference: hsl(var(--color-category-reference-base));
+  --color-category-management: hsl(var(--color-category-management-base));
+  --color-status-success: hsl(var(--color-status-success-base));
+  --color-status-warning: hsl(var(--color-status-warning-base));
+  --color-status-danger: hsl(var(--color-status-danger-base));
+  --color-status-stopped: hsl(var(--color-status-stopped-base));
+  --color-status-neutral: hsl(var(--color-status-neutral-base));
+  --color-status-emphasis: hsl(var(--color-status-emphasis-base));
+  --color-main-bg: hsl(var(--color-main-bg-base));
+  --color-surface-bg: hsl(var(--color-surface-bg-base));
+  --color-overlay: hsl(var(--color-overlay-base));
+  --color-text-main: hsl(var(--color-text-main-base));
+  --color-text-secondary: hsl(var(--color-text-secondary-base));
+  --color-text-muted: hsl(var(--color-text-muted-base));
+  --color-text-disabled: hsl(var(--color-text-disabled-base));
+  --color-border: hsl(var(--color-border-base));
 
-    /* Effects & UI Elements
+  /* Components
        ========================================================================== */
-    --color-overlay-dark: hsl(0deg 0% 0% / 60%);
-    --color-overlay-light: hsl(0deg 0% 0% / 30%);
-    --blur-sm: 4px;
-    --blur-md: 8px;
-    --blur-lg: 12px;
-    --blur-xl: 16px;
+  --color-scroll: hsl(var(--color-scroll-base));
+  --color-table-header-bg: hsl(var(--color-table-header-bg-base));
+  --color-table-hover-bg: hsl(var(--color-table-hover-bg-base));
+  --color-input-bg: hsl(var(--color-input-bg-base));
+  --color-input-border: hsl(var(--color-input-border-base));
+  --color-input-focus: hsl(var(--color-input-focus-base));
 
-    /* 1. Elevation (Physical Shadows)
+  /* Borders
        ========================================================================== */
-    --shadow-elevation-base: 0 8px 24px -4px color-mix(in srgb, black 90%, transparent);
-    --shadow-elevation-hover: 0 16px 40px -8px black;
-    --shadow-sink: inset 0 2px 8px color-mix(in srgb, black 50%, transparent);
+  --border-width-base: 1px;
+  --border-width-thick: 2px;
 
-    /* 2. Edge Reflex (Glass Highlights)
+  /* Effects & UI Elements
        ========================================================================== */
-    --edge-reflex-base: inset 0 1px 0 var(--color-border), inset 0 0 0 1px var(--color-border);
-    --edge-reflex-hover: inset 0 2px 1px var(--color-border), inset 1px 0 1px var(--color-border);
-    --edge-reflex-press:
-        inset 1px 1px 2px var(--color-border), inset -1px -1px 2px var(--color-border);
+  --color-overlay-dark: hsl(0deg 0% 0% / 60%);
+  --color-overlay-light: hsl(0deg 0% 0% / 30%);
+  --blur-sm: 4px;
+  --blur-md: 8px;
+  --blur-lg: 12px;
+  --blur-xl: 16px;
 
-    /* 3. Animation & Transition
+  /* 1. Elevation (Physical Shadows)
        ========================================================================== */
-    --duration-fast: 0.15s;
-    --duration-base: 0.25s;
-    --duration-slow: 0.4s;
-    --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
-    --ease-float: cubic-bezier(0.16, 1, 0.3, 1);
-    --transition-base: all var(--duration-base) var(--ease-out);
-    --transition-float:
-        transform var(--duration-slow) var(--ease-float),
-        box-shadow var(--duration-slow) var(--ease-float);
-    --transition-colors:
-        background-color var(--duration-fast) var(--ease-out),
-        border-color var(--duration-fast) var(--ease-out),
-        color var(--duration-fast) var(--ease-out);
-    --icon-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A1A1AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-    --icon-checkbox-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+  --shadow-elevation-base: 0 8px 24px -4px
+    color-mix(in srgb, black 90%, transparent);
+  --shadow-elevation-hover: 0 16px 40px -8px black;
+  --shadow-sink: inset 0 2px 8px color-mix(in srgb, black 50%, transparent);
+
+  /* 2. Edge Reflex (Glass Highlights)
+       ========================================================================== */
+  --edge-reflex-base:
+    inset 0 1px 0 var(--color-border), inset 0 0 0 1px var(--color-border);
+  --edge-reflex-hover:
+    inset 0 2px 1px var(--color-border), inset 1px 0 1px var(--color-border);
+  --edge-reflex-press:
+    inset 1px 1px 2px var(--color-border),
+    inset -1px -1px 2px var(--color-border);
+
+  /* 3. Animation & Transition
+       ========================================================================== */
+  --duration-fast: 0.15s;
+  --duration-base: 0.25s;
+  --duration-slow: 0.4s;
+  --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-float: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-base: all var(--duration-base) var(--ease-out);
+  --transition-float:
+    transform var(--duration-slow) var(--ease-float),
+    box-shadow var(--duration-slow) var(--ease-float);
+  --transition-colors:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+  --icon-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A1A1AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  --icon-checkbox-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
 }

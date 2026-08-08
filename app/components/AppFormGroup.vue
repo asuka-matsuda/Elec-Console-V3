@@ -16,36 +16,36 @@ withDefaults(
   <div class="c-form-group">
     <div class="c-form-group__inner">
       <!-- Label Area -->
-    <div v-if="label || $slots.label" class="c-form-group__label-wrapper">
-      <label class="c-form-label">
-        <slot name="label">{{ label }}</slot>
-      </label>
-      <AppBadge
-        v-if="required"
-        variant="danger"
-        size="sm"
-        class="c-form-group__required"
-      >
-        REQUIRED
-      </AppBadge>
-    </div>
-
-    <!-- Input Control Area -->
-    <div class="c-form-group__control">
-      <slot />
-
-      <!-- Error Message -->
-      <transition name="fade-slide">
-        <div v-if="error" class="c-form-group__error">
-          {{ error }}
-        </div>
-      </transition>
-
-      <!-- Help Text -->
-      <div v-if="help && !error" class="c-form-group__help">
-        {{ help }}
+      <div v-if="label || $slots.label" class="c-form-group__label-wrapper">
+        <label class="c-form-label">
+          <slot name="label">{{ label }}</slot>
+        </label>
+        <AppBadge
+          v-if="required"
+          variant="danger"
+          size="sm"
+          class="c-form-group__required"
+        >
+          REQUIRED
+        </AppBadge>
       </div>
-    </div>
+
+      <!-- Input Control Area -->
+      <div class="c-form-group__control">
+        <slot />
+
+        <!-- Error Message -->
+        <transition name="fade-slide">
+          <div v-if="error" class="c-form-group__error">
+            {{ error }}
+          </div>
+        </transition>
+
+        <!-- Help Text -->
+        <div v-if="help && !error" class="c-form-group__help">
+          {{ help }}
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -72,7 +72,8 @@ withDefaults(
         width: 140px;
         // Align label with the text inside a medium input control
         padding-top: calc(
-          (var(--size-control-md) - var(--line-height-base) * var(--text-sm)) / 2
+          (var(--size-control-md) - var(--line-height-base) * var(--text-sm)) /
+            2
         );
       }
 

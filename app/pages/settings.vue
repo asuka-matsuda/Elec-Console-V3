@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useSettings } from '~/composables/useSettings'
+import { useSettings } from "~/composables/useSettings";
 
-const { 
-  themeMode, 
+const {
+  themeMode,
   baseBgStyle,
   solidColor,
   gradientColor1,
@@ -12,32 +12,34 @@ const {
   auroraColor3,
   auroraColor4,
   gridColor,
-  gridSpacing
-} = useSettings()
+  gridSpacing,
+} = useSettings();
 
 const themeOptions = [
-  { label: 'ダークモード (標準)', value: 'dark' },
-  { label: 'ライトモード', value: 'light' },
-]
+  { label: "ダークモード (標準)", value: "dark" },
+  { label: "ライトモード", value: "light" },
+];
 
 const bgOptions = [
-  { label: '単色', value: 'solid' },
-  { label: 'グラデーション', value: 'gradient' },
-  { label: 'オーロラ', value: 'aurora' },
-  { label: 'サイバーグリッド', value: 'grid' },
-]
+  { label: "単色", value: "solid" },
+  { label: "グラデーション", value: "gradient" },
+  { label: "オーロラ", value: "aurora" },
+  { label: "サイバーグリッド", value: "grid" },
+];
 </script>
 
 <template>
   <div class="p-settings">
     <header class="p-settings__header">
-      <AppSectionHeader 
-        title="UI・個人設定" 
-        icon="settings" 
+      <AppSectionHeader
+        title="UI・個人設定"
+        icon="settings"
         variant="tool"
         size="lg"
       />
-      <p class="p-settings__desc">このブラウザ固有のUI設定をカスタマイズします。</p>
+      <p class="p-settings__desc">
+        このブラウザ固有のUI設定をカスタマイズします。
+      </p>
     </header>
 
     <div class="p-settings__grid">
@@ -45,18 +47,20 @@ const bgOptions = [
         <!-- エフェクト設定 -->
         <AppPanel title="エフェクト設定" variant="hybrid" bracket-color="tool">
           <template #header>
-            <AppSectionHeader title="エフェクト設定" icon="monitor" variant="tool" size="md" />
+            <AppSectionHeader
+              title="エフェクト設定"
+              icon="monitor"
+              variant="tool"
+              size="md"
+            />
           </template>
-          
+
           <p class="p-settings__desc">
             画面の演出効果を切り替えることができます。動作が重い場合はシンプルなものに変更してください。
           </p>
 
           <AppFormGroup label="ベース背景スタイル">
-            <AppSelect 
-              v-model="baseBgStyle"
-              :options="bgOptions"
-            />
+            <AppSelect v-model="baseBgStyle" :options="bgOptions" />
           </AppFormGroup>
 
           <!-- Solid Settings -->
@@ -88,23 +92,29 @@ const bgOptions = [
         </AppPanel>
 
         <!-- テーマ・カラー設定 -->
-        <AppPanel title="テーマ・カラー設定" variant="hybrid" bracket-color="tool">
+        <AppPanel
+          title="テーマ・カラー設定"
+          variant="hybrid"
+          bracket-color="tool"
+        >
           <template #header>
-            <AppSectionHeader title="テーマ・カラー設定" icon="moon" variant="tool" size="md" />
+            <AppSectionHeader
+              title="テーマ・カラー設定"
+              icon="moon"
+              variant="tool"
+              size="md"
+            />
           </template>
-          
+
           <p class="p-settings__desc">
             画面のテーマ（ライト/ダーク）を変更します。
           </p>
 
-          <AppFormGroup 
-            label="外観モード" 
+          <AppFormGroup
+            label="外観モード"
             help="全体の明るさを変更します（ダークモード推奨）"
           >
-            <AppSelect 
-              v-model="themeMode"
-              :options="themeOptions"
-            />
+            <AppSelect v-model="themeMode" :options="themeOptions" />
           </AppFormGroup>
         </AppPanel>
       </div>
@@ -138,8 +148,8 @@ const bgOptions = [
     display: grid;
     grid-template-columns: 2fr 1fr; /* Desktop default */
     gap: var(--space-8);
-    
-    @include mq('lg') {
+
+    @include mq("lg") {
       grid-template-columns: 1fr;
     }
   }

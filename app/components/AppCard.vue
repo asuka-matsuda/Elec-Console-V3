@@ -3,7 +3,12 @@ import { computed, resolveComponent } from "vue";
 
 const props = defineProps<{
   variant?:
-    "default" | "main" | "tool" | "database" | "reference" | "management";
+    | "default"
+    | "main"
+    | "tool"
+    | "database"
+    | "reference"
+    | "management";
   to?: string;
   href?: string;
   disabled?: boolean;

@@ -1,5 +1,5 @@
-@use 'variables' as *;
-@use 'mixins' as *;
+@use "variables" as *;
+@use "mixins" as *;
 
 /* Universal & Resets
    ========================================================================== */
@@ -8,80 +8,84 @@
 *,
 *::before,
 *::after {
-    box-sizing: border-box; //箱からはみ出さないように
+  box-sizing: border-box; //箱からはみ出さないように
 }
 
 /* Base Elements
    ========================================================================== */
 body {
-    display: flex; //フレックスボックス
-    flex-direction: column; //最初から縦並び
-    height: 100dvh; //高さ
-    min-height: 100dvh; //バグ対策
-    margin: 0; //余白なし
-    overflow: hidden; //スクロール禁止
-    font-family: var(--font-base);
-    font-size: var(--text-base);
-    line-height: var(--line-height-base);
-    color: var(--color-text-main);
-    letter-spacing: 0.02em;
-    color-scheme: dark; //ダークモードベース
-    -webkit-font-smoothing: antialiased; //Chrome,Safari用
-    -moz-osx-font-smoothing: grayscale; //Firefox用
+  display: flex; //フレックスボックス
+  flex-direction: column; //最初から縦並び
+  height: 100dvh; //高さ
+  min-height: 100dvh; //バグ対策
+  margin: 0; //余白なし
+  overflow: hidden; //スクロール禁止
+  font-family: var(--font-base);
+  font-size: var(--text-base);
+  line-height: var(--line-height-base);
+  color: var(--color-text-main);
+  letter-spacing: 0.02em;
+  color-scheme: dark; //ダークモードベース
+  -webkit-font-smoothing: antialiased; //Chrome,Safari用
+  -moz-osx-font-smoothing: grayscale; //Firefox用
 }
 
 //標準のスピンボタンを消す
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-    margin: 0; //バグ対策
-    appearance: none;
+  margin: 0; //バグ対策
+  appearance: none;
 }
 
 /* Global Utilities
    ========================================================================== */
 .is-hidden {
-    display: none;
+  display: none;
 }
 
 /* Page Theme Contexts
    ========================================================================== */
 body.p-tool {
-    --color-category-main: var(--color-category-tool);
-    --color-category-main-base: var(--color-category-tool-base);
+  --color-category-main: var(--color-category-tool);
+  --color-category-main-base: var(--color-category-tool-base);
 }
 
 body.p-database {
-    --color-category-main: var(--color-category-database);
-    --color-category-main-base: var(--color-category-database-base);
+  --color-category-main: var(--color-category-database);
+  --color-category-main-base: var(--color-category-database-base);
 }
 
 body.p-reference {
-    --color-category-main: var(--color-category-reference);
-    --color-category-main-base: var(--color-category-reference-base);
+  --color-category-main: var(--color-category-reference);
+  --color-category-main-base: var(--color-category-reference-base);
 }
 
 body.p-management {
-    --color-category-main: var(--color-category-management);
-    --color-category-main-base: var(--color-category-management-base);
+  --color-category-main: var(--color-category-management);
+  --color-category-main-base: var(--color-category-management-base);
 }
 
 /* User Preferences (Reduced Motion / Disable Animations)
    ========================================================================== */
-html[data-animations='false'] {
-    *,
-    *::before,
-    *::after {
-        animation: none !important; //アニメーションのオフ
-        animation-play-state: paused !important; //jsで動いているものも一時停止
-    }
+html[data-animations="false"] {
+  *,
+  *::before,
+  *::after {
+    animation: none !important; //アニメーションのオフ
+    animation-play-state: paused !important; //jsで動いているものも一時停止
+  }
 }
 
 // --- Global Animations ---
 @keyframes ui-cursor-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
-
 
 #__nuxt {
   flex: 1;

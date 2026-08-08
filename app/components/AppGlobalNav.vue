@@ -216,7 +216,7 @@ const closeSidebar = () => {
         color: var(--section-accent, var(--color-category-main));
         filter: drop-shadow(
           0 0 var(--blur-sm)
-          theme-color(var(--section-accent, var(--color-category-main)), 80%)
+            theme-color(var(--section-accent, var(--color-category-main)), 80%)
         );
       }
     }
@@ -227,7 +227,11 @@ const closeSidebar = () => {
       border-color: transparent;
       transform: translateX(0);
       @include ui-active(var(--section-accent, var(--color-category-main)));
-      @include ui-blinking-cursor(var(--space-1), var(--text-base), currentcolor);
+      @include ui-blinking-cursor(
+        var(--space-1),
+        var(--text-base),
+        currentcolor
+      );
 
       .l-global-nav__link-text {
         font-weight: var(--font-weight-bold);

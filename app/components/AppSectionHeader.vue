@@ -1,24 +1,24 @@
 <script setup lang="ts">
-import type { MenuSection } from '~/utils/menuData'
+import type { MenuSection } from "~/utils/menuData";
 
 withDefaults(
   defineProps<{
     title?: string;
     icon?: string;
-    variant?: MenuSection['accent'];
+    variant?: MenuSection["accent"];
     size?: "md" | "lg";
   }>(),
   {
     variant: "main",
     size: "lg",
-  }
+  },
 );
 </script>
 
 <template>
   <header class="c-section-header">
-    <h2 
-      class="c-section-header__title" 
+    <h2
+      class="c-section-header__title"
       :class="[`c-section-header__title--${size}`]"
       :style="`--section-color: var(--color-category-${variant})`"
     >

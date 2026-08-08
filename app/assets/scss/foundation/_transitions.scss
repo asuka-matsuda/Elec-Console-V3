@@ -4,7 +4,9 @@
 // --- Dropdown Fade (Used in AppSelect, etc.) ---
 .dropdown-fade-enter-active,
 .dropdown-fade-leave-active {
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
 }
 
 .dropdown-fade-enter-from,
@@ -16,8 +18,9 @@
 // --- Fade Slide (Used in Form Errors, etc.) ---
 .fade-slide-enter-active,
 .fade-slide-leave-active {
-  transition: opacity var(--duration-fast) var(--ease-out),
-              transform var(--duration-fast) var(--ease-out);
+  transition:
+    opacity var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
 }
 .fade-slide-enter-from,
 .fade-slide-leave-to {
