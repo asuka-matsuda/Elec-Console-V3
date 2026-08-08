@@ -85,7 +85,7 @@ withDefaults(
   /* Header & Title */
   /* --------------------------------------------------------- */
   &__header {
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--pad-card-gap, var(--space-4));
   }
 
   &__title {
@@ -100,7 +100,7 @@ withDefaults(
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--pad-card-gap, var(--space-4));
     min-height: 0;
   }
 
