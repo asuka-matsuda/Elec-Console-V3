@@ -66,8 +66,6 @@ withDefaults(
       height: var(--border-width-thick);
       border-top: var(--border-width-base) solid var(--color-border);
       border-bottom: 1px solid transparent;
-      margin: var(--space-4) 0;
-
       transform-origin: center;
       animation: divider-scale-x 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }

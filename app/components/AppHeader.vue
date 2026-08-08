@@ -14,13 +14,11 @@ const emit = defineEmits<{
   <header class="l-header">
     <div class="l-header__left">
       <!-- Mobile Sidebar Toggle -->
-      <AppButton
-        variant="tool"
+      <AppIconButton
+        name="menu"
         class="l-header__menu-btn"
         @click="emit('toggle-sidebar')"
-      >
-        <AppIcon name="menu" />
-      </AppButton>
+      />
 
       <!-- Breadcrumbs / Page Title -->
       <AppBreadcrumb v-if="breadcrumbs?.length" :items="breadcrumbs" />
@@ -38,7 +36,7 @@ const emit = defineEmits<{
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 72px;
+  height: 64px;
   padding: 0 var(--space-4);
 
   @include mq("md") {
@@ -51,12 +49,10 @@ const emit = defineEmits<{
     gap: var(--space-4);
   }
 
-  // Use class chaining (.c-btn) to increase specificity over AppButton's default styles
-  // without relying on !important.
-  &__menu-btn.c-btn {
+  &__menu-btn {
     display: none; // Hidden on desktop
 
-    @include mq("lg") {
+    @include mq("md") {
       display: inline-flex;
     }
   }

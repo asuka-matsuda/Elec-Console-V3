@@ -66,10 +66,10 @@ const breadcrumbs = useBreadcrumbs();
   display: flex;
   flex-direction: column;
   min-width: 0; /* Prevent flex item from blowing out */
+  margin-left: 280px; /* On desktop, the sidebar takes up 280px. */
 
-  /* On desktop, the sidebar takes up 280px. We push the main content over. */
-  @include mq("lg", "up-strict") {
-    margin-left: 280px;
+  @include mq("md") {
+    margin-left: 0;
   }
 }
 

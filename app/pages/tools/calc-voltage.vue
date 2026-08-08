@@ -122,6 +122,35 @@ const targetDropOptions = [
 // 表示制御用の算出プロパティ
 const isSizeCalcMode = computed(() => form.mode === "size");
 const isDropCalcMode = computed(() => form.mode === "drop");
+
+// フォームフィールド設定のDRY化
+type FormField = {
+  id: keyof typeof form;
+  label: string;
+  type: "select" | "input-select" | "input-addon";
+  options?: { label: string; value: string }[];
+  placeholder?: string;
+  min?: string;
+  step?: string;
+  addonText?: string;
+  secondaryId?: keyof typeof form;
+  secondaryOptions?: { label: string; value: string }[];
+  showIf?: () => boolean;
+};
+
+const formFields = computed<FormField[]>(() => [
+  { id: "phase", label: "配電方式・電圧", type: "select", options: phaseOptions, placeholder: "選択してください" },
+  { id: "loadValue", label: "負荷", type: "input-select", placeholder: "入力してください", min: "0.1", step: "0.1", secondaryId: "loadUnit", secondaryOptions: loadUnitOptions },
+  { id: "powerFactor", label: "力率設定 (kW時)", type: "select", options: powerFactorOptions, placeholder: "選択してください" },
+  { id: "distance", label: "配線距離 (L)", type: "input-addon", placeholder: "入力してください", min: "1", addonText: "m" },
+  { id: "cableType", label: "使用ケーブル", type: "select", options: cableTypeOptions, placeholder: "選択してください" },
+  { id: "cores", label: "芯数 指定", type: "select", options: coreOptions, placeholder: "選択してください", showIf: () => isSizeCalcMode.value },
+  { id: "fixedSize", label: "ケーブルサイズ 指定", type: "select", options: fixedSizeOptions, placeholder: "選択してください", showIf: () => isDropCalcMode.value },
+  { id: "parallel", label: "敷設条数", type: "select", options: parallelOptions, placeholder: "選択してください" },
+  { id: "derating", label: "布設条件 (電流減少係数)", type: "select", options: deratingOptions, placeholder: "選択してください" },
+  { id: "ambientTemp", label: "想定周囲温度", type: "select", options: ambientTempOptions, placeholder: "選択してください" },
+  { id: "targetDrop", label: "目標（許容）電圧降下率", type: "select", options: targetDropOptions, placeholder: "選択してください", showIf: () => isSizeCalcMode.value },
+]);
 </script>
 
 <template>
@@ -133,11 +162,17 @@ const isDropCalcMode = computed(() => form.mode === "drop");
     <template #results>
       <AppPanel
         variant="hud"
-        bracketColor="tool"
+        bracket-color="tool"
         style="flex: 1; min-height: 0"
       >
         <template #header>
-          <AppSectionHeader title="計算結果" icon="check-square" variant="tool" size="md" />
+          <AppSectionHeader
+            title="計算結果"
+            divider-type="fade-center"
+            icon="check-square"
+            variant="tool"
+            size="md"
+          />
         </template>
         <div
           style="
@@ -156,96 +191,74 @@ const isDropCalcMode = computed(() => form.mode === "drop");
     <template #inputs>
       <AppPanel variant="simple" style="flex: 1; min-height: 0">
         <template #header>
-          <AppSectionHeader title="条件入力" icon="edit" variant="tool" size="md" />
+          <AppSectionHeader
+            title="条件入力"
+            divider-type="fade-center"
+            icon="edit"
+            variant="tool"
+            size="md"
+          />
         </template>
         <!-- 1. 計算モード切替 (AppRadioGroup) -->
-        <div class="u-mb-4">
-          <AppRadioGroup v-model="form.mode" :options="modeOptions" />
-        </div>
+        <AppRadioGroup v-model="form.mode" :options="modeOptions" />
 
         <div class="l-grid l-grid--2col">
-          <!-- 2. 配電方式・電圧 -->
-          <AppFormGroup label="配電方式・電圧">
-            <AppSelect v-model="form.phase" :options="phaseOptions" placeholder="選択してください" />
-          </AppFormGroup>
-
-          <!-- 3. 負荷 -->
-          <AppFormGroup label="負荷">
-            <div class="c-input-group">
-              <AppInput
-                v-model.number="form.loadValue"
-                type="number"
-                placeholder="入力してください"
-                min="0.1"
-                step="0.1"
+          <template v-for="field in formFields" :key="field.id">
+            <AppFormGroup
+              v-if="!field.showIf || field.showIf()"
+              :label="field.label"
+            >
+              <!-- Select Only -->
+              <AppSelect
+                v-if="field.type === 'select'"
+                v-model="(form[field.id] as any)"
+                :options="field.options || []"
+                :placeholder="field.placeholder"
               />
-              <AppSelect v-model="form.loadUnit" :options="loadUnitOptions" style="width: 80px; flex-shrink: 0;" />
-            </div>
-          </AppFormGroup>
 
-          <!-- 4. 力率 -->
-          <AppFormGroup label="力率設定 (kW時)">
-            <AppSelect v-model="form.powerFactor" :options="powerFactorOptions" placeholder="選択してください" />
-          </AppFormGroup>
+              <!-- Input + Select -->
+              <div v-else-if="field.type === 'input-select'" class="c-input-group">
+                <AppInput
+                  v-model.number="(form[field.id] as any)"
+                  type="number"
+                  :placeholder="field.placeholder"
+                  :min="field.min"
+                  :step="field.step"
+                />
+                <AppSelect
+                  v-if="field.secondaryId"
+                  v-model="(form[field.secondaryId] as any)"
+                  :options="field.secondaryOptions || []"
+                  style="width: 80px; flex-shrink: 0"
+                />
+              </div>
 
-          <!-- 5. 配線距離 -->
-          <AppFormGroup label="配線距離 (L)">
-            <div class="c-input-group">
-              <AppInput
-                v-model.number="form.distance"
-                type="number"
-                placeholder="入力してください"
-                min="1"
-              />
-              <span class="c-input-addon">m</span>
-            </div>
-          </AppFormGroup>
-
-          <!-- 6. 使用ケーブル -->
-          <AppFormGroup label="使用ケーブル">
-            <AppSelect v-model="form.cableType" :options="cableTypeOptions" placeholder="選択してください" />
-          </AppFormGroup>
-
-          <!-- 7. 芯数指定 (導体断面積モードのみ) -->
-          <AppFormGroup v-if="isSizeCalcMode" label="芯数 指定">
-            <AppSelect v-model="form.cores" :options="coreOptions" placeholder="選択してください" />
-          </AppFormGroup>
-
-          <!-- 8. ケーブルサイズ指定 (電圧降下モードのみ) -->
-          <AppFormGroup v-if="isDropCalcMode" label="ケーブルサイズ 指定">
-            <AppSelect v-model="form.fixedSize" :options="fixedSizeOptions" placeholder="選択してください" />
-          </AppFormGroup>
-
-          <!-- 9. 敷設条数 -->
-          <AppFormGroup label="敷設条数">
-            <AppSelect v-model="form.parallel" :options="parallelOptions" placeholder="選択してください" />
-          </AppFormGroup>
-
-          <!-- 10. 布設条件 -->
-          <AppFormGroup label="布設条件 (電流減少係数)">
-            <AppSelect v-model="form.derating" :options="deratingOptions" placeholder="選択してください" />
-          </AppFormGroup>
-
-          <!-- 11. 想定周囲温度 -->
-          <AppFormGroup label="想定周囲温度">
-            <AppSelect v-model="form.ambientTemp" :options="ambientTempOptions" placeholder="選択してください" />
-          </AppFormGroup>
-
-          <!-- 12. 目標（許容）電圧降下率 (導体断面積モードのみ) -->
-          <AppFormGroup v-if="isSizeCalcMode" label="目標（許容）電圧降下率">
-            <AppSelect v-model="form.targetDrop" :options="targetDropOptions" placeholder="選択してください" />
-          </AppFormGroup>
+              <!-- Input + Addon -->
+              <div v-else-if="field.type === 'input-addon'" class="c-input-group">
+                <AppInput
+                  v-model.number="(form[field.id] as any)"
+                  type="number"
+                  :placeholder="field.placeholder"
+                  :min="field.min"
+                />
+                <span class="c-input-addon">{{ field.addonText }}</span>
+              </div>
+            </AppFormGroup>
+          </template>
         </div>
       </AppPanel>
     </template>
 
     <template #basis>
-      <AppPanel
-        variant="simple"
-        style="flex: 1; min-height: 0"
-      >
+      <AppPanel variant="simple" style="flex: 1; min-height: 0">
         <template #header>
-          <AppSectionHeader title="計算根拠" icon="book" variant="tool" size="md" />
+          <AppSectionHeader
+            title="計算根拠"
+            divider-type="fade-center"
+            icon="book"
+            variant="tool"
+            size="md"
+          />
         </template>
         <div
           style="
@@ -271,8 +284,9 @@ const isDropCalcMode = computed(() => form.mode === "drop");
 
   &--2col {
     grid-template-columns: repeat(2, 1fr); // PCのデフォルトは2カラム
-    
-    @include mq("md") { // スマホサイズに縮んだ時だけ1カラムに上書き
+
+    @include mq("md") {
+      // スマホサイズに縮んだ時だけ1カラムに上書き
       grid-template-columns: 1fr;
     }
   }
@@ -289,7 +303,7 @@ const isDropCalcMode = computed(() => form.mode === "drop");
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
-  
+
   // selectやaddonを隣接させる
   > :deep(select),
   > .c-input-addon {

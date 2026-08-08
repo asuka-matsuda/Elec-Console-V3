@@ -48,6 +48,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
   --radio-color: var(--color-category-main); /* デフォルトの色 */
 
   display: inline-flex;
+  width: max-content;
   flex-shrink: 0;
   gap: var(--space-1);
   padding: var(--space-1);
@@ -56,7 +57,6 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
 
   /* --- Elements --- */
   &__label {
-    margin: 0;
     cursor: pointer;
 
     &:hover {

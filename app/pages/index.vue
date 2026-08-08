@@ -43,7 +43,7 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
       </section>
     </div>
 
-    <DashboardAside />
+    <AppDashboardAside />
   </div>
 </template>
 
@@ -55,7 +55,7 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
   gap: var(--space-8);
   padding-bottom: var(--space-8);
 
-  @include mq("lg") {
+  @include mq("md") {
     flex-direction: column;
     align-items: stretch;
   }

@@ -7,10 +7,12 @@ withDefaults(
     icon?: string;
     variant?: MenuSection["accent"];
     size?: "md" | "lg";
+    dividerType?: "default" | "fade-side" | "fade-center";
   }>(),
   {
     variant: "main",
     size: "lg",
+    dividerType: "default",
   },
 );
 </script>
@@ -25,7 +27,7 @@ withDefaults(
       <AppIcon v-if="icon" :name="icon" class="c-section-header__icon" />
       <slot>{{ title }}</slot>
     </h2>
-    <AppDivider :variant="variant" type="default" />
+    <AppDivider :variant="variant" :type="dividerType" />
   </header>
 </template>
 

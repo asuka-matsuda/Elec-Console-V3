@@ -18,7 +18,7 @@ const props = withDefaults(
   {
     type: "button",
     _variant: "primary",
-    size: "sm",
+    size: "md",
     align: "center",
   },
 );
@@ -76,13 +76,11 @@ const componentTag = computed(() => {
   text-decoration: none;
   transition: var(--transition-base), var(--transition-colors);
 
-  /* === 新規ルール適用: 完全透過と直角の強制 === */
-  border-radius: 0; // 角丸禁止（直角）
-  
   /* 視認性確保のための枠線と影（アウトラインスタイル） */
   @include ui-border-dim(var(--btn-color, var(--color-category-main)), 50%);
-  box-shadow: 
-    inset 0 0 var(--blur-md) theme-color(var(--btn-color, var(--color-category-main)), 10%),
+  box-shadow:
+    inset 0 0 var(--blur-md)
+      theme-color(var(--btn-color, var(--color-category-main)), 10%),
     0 var(--space-1) var(--space-3) rgba(0, 0, 0, 0.2);
 
   // 以前の ui-surface は枠線を上書きしてしまうため今回は無効化
@@ -162,7 +160,6 @@ const componentTag = computed(() => {
   &--icon-only {
     width: var(--size-control-md);
     padding: 0;
-    border-radius: 50%; // アイコンボタンのみ例外的に真円を許可
 
     &.c-btn--sm {
       width: var(--size-control-sm);

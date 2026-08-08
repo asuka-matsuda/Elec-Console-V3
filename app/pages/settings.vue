@@ -149,7 +149,7 @@ const bgOptions = [
     grid-template-columns: 2fr 1fr; /* Desktop default */
     gap: var(--space-8);
 
-    @include mq("lg") {
+    @include mq("md") {
       grid-template-columns: 1fr;
     }
   }

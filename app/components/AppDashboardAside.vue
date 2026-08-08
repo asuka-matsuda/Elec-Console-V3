@@ -64,12 +64,11 @@ const history = computed(() => dashboardData.value?.history || []);
     width: 320px; // Desktop default
     flex-shrink: 0;
     position: sticky;
-    top: var(--space-6);
     display: flex;
     flex-direction: column;
     gap: var(--space-8);
 
-    @include mq("lg") {
+    @include mq("md") {
       width: 100%;
       position: static;
     }

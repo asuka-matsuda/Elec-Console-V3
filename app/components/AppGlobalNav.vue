@@ -23,7 +23,7 @@ const closeSidebar = () => {
       @click="closeSidebar"
     />
 
-    <!-- Sidebar -->
+    <!-- Global-Nav -->
     <aside class="l-global-nav" :class="{ 'is-open': isOpen }">
       <!-- Logo Header -->
       <header class="l-global-nav__header">
@@ -80,8 +80,6 @@ const closeSidebar = () => {
   --sidebar-border: var(--color-border);
 
   position: fixed;
-  top: 0;
-  left: 0;
   display: flex;
   flex-direction: column;
   width: var(--sidebar-width);
@@ -89,10 +87,10 @@ const closeSidebar = () => {
   z-index: var(--z-index-nav);
   @include ui-border-fade(right, var(--sidebar-border));
   box-shadow: var(--shadow-elevation-hover); // Replaced hardcoded shadow
-  transition: transform var(--duration-normal) var(--ease-out-back);
+  transition: transform var(--duration-slow) var(--ease-float);
 
   // Mobile layout (hide by default)
-  @include mq("lg") {
+  @include mq("md") {
     transform: translateX(-100%);
 
     &.is-open {
@@ -105,7 +103,7 @@ const closeSidebar = () => {
     flex-shrink: 0;
     display: flex;
     align-items: center;
-    height: 72px; // Match standard header height
+    height: 64px; // Match standard header height
     padding: 0 var(--space-4);
     @include ui-border-fade(bottom, var(--sidebar-border));
     box-shadow: var(--shadow-elevation-base); // Replaced hardcoded shadow
@@ -115,10 +113,12 @@ const closeSidebar = () => {
   &__nav {
     flex: 1;
     overflow-y: auto;
-    padding: var(--space-4);
+    /* ホバー時の右移動ではみ出さないよう、右側に余白を設ける */
+    padding: var(--space-2) var(--space-4) var(--space-2) 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-5);
+    gap: var(--space-2);
+
     @include custom-scrollbar();
   }
 
@@ -162,6 +162,7 @@ const closeSidebar = () => {
     flex-direction: column;
     gap: var(--space-1);
     margin-bottom: var(--space-2);
+    padding: 0 var(--space-3);
   }
 
   &__heading {
@@ -173,21 +174,16 @@ const closeSidebar = () => {
     padding-left: var(--space-2);
   }
 
-  &__divider {
-    margin: 0;
-  }
-
   // --- Navigation Links ---
   &__link {
     display: flex;
     align-items: center;
     gap: var(--space-3);
-    padding: var(--space-3) var(--space-4);
+    padding: var(--space-2) var(--space-4);
     text-decoration: none;
     color: var(--color-text-secondary);
     font-size: var(--text-sm);
     font-weight: var(--font-weight-medium);
-    border-radius: 0;
     transition: var(--transition-base);
 
     &-text {
@@ -206,7 +202,7 @@ const closeSidebar = () => {
 
     // Hover
     &:hover:not(.is-disabled):not(.router-link-active) {
-      color: var(--section-accent, var(--color-text-main));
+      color: var(--section-accent, var(--color-category-main));
       // Replaced hardcoded shadow with cyber-text-glow or simplified shadow
       box-shadow: 0 0 var(--blur-sm)
         theme-color(var(--section-accent, var(--color-category-main)), 20%);
@@ -258,7 +254,7 @@ const closeSidebar = () => {
 .l-global-nav-overlay {
   display: none; // Hidden on desktop
 
-  @include mq("lg") {
+  @include mq("md") {
     display: block;
     position: fixed;
     top: 0;
@@ -270,8 +266,8 @@ const closeSidebar = () => {
     opacity: 0;
     visibility: hidden;
     transition:
-      opacity var(--duration-normal) var(--ease-out),
-      visibility var(--duration-normal) var(--ease-out);
+      opacity var(--duration-slow) var(--ease-out),
+      visibility var(--duration-slow) var(--ease-out);
 
     &.is-open {
       opacity: 1;

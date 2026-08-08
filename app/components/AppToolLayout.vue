@@ -99,9 +99,10 @@ const toggleDrawer = () => {
     display: flex;
     flex-direction: column;
     min-height: 0;
+    flex: 3; // 3/4 ratio on PC (Default)
 
-    @include mq("lg", "up-strict") {
-      flex: 3; // 3/4 ratio on PC
+    @include mq("md") {
+      flex: none; // Reset on mobile
     }
 
     // パネルの外側（ラッパー）ではなく、パネルの「中身」をスクロールさせる
@@ -115,14 +116,14 @@ const toggleDrawer = () => {
   }
 
   &__right {
-    display: none; // Cut on mobile
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-height: 0;
+    overflow-y: hidden; // No vertical scroll per user request
 
-    @include mq("lg", "up-strict") {
-      display: flex;
-      flex: 1;
-      flex-direction: column;
-      min-height: 0;
-      overflow-y: hidden; // No vertical scroll per user request
+    @include mq("md") {
+      display: none; // Cut on mobile
     }
   }
 
@@ -132,9 +133,12 @@ const toggleDrawer = () => {
   &__results {
     display: flex;
     flex-direction: column;
+    flex: 1; // 1/4 ratio on PC
+    min-height: 0;
 
     // Mobile: Sticky Drawer
-    @include mq("md", "down") {
+    @include mq("md") {
+      flex: none;
       position: fixed;
       bottom: 0;
       left: 0;
@@ -152,26 +156,20 @@ const toggleDrawer = () => {
         transform: translateY(0);
       }
     }
-
-    // PC: Top 1/4 layout
-    @include mq("lg", "up-strict") {
-      flex: 1; // 1/4 ratio on PC
-      min-height: 0;
-    }
   }
 
   &__drawer-handle {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 48px;
-    padding: 0 var(--space-4);
-    cursor: pointer;
-    background: color-mix(in srgb, var(--color-category-tool) 10%, transparent);
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    display: none; // Hidden on PC
 
-    @include mq("lg", "up-strict") {
-      display: none; // Hidden on PC
+    @include mq("md") {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 48px;
+      padding: 0 var(--space-4);
+      cursor: pointer;
+      background: color-mix(in srgb, var(--color-category-tool) 10%, transparent);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     }
   }
 
@@ -192,7 +190,7 @@ const toggleDrawer = () => {
     flex: 1;
     min-height: 0;
 
-    @include mq("md", "down") {
+    @include mq("md") {
       padding: var(--space-4);
       overflow-y: auto;
       @include custom-scrollbar();
@@ -200,14 +198,15 @@ const toggleDrawer = () => {
   }
 
   &__overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: calc(var(--z-index-modal) - 1);
-    backdrop-filter: blur(2px);
+    display: none; // Hidden on PC
 
-    @include mq("lg", "up-strict") {
-      display: none; // Hidden on PC
+    @include mq("md") {
+      display: block; // Show on mobile
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: calc(var(--z-index-modal) - 1);
+      backdrop-filter: blur(2px);
     }
   }
 }
