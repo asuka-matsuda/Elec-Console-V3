@@ -70,6 +70,7 @@ withDefaults(
       .c-form-group__label-wrapper {
         flex-shrink: 0;
         width: 140px;
+
         // Align label with the text inside a medium input control
         padding-top: calc(
           (var(--size-control-md) - var(--line-height-base) * var(--text-sm)) /
@@ -101,6 +102,7 @@ withDefaults(
   &__error {
     font-size: var(--text-xs);
     color: var(--color-status-danger);
+
     @include cyber-text-glow(30%, var(--blur-sm), var(--color-status-danger));
   }
 

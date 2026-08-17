@@ -60,7 +60,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
     cursor: pointer;
 
     &:hover {
-      .c-segmented-control__input:not(:disabled):not(:checked)
+      .c-segmented-control__input:not(:disabled, :checked)
         + .c-segmented-control__text {
         color: var(--color-text-main);
         border-color: var(--color-border);
@@ -75,6 +75,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
     /* Checked state */
     &:checked + .c-segmented-control__text {
       color: var(--radio-color);
+
       @include ui-active(var(--radio-color));
       @include cyber-text-glow(60%, var(--blur-md), var(--radio-color));
     }
@@ -88,6 +89,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
     /* Disabled state */
     &:disabled + .c-segmented-control__text {
       @extend %disabled;
+
       opacity: 0.3;
       filter: grayscale(100%);
     }
@@ -97,7 +99,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: var(--space-1) var(--space-4);
+    padding: var(--space-2);
     font-size: var(--text-sm);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);

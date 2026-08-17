@@ -129,25 +129,25 @@ const bgOptions = [
 .p-settings {
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
-  padding-bottom: var(--space-8);
+  gap: var(--gap-section);
+  padding-bottom: var(--gap-section);
 
   &__header {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--gap-element);
   }
 
   &__desc {
     color: var(--color-text-muted);
     font-size: var(--text-sm);
-    margin-top: var(--space-2);
+    margin-top: var(--gap-element);
   }
 
   &__grid {
     display: grid;
     grid-template-columns: 2fr 1fr; /* Desktop default */
-    gap: var(--space-8);
+    gap: var(--gap-section);
 
     @include mq("md") {
       grid-template-columns: 1fr;
@@ -157,15 +157,15 @@ const bgOptions = [
   &__stack {
     display: flex;
     flex-direction: column;
-    gap: var(--space-8);
+    gap: var(--gap-section);
   }
 
   &__sub-group {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-4);
-    margin-top: var(--space-4);
-    padding: var(--space-4);
+    gap: var(--gap-component);
+    margin-top: var(--gap-component);
+    padding: var(--pad-card);
     border-radius: 0;
     border: var(--border-width-base) solid var(--color-border);
   }

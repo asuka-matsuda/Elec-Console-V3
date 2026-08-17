@@ -24,28 +24,29 @@ $base-glows:
 /* Base
    ========================================================================== */
 body {
-  background-color: var(--color-main-bg); //メイン背景
+  background-color: var(--color-main-bg); // メイン背景
   background-image: #{$base-glows};
-  background-repeat: no-repeat; //1回だけ表示
-  background-attachment: fixed; //固定
+  background-repeat: no-repeat; // 1回だけ表示
+  background-attachment: fixed; // 固定
   background-size:
     100% 100%,
-    100% 100%; //バグ対策
-  transition: background 0.5s ease; //背景の切替時間
+    100% 100%; // バグ対策
+
+  transition: background 0.5s ease; // 背景の切替時間
 }
 
 /* Components
    ========================================================================== */
 .c-bg-canvas {
-  position: fixed; //固定
-  top: 0; //一番上の
-  left: 0; //一番左から
-  z-index: map.get($z-index, "bg-canvas"); //一番後ろに
-  width: 100vw; //横幅いっぱい
-  height: 100lvh; //高さいっぱい
-  pointer-events: none; //マウスイベントを無効化
-  opacity: 0; //不透明度　初期値は0（透明）
-  transition: opacity 0.5s ease; //不透明度の切替時間
+  position: fixed; // 固定
+  top: 0; // 一番上の
+  left: 0; // 一番左から
+  z-index: map.get($z-index, "bg-canvas"); // 一番後ろに
+  width: 100vw; // 横幅いっぱい
+  height: 100lvh; // 高さいっぱい
+  pointer-events: none; // マウスイベントを無効化
+  opacity: 0; // 不透明度　初期値は0（透明）
+  transition: opacity 0.5s ease; // 不透明度の切替時間
 }
 
 // 条件：bodyタグの属性が「none」ではない時、.c-bg-canvas に対して不透明度を25%にする
@@ -116,5 +117,5 @@ html[data-base-bg="grid"] body {
 
 // --- Overrides ---
 html[data-theme="light"] body {
-  background-image: none; //ライトモードの時は背景効果をオフに
+  background-image: none; // ライトモードの時は背景効果をオフに
 }

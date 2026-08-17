@@ -37,10 +37,10 @@ const emit = defineEmits<{
   align-items: center;
   justify-content: space-between;
   height: 64px;
-  padding: 0 var(--space-4);
+  padding: var(--space-4);
 
   @include mq("md") {
-    padding: 0 var(--space-3);
+    padding: var(--space-3);
   }
 
   &__left {

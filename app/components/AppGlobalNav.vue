@@ -85,7 +85,9 @@ const closeSidebar = () => {
   width: var(--sidebar-width);
   height: 100dvh;
   z-index: var(--z-index-nav);
+
   @include ui-border-fade(right, var(--sidebar-border));
+
   box-shadow: var(--shadow-elevation-hover); // Replaced hardcoded shadow
   transition: transform var(--duration-slow) var(--ease-float);
 
@@ -104,8 +106,10 @@ const closeSidebar = () => {
     display: flex;
     align-items: center;
     height: 64px; // Match standard header height
-    padding: 0 var(--space-4);
+    padding: var(--space-4);
+
     @include ui-border-fade(bottom, var(--sidebar-border));
+
     box-shadow: var(--shadow-elevation-base); // Replaced hardcoded shadow
   }
 
@@ -113,13 +117,14 @@ const closeSidebar = () => {
   &__nav {
     flex: 1;
     overflow-y: auto;
+
     /* ホバー時の右移動ではみ出さないよう、右側に余白を設ける */
-    padding: var(--space-2) var(--space-4) var(--space-2) 0;
+    padding: var(--space-3);
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
 
-    @include custom-scrollbar();
+    @include custom-scrollbar;
   }
 
   &__section {
@@ -132,12 +137,15 @@ const closeSidebar = () => {
     &.has-accent-main {
       --section-accent: var(--color-category-main);
     }
+
     &.has-accent-success {
       --section-accent: var(--color-status-success);
     }
+
     &.has-accent-warning {
       --section-accent: var(--color-status-warning);
     }
+
     &.has-accent-danger {
       --section-accent: var(--color-status-danger);
     }
@@ -146,12 +154,15 @@ const closeSidebar = () => {
     &.has-accent-tool {
       --section-accent: var(--color-category-tool);
     }
+
     &.has-accent-database {
       --section-accent: var(--color-category-database);
     }
+
     &.has-accent-reference {
       --section-accent: var(--color-category-reference);
     }
+
     &.has-accent-management {
       --section-accent: var(--color-category-management);
     }
@@ -162,7 +173,7 @@ const closeSidebar = () => {
     flex-direction: column;
     gap: var(--space-1);
     margin-bottom: var(--space-2);
-    padding: 0 var(--space-3);
+    padding: var(--space-3);
   }
 
   &__heading {
@@ -179,7 +190,7 @@ const closeSidebar = () => {
     display: flex;
     align-items: center;
     gap: var(--space-3);
-    padding: var(--space-2) var(--space-4);
+    padding: var(--space-3);
     text-decoration: none;
     color: var(--color-text-secondary);
     font-size: var(--text-sm);
@@ -201,8 +212,9 @@ const closeSidebar = () => {
     }
 
     // Hover
-    &:hover:not(.is-disabled):not(.router-link-active) {
+    &:hover:not(.is-disabled, .router-link-active) {
       color: var(--section-accent, var(--color-category-main));
+
       // Replaced hardcoded shadow with cyber-text-glow or simplified shadow
       box-shadow: 0 0 var(--blur-sm)
         theme-color(var(--section-accent, var(--color-category-main)), 20%);
@@ -222,6 +234,7 @@ const closeSidebar = () => {
       color: var(--section-accent, var(--color-category-main));
       border-color: transparent;
       transform: translateX(0);
+
       @include ui-active(var(--section-accent, var(--color-category-main)));
       @include ui-blinking-cursor(
         var(--space-1),

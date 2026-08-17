@@ -38,7 +38,7 @@ withDefaults(
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: calc(var(--space-1) / 2) var(--space-1);
+  padding: var(--space-1);
   font-family: var(--font-mono);
   font-size: var(--text-2xs);
   font-weight: var(--font-weight-bold);
@@ -48,14 +48,16 @@ withDefaults(
   box-shadow:
     inset 0 0 var(--blur-sm) var(--badge-shadow),
     0 0 var(--blur-md) var(--badge-shadow);
+
   @include cyber-text-glow(100%, var(--blur-sm), var(--badge-color));
+
   user-select: none;
   line-height: var(--line-height-tight);
   white-space: nowrap;
   transition: var(--transition-base);
 
   &--md {
-    padding: var(--space-1) var(--space-2);
+    padding: var(--space-2);
     font-size: var(--text-xs);
   }
 

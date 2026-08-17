@@ -22,6 +22,7 @@
     opacity var(--duration-fast) var(--ease-out),
     transform var(--duration-fast) var(--ease-out);
 }
+
 .fade-slide-enter-from,
 .fade-slide-leave-to {
   opacity: 0;

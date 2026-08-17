@@ -213,15 +213,17 @@ const listboxId = useId();
   justify-content: flex-start;
   width: 100%;
   height: var(--size-control-md);
-  padding: 0 var(--space-10) 0 var(--space-2);
+  padding: var(--space-2);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+
   @include form-control-base(
     $is-error: ".c-custom-select.is-error &",
     $is-active: "&.is-active, &:focus, &:focus-visible",
     $is-hover: "&:hover:not(:disabled):not(.is-active)"
   );
+
   appearance: none; /* Reset button styles */
   text-align: left;
 
@@ -293,7 +295,7 @@ const listboxId = useId();
 .c-custom-select__option {
   @extend %click-enabled;
 
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-2);
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: var(--text-sm);

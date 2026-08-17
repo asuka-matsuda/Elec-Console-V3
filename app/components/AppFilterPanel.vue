@@ -69,7 +69,9 @@ const toggleCat = (value: string) => {
     font-size: var(--text-base);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
+
     @include ui-border-fade(bottom, var(--color-border));
+
     padding-bottom: var(--space-2);
   }
 
@@ -79,7 +81,7 @@ const toggleCat = (value: string) => {
     gap: var(--space-5);
 
     /* PC時は横並び（キーワード入力幅を固定、残りをカテゴリに） */
-    @media (min-width: 768px) {
+    @media (width >= 768px) {
       grid-template-columns: 280px 1fr;
     }
   }

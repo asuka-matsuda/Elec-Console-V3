@@ -45,11 +45,11 @@ defineProps<{
     display: inline-flex;
     flex-wrap: wrap;
     align-items: center;
-    padding: var(--space-4) var(--space-5) var(--space-2) var(--space-4);
+    padding: var(--space-4);
     margin: 0;
     list-style: none;
 
-    @include ui-surface();
+    @include ui-surface;
 
     // The SYS.LOC label
     &::after {
@@ -61,6 +61,7 @@ defineProps<{
       color: var(--color-category-main);
       content: "SYS.LOC";
       opacity: 0.9;
+
       @include cyber-text-glow(50%, var(--blur-sm), var(--color-category-main));
     }
   }

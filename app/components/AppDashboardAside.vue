@@ -64,9 +64,10 @@ const history = computed(() => dashboardData.value?.history || []);
     width: 320px; // Desktop default
     flex-shrink: 0;
     position: sticky;
+    top: var(--space-8);
     display: flex;
     flex-direction: column;
-    gap: var(--space-8);
+    gap: var(--gap-section);
 
     @include mq("md") {
       width: 100%;
@@ -77,34 +78,36 @@ const history = computed(() => dashboardData.value?.history || []);
   &__aside-block {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--gap-component);
   }
 
   &__list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
+    gap: var(--gap-component);
   }
 
   &__loading {
-    padding: var(--space-4);
+    padding: var(--pad-card);
     text-align: center;
     color: var(--color-text-muted);
     font-size: var(--text-sm);
+
     @include ui-surface(5%);
+
     border-radius: 0;
   }
 }
 
 /* List Item Card Styles */
 .p-dashboard-list-item {
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-4);
 
   &__header {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
-    margin-bottom: var(--space-1);
+    gap: var(--gap-element);
+    margin-bottom: var(--gap-element);
   }
 
   &__title {

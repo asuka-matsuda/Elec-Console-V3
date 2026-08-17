@@ -1,0 +1,176 @@
+<script setup lang="ts">
+import katex from "katex";
+import "katex/dist/katex.min.css"; // Required for rendering KaTeX styles
+
+export type MathStep = {
+  title?: string;
+  tex: string;
+  legend?: string[];
+};
+
+const props = defineProps<{
+  steps: MathStep[];
+}>();
+
+// 各ステップの legend (string[]) をパースして使いやすいオブジェクト配列に変換する
+const parseLegend = (legendArray: string[] | undefined) => {
+  if (!legendArray) return [];
+  return legendArray.map(leg => {
+    const parts = leg.split(":");
+    let rawSymbol = parts[0]?.trim() || "";
+    // KaTeXの renderToString は純粋な数式を期待するため、数式マーカーを剥がす
+    rawSymbol = rawSymbol.replace(/\\\(/g, "").replace(/\\\)/g, "").trim();
+    const name = parts.slice(1).join(":")?.trim() || leg;
+    return { symbol: rawSymbol, name };
+  });
+};
+
+// Helper to safely render KaTeX string
+const renderMath = (mathStr: string, isDisplay: boolean = true) => {
+  if (!mathStr) return "";
+  try {
+    return katex.renderToString(mathStr, {
+      displayMode: isDisplay,
+      throwOnError: false,
+    });
+  } catch (e) {
+    console.error("KaTeX render error:", e);
+    return mathStr;
+  }
+};
+</script>
+
+<template>
+  <div class="c-math-basis">
+    <template v-if="steps && steps.length > 0">
+      <AppCard
+        v-for="(step, index) in steps"
+        :key="index"
+        class="c-math-basis__card"
+      >
+        <header v-if="step.title" class="c-math-basis__header">
+          <h4 class="c-math-basis__title">{{ step.title }}</h4>
+        </header>
+        
+        <AppDivider v-if="step.title" variant="dim" class="c-math-basis__divider" />
+        
+        <div class="c-math-basis__body">
+          <!-- 左カラム：公式 -->
+          <div class="c-math-basis__math" v-html="renderMath(step.tex)"></div>
+
+          <!-- 右カラム：凡例 -->
+          <div v-if="step.legend && step.legend.length" class="c-math-basis__legend">
+            <h5 class="c-math-basis__legend-title">【凡例】</h5>
+            <ul class="c-math-basis__legend-list">
+              <li v-for="v in parseLegend(step.legend)" :key="v.symbol" class="c-math-basis__legend-item">
+                <span class="c-math-basis__legend-symbol" v-html="renderMath(v.symbol, false)"></span>
+                <span class="c-math-basis__legend-sep">:</span>
+                <span class="c-math-basis__legend-name">{{ v.name }}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </AppCard>
+    </template>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.c-math-basis {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  flex: 1;
+  overflow-y: auto;
+  padding-right: var(--space-2);
+  padding-bottom: var(--space-4);
+
+  &__card {
+    padding: var(--space-4);
+  }
+  
+  &__title {
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-category-tool);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+
+  &__divider {
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-4);
+  }
+
+  &__body {
+    /* PCファースト: カード内を左右2カラムに分割 */
+    display: flex;
+    flex-flow: row nowrap;
+    gap: var(--space-6);
+    align-items: flex-start;
+  }
+
+  &__math {
+    flex: 1;
+    min-width: 0;
+    font-size: 1.1em;
+    overflow-x: auto;
+
+    @include custom-scrollbar;
+
+    :deep(.katex) {
+      color: var(--color-text-main);
+    }
+
+    :deep(.katex-display) {
+      margin: 0;
+      padding: var(--space-2);
+    }
+  }
+
+  &__legend {
+    width: 250px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__legend-title {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-2) 0;
+  }
+
+  &__legend-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__legend-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+  }
+
+  &__legend-symbol {
+    color: var(--color-text-main);
+    font-weight: var(--font-weight-bold);
+  }
+
+  &__legend-sep {
+    color: var(--color-text-muted);
+  }
+
+  &__legend-name {
+    flex: 1;
+  }
+}
+</style>

@@ -1,6 +1,8 @@
 /* Foundation Modules
    ========================================================================== */
+
 /*! destyle.css v4.0.0 | MIT License | https://github.com/nicolas-cusan/destyle.css */
+
 /* Reset box-model and set borders
    ========================================================================== */
 *,
@@ -270,27 +272,35 @@ template {
 
 /* SCSS Functions
    ========================================================================== */
+
 /* SCSS VARIABLES (Design Tokens)
    ========================================================================== */
+
 /* Typography
    ========================================================================== */
+
 /* Layout & Breakpoints
    ========================================================================== */
+
 /* Z-index
    ========================================================================== */
+
 /* Spacing & Sizing
    ========================================================================== */
+
 /* Colors (Semantic HSL Bases)
    ========================================================================== */
+
 /* Colors (Component HSL Bases)
    ========================================================================== */
+
 /* CSS CUSTOM PROPERTIES (:root)
    ========================================================================== */
 :root {
   /* Typography
      ========================================================================== */
-  --font-base: Inter, Noto Sans JP, Segoe UI, Yu Gothic UI, Meiryo, sans-serif;
-  --font-mono: Roboto Mono, Cascadia Code, Consolas, monospace;
+  --font-base: inter, noto sans jp, segoe ui, yu gothic ui, meiryo, sans-serif;
+  --font-mono: roboto mono, cascadia code, consolas, monospace;
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
@@ -308,6 +318,7 @@ template {
   --text-3xl: 24px;
   --text-4xl: 32px;
 }
+
 @media (width >= 1600px) {
   :root {
     --text-2xs: 12px;
@@ -321,6 +332,7 @@ template {
     --text-4xl: 36px;
   }
 }
+
 @media (width <= 1024px) {
   :root {
     --text-2xl: 18px;
@@ -328,6 +340,7 @@ template {
     --text-4xl: 28px;
   }
 }
+
 @media (width <= 768px) {
   :root {
     --text-lg: 15px;
@@ -337,6 +350,7 @@ template {
     --text-4xl: 24px;
   }
 }
+
 :root {
   /* Layout, Spacing & Sizing
      ========================================================================== */
@@ -360,6 +374,7 @@ template {
   --size-5: 20px;
   --size-6: 24px;
   --size-8: 32px;
+
   /* Semantic Spacing
      ========================================================================== */
   --gap-component: var(--space-4);
@@ -367,12 +382,14 @@ template {
   --gap-section: var(--space-8);
   --pad-card: var(--space-6);
 }
+
 @media (width <= 1024px) {
   :root {
     --gap-section: var(--space-6);
     --pad-card: var(--space-4);
   }
 }
+
 @media (width <= 768px) {
   :root {
     --gap-component: var(--space-3);
@@ -380,6 +397,7 @@ template {
     --pad-card: var(--space-3);
   }
 }
+
 :root {
   /* Component Specific Sizes
      ========================================================================== */
@@ -389,6 +407,7 @@ template {
   --width-sm: 150px;
   --width-md: 250px;
   --table-cell-min-height: 36px;
+
   /* Icon Sizes
      ========================================================================== */
   --icon-size-sm: 16px;
@@ -396,8 +415,10 @@ template {
   --icon-size-lg: 32px;
   --icon-size-xl: 44px;
   --icon-size-xxl: 48px;
+
   /* Colors (Bases)
      ========================================================================== */
+
   /* Semantic HSL Bases
      ========================================================================== */
   --color-category-main-base: 245 84% 67%;
@@ -426,8 +447,10 @@ template {
   --color-input-bg-base: 240 10% 4%;
   --color-input-border-base: 240 5% 26%;
   --color-input-focus-base: 217 91% 60%;
+
   /* Colors (Applied)
      ========================================================================== */
+
   /* Semantics
      ========================================================================== */
   --color-category-main: hsl(var(--color-category-main-base));
@@ -449,6 +472,7 @@ template {
   --color-text-muted: hsl(var(--color-text-muted-base));
   --color-text-disabled: hsl(var(--color-text-disabled-base));
   --color-border: hsl(var(--color-border-base));
+
   /* Components
      ========================================================================== */
   --color-scroll: hsl(var(--color-scroll-base));
@@ -457,10 +481,12 @@ template {
   --color-input-bg: hsl(var(--color-input-bg-base));
   --color-input-border: hsl(var(--color-input-border-base));
   --color-input-focus: hsl(var(--color-input-focus-base));
+
   /* Borders
      ========================================================================== */
   --border-width-base: 1px;
   --border-width-thick: 2px;
+
   /* Effects & UI Elements
      ========================================================================== */
   --color-overlay-dark: hsl(0deg 0% 0% / 60%);
@@ -469,12 +495,14 @@ template {
   --blur-md: 8px;
   --blur-lg: 12px;
   --blur-xl: 16px;
+
   /* 1. Elevation (Physical Shadows)
      ========================================================================== */
   --shadow-elevation-base: 0 8px 24px -4px
     color-mix(in srgb, black 90%, transparent);
   --shadow-elevation-hover: 0 16px 40px -8px black;
   --shadow-sink: inset 0 2px 8px color-mix(in srgb, black 50%, transparent);
+
   /* 2. Edge Reflex (Glass Highlights)
      ========================================================================== */
   --edge-reflex-base:
@@ -486,6 +514,7 @@ template {
   --edge-reflex-press:
     inset 1px 1px 2px color-mix(in srgb, var(--color-overlay) 15%, transparent),
     inset -1px -1px 2px color-mix(in srgb, var(--color-overlay) 2%, transparent);
+
   /* 3. Animation & Transition
      ========================================================================== */
   --duration-fast: 0.15s;
@@ -507,16 +536,22 @@ template {
 
 /* Media Queries
    ========================================================================== */
+
 /* Base / Common Placeholders
    ========================================================================== */
+
 /* Visual Effects & Glassmorphism
    ========================================================================== */
+
 /* Interactive States (Focus, Hover, Active, Disabled)
    ========================================================================== */
+
 /* Misc Utilities
    ========================================================================== */
+
 /* Variables
    ========================================================================== */
+
 /* Base
    ========================================================================== */
 body {
@@ -685,13 +720,16 @@ html[data-animations="false"] *::after {
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0;
   }
 }
+
 /* SVG Icon Data (Base64)
    ========================================================================== */
 /* stylelint-disable no-descending-specificity */
+
 /* Custom Scrollbar (HUD/Wireframe Style)
    ========================================================================== */
 ::-webkit-scrollbar {
@@ -706,11 +744,13 @@ html[data-animations="false"] *::after {
   border: 1px solid
     color-mix(in srgb, var(--color-category-main) 40%, transparent);
 }
+
 ::-webkit-scrollbar-thumb:hover {
   border-color: var(--color-category-main);
   box-shadow: inset 0 0 8px
     color-mix(in srgb, var(--color-category-main) 40%, transparent);
 }
+
 ::-webkit-scrollbar-thumb:active {
   border-color: var(--color-category-main);
   box-shadow: inset 0 0 12px
@@ -738,41 +778,41 @@ html[data-animations="false"] *::after {
 /* Base States
    ========================================================================== */
 ::-webkit-scrollbar-button:vertical:decrement {
-  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuNCknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPScxOCAxNSAxMiA5IDYgMTUnPjwvcG9seWxpbmU+PC9zdmc+);
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuNCknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPScxOCAxNSAxMiA5IDYgMTUnPjwvcG9seWxpbmU+PC9zdmc+");
 }
 
 ::-webkit-scrollbar-button:vertical:increment {
-  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuNCknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPSc2IDkgMTIgMTUgMTggOSc+PC9wb2x5bGluZT48L3N2Zz4=);
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuNCknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPSc2IDkgMTIgMTUgMTggOSc+PC9wb2x5bGluZT48L3N2Zz4=");
 }
 
 ::-webkit-scrollbar-button:horizontal:decrement {
-  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuNCknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPScxNSAxOCA5IDEyIDE1IDYnPjwvcG9seWxpbmU+PC9zdmc+);
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuNCknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPScxNSAxOCA5IDEyIDE1IDYnPjwvcG9seWxpbmU+PC9zdmc+");
 }
 
 ::-webkit-scrollbar-button:horizontal:increment {
-  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuNCknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPSc5IDE4IDE1IDEyIDkgNic+PC9wb2x5bGluZT48L3N2Zz4=);
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuNCknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPSc5IDE4IDE1IDEyIDkgNic+PC9wb2x5bGluZT48L3N2Zz4=");
 }
 
 /* Hover & Active States
    ========================================================================== */
 ::-webkit-scrollbar-button:vertical:decrement:hover,
 ::-webkit-scrollbar-button:vertical:decrement:active {
-  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuOSknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPScxOCAxNSAxMiA5IDYgMTUnPjwvcG9seWxpbmU+PC9zdmc+);
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuOSknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPScxOCAxNSAxMiA5IDYgMTUnPjwvcG9seWxpbmU+PC9zdmc+");
 }
 
 ::-webkit-scrollbar-button:vertical:increment:hover,
 ::-webkit-scrollbar-button:vertical:increment:active {
-  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuOSknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPSc2IDkgMTIgMTUgMTggOSc+PC9wb2x5bGluZT48L3N2Zz4=);
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuOSknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPSc2IDkgMTIgMTUgMTggOSc+PC9wb2x5bGluZT48L3N2Zz4=");
 }
 
 ::-webkit-scrollbar-button:horizontal:decrement:hover,
 ::-webkit-scrollbar-button:horizontal:decrement:active {
-  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuOSknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPScxNSAxOCA5IDEyIDE1IDYnPjwvcG9seWxpbmU+PC9zdmc+);
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuOSknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPScxNSAxOCA5IDEyIDE1IDYnPjwvcG9seWxpbmU+PC9zdmc+");
 }
 
 ::-webkit-scrollbar-button:horizontal:increment:hover,
 ::-webkit-scrollbar-button:horizontal:increment:active {
-  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuOSknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPSc5IDE4IDE1IDEyIDkgNic+PC9wb2x5bGluZT48L3N2Zz4=);
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuOSknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPSc5IDE4IDE1IDEyIDkgNic+PC9wb2x5bGluZT48L3N2Zz4=");
 }
 
 ::-webkit-scrollbar-corner {
@@ -818,6 +858,7 @@ html[data-animations="false"] *::after {
 
 /* Accent Color Variations
    ========================================================================== */
+
 /* Border Style Themes
    ========================================================================== */
 :root,
@@ -926,4 +967,4 @@ body[data-border-style="hybrid"] {
 .fade-slide-leave-to {
   opacity: 0;
   transform: translateY(-4px);
-} /*# sourceMappingURL=style.css.map */
+}

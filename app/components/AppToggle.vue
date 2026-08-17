@@ -47,6 +47,7 @@ const inputId = useId();
 
   &.is-disabled {
     cursor: not-allowed;
+
     @extend %disabled;
   }
 
@@ -62,6 +63,7 @@ const inputId = useId();
     &:focus-visible + .c-toggle__track {
       @include ui-focus(var(--toggle-color));
       @include cyber-text-glow(50%, var(--blur-md), var(--toggle-color));
+
       transition:
         box-shadow var(--duration-slow) var(--ease-out),
         border-color var(--duration-slow) var(--ease-out);
@@ -114,7 +116,7 @@ const inputId = useId();
 
   /* 3. Hover State */
   &:hover:not(.is-disabled) {
-    .c-toggle__input:not(:focus-visible):not(:active) + .c-toggle__track {
+    .c-toggle__input:not(:focus-visible, :active) + .c-toggle__track {
       border-color: theme-color(var(--toggle-color), 50%);
       box-shadow:
         0 0 var(--blur-md) theme-color(var(--toggle-color), 40%),
@@ -124,6 +126,7 @@ const inputId = useId();
     /* Label slightly glows on hover */
     .c-toggle__label {
       color: theme-color(var(--toggle-color), 90%);
+
       @include cyber-text-glow(20%, var(--blur-sm), var(--toggle-color));
     }
   }
@@ -134,8 +137,9 @@ const inputId = useId();
       transform: scale(0.95);
       transition: transform var(--duration-slow) var(--ease-out);
     }
+
     .c-toggle__thumb {
-      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+      box-shadow: inset 0 0 6px rgb(0 0 0 / 50%);
     }
   }
 }

@@ -78,8 +78,8 @@ onUnmounted(() => {
 <style scoped>
 .c-debug-tooltip {
   position: fixed;
-  background: rgba(0, 0, 0, 0.85);
-  color: #00ffff;
+  background: rgb(0 0 0 / 85%);
+  color: #0ff;
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 11px;
@@ -87,8 +87,8 @@ onUnmounted(() => {
   z-index: 999999;
   pointer-events: none;
   white-space: nowrap;
-  border: 1px solid rgba(0, 255, 255, 0.3);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgb(0 255 255 / 30%);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 50%);
 }
 
 .c-debug-visualizer-btn {
@@ -106,7 +106,7 @@ onUnmounted(() => {
   justify-content: center;
   cursor: pointer;
   z-index: 99999;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 50%);
   transition: all 0.2s ease;
 }
 
@@ -116,9 +116,9 @@ onUnmounted(() => {
 }
 
 .c-debug-visualizer-btn.is-active {
-  background-color: #ff0033;
-  border-color: #ffcccc;
-  box-shadow: 0 0 15px rgba(255, 0, 51, 0.6);
+  background-color: #f03;
+  border-color: #fcc;
+  box-shadow: 0 0 15px rgb(255 0 51 / 60%);
   animation: pulse-danger 2s infinite;
 }
 
@@ -129,13 +129,15 @@ onUnmounted(() => {
 
 @keyframes pulse-danger {
   0% {
-    box-shadow: 0 0 0 0 rgba(255, 0, 51, 0.7);
+    box-shadow: 0 0 0 0 rgb(255 0 51 / 70%);
   }
+
   70% {
-    box-shadow: 0 0 0 10px rgba(255, 0, 51, 0);
+    box-shadow: 0 0 0 10px rgb(255 0 51 / 0%);
   }
+
   100% {
-    box-shadow: 0 0 0 0 rgba(255, 0, 51, 0);
+    box-shadow: 0 0 0 0 rgb(255 0 51 / 0%);
   }
 }
 </style>

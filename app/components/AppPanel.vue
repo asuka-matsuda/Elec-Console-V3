@@ -82,7 +82,9 @@ withDefaults(
   }
 
   /* --------------------------------------------------------- */
+
   /* Header & Title */
+
   /* --------------------------------------------------------- */
   &__header {
     margin-bottom: var(--pad-card-gap, var(--space-4));
@@ -105,26 +107,34 @@ withDefaults(
   }
 
   /* --------------------------------------------------------- */
+
   /* Color Variants */
+
   /* --------------------------------------------------------- */
   &--color-main {
     --p-theme-color: var(--color-category-main);
   }
+
   &--color-tool {
     --p-theme-color: var(--color-category-tool);
   }
+
   &--color-database {
     --p-theme-color: var(--color-category-database);
   }
+
   &--color-reference {
     --p-theme-color: var(--color-category-reference);
   }
+
   &--color-management {
     --p-theme-color: var(--color-category-management);
   }
 
   /* --------------------------------------------------------- */
+
   /* Style Variants (Ported from original _themes.scss) */
+
   /* --------------------------------------------------------- */
   &--hud {
     --p-border-color: #{theme-color(var(--color-border), 50%)};

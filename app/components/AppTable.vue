@@ -73,7 +73,7 @@ defineProps<{
 
   :deep(th),
   :deep(td) {
-    padding: var(--space-2) var(--space-4);
+    padding: var(--space-3);
     border-bottom: var(--border-width-base) solid var(--color-border);
     color: var(--color-text-main);
     vertical-align: middle;
@@ -101,8 +101,10 @@ defineProps<{
 
     &:hover {
       z-index: 1;
+
       /* テーブル行ホバー時の発光エフェクト */
       @include ui-hover-glow;
+
       /* 行全体を光らせるため、セルの背景を上書きさせない */
       outline: var(--border-width-base) solid
         theme-color(var(--color-category-main), 80%);

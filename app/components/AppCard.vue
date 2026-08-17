@@ -47,6 +47,7 @@ const rootProps = computed(() => {
   flex-direction: column;
   color: var(--color-text-main);
   transition: var(--transition-base);
+
   @include ui-surface(15%);
 
   /* Interactive link styles */
@@ -72,12 +73,15 @@ const rootProps = computed(() => {
   &--tool {
     --card-accent: var(--color-category-tool);
   }
+
   &--database {
     --card-accent: var(--color-category-database);
   }
+
   &--reference {
     --card-accent: var(--color-category-reference);
   }
+
   &--management {
     --card-accent: var(--color-category-management);
   }

@@ -4,37 +4,37 @@
 /* Universal & Resets
    ========================================================================== */
 
-//ユニバーサルセレクタ
+// ユニバーサルセレクタ
 *,
 *::before,
 *::after {
-  box-sizing: border-box; //箱からはみ出さないように
+  box-sizing: border-box; // 箱からはみ出さないように
   background-color: transparent;
 }
 
 /* Base Elements
    ========================================================================== */
 body {
-  display: flex; //フレックスボックス
-  flex-direction: column; //最初から縦並び
-  height: 100dvh; //高さ
-  min-height: 100dvh; //バグ対策
-  margin: 0; //余白なし
-  overflow: hidden; //スクロール禁止
+  display: flex; // フレックスボックス
+  flex-direction: column; // 最初から縦並び
+  height: 100dvh; // 高さ
+  min-height: 100dvh; // バグ対策
+  margin: 0; // 余白なし
+  overflow: hidden; // スクロール禁止
   font-family: var(--font-base);
   font-size: var(--text-base);
   line-height: var(--line-height-base);
   color: var(--color-text-main);
   letter-spacing: 0.02em;
-  color-scheme: dark; //ダークモードベース
-  -webkit-font-smoothing: antialiased; //Chrome,Safari用
-  -moz-osx-font-smoothing: grayscale; //Firefox用
+  color-scheme: dark; // ダークモードベース
+  -webkit-font-smoothing: antialiased; // Chrome,Safari用
+  -moz-osx-font-smoothing: grayscale; // Firefox用
 }
 
-//標準のスピンボタンを消す
+// 標準のスピンボタンを消す
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  margin: 0; //バグ対策
+  margin: 0; // バグ対策
   appearance: none;
 }
 
@@ -72,8 +72,8 @@ html[data-animations="false"] {
   *,
   *::before,
   *::after {
-    animation: none !important; //アニメーションのオフ
-    animation-play-state: paused !important; //jsで動いているものも一時停止
+    animation: none !important; // アニメーションのオフ
+    animation-play-state: paused !important; // jsで動いているものも一時停止
   }
 }
 
@@ -83,6 +83,7 @@ html[data-animations="false"] {
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0;
   }

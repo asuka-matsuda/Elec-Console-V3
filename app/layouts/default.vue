@@ -80,7 +80,8 @@ const breadcrumbs = useBreadcrumbs();
   min-height: 0;
   padding: var(--space-4);
   overflow-y: auto;
-  @include custom-scrollbar();
+
+  @include custom-scrollbar;
 
   @include mq("md") {
     padding: var(--space-3);

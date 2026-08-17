@@ -66,6 +66,7 @@ const inputId = useId();
   font-family: var(--font-mono);
   font-size: var(--text-sm);
   color: var(--color-text-main);
+
   @include form-control-base;
 
   &::placeholder {
@@ -77,6 +78,7 @@ const inputId = useId();
   &--sm {
     --form-control-px: var(--space-2);
     --form-control-py: var(--space-1);
+
     height: var(--size-control-sm);
     font-size: var(--text-xs);
   }
@@ -88,6 +90,7 @@ const inputId = useId();
   &--lg {
     --form-control-px: var(--space-4);
     --form-control-py: var(--space-3);
+
     height: var(--size-control-lg);
     font-size: var(--text-base);
   }
@@ -96,10 +99,12 @@ const inputId = useId();
   &--textarea {
     resize: vertical;
     min-height: calc(var(--size-control-md) * 2);
+
     // Override fixed heights so rows/min-height can take over
     &:is(.c-form-control--sm, .c-form-control--md, .c-form-control--lg) {
       height: auto;
     }
+
     &:disabled {
       resize: none;
     }

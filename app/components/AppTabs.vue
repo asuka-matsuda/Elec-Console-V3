@@ -92,7 +92,7 @@ const selectTab = (option: TabOption) => {
   gap: var(--space-2);
   align-items: center;
   justify-content: center;
-  padding: var(--space-3) var(--space-5);
+  padding: var(--space-4);
   font-family: var(--font-base);
   font-size: var(--text-sm);
   font-weight: var(--font-weight-medium);
@@ -104,16 +104,20 @@ const selectTab = (option: TabOption) => {
   transition: var(--transition-base);
 
   /* --- Hover State --- */
-  &:hover:not(.is-disabled):not(.is-active) {
+  &:hover:not(.is-disabled, .is-active) {
     color: var(--color-text-main);
-    @include ui-hover-glow();
+
+    @include ui-hover-glow;
+
     transform: translateY(-2px);
   }
 
   /* --- Active State --- */
   &.is-active {
     color: var(--color-category-main);
+
     @include ui-active(var(--color-category-main));
+
     transform: translateY(0);
 
     .c-tabs__item-text {

@@ -15,7 +15,7 @@ const currentYear = new Date().getFullYear();
 <style scoped lang="scss">
 .l-footer {
   position: relative;
-  padding: var(--space-6) var(--space-4) var(--space-4);
+  padding: var(--space-6);
   margin-top: auto;
   text-align: center;
   display: flex;
@@ -37,6 +37,7 @@ const currentYear = new Date().getFullYear();
 
     &:hover {
       color: var(--color-text-secondary);
+
       @include cyber-text-glow(
         30%,
         var(--blur-sm),

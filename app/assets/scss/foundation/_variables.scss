@@ -6,8 +6,7 @@
 
 /* Typography
    ========================================================================== */
-$font-base:
-  "Inter", "Noto Sans JP", "Segoe UI", "Yu Gothic UI", "Meiryo", sans-serif;
+$font-base: "Inter", "Noto Sans JP", "Segoe UI", "Yu Gothic UI", "Meiryo", sans-serif;
 $font-mono: "Roboto Mono", "Cascadia Code", "Consolas", monospace;
 $text-sizes: (
   "2xs": 10px,
@@ -163,6 +162,7 @@ $color-input-focus-base: 217 91% 60%;
   @each $name, $value in $z-index {
     --z-index-#{$name}: #{$value};
   }
+
   /* Alias for nav to match AppGlobalNav.vue */
   --z-index-nav: #{map.get($z-index, "sidebar-container")};
 

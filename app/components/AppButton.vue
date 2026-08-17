@@ -67,7 +67,7 @@ const componentTag = computed(() => {
   align-items: center;
   justify-content: center;
   height: var(--size-control-md);
-  padding: 0 var(--space-4);
+  padding: var(--space-4);
   font-size: var(--text-sm);
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-ui);
@@ -78,10 +78,11 @@ const componentTag = computed(() => {
 
   /* 視認性確保のための枠線と影（アウトラインスタイル） */
   @include ui-border-dim(var(--btn-color, var(--color-category-main)), 50%);
+
   box-shadow:
     inset 0 0 var(--blur-md)
       theme-color(var(--btn-color, var(--color-category-main)), 10%),
-    0 var(--space-1) var(--space-3) rgba(0, 0, 0, 0.2);
+    0 var(--space-1) var(--space-3) rgb(0 0 0 / 20%);
 
   // 以前の ui-surface は枠線を上書きしてしまうため今回は無効化
   // @include ui-surface;
@@ -92,17 +93,20 @@ const componentTag = computed(() => {
   /* Interaction States */
   &:hover:not(:disabled, .is-disabled) {
     z-index: 1;
+
     @include ui-hover-glow(var(--btn-color));
   }
 
   &:focus-visible {
     z-index: 1;
+
     @include ui-focus(var(--btn-color));
     @include cyber-text-glow(50%, 8px, var(--btn-color));
   }
 
   &:active:not(:disabled, .is-disabled) {
     z-index: 1;
+
     @include ui-press(var(--btn-color));
     @include cyber-text-glow(50%, 8px, var(--btn-color));
   }
@@ -116,12 +120,15 @@ const componentTag = computed(() => {
   &--primary {
     --btn-color: var(--color-category-main);
   }
+
   &--secondary {
     --btn-color: var(--color-status-neutral);
   }
+
   &--success {
     --btn-color: var(--color-status-success);
   }
+
   &--danger {
     --btn-color: var(--color-status-danger);
   }
@@ -129,7 +136,7 @@ const componentTag = computed(() => {
   /* Size Modifiers */
   &--sm {
     height: var(--size-control-sm);
-    padding: 0 var(--space-3);
+    padding: var(--space-3);
     font-size: var(--text-xs);
 
     // Minimum touch target (48x48) for accessibility
@@ -148,7 +155,7 @@ const componentTag = computed(() => {
 
   &--lg {
     height: var(--size-control-lg);
-    padding: 0 var(--space-5);
+    padding: var(--space-5);
     font-size: var(--text-base);
   }
 

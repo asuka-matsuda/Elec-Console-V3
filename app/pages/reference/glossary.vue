@@ -13,19 +13,6 @@ const {
   searchMapper: (item) => `${item.term} ${item.kana || ""}`,
 });
 
-const kanaOptions = [
-  { label: "あ行", value: "a" },
-  { label: "か行", value: "k" },
-  { label: "さ行", value: "s" },
-  { label: "た行", value: "t" },
-  { label: "な行", value: "n" },
-  { label: "は行", value: "h" },
-  { label: "ま行", value: "m" },
-  { label: "や行", value: "y" },
-  { label: "ら行", value: "r" },
-  { label: "わ行他", value: "w" },
-];
-
 function getKanaRow(kanaStr: string) {
   if (!kanaStr) return "other";
   const firstChar = kanaStr.charAt(0);
@@ -70,20 +57,6 @@ const availableRows = computed(() => {
   return rows;
 });
 
-function isKanaDisabled(row: string) {
-  if (row === "w")
-    return !availableRows.value.has("w") && !availableRows.value.has("other");
-  return !availableRows.value.has(row);
-}
-
-function toggleKana(kana: string) {
-  if (activeKanas.value.includes(kana)) {
-    activeKanas.value = activeKanas.value.filter((k) => k !== kana);
-  } else {
-    activeKanas.value.push(kana);
-  }
-}
-
 const categoryColorMap: Record<string, string> = {
   電気: "#eab308", // 黄色
   建築: "#ef4444", // 赤
@@ -106,17 +79,7 @@ const categoryColorMap: Record<string, string> = {
           >
             <template #extra-filters>
               <AppFormGroup label="INDEX (読み・五十音)">
-                <div class="p-db__filter-grid p-glossary__filter-grid--sm">
-                  <AppCheckbox
-                    v-for="kana in kanaOptions"
-                    :key="kana.value"
-                    :model-value="activeKanas.includes(kana.value)"
-                    :disabled="isKanaDisabled(kana.value)"
-                    @update:model-value="toggleKana(kana.value)"
-                  >
-                    {{ kana.label }}
-                  </AppCheckbox>
-                </div>
+                  <AppKanaFilter v-model="activeKanas" :available-rows="availableRows" />
               </AppFormGroup>
             </template>
           </AppFilterPanel>

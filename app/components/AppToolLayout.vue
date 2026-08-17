@@ -108,7 +108,8 @@ const toggleDrawer = () => {
     // パネルの外側（ラッパー）ではなく、パネルの「中身」をスクロールさせる
     :deep(.c-panel__content) {
       overflow-y: auto;
-      @include custom-scrollbar();
+
+      @include custom-scrollbar;
       
       // スクロール時に要素がpaddingに食い込まないよう調整
       padding-right: var(--space-2);
@@ -128,7 +129,9 @@ const toggleDrawer = () => {
   }
 
   /* --------------------------------------------------------- */
+
   /* Mobile Drawer & PC Results Layout */
+
   /* --------------------------------------------------------- */
   &__results {
     display: flex;
@@ -147,7 +150,7 @@ const toggleDrawer = () => {
       background: var(--color-bg-base);
       border-top: var(--border-width-base) solid var(--color-category-tool);
       border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 -4px 16px rgb(0 0 0 / 50%);
       transition: transform var(--transition-base);
       transform: translateY(calc(100% - 48px)); // Show only handle
       max-height: 80vh;
@@ -166,7 +169,7 @@ const toggleDrawer = () => {
       align-items: center;
       justify-content: space-between;
       height: 48px;
-      padding: 0 var(--space-4);
+      padding: var(--space-4);
       cursor: pointer;
       background: color-mix(in srgb, var(--color-category-tool) 10%, transparent);
       border-radius: var(--radius-lg) var(--radius-lg) 0 0;
@@ -193,7 +196,8 @@ const toggleDrawer = () => {
     @include mq("md") {
       padding: var(--space-4);
       overflow-y: auto;
-      @include custom-scrollbar();
+
+      @include custom-scrollbar;
     }
   }
 
@@ -204,7 +208,7 @@ const toggleDrawer = () => {
       display: block; // Show on mobile
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgb(0 0 0 / 50%);
       z-index: calc(var(--z-index-modal) - 1);
       backdrop-filter: blur(2px);
     }

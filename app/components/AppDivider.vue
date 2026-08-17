@@ -41,15 +41,19 @@ withDefaults(
   &.has-accent-main {
     --divider-accent: var(--color-category-main);
   }
+
   &.has-accent-tool {
     --divider-accent: var(--color-category-tool);
   }
+
   &.has-accent-database {
     --divider-accent: var(--color-category-database);
   }
+
   &.has-accent-reference {
     --divider-accent: var(--color-category-reference);
   }
+
   &.has-accent-management {
     --divider-accent: var(--color-category-management);
   }
@@ -164,6 +168,7 @@ withDefaults(
       transform: scaleX(0);
       opacity: 0;
     }
+
     to {
       transform: scaleX(1);
       opacity: 1;
@@ -175,6 +180,7 @@ withDefaults(
       transform: scaleY(0);
       opacity: 0;
     }
+
     to {
       transform: scaleY(1);
       opacity: 1;
@@ -186,12 +192,15 @@ withDefaults(
       transform: translateX(0);
       opacity: 0;
     }
+
     10% {
       opacity: 1;
     }
+
     50% {
       opacity: 1;
     }
+
     60% {
       transform: translateX(450%);
       opacity: 0;
@@ -207,16 +216,20 @@ withDefaults(
       transform: translateY(0);
       opacity: 0;
     }
+
     10% {
       opacity: 1;
     }
+
     50% {
       opacity: 1;
     }
+
     60% {
       transform: translateY(450%);
       opacity: 0;
     }
+
     100% {
       transform: translateY(450%);
       opacity: 0;

@@ -67,15 +67,18 @@ const inputId = useId();
   &--success {
     --checkbox-color: var(--color-status-success);
   }
+
   &--danger {
     --checkbox-color: var(--color-status-danger);
   }
+
   &--warning {
     --checkbox-color: var(--color-status-warning);
   }
 
   &:has(.c-checkbox__input:disabled) {
     cursor: not-allowed;
+
     @extend %disabled;
   }
 
@@ -92,6 +95,7 @@ const inputId = useId();
   &:has(.c-checkbox__input:focus-visible) .c-checkbox__box {
     @include ui-focus(var(--checkbox-color));
     @include cyber-text-glow(50%, var(--blur-md), var(--checkbox-color));
+
     transition:
       box-shadow var(--duration-slow) var(--ease-out),
       border-color var(--duration-slow) var(--ease-out);
@@ -115,9 +119,12 @@ const inputId = useId();
     display: flex;
     align-items: center;
     justify-content: center;
+
     @include ui-border-dim(var(--color-border), 50%);
+
     box-shadow: var(--edge-reflex-base), var(--shadow-sink);
     transition: var(--transition-base);
+
     // Explicitly NO border-radius to ensure sharp corners
 
     // Icon animation setup
@@ -141,6 +148,7 @@ const inputId = useId();
     // Label slightly glows on hover
     .c-checkbox__label {
       color: theme-color(var(--checkbox-color), 90%);
+
       @include cyber-text-glow(20%, var(--blur-sm), var(--checkbox-color));
     }
   }
