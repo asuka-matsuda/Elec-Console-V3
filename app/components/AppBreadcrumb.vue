@@ -37,6 +37,7 @@ defineProps<{
 <style scoped lang="scss">
 .c-breadcrumb {
   font-family: var(--font-mono);
+  font-weight: var(--font-weight-bold); // まとめて継承させる
   text-transform: uppercase;
   letter-spacing: 0.1em;
 
@@ -46,9 +47,7 @@ defineProps<{
     flex-wrap: wrap;
     align-items: center;
     padding: var(--space-4);
-    margin: 0;
     list-style: none;
-
     @include ui-surface;
 
     // The SYS.LOC label
@@ -57,11 +56,9 @@ defineProps<{
       top: var(--space-1);
       left: 6px;
       font-size: 9px;
-      font-weight: var(--font-weight-bold);
       color: var(--color-category-main);
       content: "SYS.LOC";
       opacity: 0.9;
-
       @include cyber-text-glow(50%, var(--blur-sm), var(--color-category-main));
     }
   }
@@ -69,10 +66,10 @@ defineProps<{
   &__item {
     display: flex;
     align-items: center;
+    gap: var(--space-3); // 区切り文字との間隔をgapで一元管理
 
     // The separator »
     &:not(:last-child)::after {
-      margin: 0 var(--space-3);
       font-size: var(--text-xs);
       color: color-mix(in srgb, var(--color-category-main) 60%, transparent);
       content: "»";
@@ -81,33 +78,25 @@ defineProps<{
 
   &__link,
   &__text {
-    display: flex;
-    align-items: center;
     font-size: var(--text-xs);
-    font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
     text-decoration: none;
     transition: var(--transition-base);
   }
 
-  &__link {
-    &:hover {
-      color: var(--color-text-main);
-      text-shadow: 0 0 var(--blur-md) theme-color(var(--color-text-main), 50%);
-    }
+  &__link:hover {
+    color: var(--color-text-main);
+    @include cyber-text-glow(50%, var(--blur-md), var(--color-text-main));
   }
 
   // Current page acts as the page title (h1 equivalent visually)
   &__current {
     display: flex;
-    gap: var(--space-2);
+    gap: var(--space-2); // 点滅カーソル用
     align-items: center;
-    font-size: var(--text-md); // Larger font size for the active page title
-    font-weight: var(--font-weight-bold);
+    font-size: var(--text-md);
     color: var(--color-category-main);
     line-height: 1;
-    margin-left: var(--space-1);
-
     @include cyber-text-glow(60%, var(--blur-md), var(--color-category-main));
     @include ui-blinking-cursor(var(--space-2), var(--space-5), currentcolor);
   }

@@ -118,7 +118,6 @@ withDefaults(
   align-items: center;
   justify-content: flex-start;
   gap: var(--space-2);
-  font-family: var(--font-base);
   font-size: var(--text-sm);
   color: var(--color-category-main);
   text-transform: uppercase;

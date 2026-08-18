@@ -77,12 +77,12 @@ const toggleCat = (value: string) => {
 
   &__filters {
     display: grid;
-    grid-template-columns: 1fr; /* スマホ時は縦積み */
+    grid-template-columns: 280px 1fr; /* PC時は横並び（キーワード入力幅を固定、残りをカテゴリに） */
     gap: var(--space-5);
 
-    /* PC時は横並び（キーワード入力幅を固定、残りをカテゴリに） */
-    @media (width >= 768px) {
-      grid-template-columns: 280px 1fr;
+    /* スマホ時は縦積み */
+    @include mq("md") {
+      grid-template-columns: 1fr;
     }
   }
 

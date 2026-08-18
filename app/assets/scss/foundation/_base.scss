@@ -10,6 +10,16 @@
 *::after {
   box-sizing: border-box; // 箱からはみ出さないように
   background-color: transparent;
+  font-family: inherit;
+}
+
+// フォーム要素も継承させる
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
 }
 
 /* Base Elements

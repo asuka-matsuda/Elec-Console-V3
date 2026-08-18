@@ -80,6 +80,10 @@ defineProps<{
     white-space: nowrap;
   }
 
+  :deep(td) {
+    font-family: var(--font-mono);
+  }
+
   :deep(th) {
     position: sticky;
     top: 0;

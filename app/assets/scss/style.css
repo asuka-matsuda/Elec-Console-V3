@@ -1,8 +1,7 @@
+@charset "UTF-8";
 /* Foundation Modules
    ========================================================================== */
-
 /*! destyle.css v4.0.0 | MIT License | https://github.com/nicolas-cusan/destyle.css */
-
 /* Reset box-model and set borders
    ========================================================================== */
 *,
@@ -18,8 +17,8 @@
 html {
   line-height: 1.15;
   -webkit-text-size-adjust: 100%;
-  -moz-text-size-adjust: 100%;
-  text-size-adjust: 100%;
+     -moz-text-size-adjust: 100%;
+          text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -109,7 +108,7 @@ a {
 
 abbr[title] {
   -webkit-text-decoration: underline dotted;
-  text-decoration: underline dotted;
+          text-decoration: underline dotted;
 }
 
 b,
@@ -169,34 +168,34 @@ textarea {
   text-align: inherit;
   text-transform: inherit;
   -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+     -moz-appearance: none;
+          appearance: none;
   border-radius: 0;
 }
 
-[type="checkbox"] {
+[type=checkbox] {
   -webkit-appearance: auto;
-  -moz-appearance: auto;
-  appearance: auto;
+     -moz-appearance: auto;
+          appearance: auto;
 }
 
-[type="radio"] {
+[type=radio] {
   -webkit-appearance: auto;
-  -moz-appearance: auto;
-  appearance: auto;
+     -moz-appearance: auto;
+          appearance: auto;
 }
 
 button,
-[type="button"],
-[type="reset"],
-[type="submit"] {
+[type=button],
+[type=reset],
+[type=submit] {
   cursor: pointer;
 }
 
 button:disabled,
-[type="button"]:disabled,
-[type="reset"]:disabled,
-[type="submit"]:disabled {
+[type=button]:disabled,
+[type=reset]:disabled,
+[type=submit]:disabled {
   cursor: default;
 }
 
@@ -230,24 +229,24 @@ textarea {
   overflow: auto;
 }
 
-[type="number"]::-webkit-inner-spin-button,
-[type="number"]::-webkit-outer-spin-button {
+[type=number]::-webkit-inner-spin-button,
+[type=number]::-webkit-outer-spin-button {
   height: auto;
 }
 
-[type="search"] {
+[type=search] {
   outline-offset: -2px;
 }
 
-[type="search"]::-webkit-search-decoration {
+[type=search]::-webkit-search-decoration {
   -webkit-appearance: none;
-  appearance: none;
+          appearance: none;
 }
 
 ::-webkit-file-upload-button {
   font: inherit;
   -webkit-appearance: auto;
-  appearance: auto;
+          appearance: auto;
 }
 
 /* Interactive
@@ -272,35 +271,28 @@ template {
 
 /* SCSS Functions
    ========================================================================== */
-
+/* 不透明度20%のテーマカラー */
 /* SCSS VARIABLES (Design Tokens)
    ========================================================================== */
-
 /* Typography
    ========================================================================== */
-
 /* Layout & Breakpoints
    ========================================================================== */
-
 /* Z-index
    ========================================================================== */
-
 /* Spacing & Sizing
    ========================================================================== */
-
 /* Colors (Semantic HSL Bases)
    ========================================================================== */
-
 /* Colors (Component HSL Bases)
    ========================================================================== */
-
 /* CSS CUSTOM PROPERTIES (:root)
    ========================================================================== */
 :root {
   /* Typography
-     ========================================================================== */
-  --font-base: inter, noto sans jp, segoe ui, yu gothic ui, meiryo, sans-serif;
-  --font-mono: roboto mono, cascadia code, consolas, monospace;
+       ========================================================================== */
+  --font-base: Noto Sans JP, Hiragino Kaku Gothic ProN, Meiryo, sans-serif;
+  --font-mono: Roboto Mono, Noto Sans JP, Hiragino Kaku Gothic ProN, Meiryo, sans-serif;
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
@@ -317,8 +309,8 @@ template {
   --text-2xl: 20px;
   --text-3xl: 24px;
   --text-4xl: 32px;
+  /* Responsive Typography (Fluid Scale) */
 }
-
 @media (width >= 1600px) {
   :root {
     --text-2xs: 12px;
@@ -332,7 +324,6 @@ template {
     --text-4xl: 36px;
   }
 }
-
 @media (width <= 1024px) {
   :root {
     --text-2xl: 18px;
@@ -340,7 +331,6 @@ template {
     --text-4xl: 28px;
   }
 }
-
 @media (width <= 768px) {
   :root {
     --text-lg: 15px;
@@ -350,13 +340,28 @@ template {
     --text-4xl: 24px;
   }
 }
-
 :root {
   /* Layout, Spacing & Sizing
-     ========================================================================== */
+       ========================================================================== */
   --sidebar-width: 340px;
   --base-spacing: 8px;
   --base-size: 8px;
+  /* Z-index
+       ========================================================================== */
+  --z-index-bg-canvas: -3;
+  --z-index-footer: 10;
+  --z-index-table-header: 10;
+  --z-index-header: 99;
+  --z-index-dropdown: 100;
+  --z-index-fab: 100;
+  --z-index-sidebar-container: 100;
+  --z-index-sidebar-overlay: 101;
+  --z-index-sidebar: 102;
+  --z-index-modal: 1000;
+  --z-index-theme-switcher: 1000;
+  --z-index-click-effect: 9999;
+  /* Alias for nav to match AppGlobalNav.vue */
+  --z-index-nav: 100;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -374,22 +379,19 @@ template {
   --size-5: 20px;
   --size-6: 24px;
   --size-8: 32px;
-
   /* Semantic Spacing
-     ========================================================================== */
+       ========================================================================== */
   --gap-component: var(--space-4);
   --gap-element: var(--space-2);
   --gap-section: var(--space-8);
   --pad-card: var(--space-6);
 }
-
 @media (width <= 1024px) {
   :root {
     --gap-section: var(--space-6);
     --pad-card: var(--space-4);
   }
 }
-
 @media (width <= 768px) {
   :root {
     --gap-component: var(--space-3);
@@ -397,30 +399,26 @@ template {
     --pad-card: var(--space-3);
   }
 }
-
 :root {
   /* Component Specific Sizes
-     ========================================================================== */
+       ========================================================================== */
   --size-control-sm: 32px;
   --size-control-md: 40px;
   --size-control-lg: 48px;
   --width-sm: 150px;
   --width-md: 250px;
   --table-cell-min-height: 36px;
-
   /* Icon Sizes
-     ========================================================================== */
+       ========================================================================== */
   --icon-size-sm: 16px;
   --icon-size-md: 24px;
   --icon-size-lg: 32px;
   --icon-size-xl: 44px;
   --icon-size-xxl: 48px;
-
   /* Colors (Bases)
-     ========================================================================== */
-
+       ========================================================================== */
   /* Semantic HSL Bases
-     ========================================================================== */
+       ========================================================================== */
   --color-category-main-base: 245 84% 67%;
   --color-category-tool-base: 189 94% 43%;
   --color-category-database-base: 210 91% 60%;
@@ -447,12 +445,10 @@ template {
   --color-input-bg-base: 240 10% 4%;
   --color-input-border-base: 240 5% 26%;
   --color-input-focus-base: 217 91% 60%;
-
   /* Colors (Applied)
-     ========================================================================== */
-
+       ========================================================================== */
   /* Semantics
-     ========================================================================== */
+       ========================================================================== */
   --color-category-main: hsl(var(--color-category-main-base));
   --color-category-tool: hsl(var(--color-category-tool-base));
   --color-category-database: hsl(var(--color-category-database-base));
@@ -472,51 +468,43 @@ template {
   --color-text-muted: hsl(var(--color-text-muted-base));
   --color-text-disabled: hsl(var(--color-text-disabled-base));
   --color-border: hsl(var(--color-border-base));
-
   /* Components
-     ========================================================================== */
+       ========================================================================== */
   --color-scroll: hsl(var(--color-scroll-base));
   --color-table-header-bg: hsl(var(--color-table-header-bg-base));
   --color-table-hover-bg: hsl(var(--color-table-hover-bg-base));
   --color-input-bg: hsl(var(--color-input-bg-base));
   --color-input-border: hsl(var(--color-input-border-base));
   --color-input-focus: hsl(var(--color-input-focus-base));
-
   /* Borders
-     ========================================================================== */
+       ========================================================================== */
   --border-width-base: 1px;
   --border-width-thick: 2px;
-
   /* Effects & UI Elements
-     ========================================================================== */
+       ========================================================================== */
   --color-overlay-dark: hsl(0deg 0% 0% / 60%);
   --color-overlay-light: hsl(0deg 0% 0% / 30%);
   --blur-sm: 4px;
   --blur-md: 8px;
   --blur-lg: 12px;
   --blur-xl: 16px;
-
   /* 1. Elevation (Physical Shadows)
-     ========================================================================== */
+       ========================================================================== */
   --shadow-elevation-base: 0 8px 24px -4px
     color-mix(in srgb, black 90%, transparent);
   --shadow-elevation-hover: 0 16px 40px -8px black;
   --shadow-sink: inset 0 2px 8px color-mix(in srgb, black 50%, transparent);
-
   /* 2. Edge Reflex (Glass Highlights)
-     ========================================================================== */
+       ========================================================================== */
   --edge-reflex-base:
-    inset 0 1px 0 color-mix(in srgb, var(--color-overlay) 25%, transparent),
-    inset 0 0 0 1px color-mix(in srgb, var(--color-overlay) 4%, transparent);
+    inset 0 1px 0 var(--color-border), inset 0 0 0 1px var(--color-border);
   --edge-reflex-hover:
-    inset 0 2px 1px color-mix(in srgb, var(--color-overlay) 40%, transparent),
-    inset 1px 0 1px color-mix(in srgb, var(--color-overlay) 20%, transparent);
+    inset 0 2px 1px var(--color-border), inset 1px 0 1px var(--color-border);
   --edge-reflex-press:
-    inset 1px 1px 2px color-mix(in srgb, var(--color-overlay) 15%, transparent),
-    inset -1px -1px 2px color-mix(in srgb, var(--color-overlay) 2%, transparent);
-
+    inset 1px 1px 2px var(--color-border),
+    inset -1px -1px 2px var(--color-border);
   /* 3. Animation & Transition
-     ========================================================================== */
+       ========================================================================== */
   --duration-fast: 0.15s;
   --duration-base: 0.25s;
   --duration-slow: 0.4s;
@@ -536,42 +524,26 @@ template {
 
 /* Media Queries
    ========================================================================== */
-
 /* Base / Common Placeholders
    ========================================================================== */
-
 /* Visual Effects & Glassmorphism
    ========================================================================== */
-
 /* Interactive States (Focus, Hover, Active, Disabled)
    ========================================================================== */
-
 /* Misc Utilities
    ========================================================================== */
-
+/* Cursor & Indicators
+   ========================================================================== */
 /* Variables
    ========================================================================== */
-
 /* Base
    ========================================================================== */
 body {
   background-color: var(--color-main-bg);
-  background-image:
-    radial-gradient(
-      circle at 10% -10%,
-      color-mix(in srgb, var(--color-category-main) 15%, transparent) 0%,
-      transparent 70%
-    ),
-    radial-gradient(
-      circle at 80% 20%,
-      color-mix(in srgb, var(--color-category-tool) 10%, transparent) 0%,
-      transparent 60%
-    );
+  background-image: radial-gradient(circle at 10% -10%, color-mix(in srgb, var(--color-category-main) 15%, transparent) 0%, transparent 70%), radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--color-category-tool) 10%, transparent) 0%, transparent 60%);
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-size:
-    100% 100%,
-    100% 100%;
+  background-size: 100% 100%, 100% 100%;
   transition: background 0.5s ease;
 }
 
@@ -589,58 +561,33 @@ body {
   transition: opacity 0.5s ease;
 }
 
-body:not([data-bg-theme="none"]) .c-bg-canvas {
+body:not([data-bg-theme=none]) .c-bg-canvas {
   opacity: 0.25;
 }
 
 /* Modifiers
    ========================================================================== */
-html[data-base-bg="solid"] body {
+html[data-base-bg=solid] body {
+  background-color: var(--bg-solid-color);
   background-image: none;
 }
 
-html[data-base-bg="aurora"] body {
-  background-image:
-    radial-gradient(
-      ellipse at top left,
-      color-mix(in srgb, var(--color-category-main) 35%, transparent) 0%,
-      transparent 70%
-    ),
-    radial-gradient(
-      ellipse at bottom right,
-      color-mix(in srgb, var(--color-category-tool) 25%, transparent) 0%,
-      transparent 70%
-    ),
-    radial-gradient(
-      ellipse at top right,
-      color-mix(in srgb, var(--color-category-database) 25%, transparent) 0%,
-      transparent 70%
-    ),
-    radial-gradient(
-      ellipse at bottom left,
-      color-mix(in srgb, var(--color-category-reference) 25%, transparent) 0%,
-      transparent 70%
-    );
+html[data-base-bg=gradient] body {
+  background-image: linear-gradient(135deg, var(--bg-gradient-c1), var(--bg-gradient-c2));
+}
+
+html[data-base-bg=aurora] body {
+  background-image: radial-gradient(ellipse at top left, color-mix(in srgb, var(--bg-aurora-c1) 35%, transparent) 0%, transparent 70%), radial-gradient(ellipse at bottom right, color-mix(in srgb, var(--bg-aurora-c2) 25%, transparent) 0%, transparent 70%), radial-gradient(ellipse at top right, color-mix(in srgb, var(--bg-aurora-c3) 25%, transparent) 0%, transparent 70%), radial-gradient(ellipse at bottom left, color-mix(in srgb, var(--bg-aurora-c4) 25%, transparent) 0%, transparent 70%);
   background-size: 100% 100%;
 }
 
-html[data-base-bg="grid"] body {
-  background-image:
-    linear-gradient(
-      to right,
-      color-mix(in srgb, var(--color-overlay) 5%, transparent) 2px,
-      transparent 2px
-    ),
-    linear-gradient(
-      to bottom,
-      color-mix(in srgb, var(--color-overlay) 5%, transparent) 2px,
-      transparent 2px
-    );
+html[data-base-bg=grid] body {
+  background-image: linear-gradient(to right, color-mix(in srgb, var(--bg-grid-color) 50%, transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in srgb, var(--bg-grid-color) 50%, transparent) 1px, transparent 1px);
   background-repeat: repeat;
-  background-size: 40px 40px;
+  background-size: var(--bg-grid-spacing) var(--bg-grid-spacing);
 }
 
-html[data-theme="light"] body {
+html[data-theme=light] body {
   background-image: none;
 }
 
@@ -650,6 +597,16 @@ html[data-theme="light"] body {
 *::before,
 *::after {
   box-sizing: border-box;
+  background-color: transparent;
+  font-family: inherit;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
 }
 
 /* Base Elements
@@ -675,7 +632,7 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   margin: 0;
   -webkit-appearance: none;
-  appearance: none;
+          appearance: none;
 }
 
 /* Global Utilities
@@ -708,28 +665,31 @@ body.p-management {
 
 /* User Preferences (Reduced Motion / Disable Animations)
    ========================================================================== */
-html[data-animations="false"] *,
-html[data-animations="false"] *::before,
-html[data-animations="false"] *::after {
+html[data-animations=false] *,
+html[data-animations=false] *::before,
+html[data-animations=false] *::after {
   animation: none !important;
   animation-play-state: paused !important;
 }
 
 @keyframes ui-cursor-blink {
-  0%,
-  100% {
+  0%, 100% {
     opacity: 1;
   }
-
   50% {
     opacity: 0;
   }
+}
+#__nuxt {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 /* SVG Icon Data (Base64)
    ========================================================================== */
 /* stylelint-disable no-descending-specificity */
-
 /* Custom Scrollbar (HUD/Wireframe Style)
    ========================================================================== */
 ::-webkit-scrollbar {
@@ -737,24 +697,16 @@ html[data-animations="false"] *::after {
   height: 12px;
 }
 
-::-webkit-scrollbar-track {
-}
-
 ::-webkit-scrollbar-thumb {
-  border: 1px solid
-    color-mix(in srgb, var(--color-category-main) 40%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-category-main) 40%, transparent);
 }
-
 ::-webkit-scrollbar-thumb:hover {
   border-color: var(--color-category-main);
-  box-shadow: inset 0 0 8px
-    color-mix(in srgb, var(--color-category-main) 40%, transparent);
+  box-shadow: inset 0 0 8px color-mix(in srgb, var(--color-category-main) 40%, transparent);
 }
-
 ::-webkit-scrollbar-thumb:active {
   border-color: var(--color-category-main);
-  box-shadow: inset 0 0 12px
-    color-mix(in srgb, var(--color-category-main) 80%, transparent);
+  box-shadow: inset 0 0 12px color-mix(in srgb, var(--color-category-main) 80%, transparent);
 }
 
 /* Scrollbar Buttons
@@ -778,49 +730,46 @@ html[data-animations="false"] *::after {
 /* Base States
    ========================================================================== */
 ::-webkit-scrollbar-button:vertical:decrement {
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuNCknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPScxOCAxNSAxMiA5IDYgMTUnPjwvcG9seWxpbmU+PC9zdmc+");
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuNCknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPScxOCAxNSAxMiA5IDYgMTUnPjwvcG9seWxpbmU+PC9zdmc+);
 }
 
 ::-webkit-scrollbar-button:vertical:increment {
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuNCknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPSc2IDkgMTIgMTUgMTggOSc+PC9wb2x5bGluZT48L3N2Zz4=");
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuNCknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPSc2IDkgMTIgMTUgMTggOSc+PC9wb2x5bGluZT48L3N2Zz4=);
 }
 
 ::-webkit-scrollbar-button:horizontal:decrement {
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuNCknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPScxNSAxOCA5IDEyIDE1IDYnPjwvcG9seWxpbmU+PC9zdmc+");
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuNCknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPScxNSAxOCA5IDEyIDE1IDYnPjwvcG9seWxpbmU+PC9zdmc+);
 }
 
 ::-webkit-scrollbar-button:horizontal:increment {
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuNCknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPSc5IDE4IDE1IDEyIDkgNic+PC9wb2x5bGluZT48L3N2Zz4=");
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuNCknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPSc5IDE4IDE1IDEyIDkgNic+PC9wb2x5bGluZT48L3N2Zz4=);
 }
 
 /* Hover & Active States
    ========================================================================== */
 ::-webkit-scrollbar-button:vertical:decrement:hover,
 ::-webkit-scrollbar-button:vertical:decrement:active {
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuOSknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPScxOCAxNSAxMiA5IDYgMTUnPjwvcG9seWxpbmU+PC9zdmc+");
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuOSknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPScxOCAxNSAxMiA5IDYgMTUnPjwvcG9seWxpbmU+PC9zdmc+);
 }
 
 ::-webkit-scrollbar-button:vertical:increment:hover,
 ::-webkit-scrollbar-button:vertical:increment:active {
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuOSknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPSc2IDkgMTIgMTUgMTggOSc+PC9wb2x5bGluZT48L3N2Zz4=");
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuOSknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPSc2IDkgMTIgMTUgMTggOSc+PC9wb2x5bGluZT48L3N2Zz4=);
 }
 
 ::-webkit-scrollbar-button:horizontal:decrement:hover,
 ::-webkit-scrollbar-button:horizontal:decrement:active {
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuOSknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPScxNSAxOCA5IDEyIDE1IDYnPjwvcG9seWxpbmU+PC9zdmc+");
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuOSknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPScxNSAxOCA5IDEyIDE1IDYnPjwvcG9seWxpbmU+PC9zdmc+);
 }
 
 ::-webkit-scrollbar-button:horizontal:increment:hover,
 ::-webkit-scrollbar-button:horizontal:increment:active {
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuOSknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPSc5IDE4IDE1IDEyIDkgNic+PC9wb2x5bGluZT48L3N2Zz4=");
-}
-
-::-webkit-scrollbar-corner {
+  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAyNCAyNCcgZmlsbD0nbm9uZScgc3Ryb2tlPSdyZ2JhKDI1NSwyNTUsMjU1LDAuOSknIHN0cm9rZS13aWR0aD0nMycgc3Ryb2tlLWxpbmVjYXA9J3JvdW5kJyBzdHJva2UtbGluZWpvaW49J3JvdW5kJz48cG9seWxpbmUgcG9pbnRzPSc5IDE4IDE1IDEyIDkgNic+PC9wb2x5bGluZT48L3N2Zz4=);
 }
 
 /* Light Theme Variables
    ========================================================================== */
-[data-theme="light"] {
+[data-theme=light] {
   --color-main-bg-base: 0 0% 100%;
   --color-surface-bg-base: 0 0% 100%;
   --color-overlay-base: 220 25% 15%;
@@ -858,96 +807,67 @@ html[data-animations="false"] *::after {
 
 /* Accent Color Variations
    ========================================================================== */
-
 /* Border Style Themes
    ========================================================================== */
 :root,
-body[data-border-style="hud"] {
-  --panel-border-color: color-mix(
-    in srgb,
-    var(--color-overlay) 15%,
-    transparent
-  );
+body[data-border-style=hud] {
+  --panel-border-color: var(--color-border);
   --panel-border-image: none;
   --panel-box-shadow:
-    inset 0 0 0 1px var(--color-main-bg),
-    inset 0 0 0 2px color-mix(in srgb, var(--color-overlay) 15%, transparent),
+    inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border),
     var(--edge-reflex-base), var(--shadow-elevation-base);
   --panel-bracket-display: block;
   --panel-bracket-size: 16px;
-  --panel-bracket-color: color-mix(
-    in srgb,
-    var(--color-overlay) 60%,
-    transparent
-  );
+  --panel-bracket-color: var(--color-border);
 }
 
-body[data-border-style="simple"] {
-  --panel-border-color: color-mix(
-    in srgb,
-    var(--color-overlay) 15%,
-    transparent
-  );
+body[data-border-style=simple] {
+  --panel-border-color: var(--color-border);
   --panel-border-image: none;
   --panel-box-shadow:
-    inset 1px 1px 2px color-mix(in srgb, var(--color-overlay) 15%, transparent),
-    inset -1px -1px 2px color-mix(in srgb, var(--color-overlay) 2%, transparent),
+    inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent,
     var(--edge-reflex-base), var(--shadow-elevation-base);
   --panel-bracket-display: none;
 }
 
-body[data-border-style="gradient"] {
+body[data-border-style=gradient] {
   --panel-border-color: transparent;
   --panel-border-image: linear-gradient(
       135deg,
-      color-mix(in srgb, var(--color-overlay) 40%, transparent) 0%,
-      color-mix(in srgb, var(--color-overlay) 5%, transparent) 100%
+      var(--color-border) 0%,
+      transparent 100%
     )
     1;
   --panel-box-shadow:
-    inset 1px 1px 2px color-mix(in srgb, var(--color-overlay) 15%, transparent),
-    inset -1px -1px 2px color-mix(in srgb, var(--color-overlay) 2%, transparent),
+    inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent,
     var(--edge-reflex-base), var(--shadow-elevation-base);
   --panel-bracket-display: block;
   --panel-bracket-size: 12px;
-  --panel-bracket-color: color-mix(
-    in srgb,
-    var(--color-overlay) 40%,
-    transparent
-  );
+  --panel-bracket-color: var(--color-border);
 }
 
-body[data-border-style="hybrid"] {
+body[data-border-style=hybrid] {
   --panel-border-color: transparent;
   --panel-border-image: linear-gradient(
       135deg,
-      color-mix(in srgb, var(--color-overlay) 50%, transparent) 0%,
-      color-mix(in srgb, var(--color-overlay) 5%, transparent) 100%
+      var(--color-border) 0%,
+      transparent 100%
     )
     1;
   --panel-box-shadow:
-    inset 0 0 0 1px var(--color-main-bg),
-    inset 0 0 0 2px color-mix(in srgb, var(--color-overlay) 15%, transparent),
+    inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border),
     var(--edge-reflex-base), var(--shadow-elevation-base);
   --panel-bracket-display: block;
   --panel-bracket-size: 18px;
-  --panel-bracket-color: color-mix(
-    in srgb,
-    var(--color-overlay) 60%,
-    transparent
-  );
-  --panel-bracket-glow: drop-shadow(
-    0 0 4px color-mix(in srgb, var(--color-overlay) 30%, transparent)
-  );
+  --panel-bracket-color: var(--color-border);
+  --panel-bracket-glow: drop-shadow(0 0 4px var(--color-border));
 }
 
 /* Transitions
    ========================================================================== */
 .dropdown-fade-enter-active,
 .dropdown-fade-leave-active {
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .dropdown-fade-enter-from,
@@ -958,9 +878,7 @@ body[data-border-style="hybrid"] {
 
 .fade-slide-enter-active,
 .fade-slide-leave-active {
-  transition:
-    opacity var(--duration-fast) var(--ease-out),
-    transform var(--duration-fast) var(--ease-out);
+  transition: opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
 }
 
 .fade-slide-enter-from,
@@ -968,3 +886,97 @@ body[data-border-style="hybrid"] {
   opacity: 0;
   transform: translateY(-4px);
 }
+
+.p-db {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.p-db__table-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.p-db__empty {
+  padding: var(--space-10);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  border: var(--border-width-base) dotted color-mix(in srgb, var(--color-border) 50%, transparent);
+}
+.p-db__meta {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.p-glossary__filter-grid--sm {
+  gap: var(--gap-element);
+}
+.p-glossary__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-component);
+}
+.p-glossary__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-component);
+  transition: var(--transition-base);
+}
+.p-glossary__card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--gap-component);
+  border-bottom: var(--border-width-base) solid transparent;
+  -o-border-image: linear-gradient(to right, transparent 0%, var(--color-border) 50%, transparent 100%) 1;
+     border-image: linear-gradient(to right, transparent 0%, var(--color-border) 50%, transparent 100%) 1;
+  padding-bottom: var(--gap-element);
+}
+.p-glossary__card-title {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-element);
+}
+.p-glossary__card-kana {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+.p-glossary__card-term {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-main);
+  margin: 0;
+}
+.p-glossary__card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-element);
+}
+.p-glossary__card-desc {
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+.p-glossary__card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-element);
+  padding: var(--pad-card);
+  border: var(--border-width-base) dotted color-mix(in srgb, var(--color-border) 50%, transparent);
+}
+.p-glossary__card-label {
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-muted);
+}
+.p-glossary__card-text {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}/*# sourceMappingURL=style.css.map */

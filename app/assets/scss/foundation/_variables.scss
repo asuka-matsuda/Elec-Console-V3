@@ -6,8 +6,9 @@
 
 /* Typography
    ========================================================================== */
-$font-base: "Inter", "Noto Sans JP", "Segoe UI", "Yu Gothic UI", "Meiryo", sans-serif;
-$font-mono: "Roboto Mono", "Cascadia Code", "Consolas", monospace;
+$font-fallback: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+$font-base: $font-fallback;
+$font-mono: "Roboto Mono", $font-fallback;
 $text-sizes: (
   "2xs": 10px,
   "xs": 12px,
