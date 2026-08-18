@@ -139,7 +139,7 @@ const dropStatusClass = computed(() => {
       <!-- 選択ケーブル (dropモード) -->
       <div v-else class="metric-card">
         <div class="metric-label">選択ケーブル</div>
-        <div class="metric-value">
+        <div class="metric-value is-neutral">
           <span class="value-text" style="font-size: 1.25rem;">{{ dropCableName }}</span>
         </div>
       </div>
