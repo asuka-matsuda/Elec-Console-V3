@@ -151,7 +151,7 @@ const dropStatusClass = computed(() => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: var(--space-3);
+    padding: var(--space-2) var(--space-3);
     background: rgb(0 0 0 / 20%);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
@@ -175,7 +175,7 @@ const dropStatusClass = computed(() => {
     font-family: var(--font-family-mono);
 
     .value-text {
-      font-size: 2.5rem;
+      font-size: 2rem;
       font-weight: var(--font-weight-bold);
       line-height: 1;
     }

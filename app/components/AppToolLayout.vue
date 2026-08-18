@@ -136,7 +136,7 @@ const toggleDrawer = () => {
   &__results {
     display: flex;
     flex-direction: column;
-    flex: 1; // 1/4 ratio on PC
+    flex: none; // コンテンツの高さに合わせて自動調整
     min-height: 0;
 
     // Mobile: Sticky Drawer
