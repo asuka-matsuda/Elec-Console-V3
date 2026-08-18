@@ -247,14 +247,24 @@ function _getTargetCable(inputs: Record<string, any>, result: Record<string, any
 function _getTempDeratingFormula(inputs: Record<string, any>, result: Record<string, any> | null, cables: Record<string, any>[]) {
     const targetCable = _getTargetCable(inputs, result, cables);
     if (!targetCable) {
-        const tex = `k = \\sqrt{\\frac{\\theta_{max} - \\theta_{amb}}{\\theta_{max} - \\theta_{base}}}`;
-        const leg = [
-            '\\( k \\): 温度補正係数',
-            '\\( \\theta_{max} \\): ケーブルの最高許容温度 [℃]',
-            '\\( \\theta_{base} \\): 基底温度 [℃]',
-            '\\( \\theta_{amb} \\): 周囲温度 [℃]'
-        ];
-        return { tex, leg };
+        if (inputs.ambientTemp === null) {
+            return {
+                tex: `I_0' = I_0 \\quad \\text{(温度補正なし)}`,
+                leg: [
+                    "\\( I_0' \\): 補正後許容電流 [A]",
+                    '\\( I_0 \\): 許容電流 [A]'
+                ]
+            };
+        } else {
+            const tex = `k = \\sqrt{\\frac{\\theta_{max} - \\theta_{amb}}{\\theta_{max} - \\theta_{base}}}`;
+            const leg = [
+                '\\( k \\): 温度補正係数',
+                '\\( \\theta_{max} \\): ケーブルの最高許容温度 [℃]',
+                '\\( \\theta_{base} \\): 基底温度 [℃]',
+                '\\( \\theta_{amb} \\): 周囲温度 [℃]'
+            ];
+            return { tex, leg };
+        }
     }
 
     const baseAmp = parseFloat(targetCable.ampacity);
@@ -368,7 +378,7 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
     const targetCable = _getTargetCable(inputs, result, cables);
     if (!targetCable) {
         let rightSideSymbol = `I_0'`;
-        if (derating !== null) {
+        if (derating !== null && derating < 1.0) {
             rightSideSymbol += ` \\times C_d`;
             leg.push(`\\( C_d \\): 減少係数`);
         }
