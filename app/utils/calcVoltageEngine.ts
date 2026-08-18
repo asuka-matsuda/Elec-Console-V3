@@ -246,8 +246,9 @@ function _getTargetCable(inputs: Record<string, any>, result: Record<string, any
  */
 function _getTempDeratingFormula(inputs: Record<string, any>, result: Record<string, any> | null, cables: Record<string, any>[]) {
     const targetCable = _getTargetCable(inputs, result, cables);
+    if (!targetCable) return { tex: '', leg: [] };
 
-    const baseAmp = parseFloat(targetCable!.ampacity);
+    const baseAmp = parseFloat(targetCable.ampacity);
 
     if (inputs.ambientTemp === null) {
         return {
@@ -356,19 +357,20 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
     if (N_val > 1) leg.push('\\( N \\): 条数');
 
     const targetCable = _getTargetCable(inputs, result, cables);
+    if (!targetCable) return { tex: '', leg: [] };
 
     let kValue = result && result.tempDerating ? result.tempDerating : 1.0;
     if (inputs.ambientTemp !== null) {
         kValue =
             (result && result.tempDerating) ||
             _getAmbientTempDerating(
-                targetCable!.baseTemp,
-                targetCable!.maxTemp,
+                targetCable.baseTemp,
+                targetCable.maxTemp,
                 inputs.ambientTemp
             );
     }
-    const tempAmp = (parseFloat(targetCable!.ampacity) * kValue).toFixed(1);
-    const unitStr = targetCable!.unit || 'sq';
+    const tempAmp = (parseFloat(targetCable.ampacity) * kValue).toFixed(1);
+    const unitStr = targetCable.unit || 'sq';
 
     let rightSide = `${tempAmp}`;
     if (derating !== null && derating < 1.0) {
