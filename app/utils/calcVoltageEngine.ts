@@ -357,16 +357,7 @@ function _getUnitConversionFormula(inputs: Record<string, any>) {
     else if (loadUnit === 'kVA') leg.push('\\( P \\): 負荷 [kVA]');
     else if (loadUnit === 'VA') leg.push('\\( P \\): 負荷 [VA]');
 
-    if (sys) {
-        if (sys.id.startsWith('3P')) {
-            leg.push(`\\( V \\): 線間電圧 (${sys.voltage} V)`, `\\( \\sqrt{3} \\): 三相係数`);
-        } else {
-            const vTerm = sys.id === '1P3W200' ? `200` : `${sys.voltage}`;
-            leg.push(`\\( V \\): 電圧 (${vTerm} V)`);
-        }
-    } else {
-        leg.push('\\( V \\): 基準電圧 [V]', '\\( \\alpha \\): 相係数 (単相=1, 三相=√3)');
-    }
+    leg.push('\\( V \\): 基準電圧 [V]', '\\( \\alpha \\): 相係数 (単相=1, 三相=√3)');
 
     return { tex, leg };
 }
@@ -386,16 +377,17 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
     const N_hl = hlVal(parallel, 'N', 0);
     const cdStr = derating !== null ? hlVal(derating, 'C_d', 2) : 'C_d';
 
-    const leg = ['\\( I \\): 設計電流 [A]', "\\( I_0' \\): 補正後許容電流 [A]"];
-    if (N_val > 1) leg.push('\\( N \\): 条数');
+    const leg = [
+        '\\( I \\): 設計電流 [A]',
+        "\\( I_0' \\): 補正後許容電流 [A]",
+        '\\( C_d \\): 減少係数',
+        '\\( N \\): 条数'
+    ];
 
     const targetCable = _getTargetCable(inputs, result, cables);
     if (!targetCable) {
         let rightSideSymbol = `I_0'`;
-        if (derating !== null && derating < 1.0) {
-            rightSideSymbol += ` \\times C_d`;
-            leg.push(`\\( C_d \\): 減少係数`);
-        }
+        if (derating !== null && derating < 1.0) rightSideSymbol += ` \\times C_d`;
         if (N_val > 1) rightSideSymbol += ` \\times N`;
         const tex = `I \\le ${rightSideSymbol}`;
         return { tex, leg };
@@ -417,10 +409,8 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
     let rightSide = `${tempAmp}`;
     if (derating !== null && derating < 1.0) {
         rightSide += ` \\times ${cdStr}`;
-        leg.push(`C_d: 減少係数 (${derating})`);
     } else if (derating === null) {
         rightSide += ` \\times C_d`;
-        leg.push(`C_d: 減少係数`);
     }
 
     if (N_val > 1) rightSide += ` \\times ${N_hl}`;
@@ -470,20 +460,19 @@ function _getVoltageDropFormula(inputs: Record<string, any>, result: Record<stri
 
     let tex;
     const leg = [
-        `\\( K \\): 方式係数 (${K_val})`,
+        '\\( K \\): 方式係数',
         '\\( L \\): 距離 [m]',
         '\\( I \\): 電流 [A]',
         '1000: 定数'
     ];
 
     if (isAuto) {
-        leg.push(`\\( e \\): 許容電圧降下 (${TargetE} V)`);
-        if (N_val > 1) leg.push('\\( A_{\\text{each}} \\): 1条あたりの算出断面積 [sq]');
-        else leg.push('\\( A \\): 算出断面積 [sq]');
+        leg.push('\\( e \\): 許容電圧降下 [V]');
+        leg.push('\\( A \\): 算出断面積 [sq]');
     } else {
         leg.push('\\( A \\): 断面積 [sq]', '\\( e \\): 電圧降下 [V]');
     }
-    if (N_val > 1) leg.push('\\( N \\): 条数');
+    leg.push('\\( N \\): 条数');
 
     const N_term = N_val > 1 ? ` \\times ${N_hl}` : '';
     const N_paren = N_val > 1 ? `(${A_val} \\times ${N_hl})` : `${A_val}`;
