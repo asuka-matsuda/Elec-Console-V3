@@ -17,11 +17,13 @@ import { hlVal, formatVal } from './mathUtils';
  * @returns {number|null} 変換された設計電流(A)
  */
 export function calculateDesignCurrent(sys: Record<string, any> | null | undefined, loadVal: number, loadUnit: string, pf?: number): number | null {
-    if (!sys || isNaN(loadVal) || loadVal <= 0) return null;
+    if (isNaN(loadVal) || loadVal <= 0) return null;
+    if (loadUnit === 'A') return loadVal;
+
+    if (!sys) return null;
     if (loadUnit === 'kW' && pf !== undefined && !isNaN(pf)) return (loadVal * 1000) / (sys.kwDivisor * pf);
     if (loadUnit === 'kVA') return (loadVal * 1000) / sys.kwDivisor;
     if (loadUnit === 'VA') return loadVal / sys.kwDivisor;
-    if (loadUnit === 'A') return loadVal;
     return null;
 }
 
