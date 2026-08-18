@@ -351,7 +351,6 @@ function _getUnitConversionFormula(inputs: Record<string, any>) {
 function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<string, any> | null, cables: Record<string, any>[]) {
     const { I, derating, parallel } = inputs;
 
-    const I_str = formatVal(I, 'I', 1); // 算出値
     const N_val = parallel !== null ? parallel : 1;
     const N_hl = hlVal(parallel, 'N', 0);
     const cdStr = derating !== null ? hlVal(derating, 'C_d', 2) : 'C_d';
@@ -363,58 +362,60 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
         '\\( N \\): 条数'
     ];
 
+    let rightSideSymbol = `I_0'`;
+    if (derating !== null && derating < 1.0) rightSideSymbol += ` \\times C_d`;
+    else if (derating === null) rightSideSymbol += ` \\times C_d`;
+    if (N_val > 1) rightSideSymbol += ` \\times N`;
+
     const targetCable = _getTargetCable(inputs, result, cables);
+
+    let rightSideSubst;
+    let resultLine = '\\text{-- A}';
+
     if (!targetCable) {
-        let rightSideSymbol = `I_0'`;
-        if (derating !== null && derating < 1.0) rightSideSymbol += ` \\times C_d`;
-        if (N_val > 1) rightSideSymbol += ` \\times N`;
-        const tex = `I \\le ${rightSideSymbol}`;
-        return { tex, leg };
-    }
+        rightSideSubst = `I_0'`;
+        if (derating !== null && derating < 1.0) rightSideSubst += ` \\times ${cdStr}`;
+        else if (derating === null) rightSideSubst += ` \\times C_d`;
+        if (N_val > 1) rightSideSubst += ` \\times ${N_hl}`;
+    } else {
+        let kValue = result && result.tempDerating ? result.tempDerating : 1.0;
+        if (inputs.ambientTemp !== null) {
+            kValue =
+                (result && result.tempDerating) ||
+                _getAmbientTempDerating(
+                    targetCable.baseTemp,
+                    targetCable.maxTemp,
+                    inputs.ambientTemp
+                );
+        }
+        const tempAmp = (parseFloat(targetCable.ampacity) * kValue).toFixed(1);
+        const unitStr = targetCable.unit || 'sq';
 
-    let kValue = result && result.tempDerating ? result.tempDerating : 1.0;
-    if (inputs.ambientTemp !== null) {
-        kValue =
-            (result && result.tempDerating) ||
-            _getAmbientTempDerating(
-                targetCable.baseTemp,
-                targetCable.maxTemp,
-                inputs.ambientTemp
-            );
-    }
-    const tempAmp = (parseFloat(targetCable.ampacity) * kValue).toFixed(1);
-    const unitStr = targetCable.unit || 'sq';
+        rightSideSubst = `${tempAmp}`;
+        if (derating !== null && derating < 1.0) {
+            rightSideSubst += ` \\times ${cdStr}`;
+        } else if (derating === null) {
+            rightSideSubst += ` \\times C_d`;
+        }
+        if (N_val > 1) rightSideSubst += ` \\times ${N_hl}`;
 
-    let rightSide = `${tempAmp}`;
-    if (derating !== null && derating < 1.0) {
-        rightSide += ` \\times ${cdStr}`;
-    } else if (derating === null) {
-        rightSide += ` \\times C_d`;
-    }
-
-    if (N_val > 1) rightSide += ` \\times ${N_hl}`;
-
-    if (derating !== null) {
-        const effAmp =
-            result && result.finalEffAmp !== undefined
+        let effAmp;
+        if (derating !== null) {
+            effAmp = result && result.finalEffAmp !== undefined
                 ? result.finalEffAmp.toFixed(1)
                 : (parseFloat(tempAmp) * derating * N_val).toFixed(1);
-        let rightSideSymbol = `I_0'`;
-        if (derating !== null && derating < 1.0) rightSideSymbol += ` \\times C_d`;
-        else if (derating === null) rightSideSymbol += ` \\times C_d`;
-        if (N_val > 1) rightSideSymbol += ` \\times N`;
-
+        } else {
+            effAmp = (parseFloat(tempAmp) * N_val).toFixed(1);
+        }
+        
         const parallelStr = N_val > 1 ? ` \\times ${N_val}` : '';
-        const effAmpHl = `\\textcolor{#10b77f}{${effAmp}}`;
-        const tex = `\\begin{aligned} ${I_str} \\text{ A} &\\le ${rightSideSymbol} \\\\ &\\le ${rightSide} \\\\ &= ${effAmpHl} \\text{ A (}${targetCable.size}\\text{${unitStr}}${parallelStr}\\text{)} \\end{aligned}`;
-        return { tex, leg };
-    } else {
-        const rightSideSymbol = `I_0'` + (N_val > 1 ? ` \\times N` : '');
-        const parallelStr = N_val > 1 ? ` \\times ${N_val}` : '';
-        const tempAmpHl = `\\textcolor{#10b77f}{${tempAmp}}`;
-        const tex = `\\begin{aligned} ${I_str} \\text{ A} &\\le ${rightSideSymbol} \\\\ &\\le ${rightSide} \\\\ &= ${tempAmpHl} \\text{ A (}${targetCable.size}\\text{${unitStr}}${parallelStr}\\text{)} \\end{aligned}`;
-        return { tex, leg };
+        resultLine = `\\textcolor{#10b77f}{${effAmp}} \\text{ A (}${targetCable.size}\\text{${unitStr}}${parallelStr}\\text{)}`;
     }
+
+    const I_str_left = I !== null && I !== undefined ? I.toFixed(1) : '--';
+    const tex = `\\begin{aligned} I \\text{ A} &\\le ${rightSideSymbol} \\\\ ${I_str_left} \\text{ A} &\\le ${rightSideSubst} \\\\ ${I_str_left} \\text{ A} &\\le ${resultLine} \\end{aligned}`;
+
+    return { tex, leg };
 }
 
 /**
@@ -461,22 +462,24 @@ function _getVoltageDropFormula(inputs: Record<string, any>, result: Record<stri
         const leftSide = `A${N_sub}`;
         const rightSideSymbol = `\\frac{K \\cdot L \\cdot I}{1000 \\times e${N_val > 1 ? ` \\times N` : ''}}`;
         const rightSide = `\\frac{${K_val} \\cdot ${L_val} \\cdot ${I_str}}{1000 \\times ${TargetE}${N_term}}`;
-        tex = `\\begin{aligned} ${leftSide} &= ${rightSideSymbol} \\\\ &= ${rightSide}`;
-
-        if (result && result.optimal) {
+        
+        let resultLine = '\\text{-- sq}';
+        if (result && result.optimal && sys && targetDrop !== null && I !== null && L !== null) {
             const calA_total = (sys.simpleK * L * I) / (1000 * (sys.voltage * (targetDrop / 100)));
             const calA_each = calA_total / N_val;
             const aVal = (N_val > 1 ? calA_each : calA_total).toFixed(2);
-            tex += ` \\\\ &= \\textcolor{#10b77f}{${aVal}} \\text{ sq}`;
+            resultLine = `\\textcolor{#10b77f}{${aVal}} \\text{ sq}`;
         }
-        tex += ` \\end{aligned}`;
+        tex = `\\begin{aligned} ${leftSide} &= ${rightSideSymbol} \\\\ &= ${rightSide} \\\\ &= ${resultLine} \\end{aligned}`;
     } else {
         const rightSideSymbol = `\\frac{K \\cdot L \\cdot I}{1000 \\times A${N_val > 1 ? ` \\times N` : ''}}`;
-        tex = `\\begin{aligned} e &= ${rightSideSymbol} \\\\ &= \\frac{${K_val} \\cdot ${L_val} \\cdot ${I_str}}{1000 \\times ${N_paren}}`;
+        const rightSide = `\\frac{${K_val} \\cdot ${L_val} \\cdot ${I_str}}{1000 \\times ${N_paren}}`;
+
+        let resultLine = '\\text{-- V}';
         if (result && result.finalDropV !== undefined) {
-            tex += ` \\\\ &= \\textcolor{#10b77f}{${result.finalDropV.toFixed(2)}} \\text{ V}`;
+            resultLine = `\\textcolor{#10b77f}{${result.finalDropV.toFixed(2)}} \\text{ V}`;
         }
-        tex += ` \\end{aligned}`;
+        tex = `\\begin{aligned} e &= ${rightSideSymbol} \\\\ &= ${rightSide} \\\\ &= ${resultLine} \\end{aligned}`;
     }
 
     return { tex, leg };
