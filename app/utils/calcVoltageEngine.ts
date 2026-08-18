@@ -246,7 +246,16 @@ function _getTargetCable(inputs: Record<string, any>, result: Record<string, any
  */
 function _getTempDeratingFormula(inputs: Record<string, any>, result: Record<string, any> | null, cables: Record<string, any>[]) {
     const targetCable = _getTargetCable(inputs, result, cables);
-    if (!targetCable) return { tex: '', leg: [] };
+    if (!targetCable) {
+        const tex = `k = \\sqrt{\\frac{\\theta_{max} - \\theta_{amb}}{\\theta_{max} - \\theta_{base}}}`;
+        const leg = [
+            '\\( k \\): 温度補正係数',
+            '\\( \\theta_{max} \\): ケーブルの最高許容温度 [℃]',
+            '\\( \\theta_{base} \\): 基底温度 [℃]',
+            '\\( \\theta_{amb} \\): 周囲温度 [℃]'
+        ];
+        return { tex, leg };
+    }
 
     const baseAmp = parseFloat(targetCable.ampacity);
 
@@ -357,7 +366,13 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
     if (N_val > 1) leg.push('\\( N \\): 条数');
 
     const targetCable = _getTargetCable(inputs, result, cables);
-    if (!targetCable) return { tex: '', leg: [] };
+    if (!targetCable) {
+        let rightSideSymbol = `I_0'`;
+        if (derating !== null) rightSideSymbol += ` \\times C_d`;
+        if (N_val > 1) rightSideSymbol += ` \\times N`;
+        const tex = `I \\le ${rightSideSymbol}`;
+        return { tex, leg };
+    }
 
     let kValue = result && result.tempDerating ? result.tempDerating : 1.0;
     if (inputs.ambientTemp !== null) {
