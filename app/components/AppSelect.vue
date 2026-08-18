@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, useId } from "vue";
+import { ref, computed, watch, useId, onMounted, onUnmounted } from "vue";
 
 export interface SelectOption {
   label: string;
@@ -21,26 +21,63 @@ const isOpen = ref(false);
 const selectRef = ref<HTMLElement | null>(null);
 const focusedIndex = ref(-1);
 const dynamicPlacement = ref<"top" | "bottom">("bottom");
+const dropdownStyle = ref<Record<string, string>>({});
 
 const calculatePlacement = () => {
   if (!selectRef.value) return;
-  // If explicitly set via props, respect it
-  if (props.placement) {
-    dynamicPlacement.value = props.placement;
-    return;
-  }
   
   const rect = selectRef.value.getBoundingClientRect();
   const spaceBelow = window.innerHeight - rect.bottom;
   const spaceAbove = rect.top;
-  const DROPDOWN_MAX_HEIGHT = 260; // Approximate max height of dropdown
+  const DROPDOWN_MAX_HEIGHT = 250; // Approximate max height of dropdown
 
-  if (spaceBelow < DROPDOWN_MAX_HEIGHT && spaceAbove > spaceBelow) {
-    dynamicPlacement.value = "top";
+  let placement = props.placement;
+  if (!placement) {
+    if (spaceBelow < DROPDOWN_MAX_HEIGHT && spaceAbove > spaceBelow) {
+      placement = "top";
+    } else {
+      placement = "bottom";
+    }
+  }
+  
+  dynamicPlacement.value = placement;
+
+  // 画面の絶対位置 (fixed) で座標を指定する
+  if (placement === "top") {
+    dropdownStyle.value = {
+      position: "fixed",
+      bottom: `${window.innerHeight - rect.top + 4}px`,
+      left: `${rect.left}px`,
+      minWidth: `${rect.width}px`
+    };
   } else {
-    dynamicPlacement.value = "bottom";
+    dropdownStyle.value = {
+      position: "fixed",
+      top: `${rect.bottom + 4}px`,
+      left: `${rect.left}px`,
+      minWidth: `${rect.width}px`
+    };
   }
 };
+
+const handleGlobalScroll = (e: Event) => {
+  if (!isOpen.value) return;
+  // ドロップダウン内部のスクロールは無視
+  const dropdown = document.getElementById(listboxId);
+  if (dropdown && dropdown.contains(e.target as Node)) return;
+  // 親要素などがスクロールされたら閉じる
+  isOpen.value = false;
+};
+
+onMounted(() => {
+  window.addEventListener("scroll", handleGlobalScroll, { capture: true, passive: true });
+  window.addEventListener("resize", calculatePlacement, { passive: true });
+});
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", handleGlobalScroll, { capture: true });
+  window.removeEventListener("resize", calculatePlacement);
+});
 
 const selectedOption = computed(() => {
   return props.options.find((opt) => opt.value === model.value);
@@ -185,35 +222,39 @@ const listboxId = useId();
     </button>
 
     <!-- Dropdown Menu -->
-    <transition name="dropdown-fade">
-      <div v-if="isOpen" class="c-custom-select__dropdown" :class="[`is-${dynamicPlacement}`]">
-        <ul :id="listboxId" class="c-custom-select__list" role="listbox">
-          <li
-            v-if="placeholder && !selectedOption"
-            class="c-custom-select__option is-placeholder"
-            role="option"
-            aria-selected="false"
-          >
-            {{ placeholder }}
-          </li>
-          <li
-            v-for="(option, index) in options"
-            :key="String(option.value)"
-            class="c-custom-select__option"
-            role="option"
-            :aria-selected="model === option.value"
-            :class="{
-              'is-selected': model === option.value,
-              'is-focused': index === focusedIndex,
-              'is-disabled': option.disabled,
-            }"
-            @click="selectOption(option)"
-          >
-            {{ option.label }}
-          </li>
-        </ul>
-      </div>
-    </transition>
+    <ClientOnly>
+      <Teleport to="body">
+        <transition name="dropdown-fade">
+          <div v-if="isOpen" class="c-custom-select__dropdown" :class="[`is-${dynamicPlacement}`]" :style="dropdownStyle">
+            <ul :id="listboxId" class="c-custom-select__list" role="listbox">
+              <li
+                v-if="placeholder && !selectedOption"
+                class="c-custom-select__option is-placeholder"
+                role="option"
+                aria-selected="false"
+              >
+                {{ placeholder }}
+              </li>
+              <li
+                v-for="(option, index) in options"
+                :key="String(option.value)"
+                class="c-custom-select__option"
+                role="option"
+                :aria-selected="model === option.value"
+                :class="{
+                  'is-selected': model === option.value,
+                  'is-focused': index === focusedIndex,
+                  'is-disabled': option.disabled,
+                }"
+                @click="selectOption(option)"
+              >
+                {{ option.label }}
+              </li>
+            </ul>
+          </div>
+        </transition>
+      </Teleport>
+    </ClientOnly>
   </div>
 </template>
 
@@ -284,10 +325,9 @@ const listboxId = useId();
 }
 
 .c-custom-select__dropdown {
-  position: absolute;
-  z-index: 100;
+  position: absolute; // jsのスタイルが当たるまでの初期値
+  z-index: 10000; // bodyの直下に移動したためzIndexを高めに設定
   width: max-content;
-  min-width: 100%;
   max-width: 90vw;
   background-color: transparent;
   backdrop-filter: blur(var(--blur-md));
@@ -296,15 +336,6 @@ const listboxId = useId();
   box-shadow:
     var(--shadow-elevation-hover),
     inset 0 0 10px theme-color(var(--color-category-main), 20%);
-
-  &.is-bottom {
-    top: calc(100% + var(--space-1));
-  }
-
-  &.is-top {
-    bottom: calc(100% + var(--space-1));
-    top: auto;
-  }
 
   /* Error state dropdown border */
   .c-custom-select.is-error & {
@@ -318,8 +349,10 @@ const listboxId = useId();
 .c-custom-select__list {
   box-sizing: border-box;
   width: 100%;
-  max-height: 250px;
+  max-height: 250px; /* フォールバック */
+  max-height: min(250px, 40vh); /* 画面が小さい場合にも対応 */
   overflow: hidden auto;
+  -webkit-overflow-scrolling: touch;
   scrollbar-color: var(--color-category-main) transparent;
   scrollbar-width: thin;
   transform: translateZ(0);

@@ -17,7 +17,9 @@ const isReady = computed(() => props.inputs?.isReady && props.result);
 const mode = computed(() => props.inputs?.mode || "drop");
 
 // 1. メイン結果（ケーブルサイズ or 判定OK/NG）
-const mainLabel = computed(() => (mode.value === "size" ? "選定ケーブルサイズ" : "判定結果"));
+const mainLabel = computed(() =>
+  mode.value === "size" ? "選定ケーブルサイズ" : "判定結果",
+);
 
 const mainValue = computed(() => {
   if (!isReady.value) return "ーー";
@@ -44,21 +46,31 @@ const mainStatusClass = computed(() => {
   if (mode.value === "size") {
     return props.result?.optimal ? "is-success" : "is-danger";
   } else {
-    return props.inputs.I <= props.result!.finalEffAmp ? "is-success" : "is-danger";
+    return props.inputs.I <= props.result!.finalEffAmp
+      ? "is-success"
+      : "is-danger";
   }
 });
 
 // 2. 電流チェック (設計電流 / 許容電流)
-const currentI = computed(() => (isReady.value ? formatVal(props.inputs.I, 1) : "ーー"));
-const maxI = computed(() => (isReady.value ? formatVal(props.result!.finalEffAmp, 1) : "ーー"));
+const currentI = computed(() =>
+  isReady.value ? formatVal(props.inputs.I, 1) : "ーー",
+);
+const maxI = computed(() =>
+  isReady.value ? formatVal(props.result!.finalEffAmp, 1) : "ーー",
+);
 
 const ampStatusClass = computed(() => {
   if (!isReady.value) return "is-neutral";
-  return props.inputs.I <= props.result!.finalEffAmp ? "is-success" : "is-danger";
+  return props.inputs.I <= props.result!.finalEffAmp
+    ? "is-success"
+    : "is-danger";
 });
 
 // 3. 電圧降下
-const dropV = computed(() => (isReady.value ? formatVal(props.result!.finalDropV, 2) : "ーー"));
+const dropV = computed(() =>
+  isReady.value ? formatVal(props.result!.finalDropV, 2) : "ーー",
+);
 const dropPercent = computed(() => {
   if (!isReady.value) return "ーー";
   const v = props.inputs.sys?.voltage;
@@ -69,8 +81,11 @@ const dropPercent = computed(() => {
 const dropStatusClass = computed(() => {
   if (!isReady.value) return "is-neutral";
   if (mode.value === "size" && props.inputs.targetDrop) {
-    const currentPercent = (props.result!.finalDropV / props.inputs.sys!.voltage) * 100;
-    return currentPercent <= props.inputs.targetDrop ? "is-success" : "is-warning";
+    const currentPercent =
+      (props.result!.finalDropV / props.inputs.sys!.voltage) * 100;
+    return currentPercent <= props.inputs.targetDrop
+      ? "is-success"
+      : "is-warning";
   }
   return "is-success";
 });
@@ -200,8 +215,7 @@ const dropStatusClass = computed(() => {
 
     // md以下（モバイル）のスタイル
     @include mq("md") {
-      flex-direction: row; // モバイルは横並び
-      flex-wrap: wrap;
+      flex-flow: row wrap; // モバイルは横並び
       min-width: auto;
     }
   }
@@ -212,7 +226,6 @@ const dropStatusClass = computed(() => {
     align-items: center;
     justify-content: center;
     padding: var(--space-2);
-    background: rgb(255 255 255 / 2%);
     border: 1px solid var(--color-border);
     flex: 1;
   }
