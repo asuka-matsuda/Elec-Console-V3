@@ -61,6 +61,9 @@ export default defineNuxtConfig({
           additionalData: '@use "~/assets/scss/foundation/_variables.scss" as *; @use "~/assets/scss/foundation/_mixins.scss" as *; @use "~/assets/scss/foundation/_functions.scss" as *;'
         }
       }
+    },
+    build: {
+      target: 'esnext'
     }
   },
 
