@@ -6,8 +6,8 @@
 /* Custom Scrollbar (HUD/Wireframe Style)
    ========================================================================== */
 ::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
+  width: var(--scrollbar-size, 12px);
+  height: var(--scrollbar-size, 12px);
 }
 
 ::-webkit-scrollbar-track {
@@ -33,11 +33,11 @@
 /* Scrollbar Buttons
    ========================================================================== */
 ::-webkit-scrollbar-button {
-  width: 12px;
-  height: 12px;
+  width: var(--scrollbar-size, 12px);
+  height: var(--scrollbar-size, 12px);
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 10px;
+  background-size: calc(var(--scrollbar-size, 12px) * 0.8);
 }
 
 /* Hide unwanted double buttons */

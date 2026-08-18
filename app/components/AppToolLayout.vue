@@ -109,7 +109,7 @@ const toggleDrawer = () => {
     :deep(.c-panel__content) {
       overflow-y: auto;
 
-      @include custom-scrollbar;
+      --scrollbar-size: var(--size-2);
       
       // スクロール時に要素がpaddingに食い込まないよう調整
       padding-right: var(--space-2);
@@ -197,7 +197,7 @@ const toggleDrawer = () => {
       padding: var(--pad-container);
       overflow-y: auto;
 
-      @include custom-scrollbar;
+      --scrollbar-size: var(--size-2);
     }
   }
 

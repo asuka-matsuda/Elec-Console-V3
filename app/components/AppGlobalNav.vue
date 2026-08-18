@@ -124,7 +124,7 @@ const closeSidebar = () => {
     flex-direction: column;
     gap: var(--gap-section); // セクション間の隙間なので gap-section が適切
 
-    @include custom-scrollbar;
+    --scrollbar-size: var(--size-2);
   }
 
   &__section {

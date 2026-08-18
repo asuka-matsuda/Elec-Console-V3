@@ -125,7 +125,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
     font-size: 1.1em;
     overflow-x: auto;
 
-    @include custom-scrollbar;
+    --scrollbar-size: var(--size-2);
 
     :deep(.katex) {
       color: var(--color-text-main);

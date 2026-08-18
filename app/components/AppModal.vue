@@ -230,7 +230,7 @@ const titleId = `modal-title-${modalId}`;
     color: var(--color-text-main);
     line-height: 1.6;
 
-    @include custom-scrollbar;
+    --scrollbar-size: var(--size-2);
   }
 
   &__footer {

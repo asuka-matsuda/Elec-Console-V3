@@ -81,7 +81,7 @@ const breadcrumbs = useBreadcrumbs();
   padding: var(--pad-container);
   overflow-y: auto;
 
-  @include custom-scrollbar;
+  --scrollbar-size: var(--size-2);
 
   @include mq("md") {
     padding: var(--space-3);
