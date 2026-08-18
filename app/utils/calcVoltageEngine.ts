@@ -310,49 +310,58 @@ function _getTempDeratingFormula(inputs: Record<string, any>, result: Record<str
  */
 function _getUnitConversionFormula(inputs: Record<string, any>) {
     const { sys, I, loadVal, loadUnit, pf } = inputs;
-    const P = hlVal(loadVal, 'P', 1);
-    const Cos = hlVal(pf, '\\cos \\theta', 2);
+    const P_val = loadVal ? hlVal(loadVal, 'P', 1) : '\\text{?}';
+    const Cos_val = pf ? hlVal(pf, '\\cos \\theta', 2) : '1.0';
 
     if (loadUnit === 'A') {
-        const tex =
-            loadVal === null ? `I = \\text{設計電流 [A]}` : `I = ${P} \\text{ A}`;
+        const tex = (!loadVal) ? `I = \\text{-- A}` : `I = ${P_val} \\text{ A}`;
         return { tex, leg: ['\\( I \\): 設計電流 [A]'] };
     }
 
-    let vTerm = '\\alpha \\cdot V';
     const leg = [];
+
+    // 文字式 (1段目)
+    let rightSideSymbol = `\\frac{P`;
+    if (loadUnit === 'kW' || loadUnit === 'kVA') rightSideSymbol += ` \\times 1000`;
+    rightSideSymbol += `}{V`;
+    if (sys && sys.id.startsWith('3P')) rightSideSymbol += ` \\times \\sqrt{3}`;
+    else if (!sys) rightSideSymbol += ` \\times \\alpha`;
+    if (loadUnit === 'kW') rightSideSymbol += ` \\times \\cos \\theta`;
+    rightSideSymbol += `}`;
+
+    // 途中式 (2段目)
+    let v_val = '\\text{?}';
+    if (sys) {
+        v_val = sys.id === '1P3W200' ? '200' : `${sys.voltage}`;
+    }
+    let rightSideSubst = `\\frac{${P_val}`;
+    if (loadUnit === 'kW' || loadUnit === 'kVA') rightSideSubst += ` \\times 1000`;
+    rightSideSubst += `}{${v_val}`;
+    if (sys && sys.id.startsWith('3P')) rightSideSubst += ` \\times \\sqrt{3}`;
+    else if (!sys) rightSideSubst += ` \\times \\alpha`;
+    if (loadUnit === 'kW') rightSideSubst += ` \\times ${Cos_val}`;
+    rightSideSubst += `}`;
+
+    // 結果 (3段目)
+    const resultVal = I !== null ? `${I.toFixed(1)} \\text{ A}` : `\\text{-- A}`;
+
+    const tex = `\\begin{aligned} I &= ${rightSideSymbol} \\\\ &= ${rightSideSubst} \\\\ &= ${resultVal} \\end{aligned}`;
+
+    // 凡例
+    if (loadUnit === 'kW') leg.push('\\( P \\): 負荷 [kW]', '\\( \\cos \\theta \\): 力率');
+    else if (loadUnit === 'kVA') leg.push('\\( P \\): 負荷 [kVA]');
+    else if (loadUnit === 'VA') leg.push('\\( P \\): 負荷 [VA]');
 
     if (sys) {
         if (sys.id.startsWith('3P')) {
-            vTerm = `\\sqrt{3} \\times ${sys.voltage}`;
             leg.push(`\\( V \\): 線間電圧 (${sys.voltage} V)`, `\\( \\sqrt{3} \\): 三相係数`);
         } else {
-            vTerm = sys.id === '1P3W200' ? `200` : `${sys.voltage}`;
+            const vTerm = sys.id === '1P3W200' ? `200` : `${sys.voltage}`;
             leg.push(`\\( V \\): 電圧 (${vTerm} V)`);
         }
     } else {
         leg.push('\\( V \\): 基準電圧 [V]', '\\( \\alpha \\): 相係数 (単相=1, 三相=√3)');
     }
-
-    let tex = `\\begin{aligned} I &= \\frac{P`;
-    if (loadUnit === 'kW' || loadUnit === 'kVA') tex += ` \\times 1000`;
-    tex += `}{V`;
-    if (sys && sys.id.startsWith('3P')) tex += ` \\times \\sqrt{3}`;
-    if (loadUnit === 'kW') tex += ` \\times \\cos \\theta`;
-    tex += `}`;
-
-    tex += ` \\\\ &= \\frac{${P}`;
-    if (loadUnit === 'kW' || loadUnit === 'kVA') tex += ` \\times 1000`;
-    tex += `}{${vTerm}`;
-    if (loadUnit === 'kW') tex += ` \\times ${Cos}`;
-    tex += `}`;
-
-    if (loadUnit === 'kW') leg.unshift('\\( P \\): 負荷 [kW]', '\\( \\cos \\theta \\): 力率');
-    else if (loadUnit === 'kVA') leg.unshift('\\( P \\): 負荷 [kVA]');
-    else if (loadUnit === 'VA') leg.unshift('\\( P \\): 負荷 [VA]');
-
-    if (I !== null) tex += ` \\\\ &= ${I.toFixed(1)} \\text{ A}`;
-    tex += ` \\end{aligned}`;
 
     return { tex, leg };
 }
