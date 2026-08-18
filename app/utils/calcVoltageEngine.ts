@@ -294,7 +294,6 @@ function _getTempDeratingFormula(inputs: Record<string, any>, result: Record<str
         return { tex: '\\text{温度補正不可}', leg: [] };
     }
 
-    const tempAmp = baseAmp * k;
     const ambHl = hlVal(amb, '\\theta_{amb}', 1);
     const tex = `\\begin{aligned} I_0' &= I_0 \\times \\sqrt{\\frac{\\theta_{max} - \\theta_{amb}}{\\theta_{max} - \\theta_{base}}} \\\\ &= ${baseAmp} \\times \\sqrt{\\frac{${max} - ${ambHl}}{${max} - ${base}}} \\\\ &= ${resultVal} \\end{aligned}`;
 
