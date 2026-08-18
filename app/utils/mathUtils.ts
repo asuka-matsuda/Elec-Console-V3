@@ -5,6 +5,7 @@
 
 // アプリケーション全体で統一されたハイライト色（Warning相当）
 export const TEX_HL_COLOR = '#f5a623';
+export const TEX_SUCCESS_COLOR = 'var(--color-status-success)';
 
 /**
  * 数値をフォーマットし、指定された色でKaTeX用のtextcolorコマンドでラップします。

@@ -249,7 +249,7 @@ function _getTempDeratingFormula(inputs: Record<string, any>, result: Record<str
     if (!targetCable) {
         if (inputs.ambientTemp === null) {
             return {
-                tex: `I_0' = I_0 \\quad \\text{(温度補正なし)}`,
+                tex: `\\begin{aligned} I_0' &= I_0 \\\\ &= \\textcolor{var(--color-status-success)}{${inputs.I || 0}} \\text{ A (温度補正なし)} \\end{aligned}`,
                 leg: [
                     "\\( I_0' \\): 補正後許容電流 [A]",
                     '\\( I_0 \\): 許容電流 [A]'
@@ -268,21 +268,27 @@ function _getTempDeratingFormula(inputs: Record<string, any>, result: Record<str
     }
 
     const baseAmp = parseFloat(targetCable.ampacity);
+    const amb = inputs.ambientTemp || 0;
 
     if (inputs.ambientTemp === null) {
         return {
-            tex: `I_0' = ${baseAmp}\\text{ A} \\quad \\text{(温度補正なし)}`,
+            tex: `I_0' = \\textcolor{var(--color-status-success)}{${baseAmp}} \\text{ A} \\quad \\text{(温度補正なし)}`,
             leg: ["\\( I_0' \\): 補正後許容電流 [A]"]
         };
     }
 
-    const amb = inputs.ambientTemp;
     const max = parseFloat(targetCable.maxTemp);
     const base = parseFloat(targetCable.baseTemp);
 
     let k;
+    let resultVal = '\\text{-- A}';
     if (result && result.tempDerating) k = result.tempDerating;
     else k = _getAmbientTempDerating(targetCable.baseTemp, targetCable.maxTemp, amb);
+    
+    if (!isNaN(max) && !isNaN(base)) {
+        const tempAmp = baseAmp * k;
+        resultVal = `\\textcolor{var(--color-status-success)}{${tempAmp.toFixed(1)}} \\text{ A}`;
+    }
 
     if (isNaN(max) || isNaN(base)) {
         return { tex: '\\text{温度補正不可}', leg: [] };
@@ -290,7 +296,7 @@ function _getTempDeratingFormula(inputs: Record<string, any>, result: Record<str
 
     const tempAmp = baseAmp * k;
     const ambHl = hlVal(amb, '\\theta_{amb}', 1);
-    const tex = `\\begin{aligned} I_0' &= I_0 \\times \\sqrt{\\frac{\\theta_{max} - \\theta_{amb}}{\\theta_{max} - \\theta_{base}}} \\\\ &= ${baseAmp} \\times \\sqrt{\\frac{${max} - ${ambHl}}{${max} - ${base}}} \\\\ &= ${tempAmp.toFixed(1)} \\text{ A} \\end{aligned}`;
+    const tex = `\\begin{aligned} I_0' &= I_0 \\times \\sqrt{\\frac{\\theta_{max} - \\theta_{amb}}{\\theta_{max} - \\theta_{base}}} \\\\ &= ${baseAmp} \\times \\sqrt{\\frac{${max} - ${ambHl}}{${max} - ${base}}} \\\\ &= ${resultVal} \\end{aligned}`;
 
     const leg = [
         "\\( I_0' \\): 補正後許容電流 [A]",
@@ -314,7 +320,7 @@ function _getUnitConversionFormula(inputs: Record<string, any>) {
     const Cos_val = pf ? hlVal(pf, '\\cos \\theta', 2) : '\\cos \\theta';
 
     if (loadUnit === 'A') {
-        const tex = (!loadVal) ? `I = \\text{-- A}` : `I = ${P_val} \\text{ A}`;
+        const tex = (!loadVal) ? `I = \\text{-- A}` : `I = \\textcolor{var(--color-status-success)}{${P_val}} \\text{ A}`;
         return { tex, leg: ['\\( I \\): 設計電流 [A]'] };
     }
 
@@ -343,7 +349,7 @@ function _getUnitConversionFormula(inputs: Record<string, any>) {
     rightSideSubst += `}`;
 
     // 結果 (3段目)
-    const resultVal = I !== null ? `${I.toFixed(1)} \\text{ A}` : `\\text{-- A}`;
+    const resultVal = I !== null ? `\\textcolor{var(--color-status-success)}{${I.toFixed(1)}} \\text{ A}` : `\\text{-- A}`;
 
     const tex = `\\begin{aligned} I &= ${rightSideSymbol} \\\\ &= ${rightSideSubst} \\\\ &= ${resultVal} \\end{aligned}`;
 
@@ -431,12 +437,14 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
         if (N_val > 1) rightSideSymbol += ` \\times N`;
 
         const parallelStr = N_val > 1 ? ` \\times ${N_val}` : '';
-        const tex = `\\begin{aligned} ${I_str} \\text{ A} &\\le ${rightSideSymbol} \\\\ &\\le ${rightSide} \\\\ &= ${effAmp} \\text{ A (}${targetCable.size}\\text{${unitStr}}${parallelStr}\\text{)} \\end{aligned}`;
+        const effAmpHl = `\\textcolor{var(--color-status-success)}{${effAmp}}`;
+        const tex = `\\begin{aligned} ${I_str} \\text{ A} &\\le ${rightSideSymbol} \\\\ &\\le ${rightSide} \\\\ &= ${effAmpHl} \\text{ A (}${targetCable.size}\\text{${unitStr}}${parallelStr}\\text{)} \\end{aligned}`;
         return { tex, leg };
     } else {
         const rightSideSymbol = `I_0'` + (N_val > 1 ? ` \\times N` : '');
         const parallelStr = N_val > 1 ? ` \\times ${N_val}` : '';
-        const tex = `\\begin{aligned} ${I_str} \\text{ A} &\\le ${rightSideSymbol} \\\\ &\\le ${rightSide} \\text{ A (}${targetCable.size}\\text{${unitStr}}${parallelStr}\\text{)} \\end{aligned}`;
+        const tempAmpHl = `\\textcolor{var(--color-status-success)}{${tempAmp}}`;
+        const tex = `\\begin{aligned} ${I_str} \\text{ A} &\\le ${rightSideSymbol} \\\\ &\\le ${rightSide} \\\\ &= ${tempAmpHl} \\text{ A (}${targetCable.size}\\text{${unitStr}}${parallelStr}\\text{)} \\end{aligned}`;
         return { tex, leg };
     }
 }
@@ -491,14 +499,15 @@ function _getVoltageDropFormula(inputs: Record<string, any>, result: Record<stri
         if (result && result.optimal) {
             const calA_total = (sys.simpleK * L * I) / (1000 * (sys.voltage * (targetDrop / 100)));
             const calA_each = calA_total / N_val;
-            tex += ` \\\\ &= ${(N_val > 1 ? calA_each : calA_total).toFixed(2)} \\text{ sq}`;
+            const aVal = (N_val > 1 ? calA_each : calA_total).toFixed(2);
+            tex += ` \\\\ &= \\textcolor{var(--color-status-success)}{${aVal}} \\text{ sq}`;
         }
         tex += ` \\end{aligned}`;
     } else {
         const rightSideSymbol = `\\frac{K \\cdot L \\cdot I}{1000 \\times A${N_val > 1 ? ` \\times N` : ''}}`;
         tex = `\\begin{aligned} e &= ${rightSideSymbol} \\\\ &= \\frac{${K_val} \\cdot ${L_val} \\cdot ${I_str}}{1000 \\times ${N_paren}}`;
         if (result && result.finalDropV !== undefined) {
-            tex += ` \\\\ &= ${result.finalDropV.toFixed(2)} \\text{ V}`;
+            tex += ` \\\\ &= \\textcolor{var(--color-status-success)}{${result.finalDropV.toFixed(2)}} \\text{ V}`;
         }
         tex += ` \\end{aligned}`;
     }
