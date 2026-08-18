@@ -237,10 +237,7 @@ const mathSteps = computed(() => {
     </template>
 
     <template #results>
-      <AppPanel
-        bracket-color="tool"
-        style="flex: 1; min-height: 0"
-      >
+      <AppPanel bracket-color="tool" style="flex: 1; min-height: 0">
         <template #header>
           <AppSectionHeader
             title="計算結果"
@@ -265,10 +262,7 @@ const mathSteps = computed(() => {
     </template>
 
     <template #inputs>
-      <AppPanel
-        bracket-color="tool"
-        style="flex: 1; min-height: 0"
-      >
+      <AppPanel bracket-color="tool" style="flex: 1; min-height: 0">
         <template #header>
           <AppSectionHeader
             title="条件入力"
@@ -340,7 +334,7 @@ const mathSteps = computed(() => {
 
     <template #basis>
       <AppPanel
-        bracket-color="reference"
+        bracket-color="tool"
         class="c-basis-panel"
         style="flex: 1; min-height: 0"
       >
