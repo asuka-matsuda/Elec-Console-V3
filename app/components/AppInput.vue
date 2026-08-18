@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useId } from "vue";
 
-const model = defineModel<string | number>();
+const model = defineModel<string | number | null>();
 
 withDefaults(
   defineProps<{

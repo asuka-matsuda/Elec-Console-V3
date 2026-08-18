@@ -7,7 +7,7 @@ export interface SelectOption {
   disabled?: boolean;
 }
 
-const model = defineModel<string | number | boolean>();
+const model = defineModel<string | number | boolean | null>();
 
 const props = defineProps<{
   options: SelectOption[];

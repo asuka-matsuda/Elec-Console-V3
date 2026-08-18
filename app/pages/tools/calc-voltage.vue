@@ -299,7 +299,7 @@ const mathSteps = computed(() => {
               <!-- Select Only -->
               <AppSelect
                 v-if="field.type === 'select'"
-                v-model="form[field.id] as any"
+                v-model="form[field.id]"
                 :options="field.options || []"
                 :placeholder="field.placeholder"
               />
@@ -307,7 +307,7 @@ const mathSteps = computed(() => {
               <!-- Input + Select -->
               <AppInputGroup v-else-if="field.type === 'input-select'">
                 <AppInput
-                  v-model.number="form[field.id] as any"
+                  v-model.number="form[field.id]"
                   type="number"
                   :placeholder="field.placeholder"
                   :min="field.min"
@@ -316,7 +316,7 @@ const mathSteps = computed(() => {
                 <template #append>
                   <AppSelect
                     v-if="field.secondaryId"
-                    v-model="form[field.secondaryId] as any"
+                    v-model="form[field.secondaryId]"
                     :options="field.secondaryOptions || []"
                     style="width: 80px; flex-shrink: 0"
                   />
@@ -326,7 +326,7 @@ const mathSteps = computed(() => {
               <!-- Input + Addon -->
               <AppInputGroup v-else-if="field.type === 'input-addon'">
                 <AppInput
-                  v-model.number="form[field.id] as any"
+                  v-model.number="form[field.id]"
                   type="number"
                   :placeholder="field.placeholder"
                   :min="field.min"
