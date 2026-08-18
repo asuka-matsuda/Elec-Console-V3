@@ -230,7 +230,7 @@ function _getTargetCable(inputs: Record<string, any>, result: Record<string, any
             (c) => c.category === inputs.cableType && parseFloat(c.size) === inputs.selectedSize
         );
         if (inputs.selectedCores) {
-            candidates = candidates.filter((c) => c.cores === inputs.selectedCores || !c.cores);
+            candidates = candidates.filter((c) => c.cores === inputs.selectedCores || !c.cores || c.cores === '-');
         }
         return candidates[0] || null;
     }
@@ -247,14 +247,7 @@ function _getTargetCable(inputs: Record<string, any>, result: Record<string, any
 function _getTempDeratingFormula(inputs: Record<string, any>, result: Record<string, any> | null, cables: Record<string, any>[]) {
     const targetCable = _getTargetCable(inputs, result, cables);
 
-    if (!targetCable || !targetCable.ampacity || targetCable.ampacity === '-') {
-        return {
-            tex: `\\text{許容電流データなし}`,
-            leg: []
-        };
-    }
-
-    const baseAmp = parseFloat(targetCable.ampacity);
+    const baseAmp = parseFloat(targetCable!.ampacity);
 
     if (inputs.ambientTemp === null) {
         return {
@@ -364,25 +357,18 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
 
     const targetCable = _getTargetCable(inputs, result, cables);
 
-    if (!targetCable || !targetCable.ampacity || targetCable.ampacity === '-') {
-        return {
-            tex: `\\text{許容電流データなし}`,
-            leg: []
-        };
-    }
-
     let kValue = result && result.tempDerating ? result.tempDerating : 1.0;
     if (inputs.ambientTemp !== null) {
         kValue =
             (result && result.tempDerating) ||
             _getAmbientTempDerating(
-                targetCable.baseTemp,
-                targetCable.maxTemp,
+                targetCable!.baseTemp,
+                targetCable!.maxTemp,
                 inputs.ambientTemp
             );
     }
-    const tempAmp = (parseFloat(targetCable.ampacity) * kValue).toFixed(1);
-    const unitStr = targetCable.unit || 'sq';
+    const tempAmp = (parseFloat(targetCable!.ampacity) * kValue).toFixed(1);
+    const unitStr = targetCable!.unit || 'sq';
 
     let rightSide = `${tempAmp}`;
     if (derating !== null && derating < 1.0) {
