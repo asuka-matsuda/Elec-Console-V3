@@ -2,7 +2,7 @@
 withDefaults(
   defineProps<{
     type?: "default" | "fade-side" | "fade-center";
-    variant?: "main" | "tool" | "database" | "reference" | "management";
+    variant?: "main" | "tool" | "database" | "reference" | "management" | "danger" | "success";
     vertical?: boolean;
     animated?: boolean;
   }>(),
@@ -56,6 +56,14 @@ withDefaults(
 
   &.has-accent-management {
     --divider-accent: var(--color-category-management);
+  }
+
+  &.has-accent-danger {
+    --divider-accent: var(--color-status-danger);
+  }
+
+  &.has-accent-success {
+    --divider-accent: var(--color-status-success);
   }
 
   // ==========================================

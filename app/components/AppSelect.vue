@@ -14,11 +14,33 @@ const props = defineProps<{
   placeholder?: string;
   disabled?: boolean;
   error?: boolean;
+  placement?: "top" | "bottom";
 }>();
 
 const isOpen = ref(false);
 const selectRef = ref<HTMLElement | null>(null);
 const focusedIndex = ref(-1);
+const dynamicPlacement = ref<"top" | "bottom">("bottom");
+
+const calculatePlacement = () => {
+  if (!selectRef.value) return;
+  // If explicitly set via props, respect it
+  if (props.placement) {
+    dynamicPlacement.value = props.placement;
+    return;
+  }
+  
+  const rect = selectRef.value.getBoundingClientRect();
+  const spaceBelow = window.innerHeight - rect.bottom;
+  const spaceAbove = rect.top;
+  const DROPDOWN_MAX_HEIGHT = 260; // Approximate max height of dropdown
+
+  if (spaceBelow < DROPDOWN_MAX_HEIGHT && spaceAbove > spaceBelow) {
+    dynamicPlacement.value = "top";
+  } else {
+    dynamicPlacement.value = "bottom";
+  }
+};
 
 const selectedOption = computed(() => {
   return props.options.find((opt) => opt.value === model.value);
@@ -114,9 +136,10 @@ const handleKeydown = (event: KeyboardEvent) => {
   }
 };
 
-// Reset focus state when dropdown opens
+// Reset focus state and calculate placement when dropdown opens
 watch(isOpen, (newVal) => {
   if (newVal) {
+    calculatePlacement();
     const index = props.options.findIndex((opt) => opt.value === model.value);
     if (index >= 0) {
       focusedIndex.value = index;
@@ -163,7 +186,7 @@ const listboxId = useId();
 
     <!-- Dropdown Menu -->
     <transition name="dropdown-fade">
-      <div v-if="isOpen" class="c-custom-select__dropdown">
+      <div v-if="isOpen" class="c-custom-select__dropdown" :class="[`is-${dynamicPlacement}`]">
         <ul :id="listboxId" class="c-custom-select__list" role="listbox">
           <li
             v-if="placeholder && !selectedOption"
@@ -262,8 +285,6 @@ const listboxId = useId();
 
 .c-custom-select__dropdown {
   position: absolute;
-  top: calc(100% + var(--space-1));
-  left: 0;
   z-index: 100;
   width: max-content;
   min-width: 100%;
@@ -275,6 +296,15 @@ const listboxId = useId();
   box-shadow:
     var(--shadow-elevation-hover),
     inset 0 0 10px theme-color(var(--color-category-main), 20%);
+
+  &.is-bottom {
+    top: calc(100% + var(--space-1));
+  }
+
+  &.is-top {
+    bottom: calc(100% + var(--space-1));
+    top: auto;
+  }
 
   /* Error state dropdown border */
   .c-custom-select.is-error & {

@@ -1,6 +1,11 @@
 <script setup lang="ts">
-import { reactive, computed } from "vue";
-import { calculateDesignCurrent, calculateLogic, generateMathData } from "~/utils/calcVoltageEngine";
+import { computed } from "vue";
+import { useLocalStorage } from "@vueuse/core";
+import {
+  calculateDesignCurrent,
+  calculateLogic,
+  generateMathData,
+} from "~/utils/calcVoltageEngine";
 import { systemData } from "~/utils/data/systemData";
 
 import {
@@ -15,13 +20,13 @@ import {
   deratingOptions,
   ambientTempOptions,
   targetDropOptions,
-} from "~/utils/constants/toolOptions";// 空の構造
+} from "~/utils/constants/toolOptions"; // 空の構造
 useHead({
   title: "電圧降下・ケーブルサイズ選定",
 });
 
-// リアクティブステート（フォーム入力値）
-const form = reactive({
+// 初期状態の定義
+const defaultForm = {
   mode: "drop", // "drop" (電圧降下) | "size" (導体断面積)
   phase: "",
   loadValue: null as number | null,
@@ -35,15 +40,25 @@ const form = reactive({
   derating: "1.0",
   ambientTemp: "none",
   targetDrop: "2",
-});
+};
+
+// リアクティブステート（フォーム入力値・ローカルストレージで永続化）
+const form = useLocalStorage("elec-calc-voltage-form", { ...defaultForm });
+const isResetModalOpen = ref(false);
+
+// フォームのリセット
+const resetForm = () => {
+  form.value = { ...defaultForm };
+  isResetModalOpen.value = false;
+};
 
 // 表示制御用の算出プロパティ
-const isSizeCalcMode = computed(() => form.mode === "size");
-const isDropCalcMode = computed(() => form.mode === "drop");
+const isSizeCalcMode = computed(() => form.value.mode === "size");
+const isDropCalcMode = computed(() => form.value.mode === "drop");
 
 // フォームフィールド設定のDRY化
 type FormField = {
-  id: keyof typeof form;
+  id: keyof typeof defaultForm;
   label: string;
   type: "select" | "input-select" | "input-addon";
   options?: { label: string; value: string }[];
@@ -51,23 +66,96 @@ type FormField = {
   min?: string;
   step?: string;
   addonText?: string;
-  secondaryId?: keyof typeof form;
+  secondaryId?: keyof typeof defaultForm;
   secondaryOptions?: { label: string; value: string }[];
   showIf?: () => boolean;
 };
 
 const formFields = computed<FormField[]>(() => [
-  { id: "phase", label: "配電方式・電圧", type: "select", options: phaseOptions, placeholder: "選択してください" },
-  { id: "loadValue", label: "負荷", type: "input-select", placeholder: "入力してください", min: "0.1", step: "0.1", secondaryId: "loadUnit", secondaryOptions: loadUnitOptions },
-  { id: "powerFactor", label: "力率設定 (kW時)", type: "select", options: powerFactorOptions, placeholder: "選択してください" },
-  { id: "distance", label: "配線距離 (L)", type: "input-addon", placeholder: "入力してください", min: "1", addonText: "m" },
-  { id: "cableType", label: "使用ケーブル", type: "select", options: cableTypeOptions, placeholder: "選択してください" },
-  { id: "cores", label: "芯数 指定", type: "select", options: coreOptions, placeholder: "選択してください", showIf: () => isSizeCalcMode.value },
-  { id: "fixedSize", label: "ケーブルサイズ 指定", type: "select", options: fixedSizeOptions, placeholder: "選択してください", showIf: () => isDropCalcMode.value },
-  { id: "parallel", label: "敷設条数", type: "select", options: parallelOptions, placeholder: "選択してください" },
-  { id: "derating", label: "布設条件 (電流減少係数)", type: "select", options: deratingOptions, placeholder: "選択してください" },
-  { id: "ambientTemp", label: "想定周囲温度", type: "select", options: ambientTempOptions, placeholder: "選択してください" },
-  { id: "targetDrop", label: "目標（許容）電圧降下率", type: "select", options: targetDropOptions, placeholder: "選択してください", showIf: () => isSizeCalcMode.value },
+  {
+    id: "phase",
+    label: "配電方式・電圧",
+    type: "select",
+    options: phaseOptions,
+    placeholder: "選択してください",
+  },
+  {
+    id: "loadValue",
+    label: "負荷",
+    type: "input-select",
+    placeholder: "入力してください",
+    min: "0.1",
+    step: "0.1",
+    secondaryId: "loadUnit",
+    secondaryOptions: loadUnitOptions,
+  },
+  {
+    id: "powerFactor",
+    label: "力率設定 (kW時)",
+    type: "select",
+    options: powerFactorOptions,
+    placeholder: "選択してください",
+  },
+  {
+    id: "distance",
+    label: "配線距離 (L)",
+    type: "input-addon",
+    placeholder: "入力してください",
+    min: "1",
+    addonText: "m",
+  },
+  {
+    id: "cableType",
+    label: "使用ケーブル",
+    type: "select",
+    options: cableTypeOptions,
+    placeholder: "選択してください",
+  },
+  {
+    id: "cores",
+    label: "芯数 指定",
+    type: "select",
+    options: coreOptions,
+    placeholder: "選択してください",
+    showIf: () => isSizeCalcMode.value,
+  },
+  {
+    id: "fixedSize",
+    label: "ケーブルサイズ 指定",
+    type: "select",
+    options: fixedSizeOptions,
+    placeholder: "選択してください",
+    showIf: () => isDropCalcMode.value,
+  },
+  {
+    id: "parallel",
+    label: "敷設条数",
+    type: "select",
+    options: parallelOptions,
+    placeholder: "選択してください",
+  },
+  {
+    id: "derating",
+    label: "布設条件 (電流減少係数)",
+    type: "select",
+    options: deratingOptions,
+    placeholder: "選択してください",
+  },
+  {
+    id: "ambientTemp",
+    label: "想定周囲温度",
+    type: "select",
+    options: ambientTempOptions,
+    placeholder: "選択してください",
+  },
+  {
+    id: "targetDrop",
+    label: "目標（許容）電圧降下率",
+    type: "select",
+    options: targetDropOptions,
+    placeholder: "選択してください",
+    showIf: () => isSizeCalcMode.value,
+  },
 ]);
 
 // ---------------------------------
@@ -75,30 +163,31 @@ const formFields = computed<FormField[]>(() => [
 // ---------------------------------
 
 const calcInputs = computed(() => {
-  const mode = form.mode;
-  const sys = systemData.find(s => s.id === form.phase) || null;
-  const loadVal = form.loadValue || null;
-  const loadUnit = form.loadUnit;
-  const pf = parseFloat(form.powerFactor);
-  const L = form.distance || null;
-  const cableType = form.cableType || null;
-  const rawSize = form.fixedSize || "";
-  
+  const mode = form.value.mode;
+  const sys = systemData.find((s) => s.id === form.value.phase) || null;
+  const loadVal = form.value.loadValue || null;
+  const loadUnit = form.value.loadUnit;
+  const pf = parseFloat(form.value.powerFactor);
+  const L = form.value.distance || null;
+  const cableType = form.value.cableType || null;
+  const rawSize = form.value.fixedSize || "";
+
   let selectedSize = null;
   let selectedCores = null;
 
   if (mode === "size") {
-    selectedCores = form.cores || null;
+    selectedCores = form.value.cores || null;
   } else if (rawSize) {
     selectedSize = parseFloat(rawSize);
-    selectedCores = form.cores || null;
+    selectedCores = form.value.cores || null;
   }
 
-  const derating = parseFloat(form.derating);
-  const rawTempVal = form.ambientTemp;
-  const ambientTemp = rawTempVal && rawTempVal !== "none" ? parseFloat(rawTempVal) : null;
-  const parallel = parseInt(form.parallel) || 1;
-  const targetDrop = parseFloat(form.targetDrop) || null;
+  const derating = parseFloat(form.value.derating);
+  const rawTempVal = form.value.ambientTemp;
+  const ambientTemp =
+    rawTempVal && rawTempVal !== "none" ? parseFloat(rawTempVal) : null;
+  const parallel = parseInt(form.value.parallel) || 1;
+  const targetDrop = parseFloat(form.value.targetDrop) || null;
 
   const I = calculateDesignCurrent(sys, loadVal || 0, loadUnit, pf);
 
@@ -111,9 +200,23 @@ const calcInputs = computed(() => {
   if (mode === "drop" && !selectedSize) missing.push("selectedSize");
 
   return {
-    mode, sys, I, L, cableType, selectedCores, derating, rawTempVal, ambientTemp, parallel, targetDrop, selectedSize, loadVal, loadUnit, pf,
+    mode,
+    sys,
+    I,
+    L,
+    cableType,
+    selectedCores,
+    derating,
+    rawTempVal,
+    ambientTemp,
+    parallel,
+    targetDrop,
+    selectedSize,
+    loadVal,
+    loadUnit,
+    pf,
     isReady: missing.length === 0,
-    missingFields: missing
+    missingFields: missing,
   };
 });
 
@@ -128,7 +231,8 @@ const mathSteps = computed(() => {
 </script>
 
 <template>
-  <AppToolLayout>
+  <div class="p-tool-calc-voltage">
+    <AppToolLayout>
     <template #disclaimer>
       <AppDisclaimer />
     </template>
@@ -163,7 +267,11 @@ const mathSteps = computed(() => {
     </template>
 
     <template #inputs>
-      <AppPanel variant="hud" bracket-color="tool" style="flex: 1; min-height: 0">
+      <AppPanel
+        variant="hud"
+        bracket-color="tool"
+        style="flex: 1; min-height: 0"
+      >
         <template #header>
           <AppSectionHeader
             title="条件入力"
@@ -171,7 +279,14 @@ const mathSteps = computed(() => {
             icon="edit"
             variant="tool"
             size="md"
-          />
+          >
+            <template #actions>
+              <AppButtonDanger size="sm" @click="isResetModalOpen = true">
+                <AppIcon name="refresh-cw" size="sm" />
+                リセット
+              </AppButtonDanger>
+            </template>
+          </AppSectionHeader>
         </template>
         <!-- 1. 計算モード切替 (AppRadioGroup) -->
         <AppRadioGroup v-model="form.mode" :options="modeOptions" />
@@ -185,7 +300,7 @@ const mathSteps = computed(() => {
               <!-- Select Only -->
               <AppSelect
                 v-if="field.type === 'select'"
-                v-model="(form[field.id] as any)"
+                v-model="form[field.id] as any"
                 :options="field.options || []"
                 :placeholder="field.placeholder"
               />
@@ -193,7 +308,7 @@ const mathSteps = computed(() => {
               <!-- Input + Select -->
               <AppInputGroup v-else-if="field.type === 'input-select'">
                 <AppInput
-                  v-model.number="(form[field.id] as any)"
+                  v-model.number="form[field.id] as any"
                   type="number"
                   :placeholder="field.placeholder"
                   :min="field.min"
@@ -202,7 +317,7 @@ const mathSteps = computed(() => {
                 <template #append>
                   <AppSelect
                     v-if="field.secondaryId"
-                    v-model="(form[field.secondaryId] as any)"
+                    v-model="form[field.secondaryId] as any"
                     :options="field.secondaryOptions || []"
                     style="width: 80px; flex-shrink: 0"
                   />
@@ -212,7 +327,7 @@ const mathSteps = computed(() => {
               <!-- Input + Addon -->
               <AppInputGroup v-else-if="field.type === 'input-addon'">
                 <AppInput
-                  v-model.number="(form[field.id] as any)"
+                  v-model.number="form[field.id] as any"
                   type="number"
                   :placeholder="field.placeholder"
                   :min="field.min"
@@ -228,7 +343,12 @@ const mathSteps = computed(() => {
     </template>
 
     <template #basis>
-      <AppPanel variant="hud" bracket-color="tool" class="c-basis-panel" style="flex: 1; min-height: 0">
+      <AppPanel
+        variant="hud"
+        bracket-color="tool"
+        class="c-basis-panel"
+        style="flex: 1; min-height: 0"
+      >
         <template #header>
           <AppSectionHeader
             title="計算根拠"
@@ -238,11 +358,34 @@ const mathSteps = computed(() => {
             size="md"
           />
         </template>
-        
+
         <AppMathBasis :steps="mathSteps" />
       </AppPanel>
     </template>
   </AppToolLayout>
+
+  <!-- Reset Confirmation Modal -->
+  <AppModal
+    v-model="isResetModalOpen"
+    title="入力条件のリセット"
+    icon="alert-triangle"
+    variant="danger"
+  >
+    <p>
+      これまでに入力したすべての条件が初期化されます。<br />
+      本当によろしいですか？
+    </p>
+    <template #footer>
+      <AppButtonSecondary @click="isResetModalOpen = false">
+        キャンセル
+      </AppButtonSecondary>
+      <AppButtonDanger @click="resetForm">
+        <AppIcon name="trash-2" size="sm" />
+        リセットする
+      </AppButtonDanger>
+    </template>
+  </AppModal>
+</div>
 </template>
 
 <style scoped lang="scss">

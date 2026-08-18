@@ -54,7 +54,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
         <AppDivider
           v-if="step.title"
-          variant="dim"
+          variant="main"
           class="c-math-basis__divider"
         />
 
@@ -76,10 +76,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
                 class="c-math-basis__legend-item"
               >
                 <!-- eslint-disable-next-line vue/no-v-html -->
-                <span
-                  class="c-math-basis__legend-symbol"
-                  v-html="renderMath(v.symbol, false)"
-                ></span>
+                <span class="c-math-basis__legend-symbol" v-html="renderMath(v.symbol, false)"></span>
                 <span class="c-math-basis__legend-sep">:</span>
                 <span class="c-math-basis__legend-name">{{ v.name }}</span>
               </li>

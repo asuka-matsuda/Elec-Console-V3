@@ -36,5 +36,25 @@ const svgContent = computed(() => {
     width: 100%;
     height: 100%;
   }
+
+  &--sm {
+    width: 14px;
+    height: 14px;
+  }
+  
+  &--md {
+    width: 18px;
+    height: 18px;
+  }
+  
+  &--lg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  &--xl {
+    width: 32px;
+    height: 32px;
+  }
 }
 </style>

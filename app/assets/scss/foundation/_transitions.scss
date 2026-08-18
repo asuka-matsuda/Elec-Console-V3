@@ -13,6 +13,10 @@
 .dropdown-fade-leave-to {
   opacity: 0;
   transform: translateY(-5px);
+
+  &.is-top {
+    transform: translateY(5px);
+  }
 }
 
 // --- Fade Slide (Used in Form Errors, etc.) ---

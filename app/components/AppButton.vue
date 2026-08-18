@@ -136,7 +136,7 @@ const componentTag = computed(() => {
   /* Size Modifiers */
   &--sm {
     height: var(--size-control-sm);
-    padding: var(--space-3);
+    padding: 0 var(--space-2);
     font-size: var(--font-size-xs);
 
     // Minimum touch target (48x48) for accessibility

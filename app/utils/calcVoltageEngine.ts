@@ -6,6 +6,7 @@
  */
 
 import { cableData as defaultCableData } from './data/cableData';
+import { hlVal, formatVal } from './mathUtils';
 
 /**
  * 容量と単位から設計電流(A)を逆算します。
@@ -148,9 +149,9 @@ function _calculateSizeSelection(inputs: Record<string, any>, cables: Record<str
  * @param {Object} inputs - ユーザーの入力条件
  * @param {Object} result - calculateLogicの計算結果
  * @param {Array} cableDataList - ケーブルデータ
- * @returns {Array<{tex: string, legend: Array<string>}>|null} ステップごとの描画用データ
+ * @returns {Array<{title?: string, tex: string, legend: Array<{symbol: string, name: string}>}>|null} ステップごとの描画用データ
  */
-export function generateMathData(inputs: Record<string, any>, result: Record<string, any> | null, cableDataList: Record<string, any>[] | null = null): Array<{tex: string, legend: Array<string>}> | null {
+export function generateMathData(inputs: Record<string, any>, result: Record<string, any> | null, cableDataList: Record<string, any>[] | null = null): Array<{title?: string, tex: string, legend: any[]}> | null {
     if (!inputs) return null;
     const cables = cableDataList || defaultCableData;
 
@@ -205,24 +206,14 @@ export function generateMathData(inputs: Record<string, any>, result: Record<str
  */
 function _getAmbientTempDerating(baseTempStr: string | number, maxTempStr: string | number, ambientTemp: number | null) {
     if (!ambientTemp || isNaN(ambientTemp)) return 1.0;
-    const base = parseFloat(baseTempStr);
-    const max = parseFloat(maxTempStr);
+    const base = parseFloat(String(baseTempStr));
+    const max = parseFloat(String(maxTempStr));
     if (isNaN(base) || isNaN(max)) return 1.0;
     if (ambientTemp >= max) return 0.1; // 極端な低減（計算破綻回避）
     return Math.sqrt((max - ambientTemp) / (max - base));
 }
 
-/**
- * 数値をフォーマットして文字列化する
- * @param {number|null} val - フォーマット対象の数値
- * @param {string} fallback - 数値が無効な場合の代替文字列
- * @param {number} [dec=1] - 小数点以下の桁数
- * @returns {string} フォーマット後の文字列
- */
-function _str(val: number | null | undefined, fallback: string, dec = 1) {
-    if (val === null || val === undefined || isNaN(val)) return fallback;
-    return val % 1 === 0 ? val.toString() : val.toFixed(dec);
-}
+// _str は mathUtils.ts の formatVal / hlVal に移行したため削除
 
 /**
  * 対象となるケーブルの定義データを取得する
@@ -290,7 +281,8 @@ function _getTempDeratingFormula(inputs: Record<string, any>, result: Record<str
     }
 
     const tempAmp = baseAmp * k;
-    const tex = `\\begin{aligned} I_0' &= I_0 \\times \\sqrt{\\frac{\\theta_{max} - \\theta_{amb}}{\\theta_{max} - \\theta_{base}}} \\\\ &= ${baseAmp} \\times \\sqrt{\\frac{${max} - ${amb}}{${max} - ${base}}} \\\\ &= ${tempAmp.toFixed(1)} \\text{ A} \\end{aligned}`;
+    const ambHl = hlVal(amb, '\\theta_{amb}', 1);
+    const tex = `\\begin{aligned} I_0' &= I_0 \\times \\sqrt{\\frac{\\theta_{max} - \\theta_{amb}}{\\theta_{max} - \\theta_{base}}} \\\\ &= ${baseAmp} \\times \\sqrt{\\frac{${max} - ${ambHl}}{${max} - ${base}}} \\\\ &= ${tempAmp.toFixed(1)} \\text{ A} \\end{aligned}`;
 
     const leg = [
         "\\( I_0' \\): 補正後許容電流 [A]",
@@ -310,12 +302,12 @@ function _getTempDeratingFormula(inputs: Record<string, any>, result: Record<str
  */
 function _getUnitConversionFormula(inputs: Record<string, any>) {
     const { sys, I, loadVal, loadUnit, pf } = inputs;
-    const P = _str(loadVal, 'P', 1);
-    const Cos = _str(pf, '\\cos \\theta', 2);
+    const P = hlVal(loadVal, 'P', 1);
+    const Cos = hlVal(pf, '\\cos \\theta', 2);
 
     if (loadUnit === 'A') {
         const tex =
-            loadVal === null ? `I = \\text{設計電流 [A]}` : `I = ${loadVal.toFixed(1)} \\text{ A}`;
+            loadVal === null ? `I = \\text{設計電流 [A]}` : `I = ${P} \\text{ A}`;
         return { tex, leg: ['\\( I \\): 設計電流 [A]'] };
     }
 
@@ -331,7 +323,7 @@ function _getUnitConversionFormula(inputs: Record<string, any>) {
             leg.push(`\\( V \\): 電圧 (${vTerm} V)`);
         }
     } else {
-        leg.push('\\( V \\): 基準電圧 [V]', '\\( \\alpha \\): 相係数 (単相=1, 三相=\\sqrt{3})');
+        leg.push('\\( V \\): 基準電圧 [V]', '\\( \\alpha \\): 相係数 (単相=1, 三相=√3)');
     }
 
     let tex = `\\begin{aligned} I &= \\frac{P`;
@@ -367,9 +359,10 @@ function _getUnitConversionFormula(inputs: Record<string, any>) {
 function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<string, any> | null, cables: Record<string, any>[]) {
     const { I, derating, parallel } = inputs;
 
-    const I_str = _str(I, 'I', 1);
+    const I_str = formatVal(I, 'I', 1); // 算出値
     const N_val = parallel !== null ? parallel : 1;
-    const cdStr = derating !== null ? derating : 'C_d';
+    const N_hl = hlVal(parallel, 'N', 0);
+    const cdStr = derating !== null ? hlVal(derating, 'C_d', 2) : 'C_d';
 
     const leg = ['\\( I \\): 設計電流 [A]', "\\( I_0' \\): 補正後許容電流 [A]"];
     if (N_val > 1) leg.push('\\( N \\): 条数');
@@ -392,14 +385,14 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
 
         let rightSide = `${tempAmp}`;
         if (derating !== null && derating < 1.0) {
-            rightSide += ` \\times ${derating}`;
+            rightSide += ` \\times ${cdStr}`;
             leg.push(`C_d: 減少係数 (${derating})`);
         } else if (derating === null) {
             rightSide += ` \\times C_d`;
             leg.push(`C_d: 減少係数`);
         }
 
-        if (N_val > 1) rightSide += ` \\times ${N_val}`;
+        if (N_val > 1) rightSide += ` \\times ${N_hl}`;
 
         if (derating !== null) {
             const effAmp =
@@ -423,8 +416,8 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
     }
 
     if (cdStr === 'C_d') leg.push(`C_d: 減少係数`);
-    const rightSide = `I_0' \\times ${cdStr}` + (N_val > 1 ? ` \\times ${N_val}` : '');
-    return { tex: `${I_str} \\le ${rightSide} \\text{ (size)}`, leg };
+    const rightSideFallback = `I_0' \\times ${cdStr}` + (N_val > 1 ? ` \\times ${N_hl}` : '');
+    return { tex: `${I_str} \\le ${rightSideFallback} \\text{ (size)}`, leg };
 }
 
 /**
@@ -436,14 +429,16 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
 function _getVoltageDropFormula(inputs: Record<string, any>, result: Record<string, any> | null) {
     const { mode, sys, I, L, targetDrop, selectedSize, parallel } = inputs;
     const isAuto = mode === 'size';
-    const I_str = _str(I, 'I', 1);
-    const K_val = sys ? sys.simpleK : 'K';
-    const L_val = _str(L, 'L', 1);
-    const TargetE =
-        sys && targetDrop !== null ? (sys.voltage * (targetDrop / 100)).toFixed(2) : 'e';
-    const A_val =
-        result && result.convertedA ? result.convertedA.toFixed(2) : _str(selectedSize, 'A', 1);
+    const I_str = formatVal(I, 'I', 1);
+    const K_val = sys ? formatVal(sys.simpleK, 'K', 2) : 'K';
+    const L_val = hlVal(L, 'L', 1);
+    
+    // e は %入力から計算した実数値。V計算の元になった入力なのでハイライト
+    const TargetE = sys && targetDrop !== null ? hlVal(sys.voltage * (targetDrop / 100), 'e', 2) : 'e';
+    
+    const A_val = result && result.convertedA ? formatVal(result.convertedA, 'A', 2) : hlVal(selectedSize, 'A', 1);
     const N_val = parallel !== null ? parallel : 1;
+    const N_hl = hlVal(parallel, 'N', 0);
 
     let tex;
     const leg = [
@@ -462,8 +457,8 @@ function _getVoltageDropFormula(inputs: Record<string, any>, result: Record<stri
     }
     if (N_val > 1) leg.push('\\( N \\): 条数');
 
-    const N_term = N_val > 1 ? ` \\times ${N_val}` : '';
-    const N_paren = N_val > 1 ? `(${A_val} \\times ${N_val})` : `${A_val}`;
+    const N_term = N_val > 1 ? ` \\times ${N_hl}` : '';
+    const N_paren = N_val > 1 ? `(${A_val} \\times ${N_hl})` : `${A_val}`;
     const N_sub = N_val > 1 ? '_{\\text{each}}' : '';
 
     if (isAuto) {
