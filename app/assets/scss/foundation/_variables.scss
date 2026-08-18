@@ -10,15 +10,15 @@ $font-fallback: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-seri
 $font-base: $font-fallback;
 $font-mono: "Roboto Mono", $font-fallback;
 $font-sizes: (
-  "2xs": 10px,
-  "xs": 11px,
-  "sm": 12px,
-  "base": 13px,
-  "lg": 14px,
-  "xl": 16px,
-  "2xl": 18px,
-  "3xl": 20px,
-  "4xl": 24px,
+  "2xs": 9px,
+  "xs": 10px,
+  "sm": 11px,
+  "base": 12px,
+  "lg": 13px,
+  "xl": 14px,
+  "2xl": 16px,
+  "3xl": 18px,
+  "4xl": 20px,
 );
 
 /* Layout & Breakpoints
@@ -127,29 +127,29 @@ $color-input-focus-base: 217 91% 60%;
 
   /* Responsive Typography (Fluid Scale) */
   @media (width >= 1600px) {
-    --font-size-2xs: 11px;
-    --font-size-xs: 12px;
-    --font-size-sm: 13px;
-    --font-size-base: 14px;
-    --font-size-lg: 16px;
-    --font-size-xl: 18px;
-    --font-size-2xl: 20px;
-    --font-size-3xl: 24px;
-    --font-size-4xl: 28px;
-  }
-
-  @media (width <= 1024px) {
-    --font-size-2xl: 16px;
+    --font-size-2xs: 10px;
+    --font-size-xs: 11px;
+    --font-size-sm: 12px;
+    --font-size-base: 13px;
+    --font-size-lg: 14px;
+    --font-size-xl: 16px;
+    --font-size-2xl: 18px;
     --font-size-3xl: 20px;
     --font-size-4xl: 24px;
   }
 
-  @media (width <= 768px) {
-    --font-size-lg: 13px;
-    --font-size-xl: 14px;
-    --font-size-2xl: 16px;
+  @media (width <= 1024px) {
+    --font-size-2xl: 15px;
     --font-size-3xl: 18px;
     --font-size-4xl: 20px;
+  }
+
+  @media (width <= 768px) {
+    --font-size-lg: 12px;
+    --font-size-xl: 13px;
+    --font-size-2xl: 14px;
+    --font-size-3xl: 16px;
+    --font-size-4xl: 18px;
   }
 
   /* Layout, Spacing & Sizing
