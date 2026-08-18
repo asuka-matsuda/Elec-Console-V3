@@ -247,16 +247,11 @@ function _getTargetCable(inputs: Record<string, any>, result: Record<string, any
 function _getTempDeratingFormula(inputs: Record<string, any>, result: Record<string, any> | null, cables: Record<string, any>[]) {
     const targetCable = _getTargetCable(inputs, result, cables);
 
-    if (!targetCable) {
-        const tex = `I_0' = I_0 \\times \\sqrt{\\frac{\\theta_{max} - \\theta_{amb}}{\\theta_{max} - \\theta_{base}}}`;
-        const leg = [
-            "\\( I_0' \\): 補正後許容電流 [A]",
-            '\\( I_0 \\): 基準許容電流 [A]',
-            '\\( \\theta_{max} \\): 最高許容温度 [℃]',
-            '\\( \\theta_{base} \\): 基底温度 [℃]',
-            '\\( \\theta_{amb} \\): 周囲温度 [℃]'
-        ];
-        return { tex, leg };
+    if (!targetCable || !targetCable.ampacity || targetCable.ampacity === '-') {
+        return {
+            tex: `\\text{選択されたケーブルのデータが登録されていません}`,
+            leg: []
+        };
     }
 
     const baseAmp = parseFloat(targetCable.ampacity);
@@ -369,55 +364,56 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
 
     const targetCable = _getTargetCable(inputs, result, cables);
 
-    if (targetCable) {
-        let kValue = result && result.tempDerating ? result.tempDerating : 1.0;
-        if (inputs.ambientTemp !== null) {
-            kValue =
-                (result && result.tempDerating) ||
-                _getAmbientTempDerating(
-                    targetCable.baseTemp,
-                    targetCable.maxTemp,
-                    inputs.ambientTemp
-                );
-        }
-        const tempAmp = (parseFloat(targetCable.ampacity) * kValue).toFixed(1);
-        const unitStr = targetCable.unit || 'sq';
-
-        let rightSide = `${tempAmp}`;
-        if (derating !== null && derating < 1.0) {
-            rightSide += ` \\times ${cdStr}`;
-            leg.push(`C_d: 減少係数 (${derating})`);
-        } else if (derating === null) {
-            rightSide += ` \\times C_d`;
-            leg.push(`C_d: 減少係数`);
-        }
-
-        if (N_val > 1) rightSide += ` \\times ${N_hl}`;
-
-        if (derating !== null) {
-            const effAmp =
-                result && result.finalEffAmp !== undefined
-                    ? result.finalEffAmp.toFixed(1)
-                    : (parseFloat(tempAmp) * derating * N_val).toFixed(1);
-            let rightSideSymbol = `I_0'`;
-            if (derating !== null && derating < 1.0) rightSideSymbol += ` \\times C_d`;
-            else if (derating === null) rightSideSymbol += ` \\times C_d`;
-            if (N_val > 1) rightSideSymbol += ` \\times N`;
-
-            const parallelStr = N_val > 1 ? ` \\times ${N_val}` : '';
-            const tex = `\\begin{aligned} ${I_str} \\text{ A} &\\le ${rightSideSymbol} \\\\ &\\le ${rightSide} \\\\ &= ${effAmp} \\text{ A (}${targetCable.size}\\text{${unitStr}}${parallelStr}\\text{)} \\end{aligned}`;
-            return { tex, leg };
-        } else {
-            const rightSideSymbol = `I_0'` + (N_val > 1 ? ` \\times N` : '');
-            const parallelStr = N_val > 1 ? ` \\times ${N_val}` : '';
-            const tex = `\\begin{aligned} ${I_str} \\text{ A} &\\le ${rightSideSymbol} \\\\ &\\le ${rightSide} \\text{ A (}${targetCable.size}\\text{${unitStr}}${parallelStr}\\text{)} \\end{aligned}`;
-            return { tex, leg };
-        }
+    if (!targetCable || !targetCable.ampacity || targetCable.ampacity === '-') {
+        return {
+            tex: `\\text{選択されたケーブルのデータが登録されていません}`,
+            leg: []
+        };
     }
 
-    if (cdStr === 'C_d') leg.push(`C_d: 減少係数`);
-    const rightSideFallback = `I_0' \\times ${cdStr}` + (N_val > 1 ? ` \\times ${N_hl}` : '');
-    return { tex: `${I_str} \\le ${rightSideFallback} \\text{ (size)}`, leg };
+    let kValue = result && result.tempDerating ? result.tempDerating : 1.0;
+    if (inputs.ambientTemp !== null) {
+        kValue =
+            (result && result.tempDerating) ||
+            _getAmbientTempDerating(
+                targetCable.baseTemp,
+                targetCable.maxTemp,
+                inputs.ambientTemp
+            );
+    }
+    const tempAmp = (parseFloat(targetCable.ampacity) * kValue).toFixed(1);
+    const unitStr = targetCable.unit || 'sq';
+
+    let rightSide = `${tempAmp}`;
+    if (derating !== null && derating < 1.0) {
+        rightSide += ` \\times ${cdStr}`;
+        leg.push(`C_d: 減少係数 (${derating})`);
+    } else if (derating === null) {
+        rightSide += ` \\times C_d`;
+        leg.push(`C_d: 減少係数`);
+    }
+
+    if (N_val > 1) rightSide += ` \\times ${N_hl}`;
+
+    if (derating !== null) {
+        const effAmp =
+            result && result.finalEffAmp !== undefined
+                ? result.finalEffAmp.toFixed(1)
+                : (parseFloat(tempAmp) * derating * N_val).toFixed(1);
+        let rightSideSymbol = `I_0'`;
+        if (derating !== null && derating < 1.0) rightSideSymbol += ` \\times C_d`;
+        else if (derating === null) rightSideSymbol += ` \\times C_d`;
+        if (N_val > 1) rightSideSymbol += ` \\times N`;
+
+        const parallelStr = N_val > 1 ? ` \\times ${N_val}` : '';
+        const tex = `\\begin{aligned} ${I_str} \\text{ A} &\\le ${rightSideSymbol} \\\\ &\\le ${rightSide} \\\\ &= ${effAmp} \\text{ A (}${targetCable.size}\\text{${unitStr}}${parallelStr}\\text{)} \\end{aligned}`;
+        return { tex, leg };
+    } else {
+        const rightSideSymbol = `I_0'` + (N_val > 1 ? ` \\times N` : '');
+        const parallelStr = N_val > 1 ? ` \\times ${N_val}` : '';
+        const tex = `\\begin{aligned} ${I_str} \\text{ A} &\\le ${rightSideSymbol} \\\\ &\\le ${rightSide} \\text{ A (}${targetCable.size}\\text{${unitStr}}${parallelStr}\\text{)} \\end{aligned}`;
+        return { tex, leg };
+    }
 }
 
 /**
