@@ -14,13 +14,13 @@ import {
   loadUnitOptions,
   powerFactorOptions,
   cableTypeOptions,
-  coreOptions,
-  fixedSizeOptions,
   parallelOptions,
   deratingOptions,
   ambientTempOptions,
   targetDropOptions,
-} from "~/utils/constants/toolOptions"; // 空の構造
+} from "~/utils/constants/toolOptions";
+import { getAvailableCores, getAvailableSizes } from "~/utils/cableDataHelper";
+
 useHead({
   title: "電圧降下・ケーブルサイズ選定",
 });
@@ -69,7 +69,45 @@ type FormField = {
   secondaryId?: keyof typeof defaultForm;
   secondaryOptions?: { label: string; value: string }[];
   showIf?: () => boolean;
+  disabled?: boolean;
 };
+
+// 動的な選択肢の算出
+const computedAvailableCores = computed(() => {
+  return getAvailableCores(form.value.cableType);
+});
+
+const computedAvailableSizes = computed(() => {
+  return getAvailableSizes(form.value.cableType, form.value.cores);
+});
+
+// 値の自動リセットロジック
+watch(
+  () => form.value.cableType,
+  (newVal) => {
+    const cores = getAvailableCores(newVal);
+    // もし現在の芯数が新しいケーブル種別に存在しなければリセット
+    if (!cores.some((c) => c.value === form.value.cores)) {
+      form.value.cores = cores.length === 1 && cores[0]?.value === "-" ? "-" : "";
+    }
+    
+    // ケーブル種別が変わればサイズもリセットの可能性がある
+    const sizes = getAvailableSizes(newVal, form.value.cores);
+    if (!sizes.some((s) => s.value === form.value.fixedSize)) {
+      form.value.fixedSize = "";
+    }
+  }
+);
+
+watch(
+  () => form.value.cores,
+  (newVal) => {
+    const sizes = getAvailableSizes(form.value.cableType, newVal);
+    if (!sizes.some((s) => s.value === form.value.fixedSize)) {
+      form.value.fixedSize = "";
+    }
+  }
+);
 
 const formFields = computed<FormField[]>(() => [
   {
@@ -115,15 +153,16 @@ const formFields = computed<FormField[]>(() => [
     id: "cores",
     label: "芯数 指定",
     type: "select",
-    options: coreOptions,
+    options: computedAvailableCores.value,
     placeholder: "選択してください",
     showIf: () => isSizeCalcMode.value,
+    disabled: computedAvailableCores.value.length === 1 && computedAvailableCores.value[0]?.value === "-",
   },
   {
     id: "fixedSize",
     label: "ケーブルサイズ 指定",
     type: "select",
-    options: fixedSizeOptions,
+    options: computedAvailableSizes.value,
     placeholder: "選択してください",
     showIf: () => isDropCalcMode.value,
   },
@@ -284,6 +323,7 @@ const mathSteps = computed(() => {
                 v-model="form[field.id]"
                 :options="field.options || []"
                 :placeholder="field.placeholder"
+                :disabled="field.disabled"
               />
 
               <!-- Input + Select -->

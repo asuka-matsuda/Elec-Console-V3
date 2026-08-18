@@ -1,0 +1,69 @@
+import { cableData } from "~/utils/data/cableData";
+
+export interface DropdownOption {
+    label: string;
+    value: string;
+}
+
+/**
+ * 指定されたカテゴリ（cableType）に存在する芯数（cores）のリストを取得する
+ */
+export function getAvailableCores(category: string): DropdownOption[] {
+    if (!category) return [];
+
+    const candidates = cableData.filter((c) => c.category === category);
+    const uniqueCores = Array.from(new Set(candidates.map((c) => c.cores)));
+
+    // 該当するケーブルが「-」しか持たない場合（CVTなど）
+    if (uniqueCores.length === 1 && uniqueCores[0] === "-") {
+        return [{ label: "指定なし（共通）", value: "-" }];
+    }
+
+    return uniqueCores
+        .filter((core) => core !== "-") // もし「-」と「2C」などが混在していれば「-」を除外
+        .sort()
+        .map((core) => {
+            const count = core.replace(/\D/g, "");
+            return {
+                label: `${count}芯${core.includes("C") ? "" : " " + core}`,
+                value: core.replace("C", ""), // "3" などの値として返す
+            };
+        });
+}
+
+/**
+ * 指定されたカテゴリ（cableType）と芯数（cores）に存在するサイズ（size）のリストを取得する
+ */
+export function getAvailableSizes(category: string, coreVal?: string): DropdownOption[] {
+    if (!category) return [];
+
+    let candidates = cableData.filter((c) => c.category === category);
+
+    if (coreVal && coreVal !== "-") {
+        // "3C" のような形式が cableData に登録されているか確認し、フィルタリングする
+        // ユーザーが選ぶのは "3" なので、"3C" 等にマッチするか確認
+        candidates = candidates.filter((c) => c.cores === `${coreVal}C` || c.cores === coreVal || c.cores === "-");
+    }
+
+    // サイズと単位のペアを抽出
+    const sizeMap = new Map<string, string>(); // key: size, value: unit
+    candidates.forEach((c) => {
+        if (!sizeMap.has(c.size)) {
+            sizeMap.set(c.size, c.unit);
+        }
+    });
+
+    const sizes = Array.from(sizeMap.entries()).map(([size, unit]) => ({
+        size: parseFloat(size),
+        sizeStr: size,
+        unit: unit || "sq"
+    }));
+
+    // サイズ順にソート
+    sizes.sort((a, b) => a.size - b.size);
+
+    return sizes.map((item) => ({
+        label: `${item.sizeStr} (${item.unit})`,
+        value: item.sizeStr,
+    }));
+}

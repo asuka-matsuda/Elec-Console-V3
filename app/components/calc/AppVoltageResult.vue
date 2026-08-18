@@ -56,10 +56,10 @@ const mainStatusClass = computed(() => {
 
 // 2. 電流チェック (設計電流 / 許容電流)
 const currentI = computed(() =>
-  isReady.value ? formatVal(props.inputs.I, 1) : "ーー",
+  isReady.value ? formatVal(props.inputs.I, "ーー", 1) : "ーー",
 );
 const maxI = computed(() =>
-  isReady.value ? formatVal(props.result!.finalEffAmp, 1) : "ーー",
+  isReady.value ? formatVal(props.result!.finalEffAmp, "ーー", 1) : "ーー",
 );
 
 const ampStatusClass = computed(() => {
@@ -71,13 +71,13 @@ const ampStatusClass = computed(() => {
 
 // 3. 電圧降下
 const dropV = computed(() =>
-  isReady.value ? formatVal(props.result!.finalDropV, 2) : "ーー",
+  isReady.value ? formatVal(props.result!.finalDropV, "ーー", 2) : "ーー",
 );
 const dropPercent = computed(() => {
   if (!isReady.value) return "ーー";
   const v = props.inputs.sys?.voltage;
   if (!v) return "ーー";
-  return formatVal((props.result!.finalDropV / v) * 100, 2);
+  return formatVal((props.result!.finalDropV / v) * 100, "ーー", 2);
 });
 
 const dropStatusClass = computed(() => {

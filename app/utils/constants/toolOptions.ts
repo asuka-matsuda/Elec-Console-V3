@@ -38,6 +38,7 @@ export const cableTypeOptions = [
   { label: "VVF (平型)", value: "VVF" },
 ];
 
+/* 動的生成に変更したため削除
 export const coreOptions = [
   { label: "1芯 (単心)", value: "1" },
   { label: "2芯", value: "2" },
@@ -60,6 +61,7 @@ export const fixedSizeOptions = [
   { label: "250 (mm²)", value: "250" },
   { label: "325 (mm²)", value: "325" },
 ];
+*/
 
 export const parallelOptions = [
   { label: "1条", value: "1" },
