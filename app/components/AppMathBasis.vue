@@ -148,13 +148,13 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
-    margin: 0 0 var(--space-2) 0;
+    margin: 0 0 var(--space-1) 0;
   }
 
   &__legend-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: 2px;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -163,7 +163,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   &__legend-item {
     display: flex;
     align-items: flex-start;
-    gap: var(--space-2);
+    gap: var(--space-1);
     font-size: var(--font-size-sm);
     color: var(--color-text-secondary);
   }
