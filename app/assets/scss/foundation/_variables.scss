@@ -123,6 +123,7 @@ $color-input-focus-base: 217 91% 60%;
 
   @each $name, $size in $font-sizes {
     --text-#{$name}: #{$size};
+    --font-size-#{$name}: #{$size};
   }
 
   /* Responsive Typography (Fluid Scale) */
