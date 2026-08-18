@@ -367,7 +367,7 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
     let rightSideSymbol = `I_0'`;
     if (derating !== null && derating < 1.0) rightSideSymbol += ` \\times C_d`;
     else if (derating === null) rightSideSymbol += ` \\times C_d`;
-    if (N_val > 1) rightSideSymbol += ` \\times N`;
+    rightSideSymbol += ` \\times N`;
 
     const targetCable = _getTargetCable(inputs, result, cables);
 
@@ -378,7 +378,7 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
         rightSideSubst = `I_0'`;
         if (derating !== null && derating < 1.0) rightSideSubst += ` \\times ${cdStr}`;
         else if (derating === null) rightSideSubst += ` \\times C_d`;
-        if (N_val > 1) rightSideSubst += ` \\times ${N_hl}`;
+        rightSideSubst += ` \\times ${N_hl}`;
     } else {
         let kValue = result && result.tempDerating ? result.tempDerating : 1.0;
         if (inputs.ambientTemp !== null) {
@@ -399,7 +399,7 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
         } else if (derating === null) {
             rightSideSubst += ` \\times C_d`;
         }
-        if (N_val > 1) rightSideSubst += ` \\times ${N_hl}`;
+        rightSideSubst += ` \\times ${N_hl}`;
 
         let effAmp;
         if (derating !== null) {
@@ -410,7 +410,7 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
             effAmp = (parseFloat(tempAmp) * N_val).toFixed(1);
         }
         
-        const parallelStr = N_val > 1 ? ` \\times ${N_val}` : '';
+        const parallelStr = ` \\times ${N_val}`;
         resultLine = `\\textcolor{#10b77f}{${effAmp}} \\text{ A (}${targetCable.size}\\text{${unitStr}}${parallelStr}\\text{)}`;
     }
 
