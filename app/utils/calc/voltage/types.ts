@@ -16,9 +16,10 @@ export interface CableData {
   size: string | number;
   unit: string;
   ampacity?: string | number;
+  resistance?: string | number;
   baseTemp?: string | number;
   maxTemp?: string | number;
-  [key: string]: any; // Allow other properties
+  [key: string]: unknown; // Allow other properties
 }
 
 export interface VoltageCalcInputs {

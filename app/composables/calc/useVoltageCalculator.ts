@@ -4,7 +4,7 @@ import { systemData } from "~/utils/data/systemData";
 import { getAvailableSizes } from "~/utils/cableDataHelper";
 import { cableData } from "~/utils/cableData";
 import { calculateDesignCurrent, calculateLogic, generateMathData } from "~/utils/calcVoltageEngine";
-import type { VoltageCalcInputs } from "~/utils/calc/voltage/types";
+import type { VoltageCalcInputs, SystemData } from "~/utils/calc/voltage/types";
 
 export const defaultForm = {
   mode: "drop" as "drop" | "size",
@@ -79,7 +79,7 @@ export function useVoltageCalculator() {
     const parallel = parseInt(form.value.parallel) || 1;
     const targetDrop = parseFloat(form.value.targetDrop) || null;
 
-    const I = calculateDesignCurrent(sys as any, loadVal, loadUnit, pf) || 0;
+    const I = calculateDesignCurrent(sys, loadVal, loadUnit, pf) || 0;
 
     const missing = [];
     if (!sys) missing.push("sys");
@@ -91,7 +91,7 @@ export function useVoltageCalculator() {
 
     return {
       mode,
-      sys: sys as any,
+      sys: sys as SystemData,
       I,
       L,
       cableType,
@@ -112,11 +112,11 @@ export function useVoltageCalculator() {
 
   const calcResult = computed(() => {
     if (!calcInputs.value.isReady) return null;
-    return calculateLogic(calcInputs.value as any);
+    return calculateLogic(calcInputs.value);
   });
 
   const mathSteps = computed(() => {
-    return generateMathData(calcInputs.value as any, calcResult.value as any) || [];
+    return generateMathData(calcInputs.value, calcResult.value) || [];
   });
 
   return {

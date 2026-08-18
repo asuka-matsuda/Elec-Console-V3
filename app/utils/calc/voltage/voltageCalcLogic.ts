@@ -106,7 +106,7 @@ function _calculateSizeSelection(inputs: VoltageCalcInputs, cables: CableData[])
         if (!minAmpacityCable && totalEffAmp >= I) minAmpacityCable = c;
 
         if (totalEffAmp < I) continue;
-        const R_total = parseFloat(c.resistance) / parallel;
+        const R_total = parseFloat(String(c.resistance)) / parallel;
         const dropV = sys.coefficient * L * I * R_total / 1000;
         if (dropV > maxDropV) continue;
 
