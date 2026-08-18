@@ -83,6 +83,7 @@ const processedItems = computed(() => {
     align-items: center;
     padding: var(--space-4);
     list-style: none;
+
     @include ui-surface;
 
     // 左上の「SYS.LOC」ラベル（装飾）
@@ -94,6 +95,7 @@ const processedItems = computed(() => {
       color: var(--color-category-main);
       content: "SYS.LOC";
       opacity: 0.9;
+
       @include cyber-text-glow(50%, var(--blur-sm), var(--color-category-main));
     }
   }
@@ -124,6 +126,7 @@ const processedItems = computed(() => {
   // リンクのホバーエフェクト
   &__link:hover {
     color: var(--color-text-main);
+
     @include cyber-text-glow(50%, var(--blur-md), var(--color-text-main));
   }
 
@@ -136,8 +139,10 @@ const processedItems = computed(() => {
     font-size: var(
       --font-size-lg
     ); // 以前の --text-md は存在しなかったため lg に修正
+
     color: var(--color-category-main);
     line-height: 1;
+
     @include cyber-text-glow(60%, var(--blur-md), var(--color-category-main));
 
     // 点滅するカーソルエフェクト

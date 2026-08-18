@@ -8,7 +8,7 @@ export type MathStep = {
   legend?: string[];
 };
 
-const props = defineProps<{
+defineProps<{
   steps: MathStep[];
 }>();
 
@@ -60,6 +60,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
         <div class="c-math-basis__body">
           <!-- 左カラム：公式 -->
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <div class="c-math-basis__math" v-html="renderMath(step.tex)"></div>
 
           <!-- 右カラム：凡例 -->
@@ -74,6 +75,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
                 :key="v.symbol"
                 class="c-math-basis__legend-item"
               >
+                <!-- eslint-disable-next-line vue/no-v-html -->
                 <span
                   class="c-math-basis__legend-symbol"
                   v-html="renderMath(v.symbol, false)"

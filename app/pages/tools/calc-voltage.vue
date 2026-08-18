@@ -1,7 +1,21 @@
 <script setup lang="ts">
-import { reactive, computed, watch } from "vue";
+import { reactive, computed } from "vue";
 import { calculateDesignCurrent, calculateLogic, generateMathData } from "~/utils/calcVoltageEngine";
-import { systemData } from "~/utils/data/systemData";// 空の構造
+import { systemData } from "~/utils/data/systemData";
+
+import {
+  modeOptions,
+  phaseOptions,
+  loadUnitOptions,
+  powerFactorOptions,
+  cableTypeOptions,
+  coreOptions,
+  fixedSizeOptions,
+  parallelOptions,
+  deratingOptions,
+  ambientTempOptions,
+  targetDropOptions,
+} from "~/utils/constants/toolOptions";// 空の構造
 useHead({
   title: "電圧降下・ケーブルサイズ選定",
 });
@@ -22,20 +36,6 @@ const form = reactive({
   ambientTemp: "none",
   targetDrop: "2",
 });
-
-import {
-  modeOptions,
-  phaseOptions,
-  loadUnitOptions,
-  powerFactorOptions,
-  cableTypeOptions,
-  coreOptions,
-  fixedSizeOptions,
-  parallelOptions,
-  deratingOptions,
-  ambientTempOptions,
-  targetDropOptions,
-} from "~/utils/constants/toolOptions";
 
 // 表示制御用の算出プロパティ
 const isSizeCalcMode = computed(() => form.mode === "size");

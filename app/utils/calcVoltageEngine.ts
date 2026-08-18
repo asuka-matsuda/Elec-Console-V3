@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * @fileoverview Voltage Calculation Engine
  * 電圧降下 / ケーブルサイズ選定計算エンジン。
@@ -5,7 +6,6 @@
  */
 
 import { cableData as defaultCableData } from './data/cableData';
-import { systemData } from './data/systemData';
 
 /**
  * 容量と単位から設計電流(A)を逆算します。
@@ -15,7 +15,7 @@ import { systemData } from './data/systemData';
  * @param {number} [pf] - 力率 (kW の場合に使用)
  * @returns {number|null} 変換された設計電流(A)
  */
-export function calculateDesignCurrent(sys: any, loadVal: number, loadUnit: string, pf?: number): number | null {
+export function calculateDesignCurrent(sys: Record<string, any> | null | undefined, loadVal: number, loadUnit: string, pf?: number): number | null {
     if (!sys || isNaN(loadVal) || loadVal <= 0) return null;
     if (loadUnit === 'kW' && pf !== undefined && !isNaN(pf)) return (loadVal * 1000) / (sys.kwDivisor * pf);
     if (loadUnit === 'kVA') return (loadVal * 1000) / sys.kwDivisor;
@@ -30,7 +30,7 @@ export function calculateDesignCurrent(sys: any, loadVal: number, loadUnit: stri
  * @param {Array} cableDataList - ケーブルマスターデータ
  * @returns {Object|null} 最適サイズ、限界電流値、最終電圧降下などの計算結果
  */
-export function calculateLogic(inputs: any, cableDataList: any = null): any {
+export function calculateLogic(inputs: Record<string, any>, cableDataList: Record<string, any>[] | null = null): Record<string, any> | null {
     if (!inputs || !inputs.isReady) return null;
     const cables = cableDataList || defaultCableData;
 
@@ -51,7 +51,7 @@ export function calculateLogic(inputs: any, cableDataList: any = null): any {
  * @param {Array} cables - ケーブルデータ
  * @returns {Object} 計算結果オブジェクト
  */
-function _calculateVoltageDrop(inputs, cables) {
+function _calculateVoltageDrop(inputs: Record<string, any>, cables: Record<string, any>[]) {
     const { sys, I, L, cableType, selectedCores, derating, ambientTemp, parallel, selectedSize } =
         inputs;
 
@@ -62,8 +62,8 @@ function _calculateVoltageDrop(inputs, cables) {
         candidates = candidates.filter((c) => c.cores === selectedCores || !c.cores);
     }
 
-    let fixedCable = candidates[0] || null;
-    let unit = fixedCable ? fixedCable.unit : 'sq';
+    const fixedCable = candidates[0] || null;
+    const unit = fixedCable ? fixedCable.unit : 'sq';
     let A = selectedSize;
     if (unit === 'mm') {
         if (selectedSize === 1.6) A = 2.0;
@@ -107,7 +107,7 @@ function _calculateVoltageDrop(inputs, cables) {
  * @param {Array} cables - ケーブルデータ
  * @returns {Object|null} 選定結果オブジェクト
  */
-function _calculateSizeSelection(inputs, cables) {
+function _calculateSizeSelection(inputs: Record<string, any>, cables: Record<string, any>[]) {
     const { sys, I, L, cableType, selectedCores, derating, ambientTemp, parallel, targetDrop } =
         inputs;
     const maxDropV = sys.voltage * (targetDrop / 100);
@@ -120,9 +120,8 @@ function _calculateSizeSelection(inputs, cables) {
     candidates.sort((a, b) => parseFloat(a.ampacity) - parseFloat(b.ampacity));
 
     let minAmpacityCable = null;
-    let finalTempDerating = 1.0;
-    for (let c of candidates) {
-        finalTempDerating = _getAmbientTempDerating(c.baseTemp, c.maxTemp, ambientTemp);
+    for (const c of candidates) {
+        const finalTempDerating = _getAmbientTempDerating(c.baseTemp, c.maxTemp, ambientTemp);
         const effAmp = parseFloat(c.ampacity) * derating * finalTempDerating;
         const totalEffAmp = effAmp * parallel;
         if (!minAmpacityCable && totalEffAmp >= I) minAmpacityCable = c;
@@ -151,7 +150,7 @@ function _calculateSizeSelection(inputs, cables) {
  * @param {Array} cableDataList - ケーブルデータ
  * @returns {Array<{tex: string, legend: Array<string>}>|null} ステップごとの描画用データ
  */
-export function generateMathData(inputs: any, result: any, cableDataList: any = null): any {
+export function generateMathData(inputs: Record<string, any>, result: Record<string, any> | null, cableDataList: Record<string, any>[] | null = null): Array<{tex: string, legend: Array<string>}> | null {
     if (!inputs) return null;
     const cables = cableDataList || defaultCableData;
 
@@ -204,7 +203,7 @@ export function generateMathData(inputs: any, result: any, cableDataList: any = 
  * @param {number} ambientTemp - 実際の周囲温度
  * @returns {number} 温度低減係数
  */
-function _getAmbientTempDerating(baseTempStr, maxTempStr, ambientTemp) {
+function _getAmbientTempDerating(baseTempStr: string | number, maxTempStr: string | number, ambientTemp: number | null) {
     if (!ambientTemp || isNaN(ambientTemp)) return 1.0;
     const base = parseFloat(baseTempStr);
     const max = parseFloat(maxTempStr);
@@ -220,7 +219,7 @@ function _getAmbientTempDerating(baseTempStr, maxTempStr, ambientTemp) {
  * @param {number} [dec=1] - 小数点以下の桁数
  * @returns {string} フォーマット後の文字列
  */
-function _str(val, fallback, dec = 1) {
+function _str(val: number | null | undefined, fallback: string, dec = 1) {
     if (val === null || val === undefined || isNaN(val)) return fallback;
     return val % 1 === 0 ? val.toString() : val.toFixed(dec);
 }
@@ -232,7 +231,7 @@ function _str(val, fallback, dec = 1) {
  * @param {Array} cables - ケーブルデータ
  * @returns {Object|null} ケーブルマスターデータ
  */
-function _getTargetCable(inputs, result, cables) {
+function _getTargetCable(inputs: Record<string, any>, result: Record<string, any> | null, cables: Record<string, any>[]) {
     if (result && result.optimal) return result.optimal;
 
     if (inputs && inputs.cableType && inputs.selectedSize !== null) {
@@ -254,12 +253,12 @@ function _getTargetCable(inputs, result, cables) {
  * @param {Array} cables - ケーブルデータ
  * @returns {Object} { tex, leg } TEX文字列と凡例配列
  */
-function _getTempDeratingFormula(inputs, result, cables) {
+function _getTempDeratingFormula(inputs: Record<string, any>, result: Record<string, any> | null, cables: Record<string, any>[]) {
     const targetCable = _getTargetCable(inputs, result, cables);
 
     if (!targetCable) {
-        let tex = `I_0' = I_0 \\times \\sqrt{\\frac{\\theta_{max} - \\theta_{amb}}{\\theta_{max} - \\theta_{base}}}`;
-        let leg = [
+        const tex = `I_0' = I_0 \\times \\sqrt{\\frac{\\theta_{max} - \\theta_{amb}}{\\theta_{max} - \\theta_{base}}}`;
+        const leg = [
             "\\( I_0' \\): 補正後許容電流 [A]",
             '\\( I_0 \\): 基準許容電流 [A]',
             '\\( \\theta_{max} \\): 最高許容温度 [℃]',
@@ -282,7 +281,7 @@ function _getTempDeratingFormula(inputs, result, cables) {
     const max = parseFloat(targetCable.maxTemp);
     const base = parseFloat(targetCable.baseTemp);
 
-    let k = 1.0;
+    let k;
     if (result && result.tempDerating) k = result.tempDerating;
     else k = _getAmbientTempDerating(targetCable.baseTemp, targetCable.maxTemp, amb);
 
@@ -291,9 +290,9 @@ function _getTempDeratingFormula(inputs, result, cables) {
     }
 
     const tempAmp = baseAmp * k;
-    let tex = `\\begin{aligned} I_0' &= I_0 \\times \\sqrt{\\frac{\\theta_{max} - \\theta_{amb}}{\\theta_{max} - \\theta_{base}}} \\\\ &= ${baseAmp} \\times \\sqrt{\\frac{${max} - ${amb}}{${max} - ${base}}} \\\\ &= ${tempAmp.toFixed(1)} \\text{ A} \\end{aligned}`;
+    const tex = `\\begin{aligned} I_0' &= I_0 \\times \\sqrt{\\frac{\\theta_{max} - \\theta_{amb}}{\\theta_{max} - \\theta_{base}}} \\\\ &= ${baseAmp} \\times \\sqrt{\\frac{${max} - ${amb}}{${max} - ${base}}} \\\\ &= ${tempAmp.toFixed(1)} \\text{ A} \\end{aligned}`;
 
-    let leg = [
+    const leg = [
         "\\( I_0' \\): 補正後許容電流 [A]",
         '\\( I_0 \\): 基準許容電流 [A]',
         '\\( \\theta_{max} \\): 最高許容温度 (' + max + '℃)',
@@ -309,7 +308,7 @@ function _getTempDeratingFormula(inputs, result, cables) {
  * @param {Object} inputs - ユーザー入力データ
  * @returns {Object} { tex, leg } TEX文字列と凡例配列
  */
-function _getUnitConversionFormula(inputs) {
+function _getUnitConversionFormula(inputs: Record<string, any>) {
     const { sys, I, loadVal, loadUnit, pf } = inputs;
     const P = _str(loadVal, 'P', 1);
     const Cos = _str(pf, '\\cos \\theta', 2);
@@ -321,7 +320,7 @@ function _getUnitConversionFormula(inputs) {
     }
 
     let vTerm = '\\alpha \\cdot V';
-    let leg = [];
+    const leg = [];
 
     if (sys) {
         if (sys.id.startsWith('3P')) {
@@ -365,14 +364,14 @@ function _getUnitConversionFormula(inputs) {
  * @param {Array} cables - ケーブルデータ
  * @returns {Object} { tex, leg } TEX文字列と凡例配列
  */
-function _getThermalLimitFormula(inputs, result, cables) {
+function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<string, any> | null, cables: Record<string, any>[]) {
     const { I, derating, parallel } = inputs;
 
     const I_str = _str(I, 'I', 1);
     const N_val = parallel !== null ? parallel : 1;
     const cdStr = derating !== null ? derating : 'C_d';
 
-    let leg = ['\\( I \\): 設計電流 [A]', "\\( I_0' \\): 補正後許容電流 [A]"];
+    const leg = ['\\( I \\): 設計電流 [A]', "\\( I_0' \\): 補正後許容電流 [A]"];
     if (N_val > 1) leg.push('\\( N \\): 条数');
 
     const targetCable = _getTargetCable(inputs, result, cables);
@@ -413,12 +412,12 @@ function _getThermalLimitFormula(inputs, result, cables) {
             if (N_val > 1) rightSideSymbol += ` \\times N`;
 
             const parallelStr = N_val > 1 ? ` \\times ${N_val}` : '';
-            let tex = `\\begin{aligned} ${I_str} \\text{ A} &\\le ${rightSideSymbol} \\\\ &\\le ${rightSide} \\\\ &= ${effAmp} \\text{ A (}${targetCable.size}\\text{${unitStr}}${parallelStr}\\text{)} \\end{aligned}`;
+            const tex = `\\begin{aligned} ${I_str} \\text{ A} &\\le ${rightSideSymbol} \\\\ &\\le ${rightSide} \\\\ &= ${effAmp} \\text{ A (}${targetCable.size}\\text{${unitStr}}${parallelStr}\\text{)} \\end{aligned}`;
             return { tex, leg };
         } else {
-            let rightSideSymbol = `I_0'` + (N_val > 1 ? ` \\times N` : '');
+            const rightSideSymbol = `I_0'` + (N_val > 1 ? ` \\times N` : '');
             const parallelStr = N_val > 1 ? ` \\times ${N_val}` : '';
-            let tex = `\\begin{aligned} ${I_str} \\text{ A} &\\le ${rightSideSymbol} \\\\ &\\le ${rightSide} \\text{ A (}${targetCable.size}\\text{${unitStr}}${parallelStr}\\text{)} \\end{aligned}`;
+            const tex = `\\begin{aligned} ${I_str} \\text{ A} &\\le ${rightSideSymbol} \\\\ &\\le ${rightSide} \\text{ A (}${targetCable.size}\\text{${unitStr}}${parallelStr}\\text{)} \\end{aligned}`;
             return { tex, leg };
         }
     }
@@ -434,7 +433,7 @@ function _getThermalLimitFormula(inputs, result, cables) {
  * @param {Object} result - 計算結果データ
  * @returns {Object} { tex, leg } TEX文字列と凡例配列
  */
-function _getVoltageDropFormula(inputs, result) {
+function _getVoltageDropFormula(inputs: Record<string, any>, result: Record<string, any> | null) {
     const { mode, sys, I, L, targetDrop, selectedSize, parallel } = inputs;
     const isAuto = mode === 'size';
     const I_str = _str(I, 'I', 1);
@@ -446,13 +445,13 @@ function _getVoltageDropFormula(inputs, result) {
         result && result.convertedA ? result.convertedA.toFixed(2) : _str(selectedSize, 'A', 1);
     const N_val = parallel !== null ? parallel : 1;
 
-    let tex = '',
-        leg = [
-            `\\( K \\): 方式係数 (${K_val})`,
-            '\\( L \\): 距離 [m]',
-            '\\( I \\): 電流 [A]',
-            '1000: 定数'
-        ];
+    let tex;
+    const leg = [
+        `\\( K \\): 方式係数 (${K_val})`,
+        '\\( L \\): 距離 [m]',
+        '\\( I \\): 電流 [A]',
+        '1000: 定数'
+    ];
 
     if (isAuto) {
         leg.push(`\\( e \\): 許容電圧降下 (${TargetE} V)`);

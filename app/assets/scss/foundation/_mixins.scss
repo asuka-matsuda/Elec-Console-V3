@@ -16,11 +16,13 @@
       @media (width <= $value) {
         @content;
       }
+
       // "up"なら「〇〇px以上（モバイルファースト用）」
     } @else if $direction == "up" {
       @media (width >= $value) {
         @content;
       }
+
       // "up-strict"なら「〇〇pxより大きい（境界値を含まない）」
     } @else if $direction == "up-strict" {
       @media (width > $value) {
@@ -36,23 +38,23 @@
 /* Base / Common Placeholders
    ========================================================================== */
 
-//クリック時の挙動
+// クリック時の挙動
 %click-enabled {
   cursor: pointer;
   user-select: none;
 }
 
-//クリック不可時の挙動
+// クリック不可時の挙動
 %disabled {
-  opacity: 0.5; //半透明
-  cursor: not-allowed; //不許可マーク
-  pointer-events: none; //マウス操作をなしに
+  opacity: 0.5; // 半透明
+  cursor: not-allowed; // 不許可マーク
+  pointer-events: none; // マウス操作をなしに
 }
 
 /* Visual Effects & Glassmorphism
    ========================================================================== */
 
-//テキストの発光
+// テキストの発光
 @mixin cyber-text-glow($opacity: 40%, $blur: 8px, $color: currentcolor) {
   text-shadow: 0 0 $blur theme-color($color, $opacity);
 }
@@ -195,6 +197,7 @@
       inset 0 0 8px theme-color($color, 20%),
       0 0 12px theme-color($color, 30%),
       var(--shadow-elevation-base);
+
     // 色指定がない場合は、標準のボーダー色と控えめな発光にする
   } @else {
     border-color: var(--color-border);
@@ -250,7 +253,7 @@
   }
 
   &::-webkit-scrollbar-track {
-    background-color: transparent; //ユニバーサルセレクタでは効果がないため記述
+    background-color: transparent; // ユニバーサルセレクタでは効果がないため記述
   }
 }
 
