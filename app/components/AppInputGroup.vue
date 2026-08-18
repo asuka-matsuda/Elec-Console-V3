@@ -51,7 +51,7 @@
       border-left: none;
       border-radius: 0 var(--radius-base) var(--radius-base) 0;
       color: var(--color-text-muted);
-      font-size: var(--text-sm);
+      font-size: var(--font-size-sm);
       white-space: nowrap;
     }
   }

@@ -100,7 +100,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
     align-items: center;
     justify-content: center;
     padding: var(--space-2);
-    font-size: var(--text-sm);
+    font-size: var(--font-size-sm);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
     user-select: none;

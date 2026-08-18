@@ -41,7 +41,7 @@ const rootProps = computed(() => {
 <style scoped lang="scss">
 .c-card {
   position: relative;
-  padding: var(--pad-card, var(--space-4));
+  padding: var(--pad-container, var(--space-4));
   text-decoration: none; /* Reset for links */
   display: flex;
   flex-direction: column;

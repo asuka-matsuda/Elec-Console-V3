@@ -140,7 +140,7 @@ const bgOptions = [
 
   &__desc {
     color: var(--color-text-muted);
-    font-size: var(--text-sm);
+    font-size: var(--font-size-sm);
     margin-top: var(--gap-element);
   }
 
@@ -165,13 +165,13 @@ const bgOptions = [
     flex-wrap: wrap;
     gap: var(--gap-component);
     margin-top: var(--gap-component);
-    padding: var(--pad-card);
+    padding: var(--pad-container);
     border-radius: 0;
     border: var(--border-width-base) solid var(--color-border);
   }
 
   &__desc {
-    font-size: var(--text-sm);
+    font-size: var(--font-size-sm);
     color: var(--color-text-muted);
   }
 }

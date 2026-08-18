@@ -119,10 +119,10 @@ const closeSidebar = () => {
     overflow-y: auto;
 
     /* ホバー時の右移動ではみ出さないよう、右側に余白を設ける */
-    padding: var(--space-3);
+    padding: var(--pad-container);
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--gap-section); // セクション間の隙間なので gap-section が適切
 
     @include custom-scrollbar;
   }
@@ -130,70 +130,52 @@ const closeSidebar = () => {
   &__section {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--gap-component);
 
-    // Dynamic accent color support
-    &.has-accent-primary,
-    &.has-accent-main {
-      --section-accent: var(--color-category-main);
-    }
+    // Dynamic accent color support using Map and @each
+    $accents: (
+      "primary": var(--color-category-main),
+      "main": var(--color-category-main),
+      "success": var(--color-status-success),
+      "warning": var(--color-status-warning),
+      "danger": var(--color-status-danger),
+      "tool": var(--color-category-tool),
+      "database": var(--color-category-database),
+      "reference": var(--color-category-reference),
+      "management": var(--color-category-management)
+    );
 
-    &.has-accent-success {
-      --section-accent: var(--color-status-success);
-    }
-
-    &.has-accent-warning {
-      --section-accent: var(--color-status-warning);
-    }
-
-    &.has-accent-danger {
-      --section-accent: var(--color-status-danger);
-    }
-
-    // Category Accents
-    &.has-accent-tool {
-      --section-accent: var(--color-category-tool);
-    }
-
-    &.has-accent-database {
-      --section-accent: var(--color-category-database);
-    }
-
-    &.has-accent-reference {
-      --section-accent: var(--color-category-reference);
-    }
-
-    &.has-accent-management {
-      --section-accent: var(--color-category-management);
+    @each $name, $var in $accents {
+      &.has-accent-#{$name} {
+        --section-accent: #{$var};
+      }
     }
   }
 
   &__section-header {
     display: flex;
     flex-direction: column;
-    gap: var(--space-1);
-    margin-bottom: var(--space-2);
-    padding: var(--space-3);
+    gap: var(--gap-element);
+    padding: var(--space-3) var(--space-2);
   }
 
   &__heading {
-    font-size: var(--text-xs);
+    font-size: var(--font-size-xs);
     font-weight: var(--font-weight-bold);
     color: var(--section-accent, var(--color-text-secondary));
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    padding-left: var(--space-2);
   }
 
   // --- Navigation Links ---
   &__link {
     display: flex;
     align-items: center;
-    gap: var(--space-3);
-    padding: var(--space-3);
+    gap: var(--space-4);
+    padding: var(--space-2);
     text-decoration: none;
     color: var(--color-text-secondary);
-    font-size: var(--text-sm);
+    font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
     transition: var(--transition-base);
 
@@ -238,7 +220,7 @@ const closeSidebar = () => {
       @include ui-active(var(--section-accent, var(--color-category-main)));
       @include ui-blinking-cursor(
         var(--space-1),
-        var(--text-base),
+        var(--font-size-base),
         currentcolor
       );
 

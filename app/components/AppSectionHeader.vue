@@ -46,11 +46,11 @@ withDefaults(
     margin: 0;
 
     &--lg {
-      font-size: var(--text-xl);
+      font-size: var(--font-size-xl);
     }
 
     &--md {
-      font-size: var(--text-lg);
+      font-size: var(--font-size-lg);
     }
   }
 

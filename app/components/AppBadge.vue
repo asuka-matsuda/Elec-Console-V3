@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/* ==========================================================================
+   型定義
+   ========================================================================== */
+
+// バッジのカラーバリエーション定義
 export type BadgeVariant =
   | "neutral"
   | "primary"
@@ -10,6 +15,11 @@ export type BadgeVariant =
   | "reference"
   | "management";
 
+/* ==========================================================================
+   Props定義
+   ========================================================================== */
+
+// バッジの色（variant）とサイズ（size）を受け取る
 withDefaults(
   defineProps<{
     variant?: BadgeVariant;
@@ -23,14 +33,21 @@ withDefaults(
 </script>
 
 <template>
+  <!-- ==========================================================================
+       バッジ本体
+       ========================================================================== -->
   <span class="c-badge" :class="[`c-badge--${variant}`, `c-badge--${size}`]">
     <slot />
   </span>
 </template>
 
 <style scoped lang="scss">
+/* ==========================================================================
+   バッジのスタイル
+   ========================================================================== */
+
 .c-badge {
-  // CSS Custom Properties for theme values
+  // テーマ値から参照するためのカスタムプロパティ
   --badge-color: var(--color-text-main);
   --badge-border: theme-color(var(--color-border), 50%);
   --badge-shadow: transparent;
@@ -39,8 +56,7 @@ withDefaults(
   align-items: center;
   justify-content: center;
   padding: var(--space-1);
-  font-family: var(--font-mono);
-  font-size: var(--text-2xs);
+  font-size: var(--font-size-2xs);
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   color: var(--badge-color);
@@ -49,18 +65,24 @@ withDefaults(
     inset 0 0 var(--blur-sm) var(--badge-shadow),
     0 0 var(--blur-md) var(--badge-shadow);
 
+  // テキストの発光エフェクト
   @include cyber-text-glow(100%, var(--blur-sm), var(--badge-color));
 
-  user-select: none;
   line-height: var(--line-height-tight);
   white-space: nowrap;
+  user-select: none;
   transition: var(--transition-base);
 
+  // 中サイズ（md）の場合の余白とフォントサイズ上書き
   &--md {
     padding: var(--space-2);
-    font-size: var(--text-xs);
+    font-size: var(--font-size-xs);
   }
 
+  /* カラーバリアント (Color Variants)
+     ========================================================================== */
+
+  // 各バリアントのクラス名と、対応するCSS変数のマップ
   $variants: (
     "primary": "--color-category-main",
     "success": "--color-status-success",
@@ -72,6 +94,7 @@ withDefaults(
     "management": "--color-category-management",
   );
 
+  // マップを展開して各バリアントのスタイルを自動生成する
   @each $name, $var in $variants {
     &--#{$name} {
       --badge-color: var(#{$var});

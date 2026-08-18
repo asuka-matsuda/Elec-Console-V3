@@ -36,7 +36,7 @@ const emit = defineEmits<{
   }
 
   &__text {
-    font-size: var(--text-lg);
+    font-size: var(--font-size-lg);
     font-weight: var(--font-weight-bold);
     letter-spacing: 0.05em;
   }

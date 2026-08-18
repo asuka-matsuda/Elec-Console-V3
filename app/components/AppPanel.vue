@@ -44,7 +44,8 @@ withDefaults(
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: var(--pad-card, var(--space-4));
+  padding: var(--pad-container, var(--space-4));
+  gap: var(--pad-container-gap, var(--space-4));
 
   // Apply visual base
   border: var(--border-width-base) solid var(--p-border-color);
@@ -87,12 +88,12 @@ withDefaults(
 
   /* --------------------------------------------------------- */
   &__header {
-    margin-bottom: var(--pad-card-gap, var(--space-4));
+    // 削除: margin-bottom: var(--pad-container-gap, var(--space-4));
   }
 
   &__title {
     margin: 0;
-    font-size: var(--text-lg);
+    font-size: var(--font-size-lg);
     font-weight: var(--font-weight-bold);
     color: #{theme-color(var(--p-theme-color), 100%)};
     text-shadow: 0 0 var(--blur-md) #{theme-color(var(--p-theme-color), 40%)};
@@ -102,7 +103,7 @@ withDefaults(
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: var(--pad-card-gap, var(--space-4));
+    gap: var(--pad-container-gap, var(--space-4));
     min-height: 0;
   }
 

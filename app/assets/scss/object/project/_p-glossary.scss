@@ -38,12 +38,12 @@
   }
 
   &__card-kana {
-    font-size: var(--text-xs);
+    font-size: var(--font-size-xs);
     color: var(--color-text-muted);
   }
 
   &__card-term {
-    font-size: var(--text-lg);
+    font-size: var(--font-size-lg);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
     margin: 0;
@@ -56,7 +56,7 @@
   }
 
   &__card-desc {
-    font-size: var(--text-sm);
+    font-size: var(--font-size-sm);
     line-height: 1.6;
     color: var(--color-text-secondary);
   }
@@ -65,19 +65,19 @@
     display: flex;
     flex-direction: column;
     gap: var(--gap-element);
-    padding: var(--pad-card);
+    padding: var(--pad-container);
     border: var(--border-width-base) dotted
       theme-color(var(--color-border), 50%);
   }
 
   &__card-label {
-    font-size: var(--text-xs);
+    font-size: var(--font-size-xs);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
   }
 
   &__card-text {
-    font-size: var(--text-sm);
+    font-size: var(--font-size-sm);
     color: var(--color-text-secondary);
     line-height: 1.5;
     margin: 0;

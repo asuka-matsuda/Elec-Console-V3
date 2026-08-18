@@ -88,10 +88,10 @@ const history = computed(() => dashboardData.value?.history || []);
   }
 
   &__loading {
-    padding: var(--pad-card);
+    padding: var(--pad-container);
     text-align: center;
     color: var(--color-text-muted);
-    font-size: var(--text-sm);
+    font-size: var(--font-size-sm);
 
     @include ui-surface(5%);
 
@@ -116,7 +116,7 @@ const history = computed(() => dashboardData.value?.history || []);
   }
 
   &__meta {
-    font-size: var(--text-xs);
+    font-size: var(--font-size-xs);
     color: var(--color-text-muted);
     margin-top: var(--space-1);
   }

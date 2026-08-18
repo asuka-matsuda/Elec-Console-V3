@@ -48,7 +48,7 @@ const inputId = useId();
 }
 
 .c-color-picker__label {
-  font-size: var(--text-xs);
+  font-size: var(--font-size-xs);
   color: var(--color-text-muted);
 }
 
@@ -89,7 +89,7 @@ const inputId = useId();
 
   &__value {
     font-family: var(--font-mono);
-    font-size: var(--text-sm);
+    font-size: var(--font-size-sm);
     color: var(--color-text-main);
     letter-spacing: 0.05em;
   }

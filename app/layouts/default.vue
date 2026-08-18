@@ -93,7 +93,7 @@ const breadcrumbs = useBreadcrumbs();
   display: flex;
   align-items: center;
   gap: var(--space-4);
-  font-size: var(--text-sm);
+  font-size: var(--font-size-sm);
 
   &__avatar {
     display: flex;

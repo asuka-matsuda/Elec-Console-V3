@@ -73,7 +73,7 @@ withDefaults(
 
         // Align label with the text inside a medium input control
         padding-top: calc(
-          (var(--size-control-md) - var(--line-height-base) * var(--text-sm)) /
+          (var(--size-control-md) - var(--line-height-base) * var(--font-size-sm)) /
             2
         );
       }
@@ -100,14 +100,14 @@ withDefaults(
   }
 
   &__error {
-    font-size: var(--text-xs);
+    font-size: var(--font-size-xs);
     color: var(--color-status-danger);
 
     @include cyber-text-glow(30%, var(--blur-sm), var(--color-status-danger));
   }
 
   &__help {
-    font-size: var(--text-xs);
+    font-size: var(--font-size-xs);
     color: var(--color-text-muted);
   }
 }
@@ -118,7 +118,7 @@ withDefaults(
   align-items: center;
   justify-content: flex-start;
   gap: var(--space-2);
-  font-size: var(--text-sm);
+  font-size: var(--font-size-sm);
   color: var(--color-category-main);
   text-transform: uppercase;
   letter-spacing: 0.1em;

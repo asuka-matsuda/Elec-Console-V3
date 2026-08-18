@@ -60,7 +60,7 @@ const inputId = useId();
   gap: var(--space-2);
   cursor: pointer;
   position: relative;
-  font-size: var(--text-sm);
+  font-size: var(--font-size-sm);
   color: var(--color-text-main);
   user-select: none;
 

@@ -68,23 +68,23 @@ const toggleDrawer = () => {
   width: 100%;
   max-width: 1600px;
   margin: 0 auto;
+  gap: var(--gap-component);
 
   // Override AppPanel padding to be tighter in tools
   :deep(.c-panel) {
-    --pad-card: var(--space-3);
-    --pad-card-gap: var(--space-3);
+    --pad-container: var(--space-3);
+    --pad-container-gap: var(--space-3);
   }
 
   &__disclaimer {
     flex-shrink: 0;
-    margin-bottom: var(--space-2);
   }
 
   &__main {
     flex: 1;
     display: flex;
     min-height: 0;
-    gap: var(--space-2);
+    gap: var(--gap-component);
   }
 
   &__left {
@@ -92,7 +92,7 @@ const toggleDrawer = () => {
     display: flex;
     flex-direction: column;
     min-height: 0;
-    gap: var(--space-2);
+    gap: var(--gap-component);
   }
 
   &__inputs {
