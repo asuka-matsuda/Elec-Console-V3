@@ -254,7 +254,7 @@ function _getTempDeratingFormula(inputs: Record<string, any>, result: Record<str
     const I_0_val = targetCable && targetCable.ampacity ? parseFloat(targetCable.ampacity).toString() : 'I_0';
 
     if (amb === null) {
-        const resultVal = targetCable && targetCable.ampacity ? `\\textcolor{#10b77f}{${I_0_val}} \\text{ A}` : `\\text{-- A}`;
+        const resultVal = targetCable && targetCable.ampacity ? `\\textcolor{#10b77f}{${I_0_val}} \\text{ A}` : `0 \\text{ A}`;
         const tex = `\\begin{aligned} I_0' &= I_0 \\\\ &= ${I_0_val} \\text{ A (温度補正なし)} \\\\ &= ${resultVal} \\end{aligned}`;
         return { tex, leg };
     }
@@ -269,7 +269,7 @@ function _getTempDeratingFormula(inputs: Record<string, any>, result: Record<str
     const base_val = targetCable && targetCable.baseTemp ? parseFloat(targetCable.baseTemp).toString() : '\\theta_{base}';
     const amb_val = amb.toString();
 
-    let resultVal = '\\text{-- A}';
+    let resultVal = '0 \\text{ A}';
     if (targetCable && targetCable.maxTemp && targetCable.baseTemp && !isNaN(parseFloat(targetCable.maxTemp)) && !isNaN(parseFloat(targetCable.baseTemp))) {
         const baseAmp = parseFloat(targetCable.ampacity);
         const max = parseFloat(targetCable.maxTemp);
@@ -298,7 +298,7 @@ function _getUnitConversionFormula(inputs: Record<string, any>) {
     const Cos_val = pf ? hlVal(pf, '\\cos \\theta', 2) : '\\cos \\theta';
 
     if (loadUnit === 'A') {
-        const tex = (!loadVal) ? `I = \\text{-- A}` : `I = \\textcolor{#10b77f}{${P_val}} \\text{ A}`;
+        const tex = (!loadVal) ? `I = 0 \\text{ A}` : `I = \\textcolor{#10b77f}{${P_val}} \\text{ A}`;
         return { tex, leg: ['\\( I \\): 設計電流 [A]'] };
     }
 
@@ -327,7 +327,7 @@ function _getUnitConversionFormula(inputs: Record<string, any>) {
     rightSideSubst += `}`;
 
     // 結果 (3段目)
-    const resultVal = I !== null ? `\\textcolor{#10b77f}{${I.toFixed(1)}} \\text{ A}` : `\\text{-- A}`;
+    const resultVal = I !== null ? `\\textcolor{#10b77f}{${I.toFixed(1)}} \\text{ A}` : `0 \\text{ A}`;
 
     const tex = `\\begin{aligned} I &= ${rightSideSymbol} \\\\ &= ${rightSideSubst} \\\\ &= ${resultVal} \\end{aligned}`;
 
@@ -370,7 +370,7 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
     const targetCable = _getTargetCable(inputs, result, cables);
 
     let rightSideSubst;
-    let resultLine = '\\text{-- A}';
+    let resultLine = '0 \\text{ A}';
 
     if (!targetCable) {
         rightSideSubst = `I_0'`;
@@ -412,7 +412,7 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
         resultLine = `\\textcolor{#10b77f}{${effAmp}} \\text{ A (}${targetCable.size}\\text{${unitStr}}${parallelStr}\\text{)}`;
     }
 
-    const I_str_left = I !== null && I !== undefined ? I.toFixed(1) : '\\text{--}';
+    const I_str_left = I !== null && I !== undefined ? I.toFixed(1) : '0';
     const tex = `\\begin{aligned} I \\text{ A} &\\le ${rightSideSymbol} \\\\ ${I_str_left} \\text{ A} &\\le ${rightSideSubst} \\\\ ${I_str_left} \\text{ A} &\\le ${resultLine} \\end{aligned}`;
 
     return { tex, leg };
@@ -463,7 +463,7 @@ function _getVoltageDropFormula(inputs: Record<string, any>, result: Record<stri
         const rightSideSymbol = `\\frac{K \\cdot L \\cdot I}{1000 \\times e${N_val > 1 ? ` \\times N` : ''}}`;
         const rightSide = `\\frac{${K_val} \\cdot ${L_val} \\cdot ${I_str}}{1000 \\times ${TargetE}${N_term}}`;
         
-        let resultLine = '\\text{-- sq}';
+        let resultLine = '0 \\text{ sq}';
         if (result && result.optimal && sys && targetDrop !== null && I !== null && L !== null) {
             const calA_total = (sys.simpleK * L * I) / (1000 * (sys.voltage * (targetDrop / 100)));
             const calA_each = calA_total / N_val;
@@ -475,7 +475,7 @@ function _getVoltageDropFormula(inputs: Record<string, any>, result: Record<stri
         const rightSideSymbol = `\\frac{K \\cdot L \\cdot I}{1000 \\times A${N_val > 1 ? ` \\times N` : ''}}`;
         const rightSide = `\\frac{${K_val} \\cdot ${L_val} \\cdot ${I_str}}{1000 \\times ${N_paren}}`;
 
-        let resultLine = '\\text{-- V}';
+        let resultLine = '0 \\text{ V}';
         if (result && result.finalDropV !== undefined) {
             resultLine = `\\textcolor{#10b77f}{${result.finalDropV.toFixed(2)}} \\text{ V}`;
         }
