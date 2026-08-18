@@ -5,7 +5,7 @@
  * ケーブルマスターデータや配電方式データを元に、条件に適合する最小ケーブルサイズの探索や設計電流の計算を行います。
  */
 
-import { cableData as defaultCableData } from './data/cableData';
+import { cableData as defaultCableData } from '~/utils/cableData';
 import { hlVal, formatVal } from './mathUtils';
 
 /**
