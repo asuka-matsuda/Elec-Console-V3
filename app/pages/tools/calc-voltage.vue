@@ -238,7 +238,6 @@ const mathSteps = computed(() => {
 
     <template #results>
       <AppPanel
-        variant="hud"
         bracket-color="tool"
         style="flex: 1; min-height: 0"
       >
@@ -267,7 +266,6 @@ const mathSteps = computed(() => {
 
     <template #inputs>
       <AppPanel
-        variant="hud"
         bracket-color="tool"
         style="flex: 1; min-height: 0"
       >
@@ -342,8 +340,7 @@ const mathSteps = computed(() => {
 
     <template #basis>
       <AppPanel
-        variant="hud"
-        bracket-color="tool"
+        bracket-color="reference"
         class="c-basis-panel"
         style="flex: 1; min-height: 0"
       >

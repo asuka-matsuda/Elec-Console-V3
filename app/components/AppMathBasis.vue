@@ -54,7 +54,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
         <AppDivider
           v-if="step.title"
-          variant="main"
+          variant="tool"
           class="c-math-basis__divider"
         />
 

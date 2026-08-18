@@ -62,7 +62,6 @@ const titleId = `modal-title-${modalId}`;
       <div v-if="modelValue" class="c-modal-overlay" @click.self="close">
         <AppPanel
           class="c-modal"
-          variant="hud"
           :bracket-color="variant"
           role="dialog"
           aria-modal="true"
@@ -86,7 +85,7 @@ const titleId = `modal-title-${modalId}`;
             </header>
           </template>
 
-          <AppDivider :variant="variant" type="default" />
+          <AppDivider :variant="variant" />
 
           <!-- Body -->
           <div class="c-modal__body">
