@@ -318,7 +318,6 @@ const mathSteps = computed(() => {
                     v-if="field.secondaryId"
                     v-model="form[field.secondaryId]"
                     :options="field.secondaryOptions || []"
-                    class="c-input-addon-select"
                   />
                 </template>
               </AppInputGroup>
@@ -407,11 +406,5 @@ const mathSteps = computed(() => {
   @include mq("md") {
     display: none !important;
   }
-}
-
-/* 入力欄の横に付く単位用セレクトボックス */
-.c-input-addon-select {
-  width: 80px;
-  flex-shrink: 0;
 }
 </style>

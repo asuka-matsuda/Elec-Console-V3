@@ -40,6 +40,12 @@
       border-left: none;
     }
 
+    /* append領域に配置されたAppSelectは、単位選択などを想定しコンパクトな幅にする */
+    :deep(.c-custom-select) {
+      width: 5em;
+      flex-shrink: 0;
+    }
+
     :deep(.c-input-addon) {
       display: inline-flex;
       align-items: center;
