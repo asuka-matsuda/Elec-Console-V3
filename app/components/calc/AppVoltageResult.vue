@@ -16,9 +16,8 @@ const props = defineProps<{
 const isReady = computed(() => props.inputs?.isReady && props.result);
 const mode = computed(() => props.inputs?.mode || "drop");
 
-// 1. メイン結果（ケーブルサイズ or 判定OK/NG）
 const mainLabel = computed(() =>
-  mode.value === "size" ? "選定ケーブルサイズ" : "判定結果",
+  mode.value === "size" ? "選定ケーブルサイズ" : "電圧降下",
 );
 
 const mainValue = computed(() => {
@@ -27,9 +26,7 @@ const mainValue = computed(() => {
     const size = props.result?.optimal?.size;
     return size ? String(size) : "選定不可";
   } else {
-    // 電圧降下確認モードの場合
-    const isAmpOk = props.inputs.I <= props.result!.finalEffAmp;
-    return isAmpOk ? "OK" : "NG (容量不足)";
+    return formatVal(props.result!.finalDropV, "ーー", 2);
   }
 });
 
@@ -99,6 +96,12 @@ const dropStatusClass = computed(() => {
       <div class="c-voltage-result__main-value" :class="mainStatusClass">
         <span class="value-text">{{ mainValue }}</span>
         <span v-if="mainUnit" class="value-unit">{{ mainUnit }}</span>
+        <template v-if="mode === 'drop' && isReady">
+          <span class="value-sep" style="margin-left: 0.5rem">(</span>
+          <span class="value-text" style="font-size: 1.25rem">{{ dropPercent }}</span>
+          <span class="value-unit" style="font-size: 1rem">%</span>
+          <span class="value-sep">)</span>
+        </template>
       </div>
     </div>
 
@@ -115,8 +118,8 @@ const dropStatusClass = computed(() => {
         </div>
       </div>
 
-      <!-- 電圧降下 -->
-      <div class="metric-card">
+      <!-- 電圧降下 (sizeモード) -->
+      <div v-if="mode === 'size'" class="metric-card">
         <div class="metric-label">電圧降下</div>
         <div class="metric-value" :class="dropStatusClass">
           <span class="value-text">{{ dropV }}</span>
@@ -125,6 +128,16 @@ const dropStatusClass = computed(() => {
           <span class="value-text">{{ dropPercent }}</span>
           <span class="value-unit">%</span>
           <span class="value-sep">)</span>
+        </div>
+      </div>
+
+      <!-- 判定結果 (dropモード) -->
+      <div v-else class="metric-card">
+        <div class="metric-label">許容電流判定</div>
+        <div class="metric-value" :class="ampStatusClass">
+          <span class="value-text" style="font-size: 1.25rem; font-weight: bold;">
+            {{ !isReady ? "ーー" : (props.inputs.I <= props.result!.finalEffAmp ? "OK" : "NG (容量不足)") }}
+          </span>
         </div>
       </div>
     </div>
