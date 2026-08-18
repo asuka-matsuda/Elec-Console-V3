@@ -76,7 +76,10 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
                 class="c-math-basis__legend-item"
               >
                 <!-- eslint-disable-next-line vue/no-v-html -->
-                <span class="c-math-basis__legend-symbol" v-html="renderMath(v.symbol, false)"></span>
+                <span
+                  class="c-math-basis__legend-symbol"
+                  v-html="renderMath(v.symbol, false)"
+                ></span>
                 <span class="c-math-basis__legend-sep">:</span>
                 <span class="c-math-basis__legend-name">{{ v.name }}</span>
               </li>
@@ -108,7 +111,6 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
     color: var(--color-category-tool);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    margin: 0;
   }
 
   &__body {
@@ -132,8 +134,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
     }
 
     :deep(.katex-display) {
-      margin: 0;
-      padding: var(--space-2);
+      padding: var(--space-1);
     }
   }
 
@@ -148,15 +149,13 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
-    margin: 0 0 var(--space-1) 0;
+    margin-bottom: var(--space-1);
   }
 
   &__legend-list {
     display: flex;
     flex-direction: column;
-    gap: 2px;
-    margin: 0;
-    padding: 0;
+    gap: var(--space-1);
     list-style: none;
   }
 
