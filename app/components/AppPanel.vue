@@ -64,7 +64,7 @@ withDefaults(
     height: var(--p-bracket-size);
     pointer-events: none;
     content: "";
-    border: var(--border-width-base) solid var(--p-bracket-color);
+    border: var(--border-width-thick) solid var(--p-bracket-color);
     filter: var(--p-bracket-glow);
   }
 
