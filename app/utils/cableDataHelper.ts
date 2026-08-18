@@ -1,4 +1,4 @@
-import { cableData } from "~/utils/data/cableData";
+import { cableData } from "~/utils/cableData";
 
 export interface DropdownOption {
     label: string;

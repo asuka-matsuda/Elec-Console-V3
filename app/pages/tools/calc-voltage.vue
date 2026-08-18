@@ -20,7 +20,7 @@ import {
   targetDropOptions,
 } from "~/utils/constants/toolOptions";
 import { getAvailableSizes } from "~/utils/cableDataHelper";
-import { cableData } from "~/utils/data/cableData";
+import { cableData } from "~/utils/cableData";
 
 useHead({
   title: "電圧降下・ケーブルサイズ選定",
