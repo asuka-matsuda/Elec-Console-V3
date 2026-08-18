@@ -169,17 +169,17 @@ const dropStatusClass = computed(() => {
 
   .is-success {
     color: var(--color-status-success);
-    text-shadow: 0 0 8px rgb(34 197 94 / 40%);
+    text-shadow: 0 0 8px hsl(var(--color-status-success-base) / 40%);
   }
 
   .is-warning {
     color: var(--color-status-warning);
-    text-shadow: 0 0 8px rgb(234 179 8 / 40%);
+    text-shadow: 0 0 8px hsl(var(--color-status-warning-base) / 40%);
   }
 
   .is-danger {
     color: var(--color-status-danger);
-    text-shadow: 0 0 8px rgb(239 68 68 / 40%);
+    text-shadow: 0 0 8px hsl(var(--color-status-danger-base) / 40%);
   }
 
   &__main {
