@@ -310,8 +310,8 @@ function _getTempDeratingFormula(inputs: Record<string, any>, result: Record<str
  */
 function _getUnitConversionFormula(inputs: Record<string, any>) {
     const { sys, I, loadVal, loadUnit, pf } = inputs;
-    const P_val = loadVal ? hlVal(loadVal, 'P', 1) : '\\text{?}';
-    const Cos_val = pf ? hlVal(pf, '\\cos \\theta', 2) : '1.0';
+    const P_val = loadVal ? hlVal(loadVal, 'P', 1) : 'P';
+    const Cos_val = pf ? hlVal(pf, '\\cos \\theta', 2) : '\\cos \\theta';
 
     if (loadUnit === 'A') {
         const tex = (!loadVal) ? `I = \\text{-- A}` : `I = ${P_val} \\text{ A}`;
@@ -330,7 +330,7 @@ function _getUnitConversionFormula(inputs: Record<string, any>) {
     rightSideSymbol += `}`;
 
     // 途中式 (2段目)
-    let v_val = '\\text{?}';
+    let v_val = 'V';
     if (sys) {
         v_val = sys.id === '1P3W200' ? '200' : `${sys.voltage}`;
     }
