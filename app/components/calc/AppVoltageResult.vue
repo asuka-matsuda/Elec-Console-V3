@@ -28,7 +28,6 @@ const mainValue = computed(() => {
     return size ? String(size) : "選定不可";
   } else {
     // 電圧降下確認モードの場合
-    if (props.result!.finalEffAmp === 0) return "データ未登録";
     const isAmpOk = props.inputs.I <= props.result!.finalEffAmp;
     return isAmpOk ? "OK" : "NG (容量不足)";
   }
@@ -47,7 +46,6 @@ const mainStatusClass = computed(() => {
   if (mode.value === "size") {
     return props.result?.optimal ? "is-success" : "is-danger";
   } else {
-    if (props.result!.finalEffAmp === 0) return "is-neutral";
     return props.inputs.I <= props.result!.finalEffAmp
       ? "is-success"
       : "is-danger";

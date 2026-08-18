@@ -32,42 +32,24 @@ export function getAvailableCores(category: string): DropdownOption[] {
 }
 
 /**
- * 指定されたカテゴリ（cableType）と芯数（cores）に存在するサイズ（size）のリストを取得する
+ * 指定されたカテゴリ（cableType）に存在するケーブルのリストを取得する
  */
-export function getAvailableSizes(category: string, coreVal?: string): DropdownOption[] {
+export function getAvailableSizes(category: string): DropdownOption[] {
     if (!category) return [];
 
-    let candidates = cableData.filter((c) => c.category === category);
+    // 元の配列におけるインデックスを保持したままフィルタリングする
+    const candidates = cableData
+        .map((cable, index) => ({ cable, index }))
+        .filter((item) => item.cable.category === category);
 
-    if (coreVal && coreVal !== "-") {
-        // "3C" のような形式が cableData に登録されているか確認し、フィルタリングする
-        // ユーザーが選ぶのは "3" なので、"3C" 等にマッチするか確認
-        candidates = candidates.filter((c) => c.cores === `${coreVal}C` || c.cores === coreVal || c.cores === "-");
-    }
-
-    // サイズ、単位、許容電流のペアを抽出
-    const sizeMap = new Map<string, { unit: string; ampacity: string }>(); // key: size
-    candidates.forEach((c) => {
-        if (!sizeMap.has(c.size)) {
-            sizeMap.set(c.size, { unit: c.unit, ampacity: c.ampacity });
-        }
-    });
-
-    const sizes = Array.from(sizeMap.entries()).map(([size, data]) => ({
-        size: parseFloat(size),
-        sizeStr: size,
-        unit: data.unit || "sq",
-        ampacity: data.ampacity
-    }));
-
-    // サイズ順にソート
-    sizes.sort((a, b) => a.size - b.size);
-
-    return sizes.map((item) => {
-        const ampStr = item.ampacity !== "-" ? ` (許容電流: ${item.ampacity}A)` : "";
+    return candidates.map((item) => {
+        const c = item.cable;
+        const coreStr = c.cores === "-" ? "" : `${c.cores} `;
+        const label = `${coreStr}${c.size} ${c.unit}`;
+        
         return {
-            label: `${item.sizeStr} ${item.unit}${ampStr}`,
-            value: item.sizeStr,
+            label,
+            value: `idx_${item.index}`,
         };
     });
 }

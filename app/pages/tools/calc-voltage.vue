@@ -19,7 +19,8 @@ import {
   ambientTempOptions,
   targetDropOptions,
 } from "~/utils/constants/toolOptions";
-import { getAvailableCores, getAvailableSizes } from "~/utils/cableDataHelper";
+import { getAvailableSizes } from "~/utils/cableDataHelper";
+import { cableData } from "~/utils/data/cableData";
 
 useHead({
   title: "電圧降下・ケーブルサイズ選定",
@@ -73,36 +74,16 @@ type FormField = {
 };
 
 // 動的な選択肢の算出
-const computedAvailableCores = computed(() => {
-  return getAvailableCores(form.value.cableType);
-});
-
 const computedAvailableSizes = computed(() => {
-  return getAvailableSizes(form.value.cableType, form.value.cores);
+  return getAvailableSizes(form.value.cableType);
 });
 
 // 値の自動リセットロジック
 watch(
   () => form.value.cableType,
   (newVal) => {
-    const cores = getAvailableCores(newVal);
-    // もし現在の芯数が新しいケーブル種別に存在しなければリセット
-    if (!cores.some((c) => c.value === form.value.cores)) {
-      form.value.cores = cores.length === 1 && cores[0]?.value === "-" ? "-" : "";
-    }
-    
-    // ケーブル種別が変わればサイズもリセットの可能性がある
-    const sizes = getAvailableSizes(newVal, form.value.cores);
-    if (!sizes.some((s) => s.value === form.value.fixedSize)) {
-      form.value.fixedSize = "";
-    }
-  }
-);
-
-watch(
-  () => form.value.cores,
-  (newVal) => {
-    const sizes = getAvailableSizes(form.value.cableType, newVal);
+    // ケーブル種別が変わればサイズリセット
+    const sizes = getAvailableSizes(newVal);
     if (!sizes.some((s) => s.value === form.value.fixedSize)) {
       form.value.fixedSize = "";
     }
@@ -148,14 +129,6 @@ const formFields = computed<FormField[]>(() => [
     type: "select",
     options: cableTypeOptions,
     placeholder: "選択してください",
-  },
-  {
-    id: "cores",
-    label: "芯数 指定",
-    type: "select",
-    options: computedAvailableCores.value,
-    placeholder: "選択してください",
-    disabled: computedAvailableCores.value.length === 1 && computedAvailableCores.value[0]?.value === "-",
   },
   {
     id: "fixedSize",
@@ -215,9 +188,13 @@ const calcInputs = computed(() => {
 
   if (mode === "size") {
     selectedCores = form.value.cores || null;
-  } else if (rawSize) {
-    selectedSize = parseFloat(rawSize);
-    selectedCores = form.value.cores || null;
+  } else if (rawSize && rawSize.startsWith('idx_')) {
+    const idx = parseInt(rawSize.replace('idx_', ''), 10);
+    const cable = cableData[idx];
+    if (cable) {
+      selectedSize = parseFloat(cable.size);
+      selectedCores = cable.cores;
+    }
   }
 
   const derating = parseFloat(form.value.derating);
