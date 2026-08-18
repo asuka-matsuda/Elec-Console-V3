@@ -249,7 +249,7 @@ function _getTempDeratingFormula(inputs: Record<string, any>, result: Record<str
 
     if (!targetCable || !targetCable.ampacity || targetCable.ampacity === '-') {
         return {
-            tex: `\\text{選択されたケーブルのデータが登録されていません}`,
+            tex: `\\text{許容電流データなし}`,
             leg: []
         };
     }
@@ -366,7 +366,7 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
 
     if (!targetCable || !targetCable.ampacity || targetCable.ampacity === '-') {
         return {
-            tex: `\\text{選択されたケーブルのデータが登録されていません}`,
+            tex: `\\text{許容電流データなし}`,
             leg: []
         };
     }
