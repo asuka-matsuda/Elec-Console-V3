@@ -326,6 +326,8 @@ const listboxId = useId();
   margin: 0;
   padding: 0;
   list-style: none;
+
+  @include custom-scrollbar;
 }
 
 .c-custom-select__option {
