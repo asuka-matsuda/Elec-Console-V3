@@ -40,7 +40,7 @@ withDefaults(
   &__title {
     display: flex;
     align-items: center;
-    gap: var(--space-3);
+    gap: var(--gap-component);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
     margin: 0;

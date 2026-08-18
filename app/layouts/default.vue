@@ -78,7 +78,7 @@ const breadcrumbs = useBreadcrumbs();
   display: flex;
   flex-direction: column;
   min-height: 0;
-  padding: var(--space-4);
+  padding: var(--pad-container);
   overflow-y: auto;
 
   @include custom-scrollbar;
@@ -92,7 +92,7 @@ const breadcrumbs = useBreadcrumbs();
 .l-header-user {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--gap-component);
   font-size: var(--font-size-sm);
 
   &__avatar {

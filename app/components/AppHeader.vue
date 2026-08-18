@@ -37,7 +37,7 @@ const emit = defineEmits<{
   align-items: center;
   justify-content: space-between;
   height: 64px;
-  padding: var(--space-4);
+  padding: var(--pad-container);
 
   @include mq("md") {
     padding: var(--space-3);
@@ -46,7 +46,7 @@ const emit = defineEmits<{
   &__left {
     display: flex;
     align-items: center;
-    gap: var(--space-4);
+    gap: var(--gap-component);
   }
 
   &__menu-btn {
@@ -60,7 +60,7 @@ const emit = defineEmits<{
   &__actions {
     display: flex;
     align-items: center;
-    gap: var(--space-4);
+    gap: var(--gap-component);
   }
 }
 </style>

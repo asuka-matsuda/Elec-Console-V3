@@ -101,7 +101,7 @@ const history = computed(() => dashboardData.value?.history || []);
 
 /* List Item Card Styles */
 .p-dashboard-list-item {
-  padding: var(--space-4);
+  padding: var(--pad-container);
 
   &__header {
     display: flex;

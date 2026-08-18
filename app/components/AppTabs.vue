@@ -58,7 +58,7 @@ const selectTab = (option: TabOption) => {
 .c-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-4);
+  gap: var(--gap-component);
   align-items: center;
   justify-content: flex-start;
 
@@ -92,7 +92,7 @@ const selectTab = (option: TabOption) => {
   gap: var(--space-2);
   align-items: center;
   justify-content: center;
-  padding: var(--space-4);
+  padding: var(--pad-container);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);

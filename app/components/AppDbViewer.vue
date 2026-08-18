@@ -63,7 +63,7 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
     min-height: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
+    gap: var(--gap-section);
   }
 
   &__sidebar {

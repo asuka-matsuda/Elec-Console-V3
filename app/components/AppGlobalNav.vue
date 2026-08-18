@@ -106,7 +106,7 @@ const closeSidebar = () => {
     display: flex;
     align-items: center;
     height: 64px; // Match standard header height
-    padding: var(--space-4);
+    padding: var(--pad-container);
 
     @include ui-border-fade(bottom, var(--sidebar-border));
 
@@ -171,7 +171,7 @@ const closeSidebar = () => {
   &__link {
     display: flex;
     align-items: center;
-    gap: var(--space-4);
+    gap: var(--gap-component);
     padding: var(--space-2);
     text-decoration: none;
     color: var(--color-text-secondary);

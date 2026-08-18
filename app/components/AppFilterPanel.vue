@@ -78,7 +78,7 @@ const toggleCat = (value: string) => {
   &__filters {
     display: grid;
     grid-template-columns: 280px 1fr; /* PC時は横並び（キーワード入力幅を固定、残りをカテゴリに） */
-    gap: var(--space-5);
+    gap: var(--gap-section);
 
     /* スマホ時は縦積み */
     @include mq("md") {
@@ -89,7 +89,7 @@ const toggleCat = (value: string) => {
   &__grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
-    gap: var(--space-3);
+    gap: var(--gap-component);
   }
 }
 </style>

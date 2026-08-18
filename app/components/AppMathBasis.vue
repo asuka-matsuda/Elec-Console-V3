@@ -118,7 +118,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
     /* PCファースト: カード内を左右2カラムに分割 */
     display: flex;
     flex-flow: row nowrap;
-    gap: var(--space-6);
+    gap: var(--gap-section);
     align-items: flex-start;
   }
 

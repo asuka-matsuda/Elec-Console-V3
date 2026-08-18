@@ -169,7 +169,7 @@ const toggleDrawer = () => {
       align-items: center;
       justify-content: space-between;
       height: 48px;
-      padding: var(--space-4);
+      padding: var(--pad-container);
       cursor: pointer;
       background: color-mix(in srgb, var(--color-category-tool) 10%, transparent);
       border-radius: var(--radius-lg) var(--radius-lg) 0 0;
@@ -194,7 +194,7 @@ const toggleDrawer = () => {
     min-height: 0;
 
     @include mq("md") {
-      padding: var(--space-4);
+      padding: var(--pad-container);
       overflow-y: auto;
 
       @include custom-scrollbar;
