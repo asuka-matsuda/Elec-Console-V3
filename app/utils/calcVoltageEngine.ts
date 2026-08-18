@@ -60,7 +60,7 @@ function _calculateVoltageDrop(inputs: Record<string, any>, cables: Record<strin
         (c) => c.category === cableType && parseFloat(c.size) === selectedSize
     );
     if (selectedCores) {
-        candidates = candidates.filter((c) => c.cores === selectedCores || !c.cores);
+        candidates = candidates.filter((c) => c.cores === selectedCores || !c.cores || c.cores === '-');
     }
 
     const fixedCable = candidates[0] || null;
@@ -115,7 +115,7 @@ function _calculateSizeSelection(inputs: Record<string, any>, cables: Record<str
 
     let candidates = cables.filter((c) => c.category === cableType && c.ampacity !== '-');
     if (selectedCores) {
-        candidates = candidates.filter((c) => c.cores === selectedCores || !c.cores);
+        candidates = candidates.filter((c) => c.cores === selectedCores || !c.cores || c.cores === '-');
     }
 
     candidates.sort((a, b) => parseFloat(a.ampacity) - parseFloat(b.ampacity));
