@@ -231,8 +231,7 @@ const mathSteps = computed(() => {
 </script>
 
 <template>
-  <div class="p-tool-calc-voltage">
-    <AppToolLayout>
+  <AppToolLayout>
     <template #disclaimer>
       <AppDisclaimer />
     </template>
@@ -360,32 +359,31 @@ const mathSteps = computed(() => {
         </template>
 
         <AppMathBasis :steps="mathSteps" />
+
+        <!-- Reset Confirmation Modal -->
+        <AppModal
+          v-model="isResetModalOpen"
+          title="入力条件のリセット"
+          icon="alert-triangle"
+          variant="danger"
+        >
+          <p>
+            これまでに入力したすべての条件が初期化されます。<br />
+            本当によろしいですか？
+          </p>
+          <template #footer>
+            <AppButtonSecondary @click="isResetModalOpen = false">
+              キャンセル
+            </AppButtonSecondary>
+            <AppButtonDanger @click="resetForm">
+              <AppIcon name="trash-2" size="sm" />
+              リセットする
+            </AppButtonDanger>
+          </template>
+        </AppModal>
       </AppPanel>
     </template>
   </AppToolLayout>
-
-  <!-- Reset Confirmation Modal -->
-  <AppModal
-    v-model="isResetModalOpen"
-    title="入力条件のリセット"
-    icon="alert-triangle"
-    variant="danger"
-  >
-    <p>
-      これまでに入力したすべての条件が初期化されます。<br />
-      本当によろしいですか？
-    </p>
-    <template #footer>
-      <AppButtonSecondary @click="isResetModalOpen = false">
-        キャンセル
-      </AppButtonSecondary>
-      <AppButtonDanger @click="resetForm">
-        <AppIcon name="trash-2" size="sm" />
-        リセットする
-      </AppButtonDanger>
-    </template>
-  </AppModal>
-</div>
 </template>
 
 <style scoped lang="scss">

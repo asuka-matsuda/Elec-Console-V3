@@ -62,7 +62,11 @@
 // 境界線（ボーダー）を端に向けてグラデーションで透過（フェードアウト）させる
 @mixin ui-border-fade($direction: bottom, $color: var(--color-border)) {
   // directionがbottomなら横方向(to right)、rightなら縦方向(to bottom)のグラデーションにする
-  $gradient-dir: if($direction == bottom, to right, to bottom);
+  $gradient-dir: to bottom;
+
+  @if $direction == bottom {
+    $gradient-dir: to right;
+  }
 
   border-#{$direction}: var(--border-width-base) solid transparent;
   border-image: linear-gradient(
