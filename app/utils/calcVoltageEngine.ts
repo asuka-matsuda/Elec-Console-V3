@@ -414,7 +414,7 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
         resultLine = `\\textcolor{#10b77f}{${effAmp}} \\text{ A (}${targetCable.size}\\text{${unitStr}}${parallelStr}\\text{)}`;
     }
 
-    const I_str_left = I !== null && I !== undefined ? I.toFixed(1) : '0';
+    const I_str_left = hlVal(I, '0', 1);
     const tex = `\\begin{aligned} I \\text{ A} &\\le ${rightSideSymbol} \\\\ ${I_str_left} \\text{ A} &\\le ${rightSideSubst} \\\\ ${I_str_left} \\text{ A} &\\le ${resultLine} \\end{aligned}`;
 
     return { tex, leg };
@@ -429,7 +429,7 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
 function _getVoltageDropFormula(inputs: Record<string, any>, result: Record<string, any> | null) {
     const { mode, sys, I, L, targetDrop, selectedSize, parallel } = inputs;
     const isAuto = mode === 'size';
-    const I_str = formatVal(I, 'I', 1);
+    const I_str = hlVal(I, 'I', 1);
     const K_val = sys ? formatVal(sys.simpleK, 'K', 2) : 'K';
     const L_val = hlVal(L, 'L', 1);
     
