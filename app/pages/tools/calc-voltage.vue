@@ -247,17 +247,7 @@ const mathSteps = computed(() => {
             size="md"
           />
         </template>
-        <div
-          style="
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--color-text-muted);
-          "
-        >
-          （結果エリア：後日実装）
-        </div>
+        <AppVoltageResult :inputs="calcInputs" :result="calcResult" />
       </AppPanel>
     </template>
 
