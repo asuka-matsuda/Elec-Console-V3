@@ -169,17 +169,17 @@ const dropStatusClass = computed(() => {
 
   .is-success {
     color: var(--color-status-success);
-    text-shadow: 0 0 8px rgb(34 197 94 / 40%);
+    text-shadow: 0 0 8px color-mix(in srgb, var(--color-status-success) 40%, transparent);
   }
 
   .is-warning {
     color: var(--color-status-warning);
-    text-shadow: 0 0 8px rgb(234 179 8 / 40%);
+    text-shadow: 0 0 8px color-mix(in srgb, var(--color-status-warning) 40%, transparent);
   }
 
   .is-danger {
     color: var(--color-status-danger);
-    text-shadow: 0 0 8px rgb(239 68 68 / 40%);
+    text-shadow: 0 0 8px color-mix(in srgb, var(--color-status-danger) 40%, transparent);
   }
 
   &__main {
@@ -188,9 +188,9 @@ const dropStatusClass = computed(() => {
     align-items: center;
     justify-content: center;
     padding: var(--space-2) var(--space-3);
-    background: rgb(0 0 0 / 20%);
+    background: color-mix(in srgb, #000 20%, transparent);
     border: 1px solid var(--color-border);
-    box-shadow: inset 0 0 20px rgb(0 0 0 / 50%);
+    box-shadow: inset 0 0 20px color-mix(in srgb, #000 50%, transparent);
     flex: 1;
     min-width: 0;
   }
