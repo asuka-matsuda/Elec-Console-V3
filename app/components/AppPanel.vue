@@ -2,7 +2,7 @@
 withDefaults(
   defineProps<{
     title?: string;
-    bracketColor?: "main" | "tool" | "database" | "reference" | "management";
+    bracketColor?: "main" | "tool" | "database" | "reference" | "management" | "danger" | "success";
     variant?: "hud" | "simple" | "gradient" | "hybrid";
   }>(),
   {
@@ -130,6 +130,14 @@ withDefaults(
 
   &--color-management {
     --p-theme-color: var(--color-category-management);
+  }
+
+  &--color-danger {
+    --p-theme-color: var(--color-status-danger);
+  }
+
+  &--color-success {
+    --p-theme-color: var(--color-status-success);
   }
 
   /* --------------------------------------------------------- */

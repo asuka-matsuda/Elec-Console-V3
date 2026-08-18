@@ -60,31 +60,31 @@ const titleId = `modal-title-${modalId}`;
   <Teleport to="body">
     <transition name="modal-fade">
       <div v-if="modelValue" class="c-modal-overlay" @click.self="close">
-        <div
+        <AppPanel
           class="c-modal"
-          :class="`c-modal--color-${variant}`"
+          variant="hud"
+          :bracket-color="variant"
           role="dialog"
           aria-modal="true"
           :aria-labelledby="titleId"
         >
-          <!-- Cyber Brackets -->
-          <div class="c-modal__brackets"></div>
-
           <!-- Header -->
-          <header class="c-modal__header">
-            <h2 :id="titleId" class="c-modal__title">
-              <AppIcon v-if="icon" :name="icon" class="c-modal__icon" />
-              <slot name="title">{{ title }}</slot>
-            </h2>
-            <button
-              type="button"
-              class="c-modal__close-btn"
-              aria-label="Close modal"
-              @click="close"
-            >
-              <AppIcon name="x" size="sm" />
-            </button>
-          </header>
+          <template #header>
+            <header class="c-modal__header">
+              <h2 :id="titleId" class="c-modal__title">
+                <AppIcon v-if="icon" :name="icon" class="c-modal__icon" />
+                <slot name="title">{{ title }}</slot>
+              </h2>
+              <button
+                type="button"
+                class="c-modal__close-btn"
+                aria-label="Close modal"
+                @click="close"
+              >
+                <AppIcon name="x" size="sm" />
+              </button>
+            </header>
+          </template>
 
           <AppDivider :variant="variant" type="default" />
 
@@ -97,7 +97,7 @@ const titleId = `modal-title-${modalId}`;
           <footer v-if="$slots.footer" class="c-modal__footer">
             <slot name="footer" />
           </footer>
-        </div>
+        </AppPanel>
       </div>
     </transition>
   </Teleport>
@@ -120,69 +120,18 @@ const titleId = `modal-title-${modalId}`;
 }
 
 .c-modal {
-  --p-theme-color: var(--color-category-main);
-  
-  position: relative;
-  display: flex;
-  flex-direction: column;
+  /* AppPanelとしての幅と背景の上書き */
   width: 90%;
   max-width: 500px;
   max-height: 90vh;
-  padding: var(--space-4);
   background-color: color-mix(in srgb, var(--color-main-bg) 85%, transparent);
-  border: var(--border-width-base) solid #{theme-color(var(--p-theme-color), 50%)};
-  box-shadow:
-    var(--shadow-elevation-high),
-    inset 0 0 20px #{theme-color(var(--p-theme-color), 15%)};
   backdrop-filter: blur(var(--blur-lg));
-  
-  /* DRY: Color variants mapping */
-  &--color-main { --p-theme-color: var(--color-category-main); }
-  &--color-tool { --p-theme-color: var(--color-category-tool); }
-  &--color-database { --p-theme-color: var(--color-category-database); }
-  &--color-reference { --p-theme-color: var(--color-category-reference); }
-  &--color-management { --p-theme-color: var(--color-category-management); }
-  &--color-danger { --p-theme-color: var(--color-status-danger); }
-  &--color-success { --p-theme-color: var(--color-status-success); }
-
-  /* Cyber Brackets (Top-Left & Bottom-Right) */
-  &__brackets {
-    position: absolute;
-    inset: -1px;
-    pointer-events: none;
-    z-index: -1;
-
-    &::before,
-    &::after {
-      content: "";
-      position: absolute;
-      width: var(--space-5);
-      height: var(--space-5);
-      border: var(--border-width-base) solid #{theme-color(var(--p-theme-color), 80%)};
-      filter: drop-shadow(0 0 6px #{theme-color(var(--p-theme-color), 60%)});
-    }
-
-    &::before {
-      top: 0;
-      left: 0;
-      border-right: none;
-      border-bottom: none;
-    }
-
-    &::after {
-      bottom: 0;
-      right: 0;
-      border-top: none;
-      border-left: none;
-    }
-  }
 
   &__header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: var(--space-3);
-    margin-bottom: var(--space-3);
   }
 
   &__title {
@@ -192,8 +141,7 @@ const titleId = `modal-title-${modalId}`;
     margin: 0;
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-bold);
-    color: #{theme-color(var(--p-theme-color), 100%)};
-    text-shadow: 0 0 var(--blur-md) #{theme-color(var(--p-theme-color), 40%)};
+    color: var(--color-text-main);
   }
 
   &__icon {
@@ -239,7 +187,6 @@ const titleId = `modal-title-${modalId}`;
     justify-content: flex-end;
     gap: var(--space-3);
     margin-top: var(--space-3);
-    padding-top: var(--space-3);
   }
 }
 
