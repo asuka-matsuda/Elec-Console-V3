@@ -249,7 +249,7 @@ function _getTempDeratingFormula(inputs: Record<string, any>, result: Record<str
     if (!targetCable) {
         if (inputs.ambientTemp === null) {
             return {
-                tex: `\\begin{aligned} I_0' &= I_0 \\\\ &= \\textcolor{var(--color-status-success)}{${inputs.I || 0}} \\text{ A (温度補正なし)} \\end{aligned}`,
+                tex: `\\begin{aligned} I_0' &= I_0 \\\\ &= \\textcolor{#10b77f}{${inputs.I || 0}} \\text{ A (温度補正なし)} \\end{aligned}`,
                 leg: [
                     "\\( I_0' \\): 補正後許容電流 [A]",
                     '\\( I_0 \\): 許容電流 [A]'
@@ -272,7 +272,7 @@ function _getTempDeratingFormula(inputs: Record<string, any>, result: Record<str
 
     if (inputs.ambientTemp === null) {
         return {
-            tex: `I_0' = \\textcolor{var(--color-status-success)}{${baseAmp}} \\text{ A} \\quad \\text{(温度補正なし)}`,
+            tex: `I_0' = \\textcolor{#10b77f}{${baseAmp}} \\text{ A} \\quad \\text{(温度補正なし)}`,
             leg: ["\\( I_0' \\): 補正後許容電流 [A]"]
         };
     }
@@ -287,7 +287,7 @@ function _getTempDeratingFormula(inputs: Record<string, any>, result: Record<str
     
     if (!isNaN(max) && !isNaN(base)) {
         const tempAmp = baseAmp * k;
-        resultVal = `\\textcolor{var(--color-status-success)}{${tempAmp.toFixed(1)}} \\text{ A}`;
+        resultVal = `\\textcolor{#10b77f}{${tempAmp.toFixed(1)}} \\text{ A}`;
     }
 
     if (isNaN(max) || isNaN(base)) {
@@ -319,7 +319,7 @@ function _getUnitConversionFormula(inputs: Record<string, any>) {
     const Cos_val = pf ? hlVal(pf, '\\cos \\theta', 2) : '\\cos \\theta';
 
     if (loadUnit === 'A') {
-        const tex = (!loadVal) ? `I = \\text{-- A}` : `I = \\textcolor{var(--color-status-success)}{${P_val}} \\text{ A}`;
+        const tex = (!loadVal) ? `I = \\text{-- A}` : `I = \\textcolor{#10b77f}{${P_val}} \\text{ A}`;
         return { tex, leg: ['\\( I \\): 設計電流 [A]'] };
     }
 
@@ -348,7 +348,7 @@ function _getUnitConversionFormula(inputs: Record<string, any>) {
     rightSideSubst += `}`;
 
     // 結果 (3段目)
-    const resultVal = I !== null ? `\\textcolor{var(--color-status-success)}{${I.toFixed(1)}} \\text{ A}` : `\\text{-- A}`;
+    const resultVal = I !== null ? `\\textcolor{#10b77f}{${I.toFixed(1)}} \\text{ A}` : `\\text{-- A}`;
 
     const tex = `\\begin{aligned} I &= ${rightSideSymbol} \\\\ &= ${rightSideSubst} \\\\ &= ${resultVal} \\end{aligned}`;
 
@@ -436,13 +436,13 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
         if (N_val > 1) rightSideSymbol += ` \\times N`;
 
         const parallelStr = N_val > 1 ? ` \\times ${N_val}` : '';
-        const effAmpHl = `\\textcolor{var(--color-status-success)}{${effAmp}}`;
+        const effAmpHl = `\\textcolor{#10b77f}{${effAmp}}`;
         const tex = `\\begin{aligned} ${I_str} \\text{ A} &\\le ${rightSideSymbol} \\\\ &\\le ${rightSide} \\\\ &= ${effAmpHl} \\text{ A (}${targetCable.size}\\text{${unitStr}}${parallelStr}\\text{)} \\end{aligned}`;
         return { tex, leg };
     } else {
         const rightSideSymbol = `I_0'` + (N_val > 1 ? ` \\times N` : '');
         const parallelStr = N_val > 1 ? ` \\times ${N_val}` : '';
-        const tempAmpHl = `\\textcolor{var(--color-status-success)}{${tempAmp}}`;
+        const tempAmpHl = `\\textcolor{#10b77f}{${tempAmp}}`;
         const tex = `\\begin{aligned} ${I_str} \\text{ A} &\\le ${rightSideSymbol} \\\\ &\\le ${rightSide} \\\\ &= ${tempAmpHl} \\text{ A (}${targetCable.size}\\text{${unitStr}}${parallelStr}\\text{)} \\end{aligned}`;
         return { tex, leg };
     }
@@ -499,14 +499,14 @@ function _getVoltageDropFormula(inputs: Record<string, any>, result: Record<stri
             const calA_total = (sys.simpleK * L * I) / (1000 * (sys.voltage * (targetDrop / 100)));
             const calA_each = calA_total / N_val;
             const aVal = (N_val > 1 ? calA_each : calA_total).toFixed(2);
-            tex += ` \\\\ &= \\textcolor{var(--color-status-success)}{${aVal}} \\text{ sq}`;
+            tex += ` \\\\ &= \\textcolor{#10b77f}{${aVal}} \\text{ sq}`;
         }
         tex += ` \\end{aligned}`;
     } else {
         const rightSideSymbol = `\\frac{K \\cdot L \\cdot I}{1000 \\times A${N_val > 1 ? ` \\times N` : ''}}`;
         tex = `\\begin{aligned} e &= ${rightSideSymbol} \\\\ &= \\frac{${K_val} \\cdot ${L_val} \\cdot ${I_str}}{1000 \\times ${N_paren}}`;
         if (result && result.finalDropV !== undefined) {
-            tex += ` \\\\ &= \\textcolor{var(--color-status-success)}{${result.finalDropV.toFixed(2)}} \\text{ V}`;
+            tex += ` \\\\ &= \\textcolor{#10b77f}{${result.finalDropV.toFixed(2)}} \\text{ V}`;
         }
         tex += ` \\end{aligned}`;
     }
