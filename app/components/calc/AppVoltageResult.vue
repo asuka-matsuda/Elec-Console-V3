@@ -17,13 +17,9 @@ const isReady = computed(() => props.inputs?.isReady && props.result);
 const mode = computed(() => props.inputs?.mode || "drop");
 
 // 選択ケーブル（dropモード時のサブ指標用）
-const dropCableSize = computed(() => {
+const dropCableName = computed(() => {
   if (!isReady.value) return "ーー";
-  return props.result?.optimal?.size ? String(props.result.optimal.size) : "ーー";
-});
-const dropCableUnit = computed(() => {
-  if (!isReady.value) return "sq";
-  return props.result?.optimal?.unit || "sq";
+  return props.result?.optimal?.name || "ーー";
 });
 
 const mainLabel = computed(() =>
@@ -140,12 +136,11 @@ const dropStatusClass = computed(() => {
         </div>
       </div>
 
-      <!-- 選択ケーブルサイズ (dropモード) -->
+      <!-- 選択ケーブル (dropモード) -->
       <div v-else class="metric-card">
-        <div class="metric-label">選択ケーブルサイズ</div>
+        <div class="metric-label">選択ケーブル</div>
         <div class="metric-value">
-          <span class="value-text" style="font-size: 1.25rem;">{{ dropCableSize }}</span>
-          <span class="value-unit">{{ dropCableUnit }}</span>
+          <span class="value-text" style="font-size: 1.25rem;">{{ dropCableName }}</span>
         </div>
       </div>
     </div>
