@@ -368,7 +368,10 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
     const targetCable = _getTargetCable(inputs, result, cables);
     if (!targetCable) {
         let rightSideSymbol = `I_0'`;
-        if (derating !== null) rightSideSymbol += ` \\times C_d`;
+        if (derating !== null) {
+            rightSideSymbol += ` \\times C_d`;
+            leg.push(`\\( C_d \\): 減少係数`);
+        }
         if (N_val > 1) rightSideSymbol += ` \\times N`;
         const tex = `I \\le ${rightSideSymbol}`;
         return { tex, leg };
