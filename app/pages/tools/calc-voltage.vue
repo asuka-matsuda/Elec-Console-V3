@@ -46,7 +46,9 @@ const formFields = computed(() =>
             size="md"
           />
         </template>
-        <AppVoltageResult :inputs="calcInputs" :result="calcResult" />
+        <ClientOnly>
+          <AppVoltageResult :inputs="calcInputs" :result="calcResult" />
+        </ClientOnly>
       </AppPanel>
     </template>
 
@@ -138,7 +140,9 @@ const formFields = computed(() =>
           />
         </template>
 
-        <AppMathBasis :steps="mathSteps" />
+        <ClientOnly>
+          <AppMathBasis :steps="mathSteps" />
+        </ClientOnly>
 
         <!-- Reset Confirmation Modal -->
         <AppModal
