@@ -178,19 +178,12 @@ export function generateMathData(inputs: Record<string, any>, result: Record<str
             { title: '④ ③で算出された許容電流による最終サイズ', tex: step3.tex, legend: step3.leg }
         ];
     } else {
-        const isAmpOver = result && result.finalEffAmp > 0 && inputs.I > result.finalEffAmp;
         const steps = [
             { title: '① 単位換算（負荷電流）', tex: step1.tex, legend: step1.leg },
             { title: '② 選択ケーブルの温度補正による許容電流', tex: step2.tex, legend: step2.leg },
-            { title: '③ 選択ケーブルの許容電流チェック', tex: step3.tex, legend: step3.leg }
+            { title: '③ 選択ケーブルの許容電流チェック', tex: step3.tex, legend: step3.leg },
+            { title: '④ 選択ケーブルの電圧降下チェック', tex: step4.tex, legend: step4.leg }
         ];
-        if (!isAmpOver) {
-            steps.push({
-                title: '④ 選択ケーブルの電圧降下チェック',
-                tex: step4.tex,
-                legend: step4.leg
-            });
-        }
         return steps;
     }
 }
