@@ -155,7 +155,6 @@ const formFields = computed<FormField[]>(() => [
     type: "select",
     options: computedAvailableCores.value,
     placeholder: "選択してください",
-    showIf: () => isSizeCalcMode.value,
     disabled: computedAvailableCores.value.length === 1 && computedAvailableCores.value[0]?.value === "-",
   },
   {

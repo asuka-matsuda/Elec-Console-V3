@@ -45,25 +45,29 @@ export function getAvailableSizes(category: string, coreVal?: string): DropdownO
         candidates = candidates.filter((c) => c.cores === `${coreVal}C` || c.cores === coreVal || c.cores === "-");
     }
 
-    // サイズと単位のペアを抽出
-    const sizeMap = new Map<string, string>(); // key: size, value: unit
+    // サイズ、単位、許容電流のペアを抽出
+    const sizeMap = new Map<string, { unit: string; ampacity: string }>(); // key: size
     candidates.forEach((c) => {
         if (!sizeMap.has(c.size)) {
-            sizeMap.set(c.size, c.unit);
+            sizeMap.set(c.size, { unit: c.unit, ampacity: c.ampacity });
         }
     });
 
-    const sizes = Array.from(sizeMap.entries()).map(([size, unit]) => ({
+    const sizes = Array.from(sizeMap.entries()).map(([size, data]) => ({
         size: parseFloat(size),
         sizeStr: size,
-        unit: unit || "sq"
+        unit: data.unit || "sq",
+        ampacity: data.ampacity
     }));
 
     // サイズ順にソート
     sizes.sort((a, b) => a.size - b.size);
 
-    return sizes.map((item) => ({
-        label: `${item.sizeStr} (${item.unit})`,
-        value: item.sizeStr,
-    }));
+    return sizes.map((item) => {
+        const ampStr = item.ampacity !== "-" ? ` (許容電流: ${item.ampacity}A)` : "";
+        return {
+            label: `${item.sizeStr} ${item.unit}${ampStr}`,
+            value: item.sizeStr,
+        };
+    });
 }
