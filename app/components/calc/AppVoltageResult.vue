@@ -119,12 +119,17 @@ const dropStatusClass = computed(() => {
 <style scoped lang="scss">
 .c-voltage-result {
   display: flex;
-  flex-direction: row;
+  flex-direction: row; // デフォルトはPC用（横並び）
   align-items: stretch;
   gap: var(--space-3);
   padding: var(--space-2);
   flex: 1;
   min-height: 0;
+
+  // md以下（モバイル）のスタイル
+  @include mq("md") {
+    flex-direction: column; // モバイルは縦並び
+  }
 
   // ステータスカラー定義
   .is-neutral {
@@ -154,7 +159,6 @@ const dropStatusClass = computed(() => {
     padding: var(--space-2) var(--space-3);
     background: rgb(0 0 0 / 20%);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
     box-shadow: inset 0 0 20px rgb(0 0 0 / 50%);
     flex: 1;
     min-width: 0;
@@ -189,10 +193,17 @@ const dropStatusClass = computed(() => {
 
   &__metrics {
     display: flex;
-    flex-direction: column;
+    flex-direction: column; // PCは縦積み
     gap: var(--space-2);
     min-width: 220px;
     flex-shrink: 0;
+
+    // md以下（モバイル）のスタイル
+    @include mq("md") {
+      flex-direction: row; // モバイルは横並び
+      flex-wrap: wrap;
+      min-width: auto;
+    }
   }
 
   .metric-card {
@@ -203,7 +214,6 @@ const dropStatusClass = computed(() => {
     padding: var(--space-2);
     background: rgb(255 255 255 / 2%);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
     flex: 1;
   }
 
