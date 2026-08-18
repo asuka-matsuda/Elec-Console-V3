@@ -391,7 +391,6 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
                 );
         }
         const tempAmp = (parseFloat(targetCable.ampacity) * kValue).toFixed(1);
-        const unitStr = targetCable.unit || 'sq';
 
         rightSideSubst = `${tempAmp}`;
         if (derating !== null && derating < 1.0) {
@@ -410,8 +409,7 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
             effAmp = (parseFloat(tempAmp) * N_val).toFixed(1);
         }
         
-        const parallelStr = ` \\times ${N_val}`;
-        resultLine = `\\textcolor{#10b77f}{${effAmp}} \\text{ A (}${targetCable.size}\\text{${unitStr}}${parallelStr}\\text{)}`;
+        resultLine = `\\textcolor{#10b77f}{${effAmp}} \\text{ A}`;
     }
 
     const I_str_left = hlVal(I, '0', 1);
