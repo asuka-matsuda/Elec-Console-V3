@@ -31,11 +31,11 @@ const mainValue = computed(() => {
 });
 
 const mainUnit = computed(() => {
-  if (!isReady.value) return mode.value === "size" ? "sq" : "";
+  if (!isReady.value) return mode.value === "size" ? "sq" : "V";
   if (mode.value === "size") {
     return props.result?.optimal?.unit || "sq";
   }
-  return "";
+  return "V";
 });
 
 const mainStatusClass = computed(() => {
@@ -90,15 +90,14 @@ const dropStatusClass = computed(() => {
 
 <template>
   <div class="c-voltage-result">
-    <!-- メイン結果 -->
     <div class="c-voltage-result__main">
       <div class="c-voltage-result__main-label">{{ mainLabel }}</div>
-      <div class="c-voltage-result__main-value" :class="mainStatusClass">
-        <span class="value-text">{{ mainValue }}</span>
+      <div class="c-voltage-result__main-value">
+        <span class="value-text" :class="mainStatusClass">{{ mainValue }}</span>
         <span v-if="mainUnit" class="value-unit">{{ mainUnit }}</span>
         <template v-if="mode === 'drop' && isReady">
           <span class="value-sep" style="margin-left: 0.5rem">(</span>
-          <span class="value-text" style="font-size: 1.25rem">{{ dropPercent }}</span>
+          <span class="value-text" :class="mainStatusClass" style="font-size: 1.25rem">{{ dropPercent }}</span>
           <span class="value-unit" style="font-size: 1rem">%</span>
           <span class="value-sep">)</span>
         </template>
