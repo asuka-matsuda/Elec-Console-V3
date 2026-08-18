@@ -32,6 +32,8 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
     return katex.renderToString(mathStr, {
       displayMode: isDisplay,
       throwOnError: false,
+      trust: true,
+      strict: false,
     });
   } catch (e) {
     console.error("KaTeX render error:", e);
@@ -131,6 +133,18 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
     :deep(.katex) {
       color: var(--color-text-main);
+
+      .tex-status-success {
+        color: var(--color-status-success) !important;
+      }
+      
+      .tex-status-warning {
+        color: var(--color-status-warning) !important;
+      }
+      
+      .tex-status-danger {
+        color: var(--color-status-danger) !important;
+      }
     }
 
     :deep(.katex-display) {

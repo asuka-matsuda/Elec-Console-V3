@@ -59,7 +59,7 @@ const availableRows = computed(() => {
 
 const categoryColorMap: Record<string, string> = {
   電気: "#eab308", // 黄色
-  建築: "#ef4444", // 赤
+  建築: "#ea580c", // 赤とオレンジの間（朱色）
   "空調・換気": "#22c55e", // 緑
   衛生: "#06b6d4", // 水色
   雑学: "var(--color-category-reference)", // reference

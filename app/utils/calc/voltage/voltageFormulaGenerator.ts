@@ -24,7 +24,7 @@ function _getUnitConversionFormula(inputs: VoltageCalcInputs) {
     const Cos_val = pf ? hlVal(pf, '\\cos \\theta', 2) : '\\cos \\theta';
 
     if (loadUnit === 'A') {
-        const tex = (!loadVal) ? `I = 0 \\text{ A}` : `I = \\textcolor{#10b77f}{${P_val}} \\text{ A}`;
+        const tex = (!loadVal) ? `I = 0 \\text{ A}` : `I = \\htmlClass{tex-status-success}{${P_val}} \\text{ A}`;
         return { tex, leg: ['\\( I \\): 設計電流 [A]'] };
     }
 
@@ -49,7 +49,7 @@ function _getUnitConversionFormula(inputs: VoltageCalcInputs) {
     if (loadUnit === 'kW') rightSideSubst += ` \\times ${Cos_val}`;
     rightSideSubst += `}`;
 
-    const resultVal = I !== null ? `\\textcolor{#10b77f}{${I.toFixed(1)}} \\text{ A}` : `0 \\text{ A}`;
+    const resultVal = I !== null ? `\\htmlClass{tex-status-success}{${I.toFixed(1)}} \\text{ A}` : `0 \\text{ A}`;
     const tex = `\\begin{aligned} I &= ${rightSideSymbol} \\\\ &= ${rightSideSubst} \\\\ &= ${resultVal} \\end{aligned}`;
 
     if (loadUnit === 'kW') leg.push('\\( P \\): 負荷 [kW]', '\\( \\cos \\theta \\): 力率');
@@ -73,7 +73,7 @@ function _getTempDeratingFormula(inputs: VoltageCalcInputs, result: VoltageCalcR
     const I_0_val = targetCable && targetCable.ampacity ? parseFloat(String(targetCable.ampacity)).toString() : 'I_0';
 
     if (amb === null) {
-        const resultVal = targetCable && targetCable.ampacity ? `\\textcolor{#10b77f}{${I_0_val}} \\text{ A}` : `0 \\text{ A}`;
+        const resultVal = targetCable && targetCable.ampacity ? `\\htmlClass{tex-status-success}{${I_0_val}} \\text{ A}` : `0 \\text{ A}`;
         const tex = `\\begin{aligned} I_0' &= I_0 \\\\ &= ${I_0_val} \\text{ A (温度補正なし)} \\\\ &= ${resultVal} \\end{aligned}`;
         return { tex, leg };
     }
@@ -98,7 +98,7 @@ function _getTempDeratingFormula(inputs: VoltageCalcInputs, result: VoltageCalcR
         else k = getAmbientTempDerating(base, max, amb);
         
         const tempAmp = baseAmp * k;
-        resultVal = `\\textcolor{#10b77f}{${tempAmp.toFixed(1)}} \\text{ A}`;
+        resultVal = `\\htmlClass{tex-status-success}{${tempAmp.toFixed(1)}} \\text{ A}`;
     }
 
     const tex = `\\begin{aligned} I_0' &= I_0 \\times \\sqrt{\\frac{\\theta_{max} - \\theta_{amb}}{\\theta_{max} - \\theta_{base}}} \\\\ &= ${I_0_val} \\times \\sqrt{\\frac{${max_val} - ${amb_val}}{${max_val} - ${base_val}}} \\\\ &= ${resultVal} \\end{aligned}`;
@@ -157,7 +157,7 @@ function _getThermalLimitFormula(inputs: VoltageCalcInputs, result: VoltageCalcR
             effAmp = (parseFloat(tempAmp) * N_val).toFixed(1);
         }
         
-        resultLine = `\\textcolor{#10b77f}{${effAmp}} \\text{ A}`;
+        resultLine = `\\htmlClass{tex-status-success}{${effAmp}} \\text{ A}`;
     }
 
     const I_str_left = hlVal(I, '0', 1);
@@ -209,7 +209,7 @@ function _getVoltageDropFormula(inputs: VoltageCalcInputs, result: VoltageCalcRe
             const calA_total = (sys.coefficient * L * I) / (1000 * (sys.voltage * (targetDrop / 100)));
             const calA_each = calA_total / N_val;
             const aVal = (N_val > 1 ? calA_each : calA_total).toFixed(2);
-            resultLine = `\\textcolor{#10b77f}{${aVal}} \\text{ sq}`;
+            resultLine = `\\htmlClass{tex-status-success}{${aVal}} \\text{ sq}`;
         }
         tex = `\\begin{aligned} ${leftSide} &= ${rightSideSymbol} \\\\ &= ${rightSide} \\\\ &= ${resultLine} \\end{aligned}`;
     } else {
@@ -218,7 +218,7 @@ function _getVoltageDropFormula(inputs: VoltageCalcInputs, result: VoltageCalcRe
 
         let resultLine = '0 \\text{ V}';
         if (result && result.finalDropV !== undefined) {
-            resultLine = `\\textcolor{#10b77f}{${result.finalDropV.toFixed(2)}} \\text{ V}`;
+            resultLine = `\\htmlClass{tex-status-success}{${result.finalDropV.toFixed(2)}} \\text{ V}`;
         }
         tex = `\\begin{aligned} e &= ${rightSideSymbol} \\\\ &= ${rightSide} \\\\ &= ${resultLine} \\end{aligned}`;
     }
