@@ -44,8 +44,8 @@ export function getAvailableSizes(category: string): DropdownOption[] {
 
     return candidates.map((item) => {
         const c = item.cable;
-        const coreStr = c.cores === "-" ? "" : `${c.cores} `;
-        const label = `${coreStr}${c.size} ${c.unit}`;
+        // nameプロパティが存在する場合はそれを利用し、なければフォールバック
+        const label = c.name || `${c.size} ${c.unit}`;
         
         return {
             label,

@@ -5,6 +5,7 @@
 export const cableData = [
     // --- VVF ---
     {
+        name: '1.6 mm (2C) - 許容電流: 18A',
         category: 'VVF',
         cores: '2C',
         size: '1.6',
@@ -19,6 +20,7 @@ export const cableData = [
         standard: '矢崎エナジーシステム'
     },
     {
+        name: '1.6 mm (3C) - 許容電流: 15A',
         category: 'VVF',
         cores: '3C',
         size: '1.6',
@@ -33,6 +35,7 @@ export const cableData = [
         standard: '矢崎エナジーシステム'
     },
     {
+        name: '1.6 mm (4C) - 許容電流: 13A',
         category: 'VVF',
         cores: '4C',
         size: '1.6',
@@ -47,6 +50,7 @@ export const cableData = [
         standard: '矢崎エナジーシステム'
     },
     {
+        name: '2.0 mm (2C) - 許容電流: 23A',
         category: 'VVF',
         cores: '2C',
         size: '2.0',
@@ -61,6 +65,7 @@ export const cableData = [
         standard: '矢崎エナジーシステム'
     },
     {
+        name: '2.0 mm (3C) - 許容電流: 20A',
         category: 'VVF',
         cores: '3C',
         size: '2.0',
@@ -75,6 +80,7 @@ export const cableData = [
         standard: '矢崎エナジーシステム'
     },
     {
+        name: '2.0 mm (4C) - 許容電流: 18A',
         category: 'VVF',
         cores: '4C',
         size: '2.0',
@@ -89,6 +95,7 @@ export const cableData = [
         standard: '矢崎エナジーシステム'
     },
     {
+        name: '2.6 mm (2C) - 許容電流: 32A',
         category: 'VVF',
         cores: '2C',
         size: '2.6',
@@ -103,6 +110,7 @@ export const cableData = [
         standard: '矢崎エナジーシステム'
     },
     {
+        name: '2.6 mm (3C) - 許容電流: 27A',
         category: 'VVF',
         cores: '3C',
         size: '2.6',
@@ -119,6 +127,7 @@ export const cableData = [
 
     // --- IV (mm) ---
     {
+        name: '1.0 mm - 許容電流: 16A',
         category: 'IV',
         cores: '-',
         size: '1.0',
@@ -133,6 +142,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '1.2 mm - 許容電流: 19A',
         category: 'IV',
         cores: '-',
         size: '1.2',
@@ -147,6 +157,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '1.6 mm - 許容電流: 27A',
         category: 'IV',
         cores: '-',
         size: '1.6',
@@ -161,6 +172,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '2.0 mm - 許容電流: 35A',
         category: 'IV',
         cores: '-',
         size: '2.0',
@@ -175,6 +187,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '2.6 mm - 許容電流: 48A',
         category: 'IV',
         cores: '-',
         size: '2.6',
@@ -189,6 +202,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '3.2 mm - 許容電流: 62A',
         category: 'IV',
         cores: '-',
         size: '3.2',
@@ -205,6 +219,7 @@ export const cableData = [
 
     // --- IV (sq) ---
     {
+        name: '0.9 sq - 許容電流: 17A',
         category: 'IV',
         cores: '-',
         size: '0.9',
@@ -219,6 +234,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '1.25 sq - 許容電流: 19A',
         category: 'IV',
         cores: '-',
         size: '1.25',
@@ -233,6 +249,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '1.6 sq - 許容電流: 27A',
         category: 'IV',
         cores: '-',
         size: '1.6',
@@ -247,6 +264,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '3.5 sq - 許容電流: 37A',
         category: 'IV',
         cores: '-',
         size: '3.5',
@@ -261,6 +279,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '5.5 sq - 許容電流: 49A',
         category: 'IV',
         cores: '-',
         size: '5.5',
@@ -275,6 +294,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '8 sq - 許容電流: 61A',
         category: 'IV',
         cores: '-',
         size: '8',
@@ -289,6 +309,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '14 sq - 許容電流: 88A',
         category: 'IV',
         cores: '-',
         size: '14',
@@ -303,6 +324,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '22 sq - 許容電流: 115A',
         category: 'IV',
         cores: '-',
         size: '22',
@@ -317,6 +339,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '38 sq - 許容電流: 162A',
         category: 'IV',
         cores: '-',
         size: '38',
@@ -331,6 +354,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '60 sq - 許容電流: 217A',
         category: 'IV',
         cores: '-',
         size: '60',
@@ -345,6 +369,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '100 sq - 許容電流: 298A',
         category: 'IV',
         cores: '-',
         size: '100',
@@ -359,6 +384,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '150 sq - 許容電流: 395A',
         category: 'IV',
         cores: '-',
         size: '150',
@@ -373,6 +399,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '200 sq - 許容電流: 469A',
         category: 'IV',
         cores: '-',
         size: '200',
@@ -387,6 +414,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '250 sq - 許容電流: 556A',
         category: 'IV',
         cores: '-',
         size: '250',
@@ -401,6 +429,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '325 sq - 許容電流: 650A',
         category: 'IV',
         cores: '-',
         size: '325',
@@ -417,6 +446,7 @@ export const cableData = [
 
     // --- CV ---
     {
+        name: '325 sq (1C) - 許容電流: 725A',
         category: 'CV',
         cores: '1C',
         size: '325',
@@ -431,6 +461,7 @@ export const cableData = [
         standard: 'JIS C 3605'
     },
     {
+        name: '3.5 sq (2C) - 許容電流: 35A',
         category: 'CV',
         cores: '2C',
         size: '3.5',
@@ -445,6 +476,7 @@ export const cableData = [
         standard: 'JIS C 3605'
     },
     {
+        name: '3.5 sq (3C) - 許容電流: 33A',
         category: 'CV',
         cores: '3C',
         size: '3.5',
@@ -459,6 +491,7 @@ export const cableData = [
         standard: 'JIS C 3605'
     },
     {
+        name: '3.5 sq (4C) - 許容電流: 31A',
         category: 'CV',
         cores: '4C',
         size: '3.5',
@@ -473,6 +506,7 @@ export const cableData = [
         standard: 'JIS C 3605'
     },
     {
+        name: '5.5 sq (3C) - 許容電流: 44A',
         category: 'CV',
         cores: '3C',
         size: '5.5',
@@ -487,6 +521,7 @@ export const cableData = [
         standard: 'JIS C 3605'
     },
     {
+        name: '5.5 sq (4C) - 許容電流: 40A',
         category: 'CV',
         cores: '4C',
         size: '5.5',
@@ -501,6 +536,7 @@ export const cableData = [
         standard: 'JIS C 3605'
     },
     {
+        name: '8 sq (3C) - 許容電流: 54A',
         category: 'CV',
         cores: '3C',
         size: '8',
@@ -515,6 +551,7 @@ export const cableData = [
         standard: 'JIS C 3605'
     },
     {
+        name: '8 sq (4C) - 許容電流: 50A',
         category: 'CV',
         cores: '4C',
         size: '8',
@@ -529,6 +566,7 @@ export const cableData = [
         standard: 'JIS C 3605'
     },
     {
+        name: '14 sq (3C) - 許容電流: 75A',
         category: 'CV',
         cores: '3C',
         size: '14',
@@ -543,6 +581,7 @@ export const cableData = [
         standard: 'JIS C 3605'
     },
     {
+        name: '14 sq (4C) - 許容電流: 71A',
         category: 'CV',
         cores: '4C',
         size: '14',
@@ -557,6 +596,7 @@ export const cableData = [
         standard: 'JIS C 3605'
     },
     {
+        name: '22 sq (3C) - 許容電流: 98A',
         category: 'CV',
         cores: '3C',
         size: '22',
@@ -571,6 +611,7 @@ export const cableData = [
         standard: 'JIS C 3605'
     },
     {
+        name: '22 sq (4C) - 許容電流: 91A',
         category: 'CV',
         cores: '4C',
         size: '22',
@@ -585,6 +626,7 @@ export const cableData = [
         standard: 'JIS C 3605'
     },
     {
+        name: '38 sq (3C) - 許容電流: 136A',
         category: 'CV',
         cores: '3C',
         size: '38',
@@ -599,6 +641,7 @@ export const cableData = [
         standard: 'JIS C 3605'
     },
     {
+        name: '38 sq (4C) - 許容電流: 129A',
         category: 'CV',
         cores: '4C',
         size: '38',
@@ -615,6 +658,7 @@ export const cableData = [
 
     // --- CVT ---
     {
+        name: '8 sq - 許容電流: 61A',
         category: 'CVT',
         cores: '-',
         size: '8',
@@ -629,6 +673,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '14 sq - 許容電流: 88A',
         category: 'CVT',
         cores: '-',
         size: '14',
@@ -643,6 +688,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '22 sq - 許容電流: 115A',
         category: 'CVT',
         cores: '-',
         size: '22',
@@ -657,6 +703,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '38 sq - 許容電流: 162A',
         category: 'CVT',
         cores: '-',
         size: '38',
@@ -671,6 +718,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '60 sq - 許容電流: 217A',
         category: 'CVT',
         cores: '-',
         size: '60',
@@ -685,6 +733,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '100 sq - 許容電流: 298A',
         category: 'CVT',
         cores: '-',
         size: '100',
@@ -699,6 +748,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '150 sq - 許容電流: 395A',
         category: 'CVT',
         cores: '-',
         size: '150',
@@ -713,6 +763,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '200 sq - 許容電流: 481A',
         category: 'CVT',
         cores: '-',
         size: '200',
@@ -727,6 +778,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '250 sq - 許容電流: 556A',
         category: 'CVT',
         cores: '-',
         size: '250',
@@ -741,6 +793,7 @@ export const cableData = [
         standard: 'フジクラ・ダイヤケーブル'
     },
     {
+        name: '325 sq - 許容電流: 650A',
         category: 'CVT',
         cores: '-',
         size: '325',
@@ -757,6 +810,7 @@ export const cableData = [
 
     // --- 6.6kV CVT ---
     {
+        name: '22 sq - 許容電流: 120A',
         category: '6.6kV CVT',
         cores: '-',
         size: '22',
@@ -771,6 +825,7 @@ export const cableData = [
         standard: 'JIS C 3606'
     },
     {
+        name: '38 sq - 許容電流: 170A',
         category: '6.6kV CVT',
         cores: '-',
         size: '38',
@@ -785,6 +840,7 @@ export const cableData = [
         standard: 'JIS C 3606'
     },
     {
+        name: '60 sq - 許容電流: 225A',
         category: '6.6kV CVT',
         cores: '-',
         size: '60',
@@ -799,6 +855,7 @@ export const cableData = [
         standard: 'JIS C 3606'
     },
     {
+        name: '100 sq - 許容電流: 310A',
         category: '6.6kV CVT',
         cores: '-',
         size: '100',
@@ -813,6 +870,7 @@ export const cableData = [
         standard: 'JIS C 3606'
     },
     {
+        name: '150 sq - 許容電流: 405A',
         category: '6.6kV CVT',
         cores: '-',
         size: '150',
@@ -827,6 +885,7 @@ export const cableData = [
         standard: 'JIS C 3606'
     },
     {
+        name: '200 sq - 許容電流: 485A',
         category: '6.6kV CVT',
         cores: '-',
         size: '200',
@@ -841,6 +900,7 @@ export const cableData = [
         standard: 'JIS C 3606'
     },
     {
+        name: '250 sq - 許容電流: 560A',
         category: '6.6kV CVT',
         cores: '-',
         size: '250',
@@ -855,6 +915,7 @@ export const cableData = [
         standard: 'JIS C 3606'
     },
     {
+        name: '325 sq - 許容電流: 660A',
         category: '6.6kV CVT',
         cores: '-',
         size: '325',
@@ -871,6 +932,7 @@ export const cableData = [
 
     // --- CPEV ---
     {
+        name: '0.65 mm (1P)',
         category: 'CPEV',
         cores: '1P',
         size: '0.65',
@@ -885,6 +947,7 @@ export const cableData = [
         standard: 'JCS 5224準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.65 mm (2P)',
         category: 'CPEV',
         cores: '2P',
         size: '0.65',
@@ -899,6 +962,7 @@ export const cableData = [
         standard: 'JCS 5224準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.65 mm (3P)',
         category: 'CPEV',
         cores: '3P',
         size: '0.65',
@@ -913,6 +977,7 @@ export const cableData = [
         standard: 'JCS 5224準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.65 mm (5P)',
         category: 'CPEV',
         cores: '5P',
         size: '0.65',
@@ -927,6 +992,7 @@ export const cableData = [
         standard: 'JCS 5224準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.65 mm (10P)',
         category: 'CPEV',
         cores: '10P',
         size: '0.65',
@@ -941,6 +1007,7 @@ export const cableData = [
         standard: 'JCS 5224準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (1P)',
         category: 'CPEV',
         cores: '1P',
         size: '0.9',
@@ -955,6 +1022,7 @@ export const cableData = [
         standard: 'JCS 5224準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (3P)',
         category: 'CPEV',
         cores: '3P',
         size: '0.9',
@@ -969,6 +1037,7 @@ export const cableData = [
         standard: 'JCS 5224準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (5P)',
         category: 'CPEV',
         cores: '5P',
         size: '0.9',
@@ -983,6 +1052,7 @@ export const cableData = [
         standard: 'JCS 5224準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (10P)',
         category: 'CPEV',
         cores: '10P',
         size: '0.9',
@@ -999,6 +1069,7 @@ export const cableData = [
 
     // --- F-CPEV ---
     {
+        name: '0.65 mm (1P)',
         category: 'F-CPEV',
         cores: '1P',
         size: '0.65',
@@ -1013,6 +1084,7 @@ export const cableData = [
         standard: 'JCS 4364準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.65 mm (2P)',
         category: 'F-CPEV',
         cores: '2P',
         size: '0.65',
@@ -1027,6 +1099,7 @@ export const cableData = [
         standard: 'JCS 4364準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.65 mm (3P)',
         category: 'F-CPEV',
         cores: '3P',
         size: '0.65',
@@ -1041,6 +1114,7 @@ export const cableData = [
         standard: 'JCS 4364準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.65 mm (5P)',
         category: 'F-CPEV',
         cores: '5P',
         size: '0.65',
@@ -1055,6 +1129,7 @@ export const cableData = [
         standard: 'JCS 4364準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.65 mm (10P)',
         category: 'F-CPEV',
         cores: '10P',
         size: '0.65',
@@ -1069,6 +1144,7 @@ export const cableData = [
         standard: 'JCS 4364準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (1P)',
         category: 'F-CPEV',
         cores: '1P',
         size: '0.9',
@@ -1083,6 +1159,7 @@ export const cableData = [
         standard: 'JCS 4364準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (3P)',
         category: 'F-CPEV',
         cores: '3P',
         size: '0.9',
@@ -1097,6 +1174,7 @@ export const cableData = [
         standard: 'JCS 4364準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (5P)',
         category: 'F-CPEV',
         cores: '5P',
         size: '0.9',
@@ -1111,6 +1189,7 @@ export const cableData = [
         standard: 'JCS 4364準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (10P)',
         category: 'F-CPEV',
         cores: '10P',
         size: '0.9',
@@ -1125,6 +1204,7 @@ export const cableData = [
         standard: 'JCS 4364準拠 (冨士/伸興参考)'
     },
     {
+        name: '1.2 mm (1P)',
         category: 'F-CPEV',
         cores: '1P',
         size: '1.2',
@@ -1141,6 +1221,7 @@ export const cableData = [
 
     // --- HP ---
     {
+        name: '0.9 mm (2C)',
         category: 'HP',
         cores: '2C',
         size: '0.9',
@@ -1155,6 +1236,7 @@ export const cableData = [
         standard: 'JCS 3501準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (3C)',
         category: 'HP',
         cores: '3C',
         size: '0.9',
@@ -1169,6 +1251,7 @@ export const cableData = [
         standard: 'JCS 3501準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (4C)',
         category: 'HP',
         cores: '4C',
         size: '0.9',
@@ -1183,6 +1266,7 @@ export const cableData = [
         standard: 'JCS 3501準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (5C)',
         category: 'HP',
         cores: '5C',
         size: '0.9',
@@ -1197,6 +1281,7 @@ export const cableData = [
         standard: 'JCS 3501準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (1P)',
         category: 'HP',
         cores: '1P',
         size: '0.9',
@@ -1211,6 +1296,7 @@ export const cableData = [
         standard: 'JCS 3501準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (2P)',
         category: 'HP',
         cores: '2P',
         size: '0.9',
@@ -1225,6 +1311,7 @@ export const cableData = [
         standard: 'JCS 3501準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (3P)',
         category: 'HP',
         cores: '3P',
         size: '0.9',
@@ -1239,6 +1326,7 @@ export const cableData = [
         standard: 'JCS 3501準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (5P)',
         category: 'HP',
         cores: '5P',
         size: '0.9',
@@ -1253,6 +1341,7 @@ export const cableData = [
         standard: 'JCS 3501準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (10P)',
         category: 'HP',
         cores: '10P',
         size: '0.9',
@@ -1267,6 +1356,7 @@ export const cableData = [
         standard: 'JCS 3501準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (20P)',
         category: 'HP',
         cores: '20P',
         size: '0.9',
@@ -1281,6 +1371,7 @@ export const cableData = [
         standard: 'JCS 3501準拠 (冨士/伸興参考)'
     },
     {
+        name: '1.2 mm (2C)',
         category: 'HP',
         cores: '2C',
         size: '1.2',
@@ -1295,6 +1386,7 @@ export const cableData = [
         standard: 'JCS 3501準拠 (冨士/伸興参考)'
     },
     {
+        name: '1.2 mm (3C)',
         category: 'HP',
         cores: '3C',
         size: '1.2',
@@ -1309,6 +1401,7 @@ export const cableData = [
         standard: 'JCS 3501準拠 (冨士/伸興参考)'
     },
     {
+        name: '1.2 mm (4C)',
         category: 'HP',
         cores: '4C',
         size: '1.2',
@@ -1323,6 +1416,7 @@ export const cableData = [
         standard: 'JCS 3501準拠 (冨士/伸興参考)'
     },
     {
+        name: '1.2 mm (5C)',
         category: 'HP',
         cores: '5C',
         size: '1.2',
@@ -1337,6 +1431,7 @@ export const cableData = [
         standard: 'JCS 3501準拠 (冨士/伸興参考)'
     },
     {
+        name: '1.2 mm (1P)',
         category: 'HP',
         cores: '1P',
         size: '1.2',
@@ -1351,6 +1446,7 @@ export const cableData = [
         standard: 'JCS 3501準拠 (冨士/伸興参考)'
     },
     {
+        name: '1.2 mm (2P)',
         category: 'HP',
         cores: '2P',
         size: '1.2',
@@ -1365,6 +1461,7 @@ export const cableData = [
         standard: 'JCS 3501準拠 (冨士/伸興参考)'
     },
     {
+        name: '1.2 mm (3P)',
         category: 'HP',
         cores: '3P',
         size: '1.2',
@@ -1379,6 +1476,7 @@ export const cableData = [
         standard: 'JCS 3501準拠 (冨士/伸興参考)'
     },
     {
+        name: '1.2 mm (5P)',
         category: 'HP',
         cores: '5P',
         size: '1.2',
@@ -1393,6 +1491,7 @@ export const cableData = [
         standard: 'JCS 3501準拠 (冨士/伸興参考)'
     },
     {
+        name: '1.2 mm (10P)',
         category: 'HP',
         cores: '10P',
         size: '1.2',
@@ -1407,6 +1506,7 @@ export const cableData = [
         standard: 'JCS 3501準拠 (冨士/伸興参考)'
     },
     {
+        name: '1.2 mm (20P)',
         category: 'HP',
         cores: '20P',
         size: '1.2',
@@ -1423,6 +1523,7 @@ export const cableData = [
 
     // --- AE ---
     {
+        name: '0.65 mm (2C)',
         category: 'AE',
         cores: '2C',
         size: '0.65',
@@ -1437,6 +1538,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.65 mm (3C)',
         category: 'AE',
         cores: '3C',
         size: '0.65',
@@ -1451,6 +1553,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.65 mm (4C)',
         category: 'AE',
         cores: '4C',
         size: '0.65',
@@ -1465,6 +1568,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.65 mm (1P)',
         category: 'AE',
         cores: '1P',
         size: '0.65',
@@ -1479,6 +1583,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.65 mm (2P)',
         category: 'AE',
         cores: '2P',
         size: '0.65',
@@ -1493,6 +1598,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.65 mm (3P)',
         category: 'AE',
         cores: '3P',
         size: '0.65',
@@ -1507,6 +1613,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.65 mm (5P)',
         category: 'AE',
         cores: '5P',
         size: '0.65',
@@ -1521,6 +1628,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.65 mm (10P)',
         category: 'AE',
         cores: '10P',
         size: '0.65',
@@ -1535,6 +1643,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.65 mm (20P)',
         category: 'AE',
         cores: '20P',
         size: '0.65',
@@ -1549,6 +1658,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (2C)',
         category: 'AE',
         cores: '2C',
         size: '0.9',
@@ -1563,6 +1673,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (3C)',
         category: 'AE',
         cores: '3C',
         size: '0.9',
@@ -1577,6 +1688,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (4C)',
         category: 'AE',
         cores: '4C',
         size: '0.9',
@@ -1591,6 +1703,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (1P)',
         category: 'AE',
         cores: '1P',
         size: '0.9',
@@ -1605,6 +1718,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (2P)',
         category: 'AE',
         cores: '2P',
         size: '0.9',
@@ -1619,6 +1733,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (3P)',
         category: 'AE',
         cores: '3P',
         size: '0.9',
@@ -1633,6 +1748,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (5P)',
         category: 'AE',
         cores: '5P',
         size: '0.9',
@@ -1647,6 +1763,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (10P)',
         category: 'AE',
         cores: '10P',
         size: '0.9',
@@ -1661,6 +1778,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '0.9 mm (20P)',
         category: 'AE',
         cores: '20P',
         size: '0.9',
@@ -1675,6 +1793,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '1.2 mm (2C)',
         category: 'AE',
         cores: '2C',
         size: '1.2',
@@ -1689,6 +1808,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '1.2 mm (3C)',
         category: 'AE',
         cores: '3C',
         size: '1.2',
@@ -1703,6 +1823,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '1.2 mm (4C)',
         category: 'AE',
         cores: '4C',
         size: '1.2',
@@ -1717,6 +1838,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '1.2 mm (1P)',
         category: 'AE',
         cores: '1P',
         size: '1.2',
@@ -1731,6 +1853,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '1.2 mm (2P)',
         category: 'AE',
         cores: '2P',
         size: '1.2',
@@ -1745,6 +1868,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '1.2 mm (3P)',
         category: 'AE',
         cores: '3P',
         size: '1.2',
@@ -1759,6 +1883,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '1.2 mm (5P)',
         category: 'AE',
         cores: '5P',
         size: '1.2',
@@ -1773,6 +1898,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '1.2 mm (10P)',
         category: 'AE',
         cores: '10P',
         size: '1.2',
@@ -1787,6 +1913,7 @@ export const cableData = [
         standard: 'JCS 4396準拠 (冨士/伸興参考)'
     },
     {
+        name: '1.2 mm (20P)',
         category: 'AE',
         cores: '20P',
         size: '1.2',
@@ -1875,6 +2002,7 @@ export const cableData = [
 
     // --- VCTF (ビニルキャブタイヤコード) ---
     {
+        name: '0.75 sq (2C) - 許容電流: 7A',
         category: 'VCTF',
         cores: '2C',
         size: '0.75',
@@ -1889,6 +2017,7 @@ export const cableData = [
         standard: 'JIS C 3306'
     },
     {
+        name: '0.75 sq (3C) - 許容電流: 7A',
         category: 'VCTF',
         cores: '3C',
         size: '0.75',
@@ -1903,6 +2032,7 @@ export const cableData = [
         standard: 'JIS C 3306'
     },
     {
+        name: '0.75 sq (4C) - 許容電流: 7A',
         category: 'VCTF',
         cores: '4C',
         size: '0.75',
@@ -1917,6 +2047,7 @@ export const cableData = [
         standard: 'JIS C 3306'
     },
     {
+        name: '1.25 sq (2C) - 許容電流: 12A',
         category: 'VCTF',
         cores: '2C',
         size: '1.25',
@@ -1931,6 +2062,7 @@ export const cableData = [
         standard: 'JIS C 3306'
     },
     {
+        name: '1.25 sq (3C) - 許容電流: 12A',
         category: 'VCTF',
         cores: '3C',
         size: '1.25',
@@ -1945,6 +2077,7 @@ export const cableData = [
         standard: 'JIS C 3306'
     },
     {
+        name: '1.25 sq (4C) - 許容電流: 12A',
         category: 'VCTF',
         cores: '4C',
         size: '1.25',
@@ -1959,6 +2092,7 @@ export const cableData = [
         standard: 'JIS C 3306'
     },
     {
+        name: '2.0 sq (2C) - 許容電流: 17A',
         category: 'VCTF',
         cores: '2C',
         size: '2.0',
@@ -1973,6 +2107,7 @@ export const cableData = [
         standard: 'JIS C 3306'
     },
     {
+        name: '2.0 sq (3C) - 許容電流: 17A',
         category: 'VCTF',
         cores: '3C',
         size: '2.0',
@@ -1987,6 +2122,7 @@ export const cableData = [
         standard: 'JIS C 3306'
     },
     {
+        name: '2.0 sq (4C) - 許容電流: 17A',
         category: 'VCTF',
         cores: '4C',
         size: '2.0',
@@ -2001,6 +2137,7 @@ export const cableData = [
         standard: 'JIS C 3306'
     },
     {
+        name: '3.5 sq (2C) - 許容電流: 23A',
         category: 'VCTF',
         cores: '2C',
         size: '3.5',
@@ -2015,6 +2152,7 @@ export const cableData = [
         standard: 'JIS C 3306'
     },
     {
+        name: '3.5 sq (3C) - 許容電流: 23A',
         category: 'VCTF',
         cores: '3C',
         size: '3.5',
@@ -2029,6 +2167,7 @@ export const cableData = [
         standard: 'JIS C 3306'
     },
     {
+        name: '3.5 sq (4C) - 許容電流: 23A',
         category: 'VCTF',
         cores: '4C',
         size: '3.5',
@@ -2043,6 +2182,7 @@ export const cableData = [
         standard: 'JIS C 3306'
     },
     {
+        name: '5.5 sq (2C) - 許容電流: 32A',
         category: 'VCTF',
         cores: '2C',
         size: '5.5',
@@ -2057,6 +2197,7 @@ export const cableData = [
         standard: 'JIS C 3306'
     },
     {
+        name: '5.5 sq (3C) - 許容電流: 32A',
         category: 'VCTF',
         cores: '3C',
         size: '5.5',
@@ -2071,6 +2212,7 @@ export const cableData = [
         standard: 'JIS C 3306'
     },
     {
+        name: '5.5 sq (4C) - 許容電流: 32A',
         category: 'VCTF',
         cores: '4C',
         size: '5.5',
