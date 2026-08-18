@@ -67,6 +67,12 @@ const handleKeydown = (event: KeyboardEvent) => {
   if (props.disabled) return;
 
   switch (event.key) {
+    case "Delete":
+    case "Backspace":
+      event.preventDefault();
+      model.value = undefined;
+      isOpen.value = false;
+      break;
     case "Enter":
     case " ":
       event.preventDefault();

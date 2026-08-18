@@ -45,8 +45,8 @@
       align-items: center;
       justify-content: center;
       padding: 0 var(--space-3);
-      background-color: theme-color(var(--color-category-main), 15%);
-      border: var(--border-width-base) solid theme-color(var(--color-category-main), 50%);
+      border: var(--border-width-base) solid
+        theme-color(var(--color-category-main), 50%);
       border-left: none;
       box-shadow: var(--edge-reflex-base), var(--shadow-sink);
       color: var(--color-text-main);
