@@ -213,8 +213,6 @@ function _getAmbientTempDerating(baseTempStr: string | number, maxTempStr: strin
     return Math.sqrt((max - ambientTemp) / (max - base));
 }
 
-// _str は mathUtils.ts の formatVal / hlVal に移行したため削除
-
 /**
  * 対象となるケーブルの定義データを取得する
  * @param {Object} inputs - ユーザー入力データ
@@ -246,64 +244,45 @@ function _getTargetCable(inputs: Record<string, any>, result: Record<string, any
  */
 function _getTempDeratingFormula(inputs: Record<string, any>, result: Record<string, any> | null, cables: Record<string, any>[]) {
     const targetCable = _getTargetCable(inputs, result, cables);
-    if (!targetCable) {
-        if (inputs.ambientTemp === null) {
-            return {
-                tex: `\\begin{aligned} I_0' &= I_0 \\\\ &= \\textcolor{#10b77f}{${inputs.I || 0}} \\text{ A (温度補正なし)} \\end{aligned}`,
-                leg: [
-                    "\\( I_0' \\): 補正後許容電流 [A]",
-                    '\\( I_0 \\): 許容電流 [A]'
-                ]
-            };
-        } else {
-            const tex = `k = \\sqrt{\\frac{\\theta_{max} - \\theta_{amb}}{\\theta_{max} - \\theta_{base}}}`;
-            const leg = [
-                '\\( k \\): 温度補正係数',
-                '\\( \\theta_{max} \\): ケーブルの最高許容温度 [℃]',
-                '\\( \\theta_{base} \\): 基底温度 [℃]',
-                '\\( \\theta_{amb} \\): 周囲温度 [℃]'
-            ];
-            return { tex, leg };
-        }
+    const amb = inputs.ambientTemp;
+
+    const leg = [
+        "\\( I_0' \\): 補正後許容電流 [A]",
+        '\\( I_0 \\): 基準許容電流 [A]'
+    ];
+
+    const I_0_val = targetCable && targetCable.ampacity ? parseFloat(targetCable.ampacity).toString() : 'I_0';
+
+    if (amb === null) {
+        const resultVal = targetCable && targetCable.ampacity ? `\\textcolor{#10b77f}{${I_0_val}} \\text{ A}` : `\\text{-- A}`;
+        const tex = `\\begin{aligned} I_0' &= I_0 \\\\ &= ${I_0_val} \\text{ A (温度補正なし)} \\\\ &= ${resultVal} \\end{aligned}`;
+        return { tex, leg };
     }
 
-    const baseAmp = parseFloat(targetCable.ampacity);
-    const amb = inputs.ambientTemp || 0;
+    leg.push(
+        '\\( \\theta_{max} \\): 最高許容温度 [℃]',
+        '\\( \\theta_{base} \\): 基底温度 [℃]',
+        '\\( \\theta_{amb} \\): 周囲温度 [℃]'
+    );
 
-    if (inputs.ambientTemp === null) {
-        return {
-            tex: `I_0' = \\textcolor{#10b77f}{${baseAmp}} \\text{ A} \\quad \\text{(温度補正なし)}`,
-            leg: ["\\( I_0' \\): 補正後許容電流 [A]"]
-        };
-    }
+    const max_val = targetCable && targetCable.maxTemp ? parseFloat(targetCable.maxTemp).toString() : '\\theta_{max}';
+    const base_val = targetCable && targetCable.baseTemp ? parseFloat(targetCable.baseTemp).toString() : '\\theta_{base}';
+    const amb_val = amb.toString();
 
-    const max = parseFloat(targetCable.maxTemp);
-    const base = parseFloat(targetCable.baseTemp);
-
-    let k;
     let resultVal = '\\text{-- A}';
-    if (result && result.tempDerating) k = result.tempDerating;
-    else k = _getAmbientTempDerating(targetCable.baseTemp, targetCable.maxTemp, amb);
-    
-    if (!isNaN(max) && !isNaN(base)) {
+    if (targetCable && targetCable.maxTemp && targetCable.baseTemp && !isNaN(parseFloat(targetCable.maxTemp)) && !isNaN(parseFloat(targetCable.baseTemp))) {
+        const baseAmp = parseFloat(targetCable.ampacity);
+        const max = parseFloat(targetCable.maxTemp);
+        const base = parseFloat(targetCable.baseTemp);
+        let k;
+        if (result && result.tempDerating) k = result.tempDerating;
+        else k = _getAmbientTempDerating(base, max, amb);
+        
         const tempAmp = baseAmp * k;
         resultVal = `\\textcolor{#10b77f}{${tempAmp.toFixed(1)}} \\text{ A}`;
     }
 
-    if (isNaN(max) || isNaN(base)) {
-        return { tex: '\\text{温度補正不可}', leg: [] };
-    }
-
-    const ambHl = hlVal(amb, '\\theta_{amb}', 1);
-    const tex = `\\begin{aligned} I_0' &= I_0 \\times \\sqrt{\\frac{\\theta_{max} - \\theta_{amb}}{\\theta_{max} - \\theta_{base}}} \\\\ &= ${baseAmp} \\times \\sqrt{\\frac{${max} - ${ambHl}}{${max} - ${base}}} \\\\ &= ${resultVal} \\end{aligned}`;
-
-    const leg = [
-        "\\( I_0' \\): 補正後許容電流 [A]",
-        '\\( I_0 \\): 基準許容電流 [A]',
-        '\\( \\theta_{max} \\): 最高許容温度 (' + max + '℃)',
-        '\\( \\theta_{base} \\): 基底温度 (' + base + '℃)',
-        '\\( \\theta_{amb} \\): 周囲温度 (' + amb + '℃)'
-    ];
+    const tex = `\\begin{aligned} I_0' &= I_0 \\times \\sqrt{\\frac{\\theta_{max} - \\theta_{amb}}{\\theta_{max} - \\theta_{base}}} \\\\ &= ${I_0_val} \\times \\sqrt{\\frac{${max_val} - ${amb_val}}{${max_val} - ${base_val}}} \\\\ &= ${resultVal} \\end{aligned}`;
 
     return { tex, leg };
 }
