@@ -34,23 +34,22 @@
   &__append {
     display: flex;
 
-    /* AppSelect や addon のボーダーと角丸を調整 */
-    :deep(select),
+    /* AppSelect のボタンや addon のボーダーを調整 */
+    :deep(.c-custom-select__value),
     :deep(.c-input-addon) {
       border-left: none;
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
     }
 
     :deep(.c-input-addon) {
       display: inline-flex;
       align-items: center;
-      padding: var(--space-3);
-      background: var(--color-bg-base);
-      border: var(--border-width-base) solid var(--color-border);
+      justify-content: center;
+      padding: 0 var(--space-3);
+      background-color: theme-color(var(--color-category-main), 15%);
+      border: var(--border-width-base) solid theme-color(var(--color-category-main), 50%);
       border-left: none;
-      border-radius: 0 var(--radius-base) var(--radius-base) 0;
-      color: var(--color-text-muted);
+      box-shadow: var(--edge-reflex-base), var(--shadow-sink);
+      color: var(--color-text-main);
       font-size: var(--font-size-sm);
       white-space: nowrap;
     }
