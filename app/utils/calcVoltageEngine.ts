@@ -412,7 +412,7 @@ function _getThermalLimitFormula(inputs: Record<string, any>, result: Record<str
         resultLine = `\\textcolor{#10b77f}{${effAmp}} \\text{ A (}${targetCable.size}\\text{${unitStr}}${parallelStr}\\text{)}`;
     }
 
-    const I_str_left = I !== null && I !== undefined ? I.toFixed(1) : '--';
+    const I_str_left = I !== null && I !== undefined ? I.toFixed(1) : '\\text{--}';
     const tex = `\\begin{aligned} I \\text{ A} &\\le ${rightSideSymbol} \\\\ ${I_str_left} \\text{ A} &\\le ${rightSideSubst} \\\\ ${I_str_left} \\text{ A} &\\le ${resultLine} \\end{aligned}`;
 
     return { tex, leg };
