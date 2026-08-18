@@ -119,10 +119,12 @@ const dropStatusClass = computed(() => {
 <style scoped lang="scss">
 .c-voltage-result {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  padding: var(--space-4);
+  flex-direction: row;
+  align-items: stretch;
+  gap: var(--space-3);
+  padding: var(--space-2);
   flex: 1;
+  min-height: 0;
 
   // ステータスカラー定義
   .is-neutral {
@@ -149,18 +151,19 @@ const dropStatusClass = computed(() => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: var(--space-4);
+    padding: var(--space-3);
     background: rgb(0 0 0 / 20%);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     box-shadow: inset 0 0 20px rgb(0 0 0 / 50%);
     flex: 1;
+    min-width: 0;
   }
 
   &__main-label {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-xs);
     color: var(--color-text-secondary);
-    margin-bottom: var(--space-2);
+    margin-bottom: var(--space-1);
     text-transform: uppercase;
     letter-spacing: 0.1em;
   }
@@ -172,38 +175,42 @@ const dropStatusClass = computed(() => {
     font-family: var(--font-family-mono);
 
     .value-text {
-      font-size: 3rem;
+      font-size: 2.5rem;
       font-weight: var(--font-weight-bold);
       line-height: 1;
     }
 
     .value-unit {
-      font-size: var(--font-size-lg);
+      font-size: var(--font-size-md);
       font-weight: var(--font-weight-bold);
       opacity: 0.8;
     }
   }
 
   &__metrics {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: var(--space-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    min-width: 220px;
+    flex-shrink: 0;
   }
 
   .metric-card {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: var(--space-3);
+    justify-content: center;
+    padding: var(--space-2);
     background: rgb(255 255 255 / 2%);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
+    flex: 1;
   }
 
   .metric-label {
     font-size: var(--font-size-xs);
     color: var(--color-text-muted);
-    margin-bottom: var(--space-2);
+    margin-bottom: var(--space-1);
   }
 
   .metric-value {
@@ -211,17 +218,17 @@ const dropStatusClass = computed(() => {
     align-items: baseline;
     gap: var(--space-1);
     font-family: var(--font-family-mono);
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-md);
     font-weight: var(--font-weight-bold);
 
     .value-sep {
       color: var(--color-text-muted);
-      margin: 0 var(--space-1);
+      margin: 0 2px;
       font-weight: normal;
     }
 
     .value-unit {
-      font-size: var(--font-size-sm);
+      font-size: var(--font-size-xs);
       opacity: 0.8;
     }
   }
