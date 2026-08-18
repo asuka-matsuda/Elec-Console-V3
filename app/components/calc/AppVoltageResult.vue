@@ -130,15 +130,7 @@ const dropStatusClass = computed(() => {
         </div>
       </div>
 
-      <!-- 判定結果 (dropモード) -->
-      <div v-else class="metric-card">
-        <div class="metric-label">許容電流判定</div>
-        <div class="metric-value" :class="ampStatusClass">
-          <span class="value-text" style="font-size: 1.25rem; font-weight: bold;">
-            {{ !isReady ? "ーー" : (props.inputs.I <= props.result!.finalEffAmp ? "OK" : "NG (容量不足)") }}
-          </span>
-        </div>
-      </div>
+
     </div>
   </div>
 </template>
