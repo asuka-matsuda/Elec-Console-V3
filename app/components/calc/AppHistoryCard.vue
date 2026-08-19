@@ -71,7 +71,7 @@ const handleDelete = () => {
 .c-history-card {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--gap-component);
 
   /* Status Accents */
   &.is-error {
@@ -118,7 +118,7 @@ const handleDelete = () => {
 
   &__body {
     display: grid;
-    gap: var(--space-4);
+    gap: var(--gap-component);
     grid-template-columns: 1fr 1fr; // デスクトップファースト
 
     @include mq("md") {

@@ -107,7 +107,7 @@ const handleClearAll = () => {
 .p-history-page {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--gap-section);
 
   &__tabs {
     margin-bottom: var(--space-6);
@@ -115,7 +115,7 @@ const handleClearAll = () => {
 
   &__grid {
     display: grid;
-    gap: var(--space-4);
+    gap: var(--gap-component);
     
     // デスクトップファーストのレイアウト
     grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
