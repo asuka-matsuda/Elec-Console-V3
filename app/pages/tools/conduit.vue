@@ -124,8 +124,8 @@ const handleSave = async () => {
       <AppCalculationBasisPanel :steps="mathSteps">
         <div class="p-basis-note">
           <strong>内線規程（勧告）</strong><br>
-          3110-5　管の屈曲が少なく、容易に電線を引き入れ及び引き替えることができる場合（48％）<br>
-          3110-6　異なる太さの絶縁電線を同一管内に収める場合（32％）
+          3110-5 管の屈曲が少なく、容易に電線を引き入れ及び引き替えることができる場合（48％）<br>
+          3110-6 異なる太さの絶縁電線を同一管内に収める場合（32％）
         </div>
       </AppCalculationBasisPanel>
     </template>
