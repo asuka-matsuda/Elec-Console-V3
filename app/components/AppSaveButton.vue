@@ -37,7 +37,7 @@ const handleClick = async () => {
   <AppButton
     :disabled="disabled || state !== 'idle'"
     :size="size || 'sm'"
-    _variant="primary"
+    _variant="success"
     class="c-save-button"
     :class="{ [`is-${state}`]: true }"
     @click="handleClick"
