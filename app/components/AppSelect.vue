@@ -22,6 +22,7 @@ const selectRef = ref<HTMLElement | null>(null);
 const focusedIndex = ref(-1);
 const dynamicPlacement = ref<"top" | "bottom">("bottom");
 const dropdownStyle = ref<Record<string, string>>({});
+const isMounted = ref(false);
 
 const calculatePlacement = () => {
   if (!selectRef.value) return;
@@ -70,6 +71,7 @@ const handleGlobalScroll = (e: Event) => {
 };
 
 onMounted(() => {
+  isMounted.value = true;
   window.addEventListener("scroll", handleGlobalScroll, { capture: true, passive: true });
   window.addEventListener("resize", calculatePlacement, { passive: true });
 });
@@ -84,8 +86,14 @@ const selectedOption = computed(() => {
 });
 
 const displayLabel = computed(() => {
+  if (!isMounted.value) return props.placeholder || "";
   if (selectedOption.value) return selectedOption.value.label;
   return props.placeholder || "";
+});
+
+const isPlaceholder = computed(() => {
+  if (!isMounted.value) return !!props.placeholder;
+  return !selectedOption.value && !!props.placeholder;
 });
 
 const toggleDropdown = () => {
@@ -208,7 +216,7 @@ const listboxId = useId();
       type="button"
       class="c-custom-select__value"
       :class="{
-        'is-placeholder': !selectedOption && placeholder,
+        'is-placeholder': isPlaceholder,
         'is-active': isOpen,
       }"
       :disabled="disabled"
@@ -228,7 +236,7 @@ const listboxId = useId();
           <div v-if="isOpen" class="c-custom-select__dropdown" :class="[`is-${dynamicPlacement}`]" :style="dropdownStyle">
             <ul :id="listboxId" class="c-custom-select__list" role="listbox">
               <li
-                v-if="placeholder && !selectedOption"
+                v-if="isPlaceholder"
                 class="c-custom-select__option is-placeholder"
                 role="option"
                 aria-selected="false"

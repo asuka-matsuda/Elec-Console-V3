@@ -128,22 +128,36 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
     min-width: 0;
     font-size: 1.1em;
     overflow-x: auto;
+    
+    // スクロールバー自体は非表示にしつつスクロールは可能にする
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
 
     --scrollbar-size: var(--size-2);
 
     :deep(.katex) {
       color: var(--color-text-main);
 
-      .tex-status-success {
-        color: var(--color-status-success) !important;
+      .tex-status-success,
+      .tex-status-success * {
+        color: var(--color-status-success);
       }
       
-      .tex-status-warning {
-        color: var(--color-status-warning) !important;
+      .tex-status-warning,
+      .tex-status-warning * {
+        color: var(--color-status-warning);
       }
       
-      .tex-status-danger {
-        color: var(--color-status-danger) !important;
+      .tex-status-danger,
+      .tex-status-danger * {
+        color: var(--color-status-danger);
+      }
+
+      .tex-color-accent,
+      .tex-color-accent * {
+        color: var(--color-accent-main);
       }
     }
 

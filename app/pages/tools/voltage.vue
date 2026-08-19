@@ -20,6 +20,7 @@ const {
   calcInputs,
   calcResult,
   mathSteps,
+  openResetModal
 } = useVoltageCalculator();
 
 const formFields = computed(() =>
@@ -43,9 +44,7 @@ const handleSaveToHistory = async () => {
 
 <template>
   <AppToolLayout>
-    <template #disclaimer>
-      <AppDisclaimer />
-    </template>
+
 
     <template #results>
       <AppToolResultPanel
@@ -60,7 +59,7 @@ const handleSaveToHistory = async () => {
     </template>
 
     <template #inputs>
-      <AppToolInputPanel @reset="isResetModalOpen = true">
+      <AppToolInputPanel @reset="openResetModal">
         <!-- 1. 計算モード切替 (AppRadioGroup) -->
         <AppRadioGroup v-model="form.mode" :options="modeOptions" />
 
@@ -112,29 +111,11 @@ const handleSaveToHistory = async () => {
             </AppFormGroup>
           </template>
         </div>
-      </AppToolInputPanel>
+        </AppToolInputPanel>
     </template>
 
     <template #basis>
-      <AppPanel
-        bracket-color="tool"
-        class="c-basis-panel"
-        style="flex: 1; min-height: 0"
-      >
-        <template #header>
-          <AppSectionHeader
-            title="計算根拠"
-            divider-type="fade-center"
-            icon="book"
-            variant="tool"
-            size="md"
-          />
-        </template>
-
-        <ClientOnly>
-          <AppMathBasis :steps="mathSteps" />
-        </ClientOnly>
-      </AppPanel>
+      <AppCalculationBasisPanel :steps="mathSteps" />
     </template>
   </AppToolLayout>
 
@@ -158,10 +139,4 @@ const handleSaveToHistory = async () => {
   }
 }
 
-/* 計算根拠エリアはスマホ表示時にカット */
-.c-basis-panel {
-  @include mq("md") {
-    display: none !important;
-  }
-}
 </style>

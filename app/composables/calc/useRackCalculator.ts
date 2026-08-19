@@ -1,39 +1,41 @@
-import { ref, computed } from 'vue';
-import { calculateRackSize } from '~/utils/calc/rack/rackCalcLogic';
+import { computed } from 'vue';
+import { calculateRackSize, generateMathData } from '~/utils/calc/rack/rackCalcLogic';
 import type { RackCableInput, RackCalcInputs, RackCalcResult } from '~/utils/calc/rack/rackCalcLogic';
 import { cableData } from '~/utils/data/cableData';
-import { useCalcHistory } from './useCalcHistory';
 import { mapRackToHistory } from '~/utils/calc/rack/historyMapper';
+import { useToolPage } from '~/composables/calc/useToolPage';
 
 export interface RackCableUIInput {
   id: string;
   category: string;
   size: string;
   cores: string;
-  count: number;
+  count: number | null;
 }
 
+export interface RackInputs {
+  isStrong: boolean;
+  isWeak: boolean;
+  lStrong: number | null;
+  lWeak: number | null;
+  rackHeight: number | null;
+  separatorWidth: number | null;
+  strongCablesUI: RackCableUIInput[];
+  weakCablesUI: RackCableUIInput[];
+}
+
+const defaultInputs: RackInputs = {
+  isStrong: true,
+  isWeak: false,
+  lStrong: null,
+  lWeak: null,
+  rackHeight: null,
+  separatorWidth: null,
+  strongCablesUI: [{ id: crypto.randomUUID(), category: '', size: '', cores: '', count: null }],
+  weakCablesUI: [{ id: crypto.randomUUID(), category: '', size: '', cores: '', count: null }]
+};
+
 export function useRackCalculator() {
-  const isStrong = ref(true);
-  const isWeak = ref(false);
-  const lStrong = ref(1);
-  const lWeak = ref(1);
-  const rackHeight = ref(70);
-  const separatorWidth = ref(30);
-
-  const strongCablesUI = ref<RackCableUIInput[]>([
-    { id: crypto.randomUUID(), category: '', size: '', cores: '', count: 1 }
-  ]);
-  const weakCablesUI = ref<RackCableUIInput[]>([
-    { id: crypto.randomUUID(), category: '', size: '', cores: '', count: 1 }
-  ]);
-
-  const { saveHistory } = useCalcHistory("elec_calc_rack_hist");
-
-  // maxDepth calculation
-  const maxDepth = computed(() => Math.max(1, rackHeight.value - 10));
-
-  // standard rack sizes (usually 100, 200, 300, 400, 500, 600, 800, 1000, 1200)
   const standardRackSizes = [100, 200, 300, 400, 500, 600, 800, 1000, 1200];
 
   function convertUIToRackCable(uiInput: RackCableUIInput): RackCableInput {
@@ -51,86 +53,105 @@ export function useRackCalculator() {
     return { d, n: uiInput.count };
   }
 
-  const result = computed<RackCalcResult>(() => {
-    const inputs: RackCalcInputs = {
-      isStrong: isStrong.value,
-      isWeak: isWeak.value,
-      lStrong: lStrong.value,
-      lWeak: lWeak.value,
-      rackHeight: rackHeight.value,
-      maxDepth: maxDepth.value,
-      strongCables: strongCablesUI.value.map(convertUIToRackCable),
-      weakCables: weakCablesUI.value.map(convertUIToRackCable),
-      separatorWidth: separatorWidth.value
-    };
-    return calculateRackSize(inputs, standardRackSizes);
-  });
+  const {
+    inputs,
+    result,
+    saveToHistory: handleSaveHistory,
+    resetInputs,
+    isResetModalOpen,
+    openResetModal,
+    confirmReset,
+  } = useToolPage<RackInputs, RackCalcResult>(
+    'rack',
+    'ケーブルラック選定',
+    defaultInputs,
+    (inputs) => {
+      const rH = inputs.rackHeight ?? 0;
+      const maxDepth = Math.max(1, rH - 10);
+      const logicInputs: RackCalcInputs = {
+        isStrong: inputs.isStrong,
+        isWeak: inputs.isWeak,
+        lStrong: inputs.lStrong ?? 1,
+        lWeak: inputs.lWeak ?? 1,
+        rackHeight: rH,
+        maxDepth: maxDepth,
+        strongCables: inputs.strongCablesUI.map(convertUIToRackCable),
+        weakCables: inputs.weakCablesUI.map(convertUIToRackCable),
+        separatorWidth: inputs.separatorWidth ?? 0
+      };
+      return calculateRackSize(logicInputs, standardRackSizes);
+    },
+    {
+      toHistory: (inputs, res) => {
+        const rH = inputs.rackHeight ?? 0;
+        const maxDepth = Math.max(1, rH - 10);
+        return mapRackToHistory(
+          {
+            isStrong: inputs.isStrong,
+            isWeak: inputs.isWeak,
+            lStrong: inputs.lStrong ?? 1,
+            lWeak: inputs.lWeak ?? 1,
+            rackHeight: rH,
+            maxDepth: maxDepth,
+            separatorWidth: inputs.separatorWidth ?? 0
+          },
+          inputs.strongCablesUI,
+          inputs.weakCablesUI,
+          res!
+        )!;
+      },
+      fromHistory: () => JSON.parse(JSON.stringify(defaultInputs))
+    }
+  );
+
+  const maxDepth = computed(() => Math.max(1, (inputs.value.rackHeight ?? 0) - 10));
 
   function addStrongCable() {
-    strongCablesUI.value.push({ id: crypto.randomUUID(), category: '', size: '', cores: '', count: 1 });
+    inputs.value.strongCablesUI.push({ id: crypto.randomUUID(), category: '', size: '', cores: '', count: 1 });
   }
 
   function removeStrongCable(id: string) {
-    if (strongCablesUI.value.length <= 1) return;
-    strongCablesUI.value = strongCablesUI.value.filter((c) => c.id !== id);
+    if (inputs.value.strongCablesUI.length <= 1) return;
+    inputs.value.strongCablesUI = inputs.value.strongCablesUI.filter((c) => c.id !== id);
   }
 
   function addWeakCable() {
-    weakCablesUI.value.push({ id: crypto.randomUUID(), category: '', size: '', cores: '', count: 1 });
+    inputs.value.weakCablesUI.push({ id: crypto.randomUUID(), category: '', size: '', cores: '', count: 1 });
   }
 
   function removeWeakCable(id: string) {
-    if (weakCablesUI.value.length <= 1) return;
-    weakCablesUI.value = weakCablesUI.value.filter((c) => c.id !== id);
+    if (inputs.value.weakCablesUI.length <= 1) return;
+    inputs.value.weakCablesUI = inputs.value.weakCablesUI.filter((c) => c.id !== id);
   }
 
-  function reset() {
-    isStrong.value = true;
-    isWeak.value = false;
-    lStrong.value = 1;
-    lWeak.value = 1;
-    rackHeight.value = 70;
-    separatorWidth.value = 30;
-    strongCablesUI.value = [{ id: crypto.randomUUID(), category: '', size: '', cores: '', count: 1 }];
-    weakCablesUI.value = [{ id: crypto.randomUUID(), category: '', size: '', cores: '', count: 1 }];
-  }
-
-  function handleSaveHistory() {
-    if (result.value.error || result.value.totalWidth === 0) return;
-    const historyData = mapRackToHistory(
-      {
-        isStrong: isStrong.value,
-        isWeak: isWeak.value,
-        lStrong: lStrong.value,
-        lWeak: lWeak.value,
-        rackHeight: rackHeight.value,
-        maxDepth: maxDepth.value,
-        separatorWidth: separatorWidth.value
-      },
-      strongCablesUI.value,
-      weakCablesUI.value,
-      result.value
-    );
-    if (historyData) {
-      saveHistory(historyData);
-    }
-  }
+  const mathSteps = computed(() => {
+    const logicInputs: RackCalcInputs = {
+      isStrong: inputs.value.isStrong,
+      isWeak: inputs.value.isWeak,
+      lStrong: inputs.value.lStrong ?? 1,
+      lWeak: inputs.value.lWeak ?? 1,
+      rackHeight: inputs.value.rackHeight ?? 0,
+      maxDepth: maxDepth.value,
+      strongCables: inputs.value.strongCablesUI.map(convertUIToRackCable),
+      weakCables: inputs.value.weakCablesUI.map(convertUIToRackCable),
+      separatorWidth: inputs.value.separatorWidth ?? 0
+    };
+    return generateMathData(logicInputs, result.value);
+  });
 
   return {
-    isStrong,
-    isWeak,
-    lStrong,
-    lWeak,
-    rackHeight,
-    separatorWidth,
-    strongCablesUI,
-    weakCablesUI,
+    inputs,
+    maxDepth,
     result,
     addStrongCable,
     removeStrongCable,
     addWeakCable,
     removeWeakCable,
-    reset,
-    handleSaveHistory
+    reset: resetInputs,
+    isResetModalOpen,
+    openResetModal,
+    confirmReset,
+    handleSaveHistory,
+    mathSteps
   };
 }

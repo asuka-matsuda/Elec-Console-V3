@@ -1,16 +1,10 @@
-import type { WeightCalcResult } from "./weightCalcLogic";
+import type { WeightCalcInputs, WeightCalcResult } from "./weightCalcLogic";
 import type { HistoryEntry } from "../history/types";
 import { formatCableName } from "../cableHelpers";
 import { cableData } from "~/utils/data/cableData";
 
 export function mapWeightToHistory(
-  settings: {
-    category: string;
-    size: string;
-    cores: string;
-    L_input: number;
-    K: number;
-  },
+  settings: WeightCalcInputs,
   result: WeightCalcResult
 ): Omit<HistoryEntry, "id" | "timestamp"> | null {
   if (result.error) return null;
@@ -28,7 +22,7 @@ export function mapWeightToHistory(
   const inputs = [
     { label: "対象ケーブル", value: name },
     { label: "ケーブル長", value: `${settings.L_input} m` },
-    { label: "占積率 (K)", value: `${(settings.K * 100).toFixed(0)}%` },
+    { label: "占積率 (K)", value: `${((settings.K ?? 0) * 100).toFixed(0)}%` },
   ];
 
   let status: HistoryEntry["status"] = "success";

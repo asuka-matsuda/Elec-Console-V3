@@ -1,67 +1,57 @@
-import { ref, computed } from 'vue';
-import { calculateWeightAndDrum } from '~/utils/calc/weight/weightCalcLogic';
+import { computed } from 'vue';
+import { calculateWeightAndDrum, generateMathData } from '~/utils/calc/weight/weightCalcLogic';
 import type { WeightCalcInputs, WeightCalcResult } from '~/utils/calc/weight/weightCalcLogic';
 import { cableData } from '~/utils/data/cableData';
 import { drumData } from '~/utils/data/drumData';
-import { useCalcHistory } from './useCalcHistory';
 import { mapWeightToHistory } from '~/utils/calc/weight/historyMapper';
+import { useToolPage } from '~/composables/calc/useToolPage';
+
+const defaultInputs: WeightCalcInputs = {
+  category: '',
+  size: '',
+  cores: '',
+  L_input: null,
+  K: null
+};
 
 export function useWeightCalculator() {
-  const category = ref('');
-  const size = ref('');
-  const cores = ref('');
-  const L_input = ref(100);
-  const K = ref(0.85);
 
-  const { saveHistory } = useCalcHistory("elec_calc_weight_hist");
-
-  const result = computed<WeightCalcResult>(() => {
-    if (!category.value || !size.value || !cores.value || L_input.value <= 0) {
-      return { error: true };
+  const {
+    inputs,
+    result,
+    saveToHistory: handleSaveHistory,
+    resetInputs,
+    isResetModalOpen,
+    openResetModal,
+    confirmReset,
+  } = useToolPage<WeightCalcInputs, WeightCalcResult>(
+    'weight',
+    'ドラムサイズ・重量計算',
+    defaultInputs,
+    (inputs) => {
+      if (!inputs.category || !inputs.size || !inputs.cores || !inputs.L_input || inputs.L_input <= 0 || !inputs.K) {
+        return { error: true };
+      }
+      return calculateWeightAndDrum(inputs, cableData, drumData);
+    },
+    {
+      toHistory: (inputs, res) => mapWeightToHistory(inputs, res!)!,
+      fromHistory: () => JSON.parse(JSON.stringify(defaultInputs))
     }
-    const inputs: WeightCalcInputs = {
-      category: category.value,
-      size: size.value,
-      cores: cores.value,
-      L_input: L_input.value,
-      K: K.value
-    };
-    return calculateWeightAndDrum(inputs, cableData, drumData);
+  );
+
+  const mathSteps = computed(() => {
+    return generateMathData(inputs.value, result.value, cableData);
   });
 
-  function reset() {
-    category.value = '';
-    size.value = '';
-    cores.value = '';
-    L_input.value = 100;
-    K.value = 0.85;
-  }
-
-  function handleSaveHistory() {
-    if (result.value.error) return;
-    const historyData = mapWeightToHistory(
-      {
-        category: category.value,
-        size: size.value,
-        cores: cores.value,
-        L_input: L_input.value,
-        K: K.value
-      },
-      result.value
-    );
-    if (historyData) {
-      saveHistory(historyData);
-    }
-  }
-
   return {
-    category,
-    size,
-    cores,
-    L_input,
-    K,
+    inputs,
     result,
-    reset,
-    handleSaveHistory
+    reset: resetInputs,
+    isResetModalOpen,
+    openResetModal,
+    confirmReset,
+    handleSaveHistory,
+    mathSteps
   };
 }

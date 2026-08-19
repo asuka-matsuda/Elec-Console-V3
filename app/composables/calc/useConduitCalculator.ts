@@ -1,35 +1,52 @@
-import { ref, computed, watch } from 'vue';
+import { ref, computed } from 'vue';
 const uuidv4 = () => crypto.randomUUID();
-import { calculateConduitSize } from '~/utils/calc/conduit/conduitCalcLogic';
+import { calculateConduitSize, generateMathData } from '~/utils/calc/conduit/conduitCalcLogic';
 import type { CableInput, ConduitCalcResult } from '~/utils/calc/conduit/conduitCalcLogic';
 import { cableData } from '~/utils/data/cableData';
 import { conduitData } from '~/utils/data/conduitData';
-import { useCalcHistory } from './useCalcHistory';
 import { mapConduitToHistory } from '~/utils/calc/conduit/historyMapper';
+import { useToolPage } from '~/composables/calc/useToolPage';
+
+export interface ConduitInputs {
+  conduitCategory: string;
+  inputCables: CableInput[];
+}
+
+const defaultInputs: ConduitInputs = {
+  conduitCategory: '',
+  inputCables: [{ id: uuidv4(), category: '', size: '', cores: '', count: null as any }]
+};
 
 export function useConduitCalculator() {
-  const conduitCategory = ref<string>('');
-  
-  // ケーブルリスト
-  const inputCables = ref<CableInput[]>([
-    { id: uuidv4(), category: '', size: '', cores: '', count: 1 }
-  ]);
+  const {
+    inputs,
+    result,
+    saveToHistory: saveHistory,
+    resetInputs,
+    isResetModalOpen,
+    openResetModal,
+    confirmReset,
+  } = useToolPage<ConduitInputs, ConduitCalcResult>(
+    'conduit',
+    '配管サイズ自動選定',
+    defaultInputs,
+    (inputs) => calculateConduitSize(inputs.conduitCategory, inputs.inputCables, conduitData, cableData),
+    {
+      toHistory: (inputs, res) => mapConduitToHistory(inputs.conduitCategory, inputs.inputCables, res!)!,
+      fromHistory: () => {
+        return JSON.parse(JSON.stringify(defaultInputs));
+      }
+    }
+  );
 
-  const { saveHistory: addHistory } = useCalcHistory('elec_calc_conduit_hist');
-
-  // 計算結果
-  const result = computed<ConduitCalcResult>(() => {
-    return calculateConduitSize(
-      conduitCategory.value,
-      inputCables.value,
-      conduitData,
-      cableData
-    );
-  });
+  // VueUseのuseLocalStorageで初期化される際にidが重複しないようにする等の対処は必要に応じて行う
+  if (!inputs.value.inputCables || inputs.value.inputCables.length === 0) {
+    inputs.value.inputCables = [{ id: uuidv4(), category: '', size: '', cores: '', count: null }];
+  }
 
   // 操作
   function addCable() {
-    inputCables.value.push({
+    inputs.value.inputCables.push({
       id: uuidv4(),
       category: '',
       size: '',
@@ -39,40 +56,24 @@ export function useConduitCalculator() {
   }
 
   function removeCable(id: string) {
-    if (inputCables.value.length <= 1) return;
-    inputCables.value = inputCables.value.filter(c => c.id !== id);
+    if (inputs.value.inputCables.length <= 1) return;
+    inputs.value.inputCables = inputs.value.inputCables.filter(c => c.id !== id);
   }
 
-  function reset() {
-    conduitCategory.value = '';
-    inputCables.value = [
-      { id: uuidv4(), category: '', size: '', cores: '', count: 1 }
-    ];
-  }
+  const mathSteps = computed(() => {
+    return generateMathData(inputs.value.conduitCategory, inputs.value.inputCables, result.value);
+  });
 
-  function saveHistory() {
-    if (!result.value.success || result.value.partial) return;
-    const historyData = mapConduitToHistory(
-      conduitCategory.value,
-      inputCables.value,
-      result.value
-    );
-    if (historyData) {
-      addHistory(historyData);
-    }
-  }
-
-  // カテゴリやケーブルが変更され、かつ計算結果が有効なときに自動保存するかどうか
-  // （配管サイズ選定はボタン押下ではなくリアルタイム算出なので、適宜Debounce等で保存するのがよい）
-  // とりあえず今回は手動保存または一定条件での保存。ここでは手動保存用の関数を提供。
-  
   return {
-    conduitCategory,
-    inputCables,
+    inputs,
     result,
     addCable,
     removeCable,
-    reset,
-    saveHistory
+    reset: resetInputs,
+    saveHistory,
+    isResetModalOpen,
+    openResetModal,
+    confirmReset,
+    mathSteps
   };
 }

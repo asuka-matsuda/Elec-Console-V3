@@ -5,8 +5,8 @@ import type { SystemData, VoltageCalcInputs, VoltageCalcResult } from './types';
 /**
  * 容量と単位から設計電流(A)を逆算します。
  */
-export function calculateDesignCurrent(sys: SystemData | null | undefined, loadVal: number, loadUnit: string, pf?: number): number | null {
-    if (isNaN(loadVal) || loadVal <= 0) return null;
+export function calculateDesignCurrent(sys: SystemData | null | undefined, loadVal: number | null | undefined, loadUnit: string, pf?: number): number | null {
+    if (loadVal === null || loadVal === undefined || isNaN(loadVal) || loadVal <= 0) return null;
     if (loadUnit === 'A') return loadVal;
 
     if (!sys) return null;
@@ -44,6 +44,7 @@ export function calculateLogic(inputs: VoltageCalcInputs, cableDataList: CableDa
 
 function _calculateVoltageDrop(inputs: VoltageCalcInputs, cables: CableData[]): VoltageCalcResult {
     const { sys, I, L, cableType, selectedCores, derating, ambientTemp, parallel, selectedSize } = inputs;
+    if (I === null || L === null || parallel === null || derating === null || selectedSize === null) throw new Error("Invalid inputs");
 
     let candidates = cables.filter(
         (c) => c.category === cableType && parseFloat(String(c.size)) === selectedSize
@@ -90,6 +91,7 @@ function _calculateVoltageDrop(inputs: VoltageCalcInputs, cables: CableData[]): 
 
 function _calculateSizeSelection(inputs: VoltageCalcInputs, cables: CableData[]): VoltageCalcResult | null {
     const { sys, I, L, cableType, selectedCores, derating, ambientTemp, parallel, targetDrop } = inputs;
+    if (I === null || L === null || parallel === null || derating === null || targetDrop === null) throw new Error("Invalid inputs");
     const maxDropV = sys.voltage * ((targetDrop || 0) / 100);
 
     let candidates = cables.filter((c) => c.category === cableType && c.ampacity !== '-');

@@ -35,18 +35,18 @@ export function mapVoltageToHistory(
   const loadStr = `${inputs.loadVal}${inputs.loadUnit} (力率: ${pfStr})`;
   historyInputs.push({ label: getLabel("loadValue"), value: loadStr });
   
-  historyInputs.push({ label: getLabel("distance"), value: `${inputs.L}m` });
+  historyInputs.push({ label: getLabel("distance"), value: `${inputs.L ?? "--"}m` });
   
   if (isAuto) {
     historyInputs.push({ label: getLabel("targetDrop"), value: `規定 ${inputs.targetDrop}%` });
   }
   
-  historyInputs.push({ label: getLabel("parallel"), value: `${inputs.parallel}条` });
+  historyInputs.push({ label: getLabel("parallel"), value: `${inputs.parallel ?? "--"}条` });
   
   const tempStr = inputs.rawTempVal && inputs.rawTempVal !== "none" ? `${inputs.ambientTemp}℃` : "なし";
   historyInputs.push({ label: getLabel("ambientTemp"), value: tempStr });
   
-  historyInputs.push({ label: getLabel("derating"), value: inputs.derating.toString() });
+  historyInputs.push({ label: getLabel("derating"), value: inputs.derating ? inputs.derating.toString() : "--" });
 
   if (!isAuto) {
     // ケーブル指定モードの場合は使用ケーブル情報も入力条件に含める
@@ -82,7 +82,7 @@ export function mapVoltageToHistory(
   } else {
     // 成功・エラー判定
     const maxDropV = inputs.sys.voltage * ((inputs.targetDrop || 100) / 100);
-    const isAmpOver = result.finalEffAmp > 0 && inputs.I > result.finalEffAmp;
+    const isAmpOver = result.finalEffAmp > 0 && (inputs.I ?? 0) > result.finalEffAmp;
     const isDropOver = !isAuto && result.finalDropV > maxDropV;
     const hasError = isAmpOver || isDropOver;
     
@@ -105,7 +105,8 @@ export function mapVoltageToHistory(
       cableNameStr = `${cabType} ${size}sq`;
     }
 
-    mainResultText = inputs.parallel > 1 ? `${cableNameStr} × ${inputs.parallel}条` : cableNameStr;
+    const parallelCount = inputs.parallel ?? 1;
+    mainResultText = parallelCount > 1 ? `${cableNameStr} × ${parallelCount}条` : cableNameStr;
     
     // 詳細結果の追加
     historyResults.push({
@@ -119,7 +120,7 @@ export function mapVoltageToHistory(
     const dropText = `${result.finalDropV.toFixed(2)}V (${dropPct}%)`;
     historyResults.push({ label: "電圧降下", value: dropText });
 
-    historyResults.push({ label: "設計電流", value: `${inputs.I.toFixed(1)}A` });
+    historyResults.push({ label: "設計電流", value: `${inputs.I?.toFixed(1) ?? "--"}A` });
 
     historyResults.push({
       label: "許容電流",

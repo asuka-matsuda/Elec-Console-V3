@@ -1,12 +1,12 @@
 import type { CableData, ConduitData, DrumData } from '~/types/database';
-;
+import type { MathStep } from '~/components/AppMathBasis.vue';
 
 export interface WeightCalcInputs {
   category: string;
   size: string;
   cores: string;
-  L_input: number;
-  K: number;
+  L_input: number | null;
+  K: number | null;
 }
 
 export interface WeightCalcResult {
@@ -50,6 +50,7 @@ export function calculateWeightAndDrum(
   drumData: DrumData[]
 ): WeightCalcResult {
   const { category, size, cores, L_input, K } = inputs;
+  if (L_input === null || K === null) throw new Error("Invalid inputs");
 
   const cable = cableData.find(
     (c) => c.category === category && c.cores === cores && c.size === size
@@ -142,4 +143,89 @@ export function calculateWeightAndDrum(
     maxCapacityMeters,
     bestMathParams
   };
+}
+
+import { hlVal, hlOk, hlNg, buildFormula } from '~/utils/mathUtils';
+
+/**
+ * MathJax用の数式データを生成する
+ */
+export function generateMathData(
+  inputs: WeightCalcInputs,
+  result: WeightCalcResult | null,
+  cableData: CableData[]
+): MathStep[] {
+  const L_req_hl = hlVal(inputs.L_input, 'L_{req}', 1);
+  
+  // To handle the case when result is incomplete, we can still show base formulas
+  const cable = cableData.find(c => c.category === inputs.category && c.cores === inputs.cores && c.size === inputs.size);
+  const d_val = cable ? getMaxCableDiameter(cable.diameter) : null;
+  const d_hl = hlVal(d_val, 'd', 1);
+  const w_unit_hl = hlVal(cable ? parseFloat(cable.weight) : null, 'W_{unit}', 1);
+  const bendFactor = inputs.category.includes('6.6kV') ? 15 : 12;
+
+  // ① ケーブル重量算出と許容巻取重量
+  const W_cable_sym = `\\frac{W_{unit} \\times L_{req}}{1000}`;
+  const W_cable_sub = `\\frac{${w_unit_hl} \\times ${L_req_hl}}{1000}`;
+  let W_cable_res = '\\text{---}';
+  let drumWeightSym = 'W_{cable} &\\le W_{max}';
+  let drumWeightSub = '\\text{---} \\text{ kg} &\\le \\text{---} \\text{ kg}';
+
+  if (result && !result.error && result.cableWeight !== undefined && result.bestDrum) {
+    W_cable_res = result.cableWeight.toFixed(1);
+    const W_max = parseFloat(result.bestDrum.max_winding_weight);
+    drumWeightSub = `${hlVal(result.cableWeight, 'W_{cable}', 1)} \\text{ kg} &\\le ${hlOk(W_max.toFixed(1))} \\text{ kg}`;
+    drumWeightSub += ` \\\\ &\\rightarrow \\text{【 } ${hlOk(result.bestDrum.id)} \\text{ 】}`;
+  }
+  const tex1 = `\\begin{aligned} W_{cable} &= ${W_cable_sym} \\\\ &= ${W_cable_sub} \\\\ &= ${W_cable_res} \\text{ [kg]} \\\\\\\\ ${drumWeightSym} \\\\ ${drumWeightSub} \\end{aligned}`;
+  const leg1 = [
+    `\\(W_{cable}\\): ケーブル重量 [kg]`,
+    `\\(W_{unit}\\): 単位重量 [kg/km]`,
+    `\\(L_{req}\\): 要求長 [m]`,
+    `\\(W_{max}\\): 許容巻取重量 [kg]`
+  ];
+
+  // ② 曲げ半径判定（最小胴径）
+  const minD2_sym = `${bendFactor}d`;
+  const minD2_sub = `${bendFactor} \\times ${d_hl}`;
+  let minD2_res = '\\text{---}';
+  let drumRadiusSym = `D_{min} &\\le D_2`;
+  let drumRadiusSub = `\\text{---} \\text{ mm} &\\le \\text{---} \\text{ mm}`;
+
+  if (result && !result.error && result.bestMathParams && result.bestDrum) {
+    minD2_res = result.bestMathParams.minD2.toFixed(1);
+    const D2 = result.bestMathParams.D2;
+    drumRadiusSub = `${hlVal(result.bestMathParams.minD2, 'D_{min}', 1)} \\text{ mm} &\\le ${hlOk(D2.toFixed(1))} \\text{ mm}`;
+  }
+  const tex2 = `\\begin{aligned} D_{min} &= ${minD2_sym} \\\\ &= ${minD2_sub} \\\\ &= ${minD2_res} \\text{ [mm]} \\\\\\\\ ${drumRadiusSym} \\\\ ${drumRadiusSub} \\end{aligned}`;
+  const leg2 = [
+    `\\(D_{min}\\): 最小曲げ半径(胴径換算) [mm]`,
+    `\\(d\\): ケーブル外径 [mm]`,
+    `\\(D_2\\): 選定ドラムの胴径 [mm]`
+  ];
+
+  // ③ 容量判定（巻き込み可能条長）
+  let tex3 = `\\begin{aligned} L_{cap} &= \\pi m n (D_2 + n d) \\times 10^{-3} \\\\ &= \\text{---} \\\\ &= \\text{---} \\text{ [m]} \\\\\\\\ L_{req} &\\le L_{cap} \\\\ \\text{---} \\text{ m} &\\le \\text{---} \\text{ m} \\end{aligned}`;
+  const leg3 = [
+    `\\(L_{cap}\\): 巻取可能長 [m]`,
+    `\\(m\\): 1層にならぶ条数 [条]`,
+    `\\(n\\): 層数 [層]`
+  ];
+
+  if (result && !result.error && result.bestMathParams) {
+    const { m, n, L, D2 } = result.bestMathParams;
+    const m_hl = hlVal(m, 'm', 0);
+    const n_hl = hlVal(n, 'n', 0);
+    const D2_hl = hlVal(D2, 'D_2', 1);
+    
+    const L_cap_sub = `\\pi \\times ${m_hl} \\times ${n_hl} (${D2_hl} + ${n_hl} \\times ${d_hl}) \\times 10^{-3}`;
+    const capCheckSub = `${L_req_hl} \\text{ m} &\\le ${hlOk(L.toFixed(1))} \\text{ m}`;
+    tex3 = `\\begin{aligned} L_{cap} &= \\pi m n (D_2 + n d) \\times 10^{-3} \\\\ &= ${L_cap_sub} \\\\ &= ${L.toFixed(1)} \\text{ [m]} \\\\\\\\ L_{req} &\\le L_{cap} \\\\ ${capCheckSub} \\end{aligned}`;
+  }
+
+  return [
+    { title: '① 重量判定（許容巻取重量）', tex: tex1, legend: leg1 },
+    { title: '② 曲げ半径判定（最小胴径）', tex: tex2, legend: leg2 },
+    { title: '③ 容量判定（巻き込み可能条長）', tex: tex3, legend: leg3 }
+  ];
 }

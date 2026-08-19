@@ -12,8 +12,10 @@ const toggleDrawer = () => {
 <template>
   <div class="l-tool-layout">
     <!-- Disclaimer -->
-    <div v-if="$slots.disclaimer" class="l-tool-layout__disclaimer">
-      <slot name="disclaimer"></slot>
+    <div class="l-tool-layout__disclaimer">
+      <slot name="disclaimer">
+        <AppDisclaimer />
+      </slot>
     </div>
 
     <div class="l-tool-layout__main">

@@ -3,9 +3,10 @@
  * 計算根拠などをTeXで表示する際に使用する、フォーマットやハイライト機能を提供します。
  */
 
-// アプリケーション全体で統一されたハイライト用クラス（Warning相当）
-export const TEX_HL_CLASS = 'tex-status-warning';
+// アプリケーション全体で統一されたハイライト用クラス（Accent相当）
+export const TEX_HL_CLASS = 'tex-color-accent';
 export const TEX_SUCCESS_CLASS = 'tex-status-success';
+export const TEX_DANGER_CLASS = 'tex-status-danger';
 
 /**
  * 数値をフォーマットし、指定されたCSSクラスでKaTeX用のhtmlClassコマンドでラップします。
@@ -36,4 +37,46 @@ export function formatVal(val: number | string | null | undefined, fallback: str
     if (val === null || val === undefined || val === '' || isNaN(Number(val))) return fallback;
     const num = Number(val);
     return num % 1 === 0 ? num.toString() : num.toFixed(dec);
+}
+
+/**
+ * 判定結果などを要件を満たす場合（Success）の色でハイライトする
+ */
+export function hlOk(value: string | number): string {
+    return `\\htmlClass{${TEX_SUCCESS_CLASS}}{${value}}`;
+}
+
+/**
+ * 判定結果などを要件を満たさない場合（Danger）の色でハイライトする
+ */
+export function hlNg(value: string | number): string {
+    return `\\htmlClass{${TEX_DANGER_CLASS}}{${value}}`;
+}
+
+/**
+ * 数式の基本的なフォーマット（文字式 = 代入式 = 結果）を組み立てる
+ */
+export function buildFormula(
+    symbols: string,
+    substitution: string,
+    resultStr?: string,
+    unit?: string
+): string {
+    let tex = `\\begin{aligned} ${symbols}`;
+    
+    if (substitution) {
+        tex += ` &= ${substitution}`;
+    }
+    
+    if (resultStr !== undefined) {
+        tex += ` \\\\ &= ${resultStr}`;
+        if (unit) {
+            // 単位の中に ^（上付き）が含まれる場合、\text{}内ではエラーになるため安全な形式に変換する
+            const safeUnit = unit.includes('^') ? unit.replace(/\^(\d+)/g, '}^$1\\text{') : unit;
+            tex += ` \\text{ [${safeUnit}]}`;
+        }
+    }
+    
+    tex += ` \\end{aligned}`;
+    return tex;
 }

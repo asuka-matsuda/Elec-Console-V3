@@ -7,28 +7,19 @@ useHead({
 });
 
 const {
-  isStrong,
-  isWeak,
-  lStrong,
-  lWeak,
-  rackHeight,
-  separatorWidth,
-  strongCablesUI,
-  weakCablesUI,
+  inputs,
+  maxDepth,
   result,
   addStrongCable,
   removeStrongCable,
   addWeakCable,
   removeWeakCable,
-  reset,
-  handleSaveHistory
+  handleSaveHistory,
+  isResetModalOpen,
+  openResetModal,
+  confirmReset,
+  mathSteps
 } = useRackCalculator();
-
-const isResetModalOpen = ref(false);
-const confirmReset = () => {
-  reset();
-  isResetModalOpen.value = false;
-};
 </script>
 
 <template>
@@ -39,13 +30,13 @@ const confirmReset = () => {
     note="※ 内線規程に基づく概算です。"
   >
     <template #inputs>
-      <AppToolInputPanel @reset="isResetModalOpen = true">
+      <AppToolInputPanel @reset="openResetModal">
         <div class="l-stack" style="gap: var(--gap-section);">
           <div class="l-grid l-grid--2col">
             <AppFormGroup label="ラック深さ (H)">
               <AppInputGroup>
                 <AppInput
-                  v-model="rackHeight"
+                  v-model="inputs.rackHeight"
                   type="number"
                   min="50"
                   step="10"
@@ -56,10 +47,10 @@ const confirmReset = () => {
               </AppInputGroup>
             </AppFormGroup>
 
-            <AppFormGroup v-if="isStrong && isWeak" label="セパレータ幅">
+            <AppFormGroup v-if="inputs.isStrong && inputs.isWeak" label="セパレータ幅">
               <AppInputGroup>
                 <AppInput
-                  v-model="separatorWidth"
+                  v-model="inputs.separatorWidth"
                   type="number"
                   min="0"
                 />
@@ -74,14 +65,14 @@ const confirmReset = () => {
           <AppCard variant="default">
             <div class="u-flex u-justify-between u-items-center u-mb-4">
               <h3 class="u-text-base u-font-bold">強電エリア</h3>
-              <AppToggle v-model="isStrong" label="" />
+              <AppToggle v-model="inputs.isStrong" label="" />
             </div>
 
-            <div v-if="isStrong" class="l-stack" style="gap: var(--gap-component);">
+            <div v-if="inputs.isStrong" class="l-stack" style="gap: var(--gap-component);">
               <AppFormGroup label="段積み数">
                 <AppInputGroup>
                   <AppInput
-                    v-model="lStrong"
+                    v-model="inputs.lStrong"
                     type="number"
                     min="1"
                   />
@@ -95,11 +86,11 @@ const confirmReset = () => {
                 <div class="u-text-sm u-font-bold u-mb-2">強電ケーブルリスト</div>
                 <div class="l-stack" style="gap: var(--gap-component);">
                   <AppCableRowCard
-                    v-for="(cable, index) in strongCablesUI"
+                    v-for="(cable, index) in inputs.strongCablesUI"
                     :key="cable.id"
-                    v-model="strongCablesUI[index]!"
+                    v-model="inputs.strongCablesUI[index]!"
                     :index="index"
-                    :removable="strongCablesUI.length > 1"
+                    :removable="inputs.strongCablesUI.length > 1"
                     @remove="removeStrongCable(cable.id)"
                   />
                 </div>
@@ -118,14 +109,14 @@ const confirmReset = () => {
           <AppCard variant="default">
             <div class="u-flex u-justify-between u-items-center u-mb-4">
               <h3 class="u-text-base u-font-bold">弱電エリア</h3>
-              <AppToggle v-model="isWeak" label="" />
+              <AppToggle v-model="inputs.isWeak" label="" />
             </div>
 
-            <div v-if="isWeak" class="l-stack" style="gap: var(--gap-component);">
+            <div v-if="inputs.isWeak" class="l-stack" style="gap: var(--gap-component);">
               <AppFormGroup label="段積み数">
                 <AppInputGroup>
                   <AppInput
-                    v-model="lWeak"
+                    v-model="inputs.lWeak"
                     type="number"
                     min="1"
                   />
@@ -139,11 +130,11 @@ const confirmReset = () => {
                 <div class="u-text-sm u-font-bold u-mb-2">弱電ケーブルリスト</div>
                 <div class="l-stack" style="gap: var(--gap-component);">
                   <AppCableRowCard
-                    v-for="(cable, index) in weakCablesUI"
+                    v-for="(cable, index) in inputs.weakCablesUI"
                     :key="cable.id"
-                    v-model="weakCablesUI[index]!"
+                    v-model="inputs.weakCablesUI[index]!"
                     :index="index"
-                    :removable="weakCablesUI.length > 1"
+                    :removable="inputs.weakCablesUI.length > 1"
                     @remove="removeWeakCable(cable.id)"
                   />
                 </div>
@@ -163,29 +154,29 @@ const confirmReset = () => {
 
     <template #results>
       <AppToolResultPanel
-        :save-disabled="result.error || (!isStrong && !isWeak)"
+        :save-disabled="result?.error || (!inputs.isStrong && !inputs.isWeak)"
         @save="handleSaveHistory"
       >
         <AppResultBox
           title="推奨ラック幅"
-          :status="result.error ? 'empty' : (result.isOverflow || !result.selectedSize ? 'error' : 'success')"
-          :is-empty="result.error || (!isStrong && !isWeak)"
+          :status="result?.error ? 'empty' : (result?.isOverflow || !result?.selectedSize ? 'error' : 'success')"
+          :is-empty="result?.error || (!inputs.isStrong && !inputs.isWeak)"
         >
           <template #value>
             <div class="p-result-rack">
               <div class="p-result-rack__val">
-                <template v-if="result.error || (!isStrong && !isWeak)">
+                <template v-if="result?.error || (!inputs.isStrong && !inputs.isWeak)">
                   ---
                 </template>
-                <template v-else-if="result.selectedSize">
-                  W{{ result.selectedSize }}
+                <template v-else-if="result?.selectedSize">
+                  W{{ result?.selectedSize }}
                 </template>
                 <template v-else>
-                  規格外 ({{ Math.ceil(result.totalWidth) }}mm以上)
+                  規格外 ({{ result?.totalWidth ? Math.ceil(result.totalWidth) : 0 }}mm以上)
                 </template>
               </div>
-              <div v-if="result.isOverflow" class="p-result-rack__warning">
-                ⚠️ ケーブルの高さがラックの有効深さ({{ result.maxDepth }}mm)を超過しています。
+              <div v-if="result?.isOverflow" class="p-result-rack__warning">
+                ⚠️ ケーブルの高さがラックの有効深さ({{ maxDepth }}mm)を超過しています。
               </div>
             </div>
           </template>
@@ -193,23 +184,27 @@ const confirmReset = () => {
 
         <AppResultDetails>
           <AppResultDetailsRow label="強電 必要幅">
-            <strong>{{ result.wStrong.toFixed(1) }}</strong> mm
+            <strong>{{ result?.wStrong?.toFixed(1) ?? '0.0' }}</strong> mm
           </AppResultDetailsRow>
           <AppResultDetailsRow label="弱電 必要幅">
-            <strong>{{ result.wWeak.toFixed(1) }}</strong> mm
+            <strong>{{ result?.wWeak?.toFixed(1) ?? '0.0' }}</strong> mm
           </AppResultDetailsRow>
-          <AppResultDetailsRow v-if="isStrong && isWeak" label="セパレータ幅">
-            <strong>{{ result.wSep.toFixed(1) }}</strong> mm
+          <AppResultDetailsRow v-if="inputs.isStrong && inputs.isWeak" label="セパレータ幅">
+            <strong>{{ result?.wSep?.toFixed(1) ?? '0.0' }}</strong> mm
           </AppResultDetailsRow>
           <AppResultDetailsRow label="合計 必要幅" top-border>
-            <strong>{{ Math.ceil(result.totalWidth) }}</strong> mm
+            <strong>{{ result?.totalWidth ? Math.ceil(result.totalWidth) : 0 }}</strong> mm
           </AppResultDetailsRow>
           <AppResultDetailsRow label="最大ケーブル高さ">
-            <strong :class="{'u-text-danger': result.isOverflow}">{{ result.maxCableStackHeight.toFixed(1) }}</strong> mm
-            (有効 {{ result.maxDepth }} mm)
+            <strong :class="{'u-text-danger': result?.isOverflow}">{{ result?.maxCableStackHeight?.toFixed(1) ?? '0.0' }}</strong> mm
+            (有効 {{ maxDepth }} mm)
           </AppResultDetailsRow>
         </AppResultDetails>
       </AppToolResultPanel>
+    </template>
+
+    <template #basis>
+      <AppCalculationBasisPanel :steps="mathSteps" />
     </template>
   </AppToolLayout>
 

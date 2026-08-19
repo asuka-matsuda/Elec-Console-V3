@@ -16,19 +16,19 @@ import type { CableData } from "~/types/database";
 export interface VoltageCalcInputs {
   mode: "size" | "drop";
   sys: SystemData;
-  I: number;
-  L: number;
+  I: number | null;
+  L: number | null;
   cableType: string;
   selectedCores: string | null;
-  derating: number;
+  derating: number | null;
   rawTempVal: string | null;
   ambientTemp: number | null;
-  parallel: number;
+  parallel: number | null;
   targetDrop: number | null;
   selectedSize: number | null;
-  loadVal: number;
+  loadVal: number | null;
   loadUnit: string;
-  pf: number;
+  pf: number | null;
   isReady: boolean;
   missingFields: string[];
 }

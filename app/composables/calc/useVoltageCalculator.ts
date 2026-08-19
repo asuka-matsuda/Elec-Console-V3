@@ -4,53 +4,49 @@ import { getAvailableSizes } from "~/utils/cableDataHelper";
 import { cableData } from "~/utils/data/cableData";
 import { calculateDesignCurrent, calculateLogic, generateMathData } from "~/utils/calc/voltage/calcVoltageEngine";
 import type { VoltageCalcInputs, SystemData } from "~/utils/calc/voltage/types";
+import { useToolPage } from "~/composables/calc/useToolPage";
+import { mapVoltageToHistory } from "~/utils/calc/voltage/historyMapper";
 
 export const defaultForm = {
   mode: "drop" as "drop" | "size",
   phase: "",
   loadValue: null as number | null,
   loadUnit: "A",
-  powerFactor: "1.0",
+  powerFactor: "",
   distance: null as number | null,
   cableType: "",
   cores: "",
   fixedSize: "",
-  parallel: "1",
-  derating: "1.0",
-  ambientTemp: "none",
-  targetDrop: "2",
+  parallel: "",
+  derating: "",
+  ambientTemp: "",
+  targetDrop: "",
 };
 
 export function useVoltageCalculator() {
-  // 1. SSRおよびハイドレーション時はデフォルト値（空）を使用する
-  const form = ref({ ...defaultForm });
-
-  // 2. クライアント側でのマウント完了後（ハイドレーション後）にローカルストレージから復元する
-  onMounted(() => {
-    const stored = localStorage.getItem("elec-calc-voltage-form");
-    if (stored) {
-      try {
-        form.value = { ...defaultForm, ...JSON.parse(stored) };
-      } catch (e) {
-        console.error("Failed to parse localStorage:", e);
-      }
+  const {
+    inputs: form,
+    result: _dummyResult,
+    resetInputs,
+    isResetModalOpen,
+    openResetModal,
+    confirmReset,
+    saveToHistory
+  } = useToolPage(
+    'voltage',
+    '電圧降下・ケーブルサイズ選定',
+    { ...defaultForm },
+    (inputs) => {
+      // Dummy calculate function since calcInputs needs to be derived first
+      return null;
+    },
+    {
+      toHistory: (inputs, res) => mapVoltageToHistory('電圧降下・ケーブルサイズ選定', {} as any, res as any), // Will not be used directly
+      fromHistory: () => JSON.parse(JSON.stringify(defaultForm))
     }
+  );
 
-    // 3. 値の変更を監視し、ローカルストレージに自動保存する
-    watch(
-      form,
-      (newVal) => {
-        localStorage.setItem("elec-calc-voltage-form", JSON.stringify(newVal));
-      },
-      { deep: true }
-    );
-  });
-  const isResetModalOpen = ref(false);
-
-  const resetForm = () => {
-    form.value = { ...defaultForm };
-    isResetModalOpen.value = false;
-  };
+  const resetForm = confirmReset;
 
   const isSizeCalcMode = computed(() => form.value.mode === "size");
   const isDropCalcMode = computed(() => form.value.mode === "drop");
@@ -72,10 +68,10 @@ export function useVoltageCalculator() {
   const calcInputs = computed<VoltageCalcInputs>(() => {
     const mode = form.value.mode;
     const sys = systemData.find((s) => s.id === form.value.phase) || null;
-    const loadVal = form.value.loadValue || 0;
+    const loadVal = form.value.loadValue;
     const loadUnit = form.value.loadUnit;
-    const pf = parseFloat(form.value.powerFactor);
-    const L = form.value.distance || 0;
+    const pf = form.value.powerFactor ? parseFloat(form.value.powerFactor) : null;
+    const L = form.value.distance;
     const cableType = form.value.cableType || "";
     const rawSize = form.value.fixedSize || "";
 
@@ -93,14 +89,14 @@ export function useVoltageCalculator() {
       }
     }
 
-    const derating = parseFloat(form.value.derating) || 1.0;
+    const derating = form.value.derating ? parseFloat(form.value.derating) : null;
     const rawTempVal = form.value.ambientTemp;
     const ambientTemp =
       rawTempVal && rawTempVal !== "none" ? parseFloat(rawTempVal) : null;
-    const parallel = parseInt(form.value.parallel) || 1;
-    const targetDrop = parseFloat(form.value.targetDrop) || null;
+    const parallel = form.value.parallel ? parseInt(form.value.parallel) : null;
+    const targetDrop = form.value.targetDrop ? parseFloat(form.value.targetDrop) : null;
 
-    const I = calculateDesignCurrent(sys, loadVal, loadUnit, pf) || 0;
+    const I = calculateDesignCurrent(sys, loadVal, loadUnit, pf ?? undefined);
 
     const missing = [];
     if (!sys) missing.push("sys");
@@ -143,6 +139,7 @@ export function useVoltageCalculator() {
   return {
     form,
     isResetModalOpen,
+    openResetModal,
     resetForm,
     isSizeCalcMode,
     isDropCalcMode,

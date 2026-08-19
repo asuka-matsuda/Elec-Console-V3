@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { cableData } from '~/utils/data/cableData';
-import { formatCableName } from '~/utils/calc/cableHelpers';
 import type { CableInput } from '~/utils/calc/conduit/conduitCalcLogic';
+import { useCableSelector } from '~/composables/calc/useCableSelector';
 
 const props = defineProps<{
   modelValue: CableInput;
@@ -15,23 +15,14 @@ const emit = defineEmits<{
   (e: 'remove'): void;
 }>();
 
-// カテゴリ一覧
-const categoryOptions = computed(() => {
-  const cats = [...new Set(cableData.map(c => c.category))];
-  return cats.map(c => ({ value: c, label: c }));
-});
+const selectedCategory = computed(() => props.modelValue.category);
+const selectedSize = computed(() => props.modelValue.size);
 
-// 選択中のカテゴリに対応するケーブルのサイズ一覧
-const specOptions = computed(() => {
-  if (!props.modelValue.category) return [];
-  const filtered = cableData.filter(c => c.category === props.modelValue.category);
-  return filtered.map(c => {
-    return {
-      value: `${c.size}|${c.cores}`,
-      label: formatCableName(c, false, true)
-    };
-  });
-});
+const { categories, combinedSpecOptions } = useCableSelector(
+  cableData,
+  selectedCategory,
+  selectedSize
+);
 
 // specが変更された時のハンドリング
 const selectedSpec = computed({
@@ -80,7 +71,7 @@ const updateCount = (val: any) => {
         <AppFormGroup label="種類">
           <AppSelect
             :model-value="modelValue.category"
-            :options="categoryOptions"
+            :options="categories"
             placeholder="選択"
             @update:model-value="onCategoryChange"
           />
@@ -89,7 +80,7 @@ const updateCount = (val: any) => {
         <AppFormGroup label="サイズ・芯線数">
           <AppSelect
             v-model="selectedSpec"
-            :options="specOptions"
+            :options="combinedSpecOptions"
             placeholder="選択"
             :disabled="!modelValue.category"
           />

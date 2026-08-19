@@ -33,7 +33,7 @@ export function mapRackToHistory(
       value: `段積み数: ${settings.lStrong} 段`,
     });
     strongCables.forEach((c, i) => {
-      if (c.count <= 0) return;
+      if (!c.count || c.count <= 0) return;
       const cableDef = cableData.find(
         (cd: any) => cd.category === c.category && cd.size === c.size && cd.cores === c.cores
       );
@@ -55,7 +55,7 @@ export function mapRackToHistory(
       value: `段積み数: ${settings.lWeak} 段`,
     });
     weakCables.forEach((c, i) => {
-      if (c.count <= 0) return;
+      if (!c.count || c.count <= 0) return;
       const cableDef = cableData.find(
         (cd: any) => cd.category === c.category && cd.size === c.size && cd.cores === c.cores
       );
