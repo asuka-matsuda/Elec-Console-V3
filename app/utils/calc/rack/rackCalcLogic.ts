@@ -1,8 +1,10 @@
+import type { MathStep } from '~/components/AppMathBasis.vue';
+
+import { hlVal, hlOk, buildFormula } from '~/utils/mathUtils';
 export interface RackCableInput {
   d: number | null;
   n: number | null;
 }
-import type { MathStep } from '~/components/AppMathBasis.vue';
 
 export interface RackCalcInputs {
   isStrong: boolean;
@@ -155,8 +157,6 @@ export function calculateRackSize(inputs: RackCalcInputs, standardRackSizes: num
   };
 }
 
-import { hlVal, hlOk, buildFormula } from '~/utils/mathUtils';
-
 /**
  * MathJax用の数式データを生成する
  */
@@ -180,9 +180,9 @@ export function generateMathData(
   // 1. 強電ケーブルの必要幅算出
   if (isStrong) {
     const lS = inputs.lStrong ?? 1;
-    let divStrSym = lS > 1 ? ` \\div L_{strong}` : ``;
-    let divStrSub = lS > 1 ? ` \\div ${lStrongHl}` : ``;
-    let legendList = [
+    const divStrSym = lS > 1 ? ` \\div L_{strong}` : ``;
+    const divStrSub = lS > 1 ? ` \\div ${lStrongHl}` : ``;
+    const legendList = [
       '\\(W_{strong}\\): 強電ケーブルの必要幅 [mm]',
       '\\(D\\): ケーブル外径 [mm]',
       '※ 1.2は余裕係数、60は両端の離隔距離'
@@ -202,9 +202,9 @@ export function generateMathData(
   // 2. 弱電ケーブルの必要幅算出
   if (isWeak) {
     const lW = inputs.lWeak ?? 1;
-    let divStrSym = lW > 1 ? ` \\div L_{weak}` : ``;
-    let divStrSub = lW > 1 ? ` \\div ${lWeakHl}` : ``;
-    let legendList = [
+    const divStrSym = lW > 1 ? ` \\div L_{weak}` : ``;
+    const divStrSub = lW > 1 ? ` \\div ${lWeakHl}` : ``;
+    const legendList = [
       '\\(W_{weak}\\): 弱電ケーブルの必要幅 [mm]',
       '\\(D\\): ケーブル外径 [mm]'
     ];
@@ -221,7 +221,7 @@ export function generateMathData(
   }
 
   // 3. 合計ラック幅の算出
-  let legend3 = [
+  const legend3 = [
     '\\(W_{total}\\): 合計ラック幅 [mm]'
   ];
   if (isStrong) legend3.push('\\(W_{strong}\\): 強電幅 [mm]');
@@ -230,8 +230,8 @@ export function generateMathData(
     legend3.push('\\(W_{sep}\\): セパレータ幅 [mm]');
   }
 
-  let rightSideSym = [];
-  let rightSideSub = [];
+  const rightSideSym = [];
+  const rightSideSub = [];
   if (isStrong) { rightSideSym.push('W_{strong}'); rightSideSub.push(wStrongHl); }
   if (isWeak) { rightSideSym.push('W_{weak}'); rightSideSub.push(wWeakHl); }
   if (isStrong && isWeak && (inputs.separatorWidth !== undefined && inputs.separatorWidth !== null && inputs.separatorWidth > 0)) {

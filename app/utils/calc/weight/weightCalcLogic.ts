@@ -1,6 +1,8 @@
 import type { CableData, ConduitData, DrumData } from '~/types/database';
 import type { MathStep } from '~/components/AppMathBasis.vue';
 
+import { hlVal, hlOk, hlNg, buildFormula } from '~/utils/mathUtils';
+
 export interface WeightCalcInputs {
   category: string;
   cableIdx: string;
@@ -146,8 +148,6 @@ export function calculateWeightAndDrum(
   };
 }
 
-import { hlVal, hlOk, hlNg, buildFormula } from '~/utils/mathUtils';
-
 /**
  * MathJax用の数式データを生成する
  */
@@ -172,7 +172,7 @@ export function generateMathData(
   const W_cable_sym = `\\frac{W_{unit} \\times L_{req}}{1000}`;
   const W_cable_sub = `\\frac{${w_unit_hl} \\times ${L_req_hl}}{1000}`;
   let W_cable_res = '\\text{---}';
-  let drumWeightSym = 'W_{cable} &\\le W_{max}';
+  const drumWeightSym = 'W_{cable} &\\le W_{max}';
   let drumWeightSub = '\\text{---} \\text{ kg} &\\le \\text{---} \\text{ kg}';
 
   if (result && !result.error && result.cableWeight !== undefined && result.bestDrum) {
@@ -193,7 +193,7 @@ export function generateMathData(
   const minD2_sym = `${bendFactor}d`;
   const minD2_sub = `${bendFactor} \\times ${d_hl}`;
   let minD2_res = '\\text{---}';
-  let drumRadiusSym = `D_{min} &\\le D_2`;
+  const drumRadiusSym = `D_{min} &\\le D_2`;
   let drumRadiusSub = `\\text{---} \\text{ mm} &\\le \\text{---} \\text{ mm}`;
 
   if (result && !result.error && result.bestMathParams && result.bestDrum) {

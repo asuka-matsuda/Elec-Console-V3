@@ -131,6 +131,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
     
     // スクロールバー自体は非表示にしつつスクロールは可能にする
     scrollbar-width: none;
+
     &::-webkit-scrollbar {
       display: none;
     }

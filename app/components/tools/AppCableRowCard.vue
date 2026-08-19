@@ -59,7 +59,7 @@ const updateCount = (val: any) => {
     <div class="c-cable-row__header">
       <div class="c-cable-row__title-group">
         <span class="c-cable-row__title">ケーブル {{ index + 1 }}</span>
-        <span class="c-cable-row__meta" v-if="singleCableArea !== null">
+        <span v-if="singleCableArea !== null" class="c-cable-row__meta">
           ( 断面積: {{ singleCableArea.toFixed(1) }} mm² / 本 )
         </span>
       </div>

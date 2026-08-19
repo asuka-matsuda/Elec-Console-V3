@@ -1,6 +1,8 @@
 import type { CableData, ConduitData, DrumData } from '~/types/database';
 import type { MathStep } from '~/components/AppMathBasis.vue';
 
+import { hlVal, hlOk, hlNg, buildFormula } from '~/utils/mathUtils';
+
 export interface CableInput {
   id: string; // for UI tracking
   category: string;
@@ -178,8 +180,6 @@ export function calculateConduitSize(
     cableDetails
   };
 }
-
-import { hlVal, hlOk, hlNg, buildFormula } from '~/utils/mathUtils';
 
 /**
  * MathJax用の数式データを生成する

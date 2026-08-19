@@ -146,9 +146,11 @@ const handleSave = async () => {
     align-items: baseline;
     font-size: var(--font-size-base);
   }
+
   &__label {
     color: var(--color-text-muted);
   }
+
   &__val {
     font-size: var(--font-size-xl);
     font-weight: var(--font-weight-bold);

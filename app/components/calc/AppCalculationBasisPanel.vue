@@ -35,6 +35,7 @@ defineProps<{
     display: none !important;
   }
 }
+
 .c-basis-panel__content {
   margin-top: var(--gap-component);
 }

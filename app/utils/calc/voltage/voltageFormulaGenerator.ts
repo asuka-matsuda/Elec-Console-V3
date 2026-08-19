@@ -95,7 +95,7 @@ function _getTempDeratingFormula(inputs: VoltageCalcInputs, result: VoltageCalcR
         const baseAmp = parseFloat(String(targetCable.ampacity));
         const max = parseFloat(String(targetCable.maxTemp));
         const base = parseFloat(String(targetCable.baseTemp));
-        let k = result?.tempDerating ?? getAmbientTempDerating(base, max, amb);
+        const k = result?.tempDerating ?? getAmbientTempDerating(base, max, amb);
         
         const tempAmp = baseAmp * k;
         resultVal = hlOk(tempAmp.toFixed(1));
@@ -122,7 +122,7 @@ function _getThermalLimitFormula(inputs: VoltageCalcInputs, result: VoltageCalcR
         '\\( N \\): 条数'
     ];
 
-    let rightSideSymbol = `I_0' \\times C_d \\times N`;
+    const rightSideSymbol = `I_0' \\times C_d \\times N`;
     const targetCable = _getTargetCable(inputs, result, cables);
     let rightSideSubst;
     let resultLine = '\\text{---}';

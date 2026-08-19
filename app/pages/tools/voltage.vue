@@ -75,9 +75,9 @@ const handleSaveToHistory = async () => {
           <template v-for="field in formFields" :key="field.id">
             <Field 
               v-if="!field.showIf || field.showIf()"
-              :name="field.id" 
+              v-slot="{ errorMessage, handleChange, handleBlur }" 
               v-model="form[field.id]" 
-              v-slot="{ errorMessage, handleChange, handleBlur }"
+              :name="field.id"
             >
               <AppFormGroup
                 :label="field.label"
@@ -109,9 +109,9 @@ const handleSaveToHistory = async () => {
                   <template #append>
                     <Field
                       v-if="field.secondaryId"
-                      :name="field.secondaryId"
-                      v-model="form[field.secondaryId!]"
                       v-slot="{ errorMessage: secError, handleChange: secChange, handleBlur: secBlur }"
+                      v-model="form[field.secondaryId!]"
+                      :name="field.secondaryId"
                     >
                       <AppSelect
                         v-model="form[field.secondaryId!]"

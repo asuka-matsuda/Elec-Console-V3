@@ -4,6 +4,8 @@ import { useWeightCalculator } from '~/composables/calc/useWeightCalculator';
 import { cableData } from '~/utils/data/cableData';
 import { drumData } from '~/utils/data/drumData';
 
+import { getCableCategories, getAvailableSizes } from '~/utils/cableDataHelper';
+
 useHead({
   title: 'ケーブル重量・ドラム選定',
 });
@@ -17,8 +19,6 @@ const {
   confirmReset,
   mathSteps
 } = useWeightCalculator();
-
-import { getCableCategories, getAvailableSizes } from '~/utils/cableDataHelper';
 
 // ケーブル選択用データ
 const categories = computed(() => getCableCategories());

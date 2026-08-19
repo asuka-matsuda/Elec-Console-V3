@@ -80,6 +80,7 @@ const handleDelete = () => {
     
     .c-history-card__main-result {
       color: var(--color-status-danger);
+
       @include cyber-text-glow(50%, 8px, var(--color-status-danger));
     }
   }
@@ -143,8 +144,7 @@ const handleDelete = () => {
   &__list {
     display: grid;
     grid-template-columns: auto 1fr;
-    column-gap: var(--space-3);
-    row-gap: var(--space-1);
+    gap: var(--space-1) var(--space-3);
     font-size: var(--font-size-sm);
 
     dt {

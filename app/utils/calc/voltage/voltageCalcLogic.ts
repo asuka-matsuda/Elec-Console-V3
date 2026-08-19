@@ -64,7 +64,7 @@ function _calculateVoltageDrop(inputs: VoltageCalcInputs, cables: CableData[]): 
 
     const fixedCable = candidates[0] || null;
     const unit = fixedCable ? fixedCable.unit : 'sq';
-    let A = _getEquivalentSq(selectedSize || 0, unit);
+    const A = _getEquivalentSq(selectedSize || 0, unit);
 
     const finalDropV = (sys.simpleK * L * I) / (1000 * (A * parallel));
 

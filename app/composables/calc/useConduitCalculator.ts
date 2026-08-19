@@ -1,11 +1,11 @@
 import { ref, computed } from 'vue';
-const uuidv4 = () => crypto.randomUUID();
 import { calculateConduitSize, generateMathData } from '~/utils/calc/conduit/conduitCalcLogic';
 import type { CableInput, ConduitCalcResult } from '~/utils/calc/conduit/conduitCalcLogic';
 import { cableData } from '~/utils/data/cableData';
 import { conduitData } from '~/utils/data/conduitData';
 import { mapConduitToHistory } from '~/utils/calc/conduit/historyMapper';
 import { useToolPage } from '~/composables/calc/useToolPage';
+const uuidv4 = () => crypto.randomUUID();
 
 export interface ConduitInputs {
   conduitCategory: string;

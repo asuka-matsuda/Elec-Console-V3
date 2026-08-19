@@ -1,5 +1,7 @@
 
 
+import type { CableData } from "~/types/database";
+
 export interface SystemData {
   id: string;
   label: string;
@@ -10,8 +12,6 @@ export interface SystemData {
   kwDivisor: number;
   simpleK: number;
 }
-
-import type { CableData } from "~/types/database";
 
 export interface VoltageCalcInputs {
   mode: "size" | "drop";

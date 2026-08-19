@@ -19,8 +19,14 @@ defineProps<{
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   
+  /* stylelint-disable-next-line selector-pseudo-class-no-unknown */
   :slotted(strong) {
     color: var(--color-text-main);
+  }
+
+  /* stylelint-disable-next-line selector-pseudo-class-no-unknown */
+  :slotted(.p-badge) {
+    flex-shrink: 0;
   }
 
   &.has-top-border {
