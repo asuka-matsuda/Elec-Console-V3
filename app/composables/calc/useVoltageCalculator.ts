@@ -1,5 +1,4 @@
-import { ref, computed, watch } from "vue";
-import { useLocalStorage } from "@vueuse/core";
+import { ref, computed, watch, onMounted } from "vue";
 import { systemData } from "~/utils/data/systemData";
 import { getAvailableSizes } from "~/utils/cableDataHelper";
 import { cableData } from "~/utils/cableData";
@@ -23,7 +22,29 @@ export const defaultForm = {
 };
 
 export function useVoltageCalculator() {
-  const form = useLocalStorage("elec-calc-voltage-form", { ...defaultForm });
+  // 1. SSRおよびハイドレーション時はデフォルト値（空）を使用する
+  const form = ref({ ...defaultForm });
+
+  // 2. クライアント側でのマウント完了後（ハイドレーション後）にローカルストレージから復元する
+  onMounted(() => {
+    const stored = localStorage.getItem("elec-calc-voltage-form");
+    if (stored) {
+      try {
+        form.value = { ...defaultForm, ...JSON.parse(stored) };
+      } catch (e) {
+        console.error("Failed to parse localStorage:", e);
+      }
+    }
+
+    // 3. 値の変更を監視し、ローカルストレージに自動保存する
+    watch(
+      form,
+      (newVal) => {
+        localStorage.setItem("elec-calc-voltage-form", JSON.stringify(newVal));
+      },
+      { deep: true }
+    );
+  });
   const isResetModalOpen = ref(false);
 
   const resetForm = () => {
