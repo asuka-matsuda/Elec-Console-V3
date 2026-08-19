@@ -1,7 +1,6 @@
 import type { HistoryEntry } from "~/utils/calc/history/types";
 import type { VoltageCalcInputs, VoltageCalcResult } from "~/utils/calc/voltage/types";
 import { getVoltageFormFields } from "~/utils/config/voltageFormConfig";
-import { formatCableName } from "~/utils/cableDataHelper";
 import { cableData } from "~/utils/cableData";
 
 /**
@@ -28,7 +27,7 @@ export function mapVoltageToHistory(
   // -- 1. 入力条件 (Inputs) のマッピング --
   const historyInputs: { label: string; value: string }[] = [];
   
-  const sysName = inputs.sys ? inputs.sys.name : "未選択";
+  const sysName = inputs.sys ? inputs.sys.label : "未選択";
   historyInputs.push({ label: getLabel("phase"), value: sysName });
   
   const pfStr = inputs.pf ? inputs.pf.toString() : "1.0";
@@ -58,7 +57,7 @@ export function mapVoltageToHistory(
         (!inputs.selectedCores || c.cores === inputs.selectedCores)
     );
     if (matched) {
-      cabName = formatCableName(matched, true, false);
+      cabName = matched.name || `${matched.size} ${matched.unit}`;
     } else {
       cabName = `${inputs.cableType} ${inputs.selectedSize}sq`;
     }
@@ -100,7 +99,7 @@ export function mapVoltageToHistory(
         (!inputs.selectedCores || c.cores === inputs.selectedCores)
     );
     if (matchedCable) {
-      cableNameStr = formatCableName(matchedCable, true, false);
+      cableNameStr = matchedCable.name || `${matchedCable.size} ${matchedCable.unit}`;
     } else {
       cableNameStr = `${cabType} ${size}sq`;
     }
