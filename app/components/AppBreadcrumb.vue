@@ -81,7 +81,8 @@ const processedItems = computed(() => {
     display: inline-flex;
     flex-wrap: wrap;
     align-items: center;
-    padding: var(--space-4);
+    padding: var(--pad-container);
+    padding-top: calc(var(--pad-container) + var(--space-2)); // SYS.LOCとの距離を確保
     list-style: none;
 
     @include ui-surface;
@@ -104,7 +105,7 @@ const processedItems = computed(() => {
   &__item {
     display: flex;
     align-items: center;
-    gap: var(--space-3);
+    gap: var(--gap-element);
 
     // 項目の区切り文字（最後の子要素以外に付与）
     &:not(:last-child)::after {
@@ -134,7 +135,7 @@ const processedItems = computed(() => {
   // 視覚的にページタイトル（h1相当）として機能するよう強調
   &__current {
     display: flex;
-    gap: var(--space-2);
+    gap: var(--gap-element);
     align-items: center;
     font-size: var(
       --font-size-lg

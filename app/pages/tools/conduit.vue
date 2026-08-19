@@ -156,10 +156,10 @@ const handleSave = async () => {
     &.is-error {
       color: var(--color-status-danger);
     }
+  }
 }
+
 .p-basis-note {
-  margin-top: var(--space-4);
-  padding: 0 var(--space-4);
   font-size: var(--font-size-2xs);
   color: var(--color-status-warning);
 }

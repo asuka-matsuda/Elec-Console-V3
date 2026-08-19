@@ -5,6 +5,9 @@ import { useVoltageCalculator } from "~/composables/calc/useVoltageCalculator";
 import { getVoltageFormFields } from "~/utils/config/voltageFormConfig";
 import { useCalcHistory } from "~/composables/calc/useCalcHistory";
 import { mapVoltageToHistory } from "~/utils/calc/voltage/historyMapper";
+import { useForm, Field } from 'vee-validate';
+import { toTypedSchema } from '@vee-validate/zod';
+import { voltageSchema } from '~/utils/calc/voltage/voltageSchema';
 
 useHead({
   title: "電圧降下・ケーブルサイズ選定",
@@ -22,6 +25,11 @@ const {
   mathSteps,
   openResetModal
 } = useVoltageCalculator();
+
+useForm({
+  validationSchema: toTypedSchema(voltageSchema),
+  initialValues: form.value,
+});
 
 const formFields = computed(() =>
   getVoltageFormFields(
@@ -65,50 +73,73 @@ const handleSaveToHistory = async () => {
 
         <div class="l-grid l-grid--2col">
           <template v-for="field in formFields" :key="field.id">
-            <AppFormGroup
+            <Field 
               v-if="!field.showIf || field.showIf()"
-              :label="field.label"
+              :name="field.id" 
+              v-model="form[field.id]" 
+              v-slot="{ errorMessage, handleChange, handleBlur }"
             >
-              <!-- Select Only -->
-              <AppSelect
-                v-if="field.type === 'select'"
-                v-model="form[field.id]"
-                :options="field.options || []"
-                :placeholder="field.placeholder"
-                :disabled="field.disabled"
-              />
-
-              <!-- Input + Select -->
-              <AppInputGroup v-else-if="field.type === 'input-select'">
-                <AppInput
-                  v-model.number="form[field.id]"
-                  type="number"
+              <AppFormGroup
+                :label="field.label"
+                :error="errorMessage"
+              >
+                <!-- Select Only -->
+                <AppSelect
+                  v-if="field.type === 'select'"
+                  v-model="form[field.id]"
+                  :options="field.options || []"
                   :placeholder="field.placeholder"
-                  :min="field.min"
-                  :step="field.step"
+                  :disabled="field.disabled"
+                  :error="!!errorMessage"
+                  @update:model-value="handleChange"
+                  @blur="handleBlur"
                 />
-                <template #append>
-                  <AppSelect
-                    v-if="field.secondaryId"
-                    v-model="form[field.secondaryId]"
-                    :options="field.secondaryOptions || []"
+
+                <!-- Input + Select -->
+                <AppInputGroup v-else-if="field.type === 'input-select'">
+                  <AppInput
+                    v-model.number="form[field.id]"
+                    type="number"
+                    :placeholder="field.placeholder"
+                    :min="field.min"
+                    :step="field.step"
+                    :error="!!errorMessage"
+                    @blur="handleBlur"
                   />
-                </template>
-              </AppInputGroup>
+                  <template #append>
+                    <Field
+                      v-if="field.secondaryId"
+                      :name="field.secondaryId"
+                      v-model="form[field.secondaryId!]"
+                      v-slot="{ errorMessage: secError, handleChange: secChange, handleBlur: secBlur }"
+                    >
+                      <AppSelect
+                        v-model="form[field.secondaryId!]"
+                        :options="field.secondaryOptions || []"
+                        :error="!!secError"
+                        @update:model-value="secChange"
+                        @blur="secBlur"
+                      />
+                    </Field>
+                  </template>
+                </AppInputGroup>
 
-              <!-- Input + Addon -->
-              <AppInputGroup v-else-if="field.type === 'input-addon'">
-                <AppInput
-                  v-model.number="form[field.id]"
-                  type="number"
-                  :placeholder="field.placeholder"
-                  :min="field.min"
-                />
-                <template #append>
-                  <span class="c-input-addon">{{ field.addonText }}</span>
-                </template>
-              </AppInputGroup>
-            </AppFormGroup>
+                <!-- Input + Addon -->
+                <AppInputGroup v-else-if="field.type === 'input-addon'">
+                  <AppInput
+                    v-model.number="form[field.id]"
+                    type="number"
+                    :placeholder="field.placeholder"
+                    :min="field.min"
+                    :error="!!errorMessage"
+                    @blur="handleBlur"
+                  />
+                  <template #append>
+                    <span class="c-input-addon">{{ field.addonText }}</span>
+                  </template>
+                </AppInputGroup>
+              </AppFormGroup>
+            </Field>
           </template>
         </div>
         </AppToolInputPanel>

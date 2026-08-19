@@ -8,8 +8,7 @@ import { useToolPage } from '~/composables/calc/useToolPage';
 export interface RackCableUIInput {
   id: string;
   category: string;
-  size: string;
-  cores: string;
+  cableIdx: string;
   count: number | null;
 }
 
@@ -31,17 +30,19 @@ const defaultInputs: RackInputs = {
   lWeak: null,
   rackHeight: null,
   separatorWidth: null,
-  strongCablesUI: [{ id: crypto.randomUUID(), category: '', size: '', cores: '', count: null }],
-  weakCablesUI: [{ id: crypto.randomUUID(), category: '', size: '', cores: '', count: null }]
+  strongCablesUI: [{ id: crypto.randomUUID(), category: '', cableIdx: '', count: null }],
+  weakCablesUI: [{ id: crypto.randomUUID(), category: '', cableIdx: '', count: null }]
 };
 
 export function useRackCalculator() {
   const standardRackSizes = [100, 200, 300, 400, 500, 600, 800, 1000, 1200];
 
   function convertUIToRackCable(uiInput: RackCableUIInput): RackCableInput {
-    const def = cableData.find(
-      (c) => c.category === uiInput.category && c.size === uiInput.size && c.cores === uiInput.cores
-    );
+    let def: any;
+    if (uiInput.cableIdx && uiInput.cableIdx.startsWith('idx_')) {
+      const idx = parseInt(uiInput.cableIdx.replace('idx_', ''), 10);
+      def = cableData[idx];
+    }
     let d = 0;
     if (def) {
       if (def.diameter.includes('×')) {
@@ -107,7 +108,7 @@ export function useRackCalculator() {
   const maxDepth = computed(() => Math.max(1, (inputs.value.rackHeight ?? 0) - 10));
 
   function addStrongCable() {
-    inputs.value.strongCablesUI.push({ id: crypto.randomUUID(), category: '', size: '', cores: '', count: 1 });
+    inputs.value.strongCablesUI.push({ id: crypto.randomUUID(), category: '', cableIdx: '', count: 1 });
   }
 
   function removeStrongCable(id: string) {
@@ -116,7 +117,7 @@ export function useRackCalculator() {
   }
 
   function addWeakCable() {
-    inputs.value.weakCablesUI.push({ id: crypto.randomUUID(), category: '', size: '', cores: '', count: 1 });
+    inputs.value.weakCablesUI.push({ id: crypto.randomUUID(), category: '', cableIdx: '', count: 1 });
   }
 
   function removeWeakCable(id: string) {

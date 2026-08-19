@@ -18,44 +18,15 @@ const {
   mathSteps
 } = useWeightCalculator();
 
+import { getCableCategories, getAvailableSizes } from '~/utils/cableDataHelper';
+
 // ケーブル選択用データ
-const categories = computed(() => {
-  return Array.from(new Set(cableData.map(c => c.category))).sort();
-});
+const categories = computed(() => getCableCategories());
+const availableSizes = computed(() => getAvailableSizes(inputs.value.category));
 
-const availableSizes = computed(() => {
-  if (!inputs.value.category) return [];
-  const sizes = cableData
-    .filter(c => c.category === inputs.value.category)
-    .map(c => c.size);
-  return Array.from(new Set(sizes)).sort((a, b) => {
-    const numA = parseFloat(a) || 0;
-    const numB = parseFloat(b) || 0;
-    if (numA !== numB) return numA - numB;
-    return a.localeCompare(b);
-  });
-});
-
-const availableCores = computed(() => {
-  if (!inputs.value.category || !inputs.value.size) return [];
-  const coreList = cableData
-    .filter(c => c.category === inputs.value.category && c.size === inputs.value.size)
-    .map(c => c.cores);
-  return Array.from(new Set(coreList)).sort((a, b) => {
-    const numA = parseInt(a) || 0;
-    const numB = parseInt(b) || 0;
-    if (numA !== numB) return numA - numB;
-    return a.localeCompare(b);
-  });
-});
-
-// Category/Sizeが変更されたらCoresをリセットする
+// Categoryが変更されたらcableIdxをリセットする
 watch(() => inputs.value.category, () => {
-  inputs.value.size = '';
-  inputs.value.cores = '';
-});
-watch(() => inputs.value.size, () => {
-  inputs.value.cores = '';
+  inputs.value.cableIdx = '';
 });
 
 
@@ -78,25 +49,21 @@ const totalWeight = computed(() => {
       <AppToolInputPanel @reset="openResetModal">
         <div class="l-stack" style="gap: var(--gap-section);">
           <div class="l-grid l-grid--2col">
-            <AppFormGroup label="ケーブル種類" required>
-              <select v-model="inputs.category" class="c-input">
-                <option value="">選択してください</option>
-                <option v-for="c in categories" :key="c" :value="c">{{ c }}</option>
-              </select>
+            <AppFormGroup label="ケーブル種別" required>
+              <AppSelect
+                v-model="inputs.category"
+                :options="categories"
+                placeholder="選択してください"
+              />
             </AppFormGroup>
             
-            <AppFormGroup label="サイズ" required>
-              <select v-model="inputs.size" class="c-input" :disabled="!inputs.category">
-                <option value="">選択してください</option>
-                <option v-for="s in availableSizes" :key="s" :value="s">{{ s }}</option>
-              </select>
-            </AppFormGroup>
-            
-            <AppFormGroup label="芯数" required>
-              <select v-model="inputs.cores" class="c-input" :disabled="!inputs.size">
-                <option value="">選択してください</option>
-                <option v-for="c in availableCores" :key="c" :value="c">{{ c }}</option>
-              </select>
+            <AppFormGroup label="ケーブルサイズ" required>
+              <AppSelect
+                v-model="inputs.cableIdx"
+                :options="availableSizes"
+                placeholder="選択してください"
+                :disabled="!inputs.category"
+              />
             </AppFormGroup>
           </div>
 
@@ -212,7 +179,7 @@ const totalWeight = computed(() => {
 .p-result-weight {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--gap-element);
   
   &__val {
     font-size: var(--font-size-2xl);
@@ -224,7 +191,7 @@ const totalWeight = computed(() => {
     font-size: var(--font-size-sm);
     color: var(--color-status-danger);
     background-color: color-mix(in srgb, var(--color-status-danger) 10%, transparent);
-    padding: var(--space-2);
+    padding: var(--gap-element);
     border-radius: var(--radius-sm);
   }
 }

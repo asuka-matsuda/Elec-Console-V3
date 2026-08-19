@@ -24,7 +24,7 @@ defineProps<{
   }
 
   &.has-top-border {
-    border-top: 1px dashed var(--color-border);
+    border-top: 1px solid var(--color-border);
     padding-top: 8px;
     margin-top: 4px;
   }

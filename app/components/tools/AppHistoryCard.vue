@@ -89,13 +89,13 @@ const handleDelete = () => {
     justify-content: space-between;
     align-items: flex-end;
     border-bottom: 1px solid var(--color-border);
-    padding-bottom: var(--space-3);
+    padding-bottom: var(--gap-component);
   }
 
   &__title-group {
     display: flex;
     flex-direction: column;
-    gap: var(--space-1);
+    gap: var(--gap-element);
   }
 
   &__date {
@@ -126,13 +126,18 @@ const handleDelete = () => {
     }
   }
 
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-element);
+  }
+
   &__section-title {
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
-    margin-bottom: var(--space-2);
     border-left: 2px solid var(--color-category-tool);
-    padding-left: var(--space-2);
+    padding-left: var(--gap-element);
   }
 
   &__list {

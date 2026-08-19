@@ -80,7 +80,7 @@ onUnmounted(() => {
   position: fixed;
   background: rgb(0 0 0 / 85%);
   color: #0ff;
-  padding: 4px 8px;
+  padding: var(--space-1) var(--space-2);
   border-radius: 4px;
   font-size: 11px;
   font-family: monospace;
@@ -93,8 +93,8 @@ onUnmounted(() => {
 
 .c-debug-visualizer-btn {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
+  bottom: var(--space-6);
+  right: var(--space-6);
   width: 48px;
   height: 48px;
   border-radius: 50%;

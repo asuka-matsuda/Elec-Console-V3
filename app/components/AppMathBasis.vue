@@ -171,13 +171,13 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
+    gap: var(--gap-element);
   }
 
   &__legend-title {
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
-    margin-bottom: var(--space-1);
   }
 
   &__legend-list {

@@ -65,14 +65,14 @@ const toggleCat = (value: string) => {
   &__header {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--gap-element);
     font-size: var(--font-size-base);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
 
     @include ui-border-fade(bottom, var(--color-border));
 
-    padding-bottom: var(--space-2);
+    padding-bottom: var(--gap-element);
   }
 
   &__filters {

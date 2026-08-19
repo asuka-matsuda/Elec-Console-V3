@@ -110,7 +110,7 @@ const handleClearAll = () => {
   gap: var(--gap-section);
 
   &__tabs {
-    margin-bottom: var(--space-6);
+    /* 親要素(p-history-page)のgapで管理されるためmargin-bottomは削除 */
   }
 
   &__grid {
@@ -130,8 +130,8 @@ const handleClearAll = () => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: var(--space-12) 0;
-    gap: var(--space-4);
+    padding: var(--pad-container) 0;
+    gap: var(--gap-element);
     color: var(--color-text-muted);
   }
 }

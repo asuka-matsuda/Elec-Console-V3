@@ -58,7 +58,7 @@ withDefaults(
   &__inner {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--gap-component);
     width: 100%;
 
     // --- Responsive Layout ---
@@ -89,13 +89,13 @@ withDefaults(
   &__label-wrapper {
     display: flex;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--gap-element);
   }
 
   &__control {
     display: flex;
     flex-direction: column;
-    gap: var(--space-1);
+    gap: var(--gap-element);
     position: relative;
   }
 
@@ -117,7 +117,7 @@ withDefaults(
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--space-2);
+  gap: var(--gap-element);
   font-size: var(--font-size-sm);
   color: var(--color-category-main);
   text-transform: uppercase;

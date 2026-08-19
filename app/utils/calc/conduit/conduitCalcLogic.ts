@@ -4,8 +4,7 @@ import type { MathStep } from '~/components/AppMathBasis.vue';
 export interface CableInput {
   id: string; // for UI tracking
   category: string;
-  size: string;
-  cores: string;
+  cableIdx: string;
   count: number | null;
 }
 
@@ -80,9 +79,11 @@ export function calculateConduitSize(
   for (const input of inputCables) {
     if (input.count === null || isNaN(input.count) || input.count <= 0) continue;
 
-    const cableDef = cableData.find(
-      (c) => c.category === input.category && c.cores === input.cores && c.size === input.size
-    );
+    let cableDef: CableData | undefined;
+    if (input.cableIdx && input.cableIdx.startsWith('idx_')) {
+      const idx = parseInt(input.cableIdx.replace('idx_', ''), 10);
+      cableDef = cableData[idx];
+    }
 
     if (!cableDef) {
       // 途中のデータなどが含まれている場合

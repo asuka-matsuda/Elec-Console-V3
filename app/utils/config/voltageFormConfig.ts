@@ -66,14 +66,14 @@ export function getVoltageFormFields(
     },
     {
       id: "cableType",
-      label: "使用ケーブル",
+      label: "ケーブル種別",
       type: "select",
       options: cableTypeOptions,
       placeholder: "選択してください",
     },
     {
       id: "fixedSize",
-      label: "ケーブルサイズ 指定",
+      label: "ケーブルサイズ",
       type: "select",
       options: computedAvailableSizes(),
       placeholder: "選択してください",

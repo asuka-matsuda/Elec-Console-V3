@@ -64,7 +64,7 @@ const history = computed(() => dashboardData.value?.history || []);
     width: 320px; // Desktop default
     flex-shrink: 0;
     position: sticky;
-    top: var(--space-8);
+    top: var(--pad-container);
     display: flex;
     flex-direction: column;
     gap: var(--gap-section);
@@ -102,12 +102,14 @@ const history = computed(() => dashboardData.value?.history || []);
 /* List Item Card Styles */
 .p-dashboard-list-item {
   padding: var(--pad-container);
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-element);
 
   &__header {
     display: flex;
     align-items: center;
     gap: var(--gap-element);
-    margin-bottom: var(--gap-element);
   }
 
   &__title {
@@ -118,7 +120,6 @@ const history = computed(() => dashboardData.value?.history || []);
   &__meta {
     font-size: var(--font-size-xs);
     color: var(--color-text-muted);
-    margin-top: var(--space-1);
   }
 }
 </style>

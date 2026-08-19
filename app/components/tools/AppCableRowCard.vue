@@ -1,52 +1,37 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { cableData } from '~/utils/data/cableData';
 import type { CableInput } from '~/utils/calc/conduit/conduitCalcLogic';
-import { useCableSelector } from '~/composables/calc/useCableSelector';
+import { getCableCategories, getAvailableSizes } from '~/utils/cableDataHelper';
 
+// note: CableInput is used as a generic type here, but make sure 
+// it matches { id: string, category: string, cableIdx: string, count: number | null }
 const props = defineProps<{
-  modelValue: CableInput;
+  modelValue: any; 
   index: number;
   removable?: boolean;
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: CableInput): void;
+  (e: 'update:modelValue', value: any): void;
   (e: 'remove'): void;
 }>();
 
-const selectedCategory = computed(() => props.modelValue.category);
-const selectedSize = computed(() => props.modelValue.size);
+const categories = computed(() => getCableCategories());
+const availableSizes = computed(() => getAvailableSizes(props.modelValue.category));
 
-const { categories, combinedSpecOptions } = useCableSelector(
-  cableData,
-  selectedCategory,
-  selectedSize
-);
-
-// specが変更された時のハンドリング
-const selectedSpec = computed({
-  get: () => {
-    if (!props.modelValue.size || !props.modelValue.cores) return '';
-    return `${props.modelValue.size}|${props.modelValue.cores}`;
-  },
-  set: (val: string) => {
-    const [size, cores] = val.split('|');
-    emit('update:modelValue', {
-      ...props.modelValue,
-      size: size || '',
-      cores: cores || ''
-    });
-  }
-});
-
-// カテゴリ変更時にspecをリセット
+// カテゴリ変更時にcableIdxをリセット
 const onCategoryChange = (val: any) => {
   emit('update:modelValue', {
     ...props.modelValue,
     category: String(val),
-    size: '',
-    cores: ''
+    cableIdx: ''
+  });
+};
+
+const updateCableIdx = (val: any) => {
+  emit('update:modelValue', {
+    ...props.modelValue,
+    cableIdx: String(val)
   });
 };
 
@@ -68,7 +53,7 @@ const updateCount = (val: any) => {
     </div>
     <div class="c-cable-row__body">
       <div class="l-grid l-grid--3col">
-        <AppFormGroup label="種類">
+        <AppFormGroup label="ケーブル種別">
           <AppSelect
             :model-value="modelValue.category"
             :options="categories"
@@ -77,12 +62,13 @@ const updateCount = (val: any) => {
           />
         </AppFormGroup>
         
-        <AppFormGroup label="サイズ・芯線数">
+        <AppFormGroup label="ケーブルサイズ">
           <AppSelect
-            v-model="selectedSpec"
-            :options="combinedSpecOptions"
+            :model-value="modelValue.cableIdx"
+            :options="availableSizes"
             placeholder="選択"
             :disabled="!modelValue.category"
+            @update:model-value="updateCableIdx"
           />
         </AppFormGroup>
         

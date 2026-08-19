@@ -216,7 +216,7 @@ const {
 .p-result-rack {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--gap-element);
   
   &__val {
     font-size: var(--font-size-2xl);
@@ -228,7 +228,7 @@ const {
     font-size: var(--font-size-sm);
     color: var(--color-status-danger);
     background-color: color-mix(in srgb, var(--color-status-danger) 10%, transparent);
-    padding: var(--space-2);
+    padding: var(--gap-element);
     border-radius: var(--radius-sm);
   }
 }

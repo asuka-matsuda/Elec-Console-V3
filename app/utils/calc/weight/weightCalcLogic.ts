@@ -3,8 +3,7 @@ import type { MathStep } from '~/components/AppMathBasis.vue';
 
 export interface WeightCalcInputs {
   category: string;
-  size: string;
-  cores: string;
+  cableIdx: string;
   L_input: number | null;
   K: number | null;
 }
@@ -49,12 +48,14 @@ export function calculateWeightAndDrum(
   cableData: CableData[],
   drumData: DrumData[]
 ): WeightCalcResult {
-  const { category, size, cores, L_input, K } = inputs;
+  const { category, cableIdx, L_input, K } = inputs;
   if (L_input === null || K === null) throw new Error("Invalid inputs");
 
-  const cable = cableData.find(
-    (c) => c.category === category && c.cores === cores && c.size === size
-  );
+  let cable: CableData | undefined;
+  if (cableIdx && cableIdx.startsWith('idx_')) {
+    const idx = parseInt(cableIdx.replace('idx_', ''), 10);
+    cable = cableData[idx];
+  }
   if (!cable) return { error: true, reason: 'cable_not_found' };
 
   const diameter = getMaxCableDiameter(cable.diameter);
@@ -157,8 +158,11 @@ export function generateMathData(
 ): MathStep[] {
   const L_req_hl = hlVal(inputs.L_input, 'L_{req}', 1);
   
-  // To handle the case when result is incomplete, we can still show base formulas
-  const cable = cableData.find(c => c.category === inputs.category && c.cores === inputs.cores && c.size === inputs.size);
+  let cable: CableData | undefined;
+  if (inputs.cableIdx && inputs.cableIdx.startsWith('idx_')) {
+    const idx = parseInt(inputs.cableIdx.replace('idx_', ''), 10);
+    cable = cableData[idx];
+  }
   const d_val = cable ? getMaxCableDiameter(cable.diameter) : null;
   const d_hl = hlVal(d_val, 'd', 1);
   const w_unit_hl = hlVal(cable ? parseFloat(cable.weight) : null, 'W_{unit}', 1);

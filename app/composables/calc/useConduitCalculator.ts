@@ -14,7 +14,7 @@ export interface ConduitInputs {
 
 const defaultInputs: ConduitInputs = {
   conduitCategory: '',
-  inputCables: [{ id: uuidv4(), category: '', size: '', cores: '', count: null as any }]
+  inputCables: [{ id: uuidv4(), category: '', cableIdx: '', count: null as any }]
 };
 
 export function useConduitCalculator() {
@@ -41,7 +41,7 @@ export function useConduitCalculator() {
 
   // VueUseのuseLocalStorageで初期化される際にidが重複しないようにする等の対処は必要に応じて行う
   if (!inputs.value.inputCables || inputs.value.inputCables.length === 0) {
-    inputs.value.inputCables = [{ id: uuidv4(), category: '', size: '', cores: '', count: null }];
+    inputs.value.inputCables = [{ id: uuidv4(), category: '', cableIdx: '', count: null }];
   }
 
   // 操作
@@ -49,8 +49,7 @@ export function useConduitCalculator() {
     inputs.value.inputCables.push({
       id: uuidv4(),
       category: '',
-      size: '',
-      cores: '',
+      cableIdx: '',
       count: 1
     });
   }

@@ -9,24 +9,31 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "typecheck": "nuxi typecheck",
+    "test": "vitest",
     "lint": "eslint .",
     "lint:style": "stylelint \"**/*.{vue,css,scss}\""
   },
   "dependencies": {
+    "@vee-validate/zod": "^4.15.1",
     "@vueuse/core": "^14.4.0",
     "@vueuse/nuxt": "^14.4.0",
     "feather-icons": "^4.29.2",
     "katex": "^0.18.1",
     "nuxt": "^4.5.1",
+    "vee-validate": "^4.15.1",
     "vue": "^3.5.40",
-    "vue-router": "^5.2.0"
+    "vue-router": "^5.2.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.17.0",
+    "@nuxt/test-utils": "^4.1.0",
     "@types/feather-icons": "^4.29.4",
     "@types/katex": "^0.16.8",
     "@vitejs/plugin-vue": "^6.0.8",
+    "@vue/test-utils": "^2.4.11",
     "eslint": "^10.8.0",
+    "happy-dom": "^20.11.2",
     "jsdoc-type-pratt-parser": "^8.0.0",
     "postcss-html": "^2.0.0",
     "sass": "^1.102.0",
@@ -34,6 +41,7 @@
     "stylelint-config-recommended-vue": "^2.0.0",
     "stylelint-config-standard-scss": "^17.0.0",
     "typescript": "^5.9.3",
+    "vitest": "^4.1.11",
     "vue-tsc": "^2.2.12"
   }
 }

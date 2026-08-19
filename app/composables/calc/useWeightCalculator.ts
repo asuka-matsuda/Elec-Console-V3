@@ -8,8 +8,7 @@ import { useToolPage } from '~/composables/calc/useToolPage';
 
 const defaultInputs: WeightCalcInputs = {
   category: '',
-  size: '',
-  cores: '',
+  cableIdx: '',
   L_input: null,
   K: null
 };
@@ -29,7 +28,7 @@ export function useWeightCalculator() {
     'ドラムサイズ・重量計算',
     defaultInputs,
     (inputs) => {
-      if (!inputs.category || !inputs.size || !inputs.cores || !inputs.L_input || inputs.L_input <= 0 || !inputs.K) {
+      if (!inputs.category || !inputs.cableIdx || !inputs.L_input || inputs.L_input <= 0 || !inputs.K) {
         return { error: true };
       }
       return calculateWeightAndDrum(inputs, cableData, drumData);

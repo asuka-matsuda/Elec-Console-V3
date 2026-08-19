@@ -14,6 +14,6 @@
   gap: var(--gap-element);
   margin-top: var(--gap-section);
   padding-top: var(--gap-section);
-  border-top: 1px dashed var(--color-border);
+  border-top: 1px solid var(--color-border);
 }
 </style>

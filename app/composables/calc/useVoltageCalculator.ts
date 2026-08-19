@@ -6,6 +6,7 @@ import { calculateDesignCurrent, calculateLogic, generateMathData } from "~/util
 import type { VoltageCalcInputs, SystemData } from "~/utils/calc/voltage/types";
 import { useToolPage } from "~/composables/calc/useToolPage";
 import { mapVoltageToHistory } from "~/utils/calc/voltage/historyMapper";
+import { voltageSchema } from "~/utils/calc/voltage/voltageSchema";
 
 export const defaultForm = {
   mode: "drop" as "drop" | "size",
@@ -98,13 +99,7 @@ export function useVoltageCalculator() {
 
     const I = calculateDesignCurrent(sys, loadVal, loadUnit, pf ?? undefined);
 
-    const missing = [];
-    if (!sys) missing.push("sys");
-    if (!loadVal) missing.push("loadVal");
-    if (!L) missing.push("L");
-    if (!cableType) missing.push("cableType");
-    if (!derating) missing.push("derating");
-    if (mode === "drop" && !selectedSize) missing.push("selectedSize");
+    const validationResult = voltageSchema.safeParse(form.value);
 
     return {
       mode,
@@ -122,8 +117,8 @@ export function useVoltageCalculator() {
       loadVal,
       loadUnit,
       pf,
-      isReady: missing.length === 0,
-      missingFields: missing,
+      isReady: validationResult.success,
+      missingFields: validationResult.success ? [] : validationResult.error.errors.map(e => String(e.path[0])),
     };
   });
 

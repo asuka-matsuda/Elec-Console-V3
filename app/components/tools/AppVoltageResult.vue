@@ -193,12 +193,12 @@ const dropStatusClass = computed(() => {
     box-shadow: inset 0 0 20px color-mix(in srgb, #000 50%, transparent);
     flex: 1;
     min-width: 0;
+    gap: var(--gap-element);
   }
 
   &__main-label {
     font-size: var(--font-size-xs);
     color: var(--color-text-secondary);
-    margin-bottom: var(--space-1);
     text-transform: uppercase;
     letter-spacing: 0.1em;
   }
@@ -244,12 +244,12 @@ const dropStatusClass = computed(() => {
     padding: var(--space-2);
     border: 1px solid var(--color-border);
     flex: 1;
+    gap: var(--gap-element);
   }
 
   .metric-label {
     font-size: var(--font-size-xs);
     color: var(--color-text-muted);
-    margin-bottom: var(--space-1);
   }
 
   .metric-value {

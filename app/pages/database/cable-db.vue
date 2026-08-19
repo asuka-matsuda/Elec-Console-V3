@@ -25,9 +25,14 @@ const tableColumns: TableColumn[] = [
       {{ isNaN(Number(value)) ? value : Number(value) / 1000 }}
     </template>
 
+    <!-- 耐電圧セル -->
+    <template #cell-voltage="{ value }">
+      {{ value }} V
+    </template>
+
     <!-- 温度セル -->
     <template #cell-temp="{ row }">
-      {{ row.baseTemp }} / {{ row.maxTemp }}
+      {{ row.baseTemp }}℃ / {{ row.maxTemp }}℃
     </template>
 
     <!-- 規格セル -->

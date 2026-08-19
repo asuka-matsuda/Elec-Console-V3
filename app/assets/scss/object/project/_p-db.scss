@@ -15,12 +15,18 @@
     overflow: hidden; // Ensure rounded corners from panel apply to table
   }
 
+  &__content {
+    flex: 1;
+    padding: var(--pad-container);
+    overflow-y: auto;
+  }
+
   &__empty {
-    padding: var(--space-10);
+    padding: var(--pad-container);
     text-align: center;
     color: var(--color-text-muted);
     font-size: var(--font-size-base);
-    border: var(--border-width-base) dotted
+    border: var(--border-width-base) solid
       theme-color(var(--color-border), 50%);
   }
 

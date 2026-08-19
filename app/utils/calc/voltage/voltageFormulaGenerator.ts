@@ -186,7 +186,7 @@ function _getVoltageDropFormula(inputs: VoltageCalcInputs, result: VoltageCalcRe
         
         let resultLine = '\\text{---}';
         if (result?.optimal && sys && targetDrop !== null && I !== null && L !== null) {
-            const calA_total = (sys.coefficient * L * I) / (1000 * (sys.voltage * (targetDrop / 100)));
+            const calA_total = (sys.simpleK * L * I) / (1000 * (sys.voltage * (targetDrop / 100)));
             const calA_each = calA_total / N_val;
             resultLine = hlOk(calA_each.toFixed(2));
         }

@@ -19,8 +19,9 @@ export const TEX_DANGER_CLASS = 'tex-status-danger';
  * @param className - 付与するCSSクラス名
  */
 export function hlVal(val: number | string | null | undefined, fallback: string, dec = 1, className = TEX_HL_CLASS): string {
-    if (val === null || val === undefined || val === '' || isNaN(Number(val))) return fallback;
-    const num = Number(val);
+    if (val === null || val === undefined || val === '') return fallback;
+    const num = parseFloat(String(val));
+    if (isNaN(num)) return fallback;
     const numStr = num % 1 === 0 ? num.toString() : num.toFixed(dec);
     return `\\htmlClass{${className}}{${numStr}}`;
 }
@@ -34,8 +35,9 @@ export function hlVal(val: number | string | null | undefined, fallback: string,
  * @param dec - 小数点以下の桁数（デフォルト: 1）
  */
 export function formatVal(val: number | string | null | undefined, fallback: string, dec = 1): string {
-    if (val === null || val === undefined || val === '' || isNaN(Number(val))) return fallback;
-    const num = Number(val);
+    if (val === null || val === undefined || val === '') return fallback;
+    const num = parseFloat(String(val));
+    if (isNaN(num)) return fallback;
     return num % 1 === 0 ? num.toString() : num.toFixed(dec);
 }
 

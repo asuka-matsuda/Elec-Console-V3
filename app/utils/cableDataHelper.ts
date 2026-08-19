@@ -8,6 +8,14 @@ export interface DropdownOption {
 
 
 /**
+ * 重複のないケーブルカテゴリ（種類）のリストを取得する
+ */
+export function getCableCategories(): DropdownOption[] {
+    const cats = [...new Set(cableData.map(c => c.category))];
+    return cats.map(c => ({ label: c, value: c }));
+}
+
+/**
  * 指定されたカテゴリ（cableType）に存在するケーブルのリストを取得する
  */
 export function getAvailableSizes(category: string): DropdownOption[] {

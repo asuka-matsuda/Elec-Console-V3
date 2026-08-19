@@ -42,6 +42,15 @@ export function calculateLogic(inputs: VoltageCalcInputs, cableDataList: CableDa
     }
 }
 
+function _getEquivalentSq(size: number, unit: string): number {
+    if (unit !== 'mm') return size;
+    if (size === 1.6) return 2.0;
+    if (size === 2.0) return 3.5;
+    if (size === 2.6) return 5.5;
+    if (size === 3.2) return 8.0;
+    return Math.PI * Math.pow(size / 2, 2);
+}
+
 function _calculateVoltageDrop(inputs: VoltageCalcInputs, cables: CableData[]): VoltageCalcResult {
     const { sys, I, L, cableType, selectedCores, derating, ambientTemp, parallel, selectedSize } = inputs;
     if (I === null || L === null || parallel === null || derating === null || selectedSize === null) throw new Error("Invalid inputs");
@@ -55,15 +64,7 @@ function _calculateVoltageDrop(inputs: VoltageCalcInputs, cables: CableData[]): 
 
     const fixedCable = candidates[0] || null;
     const unit = fixedCable ? fixedCable.unit : 'sq';
-    let A = selectedSize || 0;
-    
-    if (unit === 'mm') {
-        if (selectedSize === 1.6) A = 2.0;
-        else if (selectedSize === 2.0) A = 3.5;
-        else if (selectedSize === 2.6) A = 5.5;
-        else if (selectedSize === 3.2) A = 8.0;
-        else A = Math.PI * Math.pow((selectedSize || 0) / 2, 2);
-    }
+    let A = _getEquivalentSq(selectedSize || 0, unit);
 
     const finalDropV = (sys.simpleK * L * I) / (1000 * (A * parallel));
 
@@ -92,34 +93,53 @@ function _calculateVoltageDrop(inputs: VoltageCalcInputs, cables: CableData[]): 
 function _calculateSizeSelection(inputs: VoltageCalcInputs, cables: CableData[]): VoltageCalcResult | null {
     const { sys, I, L, cableType, selectedCores, derating, ambientTemp, parallel, targetDrop } = inputs;
     if (I === null || L === null || parallel === null || derating === null || targetDrop === null) throw new Error("Invalid inputs");
+    
     const maxDropV = sys.voltage * ((targetDrop || 0) / 100);
+    const A_req = (sys.simpleK * L * I) / (1000 * maxDropV * parallel);
 
     let candidates = cables.filter((c) => c.category === cableType && c.ampacity !== '-');
     if (selectedCores) {
         candidates = candidates.filter((c) => c.cores === selectedCores || !c.cores || c.cores === '-');
     }
 
-    candidates.sort((a, b) => parseFloat(String(a.ampacity)) - parseFloat(String(b.ampacity)));
+    candidates.sort((a, b) => {
+        const a_sq = _getEquivalentSq(parseFloat(String(a.size)), a.unit);
+        const b_sq = _getEquivalentSq(parseFloat(String(b.size)), b.unit);
+        return a_sq - b_sq;
+    });
 
     let minAmpacityCable: CableData | null = null;
-    for (const c of candidates) {
-        const finalTempDerating = getAmbientTempDerating(c.baseTemp || '', c.maxTemp || '', ambientTemp);
-        const effAmp = parseFloat(String(c.ampacity)) * derating * finalTempDerating;
-        const totalEffAmp = effAmp * parallel;
-        if (!minAmpacityCable && totalEffAmp >= I) minAmpacityCable = c;
+    let minAreaCable: CableData | null = null;
 
+    for (const c of candidates) {
+        const sizeVal = typeof c.size === 'number' ? c.size : parseFloat(String(c.size));
+        const c_sq = _getEquivalentSq(sizeVal, c.unit);
+        
+        if (!minAreaCable && c_sq >= A_req) {
+            minAreaCable = c;
+        }
+
+        const finalTempDerating = getAmbientTempDerating(c.baseTemp || '', c.maxTemp || '', ambientTemp);
+        const ampacityVal = typeof c.ampacity === 'number' ? c.ampacity : parseFloat(String(c.ampacity));
+        const effAmp = ampacityVal * derating * finalTempDerating;
+        const totalEffAmp = effAmp * parallel;
+        
+        if (!minAmpacityCable && totalEffAmp >= I) {
+            minAmpacityCable = c;
+        }
+
+        if (c_sq < A_req) continue;
         if (totalEffAmp < I) continue;
-        const R_total = parseFloat(String(c.resistance)) / parallel;
-        const dropV = sys.coefficient * L * I * R_total / 1000;
-        if (dropV > maxDropV) continue;
+
+        const finalDropV = (sys.simpleK * L * I) / (1000 * c_sq * parallel);
 
         return {
             optimal: c,
             minAmpacityCable,
             finalEffAmp: totalEffAmp,
-            finalDropV: dropV,
+            finalDropV: finalDropV,
             parallelCount: parallel,
-            convertedA: 0, // In original code it was implicitly omitted
+            convertedA: c_sq,
             tempDerating: finalTempDerating
         };
     }
