@@ -119,9 +119,10 @@ const handleDelete = () => {
   &__body {
     display: grid;
     gap: var(--space-4);
+    grid-template-columns: 1fr 1fr; // デスクトップファースト
 
-    @include mq("md") {
-      grid-template-columns: 1fr 1fr;
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
     }
   }
 

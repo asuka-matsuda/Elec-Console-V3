@@ -21,7 +21,9 @@ const storageKey = computed(() => {
 });
 
 // 現在のタブの履歴ロジックを取得
-const { historyList, deleteHistory, clearAll } = useCalcHistory(storageKey.value);
+const { historyList, deleteHistory, clearAll } = useCalcHistory(
+  storageKey.value,
+);
 
 // タブが切り替わったら再取得するために、useCalcHistoryをコンポーネント化するか、
 // 簡易的にコンポーザブル自体を再呼び出しするか。
@@ -48,7 +50,11 @@ const handleClearAll = () => {
           size="lg"
         >
           <template #actions>
-            <AppButtonDanger v-if="historyList.length > 0" size="sm" @click="handleClearAll">
+            <AppButtonDanger
+              v-if="historyList.length > 0"
+              size="sm"
+              @click="handleClearAll"
+            >
               <AppIcon name="trash-2" size="sm" />
               全て削除
             </AppButtonDanger>
@@ -58,15 +64,15 @@ const handleClearAll = () => {
 
       <!-- タブ部分 -->
       <div class="p-history-page__tabs">
-        <AppTabs
-          v-model="currentTab"
-          :options="tabs"
-        />
+        <AppTabs v-model="currentTab" :options="tabs" />
       </div>
 
       <ClientOnly>
         <!-- 履歴一覧 -->
-        <div v-if="historyList.length > 0" class="p-history-page__grid l-grid l-grid--auto-fill">
+        <div
+          v-if="historyList.length > 0"
+          class="p-history-page__grid l-grid l-grid--auto-fill"
+        >
           <AppHistoryCard
             v-for="entry in historyList"
             :key="entry.id"
@@ -84,7 +90,11 @@ const handleClearAll = () => {
         <!-- SSR時・ハイドレーション前のプレースホルダー -->
         <template #fallback>
           <div class="p-history-page__empty c-empty-state">
-            <AppIcon name="loader" size="lg" class="c-empty-state__icon u-spin" />
+            <AppIcon
+              name="loader"
+              size="lg"
+              class="c-empty-state__icon u-spin"
+            />
             <p class="c-empty-state__text">履歴を読み込み中...</p>
           </div>
         </template>
@@ -107,10 +117,11 @@ const handleClearAll = () => {
     display: grid;
     gap: var(--space-4);
     
-    // l-grid--auto-fill 相当のレスポンシブ
-    grid-template-columns: 1fr;
-    @include mq("md") {
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    // デスクトップファーストのレイアウト
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
     }
   }
 
@@ -129,7 +140,11 @@ const handleClearAll = () => {
   animation: spin 1s linear infinite;
 }
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
