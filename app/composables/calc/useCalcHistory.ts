@@ -6,21 +6,25 @@ import type { HistoryEntry } from "~/utils/calc/history/types";
  * @param storageKey ローカルストレージの保存先キー (例: 'elec_calc_voltage_hist')
  */
 export function useCalcHistory(storageKey: string) {
-  // ハイドレーションエラーを防ぐため、初期値は空配列にする
-  const historyList = ref<HistoryEntry[]>([]);
-
-  // クライアント側でマウント後にストレージからデータを復元する（遅延ハイドレーション）
-  onMounted(() => {
-    const stored = localStorage.getItem(storageKey);
-    if (stored) {
-      try {
-        historyList.value = JSON.parse(stored);
-      } catch (e) {
-        console.error("Failed to parse history from localStorage:", e);
+  // setup時に即座にlocalStorageから読み込む (クライアントナビゲーション時のラグを防ぐため)
+  const getInitialState = (): HistoryEntry[] => {
+    if (import.meta.client) {
+      const stored = localStorage.getItem(storageKey);
+      if (stored) {
+        try {
+          return JSON.parse(stored);
+        } catch (e) {
+          console.error("Failed to parse history:", e);
+        }
       }
     }
+    return [];
+  };
 
-    // 値が変更されるたびにストレージに自動保存
+  const historyList = ref<HistoryEntry[]>(getInitialState());
+
+  // クライアント側のみ、値が変更されたらストレージに自動保存
+  if (import.meta.client) {
     watch(
       historyList,
       (newVal) => {
@@ -28,7 +32,7 @@ export function useCalcHistory(storageKey: string) {
       },
       { deep: true }
     );
-  });
+  }
 
   /**
    * 履歴を追加する

@@ -64,21 +64,31 @@ const handleClearAll = () => {
         />
       </div>
 
-      <!-- 履歴一覧 -->
-      <div v-if="historyList.length > 0" class="p-history-page__grid l-grid l-grid--auto-fill">
-        <AppHistoryCard
-          v-for="entry in historyList"
-          :key="entry.id"
-          :entry="entry"
-          @delete="deleteHistory"
-        />
-      </div>
+      <ClientOnly>
+        <!-- 履歴一覧 -->
+        <div v-if="historyList.length > 0" class="p-history-page__grid l-grid l-grid--auto-fill">
+          <AppHistoryCard
+            v-for="entry in historyList"
+            :key="entry.id"
+            :entry="entry"
+            @delete="deleteHistory"
+          />
+        </div>
 
-      <!-- 空状態 -->
-      <div v-else class="p-history-page__empty c-empty-state">
-        <AppIcon name="inbox" size="lg" class="c-empty-state__icon" />
-        <p class="c-empty-state__text">保存された履歴はありません。</p>
-      </div>
+        <!-- 空状態 -->
+        <div v-else class="p-history-page__empty c-empty-state">
+          <AppIcon name="inbox" size="lg" class="c-empty-state__icon" />
+          <p class="c-empty-state__text">保存された履歴はありません。</p>
+        </div>
+
+        <!-- SSR時・ハイドレーション前のプレースホルダー -->
+        <template #fallback>
+          <div class="p-history-page__empty c-empty-state">
+            <AppIcon name="loader" size="lg" class="c-empty-state__icon u-spin" />
+            <p class="c-empty-state__text">履歴を読み込み中...</p>
+          </div>
+        </template>
+      </ClientOnly>
     </AppPanel>
   </div>
 </template>
@@ -113,5 +123,13 @@ const handleClearAll = () => {
     gap: var(--space-4);
     color: var(--color-text-muted);
   }
+}
+
+.u-spin {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 </style>
