@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { CableInput } from '~/utils/calc/conduit/conduitCalcLogic';
+import { calculateCableArea } from '~/utils/calc/conduit/conduitCalcLogic';
 import { getCableCategories, getAvailableSizes } from '~/utils/cableDataHelper';
+import { cableData } from '~/utils/data/cableData';
 
 // note: CableInput is used as a generic type here, but make sure 
 // it matches { id: string, category: string, cableIdx: string, count: number | null }
@@ -18,6 +20,15 @@ const emit = defineEmits<{
 
 const categories = computed(() => getCableCategories());
 const availableSizes = computed(() => getAvailableSizes(props.modelValue.category));
+
+const singleCableArea = computed(() => {
+  const cableIdxStr = props.modelValue.cableIdx;
+  if (!cableIdxStr || !cableIdxStr.startsWith('idx_')) return null;
+  const idx = parseInt(cableIdxStr.replace('idx_', ''), 10);
+  const def = cableData[idx];
+  if (!def) return null;
+  return calculateCableArea(def.diameter);
+});
 
 // カテゴリ変更時にcableIdxをリセット
 const onCategoryChange = (val: any) => {
@@ -46,7 +57,12 @@ const updateCount = (val: any) => {
 <template>
   <AppCard class="c-cable-row" variant="default">
     <div class="c-cable-row__header">
-      <span class="c-cable-row__title">ケーブル {{ index + 1 }}</span>
+      <div class="c-cable-row__title-group">
+        <span class="c-cable-row__title">ケーブル {{ index + 1 }}</span>
+        <span class="c-cable-row__meta" v-if="singleCableArea !== null">
+          ( 断面積: {{ singleCableArea.toFixed(1) }} mm² / 本 )
+        </span>
+      </div>
       <AppButtonDanger v-if="removable" size="sm" icon-only @click="emit('remove')">
         <AppIcon name="trash-2" size="sm" />
       </AppButtonDanger>
@@ -102,10 +118,21 @@ const updateCount = (val: any) => {
     margin-bottom: var(--gap-element);
   }
 
+  &__title-group {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-element);
+  }
+
   &__title {
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
+  }
+
+  &__meta {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
   }
 }
 </style>

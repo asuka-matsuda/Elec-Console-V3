@@ -130,7 +130,7 @@ export function calculateConduitSize(
   // 内線規程に基づき、異なるケーブル混在時(32%)と同一ケーブル時(48%)の両方の基準で最適な配管サイズを選定する
   const targetConduits = conduitData
     .filter((c) => c.category === conduitCategory)
-    .sort((a, b) => parseFloat(a.innerDiameter) - parseFloat(b.innerDiameter));
+    .sort((a, b) => Number(a.innerDiameter) - Number(b.innerDiameter));
 
   if (targetConduits.length === 0) {
     return { success: false, partial: false, totalArea, cableDetails, error: 'CONDUIT_NOT_FOUND', message: '指定された配管のデータがありません' };
@@ -140,11 +140,11 @@ export function calculateConduitSize(
 
   function findOptimalConduit(conduits: ConduitData[], requiredArea: number, ruleField: 'area32' | 'area48') {
     for (const conduit of conduits) {
-      const allowable = parseFloat(conduit[ruleField]);
+      const allowable = Number(conduit[ruleField]);
       if (requiredArea <= allowable) {
         return {
           conduit,
-          fillPercent: (requiredArea / parseFloat(conduit.area)) * 100,
+          fillPercent: (requiredArea / Number(conduit.area)) * 100,
           allowable,
           isOversize: false
         };
@@ -152,9 +152,9 @@ export function calculateConduitSize(
     }
     return {
       conduit: largest!,
-      fillPercent: (requiredArea / parseFloat(largest!.area)) * 100,
-      allowable: parseFloat(largest![ruleField]),
-      isOversize: requiredArea > parseFloat(largest![ruleField])
+      fillPercent: (requiredArea / Number(largest!.area)) * 100,
+      allowable: Number(largest![ruleField]),
+      isOversize: requiredArea > Number(largest![ruleField])
     };
   }
 
@@ -194,31 +194,18 @@ export function generateMathData(
   const allCablesKnown = res?.success && !res.partial;
   const totalKnownArea = res?.totalArea || 0;
 
-  const partsVariables = [];
-  const partsNumbers = [];
-  for (let i = 0; i < rowCount; i++) {
-    partsVariables.push(rowCount === 1 ? 'A_1' : `A_{${i + 1}}`);
-    const d = details[i];
-    if (d) {
-      partsNumbers.push(hlVal(d.subTotalArea, `A_{${i + 1}}`, 1));
-    } else {
-      partsNumbers.push('\\text{---}');
-    }
-  }
-
-  const formulaVarStr = partsVariables.join(' + ');
-  const formulaNumStr = partsNumbers.join(' + ');
+  const formulaVarStr = rowCount === 1 ? 'A_1' : '\\Sigma A_n';
   const resultStr1 = allCablesKnown ? hlOk(totalKnownArea.toFixed(1)) : '\\text{---}';
   
-  const formula1 = buildFormula('A_{total}', formulaVarStr + ' \\\\ &= ' + formulaNumStr, resultStr1, 'mm^2');
+  const formula1 = buildFormula('A_{total}', formulaVarStr, resultStr1, 'mm^2');
 
-  let formula2 = `\\begin{aligned} \\text{32\\%以下:} \\quad A_{\\text{conduit}} \\times 0.32 &\\ge A_{total} \\\\ \\text{---} \\text{ mm}^2 &\\ge \\text{---} \\text{ mm}^2 \\\\\\\\ \\text{48\\%以下:} \\quad A_{\\text{conduit}} \\times 0.48 &\\ge A_{total} \\\\ \\text{---} \\text{ mm}^2 &\\ge \\text{---} \\text{ mm}^2 \\end{aligned}`;
+  let formula2 = `\\begin{aligned} \\text{32\\%以下:} \\quad A_{\\text{pipe}} \\times 0.32 &\\ge A_{total} \\\\ \\text{---} \\text{ mm}^2 &\\ge \\text{---} \\text{ mm}^2 \\\\\\\\ \\text{48\\%以下:} \\quad A_{\\text{pipe}} \\times 0.48 &\\ge A_{total} \\\\ \\text{---} \\text{ mm}^2 &\\ge \\text{---} \\text{ mm}^2 \\end{aligned}`;
   if (allCablesKnown && conduitCategory && res?.conduit32 && res?.conduit48) {
     const totalAreaHl = hlVal(totalKnownArea, 'A_{total}', 1);
     const allow32Hl = hlVal(res.allowable32, 'A_{\\text{allow32}}', 1);
     const allow48Hl = hlVal(res.allowable48, 'A_{\\text{allow48}}', 1);
     
-    formula2 = `\\begin{aligned} \\text{32\\%以下:} \\quad A_{\\text{conduit}} \\times 0.32 &\\ge A_{total} \\\\ ${allow32Hl} \\text{ mm}^2 &\\ge ${totalAreaHl} \\text{ mm}^2 \\\\ &\\rightarrow \\text{【 } ${hlOk(res.conduit32.size)} \\text{ 】選定} \\\\\\\\ \\text{48\\%以下:} \\quad A_{\\text{conduit}} \\times 0.48 &\\ge A_{total} \\\\ ${allow48Hl} \\text{ mm}^2 &\\ge ${totalAreaHl} \\text{ mm}^2 \\\\ &\\rightarrow \\text{【 } ${hlOk(res.conduit48.size)} \\text{ 】選定} \\end{aligned}`;
+    formula2 = `\\begin{aligned} \\text{32\\%以下:} \\quad A_{\\text{pipe}} \\times 0.32 &\\ge A_{total} \\\\ ${allow32Hl} \\text{ mm}^2 &\\ge ${totalAreaHl} \\text{ mm}^2 \\\\ &\\rightarrow \\text{【 } ${hlOk(res.conduit32.size)} \\text{ 】選定} \\\\\\\\ \\text{48\\%以下:} \\quad A_{\\text{pipe}} \\times 0.48 &\\ge A_{total} \\\\ ${allow48Hl} \\text{ mm}^2 &\\ge ${totalAreaHl} \\text{ mm}^2 \\\\ &\\rightarrow \\text{【 } ${hlOk(res.conduit48.size)} \\text{ 】選定} \\end{aligned}`;
   }
 
   return [
@@ -227,13 +214,13 @@ export function generateMathData(
       tex: formula1,
       legend: [
         `\\( A_{total} \\) : ケーブル合計断面積 [mm²]`,
-        `\\( A_n \\) : ケーブルnの合計断面積 [mm²]`
+        rowCount === 1 ? `\\( A_1 \\) : ケーブルの断面積 [mm²]` : `\\( A_n \\) : 各ケーブルの合計断面積 [mm²]`
       ]
     },
     {
       title: '② 最小配管サイズの抽出',
       tex: formula2,
-      legend: [`\\( A_{\\text{conduit}} \\) : 選定管の断面積 [mm²]`]
+      legend: [`\\( A_{\\text{pipe}} \\) : 選定管の断面積 [mm²]`]
     }
   ];
 }

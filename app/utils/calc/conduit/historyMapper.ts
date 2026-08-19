@@ -13,14 +13,13 @@ export function mapConduitToHistory(
   const inputs = [{ label: "配管種類", value: conduitCategory }];
 
   inputCables.forEach((c, i) => {
-    const cableDef = cableData.find(
-      (cd: any) =>
-        cd.category === c.category &&
-        cd.size === c.size &&
-        cd.cores === c.cores
-    );
+    let cableDef: any = undefined;
+    if (c.cableIdx && c.cableIdx.startsWith('idx_')) {
+      const idx = parseInt(c.cableIdx.replace('idx_', ''), 10);
+      cableDef = cableData[idx];
+    }
     const name = formatCableName(
-      cableDef || { category: c.category, size: c.size, cores: c.cores } as any,
+      cableDef || { category: c.category, size: '', cores: '' } as any,
       true,
       false
     );

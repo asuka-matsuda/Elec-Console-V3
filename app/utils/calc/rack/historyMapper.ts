@@ -34,11 +34,13 @@ export function mapRackToHistory(
     });
     strongCables.forEach((c, i) => {
       if (!c.count || c.count <= 0) return;
-      const cableDef = cableData.find(
-        (cd: any) => cd.category === c.category && cd.size === c.size && cd.cores === c.cores
-      );
+      let cableDef: any = undefined;
+      if (c.cableIdx && c.cableIdx.startsWith('idx_')) {
+        const idx = parseInt(c.cableIdx.replace('idx_', ''), 10);
+        cableDef = cableData[idx];
+      }
       const name = formatCableName(
-        cableDef || { category: c.category, size: c.size, cores: c.cores } as any,
+        cableDef || { category: c.category, size: '', cores: '' } as any,
         true,
         false
       );
@@ -56,11 +58,13 @@ export function mapRackToHistory(
     });
     weakCables.forEach((c, i) => {
       if (!c.count || c.count <= 0) return;
-      const cableDef = cableData.find(
-        (cd: any) => cd.category === c.category && cd.size === c.size && cd.cores === c.cores
-      );
+      let cableDef: any = undefined;
+      if (c.cableIdx && c.cableIdx.startsWith('idx_')) {
+        const idx = parseInt(c.cableIdx.replace('idx_', ''), 10);
+        cableDef = cableData[idx];
+      }
       const name = formatCableName(
-        cableDef || { category: c.category, size: c.size, cores: c.cores } as any,
+        cableDef || { category: c.category, size: '', cores: '' } as any,
         true,
         false
       );

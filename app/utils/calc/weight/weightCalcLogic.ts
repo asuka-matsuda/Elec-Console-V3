@@ -60,7 +60,7 @@ export function calculateWeightAndDrum(
 
   const diameter = getMaxCableDiameter(cable.diameter);
 
-  const weightPerKm = parseFloat(cable.weight);
+  const weightPerKm = Number(cable.weight);
   const cableWeight = (weightPerKm * L_input) / 1000;
 
   let bestDrum: DrumData | null = null;
@@ -73,16 +73,16 @@ export function calculateWeightAndDrum(
   const bendFactor = category.includes('6.6kV') ? 15 : 12;
   const minD2 = bendFactor * diameter;
 
-  const minDrumByWeight = drumData.find((d) => parseFloat(d.max_winding_weight) >= cableWeight);
-  const minDrumByRadius = drumData.find((d) => parseFloat(d.barrel_diameter) >= minD2);
+  const minDrumByWeight = drumData.find((d) => Number(d.max_winding_weight) >= cableWeight);
+  const minDrumByRadius = drumData.find((d) => Number(d.barrel_diameter) >= minD2);
 
   for (const drum of drumData) {
-    const maxWindingWeight = parseFloat(drum.max_winding_weight);
+    const maxWindingWeight = Number(drum.max_winding_weight);
     if (cableWeight > maxWindingWeight) continue;
 
-    const D1 = parseFloat(drum.flange_diameter);
-    const D2 = parseFloat(drum.barrel_diameter);
-    const W2 = parseFloat(drum.inner_width);
+    const D1 = Number(drum.flange_diameter);
+    const D2 = Number(drum.barrel_diameter);
+    const W2 = Number(drum.inner_width);
 
     if (D2 < minD2) continue;
 
@@ -111,7 +111,7 @@ export function calculateWeightAndDrum(
     const capacity = Math.PI * m * n * (D2 + n * diameter) * 1e-3;
 
     if (capacity >= L_input) {
-      if (!bestDrum || parseFloat(drum.weight) < parseFloat(bestDrum.weight)) {
+      if (!bestDrum || Number(drum.weight) < Number(bestDrum.weight)) {
         bestDrum = drum;
         maxCapacityMeters = capacity;
         bestMathParams = {
@@ -165,7 +165,7 @@ export function generateMathData(
   }
   const d_val = cable ? getMaxCableDiameter(cable.diameter) : null;
   const d_hl = hlVal(d_val, 'd', 1);
-  const w_unit_hl = hlVal(cable ? parseFloat(cable.weight) : null, 'W_{unit}', 1);
+  const w_unit_hl = hlVal(cable ? Number(cable.weight) : null, 'W_{unit}', 1);
   const bendFactor = inputs.category.includes('6.6kV') ? 15 : 12;
 
   // ① ケーブル重量算出と許容巻取重量
@@ -177,7 +177,7 @@ export function generateMathData(
 
   if (result && !result.error && result.cableWeight !== undefined && result.bestDrum) {
     W_cable_res = result.cableWeight.toFixed(1);
-    const W_max = parseFloat(result.bestDrum.max_winding_weight);
+    const W_max = Number(result.bestDrum.max_winding_weight);
     drumWeightSub = `${hlVal(result.cableWeight, 'W_{cable}', 1)} \\text{ kg} &\\le ${hlOk(W_max.toFixed(1))} \\text{ kg}`;
     drumWeightSub += ` \\\\ &\\rightarrow \\text{【 } ${hlOk(result.bestDrum.id)} \\text{ 】}`;
   }

@@ -9,12 +9,14 @@ export function mapWeightToHistory(
 ): Omit<HistoryEntry, "id" | "timestamp"> | null {
   if (result.error) return null;
 
-  const cableDef = cableData.find(
-    (cd: any) => cd.category === settings.category && cd.size === settings.size && cd.cores === settings.cores
-  );
+  let cableDef: any = undefined;
+  if (settings.cableIdx && settings.cableIdx.startsWith('idx_')) {
+    const idx = parseInt(settings.cableIdx.replace('idx_', ''), 10);
+    cableDef = cableData[idx];
+  }
   
   const name = formatCableName(
-    cableDef || { category: settings.category, size: settings.size, cores: settings.cores } as any,
+    cableDef || { category: settings.category, size: '', cores: '' } as any,
     true,
     false
   );
@@ -50,7 +52,7 @@ export function mapWeightToHistory(
     });
     results.push({
       label: "総重量 (ケーブル+ドラム)",
-      value: `${((result.cableWeight || 0) + parseFloat(result.bestDrum.weight)).toFixed(1)} kg`,
+      value: `${((result.cableWeight || 0) + Number(result.bestDrum.weight)).toFixed(1)} kg`,
     });
     results.push({
       label: "最大巻取可能長",

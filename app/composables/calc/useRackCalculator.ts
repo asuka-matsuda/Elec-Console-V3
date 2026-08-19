@@ -46,7 +46,7 @@ export function useRackCalculator() {
     let d = 0;
     if (def) {
       if (def.diameter.includes('×')) {
-        d = Math.max(...def.diameter.split('×').map((s) => parseFloat(s.trim())));
+        d = Math.max(...def.diameter.split('×').map((s: string) => parseFloat(s.trim())));
       } else {
         d = parseFloat(def.diameter);
       }
