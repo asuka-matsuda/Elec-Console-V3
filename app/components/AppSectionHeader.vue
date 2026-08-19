@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { MenuSection } from "~/utils/menuData";
+import type { MenuSection } from "~/utils/data/menuData";
 
 withDefaults(
   defineProps<{

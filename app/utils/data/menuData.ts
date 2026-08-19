@@ -58,28 +58,28 @@ export const menuData: MenuSection[] = [
     items: [
       {
         text: "電圧降下計算・ケーブルサイズ選定",
-        href: "/tools/calc-voltage",
+        href: "/tools/voltage",
         icon: "zap",
         customClass: "l-global-nav__link--tool",
         desc: "適切なケーブルサイズと電圧降下を自動計算します。",
       },
       {
         text: "配管サイズ自動選定",
-        href: "/tools/calc-conduit",
+        href: "/tools/conduit",
         icon: "target",
         customClass: "l-global-nav__link--tool",
         desc: "内線規程に基づき適切な配管サイズを導き出します。",
       },
       {
         text: "ケーブルラック選定",
-        href: "/tools/calc-rack",
+        href: "/tools/rack",
         icon: "align-justify",
         customClass: "l-global-nav__link--tool",
         desc: "最適なラック幅を自動選定します。",
       },
       {
         text: "ケーブル重量概算・ドラム選定",
-        href: "/tools/calc-weight",
+        href: "/tools/weight",
         icon: "package",
         customClass: "l-global-nav__link--tool",
         desc: "ケーブル重量を概算し最適な木製ドラムを提案します。",
@@ -93,7 +93,7 @@ export const menuData: MenuSection[] = [
       },
       {
         text: "ブレーカー選定（電灯）",
-        href: "/tools/calc-panel-light",
+        href: "/tools/panel-light",
         icon: "sun",
         customClass: "l-global-nav__link--tool",
         disabled: true,
@@ -101,7 +101,7 @@ export const menuData: MenuSection[] = [
       },
       {
         text: "ブレーカー選定（動力）",
-        href: "/tools/calc-panel-power",
+        href: "/tools/panel-power",
         icon: "power",
         customClass: "l-global-nav__link--tool",
         disabled: true,

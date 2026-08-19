@@ -1,8 +1,8 @@
 import { ref, computed, watch, onMounted } from "vue";
 import { systemData } from "~/utils/data/systemData";
 import { getAvailableSizes } from "~/utils/cableDataHelper";
-import { cableData } from "~/utils/cableData";
-import { calculateDesignCurrent, calculateLogic, generateMathData } from "~/utils/calcVoltageEngine";
+import { cableData } from "~/utils/data/cableData";
+import { calculateDesignCurrent, calculateLogic, generateMathData } from "~/utils/calc/voltage/calcVoltageEngine";
 import type { VoltageCalcInputs, SystemData } from "~/utils/calc/voltage/types";
 
 export const defaultForm = {

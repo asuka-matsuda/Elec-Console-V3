@@ -1,0 +1,19 @@
+<script setup lang="ts">
+</script>
+
+<template>
+  <div class="p-result-details">
+    <slot />
+  </div>
+</template>
+
+<style scoped lang="scss">
+.p-result-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-element);
+  margin-top: var(--gap-section);
+  padding-top: var(--gap-section);
+  border-top: 1px dashed var(--color-border);
+}
+</style>

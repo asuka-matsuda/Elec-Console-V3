@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { drumData } from "~/utils/drumData";
+import { drumData } from "~/utils/data/drumData";
 import type { TableColumn } from "~/components/AppTable.vue";
 
 const tableColumns: TableColumn[] = [

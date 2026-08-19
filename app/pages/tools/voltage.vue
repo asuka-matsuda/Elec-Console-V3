@@ -48,47 +48,19 @@ const handleSaveToHistory = async () => {
     </template>
 
     <template #results>
-      <AppPanel bracket-color="tool" style="flex: 1; min-height: 0">
-        <template #header>
-          <AppSectionHeader
-            title="計算結果"
-            divider-type="fade-center"
-            icon="check-square"
-            variant="tool"
-            size="md"
-          >
-            <template #actions>
-              <AppSaveButton 
-                :disabled="!calcInputs.isReady"
-                :save-function="handleSaveToHistory"
-              />
-            </template>
-          </AppSectionHeader>
-        </template>
+      <AppToolResultPanel
+        title="計算結果"
+        :save-disabled="!calcInputs.isReady"
+        @save="handleSaveToHistory"
+      >
         <ClientOnly>
           <AppVoltageResult :inputs="calcInputs" :result="calcResult" />
         </ClientOnly>
-      </AppPanel>
+      </AppToolResultPanel>
     </template>
 
     <template #inputs>
-      <AppPanel bracket-color="tool" style="flex: 1; min-height: 0">
-        <template #header>
-          <AppSectionHeader
-            title="条件入力"
-            divider-type="fade-center"
-            icon="edit"
-            variant="tool"
-            size="md"
-          >
-            <template #actions>
-              <AppButtonDanger size="sm" @click="isResetModalOpen = true">
-                <AppIcon name="refresh-cw" size="sm" />
-                リセット
-              </AppButtonDanger>
-            </template>
-          </AppSectionHeader>
-        </template>
+      <AppToolInputPanel @reset="isResetModalOpen = true">
         <!-- 1. 計算モード切替 (AppRadioGroup) -->
         <AppRadioGroup v-model="form.mode" :options="modeOptions" />
 
@@ -140,7 +112,7 @@ const handleSaveToHistory = async () => {
             </AppFormGroup>
           </template>
         </div>
-      </AppPanel>
+      </AppToolInputPanel>
     </template>
 
     <template #basis>
@@ -162,31 +134,12 @@ const handleSaveToHistory = async () => {
         <ClientOnly>
           <AppMathBasis :steps="mathSteps" />
         </ClientOnly>
-
-        <!-- Reset Confirmation Modal -->
-        <AppModal
-          v-model="isResetModalOpen"
-          title="入力条件のリセット"
-          icon="alert-triangle"
-          variant="danger"
-        >
-          <p>
-            これまでに入力したすべての条件が初期化されます。<br />
-            本当によろしいですか？
-          </p>
-          <template #footer>
-            <AppButtonSecondary @click="isResetModalOpen = false">
-              キャンセル
-            </AppButtonSecondary>
-            <AppButtonDanger @click="resetForm">
-              <AppIcon name="trash-2" size="sm" />
-              リセットする
-            </AppButtonDanger>
-          </template>
-        </AppModal>
       </AppPanel>
     </template>
   </AppToolLayout>
+
+  <!-- Reset Confirmation Modal -->
+  <AppToolResetModal v-model="isResetModalOpen" @confirm="resetForm" />
 </template>
 
 <style scoped lang="scss">

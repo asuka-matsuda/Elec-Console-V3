@@ -1,5 +1,6 @@
-import { cableData as defaultCableData } from '~/utils/cableData';
-import type { SystemData, CableData, VoltageCalcInputs, VoltageCalcResult } from './types';
+import type { CableData } from '~/types/database';
+import { cableData as defaultCableData } from '~/utils/data/cableData';
+import type { SystemData, VoltageCalcInputs, VoltageCalcResult } from './types';
 
 /**
  * 容量と単位から設計電流(A)を逆算します。
@@ -77,7 +78,7 @@ function _calculateVoltageDrop(inputs: VoltageCalcInputs, cables: CableData[]): 
     }
 
     return {
-        optimal: fixedCable || { category: cableType, size: selectedSize || '', unit: unit },
+        optimal: (fixedCable || { category: cableType, size: selectedSize || '', unit: unit }) as CableData,
         minAmpacityCable: fixedCable,
         finalEffAmp,
         finalDropV,

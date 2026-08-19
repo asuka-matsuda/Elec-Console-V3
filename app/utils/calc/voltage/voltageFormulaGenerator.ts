@@ -1,6 +1,7 @@
-import { cableData as defaultCableData } from '~/utils/cableData';
+import type { CableData, ConduitData, DrumData } from '~/types/database';
+import { cableData as defaultCableData } from '~/utils/data/cableData';
 import { hlVal, formatVal } from '~/utils/mathUtils';
-import type { VoltageCalcInputs, VoltageCalcResult, CableData, MathStep } from './types';
+import type { VoltageCalcInputs, VoltageCalcResult, MathStep } from './types';
 import { getAmbientTempDerating } from './voltageCalcLogic';
 
 function _getTargetCable(inputs: VoltageCalcInputs, result: VoltageCalcResult | null, cables: CableData[]): CableData | null {

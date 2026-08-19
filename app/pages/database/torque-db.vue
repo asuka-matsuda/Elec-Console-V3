@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { torqueData } from "~/utils/torqueData";
+import { torqueData } from "~/utils/data/torqueData";
 import type { TableColumn } from "~/components/AppTable.vue";
 
 // Flatten the nested torqueData structure

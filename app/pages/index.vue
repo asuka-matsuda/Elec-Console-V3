@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { menuData } from "../utils/menuData";
+import { menuData } from "~/utils/data/menuData";
 
 // Extract just the sections to show on the dashboard
 const dashboardSections = menuData.filter((section) => section.showInDashboard);

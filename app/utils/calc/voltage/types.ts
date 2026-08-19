@@ -1,3 +1,5 @@
+
+
 export interface SystemData {
   id: string;
   label: string;
@@ -9,18 +11,7 @@ export interface SystemData {
   simpleK: number;
 }
 
-export interface CableData {
-  name?: string;
-  category: string;
-  cores?: string;
-  size: string | number;
-  unit: string;
-  ampacity?: string | number;
-  resistance?: string | number;
-  baseTemp?: string | number;
-  maxTemp?: string | number;
-  [key: string]: unknown; // Allow other properties
-}
+import type { CableData } from "~/types/database";
 
 export interface VoltageCalcInputs {
   mode: "size" | "drop";

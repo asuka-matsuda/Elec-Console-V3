@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { glossaryData } from "~/utils/glossaryData";
+import { glossaryData } from "~/utils/data/glossaryData";
 import { useDbFilter } from "~/composables/useDbFilter";
 
 const {

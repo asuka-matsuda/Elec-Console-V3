@@ -1,7 +1,8 @@
 import type { HistoryEntry } from "~/utils/calc/history/types";
 import type { VoltageCalcInputs, VoltageCalcResult } from "~/utils/calc/voltage/types";
 import { getVoltageFormFields } from "~/utils/config/voltageFormConfig";
-import { cableData } from "~/utils/cableData";
+
+import { cableData } from "~/utils/data/cableData";
 
 /**
  * 電圧降下の計算入出力を HistoryEntry 形式に変換する
@@ -49,15 +50,15 @@ export function mapVoltageToHistory(
 
   if (!isAuto) {
     // ケーブル指定モードの場合は使用ケーブル情報も入力条件に含める
-    let cabName = "";
+    let cabName = `${inputs.cableType} ${inputs.selectedSize}`;
     const matched = cableData.find(
-      (c) =>
+      (c: any) =>
         c.category === inputs.cableType &&
         parseFloat(String(c.size)) === inputs.selectedSize &&
         (!inputs.selectedCores || c.cores === inputs.selectedCores)
     );
     if (matched) {
-      cabName = matched.name || `${matched.size} ${matched.unit}`;
+      cabName = matched.name || "";
     } else {
       cabName = `${inputs.cableType} ${inputs.selectedSize}sq`;
     }
@@ -75,7 +76,7 @@ export function mapVoltageToHistory(
     historyResults.push({
       label: isAuto ? "選定ケーブル" : "判定",
       value: "計算エラー（条件超過）",
-      isMain: true,
+      isMain: true as boolean,
       color: "var(--color-status-danger)",
     });
   } else {
@@ -90,16 +91,16 @@ export function mapVoltageToHistory(
     // メイン結果テキストの生成
     const cabType = isAuto ? result.optimal.category || "" : inputs.cableType || "";
     const size = isAuto ? result.optimal.size : inputs.selectedSize;
-    let cableNameStr = "";
+    let cableNameStr = `${cabType} ${size}`;
     
     const matchedCable = cableData.find(
-      (c) =>
+      (c: any) =>
         c.category === cabType &&
         parseFloat(String(c.size)) === parseFloat(String(size)) &&
         (!inputs.selectedCores || c.cores === inputs.selectedCores)
     );
     if (matchedCable) {
-      cableNameStr = matchedCable.name || `${matchedCable.size} ${matchedCable.unit}`;
+      cableNameStr = matchedCable.name || "";
     } else {
       cableNameStr = `${cabType} ${size}sq`;
     }
@@ -110,7 +111,7 @@ export function mapVoltageToHistory(
     historyResults.push({
       label: isAuto ? "選定ケーブル" : "判定",
       value: mainResultText,
-      isMain: true,
+      isMain: true as boolean,
       color: hasError ? "var(--color-status-danger)" : undefined,
     });
 

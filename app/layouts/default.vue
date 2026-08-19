@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { menuData } from "../utils/menuData";
+import { menuData } from "~/utils/data/menuData";
 
 // Mobile sidebar toggle state (Global)
 const isSidebarOpen = useState("sidebar-open", () => false);

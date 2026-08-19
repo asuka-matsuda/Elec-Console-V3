@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { cableData } from "~/utils/cableData";
+import { cableData } from "~/utils/data/cableData";
 import type { TableColumn } from "~/components/AppTable.vue";
 
 const tableColumns: TableColumn[] = [

@@ -54,27 +54,7 @@ input::-webkit-inner-spin-button {
   display: none;
 }
 
-/* Page Theme Contexts
-   ========================================================================== */
-body.p-tool {
-  --color-category-main: var(--color-category-tool);
-  --color-category-main-base: var(--color-category-tool-base);
-}
 
-body.p-database {
-  --color-category-main: var(--color-category-database);
-  --color-category-main-base: var(--color-category-database-base);
-}
-
-body.p-reference {
-  --color-category-main: var(--color-category-reference);
-  --color-category-main-base: var(--color-category-reference-base);
-}
-
-body.p-management {
-  --color-category-main: var(--color-category-management);
-  --color-category-main-base: var(--color-category-management-base);
-}
 
 /* User Preferences (Reduced Motion / Disable Animations)
    ========================================================================== */

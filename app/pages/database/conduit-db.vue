@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { conduitData } from "~/utils/conduitData";
+import { conduitData } from "~/utils/data/conduitData";
 import type { TableColumn } from "~/components/AppTable.vue";
 
 const tableColumns: TableColumn[] = [
