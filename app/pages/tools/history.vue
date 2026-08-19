@@ -8,12 +8,6 @@ useHead({
 
 const currentTab = ref("voltage");
 
-const breadcrumbs = [
-  { text: "Home", href: "/" },
-  { text: "計算ツール" },
-  { text: "計算履歴" },
-];
-
 const tabs = [
   { value: "voltage", label: "電圧降下計算" },
   // 拡張用：後から追加可能
@@ -44,8 +38,6 @@ const handleClearAll = () => {
 
 <template>
   <div class="p-history-page">
-    <AppBreadcrumb :items="breadcrumbs" />
-
     <AppPanel bracket-color="tool">
       <template #header>
         <AppSectionHeader
