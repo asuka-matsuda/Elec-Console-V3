@@ -120,7 +120,7 @@ const handleClearAll = () => {
     // デスクトップファーストのレイアウト
     grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
 
-    @media (max-width: 768px) {
+    @include mq("md") {
       grid-template-columns: 1fr;
     }
   }

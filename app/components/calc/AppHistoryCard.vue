@@ -121,7 +121,7 @@ const handleDelete = () => {
     gap: var(--space-4);
     grid-template-columns: 1fr 1fr; // デスクトップファースト
 
-    @media (max-width: 768px) {
+    @include mq("md") {
       grid-template-columns: 1fr;
     }
   }
