@@ -3,6 +3,8 @@ import { computed } from "vue";
 import { modeOptions } from "~/utils/constants/toolOptions";
 import { useVoltageCalculator } from "~/composables/calc/useVoltageCalculator";
 import { getVoltageFormFields } from "~/utils/config/voltageFormConfig";
+import { useCalcHistory } from "~/composables/calc/useCalcHistory";
+import { mapVoltageToHistory } from "~/utils/calc/voltage/historyMapper";
 
 useHead({
   title: "電圧降下・ケーブルサイズ選定",
@@ -27,6 +29,16 @@ const formFields = computed(() =>
     () => computedAvailableSizes.value
   )
 );
+
+const { saveHistory } = useCalcHistory("elec_calc_voltage_hist");
+const route = useRoute();
+
+const handleSaveToHistory = async () => {
+  if (!calcInputs.value.isReady) return;
+  const toolName = (route.meta.title as string) || "電圧降下・ケーブルサイズ選定";
+  const entry = mapVoltageToHistory(toolName, calcInputs.value, calcResult.value);
+  await saveHistory(entry);
+};
 </script>
 
 <template>
@@ -44,7 +56,14 @@ const formFields = computed(() =>
             icon="check-square"
             variant="tool"
             size="md"
-          />
+          >
+            <template #actions>
+              <AppSaveButton 
+                :disabled="!calcInputs.isReady"
+                :save-function="handleSaveToHistory"
+              />
+            </template>
+          </AppSectionHeader>
         </template>
         <ClientOnly>
           <AppVoltageResult :inputs="calcInputs" :result="calcResult" />
