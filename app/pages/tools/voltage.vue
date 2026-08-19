@@ -51,7 +51,8 @@ const handleSaveToHistory = async () => {
 </script>
 
 <template>
-  <AppToolLayout>
+  <div>
+    <AppToolLayout>
 
 
     <template #results>
@@ -148,10 +149,11 @@ const handleSaveToHistory = async () => {
     <template #basis>
       <AppCalculationBasisPanel :steps="mathSteps" />
     </template>
-  </AppToolLayout>
+    </AppToolLayout>
 
-  <!-- Reset Confirmation Modal -->
-  <AppToolResetModal v-model="isResetModalOpen" @confirm="resetForm" />
+    <!-- リセット確認モーダル -->
+    <AppToolResetModal v-model="isResetModalOpen" @confirm="resetForm" />
+  </div>
 </template>
 
 <style scoped lang="scss">

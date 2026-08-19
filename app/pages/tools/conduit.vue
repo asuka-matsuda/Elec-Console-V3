@@ -33,7 +33,8 @@ const handleSave = async () => {
 </script>
 
 <template>
-  <AppToolLayout
+  <div>
+    <AppToolLayout
     title="配管サイズ自動選定"
     icon="target"
     description="内線規程に基づき、ケーブルの断面積（占積率32% / 48%）から適切な配管サイズを導き出します。"
@@ -129,10 +130,11 @@ const handleSave = async () => {
         </div>
       </AppCalculationBasisPanel>
     </template>
-  </AppToolLayout>
+    </AppToolLayout>
 
-  <!-- リセット確認モーダル -->
-  <AppToolResetModal v-model="isResetModalOpen" @confirm="confirmReset" />
+    <!-- リセット確認モーダル -->
+    <AppToolResetModal v-model="isResetModalOpen" @confirm="confirmReset" />
+  </div>
 </template>
 
 <style scoped lang="scss">

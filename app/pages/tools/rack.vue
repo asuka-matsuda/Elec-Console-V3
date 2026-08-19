@@ -23,7 +23,8 @@ const {
 </script>
 
 <template>
-  <AppToolLayout
+  <div>
+    <AppToolLayout
     title="ケーブルラック選定"
     icon="align-justify"
     description="強電・弱電ケーブルのリストと段積み数から、最適なラック幅を選定します。"
@@ -206,10 +207,11 @@ const {
     <template #basis>
       <AppCalculationBasisPanel :steps="mathSteps" />
     </template>
-  </AppToolLayout>
+    </AppToolLayout>
 
-  <!-- リセット確認モーダル -->
-  <AppToolResetModal v-model="isResetModalOpen" @confirm="confirmReset" />
+    <!-- リセット確認モーダル -->
+    <AppToolResetModal v-model="isResetModalOpen" @confirm="confirmReset" />
+  </div>
 </template>
 
 <style scoped lang="scss">

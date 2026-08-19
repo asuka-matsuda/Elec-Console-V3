@@ -39,7 +39,8 @@ const totalWeight = computed(() => {
 </script>
 
 <template>
-  <AppToolLayout
+  <div>
+    <AppToolLayout
     title="ケーブル重量・ドラム選定"
     icon="package"
     description="ケーブルの種類と長さから重量を計算し、最適なドラムを選定します。"
@@ -169,10 +170,11 @@ const totalWeight = computed(() => {
         </div>
       </AppCalculationBasisPanel>
     </template>
-  </AppToolLayout>
+    </AppToolLayout>
 
-  <!-- リセット確認モーダル -->
-  <AppToolResetModal v-model="isResetModalOpen" @confirm="confirmReset" />
+    <!-- リセット確認モーダル -->
+    <AppToolResetModal v-model="isResetModalOpen" @confirm="confirmReset" />
+  </div>
 </template>
 
 <style scoped lang="scss">
