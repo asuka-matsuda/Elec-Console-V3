@@ -21,17 +21,15 @@ export type BadgeVariant =
 withDefaults(
   defineProps<{
     variant?: BadgeVariant;
-    size?: "sm" | "md";
   }>(),
   {
     variant: "neutral",
-    size: "sm",
   },
 );
 </script>
 
 <template>
-  <span class="c-badge" :class="[`c-badge--${variant}`, `c-badge--${size}`]">
+  <span class="c-badge" :class="[`c-badge--${variant}`]">
     <slot />
   </span>
 </template>
@@ -54,9 +52,13 @@ withDefaults(
   --badge-border: theme-color(var(--color-border), 50%);
   --badge-shadow: transparent;
 
+  // --- Base Styling ---
+  @extend %text-2xs;
+
   // --- Base Styles ---
   user-select: none;
 
+  padding: var(--space-1);
   border: var(--border-width-base) solid var(--badge-border);
 
   font-weight: var(--font-weight-bold);
@@ -70,20 +72,7 @@ withDefaults(
     0 0 var(--blur-md) var(--badge-shadow);
 
   transition: var(--transition-base);
-
-  // --- Size Modifiers ---
-  &--sm {
-    @extend %text-2xs;
-
-    padding: var(--space-1);
-  }
-
-  &--md {
-    @extend %text-xs;
-
-    padding: var(--space-2);
-  }
-
+  
   @include flex-center(0, inline-flex);
   @include cyber-text-glow(100%, var(--blur-sm), var(--badge-color));
 

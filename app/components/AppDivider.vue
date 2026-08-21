@@ -5,13 +5,20 @@
  */
 withDefaults(
   defineProps<{
-    variant?: "main" | "tool" | "database" | "reference" | "management" | "danger" | "success";
+    variant?:
+      | "main"
+      | "tool"
+      | "database"
+      | "reference"
+      | "management"
+      | "danger"
+      | "success";
     vertical?: boolean;
   }>(),
   {
     variant: "main",
     vertical: false,
-  }
+  },
 );
 </script>
 
@@ -95,7 +102,8 @@ withDefaults(
         theme-color(var(--divider-accent, var(--color-category-main)), 80%),
         transparent
       );
-      box-shadow: 0 0 var(--blur-md) var(--divider-accent, var(--color-category-main));
+      box-shadow: 0 0 var(--blur-md)
+        var(--divider-accent, var(--color-category-main));
 
       animation: data-pulse-x 3s ease-in-out infinite;
     }
@@ -132,7 +140,8 @@ withDefaults(
         theme-color(var(--divider-accent, var(--color-category-main)), 80%),
         transparent
       );
-      box-shadow: 0 0 var(--blur-md) var(--divider-accent, var(--color-category-main));
+      box-shadow: 0 0 var(--blur-md)
+        var(--divider-accent, var(--color-category-main));
 
       animation: data-pulse-y 3s ease-in-out infinite;
     }
@@ -212,4 +221,3 @@ withDefaults(
   }
 }
 </style>
-
