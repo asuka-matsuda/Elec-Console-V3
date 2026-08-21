@@ -14,6 +14,7 @@ const currentYear = new Date().getFullYear();
 
 <style scoped lang="scss">
 .l-footer {
+  // --- Base Styles ---
   position: relative;
 
   display: flex;

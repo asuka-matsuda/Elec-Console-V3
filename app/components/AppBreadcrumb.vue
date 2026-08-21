@@ -5,7 +5,7 @@ import { computed } from "vue";
    型定義
    ========================================================================== */
 
-// パンくずリストの各項目の型定義
+/** パンくずリストの各項目の型定義 */
 export type BreadcrumbItem = {
   text: string;
   href?: string;
@@ -23,12 +23,14 @@ const props = defineProps<{
    算出プロパティ (Computed)
    ========================================================================== */
 
-// テンプレート側での判定ロジックを減らすため、あらかじめ「最後の要素かどうか」を判定した配列を生成する
+/**
+ * テンプレート側での判定ロジックを減らすため、あらかじめ「最後の要素かどうか」を判定した配列を生成する
+ */
 const processedItems = computed(() => {
   return props.items.map((item, index) => ({
     ...item,
     isLast: index === props.items.length - 1,
-    // keyとして使用できる一意のIDを生成（hrefがあればそれを使用、なければテキスト）
+    /** keyとして使用できる一意のIDを生成（hrefがあればそれを使用、なければテキスト） */
     uniqueKey: item.href ? item.href : `${item.text}-${index}`,
   }));
 });
@@ -71,6 +73,7 @@ const processedItems = computed(() => {
    ========================================================================== */
 
 .c-breadcrumb {
+  // --- Base Styles ---
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   letter-spacing: 0.1em;

@@ -5,10 +5,10 @@ defineProps<{
   menuData: MenuSection[];
 }>();
 
-// For mobile responsive toggle
+/** For mobile responsive toggle */
 const isOpen = defineModel<boolean>("isOpen", { default: false });
 
-// Close sidebar on mobile when a link is clicked
+/** Close sidebar on mobile when a link is clicked */
 const closeSidebar = () => {
   isOpen.value = false;
 };
@@ -76,9 +76,11 @@ const closeSidebar = () => {
 
 <style scoped lang="scss">
 .l-global-nav {
+  // --- Theme Variables ---
   --sidebar-width: 280px;
   --sidebar-border: var(--color-border);
 
+  // --- Base Styles ---
   position: fixed;
   z-index: var(--z-index-nav);
 

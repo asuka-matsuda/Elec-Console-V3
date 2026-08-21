@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-// Drawer state for mobile
+/** Drawer state for mobile */
 const isDrawerOpen = ref(false);
 
 const toggleDrawer = () => {
@@ -63,6 +63,7 @@ const toggleDrawer = () => {
 
 <style scoped lang="scss">
 .l-tool-layout {
+  // --- Base Styles ---
   display: flex;
   flex: 1;
   flex-direction: column;

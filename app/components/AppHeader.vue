@@ -33,6 +33,7 @@ const emit = defineEmits<{
 
 <style scoped lang="scss">
 .l-header {
+  // --- Base Styles ---
   @include flex-between;
 
   height: 64px;

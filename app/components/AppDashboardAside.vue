@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const { data: dashboardData, pending } = await useFetch("/api/dashboard", {
-  lazy: true, // Prevent blocking navigation while loading
+  /** Prevent blocking navigation while loading */
+  lazy: true,
 });
 const announcements = computed(() => dashboardData.value?.announcements || []);
 const history = computed(() => dashboardData.value?.history || []);
@@ -104,6 +105,7 @@ const history = computed(() => dashboardData.value?.history || []);
 
 /* List Item Card Styles */
 .p-dashboard-list-item {
+  // --- Base Styles ---
   display: flex;
   flex-direction: column;
   gap: var(--gap-element);
