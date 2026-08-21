@@ -111,10 +111,10 @@ const isChecked = ref(false);
   &__title {
     @extend %text-lg;
 
+    padding-bottom: var(--space-2);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
     border-bottom: 1px solid var(--color-border);
-    padding-bottom: var(--space-2);
   }
 
   &__grid {
@@ -127,16 +127,16 @@ const isChecked = ref(false);
 .p-ds-card-title {
   @extend %text-base;
 
-  font-weight: var(--font-weight-bold);
   margin-bottom: var(--space-4);
+  font-weight: var(--font-weight-bold);
   color: var(--color-text-sub);
 }
 
 .p-ds-flex {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
   gap: var(--space-4);
+  align-items: center;
 }
 
 .p-ds-stack {

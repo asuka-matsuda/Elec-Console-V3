@@ -227,8 +227,8 @@ const {
   &__warning {
     @extend %text-sm;
 
-    color: var(--color-status-danger);
     padding: var(--gap-element);
+    color: var(--color-status-danger);
   }
 }
 
@@ -274,8 +274,8 @@ const {
   &__section-title {
     @extend %text-sm;
 
-    font-weight: var(--font-weight-bold);
     margin-bottom: var(--space-2);
+    font-weight: var(--font-weight-bold);
   }
   
   &__cable-list {

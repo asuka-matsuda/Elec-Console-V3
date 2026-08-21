@@ -1,14 +1,14 @@
 @use "../../foundation" as *;
 
 .p-db {
-  flex: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
   min-height: 0;
 
   &__table-panel {
-    flex: 1;
     display: flex;
+    flex: 1;
     flex-direction: column;
     min-height: 0;
     padding: 0; // Remove padding so table spans full width of panel
@@ -23,9 +23,9 @@
 
   &__empty {
     padding: var(--pad-container);
-    text-align: center;
-    color: var(--color-text-muted);
     font-size: var(--font-size-base);
+    color: var(--color-text-muted);
+    text-align: center;
     border: var(--border-width-base) solid
       theme-color(var(--color-border), 50%);
   }

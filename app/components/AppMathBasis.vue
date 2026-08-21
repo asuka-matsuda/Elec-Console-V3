@@ -96,12 +96,12 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 <style scoped lang="scss">
 .c-math-basis {
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: var(--gap-section);
-  flex: 1;
-  overflow-y: auto;
   padding-right: var(--space-2);
   padding-bottom: var(--pad-container);
+  overflow-y: auto;
 
   &__card {
     gap: var(--gap-component);
@@ -127,8 +127,8 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   &__math {
     flex: 1;
     min-width: 0;
-    font-size: 1.1em;
     overflow-x: auto;
+    font-size: 1.1em;
     
     // スクロールバー自体は非表示にしつつスクロールは可能にする
     scrollbar-width: none;
@@ -169,11 +169,11 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   }
 
   &__legend {
-    width: 250px;
-    flex-shrink: 0;
     display: flex;
+    flex-shrink: 0;
     flex-direction: column;
     gap: var(--gap-element);
+    width: 250px;
   }
 
   &__legend-title {
@@ -192,17 +192,16 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
   &__legend-item {
     display: flex;
-    align-items: flex-start;
     gap: var(--space-1);
+    align-items: flex-start;
+    color: var(--color-text-secondary);
 
     @extend %text-sm;
-
-    color: var(--color-text-secondary);
   }
 
   &__legend-symbol {
-    color: var(--color-text-main);
     font-weight: var(--font-weight-bold);
+    color: var(--color-text-main);
   }
 
   &__legend-sep {

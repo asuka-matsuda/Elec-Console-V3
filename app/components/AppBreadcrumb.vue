@@ -105,8 +105,8 @@ const processedItems = computed(() => {
   // リストの各項目
   &__item {
     display: flex;
-    align-items: center;
     gap: var(--gap-element);
+    align-items: center;
 
     // 項目の区切り文字（最後の子要素以外に付与）
     &:not(:last-child)::after {
@@ -139,12 +139,10 @@ const processedItems = computed(() => {
     display: flex;
     gap: var(--gap-element);
     align-items: center;
+    line-height: 1;
+    color: var(--color-category-main);
 
     @extend %text-lg; // 以前の --text-md は存在しなかったため lg に修正
-
-    color: var(--color-category-main);
-    line-height: 1;
-
     @include cyber-text-glow(60%, var(--blur-md), var(--color-category-main));
 
     // 点滅するカーソルエフェクト

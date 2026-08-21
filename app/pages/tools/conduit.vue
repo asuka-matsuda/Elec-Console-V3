@@ -142,8 +142,8 @@ const handleSave = async () => {
   
   &__item {
     display: flex;
-    justify-content: space-between;
     align-items: baseline;
+    justify-content: space-between;
 
     @extend %text-base;
   }
@@ -173,8 +173,8 @@ const handleSave = async () => {
   &__section-title {
     @extend %text-base;
 
-    font-weight: var(--font-weight-bold);
     margin-bottom: var(--space-2);
+    font-weight: var(--font-weight-bold);
   }
   
   &__cable-list {

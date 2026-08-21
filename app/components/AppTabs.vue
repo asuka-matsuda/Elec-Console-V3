@@ -74,8 +74,8 @@ const selectTab = (option: TabOption) => {
 
   &--vertical {
     flex-direction: column;
-    align-items: stretch;
     gap: var(--space-2);
+    align-items: stretch;
 
     .c-tabs__item {
       justify-content: flex-start;
@@ -86,20 +86,17 @@ const selectTab = (option: TabOption) => {
 
 .c-tabs__item {
   position: relative;
-
-  @include flex-center(var(--space-2));
-
   padding: var(--pad-container);
-
-  @extend %text-sm;
-
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
-  border: var(--border-width-base) solid var(--color-border);
-  box-shadow: inset 0 0 var(--blur-sm) var(--color-border);
   cursor: pointer;
   user-select: none;
+  border: var(--border-width-base) solid var(--color-border);
+  box-shadow: inset 0 0 var(--blur-sm) var(--color-border);
   transition: var(--transition-base);
+
+  @include flex-center(var(--space-2));
+  @extend %text-sm;
 
   /* --- Hover State --- */
   &:hover:not(.is-disabled, .is-active) {

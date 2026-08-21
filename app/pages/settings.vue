@@ -151,8 +151,8 @@ const bgOptions = [
 
   &__grid {
     display: grid;
-    gap: var(--gap-section);
     grid-template-columns: 1fr; // スモールファースト
+    gap: var(--gap-section);
 
     @include cq("md") {
       grid-template-columns: 2fr 1fr;
@@ -170,8 +170,8 @@ const bgOptions = [
     flex-wrap: wrap;
     gap: var(--gap-component);
     padding: var(--pad-container);
-    border-radius: 0;
     border: var(--border-width-base) solid var(--color-border);
+    border-radius: 0;
   }
 
   &__desc {

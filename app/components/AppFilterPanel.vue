@@ -64,17 +64,14 @@ const toggleCat = (value: string) => {
 .c-filter-panel {
   &__header {
     display: flex;
-    align-items: center;
     gap: var(--gap-element);
-
-    @extend %text-base;
-
+    align-items: center;
+    padding-bottom: var(--gap-element);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
 
+    @extend %text-base;
     @include ui-border-fade(bottom, var(--color-border));
-
-    padding-bottom: var(--gap-element);
   }
 
   &__filters {

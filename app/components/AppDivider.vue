@@ -70,8 +70,8 @@ withDefaults(
   // Types
   // ==========================================
   &--default {
-    box-shadow: var(--shadow-sink); // 彫り込まれた溝の影
     overflow: hidden; // アニメーションの光がはみ出さないようにする
+    box-shadow: var(--shadow-sink); // 彫り込まれた溝の影
 
     &.c-divider--horizontal {
       width: 100%;
@@ -113,12 +113,12 @@ withDefaults(
   &--horizontal {
     // パルス発光用（Data Flow）の擬似要素
     &.is-animated.c-divider--default::before {
-      content: "";
       position: absolute;
       top: 0;
       left: -30%;
       width: 30%;
       height: 100%;
+      content: "";
       background: linear-gradient(
         90deg,
         transparent,
@@ -139,9 +139,9 @@ withDefaults(
       width: var(--border-width-thick);
       height: auto;
       min-height: 100%;
-      border-left: var(--border-width-base) solid var(--color-border);
-      border-right: 1px solid transparent;
       margin: 0 var(--space-4);
+      border-right: 1px solid transparent;
+      border-left: var(--border-width-base) solid var(--color-border);
 
       // Entrance Animation (縦に伸びる)
       transform-origin: center;
@@ -150,12 +150,12 @@ withDefaults(
 
     // パルス発光用（Data Flow）の擬似要素
     &.is-animated.c-divider--default::before {
-      content: "";
       position: absolute;
       top: -30%;
       left: 0;
       width: 100%;
       height: 30%;
+      content: "";
       background: linear-gradient(
         180deg,
         transparent,
@@ -173,32 +173,32 @@ withDefaults(
   // ==========================================
   @keyframes divider-scale-x {
     from {
-      transform: scaleX(0);
       opacity: 0;
+      transform: scaleX(0);
     }
 
     to {
-      transform: scaleX(1);
       opacity: 1;
+      transform: scaleX(1);
     }
   }
 
   @keyframes divider-scale-y {
     from {
-      transform: scaleY(0);
       opacity: 0;
+      transform: scaleY(0);
     }
 
     to {
-      transform: scaleY(1);
       opacity: 1;
+      transform: scaleY(1);
     }
   }
 
   @keyframes data-pulse-x {
     0% {
-      transform: translateX(0);
       opacity: 0;
+      transform: translateX(0);
     }
 
     10% {
@@ -210,19 +210,19 @@ withDefaults(
     }
 
     60% {
-      transform: translateX(450%);
       opacity: 0;
+      transform: translateX(450%);
     } // 100% + 300% travel + buffer
     100% {
-      transform: translateX(450%);
       opacity: 0;
+      transform: translateX(450%);
     } // 休止時間
   }
 
   @keyframes data-pulse-y {
     0% {
-      transform: translateY(0);
       opacity: 0;
+      transform: translateY(0);
     }
 
     10% {
@@ -234,13 +234,13 @@ withDefaults(
     }
 
     60% {
-      transform: translateY(450%);
       opacity: 0;
+      transform: translateY(450%);
     }
 
     100% {
-      transform: translateY(450%);
       opacity: 0;
+      transform: translateY(450%);
     } // 休止時間
   }
 }

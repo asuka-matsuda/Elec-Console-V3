@@ -87,10 +87,10 @@ const handleDelete = () => {
 
   &__header {
     display: flex;
-    justify-content: space-between;
     align-items: flex-end;
-    border-bottom: 1px solid var(--color-border);
+    justify-content: space-between;
     padding-bottom: var(--gap-component);
+    border-bottom: 1px solid var(--color-border);
   }
 
   &__title-group {
@@ -122,8 +122,8 @@ const handleDelete = () => {
 
   &__body {
     display: grid;
-    gap: var(--gap-component);
     grid-template-columns: 1fr; // スモールファースト
+    gap: var(--gap-component);
 
     @include cq("xs") {
       grid-template-columns: 1fr 1fr;
@@ -139,10 +139,10 @@ const handleDelete = () => {
   &__section-title {
     @extend %text-sm;
 
+    padding-left: var(--gap-element);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
     border-left: 2px solid var(--color-category-tool);
-    padding-left: var(--gap-element);
   }
 
   &__list {
@@ -165,8 +165,8 @@ const handleDelete = () => {
 
   &__footer {
     display: flex;
-    justify-content: flex-end;
     align-items: center;
+    justify-content: flex-end;
     margin-top: auto;
   }
 }

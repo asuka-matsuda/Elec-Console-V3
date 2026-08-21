@@ -92,8 +92,8 @@ const inputId = useId();
 
   /* Textarea Modifiers */
   &--textarea {
-    resize: vertical;
     min-height: calc(var(--size-control-md) * 2);
+    resize: vertical;
 
     // Override fixed heights so rows/min-height can take over
     &:is(.c-form-control--sm, .c-form-control--md) {

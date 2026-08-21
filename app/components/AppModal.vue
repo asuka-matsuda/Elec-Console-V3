@@ -92,27 +92,16 @@ const titleId = `modal-title-${modalId}`;
 
 <style scoped lang="scss">
 .c-modal {
-  /* Native Dialog Resets */
-  margin: auto;
-  border: none;
-  outline: none;
-  overflow: visible;
-
   /* Sizing based on original AppPanel overlay */
   width: 90vw;
   max-width: 500px;
   max-height: 90vh;
 
-  /* Native Backdrop Styling */
-  &::backdrop {
-    backdrop-filter: blur(var(--blur-md));
-    opacity: 0;
-    transition:
-      opacity var(--duration-modal) ease,
-      backdrop-filter var(--duration-modal) ease,
-      display var(--duration-modal) allow-discrete,
-      overlay var(--duration-modal) allow-discrete;
-  }
+  /* Native Dialog Resets */
+  margin: auto;
+  overflow: visible;
+  outline: none;
+  border: none;
 
   /* Animation */
   opacity: 0;
@@ -122,6 +111,17 @@ const titleId = `modal-title-${modalId}`;
     transform var(--duration-modal) var(--ease-modal),
     display var(--duration-modal) allow-discrete,
     overlay var(--duration-modal) allow-discrete;
+
+  /* Native Backdrop Styling */
+  &::backdrop {
+    opacity: 0;
+    backdrop-filter: blur(var(--blur-md));
+    transition:
+      opacity var(--duration-modal) ease,
+      backdrop-filter var(--duration-modal) ease,
+      display var(--duration-modal) allow-discrete,
+      overlay var(--duration-modal) allow-discrete;
+  }
 
   &[open] {
     opacity: 1;
@@ -169,16 +169,16 @@ const titleId = `modal-title-${modalId}`;
 
   &__layout {
     display: flex;
+    flex: 1;
     flex-direction: column;
     gap: var(--gap-component);
-    flex: 1;
     min-height: 0;
   }
 
   &__body {
     flex: 1;
-    overflow-y: auto;
     padding: var(--pad-container) 0;
+    overflow-y: auto;
     color: var(--color-text-main);
     
     @extend %text-caption;
@@ -188,9 +188,9 @@ const titleId = `modal-title-${modalId}`;
 
   &__footer {
     display: flex;
-    justify-content: flex-end;
-    align-items: center;
     gap: var(--gap-element);
+    align-items: center;
+    justify-content: flex-end;
   }
 }
 </style>

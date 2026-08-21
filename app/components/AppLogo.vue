@@ -14,10 +14,10 @@ const emit = defineEmits<{
 <style scoped lang="scss">
 .c-logo {
   display: flex;
-  align-items: center;
   gap: var(--space-3);
-  text-decoration: none;
+  align-items: center;
   color: var(--color-text-main);
+  text-decoration: none;
   transition: var(--transition-base);
 
   &:hover {
@@ -29,9 +29,9 @@ const emit = defineEmits<{
   }
 
   &__icon {
-    color: var(--color-category-main);
     width: var(--icon-size-md);
     height: var(--icon-size-md);
+    color: var(--color-category-main);
     transition: var(--transition-base);
   }
 

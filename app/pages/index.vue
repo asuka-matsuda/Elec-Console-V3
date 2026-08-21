@@ -53,8 +53,8 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
 .p-dashboard {
   display: flex;
   flex-direction: row; /* Desktop default */
-  align-items: flex-start;
   gap: var(--gap-section);
+  align-items: flex-start;
   padding-bottom: var(--gap-section);
 
   @include mq("md") {
@@ -63,8 +63,8 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
   }
 
   &__main {
-    flex: 1;
     display: flex;
+    flex: 1;
     flex-direction: column;
     gap: var(--gap-section);
   }
@@ -92,16 +92,15 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
 
   &__header {
     display: flex;
-    align-items: flex-start;
     gap: var(--gap-element);
-
-    @extend %text-base;
-
+    align-items: flex-start;
     font-weight: var(--font-weight-bold);
     color: var(--card-accent, var(--color-text-main));
+    line-break: strict;
     word-break: keep-all;
     overflow-wrap: anywhere;
-    line-break: strict;
+
+    @extend %text-base;
   }
 
   &__desc {

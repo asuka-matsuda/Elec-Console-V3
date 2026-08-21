@@ -155,12 +155,12 @@ const dropStatusClass = computed(() => {
   &__drop-cable { @extend %text-xl; }
 
   display: flex;
-  flex-direction: column; // コンテナ未定義・または狭い場合は縦並び（スモールファースト）
-  align-items: stretch;
-  gap: var(--space-3);
-  padding: var(--space-2);
   flex: 1;
+  flex-direction: column; // コンテナ未定義・または狭い場合は縦並び（スモールファースト）
+  gap: var(--space-3);
+  align-items: stretch;
   min-height: 0;
+  padding: var(--space-2);
 
   // コンテナの幅が xs 以上の場合は横並び
   @include cq("xs") {
@@ -192,18 +192,17 @@ const dropStatusClass = computed(() => {
 
   &__main {
     display: flex;
+    flex: 1;
     flex-direction: column;
+    gap: var(--gap-element);
     align-items: center;
     justify-content: center;
+    min-width: 0;
     padding: var(--space-2) var(--space-3);
-
-    @include ui-surface(20%);
-
     border: var(--border-width-base) solid var(--color-border);
     box-shadow: var(--shadow-sink);
-    flex: 1;
-    min-width: 0;
-    gap: var(--gap-element);
+
+    @include ui-surface(20%);
   }
 
   &__main-label {
@@ -216,8 +215,8 @@ const dropStatusClass = computed(() => {
 
   &__main-value {
     display: flex;
-    align-items: baseline;
     gap: var(--space-2);
+    align-items: baseline;
     font-family: var(--font-family-mono);
 
     .value-text {
@@ -236,10 +235,10 @@ const dropStatusClass = computed(() => {
 
   &__metrics {
     display: flex;
+    flex-shrink: 0;
     flex-flow: row wrap; // 狭い場合は横並びラップ（スモールファースト）
     gap: var(--space-2);
     min-width: auto;
-    flex-shrink: 0;
 
     // コンテナの幅が xs 以上の場合は縦積み
     @include cq("xs") {
@@ -250,13 +249,13 @@ const dropStatusClass = computed(() => {
 
   .metric-card {
     display: flex;
+    flex: 1;
     flex-direction: column;
+    gap: var(--gap-element);
     align-items: center;
     justify-content: center;
     padding: var(--space-2);
     border: 1px solid var(--color-border);
-    flex: 1;
-    gap: var(--gap-element);
   }
 
   .metric-label {
@@ -267,18 +266,17 @@ const dropStatusClass = computed(() => {
 
   .metric-value {
     display: flex;
-    align-items: baseline;
     gap: var(--space-1);
+    align-items: baseline;
     font-family: var(--font-family-mono);
+    font-weight: var(--font-weight-bold);
 
     @extend %text-md;
 
-    font-weight: var(--font-weight-bold);
-
     .value-sep {
-      color: var(--color-text-muted);
       margin: 0 2px;
       font-weight: normal;
+      color: var(--color-text-muted);
     }
 
     .value-unit {

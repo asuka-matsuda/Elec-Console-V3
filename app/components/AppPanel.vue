@@ -44,8 +44,8 @@ withDefaults(
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: var(--pad-container, var(--space-4));
   gap: var(--pad-container-gap, var(--space-4));
+  padding: var(--pad-container, var(--space-4));
 
   // Apply visual base
   border: var(--border-width-base) solid var(--p-border-color);
@@ -102,8 +102,8 @@ withDefaults(
   }
 
   &__content {
-    flex: 1;
     display: flex;
+    flex: 1;
     flex-direction: column;
     gap: var(--pad-container-gap, var(--space-4));
     min-height: 0;

@@ -64,13 +64,13 @@ const toggleDrawer = () => {
 <style scoped lang="scss">
 .l-tool-layout {
   display: flex;
-  flex-direction: column;
   flex: 1;
-  min-height: 0;
+  flex-direction: column;
+  gap: var(--gap-component);
   width: 100%;
   max-width: 1600px;
+  min-height: 0;
   margin: 0 auto;
-  gap: var(--gap-component);
 
   // Override AppPanel padding to be tighter in tools
   :deep(.c-panel) {
@@ -83,26 +83,26 @@ const toggleDrawer = () => {
   }
 
   &__main {
-    flex: 1;
     display: flex;
-    min-height: 0;
+    flex: 1;
     gap: var(--gap-component);
+    min-height: 0;
   }
 
   &__left {
-    flex: 1;
     display: flex;
+    flex: 1;
     flex-direction: column;
-    min-height: 0;
     gap: var(--gap-component);
+    min-height: 0;
     container-type: inline-size;
   }
 
   &__inputs {
     display: flex;
+    flex: 3; // 3/4 ratio on PC (Default)
     flex-direction: column;
     min-height: 0;
-    flex: 3; // 3/4 ratio on PC (Default)
 
     @include mq("md") {
       flex: none; // Reset on mobile
@@ -110,12 +110,12 @@ const toggleDrawer = () => {
 
     // パネルの外側（ラッパー）ではなく、パネルの「中身」をスクロールさせる
     :deep(.c-panel__content) {
-      overflow-y: auto;
-
-      --scrollbar-size: var(--size-2);
       
       // スクロール時に要素がpaddingに食い込まないよう調整
       padding-right: var(--space-2);
+      overflow-y: auto;
+
+      --scrollbar-size: var(--size-2);
     }
   }
 
@@ -138,25 +138,25 @@ const toggleDrawer = () => {
   /* --------------------------------------------------------- */
   &__results {
     display: flex;
-    flex-direction: column;
     flex: none; // コンテンツの高さに合わせて自動調整
+    flex-direction: column;
     min-height: 0;
     container-type: inline-size;
 
     // Mobile: Sticky Drawer
     @include mq("md") {
-      flex: none;
       position: fixed;
+      right: 0;
       bottom: 0;
       left: 0;
-      right: 0;
       z-index: var(--z-index-modal);
+      flex: none;
+      max-height: 80vh;
       background: var(--color-bg-base);
       border-top: var(--border-width-base) solid var(--color-category-tool);
       box-shadow: var(--shadow-elevation-hover);
-      transition: transform var(--transition-base);
       transform: translateY(calc(100% - 48px)); // Show only handle
-      max-height: 80vh;
+      transition: transform var(--transition-base);
 
       &.is-drawer-open {
         transform: translateY(0);
@@ -191,8 +191,8 @@ const toggleDrawer = () => {
 
   &__results-content {
     display: flex;
-    flex-direction: column;
     flex: 1;
+    flex-direction: column;
     min-height: 0;
 
     @include mq("md") {
@@ -207,11 +207,11 @@ const toggleDrawer = () => {
     display: none; // Hidden on PC
 
     @include mq("md") {
-      display: block; // Show on mobile
       position: fixed;
       inset: 0;
-      background: var(--color-overlay-dark);
       z-index: calc(var(--z-index-modal) - 1);
+      display: block; // Show on mobile
+      background: var(--color-overlay-dark);
       backdrop-filter: blur(var(--blur-sm));
     }
   }

@@ -61,17 +61,17 @@ const history = computed(() => dashboardData.value?.history || []);
 <style scoped lang="scss">
 .p-dashboard {
   &__aside {
-    width: var(--sidebar-width);
-    flex-shrink: 0;
     position: sticky;
     top: var(--pad-container);
     display: flex;
+    flex-shrink: 0;
     flex-direction: column;
     gap: var(--gap-section);
+    width: var(--sidebar-width);
 
     @include mq("md") {
-      width: 100%;
       position: static;
+      width: 100%;
     }
   }
 
@@ -89,27 +89,26 @@ const history = computed(() => dashboardData.value?.history || []);
 
   &__loading {
     padding: var(--pad-container);
-    text-align: center;
     color: var(--color-text-muted);
+    text-align: center;
+    border-radius: 0;
 
     @extend %text-sm;
     @include ui-surface(5%);
-
-    border-radius: 0;
   }
 }
 
 /* List Item Card Styles */
 .p-dashboard-list-item {
-  padding: var(--pad-container);
   display: flex;
   flex-direction: column;
   gap: var(--gap-element);
+  padding: var(--pad-container);
 
   &__header {
     display: flex;
-    align-items: center;
     gap: var(--gap-element);
+    align-items: center;
   }
 
   &__title {

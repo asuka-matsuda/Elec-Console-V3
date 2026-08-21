@@ -56,15 +56,14 @@ const inputId = useId();
 .c-color-picker {
   @include flex-start(var(--space-3), inline-flex);
 
+  position: relative;
   padding: var(--space-3);
+  cursor: pointer;
+  user-select: none;
+  border-radius: 0;
+  transition: var(--transition-base);
 
   @include ui-border-dim(var(--color-border), 50%);
-
-  border-radius: 0;
-  cursor: pointer;
-  position: relative;
-  transition: var(--transition-base);
-  user-select: none;
 
   &:hover:not(.is-disabled) {
     border-color: var(--color-category-main);
@@ -72,19 +71,18 @@ const inputId = useId();
   }
 
   &.is-disabled {
-    opacity: 0.5;
     cursor: not-allowed;
+    opacity: 0.5;
   }
 
   &__swatch {
+    flex-shrink: 0;
     width: var(--icon-size-md);
     height: var(--icon-size-md);
     border-radius: 50%;
+    box-shadow: var(--shadow-sink);
 
     @include ui-border-dim(var(--color-border), 50%);
-
-    box-shadow: var(--shadow-sink);
-    flex-shrink: 0;
   }
 
   &__value {
@@ -98,12 +96,12 @@ const inputId = useId();
 
   &__input {
     position: absolute;
-    opacity: 0;
     width: 0;
     height: 0;
     padding: 0;
     margin: 0;
     pointer-events: none;
+    opacity: 0;
   }
 }
 </style>

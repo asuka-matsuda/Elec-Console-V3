@@ -116,8 +116,8 @@ const handleClearAll = () => {
 
   &__grid {
     display: grid;
-    gap: var(--gap-component);
     grid-template-columns: 1fr; // スモールファースト
+    gap: var(--gap-component);
 
     @include cq("sm") {
       grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
@@ -127,10 +127,10 @@ const handleClearAll = () => {
   &__empty {
     display: flex;
     flex-direction: column;
+    gap: var(--gap-element);
     align-items: center;
     justify-content: center;
     padding: var(--pad-container) 0;
-    gap: var(--gap-element);
     color: var(--color-text-muted);
   }
 }

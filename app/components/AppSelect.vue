@@ -296,16 +296,15 @@ const listboxId = useId();
   padding: var(--space-2);
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: left;
   white-space: nowrap;
+  appearance: none; /* Reset button styles */
 
   @include form-control-base(
     $is-error: ".c-custom-select.is-error &",
     $is-active: "&.is-active, &:focus, &:focus-visible",
     $is-hover: "&:hover:not(:disabled):not(.is-active)"
   );
-
-  appearance: none; /* Reset button styles */
-  text-align: left;
 
   /* Arrow icon (down) */
   &::after {
@@ -340,12 +339,12 @@ const listboxId = useId();
   width: max-content;
   max-width: 90vw;
   background-color: transparent;
-  backdrop-filter: blur(var(--blur-md));
   border: var(--border-width-base) solid
     theme-color(var(--color-category-main), 50%);
   box-shadow:
     var(--shadow-elevation-hover),
     inset 0 0 var(--blur-md) theme-color(var(--color-category-main), 20%);
+  backdrop-filter: blur(var(--blur-md));
 
   /* Error state dropdown border */
   .c-custom-select.is-error & {
@@ -360,13 +359,13 @@ const listboxId = useId();
   box-sizing: border-box;
   width: 100%;
   max-height: min(250px, 40vh); /* 画面が小さい場合にも対応 */
+  padding: 0;
+  margin: 0;
   overflow: hidden auto;
+  list-style: none;
   scrollbar-color: var(--color-category-main) transparent;
   scrollbar-width: thin;
   transform: translateZ(0);
-  margin: 0;
-  padding: 0;
-  list-style: none;
 
   --scrollbar-size: var(--size-2);
 }
@@ -389,8 +388,8 @@ const listboxId = useId();
   &:hover:not(.is-disabled, .is-placeholder),
   &.is-focused:not(.is-disabled) {
     color: var(--color-category-main);
-    border-left-color: var(--color-category-main);
     background-color: transparent;
+    border-left-color: var(--color-category-main);
     box-shadow: inset 0 0 var(--size-3)
       theme-color(var(--color-category-main), 30%);
     transform: translateX(2px);
@@ -399,8 +398,8 @@ const listboxId = useId();
   &.is-selected {
     font-weight: var(--font-weight-bold);
     color: var(--color-category-main);
-    border-left-color: var(--color-category-main);
     background-color: transparent;
+    border-left-color: var(--color-category-main);
     box-shadow: inset 0 0 var(--size-4)
       theme-color(var(--color-category-main), 40%);
   }
@@ -413,8 +412,8 @@ const listboxId = useId();
   }
 
   &.is-placeholder {
-    color: var(--color-text-muted);
     font-style: italic;
+    color: var(--color-text-muted);
     cursor: default;
   }
 }

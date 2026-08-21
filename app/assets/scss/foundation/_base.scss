@@ -9,8 +9,8 @@
 *::before,
 *::after {
   box-sizing: border-box; // 箱からはみ出さないように
-  background-color: transparent;
   font-family: inherit;
+  background-color: transparent;
 }
 
 // フォーム要素も継承させる
@@ -79,8 +79,8 @@ html[data-animations="false"] {
 }
 
 #__nuxt {
-  flex: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
   min-height: 0;
 }

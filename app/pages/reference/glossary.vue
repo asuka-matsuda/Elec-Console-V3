@@ -136,21 +136,21 @@ const categoryColorMap: Record<string, string> = {
 <style scoped lang="scss">
 /* Layout CSS moved to _l-sidebar.scss, Project CSS moved to _p-glossary.scss and _p-db.scss */
 .l-filter-layout {
-  flex: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
-  min-height: 0;
   width: 100%;
   max-width: 1400px;
-  container-type: inline-size;
+  min-height: 0;
   container-name: filter-layout;
+  container-type: inline-size;
 
   &__grid {
-    flex: 1;
-    min-height: 0;
     display: flex;
+    flex: 1;
     flex-direction: column;
     gap: var(--gap-section);
+    min-height: 0;
   }
 
   &__sidebar {
@@ -158,10 +158,10 @@ const categoryColorMap: Record<string, string> = {
   }
 
   &__main {
-    min-width: 0;
-    flex: 1;
     display: flex;
+    flex: 1;
     flex-direction: column;
+    min-width: 0;
     min-height: 0;
   }
 }

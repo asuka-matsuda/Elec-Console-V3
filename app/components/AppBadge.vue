@@ -55,20 +55,19 @@ withDefaults(
   @include flex-center(0, inline-flex);
 
   font-weight: var(--font-weight-bold);
-  text-transform: uppercase;
+  line-height: var(--line-height-tight);
   color: var(--badge-color);
+  text-transform: uppercase;
+  white-space: nowrap;
+  user-select: none;
   border: var(--border-width-base) solid var(--badge-border);
   box-shadow:
     inset 0 0 var(--blur-sm) var(--badge-shadow),
     0 0 var(--blur-md) var(--badge-shadow);
+  transition: var(--transition-base);
 
   // テキストの発光エフェクト
   @include cyber-text-glow(100%, var(--blur-sm), var(--badge-color));
-
-  line-height: var(--line-height-tight);
-  white-space: nowrap;
-  user-select: none;
-  transition: var(--transition-base);
 
   /* サイズバリアント (Size Variants)
      ========================================================================== */

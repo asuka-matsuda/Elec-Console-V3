@@ -80,16 +80,15 @@ const closeSidebar = () => {
   --sidebar-border: var(--color-border);
 
   position: fixed;
+  z-index: var(--z-index-nav);
   display: flex;
   flex-direction: column;
   width: var(--sidebar-width);
   height: 100dvh;
-  z-index: var(--z-index-nav);
-
-  @include ui-border-fade(right, var(--sidebar-border));
-
   box-shadow: var(--shadow-elevation-hover); // Replaced hardcoded shadow
   transition: transform var(--duration-slow) var(--ease-float);
+
+  @include ui-border-fade(right, var(--sidebar-border));
 
   // Mobile layout (hide by default)
   @include mq("md") {
@@ -102,27 +101,26 @@ const closeSidebar = () => {
 
   // --- Logo Header ---
   &__header {
-    flex-shrink: 0;
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     height: 64px; // Match standard header height
     padding: var(--pad-container);
+    box-shadow: var(--shadow-elevation-base); // Replaced hardcoded shadow
 
     @include ui-border-fade(bottom, var(--sidebar-border));
-
-    box-shadow: var(--shadow-elevation-base); // Replaced hardcoded shadow
   }
 
   // --- Navigation Content ---
   &__nav {
+    display: flex;
     flex: 1;
-    overflow-y: auto;
+    flex-direction: column;
+    gap: var(--gap-section); // セクション間の隙間なので gap-section が適切
 
     /* ホバー時の右移動ではみ出さないよう、右側に余白を設ける */
     padding: var(--pad-container);
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-section); // セクション間の隙間なので gap-section が適切
+    overflow-y: auto;
 
     --scrollbar-size: var(--size-2);
   }
@@ -171,28 +169,27 @@ const closeSidebar = () => {
   // --- Navigation Links ---
   &__link {
     display: flex;
-    align-items: center;
     gap: var(--gap-component);
+    align-items: center;
     padding: var(--space-2);
-    text-decoration: none;
+    font-weight: var(--font-weight-medium);
     color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: var(--transition-base);
 
     @extend %text-sm;
 
-    font-weight: var(--font-weight-medium);
-    transition: var(--transition-base);
-
     &-text {
+      line-height: 1.4;
+      line-break: strict;
       word-break: keep-all; // 句読点やスペース、記号（・など）の区切りでのみ改行を許可
       overflow-wrap: anywhere; // 万が一収まらない場合は強制改行
-      line-break: strict;
-      line-height: 1.4;
     }
 
     &-icon {
+      flex-shrink: 0; // アイコンが潰れないように
       width: var(--icon-size-md);
       height: var(--icon-size-md);
-      flex-shrink: 0; // アイコンが潰れないように
       transition: var(--transition-base);
     }
 
@@ -241,8 +238,8 @@ const closeSidebar = () => {
 
     // Disabled
     &.is-disabled {
-      opacity: 0.4;
       cursor: not-allowed;
+      opacity: 0.4;
       filter: grayscale(100%);
     }
   }
@@ -253,24 +250,24 @@ const closeSidebar = () => {
   display: none; // Hidden on desktop
 
   @include mq("md") {
-    display: block;
     position: fixed;
     top: 0;
     left: 0;
     z-index: var(--z-index-nav); // Just below sidebar
+    display: block;
+    visibility: hidden;
     width: 100vw;
     height: 100dvh;
-    backdrop-filter: blur(4px) brightness(0.4);
     opacity: 0;
-    visibility: hidden;
+    backdrop-filter: blur(4px) brightness(0.4);
     transition:
       opacity var(--duration-slow) var(--ease-out),
       visibility var(--duration-slow) var(--ease-out);
 
     &.is-open {
-      opacity: 1;
       visibility: visible;
       pointer-events: auto;
+      opacity: 1;
     }
   }
 }

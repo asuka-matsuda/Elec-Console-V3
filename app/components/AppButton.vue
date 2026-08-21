@@ -61,24 +61,22 @@ const componentTag = computed(() => {
   @extend %click-enabled;
 
   position: relative;
-
-  @include flex-center(var(--space-2), inline-flex);
-
   flex-shrink: 0;
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-ui);
   color: var(--color-text-main);
   letter-spacing: 0.05em;
   text-decoration: none;
-  transition: var(--transition-base), var(--transition-colors);
-
-  /* 視認性確保のための枠線と影（アウトラインスタイル） */
-  @include ui-border-dim(var(--btn-color, var(--color-category-main)), 50%);
-
   box-shadow:
     inset 0 0 var(--blur-md)
       theme-color(var(--btn-color, var(--color-category-main)), 10%),
     var(--shadow-elevation-base);
+  transition: var(--transition-base), var(--transition-colors);
+
+  @include flex-center(var(--space-2), inline-flex);
+
+  /* 視認性確保のための枠線と影（アウトラインスタイル） */
+  @include ui-border-dim(var(--btn-color, var(--color-category-main)), 50%);
 
   // 以前の ui-surface は枠線を上書きしてしまうため今回は無効化
   // @include ui-surface;

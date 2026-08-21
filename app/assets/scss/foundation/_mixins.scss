@@ -66,9 +66,9 @@
 
 // クリック不可時の挙動
 %disabled {
-  opacity: 0.5; // 半透明
-  cursor: not-allowed; // 不許可マーク
   pointer-events: none; // マウス操作をなしに
+  cursor: not-allowed; // 不許可マーク
+  opacity: 0.5; // 半透明
 }
 
 /* Visual Effects & Glassmorphism
@@ -273,10 +273,10 @@
     display: inline-block;
     width: $width;
     height: $height;
+    margin-left: auto;
     content: "";
     background-color: $color;
     animation: ui-cursor-blink 1s step-end infinite;
-    margin-left: auto;
   }
 }
 
@@ -346,24 +346,24 @@
 
 @mixin flex-center($gap: 0, $display: flex) {
   display: $display;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 
   @if $gap != 0 { gap: $gap; }
 }
 
 @mixin flex-between($gap: 0, $display: flex) {
   display: $display;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 
   @if $gap != 0 { gap: $gap; }
 }
 
 @mixin flex-start($gap: 0, $display: flex) {
   display: $display;
-  justify-content: flex-start;
   align-items: center;
+  justify-content: flex-start;
 
   @if $gap != 0 { gap: $gap; }
 }

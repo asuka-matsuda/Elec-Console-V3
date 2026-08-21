@@ -44,10 +44,10 @@ withDefaults(
 
   &__top {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    width: 100%;
     gap: var(--space-4);
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 100%;
   }
 
   &__actions {
@@ -57,9 +57,9 @@ withDefaults(
   &__title {
     @include flex-start(var(--gap-component));
 
+    margin: 0;
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
-    margin: 0;
 
     &--lg {
       @extend %text-xl;

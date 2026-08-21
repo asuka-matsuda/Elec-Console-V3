@@ -39,10 +39,10 @@
   }
 
   &__card-term {
+    margin: 0;
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
-    margin: 0;
   }
 
   &__card-body {
@@ -73,9 +73,9 @@
   }
 
   &__card-text {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-    line-height: 1.5;
     margin: 0;
+    font-size: var(--font-size-sm);
+    line-height: 1.5;
+    color: var(--color-text-secondary);
   }
 }

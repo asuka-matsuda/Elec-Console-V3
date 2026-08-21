@@ -32,8 +32,8 @@ defineProps<{
   }
 
   &.has-top-border {
-    border-top: 1px solid var(--color-border);
     padding-top: var(--gap-element);
+    border-top: 1px solid var(--color-border);
   }
 }
 </style>

@@ -57,13 +57,12 @@ const inputId = useId();
 
   @include flex-start(var(--space-2), inline-flex);
 
-  cursor: pointer;
   position: relative;
+  color: var(--color-text-main);
+  cursor: pointer;
+  user-select: none;
 
   @extend %text-sm;
-
-  color: var(--color-text-main);
-  user-select: none;
 
   &--success {
     --checkbox-color: var(--color-status-success);
@@ -86,10 +85,10 @@ const inputId = useId();
   &__input {
     // Hide native input visually, but keep accessible for keyboard focus
     position: absolute;
-    opacity: 0;
     width: 0;
     height: 0;
     margin: 0;
+    opacity: 0;
   }
 
   // 1. Keyboard Focus State
@@ -107,9 +106,9 @@ const inputId = useId();
     @include ui-active(var(--checkbox-color));
 
     .c-checkbox__icon {
-      stroke-dashoffset: 0;
       opacity: 1;
       filter: drop-shadow(0 0 var(--blur-sm) var(--checkbox-color));
+      stroke-dashoffset: 0;
     }
   }
 
@@ -130,8 +129,8 @@ const inputId = useId();
     .c-checkbox__icon {
       width: 70%;
       height: 70%;
-      stroke: var(--checkbox-color);
       opacity: 0;
+      stroke: var(--checkbox-color);
       stroke-dasharray: 24;
       stroke-dashoffset: 24;
       transition: var(--transition-base);

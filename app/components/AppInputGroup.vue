@@ -20,8 +20,8 @@
   width: 100%;
 
   &__main {
-    flex: 1;
     display: flex;
+    flex: 1;
 
     /* AppInput のボーダーと角丸を調整 */
     :deep(.c-input) {
@@ -42,23 +42,22 @@
 
     /* append領域に配置されたAppSelectは、単位選択などを想定しコンパクトな幅にする */
     :deep(.c-custom-select) {
-      width: 5em;
       flex-shrink: 0;
+      width: 5em;
     }
 
     :deep(.c-input-addon) {
       @include flex-center(0, inline-flex);
 
       padding: 0 var(--space-3);
+      color: var(--color-text-main);
+      white-space: nowrap;
       border: var(--border-width-base) solid
         theme-color(var(--color-category-main), 50%);
       border-left: none;
       box-shadow: var(--edge-reflex-base), var(--shadow-sink);
-      color: var(--color-text-main);
 
       @extend %text-sm;
-
-      white-space: nowrap;
     }
   }
 }

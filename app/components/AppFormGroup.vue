@@ -94,10 +94,10 @@ withDefaults(
   }
 
   &__control {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: var(--gap-element);
-    position: relative;
   }
 
   &__error {
@@ -120,11 +120,12 @@ withDefaults(
   @include flex-start(var(--gap-element));
   @extend %text-sm;
 
+  font-weight: var(--font-weight-bold);
+
   // Default state: slightly dimmed
   color: theme-color(var(--color-category-main), 70%);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  font-weight: var(--font-weight-bold);
   user-select: none;
   transition: var(--transition-base);
 

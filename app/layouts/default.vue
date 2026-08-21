@@ -25,9 +25,9 @@ const breadcrumbs = useBreadcrumbs();
             <AppIcon
               name="bell"
               style="
-                color: var(--color-text-secondary);
                 width: var(--icon-size-md);
                 height: var(--icon-size-md);
+                color: var(--color-text-secondary);
               "
             />
             <div class="l-header-user__avatar">
@@ -62,8 +62,8 @@ const breadcrumbs = useBreadcrumbs();
 }
 
 .l-main {
-  flex: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
   min-width: 0; /* Prevent flex item from blowing out */
   margin-left: 280px; /* On desktop, the sidebar takes up 280px. */
@@ -74,13 +74,13 @@ const breadcrumbs = useBreadcrumbs();
 }
 
 .l-content {
-  flex: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
   min-height: 0;
   padding: var(--pad-container);
-  overflow-y: auto;
   container-type: inline-size;
+  overflow-y: auto;
 
   --scrollbar-size: var(--size-2);
 
@@ -92,8 +92,8 @@ const breadcrumbs = useBreadcrumbs();
 /* Temporary user bar styles for demo */
 .l-header-user {
   display: flex;
-  align-items: center;
   gap: var(--gap-component);
+  align-items: center;
 
   @extend %text-sm;
 
@@ -103,15 +103,15 @@ const breadcrumbs = useBreadcrumbs();
     justify-content: center;
     width: var(--size-control-sm);
     height: var(--size-control-sm);
-    border-radius: 50%;
-    border: var(--border-width-thick) solid var(--color-category-main);
     background: var(--color-category-main);
+    border: var(--border-width-thick) solid var(--color-category-main);
+    border-radius: 50%;
     box-shadow: 0 0 var(--blur-lg) theme-color(var(--color-category-main), 50%);
   }
 
   &__name {
-    color: var(--color-text-main);
     font-weight: var(--font-weight-bold);
+    color: var(--color-text-main);
     letter-spacing: 0.05em;
   }
 }

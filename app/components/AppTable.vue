@@ -58,8 +58,8 @@ defineProps<{
 
 <style scoped lang="scss">
 .c-table-wrapper {
-  width: 100%;
   flex: 1;
+  width: 100%;
   min-height: 0;
   overflow: auto;
   border: var(--border-width-base) solid var(--color-border);
@@ -67,17 +67,17 @@ defineProps<{
 
 .c-table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
   text-align: left;
+  border-spacing: 0;
+  border-collapse: separate;
 
   :deep(th),
   :deep(td) {
     padding: var(--space-3);
-    border-bottom: var(--border-width-base) solid var(--color-border);
-    color: var(--color-text-main);
     vertical-align: middle;
+    color: var(--color-text-main);
     white-space: nowrap;
+    border-bottom: var(--border-width-base) solid var(--color-border);
   }
 
   :deep(td) {
@@ -88,18 +88,17 @@ defineProps<{
     position: sticky;
     top: 0;
     z-index: 2;
-    backdrop-filter: blur(var(--blur-md));
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
+    border-bottom-width: calc(var(--border-width-base) * 2);
+    backdrop-filter: blur(var(--blur-md));
 
     @extend %text-sm;
-
-    border-bottom-width: calc(var(--border-width-base) * 2);
   }
 
   :deep(tbody tr) {
-    transition: var(--transition-base);
     position: relative; /* Required for z-index and box-shadow to appear correctly on rows */
+    transition: var(--transition-base);
 
     &:last-child td {
       border-bottom: none;

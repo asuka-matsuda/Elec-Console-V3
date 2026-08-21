@@ -38,13 +38,12 @@ const inputId = useId();
 
   @include flex-start(var(--space-2), inline-flex);
 
-  cursor: pointer;
   position: relative;
+  color: var(--color-text-main);
+  cursor: pointer;
+  user-select: none;
 
   @extend %text-sm;
-
-  color: var(--color-text-main);
-  user-select: none;
 
   &:has(.c-toggle__input:disabled) {
     cursor: not-allowed;
@@ -55,10 +54,10 @@ const inputId = useId();
   &__input {
     /* Hide native input visually, but keep accessible for keyboard focus */
     position: absolute;
-    opacity: 0;
     width: 0;
     height: 0;
     margin: 0;
+    opacity: 0;
 
     /* 1. Keyboard Focus State */
     &:focus-visible + .c-toggle__track {
@@ -79,21 +78,21 @@ const inputId = useId();
 
       /* Slide and glow the thumb */
       .c-toggle__thumb {
-        transform: translateX(calc(var(--track-w) - var(--thumb-w)));
         border-color: theme-color(white, 80%);
         box-shadow:
           0 0 var(--blur-lg) var(--toggle-color),
           inset 0 0 var(--blur-md) var(--toggle-color),
           0 0 var(--blur-sm) white;
+        transform: translateX(calc(var(--track-w) - var(--thumb-w)));
       }
     }
   }
 
   &__track {
+    position: relative;
     flex-shrink: 0;
     width: var(--track-w);
     height: var(--track-h);
-    position: relative;
     border: var(--border-width-base) solid var(--color-border);
     box-shadow: var(--shadow-sink);
     transition: var(--transition-base);
@@ -103,6 +102,7 @@ const inputId = useId();
     position: absolute;
     top: -1px;
     left: -1px;
+    z-index: 1;
     width: var(--thumb-w);
     height: var(--track-h);
     border: var(--border-width-base) solid var(--color-border);
@@ -112,7 +112,6 @@ const inputId = useId();
       background-color var(--duration-base) var(--ease-out),
       box-shadow var(--duration-base) var(--ease-out),
       border-color var(--duration-base) var(--ease-out);
-    z-index: 1;
   }
 
   /* 3. Hover State */

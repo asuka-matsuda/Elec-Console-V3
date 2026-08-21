@@ -189,8 +189,8 @@ const totalWeight = computed(() => {
   &__warning {
     @extend %text-sm;
 
-    color: var(--color-status-danger);
     padding: var(--gap-element);
+    color: var(--color-status-danger);
   }
 }
 
@@ -202,17 +202,16 @@ const totalWeight = computed(() => {
   }
 
   &__note {
+    padding: 0 var(--space-4);
     margin-top: var(--space-4);
+    color: var(--color-text-muted);
 
     @extend %text-xs;
-
-    color: var(--color-text-muted);
-    padding: 0 var(--space-4);
   }
   
   &__note-list {
-    list-style-type: disc;
     padding-left: var(--space-4);
+    list-style-type: disc;
   }
 }
 </style>

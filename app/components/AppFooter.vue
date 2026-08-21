@@ -15,13 +15,13 @@ const currentYear = new Date().getFullYear();
 <style scoped lang="scss">
 .l-footer {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-component);
+  align-items: center;
   padding: var(--pad-container);
   margin-top: auto;
   text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--gap-component);
 
   &__divider {
     width: 100%;
