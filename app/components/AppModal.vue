@@ -153,7 +153,7 @@ const titleId = `modal-title-${modalId}`;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: var(--space-3);
+    gap: var(--gap-element);
   }
 
   &__title {
@@ -195,7 +195,7 @@ const titleId = `modal-title-${modalId}`;
   &__layout {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
+    gap: var(--gap-component);
     flex: 1;
     min-height: 0;
   }
@@ -203,7 +203,7 @@ const titleId = `modal-title-${modalId}`;
   &__body {
     flex: 1;
     overflow-y: auto;
-    padding: var(--space-3) 0;
+    padding: var(--pad-container) 0;
     font-size: var(--font-size-sm);
     color: var(--color-text-main);
     line-height: 1.6;
@@ -215,7 +215,7 @@ const titleId = `modal-title-${modalId}`;
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: var(--space-3);
+    gap: var(--gap-element);
   }
 }
 </style>
