@@ -345,7 +345,7 @@
    ========================================================================== */
 
 // 基本的なFlexレイアウト
-@mixin flex-layout($direction: row, $justify: flex-start, $align: stretch, $gap: null) {
+@mixin flex-layout($direction: row, $justify: null, $align: null, $gap: null) {
   display: flex;
   flex-direction: $direction;
   justify-content: $justify;
@@ -362,6 +362,6 @@
   @include flex-layout(row, space-between, $align, $gap);
 }
 
-@mixin flex-column($gap: null, $align: stretch) {
-  @include flex-layout(column, flex-start, $align, $gap);
+@mixin flex-column($gap: null, $align: null) {
+  @include flex-layout(column, null, $align, $gap);
 }
