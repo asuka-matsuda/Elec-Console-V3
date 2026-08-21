@@ -1,3 +1,18 @@
+<script lang="ts">
+export interface AppButtonProps {
+  to?: string;
+  href?: string;
+  type?: "button" | "submit" | "reset";
+  // eslint-disable-next-line vue/prop-name-casing
+  _variant?: "primary" | "secondary" | "success" | "danger";
+  size?: "sm" | "md";
+  block?: boolean;
+  iconOnly?: boolean;
+  align?: "center" | "right" | "left";
+  disabled?: boolean;
+}
+</script>
+
 <script setup lang="ts">
 /**
  * AppButton
@@ -6,18 +21,7 @@
 import { computed } from "vue";
 
 const props = withDefaults(
-  defineProps<{
-    to?: string;
-    href?: string;
-    type?: "button" | "submit" | "reset";
-    // eslint-disable-next-line vue/prop-name-casing
-    _variant?: "primary" | "secondary" | "success" | "danger";
-    size?: "sm" | "md";
-    block?: boolean;
-    iconOnly?: boolean;
-    align?: "center" | "right" | "left";
-    disabled?: boolean;
-  }>(),
+  defineProps<AppButtonProps>(),
   {
     type: "button",
     _variant: "primary",

@@ -4,10 +4,13 @@
  * 危険なアクションを示す赤いボタンコンポーネント
  */
 import AppButton from "./AppButton.vue";
+import type { AppButtonProps } from "./AppButton.vue";
+
+defineProps<AppButtonProps>();
 </script>
 
 <template>
-  <AppButton _variant="danger" v-bind="$attrs">
+  <AppButton v-bind="$props" _variant="danger">
     <slot />
   </AppButton>
 </template>

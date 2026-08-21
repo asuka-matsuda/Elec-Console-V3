@@ -3,35 +3,28 @@
  * AppIconButton
  * アイコンのみのボタンを表示するコンポーネントです。
  */
-withDefaults(
-  defineProps<{
-    /** The icon name */
-    name: string;
-    to?: string;
-    href?: string;
-    type?: "button" | "submit" | "reset";
-    // eslint-disable-next-line vue/prop-name-casing
-    _variant?: "primary" | "secondary" | "success" | "danger";
-    size?: "sm" | "md";
-    disabled?: boolean;
-  }>(),
+import type { AppButtonProps } from "./AppButton.vue";
+
+interface Props extends AppButtonProps {
+  /** The icon name */
+  name: string;
+}
+
+const props = withDefaults(
+  defineProps<Props>(),
   {
     type: "button",
     _variant: "primary",
     size: "md",
+    iconOnly: true,
   }
 );
 </script>
 
 <template>
   <AppButton
-    :to="to"
-    :href="href"
-    :type="type"
-    :_variant="_variant"
-    :size="size"
-    :disabled="disabled"
-    icon-only
+    v-bind="props"
+    class="c-icon-button"
   >
     <AppIcon :name="name" />
   </AppButton>

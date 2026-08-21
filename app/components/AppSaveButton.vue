@@ -4,25 +4,16 @@
  * 非同期の保存処理をトリガーし、ローディング状態や成功状態を視覚的にフィードバックするボタンコンポーネント。
  */
 import { ref } from "vue";
+import type { AppButtonProps } from "./AppButton.vue";
 
-const props = defineProps<{
-  /** Promiseを返す保存処理関数 */
+interface Props extends AppButtonProps {
+  /** Promiseを返す保存関数 */
   saveFunction: () => Promise<void>;
-  /** 保存処理が実行可能かどうか */
-  disabled?: boolean;
   /** ボタンのラベル（通常時） */
   label?: string;
-  
-  // --- AppButton Props (継承) ---
-  to?: string;
-  href?: string;
-  type?: "button" | "submit" | "reset";
-  // eslint-disable-next-line vue/prop-name-casing
-  _variant?: "primary" | "secondary" | "success" | "danger";
-  size?: "sm" | "md";
-  block?: boolean;
-  align?: "center" | "right" | "left";
-}>();
+}
+
+const props = defineProps<Props>();
 
 const state = ref<"idle" | "saving" | "success">("idle");
 
@@ -47,14 +38,10 @@ const handleClick = async () => {
 
 <template>
   <AppButton
+    v-bind="props"
     :disabled="disabled || state !== 'idle'"
     :size="size || 'sm'"
     :_variant="_variant || 'success'"
-    :to="to"
-    :href="href"
-    :type="type"
-    :block="block"
-    :align="align"
     class="c-save-button"
     :class="{ [`is-${state}`]: true }"
     @click="handleClick"
