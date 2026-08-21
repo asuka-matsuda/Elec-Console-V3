@@ -62,6 +62,7 @@ const toggleCat = (value: string) => {
 
 <style scoped lang="scss">
 .c-filter-panel {
+  // --- Base Styles ---
   &__header {
 
     @extend %text-base;

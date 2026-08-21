@@ -12,7 +12,9 @@ defineProps<{
   steps: MathStep[];
 }>();
 
-// 各ステップの legend (string[]) をパースして使いやすいオブジェクト配列に変換する
+/**
+ * 各ステップの legend (string[]) をパースして使いやすいオブジェクト配列に変換する
+ */
 const parseLegend = (legendArray: string[] | undefined) => {
   if (!legendArray) return [];
   return legendArray.map((leg) => {
@@ -25,7 +27,9 @@ const parseLegend = (legendArray: string[] | undefined) => {
   });
 };
 
-// Helper to safely render KaTeX string
+/**
+ * Helper to safely render KaTeX string
+ */
 const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   if (!mathStr) return "";
   try {
@@ -95,6 +99,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
 <style scoped lang="scss">
 .c-math-basis {
+  // --- Base Styles ---
   overflow-y: auto;
   display: flex;
   flex: 1;

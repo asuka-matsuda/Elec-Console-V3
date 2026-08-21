@@ -56,8 +56,8 @@ function toggleKana(kana: string) {
 </template>
 
 <style scoped lang="scss">
-// 既存のグリッドスタイルを継承、もしくは追加
 .p-db__filter-grid {
+  // --- Base Styles ---
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   gap: var(--space-2);

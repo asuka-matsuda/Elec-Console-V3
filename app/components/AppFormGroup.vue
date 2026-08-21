@@ -52,6 +52,7 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-form-group {
+  // --- Base Styles ---
   container-type: inline-size;
   width: 100%;
 

@@ -58,6 +58,7 @@ defineProps<{
 
 <style scoped lang="scss">
 .c-table-wrapper {
+  // --- Base Styles ---
   overflow: auto;
   flex: 1;
 

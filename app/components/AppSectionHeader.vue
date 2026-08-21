@@ -38,6 +38,7 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-section-header {
+  // --- Base Styles ---
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
@@ -62,6 +63,7 @@ withDefaults(
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
 
+    // --- Size Modifiers ---
     &--lg {
       @extend %text-xl;
     }

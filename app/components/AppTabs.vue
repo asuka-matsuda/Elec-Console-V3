@@ -56,6 +56,7 @@ const selectTab = (option: TabOption) => {
 
 <style scoped lang="scss">
 .c-tabs {
+  // --- Base Styles ---
   @include flex-start(var(--gap-component));
 
   flex-wrap: wrap;
@@ -101,6 +102,8 @@ const selectTab = (option: TabOption) => {
   box-shadow: inset 0 0 var(--blur-sm) var(--color-border);
 
   transition: var(--transition-base);
+
+  // --- State Modifiers ---
 
   /* --- Hover State --- */
   &:hover:not(.is-disabled, .is-active) {
