@@ -2,8 +2,7 @@
 @use "mixins" as *;
 @use "functions" as *;
 
-/* Light Theme Variables
-   ========================================================================== */
+// --- Light Theme Variables ---
 [data-theme="light"] {
   // --- Light Mode Colors (Pure White / No Background) ---
   --color-main-bg-base: 0 0% 100%; // #FFFFFF
@@ -57,15 +56,13 @@
     inset 0 0 0 1px color-mix(in srgb, black 15%, transparent);
 }
 
-/* Accent Color Variations
-   ========================================================================== */
+// --- Accent Color Variations ---
 // Accent Color Variables (These are dynamically overridden via JS)
 // Default values are defined in :root in _variables.scss
 // Examples of accent color presets:
 // Orange (Default): 25 95% 53%
 
-/* Border Style Themes
-   ========================================================================== */
+// --- Border Style Themes ---
 :root,
 body[data-border-style="hud"] {
   --panel-border-color: var(--color-border);

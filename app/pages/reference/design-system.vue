@@ -86,6 +86,7 @@ const isChecked = ref(false);
 
 <style scoped lang="scss">
 .p-design-system {
+  // --- Base Styles ---
   display: flex;
   flex-direction: column;
   gap: var(--gap-section);

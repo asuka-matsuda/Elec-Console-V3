@@ -18,18 +18,18 @@ const {
   mathSteps
 } = useWeightCalculator();
 
-// ケーブル選択用データ
+/** ケーブル選択用データ */
 const categories = computed(() => getCableCategories());
 const availableSizes = computed(() => getAvailableSizes(inputs.value.category));
 
-// Categoryが変更されたらcableIdxをリセットする
+/** Categoryが変更されたらcableIdxをリセットする */
 watch(() => inputs.value.category, () => {
   inputs.value.cableIdx = '';
 });
 
 
 
-// 総重量の計算
+/** 総重量の計算 */
 const totalWeight = computed(() => {
   if (!result.value || result.value?.error || !result.value?.bestDrum) return 0;
   return (result.value?.cableWeight || 0) + parseFloat(result.value?.bestDrum?.weight as any || '0');
@@ -195,6 +195,8 @@ const totalWeight = computed(() => {
 }
 
 .p-weight {
+  // --- Base Styles ---
+
   &__sections {
     display: flex;
     flex-direction: column;

@@ -1,7 +1,6 @@
 /*! destyle.css v4.0.0 | MIT License | https://github.com/nicolas-cusan/destyle.css */
 
-/* Reset box-model and set borders
-   ========================================================================== */
+// --- Reset box-model and set borders ---
 
 *,
 ::before,
@@ -11,16 +10,14 @@
   border-width: 0;
 }
 
-/* Document
-   ========================================================================== */
+// --- Document ---
 
 html {
   line-height: 1.15;
   text-size-adjust: 100%;
 }
 
-/* Sections
-   ========================================================================== */
+// --- Sections ---
 
 body {
   margin: 0;
@@ -30,8 +27,7 @@ main {
   display: block;
 }
 
-/* Vertical rhythm
-   ========================================================================== */
+// --- Vertical rhythm ---
 
 p,
 table,
@@ -45,8 +41,7 @@ dl {
   margin: 0;
 }
 
-/* Headings
-   ========================================================================== */
+// --- Headings ---
 
 h1,
 h2,
@@ -59,8 +54,7 @@ h6 {
   font-weight: inherit;
 }
 
-/* Lists (enumeration)
-   ========================================================================== */
+// --- Lists (enumeration) ---
 
 ul,
 ol {
@@ -69,8 +63,7 @@ ol {
   list-style: none;
 }
 
-/* Lists (definition)
-   ========================================================================== */
+// --- Lists (definition) ---
 
 dt {
   font-weight: bold;
@@ -80,8 +73,7 @@ dd {
   margin-left: 0;
 }
 
-/* Grouping content
-   ========================================================================== */
+// --- Grouping content ---
 
 hr {
   clear: both;
@@ -104,8 +96,7 @@ address {
   font-style: inherit;
 }
 
-/* Text-level semantics
-   ========================================================================== */
+// --- Text-level semantics ---
 
 a {
   color: inherit;
@@ -148,8 +139,7 @@ sup {
   top: -0.5em;
 }
 
-/* Replaced content
-   ========================================================================== */
+// --- Replaced content ---
 
 svg,
 img,
@@ -159,8 +149,7 @@ iframe {
   vertical-align: bottom;
 }
 
-/* Forms
-   ========================================================================== */
+// --- Forms ---
 
 button,
 input,
@@ -246,8 +235,7 @@ textarea {
   appearance: auto;
 }
 
-/* Interactive
-   ========================================================================== */
+// --- Interactive ---
 
 details {
   display: block;
@@ -257,8 +245,7 @@ summary {
   display: list-item;
 }
 
-/* Misc
-   ========================================================================== */
+// --- Misc ---
 
 template {
   display: none;

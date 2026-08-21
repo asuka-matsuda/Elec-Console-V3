@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { menuData } from "~/utils/data/menuData";
 
-// Extract just the sections to show on the dashboard
+/** Extract just the sections to show on the dashboard */
 const dashboardSections = menuData.filter((section) => section.showInDashboard);
 </script>
 
@@ -51,6 +51,7 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
 
 <style scoped lang="scss">
 .p-dashboard {
+  // --- Base Styles ---
   display: flex;
   flex-direction: row; /* Desktop default */
   gap: var(--gap-section);

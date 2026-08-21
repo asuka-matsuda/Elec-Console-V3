@@ -2,8 +2,7 @@
 @use "functions" as *;
 @use "variables" as *;
 
-/* Media Queries
-   ========================================================================== */
+// --- Media Queries ---
 
 // ブレイクポイントのメディアクエリ（レスポンシブ対応）
 @mixin mq($breakpoint, $direction: "down") {
@@ -65,8 +64,7 @@
   }
 }
 
-/* Base / Common Placeholders
-   ========================================================================== */
+// --- Base / Common Placeholders ---
 
 // クリック時の挙動
 %click-enabled {
@@ -81,8 +79,7 @@
   opacity: 0.5; // 半透明
 }
 
-/* Visual Effects & Glassmorphism
-   ========================================================================== */
+// --- Visual Effects & Glassmorphism ---
 
 // テキストの発光
 @mixin cyber-text-glow($opacity: 40%, $blur: 8px, $color: currentcolor) {
@@ -120,8 +117,7 @@
   box-shadow: var(--edge-reflex-base), var(--shadow-elevation-base);
 }
 
-/* フォーム要素用の小分けパック（各状態のスタイル）
-   ========================================================================== */
+// --- フォーム要素用の小分けパック（各状態のスタイル） ---
 
 @mixin form-control-hover {
   border-color: var(--color-category-main);
@@ -167,8 +163,7 @@
   }
 }
 
-/* フォーム要素のベーススタイル（統合）
-   ========================================================================== */
+// --- フォーム要素のベーススタイル（統合） ---
 
 // 通常・ホバー・フォーカス・エラー時の光り方や影をすべて統合管理
 @mixin form-control-base(
@@ -209,8 +204,8 @@
   }
 }
 
-/* Interactive States (Focus, Hover, Active, Disabled)
-   ========================================================================== */
+// --- Interactive States (Focus, Hover, Active, Disabled) ---
+
 
 // フォーカス時の発光（標準のアウトラインの代わり）
 @mixin ui-focus($color: var(--color-category-main), $shadow-spread: 12px) {
@@ -274,11 +269,11 @@
     0 0 var(--blur-lg) theme-color($color, 40%);
 }
 
-/* Misc Utilities
-   ========================================================================== */
+// --- Misc Utilities ---
 
-/* Cursor & Indicators
-   ========================================================================== */
+
+// --- Cursor & Indicators ---
+
 
 // ターミナル風の点滅するサイバーカーソル（文字の後ろに配置）
 @mixin ui-blinking-cursor($width: 6px, $height: 14px, $color: currentcolor) {
@@ -297,8 +292,8 @@
   }
 }
 
-/* Typography Placeholders
-   ========================================================================== */
+// --- Typography Placeholders ---
+
 %text-heading {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
@@ -315,8 +310,8 @@
   line-height: var(--line-height-base);
 }
 
-/* Typography Placeholders
-   ========================================================================== */
+// --- Typography Placeholders ---
+
 %text-2xs {
   font-size: var(--font-size-2xs);
   line-height: var(--line-height-base);
@@ -358,8 +353,8 @@
   line-height: var(--line-height-tight);
 }
 
-/* Layout Mixins
-   ========================================================================== */
+// --- Layout Mixins ---
+
 
 @mixin flex-center($gap: 0, $display: flex) {
   display: $display;

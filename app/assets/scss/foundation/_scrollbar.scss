@@ -3,8 +3,7 @@
 
 /* stylelint-disable no-descending-specificity */
 
-/* Custom Scrollbar (HUD/Wireframe Style)
-   ========================================================================== */
+// --- Custom Scrollbar (HUD/Wireframe Style) ---
 ::-webkit-scrollbar {
   width: var(--scrollbar-size, 12px);
   height: var(--scrollbar-size, 12px);
@@ -30,8 +29,7 @@
   }
 }
 
-/* Scrollbar Buttons
-   ========================================================================== */
+// --- Scrollbar Buttons ---
 ::-webkit-scrollbar-button {
   width: var(--scrollbar-size, 12px);
   height: var(--scrollbar-size, 12px);
@@ -49,8 +47,7 @@
   display: none;
 }
 
-/* Base States
-   ========================================================================== */
+// --- Base States ---
 
 ::-webkit-scrollbar-button:vertical:decrement {
   background-image: url(#{$icon-chevron-up-normal});
@@ -68,8 +65,7 @@
   background-image: url(#{$icon-chevron-right-normal});
 }
 
-/* Hover & Active States
-   ========================================================================== */
+// --- Hover & Active States ---
 
 ::-webkit-scrollbar-button:vertical:decrement:hover,
 ::-webkit-scrollbar-button:vertical:decrement:active {

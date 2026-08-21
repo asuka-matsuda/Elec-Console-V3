@@ -161,6 +161,7 @@ const handleSaveToHistory = async () => {
   display: grid;
   gap: var(--gap-component);
 
+  // --- 2col Modifiers ---
   &--2col {
     grid-template-columns: 1fr; // スモールファースト
 

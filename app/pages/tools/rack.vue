@@ -237,6 +237,8 @@ const {
 }
 
 .p-rack {
+  // --- Base Styles ---
+
   &__sections {
     display: flex;
     flex-direction: column;

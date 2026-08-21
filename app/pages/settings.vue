@@ -131,6 +131,7 @@ const bgOptions = [
 
 <style scoped lang="scss">
 .p-settings {
+  // --- Base Styles ---
   container-type: inline-size;
   display: flex;
   flex-direction: column;

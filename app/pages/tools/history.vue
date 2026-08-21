@@ -14,22 +14,24 @@ const tabs = [
   // { value: "conduit", label: "配管サイズ" },
 ];
 
-// タブに応じたストレージキーを取得
+/** タブに応じたストレージキーを取得 */
 const storageKey = computed(() => {
   if (currentTab.value === "voltage") return "elec_calc_voltage_hist";
   return "";
 });
 
-// 現在のタブの履歴ロジックを取得
+/** 現在のタブの履歴ロジックを取得 */
 const { historyList, deleteHistory, clearAll } = useCalcHistory(
   storageKey.value,
 );
 
-// タブが切り替わったら再取得するために、useCalcHistoryをコンポーネント化するか、
-// 簡易的にコンポーザブル自体を再呼び出しするか。
-// 依存関係としてstorageKeyを持たせるより、タブごとに切り替える方が綺麗なのでwatchする。
-// （※現在の実装では useCalcHistory が onMounted で動作するため、タブ切り替え時に一工夫必要。
-// 今回は電圧降下のみなので、単純化のために1つだけロードする構成としています）
+/**
+ * タブが切り替わったら再取得するために、useCalcHistoryをコンポーネント化するか、
+ * 簡易的にコンポーザブル自体を再呼び出しするか。
+ * 依存関係としてstorageKeyを持たせるより、タブごとに切り替える方が綺麗なのでwatchする。
+ * （※現在の実装では useCalcHistory が onMounted で動作するため、タブ切り替え時に一工夫必要。
+ * 今回は電圧降下のみなので、単純化のために1つだけロードする構成としています）
+ */
 
 const handleClearAll = () => {
   if (confirm("全ての履歴を削除しますか？\nこの操作は取り消せません。")) {
@@ -105,6 +107,7 @@ const handleClearAll = () => {
 
 <style scoped lang="scss">
 .p-history-page {
+  // --- Base Styles ---
   container-type: inline-size;
   display: flex;
   flex-direction: column;

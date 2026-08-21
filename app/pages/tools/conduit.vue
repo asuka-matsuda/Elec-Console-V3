@@ -19,13 +19,13 @@ const {
   mathSteps
 } = useConduitCalculator();
 
-// 配管カテゴリの選択肢
+/** 配管カテゴリの選択肢 */
 const conduitCategoryOptions = computed(() => {
   const cats = [...new Set(conduitData.map(c => c.category))];
   return cats.map(c => ({ value: c, label: c }));
 });
 
-// 保存ハンドラ
+/** 保存ハンドラ */
 const handleSave = async () => {
   saveHistory();
 };
@@ -171,6 +171,8 @@ const handleSave = async () => {
 }
 
 .p-conduit {
+  // --- Base Styles ---
+
   &__section-title {
     @extend %text-base;
 

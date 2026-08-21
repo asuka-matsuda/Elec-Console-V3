@@ -1,11 +1,9 @@
 @use "functions" as *;
 @use "sass:map";
 
-/* SCSS VARIABLES (Design Tokens)
-   ========================================================================== */
+// --- SCSS VARIABLES (Design Tokens) ---
 
-/* Typography
-   ========================================================================== */
+// --- Typography ---
 $font-fallback: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
 $font-base: $font-fallback;
 $font-mono: "Roboto Mono", $font-fallback;
@@ -21,8 +19,7 @@ $font-sizes: (
   "4xl": 24px,
 );
 
-/* Layout & Breakpoints
-   ========================================================================== */
+// --- Layout & Breakpoints ---
 $breakpoints: (
   "md": 768px,
   "lg": 1024px,
@@ -36,8 +33,7 @@ $container-breakpoints: (
 );
 $sidebar-width: 340px;
 
-/* Z-index
-   ========================================================================== */
+// --- Z-index ---
 $z-index: (
   "bg-canvas": -3,
   "nav": 90,
@@ -56,8 +52,7 @@ $z-index: (
   "debug": 999999,
 );
 
-/* Spacing & Sizing
-   ========================================================================== */
+// --- Spacing & Sizing ---
 $base-spacing: 8px;
 $base-size: 8px;
 $spacing-scale: (
@@ -78,8 +73,7 @@ $size-scale: (
   "8": $base-size * 4,
 );
 
-/* Colors (Semantic HSL Bases)
-   ========================================================================== */
+// --- Colors (Semantic HSL Bases) ---
 $color-status-danger-base: 0 84% 60%;
 $color-accent-main-base: 25 95% 53%;
 $color-status-warning-base: 38 92% 56%;
@@ -101,8 +95,7 @@ $color-text-muted-base: 240 5% 65%;
 $color-text-disabled-base: 240 5% 34%;
 $color-border-main-base: 240 4% 16%;
 
-/* Colors (Component HSL Bases)
-   ========================================================================== */
+// --- Colors (Component HSL Bases) ---
 $color-scroll-base: 240 5% 26%;
 $color-table-header-bg-base: 240 6% 10%;
 $color-table-hover-bg-base: 240 4% 22%;
@@ -110,11 +103,9 @@ $color-input-bg-base: 240 10% 4%;
 $color-input-border-base: 240 5% 26%;
 $color-input-focus-base: 217 91% 60%;
 
-/* CSS CUSTOM PROPERTIES (:root)
-   ========================================================================== */
+// --- CSS CUSTOM PROPERTIES (:root) ---
 :root {
-  /* Typography
-       ========================================================================== */
+  // --- Typography ---
   --font-base: #{$font-base};
   --font-mono: #{$font-mono};
   --font-weight-normal: 400;
@@ -125,8 +116,7 @@ $color-input-focus-base: 217 91% 60%;
   --line-height-ui: 1.4;
   --line-height-tight: 1.2;
 
-  /* Layout, Spacing & Sizing
-       ========================================================================== */
+  // --- Layout, Spacing & Sizing ---
   --sidebar-width: #{$sidebar-width};
   --base-spacing: #{$base-spacing};
   --base-size: #{$base-size};
@@ -134,15 +124,13 @@ $color-input-focus-base: 217 91% 60%;
   /* Alias for nav to match AppGlobalNav.vue */
   --z-index-nav: #{map.get($z-index, "sidebar-container")};
 
-  /* Semantic Spacing
-       ========================================================================== */
+  // --- Semantic Spacing ---
   --gap-component: var(--space-2);
   --gap-element: var(--space-2);
   --gap-section: var(--space-3);
   --pad-container: var(--space-3);
 
-  /* Component Specific Sizes
-       ========================================================================== */
+  // --- Component Specific Sizes ---
   --size-control-sm: 32px;
   --size-control-md: 40px;
   --size-control-lg: 48px;
@@ -150,19 +138,16 @@ $color-input-focus-base: 217 91% 60%;
   --width-md: 250px;
   --table-cell-min-height: 36px;
 
-  /* Icon Sizes
-       ========================================================================== */
+  // --- Icon Sizes ---
   --icon-size-sm: 14px;
   --icon-size-md: 20px;
   --icon-size-lg: 24px;
   --icon-size-xl: 32px;
   --icon-size-xxl: 40px;
 
-  /* Colors (Bases)
-       ========================================================================== */
+  // --- Colors (Bases) ---
 
-  /* Semantic HSL Bases
-       ========================================================================== */
+  // --- Semantic HSL Bases ---
   --color-category-main-base: #{$color-category-main-base};
   --color-category-tool-base: #{$color-category-tool-base};
   --color-category-database-base: #{$color-category-database-base};
@@ -190,11 +175,9 @@ $color-input-focus-base: 217 91% 60%;
   --color-input-border-base: #{$color-input-border-base};
   --color-input-focus-base: #{$color-input-focus-base};
 
-  /* Colors (Applied)
-       ========================================================================== */
+  // --- Colors (Applied) ---
 
-  /* Semantics
-       ========================================================================== */
+  // --- Semantics ---
   --color-category-main: hsl(var(--color-category-main-base));
   --color-category-tool: hsl(var(--color-category-tool-base));
   --color-category-database: hsl(var(--color-category-database-base));
@@ -216,8 +199,7 @@ $color-input-focus-base: 217 91% 60%;
   --color-text-disabled: hsl(var(--color-text-disabled-base));
   --color-border: hsl(var(--color-border-base));
 
-  /* Components
-       ========================================================================== */
+  // --- Components ---
   --color-scroll: hsl(var(--color-scroll-base));
   --color-table-header-bg: hsl(var(--color-table-header-bg-base));
   --color-table-hover-bg: hsl(var(--color-table-hover-bg-base));
@@ -225,13 +207,11 @@ $color-input-focus-base: 217 91% 60%;
   --color-input-border: hsl(var(--color-input-border-base));
   --color-input-focus: hsl(var(--color-input-focus-base));
 
-  /* Borders
-       ========================================================================== */
+  // --- Borders ---
   --border-width-base: 1px;
   --border-width-thick: 2px;
 
-  /* Effects & UI Elements
-       ========================================================================== */
+  // --- Effects & UI Elements ---
   --color-overlay-dark: hsl(0deg 0% 0% / 60%);
   --color-overlay-light: hsl(0deg 0% 0% / 30%);
   --blur-sm: 4px;
@@ -239,15 +219,13 @@ $color-input-focus-base: 217 91% 60%;
   --blur-lg: 12px;
   --blur-xl: 16px;
 
-  /* 1. Elevation (Physical Shadows)
-       ========================================================================== */
+  // --- 1. Elevation (Physical Shadows) ---
   --shadow-elevation-base: 0 8px 24px -4px
     color-mix(in srgb, black 90%, transparent);
   --shadow-elevation-hover: 0 16px 40px -8px black;
   --shadow-sink: inset 0 2px 8px color-mix(in srgb, black 50%, transparent);
 
-  /* 2. Edge Reflex (Glass Highlights)
-       ========================================================================== */
+  // --- 2. Edge Reflex (Glass Highlights) ---
   --edge-reflex-base:
     inset 0 1px 0 var(--color-border), inset 0 0 0 1px var(--color-border);
   --edge-reflex-hover:
@@ -256,8 +234,7 @@ $color-input-focus-base: 217 91% 60%;
     inset 1px 1px 2px var(--color-border),
     inset -1px -1px 2px var(--color-border);
 
-  /* 3. Animation & Transition
-       ========================================================================== */
+  // --- 3. Animation & Transition ---
   --duration-fast: 0.15s;
   --duration-base: 0.25s;
   --duration-slow: 0.4s;
@@ -319,8 +296,7 @@ $color-input-focus-base: 217 91% 60%;
     --font-size-#{$name}: #{$size};
   }
 
-  /* Z-index
-       ========================================================================== */
+  // --- Z-index ---
   @each $name, $value in $z-index {
     --z-index-#{$name}: #{$value};
   }
