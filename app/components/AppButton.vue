@@ -1,4 +1,11 @@
-<script lang="ts">
+
+
+<script setup lang="ts">
+/**
+ * AppButton
+ * 汎用的なボタンコンポーネント
+ */
+import { computed } from "vue";
 export interface AppButtonProps {
   to?: string;
   href?: string;
@@ -11,14 +18,6 @@ export interface AppButtonProps {
   align?: "center" | "right" | "left";
   disabled?: boolean;
 }
-</script>
-
-<script setup lang="ts">
-/**
- * AppButton
- * 汎用的なボタンコンポーネント
- */
-import { computed } from "vue";
 
 const props = withDefaults(
   defineProps<AppButtonProps>(),
