@@ -1,0 +1,15 @@
+﻿{
+  "no-terminal-edits": {
+    "PreToolUse": [
+      {
+        "matcher": "run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .agents/scripts/block-powershell.js"
+          }
+        ]
+      }
+    ]
+  }
+}
