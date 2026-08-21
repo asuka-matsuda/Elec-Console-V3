@@ -80,7 +80,7 @@ const componentTag = computed(() => {
 
   @include elevation('sm', 'base', false, inset 0 0 var(--blur-md) theme-color(var(--btn-color, var(--color-category-main)), 10%));
 
-  transition: var(--transition-base), var(--transition-colors);
+  transition: var(--transition-fast);
 
   /* Interaction States */
   &:hover:not(:disabled, .is-disabled) {

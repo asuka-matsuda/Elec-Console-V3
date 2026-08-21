@@ -96,7 +96,7 @@ const closeSidebar = () => {
 
   @include elevation('md', 'base', false); // Replaced hardcoded shadow
 
-  transition: transform var(--duration-slow) var(--ease-float);
+  transition: transform var(--duration-slow) var(--ease-smooth);
 
   @include border-fade(right, var(--sidebar-border));
 
@@ -281,8 +281,8 @@ const closeSidebar = () => {
     backdrop-filter: blur(4px) brightness(0.4);
 
     transition:
-      opacity var(--duration-slow) var(--ease-out),
-      visibility var(--duration-slow) var(--ease-out);
+      opacity var(--duration-slow) var(--ease-base),
+      visibility var(--duration-slow) var(--ease-base);
 
     &.is-open {
       pointer-events: auto;

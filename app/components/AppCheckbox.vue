@@ -101,8 +101,8 @@ const inputId = useId();
     @include cyber-text-glow(50%, var(--blur-md), var(--checkbox-color));
 
     transition:
-      box-shadow var(--duration-slow) var(--ease-out),
-      border-color var(--duration-slow) var(--ease-out);
+      box-shadow var(--duration-slow) var(--ease-base),
+      border-color var(--duration-slow) var(--ease-base);
   }
 
   // 2. Checked State

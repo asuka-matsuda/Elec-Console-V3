@@ -131,8 +131,8 @@
   @include cyber-text-glow(50%, 8px, var(--color-category-main));
 
   transition:
-    box-shadow var(--duration-slow) var(--ease-out),
-    border-color var(--duration-slow) var(--ease-out);
+    box-shadow var(--duration-slow) var(--ease-base),
+    border-color var(--duration-slow) var(--ease-base);
 }
 
 @mixin form-control-error {
@@ -156,8 +156,8 @@
     @include cyber-text-glow(50%, 8px, var(--color-status-danger));
 
     transition:
-      box-shadow var(--duration-slow) var(--ease-out),
-      border-color var(--duration-slow) var(--ease-out);
+      box-shadow var(--duration-slow) var(--ease-base),
+      border-color var(--duration-slow) var(--ease-base);
   }
 }
 
@@ -248,9 +248,9 @@
 
   /* Override transition specifically for the "sinking down" phase */
   transition:
-    transform var(--duration-slow) var(--ease-out),
-    box-shadow var(--duration-slow) var(--ease-out),
-    border-color var(--duration-slow) var(--ease-out);
+    transform var(--duration-slow) var(--ease-base),
+    box-shadow var(--duration-slow) var(--ease-base),
+    border-color var(--duration-slow) var(--ease-base);
 
   svg {
     filter: drop-shadow(0 0 2px $color);

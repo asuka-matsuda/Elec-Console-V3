@@ -22,8 +22,8 @@
 .fade-slide-enter-active,
 .fade-slide-leave-active {
   transition:
-    opacity var(--duration-fast) var(--ease-out),
-    transform var(--duration-fast) var(--ease-out);
+    opacity var(--duration-fast) var(--ease-base),
+    transform var(--duration-fast) var(--ease-base);
 }
 
 .fade-slide-enter-from,

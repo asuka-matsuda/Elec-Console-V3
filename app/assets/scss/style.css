@@ -368,14 +368,14 @@ template {
   --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-float: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-modal: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  --transition-base: all var(--duration-base) var(--ease-out);
+  --transition-base: all var(--duration-base) var(--ease-base);
   --transition-float:
-    transform var(--duration-slow) var(--ease-float),
-    box-shadow var(--duration-slow) var(--ease-float);
+    transform var(--duration-slow) var(--ease-smooth),
+    box-shadow var(--duration-slow) var(--ease-smooth);
   --transition-colors:
-    background-color var(--duration-fast) var(--ease-out),
-    border-color var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out);
+    background-color var(--duration-fast) var(--ease-base),
+    border-color var(--duration-fast) var(--ease-base),
+    color var(--duration-fast) var(--ease-base);
   --icon-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A1A1AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
 
   /* Responsive Typography (Fluid Scale) */
@@ -766,7 +766,7 @@ body[data-border-style="hybrid"] {
 
 .fade-slide-enter-active,
 .fade-slide-leave-active {
-  transition: opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+  transition: opacity var(--duration-fast) var(--ease-base), transform var(--duration-fast) var(--ease-base);
 }
 
 .fade-slide-enter-from,

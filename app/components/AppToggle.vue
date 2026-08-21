@@ -69,8 +69,8 @@ const inputId = useId();
       @include cyber-text-glow(50%, var(--blur-md), var(--toggle-color));
 
       transition:
-        box-shadow var(--duration-slow) var(--ease-out),
-        border-color var(--duration-slow) var(--ease-out);
+        box-shadow var(--duration-slow) var(--ease-base),
+        border-color var(--duration-slow) var(--ease-base);
     }
 
     /* 2. Checked State (ON) */
@@ -119,10 +119,10 @@ const inputId = useId();
     @include elevation('sm', 'base', false);
 
     transition:
-      transform var(--duration-base) var(--ease-float),
-      background-color var(--duration-base) var(--ease-out),
-      box-shadow var(--duration-base) var(--ease-out),
-      border-color var(--duration-base) var(--ease-out);
+      transform var(--duration-base) var(--ease-smooth),
+      background-color var(--duration-base) var(--ease-base),
+      box-shadow var(--duration-base) var(--ease-base),
+      border-color var(--duration-base) var(--ease-base);
   }
 
   /* 3. Hover State */
@@ -146,7 +146,7 @@ const inputId = useId();
   &:active:not(:has(.c-toggle__input:disabled)) {
     .c-toggle__track {
       transform: scale(0.95);
-      transition: transform var(--duration-slow) var(--ease-out);
+      transition: transform var(--duration-slow) var(--ease-base);
     }
 
     .c-toggle__thumb {

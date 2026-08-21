@@ -114,7 +114,7 @@ const titleId = `modal-title-${modalId}`;
 
   transition:
     opacity var(--duration-modal) ease,
-    transform var(--duration-modal) var(--ease-modal),
+    transform var(--duration-modal) var(--ease-bounce),
     display var(--duration-modal) allow-discrete,
     overlay var(--duration-modal) allow-discrete;
 
