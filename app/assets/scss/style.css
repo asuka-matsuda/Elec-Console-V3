@@ -264,10 +264,13 @@ template {
 
   /* Alias for nav to match AppGlobalNav.vue */
   --z-index-nav: 100;
+  --gap-element: var(--space-1);
   --gap-component: var(--space-2);
-  --gap-element: var(--space-2);
   --gap-section: var(--space-3);
-  --pad-container: var(--space-3);
+  --pad-element: var(--space-1);
+  --pad-component: var(--space-2);
+  --pad-section: var(--space-3);
+  --pad-container: var(--space-4);
   --size-control-sm: 32px;
   --size-control-md: 40px;
   --size-control-lg: 48px;
@@ -365,17 +368,13 @@ template {
   --duration-base: 0.25s;
   --duration-slow: 0.4s;
   --duration-modal: 0.5s;
-  --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
-  --ease-float: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-modal: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-base: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --transition-fast: all var(--duration-fast) var(--ease-base);
   --transition-base: all var(--duration-base) var(--ease-base);
-  --transition-float:
-    transform var(--duration-slow) var(--ease-smooth),
-    box-shadow var(--duration-slow) var(--ease-smooth);
-  --transition-colors:
-    background-color var(--duration-fast) var(--ease-base),
-    border-color var(--duration-fast) var(--ease-base),
-    color var(--duration-fast) var(--ease-base);
+  --transition-slow: all var(--duration-slow) var(--ease-smooth);
+  --transition-modal: all var(--duration-modal) var(--ease-bounce);
   --icon-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A1A1AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
 
   /* Responsive Typography (Fluid Scale) */
@@ -415,15 +414,18 @@ template {
 
 @media (width <= 1024px) {
   :root {
-    --gap-section: var(--space-4);
+    --gap-section: var(--space-3);
+    --pad-section: var(--space-3);
     --pad-container: var(--space-3);
   }
 }
 
 @media (width <= 768px) {
   :root {
-    --gap-component: var(--space-2);
-    --gap-section: var(--space-3);
+    --gap-component: var(--space-1);
+    --gap-section: var(--space-2);
+    --pad-component: var(--space-1);
+    --pad-section: var(--space-2);
     --pad-container: var(--space-2);
   }
 }

@@ -105,8 +105,30 @@ $color-input-focus-base: 217 91% 60%;
 
 // --- CSS CUSTOM PROPERTIES (:root) ---
 :root {
-  // --- Typography ---
-  --font-base: #{$font-base};
+  // ==========================================================================
+  // 1. PRIMITIVES (Base Dictionaries & Scales)
+  // ==========================================================================
+
+  // --- Auto-generated Scales ---
+  @each $name, $size in $font-sizes {
+    --text-#{$name}: #{$size};
+    --font-size-#{$name}: #{$size};
+  }
+
+  @each $name, $value in $z-index {
+    --z-index-#{$name}: #{$value};
+  }
+
+  @each $name, $size in $spacing-scale {
+    --space-#{$name}: #{$size};
+  }
+
+  @each $name, $size in $size-scale {
+    --size-#{$name}: #{$size};
+  }
+
+  // --- Typography Base ---
+  --font-family: #{$font-base};
   --font-mono: #{$font-mono};
   --font-weight-normal: 400;
   --font-weight-medium: 500;
@@ -116,44 +138,12 @@ $color-input-focus-base: 217 91% 60%;
   --line-height-ui: 1.4;
   --line-height-tight: 1.2;
 
-  // --- Layout, Spacing & Sizing ---
+  // --- Layout & Spacing Base ---
   --sidebar-width: #{$sidebar-width};
   --base-spacing: #{$base-spacing};
   --base-size: #{$base-size};
 
-  /* Alias for nav to match AppGlobalNav.vue */
-  --z-index-nav: #{map.get($z-index, "sidebar-container")};
-
-  // --- Semantic Spacing ---
-  // --- Semantic Gap (PC-First) ---
-  --gap-element: var(--space-1);
-  --gap-component: var(--space-2);
-  --gap-section: var(--space-3);
-
-  // --- Semantic Padding (PC-First) ---
-  --pad-element: var(--space-1);
-  --pad-component: var(--space-2);
-  --pad-section: var(--space-3);
-  --pad-container: var(--space-4);
-
-  // --- Component Specific Sizes ---
-  --size-control-sm: 32px;
-  --size-control-md: 40px;
-  --size-control-lg: 48px;
-  --width-sm: 150px;
-  --width-md: 250px;
-  --table-cell-min-height: 36px;
-
-  // --- Icon Sizes ---
-  --icon-size-sm: 14px;
-  --icon-size-md: 20px;
-  --icon-size-lg: 24px;
-  --icon-size-xl: 32px;
-  --icon-size-xxl: 40px;
-
-  // --- Colors (Bases) ---
-
-  // --- Semantic HSL Bases ---
+  // --- Color Base (HSL Values) ---
   --color-category-main-base: #{$color-category-main-base};
   --color-category-tool-base: #{$color-category-tool-base};
   --color-category-database-base: #{$color-category-database-base};
@@ -181,9 +171,23 @@ $color-input-focus-base: 217 91% 60%;
   --color-input-border-base: #{$color-input-border-base};
   --color-input-focus-base: #{$color-input-focus-base};
 
-  // --- Colors (Applied) ---
+  // --- Borders Base ---
+  --border-width-base: 1px;
+  --border-width-thick: 2px;
 
-  // --- Semantics ---
+  // --- Effects Base (Blurs & Overlays) ---
+  --color-overlay-dark: hsl(0deg 0% 0% / 60%);
+  --color-overlay-light: hsl(0deg 0% 0% / 30%);
+  --blur-sm: 4px;
+  --blur-md: 8px;
+  --blur-lg: 12px;
+  --blur-xl: 16px;
+
+  // ==========================================================================
+  // 2. SEMANTICS (Meaningful Aliases)
+  // ==========================================================================
+
+  // --- Semantic Colors ---
   --color-category-main: hsl(var(--color-category-main-base));
   --color-category-tool: hsl(var(--color-category-tool-base));
   --color-category-database: hsl(var(--color-category-database-base));
@@ -205,7 +209,7 @@ $color-input-focus-base: 217 91% 60%;
   --color-text-disabled: hsl(var(--color-text-disabled-base));
   --color-border: hsl(var(--color-border-base));
 
-  // --- Components ---
+  // --- Component Colors ---
   --color-scroll: hsl(var(--color-scroll-base));
   --color-table-header-bg: hsl(var(--color-table-header-bg-base));
   --color-table-hover-bg: hsl(var(--color-table-hover-bg-base));
@@ -213,19 +217,16 @@ $color-input-focus-base: 217 91% 60%;
   --color-input-border: hsl(var(--color-input-border-base));
   --color-input-focus: hsl(var(--color-input-focus-base));
 
-  // --- Borders ---
-  --border-width-base: 1px;
-  --border-width-thick: 2px;
+  // --- Semantic Spacing (Gap & Pad) ---
+  --gap-element: var(--space-1);
+  --gap-component: var(--space-2);
+  --gap-section: var(--space-3);
+  --pad-element: var(--space-1);
+  --pad-component: var(--space-2);
+  --pad-section: var(--space-3);
+  --pad-container: var(--space-4);
 
-  // --- Effects & UI Elements ---
-  --color-overlay-dark: hsl(0deg 0% 0% / 60%);
-  --color-overlay-light: hsl(0deg 0% 0% / 30%);
-  --blur-sm: 4px;
-  --blur-md: 8px;
-  --blur-lg: 12px;
-  --blur-xl: 16px;
-
-  // --- 1. Elevation (Physical Shadows) ---
+  // --- Shadows & Edge Reflexes ---
   --shadow-color: color-mix(in srgb, black 90%, transparent); // Dark mode default
 
   --shadow-elevation-sm: 
@@ -242,7 +243,6 @@ $color-input-focus-base: 217 91% 60%;
 
   --shadow-sink: inset 0 2px 4px 0 color-mix(in srgb, black 40%, transparent);
 
-  // --- 2. Edge Reflex (Glass Highlights) ---
   --edge-reflex-base:
     inset 0 1px 0 var(--color-border), inset 0 0 0 1px var(--color-border);
   --edge-reflex-hover:
@@ -251,26 +251,49 @@ $color-input-focus-base: 217 91% 60%;
     inset 1px 1px 2px var(--color-border),
     inset -1px -1px 2px var(--color-border);
 
-  // --- 3. Animation & Transition ---
-  // Duration
+  // --- Animation & Transitions ---
   --duration-fast: 0.15s;
   --duration-base: 0.25s;
   --duration-slow: 0.4s;
   --duration-modal: 0.5s;
-
-  // Easing
   --ease-base: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
-  // Transition Sets (Combinations)
   --transition-fast: all var(--duration-fast) var(--ease-base);
   --transition-base: all var(--duration-base) var(--ease-base);
   --transition-slow: all var(--duration-slow) var(--ease-smooth);
   --transition-modal: all var(--duration-modal) var(--ease-bounce);
+
+  // ==========================================================================
+  // 3. COMPONENT SPECIFIC (Micro Adjustments)
+  // ==========================================================================
+
+  // --- Component & Icon Sizes ---
+  --size-control-sm: 32px;
+  --size-control-md: 40px;
+  --size-control-lg: 48px;
+  --width-sm: 150px;
+  --width-md: 250px;
+  --table-cell-min-height: 36px;
+  --icon-size-sm: 14px;
+  --icon-size-md: 20px;
+  --icon-size-lg: 24px;
+  --icon-size-xl: 32px;
+  --icon-size-xxl: 40px;
+
+  // --- Z-index Aliases ---
+
+  /* Alias for nav to match AppGlobalNav.vue */
+  --z-index-nav: #{map.get($z-index, "sidebar-container")};
+
+  // --- UI Icons ---
   --icon-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A1A1AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
 
-  /* Responsive Typography (Fluid Scale) */
+  // ==========================================================================
+  // 4. RESPONSIVE OVERRIDES (Media Queries)
+  // ==========================================================================
+
+  // --- Typography Overrides ---
   @media (width >= 1600px) {
     --font-size-2xs: 11px;
     --font-size-xs: 12px;
@@ -297,6 +320,7 @@ $color-input-focus-base: 217 91% 60%;
     --font-size-4xl: 18px;
   }
 
+  // --- Spacing Overrides ---
   @media (width <= 1024px) {
     --gap-section: var(--space-3);
     --pad-section: var(--space-3);
@@ -309,23 +333,5 @@ $color-input-focus-base: 217 91% 60%;
     --pad-component: var(--space-1);
     --pad-section: var(--space-2);
     --pad-container: var(--space-2);
-  }
-
-  @each $name, $size in $font-sizes {
-    --text-#{$name}: #{$size};
-    --font-size-#{$name}: #{$size};
-  }
-
-  // --- Z-index ---
-  @each $name, $value in $z-index {
-    --z-index-#{$name}: #{$value};
-  }
-
-  @each $name, $size in $spacing-scale {
-    --space-#{$name}: #{$size};
-  }
-
-  @each $name, $size in $size-scale {
-    --size-#{$name}: #{$size};
   }
 }
