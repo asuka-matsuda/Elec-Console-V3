@@ -44,7 +44,6 @@ const inputId = useId();
     :placeholder="placeholder"
     :disabled="disabled"
     :rows="rows"
-    :aria-invalid="error"
   />
   <input
     v-else
@@ -55,7 +54,6 @@ const inputId = useId();
     :class="[`c-form-control--${size}`, { 'is-error': error }]"
     :placeholder="placeholder"
     :disabled="disabled"
-    :aria-invalid="error"
   />
 </template>
 

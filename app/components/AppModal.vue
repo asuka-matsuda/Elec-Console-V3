@@ -62,7 +62,6 @@ const titleId = `modal-title-${modalId}`;
   <dialog
     ref="dialogRef"
     class="c-modal"
-    :aria-labelledby="titleId"
     @click.self="close"
     @cancel.prevent="close"
   >

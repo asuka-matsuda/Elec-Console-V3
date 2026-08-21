@@ -25,8 +25,6 @@ withDefaults(
         'c-divider--horizontal': !vertical,
       },
     ]"
-    role="separator"
-    :aria-orientation="vertical ? 'vertical' : 'horizontal'"
   />
 </template>
 

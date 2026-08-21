@@ -36,8 +36,6 @@ const selectTab = (option: TabOption) => {
       'c-tabs--vertical': vertical,
       'c-tabs--grid': grid,
     }"
-    role="tablist"
-    :aria-orientation="vertical ? 'vertical' : 'horizontal'"
   >
     <button
       v-for="option in options"
@@ -47,9 +45,6 @@ const selectTab = (option: TabOption) => {
         'is-active': model === option.value,
         'is-disabled': option.disabled,
       }"
-      role="tab"
-      :aria-selected="model === option.value"
-      :aria-disabled="option.disabled"
       :disabled="option.disabled"
       @click="selectTab(option)"
     >

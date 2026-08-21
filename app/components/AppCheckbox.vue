@@ -32,7 +32,6 @@ const inputId = useId();
       class="c-checkbox__input"
       :value="value"
       :disabled="disabled"
-      :aria-invalid="error"
     />
     <div class="c-checkbox__box">
       <!-- Checkmark SVG: Animated via stroke-dashoffset -->

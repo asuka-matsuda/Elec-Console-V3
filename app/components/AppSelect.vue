@@ -224,9 +224,6 @@ const listboxId = useId();
         'is-active': isOpen,
       }"
       :disabled="disabled"
-      aria-haspopup="listbox"
-      :aria-expanded="isOpen"
-      :aria-controls="listboxId"
       @click="toggleDropdown"
       @keydown="handleKeydown"
     >
@@ -238,12 +235,10 @@ const listboxId = useId();
       <Teleport to="body">
         <transition name="dropdown-fade">
           <div v-if="isOpen" class="c-custom-select__dropdown" :class="[`is-${dynamicPlacement}`]" :style="dropdownStyle">
-            <ul :id="listboxId" class="c-custom-select__list" role="listbox">
+            <ul :id="listboxId" class="c-custom-select__list">
               <li
                 v-if="isPlaceholder"
                 class="c-custom-select__option is-placeholder"
-                role="option"
-                aria-selected="false"
               >
                 {{ placeholder }}
               </li>
@@ -251,8 +246,6 @@ const listboxId = useId();
                 v-for="(option, index) in options"
                 :key="String(option.value)"
                 class="c-custom-select__option"
-                role="option"
-                :aria-selected="model === option.value"
                 :class="{
                   'is-selected': model === option.value,
                   'is-focused': index === focusedIndex,

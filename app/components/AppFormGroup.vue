@@ -167,8 +167,8 @@ withDefaults(
   }
 }
 
-// フォームグループ内にエラー要素（.c-form-group__error や [aria-invalid="true"] 等）が存在する場合、ラベルを赤くする
-.c-form-group:has(.c-form-group__error, :invalid, [aria-invalid="true"])
+// フォームグループ内にエラー要素（.c-form-group__error や .is-error 等）が存在する場合、ラベルを赤くする
+.c-form-group:has(.c-form-group__error, :invalid, .is-error)
   .c-form-label {
   color: var(--color-status-danger);
 

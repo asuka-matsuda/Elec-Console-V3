@@ -29,7 +29,7 @@ const processedItems = computed(() => {
 </script>
 
 <template>
-  <nav class="c-breadcrumb" aria-label="Breadcrumb">
+  <nav class="c-breadcrumb">
     <ol class="c-breadcrumb__list">
       <li
         v-for="item in processedItems"
@@ -46,7 +46,7 @@ const processedItems = computed(() => {
           </span>
         </template>
 
-        <span v-else class="c-breadcrumb__current" aria-current="page">
+        <span v-else class="c-breadcrumb__current">
           {{ item.text }}
         </span>
       </li>
