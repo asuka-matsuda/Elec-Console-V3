@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppDivider
+ * 画面やコンテンツの区切り線を表示するコンポーネント
+ */
 withDefaults(
   defineProps<{
     type?: "default" | "fade-side" | "fade-center";
@@ -67,9 +71,7 @@ withDefaults(
     --divider-accent: var(--color-status-success);
   }
 
-  // ==========================================
-  // Types
-  // ==========================================
+  // --- Type Modifiers ---
   &--default {
     overflow: hidden; // アニメーションの光がはみ出さないようにする
     box-shadow: var(--shadow-sink); // 彫り込まれた溝の影
@@ -110,9 +112,7 @@ withDefaults(
       theme-color(var(--divider-accent, var(--color-border)), 30%);
   }
 
-  // ==========================================
-  // Horizontal (水平) - Default
-  // ==========================================
+  // --- Orientation Modifiers (Horizontal) ---
   &--horizontal {
     // パルス発光用（Data Flow）の擬似要素
     &.is-animated.c-divider--default::before {
@@ -138,9 +138,7 @@ withDefaults(
     }
   }
 
-  // ==========================================
-  // Vertical (垂直)
-  // ==========================================
+  // --- Orientation Modifiers (Vertical) ---
   &--vertical {
     &.c-divider--default {
       // Entrance Animation (縦に伸びる)
@@ -180,9 +178,7 @@ withDefaults(
     }
   }
 
-  // ==========================================
-  // Keyframes
-  // ==========================================
+  // --- Keyframes ---
   @keyframes divider-scale-x {
     from {
       transform: scaleX(0);
