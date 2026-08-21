@@ -105,9 +105,7 @@ $color-input-focus-base: 217 91% 60%;
 
 // --- CSS CUSTOM PROPERTIES (:root) ---
 :root {
-  // ==========================================================================
-  // 1. PRIMITIVES (Base Dictionaries & Scales)
-  // ==========================================================================
+  // --- 1. Primitives (Base Dictionaries & Scales) ---
 
   // --- Auto-generated Scales ---
   @each $name, $size in $font-sizes {
@@ -183,9 +181,7 @@ $color-input-focus-base: 217 91% 60%;
   --blur-lg: 12px;
   --blur-xl: 16px;
 
-  // ==========================================================================
-  // 2. SEMANTICS (Meaningful Aliases)
-  // ==========================================================================
+  // --- 2. Semantics (Meaningful Aliases) ---
 
   // --- Semantic Colors ---
   --color-category-main: hsl(var(--color-category-main-base));
@@ -264,9 +260,7 @@ $color-input-focus-base: 217 91% 60%;
   --transition-slow: all var(--duration-slow) var(--ease-smooth);
   --transition-modal: all var(--duration-modal) var(--ease-bounce);
 
-  // ==========================================================================
-  // 3. COMPONENT SPECIFIC (Micro Adjustments)
-  // ==========================================================================
+  // --- 3. Component Specific (Micro Adjustments) ---
 
   // --- Component & Icon Sizes ---
   --size-control-sm: 32px;
@@ -283,15 +277,13 @@ $color-input-focus-base: 217 91% 60%;
 
   // --- Z-index Aliases ---
 
-  /* Alias for nav to match AppGlobalNav.vue */
+  // Alias for nav to match AppGlobalNav.vue
   --z-index-nav: #{map.get($z-index, "sidebar-container")};
 
   // --- UI Icons ---
   --icon-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A1A1AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
 
-  // ==========================================================================
-  // 4. RESPONSIVE OVERRIDES (Media Queries)
-  // ==========================================================================
+  // --- 4. Responsive Overrides (Media Queries) ---
 
   // --- Typography Overrides ---
   @media (width >= 1600px) {
