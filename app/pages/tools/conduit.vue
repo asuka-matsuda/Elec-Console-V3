@@ -83,7 +83,7 @@ const handleSave = async () => {
     <template #results>
       <AppToolResultPanel
         :save-disabled="!result?.success || result?.partial"
-        @save="handleSave"
+        :save-function="handleSave"
       >
         <AppResultBox
           title="推奨配管サイズ"

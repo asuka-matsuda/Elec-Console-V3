@@ -158,7 +158,7 @@ const {
     <template #results>
       <AppToolResultPanel
         :save-disabled="result?.error || (!inputs.isStrong && !inputs.isWeak)"
-        @save="handleSaveHistory"
+        :save-function="handleSaveHistory"
       >
         <AppResultBox
           title="推奨ラック幅"

@@ -9,8 +9,6 @@ defineProps<{
   saveDisabled?: boolean;
   saveFunction?: () => Promise<void>;
 }>();
-
-defineEmits(['save']);
 </script>
 
 <template>
@@ -27,7 +25,6 @@ defineEmits(['save']);
           <AppSaveButton
             :disabled="saveDisabled"
             :save-function="saveFunction as () => Promise<void>"
-            @save="$emit('save')"
           />
         </template>
       </AppSectionHeader>

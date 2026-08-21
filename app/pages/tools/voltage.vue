@@ -62,7 +62,7 @@ const handleSaveToHistory = async () => {
       <AppToolResultPanel
         title="計算結果"
         :save-disabled="!calcInputs.isReady"
-        @save="handleSaveToHistory"
+        :save-function="handleSaveToHistory"
       >
         <ClientOnly>
           <AppVoltageResult :inputs="calcInputs" :result="calcResult" />

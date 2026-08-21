@@ -13,7 +13,7 @@ const props = defineProps<{
   /** ボタンのラベル（通常時） */
   label?: string;
   /** ボタンのサイズ */
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md";
 }>();
 
 const state = ref<"idle" | "saving" | "success">("idle");

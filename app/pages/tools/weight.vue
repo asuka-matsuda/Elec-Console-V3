@@ -105,7 +105,7 @@ const totalWeight = computed(() => {
     <template #results>
       <AppToolResultPanel
         :save-disabled="result?.error"
-        @save="handleSaveHistory"
+        :save-function="handleSaveHistory"
       >
         <AppResultBox
           title="推奨ドラム"

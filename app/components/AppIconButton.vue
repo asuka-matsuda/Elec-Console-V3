@@ -12,7 +12,7 @@ withDefaults(
     type?: "button" | "submit" | "reset";
     // eslint-disable-next-line vue/prop-name-casing
     _variant?: "primary" | "secondary" | "success" | "danger";
-    size?: "sm" | "md" | "lg";
+    size?: "sm" | "md";
     disabled?: boolean;
   }>(),
   {
