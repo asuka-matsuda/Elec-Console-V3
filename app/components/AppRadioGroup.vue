@@ -96,9 +96,8 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
   }
 
   &__text {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    @include flex-center(0, inline-flex);
+
     padding: var(--space-2);
 
     @extend %text-sm;

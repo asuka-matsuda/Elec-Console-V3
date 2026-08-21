@@ -61,11 +61,10 @@ const componentTag = computed(() => {
   @extend %click-enabled;
 
   position: relative;
-  display: inline-flex;
+
+  @include flex-center(var(--space-2), inline-flex);
+
   flex-shrink: 0;
-  gap: var(--space-2);
-  align-items: center;
-  justify-content: center;
   height: var(--size-control-md);
   padding: var(--space-4);
 

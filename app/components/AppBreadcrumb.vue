@@ -78,9 +78,10 @@ const processedItems = computed(() => {
   // パンくずリストのコンテナ
   &__list {
     position: relative;
-    display: inline-flex;
+
+    @include flex-start(0, inline-flex);
+
     flex-wrap: wrap;
-    align-items: center;
     padding: var(--pad-container);
     padding-top: calc(var(--pad-container) + var(--space-2)); // SYS.LOCとの距離を確保
     list-style: none;

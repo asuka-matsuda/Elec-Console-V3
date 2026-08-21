@@ -54,9 +54,8 @@ const inputId = useId();
 }
 
 .c-color-picker {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-3);
+  @include flex-start(var(--space-3), inline-flex);
+
   padding: var(--space-3);
 
   @include ui-border-dim(var(--color-border), 50%);

@@ -36,9 +36,8 @@ const inputId = useId();
   --track-h: var(--space-5);
   --thumb-w: var(--space-5);
 
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
+  @include flex-start(var(--space-2), inline-flex);
+
   cursor: pointer;
   position: relative;
 

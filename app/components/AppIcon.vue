@@ -28,9 +28,7 @@ const svgContent = computed(() => {
 <style scoped lang="scss">
 .c-icon {
   // SVG styling is handled by global .c-icon
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  @include flex-center(0, inline-flex);
 
   :deep(svg) {
     width: 100%;

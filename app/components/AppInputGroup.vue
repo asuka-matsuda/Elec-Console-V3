@@ -47,9 +47,8 @@
     }
 
     :deep(.c-input-addon) {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+      @include flex-center(0, inline-flex);
+
       padding: 0 var(--space-3);
       border: var(--border-width-base) solid
         theme-color(var(--color-category-main), 50%);

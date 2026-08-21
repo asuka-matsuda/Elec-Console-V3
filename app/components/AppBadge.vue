@@ -52,12 +52,7 @@ withDefaults(
   --badge-border: theme-color(var(--color-border), 50%);
   --badge-shadow: transparent;
 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-1);
-
-  @extend %text-2xs;
+  @include flex-center(0, inline-flex);
 
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
@@ -75,7 +70,15 @@ withDefaults(
   user-select: none;
   transition: var(--transition-base);
 
-  // 中サイズ（md）の場合の余白とフォントサイズ上書き
+  /* サイズバリアント (Size Variants)
+     ========================================================================== */
+
+  &--sm {
+    padding: var(--space-1);
+
+    @extend %text-2xs;
+  }
+
   &--md {
     padding: var(--space-2);
 
