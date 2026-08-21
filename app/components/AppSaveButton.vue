@@ -12,8 +12,16 @@ const props = defineProps<{
   disabled?: boolean;
   /** ボタンのラベル（通常時） */
   label?: string;
-  /** ボタンのサイズ */
+  
+  // --- AppButton Props (継承) ---
+  to?: string;
+  href?: string;
+  type?: "button" | "submit" | "reset";
+  // eslint-disable-next-line vue/prop-name-casing
+  _variant?: "primary" | "secondary" | "success" | "danger";
   size?: "sm" | "md";
+  block?: boolean;
+  align?: "center" | "right" | "left";
 }>();
 
 const state = ref<"idle" | "saving" | "success">("idle");
@@ -41,7 +49,12 @@ const handleClick = async () => {
   <AppButton
     :disabled="disabled || state !== 'idle'"
     :size="size || 'sm'"
-    _variant="success"
+    :_variant="_variant || 'success'"
+    :to="to"
+    :href="href"
+    :type="type"
+    :block="block"
+    :align="align"
     class="c-save-button"
     :class="{ [`is-${state}`]: true }"
     @click="handleClick"
