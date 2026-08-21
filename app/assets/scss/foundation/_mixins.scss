@@ -345,26 +345,23 @@
    ========================================================================== */
 
 // 基本的なFlexレイアウト
-@mixin flex-layout($direction: row, $justify: flex-start, $align: stretch, $gap: 0) {
+@mixin flex-layout($direction: row, $justify: flex-start, $align: stretch, $gap: null) {
   display: flex;
   flex-direction: $direction;
   justify-content: $justify;
   align-items: $align;
-
-  @if $gap != 0 {
-    gap: $gap;
-  }
+  gap: $gap;
 }
 
 // よく使うパターン
-@mixin flex-center($direction: row, $gap: 0) {
+@mixin flex-center($direction: row, $gap: null) {
   @include flex-layout($direction, center, center, $gap);
 }
 
-@mixin flex-between($align: center, $gap: 0) {
+@mixin flex-between($align: center, $gap: null) {
   @include flex-layout(row, space-between, $align, $gap);
 }
 
-@mixin flex-column($gap: 0, $align: stretch) {
+@mixin flex-column($gap: null, $align: stretch) {
   @include flex-layout(column, flex-start, $align, $gap);
 }
