@@ -31,11 +31,13 @@ const inputId = useId();
 
 <style scoped lang="scss">
 .c-toggle {
+  // --- Theme Variables ---
   --toggle-color: var(--color-category-main);
   --track-w: 44px;
   --track-h: var(--space-5);
   --thumb-w: var(--space-5);
 
+  // --- Base Styles ---
   @extend %text-sm;
 
   cursor: pointer;

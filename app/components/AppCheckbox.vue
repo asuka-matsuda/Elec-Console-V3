@@ -53,8 +53,10 @@ const inputId = useId();
 
 <style scoped lang="scss">
 .c-checkbox {
+  // --- Theme Variables ---
   --checkbox-color: var(--color-category-main);
 
+  // --- Base Styles ---
   @extend %text-sm;
 
   cursor: pointer;
@@ -62,6 +64,7 @@ const inputId = useId();
   position: relative;
   color: var(--color-text-main);
 
+  // --- Color Modifiers ---
   &--success {
     --checkbox-color: var(--color-status-success);
   }

@@ -268,7 +268,7 @@ const listboxId = useId();
 
 <style scoped lang="scss">
 .c-custom-select {
-
+  // --- Base Styles ---
   @extend %text-sm;
 
   user-select: none;
@@ -369,9 +369,10 @@ const listboxId = useId();
 }
 
 .c-custom-select__list {
-
+  // --- Theme Variables ---
   --scrollbar-size: var(--size-2);
 
+  // --- Base Styles ---
   scrollbar-color: var(--color-category-main) transparent;
   scrollbar-width: thin;
 

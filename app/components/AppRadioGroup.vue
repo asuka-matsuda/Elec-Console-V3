@@ -15,7 +15,9 @@ const props = defineProps<{
   name?: string;
 }>();
 
-// ユニークなname属性を自動生成（複数グループが配置された際の干渉を防ぐため）
+/**
+ * ユニークなname属性を自動生成（複数グループが配置された際の干渉を防ぐため）
+ */
 const uniqueName = useId();
 const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
 </script>
@@ -45,8 +47,10 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
 
 <style scoped lang="scss">
 .c-segmented-control {
+  // --- Theme Variables ---
   --radio-color: var(--color-category-main); /* デフォルトの色 */
 
+  // --- Base Styles ---
   display: inline-flex;
   flex-shrink: 0;
   gap: var(--space-1);

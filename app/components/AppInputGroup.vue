@@ -1,6 +1,8 @@
 <script setup lang="ts">
-// AppInputGroup.vue
-// Input と Select やテキストアドオンを連結して表示するためのレイアウトコンポーネント
+/**
+ * AppInputGroup.vue
+ * Input と Select やテキストアドオンを連結して表示するためのレイアウトコンポーネント
+ */
 </script>
 
 <template>
@@ -16,6 +18,7 @@
 
 <style scoped lang="scss">
 .c-input-group {
+  // --- Base Styles ---
   display: flex;
   width: 100%;
 

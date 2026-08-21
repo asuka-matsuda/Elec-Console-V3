@@ -57,9 +57,11 @@ const inputId = useId();
 
 <style scoped lang="scss">
 .c-form-control {
+  // --- Theme Variables ---
   --form-control-px: var(--space-2);
   --form-control-py: var(--space-2);
 
+  // --- Base Styles ---
   @extend %text-sm;
 
   box-sizing: border-box;
@@ -74,7 +76,7 @@ const inputId = useId();
     opacity: 0.5;
   }
 
-  /* Size Modifiers */
+  // --- Size Modifiers ---
   &--sm {
     --form-control-px: var(--space-2);
     --form-control-py: var(--space-1);
@@ -88,7 +90,7 @@ const inputId = useId();
     height: var(--size-control-md);
   }
 
-  /* Textarea Modifiers */
+  // --- Textarea Modifiers ---
   &--textarea {
     resize: vertical;
     min-height: calc(var(--size-control-md) * 2);
