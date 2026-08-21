@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppToolResetModal
+ * ツール等の入力条件をリセットする際の確認モーダルコンポーネントです。
+ */
 const isOpen = defineModel<boolean>({ default: false });
 defineProps<{
   title?: string;

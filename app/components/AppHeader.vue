@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppHeader
+ * アプリケーションのヘッダー部分（パンくずリストやアクション等）を表示するコンポーネントです。
+ */
 import type { BreadcrumbItem } from "./AppBreadcrumb.vue";
 
 defineProps<{

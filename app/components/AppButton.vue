@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppButton
+ * 汎用的なボタンコンポーネント
+ */
 import { computed } from "vue";
 
 const props = withDefaults(

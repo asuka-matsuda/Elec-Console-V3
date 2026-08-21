@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppSectionHeader
+ * セクションのタイトル、アイコン、アクションボタン、および区切り線を表示するヘッダーコンポーネント。
+ */
 import type { MenuSection } from "~/utils/data/menuData";
 
 withDefaults(

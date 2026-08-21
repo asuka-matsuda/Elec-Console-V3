@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppCheckbox
+ * 真偽値を選択するためのチェックボックスコンポーネント
+ */
 import { useId } from "vue";
 
 const model = defineModel<boolean | unknown[]>();

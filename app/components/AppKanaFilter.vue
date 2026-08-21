@@ -1,5 +1,8 @@
 <script setup lang="ts">
-
+/**
+ * AppKanaFilter
+ * 五十音（あ行〜わ行他）による絞り込み機能を提供するフィルターコンポーネント。
+ */
 
 const props = defineProps<{
   modelValue: string[];

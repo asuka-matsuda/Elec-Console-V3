@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppPanel
+ * ヘッダーや枠線（サイバー風のブラケットなど）を持ち、コンテンツを囲むパネルコンポーネント。
+ */
 withDefaults(
   defineProps<{
     title?: string;

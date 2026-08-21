@@ -8,6 +8,10 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * AppIcon
+ * feather-iconsを使用したアイコンを表示するコンポーネントです。
+ */
 import { computed } from "vue";
 import feather from "feather-icons";
 

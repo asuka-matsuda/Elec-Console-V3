@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppMathBasis
+ * KaTeXを利用して、数式とその凡例（変数の説明）をステップごとに表示するコンポーネント。
+ */
 import katex from "katex";
 import "katex/dist/katex.min.css"; // Required for rendering KaTeX styles
 

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * RackDbPage
+ * ケーブルラックのデータベース情報を一覧表示・検索するためのページコンポーネントです。
+ */
 import { rackData } from "~/utils/data/rackData";
 import type { TableColumn } from "~/components/AppTable.vue";
 

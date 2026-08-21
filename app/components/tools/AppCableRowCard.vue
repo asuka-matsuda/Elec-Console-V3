@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppCableRowCard
+ * ケーブルの種類、サイズ、本数を入力するためのカードコンポーネントです。
+ */
 import { computed } from 'vue';
 import { calculateCableArea } from '~/utils/calc/conduit/conduitCalcLogic';
 import { getCableCategories, getAvailableSizes } from '~/utils/cableDataHelper';

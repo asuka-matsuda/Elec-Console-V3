@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppCard
+ * コンテンツをまとめるためのカード型コンポーネント
+ */
 import { computed, resolveComponent } from "vue";
 
 const props = defineProps<{

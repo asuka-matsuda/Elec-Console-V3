@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * DesignSystem
+ * 社内用のUIカタログ（デザインシステム）画面のコンポーネントです。UIコンポーネントの見た目や状態を一覧で確認できます。
+ */
 import { ref } from 'vue';
 
 const inputText = ref('');

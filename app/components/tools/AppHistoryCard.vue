@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppHistoryCard
+ * 計算履歴を1件表示するカードコンポーネントです。入力条件と計算結果のプレビューを提供します。
+ */
 import type { HistoryEntry } from "~/utils/calc/history/types";
 
 const props = defineProps<{

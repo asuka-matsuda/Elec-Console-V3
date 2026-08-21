@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppSelect
+ * キーボード操作や画面外へのはみ出し防止機能に対応した、カスタムのセレクトボックスコンポーネント。
+ */
 import { ref, computed, watch, useId, onMounted, onUnmounted } from "vue";
 
 export interface SelectOption {

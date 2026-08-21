@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppModal
+ * ネイティブの dialog 要素を使用した、アクセシビリティ対応のモーダルコンポーネント。
+ */
 import { useId, ref, watch, onMounted } from "vue";
 
 const props = withDefaults(

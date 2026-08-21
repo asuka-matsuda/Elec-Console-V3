@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppTabs
+ * タブ切り替えのためのコンポーネントです。垂直方向の配置やグリッド配置にも対応しています。
+ */
 export type TabOption = {
   label: string;
   value: string | number;

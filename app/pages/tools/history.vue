@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * CalculationHistory
+ * 計算履歴ツールのコンポーネントです。過去に実行した各種計算ツールの履歴を一覧表示し、管理します。
+ */
 import { ref, computed } from "vue";
 import { useCalcHistory } from "~/composables/calc/useCalcHistory";
 

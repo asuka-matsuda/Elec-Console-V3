@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Settings
+ * UIや個人の設定を行う画面のコンポーネントです。テーマや背景エフェクトなどのカスタマイズ機能を提供します。
+ */
 import { useSettings } from "~/composables/useSettings";
 
 const {

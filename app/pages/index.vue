@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Dashboard
+ * ダッシュボード画面のコンポーネントです。各機能へのリンクやメニューをカード形式で一覧表示します。
+ */
 import { menuData } from "~/utils/data/menuData";
 
 /** Extract just the sections to show on the dashboard */

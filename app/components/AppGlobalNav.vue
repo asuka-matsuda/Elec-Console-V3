@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppGlobalNav
+ * アプリケーションのグローバルナビゲーション（サイドバーメニュー）を表示するコンポーネントです。
+ */
 import type { MenuSection } from "~/utils/data/menuData";
 
 defineProps<{

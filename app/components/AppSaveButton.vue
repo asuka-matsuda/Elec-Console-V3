@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppSaveButton
+ * 非同期の保存処理をトリガーし、ローディング状態や成功状態を視覚的にフィードバックするボタンコンポーネント。
+ */
 import { ref } from "vue";
 
 const props = defineProps<{

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppButtonSuccess
+ * 成功のアクションを示す緑のボタンコンポーネント
+ */
 import AppButton from "./AppButton.vue";
 </script>
 

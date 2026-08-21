@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppFormGroup
+ * フォームのラベル、入力項目、エラーメッセージ、ヘルプテキストをグループ化して表示するコンポーネントです。
+ */
 withDefaults(
   defineProps<{
     label?: string;

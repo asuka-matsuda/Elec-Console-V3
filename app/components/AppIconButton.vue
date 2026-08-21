@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppIconButton
+ * アイコンのみのボタンを表示するコンポーネントです。
+ */
 withDefaults(
   defineProps<{
     /** The icon name */

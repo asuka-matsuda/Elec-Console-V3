@@ -1,5 +1,10 @@
 <script setup lang="ts">
 /**
+ * AppBadge
+ * 状態やカテゴリを視覚的に示すためのバッジコンポーネント
+ */
+
+/**
  * バッジのカラーバリエーション
  */
 export type BadgeVariant =
@@ -13,10 +18,6 @@ export type BadgeVariant =
   | "reference"
   | "management";
 
-/**
- * AppBadge
- * 状態やカテゴリを視覚的に示すためのバッジコンポーネント
- */
 withDefaults(
   defineProps<{
     variant?: BadgeVariant;

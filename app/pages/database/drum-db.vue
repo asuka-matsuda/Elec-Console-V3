@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * DrumDbPage
+ * ケーブルドラムのデータベース情報を一覧表示・検索するためのページコンポーネントです。
+ */
 import { drumData } from "~/utils/data/drumData";
 import type { TableColumn } from "~/components/AppTable.vue";
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
- * AppInputGroup.vue
- * Input と Select やテキストアドオンを連結して表示するためのレイアウトコンポーネント
+ * AppInputGroup
+ * Input と Select やテキストアドオンを連結して表示するためのレイアウトコンポーネント。
  */
 </script>
 

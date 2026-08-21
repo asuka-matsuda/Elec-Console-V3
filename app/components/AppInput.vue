@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppInput
+ * テキスト入力やテキストエリアを提供するフォームコントロールコンポーネントです。
+ */
 import { useId } from "vue";
 
 const model = defineModel<string | number | null>();

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppRadioGroup
+ * 複数の選択肢から1つを選択するための、セグメントコントロール風のラジオボタングループコンポーネント。
+ */
 import { useId, computed } from "vue";
 
 export interface RadioOption {

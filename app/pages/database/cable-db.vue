@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * CableDbPage
+ * ケーブルのデータベース情報を一覧表示・検索するためのページコンポーネントです。
+ */
 import { cableData } from "~/utils/data/cableData";
 import type { TableColumn } from "~/components/AppTable.vue";
 

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * Glossary
+ * 用語集画面のコンポーネントです。専門用語の検索や、五十音・カテゴリ別での絞り込み機能を提供します。
+ */
 import { ref, computed } from "vue";
 import { glossaryData } from "~/utils/data/glossaryData";
 import { useDbFilter } from "~/composables/useDbFilter";

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppLogo
+ * アプリケーションのロゴを表示し、クリック時にホームへ遷移またはイベントを発火するコンポーネント。
+ */
 const emit = defineEmits<{
   (e: "click"): void;
 }>();

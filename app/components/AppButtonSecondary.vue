@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppButtonSecondary
+ * 補助的なアクションを示すセカンダリボタンコンポーネント
+ */
 import AppButton from "./AppButton.vue";
 </script>
 

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppBreadcrumb
+ * パンくずリストを表示するためのコンポーネント
+ */
 import { computed } from "vue";
 
 /** パンくずリストの各要素の型定義 */

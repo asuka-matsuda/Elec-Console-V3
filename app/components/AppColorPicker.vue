@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppColorPicker
+ * 色を選択するためのカラーピッカーコンポーネント
+ */
 import { useId } from "vue";
 
 const modelValue = defineModel<string>({ default: "#000000" });

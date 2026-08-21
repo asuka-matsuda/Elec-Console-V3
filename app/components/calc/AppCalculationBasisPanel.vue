@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppCalculationBasisPanel
+ * 計算ツールの計算根拠（数式やステップ）を表示するためのパネルコンポーネントです。
+ */
 import type { MathStep } from '../AppMathBasis.vue';
 
 defineProps<{

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * AppToolInputPanel
+ * ツール等の条件入力エリアを囲むパネルコンポーネントです。
+ */
 defineProps<{
   title?: string;
   icon?: string;
