@@ -15,12 +15,15 @@ const currentYear = new Date().getFullYear();
 <style scoped lang="scss">
 .l-footer {
   position: relative;
+
   display: flex;
   flex-direction: column;
   gap: var(--gap-component);
   align-items: center;
-  padding: var(--pad-container);
+
   margin-top: auto;
+  padding: var(--pad-container);
+
   text-align: center;
 
   &__divider {
@@ -29,10 +32,10 @@ const currentYear = new Date().getFullYear();
   }
 
   &__copyright {
-    font-family: var(--font-mono);
 
     @extend %text-xs;
 
+    font-family: var(--font-mono);
     color: var(--color-text-muted);
     letter-spacing: 0.05em;
     transition: var(--transition-base);

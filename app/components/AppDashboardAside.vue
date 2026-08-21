@@ -63,10 +63,12 @@ const history = computed(() => dashboardData.value?.history || []);
   &__aside {
     position: sticky;
     top: var(--pad-container);
+
     display: flex;
-    flex-shrink: 0;
     flex-direction: column;
+    flex-shrink: 0;
     gap: var(--gap-section);
+
     width: var(--sidebar-width);
 
     @include mq("md") {
@@ -88,12 +90,14 @@ const history = computed(() => dashboardData.value?.history || []);
   }
 
   &__loading {
-    padding: var(--pad-container);
-    color: var(--color-text-muted);
-    text-align: center;
-    border-radius: 0;
 
     @extend %text-sm;
+
+    padding: var(--pad-container);
+    border-radius: 0;
+    color: var(--color-text-muted);
+    text-align: center;
+
     @include ui-surface(5%);
   }
 }

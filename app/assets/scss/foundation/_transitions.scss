@@ -11,8 +11,8 @@
 
 .dropdown-fade-enter-from,
 .dropdown-fade-leave-to {
-  opacity: 0;
   transform: translateY(-5px);
+  opacity: 0;
 
   &.is-top {
     transform: translateY(5px);
@@ -29,6 +29,6 @@
 
 .fade-slide-enter-from,
 .fade-slide-leave-to {
-  opacity: 0;
   transform: translateY(-4px);
+  opacity: 0;
 }

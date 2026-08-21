@@ -149,23 +149,18 @@ const dropStatusClass = computed(() => {
 
 <style scoped lang="scss">
 .c-voltage-result {
-  &__drop-paren { margin-left: var(--space-2); }
-  &__drop-percent { @extend %text-xl; }
-  &__drop-unit { @extend %text-md; }
-  &__drop-cable { @extend %text-xl; }
-
   display: flex;
   flex: 1;
   flex-direction: column; // コンテナ未定義・または狭い場合は縦並び（スモールファースト）
   gap: var(--space-3);
   align-items: stretch;
+
   min-height: 0;
   padding: var(--space-2);
-
-  // コンテナの幅が xs 以上の場合は横並び
-  @include cq("xs") {
-    flex-direction: row;
-  }
+  &__drop-paren { margin-left: var(--space-2); }
+  &__drop-percent { @extend %text-xl; }
+  &__drop-unit { @extend %text-md; }
+  &__drop-cable { @extend %text-xl; }
 
   // ステータスカラー定義
   .is-neutral {
@@ -197,9 +192,11 @@ const dropStatusClass = computed(() => {
     gap: var(--gap-element);
     align-items: center;
     justify-content: center;
+
     min-width: 0;
     padding: var(--space-2) var(--space-3);
     border: var(--border-width-base) solid var(--color-border);
+
     box-shadow: var(--shadow-sink);
 
     @include ui-surface(20%);
@@ -235,9 +232,10 @@ const dropStatusClass = computed(() => {
 
   &__metrics {
     display: flex;
-    flex-shrink: 0;
     flex-flow: row wrap; // 狭い場合は横並びラップ（スモールファースト）
+    flex-shrink: 0;
     gap: var(--space-2);
+
     min-width: auto;
 
     // コンテナの幅が xs 以上の場合は縦積み
@@ -254,6 +252,7 @@ const dropStatusClass = computed(() => {
     gap: var(--gap-element);
     align-items: center;
     justify-content: center;
+
     padding: var(--space-2);
     border: 1px solid var(--color-border);
   }
@@ -265,13 +264,15 @@ const dropStatusClass = computed(() => {
   }
 
   .metric-value {
+
+    @extend %text-md;
+
     display: flex;
     gap: var(--space-1);
     align-items: baseline;
+
     font-family: var(--font-family-mono);
     font-weight: var(--font-weight-bold);
-
-    @extend %text-md;
 
     .value-sep {
       margin: 0 2px;
@@ -284,6 +285,11 @@ const dropStatusClass = computed(() => {
 
       opacity: 0.8;
     }
+  }
+
+  // コンテナの幅が xs 以上の場合は横並び
+  @include cq("xs") {
+    flex-direction: row;
   }
 }
 </style>

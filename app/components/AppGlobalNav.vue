@@ -81,11 +81,15 @@ const closeSidebar = () => {
 
   position: fixed;
   z-index: var(--z-index-nav);
+
   display: flex;
   flex-direction: column;
+
   width: var(--sidebar-width);
   height: 100dvh;
+
   box-shadow: var(--shadow-elevation-hover); // Replaced hardcoded shadow
+
   transition: transform var(--duration-slow) var(--ease-float);
 
   @include ui-border-fade(right, var(--sidebar-border));
@@ -104,8 +108,10 @@ const closeSidebar = () => {
     display: flex;
     flex-shrink: 0;
     align-items: center;
+
     height: 64px; // Match standard header height
     padding: var(--pad-container);
+
     box-shadow: var(--shadow-elevation-base); // Replaced hardcoded shadow
 
     @include ui-border-fade(bottom, var(--sidebar-border));
@@ -113,6 +119,10 @@ const closeSidebar = () => {
 
   // --- Navigation Content ---
   &__nav {
+
+    --scrollbar-size: var(--size-2);
+
+    overflow-y: auto;
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -120,15 +130,9 @@ const closeSidebar = () => {
 
     /* ホバー時の右移動ではみ出さないよう、右側に余白を設ける */
     padding: var(--pad-container);
-    overflow-y: auto;
-
-    --scrollbar-size: var(--size-2);
   }
 
   &__section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-component);
 
     // Dynamic accent color support using Map and @each
     $accents: (
@@ -142,6 +146,10 @@ const closeSidebar = () => {
       "reference": var(--color-category-reference),
       "management": var(--color-category-management)
     );
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-component);
 
     @each $name, $var in $accents {
       &.has-accent-#{$name} {
@@ -168,21 +176,25 @@ const closeSidebar = () => {
 
   // --- Navigation Links ---
   &__link {
-    display: flex;
-    gap: var(--gap-component);
-    align-items: center;
-    padding: var(--space-2);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-secondary);
-    text-decoration: none;
-    transition: var(--transition-base);
 
     @extend %text-sm;
 
+    display: flex;
+    gap: var(--gap-component);
+    align-items: center;
+
+    padding: var(--space-2);
+
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+
+    transition: var(--transition-base);
+
     &-text {
       line-height: 1.4;
-      line-break: strict;
       word-break: keep-all; // 句読点やスペース、記号（・など）の区切りでのみ改行を許可
+      line-break: strict;
       overflow-wrap: anywhere; // 万が一収まらない場合は強制改行
     }
 
@@ -195,12 +207,12 @@ const closeSidebar = () => {
 
     // Hover
     &:hover:not(.is-disabled, .router-link-active) {
+      transform: translateX(var(--space-1));
       color: var(--section-accent, var(--color-category-main));
 
       // Replaced hardcoded shadow with cyber-text-glow or simplified shadow
       box-shadow: 0 0 var(--blur-sm)
         theme-color(var(--section-accent, var(--color-category-main)), 20%);
-      transform: translateX(var(--space-1));
 
       .l-global-nav__link-icon {
         color: var(--section-accent, var(--color-category-main));
@@ -213,9 +225,9 @@ const closeSidebar = () => {
 
     // Active
     &.router-link-active {
-      color: var(--section-accent, var(--color-category-main));
-      border-color: transparent;
       transform: translateX(0);
+      border-color: transparent;
+      color: var(--section-accent, var(--color-category-main));
 
       @include ui-active(var(--section-accent, var(--color-category-main)));
       @include ui-blinking-cursor(
@@ -251,22 +263,26 @@ const closeSidebar = () => {
 
   @include mq("md") {
     position: fixed;
+    z-index: var(--z-index-nav); // Just below sidebar
     top: 0;
     left: 0;
-    z-index: var(--z-index-nav); // Just below sidebar
+
     display: block;
-    visibility: hidden;
+
     width: 100vw;
     height: 100dvh;
+
+    visibility: hidden;
     opacity: 0;
     backdrop-filter: blur(4px) brightness(0.4);
+
     transition:
       opacity var(--duration-slow) var(--ease-out),
       visibility var(--duration-slow) var(--ease-out);
 
     &.is-open {
-      visibility: visible;
       pointer-events: auto;
+      visibility: visible;
       opacity: 1;
     }
   }

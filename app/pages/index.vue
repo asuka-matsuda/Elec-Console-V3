@@ -55,6 +55,7 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
   flex-direction: row; /* Desktop default */
   gap: var(--gap-section);
   align-items: flex-start;
+
   padding-bottom: var(--gap-section);
 
   @include mq("md") {
@@ -91,16 +92,18 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
   }
 
   &__header {
+
+    @extend %text-base;
+
     display: flex;
     gap: var(--gap-element);
     align-items: flex-start;
+
     font-weight: var(--font-weight-bold);
     color: var(--card-accent, var(--color-text-main));
-    line-break: strict;
     word-break: keep-all;
+    line-break: strict;
     overflow-wrap: anywhere;
-
-    @extend %text-base;
   }
 
   &__desc {

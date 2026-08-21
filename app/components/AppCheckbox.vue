@@ -55,14 +55,12 @@ const inputId = useId();
 .c-checkbox {
   --checkbox-color: var(--color-category-main);
 
-  @include flex-start(var(--space-2), inline-flex);
+  @extend %text-sm;
 
-  position: relative;
-  color: var(--color-text-main);
   cursor: pointer;
   user-select: none;
-
-  @extend %text-sm;
+  position: relative;
+  color: var(--color-text-main);
 
   &--success {
     --checkbox-color: var(--color-status-success);
@@ -77,17 +75,20 @@ const inputId = useId();
   }
 
   &:has(.c-checkbox__input:disabled) {
-    cursor: not-allowed;
 
     @extend %disabled;
+
+    cursor: not-allowed;
   }
 
   &__input {
     // Hide native input visually, but keep accessible for keyboard focus
     position: absolute;
+
     width: 0;
     height: 0;
     margin: 0;
+
     opacity: 0;
   }
 
@@ -114,6 +115,7 @@ const inputId = useId();
 
   &__box {
     flex-shrink: 0;
+
     width: 1.4em;
     height: 1.4em;
 
@@ -121,6 +123,7 @@ const inputId = useId();
     @include ui-border-dim(var(--color-border), 50%);
 
     box-shadow: var(--edge-reflex-base), var(--shadow-sink);
+
     transition: var(--transition-base);
 
     // Explicitly NO border-radius to ensure sharp corners
@@ -129,10 +132,13 @@ const inputId = useId();
     .c-checkbox__icon {
       width: 70%;
       height: 70%;
+
       opacity: 0;
+
       stroke: var(--checkbox-color);
       stroke-dasharray: 24;
       stroke-dashoffset: 24;
+
       transition: var(--transition-base);
     }
   }
@@ -155,5 +161,7 @@ const inputId = useId();
   &:active:not(:has(.c-checkbox__input:disabled)) .c-checkbox__box {
     @include ui-press(var(--checkbox-color));
   }
+
+  @include flex-start(var(--space-2), inline-flex);
 }
 </style>

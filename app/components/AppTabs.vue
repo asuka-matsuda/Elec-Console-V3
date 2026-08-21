@@ -85,35 +85,37 @@ const selectTab = (option: TabOption) => {
 }
 
 .c-tabs__item {
-  position: relative;
-  padding: var(--pad-container);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
+  @extend %text-sm;
+
   cursor: pointer;
   user-select: none;
-  border: var(--border-width-base) solid var(--color-border);
-  box-shadow: inset 0 0 var(--blur-sm) var(--color-border);
-  transition: var(--transition-base);
 
-  @include flex-center(var(--space-2));
-  @extend %text-sm;
+  position: relative;
+
+  padding: var(--pad-container);
+  border: var(--border-width-base) solid var(--color-border);
+
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+
+  box-shadow: inset 0 0 var(--blur-sm) var(--color-border);
+
+  transition: var(--transition-base);
 
   /* --- Hover State --- */
   &:hover:not(.is-disabled, .is-active) {
+    transform: translateY(-2px);
     color: var(--color-text-main);
 
     @include ui-hover-glow;
-
-    transform: translateY(-2px);
   }
 
   /* --- Active State --- */
   &.is-active {
+    transform: translateY(0);
     color: var(--color-category-main);
 
     @include ui-active(var(--color-category-main));
-
-    transform: translateY(0);
 
     .c-tabs__item-text {
       @include cyber-text-glow(50%, var(--blur-md), var(--color-category-main));
@@ -125,6 +127,8 @@ const selectTab = (option: TabOption) => {
     cursor: not-allowed;
     opacity: 0.5;
   }
+
+  @include flex-center(var(--space-2));
 }
 
 .c-tabs__item-text {

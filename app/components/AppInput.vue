@@ -60,16 +60,14 @@ const inputId = useId();
   --form-control-px: var(--space-2);
   --form-control-py: var(--space-2);
 
+  @extend %text-sm;
+
   box-sizing: border-box;
   width: 100%;
   padding: var(--form-control-py) var(--form-control-px);
+
   font-family: var(--font-mono);
-
-  @extend %text-sm;
-
   color: var(--color-text-main);
-
-  @include form-control-base;
 
   &::placeholder {
     color: var(--color-text-muted);
@@ -81,9 +79,9 @@ const inputId = useId();
     --form-control-px: var(--space-2);
     --form-control-py: var(--space-1);
 
-    height: var(--size-control-sm);
-
     @extend %text-xs;
+
+    height: var(--size-control-sm);
   }
 
   &--md {
@@ -92,8 +90,8 @@ const inputId = useId();
 
   /* Textarea Modifiers */
   &--textarea {
-    min-height: calc(var(--size-control-md) * 2);
     resize: vertical;
+    min-height: calc(var(--size-control-md) * 2);
 
     // Override fixed heights so rows/min-height can take over
     &:is(.c-form-control--sm, .c-form-control--md) {
@@ -104,5 +102,7 @@ const inputId = useId();
       resize: none;
     }
   }
+
+  @include form-control-base;
 }
 </style>

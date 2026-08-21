@@ -74,11 +74,13 @@ withDefaults(
     box-shadow: var(--shadow-sink); // 彫り込まれた溝の影
 
     &.c-divider--horizontal {
+      transform-origin: center;
+
       width: 100%;
       height: var(--border-width-thick);
       border-top: var(--border-width-base) solid var(--color-border);
       border-bottom: 1px solid transparent;
-      transform-origin: center;
+
       animation: divider-scale-x 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
   }
@@ -86,12 +88,12 @@ withDefaults(
   &--fade-side {
     width: 100%;
     height: var(--border-width-base);
+    opacity: 0.5;
     background: linear-gradient(
       90deg,
       var(--divider-accent, var(--color-border)) 0%,
       transparent 100%
     );
-    opacity: 0.5;
   }
 
   &--fade-center {
@@ -113,12 +115,15 @@ withDefaults(
   &--horizontal {
     // パルス発光用（Data Flow）の擬似要素
     &.is-animated.c-divider--default::before {
+      content: "";
+
       position: absolute;
       top: 0;
       left: -30%;
+
       width: 30%;
       height: 100%;
-      content: "";
+
       background: linear-gradient(
         90deg,
         transparent,
@@ -127,6 +132,7 @@ withDefaults(
       );
       box-shadow: 0 0 var(--blur-md)
         var(--divider-accent, var(--color-category-main));
+
       animation: data-pulse-x 3s ease-in-out infinite;
     }
   }
@@ -136,6 +142,10 @@ withDefaults(
   // ==========================================
   &--vertical {
     &.c-divider--default {
+
+      // Entrance Animation (縦に伸びる)
+      transform-origin: center;
+
       width: var(--border-width-thick);
       height: auto;
       min-height: 100%;
@@ -143,19 +153,20 @@ withDefaults(
       border-right: 1px solid transparent;
       border-left: var(--border-width-base) solid var(--color-border);
 
-      // Entrance Animation (縦に伸びる)
-      transform-origin: center;
       animation: divider-scale-y 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
     // パルス発光用（Data Flow）の擬似要素
     &.is-animated.c-divider--default::before {
+      content: "";
+
       position: absolute;
       top: -30%;
       left: 0;
+
       width: 100%;
       height: 30%;
-      content: "";
+
       background: linear-gradient(
         180deg,
         transparent,
@@ -164,6 +175,7 @@ withDefaults(
       );
       box-shadow: 0 0 var(--blur-md)
         var(--divider-accent, var(--color-category-main));
+
       animation: data-pulse-y 3s ease-in-out infinite;
     }
   }
@@ -173,32 +185,32 @@ withDefaults(
   // ==========================================
   @keyframes divider-scale-x {
     from {
-      opacity: 0;
       transform: scaleX(0);
+      opacity: 0;
     }
 
     to {
-      opacity: 1;
       transform: scaleX(1);
+      opacity: 1;
     }
   }
 
   @keyframes divider-scale-y {
     from {
-      opacity: 0;
       transform: scaleY(0);
+      opacity: 0;
     }
 
     to {
-      opacity: 1;
       transform: scaleY(1);
+      opacity: 1;
     }
   }
 
   @keyframes data-pulse-x {
     0% {
-      opacity: 0;
       transform: translateX(0);
+      opacity: 0;
     }
 
     10% {
@@ -210,19 +222,19 @@ withDefaults(
     }
 
     60% {
-      opacity: 0;
       transform: translateX(450%);
+      opacity: 0;
     } // 100% + 300% travel + buffer
     100% {
-      opacity: 0;
       transform: translateX(450%);
+      opacity: 0;
     } // 休止時間
   }
 
   @keyframes data-pulse-y {
     0% {
-      opacity: 0;
       transform: translateY(0);
+      opacity: 0;
     }
 
     10% {
@@ -234,13 +246,13 @@ withDefaults(
     }
 
     60% {
-      opacity: 0;
       transform: translateY(450%);
+      opacity: 0;
     }
 
     100% {
-      opacity: 0;
       transform: translateY(450%);
+      opacity: 0;
     } // 休止時間
   }
 }

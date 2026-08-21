@@ -63,14 +63,18 @@ const toggleCat = (value: string) => {
 <style scoped lang="scss">
 .c-filter-panel {
   &__header {
+
+    @extend %text-base;
+
     display: flex;
     gap: var(--gap-element);
     align-items: center;
+
     padding-bottom: var(--gap-element);
+
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
 
-    @extend %text-base;
     @include ui-border-fade(bottom, var(--color-border));
   }
 

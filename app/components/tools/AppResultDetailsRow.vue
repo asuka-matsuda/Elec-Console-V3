@@ -14,11 +14,11 @@ defineProps<{
 
 <style scoped lang="scss">
 .p-result-details__row {
-  display: flex;
-  justify-content: space-between;
 
   @extend %text-sm;
 
+  display: flex;
+  justify-content: space-between;
   color: var(--color-text-secondary);
   
   /* stylelint-disable-next-line selector-pseudo-class-no-unknown */

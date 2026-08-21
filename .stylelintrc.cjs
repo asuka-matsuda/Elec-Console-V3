@@ -2,7 +2,7 @@ module.exports = {
   extends: [
     "stylelint-config-standard-scss",
     "stylelint-config-recommended-vue/scss",
-    "stylelint-config-recess-order"
+    "stylelint-config-clean-order"
   ],
   rules: {
     // クラス名のパターン（BEMなどを許容するため）

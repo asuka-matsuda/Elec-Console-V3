@@ -131,11 +131,12 @@ const bgOptions = [
 
 <style scoped lang="scss">
 .p-settings {
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   gap: var(--gap-section);
+
   padding-bottom: var(--gap-section);
-  container-type: inline-size;
 
   &__header {
     display: flex;
@@ -169,6 +170,7 @@ const bgOptions = [
     display: flex;
     flex-wrap: wrap;
     gap: var(--gap-component);
+
     padding: var(--pad-container);
     border: var(--border-width-base) solid var(--color-border);
     border-radius: 0;

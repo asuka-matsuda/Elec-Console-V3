@@ -16,8 +16,10 @@ const emit = defineEmits<{
   display: flex;
   gap: var(--space-3);
   align-items: center;
+
   color: var(--color-text-main);
   text-decoration: none;
+
   transition: var(--transition-base);
 
   &:hover {

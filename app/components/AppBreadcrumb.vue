@@ -82,20 +82,25 @@ const processedItems = computed(() => {
     @include flex-start(0, inline-flex);
 
     flex-wrap: wrap;
+
     padding: var(--pad-container);
     padding-top: calc(var(--pad-container) + var(--space-2)); // SYS.LOCとの距離を確保
+
     list-style: none;
 
     @include ui-surface;
 
     // 左上の「SYS.LOC」ラベル（装飾）
     &::after {
+      content: "SYS.LOC";
+
       position: absolute;
       top: var(--space-1);
       left: var(--space-2);
+
       font-size: 0.6em;
       color: var(--color-category-main);
-      content: "SYS.LOC";
+
       opacity: 0.9;
 
       @include cyber-text-glow(50%, var(--blur-sm), var(--color-category-main));
@@ -110,9 +115,9 @@ const processedItems = computed(() => {
 
     // 項目の区切り文字（最後の子要素以外に付与）
     &:not(:last-child)::after {
+      content: "»";
       font-size: var(--font-size-xs);
       color: color-mix(in srgb, var(--color-category-main) 60%, transparent);
-      content: "»";
     }
   }
 
@@ -136,13 +141,16 @@ const processedItems = computed(() => {
   // 最後の項目（現在のページ）のスタイル
   // 視覚的にページタイトル（h1相当）として機能するよう強調
   &__current {
+
+    @extend %text-lg; // 以前の --text-md は存在しなかったため lg に修正
+
     display: flex;
     gap: var(--gap-element);
     align-items: center;
+
     line-height: 1;
     color: var(--color-category-main);
 
-    @extend %text-lg; // 以前の --text-md は存在しなかったため lg に修正
     @include cyber-text-glow(60%, var(--blur-md), var(--color-category-main));
 
     // 点滅するカーソルエフェクト

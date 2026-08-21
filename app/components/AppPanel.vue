@@ -42,15 +42,19 @@ withDefaults(
   --p-theme-color: var(--color-category-main);
 
   position: relative;
+
   display: flex;
   flex-direction: column;
   gap: var(--pad-container-gap, var(--space-4));
+
   padding: var(--pad-container, var(--space-4));
 
   // Apply visual base
   border: var(--border-width-base) solid var(--p-border-color);
   border-image: var(--p-border-image);
+
   box-shadow: var(--p-box-shadow);
+
   transition: var(--transition-base);
 
   // ---------------------------------------------------------
@@ -58,13 +62,17 @@ withDefaults(
   // ---------------------------------------------------------
   &::before,
   &::after {
-    position: absolute;
-    display: var(--p-bracket-display);
-    width: var(--p-bracket-size);
-    height: var(--p-bracket-size);
     pointer-events: none;
     content: "";
+
+    position: absolute;
+
+    display: var(--p-bracket-display);
+
+    width: var(--p-bracket-size);
+    height: var(--p-bracket-size);
     border: var(--border-width-thick) solid var(--p-bracket-color);
+
     filter: var(--p-bracket-glow);
   }
 
@@ -92,10 +100,10 @@ withDefaults(
   }
 
   &__title {
-    margin: 0;
 
     @extend %text-lg;
 
+    margin: 0;
     font-weight: var(--font-weight-bold);
     color: #{theme-color(var(--p-theme-color), 100%)};
     text-shadow: 0 0 var(--blur-md) #{theme-color(var(--p-theme-color), 40%)};
@@ -106,6 +114,7 @@ withDefaults(
     flex: 1;
     flex-direction: column;
     gap: var(--pad-container-gap, var(--space-4));
+
     min-height: 0;
   }
 

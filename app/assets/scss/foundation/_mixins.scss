@@ -18,18 +18,24 @@
       }
 
       // "up"なら「〇〇px以上（モバイルファースト用）」
-    } @else if $direction == "up" {
+    }
+
+ @else if $direction == "up" {
       @media (width >= $value) {
         @content;
       }
 
       // "up-strict"なら「〇〇pxより大きい（境界値を含まない）」
-    } @else if $direction == "up-strict" {
+    }
+
+ @else if $direction == "up-strict" {
       @media (width > $value) {
         @content;
       }
     }
-  } @else {
+  }
+
+ @else {
     // 存在しないブレイクポイント名が指定されたら警告を出す
     @warn "Invalid breakpoint: #{$breakpoint}.";
   }
@@ -45,12 +51,16 @@
       @container (min-width: #{$value}) {
         @content;
       }
-    } @else if $direction == "down" {
+    }
+
+ @else if $direction == "down" {
       @container (max-width: #{$value}) {
         @content;
       }
     }
-  } @else {
+  }
+
+ @else {
     @warn "Invalid container breakpoint: #{$breakpoint}.";
   }
 }
@@ -132,8 +142,8 @@
 }
 
 @mixin form-control-error {
-  color: var(--color-status-danger);
   border-color: theme-color(var(--color-status-danger), 50%);
+  color: var(--color-status-danger);
   box-shadow:
     inset 0 0 var(--blur-sm) theme-color(var(--color-status-danger), 30%),
     0 0 6px theme-color(var(--color-status-danger), 50%);
@@ -166,9 +176,9 @@
   $is-active: "&:is(:focus, :focus-visible)",
   $is-hover: "&:hover:not(:disabled, .is-error, :focus)"
 ) {
+  border: var(--border-width-base) solid theme-color(var(--color-category-main), 50%);
   // 1. 通常状態 (Default)
   background-color: transparent;
-  border: var(--border-width-base) solid theme-color(var(--color-category-main), 50%);
   box-shadow: var(--edge-reflex-base), var(--shadow-sink);
   transition: var(--transition-base);
 
@@ -203,8 +213,8 @@
 
 // フォーカス時の発光（標準のアウトラインの代わり）
 @mixin ui-focus($color: var(--color-category-main), $shadow-spread: 12px) {
-  outline: none;
   border-color: $color;
+  outline: none;
   box-shadow:
     inset 0 0 var(--blur-sm) theme-color($color, 20%),
     0 0 var(--blur-sm) theme-color($color, 50%),
@@ -223,7 +233,9 @@
       var(--shadow-elevation-base);
 
     // 色指定がない場合は、標準のボーダー色と控えめな発光にする
-  } @else {
+  }
+
+ @else {
     border-color: var(--color-border);
     box-shadow: var(--edge-reflex-hover), var(--shadow-elevation-base);
   }
@@ -231,6 +243,7 @@
 
 // クリック（押し込み）時の沈み込みと影の変化
 @mixin ui-press($color: var(--color-category-main)) {
+  transform: scale(0.985);
   border-color: theme-color($color, 90%);
   box-shadow:
     var(--edge-reflex-press),
@@ -238,7 +251,6 @@
     inset 0 -var(--blur-sm) 10px theme-color($color, 30%),
     inset 0 0 0 1px theme-color($color, 30%),
     var(--shadow-sink);
-  transform: scale(0.985);
 
   /* Override transition specifically for the "sinking down" phase */
   transition:
@@ -270,12 +282,16 @@
 // ターミナル風の点滅するサイバーカーソル（文字の後ろに配置）
 @mixin ui-blinking-cursor($width: 6px, $height: 14px, $color: currentcolor) {
   &::after {
+    content: "";
+
     display: inline-block;
+
     width: $width;
     height: $height;
     margin-left: auto;
-    content: "";
+
     background-color: $color;
+
     animation: ui-cursor-blink 1s step-end infinite;
   }
 }

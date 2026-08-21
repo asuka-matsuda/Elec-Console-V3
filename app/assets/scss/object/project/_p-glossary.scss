@@ -61,6 +61,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--gap-element);
+
     padding: var(--pad-container);
     border: var(--border-width-base) solid
       theme-color(var(--color-border), 50%);

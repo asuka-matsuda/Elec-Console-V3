@@ -52,8 +52,8 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-form-group {
-  width: 100%;
   container-type: inline-size;
+  width: 100%;
 
   &__inner {
     display: flex;
@@ -118,7 +118,10 @@ withDefaults(
 // Label Component Styles (Legacy _c-form-label)
 .c-form-label {
   @include flex-start(var(--gap-element));
+
   @extend %text-sm;
+
+  user-select: none;
 
   font-weight: var(--font-weight-bold);
 
@@ -126,19 +129,23 @@ withDefaults(
   color: theme-color(var(--color-category-main), 70%);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  user-select: none;
+
   transition: var(--transition-base);
 
   // Cyber glowing dot
   &::before {
+    content: "";
+
     display: inline-block;
+
     width: var(--size-2);
     height: var(--size-2);
-    content: "";
     border: var(--border-width-thick) solid
       theme-color(var(--color-category-main), 70%);
     border-radius: 50%;
+
     box-shadow: 0 0 var(--blur-sm) theme-color(var(--color-category-main), 30%);
+
     transition: var(--transition-base);
   }
 }

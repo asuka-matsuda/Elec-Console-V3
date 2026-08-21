@@ -92,6 +92,10 @@ const titleId = `modal-title-${modalId}`;
 
 <style scoped lang="scss">
 .c-modal {
+  transform: translateY(var(--space-2));
+
+  overflow: visible;
+
   /* Sizing based on original AppPanel overlay */
   width: 90vw;
   max-width: 500px;
@@ -99,13 +103,12 @@ const titleId = `modal-title-${modalId}`;
 
   /* Native Dialog Resets */
   margin: auto;
-  overflow: visible;
-  outline: none;
   border: none;
 
   /* Animation */
   opacity: 0;
-  transform: translateY(var(--space-2));
+  outline: none;
+
   transition:
     opacity var(--duration-modal) ease,
     transform var(--duration-modal) var(--ease-modal),
@@ -124,12 +127,12 @@ const titleId = `modal-title-${modalId}`;
   }
 
   &[open] {
-    opacity: 1;
     transform: translateY(0);
+    opacity: 1;
 
     @starting-style {
-      opacity: 0;
       transform: translateY(var(--space-2));
+      opacity: 0;
     }
 
     &::backdrop {
@@ -156,11 +159,12 @@ const titleId = `modal-title-${modalId}`;
   }
 
   &__title {
-    @include flex-start(var(--space-2));
-
-    margin: 0;
     
     @extend %text-heading;
+
+    margin: 0;
+
+    @include flex-start(var(--space-2));
   }
 
   &__icon {
@@ -172,18 +176,20 @@ const titleId = `modal-title-${modalId}`;
     flex: 1;
     flex-direction: column;
     gap: var(--gap-component);
+
     min-height: 0;
   }
 
   &__body {
-    flex: 1;
-    padding: var(--pad-container) 0;
-    overflow-y: auto;
-    color: var(--color-text-main);
+
+    --scrollbar-size: var(--size-2);
     
     @extend %text-caption;
 
-    --scrollbar-size: var(--size-2);
+    overflow-y: auto;
+    flex: 1;
+    padding: var(--pad-container) 0;
+    color: var(--color-text-main);
   }
 
   &__footer {

@@ -47,17 +47,20 @@
     }
 
     :deep(.c-input-addon) {
-      @include flex-center(0, inline-flex);
+
+      @extend %text-sm;
 
       padding: 0 var(--space-3);
-      color: var(--color-text-main);
-      white-space: nowrap;
       border: var(--border-width-base) solid
         theme-color(var(--color-category-main), 50%);
       border-left: none;
+
+      color: var(--color-text-main);
+      white-space: nowrap;
+
       box-shadow: var(--edge-reflex-base), var(--shadow-sink);
 
-      @extend %text-sm;
+      @include flex-center(0, inline-flex);
     }
   }
 }

@@ -18,11 +18,12 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-disclaimer {
+
+  @extend %text-sm;
+
   width: 100%;
   padding: var(--space-3);
   line-height: var(--line-height-relaxed);
   color: var(--color-status-warning);
-
-  @extend %text-sm;
 }
 </style>

@@ -47,6 +47,7 @@ withDefaults(
     gap: var(--space-4);
     align-items: flex-end;
     justify-content: space-between;
+
     width: 100%;
   }
 

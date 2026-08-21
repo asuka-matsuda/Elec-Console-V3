@@ -49,20 +49,22 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
 
 <style scoped lang="scss">
 .l-filter-layout {
+  container-name: filter-layout;
+  container-type: inline-size;
   display: flex;
   flex: 1;
   flex-direction: column;
+
   width: 100%;
   max-width: 1400px;
   min-height: 0;
-  container-name: filter-layout;
-  container-type: inline-size;
 
   &__grid {
     display: flex;
     flex: 1;
     flex-direction: column;
     gap: var(--gap-section);
+
     min-height: 0;
   }
 
@@ -74,6 +76,7 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
     display: flex;
     flex: 1;
     flex-direction: column;
+
     min-width: 0;
     min-height: 0;
   }

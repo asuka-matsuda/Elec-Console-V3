@@ -56,11 +56,14 @@ const inputId = useId();
 .c-color-picker {
   @include flex-start(var(--space-3), inline-flex);
 
-  position: relative;
-  padding: var(--space-3);
   cursor: pointer;
   user-select: none;
+
+  position: relative;
+
+  padding: var(--space-3);
   border-radius: 0;
+
   transition: var(--transition-base);
 
   @include ui-border-dim(var(--color-border), 50%);
@@ -77,30 +80,35 @@ const inputId = useId();
 
   &__swatch {
     flex-shrink: 0;
+
     width: var(--icon-size-md);
     height: var(--icon-size-md);
     border-radius: 50%;
+
     box-shadow: var(--shadow-sink);
 
     @include ui-border-dim(var(--color-border), 50%);
   }
 
   &__value {
-    font-family: var(--font-mono);
 
     @extend %text-sm;
 
+    font-family: var(--font-mono);
     color: var(--color-text-main);
     letter-spacing: 0.05em;
   }
 
   &__input {
+    pointer-events: none;
+
     position: absolute;
+
     width: 0;
     height: 0;
-    padding: 0;
     margin: 0;
-    pointer-events: none;
+    padding: 0;
+
     opacity: 0;
   }
 }

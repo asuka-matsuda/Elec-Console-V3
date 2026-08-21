@@ -35,6 +35,7 @@
 ::-webkit-scrollbar-button {
   width: var(--scrollbar-size, 12px);
   height: var(--scrollbar-size, 12px);
+
   background-repeat: no-repeat;
   background-position: center;
   background-size: calc(var(--scrollbar-size, 12px) * 0.8);

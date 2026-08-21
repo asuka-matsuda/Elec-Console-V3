@@ -70,9 +70,9 @@ const handleClick = async () => {
     /* 成功時はボタン自体を少しグリーンにする */
     --btn-color: var(--color-status-success);
 
-    color: var(--color-status-success);
     pointer-events: none;
     border-color: var(--color-status-success);
+    color: var(--color-status-success);
   }
 }
 

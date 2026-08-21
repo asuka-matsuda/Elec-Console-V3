@@ -58,31 +58,31 @@ const componentTag = computed(() => {
 
 <style scoped lang="scss">
 .c-btn {
-  @extend %click-enabled;
-
-  position: relative;
-  flex-shrink: 0;
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-ui);
-  color: var(--color-text-main);
-  letter-spacing: 0.05em;
-  text-decoration: none;
-  box-shadow:
-    inset 0 0 var(--blur-md)
-      theme-color(var(--btn-color, var(--color-category-main)), 10%),
-    var(--shadow-elevation-base);
-  transition: var(--transition-base), var(--transition-colors);
-
-  @include flex-center(var(--space-2), inline-flex);
-
-  /* 視認性確保のための枠線と影（アウトラインスタイル） */
-  @include ui-border-dim(var(--btn-color, var(--color-category-main)), 50%);
 
   // 以前の ui-surface は枠線を上書きしてしまうため今回は無効化
   // @include ui-surface;
 
   /* State Variables */
   --btn-color: var(--color-category-main); // Default interaction color
+
+  @extend %click-enabled;
+
+  position: relative;
+
+  flex-shrink: 0;
+
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui);
+  color: var(--color-text-main);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+
+  box-shadow:
+    inset 0 0 var(--blur-md)
+      theme-color(var(--btn-color, var(--color-category-main)), 10%),
+    var(--shadow-elevation-base);
+
+  transition: var(--transition-base), var(--transition-colors);
 
   /* Interaction States */
   &:hover:not(:disabled, .is-disabled) {
@@ -129,30 +129,34 @@ const componentTag = computed(() => {
 
   /* Size Modifiers */
   &--sm {
-    height: var(--size-control-sm);
-    padding: 0 var(--space-2);
 
     @extend %text-xs;
 
+    height: var(--size-control-sm);
+    padding: 0 var(--space-2);
+
     // Minimum touch target (48x48) for accessibility
     &::after {
+      content: "";
+
       position: absolute;
       top: 50%;
       left: 50%;
+      transform: translate(-50%, -50%);
+
       width: 100%;
       min-width: var(--size-control-lg);
       height: 100%;
       min-height: var(--size-control-lg);
-      content: "";
-      transform: translate(-50%, -50%);
     }
   }
 
   &--md {
-    height: var(--size-control-md);
-    padding: var(--space-4);
 
     @extend %text-sm;
+
+    height: var(--size-control-md);
+    padding: var(--space-4);
   }
 
   /* Layout Modifiers */
@@ -179,5 +183,10 @@ const componentTag = computed(() => {
   &--right {
     justify-content: flex-end;
   }
+
+  @include flex-center(var(--space-2), inline-flex);
+
+  /* 視認性確保のための枠線と影（アウトラインスタイル） */
+  @include ui-border-dim(var(--btn-color, var(--color-category-main)), 50%);
 }
 </style>

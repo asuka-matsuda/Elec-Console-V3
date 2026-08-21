@@ -65,6 +65,7 @@ const breadcrumbs = useBreadcrumbs();
   display: flex;
   flex: 1;
   flex-direction: column;
+
   min-width: 0; /* Prevent flex item from blowing out */
   margin-left: 280px; /* On desktop, the sidebar takes up 280px. */
 
@@ -74,15 +75,17 @@ const breadcrumbs = useBreadcrumbs();
 }
 
 .l-content {
+
+  --scrollbar-size: var(--size-2);
+
+  container-type: inline-size;
+  overflow-y: auto;
   display: flex;
   flex: 1;
   flex-direction: column;
+
   min-height: 0;
   padding: var(--pad-container);
-  container-type: inline-size;
-  overflow-y: auto;
-
-  --scrollbar-size: var(--size-2);
 
   @include mq("md") {
     padding: var(--space-3);
@@ -91,21 +94,24 @@ const breadcrumbs = useBreadcrumbs();
 
 /* Temporary user bar styles for demo */
 .l-header-user {
+
+  @extend %text-sm;
+
   display: flex;
   gap: var(--gap-component);
   align-items: center;
-
-  @extend %text-sm;
 
   &__avatar {
     display: flex;
     align-items: center;
     justify-content: center;
+
     width: var(--size-control-sm);
     height: var(--size-control-sm);
-    background: var(--color-category-main);
     border: var(--border-width-thick) solid var(--color-category-main);
     border-radius: 50%;
+
+    background: var(--color-category-main);
     box-shadow: 0 0 var(--blur-lg) theme-color(var(--color-category-main), 50%);
   }
 

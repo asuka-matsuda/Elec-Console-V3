@@ -89,6 +89,7 @@ const handleDelete = () => {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
+
     padding-bottom: var(--gap-component);
     border-bottom: 1px solid var(--color-border);
   }
@@ -140,17 +141,18 @@ const handleDelete = () => {
     @extend %text-sm;
 
     padding-left: var(--gap-element);
+    border-left: 2px solid var(--color-category-tool);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
-    border-left: 2px solid var(--color-category-tool);
   }
 
   &__list {
+
+    @extend %text-sm;
+
     display: grid;
     grid-template-columns: auto 1fr;
     gap: var(--space-1) var(--space-3);
-
-    @extend %text-sm;
 
     dt {
       color: var(--color-text-muted);

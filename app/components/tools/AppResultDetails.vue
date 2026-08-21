@@ -12,6 +12,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--gap-element);
+
   padding-top: var(--gap-section);
   border-top: 1px solid var(--color-border);
 }

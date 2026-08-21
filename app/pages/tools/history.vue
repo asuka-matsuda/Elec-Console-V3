@@ -105,10 +105,10 @@ const handleClearAll = () => {
 
 <style scoped lang="scss">
 .p-history-page {
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   gap: var(--gap-section);
-  container-type: inline-size;
 
   &__tabs {
     /* 親要素(p-history-page)のgapで管理されるためmargin-bottomは削除 */
@@ -130,7 +130,9 @@ const handleClearAll = () => {
     gap: var(--gap-element);
     align-items: center;
     justify-content: center;
+
     padding: var(--pad-container) 0;
+
     color: var(--color-text-muted);
   }
 }

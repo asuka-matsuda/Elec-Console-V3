@@ -125,60 +125,14 @@ $color-input-focus-base: 217 91% 60%;
   --line-height-ui: 1.4;
   --line-height-tight: 1.2;
 
-  @each $name, $size in $font-sizes {
-    --text-#{$name}: #{$size};
-    --font-size-#{$name}: #{$size};
-  }
-
-  /* Responsive Typography (Fluid Scale) */
-  @media (width >= 1600px) {
-    --font-size-2xs: 11px;
-    --font-size-xs: 12px;
-    --font-size-sm: 13px;
-    --font-size-base: 14px;
-    --font-size-lg: 16px;
-    --font-size-xl: 18px;
-    --font-size-2xl: 20px;
-    --font-size-3xl: 24px;
-    --font-size-4xl: 28px;
-  }
-
-  @media (width <= 1024px) {
-    --font-size-2xl: 16px;
-    --font-size-3xl: 20px;
-    --font-size-4xl: 24px;
-  }
-
-  @media (width <= 768px) {
-    --font-size-lg: 12px;
-    --font-size-xl: 13px;
-    --font-size-2xl: 14px;
-    --font-size-3xl: 16px;
-    --font-size-4xl: 18px;
-  }
-
   /* Layout, Spacing & Sizing
        ========================================================================== */
   --sidebar-width: #{$sidebar-width};
   --base-spacing: #{$base-spacing};
   --base-size: #{$base-size};
 
-  /* Z-index
-       ========================================================================== */
-  @each $name, $value in $z-index {
-    --z-index-#{$name}: #{$value};
-  }
-
   /* Alias for nav to match AppGlobalNav.vue */
   --z-index-nav: #{map.get($z-index, "sidebar-container")};
-
-  @each $name, $size in $spacing-scale {
-    --space-#{$name}: #{$size};
-  }
-
-  @each $name, $size in $size-scale {
-    --size-#{$name}: #{$size};
-  }
 
   /* Semantic Spacing
        ========================================================================== */
@@ -186,17 +140,6 @@ $color-input-focus-base: 217 91% 60%;
   --gap-element: var(--space-2);
   --gap-section: var(--space-3);
   --pad-container: var(--space-3);
-
-  @media (width <= 1024px) {
-    --gap-section: var(--space-4);
-    --pad-container: var(--space-3);
-  }
-
-  @media (width <= 768px) {
-    --gap-component: var(--space-2);
-    --gap-section: var(--space-3);
-    --pad-container: var(--space-2);
-  }
 
   /* Component Specific Sizes
        ========================================================================== */
@@ -332,4 +275,61 @@ $color-input-focus-base: 217 91% 60%;
     color var(--duration-fast) var(--ease-out);
   --icon-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A1A1AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
   --icon-checkbox-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFFFFF' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+
+  /* Responsive Typography (Fluid Scale) */
+  @media (width >= 1600px) {
+    --font-size-2xs: 11px;
+    --font-size-xs: 12px;
+    --font-size-sm: 13px;
+    --font-size-base: 14px;
+    --font-size-lg: 16px;
+    --font-size-xl: 18px;
+    --font-size-2xl: 20px;
+    --font-size-3xl: 24px;
+    --font-size-4xl: 28px;
+  }
+
+  @media (width <= 1024px) {
+    --font-size-2xl: 16px;
+    --font-size-3xl: 20px;
+    --font-size-4xl: 24px;
+  }
+
+  @media (width <= 768px) {
+    --font-size-lg: 12px;
+    --font-size-xl: 13px;
+    --font-size-2xl: 14px;
+    --font-size-3xl: 16px;
+    --font-size-4xl: 18px;
+  }
+
+  @media (width <= 1024px) {
+    --gap-section: var(--space-4);
+    --pad-container: var(--space-3);
+  }
+
+  @media (width <= 768px) {
+    --gap-component: var(--space-2);
+    --gap-section: var(--space-3);
+    --pad-container: var(--space-2);
+  }
+
+  @each $name, $size in $font-sizes {
+    --text-#{$name}: #{$size};
+    --font-size-#{$name}: #{$size};
+  }
+
+  /* Z-index
+       ========================================================================== */
+  @each $name, $value in $z-index {
+    --z-index-#{$name}: #{$value};
+  }
+
+  @each $name, $size in $spacing-scale {
+    --space-#{$name}: #{$size};
+  }
+
+  @each $name, $size in $size-scale {
+    --size-#{$name}: #{$size};
+  }
 }

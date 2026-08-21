@@ -112,9 +112,9 @@ const isChecked = ref(false);
     @extend %text-lg;
 
     padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--color-border);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
-    border-bottom: 1px solid var(--color-border);
   }
 
   &__grid {

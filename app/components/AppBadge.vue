@@ -47,43 +47,6 @@ withDefaults(
    ========================================================================== */
 
 .c-badge {
-  // テーマ値から参照するためのカスタムプロパティ
-  --badge-color: var(--color-text-main);
-  --badge-border: theme-color(var(--color-border), 50%);
-  --badge-shadow: transparent;
-
-  @include flex-center(0, inline-flex);
-
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  color: var(--badge-color);
-  text-transform: uppercase;
-  white-space: nowrap;
-  user-select: none;
-  border: var(--border-width-base) solid var(--badge-border);
-  box-shadow:
-    inset 0 0 var(--blur-sm) var(--badge-shadow),
-    0 0 var(--blur-md) var(--badge-shadow);
-  transition: var(--transition-base);
-
-  // テキストの発光エフェクト
-  @include cyber-text-glow(100%, var(--blur-sm), var(--badge-color));
-
-  /* サイズバリアント (Size Variants)
-     ========================================================================== */
-
-  &--sm {
-    padding: var(--space-1);
-
-    @extend %text-2xs;
-  }
-
-  &--md {
-    padding: var(--space-2);
-
-    @extend %text-xs;
-  }
-
   /* カラーバリアント (Color Variants)
      ========================================================================== */
 
@@ -98,6 +61,48 @@ withDefaults(
     "reference": "--color-category-reference",
     "management": "--color-category-management",
   );
+  // テーマ値から参照するためのカスタムプロパティ
+  --badge-color: var(--color-text-main);
+  --badge-border: theme-color(var(--color-border), 50%);
+  --badge-shadow: transparent;
+
+  user-select: none;
+
+  border: var(--border-width-base) solid var(--badge-border);
+
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--badge-color);
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  box-shadow:
+    inset 0 0 var(--blur-sm) var(--badge-shadow),
+    0 0 var(--blur-md) var(--badge-shadow);
+
+  transition: var(--transition-base);
+
+  /* サイズバリアント (Size Variants)
+     ========================================================================== */
+
+  &--sm {
+
+    @extend %text-2xs;
+
+    padding: var(--space-1);
+  }
+
+  &--md {
+
+    @extend %text-xs;
+
+    padding: var(--space-2);
+  }
+
+  @include flex-center(0, inline-flex);
+
+  // テキストの発光エフェクト
+  @include cyber-text-glow(100%, var(--blur-sm), var(--badge-color));
 
   // マップを展開して各バリアントのスタイルを自動生成する
   @each $name, $var in $variants {

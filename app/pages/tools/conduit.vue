@@ -141,11 +141,12 @@ const handleSave = async () => {
   gap: var(--gap-element);
   
   &__item {
+
+    @extend %text-base;
+
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-
-    @extend %text-base;
   }
 
   &__label {

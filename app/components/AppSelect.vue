@@ -268,14 +268,17 @@ const listboxId = useId();
 
 <style scoped lang="scss">
 .c-custom-select {
-  position: relative;
-  width: 100%;
-  font-family: var(--font-mono);
 
   @extend %text-sm;
 
-  color: var(--color-text-main);
   user-select: none;
+
+  position: relative;
+
+  width: 100%;
+
+  font-family: var(--font-mono);
+  color: var(--color-text-main);
 
   &.is-disabled {
     pointer-events: none;
@@ -287,17 +290,21 @@ const listboxId = useId();
   @extend %click-enabled;
 
   position: relative;
-  box-sizing: border-box;
+
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: flex-start;
+
+  box-sizing: border-box;
   width: 100%;
   height: var(--size-control-md);
   padding: var(--space-2);
-  overflow: hidden;
-  text-overflow: ellipsis;
+
   text-align: left;
+  text-overflow: ellipsis;
   white-space: nowrap;
+
   appearance: none; /* Reset button styles */
 
   @include form-control-base(
@@ -308,17 +315,21 @@ const listboxId = useId();
 
   /* Arrow icon (down) */
   &::after {
+    content: "";
+
     position: absolute;
     top: 50%;
     right: var(--space-4);
+    transform: translateY(-50%);
+
     width: var(--size-4);
     height: var(--size-3);
-    content: "";
+
     background-image: var(--icon-select-arrow);
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
-    transform: translateY(-50%);
+
     transition: var(--transition-base);
   }
 
@@ -336,15 +347,17 @@ const listboxId = useId();
 .c-custom-select__dropdown {
   position: absolute; // jsのスタイルが当たるまでの初期値
   z-index: 10000; // bodyの直下に移動したためzIndexを高めに設定
+
   width: max-content;
   max-width: 90vw;
-  background-color: transparent;
   border: var(--border-width-base) solid
     theme-color(var(--color-category-main), 50%);
+
+  background-color: transparent;
+  backdrop-filter: blur(var(--blur-md));
   box-shadow:
     var(--shadow-elevation-hover),
     inset 0 0 var(--blur-md) theme-color(var(--color-category-main), 20%);
-  backdrop-filter: blur(var(--blur-md));
 
   /* Error state dropdown border */
   .c-custom-select.is-error & {
@@ -356,65 +369,77 @@ const listboxId = useId();
 }
 
 .c-custom-select__list {
+
+  --scrollbar-size: var(--size-2);
+
+  scrollbar-color: var(--color-category-main) transparent;
+  scrollbar-width: thin;
+
+  transform: translateZ(0);
+
+  overflow: hidden auto;
+
   box-sizing: border-box;
   width: 100%;
   max-height: min(250px, 40vh); /* 画面が小さい場合にも対応 */
-  padding: 0;
   margin: 0;
-  overflow: hidden auto;
-  list-style: none;
-  scrollbar-color: var(--color-category-main) transparent;
-  scrollbar-width: thin;
-  transform: translateZ(0);
+  padding: 0;
 
-  --scrollbar-size: var(--size-2);
+  list-style: none;
 }
 
 .c-custom-select__option {
   @extend %click-enabled;
 
-  padding: var(--space-2);
-  overflow: hidden;
-  text-overflow: ellipsis;
-
   @extend %text-sm;
 
-  color: var(--color-text-main);
-  white-space: nowrap;
+  overflow: hidden;
+
+  padding: var(--space-2);
   border-left: var(--border-width-thick) solid transparent;
+
+  color: var(--color-text-main);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
   transition: var(--transition-base);
 
   /* --- States --- */
   &:hover:not(.is-disabled, .is-placeholder),
   &.is-focused:not(.is-disabled) {
-    color: var(--color-category-main);
-    background-color: transparent;
+    transform: translateX(2px);
+
     border-left-color: var(--color-category-main);
+
+    color: var(--color-category-main);
+
+    background-color: transparent;
     box-shadow: inset 0 0 var(--size-3)
       theme-color(var(--color-category-main), 30%);
-    transform: translateX(2px);
   }
 
   &.is-selected {
+    border-left-color: var(--color-category-main);
+
     font-weight: var(--font-weight-bold);
     color: var(--color-category-main);
+
     background-color: transparent;
-    border-left-color: var(--color-category-main);
     box-shadow: inset 0 0 var(--size-4)
       theme-color(var(--color-category-main), 40%);
   }
 
   &.is-disabled {
-    color: var(--color-text-muted);
     pointer-events: none;
     cursor: not-allowed;
+    color: var(--color-text-muted);
     opacity: 0.3;
   }
 
   &.is-placeholder {
+    cursor: default;
     font-style: italic;
     color: var(--color-text-muted);
-    cursor: default;
   }
 }
 </style>

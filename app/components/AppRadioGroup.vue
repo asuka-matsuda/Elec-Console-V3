@@ -50,9 +50,11 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
   display: inline-flex;
   flex-shrink: 0;
   gap: var(--space-1);
+
   width: max-content;
   padding: var(--space-1);
   border: var(--border-width-base) solid var(--color-border);
+
   box-shadow: none;
 
   /* --- Elements --- */
@@ -62,8 +64,8 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
     &:hover {
       .c-segmented-control__input:not(:disabled, :checked)
         + .c-segmented-control__text {
-        color: var(--color-text-main);
         border-color: var(--color-border);
+        color: var(--color-text-main);
         box-shadow: inset 0 0 var(--blur-sm) var(--color-border);
       }
     }
@@ -96,17 +98,20 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
   }
 
   &__text {
-    @include flex-center(0, inline-flex);
-
-    padding: var(--space-2);
 
     @extend %text-sm;
 
+    user-select: none;
+
+    padding: var(--space-2);
+    border: var(--border-width-base) solid transparent;
+
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
-    user-select: none;
-    border: var(--border-width-base) solid transparent;
+
     transition: var(--transition-base);
+
+    @include flex-center(0, inline-flex);
   }
 }
 </style>

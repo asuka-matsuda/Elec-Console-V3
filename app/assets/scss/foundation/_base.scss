@@ -25,18 +25,22 @@ textarea {
 /* Base Elements
    ========================================================================== */
 body {
+  overflow: hidden; // スクロール禁止
   display: flex; // フレックスボックス
   flex-direction: column; // 最初から縦並び
+
   height: 100dvh; // 高さ
   min-height: 100dvh; // バグ対策
   margin: 0; // 余白なし
-  overflow: hidden; // スクロール禁止
+
   font-family: var(--font-base);
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
   color: var(--color-text-main);
   letter-spacing: 0.02em;
+
   color-scheme: dark; // ダークモードベース
+
   -webkit-font-smoothing: antialiased; // Chrome,Safari用
 }
 

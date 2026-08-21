@@ -95,13 +95,14 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
 <style scoped lang="scss">
 .c-math-basis {
+  overflow-y: auto;
   display: flex;
   flex: 1;
   flex-direction: column;
   gap: var(--gap-section);
+
   padding-right: var(--space-2);
   padding-bottom: var(--pad-container);
-  overflow-y: auto;
 
   &__card {
     gap: var(--gap-component);
@@ -125,19 +126,22 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   }
 
   &__math {
-    flex: 1;
-    min-width: 0;
-    overflow-x: auto;
-    font-size: 1.1em;
+
+    --scrollbar-size: var(--size-2);
     
     // スクロールバー自体は非表示にしつつスクロールは可能にする
     scrollbar-width: none;
 
+    overflow-x: auto;
+    flex: 1;
+
+    min-width: 0;
+
+    font-size: 1.1em;
+
     &::-webkit-scrollbar {
       display: none;
     }
-
-    --scrollbar-size: var(--size-2);
 
     :deep(.katex) {
       color: var(--color-text-main);
@@ -170,9 +174,10 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
   &__legend {
     display: flex;
-    flex-shrink: 0;
     flex-direction: column;
+    flex-shrink: 0;
     gap: var(--gap-element);
+
     width: 250px;
   }
 
@@ -191,12 +196,13 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   }
 
   &__legend-item {
+
+    @extend %text-sm;
+
     display: flex;
     gap: var(--space-1);
     align-items: flex-start;
     color: var(--color-text-secondary);
-
-    @extend %text-sm;
   }
 
   &__legend-symbol {

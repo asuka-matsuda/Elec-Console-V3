@@ -36,27 +36,28 @@ const inputId = useId();
   --track-h: var(--space-5);
   --thumb-w: var(--space-5);
 
-  @include flex-start(var(--space-2), inline-flex);
-
-  position: relative;
-  color: var(--color-text-main);
-  cursor: pointer;
-  user-select: none;
-
   @extend %text-sm;
 
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  color: var(--color-text-main);
+
   &:has(.c-toggle__input:disabled) {
-    cursor: not-allowed;
 
     @extend %disabled;
+
+    cursor: not-allowed;
   }
 
   &__input {
     /* Hide native input visually, but keep accessible for keyboard focus */
     position: absolute;
+
     width: 0;
     height: 0;
     margin: 0;
+
     opacity: 0;
 
     /* 1. Keyboard Focus State */
@@ -78,35 +79,42 @@ const inputId = useId();
 
       /* Slide and glow the thumb */
       .c-toggle__thumb {
+        transform: translateX(calc(var(--track-w) - var(--thumb-w)));
         border-color: theme-color(white, 80%);
         box-shadow:
           0 0 var(--blur-lg) var(--toggle-color),
           inset 0 0 var(--blur-md) var(--toggle-color),
           0 0 var(--blur-sm) white;
-        transform: translateX(calc(var(--track-w) - var(--thumb-w)));
       }
     }
   }
 
   &__track {
     position: relative;
+
     flex-shrink: 0;
+
     width: var(--track-w);
     height: var(--track-h);
     border: var(--border-width-base) solid var(--color-border);
+
     box-shadow: var(--shadow-sink);
+
     transition: var(--transition-base);
   }
 
   &__thumb {
     position: absolute;
+    z-index: 1;
     top: -1px;
     left: -1px;
-    z-index: 1;
+
     width: var(--thumb-w);
     height: var(--track-h);
     border: var(--border-width-base) solid var(--color-border);
+
     box-shadow: var(--shadow-elevation-base);
+
     transition:
       transform var(--duration-base) var(--ease-float),
       background-color var(--duration-base) var(--ease-out),
@@ -142,5 +150,7 @@ const inputId = useId();
       box-shadow: var(--shadow-sink);
     }
   }
+
+  @include flex-start(var(--space-2), inline-flex);
 }
 </style>
