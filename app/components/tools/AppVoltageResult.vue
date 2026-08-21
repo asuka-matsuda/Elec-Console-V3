@@ -102,9 +102,9 @@ const dropStatusClass = computed(() => {
         <span class="value-text" :class="mainStatusClass">{{ mainValue }}</span>
         <span v-if="mainUnit" class="value-unit">{{ mainUnit }}</span>
         <template v-if="mode === 'drop' && isReady">
-          <span class="value-sep" style="margin-left: 0.5rem">(</span>
-          <span class="value-text" :class="mainStatusClass" style="font-size: 1.25rem">{{ dropPercent }}</span>
-          <span class="value-unit" style="font-size: 1rem">%</span>
+          <span class="value-sep c-voltage-result__drop-paren">(</span>
+          <span class="value-text c-voltage-result__drop-percent" :class="mainStatusClass">{{ dropPercent }}</span>
+          <span class="value-unit c-voltage-result__drop-unit">%</span>
           <span class="value-sep">)</span>
         </template>
       </div>
@@ -140,7 +140,7 @@ const dropStatusClass = computed(() => {
       <div v-else class="metric-card">
         <div class="metric-label">選択ケーブル</div>
         <div class="metric-value is-neutral">
-          <span class="value-text" style="font-size: 1.25rem;">{{ dropCableName }}</span>
+          <span class="value-text c-voltage-result__drop-cable">{{ dropCableName }}</span>
         </div>
       </div>
     </div>
@@ -149,6 +149,11 @@ const dropStatusClass = computed(() => {
 
 <style scoped lang="scss">
 .c-voltage-result {
+  &__drop-paren { margin-left: var(--space-2); }
+  &__drop-percent { @extend %text-xl; }
+  &__drop-unit { @extend %text-md; }
+  &__drop-cable { @extend %text-xl; }
+
   display: flex;
   flex-direction: column; // コンテナ未定義・または狭い場合は縦並び（スモールファースト）
   align-items: stretch;
@@ -202,7 +207,8 @@ const dropStatusClass = computed(() => {
   }
 
   &__main-label {
-    font-size: var(--font-size-xs);
+    @extend %text-xs;
+
     color: var(--color-text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -221,7 +227,8 @@ const dropStatusClass = computed(() => {
     }
 
     .value-unit {
-      font-size: var(--font-size-md);
+      @extend %text-md;
+
       font-weight: var(--font-weight-bold);
       opacity: 0.8;
     }
@@ -253,7 +260,8 @@ const dropStatusClass = computed(() => {
   }
 
   .metric-label {
-    font-size: var(--font-size-xs);
+    @extend %text-xs;
+
     color: var(--color-text-muted);
   }
 
@@ -262,7 +270,9 @@ const dropStatusClass = computed(() => {
     align-items: baseline;
     gap: var(--space-1);
     font-family: var(--font-family-mono);
-    font-size: var(--font-size-md);
+
+    @extend %text-md;
+
     font-weight: var(--font-weight-bold);
 
     .value-sep {
@@ -272,7 +282,8 @@ const dropStatusClass = computed(() => {
     }
 
     .value-unit {
-      font-size: var(--font-size-xs);
+      @extend %text-xs;
+
       opacity: 0.8;
     }
   }

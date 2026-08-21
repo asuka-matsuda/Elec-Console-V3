@@ -66,7 +66,9 @@ const toggleCat = (value: string) => {
     display: flex;
     align-items: center;
     gap: var(--gap-element);
-    font-size: var(--font-size-base);
+
+    @extend %text-base;
+
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
 

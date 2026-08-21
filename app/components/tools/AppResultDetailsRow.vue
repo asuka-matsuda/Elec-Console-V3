@@ -16,7 +16,9 @@ defineProps<{
 .p-result-details__row {
   display: flex;
   justify-content: space-between;
-  font-size: var(--font-size-sm);
+
+  @extend %text-sm;
+
   color: var(--color-text-secondary);
   
   /* stylelint-disable-next-line selector-pseudo-class-no-unknown */

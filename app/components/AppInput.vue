@@ -64,7 +64,9 @@ const inputId = useId();
   width: 100%;
   padding: var(--form-control-py) var(--form-control-px);
   font-family: var(--font-mono);
-  font-size: var(--font-size-sm);
+
+  @extend %text-sm;
+
   color: var(--color-text-main);
 
   @include form-control-base;
@@ -80,7 +82,8 @@ const inputId = useId();
     --form-control-py: var(--space-1);
 
     height: var(--size-control-sm);
-    font-size: var(--font-size-xs);
+
+    @extend %text-xs;
   }
 
   &--md {
@@ -92,7 +95,8 @@ const inputId = useId();
     --form-control-py: var(--space-3);
 
     height: var(--size-control-lg);
-    font-size: var(--font-size-base);
+
+    @extend %text-base;
   }
 
   /* Textarea Modifiers */

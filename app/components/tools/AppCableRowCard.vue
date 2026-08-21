@@ -124,13 +124,15 @@ const updateCount = (val: any) => {
   }
 
   &__title {
-    font-size: var(--font-size-sm);
+    @extend %text-sm;
+
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
 
   &__meta {
-    font-size: var(--font-size-xs);
+    @extend %text-xs;
+
     color: var(--color-text-muted);
   }
 }

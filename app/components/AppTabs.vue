@@ -93,7 +93,9 @@ const selectTab = (option: TabOption) => {
   align-items: center;
   justify-content: center;
   padding: var(--pad-container);
-  font-size: var(--font-size-sm);
+
+  @extend %text-sm;
+
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
   border: var(--border-width-base) solid var(--color-border);

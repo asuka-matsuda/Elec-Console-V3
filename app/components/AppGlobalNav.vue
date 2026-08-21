@@ -160,7 +160,8 @@ const closeSidebar = () => {
   }
 
   &__heading {
-    font-size: var(--font-size-xs);
+    @extend %text-xs;
+
     font-weight: var(--font-weight-bold);
     color: var(--section-accent, var(--color-text-secondary));
     text-transform: uppercase;
@@ -175,7 +176,9 @@ const closeSidebar = () => {
     padding: var(--space-2);
     text-decoration: none;
     color: var(--color-text-secondary);
-    font-size: var(--font-size-sm);
+
+    @extend %text-sm;
+
     font-weight: var(--font-weight-medium);
     transition: var(--transition-base);
 

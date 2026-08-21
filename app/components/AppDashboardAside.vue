@@ -91,8 +91,8 @@ const history = computed(() => dashboardData.value?.history || []);
     padding: var(--pad-container);
     text-align: center;
     color: var(--color-text-muted);
-    font-size: var(--font-size-sm);
 
+    @extend %text-sm;
     @include ui-surface(5%);
 
     border-radius: 0;
@@ -118,7 +118,8 @@ const history = computed(() => dashboardData.value?.history || []);
   }
 
   &__meta {
-    font-size: var(--font-size-xs);
+    @extend %text-xs;
+
     color: var(--color-text-muted);
   }
 }

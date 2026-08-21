@@ -91,7 +91,9 @@ defineProps<{
     backdrop-filter: blur(var(--blur-md));
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
-    font-size: var(--font-size-sm);
+
+    @extend %text-sm;
+
     border-bottom-width: calc(var(--border-width-base) * 2);
   }
 

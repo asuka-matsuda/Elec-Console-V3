@@ -68,7 +68,9 @@ const componentTag = computed(() => {
   justify-content: center;
   height: var(--size-control-md);
   padding: var(--space-4);
-  font-size: var(--font-size-sm);
+
+  @extend %text-sm;
+
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-ui);
   color: var(--color-text-main);
@@ -137,7 +139,8 @@ const componentTag = computed(() => {
   &--sm {
     height: var(--size-control-sm);
     padding: 0 var(--space-2);
-    font-size: var(--font-size-xs);
+
+    @extend %text-xs;
 
     // Minimum touch target (48x48) for accessibility
     &::after {
@@ -156,7 +159,8 @@ const componentTag = computed(() => {
   &--lg {
     height: var(--size-control-lg);
     padding: var(--space-5);
-    font-size: var(--font-size-base);
+
+    @extend %text-base;
   }
 
   /* Layout Modifiers */

@@ -100,14 +100,16 @@ withDefaults(
   }
 
   &__error {
-    font-size: var(--font-size-xs);
+    @extend %text-xs;
+
     color: var(--color-status-danger);
 
     @include cyber-text-glow(30%, var(--blur-sm), var(--color-status-danger));
   }
 
   &__help {
-    font-size: var(--font-size-xs);
+    @extend %text-xs;
+
     color: var(--color-text-muted);
   }
 }
@@ -118,7 +120,8 @@ withDefaults(
   align-items: center;
   justify-content: flex-start;
   gap: var(--gap-element);
-  font-size: var(--font-size-sm);
+
+  @extend %text-sm;
 
   // Default state: slightly dimmed
   color: theme-color(var(--color-category-main), 70%);

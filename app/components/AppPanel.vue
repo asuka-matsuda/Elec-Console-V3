@@ -93,7 +93,9 @@ withDefaults(
 
   &__title {
     margin: 0;
-    font-size: var(--font-size-lg);
+
+    @extend %text-lg;
+
     font-weight: var(--font-weight-bold);
     color: #{theme-color(var(--p-theme-color), 100%)};
     text-shadow: 0 0 var(--blur-md) #{theme-color(var(--p-theme-color), 40%)};

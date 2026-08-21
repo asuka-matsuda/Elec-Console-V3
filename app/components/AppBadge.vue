@@ -56,7 +56,9 @@ withDefaults(
   align-items: center;
   justify-content: center;
   padding: var(--space-1);
-  font-size: var(--font-size-2xs);
+
+  @extend %text-2xs;
+
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   color: var(--badge-color);
@@ -76,7 +78,8 @@ withDefaults(
   // 中サイズ（md）の場合の余白とフォントサイズ上書き
   &--md {
     padding: var(--space-2);
-    font-size: var(--font-size-xs);
+
+    @extend %text-xs;
   }
 
   /* カラーバリアント (Color Variants)

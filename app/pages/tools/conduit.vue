@@ -144,7 +144,8 @@ const handleSave = async () => {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    font-size: var(--font-size-base);
+
+    @extend %text-base;
   }
 
   &__label {
@@ -152,7 +153,8 @@ const handleSave = async () => {
   }
 
   &__val {
-    font-size: var(--font-size-xl);
+    @extend %text-xl;
+
     font-weight: var(--font-weight-bold);
     
     &.is-error {
@@ -162,13 +164,15 @@ const handleSave = async () => {
 }
 
 .p-basis-note {
-  font-size: var(--font-size-2xs);
+  @extend %text-2xs;
+
   color: var(--color-status-warning);
 }
 
 .p-conduit {
   &__section-title {
-    font-size: var(--font-size-base);
+    @extend %text-base;
+
     font-weight: var(--font-weight-bold);
     margin-bottom: var(--space-2);
   }

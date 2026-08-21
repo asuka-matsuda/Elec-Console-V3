@@ -110,7 +110,8 @@ const isChecked = ref(false);
   gap: var(--gap-component);
 
   &__title {
-    font-size: var(--font-size-lg);
+    @extend %text-lg;
+
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
     border-bottom: 1px solid var(--color-border);
@@ -125,7 +126,8 @@ const isChecked = ref(false);
 }
 
 .p-ds-card-title {
-  font-size: var(--font-size-base);
+  @extend %text-base;
+
   font-weight: var(--font-weight-bold);
   margin-bottom: var(--space-4);
   color: var(--color-text-sub);

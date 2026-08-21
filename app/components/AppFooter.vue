@@ -30,7 +30,9 @@ const currentYear = new Date().getFullYear();
 
   &__copyright {
     font-family: var(--font-mono);
-    font-size: var(--font-size-xs);
+
+    @extend %text-xs;
+
     color: var(--color-text-muted);
     letter-spacing: 0.05em;
     transition: var(--transition-base);

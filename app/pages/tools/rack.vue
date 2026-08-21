@@ -218,13 +218,15 @@ const {
   gap: var(--gap-element);
   
   &__val {
-    font-size: var(--font-size-2xl);
+    @extend %text-2xl;
+
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
   
   &__warning {
-    font-size: var(--font-size-sm);
+    @extend %text-sm;
+
     color: var(--color-status-danger);
     padding: var(--gap-element);
   }
@@ -259,7 +261,8 @@ const {
   }
   
   &__card-title {
-    font-size: var(--font-size-md);
+    @extend %text-md;
+
     font-weight: var(--font-weight-bold);
   }
   
@@ -270,7 +273,8 @@ const {
   }
 
   &__section-title {
-    font-size: var(--font-size-sm);
+    @extend %text-sm;
+
     font-weight: var(--font-weight-bold);
     margin-bottom: var(--space-2);
   }

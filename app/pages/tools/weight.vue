@@ -45,7 +45,7 @@ const totalWeight = computed(() => {
   >
     <template #inputs>
       <AppToolInputPanel @reset="openResetModal">
-        <div class="l-stack" style="gap: var(--gap-section);">
+        <div class="p-weight__sections">
           <div class="l-grid l-grid--2col">
             <AppFormGroup label="ケーブル種別" required>
               <AppSelect
@@ -180,22 +180,32 @@ const totalWeight = computed(() => {
   gap: var(--gap-element);
   
   &__val {
-    font-size: var(--font-size-2xl);
+    @extend %text-2xl;
+
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
   
   &__warning {
-    font-size: var(--font-size-sm);
+    @extend %text-sm;
+
     color: var(--color-status-danger);
     padding: var(--gap-element);
   }
 }
 
 .p-weight {
+  &__sections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-section);
+  }
+
   &__note {
     margin-top: var(--space-4);
-    font-size: var(--font-size-xs);
+
+    @extend %text-xs;
+
     color: var(--color-text-muted);
     padding: 0 var(--space-4);
   }

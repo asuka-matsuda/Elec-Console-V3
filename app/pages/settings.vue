@@ -175,7 +175,8 @@ const bgOptions = [
   }
 
   &__desc {
-    font-size: var(--font-size-sm);
+    @extend %text-sm;
+
     color: var(--color-text-muted);
   }
 }

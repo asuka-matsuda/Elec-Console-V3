@@ -118,7 +118,8 @@ const processedItems = computed(() => {
   // リンクとテキストの基本スタイル
   &__link,
   &__text {
-    font-size: var(--font-size-xs);
+    @extend %text-xs;
+
     color: var(--color-text-muted);
     text-decoration: none;
     transition: var(--transition-base);
@@ -137,9 +138,8 @@ const processedItems = computed(() => {
     display: flex;
     gap: var(--gap-element);
     align-items: center;
-    font-size: var(
-      --font-size-lg
-    ); // 以前の --text-md は存在しなかったため lg に修正
+
+    @extend %text-lg; // 以前の --text-md は存在しなかったため lg に修正
 
     color: var(--color-category-main);
     line-height: 1;

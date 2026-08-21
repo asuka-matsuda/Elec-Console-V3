@@ -108,7 +108,8 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   }
 
   &__title {
-    font-size: var(--font-size-sm);
+    @extend %text-sm;
+
     font-weight: var(--font-weight-bold);
     color: var(--color-category-tool);
     text-transform: uppercase;
@@ -176,7 +177,8 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   }
 
   &__legend-title {
-    font-size: var(--font-size-xs);
+    @extend %text-xs;
+
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
   }
@@ -192,7 +194,9 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
     display: flex;
     align-items: flex-start;
     gap: var(--space-1);
-    font-size: var(--font-size-sm);
+
+    @extend %text-sm;
+
     color: var(--color-text-secondary);
   }
 

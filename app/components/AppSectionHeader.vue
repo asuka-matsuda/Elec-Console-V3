@@ -65,11 +65,11 @@ withDefaults(
     margin: 0;
 
     &--lg {
-      font-size: var(--font-size-xl);
+      @extend %text-xl;
     }
 
     &--md {
-      font-size: var(--font-size-lg);
+      @extend %text-lg;
     }
   }
 

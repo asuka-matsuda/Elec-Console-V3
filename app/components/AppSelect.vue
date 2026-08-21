@@ -271,7 +271,9 @@ const listboxId = useId();
   position: relative;
   width: 100%;
   font-family: var(--font-mono);
-  font-size: var(--font-size-sm);
+
+  @extend %text-sm;
+
   color: var(--color-text-main);
   user-select: none;
 
@@ -375,7 +377,9 @@ const listboxId = useId();
   padding: var(--space-2);
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: var(--font-size-sm);
+
+  @extend %text-sm;
+
   color: var(--color-text-main);
   white-space: nowrap;
   border-left: var(--border-width-thick) solid transparent;

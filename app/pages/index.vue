@@ -94,7 +94,9 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
     display: flex;
     align-items: flex-start;
     gap: var(--gap-element);
-    font-size: var(--font-size-base);
+
+    @extend %text-base;
+
     font-weight: var(--font-weight-bold);
     color: var(--card-accent, var(--color-text-main));
     word-break: keep-all;
@@ -103,7 +105,8 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
   }
 
   &__desc {
-    font-size: var(--font-size-sm);
+    @extend %text-sm;
+
     color: var(--color-text-muted);
   }
 }

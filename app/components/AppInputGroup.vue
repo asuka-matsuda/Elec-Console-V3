@@ -56,7 +56,9 @@
       border-left: none;
       box-shadow: var(--edge-reflex-base), var(--shadow-sink);
       color: var(--color-text-main);
-      font-size: var(--font-size-sm);
+
+      @extend %text-sm;
+
       white-space: nowrap;
     }
   }

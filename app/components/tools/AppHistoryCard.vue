@@ -100,18 +100,21 @@ const handleDelete = () => {
   }
 
   &__date {
-    font-size: var(--font-size-xs);
+    @extend %text-xs;
+
     color: var(--color-text-muted);
   }
 
   &__title {
-    font-size: var(--font-size-base);
+    @extend %text-base;
+
     font-weight: var(--font-weight-semibold);
     color: var(--color-text-main);
   }
 
   &__main-result {
-    font-size: var(--font-size-lg);
+    @extend %text-lg;
+
     font-weight: var(--font-weight-bold);
     color: var(--color-category-tool);
     text-align: right;
@@ -134,7 +137,8 @@ const handleDelete = () => {
   }
 
   &__section-title {
-    font-size: var(--font-size-sm);
+    @extend %text-sm;
+
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
     border-left: 2px solid var(--color-category-tool);
@@ -145,7 +149,8 @@ const handleDelete = () => {
     display: grid;
     grid-template-columns: auto 1fr;
     gap: var(--space-1) var(--space-3);
-    font-size: var(--font-size-sm);
+
+    @extend %text-sm;
 
     dt {
       color: var(--color-text-muted);

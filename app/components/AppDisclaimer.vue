@@ -20,7 +20,9 @@ withDefaults(
 .c-disclaimer {
   width: 100%;
   padding: var(--space-3);
-  font-size: var(--font-size-sm);
+
+  @extend %text-sm;
+
   color: var(--color-status-warning);
   line-height: var(--line-height-relaxed);
 }
