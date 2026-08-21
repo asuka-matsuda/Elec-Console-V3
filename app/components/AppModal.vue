@@ -70,13 +70,6 @@ const titleId = `modal-title-${modalId}`;
             <AppIcon v-if="icon" :name="icon" class="c-modal__icon" />
             <slot name="title">{{ title }}</slot>
           </h2>
-          <AppIconButton
-            name="x"
-            size="sm"
-            _variant="secondary"
-            aria-label="Close modal"
-            @click="close"
-          />
         </header>
       </template>
 
