@@ -184,13 +184,10 @@ const toggleDrawer = () => {
     @include mq("md") {
       cursor: pointer;
 
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      @include flex-between;
 
       height: 48px;
       padding: var(--pad-container);
-
       background: color-mix(in srgb, var(--color-category-tool) 10%, transparent);
     }
   }

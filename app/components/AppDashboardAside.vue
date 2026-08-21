@@ -116,9 +116,7 @@ const history = computed(() => dashboardData.value?.history || []);
   padding: var(--pad-container);
 
   &__header {
-    display: flex;
-    gap: var(--gap-element);
-    align-items: center;
+    @include flex-start(var(--gap-element));
   }
 
   &__title {

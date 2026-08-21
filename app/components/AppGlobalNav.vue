@@ -111,13 +111,11 @@ const closeSidebar = () => {
 
   // --- Logo Header ---
   &__header {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
+    @include flex-start;
 
+    flex-shrink: 0;
     height: 64px; // Match standard header height
     padding: var(--pad-container);
-
     box-shadow: var(--shadow-elevation-base); // Replaced hardcoded shadow
 
     @include ui-border-fade(bottom, var(--sidebar-border));
@@ -184,9 +182,7 @@ const closeSidebar = () => {
 
     @extend %text-sm;
 
-    display: flex;
-    gap: var(--gap-component);
-    align-items: center;
+    @include flex-start(var(--gap-component));
 
     padding: var(--space-2);
 

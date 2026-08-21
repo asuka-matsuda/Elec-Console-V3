@@ -93,9 +93,7 @@ const processedItems = computed(() => {
   }
 
   &__item {
-    display: flex;
-    gap: var(--gap-element);
-    align-items: center;
+    @include flex-start(var(--gap-element));
 
     // 項目の区切り文字（最後の子要素以外に付与）
     &:not(:last-child)::after {
@@ -124,9 +122,7 @@ const processedItems = computed(() => {
   &__current {
     @extend %text-lg;
 
-    display: flex;
-    gap: var(--gap-element);
-    align-items: center;
+    @include flex-start(var(--gap-element));
 
     line-height: 1;
     color: var(--color-category-main);

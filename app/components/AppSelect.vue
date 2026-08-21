@@ -296,9 +296,8 @@ const listboxId = useId();
   position: relative;
 
   overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
+
+  @include flex-start;
 
   box-sizing: border-box;
   width: 100%;

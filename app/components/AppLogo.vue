@@ -18,13 +18,10 @@ const emit = defineEmits<{
 <style scoped lang="scss">
 .c-logo {
   // --- Base Styles ---
-  display: flex;
-  gap: var(--space-3);
-  align-items: center;
+  @include flex-start(var(--space-3));
 
   color: var(--color-text-main);
   text-decoration: none;
-
   transition: var(--transition-base);
 
   &:hover {
