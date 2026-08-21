@@ -151,11 +151,13 @@ const titleId = `modal-title-${modalId}`;
 
   &__header {
     @include flex-between(var(--gap-element));
+
     align-items: flex-start;
   }
 
   &__title {
     @include flex-start(var(--space-2));
+
     margin: 0;
     
     @extend %text-heading;

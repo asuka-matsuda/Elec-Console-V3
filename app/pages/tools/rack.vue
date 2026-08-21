@@ -254,9 +254,8 @@ const {
   }
 
   &__card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    @include flex-between;
+
     margin-bottom: var(--space-4);
   }
   

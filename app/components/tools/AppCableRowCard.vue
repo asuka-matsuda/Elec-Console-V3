@@ -112,6 +112,7 @@ const updateCount = (val: any) => {
 
   &__header {
     @include flex-between;
+
     margin-bottom: var(--gap-element);
   }
 

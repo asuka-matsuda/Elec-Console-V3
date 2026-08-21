@@ -65,7 +65,7 @@ withDefaults(
     // If the .c-form-group container is wide enough (>= xs), switch to horizontal layout
     @include cq("xs") {
       flex-direction: row;
-      align-items:;
+      align-items: flex-start;
 
       .c-form-group__label-wrapper {
         flex-shrink: 0;
@@ -118,7 +118,6 @@ withDefaults(
 // Label Component Styles (Legacy _c-form-label)
 .c-form-label {
   @include flex-start(var(--gap-element));
-
   @extend %text-sm;
 
   // Default state: slightly dimmed

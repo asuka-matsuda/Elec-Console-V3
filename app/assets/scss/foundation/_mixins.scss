@@ -348,6 +348,7 @@
   display: $display;
   justify-content: center;
   align-items: center;
+
   @if $gap != 0 { gap: $gap; }
 }
 
@@ -355,6 +356,7 @@
   display: $display;
   justify-content: space-between;
   align-items: center;
+
   @if $gap != 0 { gap: $gap; }
 }
 
@@ -362,5 +364,6 @@
   display: $display;
   justify-content: flex-start;
   align-items: center;
+
   @if $gap != 0 { gap: $gap; }
 }

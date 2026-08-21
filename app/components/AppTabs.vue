@@ -57,6 +57,7 @@ const selectTab = (option: TabOption) => {
 <style scoped lang="scss">
 .c-tabs {
   @include flex-start(var(--gap-component));
+
   flex-wrap: wrap;
 
   /* --- Modifiers --- */
@@ -85,7 +86,9 @@ const selectTab = (option: TabOption) => {
 
 .c-tabs__item {
   position: relative;
+
   @include flex-center(var(--space-2));
+
   padding: var(--pad-container);
 
   @extend %text-sm;

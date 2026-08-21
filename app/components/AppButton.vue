@@ -178,7 +178,7 @@ const componentTag = computed(() => {
   }
 
   &--left {
-    justify-content:;
+    justify-content: flex-start;
   }
 
   &--right {
