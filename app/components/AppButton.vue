@@ -9,7 +9,7 @@ const props = withDefaults(
     type?: "button" | "submit" | "reset";
     // eslint-disable-next-line vue/prop-name-casing
     _variant?: "primary" | "secondary" | "success" | "danger";
-    size?: "sm" | "md" | "lg";
+    size?: "sm" | "md";
     block?: boolean;
     iconOnly?: boolean;
     align?: "center" | "right" | "left";
@@ -157,13 +157,6 @@ const componentTag = computed(() => {
     @extend %text-sm;
   }
 
-  &--lg {
-    height: var(--size-control-lg);
-    padding: var(--space-5);
-
-    @extend %text-base;
-  }
-
   /* Layout Modifiers */
   &--block {
     width: 100%;
@@ -178,10 +171,6 @@ const componentTag = computed(() => {
     
     &.c-btn--md {
       width: var(--size-control-md);
-    }
-    
-    &.c-btn--lg {
-      width: var(--size-control-lg);
     }
   }
 

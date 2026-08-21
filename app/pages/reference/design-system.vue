@@ -35,7 +35,6 @@ const isChecked = ref(false);
             <div class="p-ds-flex">
               <AppButton size="sm">Small</AppButton>
               <AppButton size="md">Medium</AppButton>
-              <AppButton size="lg">Large</AppButton>
               <AppButton disabled>Disabled</AppButton>
             </div>
           </AppCard>

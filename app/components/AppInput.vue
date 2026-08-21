@@ -17,7 +17,7 @@ withDefaults(
     placeholder?: string;
     disabled?: boolean;
     error?: boolean;
-    size?: "sm" | "md" | "lg";
+    size?: "sm" | "md";
     rows?: number;
   }>(),
   {
@@ -90,22 +90,13 @@ const inputId = useId();
     height: var(--size-control-md);
   }
 
-  &--lg {
-    --form-control-px: var(--space-4);
-    --form-control-py: var(--space-3);
-
-    height: var(--size-control-lg);
-
-    @extend %text-base;
-  }
-
   /* Textarea Modifiers */
   &--textarea {
     resize: vertical;
     min-height: calc(var(--size-control-md) * 2);
 
     // Override fixed heights so rows/min-height can take over
-    &:is(.c-form-control--sm, .c-form-control--md, .c-form-control--lg) {
+    &:is(.c-form-control--sm, .c-form-control--md) {
       height: auto;
     }
 
