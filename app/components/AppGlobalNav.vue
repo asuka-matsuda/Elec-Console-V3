@@ -133,7 +133,6 @@ const closeSidebar = () => {
   }
 
   &__section {
-
     // Dynamic accent color support using Map and @each
     $accents: (
       "primary": var(--color-category-main),

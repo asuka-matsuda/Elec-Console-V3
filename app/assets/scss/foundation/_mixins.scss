@@ -177,6 +177,7 @@
   $is-hover: "&:hover:not(:disabled, .is-error, :focus)"
 ) {
   border: var(--border-width-base) solid theme-color(var(--color-category-main), 50%);
+
   // 1. 通常状態 (Default)
   background-color: transparent;
   box-shadow: var(--edge-reflex-base), var(--shadow-sink);

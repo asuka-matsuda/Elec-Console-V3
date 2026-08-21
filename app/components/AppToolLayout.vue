@@ -116,6 +116,7 @@ const toggleDrawer = () => {
       --scrollbar-size: var(--size-2);
 
       overflow-y: auto;
+
       // スクロール時に要素がpaddingに食い込まないよう調整
       padding-right: var(--space-2);
     }

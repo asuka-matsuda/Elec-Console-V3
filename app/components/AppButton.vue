@@ -58,7 +58,6 @@ const componentTag = computed(() => {
 
 <style scoped lang="scss">
 .c-btn {
-
   // 以前の ui-surface は枠線を上書きしてしまうため今回は無効化
   // @include ui-surface;
 

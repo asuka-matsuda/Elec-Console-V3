@@ -142,7 +142,6 @@ withDefaults(
   // ==========================================
   &--vertical {
     &.c-divider--default {
-
       // Entrance Animation (縦に伸びる)
       transform-origin: center;
 

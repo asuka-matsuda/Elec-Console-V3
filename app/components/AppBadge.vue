@@ -1,9 +1,7 @@
 <script setup lang="ts">
-/* ==========================================================================
-   型定義
-   ========================================================================== */
-
-// バッジのカラーバリエーション定義
+/**
+ * バッジのカラーバリエーション
+ */
 export type BadgeVariant =
   | "neutral"
   | "primary"
@@ -15,11 +13,10 @@ export type BadgeVariant =
   | "reference"
   | "management";
 
-/* ==========================================================================
-   Props定義
-   ========================================================================== */
-
-// バッジの色（variant）とサイズ（size）を受け取る
+/**
+ * AppBadge
+ * 状態やカテゴリを視覚的に示すためのバッジコンポーネント
+ */
 withDefaults(
   defineProps<{
     variant?: BadgeVariant;
@@ -33,24 +30,14 @@ withDefaults(
 </script>
 
 <template>
-  <!-- ==========================================================================
-       バッジ本体
-       ========================================================================== -->
   <span class="c-badge" :class="[`c-badge--${variant}`, `c-badge--${size}`]">
     <slot />
   </span>
 </template>
 
 <style scoped lang="scss">
-/* ==========================================================================
-   バッジのスタイル
-   ========================================================================== */
-
 .c-badge {
-  /* カラーバリアント (Color Variants)
-     ========================================================================== */
 
-  // 各バリアントのクラス名と、対応するCSS変数のマップ
   $variants: (
     "primary": "--color-category-main",
     "success": "--color-status-success",
@@ -61,11 +48,12 @@ withDefaults(
     "reference": "--color-category-reference",
     "management": "--color-category-management",
   );
-  // テーマ値から参照するためのカスタムプロパティ
+  // --- Theme Variables ---
   --badge-color: var(--color-text-main);
   --badge-border: theme-color(var(--color-border), 50%);
   --badge-shadow: transparent;
 
+  // --- Base Styles ---
   user-select: none;
 
   border: var(--border-width-base) solid var(--badge-border);
@@ -82,29 +70,23 @@ withDefaults(
 
   transition: var(--transition-base);
 
-  /* サイズバリアント (Size Variants)
-     ========================================================================== */
-
+  // --- Size Modifiers ---
   &--sm {
-
     @extend %text-2xs;
 
     padding: var(--space-1);
   }
 
   &--md {
-
     @extend %text-xs;
 
     padding: var(--space-2);
   }
 
   @include flex-center(0, inline-flex);
-
-  // テキストの発光エフェクト
   @include cyber-text-glow(100%, var(--blur-sm), var(--badge-color));
 
-  // マップを展開して各バリアントのスタイルを自動生成する
+  // --- Color Modifiers ---
   @each $name, $var in $variants {
     &--#{$name} {
       --badge-color: var(#{$var});
