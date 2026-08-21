@@ -8,7 +8,7 @@ defineEmits(['reset']);
 </script>
 
 <template>
-  <AppPanel bracket-color="tool" style="flex: 1; min-height: 0">
+  <AppPanel bracket-color="tool" class="c-tool-panel">
     <template #header>
       <AppSectionHeader
         :title="title || '条件入力'"
@@ -26,8 +26,21 @@ defineEmits(['reset']);
       </AppSectionHeader>
     </template>
     
-    <div class="l-stack" style="gap: var(--gap-section);">
+    <div class="c-tool-panel__content">
       <slot />
     </div>
   </AppPanel>
 </template>
+
+<style scoped lang="scss">
+.c-tool-panel {
+  flex: 1;
+  min-height: 0;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-section);
+  }
+}
+</style>

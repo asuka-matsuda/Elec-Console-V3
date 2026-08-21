@@ -29,12 +29,18 @@ $breakpoints: (
   "xl": 1200px,
   "xxl": 1600px,
 );
+$container-breakpoints: (
+  "xs": 480px,
+  "sm": 600px,
+  "md": 800px,
+);
 $sidebar-width: 340px;
 
 /* Z-index
    ========================================================================== */
 $z-index: (
   "bg-canvas": -3,
+  "nav": 90,
   "footer": 10,
   "table-header": 10,
   "header": 99,
@@ -43,9 +49,11 @@ $z-index: (
   "sidebar-container": 100,
   "sidebar-overlay": 101,
   "sidebar": 102,
-  "modal": 1000,
+  "modal": 9999,
+  "select": 10000,
   "theme-switcher": 1000,
   "click-effect": 9999,
+  "debug": 999999,
 );
 
 /* Spacing & Sizing
@@ -310,8 +318,10 @@ $color-input-focus-base: 217 91% 60%;
   --duration-fast: 0.15s;
   --duration-base: 0.25s;
   --duration-slow: 0.4s;
+  --duration-modal: 0.5s;
   --ease-out: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-float: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-modal: cubic-bezier(0.175, 0.885, 0.32, 1.275);
   --transition-base: all var(--duration-base) var(--ease-out);
   --transition-float:
     transform var(--duration-slow) var(--ease-float),

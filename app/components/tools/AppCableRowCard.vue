@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { CableInput } from '~/utils/calc/conduit/conduitCalcLogic';
 import { calculateCableArea } from '~/utils/calc/conduit/conduitCalcLogic';
 import { getCableCategories, getAvailableSizes } from '~/utils/cableDataHelper';
 import { cableData } from '~/utils/data/cableData';

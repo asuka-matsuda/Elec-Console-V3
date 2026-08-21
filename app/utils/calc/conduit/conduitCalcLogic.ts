@@ -1,7 +1,7 @@
-import type { CableData, ConduitData, DrumData } from '~/types/database';
+import type { CableData, ConduitData } from '~/types/database';
 import type { MathStep } from '~/components/AppMathBasis.vue';
 
-import { hlVal, hlOk, hlNg, buildFormula } from '~/utils/mathUtils';
+import { hlVal, hlOk, buildFormula } from '~/utils/mathUtils';
 
 export interface CableInput {
   id: string; // for UI tracking
@@ -45,10 +45,10 @@ export interface ConduitCalcResult {
 export function calculateCableArea(diameterStr: string): number {
   if (!diameterStr) return 0;
 
-  let diameter = 0;
+  let diameter: number;
   if (diameterStr.includes('×')) {
     // VVFなどの平形ケーブルにおいては、安全側の設計とするため最大寸法を長径として扱う
-    const parts = diameterStr.split('×').map((s: any) => parseFloat(s.trim()));
+    const parts = diameterStr.split('×').map((s: string) => parseFloat(s.trim()));
     diameter = Math.max(...parts);
   } else {
     diameter = parseFloat(diameterStr);
@@ -92,9 +92,9 @@ export function calculateConduitSize(
       continue;
     }
 
-    let diameter = 0;
+    let diameter: number;
     if (cableDef.diameter.includes('×')) {
-      diameter = Math.max(...cableDef.diameter.split('×').map((s: any) => parseFloat(s.trim())));
+      diameter = Math.max(...cableDef.diameter.split('×').map((s: string) => parseFloat(s.trim())));
     } else {
       diameter = parseFloat(cableDef.diameter);
     }
@@ -190,7 +190,6 @@ export function generateMathData(
   res: ConduitCalcResult | null
 ): MathStep[] {
   const rowCount = inputCables.length || 1;
-  const details = res?.cableDetails || [];
   const allCablesKnown = res?.success && !res.partial;
   const totalKnownArea = res?.totalArea || 0;
 

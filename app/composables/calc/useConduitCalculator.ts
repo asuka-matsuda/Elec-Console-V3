@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { calculateConduitSize, generateMathData } from '~/utils/calc/conduit/conduitCalcLogic';
 import type { CableInput, ConduitCalcResult } from '~/utils/calc/conduit/conduitCalcLogic';
 import { cableData } from '~/utils/data/cableData';

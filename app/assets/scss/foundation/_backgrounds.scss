@@ -32,7 +32,7 @@ body {
     100% 100%,
     100% 100%; // バグ対策
 
-  transition: background 0.5s ease; // 背景の切替時間
+  transition: background var(--duration-modal) ease; // 背景の切替時間
 }
 
 

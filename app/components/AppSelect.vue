@@ -343,24 +343,22 @@ const listboxId = useId();
     theme-color(var(--color-category-main), 50%);
   box-shadow:
     var(--shadow-elevation-hover),
-    inset 0 0 10px theme-color(var(--color-category-main), 20%);
+    inset 0 0 var(--blur-md) theme-color(var(--color-category-main), 20%);
 
   /* Error state dropdown border */
   .c-custom-select.is-error & {
     border-color: theme-color(var(--color-status-danger), 50%);
     box-shadow:
       var(--shadow-elevation-hover),
-      inset 0 0 10px theme-color(var(--color-status-danger), 20%);
+      inset 0 0 var(--blur-md) theme-color(var(--color-status-danger), 20%);
   }
 }
 
 .c-custom-select__list {
   box-sizing: border-box;
   width: 100%;
-  max-height: 250px; /* フォールバック */
   max-height: min(250px, 40vh); /* 画面が小さい場合にも対応 */
   overflow: hidden auto;
-  -webkit-overflow-scrolling: touch;
   scrollbar-color: var(--color-category-main) transparent;
   scrollbar-width: thin;
   transform: translateZ(0);

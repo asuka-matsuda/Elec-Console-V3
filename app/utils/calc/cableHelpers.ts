@@ -1,5 +1,4 @@
-import type { CableData, ConduitData, DrumData } from '~/types/database';
-;
+import type { CableData } from '~/types/database';
 
 export function formatCableName(
   cable: CableData | { category: string; size: string; cores: string },

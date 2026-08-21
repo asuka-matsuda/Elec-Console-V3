@@ -1,6 +1,6 @@
 import type { CableData } from '~/types/database';
 import { cableData as defaultCableData } from '~/utils/data/cableData';
-import { hlVal, hlOk, hlNg, buildFormula } from '~/utils/mathUtils';
+import { hlVal, hlOk, buildFormula } from '~/utils/mathUtils';
 import type { VoltageCalcInputs, VoltageCalcResult, MathStep } from './types';
 import { getAmbientTempDerating } from './voltageCalcLogic';
 

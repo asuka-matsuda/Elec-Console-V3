@@ -150,16 +150,16 @@ const dropStatusClass = computed(() => {
 <style scoped lang="scss">
 .c-voltage-result {
   display: flex;
-  flex-direction: row; // デフォルトはPC用（横並び）
+  flex-direction: column; // コンテナ未定義・または狭い場合は縦並び（スモールファースト）
   align-items: stretch;
   gap: var(--space-3);
   padding: var(--space-2);
   flex: 1;
   min-height: 0;
 
-  // md以下（モバイル）のスタイル
-  @include mq("md") {
-    flex-direction: column; // モバイルは縦並び
+  // コンテナの幅が xs 以上の場合は横並び
+  @include cq("xs") {
+    flex-direction: row;
   }
 
   // ステータスカラー定義
@@ -169,17 +169,20 @@ const dropStatusClass = computed(() => {
 
   .is-success {
     color: var(--color-status-success);
-    text-shadow: 0 0 8px color-mix(in srgb, var(--color-status-success) 40%, transparent);
+
+    @include cyber-text-glow(40%, var(--blur-md), var(--color-status-success));
   }
 
   .is-warning {
     color: var(--color-status-warning);
-    text-shadow: 0 0 8px color-mix(in srgb, var(--color-status-warning) 40%, transparent);
+
+    @include cyber-text-glow(40%, var(--blur-md), var(--color-status-warning));
   }
 
   .is-danger {
     color: var(--color-status-danger);
-    text-shadow: 0 0 8px color-mix(in srgb, var(--color-status-danger) 40%, transparent);
+
+    @include cyber-text-glow(40%, var(--blur-md), var(--color-status-danger));
   }
 
   &__main {
@@ -188,9 +191,11 @@ const dropStatusClass = computed(() => {
     align-items: center;
     justify-content: center;
     padding: var(--space-2) var(--space-3);
-    background: color-mix(in srgb, #000 20%, transparent);
-    border: 1px solid var(--color-border);
-    box-shadow: inset 0 0 20px color-mix(in srgb, #000 50%, transparent);
+
+    @include ui-surface(20%);
+
+    border: var(--border-width-base) solid var(--color-border);
+    box-shadow: var(--shadow-sink);
     flex: 1;
     min-width: 0;
     gap: var(--gap-element);
@@ -224,15 +229,15 @@ const dropStatusClass = computed(() => {
 
   &__metrics {
     display: flex;
-    flex-direction: column; // PCは縦積み
+    flex-flow: row wrap; // 狭い場合は横並びラップ（スモールファースト）
     gap: var(--space-2);
-    min-width: 220px;
+    min-width: auto;
     flex-shrink: 0;
 
-    // md以下（モバイル）のスタイル
-    @include mq("md") {
-      flex-flow: row wrap; // モバイルは横並び
-      min-width: auto;
+    // コンテナの幅が xs 以上の場合は縦積み
+    @include cq("xs") {
+      flex-flow: column nowrap;
+      min-width: 220px;
     }
   }
 

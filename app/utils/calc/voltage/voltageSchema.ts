@@ -3,10 +3,10 @@ import { z } from 'zod';
 export const voltageSchema = z.object({
   mode: z.enum(["drop", "size"]),
   phase: z.string().min(1, "配電方式を選択してください"),
-  loadValue: z.number({ required_error: "必須です", invalid_type_error: "数値を入力してください" }).positive("0より大きい数値を入力してください"),
+  loadValue: z.number({ required_error: "必須です", invalid_type_error: "数値を入力してください" }).nullable().refine(val => val !== null && val > 0, { message: "0より大きい数値を入力してください" }),
   loadUnit: z.string(),
   powerFactor: z.string().optional(),
-  distance: z.number({ required_error: "必須です", invalid_type_error: "数値を入力してください" }).positive("0より大きい数値を入力してください"),
+  distance: z.number({ required_error: "必須です", invalid_type_error: "数値を入力してください" }).nullable().refine(val => val !== null && val > 0, { message: "0より大きい数値を入力してください" }),
   cableType: z.string().min(1, "ケーブル種別を選択してください"),
   cores: z.string().optional(),
   fixedSize: z.string().optional(),

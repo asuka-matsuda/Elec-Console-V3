@@ -62,8 +62,8 @@ withDefaults(
     width: 100%;
 
     // --- Responsive Layout ---
-    // If the .c-form-group container is wide enough (>= 480px), switch to horizontal layout
-    @container (min-width: 480px) {
+    // If the .c-form-group container is wide enough (>= xs), switch to horizontal layout
+    @include cq("xs") {
       flex-direction: row;
       align-items: flex-start;
 
@@ -119,11 +119,14 @@ withDefaults(
   justify-content: flex-start;
   gap: var(--gap-element);
   font-size: var(--font-size-sm);
-  color: var(--color-category-main);
+
+  // Default state: slightly dimmed
+  color: theme-color(var(--color-category-main), 70%);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-weight: var(--font-weight-bold);
   user-select: none;
+  transition: var(--transition-base);
 
   // Cyber glowing dot
   &::before {
@@ -131,9 +134,34 @@ withDefaults(
     width: var(--size-2);
     height: var(--size-2);
     content: "";
-    border: var(--border-width-thick) solid var(--color-category-main);
+    border: var(--border-width-thick) solid theme-color(var(--color-category-main), 70%);
     border-radius: 50%;
-    box-shadow: 0 0 var(--blur-sm) var(--color-category-main);
+    box-shadow: 0 0 var(--blur-sm) theme-color(var(--color-category-main), 30%);
+    transition: var(--transition-base);
+  }
+}
+
+// フォームグループ内がフォーカスされたらラベルを発光させる
+.c-form-group:focus-within .c-form-label {
+  color: var(--color-category-main);
+
+  @include cyber-text-glow(50%, var(--blur-md), var(--color-category-main));
+
+  &::before {
+    border-color: var(--color-category-main);
+    box-shadow: 0 0 var(--blur-md) var(--color-category-main);
+  }
+}
+
+// フォームグループ内にエラー要素（.c-form-group__error や [aria-invalid="true"] 等）が存在する場合、ラベルを赤くする
+.c-form-group:has(.c-form-group__error, :invalid, [aria-invalid="true"]) .c-form-label {
+  color: var(--color-status-danger);
+
+  @include cyber-text-glow(50%, var(--blur-md), var(--color-status-danger));
+
+  &::before {
+    border-color: var(--color-status-danger);
+    box-shadow: 0 0 var(--blur-md) var(--color-status-danger);
   }
 }
 </style>

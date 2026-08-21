@@ -40,5 +40,4 @@ if (import.meta.client) {
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
-  <AppDebugVisualizer />
 </template>

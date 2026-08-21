@@ -120,10 +120,10 @@ const handleDelete = () => {
   &__body {
     display: grid;
     gap: var(--gap-component);
-    grid-template-columns: 1fr 1fr; // デスクトップファースト
+    grid-template-columns: 1fr; // スモールファースト
 
-    @include mq("md") {
-      grid-template-columns: 1fr;
+    @include cq("xs") {
+      grid-template-columns: 1fr 1fr;
     }
   }
 

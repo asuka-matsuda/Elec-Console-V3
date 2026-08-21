@@ -35,6 +35,26 @@
   }
 }
 
+// コンテナクエリ用のブレイクポイント
+// コンテナは「親がない(狭い)状態」をデフォルトとし、広ければ展開する「スモールファースト(up)」が必須
+@mixin cq($breakpoint, $direction: "up") {
+  @if map.has-key($container-breakpoints, $breakpoint) {
+    $value: map.get($container-breakpoints, $breakpoint);
+
+    @if $direction == "up" {
+      @container (min-width: #{$value}) {
+        @content;
+      }
+    } @else if $direction == "down" {
+      @container (max-width: #{$value}) {
+        @content;
+      }
+    }
+  } @else {
+    @warn "Invalid container breakpoint: #{$breakpoint}.";
+  }
+}
+
 /* Base / Common Placeholders
    ========================================================================== */
 

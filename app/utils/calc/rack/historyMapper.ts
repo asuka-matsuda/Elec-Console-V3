@@ -2,7 +2,7 @@ import type { RackCalcResult } from "./rackCalcLogic";
 import type { HistoryEntry } from "../history/types";
 import { formatCableName } from "../cableHelpers";
 import { cableData } from "~/utils/data/cableData";
-import type { RackCableUIInput } from "~/composables/calc/useRackCalculator";
+import type { RackCableUIInput } from "~/utils/calc/rack/rackMapper";
 
 export function mapRackToHistory(
   settings: {

@@ -1,27 +1,11 @@
 import { computed } from 'vue';
 import { calculateRackSize, generateMathData } from '~/utils/calc/rack/rackCalcLogic';
-import type { RackCableInput, RackCalcInputs, RackCalcResult } from '~/utils/calc/rack/rackCalcLogic';
-import { cableData } from '~/utils/data/cableData';
+import type { RackCalcResult } from '~/utils/calc/rack/rackCalcLogic';
 import { mapRackToHistory } from '~/utils/calc/rack/historyMapper';
 import { useToolPage } from '~/composables/calc/useToolPage';
-
-export interface RackCableUIInput {
-  id: string;
-  category: string;
-  cableIdx: string;
-  count: number | null;
-}
-
-export interface RackInputs {
-  isStrong: boolean;
-  isWeak: boolean;
-  lStrong: number | null;
-  lWeak: number | null;
-  rackHeight: number | null;
-  separatorWidth: number | null;
-  strongCablesUI: RackCableUIInput[];
-  weakCablesUI: RackCableUIInput[];
-}
+import { STANDARD_RACK_SIZES } from '~/utils/constants/rackConstants';
+import { mapFormToRackCalcInputs } from '~/utils/calc/rack/rackMapper';
+import type { RackInputs } from '~/utils/calc/rack/rackMapper';
 
 const defaultInputs: RackInputs = {
   isStrong: true,
@@ -35,25 +19,6 @@ const defaultInputs: RackInputs = {
 };
 
 export function useRackCalculator() {
-  const standardRackSizes = [100, 200, 300, 400, 500, 600, 800, 1000, 1200];
-
-  function convertUIToRackCable(uiInput: RackCableUIInput): RackCableInput {
-    let def: any;
-    if (uiInput.cableIdx && uiInput.cableIdx.startsWith('idx_')) {
-      const idx = parseInt(uiInput.cableIdx.replace('idx_', ''), 10);
-      def = cableData[idx];
-    }
-    let d = 0;
-    if (def) {
-      if (def.diameter.includes('×')) {
-        d = Math.max(...def.diameter.split('×').map((s: string) => parseFloat(s.trim())));
-      } else {
-        d = parseFloat(def.diameter);
-      }
-    }
-    return { d, n: uiInput.count };
-  }
-
   const {
     inputs,
     result,
@@ -67,34 +32,21 @@ export function useRackCalculator() {
     'ケーブルラック選定',
     defaultInputs,
     (inputs) => {
-      const rH = inputs.rackHeight ?? 0;
-      const maxDepth = Math.max(1, rH - 10);
-      const logicInputs: RackCalcInputs = {
-        isStrong: inputs.isStrong,
-        isWeak: inputs.isWeak,
-        lStrong: inputs.lStrong ?? 1,
-        lWeak: inputs.lWeak ?? 1,
-        rackHeight: rH,
-        maxDepth: maxDepth,
-        strongCables: inputs.strongCablesUI.map(convertUIToRackCable),
-        weakCables: inputs.weakCablesUI.map(convertUIToRackCable),
-        separatorWidth: inputs.separatorWidth ?? 0
-      };
-      return calculateRackSize(logicInputs, standardRackSizes);
+      const logicInputs = mapFormToRackCalcInputs(inputs);
+      return calculateRackSize(logicInputs, STANDARD_RACK_SIZES);
     },
     {
       toHistory: (inputs, res) => {
-        const rH = inputs.rackHeight ?? 0;
-        const maxDepth = Math.max(1, rH - 10);
+        const logicInputs = mapFormToRackCalcInputs(inputs);
         return mapRackToHistory(
           {
-            isStrong: inputs.isStrong,
-            isWeak: inputs.isWeak,
-            lStrong: inputs.lStrong ?? 1,
-            lWeak: inputs.lWeak ?? 1,
-            rackHeight: rH,
-            maxDepth: maxDepth,
-            separatorWidth: inputs.separatorWidth ?? 0
+            isStrong: logicInputs.isStrong,
+            isWeak: logicInputs.isWeak,
+            lStrong: logicInputs.lStrong,
+            lWeak: logicInputs.lWeak,
+            rackHeight: logicInputs.rackHeight,
+            maxDepth: logicInputs.maxDepth,
+            separatorWidth: logicInputs.separatorWidth
           },
           inputs.strongCablesUI,
           inputs.weakCablesUI,
@@ -126,17 +78,7 @@ export function useRackCalculator() {
   }
 
   const mathSteps = computed(() => {
-    const logicInputs: RackCalcInputs = {
-      isStrong: inputs.value.isStrong,
-      isWeak: inputs.value.isWeak,
-      lStrong: inputs.value.lStrong ?? 1,
-      lWeak: inputs.value.lWeak ?? 1,
-      rackHeight: inputs.value.rackHeight ?? 0,
-      maxDepth: maxDepth.value,
-      strongCables: inputs.value.strongCablesUI.map(convertUIToRackCable),
-      weakCables: inputs.value.weakCablesUI.map(convertUIToRackCable),
-      separatorWidth: inputs.value.separatorWidth ?? 0
-    };
+    const logicInputs = mapFormToRackCalcInputs(inputs.value);
     return generateMathData(logicInputs, result.value);
   });
 

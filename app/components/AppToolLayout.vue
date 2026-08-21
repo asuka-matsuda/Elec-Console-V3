@@ -95,6 +95,7 @@ const toggleDrawer = () => {
     flex-direction: column;
     min-height: 0;
     gap: var(--gap-component);
+    container-type: inline-size;
   }
 
   &__inputs {
@@ -140,6 +141,7 @@ const toggleDrawer = () => {
     flex-direction: column;
     flex: none; // コンテンツの高さに合わせて自動調整
     min-height: 0;
+    container-type: inline-size;
 
     // Mobile: Sticky Drawer
     @include mq("md") {
@@ -151,8 +153,7 @@ const toggleDrawer = () => {
       z-index: var(--z-index-modal);
       background: var(--color-bg-base);
       border-top: var(--border-width-base) solid var(--color-category-tool);
-      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-      box-shadow: 0 -4px 16px rgb(0 0 0 / 50%);
+      box-shadow: var(--shadow-elevation-hover);
       transition: transform var(--transition-base);
       transform: translateY(calc(100% - 48px)); // Show only handle
       max-height: 80vh;
@@ -174,7 +175,6 @@ const toggleDrawer = () => {
       padding: var(--pad-container);
       cursor: pointer;
       background: color-mix(in srgb, var(--color-category-tool) 10%, transparent);
-      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     }
   }
 
@@ -210,9 +210,9 @@ const toggleDrawer = () => {
       display: block; // Show on mobile
       position: fixed;
       inset: 0;
-      background: rgb(0 0 0 / 50%);
+      background: var(--color-overlay-dark);
       z-index: calc(var(--z-index-modal) - 1);
-      backdrop-filter: blur(2px);
+      backdrop-filter: blur(var(--blur-sm));
     }
   }
 }

@@ -7,7 +7,7 @@ defineProps<{
 </script>
 
 <template>
-  <AppPanel bracket-color="tool" class="c-basis-panel" style="flex: 1; min-height: 0">
+  <AppPanel bracket-color="tool" class="c-basis-panel">
     <template #header>
       <AppSectionHeader
         title="計算根拠"
@@ -18,12 +18,14 @@ defineProps<{
       />
     </template>
     
-    <ClientOnly>
-      <AppMathBasis v-if="steps && steps.length > 0" :steps="steps" />
-    </ClientOnly>
+    <div class="c-basis-panel__layout">
+      <ClientOnly>
+        <AppMathBasis v-if="steps && steps.length > 0" :steps="steps" />
+      </ClientOnly>
 
-    <div class="c-basis-panel__content">
-      <slot />
+      <div class="c-basis-panel__content">
+        <slot />
+      </div>
     </div>
   </AppPanel>
 </template>
@@ -31,12 +33,17 @@ defineProps<{
 <style scoped lang="scss">
 /* 計算根拠エリアはスマホ表示時にカットするかどうかは親で制御可能ですが、一旦デフォルトで追従 */
 .c-basis-panel {
-  @include mq("md") {
-    display: none !important;
-  }
-}
+  flex: 1;
+  min-height: 0;
 
-.c-basis-panel__content {
-  margin-top: var(--gap-component);
+  @include mq("md") {
+    display: none;
+  }
+
+  &__layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-component);
+  }
 }
 </style>

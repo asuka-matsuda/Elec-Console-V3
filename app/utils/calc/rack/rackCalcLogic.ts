@@ -2,20 +2,20 @@ import type { MathStep } from '~/components/AppMathBasis.vue';
 
 import { hlVal, hlOk, buildFormula } from '~/utils/mathUtils';
 export interface RackCableInput {
-  d: number | null;
-  n: number | null;
+  d: number;
+  n: number;
 }
 
 export interface RackCalcInputs {
   isStrong: boolean;
   isWeak: boolean;
-  lStrong: number | null;
-  lWeak: number | null;
-  rackHeight: number | null;
-  maxDepth: number | null;
+  lStrong: number;
+  lWeak: number;
+  rackHeight: number;
+  maxDepth: number;
   strongCables: RackCableInput[];
   weakCables: RackCableInput[];
-  separatorWidth: number | null;
+  separatorWidth: number;
 }
 
 export interface RackCalcResult {
@@ -121,8 +121,8 @@ export function calculateRackSize(inputs: RackCalcInputs, standardRackSizes: num
     stackHWeak = getStackHeightFromDiams(getCableDiameters(weakCables), lWeak ?? 1);
   }
 
-  let maxCableStackHeight = 0;
-  let maxStackDetailStr = '0';
+  let maxCableStackHeight: number;
+  let maxStackDetailStr: string;
   if (stackHStrong.height >= stackHWeak.height) {
     maxCableStackHeight = stackHStrong.height;
     maxStackDetailStr = stackHStrong.detailStr;

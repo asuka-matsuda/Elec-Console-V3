@@ -61,7 +61,7 @@ const history = computed(() => dashboardData.value?.history || []);
 <style scoped lang="scss">
 .p-dashboard {
   &__aside {
-    width: 320px; // Desktop default
+    width: var(--sidebar-width);
     flex-shrink: 0;
     position: sticky;
     top: var(--pad-container);

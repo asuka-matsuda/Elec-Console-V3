@@ -1,4 +1,4 @@
-import { ref, onMounted, watch } from "vue";
+import { ref, watch } from "vue";
 import type { HistoryEntry } from "~/utils/calc/history/types";
 
 /**

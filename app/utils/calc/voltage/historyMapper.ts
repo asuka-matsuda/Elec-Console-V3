@@ -3,7 +3,7 @@ import type { VoltageCalcInputs, VoltageCalcResult } from "~/utils/calc/voltage/
 import { getVoltageFormFields } from "~/utils/config/voltageFormConfig";
 
 import { cableData } from "~/utils/data/cableData";
-
+import type { CableData } from "~/types/database";
 /**
  * 電圧降下の計算入出力を HistoryEntry 形式に変換する
  */
@@ -12,7 +12,6 @@ export function mapVoltageToHistory(
   inputs: VoltageCalcInputs,
   result: VoltageCalcResult | null
 ): Omit<HistoryEntry, "id" | "timestamp"> {
-  // コンフィグからラベル一覧を取得（関数化されているためダミーの関数を渡す）
   const formFields = getVoltageFormFields(
     () => true,
     () => true,
@@ -50,9 +49,9 @@ export function mapVoltageToHistory(
 
   if (!isAuto) {
     // ケーブル指定モードの場合は使用ケーブル情報も入力条件に含める
-    let cabName = `${inputs.cableType} ${inputs.selectedSize}`;
+    let cabName: string;
     const matched = cableData.find(
-      (c: any) =>
+      (c: CableData) =>
         c.category === inputs.cableType &&
         parseFloat(String(c.size)) === inputs.selectedSize &&
         (!inputs.selectedCores || c.cores === inputs.selectedCores)
@@ -91,10 +90,10 @@ export function mapVoltageToHistory(
     // メイン結果テキストの生成
     const cabType = isAuto ? result.optimal.category || "" : inputs.cableType || "";
     const size = isAuto ? result.optimal.size : inputs.selectedSize;
-    let cableNameStr = `${cabType} ${size}`;
+    let cableNameStr: string;
     
     const matchedCable = cableData.find(
-      (c: any) =>
+      (c: CableData) =>
         c.category === cabType &&
         parseFloat(String(c.size)) === parseFloat(String(size)) &&
         (!inputs.selectedCores || c.cores === inputs.selectedCores)

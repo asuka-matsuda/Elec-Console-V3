@@ -91,8 +91,8 @@ const processedItems = computed(() => {
     &::after {
       position: absolute;
       top: var(--space-1);
-      left: 6px;
-      font-size: 9px;
+      left: var(--space-2);
+      font-size: 0.6em;
       color: var(--color-category-main);
       content: "SYS.LOC";
       opacity: 0.9;

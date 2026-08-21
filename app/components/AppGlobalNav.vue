@@ -254,7 +254,7 @@ const closeSidebar = () => {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 90; // Just below sidebar (100)
+    z-index: var(--z-index-nav); // Just below sidebar
     width: 100vw;
     height: 100dvh;
     backdrop-filter: blur(4px) brightness(0.4);

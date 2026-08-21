@@ -1,7 +1,7 @@
-import type { CableData, ConduitData, DrumData } from '~/types/database';
+import type { CableData, DrumData } from '~/types/database';
 import type { MathStep } from '~/components/AppMathBasis.vue';
 
-import { hlVal, hlOk, hlNg, buildFormula } from '~/utils/mathUtils';
+import { hlVal, hlOk } from '~/utils/mathUtils';
 
 export interface WeightCalcInputs {
   category: string;
@@ -88,7 +88,7 @@ export function calculateWeightAndDrum(
 
     if (D2 < minD2) continue;
 
-    let g = 0;
+    let g: number;
     const catPrefix = drum.category;
     const catNumMatch = catPrefix.match(/\d+/);
     const catNum = catNumMatch ? parseInt(catNumMatch[0]) : 0;

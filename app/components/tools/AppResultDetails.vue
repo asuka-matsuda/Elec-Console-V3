@@ -12,7 +12,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--gap-element);
-  margin-top: var(--gap-section);
   padding-top: var(--gap-section);
   border-top: 1px solid var(--color-border);
 }

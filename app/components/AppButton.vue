@@ -82,7 +82,7 @@ const componentTag = computed(() => {
   box-shadow:
     inset 0 0 var(--blur-md)
       theme-color(var(--btn-color, var(--color-category-main)), 10%),
-    0 var(--space-1) var(--space-3) rgb(0 0 0 / 20%);
+    var(--shadow-elevation-base);
 
   // 以前の ui-surface は枠線を上書きしてしまうため今回は無効化
   // @include ui-surface;
@@ -101,14 +101,14 @@ const componentTag = computed(() => {
     z-index: 1;
 
     @include ui-focus(var(--btn-color));
-    @include cyber-text-glow(50%, 8px, var(--btn-color));
+    @include cyber-text-glow(50%, var(--blur-md), var(--btn-color));
   }
 
   &:active:not(:disabled, .is-disabled) {
     z-index: 1;
 
     @include ui-press(var(--btn-color));
-    @include cyber-text-glow(50%, 8px, var(--btn-color));
+    @include cyber-text-glow(50%, var(--blur-md), var(--btn-color));
   }
 
   /* Disabled State */

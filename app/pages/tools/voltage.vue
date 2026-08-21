@@ -51,8 +51,7 @@ const handleSaveToHistory = async () => {
 </script>
 
 <template>
-  <div>
-    <AppToolLayout>
+  <AppToolLayout>
 
 
     <template #results>
@@ -83,6 +82,7 @@ const handleSaveToHistory = async () => {
               <AppFormGroup
                 :label="field.label"
                 :error="errorMessage"
+                :class="`js-field-${field.id}`"
               >
                 <!-- Select Only -->
                 <AppSelect
@@ -153,23 +153,26 @@ const handleSaveToHistory = async () => {
 
     <!-- リセット確認モーダル -->
     <AppToolResetModal v-model="isResetModalOpen" @confirm="resetForm" />
-  </div>
 </template>
 
 <style scoped lang="scss">
-/* 2カラムグリッドを再現 (PCファースト) */
+/* 2カラムグリッドを再現 */
 .l-grid {
   display: grid;
   gap: var(--gap-component);
 
   &--2col {
-    grid-template-columns: repeat(2, 1fr); // PCのデフォルトは2カラム
+    grid-template-columns: 1fr; // スモールファースト
 
-    @include mq("md") {
-      // スマホサイズに縮んだ時だけ1カラムに上書き
-      grid-template-columns: 1fr;
+    @include cq("sm") {
+      // コンテナ幅が広い時は2カラム
+      grid-template-columns: repeat(2, 1fr);
     }
   }
 }
 
+/* ケーブル種別未選択時にケーブルサイズを無効化 */
+.l-grid:has(.js-field-cableType [data-placeholder="true"]) .js-field-fixedSize {
+  @extend %disabled;
+}
 </style>

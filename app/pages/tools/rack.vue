@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import { useRackCalculator } from '~/composables/calc/useRackCalculator';
 
 useHead({
@@ -23,8 +22,7 @@ const {
 </script>
 
 <template>
-  <div>
-    <AppToolLayout
+  <AppToolLayout
     title="ケーブルラック選定"
     icon="align-justify"
     description="強電・弱電ケーブルのリストと段積み数から、最適なラック幅を選定します。"
@@ -32,8 +30,8 @@ const {
   >
     <template #inputs>
       <AppToolInputPanel @reset="openResetModal">
-        <div class="l-stack" style="gap: var(--gap-section);">
-          <div class="l-grid l-grid--2col">
+        <div class="p-rack__sections">
+          <div class="p-rack__grid">
             <AppFormGroup label="ラック深さ (H)">
               <AppInputGroup>
                 <AppInput
@@ -64,12 +62,12 @@ const {
 
           <!-- 強電エリア -->
           <AppCard variant="default">
-            <div class="u-flex u-justify-between u-items-center u-mb-4">
-              <h3 class="u-text-base u-font-bold">強電エリア</h3>
+            <div class="p-rack__card-header">
+              <h3 class="p-rack__card-title">強電エリア</h3>
               <AppToggle v-model="inputs.isStrong" label="" />
             </div>
 
-            <div v-if="inputs.isStrong" class="l-stack" style="gap: var(--gap-component);">
+            <div v-if="inputs.isStrong" class="p-rack__card-body">
               <AppFormGroup label="段積み数">
                 <AppInputGroup>
                   <AppInput
@@ -84,8 +82,8 @@ const {
               </AppFormGroup>
 
               <div>
-                <div class="u-text-sm u-font-bold u-mb-2">強電ケーブルリスト</div>
-                <div class="l-stack" style="gap: var(--gap-component);">
+                <div class="p-rack__section-title">強電ケーブルリスト</div>
+                <div class="p-rack__cable-list">
                   <AppCableRowCard
                     v-for="(cable, index) in inputs.strongCablesUI"
                     :key="cable.id"
@@ -97,7 +95,7 @@ const {
                 </div>
                 <AppButton
                   variant="secondary"
-                  class="u-w-full u-mt-4"
+                  class="p-rack__add-button"
                   @click="addStrongCable"
                 >
                   <AppIcon name="plus" /> 強電ケーブルを追加
@@ -108,12 +106,12 @@ const {
 
           <!-- 弱電エリア -->
           <AppCard variant="default">
-            <div class="u-flex u-justify-between u-items-center u-mb-4">
-              <h3 class="u-text-base u-font-bold">弱電エリア</h3>
+            <div class="p-rack__card-header">
+              <h3 class="p-rack__card-title">弱電エリア</h3>
               <AppToggle v-model="inputs.isWeak" label="" />
             </div>
 
-            <div v-if="inputs.isWeak" class="l-stack" style="gap: var(--gap-component);">
+            <div v-if="inputs.isWeak" class="p-rack__card-body">
               <AppFormGroup label="段積み数">
                 <AppInputGroup>
                   <AppInput
@@ -128,8 +126,8 @@ const {
               </AppFormGroup>
 
               <div>
-                <div class="u-text-sm u-font-bold u-mb-2">弱電ケーブルリスト</div>
-                <div class="l-stack" style="gap: var(--gap-component);">
+                <div class="p-rack__section-title">弱電ケーブルリスト</div>
+                <div class="p-rack__cable-list">
                   <AppCableRowCard
                     v-for="(cable, index) in inputs.weakCablesUI"
                     :key="cable.id"
@@ -141,7 +139,7 @@ const {
                 </div>
                 <AppButton
                   variant="secondary"
-                  class="u-w-full u-mt-4"
+                  class="p-rack__add-button"
                   @click="addWeakCable"
                 >
                   <AppIcon name="plus" /> 弱電ケーブルを追加
@@ -197,7 +195,7 @@ const {
             <strong>{{ result?.totalWidth ? Math.ceil(result.totalWidth) : 0 }}</strong> mm
           </AppResultDetailsRow>
           <AppResultDetailsRow label="最大ケーブル高さ">
-            <strong :class="{'u-text-danger': result?.isOverflow}">{{ result?.maxCableStackHeight?.toFixed(1) ?? '0.0' }}</strong> mm
+            <strong :class="{'is-overflow': result?.isOverflow}">{{ result?.maxCableStackHeight?.toFixed(1) ?? '0.0' }}</strong> mm
             (有効 {{ maxDepth }} mm)
           </AppResultDetailsRow>
         </AppResultDetails>
@@ -211,7 +209,6 @@ const {
 
     <!-- リセット確認モーダル -->
     <AppToolResetModal v-model="isResetModalOpen" @confirm="confirmReset" />
-  </div>
 </template>
 
 <style scoped lang="scss">
@@ -229,13 +226,64 @@ const {
   &__warning {
     font-size: var(--font-size-sm);
     color: var(--color-status-danger);
-    background-color: color-mix(in srgb, var(--color-status-danger) 10%, transparent);
     padding: var(--gap-element);
-    border-radius: var(--radius-sm);
   }
 }
 
-.u-text-danger {
-  color: var(--color-status-danger) !important;
+.is-overflow {
+  color: var(--color-status-danger);
+}
+
+.p-rack {
+  &__sections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-section);
+  }
+  
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gap-component);
+    
+    @include cq("xs") {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  &__card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-4);
+  }
+  
+  &__card-title {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-bold);
+  }
+  
+  &__card-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-component);
+  }
+
+  &__section-title {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-2);
+  }
+  
+  &__cable-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-component);
+  }
+  
+  &__add-button {
+    width: 100%;
+    margin-top: var(--space-4);
+  }
 }
 </style>

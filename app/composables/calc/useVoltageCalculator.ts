@@ -1,20 +1,19 @@
-import { ref, computed, watch, onMounted } from "vue";
-import { systemData } from "~/utils/data/systemData";
+import { computed, watch } from "vue";
 import { getAvailableSizes } from "~/utils/cableDataHelper";
-import { cableData } from "~/utils/data/cableData";
-import { calculateDesignCurrent, calculateLogic, generateMathData } from "~/utils/calc/voltage/calcVoltageEngine";
-import type { VoltageCalcInputs, SystemData } from "~/utils/calc/voltage/types";
+import { calculateLogic, generateMathData } from "~/utils/calc/voltage/calcVoltageEngine";
+import type { VoltageCalcResult } from "~/utils/calc/voltage/types";
 import { useToolPage } from "~/composables/calc/useToolPage";
 import { mapVoltageToHistory } from "~/utils/calc/voltage/historyMapper";
-import { voltageSchema } from "~/utils/calc/voltage/voltageSchema";
+import { mapFormToVoltageCalcInputs } from "~/utils/calc/voltage/voltageMapper";
+import type { VoltageFormState } from "~/utils/calc/voltage/voltageMapper";
 
-export const defaultForm = {
-  mode: "drop" as "drop" | "size",
+export const defaultForm: VoltageFormState = {
+  mode: "drop",
   phase: "",
-  loadValue: null as number | null,
+  loadValue: null,
   loadUnit: "A",
   powerFactor: "",
-  distance: null as number | null,
+  distance: null,
   cableType: "",
   cores: "",
   fixedSize: "",
@@ -27,22 +26,21 @@ export const defaultForm = {
 export function useVoltageCalculator() {
   const {
     inputs: form,
-    result: _dummyResult,
-    resetInputs,
+    result: calcResult,
     isResetModalOpen,
     openResetModal,
     confirmReset,
-    saveToHistory
-  } = useToolPage(
+  } = useToolPage<VoltageFormState, VoltageCalcResult | null>(
     'voltage',
     '電圧降下・ケーブルサイズ選定',
     { ...defaultForm },
-    (inputs) => {
-      // Dummy calculate function since calcInputs needs to be derived first
-      return null;
+    (formInputs) => {
+      const calcInputs = mapFormToVoltageCalcInputs(formInputs);
+      if (!calcInputs.isReady) return null;
+      return calculateLogic(calcInputs);
     },
     {
-      toHistory: (inputs, res) => mapVoltageToHistory('電圧降下・ケーブルサイズ選定', {} as any, res as any), // Will not be used directly
+      toHistory: (formInputs, res) => mapVoltageToHistory('電圧降下・ケーブルサイズ選定', {} as any, res as any), // Will not be used directly
       fromHistory: () => JSON.parse(JSON.stringify(defaultForm))
     }
   );
@@ -66,66 +64,7 @@ export function useVoltageCalculator() {
     }
   );
 
-  const calcInputs = computed<VoltageCalcInputs>(() => {
-    const mode = form.value.mode;
-    const sys = systemData.find((s) => s.id === form.value.phase) || null;
-    const loadVal = form.value.loadValue;
-    const loadUnit = form.value.loadUnit;
-    const pf = form.value.powerFactor ? parseFloat(form.value.powerFactor) : null;
-    const L = form.value.distance;
-    const cableType = form.value.cableType || "";
-    const rawSize = form.value.fixedSize || "";
-
-    let selectedSize: number | null = null;
-    let selectedCores: string | null = null;
-
-    if (mode === "size") {
-      selectedCores = form.value.cores || null;
-    } else if (rawSize && rawSize.startsWith("idx_")) {
-      const idx = parseInt(rawSize.replace("idx_", ""), 10);
-      const cable = cableData[idx];
-      if (cable) {
-        selectedSize = parseFloat(String(cable.size));
-        selectedCores = cable.cores || null;
-      }
-    }
-
-    const derating = form.value.derating ? parseFloat(form.value.derating) : null;
-    const rawTempVal = form.value.ambientTemp;
-    const ambientTemp =
-      rawTempVal && rawTempVal !== "none" ? parseFloat(rawTempVal) : null;
-    const parallel = form.value.parallel ? parseInt(form.value.parallel) : null;
-    const targetDrop = form.value.targetDrop ? parseFloat(form.value.targetDrop) : null;
-
-    const I = calculateDesignCurrent(sys, loadVal, loadUnit, pf ?? undefined);
-
-    const validationResult = voltageSchema.safeParse(form.value);
-
-    return {
-      mode,
-      sys: sys as SystemData,
-      I,
-      L,
-      cableType,
-      selectedCores,
-      derating,
-      rawTempVal,
-      ambientTemp,
-      parallel,
-      targetDrop,
-      selectedSize,
-      loadVal,
-      loadUnit,
-      pf,
-      isReady: validationResult.success,
-      missingFields: validationResult.success ? [] : validationResult.error.errors.map(e => String(e.path[0])),
-    };
-  });
-
-  const calcResult = computed(() => {
-    if (!calcInputs.value.isReady) return null;
-    return calculateLogic(calcInputs.value);
-  });
+  const calcInputs = computed(() => mapFormToVoltageCalcInputs(form.value));
 
   const mathSteps = computed(() => {
     return generateMathData(calcInputs.value, calcResult.value) || [];

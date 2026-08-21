@@ -28,15 +28,17 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
             :to="item.disabled ? undefined : item.href"
             :disabled="item.disabled"
           >
-            <div
-              class="p-dashboard-card__header"
-              :style="`--card-accent: var(--color-category-${section.accent})`"
-            >
-              <AppIcon :name="item.icon" class="p-dashboard-card__icon" />
-              <span>{{ item.text }}</span>
-            </div>
-            <div class="p-dashboard-card__desc">
-              {{ item.desc || "※準備中…" }}
+            <div class="p-dashboard-card__layout">
+              <div
+                class="p-dashboard-card__header"
+                :style="`--card-accent: var(--color-category-${section.accent})`"
+              >
+                <AppIcon :name="item.icon" class="p-dashboard-card__icon" />
+                <span>{{ item.text }}</span>
+              </div>
+              <div class="p-dashboard-card__desc">
+                {{ item.desc || "※準備中…" }}
+              </div>
             </div>
           </AppCard>
         </div>
@@ -82,6 +84,12 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
 
 /* Inner Card Styles */
 .p-dashboard-card {
+  &__layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-element);
+  }
+
   &__header {
     display: flex;
     align-items: flex-start;
@@ -89,7 +97,6 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
     font-size: var(--font-size-base);
     font-weight: var(--font-weight-bold);
     color: var(--card-accent, var(--color-text-main));
-    margin-bottom: var(--gap-element);
     word-break: keep-all;
     overflow-wrap: anywhere;
     line-break: strict;

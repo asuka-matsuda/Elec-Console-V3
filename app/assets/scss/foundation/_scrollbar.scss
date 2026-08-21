@@ -14,18 +14,18 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  border: 1px solid
+  border: var(--border-width-base) solid
     color-mix(in srgb, var(--color-category-main) 40%, transparent);
 
   &:hover {
     border-color: var(--color-category-main);
-    box-shadow: inset 0 0 8px
+    box-shadow: inset 0 0 var(--blur-md)
       color-mix(in srgb, var(--color-category-main) 40%, transparent);
   }
 
   &:active {
     border-color: var(--color-category-main);
-    box-shadow: inset 0 0 12px
+    box-shadow: inset 0 0 var(--blur-lg)
       color-mix(in srgb, var(--color-category-main) 80%, transparent);
   }
 }

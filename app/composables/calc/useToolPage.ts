@@ -1,4 +1,4 @@
-import { computed, ref, onMounted, watch } from 'vue';
+import { computed, ref } from 'vue';
 import { useLocalStorage } from '@vueuse/core';
 import { useCalcHistory } from '~/composables/calc/useCalcHistory';
 import type { HistoryEntry } from '~/utils/calc/history/types';

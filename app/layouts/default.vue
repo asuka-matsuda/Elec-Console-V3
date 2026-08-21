@@ -80,6 +80,7 @@ const breadcrumbs = useBreadcrumbs();
   min-height: 0;
   padding: var(--pad-container);
   overflow-y: auto;
+  container-type: inline-size;
 
   --scrollbar-size: var(--size-2);
 
@@ -104,7 +105,7 @@ const breadcrumbs = useBreadcrumbs();
     border-radius: 50%;
     border: var(--border-width-thick) solid var(--color-category-main);
     background: var(--color-category-main);
-    box-shadow: 0 0 12px theme-color(var(--color-category-main), 50%);
+    box-shadow: 0 0 var(--blur-lg) theme-color(var(--color-category-main), 50%);
   }
 
   &__name {

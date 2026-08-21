@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useId, onMounted, onUnmounted, watch } from "vue";
+import { useId, ref, watch, onMounted } from "vue";
 
 const props = withDefaults(
   defineProps<{
@@ -17,114 +17,137 @@ const emit = defineEmits<{
   (e: "update:modelValue", value: boolean): void;
 }>();
 
+const dialogRef = ref<HTMLDialogElement | null>(null);
+
 const close = () => {
   emit("update:modelValue", false);
 };
 
-// Handle Escape key to close
-const handleKeydown = (e: KeyboardEvent) => {
-  if (e.key === "Escape" && props.modelValue) {
-    close();
-  }
-};
-
-onMounted(() => {
-  window.addEventListener("keydown", handleKeydown);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("keydown", handleKeydown);
-});
-
-// Prevent background scrolling when modal is open
+// watch props.modelValue to open/close native dialog
 watch(
   () => props.modelValue,
   (isOpen) => {
-    // Only handle if we are in browser
-    if (typeof window !== "undefined") {
-      if (isOpen) {
-        document.body.style.overflow = "hidden";
-      } else {
-        document.body.style.overflow = "";
-      }
+    if (isOpen) {
+      dialogRef.value?.showModal();
+    } else {
+      dialogRef.value?.close();
     }
   },
-  { immediate: true }
+  { flush: "post" }
 );
+
+// 初期状態で開いている場合への対応
+onMounted(() => {
+  if (props.modelValue) {
+    dialogRef.value?.showModal();
+  }
+});
 
 const modalId = useId();
 const titleId = `modal-title-${modalId}`;
 </script>
 
 <template>
-  <Teleport to="body">
-    <transition name="modal-fade">
-      <div v-if="modelValue" class="c-modal-overlay" @click.self="close">
-        <AppPanel
-          class="c-modal"
-          :bracket-color="variant"
-          role="dialog"
-          aria-modal="true"
-          :aria-labelledby="titleId"
-        >
-          <!-- Header -->
-          <template #header>
-            <header class="c-modal__header">
-              <h2 :id="titleId" class="c-modal__title">
-                <AppIcon v-if="icon" :name="icon" class="c-modal__icon" />
-                <slot name="title">{{ title }}</slot>
-              </h2>
-              <button
-                type="button"
-                class="c-modal__close-btn"
-                aria-label="Close modal"
-                @click="close"
-              >
-                <AppIcon name="x" size="sm" />
-              </button>
-            </header>
-          </template>
+  <dialog
+    ref="dialogRef"
+    class="c-modal"
+    :aria-labelledby="titleId"
+    @click.self="close"
+    @cancel.prevent="close"
+  >
+    <AppPanel
+      class="c-modal__panel"
+      :bracket-color="variant"
+    >
+      <!-- Header -->
+      <template #header>
+        <header class="c-modal__header">
+          <h2 :id="titleId" class="c-modal__title">
+            <AppIcon v-if="icon" :name="icon" class="c-modal__icon" />
+            <slot name="title">{{ title }}</slot>
+          </h2>
+          <button
+            type="button"
+            class="c-modal__close-btn"
+            aria-label="Close modal"
+            @click="close"
+          >
+            <AppIcon name="x" size="sm" />
+          </button>
+        </header>
+      </template>
 
-          <AppDivider :variant="variant" />
+      <AppDivider :variant="variant" />
 
-          <!-- Body -->
-          <div class="c-modal__body">
-            <slot />
-          </div>
+      <div class="c-modal__layout">
+        <!-- Body -->
+        <div class="c-modal__body">
+          <slot />
+        </div>
 
-          <!-- Footer -->
-          <footer v-if="$slots.footer" class="c-modal__footer">
-            <slot name="footer" />
-          </footer>
-        </AppPanel>
+        <!-- Footer -->
+        <footer v-if="$slots.footer" class="c-modal__footer">
+          <slot name="footer" />
+        </footer>
       </div>
-    </transition>
-  </Teleport>
+    </AppPanel>
+  </dialog>
 </template>
 
 <style scoped lang="scss">
-.c-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100vw;
-  height: 100vh;
-
-  /* 背景色はなし、backdrop-filterのみ */
-  backdrop-filter: blur(var(--blur-md));
-}
-
 .c-modal {
-  /* AppPanelとしての幅と背景の上書き */
-  width: 90%;
+  /* Native Dialog Resets */
+  margin: auto;
+  padding: 0;
+  border: none;
+  background: transparent;
+  outline: none;
+  overflow: visible;
+
+  /* Sizing based on original AppPanel overlay */
+  width: 90vw;
   max-width: 500px;
   max-height: 90vh;
-  background-color: color-mix(in srgb, var(--color-main-bg) 85%, transparent);
-  backdrop-filter: blur(var(--blur-lg));
+
+  /* Native Backdrop Styling */
+  &::backdrop {
+    background: transparent;
+    backdrop-filter: blur(var(--blur-md));
+    opacity: 0;
+    transition: opacity var(--duration-modal) ease, backdrop-filter var(--duration-modal) ease, display var(--duration-modal) allow-discrete, overlay var(--duration-modal) allow-discrete;
+  }
+
+  /* Animation */
+  opacity: 0;
+  transform: scale(0.95) translateY(10px);
+  transition: opacity var(--duration-modal) ease, transform var(--duration-modal) var(--ease-modal), display var(--duration-modal) allow-discrete, overlay var(--duration-modal) allow-discrete;
+
+  &[open] {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    
+    @starting-style {
+      opacity: 0;
+      transform: scale(0.95) translateY(10px);
+    }
+
+    &::backdrop {
+      opacity: 1;
+
+      @starting-style {
+        opacity: 0;
+      }
+    }
+  }
+
+  /* Internal Panel */
+  &__panel {
+    width: 100%;
+    height: 100%;
+    max-height: 90vh;
+    background-color: color-mix(in srgb, var(--color-main-bg) 85%, transparent);
+    backdrop-filter: blur(var(--blur-lg));
+  }
 
   &__header {
     display: flex;
@@ -169,6 +192,14 @@ const titleId = `modal-title-${modalId}`;
     }
   }
 
+  &__layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    flex: 1;
+    min-height: 0;
+  }
+
   &__body {
     flex: 1;
     overflow-y: auto;
@@ -185,26 +216,6 @@ const titleId = `modal-title-${modalId}`;
     align-items: center;
     justify-content: flex-end;
     gap: var(--space-3);
-    margin-top: var(--space-3);
-  }
-}
-
-/* Modal Transition */
-.modal-fade-enter-active,
-.modal-fade-leave-active {
-  transition: opacity 0.3s ease;
-
-  .c-modal {
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
-}
-
-.modal-fade-enter-from,
-.modal-fade-leave-to {
-  opacity: 0;
-
-  .c-modal {
-    transform: scale(0.95) translateY(10px);
   }
 }
 </style>

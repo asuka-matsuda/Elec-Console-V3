@@ -198,7 +198,7 @@ withDefaults(
     --p-bracket-size: var(--space-4);
     --p-bracket-color: #{theme-color(var(--p-theme-color), 80%)};
     --p-bracket-glow: drop-shadow(
-      0 0 6px #{theme-color(var(--p-theme-color), 60%)}
+      0 0 var(--blur-md) #{theme-color(var(--p-theme-color), 60%)}
     );
   }
 }

@@ -12,7 +12,7 @@ const inputId = useId();
 </script>
 
 <template>
-  <label class="c-toggle" :class="{ 'is-disabled': disabled }" :for="inputId">
+  <label class="c-toggle" :for="inputId">
     <input
       :id="inputId"
       v-model="model"
@@ -45,7 +45,7 @@ const inputId = useId();
   color: var(--color-text-main);
   user-select: none;
 
-  &.is-disabled {
+  &:has(.c-toggle__input:disabled) {
     cursor: not-allowed;
 
     @extend %disabled;
@@ -115,7 +115,7 @@ const inputId = useId();
   }
 
   /* 3. Hover State */
-  &:hover:not(.is-disabled) {
+  &:hover:not(:has(.c-toggle__input:disabled)) {
     .c-toggle__input:not(:focus-visible, :active) + .c-toggle__track {
       border-color: theme-color(var(--toggle-color), 50%);
       box-shadow:
@@ -132,14 +132,14 @@ const inputId = useId();
   }
 
   /* 4. Active (Press) State */
-  &:active:not(.is-disabled) {
+  &:active:not(:has(.c-toggle__input:disabled)) {
     .c-toggle__track {
       transform: scale(0.95);
       transition: transform var(--duration-slow) var(--ease-out);
     }
 
     .c-toggle__thumb {
-      box-shadow: inset 0 0 6px rgb(0 0 0 / 50%);
+      box-shadow: var(--shadow-sink);
     }
   }
 }

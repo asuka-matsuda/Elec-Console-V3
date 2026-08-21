@@ -108,6 +108,7 @@ const handleClearAll = () => {
   display: flex;
   flex-direction: column;
   gap: var(--gap-section);
+  container-type: inline-size;
 
   &__tabs {
     /* 親要素(p-history-page)のgapで管理されるためmargin-bottomは削除 */
@@ -116,12 +117,10 @@ const handleClearAll = () => {
   &__grid {
     display: grid;
     gap: var(--gap-component);
-    
-    // デスクトップファーストのレイアウト
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    grid-template-columns: 1fr; // スモールファースト
 
-    @include mq("md") {
-      grid-template-columns: 1fr;
+    @include cq("sm") {
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
     }
   }
 

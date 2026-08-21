@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { useWeightCalculator } from '~/composables/calc/useWeightCalculator';
-import { cableData } from '~/utils/data/cableData';
-import { drumData } from '~/utils/data/drumData';
 
 import { getCableCategories, getAvailableSizes } from '~/utils/cableDataHelper';
 
@@ -39,8 +37,7 @@ const totalWeight = computed(() => {
 </script>
 
 <template>
-  <div>
-    <AppToolLayout
+  <AppToolLayout
     title="ケーブル重量・ドラム選定"
     icon="package"
     description="ケーブルの種類と長さから重量を計算し、最適なドラムを選定します。"
@@ -152,14 +149,14 @@ const totalWeight = computed(() => {
 
     <template #basis>
       <AppCalculationBasisPanel :steps="mathSteps">
-        <div class="u-mt-4 u-text-xs u-text-muted u-px-4">
+        <div class="p-weight__note">
           <strong>【ドラム選定ロジック】</strong><br>
           上記①〜③の計算をデータベース上のすべてのドラムに対して行い、重量要件、曲げ半径要件、容量要件のすべてをクリアするドラムのうち、「自重が最も軽いもの」を最適なドラムとして最終選定しています。
         </div>
 
-        <div class="u-mt-2 u-text-xs u-text-muted u-px-4">
+        <div class="p-weight__note">
           <p><strong>【変数の定義】</strong></p>
-          <ul class="u-list-disc u-pl-4">
+          <ul class="p-weight__note-list">
             <li>D1: つば径</li>
             <li>D2: 胴径</li>
             <li>W2: 内幅</li>
@@ -174,7 +171,6 @@ const totalWeight = computed(() => {
 
     <!-- リセット確認モーダル -->
     <AppToolResetModal v-model="isResetModalOpen" @confirm="confirmReset" />
-  </div>
 </template>
 
 <style scoped lang="scss">
@@ -192,9 +188,21 @@ const totalWeight = computed(() => {
   &__warning {
     font-size: var(--font-size-sm);
     color: var(--color-status-danger);
-    background-color: color-mix(in srgb, var(--color-status-danger) 10%, transparent);
     padding: var(--gap-element);
-    border-radius: var(--radius-sm);
+  }
+}
+
+.p-weight {
+  &__note {
+    margin-top: var(--space-4);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    padding: 0 var(--space-4);
+  }
+  
+  &__note-list {
+    list-style-type: disc;
+    padding-left: var(--space-4);
   }
 }
 </style>

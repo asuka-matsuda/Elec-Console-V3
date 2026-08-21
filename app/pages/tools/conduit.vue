@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import { useConduitCalculator } from '~/composables/calc/useConduitCalculator';
 import { conduitData } from '~/utils/data/conduitData';
 
@@ -33,8 +33,7 @@ const handleSave = async () => {
 </script>
 
 <template>
-  <div>
-    <AppToolLayout
+  <AppToolLayout
     title="配管サイズ自動選定"
     icon="target"
     description="内線規程に基づき、ケーブルの断面積（占積率32% / 48%）から適切な配管サイズを導き出します。"
@@ -53,9 +52,9 @@ const handleSave = async () => {
         
         <!-- 2. 収容するケーブル -->
         <div>
-          <div class="u-text-base u-font-bold u-mb-2">収容するケーブル</div>
+          <div class="p-conduit__section-title">収容するケーブル</div>
           
-          <div class="l-stack" style="gap: var(--gap-component);">
+          <div class="p-conduit__cable-list">
             <AppCableRowCard
               v-for="(cable, index) in inputs.inputCables"
               :key="cable.id"
@@ -68,7 +67,7 @@ const handleSave = async () => {
           
           <AppButton
             variant="success"
-            class="u-w-full u-mt-4"
+            class="p-conduit__add-button"
             @click="addCable"
           >
             <AppIcon name="plus" /> ケーブルを追加
@@ -134,7 +133,6 @@ const handleSave = async () => {
 
     <!-- リセット確認モーダル -->
     <AppToolResetModal v-model="isResetModalOpen" @confirm="confirmReset" />
-  </div>
 </template>
 
 <style scoped lang="scss">
@@ -166,5 +164,24 @@ const handleSave = async () => {
 .p-basis-note {
   font-size: var(--font-size-2xs);
   color: var(--color-status-warning);
+}
+
+.p-conduit {
+  &__section-title {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--space-2);
+  }
+  
+  &__cable-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-component);
+  }
+  
+  &__add-button {
+    width: 100%;
+    margin-top: var(--space-4);
+  }
 }
 </style>

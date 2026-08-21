@@ -10,7 +10,7 @@ defineEmits(['save']);
 </script>
 
 <template>
-  <AppPanel bracket-color="tool" style="flex: 1; min-height: 0">
+  <AppPanel bracket-color="tool" class="c-tool-panel">
     <template #header>
       <AppSectionHeader
         :title="title || '計算結果・選定結果'"
@@ -29,6 +29,21 @@ defineEmits(['save']);
       </AppSectionHeader>
     </template>
 
-    <slot />
+    <div class="c-tool-panel__content">
+      <slot />
+    </div>
   </AppPanel>
 </template>
+
+<style scoped lang="scss">
+.c-tool-panel {
+  flex: 1;
+  min-height: 0;
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-section);
+  }
+}
+</style>

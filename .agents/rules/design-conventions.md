@@ -40,12 +40,27 @@ trigger: always_on
 
 7. **インラインスタイルの厳禁 (No Inline Styles)**:
    - HTMLタグに対して直接 `style="..."` を記述することは原則として厳格に禁止する。
+   - 特に、`<div style="gap: var(--gap-section)">` や `<div style="flex: 1">` のように、レイアウトや余白をインラインスタイルで制御することは絶対に避けること。
    - スタイリングが必要な場合は必ずCSSクラスを付与し、スタイルシート（または `<style scoped>`）側で記述すること。
 
-8. **無闇なグローバルユーティリティクラスの追加禁止 (Avoid Unnecessary Global Utility Classes)**:
+8. **無闇なグローバルユーティリティクラスの追加・併用禁止 (Avoid Unnecessary Global Utility Classes & Layout Hacks)**:
    - テキストのサイズ変更や色の変更など、単一のコンポーネント内で完結する微小なスタイリングのために、グローバルなユーティリティクラス（例: `.u-text-xs` 等）を安易に新設・使用しないこと（このプロジェクトにはTailwindやUnoCSSは導入されていません）。
+   - **レイアウトの横着禁止**: `.l-stack` などの汎用レイアウトクラスにインラインスタイルの `gap` を組み合わせてレイアウトを組む手法は厳禁とする。
+   - **意味論的なクラスとレスポンシブ余白の適用**: スタック（縦並び）やラップ（折り返し）等のレイアウト構造が必要な場合は、横着せずに該当要素に意味のあるBEMクラス（例: `.p-tool__section`, `.c-form-group__controls`）を付与すること。そして `<style scoped>` 内において、`display: flex; flex-direction: column;` 等を指定した上で、第2項で定義されているレスポンシブ余白変数（`var(--gap-section)`, `var(--gap-component)`）を `gap` プロパティとして適用すること。
    - 代わりに、各Vueコンポーネントの `<style scoped>` 内でローカルなクラス（例: `.p-basis-note`）を定義し、プロジェクトで定義済みのCSS変数（`var(--font-size-2xs)`, `var(--color-status-warning)` 等）を適用することでスタイリングを行うこと。
 
 9. **破線系ボーダー（dotted, dashed）の使用禁止 (No Dotted or Dashed Borders)**:
    - UIの一貫性とシャープなデザインを維持するため、要素の枠線に対して破線（`dotted`）や点線（`dashed`）を使用することを厳格に禁止する。
    - 境界線、区切り線、および空状態（Empty State）のパネルなど、あらゆる装飾において必ず実線（`solid`）を使用すること。
+
+10. **タイポグラフィのプレースホルダー化 (Typography Placeholders)**:
+    - 文字サイズや行間を各コンポーネント内で個別に `font-size: var(...)` のように指定することは避け、あらかじめ定義されたSCSSプレースホルダー（例: `%text-heading`, `%text-body`, `%text-caption`）または Mixin を使用してタイポグラフィを適用すること。
+    - これにより、テキストの役割ごとの一貫したサイズと行間のペアを保証し、マジックナンバーや場当たり的なサイズ調整を防ぐ。
+
+11. **最新ブラウザ機能の活用とフォールバックの禁止**:
+   - 本プロジェクトは最新のモダンブラウザ（Chrome、Edge、Safari）のみをサポート対象とする。Firefoxや旧ブラウザ向けのポリフィル、またはフォールバックのための余計な記述（CSS/JS問わず）は一切不要とする。
+   - `:has()` 疑似クラス、`@container` (コンテナクエリ)、`@starting-style`、`light-dark()` 関数、`<dialog>` タグ、Popover API など、最新技術を用いてシンプルに実装できる場合は、冗長なJSによる状態管理を避け、これらを積極的に採用すること。
+
+12. **定義済みSass資産（Mixin / Placeholder）の徹底活用**:
+    - スタイリングを行う際、プロパティ群（例: `pointer-events: none; opacity: 0.5;` など）を場当たり的にハードコードする前に、プロジェクト内の `_mixins.scss` 等に用意されている Sass の Mixin (`@include ...`) やプレースホルダー (`@extend %...`) が存在しないか必ず確認すること。
+    - `%disabled` や `%click-enabled`、フォームの各種状態（hover, focus, error）など、既存の資産が利用可能な場合はそれらを積極的に再利用し、デザインの統一性と保守性を高めること。
