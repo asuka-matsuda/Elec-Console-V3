@@ -37,7 +37,6 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-badge {
-
   $variants: (
     "primary": "--color-category-main",
     "success": "--color-status-success",
@@ -48,6 +47,7 @@ withDefaults(
     "reference": "--color-category-reference",
     "management": "--color-category-management",
   );
+
   // --- Theme Variables ---
   --badge-color: var(--color-text-main);
   --badge-border: theme-color(var(--color-border), 50%);

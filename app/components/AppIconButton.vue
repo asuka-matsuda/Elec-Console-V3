@@ -1,8 +1,8 @@
 <script setup lang="ts">
-// AppIconButton.vue
 withDefaults(
   defineProps<{
-    name: string; // The icon name
+    /** The icon name */
+    name: string;
     to?: string;
     href?: string;
     type?: "button" | "submit" | "reset";

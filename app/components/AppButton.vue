@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-// ① withDefaults を使って「初期値」を定義する
 const props = withDefaults(
   defineProps<{
     to?: string;
@@ -23,7 +22,6 @@ const props = withDefaults(
   },
 );
 
-// ② タグ判定を独立させ、ネストした三項演算子を排除
 const componentTag = computed(() => {
   if (props.to) return "NuxtLink";
   if (props.href) return "a";
@@ -40,7 +38,6 @@ const componentTag = computed(() => {
     :disabled="componentTag === 'button' ? disabled : null"
     class="c-btn"
     :class="[
-      /* ③ Vueの配列＋オブジェクト構文でクラス付与をDRYに */
       _variant && `c-btn--${_variant}`,
       size && `c-btn--${size}`,
       align !== 'center' && `c-btn--${align}`,
@@ -58,12 +55,10 @@ const componentTag = computed(() => {
 
 <style scoped lang="scss">
 .c-btn {
-  // 以前の ui-surface は枠線を上書きしてしまうため今回は無効化
-  // @include ui-surface;
+  // --- Theme Variables ---
+  --btn-color: var(--color-category-main);
 
-  /* State Variables */
-  --btn-color: var(--color-category-main); // Default interaction color
-
+  // --- Base Styles ---
   @extend %click-enabled;
 
   position: relative;
@@ -109,7 +104,7 @@ const componentTag = computed(() => {
     @extend %disabled;
   }
 
-  /* Color Modifiers */
+  // --- Color Modifiers ---
   &--primary {
     --btn-color: var(--color-category-main);
   }
@@ -126,7 +121,7 @@ const componentTag = computed(() => {
     --btn-color: var(--color-status-danger);
   }
 
-  /* Size Modifiers */
+  // --- Size Modifiers ---
   &--sm {
 
     @extend %text-xs;

@@ -64,8 +64,10 @@ const handleClick = async () => {
 
 <style scoped lang="scss">
 .c-save-button {
+  // --- Base Styles ---
   transition: all var(--transition-base);
   
+  // --- Color Modifiers ---
   &.is-success {
     /* 成功時はボタン自体を少しグリーンにする */
     --btn-color: var(--color-status-success);
