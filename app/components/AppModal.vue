@@ -150,16 +150,11 @@ const titleId = `modal-title-${modalId}`;
   }
 
   &__header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: var(--gap-element);
+    @include flex-between(flex-start, var(--gap-element));
   }
 
   &__title {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
+    @include flex-layout(row, flex-start, center, var(--space-2));
     margin: 0;
     
     @extend %text-heading;
@@ -170,9 +165,7 @@ const titleId = `modal-title-${modalId}`;
   }
 
   &__layout {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-component);
+    @include flex-column(var(--gap-component));
     flex: 1;
     min-height: 0;
   }
@@ -189,10 +182,7 @@ const titleId = `modal-title-${modalId}`;
   }
 
   &__footer {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: var(--gap-element);
+    @include flex-layout(row, flex-end, center, var(--gap-element));
   }
 }
 </style>
