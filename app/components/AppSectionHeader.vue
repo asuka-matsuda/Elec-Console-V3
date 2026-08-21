@@ -51,15 +51,11 @@ withDefaults(
   }
 
   &__actions {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
+    @include flex-start(var(--space-2));
   }
 
   &__title {
-    display: flex;
-    align-items: center;
-    gap: var(--gap-component);
+    @include flex-start(var(--gap-component));
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
     margin: 0;

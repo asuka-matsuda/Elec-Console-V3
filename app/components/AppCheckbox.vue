@@ -55,9 +55,7 @@ const inputId = useId();
 .c-checkbox {
   --checkbox-color: var(--color-category-main);
 
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
+  @include flex-start(var(--space-2), inline-flex);
   cursor: pointer;
   position: relative;
 
@@ -118,9 +116,7 @@ const inputId = useId();
     flex-shrink: 0;
     width: 1.4em;
     height: 1.4em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include flex-center;
 
     @include ui-border-dim(var(--color-border), 50%);
 

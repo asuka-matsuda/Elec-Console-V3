@@ -65,7 +65,7 @@ withDefaults(
     // If the .c-form-group container is wide enough (>= xs), switch to horizontal layout
     @include cq("xs") {
       flex-direction: row;
-      align-items: flex-start;
+      align-items:;
 
       .c-form-group__label-wrapper {
         flex-shrink: 0;
@@ -73,7 +73,10 @@ withDefaults(
 
         // Align label with the text inside a medium input control
         padding-top: calc(
-          (var(--size-control-md) - var(--line-height-base) * var(--font-size-sm)) /
+          (
+              var(--size-control-md) - var(--line-height-base) *
+                var(--font-size-sm)
+            ) /
             2
         );
       }
@@ -87,9 +90,7 @@ withDefaults(
 
   // --- Elements ---
   &__label-wrapper {
-    display: flex;
-    align-items: center;
-    gap: var(--gap-element);
+    @include flex-start(var(--gap-element));
   }
 
   &__control {
@@ -116,10 +117,7 @@ withDefaults(
 
 // Label Component Styles (Legacy _c-form-label)
 .c-form-label {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: var(--gap-element);
+  @include flex-start(var(--gap-element));
 
   @extend %text-sm;
 
@@ -137,7 +135,8 @@ withDefaults(
     width: var(--size-2);
     height: var(--size-2);
     content: "";
-    border: var(--border-width-thick) solid theme-color(var(--color-category-main), 70%);
+    border: var(--border-width-thick) solid
+      theme-color(var(--color-category-main), 70%);
     border-radius: 50%;
     box-shadow: 0 0 var(--blur-sm) theme-color(var(--color-category-main), 30%);
     transition: var(--transition-base);
@@ -157,7 +156,8 @@ withDefaults(
 }
 
 // フォームグループ内にエラー要素（.c-form-group__error や [aria-invalid="true"] 等）が存在する場合、ラベルを赤くする
-.c-form-group:has(.c-form-group__error, :invalid, [aria-invalid="true"]) .c-form-label {
+.c-form-group:has(.c-form-group__error, :invalid, [aria-invalid="true"])
+  .c-form-label {
   color: var(--color-status-danger);
 
   @include cyber-text-glow(50%, var(--blur-md), var(--color-status-danger));

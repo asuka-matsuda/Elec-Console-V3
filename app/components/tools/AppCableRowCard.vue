@@ -111,16 +111,12 @@ const updateCount = (val: any) => {
   flex-direction: column;
 
   &__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    @include flex-between;
     margin-bottom: var(--gap-element);
   }
 
   &__title-group {
-    display: flex;
-    align-items: center;
-    gap: var(--gap-element);
+    @include flex-start(var(--gap-element));
   }
 
   &__title {

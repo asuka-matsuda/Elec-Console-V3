@@ -33,9 +33,7 @@ const emit = defineEmits<{
 
 <style scoped lang="scss">
 .l-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  @include flex-between;
   height: 64px;
   padding: var(--pad-container);
 
@@ -44,9 +42,7 @@ const emit = defineEmits<{
   }
 
   &__left {
-    display: flex;
-    align-items: center;
-    gap: var(--gap-component);
+    @include flex-start(var(--gap-component));
   }
 
   &__menu-btn {
@@ -58,9 +54,7 @@ const emit = defineEmits<{
   }
 
   &__actions {
-    display: flex;
-    align-items: center;
-    gap: var(--gap-component);
+    @include flex-start(var(--gap-component));
   }
 }
 </style>

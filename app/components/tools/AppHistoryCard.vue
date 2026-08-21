@@ -166,6 +166,7 @@ const handleDelete = () => {
   &__footer {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     margin-top: auto;
   }
 }

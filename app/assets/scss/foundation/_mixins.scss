@@ -344,24 +344,23 @@
 /* Layout Mixins
    ========================================================================== */
 
-// 基本的なFlexレイアウト
-@mixin flex-layout($direction: row, $justify: null, $align: null, $gap: null) {
-  display: flex;
-  flex-direction: $direction;
-  justify-content: $justify;
-  align-items: $align;
-  gap: $gap;
+@mixin flex-center($gap: 0, $display: flex) {
+  display: $display;
+  justify-content: center;
+  align-items: center;
+  @if $gap != 0 { gap: $gap; }
 }
 
-// よく使うパターン
-@mixin flex-center($direction: row, $gap: null) {
-  @include flex-layout($direction, center, center, $gap);
+@mixin flex-between($gap: 0, $display: flex) {
+  display: $display;
+  justify-content: space-between;
+  align-items: center;
+  @if $gap != 0 { gap: $gap; }
 }
 
-@mixin flex-between($align: center, $gap: null) {
-  @include flex-layout(row, space-between, $align, $gap);
-}
-
-@mixin flex-column($gap: null, $align: null) {
-  @include flex-layout(column, null, $align, $gap);
+@mixin flex-start($gap: 0, $display: flex) {
+  display: $display;
+  justify-content: flex-start;
+  align-items: center;
+  @if $gap != 0 { gap: $gap; }
 }

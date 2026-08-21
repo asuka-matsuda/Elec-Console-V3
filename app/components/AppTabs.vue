@@ -56,11 +56,8 @@ const selectTab = (option: TabOption) => {
 
 <style scoped lang="scss">
 .c-tabs {
-  display: flex;
+  @include flex-start(var(--gap-component));
   flex-wrap: wrap;
-  gap: var(--gap-component);
-  align-items: center;
-  justify-content: flex-start;
 
   /* --- Modifiers --- */
   &--grid {
@@ -88,10 +85,7 @@ const selectTab = (option: TabOption) => {
 
 .c-tabs__item {
   position: relative;
-  display: flex;
-  gap: var(--space-2);
-  align-items: center;
-  justify-content: center;
+  @include flex-center(var(--space-2));
   padding: var(--pad-container);
 
   @extend %text-sm;
