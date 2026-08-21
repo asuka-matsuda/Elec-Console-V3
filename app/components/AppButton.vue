@@ -42,7 +42,7 @@ const componentTag = computed(() => {
     :class="[
       /* ③ Vueの配列＋オブジェクト構文でクラス付与をDRYに */
       _variant && `c-btn--${_variant}`,
-      size !== 'md' && `c-btn--${size}`,
+      size && `c-btn--${size}`,
       align !== 'center' && `c-btn--${align}`,
       {
         'c-btn--block': block,
@@ -65,11 +65,6 @@ const componentTag = computed(() => {
   @include flex-center(var(--space-2), inline-flex);
 
   flex-shrink: 0;
-  height: var(--size-control-md);
-  padding: var(--space-4);
-
-  @extend %text-sm;
-
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-ui);
   color: var(--color-text-main);
@@ -155,6 +150,13 @@ const componentTag = computed(() => {
     }
   }
 
+  &--md {
+    height: var(--size-control-md);
+    padding: var(--space-4);
+
+    @extend %text-sm;
+  }
+
   &--lg {
     height: var(--size-control-lg);
     padding: var(--space-5);
@@ -168,11 +170,18 @@ const componentTag = computed(() => {
   }
 
   &--icon-only {
-    width: var(--size-control-md);
     padding: 0;
 
     &.c-btn--sm {
       width: var(--size-control-sm);
+    }
+    
+    &.c-btn--md {
+      width: var(--size-control-md);
+    }
+    
+    &.c-btn--lg {
+      width: var(--size-control-lg);
     }
   }
 
