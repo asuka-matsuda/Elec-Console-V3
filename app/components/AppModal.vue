@@ -161,8 +161,8 @@ const titleId = `modal-title-${modalId}`;
     align-items: center;
     gap: var(--space-2);
     margin: 0;
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-bold);
+    
+    @extend %text-heading;
   }
 
   &__icon {
@@ -181,9 +181,9 @@ const titleId = `modal-title-${modalId}`;
     flex: 1;
     overflow-y: auto;
     padding: var(--pad-container) 0;
-    font-size: var(--font-size-sm);
     color: var(--color-text-main);
-    line-height: 1.6;
+    
+    @extend %text-caption;
 
     --scrollbar-size: var(--size-2);
   }

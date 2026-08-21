@@ -279,3 +279,21 @@
     margin-left: auto;
   }
 }
+
+/* Typography Placeholders
+   ========================================================================== */
+%text-heading {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+}
+
+%text-body {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+}
+
+%text-caption {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+}
