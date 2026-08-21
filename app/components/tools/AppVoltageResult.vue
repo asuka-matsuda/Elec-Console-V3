@@ -9,14 +9,9 @@ const props = defineProps<{
   result: Record<string, any> | null;
 }>();
 
-// ==========================================
-// 判定・フォーマットロジック
-// ==========================================
-
 const isReady = computed(() => props.inputs?.isReady && props.result);
 const mode = computed(() => props.inputs?.mode || "drop");
 
-// 選択ケーブル（dropモード時のサブ指標用）
 const dropCableName = computed(() => {
   if (!isReady.value) return "ーー";
   return props.result?.optimal?.name || "ーー";
@@ -55,7 +50,6 @@ const mainStatusClass = computed(() => {
   }
 });
 
-// 2. 電流チェック (設計電流 / 許容電流)
 const currentI = computed(() =>
   isReady.value ? formatVal(props.inputs.I, "ーー", 1) : "ーー",
 );
@@ -70,7 +64,6 @@ const ampStatusClass = computed(() => {
     : "is-danger";
 });
 
-// 3. 電圧降下
 const dropV = computed(() =>
   isReady.value ? formatVal(props.result!.finalDropV, "ーー", 2) : "ーー",
 );
@@ -149,6 +142,7 @@ const dropStatusClass = computed(() => {
 
 <style scoped lang="scss">
 .c-voltage-result {
+  // --- Base Styles ---
   display: flex;
   flex: 1;
   flex-direction: column; // コンテナ未定義・または狭い場合は縦並び（スモールファースト）
@@ -162,7 +156,7 @@ const dropStatusClass = computed(() => {
   &__drop-unit { @extend %text-md; }
   &__drop-cable { @extend %text-xl; }
 
-  // ステータスカラー定義
+  // --- State Modifiers ---
   .is-neutral {
     color: var(--color-text-muted);
   }

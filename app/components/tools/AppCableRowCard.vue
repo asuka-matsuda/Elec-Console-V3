@@ -4,8 +4,10 @@ import { calculateCableArea } from '~/utils/calc/conduit/conduitCalcLogic';
 import { getCableCategories, getAvailableSizes } from '~/utils/cableDataHelper';
 import { cableData } from '~/utils/data/cableData';
 
-// note: CableInput is used as a generic type here, but make sure 
-// it matches { id: string, category: string, cableIdx: string, count: number | null }
+/**
+ * CableInput is used as a generic type here, but make sure 
+ * it matches { id: string, category: string, cableIdx: string, count: number | null }
+ */
 const props = defineProps<{
   modelValue: any; 
   index: number;
@@ -29,7 +31,6 @@ const singleCableArea = computed(() => {
   return calculateCableArea(def.diameter);
 });
 
-// カテゴリ変更時にcableIdxをリセット
 const onCategoryChange = (val: any) => {
   emit('update:modelValue', {
     ...props.modelValue,
@@ -107,6 +108,7 @@ const updateCount = (val: any) => {
 
 <style scoped lang="scss">
 .c-cable-row {
+  // --- Base Styles ---
   display: flex;
   flex-direction: column;
 

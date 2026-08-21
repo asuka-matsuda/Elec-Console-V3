@@ -31,8 +31,8 @@ defineProps<{
 </template>
 
 <style scoped lang="scss">
-/* 計算根拠エリアはスマホ表示時にカットするかどうかは親で制御可能ですが、一旦デフォルトで追従 */
 .c-basis-panel {
+  // --- Base Styles ---
   flex: 1;
   min-height: 0;
 

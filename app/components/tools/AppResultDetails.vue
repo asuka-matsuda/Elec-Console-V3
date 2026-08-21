@@ -9,6 +9,7 @@
 
 <style scoped lang="scss">
 .p-result-details {
+  // --- Base Styles ---
   display: flex;
   flex-direction: column;
   gap: var(--gap-element);

@@ -34,6 +34,7 @@ defineEmits(['reset']);
 
 <style scoped lang="scss">
 .c-tool-panel {
+  // --- Base Styles ---
   flex: 1;
   min-height: 0;
 

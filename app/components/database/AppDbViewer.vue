@@ -49,6 +49,7 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
 
 <style scoped lang="scss">
 .l-filter-layout {
+  // --- Base Styles ---
   container-name: filter-layout;
   container-type: inline-size;
   display: flex;

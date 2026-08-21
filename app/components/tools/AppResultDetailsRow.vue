@@ -14,7 +14,7 @@ defineProps<{
 
 <style scoped lang="scss">
 .p-result-details__row {
-
+  // --- Base Styles ---
   @extend %text-sm;
 
   display: flex;
@@ -31,6 +31,7 @@ defineProps<{
     flex-shrink: 0;
   }
 
+  // --- State Modifiers ---
   &.has-top-border {
     padding-top: var(--gap-element);
     border-top: 1px solid var(--color-border);

@@ -69,11 +69,12 @@ const handleDelete = () => {
 
 <style scoped lang="scss">
 .c-history-card {
+  // --- Base Styles ---
   display: flex;
   flex-direction: column;
   gap: var(--gap-component);
 
-  /* Status Accents */
+  // --- State Modifiers ---
   &.is-error {
     border-color: var(--color-status-danger);
     box-shadow: inset 0 0 var(--blur-md) theme-color(var(--color-status-danger), 10%);
