@@ -170,6 +170,8 @@ const titleId = `modal-title-${modalId}`;
     margin: 0;
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-bold);
+  }
+
   &__icon {
     flex-shrink: 0;
   }
