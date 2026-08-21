@@ -30,7 +30,7 @@ const close = () => {
   emit("update:modelValue", false);
 };
 
-// watch props.modelValue to open/close native dialog
+/** Watch props.modelValue to open/close native dialog */
 watch(
   () => props.modelValue,
   (isOpen) => {
@@ -43,7 +43,7 @@ watch(
   { flush: "post" },
 );
 
-// 初期状態で開いている場合への対応
+/** Support opening dialog initially if modelValue is true */
 onMounted(() => {
   if (props.modelValue) {
     dialogRef.value?.showModal();
@@ -92,6 +92,7 @@ const titleId = `modal-title-${modalId}`;
 
 <style scoped lang="scss">
 .c-modal {
+  // --- Base Styles ---
   transform: translateY(var(--space-2));
 
   overflow: visible;
@@ -126,6 +127,7 @@ const titleId = `modal-title-${modalId}`;
       overlay var(--duration-modal) allow-discrete;
   }
 
+  // --- State Modifiers ---
   &[open] {
     transform: translateY(0);
     opacity: 1;

@@ -13,6 +13,7 @@ const emit = defineEmits<{
 
 <style scoped lang="scss">
 .c-logo {
+  // --- Base Styles ---
   display: flex;
   gap: var(--space-3);
   align-items: center;

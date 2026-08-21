@@ -54,6 +54,7 @@ const inputId = useId();
 }
 
 .c-color-picker {
+  // --- Base Styles ---
   @include flex-start(var(--space-3), inline-flex);
 
   cursor: pointer;
@@ -68,6 +69,7 @@ const inputId = useId();
 
   @include ui-border-dim(var(--color-border), 50%);
 
+  // --- State Modifiers ---
   &:hover:not(.is-disabled) {
     border-color: var(--color-category-main);
     box-shadow: 0 0 var(--blur-md) theme-color(var(--color-category-main), 20%);

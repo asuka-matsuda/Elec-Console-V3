@@ -34,10 +34,11 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-divider {
+  // --- Base Styles ---
   position: relative;
   flex-shrink: 0;
 
-  // Variants (Colors)
+  // --- Color Modifiers ---
   &.has-accent-main {
     --divider-accent: var(--color-category-main);
   }

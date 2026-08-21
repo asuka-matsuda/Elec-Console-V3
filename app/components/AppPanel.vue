@@ -31,7 +31,7 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-panel {
-  // Base properties (overridden by variants)
+  // --- Theme Variables ---
   --p-border-color: var(--color-border);
   --p-border-image: none;
   --p-box-shadow: none;
@@ -41,6 +41,7 @@ withDefaults(
   --p-bracket-glow: none;
   --p-theme-color: var(--color-category-main);
 
+  // --- Base Styles ---
   position: relative;
 
   display: flex;
@@ -120,7 +121,7 @@ withDefaults(
 
   /* --------------------------------------------------------- */
 
-  /* Color Variants */
+  // --- Color Modifiers ---
 
   /* --------------------------------------------------------- */
   &--color-main {
@@ -153,7 +154,7 @@ withDefaults(
 
   /* --------------------------------------------------------- */
 
-  /* Style Variants (Ported from original _themes.scss) */
+  // --- Modifiers ---
 
   /* --------------------------------------------------------- */
   &--hud {

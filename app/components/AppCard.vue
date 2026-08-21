@@ -40,6 +40,7 @@ const rootProps = computed(() => {
 
 <style scoped lang="scss">
 .c-card {
+  // --- Base Styles ---
   position: relative;
 
   display: flex;
@@ -54,7 +55,7 @@ const rootProps = computed(() => {
 
   @include ui-surface(15%);
 
-  /* Interactive link styles */
+  // --- State Modifiers ---
   &:is(a, button) {
     cursor: pointer;
 
@@ -73,7 +74,7 @@ const rootProps = computed(() => {
     filter: grayscale(100%);
   }
 
-  /* Variants */
+  // --- Color Modifiers ---
   &--tool {
     --card-accent: var(--color-category-tool);
   }

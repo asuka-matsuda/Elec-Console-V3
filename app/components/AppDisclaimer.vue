@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// AppDisclaimer.vue
 withDefaults(
   defineProps<{
     text?: string;
@@ -18,7 +17,7 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-disclaimer {
-
+  // --- Base Styles ---
   @extend %text-sm;
 
   width: 100%;
