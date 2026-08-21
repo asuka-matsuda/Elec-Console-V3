@@ -6,11 +6,18 @@ const props = withDefaults(
     modelValue: boolean;
     title?: string;
     icon?: string;
-    variant?: "main" | "tool" | "database" | "reference" | "management" | "danger" | "success";
+    variant?:
+      | "main"
+      | "tool"
+      | "database"
+      | "reference"
+      | "management"
+      | "danger"
+      | "success";
   }>(),
   {
     variant: "main",
-  }
+  },
 );
 
 const emit = defineEmits<{
@@ -33,7 +40,7 @@ watch(
       dialogRef.value?.close();
     }
   },
-  { flush: "post" }
+  { flush: "post" },
 );
 
 // 初期状態で開いている場合への対応
@@ -55,10 +62,7 @@ const titleId = `modal-title-${modalId}`;
     @click.self="close"
     @cancel.prevent="close"
   >
-    <AppPanel
-      class="c-modal__panel"
-      :bracket-color="variant"
-    >
+    <AppPanel class="c-modal__panel" :bracket-color="variant">
       <!-- Header -->
       <template #header>
         <header class="c-modal__header">
@@ -98,9 +102,7 @@ const titleId = `modal-title-${modalId}`;
 .c-modal {
   /* Native Dialog Resets */
   margin: auto;
-  padding: 0;
   border: none;
-  background: transparent;
   outline: none;
   overflow: visible;
 
@@ -111,24 +113,27 @@ const titleId = `modal-title-${modalId}`;
 
   /* Native Backdrop Styling */
   &::backdrop {
-    background: transparent;
     backdrop-filter: blur(var(--blur-md));
     opacity: 0;
-    transition: opacity var(--duration-modal) ease, backdrop-filter var(--duration-modal) ease, display var(--duration-modal) allow-discrete, overlay var(--duration-modal) allow-discrete;
+    transition:
+      opacity var(--duration-modal) ease,
+      backdrop-filter var(--duration-modal) ease,
+      display var(--duration-modal) allow-discrete,
+      overlay var(--duration-modal) allow-discrete;
   }
 
   /* Animation */
   opacity: 0;
-  transform: scale(0.95) translateY(10px);
+  transform: translateY(var(--space-2));
   transition: opacity var(--duration-modal) ease, transform var(--duration-modal) var(--ease-modal), display var(--duration-modal) allow-discrete, overlay var(--duration-modal) allow-discrete;
 
   &[open] {
     opacity: 1;
-    transform: scale(1) translateY(0);
-    
+    transform: translateY(0);
+
     @starting-style {
       opacity: 0;
-      transform: scale(0.95) translateY(10px);
+      transform: translateY(var(--space-2));
     }
 
     &::backdrop {
