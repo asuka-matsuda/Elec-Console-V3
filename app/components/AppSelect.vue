@@ -295,7 +295,7 @@ const listboxId = useId();
   box-sizing: border-box;
   width: 100%;
   height: var(--size-control-md);
-  padding: var(--space-2);
+  padding: var(--pad-component);
 
   text-align: left;
   text-overflow: ellipsis;
@@ -390,7 +390,7 @@ const listboxId = useId();
 
   overflow: hidden;
 
-  padding: var(--space-2);
+  padding: var(--pad-component);
   border-left: var(--border-width-thick) solid transparent;
 
   color: var(--color-text-main);

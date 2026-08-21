@@ -66,7 +66,7 @@ const inputId = useId();
 
   position: relative;
 
-  padding: var(--space-3);
+  padding: var(--pad-section);
   border-radius: 0;
 
   transition: var(--transition-base);

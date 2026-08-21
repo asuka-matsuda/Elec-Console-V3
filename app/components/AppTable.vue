@@ -75,7 +75,7 @@ defineProps<{
 
   :deep(th),
   :deep(td) {
-    padding: var(--space-3);
+    padding: var(--pad-section);
     border-bottom: var(--border-width-base) solid var(--color-border);
 
     color: var(--color-text-main);

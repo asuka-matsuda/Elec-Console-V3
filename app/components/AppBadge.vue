@@ -58,7 +58,7 @@ withDefaults(
   // --- Base Styles ---
   user-select: none;
 
-  padding: var(--space-1);
+  padding: var(--pad-element);
   border: var(--border-width-base) solid var(--badge-border);
 
   font-weight: var(--font-weight-bold);

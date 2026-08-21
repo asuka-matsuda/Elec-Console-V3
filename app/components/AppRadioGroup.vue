@@ -60,7 +60,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
   gap: var(--space-1);
 
   width: max-content;
-  padding: var(--space-1);
+  padding: var(--pad-element);
   border: var(--border-width-base) solid var(--color-border);
 
   box-shadow: none;
@@ -111,7 +111,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
 
     user-select: none;
 
-    padding: var(--space-2);
+    padding: var(--pad-component);
     border: var(--border-width-base) solid transparent;
 
     font-weight: var(--font-weight-bold);

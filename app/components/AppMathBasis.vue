@@ -177,7 +177,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
     }
 
     :deep(.katex-display) {
-      padding: var(--space-1);
+      padding: var(--pad-element);
     }
   }
 

@@ -155,7 +155,7 @@ const dropStatusClass = computed(() => {
   align-items: stretch;
 
   min-height: 0;
-  padding: var(--space-2);
+  padding: var(--pad-component);
   &__drop-paren { margin-left: var(--space-2); }
   &__drop-percent { @extend %text-xl; }
   &__drop-unit { @extend %text-md; }
@@ -167,7 +167,7 @@ const dropStatusClass = computed(() => {
     padding: 0;
     
     .c-voltage-result__main {
-      padding: var(--space-1) var(--space-2);
+      padding: var(--pad-element) var(--pad-component);
     }
     
     .c-voltage-result__main-value .value-text {
@@ -183,7 +183,7 @@ const dropStatusClass = computed(() => {
     }
     
     .metric-card {
-      padding: var(--space-1);
+      padding: var(--pad-element);
     }
   }
 
@@ -218,7 +218,7 @@ const dropStatusClass = computed(() => {
     justify-content: center;
 
     min-width: 0;
-    padding: var(--space-2) var(--space-3);
+    padding: var(--pad-component) var(--pad-section);
     border: var(--border-width-base) solid var(--color-border);
 
     @include sink;
@@ -278,7 +278,7 @@ const dropStatusClass = computed(() => {
     align-items: center;
     justify-content: center;
 
-    padding: var(--space-2);
+    padding: var(--pad-component);
     border: 1px solid var(--color-border);
   }
 

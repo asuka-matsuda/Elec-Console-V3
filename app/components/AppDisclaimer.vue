@@ -25,7 +25,7 @@ withDefaults(
   @extend %text-sm;
 
   width: 100%;
-  padding: var(--space-3);
+  padding: var(--pad-section);
   line-height: var(--line-height-relaxed);
   color: var(--color-status-warning);
 }

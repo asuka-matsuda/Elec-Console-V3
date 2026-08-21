@@ -105,7 +105,7 @@ const fill48 = computed(() =>
   align-items: stretch;
 
   min-height: 0;
-  padding: var(--space-2);
+  padding: var(--pad-component);
 
   &__paren { margin-left: var(--space-2); }
   &__percent { @extend %text-xl; }
@@ -147,7 +147,7 @@ const fill48 = computed(() =>
     padding: 0;
     
     .c-conduit-result__main {
-      padding: var(--space-1) var(--space-2);
+      padding: var(--pad-element) var(--pad-component);
     }
     
     .c-conduit-result__main-value .value-text {
@@ -168,7 +168,7 @@ const fill48 = computed(() =>
     justify-content: center;
 
     min-width: 0;
-    padding: var(--space-2) var(--space-3);
+    padding: var(--pad-component) var(--pad-section);
     border: var(--border-width-base) solid var(--color-border);
 
     @include sink;
