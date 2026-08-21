@@ -70,14 +70,13 @@ const titleId = `modal-title-${modalId}`;
             <AppIcon v-if="icon" :name="icon" class="c-modal__icon" />
             <slot name="title">{{ title }}</slot>
           </h2>
-          <button
-            type="button"
-            class="c-modal__close-btn"
+          <AppIconButton
+            name="x"
+            size="sm"
+            _variant="secondary"
             aria-label="Close modal"
             @click="close"
-          >
-            <AppIcon name="x" size="sm" />
-          </button>
+          />
         </header>
       </template>
 
@@ -125,7 +124,11 @@ const titleId = `modal-title-${modalId}`;
   /* Animation */
   opacity: 0;
   transform: translateY(var(--space-2));
-  transition: opacity var(--duration-modal) ease, transform var(--duration-modal) var(--ease-modal), display var(--duration-modal) allow-discrete, overlay var(--duration-modal) allow-discrete;
+  transition:
+    opacity var(--duration-modal) ease,
+    transform var(--duration-modal) var(--ease-modal),
+    display var(--duration-modal) allow-discrete,
+    overlay var(--duration-modal) allow-discrete;
 
   &[open] {
     opacity: 1;
@@ -150,7 +153,6 @@ const titleId = `modal-title-${modalId}`;
     width: 100%;
     height: 100%;
     max-height: 90vh;
-    background-color: color-mix(in srgb, var(--color-main-bg) 85%, transparent);
     backdrop-filter: blur(var(--blur-lg));
   }
 
@@ -168,33 +170,8 @@ const titleId = `modal-title-${modalId}`;
     margin: 0;
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-bold);
-    color: var(--color-text-main);
-  }
-
   &__icon {
     flex-shrink: 0;
-  }
-
-  &__close-btn {
-    @extend %click-enabled;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: var(--size-4);
-    height: var(--size-4);
-    padding: 0;
-    color: var(--color-text-muted);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    transition: var(--transition-base);
-
-    &:hover,
-    &:focus-visible {
-      color: var(--color-status-danger);
-      outline: none;
-    }
   }
 
   &__layout {
