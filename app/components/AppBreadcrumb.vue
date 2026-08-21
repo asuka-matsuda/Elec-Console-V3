@@ -1,45 +1,30 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-/* ==========================================================================
-   型定義
-   ========================================================================== */
-
-/** パンくずリストの各項目の型定義 */
+/** パンくずリストの各要素の型定義 */
 export type BreadcrumbItem = {
   text: string;
   href?: string;
 };
 
-/* ==========================================================================
-   Props定義
-   ========================================================================== */
-
 const props = defineProps<{
   items: BreadcrumbItem[];
 }>();
 
-/* ==========================================================================
-   算出プロパティ (Computed)
-   ========================================================================== */
-
 /**
- * テンプレート側での判定ロジックを減らすため、あらかじめ「最後の要素かどうか」を判定した配列を生成する
+ * テンプレートでの判定ロジックを減らすため、あらかじめ「最後の要素かどうか」を判定した配列を生成する
  */
 const processedItems = computed(() => {
   return props.items.map((item, index) => ({
     ...item,
     isLast: index === props.items.length - 1,
-    /** keyとして使用できる一意のIDを生成（hrefがあればそれを使用、なければテキスト） */
+    /** keyとして使用できる一意なIDを生成。hrefがあればそれを使用、なければテキスト */
     uniqueKey: item.href ? item.href : `${item.text}-${index}`,
   }));
 });
 </script>
 
 <template>
-  <!-- ==========================================================================
-       パンくずリスト本体
-       ========================================================================== -->
   <nav class="c-breadcrumb" aria-label="Breadcrumb">
     <ol class="c-breadcrumb__list">
       <li
@@ -47,7 +32,6 @@ const processedItems = computed(() => {
         :key="item.uniqueKey"
         class="c-breadcrumb__item"
       >
-        <!-- 最後の項目以外（リンク付き、またはただのテキスト） -->
         <template v-if="!item.isLast">
           <NuxtLink v-if="item.href" :to="item.href" class="c-breadcrumb__link">
             {{ item.text }}
@@ -58,7 +42,6 @@ const processedItems = computed(() => {
           </span>
         </template>
 
-        <!-- 最後の項目（現在のページを表す） -->
         <span v-else class="c-breadcrumb__current" aria-current="page">
           {{ item.text }}
         </span>
@@ -68,32 +51,27 @@ const processedItems = computed(() => {
 </template>
 
 <style scoped lang="scss">
-/* ==========================================================================
-   パンくずリストのスタイル
-   ========================================================================== */
-
 .c-breadcrumb {
   // --- Base Styles ---
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   letter-spacing: 0.1em;
 
-  // パンくずリストのコンテナ
+  // --- Layout Modifiers ---
   &__list {
     position: relative;
-
-    @include flex-start(0, inline-flex);
 
     flex-wrap: wrap;
 
     padding: var(--pad-container);
-    padding-top: calc(var(--pad-container) + var(--space-2)); // SYS.LOCとの距離を確保
+    padding-top: calc(var(--pad-container) + var(--space-2));
 
     list-style: none;
 
+    @include flex-start(0, inline-flex);
     @include ui-surface;
 
-    // 左上の「SYS.LOC」ラベル（装飾）
+    // 左上の「SYS.LOC」ラベル
     &::after {
       content: "SYS.LOC";
 
@@ -110,7 +88,6 @@ const processedItems = computed(() => {
     }
   }
 
-  // リストの各項目
   &__item {
     display: flex;
     gap: var(--gap-element);
@@ -124,7 +101,6 @@ const processedItems = computed(() => {
     }
   }
 
-  // リンクとテキストの基本スタイル
   &__link,
   &__text {
     @extend %text-xs;
@@ -134,18 +110,15 @@ const processedItems = computed(() => {
     transition: var(--transition-base);
   }
 
-  // リンクのホバーエフェクト
+  // --- State Modifiers ---
   &__link:hover {
     color: var(--color-text-main);
 
     @include cyber-text-glow(50%, var(--blur-md), var(--color-text-main));
   }
 
-  // 最後の項目（現在のページ）のスタイル
-  // 視覚的にページタイトル（h1相当）として機能するよう強調
   &__current {
-
-    @extend %text-lg; // 以前の --text-md は存在しなかったため lg に修正
+    @extend %text-lg;
 
     display: flex;
     gap: var(--gap-element);
@@ -155,8 +128,6 @@ const processedItems = computed(() => {
     color: var(--color-category-main);
 
     @include cyber-text-glow(60%, var(--blur-md), var(--color-category-main));
-
-    // 点滅するカーソルエフェクト
     @include ui-blinking-cursor(var(--space-2), var(--space-5), currentcolor);
   }
 }
