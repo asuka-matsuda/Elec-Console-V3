@@ -50,10 +50,7 @@ const inputId = useId();
   color: var(--color-text-main);
 
   &:has(.c-toggle__input:disabled) {
-
     @extend %disabled;
-
-    cursor: not-allowed;
   }
 
   &__input {

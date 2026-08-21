@@ -435,7 +435,6 @@ const listboxId = useId();
 
   &.is-disabled {
     pointer-events: none;
-    cursor: not-allowed;
     color: var(--color-text-muted);
     opacity: 0.3;
   }

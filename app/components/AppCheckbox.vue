@@ -82,10 +82,7 @@ const inputId = useId();
   }
 
   &:has(.c-checkbox__input:disabled) {
-
     @extend %disabled;
-
-    cursor: not-allowed;
   }
 
   &__input {

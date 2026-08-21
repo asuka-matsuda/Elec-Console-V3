@@ -80,8 +80,7 @@ const inputId = useId();
   }
 
   &.is-disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
+    @extend %disabled;
   }
 
   &__swatch {

@@ -131,8 +131,7 @@ const selectTab = (option: TabOption) => {
 
   /* --- Disabled State --- */
   &.is-disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
+    @extend %disabled;
   }
 
   @include flex-center(var(--space-2));

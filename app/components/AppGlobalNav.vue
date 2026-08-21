@@ -251,8 +251,8 @@ const closeSidebar = () => {
 
     // Disabled
     &.is-disabled {
-      cursor: not-allowed;
-      opacity: 0.4;
+      @extend %disabled;
+
       filter: grayscale(100%);
     }
   }
