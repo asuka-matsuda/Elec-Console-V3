@@ -71,7 +71,7 @@ const inputId = useId();
 
   transition: var(--transition-base);
 
-  @include ui-border-dim(var(--color-border), 50%);
+  @include border-dim(var(--color-border), 50%);
 
   // --- State Modifiers ---
   &:hover:not(.is-disabled) {
@@ -85,14 +85,13 @@ const inputId = useId();
 
   &__swatch {
     flex-shrink: 0;
-
     width: var(--icon-size-md);
     height: var(--icon-size-md);
     border-radius: 50%;
 
-    box-shadow: var(--shadow-sink);
+    @include sink;
 
-    @include ui-border-dim(var(--color-border), 50%);
+    @include border-dim(var(--color-border), 50%);
   }
 
   &__value {

@@ -163,10 +163,7 @@ withDefaults(
   /* --------------------------------------------------------- */
   &--hud {
     --p-border-color: #{theme-color(var(--color-border), 50%)};
-    --p-box-shadow:
-      inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border),
-      inset 0 0 0 1px color-mix(in srgb, black 8%, transparent),
-      var(--shadow-elevation-base);
+    --p-box-shadow: elevation-value('sm', 'base', true, (inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border)));
     --p-bracket-display: block;
     --p-bracket-size: var(--space-4);
     --p-bracket-color: #{theme-color(var(--p-theme-color), 60%)};
@@ -174,10 +171,7 @@ withDefaults(
 
   &--simple {
     --p-border-color: #{theme-color(var(--color-border), 50%)};
-    --p-box-shadow:
-      inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent,
-      inset 0 0 0 1px color-mix(in srgb, black 8%, transparent),
-      var(--shadow-elevation-base);
+    --p-box-shadow: elevation-value('sm', 'base', true, (inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent));
     --p-bracket-display: none;
   }
 
@@ -189,10 +183,7 @@ withDefaults(
         transparent 100%
       )
       1;
-    --p-box-shadow:
-      inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent,
-      inset 0 0 0 1px color-mix(in srgb, black 8%, transparent),
-      var(--shadow-elevation-base);
+    --p-box-shadow: elevation-value('sm', 'base', true, (inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent));
     --p-bracket-display: block;
     --p-bracket-size: var(--space-3);
     --p-bracket-color: #{theme-color(var(--p-theme-color), 40%)};
@@ -206,10 +197,7 @@ withDefaults(
         transparent 100%
       )
       1;
-    --p-box-shadow:
-      inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border),
-      inset 0 0 0 1px color-mix(in srgb, black 8%, transparent),
-      var(--shadow-elevation-base);
+    --p-box-shadow: elevation-value('sm', 'base', true, (inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border)));
     --p-bracket-display: block;
     --p-bracket-size: var(--space-4);
     --p-bracket-color: #{theme-color(var(--p-theme-color), 80%)};

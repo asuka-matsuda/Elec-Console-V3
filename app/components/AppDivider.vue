@@ -5,17 +5,13 @@
  */
 withDefaults(
   defineProps<{
-    type?: "default" | "fade-side" | "fade-center";
     variant?: "main" | "tool" | "database" | "reference" | "management" | "danger" | "success";
     vertical?: boolean;
-    animated?: boolean;
   }>(),
   {
-    type: "fade-center",
     variant: "main",
     vertical: false,
-    animated: true,
-  },
+  }
 );
 </script>
 
@@ -23,12 +19,10 @@ withDefaults(
   <div
     class="c-divider"
     :class="[
-      `c-divider--${type}`,
       `has-accent-${variant}`,
       {
         'c-divider--vertical': vertical,
         'c-divider--horizontal': !vertical,
-        'is-animated': animated,
       },
     ]"
     role="separator"
@@ -40,7 +34,11 @@ withDefaults(
 .c-divider {
   // --- Base Styles ---
   position: relative;
+
+  // --- Base Styling ---
+  overflow: hidden; // アニメーションの光がはみ出さないようにする
   flex-shrink: 0;
+  box-shadow: var(--shadow-sink); // 彫り込まれた溝の影
 
   // --- Color Modifiers ---
   &.has-accent-main {
@@ -71,51 +69,19 @@ withDefaults(
     --divider-accent: var(--color-status-success);
   }
 
-  // --- Type Modifiers ---
-  &--default {
-    overflow: hidden; // アニメーションの光がはみ出さないようにする
-    box-shadow: var(--shadow-sink); // 彫り込まれた溝の影
-
-    &.c-divider--horizontal {
-      transform-origin: center;
-
-      width: 100%;
-      height: var(--border-width-thick);
-      border-top: var(--border-width-base) solid var(--color-border);
-      border-bottom: 1px solid transparent;
-
-      animation: divider-scale-x 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-  }
-
-  &--fade-side {
-    width: 100%;
-    height: var(--border-width-base);
-    opacity: 0.5;
-    background: linear-gradient(
-      90deg,
-      var(--divider-accent, var(--color-border)) 0%,
-      transparent 100%
-    );
-  }
-
-  &--fade-center {
-    width: 100%;
-    height: var(--border-width-base);
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      var(--divider-accent, var(--color-border)) 50%,
-      transparent 100%
-    );
-    box-shadow: 0 0 var(--blur-sm)
-      theme-color(var(--divider-accent, var(--color-border)), 30%);
-  }
-
   // --- Orientation Modifiers (Horizontal) ---
   &--horizontal {
+    transform-origin: center;
+
+    width: 100%;
+    height: var(--border-width-thick);
+    border-top: var(--border-width-base) solid var(--color-border);
+    border-bottom: 1px solid transparent;
+
+    animation: divider-scale-x 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
     // パルス発光用（Data Flow）の擬似要素
-    &.is-animated.c-divider--default::before {
+    &::before {
       content: "";
 
       position: absolute;
@@ -131,8 +97,7 @@ withDefaults(
         theme-color(var(--divider-accent, var(--color-category-main)), 80%),
         transparent
       );
-      box-shadow: 0 0 var(--blur-md)
-        var(--divider-accent, var(--color-category-main));
+      box-shadow: 0 0 var(--blur-md) var(--divider-accent, var(--color-category-main));
 
       animation: data-pulse-x 3s ease-in-out infinite;
     }
@@ -140,22 +105,20 @@ withDefaults(
 
   // --- Orientation Modifiers (Vertical) ---
   &--vertical {
-    &.c-divider--default {
-      // Entrance Animation (縦に伸びる)
-      transform-origin: center;
+    // Entrance Animation (縦に伸びる)
+    transform-origin: center;
 
-      width: var(--border-width-thick);
-      height: auto;
-      min-height: 100%;
-      margin: 0 var(--space-4);
-      border-right: 1px solid transparent;
-      border-left: var(--border-width-base) solid var(--color-border);
+    width: var(--border-width-thick);
+    height: auto;
+    min-height: 100%;
+    margin: 0 var(--space-4);
+    border-right: 1px solid transparent;
+    border-left: var(--border-width-base) solid var(--color-border);
 
-      animation: divider-scale-y 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
+    animation: divider-scale-y 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
     // パルス発光用（Data Flow）の擬似要素
-    &.is-animated.c-divider--default::before {
+    &::before {
       content: "";
 
       position: absolute;
@@ -171,8 +134,7 @@ withDefaults(
         theme-color(var(--divider-accent, var(--color-category-main)), 80%),
         transparent
       );
-      box-shadow: 0 0 var(--blur-md)
-        var(--divider-accent, var(--color-category-main));
+      box-shadow: 0 0 var(--blur-md) var(--divider-accent, var(--color-category-main));
 
       animation: data-pulse-y 3s ease-in-out infinite;
     }
@@ -224,7 +186,7 @@ withDefaults(
     100% {
       transform: translateX(450%);
       opacity: 0;
-    } // 休止時間
+    }
   }
 
   @keyframes data-pulse-y {
@@ -244,12 +206,12 @@ withDefaults(
     60% {
       transform: translateY(450%);
       opacity: 0;
-    }
-
+    } // 100% + 300% travel + buffer
     100% {
       transform: translateY(450%);
       opacity: 0;
-    } // 休止時間
+    }
   }
 }
 </style>
+

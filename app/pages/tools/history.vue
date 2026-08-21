@@ -3,8 +3,7 @@
  * CalculationHistory
  * 計算履歴ツールのコンポーネントです。過去に実行した各種計算ツールの履歴を一覧表示し、管理します。
  */
-import { ref, computed } from "vue";
-import { useCalcHistory } from "~/composables/calc/useCalcHistory";
+import { ref, computed, watch } from "vue";
 
 useHead({
   title: "計算履歴",
@@ -14,33 +13,68 @@ const currentTab = ref("voltage");
 
 const tabs = [
   { value: "voltage", label: "電圧降下計算" },
-  // 拡張用：後から追加可能
-  // { value: "conduit", label: "配管サイズ" },
+  { value: "conduit", label: "配管サイズ" },
 ];
 
 /** タブに応じたストレージキーを取得 */
 const storageKey = computed(() => {
-  if (currentTab.value === "voltage") return "elec_calc_voltage_hist";
-  return "";
+  return `elec_calc_${currentTab.value}_hist`;
 });
 
-/** 現在のタブの履歴ロジックを取得 */
-const { historyList, deleteHistory, clearAll } = useCalcHistory(
-  storageKey.value,
-);
+/** 履歴ロジック (マウント後・タブ切り替え時に再取得) */
+const historyList = ref<any[]>([]);
 
-/**
- * タブが切り替わったら再取得するために、useCalcHistoryをコンポーネント化するか、
- * 簡易的にコンポーザブル自体を再呼び出しするか。
- * 依存関係としてstorageKeyを持たせるより、タブごとに切り替える方が綺麗なのでwatchする。
- * （※現在の実装では useCalcHistory が onMounted で動作するため、タブ切り替え時に一工夫必要。
- * 今回は電圧降下のみなので、単純化のために1つだけロードする構成としています）
- */
-
-const handleClearAll = () => {
-  if (confirm("全ての履歴を削除しますか？\nこの操作は取り消せません。")) {
-    clearAll();
+const loadHistory = () => {
+  if (import.meta.client) {
+    const stored = localStorage.getItem(storageKey.value);
+    if (stored) {
+      try {
+        historyList.value = JSON.parse(stored);
+      } catch (e) {
+        historyList.value = [];
+      }
+    } else {
+      historyList.value = [];
+    }
   }
+};
+
+watch(currentTab, () => {
+  loadHistory();
+}, { immediate: true });
+
+// ストレージへの自動保存（削除時など）
+watch(historyList, (newVal) => {
+  if (import.meta.client) {
+    localStorage.setItem(storageKey.value, JSON.stringify(newVal));
+  }
+}, { deep: true });
+
+const deleteHistory = (id: string) => {
+  historyList.value = historyList.value.filter(item => item.id !== id);
+};
+
+// --- Dialog States ---
+const isClearAllModalOpen = ref(false);
+const isDeleteModalOpen = ref(false);
+const targetDeleteId = ref<string | null>(null);
+
+const confirmClearAll = () => {
+  historyList.value = [];
+  isClearAllModalOpen.value = false;
+};
+
+const openDeleteModal = (id: string) => {
+  targetDeleteId.value = id;
+  isDeleteModalOpen.value = true;
+};
+
+const confirmDelete = () => {
+  if (targetDeleteId.value) {
+    deleteHistory(targetDeleteId.value);
+    targetDeleteId.value = null;
+  }
+  isDeleteModalOpen.value = false;
 };
 </script>
 
@@ -59,7 +93,7 @@ const handleClearAll = () => {
             <AppButtonDanger
               v-if="historyList.length > 0"
               size="sm"
-              @click="handleClearAll"
+              @click="isClearAllModalOpen = true"
             >
               <AppIcon name="trash-2" size="sm" />
               全て削除
@@ -83,7 +117,7 @@ const handleClearAll = () => {
             v-for="entry in historyList"
             :key="entry.id"
             :entry="entry"
-            @delete="deleteHistory"
+            @delete="openDeleteModal"
           />
         </div>
 
@@ -106,6 +140,23 @@ const handleClearAll = () => {
         </template>
       </ClientOnly>
     </AppPanel>
+
+    <!-- Dialogs -->
+    <AppConfirmModal
+      v-model="isClearAllModalOpen"
+      title="履歴をすべて削除"
+      message="全ての履歴を削除しますか？この操作は取り消せません。"
+      confirm-text="削除する"
+      @confirm="confirmClearAll"
+    />
+
+    <AppConfirmModal
+      v-model="isDeleteModalOpen"
+      title="履歴を削除"
+      message="この履歴を削除しますか？"
+      confirm-text="削除する"
+      @confirm="confirmDelete"
+    />
   </div>
 </template>
 

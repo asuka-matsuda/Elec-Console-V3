@@ -73,7 +73,7 @@ const toggleCat = (value: string) => {
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
 
-    @include ui-border-fade(bottom, var(--color-border));
+    @include border-fade(bottom, var(--color-border));
   }
 
   &__filters {

@@ -15,7 +15,8 @@ export function mapVoltageToHistory(
   const formFields = getVoltageFormFields(
     () => true,
     () => true,
-    () => []
+    () => [],
+    () => !!inputs.cableType
   );
 
   const getLabel = (id: string) => {
@@ -128,7 +129,8 @@ export function mapVoltageToHistory(
   }
 
   return {
-    toolName,
+    toolName: isAuto ? "ケーブルサイズ自動選定" : "電圧降下計算",
+    mode: isAuto ? "サイズ選定" : "電圧降下",
     status,
     mainResultText,
     inputs: historyInputs,

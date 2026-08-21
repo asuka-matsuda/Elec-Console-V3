@@ -14,9 +14,7 @@ const emit = defineEmits<{
 }>();
 
 const handleDelete = () => {
-  if (confirm("この履歴を削除しますか？")) {
-    emit("delete", props.entry.id);
-  }
+  emit("delete", props.entry.id);
 };
 </script>
 
@@ -26,15 +24,47 @@ const handleDelete = () => {
     <header class="c-history-card__header">
       <div class="c-history-card__title-group">
         <span class="c-history-card__date">{{ entry.timestamp }}</span>
-        <h3 class="c-history-card__title">{{ entry.toolName }}</h3>
-      </div>
-      <div class="c-history-card__main-result">
-        {{ entry.mainResultText }}
+        <h3 class="c-history-card__title">
+          <span>{{ entry.toolName }}</span>
+          <AppBadge v-if="entry.mode === 'サイズ選定'" variant="tool">{{ entry.mode }}</AppBadge>
+          <AppBadge v-else-if="entry.mode === '電圧降下'" variant="primary">{{ entry.mode }}</AppBadge>
+        </h3>
       </div>
     </header>
 
-    <!-- ボディ（グリッドレイアウト） -->
     <div class="c-history-card__body">
+      <!-- 計算結果 (動的コンポーネントでDRY化) -->
+      <section class="c-history-card__section">
+        <div class="c-history-card__result-wrapper">
+          <AppVoltageResult 
+            v-if="entry.toolId === 'voltage' && entry.rawInputs && entry.rawResult"
+            :inputs="entry.rawInputs"
+            :result="entry.rawResult"
+            size="sm"
+          />
+          <AppConduitResult
+            v-else-if="entry.toolId === 'conduit' && entry.rawInputs && entry.rawResult"
+            :inputs="entry.rawInputs"
+            :result="entry.rawResult"
+            size="sm"
+          />
+          <!-- 過去のデータなどrawデータがない場合のフォールバック -->
+          <template v-else>
+            <h4 class="c-history-card__section-title">計算結果</h4>
+            <dl class="c-history-card__list">
+              <template v-for="(res, idx) in entry.results" :key="idx">
+                <dt :style="{ color: res.color, fontWeight: res.color ? 'bold' : 'normal' }">
+                  {{ res.label }}
+                </dt>
+                <dd :style="{ color: res.color, fontWeight: (res.isMain || res.color) ? 'bold' : 'normal' }">
+                  {{ res.value }}
+                </dd>
+              </template>
+            </dl>
+          </template>
+        </div>
+      </section>
+
       <!-- 入力条件 -->
       <section class="c-history-card__section">
         <h4 class="c-history-card__section-title">入力条件</h4>
@@ -42,21 +72,6 @@ const handleDelete = () => {
           <template v-for="(input, idx) in entry.inputs" :key="idx">
             <dt>{{ input.label }}</dt>
             <dd>{{ input.value }}</dd>
-          </template>
-        </dl>
-      </section>
-
-      <!-- 計算結果 -->
-      <section class="c-history-card__section">
-        <h4 class="c-history-card__section-title">計算結果</h4>
-        <dl class="c-history-card__list">
-          <template v-for="(res, idx) in entry.results" :key="idx">
-            <dt :style="{ color: res.color, fontWeight: res.color ? 'bold' : 'normal' }">
-              {{ res.label }}
-            </dt>
-            <dd :style="{ color: res.color, fontWeight: (res.isMain || res.color) ? 'bold' : 'normal' }">
-              {{ res.value }}
-            </dd>
           </template>
         </dl>
       </section>
@@ -114,26 +129,16 @@ const handleDelete = () => {
   &__title {
     @extend %text-base;
 
+    @include flex-start(var(--gap-element));
+
     font-weight: var(--font-weight-semibold);
     color: var(--color-text-main);
   }
 
-  &__main-result {
-    @extend %text-lg;
-
-    font-weight: var(--font-weight-bold);
-    color: var(--color-category-tool);
-    text-align: right;
-  }
-
   &__body {
-    display: grid;
-    grid-template-columns: 1fr; // スモールファースト
+    display: flex;
+    flex-direction: column;
     gap: var(--gap-component);
-
-    @include cq("xs") {
-      grid-template-columns: 1fr 1fr;
-    }
   }
 
   &__section {

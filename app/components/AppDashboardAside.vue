@@ -103,7 +103,7 @@ const history = computed(() => dashboardData.value?.history || []);
     color: var(--color-text-muted);
     text-align: center;
 
-    @include ui-surface(5%);
+    @include surface(5%);
   }
 }
 

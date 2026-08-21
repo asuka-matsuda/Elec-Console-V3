@@ -39,13 +39,7 @@
   --color-overlay-light: hsl(0deg 0% 100% / 50%);
 
   // --- Shadows ---
-  --shadow-color-base: color-mix(in srgb, hsl(220deg 25% 15%) 12%, transparent);
-  --shadow-color-hover: color-mix(
-    in srgb,
-    hsl(220deg 25% 15%) 20%,
-    transparent
-  );
-  --shadow-color-sink: color-mix(in srgb, black 15%, transparent);
+  --shadow-color: hsl(220deg 25% 15% / 15%);
 
   // --- Edge Reflex ---
   --edge-reflex-base: inset 0 0 0 1px color-mix(in srgb, black 8%, transparent);
@@ -67,9 +61,7 @@
 body[data-border-style="hud"] {
   --panel-border-color: var(--color-border);
   --panel-border-image: none;
-  --panel-box-shadow:
-    inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border),
-    var(--edge-reflex-base), var(--shadow-elevation-base);
+  --panel-box-shadow: elevation-value('sm', 'base', true, (inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border)));
   --panel-bracket-display: block;
   --panel-bracket-size: 16px;
   --panel-bracket-color: var(--color-border);
@@ -78,9 +70,7 @@ body[data-border-style="hud"] {
 body[data-border-style="simple"] {
   --panel-border-color: var(--color-border);
   --panel-border-image: none;
-  --panel-box-shadow:
-    inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent,
-    var(--edge-reflex-base), var(--shadow-elevation-base);
+  --panel-box-shadow: elevation-value('sm', 'base', true, (inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent));
   --panel-bracket-display: none;
 }
 
@@ -92,9 +82,7 @@ body[data-border-style="gradient"] {
       transparent 100%
     )
     1;
-  --panel-box-shadow:
-    inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent,
-    var(--edge-reflex-base), var(--shadow-elevation-base);
+  --panel-box-shadow: elevation-value('sm', 'base', true, (inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent));
   --panel-bracket-display: block;
   --panel-bracket-size: 12px;
   --panel-bracket-color: var(--color-border);
@@ -108,9 +96,7 @@ body[data-border-style="hybrid"] {
       transparent 100%
     )
     1;
-  --panel-box-shadow:
-    inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border),
-    var(--edge-reflex-base), var(--shadow-elevation-base); // Revert shadow elevation to base
+  --panel-box-shadow: elevation-value('sm', 'base', true, (inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border))); // Revert shadow elevation to base
 
   --panel-bracket-display: block;
   --panel-bracket-size: 18px;

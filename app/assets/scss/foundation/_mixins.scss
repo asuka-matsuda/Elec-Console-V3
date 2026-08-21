@@ -1,3 +1,4 @@
+@use "sass:list";
 @use "sass:map";
 @use "functions" as *;
 @use "variables" as *;
@@ -87,32 +88,29 @@
 }
 
 // 境界線（ボーダー）を端に向けてグラデーションで透過（フェードアウト）させる
-@mixin ui-border-fade($direction: bottom, $color: var(--color-border)) {
-  // directionがbottomなら横方向(to right)、rightなら縦方向(to bottom)のグラデーションにする
+@mixin border-fade($direction: bottom, $color: var(--color-border), $type: 'center') {
   $gradient-dir: to bottom;
 
-  @if $direction == bottom {
-    $gradient-dir: to right;
+  @if $direction == bottom or $direction == top { $gradient-dir: to right; }
+
+  $gradient: linear-gradient($gradient-dir, transparent 0%, $color 50%, transparent 100%);
+
+  @if $type == 'side' {
+    $gradient: linear-gradient($gradient-dir, $color 0%, transparent 100%);
   }
 
   border-#{$direction}: var(--border-width-base) solid transparent;
-  border-image: linear-gradient(
-      $gradient-dir,
-      transparent 0%,
-      $color 50%,
-      transparent 100%
-    )
-    1;
+  border-image: $gradient 1;
 }
 
 // 少し暗めの半透明なボーダー（汎用）
-@mixin ui-border-dim($color: var(--color-border), $opacity: 30%) {
+@mixin border-dim($color: var(--color-border), $opacity: 30%) {
   border: var(--border-width-base) solid theme-color($color, $opacity);
 }
 
 // パネルやカードのベース表面（枠線とわずかな影で浮遊感を出す）
-@mixin ui-surface($border-opacity: 10%) {
-  @include ui-border-dim(var(--color-border), $border-opacity);
+@mixin surface($border-opacity: 10%) {
+  @include border-dim(var(--color-border), $border-opacity);
 
   box-shadow: var(--edge-reflex-base), var(--shadow-elevation-base);
 }
@@ -125,11 +123,11 @@
 }
 
 @mixin form-control-press {
-  @include ui-press(var(--color-category-main));
+  @include press(var(--color-category-main));
 }
 
 @mixin form-control-focus {
-  @include ui-focus(var(--color-category-main));
+  @include focus(var(--color-category-main));
   @include cyber-text-glow(50%, 8px, var(--color-category-main));
 
   transition:
@@ -154,7 +152,7 @@
 
   // エラー時のフォーカス
   &:is(:-moz-focusring, :focus, :focus-visible, .is-active) {
-    @include ui-focus(var(--color-status-danger));
+    @include focus(var(--color-status-danger));
     @include cyber-text-glow(50%, 8px, var(--color-status-danger));
 
     transition:
@@ -208,7 +206,7 @@
 
 
 // フォーカス時の発光（標準のアウトラインの代わり）
-@mixin ui-focus($color: var(--color-category-main), $shadow-spread: 12px) {
+@mixin focus($color: var(--color-category-main), $shadow-spread: 12px) {
   border-color: $color;
   outline: none;
   box-shadow:
@@ -218,7 +216,7 @@
 }
 
 // ホバー時の発光（ボタンやカードが光る演出）
-@mixin ui-hover-glow($color: null) {
+@mixin hover-glow($color: null) {
   // 特定の色が指定された場合は、その色で強く発光させる
   @if $color {
     border-color: theme-color($color, 80%);
@@ -238,7 +236,7 @@
 }
 
 // クリック（押し込み）時の沈み込みと影の変化
-@mixin ui-press($color: var(--color-category-main)) {
+@mixin press($color: var(--color-category-main)) {
   transform: scale(0.985);
   border-color: theme-color($color, 90%);
   box-shadow:
@@ -261,7 +259,7 @@
 }
 
 // アクティブ状態（現在選択されているタブなど）の発光
-@mixin ui-active($color: var(--color-category-main)) {
+@mixin active($color: var(--color-category-main)) {
   border-color: $color;
   box-shadow:
     inset 0 0 var(--blur-lg) theme-color($color, 40%),
@@ -276,7 +274,7 @@
 
 
 // ターミナル風の点滅するサイバーカーソル（文字の後ろに配置）
-@mixin ui-blinking-cursor($width: 6px, $height: 14px, $color: currentcolor) {
+@mixin blinking-cursor($width: 6px, $height: 14px, $color: currentcolor) {
   &::after {
     content: "";
 
@@ -378,4 +376,30 @@
   justify-content: flex-start;
 
   @if $gap != 0 { gap: $gap; }
+}
+
+@function elevation-value($level: 'sm', $state: 'base', $with_reflex: true, $extra: null) {
+  $shadows: ();
+
+  @if $extra { $shadows: list.append($shadows, $extra, comma); }
+
+  @if $with_reflex { $shadows: list.append($shadows, var(--edge-reflex-#{$state}), comma); }
+
+$shadows: list.append($shadows, var(--shadow-elevation-#{$level}), comma);
+
+  @return $shadows;
+}
+
+@mixin elevation($level: 'sm', $state: 'base', $with_reflex: true, $extra: null) {
+  box-shadow: elevation-value($level, $state, $with_reflex, $extra);
+}
+
+@mixin sink($with_reflex: false, $state: 'base') {
+  @if $with_reflex {
+    box-shadow: var(--edge-reflex-#{$state}), var(--shadow-sink);
+  }
+
+ @else {
+    box-shadow: var(--shadow-sink);
+  }
 }

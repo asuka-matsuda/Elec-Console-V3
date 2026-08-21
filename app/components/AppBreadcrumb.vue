@@ -73,7 +73,7 @@ const processedItems = computed(() => {
     list-style: none;
 
     @include flex-start(0, inline-flex);
-    @include ui-surface;
+    @include surface;
 
     // 左上の「SYS.LOC」ラベル
     &::after {
@@ -93,7 +93,9 @@ const processedItems = computed(() => {
   }
 
   &__item {
-    @include flex-start(var(--gap-element));
+    display: flex;
+    gap: var(--gap-element);
+    align-items: center;
 
     // 項目の区切り文字（最後の子要素以外に付与）
     &:not(:last-child)::after {
@@ -122,13 +124,15 @@ const processedItems = computed(() => {
   &__current {
     @extend %text-lg;
 
-    @include flex-start(var(--gap-element));
+    display: flex;
+    gap: var(--gap-element);
+    align-items: center;
 
     line-height: 1;
     color: var(--color-category-main);
 
     @include cyber-text-glow(60%, var(--blur-md), var(--color-category-main));
-    @include ui-blinking-cursor(var(--space-2), var(--space-5), currentcolor);
+    @include blinking-cursor(var(--space-2), var(--space-5), currentcolor);
   }
 }
 </style>

@@ -86,13 +86,13 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
     &:checked + .c-segmented-control__text {
       color: var(--radio-color);
 
-      @include ui-active(var(--radio-color));
+      @include active(var(--radio-color));
       @include cyber-text-glow(60%, var(--blur-md), var(--radio-color));
     }
 
     /* Keyboard Focus state */
     &:focus-visible + .c-segmented-control__text {
-      @include ui-focus(var(--radio-color));
+      @include focus(var(--radio-color));
       @include cyber-text-glow(60%, var(--blur-md), var(--radio-color));
     }
 

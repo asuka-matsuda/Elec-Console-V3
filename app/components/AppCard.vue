@@ -57,18 +57,18 @@ const rootProps = computed(() => {
 
   transition: var(--transition-base);
 
-  @include ui-surface(15%);
+  @include surface(15%);
 
   // --- State Modifiers ---
   &:is(a, button) {
     cursor: pointer;
 
     &:not(.is-disabled):hover {
-      @include ui-hover-glow(var(--card-accent, var(--color-category-main)));
+      @include hover-glow(var(--card-accent, var(--color-category-main)));
     }
 
     &:not(.is-disabled):active {
-      @include ui-active(var(--card-accent, var(--color-category-main)));
+      @include active(var(--card-accent, var(--color-category-main)));
     }
   }
 

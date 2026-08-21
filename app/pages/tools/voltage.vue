@@ -39,7 +39,8 @@ const formFields = computed(() =>
   getVoltageFormFields(
     () => isDropCalcMode.value,
     () => isSizeCalcMode.value,
-    () => computedAvailableSizes.value
+    () => computedAvailableSizes.value,
+    () => !!form.value.cableType
   )
 );
 

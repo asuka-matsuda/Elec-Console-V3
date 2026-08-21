@@ -29,7 +29,8 @@ export type FormField = {
 export function getVoltageFormFields(
   isDropCalcMode: () => boolean,
   isSizeCalcMode: () => boolean,
-  computedAvailableSizes: () => { label: string; value: string }[]
+  computedAvailableSizes: () => { label: string; value: string }[],
+  isCableTypeSelected: () => boolean
 ): FormField[] {
   return [
     {
@@ -78,6 +79,7 @@ export function getVoltageFormFields(
       options: computedAvailableSizes(),
       placeholder: "選択してください",
       showIf: isDropCalcMode,
+      disabled: !isCableTypeSelected(),
     },
     {
       id: "parallel",

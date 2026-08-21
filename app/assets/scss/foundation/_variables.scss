@@ -220,10 +220,21 @@ $color-input-focus-base: 217 91% 60%;
   --blur-xl: 16px;
 
   // --- 1. Elevation (Physical Shadows) ---
-  --shadow-elevation-base: 0 8px 24px -4px
-    color-mix(in srgb, black 90%, transparent);
-  --shadow-elevation-hover: 0 16px 40px -8px black;
-  --shadow-sink: inset 0 2px 8px color-mix(in srgb, black 50%, transparent);
+  --shadow-color: color-mix(in srgb, black 90%, transparent); // Dark mode default
+
+  --shadow-elevation-sm: 
+    0 2px 4px -1px color-mix(in srgb, var(--shadow-color) 80%, transparent),
+    0 1px 2px -1px color-mix(in srgb, var(--shadow-color) 100%, transparent);
+  
+  --shadow-elevation-md: 
+    0 8px 16px -4px color-mix(in srgb, var(--shadow-color) 60%, transparent),
+    0 4px 6px -2px color-mix(in srgb, var(--shadow-color) 80%, transparent);
+  
+  --shadow-elevation-lg: 
+    0 20px 25px -5px color-mix(in srgb, var(--shadow-color) 60%, transparent),
+    0 8px 10px -6px color-mix(in srgb, var(--shadow-color) 80%, transparent);
+
+  --shadow-sink: inset 0 2px 4px 0 color-mix(in srgb, black 40%, transparent);
 
   // --- 2. Edge Reflex (Glass Highlights) ---
   --edge-reflex-base:

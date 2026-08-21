@@ -98,7 +98,7 @@ const inputId = useId();
 
   // 1. Keyboard Focus State
   &:has(.c-checkbox__input:focus-visible) .c-checkbox__box {
-    @include ui-focus(var(--checkbox-color));
+    @include focus(var(--checkbox-color));
     @include cyber-text-glow(50%, var(--blur-md), var(--checkbox-color));
 
     transition:
@@ -108,7 +108,7 @@ const inputId = useId();
 
   // 2. Checked State
   &:has(.c-checkbox__input:checked) .c-checkbox__box {
-    @include ui-active(var(--checkbox-color));
+    @include active(var(--checkbox-color));
 
     .c-checkbox__icon {
       opacity: 1;
@@ -119,14 +119,13 @@ const inputId = useId();
 
   &__box {
     flex-shrink: 0;
-
     width: 1.4em;
     height: 1.4em;
 
     @include flex-center;
-    @include ui-border-dim(var(--color-border), 50%);
+    @include border-dim(var(--color-border), 50%);
 
-    box-shadow: var(--edge-reflex-base), var(--shadow-sink);
+    @include sink(true);
 
     transition: var(--transition-base);
 
@@ -150,7 +149,7 @@ const inputId = useId();
   // 3. Hover State
   &:hover:not(:has(.c-checkbox__input:disabled)) {
     &:has(.c-checkbox__input:not(:focus-visible, :active)) .c-checkbox__box {
-      @include ui-hover-glow(var(--checkbox-color));
+      @include hover-glow(var(--checkbox-color));
     }
 
     // Label slightly glows on hover
@@ -163,7 +162,7 @@ const inputId = useId();
 
   // 4. Active (Press) State
   &:active:not(:has(.c-checkbox__input:disabled)) .c-checkbox__box {
-    @include ui-press(var(--checkbox-color));
+    @include press(var(--checkbox-color));
   }
 
   @include flex-start(var(--space-2), inline-flex);

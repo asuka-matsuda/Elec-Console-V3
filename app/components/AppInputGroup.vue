@@ -61,7 +61,7 @@
       color: var(--color-text-main);
       white-space: nowrap;
 
-      box-shadow: var(--edge-reflex-base), var(--shadow-sink);
+      @include sink(true);
 
       @include flex-center(0, inline-flex);
     }

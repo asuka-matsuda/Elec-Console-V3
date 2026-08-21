@@ -51,7 +51,7 @@ const emit = defineEmits<{
     @include flex-start(var(--gap-component));
   }
 
-  &__menu-btn {
+  &__menu-btn.c-btn {
     display: none; // Hidden on desktop
 
     @include mq("md") {

@@ -11,6 +11,7 @@ const props = defineProps<{
   inputs: Record<string, any>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   result: Record<string, any> | null;
+  size?: "sm" | "md";
 }>();
 
 const isReady = computed(() => props.inputs?.isReady && props.result);
@@ -92,7 +93,7 @@ const dropStatusClass = computed(() => {
 </script>
 
 <template>
-  <div class="c-voltage-result">
+  <div class="c-voltage-result" :class="[size === 'sm' ? 'is-sm' : '']">
     <div class="c-voltage-result__main">
       <div class="c-voltage-result__main-label">{{ mainLabel }}</div>
       <div class="c-voltage-result__main-value">
@@ -161,6 +162,31 @@ const dropStatusClass = computed(() => {
   &__drop-cable { @extend %text-xl; }
 
   // --- State Modifiers ---
+  &.is-sm {
+    gap: var(--space-2);
+    padding: 0;
+    
+    .c-voltage-result__main {
+      padding: var(--space-1) var(--space-2);
+    }
+    
+    .c-voltage-result__main-value .value-text {
+      font-size: 1.5rem;
+    }
+    
+    .c-voltage-result__drop-cable {
+      font-size: 1.25rem;
+    }
+    
+    .c-voltage-result__drop-percent {
+      font-size: 1rem;
+    }
+    
+    .metric-card {
+      padding: var(--space-1);
+    }
+  }
+
   .is-neutral {
     color: var(--color-text-muted);
   }
@@ -195,9 +221,9 @@ const dropStatusClass = computed(() => {
     padding: var(--space-2) var(--space-3);
     border: var(--border-width-base) solid var(--color-border);
 
-    box-shadow: var(--shadow-sink);
+    @include sink;
 
-    @include ui-surface(20%);
+    @include surface(20%);
   }
 
   &__main-label {
@@ -224,6 +250,7 @@ const dropStatusClass = computed(() => {
       @extend %text-md;
 
       font-weight: var(--font-weight-bold);
+      color: var(--color-text-secondary);
       opacity: 0.8;
     }
   }
@@ -281,6 +308,7 @@ const dropStatusClass = computed(() => {
     .value-unit {
       @extend %text-xs;
 
+      color: var(--color-text-secondary);
       opacity: 0.8;
     }
   }

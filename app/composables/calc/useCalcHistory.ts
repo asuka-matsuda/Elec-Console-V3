@@ -53,6 +53,12 @@ export function useCalcHistory(storageKey: string) {
 
     // 先頭に追加（最新が上）
     historyList.value.unshift(newEntry);
+
+    // 履歴の上限を30件に制限
+    const MAX_HISTORY = 30;
+    if (historyList.value.length > MAX_HISTORY) {
+      historyList.value = historyList.value.slice(0, MAX_HISTORY);
+    }
   };
 
   /**

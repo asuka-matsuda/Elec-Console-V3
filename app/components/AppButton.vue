@@ -78,10 +78,7 @@ const componentTag = computed(() => {
   text-decoration: none;
   letter-spacing: 0.05em;
 
-  box-shadow:
-    inset 0 0 var(--blur-md)
-      theme-color(var(--btn-color, var(--color-category-main)), 10%),
-    var(--shadow-elevation-base);
+  @include elevation('sm', 'base', false, inset 0 0 var(--blur-md) theme-color(var(--btn-color, var(--color-category-main)), 10%));
 
   transition: var(--transition-base), var(--transition-colors);
 
@@ -89,20 +86,20 @@ const componentTag = computed(() => {
   &:hover:not(:disabled, .is-disabled) {
     z-index: 1;
 
-    @include ui-hover-glow(var(--btn-color));
+    @include hover-glow(var(--btn-color));
   }
 
   &:focus-visible {
     z-index: 1;
 
-    @include ui-focus(var(--btn-color));
+    @include focus(var(--btn-color));
     @include cyber-text-glow(50%, var(--blur-md), var(--btn-color));
   }
 
   &:active:not(:disabled, .is-disabled) {
     z-index: 1;
 
-    @include ui-press(var(--btn-color));
+    @include press(var(--btn-color));
     @include cyber-text-glow(50%, var(--blur-md), var(--btn-color));
   }
 
@@ -188,6 +185,6 @@ const componentTag = computed(() => {
   @include flex-center(var(--space-2), inline-flex);
 
   /* 視認性確保のための枠線と影（アウトラインスタイル） */
-  @include ui-border-dim(var(--btn-color, var(--color-category-main)), 50%);
+  @include border-dim(var(--btn-color, var(--color-category-main)), 50%);
 }
 </style>

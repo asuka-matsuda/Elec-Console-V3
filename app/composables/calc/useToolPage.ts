@@ -26,8 +26,12 @@ export function useToolPage<InputType, ResultType>(
 
   const saveToHistory = async () => {
     if (result.value) {
-      const entry = historyMapper.toHistory(inputs.value, result.value);
+      const entry = historyMapper.toHistory(inputs.value, result.value) as any;
       if (entry) {
+        entry.toolId = toolId;
+        // 参照を切るためにディープコピーして保存
+        entry.rawInputs = JSON.parse(JSON.stringify(inputs.value));
+        entry.rawResult = JSON.parse(JSON.stringify(result.value));
         await saveHistory(entry);
       }
     }

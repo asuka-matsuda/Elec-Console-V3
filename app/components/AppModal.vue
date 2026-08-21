@@ -77,7 +77,6 @@ const titleId = `modal-title-${modalId}`;
         </header>
       </template>
 
-      <AppDivider :variant="variant" />
 
       <div class="c-modal__layout">
         <!-- Body -->
@@ -159,6 +158,7 @@ const titleId = `modal-title-${modalId}`;
   }
 
   &__header {
+    @include border-fade(bottom, var(--color-border), 'center');
     @include flex-between(var(--gap-element));
 
     align-items: flex-start;

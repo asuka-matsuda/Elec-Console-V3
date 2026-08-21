@@ -65,7 +65,7 @@ const inputId = useId();
 
     /* 1. Keyboard Focus State */
     &:focus-visible + .c-toggle__track {
-      @include ui-focus(var(--toggle-color));
+      @include focus(var(--toggle-color));
       @include cyber-text-glow(50%, var(--blur-md), var(--toggle-color));
 
       transition:
@@ -101,7 +101,7 @@ const inputId = useId();
     height: var(--track-h);
     border: var(--border-width-base) solid var(--color-border);
 
-    box-shadow: var(--shadow-sink);
+    @include sink;
 
     transition: var(--transition-base);
   }
@@ -116,7 +116,7 @@ const inputId = useId();
     height: var(--track-h);
     border: var(--border-width-base) solid var(--color-border);
 
-    box-shadow: var(--shadow-elevation-base);
+    @include elevation('sm', 'base', false);
 
     transition:
       transform var(--duration-base) var(--ease-float),
@@ -150,7 +150,7 @@ const inputId = useId();
     }
 
     .c-toggle__thumb {
-      box-shadow: var(--shadow-sink);
+      @include sink;
     }
   }
 

@@ -114,7 +114,7 @@ const selectTab = (option: TabOption) => {
     transform: translateY(-2px);
     color: var(--color-text-main);
 
-    @include ui-hover-glow;
+    @include hover-glow;
   }
 
   /* --- Active State --- */
@@ -122,7 +122,7 @@ const selectTab = (option: TabOption) => {
     transform: translateY(0);
     color: var(--color-category-main);
 
-    @include ui-active(var(--color-category-main));
+    @include active(var(--color-category-main));
 
     .c-tabs__item-text {
       @include cyber-text-glow(50%, var(--blur-md), var(--color-category-main));

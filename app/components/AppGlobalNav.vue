@@ -94,11 +94,11 @@ const closeSidebar = () => {
   width: var(--sidebar-width);
   height: 100dvh;
 
-  box-shadow: var(--shadow-elevation-hover); // Replaced hardcoded shadow
+  @include elevation('md', 'base', false); // Replaced hardcoded shadow
 
   transition: transform var(--duration-slow) var(--ease-float);
 
-  @include ui-border-fade(right, var(--sidebar-border));
+  @include border-fade(right, var(--sidebar-border));
 
   // Mobile layout (hide by default)
   @include mq("md") {
@@ -116,9 +116,10 @@ const closeSidebar = () => {
     flex-shrink: 0;
     height: 64px; // Match standard header height
     padding: var(--pad-container);
-    box-shadow: var(--shadow-elevation-base); // Replaced hardcoded shadow
 
-    @include ui-border-fade(bottom, var(--sidebar-border));
+    @include elevation('sm', 'base', false); // Replaced hardcoded shadow
+
+    @include border-fade(bottom, var(--sidebar-border));
   }
 
   // --- Navigation Content ---
@@ -162,6 +163,8 @@ const closeSidebar = () => {
   }
 
   &__section-header {
+    @include border-fade(bottom, var(--sidebar-border), 'side');
+
     display: flex;
     flex-direction: column;
     gap: var(--gap-element);
@@ -230,8 +233,8 @@ const closeSidebar = () => {
       border-color: transparent;
       color: var(--section-accent, var(--color-category-main));
 
-      @include ui-active(var(--section-accent, var(--color-category-main)));
-      @include ui-blinking-cursor(
+      @include active(var(--section-accent, var(--color-category-main)));
+      @include blinking-cursor(
         var(--space-1),
         var(--font-size-base),
         currentcolor

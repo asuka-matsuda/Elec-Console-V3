@@ -31,7 +31,7 @@ const conduitCategoryOptions = computed(() => {
 
 /** 保存ハンドラ */
 const handleSave = async () => {
-  saveHistory();
+  await saveHistory();
 };
 
 </script>
@@ -85,42 +85,7 @@ const handleSave = async () => {
         :save-disabled="!result?.success || result?.partial"
         :save-function="handleSave"
       >
-        <AppResultBox
-          title="推奨配管サイズ"
-          :status="result?.success && !result?.partial ? (result?.isOversize32 && result?.isOversize48 ? 'error' : (result?.isOversize32 || result?.isOversize48 ? 'warning' : 'success')) : 'empty'"
-          :is-empty="!result?.success || result?.partial"
-        >
-          <template #value>
-            <div class="p-result-grid">
-              <div class="p-result-grid__item">
-                <span class="p-result-grid__label">32%以下 (異種)</span>
-                <span :class="['p-result-grid__val', { 'is-error': result?.isOversize32 }]">
-                  {{ result?.success && !result?.partial ? (result?.isOversize32 ? 'サイズ超過' : result?.conduit32?.size) : '---' }}
-                </span>
-              </div>
-              <div class="p-result-grid__item">
-                <span class="p-result-grid__label">48%以下 (同種)</span>
-                <span :class="['p-result-grid__val', { 'is-error': result?.isOversize48 }]">
-                  {{ result?.success && !result?.partial ? (result?.isOversize48 ? 'サイズ超過' : result?.conduit48?.size) : '---' }}
-                </span>
-              </div>
-            </div>
-          </template>
-        </AppResultBox>
-
-        <AppResultDetails>
-          <AppResultDetailsRow label="ケーブル合計断面積">
-            <strong>{{ result?.totalArea?.toFixed(1) ?? '0.0' }}</strong> mm²
-          </AppResultDetailsRow>
-          <AppResultDetailsRow label="許容面積 (32%)">
-            <strong>{{ result?.allowable32?.toFixed(1) || '0.0' }}</strong> mm² 
-            ({{ result?.fill32?.toFixed(1) || '0.0' }}%)
-          </AppResultDetailsRow>
-          <AppResultDetailsRow label="許容面積 (48%)">
-            <strong>{{ result?.allowable48?.toFixed(1) || '0.0' }}</strong> mm² 
-            ({{ result?.fill48?.toFixed(1) || '0.0' }}%)
-          </AppResultDetailsRow>
-        </AppResultDetails>
+        <AppConduitResult :result="result" />
       </AppToolResultPanel>
     </template>
 
@@ -140,33 +105,6 @@ const handleSave = async () => {
 </template>
 
 <style scoped lang="scss">
-.p-result-grid {
-  display: grid;
-  gap: var(--gap-element);
-  
-  &__item {
-
-    @extend %text-base;
-
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-  }
-
-  &__label {
-    color: var(--color-text-muted);
-  }
-
-  &__val {
-    @extend %text-xl;
-
-    font-weight: var(--font-weight-bold);
-    
-    &.is-error {
-      color: var(--color-status-danger);
-    }
-  }
-}
 
 .p-basis-note {
   @extend %text-2xs;
