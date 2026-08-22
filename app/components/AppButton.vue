@@ -78,7 +78,7 @@ const componentTag = computed(() => {
   text-decoration: none;
   letter-spacing: 0.05em;
 
-  @include elevation('sm', inset 0 0 var(--blur-md) theme-color(var(--btn-color, var(--color-category-main)), 10%));
+  box-shadow: inset 0 0 var(--blur-md) theme-color(var(--btn-color, var(--color-category-main)), 10%), var(--shadow-elevation-sm);
 
   transition: var(--transition-fast);
 

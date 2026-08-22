@@ -83,7 +83,7 @@
 @mixin surface($border-opacity: 10%) {
   @include border-dim(var(--color-border), $border-opacity);
 
-  box-shadow: var(--shadow-elevation-base);
+  box-shadow: var(--shadow-elevation-sm);
 }
 
 // --- Interactive States (Focus, Hover, Active, Disabled) ---
@@ -106,14 +106,14 @@
     box-shadow:
       inset 0 0 8px theme-color($color, 20%),
       0 0 12px theme-color($color, 30%),
-      var(--shadow-elevation-base);
+      var(--shadow-elevation-sm);
 
     // 色指定がない場合は、標準のボーダー色と控えめな発光にする
   }
 
  @else {
     border-color: var(--color-border);
-    box-shadow: var(--shadow-elevation-base);
+    box-shadow: var(--shadow-elevation-sm);
   }
 }
 
@@ -262,10 +262,6 @@
   }
 }
 
-
-@mixin elevation($level: "sm", $extra: null) {
-  box-shadow: elevation-value($level, $extra);
-}
 
 @mixin sink() {
   box-shadow: var(--shadow-sink);

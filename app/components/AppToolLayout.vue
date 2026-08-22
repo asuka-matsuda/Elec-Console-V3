@@ -169,7 +169,7 @@ const toggleDrawer = () => {
 
       background: var(--color-bg-base);
 
-      @include elevation('md');
+      box-shadow: var(--shadow-elevation-md);
 
       transition: transform var(--transition-base);
 
