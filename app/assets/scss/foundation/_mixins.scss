@@ -12,16 +12,22 @@
       @media (width <= $value) {
         @content;
       }
-    } @else if $direction == "up" {
+    }
+
+ @else if $direction == "up" {
       @media (width >= $value) {
         @content;
       }
-    } @else if $direction == "up-strict" {
+    }
+
+ @else if $direction == "up-strict" {
       @media (width > $value) {
         @content;
       }
     }
-  } @else {
+  }
+
+ @else {
     @warn "Invalid breakpoint: #{$breakpoint}.";
   }
 }
@@ -35,12 +41,16 @@
       @container (min-width: #{$value}) {
         @content;
       }
-    } @else if $direction == "down" {
+    }
+
+ @else if $direction == "down" {
       @container (max-width: #{$value}) {
         @content;
       }
     }
-  } @else {
+  }
+
+ @else {
     @warn "Invalid container breakpoint: #{$breakpoint}.";
   }
 }
@@ -93,7 +103,9 @@
       inset 0 0 8px theme-color($color, 20%),
       0 0 12px theme-color($color, 30%),
       var(--shadow-elevation-sm);
-  } @else {
+  }
+
+ @else {
     border-color: var(--color-border);
     box-shadow: var(--shadow-elevation-sm);
   }
@@ -203,25 +215,25 @@
 }
 
 // --- Layout Mixins ---
-@mixin flex-center($gap: 0, $display: flex) {
+@mixin flex-center($gap: var(--gap-element), $display: flex) {
   display: $display;
+  gap: $gap;
   align-items: center;
   justify-content: center;
-  gap: $gap;
 }
 
-@mixin flex-between($gap: 0, $display: flex) {
+@mixin flex-between($gap: var(--gap-element), $display: flex) {
   display: $display;
+  gap: $gap;
   align-items: center;
   justify-content: space-between;
-  gap: $gap;
 }
 
-@mixin flex-start($gap: 0, $display: flex) {
+@mixin flex-start($gap: var(--gap-element), $display: flex) {
   display: $display;
+  gap: $gap;
   align-items: center;
   justify-content: flex-start;
-  gap: $gap;
 }
 
 @mixin sink() {
