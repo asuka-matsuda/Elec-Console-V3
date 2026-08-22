@@ -12,22 +12,16 @@
       @media (width <= $value) {
         @content;
       }
-    }
-
- @else if $direction == "up" {
+    } @else if $direction == "up" {
       @media (width >= $value) {
         @content;
       }
-    }
-
- @else if $direction == "up-strict" {
+    } @else if $direction == "up-strict" {
       @media (width > $value) {
         @content;
       }
     }
-  }
-
- @else {
+  } @else {
     @warn "Invalid breakpoint: #{$breakpoint}.";
   }
 }
@@ -41,16 +35,12 @@
       @container (min-width: #{$value}) {
         @content;
       }
-    }
-
- @else if $direction == "down" {
+    } @else if $direction == "down" {
       @container (max-width: #{$value}) {
         @content;
       }
     }
-  }
-
- @else {
+  } @else {
     @warn "Invalid container breakpoint: #{$breakpoint}.";
   }
 }
@@ -132,6 +122,21 @@
     filter: drop-shadow(0 0 2px $color);
     stroke: $color;
   }
+}
+
+
+// --- DEPRECATED (Will be removed after migrating Vue components) ---
+@mixin focus($color: var(--color-category-main), $shadow-spread: 12px) {
+  @include state-focus($color);
+}
+@mixin hover-glow($color: null) {
+  @include state-hover($color);
+}
+@mixin press($color: var(--color-category-main)) {
+  @include state-active($color);
+}
+@mixin active($color: var(--color-category-main)) {
+  @include state-active($color);
 }
 
 // --- Cursor & Indicators ---
