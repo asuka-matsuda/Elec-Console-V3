@@ -437,3 +437,23 @@ const listboxId = useId();
   }
 }
 </style>
+
+<style lang="scss">
+/* --- Dropdown Fade (Global for Teleport) --- */
+.dropdown-fade-enter-active,
+.dropdown-fade-leave-active {
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.dropdown-fade-enter-from,
+.dropdown-fade-leave-to {
+  transform: translateY(-5px);
+  opacity: 0;
+
+  &.is-top {
+    transform: translateY(5px);
+  }
+}
+</style>

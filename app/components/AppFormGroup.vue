@@ -180,3 +180,19 @@ withDefaults(
   }
 }
 </style>
+
+<style lang="scss">
+/* --- Fade Slide --- */
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition:
+    opacity var(--duration-fast) var(--ease-base),
+    transform var(--duration-fast) var(--ease-base);
+}
+
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+  transform: translateY(-4px);
+  opacity: 0;
+}
+</style>
