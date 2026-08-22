@@ -94,7 +94,7 @@ const closeSidebar = () => {
   width: var(--sidebar-width);
   height: 100dvh;
 
-  @include elevation('md', 'base', false); // Replaced hardcoded shadow
+  @include elevation('md'); // Replaced hardcoded shadow
 
   transition: transform var(--duration-slow) var(--ease-smooth);
 
@@ -117,7 +117,7 @@ const closeSidebar = () => {
     height: 64px; // Match standard header height
     padding: var(--pad-container);
 
-    @include elevation('sm', 'base', false); // Replaced hardcoded shadow
+    @include elevation('sm'); // Replaced hardcoded shadow
 
     @include border-fade(bottom, var(--sidebar-border));
   }

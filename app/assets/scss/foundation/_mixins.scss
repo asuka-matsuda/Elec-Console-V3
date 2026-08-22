@@ -112,14 +112,14 @@
 @mixin surface($border-opacity: 10%) {
   @include border-dim(var(--color-border), $border-opacity);
 
-  box-shadow: var(--edge-reflex-base), var(--shadow-elevation-base);
+  box-shadow: var(--shadow-elevation-base);
 }
 
 // --- フォーム要素用の小分けパック（各状態のスタイル） ---
 
 @mixin form-control-hover {
   border-color: var(--color-category-main);
-  box-shadow: var(--edge-reflex-hover), var(--shadow-sink);
+  box-shadow: var(--shadow-sink);
 }
 
 @mixin form-control-press {
@@ -173,7 +173,7 @@
 
   // 1. 通常状態 (Default)
   background-color: transparent;
-  box-shadow: var(--edge-reflex-base), var(--shadow-sink);
+  box-shadow: var(--shadow-sink);
   transition: var(--transition-base);
 
   // 2. ホバー状態 (Hover)
@@ -221,8 +221,7 @@
   @if $color {
     border-color: theme-color($color, 80%);
     box-shadow:
-      var(--edge-reflex-hover),
-      inset 0 0 8px theme-color($color, 20%),
+            inset 0 0 8px theme-color($color, 20%),
       0 0 12px theme-color($color, 30%),
       var(--shadow-elevation-base);
 
@@ -231,7 +230,7 @@
 
  @else {
     border-color: var(--color-border);
-    box-shadow: var(--edge-reflex-hover), var(--shadow-elevation-base);
+    box-shadow: var(--shadow-elevation-base);
   }
 }
 
@@ -240,8 +239,7 @@
   transform: scale(0.985);
   border-color: theme-color($color, 90%);
   box-shadow:
-    var(--edge-reflex-press),
-    inset 0 var(--blur-sm) var(--blur-lg) theme-color(#000, 60%),
+        inset 0 var(--blur-sm) var(--blur-lg) theme-color(#000, 60%),
     inset 0 -var(--blur-sm) 10px theme-color($color, 30%),
     inset 0 0 0 1px theme-color($color, 30%),
     var(--shadow-sink);
@@ -378,28 +376,21 @@
   @if $gap != 0 { gap: $gap; }
 }
 
-@function elevation-value($level: 'sm', $state: 'base', $with_reflex: true, $extra: null) {
+@function elevation-value($level: 'sm', $extra: null) {
   $shadows: ();
 
   @if $extra { $shadows: list.append($shadows, $extra, comma); }
 
-  @if $with_reflex { $shadows: list.append($shadows, var(--edge-reflex-#{$state}), comma); }
 
 $shadows: list.append($shadows, var(--shadow-elevation-#{$level}), comma);
 
   @return $shadows;
 }
 
-@mixin elevation($level: 'sm', $state: 'base', $with_reflex: true, $extra: null) {
-  box-shadow: elevation-value($level, $state, $with_reflex, $extra);
+@mixin elevation($level: 'sm', $extra: null) {
+  box-shadow: elevation-value($level, $extra);
 }
 
-@mixin sink($with_reflex: false, $state: 'base') {
-  @if $with_reflex {
-    box-shadow: var(--edge-reflex-#{$state}), var(--shadow-sink);
-  }
-
- @else {
-    box-shadow: var(--shadow-sink);
-  }
+@mixin sink() {
+  box-shadow: var(--shadow-sink);
 }

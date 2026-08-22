@@ -116,7 +116,7 @@ const inputId = useId();
     height: var(--track-h);
     border: var(--border-width-base) solid var(--color-border);
 
-    @include elevation('sm', 'base', false);
+    @include elevation('sm');
 
     transition:
       transform var(--duration-base) var(--ease-smooth),

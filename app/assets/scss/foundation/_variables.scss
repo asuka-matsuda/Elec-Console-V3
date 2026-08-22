@@ -94,12 +94,8 @@ $color-text-muted-base: 240 5% 65%;
 $color-text-disabled-base: 240 5% 34%;
 $color-border-main-base: 240 4% 16%;
 
-// --- Colors (Component HSL Bases) ---
-
 // --- CSS CUSTOM PROPERTIES (:root) ---
 :root {
-  // --- 1. Primitives (Base Dictionaries & Scales) ---
-
   // --- Auto-generated Scales ---
   @each $name, $size in $font-sizes {
     --text-#{$name}: #{$size};
@@ -134,7 +130,7 @@ $color-border-main-base: 240 4% 16%;
   --base-spacing: #{$base-spacing};
   --base-size: #{$base-size};
 
-    // --- Color Base (HSL Values) ---
+  // --- Color Base (HSL Values) ---
   --color-category-main-base: #{$color-category-main-base};
   --color-category-tool-base: #{$color-category-tool-base};
   --color-category-database-base: #{$color-category-database-base};
@@ -167,9 +163,7 @@ $color-border-main-base: 240 4% 16%;
   --blur-lg: 12px;
   --blur-xl: 16px;
 
-  // --- 2. Semantics (Meaningful Aliases) ---
-
-    // --- Semantic Colors ---
+  // --- Semantic Colors ---
   --color-category-main: hsl(var(--color-category-main-base));
   --color-category-tool: hsl(var(--color-category-tool-base));
   --color-category-database: hsl(var(--color-category-database-base));
@@ -200,29 +194,25 @@ $color-border-main-base: 240 4% 16%;
   --pad-container: var(--space-4);
 
   // --- Shadows & Edge Reflexes ---
-  --shadow-color: color-mix(in srgb, black 90%, transparent); // Dark mode default
+  --shadow-color: color-mix(
+    in srgb,
+    black 90%,
+    transparent
+  ); // Dark mode default
 
-  --shadow-elevation-sm: 
+  --shadow-elevation-sm:
     0 2px 4px -1px color-mix(in srgb, var(--shadow-color) 80%, transparent),
     0 1px 2px -1px color-mix(in srgb, var(--shadow-color) 100%, transparent);
-  
-  --shadow-elevation-md: 
+
+  --shadow-elevation-md:
     0 8px 16px -4px color-mix(in srgb, var(--shadow-color) 60%, transparent),
     0 4px 6px -2px color-mix(in srgb, var(--shadow-color) 80%, transparent);
-  
-  --shadow-elevation-lg: 
+
+  --shadow-elevation-lg:
     0 20px 25px -5px color-mix(in srgb, var(--shadow-color) 60%, transparent),
     0 8px 10px -6px color-mix(in srgb, var(--shadow-color) 80%, transparent);
 
-  --shadow-sink: inset 0 2px 4px 0 color-mix(in srgb, black 40%, transparent);
-
-  --edge-reflex-base:
-    inset 0 1px 0 var(--color-border), inset 0 0 0 1px var(--color-border);
-  --edge-reflex-hover:
-    inset 0 2px 1px var(--color-border), inset 1px 0 1px var(--color-border);
-  --edge-reflex-press:
-    inset 1px 1px 2px var(--color-border),
-    inset -1px -1px 2px var(--color-border);
+  --shadow-sink: inset 0 2px 4px 0 color-mix(in srgb, var(--shadow-color) 40%, transparent);
 
   // --- Animation & Transitions ---
   --duration-fast: 0.15s;
@@ -236,8 +226,6 @@ $color-border-main-base: 240 4% 16%;
   --transition-base: all var(--duration-base) var(--ease-base);
   --transition-slow: all var(--duration-slow) var(--ease-smooth);
   --transition-modal: all var(--duration-modal) var(--ease-bounce);
-
-  // --- 3. Component Specific (Micro Adjustments) ---
 
   // --- Component & Icon Sizes ---
   --size-control-sm: 32px;
