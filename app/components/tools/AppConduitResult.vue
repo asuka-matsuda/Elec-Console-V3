@@ -172,6 +172,7 @@ const fill48 = computed(() =>
     border: var(--border-width-base) solid var(--color-border);
 
     box-shadow: var(--shadow-sink);
+
     @include surface(20%);
   }
 

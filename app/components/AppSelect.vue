@@ -351,13 +351,11 @@ const listboxId = useId();
 
   background-color: transparent;
   backdrop-filter: blur(var(--blur-md));
-
   box-shadow: inset 0 0 var(--blur-md) theme-color(var(--color-category-main), 20%), var(--shadow-elevation-md);
 
   /* Error state dropdown border */
   .c-custom-select.is-error & {
     border-color: theme-color(var(--color-status-danger), 50%);
-
     box-shadow: inset 0 0 var(--blur-md) theme-color(var(--color-status-danger), 20%), var(--shadow-elevation-md);
   }
 }

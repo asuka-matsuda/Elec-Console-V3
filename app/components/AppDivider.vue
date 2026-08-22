@@ -90,21 +90,24 @@ withDefaults(
   // --- Orientation Modifiers (Horizontal) ---
   &--horizontal {
     transform-origin: center;
-
     width: 100%;
     height: var(--border-width-base);
     animation: divider-scale-x 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
     &.is-type-solid {
       background: var(--color-border);
+
       // パルス発光用のData Flow（擬似要素）
       &::before {
         content: "";
+
         position: absolute;
         top: 0;
         left: -30%;
+
         width: 30%;
         height: 100%;
+
         background: linear-gradient(
           90deg,
           transparent,
@@ -112,6 +115,7 @@ withDefaults(
           transparent
         );
         box-shadow: 0 0 var(--blur-md) var(--divider-accent, var(--color-category-main));
+
         animation: data-pulse-x 3s ease-in-out infinite;
       }
     }
@@ -132,18 +136,23 @@ withDefaults(
     width: var(--border-width-base);
     height: auto;
     min-height: 100%;
+
     animation: divider-scale-y 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
     &.is-type-solid {
       background: var(--color-border);
+
       // パルス発光用のData Flow（擬似要素）
       &::before {
         content: "";
+
         position: absolute;
         top: -30%;
         left: 0;
+
         width: 100%;
         height: 30%;
+
         background: linear-gradient(
           180deg,
           transparent,
@@ -151,6 +160,7 @@ withDefaults(
           transparent
         );
         box-shadow: 0 0 var(--blur-md) var(--divider-accent, var(--color-category-main));
+
         animation: data-pulse-y 3s ease-in-out infinite;
       }
     }

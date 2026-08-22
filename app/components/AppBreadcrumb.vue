@@ -118,7 +118,7 @@ const processedItems = computed(() => {
   &__link:hover {
     color: var(--color-text-main);
 
-    @include cyber-text-glow(50%, var(--blur-md), var(--color-text-main));
+    @include cyber-text-glow($color: var(--color-text-main));
   }
 
   &__current {

@@ -120,7 +120,7 @@ const selectTab = (option: TabOption) => {
     @include active(var(--color-category-main));
 
     .c-tabs__item-text {
-      @include cyber-text-glow(50%, var(--blur-md), var(--color-category-main));
+      @include cyber-text-glow;
     }
   }
 

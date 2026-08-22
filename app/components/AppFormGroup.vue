@@ -159,7 +159,7 @@ withDefaults(
 .c-form-group:focus-within .c-form-label {
   color: var(--color-category-main);
 
-  @include cyber-text-glow(50%, var(--blur-md), var(--color-category-main));
+  @include cyber-text-glow;
 
   &::before {
     border-color: var(--color-category-main);
@@ -172,7 +172,7 @@ withDefaults(
   .c-form-label {
   color: var(--color-status-danger);
 
-  @include cyber-text-glow(50%, var(--blur-md), var(--color-status-danger));
+  @include cyber-text-glow($color: var(--color-status-danger));
 
   &::before {
     border-color: var(--color-status-danger);

@@ -12,16 +12,22 @@
       @media (width <= $value) {
         @content;
       }
-    } @else if $direction == "up" {
+    }
+
+ @else if $direction == "up" {
       @media (width >= $value) {
         @content;
       }
-    } @else if $direction == "up-strict" {
+    }
+
+ @else if $direction == "up-strict" {
       @media (width > $value) {
         @content;
       }
     }
-  } @else {
+  }
+
+ @else {
     @warn "Invalid breakpoint: #{$breakpoint}.";
   }
 }
@@ -35,12 +41,16 @@
       @container (min-width: #{$value}) {
         @content;
       }
-    } @else if $direction == "down" {
+    }
+
+ @else if $direction == "down" {
       @container (max-width: #{$value}) {
         @content;
       }
     }
-  } @else {
+  }
+
+ @else {
     @warn "Invalid container breakpoint: #{$breakpoint}.";
   }
 }
@@ -59,8 +69,8 @@
 
 // --- Visual Effects & Glassmorphism ---
 @mixin cyber-text-glow(
-  $opacity: 40%,
-  $blur: var(--blur-sm),
+  $opacity: 50%,
+  $blur: var(--blur-md),
   $color: currentcolor
 ) {
   text-shadow: 0 0 $blur theme-color($color, $opacity);
@@ -93,7 +103,9 @@
       inset 0 0 8px theme-color($color, 20%),
       0 0 12px theme-color($color, 30%),
       var(--shadow-elevation-sm);
-  } @else {
+  }
+
+ @else {
     border-color: var(--color-border);
     box-shadow: var(--shadow-elevation-sm);
   }

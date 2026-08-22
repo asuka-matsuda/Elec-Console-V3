@@ -160,6 +160,7 @@ const titleId = `modal-title-${modalId}`;
 
   &__header {
     @include flex-between(var(--gap-element));
+
     align-items: flex-start;
   }
 

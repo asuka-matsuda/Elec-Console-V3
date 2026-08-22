@@ -98,7 +98,7 @@ const inputId = useId();
   // 1. Keyboard Focus State
   &:has(.c-checkbox__input:focus-visible) .c-checkbox__box {
     @include focus(var(--checkbox-color));
-    @include cyber-text-glow(50%, var(--blur-md), var(--checkbox-color));
+    @include cyber-text-glow($color: var(--checkbox-color));
 
     transition:
       box-shadow var(--duration-slow) var(--ease-base),
@@ -118,6 +118,7 @@ const inputId = useId();
 
   &__box {
     flex-shrink: 0;
+
     width: 1.4em;
     height: 1.4em;
 

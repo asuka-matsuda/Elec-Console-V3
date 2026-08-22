@@ -116,7 +116,6 @@ const closeSidebar = () => {
     flex-shrink: 0;
     height: 64px; // Match standard header height
     padding: var(--pad-container);
-
     box-shadow: var(--shadow-elevation-sm); // Replaced hardcoded shadow
 
       }
@@ -124,8 +123,8 @@ const closeSidebar = () => {
   // --- Navigation Content ---
   &__border-right {
     position: absolute;
-    right: 0;
     top: 0;
+    right: 0;
     height: 100%;
   }
 

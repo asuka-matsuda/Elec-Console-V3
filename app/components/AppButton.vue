@@ -93,14 +93,14 @@ const componentTag = computed(() => {
     z-index: 1;
 
     @include focus(var(--btn-color));
-    @include cyber-text-glow(50%, var(--blur-md), var(--btn-color));
+    @include cyber-text-glow($color: var(--btn-color));
   }
 
   &:active:not(:disabled, .is-disabled) {
     z-index: 1;
 
     @include press(var(--btn-color));
-    @include cyber-text-glow(50%, var(--blur-md), var(--btn-color));
+    @include cyber-text-glow($color: var(--btn-color));
   }
 
   /* Disabled State */

@@ -10,11 +10,9 @@
   $is-active: "&:is(:focus, :focus-visible)",
   $is-hover: "&:hover:not(:disabled, .is-error, :focus)"
 ) {
-  border: var(--border-width-base) solid
-    theme-color(var(--color-category-main), 50%);
+  border: var(--border-width-base) solid theme-color(var(--color-category-main));
 
   // 1. 通常状態 (Default)
-  background-color: transparent;
   box-shadow: var(--shadow-sink);
   transition: var(--transition-base);
 
@@ -31,7 +29,7 @@
   // 4. フォーカス状態 (Focus)
   #{$is-active} {
     @include focus(var(--color-category-main));
-    @include cyber-text-glow(50%, 8px, var(--color-category-main));
+    @include cyber-text-glow($color: var(--color-category-main));
 
     transition:
       box-shadow var(--duration-slow) var(--ease-base),

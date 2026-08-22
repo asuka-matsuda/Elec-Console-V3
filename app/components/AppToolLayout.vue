@@ -168,7 +168,6 @@ const toggleDrawer = () => {
       border-top: var(--border-width-base) solid var(--color-category-tool);
 
       background: var(--color-bg-base);
-
       box-shadow: var(--shadow-elevation-md);
 
       transition: transform var(--transition-base);

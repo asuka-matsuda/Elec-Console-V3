@@ -85,6 +85,7 @@ const inputId = useId();
 
   &__swatch {
     flex-shrink: 0;
+
     width: var(--icon-size-md);
     height: var(--icon-size-md);
     border-radius: 50%;
