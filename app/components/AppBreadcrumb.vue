@@ -69,8 +69,8 @@ const processedItems = computed(() => {
     flex-wrap: wrap;
 
     // Box Model
-    padding: var(--pad-container);
-    padding-top: calc(var(--pad-container) + var(--space-2));
+    padding: var(--pad-component);
+    padding-top: calc(var(--pad-component) + var(--space-2));
 
     // Typography
     list-style: none;
@@ -95,8 +95,6 @@ const processedItems = computed(() => {
       letter-spacing: normal;
 
       // Visuals & Effects
-      opacity: 0.9;
-
       @include cyber-text-glow(50%, var(--blur-sm), var(--color-category-main));
     }
   }
