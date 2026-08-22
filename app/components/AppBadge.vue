@@ -12,11 +12,7 @@ export type BadgeVariant =
   | "primary"
   | "success"
   | "warning"
-  | "danger"
-  | "tool"
-  | "database"
-  | "reference"
-  | "management";
+  | "danger";
 
 withDefaults(
   defineProps<{
@@ -37,14 +33,11 @@ withDefaults(
 <style scoped lang="scss">
 .c-badge {
   $variants: (
+    "neutral": "--color-text-main",
     "primary": "--color-category-main",
     "success": "--color-status-success",
     "warning": "--color-status-warning",
     "danger": "--color-status-danger",
-    "tool": "--color-category-tool",
-    "database": "--color-category-database",
-    "reference": "--color-category-reference",
-    "management": "--color-category-management",
   );
 
   // --- Theme Variables ---
