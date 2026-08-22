@@ -89,7 +89,7 @@ const inputId = useId();
     height: var(--icon-size-md);
     border-radius: 50%;
 
-    @include sink;
+    box-shadow: var(--shadow-sink);
 
     @include border-dim(var(--color-border), 50%);
   }

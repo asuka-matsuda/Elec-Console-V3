@@ -101,7 +101,7 @@ const inputId = useId();
     height: var(--track-h);
     border: var(--border-width-base) solid var(--color-border);
 
-    @include sink;
+    box-shadow: var(--shadow-sink);
 
     transition: var(--transition-base);
   }
@@ -150,7 +150,7 @@ const inputId = useId();
     }
 
     .c-toggle__thumb {
-      @include sink;
+      box-shadow: var(--shadow-sink);
     }
   }
 

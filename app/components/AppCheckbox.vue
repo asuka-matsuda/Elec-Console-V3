@@ -124,7 +124,7 @@ const inputId = useId();
     @include flex-center;
     @include border-dim(var(--color-border), 50%);
 
-    @include sink;
+    box-shadow: var(--shadow-sink);
 
     transition: var(--transition-base);
 

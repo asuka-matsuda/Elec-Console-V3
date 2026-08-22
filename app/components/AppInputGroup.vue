@@ -61,7 +61,7 @@
       color: var(--color-text-main);
       white-space: nowrap;
 
-      @include sink;
+      box-shadow: var(--shadow-sink);
 
       @include flex-center(0, inline-flex);
     }

@@ -221,7 +221,7 @@ const dropStatusClass = computed(() => {
     padding: var(--pad-component) var(--pad-section);
     border: var(--border-width-base) solid var(--color-border);
 
-    @include sink;
+    box-shadow: var(--shadow-sink);
 
     @include surface(20%);
   }
