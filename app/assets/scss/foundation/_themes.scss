@@ -34,13 +34,6 @@
   // --- Shadows ---
   --shadow-color: hsl(220deg 25% 15% / 15%);
 
-  // --- Edge Reflex ---
-  --edge-reflex-base: inset 0 0 0 1px color-mix(in srgb, black 8%, transparent);
-  --edge-reflex-hover: inset 0 0 0 1px
-    color-mix(in srgb, black 15%, transparent);
-  --edge-reflex-press:
-    inset 0 1px 3px color-mix(in srgb, black 10%, transparent),
-    inset 0 0 0 1px color-mix(in srgb, black 15%, transparent);
 }
 
 // --- Accent Color Variations ---
