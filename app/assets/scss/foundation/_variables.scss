@@ -95,12 +95,6 @@ $color-text-disabled-base: 240 5% 34%;
 $color-border-main-base: 240 4% 16%;
 
 // --- Colors (Component HSL Bases) ---
-$color-scroll-base: 240 5% 26%;
-$color-table-header-bg-base: 240 6% 10%;
-$color-table-hover-bg-base: 240 4% 22%;
-$color-input-bg-base: 240 10% 4%;
-$color-input-border-base: 240 5% 26%;
-$color-input-focus-base: 217 91% 60%;
 
 // --- CSS CUSTOM PROPERTIES (:root) ---
 :root {
@@ -160,12 +154,6 @@ $color-input-focus-base: 217 91% 60%;
   --color-text-muted-base: #{$color-text-muted-base};
   --color-text-disabled-base: #{$color-text-disabled-base};
   --color-border-base: #{$color-border-main-base};
-  --color-scroll-base: #{$color-scroll-base};
-  --color-table-header-bg-base: #{$color-table-header-bg-base};
-  --color-table-hover-bg-base: #{$color-table-hover-bg-base};
-  --color-input-bg-base: #{$color-input-bg-base};
-  --color-input-border-base: #{$color-input-border-base};
-  --color-input-focus-base: #{$color-input-focus-base};
 
   // --- Borders Base ---
   --border-width-base: 1px;
@@ -201,14 +189,6 @@ $color-input-focus-base: 217 91% 60%;
   --color-text-muted: hsl(var(--color-text-muted-base));
   --color-text-disabled: hsl(var(--color-text-disabled-base));
   --color-border: hsl(var(--color-border-base));
-
-  // --- Component Colors ---
-  --color-scroll: hsl(var(--color-scroll-base));
-  --color-table-header-bg: hsl(var(--color-table-header-bg-base));
-  --color-table-hover-bg: hsl(var(--color-table-hover-bg-base));
-  --color-input-bg: hsl(var(--color-input-bg-base));
-  --color-input-border: hsl(var(--color-input-border-base));
-  --color-input-focus: hsl(var(--color-input-focus-base));
 
   // --- Semantic Spacing (Gap & Pad) ---
   --gap-element: var(--space-1);
