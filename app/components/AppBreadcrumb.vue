@@ -68,8 +68,6 @@ const processedItems = computed(() => {
 
     position: relative;
 
-    flex-wrap: wrap;
-
     // Box Model
     padding: var(--pad-component);
     padding-top: calc(var(--pad-component) + var(--space-2));
