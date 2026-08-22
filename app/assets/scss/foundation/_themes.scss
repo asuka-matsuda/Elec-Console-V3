@@ -6,6 +6,7 @@
 [data-theme="light"] {
   // --- Light Mode Colors (Pure White / No Background) ---
   --color-main-bg-base: 0 0% 100%; // #FFFFFF
+  --surface-bg: var(--color-main-bg);
 
   // --- Text & Overlay ---
   --color-overlay-base: 220 25% 15%; // For glass and overlays
@@ -158,5 +159,6 @@ html[data-base-bg="grid"] body {
 
 // --- Overrides ---
 html[data-theme="light"] body {
-  background-image: none; // ライトモードの時は背景効果をオフに
+  background-color: hsl(240deg 5% 96%) !important;
+  background-image: none !important;
 }
