@@ -10,7 +10,8 @@
   $is-active: "&:is(:focus, :focus-visible)",
   $is-hover: "&:hover:not(:disabled, .is-error, :focus)"
 ) {
-  border: var(--border-width-base) solid theme-color(var(--color-category-main), 50%);
+  border: var(--border-width-base) solid
+    theme-color(var(--color-category-main), 50%);
 
   // 1. 通常状態 (Default)
   background-color: transparent;
@@ -71,4 +72,3 @@
     @extend %disabled;
   }
 }
-

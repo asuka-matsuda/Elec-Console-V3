@@ -95,7 +95,6 @@ const history = computed(() => dashboardData.value?.history || []);
   }
 
   &__loading {
-
     @extend %text-sm;
 
     padding: var(--pad-container);

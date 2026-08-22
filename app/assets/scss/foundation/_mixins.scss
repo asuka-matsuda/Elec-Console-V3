@@ -12,22 +12,16 @@
       @media (width <= $value) {
         @content;
       }
-    }
-
- @else if $direction == "up" {
+    } @else if $direction == "up" {
       @media (width >= $value) {
         @content;
       }
-    }
-
- @else if $direction == "up-strict" {
+    } @else if $direction == "up-strict" {
       @media (width > $value) {
         @content;
       }
     }
-  }
-
- @else {
+  } @else {
     @warn "Invalid breakpoint: #{$breakpoint}.";
   }
 }
@@ -41,16 +35,12 @@
       @container (min-width: #{$value}) {
         @content;
       }
-    }
-
- @else if $direction == "down" {
+    } @else if $direction == "down" {
       @container (max-width: #{$value}) {
         @content;
       }
     }
-  }
-
- @else {
+  } @else {
     @warn "Invalid container breakpoint: #{$breakpoint}.";
   }
 }
@@ -76,18 +66,15 @@
   text-shadow: 0 0 $blur theme-color($color, $opacity);
 }
 
-// 少し暗めの半透明なボーダー（汎用）
 @mixin border-dim($color: var(--color-border), $opacity: 30%) {
   border: var(--border-width-base) solid theme-color($color, $opacity);
 }
 
-// パネルやカードのベース表面（枠線とわずかな影で浮遊感を出す）
 @mixin surface($border-opacity: 10%) {
   @include border-dim(var(--color-border), $border-opacity);
 
   box-shadow: var(--shadow-elevation-base);
 }
-
 
 // --- Interactive States (Focus, Hover, Active, Disabled) ---
 
@@ -112,9 +99,7 @@
       var(--shadow-elevation-base);
 
     // 色指定がない場合は、標準のボーダー色と控えめな発光にする
-  }
-
- @else {
+  } @else {
     border-color: var(--color-border);
     box-shadow: var(--shadow-elevation-base);
   }
