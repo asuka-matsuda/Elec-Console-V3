@@ -22,8 +22,6 @@
   --color-category-reference-base: 271 80% 50%; // Deep Purple
   --color-category-management-base: 180 75% 30%; // Dark Teal
 
-
-
   // --- Glassmorphism Base Color ---
   --glass-base-color: black;
 
@@ -33,21 +31,19 @@
 
   // --- Shadows ---
   --shadow-color: hsl(220deg 25% 15% / 15%);
-
 }
 
 // --- Accent Color Variations ---
-// Accent Color Variables (These are dynamically overridden via JS)
-// Default values are defined in :root in _variables.scss
-// Examples of accent color presets:
-// Orange (Default): 25 95% 53%
 
 // --- Border Style Themes ---
 :root,
 body[data-border-style="hud"] {
   --panel-border-color: var(--color-border);
   --panel-border-image: none;
-  --panel-box-shadow: elevation-value('sm', (inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border)));
+  --panel-box-shadow: elevation-value(
+    "sm",
+    (inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border))
+  );
   --panel-bracket-display: block;
   --panel-bracket-size: 16px;
   --panel-bracket-color: var(--color-border);
@@ -56,7 +52,10 @@ body[data-border-style="hud"] {
 body[data-border-style="simple"] {
   --panel-border-color: var(--color-border);
   --panel-border-image: none;
-  --panel-box-shadow: elevation-value('sm', (inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent));
+  --panel-box-shadow: elevation-value(
+    "sm",
+    (inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent)
+  );
   --panel-bracket-display: none;
 }
 
@@ -68,7 +67,10 @@ body[data-border-style="gradient"] {
       transparent 100%
     )
     1;
-  --panel-box-shadow: elevation-value('sm', (inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent));
+  --panel-box-shadow: elevation-value(
+    "sm",
+    (inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent)
+  );
   --panel-bracket-display: block;
   --panel-bracket-size: 12px;
   --panel-bracket-color: var(--color-border);
@@ -82,10 +84,83 @@ body[data-border-style="hybrid"] {
       transparent 100%
     )
     1;
-  --panel-box-shadow: elevation-value('sm', (inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border))); // Revert shadow elevation to base
+  --panel-box-shadow: elevation-value(
+    "sm",
+    (inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border))
+  ); // Revert shadow elevation to base
 
   --panel-bracket-display: block;
   --panel-bracket-size: 18px;
   --panel-bracket-color: var(--color-border);
   --panel-bracket-glow: drop-shadow(0 0 4px var(--color-border));
+}
+
+// ==========================================================================
+// Background Themes
+// ==========================================================================
+
+/* Modifiers
+   ========================================================================== */
+
+// --- 無地 ---
+html[data-base-bg="solid"] body {
+  background-color: var(--bg-solid-color);
+  background-image: none;
+}
+
+// --- gradient ---
+html[data-base-bg="gradient"] body {
+  background-image: linear-gradient(
+    135deg,
+    var(--bg-gradient-c1),
+    var(--bg-gradient-c2)
+  );
+}
+
+// --- aurora ---
+html[data-base-bg="aurora"] body {
+  background-image:
+    radial-gradient(
+      ellipse at top left,
+      color-mix(in srgb, var(--bg-aurora-c1) 35%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse at bottom right,
+      color-mix(in srgb, var(--bg-aurora-c2) 25%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse at top right,
+      color-mix(in srgb, var(--bg-aurora-c3) 25%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse at bottom left,
+      color-mix(in srgb, var(--bg-aurora-c4) 25%, transparent) 0%,
+      transparent 70%
+    );
+  background-size: 100% 100%;
+}
+
+// --- grid ---
+html[data-base-bg="grid"] body {
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in srgb, var(--bg-grid-color) 50%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--bg-grid-color) 50%, transparent) 1px,
+      transparent 1px
+    );
+  background-repeat: repeat;
+  background-size: var(--bg-grid-spacing) var(--bg-grid-spacing);
+}
+
+// --- Overrides ---
+html[data-theme="light"] body {
+  background-image: none; // ライトモードの時は背景効果をオフに
 }

@@ -1,5 +1,6 @@
 @use "variables" as *;
 @use "mixins" as *;
+@use "functions" as *;
 
 /* Universal & Resets
    ========================================================================== */
@@ -22,6 +23,22 @@ textarea {
   font-family: inherit;
 }
 
+$base-glows:
+    //1つ目のグラデーション
+    //左から10%、上から-10%
+  radial-gradient(
+    circle at 10% -10%,
+    theme-color(var(--color-category-main), 15%) 0%,
+    transparent 70%
+  ),
+  //2つ目のグラデーション
+  //左から80%、上から20%
+  radial-gradient(
+      circle at 80% 20%,
+      theme-color(var(--color-category-tool), 10%) 0%,
+      transparent 60%
+    );
+
 /* Base Elements
    ========================================================================== */
 body {
@@ -40,6 +57,15 @@ body {
   letter-spacing: 0.02em;
 
   color-scheme: dark; // ダークモードベース
+  background-color: var(--color-main-bg);
+  background-image: #{$base-glows};
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size:
+    100% 100%,
+    100% 100%;
+
+  transition: background var(--duration-modal) ease;
 
   -webkit-font-smoothing: antialiased; // Chrome,Safari用
 }

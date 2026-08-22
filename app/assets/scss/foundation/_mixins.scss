@@ -88,14 +88,25 @@
 }
 
 // 境界線（ボーダー）を端に向けてグラデーションで透過（フェードアウト）させる
-@mixin border-fade($direction: bottom, $color: var(--color-border), $type: 'center') {
+@mixin border-fade(
+  $direction: bottom,
+  $color: var(--color-border),
+  $type: "center"
+) {
   $gradient-dir: to bottom;
 
-  @if $direction == bottom or $direction == top { $gradient-dir: to right; }
+  @if $direction == bottom or $direction == top {
+    $gradient-dir: to right;
+  }
 
-  $gradient: linear-gradient($gradient-dir, transparent 0%, $color 50%, transparent 100%);
+  $gradient: linear-gradient(
+    $gradient-dir,
+    transparent 0%,
+    $color 50%,
+    transparent 100%
+  );
 
-  @if $type == 'side' {
+  @if $type == "side" {
     $gradient: linear-gradient($gradient-dir, $color 0%, transparent 100%);
   }
 
@@ -169,7 +180,8 @@
   $is-active: "&:is(:focus, :focus-visible)",
   $is-hover: "&:hover:not(:disabled, .is-error, :focus)"
 ) {
-  border: var(--border-width-base) solid theme-color(var(--color-category-main), 50%);
+  border: var(--border-width-base) solid
+    theme-color(var(--color-category-main), 50%);
 
   // 1. 通常状態 (Default)
   background-color: transparent;
@@ -204,7 +216,6 @@
 
 // --- Interactive States (Focus, Hover, Active, Disabled) ---
 
-
 // フォーカス時の発光（標準のアウトラインの代わり）
 @mixin focus($color: var(--color-category-main), $shadow-spread: 12px) {
   border-color: $color;
@@ -221,7 +232,7 @@
   @if $color {
     border-color: theme-color($color, 80%);
     box-shadow:
-            inset 0 0 8px theme-color($color, 20%),
+      inset 0 0 8px theme-color($color, 20%),
       0 0 12px theme-color($color, 30%),
       var(--shadow-elevation-base);
 
@@ -239,7 +250,7 @@
   transform: scale(0.985);
   border-color: theme-color($color, 90%);
   box-shadow:
-        inset 0 var(--blur-sm) var(--blur-lg) theme-color(#000, 60%),
+    inset 0 var(--blur-sm) var(--blur-lg) theme-color(#000, 60%),
     inset 0 -var(--blur-sm) 10px theme-color($color, 30%),
     inset 0 0 0 1px theme-color($color, 30%),
     var(--shadow-sink);
@@ -267,9 +278,7 @@
 
 // --- Misc Utilities ---
 
-
 // --- Cursor & Indicators ---
-
 
 // ターミナル風の点滅するサイバーカーソル（文字の後ろに配置）
 @mixin blinking-cursor($width: 6px, $height: 14px, $color: currentcolor) {
@@ -351,13 +360,14 @@
 
 // --- Layout Mixins ---
 
-
 @mixin flex-center($gap: 0, $display: flex) {
   display: $display;
   align-items: center;
   justify-content: center;
 
-  @if $gap != 0 { gap: $gap; }
+  @if $gap != 0 {
+    gap: $gap;
+  }
 }
 
 @mixin flex-between($gap: 0, $display: flex) {
@@ -365,7 +375,9 @@
   align-items: center;
   justify-content: space-between;
 
-  @if $gap != 0 { gap: $gap; }
+  @if $gap != 0 {
+    gap: $gap;
+  }
 }
 
 @mixin flex-start($gap: 0, $display: flex) {
@@ -373,21 +385,24 @@
   align-items: center;
   justify-content: flex-start;
 
-  @if $gap != 0 { gap: $gap; }
+  @if $gap != 0 {
+    gap: $gap;
+  }
 }
 
-@function elevation-value($level: 'sm', $extra: null) {
+@function elevation-value($level: "sm", $extra: null) {
   $shadows: ();
 
-  @if $extra { $shadows: list.append($shadows, $extra, comma); }
+  @if $extra {
+    $shadows: list.append($shadows, $extra, comma);
+  }
 
-
-$shadows: list.append($shadows, var(--shadow-elevation-#{$level}), comma);
+  $shadows: list.append($shadows, var(--shadow-elevation-#{$level}), comma);
 
   @return $shadows;
 }
 
-@mixin elevation($level: 'sm', $extra: null) {
+@mixin elevation($level: "sm", $extra: null) {
   box-shadow: elevation-value($level, $extra);
 }
 
