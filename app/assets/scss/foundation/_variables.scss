@@ -197,23 +197,46 @@ $color-border-main-base: 240 4% 16%;
   --shadow-color: theme-color(black, 90%); // Dark mode default
 
   --shadow-elevation-sm:
-    0 2px 4px -1px theme-color(var(--shadow-color), 80%),
-    0 1px 2px -1px theme-color(var(--shadow-color), 100%);
+    0 1px 2px theme-color(var(--shadow-color), 40%),
+    0 4px 8px theme-color(var(--shadow-color), 20%),
+    inset 0 1px 0 rgb(255 255 255 / 5%);
 
   --shadow-elevation-md:
-    0 8px 16px -4px theme-color(var(--shadow-color), 60%),
-    0 4px 6px -2px theme-color(var(--shadow-color), 80%);
+    0 2px 4px theme-color(var(--shadow-color), 30%),
+    0 8px 16px theme-color(var(--shadow-color), 20%),
+    inset 0 1px 0 rgb(255 255 255 / 5%);
 
   --shadow-elevation-lg:
-    0 20px 25px -5px theme-color(var(--shadow-color), 60%),
-    0 8px 10px -6px theme-color(var(--shadow-color), 80%);
+    0 4px 8px theme-color(var(--shadow-color), 20%),
+    0 16px 32px theme-color(var(--shadow-color), 20%),
+    inset 0 1px 0 rgb(255 255 255 / 5%);
 
-  --shadow-sink: inset 0 2px 4px 0 theme-color(var(--shadow-color), 40%);
+  --shadow-sink: inset 0 2px 4px 0 theme-color(var(--shadow-color), 60%);
 
+  --shadow-glow-hover:
+    0 0 16px theme-color(var(--glow-color, var(--color-category-main)), 50%),
+    inset 0 0 4px theme-color(var(--glow-color, var(--color-category-main)), 30%);
+
+  --shadow-glow-focus:
+    0 0 16px theme-color(var(--glow-color, var(--color-category-main)), 70%),
+    inset 0 0 8px theme-color(var(--glow-color, var(--color-category-main)), 50%);
+
+  --shadow-glow-active:
+    0 0 8px theme-color(var(--glow-color, var(--color-category-main)), 40%),
+    inset 0 0 12px theme-color(var(--glow-color, var(--color-category-main)), 80%);
+
+  
   // --- Animation & Transitions ---
   --duration-fast: 0.15s;
   --duration-base: 0.25s;
   --duration-slow: 0.4s;
+
+  --transition-glow:
+    box-shadow var(--duration-slow) var(--ease-base),
+    border-color var(--duration-slow) var(--ease-base),
+    background-color var(--duration-base) var(--ease-base),
+    color var(--duration-base) var(--ease-base),
+    transform var(--duration-slow) var(--ease-base);
   --duration-modal: 0.5s;
   --ease-base: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
@@ -221,8 +244,7 @@ $color-border-main-base: 240 4% 16%;
   --transition-fast: all var(--duration-fast) var(--ease-base);
   --transition-base: all var(--duration-base) var(--ease-base);
   --transition-slow: all var(--duration-slow) var(--ease-smooth);
-  --transition-modal: all var(--duration-modal) var(--ease-bounce);
-
+  
   // --- Component & Icon Sizes ---
   --size-control-sm: 32px;
   --size-control-md: 40px;

@@ -13,59 +13,47 @@
   border: var(--border-width-base) solid theme-color(var(--color-category-main));
 
   // 1. 通常状態 (Default)
-  box-shadow: var(--shadow-sink);
-  transition: var(--transition-base);
+  @include state-base(var(--shadow-sink), var(--transition-glow));
 
-  // 2. ホバー状態 (Hover)
+  // 2. ホバー (Hover)
   #{$is-hover} {
-    @include hover-glow(var(--color-category-main));
+    @include state-hover(var(--color-category-main));
   }
 
-  // 3. クリック（押し込み）状態 (Active/Press)
+  // 3. クリック (Active/Press)
   &:active:not(:disabled, .is-error) {
-    @include press(var(--color-category-main));
+    @include state-active(var(--color-category-main));
   }
 
   // 4. フォーカス状態 (Focus)
   #{$is-active} {
-    @include focus(var(--color-category-main));
+    @include state-focus(var(--color-category-main));
     @include cyber-text-glow($color: var(--color-category-main));
-
-    transition:
-      box-shadow var(--duration-slow) var(--ease-base),
-      border-color var(--duration-slow) var(--ease-base);
   }
 
-  // 5. エラー状態 (Error)
+  // 5. エラー (Error)
   #{$is-error} {
     border-color: theme-color(var(--color-status-danger), 50%);
     color: var(--color-status-danger);
 
-    // エラー状態の基本発光
-    @include active(var(--color-status-danger));
-
-    // エラー時のホバー
+    // エラーのホバー
     &:hover:not(:disabled, :focus) {
-      @include hover-glow(var(--color-status-danger));
+      @include state-hover(var(--color-status-danger));
     }
 
-    // エラー時のクリック
+    // エラーのクリック
     &:active:not(:disabled) {
-      @include press(var(--color-status-danger));
+      @include state-active(var(--color-status-danger));
     }
 
-    // エラー時のフォーカス
+    // エラーのフォーカス
     &:is(:-moz-focusring, :focus, :focus-visible, .is-active) {
-      @include focus(var(--color-status-danger));
-      @include cyber-text-glow(50%, 8px, var(--color-status-danger));
-
-      transition:
-        box-shadow var(--duration-slow) var(--ease-base),
-        border-color var(--duration-slow) var(--ease-base);
+      @include state-focus(var(--color-status-danger));
+      @include cyber-text-glow($color: var(--color-status-danger));
     }
   }
 
-  // 6. 無効化状態 (Disabled)
+  // 6. 無効 (Disabled)
   &:is(:disabled, .is-disabled) {
     @extend %disabled;
   }

@@ -86,56 +86,52 @@
   box-shadow: var(--shadow-elevation-sm);
 }
 
-// --- Interactive States (Focus, Hover, Active, Disabled) ---
-@mixin focus($color: var(--color-category-main), $shadow-spread: 12px) {
-  border-color: $color;
-  outline: none;
-  box-shadow:
-    inset 0 0 var(--blur-sm) theme-color($color, 20%),
-    0 0 var(--blur-sm) theme-color($color, 50%),
-    0 0 $shadow-spread theme-color($color, 30%);
+// --- Interactive States (State Mixins) ---
+@mixin state-base($shadow: none, $transition: var(--transition-base)) {
+  --shadow-base: #{$shadow};
+
+  box-shadow: var(--shadow-base);
+  transition: $transition;
 }
 
-@mixin hover-glow($color: null) {
+@mixin state-hover($color: null, $transition: var(--transition-glow)) {
   @if $color {
-    border-color: theme-color($color, 80%);
-    box-shadow:
-      inset 0 0 8px theme-color($color, 20%),
-      0 0 12px theme-color($color, 30%),
-      var(--shadow-elevation-sm);
+    --glow-color: #{$color};
+
+    border-color: $color;
   }
 
- @else {
-    border-color: var(--color-border);
-    box-shadow: var(--shadow-elevation-sm);
-  }
+  box-shadow: var(--shadow-glow-hover), var(--shadow-base, none);
+  transition: $transition;
 }
 
-@mixin press($color: var(--color-category-main)) {
+@mixin state-focus($color: null, $transition: var(--transition-glow)) {
+  @if $color {
+    --glow-color: #{$color};
+
+    border-color: $color;
+  }
+
+  outline: none;
+  box-shadow: var(--shadow-glow-focus), var(--shadow-base, none);
+  transition: $transition;
+}
+
+@mixin state-active($color: null, $transition: var(--transition-glow)) {
+  @if $color {
+    --glow-color: #{$color};
+
+    border-color: $color;
+  }
+
   transform: scale(0.985);
-  border-color: theme-color($color, 90%);
-  box-shadow:
-    inset 0 var(--blur-sm) var(--blur-lg) theme-color(#000, 60%),
-    inset 0 -var(--blur-sm) 10px theme-color($color, 30%),
-    inset 0 0 0 1px theme-color($color, 30%),
-    var(--shadow-sink);
-  transition:
-    transform var(--duration-slow) var(--ease-base),
-    box-shadow var(--duration-slow) var(--ease-base),
-    border-color var(--duration-slow) var(--ease-base);
+  box-shadow: var(--shadow-glow-active), var(--shadow-base, none);
+  transition: $transition;
 
   svg {
     filter: drop-shadow(0 0 2px $color);
     stroke: $color;
   }
-}
-
-@mixin active($color: var(--color-category-main)) {
-  border-color: $color;
-  box-shadow:
-    inset 0 0 var(--blur-lg) theme-color($color, 40%),
-    inset 0 0 2px theme-color($color, 50%),
-    0 0 var(--blur-lg) theme-color($color, 40%);
 }
 
 // --- Cursor & Indicators ---
