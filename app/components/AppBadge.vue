@@ -48,37 +48,33 @@ withDefaults(
   );
 
   // --- Theme Variables ---
-  --badge-color: var(--color-text-main);
-  --badge-border: theme-color(var(--color-border), 50%);
-  --badge-shadow: transparent;
+  --glow-color: var(--color-text-main);
 
   // --- Base Styling ---
   @extend %text-2xs;
 
-  // --- Base Styles ---
   user-select: none;
 
   padding: var(--pad-element);
-  border: var(--border-width-base) solid var(--badge-border);
+  border: var(--border-width-base) solid theme-color(var(--glow-color), 60%);
 
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
-  color: var(--badge-color);
+  color: var(--glow-color);
   text-transform: uppercase;
   white-space: nowrap;
 
-  @include state-base((inset 0 0 var(--blur-sm) var(--badge-shadow), 0 0 var(--blur-md) var(--badge-shadow)), var(--transition-base));
+  @include state-base(var(--shadow-glow-hover), var(--transition-base));
   
   @include flex-center(0, inline-flex);
-  @include cyber-text-glow(100%, var(--blur-sm), var(--badge-color));
+  @include cyber-text-glow(100%, var(--blur-sm), var(--glow-color));
 
   // --- Color Modifiers ---
   @each $name, $var in $variants {
     &--#{$name} {
-      --badge-color: var(#{$var});
-      --badge-border: #{theme-color(var(#{$var}), 60%)};
-      --badge-shadow: #{theme-color(var(#{$var}), 30%)};
+      --glow-color: var(#{$var});
     }
   }
 }
 </style>
+

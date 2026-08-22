@@ -4,7 +4,8 @@
 // --- SCSS VARIABLES (Design Tokens) ---
 
 // --- Typography ---
-$font-fallback: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+$font-fallback:
+  "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
 $font-base: $font-fallback;
 $font-mono: "Roboto Mono", $font-fallback;
 $font-sizes: (
@@ -149,7 +150,7 @@ $color-border-main-base: 240 4% 16%;
   --color-text-secondary-base: #{$color-text-secondary-base};
   --color-text-muted-base: #{$color-text-muted-base};
   --color-text-disabled-base: #{$color-text-disabled-base};
-  --color-border-base: #{$color-border-main-base};
+  --color-border-main-base: #{$color-border-main-base};
 
   // --- Borders Base ---
   --border-width-base: 1px;
@@ -182,7 +183,7 @@ $color-border-main-base: 240 4% 16%;
   --color-text-secondary: hsl(var(--color-text-secondary-base));
   --color-text-muted: hsl(var(--color-text-muted-base));
   --color-text-disabled: hsl(var(--color-text-disabled-base));
-  --color-border: hsl(var(--color-border-base));
+  --color-border: hsl(var(--color-border-main-base));
 
   // --- Semantic Spacing (Gap & Pad) ---
   --gap-element: var(--space-1);
@@ -215,17 +216,19 @@ $color-border-main-base: 240 4% 16%;
 
   --shadow-glow-hover:
     0 0 16px theme-color(var(--glow-color, var(--color-category-main)), 50%),
-    inset 0 0 4px theme-color(var(--glow-color, var(--color-category-main)), 30%);
+    inset 0 0 4px
+      theme-color(var(--glow-color, var(--color-category-main)), 30%);
 
   --shadow-glow-focus:
     0 0 16px theme-color(var(--glow-color, var(--color-category-main)), 70%),
-    inset 0 0 8px theme-color(var(--glow-color, var(--color-category-main)), 50%);
+    inset 0 0 8px
+      theme-color(var(--glow-color, var(--color-category-main)), 50%);
 
   --shadow-glow-active:
     0 0 8px theme-color(var(--glow-color, var(--color-category-main)), 40%),
-    inset 0 0 12px theme-color(var(--glow-color, var(--color-category-main)), 80%);
+    inset 0 0 12px
+      theme-color(var(--glow-color, var(--color-category-main)), 80%);
 
-  
   // --- Animation & Transitions ---
   --duration-fast: 0.15s;
   --duration-base: 0.25s;
@@ -244,7 +247,7 @@ $color-border-main-base: 240 4% 16%;
   --transition-fast: all var(--duration-fast) var(--ease-base);
   --transition-base: all var(--duration-base) var(--ease-base);
   --transition-slow: all var(--duration-slow) var(--ease-smooth);
-  
+
   // --- Component & Icon Sizes ---
   --size-control-sm: 32px;
   --size-control-md: 40px;
