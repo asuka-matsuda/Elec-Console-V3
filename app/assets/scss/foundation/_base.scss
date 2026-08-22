@@ -34,9 +34,11 @@ body {
   min-height: 100dvh; // バグ対策
   margin: 0; // 余白なし
 
+  // Extends
+  @extend %text-body;
+
+  // Typography
   font-family: var(--font-base);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-base);
   color: var(--color-text-main);
   letter-spacing: 0.02em;
 
@@ -57,17 +59,6 @@ input::-webkit-inner-spin-button {
    ========================================================================== */
 .is-hidden {
   display: none;
-}
-
-/* User Preferences (Reduced Motion / Disable Animations)
-   ========================================================================== */
-html[data-animations="false"] {
-  *,
-  *::before,
-  *::after {
-    animation: none !important; // アニメーションのオフ
-    animation-play-state: paused !important; // jsで動いているものも一時停止
-  }
 }
 
 // --- Global Animations ---
