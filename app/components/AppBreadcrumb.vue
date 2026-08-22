@@ -56,36 +56,47 @@ const processedItems = computed(() => {
 
 <style scoped lang="scss">
 .c-breadcrumb {
-  // --- Base Styles ---
+  // Extends & Typography Base
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   letter-spacing: 0.1em;
 
-  // --- Layout Modifiers ---
   &__list {
+    // Layout & Positioning
+    @include flex-start(0, inline-flex);
+
     position: relative;
 
     flex-wrap: wrap;
 
+    // Box Model
     padding: var(--pad-container);
     padding-top: calc(var(--pad-container) + var(--space-2));
 
+    // Typography
     list-style: none;
 
-    @include flex-start(0, inline-flex);
+    // Visuals & Effects
     @include surface;
 
     // 左上の「SYS.LOC」ラベル
     &::after {
+
+      // Extends
+      @extend %text-label;
+
       content: "SYS.LOC";
 
+      // Layout & Positioning
       position: absolute;
       top: var(--space-1);
       left: var(--space-2);
 
-      font-size: 0.6em;
+      // Typography
       color: var(--color-category-main);
+      letter-spacing: normal; // 親のletter-spacingをリセット
 
+      // Visuals & Effects
       opacity: 0.9;
 
       @include cyber-text-glow(50%, var(--blur-sm), var(--color-category-main));
@@ -93,13 +104,16 @@ const processedItems = computed(() => {
   }
 
   &__item {
+    // Layout & Positioning
     display: flex;
     gap: var(--gap-element);
     align-items: center;
 
-    // 項目の区切り文字（最後の子要素以外に付与）
+    // 項目の区切り文字（最後の要素以外に付与）
     &:not(:last-child)::after {
       content: "»";
+      
+      // Typography
       font-size: var(--font-size-xs);
       color: theme-color(var(--color-category-main), 60%);
     }
@@ -107,32 +121,41 @@ const processedItems = computed(() => {
 
   &__link,
   &__text {
+    // Extends
     @extend %text-xs;
 
+    // Typography
     color: var(--color-text-muted);
     text-decoration: none;
+
+    // Visuals & Effects
     transition: var(--transition-base);
   }
 
-  // --- State Modifiers ---
   &__link:hover {
+    // Typography
     color: var(--color-text-main);
 
-    @include cyber-text-glow($color: var(--color-text-main));
+    // Visuals & Effects
+    @include cyber-text-glow(100%, var(--blur-sm), var(--color-text-main));
   }
 
   &__current {
-    @extend %text-lg;
+    // Extends
+    @extend %text-heading; // font-size: lg, font-weight: bold, line-height: tight
 
+    // Layout & Positioning
     display: flex;
     gap: var(--gap-element);
     align-items: center;
 
-    line-height: 1;
+    // Typography
     color: var(--color-category-main);
 
+    // Visuals & Effects
     @include cyber-text-glow(60%, var(--blur-md), var(--color-category-main));
     @include blinking-cursor(var(--space-2), var(--space-5), currentcolor);
   }
 }
 </style>
+
