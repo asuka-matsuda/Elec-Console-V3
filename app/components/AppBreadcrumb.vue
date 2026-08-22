@@ -31,10 +31,7 @@ const processedItems = computed(() => {
 <template>
   <nav class="c-breadcrumb">
     <ol>
-      <li
-        v-for="item in processedItems"
-        :key="item.uniqueKey"
-      >
+      <li v-for="item in processedItems" :key="item.uniqueKey">
         <template v-if="!item.isLast">
           <NuxtLink v-if="item.href" :to="item.href">
             {{ item.text }}

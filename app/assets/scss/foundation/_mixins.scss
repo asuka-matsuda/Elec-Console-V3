@@ -81,7 +81,9 @@
 }
 
 @mixin surface($border-opacity: 10%) {
-  @include border-dim(var(--color-border), $border-opacity);
+  background-color: var(--color-bg-panel);
+
+  @include border-dim($border-opacity);
 
   box-shadow: var(--shadow-elevation-sm);
 }
