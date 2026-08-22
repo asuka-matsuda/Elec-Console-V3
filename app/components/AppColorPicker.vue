@@ -71,7 +71,7 @@ const inputId = useId();
 
   @include state-base(none, var(--transition-base));
 
-  @include border-dim(var(--color-border), 50%);
+  @include border-dim(50%);
 
   // --- State Modifiers ---
   &:hover:not(.is-disabled) {
@@ -92,7 +92,7 @@ const inputId = useId();
 
     box-shadow: var(--shadow-sink);
 
-    @include border-dim(var(--color-border), 50%);
+    @include border-dim(50%);
   }
 
   &__value {

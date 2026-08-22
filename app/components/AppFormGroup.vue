@@ -110,7 +110,7 @@ withDefaults(
 
     color: var(--color-status-danger);
 
-    @include cyber-text-glow(30%, var(--blur-sm), var(--color-status-danger));
+    @include cyber-text-glow(var(--color-status-danger), 30%, var(--blur-sm));
   }
 
   &__help {
@@ -172,7 +172,7 @@ withDefaults(
   .c-form-label {
   color: var(--color-status-danger);
 
-  @include cyber-text-glow($color: var(--color-status-danger));
+  @include cyber-text-glow(var(--color-status-danger));
 
   &::before {
     border-color: var(--color-status-danger);

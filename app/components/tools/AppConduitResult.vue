@@ -133,13 +133,13 @@ const fill48 = computed(() =>
   .is-success {
     color: var(--color-status-success);
 
-    @include cyber-text-glow(40%, var(--blur-md), var(--color-status-success));
+    @include cyber-text-glow(var(--color-status-success), 40%, var(--blur-md));
   }
 
   .is-danger {
     color: var(--color-status-danger);
 
-    @include cyber-text-glow(40%, var(--blur-md), var(--color-status-danger));
+    @include cyber-text-glow(var(--color-status-danger), 40%, var(--blur-md));
   }
 
   &.is-sm {

@@ -98,7 +98,7 @@ const inputId = useId();
   // 1. Keyboard Focus State
   &:has(.c-checkbox__input:focus-visible) .c-checkbox__box {
     @include state-focus(var(--checkbox-color));
-    @include cyber-text-glow($color: var(--checkbox-color));
+    @include cyber-text-glow(var(--checkbox-color));
 
     
   }
@@ -120,7 +120,7 @@ const inputId = useId();
     height: 1.4em;
 
     @include flex-center;
-    @include border-dim(var(--color-border), 50%);
+    @include border-dim(50%);
 
     @include state-base(var(--shadow-sink), var(--transition-glow));
 
@@ -151,7 +151,7 @@ const inputId = useId();
     .c-checkbox__label {
       color: theme-color(var(--checkbox-color), 90%);
 
-      @include cyber-text-glow(20%, var(--blur-sm), var(--checkbox-color));
+      @include cyber-text-glow(var(--checkbox-color), 20%, var(--blur-sm));
     }
   }
 

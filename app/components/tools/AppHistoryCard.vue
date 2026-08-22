@@ -101,7 +101,7 @@ const handleDelete = () => {
     .c-history-card__main-result {
       color: var(--color-status-danger);
 
-      @include cyber-text-glow(50%, 8px, var(--color-status-danger));
+      @include cyber-text-glow(var(--color-status-danger), 50%, 8px);
     }
   }
 

@@ -66,7 +66,7 @@ const inputId = useId();
     /* 1. Keyboard Focus State */
     &:focus-visible + .c-toggle__track {
       @include state-focus(var(--toggle-color));
-      @include cyber-text-glow($color: var(--toggle-color));
+      @include cyber-text-glow(var(--toggle-color));
 
       
     }
@@ -134,7 +134,7 @@ const inputId = useId();
     .c-toggle__label {
       color: theme-color(var(--toggle-color), 90%);
 
-      @include cyber-text-glow(20%, var(--blur-sm), var(--toggle-color));
+      @include cyber-text-glow(var(--toggle-color), 20%, var(--blur-sm));
     }
   }
 

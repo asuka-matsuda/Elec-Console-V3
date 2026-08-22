@@ -91,14 +91,14 @@ const componentTag = computed(() => {
     z-index: 1;
 
     @include state-focus(var(--btn-color));
-    @include cyber-text-glow($color: var(--btn-color));
+    @include cyber-text-glow(var(--btn-color));
   }
 
   &:active:not(:disabled, .is-disabled) {
     z-index: 1;
 
     @include state-active(var(--btn-color));
-    @include cyber-text-glow($color: var(--btn-color));
+    @include cyber-text-glow(var(--btn-color));
   }
 
   /* Disabled State */
@@ -183,6 +183,6 @@ const componentTag = computed(() => {
   @include flex-center(var(--space-2), inline-flex);
 
   /* 視認性確保のための枠線と影（アウトラインスタイル） */
-  @include border-dim(var(--btn-color, var(--color-category-main)), 50%);
+  @include border-dim(50%, var(--btn-color, var(--color-category-main)));
 }
 </style>

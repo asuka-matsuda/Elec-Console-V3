@@ -28,7 +28,7 @@
   // 4. フォーカス状態 (Focus)
   #{$is-active} {
     @include state-focus(var(--color-category-main));
-    @include cyber-text-glow($color: var(--color-category-main));
+    @include cyber-text-glow(var(--color-category-main));
   }
 
   // 5. エラー (Error)
@@ -49,7 +49,7 @@
     // エラーのフォーカス
     &:is(:-moz-focusring, :focus, :focus-visible, .is-active) {
       @include state-focus(var(--color-status-danger));
-      @include cyber-text-glow($color: var(--color-status-danger));
+      @include cyber-text-glow(var(--color-status-danger));
     }
   }
 

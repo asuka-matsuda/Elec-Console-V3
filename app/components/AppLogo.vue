@@ -26,7 +26,7 @@ const emit = defineEmits<{
 
   &:hover {
     .c-logo__icon {
-      @include cyber-text-glow(60%, var(--blur-md), var(--color-category-main));
+      @include cyber-text-glow(var(--color-category-main), 60%, var(--blur-md));
 
       transform: scale(1.1);
     }

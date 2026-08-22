@@ -58,7 +58,9 @@ const processedItems = computed(() => {
 .c-breadcrumb {
   // Extends & Typography Base
   @extend %text-caption;
+
   @include border-dim;
+
   text-transform: uppercase;
 
   &__list {
@@ -66,6 +68,7 @@ const processedItems = computed(() => {
     @include flex-start(0, inline-flex);
 
     position: relative;
+
     flex-wrap: wrap;
 
     // Box Model
@@ -95,7 +98,7 @@ const processedItems = computed(() => {
       letter-spacing: normal;
 
       // Visuals & Effects
-      @include cyber-text-glow(50%, var(--blur-sm), var(--color-category-main));
+      @include cyber-text-glow(var(--color-category-main), 50%, var(--blur-sm));
     }
   }
 
@@ -131,7 +134,7 @@ const processedItems = computed(() => {
     color: var(--color-text-main);
 
     // Visuals & Effects
-    @include cyber-text-glow(100%, var(--blur-sm), var(--color-text-main));
+    @include cyber-text-glow(var(--color-text-main), 100%, var(--blur-sm));
   }
 
   &__current {
@@ -142,7 +145,7 @@ const processedItems = computed(() => {
     color: var(--color-category-main);
 
     // Visuals & Effects
-    @include cyber-text-glow(60%, var(--blur-md), var(--color-category-main));
+    @include cyber-text-glow(var(--color-category-main), 60%, var(--blur-md));
     @include blinking-cursor;
   }
 }

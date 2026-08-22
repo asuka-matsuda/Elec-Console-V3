@@ -63,7 +63,7 @@ withDefaults(
 
   // Visuals & Effects
   @include state-base(var(--shadow-glow-hover), var(--transition-base));
-  @include cyber-text-glow(100%, var(--blur-sm), var(--glow-color));
+  @include cyber-text-glow(var(--glow-color), 100%, var(--blur-sm));
 
   // Modifiers
   @each $name, $var in $variants {
