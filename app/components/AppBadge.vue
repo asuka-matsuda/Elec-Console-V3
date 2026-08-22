@@ -44,17 +44,14 @@ withDefaults(
   --glow-color: var(--color-text-main);
 
   // --- Base Styling ---
-  @extend %text-2xs;
+  @extend %text-label;
 
   user-select: none;
 
   padding: var(--pad-element);
   border: var(--border-width-base) solid theme-color(var(--glow-color), 60%);
 
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
   color: var(--glow-color);
-  text-transform: uppercase;
   white-space: nowrap;
 
   @include state-base(var(--shadow-glow-hover), var(--transition-base));
