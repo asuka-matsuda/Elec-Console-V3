@@ -10,11 +10,14 @@
 }
 
 ::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
   border: var(--border-width-base) solid
     theme-color(var(--color-category-main), 40%);
+  background: theme-color(var(--color-category-main), 10%);
+  background-clip: padding-box;
 
   &:hover {
     border-color: var(--color-category-main);
@@ -88,4 +91,5 @@
 }
 
 ::-webkit-scrollbar-corner {
+  background: transparent;
 }
