@@ -64,11 +64,11 @@ const rootProps = computed(() => {
     cursor: pointer;
 
     &:not(.is-disabled):hover {
-      @include hover-glow(var(--card-accent, var(--color-category-main)));
+      @include state-hover(var(--card-accent, var(--color-category-main)));
     }
 
     &:not(.is-disabled):active {
-      @include active(var(--card-accent, var(--color-category-main)));
+      @include state-active(var(--card-accent, var(--color-category-main)));
     }
   }
 

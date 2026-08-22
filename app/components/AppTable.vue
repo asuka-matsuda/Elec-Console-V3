@@ -115,7 +115,7 @@ defineProps<{
       z-index: 1;
 
       /* テーブル行ホバー時の発光エフェクト */
-      @include hover-glow;
+      @include state-hover;
 
       /* 行全体を光らせるため、セルの背景を上書きさせない */
       outline: var(--border-width-base) solid

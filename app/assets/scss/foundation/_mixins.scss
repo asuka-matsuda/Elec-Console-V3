@@ -125,20 +125,6 @@
 }
 
 
-// --- DEPRECATED (Will be removed after migrating Vue components) ---
-@mixin focus($color: var(--color-category-main), $shadow-spread: 12px) {
-  @include state-focus($color);
-}
-@mixin hover-glow($color: null) {
-  @include state-hover($color);
-}
-@mixin press($color: var(--color-category-main)) {
-  @include state-active($color);
-}
-@mixin active($color: var(--color-category-main)) {
-  @include state-active($color);
-}
-
 // --- Cursor & Indicators ---
 @mixin blinking-cursor($width: 6px, $height: 14px, $color: currentcolor) {
   &::after {

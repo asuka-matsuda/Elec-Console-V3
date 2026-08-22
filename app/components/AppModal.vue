@@ -114,21 +114,13 @@ const titleId = `modal-title-${modalId}`;
   opacity: 0;
   outline: none;
 
-  transition:
-    opacity var(--duration-modal) ease,
-    transform var(--duration-modal) var(--ease-bounce),
-    display var(--duration-modal) allow-discrete,
-    overlay var(--duration-modal) allow-discrete;
+  transition: var(--transition-modal);
 
   /* Native Backdrop Styling */
   &::backdrop {
     opacity: 0;
     backdrop-filter: blur(var(--blur-md));
-    transition:
-      opacity var(--duration-modal) ease,
-      backdrop-filter var(--duration-modal) ease,
-      display var(--duration-modal) allow-discrete,
-      overlay var(--duration-modal) allow-discrete;
+    transition: var(--transition-modal-backdrop);
   }
 
   // --- State Modifiers ---

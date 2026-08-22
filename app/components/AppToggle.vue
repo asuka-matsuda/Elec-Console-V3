@@ -65,12 +65,10 @@ const inputId = useId();
 
     /* 1. Keyboard Focus State */
     &:focus-visible + .c-toggle__track {
-      @include focus(var(--toggle-color));
+      @include state-focus(var(--toggle-color));
       @include cyber-text-glow($color: var(--toggle-color));
 
-      transition:
-        box-shadow var(--duration-slow) var(--ease-base),
-        border-color var(--duration-slow) var(--ease-base);
+      
     }
 
     /* 2. Checked State (ON) */

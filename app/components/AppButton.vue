@@ -86,20 +86,20 @@ const componentTag = computed(() => {
   &:hover:not(:disabled, .is-disabled) {
     z-index: 1;
 
-    @include hover-glow(var(--btn-color));
+    @include state-hover(var(--btn-color));
   }
 
   &:focus-visible {
     z-index: 1;
 
-    @include focus(var(--btn-color));
+    @include state-focus(var(--btn-color));
     @include cyber-text-glow($color: var(--btn-color));
   }
 
   &:active:not(:disabled, .is-disabled) {
     z-index: 1;
 
-    @include press(var(--btn-color));
+    @include state-active(var(--btn-color));
     @include cyber-text-glow($color: var(--btn-color));
   }
 

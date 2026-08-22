@@ -236,7 +236,7 @@ const closeSidebar = () => {
       border-color: transparent;
       color: var(--section-accent, var(--color-category-main));
 
-      @include active(var(--section-accent, var(--color-category-main)));
+      @include state-active(var(--section-accent, var(--color-category-main)));
       @include blinking-cursor(
         var(--space-1),
         var(--font-size-base),
