@@ -1,3 +1,5 @@
+﻿@use "sass:list";
+
 /* SCSS Functions
    ========================================================================== */
 
@@ -15,3 +17,17 @@
 @function theme-darken($color, $percentage: 10%) {
   @return color-mix(in srgb, #{$color}, black #{$percentage});
 }
+
+// 影の重ね合わせ（elevation用）
+@function elevation-value($level: "sm", $extra: null) {
+  $shadows: ();
+
+  @if $extra {
+    $shadows: list.append($shadows, $extra, comma);
+  }
+
+  $shadows: list.append($shadows, var(--shadow-elevation-#{$level}), comma);
+
+  @return $shadows;
+}
+

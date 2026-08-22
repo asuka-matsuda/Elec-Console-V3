@@ -12,16 +12,22 @@
       @media (width <= $value) {
         @content;
       }
-    } @else if $direction == "up" {
+    }
+
+ @else if $direction == "up" {
       @media (width >= $value) {
         @content;
       }
-    } @else if $direction == "up-strict" {
+    }
+
+ @else if $direction == "up-strict" {
       @media (width > $value) {
         @content;
       }
     }
-  } @else {
+  }
+
+ @else {
     @warn "Invalid breakpoint: #{$breakpoint}.";
   }
 }
@@ -35,12 +41,16 @@
       @container (min-width: #{$value}) {
         @content;
       }
-    } @else if $direction == "down" {
+    }
+
+ @else if $direction == "down" {
       @container (max-width: #{$value}) {
         @content;
       }
     }
-  } @else {
+  }
+
+ @else {
     @warn "Invalid container breakpoint: #{$breakpoint}.";
   }
 }
@@ -99,7 +109,9 @@
       var(--shadow-elevation-base);
 
     // 色指定がない場合は、標準のボーダー色と控えめな発光にする
-  } @else {
+  }
+
+ @else {
     border-color: var(--color-border);
     box-shadow: var(--shadow-elevation-base);
   }
@@ -250,17 +262,6 @@
   }
 }
 
-@function elevation-value($level: "sm", $extra: null) {
-  $shadows: ();
-
-  @if $extra {
-    $shadows: list.append($shadows, $extra, comma);
-  }
-
-  $shadows: list.append($shadows, var(--shadow-elevation-#{$level}), comma);
-
-  @return $shadows;
-}
 
 @mixin elevation($level: "sm", $extra: null) {
   box-shadow: elevation-value($level, $extra);
