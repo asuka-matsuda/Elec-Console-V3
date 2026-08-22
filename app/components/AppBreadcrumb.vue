@@ -57,9 +57,9 @@ const processedItems = computed(() => {
 <style scoped lang="scss">
 .c-breadcrumb {
   // Extends & Typography Base
-  font-weight: var(--font-weight-bold);
+  @extend %text-caption;
+  @include border-dim;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
 
   &__list {
     // Layout & Positioning
