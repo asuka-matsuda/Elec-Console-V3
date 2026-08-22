@@ -30,23 +30,22 @@ const processedItems = computed(() => {
 
 <template>
   <nav class="c-breadcrumb">
-    <ol class="c-breadcrumb__list">
+    <ol>
       <li
         v-for="item in processedItems"
         :key="item.uniqueKey"
-        class="c-breadcrumb__item"
       >
         <template v-if="!item.isLast">
-          <NuxtLink v-if="item.href" :to="item.href" class="c-breadcrumb__link">
+          <NuxtLink v-if="item.href" :to="item.href">
             {{ item.text }}
           </NuxtLink>
 
-          <span v-else class="c-breadcrumb__text">
+          <span v-else>
             {{ item.text }}
           </span>
         </template>
 
-        <span v-else class="c-breadcrumb__current">
+        <span v-else class="current">
           {{ item.text }}
         </span>
       </li>
@@ -63,7 +62,7 @@ const processedItems = computed(() => {
 
   text-transform: uppercase;
 
-  &__list {
+  ol {
     // Layout & Positioning
     @include flex-start(0, inline-flex);
 
@@ -102,7 +101,7 @@ const processedItems = computed(() => {
     }
   }
 
-  &__item {
+  li {
     // Layout & Positioning
     @include flex-start;
 
@@ -116,8 +115,8 @@ const processedItems = computed(() => {
     }
   }
 
-  &__link,
-  &__text {
+  a,
+  span:not(.current) {
     // Extends
     @extend %text-xs;
 
@@ -129,7 +128,7 @@ const processedItems = computed(() => {
     transition: var(--transition-base);
   }
 
-  &__link:hover {
+  a:hover {
     // Typography
     color: var(--color-text-main);
 
@@ -137,7 +136,7 @@ const processedItems = computed(() => {
     @include cyber-text-glow(var(--color-text-main), 100%, var(--blur-sm));
   }
 
-  &__current {
+  .current {
     // Layout & Positioning
     @include flex-start;
 
