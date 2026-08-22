@@ -12,16 +12,22 @@
       @media (width <= $value) {
         @content;
       }
-    } @else if $direction == "up" {
+    }
+
+ @else if $direction == "up" {
       @media (width >= $value) {
         @content;
       }
-    } @else if $direction == "up-strict" {
+    }
+
+ @else if $direction == "up-strict" {
       @media (width > $value) {
         @content;
       }
     }
-  } @else {
+  }
+
+ @else {
     @warn "Invalid breakpoint: #{$breakpoint}.";
   }
 }
@@ -35,12 +41,16 @@
       @container (min-width: #{$value}) {
         @content;
       }
-    } @else if $direction == "down" {
+    }
+
+ @else if $direction == "down" {
       @container (max-width: #{$value}) {
         @content;
       }
     }
-  } @else {
+  }
+
+ @else {
     @warn "Invalid container breakpoint: #{$breakpoint}.";
   }
 }
@@ -78,12 +88,6 @@
   box-shadow: var(--shadow-elevation-base);
 }
 
-// 共通のネオン発光Mixin（フォームやボタンのエラー・フォーカス状態用）
-@mixin neon-box($color, $out-opacity: 50%, $spread: 6px) {
-  box-shadow:
-    inset 0 0 var(--blur-sm) theme-color($color, 30%),
-    0 0 $spread theme-color($color, $out-opacity);
-}
 
 // --- Interactive States (Focus, Hover, Active, Disabled) ---
 
@@ -108,7 +112,9 @@
       var(--shadow-elevation-base);
 
     // 色指定がない場合は、標準のボーダー色と控えめな発光にする
-  } @else {
+  }
+
+ @else {
     border-color: var(--color-border);
     box-shadow: var(--shadow-elevation-base);
   }

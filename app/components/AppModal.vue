@@ -79,7 +79,6 @@ const titleId = `modal-title-${modalId}`;
         </div>
       </template>
 
-
       <div class="c-modal__layout">
         <!-- Body -->
         <div class="c-modal__body">
@@ -165,7 +164,6 @@ const titleId = `modal-title-${modalId}`;
   }
 
   &__title {
-    
     @extend %text-heading;
 
     margin: 0;
@@ -187,9 +185,8 @@ const titleId = `modal-title-${modalId}`;
   }
 
   &__body {
-
     --scrollbar-size: var(--size-2);
-    
+
     @extend %text-caption;
 
     overflow-y: auto;

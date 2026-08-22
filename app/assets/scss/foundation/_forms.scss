@@ -10,7 +10,7 @@
   $is-active: "&:is(:focus, :focus-visible)",
   $is-hover: "&:hover:not(:disabled, .is-error, :focus)"
 ) {
-  border: var(--border-width-base) solid theme-color(var(--color-category-main));
+  border: var(--border-width-base) solid theme-color(var(--color-category-main), 50%);
 
   // 1. 通常状態 (Default)
   background-color: transparent;
@@ -19,8 +19,7 @@
 
   // 2. ホバー状態 (Hover)
   #{$is-hover} {
-    border-color: var(--color-category-main);
-    box-shadow: var(--shadow-sink);
+    @include hover-glow(var(--color-category-main));
   }
 
   // 3. クリック（押し込み）状態 (Active/Press)
@@ -40,14 +39,20 @@
 
   // 5. エラー状態 (Error)
   #{$is-error} {
-    border-color: theme-color(var(--color-status-danger));
+    border-color: theme-color(var(--color-status-danger), 50%);
     color: var(--color-status-danger);
-    @include neon-box(var(--color-status-danger));
+
+    // エラー状態の基本発光
+    @include active(var(--color-status-danger));
 
     // エラー時のホバー
     &:hover:not(:disabled, :focus) {
-      border-color: var(--color-status-danger);
-      @include neon-box(var(--color-status-danger), 60%, 8px);
+      @include hover-glow(var(--color-status-danger));
+    }
+
+    // エラー時のクリック
+    &:active:not(:disabled) {
+      @include press(var(--color-status-danger));
     }
 
     // エラー時のフォーカス

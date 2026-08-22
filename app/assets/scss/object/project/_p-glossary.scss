@@ -23,10 +23,9 @@
   &__card-header {
     @include flex-between(var(--gap-component));
 
+    padding-bottom: var(--gap-element);
     border-bottom: var(--border-width-base) solid transparent;
     border-image: linear-gradient(to right, transparent, var(--color-border) 50%, transparent) 1;
-
-    padding-bottom: var(--gap-element);
   }
 
   &__card-title {
