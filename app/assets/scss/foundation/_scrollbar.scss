@@ -15,7 +15,6 @@
 
 ::-webkit-scrollbar-thumb {
   border: 1px solid hsl(var(--color-category-main-base) / 40%);
-  background: hsl(var(--color-category-main-base) / 10%);
   background-clip: padding-box;
 
   &:hover {
