@@ -55,92 +55,77 @@ const processedItems = computed(() => {
   // Extends & Typography Base
   @extend %text-caption;
 
-  @include border-dim;
+  position: relative;
 
+  // Box Model
+  padding: var(--pad-component);
+  padding-top: calc(var(--pad-component) + var(--space-2));
   text-transform: uppercase;
 
+  // Layout & Positioning
+  @include flex-start(0, inline-flex);
+
+  // Visuals & Effects
+  @include surface; // Includes background, border, and shadow!
+
+  // 左上の「SYS.LOC」ラベル
+  &::after {
+    @extend %text-label;
+
+    content: "SYS.LOC";
+
+    position: absolute;
+    top: var(--space-1);
+    left: var(--space-2);
+
+    color: var(--color-category-main);
+    letter-spacing: normal;
+
+    @include cyber-text-glow(var(--color-category-main), 50%, var(--blur-sm));
+  }
+
   ol {
-    // Layout & Positioning
     @include flex-start(0, inline-flex);
 
-    position: relative;
-
-    // Box Model
-    padding: var(--pad-component);
-    padding-top: calc(var(--pad-component) + var(--space-2));
-
-    // Typography
+    margin: 0;
+    padding: 0;
     list-style: none;
-
-    // Visuals & Effects
-    @include surface;
-
-    // 左上の「SYS.LOC」ラベル
-    &::after {
-      // Extends
-      @extend %text-label;
-
-      content: "SYS.LOC";
-
-      // Layout & Positioning
-      position: absolute;
-      top: var(--space-1);
-      left: var(--space-2);
-
-      // Typography
-      color: var(--color-category-main);
-      letter-spacing: normal;
-
-      // Visuals & Effects
-      @include cyber-text-glow(var(--color-category-main), 50%, var(--blur-sm));
-    }
   }
 
   li {
-    // Layout & Positioning
     @include flex-start;
 
-    // 項目の区切り文字（最後の要素以外に付与）
     &:not(:last-child)::after {
-      content: "»";
+      @extend %text-label;
 
-      // Typography
-      font-size: var(--font-size-xs);
+      content: "»";
       color: theme-color(var(--color-category-main), 60%);
     }
   }
 
   a,
   span:not(.current) {
-    // Extends
     @extend %text-xs;
 
-    // Typography
     color: var(--color-text-muted);
     text-decoration: none;
-
-    // Visuals & Effects
     transition: var(--transition-base);
   }
 
   a:hover {
-    // Typography
     color: var(--color-text-main);
 
-    // Visuals & Effects
     @include cyber-text-glow(var(--color-text-main), 100%, var(--blur-sm));
   }
 
   .current {
-    // Layout & Positioning
     @include flex-start;
 
-    // Typography
     color: var(--color-category-main);
 
-    // Visuals & Effects
     @include cyber-text-glow(var(--color-category-main), 60%, var(--blur-md));
     @include blinking-cursor;
   }
 }
 </style>
+
