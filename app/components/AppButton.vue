@@ -182,7 +182,7 @@ const componentTag = computed(() => {
     justify-content: flex-end;
   }
 
-  @include flex-center(var(--space-2), inline-flex);
+  @include flex-center(var(--space-2), true);
 
   /* 視認性確保のための枠線と影（アウトラインスタイル） */
   @include border-dim(var(--btn-color, var(--color-category-main)), 50%);

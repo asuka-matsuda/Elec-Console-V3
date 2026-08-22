@@ -154,6 +154,6 @@ const inputId = useId();
     }
   }
 
-  @include flex-start(var(--space-2), inline-flex);
+  @include flex-start(var(--space-2), true);
 }
 </style>

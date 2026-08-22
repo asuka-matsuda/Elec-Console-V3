@@ -215,22 +215,22 @@
 }
 
 // --- Layout Mixins ---
-@mixin flex-center($gap: var(--gap-element), $display: flex) {
-  display: $display;
+@mixin flex-center($gap: var(--gap-element), $inline: false) {
+  display: if($inline, inline-flex, flex);
   gap: $gap;
   align-items: center;
   justify-content: center;
 }
 
-@mixin flex-between($gap: var(--gap-element), $display: flex) {
-  display: $display;
+@mixin flex-between($gap: var(--gap-element), $inline: false) {
+  display: if($inline, inline-flex, flex);
   gap: $gap;
   align-items: center;
   justify-content: space-between;
 }
 
-@mixin flex-start($gap: var(--gap-element), $display: flex) {
-  display: $display;
+@mixin flex-start($gap: var(--gap-element), $inline: false) {
+  display: if($inline, inline-flex, flex);
   gap: $gap;
   align-items: center;
   justify-content: flex-start;

@@ -63,7 +63,7 @@
 
       @include sink;
 
-      @include flex-center(0, inline-flex);
+      @include flex-center(0, true);
     }
   }
 }
