@@ -207,18 +207,21 @@
   display: $display;
   align-items: center;
   justify-content: center;
+  gap: $gap;
 }
 
 @mixin flex-between($gap: 0, $display: flex) {
   display: $display;
   align-items: center;
   justify-content: space-between;
+  gap: $gap;
 }
 
 @mixin flex-start($gap: 0, $display: flex) {
   display: $display;
   align-items: center;
   justify-content: flex-start;
+  gap: $gap;
 }
 
 @mixin sink() {
