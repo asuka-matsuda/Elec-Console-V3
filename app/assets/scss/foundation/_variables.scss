@@ -197,18 +197,18 @@ $color-border-main-base: 240 4% 16%;
   --shadow-color: theme-color(black, 90%); // Dark mode default
 
   --shadow-elevation-sm:
-    0 1px 2px theme-color(var(--shadow-color), 40%),
-    0 4px 8px theme-color(var(--shadow-color), 20%),
+    0 1px 3px 0 theme-color(var(--shadow-color), 40%),
+    0 1px 2px -1px theme-color(var(--shadow-color), 60%),
     inset 0 1px 0 rgb(255 255 255 / 5%);
 
   --shadow-elevation-md:
-    0 2px 4px theme-color(var(--shadow-color), 30%),
-    0 8px 16px theme-color(var(--shadow-color), 20%),
+    0 4px 6px -1px theme-color(var(--shadow-color), 40%),
+    0 2px 4px -2px theme-color(var(--shadow-color), 60%),
     inset 0 1px 0 rgb(255 255 255 / 5%);
 
   --shadow-elevation-lg:
-    0 4px 8px theme-color(var(--shadow-color), 20%),
-    0 16px 32px theme-color(var(--shadow-color), 20%),
+    0 10px 15px -3px theme-color(var(--shadow-color), 40%),
+    0 4px 6px -4px theme-color(var(--shadow-color), 60%),
     inset 0 1px 0 rgb(255 255 255 / 5%);
 
   --shadow-sink: inset 0 2px 4px 0 theme-color(var(--shadow-color), 60%);
