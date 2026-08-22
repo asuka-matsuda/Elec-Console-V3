@@ -81,7 +81,6 @@ const processedItems = computed(() => {
 
     // 左上の「SYS.LOC」ラベル
     &::after {
-
       // Extends
       @extend %text-label;
 
@@ -105,9 +104,7 @@ const processedItems = computed(() => {
 
   &__item {
     // Layout & Positioning
-    display: flex;
-    gap: var(--gap-element);
-    align-items: center;
+    @include flex-start;
 
     // 項目の区切り文字（最後の要素以外に付与）
     &:not(:last-child)::after {
@@ -145,9 +142,7 @@ const processedItems = computed(() => {
     @extend %text-heading; // font-size: lg, font-weight: bold, line-height: tight
 
     // Layout & Positioning
-    display: flex;
-    gap: var(--gap-element);
-    align-items: center;
+    @include flex-start;
 
     // Typography
     color: var(--color-category-main);
