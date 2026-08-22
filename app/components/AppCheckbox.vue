@@ -124,7 +124,7 @@ const inputId = useId();
     @include flex-center;
     @include border-dim(var(--color-border), 50%);
 
-    @include sink(true);
+    @include sink;
 
     transition: var(--transition-base);
 
