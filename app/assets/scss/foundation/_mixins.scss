@@ -12,22 +12,16 @@
       @media (width <= $value) {
         @content;
       }
-    }
-
- @else if $direction == "up" {
+    } @else if $direction == "up" {
       @media (width >= $value) {
         @content;
       }
-    }
-
- @else if $direction == "up-strict" {
+    } @else if $direction == "up-strict" {
       @media (width > $value) {
         @content;
       }
     }
-  }
-
- @else {
+  } @else {
     @warn "Invalid breakpoint: #{$breakpoint}.";
   }
 }
@@ -41,16 +35,12 @@
       @container (min-width: #{$value}) {
         @content;
       }
-    }
-
- @else if $direction == "down" {
+    } @else if $direction == "down" {
       @container (max-width: #{$value}) {
         @content;
       }
     }
-  }
-
- @else {
+  } @else {
     @warn "Invalid container breakpoint: #{$breakpoint}.";
   }
 }
@@ -80,12 +70,10 @@
   border: var(--border-width-base) solid theme-color($color, $opacity);
 }
 
-@mixin surface($border-opacity: 10%) {
-  background-color: var(--color-bg-panel);
-
+@mixin surface($border-opacity: 100%) {
   @include border-dim($border-opacity);
 
-  box-shadow: var(--shadow-elevation-sm);
+  box-shadow: var(--shadow-elevation-lg);
 }
 
 // --- Interactive States (State Mixins) ---

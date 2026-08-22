@@ -74,6 +74,7 @@ const processedItems = computed(() => {
 
     // Visuals & Effects
     @include surface;
+    box-shadow: var(--shadow-elevetion-lg);
 
     // 左上の「SYS.LOC」ラベル
     &::after {
