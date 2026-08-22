@@ -37,9 +37,19 @@ $default-size: 12px;
   width: var(--scrollbar-size, #{$default-size});
   height: var(--scrollbar-size, #{$default-size});
 
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: calc(var(--scrollbar-size, #{$default-size}) * 0.8);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: calc(var(--scrollbar-size, #{$default-size}) * 0.8);
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: calc(var(--scrollbar-size, #{$default-size}) * 0.8);
+
+  background-color: var(--color-text-muted);
+}
+
+::-webkit-scrollbar-button:hover,
+::-webkit-scrollbar-button:active {
+  background-color: var(--color-text-main);
 }
 
 /* Hide unwanted double buttons */
@@ -50,44 +60,24 @@ $default-size: 12px;
   display: none;
 }
 
-// --- Base States ---
-
 ::-webkit-scrollbar-button:vertical:decrement {
-  background-image: url(#{$icon-chevron-up-normal});
+  mask-image: url(#{$icon-chevron-up});
+  -webkit-mask-image: url(#{$icon-chevron-up});
 }
 
 ::-webkit-scrollbar-button:vertical:increment {
-  background-image: url(#{$icon-chevron-down-normal});
+  mask-image: url(#{$icon-chevron-down});
+  -webkit-mask-image: url(#{$icon-chevron-down});
 }
 
 ::-webkit-scrollbar-button:horizontal:decrement {
-  background-image: url(#{$icon-chevron-left-normal});
+  mask-image: url(#{$icon-chevron-left});
+  -webkit-mask-image: url(#{$icon-chevron-left});
 }
 
 ::-webkit-scrollbar-button:horizontal:increment {
-  background-image: url(#{$icon-chevron-right-normal});
-}
-
-// --- Hover & Active States ---
-
-::-webkit-scrollbar-button:vertical:decrement:hover,
-::-webkit-scrollbar-button:vertical:decrement:active {
-  background-image: url(#{$icon-chevron-up-hover});
-}
-
-::-webkit-scrollbar-button:vertical:increment:hover,
-::-webkit-scrollbar-button:vertical:increment:active {
-  background-image: url(#{$icon-chevron-down-hover});
-}
-
-::-webkit-scrollbar-button:horizontal:decrement:hover,
-::-webkit-scrollbar-button:horizontal:decrement:active {
-  background-image: url(#{$icon-chevron-left-hover});
-}
-
-::-webkit-scrollbar-button:horizontal:increment:hover,
-::-webkit-scrollbar-button:horizontal:increment:active {
-  background-image: url(#{$icon-chevron-right-hover});
+  mask-image: url(#{$icon-chevron-right});
+  -webkit-mask-image: url(#{$icon-chevron-right});
 }
 
 ::-webkit-scrollbar-corner {
