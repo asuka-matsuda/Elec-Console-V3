@@ -4,6 +4,8 @@
 
 // --- Light Theme Variables ---
 [data-theme="light"] {
+  color-scheme: light;
+
   // --- Light Mode Colors (Pure White / No Background) ---
   --color-main-bg-base: 0 0% 100%; // #FFFFFF
   --surface-bg: var(--color-main-bg);
@@ -98,6 +100,10 @@ body[data-border-style="hybrid"] {
 
 body {
   background-color: var(--color-main-bg);
+}
+
+:root {
+  color-scheme: dark;
 }
 
 html[data-theme="light"] body {
