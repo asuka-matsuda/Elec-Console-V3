@@ -37,19 +37,9 @@ $default-size: 12px;
   width: var(--scrollbar-size, #{$default-size});
   height: var(--scrollbar-size, #{$default-size});
 
-  mask-repeat: no-repeat;
-  mask-position: center;
-  mask-size: calc(var(--scrollbar-size, #{$default-size}) * 0.8);
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  -webkit-mask-size: calc(var(--scrollbar-size, #{$default-size}) * 0.8);
-
-  background-color: var(--color-text-muted);
-}
-
-::-webkit-scrollbar-button:hover,
-::-webkit-scrollbar-button:active {
-  background-color: var(--color-text-main);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: calc(var(--scrollbar-size, #{$default-size}) * 0.8);
 }
 
 /* Hide unwanted double buttons */
@@ -61,23 +51,39 @@ $default-size: 12px;
 }
 
 ::-webkit-scrollbar-button:vertical:decrement {
-  mask-image: url(#{$icon-chevron-up});
-  -webkit-mask-image: url(#{$icon-chevron-up});
+  background-image: var(--icon-sb-up);
 }
 
 ::-webkit-scrollbar-button:vertical:increment {
-  mask-image: url(#{$icon-chevron-down});
-  -webkit-mask-image: url(#{$icon-chevron-down});
+  background-image: var(--icon-sb-down);
 }
 
 ::-webkit-scrollbar-button:horizontal:decrement {
-  mask-image: url(#{$icon-chevron-left});
-  -webkit-mask-image: url(#{$icon-chevron-left});
+  background-image: var(--icon-sb-left);
 }
 
 ::-webkit-scrollbar-button:horizontal:increment {
-  mask-image: url(#{$icon-chevron-right});
-  -webkit-mask-image: url(#{$icon-chevron-right});
+  background-image: var(--icon-sb-right);
+}
+
+::-webkit-scrollbar-button:vertical:decrement:hover,
+::-webkit-scrollbar-button:vertical:decrement:active {
+  background-image: var(--icon-sb-up-hover);
+}
+
+::-webkit-scrollbar-button:vertical:increment:hover,
+::-webkit-scrollbar-button:vertical:increment:active {
+  background-image: var(--icon-sb-down-hover);
+}
+
+::-webkit-scrollbar-button:horizontal:decrement:hover,
+::-webkit-scrollbar-button:horizontal:decrement:active {
+  background-image: var(--icon-sb-left-hover);
+}
+
+::-webkit-scrollbar-button:horizontal:increment:hover,
+::-webkit-scrollbar-button:horizontal:increment:active {
+  background-image: var(--icon-sb-right-hover);
 }
 
 ::-webkit-scrollbar-corner {

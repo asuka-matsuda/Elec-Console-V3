@@ -1,9 +1,20 @@
+@use "icons" as *;
 @use "variables" as *;
 @use "mixins" as *;
 @use "functions" as *;
 
 // --- Light Theme Variables ---
 [data-theme="light"] {
+
+  --icon-sb-up: #{$icon-chevron-up-light};
+  --icon-sb-up-hover: #{$icon-chevron-up-light-hover};
+  --icon-sb-down: #{$icon-chevron-down-light};
+  --icon-sb-down-hover: #{$icon-chevron-down-light-hover};
+  --icon-sb-left: #{$icon-chevron-left-light};
+  --icon-sb-left-hover: #{$icon-chevron-left-light-hover};
+  --icon-sb-right: #{$icon-chevron-right-light};
+  --icon-sb-right-hover: #{$icon-chevron-right-light-hover};
+
   color-scheme: light;
 
   // --- Light Mode Colors (Pure White / No Background) ---

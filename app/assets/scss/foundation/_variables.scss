@@ -1,3 +1,4 @@
+@use "icons" as *;
 @use "functions" as *;
 @use "sass:map";
 
@@ -106,6 +107,16 @@ $color-border-main-base: 240 4% 16%;
 
 // --- CSS CUSTOM PROPERTIES (:root) ---
 :root {
+
+  --icon-sb-up: #{$icon-chevron-up-dark};
+  --icon-sb-up-hover: #{$icon-chevron-up-dark-hover};
+  --icon-sb-down: #{$icon-chevron-down-dark};
+  --icon-sb-down-hover: #{$icon-chevron-down-dark-hover};
+  --icon-sb-left: #{$icon-chevron-left-dark};
+  --icon-sb-left-hover: #{$icon-chevron-left-dark-hover};
+  --icon-sb-right: #{$icon-chevron-right-dark};
+  --icon-sb-right-hover: #{$icon-chevron-right-dark-hover};
+
   // --- Auto-generated Scales ---
   @each $name, $value in $letter-spacings {
     --tracking-#{$name}: #{$value};
