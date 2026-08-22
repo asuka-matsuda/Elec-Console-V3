@@ -66,7 +66,6 @@ const processedItems = computed(() => {
     @include flex-start(0, inline-flex);
 
     position: relative;
-
     flex-wrap: wrap;
 
     // Box Model
@@ -93,7 +92,7 @@ const processedItems = computed(() => {
 
       // Typography
       color: var(--color-category-main);
-      letter-spacing: normal; // 親のletter-spacingをリセット
+      letter-spacing: normal;
 
       // Visuals & Effects
       opacity: 0.9;
@@ -109,7 +108,7 @@ const processedItems = computed(() => {
     // 項目の区切り文字（最後の要素以外に付与）
     &:not(:last-child)::after {
       content: "»";
-      
+
       // Typography
       font-size: var(--font-size-xs);
       color: theme-color(var(--color-category-main), 60%);
@@ -138,9 +137,6 @@ const processedItems = computed(() => {
   }
 
   &__current {
-    // Extends
-    @extend %text-heading; // font-size: lg, font-weight: bold, line-height: tight
-
     // Layout & Positioning
     @include flex-start;
 
@@ -149,8 +145,7 @@ const processedItems = computed(() => {
 
     // Visuals & Effects
     @include cyber-text-glow(60%, var(--blur-md), var(--color-category-main));
-    @include blinking-cursor(var(--space-2), var(--space-5), currentcolor);
+    @include blinking-cursor;
   }
 }
 </style>
-
