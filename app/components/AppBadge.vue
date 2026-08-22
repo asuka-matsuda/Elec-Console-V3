@@ -73,7 +73,7 @@ withDefaults(
 
   transition: var(--transition-base);
   
-  @include flex-center(0, true);
+  @include flex-center(0, inline-flex);
   @include cyber-text-glow(100%, var(--blur-sm), var(--badge-color));
 
   // --- Color Modifiers ---

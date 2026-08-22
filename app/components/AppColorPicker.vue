@@ -59,7 +59,7 @@ const inputId = useId();
 
 .c-color-picker {
   // --- Base Styles ---
-  @include flex-start(var(--space-3), true);
+  @include flex-start(var(--space-3), inline-flex);
 
   cursor: pointer;
   user-select: none;

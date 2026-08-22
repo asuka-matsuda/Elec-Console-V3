@@ -72,7 +72,7 @@ const processedItems = computed(() => {
 
     list-style: none;
 
-    @include flex-start(0, true);
+    @include flex-start(0, inline-flex);
     @include surface;
 
     // 左上の「SYS.LOC」ラベル

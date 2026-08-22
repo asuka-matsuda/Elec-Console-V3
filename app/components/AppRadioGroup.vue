@@ -119,7 +119,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
 
     transition: var(--transition-base);
 
-    @include flex-center(0, true);
+    @include flex-center(0, inline-flex);
   }
 }
 </style>
