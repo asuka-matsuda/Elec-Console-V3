@@ -20,6 +20,15 @@ $font-sizes: (
   "4xl": 24px,
 );
 
+$letter-spacings: (
+  "tighter": -0.04em,
+  "tight": -0.02em,
+  "normal": 0em,
+  "wide": 0.02em,
+  "wider": 0.05em,
+  "widest": 0.1em,
+);
+
 // --- Layout & Breakpoints ---
 $breakpoints: (
   "md": 768px,
@@ -98,6 +107,10 @@ $color-border-main-base: 240 4% 16%;
 // --- CSS CUSTOM PROPERTIES (:root) ---
 :root {
   // --- Auto-generated Scales ---
+  @each $name, $value in $letter-spacings {
+    --tracking-#{$name}: #{$value};
+  }
+
   @each $name, $size in $font-sizes {
     --text-#{$name}: #{$size};
     --font-size-#{$name}: #{$size};
