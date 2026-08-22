@@ -22,7 +22,7 @@ withDefaults(
 </script>
 
 <template>
-  <header class="c-section-header" :class="[`is-fade-${dividerType}`]">
+  <header class="c-section-header">
     <div class="c-section-header__top">
       <h2
         class="c-section-header__title"
@@ -36,7 +36,10 @@ withDefaults(
         <slot name="actions" />
       </div>
     </div>
-    <AppDivider v-if="dividerType === 'default'" :variant="variant" />
+    <AppDivider 
+      :variant="dividerType === 'default' ? variant : 'border'" 
+      :type="dividerType === 'default' ? 'solid' : dividerType"
+    />
   </header>
 </template>
 
@@ -47,14 +50,6 @@ withDefaults(
   gap: var(--space-2);
 
   // --- Base Styles ---
-  &.is-fade-side {
-    @include border-fade(bottom, var(--color-border), 'side');
-  }
-
-  &.is-fade-center {
-    @include border-fade(bottom, var(--color-border), 'center');
-  }
-
   &__top {
     display: flex;
     gap: var(--space-4);

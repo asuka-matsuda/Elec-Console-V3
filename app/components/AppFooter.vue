@@ -18,8 +18,6 @@ const currentYear = new Date().getFullYear();
 
 <style scoped lang="scss">
 .l-footer {
-  @include border-fade(top, var(--color-border), 'center');
-
   // --- Base Styles ---
   position: relative;
 

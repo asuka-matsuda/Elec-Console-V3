@@ -12,11 +12,15 @@ withDefaults(
       | "reference"
       | "management"
       | "danger"
-      | "success";
+      | "success"
+      | "border"
+      | "sidebar-border";
+    type?: "solid" | "fade-center" | "fade-side";
     vertical?: boolean;
   }>(),
   {
     variant: "main",
+    type: "solid",
     vertical: false,
   },
 );
@@ -27,6 +31,7 @@ withDefaults(
     class="c-divider"
     :class="[
       `has-accent-${variant}`,
+      `is-type-${type}`,
       {
         'c-divider--vertical': vertical,
         'c-divider--horizontal': !vertical,
@@ -74,76 +79,88 @@ withDefaults(
     --divider-accent: var(--color-status-success);
   }
 
+  &.has-accent-border {
+    --divider-accent: var(--color-border);
+  }
+
+  &.has-accent-sidebar-border {
+    --divider-accent: var(--sidebar-border);
+  }
+
   // --- Orientation Modifiers (Horizontal) ---
   &--horizontal {
     transform-origin: center;
 
     width: 100%;
-    height: var(--border-width-thick);
-    border-top: var(--border-width-base) solid var(--color-border);
-    border-bottom: 1px solid transparent;
-
+    height: var(--border-width-base);
     animation: divider-scale-x 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
-    // パルス発光用（Data Flow）の擬似要素
-    &::before {
-      content: "";
+    &.is-type-solid {
+      background: var(--color-border);
+      // パルス発光用のData Flow（擬似要素）
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -30%;
+        width: 30%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          theme-color(var(--divider-accent, var(--color-category-main)), 80%),
+          transparent
+        );
+        box-shadow: 0 0 var(--blur-md) var(--divider-accent, var(--color-category-main));
+        animation: data-pulse-x 3s ease-in-out infinite;
+      }
+    }
 
-      position: absolute;
-      top: 0;
-      left: -30%;
+    &.is-type-fade-center {
+      background: linear-gradient(to right, transparent 0%, var(--divider-accent) 50%, transparent 100%);
+    }
 
-      width: 30%;
-      height: 100%;
-
-      background: linear-gradient(
-        90deg,
-        transparent,
-        theme-color(var(--divider-accent, var(--color-category-main)), 80%),
-        transparent
-      );
-      box-shadow: 0 0 var(--blur-md)
-        var(--divider-accent, var(--color-category-main));
-
-      animation: data-pulse-x 3s ease-in-out infinite;
+    &.is-type-fade-side {
+      background: linear-gradient(to right, var(--divider-accent) 0%, transparent 100%);
     }
   }
 
   // --- Orientation Modifiers (Vertical) ---
   &--vertical {
-    // Entrance Animation (縦に伸びる)
     transform-origin: center;
 
-    width: var(--border-width-thick);
+    width: var(--border-width-base);
     height: auto;
     min-height: 100%;
-    margin: 0 var(--space-4);
-    border-right: 1px solid transparent;
-    border-left: var(--border-width-base) solid var(--color-border);
-
     animation: divider-scale-y 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
-    // パルス発光用（Data Flow）の擬似要素
-    &::before {
-      content: "";
+    &.is-type-solid {
+      background: var(--color-border);
+      // パルス発光用のData Flow（擬似要素）
+      &::before {
+        content: "";
+        position: absolute;
+        top: -30%;
+        left: 0;
+        width: 100%;
+        height: 30%;
+        background: linear-gradient(
+          180deg,
+          transparent,
+          theme-color(var(--divider-accent, var(--color-category-main)), 80%),
+          transparent
+        );
+        box-shadow: 0 0 var(--blur-md) var(--divider-accent, var(--color-category-main));
+        animation: data-pulse-y 3s ease-in-out infinite;
+      }
+    }
 
-      position: absolute;
-      top: -30%;
-      left: 0;
+    &.is-type-fade-center {
+      background: linear-gradient(to bottom, transparent 0%, var(--divider-accent) 50%, transparent 100%);
+    }
 
-      width: 100%;
-      height: 30%;
-
-      background: linear-gradient(
-        180deg,
-        transparent,
-        theme-color(var(--divider-accent, var(--color-category-main)), 80%),
-        transparent
-      );
-      box-shadow: 0 0 var(--blur-md)
-        var(--divider-accent, var(--color-category-main));
-
-      animation: data-pulse-y 3s ease-in-out infinite;
+    &.is-type-fade-side {
+      background: linear-gradient(to bottom, var(--divider-accent) 0%, transparent 100%);
     }
   }
 

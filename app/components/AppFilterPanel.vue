@@ -31,9 +31,12 @@ const toggleCat = (value: string) => {
 
 <template>
   <AppPanel>
-    <div class="c-filter-panel__header">
-      <AppIcon name="search" />
-      <span>絞り込み・検索</span>
+    <div class="c-filter-panel__header-wrapper">
+      <div class="c-filter-panel__header">
+        <AppIcon name="search" />
+        <span>絞り込み・検索</span>
+      </div>
+      <AppDivider type="fade-center" variant="border" />
     </div>
 
     <div class="c-filter-panel__filters">
@@ -72,8 +75,13 @@ const toggleCat = (value: string) => {
     padding-bottom: var(--gap-element);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
+  }
 
-    @include border-fade(bottom, var(--color-border));
+  &__header-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
   }
 
   &__filters {

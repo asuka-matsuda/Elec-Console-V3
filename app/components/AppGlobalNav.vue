@@ -33,6 +33,7 @@ const closeSidebar = () => {
       <header class="l-global-nav__header">
         <AppLogo @click="closeSidebar" />
       </header>
+      <AppDivider type="fade-center" variant="sidebar-border" />
 
       <!-- Navigation Content -->
       <nav class="l-global-nav__nav custom-scrollbar">
@@ -74,6 +75,7 @@ const closeSidebar = () => {
           </template>
         </section>
       </nav>
+    <AppDivider vertical type="fade-center" variant="sidebar-border" class="l-global-nav__border-right" />
     </aside>
   </div>
 </template>
@@ -98,9 +100,7 @@ const closeSidebar = () => {
 
   transition: transform var(--duration-slow) var(--ease-smooth);
 
-  @include border-fade(right, var(--sidebar-border));
-
-  // Mobile layout (hide by default)
+    // Mobile layout (hide by default)
   @include mq("md") {
     transform: translateX(-100%);
 
@@ -119,10 +119,16 @@ const closeSidebar = () => {
 
     @include elevation('sm'); // Replaced hardcoded shadow
 
-    @include border-fade(bottom, var(--sidebar-border));
-  }
+      }
 
   // --- Navigation Content ---
+  &__border-right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+  }
+
   &__nav {
 
     --scrollbar-size: var(--size-2);
@@ -163,9 +169,7 @@ const closeSidebar = () => {
   }
 
   &__section-header {
-    @include border-fade(bottom, var(--sidebar-border), 'side');
-
-    display: flex;
+        display: flex;
     flex-direction: column;
     gap: var(--gap-element);
     padding: var(--space-3) var(--space-2);

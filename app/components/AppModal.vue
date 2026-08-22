@@ -68,12 +68,15 @@ const titleId = `modal-title-${modalId}`;
     <AppPanel class="c-modal__panel" :bracket-color="variant">
       <!-- Header -->
       <template #header>
-        <header class="c-modal__header">
-          <h2 :id="titleId" class="c-modal__title">
-            <AppIcon v-if="icon" :name="icon" class="c-modal__icon" />
-            <slot name="title">{{ title }}</slot>
-          </h2>
-        </header>
+        <div class="c-modal__header-wrapper">
+          <header class="c-modal__header">
+            <h2 :id="titleId" class="c-modal__title">
+              <AppIcon v-if="icon" :name="icon" class="c-modal__icon" />
+              <slot name="title">{{ title }}</slot>
+            </h2>
+          </header>
+          <AppDivider type="fade-center" variant="border" />
+        </div>
       </template>
 
 
@@ -157,9 +160,7 @@ const titleId = `modal-title-${modalId}`;
   }
 
   &__header {
-    @include border-fade(bottom, var(--color-border), 'center');
     @include flex-between(var(--gap-element));
-
     align-items: flex-start;
   }
 

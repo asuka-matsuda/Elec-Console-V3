@@ -194,25 +194,21 @@ $color-border-main-base: 240 4% 16%;
   --pad-container: var(--space-4);
 
   // --- Shadows & Edge Reflexes ---
-  --shadow-color: color-mix(
-    in srgb,
-    black 90%,
-    transparent
-  ); // Dark mode default
+  --shadow-color: theme-color(black, 90%); // Dark mode default
 
   --shadow-elevation-sm:
-    0 2px 4px -1px color-mix(in srgb, var(--shadow-color) 80%, transparent),
-    0 1px 2px -1px color-mix(in srgb, var(--shadow-color) 100%, transparent);
+    0 2px 4px -1px theme-color(var(--shadow-color), 80%),
+    0 1px 2px -1px theme-color(var(--shadow-color), 100%);
 
   --shadow-elevation-md:
-    0 8px 16px -4px color-mix(in srgb, var(--shadow-color) 60%, transparent),
-    0 4px 6px -2px color-mix(in srgb, var(--shadow-color) 80%, transparent);
+    0 8px 16px -4px theme-color(var(--shadow-color), 60%),
+    0 4px 6px -2px theme-color(var(--shadow-color), 80%);
 
   --shadow-elevation-lg:
-    0 20px 25px -5px color-mix(in srgb, var(--shadow-color) 60%, transparent),
-    0 8px 10px -6px color-mix(in srgb, var(--shadow-color) 80%, transparent);
+    0 20px 25px -5px theme-color(var(--shadow-color), 60%),
+    0 8px 10px -6px theme-color(var(--shadow-color), 80%);
 
-  --shadow-sink: inset 0 2px 4px 0 color-mix(in srgb, var(--shadow-color) 40%, transparent);
+  --shadow-sink: inset 0 2px 4px 0 theme-color(var(--shadow-color), 40%);
 
   // --- Animation & Transitions ---
   --duration-fast: 0.15s;

@@ -189,7 +189,7 @@ const toggleDrawer = () => {
 
       height: 48px;
       padding: var(--pad-container);
-      background: color-mix(in srgb, var(--color-category-tool) 10%, transparent);
+      background: theme-color(var(--color-category-tool), 10%);
     }
   }
 

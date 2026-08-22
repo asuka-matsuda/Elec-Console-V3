@@ -122,22 +122,22 @@ html[data-base-bg="aurora"] body {
   background-image:
     radial-gradient(
       ellipse at top left,
-      color-mix(in srgb, var(--bg-aurora-c1) 35%, transparent) 0%,
+      theme-color(var(--bg-aurora-c1), 35%) 0%,
       transparent 70%
     ),
     radial-gradient(
       ellipse at bottom right,
-      color-mix(in srgb, var(--bg-aurora-c2) 25%, transparent) 0%,
+      theme-color(var(--bg-aurora-c2), 25%) 0%,
       transparent 70%
     ),
     radial-gradient(
       ellipse at top right,
-      color-mix(in srgb, var(--bg-aurora-c3) 25%, transparent) 0%,
+      theme-color(var(--bg-aurora-c3), 25%) 0%,
       transparent 70%
     ),
     radial-gradient(
       ellipse at bottom left,
-      color-mix(in srgb, var(--bg-aurora-c4) 25%, transparent) 0%,
+      theme-color(var(--bg-aurora-c4), 25%) 0%,
       transparent 70%
     );
   background-size: 100% 100%;
@@ -148,12 +148,12 @@ html[data-base-bg="grid"] body {
   background-image:
     linear-gradient(
       to right,
-      color-mix(in srgb, var(--bg-grid-color) 50%, transparent) 1px,
+      theme-color(var(--bg-grid-color), 50%) 1px,
       transparent 1px
     ),
     linear-gradient(
       to bottom,
-      color-mix(in srgb, var(--bg-grid-color) 50%, transparent) 1px,
+      theme-color(var(--bg-grid-color), 50%) 1px,
       transparent 1px
     );
   background-repeat: repeat;

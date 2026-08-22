@@ -14,18 +14,18 @@
 
 ::-webkit-scrollbar-thumb {
   border: var(--border-width-base) solid
-    color-mix(in srgb, var(--color-category-main) 40%, transparent);
+    theme-color(var(--color-category-main), 40%);
 
   &:hover {
     border-color: var(--color-category-main);
     box-shadow: inset 0 0 var(--blur-md)
-      color-mix(in srgb, var(--color-category-main) 40%, transparent);
+      theme-color(var(--color-category-main), 40%);
   }
 
   &:active {
     border-color: var(--color-category-main);
     box-shadow: inset 0 0 var(--blur-lg)
-      color-mix(in srgb, var(--color-category-main) 80%, transparent);
+      theme-color(var(--color-category-main), 80%);
   }
 }
 

@@ -4,45 +4,29 @@
 @use "variables" as *;
 
 // --- Media Queries ---
-
-// ブレイクポイントのメディアクエリ（レスポンシブ対応）
 @mixin mq($breakpoint, $direction: "down") {
-  // 指定されたブレイクポイントが変数リストに存在するかチェック
   @if map.has-key($breakpoints, $breakpoint) {
     $value: map.get($breakpoints, $breakpoint);
 
-    // "down"なら「〇〇px以下（デスクトップファースト用）」
     @if $direction == "down" {
       @media (width <= $value) {
         @content;
       }
-
-      // "up"なら「〇〇px以上（モバイルファースト用）」
-    }
-
- @else if $direction == "up" {
+    } @else if $direction == "up" {
       @media (width >= $value) {
         @content;
       }
-
-      // "up-strict"なら「〇〇pxより大きい（境界値を含まない）」
-    }
-
- @else if $direction == "up-strict" {
+    } @else if $direction == "up-strict" {
       @media (width > $value) {
         @content;
       }
     }
-  }
-
- @else {
-    // 存在しないブレイクポイント名が指定されたら警告を出す
+  } @else {
     @warn "Invalid breakpoint: #{$breakpoint}.";
   }
 }
 
-// コンテナクエリ用のブレイクポイント
-// コンテナは「親がない(狭い)状態」をデフォルトとし、広ければ展開する「スモールファースト(up)」が必須
+// --- Container Queries ---
 @mixin cq($breakpoint, $direction: "up") {
   @if map.has-key($container-breakpoints, $breakpoint) {
     $value: map.get($container-breakpoints, $breakpoint);
@@ -51,67 +35,31 @@
       @container (min-width: #{$value}) {
         @content;
       }
-    }
-
- @else if $direction == "down" {
+    } @else if $direction == "down" {
       @container (max-width: #{$value}) {
         @content;
       }
     }
-  }
-
- @else {
+  } @else {
     @warn "Invalid container breakpoint: #{$breakpoint}.";
   }
 }
 
 // --- Base / Common Placeholders ---
-
-// クリック時の挙動
 %click-enabled {
   cursor: pointer;
   user-select: none;
 }
 
-// クリック不可時の挙動
 %disabled {
-  pointer-events: none; // マウス操作をなしに
-  cursor: not-allowed; // 不許可マーク
-  opacity: 0.5; // 半透明
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 // --- Visual Effects & Glassmorphism ---
-
-// テキストの発光
 @mixin cyber-text-glow($opacity: 40%, $blur: 8px, $color: currentcolor) {
   text-shadow: 0 0 $blur theme-color($color, $opacity);
-}
-
-// 境界線（ボーダー）を端に向けてグラデーションで透過（フェードアウト）させる
-@mixin border-fade(
-  $direction: bottom,
-  $color: var(--color-border),
-  $type: "center"
-) {
-  $gradient-dir: to bottom;
-
-  @if $direction == bottom or $direction == top {
-    $gradient-dir: to right;
-  }
-
-  $gradient: linear-gradient(
-    $gradient-dir,
-    transparent 0%,
-    $color 50%,
-    transparent 100%
-  );
-
-  @if $type == "side" {
-    $gradient: linear-gradient($gradient-dir, $color 0%, transparent 100%);
-  }
-
-  border-#{$direction}: var(--border-width-base) solid transparent;
-  border-image: $gradient 1;
 }
 
 // 少し暗めの半透明なボーダー（汎用）
@@ -237,9 +185,7 @@
       var(--shadow-elevation-base);
 
     // 色指定がない場合は、標準のボーダー色と控えめな発光にする
-  }
-
- @else {
+  } @else {
     border-color: var(--color-border);
     box-shadow: var(--shadow-elevation-base);
   }

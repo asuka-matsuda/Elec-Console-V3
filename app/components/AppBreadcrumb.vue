@@ -101,7 +101,7 @@ const processedItems = computed(() => {
     &:not(:last-child)::after {
       content: "»";
       font-size: var(--font-size-xs);
-      color: color-mix(in srgb, var(--color-category-main) 60%, transparent);
+      color: theme-color(var(--color-category-main), 60%);
     }
   }
 
