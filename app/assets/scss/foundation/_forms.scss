@@ -1,0 +1,69 @@
+﻿@use "variables" as *;
+@use "mixins" as *;
+@use "functions" as *;
+
+// --- フォーム要素のベーススタイル（統合） ---
+
+// 通常・ホバー・フォーカス・エラー時の光り方や影をすべて統合管理
+@mixin form-control-base(
+  $is-error: "&.is-error",
+  $is-active: "&:is(:focus, :focus-visible)",
+  $is-hover: "&:hover:not(:disabled, .is-error, :focus)"
+) {
+  border: var(--border-width-base) solid theme-color(var(--color-category-main));
+
+  // 1. 通常状態 (Default)
+  background-color: transparent;
+  box-shadow: var(--shadow-sink);
+  transition: var(--transition-base);
+
+  // 2. ホバー状態 (Hover)
+  #{$is-hover} {
+    border-color: var(--color-category-main);
+    box-shadow: var(--shadow-sink);
+  }
+
+  // 3. クリック（押し込み）状態 (Active/Press)
+  &:active:not(:disabled, .is-error) {
+    @include press(var(--color-category-main));
+  }
+
+  // 4. フォーカス状態 (Focus)
+  #{$is-active} {
+    @include focus(var(--color-category-main));
+    @include cyber-text-glow(50%, 8px, var(--color-category-main));
+
+    transition:
+      box-shadow var(--duration-slow) var(--ease-base),
+      border-color var(--duration-slow) var(--ease-base);
+  }
+
+  // 5. エラー状態 (Error)
+  #{$is-error} {
+    border-color: theme-color(var(--color-status-danger));
+    color: var(--color-status-danger);
+    @include neon-box(var(--color-status-danger));
+
+    // エラー時のホバー
+    &:hover:not(:disabled, :focus) {
+      border-color: var(--color-status-danger);
+      @include neon-box(var(--color-status-danger), 60%, 8px);
+    }
+
+    // エラー時のフォーカス
+    &:is(:-moz-focusring, :focus, :focus-visible, .is-active) {
+      @include focus(var(--color-status-danger));
+      @include cyber-text-glow(50%, 8px, var(--color-status-danger));
+
+      transition:
+        box-shadow var(--duration-slow) var(--ease-base),
+        border-color var(--duration-slow) var(--ease-base);
+    }
+  }
+
+  // 6. 無効化状態 (Disabled)
+  &:is(:disabled, .is-disabled) {
+    @extend %disabled;
+  }
+}
+
