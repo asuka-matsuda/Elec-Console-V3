@@ -41,7 +41,14 @@ const tableColumns: TableColumn[] = [
 
     <!-- 規格セル -->
     <template #cell-standard="{ value }">
-      <span class="p-db__meta">{{ value }}</span>
+      <span class="c-db-meta">{{ value }}</span>
     </template>
   </AppDbViewer>
 </template>
+
+<style scoped lang="scss">
+.c-db-meta {
+  @extend %text-sm;
+  color: var(--color-text-muted);
+}
+</style>

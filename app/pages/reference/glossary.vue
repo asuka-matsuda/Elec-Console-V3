@@ -90,17 +90,17 @@ const categoryColorMap: Record<string, string> = {
         </aside>
 
         <main class="l-filter-layout__main">
-          <div v-if="filteredGlossary.length > 0" class="p-glossary__list">
+          <div v-if="filteredGlossary.length > 0" class="c-glossary-list">
             <AppCard
               v-for="item in filteredGlossary"
               :key="item.term"
-              class="p-glossary__card"
+              class="c-glossary-card"
               :style="{ '--card-accent': categoryColorMap[item.category] }"
             >
-              <div class="p-glossary__card-header">
-                <div class="p-glossary__card-title">
-                  <span class="p-glossary__card-kana">{{ item.kana }}</span>
-                  <h2 class="p-glossary__card-term">{{ item.term }}</h2>
+              <div class="c-glossary-card__header">
+                <div class="c-glossary-card__title">
+                  <span class="c-glossary-card__kana">{{ item.kana }}</span>
+                  <h2 class="c-glossary-card__term">{{ item.term }}</h2>
                 </div>
                 <AppBadge
                   :style="{
@@ -112,23 +112,23 @@ const categoryColorMap: Record<string, string> = {
                 </AppBadge>
               </div>
 
-              <div class="p-glossary__card-body">
-                <p class="p-glossary__card-desc">{{ item.desc }}</p>
+              <div class="c-glossary-card__body">
+                <p class="c-glossary-card__desc">{{ item.desc }}</p>
 
-                <div v-if="item.related" class="p-glossary__card-meta">
-                  <span class="p-glossary__card-label">関連用語</span>
-                  <p class="p-glossary__card-text">{{ item.related }}</p>
+                <div v-if="item.related" class="c-glossary-card__meta">
+                  <span class="c-glossary-card__label">関連用語</span>
+                  <p class="c-glossary-card__text">{{ item.related }}</p>
                 </div>
 
-                <div v-if="item.example" class="p-glossary__card-meta">
-                  <span class="p-glossary__card-label">用例・備考</span>
-                  <p class="p-glossary__card-text">{{ item.example }}</p>
+                <div v-if="item.example" class="c-glossary-card__meta">
+                  <span class="c-glossary-card__label">用例・備考</span>
+                  <p class="c-glossary-card__text">{{ item.example }}</p>
                 </div>
               </div>
             </AppCard>
           </div>
 
-          <div v-else class="p-db__empty">
+          <div v-else class="c-empty-state">
             <p>条件に一致する用語が見つかりません。</p>
           </div>
         </main>
@@ -172,4 +172,83 @@ const categoryColorMap: Record<string, string> = {
     min-height: 0;
   }
 }
+
+.c-glossary-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-component);
+}
+
+.c-glossary-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-component);
+  transition: var(--transition-base);
+
+  &__header {
+    @include flex-between(var(--gap-component));
+    padding-bottom: var(--gap-element);
+    border-bottom: var(--border-width-base) solid transparent;
+    border-image: linear-gradient(to right, transparent, var(--color-border) 50%, transparent) 1;
+  }
+
+  &__title {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-element);
+  }
+
+  &__kana {
+    @extend %text-xs;
+    color: var(--color-text-muted);
+  }
+
+  &__term {
+    margin: 0;
+    @extend %text-lg;
+    color: var(--color-text-main);
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-element);
+  }
+
+  &__desc {
+    @extend %text-sm;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+
+  &__meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-element);
+    padding: var(--pad-container);
+    border: var(--border-width-base) solid theme-color(var(--color-border), 50%);
+  }
+
+  &__label {
+    @extend %text-xs;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-muted);
+  }
+
+  &__text {
+    margin: 0;
+    @extend %text-sm;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+  }
+}
+
+.c-empty-state {
+  padding: var(--pad-container);
+  border: var(--border-width-base) solid theme-color(var(--color-border), 50%);
+  @extend %text-base;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
 </style>

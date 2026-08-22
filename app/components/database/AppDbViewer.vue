@@ -20,7 +20,7 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
 </script>
 
 <template>
-  <div class="p-db">
+  <div class="c-db">
     <div class="l-filter-layout">
       <div class="l-filter-layout__grid">
         <aside class="l-filter-layout__sidebar">
@@ -33,7 +33,7 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
         </aside>
 
         <main class="l-filter-layout__main">
-          <AppPanel v-if="filteredData.length > 0" class="p-db__table-panel">
+          <AppPanel v-if="filteredData.length > 0" class="c-db-panel">
             <AppTable :columns="columns" :data="filteredData">
               <!-- Pass through all slots for custom cells -->
               <template v-for="(_, name) in $slots" #[name]="slotProps">
@@ -42,7 +42,7 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
             </AppTable>
           </AppPanel>
 
-          <div v-else class="p-db__empty">
+          <div v-else class="c-db-empty">
             <p>条件に一致するデータが見つかりません。</p>
           </div>
         </main>
@@ -86,4 +86,29 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
     min-height: 0;
   }
 }
+
+.c-db {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.c-db-panel {
+  overflow: hidden;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  padding: 0;
+}
+
+.c-db-empty {
+  padding: var(--pad-container);
+  border: var(--border-width-base) solid theme-color(var(--color-border), 50%);
+  @extend %text-base;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
 </style>

@@ -45,7 +45,7 @@ function toggleKana(kana: string) {
 </script>
 
 <template>
-  <div class="p-db__filter-grid p-glossary__filter-grid--sm">
+  <div class="c-kana-filter">
     <AppCheckbox
       v-for="kana in kanaOptions"
       :key="kana.value"
@@ -59,10 +59,10 @@ function toggleKana(kana: string) {
 </template>
 
 <style scoped lang="scss">
-.p-db__filter-grid {
-  // --- Base Styles ---
+.c-kana-filter {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-  gap: var(--space-2);
+  gap: var(--gap-element);
+
 }
 </style>
