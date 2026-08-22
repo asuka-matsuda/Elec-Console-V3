@@ -67,11 +67,7 @@ withDefaults(
   text-transform: uppercase;
   white-space: nowrap;
 
-  box-shadow:
-    inset 0 0 var(--blur-sm) var(--badge-shadow),
-    0 0 var(--blur-md) var(--badge-shadow);
-
-  transition: var(--transition-base);
+  @include state-base((inset 0 0 var(--blur-sm) var(--badge-shadow), 0 0 var(--blur-md) var(--badge-shadow)), var(--transition-base));
   
   @include flex-center(0, inline-flex);
   @include cyber-text-glow(100%, var(--blur-sm), var(--badge-color));

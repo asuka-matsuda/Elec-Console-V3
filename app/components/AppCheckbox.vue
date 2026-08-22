@@ -116,16 +116,13 @@ const inputId = useId();
 
   &__box {
     flex-shrink: 0;
-
     width: 1.4em;
     height: 1.4em;
 
     @include flex-center;
     @include border-dim(var(--color-border), 50%);
 
-    box-shadow: var(--shadow-sink);
-
-    transition: var(--transition-base);
+    @include state-base(var(--shadow-sink), var(--transition-glow));
 
     // Explicitly NO border-radius to ensure sharp corners
 

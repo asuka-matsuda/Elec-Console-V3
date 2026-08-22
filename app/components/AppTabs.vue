@@ -98,9 +98,7 @@ const selectTab = (option: TabOption) => {
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
 
-  box-shadow: inset 0 0 var(--blur-sm) var(--color-border);
-
-  transition: var(--transition-base);
+  @include state-base(inset 0 0 var(--blur-sm) var(--color-border), var(--transition-fast));
 
   // --- State Modifiers ---
 

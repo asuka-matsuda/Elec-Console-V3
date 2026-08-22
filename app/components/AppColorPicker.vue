@@ -69,7 +69,7 @@ const inputId = useId();
   padding: var(--pad-section);
   border-radius: 0;
 
-  transition: var(--transition-base);
+  @include state-base(none, var(--transition-base));
 
   @include border-dim(var(--color-border), 50%);
 

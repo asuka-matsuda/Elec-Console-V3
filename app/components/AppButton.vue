@@ -78,9 +78,7 @@ const componentTag = computed(() => {
   text-decoration: none;
   letter-spacing: 0.05em;
 
-  box-shadow: inset 0 0 var(--blur-md) theme-color(var(--btn-color, var(--color-category-main)), 10%), var(--shadow-elevation-sm);
-
-  transition: var(--transition-fast);
+  @include state-base((inset 0 0 var(--blur-md) theme-color(var(--btn-color, var(--color-category-main)), 10%), var(--shadow-elevation-sm)), var(--transition-fast));
 
   /* Interaction States */
   &:hover:not(:disabled, .is-disabled) {

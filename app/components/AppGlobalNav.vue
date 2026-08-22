@@ -96,9 +96,7 @@ const closeSidebar = () => {
   width: var(--sidebar-width);
   height: 100dvh;
 
-  box-shadow: var(--shadow-elevation-md); // Replaced hardcoded shadow
-
-  transition: transform var(--duration-slow) var(--ease-smooth);
+  @include state-base(var(--shadow-elevation-md), transform var(--duration-slow) var(--ease-smooth));
 
     // Mobile layout (hide by default)
   @include mq("md") {

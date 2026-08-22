@@ -55,7 +55,7 @@ const rootProps = computed(() => {
   color: var(--color-text-main);
   text-decoration: none; /* Reset for links */
 
-  transition: var(--transition-base);
+  @include state-base(none, var(--transition-base));
 
   @include surface(15%);
 

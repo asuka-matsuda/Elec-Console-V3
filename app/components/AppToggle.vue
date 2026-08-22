@@ -99,9 +99,7 @@ const inputId = useId();
     height: var(--track-h);
     border: var(--border-width-base) solid var(--color-border);
 
-    box-shadow: var(--shadow-sink);
-
-    transition: var(--transition-base);
+    @include state-base(var(--shadow-sink), var(--transition-glow));
   }
 
   &__thumb {
