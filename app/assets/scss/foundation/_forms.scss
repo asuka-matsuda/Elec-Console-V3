@@ -2,9 +2,7 @@
 @use "mixins" as *;
 @use "functions" as *;
 
-// --- フォーム要素のベーススタイル（統合） ---
-
-// 通常・ホバー・フォーカス・エラー時の光り方や影をすべて統合管理
+// --- フォーム要素のベーススタイル ---
 @mixin form-control-base(
   $is-error: "&.is-error",
   $is-active: "&:is(:focus, :focus-visible)",
@@ -12,49 +10,50 @@
 ) {
   border: var(--border-width-base) solid theme-color(var(--color-category-main));
 
-  // 1. 通常状態 (Default)
+  // --- 通常状態 ---
   @include state-base(var(--shadow-sink), var(--transition-glow));
 
-  // 2. ホバー (Hover)
+  // --- ホバー ---
   #{$is-hover} {
     @include state-hover(var(--color-category-main));
   }
 
-  // 3. クリック (Active/Press)
+  // --- クリック ---
   &:active:not(:disabled, .is-error) {
     @include state-active(var(--color-category-main));
   }
 
-  // 4. フォーカス状態 (Focus)
+  // --- フォーカス ---
   #{$is-active} {
     @include state-focus(var(--color-category-main));
     @include cyber-text-glow(var(--color-category-main));
   }
 
-  // 5. エラー (Error)
+  // --- エラー ---
   #{$is-error} {
     border-color: theme-color(var(--color-status-danger), 50%);
     color: var(--color-status-danger);
 
-    // エラーのホバー
+    // --- エラー時のホバー ---
     &:hover:not(:disabled, :focus) {
       @include state-hover(var(--color-status-danger));
     }
 
-    // エラーのクリック
+    // --- エラー時のクリック ---
     &:active:not(:disabled) {
       @include state-active(var(--color-status-danger));
     }
 
-    // エラーのフォーカス
+    // --- エラー時のフォーカス ---
     &:is(:-moz-focusring, :focus, :focus-visible, .is-active) {
       @include state-focus(var(--color-status-danger));
       @include cyber-text-glow(var(--color-status-danger));
     }
   }
 
-  // 6. 無効 (Disabled)
+  // --- 無効状態 ---
   &:is(:disabled, .is-disabled) {
     @extend %disabled;
   }
 }
+

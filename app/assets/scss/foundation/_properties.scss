@@ -3,7 +3,7 @@
 @use "sass:map";
 @use "variables" as *;
 
-// --- CSS CUSTOM PROPERTIES (:root) ---
+// --- CSSカスタムプロパティ ---
 :root {
 
   --icon-sb-up: #{$icon-chevron-up-dark};
@@ -15,7 +15,7 @@
   --icon-sb-right: #{$icon-chevron-right-dark};
   --icon-sb-right-hover: #{$icon-chevron-right-dark-hover};
 
-  // --- Auto-generated Scales ---
+  // --- 自動生成スケール ---
   @each $name, $value in $letter-spacings {
     --tracking-#{$name}: #{$value};
   }
@@ -37,7 +37,7 @@
     --size-#{$name}: #{$size};
   }
 
-  // --- Typography Base ---
+  // --- タイポグラフィベース ---
   --font-family: #{$font-base};
   --font-mono: #{$font-mono};
   --font-weight-normal: 400;
@@ -48,12 +48,12 @@
   --line-height-ui: 1.4;
   --line-height-tight: 1.2;
 
-  // --- Layout & Spacing Base ---
+  // --- レイアウト・余白ベース ---
   --sidebar-width: #{$sidebar-width};
   --base-spacing: #{$base-spacing};
   --base-size: #{$base-size};
 
-  // --- Color Base (HSL Values) ---
+  // --- カラーベース（HSL） ---
   --color-category-main-base: #{$color-category-main-base};
   --color-category-tool-base: #{$color-category-tool-base};
   --color-category-database-base: #{$color-category-database-base};
@@ -74,11 +74,11 @@
   --color-text-disabled-base: #{$color-text-disabled-base};
   --color-border-main-base: #{$color-border-main-base};
 
-  // --- Borders Base ---
+  // --- ボーダーベース ---
   --border-width-base: 1px;
   --border-width-thick: 2px;
 
-  // --- Effects Base (Blurs & Overlays) ---
+  // --- エフェクトベース（ブラー・オーバーレイ） ---
   --color-overlay-dark: hsl(0deg 0% 0% / 60%);
   --color-overlay-light: hsl(0deg 0% 0% / 30%);
   --blur-sm: 4px;
@@ -86,7 +86,7 @@
   --blur-lg: 12px;
   --blur-xl: 16px;
 
-  // --- Semantic Colors ---
+  // --- セマンティックカラー ---
   --color-category-main: hsl(var(--color-category-main-base));
   --color-category-tool: hsl(var(--color-category-tool-base));
   --color-category-database: hsl(var(--color-category-database-base));
@@ -108,7 +108,7 @@
   --color-text-disabled: hsl(var(--color-text-disabled-base));
   --color-border: hsl(var(--color-border-main-base));
 
-  // --- Semantic Spacing (Gap & Pad) ---
+  // --- セマンティック余白 ---
   --gap-element: var(--space-1);
   --gap-component: var(--space-2);
   --gap-section: var(--space-3);
@@ -117,8 +117,8 @@
   --pad-section: var(--space-3);
   --pad-container: var(--space-4);
 
-  // --- Shadows & Edge Reflexes ---
-  --shadow-color: theme-color(black, 90%); // Dark mode default
+  // --- シャドウ・エッジ反射 ---
+  --shadow-color: theme-color(black, 90%);
 
   --shadow-elevation-sm:
     0 1px 2px theme-color(var(--shadow-color), 40%),
@@ -152,7 +152,7 @@
     inset 0 0 12px
       theme-color(var(--glow-color, var(--color-category-main)), 80%);
 
-  // --- Animation & Transitions ---
+  // --- アニメーション・トランジション ---
   --duration-fast: 0.15s;
   --duration-base: 0.25s;
   --duration-slow: 0.4s;
@@ -171,7 +171,7 @@
   --transition-base: all var(--duration-base) var(--ease-base);
   --transition-slow: all var(--duration-slow) var(--ease-smooth);
 
-  // --- Component & Icon Sizes ---
+  // --- コンポーネント・アイコンサイズ ---
   --size-control-sm: 32px;
   --size-control-md: 40px;
   --size-control-lg: 48px;
@@ -184,17 +184,15 @@
   --icon-size-xl: 32px;
   --icon-size-xxl: 40px;
 
-  // --- Z-index Aliases ---
-
-  // Alias for nav to match AppGlobalNav.vue
+  // --- Z-indexエイリアス ---
   --z-index-nav: #{map.get($z-index, "sidebar-container")};
 
-  // --- UI Icons ---
+  // --- UIアイコン ---
   --icon-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A1A1AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
 
-  // --- 4. Responsive Overrides (Media Queries) ---
+  // --- レスポンシブ上書き ---
 
-  // --- Typography Overrides ---
+  // --- タイポグラフィ上書き ---
   @media (width >= 1600px) {
     --font-size-2xs: 11px;
     --font-size-xs: 12px;
@@ -221,7 +219,7 @@
     --font-size-4xl: 18px;
   }
 
-  // --- Spacing Overrides ---
+  // --- 余白上書き ---
   @media (width <= 1024px) {
     --gap-section: var(--space-3);
     --pad-section: var(--space-3);
@@ -236,3 +234,4 @@
     --pad-container: var(--space-2);
   }
 }
+

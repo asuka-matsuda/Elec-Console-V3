@@ -5,7 +5,7 @@
 
 $default-size: 12px;
 
-// --- Custom Scrollbar (HUD/Wireframe Style) ---
+// --- カスタムスクロールバー（HUD/ワイヤーフレーム） ---
 ::-webkit-scrollbar {
   width: var(--scrollbar-size, #{$default-size});
   height: var(--scrollbar-size, #{$default-size});
@@ -32,7 +32,7 @@ $default-size: 12px;
   }
 }
 
-// --- Scrollbar Buttons ---
+// --- スクロールバーボタン ---
 ::-webkit-scrollbar-button {
   width: var(--scrollbar-size, #{$default-size});
   height: var(--scrollbar-size, #{$default-size});
@@ -42,7 +42,6 @@ $default-size: 12px;
   background-size: calc(var(--scrollbar-size, #{$default-size}) * 0.8);
 }
 
-/* Hide unwanted double buttons */
 ::-webkit-scrollbar-button:vertical:start:increment,
 ::-webkit-scrollbar-button:vertical:end:decrement,
 ::-webkit-scrollbar-button:horizontal:start:increment,
@@ -89,3 +88,4 @@ $default-size: 12px;
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
+

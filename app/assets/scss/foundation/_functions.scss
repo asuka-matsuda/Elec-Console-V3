@@ -1,19 +1,13 @@
 ﻿@use "sass:list";
 
-/* SCSS Functions
-   ========================================================================== */
-
-/* 指定された不透明度（デフォルト50%）のテーマカラーを生成 */
 @function theme-color($color, $opacity: 50%) {
   @return color-mix(in srgb, #{$color} $opacity, transparent);
 }
 
-/* 色を指定パーセント分「明るく」する（白を混ぜる） */
 @function theme-lighten($color, $percentage: 10%) {
   @return color-mix(in srgb, #{$color}, white #{$percentage});
 }
 
-/* 色を指定パーセント分「暗く」する（黒を混ぜる） */
 @function theme-darken($color, $percentage: 10%) {
   @return color-mix(in srgb, #{$color}, black #{$percentage});
 }

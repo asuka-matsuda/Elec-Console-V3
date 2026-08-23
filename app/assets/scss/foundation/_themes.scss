@@ -3,7 +3,7 @@
 @use "mixins" as *;
 @use "functions" as *;
 
-// --- Light Theme Variables ---
+// --- ライトテーマ変数 ---
 [data-theme="light"] {
 
   --icon-sb-up: #{$icon-chevron-up-light};
@@ -15,41 +15,41 @@
   --icon-sb-right: #{$icon-chevron-right-light};
   --icon-sb-right-hover: #{$icon-chevron-right-light-hover};
 
-  color-scheme: light;
-
-  // --- Light Mode Colors (Pure White / No Background) ---
-  --color-main-bg-base: 0 0% 100%; // #FFFFFF
+  // --- ライトモードカラー（純白背景） ---
+  --color-main-bg-base: 0 0% 100%;
   --surface-bg: var(--color-main-bg);
 
-  // --- Text & Overlay ---
-  --color-overlay-base: 220 25% 15%; // For glass and overlays
-  --color-text-main-base: 220 25% 15%; // Rich blue-gray
-  --color-text-secondary-base: 240 6% 35%; // #545459
-  --color-text-muted-base: 240 5% 55%; // #86868C
-  --color-text-disabled-base: 240 5% 75%; // #B8B8BE
-  --color-border-main-base: 240 6% 85%; // #D4D4D8
+  // --- テキスト・オーバーレイ ---
+  --color-overlay-base: 220 25% 15%;
+  --color-text-main-base: 220 25% 15%;
+  --color-text-secondary-base: 240 6% 35%;
+  --color-text-muted-base: 240 5% 55%;
+  --color-text-disabled-base: 240 5% 75%;
+  --color-border-main-base: 240 6% 85%;
 
-  // --- Semantic / Category Colors (Rich & Deep for white background) ---
-  --color-category-main-base: 245 75% 55%; // Deep Indigo
-  --color-category-tool-base: 189 85% 35%; // Rich Teal
-  --color-category-database-base: 210 80% 45%; // Calm Blue
-  --color-category-reference-base: 271 80% 50%; // Deep Purple
-  --color-category-management-base: 180 75% 30%; // Dark Teal
+  // --- セマンティックカラー（白背景用） ---
+  --color-category-main-base: 245 75% 55%;
+  --color-category-tool-base: 189 85% 35%;
+  --color-category-database-base: 210 80% 45%;
+  --color-category-reference-base: 271 80% 50%;
+  --color-category-management-base: 180 75% 30%;
 
-  // --- Glassmorphism Base Color ---
+  // --- グラスモーフィズムベース ---
   --glass-base-color: black;
 
-  // --- Overlays & Effects ---
+  // --- オーバーレイ・エフェクト ---
   --color-overlay-dark: hsl(240deg 10% 15% / 40%);
   --color-overlay-light: hsl(0deg 0% 100% / 50%);
 
-  // --- Shadows ---
+  // --- シャドウ ---
   --shadow-color: hsl(220deg 25% 15% / 20%);
+
+  color-scheme: light;
 }
 
-// --- Accent Color Variations ---
+// --- アクセントカラーバリエーション ---
 
-// --- Border Style Themes ---
+// --- ボーダースタイルテーマ ---
 :root,
 body[data-border-style="hud"] {
   --panel-border-color: var(--color-border);
@@ -97,17 +97,13 @@ body[data-border-style="hybrid"] {
     1;
   --panel-box-shadow:
     inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border),
-    var(--shadow-elevation-sm); // Revert shadow elevation to base
+    var(--shadow-elevation-sm);
 
   --panel-bracket-display: block;
   --panel-bracket-size: 18px;
   --panel-bracket-color: var(--color-border);
   --panel-bracket-glow: drop-shadow(0 0 4px var(--color-border));
 }
-
-// ==========================================================================
-// Base Background
-// ==========================================================================
 
 body {
   background-color: var(--color-main-bg);
@@ -120,3 +116,4 @@ body {
 html[data-theme="light"] body {
   background-color: hsl(240deg 5% 96%);
 }
+

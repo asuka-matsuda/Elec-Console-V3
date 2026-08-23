@@ -2,9 +2,9 @@
 @use "functions" as *;
 @use "sass:map";
 
-// --- SCSS VARIABLES (Design Tokens) ---
+// --- SCSS変数（デザイントークン） ---
 
-// --- Typography ---
+// --- タイポグラフィ ---
 $font-fallback: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
 $font-base: $font-fallback;
 $font-mono: "Roboto Mono", $font-fallback;
@@ -28,7 +28,7 @@ $letter-spacings: (
   "widest": 0.1em,
 );
 
-// --- Layout & Breakpoints ---
+// --- レイアウト・ブレイクポイント ---
 $breakpoints: (
   "md": 768px,
   "lg": 1024px,
@@ -61,7 +61,7 @@ $z-index: (
   "debug": 999999,
 );
 
-// --- Spacing & Sizing ---
+// --- 余白・サイズ ---
 $base-spacing: 8px;
 $base-size: 8px;
 $spacing-scale: (
@@ -82,7 +82,7 @@ $size-scale: (
   "8": $base-size * 4,
 );
 
-// --- Colors (Semantic HSL Bases) ---
+// --- カラー（セマンティックHSLベース） ---
 $color-category-main-base: 245 84% 67%;
 $color-category-tool-base: 189 94% 43%;
 $color-category-database-base: 210 91% 60%;

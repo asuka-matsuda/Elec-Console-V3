@@ -1,7 +1,5 @@
 /*! destyle.css v4.0.0 | MIT License | https://github.com/nicolas-cusan/destyle.css */
-
-// --- Reset box-model and set borders ---
-
+// --- ボックスモデルとボーダーのリセット ---
 *,
 ::before,
 ::after {
@@ -10,15 +8,13 @@
   border-width: 0;
 }
 
-// --- Document ---
-
+// --- ドキュメント ---
 html {
   line-height: 1.15;
   text-size-adjust: 100%;
 }
 
-// --- Sections ---
-
+// --- セクション ---
 body {
   margin: 0;
 }
@@ -27,8 +23,7 @@ main {
   display: block;
 }
 
-// --- Vertical rhythm ---
-
+// --- 垂直リズム ---
 p,
 table,
 blockquote,
@@ -41,8 +36,7 @@ dl {
   margin: 0;
 }
 
-// --- Headings ---
-
+// --- 見出し ---
 h1,
 h2,
 h3,
@@ -54,8 +48,7 @@ h6 {
   font-weight: inherit;
 }
 
-// --- Lists (enumeration) ---
-
+// --- リスト（列挙） ---
 ul,
 ol {
   margin: 0;
@@ -63,8 +56,7 @@ ol {
   list-style: none;
 }
 
-// --- Lists (definition) ---
-
+// --- リスト（定義） ---
 dt {
   font-weight: bold;
 }
@@ -73,8 +65,7 @@ dd {
   margin-left: 0;
 }
 
-// --- Grouping content ---
-
+// --- コンテンツのグループ化 ---
 hr {
   clear: both;
   overflow: visible;
@@ -96,8 +87,7 @@ address {
   font-style: inherit;
 }
 
-// --- Text-level semantics ---
-
+// --- インライン要素 ---
 a {
   color: inherit;
   text-decoration: none;
@@ -139,8 +129,7 @@ sup {
   top: -0.5em;
 }
 
-// --- Replaced content ---
-
+// --- 置換要素 ---
 svg,
 img,
 embed,
@@ -149,8 +138,7 @@ iframe {
   vertical-align: bottom;
 }
 
-// --- Forms ---
-
+// --- フォーム ---
 button,
 input,
 optgroup,
@@ -235,8 +223,7 @@ textarea {
   appearance: auto;
 }
 
-// --- Interactive ---
-
+// --- インタラクティブ要素 ---
 details {
   display: block;
 }
@@ -245,8 +232,7 @@ summary {
   display: list-item;
 }
 
-// --- Misc ---
-
+// --- その他 ---
 template {
   display: none;
 }
@@ -254,3 +240,4 @@ template {
 [hidden] {
   display: none;
 }
+

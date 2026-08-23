@@ -2,19 +2,14 @@
 @use "mixins" as *;
 @use "functions" as *;
 
-/* Universal & Resets
-   ========================================================================== */
-
-// ユニバーサルセレクタ
 *,
 *::before,
 *::after {
-  box-sizing: border-box; // 箱からはみ出さないように
+  box-sizing: border-box;
   font-family: inherit;
   background-color: transparent;
 }
 
-// フォーム要素も継承させる
 button,
 input,
 optgroup,
@@ -23,20 +18,18 @@ textarea {
   font-family: inherit;
 }
 
-/* Base Elements
-   ========================================================================== */
 body {
   @extend %text-body;
 
-  overflow: hidden; // スクロール禁止
-  display: flex; // フレックスボックス
-  flex-direction: column; // 最初から縦並び
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 
-  height: 100dvh; // 高さ
-  min-height: 100dvh; // バグ対策
-  margin: 0; // 余白なし
+  height: 100dvh;
+  min-height: 100dvh;
+  margin: 0;
 
-  // Typography
+  // --- タイポグラフィ ---
   font-family: var(--font-base);
   color: var(--color-text-main);
 
@@ -44,23 +37,20 @@ body {
 
   transition: background-color var(--duration-modal) ease;
 
-  -webkit-font-smoothing: antialiased; // Chrome,Safari用
+  -webkit-font-smoothing: antialiased;
 }
 
-// 標準のスピンボタンを消す
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  margin: 0; // バグ対策
+  margin: 0;
   appearance: none;
 }
 
-/* Global Utilities
-   ========================================================================== */
 .is-hidden {
   display: none;
 }
 
-// --- Global Animations ---
+// --- グローバルアニメーション ---
 @keyframes ui-cursor-blink {
   0%,
   100% {
@@ -78,3 +68,4 @@ input::-webkit-inner-spin-button {
   flex-direction: column;
   min-height: 0;
 }
+
