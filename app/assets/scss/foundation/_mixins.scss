@@ -1,7 +1,30 @@
+/* stylelint-disable at-rule-empty-line-before */
 @use "sass:list";
 @use "sass:map";
 @use "functions" as *;
 @use "variables" as *;
+
+// --- Layout Mixins ---
+@mixin flex-center($gap: var(--gap-element), $display: flex) {
+  display: $display;
+  gap: $gap;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between($gap: var(--gap-element), $display: flex) {
+  display: $display;
+  gap: $gap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-start($gap: var(--gap-element), $display: flex) {
+  display: $display;
+  gap: $gap;
+  align-items: center;
+  justify-content: flex-start;
+}
 
 // --- Media Queries ---
 @mixin mq($breakpoint, $direction: "down") {
@@ -43,135 +66,6 @@
   } @else {
     @warn "Invalid container breakpoint: #{$breakpoint}.";
   }
-}
-
-// --- Base / Common Placeholders ---
-%click-enabled {
-  cursor: pointer;
-  user-select: none;
-}
-
-%disabled {
-  pointer-events: none;
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-// --- Visual Effects & Glassmorphism ---
-@mixin cyber-text-glow(
-  $color: currentcolor,
-  $opacity: 50%,
-  $blur: var(--blur-md)
-) {
-  text-shadow: 0 0 $blur theme-color($color, $opacity);
-}
-
-@mixin border-dim($opacity: 50%, $color: var(--color-border)) {
-  border: var(--border-width-base) solid theme-color($color, $opacity);
-}
-
-@mixin surface($border-opacity: 100%) {
-  background-color: var(--surface-bg);
-  @include border-dim($border-opacity);
-
-  box-shadow: var(--shadow-elevation-lg);
-}
-
-// --- Interactive States (State Mixins) ---
-@mixin state-base($shadow: none, $transition: var(--transition-base)) {
-  --shadow-base: #{$shadow};
-
-  box-shadow: var(--shadow-base);
-  transition: $transition;
-}
-
-@mixin state-hover($color: null, $transition: var(--transition-glow)) {
-  @if $color {
-    --glow-color: #{$color};
-
-    border-color: $color;
-  }
-
-  box-shadow: var(--shadow-glow-hover), var(--shadow-base, none);
-  transition: $transition;
-}
-
-@mixin state-focus($color: null, $transition: var(--transition-glow)) {
-  @if $color {
-    --glow-color: #{$color};
-
-    border-color: $color;
-  }
-
-  outline: none;
-  box-shadow: var(--shadow-glow-focus), var(--shadow-base, none);
-  transition: $transition;
-}
-
-@mixin state-active($color: null, $transition: var(--transition-glow)) {
-  @if $color {
-    --glow-color: #{$color};
-
-    border-color: $color;
-  }
-
-  transform: scale(0.985);
-  box-shadow: var(--shadow-glow-active), var(--shadow-base, none);
-  transition: $transition;
-
-  svg {
-    filter: drop-shadow(0 0 2px $color);
-    stroke: $color;
-  }
-}
-
-// --- Cursor & Indicators ---
-@mixin blinking-cursor(
-  $width: var(--space-1),
-  $height: var(--space-3),
-  $color: currentcolor
-) {
-  &::after {
-    content: "";
-
-    display: inline-block;
-
-    width: $width;
-    height: $height;
-    margin-left: auto;
-
-    background-color: $color;
-
-    animation: ui-cursor-blink 1s step-end infinite;
-  }
-}
-
-// --- Typography Placeholders (Semantic) ---
-%text-label {
-  font-size: var(--font-size-2xs);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--tracking-wider);
-  text-transform: uppercase;
-}
-
-%text-caption {
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-base);
-  letter-spacing: var(--tracking-normal);
-}
-
-%text-body {
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-base);
-  letter-spacing: var(--tracking-wide);
-}
-
-%text-heading {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--tracking-normal);
 }
 
 // --- Typography Placeholders (T-Shirt Sizes) ---
@@ -227,24 +121,133 @@
   letter-spacing: var(--tracking-tighter);
 }
 
-// --- Layout Mixins ---
-@mixin flex-center($gap: var(--gap-element), $display: flex) {
-  display: $display;
-  gap: $gap;
-  align-items: center;
-  justify-content: center;
+// --- Typography Placeholders (Semantic) ---
+%text-label {
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
 }
 
-@mixin flex-between($gap: var(--gap-element), $display: flex) {
-  display: $display;
-  gap: $gap;
-  align-items: center;
-  justify-content: space-between;
+%text-caption {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  letter-spacing: var(--tracking-normal);
 }
 
-@mixin flex-start($gap: var(--gap-element), $display: flex) {
-  display: $display;
-  gap: $gap;
-  align-items: center;
-  justify-content: flex-start;
+%text-body {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  letter-spacing: var(--tracking-wide);
 }
+
+%text-heading {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-normal);
+}
+
+// --- Visual Effects & Glassmorphism ---
+@mixin cyber-text-glow(
+  $color: currentcolor,
+  $opacity: 50%,
+  $blur: var(--blur-md)
+) {
+  text-shadow: 0 0 $blur theme-color($color, $opacity);
+}
+
+@mixin border-dim($opacity: 50%, $color: var(--color-border)) {
+  border: var(--border-width-base) solid theme-color($color, $opacity);
+}
+
+@mixin surface($border-opacity: 100%) {
+  background-color: var(--surface-bg);
+
+  @include border-dim($border-opacity);
+
+  box-shadow: var(--shadow-elevation-lg);
+}
+
+// --- Interactive States (State Mixins) ---
+@mixin state-base($shadow: none, $transition: var(--transition-base)) {
+  --shadow-base: #{$shadow};
+
+  box-shadow: var(--shadow-base);
+  transition: $transition;
+}
+
+@mixin state-hover($color: null, $transition: var(--transition-glow)) {
+  @if $color {
+    --glow-color: #{$color};
+
+    border-color: $color;
+  }
+
+  box-shadow: var(--shadow-glow-hover), var(--shadow-base, none);
+  transition: $transition;
+}
+
+@mixin state-focus($color: null, $transition: var(--transition-glow)) {
+  @if $color {
+    --glow-color: #{$color};
+
+    border-color: $color;
+  }
+
+  outline: none;
+  box-shadow: var(--shadow-glow-focus), var(--shadow-base, none);
+  transition: $transition;
+}
+
+@mixin state-active($color: null, $transition: var(--transition-glow)) {
+  @if $color {
+    --glow-color: #{$color};
+
+    border-color: $color;
+  }
+
+  transform: scale(0.985);
+  box-shadow: var(--shadow-glow-active), var(--shadow-base, none);
+  transition: $transition;
+
+  svg {
+    filter: drop-shadow(0 0 2px $color);
+    stroke: $color;
+  }
+}
+
+// --- Base / Common Placeholders ---
+%click-enabled {
+  cursor: pointer;
+  user-select: none;
+}
+
+%disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+// --- Cursor & Indicators ---
+@mixin blinking-cursor(
+  $width: var(--space-1),
+  $height: var(--space-3),
+  $color: currentcolor
+) {
+  &::after {
+    content: "";
+
+    display: inline-block;
+
+    width: $width;
+    height: $height;
+    margin-left: auto;
+
+    background-color: $color;
+
+    animation: ui-cursor-blink 1s step-end infinite;
+  }
+}
+

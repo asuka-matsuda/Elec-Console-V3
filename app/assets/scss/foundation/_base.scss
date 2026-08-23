@@ -26,6 +26,8 @@ textarea {
 /* Base Elements
    ========================================================================== */
 body {
+  @extend %text-body;
+
   overflow: hidden; // スクロール禁止
   display: flex; // フレックスボックス
   flex-direction: column; // 最初から縦並び
@@ -34,14 +36,12 @@ body {
   min-height: 100dvh; // バグ対策
   margin: 0; // 余白なし
 
-  // Extends
-  @extend %text-body;
-
   // Typography
   font-family: var(--font-base);
   color: var(--color-text-main);
 
   background-color: var(--color-main-bg);
+
   transition: background-color var(--duration-modal) ease;
 
   -webkit-font-smoothing: antialiased; // Chrome,Safari用
