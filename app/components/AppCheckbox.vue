@@ -65,7 +65,6 @@ const inputId = useId();
   cursor: pointer;
   user-select: none;
   position: relative;
-  color: var(--color-text-main);
 
   // --- Color Modifiers ---
   &--success {

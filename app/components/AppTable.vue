@@ -78,7 +78,6 @@ defineProps<{
     padding: var(--pad-section);
     border-bottom: var(--border-width-base) solid var(--color-border);
 
-    color: var(--color-text-main);
     white-space: nowrap;
     vertical-align: middle;
   }

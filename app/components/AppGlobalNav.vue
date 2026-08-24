@@ -192,7 +192,6 @@ const closeSidebar = () => {
 
     font-weight: var(--font-weight-medium);
     color: var(--color-text-secondary);
-    text-decoration: none;
 
     transition: var(--transition-base);
 

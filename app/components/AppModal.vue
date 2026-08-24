@@ -185,7 +185,6 @@ const titleId = `modal-title-${modalId}`;
     overflow-y: auto;
     flex: 1;
     padding: var(--pad-container) 0;
-    color: var(--color-text-main);
   }
 
   &__footer {

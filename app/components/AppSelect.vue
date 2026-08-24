@@ -275,7 +275,6 @@ const listboxId = useId();
   width: 100%;
 
   font-family: var(--font-mono);
-  color: var(--color-text-main);
 
   &.is-disabled {
     pointer-events: none;
@@ -391,7 +390,6 @@ const listboxId = useId();
   padding: var(--pad-component);
   border-left: var(--border-width-thick) solid transparent;
 
-  color: var(--color-text-main);
   text-overflow: ellipsis;
   white-space: nowrap;
 

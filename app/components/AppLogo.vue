@@ -20,8 +20,6 @@ const emit = defineEmits<{
   // --- Base Styles ---
   @include flex-start(var(--space-3));
 
-  color: var(--color-text-main);
-  text-decoration: none;
   transition: var(--transition-base);
 
   &:hover {

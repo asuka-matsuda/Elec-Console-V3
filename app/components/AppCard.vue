@@ -52,9 +52,6 @@ const rootProps = computed(() => {
 
   padding: var(--pad-container);
 
-  color: var(--color-text-main);
-  text-decoration: none; /* Reset for links */
-
   @include state-base(none, var(--transition-base));
 
   @include surface(15%);

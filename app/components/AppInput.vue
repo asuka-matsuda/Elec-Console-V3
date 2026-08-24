@@ -71,7 +71,6 @@ const inputId = useId();
   padding: var(--form-control-py) var(--form-control-px);
 
   font-family: var(--font-mono);
-  color: var(--color-text-main);
 
   &::placeholder {
     color: var(--color-text-muted);
