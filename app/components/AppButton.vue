@@ -43,8 +43,8 @@ const componentTag = computed(() => {
     :disabled="componentTag === 'button' ? disabled : null"
     class="c-btn"
     :class="[
-      _variant && `c-btn--${_variant}`,
-      size && `c-btn--${size}`,
+      _variant !== 'primary' && `c-btn--${_variant}`,
+      size !== 'sm' && `c-btn--${size}`,
       align !== 'center' && `c-btn--${align}`,
       {
         'c-btn--block': block,
@@ -65,6 +65,7 @@ const componentTag = computed(() => {
 
   // --- 継承 ---
   @extend %click-enabled;
+  @extend %text-xs;
 
   // --- レイアウト・配置 ---
   @include flex-center(var(--space-2), inline-flex);
@@ -72,6 +73,10 @@ const componentTag = computed(() => {
   position: relative;
 
   flex-shrink: 0;
+
+  // --- ボックスモデル ---
+  height: var(--size-control-sm);
+  padding: 0 var(--space-2);
 
   // --- タイポグラフィ ---
   font-weight: var(--font-weight-semibold);
@@ -83,6 +88,23 @@ const componentTag = computed(() => {
   // --- 視覚効果 ---
   @include border-dim(50%, var(--btn-color, var(--color-category-main)));
   @include state-base((inset 0 0 var(--blur-md) theme-color(var(--btn-color, var(--color-category-main)), 10%), var(--shadow-elevation-sm)), var(--transition-fast));
+
+  // --- 疑似要素（タッチターゲット確保） ---
+  &::after {
+    content: "";
+
+    // --- レイアウト・配置 ---
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    // --- ボックスモデル ---
+    width: 100%;
+    min-width: var(--size-control-lg);
+    height: 100%;
+    min-height: var(--size-control-lg);
+  }
 
   // --- インタラクティブ状態 ---
   &:hover:not(:disabled, .is-disabled) {
@@ -117,10 +139,6 @@ const componentTag = computed(() => {
   }
 
   // --- モディファイア（カラー） ---
-  &--primary {
-    --btn-color: var(--color-category-main);
-  }
-
   &--secondary {
     --btn-color: var(--color-status-neutral);
   }
@@ -134,32 +152,6 @@ const componentTag = computed(() => {
   }
 
   // --- モディファイア（サイズ） ---
-  &--sm {
-    // --- 継承 ---
-    @extend %text-xs;
-
-    // --- ボックスモデル ---
-    height: var(--size-control-sm);
-    padding: 0 var(--space-2);
-
-    // --- 疑似要素 ---
-    &::after {
-      content: "";
-
-      // --- レイアウト・配置 ---
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-
-      // --- ボックスモデル ---
-      width: 100%;
-      min-width: var(--size-control-lg);
-      height: 100%;
-      min-height: var(--size-control-lg);
-    }
-  }
-
   &--md {
     // --- 継承 ---
     @extend %text-sm;
@@ -177,12 +169,8 @@ const componentTag = computed(() => {
 
   &--icon-only {
     // --- ボックスモデル ---
+    width: var(--size-control-sm);
     padding: 0;
-
-    &.c-btn--sm {
-      // --- ボックスモデル ---
-      width: var(--size-control-sm);
-    }
 
     &.c-btn--md {
       // --- ボックスモデル ---
