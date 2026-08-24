@@ -58,9 +58,14 @@ defineProps<{
 
 <style scoped lang="scss">
 .c-table-wrapper {
-  // --- Base Styles ---
+  // --- その他 ---
   overflow: auto;
+
+  // --- レイアウト・配置 ---
   flex: 1;
+
+
+  // --- ボックスモデル ---
 
   width: 100%;
   min-height: 0;
@@ -70,25 +75,39 @@ defineProps<{
 .c-table {
   border-spacing: 0;
   border-collapse: separate;
+
+  // --- ボックスモデル ---
   width: 100%;
+
+  // --- タイポグラフィ ---
   text-align: left;
+
+
+  // --- 疑似クラス ---
 
   :deep(th),
   :deep(td) {
+    // --- ボックスモデル ---
     padding: var(--pad-section);
     border-bottom: var(--border-width-base) solid var(--color-border);
 
+    // --- タイポグラフィ ---
     white-space: nowrap;
     vertical-align: middle;
   }
 
   :deep(td) {
+    // --- タイポグラフィ ---
     font-family: var(--font-mono);
   }
 
   :deep(th) {
+    // --- 継承 ---
 
     @extend %text-sm;
+
+
+    // --- レイアウト・配置 ---
 
     position: sticky;
     z-index: 2;
@@ -96,27 +115,43 @@ defineProps<{
 
     border-bottom-width: calc(var(--border-width-base) * 2);
 
+
+    // --- タイポグラフィ ---
+
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
+
+
+    // --- 視覚効果 ---
 
     backdrop-filter: blur(var(--blur-md));
   }
 
   :deep(tbody tr) {
+    // --- レイアウト・配置 ---
     position: relative; /* Required for z-index and box-shadow to appear correctly on rows */
+
+    // --- 視覚効果 ---
     transition: var(--transition-base);
 
+
+    // --- 疑似クラス ---
+
     &:last-child td {
+      // --- ボックスモデル ---
       border-bottom: none;
     }
 
     &:hover {
+      // --- レイアウト・配置 ---
       z-index: 1;
 
       /* テーブル行ホバー時の発光エフェクト */
       @include state-hover;
 
       /* 行全体を光らせるため、セルの背景を上書きさせない */
+
+      // --- ボックスモデル ---
       outline: var(--border-width-base) solid
         theme-color(var(--color-category-main), 80%);
       outline-offset: calc(var(--border-width-base) * -1);

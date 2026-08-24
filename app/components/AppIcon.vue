@@ -31,31 +31,39 @@ const svgContent = computed(() => {
 
 <style scoped lang="scss">
 .c-icon {
-  // --- Base Styles ---
+  // --- レイアウト・配置 ---
   @include flex-center(0, inline-flex);
 
+
+  // --- 疑似クラス ---
+
   :deep(svg) {
+    // --- ボックスモデル ---
     width: 100%;
     height: 100%;
   }
 
-  // --- Size Modifiers ---
+  // --- モディファイア ---
   &--sm {
+    // --- ボックスモデル ---
     width: 14px;
     height: 14px;
   }
   
   &--md {
+    // --- ボックスモデル ---
     width: 18px;
     height: 18px;
   }
   
   &--lg {
+    // --- ボックスモデル ---
     width: 24px;
     height: 24px;
   }
   
   &--xl {
+    // --- ボックスモデル ---
     width: 32px;
     height: 32px;
   }

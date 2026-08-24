@@ -17,6 +17,7 @@ defineProps<AppButtonProps>();
 
 <style scoped lang="scss">
 .c-btn-danger {
+  // --- CSSカスタムプロパティ ---
   --btn-color: var(--color-status-danger);
 }
 </style>

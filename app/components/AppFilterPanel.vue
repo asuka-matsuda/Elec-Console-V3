@@ -65,35 +65,52 @@ const toggleCat = (value: string) => {
 
 <style scoped lang="scss">
 .c-filter-panel {
-  // --- Base Styles ---
+  // --- 子要素 ---
   &__header {
+    // --- 継承 ---
 
     @extend %text-base;
 
+
+    // --- レイアウト・配置 ---
+
     @include flex-start(var(--gap-element));
 
+
+    // --- ボックスモデル ---
+
     padding-bottom: var(--gap-element);
+
+    // --- タイポグラフィ ---
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
   }
 
   &__header-wrapper {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-component));
+
+
+    // --- ボックスモデル ---
+
     margin-bottom: var(--pad-container);
   }
 
   &__filters {
+    // --- レイアウト・配置 ---
     display: grid;
     grid-template-columns: 280px 1fr; /* PC時は横並び（キーワード入力幅を固定、残りをカテゴリに） */
     gap: var(--gap-section);
 
     /* スマホ時は縦積み */
     @include mq("md") {
+      // --- レイアウト・配置 ---
       grid-template-columns: 1fr;
     }
   }
 
   &__grid {
+    // --- レイアウト・配置 ---
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
     gap: var(--gap-component);

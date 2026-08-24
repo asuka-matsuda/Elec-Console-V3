@@ -112,28 +112,44 @@ const updateCount = (val: any) => {
 
 <style scoped lang="scss">
 .c-cable-row {
-  // --- Base Styles ---
+  // --- レイアウト・配置 ---
   @include flex-column(0);
 
+
+  // --- 子要素 ---
+
   &__header {
+    // --- レイアウト・配置 ---
     @include flex-between;
+
+
+    // --- ボックスモデル ---
 
     margin-bottom: var(--gap-element);
   }
 
   &__title-group {
+    // --- レイアウト・配置 ---
     @include flex-start(var(--gap-element));
   }
 
   &__title {
+    // --- 継承 ---
     @extend %text-sm;
+
+
+    // --- タイポグラフィ ---
 
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
 
   &__meta {
+    // --- 継承 ---
     @extend %text-xs;
+
+
+    // --- タイポグラフィ ---
 
     color: var(--color-text-muted);
   }

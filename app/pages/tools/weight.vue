@@ -179,40 +179,62 @@ const totalWeight = computed(() => {
 
 <style scoped lang="scss">
 .p-result-weight {
+  // --- レイアウト・配置 ---
   @include flex-column(var(--gap-element));
+
+  
+  // --- 子要素 ---
   
   &__val {
+    // --- 継承 ---
     @extend %text-2xl;
+
+
+    // --- タイポグラフィ ---
 
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
   
   &__warning {
+    // --- 継承 ---
     @extend %text-sm;
 
+
+    // --- ボックスモデル ---
+
     padding: var(--gap-element);
+
+    // --- タイポグラフィ ---
     color: var(--color-status-danger);
   }
 }
 
 .p-weight {
-  // --- Base Styles ---
+  // --- 子要素 ---
 
   &__sections {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-section));
   }
 
   &__note {
+    // --- 継承 ---
 
     @extend %text-xs;
 
+
+    // --- ボックスモデル ---
+
     margin-top: var(--pad-container);
     padding: 0 var(--pad-container);
+
+    // --- タイポグラフィ ---
     color: var(--color-text-muted);
   }
   
   &__note-list {
+    // --- ボックスモデル ---
     padding-left: var(--pad-container);
     list-style-type: disc;
   }

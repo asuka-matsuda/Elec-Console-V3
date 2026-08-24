@@ -104,28 +104,39 @@ const handleSave = async () => {
 </template>
 
 <style scoped lang="scss">
-
 .p-basis-note {
+  // --- 継承 ---
   @extend %text-2xs;
+
+
+  // --- タイポグラフィ ---
 
   color: var(--color-status-warning);
 }
 
 .p-conduit {
-  // --- Base Styles ---
+  // --- 子要素 ---
 
   &__section-title {
+    // --- 継承 ---
     @extend %text-base;
 
+
+    // --- ボックスモデル ---
+
     margin-bottom: var(--gap-component);
+
+    // --- タイポグラフィ ---
     font-weight: var(--font-weight-bold);
   }
   
   &__cable-list {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-component));
   }
   
   &__add-button {
+    // --- ボックスモデル ---
     width: 100%;
     margin-top: var(--pad-container);
   }

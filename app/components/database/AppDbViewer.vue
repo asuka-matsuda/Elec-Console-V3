@@ -53,55 +53,88 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
 
 <style scoped lang="scss">
 .l-filter-layout {
-  // --- Base Styles ---
+  // --- レイアウト・配置 ---
   container-name: filter-layout;
   container-type: inline-size;
+
   @include flex-column(0);
+
   flex: 1;
+
+
+  // --- ボックスモデル ---
 
   width: 100%;
   max-width: 1400px;
   min-height: 0;
 
+
+  // --- 子要素 ---
+
   &__grid {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-section));
+
     flex: 1;
 
+    // --- ボックスモデル ---
     min-height: 0;
   }
 
   &__sidebar {
+    // --- ボックスモデル ---
     width: 100%;
   }
 
   &__main {
+    // --- レイアウト・配置 ---
     @include flex-column(0);
+
     flex: 1;
 
+    // --- ボックスモデル ---
     min-width: 0;
     min-height: 0;
   }
 }
 
 .c-db {
+  // --- レイアウト・配置 ---
   @include flex-column(0);
+
   flex: 1;
+
+  // --- ボックスモデル ---
   min-height: 0;
 }
 
 .c-db-panel {
+  // --- その他 ---
   overflow: hidden;
+
+
+  // --- レイアウト・配置 ---
+
   @include flex-column(0);
+
   flex: 1;
+
+  // --- ボックスモデル ---
   min-height: 0;
 }
 
 .c-db-empty {
+  // --- 継承 ---
+  @extend %text-base;
+
+
+  // --- ボックスモデル ---
+
   padding: var(--pad-container);
   border: var(--border-width-base) solid theme-color(var(--color-border), 50%);
-  @extend %text-base;
+
+  // --- タイポグラフィ ---
   color: var(--color-text-muted);
   text-align: center;
 }
-
 </style>

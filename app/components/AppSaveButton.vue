@@ -67,30 +67,47 @@ const handleClick = async () => {
 
 <style scoped lang="scss">
 .c-save-button {
-  // --- Base Styles ---
+  // --- 視覚効果 ---
   transition: all var(--transition-base);
-  
-  // --- Color Modifiers ---
+
+  // --- モディファイア ---
   &.is-success {
     /* 成功時はボタン自体を少しグリーンにする */
+
+    // --- CSSカスタムプロパティ ---
     --btn-color: var(--color-status-success);
 
+
+    // --- その他 ---
+
     pointer-events: none;
+
+    // --- ボックスモデル ---
     border-color: var(--color-status-success);
+
+    // --- タイポグラフィ ---
     color: var(--color-status-success);
   }
 }
 
 .u-spin {
+  // --- 視覚効果 ---
   animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  // --- 子要素 ---
+  from {
+  // --- 視覚効果 ---
+  transform: rotate(0deg); }
+
+  to {
+  // --- 視覚効果 ---
+  transform: rotate(360deg); }
 }
 
 .c-save-button__check {
+  // --- タイポグラフィ ---
   color: var(--color-status-success);
 }
 </style>

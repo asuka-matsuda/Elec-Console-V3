@@ -65,9 +65,10 @@ withDefaults(
   @include state-base(var(--shadow-glow-hover), var(--transition-base));
   @include cyber-text-glow(var(--glow-color), 100%, var(--blur-sm));
 
-  // --- モディファイア ---
   @each $name, $var in $variants {
+    // --- モディファイア ---
     &--#{$name} {
+      // --- CSSカスタムプロパティ ---
       --glow-color: var(#{$var});
     }
   }

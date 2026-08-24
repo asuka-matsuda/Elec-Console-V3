@@ -88,90 +88,143 @@ const handleDelete = () => {
 
 <style scoped lang="scss">
 .c-history-card {
-  // --- Base Styles ---
+  // --- レイアウト・配置 ---
   @include flex-column(var(--gap-component));
 
-  // --- State Modifiers ---
+  // --- モディファイア ---
   &.is-error {
-    border-color: var(--color-status-danger);
+    // --- CSSカスタムプロパティ ---
     --glow-color: theme-color(var(--color-status-danger), 10%);
+
+
+    // --- ボックスモデル ---
+
+    border-color: var(--color-status-danger);
+
+    // --- 視覚効果 ---
     box-shadow: var(--shadow-glow-inset-md);
+
+    
+    // --- 子要素 ---
     
     .c-history-card__main-result {
+      // --- タイポグラフィ ---
       color: var(--color-status-danger);
+
+
+      // --- 視覚効果 ---
 
       @include cyber-text-glow(var(--color-status-danger), 50%, 8px);
     }
   }
 
+
+  // --- 子要素 ---
+
   &__header {
+    // --- レイアウト・配置 ---
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
+
+
+    // --- ボックスモデル ---
 
     padding-bottom: var(--gap-component);
     border-bottom: 1px solid var(--color-border);
   }
 
   &__title-group {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-element));
   }
 
   &__date {
+    // --- 継承 ---
     @extend %text-xs;
+
+
+    // --- タイポグラフィ ---
 
     color: var(--color-text-muted);
   }
 
   &__title {
+    // --- 継承 ---
     @extend %text-base;
 
+
+    // --- レイアウト・配置 ---
+
     @include flex-start(var(--gap-element));
+
+
+    // --- タイポグラフィ ---
 
     font-weight: var(--font-weight-semibold);
     color: var(--color-text-main);
   }
 
   &__body {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-component));
   }
 
   &__section {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-element));
   }
 
   &__section-title {
+    // --- 継承 ---
     @extend %text-sm;
+
+
+    // --- ボックスモデル ---
 
     padding-left: var(--gap-element);
     border-left: 2px solid var(--color-category-tool);
+
+    // --- タイポグラフィ ---
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
 
   &__list {
+    // --- 継承 ---
 
     @extend %text-sm;
+
+
+    // --- レイアウト・配置 ---
 
     display: grid;
     grid-template-columns: auto 1fr;
     gap: var(--gap-element) var(--gap-section);
 
+
+    // --- 子要素 ---
+
     dt {
+      // --- タイポグラフィ ---
       color: var(--color-text-muted);
       white-space: nowrap;
     }
     
     dd {
+      // --- タイポグラフィ ---
       color: var(--color-text-main);
       text-align: right;
     }
   }
 
   &__footer {
+    // --- レイアウト・配置 ---
     display: flex;
     align-items: center;
     justify-content: flex-end;
+
+    // --- ボックスモデル ---
     margin-top: auto;
   }
 }

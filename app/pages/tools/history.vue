@@ -162,45 +162,59 @@ const confirmDelete = () => {
 
 <style scoped lang="scss">
 .p-history-page {
-  // --- Base Styles ---
+  // --- レイアウト・配置 ---
   container-type: inline-size;
+
   @include flex-column(var(--gap-section));
+
+
+  // --- 子要素 ---
 
   &__tabs {
     /* 親要素(p-history-page)のgapで管理されるためmargin-bottomは削除 */
   }
 
   &__grid {
+    // --- レイアウト・配置 ---
     display: grid;
     grid-template-columns: 1fr; // スモールファースト
     gap: var(--gap-component);
 
     @include cq("sm") {
+      // --- レイアウト・配置 ---
       grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
     }
   }
 
   &__empty {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-element));
+
     align-items: center;
     justify-content: center;
 
+    // --- ボックスモデル ---
     padding: var(--pad-container) 0;
 
+    // --- タイポグラフィ ---
     color: var(--color-text-muted);
   }
 }
 
 .u-spin {
+  // --- 視覚効果 ---
   animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
+  // --- 子要素 ---
   from {
+    // --- 視覚効果 ---
     transform: rotate(0deg);
   }
 
   to {
+    // --- 視覚効果 ---
     transform: rotate(360deg);
   }
 }

@@ -163,15 +163,19 @@ const handleSaveToHistory = async () => {
 <style scoped lang="scss">
 /* 2カラムグリッドを再現 */
 .l-grid {
+  // --- レイアウト・配置 ---
   display: grid;
   gap: var(--gap-component);
 
-  // --- 2col Modifiers ---
+  // --- モディファイア ---
   &--2col {
+    // --- レイアウト・配置 ---
     grid-template-columns: 1fr; // スモールファースト
 
     @include cq("sm") {
       // コンテナ幅が広い時は2カラム
+
+      // --- レイアウト・配置 ---
       grid-template-columns: repeat(2, 1fr);
     }
   }
@@ -179,6 +183,7 @@ const handleSaveToHistory = async () => {
 
 /* ケーブル種別未選択時にケーブルサイズを無効化 */
 .l-grid:has(.js-field-cableType [data-placeholder="true"]) .js-field-fixedSize {
+  // --- 継承 ---
   @extend %disabled;
 }
 </style>

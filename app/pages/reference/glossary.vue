@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * Glossary
- * 用語集画面のコンポ�Eネントです。専門用語�E検索めE��五十音・カチE��リ別での絞り込み機�Eを提供します、E
+ * 用語集画面のコンポ�Eネントです。専門用語�E検索めE��五十音・カチE��リ別での絞り込み機�Eを提供します、E
  */
 import { ref, computed } from "vue";
 import { glossaryData } from "~/utils/data/glossaryData";
@@ -25,8 +25,8 @@ function getKanaRow(kanaStr: string) {
   if (/[ぁEそサ-ソぁEぞザ-ゾ]/.test(firstChar)) return "s";
   if (/[ぁEとタ-トだ-どダ-ド]/.test(firstChar)) return "t";
   if (/[な-のチEノ]/.test(firstChar)) return "n";
-  if (/[は-ほチEホ�E-ぼチEボ�E-ぽチEポ]/.test(firstChar)) return "h";
-  if (/[ま-も�E-モ]/.test(firstChar)) return "m";
+  if (/[は-ほチEホ�E-ぼチEボ�E-ぽチEポ]/.test(firstChar)) return "h";
+  if (/[ま-も�E-モ]/.test(firstChar)) return "m";
   if (/[めEよヤ-ヨ]/.test(firstChar)) return "y";
   if (/[めEろラ-ロ]/.test(firstChar)) return "r";
   if (/[めEんワ-ン]/.test(firstChar)) return "w";
@@ -79,7 +79,7 @@ const categoryColorMap: Record<string, string> = {
             v-model:search-query="searchQuery"
             v-model:active-cats="activeCats"
             :category-options="categoryOptions"
-            placeholder="用語名めE��明を検索..."
+            placeholder="用語名めE��明を検索..."
           >
             <template #extra-filters>
               <AppFormGroup label="INDEX (読み・五十音)">
@@ -121,7 +121,7 @@ const categoryColorMap: Record<string, string> = {
                 </div>
 
                 <div v-if="item.example" class="c-glossary-card__meta">
-                  <span class="c-glossary-card__label">用例�E備老E/span>
+                  <span class="c-glossary-card__label">用例�E備老E/span>
                   <p class="c-glossary-card__text">{{ item.example }}</p>
                 </div>
               </div>
@@ -139,98 +139,168 @@ const categoryColorMap: Record<string, string> = {
 
 <style scoped lang="scss">
 .l-filter-layout {
-  // --- Base Styles ---
+  // --- レイアウト・配置 ---
   container-name: filter-layout;
   container-type: inline-size;
-  @include flex-column(0);`n  flex: 1;
+
+  @include flex-column(0);
+
+  flex: 1;
+
+
+  // --- ボックスモデル ---
 
   width: 100%;
   max-width: 1400px;
   min-height: 0;
 
+
+  // --- 子要素 ---
+
   &__grid {
-    @include flex-column(0);`n    flex: 1;
+    // --- レイアウト・配置 ---
+    @include flex-column(0);
+
+    flex: 1;
     gap: var(--gap-section);
 
+    // --- ボックスモデル ---
     min-height: 0;
   }
 
   &__sidebar {
+    // --- ボックスモデル ---
     width: 100%;
   }
 
   &__main {
-    @include flex-column(0);`n    flex: 1;
+    // --- レイアウト・配置 ---
+    @include flex-column(0);
 
+    flex: 1;
+
+    // --- ボックスモデル ---
     min-width: 0;
     min-height: 0;
   }
 }
 
 .c-glossary-list {
+  // --- レイアウト・配置 ---
   @include flex-column(var(--gap-component));
 }
 
 .c-glossary-card {
+  // --- レイアウト・配置 ---
   @include flex-column(var(--gap-component));
+
+
+  // --- 視覚効果 ---
+
   transition: var(--transition-base);
 
+
+  // --- 子要素 ---
+
   &__header {
+    // --- レイアウト・配置 ---
     @include flex-between(var(--gap-component));
+
+
+    // --- ボックスモデル ---
+
     padding-bottom: var(--gap-element);
     border-bottom: var(--border-width-base) solid transparent;
     border-image: linear-gradient(to right, transparent, var(--color-border) 50%, transparent) 1;
   }
 
   &__title {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-element));
   }
 
   &__kana {
+    // --- 継承 ---
     @extend %text-xs;
+
+
+    // --- タイポグラフィ ---
+
     color: var(--color-text-muted);
   }
 
   &__term {
+    // --- 継承 ---
     @extend %text-lg;
+
+
+    // --- タイポグラフィ ---
+
     color: var(--color-text-main);
   }
 
   &__body {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-element));
   }
 
   &__desc {
+    // --- 継承 ---
     @extend %text-sm;
+
+
+    // --- タイポグラフィ ---
+
     line-height: 1.6;
     color: var(--color-text-secondary);
   }
 
   &__meta {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-element));
+
+
+    // --- ボックスモデル ---
+
     padding: var(--pad-container);
     border: var(--border-width-base) solid theme-color(var(--color-border), 50%);
   }
 
   &__label {
+    // --- 継承 ---
     @extend %text-xs;
+
+
+    // --- タイポグラフィ ---
+
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
   }
 
   &__text {
+    // --- 継承 ---
     @extend %text-sm;
+
+
+    // --- タイポグラフィ ---
+
     line-height: 1.5;
     color: var(--color-text-secondary);
   }
 }
 
 .c-empty-state {
+  // --- 継承 ---
+  @extend %text-base;
+
+
+  // --- ボックスモデル ---
+
   padding: var(--pad-container);
   border: var(--border-width-base) solid theme-color(var(--color-border), 50%);
-  @extend %text-base;
+
+  // --- タイポグラフィ ---
   color: var(--color-text-muted);
   text-align: center;
 }
-
 </style>

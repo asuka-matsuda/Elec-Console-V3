@@ -55,29 +55,40 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
 
 <style scoped lang="scss">
 .p-dashboard {
-  // --- Base Styles ---
+  // --- レイアウト・配置 ---
   display: flex;
   flex-direction: row; /* Desktop default */
   gap: var(--gap-section);
   align-items: flex-start;
 
+
+  // --- ボックスモデル ---
+
   padding-bottom: var(--gap-section);
 
   @include mq("md") {
+    // --- レイアウト・配置 ---
     flex-direction: column;
     align-items: stretch;
   }
 
+
+  // --- 子要素 ---
+
   &__main {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-section));
+
     flex: 1;
   }
 
   &__section {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-component));
   }
 
   &__grid {
+    // --- レイアウト・配置 ---
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: var(--gap-component);
@@ -86,17 +97,26 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
 
 /* Inner Card Styles */
 .p-dashboard-card {
+  // --- 子要素 ---
   &__layout {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-element));
   }
 
   &__header {
+    // --- 継承 ---
 
     @extend %text-base;
+
+
+    // --- レイアウト・配置 ---
 
     display: flex;
     gap: var(--gap-element);
     align-items: flex-start;
+
+
+    // --- タイポグラフィ ---
 
     font-weight: var(--font-weight-bold);
     color: var(--card-accent, var(--color-text-main));
@@ -106,7 +126,11 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
   }
 
   &__desc {
+    // --- 継承 ---
     @extend %text-sm;
+
+
+    // --- タイポグラフィ ---
 
     color: var(--color-text-muted);
   }

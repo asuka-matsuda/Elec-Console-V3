@@ -44,18 +44,30 @@ const rootProps = computed(() => {
 
 <style scoped lang="scss">
 .c-card {
-  // --- Base Styles ---
+  // --- レイアウト・配置 ---
   position: relative;
+
   @include flex-column(var(--gap-section));
+
+
+  // --- ボックスモデル ---
+
   padding: var(--pad-container);
+
+
+  // --- 視覚効果 ---
 
   @include state-base(none, var(--transition-base));
 
   @include surface(15%);
 
-  // --- State Modifiers ---
+  // --- 疑似クラス ---
   &:is(a, button) {
+    // --- その他 ---
     cursor: pointer;
+
+
+    // --- 疑似クラス ---
 
     &:not(.is-disabled):hover {
       @include state-hover(var(--card-accent, var(--color-category-main)));
@@ -66,24 +78,31 @@ const rootProps = computed(() => {
     }
   }
 
+
+  // --- モディファイア ---
+
   &.is-disabled {
+    // --- 継承 ---
     @extend %disabled;
   }
 
-  // --- Color Modifiers ---
   &--tool {
+    // --- CSSカスタムプロパティ ---
     --card-accent: var(--color-category-tool);
   }
 
   &--database {
+    // --- CSSカスタムプロパティ ---
     --card-accent: var(--color-category-database);
   }
 
   &--reference {
+    // --- CSSカスタムプロパティ ---
     --card-accent: var(--color-category-reference);
   }
 
   &--management {
+    // --- CSSカスタムプロパティ ---
     --card-accent: var(--color-category-management);
   }
 }

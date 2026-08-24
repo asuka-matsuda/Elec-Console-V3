@@ -49,31 +49,53 @@ const inputId = useId();
 
 <style scoped lang="scss">
 .c-checkbox {
-  // --- Theme Variables ---
+  // --- CSSカスタムプロパティ ---
   --checkbox-color: var(--color-category-main);
 
-  // --- Base Styles ---
+  // --- 継承 ---
   @extend %text-sm;
+
+
+  // --- その他 ---
 
   cursor: pointer;
   user-select: none;
+
+  // --- レイアウト・配置 ---
   position: relative;
 
+
+  // --- 疑似クラス ---
+
   &:has(.c-checkbox__input:disabled) {
+    // --- 継承 ---
     @extend %disabled;
   }
 
+
+  // --- 子要素 ---
+
   &__input {
     // Hide native input visually, but keep accessible for keyboard focus
+
+    // --- レイアウト・配置 ---
     position: absolute;
+
+    // --- ボックスモデル ---
     width: 0;
     height: 0;
+
+    // --- 視覚効果 ---
     opacity: 0;
   }
 
   // 1. Keyboard Focus State
+
+  // --- 疑似クラス ---
   &:has(.c-checkbox__input:focus-visible) .c-checkbox__box {
     @include state-focus(var(--checkbox-color));
+
+    // --- 視覚効果 ---
     @include cyber-text-glow(var(--checkbox-color));
   }
 
@@ -81,29 +103,51 @@ const inputId = useId();
   &:has(.c-checkbox__input:checked) .c-checkbox__box {
     @include state-active(var(--checkbox-color));
 
+
+    // --- 子要素 ---
+
     .c-checkbox__icon {
+      // --- 視覚効果 ---
       opacity: 1;
       filter: drop-shadow(0 0 var(--blur-sm) var(--checkbox-color));
       stroke-dashoffset: 0;
     }
   }
 
+
+  // --- 子要素 ---
+
   &__box {
+    // --- レイアウト・配置 ---
     flex-shrink: 0;
+
+    // --- ボックスモデル ---
     width: 1.4em;
     height: 1.4em;
 
+
+    // --- レイアウト・配置 ---
+
     @include flex-center;
     @include border-dim(50%);
+
+
+    // --- 視覚効果 ---
 
     @include state-base(var(--shadow-sink), var(--transition-glow));
 
     // Explicitly NO border-radius to ensure sharp corners
 
     // Icon animation setup
+
+    // --- 子要素 ---
     .c-checkbox__icon {
+      // --- ボックスモデル ---
       width: 70%;
       height: 70%;
+
+
+      // --- 視覚効果 ---
 
       opacity: 0;
 
@@ -116,14 +160,23 @@ const inputId = useId();
   }
 
   // 3. Hover State
+
+  // --- 疑似クラス ---
   &:hover:not(:has(.c-checkbox__input:disabled)) {
+    // --- 疑似クラス ---
     &:has(.c-checkbox__input:not(:focus-visible, :active)) .c-checkbox__box {
       @include state-hover(var(--checkbox-color));
     }
 
     // Label slightly glows on hover
+
+    // --- 子要素 ---
     .c-checkbox__label {
+      // --- タイポグラフィ ---
       color: theme-color(var(--checkbox-color), 90%);
+
+
+      // --- 視覚効果 ---
 
       @include cyber-text-glow(var(--checkbox-color), 20%, var(--blur-sm));
     }
@@ -133,6 +186,9 @@ const inputId = useId();
   &:active:not(:has(.c-checkbox__input:disabled)) .c-checkbox__box {
     @include state-active(var(--checkbox-color));
   }
+
+
+  // --- レイアウト・配置 ---
 
   @include flex-start(var(--gap-component), inline-flex);
 }

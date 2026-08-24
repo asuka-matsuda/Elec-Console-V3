@@ -45,38 +45,52 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-section-header {
+  // --- レイアウト・配置 ---
   @include flex-column(var(--gap-component));
 
-  // --- Base Styles ---
+  // --- 子要素 ---
   &__top {
+    // --- レイアウト・配置 ---
     display: flex;
     gap: var(--pad-container);
     align-items: flex-end;
     justify-content: space-between;
 
+
+    // --- ボックスモデル ---
+
     width: 100%;
   }
 
   &__actions {
+    // --- レイアウト・配置 ---
     @include flex-start(var(--gap-component));
   }
 
   &__title {
+    // --- レイアウト・配置 ---
     @include flex-start(var(--gap-component));
+
+
+    // --- タイポグラフィ ---
+
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
 
-    // --- Size Modifiers ---
+    // --- モディファイア ---
     &--lg {
+      // --- 継承 ---
       @extend %text-xl;
     }
 
     &--md {
+      // --- 継承 ---
       @extend %text-lg;
     }
   }
 
   &__icon {
+    // --- タイポグラフィ ---
     color: var(--section-color);
   }
 }

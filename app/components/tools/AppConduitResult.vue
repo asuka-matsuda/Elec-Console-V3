@@ -97,73 +97,122 @@ const fill48 = computed(() =>
 
 <style scoped lang="scss">
 .c-conduit-result {
-  // --- Base Styles ---
+  // --- レイアウト・配置 ---
   @include flex-column(var(--gap-section));
+
   flex: 1;
   align-items: stretch;
 
+  // --- ボックスモデル ---
   min-height: 0;
   padding: var(--pad-component);
 
-  &__paren { margin-left: var(--gap-component); }
-  &__percent { @extend %text-xl; }
-  &__percent-unit { @extend %text-md; }
+
+  // --- 子要素 ---
+
+  &__paren {
+  // --- ボックスモデル ---
+  margin-left: var(--gap-component); }
+
+  &__percent {
+  // --- 継承 ---
+  @extend %text-xl; }
+
+  &__percent-unit {
+  // --- 継承 ---
+  @extend %text-md; }
 
   // コンテナ幅が xs 以上の場合は横並び2カラム
   @include cq("xs") {
+    // --- レイアウト・配置 ---
     flex-direction: row;
   }
 
   &__col {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-section));
+
     flex: 1;
 
+    // --- ボックスモデル ---
     min-width: 0;
   }
 
-  // --- State Modifiers ---
+  // --- モディファイア ---
   .is-neutral {
+    // --- タイポグラフィ ---
     color: var(--color-text-muted);
   }
 
   .is-success {
+    // --- タイポグラフィ ---
     color: var(--color-status-success);
+
+
+    // --- 視覚効果 ---
 
     @include cyber-text-glow(var(--color-status-success), 40%, var(--blur-md));
   }
 
   .is-danger {
+    // --- タイポグラフィ ---
     color: var(--color-status-danger);
+
+
+    // --- 視覚効果 ---
 
     @include cyber-text-glow(var(--color-status-danger), 40%, var(--blur-md));
   }
 
   &.is-sm {
+    // --- レイアウト・配置 ---
     gap: var(--gap-component);
+
+    // --- ボックスモデル ---
     padding: 0;
+
+    
+    // --- 子要素 ---
     
     .c-conduit-result__main {
+      // --- ボックスモデル ---
       padding: var(--pad-element) var(--pad-component);
     }
     
     .c-conduit-result__main-value .value-text {
+      // --- タイポグラフィ ---
       font-size: 1.5rem;
+
+      
+      // --- 子要素 ---
       
       &.c-conduit-result__percent {
+        // --- タイポグラフィ ---
         font-size: 1rem;
       }
     }
   }
 
+
+  // --- 子要素 ---
+
   &__main {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-element));
+
     flex: 1;
     align-items: center;
     justify-content: center;
 
+
+    // --- ボックスモデル ---
+
     min-width: 0;
     padding: var(--pad-component) var(--pad-section);
     border: var(--border-width-base) solid var(--color-border);
+
+
+    // --- 視覚効果 ---
 
     box-shadow: var(--shadow-sink);
 
@@ -171,39 +220,60 @@ const fill48 = computed(() =>
   }
 
   &__main-label {
+    // --- 継承 ---
     @extend %text-xs;
+
+
+    // --- タイポグラフィ ---
 
     color: var(--color-text-secondary);
     text-transform: uppercase;
   }
 
   &__main-value {
+    // --- レイアウト・配置 ---
     display: flex;
     gap: var(--gap-component);
     align-items: baseline;
+
+    // --- タイポグラフィ ---
     font-family: var(--font-family-mono);
 
     .value-text {
+      // --- タイポグラフィ ---
       font-size: 2rem;
       font-weight: var(--font-weight-bold);
       line-height: 1;
+
+      
+      // --- 子要素 ---
       
       &.c-conduit-result__percent {
+        // --- 継承 ---
         @extend %text-md;
+
+
+        // --- タイポグラフィ ---
 
         font-weight: normal;
       }
     }
 
     .value-sep {
+      // --- ボックスモデル ---
       margin: 0 2px;
+
+      // --- タイポグラフィ ---
       font-weight: normal;
       color: var(--color-text-muted);
     }
 
     .value-unit {
+      // --- タイポグラフィ ---
       font-weight: var(--font-weight-bold);
       color: var(--color-text-secondary);
+
+      // --- 視覚効果 ---
       opacity: 0.8;
     }
   }

@@ -17,28 +17,48 @@ const emit = defineEmits<{
 
 <style scoped lang="scss">
 .c-logo {
-  // --- Base Styles ---
+  // --- レイアウト・配置 ---
   @include flex-start(var(--gap-section));
+
+
+  // --- 視覚効果 ---
 
   transition: var(--transition-base);
 
+
+  // --- 疑似クラス ---
+
   &:hover {
+    // --- 子要素 ---
     .c-logo__icon {
+      // --- 視覚効果 ---
       @include cyber-text-glow(var(--color-category-main), 60%, var(--blur-md));
 
       transform: scale(1.1);
     }
   }
 
+
+  // --- 子要素 ---
+
   &__icon {
+    // --- ボックスモデル ---
     width: var(--icon-size-md);
     height: var(--icon-size-md);
+
+    // --- タイポグラフィ ---
     color: var(--color-category-main);
+
+    // --- 視覚効果 ---
     transition: var(--transition-base);
   }
 
   &__text {
+    // --- 継承 ---
     @extend %text-lg;
+
+
+    // --- タイポグラフィ ---
 
     font-weight: var(--font-weight-bold);
   }

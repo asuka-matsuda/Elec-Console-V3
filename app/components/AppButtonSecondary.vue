@@ -17,6 +17,7 @@ defineProps<AppButtonProps>();
 
 <style scoped lang="scss">
 .c-btn-secondary {
+  // --- CSSカスタムプロパティ ---
   --btn-color: var(--color-status-neutral);
 }
 </style>

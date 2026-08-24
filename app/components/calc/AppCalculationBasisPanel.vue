@@ -36,15 +36,22 @@ defineProps<{
 
 <style scoped lang="scss">
 .c-basis-panel {
-  // --- Base Styles ---
+  // --- レイアウト・配置 ---
   flex: 1;
+
+  // --- ボックスモデル ---
   min-height: 0;
 
   @include mq("md") {
+    // --- レイアウト・配置 ---
     display: none;
   }
 
+
+  // --- 子要素 ---
+
   &__layout {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-component));
   }
 }

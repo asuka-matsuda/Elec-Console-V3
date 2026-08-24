@@ -61,6 +61,9 @@ const processedItems = computed(() => {
   // --- 視覚効果 ---
   @include surface;
 
+
+  // --- レイアウト・配置 ---
+
   position: relative;
 
   // --- ボックスモデル ---
@@ -72,57 +75,93 @@ const processedItems = computed(() => {
 
   // --- 疑似要素 ---
   &::after {
+    // --- 継承 ---
     @extend %text-label;
 
     content: "SYS.LOC";
+
+
+    // --- レイアウト・配置 ---
 
     position: absolute;
     top: var(--space-1);
     left: var(--space-2);
 
+
+    // --- タイポグラフィ ---
+
     color: var(--color-category-main);
+
+
+    // --- 視覚効果 ---
 
     @include cyber-text-glow(var(--color-category-main), 50%, var(--blur-sm));
   }
 
   // --- 子要素 ---
   ol {
+    // --- レイアウト・配置 ---
     @include flex-start(0, inline-flex);
 
     list-style: none;
   }
 
   li {
+    // --- レイアウト・配置 ---
     @include flex-start;
 
+
+    // --- 疑似要素 ---
+
     &:not(:last-child)::after {
+      // --- 継承 ---
       @extend %text-label;
 
       content: "»";
 
+      // --- タイポグラフィ ---
       color: theme-color(var(--color-category-main), 60%);
     }
   }
 
+
+  // --- 疑似クラス ---
+
   a,
   span:not(.current) {
+    // --- 継承 ---
     @extend %text-xs;
+
+
+    // --- タイポグラフィ ---
 
     color: var(--color-text-muted);
 
+    // --- 視覚効果 ---
     transition: var(--transition-base);
   }
 
   a:hover {
+    // --- タイポグラフィ ---
     color: var(--color-text-main);
+
+
+    // --- 視覚効果 ---
 
     @include cyber-text-glow(var(--color-text-main), 100%, var(--blur-sm));
   }
 
   .current {
+    // --- レイアウト・配置 ---
     @include flex-start;
 
+
+    // --- タイポグラフィ ---
+
     color: var(--color-category-main);
+
+
+    // --- 視覚効果 ---
 
     @include cyber-text-glow(var(--color-category-main), 60%, var(--blur-md));
     @include blinking-cursor;

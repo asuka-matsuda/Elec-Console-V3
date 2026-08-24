@@ -17,6 +17,7 @@ defineProps<AppButtonProps>();
 
 <style scoped lang="scss">
 .c-btn-success {
+  // --- CSSカスタムプロパティ ---
   --btn-color: var(--color-status-success);
 }
 </style>

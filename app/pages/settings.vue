@@ -69,38 +69,54 @@ const themeOptions = [
 
 <style scoped lang="scss">
 .p-settings {
-  // --- Base Styles ---
+  // --- レイアウト・配置 ---
   container-type: inline-size;
+
   @include flex-column(var(--gap-section));
+
+
+  // --- ボックスモデル ---
 
   padding-bottom: var(--gap-section);
 
+
+  // --- 子要素 ---
+
   &__header {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-element));
   }
 
   &__panel-content {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-section));
   }
 
   &__grid {
+    // --- レイアウト・配置 ---
     display: grid;
     grid-template-columns: 1fr; // スモールファースト
     gap: var(--gap-section);
 
     @include cq("md") {
+      // --- レイアウト・配置 ---
       grid-template-columns: 2fr 1fr;
     }
   }
 
   &__stack {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-section));
   }
 
   &__sub-group {
+    // --- レイアウト・配置 ---
     display: flex;
     flex-wrap: wrap;
     gap: var(--gap-component);
+
+
+    // --- ボックスモデル ---
 
     padding: var(--pad-container);
     border: var(--border-width-base) solid var(--color-border);
@@ -108,7 +124,11 @@ const themeOptions = [
   }
 
   &__desc {
+    // --- 継承 ---
     @extend %text-sm;
+
+
+    // --- タイポグラフィ ---
 
     color: var(--color-text-muted);
   }

@@ -265,34 +265,67 @@ const listboxId = useId();
 
 <style scoped lang="scss">
 .c-custom-select {
-  // --- Base Styles ---
+  // --- 継承 ---
   @extend %text-sm;
 
+
+  // --- その他 ---
+
   user-select: none;
+
+  // --- レイアウト・配置 ---
   position: relative;
+
+  // --- ボックスモデル ---
   width: 100%;
+
+  // --- タイポグラフィ ---
   font-family: var(--font-mono);
 
+
+  // --- モディファイア ---
+
   &.is-disabled {
+    // --- 継承 ---
     @extend %disabled;
   }
 }
 
 .c-custom-select__value {
+  // --- 継承 ---
   @extend %click-enabled;
+
+
+  // --- レイアウト・配置 ---
 
   position: relative;
 
+
+  // --- その他 ---
+
   overflow: hidden;
 
+
+  // --- レイアウト・配置 ---
+
   @include flex-start;
+
+
+  // --- ボックスモデル ---
+
   width: 100%;
   height: var(--size-control-md);
   padding: var(--pad-component);
 
+
+  // --- タイポグラフィ ---
+
   text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
+
+
+  // --- その他 ---
 
   appearance: none; /* Reset button styles */
 
@@ -303,16 +336,29 @@ const listboxId = useId();
   );
 
   /* Arrow icon (down) */
+
+  // --- 疑似要素 ---
   &::after {
     content: "";
+
+
+    // --- レイアウト・配置 ---
 
     position: absolute;
     top: 50%;
     right: var(--space-4);
+
+    // --- 視覚効果 ---
     transform: translateY(-50%);
+
+
+    // --- ボックスモデル ---
 
     width: var(--size-4);
     height: var(--size-3);
+
+
+    // --- 視覚効果 ---
 
     background-image: var(--icon-select-arrow);
     background-repeat: no-repeat;
@@ -322,50 +368,85 @@ const listboxId = useId();
     transition: var(--transition-base);
   }
 
+
+  // --- モディファイア ---
+
   &.is-placeholder {
+    // --- タイポグラフィ ---
     color: var(--color-text-muted);
   }
 
   &.is-active {
+    // --- 疑似要素 ---
     &::after {
+      // --- 視覚効果 ---
       transform: translateY(-50%) rotate(180deg);
     }
   }
 }
 
 .c-custom-select__dropdown {
+  // --- CSSカスタムプロパティ ---
+  --glow-color: theme-color(var(--color-category-main), 20%);
+
+
+  // --- レイアウト・配置 ---
+
   position: absolute; // jsのスタイルが当たるまでの初期値
   z-index: 10000; // bodyの直下に移動したためzIndexを高めに設定
+
+
+  // --- ボックスモデル ---
 
   width: max-content;
   max-width: 90vw;
   border: var(--border-width-base) solid
     theme-color(var(--color-category-main), 50%);
 
+
+  // --- 視覚効果 ---
+
   background-color: transparent;
   backdrop-filter: blur(var(--blur-md));
-  --glow-color: theme-color(var(--color-category-main), 20%);
   box-shadow: var(--shadow-glow-inset-md), var(--shadow-elevation-md);
 
   /* Error state dropdown border */
+
+  // --- モディファイア ---
   .c-custom-select.is-error & {
-    border-color: theme-color(var(--color-status-danger), 50%);
+    // --- CSSカスタムプロパティ ---
     --glow-color: theme-color(var(--color-status-danger), 20%);
+
+
+    // --- ボックスモデル ---
+
+    border-color: theme-color(var(--color-status-danger), 50%);
+
+    // --- 視覚効果 ---
     box-shadow: var(--shadow-glow-inset-md), var(--shadow-elevation-md);
   }
 }
 
 .c-custom-select__list {
-  // --- Theme Variables ---
+  // --- CSSカスタムプロパティ ---
   --scrollbar-size: var(--size-2);
 
-  // --- Base Styles ---
   scrollbar-color: var(--color-category-main) transparent;
   scrollbar-width: thin;
 
+
+  // --- 視覚効果 ---
+
   transform: translateZ(0);
 
+
+  // --- その他 ---
+
   overflow: hidden auto;
+
+
+  // --- ボックスモデル ---
+
   width: 100%;
   max-height: min(250px, 40vh); /* 画面が小さい場合にも対応 */
 
@@ -373,59 +454,97 @@ const listboxId = useId();
 }
 
 .c-custom-select__option {
+  // --- 継承 ---
   @extend %click-enabled;
 
   @extend %text-sm;
 
+
+  // --- その他 ---
+
   overflow: hidden;
+
+
+  // --- ボックスモデル ---
 
   padding: var(--pad-component);
   border-left: var(--border-width-thick) solid transparent;
 
   text-overflow: ellipsis;
+
+  // --- タイポグラフィ ---
   white-space: nowrap;
+
+
+  // --- 視覚効果 ---
 
   transition: var(--transition-base);
 
-  /* --- States --- */
+  // --- 疑似クラス ---
   &:hover:not(.is-disabled, .is-placeholder),
   &.is-focused:not(.is-disabled) {
+    // --- CSSカスタムプロパティ ---
+    --glow-color: theme-color(var(--color-category-main), 30%);
+
+
+    // --- 視覚効果 ---
+
     transform: translateX(2px);
 
     border-left-color: var(--color-category-main);
 
+
+    // --- タイポグラフィ ---
+
     color: var(--color-category-main);
 
+
+    // --- 視覚効果 ---
+
     background-color: transparent;
-    --glow-color: theme-color(var(--color-category-main), 30%);
     box-shadow: var(--shadow-glow-inset-md);
   }
 
+
+  // --- モディファイア ---
+
   &.is-selected {
+    // --- CSSカスタムプロパティ ---
+    --glow-color: theme-color(var(--color-category-main), 40%);
+
     border-left-color: var(--color-category-main);
+
+
+    // --- タイポグラフィ ---
 
     font-weight: var(--font-weight-bold);
     color: var(--color-category-main);
 
+
+    // --- 視覚効果 ---
+
     background-color: transparent;
-    --glow-color: theme-color(var(--color-category-main), 40%);
     box-shadow: var(--shadow-glow-inset-lg);
   }
 
   &.is-disabled {
+    // --- 継承 ---
     @extend %disabled;
   }
 
   &.is-placeholder {
+    // --- その他 ---
     cursor: default;
     font-style: italic;
+
+    // --- タイポグラフィ ---
     color: var(--color-text-muted);
   }
 }
 </style>
 
 <style lang="scss">
-/* --- Dropdown Fade (Global for Teleport) --- */
+// --- Dropdown Fade (Global for Teleport) ---
 .dropdown-fade-enter-active,
 .dropdown-fade-leave-active {
   transition:

@@ -147,75 +147,125 @@ const dropStatusClass = computed(() => {
 
 <style scoped lang="scss">
 .c-voltage-result {
-  // --- Base Styles ---
+  // --- レイアウト・配置 ---
   @include flex-column(var(--gap-section));
+
   flex: 1;
   align-items: stretch;
 
+  // --- ボックスモデル ---
   min-height: 0;
   padding: var(--pad-component);
-  &__drop-paren { margin-left: var(--gap-component); }
-  &__drop-percent { @extend %text-xl; }
-  &__drop-unit { @extend %text-md; }
-  &__drop-cable { @extend %text-xl; }
 
-  // --- State Modifiers ---
+  // --- 子要素 ---
+  &__drop-paren {
+  // --- ボックスモデル ---
+  margin-left: var(--gap-component); }
+
+  &__drop-percent {
+  // --- 継承 ---
+  @extend %text-xl; }
+
+  &__drop-unit {
+  // --- 継承 ---
+  @extend %text-md; }
+
+  &__drop-cable {
+  // --- 継承 ---
+  @extend %text-xl; }
+
+  // --- モディファイア ---
   &.is-sm {
+    // --- レイアウト・配置 ---
     gap: var(--gap-component);
+
+    // --- ボックスモデル ---
     padding: 0;
+
+    
+    // --- 子要素 ---
     
     .c-voltage-result__main {
+      // --- ボックスモデル ---
       padding: var(--pad-element) var(--pad-component);
     }
     
     .c-voltage-result__main-value .value-text {
+      // --- タイポグラフィ ---
       font-size: 1.5rem;
     }
     
     .c-voltage-result__drop-cable {
+      // --- タイポグラフィ ---
       font-size: 1.25rem;
     }
     
     .c-voltage-result__drop-percent {
+      // --- タイポグラフィ ---
       font-size: 1rem;
     }
     
     .metric-card {
+      // --- ボックスモデル ---
       padding: var(--pad-element);
     }
   }
 
   .is-neutral {
+    // --- タイポグラフィ ---
     color: var(--color-text-muted);
   }
 
   .is-success {
+    // --- タイポグラフィ ---
     color: var(--color-status-success);
+
+
+    // --- 視覚効果 ---
 
     @include cyber-text-glow(var(--color-status-success), 40%, var(--blur-md));
   }
 
   .is-warning {
+    // --- タイポグラフィ ---
     color: var(--color-status-warning);
+
+
+    // --- 視覚効果 ---
 
     @include cyber-text-glow(var(--color-status-warning), 40%, var(--blur-md));
   }
 
   .is-danger {
+    // --- タイポグラフィ ---
     color: var(--color-status-danger);
+
+
+    // --- 視覚効果 ---
 
     @include cyber-text-glow(var(--color-status-danger), 40%, var(--blur-md));
   }
 
+
+  // --- 子要素 ---
+
   &__main {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-element));
+
     flex: 1;
     align-items: center;
     justify-content: center;
 
+
+    // --- ボックスモデル ---
+
     min-width: 0;
     padding: var(--pad-component) var(--pad-section);
     border: var(--border-width-base) solid var(--color-border);
+
+
+    // --- 視覚効果 ---
 
     box-shadow: var(--shadow-sink);
 
@@ -223,91 +273,137 @@ const dropStatusClass = computed(() => {
   }
 
   &__main-label {
+    // --- 継承 ---
     @extend %text-xs;
+
+
+    // --- タイポグラフィ ---
 
     color: var(--color-text-secondary);
     text-transform: uppercase;
   }
 
   &__main-value {
+    // --- レイアウト・配置 ---
     display: flex;
     gap: var(--gap-component);
     align-items: baseline;
+
+    // --- タイポグラフィ ---
     font-family: var(--font-family-mono);
 
     .value-text {
+      // --- タイポグラフィ ---
       font-size: 2rem;
       font-weight: var(--font-weight-bold);
       line-height: 1;
     }
 
     .value-unit {
+      // --- 継承 ---
       @extend %text-md;
+
+
+      // --- タイポグラフィ ---
 
       font-weight: var(--font-weight-bold);
       color: var(--color-text-secondary);
+
+      // --- 視覚効果 ---
       opacity: 0.8;
     }
   }
 
   &__metrics {
+    // --- レイアウト・配置 ---
     display: flex;
     flex-flow: row wrap; // 狭い場合は横並びラップ（スモールファースト）
     flex-shrink: 0;
     gap: var(--gap-component);
+
+
+    // --- ボックスモデル ---
 
     min-width: auto;
 
     // コンテナの幅が xs 以上の場合は縦積み
     @include cq("xs") {
       flex-flow: column nowrap;
+
+      // --- ボックスモデル ---
       min-width: 220px;
     }
   }
 
   .metric-card {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-element));
+
     flex: 1;
     align-items: center;
     justify-content: center;
+
+
+    // --- ボックスモデル ---
 
     padding: var(--pad-component);
     border: 1px solid var(--color-border);
   }
 
   .metric-label {
+    // --- 継承 ---
     @extend %text-xs;
+
+
+    // --- タイポグラフィ ---
 
     color: var(--color-text-muted);
   }
 
   .metric-value {
+    // --- 継承 ---
 
     @extend %text-md;
+
+
+    // --- レイアウト・配置 ---
 
     display: flex;
     gap: var(--gap-element);
     align-items: baseline;
 
+
+    // --- タイポグラフィ ---
+
     font-family: var(--font-family-mono);
     font-weight: var(--font-weight-bold);
 
     .value-sep {
+      // --- ボックスモデル ---
       margin: 0 2px;
+
+      // --- タイポグラフィ ---
       font-weight: normal;
       color: var(--color-text-muted);
     }
 
     .value-unit {
+      // --- 継承 ---
       @extend %text-xs;
 
+
+      // --- タイポグラフィ ---
+
       color: var(--color-text-secondary);
+
+      // --- 視覚効果 ---
       opacity: 0.8;
     }
   }
 
   // コンテナの幅が xs 以上の場合は横並び
   @include cq("xs") {
+    // --- レイアウト・配置 ---
     flex-direction: row;
   }
 }

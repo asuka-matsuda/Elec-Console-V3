@@ -47,7 +47,12 @@ const tableColumns: TableColumn[] = [
 
 <style scoped lang="scss">
 .c-db-meta {
+  // --- 継承 ---
   @extend %text-sm;
+
+
+  // --- タイポグラフィ ---
+
   color: var(--color-text-muted);
 }
 </style>

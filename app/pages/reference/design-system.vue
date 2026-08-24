@@ -90,33 +90,55 @@ const isChecked = ref(false);
 
 <style scoped lang="scss">
 .p-design-system {
-  // --- Base Styles ---
+  // --- レイアウト・配置 ---
   @include flex-column(var(--gap-section));
+
+
+  // --- ボックスモデル ---
+
   padding-bottom: var(--gap-section);
 
+
+  // --- 子要素 ---
+
   &__desc {
+    // --- ボックスモデル ---
     margin-top: var(--pad-container);
+
+    // --- タイポグラフィ ---
     color: var(--color-text-muted);
   }
 
   &__content {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-section));
   }
 }
 
 .p-ds-section {
+  // --- レイアウト・配置 ---
   @include flex-column(var(--gap-component));
 
+
+  // --- 子要素 ---
+
   &__title {
+    // --- 継承 ---
     @extend %text-lg;
+
+
+    // --- ボックスモデル ---
 
     padding-bottom: var(--pad-component);
     border-bottom: 1px solid var(--color-border);
+
+    // --- タイポグラフィ ---
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
 
   &__grid {
+    // --- レイアウト・配置 ---
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: var(--gap-component);
@@ -124,14 +146,21 @@ const isChecked = ref(false);
 }
 
 .p-ds-card-title {
+  // --- 継承 ---
   @extend %text-base;
 
+
+  // --- ボックスモデル ---
+
   margin-bottom: var(--pad-container);
+
+  // --- タイポグラフィ ---
   font-weight: var(--font-weight-bold);
   color: var(--color-text-sub);
 }
 
 .p-ds-flex {
+  // --- レイアウト・配置 ---
   display: flex;
   flex-wrap: wrap;
   gap: var(--pad-container);
@@ -139,6 +168,7 @@ const isChecked = ref(false);
 }
 
 .p-ds-stack {
+  // --- レイアウト・配置 ---
   @include flex-column(var(--pad-container));
 }
 </style>

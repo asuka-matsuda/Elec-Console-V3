@@ -48,10 +48,17 @@ const componentTag = computed(() => {
 
 <style scoped lang="scss">
 .c-btn {
+  // --- CSSカスタムプロパティ ---
   --btn-color: var(--color-category-main);
+
+
+  // --- 継承 ---
 
   @extend %click-enabled;
   @extend %text-xs;
+
+
+  // --- レイアウト・配置 ---
 
   @include flex-center(var(--pad-component), inline-flex);
 
@@ -59,21 +66,40 @@ const componentTag = computed(() => {
 
   flex-shrink: 0;
 
+
+  // --- ボックスモデル ---
+
   height: var(--size-control-sm);
   padding: 0 var(--pad-component);
+
+
+  // --- タイポグラフィ ---
 
   font-weight: var(--font-weight-semibold);
 
   @include border-dim(50%, var(--btn-color));
+
+  // --- 視覚効果 ---
   @include state-base(var(--shadow-elevation-sm), var(--transition-fast));
+
+
+  // --- 疑似要素 ---
 
   &::after {
     content: "";
 
+
+    // --- レイアウト・配置 ---
+
     position: absolute;
     top: 50%;
     left: 50%;
+
+    // --- 視覚効果 ---
     transform: translate(-50%, -50%);
+
+
+    // --- ボックスモデル ---
 
     width: 100%;
     min-width: var(--size-control-lg);
@@ -81,42 +107,65 @@ const componentTag = computed(() => {
     min-height: var(--size-control-lg);
   }
 
+
+  // --- 疑似クラス ---
+
   &:hover:not(:disabled, .is-disabled) {
+    // --- レイアウト・配置 ---
     z-index: 1;
 
     @include state-hover(var(--btn-color));
   }
 
   &:focus-visible {
+    // --- レイアウト・配置 ---
     z-index: 1;
 
     @include state-focus(var(--btn-color));
+
+    // --- 視覚効果 ---
     @include cyber-text-glow(var(--btn-color));
   }
 
   &:active:not(:disabled, .is-disabled) {
+    // --- レイアウト・配置 ---
     z-index: 1;
 
     @include state-active(var(--btn-color));
+
+    // --- 視覚効果 ---
     @include cyber-text-glow(var(--btn-color));
   }
 
   &:is(:disabled, .is-disabled) {
+    // --- 継承 ---
     @extend %disabled;
   }
 
+
+  // --- モディファイア ---
+
   &--md {
+    // --- 継承 ---
     @extend %text-sm;
+
+
+    // --- ボックスモデル ---
 
     height: var(--size-control-md);
     padding: 0 var(--pad-container);
   }
 
   &--icon-only {
+    // --- ボックスモデル ---
     width: var(--size-control-sm);
     padding: 0;
 
+
+    // --- モディファイア ---
+
     &.c-btn--md {
+      // --- ボックスモデル ---
       width: var(--size-control-md);
     }
   }

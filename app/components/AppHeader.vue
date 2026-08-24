@@ -37,29 +37,40 @@ const emit = defineEmits<{
 
 <style scoped lang="scss">
 .l-header {
-  // --- Base Styles ---
+  // --- レイアウト・配置 ---
   @include flex-between;
+
+
+  // --- ボックスモデル ---
 
   height: 64px;
   padding: var(--pad-container);
 
   @include mq("md") {
+    // --- ボックスモデル ---
     padding: var(--pad-section);
   }
 
+
+  // --- 子要素 ---
+
   &__left {
+    // --- レイアウト・配置 ---
     @include flex-start(var(--gap-component));
   }
 
   &__menu-btn.c-btn {
+    // --- レイアウト・配置 ---
     display: none; // Hidden on desktop
 
     @include mq("md") {
+      // --- レイアウト・配置 ---
       display: inline-flex;
     }
   }
 
   &__actions {
+    // --- レイアウト・配置 ---
     @include flex-start(var(--gap-component));
   }
 }

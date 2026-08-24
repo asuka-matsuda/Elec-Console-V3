@@ -51,55 +51,87 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
 
 <style scoped lang="scss">
 .c-segmented-control {
-  // --- Theme Variables ---
+  // --- CSSカスタムプロパティ ---
   --radio-color: var(--color-category-main); /* デフォルトの色 */
 
-  // --- Base Styles ---
+  // --- レイアウト・配置 ---
   display: inline-flex;
   flex-shrink: 0;
   gap: var(--gap-element);
+
+
+  // --- ボックスモデル ---
 
   width: max-content;
   padding: var(--pad-element);
   border: var(--border-width-base) solid var(--color-border);
 
+
+  // --- 視覚効果 ---
+
   box-shadow: none;
 
-  /* --- Elements --- */
+  // --- 子要素 ---
   &__label {
+    // --- その他 ---
     cursor: pointer;
 
+
+    // --- 疑似クラス ---
+
     &:hover {
+      // --- 疑似クラス ---
       .c-segmented-control__input:not(:disabled, :checked)
         + .c-segmented-control__text {
-        border-color: var(--color-border);
-        color: var(--color-text-main);
+        // --- CSSカスタムプロパティ ---
         --glow-color: var(--color-border);
+
+
+        // --- ボックスモデル ---
+
+        border-color: var(--color-border);
+
+        // --- タイポグラフィ ---
+        color: var(--color-text-main);
+
+        // --- 視覚効果 ---
         box-shadow: var(--shadow-glow-inset-sm);
       }
     }
   }
 
   &__input {
+    // --- レイアウト・配置 ---
     display: none;
 
     /* Checked state */
+
+    // --- 疑似クラス ---
     &:checked + .c-segmented-control__text {
+      // --- タイポグラフィ ---
       color: var(--radio-color);
 
       @include state-active(var(--radio-color));
+
+      // --- 視覚効果 ---
       @include cyber-text-glow(var(--radio-color), 60%, var(--blur-md));
     }
 
     /* Keyboard Focus state */
     &:focus-visible + .c-segmented-control__text {
       @include state-focus(var(--radio-color));
+
+      // --- 視覚効果 ---
       @include cyber-text-glow(var(--radio-color), 60%, var(--blur-md));
     }
 
     /* Disabled state */
     &:disabled + .c-segmented-control__text {
+      // --- 継承 ---
       @extend %disabled;
+
+
+      // --- 視覚効果 ---
 
       opacity: 0.3;
       filter: grayscale(100%);
@@ -107,18 +139,34 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
   }
 
   &__text {
+    // --- 継承 ---
 
     @extend %text-sm;
 
+
+    // --- その他 ---
+
     user-select: none;
+
+
+    // --- ボックスモデル ---
 
     padding: var(--pad-component);
     border: var(--border-width-base) solid transparent;
 
+
+    // --- タイポグラフィ ---
+
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
 
+
+    // --- 視覚効果 ---
+
     transition: var(--transition-base);
+
+
+    // --- レイアウト・配置 ---
 
     @include flex-center(0, inline-flex);
   }

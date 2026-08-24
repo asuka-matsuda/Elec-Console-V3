@@ -103,20 +103,34 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
 <style scoped lang="scss">
 .c-math-basis {
-  // --- Base Styles ---
+  // --- その他 ---
   overflow-y: auto;
+
+
+  // --- レイアウト・配置 ---
+
   @include flex-column(var(--gap-section));
+
   flex: 1;
 
+  // --- ボックスモデル ---
   padding-right: var(--pad-component);
   padding-bottom: var(--pad-container);
 
+
+  // --- 子要素 ---
+
   &__card {
+    // --- レイアウト・配置 ---
     gap: var(--gap-component);
   }
 
   &__title {
+    // --- 継承 ---
     @extend %text-sm;
+
+
+    // --- タイポグラフィ ---
 
     font-weight: var(--font-weight-bold);
     color: var(--color-category-tool);
@@ -125,6 +139,8 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
   &__body {
     /* PCファースト: カード内を左右2カラムに分割 */
+
+    // --- レイアウト・配置 ---
     display: flex;
     flex-flow: row nowrap;
     gap: var(--gap-section);
@@ -132,91 +148,134 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   }
 
   &__math {
+    // --- CSSカスタムプロパティ ---
 
     --scrollbar-size: var(--size-2);
     
     // スクロールバー自体は非表示にしつつスクロールは可能にする
     scrollbar-width: none;
 
+
+    // --- その他 ---
+
     overflow-x: auto;
+
+    // --- レイアウト・配置 ---
     flex: 1;
+
+
+    // --- ボックスモデル ---
 
     min-width: 0;
 
+
+    // --- タイポグラフィ ---
+
     font-size: 1.1em;
 
+
+    // --- 疑似要素 ---
+
     &::-webkit-scrollbar {
+      // --- レイアウト・配置 ---
       display: none;
     }
 
+
+    // --- 疑似クラス ---
+
     :deep(.katex) {
+      // --- タイポグラフィ ---
       color: var(--color-text-main);
 
       .tex-status-success,
       .tex-status-success * {
+        // --- タイポグラフィ ---
         color: var(--color-status-success);
       }
       
       .tex-status-warning,
       .tex-status-warning * {
+        // --- タイポグラフィ ---
         color: var(--color-status-warning);
       }
       
       .tex-status-danger,
       .tex-status-danger * {
+        // --- タイポグラフィ ---
         color: var(--color-status-danger);
       }
 
       .tex-color-accent,
       .tex-color-accent * {
+        // --- タイポグラフィ ---
         color: var(--color-accent-main);
       }
     }
 
     :deep(.katex-display) {
+      // --- ボックスモデル ---
       padding: var(--pad-element);
     }
   }
 
   &__legend {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-element));
+
     flex-shrink: 0;
 
+    // --- ボックスモデル ---
     width: 250px;
   }
 
   &__legend-title {
+    // --- 継承 ---
     @extend %text-xs;
+
+
+    // --- タイポグラフィ ---
 
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
   }
 
   &__legend-list {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-element));
+
     list-style: none;
   }
 
   &__legend-item {
+    // --- 継承 ---
 
     @extend %text-sm;
+
+
+    // --- レイアウト・配置 ---
 
     display: flex;
     gap: var(--gap-element);
     align-items: flex-start;
+
+    // --- タイポグラフィ ---
     color: var(--color-text-secondary);
   }
 
   &__legend-symbol {
+    // --- タイポグラフィ ---
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
 
   &__legend-sep {
+    // --- タイポグラフィ ---
     color: var(--color-text-muted);
   }
 
   &__legend-name {
+    // --- レイアウト・配置 ---
     flex: 1;
   }
 }

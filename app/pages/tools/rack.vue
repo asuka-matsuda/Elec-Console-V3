@@ -215,72 +215,107 @@ const {
 
 <style scoped lang="scss">
 .p-result-rack {
+  // --- レイアウト・配置 ---
   @include flex-column(var(--gap-element));
+
+  
+  // --- 子要素 ---
   
   &__val {
+    // --- 継承 ---
     @extend %text-2xl;
+
+
+    // --- タイポグラフィ ---
 
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
   
   &__warning {
+    // --- 継承 ---
     @extend %text-sm;
 
+
+    // --- ボックスモデル ---
+
     padding: var(--gap-element);
+
+    // --- タイポグラフィ ---
     color: var(--color-status-danger);
   }
 }
 
 .is-overflow {
+  // --- タイポグラフィ ---
   color: var(--color-status-danger);
 }
 
 .p-rack {
-  // --- Base Styles ---
+  // --- 子要素 ---
 
   &__sections {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-section));
   }
   
   &__grid {
+    // --- レイアウト・配置 ---
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--gap-component);
     
     @include cq("xs") {
+      // --- レイアウト・配置 ---
       grid-template-columns: repeat(2, 1fr);
     }
   }
 
   &__card-header {
+    // --- レイアウト・配置 ---
     @include flex-between;
+
+
+    // --- ボックスモデル ---
 
     margin-bottom: var(--pad-container);
   }
   
   &__card-title {
+    // --- 継承 ---
     @extend %text-md;
+
+
+    // --- タイポグラフィ ---
 
     font-weight: var(--font-weight-bold);
   }
   
   &__card-body {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-component));
   }
 
   &__section-title {
+    // --- 継承 ---
     @extend %text-sm;
 
+
+    // --- ボックスモデル ---
+
     margin-bottom: var(--gap-component);
+
+    // --- タイポグラフィ ---
     font-weight: var(--font-weight-bold);
   }
   
   &__cable-list {
+    // --- レイアウト・配置 ---
     @include flex-column(var(--gap-component));
   }
   
   &__add-button {
+    // --- ボックスモデル ---
     width: 100%;
     margin-top: var(--pad-container);
   }

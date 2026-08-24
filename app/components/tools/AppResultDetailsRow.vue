@@ -18,25 +18,34 @@ defineProps<{
 
 <style scoped lang="scss">
 .p-result-details__row {
-  // --- Base Styles ---
+  // --- 継承 ---
   @extend %text-sm;
+
+
+  // --- レイアウト・配置 ---
 
   display: flex;
   justify-content: space-between;
+
+  // --- タイポグラフィ ---
   color: var(--color-text-secondary);
   
+  // --- 子要素 ---
   /* stylelint-disable-next-line selector-pseudo-class-no-unknown */
   :slotted(strong) {
+    // --- タイポグラフィ ---
     color: var(--color-text-main);
   }
 
   /* stylelint-disable-next-line selector-pseudo-class-no-unknown */
   :slotted(.p-badge) {
+    // --- レイアウト・配置 ---
     flex-shrink: 0;
   }
 
-  // --- State Modifiers ---
+  // --- モディファイア ---
   &.has-top-border {
+    // --- ボックスモデル ---
     padding-top: var(--gap-element);
     border-top: 1px solid var(--color-border);
   }
