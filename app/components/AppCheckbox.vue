@@ -7,24 +7,17 @@ import { useId } from "vue";
 
 const model = defineModel<boolean | unknown[]>();
 
-withDefaults(
-  defineProps<{
-    value?: unknown;
-    label?: string;
-    disabled?: boolean;
-    error?: boolean;
-    color?: "primary" | "success" | "danger" | "warning";
-  }>(),
-  {
-    color: "primary",
-  },
-);
+defineProps<{
+  value?: unknown;
+  label?: string;
+  disabled?: boolean;
+}>();
 
 const inputId = useId();
 </script>
 
 <template>
-  <label class="c-checkbox" :class="`c-checkbox--${color}`" :for="inputId">
+  <label class="c-checkbox" :for="inputId">
     <input
       :id="inputId"
       v-model="model"
@@ -66,18 +59,6 @@ const inputId = useId();
   user-select: none;
   position: relative;
 
-  // --- Color Modifiers ---
-  &--success {
-    --checkbox-color: var(--color-status-success);
-  }
-
-  &--danger {
-    --checkbox-color: var(--color-status-danger);
-  }
-
-  &--warning {
-    --checkbox-color: var(--color-status-warning);
-  }
 
   &:has(.c-checkbox__input:disabled) {
     @extend %disabled;
@@ -86,10 +67,8 @@ const inputId = useId();
   &__input {
     // Hide native input visually, but keep accessible for keyboard focus
     position: absolute;
-
     width: 0;
     height: 0;
-
     opacity: 0;
   }
 
