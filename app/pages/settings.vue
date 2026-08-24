@@ -71,9 +71,7 @@ const themeOptions = [
 .p-settings {
   // --- Base Styles ---
   container-type: inline-size;
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-section);
+  @include flex-column(var(--gap-section));
 
   padding-bottom: var(--gap-section);
 

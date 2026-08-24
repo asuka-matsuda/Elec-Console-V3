@@ -22,8 +22,7 @@ body {
   @extend %text-body;
 
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  @include flex-column(0);
 
   height: 100dvh;
   min-height: 100dvh;

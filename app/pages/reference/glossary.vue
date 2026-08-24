@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * Glossary
- * 用語集画面のコンポーネントです。専門用語の検索や、五十音・カテゴリ別での絞り込み機能を提供します。
+ * 用語集画面のコンポ�Eネントです。専門用語�E検索めE��五十音・カチE��リ別での絞り込み機�Eを提供します、E
  */
 import { ref, computed } from "vue";
 import { glossaryData } from "~/utils/data/glossaryData";
@@ -20,16 +20,16 @@ const {
 function getKanaRow(kanaStr: string) {
   if (!kanaStr) return "other";
   const firstChar = kanaStr.charAt(0);
-  if (/[あ-おア-オ]/.test(firstChar)) return "a";
-  if (/[か-こカ-コが-ごガ-ゴ]/.test(firstChar)) return "k";
-  if (/[さ-そサ-ソざ-ぞザ-ゾ]/.test(firstChar)) return "s";
-  if (/[た-とタ-トだ-どダ-ド]/.test(firstChar)) return "t";
-  if (/[な-のナ-ノ]/.test(firstChar)) return "n";
-  if (/[は-ほハ-ホば-ぼバ-ボぱ-ぽパ-ポ]/.test(firstChar)) return "h";
-  if (/[ま-もマ-モ]/.test(firstChar)) return "m";
-  if (/[や-よヤ-ヨ]/.test(firstChar)) return "y";
-  if (/[ら-ろラ-ロ]/.test(firstChar)) return "r";
-  if (/[わ-んワ-ン]/.test(firstChar)) return "w";
+  if (/[ぁEおア-オ]/.test(firstChar)) return "a";
+  if (/[ぁEこカ-コぁEごガ-ゴ]/.test(firstChar)) return "k";
+  if (/[ぁEそサ-ソぁEぞザ-ゾ]/.test(firstChar)) return "s";
+  if (/[ぁEとタ-トだ-どダ-ド]/.test(firstChar)) return "t";
+  if (/[な-のチEノ]/.test(firstChar)) return "n";
+  if (/[は-ほチEホ�E-ぼチEボ�E-ぽチEポ]/.test(firstChar)) return "h";
+  if (/[ま-も�E-モ]/.test(firstChar)) return "m";
+  if (/[めEよヤ-ヨ]/.test(firstChar)) return "y";
+  if (/[めEろラ-ロ]/.test(firstChar)) return "r";
+  if (/[めEんワ-ン]/.test(firstChar)) return "w";
   return "other";
 }
 
@@ -62,9 +62,9 @@ const availableRows = computed(() => {
 });
 
 const categoryColorMap: Record<string, string> = {
-  電気: "#eab308",
-  建築: "#ea580c",
-  "空調・換気": "#22c55e",
+  電氁E "#eab308",
+  建篁E "#ea580c",
+  "空調・換氁E: "#22c55e",
   衛生: "#06b6d4",
   雑学: "var(--color-category-reference)",
 };
@@ -79,7 +79,7 @@ const categoryColorMap: Record<string, string> = {
             v-model:search-query="searchQuery"
             v-model:active-cats="activeCats"
             :category-options="categoryOptions"
-            placeholder="用語名や説明を検索..."
+            placeholder="用語名めE��明を検索..."
           >
             <template #extra-filters>
               <AppFormGroup label="INDEX (読み・五十音)">
@@ -116,12 +116,12 @@ const categoryColorMap: Record<string, string> = {
                 <p class="c-glossary-card__desc">{{ item.desc }}</p>
 
                 <div v-if="item.related" class="c-glossary-card__meta">
-                  <span class="c-glossary-card__label">関連用語</span>
+                  <span class="c-glossary-card__label">関連用誁E/span>
                   <p class="c-glossary-card__text">{{ item.related }}</p>
                 </div>
 
                 <div v-if="item.example" class="c-glossary-card__meta">
-                  <span class="c-glossary-card__label">用例・備考</span>
+                  <span class="c-glossary-card__label">用例�E備老E/span>
                   <p class="c-glossary-card__text">{{ item.example }}</p>
                 </div>
               </div>
@@ -129,7 +129,7 @@ const categoryColorMap: Record<string, string> = {
           </div>
 
           <div v-else class="c-empty-state">
-            <p>条件に一致する用語が見つかりません。</p>
+            <p>条件に一致する用語が見つかりません、E/p>
           </div>
         </main>
       </div>
@@ -142,18 +142,14 @@ const categoryColorMap: Record<string, string> = {
   // --- Base Styles ---
   container-name: filter-layout;
   container-type: inline-size;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
+  @include flex-column(0);`n  flex: 1;
 
   width: 100%;
   max-width: 1400px;
   min-height: 0;
 
   &__grid {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
+    @include flex-column(0);`n    flex: 1;
     gap: var(--gap-section);
 
     min-height: 0;
@@ -164,9 +160,7 @@ const categoryColorMap: Record<string, string> = {
   }
 
   &__main {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
+    @include flex-column(0);`n    flex: 1;
 
     min-width: 0;
     min-height: 0;

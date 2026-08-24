@@ -62,9 +62,7 @@ const breadcrumbs = useBreadcrumbs();
 }
 
 .l-main {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
+  @include flex-column(0);`n  flex: 1;
 
   min-width: 0; /* Prevent flex item from blowing out */
   margin-left: 280px; /* On desktop, the sidebar takes up 280px. */
@@ -80,9 +78,7 @@ const breadcrumbs = useBreadcrumbs();
 
   container-type: inline-size;
   overflow-y: auto;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
+  @include flex-column(0);`n  flex: 1;
 
   min-height: 0;
   padding: var(--pad-container);
