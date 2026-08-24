@@ -10,7 +10,13 @@ defineProps<AppButtonProps>();
 </script>
 
 <template>
-  <AppButton v-bind="$props" style="--btn-color: var(--color-status-neutral)">
+  <AppButton v-bind="$props" class="c-btn-secondary">
     <slot />
   </AppButton>
 </template>
+
+<style scoped lang="scss">
+.c-btn-secondary {
+  --btn-color: var(--color-status-neutral);
+}
+</style>
