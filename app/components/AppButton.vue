@@ -86,13 +86,11 @@ const componentTag = computed(() => {
   &::after {
     content: "";
 
-    // --- レイアウト・配置 ---
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 
-    // --- ボックスモデル ---
     width: 100%;
     min-width: var(--size-control-lg);
     height: 100%;
@@ -101,33 +99,26 @@ const componentTag = computed(() => {
 
   // --- インタラクティブ状態 ---
   &:hover:not(:disabled, .is-disabled) {
-    // --- レイアウト・配置 ---
     z-index: 1;
 
-    // --- 視覚効果 ---
     @include state-hover(var(--btn-color));
   }
 
   &:focus-visible {
-    // --- レイアウト・配置 ---
     z-index: 1;
 
-    // --- 視覚効果 ---
     @include state-focus(var(--btn-color));
     @include cyber-text-glow(var(--btn-color));
   }
 
   &:active:not(:disabled, .is-disabled) {
-    // --- レイアウト・配置 ---
     z-index: 1;
 
-    // --- 視覚効果 ---
     @include state-active(var(--btn-color));
     @include cyber-text-glow(var(--btn-color));
   }
 
   &:is(:disabled, .is-disabled) {
-    // --- 継承 ---
     @extend %disabled;
   }
 
@@ -146,38 +137,31 @@ const componentTag = computed(() => {
 
   // --- モディファイア（サイズ） ---
   &--md {
-    // --- 継承 ---
     @extend %text-sm;
 
-    // --- ボックスモデル ---
     height: var(--size-control-md);
     padding: var(--space-4);
   }
 
   // --- モディファイア（レイアウト） ---
   &--block {
-    // --- ボックスモデル ---
     width: 100%;
   }
 
   &--icon-only {
-    // --- ボックスモデル ---
     width: var(--size-control-sm);
     padding: 0;
 
     &.c-btn--md {
-      // --- ボックスモデル ---
-      width: var(--size-control-md);
+        width: var(--size-control-md);
     }
   }
 
   &--left {
-    // --- レイアウト・配置 ---
     justify-content: flex-start;
   }
 
   &--right {
-    // --- レイアウト・配置 ---
     justify-content: flex-end;
   }
 }
