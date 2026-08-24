@@ -52,80 +52,103 @@ const processedItems = computed(() => {
 
 <style scoped lang="scss">
 .c-breadcrumb {
-  // Extends & Typography Base
+  // --- 継承 ---
   @extend %text-caption;
+
+  // --- レイアウト・配置 ---
+  @include flex-start(0, inline-flex);
+
+  // --- 視覚効果 ---
+  @include surface;
 
   position: relative;
 
-  // Box Model
+  // --- ボックスモデル ---
   padding: var(--pad-component);
   padding-top: calc(var(--pad-component) + var(--space-2));
+
+  // --- タイポグラフィ ---
   text-transform: uppercase;
 
-  // Layout & Positioning
-  @include flex-start(0, inline-flex);
-
-  // Visuals & Effects
-  @include surface; // Includes background, border, and shadow!
-
-  // 左上の「SYS.LOC」ラベル
+  // --- 疑似要素 ---
   &::after {
+    // --- 継承 ---
     @extend %text-label;
 
     content: "SYS.LOC";
 
+    // --- レイアウト・配置 ---
     position: absolute;
     top: var(--space-1);
     left: var(--space-2);
 
+    // --- タイポグラフィ ---
     color: var(--color-category-main);
     letter-spacing: normal;
 
+    // --- 視覚効果 ---
     @include cyber-text-glow(var(--color-category-main), 50%, var(--blur-sm));
   }
 
+  // --- 子要素 ---
   ol {
+    // --- レイアウト・配置 ---
     @include flex-start(0, inline-flex);
 
+    // --- ボックスモデル ---
     margin: 0;
     padding: 0;
+
+    // --- タイポグラフィ ---
     list-style: none;
   }
 
   li {
+    // --- レイアウト・配置 ---
     @include flex-start;
 
     &:not(:last-child)::after {
+      // --- 継承 ---
       @extend %text-label;
 
       content: "»";
+
+      // --- タイポグラフィ ---
       color: theme-color(var(--color-category-main), 60%);
     }
   }
 
   a,
   span:not(.current) {
+    // --- 継承 ---
     @extend %text-xs;
 
+    // --- タイポグラフィ ---
     color: var(--color-text-muted);
     text-decoration: none;
+
+    // --- アニメーション・トランジション ---
     transition: var(--transition-base);
   }
 
   a:hover {
+    // --- タイポグラフィ ---
     color: var(--color-text-main);
 
+    // --- 視覚効果 ---
     @include cyber-text-glow(var(--color-text-main), 100%, var(--blur-sm));
   }
 
   .current {
+    // --- レイアウト・配置 ---
     @include flex-start;
 
+    // --- タイポグラフィ ---
     color: var(--color-category-main);
 
+    // --- 視覚効果 ---
     @include cyber-text-glow(var(--color-category-main), 60%, var(--blur-md));
     @include blinking-cursor;
   }
 }
 </style>
-
