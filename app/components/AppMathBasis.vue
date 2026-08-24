@@ -197,9 +197,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   }
 
   &__legend-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-element);
+    @include flex-column(var(--gap-element));
     list-style: none;
   }
 

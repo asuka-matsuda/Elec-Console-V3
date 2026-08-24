@@ -270,10 +270,8 @@ const dropStatusClass = computed(() => {
   }
 
   .metric-card {
-    display: flex;
+    @include flex-column(var(--gap-element));
     flex: 1;
-    flex-direction: column;
-    gap: var(--gap-element);
     align-items: center;
     justify-content: center;
 
