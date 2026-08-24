@@ -35,10 +35,16 @@ const confirmButtonComponent = computed(() => {
     v-model="isOpen"
     :title="title || '確認'"
   >
-    <p class="u-text-center">{{ message || '本当によろしいですか？' }}</p>
+    <p class="c-confirm-modal__message">{{ message || '本当によろしいですか？' }}</p>
     <template #footer>
       <AppButtonSecondary @click="isOpen = false">{{ cancelText || 'キャンセル' }}</AppButtonSecondary>
       <component :is="confirmButtonComponent" @click="$emit('confirm')">{{ confirmText || '実行する' }}</component>
     </template>
   </AppModal>
 </template>
+
+<style scoped lang="scss">
+.c-confirm-modal__message {
+  text-align: center;
+}
+</style>
