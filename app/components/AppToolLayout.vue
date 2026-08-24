@@ -97,10 +97,8 @@ const toggleDrawer = () => {
 
   &__left {
     container-type: inline-size;
-    display: flex;
+    @include flex-column(var(--gap-component));
     flex: 1;
-    flex-direction: column;
-    gap: var(--gap-component);
 
     min-height: 0;
   }

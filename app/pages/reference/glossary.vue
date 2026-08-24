@@ -174,9 +174,7 @@ const categoryColorMap: Record<string, string> = {
 }
 
 .c-glossary-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-component);
+  @include flex-column(var(--gap-component));
 }
 
 .c-glossary-card {

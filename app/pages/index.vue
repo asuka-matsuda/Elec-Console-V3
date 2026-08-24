@@ -76,9 +76,7 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
   }
 
   &__section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-component);
+    @include flex-column(var(--gap-component));
   }
 
   &__grid {

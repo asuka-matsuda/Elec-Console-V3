@@ -84,9 +84,7 @@ const themeOptions = [
   }
 
   &__panel-content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-section);
+    @include flex-column(var(--gap-section));
   }
 
   &__grid {
