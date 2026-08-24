@@ -18,6 +18,7 @@ const props = withDefaults(
       | "management"
       | "danger"
       | "success";
+    align?: "left" | "center";
   }>(),
   {
     variant: "main",
@@ -81,7 +82,7 @@ const titleId = `modal-title-${modalId}`;
 
       <div class="c-modal__layout">
         <!-- Body -->
-        <div class="c-modal__body">
+        <div class="c-modal__body" :class="align === 'center' ? 'c-modal__body--align-center' : ''">
           <slot />
         </div>
 
@@ -183,6 +184,10 @@ const titleId = `modal-title-${modalId}`;
     overflow-y: auto;
     flex: 1;
     padding: var(--pad-container) 0;
+
+    &--align-center {
+      text-align: center;
+    }
   }
 
   &__footer {

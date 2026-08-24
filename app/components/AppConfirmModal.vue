@@ -34,8 +34,9 @@ const confirmButtonComponent = computed(() => {
   <AppModal
     v-model="isOpen"
     :title="title || '確認'"
+    align="center"
   >
-    <p class="c-confirm-modal__message">{{ message || '本当によろしいですか？' }}</p>
+    {{ message || '本当によろしいですか？' }}
     <template #footer>
       <AppButtonSecondary @click="isOpen = false">{{ cancelText || 'キャンセル' }}</AppButtonSecondary>
       <component :is="confirmButtonComponent" @click="$emit('confirm')">{{ confirmText || '実行する' }}</component>
@@ -43,8 +44,3 @@ const confirmButtonComponent = computed(() => {
   </AppModal>
 </template>
 
-<style scoped lang="scss">
-.c-confirm-modal__message {
-  text-align: center;
-}
-</style>
