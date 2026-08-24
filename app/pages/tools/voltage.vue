@@ -157,7 +157,7 @@ const handleSaveToHistory = async () => {
     </AppToolLayout>
 
     <!-- リセット確認モーダル -->
-    <AppToolResetModal v-model="isResetModalOpen" @confirm="resetForm" />
+    <AppConfirmModal v-model="isResetModalOpen" @confirm="resetForm" title="リセットの確認" message="入力した条件をすべてリセットしますか？" confirmText="リセットする" />
 </template>
 
 <style scoped lang="scss">
