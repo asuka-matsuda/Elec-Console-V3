@@ -148,10 +148,8 @@ const dropStatusClass = computed(() => {
 <style scoped lang="scss">
 .c-voltage-result {
   // --- Base Styles ---
-  display: flex;
+  @include flex-column(var(--gap-section));
   flex: 1;
-  flex-direction: column; // コンテナ未定義・または狭い場合は縦並び（スモールファースト）
-  gap: var(--gap-section);
   align-items: stretch;
 
   min-height: 0;

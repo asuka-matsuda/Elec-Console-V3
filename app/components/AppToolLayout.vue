@@ -106,9 +106,8 @@ const toggleDrawer = () => {
   }
 
   &__inputs {
-    display: flex;
+    @include flex-column(0);
     flex: 3; // 3/4 ratio on PC (Default)
-    flex-direction: column;
     min-height: 0;
 
     @include mq("md") {

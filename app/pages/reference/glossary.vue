@@ -180,9 +180,7 @@ const categoryColorMap: Record<string, string> = {
 }
 
 .c-glossary-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-component);
+  @include flex-column(var(--gap-component));
   transition: var(--transition-base);
 
   &__header {

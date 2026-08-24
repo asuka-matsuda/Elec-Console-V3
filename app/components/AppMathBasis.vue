@@ -105,10 +105,8 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 .c-math-basis {
   // --- Base Styles ---
   overflow-y: auto;
-  display: flex;
+  @include flex-column(var(--gap-section));
   flex: 1;
-  flex-direction: column;
-  gap: var(--gap-section);
 
   padding-right: var(--pad-component);
   padding-bottom: var(--pad-container);

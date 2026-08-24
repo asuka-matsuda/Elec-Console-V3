@@ -91,9 +91,7 @@ const isChecked = ref(false);
 <style scoped lang="scss">
 .p-design-system {
   // --- Base Styles ---
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-section);
+  @include flex-column(var(--gap-section));
   padding-bottom: var(--gap-section);
 
   &__desc {
