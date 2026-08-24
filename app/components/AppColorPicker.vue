@@ -8,7 +8,6 @@ import { useId } from "vue";
 const modelValue = defineModel<string>({ default: "#000000" });
 
 defineProps<{
-  label?: string;
   disabled?: boolean;
 }>();
 
@@ -16,78 +15,54 @@ const inputId = useId();
 </script>
 
 <template>
-  <div class="c-color-picker-wrapper">
-    <span v-if="label" class="c-color-picker__label">{{ label }}</span>
-    <label
-      class="c-color-picker"
-      :class="{ 'is-disabled': disabled }"
-      :for="inputId"
-    >
-      <!-- Visual Swatch -->
-      <div
-        class="c-color-picker__swatch"
-        :style="{ backgroundColor: modelValue }"
-      ></div>
+  <label
+    class="c-color-picker"
+    :class="{ 'is-disabled': disabled }"
+    :for="inputId"
+  >
+    <!-- Visual Swatch -->
+    <div
+      class="c-color-picker__swatch"
+      :style="{ backgroundColor: modelValue }"
+    ></div>
 
-      <!-- Hex Value Display -->
-      <div class="c-color-picker__value">{{ modelValue.toUpperCase() }}</div>
+    <!-- Hex Value Display -->
+    <div class="c-color-picker__value">{{ modelValue.toUpperCase() }}</div>
 
-      <!-- Hidden Native Input -->
-      <input
-        :id="inputId"
-        v-model="modelValue"
-        type="color"
-        class="c-color-picker__input"
-        :disabled="disabled"
-      />
-    </label>
-  </div>
+    <!-- Hidden Native Input -->
+    <input
+      :id="inputId"
+      v-model="modelValue"
+      type="color"
+      class="c-color-picker__input"
+      :disabled="disabled"
+    />
+  </label>
 </template>
 
 <style scoped lang="scss">
-.c-color-picker-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-component);
-}
-
-.c-color-picker__label {
-  @extend %text-xs;
-
-  color: var(--color-text-muted);
-}
-
 .c-color-picker {
   // --- Base Styles ---
-  @include flex-start(var(--gap-section), inline-flex);
+  @include flex-start(var(--gap-component), inline-flex);
 
   cursor: pointer;
   user-select: none;
 
   position: relative;
 
-  padding: var(--pad-section);
-  border-radius: 0;
+  box-sizing: border-box;
+  height: var(--size-control-md);
+  padding: 0 var(--pad-component);
 
-  @include state-base(none, var(--transition-base));
-
-  @include border-dim(50%);
-
-  // --- State Modifiers ---
-  &:hover:not(.is-disabled) {
-    border-color: var(--color-category-main);
-    box-shadow: 0 0 var(--blur-md) theme-color(var(--color-category-main), 20%);
-  }
-
-  &.is-disabled {
-    @extend %disabled;
-  }
+  @include form-control-base(
+    $is-active: "&:has(.c-color-picker__input:focus-visible)"
+  );
 
   &__swatch {
     flex-shrink: 0;
 
-    width: var(--icon-size-md);
-    height: var(--icon-size-md);
+    width: var(--icon-size-sm);
+    height: var(--icon-size-sm);
     border-radius: 50%;
 
     box-shadow: var(--shadow-sink);
@@ -96,7 +71,6 @@ const inputId = useId();
   }
 
   &__value {
-
     @extend %text-sm;
 
     font-family: var(--font-mono);
@@ -105,13 +79,10 @@ const inputId = useId();
   }
 
   &__input {
-    pointer-events: none;
-
+    // Hide native input visually, but keep accessible for keyboard focus
     position: absolute;
-
     width: 0;
     height: 0;
-
     opacity: 0;
   }
 }
