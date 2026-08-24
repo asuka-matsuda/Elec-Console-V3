@@ -37,11 +37,10 @@ const handleClick = async () => {
 </script>
 
 <template>
-  <AppButton
+  <AppButtonSuccess
     v-bind="props"
     :disabled="disabled || state !== 'idle'"
     :size="size || 'sm'"
-    :_variant="_variant || 'success'"
     class="c-save-button"
     :class="{ [`is-${state}`]: true }"
     @click="handleClick"
@@ -63,7 +62,7 @@ const handleClick = async () => {
       <AppIcon name="check" size="sm" class="c-save-button__check" />
       保存しました
     </template>
-  </AppButton>
+  </AppButtonSuccess>
 </template>
 
 <style scoped lang="scss">

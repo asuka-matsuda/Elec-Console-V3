@@ -19,7 +19,7 @@ defineEmits(['confirm']);
   >
     <p class="u-text-center">{{ message || '入力した条件をすべてリセットしますか？' }}</p>
     <template #footer>
-      <AppButton variant="secondary" @click="isOpen = false">キャンセル</AppButton>
+      <AppButtonSecondary @click="isOpen = false">キャンセル</AppButtonSecondary>
       <AppButtonDanger @click="$emit('confirm')">リセットする</AppButtonDanger>
     </template>
   </AppModal>

@@ -21,7 +21,7 @@ defineEmits(['confirm']);
   >
     <p class="u-text-center">{{ message || '本当によろしいですか？' }}</p>
     <template #footer>
-      <AppButton variant="secondary" @click="isOpen = false">{{ cancelText || 'キャンセル' }}</AppButton>
+      <AppButtonSecondary @click="isOpen = false">{{ cancelText || 'キャンセル' }}</AppButtonSecondary>
       <AppButtonDanger @click="$emit('confirm')">{{ confirmText || '実行する' }}</AppButtonDanger>
     </template>
   </AppModal>

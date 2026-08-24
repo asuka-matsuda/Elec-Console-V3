@@ -1,27 +1,21 @@
 <script setup lang="ts">
 /**
  * AppButton
- * 汎用的なボタンコンポーネント
+ * 汎用的なボタンコンポーネント（ベース）
  */
 import { computed } from "vue";
 export interface AppButtonProps {
   to?: string;
   href?: string;
   type?: "button" | "submit" | "reset";
-  // eslint-disable-next-line vue/prop-name-casing
-  _variant?: "primary" | "secondary" | "success" | "danger";
   size?: "sm" | "md";
-  block?: boolean;
   iconOnly?: boolean;
-  align?: "center" | "right" | "left";
   disabled?: boolean;
 }
 
 const props = withDefaults(defineProps<AppButtonProps>(), {
   type: "button",
-  _variant: "primary",
   size: "sm",
-  align: "center",
 });
 
 const componentTag = computed(() => {
@@ -40,11 +34,8 @@ const componentTag = computed(() => {
     :disabled="componentTag === 'button' ? disabled : null"
     class="c-btn"
     :class="[
-      _variant !== 'primary' && `c-btn--${_variant}`,
       size !== 'sm' && `c-btn--${size}`,
-      align !== 'center' && `c-btn--${align}`,
       {
-        'c-btn--block': block,
         'c-btn--icon-only': iconOnly,
         'is-disabled': disabled,
       },
@@ -57,32 +48,25 @@ const componentTag = computed(() => {
 
 <style scoped lang="scss">
 .c-btn {
-  // --- CSSカスタムプロパティ ---
   --btn-color: var(--color-category-main);
 
-  // --- 継承 ---
   @extend %click-enabled;
   @extend %text-xs;
 
-  // --- レイアウト・配置 ---
   @include flex-center(var(--pad-component), inline-flex);
 
   position: relative;
 
   flex-shrink: 0;
 
-  // --- ボックスモデル ---
   height: var(--size-control-sm);
   padding: 0 var(--space-2);
 
-  // --- タイポグラフィ ---
   font-weight: var(--font-weight-semibold);
 
-  // --- 視覚効果 ---
   @include border-dim(50%, var(--btn-color));
   @include state-base(var(--shadow-elevation-sm), var(--transition-fast));
 
-  // --- 疑似要素（タッチターゲット確保） ---
   &::after {
     content: "";
 
@@ -97,7 +81,6 @@ const componentTag = computed(() => {
     min-height: var(--size-control-lg);
   }
 
-  // --- インタラクティブ状態 ---
   &:hover:not(:disabled, .is-disabled) {
     z-index: 1;
 
@@ -122,20 +105,6 @@ const componentTag = computed(() => {
     @extend %disabled;
   }
 
-  // --- モディファイア（カラー） ---
-  &--secondary {
-    --btn-color: var(--color-status-neutral);
-  }
-
-  &--success {
-    --btn-color: var(--color-status-success);
-  }
-
-  &--danger {
-    --btn-color: var(--color-status-danger);
-  }
-
-  // --- モディファイア（サイズ） ---
   &--md {
     @extend %text-sm;
 
@@ -143,26 +112,13 @@ const componentTag = computed(() => {
     padding: var(--space-4);
   }
 
-  // --- モディファイア（レイアウト） ---
-  &--block {
-    width: 100%;
-  }
-
   &--icon-only {
     width: var(--size-control-sm);
     padding: 0;
 
     &.c-btn--md {
-        width: var(--size-control-md);
+      width: var(--size-control-md);
     }
-  }
-
-  &--left {
-    justify-content: flex-start;
-  }
-
-  &--right {
-    justify-content: flex-end;
   }
 }
 </style>

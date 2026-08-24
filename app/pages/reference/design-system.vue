@@ -27,10 +27,10 @@ const isChecked = ref(false);
           <AppCard>
             <h3 class="p-ds-card-title">Variants</h3>
             <div class="p-ds-flex">
-              <AppButton _variant="primary">Primary</AppButton>
-              <AppButton _variant="secondary">Secondary</AppButton>
-              <AppButton _variant="success">Success</AppButton>
-              <AppButton _variant="danger">Danger</AppButton>
+              <AppButton>Primary</AppButton>
+              <AppButtonSecondary>Secondary</AppButtonSecondary>
+              <AppButtonSuccess>Success</AppButtonSuccess>
+              <AppButtonDanger>Danger</AppButtonDanger>
             </div>
           </AppCard>
 

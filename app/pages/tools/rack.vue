@@ -97,13 +97,12 @@ const {
                     @remove="removeStrongCable(cable.id)"
                   />
                 </div>
-                <AppButton
-                  variant="secondary"
+                <AppButtonSecondary
                   class="p-rack__add-button"
                   @click="addStrongCable"
                 >
                   <AppIcon name="plus" /> 強電ケーブルを追加
-                </AppButton>
+                </AppButtonSecondary>
               </div>
             </div>
           </AppCard>
@@ -141,13 +140,12 @@ const {
                     @remove="removeWeakCable(cable.id)"
                   />
                 </div>
-                <AppButton
-                  variant="secondary"
+                <AppButtonSecondary
                   class="p-rack__add-button"
                   @click="addWeakCable"
                 >
                   <AppIcon name="plus" /> 弱電ケーブルを追加
-                </AppButton>
+                </AppButtonSecondary>
               </div>
             </div>
           </AppCard>

@@ -69,13 +69,12 @@ const handleSave = async () => {
             />
           </div>
           
-          <AppButton
-            variant="success"
+          <AppButtonSuccess
             class="p-conduit__add-button"
             @click="addCable"
           >
             <AppIcon name="plus" /> ケーブルを追加
-          </AppButton>
+          </AppButtonSuccess>
         </div>
       </AppToolInputPanel>
     </template>

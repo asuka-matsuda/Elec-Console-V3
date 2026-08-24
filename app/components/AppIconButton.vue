@@ -14,7 +14,6 @@ const props = withDefaults(
   defineProps<Props>(),
   {
     type: "button",
-    _variant: "primary",
     size: "md",
     iconOnly: true,
   }

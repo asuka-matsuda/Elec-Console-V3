@@ -10,7 +10,7 @@ defineProps<AppButtonProps>();
 </script>
 
 <template>
-  <AppButton v-bind="$props" _variant="secondary">
+  <AppButton v-bind="$props" style="--btn-color: var(--color-status-neutral)">
     <slot />
   </AppButton>
 </template>
