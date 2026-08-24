@@ -5,9 +5,10 @@
  */
 import { useId, ref, watch, onMounted } from "vue";
 
-const props = withDefaults(
+const isOpen = defineModel<boolean>({ default: false });
+
+withDefaults(
   defineProps<{
-    modelValue: boolean;
     title?: string;
     icon?: string;
     variant?:
@@ -25,32 +26,51 @@ const props = withDefaults(
   },
 );
 
-const emit = defineEmits<{
-  (e: "update:modelValue", value: boolean): void;
-}>();
-
 const dialogRef = ref<HTMLDialogElement | null>(null);
+const isClosing = ref(false);
+let closeTimeout: ReturnType<typeof setTimeout> | null = null;
 
 const close = () => {
-  emit("update:modelValue", false);
+  isOpen.value = false;
 };
 
-/** Watch props.modelValue to open/close native dialog */
+// Handle native close event (e.g., if closed via script or devtools directly)
+const onNativeClose = () => {
+  if (isOpen.value) {
+    isOpen.value = false;
+  }
+};
+
+/** Watch isOpen to open/close native dialog with animation support */
 watch(
-  () => props.modelValue,
-  (isOpen) => {
-    if (isOpen) {
-      dialogRef.value?.showModal();
+  isOpen,
+  (newVal) => {
+    if (newVal) {
+      if (closeTimeout) {
+        clearTimeout(closeTimeout);
+        closeTimeout = null;
+      }
+      isClosing.value = false;
+      if (!dialogRef.value?.open) {
+        dialogRef.value?.showModal();
+      }
     } else {
-      dialogRef.value?.close();
+      if (dialogRef.value?.open) {
+        isClosing.value = true;
+        closeTimeout = setTimeout(() => {
+          dialogRef.value?.close();
+          isClosing.value = false;
+          closeTimeout = null;
+        }, 300); // 300ms matches typical transition duration
+      }
     }
   },
-  { flush: "post" },
+  { flush: "post" }
 );
 
-/** Support opening dialog initially if modelValue is true */
+/** Support opening dialog initially if isOpen is true */
 onMounted(() => {
-  if (props.modelValue) {
+  if (isOpen.value) {
     dialogRef.value?.showModal();
   }
 });
@@ -62,7 +82,10 @@ const titleId = `modal-title-${modalId}`;
 <template>
   <dialog
     ref="dialogRef"
+    :aria-labelledby="titleId"
     class="c-modal"
+    :class="{ 'is-closing': isClosing }"
+    @close="onNativeClose"
     @click.self="close"
     @cancel.prevent="close"
   >
@@ -115,13 +138,17 @@ const titleId = `modal-title-${modalId}`;
   opacity: 0;
   outline: none;
 
-  transition: var(--transition-modal);
+  transition:
+    opacity var(--duration-modal) var(--ease-smooth),
+    transform var(--duration-modal) var(--ease-smooth);
 
   /* Native Backdrop Styling */
   &::backdrop {
     opacity: 0;
     backdrop-filter: blur(var(--blur-md));
-    transition: var(--transition-modal-backdrop);
+    transition:
+      opacity var(--duration-modal) var(--ease-smooth),
+      backdrop-filter var(--duration-modal) var(--ease-smooth);
   }
 
   // --- State Modifiers ---
