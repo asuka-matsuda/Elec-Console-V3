@@ -98,10 +98,8 @@ const fill48 = computed(() =>
 <style scoped lang="scss">
 .c-conduit-result {
   // --- Base Styles ---
-  display: flex;
+  @include flex-column(var(--gap-section));
   flex: 1;
-  flex-direction: column; // スモールファースト
-  gap: var(--gap-section);
   align-items: stretch;
 
   min-height: 0;
@@ -117,10 +115,8 @@ const fill48 = computed(() =>
   }
 
   &__col {
-    display: flex;
+    @include flex-column(var(--gap-section));
     flex: 1;
-    flex-direction: column;
-    gap: var(--gap-section);
 
     min-width: 0;
   }
@@ -160,10 +156,8 @@ const fill48 = computed(() =>
   }
 
   &__main {
-    display: flex;
+    @include flex-column(var(--gap-element));
     flex: 1;
-    flex-direction: column;
-    gap: var(--gap-element);
     align-items: center;
     justify-content: center;
 

@@ -113,9 +113,7 @@ const handleDelete = () => {
   }
 
   &__title-group {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-element);
+    @include flex-column(var(--gap-element));
   }
 
   &__date {
@@ -138,9 +136,7 @@ const handleDelete = () => {
   }
 
   &__section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-element);
+    @include flex-column(var(--gap-element));
   }
 
   &__section-title {

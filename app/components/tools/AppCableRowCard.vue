@@ -113,8 +113,7 @@ const updateCount = (val: any) => {
 <style scoped lang="scss">
 .c-cable-row {
   // --- Base Styles ---
-  display: flex;
-  flex-direction: column;
+  @include flex-column(0);
 
   &__header {
     @include flex-between;

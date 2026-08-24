@@ -14,9 +14,7 @@
 <style scoped lang="scss">
 .p-result-details {
   // --- Base Styles ---
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-element);
+  @include flex-column(var(--gap-element));
 
   padding-top: var(--gap-section);
   border-top: 1px solid var(--color-border);

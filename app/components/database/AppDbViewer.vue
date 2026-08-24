@@ -56,19 +56,16 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
   // --- Base Styles ---
   container-name: filter-layout;
   container-type: inline-size;
-  display: flex;
+  @include flex-column(0);
   flex: 1;
-  flex-direction: column;
 
   width: 100%;
   max-width: 1400px;
   min-height: 0;
 
   &__grid {
-    display: flex;
+    @include flex-column(var(--gap-section));
     flex: 1;
-    flex-direction: column;
-    gap: var(--gap-section);
 
     min-height: 0;
   }
@@ -78,9 +75,8 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
   }
 
   &__main {
-    display: flex;
+    @include flex-column(0);
     flex: 1;
-    flex-direction: column;
 
     min-width: 0;
     min-height: 0;
@@ -88,17 +84,15 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
 }
 
 .c-db {
-  display: flex;
+  @include flex-column(0);
   flex: 1;
-  flex-direction: column;
   min-height: 0;
 }
 
 .c-db-panel {
   overflow: hidden;
-  display: flex;
+  @include flex-column(0);
   flex: 1;
-  flex-direction: column;
   min-height: 0;
 }
 
