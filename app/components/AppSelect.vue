@@ -269,16 +269,12 @@ const listboxId = useId();
   @extend %text-sm;
 
   user-select: none;
-
   position: relative;
-
   width: 100%;
-
   font-family: var(--font-mono);
 
   &.is-disabled {
-    pointer-events: none;
-    opacity: 0.5;
+    @extend %disabled;
   }
 }
 

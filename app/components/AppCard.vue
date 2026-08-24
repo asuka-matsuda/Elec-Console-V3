@@ -46,10 +46,8 @@ const rootProps = computed(() => {
 .c-card {
   // --- Base Styles ---
   position: relative;
-
   display: flex;
   flex-direction: column;
-
   padding: var(--pad-container);
 
   @include state-base(none, var(--transition-base));
@@ -70,9 +68,7 @@ const rootProps = computed(() => {
   }
 
   &.is-disabled {
-    pointer-events: none;
-    opacity: 0.5;
-    filter: grayscale(100%);
+    @extend %disabled;
   }
 
   // --- Color Modifiers ---
