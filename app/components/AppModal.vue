@@ -161,7 +161,7 @@ const titleId = `modal-title-${modalId}`;
 
     margin: 0;
 
-    @include flex-start(var(--space-2));
+    @include flex-start(var(--gap-component));
   }
 
   &__icon {

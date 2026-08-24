@@ -47,12 +47,12 @@ withDefaults(
 .c-section-header {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--gap-component);
 
   // --- Base Styles ---
   &__top {
     display: flex;
-    gap: var(--space-4);
+    gap: var(--pad-container);
     align-items: flex-end;
     justify-content: space-between;
 
@@ -60,7 +60,7 @@ withDefaults(
   }
 
   &__actions {
-    @include flex-start(var(--space-2));
+    @include flex-start(var(--gap-component));
   }
 
   &__title {

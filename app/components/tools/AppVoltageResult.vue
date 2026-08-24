@@ -151,19 +151,19 @@ const dropStatusClass = computed(() => {
   display: flex;
   flex: 1;
   flex-direction: column; // コンテナ未定義・または狭い場合は縦並び（スモールファースト）
-  gap: var(--space-3);
+  gap: var(--gap-section);
   align-items: stretch;
 
   min-height: 0;
   padding: var(--pad-component);
-  &__drop-paren { margin-left: var(--space-2); }
+  &__drop-paren { margin-left: var(--gap-component); }
   &__drop-percent { @extend %text-xl; }
   &__drop-unit { @extend %text-md; }
   &__drop-cable { @extend %text-xl; }
 
   // --- State Modifiers ---
   &.is-sm {
-    gap: var(--space-2);
+    gap: var(--gap-component);
     padding: 0;
     
     .c-voltage-result__main {
@@ -236,7 +236,7 @@ const dropStatusClass = computed(() => {
 
   &__main-value {
     display: flex;
-    gap: var(--space-2);
+    gap: var(--gap-component);
     align-items: baseline;
     font-family: var(--font-family-mono);
 
@@ -259,7 +259,7 @@ const dropStatusClass = computed(() => {
     display: flex;
     flex-flow: row wrap; // 狭い場合は横並びラップ（スモールファースト）
     flex-shrink: 0;
-    gap: var(--space-2);
+    gap: var(--gap-component);
 
     min-width: auto;
 
@@ -293,7 +293,7 @@ const dropStatusClass = computed(() => {
     @extend %text-md;
 
     display: flex;
-    gap: var(--space-1);
+    gap: var(--gap-element);
     align-items: baseline;
 
     font-family: var(--font-family-mono);

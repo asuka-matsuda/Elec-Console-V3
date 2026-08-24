@@ -260,7 +260,7 @@ const {
   &__card-header {
     @include flex-between;
 
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--pad-container);
   }
   
   &__card-title {
@@ -278,7 +278,7 @@ const {
   &__section-title {
     @extend %text-sm;
 
-    margin-bottom: var(--space-2);
+    margin-bottom: var(--gap-component);
     font-weight: var(--font-weight-bold);
   }
   
@@ -290,7 +290,7 @@ const {
   
   &__add-button {
     width: 100%;
-    margin-top: var(--space-4);
+    margin-top: var(--pad-container);
   }
 }
 </style>

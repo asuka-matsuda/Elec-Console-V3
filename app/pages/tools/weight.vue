@@ -211,13 +211,13 @@ const totalWeight = computed(() => {
 
     @extend %text-xs;
 
-    margin-top: var(--space-4);
-    padding: 0 var(--space-4);
+    margin-top: var(--pad-container);
+    padding: 0 var(--pad-container);
     color: var(--color-text-muted);
   }
   
   &__note-list {
-    padding-left: var(--space-4);
+    padding-left: var(--pad-container);
     list-style-type: disc;
   }
 }

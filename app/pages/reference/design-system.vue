@@ -97,7 +97,7 @@ const isChecked = ref(false);
   padding-bottom: var(--gap-section);
 
   &__desc {
-    margin-top: var(--space-4);
+    margin-top: var(--pad-container);
     color: var(--color-text-muted);
   }
 
@@ -116,7 +116,7 @@ const isChecked = ref(false);
   &__title {
     @extend %text-lg;
 
-    padding-bottom: var(--space-2);
+    padding-bottom: var(--pad-component);
     border-bottom: 1px solid var(--color-border);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
@@ -132,7 +132,7 @@ const isChecked = ref(false);
 .p-ds-card-title {
   @extend %text-base;
 
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--pad-container);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-sub);
 }
@@ -140,13 +140,13 @@ const isChecked = ref(false);
 .p-ds-flex {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-4);
+  gap: var(--pad-container);
   align-items: center;
 }
 
 .p-ds-stack {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--pad-container);
 }
 </style>

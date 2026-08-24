@@ -162,7 +162,7 @@ const handleDelete = () => {
 
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: var(--space-1) var(--space-3);
+    gap: var(--gap-element) var(--gap-section);
 
     dt {
       color: var(--color-text-muted);

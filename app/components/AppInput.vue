@@ -60,8 +60,8 @@ const inputId = useId();
 <style scoped lang="scss">
 .c-form-control {
   // --- Theme Variables ---
-  --form-control-px: var(--space-2);
-  --form-control-py: var(--space-2);
+  --form-control-px: var(--pad-component);
+  --form-control-py: var(--pad-component);
 
   // --- Base Styles ---
   @extend %text-sm;
@@ -79,8 +79,8 @@ const inputId = useId();
 
   // --- Size Modifiers ---
   &--sm {
-    --form-control-px: var(--space-2);
-    --form-control-py: var(--space-1);
+    --form-control-px: var(--pad-component);
+    --form-control-py: var(--pad-element);
 
     @extend %text-xs;
 

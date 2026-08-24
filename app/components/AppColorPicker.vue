@@ -48,7 +48,7 @@ const inputId = useId();
 .c-color-picker-wrapper {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--gap-component);
 }
 
 .c-color-picker__label {
@@ -59,7 +59,7 @@ const inputId = useId();
 
 .c-color-picker {
   // --- Base Styles ---
-  @include flex-start(var(--space-3), inline-flex);
+  @include flex-start(var(--gap-section), inline-flex);
 
   cursor: pointer;
   user-select: none;

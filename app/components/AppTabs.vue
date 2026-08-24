@@ -74,7 +74,7 @@ const selectTab = (option: TabOption) => {
 
   &--vertical {
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--gap-component);
     align-items: stretch;
 
     .c-tabs__item {
@@ -127,7 +127,7 @@ const selectTab = (option: TabOption) => {
     @extend %disabled;
   }
 
-  @include flex-center(var(--space-2));
+  @include flex-center(var(--gap-component));
 }
 
 .c-tabs__item-text {

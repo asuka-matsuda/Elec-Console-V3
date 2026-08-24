@@ -80,8 +80,8 @@ const toggleCat = (value: string) => {
   &__header-wrapper {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
-    margin-bottom: var(--space-4);
+    gap: var(--gap-component);
+    margin-bottom: var(--pad-container);
   }
 
   &__filters {

@@ -169,7 +169,7 @@ const closeSidebar = () => {
         display: flex;
     flex-direction: column;
     gap: var(--gap-element);
-    padding: var(--space-3) var(--space-2);
+    padding: var(--pad-section) var(--pad-component);
   }
 
   &__heading {
@@ -188,7 +188,7 @@ const closeSidebar = () => {
 
     @include flex-start(var(--gap-component));
 
-    padding: var(--space-2);
+    padding: var(--pad-component);
 
     font-weight: var(--font-weight-medium);
     color: var(--color-text-secondary);

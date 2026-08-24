@@ -88,7 +88,7 @@ const breadcrumbs = useBreadcrumbs();
   padding: var(--pad-container);
 
   @include mq("md") {
-    padding: var(--space-3);
+    padding: var(--pad-section);
   }
 }
 

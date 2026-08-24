@@ -53,7 +53,7 @@
 
       @extend %text-sm;
 
-      padding: 0 var(--space-3);
+      padding: 0 var(--pad-section);
       border: var(--border-width-base) solid
         theme-color(var(--color-category-main), 50%);
       border-left: none;

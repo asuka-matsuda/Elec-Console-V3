@@ -18,7 +18,7 @@ const emit = defineEmits<{
 <style scoped lang="scss">
 .c-logo {
   // --- Base Styles ---
-  @include flex-start(var(--space-3));
+  @include flex-start(var(--gap-section));
 
   transition: var(--transition-base);
 

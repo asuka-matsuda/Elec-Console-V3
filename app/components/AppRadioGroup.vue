@@ -57,7 +57,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
   // --- Base Styles ---
   display: inline-flex;
   flex-shrink: 0;
-  gap: var(--space-1);
+  gap: var(--gap-element);
 
   width: max-content;
   padding: var(--pad-element);

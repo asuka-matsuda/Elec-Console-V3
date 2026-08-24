@@ -159,6 +159,6 @@ const inputId = useId();
     @include state-active(var(--checkbox-color));
   }
 
-  @include flex-start(var(--space-2), inline-flex);
+  @include flex-start(var(--gap-component), inline-flex);
 }
 </style>

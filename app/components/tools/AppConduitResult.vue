@@ -101,13 +101,13 @@ const fill48 = computed(() =>
   display: flex;
   flex: 1;
   flex-direction: column; // スモールファースト
-  gap: var(--space-3);
+  gap: var(--gap-section);
   align-items: stretch;
 
   min-height: 0;
   padding: var(--pad-component);
 
-  &__paren { margin-left: var(--space-2); }
+  &__paren { margin-left: var(--gap-component); }
   &__percent { @extend %text-xl; }
   &__percent-unit { @extend %text-md; }
 
@@ -120,7 +120,7 @@ const fill48 = computed(() =>
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: var(--space-3);
+    gap: var(--gap-section);
 
     min-width: 0;
   }
@@ -143,7 +143,7 @@ const fill48 = computed(() =>
   }
 
   &.is-sm {
-    gap: var(--space-2);
+    gap: var(--gap-component);
     padding: 0;
     
     .c-conduit-result__main {
@@ -186,7 +186,7 @@ const fill48 = computed(() =>
 
   &__main-value {
     display: flex;
-    gap: var(--space-2);
+    gap: var(--gap-component);
     align-items: baseline;
     font-family: var(--font-family-mono);
 

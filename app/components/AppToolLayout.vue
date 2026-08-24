@@ -81,7 +81,7 @@ const toggleDrawer = () => {
   // Override AppPanel padding to be tighter in tools
   :deep(.c-panel) {
     --pad-container: var(--space-3);
-    --pad-container-gap: var(--space-3);
+    --pad-container-gap: var(--gap-section);
   }
 
   &__disclaimer {
@@ -123,7 +123,7 @@ const toggleDrawer = () => {
       overflow-y: auto;
 
       // スクロール時に要素がpaddingに食い込まないよう調整
-      padding-right: var(--space-2);
+      padding-right: var(--pad-component);
     }
   }
 

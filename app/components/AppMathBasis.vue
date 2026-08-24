@@ -110,7 +110,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   flex-direction: column;
   gap: var(--gap-section);
 
-  padding-right: var(--space-2);
+  padding-right: var(--pad-component);
   padding-bottom: var(--pad-container);
 
   &__card {
@@ -200,7 +200,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   &__legend-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-1);
+    gap: var(--gap-element);
     list-style: none;
   }
 
@@ -209,7 +209,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
     @extend %text-sm;
 
     display: flex;
-    gap: var(--space-1);
+    gap: var(--gap-element);
     align-items: flex-start;
     color: var(--color-text-secondary);
   }

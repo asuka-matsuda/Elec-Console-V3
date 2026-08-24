@@ -117,7 +117,7 @@ const handleSave = async () => {
   &__section-title {
     @extend %text-base;
 
-    margin-bottom: var(--space-2);
+    margin-bottom: var(--gap-component);
     font-weight: var(--font-weight-bold);
   }
   
@@ -129,7 +129,7 @@ const handleSave = async () => {
   
   &__add-button {
     width: 100%;
-    margin-top: var(--space-4);
+    margin-top: var(--pad-container);
   }
 }
 </style>
