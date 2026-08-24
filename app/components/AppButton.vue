@@ -60,7 +60,7 @@ const componentTag = computed(() => {
   flex-shrink: 0;
 
   height: var(--size-control-sm);
-  padding: 0 var(--space-2);
+  padding: 0 var(--pad-component);
 
   font-weight: var(--font-weight-semibold);
 
@@ -109,7 +109,7 @@ const componentTag = computed(() => {
     @extend %text-sm;
 
     height: var(--size-control-md);
-    padding: var(--space-4);
+    padding: 0 var(--pad-container);
   }
 
   &--icon-only {
