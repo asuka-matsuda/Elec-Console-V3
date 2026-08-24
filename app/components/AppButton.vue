@@ -22,7 +22,7 @@ const props = withDefaults(
   {
     type: "button",
     _variant: "primary",
-    size: "md",
+    size: "sm",
     align: "center",
   },
 );
