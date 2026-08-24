@@ -46,8 +46,7 @@ const rootProps = computed(() => {
 .c-card {
   // --- Base Styles ---
   position: relative;
-  display: flex;
-  flex-direction: column;
+  @include flex-column(var(--gap-section));
   padding: var(--pad-container);
 
   @include state-base(none, var(--transition-base));

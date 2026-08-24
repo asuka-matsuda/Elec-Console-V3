@@ -26,6 +26,12 @@
   justify-content: flex-start;
 }
 
+@mixin flex-column($gap: var(--gap-component), $display: flex) {
+  display: $display;
+  flex-direction: column;
+  gap: $gap;
+}
+
 // --- メディアクエリ ---
 @mixin mq($breakpoint, $direction: "down") {
   @if map.has-key($breakpoints, $breakpoint) {

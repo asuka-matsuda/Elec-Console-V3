@@ -21,9 +21,7 @@ const currentYear = new Date().getFullYear();
   // --- Base Styles ---
   position: relative;
 
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-component);
+  @include flex-column(var(--gap-component));
   align-items: center;
 
   margin-top: auto;
