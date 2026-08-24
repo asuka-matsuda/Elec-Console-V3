@@ -80,13 +80,7 @@ const componentTag = computed(() => {
 
   // --- 視覚効果 ---
   @include border-dim(50%, var(--btn-color));
-  @include state-base(
-    (
-      inset 0 0 var(--blur-md) theme-color(var(--btn-color), 10%),
-      var(--shadow-elevation-sm)
-    ),
-    var(--transition-fast)
-  );
+  @include state-base(var(--shadow-elevation-sm), var(--transition-fast));
 
   // --- 疑似要素（タッチターゲット確保） ---
   &::after {
