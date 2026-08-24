@@ -113,10 +113,8 @@ withDefaults(
   }
 
   &__content {
-    display: flex;
+    @include flex-column(var(--pad-container-gap, var(--pad-container)));
     flex: 1;
-    flex-direction: column;
-    gap: var(--pad-container-gap, var(--pad-container));
 
     min-height: 0;
   }

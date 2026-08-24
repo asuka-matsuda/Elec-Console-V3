@@ -203,9 +203,8 @@ const toggleDrawer = () => {
   }
 
   &__results-content {
-    display: flex;
+    @include flex-column(0);
     flex: 1;
-    flex-direction: column;
     min-height: 0;
 
     @include mq("md") {

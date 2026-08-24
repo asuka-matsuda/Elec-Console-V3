@@ -166,9 +166,7 @@ const closeSidebar = () => {
   }
 
   &__section-header {
-        display: flex;
-    flex-direction: column;
-    gap: var(--gap-element);
+        @include flex-column(var(--gap-element));
     padding: var(--pad-section) var(--pad-component);
   }
 
