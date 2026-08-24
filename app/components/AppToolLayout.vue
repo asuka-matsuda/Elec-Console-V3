@@ -68,10 +68,8 @@ const toggleDrawer = () => {
 <style scoped lang="scss">
 .l-tool-layout {
   // --- Base Styles ---
-  display: flex;
+  @include flex-column(var(--gap-component));
   flex: 1;
-  flex-direction: column;
-  gap: var(--gap-component);
 
   width: 100%;
   max-width: 1600px;

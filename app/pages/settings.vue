@@ -78,9 +78,7 @@ const themeOptions = [
   padding-bottom: var(--gap-section);
 
   &__header {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-element);
+    @include flex-column(var(--gap-element));
   }
 
   &__panel-content {
