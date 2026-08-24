@@ -76,8 +76,6 @@ const componentTag = computed(() => {
   padding: 0 var(--space-2);
 
   // --- タイポグラフィ ---
-  color: var(--color-text-main);
-  text-decoration: none;
   font-weight: var(--font-weight-semibold);
 
   // --- 視覚効果 ---

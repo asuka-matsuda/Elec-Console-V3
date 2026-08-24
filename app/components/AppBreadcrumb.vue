@@ -125,7 +125,6 @@ const processedItems = computed(() => {
 
     // --- タイポグラフィ ---
     color: var(--color-text-muted);
-    text-decoration: none;
 
     // --- アニメーション・トランジション ---
     transition: var(--transition-base);
