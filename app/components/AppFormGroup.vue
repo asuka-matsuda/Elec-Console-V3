@@ -61,9 +61,7 @@ withDefaults(
   width: 100%;
 
   &__inner {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-component);
+    @include flex-column(var(--gap-component));
     width: 100%;
 
     // --- Responsive Layout ---
@@ -100,9 +98,7 @@ withDefaults(
 
   &__control {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-element);
+    @include flex-column(var(--gap-element));
   }
 
   &__error {

@@ -45,9 +45,7 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-section-header {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-component);
+  @include flex-column(var(--gap-component));
 
   // --- Base Styles ---
   &__top {

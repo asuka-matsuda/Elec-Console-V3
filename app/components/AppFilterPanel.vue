@@ -78,9 +78,7 @@ const toggleCat = (value: string) => {
   }
 
   &__header-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-component);
+    @include flex-column(var(--gap-component));
     margin-bottom: var(--pad-container);
   }
 

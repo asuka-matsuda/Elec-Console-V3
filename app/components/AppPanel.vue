@@ -48,9 +48,7 @@ withDefaults(
   // --- Base Styles ---
   position: relative;
 
-  display: flex;
-  flex-direction: column;
-  gap: var(--pad-container-gap, var(--pad-container));
+  @include flex-column(var(--pad-container-gap, var(--pad-container)));
 
   padding: var(--pad-container, var(--pad-container));
 

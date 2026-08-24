@@ -90,8 +90,7 @@ const closeSidebar = () => {
   position: fixed;
   z-index: var(--z-index-nav);
 
-  display: flex;
-  flex-direction: column;
+  @include flex-column(0);
 
   width: var(--sidebar-width);
   height: 100dvh;
@@ -131,10 +130,8 @@ const closeSidebar = () => {
     --scrollbar-size: var(--size-2);
 
     overflow-y: auto;
-    display: flex;
+    @include flex-column(var(--gap-section));
     flex: 1;
-    flex-direction: column;
-    gap: var(--gap-section); // セクション間の隙間なので gap-section が適切
 
     /* ホバー時の右移動ではみ出さないよう、右側に余白を設ける */
     padding: var(--pad-container);
@@ -154,9 +151,7 @@ const closeSidebar = () => {
       "management": var(--color-category-management)
     );
 
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-component);
+    @include flex-column(var(--gap-component));
 
     @each $name, $var in $accents {
       &.has-accent-#{$name} {
