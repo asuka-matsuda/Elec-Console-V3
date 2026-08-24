@@ -89,9 +89,7 @@ const handleDelete = () => {
 <style scoped lang="scss">
 .c-history-card {
   // --- Base Styles ---
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-component);
+  @include flex-column(var(--gap-component));
 
   // --- State Modifiers ---
   &.is-error {
@@ -136,9 +134,7 @@ const handleDelete = () => {
   }
 
   &__body {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-component);
+    @include flex-column(var(--gap-component));
   }
 
   &__section {
