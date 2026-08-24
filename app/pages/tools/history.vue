@@ -164,9 +164,7 @@ const confirmDelete = () => {
 .p-history-page {
   // --- Base Styles ---
   container-type: inline-size;
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-section);
+  @include flex-column(var(--gap-section));
 
   &__tabs {
     /* 親要素(p-history-page)のgapで管理されるためmargin-bottomは削除 */

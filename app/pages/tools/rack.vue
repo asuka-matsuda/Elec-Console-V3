@@ -283,9 +283,7 @@ const {
   }
   
   &__cable-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-component);
+    @include flex-column(var(--gap-component));
   }
   
   &__add-button {

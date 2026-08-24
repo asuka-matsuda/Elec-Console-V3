@@ -91,9 +91,7 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
 /* Inner Card Styles */
 .p-dashboard-card {
   &__layout {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-element);
+    @include flex-column(var(--gap-element));
   }
 
   &__header {

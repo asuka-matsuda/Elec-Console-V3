@@ -100,9 +100,7 @@ const themeOptions = [
   }
 
   &__stack {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-section);
+    @include flex-column(var(--gap-section));
   }
 
   &__sub-group {
