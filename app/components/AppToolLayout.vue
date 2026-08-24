@@ -147,9 +147,8 @@ const toggleDrawer = () => {
   /* --------------------------------------------------------- */
   &__results {
     container-type: inline-size;
-    display: flex;
+    @include flex-column(0);
     flex: none; // コンテンツの高さに合わせて自動調整
-    flex-direction: column;
 
     min-height: 0;
 

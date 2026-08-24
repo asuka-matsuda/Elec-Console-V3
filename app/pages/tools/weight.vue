@@ -179,9 +179,7 @@ const totalWeight = computed(() => {
 
 <style scoped lang="scss">
 .p-result-weight {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-element);
+  @include flex-column(var(--gap-element));
   
   &__val {
     @extend %text-2xl;

@@ -270,9 +270,7 @@ const {
   }
   
   &__card-body {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-component);
+    @include flex-column(var(--gap-component));
   }
 
   &__section-title {

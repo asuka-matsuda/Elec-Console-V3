@@ -109,9 +109,7 @@ const isChecked = ref(false);
 }
 
 .p-ds-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-component);
+  @include flex-column(var(--gap-component));
 
   &__title {
     @extend %text-lg;
