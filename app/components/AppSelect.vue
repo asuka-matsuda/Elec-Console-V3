@@ -415,9 +415,7 @@ const listboxId = useId();
   }
 
   &.is-disabled {
-    pointer-events: none;
-    color: var(--color-text-muted);
-    opacity: 0.3;
+    @extend %disabled;
   }
 
   &.is-placeholder {
