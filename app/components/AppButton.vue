@@ -17,15 +17,12 @@ export interface AppButtonProps {
   disabled?: boolean;
 }
 
-const props = withDefaults(
-  defineProps<AppButtonProps>(),
-  {
-    type: "button",
-    _variant: "primary",
-    size: "sm",
-    align: "center",
-  },
-);
+const props = withDefaults(defineProps<AppButtonProps>(), {
+  type: "button",
+  _variant: "primary",
+  size: "sm",
+  align: "center",
+});
 
 const componentTag = computed(() => {
   if (props.to) return "NuxtLink";
@@ -68,7 +65,7 @@ const componentTag = computed(() => {
   @extend %text-xs;
 
   // --- レイアウト・配置 ---
-  @include flex-center(var(--space-2), inline-flex);
+  @include flex-center(var(--pad-component), inline-flex);
 
   position: relative;
 
@@ -79,15 +76,20 @@ const componentTag = computed(() => {
   padding: 0 var(--space-2);
 
   // --- タイポグラフィ ---
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-ui);
   color: var(--color-text-main);
   text-decoration: none;
-  letter-spacing: 0.05em;
+  font-weight: var(--font-weight-semibold);
 
   // --- 視覚効果 ---
   @include border-dim(50%, var(--btn-color, var(--color-category-main)));
-  @include state-base((inset 0 0 var(--blur-md) theme-color(var(--btn-color, var(--color-category-main)), 10%), var(--shadow-elevation-sm)), var(--transition-fast));
+  @include state-base(
+    (
+      inset 0 0 var(--blur-md)
+        theme-color(var(--btn-color, var(--color-category-main)), 10%),
+      var(--shadow-elevation-sm)
+    ),
+    var(--transition-fast)
+  );
 
   // --- 疑似要素（タッチターゲット確保） ---
   &::after {
