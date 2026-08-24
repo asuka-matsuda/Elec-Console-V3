@@ -79,11 +79,10 @@ const componentTag = computed(() => {
   font-weight: var(--font-weight-semibold);
 
   // --- 視覚効果 ---
-  @include border-dim(50%, var(--btn-color, var(--color-category-main)));
+  @include border-dim(50%, var(--btn-color));
   @include state-base(
     (
-      inset 0 0 var(--blur-md)
-        theme-color(var(--btn-color, var(--color-category-main)), 10%),
+      inset 0 0 var(--blur-md) theme-color(var(--btn-color), 10%),
       var(--shadow-elevation-sm)
     ),
     var(--transition-fast)
