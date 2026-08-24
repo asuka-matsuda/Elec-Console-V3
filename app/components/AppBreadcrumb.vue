@@ -90,9 +90,6 @@ const processedItems = computed(() => {
   ol {
     @include flex-start(0, inline-flex);
 
-    margin: 0;
-    padding: 0;
-
     list-style: none;
   }
 

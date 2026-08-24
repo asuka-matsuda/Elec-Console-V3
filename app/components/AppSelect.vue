@@ -374,8 +374,6 @@ const listboxId = useId();
   box-sizing: border-box;
   width: 100%;
   max-height: min(250px, 40vh); /* 画面が小さい場合にも対応 */
-  margin: 0;
-  padding: 0;
 
   list-style: none;
 }

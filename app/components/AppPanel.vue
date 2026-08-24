@@ -107,8 +107,6 @@ withDefaults(
   &__title {
 
     @extend %text-lg;
-
-    margin: 0;
     font-weight: var(--font-weight-bold);
     color: #{theme-color(var(--p-theme-color), 100%)};
     text-shadow: 0 0 var(--blur-md) #{theme-color(var(--p-theme-color), 40%)};

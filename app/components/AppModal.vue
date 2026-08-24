@@ -159,8 +159,6 @@ const titleId = `modal-title-${modalId}`;
   &__title {
     @extend %text-heading;
 
-    margin: 0;
-
     @include flex-start(var(--gap-component));
   }
 

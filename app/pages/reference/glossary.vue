@@ -204,7 +204,6 @@ const categoryColorMap: Record<string, string> = {
   }
 
   &__term {
-    margin: 0;
     @extend %text-lg;
     color: var(--color-text-main);
   }
@@ -236,7 +235,6 @@ const categoryColorMap: Record<string, string> = {
   }
 
   &__text {
-    margin: 0;
     @extend %text-sm;
     line-height: 1.5;
     color: var(--color-text-secondary);

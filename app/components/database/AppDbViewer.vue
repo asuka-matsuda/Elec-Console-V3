@@ -100,7 +100,6 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
   flex: 1;
   flex-direction: column;
   min-height: 0;
-  padding: 0;
 }
 
 .c-db-empty {

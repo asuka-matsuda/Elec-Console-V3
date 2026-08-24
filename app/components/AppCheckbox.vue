@@ -89,7 +89,6 @@ const inputId = useId();
 
     width: 0;
     height: 0;
-    margin: 0;
 
     opacity: 0;
   }

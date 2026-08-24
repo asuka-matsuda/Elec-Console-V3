@@ -65,8 +65,6 @@ withDefaults(
 
   &__title {
     @include flex-start(var(--gap-component));
-
-    margin: 0;
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
 
