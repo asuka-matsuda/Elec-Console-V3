@@ -32,7 +32,7 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-badge {
-  // SCSS Variables & Maps
+  // --- SCSS変数・マップ ---
   $variants: (
     "neutral": "--color-text-main",
     "primary": "--color-category-main",
@@ -41,31 +41,31 @@ withDefaults(
     "danger": "--color-status-danger",
   );
 
-  // CSS Custom Properties
+  // --- CSSカスタムプロパティ ---
   --glow-color: var(--color-text-main);
 
-  // Extends
+  // --- 継承 ---
   @extend %text-label;
 
-  // Layout & Positioning
+  // --- レイアウト・配置 ---
   @include flex-center(0, inline-flex);
 
-  // Misc
+  // --- その他 ---
   user-select: none;
 
-  // Box Model
+  // --- ボックスモデル ---
   padding: var(--pad-element);
   border: var(--border-width-base) solid theme-color(var(--glow-color), 60%);
 
-  // Typography
+  // --- タイポグラフィ ---
   color: var(--glow-color);
   white-space: nowrap;
 
-  // Visuals & Effects
+  // --- 視覚効果 ---
   @include state-base(var(--shadow-glow-hover), var(--transition-base));
   @include cyber-text-glow(var(--glow-color), 100%, var(--blur-sm));
 
-  // Modifiers
+  // --- モディファイア ---
   @each $name, $var in $variants {
     &--#{$name} {
       --glow-color: var(#{$var});
