@@ -145,8 +145,6 @@ const isChecked = ref(false);
 }
 
 .p-ds-stack {
-  display: flex;
-  flex-direction: column;
-  gap: var(--pad-container);
+  @include flex-column(var(--pad-container));
 }
 </style>

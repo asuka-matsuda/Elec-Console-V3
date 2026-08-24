@@ -183,9 +183,7 @@ const confirmDelete = () => {
   }
 
   &__empty {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-element);
+    @include flex-column(var(--gap-element));
     align-items: center;
     justify-content: center;
 
