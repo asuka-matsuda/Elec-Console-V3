@@ -42,7 +42,6 @@ const currentYear = new Date().getFullYear();
 
     font-family: var(--font-mono);
     color: var(--color-text-muted);
-    letter-spacing: 0.05em;
     transition: var(--transition-base);
 
     &:hover {

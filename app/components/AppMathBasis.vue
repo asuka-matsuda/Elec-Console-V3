@@ -123,7 +123,6 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
     font-weight: var(--font-weight-bold);
     color: var(--color-category-tool);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
   }
 
   &__body {

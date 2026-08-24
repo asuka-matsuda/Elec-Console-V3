@@ -133,7 +133,6 @@ withDefaults(
   // Default state: slightly dimmed
   color: theme-color(var(--color-category-main), 70%);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
 
   transition: var(--transition-base);
 

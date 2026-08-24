@@ -59,7 +59,6 @@ const inputId = useId();
   user-select: none;
   position: relative;
 
-
   &:has(.c-checkbox__input:disabled) {
     @extend %disabled;
   }
@@ -76,8 +75,6 @@ const inputId = useId();
   &:has(.c-checkbox__input:focus-visible) .c-checkbox__box {
     @include state-focus(var(--checkbox-color));
     @include cyber-text-glow(var(--checkbox-color));
-
-    
   }
 
   // 2. Checked State

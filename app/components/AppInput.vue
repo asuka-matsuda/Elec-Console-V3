@@ -65,8 +65,6 @@ const inputId = useId();
 
   // --- Base Styles ---
   @extend %text-sm;
-
-  box-sizing: border-box;
   width: 100%;
   padding: var(--form-control-py) var(--form-control-px);
 

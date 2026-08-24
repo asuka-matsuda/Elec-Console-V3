@@ -81,7 +81,6 @@ const processedItems = computed(() => {
     left: var(--space-2);
 
     color: var(--color-category-main);
-    letter-spacing: normal;
 
     @include cyber-text-glow(var(--color-category-main), 50%, var(--blur-sm));
   }
@@ -97,11 +96,11 @@ const processedItems = computed(() => {
     @include flex-start;
 
     &:not(:last-child)::after {
-        @extend %text-label;
+      @extend %text-label;
 
       content: "»";
 
-        color: theme-color(var(--color-category-main), 60%);
+      color: theme-color(var(--color-category-main), 60%);
     }
   }
 

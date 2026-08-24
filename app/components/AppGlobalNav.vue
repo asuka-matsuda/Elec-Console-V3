@@ -178,7 +178,6 @@ const closeSidebar = () => {
     font-weight: var(--font-weight-bold);
     color: var(--section-accent, var(--color-text-secondary));
     text-transform: uppercase;
-    letter-spacing: 0.1em;
   }
 
   // --- Navigation Links ---

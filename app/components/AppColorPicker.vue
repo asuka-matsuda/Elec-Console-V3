@@ -49,8 +49,6 @@ const inputId = useId();
   user-select: none;
 
   position: relative;
-
-  box-sizing: border-box;
   height: var(--size-control-md);
   padding: 0 var(--pad-component);
 
@@ -75,7 +73,6 @@ const inputId = useId();
 
     font-family: var(--font-mono);
     color: var(--color-text-main);
-    letter-spacing: 0.05em;
   }
 
   &__input {

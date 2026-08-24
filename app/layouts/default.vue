@@ -118,7 +118,6 @@ const breadcrumbs = useBreadcrumbs();
   &__name {
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
-    letter-spacing: 0.05em;
   }
 }
 </style>

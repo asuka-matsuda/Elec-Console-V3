@@ -286,8 +286,6 @@ const listboxId = useId();
   overflow: hidden;
 
   @include flex-start;
-
-  box-sizing: border-box;
   width: 100%;
   height: var(--size-control-md);
   padding: var(--pad-component);
@@ -366,8 +364,6 @@ const listboxId = useId();
   transform: translateZ(0);
 
   overflow: hidden auto;
-
-  box-sizing: border-box;
   width: 100%;
   max-height: min(250px, 40vh); /* 画面が小さい場合にも対応 */
 

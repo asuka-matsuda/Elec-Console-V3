@@ -231,7 +231,6 @@ const dropStatusClass = computed(() => {
 
     color: var(--color-text-secondary);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
   }
 
   &__main-value {

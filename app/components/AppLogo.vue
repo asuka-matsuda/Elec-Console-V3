@@ -41,7 +41,6 @@ const emit = defineEmits<{
     @extend %text-lg;
 
     font-weight: var(--font-weight-bold);
-    letter-spacing: 0.05em;
   }
 }
 </style>
