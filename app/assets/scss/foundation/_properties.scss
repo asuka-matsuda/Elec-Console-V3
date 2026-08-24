@@ -141,7 +141,9 @@
   --shadow-glow-sm: 0 0 var(--blur-sm) var(--glow-color, var(--color-category-main));
   --shadow-glow-md: 0 0 var(--blur-md) var(--glow-color, var(--color-category-main));
   --shadow-glow-lg: 0 0 var(--blur-lg) var(--glow-color, var(--color-category-main));
-
+  --shadow-glow-inset-sm: inset 0 0 var(--blur-sm) var(--glow-color, var(--color-category-main));
+  --shadow-glow-inset-md: inset 0 0 var(--blur-md) var(--glow-color, var(--color-category-main));
+  --shadow-glow-inset-lg: inset 0 0 var(--blur-lg) var(--glow-color, var(--color-category-main));
   --shadow-glow-hover:
     0 0 16px theme-color(var(--glow-color, var(--color-category-main)), 50%),
     inset 0 0 4px

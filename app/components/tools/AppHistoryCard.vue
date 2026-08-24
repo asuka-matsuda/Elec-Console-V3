@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppHistoryCard
  * 計算履歴を1件表示するカードコンポーネントです。入力条件と計算結果のプレビューを提供します。
@@ -94,7 +94,8 @@ const handleDelete = () => {
   // --- State Modifiers ---
   &.is-error {
     border-color: var(--color-status-danger);
-    box-shadow: inset 0 0 var(--blur-md) theme-color(var(--color-status-danger), 10%);
+    --glow-color: theme-color(var(--color-status-danger), 10%);
+    box-shadow: var(--shadow-glow-inset-md);
     
     .c-history-card__main-result {
       color: var(--color-status-danger);

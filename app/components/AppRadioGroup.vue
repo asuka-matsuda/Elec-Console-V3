@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppRadioGroup
  * 複数の選択肢から1つを選択するための、セグメントコントロール風のラジオボタングループコンポーネント。
@@ -74,7 +74,8 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
         + .c-segmented-control__text {
         border-color: var(--color-border);
         color: var(--color-text-main);
-        box-shadow: inset 0 0 var(--blur-sm) var(--color-border);
+        --glow-color: var(--color-border);
+        box-shadow: var(--shadow-glow-inset-sm);
       }
     }
   }

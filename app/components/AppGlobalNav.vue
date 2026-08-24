@@ -207,7 +207,8 @@ const closeSidebar = () => {
       color: var(--section-accent, var(--color-category-main));
 
       // Replaced hardcoded shadow with cyber-text-glow or simplified shadow
-      --glow-color: theme-color(var(--section-accent, var(--color-category-main)), 20%);`n      box-shadow: var(--shadow-glow-sm);
+      --glow-color: theme-color(var(--section-accent, var(--color-category-main)), 20%);
+      box-shadow: var(--shadow-glow-sm);
 
       .l-global-nav__link-icon {
         color: var(--section-accent, var(--color-category-main));

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppSelect
  * キーボード操作や画面外へのはみ出し防止機能に対応した、カスタムのセレクトボックスコンポーネント。
@@ -344,12 +344,14 @@ const listboxId = useId();
 
   background-color: transparent;
   backdrop-filter: blur(var(--blur-md));
-  box-shadow: inset 0 0 var(--blur-md) theme-color(var(--color-category-main), 20%), var(--shadow-elevation-md);
+  --glow-color: theme-color(var(--color-category-main), 20%);
+  box-shadow: var(--shadow-glow-inset-md), var(--shadow-elevation-md);
 
   /* Error state dropdown border */
   .c-custom-select.is-error & {
     border-color: theme-color(var(--color-status-danger), 50%);
-    box-shadow: inset 0 0 var(--blur-md) theme-color(var(--color-status-danger), 20%), var(--shadow-elevation-md);
+    --glow-color: theme-color(var(--color-status-danger), 20%);
+    box-shadow: var(--shadow-glow-inset-md), var(--shadow-elevation-md);
   }
 }
 
@@ -395,8 +397,8 @@ const listboxId = useId();
     color: var(--color-category-main);
 
     background-color: transparent;
-    box-shadow: inset 0 0 var(--size-3)
-      theme-color(var(--color-category-main), 30%);
+    --glow-color: theme-color(var(--color-category-main), 30%);
+    box-shadow: var(--shadow-glow-inset-md);
   }
 
   &.is-selected {
@@ -406,8 +408,8 @@ const listboxId = useId();
     color: var(--color-category-main);
 
     background-color: transparent;
-    box-shadow: inset 0 0 var(--size-4)
-      theme-color(var(--color-category-main), 40%);
+    --glow-color: theme-color(var(--color-category-main), 40%);
+    box-shadow: var(--shadow-glow-inset-lg);
   }
 
   &.is-disabled {

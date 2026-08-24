@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { menuData } from "~/utils/data/menuData";
 
 // Mobile sidebar toggle state (Global)
@@ -108,7 +108,8 @@ const breadcrumbs = useBreadcrumbs();
     border-radius: 50%;
 
     background: var(--color-category-main);
-    box-shadow: 0 0 var(--blur-lg) theme-color(var(--color-category-main), 50%);
+    --glow-color: theme-color(var(--color-category-main), 50%);
+    box-shadow: var(--shadow-glow-lg);
   }
 
   &__name {
