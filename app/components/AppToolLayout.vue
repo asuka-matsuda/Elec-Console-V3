@@ -129,9 +129,8 @@ const toggleDrawer = () => {
 
   &__right {
     overflow-y: hidden; // No vertical scroll per user request
-    display: flex;
+    @include flex-column(0);
     flex: 1;
-    flex-direction: column;
 
     min-height: 0;
 

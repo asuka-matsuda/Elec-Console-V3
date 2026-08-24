@@ -102,9 +102,7 @@ const isChecked = ref(false);
   }
 
   &__content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-section);
+    @include flex-column(var(--gap-section));
   }
 }
 

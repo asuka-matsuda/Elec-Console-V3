@@ -193,9 +193,7 @@ const categoryColorMap: Record<string, string> = {
   }
 
   &__title {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-element);
+    @include flex-column(var(--gap-element));
   }
 
   &__kana {

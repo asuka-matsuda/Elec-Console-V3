@@ -181,10 +181,8 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   }
 
   &__legend {
-    display: flex;
-    flex-direction: column;
+    @include flex-column(var(--gap-element));
     flex-shrink: 0;
-    gap: var(--gap-element);
 
     width: 250px;
   }
