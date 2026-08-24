@@ -1,5 +1,3 @@
-
-
 <script setup lang="ts">
 /**
  * AppButton
@@ -62,51 +60,63 @@ const componentTag = computed(() => {
 
 <style scoped lang="scss">
 .c-btn {
-  // --- Theme Variables ---
+  // --- CSSカスタムプロパティ ---
   --btn-color: var(--color-category-main);
 
-  // --- Base Styles ---
+  // --- 継承 ---
   @extend %click-enabled;
+
+  // --- レイアウト・配置 ---
+  @include flex-center(var(--space-2), inline-flex);
 
   position: relative;
 
   flex-shrink: 0;
 
+  // --- タイポグラフィ ---
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-ui);
   color: var(--color-text-main);
   text-decoration: none;
   letter-spacing: 0.05em;
 
+  // --- 視覚効果 ---
+  @include border-dim(50%, var(--btn-color, var(--color-category-main)));
   @include state-base((inset 0 0 var(--blur-md) theme-color(var(--btn-color, var(--color-category-main)), 10%), var(--shadow-elevation-sm)), var(--transition-fast));
 
-  /* Interaction States */
+  // --- インタラクティブ状態 ---
   &:hover:not(:disabled, .is-disabled) {
+    // --- レイアウト・配置 ---
     z-index: 1;
 
+    // --- 視覚効果 ---
     @include state-hover(var(--btn-color));
   }
 
   &:focus-visible {
+    // --- レイアウト・配置 ---
     z-index: 1;
 
+    // --- 視覚効果 ---
     @include state-focus(var(--btn-color));
     @include cyber-text-glow(var(--btn-color));
   }
 
   &:active:not(:disabled, .is-disabled) {
+    // --- レイアウト・配置 ---
     z-index: 1;
 
+    // --- 視覚効果 ---
     @include state-active(var(--btn-color));
     @include cyber-text-glow(var(--btn-color));
   }
 
-  /* Disabled State */
   &:is(:disabled, .is-disabled) {
+    // --- 継承 ---
     @extend %disabled;
   }
 
-  // --- Color Modifiers ---
+  // --- モディファイア（カラー） ---
   &--primary {
     --btn-color: var(--color-category-main);
   }
@@ -123,23 +133,26 @@ const componentTag = computed(() => {
     --btn-color: var(--color-status-danger);
   }
 
-  // --- Size Modifiers ---
+  // --- モディファイア（サイズ） ---
   &--sm {
-
+    // --- 継承 ---
     @extend %text-xs;
 
+    // --- ボックスモデル ---
     height: var(--size-control-sm);
     padding: 0 var(--space-2);
 
-    // Minimum touch target (48x48) for accessibility
+    // --- 疑似要素 ---
     &::after {
       content: "";
 
+      // --- レイアウト・配置 ---
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
 
+      // --- ボックスモデル ---
       width: 100%;
       min-width: var(--size-control-lg);
       height: 100%;
@@ -148,41 +161,43 @@ const componentTag = computed(() => {
   }
 
   &--md {
-
+    // --- 継承 ---
     @extend %text-sm;
 
+    // --- ボックスモデル ---
     height: var(--size-control-md);
     padding: var(--space-4);
   }
 
-  /* Layout Modifiers */
+  // --- モディファイア（レイアウト） ---
   &--block {
+    // --- ボックスモデル ---
     width: 100%;
   }
 
   &--icon-only {
+    // --- ボックスモデル ---
     padding: 0;
 
     &.c-btn--sm {
+      // --- ボックスモデル ---
       width: var(--size-control-sm);
     }
-    
+
     &.c-btn--md {
+      // --- ボックスモデル ---
       width: var(--size-control-md);
     }
   }
 
   &--left {
+    // --- レイアウト・配置 ---
     justify-content: flex-start;
   }
 
   &--right {
+    // --- レイアウト・配置 ---
     justify-content: flex-end;
   }
-
-  @include flex-center(var(--space-2), inline-flex);
-
-  /* 視認性確保のための枠線と影（アウトラインスタイル） */
-  @include border-dim(50%, var(--btn-color, var(--color-category-main)));
 }
 </style>
