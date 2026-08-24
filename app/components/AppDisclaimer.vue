@@ -26,7 +26,6 @@ withDefaults(
 
   width: 100%;
   padding: var(--pad-section);
-  line-height: var(--line-height-relaxed);
   color: var(--color-status-warning);
 }
 </style>

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppDivider
  * 画面やコンテンツの区切り線を表示するコンポーネント
@@ -51,127 +51,87 @@ withDefaults(
   box-shadow: var(--shadow-sink); // 彫り込まれた溝の影
 
   // --- Color Modifiers ---
-  &.has-accent-main {
-    --divider-accent: var(--color-category-main);
-  }
+  $accents: (
+    "main": var(--color-category-main),
+    "tool": var(--color-category-tool),
+    "database": var(--color-category-database),
+    "reference": var(--color-category-reference),
+    "management": var(--color-category-management),
+    "danger": var(--color-status-danger),
+    "success": var(--color-status-success),
+    "border": var(--color-border),
+    "sidebar-border": var(--sidebar-border)
+  );
 
-  &.has-accent-tool {
-    --divider-accent: var(--color-category-tool);
-  }
-
-  &.has-accent-database {
-    --divider-accent: var(--color-category-database);
-  }
-
-  &.has-accent-reference {
-    --divider-accent: var(--color-category-reference);
-  }
-
-  &.has-accent-management {
-    --divider-accent: var(--color-category-management);
-  }
-
-  &.has-accent-danger {
-    --divider-accent: var(--color-status-danger);
-  }
-
-  &.has-accent-success {
-    --divider-accent: var(--color-status-success);
-  }
-
-  &.has-accent-border {
-    --divider-accent: var(--color-border);
-  }
-
-  &.has-accent-sidebar-border {
-    --divider-accent: var(--sidebar-border);
-  }
-
-  // --- Orientation Modifiers (Horizontal) ---
-  &--horizontal {
-    transform-origin: center;
-    width: 100%;
-    height: var(--border-width-base);
-    animation: divider-scale-x 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-
-    &.is-type-solid {
-      background: var(--color-border);
-
-      // パルス発光用のData Flow（擬似要素）
-      &::before {
-        content: "";
-
-        position: absolute;
-        top: 0;
-        left: -30%;
-
-        width: 30%;
-        height: 100%;
-
-        background: linear-gradient(
-          90deg,
-          transparent,
-          theme-color(var(--divider-accent, var(--color-category-main)), 80%),
-          transparent
-        );
-        box-shadow: 0 0 var(--blur-md) var(--divider-accent, var(--color-category-main));
-
-        animation: data-pulse-x 3s ease-in-out infinite;
-      }
-    }
-
-    &.is-type-fade-center {
-      background: linear-gradient(to right, transparent 0%, var(--divider-accent) 50%, transparent 100%);
-    }
-
-    &.is-type-fade-side {
-      background: linear-gradient(to right, var(--divider-accent) 0%, transparent 100%);
+  @each $name, $val in $accents {
+    &.has-accent-#{$name} {
+      --divider-accent: #{$val};
     }
   }
 
-  // --- Orientation Modifiers (Vertical) ---
+  // --- Orientation Properties ---
+  // Default (Horizontal)
+  --divider-size-x: 100%;
+  --divider-size-y: var(--border-width-base);
+  --divider-min-h: auto;
+  --anim-scale: divider-scale-x;
+  --anim-pulse: data-pulse-x;
+  --pulse-w: 30%;
+  --pulse-h: 100%;
+  --pulse-top: 0;
+  --pulse-left: -30%;
+  --grad-dir-fade: to right;
+  --grad-dir-pulse: 90deg;
+
   &--vertical {
-    transform-origin: center;
+    --divider-size-x: var(--border-width-base);
+    --divider-size-y: auto;
+    --divider-min-h: 100%;
+    --anim-scale: divider-scale-y;
+    --anim-pulse: data-pulse-y;
+    --pulse-w: 100%;
+    --pulse-h: 30%;
+    --pulse-top: -30%;
+    --pulse-left: 0;
+    --grad-dir-fade: to bottom;
+    --grad-dir-pulse: 180deg;
+  }
 
-    width: var(--border-width-base);
-    height: auto;
-    min-height: 100%;
+  // --- Base Styling & Animations ---
+  transform-origin: center;
+  width: var(--divider-size-x);
+  height: var(--divider-size-y);
+  min-height: var(--divider-min-h);
+  animation: var(--anim-scale) 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
-    animation: divider-scale-y 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  &.is-type-solid {
+    background: var(--color-border);
 
-    &.is-type-solid {
-      background: var(--color-border);
-
-      // パルス発光用のData Flow（擬似要素）
-      &::before {
-        content: "";
-
-        position: absolute;
-        top: -30%;
-        left: 0;
-
-        width: 100%;
-        height: 30%;
-
-        background: linear-gradient(
-          180deg,
-          transparent,
-          theme-color(var(--divider-accent, var(--color-category-main)), 80%),
-          transparent
-        );
-        box-shadow: 0 0 var(--blur-md) var(--divider-accent, var(--color-category-main));
-
-        animation: data-pulse-y 3s ease-in-out infinite;
-      }
+    // パルス発光用のData Flow（擬似要素）
+    &::before {
+      content: "";
+      position: absolute;
+      top: var(--pulse-top);
+      left: var(--pulse-left);
+      width: var(--pulse-w);
+      height: var(--pulse-h);
+      background: linear-gradient(
+        var(--grad-dir-pulse),
+        transparent,
+        theme-color(var(--divider-accent, var(--color-category-main)), 80%),
+        transparent
+      );
+      box-shadow: 0 0 var(--blur-md) var(--divider-accent, var(--color-category-main));
+      animation: var(--anim-pulse) 3s ease-in-out infinite;
     }
+  }
 
-    &.is-type-fade-center {
-      background: linear-gradient(to bottom, transparent 0%, var(--divider-accent) 50%, transparent 100%);
-    }
+  &.is-type-fade-center {
+    background: linear-gradient(var(--grad-dir-fade), transparent 0%, var(--divider-accent) 50%, transparent 100%);
+  }
 
-    &.is-type-fade-side {
-      background: linear-gradient(to bottom, var(--divider-accent) 0%, transparent 100%);
-    }
+  &.is-type-fade-side {
+    background: linear-gradient(var(--grad-dir-fade), var(--divider-accent) 0%, transparent 100%);
   }
 
   // --- Keyframes ---
