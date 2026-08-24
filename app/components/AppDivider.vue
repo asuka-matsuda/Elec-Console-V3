@@ -65,7 +65,7 @@ withDefaults(
 
   @each $name, $val in $accents {
     &.has-accent-#{$name} {
-      --divider-accent: #{$val};
+      --glow-color: #{$val};
     }
   }
 
@@ -118,20 +118,20 @@ withDefaults(
       background: linear-gradient(
         var(--grad-dir-pulse),
         transparent,
-        theme-color(var(--divider-accent, var(--color-category-main)), 80%),
+        theme-color(var(--glow-color, var(--color-category-main)), 80%),
         transparent
       );
-      box-shadow: 0 0 var(--blur-md) var(--divider-accent, var(--color-category-main));
+      box-shadow: var(--shadow-glow-md);
       animation: var(--anim-pulse) 3s ease-in-out infinite;
     }
   }
 
   &.is-type-fade-center {
-    background: linear-gradient(var(--grad-dir-fade), transparent 0%, var(--divider-accent) 50%, transparent 100%);
+    background: linear-gradient(var(--grad-dir-fade), transparent 0%, var(--glow-color) 50%, transparent 100%);
   }
 
   &.is-type-fade-side {
-    background: linear-gradient(var(--grad-dir-fade), var(--divider-accent) 0%, transparent 100%);
+    background: linear-gradient(var(--grad-dir-fade), var(--glow-color) 0%, transparent 100%);
   }
 
   // --- Keyframes ---

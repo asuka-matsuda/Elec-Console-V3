@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppFormGroup
  * フォームのラベル、入力項目、エラーメッセージ、ヘルプテキストをグループ化して表示するコンポーネントです。
@@ -144,7 +144,8 @@ withDefaults(
       theme-color(var(--color-category-main), 70%);
     border-radius: 50%;
 
-    box-shadow: 0 0 var(--blur-sm) theme-color(var(--color-category-main), 30%);
+    --glow-color: theme-color(var(--color-category-main), 30%);
+    box-shadow: var(--shadow-glow-sm);
 
     transition: var(--transition-base);
   }
@@ -158,7 +159,7 @@ withDefaults(
 
   &::before {
     border-color: var(--color-category-main);
-    box-shadow: 0 0 var(--blur-md) var(--color-category-main);
+    box-shadow: var(--shadow-glow-md);
   }
 }
 
@@ -171,7 +172,8 @@ withDefaults(
 
   &::before {
     border-color: var(--color-status-danger);
-    box-shadow: 0 0 var(--blur-md) var(--color-status-danger);
+    --glow-color: var(--color-status-danger);
+    box-shadow: var(--shadow-glow-md);
   }
 }
 </style>
