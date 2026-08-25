@@ -103,21 +103,5 @@ const themeOptions = [
     // --- レイアウト・配置 ---
     @include flex-column(var(--gap-section));
   }
-
-  &__sub-group {
-    // --- レイアウト・配置 ---
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--gap-component);
-
-    // --- ボックスモデル ---
-    padding: var(--pad-container);
-
-    @include border-base;  }
-
-  &__desc {
-    // --- 継承 ---
-    @extend %text-desc;
-  }
 }
 </style>

@@ -92,25 +92,6 @@ const handleDelete = () => {
   @include flex-column;
 
   // --- モディファイア ---
-  &.is-error {
-    // --- CSSカスタムプロパティ ---
-    --glow-color: theme-color(var(--color-status-danger), 10%);
-
-    // --- ボックスモデル ---
-    border-color: var(--color-status-danger);
-
-    // --- 視覚効果 ---
-    box-shadow: var(--shadow-glow-inset-md);
-
-    // --- 子要素 ---
-    .c-history-card__main-result {
-      // --- タイポグラフィ ---
-      color: var(--color-status-danger);
-
-      // --- 視覚効果 ---
-      @include cyber-text-glow(var(--color-status-danger), 50%, 8px);
-    }
-  }
 
   // --- 子要素 ---
   &__header {

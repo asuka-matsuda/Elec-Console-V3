@@ -178,10 +178,4 @@ const handleSaveToHistory = async () => {
     }
   }
 }
-
-/* ケーブル種別未選択時にケーブルサイズを無効化 */
-.l-grid:has(.js-field-cableType [data-placeholder="true"]) .js-field-fixedSize {
-  // --- 継承 ---
-  @extend %disabled;
-}
 </style>
