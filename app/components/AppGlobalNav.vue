@@ -273,6 +273,7 @@ const closeSidebar = () => {
     &.router-link-active {
       // --- 視覚効果 ---
       transform: translateX(0);
+
       // --- タイポグラフィ ---
       color: var(--section-accent, var(--color-category-main));
 

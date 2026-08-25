@@ -55,6 +55,7 @@ withDefaults(
 
   // Apply visual base
   @include border-base(var(--p-border-color), var(--border-width-base));
+
   border-image: var(--p-border-image);
 
   // --- 視覚効果 ---
@@ -79,6 +80,7 @@ withDefaults(
     // --- ボックスモデル ---
     width: var(--p-bracket-size);
     height: var(--p-bracket-size);
+
     @include border-base(var(--p-bracket-color), var(--border-width-thick));
 
     // --- 視覚効果 ---

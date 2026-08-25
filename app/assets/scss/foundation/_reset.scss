@@ -13,9 +13,11 @@ html {
   line-height: 1.15;
   text-size-adjust: 100%;
 }
+
 main {
   display: block;
 }
+
 // --- 見出し ---
 h1,
 h2,
@@ -156,9 +158,11 @@ button:disabled,
 select:disabled {
   opacity: inherit;
 }
+
 fieldset {
   min-width: 0;
 }
+
 progress {
   vertical-align: baseline;
 }

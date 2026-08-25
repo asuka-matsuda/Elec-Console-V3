@@ -372,6 +372,7 @@ const listboxId = useId();
   // --- ボックスモデル ---
   width: max-content;
   max-width: 90vw;
+
   @include border-dim(var(--color-category-main));
 
   // --- 視覚効果 ---

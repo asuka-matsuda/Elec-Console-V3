@@ -69,7 +69,9 @@
 
       // --- ボックスモデル ---
       padding: 0 var(--pad-section);
+
       @include border-dim(var(--color-category-main));
+
       border-left: none;
 
       // --- タイポグラフィ ---

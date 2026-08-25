@@ -91,6 +91,7 @@ const toggleCat = (value: string) => {
   &__filters {
     // --- レイアウト・配置 ---
     @include grid(280px 1fr, var(--gap-section));
+
     /* スマホ時は縦積み */
     @include mq("md") {
       // --- レイアウト・配置 ---

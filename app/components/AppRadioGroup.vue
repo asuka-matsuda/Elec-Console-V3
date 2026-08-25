@@ -62,6 +62,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
   // --- ボックスモデル ---
   width: max-content;
   padding: var(--pad-element);
+
   @include border-base;
 
   // --- 視覚効果 ---
@@ -137,6 +138,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
 
     // --- ボックスモデル ---
     padding: var(--pad-component);
+
     @include border-base(transparent);
 
     // --- タイポグラフィ ---

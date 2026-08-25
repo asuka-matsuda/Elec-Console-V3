@@ -210,7 +210,7 @@ const {
     </AppToolLayout>
 
     <!-- リセット確認モーダル -->
-    <AppConfirmModal v-model="isResetModalOpen" @confirm="confirmReset" title="リセットの確認" message="入力した条件をすべてリセットしますか？" confirmText="リセットする" />
+    <AppConfirmModal v-model="isResetModalOpen" title="リセットの確認" message="入力した条件をすべてリセットしますか？" confirm-text="リセットする" @confirm="confirmReset" />
 </template>
 
 <style scoped lang="scss">
@@ -251,6 +251,7 @@ const {
   &__grid {
     // --- レイアウト・配置 ---
     @include grid;
+
     @include cq("xs") {
       // --- レイアウト・配置 ---
       grid-template-columns: repeat(2, 1fr);

@@ -156,7 +156,7 @@ const handleSaveToHistory = async () => {
     </AppToolLayout>
 
     <!-- リセット確認モーダル -->
-    <AppConfirmModal v-model="isResetModalOpen" @confirm="resetForm" title="リセットの確認" message="入力した条件をすべてリセットしますか？" confirmText="リセットする" />
+    <AppConfirmModal v-model="isResetModalOpen" title="リセットの確認" message="入力した条件をすべてリセットしますか？" confirm-text="リセットする" @confirm="resetForm" />
 </template>
 
 <style scoped lang="scss">
@@ -164,6 +164,7 @@ const handleSaveToHistory = async () => {
 .l-grid {
   // --- レイアウト・配置 ---
   @include grid;
+
   // --- モディファイア ---
   &--2col {
     // --- レイアウト・配置 ---

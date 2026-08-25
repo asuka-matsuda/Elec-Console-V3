@@ -114,12 +114,12 @@ const inputId = useId();
   &__track {
     // --- レイアウト・配置 ---
     position: relative;
-
     flex-shrink: 0;
 
     // --- ボックスモデル ---
     width: var(--track-w);
     height: var(--track-h);
+
     @include border-base;
 
     // --- 視覚効果 ---
@@ -136,6 +136,7 @@ const inputId = useId();
     // --- ボックスモデル ---
     width: var(--thumb-w);
     height: var(--track-h);
+
     @include border-base;
 
     // --- 視覚効果 ---

@@ -195,6 +195,7 @@ const fill48 = computed(() =>
     // --- ボックスモデル ---
     min-width: 0;
     padding: var(--pad-component) var(--pad-section);
+
     @include border-base;
 
     // --- 視覚効果 ---

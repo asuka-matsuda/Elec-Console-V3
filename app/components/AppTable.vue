@@ -67,6 +67,7 @@ defineProps<{
   // --- ボックスモデル ---
   width: 100%;
   min-height: 0;
+
   @include border-base;
 }
 

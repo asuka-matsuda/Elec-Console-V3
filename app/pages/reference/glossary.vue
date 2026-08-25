@@ -239,6 +239,7 @@ const categoryColorMap: Record<string, string> = {
 
     // --- ボックスモデル ---
     padding: var(--pad-container);
+
     @include border-dim;
   }
 
@@ -266,6 +267,7 @@ const categoryColorMap: Record<string, string> = {
 
   // --- ボックスモデル ---
   padding: var(--pad-container);
+
   @include border-dim;
 
   // --- タイポグラフィ ---
