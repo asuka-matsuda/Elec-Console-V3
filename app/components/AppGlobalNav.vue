@@ -75,7 +75,6 @@ const closeSidebar = () => {
           </template>
         </section>
       </nav>
-    <AppDivider vertical type="fade-center" variant="sidebar-border" class="l-global-nav__border-right" />
     </aside>
   </div>
 </template>
@@ -126,16 +125,6 @@ const closeSidebar = () => {
     box-shadow: var(--shadow-elevation-sm); // Replaced hardcoded shadow
 
       }
-
-  &__border-right {
-    // --- レイアウト・配置 ---
-    position: absolute;
-    top: 0;
-    right: 0;
-
-    // --- ボックスモデル ---
-    height: 100%;
-  }
 
   &__nav {
     // --- CSSカスタムプロパティ ---
