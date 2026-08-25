@@ -38,8 +38,6 @@
       flex: 1;
 
       // --- ボックスモデル ---
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
     }
   }
 

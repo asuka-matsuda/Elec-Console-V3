@@ -112,9 +112,7 @@ const themeOptions = [
 
     // --- ボックスモデル ---
     padding: var(--pad-container);
-    @include border-base;
-    border-radius: 0;
-  }
+    @include border-base;  }
 
   &__desc {
     // --- 継承 ---
