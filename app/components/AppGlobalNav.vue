@@ -273,10 +273,6 @@ const closeSidebar = () => {
     &.router-link-active {
       // --- 視覚効果 ---
       transform: translateX(0);
-
-      // --- ボックスモデル ---
-      border-color: transparent;
-
       // --- タイポグラフィ ---
       color: var(--section-accent, var(--color-category-main));
 
