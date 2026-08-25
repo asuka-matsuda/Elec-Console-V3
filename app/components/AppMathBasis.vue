@@ -123,10 +123,9 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
   &__title {
     // --- 継承 ---
-    @extend %text-sm;
+    @extend %text-title-sm;
 
     // --- タイポグラフィ ---
-    font-weight: var(--font-weight-bold);
     color: var(--color-category-tool);
     text-transform: uppercase;
   }
@@ -144,7 +143,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   &__math {
     // --- CSSカスタムプロパティ ---
     --scrollbar-size: var(--size-2);
-    
+
     // スクロールバー自体は非表示にしつつスクロールは可能にする
     scrollbar-width: none;
 
@@ -176,13 +175,13 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
         // --- タイポグラフィ ---
         color: var(--color-status-success);
       }
-      
+
       .tex-status-warning,
       .tex-status-warning * {
         // --- タイポグラフィ ---
         color: var(--color-status-warning);
       }
-      
+
       .tex-status-danger,
       .tex-status-danger * {
         // --- タイポグラフィ ---
@@ -214,7 +213,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
   &__legend-title {
     // --- 継承 ---
-    @extend %text-xs;
+    @extend %text-meta;
 
     // --- タイポグラフィ ---
     font-weight: var(--font-weight-bold);
@@ -230,7 +229,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
   &__legend-item {
     // --- 継承 ---
-    @extend %text-sm;
+    @extend %text-title-sm;
 
     // --- レイアウト・配置 ---
     display: flex;
@@ -243,7 +242,6 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
   &__legend-symbol {
     // --- タイポグラフィ ---
-    font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
 

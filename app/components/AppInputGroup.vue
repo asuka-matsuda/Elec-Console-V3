@@ -67,7 +67,7 @@
 
     :deep(.c-input-addon) {
       // --- 継承 ---
-      @extend %text-sm;
+      @extend %text-desc;
 
       // --- ボックスモデル ---
       padding: 0 var(--pad-section);

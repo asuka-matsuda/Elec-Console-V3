@@ -118,7 +118,7 @@ withDefaults(
 
   &__error {
     // --- 継承 ---
-    @extend %text-xs;
+    @extend %text-meta;
 
     // --- タイポグラフィ ---
     color: var(--color-status-danger);
@@ -129,10 +129,7 @@ withDefaults(
 
   &__help {
     // --- 継承 ---
-    @extend %text-xs;
-
-    // --- タイポグラフィ ---
-    color: var(--color-text-muted);
+    @extend %text-meta;
   }
 }
 
@@ -142,13 +139,12 @@ withDefaults(
   @include flex-start(var(--gap-element));
 
   // --- 継承 ---
-  @extend %text-sm;
+  @extend %text-title-sm;
 
   // --- その他 ---
   user-select: none;
 
   // --- タイポグラフィ ---
-  font-weight: var(--font-weight-bold);
 
   // Default state: slightly dimmed
   color: theme-color(var(--color-category-main), 70%);

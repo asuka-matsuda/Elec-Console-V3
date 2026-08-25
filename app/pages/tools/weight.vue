@@ -56,7 +56,7 @@ const totalWeight = computed(() => {
                 placeholder="選択してください"
               />
             </AppFormGroup>
-            
+
             <AppFormGroup label="ケーブルサイズ" required>
               <AppSelect
                 v-model="inputs.cableIdx"
@@ -180,20 +180,15 @@ const totalWeight = computed(() => {
   // --- レイアウト・配置 ---
   @include flex-column(var(--gap-element));
 
-  
   // --- 子要素 ---
   &__val {
     // --- 継承 ---
-    @extend %text-2xl;
-
-    // --- タイポグラフィ ---
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-main);
+    @extend %text-title-xl;
   }
-  
+
   &__warning {
     // --- 継承 ---
-    @extend %text-sm;
+    @extend %text-desc;
 
     // --- ボックスモデル ---
     padding: var(--gap-element);
@@ -212,7 +207,7 @@ const totalWeight = computed(() => {
 
   &__note {
     // --- 継承 ---
-    @extend %text-xs;
+    @extend %text-meta;
 
     // --- ボックスモデル ---
     margin-top: var(--pad-container);
@@ -221,7 +216,7 @@ const totalWeight = computed(() => {
     // --- タイポグラフィ ---
     color: var(--color-text-muted);
   }
-  
+
   &__note-list {
     // --- ボックスモデル ---
     padding-left: var(--pad-container);

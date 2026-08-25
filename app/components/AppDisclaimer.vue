@@ -22,7 +22,7 @@ withDefaults(
 <style scoped lang="scss">
 .c-disclaimer {
   // --- 継承 ---
-  @extend %text-sm;
+  @extend %text-desc;
 
   // --- ボックスモデル ---
   width: 100%;

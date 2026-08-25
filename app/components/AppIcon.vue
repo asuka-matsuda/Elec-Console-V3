@@ -47,19 +47,19 @@ const svgContent = computed(() => {
     width: 14px;
     height: 14px;
   }
-  
+
   &--md {
     // --- ボックスモデル ---
     width: 18px;
     height: 18px;
   }
-  
+
   &--lg {
     // --- ボックスモデル ---
     width: 24px;
     height: 24px;
   }
-  
+
   &--xl {
     // --- ボックスモデル ---
     width: 32px;

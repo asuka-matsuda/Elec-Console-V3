@@ -69,19 +69,17 @@ withDefaults(
     // --- レイアウト・配置 ---
     @include flex-start(var(--gap-component));
 
-    // --- タイポグラフィ ---
-    font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
 
     // --- モディファイア ---
     &--lg {
       // --- 継承 ---
-      @extend %text-xl;
+      @extend %text-title-lg;
     }
 
     &--md {
       // --- 継承 ---
-      @extend %text-lg;
+      @extend %text-title-md;
     }
   }
 

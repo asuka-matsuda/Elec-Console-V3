@@ -42,7 +42,7 @@ const inputId = useId();
   --thumb-w: var(--space-5);
 
   // --- 継承 ---
-  @extend %text-sm;
+  @extend %text-desc;
 
   // --- その他 ---
   cursor: pointer;
@@ -80,7 +80,6 @@ const inputId = useId();
       // --- 視覚効果 ---
       @include cyber-text-glow(var(--toggle-color));
 
-      
     }
 
     /* 2. Checked State (ON) */

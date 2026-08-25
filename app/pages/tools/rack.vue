@@ -218,20 +218,15 @@ const {
   // --- レイアウト・配置 ---
   @include flex-column(var(--gap-element));
 
-  
   // --- 子要素 ---
   &__val {
     // --- 継承 ---
-    @extend %text-2xl;
-
-    // --- タイポグラフィ ---
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-main);
+    @extend %text-title-xl;
   }
-  
+
   &__warning {
     // --- 継承 ---
-    @extend %text-sm;
+    @extend %text-title-sm;
 
     // --- ボックスモデル ---
     padding: var(--gap-element);
@@ -252,13 +247,13 @@ const {
     // --- レイアウト・配置 ---
     @include flex-column(var(--gap-section));
   }
-  
+
   &__grid {
     // --- レイアウト・配置 ---
     display: grid;
     grid-template-columns: 1fr;
     gap: var(--gap-component);
-    
+
     @include cq("xs") {
       // --- レイアウト・配置 ---
       grid-template-columns: repeat(2, 1fr);
@@ -272,15 +267,12 @@ const {
     // --- ボックスモデル ---
     margin-bottom: var(--pad-container);
   }
-  
+
   &__card-title {
     // --- 継承 ---
-    @extend %text-md;
-
-    // --- タイポグラフィ ---
-    font-weight: var(--font-weight-bold);
+    @extend %text-title-md;
   }
-  
+
   &__card-body {
     // --- レイアウト・配置 ---
     @include flex-column(var(--gap-component));
@@ -288,20 +280,18 @@ const {
 
   &__section-title {
     // --- 継承 ---
-    @extend %text-sm;
+    @extend %text-desc;
 
     // --- ボックスモデル ---
     margin-bottom: var(--gap-component);
 
-    // --- タイポグラフィ ---
-    font-weight: var(--font-weight-bold);
   }
-  
+
   &__cable-list {
     // --- レイアウト・配置 ---
     @include flex-column(var(--gap-component));
   }
-  
+
   &__add-button {
     // --- ボックスモデル ---
     width: 100%;

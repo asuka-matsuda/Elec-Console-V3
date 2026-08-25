@@ -207,7 +207,7 @@ const titleId = `modal-title-${modalId}`;
 
   &__title {
     // --- 継承 ---
-    @extend %text-heading;
+    @extend %text-title-lg;
 
     // --- レイアウト・配置 ---
     @include flex-start(var(--gap-component));

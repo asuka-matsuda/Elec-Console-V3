@@ -53,11 +53,11 @@ const handleSave = async () => {
             placeholder="選択してください"
           />
         </AppFormGroup>
-        
+
         <!-- 2. 収容するケーブル -->
         <div>
           <div class="p-conduit__section-title">収容するケーブル</div>
-          
+
           <div class="p-conduit__cable-list">
             <AppCableRowCard
               v-for="(cable, index) in inputs.inputCables"
@@ -68,7 +68,7 @@ const handleSave = async () => {
               @remove="removeCable(cable.id)"
             />
           </div>
-          
+
           <AppButtonSuccess
             class="p-conduit__add-button"
             @click="addCable"
@@ -106,7 +106,7 @@ const handleSave = async () => {
 <style scoped lang="scss">
 .p-basis-note {
   // --- 継承 ---
-  @extend %text-2xs;
+  @extend %text-meta;
 
   // --- タイポグラフィ ---
   color: var(--color-status-warning);
@@ -116,20 +116,18 @@ const handleSave = async () => {
   // --- 子要素 ---
   &__section-title {
     // --- 継承 ---
-    @extend %text-base;
+    @extend %text-title-sm;
 
     // --- ボックスモデル ---
     margin-bottom: var(--gap-component);
 
-    // --- タイポグラフィ ---
-    font-weight: var(--font-weight-bold);
   }
-  
+
   &__cable-list {
     // --- レイアウト・配置 ---
     @include flex-column(var(--gap-component));
   }
-  
+
   &__add-button {
     // --- ボックスモデル ---
     width: 100%;

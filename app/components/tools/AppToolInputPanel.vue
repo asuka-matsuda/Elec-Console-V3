@@ -29,7 +29,7 @@ defineEmits(['reset']);
         </template>
       </AppSectionHeader>
     </template>
-    
+
     <div class="c-tool-panel__content">
       <slot />
     </div>

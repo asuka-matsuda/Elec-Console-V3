@@ -21,7 +21,7 @@ defineProps<{
         size="md"
       />
     </template>
-    
+
     <div class="c-basis-panel__layout">
       <ClientOnly>
         <AppMathBasis v-if="steps && steps.length > 0" :steps="steps" />

@@ -41,7 +41,7 @@ const currentYear = new Date().getFullYear();
 
   &__copyright {
     // --- 継承 ---
-    @extend %text-xs;
+    @extend %text-meta;
 
     // --- タイポグラフィ ---
     font-family: var(--font-mono);

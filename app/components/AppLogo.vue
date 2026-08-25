@@ -49,10 +49,7 @@ const emit = defineEmits<{
 
   &__text {
     // --- 継承 ---
-    @extend %text-lg;
-
-    // --- タイポグラフィ ---
-    font-weight: var(--font-weight-bold);
+    @extend %text-title-md;
   }
 }
 </style>

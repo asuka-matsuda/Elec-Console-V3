@@ -81,7 +81,7 @@ const updateCount = (val: any) => {
             @update:model-value="onCategoryChange"
           />
         </AppFormGroup>
-        
+
         <AppFormGroup label="ケーブルサイズ">
           <AppSelect
             :model-value="modelValue.cableIdx"
@@ -91,7 +91,7 @@ const updateCount = (val: any) => {
             @update:model-value="updateCableIdx"
           />
         </AppFormGroup>
-        
+
         <AppFormGroup label="本数">
           <AppInputGroup>
             <AppInput
@@ -131,19 +131,15 @@ const updateCount = (val: any) => {
 
   &__title {
     // --- 継承 ---
-    @extend %text-sm;
+    @extend %text-title-sm;
 
     // --- タイポグラフィ ---
-    font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
 
   &__meta {
     // --- 継承 ---
-    @extend %text-xs;
-
-    // --- タイポグラフィ ---
-    color: var(--color-text-muted);
+    @extend %text-meta;
   }
 }
 </style>

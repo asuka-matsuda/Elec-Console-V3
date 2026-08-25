@@ -78,7 +78,7 @@ const inputId = useId();
 
   &__value {
     // --- 継承 ---
-    @extend %text-sm;
+    @extend %text-desc;
 
     // --- タイポグラフィ ---
     font-family: var(--font-mono);

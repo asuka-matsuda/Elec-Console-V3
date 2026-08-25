@@ -99,7 +99,7 @@ defineProps<{
 
   :deep(th) {
     // --- 継承 ---
-    @extend %text-sm;
+    @extend %text-title-sm;
 
     // --- レイアウト・配置 ---
     position: sticky;
@@ -109,7 +109,6 @@ defineProps<{
     border-bottom-width: calc(var(--border-width-base) * 2);
 
     // --- タイポグラフィ ---
-    font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
 
     // --- 視覚効果 ---

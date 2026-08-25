@@ -95,7 +95,7 @@ const breadcrumbs = useBreadcrumbs();
 /* Temporary user bar styles for demo */
 .l-header-user {
 
-  @extend %text-sm;
+  @extend %text-title-sm;
 
   display: flex;
   gap: var(--gap-component);
@@ -118,7 +118,6 @@ const breadcrumbs = useBreadcrumbs();
   }
 
   &__name {
-    font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
 }

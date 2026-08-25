@@ -53,7 +53,7 @@ const componentTag = computed(() => {
 
   // --- 継承 ---
   @extend %click-enabled;
-  @extend %text-xs;
+  @extend %text-meta;
 
   // --- レイアウト・配置 ---
   @include flex-center(var(--pad-component), inline-flex);
@@ -129,7 +129,7 @@ const componentTag = computed(() => {
   // --- モディファイア ---
   &--md {
     // --- 継承 ---
-    @extend %text-sm;
+    @extend %text-desc;
 
     // --- ボックスモデル ---
     height: var(--size-control-md);

@@ -2,8 +2,6 @@
 @use "functions" as *;
 @use "sass:map";
 
-// --- SCSS変数（デザイントークン） ---
-
 // --- タイポグラフィ ---
 $font-fallback: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
 $font-base: $font-fallback;

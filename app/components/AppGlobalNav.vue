@@ -193,7 +193,7 @@ const closeSidebar = () => {
 
   &__heading {
     // --- 継承 ---
-    @extend %text-xs;
+    @extend %text-meta;
 
     // --- タイポグラフィ ---
     font-weight: var(--font-weight-bold);
@@ -203,7 +203,7 @@ const closeSidebar = () => {
 
   &__link {
     // --- 継承 ---
-    @extend %text-sm;
+    @extend %text-title-sm;
 
     // --- レイアウト・配置 ---
     @include flex-start(var(--gap-component));
@@ -289,8 +289,6 @@ const closeSidebar = () => {
 
       // --- 子要素 ---
       .l-global-nav__link-text {
-        // --- タイポグラフィ ---
-        font-weight: var(--font-weight-bold);
       }
 
       .l-global-nav__link-icon {

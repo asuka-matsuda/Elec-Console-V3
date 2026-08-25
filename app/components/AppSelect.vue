@@ -30,7 +30,7 @@ const isMounted = ref(false);
 
 const calculatePlacement = () => {
   if (!selectRef.value) return;
-  
+
   const rect = selectRef.value.getBoundingClientRect();
   const spaceBelow = window.innerHeight - rect.bottom;
   const spaceAbove = rect.top;
@@ -44,7 +44,7 @@ const calculatePlacement = () => {
       placement = "bottom";
     }
   }
-  
+
   dynamicPlacement.value = placement;
 
   // 画面の絶対位置 (fixed) で座標を指定する
@@ -266,7 +266,7 @@ const listboxId = useId();
 <style scoped lang="scss">
 .c-custom-select {
   // --- 継承 ---
-  @extend %text-sm;
+  @extend %text-title-sm;
 
   // --- その他 ---
   user-select: none;
@@ -419,7 +419,7 @@ const listboxId = useId();
   // --- 継承 ---
   @extend %click-enabled;
 
-  @extend %text-sm;
+  @extend %text-desc;
 
   // --- その他 ---
   overflow: hidden;
@@ -463,7 +463,6 @@ const listboxId = useId();
     border-left-color: var(--color-category-main);
 
     // --- タイポグラフィ ---
-    font-weight: var(--font-weight-bold);
     color: var(--color-category-main);
 
     // --- 視覚効果 ---

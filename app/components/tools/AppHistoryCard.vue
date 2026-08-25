@@ -102,7 +102,6 @@ const handleDelete = () => {
     // --- 視覚効果 ---
     box-shadow: var(--shadow-glow-inset-md);
 
-    
     // --- 子要素 ---
     .c-history-card__main-result {
       // --- タイポグラフィ ---
@@ -132,21 +131,17 @@ const handleDelete = () => {
 
   &__date {
     // --- 継承 ---
-    @extend %text-xs;
-
-    // --- タイポグラフィ ---
-    color: var(--color-text-muted);
+    @extend %text-meta;
   }
 
   &__title {
     // --- 継承 ---
-    @extend %text-base;
+    @extend %text-title-sm;
 
     // --- レイアウト・配置 ---
     @include flex-start(var(--gap-element));
 
     // --- タイポグラフィ ---
-    font-weight: var(--font-weight-semibold);
     color: var(--color-text-main);
   }
 
@@ -162,20 +157,19 @@ const handleDelete = () => {
 
   &__section-title {
     // --- 継承 ---
-    @extend %text-sm;
+    @extend %text-title-sm;
 
     // --- ボックスモデル ---
     padding-left: var(--gap-element);
     border-left: 2px solid var(--color-category-tool);
 
     // --- タイポグラフィ ---
-    font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
 
   &__list {
     // --- 継承 ---
-    @extend %text-sm;
+    @extend %text-desc;
 
     // --- レイアウト・配置 ---
     display: grid;
@@ -188,7 +182,7 @@ const handleDelete = () => {
       color: var(--color-text-muted);
       white-space: nowrap;
     }
-    
+
     dd {
       // --- タイポグラフィ ---
       color: var(--color-text-main);

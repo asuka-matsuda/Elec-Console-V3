@@ -94,7 +94,7 @@ const selectTab = (option: TabOption) => {
 
 .c-tabs__item {
   // --- 継承 ---
-  @extend %text-sm;
+  @extend %text-desc;
 
   // --- その他 ---
   cursor: pointer;

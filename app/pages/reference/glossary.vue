@@ -211,18 +211,13 @@ const categoryColorMap: Record<string, string> = {
 
   &__kana {
     // --- 継承 ---
-    @extend %text-xs;
-
-    // --- タイポグラフィ ---
-    color: var(--color-text-muted);
+    @extend %text-meta;
   }
 
   &__term {
     // --- 継承 ---
-    @extend %text-lg;
+    @extend %text-title-md;
 
-    // --- タイポグラフィ ---
-    color: var(--color-text-main);
   }
 
   &__body {
@@ -232,7 +227,7 @@ const categoryColorMap: Record<string, string> = {
 
   &__desc {
     // --- 継承 ---
-    @extend %text-sm;
+    @extend %text-title-sm;
 
     // --- タイポグラフィ ---
     line-height: 1.6;
@@ -250,16 +245,15 @@ const categoryColorMap: Record<string, string> = {
 
   &__label {
     // --- 継承 ---
-    @extend %text-xs;
+    @extend %text-meta;
 
     // --- タイポグラフィ ---
-    font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
   }
 
   &__text {
     // --- 継承 ---
-    @extend %text-sm;
+    @extend %text-desc;
 
     // --- タイポグラフィ ---
     line-height: 1.5;
@@ -269,7 +263,7 @@ const categoryColorMap: Record<string, string> = {
 
 .c-empty-state {
   // --- 継承 ---
-  @extend %text-base;
+  @extend %text-body;
 
   // --- ボックスモデル ---
   padding: var(--pad-container);

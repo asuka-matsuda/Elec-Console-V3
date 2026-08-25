@@ -101,7 +101,7 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
 
   &__header {
     // --- 継承 ---
-    @extend %text-base;
+    @extend %text-title-sm;
 
     // --- レイアウト・配置 ---
     display: flex;
@@ -109,7 +109,6 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
     align-items: flex-start;
 
     // --- タイポグラフィ ---
-    font-weight: var(--font-weight-bold);
     color: var(--card-accent, var(--color-text-main));
     word-break: keep-all;
     line-break: strict;
@@ -118,10 +117,7 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
 
   &__desc {
     // --- 継承 ---
-    @extend %text-sm;
-
-    // --- タイポグラフィ ---
-    color: var(--color-text-muted);
+    @extend %text-desc;
   }
 }
 </style>

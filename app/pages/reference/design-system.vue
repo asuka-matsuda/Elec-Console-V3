@@ -118,7 +118,7 @@ const isChecked = ref(false);
   // --- 子要素 ---
   &__title {
     // --- 継承 ---
-    @extend %text-lg;
+    @extend %text-title-md;
 
     // --- ボックスモデル ---
     padding-bottom: var(--pad-component);
@@ -139,7 +139,7 @@ const isChecked = ref(false);
 
 .p-ds-card-title {
   // --- 継承 ---
-  @extend %text-base;
+  @extend %text-body;
 
   // --- ボックスモデル ---
   margin-bottom: var(--pad-container);

@@ -68,7 +68,7 @@ const toggleCat = (value: string) => {
   // --- 子要素 ---
   &__header {
     // --- 継承 ---
-    @extend %text-base;
+    @extend %text-title-sm;
 
     // --- レイアウト・配置 ---
     @include flex-start(var(--gap-element));
@@ -77,7 +77,6 @@ const toggleCat = (value: string) => {
     padding-bottom: var(--gap-element);
 
     // --- タイポグラフィ ---
-    font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
   }
 

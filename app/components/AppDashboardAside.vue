@@ -99,7 +99,7 @@ const history = computed(() => dashboardData.value?.history || []);
 
   &__loading {
     // --- 継承 ---
-    @extend %text-sm;
+    @extend %text-title-sm;
 
     // --- ボックスモデル ---
     padding: var(--pad-container);
@@ -130,16 +130,12 @@ const history = computed(() => dashboardData.value?.history || []);
 
   &__title {
     // --- タイポグラフィ ---
-    font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
 
   &__meta {
     // --- 継承 ---
-    @extend %text-xs;
-
-    // --- タイポグラフィ ---
-    color: var(--color-text-muted);
+    @extend %text-meta;
   }
 }
 </style>

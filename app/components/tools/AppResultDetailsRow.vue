@@ -19,7 +19,7 @@ defineProps<{
 <style scoped lang="scss">
 .p-result-details__row {
   // --- 継承 ---
-  @extend %text-sm;
+  @extend %text-desc;
 
   // --- レイアウト・配置 ---
   display: flex;
@@ -27,7 +27,7 @@ defineProps<{
 
   // --- タイポグラフィ ---
   color: var(--color-text-secondary);
-  
+
   // --- 子要素 ---
   /* stylelint-disable-next-line selector-pseudo-class-no-unknown */
   :slotted(strong) {

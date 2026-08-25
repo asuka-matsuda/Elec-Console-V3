@@ -119,7 +119,7 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
 
 .c-db-empty {
   // --- 継承 ---
-  @extend %text-base;
+  @extend %text-body;
 
   // --- ボックスモデル ---
   padding: var(--pad-container);

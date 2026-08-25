@@ -118,10 +118,7 @@ const themeOptions = [
 
   &__desc {
     // --- 継承 ---
-    @extend %text-sm;
-
-    // --- タイポグラフィ ---
-    color: var(--color-text-muted);
+    @extend %text-desc;
   }
 }
 </style>

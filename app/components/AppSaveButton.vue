@@ -19,7 +19,7 @@ const state = ref<"idle" | "saving" | "success">("idle");
 
 const handleClick = async () => {
   if (props.disabled || state.value !== "idle") return;
-  
+
   state.value = "saving";
   try {
     await props.saveFunction();
@@ -50,13 +50,13 @@ const handleClick = async () => {
       <AppIcon name="save" size="sm" />
       {{ label || '履歴に保存' }}
     </template>
-    
+
     <!-- 保存中 (ローディング) -->
     <template v-else-if="state === 'saving'">
       <AppIcon name="loader" size="sm" class="u-spin" />
       保存中...
     </template>
-    
+
     <!-- 成功時 (チェックマーク) -->
     <template v-else-if="state === 'success'">
       <AppIcon name="check" size="sm" class="c-save-button__check" />

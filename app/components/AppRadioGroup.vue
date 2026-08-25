@@ -130,7 +130,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
 
   &__text {
     // --- 継承 ---
-    @extend %text-sm;
+    @extend %text-title-sm;
 
     // --- その他 ---
     user-select: none;
@@ -140,7 +140,6 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
     border: var(--border-width-base) solid transparent;
 
     // --- タイポグラフィ ---
-    font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
 
     // --- 視覚効果 ---

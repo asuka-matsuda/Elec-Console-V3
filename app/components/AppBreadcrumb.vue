@@ -118,10 +118,7 @@ const processedItems = computed(() => {
   a,
   span:not(.current) {
     // --- 継承 ---
-    @extend %text-xs;
-
-    // --- タイポグラフィ ---
-    color: var(--color-text-muted);
+    @extend %text-meta;
 
     // --- 視覚効果 ---
     transition: var(--transition-base);

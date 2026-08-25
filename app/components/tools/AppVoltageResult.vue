@@ -164,15 +164,15 @@ const dropStatusClass = computed(() => {
 
   &__drop-percent {
   // --- 継承 ---
-  @extend %text-xl; }
+  @extend %text-title-lg; }
 
   &__drop-unit {
   // --- 継承 ---
-  @extend %text-md; }
+  @extend %text-title-sm; }
 
   &__drop-cable {
   // --- 継承 ---
-  @extend %text-xl; }
+  @extend %text-title-lg; }
 
   // --- モディファイア ---
   &.is-sm {
@@ -182,28 +182,27 @@ const dropStatusClass = computed(() => {
     // --- ボックスモデル ---
     padding: 0;
 
-    
     // --- 子要素 ---
     .c-voltage-result__main {
       // --- ボックスモデル ---
       padding: var(--pad-element) var(--pad-component);
     }
-    
+
     .c-voltage-result__main-value .value-text {
       // --- タイポグラフィ ---
       font-size: 1.5rem;
     }
-    
+
     .c-voltage-result__drop-cable {
       // --- タイポグラフィ ---
       font-size: 1.25rem;
     }
-    
+
     .c-voltage-result__drop-percent {
       // --- タイポグラフィ ---
       font-size: 1rem;
     }
-    
+
     .metric-card {
       // --- ボックスモデル ---
       padding: var(--pad-element);
@@ -261,7 +260,7 @@ const dropStatusClass = computed(() => {
 
   &__main-label {
     // --- 継承 ---
-    @extend %text-xs;
+    @extend %text-meta;
 
     // --- タイポグラフィ ---
     color: var(--color-text-secondary);
@@ -286,10 +285,8 @@ const dropStatusClass = computed(() => {
 
     .value-unit {
       // --- 継承 ---
-      @extend %text-md;
+      @extend %text-title-md;
 
-      // --- タイポグラフィ ---
-      font-weight: var(--font-weight-bold);
       color: var(--color-text-secondary);
 
       // --- 視覚効果 ---
@@ -331,15 +328,12 @@ const dropStatusClass = computed(() => {
 
   .metric-label {
     // --- 継承 ---
-    @extend %text-xs;
-
-    // --- タイポグラフィ ---
-    color: var(--color-text-muted);
+    @extend %text-meta;
   }
 
   .metric-value {
     // --- 継承 ---
-    @extend %text-md;
+    @extend %text-title-sm;
 
     // --- レイアウト・配置 ---
     display: flex;
@@ -348,7 +342,6 @@ const dropStatusClass = computed(() => {
 
     // --- タイポグラフィ ---
     font-family: var(--font-family-mono);
-    font-weight: var(--font-weight-bold);
 
     .value-sep {
       // --- ボックスモデル ---
@@ -361,7 +354,7 @@ const dropStatusClass = computed(() => {
 
     .value-unit {
       // --- 継承 ---
-      @extend %text-xs;
+      @extend %text-meta;
 
       // --- タイポグラフィ ---
       color: var(--color-text-secondary);

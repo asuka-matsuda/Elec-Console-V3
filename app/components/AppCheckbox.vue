@@ -53,7 +53,7 @@ const inputId = useId();
   --checkbox-color: var(--color-category-main);
 
   // --- 継承 ---
-  @extend %text-sm;
+  @extend %text-desc;
 
   // --- その他 ---
   cursor: pointer;

@@ -127,6 +127,55 @@
 }
 
 // --- タイポグラフィ（セマンティック） ---
+%text-title-xl {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+%text-title-lg {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+%text-title-md {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-normal);
+}
+
+%text-title-sm {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-wide);
+}
+
+%text-body {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--color-text-main);
+  letter-spacing: var(--tracking-wide);
+}
+
+%text-desc {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  color: var(--color-text-muted);
+  letter-spacing: var(--tracking-normal);
+}
+
+%text-meta {
+  font-size: var(--font-size-2xs);
+  line-height: var(--line-height-base);
+  color: var(--color-text-muted);
+  letter-spacing: var(--tracking-wide);
+}
+
 %text-label {
   font-size: var(--font-size-2xs);
   font-weight: var(--font-weight-bold);
@@ -138,19 +187,6 @@
 %text-caption {
   font-size: var(--font-size-sm);
   line-height: var(--line-height-base);
-  letter-spacing: var(--tracking-normal);
-}
-
-%text-body {
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-base);
-  letter-spacing: var(--tracking-wide);
-}
-
-%text-heading {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
   letter-spacing: var(--tracking-normal);
 }
 

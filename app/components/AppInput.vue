@@ -64,7 +64,7 @@ const inputId = useId();
   --form-control-py: var(--pad-component);
 
   // --- 継承 ---
-  @extend %text-sm;
+  @extend %text-desc;
 
   // --- ボックスモデル ---
   width: 100%;
@@ -89,7 +89,7 @@ const inputId = useId();
     --form-control-py: var(--pad-element);
 
     // --- 継承 ---
-    @extend %text-xs;
+    @extend %text-meta;
 
     // --- ボックスモデル ---
     height: var(--size-control-sm);

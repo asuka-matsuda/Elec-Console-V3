@@ -59,7 +59,7 @@ const fill48 = computed(() =>
 
 <template>
   <div class="c-conduit-result" :class="[size === 'sm' ? 'is-sm' : '']">
-    
+
     <!-- Left Column: 32% -->
     <div class="c-conduit-result__col">
       <div class="c-conduit-result__main">
@@ -114,11 +114,11 @@ const fill48 = computed(() =>
 
   &__percent {
   // --- 継承 ---
-  @extend %text-xl; }
+  @extend %text-title-lg; }
 
   &__percent-unit {
   // --- 継承 ---
-  @extend %text-md; }
+  @extend %text-title-sm; }
 
   // コンテナ幅が xs 以上の場合は横並び2カラム
   @include cq("xs") {
@@ -165,18 +165,16 @@ const fill48 = computed(() =>
     // --- ボックスモデル ---
     padding: 0;
 
-    
     // --- 子要素 ---
     .c-conduit-result__main {
       // --- ボックスモデル ---
       padding: var(--pad-element) var(--pad-component);
     }
-    
+
     .c-conduit-result__main-value .value-text {
       // --- タイポグラフィ ---
       font-size: 1.5rem;
 
-      
       // --- 子要素 ---
       &.c-conduit-result__percent {
         // --- タイポグラフィ ---
@@ -207,7 +205,7 @@ const fill48 = computed(() =>
 
   &__main-label {
     // --- 継承 ---
-    @extend %text-xs;
+    @extend %text-meta;
 
     // --- タイポグラフィ ---
     color: var(--color-text-secondary);
@@ -226,14 +224,12 @@ const fill48 = computed(() =>
     .value-text {
       // --- タイポグラフィ ---
       font-size: 2rem;
-      font-weight: var(--font-weight-bold);
       line-height: 1;
 
-      
       // --- 子要素 ---
       &.c-conduit-result__percent {
         // --- 継承 ---
-        @extend %text-md;
+        @extend %text-title-sm;
 
         // --- タイポグラフィ ---
         font-weight: normal;
