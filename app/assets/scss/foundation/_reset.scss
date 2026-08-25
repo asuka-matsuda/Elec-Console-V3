@@ -13,29 +13,9 @@ html {
   line-height: 1.15;
   text-size-adjust: 100%;
 }
-
-// --- セクション ---
-body {
-  margin: 0;
-}
-
 main {
   display: block;
 }
-
-// --- 垂直リズム ---
-p,
-table,
-blockquote,
-address,
-pre,
-iframe,
-form,
-figure,
-dl {
-  margin: 0;
-}
-
 // --- 見出し ---
 h1,
 h2,
@@ -43,7 +23,6 @@ h3,
 h4,
 h5,
 h6 {
-  margin: 0;
   font-size: inherit;
   font-weight: inherit;
 }
@@ -51,8 +30,6 @@ h6 {
 // --- リスト（列挙） ---
 ul,
 ol {
-  margin: 0;
-  padding: 0;
   list-style: none;
 }
 
@@ -72,7 +49,6 @@ hr {
 
   box-sizing: content-box;
   height: 0;
-  margin: 0;
   border-top-width: 1px;
 
   color: inherit;
@@ -144,8 +120,6 @@ input,
 optgroup,
 select,
 textarea {
-  margin: 0;
-  padding: 0;
   border-radius: 0;
 
   font: inherit;
@@ -182,21 +156,9 @@ button:disabled,
 select:disabled {
   opacity: inherit;
 }
-
-option {
-  padding: 0;
-}
-
 fieldset {
   min-width: 0;
-  margin: 0;
-  padding: 0;
 }
-
-legend {
-  padding: 0;
-}
-
 progress {
   vertical-align: baseline;
 }
