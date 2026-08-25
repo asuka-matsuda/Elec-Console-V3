@@ -172,10 +172,7 @@ const handleDelete = () => {
     @extend %text-desc;
 
     // --- レイアウト・配置 ---
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: var(--gap-element) var(--gap-section);
-
+    @include grid(auto 1fr, var(--gap-element) var(--gap-section));
     // --- 子要素 ---
     dt {
       // --- タイポグラフィ ---

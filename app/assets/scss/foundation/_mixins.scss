@@ -59,6 +59,14 @@
   gap: $gap;
 }
 
+@mixin grid($cols: 1fr, $gap: var(--gap-component)) {
+  @include grid($cols, $gap);
+}
+
+@mixin grid-auto($min-width, $gap: var(--gap-component)) {
+  @include grid-auto(#{$min-width}, $gap);
+}
+
 // --- メディアクエリ ---
 @mixin mq($breakpoint, $direction: "down") {
   @if map.has-key($breakpoints, $breakpoint) {

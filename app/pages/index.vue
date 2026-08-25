@@ -85,9 +85,7 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
 
   &__grid {
     // --- レイアウト・配置 ---
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--gap-component);
+    @include grid-auto(280px);
   }
 }
 

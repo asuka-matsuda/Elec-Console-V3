@@ -61,9 +61,6 @@ function toggleKana(kana: string) {
 <style scoped lang="scss">
 .c-kana-filter {
   // --- レイアウト・配置 ---
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-  gap: var(--gap-element);
-
+  @include grid-auto(80px, var(--gap-element));
 }
 </style>

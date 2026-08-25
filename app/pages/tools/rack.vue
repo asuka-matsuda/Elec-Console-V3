@@ -250,10 +250,7 @@ const {
 
   &__grid {
     // --- レイアウト・配置 ---
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--gap-component);
-
+    @include grid;
     @include cq("xs") {
       // --- レイアウト・配置 ---
       grid-template-columns: repeat(2, 1fr);

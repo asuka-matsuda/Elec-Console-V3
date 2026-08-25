@@ -131,9 +131,7 @@ const isChecked = ref(false);
 
   &__grid {
     // --- レイアウト・配置 ---
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: var(--gap-component);
+    @include grid-auto(350px);
   }
 }
 

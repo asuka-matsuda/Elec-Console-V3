@@ -163,9 +163,7 @@ const handleSaveToHistory = async () => {
 /* 2カラムグリッドを再現 */
 .l-grid {
   // --- レイアウト・配置 ---
-  display: grid;
-  gap: var(--gap-component);
-
+  @include grid;
   // --- モディファイア ---
   &--2col {
     // --- レイアウト・配置 ---

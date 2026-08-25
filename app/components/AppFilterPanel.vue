@@ -90,10 +90,7 @@ const toggleCat = (value: string) => {
 
   &__filters {
     // --- レイアウト・配置 ---
-    display: grid;
-    grid-template-columns: 280px 1fr; /* PC時は横並び（キーワード入力幅を固定、残りをカテゴリに） */
-    gap: var(--gap-section);
-
+    @include grid(280px 1fr, var(--gap-section));
     /* スマホ時は縦積み */
     @include mq("md") {
       // --- レイアウト・配置 ---
@@ -103,9 +100,7 @@ const toggleCat = (value: string) => {
 
   &__grid {
     // --- レイアウト・配置 ---
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
-    gap: var(--gap-component);
+    @include grid-auto(112px);
   }
 }
 </style>
