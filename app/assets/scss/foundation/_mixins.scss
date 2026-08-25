@@ -60,11 +60,15 @@
 }
 
 @mixin grid($cols: 1fr, $gap: var(--gap-component)) {
-  @include grid($cols, $gap);
+  display: grid;
+  grid-template-columns: $cols;
+  gap: $gap;
 }
 
 @mixin grid-auto($min-width, $gap: var(--gap-component)) {
-  @include grid-auto(#{$min-width}, $gap);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(#{$min-width}, 1fr));
+  gap: $gap;
 }
 
 // --- メディアクエリ ---

@@ -12,7 +12,8 @@ export type BadgeVariant =
   | "primary"
   | "success"
   | "warning"
-  | "danger";
+  | "danger"
+  | "tool";
 
 withDefaults(
   defineProps<{
@@ -39,6 +40,7 @@ withDefaults(
     "success": "--color-status-success",
     "warning": "--color-status-warning",
     "danger": "--color-status-danger",
+    "tool": "--color-category-main",
   );
 
   // --- CSSカスタムプロパティ ---
