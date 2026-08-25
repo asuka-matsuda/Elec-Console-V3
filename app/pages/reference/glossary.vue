@@ -143,7 +143,7 @@ const categoryColorMap: Record<string, string> = {
   container-name: filter-layout;
   container-type: inline-size;
 
-  @include flex-column(0);
+  @include flex-column;
 
   flex: 1;
 
@@ -155,10 +155,9 @@ const categoryColorMap: Record<string, string> = {
   // --- 子要素 ---
   &__grid {
     // --- レイアウト・配置 ---
-    @include flex-column(0);
+    @include flex-column(var(--gap-section));
 
     flex: 1;
-    gap: var(--gap-section);
 
     // --- ボックスモデル ---
     min-height: 0;
@@ -171,7 +170,7 @@ const categoryColorMap: Record<string, string> = {
 
   &__main {
     // --- レイアウト・配置 ---
-    @include flex-column(0);
+    @include flex-column;
 
     flex: 1;
 

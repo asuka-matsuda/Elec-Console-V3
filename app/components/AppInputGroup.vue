@@ -82,7 +82,7 @@
       box-shadow: var(--shadow-sink);
 
       // --- レイアウト・配置 ---
-      @include inline-flex-center(0);
+      @include inline-flex-center;
     }
   }
 }

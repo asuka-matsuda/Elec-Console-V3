@@ -90,7 +90,7 @@ const closeSidebar = () => {
   position: fixed;
   z-index: var(--z-index-nav);
 
-  @include flex-column(0);
+  @include flex-column;
 
   // --- ボックスモデル ---
   width: var(--sidebar-width);

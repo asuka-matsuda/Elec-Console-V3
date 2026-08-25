@@ -57,7 +57,7 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
   container-name: filter-layout;
   container-type: inline-size;
 
-  @include flex-column(0);
+  @include flex-column;
 
   flex: 1;
 
@@ -84,7 +84,7 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
 
   &__main {
     // --- レイアウト・配置 ---
-    @include flex-column(0);
+    @include flex-column;
 
     flex: 1;
 
@@ -96,7 +96,7 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
 
 .c-db {
   // --- レイアウト・配置 ---
-  @include flex-column(0);
+  @include flex-column;
 
   flex: 1;
 
@@ -109,7 +109,7 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
   overflow: hidden;
 
   // --- レイアウト・配置 ---
-  @include flex-column(0);
+  @include flex-column;
 
   flex: 1;
 

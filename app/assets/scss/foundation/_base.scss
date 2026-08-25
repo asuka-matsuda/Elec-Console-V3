@@ -23,7 +23,7 @@ body {
 
   overflow: hidden;
 
-  @include flex-column(0);
+  @include flex-column;
 
   height: 100dvh;
   min-height: 100dvh;
@@ -84,7 +84,7 @@ input::-webkit-inner-spin-button {
 }
 
 #__nuxt {
-  @include flex-column(0);
+  @include flex-column;
 
   flex: 1;
   min-height: 0;

@@ -48,7 +48,7 @@ withDefaults(
   @extend %text-label;
 
   // --- レイアウト・配置 ---
-  @include inline-flex-center(0);
+  @include inline-flex-center;
 
   // --- その他 ---
   user-select: none;
