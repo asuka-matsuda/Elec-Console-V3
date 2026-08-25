@@ -40,12 +40,26 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1 { @extend %text-title-xl; }
-h2 { @extend %text-title-lg; }
-h3 { @extend %text-title-md; }
-h4, h5, h6 { @extend %text-title-sm; }
-p { @extend %text-body; }
-small { @extend %text-desc; }
+h1 {
+  @extend %text-title-xl;
+}
+h2 {
+  @extend %text-title-lg;
+}
+h3 {
+  @extend %text-title-md;
+}
+h4,
+h5,
+h6 {
+  @extend %text-title-sm;
+}
+p {
+  @extend %text-body;
+}
+small {
+  @extend %text-desc;
+}
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -75,4 +89,3 @@ input::-webkit-inner-spin-button {
   flex: 1;
   min-height: 0;
 }
-

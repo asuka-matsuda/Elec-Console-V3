@@ -69,7 +69,7 @@ const componentTag = computed(() => {
   // --- タイポグラフィ ---
   font-weight: var(--font-weight-semibold);
 
-  @include border-dim(50%, var(--btn-color));
+  @include border-dim(var(--btn-color));
 
   // --- 視覚効果 ---
   @include state-base(var(--shadow-elevation-sm), var(--transition-fast));

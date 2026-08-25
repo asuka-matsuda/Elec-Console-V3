@@ -11,4 +11,3 @@
 @function theme-darken($color, $percentage: 10%) {
   @return color-mix(in srgb, #{$color}, black #{$percentage});
 }
-

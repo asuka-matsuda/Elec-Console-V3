@@ -73,7 +73,7 @@ const inputId = useId();
     // --- 視覚効果 ---
     box-shadow: var(--shadow-sink);
 
-    @include border-dim(50%);
+    @include border-dim;
   }
 
   &__value {

@@ -199,11 +199,14 @@
   text-shadow: 0 0 $blur theme-color($color, $opacity);
 }
 
-@mixin border-base($color: var(--color-border), $width: var(--border-width-base)) {
+@mixin border-base(
+  $color: var(--color-border),
+  $width: var(--border-width-base)
+) {
   border: $width solid $color;
 }
 
-@mixin border-dim($opacity: 50%, $color: var(--color-border)) {
+@mixin border-dim($color: var(--color-border), $opacity: 50%) {
   border: var(--border-width-base) solid theme-color($color, $opacity);
 }
 
@@ -288,4 +291,3 @@
     animation: ui-cursor-blink 1s step-end infinite;
   }
 }
-

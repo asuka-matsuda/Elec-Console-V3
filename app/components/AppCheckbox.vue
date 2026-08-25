@@ -117,7 +117,7 @@ const inputId = useId();
 
     // --- レイアウト・配置 ---
     @include flex-center;
-    @include border-dim(50%);
+    @include border-dim;
 
     // --- 視覚効果 ---
     @include state-base(var(--shadow-sink), var(--transition-glow));
