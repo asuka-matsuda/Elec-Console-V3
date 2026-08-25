@@ -4,7 +4,7 @@
  * 電圧降下やケーブルサイズの計算結果を視覚的に表示するコンポーネントです。
  */
 import { computed } from "vue";
-import { formatVal } from "~/utils/mathUtils";
+import { formatVal } from "~/utils/math";
 
 const props = defineProps<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

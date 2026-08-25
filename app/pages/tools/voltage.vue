@@ -4,14 +4,14 @@
  * 電圧降下・ケーブルサイズ選定ツールのコンポーネントです。電圧降下の計算や、条件を満たすケーブルサイズの選定を行います。
  */
 import { computed } from "vue";
-import { modeOptions } from "~/utils/constants/toolOptions";
-import { useVoltageCalculator } from "~/composables/calc/useVoltageCalculator";
-import { getVoltageFormFields } from "~/utils/config/voltageFormConfig";
-import { useCalcHistory } from "~/composables/calc/useCalcHistory";
-import { mapVoltageToHistory } from "~/utils/calc/voltage/historyMapper";
+import { modeOptions } from "~/constants/toolOptions";
+import { useVoltageCalculator } from "~/composables/tools/useVoltageCalculator";
+import { getVoltageFormFields } from "~/constants/config/voltageFormConfig";
+import { useCalcHistory } from "~/composables/tools/useCalcHistory";
+import { mapVoltageToHistory } from "~/utils/tools/voltage/historyMapper";
 import { useForm, Field } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
-import { voltageSchema } from '~/utils/calc/voltage/voltageSchema';
+import { voltageSchema } from '~/utils/tools/voltage/voltageSchema';
 
 useHead({
   title: "電圧降下・ケーブルサイズ選定",

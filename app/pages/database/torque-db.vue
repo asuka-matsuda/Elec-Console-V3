@@ -4,8 +4,8 @@
  * 締付トルクのデータベース情報を一覧表示・検索するためのページコンポーネントです。
  */
 import { computed } from "vue";
-import { torqueData } from "~/utils/data/torqueData";
-import type { TableColumn } from "~/components/AppTable.vue";
+import { torqueData } from "~/constants/data/torqueData";
+import type { TableColumn } from "~/components/ui/AppTable.vue";
 
 /** Flatten the nested torqueData structure */
 const flattenedData = computed(() => {

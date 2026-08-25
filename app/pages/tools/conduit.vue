@@ -4,8 +4,8 @@
  * 配管サイズ自動選定ツールのコンポーネントです。収容するケーブルの種類と数から、適切な配管サイズを計算します。
  */
 import { computed } from 'vue';
-import { useConduitCalculator } from '~/composables/calc/useConduitCalculator';
-import { conduitData } from '~/utils/data/conduitData';
+import { useConduitCalculator } from '~/composables/tools/useConduitCalculator';
+import { conduitData } from '~/constants/data/conduitData';
 
 useHead({
   title: '配管サイズ自動選定',

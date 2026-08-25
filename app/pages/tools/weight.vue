@@ -4,9 +4,9 @@
  * ケーブル重量・ドラム選定ツールのコンポーネントです。ケーブルの種類と長さから重量を計算し、最適なドラムを選定します。
  */
 import { computed } from 'vue';
-import { useWeightCalculator } from '~/composables/calc/useWeightCalculator';
+import { useWeightCalculator } from '~/composables/tools/useWeightCalculator';
 
-import { getCableCategories, getAvailableSizes } from '~/utils/cableDataHelper';
+import { getCableCategories, getAvailableSizes } from '~/utils/cable';
 
 useHead({
   title: 'ケーブル重量・ドラム選定',

@@ -1,11 +1,12 @@
 ﻿<script setup lang="ts">
-import { menuData } from "~/utils/data/menuData";
+import { menuData } from "~/constants/data/menuData";
 
 // Mobile sidebar toggle state (Global)
 const isSidebarOpen = useState("sidebar-open", () => false);
 
 // Dynamic breadcrumbs based on current route
 const breadcrumbs = useBreadcrumbs();
+const { currentUser, logout } = useAuth();
 </script>
 
 <template>
@@ -40,7 +41,8 @@ const breadcrumbs = useBreadcrumbs();
                 "
               />
             </div>
-            <span class="l-header-user__name">Admin</span>
+            <span class="l-header-user__name">{{ currentUser?.name || 'ゲスト' }}</span>
+            <AppButton variant="secondary" size="sm" @click="logout" style="margin-left: 1rem;">ログアウト</AppButton>
           </div>
         </template>
       </AppHeader>

@@ -4,8 +4,8 @@
  * 配管サイズ計算の結果を視覚的に表示する2カラムコンポーネントです。
  */
 import { computed } from "vue";
-import { formatVal } from "~/utils/mathUtils";
-import { CONDUIT_UI_LABELS } from "~/utils/constants/conduitConstants";
+import { formatVal } from "~/utils/math";
+import { CONDUIT_UI_LABELS } from "~/constants/conduitConstants";
 
 const props = defineProps<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

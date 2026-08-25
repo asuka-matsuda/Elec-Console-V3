@@ -1,6 +1,6 @@
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-import { menuData } from "~/utils/data/menuData";
+import { menuData } from "~/constants/data/menuData";
 
 export function useBreadcrumbs() {
   const route = useRoute();

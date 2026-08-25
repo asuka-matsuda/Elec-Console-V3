@@ -4,9 +4,9 @@
  * ケーブルの種類、サイズ、本数を入力するためのカードコンポーネントです。
  */
 import { computed } from 'vue';
-import { calculateCableArea } from '~/utils/calc/conduit/conduitCalcLogic';
-import { getCableCategories, getAvailableSizes } from '~/utils/cableDataHelper';
-import { cableData } from '~/utils/data/cableData';
+import { calculateCableArea } from '~/utils/tools/conduit/conduitCalcLogic';
+import { getCableCategories, getAvailableSizes } from '~/utils/cable';
+import { cableData } from '~/constants/data/cableData';
 
 /**
  * CableInput is used as a generic type here, but make sure 

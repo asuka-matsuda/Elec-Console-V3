@@ -1,6 +1,6 @@
-import type { cableData } from '~/utils/data/cableData';
-import type { conduitData } from '~/utils/data/conduitData';
-import type { drumData } from '~/utils/data/drumData';
+import type { cableData } from '~/constants/data/cableData';
+import type { conduitData } from '~/constants/data/conduitData';
+import type { drumData } from '~/constants/data/drumData';
 
 export type CableData = (typeof cableData)[number] & {
   name?: string;
