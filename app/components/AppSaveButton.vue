@@ -77,9 +77,7 @@ const handleClick = async () => {
     // --- CSSカスタムプロパティ ---
     --btn-color: var(--color-status-success);
 
-
     // --- その他 ---
-
     pointer-events: none;
 
     // --- ボックスモデル ---

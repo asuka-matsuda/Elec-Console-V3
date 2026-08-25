@@ -47,9 +47,7 @@ defineProps<{
     display: none;
   }
 
-
   // --- 子要素 ---
-
   &__layout {
     // --- レイアウト・配置 ---
     @include flex-column(var(--gap-component));

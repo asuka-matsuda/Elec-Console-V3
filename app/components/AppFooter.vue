@@ -25,20 +25,14 @@ const currentYear = new Date().getFullYear();
 
   align-items: center;
 
-
   // --- ボックスモデル ---
-
   margin-top: auto;
   padding: var(--pad-container);
 
-
   // --- タイポグラフィ ---
-
   text-align: center;
 
-
   // --- 子要素 ---
-
   &__divider {
     // --- ボックスモデル ---
     width: 100%;
@@ -47,28 +41,21 @@ const currentYear = new Date().getFullYear();
 
   &__copyright {
     // --- 継承 ---
-
     @extend %text-xs;
 
-
     // --- タイポグラフィ ---
-
     font-family: var(--font-mono);
     color: var(--color-text-muted);
 
     // --- 視覚効果 ---
     transition: var(--transition-base);
 
-
     // --- 疑似クラス ---
-
     &:hover {
       // --- タイポグラフィ ---
       color: var(--color-text-secondary);
 
-
       // --- 視覚効果 ---
-
       @include cyber-text-glow(
         30%,
         var(--blur-sm),

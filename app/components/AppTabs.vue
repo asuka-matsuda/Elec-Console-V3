@@ -66,9 +66,7 @@ const selectTab = (option: TabOption) => {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 
-
     // --- 子要素 ---
-
     .c-tabs__item {
       // --- ボックスモデル ---
       width: 100%;
@@ -83,9 +81,7 @@ const selectTab = (option: TabOption) => {
 
     align-items: stretch;
 
-
     // --- 子要素 ---
-
     .c-tabs__item {
       // --- レイアウト・配置 ---
       justify-content: flex-start;
@@ -100,32 +96,22 @@ const selectTab = (option: TabOption) => {
   // --- 継承 ---
   @extend %text-sm;
 
-
   // --- その他 ---
-
   cursor: pointer;
   user-select: none;
 
-
   // --- レイアウト・配置 ---
-
   position: relative;
 
-
   // --- ボックスモデル ---
-
   padding: var(--pad-container);
   border: var(--border-width-base) solid var(--color-border);
 
-
   // --- タイポグラフィ ---
-
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
 
-
   // --- 視覚効果 ---
-
   @include state-base(inset 0 0 var(--blur-sm) var(--color-border), var(--transition-fast));
 
   // --- 疑似クラス ---
@@ -149,9 +135,7 @@ const selectTab = (option: TabOption) => {
 
     @include state-active(var(--color-category-main));
 
-
     // --- 子要素 ---
-
     .c-tabs__item-text {
       // --- 視覚効果 ---
       @include cyber-text-glow;
@@ -163,9 +147,7 @@ const selectTab = (option: TabOption) => {
     @extend %disabled;
   }
 
-
   // --- レイアウト・配置 ---
-
   @include flex-center(var(--gap-component));
 }
 

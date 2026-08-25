@@ -20,14 +20,10 @@ const emit = defineEmits<{
   // --- レイアウト・配置 ---
   @include flex-start(var(--gap-section));
 
-
   // --- 視覚効果 ---
-
   transition: var(--transition-base);
 
-
   // --- 疑似クラス ---
-
   &:hover {
     // --- 子要素 ---
     .c-logo__icon {
@@ -38,9 +34,7 @@ const emit = defineEmits<{
     }
   }
 
-
   // --- 子要素 ---
-
   &__icon {
     // --- ボックスモデル ---
     width: var(--icon-size-md);
@@ -57,9 +51,7 @@ const emit = defineEmits<{
     // --- 継承 ---
     @extend %text-lg;
 
-
     // --- タイポグラフィ ---
-
     font-weight: var(--font-weight-bold);
   }
 }

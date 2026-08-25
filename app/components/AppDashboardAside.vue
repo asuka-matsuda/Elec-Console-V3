@@ -101,9 +101,7 @@ const history = computed(() => dashboardData.value?.history || []);
     // --- 継承 ---
     @extend %text-sm;
 
-
     // --- ボックスモデル ---
-
     padding: var(--pad-container);
     border-radius: 0;
 
@@ -111,9 +109,7 @@ const history = computed(() => dashboardData.value?.history || []);
     color: var(--color-text-muted);
     text-align: center;
 
-
     // --- 視覚効果 ---
-
     @include surface(5%);
   }
 }
@@ -123,14 +119,10 @@ const history = computed(() => dashboardData.value?.history || []);
   // --- レイアウト・配置 ---
   @include flex-column(var(--gap-element));
 
-
   // --- ボックスモデル ---
-
   padding: var(--pad-container);
 
-
   // --- 子要素 ---
-
   &__header {
     // --- レイアウト・配置 ---
     @include flex-start(var(--gap-element));
@@ -146,9 +138,7 @@ const history = computed(() => dashboardData.value?.history || []);
     // --- 継承 ---
     @extend %text-xs;
 
-
     // --- タイポグラフィ ---
-
     color: var(--color-text-muted);
   }
 }

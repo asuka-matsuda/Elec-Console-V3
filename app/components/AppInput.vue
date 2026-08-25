@@ -66,18 +66,14 @@ const inputId = useId();
   // --- 継承 ---
   @extend %text-sm;
 
-
   // --- ボックスモデル ---
-
   width: 100%;
   padding: var(--form-control-py) var(--form-control-px);
 
   // --- タイポグラフィ ---
   font-family: var(--font-mono);
 
-
   // --- 疑似要素 ---
-
   &::placeholder {
     // --- タイポグラフィ ---
     color: var(--color-text-muted);
@@ -92,14 +88,10 @@ const inputId = useId();
     --form-control-px: var(--pad-component);
     --form-control-py: var(--pad-element);
 
-
     // --- 継承 ---
-
     @extend %text-xs;
 
-
     // --- ボックスモデル ---
-
     height: var(--size-control-sm);
   }
 

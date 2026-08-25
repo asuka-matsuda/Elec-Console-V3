@@ -61,9 +61,7 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
   gap: var(--gap-section);
   align-items: flex-start;
 
-
   // --- ボックスモデル ---
-
   padding-bottom: var(--gap-section);
 
   @include mq("md") {
@@ -72,9 +70,7 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
     align-items: stretch;
   }
 
-
   // --- 子要素 ---
-
   &__main {
     // --- レイアウト・配置 ---
     @include flex-column(var(--gap-section));
@@ -105,19 +101,14 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
 
   &__header {
     // --- 継承 ---
-
     @extend %text-base;
 
-
     // --- レイアウト・配置 ---
-
     display: flex;
     gap: var(--gap-element);
     align-items: flex-start;
 
-
     // --- タイポグラフィ ---
-
     font-weight: var(--font-weight-bold);
     color: var(--card-accent, var(--color-text-main));
     word-break: keep-all;
@@ -129,9 +120,7 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
     // --- 継承 ---
     @extend %text-sm;
 
-
     // --- タイポグラフィ ---
-
     color: var(--color-text-muted);
   }
 }

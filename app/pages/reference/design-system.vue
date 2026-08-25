@@ -93,14 +93,10 @@ const isChecked = ref(false);
   // --- レイアウト・配置 ---
   @include flex-column(var(--gap-section));
 
-
   // --- ボックスモデル ---
-
   padding-bottom: var(--gap-section);
 
-
   // --- 子要素 ---
-
   &__desc {
     // --- ボックスモデル ---
     margin-top: var(--pad-container);
@@ -119,16 +115,12 @@ const isChecked = ref(false);
   // --- レイアウト・配置 ---
   @include flex-column(var(--gap-component));
 
-
   // --- 子要素 ---
-
   &__title {
     // --- 継承 ---
     @extend %text-lg;
 
-
     // --- ボックスモデル ---
-
     padding-bottom: var(--pad-component);
     border-bottom: 1px solid var(--color-border);
 
@@ -149,9 +141,7 @@ const isChecked = ref(false);
   // --- 継承 ---
   @extend %text-base;
 
-
   // --- ボックスモデル ---
-
   margin-bottom: var(--pad-container);
 
   // --- タイポグラフィ ---

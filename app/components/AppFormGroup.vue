@@ -62,16 +62,12 @@ withDefaults(
   // --- ボックスモデル ---
   width: 100%;
 
-
   // --- 子要素 ---
-
   &__inner {
     // --- レイアウト・配置 ---
     @include flex-column(var(--gap-component));
 
-
     // --- ボックスモデル ---
-
     width: 100%;
 
     // If the .c-form-group container is wide enough (>= xs), switch to horizontal layout
@@ -80,9 +76,7 @@ withDefaults(
       flex-direction: row;
       align-items: flex-start;
 
-
       // --- 子要素 ---
-
       .c-form-group__label-wrapper {
         // --- レイアウト・配置 ---
         flex-shrink: 0;
@@ -126,14 +120,10 @@ withDefaults(
     // --- 継承 ---
     @extend %text-xs;
 
-
     // --- タイポグラフィ ---
-
     color: var(--color-status-danger);
 
-
     // --- 視覚効果 ---
-
     @include cyber-text-glow(var(--color-status-danger), 30%, var(--blur-sm));
   }
 
@@ -141,9 +131,7 @@ withDefaults(
     // --- 継承 ---
     @extend %text-xs;
 
-
     // --- タイポグラフィ ---
-
     color: var(--color-text-muted);
   }
 }
@@ -153,28 +141,20 @@ withDefaults(
   // --- レイアウト・配置 ---
   @include flex-start(var(--gap-element));
 
-
   // --- 継承 ---
-
   @extend %text-sm;
 
-
   // --- その他 ---
-
   user-select: none;
 
-
   // --- タイポグラフィ ---
-
   font-weight: var(--font-weight-bold);
 
   // Default state: slightly dimmed
   color: theme-color(var(--color-category-main), 70%);
   text-transform: uppercase;
 
-
   // --- 視覚効果 ---
-
   transition: var(--transition-base);
 
   // Cyber glowing dot
@@ -182,28 +162,21 @@ withDefaults(
   // --- 疑似要素 ---
   &::before {
     // --- CSSカスタムプロパティ ---
-
     --glow-color: theme-color(var(--color-category-main), 30%);
 
     content: "";
 
-
     // --- レイアウト・配置 ---
-
     display: inline-block;
 
-
     // --- ボックスモデル ---
-
     width: var(--size-2);
     height: var(--size-2);
     border: var(--border-width-thick) solid
       theme-color(var(--color-category-main), 70%);
     border-radius: 50%;
 
-
     // --- 視覚効果 ---
-
     box-shadow: var(--shadow-glow-sm);
 
     transition: var(--transition-base);
@@ -215,14 +188,10 @@ withDefaults(
   // --- タイポグラフィ ---
   color: var(--color-category-main);
 
-
   // --- 視覚効果 ---
-
   @include cyber-text-glow;
 
-
   // --- 疑似要素 ---
-
   &::before {
     // --- ボックスモデル ---
     border-color: var(--color-category-main);
@@ -238,21 +207,15 @@ withDefaults(
   // --- タイポグラフィ ---
   color: var(--color-status-danger);
 
-
   // --- 視覚効果 ---
-
   @include cyber-text-glow(var(--color-status-danger));
 
-
   // --- 疑似要素 ---
-
   &::before {
     // --- CSSカスタムプロパティ ---
     --glow-color: var(--color-status-danger);
 
-
     // --- ボックスモデル ---
-
     border-color: var(--color-status-danger);
 
     // --- 視覚効果 ---

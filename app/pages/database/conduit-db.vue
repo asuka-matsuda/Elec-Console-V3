@@ -40,9 +40,7 @@ const tableColumns: TableColumn[] = [
   // --- 継承 ---
   @extend %text-sm;
 
-
   // --- タイポグラフィ ---
-
   color: var(--color-text-muted);
 }
 </style>

@@ -12,7 +12,6 @@ const themeOptions = [
   { label: "ライトモード", value: "light" },
 ];
 
-
 </script>
 
 <template>
@@ -74,14 +73,10 @@ const themeOptions = [
 
   @include flex-column(var(--gap-section));
 
-
   // --- ボックスモデル ---
-
   padding-bottom: var(--gap-section);
 
-
   // --- 子要素 ---
-
   &__header {
     // --- レイアウト・配置 ---
     @include flex-column(var(--gap-element));
@@ -115,9 +110,7 @@ const themeOptions = [
     flex-wrap: wrap;
     gap: var(--gap-component);
 
-
     // --- ボックスモデル ---
-
     padding: var(--pad-container);
     border: var(--border-width-base) solid var(--color-border);
     border-radius: 0;
@@ -127,9 +120,7 @@ const themeOptions = [
     // --- 継承 ---
     @extend %text-sm;
 
-
     // --- タイポグラフィ ---
-
     color: var(--color-text-muted);
   }
 }

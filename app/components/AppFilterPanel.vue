@@ -68,17 +68,12 @@ const toggleCat = (value: string) => {
   // --- 子要素 ---
   &__header {
     // --- 継承 ---
-
     @extend %text-base;
 
-
     // --- レイアウト・配置 ---
-
     @include flex-start(var(--gap-element));
 
-
     // --- ボックスモデル ---
-
     padding-bottom: var(--gap-element);
 
     // --- タイポグラフィ ---
@@ -90,9 +85,7 @@ const toggleCat = (value: string) => {
     // --- レイアウト・配置 ---
     @include flex-column(var(--gap-component));
 
-
     // --- ボックスモデル ---
-
     margin-bottom: var(--pad-container);
   }
 

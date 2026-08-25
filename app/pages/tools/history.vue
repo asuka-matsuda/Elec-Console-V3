@@ -167,9 +167,7 @@ const confirmDelete = () => {
 
   @include flex-column(var(--gap-section));
 
-
   // --- 子要素 ---
-
   &__tabs {
     /* 親要素(p-history-page)のgapで管理されるためmargin-bottomは削除 */
   }

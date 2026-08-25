@@ -24,9 +24,7 @@ withDefaults(
   // --- 継承 ---
   @extend %text-sm;
 
-
   // --- ボックスモデル ---
-
   width: 100%;
   padding: var(--pad-section);
 

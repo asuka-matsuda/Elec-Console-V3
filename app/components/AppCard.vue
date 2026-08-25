@@ -49,14 +49,10 @@ const rootProps = computed(() => {
 
   @include flex-column(var(--gap-section));
 
-
   // --- ボックスモデル ---
-
   padding: var(--pad-container);
 
-
   // --- 視覚効果 ---
-
   @include state-base(none, var(--transition-base));
 
   @include surface(15%);
@@ -66,9 +62,7 @@ const rootProps = computed(() => {
     // --- その他 ---
     cursor: pointer;
 
-
     // --- 疑似クラス ---
-
     &:not(.is-disabled):hover {
       @include state-hover(var(--card-accent, var(--color-category-main)));
     }
@@ -78,9 +72,7 @@ const rootProps = computed(() => {
     }
   }
 
-
   // --- モディファイア ---
-
   &.is-disabled {
     // --- 継承 ---
     @extend %disabled;

@@ -80,23 +80,17 @@ withDefaults(
   // --- レイアウト・配置 ---
   flex-shrink: 0;
 
-
   // --- ボックスモデル ---
-
   width: var(--divider-size-x);
   height: var(--divider-size-y);
   min-height: var(--divider-min-h);
 
-
   // --- 視覚効果 ---
-
   box-shadow: var(--shadow-sink); // 彫り込まれた溝の影
 
   animation: var(--anim-scale) 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
-
   // --- モディファイア ---
-
   &--vertical {
     // --- CSSカスタムプロパティ ---
     --divider-size-x: var(--border-width-base);
@@ -122,22 +116,16 @@ withDefaults(
     &::before {
       content: "";
 
-
       // --- レイアウト・配置 ---
-
       position: absolute;
       top: var(--pulse-top);
       left: var(--pulse-left);
 
-
       // --- ボックスモデル ---
-
       width: var(--pulse-w);
       height: var(--pulse-h);
 
-
       // --- 視覚効果 ---
-
       background: linear-gradient(
         var(--grad-dir-pulse),
         transparent,

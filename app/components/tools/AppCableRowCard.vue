@@ -115,16 +115,12 @@ const updateCount = (val: any) => {
   // --- レイアウト・配置 ---
   @include flex-column(0);
 
-
   // --- 子要素 ---
-
   &__header {
     // --- レイアウト・配置 ---
     @include flex-between;
 
-
     // --- ボックスモデル ---
-
     margin-bottom: var(--gap-element);
   }
 
@@ -137,9 +133,7 @@ const updateCount = (val: any) => {
     // --- 継承 ---
     @extend %text-sm;
 
-
     // --- タイポグラフィ ---
-
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
@@ -148,9 +142,7 @@ const updateCount = (val: any) => {
     // --- 継承 ---
     @extend %text-xs;
 
-
     // --- タイポグラフィ ---
-
     color: var(--color-text-muted);
   }
 }

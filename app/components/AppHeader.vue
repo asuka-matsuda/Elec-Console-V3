@@ -40,9 +40,7 @@ const emit = defineEmits<{
   // --- レイアウト・配置 ---
   @include flex-between;
 
-
   // --- ボックスモデル ---
-
   height: 64px;
   padding: var(--pad-container);
 
@@ -51,9 +49,7 @@ const emit = defineEmits<{
     padding: var(--pad-section);
   }
 
-
   // --- 子要素 ---
-
   &__left {
     // --- レイアウト・配置 ---
     @include flex-start(var(--gap-component));

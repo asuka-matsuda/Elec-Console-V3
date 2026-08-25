@@ -61,9 +61,7 @@ const processedItems = computed(() => {
   // --- 視覚効果 ---
   @include surface;
 
-
   // --- レイアウト・配置 ---
-
   position: relative;
 
   // --- ボックスモデル ---
@@ -80,21 +78,15 @@ const processedItems = computed(() => {
 
     content: "SYS.LOC";
 
-
     // --- レイアウト・配置 ---
-
     position: absolute;
     top: var(--space-1);
     left: var(--space-2);
 
-
     // --- タイポグラフィ ---
-
     color: var(--color-category-main);
 
-
     // --- 視覚効果 ---
-
     @include cyber-text-glow(var(--color-category-main), 50%, var(--blur-sm));
   }
 
@@ -110,9 +102,7 @@ const processedItems = computed(() => {
     // --- レイアウト・配置 ---
     @include flex-start;
 
-
     // --- 疑似要素 ---
-
     &:not(:last-child)::after {
       // --- 継承 ---
       @extend %text-label;
@@ -124,17 +114,13 @@ const processedItems = computed(() => {
     }
   }
 
-
   // --- 疑似クラス ---
-
   a,
   span:not(.current) {
     // --- 継承 ---
     @extend %text-xs;
 
-
     // --- タイポグラフィ ---
-
     color: var(--color-text-muted);
 
     // --- 視覚効果 ---
@@ -145,9 +131,7 @@ const processedItems = computed(() => {
     // --- タイポグラフィ ---
     color: var(--color-text-main);
 
-
     // --- 視覚効果 ---
-
     @include cyber-text-glow(var(--color-text-main), 100%, var(--blur-sm));
   }
 
@@ -155,14 +139,10 @@ const processedItems = computed(() => {
     // --- レイアウト・配置 ---
     @include flex-start;
 
-
     // --- タイポグラフィ ---
-
     color: var(--color-category-main);
 
-
     // --- 視覚効果 ---
-
     @include cyber-text-glow(var(--color-category-main), 60%, var(--blur-md));
     @include blinking-cursor;
   }

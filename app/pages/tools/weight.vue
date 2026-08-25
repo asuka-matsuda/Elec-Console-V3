@@ -31,8 +31,6 @@ watch(() => inputs.value.category, () => {
   inputs.value.cableIdx = '';
 });
 
-
-
 /** 総重量の計算 */
 const totalWeight = computed(() => {
   if (!result.value || result.value?.error || !result.value?.bestDrum) return 0;
@@ -184,14 +182,11 @@ const totalWeight = computed(() => {
 
   
   // --- 子要素 ---
-  
   &__val {
     // --- 継承 ---
     @extend %text-2xl;
 
-
     // --- タイポグラフィ ---
-
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
@@ -200,9 +195,7 @@ const totalWeight = computed(() => {
     // --- 継承 ---
     @extend %text-sm;
 
-
     // --- ボックスモデル ---
-
     padding: var(--gap-element);
 
     // --- タイポグラフィ ---
@@ -212,7 +205,6 @@ const totalWeight = computed(() => {
 
 .p-weight {
   // --- 子要素 ---
-
   &__sections {
     // --- レイアウト・配置 ---
     @include flex-column(var(--gap-section));
@@ -220,12 +212,9 @@ const totalWeight = computed(() => {
 
   &__note {
     // --- 継承 ---
-
     @extend %text-xs;
 
-
     // --- ボックスモデル ---
-
     margin-top: var(--pad-container);
     padding: 0 var(--pad-container);
 

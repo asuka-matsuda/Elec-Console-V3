@@ -59,16 +59,12 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
   flex-shrink: 0;
   gap: var(--gap-element);
 
-
   // --- ボックスモデル ---
-
   width: max-content;
   padding: var(--pad-element);
   border: var(--border-width-base) solid var(--color-border);
 
-
   // --- 視覚効果 ---
-
   box-shadow: none;
 
   // --- 子要素 ---
@@ -76,9 +72,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
     // --- その他 ---
     cursor: pointer;
 
-
     // --- 疑似クラス ---
-
     &:hover {
       // --- 疑似クラス ---
       .c-segmented-control__input:not(:disabled, :checked)
@@ -86,9 +80,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
         // --- CSSカスタムプロパティ ---
         --glow-color: var(--color-border);
 
-
         // --- ボックスモデル ---
-
         border-color: var(--color-border);
 
         // --- タイポグラフィ ---
@@ -130,9 +122,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
       // --- 継承 ---
       @extend %disabled;
 
-
       // --- 視覚効果 ---
-
       opacity: 0.3;
       filter: grayscale(100%);
     }
@@ -140,34 +130,23 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
 
   &__text {
     // --- 継承 ---
-
     @extend %text-sm;
 
-
     // --- その他 ---
-
     user-select: none;
 
-
     // --- ボックスモデル ---
-
     padding: var(--pad-component);
     border: var(--border-width-base) solid transparent;
 
-
     // --- タイポグラフィ ---
-
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
 
-
     // --- 視覚効果 ---
-
     transition: var(--transition-base);
 
-
     // --- レイアウト・配置 ---
-
     @include flex-center(0, inline-flex);
   }
 }

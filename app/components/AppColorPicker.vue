@@ -45,20 +45,14 @@ const inputId = useId();
   // --- レイアウト・配置 ---
   @include flex-start(var(--gap-component), inline-flex);
 
-
   // --- その他 ---
-
   cursor: pointer;
   user-select: none;
 
-
   // --- レイアウト・配置 ---
-
   position: relative;
 
-
   // --- ボックスモデル ---
-
   height: var(--size-control-md);
   padding: 0 var(--pad-component);
 
@@ -66,23 +60,17 @@ const inputId = useId();
     $is-active: "&:has(.c-color-picker__input:focus-visible)"
   );
 
-
   // --- 子要素 ---
-
   &__swatch {
     // --- レイアウト・配置 ---
     flex-shrink: 0;
 
-
     // --- ボックスモデル ---
-
     width: var(--icon-size-sm);
     height: var(--icon-size-sm);
     border-radius: 50%;
 
-
     // --- 視覚効果 ---
-
     box-shadow: var(--shadow-sink);
 
     @include border-dim(50%);
@@ -92,9 +80,7 @@ const inputId = useId();
     // --- 継承 ---
     @extend %text-sm;
 
-
     // --- タイポグラフィ ---
-
     font-family: var(--font-mono);
     color: var(--color-text-main);
   }

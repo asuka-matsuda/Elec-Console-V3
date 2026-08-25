@@ -34,9 +34,7 @@ const svgContent = computed(() => {
   // --- レイアウト・配置 ---
   @include flex-center(0, inline-flex);
 
-
   // --- 疑似クラス ---
-
   :deep(svg) {
     // --- ボックスモデル ---
     width: 100%;

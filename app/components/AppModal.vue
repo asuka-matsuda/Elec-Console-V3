@@ -123,9 +123,7 @@ const titleId = `modal-title-${modalId}`;
   // --- 視覚効果 ---
   transform: translateY(var(--space-2));
 
-
   // --- その他 ---
-
   overflow: visible;
 
   /* Sizing based on original AppPanel overlay */
@@ -147,9 +145,7 @@ const titleId = `modal-title-${modalId}`;
   // --- ボックスモデル ---
   outline: none;
 
-
   // --- 視覚効果 ---
-
   transition:
     opacity var(--duration-modal) var(--ease-smooth),
     transform var(--duration-modal) var(--ease-smooth);
@@ -177,9 +173,7 @@ const titleId = `modal-title-${modalId}`;
       opacity: 0;
     }
 
-
     // --- 疑似要素 ---
-
     &::backdrop {
       // --- 視覚効果 ---
       opacity: 1;
@@ -215,9 +209,7 @@ const titleId = `modal-title-${modalId}`;
     // --- 継承 ---
     @extend %text-heading;
 
-
     // --- レイアウト・配置 ---
-
     @include flex-start(var(--gap-component));
   }
 
@@ -240,14 +232,10 @@ const titleId = `modal-title-${modalId}`;
     // --- CSSカスタムプロパティ ---
     --scrollbar-size: var(--size-2);
 
-
     // --- 継承 ---
-
     @extend %text-caption;
 
-
     // --- その他 ---
-
     overflow-y: auto;
 
     // --- レイアウト・配置 ---
@@ -256,9 +244,7 @@ const titleId = `modal-title-${modalId}`;
     // --- ボックスモデル ---
     padding: var(--pad-container) 0;
 
-
     // --- モディファイア ---
-
     &--align-center {
       // --- タイポグラフィ ---
       text-align: center;

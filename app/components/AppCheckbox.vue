@@ -55,26 +55,20 @@ const inputId = useId();
   // --- 継承 ---
   @extend %text-sm;
 
-
   // --- その他 ---
-
   cursor: pointer;
   user-select: none;
 
   // --- レイアウト・配置 ---
   position: relative;
 
-
   // --- 疑似クラス ---
-
   &:has(.c-checkbox__input:disabled) {
     // --- 継承 ---
     @extend %disabled;
   }
 
-
   // --- 子要素 ---
-
   &__input {
     // Hide native input visually, but keep accessible for keyboard focus
 
@@ -103,9 +97,7 @@ const inputId = useId();
   &:has(.c-checkbox__input:checked) .c-checkbox__box {
     @include state-active(var(--checkbox-color));
 
-
     // --- 子要素 ---
-
     .c-checkbox__icon {
       // --- 視覚効果 ---
       opacity: 1;
@@ -114,9 +106,7 @@ const inputId = useId();
     }
   }
 
-
   // --- 子要素 ---
-
   &__box {
     // --- レイアウト・配置 ---
     flex-shrink: 0;
@@ -125,15 +115,11 @@ const inputId = useId();
     width: 1.4em;
     height: 1.4em;
 
-
     // --- レイアウト・配置 ---
-
     @include flex-center;
     @include border-dim(50%);
 
-
     // --- 視覚効果 ---
-
     @include state-base(var(--shadow-sink), var(--transition-glow));
 
     // Explicitly NO border-radius to ensure sharp corners
@@ -146,9 +132,7 @@ const inputId = useId();
       width: 70%;
       height: 70%;
 
-
       // --- 視覚効果 ---
-
       opacity: 0;
 
       stroke: var(--checkbox-color);
@@ -175,9 +159,7 @@ const inputId = useId();
       // --- タイポグラフィ ---
       color: theme-color(var(--checkbox-color), 90%);
 
-
       // --- 視覚効果 ---
-
       @include cyber-text-glow(var(--checkbox-color), 20%, var(--blur-sm));
     }
   }
@@ -187,9 +169,7 @@ const inputId = useId();
     @include state-active(var(--checkbox-color));
   }
 
-
   // --- レイアウト・配置 ---
-
   @include flex-start(var(--gap-component), inline-flex);
 }
 </style>

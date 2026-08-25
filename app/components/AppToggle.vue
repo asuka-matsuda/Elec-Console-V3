@@ -44,26 +44,20 @@ const inputId = useId();
   // --- 継承 ---
   @extend %text-sm;
 
-
   // --- その他 ---
-
   cursor: pointer;
   user-select: none;
 
   // --- レイアウト・配置 ---
   position: relative;
 
-
   // --- 疑似クラス ---
-
   &:has(.c-toggle__input:disabled) {
     // --- 継承 ---
     @extend %disabled;
   }
 
-
   // --- 子要素 ---
-
   &__input {
     /* Hide native input visually, but keep accessible for keyboard focus */
 
@@ -124,16 +118,12 @@ const inputId = useId();
 
     flex-shrink: 0;
 
-
     // --- ボックスモデル ---
-
     width: var(--track-w);
     height: var(--track-h);
     border: var(--border-width-base) solid var(--color-border);
 
-
     // --- 視覚効果 ---
-
     @include state-base(var(--shadow-sink), var(--transition-glow));
   }
 
@@ -144,16 +134,12 @@ const inputId = useId();
     top: -1px;
     left: -1px;
 
-
     // --- ボックスモデル ---
-
     width: var(--thumb-w);
     height: var(--track-h);
     border: var(--border-width-base) solid var(--color-border);
 
-
     // --- 視覚効果 ---
-
     box-shadow: var(--shadow-elevation-sm);
 
     transition:
@@ -185,9 +171,7 @@ const inputId = useId();
       // --- タイポグラフィ ---
       color: theme-color(var(--toggle-color), 90%);
 
-
       // --- 視覚効果 ---
-
       @include cyber-text-glow(var(--toggle-color), 20%, var(--blur-sm));
     }
   }
@@ -207,9 +191,7 @@ const inputId = useId();
     }
   }
 
-
   // --- レイアウト・配置 ---
-
   @include flex-start(var(--gap-component), inline-flex);
 }
 </style>

@@ -44,9 +44,7 @@ defineProps<{
   // --- ボックスモデル ---
   min-height: 0;
 
-
   // --- 子要素 ---
-
   &__content {
     // --- レイアウト・配置 ---
     @include flex-column(var(--gap-section));

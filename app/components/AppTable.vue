@@ -64,9 +64,7 @@ defineProps<{
   // --- レイアウト・配置 ---
   flex: 1;
 
-
   // --- ボックスモデル ---
-
   width: 100%;
   min-height: 0;
   border: var(--border-width-base) solid var(--color-border);
@@ -82,9 +80,7 @@ defineProps<{
   // --- タイポグラフィ ---
   text-align: left;
 
-
   // --- 疑似クラス ---
-
   :deep(th),
   :deep(td) {
     // --- ボックスモデル ---
@@ -103,27 +99,20 @@ defineProps<{
 
   :deep(th) {
     // --- 継承 ---
-
     @extend %text-sm;
 
-
     // --- レイアウト・配置 ---
-
     position: sticky;
     z-index: 2;
     top: 0;
 
     border-bottom-width: calc(var(--border-width-base) * 2);
 
-
     // --- タイポグラフィ ---
-
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
 
-
     // --- 視覚効果 ---
-
     backdrop-filter: blur(var(--blur-md));
   }
 
@@ -134,9 +123,7 @@ defineProps<{
     // --- 視覚効果 ---
     transition: var(--transition-base);
 
-
     // --- 疑似クラス ---
-
     &:last-child td {
       // --- ボックスモデル ---
       border-bottom: none;

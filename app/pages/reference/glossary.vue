@@ -147,16 +147,12 @@ const categoryColorMap: Record<string, string> = {
 
   flex: 1;
 
-
   // --- ボックスモデル ---
-
   width: 100%;
   max-width: 1400px;
   min-height: 0;
 
-
   // --- 子要素 ---
-
   &__grid {
     // --- レイアウト・配置 ---
     @include flex-column(0);
@@ -194,21 +190,15 @@ const categoryColorMap: Record<string, string> = {
   // --- レイアウト・配置 ---
   @include flex-column(var(--gap-component));
 
-
   // --- 視覚効果 ---
-
   transition: var(--transition-base);
 
-
   // --- 子要素 ---
-
   &__header {
     // --- レイアウト・配置 ---
     @include flex-between(var(--gap-component));
 
-
     // --- ボックスモデル ---
-
     padding-bottom: var(--gap-element);
     border-bottom: var(--border-width-base) solid transparent;
     border-image: linear-gradient(to right, transparent, var(--color-border) 50%, transparent) 1;
@@ -223,9 +213,7 @@ const categoryColorMap: Record<string, string> = {
     // --- 継承 ---
     @extend %text-xs;
 
-
     // --- タイポグラフィ ---
-
     color: var(--color-text-muted);
   }
 
@@ -233,9 +221,7 @@ const categoryColorMap: Record<string, string> = {
     // --- 継承 ---
     @extend %text-lg;
 
-
     // --- タイポグラフィ ---
-
     color: var(--color-text-main);
   }
 
@@ -248,9 +234,7 @@ const categoryColorMap: Record<string, string> = {
     // --- 継承 ---
     @extend %text-sm;
 
-
     // --- タイポグラフィ ---
-
     line-height: 1.6;
     color: var(--color-text-secondary);
   }
@@ -259,9 +243,7 @@ const categoryColorMap: Record<string, string> = {
     // --- レイアウト・配置 ---
     @include flex-column(var(--gap-element));
 
-
     // --- ボックスモデル ---
-
     padding: var(--pad-container);
     border: var(--border-width-base) solid theme-color(var(--color-border), 50%);
   }
@@ -270,9 +252,7 @@ const categoryColorMap: Record<string, string> = {
     // --- 継承 ---
     @extend %text-xs;
 
-
     // --- タイポグラフィ ---
-
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
   }
@@ -281,9 +261,7 @@ const categoryColorMap: Record<string, string> = {
     // --- 継承 ---
     @extend %text-sm;
 
-
     // --- タイポグラフィ ---
-
     line-height: 1.5;
     color: var(--color-text-secondary);
   }
@@ -293,9 +271,7 @@ const categoryColorMap: Record<string, string> = {
   // --- 継承 ---
   @extend %text-base;
 
-
   // --- ボックスモデル ---
-
   padding: var(--pad-container);
   border: var(--border-width-base) solid theme-color(var(--color-border), 50%);
 

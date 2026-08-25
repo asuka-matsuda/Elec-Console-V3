@@ -107,9 +107,7 @@ const fill48 = computed(() =>
   min-height: 0;
   padding: var(--pad-component);
 
-
   // --- 子要素 ---
-
   &__paren {
   // --- ボックスモデル ---
   margin-left: var(--gap-component); }
@@ -148,9 +146,7 @@ const fill48 = computed(() =>
     // --- タイポグラフィ ---
     color: var(--color-status-success);
 
-
     // --- 視覚効果 ---
-
     @include cyber-text-glow(var(--color-status-success), 40%, var(--blur-md));
   }
 
@@ -158,9 +154,7 @@ const fill48 = computed(() =>
     // --- タイポグラフィ ---
     color: var(--color-status-danger);
 
-
     // --- 視覚効果 ---
-
     @include cyber-text-glow(var(--color-status-danger), 40%, var(--blur-md));
   }
 
@@ -173,7 +167,6 @@ const fill48 = computed(() =>
 
     
     // --- 子要素 ---
-    
     .c-conduit-result__main {
       // --- ボックスモデル ---
       padding: var(--pad-element) var(--pad-component);
@@ -185,7 +178,6 @@ const fill48 = computed(() =>
 
       
       // --- 子要素 ---
-      
       &.c-conduit-result__percent {
         // --- タイポグラフィ ---
         font-size: 1rem;
@@ -193,9 +185,7 @@ const fill48 = computed(() =>
     }
   }
 
-
   // --- 子要素 ---
-
   &__main {
     // --- レイアウト・配置 ---
     @include flex-column(var(--gap-element));
@@ -204,16 +194,12 @@ const fill48 = computed(() =>
     align-items: center;
     justify-content: center;
 
-
     // --- ボックスモデル ---
-
     min-width: 0;
     padding: var(--pad-component) var(--pad-section);
     border: var(--border-width-base) solid var(--color-border);
 
-
     // --- 視覚効果 ---
-
     box-shadow: var(--shadow-sink);
 
     @include surface(20%);
@@ -223,9 +209,7 @@ const fill48 = computed(() =>
     // --- 継承 ---
     @extend %text-xs;
 
-
     // --- タイポグラフィ ---
-
     color: var(--color-text-secondary);
     text-transform: uppercase;
   }
@@ -247,14 +231,11 @@ const fill48 = computed(() =>
 
       
       // --- 子要素 ---
-      
       &.c-conduit-result__percent {
         // --- 継承 ---
         @extend %text-md;
 
-
         // --- タイポグラフィ ---
-
         font-weight: normal;
       }
     }

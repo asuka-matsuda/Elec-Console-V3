@@ -62,8 +62,9 @@ const breadcrumbs = useBreadcrumbs();
 }
 
 .l-main {
-  @include flex-column(0);`n  flex: 1;
+  @include flex-column(0);
 
+  flex: 1;
   min-width: 0; /* Prevent flex item from blowing out */
   margin-left: 280px; /* On desktop, the sidebar takes up 280px. */
 
@@ -78,7 +79,10 @@ const breadcrumbs = useBreadcrumbs();
 
   container-type: inline-size;
   overflow-y: auto;
-  @include flex-column(0);`n  flex: 1;
+
+  @include flex-column(0);
+
+  flex: 1;
 
   min-height: 0;
   padding: var(--pad-container);
@@ -98,6 +102,8 @@ const breadcrumbs = useBreadcrumbs();
   align-items: center;
 
   &__avatar {
+    --glow-color: theme-color(var(--color-category-main), 50%);
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -108,7 +114,6 @@ const breadcrumbs = useBreadcrumbs();
     border-radius: 50%;
 
     background: var(--color-category-main);
-    --glow-color: theme-color(var(--color-category-main), 50%);
     box-shadow: var(--shadow-glow-lg);
   }
 

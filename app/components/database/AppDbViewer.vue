@@ -61,16 +61,12 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
 
   flex: 1;
 
-
   // --- ボックスモデル ---
-
   width: 100%;
   max-width: 1400px;
   min-height: 0;
 
-
   // --- 子要素 ---
-
   &__grid {
     // --- レイアウト・配置 ---
     @include flex-column(var(--gap-section));
@@ -112,9 +108,7 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
   // --- その他 ---
   overflow: hidden;
 
-
   // --- レイアウト・配置 ---
-
   @include flex-column(0);
 
   flex: 1;
@@ -127,9 +121,7 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
   // --- 継承 ---
   @extend %text-base;
 
-
   // --- ボックスモデル ---
-
   padding: var(--pad-container);
   border: var(--border-width-base) solid theme-color(var(--color-border), 50%);
 

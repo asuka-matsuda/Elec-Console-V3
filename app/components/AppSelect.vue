@@ -268,9 +268,7 @@ const listboxId = useId();
   // --- 継承 ---
   @extend %text-sm;
 
-
   // --- その他 ---
-
   user-select: none;
 
   // --- レイアウト・配置 ---
@@ -282,9 +280,7 @@ const listboxId = useId();
   // --- タイポグラフィ ---
   font-family: var(--font-mono);
 
-
   // --- モディファイア ---
-
   &.is-disabled {
     // --- 継承 ---
     @extend %disabled;
@@ -295,38 +291,26 @@ const listboxId = useId();
   // --- 継承 ---
   @extend %click-enabled;
 
-
   // --- レイアウト・配置 ---
-
   position: relative;
 
-
   // --- その他 ---
-
   overflow: hidden;
 
-
   // --- レイアウト・配置 ---
-
   @include flex-start;
 
-
   // --- ボックスモデル ---
-
   width: 100%;
   height: var(--size-control-md);
   padding: var(--pad-component);
 
-
   // --- タイポグラフィ ---
-
   text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
 
-
   // --- その他 ---
-
   appearance: none; /* Reset button styles */
 
   @include form-control-base(
@@ -341,9 +325,7 @@ const listboxId = useId();
   &::after {
     content: "";
 
-
     // --- レイアウト・配置 ---
-
     position: absolute;
     top: 50%;
     right: var(--space-4);
@@ -351,15 +333,11 @@ const listboxId = useId();
     // --- 視覚効果 ---
     transform: translateY(-50%);
 
-
     // --- ボックスモデル ---
-
     width: var(--size-4);
     height: var(--size-3);
 
-
     // --- 視覚効果 ---
-
     background-image: var(--icon-select-arrow);
     background-repeat: no-repeat;
     background-position: center;
@@ -368,9 +346,7 @@ const listboxId = useId();
     transition: var(--transition-base);
   }
 
-
   // --- モディファイア ---
-
   &.is-placeholder {
     // --- タイポグラフィ ---
     color: var(--color-text-muted);
@@ -389,23 +365,17 @@ const listboxId = useId();
   // --- CSSカスタムプロパティ ---
   --glow-color: theme-color(var(--color-category-main), 20%);
 
-
   // --- レイアウト・配置 ---
-
   position: absolute; // jsのスタイルが当たるまでの初期値
   z-index: 10000; // bodyの直下に移動したためzIndexを高めに設定
 
-
   // --- ボックスモデル ---
-
   width: max-content;
   max-width: 90vw;
   border: var(--border-width-base) solid
     theme-color(var(--color-category-main), 50%);
 
-
   // --- 視覚効果 ---
-
   background-color: transparent;
   backdrop-filter: blur(var(--blur-md));
   box-shadow: var(--shadow-glow-inset-md), var(--shadow-elevation-md);
@@ -417,9 +387,7 @@ const listboxId = useId();
     // --- CSSカスタムプロパティ ---
     --glow-color: theme-color(var(--color-status-danger), 20%);
 
-
     // --- ボックスモデル ---
-
     border-color: theme-color(var(--color-status-danger), 50%);
 
     // --- 視覚効果 ---
@@ -434,19 +402,13 @@ const listboxId = useId();
   scrollbar-color: var(--color-category-main) transparent;
   scrollbar-width: thin;
 
-
   // --- 視覚効果 ---
-
   transform: translateZ(0);
 
-
   // --- その他 ---
-
   overflow: hidden auto;
 
-
   // --- ボックスモデル ---
-
   width: 100%;
   max-height: min(250px, 40vh); /* 画面が小さい場合にも対応 */
 
@@ -459,14 +421,10 @@ const listboxId = useId();
 
   @extend %text-sm;
 
-
   // --- その他 ---
-
   overflow: hidden;
 
-
   // --- ボックスモデル ---
-
   padding: var(--pad-component);
   border-left: var(--border-width-thick) solid transparent;
 
@@ -475,9 +433,7 @@ const listboxId = useId();
   // --- タイポグラフィ ---
   white-space: nowrap;
 
-
   // --- 視覚効果 ---
-
   transition: var(--transition-base);
 
   // --- 疑似クラス ---
@@ -486,43 +442,31 @@ const listboxId = useId();
     // --- CSSカスタムプロパティ ---
     --glow-color: theme-color(var(--color-category-main), 30%);
 
-
     // --- 視覚効果 ---
-
     transform: translateX(2px);
 
     border-left-color: var(--color-category-main);
 
-
     // --- タイポグラフィ ---
-
     color: var(--color-category-main);
 
-
     // --- 視覚効果 ---
-
     background-color: transparent;
     box-shadow: var(--shadow-glow-inset-md);
   }
 
-
   // --- モディファイア ---
-
   &.is-selected {
     // --- CSSカスタムプロパティ ---
     --glow-color: theme-color(var(--color-category-main), 40%);
 
     border-left-color: var(--color-category-main);
 
-
     // --- タイポグラフィ ---
-
     font-weight: var(--font-weight-bold);
     color: var(--color-category-main);
 
-
     // --- 視覚効果 ---
-
     background-color: transparent;
     box-shadow: var(--shadow-glow-inset-lg);
   }

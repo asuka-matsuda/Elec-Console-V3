@@ -51,30 +51,22 @@ const componentTag = computed(() => {
   // --- CSSカスタムプロパティ ---
   --btn-color: var(--color-category-main);
 
-
   // --- 継承 ---
-
   @extend %click-enabled;
   @extend %text-xs;
 
-
   // --- レイアウト・配置 ---
-
   @include flex-center(var(--pad-component), inline-flex);
 
   position: relative;
 
   flex-shrink: 0;
 
-
   // --- ボックスモデル ---
-
   height: var(--size-control-sm);
   padding: 0 var(--pad-component);
 
-
   // --- タイポグラフィ ---
-
   font-weight: var(--font-weight-semibold);
 
   @include border-dim(50%, var(--btn-color));
@@ -82,15 +74,11 @@ const componentTag = computed(() => {
   // --- 視覚効果 ---
   @include state-base(var(--shadow-elevation-sm), var(--transition-fast));
 
-
   // --- 疑似要素 ---
-
   &::after {
     content: "";
 
-
     // --- レイアウト・配置 ---
-
     position: absolute;
     top: 50%;
     left: 50%;
@@ -98,18 +86,14 @@ const componentTag = computed(() => {
     // --- 視覚効果 ---
     transform: translate(-50%, -50%);
 
-
     // --- ボックスモデル ---
-
     width: 100%;
     min-width: var(--size-control-lg);
     height: 100%;
     min-height: var(--size-control-lg);
   }
 
-
   // --- 疑似クラス ---
-
   &:hover:not(:disabled, .is-disabled) {
     // --- レイアウト・配置 ---
     z-index: 1;
@@ -142,16 +126,12 @@ const componentTag = computed(() => {
     @extend %disabled;
   }
 
-
   // --- モディファイア ---
-
   &--md {
     // --- 継承 ---
     @extend %text-sm;
 
-
     // --- ボックスモデル ---
-
     height: var(--size-control-md);
     padding: 0 var(--pad-container);
   }
@@ -161,9 +141,7 @@ const componentTag = computed(() => {
     width: var(--size-control-sm);
     padding: 0;
 
-
     // --- モディファイア ---
-
     &.c-btn--md {
       // --- ボックスモデル ---
       width: var(--size-control-md);

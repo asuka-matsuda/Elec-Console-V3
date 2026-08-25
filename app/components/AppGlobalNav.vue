@@ -92,15 +92,11 @@ const closeSidebar = () => {
 
   @include flex-column(0);
 
-
   // --- ボックスモデル ---
-
   width: var(--sidebar-width);
   height: 100dvh;
 
-
   // --- 視覚効果 ---
-
   @include state-base(var(--shadow-elevation-md), transform var(--duration-slow) var(--ease-smooth));
 
     // Mobile layout (hide by default)
@@ -108,9 +104,7 @@ const closeSidebar = () => {
     // --- 視覚効果 ---
     transform: translateX(-100%);
 
-
     // --- モディファイア ---
-
     &.is-open {
       // --- 視覚効果 ---
       transform: translateX(0);
@@ -145,17 +139,12 @@ const closeSidebar = () => {
 
   &__nav {
     // --- CSSカスタムプロパティ ---
-
     --scrollbar-size: var(--size-2);
 
-
     // --- その他 ---
-
     overflow-y: auto;
 
-
     // --- レイアウト・配置 ---
-
     @include flex-column(var(--gap-section));
 
     flex: 1;
@@ -182,9 +171,7 @@ const closeSidebar = () => {
       "management": var(--color-category-management)
     );
 
-
     // --- レイアウト・配置 ---
-
     @include flex-column(var(--gap-component));
 
     @each $name, $var in $accents {
@@ -200,9 +187,7 @@ const closeSidebar = () => {
         // --- レイアウト・配置 ---
         @include flex-column(var(--gap-element));
 
-
     // --- ボックスモデル ---
-
     padding: var(--pad-section) var(--pad-component);
   }
 
@@ -210,9 +195,7 @@ const closeSidebar = () => {
     // --- 継承 ---
     @extend %text-xs;
 
-
     // --- タイポグラフィ ---
-
     font-weight: var(--font-weight-bold);
     color: var(--section-accent, var(--color-text-secondary));
     text-transform: uppercase;
@@ -220,17 +203,12 @@ const closeSidebar = () => {
 
   &__link {
     // --- 継承 ---
-
     @extend %text-sm;
 
-
     // --- レイアウト・配置 ---
-
     @include flex-start(var(--gap-component));
 
-
     // --- ボックスモデル ---
-
     padding: var(--pad-component);
 
     // --- タイポグラフィ ---
@@ -269,9 +247,7 @@ const closeSidebar = () => {
       // --- CSSカスタムプロパティ ---
       --glow-color: theme-color(var(--section-accent, var(--color-category-main)), 20%);
 
-
       // --- 視覚効果 ---
-
       transform: translateX(var(--space-1));
 
       // --- タイポグラフィ ---
@@ -280,9 +256,7 @@ const closeSidebar = () => {
       // --- 視覚効果 ---
       box-shadow: var(--shadow-glow-sm);
 
-
       // --- 子要素 ---
-
       .l-global-nav__link-icon {
         // --- タイポグラフィ ---
         color: var(--section-accent, var(--color-category-main));
@@ -313,9 +287,7 @@ const closeSidebar = () => {
         currentcolor
       );
 
-
       // --- 子要素 ---
-
       .l-global-nav__link-text {
         // --- タイポグラフィ ---
         font-weight: var(--font-weight-bold);
@@ -339,9 +311,7 @@ const closeSidebar = () => {
       // --- 継承 ---
       @extend %disabled;
 
-
       // --- 視覚効果 ---
-
       filter: grayscale(100%);
     }
   }
@@ -360,15 +330,11 @@ const closeSidebar = () => {
 
     display: block;
 
-
     // --- ボックスモデル ---
-
     width: 100vw;
     height: 100dvh;
 
-
     // --- その他 ---
-
     visibility: hidden;
 
     // --- 視覚効果 ---
@@ -379,9 +345,7 @@ const closeSidebar = () => {
       opacity var(--duration-slow) var(--ease-base),
       visibility var(--duration-slow) var(--ease-base);
 
-
     // --- モディファイア ---
-
     &.is-open {
       // --- その他 ---
       pointer-events: auto;

@@ -21,9 +21,7 @@ defineProps<{
   // --- 継承 ---
   @extend %text-sm;
 
-
   // --- レイアウト・配置 ---
-
   display: flex;
   justify-content: space-between;
 

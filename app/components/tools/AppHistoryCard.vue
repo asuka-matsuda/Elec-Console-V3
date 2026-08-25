@@ -96,9 +96,7 @@ const handleDelete = () => {
     // --- CSSカスタムプロパティ ---
     --glow-color: theme-color(var(--color-status-danger), 10%);
 
-
     // --- ボックスモデル ---
-
     border-color: var(--color-status-danger);
 
     // --- 視覚効果 ---
@@ -106,30 +104,23 @@ const handleDelete = () => {
 
     
     // --- 子要素 ---
-    
     .c-history-card__main-result {
       // --- タイポグラフィ ---
       color: var(--color-status-danger);
 
-
       // --- 視覚効果 ---
-
       @include cyber-text-glow(var(--color-status-danger), 50%, 8px);
     }
   }
 
-
   // --- 子要素 ---
-
   &__header {
     // --- レイアウト・配置 ---
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
 
-
     // --- ボックスモデル ---
-
     padding-bottom: var(--gap-component);
     border-bottom: 1px solid var(--color-border);
   }
@@ -143,9 +134,7 @@ const handleDelete = () => {
     // --- 継承 ---
     @extend %text-xs;
 
-
     // --- タイポグラフィ ---
-
     color: var(--color-text-muted);
   }
 
@@ -153,14 +142,10 @@ const handleDelete = () => {
     // --- 継承 ---
     @extend %text-base;
 
-
     // --- レイアウト・配置 ---
-
     @include flex-start(var(--gap-element));
 
-
     // --- タイポグラフィ ---
-
     font-weight: var(--font-weight-semibold);
     color: var(--color-text-main);
   }
@@ -179,9 +164,7 @@ const handleDelete = () => {
     // --- 継承 ---
     @extend %text-sm;
 
-
     // --- ボックスモデル ---
-
     padding-left: var(--gap-element);
     border-left: 2px solid var(--color-category-tool);
 
@@ -192,19 +175,14 @@ const handleDelete = () => {
 
   &__list {
     // --- 継承 ---
-
     @extend %text-sm;
 
-
     // --- レイアウト・配置 ---
-
     display: grid;
     grid-template-columns: auto 1fr;
     gap: var(--gap-element) var(--gap-section);
 
-
     // --- 子要素 ---
-
     dt {
       // --- タイポグラフィ ---
       color: var(--color-text-muted);

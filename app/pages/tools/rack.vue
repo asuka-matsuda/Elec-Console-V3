@@ -220,14 +220,11 @@ const {
 
   
   // --- 子要素 ---
-  
   &__val {
     // --- 継承 ---
     @extend %text-2xl;
 
-
     // --- タイポグラフィ ---
-
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
@@ -236,9 +233,7 @@ const {
     // --- 継承 ---
     @extend %text-sm;
 
-
     // --- ボックスモデル ---
-
     padding: var(--gap-element);
 
     // --- タイポグラフィ ---
@@ -253,7 +248,6 @@ const {
 
 .p-rack {
   // --- 子要素 ---
-
   &__sections {
     // --- レイアウト・配置 ---
     @include flex-column(var(--gap-section));
@@ -275,9 +269,7 @@ const {
     // --- レイアウト・配置 ---
     @include flex-between;
 
-
     // --- ボックスモデル ---
-
     margin-bottom: var(--pad-container);
   }
   
@@ -285,9 +277,7 @@ const {
     // --- 継承 ---
     @extend %text-md;
 
-
     // --- タイポグラフィ ---
-
     font-weight: var(--font-weight-bold);
   }
   
@@ -300,9 +290,7 @@ const {
     // --- 継承 ---
     @extend %text-sm;
 
-
     // --- ボックスモデル ---
-
     margin-bottom: var(--gap-component);
 
     // --- タイポグラフィ ---

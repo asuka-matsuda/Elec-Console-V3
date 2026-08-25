@@ -56,9 +56,7 @@ withDefaults(
     align-items: flex-end;
     justify-content: space-between;
 
-
     // --- ボックスモデル ---
-
     width: 100%;
   }
 
@@ -71,9 +69,7 @@ withDefaults(
     // --- レイアウト・配置 ---
     @include flex-start(var(--gap-component));
 
-
     // --- タイポグラフィ ---
-
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
 

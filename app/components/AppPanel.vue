@@ -50,18 +50,14 @@ withDefaults(
 
   @include flex-column(var(--pad-container-gap, var(--pad-container)));
 
-
   // --- ボックスモデル ---
-
   padding: var(--pad-container, var(--pad-container));
 
   // Apply visual base
   border: var(--border-width-base) solid var(--p-border-color);
   border-image: var(--p-border-image);
 
-
   // --- 視覚効果 ---
-
   box-shadow: var(--p-box-shadow);
 
   transition: var(--transition-base);
@@ -75,23 +71,17 @@ withDefaults(
     pointer-events: none;
     content: "";
 
-
     // --- レイアウト・配置 ---
-
     position: absolute;
 
     display: var(--p-bracket-display);
 
-
     // --- ボックスモデル ---
-
     width: var(--p-bracket-size);
     height: var(--p-bracket-size);
     border: var(--border-width-thick) solid var(--p-bracket-color);
 
-
     // --- 視覚効果 ---
-
     filter: var(--p-bracket-glow);
   }
 
@@ -124,12 +114,9 @@ withDefaults(
 
   &__title {
     // --- 継承 ---
-
     @extend %text-lg;
 
-
     // --- タイポグラフィ ---
-
     font-weight: var(--font-weight-bold);
     color: #{theme-color(var(--p-theme-color), 100%)};
     text-shadow: 0 0 var(--blur-md) #{theme-color(var(--p-theme-color), 40%)};

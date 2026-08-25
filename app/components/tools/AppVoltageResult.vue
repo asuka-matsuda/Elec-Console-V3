@@ -184,7 +184,6 @@ const dropStatusClass = computed(() => {
 
     
     // --- 子要素 ---
-    
     .c-voltage-result__main {
       // --- ボックスモデル ---
       padding: var(--pad-element) var(--pad-component);
@@ -220,9 +219,7 @@ const dropStatusClass = computed(() => {
     // --- タイポグラフィ ---
     color: var(--color-status-success);
 
-
     // --- 視覚効果 ---
-
     @include cyber-text-glow(var(--color-status-success), 40%, var(--blur-md));
   }
 
@@ -230,9 +227,7 @@ const dropStatusClass = computed(() => {
     // --- タイポグラフィ ---
     color: var(--color-status-warning);
 
-
     // --- 視覚効果 ---
-
     @include cyber-text-glow(var(--color-status-warning), 40%, var(--blur-md));
   }
 
@@ -240,15 +235,11 @@ const dropStatusClass = computed(() => {
     // --- タイポグラフィ ---
     color: var(--color-status-danger);
 
-
     // --- 視覚効果 ---
-
     @include cyber-text-glow(var(--color-status-danger), 40%, var(--blur-md));
   }
 
-
   // --- 子要素 ---
-
   &__main {
     // --- レイアウト・配置 ---
     @include flex-column(var(--gap-element));
@@ -257,16 +248,12 @@ const dropStatusClass = computed(() => {
     align-items: center;
     justify-content: center;
 
-
     // --- ボックスモデル ---
-
     min-width: 0;
     padding: var(--pad-component) var(--pad-section);
     border: var(--border-width-base) solid var(--color-border);
 
-
     // --- 視覚効果 ---
-
     box-shadow: var(--shadow-sink);
 
     @include surface(20%);
@@ -276,9 +263,7 @@ const dropStatusClass = computed(() => {
     // --- 継承 ---
     @extend %text-xs;
 
-
     // --- タイポグラフィ ---
-
     color: var(--color-text-secondary);
     text-transform: uppercase;
   }
@@ -303,9 +288,7 @@ const dropStatusClass = computed(() => {
       // --- 継承 ---
       @extend %text-md;
 
-
       // --- タイポグラフィ ---
-
       font-weight: var(--font-weight-bold);
       color: var(--color-text-secondary);
 
@@ -321,9 +304,7 @@ const dropStatusClass = computed(() => {
     flex-shrink: 0;
     gap: var(--gap-component);
 
-
     // --- ボックスモデル ---
-
     min-width: auto;
 
     // コンテナの幅が xs 以上の場合は縦積み
@@ -343,9 +324,7 @@ const dropStatusClass = computed(() => {
     align-items: center;
     justify-content: center;
 
-
     // --- ボックスモデル ---
-
     padding: var(--pad-component);
     border: 1px solid var(--color-border);
   }
@@ -354,27 +333,20 @@ const dropStatusClass = computed(() => {
     // --- 継承 ---
     @extend %text-xs;
 
-
     // --- タイポグラフィ ---
-
     color: var(--color-text-muted);
   }
 
   .metric-value {
     // --- 継承 ---
-
     @extend %text-md;
 
-
     // --- レイアウト・配置 ---
-
     display: flex;
     gap: var(--gap-element);
     align-items: baseline;
 
-
     // --- タイポグラフィ ---
-
     font-family: var(--font-family-mono);
     font-weight: var(--font-weight-bold);
 
@@ -391,9 +363,7 @@ const dropStatusClass = computed(() => {
       // --- 継承 ---
       @extend %text-xs;
 
-
       // --- タイポグラフィ ---
-
       color: var(--color-text-secondary);
 
       // --- 視覚効果 ---

@@ -108,22 +108,17 @@ const handleSave = async () => {
   // --- 継承 ---
   @extend %text-2xs;
 
-
   // --- タイポグラフィ ---
-
   color: var(--color-status-warning);
 }
 
 .p-conduit {
   // --- 子要素 ---
-
   &__section-title {
     // --- 継承 ---
     @extend %text-base;
 
-
     // --- ボックスモデル ---
-
     margin-bottom: var(--gap-component);
 
     // --- タイポグラフィ ---

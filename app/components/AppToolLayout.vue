@@ -72,9 +72,7 @@ const toggleDrawer = () => {
 
   flex: 1;
 
-
   // --- ボックスモデル ---
-
   width: 100%;
   max-width: 1600px;
   min-height: 0;
@@ -89,9 +87,7 @@ const toggleDrawer = () => {
     --pad-container-gap: var(--gap-section);
   }
 
-
   // --- 子要素 ---
-
   &__disclaimer {
     // --- レイアウト・配置 ---
     flex-shrink: 0;
@@ -138,12 +134,9 @@ const toggleDrawer = () => {
     // --- 疑似クラス ---
     :deep(.c-panel__content) {
       // --- CSSカスタムプロパティ ---
-
       --scrollbar-size: var(--size-2);
 
-
       // --- その他 ---
-
       overflow-y: auto;
 
       // スクロール時に要素がpaddingに食い込まないよう調整
@@ -157,9 +150,7 @@ const toggleDrawer = () => {
     // --- その他 ---
     overflow-y: hidden; // No vertical scroll per user request
 
-
     // --- レイアウト・配置 ---
-
     @include flex-column(0);
 
     flex: 1;
@@ -197,27 +188,19 @@ const toggleDrawer = () => {
       // --- 視覚効果 ---
       transform: translateY(calc(100% - 48px)); // Show only handle
 
-
       // --- レイアウト・配置 ---
-
       flex: none;
 
-
       // --- ボックスモデル ---
-
       max-height: 80vh;
       border-top: var(--border-width-base) solid var(--color-category-tool);
 
-
       // --- 視覚効果 ---
-
       background: var(--color-bg-base);
 
       @include state-base(var(--shadow-elevation-md), transform var(--transition-base));
 
-
       // --- モディファイア ---
-
       &.is-drawer-open {
         // --- 視覚効果 ---
         transform: translateY(0);
@@ -233,14 +216,10 @@ const toggleDrawer = () => {
       // --- その他 ---
       cursor: pointer;
 
-
       // --- レイアウト・配置 ---
-
       @include flex-between;
 
-
       // --- ボックスモデル ---
-
       height: 48px;
       padding: var(--pad-container);
 
@@ -275,12 +254,9 @@ const toggleDrawer = () => {
 
     @include mq("md") {
       // --- CSSカスタムプロパティ ---
-
       --scrollbar-size: var(--size-2);
 
-
       // --- その他 ---
-
       overflow-y: auto;
 
       // --- ボックスモデル ---
@@ -300,9 +276,7 @@ const toggleDrawer = () => {
 
       display: block; // Show on mobile
 
-
       // --- 視覚効果 ---
-
       background: var(--color-overlay-dark);
       backdrop-filter: blur(var(--blur-sm));
     }

@@ -58,7 +58,6 @@ const handleSaveToHistory = async () => {
 <template>
   <AppToolLayout>
 
-
     <template #results>
       <AppToolResultPanel
         title="計算結果"

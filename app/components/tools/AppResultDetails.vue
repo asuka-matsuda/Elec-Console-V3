@@ -16,9 +16,7 @@
   // --- レイアウト・配置 ---
   @include flex-column(var(--gap-element));
 
-
   // --- ボックスモデル ---
-
   padding-top: var(--gap-section);
   border-top: 1px solid var(--color-border);
 }

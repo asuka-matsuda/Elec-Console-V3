@@ -24,9 +24,7 @@
   // --- ボックスモデル ---
   width: 100%;
 
-
   // --- 子要素 ---
-
   &__main {
     // --- レイアウト・配置 ---
     display: flex;
@@ -69,31 +67,22 @@
 
     :deep(.c-input-addon) {
       // --- 継承 ---
-
       @extend %text-sm;
 
-
       // --- ボックスモデル ---
-
       padding: 0 var(--pad-section);
       border: var(--border-width-base) solid
         theme-color(var(--color-category-main), 50%);
       border-left: none;
 
-
       // --- タイポグラフィ ---
-
       color: var(--color-text-main);
       white-space: nowrap;
 
-
       // --- 視覚効果 ---
-
       box-shadow: var(--shadow-sink);
 
-
       // --- レイアウト・配置 ---
-
       @include flex-center(0, inline-flex);
     }
   }
