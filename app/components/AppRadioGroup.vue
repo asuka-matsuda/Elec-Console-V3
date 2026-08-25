@@ -62,7 +62,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
   // --- ボックスモデル ---
   width: max-content;
   padding: var(--pad-element);
-  border: var(--border-width-base) solid var(--color-border);
+  @include border-base;
 
   // --- 視覚効果 ---
   box-shadow: none;

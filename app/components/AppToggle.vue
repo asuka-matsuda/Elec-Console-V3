@@ -120,7 +120,7 @@ const inputId = useId();
     // --- ボックスモデル ---
     width: var(--track-w);
     height: var(--track-h);
-    border: var(--border-width-base) solid var(--color-border);
+    @include border-base;
 
     // --- 視覚効果 ---
     @include state-base(var(--shadow-sink), var(--transition-glow));
@@ -136,7 +136,7 @@ const inputId = useId();
     // --- ボックスモデル ---
     width: var(--thumb-w);
     height: var(--track-h);
-    border: var(--border-width-base) solid var(--color-border);
+    @include border-base;
 
     // --- 視覚効果 ---
     box-shadow: var(--shadow-elevation-sm);

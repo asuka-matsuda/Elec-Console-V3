@@ -199,16 +199,12 @@
   text-shadow: 0 0 $blur theme-color($color, $opacity);
 }
 
-@mixin border-dim($opacity: 50%, $color: var(--color-border)) {
-  border: var(--border-width-base) solid theme-color($color, $opacity);
+@mixin border-base($color: var(--color-border), $width: var(--border-width-base)) {
+  border: $width solid $color;
 }
 
-@mixin surface($border-opacity: 100%) {
-  background-color: var(--surface-bg);
-
-  @include border-dim($border-opacity);
-
-  box-shadow: var(--shadow-elevation-lg);
+@mixin border-dim($opacity: 50%, $color: var(--color-border)) {
+  border: var(--border-width-base) solid theme-color($color, $opacity);
 }
 
 // --- インタラクティブ状態 ---

@@ -54,7 +54,7 @@ withDefaults(
   padding: var(--pad-container, var(--pad-container));
 
   // Apply visual base
-  border: var(--border-width-base) solid var(--p-border-color);
+  @include border-base(var(--p-border-color), var(--border-width-base));
   border-image: var(--p-border-image);
 
   // --- 視覚効果 ---
@@ -79,7 +79,7 @@ withDefaults(
     // --- ボックスモデル ---
     width: var(--p-bracket-size);
     height: var(--p-bracket-size);
-    border: var(--border-width-thick) solid var(--p-bracket-color);
+    @include border-base(var(--p-bracket-color), var(--border-width-thick));
 
     // --- 視覚効果 ---
     filter: var(--p-bracket-glow);

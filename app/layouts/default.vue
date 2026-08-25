@@ -110,7 +110,7 @@ const breadcrumbs = useBreadcrumbs();
 
     width: var(--size-control-sm);
     height: var(--size-control-sm);
-    border: var(--border-width-thick) solid var(--color-category-main);
+    @include border-base(var(--color-category-main), var(--border-width-thick));
     border-radius: 50%;
 
     background: var(--color-category-main);

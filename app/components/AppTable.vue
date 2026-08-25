@@ -67,7 +67,7 @@ defineProps<{
   // --- ボックスモデル ---
   width: 100%;
   min-height: 0;
-  border: var(--border-width-base) solid var(--color-border);
+  @include border-base;
 }
 
 .c-table {

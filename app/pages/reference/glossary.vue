@@ -240,7 +240,7 @@ const categoryColorMap: Record<string, string> = {
 
     // --- ボックスモデル ---
     padding: var(--pad-container);
-    border: var(--border-width-base) solid theme-color(var(--color-border), 50%);
+    @include border-dim;
   }
 
   &__label {
@@ -267,7 +267,7 @@ const categoryColorMap: Record<string, string> = {
 
   // --- ボックスモデル ---
   padding: var(--pad-container);
-  border: var(--border-width-base) solid theme-color(var(--color-border), 50%);
+  @include border-dim;
 
   // --- タイポグラフィ ---
   color: var(--color-text-muted);

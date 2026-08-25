@@ -59,7 +59,7 @@ const processedItems = computed(() => {
   @include flex-start(0, inline-flex);
 
   // --- 視覚効果 ---
-  @include surface;
+  @include border-base;
 
   // --- レイアウト・配置 ---
   position: relative;

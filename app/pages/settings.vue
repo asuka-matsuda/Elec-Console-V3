@@ -112,7 +112,7 @@ const themeOptions = [
 
     // --- ボックスモデル ---
     padding: var(--pad-container);
-    border: var(--border-width-base) solid var(--color-border);
+    @include border-base;
     border-radius: 0;
   }
 

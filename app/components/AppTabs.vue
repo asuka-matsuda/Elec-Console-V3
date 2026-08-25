@@ -105,7 +105,7 @@ const selectTab = (option: TabOption) => {
 
   // --- ボックスモデル ---
   padding: var(--pad-container);
-  border: var(--border-width-base) solid var(--color-border);
+  @include border-base;
 
   // --- タイポグラフィ ---
   font-weight: var(--font-weight-medium);

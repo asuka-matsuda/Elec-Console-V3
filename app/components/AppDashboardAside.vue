@@ -110,7 +110,7 @@ const history = computed(() => dashboardData.value?.history || []);
     text-align: center;
 
     // --- 視覚効果 ---
-    @include surface(5%);
+    @include border-base;
   }
 }
 

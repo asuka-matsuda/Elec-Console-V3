@@ -250,12 +250,12 @@ const dropStatusClass = computed(() => {
     // --- ボックスモデル ---
     min-width: 0;
     padding: var(--pad-component) var(--pad-section);
-    border: var(--border-width-base) solid var(--color-border);
+    @include border-base;
 
     // --- 視覚効果 ---
     box-shadow: var(--shadow-sink);
 
-    @include surface(20%);
+    @include border-base;
   }
 
   &__main-label {
@@ -323,7 +323,7 @@ const dropStatusClass = computed(() => {
 
     // --- ボックスモデル ---
     padding: var(--pad-component);
-    border: 1px solid var(--color-border);
+    @include border-base(var(--color-border), 1px);
   }
 
   .metric-label {

@@ -55,7 +55,7 @@ const rootProps = computed(() => {
   // --- 視覚効果 ---
   @include state-base(none, var(--transition-base));
 
-  @include surface(15%);
+  @include border-base;
 
   // --- 疑似クラス ---
   &:is(a, button) {

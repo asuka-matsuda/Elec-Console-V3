@@ -123,7 +123,7 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
 
   // --- ボックスモデル ---
   padding: var(--pad-container);
-  border: var(--border-width-base) solid theme-color(var(--color-border), 50%);
+  @include border-dim;
 
   // --- タイポグラフィ ---
   color: var(--color-text-muted);
