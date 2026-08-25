@@ -1,4 +1,4 @@
-﻿@use "variables" as *;
+@use "variables" as *;
 @use "mixins" as *;
 @use "functions" as *;
 
@@ -8,7 +8,7 @@
   $is-active: "&:is(:focus, :focus-visible)",
   $is-hover: "&:hover:not(:disabled, .is-error, :focus)"
 ) {
-  border: var(--border-width-base) solid theme-color(var(--color-category-main));
+  @include border-base(var(--color-category-main));
 
   // --- 通常状態 ---
   @include state-base(var(--shadow-sink), var(--transition-glow));

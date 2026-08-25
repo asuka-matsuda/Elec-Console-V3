@@ -55,7 +55,7 @@ withDefaults(
 
   // --- ボックスモデル ---
   padding: var(--pad-element);
-  border: var(--border-width-base) solid theme-color(var(--glow-color), 60%);
+  @include border-dim(var(--glow-color), 60%);
 
   // --- タイポグラフィ ---
   color: var(--glow-color);

@@ -168,8 +168,7 @@ withDefaults(
     // --- ボックスモデル ---
     width: var(--size-2);
     height: var(--size-2);
-    border: var(--border-width-thick) solid
-      theme-color(var(--color-category-main), 70%);
+    @include border-base(theme-color(var(--color-category-main), 70%), var(--border-width-thick));
     border-radius: 50%;
 
     // --- 視覚効果 ---

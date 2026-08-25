@@ -71,8 +71,7 @@
 
       // --- ボックスモデル ---
       padding: 0 var(--pad-section);
-      border: var(--border-width-base) solid
-        theme-color(var(--color-category-main), 50%);
+      @include border-dim(var(--color-category-main));
       border-left: none;
 
       // --- タイポグラフィ ---

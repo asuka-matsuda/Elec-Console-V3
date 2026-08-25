@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * AppRadioGroup
  * 複数の選択肢から1つを選択するための、セグメントコントロール風のラジオボタングループコンポーネント。
@@ -137,7 +137,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
 
     // --- ボックスモデル ---
     padding: var(--pad-component);
-    border: var(--border-width-base) solid transparent;
+    @include border-base(transparent);
 
     // --- タイポグラフィ ---
     color: var(--color-text-muted);
