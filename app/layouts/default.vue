@@ -56,106 +56,63 @@ const breadcrumbs = useBreadcrumbs();
 
 <style scoped lang="scss">
 .l-app {
-  // --- レイアウト・配置 ---
   display: flex;
   flex: 1;
-
-  // --- ボックスモデル ---
   min-height: 0;
 }
 
 .l-main {
-  // --- レイアウト・配置 ---
-  @include flex-column(0);
+  @include flex-column(0);`n  flex: 1;
 
-  flex: 1;
-
-  // --- ボックスモデル ---
   min-width: 0; /* Prevent flex item from blowing out */
   margin-left: 280px; /* On desktop, the sidebar takes up 280px. */
 
   @include mq("md") {
-    // --- ボックスモデル ---
     margin-left: 0;
   }
 }
 
 .l-content {
-  // --- CSSカスタムプロパティ ---
 
   --scrollbar-size: var(--size-2);
 
-
-  // --- レイアウト・配置 ---
-
   container-type: inline-size;
-
-  // --- その他 ---
   overflow-y: auto;
-
-
-  // --- レイアウト・配置 ---
-
-  @include flex-column(0);
-
-  flex: 1;
-
-
-  // --- ボックスモデル ---
+  @include flex-column(0);`n  flex: 1;
 
   min-height: 0;
   padding: var(--pad-container);
 
   @include mq("md") {
-    // --- ボックスモデル ---
     padding: var(--pad-section);
   }
 }
 
 /* Temporary user bar styles for demo */
 .l-header-user {
-  // --- 継承 ---
 
   @extend %text-sm;
-
-
-  // --- レイアウト・配置 ---
 
   display: flex;
   gap: var(--gap-component);
   align-items: center;
 
-
-  // --- 子要素 ---
-
   &__avatar {
-    // --- CSSカスタムプロパティ ---
-    --glow-color: theme-color(var(--color-category-main), 50%);
-
-
-    // --- レイアウト・配置 ---
-
     display: flex;
     align-items: center;
     justify-content: center;
-
-
-    // --- ボックスモデル ---
 
     width: var(--size-control-sm);
     height: var(--size-control-sm);
     border: var(--border-width-thick) solid var(--color-category-main);
     border-radius: 50%;
 
-
-    // --- 視覚効果 ---
-
     background: var(--color-category-main);
+    --glow-color: theme-color(var(--color-category-main), 50%);
     box-shadow: var(--shadow-glow-lg);
   }
 
   &__name {
-    // --- タイポグラフィ ---
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
