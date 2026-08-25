@@ -172,7 +172,7 @@ const closeSidebar = () => {
     );
 
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-component));
+    @include flex-column;
 
     @each $name, $var in $accents {
       // --- モディファイア ---

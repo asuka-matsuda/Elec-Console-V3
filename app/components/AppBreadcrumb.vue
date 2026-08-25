@@ -56,7 +56,7 @@ const processedItems = computed(() => {
   @extend %text-caption;
 
   // --- レイアウト・配置 ---
-  @include flex-start(0, inline-flex);
+  @include inline-flex-start(0);
 
   // --- 視覚効果 ---
   @include border-base;
@@ -93,7 +93,7 @@ const processedItems = computed(() => {
   // --- 子要素 ---
   ol {
     // --- レイアウト・配置 ---
-    @include flex-start(0, inline-flex);
+    @include inline-flex-start(0);
 
     list-style: none;
   }

@@ -43,7 +43,7 @@ const inputId = useId();
 <style scoped lang="scss">
 .c-color-picker {
   // --- レイアウト・配置 ---
-  @include flex-start(var(--gap-component), inline-flex);
+  @include inline-flex-start(var(--gap-component));
 
   // --- その他 ---
   cursor: pointer;

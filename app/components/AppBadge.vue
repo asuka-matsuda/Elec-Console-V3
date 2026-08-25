@@ -48,7 +48,7 @@ withDefaults(
   @extend %text-label;
 
   // --- レイアウト・配置 ---
-  @include flex-center(0, inline-flex);
+  @include inline-flex-center(0);
 
   // --- その他 ---
   user-select: none;
@@ -62,7 +62,7 @@ withDefaults(
   white-space: nowrap;
 
   // --- 視覚効果 ---
-  @include state-base(var(--shadow-glow-hover), var(--transition-base));
+  @include state-base(var(--shadow-glow-hover));
   @include cyber-text-glow(var(--glow-color), 100%, var(--blur-sm));
 
   @each $name, $var in $variants {

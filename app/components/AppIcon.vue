@@ -32,7 +32,7 @@ const svgContent = computed(() => {
 <style scoped lang="scss">
 .c-icon {
   // --- レイアウト・配置 ---
-  @include flex-center(0, inline-flex);
+  @include inline-flex-center(0);
 
   // --- 疑似クラス ---
   :deep(svg) {

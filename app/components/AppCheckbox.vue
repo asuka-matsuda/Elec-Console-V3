@@ -120,7 +120,7 @@ const inputId = useId();
     @include border-dim;
 
     // --- 視覚効果 ---
-    @include state-base(var(--shadow-sink), var(--transition-glow));
+    @include state-base(var(--shadow-sink));
 
     // Explicitly NO border-radius to ensure sharp corners
 
@@ -170,6 +170,6 @@ const inputId = useId();
   }
 
   // --- レイアウト・配置 ---
-  @include flex-start(var(--gap-component), inline-flex);
+  @include inline-flex-start(var(--gap-component));
 }
 </style>

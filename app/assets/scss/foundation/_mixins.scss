@@ -5,29 +5,56 @@
 @use "variables" as *;
 
 // --- レイアウト ---
-@mixin flex-center($gap: var(--gap-element), $display: flex) {
-  display: $display;
+@mixin flex-center($gap: var(--gap-element)) {
+  display: flex;
   gap: $gap;
   align-items: center;
   justify-content: center;
 }
 
-@mixin flex-between($gap: var(--gap-element), $display: flex) {
-  display: $display;
+@mixin inline-flex-center($gap: var(--gap-element)) {
+  display: inline-flex;
+  gap: $gap;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between($gap: var(--gap-element)) {
+  display: flex;
   gap: $gap;
   align-items: center;
   justify-content: space-between;
 }
 
-@mixin flex-start($gap: var(--gap-element), $display: flex) {
-  display: $display;
+@mixin inline-flex-between($gap: var(--gap-element)) {
+  display: inline-flex;
+  gap: $gap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-start($gap: var(--gap-element)) {
+  display: flex;
   gap: $gap;
   align-items: center;
   justify-content: flex-start;
 }
 
-@mixin flex-column($gap: var(--gap-component), $display: flex) {
-  display: $display;
+@mixin inline-flex-start($gap: var(--gap-element)) {
+  display: inline-flex;
+  gap: $gap;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+@mixin flex-column($gap: var(--gap-component)) {
+  display: flex;
+  flex-direction: column;
+  gap: $gap;
+}
+
+@mixin inline-flex-column($gap: var(--gap-component)) {
+  display: inline-flex;
   flex-direction: column;
   gap: $gap;
 }

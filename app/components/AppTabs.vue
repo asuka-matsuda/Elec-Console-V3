@@ -77,7 +77,7 @@ const selectTab = (option: TabOption) => {
 
   &--vertical {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-component));
+    @include flex-column;
 
     align-items: stretch;
 

@@ -183,12 +183,12 @@ const categoryColorMap: Record<string, string> = {
 
 .c-glossary-list {
   // --- レイアウト・配置 ---
-  @include flex-column(var(--gap-component));
+  @include flex-column;
 }
 
 .c-glossary-card {
   // --- レイアウト・配置 ---
-  @include flex-column(var(--gap-component));
+  @include flex-column;
 
   // --- 視覚効果 ---
   transition: var(--transition-base);

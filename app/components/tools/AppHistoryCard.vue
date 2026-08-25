@@ -89,7 +89,7 @@ const handleDelete = () => {
 <style scoped lang="scss">
 .c-history-card {
   // --- レイアウト・配置 ---
-  @include flex-column(var(--gap-component));
+  @include flex-column;
 
   // --- モディファイア ---
   &.is-error {
@@ -139,7 +139,7 @@ const handleDelete = () => {
     @extend %text-title-sm;
 
     // --- レイアウト・配置 ---
-    @include flex-start(var(--gap-element));
+    @include flex-start;
 
     // --- タイポグラフィ ---
     color: var(--color-text-main);
@@ -147,7 +147,7 @@ const handleDelete = () => {
 
   &__body {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-component));
+    @include flex-column;
   }
 
   &__section {

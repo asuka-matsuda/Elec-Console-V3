@@ -80,7 +80,7 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
 
   &__section {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-component));
+    @include flex-column;
   }
 
   &__grid {

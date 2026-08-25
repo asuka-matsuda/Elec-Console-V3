@@ -89,12 +89,12 @@ const history = computed(() => dashboardData.value?.history || []);
 
   &__aside-block {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-component));
+    @include flex-column;
   }
 
   &__list {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-component));
+    @include flex-column;
   }
 
   &__loading {
@@ -125,7 +125,7 @@ const history = computed(() => dashboardData.value?.history || []);
   // --- 子要素 ---
   &__header {
     // --- レイアウト・配置 ---
-    @include flex-start(var(--gap-element));
+    @include flex-start;
   }
 
   &__title {

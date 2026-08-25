@@ -275,7 +275,7 @@ const {
 
   &__card-body {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-component));
+    @include flex-column;
   }
 
   &__section-title {
@@ -289,7 +289,7 @@ const {
 
   &__cable-list {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-component));
+    @include flex-column;
   }
 
   &__add-button {

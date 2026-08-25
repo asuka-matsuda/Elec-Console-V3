@@ -56,7 +56,7 @@ const componentTag = computed(() => {
   @extend %text-meta;
 
   // --- レイアウト・配置 ---
-  @include flex-center(var(--pad-component), inline-flex);
+  @include inline-flex-center(var(--pad-component));
 
   position: relative;
 

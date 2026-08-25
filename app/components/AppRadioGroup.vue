@@ -146,7 +146,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
     transition: var(--transition-base);
 
     // --- レイアウト・配置 ---
-    @include flex-center(0, inline-flex);
+    @include inline-flex-center(0);
   }
 }
 </style>

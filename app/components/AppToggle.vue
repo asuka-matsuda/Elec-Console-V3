@@ -191,6 +191,6 @@ const inputId = useId();
   }
 
   // --- レイアウト・配置 ---
-  @include flex-start(var(--gap-component), inline-flex);
+  @include inline-flex-start(var(--gap-component));
 }
 </style>

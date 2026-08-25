@@ -21,7 +21,7 @@ const currentYear = new Date().getFullYear();
   // --- レイアウト・配置 ---
   position: relative;
 
-  @include flex-column(var(--gap-component));
+  @include flex-column;
 
   align-items: center;
 

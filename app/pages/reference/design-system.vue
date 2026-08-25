@@ -113,7 +113,7 @@ const isChecked = ref(false);
 
 .p-ds-section {
   // --- レイアウト・配置 ---
-  @include flex-column(var(--gap-component));
+  @include flex-column;
 
   // --- 子要素 ---
   &__title {

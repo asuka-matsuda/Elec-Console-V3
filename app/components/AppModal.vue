@@ -200,7 +200,7 @@ const titleId = `modal-title-${modalId}`;
 
   &__header {
     // --- レイアウト・配置 ---
-    @include flex-between(var(--gap-element));
+    @include flex-between;
 
     align-items: flex-start;
   }
@@ -220,7 +220,7 @@ const titleId = `modal-title-${modalId}`;
 
   &__layout {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-component));
+    @include flex-column;
 
     flex: 1;
 

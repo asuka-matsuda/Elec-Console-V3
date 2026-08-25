@@ -68,7 +68,7 @@ const toggleDrawer = () => {
 <style scoped lang="scss">
 .l-tool-layout {
   // --- レイアウト・配置 ---
-  @include flex-column(var(--gap-component));
+  @include flex-column;
 
   flex: 1;
 
@@ -107,7 +107,7 @@ const toggleDrawer = () => {
     // --- レイアウト・配置 ---
     container-type: inline-size;
 
-    @include flex-column(var(--gap-component));
+    @include flex-column;
 
     flex: 1;
 

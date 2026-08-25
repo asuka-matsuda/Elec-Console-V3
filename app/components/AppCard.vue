@@ -53,7 +53,7 @@ const rootProps = computed(() => {
   padding: var(--pad-container);
 
   // --- 視覚効果 ---
-  @include state-base(none, var(--transition-base));
+  @include state-base;
 
   @include border-base;
 

@@ -126,7 +126,7 @@ const updateCount = (val: any) => {
 
   &__title-group {
     // --- レイアウト・配置 ---
-    @include flex-start(var(--gap-element));
+    @include flex-start;
   }
 
   &__title {

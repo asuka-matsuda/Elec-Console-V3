@@ -65,7 +65,7 @@ withDefaults(
   // --- 子要素 ---
   &__inner {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-component));
+    @include flex-column;
 
     // --- ボックスモデル ---
     width: 100%;
@@ -106,7 +106,7 @@ withDefaults(
 
   &__label-wrapper {
     // --- レイアウト・配置 ---
-    @include flex-start(var(--gap-element));
+    @include flex-start;
   }
 
   &__control {
@@ -136,7 +136,7 @@ withDefaults(
 // Label Component Styles (Legacy _c-form-label)
 .c-form-label {
   // --- レイアウト・配置 ---
-  @include flex-start(var(--gap-element));
+  @include flex-start;
 
   // --- 継承 ---
   @extend %text-title-sm;
