@@ -31,17 +31,17 @@ const formatLastLogin = (row: unknown) => {
 // --- モーダルステート管理 ---
 const isCreateModalOpen = ref(false);
 const isCredentialModalOpen = ref(false);
-const createdUserResult = ref<any>(null);
+const createdUserResult = ref<User | null>(null);
 
 const isAssignModalOpen = ref(false);
 const assignTargetUserId = ref("");
 const assignTargetSiteIds = ref<string[]>([]);
 
 const isConfirmDeleteOpen = ref(false);
-const userToDelete = ref<any>(null);
+const userToDelete = ref<User | null>(null);
 
 const isConfirmResetOpen = ref(false);
-const userToReset = ref<any>(null);
+const userToReset = ref<User | null>(null);
 const isResetting = ref(false);
 
 const deleteConfirmMessage = computed(() => {
