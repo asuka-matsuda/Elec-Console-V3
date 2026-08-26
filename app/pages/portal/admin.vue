@@ -9,8 +9,8 @@ import AppTabs from '~/components/ui/AppTabs.vue';
 import AppSectionHeader from '~/components/ui/AppSectionHeader.vue';
 
 // タブコンポーネントのインポート
-import PortalAdminUsersTab from '~/components/portal/PortalAdminUsersTab.vue';
-import PortalAdminSitesTab from '~/components/portal/PortalAdminSitesTab.vue';
+import PortalAdminUsersTab from '~/components/features/PortalAdminUsersTab.vue';
+import PortalAdminSitesTab from '~/components/features/PortalAdminSitesTab.vue';
 
 useHead({ title: 'ポータル管理 - Elec-Console' });
 
