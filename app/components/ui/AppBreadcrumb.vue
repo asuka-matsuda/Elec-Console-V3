@@ -74,7 +74,7 @@ const processedItems = computed(() => {
   // --- 疑似要素 ---
   &::after {
     // --- 継承 ---
-    @extend %text-label;
+    @extend %text-badge;
 
     content: "SYS.LOC";
 
@@ -105,7 +105,7 @@ const processedItems = computed(() => {
     // --- 疑似要素 ---
     &:not(:last-child)::after {
       // --- 継承 ---
-      @extend %text-label;
+      @extend %text-badge;
 
       content: "»";
 

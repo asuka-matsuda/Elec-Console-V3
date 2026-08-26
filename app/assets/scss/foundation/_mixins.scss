@@ -215,12 +215,31 @@
   letter-spacing: var(--tracking-wide);
 }
 
-%text-label {
+%text-badge {
   font-size: var(--font-size-2xs);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
   text-transform: uppercase;
   letter-spacing: var(--tracking-wider);
+}
+
+%text-label {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-wide);
+}
+
+%text-body-bold {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-base);
+  color: var(--color-text-main);
+  letter-spacing: var(--tracking-wide);
+}
+
+%form-placeholder {
+  color: theme-color(var(--color-text-muted), 50%);
 }
 
 %text-caption {

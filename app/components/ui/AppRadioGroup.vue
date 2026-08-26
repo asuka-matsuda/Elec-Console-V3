@@ -131,7 +131,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
 
   &__text {
     // --- 継承 ---
-    @extend %text-title-sm;
+    @extend %text-body-bold;
 
     // --- その他 ---
     user-select: none;

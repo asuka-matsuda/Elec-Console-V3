@@ -182,12 +182,8 @@ const closeSidebar = () => {
 
   &__heading {
     // --- 継承 ---
-    @extend %text-meta;
-
-    // --- タイポグラフィ ---
-    font-weight: var(--font-weight-bold);
-    color: var(--section-accent, var(--color-text-secondary));
-    text-transform: uppercase;
+    @extend %text-badge;
+      color: var(--section-accent, var(--color-text-secondary));
   }
 
   &__link {

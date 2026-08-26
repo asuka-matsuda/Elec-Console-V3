@@ -75,11 +75,7 @@ const inputId = useId();
 
   // --- 疑似要素 ---
   &::placeholder {
-    // --- タイポグラフィ ---
-    color: var(--color-text-muted);
-
-    // --- 視覚効果 ---
-    opacity: 0.5;
+    @extend %form-placeholder;
   }
 
   // --- モディファイア ---

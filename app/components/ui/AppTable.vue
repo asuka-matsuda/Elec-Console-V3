@@ -100,7 +100,7 @@ defineProps<{
 
   :deep(th) {
     // --- 継承 ---
-    @extend %text-title-sm;
+    @extend %text-label;
 
     // --- レイアウト・配置 ---
     position: sticky;

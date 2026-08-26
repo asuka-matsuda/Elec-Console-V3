@@ -354,7 +354,7 @@ const listboxId = useId();
   // --- モディファイア ---
   &.is-placeholder {
     // --- タイポグラフィ ---
-    color: var(--color-text-muted);
+    @extend %form-placeholder;
   }
 
   &.is-active {

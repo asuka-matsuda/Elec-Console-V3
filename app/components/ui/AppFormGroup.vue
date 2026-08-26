@@ -139,7 +139,7 @@ withDefaults(
   @include flex-start;
 
   // --- 継承 ---
-  @extend %text-title-sm;
+  @extend %text-label;
 
   // --- その他 ---
   user-select: none;

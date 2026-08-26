@@ -47,7 +47,7 @@ withDefaults(
   --glow-color: var(--color-text-main);
 
   // --- 継承 ---
-  @extend %text-label;
+  @extend %text-badge;
 
   // --- レイアウト・配置 ---
   @include inline-flex-center;

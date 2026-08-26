@@ -219,7 +219,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
   &__legend-item {
     // --- 継承 ---
-    @extend %text-title-sm;
+    @extend %text-body-bold;
 
     // --- レイアウト・配置 ---
     display: flex;
