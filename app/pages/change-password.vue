@@ -4,7 +4,8 @@ import { useRouter } from '#app';
 import { useAuth } from '~/composables/useAuth';
 
 definePageMeta({
-  layout: 'login' // パスワード変更時はメニュー等への遷移を防ぐためログイン用レイアウトを使用
+  layout: 'login',
+  title: '初回パスワード設定' // パスワード変更時はメニュー等への遷移を防ぐためログイン用レイアウトを使用
 });
 
 const router = useRouter();
@@ -53,7 +54,6 @@ const handleChangePassword = async () => {
 <template>
   <div class="p-change-password">
     <div class="p-change-password__container">
-      <AppSectionHeader title="初回パスワード設定" />
         <p class="p-change-password__desc">
           セキュリティのため、システムから配布された初期パスワードを変更してください。
         </p>

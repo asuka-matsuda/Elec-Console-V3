@@ -12,7 +12,7 @@ import AppFormGroup from "~/components/ui/AppFormGroup.vue";
 import AppIcon from "~/components/ui/AppIcon.vue";
 
 useHead({ title: "ログイン - Elec-Console" });
-definePageMeta({ layout: "login" });
+definePageMeta({ layout: "login", title: "Elec-Console v2" });
 
 const router = useRouter();
 const { login } = useAuth();
@@ -50,7 +50,6 @@ const handleLogin = async () => {
 
 <template>
   <div class="p-login">
-    <AppSectionHeader title="Elec-Console v2" />
       <form
         @submit.prevent="handleLogin"
         class="p-login__form"
