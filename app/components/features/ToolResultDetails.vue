@@ -6,13 +6,14 @@
 </script>
 
 <template>
-  <div class="p-result-details">
+  <dl class="p-result-details">
     <slot />
   </div>
 </template>
 
 <style scoped lang="scss">
 .p-result-details {
+  margin: 0; // Reset dl margin
   // --- レイアウト・配置 ---
   @include flex-column(var(--gap-element));
 

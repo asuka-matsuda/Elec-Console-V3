@@ -11,8 +11,8 @@ defineProps<{
 
 <template>
   <div class="p-result-details__row" :class="{ 'has-top-border': topBorder }">
-    <span>{{ label }}</span>
-    <span><slot /></span>
+    <dt>{{ label }}</dt>
+    <dd><slot /></dd>
   </div>
 </template>
 
@@ -48,4 +48,8 @@ defineProps<{
     border-top: 1px solid var(--color-border);
   }
 }
+
+  dt, dd {
+    margin: 0;
+  }
 </style>

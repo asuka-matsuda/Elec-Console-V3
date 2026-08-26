@@ -106,43 +106,43 @@ const dropStatusClass = computed(() => {
           <span class="value-sep">)</span>
         </template>
       </div>
-    </div>
+      </div>
 
     <!-- サブ指標 -->
     <div class="c-voltage-result__metrics">
       <!-- 電流チェック -->
-      <div class="metric-card">
-        <div class="metric-label">電流チェック (設計 / 許容)</div>
-        <div class="metric-value" :class="ampStatusClass">
+      <dl class="metric-card">
+        <dt class="metric-label">電流チェック (設計 / 許容)</dt>
+        <dd class="metric-value" :class="ampStatusClass">
           <span class="value-text">{{ currentI }}</span>
           <span class="value-sep">/</span>
           <span class="value-text">{{ maxI }}</span>
           <span class="value-unit">A</span>
-        </div>
-      </div>
+        </dd>
+      </dl>
 
       <!-- 電圧降下 (sizeモード) -->
-      <div v-if="mode === 'size'" class="metric-card">
-        <div class="metric-label">電圧降下</div>
-        <div class="metric-value" :class="dropStatusClass">
+      <dl v-if="mode === 'size'" class="metric-card">
+        <dt class="metric-label">電圧降下</dt>
+        <dd class="metric-value" :class="dropStatusClass">
           <span class="value-text">{{ dropV }}</span>
           <span class="value-unit">V</span>
           <span class="value-sep">(</span>
           <span class="value-text">{{ dropPercent }}</span>
           <span class="value-unit">%</span>
           <span class="value-sep">)</span>
-        </div>
-      </div>
+        </dd>
+      </dl>
 
       <!-- 選択ケーブル (dropモード) -->
-      <div v-else class="metric-card">
-        <div class="metric-label">選択ケーブル</div>
-        <div class="metric-value is-neutral">
+      <dl v-else class="metric-card">
+        <dt class="metric-label">選択ケーブル</dt>
+        <dd class="metric-value is-neutral">
           <span class="value-text c-voltage-result__drop-cable">{{ dropCableName }}</span>
-        </div>
-      </div>
+        </dd>
+      </dl>
     </div>
-  </div>
+      </div>
 </template>
 
 <style scoped lang="scss">
@@ -334,6 +334,7 @@ const dropStatusClass = computed(() => {
   }
 
   .metric-value {
+    margin: 0; // Reset dd margin
     // --- 継承 ---
     @extend %text-title-sm;
 
