@@ -9,7 +9,7 @@ export interface AppButtonProps {
   href?: string;
   type?: "button" | "submit" | "reset";
   size?: "sm" | "md";
-  variant?: "primary" | "secondary" | "danger" | "success" | "ghost";
+  variant?: "primary" | "secondary" | "danger" | "success";
   block?: boolean;
   iconOnly?: boolean;
   disabled?: boolean;
@@ -83,7 +83,6 @@ const componentTag = computed(() => {
   &--danger { --btn-color: var(--color-status-danger); }
   &--success { --btn-color: var(--color-status-success); }
   &--secondary { --btn-color: var(--color-status-neutral); }
-  &--ghost { --btn-color: transparent; border-color: transparent; color: var(--color-text-main); }
 
   // --- モディファイア（ブロック） ---
   &--block {
