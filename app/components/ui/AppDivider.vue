@@ -61,8 +61,6 @@ withDefaults(
   --divider-size-x: 100%;
   --divider-size-y: var(--border-width-base);
   --divider-min-h: auto;
-  --anim-scale: divider-scale-x;
-  --anim-pulse: data-pulse-x;
   --pulse-w: 30%;
   --pulse-h: 100%;
   --pulse-top: 0;
@@ -88,7 +86,7 @@ withDefaults(
   // --- 視覚効果 ---
   box-shadow: var(--shadow-sink); // 彫り込まれた溝の影
 
-  animation: var(--anim-scale) 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: divider-scale-x 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
   // --- モディファイア ---
   &--vertical {
@@ -96,8 +94,6 @@ withDefaults(
     --divider-size-x: var(--border-width-base);
     --divider-size-y: auto;
     --divider-min-h: 100%;
-    --anim-scale: divider-scale-y;
-    --anim-pulse: data-pulse-y;
     --pulse-w: 100%;
     --pulse-h: 30%;
     --pulse-top: -30%;
@@ -134,7 +130,7 @@ withDefaults(
       );
       box-shadow: var(--shadow-glow-md);
 
-      animation: var(--anim-pulse) 3s ease-in-out infinite;
+      animation: data-pulse-x 3s ease-in-out infinite;
     }
   }
 
