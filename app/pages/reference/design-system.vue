@@ -12,17 +12,16 @@ const isChecked = ref(false);
 
 <template>
   <div class="p-design-system">
-    <div class="p-design-system__header">
-      <AppSectionHeader title="Design System (UI Catalog)" icon="layout" variant="main" />
-      <p class="p-design-system__desc">
+    <AppSectionHeader title="Design System (UI Catalog)" icon="layout" variant="main">
+      <template #description>
         このページは社内用のUIカタログです。コンポーネントのデザインと状態を一覧で確認できます。
-      </p>
-    </div>
+      </template>
+    </AppSectionHeader>
 
     <div class="p-design-system__content">
       <!-- Buttons -->
       <section class="p-ds-section">
-        <h2 class="p-ds-section__title">Buttons (AppButton)</h2>
+        <AppSectionHeader title="Buttons (AppButton)" size="md" />
         <div class="p-ds-section__grid">
           <AppCard>
             <h3 class="p-ds-card-title">Variants</h3>
@@ -47,7 +46,7 @@ const isChecked = ref(false);
 
       <!-- Forms -->
       <section class="p-ds-section">
-        <h2 class="p-ds-section__title">Forms (AppInput / AppToggle / AppCheckbox)</h2>
+        <AppSectionHeader title="Forms (AppInput / AppToggle / AppCheckbox)" size="md" />
         <div class="p-ds-section__grid">
           <AppCard>
             <h3 class="p-ds-card-title">Text Inputs</h3>
@@ -69,7 +68,7 @@ const isChecked = ref(false);
 
       <!-- Feedback -->
       <section class="p-ds-section">
-        <h2 class="p-ds-section__title">Feedback (AppBadge)</h2>
+        <AppSectionHeader title="Feedback (AppBadge)" size="md" />
         <div class="p-ds-section__grid">
           <AppCard>
             <h3 class="p-ds-card-title">Badges</h3>
@@ -96,15 +95,6 @@ const isChecked = ref(false);
   // --- ボックスモデル ---
   padding-bottom: var(--gap-section);
 
-  // --- 子要素 ---
-  &__desc {
-    // --- ボックスモデル ---
-    margin-top: var(--pad-container);
-
-    // --- タイポグラフィ ---
-    color: var(--color-text-muted);
-  }
-
   &__content {
     // --- レイアウト・配置 ---
     @include flex-column(var(--gap-section));
@@ -116,19 +106,6 @@ const isChecked = ref(false);
   @include flex-column;
 
   // --- 子要素 ---
-  &__title {
-    // --- 継承 ---
-    @extend %text-title-md;
-
-    // --- ボックスモデル ---
-    padding-bottom: var(--pad-component);
-    border-bottom: 1px solid var(--color-border);
-
-    // --- タイポグラフィ ---
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-main);
-  }
-
   &__grid {
     // --- レイアウト・配置 ---
     @include grid-auto(350px);

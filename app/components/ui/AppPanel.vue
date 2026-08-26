@@ -59,9 +59,7 @@ withDefaults(
   border-image: var(--p-border-image);
 
   // --- 視覚効果 ---
-  box-shadow: var(--p-box-shadow);
-
-  transition: var(--transition-base);
+  @include state-base(var(--p-box-shadow));
 
   // Cyber Brackets (Top-Left & Bottom-Right)
 

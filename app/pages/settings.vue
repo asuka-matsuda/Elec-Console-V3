@@ -16,17 +16,16 @@ const themeOptions = [
 
 <template>
   <div class="p-settings">
-    <header class="p-settings__header">
-      <AppSectionHeader
-        title="UI・個人設定"
-        icon="settings"
-        variant="tool"
-        size="lg"
-      />
-      <p class="p-settings__desc">
+    <AppSectionHeader
+      title="UI・個人設定"
+      icon="settings"
+      variant="tool"
+      size="lg"
+    >
+      <template #description>
         このブラウザ固有のUI設定をカスタマイズします。
-      </p>
-    </header>
+      </template>
+    </AppSectionHeader>
 
     <div class="p-settings__grid">
       <div class="p-settings__stack">
@@ -75,12 +74,6 @@ const themeOptions = [
 
   // --- ボックスモデル ---
   padding-bottom: var(--gap-section);
-
-  // --- 子要素 ---
-  &__header {
-    // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-element));
-  }
 
   &__panel-content {
     // --- レイアウト・配置 ---

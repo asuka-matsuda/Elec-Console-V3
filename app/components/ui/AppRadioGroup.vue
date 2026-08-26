@@ -145,7 +145,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
     color: var(--color-text-muted);
 
     // --- 視覚効果 ---
-    transition: var(--transition-base);
+    @include state-base;
 
     // --- レイアウト・配置 ---
     @include inline-flex-center;

@@ -48,7 +48,7 @@ const currentYear = new Date().getFullYear();
     color: var(--color-text-muted);
 
     // --- 視覚効果 ---
-    transition: var(--transition-base);
+    @include state-base;
 
     // --- 疑似クラス ---
     &:hover {

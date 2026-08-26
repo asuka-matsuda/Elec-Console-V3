@@ -1,0 +1,91 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+import AppModal from '~/components/ui/AppModal.vue';
+import AppButton from '~/components/ui/AppButton.vue';
+import AppFormGroup from '~/components/ui/AppFormGroup.vue';
+import { printUserCredential } from '~/utils/printUserCredential';
+
+const props = defineProps<{
+  user: {
+    lastName: string;
+    firstName: string;
+    loginId: string;
+    initialPassword?: string;
+  } | null;
+}>();
+
+const isOpen = defineModel<boolean>({ default: false });
+
+const handlePrint = () => {
+  if (props.user) {
+    printUserCredential(props.user);
+  }
+};
+
+const handleCopyPassword = () => {
+  if (props.user?.initialPassword) {
+    navigator.clipboard.writeText(props.user.initialPassword);
+    alert('初期パスワードをコピーしました。');
+  }
+};
+</script>
+
+<template>
+  <AppModal v-model="isOpen" title="ログイン情報の発行完了">
+    <div class="c-user-credential-modal">
+      <p class="c-user-credential-modal__desc">
+        以下のログイン情報を作業員へお伝えください。<br>
+        （初期パスワードはこの画面を閉じると二度と表示されません）
+      </p>
+      
+      <div class="c-user-credential-modal__credential-box" v-if="user">
+        <AppFormGroup label="氏名">
+          <div class="c-user-credential-modal__credential-value">{{ user.lastName }} {{ user.firstName }}</div>
+        </AppFormGroup>
+        <AppFormGroup label="ログインID">
+          <div class="c-user-credential-modal__credential-value">{{ user.loginId }}</div>
+        </AppFormGroup>
+        <AppFormGroup label="初期パスワード">
+          <div class="c-user-credential-modal__credential-value c-user-credential-modal__credential-value--password">
+            {{ user.initialPassword || '（既に設定済みです）' }}
+          </div>
+        </AppFormGroup>
+      </div>
+    </div>
+    
+    <template #footer>
+      <AppButton variant="secondary" icon="document" @click="handleCopyPassword">PWをコピー</AppButton>
+      <AppButton variant="secondary" icon="document" @click="handlePrint">印刷する</AppButton>
+      <AppButton variant="primary" @click="isOpen = false">閉じる</AppButton>
+    </template>
+  </AppModal>
+</template>
+
+<style scoped lang="scss">
+.c-user-credential-modal {
+  &__desc {
+    @extend %text-desc;
+    margin-bottom: var(--space-4);
+  }
+  
+  &__credential-box {
+    @include flex-column(var(--space-3));
+    background: transparent;
+    backdrop-filter: blur(var(--blur-sm));
+    padding: var(--space-4);
+    @include border-dim(var(--color-category-main), 20%);
+  }
+
+  &__credential-value {
+    @extend %text-title-sm;
+    padding: var(--space-2) 0;
+    
+    &--password {
+      color: var(--color-status-success);
+      font-family: var(--font-mono);
+      font-size: var(--font-size-lg);
+      letter-spacing: 2px;
+    }
+  }
+}
+</style>

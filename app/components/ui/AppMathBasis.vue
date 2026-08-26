@@ -58,14 +58,13 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
         :key="index"
         class="c-math-basis__card"
       >
-        <header v-if="step.title" class="c-math-basis__header">
-          <h4 class="c-math-basis__title">{{ step.title }}</h4>
-        </header>
-
-        <AppDivider
+        <AppSectionHeader
           v-if="step.title"
+          :title="step.title"
+          tag="h4"
           variant="tool"
-          class="c-math-basis__divider"
+          size="sm"
+          class="c-math-basis__header"
         />
 
         <div class="c-math-basis__body">
@@ -119,15 +118,6 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   &__card {
     // --- レイアウト・配置 ---
     gap: var(--gap-component);
-  }
-
-  &__title {
-    // --- 継承 ---
-    @extend %text-title-sm;
-
-    // --- タイポグラフィ ---
-    color: var(--color-category-tool);
-    text-transform: uppercase;
   }
 
   &__body {

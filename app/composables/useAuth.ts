@@ -1,5 +1,5 @@
 import { computed } from 'vue';
-import { useCookie, useState, useRouter } from '#app';
+import { useCookie, useState, useRouter, useFetch } from '#app';
 import type { User } from '~/types/auth';
 
 export const useAuth = () => {
@@ -7,28 +7,51 @@ export const useAuth = () => {
   const currentUser = useState<User | null>('currentUser', () => null);
   const router = useRouter();
 
-  const initAuth = () => {
-    if (token.value === 'dummy-admin-token') {
-      currentUser.value = { id: '1', name: 'システム管理者', role: 'admin' };
-    } else if (token.value === 'dummy-worker-token') {
-      currentUser.value = { id: '2', name: '一般作業員', role: 'worker' };
+  const initAuth = async (force = false) => {
+    if (token.value && (!currentUser.value || force)) {
+      try {
+        const { data, error } = await useFetch('/api/auth/me', {
+          headers: {
+            cookie: `auth_token=${token.value}`
+          }
+        });
+        if (!error.value && data.value) {
+          currentUser.value = (data.value as any).user;
+        } else {
+          logout(); // トークンが無効な場合はログアウト
+        }
+      } catch (e) {
+        console.error('Session restore failed');
+      }
     }
   };
 
-  const login = async (id: string, pass: string) => {
-    await new Promise(resolve => setTimeout(resolve, 500));
+  const login = async (loginId: string, pass: string) => {
+    try {
+      const { data, error } = await useFetch('/api/auth/login', {
+        method: 'POST',
+        body: { loginId, password: pass }
+      });
 
-    if (id === 'admin' && pass === 'admin') {
-      token.value = 'dummy-admin-token';
-      currentUser.value = { id: '1', name: 'システム管理者', role: 'admin' };
-      return { success: true };
-    } else if (id === 'worker' && pass === 'worker') {
-      token.value = 'dummy-worker-token';
-      currentUser.value = { id: '2', name: '一般作業員', role: 'worker' };
-      return { success: true };
+      if (error.value || !data.value) {
+        return { success: false, message: 'ログインIDまたはパスワードが違います。' };
+      }
+
+      const response = data.value as any;
+      if (response.success) {
+        token.value = response.token;
+        currentUser.value = response.user;
+        
+        if (response.mustChangePassword) {
+          return { success: true, mustChangePassword: true };
+        }
+        return { success: true };
+      }
+      
+      return { success: false, message: 'ログインに失敗しました。' };
+    } catch (e) {
+      return { success: false, message: 'サーバー通信エラーが発生しました。' };
     }
-    
-    return { success: false, message: 'IDまたはパスワードが違います' };
   };
 
   const logout = () => {

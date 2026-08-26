@@ -68,7 +68,7 @@ const handleClick = async () => {
 <style scoped lang="scss">
 .c-save-button {
   // --- 視覚効果 ---
-  transition: all var(--transition-base);
+  @include state-base;
 
   // --- モディファイア ---
   &.is-success {

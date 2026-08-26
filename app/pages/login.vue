@@ -24,7 +24,7 @@ const formData = ref<Record<string, string>>({
 });
 
 const formFields = [
-  { id: "userId", label: "ユーザーID", type: "text", placeholder: "admin" },
+  { id: "userId", label: "ユーザーID", type: "text", placeholder: "master" },
   { id: "password", label: "パスワード", type: "password", placeholder: "••••••••" },
 ] as const;
 const errorMessage = ref("");
@@ -54,7 +54,7 @@ const handleLogin = async () => {
     <AppPanel title="Elec-Console v2" class="p-login__panel">
       <form
         @submit.prevent="handleLogin"
-        class="p-login__form l-stack l-stack--sm"
+        class="p-login__form"
       >
         <div v-if="errorMessage" class="p-login__error">
           {{ errorMessage }}

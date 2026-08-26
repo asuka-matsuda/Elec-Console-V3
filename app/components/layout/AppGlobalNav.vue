@@ -205,7 +205,7 @@ const closeSidebar = () => {
     color: var(--color-text-secondary);
 
     // --- 視覚効果 ---
-    transition: var(--transition-base);
+    @include state-base;
 
     &-text {
       // --- タイポグラフィ ---
@@ -224,7 +224,7 @@ const closeSidebar = () => {
       height: var(--icon-size-md);
 
       // --- 視覚効果 ---
-      transition: var(--transition-base);
+      @include state-base;
     }
 
     // Hover
@@ -243,7 +243,7 @@ const closeSidebar = () => {
       color: var(--section-accent, var(--color-category-main));
 
       // --- 視覚効果 ---
-      box-shadow: var(--shadow-glow-sm);
+      @include state-hover;
 
       // --- 子要素 ---
       .l-global-nav__link-icon {

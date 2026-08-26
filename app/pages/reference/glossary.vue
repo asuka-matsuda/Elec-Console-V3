@@ -190,7 +190,7 @@ const categoryColorMap: Record<string, string> = {
   @include flex-column;
 
   // --- 視覚効果 ---
-  transition: var(--transition-base);
+  @include state-base;
 
   // --- 子要素 ---
   &__header {

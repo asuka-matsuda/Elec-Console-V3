@@ -343,7 +343,7 @@ const listboxId = useId();
     background-position: center;
     background-size: contain;
 
-    transition: var(--transition-base);
+    @include state-base;
   }
 
   // --- モディファイア ---
@@ -434,7 +434,7 @@ const listboxId = useId();
   white-space: nowrap;
 
   // --- 視覚効果 ---
-  transition: var(--transition-base);
+  @include state-base;
 
   // --- 疑似クラス ---
   &:hover:not(.is-disabled, .is-placeholder),

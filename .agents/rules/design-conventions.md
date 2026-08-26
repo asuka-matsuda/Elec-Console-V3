@@ -31,3 +31,12 @@ description: "電気設計コンソールのUI/UXデザイン規約"
   - CSSで親要素（例: `.metric-value`）に `.is-success` 等のクラスを付与した場合、子要素である単位表示（`.value-unit` 等）がCSS継承によって意図せず着色されるケースに注意する。
   - 必ず `.value-unit` クラス内で `color: var(--color-text-secondary);` を明示的に指定し、色の上書きを防ぐこと。
   - MathJax/KaTeX の数式内においても、`\htmlClass{tex-status-success}{...}` の適用範囲は数値のみとし、`\text{ [A]}` のような単位部分はクラスの外側に配置する。
+
+
+## 4. UIスタイリングの基本原則 (背景と角丸)
+- **背景色のベタ塗り禁止**:
+  - コンポーネントや要素の背景に単色（`background` / `background-color`）を塗ることは原則として禁止する。
+  - 重なる部分の視認性を確保する際は、背景色ではなく `backdrop-filter`（すりガラス効果等）を使用すること。
+- **角丸の禁止 (Sharp Corners)**:
+  - 要素の角は原則として直角（シャープ）とし、`border-radius` による角丸を付与することを禁止する。
+  - ※ただし、チェックボックスなどの特殊UIや、アバター・アイコン等の「真円 (`border-radius: 50%`)」については例外として許可する。

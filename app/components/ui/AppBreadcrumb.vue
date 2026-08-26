@@ -121,7 +121,7 @@ const processedItems = computed(() => {
     @extend %text-meta;
 
     // --- 視覚効果 ---
-    transition: var(--transition-base);
+    @include state-base;
   }
 
   a:hover {

@@ -89,18 +89,20 @@ const titleId = `modal-title-${modalId}`;
     @click.self="close"
     @cancel.prevent="close"
   >
-    <AppPanel class="c-modal__panel" :bracket-color="variant">
+    <AppPanel class="c-modal__panel" :bracket-color="(variant as any)">
       <!-- Header -->
       <template #header>
-        <div class="c-modal__header-wrapper">
-          <header class="c-modal__header">
-            <h2 :id="titleId" class="c-modal__title">
-              <AppIcon v-if="icon" :name="icon" class="c-modal__icon" />
-              <slot name="title">{{ title }}</slot>
-            </h2>
-          </header>
-          <AppDivider type="fade-center" variant="border" />
-        </div>
+        <AppSectionHeader
+          :titleId="titleId"
+          :title="title"
+          :icon="icon"
+          :variant="(variant as any)"
+          dividerType="fade-center"
+        >
+          <template v-if="$slots.title">
+            <slot name="title" />
+          </template>
+        </AppSectionHeader>
       </template>
 
       <div class="c-modal__layout">
@@ -198,25 +200,7 @@ const titleId = `modal-title-${modalId}`;
     backdrop-filter: blur(var(--blur-lg));
   }
 
-  &__header {
-    // --- レイアウト・配置 ---
-    @include flex-between;
 
-    align-items: flex-start;
-  }
-
-  &__title {
-    // --- 継承 ---
-    @extend %text-title-lg;
-
-    // --- レイアウト・配置 ---
-    @include flex-start(var(--gap-component));
-  }
-
-  &__icon {
-    // --- レイアウト・配置 ---
-    flex-shrink: 0;
-  }
 
   &__layout {
     // --- レイアウト・配置 ---

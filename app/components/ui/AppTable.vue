@@ -121,7 +121,7 @@ defineProps<{
     position: relative; /* Required for z-index and box-shadow to appear correctly on rows */
 
     // --- 視覚効果 ---
-    transition: var(--transition-base);
+    @include state-base;
 
     // --- 疑似クラス ---
     &:last-child td {

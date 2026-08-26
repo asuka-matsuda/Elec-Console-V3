@@ -41,7 +41,7 @@ const { currentUser, logout } = useAuth();
                 "
               />
             </div>
-            <span class="l-header-user__name">{{ currentUser?.name || 'ゲスト' }}</span>
+            <span class="l-header-user__name">{{ currentUser ? `${currentUser.lastName} ${currentUser.firstName}` : 'ゲスト' }}</span>
             <AppButton variant="secondary" size="sm" @click="logout" style="margin-left: 1rem;">ログアウト</AppButton>
           </div>
         </template>

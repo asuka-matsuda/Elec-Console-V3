@@ -21,7 +21,7 @@ const emit = defineEmits<{
   @include flex-start(var(--gap-section));
 
   // --- 視覚効果 ---
-  transition: var(--transition-base);
+  @include state-base;
 
   // --- 疑似クラス ---
   &:hover {
@@ -44,7 +44,7 @@ const emit = defineEmits<{
     color: var(--color-category-main);
 
     // --- 視覚効果 ---
-    transition: var(--transition-base);
+    @include state-base;
   }
 
   &__text {

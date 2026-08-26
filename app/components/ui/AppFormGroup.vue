@@ -151,7 +151,7 @@ withDefaults(
   text-transform: uppercase;
 
   // --- 視覚効果 ---
-  transition: var(--transition-base);
+  @include state-base;
 
   // Cyber glowing dot
 
@@ -174,9 +174,7 @@ withDefaults(
     border-radius: 50%;
 
     // --- 視覚効果 ---
-    box-shadow: var(--shadow-glow-sm);
-
-    transition: var(--transition-base);
+    @include state-base(var(--shadow-glow-sm));
   }
 }
 

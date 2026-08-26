@@ -139,7 +139,7 @@ const inputId = useId();
       stroke-dasharray: 24;
       stroke-dashoffset: 24;
 
-      transition: var(--transition-base);
+      @include state-base;
     }
   }
 

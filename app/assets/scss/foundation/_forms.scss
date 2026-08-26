@@ -8,23 +8,26 @@
   $is-active: "&:is(:focus, :focus-visible)",
   $is-hover: "&:hover:not(:disabled, .is-error, :focus)"
 ) {
-  @include border-base(var(--color-category-main));
+  @include border-dim(var(--color-category-main), 30%);
 
   // --- 通常状態 ---
   @include state-base(var(--shadow-sink), var(--transition-glow));
 
   // --- ホバー ---
   #{$is-hover} {
+    border-color: theme-color(var(--color-category-main), 50%);
     @include state-hover(var(--color-category-main));
   }
 
   // --- クリック ---
   &:active:not(:disabled, .is-error) {
+    border-color: var(--color-category-main);
     @include state-active(var(--color-category-main));
   }
 
   // --- フォーカス ---
   #{$is-active} {
+    border-color: var(--color-category-main);
     @include state-focus(var(--color-category-main));
     @include cyber-text-glow(var(--color-category-main));
   }
@@ -34,17 +37,18 @@
     border-color: theme-color(var(--color-status-danger), 50%);
     color: var(--color-status-danger);
 
-    // --- エラー時のホバー ---
+    // --- エラー時・ホバー ---
     &:hover:not(:disabled, :focus) {
+      border-color: theme-color(var(--color-status-danger), 70%);
       @include state-hover(var(--color-status-danger));
     }
 
-    // --- エラー時のクリック ---
+    // --- エラー時・クリック ---
     &:active:not(:disabled) {
       @include state-active(var(--color-status-danger));
     }
 
-    // --- エラー時のフォーカス ---
+    // --- エラー時・フォーカス ---
     &:is(:-moz-focusring, :focus, :focus-visible, .is-active) {
       @include state-focus(var(--color-status-danger));
       @include cyber-text-glow(var(--color-status-danger));
