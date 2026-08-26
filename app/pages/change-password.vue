@@ -84,7 +84,6 @@ const handleChangePassword = async () => {
 
   &__desc {
     @extend %text-desc;
-    color: var(--color-text-muted);
     margin-bottom: var(--space-4);
   }
 

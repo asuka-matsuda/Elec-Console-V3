@@ -35,7 +35,7 @@ const handleCopyPassword = () => {
         （初期パスワードはこの画面を閉じると二度と表示されません）
       </p>
       
-      <div class="c-user-credential-modal__credential-box" v-if="user">
+      <div v-if="user" class="c-user-credential-modal__credential-box">
         <AppFormGroup label="氏名">
           <div class="c-user-credential-modal__credential-value">{{ user.lastName }} {{ user.firstName }}</div>
         </AppFormGroup>

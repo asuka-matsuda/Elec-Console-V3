@@ -248,8 +248,7 @@ const categoryColorMap: Record<string, string> = {
     @extend %text-meta;
 
     // --- タイポグラフィ ---
-    color: var(--color-text-muted);
-  }
+    }
 
   &__text {
     // --- 継承 ---

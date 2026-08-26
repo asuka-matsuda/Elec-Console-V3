@@ -90,8 +90,9 @@ const confirmDelete = () => {
           size="lg"
         >
           <template #actions>
-            <AppButton variant="danger"
-              v-if="historyList.length > 0"
+            <AppButton
+v-if="historyList.length > 0"
+              variant="danger"
               size="sm"
               @click="isClearAllModalOpen = true"
             >

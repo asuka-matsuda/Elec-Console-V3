@@ -37,7 +37,8 @@ const handleClick = async () => {
 </script>
 
 <template>
-  <AppButton variant="success"
+  <AppButton
+variant="success"
     v-bind="props"
     :disabled="disabled || state !== 'idle'"
     :size="size || 'sm'"

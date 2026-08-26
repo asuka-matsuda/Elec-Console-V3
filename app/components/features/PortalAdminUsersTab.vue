@@ -123,7 +123,7 @@ const handleResetPassword = async () => {
           <div class="c-admin-users__actions">
             <AppButton variant="secondary" size="sm" @click="handleOpenAssign(row)">現場アサイン</AppButton>
             <AppButton variant="warning" size="sm" @click="confirmResetPassword(row)">PW初期化</AppButton>
-            <AppButton variant="danger" size="sm" @click="confirmDelete(row)" :disabled="row.id === 'master'">削除</AppButton>
+            <AppButton variant="danger" size="sm" :disabled="row.id === 'master'" @click="confirmDelete(row)">削除</AppButton>
           </div>
         </template>
       </AppTable>
@@ -180,7 +180,6 @@ const handleResetPassword = async () => {
 
   &__meta {
     @extend %text-meta;
-    color: var(--color-text-muted);
-  }
+    }
 }
 </style>

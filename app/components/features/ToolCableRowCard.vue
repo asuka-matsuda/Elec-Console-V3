@@ -67,7 +67,7 @@ const updateCount = (val: any) => {
           ( 断面積: {{ singleCableArea.toFixed(1) }} mm² / 本 )
         </span>
       </div>
-      <AppButton variant="danger" v-if="removable" size="sm" icon-only @click="emit('remove')">
+      <AppButton v-if="removable" variant="danger" size="sm" icon-only @click="emit('remove')">
         <AppIcon name="trash-2" size="sm" />
       </AppButton>
     </div>

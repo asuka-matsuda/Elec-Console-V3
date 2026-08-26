@@ -97,7 +97,8 @@ const {
                     @remove="removeStrongCable(cable.id)"
                   />
                 </div>
-                <AppButton variant="secondary"
+                <AppButton
+variant="secondary"
                   class="p-rack__add-button"
                   @click="addStrongCable"
                 >
@@ -140,7 +141,8 @@ const {
                     @remove="removeWeakCable(cable.id)"
                   />
                 </div>
-                <AppButton variant="secondary"
+                <AppButton
+variant="secondary"
                   class="p-rack__add-button"
                   @click="addWeakCable"
                 >

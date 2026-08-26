@@ -69,7 +69,8 @@ const handleSave = async () => {
             />
           </div>
 
-          <AppButton variant="success"
+          <AppButton
+variant="success"
             class="p-conduit__add-button"
             @click="addCable"
           >

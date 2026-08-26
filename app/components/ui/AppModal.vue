@@ -93,11 +93,11 @@ const titleId = `modal-title-${modalId}`;
       <!-- Header -->
       <template #header>
         <AppSectionHeader
-          :titleId="titleId"
+          :title-id="titleId"
           :title="title"
           :icon="icon"
           :variant="(variant as any)"
-          dividerType="fade-center"
+          divider-type="fade-center"
         >
           <template v-if="$slots.title">
             <slot name="title" />

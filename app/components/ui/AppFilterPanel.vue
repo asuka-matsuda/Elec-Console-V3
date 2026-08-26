@@ -61,7 +61,7 @@ const toggleCat = (value: string) => {
       <!-- スロットを追加して、特有のフィルター（五十音など）を拡張可能にする -->
       <slot name="extra-filters" />
     </div>
-  </AppPanel>
+  </div></AppPanel>
 </template>
 
 <style scoped lang="scss">
