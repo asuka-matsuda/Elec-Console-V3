@@ -4,7 +4,7 @@ import { useRouter } from '#app';
 import { useAuth } from '~/composables/useAuth';
 
 definePageMeta({
-  layout: 'default' // ヘッダー等がない方が良ければ empty にするが、今回は default で
+  layout: 'login' // パスワード変更時はメニュー等への遷移を防ぐためログイン用レイアウトを使用
 });
 
 const router = useRouter();
