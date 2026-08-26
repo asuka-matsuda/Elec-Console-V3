@@ -7,7 +7,8 @@
 /**
  * バッジのカラーバリエーション
  */
-export type BadgeVariant =
+export type BadgeVariant = 
+  | "secondary"
   | "neutral"
   | "primary"
   | "success"
@@ -36,6 +37,7 @@ withDefaults(
   // --- SCSS変数・マップ ---
   $variants: (
     "neutral": "--color-text-main",
+    "secondary": "--color-text-muted",
     "primary": "--color-category-main",
     "success": "--color-status-success",
     "warning": "--color-status-warning",
