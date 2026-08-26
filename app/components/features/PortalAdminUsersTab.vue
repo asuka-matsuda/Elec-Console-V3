@@ -12,9 +12,9 @@ import AppButton from '~/components/ui/AppButton.vue';
 import AppConfirmModal from '~/components/ui/AppConfirmModal.vue';
 
 // サブコンポーネント
-import PortalUserCreateModal from './users/PortalUserCreateModal.vue';
-import PortalUserCredentialModal from './users/PortalUserCredentialModal.vue';
-import PortalUserAssignModal from './users/PortalUserAssignModal.vue';
+import PortalUserCreateModal from './PortalUserCreateModal.vue';
+import PortalUserCredentialModal from './PortalUserCredentialModal.vue';
+import PortalUserAssignModal from './PortalUserAssignModal.vue';
 
 const { users, fetchUsers, deleteUser, resetUserPassword } = useAdminUsers();
 
