@@ -275,7 +275,6 @@ const closeSidebar = () => {
       );
 
       // --- 子要素 ---
-      
 
       .l-global-nav__link-icon {
         // --- タイポグラフィ ---

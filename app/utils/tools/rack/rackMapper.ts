@@ -1,3 +1,4 @@
+import type { CableData } from '~/types/database';
 import type { RackCableInput, RackCalcInputs } from '~/utils/tools/rack/rackCalcLogic';
 import { cableData } from '~/constants/data/cableData';
 
@@ -20,7 +21,7 @@ export interface RackInputs {
 }
 
 export function convertUIToRackCable(uiInput: RackCableUIInput): RackCableInput {
-  let def: any;
+  let def: CableData | undefined;
   if (uiInput.cableIdx && uiInput.cableIdx.startsWith('idx_')) {
     const idx = parseInt(uiInput.cableIdx.replace('idx_', ''), 10);
     def = cableData[idx];

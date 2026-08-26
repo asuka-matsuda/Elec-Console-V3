@@ -1,5 +1,6 @@
 import type { ConduitCalcResult, CableInput } from "./conduitCalcLogic";
 import type { HistoryEntry } from "~/types/history";
+import type { CableData } from '~/types/database';
 import { formatCableName } from "~/utils/cable";
 import { cableData } from "~/constants/data/cableData";
 
@@ -13,13 +14,13 @@ export function mapConduitToHistory(
   const inputs = [{ label: "配管種類", value: conduitCategory }];
 
   inputCables.forEach((c, i) => {
-    let cableDef: any = undefined;
+    let cableDef: CableData | undefined = undefined;
     if (c.cableIdx && c.cableIdx.startsWith('idx_')) {
       const idx = parseInt(c.cableIdx.replace('idx_', ''), 10);
       cableDef = cableData[idx];
     }
     const name = formatCableName(
-      cableDef || { category: c.category, size: '', cores: '' } as any,
+      cableDef || { category: c.category, size: '', cores: '' } as unknown as CableData,
       true,
       false
     );

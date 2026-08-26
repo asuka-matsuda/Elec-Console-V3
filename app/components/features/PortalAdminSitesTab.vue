@@ -21,7 +21,7 @@ const siteHeaders = [
 ];
 
 const formatDate = (isoString: unknown) => {
-  if (typeof isoString !== 'string') return '-';
+  if (typeof isoString !== "string") return "-";
   if (!isoString) return "-";
   return new Date(isoString).toLocaleString();
 };
@@ -227,8 +227,6 @@ const confirmIntent = computed(() => {
   &__stack {
     @include flex-column(var(--gap-section));
   }
-
-  
 
   &__status-stack {
     @include flex-column(var(--gap-element));

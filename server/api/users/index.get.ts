@@ -1,3 +1,4 @@
+import type { User } from '~/types/auth';
 import { defineEventHandler } from 'h3';
 import fs from 'fs';
 import path from 'path';
@@ -10,7 +11,7 @@ export default defineEventHandler((event) => {
   }
   
   // セキュリティのためパスワードは除去して返す
-  return users.map((u: any) => {
+  return users.map((u: User & { password?: string }) => {
     const safeUser = { ...u };
     delete safeUser.password;
     return safeUser;

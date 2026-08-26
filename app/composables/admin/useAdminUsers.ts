@@ -22,7 +22,7 @@ export const useAdminUsers = () => {
       });
       await fetchUsers();
       return data;
-    } catch (e: any) {
+    } catch (e: unknown) {
       throw new Error(e.data?.statusMessage || 'ユーザー登録に失敗しました', { cause: e });
     }
   };
@@ -53,7 +53,7 @@ export const useAdminUsers = () => {
       });
       await fetchUsers();
       return data.initialPassword;
-    } catch (e: any) {
+    } catch (e: unknown) {
       throw new Error(e.data?.statusMessage || 'パスワード初期化に失敗しました', { cause: e });
     }
   };

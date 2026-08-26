@@ -1,3 +1,4 @@
+import type { User } from '~/types/auth';
 import { defineEventHandler, getCookie, createError } from 'h3';
 import fs from 'fs';
 import path from 'path';
@@ -22,7 +23,7 @@ export default defineEventHandler((event) => {
   }
 
   const users = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
-  const user = users.find((u: any) => u.loginId === loginId);
+  const user = users.find((u: User & { password?: string }) => u.loginId === loginId);
 
   if (!user || !user.isActive) {
     throw createError({ statusCode: 401, statusMessage: 'User not found or inactive' });

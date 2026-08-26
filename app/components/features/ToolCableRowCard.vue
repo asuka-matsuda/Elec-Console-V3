@@ -13,7 +13,7 @@ import { cableData } from "~/constants/data/cableData";
  * it matches { id: string, category: string, cableIdx: string, count: number | null }
  */
 const props = defineProps<{
-  modelValue: any;
+  modelValue: { id: string, category: string, cableIdx: string, count: number | null };
   index: number;
   removable?: boolean;
 }>();
@@ -29,7 +29,7 @@ const availableSizes = computed(() =>
 );
 
 const singleCableArea = computed(() => {
-  const cableIdxStr = props.modelValue.cableIdx;
+  const cableIdxStr = (props.modelValue.cableIdx || '');
   if (!cableIdxStr || !cableIdxStr.startsWith("idx_")) return null;
   const idx = parseInt(cableIdxStr.replace("idx_", ""), 10);
   const def = cableData[idx];

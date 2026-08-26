@@ -1,3 +1,4 @@
+import type { User } from '~/types/auth';
 import { defineEventHandler, readBody, createError } from 'h3';
 import { verifyPassword } from '../../utils/password';
 import fs from 'fs';
@@ -17,7 +18,7 @@ export default defineEventHandler(async (event) => {
     users = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
   }
 
-  const user = users.find((u: any) => u.loginId === loginId);
+  const user = users.find((u: User & { password?: string }) => u.loginId === loginId);
 
   if (!user) {
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized' });

@@ -1,5 +1,6 @@
 import type { WeightCalcInputs, WeightCalcResult } from "./weightCalcLogic";
 import type { HistoryEntry } from "~/types/history";
+import type { CableData } from '~/types/database';
 import { formatCableName } from "~/utils/cable";
 import { cableData } from "~/constants/data/cableData";
 
@@ -9,14 +10,14 @@ export function mapWeightToHistory(
 ): Omit<HistoryEntry, "id" | "timestamp"> | null {
   if (result.error) return null;
 
-  let cableDef: any = undefined;
+  let cableDef: CableData | undefined = undefined;
   if (settings.cableIdx && settings.cableIdx.startsWith('idx_')) {
     const idx = parseInt(settings.cableIdx.replace('idx_', ''), 10);
     cableDef = cableData[idx];
   }
   
   const name = formatCableName(
-    cableDef || { category: settings.category, size: '', cores: '' } as any,
+    cableDef || { category: settings.category, size: '', cores: '' } as CableData,
     true,
     false
   );

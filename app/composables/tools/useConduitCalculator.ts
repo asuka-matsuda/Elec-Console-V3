@@ -14,7 +14,7 @@ export interface ConduitInputs {
 
 const defaultInputs: ConduitInputs = {
   conduitCategory: '',
-  inputCables: [{ id: uuidv4(), category: '', cableIdx: '', count: null as any }]
+  inputCables: [{ id: uuidv4(), category: '', cableIdx: '', count: null as unknown as number }]
 };
 
 export function useConduitCalculator() {

@@ -25,12 +25,12 @@ describe('conduitCalcLogic', () => {
 
   describe('calculateConduitSize', () => {
     // Mock Data
-    const mockCableData: any[] = [
+    const mockCableData: unknown[] = [
       { diameter: '10', size: 10 },    // idx_0: area = 78.54
       { diameter: '20', size: 20 },    // idx_1: area = 314.16
     ];
 
-    const mockConduitData: any[] = [
+    const mockConduitData: unknown[] = [
       { category: 'PF', size: '16', innerDiameter: 16.4, area: 211.2, area32: 67.6, area48: 101.4 },
       { category: 'PF', size: '22', innerDiameter: 21.9, area: 376.7, area32: 120.5, area48: 180.8 },
       { category: 'PF', size: '28', innerDiameter: 27.8, area: 607.0, area32: 194.2, area48: 291.4 },

@@ -1,3 +1,4 @@
+import type { User } from '~/types/auth';
 import { defineEventHandler, createError } from 'h3';
 import fs from 'fs';
 import path from 'path';
@@ -15,7 +16,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const users = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
-  const user = users.find((u: any) => u.id === id);
+  const user = users.find((u: User & { password?: string }) => u.id === id);
 
   if (!user) {
     throw createError({ statusCode: 404, statusMessage: 'User not found' });

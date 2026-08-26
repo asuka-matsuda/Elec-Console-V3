@@ -1,4 +1,4 @@
-export interface HistoryEntry {
+export interface HistoryEntry<TInputs = Record<string, unknown>, TResults = Record<string, unknown>> {
   id: string;
   toolId?: string;
   toolName: string;
@@ -8,6 +8,6 @@ export interface HistoryEntry {
   mainResultText: string;
   inputs: { label: string; value: string }[];
   results: { label: string; value: string; isMain?: boolean; color?: string }[];
-  rawInputs?: any;
-  rawResult?: any;
+  rawInputs?: TInputs;
+  rawResult?: TResults;
 }

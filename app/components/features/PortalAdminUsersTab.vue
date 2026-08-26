@@ -25,13 +25,15 @@ const userHeaders = [
 
 const formatLastLogin = (row: unknown) => {
   const user = row as User;
-  return user.lastLoginAt ? new Date(user.lastLoginAt as string).toLocaleDateString() : '未ログイン';
+  return user.lastLoginAt
+    ? new Date(user.lastLoginAt as string).toLocaleDateString()
+    : "未ログイン";
 };
 
 // --- モーダルステート管理 ---
 const isCreateModalOpen = ref(false);
 const isCredentialModalOpen = ref(false);
-const createdUserResult = ref<User | null>(null);
+const createdUserResult = ref<(User & { initialPassword?: string }) | null>(null);
 
 const isAssignModalOpen = ref(false);
 const assignTargetUserId = ref("");
@@ -109,9 +111,8 @@ const handleResetPassword = async () => {
     };
     isConfirmResetOpen.value = false;
     isCredentialModalOpen.value = true;
-  } catch (e: any) {
-     
-    alert(e.message);
+  } catch (e: unknown) {
+    alert((e as Error).message);
   } finally {
     isResetting.value = false;
     userToReset.value = null;

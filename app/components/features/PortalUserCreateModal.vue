@@ -1,11 +1,12 @@
 <script setup lang="ts">
+import type { User, UserRole  } from '~/types/auth';
 import { ref } from "vue";
 import { useAdminUsers } from "~/composables/admin/useAdminUsers";
-import type { UserRole } from "~/types/auth";
+
 
 const isOpen = defineModel<boolean>({ default: false });
 const emit = defineEmits<{
-  (e: "success", user: any): void;
+  (e: "success", user: User): void;
 }>();
 
 const { createUser } = useAdminUsers();

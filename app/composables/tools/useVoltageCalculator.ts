@@ -40,7 +40,7 @@ export function useVoltageCalculator() {
       return calculateLogic(calcInputs);
     },
     {
-      toHistory: (formInputs, res) => mapVoltageToHistory('電圧降下・ケーブルサイズ選定', {} as any, res as any), // Will not be used directly
+      toHistory: (formInputs, res) => mapVoltageToHistory('電圧降下・ケーブルサイズ選定', mapFormToVoltageCalcInputs(formInputs) as unknown as import('~/types/voltage').VoltageCalcInputs, res as unknown as VoltageCalcResult), // Will not be used directly
       fromHistory: () => JSON.parse(JSON.stringify(defaultForm))
     }
   );
