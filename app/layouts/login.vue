@@ -1,13 +1,18 @@
 <script setup lang="ts">
+import { computed } from "vue";
+import { useRoute } from "#app";
+
 // ログインページ用の最小レイアウト
+const route = useRoute();
+const pageTitle = computed(() => route.meta.title as string | undefined);
 </script>
 
 <template>
   <div class="l-login-layout">
     <AppPanel class="l-login-layout__panel">
       <AppSectionHeader
-        v-if="$route.meta.title"
-        :title="$route.meta.title as string"
+        v-if="pageTitle"
+        :title="pageTitle"
       />
       <slot />
     </AppPanel>
