@@ -9,7 +9,7 @@ definePageMeta({
 });
 
 const router = useRouter();
-const { currentUser, _initAuth } = useAuth();
+const { currentUser } = useAuth();
 const password = ref('');
 const passwordConfirm = ref('');
 const errorMsg = ref('');

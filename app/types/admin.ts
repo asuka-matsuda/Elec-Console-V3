@@ -1,4 +1,4 @@
-export type SiteStatus = 'planning' | 'in_progress' | 'completed';
+export type SiteStatus = 'planning' | 'in_progress' | 'completed' | 'on_hold';
 
 export type Site = {
   id: string;
@@ -6,6 +6,10 @@ export type Site = {
   status: SiteStatus;
   createdAt: string;
   disabledAt: string | null;
+  excelPath?: string;
+  reportTemplatePath?: string;
+  excludedCircuits?: string[];
+  workers?: string[];
 };
 
 export type SiteSettings = {
