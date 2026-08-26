@@ -53,7 +53,7 @@ const handleChangePassword = async () => {
 <template>
   <div class="p-change-password">
     <div class="p-change-password__container">
-      <AppPanel title="初回パスワード設定">
+      <AppSectionHeader title="初回パスワード設定" />
         <p class="p-change-password__desc">
           セキュリティのため、システムから配布された初期パスワードを変更してください。
         </p>
@@ -74,22 +74,13 @@ const handleChangePassword = async () => {
             設定してはじめる
           </AppButton>
         </div>
-      </AppPanel>
-    </div>
+        </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 .p-change-password {
-  // --- レイアウト ---
-  @include flex-center;
-  min-height: 100vh;
-  padding: var(--space-4);
 
-  &__container {
-    width: 100%;
-    max-width: 480px;
-  }
 
   &__desc {
     @extend %text-desc;

@@ -6,7 +6,6 @@
 import { ref } from "vue";
 import { useHead, useRouter } from "#app";
 import { useAuth } from "~/composables/useAuth";
-import AppPanel from "~/components/ui/AppPanel.vue";
 import AppInput from "~/components/ui/AppInput.vue";
 import AppButton from "~/components/ui/AppButton.vue";
 import AppFormGroup from "~/components/ui/AppFormGroup.vue";
@@ -51,7 +50,7 @@ const handleLogin = async () => {
 
 <template>
   <div class="p-login">
-    <AppPanel title="Elec-Console v2" class="p-login__panel">
+    <AppSectionHeader title="Elec-Console v2" />
       <form
         @submit.prevent="handleLogin"
         class="p-login__form"
@@ -85,8 +84,7 @@ const handleLogin = async () => {
           </AppButton>
         </div>
       </form>
-    </AppPanel>
-  </div>
+      </div>
 </template>
 
 <style scoped lang="scss">
@@ -95,12 +93,6 @@ const handleLogin = async () => {
   padding: var(--pad-container);
 
   // --- 子要素 ---
-  &__panel {
-    // --- ボックスモデル ---
-    width: 400px;
-    max-width: 100%;
-  }
-
   &__error {
     // --- 継承 ---
     @extend %text-sm;

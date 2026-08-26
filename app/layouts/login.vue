@@ -4,7 +4,9 @@
 
 <template>
   <div class="l-login-layout">
-    <slot />
+    <AppPanel class="l-login-layout__panel">
+      <slot />
+    </AppPanel>
   </div>
 </template>
 
