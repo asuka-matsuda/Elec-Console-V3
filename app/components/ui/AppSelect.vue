@@ -29,9 +29,6 @@ const dropdownStyle = ref<Record<string, string>>({});
 const isMounted = ref(false);
 const teleportTarget = ref<HTMLElement | string>("body");
 
-const dropdownStyle = ref<Record<string, string>>({});
-const isMounted = ref(false);
-
 const calculatePlacement = () => {
   if (!selectRef.value) return;
 
