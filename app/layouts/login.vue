@@ -23,6 +23,11 @@ const pageTitle = computed(() => route.meta.title as string | undefined);
 .l-login-layout {
   @include flex-center(0);
   flex: 1;
-  min-width: 320px;
+
+  &__panel {
+    width: 100%;
+    min-width: 320px;
+    max-width: 480px; // 一般的なログインパネルの最大幅
+  }
 }
 </style>
