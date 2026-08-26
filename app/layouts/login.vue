@@ -15,8 +15,6 @@
 </template>
 
 <style scoped lang="scss">
-@use "~/assets/scss/foundation/mixins" as *;
-
 .l-login-layout {
   @include flex-center(0);
   flex: 1;
