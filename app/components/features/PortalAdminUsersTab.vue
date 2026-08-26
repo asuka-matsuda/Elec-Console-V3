@@ -144,7 +144,7 @@ const handleResetPassword = async () => {
                   ? 'danger'
                   : row.role === 'worker'
                     ? 'success'
-                    : 'neutral'
+                    : 'secondary'
               "
             >
               {{ row.role }}

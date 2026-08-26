@@ -48,7 +48,7 @@ const history = computed(() => dashboardData.value?.history || []);
         >
           <div class="p-dashboard-list-item__header">
             <AppBadge
-              :variant="item.status === 'success' ? 'success' : 'neutral'"
+              :variant="item.status === 'success' ? 'success' : 'secondary'"
             >
               {{ item.version }}
             </AppBadge>
