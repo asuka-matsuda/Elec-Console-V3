@@ -3,49 +3,51 @@
  * PortalAdminSitesTab
  * ポータル管理 - 現場管理タブ
  */
-import { ref, computed } from 'vue';
-import { useAdminSites } from '~/composables/admin/useAdminSites';
-import type { SiteStatus, SiteSettings, Site } from '~/types/admin';
+import { ref, computed } from "vue";
+import { useAdminSites } from "~/composables/admin/useAdminSites";
+import type { SiteStatus, SiteSettings, Site } from "~/types/admin";
 
-const { sites, createSite, getSettings, updateSettings, toggleDisableSite } = useAdminSites();
+const { sites, createSite, getSettings, updateSettings, toggleDisableSite } =
+  useAdminSites();
 
 // --- 一覧定義 ---
 const siteHeaders = [
-  { key: 'id', label: '現場ID' },
-  { key: 'name', label: '現場名' },
-  { key: 'status', label: 'ステータス' },
-  { key: 'createdAt', label: '作成日時' },
-  { key: 'disabledAt', label: '無効化日時' },
-  { key: 'actions', label: '操作' },
+  { key: "id", label: "現場ID" },
+  { key: "name", label: "現場名" },
+  { key: "status", label: "ステータス" },
+  { key: "createdAt", label: "作成日時" },
+  { key: "disabledAt", label: "無効化日時" },
+  { key: "actions", label: "操作" },
 ];
 
-const formatDate = (isoString: any) => {
-  if (!isoString) return '-';
+const formatDate = (isoString: unknown) => {
+  if (typeof isoString !== 'string') return '-';
+  if (!isoString) return "-";
   return new Date(isoString).toLocaleString();
 };
 
 // --- 新規登録モーダル ---
 const isCreateModalOpen = ref(false);
 const newSite = ref({
-  id: '',
-  name: '',
-  status: 'planning' as SiteStatus,
+  id: "",
+  name: "",
+  status: "planning" as SiteStatus,
 });
 
 const handleCreateSite = async () => {
   if (!newSite.value.id || !newSite.value.name) {
-    throw new Error('現場IDと現場名を入力してください。');
+    throw new Error("現場IDと現場名を入力してください。");
   }
   createSite({ ...newSite.value });
   isCreateModalOpen.value = false;
-  newSite.value = { id: '', name: '', status: 'planning' };
+  newSite.value = { id: "", name: "", status: "planning" };
 };
 
 // --- 無効化/有効化モーダル ---
 const isConfirmDisableOpen = ref(false);
 const siteToToggle = ref<Site | null>(null);
 
-const confirmToggleDisable = (row: any) => {
+const confirmToggleDisable = (row: Site) => {
   siteToToggle.value = row;
   isConfirmDisableOpen.value = true;
 };
@@ -60,7 +62,7 @@ const handleToggleDisable = async () => {
 
 // --- 詳細設定モーダル ---
 const isSettingsModalOpen = ref(false);
-const settingsTargetSiteId = ref('');
+const settingsTargetSiteId = ref("");
 const editingSettings = ref<Partial<SiteSettings>>({});
 
 const openSettingsModal = (siteId: string) => {
@@ -79,21 +81,29 @@ const handleSaveSettings = async () => {
 
 const confirmMessage = computed(() => {
   if (siteToToggle.value?.disabledAt) {
-    return "現場「" + siteToToggle.value.name + "」へのアクセスを再度有効にしますか？";
+    return (
+      "現場「" +
+      siteToToggle.value.name +
+      "」へのアクセスを再度有効にしますか？"
+    );
   }
-  return "現場「" + (siteToToggle.value?.name || "") + "」を無効化しますか？ 無効になると現場へのアクセスができなくなります。";
+  return (
+    "現場「" +
+    (siteToToggle.value?.name || "") +
+    "」を無効化しますか？ 無効になると現場へのアクセスができなくなります。"
+  );
 });
 
 const confirmTitle = computed(() => {
-  return siteToToggle.value?.disabledAt ? '現場の有効化' : '現場の無効化';
+  return siteToToggle.value?.disabledAt ? "現場の有効化" : "現場の無効化";
 });
 
 const confirmBtnText = computed(() => {
-  return siteToToggle.value?.disabledAt ? '有効化する' : '無効化する';
+  return siteToToggle.value?.disabledAt ? "有効化する" : "無効化する";
 });
 
 const confirmIntent = computed(() => {
-  return siteToToggle.value?.disabledAt ? 'success' : 'danger';
+  return siteToToggle.value?.disabledAt ? "success" : "danger";
 });
 </script>
 
@@ -102,16 +112,37 @@ const confirmIntent = computed(() => {
     <AppPanel title="現場プロジェクト一覧">
       <div class="c-admin-sites__stack">
         <div class="c-admin-sites__toolbar">
-          <AppButton variant="primary" icon="plus" @click="isCreateModalOpen = true">新規現場登録</AppButton>
+          <AppButton
+            variant="primary"
+            icon="plus"
+            @click="isCreateModalOpen = true"
+            >新規現場登録</AppButton
+          >
         </div>
 
-        <AppTable :columns="siteHeaders" :data="sites as any">
+        <AppTable :columns="siteHeaders" :data="sites">
           <template #cell-status="{ value, row }">
             <div class="c-admin-sites__status-stack">
-              <AppBadge :variant="value === 'in_progress' ? 'success' : value === 'completed' ? 'neutral' : 'warning'">
-                {{ value === 'planning' ? '計画中' : value === 'in_progress' ? '進行中' : '完了' }}
+              <AppBadge
+                :variant="
+                  value === 'in_progress'
+                    ? 'success'
+                    : value === 'completed'
+                      ? 'neutral'
+                      : 'warning'
+                "
+              >
+                {{
+                  value === "planning"
+                    ? "計画中"
+                    : value === "in_progress"
+                      ? "進行中"
+                      : "完了"
+                }}
               </AppBadge>
-              <AppBadge v-if="row.disabledAt" variant="danger" size="sm">無効</AppBadge>
+              <AppBadge v-if="row.disabledAt" variant="danger" size="sm"
+                >無効</AppBadge
+              >
             </div>
           </template>
           <template #cell-createdAt="{ value }">
@@ -122,13 +153,19 @@ const confirmIntent = computed(() => {
           </template>
           <template #cell-actions="{ row }">
             <div class="c-admin-sites__actions">
-              <AppButton variant="secondary" size="sm" icon="settings" @click="openSettingsModal(row.id as any)">現場設定</AppButton>
-              <AppButton 
-                :variant="row.disabledAt ? 'success' : 'danger'" 
-                size="sm" 
+              <AppButton
+                variant="secondary"
+                size="sm"
+                icon="settings"
+                @click="openSettingsModal(row.id as string)"
+                >現場設定</AppButton
+              >
+              <AppButton
+                :variant="row.disabledAt ? 'success' : 'danger'"
+                size="sm"
                 @click="confirmToggleDisable(row)"
               >
-                {{ row.disabledAt ? '有効化' : '無効化' }}
+                {{ row.disabledAt ? "有効化" : "無効化" }}
               </AppButton>
             </div>
           </template>
@@ -137,8 +174,8 @@ const confirmIntent = computed(() => {
     </AppPanel>
 
     <!-- 新規登録モーダル -->
-    <AppFormModal 
-      v-model="isCreateModalOpen" 
+    <AppFormModal
+      v-model="isCreateModalOpen"
       title="新規現場プロジェクト登録"
       :submit-fn="handleCreateSite"
       submitText="登録する"
@@ -152,17 +189,24 @@ const confirmIntent = computed(() => {
     </AppFormModal>
 
     <!-- 詳細設定モーダル -->
-    <AppFormModal 
-      v-model="isSettingsModalOpen" 
+    <AppFormModal
+      v-model="isSettingsModalOpen"
       title="現場詳細設定"
       :submit-fn="handleSaveSettings"
       submitText="設定を保存"
     >
       <AppFormGroup label="Phase2 絶縁抵抗基準値 (MΩ)">
-        <AppInput v-model.number="editingSettings.phase2ThresholdMegOhm" type="number" step="0.1" />
+        <AppInput
+          v-model.number="editingSettings.phase2ThresholdMegOhm"
+          type="number"
+          step="0.1"
+        />
       </AppFormGroup>
       <AppFormGroup>
-        <AppCheckbox v-model="editingSettings.enablePhase3" label="Phase3 (耐圧試験) を実施する" />
+        <AppCheckbox
+          v-model="editingSettings.enablePhase3"
+          label="Phase3 (耐圧試験) を実施する"
+        />
       </AppFormGroup>
     </AppFormModal>
 

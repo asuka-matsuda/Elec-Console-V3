@@ -3,8 +3,9 @@
  * PortalAdminUsersTab
  * ポータル管理 - ユーザー管理タブ
  */
-import { ref, onMounted, computed } from 'vue';
-import { useAdminUsers } from '~/composables/admin/useAdminUsers';
+import { ref, onMounted, computed } from "vue";
+import { useAdminUsers } from "~/composables/admin/useAdminUsers";
+import type { User } from "~/types/auth";
 
 const { users, fetchUsers, deleteUser, resetUserPassword } = useAdminUsers();
 
@@ -14,16 +15,17 @@ onMounted(() => {
 
 // --- ユーザー一覧の定義 ---
 const userHeaders = [
-  { key: 'id', label: 'ID' },
-  { key: 'name', label: '名前' },
-  { key: 'loginId', label: 'ログインID' },
-  { key: 'role', label: '権限' },
-  { key: 'status', label: 'ステータス' },
-  { key: 'actions', label: '操作' },
+  { key: "id", label: "ID" },
+  { key: "name", label: "名前" },
+  { key: "loginId", label: "ログインID" },
+  { key: "role", label: "権限" },
+  { key: "status", label: "ステータス" },
+  { key: "actions", label: "操作" },
 ];
 
-const formatLastLogin = (row: any) => {
-  return row.lastLoginAt ? new Date(row.lastLoginAt as string).toLocaleDateString() : '未ログイン';
+const formatLastLogin = (row: unknown) => {
+  const user = row as User;
+  return user.lastLoginAt ? new Date(user.lastLoginAt as string).toLocaleDateString() : '未ログイン';
 };
 
 // --- モーダルステート管理 ---
@@ -32,7 +34,7 @@ const isCredentialModalOpen = ref(false);
 const createdUserResult = ref<any>(null);
 
 const isAssignModalOpen = ref(false);
-const assignTargetUserId = ref('');
+const assignTargetUserId = ref("");
 const assignTargetSiteIds = ref<string[]>([]);
 
 const isConfirmDeleteOpen = ref(false);
@@ -43,28 +45,40 @@ const userToReset = ref<any>(null);
 const isResetting = ref(false);
 
 const deleteConfirmMessage = computed(() => {
-  return "ユーザー「" + (userToDelete.value?.lastName || "") + " " + (userToDelete.value?.firstName || "") + "」を削除してもよろしいですか？";
+  return (
+    "ユーザー「" +
+    (userToDelete.value?.lastName || "") +
+    " " +
+    (userToDelete.value?.firstName || "") +
+    "」を削除してもよろしいですか？"
+  );
 });
 
 const resetConfirmMessage = computed(() => {
-  return "ユーザー「" + (userToReset.value?.lastName || "") + " " + (userToReset.value?.firstName || "") + "」のパスワードを強制的に初期化し、新しい初期パスワードを発行しますか？";
+  return (
+    "ユーザー「" +
+    (userToReset.value?.lastName || "") +
+    " " +
+    (userToReset.value?.firstName || "") +
+    "」のパスワードを強制的に初期化し、新しい初期パスワードを発行しますか？"
+  );
 });
 
 // --- イベントハンドラ ---
-const handleUserCreated = (user: any) => {
+const handleUserCreated = (user: User) => {
   createdUserResult.value = user;
   isCredentialModalOpen.value = true;
 };
 
-const handleOpenAssign = (row: any) => {
+const handleOpenAssign = (row: User) => {
   assignTargetUserId.value = row.id;
   assignTargetSiteIds.value = [...(row.assignedSiteIds || [])];
   isAssignModalOpen.value = true;
 };
 
-const confirmDelete = (row: any) => {
-  if (row.id === 'master') {
-    alert('マスターユーザーは削除できません。');
+const confirmDelete = (row: User) => {
+  if (row.id === "master") {
+    alert("マスターユーザーは削除できません。");
     return;
   }
   userToDelete.value = row;
@@ -79,7 +93,7 @@ const handleDeleteUser = async () => {
   }
 };
 
-const confirmResetPassword = (row: any) => {
+const confirmResetPassword = (row: User) => {
   userToReset.value = row;
   isConfirmResetOpen.value = true;
 };
@@ -91,11 +105,12 @@ const handleResetPassword = async () => {
     const newPassword = await resetUserPassword(userToReset.value.id);
     createdUserResult.value = {
       ...userToReset.value,
-      initialPassword: newPassword
+      initialPassword: newPassword,
     };
     isConfirmResetOpen.value = false;
     isCredentialModalOpen.value = true;
   } catch (e: any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     alert(e.message);
   } finally {
     isResetting.value = false;
@@ -109,29 +124,65 @@ const handleResetPassword = async () => {
     <AppPanel title="ユーザー一覧">
       <div class="c-admin-users__stack">
         <div class="c-admin-users__toolbar">
-          <AppButton variant="primary" icon="plus" @click="isCreateModalOpen = true">新規ユーザー登録</AppButton>
+          <AppButton
+            variant="primary"
+            icon="plus"
+            @click="isCreateModalOpen = true"
+            >新規ユーザー登録</AppButton
+          >
         </div>
 
-        <AppTable :columns="userHeaders" :data="users as any">
+        <AppTable :columns="userHeaders" :data="users">
           <template #cell-name="{ row }">
             {{ row.lastName }} {{ row.firstName }}
           </template>
           <template #cell-role="{ row }">
-            <AppBadge :variant="row.role === 'admin' ? 'danger' : row.role === 'worker' ? 'success' : 'neutral'">
+            <AppBadge
+              :variant="
+                row.role === 'admin'
+                  ? 'danger'
+                  : row.role === 'worker'
+                    ? 'success'
+                    : 'neutral'
+              "
+            >
               {{ row.role }}
             </AppBadge>
           </template>
           <template #cell-status="{ row }">
             <div class="c-admin-users__stack">
-              <AppBadge v-if="row.requirePasswordReset" variant="danger" size="sm">PWリセット要求</AppBadge>
-              <span class="c-admin-users__meta">最終ログイン: {{ formatLastLogin(row) }}</span>
+              <AppBadge
+                v-if="row.requirePasswordReset"
+                variant="danger"
+                size="sm"
+                >PWリセット要求</AppBadge
+              >
+              <span class="c-admin-users__meta"
+                >最終ログイン: {{ formatLastLogin(row) }}</span
+              >
             </div>
           </template>
           <template #cell-actions="{ row }">
             <div class="c-admin-users__actions">
-              <AppButton variant="secondary" size="sm" @click="handleOpenAssign(row)">現場アサイン</AppButton>
-              <AppButton variant="secondary" size="sm" @click="confirmResetPassword(row)">PW初期化</AppButton>
-              <AppButton variant="danger" size="sm" :disabled="row.id === 'master'" @click="confirmDelete(row)">削除</AppButton>
+              <AppButton
+                variant="secondary"
+                size="sm"
+                @click="handleOpenAssign(row)"
+                >現場アサイン</AppButton
+              >
+              <AppButton
+                variant="secondary"
+                size="sm"
+                @click="confirmResetPassword(row)"
+                >PW初期化</AppButton
+              >
+              <AppButton
+                variant="danger"
+                size="sm"
+                :disabled="row.id === 'master'"
+                @click="confirmDelete(row)"
+                >削除</AppButton
+              >
             </div>
           </template>
         </AppTable>
@@ -139,14 +190,20 @@ const handleResetPassword = async () => {
     </AppPanel>
 
     <!-- モーダル群 (関心の分離) -->
-    <PortalUserCreateModal v-model="isCreateModalOpen" @success="handleUserCreated" />
-    
-    <PortalUserCredentialModal v-model="isCredentialModalOpen" :user="createdUserResult" />
-    
-    <PortalUserAssignModal 
-      v-model="isAssignModalOpen" 
-      :user-id="assignTargetUserId" 
-      :initial-site-ids="assignTargetSiteIds" 
+    <PortalUserCreateModal
+      v-model="isCreateModalOpen"
+      @success="handleUserCreated"
+    />
+
+    <PortalUserCredentialModal
+      v-model="isCredentialModalOpen"
+      :user="createdUserResult"
+    />
+
+    <PortalUserAssignModal
+      v-model="isAssignModalOpen"
+      :user-id="assignTargetUserId"
+      :initial-site-ids="assignTargetSiteIds"
     />
 
     <AppConfirmModal
