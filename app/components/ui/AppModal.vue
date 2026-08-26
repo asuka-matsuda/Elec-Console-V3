@@ -89,14 +89,14 @@ const titleId = `modal-title-${modalId}`;
     @click.self="close"
     @cancel.prevent="close"
   >
-    <AppPanel class="c-modal__panel" :bracket-color="variant as any">
+    <AppPanel class="c-modal__panel" :bracket-color="variant as never">
       <!-- Header -->
       <template #header>
         <AppSectionHeader
           :title-id="titleId"
           :title="title"
           :icon="icon"
-          :variant="variant as any"
+          :variant="variant as never"
           divider-type="fade-center"
         >
           <template v-if="$slots.title">

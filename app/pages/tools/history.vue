@@ -22,7 +22,7 @@ const storageKey = computed(() => {
 });
 
 /** 履歴ロジック (マウント後・タブ切り替え時に再取得) */
-const historyList = ref<any[]>([]);
+const historyList = ref<import('~/types/history').HistoryEntry[]>([]);
 
 const loadHistory = () => {
   if (import.meta.client) {

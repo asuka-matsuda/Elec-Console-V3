@@ -48,16 +48,16 @@ const handleDelete = () => {
             v-if="
               entry.toolId === 'voltage' && entry.rawInputs && entry.rawResult
             "
-            :inputs="entry.rawInputs"
-            :result="entry.rawResult"
+            :inputs="entry.rawInputs as never"
+            :result="entry.rawResult as never"
             size="sm"
           />
           <ToolConduitResult
             v-else-if="
               entry.toolId === 'conduit' && entry.rawInputs && entry.rawResult
             "
-            :inputs="entry.rawInputs"
-            :result="entry.rawResult"
+            :inputs="entry.rawInputs as never"
+            :result="entry.rawResult as never"
             size="sm"
           />
           <!-- 過去のデータなどrawデータがない場合のフォールバック -->

@@ -34,7 +34,7 @@ watch(() => inputs.value.category, () => {
 /** 総重量の計算 */
 const totalWeight = computed(() => {
   if (!result.value || result.value?.error || !result.value?.bestDrum) return 0;
-  return (result.value?.cableWeight || 0) + parseFloat(result.value?.bestDrum?.weight as any || '0');
+  return (result.value?.cableWeight || 0) + parseFloat(result.value?.bestDrum?.weight as unknown as string || '0');
 });
 </script>
 

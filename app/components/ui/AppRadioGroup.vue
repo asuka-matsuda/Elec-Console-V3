@@ -33,7 +33,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
       :key="String(option.value)"
       class="c-segmented-control__label"
       :style="
-        option.color ? ({ '--radio-color': option.color } as any) : undefined
+        option.color ? ({ '--radio-color': option.color } as import('vue').StyleValue) : undefined
       "
     >
       <input

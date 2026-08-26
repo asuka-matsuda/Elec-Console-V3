@@ -107,7 +107,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const dbPath = path.resolve(process.cwd(), 'server/data/users.json');
   
-  let users: any[] = [];
+  let users: (import('~/types/auth').User & { password?: string })[] = [];
   if (fs.existsSync(dbPath)) {
     users = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
   }

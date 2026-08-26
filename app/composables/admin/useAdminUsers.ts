@@ -16,14 +16,15 @@ export const useAdminUsers = () => {
 
   const createUser = async (user: Partial<User>) => {
     try {
-      const data = await $fetch<any>('/api/users', {
+      const data = await $fetch<import('~/types/auth').User & { initialPassword?: string }>('/api/users', {
         method: 'POST',
         body: user
       });
       await fetchUsers();
       return data;
-    } catch (e: unknown) {
-      throw new Error(e.data?.statusMessage || 'ユーザー登録に失敗しました', { cause: e });
+    } catch (_e: unknown) {
+      const e = _e as Error;
+      throw new Error((e as Error & { data?: { statusMessage?: string } }).data?.statusMessage || 'ユーザー登録に失敗しました', { cause: _e });
     }
   };
 
@@ -48,13 +49,14 @@ export const useAdminUsers = () => {
 
   const resetUserPassword = async (id: string) => {
     try {
-      const data = await $fetch<any>(`/api/users/${id}/reset-password`, {
+      const data = await $fetch<{ success: boolean, initialPassword?: string }>(`/api/users/${id}/reset-password`, {
         method: 'POST'
       });
       await fetchUsers();
       return data.initialPassword;
-    } catch (e: unknown) {
-      throw new Error(e.data?.statusMessage || 'パスワード初期化に失敗しました', { cause: e });
+    } catch (_e: unknown) {
+      const e = _e as Error;
+      throw new Error((e as Error & { data?: { statusMessage?: string } }).data?.statusMessage || 'パスワード初期化に失敗しました', { cause: _e });
     }
   };
 

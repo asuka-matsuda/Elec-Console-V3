@@ -8,10 +8,8 @@ import { formatVal } from "~/utils/math";
 import { CONDUIT_UI_LABELS } from "~/constants/conduitConstants";
 
 const props = defineProps<{
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  result: Record<string, any> | null;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  inputs?: Record<string, any>;
+  result: import('~/utils/tools/conduit/conduitCalcLogic').ConduitCalcResult | null;
+  inputs?: import('~/composables/tools/useConduitCalculator').ConduitInputs;
   size?: "sm" | "md";
 }>();
 

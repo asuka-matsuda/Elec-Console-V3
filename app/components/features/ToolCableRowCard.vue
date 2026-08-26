@@ -19,7 +19,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: "update:modelValue", value: any): void;
+  (e: "update:modelValue", value: { id: string, category: string, cableIdx: string, count: number | null }): void;
   (e: "remove"): void;
 }>();
 
@@ -37,7 +37,7 @@ const singleCableArea = computed(() => {
   return calculateCableArea(def.diameter);
 });
 
-const onCategoryChange = (val: any) => {
+const onCategoryChange = (val: string | number | boolean | null | undefined) => {
   emit("update:modelValue", {
     ...props.modelValue,
     category: String(val),
@@ -45,14 +45,14 @@ const onCategoryChange = (val: any) => {
   });
 };
 
-const updateCableIdx = (val: any) => {
+const updateCableIdx = (val: string | number | boolean | null | undefined) => {
   emit("update:modelValue", {
     ...props.modelValue,
     cableIdx: String(val),
   });
 };
 
-const updateCount = (val: any) => {
+const updateCount = (val: string | number | boolean | null | undefined) => {
   emit("update:modelValue", {
     ...props.modelValue,
     count: Number(val),

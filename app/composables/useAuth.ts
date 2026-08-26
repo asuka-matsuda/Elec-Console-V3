@@ -16,7 +16,7 @@ export const useAuth = () => {
           }
         });
         if (!error.value && data.value) {
-          currentUser.value = (data.value as any).user;
+          currentUser.value = (data.value as { user: import('~/types/auth').User }).user;
         } else {
           logout(); // トークンが無効な場合はログアウト
         }
@@ -37,7 +37,7 @@ export const useAuth = () => {
         return { success: false, message: 'ログインIDまたはパスワードが違います。' };
       }
 
-      const response = data.value as any;
+      const response = data.value as { success: boolean; token: string; user: import('~/types/auth').User; mustChangePassword?: boolean };
       if (response.success) {
         token.value = response.token;
         currentUser.value = response.user;

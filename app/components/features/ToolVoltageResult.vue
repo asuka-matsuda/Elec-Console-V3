@@ -7,10 +7,8 @@ import { computed } from "vue";
 import { formatVal } from "~/utils/math";
 
 const props = defineProps<{
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  inputs: Record<string, any>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  result: Record<string, any> | null;
+  inputs: import('~/types/voltage').VoltageCalcInputs;
+  result: import('~/types/voltage').VoltageCalcResult | null;
   size?: "sm" | "md";
 }>();
 
@@ -49,7 +47,7 @@ const mainStatusClass = computed(() => {
   if (mode.value === "size") {
     return props.result?.optimal ? "is-success" : "is-danger";
   } else {
-    return props.inputs.I <= props.result!.finalEffAmp
+    return (props.inputs.I || 0) <= props.result!.finalEffAmp
       ? "is-success"
       : "is-danger";
   }
@@ -64,7 +62,7 @@ const maxI = computed(() =>
 
 const ampStatusClass = computed(() => {
   if (!isReady.value) return "is-neutral";
-  return props.inputs.I <= props.result!.finalEffAmp
+  return (props.inputs.I || 0) <= props.result!.finalEffAmp
     ? "is-success"
     : "is-danger";
 });
