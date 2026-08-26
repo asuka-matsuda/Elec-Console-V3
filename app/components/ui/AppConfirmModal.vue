@@ -37,7 +37,7 @@ const confirmButtonComponent = computed(() => {
     {{ message || '本当によろしいですか？' }}
     <template #footer>
       <AppButton variant="secondary" @click="isOpen = false">{{ cancelText || 'キャンセル' }}</AppButton>
-      <component :is="confirmButtonComponent" @click="$emit('confirm')">{{ confirmText || '実行する' }}</AppButton>
+      <AppButton :variant="intent" @click="$emit('confirm')">{{ confirmText || '実行する' }}</AppButton>
     </template>
   </AppModal>
 </template>
