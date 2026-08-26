@@ -8,7 +8,7 @@
 <template>
   <dl class="p-result-details">
     <slot />
-  </div>
+  </dl>
 </template>
 
 <style scoped lang="scss">

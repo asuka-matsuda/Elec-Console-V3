@@ -87,8 +87,6 @@ onMounted(() => {
   window.addEventListener("scroll", handleGlobalScroll, { capture: true, passive: true });
   window.addEventListener("resize", calculatePlacement, { passive: true });
 });
-  window.addEventListener("resize", calculatePlacement, { passive: true });
-});
 
 onUnmounted(() => {
   window.removeEventListener("scroll", handleGlobalScroll, { capture: true });
