@@ -30,7 +30,7 @@ const loadHistory = () => {
     if (stored) {
       try {
         historyList.value = JSON.parse(stored);
-      } catch (e) {
+      } catch {
         historyList.value = [];
       }
     } else {

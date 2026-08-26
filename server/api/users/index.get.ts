@@ -3,7 +3,7 @@ import { defineEventHandler } from 'h3';
 import fs from 'fs';
 import path from 'path';
 
-export default defineEventHandler((event) => {
+export default defineEventHandler((_event) => {
   const dbPath = path.resolve(process.cwd(), 'server/data/users.json');
   let users = [];
   if (fs.existsSync(dbPath)) {

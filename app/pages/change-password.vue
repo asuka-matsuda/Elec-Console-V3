@@ -9,7 +9,7 @@ definePageMeta({
 });
 
 const router = useRouter();
-const { currentUser, initAuth } = useAuth();
+const { currentUser, _initAuth } = useAuth();
 const password = ref('');
 const passwordConfirm = ref('');
 const errorMsg = ref('');
@@ -44,7 +44,7 @@ const handleChangePassword = async () => {
       currentUser.value.requirePasswordReset = false;
     }
     router.push('/');
-  } catch (e) {
+  } catch {
     errorMsg.value = '通信エラーが発生しました。';
     isLoading.value = false;
   }

@@ -21,7 +21,7 @@ const props = withDefaults(
 
 defineEmits(["confirm"]);
 
-const confirmButtonComponent = computed(() => {
+const _confirmButtonComponent = computed(() => {
   if (props.intent === "danger") return "danger";
   if (props.intent === "success") return "success";
   return "primary";

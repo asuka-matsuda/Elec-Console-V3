@@ -1,5 +1,5 @@
 import { useState } from '#app';
-import type { Site, SiteSettings, SiteStatus } from '~/types/admin';
+import type { Site, SiteSettings } from '~/types/admin';
 import { mockSites, mockSiteSettings } from '~/constants/data/adminMockData';
 
 export const useAdminSites = () => {

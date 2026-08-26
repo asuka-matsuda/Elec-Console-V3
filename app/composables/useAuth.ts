@@ -20,7 +20,7 @@ export const useAuth = () => {
         } else {
           logout(); // トークンが無効な場合はログアウト
         }
-      } catch (e) {
+      } catch {
         console.error('Session restore failed');
       }
     }
@@ -49,7 +49,7 @@ export const useAuth = () => {
       }
       
       return { success: false, message: 'ログインに失敗しました。' };
-    } catch (e) {
+    } catch {
       return { success: false, message: 'サーバー通信エラーが発生しました。' };
     }
   };

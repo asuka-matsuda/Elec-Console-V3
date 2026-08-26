@@ -28,7 +28,7 @@ const status32Class = computed(() => {
   return props.result!.isOversize32 ? "is-danger" : "is-success";
 });
 
-const allowable32 = computed(() =>
+const _allowable32 = computed(() =>
   isReady.value
     ? formatVal(props.result!.allowable32, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
     : CONDUIT_UI_LABELS.EMPTY_TEXT,
@@ -53,7 +53,7 @@ const status48Class = computed(() => {
   return props.result!.isOversize48 ? "is-danger" : "is-success";
 });
 
-const allowable48 = computed(() =>
+const _allowable48 = computed(() =>
   isReady.value
     ? formatVal(props.result!.allowable48, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
     : CONDUIT_UI_LABELS.EMPTY_TEXT,
