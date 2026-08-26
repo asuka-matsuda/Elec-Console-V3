@@ -115,10 +115,6 @@ withDefaults(
   /* Header & Title */
 
   // --- 子要素 ---
-  &__header {
-    // 削除: margin-bottom: var(--pad-container-gap, var(--pad-container));
-  }
-
   &__title {
     // --- 継承 ---
     @extend %text-title-md;
