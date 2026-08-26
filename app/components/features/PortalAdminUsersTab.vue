@@ -110,7 +110,7 @@ const handleResetPassword = async () => {
     isConfirmResetOpen.value = false;
     isCredentialModalOpen.value = true;
   } catch (e: any) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     alert(e.message);
   } finally {
     isResetting.value = false;

@@ -275,8 +275,7 @@ const closeSidebar = () => {
       );
 
       // --- 子要素 ---
-      .l-global-nav__link-text {
-      }
+      
 
       .l-global-nav__link-icon {
         // --- タイポグラフィ ---

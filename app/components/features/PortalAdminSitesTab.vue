@@ -228,8 +228,7 @@ const confirmIntent = computed(() => {
     @include flex-column(var(--gap-section));
   }
 
-  &__toolbar {
-  }
+  
 
   &__status-stack {
     @include flex-column(var(--gap-element));
