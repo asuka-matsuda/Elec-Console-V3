@@ -29,7 +29,7 @@ const getStatusVariant = (status: string) => {
     case 'in_progress': return 'warning';
     case 'completed': return 'success';
     case 'on_hold': return 'danger';
-    default: return 'neutral';
+    default: return 'secondary';
   }
 };
 

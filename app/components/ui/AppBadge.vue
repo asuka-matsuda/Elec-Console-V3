@@ -9,7 +9,6 @@
  */
 export type BadgeVariant = 
   | "secondary"
-  | "neutral"
   | "primary"
   | "success"
   | "warning"
@@ -21,7 +20,7 @@ withDefaults(
     variant?: BadgeVariant;
   }>(),
   {
-    variant: "neutral",
+    variant: "secondary",
   },
 );
 </script>
@@ -36,7 +35,6 @@ withDefaults(
 .c-badge {
   // --- SCSS変数・マップ ---
   $variants: (
-    "neutral": "--color-text-main",
     "secondary": "--color-text-muted",
     "primary": "--color-category-main",
     "success": "--color-status-success",

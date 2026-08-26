@@ -18,15 +18,22 @@ const { users, fetchUsers } = useAdminUsers();
 
 // Edit state
 const editData = ref<Partial<Site>>({});
-const excludedCircuitsInput = ref("");
+const excludedCircuitsList = ref<string[]>([]);
+
+const addCircuit = () => {
+  excludedCircuitsList.value.push("");
+};
+const removeCircuit = (idx: number) => {
+  excludedCircuitsList.value.splice(idx, 1);
+};
 
 watch(() => props.site, (newSite) => {
   if (newSite) {
     editData.value = { ...newSite };
-    excludedCircuitsInput.value = (newSite.excludedCircuits || []).join("\n");
+    excludedCircuitsList.value = [...(newSite.excludedCircuits || [])];
   } else {
     editData.value = {};
-    excludedCircuitsInput.value = "";
+    excludedCircuitsList.value = [];
   }
 }, { immediate: true });
 
@@ -62,10 +69,7 @@ const workerNames = computed(() => {
 const handleSave = async () => {
   if (!props.site) return;
   // Parse excluded circuits
-  const parsedCircuits = excludedCircuitsInput.value
-    .split("\n")
-    .map(line => line.trim())
-    .filter(line => line.length > 0);
+  const parsedCircuits = excludedCircuitsList.value.map(c => c.trim()).filter(c => c.length > 0);
   
   const payload: Site = {
     ...props.site,
@@ -117,7 +121,7 @@ const handleExport = () => {
           <AppFormGroup label="アサイン済ワーカー">
             <div class="c-site-settings__workers">
               <template v-if="workerNames.length > 0">
-                <AppBadge v-for="(name, idx) in workerNames" :key="idx" variant="neutral">
+                <AppBadge v-for="(name, idx) in workerNames" :key="idx" variant="secondary">
                   {{ name }}
                 </AppBadge>
               </template>
@@ -156,15 +160,15 @@ const handleExport = () => {
         <template v-else-if="activeTab === 'rules'">
           <AppFormGroup label="除外回路の設定">
             <template #description>
-              計算や連携の対象外とする回路を改行区切りで入力してください。
+              計算や連携の対象外とする回路を複数追加できます。
             </template>
-            <textarea
-              v-model="excludedCircuitsInput"
-              class="c-site-settings__textarea"
-              rows="6"
-              placeholder="盤A-回路1
-盤B-回路2"
-            ></textarea>
+            <div class="c-site-settings__circuit-list">
+              <div v-for="(_, idx) in excludedCircuitsList" :key="idx" class="c-site-settings__circuit-row">
+                <AppInput v-model="excludedCircuitsList[idx]" placeholder="例: 盤A-回路1" />
+                <AppButton variant="danger" icon="trash-2" size="sm" @click="removeCircuit(idx)" />
+              </div>
+              <AppButton variant="secondary" icon="plus" size="sm" @click="addCircuit">除外回路を追加する</AppButton>
+            </div>
           </AppFormGroup>
         </template>
       </div>
@@ -205,20 +209,14 @@ const handleExport = () => {
     font-size: var(--text-sm);
   }
 
-  &__textarea {
-    width: 100%;
-    padding: var(--gap-sm) var(--gap-md);
-    @include border-dim;
-    background-color: transparent; // No background colors!
-    backdrop-filter: blur(8px);
-    color: var(--color-text-main);
-    font-family: inherit;
-    font-size: var(--text-md);
-    resize: vertical;
+  &__circuit-list {
+    @include flex-column(var(--gap-sm));
+  }
 
-    &:focus {
-      outline: none;
-      border-color: var(--color-primary);
+  &__circuit-row {
+    @include flex-start(var(--gap-sm));
+    > *:first-child {
+      flex: 1;
     }
   }
 }

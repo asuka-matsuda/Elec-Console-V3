@@ -8,7 +8,10 @@ const route = useRoute();
 <template>
   <div class="l-login-layout">
     <AppPanel class="l-login-layout__panel">
-      <AppSectionHeader v-if="route.meta.title" :title="route.meta.title as string" />
+      <AppSectionHeader
+        v-if="route.meta.title"
+        :title="route.meta.title as string"
+      />
       <slot />
     </AppPanel>
   </div>
