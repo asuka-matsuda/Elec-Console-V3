@@ -3,7 +3,7 @@
  * ToolCalculationBasisPanel
  * 計算ツールの計算根拠（数式やステップ）を表示するためのパネルコンポーネントです。
  */
-import type { MathStep } from '~/components/ui/AppMathBasis.vue';
+import type { MathStep } from "~/components/ui/AppMathBasis.vue";
 
 defineProps<{
   steps: MathStep[] | null;

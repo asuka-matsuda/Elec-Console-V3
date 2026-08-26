@@ -3,57 +3,59 @@
  * ToolCableRowCard
  * ケーブルの種類、サイズ、本数を入力するためのカードコンポーネントです。
  */
-import { computed } from 'vue';
-import { calculateCableArea } from '~/utils/tools/conduit/conduitCalcLogic';
-import { getCableCategories, getAvailableSizes } from '~/utils/cable';
-import { cableData } from '~/constants/data/cableData';
+import { computed } from "vue";
+import { calculateCableArea } from "~/utils/tools/conduit/conduitCalcLogic";
+import { getCableCategories, getAvailableSizes } from "~/utils/cable";
+import { cableData } from "~/constants/data/cableData";
 
 /**
- * CableInput is used as a generic type here, but make sure 
+ * CableInput is used as a generic type here, but make sure
  * it matches { id: string, category: string, cableIdx: string, count: number | null }
  */
 const props = defineProps<{
-  modelValue: any; 
+  modelValue: any;
   index: number;
   removable?: boolean;
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: any): void;
-  (e: 'remove'): void;
+  (e: "update:modelValue", value: any): void;
+  (e: "remove"): void;
 }>();
 
 const categories = computed(() => getCableCategories());
-const availableSizes = computed(() => getAvailableSizes(props.modelValue.category));
+const availableSizes = computed(() =>
+  getAvailableSizes(props.modelValue.category),
+);
 
 const singleCableArea = computed(() => {
   const cableIdxStr = props.modelValue.cableIdx;
-  if (!cableIdxStr || !cableIdxStr.startsWith('idx_')) return null;
-  const idx = parseInt(cableIdxStr.replace('idx_', ''), 10);
+  if (!cableIdxStr || !cableIdxStr.startsWith("idx_")) return null;
+  const idx = parseInt(cableIdxStr.replace("idx_", ""), 10);
   const def = cableData[idx];
   if (!def) return null;
   return calculateCableArea(def.diameter);
 });
 
 const onCategoryChange = (val: any) => {
-  emit('update:modelValue', {
+  emit("update:modelValue", {
     ...props.modelValue,
     category: String(val),
-    cableIdx: ''
+    cableIdx: "",
   });
 };
 
 const updateCableIdx = (val: any) => {
-  emit('update:modelValue', {
+  emit("update:modelValue", {
     ...props.modelValue,
-    cableIdx: String(val)
+    cableIdx: String(val),
   });
 };
 
 const updateCount = (val: any) => {
-  emit('update:modelValue', {
+  emit("update:modelValue", {
     ...props.modelValue,
-    count: Number(val)
+    count: Number(val),
   });
 };
 </script>
@@ -67,7 +69,13 @@ const updateCount = (val: any) => {
           ( 断面積: {{ singleCableArea.toFixed(1) }} mm² / 本 )
         </span>
       </div>
-      <AppButton v-if="removable" variant="danger" size="sm" icon-only @click="emit('remove')">
+      <AppButton
+        v-if="removable"
+        variant="danger"
+        size="sm"
+        icon-only
+        @click="emit('remove')"
+      >
         <AppIcon name="trash-2" size="sm" />
       </AppButton>
     </div>

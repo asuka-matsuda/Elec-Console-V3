@@ -19,15 +19,23 @@ const handleDelete = () => {
 </script>
 
 <template>
-  <AppCard variant="tool" class="c-history-card" :class="[`is-${entry.status}`]">
+  <AppCard
+    variant="tool"
+    class="c-history-card"
+    :class="[`is-${entry.status}`]"
+  >
     <!-- ヘッダー -->
     <header class="c-history-card__header">
       <div class="c-history-card__title-group">
         <span class="c-history-card__date">{{ entry.timestamp }}</span>
         <h3 class="c-history-card__title">
           <span>{{ entry.toolName }}</span>
-          <AppBadge v-if="entry.mode === 'サイズ選定'" variant="tool">{{ entry.mode }}</AppBadge>
-          <AppBadge v-else-if="entry.mode === '電圧降下'" variant="primary">{{ entry.mode }}</AppBadge>
+          <AppBadge v-if="entry.mode === 'サイズ選定'" variant="tool">{{
+            entry.mode
+          }}</AppBadge>
+          <AppBadge v-else-if="entry.mode === '電圧降下'" variant="primary">{{
+            entry.mode
+          }}</AppBadge>
         </h3>
       </div>
     </header>
@@ -36,14 +44,18 @@ const handleDelete = () => {
       <!-- 計算結果 (動的コンポーネントでDRY化) -->
       <section class="c-history-card__section">
         <div class="c-history-card__result-wrapper">
-          <ToolVoltageResult 
-            v-if="entry.toolId === 'voltage' && entry.rawInputs && entry.rawResult"
+          <ToolVoltageResult
+            v-if="
+              entry.toolId === 'voltage' && entry.rawInputs && entry.rawResult
+            "
             :inputs="entry.rawInputs"
             :result="entry.rawResult"
             size="sm"
           />
           <ToolConduitResult
-            v-else-if="entry.toolId === 'conduit' && entry.rawInputs && entry.rawResult"
+            v-else-if="
+              entry.toolId === 'conduit' && entry.rawInputs && entry.rawResult
+            "
             :inputs="entry.rawInputs"
             :result="entry.rawResult"
             size="sm"
@@ -53,10 +65,20 @@ const handleDelete = () => {
             <h4 class="c-history-card__section-title">計算結果</h4>
             <dl class="c-history-card__list">
               <template v-for="(res, idx) in entry.results" :key="idx">
-                <dt :style="{ color: res.color, fontWeight: res.color ? 'bold' : 'normal' }">
+                <dt
+                  :style="{
+                    color: res.color,
+                    fontWeight: res.color ? 'bold' : 'normal',
+                  }"
+                >
                   {{ res.label }}
                 </dt>
-                <dd :style="{ color: res.color, fontWeight: (res.isMain || res.color) ? 'bold' : 'normal' }">
+                <dd
+                  :style="{
+                    color: res.color,
+                    fontWeight: res.isMain || res.color ? 'bold' : 'normal',
+                  }"
+                >
                   {{ res.value }}
                 </dd>
               </template>
@@ -79,7 +101,12 @@ const handleDelete = () => {
 
     <!-- フッター (削除アクション) -->
     <footer class="c-history-card__footer">
-      <AppButton variant="danger" size="sm" icon-only @click.prevent="handleDelete">
+      <AppButton
+        variant="danger"
+        size="sm"
+        icon-only
+        @click.prevent="handleDelete"
+      >
         <AppIcon name="trash-2" size="sm" />
       </AppButton>
     </footer>

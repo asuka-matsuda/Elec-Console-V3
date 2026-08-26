@@ -125,7 +125,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
 
       // --- 視覚効果 ---
       opacity: 0.3;
-      }
+    }
   }
 
   &__text {

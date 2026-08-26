@@ -65,7 +65,7 @@ watch(
       }
     }
   },
-  { flush: "post" }
+  { flush: "post" },
 );
 
 /** Support opening dialog initially if isOpen is true */
@@ -89,14 +89,14 @@ const titleId = `modal-title-${modalId}`;
     @click.self="close"
     @cancel.prevent="close"
   >
-    <AppPanel class="c-modal__panel" :bracket-color="(variant as any)">
+    <AppPanel class="c-modal__panel" :bracket-color="variant as any">
       <!-- Header -->
       <template #header>
         <AppSectionHeader
           :title-id="titleId"
           :title="title"
           :icon="icon"
-          :variant="(variant as any)"
+          :variant="variant as any"
           divider-type="fade-center"
         >
           <template v-if="$slots.title">
@@ -107,7 +107,10 @@ const titleId = `modal-title-${modalId}`;
 
       <div class="c-modal__layout">
         <!-- Body -->
-        <div class="c-modal__body" :class="align === 'center' ? 'c-modal__body--align-center' : ''">
+        <div
+          class="c-modal__body"
+          :class="align === 'center' ? 'c-modal__body--align-center' : ''"
+        >
           <slot />
         </div>
 
@@ -199,8 +202,6 @@ const titleId = `modal-title-${modalId}`;
     // --- 視覚効果 ---
     backdrop-filter: blur(var(--blur-lg));
   }
-
-
 
   &__layout {
     // --- レイアウト・配置 ---

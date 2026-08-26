@@ -38,8 +38,8 @@ const handleClick = async () => {
 
 <template>
   <AppButton
-variant="success"
     v-bind="props"
+    :variant="props.variant || 'success'"
     :disabled="disabled || state !== 'idle'"
     :size="size || 'sm'"
     class="c-save-button"
@@ -49,7 +49,7 @@ variant="success"
     <!-- 通常時 -->
     <template v-if="state === 'idle'">
       <AppIcon name="save" size="sm" />
-      {{ label || '履歴に保存' }}
+      {{ label || "履歴に保存" }}
     </template>
 
     <!-- 保存中 (ローディング) -->
@@ -97,12 +97,14 @@ variant="success"
 @keyframes spin {
   // --- 子要素 ---
   from {
-  // --- 視覚効果 ---
-  transform: rotate(0deg); }
+    // --- 視覚効果 ---
+    transform: rotate(0deg);
+  }
 
   to {
-  // --- 視覚効果 ---
-  transform: rotate(360deg); }
+    // --- 視覚効果 ---
+    transform: rotate(360deg);
+  }
 }
 
 .c-save-button__check {

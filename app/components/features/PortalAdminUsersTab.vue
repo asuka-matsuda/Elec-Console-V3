@@ -3,7 +3,7 @@
  * PortalAdminUsersTab
  * ポータル管理 - ユーザー管理タブ
  */
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useAdminUsers } from '~/composables/admin/useAdminUsers';
 
 const { users, fetchUsers, deleteUser, resetUserPassword } = useAdminUsers();
@@ -41,6 +41,14 @@ const userToDelete = ref<any>(null);
 const isConfirmResetOpen = ref(false);
 const userToReset = ref<any>(null);
 const isResetting = ref(false);
+
+const deleteConfirmMessage = computed(() => {
+  return "ユーザー「" + (userToDelete.value?.lastName || "") + " " + (userToDelete.value?.firstName || "") + "」を削除してもよろしいですか？";
+});
+
+const resetConfirmMessage = computed(() => {
+  return "ユーザー「" + (userToReset.value?.lastName || "") + " " + (userToReset.value?.firstName || "") + "」のパスワードを強制的に初期化し、新しい初期パスワードを発行しますか？";
+});
 
 // --- イベントハンドラ ---
 const handleUserCreated = (user: any) => {
@@ -101,32 +109,32 @@ const handleResetPassword = async () => {
     <AppPanel title="ユーザー一覧">
       <div class="c-admin-users__stack">
         <div class="c-admin-users__toolbar">
-        <AppButton variant="primary" icon="plus" @click="isCreateModalOpen = true">新規ユーザー登録</AppButton>
-      </div>
+          <AppButton variant="primary" icon="plus" @click="isCreateModalOpen = true">新規ユーザー登録</AppButton>
+        </div>
 
-      <AppTable :columns="userHeaders" :data="users as any">
-        <template #cell-name="{ row }">
-          {{ row.lastName }} {{ row.firstName }}
-        </template>
-        <template #cell-role="{ row }">
-          <AppBadge :variant="row.role === 'admin' ? 'danger' : row.role === 'worker' ? 'success' : 'neutral'">
-            {{ row.role }}
-          </AppBadge>
-        </template>
-        <template #cell-status="{ row }">
-          <div class="c-admin-users__stack">
-            <AppBadge v-if="row.requirePasswordReset" variant="warning" size="sm">PWリセット要求</AppBadge>
-            <span class="c-admin-users__meta">最終ログイン: {{ formatLastLogin(row) }}</span>
-          </div>
-        </template>
-        <template #cell-actions="{ row }">
-          <div class="c-admin-users__actions">
-            <AppButton variant="secondary" size="sm" @click="handleOpenAssign(row)">現場アサイン</AppButton>
-            <AppButton variant="warning" size="sm" @click="confirmResetPassword(row)">PW初期化</AppButton>
-            <AppButton variant="danger" size="sm" :disabled="row.id === 'master'" @click="confirmDelete(row)">削除</AppButton>
-          </div>
-        </template>
-      </AppTable>
+        <AppTable :columns="userHeaders" :data="users as any">
+          <template #cell-name="{ row }">
+            {{ row.lastName }} {{ row.firstName }}
+          </template>
+          <template #cell-role="{ row }">
+            <AppBadge :variant="row.role === 'admin' ? 'danger' : row.role === 'worker' ? 'success' : 'neutral'">
+              {{ row.role }}
+            </AppBadge>
+          </template>
+          <template #cell-status="{ row }">
+            <div class="c-admin-users__stack">
+              <AppBadge v-if="row.requirePasswordReset" variant="danger" size="sm">PWリセット要求</AppBadge>
+              <span class="c-admin-users__meta">最終ログイン: {{ formatLastLogin(row) }}</span>
+            </div>
+          </template>
+          <template #cell-actions="{ row }">
+            <div class="c-admin-users__actions">
+              <AppButton variant="secondary" size="sm" @click="handleOpenAssign(row)">現場アサイン</AppButton>
+              <AppButton variant="secondary" size="sm" @click="confirmResetPassword(row)">PW初期化</AppButton>
+              <AppButton variant="danger" size="sm" :disabled="row.id === 'master'" @click="confirmDelete(row)">削除</AppButton>
+            </div>
+          </template>
+        </AppTable>
       </div>
     </AppPanel>
 
@@ -144,8 +152,8 @@ const handleResetPassword = async () => {
     <AppConfirmModal
       v-model="isConfirmDeleteOpen"
       title="ユーザー削除"
-      :message="`ユーザー「${userToDelete?.lastName} ${userToDelete?.firstName}」を削除してもよろしいですか？`"
-      confirm-text="削除する"
+      :message="deleteConfirmMessage"
+      confirmText="削除する"
       intent="danger"
       @confirm="handleDeleteUser"
     />
@@ -153,8 +161,8 @@ const handleResetPassword = async () => {
     <AppConfirmModal
       v-model="isConfirmResetOpen"
       title="パスワード初期化"
-      :message="`ユーザー「${userToReset?.lastName} ${userToReset?.firstName}」のパスワードを強制的に初期化し、新しい初期パスワードを発行しますか？`"
-      confirm-text="初期化する"
+      :message="resetConfirmMessage"
+      confirmText="初期化する"
       intent="danger"
       @confirm="handleResetPassword"
     />
@@ -171,15 +179,8 @@ const handleResetPassword = async () => {
     @include flex-start(var(--gap-component));
   }
 
-  &__stack {
-    @include flex-column(var(--gap-section));
-  }
-
-  &__toolbar {
-  }
-
   &__meta {
     @extend %text-meta;
-    }
+  }
 }
 </style>

@@ -49,7 +49,8 @@ defineProps<{
   }
 }
 
-  dt, dd {
-    margin: 0;
-  }
+dt,
+dd {
+  margin: 0;
+}
 </style>

@@ -102,7 +102,8 @@ const history = computed(() => dashboardData.value?.history || []);
     @extend %text-title-sm;
 
     // --- ボックスモデル ---
-    padding: var(--pad-container);    // --- タイポグラフィ ---
+    padding: var(--pad-container);
+    // --- タイポグラフィ ---
     color: var(--color-text-muted);
     text-align: center;
 

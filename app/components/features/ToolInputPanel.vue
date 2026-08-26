@@ -8,7 +8,7 @@ defineProps<{
   icon?: string;
 }>();
 
-defineEmits(['reset']);
+defineEmits(["reset"]);
 </script>
 
 <template>

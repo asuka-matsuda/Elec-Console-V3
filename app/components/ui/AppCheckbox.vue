@@ -76,9 +76,10 @@ const inputId = useId();
       color: theme-color(var(--checkbox-color), 90%);
       @include cyber-text-glow(var(--checkbox-color), 20%, var(--blur-sm));
     }
-    
+
     // ホバー時のboxハイライト (inputがフォーカス/アクティブ/チェックされていない時のみ)
-    .c-checkbox__input:not(:focus-visible, :active, :checked) + .c-checkbox__box {
+    .c-checkbox__input:not(:focus-visible, :active, :checked)
+      + .c-checkbox__box {
       @include state-hover(var(--checkbox-color));
     }
   }

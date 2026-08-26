@@ -20,7 +20,9 @@ const isReady = computed(() => props.result?.success && !props.result?.partial);
 // --- 32% (異種) ---
 const size32 = computed(() => {
   if (!isReady.value) return CONDUIT_UI_LABELS.EMPTY_TEXT;
-  return props.result!.isOversize32 ? CONDUIT_UI_LABELS.OVERSIZE_TEXT : props.result!.conduit32?.size;
+  return props.result!.isOversize32
+    ? CONDUIT_UI_LABELS.OVERSIZE_TEXT
+    : props.result!.conduit32?.size;
 });
 
 const status32Class = computed(() => {
@@ -28,18 +30,24 @@ const status32Class = computed(() => {
   return props.result!.isOversize32 ? "is-danger" : "is-success";
 });
 
-const allowable32 = computed(() => 
-  isReady.value ? formatVal(props.result!.allowable32, CONDUIT_UI_LABELS.EMPTY_TEXT, 1) : CONDUIT_UI_LABELS.EMPTY_TEXT
+const allowable32 = computed(() =>
+  isReady.value
+    ? formatVal(props.result!.allowable32, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
+    : CONDUIT_UI_LABELS.EMPTY_TEXT,
 );
 
-const fill32 = computed(() => 
-  isReady.value ? formatVal(props.result!.fill32, CONDUIT_UI_LABELS.EMPTY_TEXT, 1) : CONDUIT_UI_LABELS.EMPTY_TEXT
+const fill32 = computed(() =>
+  isReady.value
+    ? formatVal(props.result!.fill32, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
+    : CONDUIT_UI_LABELS.EMPTY_TEXT,
 );
 
 // --- 48% (同種) ---
 const size48 = computed(() => {
   if (!isReady.value) return CONDUIT_UI_LABELS.EMPTY_TEXT;
-  return props.result!.isOversize48 ? CONDUIT_UI_LABELS.OVERSIZE_TEXT : props.result!.conduit48?.size;
+  return props.result!.isOversize48
+    ? CONDUIT_UI_LABELS.OVERSIZE_TEXT
+    : props.result!.conduit48?.size;
 });
 
 const status48Class = computed(() => {
@@ -47,29 +55,37 @@ const status48Class = computed(() => {
   return props.result!.isOversize48 ? "is-danger" : "is-success";
 });
 
-const allowable48 = computed(() => 
-  isReady.value ? formatVal(props.result!.allowable48, CONDUIT_UI_LABELS.EMPTY_TEXT, 1) : CONDUIT_UI_LABELS.EMPTY_TEXT
+const allowable48 = computed(() =>
+  isReady.value
+    ? formatVal(props.result!.allowable48, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
+    : CONDUIT_UI_LABELS.EMPTY_TEXT,
 );
 
-const fill48 = computed(() => 
-  isReady.value ? formatVal(props.result!.fill48, CONDUIT_UI_LABELS.EMPTY_TEXT, 1) : CONDUIT_UI_LABELS.EMPTY_TEXT
+const fill48 = computed(() =>
+  isReady.value
+    ? formatVal(props.result!.fill48, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
+    : CONDUIT_UI_LABELS.EMPTY_TEXT,
 );
-
 </script>
 
 <template>
   <div class="c-conduit-result" :class="[size === 'sm' ? 'is-sm' : '']">
-
     <!-- Left Column: 32% -->
     <div class="c-conduit-result__col">
       <div class="c-conduit-result__main">
-        <div class="c-conduit-result__main-label">{{ CONDUIT_UI_LABELS.TITLE_32 }}</div>
+        <div class="c-conduit-result__main-label">
+          {{ CONDUIT_UI_LABELS.TITLE_32 }}
+        </div>
         <div class="c-conduit-result__main-value">
           <span class="value-text" :class="status32Class">{{ size32 }}</span>
           <template v-if="isReady && !result!.isOversize32">
             <span class="value-sep c-conduit-result__paren">(</span>
-            <span class="value-text c-conduit-result__percent is-neutral">{{ fill32 }}</span>
-            <span class="value-unit c-conduit-result__percent-unit">{{ CONDUIT_UI_LABELS.UNIT_PERCENT }}</span>
+            <span class="value-text c-conduit-result__percent is-neutral">{{
+              fill32
+            }}</span>
+            <span class="value-unit c-conduit-result__percent-unit">{{
+              CONDUIT_UI_LABELS.UNIT_PERCENT
+            }}</span>
             <span class="value-sep">)</span>
           </template>
         </div>
@@ -79,19 +95,24 @@ const fill48 = computed(() =>
     <!-- Right Column: 48% -->
     <div class="c-conduit-result__col">
       <div class="c-conduit-result__main">
-        <div class="c-conduit-result__main-label">{{ CONDUIT_UI_LABELS.TITLE_48 }}</div>
+        <div class="c-conduit-result__main-label">
+          {{ CONDUIT_UI_LABELS.TITLE_48 }}
+        </div>
         <div class="c-conduit-result__main-value">
           <span class="value-text" :class="status48Class">{{ size48 }}</span>
           <template v-if="isReady && !result!.isOversize48">
             <span class="value-sep c-conduit-result__paren">(</span>
-            <span class="value-text c-conduit-result__percent is-neutral">{{ fill48 }}</span>
-            <span class="value-unit c-conduit-result__percent-unit">{{ CONDUIT_UI_LABELS.UNIT_PERCENT }}</span>
+            <span class="value-text c-conduit-result__percent is-neutral">{{
+              fill48
+            }}</span>
+            <span class="value-unit c-conduit-result__percent-unit">{{
+              CONDUIT_UI_LABELS.UNIT_PERCENT
+            }}</span>
             <span class="value-sep">)</span>
           </template>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -109,16 +130,19 @@ const fill48 = computed(() =>
 
   // --- 子要素 ---
   &__paren {
-  // --- ボックスモデル ---
-  margin-left: var(--gap-component); }
+    // --- ボックスモデル ---
+    margin-left: var(--gap-component);
+  }
 
   &__percent {
-  // --- 継承 ---
-  @extend %text-title-lg; }
+    // --- 継承 ---
+    @extend %text-title-lg;
+  }
 
   &__percent-unit {
-  // --- 継承 ---
-  @extend %text-title-sm; }
+    // --- 継承 ---
+    @extend %text-title-sm;
+  }
 
   // コンテナ幅が xs 以上の場合は横並び2カラム
   @include cq("xs") {

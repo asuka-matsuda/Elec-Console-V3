@@ -101,12 +101,16 @@ const dropStatusClass = computed(() => {
         <span v-if="mainUnit" class="value-unit">{{ mainUnit }}</span>
         <template v-if="mode === 'drop' && isReady">
           <span class="value-sep c-voltage-result__drop-paren">(</span>
-          <span class="value-text c-voltage-result__drop-percent" :class="mainStatusClass">{{ dropPercent }}</span>
+          <span
+            class="value-text c-voltage-result__drop-percent"
+            :class="mainStatusClass"
+            >{{ dropPercent }}</span
+          >
           <span class="value-unit c-voltage-result__drop-unit">%</span>
           <span class="value-sep">)</span>
         </template>
       </div>
-      </div>
+    </div>
 
     <!-- サブ指標 -->
     <div class="c-voltage-result__metrics">
@@ -138,11 +142,13 @@ const dropStatusClass = computed(() => {
       <dl v-else class="metric-card">
         <dt class="metric-label">選択ケーブル</dt>
         <dd class="metric-value is-neutral">
-          <span class="value-text c-voltage-result__drop-cable">{{ dropCableName }}</span>
+          <span class="value-text c-voltage-result__drop-cable">{{
+            dropCableName
+          }}</span>
         </dd>
       </dl>
     </div>
-      </div>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -159,20 +165,24 @@ const dropStatusClass = computed(() => {
 
   // --- 子要素 ---
   &__drop-paren {
-  // --- ボックスモデル ---
-  margin-left: var(--gap-component); }
+    // --- ボックスモデル ---
+    margin-left: var(--gap-component);
+  }
 
   &__drop-percent {
-  // --- 継承 ---
-  @extend %text-title-lg; }
+    // --- 継承 ---
+    @extend %text-title-lg;
+  }
 
   &__drop-unit {
-  // --- 継承 ---
-  @extend %text-title-sm; }
+    // --- 継承 ---
+    @extend %text-title-sm;
+  }
 
   &__drop-cable {
-  // --- 継承 ---
-  @extend %text-title-lg; }
+    // --- 継承 ---
+    @extend %text-title-lg;
+  }
 
   // --- モディファイア ---
   &.is-sm {

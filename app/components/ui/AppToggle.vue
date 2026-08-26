@@ -79,7 +79,6 @@ const inputId = useId();
 
       // --- 視覚効果 ---
       @include cyber-text-glow(var(--toggle-color));
-
     }
 
     /* 2. Checked State (ON) */

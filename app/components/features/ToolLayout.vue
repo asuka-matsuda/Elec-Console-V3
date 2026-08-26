@@ -198,7 +198,10 @@ const toggleDrawer = () => {
       // --- 視覚効果 ---
       background: var(--color-bg-base);
 
-      @include state-base(var(--shadow-elevation-md), transform var(--transition-base));
+      @include state-base(
+        var(--shadow-elevation-md),
+        transform var(--transition-base)
+      );
 
       // --- モディファイア ---
       &.is-drawer-open {

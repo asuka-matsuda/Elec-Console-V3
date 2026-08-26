@@ -169,7 +169,10 @@ withDefaults(
     width: var(--size-2);
     height: var(--size-2);
 
-    @include border-base(theme-color(var(--color-category-main), 70%), var(--border-width-thick));
+    @include border-base(
+      theme-color(var(--color-category-main), 70%),
+      var(--border-width-thick)
+    );
 
     border-radius: 50%;
 
@@ -197,8 +200,7 @@ withDefaults(
 }
 
 // フォームグループ内にエラー要素（.c-form-group__error や .is-error 等）が存在する場合、ラベルを赤くする
-.c-form-group:has(.c-form-group__error, :invalid, .is-error)
-  .c-form-label {
+.c-form-group:has(.c-form-group__error, :invalid, .is-error) .c-form-label {
   // --- タイポグラフィ ---
   color: var(--color-status-danger);
 

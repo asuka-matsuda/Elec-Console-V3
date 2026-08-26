@@ -32,36 +32,36 @@ const toggleCat = (value: string) => {
 <template>
   <AppPanel>
     <div class="c-filter-panel__stack">
-    <div class="c-filter-panel__header-wrapper">
-      <div class="c-filter-panel__header">
-        <AppIcon name="search" />
-        <span>絞り込み・検索</span>
-      </div>
-      <AppDivider type="fade-center" variant="border" />
-    </div>
-
-    <div class="c-filter-panel__filters">
-      <AppFormGroup label="Keyword">
-        <AppInput v-model="searchQuery" :placeholder="placeholder" />
-      </AppFormGroup>
-
-      <AppFormGroup v-if="categoryOptions.length > 0" label="Category">
-        <div class="c-filter-panel__grid">
-          <AppCheckbox
-            v-for="cat in categoryOptions"
-            :key="cat.value"
-            :model-value="activeCats.includes(cat.value)"
-            @update:model-value="toggleCat(cat.value)"
-          >
-            {{ cat.label }}
-          </AppCheckbox>
+      <div class="c-filter-panel__header-wrapper">
+        <div class="c-filter-panel__header">
+          <AppIcon name="search" />
+          <span>絞り込み・検索</span>
         </div>
-      </AppFormGroup>
+        <AppDivider type="fade-center" variant="border" />
+      </div>
 
-      <!-- スロットを追加して、特有のフィルター（五十音など）を拡張可能にする -->
-      <slot name="extra-filters" />
-    </div>
-  </div></AppPanel>
+      <div class="c-filter-panel__filters">
+        <AppFormGroup label="Keyword">
+          <AppInput v-model="searchQuery" :placeholder="placeholder" />
+        </AppFormGroup>
+
+        <AppFormGroup v-if="categoryOptions.length > 0" label="Category">
+          <div class="c-filter-panel__grid">
+            <AppCheckbox
+              v-for="cat in categoryOptions"
+              :key="cat.value"
+              :model-value="activeCats.includes(cat.value)"
+              @update:model-value="toggleCat(cat.value)"
+            >
+              {{ cat.label }}
+            </AppCheckbox>
+          </div>
+        </AppFormGroup>
+
+        <!-- スロットを追加して、特有のフィルター（五十音など）を拡張可能にする -->
+        <slot name="extra-filters" />
+      </div></div
+  ></AppPanel>
 </template>
 
 <style scoped lang="scss">

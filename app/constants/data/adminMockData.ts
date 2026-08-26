@@ -44,8 +44,8 @@ export const mockUsers: User[] = [
 ];
 
 export const mockSites: Site[] = [
-  { id: 's1', name: '新国立競技場', address: '東京都新宿区', status: 'in_progress', createdAt: '2026-07-01T10:00:00Z' },
-  { id: 's2', name: '虎ノ門ヒルズ', address: '東京都港区', status: 'planning', createdAt: '2026-07-15T10:00:00Z' },
+  { id: 's1', name: '新国立競技場', status: 'in_progress', createdAt: '2026-07-01T10:00:00Z', disabledAt: null },
+  { id: 's2', name: '虎ノ門ヒルズ', status: 'planning', createdAt: '2026-07-15T10:00:00Z', disabledAt: null },
 ];
 
 export const mockSiteSettings: SiteSettings[] = [

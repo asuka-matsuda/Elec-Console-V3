@@ -24,12 +24,12 @@ function getKanaRow(kanaStr: string) {
   if (/[ぁEこカ-コぁEごガ-ゴ]/.test(firstChar)) return "k";
   if (/[ぁEそサ-ソぁEぞザ-ゾ]/.test(firstChar)) return "s";
   if (/[ぁEとタ-トだ-どダ-ド]/.test(firstChar)) return "t";
-  if (/[な-のチEノ]/.test(firstChar)) return "n";
+  if (/[な-のナ-ノ]/.test(firstChar)) return "n";
   if (/[\u306f-\u307b\u30cf-\u30db\u3070-\u307c\u30d0-\u30dc\u3071-\u307d\u30d1-\u30dd]/.test(firstChar)) return "h";
   if (/[\u307e-\u3082\u30de-\u30e2]/.test(firstChar)) return "m";
-  if (/[めEよヤ-ヨ]/.test(firstChar)) return "y";
-  if (/[めEろラ-ロ]/.test(firstChar)) return "r";
-  if (/[めEんワ-ン]/.test(firstChar)) return "w";
+  if (/[や-よヤ-ヨ]/.test(firstChar)) return "y";
+  if (/[ら-ろラ-ロ]/.test(firstChar)) return "r";
+  if (/[わ-んワ-ン]/.test(firstChar)) return "w";
   return "other";
 }
 

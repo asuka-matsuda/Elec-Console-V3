@@ -44,8 +44,8 @@ withDefaults(
     <div v-if="$slots.description" class="c-section-header__desc">
       <slot name="description" />
     </div>
-    <AppDivider 
-      :variant="dividerType === 'default' ? variant : 'border'" 
+    <AppDivider
+      :variant="dividerType === 'default' ? variant : 'border'"
       :type="dividerType === 'default' ? 'solid' : dividerType"
     />
   </header>

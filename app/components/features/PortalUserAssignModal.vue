@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
-import { useAdminUsers } from '~/composables/admin/useAdminUsers';
-import { useAdminSites } from '~/composables/admin/useAdminSites';
+import { ref, watch } from "vue";
+import { useAdminUsers } from "~/composables/admin/useAdminUsers";
+import { useAdminSites } from "~/composables/admin/useAdminSites";
 
 const props = defineProps<{
   userId: string;
@@ -10,7 +10,7 @@ const props = defineProps<{
 
 const isOpen = defineModel<boolean>({ default: false });
 const emit = defineEmits<{
-  (e: 'success'): void;
+  (e: "success"): void;
 }>();
 
 const { assignSites } = useAdminUsers();
@@ -27,22 +27,28 @@ watch(isOpen, (newVal) => {
 const handleSave = async () => {
   // 例外は AppFormModal でキャッチされるため、単に await するだけでOK
   await assignSites(props.userId, targetSiteIds.value);
-  emit('success');
+  emit("success");
 };
 </script>
 
 <template>
-  <AppFormModal 
-    v-model="isOpen" 
+  <AppFormModal
+    v-model="isOpen"
     title="現場アサイン管理"
     :submit-fn="handleSave"
     submit-text="アサインを保存"
   >
-    <p class="c-user-assign-modal__desc">このユーザーが参加・閲覧できる現場を選択してください。</p>
-    
+    <p class="c-user-assign-modal__desc">
+      このユーザーが参加・閲覧できる現場を選択してください。
+    </p>
+
     <template v-for="site in sites" :key="site.id">
       <AppFormGroup>
-        <AppCheckbox v-model="targetSiteIds" :value="site.id" :label="site.name" />
+        <AppCheckbox
+          v-model="targetSiteIds"
+          :value="site.id"
+          :label="site.name"
+        />
       </AppFormGroup>
     </template>
   </AppFormModal>

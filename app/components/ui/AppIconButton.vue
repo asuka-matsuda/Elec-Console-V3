@@ -10,21 +10,15 @@ interface Props extends AppButtonProps {
   name: string;
 }
 
-const props = withDefaults(
-  defineProps<Props>(),
-  {
-    type: "button",
-    size: "md",
-    iconOnly: true,
-  }
-);
+const props = withDefaults(defineProps<Props>(), {
+  type: "button",
+  size: "md",
+  iconOnly: true,
+});
 </script>
 
 <template>
-  <AppButton
-    v-bind="props"
-    class="c-icon-button"
-  >
+  <AppButton v-bind="props" class="c-icon-button">
     <AppIcon :name="name" />
   </AppButton>
 </template>

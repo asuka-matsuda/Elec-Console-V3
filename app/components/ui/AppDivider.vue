@@ -52,7 +52,7 @@ withDefaults(
     "danger": var(--color-status-danger),
     "success": var(--color-status-success),
     "border": var(--color-border),
-    "sidebar-border": var(--sidebar-border)
+    "sidebar-border": var(--sidebar-border),
   );
 
   // Default (Horizontal)
@@ -136,12 +136,21 @@ withDefaults(
 
   &.is-type-fade-center {
     // --- 視覚効果 ---
-    background: linear-gradient(var(--grad-dir-fade), transparent 0%, var(--glow-color) 50%, transparent 100%);
+    background: linear-gradient(
+      var(--grad-dir-fade),
+      transparent 0%,
+      var(--glow-color) 50%,
+      transparent 100%
+    );
   }
 
   &.is-type-fade-side {
     // --- 視覚効果 ---
-    background: linear-gradient(var(--grad-dir-fade), var(--glow-color) 0%, transparent 100%);
+    background: linear-gradient(
+      var(--grad-dir-fade),
+      var(--glow-color) 0%,
+      transparent 100%
+    );
   }
 
   @each $name, $val in $accents {

@@ -3,25 +3,28 @@
  * AppFormModal
  * フォーム入力と非同期送信（ローディング・エラー管理）を内包した共通モーダル
  */
-import { ref } from 'vue';
+import { ref } from "vue";
 
 const isOpen = defineModel<boolean>({ default: false });
 
-const props = withDefaults(defineProps<{
-  title: string;
-  submitFn: () => Promise<void>;
-  submitText?: string;
-  cancelText?: string;
-}>(), {
-  submitText: '保存する',
-  cancelText: 'キャンセル',
-});
+const props = withDefaults(
+  defineProps<{
+    title: string;
+    submitFn: () => Promise<void>;
+    submitText?: string;
+    cancelText?: string;
+  }>(),
+  {
+    submitText: "保存する",
+    cancelText: "キャンセル",
+  },
+);
 
 const isSubmitting = ref(false);
-const errorMsg = ref('');
+const errorMsg = ref("");
 
 const handleSubmit = async () => {
-  errorMsg.value = '';
+  errorMsg.value = "";
   isSubmitting.value = true;
   try {
     await props.submitFn();
@@ -29,7 +32,7 @@ const handleSubmit = async () => {
     // 一般的には成功時に isOpen = false にする
     isOpen.value = false;
   } catch (e: any) {
-    errorMsg.value = e.message || '処理に失敗しました。';
+    errorMsg.value = e.message || "処理に失敗しました。";
   } finally {
     isSubmitting.value = false;
   }
@@ -42,18 +45,26 @@ const handleSubmit = async () => {
       <div v-if="errorMsg" class="c-app-form-modal__error">
         {{ errorMsg }}
       </div>
-      
+
       <div class="c-app-form-modal__body">
         <slot></slot>
       </div>
     </div>
-    
+
     <template #footer>
-      <AppButton variant="secondary" :disabled="isSubmitting" @click="isOpen = false">
+      <AppButton
+        variant="secondary"
+        :disabled="isSubmitting"
+        @click="isOpen = false"
+      >
         {{ cancelText }}
       </AppButton>
-      <AppButton variant="primary" :disabled="isSubmitting" @click="handleSubmit">
-        {{ isSubmitting ? '処理中...' : submitText }}
+      <AppButton
+        variant="primary"
+        :disabled="isSubmitting"
+        @click="handleSubmit"
+      >
+        {{ isSubmitting ? "処理中..." : submitText }}
       </AppButton>
     </template>
   </AppModal>

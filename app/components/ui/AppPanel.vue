@@ -6,7 +6,14 @@
 withDefaults(
   defineProps<{
     title?: string;
-    bracketColor?: "main" | "tool" | "database" | "reference" | "management" | "danger" | "success";
+    bracketColor?:
+      | "main"
+      | "tool"
+      | "database"
+      | "reference"
+      | "management"
+      | "danger"
+      | "success";
     variant?: "hud" | "simple" | "gradient" | "hybrid";
   }>(),
   {
@@ -169,7 +176,9 @@ withDefaults(
   &--hud {
     // --- CSSカスタムプロパティ ---
     --p-border-color: #{theme-color(var(--color-border), 50%)};
-    --p-box-shadow: inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border), var(--shadow-elevation-sm);
+    --p-box-shadow:
+      inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border),
+      var(--shadow-elevation-sm);
     --p-bracket-display: block;
     --p-bracket-size: var(--space-4);
     --p-bracket-color: #{theme-color(var(--p-theme-color), 60%)};
@@ -178,7 +187,9 @@ withDefaults(
   &--simple {
     // --- CSSカスタムプロパティ ---
     --p-border-color: #{theme-color(var(--color-border), 50%)};
-    --p-box-shadow: inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent, var(--shadow-elevation-sm);
+    --p-box-shadow:
+      inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent,
+      var(--shadow-elevation-sm);
     --p-bracket-display: none;
   }
 
@@ -191,7 +202,9 @@ withDefaults(
         transparent 100%
       )
       1;
-    --p-box-shadow: inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent, var(--shadow-elevation-sm);
+    --p-box-shadow:
+      inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent,
+      var(--shadow-elevation-sm);
     --p-bracket-display: block;
     --p-bracket-size: var(--space-3);
     --p-bracket-color: #{theme-color(var(--p-theme-color), 40%)};
@@ -206,7 +219,9 @@ withDefaults(
         transparent 100%
       )
       1;
-    --p-box-shadow: inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border), var(--shadow-elevation-sm);
+    --p-box-shadow:
+      inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border),
+      var(--shadow-elevation-sm);
     --p-bracket-display: block;
     --p-bracket-size: var(--space-4);
     --p-bracket-color: #{theme-color(var(--p-theme-color), 80%)};

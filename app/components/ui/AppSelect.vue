@@ -54,14 +54,14 @@ const calculatePlacement = () => {
       position: "fixed",
       bottom: `${window.innerHeight - rect.top + 4}px`,
       left: `${rect.left}px`,
-      minWidth: `${rect.width}px`
+      minWidth: `${rect.width}px`,
     };
   } else {
     dropdownStyle.value = {
       position: "fixed",
       top: `${rect.bottom + 4}px`,
       left: `${rect.left}px`,
-      minWidth: `${rect.width}px`
+      minWidth: `${rect.width}px`,
     };
   }
 };
@@ -77,11 +77,14 @@ const handleGlobalScroll = (e: Event) => {
 
 onMounted(() => {
   isMounted.value = true;
-  const modal = selectRef.value?.closest('dialog');
+  const modal = selectRef.value?.closest("dialog");
   if (modal) {
     teleportTarget.value = modal as HTMLElement;
   }
-  window.addEventListener("scroll", handleGlobalScroll, { capture: true, passive: true });
+  window.addEventListener("scroll", handleGlobalScroll, {
+    capture: true,
+    passive: true,
+  });
   window.addEventListener("resize", calculatePlacement, { passive: true });
 });
 
@@ -239,7 +242,12 @@ const listboxId = useId();
     <ClientOnly>
       <Teleport :to="teleportTarget">
         <transition name="dropdown-fade">
-          <div v-if="isOpen" class="c-custom-select__dropdown" :class="[`is-${dynamicPlacement}`]" :style="dropdownStyle">
+          <div
+            v-if="isOpen"
+            class="c-custom-select__dropdown"
+            :class="[`is-${dynamicPlacement}`]"
+            :style="dropdownStyle"
+          >
             <ul :id="listboxId" class="c-custom-select__list">
               <li
                 v-if="isPlaceholder"

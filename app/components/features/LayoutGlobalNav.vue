@@ -96,9 +96,12 @@ const closeSidebar = () => {
   height: 100dvh;
 
   // --- 視覚効果 ---
-  @include state-base(var(--shadow-elevation-md), transform var(--duration-slow) var(--ease-smooth));
+  @include state-base(
+    var(--shadow-elevation-md),
+    transform var(--duration-slow) var(--ease-smooth)
+  );
 
-    // Mobile layout (hide by default)
+  // Mobile layout (hide by default)
   @include mq("md") {
     // --- 視覚効果 ---
     transform: translateX(-100%);
@@ -123,8 +126,7 @@ const closeSidebar = () => {
 
     // --- 視覚効果 ---
     box-shadow: var(--shadow-elevation-sm); // Replaced hardcoded shadow
-
-      }
+  }
 
   &__nav {
     // --- CSSカスタムプロパティ ---
@@ -157,7 +159,7 @@ const closeSidebar = () => {
       "tool": var(--color-category-tool),
       "database": var(--color-category-database),
       "reference": var(--color-category-reference),
-      "management": var(--color-category-management)
+      "management": var(--color-category-management),
     );
 
     // --- レイアウト・配置 ---
@@ -173,8 +175,8 @@ const closeSidebar = () => {
   }
 
   &__section-header {
-        // --- レイアウト・配置 ---
-        @include flex-column(var(--gap-element));
+    // --- レイアウト・配置 ---
+    @include flex-column(var(--gap-element));
 
     // --- ボックスモデル ---
     padding: var(--pad-section) var(--pad-component);
@@ -183,7 +185,7 @@ const closeSidebar = () => {
   &__heading {
     // --- 継承 ---
     @extend %text-badge;
-      color: var(--section-accent, var(--color-text-secondary));
+    color: var(--section-accent, var(--color-text-secondary));
   }
 
   &__link {
@@ -230,7 +232,10 @@ const closeSidebar = () => {
       // Replaced hardcoded shadow with cyber-text-glow or simplified shadow
 
       // --- CSSカスタムプロパティ ---
-      --glow-color: theme-color(var(--section-accent, var(--color-category-main)), 20%);
+      --glow-color: theme-color(
+        var(--section-accent, var(--color-category-main)),
+        20%
+      );
 
       // --- 視覚効果 ---
       transform: translateX(var(--space-1));

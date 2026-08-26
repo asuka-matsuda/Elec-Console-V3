@@ -257,7 +257,10 @@
   text-shadow: 0 0 $blur theme-color($color, $opacity);
 }
 
-@mixin border-base($color: var(--color-border), $width: var(--border-width-base)) {
+@mixin border-base(
+  $color: var(--color-border),
+  $width: var(--border-width-base)
+) {
   border: $width solid $color;
 }
 
