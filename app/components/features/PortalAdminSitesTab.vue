@@ -12,6 +12,27 @@ const { sites, createSite, toggleDisableSite, updateSite } =
   useAdminSites();
 
 // --- 一覧定義 ---
+
+const getStatusLabel = (status: string) => {
+  switch (status) {
+    case 'planning': return '計画中';
+    case 'in_progress': return '進行中';
+    case 'completed': return '完了';
+    case 'on_hold': return '保留';
+    default: return '不明';
+  }
+};
+
+const getStatusVariant = (status: string) => {
+  switch (status) {
+    case 'planning': return 'warning';
+    case 'in_progress': return 'success';
+    case 'completed': return 'neutral';
+    case 'on_hold': return 'danger';
+    default: return 'neutral';
+  }
+};
+
 const siteHeaders = [
   { key: "id", label: "現場ID" },
   { key: "name", label: "現場名" },
@@ -123,23 +144,9 @@ const confirmIntent = computed(() => {
         <AppTable :columns="siteHeaders" :data="sites">
           <template #cell-status="{ value, row }">
             <div class="c-admin-sites__status-stack">
-              <AppBadge
-                :variant="
-                  value === 'in_progress'
-                    ? 'success'
-                    : value === 'completed'
-                      ? 'neutral'
-                      : 'warning'
-                "
-              >
-                {{
-                  value === "planning"
-                    ? "計画中"
-                    : value === "in_progress"
-                      ? "進行中"
-                      : "完了"
-                }}
-              </AppBadge>
+              <AppBadge :variant="getStatusVariant(value as string)">
+                  {{ getStatusLabel(value as string) }}
+                </AppBadge>
               <AppBadge v-if="row.disabledAt" variant="danger" size="sm"
                 >無効</AppBadge
               >
