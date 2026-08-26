@@ -108,6 +108,9 @@ const handleExport = () => {
           <AppFormGroup label="ステータス">
             <AppSelect v-model="(editData.status as string)" :options="statusOptions" />
           </AppFormGroup>
+          <AppFormGroup label="現場ID (半角英数)">
+            <AppInput v-model="(editData.id as string)" placeholder="例: site-tokyo-01" />
+          </AppFormGroup>
           <AppFormGroup label="現場名">
             <AppInput v-model="editData.name" />
           </AppFormGroup>

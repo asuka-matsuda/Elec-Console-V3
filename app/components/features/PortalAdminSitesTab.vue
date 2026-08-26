@@ -95,10 +95,12 @@ const handleToggleDisable = async () => {
   };
 
   const handleSaveSettings = (updatedSite: Site) => {
-    const { id, ...rest } = updatedSite;
-    updateSite(id, rest);
-    isSettingsModalOpen.value = false;
-  };
+  if (settingsTargetSite.value) {
+    const originalId = settingsTargetSite.value.id;
+    updateSite(originalId, updatedSite);
+  }
+  isSettingsModalOpen.value = false;
+};
 
   const confirmMessage = computed(() => {
   if (siteToToggle.value?.disabledAt) {

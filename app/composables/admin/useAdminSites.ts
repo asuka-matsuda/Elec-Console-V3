@@ -20,8 +20,12 @@ export const useAdminSites = () => {
     sites.value = [...sites.value, newSite];
   };
 
-  const updateSite = (id: string, updates: Partial<Omit<Site, 'id' | 'createdAt' | 'disabledAt'>>) => {
+  const updateSite = (id: string, updates: Partial<Omit<Site, 'createdAt' | 'disabledAt'>>) => {
     sites.value = sites.value.map(s => s.id === id ? { ...s, ...updates } : s);
+    // もし ID が変更された場合、関連する siteSettings の siteId も更新する
+    if (updates.id && updates.id !== id) {
+      siteSettings.value = siteSettings.value.map(set => set.siteId === id ? { ...set, siteId: updates.id as string } : set);
+    }
   };
 
   const deleteSite = (id: string) => {
