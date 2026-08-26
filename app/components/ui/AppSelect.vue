@@ -27,6 +27,9 @@ const focusedIndex = ref(-1);
 const dynamicPlacement = ref<"top" | "bottom">("bottom");
 const dropdownStyle = ref<Record<string, string>>({});
 const isMounted = ref(false);
+const teleportTarget = ref<HTMLElement | string>("body");| "bottom">("bottom");
+const dropdownStyle = ref<Record<string, string>>({});
+const isMounted = ref(false);
 
 const calculatePlacement = () => {
   if (!selectRef.value) return;
@@ -76,7 +79,13 @@ const handleGlobalScroll = (e: Event) => {
 
 onMounted(() => {
   isMounted.value = true;
+  const modal = selectRef.value?.closest('dialog');
+  if (modal) {
+    teleportTarget.value = modal as HTMLElement;
+  }
   window.addEventListener("scroll", handleGlobalScroll, { capture: true, passive: true });
+  window.addEventListener("resize", calculatePlacement, { passive: true });
+});
   window.addEventListener("resize", calculatePlacement, { passive: true });
 });
 
@@ -232,7 +241,7 @@ const listboxId = useId();
 
     <!-- Dropdown Menu -->
     <ClientOnly>
-      <Teleport to="body">
+      <Teleport :to="teleportTarget">
         <transition name="dropdown-fade">
           <div v-if="isOpen" class="c-custom-select__dropdown" :class="[`is-${dynamicPlacement}`]" :style="dropdownStyle">
             <ul :id="listboxId" class="c-custom-select__list">
@@ -266,7 +275,7 @@ const listboxId = useId();
 <style scoped lang="scss">
 .c-custom-select {
   // --- 継承 ---
-  @extend %text-title-sm;
+  @extend %text-desc;
 
   // --- その他 ---
   user-select: none;
