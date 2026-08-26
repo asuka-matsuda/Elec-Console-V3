@@ -109,7 +109,8 @@ const handleResetPassword = async () => {
 <template>
   <div class="c-admin-users">
     <AppPanel title="ユーザー一覧">
-      <div class="c-admin-users__toolbar">
+      <div class="c-admin-users__stack">
+        <div class="c-admin-users__toolbar">
         <AppButton variant="primary" icon="plus" @click="isCreateModalOpen = true">新規ユーザー登録</AppButton>
       </div>
 
@@ -136,6 +137,7 @@ const handleResetPassword = async () => {
           </div>
         </template>
       </AppTable>
+      </div>
     </AppPanel>
 
     <!-- モーダル群 (関心の分離) -->
@@ -171,6 +173,10 @@ const handleResetPassword = async () => {
 
 <style scoped lang="scss">
 .c-admin-users {
+  &__stack {
+    @include flex-column(var(--gap-section));
+  }
+
   &__actions {
     @include flex-start(var(--gap-component));
   }
@@ -180,7 +186,6 @@ const handleResetPassword = async () => {
   }
 
   &__toolbar {
-    margin-bottom: var(--gap-section);
   }
 
   &__meta {

@@ -31,6 +31,7 @@ const toggleCat = (value: string) => {
 
 <template>
   <AppPanel>
+    <div class="c-filter-panel__stack">
     <div class="c-filter-panel__header-wrapper">
       <div class="c-filter-panel__header">
         <AppIcon name="search" />
@@ -65,6 +66,10 @@ const toggleCat = (value: string) => {
 
 <style scoped lang="scss">
 .c-filter-panel {
+  &__stack {
+    @include flex-column(var(--pad-container));
+  }
+
   // --- 子要素 ---
   &__header {
     // --- 継承 ---

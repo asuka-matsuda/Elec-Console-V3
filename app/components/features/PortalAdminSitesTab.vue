@@ -67,7 +67,8 @@ const handleSaveSettings = () => {
 <template>
   <div class="c-admin-sites">
     <AppPanel title="現場プロジェクト一覧">
-      <div class="c-admin-sites__toolbar">
+      <div class="c-admin-sites__stack">
+        <div class="c-admin-sites__toolbar">
         <AppButton variant="primary" icon="plus" @click="isCreateModalOpen = true">新規現場登録</AppButton>
       </div>
 
@@ -81,6 +82,7 @@ const handleSaveSettings = () => {
           <AppButton variant="secondary" size="sm" icon="settings" @click="openSettingsModal(row.id)">現場設定</AppButton>
         </template>
       </AppTable>
+      </div>
     </AppPanel>
 
     <!-- 新規登録モーダル -->
@@ -132,7 +134,6 @@ const handleSaveSettings = () => {
 
   &__toolbar {
     // --- ボックスモデル ---
-    margin-bottom: var(--gap-section);
   }
 
   &__desc {

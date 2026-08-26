@@ -54,6 +54,5 @@ const handleSave = async () => {
 <style scoped lang="scss">
 .c-user-assign-modal__desc {
   @extend %text-desc;
-  margin-bottom: var(--space-2);
 }
 </style>

@@ -65,7 +65,6 @@ const handleCopyPassword = () => {
 .c-user-credential-modal {
   &__desc {
     @extend %text-desc;
-    margin-bottom: var(--space-4);
   }
   
   &__credential-box {
