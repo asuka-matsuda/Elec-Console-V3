@@ -1,10 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import AppFormModal from '~/components/ui/AppFormModal.vue';
-import AppFormGroup from '~/components/ui/AppFormGroup.vue';
-import AppInput from '~/components/ui/AppInput.vue';
-import AppSelect from '~/components/ui/AppSelect.vue';
-import AppCheckbox from '~/components/ui/AppCheckbox.vue';
 import { useAdminUsers } from '~/composables/admin/useAdminUsers';
 import type { UserRole } from '~/types/auth';
 

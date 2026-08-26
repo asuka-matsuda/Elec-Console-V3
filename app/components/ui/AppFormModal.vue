@@ -4,8 +4,6 @@
  * フォーム入力と非同期送信（ローディング・エラー管理）を内包した共通モーダル
  */
 import { ref } from 'vue';
-import AppModal from './AppModal.vue';
-import AppButton from './AppButton.vue';
 
 const isOpen = defineModel<boolean>({ default: false });
 

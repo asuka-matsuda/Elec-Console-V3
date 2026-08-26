@@ -4,8 +4,6 @@
  * 現場ポータルのトップ（現場選択など）
  */
 import { useHead, useRouter } from '#app';
-import AppPanel from '~/components/ui/AppPanel.vue';
-import AppButton from '~/components/ui/AppButton.vue';
 import { useAuth } from '~/composables/useAuth';
 
 useHead({ title: '現場ポータル - Elec-Console' });

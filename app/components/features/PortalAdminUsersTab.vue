@@ -5,16 +5,6 @@
  */
 import { ref, onMounted } from 'vue';
 import { useAdminUsers } from '~/composables/admin/useAdminUsers';
-import AppPanel from '~/components/ui/AppPanel.vue';
-import AppTable from '~/components/ui/AppTable.vue';
-import AppBadge from '~/components/ui/AppBadge.vue';
-import AppButton from '~/components/ui/AppButton.vue';
-import AppConfirmModal from '~/components/ui/AppConfirmModal.vue';
-
-// サブコンポーネント
-import PortalUserCreateModal from './PortalUserCreateModal.vue';
-import PortalUserCredentialModal from './PortalUserCredentialModal.vue';
-import PortalUserAssignModal from './PortalUserAssignModal.vue';
 
 const { users, fetchUsers, deleteUser, resetUserPassword } = useAdminUsers();
 

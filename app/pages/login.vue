@@ -6,10 +6,6 @@
 import { ref } from "vue";
 import { useHead, useRouter } from "#app";
 import { useAuth } from "~/composables/useAuth";
-import AppInput from "~/components/ui/AppInput.vue";
-import AppButton from "~/components/ui/AppButton.vue";
-import AppFormGroup from "~/components/ui/AppFormGroup.vue";
-import AppIcon from "~/components/ui/AppIcon.vue";
 
 useHead({ title: "ログイン - Elec-Console" });
 definePageMeta({ layout: "login", title: "Elec-Console v2" });

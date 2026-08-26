@@ -5,14 +5,6 @@
  */
 import { ref } from 'vue';
 import { useAdminSites } from '~/composables/admin/useAdminSites';
-import AppPanel from '~/components/ui/AppPanel.vue';
-import AppTable from '~/components/ui/AppTable.vue';
-import AppBadge from '~/components/ui/AppBadge.vue';
-import AppButton from '~/components/ui/AppButton.vue';
-import AppModal from '~/components/ui/AppModal.vue';
-import AppFormGroup from '~/components/ui/AppFormGroup.vue';
-import AppInput from '~/components/ui/AppInput.vue';
-import AppCheckbox from '~/components/ui/AppCheckbox.vue';
 import type { SiteStatus, SiteSettings } from '~/types/admin';
 
 const { sites, createSite, getSettings, updateSettings } = useAdminSites();

@@ -80,9 +80,15 @@ const componentTag = computed(() => {
   @include state-base(var(--shadow-elevation-sm), var(--transition-fast));
 
   // --- モディファイア（バリアント） ---
-  &--danger { --btn-color: var(--color-status-danger); }
-  &--success { --btn-color: var(--color-status-success); }
-  &--secondary { --btn-color: var(--color-status-neutral); }
+  &--danger {
+    --btn-color: var(--color-status-danger);
+  }
+  &--success {
+    --btn-color: var(--color-status-success);
+  }
+  &--secondary {
+    --btn-color: var(--color-status-neutral);
+  }
 
   // --- モディファイア（ブロック） ---
   &--block {
@@ -155,7 +161,6 @@ const componentTag = computed(() => {
   &--icon-only {
     // --- ボックスモデル ---
     width: var(--size-control-sm);
-    padding: 0;
 
     // --- モディファイア ---
     &.c-btn--md {

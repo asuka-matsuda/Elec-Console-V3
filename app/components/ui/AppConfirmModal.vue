@@ -4,11 +4,9 @@
  * 汎用的な確認モーダルコンポーネントです。
  */
 import { computed } from "vue";
-import AppButton from "./AppButton.vue";
 
 
 
-import AppModal from "./AppModal.vue";
 
 const isOpen = defineModel<boolean>({ default: false });
 const props = withDefaults(defineProps<{

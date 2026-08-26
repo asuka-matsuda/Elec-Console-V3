@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import AppFormModal from '~/components/ui/AppFormModal.vue';
-import AppFormGroup from '~/components/ui/AppFormGroup.vue';
-import AppCheckbox from '~/components/ui/AppCheckbox.vue';
 import { useAdminUsers } from '~/composables/admin/useAdminUsers';
 import { useAdminSites } from '~/composables/admin/useAdminSites';
 
