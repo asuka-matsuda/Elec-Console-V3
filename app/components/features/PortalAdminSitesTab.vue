@@ -6,9 +6,9 @@
 import { ref, computed } from "vue";
 import { useAdminSites } from "~/composables/admin/useAdminSites";
 
-import type { SiteStatus, SiteSettings, Site } from "~/types/admin";
+import type { SiteStatus, Site } from "~/types/admin";
 
-const { sites, createSite, getSettings, updateSettings, toggleDisableSite } =
+const { sites, createSite, toggleDisableSite, updateSite } =
   useAdminSites();
 
 // --- 一覧定義 ---
@@ -61,26 +61,25 @@ const handleToggleDisable = async () => {
   siteToToggle.value = null;
 };
 
-// --- 詳細設定モーダル ---
-const isSettingsModalOpen = ref(false);
-const settingsTargetSiteId = ref("");
-const editingSettings = ref<Partial<SiteSettings>>({});
+// --- 現場設定モーダル (新) ---
+  const isSettingsModalOpen = ref(false);
+  const settingsTargetSite = ref<Site | null>(null);
 
-const openSettingsModal = (siteId: string) => {
-  const currentSettings = getSettings(siteId);
-  if (currentSettings) {
-    settingsTargetSiteId.value = siteId;
-    editingSettings.value = { ...currentSettings };
-    isSettingsModalOpen.value = true;
-  }
-};
+  const openSettingsModal = (siteId: string) => {
+    const site = sites.value.find(s => s.id === siteId);
+    if (site) {
+      settingsTargetSite.value = { ...site };
+      isSettingsModalOpen.value = true;
+    }
+  };
 
-const handleSaveSettings = async () => {
-  updateSettings(settingsTargetSiteId.value, editingSettings.value);
-  isSettingsModalOpen.value = false;
-};
+  const handleSaveSettings = (updatedSite: Site) => {
+    const { id, ...rest } = updatedSite;
+    updateSite(id, rest);
+    isSettingsModalOpen.value = false;
+  };
 
-const confirmMessage = computed(() => {
+  const confirmMessage = computed(() => {
   if (siteToToggle.value?.disabledAt) {
     return (
       "現場「" +
@@ -189,27 +188,14 @@ const confirmIntent = computed(() => {
       </AppFormGroup>
     </AppFormModal>
 
-    <!-- 詳細設定モーダル -->
-    <AppFormModal
+    
+
+    <!-- 現場設定モーダル (新) -->
+    <PortalSiteSettingsModal
       v-model="isSettingsModalOpen"
-      title="現場詳細設定"
-      :submit-fn="handleSaveSettings"
-      submit-text="設定を保存"
-    >
-      <AppFormGroup label="Phase2 絶縁抵抗基準値 (MΩ)">
-        <AppInput
-          v-model.number="editingSettings.phase2ThresholdMegOhm"
-          type="number"
-          step="0.1"
-        />
-      </AppFormGroup>
-      <AppFormGroup>
-        <AppCheckbox
-          v-model="editingSettings.enablePhase3"
-          label="Phase3 (耐圧試験) を実施する"
-        />
-      </AppFormGroup>
-    </AppFormModal>
+      :site="settingsTargetSite"
+      @update:site="handleSaveSettings"
+    />
 
     <!-- 無効化/有効化の確認モーダル -->
     <AppConfirmModal
