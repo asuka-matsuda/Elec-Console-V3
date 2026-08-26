@@ -90,14 +90,14 @@ const confirmDelete = () => {
           size="lg"
         >
           <template #actions>
-            <AppButtonDanger
+            <AppButton variant="danger"
               v-if="historyList.length > 0"
               size="sm"
               @click="isClearAllModalOpen = true"
             >
               <AppIcon name="trash-2" size="sm" />
               全て削除
-            </AppButtonDanger>
+            </AppButton>
           </template>
         </AppSectionHeader>
       </template>
@@ -113,7 +113,7 @@ const confirmDelete = () => {
           v-if="historyList.length > 0"
           class="p-history-page__grid l-grid l-grid--auto-fill"
         >
-          <AppHistoryCard
+          <ToolHistoryCard
             v-for="entry in historyList"
             :key="entry.id"
             :entry="entry"

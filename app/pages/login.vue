@@ -75,8 +75,8 @@ const handleLogin = async () => {
           <AppButton
             type="submit"
             variant="primary"
+            block
             :disabled="isLoading"
-            style="width: 100%; justify-content: center"
           >
             <template v-if="isLoading">ログイン中...</template>
             <template v-else>ログイン</template>

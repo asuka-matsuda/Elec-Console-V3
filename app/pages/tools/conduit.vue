@@ -37,14 +37,14 @@ const handleSave = async () => {
 </script>
 
 <template>
-  <AppToolLayout
+  <ToolLayout
     title="配管サイズ自動選定"
     icon="target"
     description="内線規程に基づき、ケーブルの断面積（占積率32% / 48%）から適切な配管サイズを導き出します。"
     note="本ツールによる計算結果は理論値です。平形ケーブル（VVF等）は長径を外径とみなして計算します。曲がりが多いルート等の場合は1サイズ余裕を見るなど、適宜ご判断ください。"
   >
     <template #inputs>
-      <AppToolInputPanel @reset="openResetModal">
+      <ToolInputPanel @reset="openResetModal">
         <!-- 1. 対象の配管種類 -->
         <AppFormGroup label="対象の配管種類">
           <AppSelect
@@ -59,7 +59,7 @@ const handleSave = async () => {
           <div class="p-conduit__section-title">収容するケーブル</div>
 
           <div class="p-conduit__cable-list">
-            <AppCableRowCard
+            <ToolCableRowCard
               v-for="(cable, index) in inputs.inputCables"
               :key="cable.id"
               v-model="inputs.inputCables[index]!"
@@ -69,35 +69,35 @@ const handleSave = async () => {
             />
           </div>
 
-          <AppButtonSuccess
+          <AppButton variant="success"
             class="p-conduit__add-button"
             @click="addCable"
           >
             <AppIcon name="plus" /> ケーブルを追加
-          </AppButtonSuccess>
+          </AppButton>
         </div>
-      </AppToolInputPanel>
+      </ToolInputPanel>
     </template>
 
     <template #results>
-      <AppToolResultPanel
+      <ToolResultPanel
         :save-disabled="!result?.success || result?.partial"
         :save-function="handleSave"
       >
-        <AppConduitResult :result="result" />
-      </AppToolResultPanel>
+        <ToolConduitResult :result="result" />
+      </ToolResultPanel>
     </template>
 
     <template #basis>
-      <AppCalculationBasisPanel :steps="mathSteps">
+      <ToolCalculationBasisPanel :steps="mathSteps">
         <div class="p-basis-note">
           <strong>内線規程（勧告）</strong><br>
           3110-5 管の屈曲が少なく、容易に電線を引き入れ及び引き替えることができる場合（48％）<br>
           3110-6 異なる太さの絶縁電線を同一管内に収める場合（32％）
         </div>
-      </AppCalculationBasisPanel>
+      </ToolCalculationBasisPanel>
     </template>
-    </AppToolLayout>
+    </ToolLayout>
 
     <!-- リセット確認モーダル -->
     <AppConfirmModal v-model="isResetModalOpen" title="リセットの確認" message="入力した条件をすべてリセットしますか？" confirm-text="リセットする" @confirm="confirmReset" />

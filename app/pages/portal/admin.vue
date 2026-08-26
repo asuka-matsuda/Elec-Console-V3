@@ -9,8 +9,8 @@ import AppTabs from '~/components/ui/AppTabs.vue';
 import AppSectionHeader from '~/components/ui/AppSectionHeader.vue';
 
 // タブコンポーネントのインポート
-import AdminUsersTab from '~/components/portal/AdminUsersTab.vue';
-import AdminSitesTab from '~/components/portal/AdminSitesTab.vue';
+import PortalAdminUsersTab from '~/components/portal/PortalAdminUsersTab.vue';
+import PortalAdminSitesTab from '~/components/portal/PortalAdminSitesTab.vue';
 
 useHead({ title: 'ポータル管理 - Elec-Console' });
 
@@ -32,8 +32,8 @@ const activeTab = ref('users');
     <AppTabs :options="tabs" v-model="activeTab" />
 
     <div class="p-portal-admin__content">
-      <AdminUsersTab v-if="activeTab === 'users'" />
-      <AdminSitesTab v-if="activeTab === 'site'" />
+      <PortalAdminUsersTab v-if="activeTab === 'users'" />
+      <PortalAdminSitesTab v-if="activeTab === 'site'" />
     </div>
   </div>
 </template>

@@ -26,14 +26,14 @@ const {
 </script>
 
 <template>
-  <AppToolLayout
+  <ToolLayout
     title="ケーブルラック選定"
     icon="align-justify"
     description="強電・弱電ケーブルのリストと段積み数から、最適なラック幅を選定します。"
     note="※ 内線規程に基づく概算です。"
   >
     <template #inputs>
-      <AppToolInputPanel @reset="openResetModal">
+      <ToolInputPanel @reset="openResetModal">
         <div class="p-rack__sections">
           <div class="p-rack__grid">
             <AppFormGroup label="ラック深さ (H)">
@@ -88,7 +88,7 @@ const {
               <div>
                 <div class="p-rack__section-title">強電ケーブルリスト</div>
                 <div class="p-rack__cable-list">
-                  <AppCableRowCard
+                  <ToolCableRowCard
                     v-for="(cable, index) in inputs.strongCablesUI"
                     :key="cable.id"
                     v-model="inputs.strongCablesUI[index]!"
@@ -97,12 +97,12 @@ const {
                     @remove="removeStrongCable(cable.id)"
                   />
                 </div>
-                <AppButtonSecondary
+                <AppButton variant="secondary"
                   class="p-rack__add-button"
                   @click="addStrongCable"
                 >
                   <AppIcon name="plus" /> 強電ケーブルを追加
-                </AppButtonSecondary>
+                </AppButton>
               </div>
             </div>
           </AppCard>
@@ -131,7 +131,7 @@ const {
               <div>
                 <div class="p-rack__section-title">弱電ケーブルリスト</div>
                 <div class="p-rack__cable-list">
-                  <AppCableRowCard
+                  <ToolCableRowCard
                     v-for="(cable, index) in inputs.weakCablesUI"
                     :key="cable.id"
                     v-model="inputs.weakCablesUI[index]!"
@@ -140,21 +140,21 @@ const {
                     @remove="removeWeakCable(cable.id)"
                   />
                 </div>
-                <AppButtonSecondary
+                <AppButton variant="secondary"
                   class="p-rack__add-button"
                   @click="addWeakCable"
                 >
                   <AppIcon name="plus" /> 弱電ケーブルを追加
-                </AppButtonSecondary>
+                </AppButton>
               </div>
             </div>
           </AppCard>
         </div>
-      </AppToolInputPanel>
+      </ToolInputPanel>
     </template>
 
     <template #results>
-      <AppToolResultPanel
+      <ToolResultPanel
         :save-disabled="result?.error || (!inputs.isStrong && !inputs.isWeak)"
         :save-function="handleSaveHistory"
       >
@@ -183,31 +183,31 @@ const {
           </template>
         </AppResultBox>
 
-        <AppResultDetails>
-          <AppResultDetailsRow label="強電 必要幅">
+        <ToolResultDetails>
+          <ToolResultDetailsRow label="強電 必要幅">
             <strong>{{ result?.wStrong?.toFixed(1) ?? '0.0' }}</strong> mm
-          </AppResultDetailsRow>
-          <AppResultDetailsRow label="弱電 必要幅">
+          </ToolResultDetailsRow>
+          <ToolResultDetailsRow label="弱電 必要幅">
             <strong>{{ result?.wWeak?.toFixed(1) ?? '0.0' }}</strong> mm
-          </AppResultDetailsRow>
-          <AppResultDetailsRow v-if="inputs.isStrong && inputs.isWeak" label="セパレータ幅">
+          </ToolResultDetailsRow>
+          <ToolResultDetailsRow v-if="inputs.isStrong && inputs.isWeak" label="セパレータ幅">
             <strong>{{ result?.wSep?.toFixed(1) ?? '0.0' }}</strong> mm
-          </AppResultDetailsRow>
-          <AppResultDetailsRow label="合計 必要幅" top-border>
+          </ToolResultDetailsRow>
+          <ToolResultDetailsRow label="合計 必要幅" top-border>
             <strong>{{ result?.totalWidth ? Math.ceil(result.totalWidth) : 0 }}</strong> mm
-          </AppResultDetailsRow>
-          <AppResultDetailsRow label="最大ケーブル高さ">
+          </ToolResultDetailsRow>
+          <ToolResultDetailsRow label="最大ケーブル高さ">
             <strong :class="{'is-overflow': result?.isOverflow}">{{ result?.maxCableStackHeight?.toFixed(1) ?? '0.0' }}</strong> mm
             (有効 {{ maxDepth }} mm)
-          </AppResultDetailsRow>
-        </AppResultDetails>
-      </AppToolResultPanel>
+          </ToolResultDetailsRow>
+        </ToolResultDetails>
+      </ToolResultPanel>
     </template>
 
     <template #basis>
-      <AppCalculationBasisPanel :steps="mathSteps" />
+      <ToolCalculationBasisPanel :steps="mathSteps" />
     </template>
-    </AppToolLayout>
+    </ToolLayout>
 
     <!-- リセット確認モーダル -->
     <AppConfirmModal v-model="isResetModalOpen" title="リセットの確認" message="入力した条件をすべてリセットしますか？" confirm-text="リセットする" @confirm="confirmReset" />

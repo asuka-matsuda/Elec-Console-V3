@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * AppCableRowCard
+ * ToolCableRowCard
  * ケーブルの種類、サイズ、本数を入力するためのカードコンポーネントです。
  */
 import { computed } from 'vue';
@@ -67,9 +67,9 @@ const updateCount = (val: any) => {
           ( 断面積: {{ singleCableArea.toFixed(1) }} mm² / 本 )
         </span>
       </div>
-      <AppButtonDanger v-if="removable" size="sm" icon-only @click="emit('remove')">
+      <AppButton variant="danger" v-if="removable" size="sm" icon-only @click="emit('remove')">
         <AppIcon name="trash-2" size="sm" />
-      </AppButtonDanger>
+      </AppButton>
     </div>
     <div class="c-cable-row__body">
       <div class="l-grid l-grid--3col">

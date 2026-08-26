@@ -9,6 +9,8 @@ export interface AppButtonProps {
   href?: string;
   type?: "button" | "submit" | "reset";
   size?: "sm" | "md";
+  variant?: "primary" | "secondary" | "danger" | "success" | "ghost";
+  block?: boolean;
   iconOnly?: boolean;
   disabled?: boolean;
 }
@@ -16,6 +18,7 @@ export interface AppButtonProps {
 const props = withDefaults(defineProps<AppButtonProps>(), {
   type: "button",
   size: "sm",
+  variant: "primary",
 });
 
 const componentTag = computed(() => {
@@ -34,8 +37,10 @@ const componentTag = computed(() => {
     :disabled="componentTag === 'button' ? disabled : null"
     class="c-btn"
     :class="[
+      variant !== 'primary' && `c-btn--${variant}`,
       size !== 'sm' && `c-btn--${size}`,
       {
+        'c-btn--block': block,
         'c-btn--icon-only': iconOnly,
         'is-disabled': disabled,
       },
@@ -73,6 +78,18 @@ const componentTag = computed(() => {
 
   // --- 視覚効果 ---
   @include state-base(var(--shadow-elevation-sm), var(--transition-fast));
+
+  // --- モディファイア（バリアント） ---
+  &--danger { --btn-color: var(--color-status-danger); }
+  &--success { --btn-color: var(--color-status-success); }
+  &--secondary { --btn-color: var(--color-status-neutral); }
+  &--ghost { --btn-color: transparent; border-color: transparent; color: var(--color-text-main); }
+
+  // --- モディファイア（ブロック） ---
+  &--block {
+    display: flex;
+    width: 100%;
+  }
 
   // --- 疑似要素 ---
   &::after {

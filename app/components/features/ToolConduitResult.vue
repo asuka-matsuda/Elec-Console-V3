@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * AppConduitResult
+ * ToolConduitResult
  * 配管サイズ計算の結果を視覚的に表示する2カラムコンポーネントです。
  */
 import { computed } from "vue";

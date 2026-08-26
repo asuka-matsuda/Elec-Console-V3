@@ -5,9 +5,9 @@
  */
 import { computed } from "vue";
 import AppButton from "./AppButton.vue";
-import AppButtonDanger from "./AppButtonDanger.vue";
-import AppButtonSuccess from "./AppButtonSuccess.vue";
-import AppButtonSecondary from "./AppButtonSecondary.vue";
+
+
+
 import AppModal from "./AppModal.vue";
 
 const isOpen = defineModel<boolean>({ default: false });
@@ -24,9 +24,9 @@ const props = withDefaults(defineProps<{
 defineEmits(['confirm']);
 
 const confirmButtonComponent = computed(() => {
-  if (props.intent === 'danger') return AppButtonDanger;
-  if (props.intent === 'success') return AppButtonSuccess;
-  return AppButton;
+  if (props.intent === 'danger') return 'danger';
+  if (props.intent === 'success') return 'success';
+  return 'primary';
 });
 </script>
 
@@ -38,8 +38,8 @@ const confirmButtonComponent = computed(() => {
   >
     {{ message || '本当によろしいですか？' }}
     <template #footer>
-      <AppButtonSecondary @click="isOpen = false">{{ cancelText || 'キャンセル' }}</AppButtonSecondary>
-      <component :is="confirmButtonComponent" @click="$emit('confirm')">{{ confirmText || '実行する' }}</component>
+      <AppButton variant="secondary" @click="isOpen = false">{{ cancelText || 'キャンセル' }}</AppButton>
+      <component :is="confirmButtonComponent" @click="$emit('confirm')">{{ confirmText || '実行する' }}</AppButton>
     </template>
   </AppModal>
 </template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * AppFooter
+ * LayoutFooter
  * アプリケーションのフッター部分（コピーライト等）を表示するコンポーネントです。
  */
 const currentYear = new Date().getFullYear();

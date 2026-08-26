@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * AppDashboardAside
+ * LayoutDashboardAside
  * ダッシュボードのサイドバー（お知らせや更新履歴などを表示）コンポーネント
  */
 const { data: dashboardData, pending } = await useFetch("/api/dashboard", {

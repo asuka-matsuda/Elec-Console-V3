@@ -19,7 +19,7 @@ const tableColumns: TableColumn[] = [
 </script>
 
 <template>
-  <AppDbViewer
+  <DbViewer
     :data="drumData"
     :columns="tableColumns"
     :search-mapper="(item) => `${item.category} ${item.id}`"
@@ -28,5 +28,5 @@ const tableColumns: TableColumn[] = [
     <template #cell-category="{ value }">
       <strong>{{ value }}</strong>
     </template>
-  </AppDbViewer>
+  </DbViewer>
 </template>

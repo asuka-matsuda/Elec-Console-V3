@@ -27,9 +27,9 @@ const isChecked = ref(false);
             <h3 class="p-ds-card-title">Variants</h3>
             <div class="p-ds-flex">
               <AppButton>Primary</AppButton>
-              <AppButtonSecondary>Secondary</AppButtonSecondary>
-              <AppButtonSuccess>Success</AppButtonSuccess>
-              <AppButtonDanger>Danger</AppButtonDanger>
+              <AppButton variant="secondary">Secondary</AppButton>
+              <AppButton variant="success">Success</AppButton>
+              <AppButton variant="danger">Danger</AppButton>
             </div>
           </AppCard>
 

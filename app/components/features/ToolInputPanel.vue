@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * AppToolInputPanel
+ * ToolInputPanel
  * ツール等の条件入力エリアを囲むパネルコンポーネントです。
  */
 defineProps<{
@@ -22,10 +22,10 @@ defineEmits(['reset']);
         size="md"
       >
         <template #actions>
-          <AppButtonDanger size="sm" @click="$emit('reset')">
+          <AppButton variant="danger" size="sm" @click="$emit('reset')">
             <AppIcon name="refresh-cw" size="sm" />
             リセット
-          </AppButtonDanger>
+          </AppButton>
         </template>
       </AppSectionHeader>
     </template>

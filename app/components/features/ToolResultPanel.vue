@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * AppToolResultPanel
+ * ToolResultPanel
  * ツールの計算結果や選定結果を表示し、保存アクション等を提供するパネルコンポーネントです。
  */
 defineProps<{

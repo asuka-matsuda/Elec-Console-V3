@@ -56,22 +56,22 @@ const handleSaveToHistory = async () => {
 </script>
 
 <template>
-  <AppToolLayout>
+  <ToolLayout>
 
     <template #results>
-      <AppToolResultPanel
+      <ToolResultPanel
         title="計算結果"
         :save-disabled="!calcInputs.isReady"
         :save-function="handleSaveToHistory"
       >
         <ClientOnly>
-          <AppVoltageResult :inputs="calcInputs" :result="calcResult" />
+          <ToolVoltageResult :inputs="calcInputs" :result="calcResult" />
         </ClientOnly>
-      </AppToolResultPanel>
+      </ToolResultPanel>
     </template>
 
     <template #inputs>
-      <AppToolInputPanel @reset="openResetModal">
+      <ToolInputPanel @reset="openResetModal">
         <!-- 1. 計算モード切替 (AppRadioGroup) -->
         <AppRadioGroup v-model="form.mode" :options="modeOptions" />
 
@@ -147,13 +147,13 @@ const handleSaveToHistory = async () => {
             </Field>
           </template>
         </div>
-        </AppToolInputPanel>
+        </ToolInputPanel>
     </template>
 
     <template #basis>
-      <AppCalculationBasisPanel :steps="mathSteps" />
+      <ToolCalculationBasisPanel :steps="mathSteps" />
     </template>
-    </AppToolLayout>
+    </ToolLayout>
 
     <!-- リセット確認モーダル -->
     <AppConfirmModal v-model="isResetModalOpen" title="リセットの確認" message="入力した条件をすべてリセットしますか？" confirm-text="リセットする" @confirm="resetForm" />

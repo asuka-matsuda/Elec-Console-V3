@@ -12,11 +12,11 @@ const { currentUser, logout } = useAuth();
 <template>
   <div class="l-app">
     <!-- Sidebar -->
-    <AppGlobalNav v-model:is-open="isSidebarOpen" :menu-data="menuData" />
+    <LayoutGlobalNav v-model:is-open="isSidebarOpen" :menu-data="menuData" />
 
     <!-- Main Content Area -->
     <div class="l-main">
-      <AppHeader
+      <LayoutHeader
         :breadcrumbs="breadcrumbs"
         @toggle-sidebar="isSidebarOpen = !isSidebarOpen"
       >
@@ -45,12 +45,12 @@ const { currentUser, logout } = useAuth();
             <AppButton variant="secondary" size="sm" @click="logout" style="margin-left: 1rem;">ログアウト</AppButton>
           </div>
         </template>
-      </AppHeader>
+      </LayoutHeader>
 
       <!-- Page Content -->
       <main class="l-content">
         <slot />
-        <AppFooter />
+        <LayoutFooter />
       </main>
     </div>
   </div>

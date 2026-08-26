@@ -1,6 +1,6 @@
 ﻿<script setup lang="ts">
 /**
- * AppGlobalNav
+ * LayoutGlobalNav
  * アプリケーションのグローバルナビゲーション（サイドバーメニュー）を表示するコンポーネントです。
  */
 import type { MenuSection } from "~/constants/data/menuData";
@@ -31,7 +31,7 @@ const closeSidebar = () => {
     <aside class="l-global-nav" :class="{ 'is-open': isOpen }">
       <!-- Logo Header -->
       <header class="l-global-nav__header">
-        <AppLogo @click="closeSidebar" />
+        <LayoutLogo @click="closeSidebar" />
       </header>
       <AppDivider type="fade-center" variant="sidebar-border" />
 

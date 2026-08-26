@@ -6,7 +6,6 @@
 import { ref } from 'vue';
 import AppModal from './AppModal.vue';
 import AppButton from './AppButton.vue';
-import AppButtonSecondary from './AppButtonSecondary.vue';
 
 const isOpen = defineModel<boolean>({ default: false });
 
@@ -52,9 +51,9 @@ const handleSubmit = async () => {
     </div>
     
     <template #footer>
-      <AppButtonSecondary :disabled="isSubmitting" @click="isOpen = false">
+      <AppButton variant="secondary" :disabled="isSubmitting" @click="isOpen = false">
         {{ cancelText }}
-      </AppButtonSecondary>
+      </AppButton>
       <AppButton variant="primary" :disabled="isSubmitting" @click="handleSubmit">
         {{ isSubmitting ? '処理中...' : submitText }}
       </AppButton>

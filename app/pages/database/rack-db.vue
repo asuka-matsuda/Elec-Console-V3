@@ -16,7 +16,7 @@ const tableColumns: TableColumn[] = [
 </script>
 
 <template>
-  <AppDbViewer
+  <DbViewer
     :data="rackData"
     :columns="tableColumns"
     :search-mapper="(item) => `${item.category} ${item.size}`"
@@ -25,5 +25,5 @@ const tableColumns: TableColumn[] = [
     <template #cell-category="{ value }">
       <strong>{{ value }}</strong>
     </template>
-  </AppDbViewer>
+  </DbViewer>
 </template>

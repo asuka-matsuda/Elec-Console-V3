@@ -18,7 +18,7 @@ const tableColumns: TableColumn[] = [
 </script>
 
 <template>
-  <AppDbViewer
+  <DbViewer
     :data="cableData"
     :columns="tableColumns"
     :search-mapper="(item) => `${item.name} ${item.standard || ''}`"
@@ -43,7 +43,7 @@ const tableColumns: TableColumn[] = [
     <template #cell-standard="{ value }">
       <span class="c-db-meta">{{ value }}</span>
     </template>
-  </AppDbViewer>
+  </DbViewer>
 </template>
 
 <style scoped lang="scss">

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * AppResultDetails
+ * ToolResultDetails
  * 計算結果の詳細情報を行形式で表示するためのラッパーコンポーネントです。
  */
 </script>

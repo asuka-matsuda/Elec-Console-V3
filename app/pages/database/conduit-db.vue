@@ -17,7 +17,7 @@ const tableColumns: TableColumn[] = [
 </script>
 
 <template>
-  <AppDbViewer
+  <DbViewer
     :data="conduitData"
     :columns="tableColumns"
     :search-mapper="
@@ -32,7 +32,7 @@ const tableColumns: TableColumn[] = [
     <template #cell-standard="{ value }">
       <span class="c-db-meta">{{ value }}</span>
     </template>
-  </AppDbViewer>
+  </DbViewer>
 </template>
 
 <style scoped lang="scss">

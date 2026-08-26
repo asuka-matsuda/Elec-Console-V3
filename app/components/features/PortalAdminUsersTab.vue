@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * AdminUsersTab
+ * PortalAdminUsersTab
  * ポータル管理 - ユーザー管理タブ
  */
 import { ref, onMounted } from 'vue';
@@ -12,9 +12,9 @@ import AppButton from '~/components/ui/AppButton.vue';
 import AppConfirmModal from '~/components/ui/AppConfirmModal.vue';
 
 // サブコンポーネント
-import UserCreateModal from './users/UserCreateModal.vue';
-import UserCredentialModal from './users/UserCredentialModal.vue';
-import UserAssignModal from './users/UserAssignModal.vue';
+import PortalUserCreateModal from './users/PortalUserCreateModal.vue';
+import PortalUserCredentialModal from './users/PortalUserCredentialModal.vue';
+import PortalUserAssignModal from './users/PortalUserAssignModal.vue';
 
 const { users, fetchUsers, deleteUser, resetUserPassword } = useAdminUsers();
 
@@ -139,11 +139,11 @@ const handleResetPassword = async () => {
     </AppPanel>
 
     <!-- モーダル群 (関心の分離) -->
-    <UserCreateModal v-model="isCreateModalOpen" @success="handleUserCreated" />
+    <PortalUserCreateModal v-model="isCreateModalOpen" @success="handleUserCreated" />
     
-    <UserCredentialModal v-model="isCredentialModalOpen" :user="createdUserResult" />
+    <PortalUserCredentialModal v-model="isCredentialModalOpen" :user="createdUserResult" />
     
-    <UserAssignModal 
+    <PortalUserAssignModal 
       v-model="isAssignModalOpen" 
       :user-id="assignTargetUserId" 
       :initial-site-ids="assignTargetSiteIds" 

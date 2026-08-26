@@ -49,7 +49,7 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
       </section>
     </div>
 
-    <AppDashboardAside />
+    <LayoutDashboardAside />
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * AdminSitesTab
+ * PortalAdminSitesTab
  * ポータル管理 - 現場管理タブ
  */
 import { ref } from 'vue';

@@ -29,7 +29,7 @@ const tableColumns: TableColumn[] = [
 </script>
 
 <template>
-  <AppDbViewer
+  <DbViewer
     :data="flattenedData"
     :columns="tableColumns"
     :search-mapper="(item) => `${item.category} ${item.size} ${item.note}`"
@@ -42,7 +42,7 @@ const tableColumns: TableColumn[] = [
     <template #cell-reference="{ value }">
       <span class="c-db-meta">{{ value }}</span>
     </template>
-  </AppDbViewer>
+  </DbViewer>
 </template>
 
 <style scoped lang="scss">

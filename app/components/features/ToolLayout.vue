@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * AppToolLayout
+ * ToolLayout
  * ツールページの全体レイアウト（免責事項、入力欄、結果表示、計算根拠パネルなど）を提供するレイアウト用コンポーネントです。
  */
 import { ref } from "vue";

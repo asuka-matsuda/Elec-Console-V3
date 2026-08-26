@@ -1,6 +1,6 @@
 ﻿<script setup lang="ts">
 /**
- * AppHistoryCard
+ * ToolHistoryCard
  * 計算履歴を1件表示するカードコンポーネントです。入力条件と計算結果のプレビューを提供します。
  */
 import type { HistoryEntry } from "~/types/history";
@@ -36,13 +36,13 @@ const handleDelete = () => {
       <!-- 計算結果 (動的コンポーネントでDRY化) -->
       <section class="c-history-card__section">
         <div class="c-history-card__result-wrapper">
-          <AppVoltageResult 
+          <ToolVoltageResult 
             v-if="entry.toolId === 'voltage' && entry.rawInputs && entry.rawResult"
             :inputs="entry.rawInputs"
             :result="entry.rawResult"
             size="sm"
           />
-          <AppConduitResult
+          <ToolConduitResult
             v-else-if="entry.toolId === 'conduit' && entry.rawInputs && entry.rawResult"
             :inputs="entry.rawInputs"
             :result="entry.rawResult"
@@ -79,9 +79,9 @@ const handleDelete = () => {
 
     <!-- フッター (削除アクション) -->
     <footer class="c-history-card__footer">
-      <AppButtonDanger size="sm" icon-only @click.prevent="handleDelete">
+      <AppButton variant="danger" size="sm" icon-only @click.prevent="handleDelete">
         <AppIcon name="trash-2" size="sm" />
-      </AppButtonDanger>
+      </AppButton>
     </footer>
   </AppCard>
 </template>

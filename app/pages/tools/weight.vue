@@ -39,14 +39,14 @@ const totalWeight = computed(() => {
 </script>
 
 <template>
-  <AppToolLayout
+  <ToolLayout
     title="ケーブル重量・ドラム選定"
     icon="package"
     description="ケーブルの種類と長さから重量を計算し、最適なドラムを選定します。"
     note="※ ドラムは木枠ドラム（L, M, S 等）から選定されます。"
   >
     <template #inputs>
-      <AppToolInputPanel @reset="openResetModal">
+      <ToolInputPanel @reset="openResetModal">
         <div class="p-weight__sections">
           <div class="l-grid l-grid--2col">
             <AppFormGroup label="ケーブル種別" required>
@@ -97,11 +97,11 @@ const totalWeight = computed(() => {
             </AppFormGroup>
           </div>
         </div>
-      </AppToolInputPanel>
+      </ToolInputPanel>
     </template>
 
     <template #results>
-      <AppToolResultPanel
+      <ToolResultPanel
         :save-disabled="result?.error"
         :save-function="handleSaveHistory"
       >
@@ -130,27 +130,27 @@ const totalWeight = computed(() => {
           </template>
         </AppResultBox>
 
-        <AppResultDetails v-if="!result?.error">
-          <AppResultDetailsRow label="ケーブル総重量">
+        <ToolResultDetails v-if="!result?.error">
+          <ToolResultDetailsRow label="ケーブル総重量">
             <strong>{{ result?.cableWeight?.toFixed(1) }}</strong> kg
-          </AppResultDetailsRow>
+          </ToolResultDetailsRow>
           <template v-if="result?.bestDrum">
-            <AppResultDetailsRow label="ドラム空重量">
+            <ToolResultDetailsRow label="ドラム空重量">
               <strong>{{ result?.bestDrum?.weight }}</strong> kg
-            </AppResultDetailsRow>
-            <AppResultDetailsRow label="総重量 (ケーブル+ドラム)" top-border>
+            </ToolResultDetailsRow>
+            <ToolResultDetailsRow label="総重量 (ケーブル+ドラム)" top-border>
               <strong>{{ totalWeight?.toFixed(1) }}</strong> kg
-            </AppResultDetailsRow>
-            <AppResultDetailsRow label="最大巻取可能長" class="u-mt-2">
+            </ToolResultDetailsRow>
+            <ToolResultDetailsRow label="最大巻取可能長" class="u-mt-2">
               <strong>{{ result?.maxCapacityMeters?.toFixed(1) }}</strong> m
-            </AppResultDetailsRow>
+            </ToolResultDetailsRow>
           </template>
-        </AppResultDetails>
-      </AppToolResultPanel>
+        </ToolResultDetails>
+      </ToolResultPanel>
     </template>
 
     <template #basis>
-      <AppCalculationBasisPanel :steps="mathSteps">
+      <ToolCalculationBasisPanel :steps="mathSteps">
         <div class="p-weight__note">
           <strong>【ドラム選定ロジック】</strong><br>
           上記①〜③の計算をデータベース上のすべてのドラムに対して行い、重量要件、曲げ半径要件、容量要件のすべてをクリアするドラムのうち、「自重が最も軽いもの」を最適なドラムとして最終選定しています。
@@ -167,9 +167,9 @@ const totalWeight = computed(() => {
             <li>K: 補正係数</li>
           </ul>
         </div>
-      </AppCalculationBasisPanel>
+      </ToolCalculationBasisPanel>
     </template>
-    </AppToolLayout>
+    </ToolLayout>
 
     <!-- リセット確認モーダル -->
     <AppConfirmModal v-model="isResetModalOpen" title="リセットの確認" message="入力した条件をすべてリセットしますか？" confirm-text="リセットする" @confirm="confirmReset" />

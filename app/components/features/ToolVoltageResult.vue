@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * AppVoltageResult
+ * ToolVoltageResult
  * 電圧降下やケーブルサイズの計算結果を視覚的に表示するコンポーネントです。
  */
 import { computed } from "vue";
