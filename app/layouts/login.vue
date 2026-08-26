@@ -23,5 +23,6 @@ const pageTitle = computed(() => route.meta.title as string | undefined);
 .l-login-layout {
   @include flex-center(0);
   flex: 1;
+  min-width: 320px;
 }
 </style>
