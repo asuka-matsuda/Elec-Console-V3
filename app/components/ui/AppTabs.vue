@@ -104,7 +104,7 @@ const selectTab = (option: TabOption) => {
   position: relative;
 
   // --- ボックスモデル ---
-  padding: var(--pad-container);
+  padding: var(--pad-component);
 
   @include border-base;
 
@@ -113,7 +113,10 @@ const selectTab = (option: TabOption) => {
   color: var(--color-text-secondary);
 
   // --- 視覚効果 ---
-  @include state-base(inset 0 0 var(--blur-sm) var(--color-border), var(--transition-fast));
+  @include state-base(
+    inset 0 0 var(--blur-sm) var(--color-border),
+    var(--transition-fast)
+  );
 
   // --- 疑似クラス ---
   &:hover:not(.is-disabled, .is-active) {
