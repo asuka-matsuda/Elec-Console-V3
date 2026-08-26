@@ -14,15 +14,31 @@ export function useBreadcrumbs() {
       return base;
     }
 
-    // Search for a matching item in menuData
+    // Pass 1: Search for an EXACT match
     for (const section of menuData) {
       if (section.id === "home") continue;
 
       for (const item of section.items) {
-        let isMatch = route.path === item.href;
+        if (route.path === item.href) {
+          const crumbs = [...base];
+          if (section.heading) {
+            crumbs.push({ text: section.heading, href: undefined });
+          }
+          crumbs.push({ text: item.text, href: item.href });
+          return crumbs;
+        }
+      }
+    }
+
+    // Pass 2: Search for a PREFIX match
+    for (const section of menuData) {
+      if (section.id === "home") continue;
+
+      for (const item of section.items) {
+        let isMatch = false;
 
         // Match by activePrefixes
-        if (!isMatch && item.activePrefixes) {
+        if (item.activePrefixes) {
           isMatch = item.activePrefixes.some((prefix) =>
             route.path.startsWith(prefix),
           );
@@ -36,15 +52,11 @@ export function useBreadcrumbs() {
         }
 
         if (isMatch) {
-          // Found the active menu item!
           const crumbs = [...base];
-
           if (section.heading) {
             crumbs.push({ text: section.heading, href: undefined });
           }
-
           crumbs.push({ text: item.text, href: item.href });
-
           return crumbs;
         }
       }
