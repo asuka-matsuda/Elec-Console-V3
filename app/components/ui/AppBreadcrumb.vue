@@ -66,7 +66,7 @@ const processedItems = computed(() => {
 
   // --- ボックスモデル ---
   padding: var(--pad-component);
-  padding-top: calc(var(--pad-component) + var(--pad-component));
+  padding-top: calc(var(--pad-component) * 2);
 
   // --- タイポグラフィ ---
   text-transform: uppercase;
