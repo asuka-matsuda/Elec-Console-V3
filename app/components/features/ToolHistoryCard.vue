@@ -45,7 +45,7 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never;
     <div class="c-history-card__body">
       <!-- 計算結果 (動的コンポーネントでDRY化) -->
       <section class="c-history-card__section">
-        <div class="c-history-card__result-wrapper">
+        <div>
           <ToolVoltageResult
             v-if="
               entry.toolId === 'voltage' && entry.rawInputs && entry.rawResult

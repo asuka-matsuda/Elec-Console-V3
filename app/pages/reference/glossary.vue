@@ -71,7 +71,7 @@ const categoryColorMap: Record<string, string> = {
 </script>
 
 <template>
-  <div class="p-glossary">
+  <div>
     <div class="l-filter-layout">
       <div class="l-filter-layout__grid">
         <aside class="l-filter-layout__sidebar">

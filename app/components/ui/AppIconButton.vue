@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <AppButton v-bind="props" class="c-icon-button">
+  <AppButton v-bind="props">
     <AppIcon :name="name" />
   </AppButton>
 </template>

@@ -229,7 +229,12 @@ const handleResetPassword = async () => {
 
 <style scoped lang="scss">
 .c-admin-users {
-  &__stack {
+  &__toolbar {
+      display: flex;
+      justify-content: flex-end;
+    }
+    
+    &__stack {
     @include flex-column(var(--gap-section));
   }
 

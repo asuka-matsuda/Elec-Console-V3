@@ -12,9 +12,9 @@ const { isAdmin } = useAuth();
 </script>
 
 <template>
-  <div class="p-portal-index" style="padding: var(--pad-container)">
+  <div style="padding: var(--pad-container)">
     <AppPanel title="現場ポータル (仮)" variant="hud">
-      <div class="p-portal-index__stack">
+      <div>
         <p>ここは現場ポータルのトップ画面です。</p>
         <p>（本来は、アサインされている現場の一覧や、各現場のダッシュボードへのリンクが表示される予定です）</p>
         

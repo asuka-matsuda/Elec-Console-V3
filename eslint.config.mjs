@@ -15,6 +15,13 @@ export default withNuxt({
       },
       svg: 'any',
       math: 'any'
-    }]
+    }],
+    'vue/no-restricted-syntax': [
+      'error',
+      {
+        selector: 'VExpressionContainer TSAsExpression',
+        message: 'テンプレート内での s 型キャストは VS Code のシンタックスハイライトやパースを壊す原因になります。<script> 側で computed や関数を定義してキャストしてください。'
+      }
+    ]
   }
 })

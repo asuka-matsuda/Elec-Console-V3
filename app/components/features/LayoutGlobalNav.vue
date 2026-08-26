@@ -53,7 +53,7 @@ const closeSidebar = () => {
             <AppDivider
               type="fade-side"
               :variant="section.accent || 'main'"
-              class="l-global-nav__divider"
+             
             />
           </header>
 
@@ -65,12 +65,12 @@ const closeSidebar = () => {
               @click="closeSidebar"
             >
               <AppIcon :name="item.icon" class="l-global-nav__link-icon" />
-              <span class="l-global-nav__link-text">{{ item.text }}</span>
+              <span>{{ item.text }}</span>
             </NuxtLink>
 
             <div v-else class="l-global-nav__link is-disabled">
               <AppIcon :name="item.icon" class="l-global-nav__link-icon" />
-              <span class="l-global-nav__link-text">{{ item.text }}</span>
+              <span>{{ item.text }}</span>
             </div>
           </template>
         </section>

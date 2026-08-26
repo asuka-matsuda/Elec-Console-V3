@@ -47,7 +47,7 @@ const handleLogin = async () => {
 <template>
   <div class="p-login">
       <form
-        class="p-login__form"
+       
         @submit.prevent="handleLogin"
       >
         <div v-if="errorMessage" class="p-login__error">

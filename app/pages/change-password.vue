@@ -53,7 +53,7 @@ const handleChangePassword = async () => {
 
 <template>
   <div class="p-change-password">
-    <div class="p-change-password__container">
+    <div>
         <p class="p-change-password__desc">
           セキュリティのため、システムから配布された初期パスワードを変更してください。
         </p>

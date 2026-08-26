@@ -65,7 +65,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
           tag="h4"
           variant="tool"
           size="sm"
-          class="c-math-basis__header"
+         
         />
 
         <div class="c-math-basis__body">

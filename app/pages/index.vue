@@ -37,7 +37,7 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
                 class="p-dashboard-card__header"
                 :style="`--card-accent: var(--color-category-${section.accent})`"
               >
-                <AppIcon :name="item.icon" class="p-dashboard-card__icon" />
+                <AppIcon :name="item.icon" />
                 <span>{{ item.text }}</span>
               </div>
               <div class="p-dashboard-card__desc">

@@ -89,6 +89,11 @@ withDefaults(
   animation: divider-scale-x 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
   // --- モディファイア ---
+  &--horizontal {
+    width: 100%;
+    height: 1px;
+  }
+
   &--vertical {
     // --- CSSカスタムプロパティ ---
     --divider-size-x: var(--border-width-base);

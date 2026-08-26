@@ -79,7 +79,7 @@ const updateCount = (val: string | number | boolean | null | undefined) => {
         <AppIcon name="trash-2" size="sm" />
       </AppButton>
     </div>
-    <div class="c-cable-row__body">
+    <div>
       <div class="l-grid l-grid--3col">
         <AppFormGroup label="ケーブル種別">
           <AppSelect

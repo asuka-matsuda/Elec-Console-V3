@@ -13,7 +13,7 @@ const { sites, createSite, toggleDisableSite, updateSite } =
 
 // --- 一覧定義 ---
 
-const getStatusLabel = (status: string) => {
+const getStatusLabel = (status: unknown) => {
   switch (status) {
     case 'planning': return '計画中';
     case 'in_progress': return '進行中';
@@ -23,7 +23,7 @@ const getStatusLabel = (status: string) => {
   }
 };
 
-const getStatusVariant = (status: string) => {
+const getStatusVariant = (status: unknown) => {
   switch (status) {
     case 'planning': return 'secondary';
     case 'in_progress': return 'warning';
@@ -146,8 +146,8 @@ const confirmIntent = computed(() => {
         <AppTable :columns="siteHeaders" :data="sites">
           <template #cell-status="{ value, row }">
             <div class="c-admin-sites__status-stack">
-              <AppBadge :variant="getStatusVariant(value as string)">
-                  {{ getStatusLabel(value as string) }}
+              <AppBadge :variant="getStatusVariant(value)">
+                  {{ getStatusLabel(value) }}
                 </AppBadge>
               <AppBadge v-if="row.disabledAt" variant="danger" size="sm"
                 >無効</AppBadge
@@ -166,7 +166,7 @@ const confirmIntent = computed(() => {
                 variant="secondary"
                 size="sm"
                 icon="settings"
-                @click="openSettingsModal(row.id as string)"
+                @click="openSettingsModal(String(row.id))"
                 >現場設定</AppButton
               >
               <AppButton
@@ -220,7 +220,12 @@ const confirmIntent = computed(() => {
 
 <style scoped lang="scss">
 .c-admin-sites {
-  &__stack {
+  &__toolbar {
+      display: flex;
+      justify-content: flex-end;
+    }
+    
+    &__stack {
     @include flex-column(var(--gap-section));
   }
 
