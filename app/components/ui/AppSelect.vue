@@ -27,6 +27,7 @@ const focusedIndex = ref(-1);
 const dynamicPlacement = ref<"top" | "bottom">("bottom");
 const dropdownStyle = ref<Record<string, string>>({});
 const isMounted = ref(false);
+const teleportTarget = ref<HTMLElement | string>("body");
 const teleportTarget = ref<HTMLElement | string>("body");| "bottom">("bottom");
 const dropdownStyle = ref<Record<string, string>>({});
 const isMounted = ref(false);
