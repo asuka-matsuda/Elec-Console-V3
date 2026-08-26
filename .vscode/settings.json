@@ -1,5 +1,0 @@
-{
-    "vue.features.style.unusedCss":  false,
-    "vue.features.diagnostics.unusedCss":  false,
-    "vue.server.unusedCss":  false
-}
