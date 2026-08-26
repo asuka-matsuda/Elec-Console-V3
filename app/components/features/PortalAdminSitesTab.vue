@@ -25,9 +25,9 @@ const getStatusLabel = (status: string) => {
 
 const getStatusVariant = (status: string) => {
   switch (status) {
-    case 'planning': return 'warning';
-    case 'in_progress': return 'success';
-    case 'completed': return 'neutral';
+    case 'planning': return 'secondary';
+    case 'in_progress': return 'warning';
+    case 'completed': return 'success';
     case 'on_hold': return 'danger';
     default: return 'neutral';
   }
