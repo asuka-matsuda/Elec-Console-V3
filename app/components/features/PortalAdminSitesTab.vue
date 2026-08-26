@@ -178,7 +178,7 @@ const confirmIntent = computed(() => {
       v-model="isCreateModalOpen"
       title="新規現場プロジェクト登録"
       :submit-fn="handleCreateSite"
-      submitText="登録する"
+      submit-text="登録する"
     >
       <AppFormGroup label="現場ID (半角英数)">
         <AppInput v-model="newSite.id" placeholder="例: site-tokyo-01" />
@@ -193,7 +193,7 @@ const confirmIntent = computed(() => {
       v-model="isSettingsModalOpen"
       title="現場詳細設定"
       :submit-fn="handleSaveSettings"
-      submitText="設定を保存"
+      submit-text="設定を保存"
     >
       <AppFormGroup label="Phase2 絶縁抵抗基準値 (MΩ)">
         <AppInput
@@ -215,7 +215,7 @@ const confirmIntent = computed(() => {
       v-model="isConfirmDisableOpen"
       :title="confirmTitle"
       :message="confirmMessage"
-      :confirmText="confirmBtnText"
+      :confirm-text="confirmBtnText"
       :intent="confirmIntent"
       @confirm="handleToggleDisable"
     />

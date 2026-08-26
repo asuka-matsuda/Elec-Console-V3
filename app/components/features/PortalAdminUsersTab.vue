@@ -210,7 +210,7 @@ const handleResetPassword = async () => {
       v-model="isConfirmDeleteOpen"
       title="ユーザー削除"
       :message="deleteConfirmMessage"
-      confirmText="削除する"
+      confirm-text="削除する"
       intent="danger"
       @confirm="handleDeleteUser"
     />
@@ -219,7 +219,7 @@ const handleResetPassword = async () => {
       v-model="isConfirmResetOpen"
       title="パスワード初期化"
       :message="resetConfirmMessage"
-      confirmText="初期化する"
+      confirm-text="初期化する"
       intent="danger"
       @confirm="handleResetPassword"
     />
