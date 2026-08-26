@@ -57,6 +57,15 @@ const tabs = [
 ];
 const activeTab = ref("basic");
 
+const editStatus = computed({
+  get: () => (editData.value.status || "") as string,
+  set: (val: string) => editData.value.status = val as typeof editData.value.status
+});
+const editId = computed({
+  get: () => (editData.value.id || "") as string,
+  set: (val: string) => editData.value.id = val
+});
+
 // ワーカー名解決
 const workerNames = computed(() => {
   if (!editData.value.workers) return [];
@@ -110,10 +119,10 @@ const handleExport = () => {
         <!-- 基本設定 -->
         <template v-if="activeTab === 'basic'">
           <AppFormGroup label="ステータス">
-            <AppSelect v-model="(editData.status as string)" :options="statusOptions" />
+            <AppSelect v-model="editStatus" :options="statusOptions" />
           </AppFormGroup>
           <AppFormGroup label="現場ID (半角英数)">
-            <AppInput v-model="(editData.id as string)" placeholder="例: site-tokyo-01" />
+            <AppInput v-model="editId" placeholder="例: site-tokyo-01" />
           </AppFormGroup>
           <AppFormGroup label="現場名">
             <AppInput v-model="editData.name" />

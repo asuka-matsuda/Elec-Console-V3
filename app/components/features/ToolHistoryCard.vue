@@ -16,6 +16,8 @@ const emit = defineEmits<{
 const handleDelete = () => {
   emit("delete", props.entry.id);
 };
+const getInputs = (entry: HistoryEntry) => entry.rawInputs as never;
+const getResult = (entry: HistoryEntry) => entry.rawResult as never;
 </script>
 
 <template>
@@ -48,16 +50,16 @@ const handleDelete = () => {
             v-if="
               entry.toolId === 'voltage' && entry.rawInputs && entry.rawResult
             "
-            :inputs="entry.rawInputs as never"
-            :result="entry.rawResult as never"
+            :inputs="getInputs(entry)"
+            :result="getResult(entry)"
             size="sm"
           />
           <ToolConduitResult
             v-else-if="
               entry.toolId === 'conduit' && entry.rawInputs && entry.rawResult
             "
-            :inputs="entry.rawInputs as never"
-            :result="entry.rawResult as never"
+            :inputs="getInputs(entry)"
+            :result="getResult(entry)"
             size="sm"
           />
           <!-- 過去のデータなどrawデータがない場合のフォールバック -->

@@ -3,11 +3,11 @@
  * AppModal
  * ネイティブの dialog 要素を使用した、アクセシビリティ対応のモーダルコンポーネント。
  */
-import { useId, ref, watch, onMounted } from "vue";
+import { useId, ref, watch, onMounted, computed } from "vue";
 
 const isOpen = defineModel<boolean>({ default: false });
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     title?: string;
     icon?: string;
@@ -77,6 +77,7 @@ onMounted(() => {
 
 const modalId = useId();
 const titleId = `modal-title-${modalId}`;
+const typedVariant = computed(() => props.variant as never);
 </script>
 
 <template>
@@ -89,14 +90,14 @@ const titleId = `modal-title-${modalId}`;
     @click.self="close"
     @cancel.prevent="close"
   >
-    <AppPanel class="c-modal__panel" :bracket-color="variant as never">
+    <AppPanel class="c-modal__panel" :bracket-color="typedVariant">
       <!-- Header -->
       <template #header>
         <AppSectionHeader
           :title-id="titleId"
           :title="title"
           :icon="icon"
-          :variant="variant as never"
+          :variant="typedVariant"
           divider-type="fade-center"
         >
           <template v-if="$slots.title">

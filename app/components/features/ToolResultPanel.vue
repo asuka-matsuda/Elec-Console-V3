@@ -1,14 +1,16 @@
 <script setup lang="ts">
+import { computed } from "vue";
 /**
  * ToolResultPanel
  * ツールの計算結果や選定結果を表示し、保存アクション等を提供するパネルコンポーネントです。
  */
-defineProps<{
+const props = defineProps<{
   title?: string;
   icon?: string;
   saveDisabled?: boolean;
   saveFunction?: () => Promise<void>;
 }>();
+const typedSaveFunction = computed(() => props.saveFunction as (() => Promise<void>));
 </script>
 
 <template>
@@ -24,7 +26,7 @@ defineProps<{
         <template #actions>
           <AppSaveButton
             :disabled="saveDisabled"
-            :save-function="saveFunction as () => Promise<void>"
+            :save-function="typedSaveFunction"
           />
         </template>
       </AppSectionHeader>

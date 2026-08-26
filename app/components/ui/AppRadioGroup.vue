@@ -4,6 +4,7 @@
  * 複数の選択肢から1つを選択するための、セグメントコントロール風のラジオボタングループコンポーネント。
  */
 import { useId, computed } from "vue";
+import type { StyleValue } from "vue";
 
 export interface RadioOption {
   label: string;
@@ -24,6 +25,7 @@ const props = defineProps<{
  */
 const uniqueName = useId();
 const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
+const getStyle = (option: RadioOption): StyleValue | undefined => option.color ? ({ '--radio-color': option.color } as StyleValue) : undefined;
 </script>
 
 <template>
@@ -32,9 +34,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
       v-for="option in options"
       :key="String(option.value)"
       class="c-segmented-control__label"
-      :style="
-        option.color ? ({ '--radio-color': option.color } as import('vue').StyleValue) : undefined
-      "
+      :style="getStyle(option)"
     >
       <input
         v-model="model"
