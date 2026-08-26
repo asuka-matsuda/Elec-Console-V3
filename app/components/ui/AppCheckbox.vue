@@ -17,7 +17,7 @@ const inputId = useId();
 </script>
 
 <template>
-  <label class="c-checkbox" :for="inputId">
+  <label class="c-checkbox" :class="{ 'is-disabled': disabled }" :for="inputId">
     <input
       :id="inputId"
       v-model="model"
@@ -55,121 +55,88 @@ const inputId = useId();
   // --- 継承 ---
   @extend %text-desc;
 
+  // --- レイアウト・配置 ---
+  @include inline-flex-start(var(--gap-component));
+  position: relative;
+
   // --- その他 ---
   cursor: pointer;
   user-select: none;
 
-  // --- レイアウト・配置 ---
-  position: relative;
-
-  // --- 疑似クラス ---
-  &:has(.c-checkbox__input:disabled) {
-    // --- 継承 ---
+  // --- 状態 (Vue制御) ---
+  &.is-disabled {
     @extend %disabled;
+    cursor: not-allowed;
   }
 
-  // --- 子要素 ---
-  &__input {
-    // Hide native input visually, but keep accessible for keyboard focus
-
-    // --- レイアウト・配置 ---
-    position: absolute;
-
-    // --- ボックスモデル ---
-    width: 0;
-    height: 0;
-
-    // --- 視覚効果 ---
-    opacity: 0;
-  }
-
-  // 1. Keyboard Focus State
-
-  // --- 疑似クラス ---
-  &:has(.c-checkbox__input:focus-visible) .c-checkbox__box {
-    @include state-focus(var(--checkbox-color));
-
-    // --- 視覚効果 ---
-    @include cyber-text-glow(var(--checkbox-color));
-  }
-
-  // 2. Checked State
-  &:has(.c-checkbox__input:checked) .c-checkbox__box {
-    @include state-active(var(--checkbox-color));
-
-    // --- 子要素 ---
-    .c-checkbox__icon {
-      // --- 視覚効果 ---
-      opacity: 1;
-      filter: drop-shadow(0 0 var(--blur-sm) var(--checkbox-color));
-      stroke-dashoffset: 0;
+  // --- ホバー & アクティブ状態 (親要素への作用) ---
+  &:hover:not(.is-disabled) {
+    // ラベルのグロウ効果
+    .c-checkbox__label {
+      color: theme-color(var(--checkbox-color), 90%);
+      @include cyber-text-glow(var(--checkbox-color), 20%, var(--blur-sm));
+    }
+    
+    // ホバー時のboxハイライト (inputがフォーカス/アクティブ/チェックされていない時のみ)
+    .c-checkbox__input:not(:focus-visible, :active, :checked) + .c-checkbox__box {
+      @include state-hover(var(--checkbox-color));
     }
   }
 
-  // --- 子要素 ---
-  &__box {
-    // --- レイアウト・配置 ---
-    flex-shrink: 0;
+  &:active:not(.is-disabled) .c-checkbox__box {
+    @include state-active(var(--checkbox-color));
+  }
 
-    // --- ボックスモデル ---
+  // --- input本体 (非表示にしつつ隣接セレクタでboxを操作) ---
+  &__input {
+    // 視覚的には隠すがフォーカスは当たるようにする
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+
+    // フォーカス時のGlow
+    &:focus-visible + .c-checkbox__box {
+      @include state-focus(var(--checkbox-color));
+      @include cyber-text-glow(var(--checkbox-color));
+    }
+
+    // チェック時の状態
+    &:checked + .c-checkbox__box {
+      @include state-active(var(--checkbox-color));
+
+      .c-checkbox__icon {
+        opacity: 1;
+        filter: drop-shadow(0 0 var(--blur-sm) var(--checkbox-color));
+        stroke-dashoffset: 0;
+      }
+    }
+  }
+
+  // --- Box (四角い枠) ---
+  &__box {
+    flex-shrink: 0;
     width: 1.4em;
     height: 1.4em;
-
-    // --- レイアウト・配置 ---
     @include flex-center;
     @include border-dim;
-
-    // --- 視覚効果 ---
     @include state-base(var(--shadow-sink));
 
-    // Explicitly NO border-radius to ensure sharp corners
-
-    // Icon animation setup
-
-    // --- 子要素 ---
+    // アイコン (初期状態は透明かつstroke-dashoffsetで隠す)
     .c-checkbox__icon {
-      // --- ボックスモデル ---
       width: 70%;
       height: 70%;
-
-      // --- 視覚効果 ---
       opacity: 0;
-
       stroke: var(--checkbox-color);
       stroke-dasharray: 24;
       stroke-dashoffset: 24;
-
       @include state-base;
     }
   }
 
-  // 3. Hover State
-
-  // --- 疑似クラス ---
-  &:hover:not(:has(.c-checkbox__input:disabled)) {
-    // --- 疑似クラス ---
-    &:has(.c-checkbox__input:not(:focus-visible, :active)) .c-checkbox__box {
-      @include state-hover(var(--checkbox-color));
-    }
-
-    // Label slightly glows on hover
-
-    // --- 子要素 ---
-    .c-checkbox__label {
-      // --- タイポグラフィ ---
-      color: theme-color(var(--checkbox-color), 90%);
-
-      // --- 視覚効果 ---
-      @include cyber-text-glow(var(--checkbox-color), 20%, var(--blur-sm));
-    }
+  // --- ラベル ---
+  &__label {
+    @include state-base;
   }
-
-  // 4. Active (Press) State
-  &:active:not(:has(.c-checkbox__input:disabled)) .c-checkbox__box {
-    @include state-active(var(--checkbox-color));
-  }
-
-  // --- レイアウト・配置 ---
-  @include inline-flex-start(var(--gap-component));
 }
 </style>
