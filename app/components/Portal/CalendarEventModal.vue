@@ -68,14 +68,8 @@ watch(() => form.value.allDay, (isAllDay) => {
 
 watch(() => props.initialData, (newData) => {
   form.value = { ...newData };
+  hasTitleError.value = false;
 }, { deep: true, immediate: true });
-
-watch(() => props.modelValue, (newVal) => {
-  if (newVal) {
-    form.value = { ...props.initialData };
-    hasTitleError.value = false;
-  }
-});
 
 const handleSave = () => {
   if (!form.value.title.trim()) {
