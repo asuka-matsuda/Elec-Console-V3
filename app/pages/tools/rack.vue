@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * RackCalculator
  * ケーブルラック選定ツールのコンポーネントです。強電・弱電ケーブルのリストと段積み数から最適なラック幅を選定します。
@@ -88,7 +88,7 @@ const {
               <div>
                 <div class="p-rack__section-title">強電ケーブルリスト</div>
                 <div class="p-rack__cable-list">
-                  <ToolCableRowCard
+                  <ToolCableCard
                     v-for="(cable, index) in inputs.strongCablesUI"
                     :key="cable.id"
                     v-model="inputs.strongCablesUI[index]!"
@@ -132,7 +132,7 @@ variant="secondary"
               <div>
                 <div class="p-rack__section-title">弱電ケーブルリスト</div>
                 <div class="p-rack__cable-list">
-                  <ToolCableRowCard
+                  <ToolCableCard
                     v-for="(cable, index) in inputs.weakCablesUI"
                     :key="cable.id"
                     v-model="inputs.weakCablesUI[index]!"
@@ -186,28 +186,28 @@ variant="secondary"
         </AppResultBox>
 
         <ToolResultDetails>
-          <ToolResultDetailsRow label="強電 必要幅">
+          <ToolResultRow label="強電 必要幅">
             <strong>{{ result?.wStrong?.toFixed(1) ?? '0.0' }}</strong> mm
-          </ToolResultDetailsRow>
-          <ToolResultDetailsRow label="弱電 必要幅">
+          </ToolResultRow>
+          <ToolResultRow label="弱電 必要幅">
             <strong>{{ result?.wWeak?.toFixed(1) ?? '0.0' }}</strong> mm
-          </ToolResultDetailsRow>
-          <ToolResultDetailsRow v-if="inputs.isStrong && inputs.isWeak" label="セパレータ幅">
+          </ToolResultRow>
+          <ToolResultRow v-if="inputs.isStrong && inputs.isWeak" label="セパレータ幅">
             <strong>{{ result?.wSep?.toFixed(1) ?? '0.0' }}</strong> mm
-          </ToolResultDetailsRow>
-          <ToolResultDetailsRow label="合計 必要幅" top-border>
+          </ToolResultRow>
+          <ToolResultRow label="合計 必要幅" top-border>
             <strong>{{ result?.totalWidth ? Math.ceil(result.totalWidth) : 0 }}</strong> mm
-          </ToolResultDetailsRow>
-          <ToolResultDetailsRow label="最大ケーブル高さ">
+          </ToolResultRow>
+          <ToolResultRow label="最大ケーブル高さ">
             <strong :class="{'is-overflow': result?.isOverflow}">{{ result?.maxCableStackHeight?.toFixed(1) ?? '0.0' }}</strong> mm
             (有効 {{ maxDepth }} mm)
-          </ToolResultDetailsRow>
+          </ToolResultRow>
         </ToolResultDetails>
       </ToolResultPanel>
     </template>
 
     <template #basis>
-      <ToolCalculationBasisPanel :steps="mathSteps" />
+      <ToolCalcBasisPanel :steps="mathSteps" />
     </template>
     </ToolLayout>
 
@@ -299,3 +299,4 @@ variant="secondary"
   }
 }
 </style>
+

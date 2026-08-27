@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * WeightCalculator
  * ケーブル重量・ドラム選定ツールのコンポーネントです。ケーブルの種類と長さから重量を計算し、最適なドラムを選定します。
@@ -131,26 +131,26 @@ const totalWeight = computed(() => {
         </AppResultBox>
 
         <ToolResultDetails v-if="!result?.error">
-          <ToolResultDetailsRow label="ケーブル総重量">
+          <ToolResultRow label="ケーブル総重量">
             <strong>{{ result?.cableWeight?.toFixed(1) }}</strong> kg
-          </ToolResultDetailsRow>
+          </ToolResultRow>
           <template v-if="result?.bestDrum">
-            <ToolResultDetailsRow label="ドラム空重量">
+            <ToolResultRow label="ドラム空重量">
               <strong>{{ result?.bestDrum?.weight }}</strong> kg
-            </ToolResultDetailsRow>
-            <ToolResultDetailsRow label="総重量 (ケーブル+ドラム)" top-border>
+            </ToolResultRow>
+            <ToolResultRow label="総重量 (ケーブル+ドラム)" top-border>
               <strong>{{ totalWeight?.toFixed(1) }}</strong> kg
-            </ToolResultDetailsRow>
-            <ToolResultDetailsRow label="最大巻取可能長" class="u-mt-2">
+            </ToolResultRow>
+            <ToolResultRow label="最大巻取可能長" class="u-mt-2">
               <strong>{{ result?.maxCapacityMeters?.toFixed(1) }}</strong> m
-            </ToolResultDetailsRow>
+            </ToolResultRow>
           </template>
         </ToolResultDetails>
       </ToolResultPanel>
     </template>
 
     <template #basis>
-      <ToolCalculationBasisPanel :steps="mathSteps">
+      <ToolCalcBasisPanel :steps="mathSteps">
         <div class="p-weight__note">
           <strong>【ドラム選定ロジック】</strong><br>
           上記①〜③の計算をデータベース上のすべてのドラムに対して行い、重量要件、曲げ半径要件、容量要件のすべてをクリアするドラムのうち、「自重が最も軽いもの」を最適なドラムとして最終選定しています。
@@ -167,7 +167,7 @@ const totalWeight = computed(() => {
             <li>K: 補正係数</li>
           </ul>
         </div>
-      </ToolCalculationBasisPanel>
+      </ToolCalcBasisPanel>
     </template>
     </ToolLayout>
 
@@ -224,3 +224,4 @@ const totalWeight = computed(() => {
   }
 }
 </style>
+

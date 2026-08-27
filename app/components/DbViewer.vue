@@ -4,7 +4,7 @@
  * データベースのビューアコンポーネントです。検索やフィルタリング機能を提供し、結果をテーブルで表示します。
  */
 import { useDbFilter } from "~/composables/useDbFilter";
-import type { TableColumn } from "~/components/ui/AppTable.vue";
+import type { TableColumn } from "~/components/AppTable.vue";
 
 const props = defineProps<{
   data: T[];

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * LayoutDashboardAside
  * ダッシュボードのサイドバー（お知らせや更新履歴などを表示）コンポーネント
@@ -137,3 +137,4 @@ const history = computed(() => dashboardData.value?.history || []);
   }
 }
 </style>
+

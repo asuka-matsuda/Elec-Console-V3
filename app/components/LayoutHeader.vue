@@ -3,7 +3,7 @@
  * LayoutHeader
  * アプリケーションのヘッダー部分（パンくずリストやアクション等）を表示するコンポーネントです。
  */
-import type { BreadcrumbItem } from "~/components/ui/AppBreadcrumb.vue";
+import type { BreadcrumbItem } from "~/components/AppBreadcrumb.vue";
 
 defineProps<{
   breadcrumbs?: BreadcrumbItem[];

@@ -4,7 +4,7 @@
  * ケーブルラックのデータベース情報を一覧表示・検索するためのページコンポーネントです。
  */
 import { rackData } from "~/constants/data/rackData";
-import type { TableColumn } from "~/components/ui/AppTable.vue";
+import type { TableColumn } from "~/components/AppTable.vue";
 
 const tableColumns: TableColumn[] = [
   { key: "category", label: "カテゴリ" },

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * Dashboard
  * ダッシュボード画面のコンポーネントです。各機能へのリンクやメニューをカード形式で一覧表示します。
@@ -91,7 +91,7 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
       </section>
     </div>
 
-    <LayoutDashboardAside />
+    <LayoutAside />
   </div>
 </template>
 
@@ -161,3 +161,4 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
   }
 }
 </style>
+

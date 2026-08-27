@@ -4,7 +4,7 @@
  * ケーブルドラムのデータベース情報を一覧表示・検索するためのページコンポーネントです。
  */
 import { drumData } from "~/constants/data/drumData";
-import type { TableColumn } from "~/components/ui/AppTable.vue";
+import type { TableColumn } from "~/components/AppTable.vue";
 
 const tableColumns: TableColumn[] = [
   { key: "category", label: "カテゴリ" },

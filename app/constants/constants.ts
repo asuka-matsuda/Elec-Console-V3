@@ -1,4 +1,4 @@
-import type { RadioOption } from "~/components/ui/AppRadioGroup.vue";
+import type { RadioOption } from "~/components/AppRadioGroup.vue";
 
 /**
  * 汎用的なトグル（あり / なし）

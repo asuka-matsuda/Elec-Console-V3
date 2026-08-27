@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * VoltageCalculator
  * 電圧降下・ケーブルサイズ選定ツールのコンポーネントです。電圧降下の計算や、条件を満たすケーブルサイズの選定を行います。
@@ -151,7 +151,7 @@ const handleSaveToHistory = async () => {
     </template>
 
     <template #basis>
-      <ToolCalculationBasisPanel :steps="mathSteps" />
+      <ToolCalcBasisPanel :steps="mathSteps" />
     </template>
     </ToolLayout>
 
@@ -179,3 +179,4 @@ const handleSaveToHistory = async () => {
   }
 }
 </style>
+

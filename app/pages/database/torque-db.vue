@@ -5,7 +5,7 @@
  */
 import { computed } from "vue";
 import { torqueData } from "~/constants/data/torqueData";
-import type { TableColumn } from "~/components/ui/AppTable.vue";
+import type { TableColumn } from "~/components/AppTable.vue";
 
 /** Flatten the nested torqueData structure */
 const flattenedData = computed(() => {

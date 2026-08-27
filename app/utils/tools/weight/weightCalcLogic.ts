@@ -1,5 +1,5 @@
 import type { CableData, DrumData } from '~/types/database';
-import type { MathStep } from '~/components/ui/AppMathBasis.vue';
+import type { MathStep } from '~/components/AppMathBasis.vue';
 
 import { hlVal, hlOk } from '~/utils/math';
 

@@ -1,4 +1,4 @@
-
+﻿
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import FullCalendar from '@fullcalendar/vue3';
@@ -52,8 +52,8 @@ hasTitleError.value = false;
   form.value = {
       title: '',
       type: settings.value?.eventTypes[0]?.id || 'other',
-      start: formatDateTimeLocal(startStr, allDay),
-    end: formatDateTimeLocal(endStr, allDay),
+      start: formatDateTimeLocal(startStr, allDay) || '',
+    end: formatDateTimeLocal(endStr, allDay) || '',
     allDay
   };
   isModalOpen.value = true;
@@ -66,8 +66,8 @@ hasTitleError.value = false;
   form.value = {
       title: eventInfo.title,
       type: eventInfo.extendedProps?.type || 'other',
-      start: formatDateTimeLocal(eventInfo.startStr, eventInfo.allDay),
-    end: formatDateTimeLocal(eventInfo.endStr, eventInfo.allDay),
+      start: formatDateTimeLocal(eventInfo.startStr, eventInfo.allDay) || '',
+    end: formatDateTimeLocal(eventInfo.endStr, eventInfo.allDay) || '',
     allDay: eventInfo.allDay
   };
   isModalOpen.value = true;
@@ -201,11 +201,11 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
         <div class="p-event-form__row">
           <div class="p-event-form__field">
             <label>開始日時</label>
-            <PortalSiteCalendarEventDateInput v-model="form.start" :type="form.allDay ? 'date' : 'datetime-local'" required />
+            <PortalCalendarDateInput v-model="form.start" :type="form.allDay ? 'date' : 'datetime-local'" required />
           </div>
           <div class="p-event-form__field">
             <label>終了日時</label>
-            <PortalSiteCalendarEventDateInput v-model="form.end" :type="form.allDay ? 'date' : 'datetime-local'" />
+            <PortalCalendarDateInput v-model="form.end" :type="form.allDay ? 'date' : 'datetime-local'" />
           </div>
         </div>
         
@@ -352,3 +352,4 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
   }
 }
 </style>
+

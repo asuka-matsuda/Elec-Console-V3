@@ -57,7 +57,7 @@ onMounted(() => {
     <div class="l-grid l-grid--2col-2-1">
       <!-- 2/3: カレンダー -->
       <div class="p-site-dashboard__calendar">
-        <PortalSiteCalendar :site-id="siteId" />
+        <PortalCalendar :site-id="siteId" />
       </div>
 
       <!-- 1/3: ToDo & ボタン -->
