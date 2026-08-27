@@ -1,0 +1,14 @@
+
+import { defineEventHandler, getRouterParam } from 'h3';
+import fs from 'fs';
+import path from 'path';
+
+export default defineEventHandler((event) => {
+  const siteId = getRouterParam(event, 'siteId');
+  const dbPath = path.resolve(process.cwd(), 'server/data/events.json');
+  if (fs.existsSync(dbPath)) {
+    const events = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
+    return events.filter((e: Record<string, unknown>) => e.siteId === siteId);
+  }
+  return [];
+});
