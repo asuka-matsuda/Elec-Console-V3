@@ -268,12 +268,12 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
   }
 
   :deep(.is-saturday) {
-    @include highlight-day(var(--color-category-database), 15%, 90%);
+    @include highlight-day(#60a5fa, 15%, 100%);
   }
 
   :deep(.is-sunday),
   :deep(.is-holiday) {
-    @include highlight-day(var(--color-status-danger), 20%, 90%);
+    @include highlight-day(#f87171, 20%, 100%);
   }
 
   :deep(.fc-day-today) {
