@@ -1,11 +1,11 @@
 
-import { ref } from 'vue';
+import { useState } from '#app';
 import type { Site, SiteSettings } from '~/types/admin';
 import { useAsyncData } from '#app';
 
 export const useAdminSites = () => {
-  const sites = ref<Site[]>([]);
-  const siteSettings = ref<SiteSettings[]>([]);
+  const sites = useState<Site[]>('admin-sites', () => []);
+  const siteSettings = useState<SiteSettings[]>('admin-site-settings', () => []);
 
   // 初期データの取得
   const { refresh: fetchSites } = useAsyncData('admin-sites-fetch', async () => {
