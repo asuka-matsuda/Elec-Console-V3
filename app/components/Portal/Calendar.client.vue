@@ -93,13 +93,11 @@ const closeModal = () => {
 };
 
 const saveEvent = async (savedData: { title: string, type: string, start: string, end: string, allDay: boolean }) => {
-  
   let finalEnd = savedData.end || undefined;
   
-  // FullCalendar requires exclusive end date for all-day events across multiple days
   if (savedData.allDay && savedData.start && savedData.end) {
     if (savedData.start === savedData.end) {
-      finalEnd = undefined; // 1日だけならendは不要
+      finalEnd = undefined;
     } else {
       const endDate = new Date(savedData.end);
       endDate.setDate(endDate.getDate() + 1);
@@ -107,24 +105,30 @@ const saveEvent = async (savedData: { title: string, type: string, start: string
     }
   }
 
-  if (isEditing.value && editingEventId.value) {
-    await updateEvent(editingEventId.value, {
-      title: savedData.title,
-      type: savedData.type,
-      start: savedData.start,
-      end: finalEnd,
-      allDay: savedData.allDay
-    });
-  } else {
-    await createEvent({
-      title: savedData.title,
-      type: savedData.type,
-      start: savedData.start,
-      end: finalEnd,
-      allDay: savedData.allDay
-    });
+  try {
+    if (isEditing.value && editingEventId.value) {
+      await updateEvent(editingEventId.value, {
+        title: savedData.title,
+        type: savedData.type,
+        start: savedData.start,
+        end: finalEnd,
+        allDay: savedData.allDay
+      });
+    } else {
+      await createEvent({
+        title: savedData.title,
+        type: savedData.type,
+        start: savedData.start,
+        end: finalEnd,
+        allDay: savedData.allDay
+      });
+    }
+  } catch (error) {
+    console.error("Failed to save event:", error);
+    alert("保存に失敗しました。サーバーエラーが発生したか、APIが未実装です。");
+  } finally {
+    isModalOpen.value = false;
   }
-  isModalOpen.value = false;
 };
 
 const removeEvent = async () => {
