@@ -33,7 +33,7 @@ export const menuData: MenuSection[] = [
     items: [
       {
         text: "現場ポータル",
-        href: "/login",
+        href: "/portal",
         icon: "users",
         customClass: "l-global-nav__link--management",
         activePrefixes: ["/login", "/select-site", "/no-site", "/portal"],

@@ -5,10 +5,19 @@
  */
 import { useHead, useRouter } from '#app';
 import { useAuth } from '~/composables/useAuth';
+import { useLocalStorage } from '@vueuse/core';
+import { onMounted } from 'vue';
 
 useHead({ title: '現場ポータル - Elec-Console' });
 const router = useRouter();
 const { isAdmin } = useAuth();
+const lastSiteId = useLocalStorage("last-accessed-site", "");
+
+onMounted(() => {
+  if (lastSiteId.value) {
+    router.replace(`/portal/${lastSiteId.value}`);
+  }
+});
 </script>
 
 <template>
