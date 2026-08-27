@@ -4,7 +4,7 @@ import { computed } from 'vue';
 import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import type { CalendarOptions } from '@fullcalendar/core';
+
 import { useCalendar } from '~/composables/portal/useCalendar';
 
 const props = defineProps<{
@@ -25,7 +25,7 @@ const calendarOptions = computed(() => ({
     right: 'dayGridMonth,dayGridWeek'
   },
   height: '100%',
-  select: async (selectInfo) => {
+  select: async (selectInfo: Record<string, any>) => {
     const title = prompt('新しい予定を入力してください');
     const calendarApi = selectInfo.view.calendar;
     calendarApi.unselect();
@@ -38,7 +38,7 @@ const calendarOptions = computed(() => ({
       });
     }
   },
-  eventDrop: async (dropInfo) => {
+  eventDrop: async (dropInfo: Record<string, any>) => {
     await updateEvent(dropInfo.event.id, {
       start: dropInfo.event.startStr,
       end: dropInfo.event.endStr || undefined

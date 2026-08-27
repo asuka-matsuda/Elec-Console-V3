@@ -4,9 +4,60 @@
  * ダッシュボード画面のコンポーネントです。各機能へのリンクやメニューをカード形式で一覧表示します。
  */
 import { menuData } from "~/constants/data/menuData";
+import { useAuth } from "~/composables/useAuth";
+import { useLocalStorage } from "@vueuse/core";
+
 
 /** Extract just the sections to show on the dashboard */
 const dashboardSections = menuData.filter((section) => section.showInDashboard);
+
+const { currentUser, isAuthenticated } = useAuth();
+const router = useRouter();
+const lastSiteId = useLocalStorage("last-accessed-site", "");
+
+const _handleCardClick = (item: Record<string, unknown>, e: Event) => {
+  if (item.disabled) {
+    e.preventDefault();
+    return;
+  }
+  
+  // ポータルのリンクを踏んだ時の特殊処理
+  if (item.href === "/login") {
+    e.preventDefault();
+    if (!isAuthenticated.value) {
+      router.push("/login");
+      return;
+    }
+    
+    const siteIds = currentUser.value?.assignedSiteIds || [];
+    if (siteIds.length === 0) return; // disabled になっているはずだが念のため
+    
+    // 前回アクセスした現場があればそこへ、なければ最初の現場へ直行
+    const targetSiteId = siteIds.includes(lastSiteId.value) ? lastSiteId.value : siteIds[0];
+    router.push(`/portal/${targetSiteId}`);
+  }
+};
+
+const _getDynamicDisabled = (item: Record<string, unknown>) => {
+  if (item.disabled) return true;
+  if (item.href === "/login") {
+    // ログイン済みかつアサイン現場が0件の場合はグレーアウト
+    if (isAuthenticated.value && (!currentUser.value?.assignedSiteIds || currentUser.value.assignedSiteIds.length === 0)) {
+      return true;
+    }
+  }
+  return false;
+};
+
+const getDynamicDesc = (item: Record<string, unknown>) => {
+  if (item.href === "/login" && isAuthenticated.value) {
+    const siteIds = currentUser.value?.assignedSiteIds || [];
+    if (siteIds.length === 0) return "アサインされている現場がありません";
+    return `アサイン済みの現場ポータルへアクセスします（現在${siteIds.length}件）`;
+  }
+  return item.desc || "※準備中…";
+};
+
 </script>
 
 <template>
@@ -41,7 +92,7 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
                 <span>{{ item.text }}</span>
               </div>
               <div class="p-dashboard-card__desc">
-                {{ item.desc || "※準備中…" }}
+                {{ getDynamicDesc(item) }}
               </div>
             </div>
           </AppCard>
