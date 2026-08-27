@@ -53,12 +53,26 @@ onMounted(() => {
     <div class="l-grid l-grid--2col-2-1">
       <!-- 2/3: カレンダー -->
       <div class="p-site-dashboard__calendar">
-        <PortalSiteCalendar :site-id="siteId" />
+        <ClientOnly>
+          <PortalSiteCalendar :site-id="siteId" />
+          <template #fallback>
+            <div style="height: 500px; display: flex; align-items: center; justify-content: center; color: var(--color-text-muted);">
+              カレンダーを読み込み中...
+            </div>
+          </template>
+        </ClientOnly>
       </div>
 
       <!-- 1/3: ToDo & ボタン -->
       <div class="p-site-dashboard__sidebar">
-        <PortalPersonalTodo :site-id="siteId" />
+        <ClientOnly>
+          <PortalPersonalTodo :site-id="siteId" />
+          <template #fallback>
+            <div style="height: 300px; display: flex; align-items: center; justify-content: center; color: var(--color-text-muted);">
+              ToDoを読み込み中...
+            </div>
+          </template>
+        </ClientOnly>
         
         <NuxtLink :to="`/portal/${siteId}/souden`" class="c-link-button">
           <AppButton variant="primary" style="width: 100%; margin-top: 16px;">
