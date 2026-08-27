@@ -66,6 +66,10 @@ watch(() => form.value.allDay, (isAllDay) => {
   autoFillEndDate();
 });
 
+watch(() => props.initialData, (newData) => {
+  form.value = { ...newData };
+}, { deep: true, immediate: true });
+
 watch(() => props.modelValue, (newVal) => {
   if (newVal) {
     form.value = { ...props.initialData };

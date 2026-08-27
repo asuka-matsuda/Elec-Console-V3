@@ -60,7 +60,7 @@ hasTitleError.value = false;
       // FullCalendar gives exclusive end date. If user selects 1 cell, diff is 1 day.
       // We want to show the same day in UI.
       eDate.setDate(eDate.getDate() - 1);
-      initialEnd = eDate.toISOString().split('T')[0];
+      initialEnd = eDate.getFullYear() + '-' + String(eDate.getMonth() + 1).padStart(2, '0') + '-' + String(eDate.getDate()).padStart(2, '0');
     }
   }
 
