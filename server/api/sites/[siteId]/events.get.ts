@@ -1,5 +1,5 @@
 import { defineEventHandler, getRouterParam } from "h3";
-import { prisma } from "../../utils/prisma";
+import { prisma } from "../../../utils/prisma";
 
 export default defineEventHandler(async (event) => {
   try {
