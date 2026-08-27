@@ -208,6 +208,9 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 }
 
 .c-calendar {
+  --fc-border-color: var(--color-border);
+  --fc-page-bg-color: transparent;
+  --fc-neutral-bg-color: transparent;
   min-height: 500px;
   
   @include mq("md") {
