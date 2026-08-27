@@ -12,7 +12,7 @@ const props = defineProps<{
   siteId: string;
 }>();
 
-const { events, createEvent, updateEvent, deleteEvent } = useCalendar(props.siteId);
+const { events, settings, createEvent, updateEvent, deleteEvent } = useCalendar(props.siteId);
 
 // ====================
 // Modal State
@@ -23,6 +23,7 @@ const editingEventId = ref<string | null>(null);
 
 const form = ref({
   title: '',
+  type: '',
   start: '',
   end: '',
   allDay: false
@@ -45,8 +46,9 @@ const openCreateModal = (startStr: string, endStr: string, allDay: boolean) => {
   isEditing.value = false;
   editingEventId.value = null;
   form.value = {
-    title: '',
-    start: formatDateTimeLocal(startStr, allDay),
+      title: '',
+      type: settings.value?.eventTypes[0]?.id || 'other',
+      start: formatDateTimeLocal(startStr, allDay),
     end: formatDateTimeLocal(endStr, allDay),
     allDay
   };
@@ -57,8 +59,9 @@ const openEditModal = (eventInfo: Record<string, any>) => {
   isEditing.value = true;
   editingEventId.value = eventInfo.id;
   form.value = {
-    title: eventInfo.title,
-    start: formatDateTimeLocal(eventInfo.startStr, eventInfo.allDay),
+      title: eventInfo.title,
+      type: eventInfo.extendedProps?.type || 'other',
+      start: formatDateTimeLocal(eventInfo.startStr, eventInfo.allDay),
     end: formatDateTimeLocal(eventInfo.endStr, eventInfo.allDay),
     allDay: eventInfo.allDay
   };
@@ -78,6 +81,7 @@ const saveEvent = async () => {
   if (isEditing.value && editingEventId.value) {
     await updateEvent(editingEventId.value, {
       title: form.value.title,
+      type: form.value.type,
       start: form.value.start,
       end: form.value.end || undefined,
       allDay: form.value.allDay
@@ -85,6 +89,7 @@ const saveEvent = async () => {
   } else {
     await createEvent({
       title: form.value.title,
+      type: form.value.type,
       start: form.value.start,
       end: form.value.end || undefined,
       allDay: form.value.allDay
@@ -116,6 +121,29 @@ const calendarOptions = computed(() => ({
     right: 'dayGridMonth,listMonth'
   },
   height: 'auto',
+  dayCellClassNames: (arg: Record<string, any>) => {
+    const classes = [];
+    const dateStr = arg.date.toLocaleDateString('ja-JP').split('/').map(v => v.padStart(2, '0')).join('-'); // YYYY-MM-DD (rough local parsing)
+    // 厳密なISOではないが、FullCalendarの内部日付に対応させる
+    const isoDate = arg.date.getFullYear() + '-' + String(arg.date.getMonth() + 1).padStart(2, '0') + '-' + String(arg.date.getDate()).padStart(2, '0');
+    
+    if (arg.date.getDay() === 0) classes.push('is-sunday');
+    if (arg.date.getDay() === 6) classes.push('is-saturday');
+    if (settings.value?.customHolidays?.includes(isoDate)) classes.push('is-holiday');
+    
+    return classes;
+  },
+  eventDidMount: (info: Record<string, any>) => {
+    // 予定種別からテーマカラーを取得してCSS変数として注入
+    const typeId = info.event.extendedProps.type;
+    const typeDef = settings.value?.eventTypes?.find(t => t.id === typeId);
+    if (typeDef) {
+      info.el.style.setProperty('--event-theme-color', `var(--color-${typeDef.colorVar})`);
+    } else {
+      info.el.style.setProperty('--event-theme-color', 'var(--color-primary)');
+    }
+  },
+
   select: (selectInfo: Record<string, any>) => {
     // カレンダー選択時にモーダルを開く
     openCreateModal(selectInfo.startStr, selectInfo.endStr, selectInfo.allDay);
@@ -155,6 +183,13 @@ const typedCalendarOptions = computed(() => calendarOptions.value as any);
         <div class="p-event-form__field">
           <label class="u-text-sm u-text-muted">タイトル</label>
           <AppInput v-model="form.title" placeholder="会議、送電試験など" required />
+        </div>
+        <div class="p-event-form__field">
+          <label class="u-text-sm u-text-muted">予定種別</label>
+          <AppSelect 
+            v-model="form.type" 
+            :options="(settings?.eventTypes || []).map(t => ({ label: t.name, value: t.id }))" 
+          />
         </div>
         
         <div class="p-event-form__row">
@@ -207,9 +242,59 @@ const typedCalendarOptions = computed(() => calendarOptions.value as any);
     color: var(--color-text-main);
     text-decoration: none;
   }
-  :deep(.fc-day-today) {
-    background-color: rgba(255, 255, 255, 0.05) !important;
+
+  /* ==== 動的クラスによる装飾 ==== */
+  :deep(.is-saturday .fc-daygrid-day-frame) {
+    box-shadow: inset 0 0 24px color-mix(in srgb, var(--color-category-database) 15%, transparent);
   }
+  :deep(.is-saturday .fc-col-header-cell-cushion),
+  :deep(.is-saturday .fc-daygrid-day-number) {
+    color: color-mix(in srgb, var(--color-category-database) 90%, transparent);
+  }
+
+  :deep(.is-sunday .fc-daygrid-day-frame),
+  :deep(.is-holiday .fc-daygrid-day-frame) {
+    box-shadow: inset 0 0 24px color-mix(in srgb, var(--color-status-danger) 20%, transparent);
+  }
+  :deep(.is-sunday .fc-col-header-cell-cushion),
+  :deep(.is-sunday .fc-daygrid-day-number),
+  :deep(.is-holiday .fc-col-header-cell-cushion),
+  :deep(.is-holiday .fc-daygrid-day-number) {
+    color: color-mix(in srgb, var(--color-status-danger) 90%, transparent);
+  }
+
+  :deep(.fc-day-today .fc-daygrid-day-frame) {
+    box-shadow: inset 0 0 20px color-mix(in srgb, var(--color-category-main) 20%, transparent);
+  }
+  :deep(.fc-day-today .fc-daygrid-day-number) {
+    font-weight: bold;
+    color: var(--color-category-main);
+  }
+
+  /* セルのホバー */
+  :deep(.fc-daygrid-day-frame) {
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  :deep(.fc-daygrid-day-frame:hover:not(:has(.fc-daygrid-event:hover))) {
+    box-shadow: inset 0 0 var(--blur-lg) color-mix(in srgb, var(--color-category-main) 20%, transparent), 
+                inset 0 0 0 1px color-mix(in srgb, var(--color-category-main) 50%, transparent);
+  }
+
+  /* イベントの動的カラー */
+  :deep(.fc-daygrid-event) {
+    padding: 2px var(--space-1);
+    background-color: color-mix(in srgb, var(--event-theme-color, var(--color-primary)) 20%, transparent);
+    border: 1px solid color-mix(in srgb, var(--event-theme-color, var(--color-primary)) 50%, transparent);
+    color: var(--color-text-main);
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+  :deep(.fc-daygrid-event:hover) {
+    box-shadow: inset 0 0 var(--blur-lg) color-mix(in srgb, var(--event-theme-color, var(--color-primary)) 50%, transparent), 
+                0 0 var(--blur-lg) color-mix(in srgb, var(--event-theme-color, var(--color-primary)) 30%, transparent);
+    border-color: var(--event-theme-color, var(--color-primary));
+  }
+
 }
 
 .p-event-form {

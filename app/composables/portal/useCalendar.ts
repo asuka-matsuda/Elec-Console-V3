@@ -11,10 +11,17 @@ export interface CalendarEvent {
   type?: string;
 }
 
+export interface EventType {
+  id: string;
+  name: string;
+  colorVar: string; // CSS custom property name like 'primary', 'danger', 'category-database'
+}
+
 export interface CalendarSettings {
   siteId: string;
-  eventTypes: string[];
-  holidayDays: number[];
+  eventTypes: EventType[];
+  holidayDays: number[]; // 0=Sun, 6=Sat
+  customHolidays: string[]; // YYYY-MM-DD
 }
 
 export const useCalendar = (siteId: string) => {
