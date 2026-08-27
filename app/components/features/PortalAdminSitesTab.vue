@@ -60,7 +60,7 @@ const handleCreateSite = async () => {
   if (!newSite.value.id || !newSite.value.name) {
     throw new Error("現場IDと現場名を入力してください。");
   }
-  createSite({ ...newSite.value });
+  await createSite({ ...newSite.value });
   isCreateModalOpen.value = false;
   newSite.value = { id: "", name: "", status: "planning" };
 };
@@ -76,7 +76,7 @@ const confirmToggleDisable = (row: Site) => {
 
 const handleToggleDisable = async () => {
   if (siteToToggle.value) {
-    toggleDisableSite(siteToToggle.value.id);
+    await toggleDisableSite(siteToToggle.value.id);
   }
   isConfirmDisableOpen.value = false;
   siteToToggle.value = null;
@@ -94,10 +94,10 @@ const handleToggleDisable = async () => {
     }
   };
 
-  const handleSaveSettings = (updatedSite: Site) => {
+  const handleSaveSettings = async (updatedSite: Site) => {
   if (settingsTargetSite.value) {
     const originalId = settingsTargetSite.value.id;
-    updateSite(originalId, updatedSite);
+    await updateSite(originalId, updatedSite);
   }
   isSettingsModalOpen.value = false;
 };

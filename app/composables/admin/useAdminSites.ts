@@ -1,53 +1,73 @@
-import { useLocalStorage } from '@vueuse/core';
+
+import { ref } from 'vue';
 import type { Site, SiteSettings } from '~/types/admin';
-import { mockSites, mockSiteSettings } from '~/constants/data/adminMockData';
+import { useAsyncData } from '#app';
 
 export const useAdminSites = () => {
-  const sites = useLocalStorage<Site[]>('elec-admin-sites-mock', mockSites);
-  const siteSettings = useLocalStorage<SiteSettings[]>('elec-admin-site-settings-mock', mockSiteSettings);
+  const sites = ref<Site[]>([]);
+  const siteSettings = ref<SiteSettings[]>([]);
 
-  // ID はユーザーが手入力するため、引数に含める
-  const createSite = (site: Omit<Site, 'createdAt' | 'disabledAt'>) => {
-    // 既存IDとの重複チェック
-    if (sites.value.find(s => s.id === site.id)) {
-      throw new Error('指定された現場IDは既に存在します。');
+  // 初期データの取得
+  const { refresh: fetchSites } = useAsyncData('admin-sites-fetch', async () => {
+    const data = await $fetch<{ sites: Site[], siteSettings: SiteSettings[] }>('/api/sites');
+    sites.value = data.sites || [];
+    siteSettings.value = data.siteSettings || [];
+    return data;
+  });
+
+  const createSite = async (site: Omit<Site, 'createdAt' | 'disabledAt'>) => {
+    try {
+      const res = await $fetch<{ site: Site, settings: SiteSettings }>('/api/sites', {
+        method: 'POST',
+        body: site,
+      });
+      sites.value.push(res.site);
+      siteSettings.value.push(res.settings);
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
+      if (err.data?.statusMessage) {
+        throw new Error(err.data.statusMessage, { cause: err });
+      }
+      throw err;
     }
-    const newSite: Site = {
-      ...site,
-      createdAt: new Date().toISOString(),
-      disabledAt: null,
-    };
-    sites.value = [...sites.value, newSite];
   };
 
-  const updateSite = (id: string, updates: Partial<Omit<Site, 'createdAt' | 'disabledAt'>>) => {
-    sites.value = sites.value.map(s => s.id === id ? { ...s, ...updates } : s);
-    // もし ID が変更された場合、関連する siteSettings の siteId も更新する
-    if (updates.id && updates.id !== id) {
-      siteSettings.value = siteSettings.value.map(set => set.siteId === id ? { ...set, siteId: updates.id as string } : set);
+  const updateSite = async (id: string, updates: Partial<Omit<Site, 'createdAt'>>) => {
+    const res = await $fetch<{ site: Site, settings: SiteSettings }>(`/api/sites/${id}`, {
+      method: 'PUT',
+      body: { site: updates },
+    });
+    
+    if (res.site) {
+      sites.value = sites.value.map(s => s.id === id ? res.site : s);
+    }
+    if (res.settings) {
+      siteSettings.value = siteSettings.value.map(set => set.siteId === id ? res.settings : set);
     }
   };
 
-  const deleteSite = (id: string) => {
+  const deleteSite = async (id: string) => {
+    await $fetch(`/api/sites/${id}`, { method: 'DELETE' });
     sites.value = sites.value.filter(s => s.id !== id);
     siteSettings.value = siteSettings.value.filter(s => s.siteId !== id);
   };
 
-  // 現場の無効化（すでに無効化されている場合は有効化するトグル）
-  const toggleDisableSite = (id: string) => {
-    sites.value = sites.value.map(s => {
-      if (s.id === id) {
-        return {
-          ...s,
-          disabledAt: s.disabledAt ? null : new Date().toISOString(),
-        };
-      }
-      return s;
-    });
+  const toggleDisableSite = async (id: string) => {
+    const site = sites.value.find(s => s.id === id);
+    if (!site) return;
+    
+    const disabledAt = site.disabledAt ? null : new Date().toISOString();
+    await updateSite(id, { disabledAt });
   };
 
-  const updateSettings = (siteId: string, updates: Partial<Omit<SiteSettings, 'siteId'>>) => {
-    siteSettings.value = siteSettings.value.map(s => s.siteId === siteId ? { ...s, ...updates } : s);
+  const updateSettings = async (siteId: string, updates: Partial<Omit<SiteSettings, 'siteId'>>) => {
+    const res = await $fetch<{ site: Site, settings: SiteSettings }>(`/api/sites/${siteId}`, {
+      method: 'PUT',
+      body: { settings: updates },
+    });
+    
+    if (res.settings) {
+      siteSettings.value = siteSettings.value.map(set => set.siteId === siteId ? res.settings : set);
+    }
   };
 
   const getSettings = (siteId: string) => {
@@ -57,6 +77,7 @@ export const useAdminSites = () => {
   return {
     sites,
     siteSettings,
+    fetchSites,
     createSite,
     updateSite,
     deleteSite,
