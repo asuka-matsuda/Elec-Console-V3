@@ -122,7 +122,7 @@ onMounted(() => {
   gap: var(--gap-section);
   align-items: flex-start;
   
-  @media (max-width: 1024px) {
+  @include mq("lg") {
     grid-template-columns: 1fr;
   }
 }

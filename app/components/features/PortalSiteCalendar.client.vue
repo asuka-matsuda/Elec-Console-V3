@@ -230,6 +230,10 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 .c-calendar {
   min-height: 500px;
   
+  @include mq("md") {
+    min-height: 400px;
+  }
+  
   :deep(.fc-theme-standard td), :deep(.fc-theme-standard th) {
     border-color: var(--color-border);
   }
@@ -312,6 +316,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 .p-event-form {
   @include flex-column(var(--gap-component));
   padding: var(--pad-sm) 0;
+  container-type: inline-size;
 
   
   &__field {
@@ -332,6 +337,11 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
   &__row {
     @include flex-start(var(--gap-component));
     > * { flex: 1; }
+    
+    @include cq("xs", "down") {
+      flex-direction: column;
+      align-items: stretch;
+    }
   }
 
   &__actions {
