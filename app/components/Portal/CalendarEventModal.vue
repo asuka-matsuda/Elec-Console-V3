@@ -66,10 +66,17 @@ watch(() => form.value.allDay, (isAllDay) => {
   autoFillEndDate();
 });
 
-watch(() => props.initialData, (newData) => {
-  form.value = { ...newData };
-  hasTitleError.value = false;
-}, { deep: true, immediate: true });
+watch(() => props.modelValue, async (isOpen) => {
+  if (isOpen) {
+    await nextTick();
+    form.value.title = props.initialData.title;
+    form.value.type = props.initialData.type;
+    form.value.start = props.initialData.start;
+    form.value.end = props.initialData.end;
+    form.value.allDay = props.initialData.allDay;
+    hasTitleError.value = false;
+  }
+});
 
 const handleSave = () => {
   if (!form.value.title.trim()) {
