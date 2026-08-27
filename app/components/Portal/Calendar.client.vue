@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import FullCalendar from '@fullcalendar/vue3';
-import type { CalendarOptions, EventClickArg, EventMountArg, DateSelectArg, EventDropArg, DayCellContentArg } from '@fullcalendar/core';
+import type { CalendarOptions, EventClickArg, EventMountArg, DateSelectArg, EventDropArg, DayCellContentArg, DayHeaderArg } from '@fullcalendar/core';
 import type { EventResizeDoneArg } from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -128,6 +128,12 @@ const calendarOptions = computed(() => ({
     right: 'dayGridMonth,listMonth'
   },
   height: 'auto',
+  dayHeaderClassNames: (arg: DayHeaderArg) => {
+    const classes = [];
+    if (arg.date.getDay() === 0) classes.push('is-sunday');
+    if (arg.date.getDay() === 6) classes.push('is-saturday');
+    return classes;
+  },
   dayCellClassNames: (arg: DayCellContentArg) => {
     const classes = [];
     // const dateStr = arg.date.toLocaleDateString('ja-JP').split('/').map(v => v.padStart(2, '0')).join('-'); // YYYY-MM-DD (rough local parsing)
@@ -237,6 +243,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
   }
   
   :deep(.fc-theme-standard td), :deep(.fc-theme-standard th) {
+    background-color: transparent;
     border-color: var(--color-border);
   }
   :deep(.fc-daygrid-day-number) {
