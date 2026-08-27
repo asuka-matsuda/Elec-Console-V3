@@ -15,9 +15,9 @@ onMounted(() => {
 
 // --- ユーザー一覧の定義 ---
 const userHeaders = [
-  { key: "id", label: "ID" },
-  { key: "name", label: "名前" },
-  { key: "loginId", label: "ログインID" },
+  { key: "id", label: "ID", sortable: true },
+  { key: "name", label: "名前", sortable: true },
+  { key: "loginId", label: "ログインID", sortable: true },
   { key: "role", label: "権限", sortable: true },
   { key: "status", label: "ステータス" },
   { key: "actions", label: "操作" },
