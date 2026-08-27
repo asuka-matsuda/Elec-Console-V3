@@ -50,11 +50,25 @@ hasTitleError.value = false;
   const openCreateModal = (startStr: string, endStr: string, allDay: boolean) => {
   isEditing.value = false;
   editingEventId.value = null;
+  
+  let initialEnd = endStr;
+  if (allDay && startStr && endStr) {
+    const sDate = new Date(startStr);
+    const eDate = new Date(endStr);
+    if (!isNaN(sDate.getTime()) && !isNaN(eDate.getTime())) {
+      const diffDays = Math.round((eDate.getTime() - sDate.getTime()) / (1000 * 60 * 60 * 24));
+      // FullCalendar gives exclusive end date. If user selects 1 cell, diff is 1 day.
+      // We want to show the same day in UI.
+      eDate.setDate(eDate.getDate() - 1);
+      initialEnd = eDate.toISOString().split('T')[0];
+    }
+  }
+
   form.value = {
-      title: '',
-      type: settings.value?.eventTypes[0]?.id || 'other',
-      start: formatDateTimeLocal(startStr, allDay) || '',
-    end: formatDateTimeLocal(endStr, allDay) || '',
+    title: '',
+    type: settings.value?.eventTypes[0]?.id || 'other',
+    start: formatDateTimeLocal(startStr, allDay) || '',
+    end: formatDateTimeLocal(initialEnd, allDay) || '',
     allDay
   };
   isModalOpen.value = true;

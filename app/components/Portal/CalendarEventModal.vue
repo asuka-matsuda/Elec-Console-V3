@@ -26,20 +26,18 @@ const form = ref<EventFormData>({ ...props.initialData });
 const hasTitleError = ref(false);
 
 // 自動補完ロジック
-watch(() => form.value.start, (newStart) => {
-  if (!newStart) return;
+const autoFillEndDate = () => {
+  const startVal = form.value.start;
+  if (!startVal) return;
   
-  const startDate = new Date(newStart);
+  const startDate = new Date(startVal);
   if (isNaN(startDate.getTime())) return;
   
-  // end が空、または start より前の場合に補完する
   const endDate = form.value.end ? new Date(form.value.end) : null;
-  if (!endDate || isNaN(endDate.getTime()) || endDate < startDate) {
+  if (!form.value.end || !endDate || isNaN(endDate.getTime()) || endDate < startDate) {
     if (form.value.allDay) {
-      // 終日は同日
-      form.value.end = (newStart.split('T')[0] || '');
+      form.value.end = (startVal.split('T')[0] || '');
     } else {
-      // 時間指定は1時間後
       const newEnd = new Date(startDate.getTime() + 60 * 60 * 1000);
       form.value.end = newEnd.getFullYear() + '-' + 
         String(newEnd.getMonth() + 1).padStart(2, '0') + '-' + 
@@ -48,11 +46,16 @@ watch(() => form.value.start, (newStart) => {
         String(newEnd.getMinutes()).padStart(2, '0');
     }
   }
+};
+
+watch(() => form.value.start, autoFillEndDate);
+
+watch(() => form.value.end, (newEnd) => {
+  if (!newEnd) autoFillEndDate(); // ユーザーが空にした時に自動補完
 });
 
 watch(() => form.value.allDay, (isAllDay) => {
   if (!form.value.start) return;
-  
   if (isAllDay) {
     form.value.start = (form.value.start.split('T')[0] || '');
     if (form.value.end) form.value.end = (form.value.end.split('T')[0] || '');
@@ -60,6 +63,7 @@ watch(() => form.value.allDay, (isAllDay) => {
     if (!form.value.start.includes('T')) form.value.start += 'T09:00';
     if (form.value.end && !form.value.end.includes('T')) form.value.end += 'T10:00';
   }
+  autoFillEndDate();
 });
 
 watch(() => props.modelValue, (newVal) => {
