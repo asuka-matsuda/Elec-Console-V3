@@ -224,7 +224,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 
 <style scoped lang="scss">
 .c-calendar-wrapper {
-  @include flex-column(var(--gap-md));
+  @include flex-column(var(--gap-component));
 }
 
 .c-calendar {
@@ -310,7 +310,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 }
 
 .p-event-form {
-  @include flex-column(var(--gap-md));
+  @include flex-column(var(--gap-component));
   padding: var(--pad-sm) 0;
 
   
@@ -319,13 +319,13 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
   }
   
   &__row {
-    @include flex-start(var(--gap-md));
+    @include flex-start(var(--gap-component));
     > * { flex: 1; }
   }
 
   &__actions {
-    @include flex-start(var(--gap-sm));
-    margin-top: var(--gap-md);
+    @include flex-start(var(--gap-element));
+    margin-top: var(--gap-component);
     padding-top: var(--pad-sm);
     border-top: var(--border-width-base) solid var(--color-border);
   }

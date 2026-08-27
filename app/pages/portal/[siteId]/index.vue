@@ -77,7 +77,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .p-site-dashboard {
-  @include flex-column(var(--gap-lg));
+  @include flex-column(var(--gap-section));
   height: 100%;
 
   &__header {
@@ -95,7 +95,7 @@ onMounted(() => {
   }
 
   &__switcher {
-    @include flex-start(var(--gap-sm));
+    @include flex-start(var(--gap-element));
   }
   
   &__select {
@@ -107,7 +107,7 @@ onMounted(() => {
   }
 
   &__sidebar {
-    @include flex-column(var(--gap-md));
+    @include flex-column(var(--gap-component));
   }
 }
 
@@ -119,7 +119,7 @@ onMounted(() => {
 .l-grid--2col-2-1 {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  gap: var(--gap-lg);
+  gap: var(--gap-section);
   align-items: flex-start;
   
   @media (max-width: 1024px) {

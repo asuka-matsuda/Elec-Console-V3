@@ -70,21 +70,21 @@ const sortedTodos = computed(() => {
 
 <style scoped lang="scss">
 .p-personal-todo {
-  @include flex-column(var(--gap-md));
+  @include flex-column(var(--gap-component));
 
   &__header h3 {
-    @include flex-start(var(--gap-sm));
+    @include flex-start(var(--gap-element));
     @extend %text-md;
     color: var(--color-text-main);
   }
 
   &__input {
-    @include flex-start(var(--gap-sm));
+    @include flex-start(var(--gap-element));
     > *:first-child { flex: 1; }
   }
 
   &__list {
-    @include flex-column(var(--gap-sm));
+    @include flex-column(var(--gap-element));
     list-style: none;
     padding: 0;
     margin: 0;
@@ -93,7 +93,7 @@ const sortedTodos = computed(() => {
   }
 
   &__item {
-    @include flex-between(var(--gap-sm));
+    @include flex-between(var(--gap-element));
     padding: var(--pad-sm);
     background-color: var(--color-bg-hover);
     border-radius: var(--radius-sm);
