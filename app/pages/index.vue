@@ -71,8 +71,8 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
             v-for="item in section.items"
             :key="item.text"
             :variant="section.accent"
-            :to="item.disabled ? undefined : item.href"
-            :disabled="item.disabled"
+            :to="_getDynamicTo(item)"
+            :disabled="_getDynamicDisabled(item)"
           >
             <div class="p-dashboard-card__layout">
               <div
