@@ -69,5 +69,6 @@
   background: var(--color-bg-alt);
   color: var(--color-text-muted);
   border-left: 1px solid var(--color-border);
-  @extend %text-caption-bold;
+  @extend %text-caption;
+  font-weight: bold;
 }
