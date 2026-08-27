@@ -1,20 +1,98 @@
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import FullCalendar from '@fullcalendar/vue3';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import listPlugin from '@fullcalendar/list';
 
-import { useCalendar } from '~/composables/portal/useCalendar';
+import { useCalendar, type CalendarEvent } from '~/composables/portal/useCalendar';
 
 const props = defineProps<{
   siteId: string;
 }>();
 
-const { events, createEvent, updateEvent } = useCalendar(props.siteId);
+const { events, createEvent, updateEvent, deleteEvent } = useCalendar(props.siteId);
 
+// ====================
+// Modal State
+// ====================
+const isModalOpen = ref(false);
+const isEditing = ref(false);
+const editingEventId = ref<string | null>(null);
+
+const form = ref({
+  title: '',
+  start: '',
+  end: '',
+  allDay: false
+});
+
+const openCreateModal = (startStr: string, endStr: string, allDay: boolean) => {
+  isEditing.value = false;
+  editingEventId.value = null;
+  form.value = {
+    title: '',
+    start: startStr,
+    end: endStr,
+    allDay
+  };
+  isModalOpen.value = true;
+};
+
+const openEditModal = (eventInfo: Record<string, any>) => {
+  isEditing.value = true;
+  editingEventId.value = eventInfo.id;
+  form.value = {
+    title: eventInfo.title,
+    start: eventInfo.startStr,
+    end: eventInfo.endStr || '',
+    allDay: eventInfo.allDay
+  };
+  isModalOpen.value = true;
+};
+
+const closeModal = () => {
+  isModalOpen.value = false;
+};
+
+const saveEvent = async () => {
+  if (!form.value.title.trim()) {
+    alert("タイトルを入力してください");
+    return;
+  }
+  
+  if (isEditing.value && editingEventId.value) {
+    await updateEvent(editingEventId.value, {
+      title: form.value.title,
+      start: form.value.start,
+      end: form.value.end || undefined,
+      allDay: form.value.allDay
+    });
+  } else {
+    await createEvent({
+      title: form.value.title,
+      start: form.value.start,
+      end: form.value.end || undefined,
+      allDay: form.value.allDay
+    });
+  }
+  closeModal();
+};
+
+const removeEvent = async () => {
+  if (!editingEventId.value) return;
+  if (confirm("この予定を削除しますか？")) {
+    await deleteEvent(editingEventId.value);
+    closeModal();
+  }
+};
+
+// ====================
+// Calendar Config
+// ====================
 const calendarOptions = computed(() => ({
-  plugins: [dayGridPlugin, interactionPlugin],
+  plugins: [dayGridPlugin, interactionPlugin, listPlugin],
   initialView: 'dayGridMonth',
   events: events.value,
   editable: true,
@@ -22,26 +100,29 @@ const calendarOptions = computed(() => ({
   headerToolbar: {
     left: 'prev,next today',
     center: 'title',
-    right: 'dayGridMonth,dayGridWeek'
+    right: 'dayGridMonth,listMonth'
   },
-  height: 'auto', // 高さが潰れるのを防ぐためにautoに
-  select: async (selectInfo: Record<string, any>) => {
-    const title = prompt('新しい予定を入力してください');
-    const calendarApi = selectInfo.view.calendar;
-    calendarApi.unselect();
-    if (title) {
-      await createEvent({
-        title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay
-      });
-    }
+  height: 'auto',
+  select: (selectInfo: Record<string, any>) => {
+    // カレンダー選択時にモーダルを開く
+    openCreateModal(selectInfo.startStr, selectInfo.endStr, selectInfo.allDay);
+    selectInfo.view.calendar.unselect();
+  },
+  eventClick: (clickInfo: Record<string, any>) => {
+    // イベントクリック時に編集モーダルを開く
+    openEditModal(clickInfo.event);
   },
   eventDrop: async (dropInfo: Record<string, any>) => {
     await updateEvent(dropInfo.event.id, {
       start: dropInfo.event.startStr,
-      end: dropInfo.event.endStr || undefined
+      end: dropInfo.event.endStr || undefined,
+      allDay: dropInfo.event.allDay
+    });
+  },
+  eventResize: async (resizeInfo: Record<string, any>) => {
+    await updateEvent(resizeInfo.event.id, {
+      start: resizeInfo.event.startStr,
+      end: resizeInfo.event.endStr || undefined
     });
   }
 }));
@@ -51,10 +132,30 @@ const typedCalendarOptions = computed(() => calendarOptions.value as any);
 
 <template>
   <div class="c-calendar-wrapper">
-    <!-- TODO: 設定ボタン等は将来追加 -->
     <div class="c-calendar">
       <FullCalendar :options="typedCalendarOptions" />
     </div>
+
+    <!-- Event Modal -->
+    <AppModal v-if="isModalOpen" @close="closeModal" :title="isEditing ? '予定の編集' : '新しい予定'">
+      <div class="p-event-form">
+        <AppInput v-model="form.title" label="タイトル" placeholder="会議、送電試験など" required />
+        
+        <div class="p-event-form__row">
+          <AppInput v-model="form.start" type="datetime-local" label="開始日時" required />
+          <AppInput v-model="form.end" type="datetime-local" label="終了日時" />
+        </div>
+        
+        <AppCheckbox v-model="form.allDay" label="終日イベント" />
+
+        <div class="p-event-form__actions">
+          <AppButton v-if="isEditing" variant="danger" @click="removeEvent">削除</AppButton>
+          <div style="flex: 1"></div>
+          <AppButton variant="ghost" @click="closeModal">キャンセル</AppButton>
+          <AppButton variant="primary" @click="saveEvent">保存</AppButton>
+        </div>
+      </div>
+    </AppModal>
   </div>
 </template>
 
@@ -87,28 +188,22 @@ const typedCalendarOptions = computed(() => calendarOptions.value as any);
   :deep(.fc-day-today) {
     background-color: rgba(255, 255, 255, 0.05) !important;
   }
-  :deep(.fc-col-header-cell) {
-    background-color: rgba(255, 255, 255, 0.05);
-    padding: var(--pad-sm) 0;
+}
+
+.p-event-form {
+  @include flex-column(var(--gap-md));
+  padding: var(--pad-sm) 0;
+
+  &__row {
+    @include flex-start(var(--gap-md));
+    > * { flex: 1; }
   }
-  :deep(.fc-event) {
-    background-color: var(--color-primary);
-    border: none;
-    padding: 2px 4px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  :deep(.fc-button-primary) {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
-    &:hover {
-      background-color: var(--color-primary-hover);
-      border-color: var(--color-primary-hover);
-    }
-    &:disabled {
-      background-color: var(--color-bg-hover);
-      border-color: var(--color-bg-hover);
-    }
+
+  &__actions {
+    @include flex-start(var(--gap-sm));
+    margin-top: var(--gap-md);
+    padding-top: var(--pad-sm);
+    border-top: var(--border-width-base) solid var(--color-border);
   }
 }
 </style>
