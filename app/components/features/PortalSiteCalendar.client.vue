@@ -186,12 +186,12 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
     <AppModal v-model="isModalOpen" :title="isEditing ? '予定の編集' : '新しい予定'">
       <div class="p-event-form">
         <div class="p-event-form__field">
-          <label class="u-text-sm u-text-muted">タイトル</label>
+          <label>タイトル</label>
           <AppInput v-model="form.title" placeholder="会議、送電試験など" required :error="hasTitleError" />
-          <span v-if="hasTitleError" class="u-text-sm" style="color: var(--color-status-danger); margin-top: 4px;">タイトルを入力してください</span>
+          <span v-if="hasTitleError" class="p-event-form__error">タイトルを入力してください</span>
         </div>
         <div class="p-event-form__field">
-          <label class="u-text-sm u-text-muted">予定種別</label>
+          <label>予定種別</label>
           <AppSelect 
             v-model="form.type" 
             :options="(settings?.eventTypes || []).map(t => ({ label: t.name, value: t.id }))" 
@@ -200,11 +200,11 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
         
         <div class="p-event-form__row">
           <div class="p-event-form__field">
-            <label class="u-text-sm u-text-muted">開始日時</label>
+            <label>開始日時</label>
             <PortalEventDateInput v-model="form.start" :type="form.allDay ? 'date' : 'datetime-local'" required />
           </div>
           <div class="p-event-form__field">
-            <label class="u-text-sm u-text-muted">終了日時</label>
+            <label>終了日時</label>
             <PortalEventDateInput v-model="form.end" :type="form.allDay ? 'date' : 'datetime-local'" />
           </div>
         </div>
@@ -268,7 +268,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
       box-shadow: inset 0 0 20px theme-color(var(--color-category-main), 20%);
     }
     .fc-daygrid-day-number {
-      font-weight: bold;
+      font-weight: var(--font-weight-bold);
       color: var(--color-category-main);
     }
   }
@@ -303,7 +303,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
     }
     
     .fc-event-main {
-      font-weight: 500;
+      font-weight: var(--font-weight-medium);
     }
   }
 
@@ -315,7 +315,18 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 
   
   &__field {
-    @include flex-column(var(--gap-xs));
+    @include flex-column(var(--space-1));
+    
+    label {
+      @extend %text-label;
+      color: var(--color-text-muted);
+    }
+  }
+
+  &__error {
+    @extend %text-caption;
+    color: var(--color-status-danger);
+    margin-top: var(--space-1);
   }
   
   &__row {
