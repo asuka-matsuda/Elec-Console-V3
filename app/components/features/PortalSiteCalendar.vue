@@ -13,7 +13,7 @@ const props = defineProps<{
 
 const { events, createEvent, updateEvent } = useCalendar(props.siteId);
 
-const calendarOptions = computed<CalendarOptions>(() => ({
+const calendarOptions = computed(() => ({
   plugins: [dayGridPlugin, interactionPlugin],
   initialView: 'dayGridMonth',
   events: events.value,
@@ -45,13 +45,15 @@ const calendarOptions = computed<CalendarOptions>(() => ({
     });
   }
 }));
+
+const typedCalendarOptions = computed(() => calendarOptions.value as any);
 </script>
 
 <template>
   <div class="c-calendar-wrapper">
     <!-- TODO: 設定ボタン等は将来追加 -->
     <div class="c-calendar">
-      <FullCalendar :options="(calendarOptions as any)" />
+      <FullCalendar :options="typedCalendarOptions" />
     </div>
   </div>
 </template>
