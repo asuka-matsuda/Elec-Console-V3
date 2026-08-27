@@ -108,4 +108,16 @@ onMounted(() => {
   text-decoration: none;
   display: block;
 }
+
+.l-grid--2col-2-1 {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--gap-lg);
+  align-items: flex-start;
+  
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
+
 </style>
