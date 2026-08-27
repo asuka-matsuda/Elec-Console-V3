@@ -41,33 +41,21 @@ export const useCalendar = (siteId: string) => {
   });
 
   const createEvent = async (event: Omit<CalendarEvent, 'id' | 'siteId'>) => {
-    try {
-      const res = await $fetch<CalendarEvent>(`/api/sites/${siteId}/events`, {
-        method: 'POST',
-        body: event,
-      });
-      events.value.push(res);
-      return res;
-    } catch (e) {
-      console.warn("API createEvent failed, using mock data", e);
-      const mockEvent = { ...event, id: Date.now().toString(), siteId };
-      events.value.push(mockEvent);
-      return mockEvent;
-    }
+    const res = await $fetch<CalendarEvent>(`/api/sites/${siteId}/events`, {
+      method: 'POST',
+      body: event,
+    });
+    events.value.push(res);
+    return res;
   };
 
   const updateEvent = async (id: string, updates: Partial<CalendarEvent>) => {
-    try {
-      const res = await $fetch<CalendarEvent>(`/api/events/${id}`, {
-        method: 'PUT',
-        body: updates,
-      });
-      if (res) {
-        events.value = events.value.map(e => e.id === id ? res : e);
-      }
-    } catch (e) {
-      console.warn("API updateEvent failed, using mock data", e);
-      events.value = events.value.map(e => e.id === id ? { ...e, ...updates } : e);
+    const res = await $fetch<CalendarEvent>(`/api/events/${id}`, {
+      method: 'PUT',
+      body: updates,
+    });
+    if (res) {
+      events.value = events.value.map(e => e.id === id ? res : e);
     }
   };
 
