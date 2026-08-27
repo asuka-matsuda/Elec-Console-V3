@@ -24,7 +24,7 @@ const calendarOptions = computed(() => ({
     center: 'title',
     right: 'dayGridMonth,dayGridWeek'
   },
-  height: '100%',
+  height: 'auto', // 高さが潰れるのを防ぐためにautoに
   select: async (selectInfo: Record<string, any>) => {
     const title = prompt('新しい予定を入力してください');
     const calendarApi = selectInfo.view.calendar;
@@ -75,6 +75,17 @@ const typedCalendarOptions = computed(() => calendarOptions.value as any);
   
   :deep(.fc-theme-standard td), :deep(.fc-theme-standard th) {
     border-color: var(--color-border);
+  }
+  :deep(.fc-daygrid-day-number) {
+    color: var(--color-text-main);
+    text-decoration: none;
+  }
+  :deep(.fc-col-header-cell-cushion) {
+    color: var(--color-text-main);
+    text-decoration: none;
+  }
+  :deep(.fc-day-today) {
+    background-color: rgba(255, 255, 255, 0.05) !important;
   }
   :deep(.fc-col-header-cell) {
     background-color: rgba(255, 255, 255, 0.05);
