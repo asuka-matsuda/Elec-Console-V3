@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
   });
 
   const assignedSiteIds = user.assignedSites.map(s => s.id);
-  const { password, assignedSites, ...restUser } = user;
+  const { password: _dbPassword, assignedSites, ...restUser } = user;
   const safeUser = { ...restUser, assignedSiteIds };
 
   return {
