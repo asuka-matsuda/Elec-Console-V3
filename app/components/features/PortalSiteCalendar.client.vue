@@ -225,13 +225,9 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 <style scoped lang="scss">
 .c-calendar-wrapper {
   @include flex-column(var(--gap-md));
-  height: 100%;
-  flex: 1;
 }
 
 .c-calendar {
-  flex: 1;
-
   min-height: 500px;
   
   :deep(.fc-theme-standard td), :deep(.fc-theme-standard th) {
