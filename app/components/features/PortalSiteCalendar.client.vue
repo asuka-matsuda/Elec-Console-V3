@@ -160,11 +160,11 @@ const typedCalendarOptions = computed(() => calendarOptions.value as any);
         <div class="p-event-form__row">
           <div class="p-event-form__field">
             <label class="u-text-sm u-text-muted">開始日時</label>
-            <AppInput v-model="form.start" :type="form.allDay ? 'date' : 'datetime-local'" required />
+            <input v-model="form.start" :type="form.allDay ? 'date' : 'datetime-local'" required class="p-event-form__date-input" />
           </div>
           <div class="p-event-form__field">
             <label class="u-text-sm u-text-muted">終了日時</label>
-            <AppInput v-model="form.end" :type="form.allDay ? 'date' : 'datetime-local'" />
+            <input v-model="form.end" :type="form.allDay ? 'date' : 'datetime-local'" class="p-event-form__date-input" />
           </div>
         </div>
         
@@ -215,6 +215,26 @@ const typedCalendarOptions = computed(() => calendarOptions.value as any);
 .p-event-form {
   @include flex-column(var(--gap-md));
   padding: var(--pad-sm) 0;
+
+  
+  &__date-input {
+    width: 100%;
+    height: var(--size-control-md);
+    padding: var(--pad-element) var(--pad-component);
+    font-family: var(--font-mono);
+    font-size: var(--text-desc-size, 14px);
+    color: var(--color-text-main);
+    background-color: var(--color-bg-base);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    outline: none;
+    transition: border-color var(--duration-fast) var(--ease-out);
+
+    &:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 1px var(--color-primary);
+    }
+  }
 
   &__field {
     @include flex-column(var(--gap-xs));
