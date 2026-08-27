@@ -123,9 +123,6 @@ const saveEvent = async (savedData: { title: string, type: string, start: string
         allDay: savedData.allDay
       });
     }
-  } catch (error) {
-    console.error("Failed to save event:", error);
-    alert("保存に失敗しました。サーバーエラーが発生したか、APIが未実装です。");
   } finally {
     isModalOpen.value = false;
   }
