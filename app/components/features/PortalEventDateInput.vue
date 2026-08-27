@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * AppDateInput
+ * PortalEventDateInput
  * 日付や時間の入力に特化したフォームコントロールコンポーネントです。
  */
 import { useId } from "vue";
