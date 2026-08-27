@@ -1,10 +1,10 @@
-import { useState } from '#app';
+import { useLocalStorage } from '@vueuse/core';
 import type { Site, SiteSettings } from '~/types/admin';
 import { mockSites, mockSiteSettings } from '~/constants/data/adminMockData';
 
 export const useAdminSites = () => {
-  const sites = useState<Site[]>('admin-sites', () => [...mockSites]);
-  const siteSettings = useState<SiteSettings[]>('admin-site-settings', () => [...mockSiteSettings]);
+  const sites = useLocalStorage<Site[]>('elec-admin-sites-mock', mockSites);
+  const siteSettings = useLocalStorage<SiteSettings[]>('elec-admin-site-settings-mock', mockSiteSettings);
 
   // ID はユーザーが手入力するため、引数に含める
   const createSite = (site: Omit<Site, 'createdAt' | 'disabledAt'>) => {
