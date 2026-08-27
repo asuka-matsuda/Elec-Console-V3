@@ -2,11 +2,13 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import FullCalendar from '@fullcalendar/vue3';
+import type { CalendarOptions, EventClickArg, EventMountArg, DateSelectArg, EventDropArg, DayCellContentArg } from '@fullcalendar/core';
+import type { EventResizeDoneArg } from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 
-import { useCalendar, type CalendarEvent } from '~/composables/portal/useCalendar';
+import { useCalendar } from '~/composables/portal/useCalendar';
 
 const props = defineProps<{
   siteId: string;
@@ -19,6 +21,7 @@ const { events, settings, createEvent, updateEvent, deleteEvent } = useCalendar(
 // ====================
 const isModalOpen = ref(false);
 const isEditing = ref(false);
+const hasTitleError = ref(false);
 const editingEventId = ref<string | null>(null);
 
 const form = ref({
@@ -42,7 +45,8 @@ const formatDateTimeLocal = (dateStr: string, isAllDay: boolean) => {
   return dateStr + 'T09:00';
 };
 
-const openCreateModal = (startStr: string, endStr: string, allDay: boolean) => {
+hasTitleError.value = false;
+  const openCreateModal = (startStr: string, endStr: string, allDay: boolean) => {
   isEditing.value = false;
   editingEventId.value = null;
   form.value = {
@@ -55,7 +59,8 @@ const openCreateModal = (startStr: string, endStr: string, allDay: boolean) => {
   isModalOpen.value = true;
 };
 
-const openEditModal = (eventInfo: Record<string, any>) => {
+hasTitleError.value = false;
+  const openEditModal = (eventInfo: import('@fullcalendar/core').EventApi) => {
   isEditing.value = true;
   editingEventId.value = eventInfo.id;
   form.value = {
@@ -74,9 +79,10 @@ const closeModal = () => {
 
 const saveEvent = async () => {
   if (!form.value.title.trim()) {
-    alert("タイトルを入力してください");
+    hasTitleError.value = true;
     return;
   }
+  hasTitleError.value = false;
   
   if (isEditing.value && editingEventId.value) {
     await updateEvent(editingEventId.value, {
@@ -100,10 +106,9 @@ const saveEvent = async () => {
 
 const removeEvent = async () => {
   if (!editingEventId.value) return;
-  if (confirm("この予定を削除しますか？")) {
-    await deleteEvent(editingEventId.value);
-    closeModal();
-  }
+  // TODO: Implement custom confirm dialog
+  await deleteEvent(editingEventId.value);
+  closeModal();
 };
 
 // ====================
@@ -121,7 +126,7 @@ const calendarOptions = computed(() => ({
     right: 'dayGridMonth,listMonth'
   },
   height: 'auto',
-  dayCellClassNames: (arg: Record<string, any>) => {
+  dayCellClassNames: (arg: DayCellContentArg) => {
     const classes = [];
     const dateStr = arg.date.toLocaleDateString('ja-JP').split('/').map(v => v.padStart(2, '0')).join('-'); // YYYY-MM-DD (rough local parsing)
     // 厳密なISOではないが、FullCalendarの内部日付に対応させる
@@ -133,7 +138,7 @@ const calendarOptions = computed(() => ({
     
     return classes;
   },
-  eventDidMount: (info: Record<string, any>) => {
+  eventDidMount: (info: EventMountArg) => {
     // 予定種別からテーマカラーを取得してCSS変数として注入
     const typeId = info.event.extendedProps.type;
     const typeDef = settings.value?.eventTypes?.find(t => t.id === typeId);
@@ -144,23 +149,23 @@ const calendarOptions = computed(() => ({
     }
   },
 
-  select: (selectInfo: Record<string, any>) => {
+  select: (selectInfo: DateSelectArg) => {
     // カレンダー選択時にモーダルを開く
     openCreateModal(selectInfo.startStr, selectInfo.endStr, selectInfo.allDay);
     selectInfo.view.calendar.unselect();
   },
-  eventClick: (clickInfo: Record<string, any>) => {
+  eventClick: (clickInfo: EventClickArg) => {
     // イベントクリック時に編集モーダルを開く
     openEditModal(clickInfo.event);
   },
-  eventDrop: async (dropInfo: Record<string, any>) => {
+  eventDrop: async (dropInfo: EventDropArg) => {
     await updateEvent(dropInfo.event.id, {
       start: dropInfo.event.startStr,
       end: dropInfo.event.endStr || undefined,
       allDay: dropInfo.event.allDay
     });
   },
-  eventResize: async (resizeInfo: Record<string, any>) => {
+  eventResize: async (resizeInfo: EventResizeDoneArg) => {
     await updateEvent(resizeInfo.event.id, {
       start: resizeInfo.event.startStr,
       end: resizeInfo.event.endStr || undefined
@@ -168,7 +173,7 @@ const calendarOptions = computed(() => ({
   }
 }));
 
-const typedCalendarOptions = computed(() => calendarOptions.value as any);
+const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOptions);
 </script>
 
 <template>
@@ -182,7 +187,8 @@ const typedCalendarOptions = computed(() => calendarOptions.value as any);
       <div class="p-event-form">
         <div class="p-event-form__field">
           <label class="u-text-sm u-text-muted">タイトル</label>
-          <AppInput v-model="form.title" placeholder="会議、送電試験など" required />
+          <AppInput v-model="form.title" placeholder="会議、送電試験など" required :error="hasTitleError" />
+          <span v-if="hasTitleError" class="u-text-sm" style="color: var(--color-status-danger); margin-top: 4px;">タイトルを入力してください</span>
         </div>
         <div class="p-event-form__field">
           <label class="u-text-sm u-text-muted">予定種別</label>
