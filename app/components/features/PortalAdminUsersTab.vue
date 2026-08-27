@@ -18,10 +18,35 @@ const userHeaders = [
   { key: "id", label: "ID" },
   { key: "name", label: "名前" },
   { key: "loginId", label: "ログインID" },
-  { key: "role", label: "権限" },
+  { key: "role", label: "権限", sortable: true },
   { key: "status", label: "ステータス" },
   { key: "actions", label: "操作" },
 ];
+
+
+const sortKey = ref('id');
+const sortOrder = ref<'asc' | 'desc'>('asc');
+
+const handleSort = (payload: { key: string; order: 'asc' | 'desc' }) => {
+  sortKey.value = payload.key;
+  sortOrder.value = payload.order;
+};
+
+const sortedUsers = computed(() => {
+  return [...users.value].sort((a, b) => {
+    // 氏名カラムの場合は lastName を基準にする
+    const key = sortKey.value === 'name' ? 'lastName' : sortKey.value;
+    const valA = a[key as keyof typeof a];
+    const valB = b[key as keyof typeof b];
+    
+    if (valA === valB) return 0;
+    if (valA === null || valA === undefined) return 1;
+    if (valB === null || valB === undefined) return -1;
+    
+    const cmp = String(valA).localeCompare(String(valB));
+    return sortOrder.value === 'asc' ? cmp : -cmp;
+  });
+});
 
 const formatLastLogin = (row: unknown) => {
   const user = row as User;
@@ -140,7 +165,13 @@ const handleResetPassword = async () => {
           >
         </div>
 
-        <AppTable :columns="userHeaders" :data="users">
+        <AppTable 
+        :columns="userHeaders" 
+        :data="sortedUsers"
+        :sort-by="sortKey"
+        :sort-order="sortOrder"
+        @sort="handleSort"
+      >
           <template #cell-name="{ row }">
             {{ row.lastName }} {{ row.firstName }}
           </template>

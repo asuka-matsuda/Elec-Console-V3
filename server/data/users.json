@@ -10,7 +10,7 @@
       "test"
     ],
     "requirePasswordReset": false,
-    "lastLoginAt": "2026-08-26T22:52:08.237Z",
+    "lastLoginAt": "2026-08-27T01:36:12.430Z",
     "email": "",
     "isActive": true,
     "createdAt": "2026-08-25T00:00:00Z"
@@ -22,10 +22,10 @@
     "lastNameKana": "てすと",
     "firstNameKana": "ゆーざー",
     "role": "worker",
-    "requirePasswordReset": false,
+    "requirePasswordReset": true,
     "assignedSiteIds": [],
     "loginId": "y-tesuto1175",
-    "password": "16639c9e0aa9818698547b959b9c9ecb:b9b1b9901117af9e5553f830f6289051693fbbae1c4a57f99bb04e565df17080eaa01fa5397603a02d2239c926b93974b5de93478fd5ab3975f7ff7171b9c9d0",
+    "password": "cd979e0e8916f4aa486b1db33dcb72d5:bbac5b632672709ddcdde847809463e4e5945bec27b5b23c8c4498ed086c75107ccfb0f49be564f411b865a876d7e3e61f708af20dae2bd4e4f282efd67eaab4",
     "lastLoginAt": "2026-08-25T22:26:42.680Z",
     "isActive": true,
     "createdAt": "2026-08-25T22:12:12.587Z"

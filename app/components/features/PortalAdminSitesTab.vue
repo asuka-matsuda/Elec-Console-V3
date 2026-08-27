@@ -13,6 +13,29 @@ const { sites, createSite, toggleDisableSite, updateSite } =
 
 // --- 一覧定義 ---
 
+
+const sortKey = ref('id');
+const sortOrder = ref<'asc' | 'desc'>('asc');
+
+const handleSort = (payload: { key: string; order: 'asc' | 'desc' }) => {
+  sortKey.value = payload.key;
+  sortOrder.value = payload.order;
+};
+
+const sortedSites = computed(() => {
+  return [...sites.value].sort((a, b) => {
+    const valA = a[sortKey.value as keyof typeof a];
+    const valB = b[sortKey.value as keyof typeof b];
+    
+    if (valA === valB) return 0;
+    if (valA === null || valA === undefined) return 1;
+    if (valB === null || valB === undefined) return -1;
+    
+    const cmp = String(valA).localeCompare(String(valB));
+    return sortOrder.value === 'asc' ? cmp : -cmp;
+  });
+});
+
 const getStatusLabel = (status: unknown) => {
   switch (status) {
     case 'planning': return '計画中';
@@ -34,9 +57,9 @@ const getStatusVariant = (status: unknown) => {
 };
 
 const siteHeaders = [
-  { key: "id", label: "現場ID" },
-  { key: "name", label: "現場名" },
-  { key: "status", label: "ステータス" },
+  { key: "id", label: "現場ID", sortable: true },
+  { key: "name", label: "現場名", sortable: true },
+  { key: "status", label: "ステータス", sortable: true },
   { key: "createdAt", label: "作成日時" },
   { key: "disabledAt", label: "無効化日時" },
   { key: "actions", label: "操作" },
@@ -143,7 +166,13 @@ const confirmIntent = computed(() => {
           >
         </div>
 
-        <AppTable :columns="siteHeaders" :data="sites">
+        <AppTable 
+        :columns="siteHeaders" 
+        :data="sortedSites"
+        :sort-by="sortKey"
+        :sort-order="sortOrder"
+        @sort="handleSort"
+      >
           <template #cell-status="{ value, row }">
             <div class="c-admin-sites__status-stack">
               <AppBadge :variant="getStatusVariant(value)">

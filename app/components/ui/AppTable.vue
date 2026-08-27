@@ -10,12 +10,29 @@
 export interface TableColumn {
   key: string;
   label: string;
+  sortable?: boolean;
 }
 
-defineProps<{
+const props = defineProps<{
   columns?: TableColumn[];
   data?: T[];
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
 }>();
+
+const emit = defineEmits<{
+  (e: 'sort', payload: { key: string; order: 'asc' | 'desc' }): void;
+}>();
+
+const handleSort = (col: TableColumn) => {
+  if (!col.sortable) return;
+  
+  let newOrder: 'asc' | 'desc' = 'asc';
+  if (props.sortBy === col.key) {
+    newOrder = props.sortOrder === 'asc' ? 'desc' : 'asc';
+  }
+  emit('sort', { key: col.key, order: newOrder });
+};
 </script>
 
 <template>
@@ -25,7 +42,28 @@ defineProps<{
       <thead v-if="$slots.header || columns">
         <slot name="header">
           <tr v-if="columns">
-            <th v-for="col in columns" :key="col.key">{{ col.label }}</th>
+            <th 
+              v-for="col in columns" 
+              :key="col.key"
+              :class="{ 'is-sortable': col.sortable }"
+              @click="handleSort(col)"
+            >
+              <div class="c-table__th-inner">
+                <span>{{ col.label }}</span>
+                <AppIcon 
+                  v-if="col.sortable && sortBy === col.key" 
+                  :name="sortOrder === 'asc' ? 'chevron-up' : 'chevron-down'" 
+                  size="sm" 
+                  class="c-table__sort-icon"
+                />
+                <AppIcon 
+                  v-else-if="col.sortable" 
+                  name="minus" 
+                  size="sm" 
+                  class="c-table__sort-icon is-inactive"
+                />
+              </div>
+            </th>
           </tr>
         </slot>
       </thead>
@@ -114,6 +152,25 @@ defineProps<{
 
     // --- 視覚効果 ---
     backdrop-filter: blur(var(--blur-md));
+    &.is-sortable {
+      cursor: pointer;
+      transition: background-color var(--transition-fast) ease;
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.05); // hover効果
+      }
+    }
+    .c-table__th-inner {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .c-table__sort-icon {
+      color: var(--color-text-main);
+      &.is-inactive {
+        color: var(--color-text-muted);
+        opacity: 0.3;
+      }
+    }
   }
 
   :deep(tbody tr) {
