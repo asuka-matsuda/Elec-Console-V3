@@ -137,7 +137,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as any);
     </div>
 
     <!-- Event Modal -->
-    <AppModal v-if="isModalOpen" @close="closeModal" :title="isEditing ? '予定の編集' : '新しい予定'">
+    <AppModal v-model="isModalOpen" :title="isEditing ? '予定の編集' : '新しい予定'">
       <div class="p-event-form">
         <AppInput v-model="form.title" label="タイトル" placeholder="会議、送電試験など" required />
         
