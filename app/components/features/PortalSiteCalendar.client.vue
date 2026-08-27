@@ -128,7 +128,7 @@ const calendarOptions = computed(() => ({
   height: 'auto',
   dayCellClassNames: (arg: DayCellContentArg) => {
     const classes = [];
-    const dateStr = arg.date.toLocaleDateString('ja-JP').split('/').map(v => v.padStart(2, '0')).join('-'); // YYYY-MM-DD (rough local parsing)
+    // const dateStr = arg.date.toLocaleDateString('ja-JP').split('/').map(v => v.padStart(2, '0')).join('-'); // YYYY-MM-DD (rough local parsing)
     // 厳密なISOではないが、FullCalendarの内部日付に対応させる
     const isoDate = arg.date.getFullYear() + '-' + String(arg.date.getMonth() + 1).padStart(2, '0') + '-' + String(arg.date.getDate()).padStart(2, '0');
     
@@ -180,7 +180,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
   <div class="c-calendar-wrapper">
     <AppPanel class="c-calendar" variant="simple">
       <FullCalendar :options="typedCalendarOptions" />
-    </div>
+    </AppPanel>
 
     <!-- Event Modal -->
     <AppModal v-model="isModalOpen" :title="isEditing ? '予定の編集' : '新しい予定'">
