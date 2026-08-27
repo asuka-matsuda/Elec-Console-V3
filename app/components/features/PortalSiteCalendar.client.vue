@@ -201,11 +201,11 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
         <div class="p-event-form__row">
           <div class="p-event-form__field">
             <label>開始日時</label>
-            <PortalEventDateInput v-model="form.start" :type="form.allDay ? 'date' : 'datetime-local'" required />
+            <PortalSiteCalendarEventDateInput v-model="form.start" :type="form.allDay ? 'date' : 'datetime-local'" required />
           </div>
           <div class="p-event-form__field">
             <label>終了日時</label>
-            <PortalEventDateInput v-model="form.end" :type="form.allDay ? 'date' : 'datetime-local'" />
+            <PortalSiteCalendarEventDateInput v-model="form.end" :type="form.allDay ? 'date' : 'datetime-local'" />
           </div>
         </div>
         
