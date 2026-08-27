@@ -152,11 +152,20 @@ const typedCalendarOptions = computed(() => calendarOptions.value as any);
     <!-- Event Modal -->
     <AppModal v-model="isModalOpen" :title="isEditing ? '予定の編集' : '新しい予定'">
       <div class="p-event-form">
-        <AppInput v-model="form.title" label="タイトル" placeholder="会議、送電試験など" required />
+        <div class="p-event-form__field">
+          <label class="u-text-sm u-text-muted">タイトル</label>
+          <AppInput v-model="form.title" placeholder="会議、送電試験など" required />
+        </div>
         
         <div class="p-event-form__row">
-          <AppInput v-model="form.start" :type="form.allDay ? 'date' : 'datetime-local'" label="開始日時" required />
-          <AppInput v-model="form.end" :type="form.allDay ? 'date' : 'datetime-local'" label="終了日時" />
+          <div class="p-event-form__field">
+            <label class="u-text-sm u-text-muted">開始日時</label>
+            <AppInput v-model="form.start" :type="form.allDay ? 'date' : 'datetime-local'" required />
+          </div>
+          <div class="p-event-form__field">
+            <label class="u-text-sm u-text-muted">終了日時</label>
+            <AppInput v-model="form.end" :type="form.allDay ? 'date' : 'datetime-local'" />
+          </div>
         </div>
         
         <AppCheckbox v-model="form.allDay" label="終日イベント" />
@@ -207,6 +216,10 @@ const typedCalendarOptions = computed(() => calendarOptions.value as any);
   @include flex-column(var(--gap-md));
   padding: var(--pad-sm) 0;
 
+  &__field {
+    @include flex-column(var(--gap-xs));
+  }
+  
   &__row {
     @include flex-start(var(--gap-md));
     > * { flex: 1; }

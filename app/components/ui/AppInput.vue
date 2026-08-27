@@ -9,15 +9,7 @@ const model = defineModel<string | number | null>();
 
 withDefaults(
   defineProps<{
-    type?:
-      | "text"
-      | "password"
-      | "email"
-      | "number"
-      | "search"
-      | "tel"
-      | "url"
-      | "textarea";
+    type?: "text" | "password" | "email" | "number" | "search" | "tel" | "url" | "textarea" | "date" | "datetime-local" | "time";
     placeholder?: string;
     disabled?: boolean;
     error?: boolean;
