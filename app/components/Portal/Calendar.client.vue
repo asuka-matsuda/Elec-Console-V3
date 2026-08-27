@@ -7,6 +7,7 @@ import type { EventResizeDoneArg } from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
+import jaLocale from '@fullcalendar/core/locales/ja';
 
 import { useCalendar } from '~/composables/portal/useCalendar';
 
@@ -117,6 +118,7 @@ const removeEvent = async () => {
 const calendarOptions = computed(() => ({
   plugins: [dayGridPlugin, interactionPlugin, listPlugin],
   initialView: 'dayGridMonth',
+  locale: jaLocale,
   events: events.value,
   editable: true,
   selectable: true,
