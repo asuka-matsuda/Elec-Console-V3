@@ -78,31 +78,39 @@ const closeModal = () => {
   isModalOpen.value = false;
 };
 
-const saveEvent = async () => {
-  if (!form.value.title.trim()) {
-    hasTitleError.value = true;
-    return;
-  }
-  hasTitleError.value = false;
+const saveEvent = async (savedData: { title: string, type: string, start: string, end: string, allDay: boolean }) => {
   
+  let finalEnd = savedData.end || undefined;
+  
+  // FullCalendar requires exclusive end date for all-day events across multiple days
+  if (savedData.allDay && savedData.start && savedData.end) {
+    if (savedData.start === savedData.end) {
+      finalEnd = undefined; // 1日だけならendは不要
+    } else {
+      const endDate = new Date(savedData.end);
+      endDate.setDate(endDate.getDate() + 1);
+      finalEnd = endDate.toISOString().split('T')[0];
+    }
+  }
+
   if (isEditing.value && editingEventId.value) {
     await updateEvent(editingEventId.value, {
-      title: form.value.title,
-      type: form.value.type,
-      start: form.value.start,
-      end: form.value.end || undefined,
-      allDay: form.value.allDay
+      title: savedData.title,
+      type: savedData.type,
+      start: savedData.start,
+      end: finalEnd,
+      allDay: savedData.allDay
     });
   } else {
     await createEvent({
-      title: form.value.title,
-      type: form.value.type,
-      start: form.value.start,
-      end: form.value.end || undefined,
-      allDay: form.value.allDay
+      title: savedData.title,
+      type: savedData.type,
+      start: savedData.start,
+      end: finalEnd,
+      allDay: savedData.allDay
     });
   }
-  closeModal();
+  isModalOpen.value = false;
 };
 
 const removeEvent = async () => {
