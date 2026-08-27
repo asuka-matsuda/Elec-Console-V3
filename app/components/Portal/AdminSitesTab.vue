@@ -229,7 +229,7 @@ const confirmIntent = computed(() => {
     
 
     <!-- 現場設定モーダル (新) -->
-    <PortalSiteSettingsModal
+    <SiteSettingsModal
       v-model="isSettingsModalOpen"
       :site="settingsTargetSite"
       @update:site="handleSaveSettings"

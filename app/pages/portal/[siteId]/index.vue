@@ -57,12 +57,12 @@ onMounted(() => {
     <div class="l-grid l-grid--2col-2-1">
       <!-- 2/3: カレンダー -->
       <div class="p-site-dashboard__calendar">
-        <PortalCalendar :site-id="siteId" />
+        <Calendar :site-id="siteId" />
       </div>
 
       <!-- 1/3: ToDo & ボタン -->
       <div class="p-site-dashboard__sidebar">
-        <PortalPersonalTodo :site-id="siteId" />
+        <PersonalTodo :site-id="siteId" />
         
         <NuxtLink :to="`/portal/${siteId}/souden`" class="c-link-button">
           <AppButton variant="primary" style="width: 100%; margin-top: 16px;">

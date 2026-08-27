@@ -229,17 +229,17 @@ const handleResetPassword = async () => {
     </AppPanel>
 
     <!-- モーダル群 (関心の分離) -->
-    <PortalUserCreateModal
+    <UserCreateModal
       v-model="isCreateModalOpen"
       @success="handleUserCreated"
     />
 
-    <PortalUserCredentialModal
+    <UserCredentialModal
       v-model="isCredentialModalOpen"
       :user="createdUserResult"
     />
 
-    <PortalUserAssignModal
+    <UserAssignModal
       v-model="isAssignModalOpen"
       :user-id="assignTargetUserId"
       :initial-site-ids="assignTargetSiteIds"

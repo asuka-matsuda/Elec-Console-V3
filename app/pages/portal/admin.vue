@@ -26,8 +26,8 @@ const activeTab = ref('users');
     <AppTabs v-model="activeTab" :options="tabs" />
 
     <div class="p-portal-admin__content">
-      <PortalAdminUsersTab v-if="activeTab === 'users'" />
-      <PortalAdminSitesTab v-if="activeTab === 'site'" />
+      <AdminUsersTab v-if="activeTab === 'users'" />
+      <AdminSitesTab v-if="activeTab === 'site'" />
     </div>
   </div>
 </template>
