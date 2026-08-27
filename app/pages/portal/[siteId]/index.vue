@@ -14,7 +14,7 @@ const router = useRouter();
 const lastSiteId = useLocalStorage("last-accessed-site", "");
 lastSiteId.value = siteId; // アクセス時に記憶を更新
 
-const _currentSite = computed(() => sites.value.find(s => s.id === siteId));
+const currentSite = computed(() => sites.value.find(s => s.id === siteId));
 
 // アサインされている現場のみを抽出
 const assignedSites = computed(() => {
@@ -22,10 +22,12 @@ const assignedSites = computed(() => {
   return sites.value.filter(s => ids.includes(s.id));
 });
 
-const handleSiteChange = (newSiteId: string) => {
-  if (newSiteId !== siteId) {
-    router.push(`/portal/${newSiteId}`);
-  }
+const siteOptions = computed(() => assignedSites.value.map(s => ({ value: s.id, label: s.name })));
+
+const handleSiteChange = (newSiteId: unknown) => {
+  const targetId = String(newSiteId);
+  if (!targetId || targetId === siteId) return;
+  router.push(`/portal/${targetId}`);
 };
 
 onMounted(() => {
@@ -38,14 +40,16 @@ onMounted(() => {
 <template>
   <div class="p-site-dashboard">
     <div class="p-site-dashboard__header">
-      <h2>現場ダッシュボード</h2>
+      <div class="p-site-dashboard__title">
+        <AppIcon name="map-pin" class="u-text-muted" style="margin-right: 8px;" />
+        <h2>{{ currentSite?.name || '現場ダッシュボード' }}</h2>
+      </div>
       <div class="p-site-dashboard__switcher">
-        <span class="u-text-sm u-text-muted">ログイン中の現場:</span>
         <AppSelect 
           :model-value="siteId" 
-          :options="assignedSites.map(s => ({ value: s.id, label: s.name }))"
+          :options="siteOptions"
           class="p-site-dashboard__select"
-          @update:model-value="(val: any) => handleSiteChange(String(val))"
+          @update:model-value="handleSiteChange"
         />
       </div>
     </div>
@@ -80,7 +84,10 @@ onMounted(() => {
     @include flex-between;
     padding-bottom: var(--pad-sm);
     border-bottom: var(--border-width-base) solid var(--color-border);
-    
+  }
+
+  &__title {
+    @include flex-start;
     h2 {
       @extend %text-title-lg;
       color: var(--color-text-main);
