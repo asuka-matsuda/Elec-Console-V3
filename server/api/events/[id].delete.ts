@@ -1,19 +1,18 @@
 import { defineEventHandler, getRouterParam, createError } from "h3";
-import fs from "fs";
-import path from "path";
+import { prisma } from "../../utils/prisma";
 
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
   try {
     const id = getRouterParam(event, "id");
-    const dbPath = path.resolve(process.cwd(), "server/data/events.json");
-    if (fs.existsSync(dbPath)) {
-      const events = JSON.parse(fs.readFileSync(dbPath, "utf-8"));
-      const filtered = events.filter((e: any) => e.id !== id);
-      fs.writeFileSync(dbPath, JSON.stringify(filtered, null, 2), "utf-8");
-    }
+    if (!id) throw new Error("id is required");
+    
+    await prisma.event.delete({
+      where: { id }
+    });
+    
     return { success: true };
   } catch (error) {
-    console.error("API Error in events/[id].delete.ts:", error);
+    console.error("API Error in [id].delete.ts:", error);
     throw createError({
       statusCode: 500,
       statusMessage: "Internal Server Error",

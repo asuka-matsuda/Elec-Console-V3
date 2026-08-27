@@ -1,35 +1,23 @@
 import { defineEventHandler, readBody, getRouterParam, createError } from "h3";
-import fs from "fs";
-import path from "path";
+import { prisma } from "../../utils/prisma";
 
 export default defineEventHandler(async (event) => {
   try {
     const siteId = getRouterParam(event, "siteId");
+    if (!siteId) throw new Error("siteId is required");
+    
     const body = await readBody(event);
     
-    const dataDir = path.resolve(process.cwd(), "server/data");
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true });
-    }
-    
-    const dbPath = path.join(dataDir, "events.json");
-    
-    let events = [];
-    if (fs.existsSync(dbPath)) {
-      const fileContent = fs.readFileSync(dbPath, "utf-8");
-      if (fileContent.trim()) {
-        events = JSON.parse(fileContent);
+    const newEvent = await prisma.event.create({
+      data: {
+        siteId,
+        title: body.title,
+        start: body.start,
+        end: body.end || null,
+        allDay: body.allDay || false,
+        type: body.type || "other",
       }
-    }
-    
-    const newEvent = {
-      ...body,
-      id: Date.now().toString(),
-      siteId
-    };
-    
-    events.push(newEvent);
-    fs.writeFileSync(dbPath, JSON.stringify(events, null, 2), "utf-8");
+    });
     
     return newEvent;
   } catch (error) {
