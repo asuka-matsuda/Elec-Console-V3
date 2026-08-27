@@ -128,7 +128,7 @@ const calendarOptions = computed(() => ({
     right: 'dayGridMonth,listMonth'
   },
   height: 'auto',
-  dayHeaderClassNames: (arg: any) => {
+  dayHeaderClassNames: (arg: { date: Date }) => {
     const classes = [];
     if (arg.date.getDay() === 0) classes.push('is-sunday');
     if (arg.date.getDay() === 6) classes.push('is-saturday');
