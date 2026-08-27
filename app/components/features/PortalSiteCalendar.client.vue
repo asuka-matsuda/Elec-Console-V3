@@ -178,7 +178,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 
 <template>
   <div class="c-calendar-wrapper">
-    <div class="c-calendar">
+    <AppPanel class="c-calendar" variant="simple">
       <FullCalendar :options="typedCalendarOptions" />
     </div>
 
@@ -231,10 +231,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 
 .c-calendar {
   flex: 1;
-  background-color: var(--color-bg-base);
-  border-radius: var(--radius-md);
-  padding: var(--pad-md);
-  border: var(--border-width-base) solid var(--color-border);
+
   min-height: 500px;
   
   :deep(.fc-theme-standard td), :deep(.fc-theme-standard th) {
