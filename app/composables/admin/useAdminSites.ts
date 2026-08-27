@@ -1,7 +1,6 @@
 
-import { useState } from '#app';
 import type { Site, SiteSettings } from '~/types/admin';
-import { useAsyncData } from '#app';
+import { useAsyncData, useState } from '#app';
 
 export const useAdminSites = () => {
   const sites = useState<Site[]>('admin-sites', () => []);

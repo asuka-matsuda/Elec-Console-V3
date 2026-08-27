@@ -1,1 +1,9 @@
-[]
+[
+  {
+    "id": "test",
+    "name": "テスト現場",
+    "status": "planning",
+    "createdAt": "2026-08-27T01:22:54.104Z",
+    "disabledAt": null
+  }
+]

@@ -68,12 +68,12 @@ const editId = computed({
 
 // ワーカー名解決
 const workerNames = computed(() => {
-  if (!editData.value.workers) return [];
-  return editData.value.workers.map(id => {
-    const u = users.value.find(user => user.id === id);
-    return u ? `${u.lastName} ${u.firstName}` : "不明なユーザー";
+    if (!props.site?.id || !users.value) return [];
+    const assignedUsers = users.value.filter(u => 
+      u.assignedSiteIds && u.assignedSiteIds.includes(props.site!.id)
+    );
+    return assignedUsers.map(u => `${u.lastName} ${u.firstName}`);
   });
-});
 
 const handleSave = async () => {
   if (!props.site) return;
