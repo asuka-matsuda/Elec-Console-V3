@@ -51,7 +51,7 @@ const closeModal = () => {
 </script>
 
 <template>
-  <AppModal :model-value="modelValue" @update:model-value="emit('update:modelValue', $event)" :title="isEditing ? '予定の編集' : '新しい予定'">
+  <AppModal :model-value="modelValue" :title="isEditing ? '予定の編集' : '新しい予定'" @update:model-value="emit('update:modelValue', $event)">
     <div class="p-event-form">
       <div class="p-event-form__field">
         <label>タイトル</label>
