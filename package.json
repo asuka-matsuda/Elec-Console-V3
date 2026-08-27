@@ -14,10 +14,10 @@
     "lint:style": "stylelint \"**/*.{vue,css,scss}\""
   },
   "dependencies": {
-    "@fullcalendar/core": "^6.1.21",
-    "@fullcalendar/daygrid": "^6.1.21",
-    "@fullcalendar/interaction": "^6.1.21",
-    "@fullcalendar/vue3": "^7.0.2",
+    "@fullcalendar/core": "^6.1.15",
+    "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/interaction": "^6.1.15",
+    "@fullcalendar/vue3": "^6.1.15",
     "@vee-validate/zod": "^4.15.1",
     "@vueuse/core": "^14.4.0",
     "@vueuse/nuxt": "^14.4.0",
