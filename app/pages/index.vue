@@ -15,27 +15,18 @@ const { currentUser, isAuthenticated } = useAuth();
 const router = useRouter();
 const lastSiteId = useLocalStorage("last-accessed-site", "");
 
-const _handleCardClick = (item: Record<string, unknown>, e: Event) => {
-  if (item.disabled) {
-    e.preventDefault();
-    return;
+const _getDynamicTo = (item: Record<string, unknown>) => {
+  if (_getDynamicDisabled(item)) return undefined;
+  
+  if (item.href === "/login" && isAuthenticated.value) {
+    const siteIds = currentUser.value?.assignedSiteIds || [];
+    if (siteIds.length > 0) {
+      const targetSiteId = siteIds.includes(lastSiteId.value) ? lastSiteId.value : siteIds[0];
+      return `/portal/${targetSiteId}`;
+    }
   }
   
-  // ポータルのリンクを踏んだ時の特殊処理
-  if (item.href === "/login") {
-    e.preventDefault();
-    if (!isAuthenticated.value) {
-      router.push("/login");
-      return;
-    }
-    
-    const siteIds = currentUser.value?.assignedSiteIds || [];
-    if (siteIds.length === 0) return; // disabled になっているはずだが念のため
-    
-    // 前回アクセスした現場があればそこへ、なければ最初の現場へ直行
-    const targetSiteId = siteIds.includes(lastSiteId.value) ? lastSiteId.value : siteIds[0];
-    router.push(`/portal/${targetSiteId}`);
-  }
+  return item.href as string;
 };
 
 const _getDynamicDisabled = (item: Record<string, unknown>) => {
