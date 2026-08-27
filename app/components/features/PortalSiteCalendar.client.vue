@@ -28,13 +28,26 @@ const form = ref({
   allDay: false
 });
 
+
+
+const formatDateTimeLocal = (dateStr: string, isAllDay: boolean) => {
+  if (!dateStr) return '';
+  if (isAllDay) {
+    return dateStr.split('T')[0];
+  }
+  if (dateStr.includes('T')) {
+    return dateStr.substring(0, 16);
+  }
+  return dateStr + 'T09:00';
+};
+
 const openCreateModal = (startStr: string, endStr: string, allDay: boolean) => {
   isEditing.value = false;
   editingEventId.value = null;
   form.value = {
     title: '',
-    start: startStr,
-    end: endStr,
+    start: formatDateTimeLocal(startStr, allDay),
+    end: formatDateTimeLocal(endStr, allDay),
     allDay
   };
   isModalOpen.value = true;
@@ -45,8 +58,8 @@ const openEditModal = (eventInfo: Record<string, any>) => {
   editingEventId.value = eventInfo.id;
   form.value = {
     title: eventInfo.title,
-    start: eventInfo.startStr,
-    end: eventInfo.endStr || '',
+    start: formatDateTimeLocal(eventInfo.startStr, eventInfo.allDay),
+    end: formatDateTimeLocal(eventInfo.endStr, eventInfo.allDay),
     allDay: eventInfo.allDay
   };
   isModalOpen.value = true;
@@ -142,8 +155,8 @@ const typedCalendarOptions = computed(() => calendarOptions.value as any);
         <AppInput v-model="form.title" label="タイトル" placeholder="会議、送電試験など" required />
         
         <div class="p-event-form__row">
-          <AppInput v-model="form.start" type="datetime-local" label="開始日時" required />
-          <AppInput v-model="form.end" type="datetime-local" label="終了日時" />
+          <AppInput v-model="form.start" :type="form.allDay ? 'date' : 'datetime-local'" label="開始日時" required />
+          <AppInput v-model="form.end" :type="form.allDay ? 'date' : 'datetime-local'" label="終了日時" />
         </div>
         
         <AppCheckbox v-model="form.allDay" label="終日イベント" />
