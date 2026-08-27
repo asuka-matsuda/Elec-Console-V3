@@ -7,6 +7,40 @@ datasource db {
   url      = "file:./dev.db"
 }
 
+model User {
+  id                   String    @id @default(uuid())
+  loginId              String    @unique
+  password             String
+  firstName            String
+  lastName             String
+  firstNameKana        String?
+  lastNameKana         String?
+  role                 String    @default("worker")
+  requirePasswordReset Boolean   @default(false)
+  email                String?
+  isActive             Boolean   @default(true)
+  lastLoginAt          DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  // Many-to-Many relation with Site
+  assignedSites Site[] @relation("UserSites")
+}
+
+model Site {
+  id         String    @id @default(uuid())
+  name       String
+  status     String    @default("planning")
+  disabledAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  users            User[]            @relation("UserSites")
+  events           Event[]
+  settings         SiteSettings?
+  calendarSettings CalendarSettings?
+}
+
 model Event {
   id        String   @id @default(uuid())
   siteId    String
@@ -17,4 +51,43 @@ model Event {
   type      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  site Site @relation(fields: [siteId], references: [id])
+}
+
+model SiteSettings {
+  id                    String  @id @default(uuid())
+  siteId                String  @unique
+  phase2ThresholdMegOhm Float?  @default(1.0)
+  enablePhase3          Boolean @default(true)
+
+  site Site @relation(fields: [siteId], references: [id])
+}
+
+model CalendarSettings {
+  id             String @id @default(uuid())
+  siteId         String @unique
+  eventTypes     String // Stored as JSON string
+  holidayDays    String // Stored as JSON string "[0, 6]"
+  customHolidays String // Stored as JSON string "['YYYY-MM-DD']"
+
+  site Site @relation(fields: [siteId], references: [id])
+}
+
+model Announcement {
+  id        String   @id @default(uuid())
+  title     String
+  date      String
+  desc      String
+  createdAt DateTime @default(now())
+}
+
+model History {
+  id        String   @id @default(uuid())
+  version   String
+  title     String
+  date      String
+  desc      String
+  status    String   @default("neutral")
+  createdAt DateTime @default(now())
 }

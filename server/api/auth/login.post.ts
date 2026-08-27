@@ -1,42 +1,41 @@
-import type { User } from '~/types/auth';
-import { defineEventHandler, readBody, createError } from 'h3';
-import { verifyPassword } from '../../utils/password';
-import fs from 'fs';
-import path from 'path';
+import type { User } from "~/types/auth";
+import { defineEventHandler, readBody, createError } from "h3";
+import { verifyPassword } from "../../utils/password";
+import { prisma } from "../../utils/prisma";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const { loginId, password } = body;
 
   if (!loginId || !password) {
-    throw createError({ statusCode: 400, statusMessage: 'Bad Request' });
+    throw createError({ statusCode: 400, statusMessage: "Bad Request" });
   }
 
-  const dbPath = path.resolve(process.cwd(), 'server/data/users.json');
-  let users = [];
-  if (fs.existsSync(dbPath)) {
-    users = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
-  }
-
-  const user = users.find((u: User & { password?: string }) => u.loginId === loginId);
+  const user = await prisma.user.findUnique({
+    where: { loginId },
+    include: { assignedSites: true }
+  });
 
   if (!user) {
-    throw createError({ statusCode: 401, statusMessage: 'Unauthorized' });
+    throw createError({ statusCode: 401, statusMessage: "Unauthorized" });
   }
 
   if (!user.isActive) {
-    throw createError({ statusCode: 403, statusMessage: 'Forbidden: Account is inactive' });
+    throw createError({ statusCode: 403, statusMessage: "Forbidden: Account is inactive" });
   }
 
   if (!verifyPassword(password as string, user.password)) {
-    throw createError({ statusCode: 401, statusMessage: 'Unauthorized' });
+    throw createError({ statusCode: 401, statusMessage: "Unauthorized" });
   }
 
-  user.lastLoginAt = new Date().toISOString();
-  fs.writeFileSync(dbPath, JSON.stringify(users, null, 2), 'utf-8');
+  await prisma.user.update({
+    where: { loginId: user.loginId },
+    data: { lastLoginAt: new Date() }
+  });
 
-  const safeUser = { ...user };
-  delete safeUser.password;
+  const assignedSiteIds = user.assignedSites.map(s => s.id);
+  const { password, assignedSites, ...restUser } = user;
+  const safeUser = { ...restUser, assignedSiteIds };
 
   return {
     success: true,

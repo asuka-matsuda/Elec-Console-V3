@@ -1,39 +1,37 @@
-import type { User } from '~/types/auth';
-import { defineEventHandler, readBody, getCookie, createError } from 'h3';
-import fs from 'fs';
-import path from 'path';
-import { hashPassword } from '../../utils/password';
+import { defineEventHandler, readBody, getHeader, createError } from "h3";
+import { verifyPassword, hashPassword } from "../../utils/password";
+import { prisma } from "../../utils/prisma";
 
 export default defineEventHandler(async (event) => {
-  const token = getCookie(event, 'auth_token');
-  if (!token || !token.startsWith('token_')) {
-    throw createError({ statusCode: 401, statusMessage: 'Unauthorized' });
+  const authHeader = getHeader(event, "Authorization");
+  if (!authHeader) throw createError({ statusCode: 401 });
+  
+  const loginId = authHeader.replace("Bearer token_", "");
+  const { currentPassword, newPassword } = await readBody(event);
+
+  if (!currentPassword || !newPassword) {
+    throw createError({ statusCode: 400, statusMessage: "Invalid input" });
   }
 
-  const loginId = token.replace('token_', '');
-  const { newPassword } = await readBody(event);
-
-  if (!newPassword || newPassword.length < 4) {
-    throw createError({ statusCode: 400, statusMessage: '新しいパスワードが短すぎます' });
-  }
-
-  const dbPath = path.resolve(process.cwd(), 'server/data/users.json');
-  if (!fs.existsSync(dbPath)) {
-    throw createError({ statusCode: 500, statusMessage: 'Database not found' });
-  }
-
-  const users = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
-  const user = users.find((u: User & { password?: string }) => u.loginId === loginId);
+  const user = await prisma.user.findUnique({ where: { loginId } });
 
   if (!user) {
-    throw createError({ statusCode: 401, statusMessage: 'User not found' });
+    throw createError({ statusCode: 404, statusMessage: "User not found" });
   }
 
-  // パスワードを更新し、リセット要求フラグを解除
-  user.password = hashPassword(newPassword);
-  user.requirePasswordReset = false;
+  if (!verifyPassword(currentPassword as string, user.password)) {
+    throw createError({ statusCode: 401, statusMessage: "現在のパスワードが間違っています。" });
+  }
 
-  fs.writeFileSync(dbPath, JSON.stringify(users, null, 2), 'utf-8');
+  const hashedPassword = hashPassword(newPassword as string);
+
+  await prisma.user.update({
+    where: { loginId },
+    data: {
+      password: hashedPassword,
+      requirePasswordReset: false
+    }
+  });
 
   return { success: true };
 });

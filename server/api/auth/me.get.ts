@@ -1,38 +1,30 @@
-import type { User } from '~/types/auth';
-import { defineEventHandler, getCookie, createError } from 'h3';
-import fs from 'fs';
-import path from 'path';
+import { defineEventHandler, getHeader } from "h3";
+import { prisma } from "../../utils/prisma";
 
-export default defineEventHandler((event) => {
-  const token = getCookie(event, 'auth_token');
-  
-  if (!token) {
-    throw createError({ statusCode: 401, statusMessage: 'Unauthorized' });
+export default defineEventHandler(async (event) => {
+  const authHeader = getHeader(event, "Authorization");
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return { success: false };
   }
 
-  // token は "token_loginId" の形式で発行されている
-  if (!token.startsWith('token_')) {
-    throw createError({ statusCode: 401, statusMessage: 'Invalid token' });
+  const token = authHeader.replace("Bearer ", "");
+  if (!token.startsWith("token_")) {
+    return { success: false };
   }
 
-  const loginId = token.replace('token_', '');
-
-  const dbPath = path.resolve(process.cwd(), 'server/data/users.json');
-  if (!fs.existsSync(dbPath)) {
-    throw createError({ statusCode: 401, statusMessage: 'Database not found' });
-  }
-
-  const users = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
-  const user = users.find((u: User & { password?: string }) => u.loginId === loginId);
+  const loginId = token.replace("token_", "");
+  const user = await prisma.user.findUnique({
+    where: { loginId },
+    include: { assignedSites: true }
+  });
 
   if (!user || !user.isActive) {
-    throw createError({ statusCode: 401, statusMessage: 'User not found or inactive' });
+    return { success: false };
   }
 
-  const safeUser = { ...user };
-  delete safeUser.password;
+  const assignedSiteIds = user.assignedSites.map(s => s.id);
+  const { password, assignedSites, ...restUser } = user;
+  const safeUser = { ...restUser, assignedSiteIds };
 
-  return {
-    user: safeUser
-  };
+  return { success: true, user: safeUser };
 });

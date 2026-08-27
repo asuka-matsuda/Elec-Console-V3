@@ -1,35 +1,21 @@
-import type { User } from '~/types/auth';
-import { defineEventHandler, createError } from 'h3';
-import fs from 'fs';
-import path from 'path';
-import { hashPassword, generateRandomPassword } from '../../../utils/password';
+import { defineEventHandler, getRouterParam } from "h3";
+import { prisma } from "../../../utils/prisma";
+import { hashPassword } from "../../../utils/password";
 
 export default defineEventHandler(async (event) => {
-  const id = event.context.params?.id;
-  if (!id) {
-    throw createError({ statusCode: 400, statusMessage: 'Bad Request' });
-  }
+  const id = getRouterParam(event, "id");
+  if (!id) return { success: false };
 
-  const dbPath = path.resolve(process.cwd(), 'server/data/users.json');
-  if (!fs.existsSync(dbPath)) {
-    throw createError({ statusCode: 500, statusMessage: 'Database not found' });
-  }
+  const user = await prisma.user.findUnique({ where: { id } });
+  if (!user) return { success: false };
 
-  const users = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
-  const user = users.find((u: User & { password?: string }) => u.id === id);
+  await prisma.user.update({
+    where: { id },
+    data: {
+      password: hashPassword(user.loginId),
+      requirePasswordReset: true
+    }
+  });
 
-  if (!user) {
-    throw createError({ statusCode: 404, statusMessage: 'User not found' });
-  }
-
-  // ランダムな初期パスワードの生成とハッシュ化
-  const generatedPassword = generateRandomPassword();
-  
-  user.password = hashPassword(generatedPassword);
-  user.requirePasswordReset = true; // 初回ログイン時のパスワード変更を再度要求する
-
-  fs.writeFileSync(dbPath, JSON.stringify(users, null, 2), 'utf-8');
-
-  // 管理者へ1度だけ表示するために平文を返す
-  return { success: true, initialPassword: generatedPassword };
+  return { success: true };
 });

@@ -1,27 +1,33 @@
-import type { User } from '~/types/auth';
-import { defineEventHandler, readBody, getRouterParam, createError } from 'h3';
-import fs from 'fs';
-import path from 'path';
+import { defineEventHandler, readBody, getRouterParam } from "h3";
+import { prisma } from "../../utils/prisma";
 
 export default defineEventHandler(async (event) => {
-  const id = getRouterParam(event, 'id');
+  const id = getRouterParam(event, "id");
   const body = await readBody(event);
   
-  const dbPath = path.resolve(process.cwd(), 'server/data/users.json');
-  let users = [];
-  if (fs.existsSync(dbPath)) {
-    users = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
-  }
+  if (!id) return null;
+  
+  const siteConnections = (body.assignedSiteIds || []).map((sid: string) => ({ id: sid }));
 
-  const userIndex = users.findIndex((u: User & { password?: string }) => u.id === id);
-  if (userIndex === -1) {
-    throw createError({ statusCode: 404, statusMessage: 'User not found' });
-  }
+  const updatedUser = await prisma.user.update({
+    where: { id },
+    data: {
+      loginId: body.loginId,
+      firstName: body.firstName,
+      lastName: body.lastName,
+      firstNameKana: body.firstNameKana,
+      lastNameKana: body.lastNameKana,
+      role: body.role,
+      email: body.email,
+      isActive: body.isActive,
+      assignedSites: { set: siteConnections } // Override relations
+    },
+    include: { assignedSites: true }
+  });
 
-  users[userIndex] = { ...users[userIndex], ...body };
-  fs.writeFileSync(dbPath, JSON.stringify(users, null, 2), 'utf-8');
-
-  const safeUser = { ...users[userIndex] };
-  delete safeUser.password;
+  const assignedSiteIds = updatedUser.assignedSites.map(s => s.id);
+  const { password, assignedSites, ...restUser } = updatedUser;
+  const safeUser = { ...restUser, assignedSiteIds };
+  
   return safeUser;
 });

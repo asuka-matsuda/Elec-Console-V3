@@ -1,19 +1,15 @@
-import type { User } from '~/types/auth';
-import { defineEventHandler } from 'h3';
-import fs from 'fs';
-import path from 'path';
+import { defineEventHandler } from "h3";
+import { prisma } from "../../utils/prisma";
 
-export default defineEventHandler((_event) => {
-  const dbPath = path.resolve(process.cwd(), 'server/data/users.json');
-  let users = [];
-  if (fs.existsSync(dbPath)) {
-    users = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
-  }
+export default defineEventHandler(async () => {
+  const users = await prisma.user.findMany({
+    include: { assignedSites: true }
+  });
   
-  // セキュリティのためパスワードは除去して返す
-  return users.map((u: User & { password?: string }) => {
-    const safeUser = { ...u };
-    delete safeUser.password;
+  return users.map(user => {
+    const assignedSiteIds = user.assignedSites.map(s => s.id);
+    const { password, assignedSites, ...restUser } = user;
+  const safeUser = { ...restUser, assignedSiteIds };
     return safeUser;
   });
 });

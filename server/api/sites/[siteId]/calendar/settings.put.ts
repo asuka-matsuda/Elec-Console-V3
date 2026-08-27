@@ -1,27 +1,31 @@
-
-import { defineEventHandler, readBody, getRouterParam } from 'h3';
-import fs from 'fs';
-import path from 'path';
+import { defineEventHandler, readBody, getRouterParam } from "h3";
+import { prisma } from "../../../../utils/prisma";
 
 export default defineEventHandler(async (event) => {
-  const siteId = getRouterParam(event, 'siteId');
+  const siteId = getRouterParam(event, "siteId");
+  if (!siteId) return null;
+
   const body = await readBody(event);
-  
-  const dbPath = path.resolve(process.cwd(), 'server/data/calendar-settings.json');
-  let settings = [];
-  if (fs.existsSync(dbPath)) {
-    settings = JSON.parse(fs.readFileSync(dbPath, 'utf-8'));
-  }
-  
-  const index = settings.findIndex((s: Record<string, unknown>) => s.siteId === siteId);
-  const newSettings = { siteId, ...body };
-  
-  if (index >= 0) {
-    settings[index] = newSettings;
-  } else {
-    settings.push(newSettings);
-  }
-  
-  fs.writeFileSync(dbPath, JSON.stringify(settings, null, 2));
-  return newSettings;
+
+  const updated = await prisma.calendarSettings.upsert({
+    where: { siteId },
+    update: {
+      eventTypes: JSON.stringify(body.eventTypes || []),
+      holidayDays: JSON.stringify(body.holidayDays || []),
+      customHolidays: JSON.stringify(body.customHolidays || [])
+    },
+    create: {
+      siteId,
+      eventTypes: JSON.stringify(body.eventTypes || []),
+      holidayDays: JSON.stringify(body.holidayDays || []),
+      customHolidays: JSON.stringify(body.customHolidays || [])
+    }
+  });
+
+  return {
+    siteId: updated.siteId,
+    eventTypes: JSON.parse(updated.eventTypes),
+    holidayDays: JSON.parse(updated.holidayDays),
+    customHolidays: JSON.parse(updated.customHolidays)
+  };
 });

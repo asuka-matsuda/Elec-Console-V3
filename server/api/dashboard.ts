@@ -1,28 +1,16 @@
-import announcementsData from "../data/announcements.json";
-import historyData from "../data/history.json";
+import { defineEventHandler } from "h3";
+import { prisma } from "../utils/prisma";
 
-export interface Announcement {
-  title: string;
-  date: string;
-  desc: string;
-}
+export default defineEventHandler(async () => {
+  const announcements = await prisma.announcement.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 10
+  });
 
-export interface HistoryItem {
-  version: string;
-  title: string;
-  date: string;
-  desc: string;
-  status: "success" | "neutral";
-}
+  const history = await prisma.history.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 10
+  });
 
-export interface DashboardData {
-  announcements: Announcement[];
-  history: HistoryItem[];
-}
-
-export default defineEventHandler((): DashboardData => {
-  return {
-    announcements: announcementsData as Announcement[],
-    history: historyData as HistoryItem[],
-  };
+  return { announcements, history };
 });
