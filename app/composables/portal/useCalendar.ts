@@ -45,7 +45,7 @@ export const useCalendar = (siteId: string) => {
       method: 'POST',
       body: event,
     });
-    events.value.push(res);
+    events.value = [...events.value, res];
     return res;
   };
 
