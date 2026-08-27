@@ -25,9 +25,16 @@ const userHeaders = [
 
 const formatLastLogin = (row: unknown) => {
   const user = row as User;
-  return user.lastLoginAt
-    ? new Date(user.lastLoginAt as string).toLocaleDateString()
-    : "未ログイン";
+  if (!user.lastLoginAt) return "未ログイン";
+  
+  return new Date(user.lastLoginAt as string).toLocaleString("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit"
+  }).replace(/\//g, "/");
 };
 
 // --- モーダルステート管理 ---
