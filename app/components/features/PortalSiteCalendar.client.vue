@@ -151,7 +151,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as any);
         <div class="p-event-form__actions">
           <AppButton v-if="isEditing" variant="danger" @click="removeEvent">削除</AppButton>
           <div style="flex: 1"></div>
-          <AppButton variant="ghost" @click="closeModal">キャンセル</AppButton>
+          <AppButton variant="secondary" @click="closeModal">キャンセル</AppButton>
           <AppButton variant="primary" @click="saveEvent">保存</AppButton>
         </div>
       </div>
