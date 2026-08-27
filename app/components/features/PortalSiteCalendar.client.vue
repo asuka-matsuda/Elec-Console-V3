@@ -244,55 +244,68 @@ const typedCalendarOptions = computed(() => calendarOptions.value as any);
   }
 
   /* ==== 動的クラスによる装飾 ==== */
-  :deep(.is-saturday .fc-daygrid-day-frame) {
-    box-shadow: inset 0 0 24px color-mix(in srgb, var(--color-category-database) 15%, transparent);
-  }
-  :deep(.is-saturday .fc-col-header-cell-cushion),
-  :deep(.is-saturday .fc-daygrid-day-number) {
-    color: color-mix(in srgb, var(--color-category-database) 90%, transparent);
-  }
-
-  :deep(.is-sunday .fc-daygrid-day-frame),
-  :deep(.is-holiday .fc-daygrid-day-frame) {
-    box-shadow: inset 0 0 24px color-mix(in srgb, var(--color-status-danger) 20%, transparent);
-  }
-  :deep(.is-sunday .fc-col-header-cell-cushion),
-  :deep(.is-sunday .fc-daygrid-day-number),
-  :deep(.is-holiday .fc-col-header-cell-cushion),
-  :deep(.is-holiday .fc-daygrid-day-number) {
-    color: color-mix(in srgb, var(--color-status-danger) 90%, transparent);
+  
+  @mixin highlight-day($color, $opacity-bg, $opacity-text) {
+    & .fc-daygrid-day-frame {
+      box-shadow: inset 0 0 24px theme-color($color, $opacity-bg);
+    }
+    & .fc-col-header-cell-cushion,
+    & .fc-daygrid-day-number {
+      color: theme-color($color, $opacity-text);
+    }
   }
 
-  :deep(.fc-day-today .fc-daygrid-day-frame) {
-    box-shadow: inset 0 0 20px color-mix(in srgb, var(--color-category-main) 20%, transparent);
+  :deep(.is-saturday) {
+    @include highlight-day(var(--color-category-database), 15%, 90%);
   }
-  :deep(.fc-day-today .fc-daygrid-day-number) {
-    font-weight: bold;
-    color: var(--color-category-main);
+
+  :deep(.is-sunday),
+  :deep(.is-holiday) {
+    @include highlight-day(var(--color-status-danger), 20%, 90%);
+  }
+
+  :deep(.fc-day-today) {
+    .fc-daygrid-day-frame {
+      box-shadow: inset 0 0 20px theme-color(var(--color-category-main), 20%);
+    }
+    .fc-daygrid-day-number {
+      font-weight: bold;
+      color: var(--color-category-main);
+    }
   }
 
   /* セルのホバー */
   :deep(.fc-daygrid-day-frame) {
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
-  }
-  :deep(.fc-daygrid-day-frame:hover:not(:has(.fc-daygrid-event:hover))) {
-    box-shadow: inset 0 0 var(--blur-lg) color-mix(in srgb, var(--color-category-main) 20%, transparent), 
-                inset 0 0 0 1px color-mix(in srgb, var(--color-category-main) 50%, transparent);
+    transition: background-color var(--duration-fast) var(--ease-smooth), box-shadow var(--duration-fast) var(--ease-smooth);
+    
+    &:hover:not(:has(.fc-daygrid-event:hover)) {
+      box-shadow: 
+        inset 0 0 var(--blur-lg) theme-color(var(--color-category-main), 20%), 
+        inset 0 0 0 1px theme-color(var(--color-category-main), 50%);
+    }
   }
 
   /* イベントの動的カラー */
   :deep(.fc-daygrid-event) {
+    $event-color: var(--event-theme-color, var(--color-primary));
+    
     padding: 2px var(--space-1);
-    background-color: color-mix(in srgb, var(--event-theme-color, var(--color-primary)) 20%, transparent);
-    border: 1px solid color-mix(in srgb, var(--event-theme-color, var(--color-primary)) 50%, transparent);
+    background-color: theme-color($event-color, 20%);
+    border: 1px solid theme-color($event-color, 50%);
     color: var(--color-text-main);
-    border-radius: 4px;
-    transition: all 0.2s ease;
-  }
-  :deep(.fc-daygrid-event:hover) {
-    box-shadow: inset 0 0 var(--blur-lg) color-mix(in srgb, var(--event-theme-color, var(--color-primary)) 50%, transparent), 
-                0 0 var(--blur-lg) color-mix(in srgb, var(--event-theme-color, var(--color-primary)) 30%, transparent);
-    border-color: var(--event-theme-color, var(--color-primary));
+    border-radius: var(--radius-sm);
+    transition: var(--transition-glow);
+
+    &:hover {
+      box-shadow: 
+        inset 0 0 var(--blur-lg) theme-color($event-color, 50%), 
+        0 0 var(--blur-lg) theme-color($event-color, 30%);
+      border-color: $event-color;
+    }
+    
+    .fc-event-main {
+      font-weight: 500;
+    }
   }
 
 }
