@@ -29,15 +29,29 @@ const _confirmButtonComponent = computed(() => {
 </script>
 
 <template>
-  <AppModal v-model="isOpen" :title="title || '確認'" align="center">
+  <AppModal
+    v-model="isOpen"
+    :title="title || '確認'"
+    align="center"
+  >
     {{ message || "本当によろしいですか？" }}
     <template #footer>
-      <AppButton variant="secondary" @click="isOpen = false">{{
-        cancelText || "キャンセル"
-      }}</AppButton>
-      <AppButton :variant="intent" @click="$emit('confirm')">{{
-        confirmText || "実行する"
-      }}</AppButton>
+      <AppButton
+        variant="secondary"
+        @click="isOpen = false"
+      >
+        {{
+          cancelText || "キャンセル"
+        }}
+      </AppButton>
+      <AppButton
+        :variant="intent"
+        @click="$emit('confirm')"
+      >
+        {{
+          confirmText || "実行する"
+        }}
+      </AppButton>
     </template>
   </AppModal>
 </template>

@@ -162,25 +162,30 @@ const confirmIntent = computed(() => {
             variant="primary"
             icon="plus"
             @click="isCreateModalOpen = true"
-            >新規現場登録</AppButton
           >
+            新規現場登録
+          </AppButton>
         </div>
 
         <AppTable 
-        :columns="siteHeaders" 
-        :data="sortedSites"
-        :sort-by="sortKey"
-        :sort-order="sortOrder"
-        @sort="handleSort"
-      >
+          :columns="siteHeaders" 
+          :data="sortedSites"
+          :sort-by="sortKey"
+          :sort-order="sortOrder"
+          @sort="handleSort"
+        >
           <template #cell-status="{ value, row }">
             <div class="c-admin-sites__status-stack">
               <AppBadge :variant="getStatusVariant(value)">
-                  {{ getStatusLabel(value) }}
-                </AppBadge>
-              <AppBadge v-if="row.disabledAt" variant="danger" size="sm"
-                >無効</AppBadge
+                {{ getStatusLabel(value) }}
+              </AppBadge>
+              <AppBadge
+                v-if="row.disabledAt"
+                variant="danger"
+                size="sm"
               >
+                無効
+              </AppBadge>
             </div>
           </template>
           <template #cell-createdAt="{ value }">
@@ -196,8 +201,9 @@ const confirmIntent = computed(() => {
                 size="sm"
                 icon="settings"
                 @click="openSettingsModal(String(row.id))"
-                >現場設定</AppButton
               >
+                現場設定
+              </AppButton>
               <AppButton
                 :variant="row.disabledAt ? 'success' : 'danger'"
                 size="sm"
@@ -219,10 +225,16 @@ const confirmIntent = computed(() => {
       submit-text="登録する"
     >
       <AppFormGroup label="現場ID (半角英数)">
-        <AppInput v-model="newSite.id" placeholder="例: site-tokyo-01" />
+        <AppInput
+          v-model="newSite.id"
+          placeholder="例: site-tokyo-01"
+        />
       </AppFormGroup>
       <AppFormGroup label="現場名">
-        <AppInput v-model="newSite.name" placeholder="例: 新宿プロジェクト" />
+        <AppInput
+          v-model="newSite.name"
+          placeholder="例: 新宿プロジェクト"
+        />
       </AppFormGroup>
     </AppFormModal>
 

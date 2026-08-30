@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * DesignSystem
  * 社内用のUIカタログ（デザインシステム）画面のコンポーネントです。UIコンポーネントの見た目や状態を一覧で確認できます。
@@ -12,7 +12,11 @@ const isChecked = ref(false);
 
 <template>
   <div class="p-design-system">
-    <AppSectionHeader title="Design System (UI Catalog)" icon="layout" variant="main">
+    <AppSectionHeader
+      title="Design System (UI Catalog)"
+      icon="layout"
+      variant="main"
+    >
       <template #description>
         このページは社内用のUIカタログです。コンポーネントのデザインと状態を一覧で確認できます。
       </template>
@@ -21,24 +25,43 @@ const isChecked = ref(false);
     <div class="p-design-system__content">
       <!-- Buttons -->
       <section class="p-ds-section">
-        <AppSectionHeader title="Buttons (AppButton)" size="md" />
+        <AppSectionHeader
+          title="Buttons (AppButton)"
+          size="md"
+        />
         <div class="p-ds-section__grid">
           <AppCard>
-            <h3 class="p-ds-card-title">Variants</h3>
+            <h3 class="p-ds-card-title">
+              Variants
+            </h3>
             <div class="p-ds-flex">
               <AppButton>Primary</AppButton>
-              <AppButton variant="secondary">Secondary</AppButton>
-              <AppButton variant="success">Success</AppButton>
-              <AppButton variant="danger">Danger</AppButton>
+              <AppButton variant="secondary">
+                Secondary
+              </AppButton>
+              <AppButton variant="success">
+                Success
+              </AppButton>
+              <AppButton variant="danger">
+                Danger
+              </AppButton>
             </div>
           </AppCard>
 
           <AppCard>
-            <h3 class="p-ds-card-title">Sizes & States</h3>
+            <h3 class="p-ds-card-title">
+              Sizes & States
+            </h3>
             <div class="p-ds-flex">
-              <AppButton size="sm">Small</AppButton>
-              <AppButton size="md">Medium</AppButton>
-              <AppButton disabled>Disabled</AppButton>
+              <AppButton size="sm">
+                Small
+              </AppButton>
+              <AppButton size="md">
+                Medium
+              </AppButton>
+              <AppButton disabled>
+                Disabled
+              </AppButton>
             </div>
           </AppCard>
         </div>
@@ -46,21 +69,40 @@ const isChecked = ref(false);
 
       <!-- Forms -->
       <section class="p-ds-section">
-        <AppSectionHeader title="Forms (AppInput / AppToggle / AppCheckbox)" size="md" />
+        <AppSectionHeader
+          title="Forms (AppInput / AppToggle / AppCheckbox)"
+          size="md"
+        />
         <div class="p-ds-section__grid">
           <AppCard>
-            <h3 class="p-ds-card-title">Text Inputs</h3>
+            <h3 class="p-ds-card-title">
+              Text Inputs
+            </h3>
             <div class="p-ds-stack">
-              <AppInput v-model="inputText" placeholder="Standard Input" />
-              <AppInput placeholder="Disabled Input" disabled />
+              <AppInput
+                v-model="inputText"
+                placeholder="Standard Input"
+              />
+              <AppInput
+                placeholder="Disabled Input"
+                disabled
+              />
             </div>
           </AppCard>
 
           <AppCard>
-            <h3 class="p-ds-card-title">Toggles & Checkboxes</h3>
+            <h3 class="p-ds-card-title">
+              Toggles & Checkboxes
+            </h3>
             <div class="p-ds-flex">
-              <AppToggle v-model="isToggled" label="Toggle Switch" />
-              <AppCheckbox v-model="isChecked" label="Checkbox" />
+              <AppToggle
+                v-model="isToggled"
+                label="Toggle Switch"
+              />
+              <AppCheckbox
+                v-model="isChecked"
+                label="Checkbox"
+              />
             </div>
           </AppCard>
         </div>
@@ -68,17 +110,32 @@ const isChecked = ref(false);
 
       <!-- Feedback -->
       <section class="p-ds-section">
-        <AppSectionHeader title="Feedback (AppBadge)" size="md" />
+        <AppSectionHeader
+          title="Feedback (AppBadge)"
+          size="md"
+        />
         <div class="p-ds-section__grid">
           <AppCard>
-            <h3 class="p-ds-card-title">Badges</h3>
+            <h3 class="p-ds-card-title">
+              Badges
+            </h3>
             <div class="p-ds-flex">
               <!-- Assuming these variants exist based on common patterns -->
-              <AppBadge variant="primary">Primary</AppBadge>
-              <AppBadge variant="secondary">Secondary</AppBadge>
-              <AppBadge variant="success">Success</AppBadge>
-              <AppBadge variant="warning">Warning</AppBadge>
-              <AppBadge variant="danger">Danger</AppBadge>
+              <AppBadge variant="primary">
+                Primary
+              </AppBadge>
+              <AppBadge variant="secondary">
+                Secondary
+              </AppBadge>
+              <AppBadge variant="success">
+                Success
+              </AppBadge>
+              <AppBadge variant="warning">
+                Warning
+              </AppBadge>
+              <AppBadge variant="danger">
+                Danger
+              </AppBadge>
             </div>
           </AppCard>
         </div>
@@ -114,7 +171,7 @@ const isChecked = ref(false);
 
 .p-ds-card-title {
   // --- 継承 ---
-  @extend %text-body;
+  @include text-body;
 
   // --- ボックスモデル ---
   margin-bottom: var(--pad-container);

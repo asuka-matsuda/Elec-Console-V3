@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppFilterPanel
  *
@@ -37,15 +37,24 @@ const toggleCat = (value: string) => {
           <AppIcon name="search" />
           <span>絞り込み・検索</span>
         </div>
-        <AppDivider type="fade-center" variant="border" />
+        <AppDivider
+          type="fade-center"
+          variant="border"
+        />
       </div>
 
       <div class="c-filter-panel__filters">
         <AppFormGroup label="Keyword">
-          <AppInput v-model="searchQuery" :placeholder="placeholder" />
+          <AppInput
+            v-model="searchQuery"
+            :placeholder="placeholder"
+          />
         </AppFormGroup>
 
-        <AppFormGroup v-if="categoryOptions.length > 0" label="Category">
+        <AppFormGroup
+          v-if="categoryOptions.length > 0"
+          label="Category"
+        >
           <div class="c-filter-panel__grid">
             <AppCheckbox
               v-for="cat in categoryOptions"
@@ -60,8 +69,9 @@ const toggleCat = (value: string) => {
 
         <!-- スロットを追加して、特有のフィルター（五十音など）を拡張可能にする -->
         <slot name="extra-filters" />
-      </div></div
-  ></AppPanel>
+      </div>
+    </div>
+  </AppPanel>
 </template>
 
 <style scoped lang="scss">
@@ -73,7 +83,7 @@ const toggleCat = (value: string) => {
   // --- 子要素 ---
   &__header {
     // --- 継承 ---
-    @extend %text-title-sm;
+    @include text-title-sm;
 
     // --- レイアウト・配置 ---
     @include flex-start;

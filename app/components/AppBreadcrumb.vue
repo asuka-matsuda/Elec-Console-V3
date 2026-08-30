@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppBreadcrumb
  * パンくずリストを表示するためのコンポーネント
@@ -31,9 +31,15 @@ const processedItems = computed(() => {
 <template>
   <nav class="c-breadcrumb">
     <ol>
-      <li v-for="item in processedItems" :key="item.uniqueKey">
+      <li
+        v-for="item in processedItems"
+        :key="item.uniqueKey"
+      >
         <template v-if="!item.isLast">
-          <NuxtLink v-if="item.href" :to="item.href">
+          <NuxtLink
+            v-if="item.href"
+            :to="item.href"
+          >
             {{ item.text }}
           </NuxtLink>
 
@@ -42,7 +48,10 @@ const processedItems = computed(() => {
           </span>
         </template>
 
-        <span v-else class="current">
+        <span
+          v-else
+          class="current"
+        >
           {{ item.text }}
         </span>
       </li>
@@ -53,7 +62,7 @@ const processedItems = computed(() => {
 <style scoped lang="scss">
 .c-breadcrumb {
   // --- 継承 ---
-  @extend %text-caption;
+  @include text-caption;
 
   // --- レイアウト・配置 ---
   @include inline-flex-start;
@@ -74,7 +83,7 @@ const processedItems = computed(() => {
   // --- 疑似要素 ---
   &::after {
     // --- 継承 ---
-    @extend %text-badge;
+    @include text-badge;
 
     content: "SYS.LOC";
 
@@ -105,7 +114,7 @@ const processedItems = computed(() => {
     // --- 疑似要素 ---
     &:not(:last-child)::after {
       // --- 継承 ---
-      @extend %text-badge;
+      @include text-badge;
 
       content: "»";
 
@@ -118,7 +127,7 @@ const processedItems = computed(() => {
   a,
   span:not(.current) {
     // --- 継承 ---
-    @extend %text-meta;
+    @include text-meta;
 
     // --- 視覚効果 ---
     @include state-base;

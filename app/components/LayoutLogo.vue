@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * LayoutLogo
  * アプリケーションのロゴを表示し、クリック時にホームへ遷移またはイベントを発火するコンポーネント。
@@ -9,8 +9,15 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <NuxtLink to="/" class="c-logo" @click="emit('click')">
-    <AppIcon name="zap" class="c-logo__icon" />
+  <NuxtLink
+    to="/"
+    class="c-logo"
+    @click="emit('click')"
+  >
+    <AppIcon
+      name="zap"
+      class="c-logo__icon"
+    />
     <span class="c-logo__text">Elec-Console</span>
   </NuxtLink>
 </template>
@@ -49,7 +56,7 @@ const emit = defineEmits<{
 
   &__text {
     // --- 継承 ---
-    @extend %text-title-md;
+    @include text-title-md;
   }
 }
 </style>

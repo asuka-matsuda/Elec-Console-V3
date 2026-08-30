@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppColorPicker
  * 色を選択するためのカラーピッカーコンポーネント
@@ -78,7 +78,7 @@ const inputId = useId();
 
   &__value {
     // --- 継承 ---
-    @extend %text-desc;
+    @include text-desc;
 
     // --- タイポグラフィ ---
     font-family: var(--font-mono);

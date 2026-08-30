@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppToggle
  * トグルスイッチ（チェックボックス）のUIを提供するコンポーネントです。ON/OFFの切り替えに使用されます。
@@ -16,7 +16,10 @@ const inputId = useId();
 </script>
 
 <template>
-  <label class="c-toggle" :for="inputId">
+  <label
+    class="c-toggle"
+    :for="inputId"
+  >
     <input
       :id="inputId"
       v-model="model"
@@ -27,7 +30,10 @@ const inputId = useId();
     <div class="c-toggle__track">
       <div class="c-toggle__thumb" />
     </div>
-    <span v-if="label || $slots.default" class="c-toggle__label">
+    <span
+      v-if="label || $slots.default"
+      class="c-toggle__label"
+    >
       <slot>{{ label }}</slot>
     </span>
   </label>
@@ -42,7 +48,7 @@ const inputId = useId();
   --thumb-w: var(--space-5);
 
   // --- 継承 ---
-  @extend %text-desc;
+  @include text-desc;
 
   // --- その他 ---
   cursor: pointer;
@@ -54,7 +60,7 @@ const inputId = useId();
   // --- 疑似クラス ---
   &:has(.c-toggle__input:disabled) {
     // --- 継承 ---
-    @extend %disabled;
+    @include disabled;
   }
 
   // --- 子要素 ---

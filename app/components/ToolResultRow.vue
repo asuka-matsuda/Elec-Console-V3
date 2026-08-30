@@ -10,7 +10,10 @@ defineProps<{
 </script>
 
 <template>
-  <div class="p-result-details__row" :class="{ 'has-top-border': topBorder }">
+  <div
+    class="p-result-details__row"
+    :class="{ 'has-top-border': topBorder }"
+  >
     <dt>{{ label }}</dt>
     <dd><slot /></dd>
   </div>
@@ -19,7 +22,7 @@ defineProps<{
 <style scoped lang="scss">
 .p-result-details__row {
   // --- 継承 ---
-  @extend %text-desc;
+  @include text-desc;
 
   // --- レイアウト・配置 ---
   display: flex;

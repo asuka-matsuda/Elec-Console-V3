@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * ToolConduitResult
  * 配管サイズ計算の結果を視覚的に表示する2カラムコンポーネントです。
@@ -67,7 +67,10 @@ const fill48 = computed(() =>
 </script>
 
 <template>
-  <div class="c-conduit-result" :class="[size === 'sm' ? 'is-sm' : '']">
+  <div
+    class="c-conduit-result"
+    :class="[size === 'sm' ? 'is-sm' : '']"
+  >
     <!-- Left Column: 32% -->
     <div class="c-conduit-result__col">
       <div class="c-conduit-result__main">
@@ -75,7 +78,10 @@ const fill48 = computed(() =>
           {{ CONDUIT_UI_LABELS.TITLE_32 }}
         </div>
         <div class="c-conduit-result__main-value">
-          <span class="value-text" :class="status32Class">{{ size32 }}</span>
+          <span
+            class="value-text"
+            :class="status32Class"
+          >{{ size32 }}</span>
           <template v-if="isReady && !result!.isOversize32">
             <span class="value-sep c-conduit-result__paren">(</span>
             <span class="value-text c-conduit-result__percent is-neutral">{{
@@ -97,7 +103,10 @@ const fill48 = computed(() =>
           {{ CONDUIT_UI_LABELS.TITLE_48 }}
         </div>
         <div class="c-conduit-result__main-value">
-          <span class="value-text" :class="status48Class">{{ size48 }}</span>
+          <span
+            class="value-text"
+            :class="status48Class"
+          >{{ size48 }}</span>
           <template v-if="isReady && !result!.isOversize48">
             <span class="value-sep c-conduit-result__paren">(</span>
             <span class="value-text c-conduit-result__percent is-neutral">{{
@@ -134,12 +143,12 @@ const fill48 = computed(() =>
 
   &__percent {
     // --- 継承 ---
-    @extend %text-title-lg;
+    @include text-title-lg;
   }
 
   &__percent-unit {
     // --- 継承 ---
-    @extend %text-title-sm;
+    @include text-title-sm;
   }
 
   // コンテナ幅が xs 以上の場合は横並び2カラム
@@ -228,7 +237,7 @@ const fill48 = computed(() =>
 
   &__main-label {
     // --- 継承 ---
-    @extend %text-meta;
+    @include text-meta;
 
     // --- タイポグラフィ ---
     color: var(--color-text-secondary);
@@ -252,7 +261,7 @@ const fill48 = computed(() =>
       // --- 子要素 ---
       &.c-conduit-result__percent {
         // --- 継承 ---
-        @extend %text-title-sm;
+        @include text-title-sm;
 
         // --- タイポグラフィ ---
         font-weight: normal;

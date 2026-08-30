@@ -209,7 +209,10 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 
 <template>
   <div class="c-calendar-wrapper">
-    <AppPanel class="c-calendar" variant="simple">
+    <AppPanel
+      class="c-calendar"
+      variant="simple"
+    >
       <FullCalendar :options="typedCalendarOptions" />
     </AppPanel>
 
@@ -234,24 +237,6 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
   --fc-border-color: var(--color-border);
   --fc-page-bg-color: transparent;
   --fc-neutral-bg-color: transparent;
-  min-height: 500px;
-  
-  @include mq("md") {
-    min-height: 400px;
-  }
-  
-  :deep(.fc-theme-standard td), :deep(.fc-theme-standard th) {
-    background-color: transparent;
-    border-color: var(--color-border);
-  }
-  :deep(.fc-daygrid-day-number) {
-    color: var(--color-text-main);
-    text-decoration: none;
-  }
-  :deep(.fc-col-header-cell-cushion) {
-    color: var(--color-text-main);
-    text-decoration: none;
-  }
 
   /* ==== 動的クラスによる装飾 ==== */
   
@@ -259,10 +244,28 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
     & .fc-daygrid-day-frame {
       box-shadow: inset 0 0 24px theme-color($color, $opacity-bg);
     }
+
     & .fc-col-header-cell-cushion,
     & .fc-daygrid-day-number {
       color: theme-color($color, $opacity-text);
     }
+  }
+
+  min-height: 500px;
+  
+  :deep(.fc-theme-standard td), :deep(.fc-theme-standard th) {
+    border-color: var(--color-border);
+    background-color: transparent;
+  }
+
+  :deep(.fc-daygrid-day-number) {
+    color: var(--color-text-main);
+    text-decoration: none;
+  }
+
+  :deep(.fc-col-header-cell-cushion) {
+    color: var(--color-text-main);
+    text-decoration: none;
   }
 
   :deep(.is-saturday) {
@@ -278,6 +281,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
     .fc-daygrid-day-frame {
       box-shadow: inset 0 0 20px theme-color(var(--color-category-main), 20%);
     }
+
     .fc-daygrid-day-number {
       font-weight: var(--font-weight-bold);
       color: var(--color-category-main);
@@ -300,22 +304,29 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
     $event-color: var(--event-theme-color, var(--color-primary));
     
     padding: 2px var(--space-1);
-    background-color: theme-color($event-color, 20%);
     border: 1px solid theme-color($event-color, 50%);
-    color: var(--color-text-main);
     border-radius: var(--radius-sm);
+
+    color: var(--color-text-main);
+
+    background-color: theme-color($event-color, 20%);
+
     transition: var(--transition-glow);
 
     &:hover {
+      border-color: $event-color;
       box-shadow: 
         inset 0 0 var(--blur-lg) theme-color($event-color, 50%), 
         0 0 var(--blur-lg) theme-color($event-color, 30%);
-      border-color: $event-color;
     }
     
     .fc-event-main {
       font-weight: var(--font-weight-medium);
     }
+  }
+  
+  @include mq("md") {
+    min-height: 400px;
   }
 
 }

@@ -61,11 +61,17 @@ const updateCount = (val: string | number | boolean | null | undefined) => {
 </script>
 
 <template>
-  <AppCard class="c-cable-row" variant="default">
+  <AppCard
+    class="c-cable-row"
+    variant="default"
+  >
     <div class="c-cable-row__header">
       <div class="c-cable-row__title-group">
         <span class="c-cable-row__title">ケーブル {{ index + 1 }}</span>
-        <span v-if="singleCableArea !== null" class="c-cable-row__meta">
+        <span
+          v-if="singleCableArea !== null"
+          class="c-cable-row__meta"
+        >
           ( 断面積: {{ singleCableArea.toFixed(1) }} mm² / 本 )
         </span>
       </div>
@@ -76,7 +82,10 @@ const updateCount = (val: string | number | boolean | null | undefined) => {
         icon-only
         @click="emit('remove')"
       >
-        <AppIcon name="trash-2" size="sm" />
+        <AppIcon
+          name="trash-2"
+          size="sm"
+        />
       </AppButton>
     </div>
     <div>
@@ -139,7 +148,7 @@ const updateCount = (val: string | number | boolean | null | undefined) => {
 
   &__title {
     // --- 継承 ---
-    @extend %text-title-sm;
+    @include text-title-sm;
 
     // --- タイポグラフィ ---
     color: var(--color-text-main);
@@ -147,7 +156,7 @@ const updateCount = (val: string | number | boolean | null | undefined) => {
 
   &__meta {
     // --- 継承 ---
-    @extend %text-meta;
+    @include text-meta;
   }
 }
 </style>

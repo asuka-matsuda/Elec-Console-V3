@@ -1,10 +1,12 @@
-﻿@use "icons" as *;
+@use "icons" as *;
 @use "functions" as *;
 @use "sass:map";
 @use "variables" as *;
 
-// --- CSSカスタムプロパティ ---
 :root {
+  // ==========================================================================
+  // 1. アイコン (Icons)
+  // ==========================================================================
   --icon-sb-up: #{$icon-chevron-up-dark};
   --icon-sb-up-hover: #{$icon-chevron-up-dark-hover};
   --icon-sb-down: #{$icon-chevron-down-dark};
@@ -13,30 +15,48 @@
   --icon-sb-left-hover: #{$icon-chevron-left-dark-hover};
   --icon-sb-right: #{$icon-chevron-right-dark};
   --icon-sb-right-hover: #{$icon-chevron-right-dark-hover};
+  --icon-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A1A1AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
 
-  // --- 自動生成スケール ---
+  // ==========================================================================
+  // 2. トラッキング & Z-Index & 静的スケール
+  // ==========================================================================
   @each $name, $value in $letter-spacings {
     --tracking-#{$name}: #{$value};
-  }
-
-  @each $name, $size in $font-sizes {
-    --text-#{$name}: #{$size};
-    --font-size-#{$name}: #{$size};
   }
 
   @each $name, $value in $z-index {
     --z-index-#{$name}: #{$value};
   }
 
-  @each $name, $size in $spacing-scale {
-    --space-#{$name}: #{$size};
-  }
+  --z-index-nav: #{map.get($z-index, "sidebar-container")};
 
-  @each $name, $size in $size-scale {
-    --size-#{$name}: #{$size};
-  }
+  // ==========================================================================
+  // 3. Fluid Typography (画面幅に応じて滑らかにスケーリング)
+  // ==========================================================================
+  --font-size-2xs: clamp(9px, 0.55rem + 0.1vw, 11px);
+  --font-size-xs:  clamp(10px, 0.65rem + 0.15vw, 12px);
+  --font-size-sm:  clamp(11px, 0.7rem + 0.2vw, 13px);
+  --font-size-base: clamp(12px, 0.75rem + 0.25vw, 14px);
+  --font-size-md:  clamp(13px, 0.8rem + 0.3vw, 15px);
+  --font-size-lg:  clamp(13px, 0.82rem + 0.35vw, 16px);
+  --font-size-xl:  clamp(14px, 0.9rem + 0.5vw, 18px);
+  --font-size-2xl: clamp(16px, 1rem + 0.65vw, 20px);
+  --font-size-3xl: clamp(18px, 1.15rem + 0.85vw, 24px);
+  --font-size-4xl: clamp(20px, 1.3rem + 1.1vw, 28px);
 
-  // --- タイポグラフィベース ---
+  // エイリアス互換
+  --text-2xs: var(--font-size-2xs);
+  --text-xs:  var(--font-size-xs);
+  --text-sm:  var(--font-size-sm);
+  --text-base: var(--font-size-base);
+  --text-md:  var(--font-size-md);
+  --text-lg:  var(--font-size-lg);
+  --text-xl:  var(--font-size-xl);
+  --text-2xl: var(--font-size-2xl);
+  --text-3xl: var(--font-size-3xl);
+  --text-4xl: var(--font-size-4xl);
+
+  // タイポグラフィ基本
   --font-family: #{$font-base};
   --font-mono: #{$font-mono};
   --font-weight-normal: 400;
@@ -47,12 +67,45 @@
   --line-height-ui: 1.4;
   --line-height-tight: 1.2;
 
-  // --- レイアウト・余白ベース ---
-  --sidebar-width: #{$sidebar-width};
+  // ==========================================================================
+  // 4. Fluid Spacing & Sizes (余白・寸法)
+  // ==========================================================================
   --base-spacing: #{$base-spacing};
   --base-size: #{$base-size};
+  --sidebar-width: #{$sidebar-width};
 
-  // --- カラーベース（HSL） ---
+  @each $name, $size in $spacing-scale {
+    --space-#{$name}: #{$size};
+  }
+
+  @each $name, $size in $size-scale {
+    --size-#{$name}: #{$size};
+  }
+
+  --gap-element: var(--space-1);
+  --gap-component: var(--space-2);
+  --gap-section: clamp(var(--space-2), 1.5vw, var(--space-3));
+  --pad-element: var(--space-1);
+  --pad-component: var(--space-2);
+  --pad-section: clamp(var(--space-2), 1.5vw, var(--space-3));
+  --pad-container: clamp(var(--space-3), 2vw, var(--space-4));
+
+  // コントロール寸法
+  --size-control-sm: 32px;
+  --size-control-md: 40px;
+  --size-control-lg: 48px;
+  --width-sm: 150px;
+  --width-md: 250px;
+  --table-cell-min-height: 36px;
+  --icon-size-sm: 14px;
+  --icon-size-md: 20px;
+  --icon-size-lg: 24px;
+  --icon-size-xl: 32px;
+  --icon-size-xxl: 40px;
+
+  // ==========================================================================
+  // 5. カラーベース (HSL Raw Values) & セマンティックカラー
+  // ==========================================================================
   --color-category-main-base: #{$color-category-main-base};
   --color-category-tool-base: #{$color-category-tool-base};
   --color-category-database-base: #{$color-category-database-base};
@@ -73,19 +126,7 @@
   --color-text-disabled-base: #{$color-text-disabled-base};
   --color-border-main-base: #{$color-border-main-base};
 
-  // --- ボーダーベース ---
-  --border-width-base: 1px;
-  --border-width-thick: 2px;
-
-  // --- エフェクトベース（ブラー・オーバーレイ） ---
-  --color-overlay-dark: hsl(0deg 0% 0% / 60%);
-  --color-overlay-light: hsl(0deg 0% 0% / 30%);
-  --blur-sm: 4px;
-  --blur-md: 8px;
-  --blur-lg: 12px;
-  --blur-xl: 16px;
-
-  // --- セマンティックカラー ---
+  // セマンティックカラー定義
   --color-category-main: hsl(var(--color-category-main-base));
   --color-category-tool: hsl(var(--color-category-tool-base));
   --color-category-database: hsl(var(--color-category-database-base));
@@ -107,16 +148,21 @@
   --color-text-disabled: hsl(var(--color-text-disabled-base));
   --color-border: hsl(var(--color-border-main-base));
 
-  // --- セマンティック余白 ---
-  --gap-element: var(--space-1);
-  --gap-component: var(--space-2);
-  --gap-section: var(--space-3);
-  --pad-element: var(--space-1);
-  --pad-component: var(--space-2);
-  --pad-section: var(--space-3);
-  --pad-container: var(--space-4);
+  // ボーダー
+  --border-width-base: 1px;
+  --border-width-thick: 2px;
 
-  // --- シャドウ・エッジ反射 ---
+  // エフェクト
+  --color-overlay-dark: hsl(0deg 0% 0% / 60%);
+  --color-overlay-light: hsl(0deg 0% 0% / 30%);
+  --blur-sm: 4px;
+  --blur-md: 8px;
+  --blur-lg: 12px;
+  --blur-xl: 16px;
+
+  // ==========================================================================
+  // 6. シャドウ & グロー演出 (HUD / Cyber Visuals)
+  // ==========================================================================
   --shadow-color: theme-color(black, 90%);
 
   --shadow-elevation-sm:
@@ -136,38 +182,40 @@
 
   --shadow-sink: inset 0 2px 4px 0 theme-color(var(--shadow-color), 60%);
 
-  // --- Glow Effects ---
-  --shadow-glow-sm: 0 0 var(--blur-sm)
-    var(--glow-color, var(--color-category-main));
-  --shadow-glow-md: 0 0 var(--blur-md)
-    var(--glow-color, var(--color-category-main));
-  --shadow-glow-lg: 0 0 var(--blur-lg)
-    var(--glow-color, var(--color-category-main));
-  --shadow-glow-inset-sm: inset 0 0 var(--blur-sm)
-    var(--glow-color, var(--color-category-main));
-  --shadow-glow-inset-md: inset 0 0 var(--blur-md)
-    var(--glow-color, var(--color-category-main));
-  --shadow-glow-inset-lg: inset 0 0 var(--blur-lg)
-    var(--glow-color, var(--color-category-main));
+  --shadow-glow-sm: 0 0 var(--blur-sm) var(--glow-color, var(--color-category-main));
+  --shadow-glow-md: 0 0 var(--blur-md) var(--glow-color, var(--color-category-main));
+  --shadow-glow-lg: 0 0 var(--blur-lg) var(--glow-color, var(--color-category-main));
+  --shadow-glow-inset-sm: inset 0 0 var(--blur-sm) var(--glow-color, var(--color-category-main));
+  --shadow-glow-inset-md: inset 0 0 var(--blur-md) var(--glow-color, var(--color-category-main));
+  --shadow-glow-inset-lg: inset 0 0 var(--blur-lg) var(--glow-color, var(--color-category-main));
+  
   --shadow-glow-hover:
     0 0 16px theme-color(var(--glow-color, var(--color-category-main)), 50%),
-    inset 0 0 4px
-      theme-color(var(--glow-color, var(--color-category-main)), 30%);
+    inset 0 0 4px theme-color(var(--glow-color, var(--color-category-main)), 30%);
 
   --shadow-glow-focus:
     0 0 16px theme-color(var(--glow-color, var(--color-category-main)), 70%),
-    inset 0 0 8px
-      theme-color(var(--glow-color, var(--color-category-main)), 50%);
+    inset 0 0 8px theme-color(var(--glow-color, var(--color-category-main)), 50%);
 
   --shadow-glow-active:
     0 0 8px theme-color(var(--glow-color, var(--color-category-main)), 40%),
-    inset 0 0 12px
-      theme-color(var(--glow-color, var(--color-category-main)), 80%);
+    inset 0 0 12px theme-color(var(--glow-color, var(--color-category-main)), 80%);
 
-  // --- アニメーション・トランジション ---
+  // ==========================================================================
+  // 7. アニメーション & トランジション
+  // ==========================================================================
   --duration-fast: 0.15s;
   --duration-base: 0.25s;
   --duration-slow: 0.4s;
+  --duration-modal: 0.5s;
+
+  --ease-base: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  --transition-fast: all var(--duration-fast) var(--ease-base);
+  --transition-base: all var(--duration-base) var(--ease-base);
+  --transition-slow: all var(--duration-slow) var(--ease-smooth);
 
   --transition-glow:
     box-shadow var(--duration-slow) var(--ease-base),
@@ -175,72 +223,4 @@
     background-color var(--duration-base) var(--ease-base),
     color var(--duration-base) var(--ease-base),
     transform var(--duration-slow) var(--ease-base);
-  --duration-modal: 0.5s;
-  --ease-base: cubic-bezier(0.25, 1, 0.5, 1);
-  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  --transition-fast: all var(--duration-fast) var(--ease-base);
-  --transition-base: all var(--duration-base) var(--ease-base);
-  --transition-slow: all var(--duration-slow) var(--ease-smooth);
-
-  // --- コンポーネント・アイコンサイズ ---
-  --size-control-sm: 32px;
-  --size-control-md: 40px;
-  --size-control-lg: 48px;
-  --width-sm: 150px;
-  --width-md: 250px;
-  --table-cell-min-height: 36px;
-  --icon-size-sm: 14px;
-  --icon-size-md: 20px;
-  --icon-size-lg: 24px;
-  --icon-size-xl: 32px;
-  --icon-size-xxl: 40px;
-
-  // --- Z-indexエイリアス ---
-  --z-index-nav: #{map.get($z-index, "sidebar-container")};
-
-  // --- UIアイコン ---
-  --icon-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A1A1AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-
-  // --- タイポグラフィ上書き ---
-  @media (width >= 1600px) {
-    --font-size-2xs: 11px;
-    --font-size-xs: 12px;
-    --font-size-sm: 13px;
-    --font-size-base: 14px;
-    --font-size-lg: 16px;
-    --font-size-xl: 18px;
-    --font-size-2xl: 20px;
-    --font-size-3xl: 24px;
-    --font-size-4xl: 28px;
-  }
-
-  @media (width <= 1024px) {
-    --font-size-2xl: 16px;
-    --font-size-3xl: 20px;
-    --font-size-4xl: 24px;
-  }
-
-  @media (width <= 768px) {
-    --font-size-lg: 12px;
-    --font-size-xl: 13px;
-    --font-size-2xl: 14px;
-    --font-size-3xl: 16px;
-    --font-size-4xl: 18px;
-  }
-
-  // --- 余白上書き ---
-  @media (width <= 1024px) {
-    --gap-section: var(--space-3);
-    --pad-section: var(--space-3);
-    --pad-container: var(--space-3);
-  }
-
-  @media (width <= 768px) {
-    --gap-component: var(--space-1);
-    --gap-section: var(--space-2);
-    --pad-component: var(--space-1);
-    --pad-section: var(--space-2);
-    --pad-container: var(--space-2);
-  }
 }

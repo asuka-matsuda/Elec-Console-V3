@@ -20,7 +20,10 @@ withDefaults(
   <div class="c-form-group">
     <div class="c-form-group__inner">
       <!-- Label Area -->
-      <div v-if="label || $slots.label" class="c-form-group__label-wrapper">
+      <div
+        v-if="label || $slots.label"
+        class="c-form-group__label-wrapper"
+      >
         <label class="c-form-label">
           <slot name="label">{{ label }}</slot>
         </label>
@@ -40,13 +43,19 @@ withDefaults(
 
         <!-- Error Message -->
         <transition name="fade-slide">
-          <div v-if="error" class="c-form-group__error">
+          <div
+            v-if="error"
+            class="c-form-group__error"
+          >
             {{ error }}
           </div>
         </transition>
 
         <!-- Help Text -->
-        <div v-if="help && !error" class="c-form-group__help">
+        <div
+          v-if="help && !error"
+          class="c-form-group__help"
+        >
           {{ help }}
         </div>
       </div>
@@ -118,7 +127,7 @@ withDefaults(
 
   &__error {
     // --- 継承 ---
-    @extend %text-meta;
+    @include text-meta;
 
     // --- タイポグラフィ ---
     color: var(--color-status-danger);
@@ -129,7 +138,7 @@ withDefaults(
 
   &__help {
     // --- 継承 ---
-    @extend %text-meta;
+    @include text-meta;
   }
 }
 
@@ -139,7 +148,7 @@ withDefaults(
   @include flex-start;
 
   // --- 継承 ---
-  @extend %text-label;
+  @include text-label;
 
   // --- その他 ---
   user-select: none;

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from '#app';
 import { useAuth } from '~/composables/useAuth';
@@ -54,51 +54,70 @@ const handleChangePassword = async () => {
 <template>
   <div class="p-change-password">
     <div>
-        <p class="p-change-password__desc">
-          セキュリティのため、システムから配布された初期パスワードを変更してください。
-        </p>
+      <p class="p-change-password__desc">
+        セキュリティのため、システムから配布された初期パスワードを変更してください。
+      </p>
 
-        <div v-if="errorMsg" class="p-change-password__error">{{ errorMsg }}</div>
+      <div
+        v-if="errorMsg"
+        class="p-change-password__error"
+      >
+        {{ errorMsg }}
+      </div>
 
-        <div class="p-change-password__form">
-          <AppFormGroup label="新しいパスワード (8文字以上)">
-            <AppInput v-model="password" type="password" placeholder="新しいパスワード" />
-          </AppFormGroup>
-          <AppFormGroup label="新しいパスワード (確認用)">
-            <AppInput v-model="passwordConfirm" type="password" placeholder="もう一度入力" @keyup.enter="handleChangePassword" />
-          </AppFormGroup>
-        </div>
+      <div class="p-change-password__form">
+        <AppFormGroup label="新しいパスワード (8文字以上)">
+          <AppInput
+            v-model="password"
+            type="password"
+            placeholder="新しいパスワード"
+          />
+        </AppFormGroup>
+        <AppFormGroup label="新しいパスワード (確認用)">
+          <AppInput
+            v-model="passwordConfirm"
+            type="password"
+            placeholder="もう一度入力"
+            @keyup.enter="handleChangePassword"
+          />
+        </AppFormGroup>
+      </div>
 
-        <div class="p-change-password__actions">
-          <AppButton variant="primary" :disabled="isLoading" @click="handleChangePassword">
-            設定してはじめる
-          </AppButton>
-        </div>
-        </div>
+      <div class="p-change-password__actions">
+        <AppButton
+          variant="primary"
+          :disabled="isLoading"
+          @click="handleChangePassword"
+        >
+          設定してはじめる
+        </AppButton>
+      </div>
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 .p-change-password {
-
-
   &__desc {
-    @extend %text-desc;
+    @include text-desc;
+
     margin-bottom: var(--space-4);
   }
 
   &__error {
-    color: var(--color-status-danger);
     margin-bottom: var(--space-3);
+    color: var(--color-status-danger);
   }
 
   &__form {
     @include flex-column(var(--space-3));
+
     margin-bottom: var(--space-4);
   }
 
   &__actions {
     @include flex-center;
+
     width: 100%;
   }
 }

@@ -21,9 +21,15 @@ const activeTab = ref('users');
 
 <template>
   <div class="p-portal-admin">
-    <AppSectionHeader title="ポータル管理 (開発者向け)" icon="settings" />
+    <AppSectionHeader
+      title="ポータル管理 (開発者向け)"
+      icon="settings"
+    />
 
-    <AppTabs v-model="activeTab" :options="tabs" />
+    <AppTabs
+      v-model="activeTab"
+      :options="tabs"
+    />
 
     <div class="p-portal-admin__content">
       <AdminUsersTab v-if="activeTab === 'users'" />
@@ -40,6 +46,7 @@ const activeTab = ref('users');
   &__content {
     // --- レイアウト・配置 ---
     @include flex-column(var(--gap-section));
+
     flex: 1;
     min-height: 0;
   }

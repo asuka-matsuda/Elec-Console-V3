@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends Record<string, unknown>">
+﻿<script setup lang="ts" generic="T extends Record<string, unknown>">
 /**
  * DbViewer
  * データベースのビューアコンポーネントです。検索やフィルタリング機能を提供し、結果をテーブルで表示します。
@@ -33,16 +33,31 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
         </aside>
 
         <main class="l-filter-layout__main">
-          <AppPanel v-if="filteredData.length > 0" class="c-db-panel">
-            <AppTable :columns="columns" :data="filteredData">
+          <AppPanel
+            v-if="filteredData.length > 0"
+            class="c-db-panel"
+          >
+            <AppTable
+              :columns="columns"
+              :data="filteredData"
+            >
               <!-- Pass through all slots for custom cells -->
-              <template v-for="(_, name) in $slots" #[name]="slotProps">
-                <slot :name="name" v-bind="slotProps" />
+              <template
+                v-for="(_, name) in $slots"
+                #[name]="slotProps"
+              >
+                <slot
+                  :name="name"
+                  v-bind="slotProps"
+                />
               </template>
             </AppTable>
           </AppPanel>
 
-          <div v-else class="c-db-empty">
+          <div
+            v-else
+            class="c-db-empty"
+          >
             <p>条件に一致するデータが見つかりません。</p>
           </div>
         </main>
@@ -119,7 +134,7 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
 
 .c-db-empty {
   // --- 継承 ---
-  @extend %text-body;
+  @include text-body;
 
   // --- ボックスモデル ---
   padding: var(--pad-container);

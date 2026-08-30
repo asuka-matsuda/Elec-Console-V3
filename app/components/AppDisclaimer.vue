@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppDisclaimer
  * 免責事項（注意事項）を表示するコンポーネントです。
@@ -22,7 +22,7 @@ withDefaults(
 <style scoped lang="scss">
 .c-disclaimer {
   // --- 継承 ---
-  @extend %text-desc;
+  @include text-desc;
 
   // --- ボックスモデル ---
   width: 100%;

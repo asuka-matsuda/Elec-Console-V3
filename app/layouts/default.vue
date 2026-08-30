@@ -12,7 +12,10 @@ const { currentUser, logout } = useAuth();
 <template>
   <div class="l-app">
     <!-- Sidebar -->
-    <LayoutGlobalNav v-model:is-open="isSidebarOpen" :menu-data="menuData" />
+    <LayoutGlobalNav
+      v-model:is-open="isSidebarOpen"
+      :menu-data="menuData"
+    />
 
     <!-- Main Content Area -->
     <div class="l-main">
@@ -42,7 +45,14 @@ const { currentUser, logout } = useAuth();
               />
             </div>
             <span class="l-header-user__name">{{ currentUser ? `${currentUser.lastName} ${currentUser.firstName}` : 'ゲスト' }}</span>
-            <AppButton variant="secondary" size="sm" style="margin-left: 1rem;" @click="logout">ログアウト</AppButton>
+            <AppButton
+              variant="secondary"
+              size="sm"
+              style="margin-left: 1rem;"
+              @click="logout"
+            >
+              ログアウト
+            </AppButton>
           </div>
         </template>
       </LayoutHeader>
@@ -97,7 +107,7 @@ const { currentUser, logout } = useAuth();
 /* Temporary user bar styles for demo */
 .l-header-user {
 
-  @extend %text-title-sm;
+  @include text-title-sm;
 
   display: flex;
   gap: var(--gap-component);

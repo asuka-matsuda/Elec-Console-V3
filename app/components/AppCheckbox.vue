@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppCheckbox
  * 真偽値を選択するためのチェックボックスコンポーネント
@@ -17,7 +17,11 @@ const inputId = useId();
 </script>
 
 <template>
-  <label class="c-checkbox" :class="{ 'is-disabled': disabled }" :for="inputId">
+  <label
+    class="c-checkbox"
+    :class="{ 'is-disabled': disabled }"
+    :for="inputId"
+  >
     <input
       :id="inputId"
       v-model="model"
@@ -41,7 +45,10 @@ const inputId = useId();
         <polyline points="20 6 9 17 4 12" />
       </svg>
     </div>
-    <span v-if="label || $slots.default" class="c-checkbox__label">
+    <span
+      v-if="label || $slots.default"
+      class="c-checkbox__label"
+    >
       <slot>{{ label }}</slot>
     </span>
   </label>
@@ -53,19 +60,20 @@ const inputId = useId();
   --checkbox-color: var(--color-category-main);
 
   // --- 継承 ---
-  @extend %text-desc;
+  @include text-desc;
 
   // --- レイアウト・配置 ---
   @include inline-flex-start(var(--gap-component));
-  position: relative;
 
   // --- その他 ---
   cursor: pointer;
   user-select: none;
+  position: relative;
 
   // --- 状態 (Vue制御) ---
   &.is-disabled {
-    @extend %disabled;
+    @include disabled;
+
     cursor: not-allowed;
   }
 
@@ -74,6 +82,7 @@ const inputId = useId();
     // ラベルのグロウ効果
     .c-checkbox__label {
       color: theme-color(var(--checkbox-color), 90%);
+
       @include cyber-text-glow(var(--checkbox-color), 20%, var(--blur-sm));
     }
 
@@ -119,6 +128,7 @@ const inputId = useId();
     flex-shrink: 0;
     width: 1.4em;
     height: 1.4em;
+
     @include flex-center;
     @include border-dim;
     @include state-base(var(--shadow-sink));
@@ -127,10 +137,13 @@ const inputId = useId();
     .c-checkbox__icon {
       width: 70%;
       height: 70%;
+
       opacity: 0;
+
       stroke: var(--checkbox-color);
       stroke-dasharray: 24;
       stroke-dashoffset: 24;
+
       @include state-base;
     }
   }

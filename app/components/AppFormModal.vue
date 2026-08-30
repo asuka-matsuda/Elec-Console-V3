@@ -40,9 +40,15 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <AppModal v-model="isOpen" :title="title">
+  <AppModal
+    v-model="isOpen"
+    :title="title"
+  >
     <div class="c-app-form-modal">
-      <div v-if="errorMsg" class="c-app-form-modal__error">
+      <div
+        v-if="errorMsg"
+        class="c-app-form-modal__error"
+      >
         {{ errorMsg }}
       </div>
 
@@ -75,11 +81,14 @@ const handleSubmit = async () => {
   @include flex-column(var(--gap-section));
 
   &__error {
-    color: var(--color-status-danger);
-    font-weight: bold;
     padding: var(--pad-component);
+
+    font-weight: bold;
+    color: var(--color-status-danger);
+
     background: transparent;
     backdrop-filter: blur(var(--blur-sm));
+
     @include border-dim(var(--color-status-danger));
   }
 

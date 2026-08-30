@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * ConduitDbPage
  * 電線管のデータベース情報を一覧表示・検索するためのページコンポーネントです。
@@ -38,6 +38,6 @@ const tableColumns: TableColumn[] = [
 <style scoped lang="scss">
 .c-db-meta {
   // --- 継承 ---
-  @extend %text-desc;
+  @include text-desc;
 }
 </style>

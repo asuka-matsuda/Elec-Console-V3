@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * Glossary
  * 用語集画面のコンポーネントです。専門用語の検索や、五十音・カテゴリ別での絞り込み機能を提供します。
@@ -83,14 +83,20 @@ const categoryColorMap: Record<string, string> = {
           >
             <template #extra-filters>
               <AppFormGroup label="INDEX (読み・五十音)">
-                  <AppKanaFilter v-model="activeKanas" :available-rows="availableRows" />
+                <AppKanaFilter
+                  v-model="activeKanas"
+                  :available-rows="availableRows"
+                />
               </AppFormGroup>
             </template>
           </AppFilterPanel>
         </aside>
 
         <main class="l-filter-layout__main">
-          <div v-if="filteredGlossary.length > 0" class="c-glossary-list">
+          <div
+            v-if="filteredGlossary.length > 0"
+            class="c-glossary-list"
+          >
             <AppCard
               v-for="item in filteredGlossary"
               :key="item.term"
@@ -100,7 +106,9 @@ const categoryColorMap: Record<string, string> = {
               <div class="c-glossary-card__header">
                 <div class="c-glossary-card__title">
                   <span class="c-glossary-card__kana">{{ item.kana }}</span>
-                  <h2 class="c-glossary-card__term">{{ item.term }}</h2>
+                  <h2 class="c-glossary-card__term">
+                    {{ item.term }}
+                  </h2>
                 </div>
                 <AppBadge
                   :style="{
@@ -113,22 +121,37 @@ const categoryColorMap: Record<string, string> = {
               </div>
 
               <div class="c-glossary-card__body">
-                <p class="c-glossary-card__desc">{{ item.desc }}</p>
+                <p class="c-glossary-card__desc">
+                  {{ item.desc }}
+                </p>
 
-                <div v-if="item.related" class="c-glossary-card__meta">
+                <div
+                  v-if="item.related"
+                  class="c-glossary-card__meta"
+                >
                   <span class="c-glossary-card__label">関連用語</span>
-                  <p class="c-glossary-card__text">{{ item.related }}</p>
+                  <p class="c-glossary-card__text">
+                    {{ item.related }}
+                  </p>
                 </div>
 
-                <div v-if="item.example" class="c-glossary-card__meta">
+                <div
+                  v-if="item.example"
+                  class="c-glossary-card__meta"
+                >
                   <span class="c-glossary-card__label">用例・備考</span>
-                  <p class="c-glossary-card__text">{{ item.example }}</p>
+                  <p class="c-glossary-card__text">
+                    {{ item.example }}
+                  </p>
                 </div>
               </div>
             </AppCard>
           </div>
 
-          <div v-else class="c-empty-state">
+          <div
+            v-else
+            class="c-empty-state"
+          >
             <p>条件に一致する用語が見つかりません。</p>
           </div>
         </main>
@@ -210,12 +233,12 @@ const categoryColorMap: Record<string, string> = {
 
   &__kana {
     // --- 継承 ---
-    @extend %text-meta;
+    @include text-meta;
   }
 
   &__term {
     // --- 継承 ---
-    @extend %text-title-md;
+    @include text-title-md;
 
   }
 
@@ -226,7 +249,7 @@ const categoryColorMap: Record<string, string> = {
 
   &__desc {
     // --- 継承 ---
-    @extend %text-title-sm;
+    @include text-title-sm;
 
     // --- タイポグラフィ ---
     line-height: 1.6;
@@ -245,14 +268,14 @@ const categoryColorMap: Record<string, string> = {
 
   &__label {
     // --- 継承 ---
-    @extend %text-meta;
+    @include text-meta;
 
     // --- タイポグラフィ ---
     }
 
   &__text {
     // --- 継承 ---
-    @extend %text-desc;
+    @include text-desc;
 
     // --- タイポグラフィ ---
     line-height: 1.5;
@@ -262,7 +285,7 @@ const categoryColorMap: Record<string, string> = {
 
 .c-empty-state {
   // --- 継承 ---
-  @extend %text-body;
+  @include text-body;
 
   // --- ボックスモデル ---
   padding: var(--pad-container);

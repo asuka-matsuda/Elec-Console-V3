@@ -22,13 +22,20 @@ onMounted(() => {
 
 <template>
   <div style="padding: var(--pad-container)">
-    <AppPanel title="現場ポータル (仮)" variant="hud">
+    <AppPanel
+      title="現場ポータル (仮)"
+      variant="hud"
+    >
       <div>
         <p>ここは現場ポータルのトップ画面です。</p>
         <p>（本来は、アサインされている現場の一覧や、各現場のダッシュボードへのリンクが表示される予定です）</p>
         
         <div style="margin-top: var(--gap-section)">
-          <AppButton v-if="isAdmin" variant="secondary" @click="router.push('/portal/admin')">
+          <AppButton
+            v-if="isAdmin"
+            variant="secondary"
+            @click="router.push('/portal/admin')"
+          >
             ポータル管理画面へ
           </AppButton>
         </div>

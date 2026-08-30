@@ -28,12 +28,18 @@ const closeSidebar = () => {
     />
 
     <!-- Global-Nav -->
-    <aside class="l-global-nav" :class="{ 'is-open': isOpen }">
+    <aside
+      class="l-global-nav"
+      :class="{ 'is-open': isOpen }"
+    >
       <!-- Logo Header -->
       <header class="l-global-nav__header">
         <LayoutLogo @click="closeSidebar" />
       </header>
-      <AppDivider type="fade-center" variant="sidebar-border" />
+      <AppDivider
+        type="fade-center"
+        variant="sidebar-border"
+      />
 
       <!-- Navigation Content -->
       <nav class="l-global-nav__nav custom-scrollbar">
@@ -53,23 +59,34 @@ const closeSidebar = () => {
             <AppDivider
               type="fade-side"
               :variant="section.accent || 'main'"
-             
             />
           </header>
 
-          <template v-for="item in section.items" :key="item.href">
+          <template
+            v-for="item in section.items"
+            :key="item.href"
+          >
             <NuxtLink
               v-if="!item.disabled"
               :to="item.href"
               class="l-global-nav__link"
               @click="closeSidebar"
             >
-              <AppIcon :name="item.icon" class="l-global-nav__link-icon" />
+              <AppIcon
+                :name="item.icon"
+                class="l-global-nav__link-icon"
+              />
               <span>{{ item.text }}</span>
             </NuxtLink>
 
-            <div v-else class="l-global-nav__link is-disabled">
-              <AppIcon :name="item.icon" class="l-global-nav__link-icon" />
+            <div
+              v-else
+              class="l-global-nav__link is-disabled"
+            >
+              <AppIcon
+                :name="item.icon"
+                class="l-global-nav__link-icon"
+              />
               <span>{{ item.text }}</span>
             </div>
           </template>
@@ -184,13 +201,14 @@ const closeSidebar = () => {
 
   &__heading {
     // --- 継承 ---
-    @extend %text-badge;
+    @include text-badge;
+
     color: var(--section-accent, var(--color-text-secondary));
   }
 
   &__link {
     // --- 継承 ---
-    @extend %text-title-sm;
+    @include text-title-sm;
 
     // --- レイアウト・配置 ---
     @include flex-start(var(--gap-component));
@@ -292,7 +310,7 @@ const closeSidebar = () => {
     // --- モディファイア ---
     &.is-disabled {
       // --- 継承 ---
-      @extend %disabled;
+      @include disabled;
 
       // --- 視覚効果 ---
       filter: grayscale(100%);

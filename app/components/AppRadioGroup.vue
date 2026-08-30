@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppRadioGroup
  * 複数の選択肢から1つを選択するための、セグメントコントロール風のラジオボタングループコンポーネント。
@@ -121,7 +121,7 @@ const getStyle = (option: RadioOption): StyleValue | undefined => option.color ?
     /* Disabled state */
     &:disabled + .c-segmented-control__text {
       // --- 継承 ---
-      @extend %disabled;
+      @include disabled;
 
       // --- 視覚効果 ---
       opacity: 0.3;
@@ -130,7 +130,7 @@ const getStyle = (option: RadioOption): StyleValue | undefined => option.color ?
 
   &__text {
     // --- 継承 ---
-    @extend %text-body-bold;
+    @include text-body-bold;
 
     // --- その他 ---
     user-select: none;

@@ -16,17 +16,29 @@ const history = computed(() => dashboardData.value?.history || []);
   <aside class="p-dashboard__aside">
     <!-- Announcements -->
     <section class="p-dashboard__aside-block">
-      <AppSectionHeader title="お知らせ" icon="bell" size="md" />
-      <div v-if="pending" class="p-dashboard__loading">
+      <AppSectionHeader
+        title="お知らせ"
+        icon="bell"
+        size="md"
+      />
+      <div
+        v-if="pending"
+        class="p-dashboard__loading"
+      >
         データを読み込み中...
       </div>
-      <div v-else class="p-dashboard__list">
+      <div
+        v-else
+        class="p-dashboard__list"
+      >
         <AppCard
           v-for="item in announcements"
           :key="item.title"
           class="p-dashboard-list-item"
         >
-          <div class="p-dashboard-list-item__title">{{ item.title }}</div>
+          <div class="p-dashboard-list-item__title">
+            {{ item.title }}
+          </div>
           <div class="p-dashboard-list-item__meta">
             {{ item.date }} {{ item.desc }}
           </div>
@@ -36,11 +48,21 @@ const history = computed(() => dashboardData.value?.history || []);
 
     <!-- History -->
     <section class="p-dashboard__aside-block">
-      <AppSectionHeader title="更新履歴" icon="clock" size="md" />
-      <div v-if="pending" class="p-dashboard__loading">
+      <AppSectionHeader
+        title="更新履歴"
+        icon="clock"
+        size="md"
+      />
+      <div
+        v-if="pending"
+        class="p-dashboard__loading"
+      >
         データを読み込み中...
       </div>
-      <div v-else class="p-dashboard__list">
+      <div
+        v-else
+        class="p-dashboard__list"
+      >
         <AppCard
           v-for="item in history"
           :key="item.version"
@@ -99,10 +121,11 @@ const history = computed(() => dashboardData.value?.history || []);
 
   &__loading {
     // --- 継承 ---
-    @extend %text-title-sm;
+    @include text-title-sm;
 
     // --- ボックスモデル ---
     padding: var(--pad-container);
+
     // --- タイポグラフィ ---
     color: var(--color-text-muted);
     text-align: center;
@@ -133,7 +156,7 @@ const history = computed(() => dashboardData.value?.history || []);
 
   &__meta {
     // --- 継承 ---
-    @extend %text-meta;
+    @include text-meta;
   }
 }
 </style>

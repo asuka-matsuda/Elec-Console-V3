@@ -11,7 +11,10 @@ defineProps<{
 </script>
 
 <template>
-  <AppPanel bracket-color="tool" class="c-basis-panel">
+  <AppPanel
+    bracket-color="tool"
+    class="c-basis-panel"
+  >
     <template #header>
       <AppSectionHeader
         title="計算根拠"
@@ -24,7 +27,10 @@ defineProps<{
 
     <div class="c-basis-panel__layout">
       <ClientOnly>
-        <AppMathBasis v-if="steps && steps.length > 0" :steps="steps" />
+        <AppMathBasis
+          v-if="steps && steps.length > 0"
+          :steps="steps"
+        />
       </ClientOnly>
 
       <div class="c-basis-panel__content">

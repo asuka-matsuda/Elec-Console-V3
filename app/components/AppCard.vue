@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppCard
  * コンテンツをまとめるためのカード型コンポーネント
@@ -75,7 +75,7 @@ const rootProps = computed(() => {
   // --- モディファイア ---
   &.is-disabled {
     // --- 継承 ---
-    @extend %disabled;
+    @include disabled;
   }
 
   &--tool {

@@ -41,7 +41,11 @@ onMounted(() => {
   <div class="p-site-dashboard">
     <div class="p-site-dashboard__header">
       <div class="p-site-dashboard__title">
-        <AppIcon name="map-pin" class="u-text-muted" style="margin-right: 8px;" />
+        <AppIcon
+          name="map-pin"
+          class="u-text-muted"
+          style="margin-right: 8px;"
+        />
         <h2>{{ currentSite?.name || '現場ダッシュボード' }}</h2>
       </div>
       <div class="p-site-dashboard__switcher">
@@ -64,9 +68,19 @@ onMounted(() => {
       <div class="p-site-dashboard__sidebar">
         <PersonalTodo :site-id="siteId" />
         
-        <NuxtLink :to="`/portal/${siteId}/souden`" class="c-link-button">
-          <AppButton variant="primary" style="width: 100%; margin-top: 16px;">
-            <AppIcon name="zap" size="sm" style="margin-right: 8px;" />
+        <NuxtLink
+          :to="`/portal/${siteId}/souden`"
+          class="c-link-button"
+        >
+          <AppButton
+            variant="primary"
+            style="width: 100%; margin-top: 16px;"
+          >
+            <AppIcon
+              name="zap"
+              size="sm"
+              style="margin-right: 8px;"
+            />
             送電試験ダッシュボードへ
           </AppButton>
         </NuxtLink>
@@ -78,18 +92,22 @@ onMounted(() => {
 <style scoped lang="scss">
 .p-site-dashboard {
   @include flex-column(var(--gap-section));
+
   height: 100%;
 
   &__header {
     @include flex-between;
+
     padding-bottom: var(--pad-sm);
     border-bottom: var(--border-width-base) solid var(--color-border);
   }
 
   &__title {
     @include flex-start;
+
     h2 {
-      @extend %text-title-lg;
+      @include text-title-lg;
+
       color: var(--color-text-main);
     }
   }
@@ -112,8 +130,8 @@ onMounted(() => {
 }
 
 .c-link-button {
-  text-decoration: none;
   display: block;
+  text-decoration: none;
 }
 
 .l-grid--2col-2-1 {

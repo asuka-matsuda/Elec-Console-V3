@@ -91,19 +91,29 @@ const dropStatusClass = computed(() => {
 </script>
 
 <template>
-  <div class="c-voltage-result" :class="[size === 'sm' ? 'is-sm' : '']">
+  <div
+    class="c-voltage-result"
+    :class="[size === 'sm' ? 'is-sm' : '']"
+  >
     <div class="c-voltage-result__main">
-      <div class="c-voltage-result__main-label">{{ mainLabel }}</div>
+      <div class="c-voltage-result__main-label">
+        {{ mainLabel }}
+      </div>
       <div class="c-voltage-result__main-value">
-        <span class="value-text" :class="mainStatusClass">{{ mainValue }}</span>
-        <span v-if="mainUnit" class="value-unit">{{ mainUnit }}</span>
+        <span
+          class="value-text"
+          :class="mainStatusClass"
+        >{{ mainValue }}</span>
+        <span
+          v-if="mainUnit"
+          class="value-unit"
+        >{{ mainUnit }}</span>
         <template v-if="mode === 'drop' && isReady">
           <span class="value-sep c-voltage-result__drop-paren">(</span>
           <span
             class="value-text c-voltage-result__drop-percent"
             :class="mainStatusClass"
-            >{{ dropPercent }}</span
-          >
+          >{{ dropPercent }}</span>
           <span class="value-unit c-voltage-result__drop-unit">%</span>
           <span class="value-sep">)</span>
         </template>
@@ -114,8 +124,13 @@ const dropStatusClass = computed(() => {
     <div class="c-voltage-result__metrics">
       <!-- 電流チェック -->
       <dl class="metric-card">
-        <dt class="metric-label">電流チェック (設計 / 許容)</dt>
-        <dd class="metric-value" :class="ampStatusClass">
+        <dt class="metric-label">
+          電流チェック (設計 / 許容)
+        </dt>
+        <dd
+          class="metric-value"
+          :class="ampStatusClass"
+        >
           <span class="value-text">{{ currentI }}</span>
           <span class="value-sep">/</span>
           <span class="value-text">{{ maxI }}</span>
@@ -124,9 +139,17 @@ const dropStatusClass = computed(() => {
       </dl>
 
       <!-- 電圧降下 (sizeモード) -->
-      <dl v-if="mode === 'size'" class="metric-card">
-        <dt class="metric-label">電圧降下</dt>
-        <dd class="metric-value" :class="dropStatusClass">
+      <dl
+        v-if="mode === 'size'"
+        class="metric-card"
+      >
+        <dt class="metric-label">
+          電圧降下
+        </dt>
+        <dd
+          class="metric-value"
+          :class="dropStatusClass"
+        >
           <span class="value-text">{{ dropV }}</span>
           <span class="value-unit">V</span>
           <span class="value-sep">(</span>
@@ -137,8 +160,13 @@ const dropStatusClass = computed(() => {
       </dl>
 
       <!-- 選択ケーブル (dropモード) -->
-      <dl v-else class="metric-card">
-        <dt class="metric-label">選択ケーブル</dt>
+      <dl
+        v-else
+        class="metric-card"
+      >
+        <dt class="metric-label">
+          選択ケーブル
+        </dt>
         <dd class="metric-value is-neutral">
           <span class="value-text c-voltage-result__drop-cable">{{
             dropCableName
@@ -169,17 +197,17 @@ const dropStatusClass = computed(() => {
 
   &__drop-percent {
     // --- 継承 ---
-    @extend %text-title-lg;
+    @include text-title-lg;
   }
 
   &__drop-unit {
     // --- 継承 ---
-    @extend %text-title-sm;
+    @include text-title-sm;
   }
 
   &__drop-cable {
     // --- 継承 ---
-    @extend %text-title-lg;
+    @include text-title-lg;
   }
 
   // --- モディファイア ---
@@ -269,7 +297,7 @@ const dropStatusClass = computed(() => {
 
   &__main-label {
     // --- 継承 ---
-    @extend %text-meta;
+    @include text-meta;
 
     // --- タイポグラフィ ---
     color: var(--color-text-secondary);
@@ -294,7 +322,7 @@ const dropStatusClass = computed(() => {
 
     .value-unit {
       // --- 継承 ---
-      @extend %text-title-md;
+      @include text-title-md;
 
       color: var(--color-text-secondary);
 
@@ -338,39 +366,30 @@ const dropStatusClass = computed(() => {
 
   .metric-label {
     // --- 継承 ---
-    @extend %text-meta;
+    @include text-meta;
   }
 
   .metric-value {
-    margin: 0; // Reset dd margin
-    // --- 継承 ---
-    @extend %text-title-sm;
-
-    // --- レイアウト・配置 ---
     display: flex;
     gap: var(--gap-element);
     align-items: baseline;
 
-    // --- タイポグラフィ ---
+    margin: 0;
+
     font-family: var(--font-family-mono);
 
-    .value-sep {
-      // --- ボックスモデル ---
-      margin: 0 2px;
+    @include text-title-sm;
 
-      // --- タイポグラフィ ---
+    .value-sep {
+      margin: 0 2px;
       font-weight: normal;
       color: var(--color-text-muted);
     }
 
     .value-unit {
-      // --- 継承 ---
-      @extend %text-meta;
+      @include text-meta;
 
-      // --- タイポグラフィ ---
       color: var(--color-text-secondary);
-
-      // --- 視覚効果 ---
       opacity: 0.8;
     }
   }

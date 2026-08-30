@@ -50,7 +50,10 @@ const {
               </AppInputGroup>
             </AppFormGroup>
 
-            <AppFormGroup v-if="inputs.isStrong && inputs.isWeak" label="セパレータ幅">
+            <AppFormGroup
+              v-if="inputs.isStrong && inputs.isWeak"
+              label="セパレータ幅"
+            >
               <AppInputGroup>
                 <AppInput
                   v-model="inputs.separatorWidth"
@@ -67,11 +70,19 @@ const {
           <!-- 強電エリア -->
           <AppCard variant="default">
             <div class="p-rack__card-header">
-              <h3 class="p-rack__card-title">強電エリア</h3>
-              <AppToggle v-model="inputs.isStrong" label="" />
+              <h3 class="p-rack__card-title">
+                強電エリア
+              </h3>
+              <AppToggle
+                v-model="inputs.isStrong"
+                label=""
+              />
             </div>
 
-            <div v-if="inputs.isStrong" class="p-rack__card-body">
+            <div
+              v-if="inputs.isStrong"
+              class="p-rack__card-body"
+            >
               <AppFormGroup label="段積み数">
                 <AppInputGroup>
                   <AppInput
@@ -86,7 +97,9 @@ const {
               </AppFormGroup>
 
               <div>
-                <div class="p-rack__section-title">強電ケーブルリスト</div>
+                <div class="p-rack__section-title">
+                  強電ケーブルリスト
+                </div>
                 <div class="p-rack__cable-list">
                   <ToolCableCard
                     v-for="(cable, index) in inputs.strongCablesUI"
@@ -98,7 +111,7 @@ const {
                   />
                 </div>
                 <AppButton
-variant="secondary"
+                  variant="secondary"
                   class="p-rack__add-button"
                   @click="addStrongCable"
                 >
@@ -111,11 +124,19 @@ variant="secondary"
           <!-- 弱電エリア -->
           <AppCard variant="default">
             <div class="p-rack__card-header">
-              <h3 class="p-rack__card-title">弱電エリア</h3>
-              <AppToggle v-model="inputs.isWeak" label="" />
+              <h3 class="p-rack__card-title">
+                弱電エリア
+              </h3>
+              <AppToggle
+                v-model="inputs.isWeak"
+                label=""
+              />
             </div>
 
-            <div v-if="inputs.isWeak" class="p-rack__card-body">
+            <div
+              v-if="inputs.isWeak"
+              class="p-rack__card-body"
+            >
               <AppFormGroup label="段積み数">
                 <AppInputGroup>
                   <AppInput
@@ -130,7 +151,9 @@ variant="secondary"
               </AppFormGroup>
 
               <div>
-                <div class="p-rack__section-title">弱電ケーブルリスト</div>
+                <div class="p-rack__section-title">
+                  弱電ケーブルリスト
+                </div>
                 <div class="p-rack__cable-list">
                   <ToolCableCard
                     v-for="(cable, index) in inputs.weakCablesUI"
@@ -142,7 +165,7 @@ variant="secondary"
                   />
                 </div>
                 <AppButton
-variant="secondary"
+                  variant="secondary"
                   class="p-rack__add-button"
                   @click="addWeakCable"
                 >
@@ -178,7 +201,10 @@ variant="secondary"
                   規格外 ({{ result?.totalWidth ? Math.ceil(result.totalWidth) : 0 }}mm以上)
                 </template>
               </div>
-              <div v-if="result?.isOverflow" class="p-result-rack__warning">
+              <div
+                v-if="result?.isOverflow"
+                class="p-result-rack__warning"
+              >
                 ⚠️ ケーブルの高さがラックの有効深さ({{ maxDepth }}mm)を超過しています。
               </div>
             </div>
@@ -192,10 +218,16 @@ variant="secondary"
           <ToolResultRow label="弱電 必要幅">
             <strong>{{ result?.wWeak?.toFixed(1) ?? '0.0' }}</strong> mm
           </ToolResultRow>
-          <ToolResultRow v-if="inputs.isStrong && inputs.isWeak" label="セパレータ幅">
+          <ToolResultRow
+            v-if="inputs.isStrong && inputs.isWeak"
+            label="セパレータ幅"
+          >
             <strong>{{ result?.wSep?.toFixed(1) ?? '0.0' }}</strong> mm
           </ToolResultRow>
-          <ToolResultRow label="合計 必要幅" top-border>
+          <ToolResultRow
+            label="合計 必要幅"
+            top-border
+          >
             <strong>{{ result?.totalWidth ? Math.ceil(result.totalWidth) : 0 }}</strong> mm
           </ToolResultRow>
           <ToolResultRow label="最大ケーブル高さ">
@@ -209,10 +241,16 @@ variant="secondary"
     <template #basis>
       <ToolCalcBasisPanel :steps="mathSteps" />
     </template>
-    </ToolLayout>
+  </ToolLayout>
 
-    <!-- リセット確認モーダル -->
-    <AppConfirmModal v-model="isResetModalOpen" title="リセットの確認" message="入力した条件をすべてリセットしますか？" confirm-text="リセットする" @confirm="confirmReset" />
+  <!-- リセット確認モーダル -->
+  <AppConfirmModal
+    v-model="isResetModalOpen"
+    title="リセットの確認"
+    message="入力した条件をすべてリセットしますか？"
+    confirm-text="リセットする"
+    @confirm="confirmReset"
+  />
 </template>
 
 <style scoped lang="scss">
@@ -223,12 +261,12 @@ variant="secondary"
   // --- 子要素 ---
   &__val {
     // --- 継承 ---
-    @extend %text-title-xl;
+    @include text-title-xl;
   }
 
   &__warning {
     // --- 継承 ---
-    @extend %text-title-sm;
+    @include text-title-sm;
 
     // --- ボックスモデル ---
     padding: var(--gap-element);
@@ -270,7 +308,7 @@ variant="secondary"
 
   &__card-title {
     // --- 継承 ---
-    @extend %text-title-md;
+    @include text-title-md;
   }
 
   &__card-body {
@@ -280,7 +318,7 @@ variant="secondary"
 
   &__section-title {
     // --- 継承 ---
-    @extend %text-desc;
+    @include text-desc;
 
     // --- ボックスモデル ---
     margin-bottom: var(--gap-component);

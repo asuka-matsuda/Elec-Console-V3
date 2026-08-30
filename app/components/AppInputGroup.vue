@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppInputGroup
  * Input と Select やテキストアドオンを連結して表示するためのレイアウトコンポーネント。
@@ -10,7 +10,10 @@
     <div class="c-input-group__main">
       <slot />
     </div>
-    <div v-if="$slots.append" class="c-input-group__append">
+    <div
+      v-if="$slots.append"
+      class="c-input-group__append"
+    >
       <slot name="append" />
     </div>
   </div>
@@ -65,7 +68,7 @@
 
     :deep(.c-input-addon) {
       // --- 継承 ---
-      @extend %text-desc;
+      @include text-desc;
 
       // --- ボックスモデル ---
       padding: 0 var(--pad-section);

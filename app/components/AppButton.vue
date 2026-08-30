@@ -53,120 +53,93 @@ const componentTag = computed(() => {
 
 <style scoped lang="scss">
 .c-btn {
-  // --- CSSカスタムプロパティ ---
   --btn-color: var(--color-category-main);
-
-  // --- 継承 ---
-  @extend %click-enabled;
-  @extend %text-meta;
-
-  // --- レイアウト・配置 ---
-  @include inline-flex-center(var(--pad-component));
 
   position: relative;
 
   flex-shrink: 0;
 
-  // --- ボックスモデル ---
   height: var(--size-control-sm);
   padding: 0 var(--pad-component);
 
-  // --- タイポグラフィ ---
   font-weight: var(--font-weight-semibold);
 
-  @include border-dim(var(--btn-color));
-
-  // --- 視覚効果 ---
-  @include state-base(var(--shadow-elevation-sm), var(--transition-fast));
-
-  // --- モディファイア（バリアント） ---
-  &--danger {
-    --btn-color: var(--color-status-danger);
-  }
-  &--success {
-    --btn-color: var(--color-status-success);
-  }
-  &--secondary {
-    --btn-color: var(--color-status-neutral);
-  }
-
-  // --- モディファイア（ブロック） ---
-  &--block {
-    display: flex;
-    width: 100%;
-  }
-
-  // --- 疑似要素 ---
+  // タップ領域の確保
   &::after {
     content: "";
 
-    // --- レイアウト・配置 ---
     position: absolute;
     top: 50%;
     left: 50%;
-
-    // --- 視覚効果 ---
     transform: translate(-50%, -50%);
 
-    // --- ボックスモデル ---
     width: 100%;
     min-width: var(--size-control-lg);
     height: 100%;
     min-height: var(--size-control-lg);
   }
 
-  // --- 疑似クラス ---
+  &--danger {
+    --btn-color: var(--color-status-danger);
+  }
+
+  &--success {
+    --btn-color: var(--color-status-success);
+  }
+
+  &--secondary {
+    --btn-color: var(--color-status-neutral);
+  }
+
+  &--block {
+    display: flex;
+    width: 100%;
+  }
+
   &:hover:not(:disabled, .is-disabled) {
-    // --- レイアウト・配置 ---
     z-index: 1;
 
     @include state-hover(var(--btn-color));
   }
 
   &:focus-visible {
-    // --- レイアウト・配置 ---
     z-index: 1;
 
     @include state-focus(var(--btn-color));
-
-    // --- 視覚効果 ---
     @include cyber-text-glow(var(--btn-color));
   }
 
   &:active:not(:disabled, .is-disabled) {
-    // --- レイアウト・配置 ---
     z-index: 1;
 
     @include state-active(var(--btn-color));
-
-    // --- 視覚効果 ---
     @include cyber-text-glow(var(--btn-color));
   }
 
   &:is(:disabled, .is-disabled) {
-    // --- 継承 ---
-    @extend %disabled;
+    @include disabled;
   }
 
-  // --- モディファイア ---
   &--md {
-    // --- 継承 ---
-    @extend %text-desc;
+    @include text-desc;
 
-    // --- ボックスモデル ---
     height: var(--size-control-md);
     padding: 0 var(--pad-container);
   }
 
   &--icon-only {
-    // --- ボックスモデル ---
     width: var(--size-control-sm);
 
-    // --- モディファイア ---
     &.c-btn--md {
-      // --- ボックスモデル ---
       width: var(--size-control-md);
     }
   }
+
+  @include click-enabled;
+  @include text-meta;
+  @include inline-flex-center(var(--pad-component));
+
+  @include border-dim(var(--btn-color));
+  @include state-base(var(--shadow-elevation-sm), var(--transition-fast));
 }
 </style>

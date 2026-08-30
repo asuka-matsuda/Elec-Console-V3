@@ -57,7 +57,6 @@ const handleSaveToHistory = async () => {
 
 <template>
   <ToolLayout>
-
     <template #results>
       <ToolResultPanel
         title="計算結果"
@@ -65,7 +64,10 @@ const handleSaveToHistory = async () => {
         :save-function="handleSaveToHistory"
       >
         <ClientOnly>
-          <ToolVoltageResult :inputs="calcInputs" :result="calcResult" />
+          <ToolVoltageResult
+            :inputs="calcInputs"
+            :result="calcResult"
+          />
         </ClientOnly>
       </ToolResultPanel>
     </template>
@@ -73,10 +75,16 @@ const handleSaveToHistory = async () => {
     <template #inputs>
       <ToolInputPanel @reset="openResetModal">
         <!-- 1. 計算モード切替 (AppRadioGroup) -->
-        <AppRadioGroup v-model="form.mode" :options="modeOptions" />
+        <AppRadioGroup
+          v-model="form.mode"
+          :options="modeOptions"
+        />
 
         <div class="l-grid l-grid--2col">
-          <template v-for="field in formFields" :key="field.id">
+          <template
+            v-for="field in formFields"
+            :key="field.id"
+          >
             <Field 
               v-if="!field.showIf || field.showIf()"
               v-slot="{ errorMessage, handleChange, handleBlur }" 
@@ -147,16 +155,22 @@ const handleSaveToHistory = async () => {
             </Field>
           </template>
         </div>
-        </ToolInputPanel>
+      </ToolInputPanel>
     </template>
 
     <template #basis>
       <ToolCalcBasisPanel :steps="mathSteps" />
     </template>
-    </ToolLayout>
+  </ToolLayout>
 
-    <!-- リセット確認モーダル -->
-    <AppConfirmModal v-model="isResetModalOpen" title="リセットの確認" message="入力した条件をすべてリセットしますか？" confirm-text="リセットする" @confirm="resetForm" />
+  <!-- リセット確認モーダル -->
+  <AppConfirmModal
+    v-model="isResetModalOpen"
+    title="リセットの確認"
+    message="入力した条件をすべてリセットしますか？"
+    confirm-text="リセットする"
+    @confirm="resetForm"
+  />
 </template>
 
 <style scoped lang="scss">

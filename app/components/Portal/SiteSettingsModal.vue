@@ -113,16 +113,25 @@ const handleExport = () => {
     @cancel="isOpen = false"
   >
     <div class="c-site-settings">
-      <AppTabs v-model="activeTab" :options="tabs" />
+      <AppTabs
+        v-model="activeTab"
+        :options="tabs"
+      />
 
       <div class="c-site-settings__content">
         <!-- 基本設定 -->
         <template v-if="activeTab === 'basic'">
           <AppFormGroup label="ステータス">
-            <AppSelect v-model="editStatus" :options="statusOptions" />
+            <AppSelect
+              v-model="editStatus"
+              :options="statusOptions"
+            />
           </AppFormGroup>
           <AppFormGroup label="現場ID (半角英数)">
-            <AppInput v-model="editId" placeholder="例: site-tokyo-01" />
+            <AppInput
+              v-model="editId"
+              placeholder="例: site-tokyo-01"
+            />
           </AppFormGroup>
           <AppFormGroup label="現場名">
             <AppInput v-model="editData.name" />
@@ -130,11 +139,18 @@ const handleExport = () => {
           <AppFormGroup label="アサイン済ワーカー">
             <div class="c-site-settings__workers">
               <template v-if="workerNames.length > 0">
-                <AppBadge v-for="(name, idx) in workerNames" :key="idx" variant="secondary">
+                <AppBadge
+                  v-for="(name, idx) in workerNames"
+                  :key="idx"
+                  variant="secondary"
+                >
                   {{ name }}
                 </AppBadge>
               </template>
-              <div v-else class="u-text-muted u-text-sm">
+              <div
+                v-else
+                class="u-text-muted u-text-sm"
+              >
                 アサインされているワーカーはいません
               </div>
             </div>
@@ -144,22 +160,42 @@ const handleExport = () => {
         <!-- 連携設定 -->
         <template v-else-if="activeTab === 'integration'">
           <AppFormGroup label="Excel連携ファイル保存先 (絶対パス)">
-            <AppInput v-model="editData.excelPath" placeholder="例: D:\Data\site_a.xlsm" />
+            <AppInput
+              v-model="editData.excelPath"
+              placeholder="例: D:\Data\site_a.xlsm"
+            />
           </AppFormGroup>
           <AppFormGroup label="帳票テンプレート保存先 (絶対パス)">
-            <AppInput v-model="editData.reportTemplatePath" placeholder="例: D:\Templates\report.xlsx" />
+            <AppInput
+              v-model="editData.reportTemplatePath"
+              placeholder="例: D:\Templates\report.xlsx"
+            />
           </AppFormGroup>
 
-          <AppPanel title="データベース連携" class="u-mt-6">
+          <AppPanel
+            title="データベース連携"
+            class="u-mt-6"
+          >
             <div class="c-site-settings__sync-actions">
-              <AppButton variant="danger" icon="download" @click="handleImport">
+              <AppButton
+                variant="danger"
+                icon="download"
+                @click="handleImport"
+              >
                 Excelから取込 (初期化)
               </AppButton>
-              <AppButton variant="primary" icon="upload" @click="handleExport">
+              <AppButton
+                variant="primary"
+                icon="upload"
+                @click="handleExport"
+              >
                 Excelへ書戻し
               </AppButton>
             </div>
-            <div v-if="showSyncMsg" class="c-site-settings__sync-msg">
+            <div
+              v-if="showSyncMsg"
+              class="c-site-settings__sync-msg"
+            >
               {{ syncMsg }}
             </div>
           </AppPanel>
@@ -172,11 +208,30 @@ const handleExport = () => {
               計算や連携の対象外とする回路を複数追加できます。
             </template>
             <div class="c-site-settings__circuit-list">
-              <div v-for="(_, idx) in excludedCircuitsList" :key="idx" class="c-site-settings__circuit-row">
-                <AppInput v-model="excludedCircuitsList[idx]" placeholder="例: 盤A-回路1" />
-                <AppButton variant="danger" icon="trash-2" size="sm" @click="removeCircuit(idx)" />
+              <div
+                v-for="(_, idx) in excludedCircuitsList"
+                :key="idx"
+                class="c-site-settings__circuit-row"
+              >
+                <AppInput
+                  v-model="excludedCircuitsList[idx]"
+                  placeholder="例: 盤A-回路1"
+                />
+                <AppButton
+                  variant="danger"
+                  icon="trash-2"
+                  size="sm"
+                  @click="removeCircuit(idx)"
+                />
               </div>
-              <AppButton variant="secondary" icon="plus" size="sm" @click="addCircuit">除外回路を追加する</AppButton>
+              <AppButton
+                variant="secondary"
+                icon="plus"
+                size="sm"
+                @click="addCircuit"
+              >
+                除外回路を追加する
+              </AppButton>
             </div>
           </AppFormGroup>
         </template>
@@ -184,8 +239,18 @@ const handleExport = () => {
     </div>
 
     <template #footer>
-      <AppButton variant="secondary" @click="isOpen = false">キャンセル</AppButton>
-      <AppButton variant="primary" @click="handleSave">保存する</AppButton>
+      <AppButton
+        variant="secondary"
+        @click="isOpen = false"
+      >
+        キャンセル
+      </AppButton>
+      <AppButton
+        variant="primary"
+        @click="handleSave"
+      >
+        保存する
+      </AppButton>
     </template>
   </AppModal>
 </template>
@@ -196,15 +261,19 @@ const handleExport = () => {
 
   &__content {
     @include flex-column(var(--gap-component));
+
     min-height: 300px;
   }
 
   &__workers {
     @include flex-start(var(--gap-element));
+
     flex-wrap: wrap;
     min-height: 40px;
     padding: var(--gap-element);
+
     @include border-dim;
+
     // border-radius PROHIBITED
   }
 
@@ -214,8 +283,8 @@ const handleExport = () => {
 
   &__sync-msg {
     margin-top: var(--gap-element);
-    color: var(--color-success);
     font-size: var(--text-sm);
+    color: var(--color-success);
   }
 
   &__circuit-list {
@@ -224,6 +293,7 @@ const handleExport = () => {
 
   &__circuit-row {
     @include flex-start(var(--gap-element));
+
     > *:first-child {
       flex: 1;
     }

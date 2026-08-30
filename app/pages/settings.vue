@@ -53,7 +53,10 @@ const themeOptions = [
               label="外観モード"
               help="全体の明るさを変更します（ダークモード推奨）"
             >
-              <AppSelect v-model="themeMode" :options="themeOptions" />
+              <AppSelect
+                v-model="themeMode"
+                :options="themeOptions"
+              />
             </AppFormGroup>
           </div>
         </AppPanel>

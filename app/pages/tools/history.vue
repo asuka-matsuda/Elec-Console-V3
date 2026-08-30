@@ -91,12 +91,15 @@ const confirmDelete = () => {
         >
           <template #actions>
             <AppButton
-v-if="historyList.length > 0"
+              v-if="historyList.length > 0"
               variant="danger"
               size="sm"
               @click="isClearAllModalOpen = true"
             >
-              <AppIcon name="trash-2" size="sm" />
+              <AppIcon
+                name="trash-2"
+                size="sm"
+              />
               全て削除
             </AppButton>
           </template>
@@ -105,7 +108,10 @@ v-if="historyList.length > 0"
 
       <!-- タブ部分 -->
       <div class="p-history-page__tabs">
-        <AppTabs v-model="currentTab" :options="tabs" />
+        <AppTabs
+          v-model="currentTab"
+          :options="tabs"
+        />
       </div>
 
       <ClientOnly>
@@ -123,9 +129,18 @@ v-if="historyList.length > 0"
         </div>
 
         <!-- 空状態 -->
-        <div v-else class="p-history-page__empty c-empty-state">
-          <AppIcon name="inbox" size="lg" class="c-empty-state__icon" />
-          <p class="c-empty-state__text">保存された履歴はありません。</p>
+        <div
+          v-else
+          class="p-history-page__empty c-empty-state"
+        >
+          <AppIcon
+            name="inbox"
+            size="lg"
+            class="c-empty-state__icon"
+          />
+          <p class="c-empty-state__text">
+            保存された履歴はありません。
+          </p>
         </div>
 
         <!-- SSR時・ハイドレーション前のプレースホルダー -->
@@ -136,7 +151,9 @@ v-if="historyList.length > 0"
               size="lg"
               class="c-empty-state__icon u-spin"
             />
-            <p class="c-empty-state__text">履歴を読み込み中...</p>
+            <p class="c-empty-state__text">
+              履歴を読み込み中...
+            </p>
           </div>
         </template>
       </ClientOnly>

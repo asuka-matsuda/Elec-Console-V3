@@ -1,4 +1,4 @@
-
+﻿
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useTodo } from '~/composables/portal/useTodo';
@@ -33,7 +33,10 @@ const sortedTodos = computed(() => {
   <AppPanel class="p-personal-todo">
     <div class="p-personal-todo__header">
       <h3>
-        <AppIcon name="check" size="sm" /> 
+        <AppIcon
+          name="check"
+          size="sm"
+        /> 
         パーソナルToDo
       </h3>
     </div>
@@ -44,24 +47,45 @@ const sortedTodos = computed(() => {
         placeholder="新しいタスクを入力..." 
         @keyup.enter="handleAdd"
       />
-      <AppButton variant="primary" @click="handleAdd">
-        <AppIcon name="plus" size="sm" />
+      <AppButton
+        variant="primary"
+        @click="handleAdd"
+      >
+        <AppIcon
+          name="plus"
+          size="sm"
+        />
       </AppButton>
     </div>
 
     <ul class="p-personal-todo__list">
-      <li v-for="todo in sortedTodos" :key="todo.id" class="p-personal-todo__item">
+      <li
+        v-for="todo in sortedTodos"
+        :key="todo.id"
+        class="p-personal-todo__item"
+      >
         <AppCheckbox 
           :model-value="todo.completed" 
           :class="{ 'is-completed': todo.completed }"
           :label="todo.text"
           @update:model-value="toggleTodo(todo.id)"
         />
-        <AppButton variant="secondary" size="sm" @click="deleteTodo(todo.id)">
-          <AppIcon name="trash-2" size="sm" />
+        <AppButton
+          variant="secondary"
+          size="sm"
+          @click="deleteTodo(todo.id)"
+        >
+          <AppIcon
+            name="trash-2"
+            size="sm"
+          />
         </AppButton>
       </li>
-      <div v-if="todos.length === 0" class="u-text-muted u-text-sm" style="text-align: center; margin-top: 16px;">
+      <div
+        v-if="todos.length === 0"
+        class="u-text-muted u-text-sm"
+        style=" margin-top: 16px;text-align: center;"
+      >
         タスクはありません
       </div>
     </ul>
@@ -74,7 +98,8 @@ const sortedTodos = computed(() => {
 
   &__header h3 {
     @include flex-start(var(--gap-element));
-    @extend %text-md;
+    @include text-md;
+
     color: var(--color-text-main);
   }
 
@@ -85,22 +110,26 @@ const sortedTodos = computed(() => {
 
   &__list {
     @include flex-column(var(--gap-element));
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    max-height: 400px;
+
     overflow-y: auto;
+
+    max-height: 400px;
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
   }
 
   &__item {
     @include flex-between(var(--gap-element));
+
     padding: var(--pad-sm);
-    background-color: var(--color-bg-hover);
     border-radius: var(--radius-sm);
+    background-color: var(--color-bg-hover);
     
     .is-completed {
-      opacity: 0.5;
       text-decoration: line-through;
+      opacity: 0.5;
     }
   }
 }

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppPanel
  * ヘッダーや枠線（サイバー風のブラケットなど）を持ち、コンテンツを囲むパネルコンポーネント。
@@ -28,9 +28,14 @@ withDefaults(
     class="c-panel"
     :class="[`c-panel--${variant}`, `c-panel--color-${bracketColor}`]"
   >
-    <header v-if="title || $slots.header" class="c-panel__header">
+    <header
+      v-if="title || $slots.header"
+      class="c-panel__header"
+    >
       <slot name="header">
-        <h2 class="c-panel__title">{{ title }}</h2>
+        <h2 class="c-panel__title">
+          {{ title }}
+        </h2>
       </slot>
     </header>
 
@@ -117,7 +122,7 @@ withDefaults(
   // --- 子要素 ---
   &__title {
     // --- 継承 ---
-    @extend %text-title-md;
+    @include text-title-md;
 
     color: #{theme-color(var(--p-theme-color), 100%)};
     text-shadow: 0 0 var(--blur-md) #{theme-color(var(--p-theme-color), 40%)};

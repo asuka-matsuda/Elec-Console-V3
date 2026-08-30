@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * login
  * ポータルログインページ
@@ -46,40 +46,50 @@ const handleLogin = async () => {
 
 <template>
   <div class="p-login">
-      <form
+    <form
        
-        @submit.prevent="handleLogin"
+      @submit.prevent="handleLogin"
+    >
+      <div
+        v-if="errorMessage"
+        class="p-login__error"
       >
-        <div v-if="errorMessage" class="p-login__error">
-          {{ errorMessage }}
-        </div>
+        {{ errorMessage }}
+      </div>
 
-        <template v-for="field in formFields" :key="field.id">
-          <AppFormGroup :label="field.label">
-            <AppInput
-              v-model="formData[field.id]"
-              :type="field.type"
-              :placeholder="field.placeholder"
-              :disabled="isLoading"
-            />
-          </AppFormGroup>
-        </template>
+      <template
+        v-for="field in formFields"
+        :key="field.id"
+      >
+        <AppFormGroup :label="field.label">
+          <AppInput
+            v-model="formData[field.id]"
+            :type="field.type"
+            :placeholder="field.placeholder"
+            :disabled="isLoading"
+          />
+        </AppFormGroup>
+      </template>
 
         
 
-        <div class="p-login__actions">
-          <AppButton
-            type="submit"
-            variant="primary"
-            block
-            :disabled="isLoading"
-          >
-            <template v-if="isLoading">ログイン中...</template>
-            <template v-else>ログイン</template>
-          </AppButton>
-        </div>
-      </form>
+      <div class="p-login__actions">
+        <AppButton
+          type="submit"
+          variant="primary"
+          block
+          :disabled="isLoading"
+        >
+          <template v-if="isLoading">
+            ログイン中...
+          </template>
+          <template v-else>
+            ログイン
+          </template>
+        </AppButton>
       </div>
+    </form>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -90,16 +100,17 @@ const handleLogin = async () => {
   // --- 子要素 ---
   &__error {
     // --- 継承 ---
-    @extend %text-sm;
+    @include text-sm;
+
+    margin-bottom: var(--gap-component);
 
     // --- ボックスモデル ---
     padding: var(--pad-element);
-    margin-bottom: var(--gap-component);
-
-    @include border-base(var(--color-status-danger));
 
     // --- タイポグラフィ ---
     color: var(--color-status-danger);
+
+    @include border-base(var(--color-status-danger));
   }
 
   &__actions {

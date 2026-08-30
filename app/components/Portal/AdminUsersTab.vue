@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * PortalAdminUsersTab
  * ポータル管理 - ユーザー管理タブ
@@ -161,17 +161,18 @@ const handleResetPassword = async () => {
             variant="primary"
             icon="plus"
             @click="isCreateModalOpen = true"
-            >新規ユーザー登録</AppButton
           >
+            新規ユーザー登録
+          </AppButton>
         </div>
 
         <AppTable 
-        :columns="userHeaders" 
-        :data="sortedUsers"
-        :sort-by="sortKey"
-        :sort-order="sortOrder"
-        @sort="handleSort"
-      >
+          :columns="userHeaders" 
+          :data="sortedUsers"
+          :sort-by="sortKey"
+          :sort-order="sortOrder"
+          @sort="handleSort"
+        >
           <template #cell-name="{ row }">
             {{ row.lastName }} {{ row.firstName }}
           </template>
@@ -194,11 +195,10 @@ const handleResetPassword = async () => {
                 v-if="row.requirePasswordReset"
                 variant="danger"
                 size="sm"
-                >PWリセット要求</AppBadge
               >
-              <span class="c-admin-users__meta"
-                >最終ログイン: {{ formatLastLogin(row) }}</span
-              >
+                PWリセット要求
+              </AppBadge>
+              <span class="c-admin-users__meta">最終ログイン: {{ formatLastLogin(row) }}</span>
             </div>
           </template>
           <template #cell-actions="{ row }">
@@ -207,21 +207,24 @@ const handleResetPassword = async () => {
                 variant="secondary"
                 size="sm"
                 @click="handleOpenAssign(row)"
-                >現場アサイン</AppButton
               >
+                現場アサイン
+              </AppButton>
               <AppButton
                 variant="secondary"
                 size="sm"
                 @click="confirmResetPassword(row)"
-                >PW初期化</AppButton
               >
+                PW初期化
+              </AppButton>
               <AppButton
                 variant="danger"
                 size="sm"
                 :disabled="row.id === 'master'"
                 @click="confirmDelete(row)"
-                >削除</AppButton
               >
+                削除
+              </AppButton>
             </div>
           </template>
         </AppTable>
@@ -281,7 +284,7 @@ const handleResetPassword = async () => {
   }
 
   &__meta {
-    @extend %text-meta;
+    @include text-meta;
   }
 }
 </style>

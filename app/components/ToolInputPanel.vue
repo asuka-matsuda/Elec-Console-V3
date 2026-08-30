@@ -12,7 +12,10 @@ defineEmits(["reset"]);
 </script>
 
 <template>
-  <AppPanel bracket-color="tool" class="c-tool-panel">
+  <AppPanel
+    bracket-color="tool"
+    class="c-tool-panel"
+  >
     <template #header>
       <AppSectionHeader
         :title="title || '条件入力'"
@@ -22,8 +25,15 @@ defineEmits(["reset"]);
         size="md"
       >
         <template #actions>
-          <AppButton variant="danger" size="sm" @click="$emit('reset')">
-            <AppIcon name="refresh-cw" size="sm" />
+          <AppButton
+            variant="danger"
+            size="sm"
+            @click="$emit('reset')"
+          >
+            <AppIcon
+              name="refresh-cw"
+              size="sm"
+            />
             リセット
           </AppButton>
         </template>

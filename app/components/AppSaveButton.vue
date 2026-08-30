@@ -48,19 +48,30 @@ const handleClick = async () => {
   >
     <!-- 通常時 -->
     <template v-if="state === 'idle'">
-      <AppIcon name="save" size="sm" />
+      <AppIcon
+        name="save"
+        size="sm"
+      />
       {{ label || "履歴に保存" }}
     </template>
 
     <!-- 保存中 (ローディング) -->
     <template v-else-if="state === 'saving'">
-      <AppIcon name="loader" size="sm" class="u-spin" />
+      <AppIcon
+        name="loader"
+        size="sm"
+        class="u-spin"
+      />
       保存中...
     </template>
 
     <!-- 成功時 (チェックマーク) -->
     <template v-else-if="state === 'success'">
-      <AppIcon name="check" size="sm" class="c-save-button__check" />
+      <AppIcon
+        name="check"
+        size="sm"
+        class="c-save-button__check"
+      />
       保存しました
     </template>
   </AppButton>

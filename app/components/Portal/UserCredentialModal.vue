@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { printUserCredential } from "~/utils/printUserCredential";
 
 const props = defineProps<{
@@ -27,14 +27,20 @@ const handleCopyPassword = () => {
 </script>
 
 <template>
-  <AppModal v-model="isOpen" title="ログイン情報の発行完了">
+  <AppModal
+    v-model="isOpen"
+    title="ログイン情報の発行完了"
+  >
     <div class="c-user-credential-modal">
       <p class="c-user-credential-modal__desc">
         以下のログイン情報を作業員へお伝えください。<br />
         （初期パスワードはこの画面を閉じると二度と表示されません）
       </p>
 
-      <div v-if="user" class="c-user-credential-modal__credential-box">
+      <div
+        v-if="user"
+        class="c-user-credential-modal__credential-box"
+      >
         <AppFormGroup label="氏名">
           <div class="c-user-credential-modal__credential-value">
             {{ user.lastName }} {{ user.firstName }}
@@ -56,13 +62,26 @@ const handleCopyPassword = () => {
     </div>
 
     <template #footer>
-      <AppButton variant="secondary" icon="document" @click="handleCopyPassword"
-        >PWをコピー</AppButton
+      <AppButton
+        variant="secondary"
+        icon="document"
+        @click="handleCopyPassword"
       >
-      <AppButton variant="secondary" icon="document" @click="handlePrint"
-        >印刷する</AppButton
+        PWをコピー
+      </AppButton>
+      <AppButton
+        variant="secondary"
+        icon="document"
+        @click="handlePrint"
       >
-      <AppButton variant="primary" @click="isOpen = false">閉じる</AppButton>
+        印刷する
+      </AppButton>
+      <AppButton
+        variant="primary"
+        @click="isOpen = false"
+      >
+        閉じる
+      </AppButton>
     </template>
   </AppModal>
 </template>
@@ -70,25 +89,28 @@ const handleCopyPassword = () => {
 <style scoped lang="scss">
 .c-user-credential-modal {
   &__desc {
-    @extend %text-desc;
+    @include text-desc;
   }
 
   &__credential-box {
     @include flex-column(var(--space-3));
+
+    padding: var(--space-4);
     background: transparent;
     backdrop-filter: blur(var(--blur-sm));
-    padding: var(--space-4);
+
     @include border-dim(var(--color-category-main), 20%);
   }
 
   &__credential-value {
-    @extend %text-title-sm;
+    @include text-title-sm;
+
     padding: var(--space-2) 0;
 
     &--password {
-      color: var(--color-status-success);
       font-family: var(--font-mono);
       font-size: var(--font-size-lg);
+      color: var(--color-status-success);
       letter-spacing: 2px;
     }
   }

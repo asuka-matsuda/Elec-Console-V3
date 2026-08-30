@@ -25,7 +25,10 @@ const emit = defineEmits<{
       />
 
       <!-- Breadcrumbs / Page Title -->
-      <AppBreadcrumb v-if="breadcrumbs?.length" :items="breadcrumbs" />
+      <AppBreadcrumb
+        v-if="breadcrumbs?.length"
+        :items="breadcrumbs"
+      />
     </div>
 
     <div class="l-header__actions">

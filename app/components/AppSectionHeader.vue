@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppSectionHeader
  * セクションのタイトル、アイコン、アクションボタン、および区切り線を表示するヘッダーコンポーネント。
@@ -34,14 +34,24 @@ withDefaults(
         :class="[`c-section-header__title--${size}`]"
         :style="`--section-color: var(--color-category-${variant})`"
       >
-        <AppIcon v-if="icon" :name="icon" class="c-section-header__icon" />
+        <AppIcon
+          v-if="icon"
+          :name="icon"
+          class="c-section-header__icon"
+        />
         <slot>{{ title }}</slot>
       </component>
-      <div v-if="$slots.actions" class="c-section-header__actions">
+      <div
+        v-if="$slots.actions"
+        class="c-section-header__actions"
+      >
         <slot name="actions" />
       </div>
     </div>
-    <div v-if="$slots.description" class="c-section-header__desc">
+    <div
+      v-if="$slots.description"
+      class="c-section-header__desc"
+    >
       <slot name="description" />
     </div>
     <AppDivider
@@ -60,6 +70,7 @@ withDefaults(
   &__top {
     // --- レイアウト・配置 ---
     @include flex-between(var(--pad-container));
+
     align-items: flex-end;
 
     // --- ボックスモデル ---
@@ -80,17 +91,17 @@ withDefaults(
     // --- モディファイア ---
     &--lg {
       // --- 継承 ---
-      @extend %text-title-lg;
+      @include text-title-lg;
     }
 
     &--md {
       // --- 継承 ---
-      @extend %text-title-md;
+      @include text-title-md;
     }
 
     &--sm {
       // --- 継承 ---
-      @extend %text-title-sm;
+      @include text-title-sm;
     }
   }
 
@@ -101,7 +112,7 @@ withDefaults(
 
   &__desc {
     // --- 継承 ---
-    @extend %text-desc;
+    @include text-desc;
   }
 }
 </style>

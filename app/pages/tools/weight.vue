@@ -49,7 +49,10 @@ const totalWeight = computed(() => {
       <ToolInputPanel @reset="openResetModal">
         <div class="p-weight__sections">
           <div class="l-grid l-grid--2col">
-            <AppFormGroup label="ケーブル種別" required>
+            <AppFormGroup
+              label="ケーブル種別"
+              required
+            >
               <AppSelect
                 v-model="inputs.category"
                 :options="categories"
@@ -57,7 +60,10 @@ const totalWeight = computed(() => {
               />
             </AppFormGroup>
 
-            <AppFormGroup label="ケーブルサイズ" required>
+            <AppFormGroup
+              label="ケーブルサイズ"
+              required
+            >
               <AppSelect
                 v-model="inputs.cableIdx"
                 :options="availableSizes"
@@ -68,7 +74,10 @@ const totalWeight = computed(() => {
           </div>
 
           <div class="l-grid l-grid--2col">
-            <AppFormGroup label="ケーブル長 (L)" required>
+            <AppFormGroup
+              label="ケーブル長 (L)"
+              required
+            >
               <AppInputGroup>
                 <AppInput
                   v-model="inputs.L_input"
@@ -123,7 +132,10 @@ const totalWeight = computed(() => {
                   選定不可
                 </template>
               </div>
-              <div v-if="!result?.error && !result?.bestDrum" class="p-result-weight__warning">
+              <div
+                v-if="!result?.error && !result?.bestDrum"
+                class="p-result-weight__warning"
+              >
                 ⚠️ 条件に合うドラムが見つかりませんでした。
               </div>
             </div>
@@ -138,10 +150,16 @@ const totalWeight = computed(() => {
             <ToolResultRow label="ドラム空重量">
               <strong>{{ result?.bestDrum?.weight }}</strong> kg
             </ToolResultRow>
-            <ToolResultRow label="総重量 (ケーブル+ドラム)" top-border>
+            <ToolResultRow
+              label="総重量 (ケーブル+ドラム)"
+              top-border
+            >
               <strong>{{ totalWeight?.toFixed(1) }}</strong> kg
             </ToolResultRow>
-            <ToolResultRow label="最大巻取可能長" class="u-mt-2">
+            <ToolResultRow
+              label="最大巻取可能長"
+              class="u-mt-2"
+            >
               <strong>{{ result?.maxCapacityMeters?.toFixed(1) }}</strong> m
             </ToolResultRow>
           </template>
@@ -169,10 +187,16 @@ const totalWeight = computed(() => {
         </div>
       </ToolCalcBasisPanel>
     </template>
-    </ToolLayout>
+  </ToolLayout>
 
-    <!-- リセット確認モーダル -->
-    <AppConfirmModal v-model="isResetModalOpen" title="リセットの確認" message="入力した条件をすべてリセットしますか？" confirm-text="リセットする" @confirm="confirmReset" />
+  <!-- リセット確認モーダル -->
+  <AppConfirmModal
+    v-model="isResetModalOpen"
+    title="リセットの確認"
+    message="入力した条件をすべてリセットしますか？"
+    confirm-text="リセットする"
+    @confirm="confirmReset"
+  />
 </template>
 
 <style scoped lang="scss">
@@ -183,12 +207,12 @@ const totalWeight = computed(() => {
   // --- 子要素 ---
   &__val {
     // --- 継承 ---
-    @extend %text-title-xl;
+    @include text-title-xl;
   }
 
   &__warning {
     // --- 継承 ---
-    @extend %text-desc;
+    @include text-desc;
 
     // --- ボックスモデル ---
     padding: var(--gap-element);
@@ -207,7 +231,7 @@ const totalWeight = computed(() => {
 
   &__note {
     // --- 継承 ---
-    @extend %text-meta;
+    @include text-meta;
 
     // --- ボックスモデル ---
     margin-top: var(--pad-container);

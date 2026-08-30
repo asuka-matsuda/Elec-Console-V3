@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ref, watch } from 'vue';
 
 export interface EventFormData {
@@ -90,12 +90,24 @@ const closeModal = () => {
 </script>
 
 <template>
-  <AppModal :model-value="modelValue" :title="isEditing ? '予定の編集' : '新しい予定'" @update:model-value="emit('update:modelValue', $event)">
+  <AppModal
+    :model-value="modelValue"
+    :title="isEditing ? '予定の編集' : '新しい予定'"
+    @update:model-value="emit('update:modelValue', $event)"
+  >
     <div class="p-event-form">
       <div class="p-event-form__field">
         <label>タイトル</label>
-        <AppInput v-model="form.title" placeholder="会議、送電試験など" required :error="hasTitleError" />
-        <span v-if="hasTitleError" class="p-event-form__error">タイトルを入力してください</span>
+        <AppInput
+          v-model="form.title"
+          placeholder="会議、送電試験など"
+          required
+          :error="hasTitleError"
+        />
+        <span
+          v-if="hasTitleError"
+          class="p-event-form__error"
+        >タイトルを入力してください</span>
       </div>
       <div class="p-event-form__field">
         <label>予定種別</label>
@@ -108,21 +120,49 @@ const closeModal = () => {
       <div class="p-event-form__row">
         <div class="p-event-form__field">
           <label>開始日時</label>
-          <CalendarDateInput :key="'start-' + form.allDay" v-model="form.start" :type="form.allDay ? 'date' : 'datetime-local'" required />
+          <CalendarDateInput
+            :key="'start-' + form.allDay"
+            v-model="form.start"
+            :type="form.allDay ? 'date' : 'datetime-local'"
+            required
+          />
         </div>
         <div class="p-event-form__field">
           <label>終了日時</label>
-          <CalendarDateInput :key="'end-' + form.allDay" v-model="form.end" :type="form.allDay ? 'date' : 'datetime-local'" />
+          <CalendarDateInput
+            :key="'end-' + form.allDay"
+            v-model="form.end"
+            :type="form.allDay ? 'date' : 'datetime-local'"
+          />
         </div>
       </div>
       
-      <AppCheckbox v-model="form.allDay" label="終日イベント" />
+      <AppCheckbox
+        v-model="form.allDay"
+        label="終日イベント"
+      />
 
       <div class="p-event-form__actions">
-        <AppButton v-if="isEditing" variant="danger" @click="handleDelete">削除</AppButton>
+        <AppButton
+          v-if="isEditing"
+          variant="danger"
+          @click="handleDelete"
+        >
+          削除
+        </AppButton>
         <div style="flex: 1"></div>
-        <AppButton variant="secondary" @click="closeModal">キャンセル</AppButton>
-        <AppButton variant="primary" @click="handleSave">保存</AppButton>
+        <AppButton
+          variant="secondary"
+          @click="closeModal"
+        >
+          キャンセル
+        </AppButton>
+        <AppButton
+          variant="primary"
+          @click="handleSave"
+        >
+          保存
+        </AppButton>
       </div>
     </div>
   </AppModal>
@@ -131,22 +171,25 @@ const closeModal = () => {
 <style scoped lang="scss">
 .p-event-form {
   @include flex-column(var(--gap-component));
-  padding: var(--pad-sm) 0;
+
   container-type: inline-size;
+  padding: var(--pad-sm) 0;
   
   &__field {
     @include flex-column(var(--space-1));
     
     label {
-      @extend %text-label;
+      @include text-label;
+
       color: var(--color-text-muted);
     }
   }
 
   &__error {
-    @extend %text-caption;
-    color: var(--color-status-danger);
+    @include text-caption;
+
     margin-top: var(--space-1);
+    color: var(--color-status-danger);
   }
   
   &__row {
@@ -161,6 +204,7 @@ const closeModal = () => {
 
   &__actions {
     @include flex-start(var(--gap-element));
+
     margin-top: var(--gap-component);
     padding-top: var(--pad-sm);
     border-top: var(--border-width-base) solid var(--color-border);

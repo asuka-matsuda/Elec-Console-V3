@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ref, watch } from "vue";
 import { useAdminUsers } from "~/composables/admin/useAdminUsers";
 import { useAdminSites } from "~/composables/admin/useAdminSites";
@@ -42,7 +42,10 @@ const handleSave = async () => {
       このユーザーが参加・閲覧できる現場を選択してください。
     </p>
 
-    <template v-for="site in sites" :key="site.id">
+    <template
+      v-for="site in sites"
+      :key="site.id"
+    >
       <AppFormGroup>
         <AppCheckbox
           v-model="targetSiteIds"
@@ -56,6 +59,6 @@ const handleSave = async () => {
 
 <style scoped lang="scss">
 .c-user-assign-modal__desc {
-  @extend %text-desc;
+  @include text-desc;
 }
 </style>

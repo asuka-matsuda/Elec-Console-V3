@@ -14,7 +14,10 @@ const typedSaveFunction = computed(() => props.saveFunction as (() => Promise<vo
 </script>
 
 <template>
-  <AppPanel bracket-color="tool" class="c-tool-panel">
+  <AppPanel
+    bracket-color="tool"
+    class="c-tool-panel"
+  >
     <template #header>
       <AppSectionHeader
         :title="title || '計算結果・選定結果'"

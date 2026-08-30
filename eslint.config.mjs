@@ -1,27 +1,57 @@
-import withNuxt from './.nuxt/eslint.config.mjs'
+import pluginVue from 'eslint-plugin-vue';
+import vueParser from 'vue-eslint-parser';
+import tsParser from '@typescript-eslint/parser';
+import tsPlugin from '@typescript-eslint/eslint-plugin';
 
-export default withNuxt({
-  rules: {
-    'vue/no-multiple-template-root': 'off',
-    'vue/require-default-prop': 'off',
-    '@typescript-eslint/no-explicit-any': 'warn',
-    '@typescript-eslint/no-unused-vars': 'warn',
-    'no-useless-assignment': 'warn',
-    'vue/html-self-closing': ['warn', {
-      html: {
-        void: 'any',
-        normal: 'any',
-        component: 'any'
-      },
-      svg: 'any',
-      math: 'any'
-    }],
-    'vue/no-restricted-syntax': [
-      'error',
-      {
-        selector: 'VExpressionContainer TSAsExpression',
-        message: 'ƒeƒ“ƒvƒŒ[ƒg“à‚Å‚Ì s Œ^ƒLƒƒƒXƒg‚Í VS Code ‚ÌƒVƒ“ƒ^ƒbƒNƒXƒnƒCƒ‰ƒCƒg‚âƒp[ƒX‚ğ‰ó‚·Œ´ˆö‚É‚È‚è‚Ü‚·B<script> ‘¤‚Å computed ‚âŠÖ”‚ğ’è‹`‚µ‚ÄƒLƒƒƒXƒg‚µ‚Ä‚­‚¾‚³‚¢B'
-      }
+export default [
+  {
+    ignores: [
+      '.nuxt/**',
+      '.output/**',
+      'dist/**',
+      'node_modules/**',
+      '*.config.*',
+      'scripts/**',
     ]
+  },
+  ...pluginVue.configs['flat/recommended'],
+  {
+    files: ['**/*.{js,mjs,cjs,ts,vue}'],
+    languageOptions: {
+      parser: vueParser,
+      parserOptions: {
+        parser: tsParser,
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        extraFileExtensions: ['.vue']
+      }
+    },
+    plugins: {
+      '@typescript-eslint': tsPlugin
+    },
+    rules: {
+      'vue/no-multiple-template-root': 'off',
+      'vue/require-default-prop': 'off',
+      'vue/multi-word-component-names': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': 'warn',
+      'no-useless-assignment': 'warn',
+      'vue/html-self-closing': ['warn', {
+        html: {
+          void: 'any',
+          normal: 'any',
+          component: 'any'
+        },
+        svg: 'any',
+        math: 'any'
+      }],
+      'vue/no-restricted-syntax': [
+        'error',
+        {
+          selector: 'VExpressionContainer TSAsExpression',
+          message: 'ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆå†…ã§ã® as å‹ã‚­ãƒ£ã‚¹ãƒˆã¯ VS Code ã®ã‚·ãƒ³ã‚¿ãƒƒã‚¯ã‚¹ãƒã‚¤ãƒ©ã‚¤ãƒˆã‚„ãƒ‘ãƒ¼ã‚¹ã‚’å£Šã™åŸå› ã«ãªã‚Šã¾ã™ã€‚<script> å´ã§ computed ã‚„é–¢æ•°ã‚’å®šç¾©ã—ã¦ã‚­ãƒ£ã‚¹ãƒˆã—ã¦ãã ã•ã„ã€‚'
+        }
+      ]
+    }
   }
-})
+];

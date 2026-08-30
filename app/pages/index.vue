@@ -141,7 +141,7 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
 
   &__header {
     // --- 継承 ---
-    @extend %text-title-sm;
+    @include text-title-sm;
 
     // --- レイアウト・配置 ---
     display: flex;
@@ -157,7 +157,7 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
 
   &__desc {
     // --- 継承 ---
-    @extend %text-desc;
+    @include text-desc;
   }
 }
 </style>

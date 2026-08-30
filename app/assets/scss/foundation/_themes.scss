@@ -3,7 +3,9 @@
 @use "mixins" as *;
 @use "functions" as *;
 
-// --- ライトテーマ変数 ---
+// ==========================================================================
+// 1. ライトテーマ定義
+// ==========================================================================
 [data-theme="light"] {
   --icon-sb-up: #{$icon-chevron-up-light};
   --icon-sb-up-hover: #{$icon-chevron-up-light-hover};
@@ -14,10 +16,8 @@
   --icon-sb-right: #{$icon-chevron-right-light};
   --icon-sb-right-hover: #{$icon-chevron-right-light-hover};
 
-  // --- ライトモードカラー（純白背景） ---
+  // ライトモードカラー
   --color-main-bg-base: 0 0% 100%;
-
-  // --- テキスト・オーバーレイ ---
   --color-overlay-base: 220 25% 15%;
   --color-text-main-base: 220 25% 15%;
   --color-text-secondary-base: 240 6% 35%;
@@ -25,33 +25,31 @@
   --color-text-disabled-base: 240 5% 75%;
   --color-border-main-base: 240 6% 85%;
 
-  // --- セマンティックカラー（白背景用） ---
+  // セマンティックカラー（白背景調整）
   --color-category-main-base: 245 75% 55%;
   --color-category-tool-base: 189 85% 35%;
   --color-category-database-base: 210 80% 45%;
   --color-category-reference-base: 271 80% 50%;
   --color-category-management-base: 180 75% 30%;
 
-  // --- グラスモーフィズムベース ---
   --glass-base-color: black;
-
-  // --- オーバーレイ・エフェクト ---
   --color-overlay-dark: hsl(240deg 10% 15% / 40%);
   --color-overlay-light: hsl(0deg 0% 100% / 50%);
-
-  // --- シャドウ ---
   --shadow-color: hsl(220deg 25% 15% / 20%);
 
   color-scheme: light;
 }
 
-// --- ボーダースタイルテーマ ---
+// ==========================================================================
+// 2. ボーダースタイルテーマ (HUD / Simple / Gradient / Hybrid)
+// ==========================================================================
 :root,
 body[data-border-style="hud"] {
   --panel-border-color: var(--color-border);
   --panel-border-image: none;
   --panel-box-shadow:
-    inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border),
+    inset 0 0 0 1px var(--color-main-bg),
+    inset 0 0 0 2px var(--color-border),
     var(--shadow-elevation-sm);
   --panel-bracket-display: block;
   --panel-bracket-size: 16px;
@@ -62,21 +60,18 @@ body[data-border-style="simple"] {
   --panel-border-color: var(--color-border);
   --panel-border-image: none;
   --panel-box-shadow:
-    inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent,
+    inset 1px 1px 2px var(--color-border),
+    inset -1px -1px 2px transparent,
     var(--shadow-elevation-sm);
   --panel-bracket-display: none;
 }
 
 body[data-border-style="gradient"] {
   --panel-border-color: transparent;
-  --panel-border-image: linear-gradient(
-      135deg,
-      var(--color-border) 0%,
-      transparent 100%
-    )
-    1;
+  --panel-border-image: linear-gradient(135deg, var(--color-border) 0%, transparent 100%) 1;
   --panel-box-shadow:
-    inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent,
+    inset 1px 1px 2px var(--color-border),
+    inset -1px -1px 2px transparent,
     var(--shadow-elevation-sm);
   --panel-bracket-display: block;
   --panel-bracket-size: 12px;
@@ -85,16 +80,11 @@ body[data-border-style="gradient"] {
 
 body[data-border-style="hybrid"] {
   --panel-border-color: transparent;
-  --panel-border-image: linear-gradient(
-      135deg,
-      var(--color-border) 0%,
-      transparent 100%
-    )
-    1;
+  --panel-border-image: linear-gradient(135deg, var(--color-border) 0%, transparent 100%) 1;
   --panel-box-shadow:
-    inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border),
+    inset 0 0 0 1px var(--color-main-bg),
+    inset 0 0 0 2px var(--color-border),
     var(--shadow-elevation-sm);
-
   --panel-bracket-display: block;
   --panel-bracket-size: 18px;
   --panel-bracket-color: var(--color-border);

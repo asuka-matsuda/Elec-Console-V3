@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * PortalEventDateInput
  * 日付や時間の入力に特化したフォームコントロールコンポーネントです。
@@ -41,7 +41,7 @@ const inputId = useId();
   --form-control-py: var(--pad-component);
 
   // --- 継承 ---
-  @extend %text-desc;
+  @include text-desc;
 
   // --- ボックスモデル ---
   width: 100%;
@@ -54,7 +54,9 @@ const inputId = useId();
   &--sm {
     --form-control-px: var(--pad-component);
     --form-control-py: var(--pad-element);
-    @extend %text-meta;
+
+    @include text-meta;
+
     height: var(--size-control-sm);
   }
 

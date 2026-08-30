@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppMathBasis
  * KaTeXを利用して、数式とその凡例（変数の説明）をステップごとに表示するコンポーネント。
@@ -65,27 +65,30 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
           tag="h4"
           variant="tool"
           size="sm"
-         
         />
 
         <div class="c-math-basis__body">
           <!-- 左カラム：公式 -->
           
-          <div class="c-math-basis__math" v-html="renderMath(step.tex)"></div>
+          <div
+            class="c-math-basis__math"
+            v-html="renderMath(step.tex)"
+          ></div>
 
           <!-- 右カラム：凡例 -->
           <div
             v-if="step.legend && step.legend.length"
             class="c-math-basis__legend"
           >
-            <h5 class="c-math-basis__legend-title">【凡例】</h5>
+            <h5 class="c-math-basis__legend-title">
+              【凡例】
+            </h5>
             <ul class="c-math-basis__legend-list">
               <li
                 v-for="v in parseLegend(step.legend)"
                 :key="v.symbol"
                 class="c-math-basis__legend-item"
               >
-                
                 <span
                   class="c-math-basis__legend-symbol"
                   v-html="renderMath(v.symbol, false)"
@@ -204,7 +207,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
   &__legend-title {
     // --- 継承 ---
-    @extend %text-meta;
+    @include text-meta;
 
     // --- タイポグラフィ ---
     font-weight: var(--font-weight-bold);
@@ -220,7 +223,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
   &__legend-item {
     // --- 継承 ---
-    @extend %text-body-bold;
+    @include text-body-bold;
 
     // --- レイアウト・配置 ---
     display: flex;

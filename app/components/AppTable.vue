@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends Record<string, unknown>">
+﻿<script setup lang="ts" generic="T extends Record<string, unknown>">
 /**
  * AppTable
  *
@@ -72,8 +72,14 @@ const handleSort = (col: TableColumn) => {
       <tbody v-if="$slots.body || (data && columns)">
         <slot name="body">
           <template v-if="data && columns">
-            <tr v-for="(row, index) in data" :key="index">
-              <td v-for="col in columns" :key="col.key">
+            <tr
+              v-for="(row, index) in data"
+              :key="index"
+            >
+              <td
+                v-for="col in columns"
+                :key="col.key"
+              >
                 <slot
                   :name="`cell-${col.key}`"
                   :value="row[col.key]"
@@ -138,7 +144,7 @@ const handleSort = (col: TableColumn) => {
 
   :deep(th) {
     // --- 継承 ---
-    @extend %text-label;
+    @include text-label;
 
     // --- レイアウト・配置 ---
     position: sticky;
@@ -152,20 +158,25 @@ const handleSort = (col: TableColumn) => {
 
     // --- 視覚効果 ---
     backdrop-filter: blur(var(--blur-md));
+
     &.is-sortable {
       cursor: pointer;
       transition: background-color var(--transition-fast) ease;
+
       &:hover {
-        background-color: rgba(255, 255, 255, 0.05); // hover効果
+        background-color: rgb(255 255 255 / 5%); // hover効果
       }
     }
+
     .c-table__th-inner {
       display: inline-flex;
-      align-items: center;
       gap: 4px;
+      align-items: center;
     }
+
     .c-table__sort-icon {
       color: var(--color-text-main);
+
       &.is-inactive {
         color: var(--color-text-muted);
         opacity: 0.3;

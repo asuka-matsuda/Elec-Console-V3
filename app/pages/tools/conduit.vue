@@ -56,7 +56,9 @@ const handleSave = async () => {
 
         <!-- 2. 収容するケーブル -->
         <div>
-          <div class="p-conduit__section-title">収容するケーブル</div>
+          <div class="p-conduit__section-title">
+            収容するケーブル
+          </div>
 
           <div class="p-conduit__cable-list">
             <ToolCableCard
@@ -70,7 +72,7 @@ const handleSave = async () => {
           </div>
 
           <AppButton
-variant="success"
+            variant="success"
             class="p-conduit__add-button"
             @click="addCable"
           >
@@ -98,16 +100,22 @@ variant="success"
         </div>
       </ToolCalcBasisPanel>
     </template>
-    </ToolLayout>
+  </ToolLayout>
 
-    <!-- リセット確認モーダル -->
-    <AppConfirmModal v-model="isResetModalOpen" title="リセットの確認" message="入力した条件をすべてリセットしますか？" confirm-text="リセットする" @confirm="confirmReset" />
+  <!-- リセット確認モーダル -->
+  <AppConfirmModal
+    v-model="isResetModalOpen"
+    title="リセットの確認"
+    message="入力した条件をすべてリセットしますか？"
+    confirm-text="リセットする"
+    @confirm="confirmReset"
+  />
 </template>
 
 <style scoped lang="scss">
 .p-basis-note {
   // --- 継承 ---
-  @extend %text-meta;
+  @include text-meta;
 
   // --- タイポグラフィ ---
   color: var(--color-status-warning);
@@ -117,7 +125,7 @@ variant="success"
   // --- 子要素 ---
   &__section-title {
     // --- 継承 ---
-    @extend %text-title-sm;
+    @include text-title-sm;
 
     // --- ボックスモデル ---
     margin-bottom: var(--gap-component);

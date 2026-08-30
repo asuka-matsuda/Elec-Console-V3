@@ -3,8 +3,7 @@
 @use "sass:map";
 
 // --- タイポグラフィ ---
-$font-fallback:
-  "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+$font-fallback: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
 $font-base: $font-fallback;
 $font-mono: "Roboto Mono", $font-fallback;
 $font-sizes: (

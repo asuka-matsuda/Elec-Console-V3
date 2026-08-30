@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppTabs
  * タブ切り替えのためのコンポーネントです。垂直方向の配置やグリッド配置にも対応しています。
@@ -94,7 +94,7 @@ const selectTab = (option: TabOption) => {
 
 .c-tabs__item {
   // --- 継承 ---
-  @extend %text-desc;
+  @include text-desc;
 
   // --- その他 ---
   cursor: pointer;
@@ -148,7 +148,7 @@ const selectTab = (option: TabOption) => {
 
   &.is-disabled {
     // --- 継承 ---
-    @extend %disabled;
+    @include disabled;
   }
 
   // --- レイアウト・配置 ---

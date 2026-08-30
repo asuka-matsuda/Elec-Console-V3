@@ -1,10 +1,12 @@
-/* stylelint-disable at-rule-empty-line-before */
+/* stylelint-disable */
 @use "sass:list";
 @use "sass:map";
 @use "functions" as *;
 @use "variables" as *;
 
-// --- レイアウト ---
+// ==========================================================================
+// レイアウト Mixins
+// ==========================================================================
 @mixin flex-center($gap: var(--gap-element)) {
   display: flex;
   gap: $gap;
@@ -71,7 +73,9 @@
   gap: $gap;
 }
 
-// --- メディアクエリ ---
+// ==========================================================================
+// レスポンシブ & コンテナクエリ Mixins
+// ==========================================================================
 @mixin mq($breakpoint, $direction: "down") {
   @if map.has-key($breakpoints, $breakpoint) {
     $value: map.get($breakpoints, $breakpoint);
@@ -80,21 +84,26 @@
       @media (width <= $value) {
         @content;
       }
-    } @else if $direction == "up" {
+    }
+
+ @else if $direction == "up" {
       @media (width >= $value) {
         @content;
       }
-    } @else if $direction == "up-strict" {
+    }
+
+ @else if $direction == "up-strict" {
       @media (width > $value) {
         @content;
       }
     }
-  } @else {
+  }
+
+ @else {
     @warn "Invalid breakpoint: #{$breakpoint}.";
   }
 }
 
-// --- コンテナクエリ ---
 @mixin cq($breakpoint, $direction: "up") {
   @if map.has-key($container-breakpoints, $breakpoint) {
     $value: map.get($container-breakpoints, $breakpoint);
@@ -103,119 +112,142 @@
       @container (min-width: #{$value}) {
         @content;
       }
-    } @else if $direction == "down" {
+    }
+
+ @else if $direction == "down" {
       @container (max-width: #{$value}) {
         @content;
       }
     }
-  } @else {
+  }
+
+ @else {
     @warn "Invalid container breakpoint: #{$breakpoint}.";
   }
 }
 
-// --- タイポグラフィ（サイズ展開） ---
-%text-2xs {
+// ==========================================================================
+// タイポグラフィ Mixins & 互換プレースホルダー
+// ==========================================================================
+@mixin text-2xs {
   font-size: var(--font-size-2xs);
   line-height: var(--line-height-base);
   letter-spacing: var(--tracking-wide);
 }
-%text-xs {
+
+@mixin text-xs {
   font-size: var(--font-size-xs);
   line-height: var(--line-height-base);
   letter-spacing: var(--tracking-wide);
 }
-%text-sm {
+
+@mixin text-sm {
   font-size: var(--font-size-sm);
   line-height: var(--line-height-base);
   letter-spacing: var(--tracking-wide);
 }
-%text-base {
+
+@mixin text-base {
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
   letter-spacing: var(--tracking-wide);
 }
-%text-md {
-  font-size: var(--font-size-md);
+
+@mixin text-md {
+  font-size: var(--font-size-md, var(--font-size-base));
   line-height: var(--line-height-base);
   letter-spacing: var(--tracking-wide);
 }
-%text-lg {
+
+@mixin text-lg {
   font-size: var(--font-size-lg);
   line-height: var(--line-height-tight);
   letter-spacing: var(--tracking-normal);
 }
-%text-xl {
+
+@mixin text-xl {
   font-size: var(--font-size-xl);
   line-height: var(--line-height-tight);
   letter-spacing: var(--tracking-tight);
 }
-%text-2xl {
+
+@mixin text-2xl {
   font-size: var(--font-size-2xl);
   line-height: var(--line-height-tight);
   letter-spacing: var(--tracking-tight);
 }
-%text-3xl {
+
+@mixin text-3xl {
   font-size: var(--font-size-3xl);
   line-height: var(--line-height-tight);
   letter-spacing: var(--tracking-tighter);
 }
-%text-4xl {
+
+@mixin text-4xl {
   font-size: var(--font-size-4xl);
   line-height: var(--line-height-tight);
   letter-spacing: var(--tracking-tighter);
 }
 
-// --- タイポグラフィ（セマンティック） ---
-%text-title-xl {
+// セマンティック・タイポグラフィ Mixins
+@mixin text-title-xl {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
   letter-spacing: var(--tracking-tight);
 }
 
-%text-title-lg {
+@mixin text-title-lg {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
   letter-spacing: var(--tracking-tight);
 }
 
-%text-title-md {
+@mixin text-title-md {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
   letter-spacing: var(--tracking-normal);
 }
 
-%text-title-sm {
+@mixin text-title-sm {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
   letter-spacing: var(--tracking-wide);
 }
 
-%text-body {
+@mixin text-body {
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
   color: var(--color-text-main);
   letter-spacing: var(--tracking-wide);
 }
 
-%text-desc {
+@mixin text-body-bold {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-base);
+  color: var(--color-text-main);
+  letter-spacing: var(--tracking-wide);
+}
+
+@mixin text-desc {
   font-size: var(--font-size-sm);
   line-height: var(--line-height-base);
   color: var(--color-text-muted);
   letter-spacing: var(--tracking-normal);
 }
 
-%text-meta {
+@mixin text-meta {
   font-size: var(--font-size-2xs);
   line-height: var(--line-height-base);
   color: var(--color-text-muted);
   letter-spacing: var(--tracking-wide);
 }
 
-%text-badge {
+@mixin text-badge {
   font-size: var(--font-size-2xs);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
@@ -223,32 +255,38 @@
   letter-spacing: var(--tracking-wider);
 }
 
-%text-label {
+@mixin text-label {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
   letter-spacing: var(--tracking-wide);
 }
 
-%text-body-bold {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-base);
-  color: var(--color-text-main);
-  letter-spacing: var(--tracking-wide);
-}
-
-%form-placeholder {
-  color: theme-color(var(--color-text-muted), 50%);
-}
-
-%text-caption {
+@mixin text-caption {
   font-size: var(--font-size-sm);
   line-height: var(--line-height-base);
   letter-spacing: var(--tracking-normal);
 }
 
-// --- 視覚効果とグラスモーフィズム ---
+@mixin form-placeholder {
+  color: theme-color(var(--color-text-muted), 50%);
+}
+
+@mixin click-enabled {
+  cursor: pointer;
+  user-select: none;
+}
+
+@mixin disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.5;
+  filter: grayscale(100%);
+}
+
+// ==========================================================================
+// 視覚効果・インタラクション Mixins
+// ==========================================================================
 @mixin cyber-text-glow(
   $color: currentcolor,
   $opacity: 50%,
@@ -268,7 +306,6 @@
   border: var(--border-width-base) solid theme-color($color, $opacity);
 }
 
-// --- インタラクティブ状態 ---
 @mixin state-base($shadow: none, $transition: var(--transition-base)) {
   --shadow-base: #{$shadow};
 
@@ -316,20 +353,6 @@
   }
 }
 
-// --- 共通プレースホルダー ---
-%click-enabled {
-  cursor: pointer;
-  user-select: none;
-}
-
-%disabled {
-  pointer-events: none;
-  cursor: not-allowed;
-  opacity: 0.5;
-  filter: grayscale(100%);
-}
-
-// --- カーソルとインジケーター ---
 @mixin blinking-cursor(
   $width: var(--space-1),
   $height: var(--space-3),

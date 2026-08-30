@@ -31,7 +31,10 @@ const toggleDrawer = () => {
           :class="{ 'is-drawer-open': isDrawerOpen }"
         >
           <!-- Mobile Drawer Handle -->
-          <div class="l-tool-layout__drawer-handle" @click="toggleDrawer">
+          <div
+            class="l-tool-layout__drawer-handle"
+            @click="toggleDrawer"
+          >
             <span class="l-tool-layout__drawer-title">計算結果を見る</span>
             <AppIcon
               :name="isDrawerOpen ? 'chevron-down' : 'chevron-up'"
