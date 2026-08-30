@@ -170,8 +170,8 @@ const handleSort = (col: TableColumn) => {
 
     .c-table__sort-btn {
       display: inline-flex;
-      align-items: center;
       gap: var(--space-inline-gap-sm);
+      align-items: center;
     }
 
     .c-table__sort-icon {

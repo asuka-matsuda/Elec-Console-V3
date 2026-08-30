@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { hlVal, formatVal, hlOk, hlNg, buildFormula, TEX_HL_CLASS, TEX_SUCCESS_CLASS, TEX_DANGER_CLASS } from '~/utils/mathUtils';
+import { hlVal, formatVal, hlOk, hlNg, buildFormula, TEX_HL_CLASS, TEX_SUCCESS_CLASS, TEX_DANGER_CLASS } from '~/utils/math';
 
 describe('mathUtils', () => {
   describe('hlVal', () => {

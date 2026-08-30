@@ -56,7 +56,6 @@ hasTitleError.value = false;
     const sDate = new Date(startStr);
     const eDate = new Date(endStr);
     if (!isNaN(sDate.getTime()) && !isNaN(eDate.getTime())) {
-      const diffDays = Math.round((eDate.getTime() - sDate.getTime()) / (1000 * 60 * 60 * 24));
       // FullCalendar gives exclusive end date. If user selects 1 cell, diff is 1 day.
       // We want to show the same day in UI.
       eDate.setDate(eDate.getDate() - 1);

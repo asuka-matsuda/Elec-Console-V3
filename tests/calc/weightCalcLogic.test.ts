@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { calculateWeightAndDrum } from '~/utils/calc/weight/weightCalcLogic';
-import type { WeightCalcInputs } from '~/utils/calc/weight/weightCalcLogic';
+import { calculateWeightAndDrum } from '~/utils/tools/weight/weightCalcLogic';
+import type { WeightCalcInputs } from '~/utils/tools/weight/weightCalcLogic';
 import type { CableData, DrumData } from '~/types/database';
 
 describe('weightCalcLogic', () => {

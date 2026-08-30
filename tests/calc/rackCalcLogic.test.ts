@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { calculateRackSize } from '~/utils/calc/rack/rackCalcLogic';
+import { describe, it, expect } from "vitest";
+import { calculateRackSize } from "~/utils/tools/rack/rackCalcLogic";
 
 describe('rackCalcLogic', () => {
   describe('calculateRackSize', () => {

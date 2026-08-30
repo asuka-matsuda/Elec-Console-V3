@@ -29,7 +29,7 @@ withDefaults(
         </label>
         <AppBadge
           v-if="required"
-          variant="danger"
+          color="danger"
           size="sm"
           class="c-form-group__required"
         >

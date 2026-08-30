@@ -10,7 +10,7 @@ export default defineEventHandler((event) => {
       const fileContent = fs.readFileSync(dbPath, "utf-8");
       if (fileContent.trim()) {
         const events = JSON.parse(fileContent);
-        return events.filter((e: any) => e.siteId === siteId);
+        return events.filter((e: Record<string, unknown>) => e.siteId === siteId);
       }
     } catch (error) {
       console.error("API Error in events/index.get.ts:", error);

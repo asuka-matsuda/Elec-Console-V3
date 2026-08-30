@@ -178,7 +178,7 @@ const handleResetPassword = async () => {
           </template>
           <template #cell-role="{ row }">
             <AppBadge
-              :variant="
+              :color="
                 row.role === 'admin'
                   ? 'danger'
                   : row.role === 'worker'
@@ -193,7 +193,7 @@ const handleResetPassword = async () => {
             <div class="c-admin-users__stack">
               <AppBadge
                 v-if="row.requirePasswordReset"
-                variant="danger"
+                color="danger"
                 size="sm"
               >
                 PWリセット要求

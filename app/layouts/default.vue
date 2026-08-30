@@ -94,6 +94,7 @@ const { currentUser, logout } = useAuth();
   @include flex-column(0);
 
   flex: 1;
+
   min-height: 0;
   padding: var(--space-layout-pad);
 }

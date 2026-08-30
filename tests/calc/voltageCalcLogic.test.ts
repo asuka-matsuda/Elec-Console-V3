@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calculateDesignCurrent, getAmbientTempDerating } from '~/utils/calc/voltage/voltageCalcLogic';
+import { calculateDesignCurrent, getAmbientTempDerating } from '~/utils/tools/voltage/voltageCalcLogic';
 
 describe('voltageCalcLogic', () => {
   describe('calculateDesignCurrent', () => {

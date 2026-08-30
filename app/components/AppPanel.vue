@@ -66,29 +66,9 @@ withDefaults(
   // --- レイアウト・配置 ---
   position: relative;
 
-  @include flex-column(var(--space-card-gap));
-
   // --- ボックスモデル ---
   padding: var(--space-card-pad);
-
-  // 密度モディファイア
-  &--density-compact {
-    padding: var(--space-card-pad-md);
-
-    @include flex-column(var(--space-card-gap-sm));
-
-    .c-panel__content {
-      @include flex-column(var(--space-card-gap-sm));
-    }
-  }
-
-  // Apply visual base
-  @include border-base(var(--p-border-color), var(--border-width-base));
-
   border-image: var(--p-border-image);
-
-  // --- 視覚効果 ---
-  @include state-base(var(--p-box-shadow));
 
   // Cyber Brackets (Top-Left & Bottom-Right)
 
@@ -132,6 +112,17 @@ withDefaults(
     // --- ボックスモデル ---
     border-top: none;
     border-left: none;
+  }
+
+  // 密度モディファイア
+  &--density-compact {
+    padding: var(--space-card-pad-md);
+
+    @include flex-column(var(--space-card-gap-sm));
+
+    .c-panel__content {
+      @include flex-column(var(--space-card-gap-sm));
+    }
   }
 
   /* Header & Title */
@@ -247,5 +238,13 @@ withDefaults(
       0 0 var(--blur-md) #{theme-color(var(--p-theme-color), 60%)}
     );
   }
+
+  @include flex-column(var(--space-card-gap));
+
+  // Apply visual base
+  @include border-base(var(--p-border-color), var(--border-width-base));
+
+  // --- 視覚効果 ---
+  @include state-base(var(--p-box-shadow));
 }
 </style>

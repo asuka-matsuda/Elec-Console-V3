@@ -110,12 +110,7 @@ const categoryColorMap: Record<string, string> = {
                     {{ item.term }}
                   </h2>
                 </div>
-                <AppBadge
-                  :style="{
-                    '--badge-color': categoryColorMap[item.category],
-                    '--badge-border': categoryColorMap[item.category],
-                  }"
-                >
+                <AppBadge :color="categoryColorMap[item.category]">
                   {{ item.category }}
                 </AppBadge>
               </div>

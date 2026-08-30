@@ -121,19 +121,19 @@ const isChecked = ref(false);
             </h3>
             <div class="p-ds-flex">
               <!-- Assuming these variants exist based on common patterns -->
-              <AppBadge variant="primary">
+              <AppBadge color="primary">
                 Primary
               </AppBadge>
-              <AppBadge variant="secondary">
+              <AppBadge color="secondary">
                 Secondary
               </AppBadge>
-              <AppBadge variant="success">
+              <AppBadge color="success">
                 Success
               </AppBadge>
-              <AppBadge variant="warning">
+              <AppBadge color="warning">
                 Warning
               </AppBadge>
-              <AppBadge variant="danger">
+              <AppBadge color="danger">
                 Danger
               </AppBadge>
             </div>

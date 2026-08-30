@@ -262,7 +262,7 @@ const {
   // --- 子要素 ---
   &__val {
     // --- 継承 ---
-    @include text-heading-lg;
+    @include text-title-lg;
 
     // --- タイポグラフィ ---
     color: var(--color-status-success);

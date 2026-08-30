@@ -142,7 +142,7 @@ const handleExport = () => {
                 <AppBadge
                   v-for="(name, idx) in workerNames"
                   :key="idx"
-                  variant="secondary"
+                  color="secondary"
                 >
                   {{ name }}
                 </AppBadge>

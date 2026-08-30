@@ -34,19 +34,15 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never;
           <span>{{ entry.toolName }}</span>
           <AppBadge
             v-if="entry.mode === 'サイズ選定'"
-            variant="tool"
+            color="tool"
           >
-            {{
-              entry.mode
-            }}
+            {{ entry.mode }}
           </AppBadge>
           <AppBadge
             v-else-if="entry.mode === '電圧降下'"
-            variant="primary"
+            color="primary"
           >
-            {{
-              entry.mode
-            }}
+            {{ entry.mode }}
           </AppBadge>
         </h3>
       </div>

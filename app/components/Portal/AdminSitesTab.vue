@@ -46,7 +46,7 @@ const getStatusLabel = (status: unknown) => {
   }
 };
 
-const getStatusVariant = (status: unknown) => {
+const getStatusColor = (status: unknown) => {
   switch (status) {
     case 'planning': return 'secondary';
     case 'in_progress': return 'warning';
@@ -176,12 +176,12 @@ const confirmIntent = computed(() => {
         >
           <template #cell-status="{ value, row }">
             <div class="c-admin-sites__status-stack">
-              <AppBadge :variant="getStatusVariant(value)">
+              <AppBadge :color="getStatusColor(value)">
                 {{ getStatusLabel(value) }}
               </AppBadge>
               <AppBadge
                 v-if="row.disabledAt"
-                variant="danger"
+                color="danger"
                 size="sm"
               >
                 無効

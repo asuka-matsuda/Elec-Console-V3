@@ -1,4 +1,3 @@
-import type { User } from "~/types/auth";
 import { defineEventHandler, readBody, createError } from "h3";
 import { verifyPassword } from "../../utils/password";
 import { prisma } from "../../utils/prisma";
@@ -34,7 +33,7 @@ export default defineEventHandler(async (event) => {
   });
 
   const assignedSiteIds = user.assignedSites.map(s => s.id);
-  const { password: _dbPassword, assignedSites, ...restUser } = user;
+  const { password: _dbPassword, assignedSites: _assignedSites, ...restUser } = user;
   const safeUser = { ...restUser, assignedSiteIds };
 
   return {

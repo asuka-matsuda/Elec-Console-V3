@@ -1,34 +1,72 @@
 <script setup lang="ts">
 /**
  * AppBadge
- * 状態やカテゴリを視覚的に示すためのバッジコンポーネント。
+ * 状態、カテゴリ、タグなどを視覚的に示すためのバッジコンポーネント。
  */
 
 /**
- * バッジのカラーバリエーション
+ * プリセットカラー定義（型補完用）
  */
-export type BadgeVariant = 
+export type BadgePresetColor =
   | "secondary"
   | "primary"
   | "success"
   | "warning"
   | "danger"
-  | "tool";
+  | "tool"
+  | "portal"
+  | "database"
+  | "reference"
+  | "neutral";
 
-withDefaults(
+/**
+ * プリセット名または任意のCSSカラー（#HEX, rgb(), hsl(), var() など）
+ */
+export type BadgeColor = BadgePresetColor | (string & {});
+
+const props = withDefaults(
   defineProps<{
-    variant?: BadgeVariant;
+    /** 表示カラー（プリセット名 または 任意のカラーコード/CSS変数） */
+    color?: BadgeColor;
+    /** バッジのサイズ */
+    size?: "sm" | "md";
   }>(),
   {
-    variant: "secondary",
+    color: "secondary",
+    size: "md",
   },
 );
+
+const presetMap: Record<string, string> = {
+  secondary: "var(--color-text-muted)",
+  primary: "var(--color-category-main)",
+  main: "var(--color-category-main)",
+  success: "var(--color-status-success)",
+  warning: "var(--color-status-warning)",
+  danger: "var(--color-status-danger)",
+  tool: "var(--color-category-tool)",
+  portal: "var(--color-category-management)",
+  management: "var(--color-category-management)",
+  database: "var(--color-category-database)",
+  reference: "var(--color-category-reference)",
+  accent: "var(--color-accent-main)",
+  stopped: "var(--color-status-stopped)",
+  neutral: "var(--color-status-neutral)",
+};
+
+const badgeStyle = computed(() => {
+  const resolvedColor = presetMap[props.color] || props.color;
+  return {
+    "--glow-color": resolvedColor,
+  };
+});
 </script>
 
 <template>
   <span
     class="c-badge"
-    :class="[`c-badge--${variant}`]"
+    :class="[`c-badge--${size}`]"
+    :style="badgeStyle"
   >
     <slot />
   </span>
@@ -36,16 +74,7 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-badge {
-  $variants: (
-    "secondary": "--color-text-muted",
-    "primary": "--color-category-main",
-    "success": "--color-status-success",
-    "warning": "--color-status-warning",
-    "danger": "--color-status-danger",
-    "tool": "--color-category-main",
-  );
-
-  --glow-color: var(--color-text-main);
+  --glow-color: var(--color-text-muted);
 
   @include inline-flex-center;
   @include text-badge;
@@ -59,10 +88,13 @@ withDefaults(
   @include state-base(var(--shadow-glow-hover));
   @include cyber-text-glow(var(--glow-color), 100%, var(--blur-sm));
 
-  @each $name, $var in $variants {
-    &--#{$name} {
-      --glow-color: var(#{$var});
-    }
+  &--sm {
+    padding: 1px 4px;
+    font-size: 10px;
+  }
+
+  &--md {
+    padding: var(--space-badge-p);
   }
 }
 </style>

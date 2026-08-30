@@ -12,7 +12,6 @@ import { useLocalStorage } from "@vueuse/core";
 const dashboardSections = menuData.filter((section) => section.showInDashboard);
 
 const { currentUser, isAuthenticated } = useAuth();
-const router = useRouter();
 const lastSiteId = useLocalStorage("last-accessed-site", "");
 
 const _getDynamicTo = (item: Record<string, unknown>) => {
