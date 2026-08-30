@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import { useAdminSites } from '~/composables/admin/useAdminSites';
 import { useAuth } from '~/composables/useAuth';
@@ -141,7 +140,7 @@ onMounted(() => {
   grid-template-columns: 2fr 1fr;
   gap: var(--space-section-gap);
   align-items: flex-start;
-  
+
   @include mq("lg") {
     grid-template-columns: 1fr;
   }

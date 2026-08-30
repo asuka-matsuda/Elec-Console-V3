@@ -3,7 +3,7 @@
  * AppModal
  * ネイティブの dialog 要素を使用した、アクセシビリティ対応のモーダルコンポーネント。
  */
-import { useId, ref, watch, onMounted, computed } from "vue";
+import { ref, computed, watch, useId, onMounted } from "vue";
 
 const isOpen = defineModel<boolean>({ default: false });
 
@@ -26,22 +26,24 @@ const props = withDefaults(
   },
 );
 
+const modalId = useId();
+const titleId = `modal-title-${modalId}`;
 const dialogRef = ref<HTMLDialogElement | null>(null);
 const isClosing = ref(false);
 let closeTimeout: ReturnType<typeof setTimeout> | null = null;
+
+const typedVariant = computed(() => props.variant as never);
 
 const close = () => {
   isOpen.value = false;
 };
 
-// Handle native close event (e.g., if closed via script or devtools directly)
 const onNativeClose = () => {
   if (isOpen.value) {
     isOpen.value = false;
   }
 };
 
-/** Watch isOpen to open/close native dialog with animation support */
 watch(
   isOpen,
   (newVal) => {
@@ -61,23 +63,18 @@ watch(
           dialogRef.value?.close();
           isClosing.value = false;
           closeTimeout = null;
-        }, 300); // 300ms matches typical transition duration
+        }, 300);
       }
     }
   },
   { flush: "post" },
 );
 
-/** Support opening dialog initially if isOpen is true */
 onMounted(() => {
   if (isOpen.value) {
     dialogRef.value?.showModal();
   }
 });
-
-const modalId = useId();
-const titleId = `modal-title-${modalId}`;
-const typedVariant = computed(() => props.variant as never);
 </script>
 
 <template>

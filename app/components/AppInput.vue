@@ -51,54 +51,39 @@ const inputId = useId();
 
 <style scoped lang="scss">
 .c-form-control {
-  // --- CSSカスタムプロパティ ---
   --form-control-px: var(--space-control-px-md);
   --form-control-py: var(--space-control-py-md);
 
-  // --- 継承 ---
   @include text-desc;
 
-  // --- ボックスモデル ---
   width: 100%;
   padding: var(--form-control-py) var(--form-control-px);
-
-  // --- タイポグラフィ ---
   font-family: var(--font-mono);
 
-  // --- 疑似要素 ---
   &::placeholder {
     @include form-placeholder;
   }
 
-  // --- モディファイア ---
   &--sm {
-    // --- CSSカスタムプロパティ ---
     --form-control-px: var(--space-control-px-sm);
     --form-control-py: var(--space-control-py-sm);
 
-    // --- 継承 ---
     @include text-meta;
 
-    // --- ボックスモデル ---
     height: var(--size-control-sm);
   }
 
   &--md {
-    // --- ボックスモデル ---
     height: var(--size-control-md);
   }
 
   &--textarea {
     resize: vertical;
-
-    // --- ボックスモデル ---
     min-height: calc(var(--size-control-md) * 2);
 
     // Override fixed heights so rows/min-height can take over
 
-    // --- 疑似クラス ---
     &:is(.c-form-control--sm, .c-form-control--md) {
-      // --- ボックスモデル ---
       height: auto;
     }
 

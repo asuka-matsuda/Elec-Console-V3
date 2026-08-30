@@ -7,7 +7,6 @@ import { menuData } from "~/constants/data/menuData";
 import { useAuth } from "~/composables/useAuth";
 import { useLocalStorage } from "@vueuse/core";
 
-
 /** Extract just the sections to show on the dashboard */
 const dashboardSections = menuData.filter((section) => section.showInDashboard);
 
@@ -47,7 +46,6 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
   }
   return item.desc || "※準備中…";
 };
-
 </script>
 
 <template>
@@ -96,58 +94,46 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
 
 <style scoped lang="scss">
 .p-dashboard {
-  // --- レイアウト・配置 ---
   display: flex;
   flex-direction: row; /* Desktop default */
   gap: var(--space-section-gap);
   align-items: flex-start;
 
-  // --- ボックスモデル ---
   padding-bottom: var(--space-layout-pad);
 
   @include mq("md") {
-    // --- レイアウト・配置 ---
     flex-direction: column;
     align-items: stretch;
   }
 
-  // --- 子要素 ---
   &__main {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-section-gap));
 
     flex: 1;
   }
 
   &__section {
-    // --- レイアウト・配置 ---
     @include flex-column;
   }
 
   &__grid {
-    // --- レイアウト・配置 ---
     @include grid-auto(280px, var(--space-card-gap));
   }
 }
 
 /* Inner Card Styles */
 .p-dashboard-card {
-  // --- 子要素 ---
   &__layout {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-1));
   }
 
   &__header {
-    // --- 継承 ---
     @include text-title-sm;
 
-    // --- レイアウト・配置 ---
     display: flex;
     gap: var(--space-inline-gap-sm);
     align-items: flex-start;
 
-    // --- タイポグラフィ ---
     color: var(--card-accent, var(--color-text-main));
     word-break: keep-all;
     line-break: strict;
@@ -155,9 +141,7 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
   }
 
   &__desc {
-    // --- 継承 ---
     @include text-desc;
   }
 }
 </style>
-

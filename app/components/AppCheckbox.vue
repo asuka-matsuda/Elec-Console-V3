@@ -56,16 +56,11 @@ const inputId = useId();
 
 <style scoped lang="scss">
 .c-checkbox {
-  // --- CSSカスタムプロパティ ---
   --checkbox-color: var(--color-category-main);
 
-  // --- 継承 ---
   @include text-desc;
-
-  // --- レイアウト・配置 ---
   @include inline-flex-start(var(--space-inline-gap));
 
-  // --- その他 ---
   cursor: pointer;
   user-select: none;
   position: relative;

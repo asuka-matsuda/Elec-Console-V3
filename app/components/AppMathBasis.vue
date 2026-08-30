@@ -106,28 +106,20 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
 <style scoped lang="scss">
 .c-math-basis {
-  // --- その他 ---
   overflow-y: auto;
 
-  // --- レイアウト・配置 ---
   @include flex-column(var(--space-card-gap));
 
   flex: 1;
-
-  // --- ボックスモデル ---
   padding-right: var(--space-control-py-md);
   padding-bottom: var(--space-layout-pad);
 
-  // --- 子要素 ---
   &__card {
-    // --- レイアウト・配置 ---
     gap: var(--space-stack-gap);
   }
 
   &__body {
     /* PCファースト: カード内を左右2カラムに分割 */
-
-    // --- レイアウト・配置 ---
     display: flex;
     flex-flow: row nowrap;
     gap: var(--space-card-gap);
@@ -135,117 +127,89 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   }
 
   &__math {
-    // --- CSSカスタムプロパティ ---
     --scrollbar-size: var(--space-2);
 
     // スクロールバー自体は非表示にしつつスクロールは可能にする
     scrollbar-width: none;
 
-    // --- その他 ---
     overflow-x: auto;
-
-    // --- レイアウト・配置 ---
     flex: 1;
 
-    // --- ボックスモデル ---
     min-width: 0;
 
-    // --- タイポグラフィ ---
     font-size: 1.1em;
 
-    // --- 疑似要素 ---
     &::-webkit-scrollbar {
-      // --- レイアウト・配置 ---
       display: none;
     }
 
-    // --- 疑似クラス ---
     :deep(.katex) {
-      // --- タイポグラフィ ---
       color: var(--color-text-main);
 
       .tex-status-success,
       .tex-status-success * {
-        // --- タイポグラフィ ---
         color: var(--color-status-success);
       }
 
       .tex-status-warning,
       .tex-status-warning * {
-        // --- タイポグラフィ ---
         color: var(--color-status-warning);
       }
 
       .tex-status-danger,
       .tex-status-danger * {
-        // --- タイポグラフィ ---
         color: var(--color-status-danger);
       }
 
       .tex-color-accent,
       .tex-color-accent * {
-        // --- タイポグラフィ ---
         color: var(--color-accent-main);
       }
     }
 
     :deep(.katex-display) {
-      // --- ボックスモデル ---
       padding: var(--space-control-py-sm);
     }
   }
 
   &__legend {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-stack-gap-sm));
 
     flex-shrink: 0;
-
-    // --- ボックスモデル ---
     width: 250px;
   }
 
   &__legend-title {
-    // --- 継承 ---
     @include text-meta;
 
-    // --- タイポグラフィ ---
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
   }
 
   &__legend-list {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-stack-gap-sm));
 
     list-style: none;
   }
 
   &__legend-item {
-    // --- 継承 ---
     @include text-body-bold;
 
-    // --- レイアウト・配置 ---
     display: flex;
     gap: var(--space-inline-gap-sm);
     align-items: flex-start;
-
-    // --- タイポグラフィ ---
     color: var(--color-text-secondary);
   }
 
   &__legend-symbol {
-    // --- タイポグラフィ ---
     color: var(--color-text-main);
   }
 
   &__legend-sep {
-    // --- タイポグラフィ ---
     color: var(--color-text-muted);
   }
 
   &__legend-name {
-    // --- レイアウト・配置 ---
     flex: 1;
   }
 }

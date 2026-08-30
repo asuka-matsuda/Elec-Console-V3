@@ -13,8 +13,8 @@ export type User = {
   lastLoginAt: string | null;
   createdAt: string;
   
-  // 他にもあった気がしますが、と言われたもの
-  // 業務システムとして必須なものを追加
+  /** 連絡用メールアドレス（任意） */
   email?: string;
+  /** アカウント有効状態フラグ */
   isActive: boolean;
 };

@@ -308,7 +308,6 @@
 
 @mixin state-base($shadow: none, $transition: var(--transition-base)) {
   --shadow-base: #{$shadow};
-
   box-shadow: var(--shadow-base);
   transition: $transition;
 }
@@ -316,7 +315,6 @@
 @mixin state-hover($color: null, $transition: var(--transition-glow)) {
   @if $color {
     --glow-color: #{$color};
-
     border-color: $color;
   }
 
@@ -327,7 +325,6 @@
 @mixin state-focus($color: null, $transition: var(--transition-glow)) {
   @if $color {
     --glow-color: #{$color};
-
     border-color: $color;
   }
 
@@ -339,7 +336,6 @@
 @mixin state-active($color: null, $transition: var(--transition-glow)) {
   @if $color {
     --glow-color: #{$color};
-
     border-color: $color;
   }
 
@@ -360,15 +356,11 @@
 ) {
   &::after {
     content: "";
-
     display: inline-block;
-
     width: $width;
     height: $height;
     margin-left: auto;
-
     background-color: $color;
-
     animation: ui-cursor-blink 1s step-end infinite;
   }
 }

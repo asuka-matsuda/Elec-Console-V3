@@ -1,4 +1,3 @@
-
 import { useLocalStorage } from '@vueuse/core';
 
 export interface TodoItem {

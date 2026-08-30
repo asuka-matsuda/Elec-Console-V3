@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { watchEffect } from "vue";
 import { useSettings } from "~/composables/useSettings";
 
@@ -16,4 +16,3 @@ if (import.meta.client) {
     <NuxtPage />
   </NuxtLayout>
 </template>
-

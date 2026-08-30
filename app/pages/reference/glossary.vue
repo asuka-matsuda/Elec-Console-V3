@@ -7,6 +7,10 @@ import { ref, computed } from "vue";
 import { glossaryData } from "~/constants/data/glossaryData";
 import { useDbFilter } from "~/composables/useDbFilter";
 
+useHead({
+  title: "用語集",
+});
+
 const {
   searchQuery,
   activeCats,
@@ -17,13 +21,15 @@ const {
   searchMapper: (item) => `${item.term} ${item.kana || ""}`,
 });
 
+const activeKanas = ref<string[]>([]);
+
 function getKanaRow(kanaStr: string) {
   if (!kanaStr) return "other";
   const firstChar = kanaStr.charAt(0);
-  if (/[ぁEおア-オ]/.test(firstChar)) return "a";
-  if (/[ぁEこカ-コぁEごガ-ゴ]/.test(firstChar)) return "k";
-  if (/[ぁEそサ-ソぁEぞザ-ゾ]/.test(firstChar)) return "s";
-  if (/[ぁEとタ-トだ-どダ-ド]/.test(firstChar)) return "t";
+  if (/[ぁ-おア-オ]/.test(firstChar)) return "a";
+  if (/[か-こカ-コが-ごガ-ゴ]/.test(firstChar)) return "k";
+  if (/[さ-そサ-ソざ-ぞザ-ゾ]/.test(firstChar)) return "s";
+  if (/[た-とタ-トだ-どダ-ド]/.test(firstChar)) return "t";
   if (/[な-のナ-ノ]/.test(firstChar)) return "n";
   if (/[\u306f-\u307b\u30cf-\u30db\u3070-\u307c\u30d0-\u30dc\u3071-\u307d\u30d1-\u30dd]/.test(firstChar)) return "h";
   if (/[\u307e-\u3082\u30de-\u30e2]/.test(firstChar)) return "m";
@@ -32,8 +38,6 @@ function getKanaRow(kanaStr: string) {
   if (/[わ-んワ-ン]/.test(firstChar)) return "w";
   return "other";
 }
-
-const activeKanas = ref<string[]>([]);
 
 const filteredGlossary = computed(() => {
   let result = [...baseFilteredGlossary.value].sort((a, b) =>
@@ -157,7 +161,6 @@ const categoryColorMap: Record<string, string> = {
 
 <style scoped lang="scss">
 .l-filter-layout {
-  // --- レイアウト・配置 ---
   container-name: filter-layout;
   container-type: inline-size;
 
@@ -165,129 +168,96 @@ const categoryColorMap: Record<string, string> = {
 
   flex: 1;
 
-  // --- ボックスモデル ---
   width: 100%;
   max-width: 1400px;
   min-height: 0;
 
-  // --- 子要素 ---
   &__grid {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-card-gap));
 
     flex: 1;
-
-    // --- ボックスモデル ---
     min-height: 0;
   }
 
   &__sidebar {
-    // --- ボックスモデル ---
     width: 100%;
   }
 
   &__main {
-    // --- レイアウト・配置 ---
     @include flex-column;
 
     flex: 1;
-
-    // --- ボックスモデル ---
     min-width: 0;
     min-height: 0;
   }
 }
 
 .c-glossary-list {
-  // --- レイアウト・配置 ---
   @include flex-column;
 }
 
 .c-glossary-card {
-  // --- レイアウト・配置 ---
   @include flex-column;
-
-  // --- 視覚効果 ---
   @include state-base;
 
-  // --- 子要素 ---
   &__header {
-    // --- レイアウト・配置 ---
     @include flex-between(var(--space-inline-gap));
 
-    // --- ボックスモデル ---
     padding-bottom: var(--space-control-py-sm);
     border-bottom: var(--border-width-base) solid transparent;
     border-image: linear-gradient(to right, transparent, var(--color-border) 50%, transparent) 1;
   }
 
   &__title {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-1));
   }
 
   &__kana {
-    // --- 継承 ---
     @include text-meta;
   }
 
   &__term {
-    // --- 継承 ---
     @include text-title-md;
-
   }
 
   &__body {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-1));
   }
 
   &__desc {
-    // --- 継承 ---
     @include text-title-sm;
 
-    // --- タイポグラフィ ---
     line-height: 1.6;
     color: var(--color-text-secondary);
   }
 
   &__meta {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-stack-gap-sm));
 
-    // --- ボックスモデル ---
     padding: var(--space-card-pad-md);
 
     @include border-dim;
   }
 
   &__label {
-    // --- 継承 ---
     @include text-meta;
-
-    // --- タイポグラフィ ---
     }
 
   &__text {
-    // --- 継承 ---
     @include text-desc;
 
-    // --- タイポグラフィ ---
     line-height: 1.5;
     color: var(--color-text-secondary);
   }
 }
 
 .c-empty-state {
-  // --- 継承 ---
   @include text-body;
 
-  // --- ボックスモデル ---
   padding: var(--space-card-pad);
 
   @include border-dim;
 
-  // --- タイポグラフィ ---
   color: var(--color-text-muted);
   text-align: center;
 }

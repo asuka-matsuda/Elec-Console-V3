@@ -4,6 +4,7 @@
  * キーボード操作や画面外へのはみ出し防止機能に対応した、カスタムのセレクトボックスコンポーネント。
  */
 import { ref, computed, watch, useId, onMounted, onUnmounted } from "vue";
+import { useClickOutside } from "~/composables/useClickOutside";
 
 export interface SelectOption {
   label: string;
@@ -21,13 +22,33 @@ const props = defineProps<{
   placement?: "top" | "bottom";
 }>();
 
-const isOpen = ref(false);
+const listboxId = useId();
 const selectRef = ref<HTMLElement | null>(null);
+const isOpen = ref(false);
 const focusedIndex = ref(-1);
 const dynamicPlacement = ref<"top" | "bottom">("bottom");
 const dropdownStyle = ref<Record<string, string>>({});
 const isMounted = ref(false);
 const teleportTarget = ref<HTMLElement | string>("body");
+
+useClickOutside(selectRef, () => {
+  isOpen.value = false;
+});
+
+const selectedOption = computed(() => {
+  return props.options.find((opt) => opt.value === model.value);
+});
+
+const displayLabel = computed(() => {
+  if (!isMounted.value) return props.placeholder || "";
+  if (selectedOption.value) return selectedOption.value.label;
+  return props.placeholder || "";
+});
+
+const isPlaceholder = computed(() => {
+  if (!isMounted.value) return !!props.placeholder;
+  return !selectedOption.value && !!props.placeholder;
+});
 
 const calculatePlacement = () => {
   if (!selectRef.value) return;
@@ -35,7 +56,7 @@ const calculatePlacement = () => {
   const rect = selectRef.value.getBoundingClientRect();
   const spaceBelow = window.innerHeight - rect.bottom;
   const spaceAbove = rect.top;
-  const DROPDOWN_MAX_HEIGHT = 250; // Approximate max height of dropdown
+  const DROPDOWN_MAX_HEIGHT = 250;
 
   let placement = props.placement;
   if (!placement) {
@@ -48,7 +69,6 @@ const calculatePlacement = () => {
 
   dynamicPlacement.value = placement;
 
-  // 画面の絶対位置 (fixed) で座標を指定する
   if (placement === "top") {
     dropdownStyle.value = {
       position: "fixed",
@@ -68,45 +88,10 @@ const calculatePlacement = () => {
 
 const handleGlobalScroll = (e: Event) => {
   if (!isOpen.value) return;
-  // ドロップダウン内部のスクロールは無視
   const dropdown = document.getElementById(listboxId);
   if (dropdown && dropdown.contains(e.target as Node)) return;
-  // 親要素などがスクロールされたら閉じる
   isOpen.value = false;
 };
-
-onMounted(() => {
-  isMounted.value = true;
-  const modal = selectRef.value?.closest("dialog");
-  if (modal) {
-    teleportTarget.value = modal as HTMLElement;
-  }
-  window.addEventListener("scroll", handleGlobalScroll, {
-    capture: true,
-    passive: true,
-  });
-  window.addEventListener("resize", calculatePlacement, { passive: true });
-});
-
-onUnmounted(() => {
-  window.removeEventListener("scroll", handleGlobalScroll, { capture: true });
-  window.removeEventListener("resize", calculatePlacement);
-});
-
-const selectedOption = computed(() => {
-  return props.options.find((opt) => opt.value === model.value);
-});
-
-const displayLabel = computed(() => {
-  if (!isMounted.value) return props.placeholder || "";
-  if (selectedOption.value) return selectedOption.value.label;
-  return props.placeholder || "";
-});
-
-const isPlaceholder = computed(() => {
-  if (!isMounted.value) return !!props.placeholder;
-  return !selectedOption.value && !!props.placeholder;
-});
 
 const toggleDropdown = () => {
   if (props.disabled) return;
@@ -119,7 +104,6 @@ const selectOption = (option: SelectOption) => {
   isOpen.value = false;
 };
 
-// --- Keyboard Navigation ---
 const focusNext = () => {
   let nextIndex = focusedIndex.value + 1;
   while (nextIndex < props.options.length) {
@@ -193,7 +177,6 @@ const handleKeydown = (event: KeyboardEvent) => {
   }
 };
 
-// Reset focus state and calculate placement when dropdown opens
 watch(isOpen, (newVal) => {
   if (newVal) {
     calculatePlacement();
@@ -209,12 +192,23 @@ watch(isOpen, (newVal) => {
   }
 });
 
-// --- Click Outside ---
-useClickOutside(selectRef, () => {
-  isOpen.value = false;
+onMounted(() => {
+  isMounted.value = true;
+  const modal = selectRef.value?.closest("dialog");
+  if (modal) {
+    teleportTarget.value = modal as HTMLElement;
+  }
+  window.addEventListener("scroll", handleGlobalScroll, {
+    capture: true,
+    passive: true,
+  });
+  window.addEventListener("resize", calculatePlacement, { passive: true });
 });
 
-const listboxId = useId();
+onUnmounted(() => {
+  window.removeEventListener("scroll", handleGlobalScroll, { capture: true });
+  window.removeEventListener("resize", calculatePlacement);
+});
 </script>
 
 <template>

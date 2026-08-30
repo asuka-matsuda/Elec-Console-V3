@@ -87,77 +87,56 @@ const history = computed(() => dashboardData.value?.history || []);
 
 <style scoped lang="scss">
 .p-dashboard {
-  // --- 子要素 ---
   &__aside {
-    // --- レイアウト・配置 ---
     position: sticky;
     top: var(--space-layout-pad);
 
     @include flex-column(var(--space-section-gap));
 
     flex-shrink: 0;
-
-    // --- ボックスモデル ---
     width: var(--sidebar-width);
 
     @include mq("md") {
-      // --- レイアウト・配置 ---
       position: static;
-
-      // --- ボックスモデル ---
       width: 100%;
     }
   }
 
   &__aside-block {
-    // --- レイアウト・配置 ---
     @include flex-column;
   }
 
   &__list {
-    // --- レイアウト・配置 ---
     @include flex-column;
   }
 
   &__loading {
-    // --- 継承 ---
     @include text-title-sm;
 
-    // --- ボックスモデル ---
     padding: var(--space-card-pad);
-
-    // --- タイポグラフィ ---
     color: var(--color-text-muted);
     text-align: center;
 
-    // --- 視覚効果 ---
     @include border-base;
   }
 }
 
 /* List Item Card Styles */
 .p-dashboard-list-item {
-  // --- レイアウト・配置 ---
   @include flex-column(var(--space-stack-gap-sm));
 
-  // --- ボックスモデル ---
   padding: var(--space-card-pad-md);
 
-  // --- 子要素 ---
   &__header {
-    // --- レイアウト・配置 ---
     @include flex-start;
   }
 
   &__title {
-    // --- タイポグラフィ ---
     color: var(--color-text-main);
   }
 
   &__meta {
-    // --- 継承 ---
     @include text-meta;
   }
 }
 </style>
-

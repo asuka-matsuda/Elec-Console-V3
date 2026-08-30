@@ -21,32 +21,23 @@ defineProps<{
 
 <style scoped lang="scss">
 .p-result-details__row {
-  // --- 継承 ---
   @include text-desc;
 
-  // --- レイアウト・配置 ---
   display: flex;
   justify-content: space-between;
-
-  // --- タイポグラフィ ---
   color: var(--color-text-secondary);
 
-  // --- 子要素 ---
   /* stylelint-disable-next-line selector-pseudo-class-no-unknown */
   :slotted(strong) {
-    // --- タイポグラフィ ---
     color: var(--color-text-main);
   }
 
   /* stylelint-disable-next-line selector-pseudo-class-no-unknown */
   :slotted(.p-badge) {
-    // --- レイアウト・配置 ---
     flex-shrink: 0;
   }
 
-  // --- モディファイア ---
   &.has-top-border {
-    // --- ボックスモデル ---
     padding-top: var(--space-control-py-sm);
     border-top: 1px solid var(--color-border);
   }
@@ -57,4 +48,3 @@ dd {
   margin: 0;
 }
 </style>
-

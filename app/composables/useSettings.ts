@@ -1,4 +1,4 @@
-﻿import { useLocalStorage } from "@vueuse/core";
+import { useLocalStorage } from "@vueuse/core";
 
 export const useSettings = () => {
   const themeMode = useLocalStorage<"dark" | "light">(
@@ -10,4 +10,3 @@ export const useSettings = () => {
     themeMode,
   };
 };
-

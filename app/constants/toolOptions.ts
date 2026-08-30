@@ -38,31 +38,6 @@ export const cableTypeOptions = [
   { label: "VVF (平型)", value: "VVF" },
 ];
 
-/* 動的生成に変更したため削除
-export const coreOptions = [
-  { label: "1芯 (単心)", value: "1" },
-  { label: "2芯", value: "2" },
-  { label: "3芯", value: "3" },
-  { label: "4芯", value: "4" },
-];
-
-export const fixedSizeOptions = [
-  { label: "2 (mm²)", value: "2" },
-  { label: "3.5 (mm²)", value: "3.5" },
-  { label: "5.5 (mm²)", value: "5.5" },
-  { label: "8 (mm²)", value: "8" },
-  { label: "14 (mm²)", value: "14" },
-  { label: "22 (mm²)", value: "22" },
-  { label: "38 (mm²)", value: "38" },
-  { label: "60 (mm²)", value: "60" },
-  { label: "100 (mm²)", value: "100" },
-  { label: "150 (mm²)", value: "150" },
-  { label: "200 (mm²)", value: "200" },
-  { label: "250 (mm²)", value: "250" },
-  { label: "325 (mm²)", value: "325" },
-];
-*/
-
 export const parallelOptions = [
   { label: "1条", value: "1" },
   { label: "2条", value: "2" },

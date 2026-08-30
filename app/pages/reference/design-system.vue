@@ -146,40 +146,31 @@ const isChecked = ref(false);
 
 <style scoped lang="scss">
 .p-design-system {
-  // --- レイアウト・配置 ---
   @include flex-column(var(--space-section-gap));
 
-  // --- ボックスモデル ---
   padding-bottom: var(--space-layout-pad);
 
   &__content {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-section-gap));
   }
 }
 
 .p-ds-section {
-  // --- レイアウト・配置 ---
   @include flex-column;
 
-  // --- 子要素 ---
   &__grid {
-    // --- レイアウト・配置 ---
     @include grid-auto(350px, var(--space-card-gap));
   }
 }
 
 .p-ds-card-title {
-  // --- 継承 ---
   @include text-body;
 
-  // --- タイポグラフィ ---
   font-weight: var(--font-weight-bold);
   color: var(--color-text-secondary);
 }
 
 .p-ds-flex {
-  // --- レイアウト・配置 ---
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-card-gap);
@@ -187,7 +178,6 @@ const isChecked = ref(false);
 }
 
 .p-ds-stack {
-  // --- レイアウト・配置 ---
   @include flex-column(var(--space-stack-gap));
 }
 </style>

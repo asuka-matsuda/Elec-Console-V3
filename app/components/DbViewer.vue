@@ -1,4 +1,5 @@
-<script setup lang="ts" generic="T extends Record<string, unknown>">
+<script setup lang="ts" generic="T extends Record<string, unknown>
+">
 /**
  * DbViewer
  * データベースのビューアコンポーネントです。検索やフィルタリング機能を提供し、結果をテーブルで表示します。
@@ -68,7 +69,6 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
 
 <style scoped lang="scss">
 .l-filter-layout {
-  // --- レイアウト・配置 ---
   container-name: filter-layout;
   container-type: inline-size;
 
@@ -76,72 +76,53 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
 
   flex: 1;
 
-  // --- ボックスモデル ---
   width: 100%;
   max-width: 1400px;
   min-height: 0;
 
-  // --- 子要素 ---
   &__grid {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-card-gap));
 
     flex: 1;
-
-    // --- ボックスモデル ---
     min-height: 0;
   }
 
   &__sidebar {
-    // --- ボックスモデル ---
     width: 100%;
   }
 
   &__main {
-    // --- レイアウト・配置 ---
     @include flex-column;
 
     flex: 1;
-
-    // --- ボックスモデル ---
     min-width: 0;
     min-height: 0;
   }
 }
 
 .c-db {
-  // --- レイアウト・配置 ---
   @include flex-column;
 
   flex: 1;
-
-  // --- ボックスモデル ---
   min-height: 0;
 }
 
 .c-db-panel {
-  // --- その他 ---
   overflow: hidden;
 
-  // --- レイアウト・配置 ---
   @include flex-column;
 
   flex: 1;
-
-  // --- ボックスモデル ---
   min-height: 0;
 }
 
 .c-db-empty {
-  // --- 継承 ---
   @include text-body;
 
-  // --- ボックスモデル ---
   padding: var(--space-card-pad);
 
   @include border-dim;
 
-  // --- タイポグラフィ ---
   color: var(--color-text-muted);
   text-align: center;
 }

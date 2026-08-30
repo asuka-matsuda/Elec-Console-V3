@@ -1,12 +1,3 @@
-<template>
-  <!-- eslint-disable vue/no-v-html -->
-  <i
-    class="c-icon"
-    :class="[size ? `c-icon--${size}` : '']"
-    v-html="svgContent"
-  />
-</template>
-
 <script setup lang="ts">
 /**
  * AppIcon
@@ -29,39 +20,40 @@ const svgContent = computed(() => {
 });
 </script>
 
+<template>
+  <!-- eslint-disable vue/no-v-html -->
+  <i
+    class="c-icon"
+    :class="[size ? `c-icon--${size}` : '']"
+    v-html="svgContent"
+  />
+</template>
+
 <style scoped lang="scss">
 .c-icon {
-  // --- レイアウト・配置 ---
   @include inline-flex-center;
 
-  // --- 疑似クラス ---
   :deep(svg) {
-    // --- ボックスモデル ---
     width: 100%;
     height: 100%;
   }
 
-  // --- モディファイア ---
   &--sm {
-    // --- ボックスモデル ---
     width: 14px;
     height: 14px;
   }
 
   &--md {
-    // --- ボックスモデル ---
     width: 18px;
     height: 18px;
   }
 
   &--lg {
-    // --- ボックスモデル ---
     width: 24px;
     height: 24px;
   }
 
   &--xl {
-    // --- ボックスモデル ---
     width: 32px;
     height: 32px;
   }

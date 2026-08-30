@@ -201,50 +201,35 @@ const totalWeight = computed(() => {
 
 <style scoped lang="scss">
 .p-result-weight {
-  // --- レイアウト・配置 ---
   @include flex-column(var(--space-1));
 
-  // --- 子要素 ---
   &__val {
-    // --- 継承 ---
     @include text-title-xl;
   }
 
   &__warning {
-    // --- 継承 ---
     @include text-desc;
 
-    // --- ボックスモデル ---
     padding: var(--space-tag-p);
-
-    // --- タイポグラフィ ---
     color: var(--color-status-danger);
   }
 }
 
 .p-weight {
-  // --- 子要素 ---
   &__sections {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-card-gap));
   }
 
   &__note {
-    // --- 継承 ---
     @include text-meta;
 
-    // --- ボックスモデル ---
     padding: 0 var(--space-card-pad-md);
-
-    // --- タイポグラフィ ---
     color: var(--color-text-muted);
   }
 
   &__note-list {
-    // --- ボックスモデル ---
     padding-left: var(--space-layout-pad);
     list-style-type: disc;
   }
 }
 </style>
-

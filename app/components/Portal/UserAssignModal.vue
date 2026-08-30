@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { ref, watch } from "vue";
 import { useAdminUsers } from "~/composables/admin/useAdminUsers";
 import { useAdminSites } from "~/composables/admin/useAdminSites";

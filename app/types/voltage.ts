@@ -1,5 +1,3 @@
-
-
 import type { CableData } from "~/types/database";
 
 export interface SystemData {

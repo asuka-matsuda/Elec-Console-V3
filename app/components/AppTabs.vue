@@ -55,20 +55,15 @@ const selectTab = (option: TabOption) => {
 
 <style scoped lang="scss">
 .c-tabs {
-  // --- レイアウト・配置 ---
   @include flex-start(var(--space-inline-gap));
 
   flex-wrap: wrap;
 
-  // --- モディファイア ---
   &--grid {
-    // --- レイアウト・配置 ---
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 
-    // --- 子要素 ---
     .c-tabs__item {
-      // --- ボックスモデル ---
       width: 100%;
       padding-right: 0;
       padding-left: 0;
@@ -76,87 +71,63 @@ const selectTab = (option: TabOption) => {
   }
 
   &--vertical {
-    // --- レイアウト・配置 ---
     @include flex-column;
 
     align-items: stretch;
 
-    // --- 子要素 ---
     .c-tabs__item {
-      // --- レイアウト・配置 ---
       justify-content: flex-start;
-
-      // --- ボックスモデル ---
       width: 100%;
     }
   }
 }
 
 .c-tabs__item {
-  // --- 継承 ---
   @include text-desc;
 
-  // --- その他 ---
   cursor: pointer;
   user-select: none;
 
-  // --- レイアウト・配置 ---
   position: relative;
 
-  // --- ボックスモデル ---
   padding: var(--space-control-py-md) var(--space-control-px-md);
 
   @include border-base;
 
-  // --- タイポグラフィ ---
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
 
-  // --- 視覚効果 ---
   @include state-base(
     inset 0 0 var(--blur-sm) var(--color-border),
     var(--transition-fast)
   );
 
-  // --- 疑似クラス ---
   &:hover:not(.is-disabled, .is-active) {
-    // --- 視覚効果 ---
     transform: translateY(-2px);
-
-    // --- タイポグラフィ ---
     color: var(--color-text-main);
 
     @include state-hover;
   }
 
-  // --- モディファイア ---
   &.is-active {
-    // --- 視覚効果 ---
     transform: translateY(0);
-
-    // --- タイポグラフィ ---
     color: var(--color-category-main);
 
     @include state-active(var(--color-category-main));
 
-    // --- 子要素 ---
     .c-tabs__item-text {
-      // --- 視覚効果 ---
       @include cyber-text-glow;
     }
   }
 
   &.is-disabled {
-    // --- 継承 ---
     @include disabled;
   }
 
-  // --- レイアウト・配置 ---
   @include flex-center(var(--space-inline-gap));
 }
 
 .c-tabs__item-text {
-  // --- レイアウト・配置 ---
   position: relative;
   z-index: 1;
 }

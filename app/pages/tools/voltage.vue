@@ -1,22 +1,24 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * VoltageCalculator
  * 電圧降下・ケーブルサイズ選定ツールのコンポーネントです。電圧降下の計算や、条件を満たすケーブルサイズの選定を行います。
  */
 import { computed } from "vue";
+import { useRoute } from "#app";
+import { useForm, Field } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/zod";
 import { modeOptions } from "~/constants/toolOptions";
-import { useVoltageCalculator } from "~/composables/tools/useVoltageCalculator";
 import { getVoltageFormFields } from "~/constants/config/voltageFormConfig";
+import { useVoltageCalculator } from "~/composables/tools/useVoltageCalculator";
 import { useCalcHistory } from "~/composables/tools/useCalcHistory";
 import { mapVoltageToHistory } from "~/utils/tools/voltage/historyMapper";
-import { useForm, Field } from 'vee-validate';
-import { toTypedSchema } from '@vee-validate/zod';
-import { voltageSchema } from '~/utils/tools/voltage/voltageSchema';
+import { voltageSchema } from "~/utils/tools/voltage/voltageSchema";
 
 useHead({
   title: "電圧降下・ケーブルサイズ選定",
 });
 
+const route = useRoute();
 const {
   form,
   isResetModalOpen,
@@ -27,8 +29,10 @@ const {
   calcInputs,
   calcResult,
   mathSteps,
-  openResetModal
+  openResetModal,
 } = useVoltageCalculator();
+
+const { saveHistory } = useCalcHistory("elec_calc_voltage_hist");
 
 useForm({
   validationSchema: toTypedSchema(voltageSchema),
@@ -40,12 +44,9 @@ const formFields = computed(() =>
     () => isDropCalcMode.value,
     () => isSizeCalcMode.value,
     () => computedAvailableSizes.value,
-    () => !!form.value.cableType
-  )
+    () => !!form.value.cableType,
+  ),
 );
-
-const { saveHistory } = useCalcHistory("elec_calc_voltage_hist");
-const route = useRoute();
 
 const handleSaveToHistory = async () => {
   if (!calcInputs.value.isReady) return;
@@ -176,21 +177,15 @@ const handleSaveToHistory = async () => {
 <style scoped lang="scss">
 /* 2カラムグリッドを再現 */
 .l-grid {
-  // --- レイアウト・配置 ---
   @include grid;
 
-  // --- モディファイア ---
   &--2col {
-    // --- レイアウト・配置 ---
     grid-template-columns: 1fr; // スモールファースト
 
     @include cq("sm") {
       // コンテナ幅が広い時は2カラム
-
-      // --- レイアウト・配置 ---
       grid-template-columns: repeat(2, 1fr);
     }
   }
 }
 </style>
-

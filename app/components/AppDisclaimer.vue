@@ -21,14 +21,10 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-disclaimer {
-  // --- 継承 ---
   @include text-desc;
 
-  // --- ボックスモデル ---
   width: 100%;
   padding: var(--space-alert-p);
-
-  // --- タイポグラフィ ---
   color: var(--color-status-warning);
 }
 </style>

@@ -7,21 +7,21 @@ import { ref } from "vue";
 import { useHead, useRouter } from "#app";
 import { useAuth } from "~/composables/useAuth";
 
-useHead({ title: "ログイン - Elec-Console" });
 definePageMeta({ layout: "login", title: "Elec-Console v2" });
+useHead({ title: "ログイン - Elec-Console" });
 
 const router = useRouter();
 const { login } = useAuth();
-
-const formData = ref<Record<string, string>>({
-  userId: "",
-  password: "",
-});
 
 const formFields = [
   { id: "userId", label: "ユーザーID", type: "text", placeholder: "master" },
   { id: "password", label: "パスワード", type: "password", placeholder: "••••••••" },
 ] as const;
+
+const formData = ref<Record<string, string>>({
+  userId: "",
+  password: "",
+});
 const errorMessage = ref("");
 const isLoading = ref(false);
 
@@ -92,22 +92,16 @@ const handleLogin = async () => {
 
 <style scoped lang="scss">
 .p-login {
-  // --- ボックスモデル ---
   padding: var(--space-card-pad);
 
-  // --- 子要素 ---
   &__form {
     @include flex-column(var(--space-stack-gap));
   }
 
   &__error {
-    // --- 継承 ---
     @include text-sm;
 
-    // --- ボックスモデル ---
     padding: var(--space-alert-p);
-
-    // --- タイポグラフィ ---
     color: var(--color-status-danger);
 
     @include border-base(var(--color-status-danger));

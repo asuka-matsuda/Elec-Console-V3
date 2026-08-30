@@ -3,7 +3,6 @@ import type { User, UserRole  } from '~/types/auth';
 import { ref } from "vue";
 import { useAdminUsers } from "~/composables/admin/useAdminUsers";
 
-
 const isOpen = defineModel<boolean>({ default: false });
 const emit = defineEmits<{
   (e: "success", user: User): void;

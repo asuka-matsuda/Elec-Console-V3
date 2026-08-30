@@ -60,7 +60,6 @@ function toggleKana(kana: string) {
 
 <style scoped lang="scss">
 .c-kana-filter {
-  // --- レイアウト・配置 ---
   @include grid-auto(80px, var(--space-1));
 }
 </style>

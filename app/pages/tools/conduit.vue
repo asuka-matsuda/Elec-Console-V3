@@ -33,7 +33,6 @@ const conduitCategoryOptions = computed(() => {
 const handleSave = async () => {
   await saveHistory();
 };
-
 </script>
 
 <template>
@@ -114,33 +113,26 @@ const handleSave = async () => {
 
 <style scoped lang="scss">
 .p-basis-note {
-  // --- 継承 ---
   @include text-meta;
 
-  // --- タイポグラフィ ---
   color: var(--color-status-warning);
 }
 
 .p-conduit {
-  // --- 子要素 ---
   &__section {
     @include flex-column(var(--space-card-gap));
   }
 
   &__section-title {
-    // --- 継承 ---
     @include text-title-sm;
   }
 
   &__cable-list {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-card-gap));
   }
 
   &__add-button {
-    // --- ボックスモデル ---
     width: 100%;
   }
 }
 </style>
-

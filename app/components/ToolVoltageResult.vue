@@ -4,11 +4,12 @@
  * 電圧降下やケーブルサイズの計算結果を視覚的に表示するコンポーネントです。
  */
 import { computed } from "vue";
+import type { VoltageCalcInputs, VoltageCalcResult } from "~/types/voltage";
 import { formatVal } from "~/utils/math";
 
 const props = defineProps<{
-  inputs: import('~/types/voltage').VoltageCalcInputs;
-  result: import('~/types/voltage').VoltageCalcResult | null;
+  inputs: VoltageCalcInputs;
+  result: VoltageCalcResult | null;
   size?: "sm" | "md";
 }>();
 
@@ -179,188 +180,143 @@ const dropStatusClass = computed(() => {
 
 <style scoped lang="scss">
 .c-voltage-result {
-  // --- レイアウト・配置 ---
   @include flex-column(var(--space-card-gap));
 
   flex: 1;
   align-items: stretch;
-
-  // --- ボックスモデル ---
   min-height: 0;
   padding: var(--space-card-pad);
 
-  // --- 子要素 ---
   &__drop-percent {
-    // --- 継承 ---
     @include text-title-lg;
   }
 
   &__drop-unit {
-    // --- 継承 ---
     @include text-title-sm;
   }
 
   &__drop-cable {
-    // --- 継承 ---
     @include text-title-lg;
   }
 
-  // --- モディファイア ---
   &.is-sm {
-    // --- レイアウト・配置 ---
     gap: var(--space-stack-gap);
-
-    // --- ボックスモデル ---
     padding: 0;
 
-    // --- 子要素 ---
     .c-voltage-result__main {
-      // --- ボックスモデル ---
       padding: var(--space-tag-p);
     }
 
     .c-voltage-result__main-value .value-text {
-      // --- タイポグラフィ ---
       font-size: 1.5rem;
     }
 
     .c-voltage-result__drop-cable {
-      // --- タイポグラフィ ---
       font-size: 1.25rem;
     }
 
     .c-voltage-result__drop-percent {
-      // --- タイポグラフィ ---
       font-size: 1rem;
     }
 
     .metric-card {
-      // --- ボックスモデル ---
       padding: var(--space-tag-p);
     }
   }
 
   .is-neutral {
-    // --- タイポグラフィ ---
     color: var(--color-text-muted);
   }
 
   .is-success {
-    // --- タイポグラフィ ---
     color: var(--color-status-success);
 
-    // --- 視覚効果 ---
     @include cyber-text-glow(var(--color-status-success), 40%, var(--blur-md));
   }
 
   .is-warning {
-    // --- タイポグラフィ ---
     color: var(--color-status-warning);
 
-    // --- 視覚効果 ---
     @include cyber-text-glow(var(--color-status-warning), 40%, var(--blur-md));
   }
 
   .is-danger {
-    // --- タイポグラフィ ---
     color: var(--color-status-danger);
 
-    // --- 視覚効果 ---
     @include cyber-text-glow(var(--color-status-danger), 40%, var(--blur-md));
   }
 
-  // --- 子要素 ---
   &__main {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-stack-gap-sm));
 
     flex: 1;
     align-items: center;
     justify-content: center;
 
-    // --- ボックスモデル ---
     min-width: 0;
     padding: var(--space-result-p);
 
     @include border-base;
 
-    // --- 視覚効果 ---
     box-shadow: var(--shadow-sink);
 
     @include border-base;
   }
 
   &__main-label {
-    // --- 継承 ---
     @include text-meta;
 
-    // --- タイポグラフィ ---
     color: var(--color-text-secondary);
     text-transform: uppercase;
   }
 
   &__main-value {
-    // --- レイアウト・配置 ---
     display: flex;
     gap: var(--space-inline-gap);
     align-items: baseline;
-
-    // --- タイポグラフィ ---
     font-family: var(--font-mono);
 
     .value-text {
-      // --- タイポグラフィ ---
       font-size: 2rem;
       font-weight: var(--font-weight-bold);
       line-height: 1;
     }
 
     .value-unit {
-      // --- 継承 ---
       @include text-title-md;
 
       color: var(--color-text-secondary);
-
-      // --- 視覚効果 ---
       opacity: 0.8;
     }
   }
 
   &__metrics {
-    // --- レイアウト・配置 ---
     display: flex;
     flex-flow: row wrap; // 狭い場合は横並びラップ（スモールファースト）
     flex-shrink: 0;
     gap: var(--space-inline-gap);
 
-    // --- ボックスモデル ---
     min-width: auto;
 
     // コンテナの幅が xs 以上の場合は縦積み
     @include cq("xs") {
       flex-flow: column nowrap;
-
-      // --- ボックスモデル ---
       min-width: 220px;
     }
   }
 
   .metric-card {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-stack-gap-sm));
 
     flex: 1;
     align-items: center;
     justify-content: center;
-
-    // --- ボックスモデル ---
     padding: var(--space-card-pad-sm);
 
     @include border-base(var(--color-border), 1px);
   }
 
   .metric-label {
-    // --- 継承 ---
     @include text-meta;
   }
 
@@ -391,7 +347,6 @@ const dropStatusClass = computed(() => {
 
   // コンテナの幅が xs 以上の場合は横並び
   @include cq("xs") {
-    // --- レイアウト・配置 ---
     flex-direction: row;
   }
 }

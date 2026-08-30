@@ -4,25 +4,26 @@
  * 計算履歴ツールのコンポーネントです。過去に実行した各種計算ツールの履歴を一覧表示し、管理します。
  */
 import { ref, computed, watch } from "vue";
+import type { HistoryEntry } from "~/types/history";
 
 useHead({
   title: "計算履歴",
 });
-
-const currentTab = ref("voltage");
 
 const tabs = [
   { value: "voltage", label: "電圧降下計算" },
   { value: "conduit", label: "配管サイズ" },
 ];
 
-/** タブに応じたストレージキーを取得 */
+const currentTab = ref("voltage");
+const historyList = ref<HistoryEntry[]>([]);
+const isClearAllModalOpen = ref(false);
+const isDeleteModalOpen = ref(false);
+const targetDeleteId = ref<string | null>(null);
+
 const storageKey = computed(() => {
   return `elec_calc_${currentTab.value}_hist`;
 });
-
-/** 履歴ロジック (マウント後・タブ切り替え時に再取得) */
-const historyList = ref<import('~/types/history').HistoryEntry[]>([]);
 
 const loadHistory = () => {
   if (import.meta.client) {
@@ -39,25 +40,9 @@ const loadHistory = () => {
   }
 };
 
-watch(currentTab, () => {
-  loadHistory();
-}, { immediate: true });
-
-// ストレージへの自動保存（削除時など）
-watch(historyList, (newVal) => {
-  if (import.meta.client) {
-    localStorage.setItem(storageKey.value, JSON.stringify(newVal));
-  }
-}, { deep: true });
-
 const deleteHistory = (id: string) => {
-  historyList.value = historyList.value.filter(item => item.id !== id);
+  historyList.value = historyList.value.filter((item) => item.id !== id);
 };
-
-// --- Dialog States ---
-const isClearAllModalOpen = ref(false);
-const isDeleteModalOpen = ref(false);
-const targetDeleteId = ref<string | null>(null);
 
 const confirmClearAll = () => {
   historyList.value = [];
@@ -76,6 +61,24 @@ const confirmDelete = () => {
   }
   isDeleteModalOpen.value = false;
 };
+
+watch(
+  currentTab,
+  () => {
+    loadHistory();
+  },
+  { immediate: true },
+);
+
+watch(
+  historyList,
+  (newVal) => {
+    if (import.meta.client) {
+      localStorage.setItem(storageKey.value, JSON.stringify(newVal));
+    }
+  },
+  { deep: true },
+);
 </script>
 
 <template>
@@ -180,57 +183,44 @@ const confirmDelete = () => {
 
 <style scoped lang="scss">
 .p-history-page {
-  // --- レイアウト・配置 ---
   container-type: inline-size;
 
   @include flex-column(var(--space-section-gap));
 
-  // --- 子要素 ---
   &__tabs {
     /* 親要素(p-history-page)のgapで管理されるためmargin-bottomは削除 */
   }
 
   &__grid {
-    // --- レイアウト・配置 ---
     display: grid;
     grid-template-columns: 1fr; // スモールファースト
     gap: var(--space-card-gap);
 
     @include cq("sm") {
-      // --- レイアウト・配置 ---
       grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
     }
   }
 
   &__empty {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-stack-gap-sm));
 
     align-items: center;
     justify-content: center;
-
-    // --- ボックスモデル ---
     padding: var(--space-layout-pad) 0;
-
-    // --- タイポグラフィ ---
     color: var(--color-text-muted);
   }
 }
 
 .u-spin {
-  // --- 視覚効果 ---
   animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  // --- 子要素 ---
   from {
-    // --- 視覚効果 ---
     transform: rotate(0deg);
   }
 
   to {
-    // --- 視覚効果 ---
     transform: rotate(360deg);
   }
 }

@@ -4,7 +4,6 @@ import type { WeightCalcInputs } from '~/utils/tools/weight/weightCalcLogic';
 import type { CableData, DrumData } from '~/types/database';
 
 describe('weightCalcLogic', () => {
-
   describe('calculateWeightAndDrum', () => {
     const mockCableData: CableData[] = [
       { category: 'CV', diameter: '10', weight: '150', size: '14', unit: 'sq', cores: '3C' },

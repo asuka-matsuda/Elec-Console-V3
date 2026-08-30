@@ -136,94 +136,67 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never;
 
 <style scoped lang="scss">
 .c-history-card {
-  // --- レイアウト・配置 ---
   @include flex-column;
 
-  // --- モディファイア ---
-
-  // --- 子要素 ---
   &__header {
-    // --- レイアウト・配置 ---
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
 
-    // --- ボックスモデル ---
     padding-bottom: var(--space-control-py-md);
     border-bottom: 1px solid var(--color-border);
   }
 
   &__title-group {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-stack-gap-sm));
   }
 
   &__date {
-    // --- 継承 ---
     @include text-meta;
   }
 
   &__title {
-    // --- 継承 ---
     @include text-title-sm;
-
-    // --- レイアウト・配置 ---
     @include flex-start;
 
-    // --- タイポグラフィ ---
     color: var(--color-text-main);
   }
 
   &__body {
-    // --- レイアウト・配置 ---
     @include flex-column;
   }
 
   &__section {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-stack-gap-sm));
   }
 
   &__section-title {
-    // --- 継承 ---
     @include text-title-sm;
 
-    // --- ボックスモデル ---
     padding-left: var(--space-control-py-sm);
     border-left: 2px solid var(--color-category-tool);
-
-    // --- タイポグラフィ ---
     color: var(--color-text-main);
   }
 
   &__list {
-    // --- 継承 ---
     @include text-desc;
-
-    // --- レイアウト・配置 ---
     @include grid(auto 1fr, var(--space-stack-gap-sm) var(--space-inline-gap-lg));
 
-    // --- 子要素 ---
     dt {
-      // --- タイポグラフィ ---
       color: var(--color-text-muted);
       white-space: nowrap;
     }
 
     dd {
-      // --- タイポグラフィ ---
       color: var(--color-text-main);
       text-align: right;
     }
   }
 
   &__footer {
-    // --- レイアウト・配置 ---
     display: flex;
     align-items: center;
     justify-content: flex-end;
-
-    // --- ボックスモデル ---
     margin-top: auto;
   }
 }

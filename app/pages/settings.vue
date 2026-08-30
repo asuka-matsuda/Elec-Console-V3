@@ -5,13 +5,16 @@
  */
 import { useSettings } from "~/composables/useSettings";
 
+useHead({
+  title: "UI・個人設定",
+});
+
 const { themeMode } = useSettings();
 
 const themeOptions = [
   { label: "ダークモード (標準)", value: "dark" },
   { label: "ライトモード", value: "light" },
 ];
-
 </script>
 
 <template>
@@ -70,33 +73,27 @@ const themeOptions = [
 
 <style scoped lang="scss">
 .p-settings {
-  // --- レイアウト・配置 ---
   container-type: inline-size;
 
   @include flex-column(var(--space-section-gap));
 
-  // --- ボックスモデル ---
   padding-bottom: var(--space-layout-pad);
 
   &__panel-content {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-card-gap));
   }
 
   &__grid {
-    // --- レイアウト・配置 ---
     display: grid;
     grid-template-columns: 1fr; // スモールファースト
     gap: var(--space-section-gap);
 
     @include cq("md") {
-      // --- レイアウト・配置 ---
       grid-template-columns: 2fr 1fr;
     }
   }
 
   &__stack {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-stack-gap));
   }
 }

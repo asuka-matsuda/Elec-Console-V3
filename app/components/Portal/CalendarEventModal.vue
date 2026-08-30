@@ -193,7 +193,7 @@ const closeModal = () => {
   &__row {
     @include flex-start(var(--space-inline-gap));
     > * { flex: 1; }
-    
+
     @include cq("xs", "down") {
       flex-direction: column;
       align-items: stretch;

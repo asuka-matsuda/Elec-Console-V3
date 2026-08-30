@@ -98,20 +98,16 @@ const closeSidebar = () => {
 
 <style scoped lang="scss">
 .l-global-nav {
-  // --- CSSカスタムプロパティ ---
   --sidebar-border: var(--color-border);
 
-  // --- レイアウト・配置 ---
   position: fixed;
   z-index: var(--z-index-nav);
 
   @include flex-column;
 
-  // --- ボックスモデル ---
   width: var(--sidebar-width);
   height: 100dvh;
 
-  // --- 視覚効果 ---
   @include state-base(
     var(--shadow-elevation-md),
     transform var(--duration-slow) var(--ease-smooth)
@@ -119,51 +115,35 @@ const closeSidebar = () => {
 
   // Mobile layout (hide by default)
   @include mq("md") {
-    // --- 視覚効果 ---
     transform: translateX(-100%);
 
-    // --- モディファイア ---
     &.is-open {
-      // --- 視覚効果 ---
       transform: translateX(0);
     }
   }
 
-  // --- 子要素 ---
   &__header {
-    // --- レイアウト・配置 ---
     @include flex-start;
 
     flex-shrink: 0;
-
-    // --- ボックスモデル ---
     height: 64px; // Match standard header height
     padding: 0 var(--space-control-px);
-
-    // --- 視覚効果 ---
     box-shadow: var(--shadow-elevation-sm); // Replaced hardcoded shadow
   }
 
   &__nav {
-    // --- CSSカスタムプロパティ ---
     --scrollbar-size: var(--space-2);
 
-    // --- その他 ---
     overflow-y: auto;
 
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-card-gap));
 
     flex: 1;
-
-    // --- ボックスモデル ---
     padding: var(--space-card-pad-md);
   }
 
   &__section {
     // Dynamic accent color support using Map and @each
-
-    // --- SCSS変数・マップ ---
     $accents: (
       "primary": var(--color-category-main),
       "main": var(--color-category-main),
@@ -176,52 +156,38 @@ const closeSidebar = () => {
       "management": var(--color-category-management),
     );
 
-    // --- レイアウト・配置 ---
     @include flex-column;
 
     @each $name, $var in $accents {
-      // --- モディファイア ---
       &.has-accent-#{$name} {
-        // --- CSSカスタムプロパティ ---
         --section-accent: #{$var};
       }
     }
   }
 
   &__section-header {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-stack-gap-sm));
 
-    // --- ボックスモデル ---
     padding: var(--space-control-py-md) var(--space-control-px);
   }
 
   &__heading {
-    // --- 継承 ---
     @include text-badge;
 
     color: var(--section-accent, var(--color-text-secondary));
   }
 
   &__link {
-    // --- 継承 ---
     @include text-title-sm;
-
-    // --- レイアウト・配置 ---
     @include flex-start(var(--space-inline-gap));
 
-    // --- ボックスモデル ---
     padding: var(--space-control-py-md) var(--space-control-px);
-
-    // --- タイポグラフィ ---
     font-weight: var(--font-weight-medium);
     color: var(--color-text-secondary);
 
-    // --- 視覚効果 ---
     @include state-base;
 
     &-text {
-      // --- タイポグラフィ ---
       line-height: 1.4;
       word-break: keep-all; // 句読点やスペース、記号（・など）の区切りでのみ改行を許可
       line-break: strict;
@@ -229,44 +195,29 @@ const closeSidebar = () => {
     }
 
     &-icon {
-      // --- レイアウト・配置 ---
       flex-shrink: 0; // アイコンが潰れないように
-
-      // --- ボックスモデル ---
       width: var(--icon-size-md);
       height: var(--icon-size-md);
 
-      // --- 視覚効果 ---
       @include state-base;
     }
 
     // Hover
 
-    // --- 疑似クラス ---
     &:hover:not(.is-disabled, .router-link-active) {
       // Replaced hardcoded shadow with cyber-text-glow or simplified shadow
-
-      // --- CSSカスタムプロパティ ---
       --glow-color: theme-color(
         var(--section-accent, var(--color-category-main)),
         20%
       );
 
-      // --- 視覚効果 ---
       transform: translateX(var(--space-1));
-
-      // --- タイポグラフィ ---
       color: var(--section-accent, var(--color-category-main));
 
-      // --- 視覚効果 ---
       @include state-hover;
 
-      // --- 子要素 ---
       .l-global-nav__link-icon {
-        // --- タイポグラフィ ---
         color: var(--section-accent, var(--color-category-main));
-
-        // --- 視覚効果 ---
         filter: drop-shadow(
           0 0 var(--blur-sm)
             theme-color(var(--section-accent, var(--color-category-main)), 80%)
@@ -276,10 +227,7 @@ const closeSidebar = () => {
 
     // Active
     &.router-link-active {
-      // --- 視覚効果 ---
       transform: translateX(0);
-
-      // --- タイポグラフィ ---
       color: var(--section-accent, var(--color-category-main));
 
       @include state-active(var(--section-accent, var(--color-category-main)));
@@ -289,13 +237,8 @@ const closeSidebar = () => {
         currentcolor
       );
 
-      // --- 子要素 ---
-
       .l-global-nav__link-icon {
-        // --- タイポグラフィ ---
         color: var(--section-accent, var(--color-category-main));
-
-        // --- 視覚効果 ---
         filter: drop-shadow(
           0 0 var(--blur-sm) var(--section-accent, var(--color-category-main))
         );
@@ -304,23 +247,18 @@ const closeSidebar = () => {
 
     // Disabled
 
-    // --- モディファイア ---
     &.is-disabled {
-      // --- 継承 ---
       @include disabled;
 
-      // --- 視覚効果 ---
       filter: grayscale(100%);
     }
   }
 }
 
 .l-global-nav-overlay {
-  // --- レイアウト・配置 ---
   display: none; // Hidden on desktop
 
   @include mq("md") {
-    // --- レイアウト・配置 ---
     position: fixed;
     z-index: var(--z-index-nav); // Just below sidebar
     top: 0;
@@ -328,14 +266,10 @@ const closeSidebar = () => {
 
     display: block;
 
-    // --- ボックスモデル ---
     width: 100vw;
     height: 100dvh;
 
-    // --- その他 ---
     visibility: hidden;
-
-    // --- 視覚効果 ---
     opacity: 0;
     backdrop-filter: blur(4px) brightness(0.4);
 
@@ -343,13 +277,9 @@ const closeSidebar = () => {
       opacity var(--duration-slow) var(--ease-base),
       visibility var(--duration-slow) var(--ease-base);
 
-    // --- モディファイア ---
     &.is-open {
-      // --- その他 ---
       pointer-events: auto;
       visibility: visible;
-
-      // --- 視覚効果 ---
       opacity: 1;
     }
   }

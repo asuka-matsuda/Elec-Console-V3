@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import FullCalendar from '@fullcalendar/vue3';
@@ -32,8 +31,6 @@ const form = ref({
   end: '',
   allDay: false
 });
-
-
 
 const formatDateTimeLocal = (dateStr: string, isAllDay: boolean) => {
   if (!dateStr) return '';
@@ -158,7 +155,6 @@ const calendarOptions = computed(() => ({
   },
   dayCellClassNames: (arg: DayCellContentArg) => {
     const classes = [];
-    // const dateStr = arg.date.toLocaleDateString('ja-JP').split('/').map(v => v.padStart(2, '0')).join('-'); // YYYY-MM-DD (rough local parsing)
     // 厳密なISOではないが、FullCalendarの内部日付に対応させる
     const isoDate = arg.date.getFullYear() + '-' + String(arg.date.getMonth() + 1).padStart(2, '0') + '-' + String(arg.date.getDate()).padStart(2, '0');
     
@@ -251,7 +247,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
   }
 
   min-height: 500px;
-  
+
   :deep(.fc-theme-standard td), :deep(.fc-theme-standard th) {
     border-color: var(--color-border);
     background-color: transparent;
@@ -301,7 +297,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
   /* イベントの動的カラー */
   :deep(.fc-daygrid-event) {
     $event-color: var(--event-theme-color, var(--color-primary));
-    
+
     padding: var(--space-badge-p);
     border: 1px solid theme-color($event-color, 50%);
     border-radius: var(--radius-sm);
@@ -327,8 +323,5 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
   @include mq("md") {
     min-height: 400px;
   }
-
 }
-
 </style>
-

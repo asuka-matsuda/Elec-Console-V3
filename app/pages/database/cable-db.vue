@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * CableDbPage
  * ケーブルのデータベース情報を一覧表示・検索するためのページコンポーネントです。
@@ -48,7 +48,6 @@ const tableColumns: TableColumn[] = [
 
 <style scoped lang="scss">
 .c-db-meta {
-  // --- 継承 ---
   @include text-desc;
 }
 </style>

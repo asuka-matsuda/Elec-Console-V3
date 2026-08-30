@@ -14,10 +14,9 @@
 <style scoped lang="scss">
 .p-result-details {
   margin: 0; // Reset dl margin
-  // --- レイアウト・配置 ---
+
   @include flex-column(var(--space-stack-gap-sm));
 
-  // --- ボックスモデル ---
   padding-top: var(--space-card-pad-md);
   border-top: 1px solid var(--color-border);
 }

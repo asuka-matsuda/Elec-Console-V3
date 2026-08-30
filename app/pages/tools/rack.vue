@@ -256,89 +256,67 @@ const {
 
 <style scoped lang="scss">
 .p-result-rack {
-  // --- レイアウト・配置 ---
   @include flex-column(var(--space-1));
 
-  // --- 子要素 ---
   &__val {
-    // --- 継承 ---
     @include text-title-lg;
 
-    // --- タイポグラフィ ---
     color: var(--color-status-success);
 
-    // --- 視覚効果 ---
     @include cyber-text-glow(var(--color-status-success), 40%, var(--blur-md));
   }
 
   &__warning {
-    // --- 継承 ---
     @include text-title-sm;
 
-    // --- ボックスモデル ---
     padding: var(--space-tag-p);
-
-    // --- タイポグラフィ ---
     color: var(--color-status-danger);
   }
 }
 
 .is-overflow {
-  // --- タイポグラフィ ---
   color: var(--color-status-danger);
 }
 
 .p-rack {
-  // --- 子要素 ---
   &__sections {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-card-gap));
   }
 
   &__grid {
-    // --- レイアウト・配置 ---
     @include grid(1fr, var(--space-card-gap));
 
     @include cq("xs") {
-      // --- レイアウト・配置 ---
       grid-template-columns: repeat(2, 1fr);
     }
   }
 
   &__card-header {
-    // --- レイアウト・配置 ---
     @include flex-between;
   }
 
   &__card-title {
-    // --- 継承 ---
     @include text-title-md;
   }
 
   &__card-body {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-card-gap));
   }
 
   &__section {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-stack-gap-sm));
   }
 
   &__section-title {
-    // --- 継承 ---
     @include text-desc;
   }
 
   &__cable-list {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-card-gap));
   }
 
   &__add-button {
-    // --- ボックスモデル ---
     width: 100%;
   }
 }
 </style>
-

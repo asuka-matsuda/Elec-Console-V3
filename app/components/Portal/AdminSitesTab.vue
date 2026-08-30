@@ -13,7 +13,6 @@ const { sites, createSite, toggleDisableSite, updateSite } =
 
 // --- 一覧定義 ---
 
-
 const sortKey = ref('id');
 const sortOrder = ref<'asc' | 'desc'>('asc');
 

@@ -36,21 +36,15 @@ const inputId = useId();
 
 <style scoped lang="scss">
 .c-form-control {
-  // --- CSSカスタムプロパティ ---
   --form-control-px: var(--space-control-px-md);
   --form-control-py: var(--space-control-py-md);
 
-  // --- 継承 ---
   @include text-desc;
 
-  // --- ボックスモデル ---
   width: 100%;
   padding: var(--form-control-py) var(--form-control-px);
-
-  // --- タイポグラフィ ---
   font-family: var(--font-mono);
 
-  // --- モディファイア ---
   &--sm {
     --form-control-px: var(--space-control-px-sm);
     --form-control-py: var(--space-control-py-sm);

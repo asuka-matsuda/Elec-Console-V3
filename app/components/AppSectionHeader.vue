@@ -63,55 +63,42 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-section-header {
-  // --- レイアウト・配置 ---
   @include flex-column;
 
-  // --- 子要素 ---
   &__top {
-    // --- レイアウト・配置 ---
     @include flex-between(var(--space-card-gap));
 
     align-items: flex-end;
-
-    // --- ボックスモデル ---
     width: 100%;
   }
 
   &__actions {
-    // --- レイアウト・配置 ---
     @include flex-start(var(--space-inline-gap));
   }
 
   &__title {
-    // --- レイアウト・配置 ---
     @include flex-start(var(--space-inline-gap));
 
     color: var(--color-text-main);
 
-    // --- モディファイア ---
     &--lg {
-      // --- 継承 ---
       @include text-title-lg;
     }
 
     &--md {
-      // --- 継承 ---
       @include text-title-md;
     }
 
     &--sm {
-      // --- 継承 ---
       @include text-title-sm;
     }
   }
 
   &__icon {
-    // --- タイポグラフィ ---
     color: var(--section-color);
   }
 
   &__desc {
-    // --- 継承 ---
     @include text-desc;
   }
 }

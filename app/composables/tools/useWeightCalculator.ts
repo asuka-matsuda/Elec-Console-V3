@@ -14,7 +14,6 @@ const defaultInputs: WeightCalcInputs = {
 };
 
 export function useWeightCalculator() {
-
   const {
     inputs,
     result,

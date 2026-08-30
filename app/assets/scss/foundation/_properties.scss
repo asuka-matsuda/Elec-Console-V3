@@ -24,7 +24,6 @@
   --tracking-wide:    0.02em;
   --tracking-wider:   0.05em;
   --tracking-widest:  0.1em;
-
   --z-index-bg-canvas:         -3;
   --z-index-footer:            10;
   --z-index-table-header:      10;
@@ -108,12 +107,10 @@
   --space-card-pad-md:         var(--space-3);                              // 12px (コンパクト)
   --space-card-pad-lg:         clamp(var(--space-3), 1.5vw, var(--space-5)); // 12px 〜 20px (標準)
   --space-card-pad:            var(--space-card-pad-lg);                    // デフォルトエイリアス
-
   --space-card-gap-sm:         var(--space-2);                              // 8px
   --space-card-gap-md:         clamp(var(--space-2), 1.2vw, var(--space-4)); // 8px 〜 16px (標準)
   --space-card-gap-lg:         var(--space-4);                              // 16px
   --space-card-gap:            var(--space-card-gap-md);                    // デフォルトエイリアス
-
   // [3] スタック・インライン フロー (Flow Gaps: xs / sm / md / lg / xl)
   --space-stack-gap-xs:        var(--space-0-5);                            // 2px
   --space-stack-gap-sm:        var(--space-1);                              // 4px  (フォーム内など)
@@ -121,20 +118,17 @@
   --space-stack-gap-lg:        var(--space-3);                              // 12px (垂直標準)
   --space-stack-gap-xl:        var(--space-4);                              // 16px
   --space-stack-gap:           var(--space-stack-gap-lg);                   // デフォルトエイリアス
-
   --space-inline-gap-xs:       var(--space-0-5);                            // 2px
   --space-inline-gap-sm:       var(--space-1);                              // 4px  (タグ・アイコン隣接など)
   --space-inline-gap-md:       var(--space-2);                              // 8px  (水平標準)
   --space-inline-gap-lg:       var(--space-3);                              // 12px
   --space-inline-gap-xl:       var(--space-4);                              // 16px
   --space-inline-gap:          var(--space-inline-gap-md);                  // デフォルトエイリアス
-
   // [4] UIコントロール内余白 (Control Paddings: sm / md / lg)
   --space-control-px-sm:       var(--space-3);                              // 12px (コントロール左右 sm)
   --space-control-px-md:       var(--space-4);                              // 16px (コントロール左右 md)
   --space-control-px-lg:       var(--space-5);                              // 20px (コントロール左右 lg)
   --space-control-px:          var(--space-control-px-sm);                  // デフォルトエイリアス
-
   --space-control-py-sm:       var(--space-1);                              // 4px  (コントロール上下 sm)
   --space-control-py-md:       var(--space-2);                              // 8px  (コントロール上下 md)
   --space-control-py-lg:       var(--space-3);                              // 12px (コントロール上下 lg)
@@ -221,39 +215,31 @@
   // 6. シャドウ & グロー演出 (HUD / Cyber Visuals)
   // ==========================================================================
   --shadow-color: theme-color(black, 90%);
-
   --shadow-elevation-sm:
     0 1px 2px theme-color(var(--shadow-color), 40%),
     0 4px 8px theme-color(var(--shadow-color), 20%),
     inset 0 1px 0 rgb(255 255 255 / 5%);
-
   --shadow-elevation-md:
     0 2px 4px theme-color(var(--shadow-color), 30%),
     0 8px 16px theme-color(var(--shadow-color), 20%),
     inset 0 1px 0 rgb(255 255 255 / 5%);
-
   --shadow-elevation-lg:
     0 4px 8px theme-color(var(--shadow-color), 20%),
     0 16px 32px theme-color(var(--shadow-color), 20%),
     inset 0 1px 0 rgb(255 255 255 / 5%);
-
   --shadow-sink: inset 0 2px 4px 0 theme-color(var(--shadow-color), 60%);
-
   --shadow-glow-sm:       0 0 var(--blur-sm) var(--glow-color, var(--color-category-main));
   --shadow-glow-md:       0 0 var(--blur-md) var(--glow-color, var(--color-category-main));
   --shadow-glow-lg:       0 0 var(--blur-lg) var(--glow-color, var(--color-category-main));
   --shadow-glow-inset-sm: inset 0 0 var(--blur-sm) var(--glow-color, var(--color-category-main));
   --shadow-glow-inset-md: inset 0 0 var(--blur-md) var(--glow-color, var(--color-category-main));
   --shadow-glow-inset-lg: inset 0 0 var(--blur-lg) var(--glow-color, var(--color-category-main));
-  
   --shadow-glow-hover:
     0 0 16px theme-color(var(--glow-color, var(--color-category-main)), 50%),
     inset 0 0 4px theme-color(var(--glow-color, var(--color-category-main)), 30%);
-
   --shadow-glow-focus:
     0 0 16px theme-color(var(--glow-color, var(--color-category-main)), 70%),
     inset 0 0 8px theme-color(var(--glow-color, var(--color-category-main)), 50%);
-
   --shadow-glow-active:
     0 0 8px theme-color(var(--glow-color, var(--color-category-main)), 40%),
     inset 0 0 12px theme-color(var(--glow-color, var(--color-category-main)), 80%);
@@ -265,15 +251,12 @@
   --duration-base:  0.25s;
   --duration-slow:  0.4s;
   --duration-modal: 0.5s;
-
   --ease-base:   cubic-bezier(0.25, 1, 0.5, 1);
   --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
   --transition-fast: all var(--duration-fast) var(--ease-base);
   --transition-base: all var(--duration-base) var(--ease-base);
   --transition-slow: all var(--duration-slow) var(--ease-smooth);
-
   --transition-glow:
     box-shadow var(--duration-slow) var(--ease-base),
     border-color var(--duration-slow) var(--ease-base),

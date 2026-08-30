@@ -65,32 +65,21 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-form-group {
-  // --- レイアウト・配置 ---
   container-type: inline-size;
-
-  // --- ボックスモデル ---
   width: 100%;
 
-  // --- 子要素 ---
   &__inner {
-    // --- レイアウト・配置 ---
     @include flex-column;
 
-    // --- ボックスモデル ---
     width: 100%;
 
     // If the .c-form-group container is wide enough (>= xs), switch to horizontal layout
     @include cq("xs") {
-      // --- レイアウト・配置 ---
       flex-direction: row;
       align-items: flex-start;
 
-      // --- 子要素 ---
       .c-form-group__label-wrapper {
-        // --- レイアウト・配置 ---
         flex-shrink: 0;
-
-        // --- ボックスモデル ---
         width: 140px;
 
         // Align label with the text inside a medium input control
@@ -104,77 +93,57 @@ withDefaults(
       }
 
       .c-form-group__control {
-        // --- レイアウト・配置 ---
         flex: 1;
-
-        // --- ボックスモデル ---
         min-width: 0;
       }
     }
   }
 
   &__label-wrapper {
-    // --- レイアウト・配置 ---
     @include flex-start;
   }
 
   &__control {
-    // --- レイアウト・配置 ---
     position: relative;
 
     @include flex-column(var(--space-1));
   }
 
   &__error {
-    // --- 継承 ---
     @include text-meta;
 
-    // --- タイポグラフィ ---
     color: var(--color-status-danger);
 
-    // --- 視覚効果 ---
     @include cyber-text-glow(var(--color-status-danger), 30%, var(--blur-sm));
   }
 
   &__help {
-    // --- 継承 ---
     @include text-meta;
   }
 }
 
 // Label Component Styles (Legacy _c-form-label)
 .c-form-label {
-  // --- レイアウト・配置 ---
   @include flex-start;
-
-  // --- 継承 ---
   @include text-label;
 
-  // --- その他 ---
   user-select: none;
-
-  // --- タイポグラフィ ---
 
   // Default state: slightly dimmed
   color: theme-color(var(--color-category-main), 70%);
   text-transform: uppercase;
 
-  // --- 視覚効果 ---
   @include state-base;
 
   // Cyber glowing dot
 
-  // --- 疑似要素 ---
   &::before {
-    // --- CSSカスタムプロパティ ---
     --glow-color: theme-color(var(--color-category-main), 30%);
 
     content: "";
 
-    // --- レイアウト・配置 ---
     display: inline-block;
 
-    // --- ボックスモデル ---
     width: var(--space-2);
     height: var(--space-2);
 
@@ -185,46 +154,32 @@ withDefaults(
 
     border-radius: 50%;
 
-    // --- 視覚効果 ---
     @include state-base(var(--shadow-glow-sm));
   }
 }
 
 // フォームグループ内がフォーカスされたらラベルを発光させる
 .c-form-group:focus-within .c-form-label {
-  // --- タイポグラフィ ---
   color: var(--color-category-main);
 
-  // --- 視覚効果 ---
   @include cyber-text-glow;
 
-  // --- 疑似要素 ---
   &::before {
-    // --- ボックスモデル ---
     border-color: var(--color-category-main);
-
-    // --- 視覚効果 ---
     box-shadow: var(--shadow-glow-md);
   }
 }
 
 // フォームグループ内にエラー要素（.c-form-group__error や .is-error 等）が存在する場合、ラベルを赤くする
 .c-form-group:has(.c-form-group__error, :invalid, .is-error) .c-form-label {
-  // --- タイポグラフィ ---
   color: var(--color-status-danger);
 
-  // --- 視覚効果 ---
   @include cyber-text-glow(var(--color-status-danger));
 
-  // --- 疑似要素 ---
   &::before {
-    // --- CSSカスタムプロパティ ---
     --glow-color: var(--color-status-danger);
 
-    // --- ボックスモデル ---
     border-color: var(--color-status-danger);
-
-    // --- 視覚効果 ---
     box-shadow: var(--shadow-glow-md);
   }
 }

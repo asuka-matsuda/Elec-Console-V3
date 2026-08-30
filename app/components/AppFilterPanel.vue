@@ -80,39 +80,28 @@ const toggleCat = (value: string) => {
     @include flex-column(var(--space-card-gap));
   }
 
-  // --- 子要素 ---
   &__header {
-    // --- 継承 ---
     @include text-title-sm;
-
-    // --- レイアウト・配置 ---
     @include flex-start;
 
-    // --- ボックスモデル ---
     padding-bottom: var(--space-control-py-sm);
-
-    // --- タイポグラフィ ---
     color: var(--color-text-muted);
   }
 
   &__header-wrapper {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-stack-gap-sm));
   }
 
   &__filters {
-    // --- レイアウト・配置 ---
     @include grid(280px 1fr, var(--space-card-gap));
 
     /* スマホ時は縦積み */
     @include mq("md") {
-      // --- レイアウト・配置 ---
       grid-template-columns: 1fr;
     }
   }
 
   &__grid {
-    // --- レイアウト・配置 ---
     @include grid-auto(112px, var(--space-inline-gap));
   }
 }

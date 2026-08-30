@@ -129,32 +129,24 @@ const updateCount = (val: string | number | boolean | null | undefined) => {
 
 <style scoped lang="scss">
 .c-cable-row {
-  // --- レイアウト・配置 ---
   @include flex-column(var(--space-1));
 
-  // --- 子要素 ---
   &__header {
-    // --- レイアウト・配置 ---
     @include flex-between;
   }
 
   &__title-group {
-    // --- レイアウト・配置 ---
     @include flex-start;
   }
 
   &__title {
-    // --- 継承 ---
     @include text-title-sm;
 
-    // --- タイポグラフィ ---
     color: var(--color-text-main);
   }
 
   &__meta {
-    // --- 継承 ---
     @include text-meta;
   }
 }
 </style>
-

@@ -21,44 +21,33 @@ const currentYear = new Date().getFullYear();
 
 <style scoped lang="scss">
 .l-footer {
-  // --- レイアウト・配置 ---
   position: relative;
 
   @include flex-column;
 
   align-items: center;
 
-  // --- ボックスモデル ---
   margin-top: auto;
   padding: var(--space-layout-pad) 0 0;
 
-  // --- タイポグラフィ ---
   text-align: center;
 
-  // --- 子要素 ---
   &__divider {
-    // --- ボックスモデル ---
     width: 100%;
     max-width: var(--width-md);
   }
 
   &__copyright {
-    // --- 継承 ---
     @include text-meta;
 
-    // --- タイポグラフィ ---
     font-family: var(--font-mono);
     color: var(--color-text-muted);
 
-    // --- 視覚効果 ---
     @include state-base;
 
-    // --- 疑似クラス ---
     &:hover {
-      // --- タイポグラフィ ---
       color: var(--color-text-secondary);
 
-      // --- 視覚効果 ---
       @include cyber-text-glow(
         30%,
         var(--blur-sm),

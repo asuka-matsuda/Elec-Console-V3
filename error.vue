@@ -1,3 +1,8 @@
+<script setup lang="ts">
+defineProps<{
+  error?: Record<string, unknown>;
+}>();
+</script>
 
 <template>
   <div style="padding: 20px; color: red;">
@@ -8,9 +13,3 @@
     </button>
   </div>
 </template>
-
-<script setup>
-defineProps({
-  error: Object
-})
-</script>

@@ -48,15 +48,10 @@ defineEmits(["reset"]);
 
 <style scoped lang="scss">
 .c-tool-panel {
-  // --- レイアウト・配置 ---
   flex: 1;
-
-  // --- ボックスモデル ---
   min-height: 0;
 
-  // --- 子要素 ---
   &__content {
-    // --- レイアウト・配置 ---
     @include flex-column(var(--space-card-gap));
   }
 }

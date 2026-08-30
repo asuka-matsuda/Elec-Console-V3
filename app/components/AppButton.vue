@@ -138,7 +138,6 @@ const componentTag = computed(() => {
   @include click-enabled;
   @include text-meta;
   @include inline-flex-center(var(--space-inline-gap));
-
   @include border-dim(var(--btn-color));
   @include state-base(var(--shadow-elevation-sm), var(--transition-fast));
 }
