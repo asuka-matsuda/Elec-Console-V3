@@ -311,7 +311,7 @@ const dropStatusClass = computed(() => {
     align-items: baseline;
 
     // --- タイポグラフィ ---
-    font-family: var(--font-family-mono);
+    font-family: var(--font-mono);
 
     .value-text {
       // --- タイポグラフィ ---
@@ -376,7 +376,7 @@ const dropStatusClass = computed(() => {
 
     margin: 0;
 
-    font-family: var(--font-family-mono);
+    font-family: var(--font-mono);
 
     @include text-title-sm;
 

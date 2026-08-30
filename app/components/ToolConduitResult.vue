@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * ToolConduitResult
  * 配管サイズ計算の結果を視覚的に表示する2カラムコンポーネントです。
@@ -251,7 +251,7 @@ const fill48 = computed(() =>
     align-items: baseline;
 
     // --- タイポグラフィ ---
-    font-family: var(--font-family-mono);
+    font-family: var(--font-mono);
 
     .value-text {
       // --- タイポグラフィ ---

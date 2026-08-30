@@ -1,102 +1,20 @@
-@use "icons" as *;
-@use "functions" as *;
 @use "sass:map";
 
-// --- タイポグラフィ ---
-$font-fallback: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
-$font-base: $font-fallback;
-$font-mono: "Roboto Mono", $font-fallback;
-$font-sizes: (
-  "2xs": 10px,
-  "xs": 11px,
-  "sm": 12px,
-  "base": 13px,
-  "lg": 14px,
-  "xl": 16px,
-  "2xl": 18px,
-  "3xl": 20px,
-  "4xl": 24px,
-);
-$letter-spacings: (
-  "tighter": -0.04em,
-  "tight": -0.02em,
-  "normal": 0em,
-  "wide": 0.02em,
-  "wider": 0.05em,
-  "widest": 0.1em,
-);
-
-// --- レイアウト・ブレイクポイント ---
+// ==========================================================================
+// レスポンシブ・ブレイクポイント (SCSS @mixin mq で使用)
+// ==========================================================================
 $breakpoints: (
   "md": 768px,
   "lg": 1024px,
   "xl": 1200px,
   "xxl": 1600px,
 );
+
+// ==========================================================================
+// コンテナクエリ・ブレイクポイント (SCSS @mixin cq で使用)
+// ==========================================================================
 $container-breakpoints: (
   "xs": 480px,
   "sm": 600px,
   "md": 800px,
 );
-$sidebar-width: 340px;
-
-// --- Z-index ---
-$z-index: (
-  "bg-canvas": -3,
-  "nav": 90,
-  "footer": 10,
-  "table-header": 10,
-  "header": 99,
-  "dropdown": 100,
-  "fab": 100,
-  "sidebar-container": 100,
-  "sidebar-overlay": 101,
-  "sidebar": 102,
-  "modal": 9999,
-  "select": 10000,
-  "theme-switcher": 1000,
-  "click-effect": 9999,
-  "debug": 999999,
-);
-
-// --- 余白・サイズ ---
-$base-spacing: 8px;
-$base-size: 8px;
-$spacing-scale: (
-  "1": $base-spacing * 0.5,
-  "2": $base-spacing * 1,
-  "3": $base-spacing * 1.5,
-  "4": $base-spacing * 2,
-  "5": $base-spacing * 2.5,
-  "6": $base-spacing * 3,
-);
-$size-scale: (
-  "1": $base-size * 0.5,
-  "2": $base-size * 1,
-  "3": $base-size * 1.5,
-  "4": $base-size * 2,
-  "5": $base-size * 2.5,
-  "6": $base-size * 3,
-  "8": $base-size * 4,
-);
-
-// --- カラー（セマンティックHSLベース） ---
-$color-category-main-base: 245 84% 67%;
-$color-category-tool-base: 189 94% 43%;
-$color-category-database-base: 210 91% 60%;
-$color-category-reference-base: 271 91% 65%;
-$color-category-management-base: 180 75% 40%;
-$color-accent-main-base: 25 95% 53%;
-$color-status-success-base: 141 79% 58%;
-$color-status-warning-base: 38 92% 56%;
-$color-status-danger-base: 0 84% 60%;
-$color-status-stopped-base: 240 4% 46%;
-$color-status-neutral-base: 240 5% 65%;
-$color-status-emphasis-base: 0 100% 75%;
-$color-main-bg-base: 0 0% 0%;
-$color-overlay-base: 240 5% 90%;
-$color-text-main-base: 240 5% 90%;
-$color-text-secondary-base: 240 4% 83%;
-$color-text-muted-base: 240 5% 65%;
-$color-text-disabled-base: 240 5% 34%;
-$color-border-main-base: 240 4% 16%;

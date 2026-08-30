@@ -1,7 +1,5 @@
 @use "icons" as *;
 @use "functions" as *;
-@use "sass:map";
-@use "variables" as *;
 
 :root {
   // ==========================================================================
@@ -18,17 +16,30 @@
   --icon-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A1A1AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
 
   // ==========================================================================
-  // 2. トラッキング & Z-Index & 静的スケール
+  // 2. トラッキング (Letter Spacings) & Z-Index
   // ==========================================================================
-  @each $name, $value in $letter-spacings {
-    --tracking-#{$name}: #{$value};
-  }
+  --tracking-tighter: -0.04em;
+  --tracking-tight:   -0.02em;
+  --tracking-normal:  0em;
+  --tracking-wide:    0.02em;
+  --tracking-wider:   0.05em;
+  --tracking-widest:  0.1em;
 
-  @each $name, $value in $z-index {
-    --z-index-#{$name}: #{$value};
-  }
-
-  --z-index-nav: #{map.get($z-index, "sidebar-container")};
+  --z-index-bg-canvas:         -3;
+  --z-index-footer:            10;
+  --z-index-table-header:      10;
+  --z-index-nav:               90;
+  --z-index-header:            99;
+  --z-index-dropdown:          100;
+  --z-index-fab:               100;
+  --z-index-sidebar-container: 100;
+  --z-index-sidebar-overlay:   101;
+  --z-index-sidebar:           102;
+  --z-index-theme-switcher:    1000;
+  --z-index-modal:             9999;
+  --z-index-click-effect:      9999;
+  --z-index-select:            10000;
+  --z-index-debug:             999999;
 
   // ==========================================================================
   // 3. Fluid Typography (画面幅に応じて滑らかにスケーリング)
@@ -57,8 +68,9 @@
   --text-4xl: var(--font-size-4xl);
 
   // タイポグラフィ基本
-  --font-family: #{$font-base};
-  --font-mono: #{$font-mono};
+  --font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  --font-base: var(--font-family);
+  --font-mono: "Roboto Mono", var(--font-family);
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
@@ -68,19 +80,26 @@
   --line-height-tight: 1.2;
 
   // ==========================================================================
-  // 4. Fluid Spacing & Sizes (余白・寸法)
+  // 4. Spacing & Sizes (余白・寸法)
   // ==========================================================================
-  --base-spacing: #{$base-spacing};
-  --base-size: #{$base-size};
-  --sidebar-width: #{$sidebar-width};
+  --base-spacing: 8px;
+  --base-size: 8px;
+  --sidebar-width: 340px;
 
-  @each $name, $size in $spacing-scale {
-    --space-#{$name}: #{$size};
-  }
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
 
-  @each $name, $size in $size-scale {
-    --size-#{$name}: #{$size};
-  }
+  --size-1: 4px;
+  --size-2: 8px;
+  --size-3: 12px;
+  --size-4: 16px;
+  --size-5: 20px;
+  --size-6: 24px;
+  --size-8: 32px;
 
   --gap-element: var(--space-1);
   --gap-component: var(--space-2);
@@ -106,54 +125,54 @@
   // ==========================================================================
   // 5. カラーベース (HSL Raw Values) & セマンティックカラー
   // ==========================================================================
-  --color-category-main-base: #{$color-category-main-base};
-  --color-category-tool-base: #{$color-category-tool-base};
-  --color-category-database-base: #{$color-category-database-base};
-  --color-category-reference-base: #{$color-category-reference-base};
-  --color-category-management-base: #{$color-category-management-base};
-  --color-accent-main-base: #{$color-accent-main-base};
-  --color-status-success-base: #{$color-status-success-base};
-  --color-status-warning-base: #{$color-status-warning-base};
-  --color-status-danger-base: #{$color-status-danger-base};
-  --color-status-stopped-base: #{$color-status-stopped-base};
-  --color-status-neutral-base: #{$color-status-neutral-base};
-  --color-status-emphasis-base: #{$color-status-emphasis-base};
-  --color-main-bg-base: #{$color-main-bg-base};
-  --color-overlay-base: #{$color-overlay-base};
-  --color-text-main-base: #{$color-text-main-base};
-  --color-text-secondary-base: #{$color-text-secondary-base};
-  --color-text-muted-base: #{$color-text-muted-base};
-  --color-text-disabled-base: #{$color-text-disabled-base};
-  --color-border-main-base: #{$color-border-main-base};
+  --color-category-main-base:       245 84% 67%;
+  --color-category-tool-base:       189 94% 43%;
+  --color-category-database-base:   210 91% 60%;
+  --color-category-reference-base:  271 91% 65%;
+  --color-category-management-base: 180 75% 40%;
+  --color-accent-main-base:         25 95% 53%;
+  --color-status-success-base:      141 79% 58%;
+  --color-status-warning-base:      38 92% 56%;
+  --color-status-danger-base:       0 84% 60%;
+  --color-status-stopped-base:      240 4% 46%;
+  --color-status-neutral-base:      240 5% 65%;
+  --color-status-emphasis-base:     0 100% 75%;
+  --color-main-bg-base:             0 0% 0%;
+  --color-overlay-base:             240 5% 90%;
+  --color-text-main-base:           240 5% 90%;
+  --color-text-secondary-base:      240 4% 83%;
+  --color-text-muted-base:          240 5% 65%;
+  --color-text-disabled-base:       240 5% 34%;
+  --color-border-main-base:         240 4% 16%;
 
   // セマンティックカラー定義
-  --color-category-main: hsl(var(--color-category-main-base));
-  --color-category-tool: hsl(var(--color-category-tool-base));
-  --color-category-database: hsl(var(--color-category-database-base));
-  --color-category-reference: hsl(var(--color-category-reference-base));
+  --color-category-main:       hsl(var(--color-category-main-base));
+  --color-category-tool:       hsl(var(--color-category-tool-base));
+  --color-category-database:   hsl(var(--color-category-database-base));
+  --color-category-reference:  hsl(var(--color-category-reference-base));
   --color-category-management: hsl(var(--color-category-management-base));
-  --color-accent-main: hsl(var(--color-accent-main-base));
-  --color-status-success: hsl(var(--color-status-success-base));
-  --color-status-warning: hsl(var(--color-status-warning-base));
-  --color-status-danger: hsl(var(--color-status-danger-base));
-  --color-status-stopped: hsl(var(--color-status-stopped-base));
-  --color-status-neutral: hsl(var(--color-status-neutral-base));
-  --color-status-emphasis: hsl(var(--color-status-emphasis-base));
-  --color-main-bg: hsl(var(--color-main-bg-base));
-  --surface-bg: transparent;
-  --color-overlay: hsl(var(--color-overlay-base));
-  --color-text-main: hsl(var(--color-text-main-base));
-  --color-text-secondary: hsl(var(--color-text-secondary-base));
-  --color-text-muted: hsl(var(--color-text-muted-base));
-  --color-text-disabled: hsl(var(--color-text-disabled-base));
-  --color-border: hsl(var(--color-border-main-base));
+  --color-accent-main:         hsl(var(--color-accent-main-base));
+  --color-status-success:      hsl(var(--color-status-success-base));
+  --color-status-warning:      hsl(var(--color-status-warning-base));
+  --color-status-danger:       hsl(var(--color-status-danger-base));
+  --color-status-stopped:      hsl(var(--color-status-stopped-base));
+  --color-status-neutral:      hsl(var(--color-status-neutral-base));
+  --color-status-emphasis:     hsl(var(--color-status-emphasis-base));
+  --color-main-bg:             hsl(var(--color-main-bg-base));
+  --surface-bg:                transparent;
+  --color-overlay:             hsl(var(--color-overlay-base));
+  --color-text-main:           hsl(var(--color-text-main-base));
+  --color-text-secondary:      hsl(var(--color-text-secondary-base));
+  --color-text-muted:          hsl(var(--color-text-muted-base));
+  --color-text-disabled:       hsl(var(--color-text-disabled-base));
+  --color-border:              hsl(var(--color-border-main-base));
 
   // ボーダー
-  --border-width-base: 1px;
+  --border-width-base:  1px;
   --border-width-thick: 2px;
 
   // エフェクト
-  --color-overlay-dark: hsl(0deg 0% 0% / 60%);
+  --color-overlay-dark:  hsl(0deg 0% 0% / 60%);
   --color-overlay-light: hsl(0deg 0% 0% / 30%);
   --blur-sm: 4px;
   --blur-md: 8px;
@@ -182,9 +201,9 @@
 
   --shadow-sink: inset 0 2px 4px 0 theme-color(var(--shadow-color), 60%);
 
-  --shadow-glow-sm: 0 0 var(--blur-sm) var(--glow-color, var(--color-category-main));
-  --shadow-glow-md: 0 0 var(--blur-md) var(--glow-color, var(--color-category-main));
-  --shadow-glow-lg: 0 0 var(--blur-lg) var(--glow-color, var(--color-category-main));
+  --shadow-glow-sm:       0 0 var(--blur-sm) var(--glow-color, var(--color-category-main));
+  --shadow-glow-md:       0 0 var(--blur-md) var(--glow-color, var(--color-category-main));
+  --shadow-glow-lg:       0 0 var(--blur-lg) var(--glow-color, var(--color-category-main));
   --shadow-glow-inset-sm: inset 0 0 var(--blur-sm) var(--glow-color, var(--color-category-main));
   --shadow-glow-inset-md: inset 0 0 var(--blur-md) var(--glow-color, var(--color-category-main));
   --shadow-glow-inset-lg: inset 0 0 var(--blur-lg) var(--glow-color, var(--color-category-main));
@@ -204,12 +223,12 @@
   // ==========================================================================
   // 7. アニメーション & トランジション
   // ==========================================================================
-  --duration-fast: 0.15s;
-  --duration-base: 0.25s;
-  --duration-slow: 0.4s;
+  --duration-fast:  0.15s;
+  --duration-base:  0.25s;
+  --duration-slow:  0.4s;
   --duration-modal: 0.5s;
 
-  --ease-base: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-base:   cubic-bezier(0.25, 1, 0.5, 1);
   --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
