@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * ToolResultDetailsRow
  * 計算結果の詳細情報の各行を表示するコンポーネントです。ラベルと値を左右に配置します。
@@ -47,7 +47,7 @@ defineProps<{
   // --- モディファイア ---
   &.has-top-border {
     // --- ボックスモデル ---
-    padding-top: var(--gap-element);
+    padding-top: var(--space-control-py-sm);
     border-top: 1px solid var(--color-border);
   }
 }

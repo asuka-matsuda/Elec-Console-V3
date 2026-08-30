@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * AppColorPicker
  * 色を選択するためのカラーピッカーコンポーネント
@@ -43,7 +43,7 @@ const inputId = useId();
 <style scoped lang="scss">
 .c-color-picker {
   // --- レイアウト・配置 ---
-  @include inline-flex-start(var(--gap-component));
+  @include inline-flex-start(var(--space-inline-gap));
 
   // --- その他 ---
   cursor: pointer;
@@ -54,7 +54,7 @@ const inputId = useId();
 
   // --- ボックスモデル ---
   height: var(--size-control-md);
-  padding: 0 var(--pad-component);
+  padding: 0 var(--space-control-px-md);
 
   @include form-control-base(
     $is-active: "&:has(.c-color-picker__input:focus-visible)"

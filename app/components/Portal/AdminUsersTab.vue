@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * PortalAdminUsersTab
  * ポータル管理 - ユーザー管理タブ
@@ -276,11 +276,11 @@ const handleResetPassword = async () => {
     }
     
     &__stack {
-    @include flex-column(var(--gap-section));
+    @include flex-column(var(--space-card-gap));
   }
 
   &__actions {
-    @include flex-start(var(--gap-component));
+    @include flex-start(var(--space-inline-gap));
   }
 
   &__meta {

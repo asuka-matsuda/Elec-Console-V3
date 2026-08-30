@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from '#app';
 import { useAuth } from '~/composables/useAuth';
@@ -10,6 +10,7 @@ definePageMeta({
 
 const router = useRouter();
 const { currentUser } = useAuth();
+const { $api } = useApi();
 const password = ref('');
 const passwordConfirm = ref('');
 const errorMsg = ref('');
@@ -28,24 +29,18 @@ const handleChangePassword = async () => {
 
   isLoading.value = true;
   try {
-    const { error } = await useFetch('/api/auth/password', {
+    await $api('/api/auth/password', {
       method: 'PUT',
       body: { newPassword: password.value }
     });
-
-    if (error.value) {
-      errorMsg.value = 'パスワードの変更に失敗しました。';
-      isLoading.value = false;
-      return;
-    }
 
     // 成功したらフロントの状態フラグを手動で消して遷移させる
     if (currentUser.value) {
       currentUser.value.requirePasswordReset = false;
     }
     router.push('/');
-  } catch {
-    errorMsg.value = '通信エラーが発生しました。';
+  } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
+    errorMsg.value = err.data?.statusMessage || err.data?.message || 'パスワードの変更に失敗しました。';
     isLoading.value = false;
   }
 };
@@ -98,21 +93,21 @@ const handleChangePassword = async () => {
 
 <style scoped lang="scss">
 .p-change-password {
+  @include flex-column(var(--space-stack-gap));
+
   &__desc {
     @include text-desc;
-
-    margin-bottom: var(--space-4);
   }
 
   &__error {
-    margin-bottom: var(--space-3);
+    @include text-sm;
+
+    padding: var(--space-alert-p);
     color: var(--color-status-danger);
   }
 
   &__form {
-    @include flex-column(var(--space-3));
-
-    margin-bottom: var(--space-4);
+    @include flex-column(var(--space-stack-gap));
   }
 
   &__actions {

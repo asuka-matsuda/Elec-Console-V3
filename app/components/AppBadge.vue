@@ -51,7 +51,7 @@ withDefaults(
   @include text-badge;
 
   user-select: none;
-  padding: var(--pad-element);
+  padding: var(--space-badge-p);
   color: var(--glow-color);
   white-space: nowrap;
 

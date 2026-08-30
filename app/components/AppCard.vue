@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * AppCard
  * コンテンツをまとめるためのカード型コンポーネント
@@ -47,10 +47,10 @@ const rootProps = computed(() => {
   // --- レイアウト・配置 ---
   position: relative;
 
-  @include flex-column(var(--gap-section));
+  @include flex-column(var(--space-card-gap));
 
   // --- ボックスモデル ---
-  padding: var(--pad-container);
+  padding: var(--space-card-pad);
 
   // --- 視覚効果 ---
   @include state-base;

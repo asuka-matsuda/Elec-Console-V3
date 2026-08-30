@@ -52,7 +52,7 @@ const typedSaveFunction = computed(() => props.saveFunction as (() => Promise<vo
   // --- 子要素 ---
   &__content {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-section));
+    @include flex-column(var(--space-card-gap));
   }
 }
 </style>

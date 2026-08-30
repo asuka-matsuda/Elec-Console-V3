@@ -257,42 +257,41 @@ const handleExport = () => {
 
 <style lang="scss" scoped>
 .c-site-settings {
-  @include flex-column(var(--gap-section));
+  @include flex-column(var(--space-card-gap));
 
   &__content {
-    @include flex-column(var(--gap-component));
+    @include flex-column(var(--space-stack-gap));
 
     min-height: 300px;
   }
 
   &__workers {
-    @include flex-start(var(--gap-element));
+    @include flex-start(var(--space-inline-gap));
 
     flex-wrap: wrap;
     min-height: 40px;
-    padding: var(--gap-element);
+    padding: var(--space-card-pad-sm);
 
     @include border-dim;
-
-    // border-radius PROHIBITED
   }
 
   &__sync-actions {
-    @include flex-start(var(--gap-component));
+    @include flex-start(var(--space-inline-gap));
   }
 
   &__sync-msg {
-    margin-top: var(--gap-element);
-    font-size: var(--text-sm);
-    color: var(--color-success);
+    @include text-meta;
+
+    padding: var(--space-tag-p);
+    color: var(--color-status-success);
   }
 
   &__circuit-list {
-    @include flex-column(var(--gap-element));
+    @include flex-column(var(--space-stack-gap-sm));
   }
 
   &__circuit-row {
-    @include flex-start(var(--gap-element));
+    @include flex-start(var(--space-inline-gap-sm));
 
     > *:first-child {
       flex: 1;

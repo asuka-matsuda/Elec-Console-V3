@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * LayoutGlobalNav
  * アプリケーションのグローバルナビゲーション（サイドバーメニュー）を表示するコンポーネントです。
@@ -99,7 +99,6 @@ const closeSidebar = () => {
 <style scoped lang="scss">
 .l-global-nav {
   // --- CSSカスタムプロパティ ---
-  --sidebar-width: 280px;
   --sidebar-border: var(--color-border);
 
   // --- レイアウト・配置 ---
@@ -139,7 +138,7 @@ const closeSidebar = () => {
 
     // --- ボックスモデル ---
     height: 64px; // Match standard header height
-    padding: var(--pad-container);
+    padding: 0 var(--space-control-px);
 
     // --- 視覚効果 ---
     box-shadow: var(--shadow-elevation-sm); // Replaced hardcoded shadow
@@ -147,20 +146,18 @@ const closeSidebar = () => {
 
   &__nav {
     // --- CSSカスタムプロパティ ---
-    --scrollbar-size: var(--size-2);
+    --scrollbar-size: var(--space-2);
 
     // --- その他 ---
     overflow-y: auto;
 
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-section));
+    @include flex-column(var(--space-card-gap));
 
     flex: 1;
 
-    /* ホバー時の右移動ではみ出さないよう、右側に余白を設ける */
-
     // --- ボックスモデル ---
-    padding: var(--pad-container);
+    padding: var(--space-card-pad-md);
   }
 
   &__section {
@@ -193,10 +190,10 @@ const closeSidebar = () => {
 
   &__section-header {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-element));
+    @include flex-column(var(--space-stack-gap-sm));
 
     // --- ボックスモデル ---
-    padding: var(--pad-section) var(--pad-component);
+    padding: var(--space-control-py-md) var(--space-control-px);
   }
 
   &__heading {
@@ -211,10 +208,10 @@ const closeSidebar = () => {
     @include text-title-sm;
 
     // --- レイアウト・配置 ---
-    @include flex-start(var(--gap-component));
+    @include flex-start(var(--space-inline-gap));
 
     // --- ボックスモデル ---
-    padding: var(--pad-component);
+    padding: var(--space-control-py-md) var(--space-control-px);
 
     // --- タイポグラフィ ---
     font-weight: var(--font-weight-medium);

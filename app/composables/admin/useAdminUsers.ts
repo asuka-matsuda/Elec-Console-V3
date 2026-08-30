@@ -1,13 +1,14 @@
 import { useState } from '#app';
 import type { User } from '~/types/auth';
+import { useApi } from '~/composables/useApi';
 
 export const useAdminUsers = () => {
   const users = useState<User[]>('admin-users', () => []);
+  const { $api } = useApi();
   
   const fetchUsers = async () => {
     try {
-      // $fetch を使用することで、キャッシュを無視して確実に再取得する
-      const data = await $fetch<User[]>('/api/users');
+      const data = await $api<User[]>('/api/users');
       users.value = data;
     } catch (e) {
       console.error('Failed to fetch users:', e);
@@ -16,7 +17,7 @@ export const useAdminUsers = () => {
 
   const createUser = async (user: Partial<User>) => {
     try {
-      const data = await $fetch<import('~/types/auth').User & { initialPassword?: string }>('/api/users', {
+      const data = await $api<User & { initialPassword?: string }>('/api/users', {
         method: 'POST',
         body: user
       });
@@ -29,7 +30,7 @@ export const useAdminUsers = () => {
   };
 
   const updateUser = async (id: string, updates: Partial<User>) => {
-    await $fetch(`/api/users/${id}`, {
+    await $api(`/api/users/${id}`, {
       method: 'PUT',
       body: updates
     });
@@ -37,7 +38,7 @@ export const useAdminUsers = () => {
   };
 
   const deleteUser = async (id: string) => {
-    await $fetch(`/api/users/${id}`, {
+    await $api(`/api/users/${id}`, {
       method: 'DELETE'
     });
     await fetchUsers();
@@ -49,7 +50,7 @@ export const useAdminUsers = () => {
 
   const resetUserPassword = async (id: string) => {
     try {
-      const data = await $fetch<{ success: boolean, initialPassword?: string }>(`/api/users/${id}/reset-password`, {
+      const data = await $api<{ success: boolean; initialPassword?: string }>(`/api/users/${id}/reset-password`, {
         method: 'POST'
       });
       await fetchUsers();

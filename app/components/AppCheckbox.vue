@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * AppCheckbox
  * 真偽値を選択するためのチェックボックスコンポーネント
@@ -63,7 +63,7 @@ const inputId = useId();
   @include text-desc;
 
   // --- レイアウト・配置 ---
-  @include inline-flex-start(var(--gap-component));
+  @include inline-flex-start(var(--space-inline-gap));
 
   // --- その他 ---
   cursor: pointer;

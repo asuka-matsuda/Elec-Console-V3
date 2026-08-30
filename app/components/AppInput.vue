@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * AppInput
  * テキスト入力やテキストエリアを提供するフォームコントロールコンポーネントです。
@@ -52,8 +52,8 @@ const inputId = useId();
 <style scoped lang="scss">
 .c-form-control {
   // --- CSSカスタムプロパティ ---
-  --form-control-px: var(--pad-component);
-  --form-control-py: var(--pad-component);
+  --form-control-px: var(--space-control-px-md);
+  --form-control-py: var(--space-control-py-md);
 
   // --- 継承 ---
   @include text-desc;
@@ -73,8 +73,8 @@ const inputId = useId();
   // --- モディファイア ---
   &--sm {
     // --- CSSカスタムプロパティ ---
-    --form-control-px: var(--pad-component);
-    --form-control-py: var(--pad-element);
+    --form-control-px: var(--space-control-px-sm);
+    --form-control-py: var(--space-control-py-sm);
 
     // --- 継承 ---
     @include text-meta;

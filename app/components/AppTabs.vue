@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * AppTabs
  * タブ切り替えのためのコンポーネントです。垂直方向の配置やグリッド配置にも対応しています。
@@ -56,7 +56,7 @@ const selectTab = (option: TabOption) => {
 <style scoped lang="scss">
 .c-tabs {
   // --- レイアウト・配置 ---
-  @include flex-start(var(--gap-component));
+  @include flex-start(var(--space-inline-gap));
 
   flex-wrap: wrap;
 
@@ -104,7 +104,7 @@ const selectTab = (option: TabOption) => {
   position: relative;
 
   // --- ボックスモデル ---
-  padding: var(--pad-component);
+  padding: var(--space-control-py-md) var(--space-control-px-md);
 
   @include border-base;
 
@@ -152,7 +152,7 @@ const selectTab = (option: TabOption) => {
   }
 
   // --- レイアウト・配置 ---
-  @include flex-center(var(--gap-component));
+  @include flex-center(var(--space-inline-gap));
 }
 
 .c-tabs__item-text {

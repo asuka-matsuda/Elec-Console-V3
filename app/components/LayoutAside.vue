@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * LayoutDashboardAside
  * ダッシュボードのサイドバー（お知らせや更新履歴などを表示）コンポーネント
@@ -91,9 +91,9 @@ const history = computed(() => dashboardData.value?.history || []);
   &__aside {
     // --- レイアウト・配置 ---
     position: sticky;
-    top: var(--pad-container);
+    top: var(--space-layout-pad);
 
-    @include flex-column(var(--gap-section));
+    @include flex-column(var(--space-section-gap));
 
     flex-shrink: 0;
 
@@ -124,7 +124,7 @@ const history = computed(() => dashboardData.value?.history || []);
     @include text-title-sm;
 
     // --- ボックスモデル ---
-    padding: var(--pad-container);
+    padding: var(--space-card-pad);
 
     // --- タイポグラフィ ---
     color: var(--color-text-muted);
@@ -138,10 +138,10 @@ const history = computed(() => dashboardData.value?.history || []);
 /* List Item Card Styles */
 .p-dashboard-list-item {
   // --- レイアウト・配置 ---
-  @include flex-column(var(--gap-element));
+  @include flex-column(var(--space-stack-gap-sm));
 
   // --- ボックスモデル ---
-  padding: var(--pad-container);
+  padding: var(--space-card-pad-md);
 
   // --- 子要素 ---
   &__header {

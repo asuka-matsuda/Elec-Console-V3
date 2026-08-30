@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { ref, watch } from 'vue';
 
 export interface EventFormData {
@@ -170,10 +170,9 @@ const closeModal = () => {
 
 <style scoped lang="scss">
 .p-event-form {
-  @include flex-column(var(--gap-component));
+  @include flex-column(var(--space-stack-gap));
 
   container-type: inline-size;
-  padding: var(--pad-sm) 0;
   
   &__field {
     @include flex-column(var(--space-1));
@@ -188,12 +187,11 @@ const closeModal = () => {
   &__error {
     @include text-caption;
 
-    margin-top: var(--space-1);
     color: var(--color-status-danger);
   }
   
   &__row {
-    @include flex-start(var(--gap-component));
+    @include flex-start(var(--space-inline-gap));
     > * { flex: 1; }
     
     @include cq("xs", "down") {
@@ -203,10 +201,9 @@ const closeModal = () => {
   }
 
   &__actions {
-    @include flex-start(var(--gap-element));
+    @include flex-start(var(--space-inline-gap));
 
-    margin-top: var(--gap-component);
-    padding-top: var(--pad-sm);
+    padding-top: var(--space-card-pad-md);
     border-top: var(--border-width-base) solid var(--color-border);
   }
 }

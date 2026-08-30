@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * ToolHistoryCard
  * 計算履歴を1件表示するカードコンポーネントです。入力条件と計算結果のプレビューを提供します。
@@ -153,13 +153,13 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never;
     justify-content: space-between;
 
     // --- ボックスモデル ---
-    padding-bottom: var(--gap-component);
+    padding-bottom: var(--space-control-py-md);
     border-bottom: 1px solid var(--color-border);
   }
 
   &__title-group {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-element));
+    @include flex-column(var(--space-stack-gap-sm));
   }
 
   &__date {
@@ -185,7 +185,7 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never;
 
   &__section {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-element));
+    @include flex-column(var(--space-stack-gap-sm));
   }
 
   &__section-title {
@@ -193,7 +193,7 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never;
     @include text-title-sm;
 
     // --- ボックスモデル ---
-    padding-left: var(--gap-element);
+    padding-left: var(--space-control-py-sm);
     border-left: 2px solid var(--color-category-tool);
 
     // --- タイポグラフィ ---
@@ -205,7 +205,7 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never;
     @include text-desc;
 
     // --- レイアウト・配置 ---
-    @include grid(auto 1fr, var(--gap-element) var(--gap-section));
+    @include grid(auto 1fr, var(--space-stack-gap-sm) var(--space-inline-gap-lg));
 
     // --- 子要素 ---
     dt {

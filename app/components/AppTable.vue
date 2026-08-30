@@ -1,4 +1,4 @@
-﻿<script setup lang="ts" generic="T extends Record<string, unknown>">
+<script setup lang="ts" generic="T extends Record<string, unknown>">
 /**
  * AppTable
  *
@@ -129,7 +129,7 @@ const handleSort = (col: TableColumn) => {
   :deep(th),
   :deep(td) {
     // --- ボックスモデル ---
-    padding: var(--pad-section);
+    padding: var(--space-table-cell-p);
     border-bottom: var(--border-width-base) solid var(--color-border);
 
     // --- タイポグラフィ ---
@@ -164,14 +164,14 @@ const handleSort = (col: TableColumn) => {
       transition: background-color var(--transition-fast) ease;
 
       &:hover {
-        background-color: rgb(255 255 255 / 5%); // hover効果
+        background-color: var(--color-bg-hover);
       }
     }
 
-    .c-table__th-inner {
+    .c-table__sort-btn {
       display: inline-flex;
-      gap: 4px;
       align-items: center;
+      gap: var(--space-inline-gap-sm);
     }
 
     .c-table__sort-icon {

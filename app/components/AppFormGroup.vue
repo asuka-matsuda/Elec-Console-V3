@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * AppFormGroup
  * フォームのラベル、入力項目、エラーメッセージ、ヘルプテキストをグループ化して表示するコンポーネントです。
@@ -122,7 +122,7 @@ withDefaults(
     // --- レイアウト・配置 ---
     position: relative;
 
-    @include flex-column(var(--gap-element));
+    @include flex-column(var(--space-1));
   }
 
   &__error {
@@ -175,8 +175,8 @@ withDefaults(
     display: inline-block;
 
     // --- ボックスモデル ---
-    width: var(--size-2);
-    height: var(--size-2);
+    width: var(--space-2);
+    height: var(--space-2);
 
     @include border-base(
       theme-color(var(--color-category-main), 70%),

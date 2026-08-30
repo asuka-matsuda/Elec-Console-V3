@@ -1,7 +1,9 @@
 import { defineEventHandler, readBody, getRouterParam } from "h3";
 import { prisma } from "../../utils/prisma";
+import { requireAdminUser } from "../../utils/auth";
 
 export default defineEventHandler(async (event) => {
+  await requireAdminUser(event);
   const id = getRouterParam(event, "id");
   const body = await readBody(event);
   
@@ -25,9 +27,7 @@ export default defineEventHandler(async (event) => {
     include: { assignedSites: true }
   });
 
-  const assignedSiteIds = updatedUser.assignedSites.map(s => s.id);
-  const { password, assignedSites, ...restUser } = updatedUser;
-  const safeUser = { ...restUser, assignedSiteIds };
-  
-  return safeUser;
+  const assignedSiteIds = updatedUser.assignedSites.map((s) => s.id);
+  const { password: _dbPassword, assignedSites: _assignedSites, ...restUser } = updatedUser;
+  return { ...restUser, assignedSiteIds };
 });

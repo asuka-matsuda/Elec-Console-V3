@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * AppSectionHeader
  * セクションのタイトル、アイコン、アクションボタン、および区切り線を表示するヘッダーコンポーネント。
@@ -69,7 +69,7 @@ withDefaults(
   // --- 子要素 ---
   &__top {
     // --- レイアウト・配置 ---
-    @include flex-between(var(--pad-container));
+    @include flex-between(var(--space-card-gap));
 
     align-items: flex-end;
 
@@ -79,12 +79,12 @@ withDefaults(
 
   &__actions {
     // --- レイアウト・配置 ---
-    @include flex-start(var(--gap-component));
+    @include flex-start(var(--space-inline-gap));
   }
 
   &__title {
     // --- レイアウト・配置 ---
-    @include flex-start(var(--gap-component));
+    @include flex-start(var(--space-inline-gap));
 
     color: var(--color-text-main);
 

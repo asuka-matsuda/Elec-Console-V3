@@ -1,14 +1,15 @@
-
 import type { Site, SiteSettings } from '~/types/admin';
 import { useAsyncData, useState } from '#app';
+import { useApi } from '~/composables/useApi';
 
 export const useAdminSites = () => {
   const sites = useState<Site[]>('admin-sites', () => []);
   const siteSettings = useState<SiteSettings[]>('admin-site-settings', () => []);
+  const { $api } = useApi();
 
   // 初期データの取得
   const { refresh: fetchSites } = useAsyncData('admin-sites-fetch', async () => {
-    const data = await $fetch<{ sites: Site[], siteSettings: SiteSettings[] }>('/api/sites');
+    const data = await $api<{ sites: Site[]; siteSettings: SiteSettings[] }>('/api/sites');
     sites.value = data.sites || [];
     siteSettings.value = data.siteSettings || [];
     return data;
@@ -16,7 +17,7 @@ export const useAdminSites = () => {
 
   const createSite = async (site: Omit<Site, 'createdAt' | 'disabledAt'>) => {
     try {
-      const res = await $fetch<{ site: Site, settings: SiteSettings }>('/api/sites', {
+      const res = await $api<{ site: Site; settings: SiteSettings }>('/api/sites', {
         method: 'POST',
         body: site,
       });
@@ -31,7 +32,7 @@ export const useAdminSites = () => {
   };
 
   const updateSite = async (id: string, updates: Partial<Omit<Site, 'createdAt'>>) => {
-    const res = await $fetch<{ site: Site, settings: SiteSettings }>(`/api/sites/${id}`, {
+    const res = await $api<{ site: Site; settings: SiteSettings }>(`/api/sites/${id}`, {
       method: 'PUT',
       body: { site: updates },
     });
@@ -45,7 +46,7 @@ export const useAdminSites = () => {
   };
 
   const deleteSite = async (id: string) => {
-    await $fetch(`/api/sites/${id}`, { method: 'DELETE' });
+    await $api(`/api/sites/${id}`, { method: 'DELETE' });
     sites.value = sites.value.filter(s => s.id !== id);
     siteSettings.value = siteSettings.value.filter(s => s.siteId !== id);
   };
@@ -59,7 +60,7 @@ export const useAdminSites = () => {
   };
 
   const updateSettings = async (siteId: string, updates: Partial<Omit<SiteSettings, 'siteId'>>) => {
-    const res = await $fetch<{ site: Site, settings: SiteSettings }>(`/api/sites/${siteId}`, {
+    const res = await $api<{ site: Site; settings: SiteSettings }>(`/api/sites/${siteId}`, {
       method: 'PUT',
       body: { settings: updates },
     });

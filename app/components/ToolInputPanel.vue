@@ -57,7 +57,7 @@ defineEmits(["reset"]);
   // --- 子要素 ---
   &__content {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-section));
+    @include flex-column(var(--space-card-gap));
   }
 }
 </style>

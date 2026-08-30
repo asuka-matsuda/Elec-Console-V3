@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { printUserCredential } from "~/utils/printUserCredential";
 
 const props = defineProps<{
@@ -93,9 +93,9 @@ const handleCopyPassword = () => {
   }
 
   &__credential-box {
-    @include flex-column(var(--space-3));
+    @include flex-column(var(--space-stack-gap));
 
-    padding: var(--space-4);
+    padding: var(--space-card-pad);
     background: transparent;
     backdrop-filter: blur(var(--blur-sm));
 
@@ -105,7 +105,7 @@ const handleCopyPassword = () => {
   &__credential-value {
     @include text-title-sm;
 
-    padding: var(--space-2) 0;
+    padding: var(--space-control-py-md) 0;
 
     &--password {
       font-family: var(--font-mono);

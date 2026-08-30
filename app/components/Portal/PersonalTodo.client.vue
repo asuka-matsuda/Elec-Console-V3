@@ -1,4 +1,4 @@
-﻿
+
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useTodo } from '~/composables/portal/useTodo';
@@ -83,8 +83,7 @@ const sortedTodos = computed(() => {
       </li>
       <div
         v-if="todos.length === 0"
-        class="u-text-muted u-text-sm"
-        style=" margin-top: 16px;text-align: center;"
+        class="p-personal-todo__empty"
       >
         タスクはありません
       </div>
@@ -94,22 +93,22 @@ const sortedTodos = computed(() => {
 
 <style scoped lang="scss">
 .p-personal-todo {
-  @include flex-column(var(--gap-component));
+  @include flex-column(var(--space-stack-gap));
 
   &__header h3 {
-    @include flex-start(var(--gap-element));
+    @include flex-start(var(--space-1));
     @include text-md;
 
     color: var(--color-text-main);
   }
 
   &__input {
-    @include flex-start(var(--gap-element));
+    @include flex-start(var(--space-1));
     > *:first-child { flex: 1; }
   }
 
   &__list {
-    @include flex-column(var(--gap-element));
+    @include flex-column(var(--space-1));
 
     overflow-y: auto;
 
@@ -121,9 +120,9 @@ const sortedTodos = computed(() => {
   }
 
   &__item {
-    @include flex-between(var(--gap-element));
+    @include flex-between(var(--space-inline-gap-sm));
 
-    padding: var(--pad-sm);
+    padding: var(--space-card-pad-sm);
     border-radius: var(--radius-sm);
     background-color: var(--color-bg-hover);
     
@@ -131,6 +130,14 @@ const sortedTodos = computed(() => {
       text-decoration: line-through;
       opacity: 0.5;
     }
+  }
+
+  &__empty {
+    @include text-desc;
+
+    padding: var(--space-card-pad) 0;
+    color: var(--color-text-muted);
+    text-align: center;
   }
 }
 </style>

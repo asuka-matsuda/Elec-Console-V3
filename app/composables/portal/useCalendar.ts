@@ -1,5 +1,5 @@
-
 import { useState, useAsyncData } from '#app';
+import { useApi } from '~/composables/useApi';
 
 export interface CalendarEvent {
   id: string;
@@ -27,21 +27,22 @@ export interface CalendarSettings {
 export const useCalendar = (siteId: string) => {
   const events = useState<CalendarEvent[]>(`calendar-events-${siteId}`, () => []);
   const settings = useState<CalendarSettings | null>(`calendar-settings-${siteId}`, () => null);
+  const { $api } = useApi();
 
   const { refresh: fetchEvents } = useAsyncData(`fetch-events-${siteId}`, async () => {
-    const data = await $fetch<CalendarEvent[]>(`/api/sites/${siteId}/events`);
+    const data = await $api<CalendarEvent[]>(`/api/sites/${siteId}/events`);
     events.value = data;
     return data;
   });
 
   const { refresh: fetchSettings } = useAsyncData(`fetch-settings-${siteId}`, async () => {
-    const data = await $fetch<CalendarSettings>(`/api/sites/${siteId}/calendar/settings`);
+    const data = await $api<CalendarSettings>(`/api/sites/${siteId}/calendar/settings`);
     settings.value = data;
     return data;
   });
 
   const createEvent = async (event: Omit<CalendarEvent, 'id' | 'siteId'>) => {
-    const res = await $fetch<CalendarEvent>(`/api/sites/${siteId}/events`, {
+    const res = await $api<CalendarEvent>(`/api/sites/${siteId}/events`, {
       method: 'POST',
       body: event,
     });
@@ -50,7 +51,7 @@ export const useCalendar = (siteId: string) => {
   };
 
   const updateEvent = async (id: string, updates: Partial<CalendarEvent>) => {
-    const res = await $fetch<CalendarEvent>(`/api/events/${id}`, {
+    const res = await $api<CalendarEvent>(`/api/events/${id}`, {
       method: 'PUT',
       body: updates,
     });
@@ -60,12 +61,12 @@ export const useCalendar = (siteId: string) => {
   };
 
   const deleteEvent = async (id: string) => {
-    await $fetch(`/api/events/${id}`, { method: 'DELETE' });
+    await $api(`/api/events/${id}`, { method: 'DELETE' });
     events.value = events.value.filter(e => e.id !== id);
   };
 
   const updateSettings = async (updates: Partial<CalendarSettings>) => {
-    const res = await $fetch<CalendarSettings>(`/api/sites/${siteId}/calendar/settings`, {
+    const res = await $api<CalendarSettings>(`/api/sites/${siteId}/calendar/settings`, {
       method: 'PUT',
       body: updates,
     });

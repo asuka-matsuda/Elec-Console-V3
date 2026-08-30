@@ -180,21 +180,16 @@ const dropStatusClass = computed(() => {
 <style scoped lang="scss">
 .c-voltage-result {
   // --- レイアウト・配置 ---
-  @include flex-column(var(--gap-section));
+  @include flex-column(var(--space-card-gap));
 
   flex: 1;
   align-items: stretch;
 
   // --- ボックスモデル ---
   min-height: 0;
-  padding: var(--pad-component);
+  padding: var(--space-card-pad);
 
   // --- 子要素 ---
-  &__drop-paren {
-    // --- ボックスモデル ---
-    margin-left: var(--gap-component);
-  }
-
   &__drop-percent {
     // --- 継承 ---
     @include text-title-lg;
@@ -213,7 +208,7 @@ const dropStatusClass = computed(() => {
   // --- モディファイア ---
   &.is-sm {
     // --- レイアウト・配置 ---
-    gap: var(--gap-component);
+    gap: var(--space-stack-gap);
 
     // --- ボックスモデル ---
     padding: 0;
@@ -221,7 +216,7 @@ const dropStatusClass = computed(() => {
     // --- 子要素 ---
     .c-voltage-result__main {
       // --- ボックスモデル ---
-      padding: var(--pad-element) var(--pad-component);
+      padding: var(--space-tag-p);
     }
 
     .c-voltage-result__main-value .value-text {
@@ -241,7 +236,7 @@ const dropStatusClass = computed(() => {
 
     .metric-card {
       // --- ボックスモデル ---
-      padding: var(--pad-element);
+      padding: var(--space-tag-p);
     }
   }
 
@@ -277,7 +272,7 @@ const dropStatusClass = computed(() => {
   // --- 子要素 ---
   &__main {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-element));
+    @include flex-column(var(--space-stack-gap-sm));
 
     flex: 1;
     align-items: center;
@@ -285,7 +280,7 @@ const dropStatusClass = computed(() => {
 
     // --- ボックスモデル ---
     min-width: 0;
-    padding: var(--pad-component) var(--pad-section);
+    padding: var(--space-result-p);
 
     @include border-base;
 
@@ -307,7 +302,7 @@ const dropStatusClass = computed(() => {
   &__main-value {
     // --- レイアウト・配置 ---
     display: flex;
-    gap: var(--gap-component);
+    gap: var(--space-inline-gap);
     align-items: baseline;
 
     // --- タイポグラフィ ---
@@ -336,7 +331,7 @@ const dropStatusClass = computed(() => {
     display: flex;
     flex-flow: row wrap; // 狭い場合は横並びラップ（スモールファースト）
     flex-shrink: 0;
-    gap: var(--gap-component);
+    gap: var(--space-inline-gap);
 
     // --- ボックスモデル ---
     min-width: auto;
@@ -352,14 +347,14 @@ const dropStatusClass = computed(() => {
 
   .metric-card {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-element));
+    @include flex-column(var(--space-stack-gap-sm));
 
     flex: 1;
     align-items: center;
     justify-content: center;
 
     // --- ボックスモデル ---
-    padding: var(--pad-component);
+    padding: var(--space-card-pad-sm);
 
     @include border-base(var(--color-border), 1px);
   }
@@ -371,7 +366,7 @@ const dropStatusClass = computed(() => {
 
   .metric-value {
     display: flex;
-    gap: var(--gap-element);
+    gap: var(--space-1);
     align-items: baseline;
 
     margin: 0;

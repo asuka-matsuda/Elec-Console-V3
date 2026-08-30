@@ -25,3 +25,9 @@ logs
 
 *storybook.log
 storybook-static
+
+# SQLite
+*.db
+*.db-journal
+*.db-shm
+*.db-wal

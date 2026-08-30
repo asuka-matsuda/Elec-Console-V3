@@ -44,7 +44,6 @@ onMounted(() => {
         <AppIcon
           name="map-pin"
           class="u-text-muted"
-          style="margin-right: 8px;"
         />
         <h2>{{ currentSite?.name || '現場ダッシュボード' }}</h2>
       </div>
@@ -74,12 +73,11 @@ onMounted(() => {
         >
           <AppButton
             variant="primary"
-            style="width: 100%; margin-top: 16px;"
+            class="p-site-dashboard__souden-btn"
           >
             <AppIcon
               name="zap"
               size="sm"
-              style="margin-right: 8px;"
             />
             送電試験ダッシュボードへ
           </AppButton>
@@ -91,19 +89,19 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .p-site-dashboard {
-  @include flex-column(var(--gap-section));
+  @include flex-column(var(--space-section-gap));
 
   height: 100%;
 
   &__header {
     @include flex-between;
 
-    padding-bottom: var(--pad-sm);
+    padding-bottom: var(--space-card-pad-sm);
     border-bottom: var(--border-width-base) solid var(--color-border);
   }
 
   &__title {
-    @include flex-start;
+    @include flex-start(var(--space-inline-gap));
 
     h2 {
       @include text-title-lg;
@@ -113,7 +111,7 @@ onMounted(() => {
   }
 
   &__switcher {
-    @include flex-start(var(--gap-element));
+    @include flex-start(var(--space-inline-gap));
   }
   
   &__select {
@@ -125,7 +123,11 @@ onMounted(() => {
   }
 
   &__sidebar {
-    @include flex-column(var(--gap-component));
+    @include flex-column(var(--space-card-gap));
+  }
+
+  &__souden-btn {
+    width: 100%;
   }
 }
 
@@ -137,12 +139,11 @@ onMounted(() => {
 .l-grid--2col-2-1 {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  gap: var(--gap-section);
+  gap: var(--space-section-gap);
   align-items: flex-start;
   
   @include mq("lg") {
     grid-template-columns: 1fr;
   }
 }
-
 </style>

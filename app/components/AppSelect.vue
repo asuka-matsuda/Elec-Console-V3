@@ -304,7 +304,7 @@ const listboxId = useId();
 
   width: 100%;
   height: var(--size-control-md);
-  padding: var(--pad-component);
+  padding: var(--space-control-py-md) calc(var(--space-control-px-md) + var(--icon-size-md) + var(--space-inline-gap-sm)) var(--space-control-py-md) var(--space-control-px-md);
 
   text-align: left;
   text-overflow: ellipsis;
@@ -323,11 +323,11 @@ const listboxId = useId();
 
     position: absolute;
     top: 50%;
-    right: var(--space-4);
+    right: var(--space-control-px-md);
     transform: translateY(-50%);
 
-    width: var(--size-4);
-    height: var(--size-3);
+    width: var(--icon-size-md);
+    height: var(--icon-size-sm);
 
     background-image: var(--icon-select-arrow);
     background-repeat: no-repeat;
@@ -372,7 +372,7 @@ const listboxId = useId();
 }
 
 .c-custom-select__list {
-  --scrollbar-size: var(--size-2);
+  --scrollbar-size: var(--space-2);
 
   scrollbar-color: var(--color-category-main) transparent;
   scrollbar-width: thin;
@@ -393,7 +393,7 @@ const listboxId = useId();
 
   overflow: hidden;
 
-  padding: var(--pad-component);
+  padding: var(--space-control-py-md) var(--space-control-px);
   border-left: var(--border-width-thick) solid transparent;
 
   text-overflow: ellipsis;

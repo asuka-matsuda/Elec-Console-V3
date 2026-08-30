@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * AppRadioGroup
  * 複数の選択肢から1つを選択するための、セグメントコントロール風のラジオボタングループコンポーネント。
@@ -57,11 +57,11 @@ const getStyle = (option: RadioOption): StyleValue | undefined => option.color ?
   // --- レイアウト・配置 ---
   display: inline-flex;
   flex-shrink: 0;
-  gap: var(--gap-element);
+  gap: var(--space-0-5);
 
   // --- ボックスモデル ---
   width: max-content;
-  padding: var(--pad-element);
+  padding: var(--space-0-5);
 
   @include border-base;
 
@@ -136,7 +136,7 @@ const getStyle = (option: RadioOption): StyleValue | undefined => option.color ?
     user-select: none;
 
     // --- ボックスモデル ---
-    padding: var(--pad-component);
+    padding: var(--space-control-py-sm) var(--space-control-px-sm);
 
     @include border-base(transparent);
 

@@ -21,18 +21,20 @@ onMounted(() => {
 </script>
 
 <template>
-  <div style="padding: var(--pad-container)">
+  <div class="p-portal-index">
     <AppPanel
       title="現場ポータル (仮)"
       variant="hud"
     >
-      <div>
+      <div class="p-portal-index__content">
         <p>ここは現場ポータルのトップ画面です。</p>
         <p>（本来は、アサインされている現場の一覧や、各現場のダッシュボードへのリンクが表示される予定です）</p>
         
-        <div style="margin-top: var(--gap-section)">
+        <div
+          v-if="isAdmin"
+          class="p-portal-index__actions"
+        >
           <AppButton
-            v-if="isAdmin"
             variant="secondary"
             @click="router.push('/portal/admin')"
           >
@@ -43,3 +45,15 @@ onMounted(() => {
     </AppPanel>
   </div>
 </template>
+
+<style scoped lang="scss">
+.p-portal-index {
+  &__content {
+    @include flex-column(var(--space-card-gap));
+  }
+
+  &__actions {
+    @include flex-start;
+  }
+}
+</style>

@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * AppMathBasis
  * KaTeXを利用して、数式とその凡例（変数の説明）をステップごとに表示するコンポーネント。
@@ -110,18 +110,18 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   overflow-y: auto;
 
   // --- レイアウト・配置 ---
-  @include flex-column(var(--gap-section));
+  @include flex-column(var(--space-card-gap));
 
   flex: 1;
 
   // --- ボックスモデル ---
-  padding-right: var(--pad-component);
-  padding-bottom: var(--pad-container);
+  padding-right: var(--space-control-py-md);
+  padding-bottom: var(--space-layout-pad);
 
   // --- 子要素 ---
   &__card {
     // --- レイアウト・配置 ---
-    gap: var(--gap-component);
+    gap: var(--space-stack-gap);
   }
 
   &__body {
@@ -130,13 +130,13 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
     // --- レイアウト・配置 ---
     display: flex;
     flex-flow: row nowrap;
-    gap: var(--gap-section);
+    gap: var(--space-card-gap);
     align-items: flex-start;
   }
 
   &__math {
     // --- CSSカスタムプロパティ ---
-    --scrollbar-size: var(--size-2);
+    --scrollbar-size: var(--space-2);
 
     // スクロールバー自体は非表示にしつつスクロールは可能にする
     scrollbar-width: none;
@@ -191,13 +191,13 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
     :deep(.katex-display) {
       // --- ボックスモデル ---
-      padding: var(--pad-element);
+      padding: var(--space-control-py-sm);
     }
   }
 
   &__legend {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-element));
+    @include flex-column(var(--space-stack-gap-sm));
 
     flex-shrink: 0;
 
@@ -216,7 +216,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
   &__legend-list {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-element));
+    @include flex-column(var(--space-stack-gap-sm));
 
     list-style: none;
   }
@@ -227,7 +227,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
     // --- レイアウト・配置 ---
     display: flex;
-    gap: var(--gap-element);
+    gap: var(--space-inline-gap-sm);
     align-items: flex-start;
 
     // --- タイポグラフィ ---

@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * ToolCableRowCard
  * ケーブルの種類、サイズ、本数を入力するためのカードコンポーネントです。
@@ -130,15 +130,12 @@ const updateCount = (val: string | number | boolean | null | undefined) => {
 <style scoped lang="scss">
 .c-cable-row {
   // --- レイアウト・配置 ---
-  @include flex-column(0);
+  @include flex-column(var(--space-1));
 
   // --- 子要素 ---
   &__header {
     // --- レイアウト・配置 ---
     @include flex-between;
-
-    // --- ボックスモデル ---
-    margin-bottom: var(--gap-element);
   }
 
   &__title-group {

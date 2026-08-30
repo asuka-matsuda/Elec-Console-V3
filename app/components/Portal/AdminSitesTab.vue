@@ -267,15 +267,15 @@ const confirmIntent = computed(() => {
     }
     
     &__stack {
-    @include flex-column(var(--gap-section));
+    @include flex-column(var(--space-card-gap));
   }
 
   &__status-stack {
-    @include flex-column(var(--gap-element));
+    @include flex-column(var(--space-1));
   }
 
   &__actions {
-    @include flex-start(var(--gap-component));
+    @include flex-start(var(--space-inline-gap));
   }
 }
 </style>

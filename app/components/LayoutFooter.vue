@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * LayoutFooter
  * アプリケーションのフッター部分（コピーライト等）を表示するコンポーネントです。
@@ -30,7 +30,7 @@ const currentYear = new Date().getFullYear();
 
   // --- ボックスモデル ---
   margin-top: auto;
-  padding: var(--pad-container);
+  padding: var(--space-layout-pad) 0 0;
 
   // --- タイポグラフィ ---
   text-align: center;

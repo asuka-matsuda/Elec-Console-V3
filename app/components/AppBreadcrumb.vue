@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * AppBreadcrumb
  * パンくずリストを表示するためのコンポーネント
@@ -65,17 +65,15 @@ const processedItems = computed(() => {
   @include text-caption;
 
   // --- レイアウト・配置 ---
-  @include inline-flex-start;
+  @include flex-start(var(--space-inline-gap));
 
-  // --- 視覚効果 ---
-  @include border-base;
-
-  // --- レイアウト・配置 ---
   position: relative;
+  flex-wrap: wrap;
 
   // --- ボックスモデル ---
-  padding: var(--pad-component);
-  padding-top: calc(var(--pad-component) * 2);
+  padding: var(--space-control-py-md) var(--space-control-px) var(--space-control-py-sm);
+
+  @include border-base;
 
   // --- タイポグラフィ ---
   text-transform: uppercase;
@@ -89,8 +87,8 @@ const processedItems = computed(() => {
 
     // --- レイアウト・配置 ---
     position: absolute;
-    top: var(--space-1);
-    left: var(--space-2);
+    top: var(--space-control-py-sm);
+    left: var(--space-control-px);
 
     // --- タイポグラフィ ---
     color: var(--color-category-main);

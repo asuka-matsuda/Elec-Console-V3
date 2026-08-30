@@ -1,4 +1,4 @@
-﻿
+
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import FullCalendar from '@fullcalendar/vue3';
@@ -230,7 +230,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 
 <style scoped lang="scss">
 .c-calendar-wrapper {
-  @include flex-column(var(--gap-component));
+  @include flex-column(var(--space-stack-gap));
 }
 
 .c-calendar {
@@ -303,7 +303,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
   :deep(.fc-daygrid-event) {
     $event-color: var(--event-theme-color, var(--color-primary));
     
-    padding: 2px var(--space-1);
+    padding: var(--space-badge-p);
     border: 1px solid theme-color($event-color, 50%);
     border-radius: var(--radius-sm);
 

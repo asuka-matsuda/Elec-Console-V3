@@ -41,11 +41,11 @@ const activeTab = ref('users');
 <style scoped lang="scss">
 .p-portal-admin {
   // --- レイアウト・配置 ---
-  @include flex-column(var(--gap-section));
+  @include flex-column(var(--space-section-gap));
 
   &__content {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-section));
+    @include flex-column(var(--space-card-gap));
 
     flex: 1;
     min-height: 0;

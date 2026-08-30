@@ -1,15 +1,5 @@
-@layer reset, tokens, base, components, utilities;
-
-@layer reset {
-  @use "foundation/reset";
-}
-
-@layer tokens {
-  @use "foundation/properties";
-  @use "foundation/themes";
-}
-
-@layer base {
-  @use "foundation/base";
-  @use "foundation/scrollbar";
-}
+@use "foundation/reset";
+@use "foundation/properties";
+@use "foundation/themes";
+@use "foundation/base";
+@use "foundation/scrollbar";

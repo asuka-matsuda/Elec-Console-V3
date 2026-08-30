@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * AppPanel
  * ヘッダーや枠線（サイバー風のブラケットなど）を持ち、コンテンツを囲むパネルコンポーネント。
@@ -15,10 +15,12 @@ withDefaults(
       | "danger"
       | "success";
     variant?: "hud" | "simple" | "gradient" | "hybrid";
+    density?: "normal" | "compact";
   }>(),
   {
     bracketColor: "main",
     variant: "hud",
+    density: "normal",
   },
 );
 </script>
@@ -26,7 +28,11 @@ withDefaults(
 <template>
   <section
     class="c-panel"
-    :class="[`c-panel--${variant}`, `c-panel--color-${bracketColor}`]"
+    :class="[
+      `c-panel--${variant}`,
+      `c-panel--color-${bracketColor}`,
+      `c-panel--density-${density}`,
+    ]"
   >
     <header
       v-if="title || $slots.header"
@@ -60,10 +66,21 @@ withDefaults(
   // --- レイアウト・配置 ---
   position: relative;
 
-  @include flex-column(var(--pad-container-gap, var(--pad-container)));
+  @include flex-column(var(--space-card-gap));
 
   // --- ボックスモデル ---
-  padding: var(--pad-container, var(--pad-container));
+  padding: var(--space-card-pad);
+
+  // 密度モディファイア
+  &--density-compact {
+    padding: var(--space-card-pad-md);
+
+    @include flex-column(var(--space-card-gap-sm));
+
+    .c-panel__content {
+      @include flex-column(var(--space-card-gap-sm));
+    }
+  }
 
   // Apply visual base
   @include border-base(var(--p-border-color), var(--border-width-base));
@@ -130,7 +147,7 @@ withDefaults(
 
   &__content {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--pad-container-gap, var(--pad-container)));
+    @include flex-column(var(--space-card-gap));
 
     flex: 1;
 

@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * Dashboard
  * ダッシュボード画面のコンポーネントです。各機能へのリンクやメニューをカード形式で一覧表示します。
@@ -100,11 +100,11 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
   // --- レイアウト・配置 ---
   display: flex;
   flex-direction: row; /* Desktop default */
-  gap: var(--gap-section);
+  gap: var(--space-section-gap);
   align-items: flex-start;
 
   // --- ボックスモデル ---
-  padding-bottom: var(--gap-section);
+  padding-bottom: var(--space-layout-pad);
 
   @include mq("md") {
     // --- レイアウト・配置 ---
@@ -115,7 +115,7 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
   // --- 子要素 ---
   &__main {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-section));
+    @include flex-column(var(--space-section-gap));
 
     flex: 1;
   }
@@ -127,7 +127,7 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
 
   &__grid {
     // --- レイアウト・配置 ---
-    @include grid-auto(280px);
+    @include grid-auto(280px, var(--space-card-gap));
   }
 }
 
@@ -136,7 +136,7 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
   // --- 子要素 ---
   &__layout {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-element));
+    @include flex-column(var(--space-1));
   }
 
   &__header {
@@ -145,7 +145,7 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
 
     // --- レイアウト・配置 ---
     display: flex;
-    gap: var(--gap-element);
+    gap: var(--space-inline-gap-sm);
     align-items: flex-start;
 
     // --- タイポグラフィ ---

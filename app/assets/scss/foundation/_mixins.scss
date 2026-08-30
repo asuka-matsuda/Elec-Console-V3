@@ -7,67 +7,67 @@
 // ==========================================================================
 // レイアウト Mixins
 // ==========================================================================
-@mixin flex-center($gap: var(--gap-element)) {
+@mixin flex-center($gap: var(--space-inline-gap)) {
   display: flex;
   gap: $gap;
   align-items: center;
   justify-content: center;
 }
 
-@mixin inline-flex-center($gap: var(--gap-element)) {
+@mixin inline-flex-center($gap: var(--space-inline-gap)) {
   display: inline-flex;
   gap: $gap;
   align-items: center;
   justify-content: center;
 }
 
-@mixin flex-between($gap: var(--gap-element)) {
+@mixin flex-between($gap: var(--space-inline-gap)) {
   display: flex;
   gap: $gap;
   align-items: center;
   justify-content: space-between;
 }
 
-@mixin inline-flex-between($gap: var(--gap-element)) {
+@mixin inline-flex-between($gap: var(--space-inline-gap)) {
   display: inline-flex;
   gap: $gap;
   align-items: center;
   justify-content: space-between;
 }
 
-@mixin flex-start($gap: var(--gap-element)) {
+@mixin flex-start($gap: var(--space-inline-gap)) {
   display: flex;
   gap: $gap;
   align-items: center;
   justify-content: flex-start;
 }
 
-@mixin inline-flex-start($gap: var(--gap-element)) {
+@mixin inline-flex-start($gap: var(--space-inline-gap)) {
   display: inline-flex;
   gap: $gap;
   align-items: center;
   justify-content: flex-start;
 }
 
-@mixin flex-column($gap: var(--gap-component)) {
+@mixin flex-column($gap: var(--space-stack-gap)) {
   display: flex;
   flex-direction: column;
   gap: $gap;
 }
 
-@mixin inline-flex-column($gap: var(--gap-component)) {
+@mixin inline-flex-column($gap: var(--space-stack-gap)) {
   display: inline-flex;
   flex-direction: column;
   gap: $gap;
 }
 
-@mixin grid($cols: 1fr, $gap: var(--gap-component)) {
+@mixin grid($cols: 1fr, $gap: var(--space-card-gap)) {
   display: grid;
   grid-template-columns: $cols;
   gap: $gap;
 }
 
-@mixin grid-auto($min-width, $gap: var(--gap-component)) {
+@mixin grid-auto($min-width, $gap: var(--space-card-gap)) {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(#{$min-width}, 1fr));
   gap: $gap;

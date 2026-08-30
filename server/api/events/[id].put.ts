@@ -1,7 +1,10 @@
 import { defineEventHandler, readBody, getRouterParam, createError } from "h3";
 import { prisma } from "../../utils/prisma";
+import { requireAuthUser } from "../../utils/auth";
 
 export default defineEventHandler(async (event) => {
+  await requireAuthUser(event);
+
   try {
     const id = getRouterParam(event, "id");
     if (!id) throw new Error("id is required");

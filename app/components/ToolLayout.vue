@@ -81,15 +81,6 @@ const toggleDrawer = () => {
   min-height: 0;
   margin: 0 auto;
 
-  // Override AppPanel padding to be tighter in tools
-
-  // --- 疑似クラス ---
-  :deep(.c-panel) {
-    // --- CSSカスタムプロパティ ---
-    --pad-container: var(--space-3);
-    --pad-container-gap: var(--gap-section);
-  }
-
   // --- 子要素 ---
   &__disclaimer {
     // --- レイアウト・配置 ---
@@ -100,7 +91,7 @@ const toggleDrawer = () => {
     // --- レイアウト・配置 ---
     display: flex;
     flex: 1;
-    gap: var(--gap-component);
+    gap: var(--space-card-gap);
 
     // --- ボックスモデル ---
     min-height: 0;
@@ -137,7 +128,7 @@ const toggleDrawer = () => {
     // --- 疑似クラス ---
     :deep(.c-panel__content) {
       // --- CSSカスタムプロパティ ---
-      --scrollbar-size: var(--size-2);
+      --scrollbar-size: var(--space-2);
 
       // --- その他 ---
       overflow-y: auto;
@@ -145,7 +136,7 @@ const toggleDrawer = () => {
       // スクロール時に要素がpaddingに食い込まないよう調整
 
       // --- ボックスモデル ---
-      padding-right: var(--pad-component);
+      padding-right: var(--space-2);
     }
   }
 
@@ -227,7 +218,7 @@ const toggleDrawer = () => {
 
       // --- ボックスモデル ---
       height: 48px;
-      padding: var(--pad-container);
+      padding: 0 var(--space-card-pad-md);
 
       // --- 視覚効果 ---
       background: theme-color(var(--color-category-tool), 10%);
@@ -260,13 +251,13 @@ const toggleDrawer = () => {
 
     @include mq("md") {
       // --- CSSカスタムプロパティ ---
-      --scrollbar-size: var(--size-2);
+      --scrollbar-size: var(--space-2);
 
       // --- その他 ---
       overflow-y: auto;
 
       // --- ボックスモデル ---
-      padding: var(--pad-container);
+      padding: var(--space-card-pad-md);
     }
   }
 

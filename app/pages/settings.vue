@@ -73,21 +73,21 @@ const themeOptions = [
   // --- レイアウト・配置 ---
   container-type: inline-size;
 
-  @include flex-column(var(--gap-section));
+  @include flex-column(var(--space-section-gap));
 
   // --- ボックスモデル ---
-  padding-bottom: var(--gap-section);
+  padding-bottom: var(--space-layout-pad);
 
   &__panel-content {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-section));
+    @include flex-column(var(--space-card-gap));
   }
 
   &__grid {
     // --- レイアウト・配置 ---
     display: grid;
     grid-template-columns: 1fr; // スモールファースト
-    gap: var(--gap-section);
+    gap: var(--space-section-gap);
 
     @include cq("md") {
       // --- レイアウト・配置 ---
@@ -97,7 +97,7 @@ const themeOptions = [
 
   &__stack {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-section));
+    @include flex-column(var(--space-stack-gap));
   }
 }
 </style>

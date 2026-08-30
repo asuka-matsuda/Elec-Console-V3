@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * AppDisclaimer
  * 免責事項（注意事項）を表示するコンポーネントです。
@@ -26,7 +26,7 @@ withDefaults(
 
   // --- ボックスモデル ---
   width: 100%;
-  padding: var(--pad-section);
+  padding: var(--space-alert-p);
 
   // --- タイポグラフィ ---
   color: var(--color-status-warning);

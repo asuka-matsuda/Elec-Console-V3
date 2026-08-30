@@ -190,13 +190,13 @@ const typedVariant = computed(() => props.variant as never);
   }
 
   &__body {
-    --scrollbar-size: var(--size-2);
+    --scrollbar-size: var(--space-2);
 
     @include text-caption;
 
     overflow-y: auto;
     flex: 1;
-    padding: var(--pad-container) 0;
+    padding: var(--space-card-pad) 0;
 
     &--align-center {
       text-align: center;
@@ -205,7 +205,7 @@ const typedVariant = computed(() => props.variant as never);
 
   &__footer {
     display: flex;
-    gap: var(--gap-element);
+    gap: var(--space-inline-gap);
     align-items: center;
     justify-content: flex-end;
   }

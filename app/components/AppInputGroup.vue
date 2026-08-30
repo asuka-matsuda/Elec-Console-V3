@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * AppInputGroup
  * Input と Select やテキストアドオンを連結して表示するためのレイアウトコンポーネント。
@@ -71,7 +71,7 @@
       @include text-desc;
 
       // --- ボックスモデル ---
-      padding: 0 var(--pad-section);
+      padding: 0 var(--space-control-px-md);
 
       @include border-dim(var(--color-category-main));
 

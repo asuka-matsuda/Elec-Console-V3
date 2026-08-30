@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * AppToggle
  * トグルスイッチ（チェックボックス）のUIを提供するコンポーネントです。ON/OFFの切り替えに使用されます。
@@ -197,6 +197,6 @@ const inputId = useId();
   }
 
   // --- レイアウト・配置 ---
-  @include inline-flex-start(var(--gap-component));
+  @include inline-flex-start(var(--space-inline-gap));
 }
 </style>

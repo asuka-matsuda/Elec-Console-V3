@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * LayoutLogo
  * アプリケーションのロゴを表示し、クリック時にホームへ遷移またはイベントを発火するコンポーネント。
@@ -25,7 +25,7 @@ const emit = defineEmits<{
 <style scoped lang="scss">
 .c-logo {
   // --- レイアウト・配置 ---
-  @include flex-start(var(--gap-section));
+  @include flex-start(var(--space-inline-gap));
 
   // --- 視覚効果 ---
   @include state-base;

@@ -183,7 +183,7 @@ const confirmDelete = () => {
   // --- レイアウト・配置 ---
   container-type: inline-size;
 
-  @include flex-column(var(--gap-section));
+  @include flex-column(var(--space-section-gap));
 
   // --- 子要素 ---
   &__tabs {
@@ -194,7 +194,7 @@ const confirmDelete = () => {
     // --- レイアウト・配置 ---
     display: grid;
     grid-template-columns: 1fr; // スモールファースト
-    gap: var(--gap-component);
+    gap: var(--space-card-gap);
 
     @include cq("sm") {
       // --- レイアウト・配置 ---
@@ -204,13 +204,13 @@ const confirmDelete = () => {
 
   &__empty {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-element));
+    @include flex-column(var(--space-stack-gap-sm));
 
     align-items: center;
     justify-content: center;
 
     // --- ボックスモデル ---
-    padding: var(--pad-container) 0;
+    padding: var(--space-layout-pad) 0;
 
     // --- タイポグラフィ ---
     color: var(--color-text-muted);

@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { menuData } from "~/constants/data/menuData";
 
 // Mobile sidebar toggle state (Global)
@@ -48,7 +48,7 @@ const { currentUser, logout } = useAuth();
             <AppButton
               variant="secondary"
               size="sm"
-              style="margin-left: 1rem;"
+              class="l-header-user__logout"
               @click="logout"
             >
               ログアウト
@@ -78,7 +78,7 @@ const { currentUser, logout } = useAuth();
 
   flex: 1;
   min-width: 0; /* Prevent flex item from blowing out */
-  margin-left: 280px; /* On desktop, the sidebar takes up 280px. */
+  margin-left: var(--sidebar-width);
 
   @include mq("md") {
     margin-left: 0;
@@ -86,8 +86,7 @@ const { currentUser, logout } = useAuth();
 }
 
 .l-content {
-
-  --scrollbar-size: var(--size-2);
+  --scrollbar-size: var(--space-2);
 
   container-type: inline-size;
   overflow-y: auto;
@@ -95,22 +94,15 @@ const { currentUser, logout } = useAuth();
   @include flex-column(0);
 
   flex: 1;
-
   min-height: 0;
-  padding: var(--pad-container);
-
-  @include mq("md") {
-    padding: var(--pad-section);
-  }
+  padding: var(--space-layout-pad);
 }
 
-/* Temporary user bar styles for demo */
 .l-header-user {
-
   @include text-title-sm;
 
   display: flex;
-  gap: var(--gap-component);
+  gap: var(--space-inline-gap);
   align-items: center;
 
   &__avatar {

@@ -5,7 +5,7 @@ const path = require("path");
 const prisma = new PrismaClient();
 
 async function main() {
-  const dataDir = path.resolve(__dirname, "server/data");
+  const dataDir = path.resolve(__dirname, "../server/data");
 
   // Sites
   if (fs.existsSync(path.join(dataDir, "sites.json"))) {

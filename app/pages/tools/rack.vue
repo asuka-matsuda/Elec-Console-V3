@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * RackCalculator
  * ケーブルラック選定ツールのコンポーネントです。強電・弱電ケーブルのリストと段積み数から最適なラック幅を選定します。
@@ -96,7 +96,7 @@ const {
                 </AppInputGroup>
               </AppFormGroup>
 
-              <div>
+              <div class="p-rack__section">
                 <div class="p-rack__section-title">
                   強電ケーブルリスト
                 </div>
@@ -150,7 +150,7 @@ const {
                 </AppInputGroup>
               </AppFormGroup>
 
-              <div>
+              <div class="p-rack__section">
                 <div class="p-rack__section-title">
                   弱電ケーブルリスト
                 </div>
@@ -180,12 +180,13 @@ const {
 
     <template #results>
       <ToolResultPanel
+        title="選定結果"
         :save-disabled="result?.error || (!inputs.isStrong && !inputs.isWeak)"
         :save-function="handleSaveHistory"
       >
         <AppResultBox
-          title="推奨ラック幅"
-          :status="result?.error ? 'empty' : (result?.isOverflow || !result?.selectedSize ? 'error' : 'success')"
+          title="推奨ラックサイズ"
+          :variant="result?.error ? 'error' : 'default'"
           :is-empty="result?.error || (!inputs.isStrong && !inputs.isWeak)"
         >
           <template #value>
@@ -256,12 +257,18 @@ const {
 <style scoped lang="scss">
 .p-result-rack {
   // --- レイアウト・配置 ---
-  @include flex-column(var(--gap-element));
+  @include flex-column(var(--space-1));
 
   // --- 子要素 ---
   &__val {
     // --- 継承 ---
-    @include text-title-xl;
+    @include text-heading-lg;
+
+    // --- タイポグラフィ ---
+    color: var(--color-status-success);
+
+    // --- 視覚効果 ---
+    @include cyber-text-glow(var(--color-status-success), 40%, var(--blur-md));
   }
 
   &__warning {
@@ -269,7 +276,7 @@ const {
     @include text-title-sm;
 
     // --- ボックスモデル ---
-    padding: var(--gap-element);
+    padding: var(--space-tag-p);
 
     // --- タイポグラフィ ---
     color: var(--color-status-danger);
@@ -285,12 +292,12 @@ const {
   // --- 子要素 ---
   &__sections {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-section));
+    @include flex-column(var(--space-card-gap));
   }
 
   &__grid {
     // --- レイアウト・配置 ---
-    @include grid;
+    @include grid(1fr, var(--space-card-gap));
 
     @include cq("xs") {
       // --- レイアウト・配置 ---
@@ -301,9 +308,6 @@ const {
   &__card-header {
     // --- レイアウト・配置 ---
     @include flex-between;
-
-    // --- ボックスモデル ---
-    margin-bottom: var(--pad-container);
   }
 
   &__card-title {
@@ -313,27 +317,27 @@ const {
 
   &__card-body {
     // --- レイアウト・配置 ---
-    @include flex-column;
+    @include flex-column(var(--space-card-gap));
+  }
+
+  &__section {
+    // --- レイアウト・配置 ---
+    @include flex-column(var(--space-stack-gap-sm));
   }
 
   &__section-title {
     // --- 継承 ---
     @include text-desc;
-
-    // --- ボックスモデル ---
-    margin-bottom: var(--gap-component);
-
   }
 
   &__cable-list {
     // --- レイアウト・配置 ---
-    @include flex-column;
+    @include flex-column(var(--space-card-gap));
   }
 
   &__add-button {
     // --- ボックスモデル ---
     width: 100%;
-    margin-top: var(--pad-container);
   }
 }
 </style>

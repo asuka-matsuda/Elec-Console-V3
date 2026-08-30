@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * DesignSystem
  * 社内用のUIカタログ（デザインシステム）画面のコンポーネントです。UIコンポーネントの見た目や状態を一覧で確認できます。
@@ -147,14 +147,14 @@ const isChecked = ref(false);
 <style scoped lang="scss">
 .p-design-system {
   // --- レイアウト・配置 ---
-  @include flex-column(var(--gap-section));
+  @include flex-column(var(--space-section-gap));
 
   // --- ボックスモデル ---
-  padding-bottom: var(--gap-section);
+  padding-bottom: var(--space-layout-pad);
 
   &__content {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-section));
+    @include flex-column(var(--space-section-gap));
   }
 }
 
@@ -165,7 +165,7 @@ const isChecked = ref(false);
   // --- 子要素 ---
   &__grid {
     // --- レイアウト・配置 ---
-    @include grid-auto(350px);
+    @include grid-auto(350px, var(--space-card-gap));
   }
 }
 
@@ -173,24 +173,21 @@ const isChecked = ref(false);
   // --- 継承 ---
   @include text-body;
 
-  // --- ボックスモデル ---
-  margin-bottom: var(--pad-container);
-
   // --- タイポグラフィ ---
   font-weight: var(--font-weight-bold);
-  color: var(--color-text-sub);
+  color: var(--color-text-secondary);
 }
 
 .p-ds-flex {
   // --- レイアウト・配置 ---
   display: flex;
   flex-wrap: wrap;
-  gap: var(--pad-container);
+  gap: var(--space-card-gap);
   align-items: center;
 }
 
 .p-ds-stack {
   // --- レイアウト・配置 ---
-  @include flex-column(var(--pad-container));
+  @include flex-column(var(--space-stack-gap));
 }
 </style>

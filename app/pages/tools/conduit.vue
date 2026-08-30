@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * ConduitCalculator
  * 配管サイズ自動選定ツールのコンポーネントです。収容するケーブルの種類と数から、適切な配管サイズを計算します。
@@ -55,7 +55,7 @@ const handleSave = async () => {
         </AppFormGroup>
 
         <!-- 2. 収容するケーブル -->
-        <div>
+        <div class="p-conduit__section">
           <div class="p-conduit__section-title">
             収容するケーブル
           </div>
@@ -123,24 +123,23 @@ const handleSave = async () => {
 
 .p-conduit {
   // --- 子要素 ---
+  &__section {
+    @include flex-column(var(--space-card-gap));
+  }
+
   &__section-title {
     // --- 継承 ---
     @include text-title-sm;
-
-    // --- ボックスモデル ---
-    margin-bottom: var(--gap-component);
-
   }
 
   &__cable-list {
     // --- レイアウト・配置 ---
-    @include flex-column;
+    @include flex-column(var(--space-card-gap));
   }
 
   &__add-button {
     // --- ボックスモデル ---
     width: 100%;
-    margin-top: var(--pad-container);
   }
 }
 </style>

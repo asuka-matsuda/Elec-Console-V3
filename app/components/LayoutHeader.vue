@@ -45,17 +45,12 @@ const emit = defineEmits<{
 
   // --- ボックスモデル ---
   height: 64px;
-  padding: var(--pad-container);
-
-  @include mq("md") {
-    // --- ボックスモデル ---
-    padding: var(--pad-section);
-  }
+  padding: 0 var(--space-layout-pad);
 
   // --- 子要素 ---
   &__left {
     // --- レイアウト・配置 ---
-    @include flex-start(var(--gap-component));
+    @include flex-start(var(--space-inline-gap));
   }
 
   &__menu-btn.c-btn {
@@ -70,7 +65,7 @@ const emit = defineEmits<{
 
   &__actions {
     // --- レイアウト・配置 ---
-    @include flex-start(var(--gap-component));
+    @include flex-start(var(--space-inline-gap));
   }
 }
 </style>

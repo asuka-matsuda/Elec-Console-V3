@@ -1,24 +1,22 @@
 import { computed } from 'vue';
-import { useCookie, useState, useRouter, useFetch } from '#app';
+import { useCookie, useState, useRouter } from '#app';
 import type { User } from '~/types/auth';
+import { useApi } from '~/composables/useApi';
 
 export const useAuth = () => {
   const token = useCookie<string | null>('auth_token', { default: () => null, maxAge: 60 * 60 * 24 });
   const currentUser = useState<User | null>('currentUser', () => null);
   const router = useRouter();
+  const { $api } = useApi();
 
   const initAuth = async (force = false) => {
     if (token.value && (!currentUser.value || force)) {
       try {
-        const { data, error } = await useFetch('/api/auth/me', {
-          headers: {
-            cookie: `auth_token=${token.value}`
-          }
-        });
-        if (!error.value && data.value) {
-          currentUser.value = (data.value as { user: import('~/types/auth').User }).user;
+        const data = await $api<{ success: boolean; user: User }>('/api/auth/me');
+        if (data && data.success && data.user) {
+          currentUser.value = data.user;
         } else {
-          logout(); // トークンが無効な場合はログアウト
+          logout();
         }
       } catch {
         console.error('Session restore failed');
@@ -28,16 +26,16 @@ export const useAuth = () => {
 
   const login = async (loginId: string, pass: string) => {
     try {
-      const { data, error } = await useFetch('/api/auth/login', {
+      const response = await $api<{
+        success: boolean;
+        token: string;
+        user: User;
+        mustChangePassword?: boolean;
+      }>('/api/auth/login', {
         method: 'POST',
         body: { loginId, password: pass }
       });
 
-      if (error.value || !data.value) {
-        return { success: false, message: 'ログインIDまたはパスワードが違います。' };
-      }
-
-      const response = data.value as { success: boolean; token: string; user: import('~/types/auth').User; mustChangePassword?: boolean };
       if (response.success) {
         token.value = response.token;
         currentUser.value = response.user;
@@ -49,8 +47,9 @@ export const useAuth = () => {
       }
       
       return { success: false, message: 'ログインに失敗しました。' };
-    } catch {
-      return { success: false, message: 'サーバー通信エラーが発生しました。' };
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
+      const msg = err.data?.statusMessage || err.data?.message || 'ログインIDまたはパスワードが違います。';
+      return { success: false, message: msg };
     }
   };
 

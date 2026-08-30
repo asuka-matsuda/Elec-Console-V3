@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * Glossary
  * 用語集画面のコンポーネントです。専門用語の検索や、五十音・カテゴリ別での絞り込み機能を提供します。
@@ -178,7 +178,7 @@ const categoryColorMap: Record<string, string> = {
   // --- 子要素 ---
   &__grid {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-section));
+    @include flex-column(var(--space-card-gap));
 
     flex: 1;
 
@@ -218,17 +218,17 @@ const categoryColorMap: Record<string, string> = {
   // --- 子要素 ---
   &__header {
     // --- レイアウト・配置 ---
-    @include flex-between(var(--gap-component));
+    @include flex-between(var(--space-inline-gap));
 
     // --- ボックスモデル ---
-    padding-bottom: var(--gap-element);
+    padding-bottom: var(--space-control-py-sm);
     border-bottom: var(--border-width-base) solid transparent;
     border-image: linear-gradient(to right, transparent, var(--color-border) 50%, transparent) 1;
   }
 
   &__title {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-element));
+    @include flex-column(var(--space-1));
   }
 
   &__kana {
@@ -244,7 +244,7 @@ const categoryColorMap: Record<string, string> = {
 
   &__body {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-element));
+    @include flex-column(var(--space-1));
   }
 
   &__desc {
@@ -258,10 +258,10 @@ const categoryColorMap: Record<string, string> = {
 
   &__meta {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-element));
+    @include flex-column(var(--space-stack-gap-sm));
 
     // --- ボックスモデル ---
-    padding: var(--pad-container);
+    padding: var(--space-card-pad-md);
 
     @include border-dim;
   }
@@ -288,7 +288,7 @@ const categoryColorMap: Record<string, string> = {
   @include text-body;
 
   // --- ボックスモデル ---
-  padding: var(--pad-container);
+  padding: var(--space-card-pad);
 
   @include border-dim;
 

@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * login
  * ポータルログインページ
@@ -47,7 +47,7 @@ const handleLogin = async () => {
 <template>
   <div class="p-login">
     <form
-       
+      class="p-login__form"
       @submit.prevent="handleLogin"
     >
       <div
@@ -71,8 +71,6 @@ const handleLogin = async () => {
         </AppFormGroup>
       </template>
 
-        
-
       <div class="p-login__actions">
         <AppButton
           type="submit"
@@ -95,17 +93,19 @@ const handleLogin = async () => {
 <style scoped lang="scss">
 .p-login {
   // --- ボックスモデル ---
-  padding: var(--pad-container);
+  padding: var(--space-card-pad);
 
   // --- 子要素 ---
+  &__form {
+    @include flex-column(var(--space-stack-gap));
+  }
+
   &__error {
     // --- 継承 ---
     @include text-sm;
 
-    margin-bottom: var(--gap-component);
-
     // --- ボックスモデル ---
-    padding: var(--pad-element);
+    padding: var(--space-alert-p);
 
     // --- タイポグラフィ ---
     color: var(--color-status-danger);
@@ -114,8 +114,9 @@ const handleLogin = async () => {
   }
 
   &__actions {
-    // --- ボックスモデル ---
-    margin-top: var(--gap-section);
+    @include flex-center;
+
+    width: 100%;
   }
 }
 </style>

@@ -126,21 +126,16 @@ const fill48 = computed(() =>
 <style scoped lang="scss">
 .c-conduit-result {
   // --- レイアウト・配置 ---
-  @include flex-column(var(--gap-section));
+  @include flex-column(var(--space-card-gap));
 
   flex: 1;
   align-items: stretch;
 
   // --- ボックスモデル ---
   min-height: 0;
-  padding: var(--pad-component);
+  padding: var(--space-card-pad);
 
   // --- 子要素 ---
-  &__paren {
-    // --- ボックスモデル ---
-    margin-left: var(--gap-component);
-  }
-
   &__percent {
     // --- 継承 ---
     @include text-title-lg;
@@ -159,7 +154,7 @@ const fill48 = computed(() =>
 
   &__col {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-section));
+    @include flex-column(var(--space-card-gap));
 
     flex: 1;
 
@@ -191,7 +186,7 @@ const fill48 = computed(() =>
 
   &.is-sm {
     // --- レイアウト・配置 ---
-    gap: var(--gap-component);
+    gap: var(--space-stack-gap);
 
     // --- ボックスモデル ---
     padding: 0;
@@ -199,7 +194,7 @@ const fill48 = computed(() =>
     // --- 子要素 ---
     .c-conduit-result__main {
       // --- ボックスモデル ---
-      padding: var(--pad-element) var(--pad-component);
+      padding: var(--space-tag-p);
     }
 
     .c-conduit-result__main-value .value-text {
@@ -217,7 +212,7 @@ const fill48 = computed(() =>
   // --- 子要素 ---
   &__main {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-element));
+    @include flex-column(var(--space-stack-gap-sm));
 
     flex: 1;
     align-items: center;
@@ -225,7 +220,7 @@ const fill48 = computed(() =>
 
     // --- ボックスモデル ---
     min-width: 0;
-    padding: var(--pad-component) var(--pad-section);
+    padding: var(--space-result-p);
 
     @include border-base;
 
@@ -247,7 +242,7 @@ const fill48 = computed(() =>
   &__main-value {
     // --- レイアウト・配置 ---
     display: flex;
-    gap: var(--gap-component);
+    gap: var(--space-inline-gap);
     align-items: baseline;
 
     // --- タイポグラフィ ---

@@ -1,4 +1,4 @@
-﻿<script setup lang="ts" generic="T extends Record<string, unknown>">
+<script setup lang="ts" generic="T extends Record<string, unknown>">
 /**
  * DbViewer
  * データベースのビューアコンポーネントです。検索やフィルタリング機能を提供し、結果をテーブルで表示します。
@@ -84,7 +84,7 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
   // --- 子要素 ---
   &__grid {
     // --- レイアウト・配置 ---
-    @include flex-column(var(--gap-section));
+    @include flex-column(var(--space-card-gap));
 
     flex: 1;
 
@@ -137,7 +137,7 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
   @include text-body;
 
   // --- ボックスモデル ---
-  padding: var(--pad-container);
+  padding: var(--space-card-pad);
 
   @include border-dim;
 

@@ -60,7 +60,7 @@ const componentTag = computed(() => {
   flex-shrink: 0;
 
   height: var(--size-control-sm);
-  padding: 0 var(--pad-component);
+  padding: 0 var(--space-control-px);
 
   font-weight: var(--font-weight-semibold);
 
@@ -124,7 +124,7 @@ const componentTag = computed(() => {
     @include text-desc;
 
     height: var(--size-control-md);
-    padding: 0 var(--pad-container);
+    padding: 0 var(--space-control-px-md);
   }
 
   &--icon-only {
@@ -137,7 +137,7 @@ const componentTag = computed(() => {
 
   @include click-enabled;
   @include text-meta;
-  @include inline-flex-center(var(--pad-component));
+  @include inline-flex-center(var(--space-inline-gap));
 
   @include border-dim(var(--btn-color));
   @include state-base(var(--shadow-elevation-sm), var(--transition-fast));
