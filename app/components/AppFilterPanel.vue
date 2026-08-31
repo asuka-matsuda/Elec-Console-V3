@@ -20,13 +20,6 @@ defineProps<{
   categoryOptions: CategoryOption[];
 }>();
 
-const toggleCat = (value: string) => {
-  if (activeCats.value.includes(value)) {
-    activeCats.value = activeCats.value.filter((c) => c !== value);
-  } else {
-    activeCats.value = [...activeCats.value, value];
-  }
-};
 </script>
 
 <template>
@@ -59,8 +52,8 @@ const toggleCat = (value: string) => {
             <AppCheckbox
               v-for="cat in categoryOptions"
               :key="cat.value"
-              :model-value="activeCats.includes(cat.value)"
-              @update:model-value="toggleCat(cat.value)"
+              v-model="activeCats"
+              :value="cat.value"
             >
               {{ cat.label }}
             </AppCheckbox>
@@ -94,6 +87,11 @@ const toggleCat = (value: string) => {
 
   &__filters {
     @include grid(280px 1fr, var(--space-card-gap));
+
+    /* extra-filters等で3つ目以降の要素が入った場合は、全幅（フルスパン）で下に落とす */
+    & > :nth-child(n + 3) {
+      grid-column: 1 / -1;
+    }
 
     /* スマホ時は縦積み */
     @include mq("md") {
