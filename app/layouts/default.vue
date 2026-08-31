@@ -12,7 +12,7 @@ const { currentUser, logout } = useAuth();
 <template>
   <div
     class="l-app"
-    :style="{ '--theme-accent': breadcrumbAccent || 'var(--color-category-main)' }"
+    :style="{ '--theme-accent': `var(--color-category-${breadcrumbAccent || 'main'})` }"
   >
     <!-- Sidebar -->
     <LayoutGlobalNav
