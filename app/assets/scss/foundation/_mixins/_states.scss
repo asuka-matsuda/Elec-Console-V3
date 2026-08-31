@@ -1,0 +1,81 @@
+@use "../variables" as *;
+
+// ==========================================================================
+// インタラクション・状態 Mixins
+// ==========================================================================
+
+@mixin state-base($shadow: none, $transition: var(--transition-base), $color: null) {
+  --shadow-base: #{$shadow};
+
+  position: relative;
+  z-index: 1;
+  transition: $transition;
+
+  @if $color {
+    box-shadow: 
+      inset 0 0 4px color-mix(in srgb, #{$color} 20%, transparent),
+      0 2px 4px color-mix(in srgb, black 20%, transparent),
+      var(--shadow-base);
+  }
+
+ @else {
+    box-shadow: var(--shadow-base);
+  }
+}
+
+@mixin state-hover($color: var(--color-category-main), $transition: var(--transition-glow)) {
+  z-index: 2;
+  border-color: #{$color};
+  box-shadow: 
+    0 0 8px #{$color},
+    0 0 16px color-mix(in srgb, #{$color} 60%, transparent),
+    inset 0 0 6px color-mix(in srgb, #{$color} 40%, transparent),
+    var(--shadow-base, none);
+  transition: $transition;
+}
+
+@mixin state-focus($color: var(--color-category-main), $transition: var(--transition-glow)) {
+  z-index: 2;
+
+  border-color: color-mix(in srgb, #{$color} 60%, transparent);
+
+  outline: none;
+  box-shadow: 
+    0 0 0 2px var(--color-main-bg),
+    0 0 0 4px color-mix(in srgb, #{$color} 80%, transparent),
+    var(--shadow-base, none);
+
+  transition: $transition;
+}
+
+@mixin state-active($color: var(--color-category-main), $transition: var(--transition-glow)) {
+  z-index: 2;
+  border-color: #{$color};
+  box-shadow: 
+    0 0 4px #{$color},
+    0 0 8px color-mix(in srgb, #{$color} 80%, transparent),
+    inset 0 0 12px color-mix(in srgb, #{$color} 60%, transparent),
+    var(--shadow-base, none);
+  transition: $transition;
+
+  svg {
+    filter: drop-shadow(0 0 2px #{$color});
+    stroke: #{$color};
+  }
+}
+
+@mixin click-enabled {
+  cursor: pointer;
+  user-select: none;
+}
+
+@mixin disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.5;
+  filter: grayscale(100%);
+}
+
+@mixin form-placeholder {
+  color: color-mix(in srgb, var(--color-text-muted) 50%, transparent);
+}

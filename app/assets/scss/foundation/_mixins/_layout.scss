@@ -1,0 +1,144 @@
+@use "sass:map";
+@use "../variables" as *;
+
+// ==========================================================================
+// レイアウト Mixins
+// ==========================================================================
+@mixin flex-center($gap: var(--space-inline-gap)) {
+  display: flex;
+  gap: $gap;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin inline-flex-center($gap: var(--space-inline-gap)) {
+  display: inline-flex;
+  gap: $gap;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between($gap: var(--space-inline-gap)) {
+  display: flex;
+  gap: $gap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin inline-flex-between($gap: var(--space-inline-gap)) {
+  display: inline-flex;
+  gap: $gap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-start($gap: var(--space-inline-gap)) {
+  display: flex;
+  gap: $gap;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+@mixin inline-flex-start($gap: var(--space-inline-gap)) {
+  display: inline-flex;
+  gap: $gap;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+@mixin flex-end($gap: var(--space-inline-gap)) {
+  display: flex;
+  gap: $gap;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+@mixin inline-flex-end($gap: var(--space-inline-gap)) {
+  display: inline-flex;
+  gap: $gap;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+@mixin flex-baseline($gap: var(--space-inline-gap)) {
+  display: flex;
+  gap: $gap;
+  align-items: baseline;
+}
+
+@mixin flex-column($gap: var(--space-stack-gap)) {
+  display: flex;
+  flex-direction: column;
+  gap: $gap;
+}
+
+@mixin inline-flex-column($gap: var(--space-stack-gap)) {
+  display: inline-flex;
+  flex-direction: column;
+  gap: $gap;
+}
+
+@mixin grid($cols: 1fr, $gap: var(--space-card-gap)) {
+  display: grid;
+  grid-template-columns: $cols;
+  gap: $gap;
+}
+
+@mixin grid-auto($min-width, $gap: var(--space-card-gap)) {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(#{$min-width}, 1fr));
+  gap: $gap;
+}
+
+// ==========================================================================
+// レスポンシブ & コンテナクエリ Mixins
+// ==========================================================================
+@mixin mq($breakpoint, $direction: "down") {
+  @if map.has-key($breakpoints, $breakpoint) {
+    $value: map.get($breakpoints, $breakpoint);
+
+    @if $direction == "down" {
+      @media (width <= $value) {
+        @content;
+      }
+    }
+
+ @else if $direction == "up" {
+      @media (width >= $value) {
+        @content;
+      }
+    }
+
+ @else if $direction == "up-strict" {
+      @media (width > $value) {
+        @content;
+      }
+    }
+  }
+
+ @else {
+    @warn "Invalid breakpoint: #{$breakpoint}.";
+  }
+}
+
+@mixin cq($breakpoint, $direction: "up") {
+  @if map.has-key($container-breakpoints, $breakpoint) {
+    $value: map.get($container-breakpoints, $breakpoint);
+
+    @if $direction == "up" {
+      @container (min-width: #{$value}) {
+        @content;
+      }
+    }
+
+ @else if $direction == "down" {
+      @container (max-width: #{$value}) {
+        @content;
+      }
+    }
+  }
+
+ @else {
+    @warn "Invalid container breakpoint: #{$breakpoint}.";
+  }
+}
