@@ -11,6 +11,7 @@ defineProps<{
   value?: unknown;
   label?: string;
   disabled?: boolean;
+  indeterminate?: boolean;
 }>();
 
 const inputId = useId();
@@ -26,14 +27,15 @@ const inputId = useId();
       :id="inputId"
       v-model="model"
       type="checkbox"
+      .indeterminate="indeterminate"
       class="c-checkbox__input"
       :value="value"
       :disabled="disabled"
     />
     <div class="c-checkbox__box">
-      <!-- Checkmark SVG: Animated via stroke-dashoffset -->
+      <!-- Checkmark SVG -->
       <svg
-        class="c-checkbox__icon"
+        class="c-checkbox__icon c-checkbox__icon--check"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
         fill="none"
@@ -43,6 +45,19 @@ const inputId = useId();
         stroke-linejoin="miter"
       >
         <polyline points="20 6 9 17 4 12" />
+      </svg>
+      <!-- Indeterminate (Dash) SVG -->
+      <svg
+        class="c-checkbox__icon c-checkbox__icon--dash"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="3"
+        stroke-linecap="square"
+        stroke-linejoin="miter"
+      >
+        <line x1="5" y1="12" x2="19" y2="12" />
       </svg>
     </div>
     <span
@@ -58,11 +73,12 @@ const inputId = useId();
 .c-checkbox {
   --checkbox-color: var(--theme-accent);
 
-  @include text-desc;
-  @include click-enabled;
+  position: relative;
+
   @include inline-flex-start(var(--space-inline-gap));
 
-  position: relative;
+  @include text-desc;
+  @include click-enabled;
 
   // --- 状態 (Vue制御) ---
   &.is-disabled {
@@ -103,35 +119,47 @@ const inputId = useId();
       @include cyber-text-glow(var(--checkbox-color));
     }
 
-    // チェック時の状態
-    &:checked + .c-checkbox__box {
+    // チェック時 & 一部選択時のベース状態（枠が光る）
+    &:checked + .c-checkbox__box,
+    &:indeterminate + .c-checkbox__box {
       @include state-active(var(--checkbox-color));
+    }
 
-      .c-checkbox__icon {
-        opacity: 1;
-        filter: drop-shadow(0 0 var(--blur-sm) var(--checkbox-color));
-        stroke-dashoffset: 0;
-      }
+    // チェックアイコンの表示
+    &:checked + .c-checkbox__box .c-checkbox__icon--check {
+      opacity: 1;
+      filter: drop-shadow(0 0 var(--blur-sm) var(--checkbox-color));
+      stroke-dashoffset: 0;
+    }
+
+    // Indeterminateアイコンの表示
+    &:indeterminate + .c-checkbox__box .c-checkbox__icon--dash {
+      opacity: 1;
+      filter: drop-shadow(0 0 var(--blur-sm) var(--checkbox-color));
+      stroke-dashoffset: 0;
     }
   }
 
   // --- Box (四角い枠) ---
   &__box {
+    @include flex-center;
+    position: relative;
+
     flex-shrink: 0;
     width: 1.4em;
     height: 1.4em;
 
-    @include flex-center;
     @include border-dim;
     @include state-base(var(--shadow-sink));
 
     // アイコン (初期状態は透明かつstroke-dashoffsetで隠す)
     .c-checkbox__icon {
+      position: absolute;
+
       width: 70%;
       height: 70%;
 
       opacity: 0;
-
       stroke: var(--checkbox-color);
       stroke-dasharray: 24;
       stroke-dashoffset: 24;
