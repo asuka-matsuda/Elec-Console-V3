@@ -51,9 +51,12 @@
   $color: currentcolor
 ) {
   display: inline-block;
+
   width: $width;
   height: $height;
+
   background-color: $color;
+
   animation: ui-cursor-blink 1s step-end infinite;
 }
 
@@ -66,6 +69,7 @@
   &::after {
     content: "";
     margin-left: $gap;
+
     @include blinking-cursor-base($width, $height, $color);
   }
 }
