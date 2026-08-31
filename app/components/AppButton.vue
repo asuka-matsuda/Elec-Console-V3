@@ -28,26 +28,34 @@ const componentTag = computed(() => {
   if (props.href) return "a";
   return "button";
 });
+
+const handleClick = (e: MouseEvent) => {
+  if (props.disabled) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+  }
+};
 </script>
 
 <template>
   <component
     :is="componentTag"
-    :to="!disabled ? to : null"
-    :href="!disabled ? href : null"
-    :type="componentTag === 'button' ? type : null"
-    :disabled="componentTag === 'button' ? disabled : null"
+    :to="!disabled ? to : undefined"
+    :href="!disabled ? href : undefined"
+    :type="componentTag === 'button' ? type : undefined"
+    :disabled="componentTag === 'button' ? disabled : undefined"
+    :tabindex="disabled && componentTag !== 'button' ? -1 : undefined"
     class="c-btn"
     :class="[
       variant !== 'primary' && `c-btn--${variant}`,
       size !== 'sm' && `c-btn--${size}`,
       {
         'c-btn--block': block,
-        'c-btn--icon-only': iconOnly || (icon && !$slots.default),
+        'c-btn--icon-only': iconOnly,
         'is-disabled': disabled,
       },
     ]"
-    @click="disabled && $event.preventDefault()"
+    @click="handleClick"
   >
     <AppIcon
       v-if="icon"
