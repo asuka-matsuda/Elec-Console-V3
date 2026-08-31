@@ -76,17 +76,16 @@ const processedItems = computed(() => {
   text-transform: uppercase;
 
   &__list {
-    @include inline-flex-start;
+    @include inline-flex-start(var(--space-inline-gap));
   }
 
   &__item {
-    @include inline-flex-start;
+    @include inline-flex-start(var(--space-inline-gap));
 
     &:not(:last-child)::after {
       @include text-badge;
 
       content: "»";
-      margin: 0 var(--space-inline-gap);
       color: color-mix(in srgb, var(--color-category-main) 60%, transparent);
     }
   }
