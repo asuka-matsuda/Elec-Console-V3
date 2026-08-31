@@ -111,7 +111,7 @@ const history = computed(() => dashboardData.value?.history || []);
   }
 
   &__loading {
-    @include text-title-sm;
+    @include text-title("sm");
 
     padding: var(--space-card-pad);
     color: var(--color-text-muted);

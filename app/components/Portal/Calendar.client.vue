@@ -9,6 +9,7 @@ import listPlugin from '@fullcalendar/list';
 import jaLocale from '@fullcalendar/core/locales/ja';
 
 import { useCalendar } from '~/composables/portal/useCalendar';
+import CalendarEventModal from './CalendarEventModal.vue';
 
 const props = defineProps<{
   siteId: string;
@@ -124,16 +125,55 @@ const saveEvent = async (savedData: { title: string, type: string, start: string
   }
 };
 
-const removeEvent = async () => {
+const {
+  isOpen: isConfirmOpen,
+  title: confirmTitle,
+  message: confirmMessage,
+  confirmText: confirmBtnText,
+  intent: confirmIntent,
+  askConfirm,
+  handleConfirm,
+} = useConfirmModal();
+
+const removeEvent = () => {
   if (!editingEventId.value) return;
-  // TODO: Implement custom confirm dialog
-  await deleteEvent(editingEventId.value);
-  closeModal();
+  const targetId = editingEventId.value;
+  askConfirm({
+    title: "予定の削除",
+    message: `「${form.value.title || 'この予定'}」を削除してもよろしいですか？`,
+    confirmText: "削除する",
+    intent: "danger",
+    onConfirm: async () => {
+      await deleteEvent(targetId);
+      closeModal();
+    },
+  });
 };
 
 // ====================
-// Calendar Config
+// Calendar Config & Custom Toolbar
 // ====================
+const fullCalendarRef = ref<InstanceType<typeof FullCalendar> | null>(null);
+const currentTitle = ref('');
+const currentView = ref<'dayGridMonth' | 'listMonth'>('dayGridMonth');
+
+const handlePrev = () => {
+  fullCalendarRef.value?.getApi().prev();
+};
+
+const handleNext = () => {
+  fullCalendarRef.value?.getApi().next();
+};
+
+const handleToday = () => {
+  fullCalendarRef.value?.getApi().today();
+};
+
+const handleViewChange = (view: 'dayGridMonth' | 'listMonth') => {
+  currentView.value = view;
+  fullCalendarRef.value?.getApi().changeView(view);
+};
+
 const calendarOptions = computed(() => ({
   plugins: [dayGridPlugin, interactionPlugin, listPlugin],
   initialView: 'dayGridMonth',
@@ -141,10 +181,10 @@ const calendarOptions = computed(() => ({
   events: events.value,
   editable: true,
   selectable: true,
-  headerToolbar: {
-    left: 'prev,next today',
-    center: 'title',
-    right: 'dayGridMonth,listMonth'
+  headerToolbar: false,
+  datesSet: (arg: { view: { title: string; type: string } }) => {
+    currentTitle.value = arg.view.title;
+    currentView.value = arg.view.type as 'dayGridMonth' | 'listMonth';
   },
   height: 'auto',
   dayHeaderClassNames: (arg: { date: Date }) => {
@@ -204,11 +244,67 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 
 <template>
   <div class="c-calendar-wrapper">
+    <div class="c-calendar-toolbar">
+      <div class="c-calendar-toolbar__nav">
+        <AppButton
+          variant="secondary"
+          size="sm"
+          icon="chevron-left"
+          icon-only
+          aria-label="前月"
+          @click="handlePrev"
+        />
+        <AppButton
+          variant="secondary"
+          size="sm"
+          icon="chevron-right"
+          icon-only
+          aria-label="次月"
+          @click="handleNext"
+        />
+        <AppButton
+          variant="secondary"
+          size="sm"
+          @click="handleToday"
+        >
+          今日
+        </AppButton>
+      </div>
+
+      <div class="c-calendar-toolbar__center">
+        <h3 class="c-calendar-toolbar__title">
+          {{ currentTitle }}
+        </h3>
+      </div>
+
+      <div class="c-calendar-toolbar__views">
+        <AppButton
+          :variant="currentView === 'dayGridMonth' ? 'primary' : 'secondary'"
+          size="sm"
+          icon="calendar"
+          @click="handleViewChange('dayGridMonth')"
+        >
+          月表示
+        </AppButton>
+        <AppButton
+          :variant="currentView === 'listMonth' ? 'primary' : 'secondary'"
+          size="sm"
+          icon="list"
+          @click="handleViewChange('listMonth')"
+        >
+          リスト
+        </AppButton>
+      </div>
+    </div>
+
     <AppPanel
       class="c-calendar"
       variant="simple"
     >
-      <FullCalendar :options="typedCalendarOptions" />
+      <FullCalendar
+        ref="fullCalendarRef"
+        :options="typedCalendarOptions"
+      />
     </AppPanel>
 
     <!-- Event Modal -->
@@ -220,12 +316,72 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
       @save="saveEvent"
       @delete="removeEvent"
     />
+
+    <!-- Confirm Modal -->
+    <AppConfirmModal
+      v-model="isConfirmOpen"
+      :title="confirmTitle"
+      :message="confirmMessage"
+      :confirm-text="confirmBtnText"
+      :intent="confirmIntent"
+      @confirm="handleConfirm"
+    />
   </div>
 </template>
 
 <style scoped lang="scss">
 .c-calendar-wrapper {
   @include flex-column(var(--space-stack-gap));
+}
+
+.c-calendar-toolbar {
+  @include flex-between(var(--space-inline-gap));
+
+  flex-wrap: wrap;
+  padding: var(--space-card-pad-sm) var(--space-card-pad);
+
+  @include border-dim;
+
+  background-color: var(--color-surface);
+
+  &__nav {
+    @include flex-start(var(--space-inline-gap-sm));
+  }
+
+  &__center {
+    @include flex-center;
+
+    flex: 1;
+    min-width: 160px;
+  }
+
+  &__title {
+    @include text-title("md");
+
+    color: var(--color-category-main);
+
+    @include cyber-text-glow(var(--color-category-main), 60%, var(--blur-sm));
+  }
+
+  &__views {
+    @include flex-end(var(--space-inline-gap-sm));
+  }
+
+  @include mq("md") {
+    @include flex-column(var(--space-stack-gap-sm));
+
+    &__center {
+      order: -1;
+      width: 100%;
+    }
+
+    &__nav,
+    &__views {
+      @include flex-center;
+
+      width: 100%;
+    }
+  }
 }
 
 .c-calendar {
@@ -316,6 +472,52 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
     
     .fc-event-main {
       font-weight: var(--font-weight-medium);
+    }
+  }
+
+  /* リストビューの装飾 */
+  :deep(.fc-list) {
+    border: none;
+
+    .fc-list-day-cushion {
+      padding: var(--space-control-py-sm) var(--space-control-px);
+      background-color: var(--color-bg-hover);
+    }
+
+    .fc-list-day-text,
+    .fc-list-day-side-text {
+      @include text-desc(true);
+
+      color: var(--color-category-main);
+    }
+
+    .fc-list-event {
+      @include click-enabled;
+      @include state-base;
+
+      &:hover td {
+        background-color: theme-color(var(--color-category-main), 15%);
+      }
+
+      td {
+        border-color: var(--color-border);
+      }
+    }
+
+    .fc-list-event-title,
+    .fc-list-event-time {
+      @include text-desc;
+
+      color: var(--color-text-main);
+    }
+
+    .fc-list-empty {
+      @include text-body;
+
+      padding: var(--space-card-pad);
+      color: var(--color-text-muted);
+      text-align: center;
+      background-color: transparent;
     }
   }
   

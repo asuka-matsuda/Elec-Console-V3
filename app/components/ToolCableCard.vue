@@ -140,7 +140,7 @@ const updateCount = (val: string | number | boolean | null | undefined) => {
   }
 
   &__title {
-    @include text-title-sm;
+    @include text-title("sm");
 
     color: var(--color-text-main);
   }

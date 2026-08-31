@@ -133,11 +133,11 @@ const fill48 = computed(() =>
   padding: var(--space-card-pad);
 
   &__percent {
-    @include text-title-lg;
+    @include text-title("lg");
   }
 
   &__percent-unit {
-    @include text-title-sm;
+    @include text-title("sm");
   }
 
   // コンテナ幅が xs 以上の場合は横並び2カラム
@@ -217,7 +217,7 @@ const fill48 = computed(() =>
       line-height: 1;
 
       &.c-conduit-result__percent {
-        @include text-title-sm;
+        @include text-title("sm");
 
         font-weight: normal;
       }

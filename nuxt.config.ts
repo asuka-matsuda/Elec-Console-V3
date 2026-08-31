@@ -7,7 +7,7 @@ export default defineNuxtConfig({
   components: [
     {
       path: '~/components/Portal',
-      pathPrefix: true,
+      pathPrefix: false,
     },
     {
       path: '~/components',

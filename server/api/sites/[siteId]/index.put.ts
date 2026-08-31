@@ -1,18 +1,18 @@
 import { defineEventHandler, readBody, getRouterParam } from "h3";
-import { prisma } from "../../utils/prisma";
-import { requireAdminUser } from "../../utils/auth";
+import { prisma } from "../../../utils/prisma";
+import { requireAdminUser } from "../../../utils/auth";
 
 export default defineEventHandler(async (event) => {
   await requireAdminUser(event);
-  const id = getRouterParam(event, "id");
+  const siteId = getRouterParam(event, "siteId");
   const body = await readBody(event);
   
-  if (!id) return null;
+  if (!siteId) return null;
 
   const siteData = body.site || body;
 
   const updatedSite = await prisma.site.update({
-    where: { id },
+    where: { id: siteId },
     data: {
       name: siteData.name,
       status: siteData.status,
@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
   });
 
   const settings = await prisma.siteSettings.findUnique({
-    where: { siteId: id }
+    where: { siteId }
   });
 
   return { site: updatedSite, settings };

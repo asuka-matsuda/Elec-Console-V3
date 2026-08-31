@@ -82,15 +82,15 @@ withDefaults(
     color: var(--color-text-main);
 
     &--lg {
-      @include text-title-lg;
+      @include text-title("lg");
     }
 
     &--md {
-      @include text-title-md;
+      @include text-title("md");
     }
 
     &--sm {
-      @include text-title-sm;
+      @include text-title("sm");
     }
   }
 

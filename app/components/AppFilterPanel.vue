@@ -81,7 +81,7 @@ const toggleCat = (value: string) => {
   }
 
   &__header {
-    @include text-title-sm;
+    @include text-title("sm");
     @include flex-start;
 
     padding-bottom: var(--space-control-py-sm);

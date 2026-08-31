@@ -204,7 +204,7 @@ const totalWeight = computed(() => {
   @include flex-column(var(--space-1));
 
   &__val {
-    @include text-title-xl;
+    @include text-title("xl");
   }
 
   &__warning {

@@ -178,7 +178,7 @@ const closeSidebar = () => {
   }
 
   &__link {
-    @include text-title-sm;
+    @include text-title("sm");
     @include flex-start(var(--space-inline-gap));
 
     padding: var(--space-control-py-md) var(--space-control-px);

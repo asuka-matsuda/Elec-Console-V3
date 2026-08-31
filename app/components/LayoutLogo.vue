@@ -49,7 +49,7 @@ const emit = defineEmits<{
   }
 
   &__text {
-    @include text-title-md;
+    @include text-title("md");
   }
 }
 </style>

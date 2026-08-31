@@ -103,7 +103,7 @@ const handleCopyPassword = () => {
   }
 
   &__credential-value {
-    @include text-title-sm;
+    @include text-title("sm");
 
     padding: var(--space-control-py-md) 0;
 

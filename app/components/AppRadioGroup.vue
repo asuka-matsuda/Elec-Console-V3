@@ -123,7 +123,7 @@ const getStyle = (option: RadioOption): StyleValue | undefined => option.color ?
   }
 
   &__text {
-    @include text-body-bold;
+    @include text-body(true);
 
     padding: var(--space-control-py-sm) var(--space-control-px-sm);
 

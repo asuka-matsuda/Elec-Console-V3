@@ -188,15 +188,15 @@ const dropStatusClass = computed(() => {
   padding: var(--space-card-pad);
 
   &__drop-percent {
-    @include text-title-lg;
+    @include text-title("lg");
   }
 
   &__drop-unit {
-    @include text-title-sm;
+    @include text-title("sm");
   }
 
   &__drop-cable {
-    @include text-title-lg;
+    @include text-title("lg");
   }
 
   &.is-sm {
@@ -280,7 +280,7 @@ const dropStatusClass = computed(() => {
     }
 
     .value-unit {
-      @include text-title-md;
+      @include text-title("md");
 
       color: var(--color-text-secondary);
       opacity: 0.8;
@@ -323,7 +323,7 @@ const dropStatusClass = computed(() => {
     margin: 0;
     font-family: var(--font-mono);
 
-    @include text-title-sm;
+    @include text-title("sm");
 
     .value-sep {
       margin: 0 2px;

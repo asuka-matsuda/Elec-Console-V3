@@ -191,7 +191,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   }
 
   &__legend-item {
-    @include text-body-bold;
+    @include text-body(true);
 
     display: flex;
     gap: var(--space-inline-gap-sm);

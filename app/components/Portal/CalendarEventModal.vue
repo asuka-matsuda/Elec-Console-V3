@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
+import CalendarDateInput from './CalendarDateInput.vue';
 
 export interface EventFormData {
   title: string;

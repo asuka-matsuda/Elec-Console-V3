@@ -13,10 +13,10 @@ const dashboardSections = menuData.filter((section) => section.showInDashboard);
 const { currentUser, isAuthenticated } = useAuth();
 const lastSiteId = useLocalStorage("last-accessed-site", "");
 
-const _getDynamicTo = (item: Record<string, unknown>) => {
-  if (_getDynamicDisabled(item)) return undefined;
+const getDynamicTo = (item: Record<string, unknown>) => {
+  if (getDynamicDisabled(item)) return undefined;
   
-  if (item.href === "/login" && isAuthenticated.value) {
+  if ((item.href === "/portal" || item.href === "/login") && isAuthenticated.value) {
     const siteIds = currentUser.value?.assignedSiteIds || [];
     if (siteIds.length > 0) {
       const targetSiteId = siteIds.includes(lastSiteId.value) ? lastSiteId.value : siteIds[0];
@@ -27,9 +27,9 @@ const _getDynamicTo = (item: Record<string, unknown>) => {
   return item.href as string;
 };
 
-const _getDynamicDisabled = (item: Record<string, unknown>) => {
+const getDynamicDisabled = (item: Record<string, unknown>) => {
   if (item.disabled) return true;
-  if (item.href === "/login") {
+  if (item.href === "/portal" || item.href === "/login") {
     // ログイン済みかつアサイン現場が0件の場合はグレーアウト
     if (isAuthenticated.value && (!currentUser.value?.assignedSiteIds || currentUser.value.assignedSiteIds.length === 0)) {
       return true;
@@ -39,7 +39,7 @@ const _getDynamicDisabled = (item: Record<string, unknown>) => {
 };
 
 const getDynamicDesc = (item: Record<string, unknown>) => {
-  if (item.href === "/login" && isAuthenticated.value) {
+  if ((item.href === "/portal" || item.href === "/login") && isAuthenticated.value) {
     const siteIds = currentUser.value?.assignedSiteIds || [];
     if (siteIds.length === 0) return "アサインされている現場がありません";
     return `アサイン済みの現場ポータルへアクセスします（現在${siteIds.length}件）`;
@@ -68,8 +68,8 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
             v-for="item in section.items"
             :key="item.text"
             :variant="section.accent"
-            :to="_getDynamicTo(item)"
-            :disabled="_getDynamicDisabled(item)"
+            :to="getDynamicTo(item)"
+            :disabled="getDynamicDisabled(item)"
           >
             <div class="p-dashboard-card__layout">
               <div
@@ -128,7 +128,7 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
   }
 
   &__header {
-    @include text-title-sm;
+    @include text-title("sm");
 
     display: flex;
     gap: var(--space-inline-gap-sm);

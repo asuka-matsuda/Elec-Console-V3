@@ -223,7 +223,7 @@ const categoryColorMap: Record<string, string> = {
   }
 
   &__term {
-    @include text-title-md;
+    @include text-title("md");
   }
 
   &__body {
@@ -231,7 +231,7 @@ const categoryColorMap: Record<string, string> = {
   }
 
   &__desc {
-    @include text-title-sm;
+    @include text-title("sm");
 
     line-height: 1.6;
     color: var(--color-text-secondary);

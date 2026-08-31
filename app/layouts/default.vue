@@ -94,7 +94,7 @@ const { currentUser, logout } = useAuth();
 }
 
 .l-header-user {
-  @include text-title-sm;
+  @include text-title("sm");
   @include flex-start(var(--space-inline-gap));
 
   &__avatar {

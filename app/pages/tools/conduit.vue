@@ -124,7 +124,7 @@ const handleSave = async () => {
   }
 
   &__section-title {
-    @include text-title-sm;
+    @include text-title("sm");
   }
 
   &__cable-list {

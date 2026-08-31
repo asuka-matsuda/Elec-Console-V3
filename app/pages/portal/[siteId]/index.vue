@@ -1,31 +1,46 @@
 <script setup lang="ts">
+import { computed, onMounted, watch } from 'vue';
+import { useRoute, useRouter } from '#app';
 import { useAdminSites } from '~/composables/admin/useAdminSites';
 import { useAuth } from '~/composables/useAuth';
 import { useLocalStorage } from '@vueuse/core';
+import Calendar from '~/components/Portal/Calendar.client.vue';
+import PersonalTodo from '~/components/Portal/PersonalTodo.client.vue';
 
 const route = useRoute();
-const siteId = route.params.siteId as string;
+const router = useRouter();
+const siteId = computed(() => route.params.siteId as string);
 
 const { sites, fetchSites } = useAdminSites();
 const { currentUser } = useAuth();
-const router = useRouter();
 
 const lastSiteId = useLocalStorage("last-accessed-site", "");
-lastSiteId.value = siteId; // アクセス時に記憶を更新
 
-const currentSite = computed(() => sites.value.find(s => s.id === siteId));
+watch(
+  siteId,
+  (newId) => {
+    if (newId) {
+      lastSiteId.value = newId;
+    }
+  },
+  { immediate: true },
+);
+
+const currentSite = computed(() => sites.value.find((s) => s.id === siteId.value));
 
 // アサインされている現場のみを抽出
 const assignedSites = computed(() => {
   const ids = currentUser.value?.assignedSiteIds || [];
-  return sites.value.filter(s => ids.includes(s.id));
+  return sites.value.filter((s) => ids.includes(s.id));
 });
 
-const siteOptions = computed(() => assignedSites.value.map(s => ({ value: s.id, label: s.name })));
+const siteOptions = computed(() =>
+  assignedSites.value.map((s) => ({ value: s.id, label: s.name })),
+);
 
 const handleSiteChange = (newSiteId: unknown) => {
   const targetId = String(newSiteId);
-  if (!targetId || targetId === siteId) return;
+  if (!targetId || targetId === siteId.value) return;
   router.push(`/portal/${targetId}`);
 };
 
@@ -37,7 +52,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-site-dashboard">
+  <div
+    :key="siteId"
+    class="p-site-dashboard"
+  >
     <div class="p-site-dashboard__header">
       <div class="p-site-dashboard__title">
         <AppIcon
@@ -103,7 +121,7 @@ onMounted(() => {
     @include flex-start(var(--space-inline-gap));
 
     h2 {
-      @include text-title-lg;
+      @include text-title("lg");
 
       color: var(--color-text-main);
     }

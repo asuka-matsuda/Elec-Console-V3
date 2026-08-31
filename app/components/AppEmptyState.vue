@@ -98,7 +98,7 @@ withDefaults(
   }
 
   &__title {
-    @include text-title-sm;
+    @include text-title("sm");
 
     color: var(--color-text-secondary);
   }

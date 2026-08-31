@@ -10,11 +10,15 @@ import { onMounted } from 'vue';
 
 useHead({ title: '現場ポータル - Elec-Console' });
 const router = useRouter();
-const { isAdmin } = useAuth();
+const { isAdmin, currentUser } = useAuth();
 const lastSiteId = useLocalStorage("last-accessed-site", "");
 
 onMounted(() => {
-  if (lastSiteId.value) {
+  const siteIds = currentUser.value?.assignedSiteIds || [];
+  if (siteIds.length > 0) {
+    const targetSiteId = siteIds.includes(lastSiteId.value) ? lastSiteId.value : siteIds[0];
+    router.replace(`/portal/${targetSiteId}`);
+  } else if (lastSiteId.value) {
     router.replace(`/portal/${lastSiteId.value}`);
   }
 });

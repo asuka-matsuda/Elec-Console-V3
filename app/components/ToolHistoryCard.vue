@@ -156,7 +156,7 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never;
   }
 
   &__title {
-    @include text-title-sm;
+    @include text-title("sm");
     @include flex-start;
 
     color: var(--color-text-main);
@@ -171,7 +171,7 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never;
   }
 
   &__section-title {
-    @include text-title-sm;
+    @include text-title("sm");
 
     padding-left: var(--space-control-py-sm);
     border-left: 2px solid var(--color-category-tool);

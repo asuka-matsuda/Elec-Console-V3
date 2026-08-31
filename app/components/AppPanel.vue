@@ -113,7 +113,7 @@ withDefaults(
   /* Header & Title */
 
   &__title {
-    @include text-title-md;
+    @include text-title("md");
 
     color: #{theme-color(var(--p-theme-color), 100%)};
     text-shadow: 0 0 var(--blur-md) #{theme-color(var(--p-theme-color), 40%)};

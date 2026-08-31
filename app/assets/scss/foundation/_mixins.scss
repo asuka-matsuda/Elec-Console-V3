@@ -210,61 +210,79 @@
 }
 
 // セマンティック・タイポグラフィ Mixins
-@mixin text-title-xl {
-  font-size: var(--font-size-2xl);
+@mixin text-title($size: "md", $color: null) {
+  @if $size == "4xl" {
+    font-size: var(--font-size-4xl);
+    letter-spacing: var(--tracking-tighter);
+  } @else if $size == "3xl" {
+    font-size: var(--font-size-3xl);
+    letter-spacing: var(--tracking-tighter);
+  } @else if $size == "2xl" or $size == "xl" {
+    font-size: var(--font-size-2xl);
+    letter-spacing: var(--tracking-tight);
+  } @else if $size == "lg" {
+    font-size: var(--font-size-xl);
+    letter-spacing: var(--tracking-tight);
+  } @else if $size == "sm" {
+    font-size: var(--font-size-base);
+    letter-spacing: var(--tracking-wide);
+  } @else {
+    // "md" (デフォルト)
+    font-size: var(--font-size-lg);
+    letter-spacing: var(--tracking-normal);
+  }
+
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
-  letter-spacing: var(--tracking-tight);
+
+  @if $color {
+    color: $color;
+  }
 }
 
-@mixin text-title-lg {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--tracking-tight);
-}
-
-@mixin text-title-md {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--tracking-normal);
-}
-
-@mixin text-title-sm {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--tracking-wide);
-}
-
-@mixin text-body {
+@mixin text-body($bold: false, $color: null) {
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
   color: var(--color-text-main);
   letter-spacing: var(--tracking-wide);
+
+  @if $color {
+    color: $color;
+  }
+
+  @if $bold {
+    font-weight: var(--font-weight-bold);
+  }
 }
 
-@mixin text-body-bold {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-base);
-  color: var(--color-text-main);
-  letter-spacing: var(--tracking-wide);
-}
-
-@mixin text-desc {
+@mixin text-desc($bold: false, $color: null) {
   font-size: var(--font-size-sm);
   line-height: var(--line-height-base);
   color: var(--color-text-muted);
   letter-spacing: var(--tracking-normal);
+
+  @if $color {
+    color: $color;
+  }
+
+  @if $bold {
+    font-weight: var(--font-weight-bold);
+  }
 }
 
-@mixin text-meta {
+@mixin text-meta($bold: false, $color: null) {
   font-size: var(--font-size-2xs);
   line-height: var(--line-height-base);
   color: var(--color-text-muted);
   letter-spacing: var(--tracking-wide);
+
+  @if $color {
+    color: $color;
+  }
+
+  @if $bold {
+    font-weight: var(--font-weight-bold);
+  }
 }
 
 @mixin text-badge {

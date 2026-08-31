@@ -259,7 +259,7 @@ const {
   @include flex-column(var(--space-1));
 
   &__val {
-    @include text-title-lg;
+    @include text-title("lg");
 
     color: var(--color-status-success);
 
@@ -267,7 +267,7 @@ const {
   }
 
   &__warning {
-    @include text-title-sm;
+    @include text-title("sm");
 
     padding: var(--space-tag-p);
     color: var(--color-status-danger);
@@ -296,7 +296,7 @@ const {
   }
 
   &__card-title {
-    @include text-title-md;
+    @include text-title("md");
   }
 
   &__card-body {
