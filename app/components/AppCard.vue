@@ -6,13 +6,6 @@
 import { computed, resolveComponent } from "vue";
 
 const props = defineProps<{
-  variant?:
-    | "default"
-    | "main"
-    | "tool"
-    | "database"
-    | "reference"
-    | "management";
   to?: string;
   href?: string;
   disabled?: boolean;
@@ -44,7 +37,7 @@ const handleClick = (e: MouseEvent) => {
     :is="rootTag"
     v-bind="rootProps"
     class="c-card"
-    :class="[variant ? `c-card--${variant}` : '', { 'is-disabled': disabled }]"
+    :class="{ 'is-disabled': disabled }"
     @click="handleClick"
   >
     <slot />
@@ -67,36 +60,20 @@ const handleClick = (e: MouseEvent) => {
     @include click-enabled;
 
     &:hover:not(.is-disabled) {
-      @include state-hover(var(--card-accent, var(--theme-accent)));
+      @include state-hover(var(--theme-accent));
     }
 
     &:focus-visible:not(.is-disabled) {
-      @include state-focus(var(--card-accent, var(--theme-accent)));
+      @include state-focus(var(--theme-accent));
     }
 
     &:active:not(.is-disabled) {
-      @include state-active(var(--card-accent, var(--theme-accent)));
+      @include state-active(var(--theme-accent));
     }
   }
 
   &.is-disabled {
     @include disabled;
-  }
-
-  &--tool {
-    --card-accent: var(--color-category-tool);
-  }
-
-  &--database {
-    --card-accent: var(--color-category-database);
-  }
-
-  &--reference {
-    --card-accent: var(--color-category-reference);
-  }
-
-  &--management {
-    --card-accent: var(--color-category-management);
   }
 }
 </style>

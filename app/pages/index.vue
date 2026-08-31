@@ -56,26 +56,22 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
         v-for="section in dashboardSections"
         :key="section.heading"
         class="p-dashboard__section"
+        :style="`--theme-accent: var(--color-category-${section.accent || 'main'})`"
       >
         <AppSectionHeader
           :title="section.heading"
           :icon="section.icon"
-          :variant="section.accent || 'main'"
         />
 
         <div class="p-dashboard__grid">
           <AppCard
             v-for="item in section.items"
             :key="item.text"
-            :variant="section.accent"
             :to="getDynamicTo(item)"
             :disabled="getDynamicDisabled(item)"
           >
             <div class="p-dashboard-card__layout">
-              <div
-                class="p-dashboard-card__header"
-                :style="`--card-accent: var(--color-category-${section.accent || 'main'})`"
-              >
+              <div class="p-dashboard-card__header">
                 <AppIcon :name="item.icon" />
                 <span>{{ item.text }}</span>
               </div>
@@ -134,7 +130,7 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
     gap: var(--space-inline-gap-sm);
     align-items: flex-start;
 
-    color: var(--card-accent, var(--color-text-main));
+    color: var(--theme-accent);
     word-break: keep-all;
     line-break: strict;
     overflow-wrap: anywhere;

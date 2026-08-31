@@ -27,12 +27,11 @@ withDefaults(
 <template>
   <header class="c-section-header">
     <div class="c-section-header__top">
-      <component
+        <component
         :is="tag"
         :id="titleId"
         class="c-section-header__title"
         :class="[`c-section-header__title--${size}`]"
-        :style="`--section-color: var(--color-category-${variant || 'main'})`"
       >
         <AppIcon
           v-if="icon"
@@ -95,7 +94,7 @@ withDefaults(
   }
 
   &__icon {
-    color: var(--section-color);
+    color: var(--theme-accent);
   }
 
   &__desc {
