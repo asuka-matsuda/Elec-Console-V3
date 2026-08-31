@@ -42,7 +42,6 @@ const handleCustomColorInput = (event: Event) => {
 
 <template>
   <div class="c-color-picker">
-    <!-- Preset Swatches -->
     <div class="c-color-picker__presets">
       <button
         v-for="preset in presets"
@@ -58,7 +57,6 @@ const handleCustomColorInput = (event: Event) => {
       </button>
     </div>
 
-    <!-- Custom Color Picker (その他) -->
     <div class="c-color-picker__custom">
       <label
         class="c-color-swatch c-color-swatch--custom"
@@ -100,14 +98,12 @@ const handleCustomColorInput = (event: Event) => {
   }
 
   &__custom {
-    @include flex-start(var(--space-inline-gap-xs));
-
     position: relative;
+
+    @include flex-start(var(--space-inline-gap-xs));
   }
 
   &__native {
-    @include click-enabled;
-
     position: absolute;
     top: 0;
     left: 0;
@@ -116,6 +112,8 @@ const handleCustomColorInput = (event: Event) => {
     height: 100%;
 
     opacity: 0;
+
+    @include click-enabled;
   }
 
   &__hex {
@@ -128,21 +126,22 @@ const handleCustomColorInput = (event: Event) => {
 
 .c-color-swatch {
   @include flex-center;
-  @include click-enabled;
-  @include border-dim;
-  @include state-base;
 
   flex-shrink: 0;
   width: var(--space-6);
   height: var(--space-6);
   padding: var(--space-0-5);
 
-  &__indicator {
-    @include border-base(var(--swatch-color));
-    @include state-base;
+  @include border-dim;
+  @include state-base;
+  @include click-enabled;
 
+  &__indicator {
     width: 100%;
     height: 100%;
+
+    @include border-base(var(--swatch-color));
+    @include state-base;
   }
 
   &:hover {
@@ -160,7 +159,6 @@ const handleCustomColorInput = (event: Event) => {
   &--custom {
     border-style: dashed;
 
-    // フォーカス時の枠表示（a11y）
     &:focus-within {
       @include state-focus(var(--swatch-color));
       @include cyber-text-glow(var(--swatch-color));
