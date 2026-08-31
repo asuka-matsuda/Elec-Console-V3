@@ -1,0 +1,165 @@
+@use "../variables" as *;
+
+// ==========================================================================
+// タイポグラフィ Mixins & 互換プレースホルダー
+// ==========================================================================
+@mixin text-2xs {
+  font-size: var(--font-size-2xs);
+  line-height: var(--line-height-base);
+  letter-spacing: var(--tracking-wide);
+}
+
+@mixin text-xs {
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-base);
+  letter-spacing: var(--tracking-wide);
+}
+
+@mixin text-sm {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  letter-spacing: var(--tracking-wide);
+}
+
+@mixin text-base {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  letter-spacing: var(--tracking-wide);
+}
+
+@mixin text-md {
+  font-size: var(--font-size-md, var(--font-size-base));
+  line-height: var(--line-height-base);
+  letter-spacing: var(--tracking-wide);
+}
+
+@mixin text-lg {
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-normal);
+}
+
+@mixin text-xl {
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+@mixin text-2xl {
+  font-size: var(--font-size-2xl);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+@mixin text-3xl {
+  font-size: var(--font-size-3xl);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-tighter);
+}
+
+@mixin text-4xl {
+  font-size: var(--font-size-4xl);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-tighter);
+}
+
+// セマンティック・タイポグラフィ Mixins
+$title-size-map: (
+  "4xl": (size: var(--font-size-4xl), tracking: var(--tracking-tighter)),
+  "3xl": (size: var(--font-size-3xl), tracking: var(--tracking-tighter)),
+  "2xl": (size: var(--font-size-2xl), tracking: var(--tracking-tight)),
+  "xl": (size: var(--font-size-2xl), tracking: var(--tracking-tight)),
+  "lg": (size: var(--font-size-xl), tracking: var(--tracking-tight)),
+  "md": (size: var(--font-size-lg), tracking: var(--tracking-normal)),
+  "sm": (size: var(--font-size-base), tracking: var(--tracking-wide))
+);
+
+@mixin text-title($size: "md", $color: null) {
+  $config: map.get($title-size-map, $size);
+  
+  @if not $config {
+    $config: map.get($title-size-map, "md");
+  }
+
+  font-size: map.get($config, size);
+  letter-spacing: map.get($config, tracking);
+
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+
+  @if $color {
+    color: $color;
+  }
+}
+
+@mixin text-body($bold: false, $color: null) {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--color-text-main);
+  letter-spacing: var(--tracking-wide);
+
+  @if $color {
+    color: $color;
+  }
+
+  @if $bold {
+    font-weight: var(--font-weight-bold);
+  }
+}
+
+@mixin text-desc($bold: false, $color: null) {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  color: var(--color-text-muted);
+  letter-spacing: var(--tracking-normal);
+
+  @if $color {
+    color: $color;
+  }
+
+  @if $bold {
+    font-weight: var(--font-weight-bold);
+  }
+}
+
+@mixin text-meta($bold: false, $color: null) {
+  font-size: var(--font-size-2xs);
+  line-height: var(--line-height-base);
+  color: var(--color-text-muted);
+  letter-spacing: var(--tracking-wide);
+
+  @if $color {
+    color: $color;
+  }
+
+  @if $bold {
+    font-weight: var(--font-weight-bold);
+  }
+}
+
+@mixin text-badge {
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
+}
+
+@mixin text-label {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-wide);
+}
+
+@mixin text-caption {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  letter-spacing: var(--tracking-normal);
+}
+
+@mixin text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
