@@ -13,7 +13,15 @@ export type BreadcrumbItem = {
 
 const props = defineProps<{
   items: BreadcrumbItem[];
+  accent?: string;
 }>();
+
+const breadcrumbStyle = computed(() => {
+  if (!props.accent) return {};
+  return {
+    "--breadcrumb-color": `var(--color-category-${props.accent})`,
+  };
+});
 
 /**
  * テンプレートでの判定ロジックを減らすため、あらかじめ「最後の要素かどうか」を判定した配列を生成する
@@ -29,7 +37,10 @@ const processedItems = computed(() => {
 </script>
 
 <template>
-  <nav class="c-breadcrumb">
+  <nav
+    class="c-breadcrumb"
+    :style="breadcrumbStyle"
+  >
     <ol class="c-breadcrumb__list">
       <li
         v-for="item in processedItems"
@@ -86,7 +97,7 @@ const processedItems = computed(() => {
       @include text-badge;
 
       content: "»";
-      color: color-mix(in srgb, var(--color-category-main) 60%, transparent);
+      color: color-mix(in srgb, var(--breadcrumb-color, var(--color-category-main)) 60%, transparent);
     }
   }
 
@@ -108,10 +119,10 @@ const processedItems = computed(() => {
   }
 
   &__current {
-    @include cyber-text-glow(var(--color-category-main), 60%, var(--blur-md));
+    @include cyber-text-glow(var(--breadcrumb-color, var(--color-category-main)), 60%, var(--blur-md));
     @include blinking-cursor;
 
-    color: var(--color-category-main);
+    color: var(--breadcrumb-color, var(--color-category-main));
   }
 }
 </style>

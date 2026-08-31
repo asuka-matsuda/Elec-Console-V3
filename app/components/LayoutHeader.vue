@@ -7,6 +7,7 @@ import type { BreadcrumbItem } from "~/components/AppBreadcrumb.vue";
 
 defineProps<{
   breadcrumbs?: BreadcrumbItem[];
+  accent?: string;
 }>();
 
 const emit = defineEmits<{
@@ -28,6 +29,7 @@ const emit = defineEmits<{
       <AppBreadcrumb
         v-if="breadcrumbs?.length"
         :items="breadcrumbs"
+        :accent="accent"
       />
     </div>
 

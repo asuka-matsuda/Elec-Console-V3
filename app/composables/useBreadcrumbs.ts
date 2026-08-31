@@ -11,7 +11,7 @@ export function useBreadcrumbs() {
     ];
 
     if (route.path === "/") {
-      return base;
+      return { items: base, accent: "main" };
     }
 
     // Pass 1: Search for an EXACT match
@@ -25,7 +25,7 @@ export function useBreadcrumbs() {
             crumbs.push({ text: section.heading, href: undefined });
           }
           crumbs.push({ text: item.text, href: item.href });
-          return crumbs;
+          return { items: crumbs, accent: section.accent || "main" };
         }
       }
     }
@@ -57,7 +57,7 @@ export function useBreadcrumbs() {
             crumbs.push({ text: section.heading, href: undefined });
           }
           crumbs.push({ text: item.text, href: item.href });
-          return crumbs;
+          return { items: crumbs, accent: section.accent || "main" };
         }
       }
     }
@@ -72,6 +72,6 @@ export function useBreadcrumbs() {
       };
     });
 
-    return [...base, ...dynamicCrumbs];
+    return { items: [...base, ...dynamicCrumbs], accent: "main" };
   });
 }
