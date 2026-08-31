@@ -5,7 +5,7 @@ import { menuData } from "~/constants/data/menuData";
 export function useBreadcrumbs() {
   const route = useRoute();
 
-  return computed(() => {
+  const data = computed(() => {
     const base: Array<{ text: string; href?: string }> = [
       { text: "ホーム", href: "/" },
     ];
@@ -74,4 +74,9 @@ export function useBreadcrumbs() {
 
     return { items: [...base, ...dynamicCrumbs], accent: "main" };
   });
+
+  return {
+    items: computed(() => data.value.items),
+    accent: computed(() => data.value.accent),
+  };
 }

@@ -5,7 +5,7 @@ import { menuData } from "~/constants/data/menuData";
 const isSidebarOpen = useState("sidebar-open", () => false);
 
 // Dynamic breadcrumbs based on current route
-const breadcrumbData = useBreadcrumbs();
+const { items: breadcrumbs, accent: breadcrumbAccent } = useBreadcrumbs();
 const { currentUser, logout } = useAuth();
 </script>
 
@@ -20,8 +20,8 @@ const { currentUser, logout } = useAuth();
     <!-- Main Content Area -->
     <div class="l-main">
       <LayoutHeader
-        :breadcrumbs="breadcrumbData.items"
-        :accent="breadcrumbData.accent"
+        :breadcrumbs="breadcrumbs"
+        :accent="breadcrumbAccent"
         @toggle-sidebar="isSidebarOpen = !isSidebarOpen"
       >
         <template #actions>
