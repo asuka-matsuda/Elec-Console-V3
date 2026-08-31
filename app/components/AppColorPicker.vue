@@ -19,6 +19,19 @@ const isCustomColor = computed(() => {
   return !props.presets.some((p) => p.value.toLowerCase() === current);
 });
 
+// Native Color Input用の安全な7文字HEXへのフォーマット
+const safeHexColor = computed(() => {
+  const val = modelValue.value || "";
+  // すでに6桁Hex(#RRGGBB)ならそのまま
+  if (/^#[0-9A-Fa-f]{6}$/.test(val)) return val;
+  // 3桁Hex(#RGB)なら6桁に拡張
+  if (/^#[0-9A-Fa-f]{3}$/.test(val)) {
+    return "#" + val[1] + val[1] + val[2] + val[2] + val[3] + val[3];
+  }
+  // rgb()など解析不能な値は安全なデフォルト色にフォールバック
+  return "#00f0ff";
+});
+
 const handleCustomColorInput = (event: Event) => {
   const target = event.target as HTMLInputElement;
   if (target && target.value) {
@@ -55,7 +68,7 @@ const handleCustomColorInput = (event: Event) => {
       >
         <input
           type="color"
-          :value="modelValue.startsWith('#') ? modelValue : '#00f0ff'"
+          :value="safeHexColor"
           class="c-color-picker__native"
           @input="handleCustomColorInput"
         />
@@ -146,6 +159,12 @@ const handleCustomColorInput = (event: Event) => {
 
   &--custom {
     border-style: dashed;
+
+    // フォーカス時の枠表示（a11y）
+    &:focus-within {
+      @include state-focus(var(--swatch-color));
+      @include cyber-text-glow(var(--swatch-color));
+    }
 
     .c-color-swatch__icon {
       font-size: var(--font-size-2xs);
