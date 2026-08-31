@@ -75,8 +75,6 @@ const processedItems = computed(() => {
   }
 
   li {
-    @include flex-start;
-
     &:not(:last-child)::after {
       @include text-badge;
 
