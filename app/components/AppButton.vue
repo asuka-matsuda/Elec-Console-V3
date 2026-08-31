@@ -61,6 +61,12 @@ const componentTag = computed(() => {
 .c-btn {
   --btn-color: var(--color-category-main);
 
+  @include inline-flex-center(var(--space-inline-gap));
+  @include text-meta;
+  @include click-enabled;
+  @include border-dim(var(--btn-color));
+  @include state-base(var(--shadow-elevation-sm), var(--transition-fast), var(--btn-color));
+
   position: relative;
 
   flex-shrink: 0;
@@ -85,23 +91,6 @@ const componentTag = computed(() => {
     min-height: var(--size-control-lg);
   }
 
-  &--danger {
-    --btn-color: var(--color-status-danger);
-  }
-
-  &--success {
-    --btn-color: var(--color-status-success);
-  }
-
-  &--secondary {
-    --btn-color: var(--color-status-neutral);
-  }
-
-  &--block {
-    display: flex;
-    width: 100%;
-  }
-
   &:hover:not(:disabled, .is-disabled) {
     @include state-hover(var(--btn-color));
   }
@@ -118,6 +107,22 @@ const componentTag = computed(() => {
 
   &:is(:disabled, .is-disabled) {
     @include disabled;
+  }
+
+  &--danger {
+    --btn-color: var(--color-status-danger);
+  }
+
+  &--success {
+    --btn-color: var(--color-status-success);
+  }
+
+  &--secondary {
+    --btn-color: var(--color-status-neutral);
+  }
+
+  &--block {
+    width: 100%;
   }
 
   &--md {
@@ -152,11 +157,5 @@ const componentTag = computed(() => {
       }
     }
   }
-
-  @include click-enabled;
-  @include text-meta;
-  @include inline-flex-center(var(--space-inline-gap));
-  @include border-dim(var(--btn-color));
-  @include state-base(var(--shadow-elevation-sm), var(--transition-fast), var(--btn-color));
 }
 </style>
