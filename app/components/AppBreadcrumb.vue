@@ -61,13 +61,13 @@ const processedItems = computed(() => {
 
 <style scoped lang="scss">
 .c-breadcrumb {
-  @include text-caption;
   @include flex-start(var(--space-inline-gap));
+  @include text-caption;
   @include border-base;
 
   position: relative;
   flex-wrap: wrap;
-  padding: var(--space-control-py-sm) var(--space-control-px);
+  padding: var(--space-tag-p);
   text-transform: uppercase;
 
   ol {
@@ -92,9 +92,9 @@ const processedItems = computed(() => {
     color: var(--color-text-secondary);
 
     &:hover {
-      color: var(--color-text-main);
-
       @include cyber-text-glow(var(--color-text-main), 100%, var(--blur-sm));
+
+      color: var(--color-text-main);
     }
   }
 
@@ -104,11 +104,10 @@ const processedItems = computed(() => {
 
   .current {
     @include flex-start;
-
-    color: var(--color-category-main);
-
     @include cyber-text-glow(var(--color-category-main), 60%, var(--blur-md));
     @include blinking-cursor;
+
+    color: var(--color-category-main);
   }
 }
 </style>
