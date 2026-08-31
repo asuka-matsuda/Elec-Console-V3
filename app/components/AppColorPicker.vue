@@ -141,17 +141,7 @@ const handleCustomColorInput = (event: Event) => {
   }
 
   &.is-active {
-    @include border-base(var(--swatch-color));
-
-    --glow-color: var(--swatch-color);
-
-    box-shadow: var(--shadow-glow-active);
-
-    .c-color-swatch__indicator {
-      --glow-color: var(--swatch-color);
-
-      box-shadow: inset 0 0 var(--blur-sm) color-mix(in srgb, var(--swatch-color) 40%, transparent);
-    }
+    @include state-active(var(--swatch-color));
   }
 
   &--custom {

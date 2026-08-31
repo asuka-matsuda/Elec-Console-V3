@@ -397,14 +397,11 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 
     /* セル本体：変数ベースで基本背景＆ホバー枠線・発光を一元計算 */
     .fc-daygrid-day-frame {
-      box-shadow: inset 0 0 24px color-mix(in srgb, var(--cell-accent-color) var(--cell-accent-opacity, transparent));
-      transition: box-shadow var(--duration-fast) var(--ease-smooth);
+      @include state-base(none, var(--transition-base), var(--cell-accent-color));
 
-      /* 平日・土曜・日曜祝日・今日すべてで枠線＋発光を均一適用 */
+      /* 平日・土曜・日曜祝日・今日すべてで統一のホバー発光を適用 */
       &:hover:not(:has(.fc-daygrid-event:hover)) {
-        box-shadow:
-          inset 0 0 var(--blur-lg) color-mix(in srgb, var(--cell-accent-color) calc(var(--cell-accent-opacity, transparent) + 15%)),
-          inset 0 0 0 1px color-mix(in srgb, var(--cell-accent-color) 50%, transparent);
+        @include state-hover(var(--cell-accent-color));
       }
     }
   }
@@ -412,6 +409,8 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
   /* ==== イベントスタイル（FullCalendar ラッパーのクリーン化） ==== */
   :deep(.fc-daygrid-event) {
     @include click-enabled;
+
+    z-index: 1;
 
     overflow: visible;
 
@@ -423,8 +422,14 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
     background: transparent;
 
     &:hover {
+      z-index: 100; // カレンダー上で最前面に持ってくる
       border: none;
       background: transparent;
+
+      // 子要素のバッジのホバースタイルを親から強制的に発火させる
+      .c-cal-badge {
+        @include state-hover(var(--badge-color));
+      }
     }
   }
 
@@ -451,12 +456,11 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
     @include border-base;
 
     z-index: var(--z-index-modal);
-
     border-radius: 0;
-
     background-color: color-mix(in srgb, var(--color-surface) 85%, transparent);
     backdrop-filter: blur(var(--blur-md));
-    box-shadow: var(--shadow-modal);
+
+    @include shadow("modal");
 
     .fc-popover-header {
       @include flex-between;
@@ -532,7 +536,8 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 
     .fc-list-event-dot {
       border-color: var(--event-color, var(--color-primary));
-      box-shadow: var(--shadow-glow-sm);
+
+      @include state-focus(var(--event-color, var(--color-primary)));
     }
 
     .fc-list-empty {

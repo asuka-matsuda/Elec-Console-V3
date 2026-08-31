@@ -85,7 +85,7 @@ const badgeStyle = computed(() => {
   white-space: nowrap;
 
   @include border-dim(var(--glow-color), 60%);
-  @include state-base(var(--shadow-glow-hover));
+  @include state-base(none, var(--transition-base), var(--glow-color));
   @include cyber-text-glow(var(--glow-color), 100%, var(--blur-sm));
 
   &--sm {

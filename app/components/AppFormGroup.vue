@@ -154,7 +154,7 @@ withDefaults(
 
     border-radius: 50%;
 
-    @include state-base(var(--shadow-glow-sm));
+    @include state-base(none, var(--transition-base), var(--color-category-main));
   }
 }
 
@@ -162,11 +162,11 @@ withDefaults(
 .c-form-group:focus-within .c-form-label {
   color: var(--color-category-main);
 
-  @include cyber-text-glow;
+  @include cyber-text-glow(var(--color-category-main));
 
   &::before {
-    border-color: var(--color-category-main);
-    box-shadow: var(--shadow-glow-md);
+    // state-focus を使って発光（box-shadowを隠蔽）
+    @include state-focus(var(--color-category-main));
   }
 }
 
@@ -177,10 +177,8 @@ withDefaults(
   @include cyber-text-glow(var(--color-status-danger));
 
   &::before {
-    --glow-color: var(--color-status-danger);
-
-    border-color: var(--color-status-danger);
-    box-shadow: var(--shadow-glow-md);
+    // エラー時は危険を示すため hover と同じ強いオーラを放たせる
+    @include state-hover(var(--color-status-danger));
   }
 }
 </style>

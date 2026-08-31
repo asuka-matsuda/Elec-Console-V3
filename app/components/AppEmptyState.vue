@@ -83,7 +83,8 @@ withDefaults(
     @include border-dim(var(--color-text-muted), 30%);
 
     color: var(--color-text-muted);
-    box-shadow: var(--shadow-sink);
+
+    @include shadow("sink");
   }
 
   &__icon {

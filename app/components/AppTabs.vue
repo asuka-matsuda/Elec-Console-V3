@@ -116,7 +116,8 @@ const selectTab = (option: TabOption) => {
     transform: translateY(0);
     border-color: var(--color-category-main);
     color: var(--color-category-main);
-    box-shadow: var(--shadow-glow-inset-md);
+
+    @include state-active(var(--color-category-main));
 
     .c-tabs__item-text {
       @include cyber-text-glow;

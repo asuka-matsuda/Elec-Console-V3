@@ -255,6 +255,22 @@
   }
 }
 
+// ==========================================================================
+// 8. シャドウ (物理的な影・へこみのカプセル化)
+// ==========================================================================
+// "例外"として各コンポーネントに散らばりがちな box-shadow 指定を共通化
+@mixin shadow($type: "sm") {
+  @if $type == "sink" {
+    box-shadow: var(--shadow-sink);
+  } @else if $type == "modal" {
+    box-shadow: var(--shadow-modal);
+  } @else if $type == "none" {
+    box-shadow: none;
+  } @else {
+    box-shadow: var(--shadow-elevation-#{$type});
+  }
+}
+
 @mixin text-desc($bold: false, $color: null) {
   font-size: var(--font-size-sm);
   line-height: var(--line-height-base);
@@ -340,50 +356,62 @@
   border: $width solid $color;
 }
 
-@mixin border-dim($color: var(--color-border), $opacity: 50%) {
-  border: var(--border-width-base) solid color-mix(in srgb, $color $opacity, transparent);
+@mixin border-dim($color: var(--color-border), $opacity: 30%) {
+  border: var(--border-width-base) solid color-mix(in srgb, #{$color} $opacity, transparent);
 }
 
-@mixin state-base($shadow: none, $transition: var(--transition-base)) {
+@mixin state-base($shadow: none, $transition: var(--transition-base), $color: null) {
+  position: relative;
+  z-index: 1;
   --shadow-base: #{$shadow};
-  box-shadow: var(--shadow-base);
+
+  @if $color {
+    box-shadow: 
+      inset 0 0 4px color-mix(in srgb, #{$color} 20%, transparent),
+      0 2px 4px color-mix(in srgb, black 20%, transparent),
+      var(--shadow-base);
+  } @else {
+    box-shadow: var(--shadow-base);
+  }
+  
   transition: $transition;
 }
 
-@mixin state-hover($color: null, $transition: var(--transition-glow)) {
-  @if $color {
-    --glow-color: #{$color};
-    border-color: $color;
-  }
-
-  box-shadow: var(--shadow-glow-hover), var(--shadow-base, none);
+@mixin state-hover($color: var(--color-category-main), $transition: var(--transition-glow)) {
+  z-index: 2;
+  border-color: #{$color};
+  box-shadow: 
+    0 0 8px #{$color},
+    0 0 16px color-mix(in srgb, #{$color} 60%, transparent),
+    inset 0 0 6px color-mix(in srgb, #{$color} 40%, transparent),
+    var(--shadow-base, none);
   transition: $transition;
 }
 
-@mixin state-focus($color: null, $transition: var(--transition-glow)) {
-  @if $color {
-    --glow-color: #{$color};
-    border-color: $color;
-  }
-
+@mixin state-focus($color: var(--color-category-main), $transition: var(--transition-glow)) {
+  z-index: 2;
   outline: none;
-  box-shadow: var(--shadow-glow-focus), var(--shadow-base, none);
+  border-color: color-mix(in srgb, #{$color} 60%, transparent);
+  box-shadow: 
+    0 0 0 2px var(--color-main-bg),
+    0 0 0 4px color-mix(in srgb, #{$color} 80%, transparent),
+    var(--shadow-base, none);
   transition: $transition;
 }
 
-@mixin state-active($color: null, $transition: var(--transition-glow)) {
-  @if $color {
-    --glow-color: #{$color};
-    border-color: $color;
-  }
-
-  transform: scale(0.985);
-  box-shadow: var(--shadow-glow-active), var(--shadow-base, none);
+@mixin state-active($color: var(--color-category-main), $transition: var(--transition-glow)) {
+  z-index: 2;
+  border-color: #{$color};
+  box-shadow: 
+    0 0 4px #{$color},
+    0 0 8px color-mix(in srgb, #{$color} 80%, transparent),
+    inset 0 0 12px color-mix(in srgb, #{$color} 60%, transparent),
+    var(--shadow-base, none);
   transition: $transition;
 
   svg {
-    filter: drop-shadow(0 0 2px $color);
-    stroke: $color;
+    filter: drop-shadow(0 0 2px #{$color});
+    stroke: #{$color};
   }
 }
 

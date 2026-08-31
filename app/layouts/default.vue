@@ -72,7 +72,6 @@ const { currentUser, logout } = useAuth();
 
   flex: 1;
   min-width: 0; /* Prevent flex item from blowing out */
-  margin-left: var(--sidebar-width);
 
   @include mq("md") {
     margin-left: 0;
@@ -108,9 +107,9 @@ const { currentUser, logout } = useAuth();
     @include border-base(var(--color-category-main), var(--border-width-thick));
 
     border-radius: 50%;
-
     background: var(--color-category-main);
-    box-shadow: var(--shadow-glow-lg);
+
+    @include state-focus(var(--color-category-main));
   }
 
   &__name {

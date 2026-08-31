@@ -353,13 +353,15 @@ onUnmounted(() => {
 
   background-color: transparent;
   backdrop-filter: blur(var(--blur-md));
-  box-shadow: var(--shadow-glow-inset-md), var(--shadow-elevation-md);
+
+  @include state-base(var(--shadow-elevation-md), none, var(--color-category-main));
 
   .c-custom-select.is-error & {
     --glow-color: color-mix(in srgb, var(--color-status-danger) 20%, transparent);
 
     border-color: color-mix(in srgb, var(--color-status-danger) 50%, transparent);
-    box-shadow: var(--shadow-glow-inset-md), var(--shadow-elevation-md);
+
+    @include state-base(var(--shadow-elevation-md), none, var(--color-status-danger));
   }
 }
 
@@ -392,13 +394,11 @@ onUnmounted(() => {
     --glow-color: color-mix(in srgb, var(--color-category-main) 30%, transparent);
 
     transform: translateX(2px);
-
     border-left-color: var(--color-category-main);
-
     color: var(--color-category-main);
-
     background-color: transparent;
-    box-shadow: var(--shadow-glow-inset-md);
+
+    @include state-active(var(--color-category-main));
   }
 
   &.is-selected {
@@ -407,7 +407,8 @@ onUnmounted(() => {
     border-left-color: var(--color-category-main);
     color: var(--color-category-main);
     background-color: transparent;
-    box-shadow: var(--shadow-glow-inset-lg);
+
+    @include state-active(var(--color-category-main));
   }
 
   &.is-disabled {

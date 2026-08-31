@@ -188,11 +188,9 @@ const handleSave = () => {
     flex-shrink: 0;
     width: var(--size-control-sm);
     height: var(--size-control-sm);
-    box-shadow: var(--shadow-glow-focus);
 
     @include flex-center;
-    @include border-base(var(--preview-color, var(--color-primary)));
-    @include state-base;
+    @include state-focus(var(--preview-color, var(--color-primary)));
   }
 
   &__indicator {

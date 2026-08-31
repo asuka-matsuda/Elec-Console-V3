@@ -128,7 +128,8 @@ const closeSidebar = () => {
     flex-shrink: 0;
     height: 64px; // Match standard header height
     padding: 0 var(--space-control-px);
-    box-shadow: var(--shadow-elevation-sm); // Replaced hardcoded shadow
+
+    @include shadow("sm"); // Replaced hardcoded shadow
   }
 
   &__nav {
@@ -235,7 +236,8 @@ const closeSidebar = () => {
       transform: translateX(0);
       border-color: var(--section-accent, var(--color-category-main));
       color: var(--section-accent, var(--color-category-main));
-      box-shadow: var(--shadow-glow-inset-md);
+
+      @include state-active(var(--color-category-main));
 
       @include blinking-cursor(
         var(--space-1),

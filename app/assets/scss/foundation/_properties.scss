@@ -229,24 +229,6 @@
     0 16px 32px color-mix(in srgb, var(--shadow-color) 20%, transparent),
     inset 0 1px 0 rgb(255 255 255 / 5%);
   --shadow-sink: inset 0 2px 4px 0 color-mix(in srgb, var(--shadow-color) 60%, transparent);
-  --shadow-glow-sm:       0 0 var(--blur-sm) var(--glow-color, var(--color-category-main));
-  --shadow-glow-md:       0 0 var(--blur-md) var(--glow-color, var(--color-category-main));
-  --shadow-glow-lg:       0 0 var(--blur-lg) var(--glow-color, var(--color-category-main));
-  --shadow-glow-inset-sm: inset 0 0 var(--blur-sm) var(--glow-color, var(--color-category-main));
-  --shadow-glow-inset-md: inset 0 0 var(--blur-md) var(--glow-color, var(--color-category-main));
-  --shadow-glow-inset-lg: inset 0 0 var(--blur-lg) var(--glow-color, var(--color-category-main));
-  --shadow-glow-hover:
-    0 0 var(--blur-sm) var(--glow-color, var(--color-category-main)),
-    0 0 var(--blur-lg) color-mix(in srgb, var(--glow-color, var(--color-category-main)) 70%, transparent),
-    inset 0 0 2px color-mix(in srgb, var(--glow-color, var(--color-category-main)) 20%, transparent);
-  --shadow-glow-focus:
-    0 0 var(--blur-sm) var(--glow-color, var(--color-category-main)),
-    0 0 var(--blur-lg) color-mix(in srgb, var(--glow-color, var(--color-category-main)) 80%, transparent),
-    inset 0 0 4px color-mix(in srgb, var(--glow-color, var(--color-category-main)) 40%, transparent);
-  --shadow-glow-active:
-    0 0 var(--blur-xs) var(--glow-color, var(--color-category-main)),
-    0 0 var(--blur-md) color-mix(in srgb, var(--glow-color, var(--color-category-main)) 60%, transparent),
-    inset 0 0 8px color-mix(in srgb, var(--glow-color, var(--color-category-main)) 60%, transparent);
 
   // ==========================================================================
   // 7. アニメーション & トランジション
@@ -265,6 +247,5 @@
     box-shadow var(--duration-slow) var(--ease-base),
     border-color var(--duration-slow) var(--ease-base),
     background-color var(--duration-base) var(--ease-base),
-    color var(--duration-base) var(--ease-base),
-    transform var(--duration-slow) var(--ease-base);
+    color var(--duration-base) var(--ease-base);
 }

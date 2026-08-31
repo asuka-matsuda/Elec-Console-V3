@@ -258,7 +258,7 @@ const dropStatusClass = computed(() => {
 
     @include border-base;
 
-    box-shadow: var(--shadow-sink);
+    @include shadow("sink");
   }
 
   &__main-label {

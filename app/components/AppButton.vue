@@ -103,21 +103,15 @@ const componentTag = computed(() => {
   }
 
   &:hover:not(:disabled, .is-disabled) {
-    z-index: 1;
-
     @include state-hover(var(--btn-color));
   }
 
   &:focus-visible {
-    z-index: 1;
-
     @include state-focus(var(--btn-color));
     @include cyber-text-glow(var(--btn-color));
   }
 
   &:active:not(:disabled, .is-disabled) {
-    z-index: 1;
-
     @include state-active(var(--btn-color));
     @include cyber-text-glow(var(--btn-color));
   }
@@ -163,6 +157,6 @@ const componentTag = computed(() => {
   @include text-meta;
   @include inline-flex-center(var(--space-inline-gap));
   @include border-dim(var(--btn-color));
-  @include state-base(var(--shadow-elevation-sm), var(--transition-fast));
+  @include state-base(var(--shadow-elevation-sm), var(--transition-fast), var(--btn-color));
 }
 </style>

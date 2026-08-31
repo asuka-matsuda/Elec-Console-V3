@@ -75,7 +75,7 @@ withDefaults(
   height: var(--divider-size-y);
   min-height: var(--divider-min-h);
 
-  box-shadow: var(--shadow-sink); // 彫り込まれた溝の影
+  @include shadow("sink"); // 彫り込まれた溝の影
 
   animation: divider-scale-x 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
@@ -117,7 +117,8 @@ withDefaults(
         color-mix(in srgb, var(--glow-color var(--color-category-main, transparent)), 80%),
         transparent
       );
-      box-shadow: var(--shadow-glow-md);
+
+      @include state-focus(var(--color-category-main));
 
       animation: data-pulse-x 3s ease-in-out infinite;
     }

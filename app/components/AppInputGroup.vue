@@ -57,11 +57,10 @@
       @include border-dim(var(--color-category-main));
 
       border-left: none;
-
       color: var(--color-text-main);
       white-space: nowrap;
 
-      box-shadow: var(--shadow-sink);
+      @include shadow("sink");
 
       @include inline-flex-center;
     }

@@ -25,12 +25,14 @@ const timeText = computed(() => {
   if (!props.end) return `${startStr}~`;
   return `${startStr} - ${format(props.end)}`;
 });
+
+const badgeColor = computed(() => props.color || 'var(--color-category-main)');
 </script>
 
 <template>
   <div
     class="c-cal-badge"
-    :style="{ '--event-color': color }"
+    :style="{ '--badge-color': badgeColor }"
   >
     <span
       v-if="timeText"
@@ -45,10 +47,12 @@ const timeText = computed(() => {
 <style scoped lang="scss">
 .c-cal-badge {
   @include flex-start(var(--space-inline-gap-xs));
-  @include border-base(var(--glow-color));
-  @include state-base(var(--shadow-glow-sm), var(--transition-glow));
 
-  --glow-color: var(--event-color, var(--color-primary));
+  // 親から渡された単一変数を参照するため color-mix が確実に機能する
+  --badge-color-dim: color-mix(in srgb, var(--badge-color) 80%, transparent);
+
+  @include border-base(var(--badge-color-dim));
+  @include state-base(none, var(--transition-glow), var(--badge-color));
 
   width: 100%;
   padding: var(--space-badge-p);
@@ -58,6 +62,7 @@ const timeText = computed(() => {
 
     flex-shrink: 0;
     font-family: var(--font-mono);
+    color: var(--badge-color-dim);
   }
 
   &__title {
@@ -67,10 +72,6 @@ const timeText = computed(() => {
     min-width: 0;
     font-family: var(--font-mono);
     color: var(--color-text-main);
-  }
-
-  &:hover {
-    @include state-hover(var(--event-color, var(--color-primary)));
   }
 }
 </style>

@@ -62,7 +62,7 @@ const getStyle = (option: RadioOption): StyleValue | undefined => option.color ?
 
   @include border-base;
 
-  box-shadow: none;
+  @include shadow("none");
 
   &__label {
     @include click-enabled;
@@ -103,7 +103,8 @@ const getStyle = (option: RadioOption): StyleValue | undefined => option.color ?
 
       border-color: var(--radio-color);
       color: var(--radio-color);
-      box-shadow: var(--shadow-glow-inset-md);
+
+      @include state-active(var(--color-category-main));
 
       @include cyber-text-glow(var(--radio-color), 60%, var(--blur-md));
     }
