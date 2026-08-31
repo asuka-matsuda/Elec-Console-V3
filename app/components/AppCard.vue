@@ -46,8 +46,10 @@ const handleClick = (e: MouseEvent) => {
 
 <style scoped lang="scss">
 .c-card {
-  @include flex-column(var(--space-card-gap));
   position: relative;
+
+  @include flex-column(var(--space-card-gap));
+
   width: 100%;
   padding: var(--space-card-pad);
   
