@@ -28,12 +28,9 @@ const props = withDefaults(
   defineProps<{
     /** 表示カラー（プリセット名 または 任意のカラーコード/CSS変数） */
     color?: BadgeColor;
-    /** バッジのサイズ */
-    size?: "sm" | "md";
   }>(),
   {
     color: "secondary",
-    size: "md",
   },
 );
 
@@ -65,7 +62,6 @@ const badgeStyle = computed(() => {
 <template>
   <span
     class="c-badge"
-    :class="[`c-badge--${size}`]"
     :style="badgeStyle"
   >
     <slot />
@@ -78,23 +74,13 @@ const badgeStyle = computed(() => {
 
   @include inline-flex-center;
   @include text-badge;
+  @include cyber-text-glow(var(--glow-color), 100%, var(--blur-sm));
+  @include border-dim(var(--glow-color), 60%);
+  @include state-base(none, var(--transition-base), var(--glow-color));
 
   user-select: none;
   padding: var(--space-badge-p);
   color: var(--glow-color);
   white-space: nowrap;
-
-  @include border-dim(var(--glow-color), 60%);
-  @include state-base(none, var(--transition-base), var(--glow-color));
-  @include cyber-text-glow(var(--glow-color), 100%, var(--blur-sm));
-
-  &--sm {
-    padding: var(--space-badge-p);
-    font-size: var(--font-size-2xs);
-  }
-
-  &--md {
-    padding: var(--space-tag-p);
-  }
 }
 </style>
