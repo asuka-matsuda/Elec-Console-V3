@@ -76,20 +76,6 @@ const componentTag = computed(() => {
 
   font-weight: var(--font-weight-semibold);
 
-  // タップ領域の確保
-  &::after {
-    content: "";
-
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    width: 100%;
-    min-width: var(--size-control-lg);
-    height: 100%;
-    min-height: var(--size-control-lg);
-  }
 
   &:hover:not(:disabled, .is-disabled) {
     @include state-hover(var(--btn-color));
