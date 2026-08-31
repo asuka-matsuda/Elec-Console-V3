@@ -205,8 +205,9 @@ const closeSidebar = () => {
 
     // Hover & Focus
     &:is(:hover, :focus-visible):not(.is-disabled, .router-link-active) {
-      --glow-color: color-mix(in srgb, 
-        var(--section-accent var(--color-category-main, transparent)),
+      background-color: color-mix(
+        in srgb,
+        var(--section-accent, var(--color-category-main, transparent)),
         20%
       );
 
@@ -219,7 +220,7 @@ const closeSidebar = () => {
         color: var(--section-accent, var(--color-category-main));
         filter: drop-shadow(
           0 0 var(--blur-sm)
-            color-mix(in srgb, var(--section-accent var(--color-category-main, transparent)), 80%)
+            color-mix(in srgb, var(--section-accent, var(--color-category-main, transparent)), 80%)
         );
       }
     }

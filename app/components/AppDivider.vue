@@ -114,7 +114,7 @@ withDefaults(
       background: linear-gradient(
         var(--grad-dir-pulse),
         transparent,
-        color-mix(in srgb, var(--glow-color var(--color-category-main, transparent)), 80%),
+        color-mix(in srgb, var(--glow-color, var(--color-category-main, transparent)), 80%),
         transparent
       );
 
