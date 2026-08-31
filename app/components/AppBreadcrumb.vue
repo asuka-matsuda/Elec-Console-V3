@@ -66,7 +66,7 @@ const processedItems = computed(() => {
 
 <style scoped lang="scss">
 .c-breadcrumb {
-  @include flex-start(var(--space-inline-gap));
+  @include flex-start;
   @include text-caption;
   @include border-base;
 
@@ -76,7 +76,7 @@ const processedItems = computed(() => {
   text-transform: uppercase;
 
   &__list {
-    @include inline-flex-start;
+    @include inline-flex-start(var(--space-inline-gap));
   }
 
   &__item {
