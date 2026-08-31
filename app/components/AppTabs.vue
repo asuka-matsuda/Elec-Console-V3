@@ -83,13 +83,10 @@ const selectTab = (option: TabOption) => {
 }
 
 .c-tabs__item {
+  @include click-enabled;
   @include text-desc;
 
-  cursor: pointer;
-  user-select: none;
-
   position: relative;
-
   padding: var(--space-control-py-md) var(--space-control-px-md);
 
   @include border-base;
@@ -102,18 +99,24 @@ const selectTab = (option: TabOption) => {
     var(--transition-fast)
   );
 
-  &:hover:not(.is-disabled, .is-active) {
+  &:is(:hover, :focus-visible):not(.is-disabled, .is-active) {
     transform: translateY(-2px);
     color: var(--color-text-main);
 
     @include state-hover;
   }
 
-  &.is-active {
-    transform: translateY(0);
-    color: var(--color-category-main);
-
+  &:active:not(.is-disabled) {
     @include state-active(var(--color-category-main));
+  }
+
+  &.is-active {
+    --glow-color: var(--color-category-main);
+
+    transform: translateY(0);
+    border-color: var(--color-category-main);
+    color: var(--color-category-main);
+    box-shadow: var(--shadow-glow-inset-md);
 
     .c-tabs__item-text {
       @include cyber-text-glow;

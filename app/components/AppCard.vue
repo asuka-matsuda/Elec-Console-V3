@@ -54,10 +54,14 @@ const rootProps = computed(() => {
   @include border-base;
 
   &:is(a, button) {
-    cursor: pointer;
+    @include click-enabled;
 
     &:not(.is-disabled):hover {
       @include state-hover(var(--card-accent, var(--color-category-main)));
+    }
+
+    &:not(.is-disabled):focus-visible {
+      @include state-focus(var(--card-accent, var(--color-category-main)));
     }
 
     &:not(.is-disabled):active {

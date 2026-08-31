@@ -156,7 +156,7 @@ const toggleDrawer = () => {
       max-height: 80vh;
       border-top: var(--border-width-base) solid var(--color-category-tool);
 
-      background: var(--color-bg-base);
+      background: var(--color-main-bg);
 
       @include state-base(
         var(--shadow-elevation-md),

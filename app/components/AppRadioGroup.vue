@@ -65,29 +65,46 @@ const getStyle = (option: RadioOption): StyleValue | undefined => option.color ?
   box-shadow: none;
 
   &__label {
-    cursor: pointer;
+    @include click-enabled;
+
+    position: relative;
 
     &:hover {
       .c-segmented-control__input:not(:disabled, :checked)
         + .c-segmented-control__text {
-        --glow-color: var(--color-border);
-
-        border-color: var(--color-border);
         color: var(--color-text-main);
-        box-shadow: var(--shadow-glow-inset-sm);
+
+        @include state-hover(var(--color-border));
+      }
+    }
+
+    &:active {
+      .c-segmented-control__input:not(:disabled)
+        + .c-segmented-control__text {
+        @include state-active(var(--radio-color));
       }
     }
   }
 
   &__input {
-    display: none;
+    pointer-events: none;
+
+    position: absolute;
+
+    width: 0;
+    height: 0;
+
+    opacity: 0;
 
     /* Checked state */
 
     &:checked + .c-segmented-control__text {
-      color: var(--radio-color);
+      --glow-color: var(--radio-color);
 
-      @include state-active(var(--radio-color));
+      border-color: var(--radio-color);
+      color: var(--radio-color);
+      box-shadow: var(--shadow-glow-inset-md);
+
       @include cyber-text-glow(var(--radio-color), 60%, var(--blur-md));
     }
 
@@ -108,7 +125,6 @@ const getStyle = (option: RadioOption): StyleValue | undefined => option.color ?
   &__text {
     @include text-body-bold;
 
-    user-select: none;
     padding: var(--space-control-py-sm) var(--space-control-px-sm);
 
     @include border-base(transparent);

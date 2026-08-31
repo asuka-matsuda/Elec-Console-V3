@@ -66,11 +66,11 @@ const availableRows = computed(() => {
 });
 
 const categoryColorMap: Record<string, string> = {
-  電気: '#eab308',
-  建築: '#ea580c',
-  '空調・換気': '#22c55e',
-  衛生: '#06b6d4',
-  雑学: 'var(--color-category-reference)',
+  電気: "var(--trade-color-electric)",
+  建築: "var(--trade-color-architecture)",
+  "空調・換気": "var(--trade-color-hvac)",
+  衛生: "var(--trade-color-plumbing)",
+  雑学: "var(--trade-color-trivia)",
 };
 </script>
 
@@ -147,12 +147,12 @@ const categoryColorMap: Record<string, string> = {
             </AppCard>
           </div>
 
-          <div
+          <AppEmptyState
             v-else
-            class="c-empty-state"
-          >
-            <p>条件に一致する用語が見つかりません。</p>
-          </div>
+            icon="search"
+            title="該当する用語が見つかりません"
+            description="検索キーワードまたは五十音・工種フィルターの条件を変更してください。"
+          />
         </main>
       </div>
     </div>
@@ -161,6 +161,12 @@ const categoryColorMap: Record<string, string> = {
 
 <style scoped lang="scss">
 .l-filter-layout {
+  --trade-color-electric: #eab308;
+  --trade-color-architecture: #ea580c;
+  --trade-color-hvac: #22c55e;
+  --trade-color-plumbing: #06b6d4;
+  --trade-color-trivia: var(--color-category-reference);
+
   container-name: filter-layout;
   container-type: inline-size;
 
@@ -249,16 +255,5 @@ const categoryColorMap: Record<string, string> = {
     line-height: 1.5;
     color: var(--color-text-secondary);
   }
-}
-
-.c-empty-state {
-  @include text-body;
-
-  padding: var(--space-card-pad);
-
-  @include border-dim;
-
-  color: var(--color-text-muted);
-  text-align: center;
 }
 </style>

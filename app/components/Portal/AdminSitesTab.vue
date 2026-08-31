@@ -3,7 +3,7 @@
  * PortalAdminSitesTab
  * ポータル管理 - 現場管理タブ
  */
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useAdminSites } from "~/composables/admin/useAdminSites";
 
 import type { SiteStatus, Site } from "~/types/admin";
@@ -13,26 +13,23 @@ const { sites, createSite, toggleDisableSite, updateSite } =
 
 // --- 一覧定義 ---
 
-const sortKey = ref('id');
-const sortOrder = ref<'asc' | 'desc'>('asc');
+const siteHeaders: TableColumn<Site>[] = [
+  { key: "id", label: "現場ID", sortable: true },
+  { key: "name", label: "現場名", sortable: true },
+  { key: "status", label: "ステータス", sortable: true },
+  { key: "createdAt", label: "作成日時", sortable: true },
+  { key: "disabledAt", label: "無効化日時", sortable: true },
+  { key: "actions", label: "操作" },
+];
 
-const handleSort = (payload: { key: string; order: 'asc' | 'desc' }) => {
-  sortKey.value = payload.key;
-  sortOrder.value = payload.order;
-};
-
-const sortedSites = computed(() => {
-  return [...sites.value].sort((a, b) => {
-    const valA = a[sortKey.value as keyof typeof a];
-    const valB = b[sortKey.value as keyof typeof b];
-    
-    if (valA === valB) return 0;
-    if (valA === null || valA === undefined) return 1;
-    if (valB === null || valB === undefined) return -1;
-    
-    const cmp = String(valA).localeCompare(String(valB));
-    return sortOrder.value === 'asc' ? cmp : -cmp;
-  });
+const {
+  sortBy: sortKey,
+  sortOrder,
+  sortedData: sortedSites,
+  handleSort,
+} = useTableSort(sites, {
+  defaultKey: "id",
+  defaultOrder: "asc",
 });
 
 const getStatusLabel = (status: unknown) => {
@@ -55,21 +52,6 @@ const getStatusColor = (status: unknown) => {
   }
 };
 
-const siteHeaders = [
-  { key: "id", label: "現場ID", sortable: true },
-  { key: "name", label: "現場名", sortable: true },
-  { key: "status", label: "ステータス", sortable: true },
-  { key: "createdAt", label: "作成日時" },
-  { key: "disabledAt", label: "無効化日時" },
-  { key: "actions", label: "操作" },
-];
-
-const formatDate = (isoString: unknown) => {
-  if (typeof isoString !== "string") return "-";
-  if (!isoString) return "-";
-  return new Date(isoString).toLocaleString();
-};
-
 // --- 新規登録モーダル ---
 const isCreateModalOpen = ref(false);
 const newSite = ref({
@@ -88,68 +70,50 @@ const handleCreateSite = async () => {
 };
 
 // --- 無効化/有効化モーダル ---
-const isConfirmDisableOpen = ref(false);
-const siteToToggle = ref<Site | null>(null);
+const {
+  isOpen: isConfirmDisableOpen,
+  title: confirmTitle,
+  message: confirmMessage,
+  confirmText: confirmBtnText,
+  intent: confirmIntent,
+  askConfirm,
+  handleConfirm: handleToggleDisable,
+} = useConfirmModal();
 
 const confirmToggleDisable = (row: Site) => {
-  siteToToggle.value = row;
-  isConfirmDisableOpen.value = true;
-};
-
-const handleToggleDisable = async () => {
-  if (siteToToggle.value) {
-    await toggleDisableSite(siteToToggle.value.id);
-  }
-  isConfirmDisableOpen.value = false;
-  siteToToggle.value = null;
+  const isCurrentlyDisabled = !!row.disabledAt;
+  askConfirm({
+    title: isCurrentlyDisabled ? "現場の有効化" : "現場の無効化",
+    message: isCurrentlyDisabled
+      ? `現場「${row.name}」へのアクセスを再度有効にしますか？`
+      : `現場「${row.name}」を無効化しますか？ 無効になると現場へのアクセスができなくなります。`,
+    confirmText: isCurrentlyDisabled ? "有効化する" : "無効化する",
+    intent: isCurrentlyDisabled ? "success" : "danger",
+    onConfirm: async () => {
+      await toggleDisableSite(row.id);
+    },
+  });
 };
 
 // --- 現場設定モーダル (新) ---
-  const isSettingsModalOpen = ref(false);
-  const settingsTargetSite = ref<Site | null>(null);
+const isSettingsModalOpen = ref(false);
+const settingsTargetSite = ref<Site | null>(null);
 
-  const openSettingsModal = (siteId: string) => {
-    const site = sites.value.find(s => s.id === siteId);
-    if (site) {
-      settingsTargetSite.value = { ...site };
-      isSettingsModalOpen.value = true;
-    }
-  };
+const openSettingsModal = (siteId: string) => {
+  const site = sites.value.find((s) => s.id === siteId);
+  if (site) {
+    settingsTargetSite.value = { ...site };
+    isSettingsModalOpen.value = true;
+  }
+};
 
-  const handleSaveSettings = async (updatedSite: Site) => {
+const handleSaveSettings = async (updatedSite: Site) => {
   if (settingsTargetSite.value) {
     const originalId = settingsTargetSite.value.id;
     await updateSite(originalId, updatedSite);
   }
   isSettingsModalOpen.value = false;
 };
-
-  const confirmMessage = computed(() => {
-  if (siteToToggle.value?.disabledAt) {
-    return (
-      "現場「" +
-      siteToToggle.value.name +
-      "」へのアクセスを再度有効にしますか？"
-    );
-  }
-  return (
-    "現場「" +
-    (siteToToggle.value?.name || "") +
-    "」を無効化しますか？ 無効になると現場へのアクセスができなくなります。"
-  );
-});
-
-const confirmTitle = computed(() => {
-  return siteToToggle.value?.disabledAt ? "現場の有効化" : "現場の無効化";
-});
-
-const confirmBtnText = computed(() => {
-  return siteToToggle.value?.disabledAt ? "有効化する" : "無効化する";
-});
-
-const confirmIntent = computed(() => {
-  return siteToToggle.value?.disabledAt ? "success" : "danger";
-});
 </script>
 
 <template>
@@ -188,10 +152,10 @@ const confirmIntent = computed(() => {
             </div>
           </template>
           <template #cell-createdAt="{ value }">
-            {{ formatDate(value) }}
+            {{ formatDateTime(value) }}
           </template>
           <template #cell-disabledAt="{ value }">
-            {{ formatDate(value) }}
+            {{ formatDateTime(value) }}
           </template>
           <template #cell-actions="{ row }">
             <div class="c-admin-sites__actions">
@@ -237,8 +201,6 @@ const confirmIntent = computed(() => {
       </AppFormGroup>
     </AppFormModal>
 
-    
-
     <!-- 現場設定モーダル (新) -->
     <SiteSettingsModal
       v-model="isSettingsModalOpen"
@@ -261,11 +223,10 @@ const confirmIntent = computed(() => {
 <style scoped lang="scss">
 .c-admin-sites {
   &__toolbar {
-      display: flex;
-      justify-content: flex-end;
-    }
+    @include flex-end;
+  }
     
-    &__stack {
+  &__stack {
     @include flex-column(var(--space-card-gap));
   }
 

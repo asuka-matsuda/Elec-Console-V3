@@ -47,9 +47,8 @@ const inputId = useId();
   --thumb-w: var(--space-5);
 
   @include text-desc;
+  @include click-enabled;
 
-  cursor: pointer;
-  user-select: none;
   position: relative;
 
   &:has(.c-toggle__input:disabled) {
@@ -124,10 +123,7 @@ const inputId = useId();
 
   &:hover:not(:has(.c-toggle__input:disabled)) {
     .c-toggle__input:not(:focus-visible, :active) + .c-toggle__track {
-      border-color: theme-color(var(--toggle-color), 50%);
-      box-shadow:
-        0 0 var(--blur-md) theme-color(var(--toggle-color), 40%),
-        inset 0 0 var(--blur-sm) theme-color(var(--toggle-color), 20%);
+      @include state-hover(var(--toggle-color));
     }
 
     /* Label slightly glows on hover */

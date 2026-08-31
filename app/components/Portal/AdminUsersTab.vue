@@ -3,7 +3,7 @@
  * PortalAdminUsersTab
  * ポータル管理 - ユーザー管理タブ
  */
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import { useAdminUsers } from "~/composables/admin/useAdminUsers";
 import type { User } from "~/types/auth";
 
@@ -14,51 +14,29 @@ onMounted(() => {
 });
 
 // --- ユーザー一覧の定義 ---
-const userHeaders = [
+const userHeaders: TableColumn<User>[] = [
   { key: "id", label: "ID", sortable: true },
-  { key: "name", label: "名前", sortable: true },
+  { key: "lastName", label: "名前", sortable: true },
   { key: "loginId", label: "ログインID", sortable: true },
   { key: "role", label: "権限", sortable: true },
-  { key: "status", label: "ステータス" },
+  { key: "lastLoginAt", label: "最終ログイン", sortable: true },
   { key: "actions", label: "操作" },
 ];
 
-const sortKey = ref('id');
-const sortOrder = ref<'asc' | 'desc'>('asc');
-
-const handleSort = (payload: { key: string; order: 'asc' | 'desc' }) => {
-  sortKey.value = payload.key;
-  sortOrder.value = payload.order;
-};
-
-const sortedUsers = computed(() => {
-  return [...users.value].sort((a, b) => {
-    // 氏名カラムの場合は lastName を基準にする
-    const key = sortKey.value === 'name' ? 'lastName' : sortKey.value;
-    const valA = a[key as keyof typeof a];
-    const valB = b[key as keyof typeof b];
-    
-    if (valA === valB) return 0;
-    if (valA === null || valA === undefined) return 1;
-    if (valB === null || valB === undefined) return -1;
-    
-    const cmp = String(valA).localeCompare(String(valB));
-    return sortOrder.value === 'asc' ? cmp : -cmp;
-  });
+const {
+  sortBy: sortKey,
+  sortOrder,
+  sortedData: sortedUsers,
+  handleSort,
+} = useTableSort(users, {
+  defaultKey: "id",
+  defaultOrder: "asc",
 });
 
 const formatLastLogin = (row: unknown) => {
   const user = row as User;
   if (!user.lastLoginAt) return "未ログイン";
-  
-  return new Date(user.lastLoginAt as string).toLocaleString("ja-JP", {
-    timeZone: "Asia/Tokyo",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit"
-  }).replace(/\//g, "/");
+  return formatDateTime(user.lastLoginAt as string);
 };
 
 // --- モーダルステート管理 ---
@@ -70,32 +48,15 @@ const isAssignModalOpen = ref(false);
 const assignTargetUserId = ref("");
 const assignTargetSiteIds = ref<string[]>([]);
 
-const isConfirmDeleteOpen = ref(false);
-const userToDelete = ref<User | null>(null);
-
-const isConfirmResetOpen = ref(false);
-const userToReset = ref<User | null>(null);
-const isResetting = ref(false);
-
-const deleteConfirmMessage = computed(() => {
-  return (
-    "ユーザー「" +
-    (userToDelete.value?.lastName || "") +
-    " " +
-    (userToDelete.value?.firstName || "") +
-    "」を削除してもよろしいですか？"
-  );
-});
-
-const resetConfirmMessage = computed(() => {
-  return (
-    "ユーザー「" +
-    (userToReset.value?.lastName || "") +
-    " " +
-    (userToReset.value?.firstName || "") +
-    "」のパスワードを強制的に初期化し、新しい初期パスワードを発行しますか？"
-  );
-});
+const {
+  isOpen: isConfirmOpen,
+  title: confirmTitle,
+  message: confirmMessage,
+  confirmText: confirmBtnText,
+  intent: confirmIntent,
+  askConfirm,
+  handleConfirm,
+} = useConfirmModal();
 
 // --- イベントハンドラ ---
 const handleUserCreated = (user: User) => {
@@ -114,40 +75,36 @@ const confirmDelete = (row: User) => {
     alert("マスターユーザーは削除できません。");
     return;
   }
-  userToDelete.value = row;
-  isConfirmDeleteOpen.value = true;
-};
-
-const handleDeleteUser = async () => {
-  if (userToDelete.value) {
-    await deleteUser(userToDelete.value.id);
-    isConfirmDeleteOpen.value = false;
-    userToDelete.value = null;
-  }
+  askConfirm({
+    title: "ユーザー削除",
+    message: `ユーザー「${row.lastName || ""} ${row.firstName || ""}」を削除してもよろしいですか？`,
+    confirmText: "削除する",
+    intent: "danger",
+    onConfirm: async () => {
+      await deleteUser(row.id);
+    },
+  });
 };
 
 const confirmResetPassword = (row: User) => {
-  userToReset.value = row;
-  isConfirmResetOpen.value = true;
-};
-
-const handleResetPassword = async () => {
-  if (!userToReset.value) return;
-  isResetting.value = true;
-  try {
-    const newPassword = await resetUserPassword(userToReset.value.id);
-    createdUserResult.value = {
-      ...userToReset.value,
-      initialPassword: newPassword,
-    };
-    isConfirmResetOpen.value = false;
-    isCredentialModalOpen.value = true;
-  } catch (e: unknown) {
-    alert((e as Error).message);
-  } finally {
-    isResetting.value = false;
-    userToReset.value = null;
-  }
+  askConfirm({
+    title: "パスワード初期化",
+    message: `ユーザー「${row.lastName || ""} ${row.firstName || ""}」のパスワードを強制的に初期化し、新しい初期パスワードを発行しますか？`,
+    confirmText: "初期化する",
+    intent: "danger",
+    onConfirm: async () => {
+      try {
+        const newPassword = await resetUserPassword(row.id);
+        createdUserResult.value = {
+          ...row,
+          initialPassword: newPassword,
+        };
+        isCredentialModalOpen.value = true;
+      } catch (e: unknown) {
+        alert((e as Error).message);
+      }
+    },
+  });
 };
 </script>
 
@@ -172,7 +129,7 @@ const handleResetPassword = async () => {
           :sort-order="sortOrder"
           @sort="handleSort"
         >
-          <template #cell-name="{ row }">
+          <template #cell-lastName="{ row }">
             {{ row.lastName }} {{ row.firstName }}
           </template>
           <template #cell-role="{ row }">
@@ -188,7 +145,7 @@ const handleResetPassword = async () => {
               {{ row.role }}
             </AppBadge>
           </template>
-          <template #cell-status="{ row }">
+          <template #cell-lastLoginAt="{ row }">
             <div class="c-admin-users__stack">
               <AppBadge
                 v-if="row.requirePasswordReset"
@@ -197,7 +154,7 @@ const handleResetPassword = async () => {
               >
                 PWリセット要求
               </AppBadge>
-              <span class="c-admin-users__meta">最終ログイン: {{ formatLastLogin(row) }}</span>
+              <span class="c-admin-users__meta">{{ formatLastLogin(row) }}</span>
             </div>
           </template>
           <template #cell-actions="{ row }">
@@ -248,21 +205,12 @@ const handleResetPassword = async () => {
     />
 
     <AppConfirmModal
-      v-model="isConfirmDeleteOpen"
-      title="ユーザー削除"
-      :message="deleteConfirmMessage"
-      confirm-text="削除する"
-      intent="danger"
-      @confirm="handleDeleteUser"
-    />
-
-    <AppConfirmModal
-      v-model="isConfirmResetOpen"
-      title="パスワード初期化"
-      :message="resetConfirmMessage"
-      confirm-text="初期化する"
-      intent="danger"
-      @confirm="handleResetPassword"
+      v-model="isConfirmOpen"
+      :title="confirmTitle"
+      :message="confirmMessage"
+      :confirm-text="confirmBtnText"
+      :intent="confirmIntent"
+      @confirm="handleConfirm"
     />
   </div>
 </template>
@@ -270,11 +218,10 @@ const handleResetPassword = async () => {
 <style scoped lang="scss">
 .c-admin-users {
   &__toolbar {
-      display: flex;
-      justify-content: flex-end;
-    }
+    @include flex-end;
+  }
     
-    &__stack {
+  &__stack {
     @include flex-column(var(--space-card-gap));
   }
 

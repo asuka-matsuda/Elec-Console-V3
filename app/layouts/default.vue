@@ -28,20 +28,14 @@ const { currentUser, logout } = useAuth();
           <div class="l-header-user">
             <AppIcon
               name="bell"
-              style="
-                width: var(--icon-size-md);
-                height: var(--icon-size-md);
-                color: var(--color-text-secondary);
-              "
+              size="md"
+              style="color: var(--color-text-secondary);"
             />
             <div class="l-header-user__avatar">
               <AppIcon
                 name="user"
-                style="
-                  width: var(--icon-size-sm);
-                  height: var(--icon-size-sm);
-                  color: var(--color-bg-base);
-                "
+                size="sm"
+                style="color: var(--color-main-bg);"
               />
             </div>
             <span class="l-header-user__name">{{ currentUser ? `${currentUser.lastName} ${currentUser.firstName}` : 'ゲスト' }}</span>
@@ -101,17 +95,12 @@ const { currentUser, logout } = useAuth();
 
 .l-header-user {
   @include text-title-sm;
-
-  display: flex;
-  gap: var(--space-inline-gap);
-  align-items: center;
+  @include flex-start(var(--space-inline-gap));
 
   &__avatar {
     --glow-color: theme-color(var(--color-category-main), 50%);
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    @include flex-center;
 
     width: var(--size-control-sm);
     height: var(--size-control-sm);

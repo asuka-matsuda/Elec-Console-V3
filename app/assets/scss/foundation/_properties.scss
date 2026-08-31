@@ -203,7 +203,8 @@
   --border-width-base:  1px;
   --border-width-thick: 2px;
 
-  // エフェクト
+  // エフェクト & インタラクション背景
+  --color-bg-hover:      theme-color(var(--color-overlay), 6%);
   --color-overlay-dark:  hsl(0deg 0% 0% / 60%);
   --color-overlay-light: hsl(0deg 0% 0% / 30%);
   --blur-sm: 4px;

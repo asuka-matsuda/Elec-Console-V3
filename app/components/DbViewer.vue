@@ -18,6 +18,8 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
   data: props.data,
   searchMapper: props.searchMapper,
 });
+
+const { sortBy, sortOrder, sortedData, handleSort } = useTableSort(filteredData);
 </script>
 
 <template>
@@ -35,12 +37,15 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
 
         <main class="l-filter-layout__main">
           <AppPanel
-            v-if="filteredData.length > 0"
+            v-if="sortedData.length > 0"
             class="c-db-panel"
           >
             <AppTable
               :columns="columns"
-              :data="filteredData"
+              :data="sortedData"
+              :sort-by="sortBy"
+              :sort-order="sortOrder"
+              @sort="handleSort"
             >
               <!-- Pass through all slots for custom cells -->
               <template
@@ -55,12 +60,12 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
             </AppTable>
           </AppPanel>
 
-          <div
+          <AppEmptyState
             v-else
-            class="c-db-empty"
-          >
-            <p>条件に一致するデータが見つかりません。</p>
-          </div>
+            icon="search"
+            title="条件に一致するデータが見つかりません"
+            description="検索キーワードまたはカテゴリーフィルターの条件を変更してください。"
+          />
         </main>
       </div>
     </div>
@@ -114,16 +119,5 @@ const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
 
   flex: 1;
   min-height: 0;
-}
-
-.c-db-empty {
-  @include text-body;
-
-  padding: var(--space-card-pad);
-
-  @include border-dim;
-
-  color: var(--color-text-muted);
-  text-align: center;
 }
 </style>

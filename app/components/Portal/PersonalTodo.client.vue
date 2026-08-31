@@ -48,11 +48,11 @@ const sortedTodos = computed(() => {
       />
       <AppButton
         variant="primary"
+        icon-only
         @click="handleAdd"
       >
         <AppIcon
           name="plus"
-          size="sm"
         />
       </AppButton>
     </div>
@@ -72,22 +72,21 @@ const sortedTodos = computed(() => {
         <AppButton
           variant="secondary"
           size="sm"
+          icon-only
           @click="deleteTodo(todo.id)"
         >
           <AppIcon
             name="trash-2"
-            size="sm"
           />
         </AppButton>
       </li>
-      <div
+      <AppEmptyState
         v-if="todos.length === 0"
-        class="p-personal-todo__empty"
-      >
-        タスクはありません
-      </div>
-    </ul>
-  </AppPanel>
+        icon="check-circle"
+        title="タスクはありません"
+        description="上の入力欄から新しいタスクを追加してください。"
+      />
+    </ul></AppPanel>
 </template>
 
 <style scoped lang="scss">
@@ -110,33 +109,19 @@ const sortedTodos = computed(() => {
     @include flex-column(var(--space-1));
 
     overflow-y: auto;
-
     max-height: 400px;
-    margin: 0;
-    padding: 0;
-
-    list-style: none;
   }
 
   &__item {
     @include flex-between(var(--space-inline-gap-sm));
 
     padding: var(--space-card-pad-sm);
-    border-radius: var(--radius-sm);
     background-color: var(--color-bg-hover);
     
     .is-completed {
       text-decoration: line-through;
       opacity: 0.5;
     }
-  }
-
-  &__empty {
-    @include text-desc;
-
-    padding: var(--space-card-pad) 0;
-    color: var(--color-text-muted);
-    text-align: center;
   }
 }
 </style>

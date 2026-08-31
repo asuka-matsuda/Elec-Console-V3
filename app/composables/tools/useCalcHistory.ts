@@ -42,13 +42,10 @@ export function useCalcHistory(storageKey: string) {
     // 処理中アニメーションを見せるため、意図的に少し待機する（UX向上）
     await new Promise(resolve => setTimeout(resolve, 600));
 
-    const now = new Date();
-    const timestamp = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-    
     const newEntry: HistoryEntry = {
       ...entry,
       id: crypto.randomUUID(),
-      timestamp,
+      timestamp: formatDateTime(new Date()),
     };
 
     // 先頭に追加（最新が上）

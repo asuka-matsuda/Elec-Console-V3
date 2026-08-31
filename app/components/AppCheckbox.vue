@@ -59,17 +59,14 @@ const inputId = useId();
   --checkbox-color: var(--color-category-main);
 
   @include text-desc;
+  @include click-enabled;
   @include inline-flex-start(var(--space-inline-gap));
 
-  cursor: pointer;
-  user-select: none;
   position: relative;
 
   // --- 状態 (Vue制御) ---
   &.is-disabled {
     @include disabled;
-
-    cursor: not-allowed;
   }
 
   // --- ホバー & アクティブ状態 (親要素への作用) ---

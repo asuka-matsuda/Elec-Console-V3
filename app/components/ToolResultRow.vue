@@ -22,9 +22,8 @@ defineProps<{
 <style scoped lang="scss">
 .p-result-details__row {
   @include text-desc;
+  @include flex-between;
 
-  display: flex;
-  justify-content: space-between;
   color: var(--color-text-secondary);
 
   /* stylelint-disable-next-line selector-pseudo-class-no-unknown */

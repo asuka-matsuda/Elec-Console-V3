@@ -304,8 +304,6 @@ onUnmounted(() => {
   text-overflow: ellipsis;
   white-space: nowrap;
 
-  appearance: none;
-
   @include form-control-base(
     $is-error: ".c-custom-select.is-error &",
     $is-active: "&.is-active, &:focus, &:focus-visible",
@@ -346,7 +344,7 @@ onUnmounted(() => {
   --glow-color: theme-color(var(--color-category-main), 20%);
 
   position: absolute;
-  z-index: 10000;
+  z-index: var(--z-index-select);
 
   width: max-content;
   max-width: 90vw;
@@ -377,21 +375,15 @@ onUnmounted(() => {
 
   width: 100%;
   max-height: min(250px, 40vh);
-
-  list-style: none;
 }
 
 .c-custom-select__option {
   @include click-enabled;
   @include text-desc;
-
-  overflow: hidden;
+  @include text-truncate;
 
   padding: var(--space-control-py-md) var(--space-control-px);
   border-left: var(--border-width-thick) solid transparent;
-
-  text-overflow: ellipsis;
-  white-space: nowrap;
 
   @include state-base;
 

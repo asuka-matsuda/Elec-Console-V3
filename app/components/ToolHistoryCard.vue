@@ -194,9 +194,8 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never;
   }
 
   &__footer {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+    @include flex-end;
+
     margin-top: auto;
   }
 }

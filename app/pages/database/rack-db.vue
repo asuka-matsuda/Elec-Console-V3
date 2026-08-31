@@ -7,11 +7,11 @@ import { rackData } from "~/constants/data/rackData";
 import type { TableColumn } from "~/components/AppTable.vue";
 
 const tableColumns: TableColumn[] = [
-  { key: "category", label: "カテゴリ" },
-  { key: "size", label: "サイズ (呼び幅 mm)" },
-  { key: "height", label: "親桁高さ (mm)" },
-  { key: "weightPiece", label: "1本あたり質量 (kg/3m)" },
-  { key: "weightMeter", label: "1mあたり質量 (kg/m)" },
+  { key: "category", label: "カテゴリ", sortable: true },
+  { key: "size", label: "サイズ (呼び幅 mm)", sortable: true },
+  { key: "height", label: "親桁高さ (mm)", sortable: true },
+  { key: "weightPiece", label: "1本あたり質量 (kg/3m)", sortable: true },
+  { key: "weightMeter", label: "1mあたり質量 (kg/m)", sortable: true },
 ];
 </script>
 

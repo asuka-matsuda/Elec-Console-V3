@@ -208,15 +208,15 @@ const dropStatusClass = computed(() => {
     }
 
     .c-voltage-result__main-value .value-text {
-      font-size: 1.5rem;
+      font-size: var(--font-size-3xl);
     }
 
     .c-voltage-result__drop-cable {
-      font-size: 1.25rem;
+      font-size: var(--font-size-2xl);
     }
 
     .c-voltage-result__drop-percent {
-      font-size: 1rem;
+      font-size: var(--font-size-base);
     }
 
     .metric-card {
@@ -259,8 +259,6 @@ const dropStatusClass = computed(() => {
     @include border-base;
 
     box-shadow: var(--shadow-sink);
-
-    @include border-base;
   }
 
   &__main-label {
@@ -271,13 +269,12 @@ const dropStatusClass = computed(() => {
   }
 
   &__main-value {
-    display: flex;
-    gap: var(--space-inline-gap);
-    align-items: baseline;
+    @include flex-baseline(var(--space-inline-gap));
+
     font-family: var(--font-mono);
 
     .value-text {
-      font-size: 2rem;
+      font-size: var(--font-size-4xl);
       font-weight: var(--font-weight-bold);
       line-height: 1;
     }
@@ -321,12 +318,9 @@ const dropStatusClass = computed(() => {
   }
 
   .metric-value {
-    display: flex;
-    gap: var(--space-1);
-    align-items: baseline;
+    @include flex-baseline(var(--space-1));
 
     margin: 0;
-
     font-family: var(--font-mono);
 
     @include text-title-sm;

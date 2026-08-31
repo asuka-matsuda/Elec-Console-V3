@@ -84,9 +84,7 @@ const themeOptions = [
   }
 
   &__grid {
-    display: grid;
-    grid-template-columns: 1fr; // スモールファースト
-    gap: var(--space-section-gap);
+    @include grid(1fr, var(--space-section-gap));
 
     @include cq("md") {
       grid-template-columns: 2fr 1fr;

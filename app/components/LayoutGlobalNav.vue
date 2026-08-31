@@ -202,10 +202,8 @@ const closeSidebar = () => {
       @include state-base;
     }
 
-    // Hover
-
-    &:hover:not(.is-disabled, .router-link-active) {
-      // Replaced hardcoded shadow with cyber-text-glow or simplified shadow
+    // Hover & Focus
+    &:is(:hover, :focus-visible):not(.is-disabled, .router-link-active) {
       --glow-color: theme-color(
         var(--section-accent, var(--color-category-main)),
         20%
@@ -225,12 +223,20 @@ const closeSidebar = () => {
       }
     }
 
-    // Active
-    &.router-link-active {
-      transform: translateX(0);
-      color: var(--section-accent, var(--color-category-main));
-
+    // Press (Active)
+    &:active:not(.is-disabled) {
       @include state-active(var(--section-accent, var(--color-category-main)));
+    }
+
+    // Selected Route (Active Page)
+    &.router-link-active {
+      --glow-color: var(--section-accent, var(--color-category-main));
+
+      transform: translateX(0);
+      border-color: var(--section-accent, var(--color-category-main));
+      color: var(--section-accent, var(--color-category-main));
+      box-shadow: var(--shadow-glow-inset-md);
+
       @include blinking-cursor(
         var(--space-1),
         var(--font-size-base),

@@ -11,6 +11,7 @@ export interface AppButtonProps {
   size?: "sm" | "md";
   variant?: "primary" | "secondary" | "danger" | "success";
   block?: boolean;
+  icon?: string;
   iconOnly?: boolean;
   disabled?: boolean;
 }
@@ -19,6 +20,7 @@ const props = withDefaults(defineProps<AppButtonProps>(), {
   type: "button",
   size: "sm",
   variant: "primary",
+  icon: undefined,
 });
 
 const componentTag = computed(() => {
@@ -41,12 +43,16 @@ const componentTag = computed(() => {
       size !== 'sm' && `c-btn--${size}`,
       {
         'c-btn--block': block,
-        'c-btn--icon-only': iconOnly,
+        'c-btn--icon-only': iconOnly || (icon && !$slots.default),
         'is-disabled': disabled,
       },
     ]"
     @click="disabled && $event.preventDefault()"
   >
+    <AppIcon
+      v-if="icon"
+      :name="icon"
+    />
     <slot />
   </component>
 </template>
@@ -129,9 +135,27 @@ const componentTag = computed(() => {
 
   &--icon-only {
     width: var(--size-control-sm);
+    padding: 0;
+
+    :deep(.c-icon),
+    .c-icon {
+      width: 18px;
+      height: 18px;
+
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+    }
 
     &.c-btn--md {
       width: var(--size-control-md);
+
+      :deep(.c-icon),
+      .c-icon {
+        width: 22px;
+        height: 22px;
+      }
     }
   }
 

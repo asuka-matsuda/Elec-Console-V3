@@ -49,9 +49,9 @@ const currentYear = new Date().getFullYear();
       color: var(--color-text-secondary);
 
       @include cyber-text-glow(
+        var(--color-text-secondary),
         30%,
-        var(--blur-sm),
-        var(--color-text-secondary)
+        var(--blur-sm)
       );
     }
   }

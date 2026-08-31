@@ -74,7 +74,7 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
             <div class="p-dashboard-card__layout">
               <div
                 class="p-dashboard-card__header"
-                :style="`--card-accent: var(--color-category-${section.accent})`"
+                :style="`--card-accent: var(--color-category-${section.accent || 'main'})`"
               >
                 <AppIcon :name="item.icon" />
                 <span>{{ item.text }}</span>

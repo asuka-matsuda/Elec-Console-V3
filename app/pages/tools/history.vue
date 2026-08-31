@@ -17,9 +17,16 @@ const tabs = [
 
 const currentTab = ref("voltage");
 const historyList = ref<HistoryEntry[]>([]);
-const isClearAllModalOpen = ref(false);
-const isDeleteModalOpen = ref(false);
-const targetDeleteId = ref<string | null>(null);
+
+const {
+  isOpen: isConfirmOpen,
+  title: confirmTitle,
+  message: confirmMessage,
+  confirmText: confirmBtnText,
+  intent: confirmIntent,
+  askConfirm,
+  handleConfirm,
+} = useConfirmModal();
 
 const storageKey = computed(() => {
   return `elec_calc_${currentTab.value}_hist`;
@@ -44,22 +51,28 @@ const deleteHistory = (id: string) => {
   historyList.value = historyList.value.filter((item) => item.id !== id);
 };
 
-const confirmClearAll = () => {
-  historyList.value = [];
-  isClearAllModalOpen.value = false;
+const handleClearAll = () => {
+  askConfirm({
+    title: "履歴をすべて削除",
+    message: "全ての履歴を削除しますか？この操作は取り消せません。",
+    confirmText: "削除する",
+    intent: "danger",
+    onConfirm: () => {
+      historyList.value = [];
+    },
+  });
 };
 
 const openDeleteModal = (id: string) => {
-  targetDeleteId.value = id;
-  isDeleteModalOpen.value = true;
-};
-
-const confirmDelete = () => {
-  if (targetDeleteId.value) {
-    deleteHistory(targetDeleteId.value);
-    targetDeleteId.value = null;
-  }
-  isDeleteModalOpen.value = false;
+  askConfirm({
+    title: "履歴を削除",
+    message: "この履歴を削除しますか？",
+    confirmText: "削除する",
+    intent: "danger",
+    onConfirm: () => {
+      deleteHistory(id);
+    },
+  });
 };
 
 watch(
@@ -97,7 +110,7 @@ watch(
               v-if="historyList.length > 0"
               variant="danger"
               size="sm"
-              @click="isClearAllModalOpen = true"
+              @click="handleClearAll"
             >
               <AppIcon
                 name="trash-2"
@@ -132,51 +145,31 @@ watch(
         </div>
 
         <!-- 空状態 -->
-        <div
+        <AppEmptyState
           v-else
-          class="p-history-page__empty c-empty-state"
-        >
-          <AppIcon
-            name="inbox"
-            size="lg"
-            class="c-empty-state__icon"
-          />
-          <p class="c-empty-state__text">
-            保存された履歴はありません。
-          </p>
-        </div>
+          icon="inbox"
+          title="保存された履歴はありません"
+          description="計算ツールで計算を実行し、「履歴に保存」を行うとここに記録されます。"
+        />
 
         <!-- SSR時・ハイドレーション前のプレースホルダー -->
         <template #fallback>
-          <div class="p-history-page__empty c-empty-state">
-            <AppIcon
-              name="loader"
-              size="lg"
-              class="c-empty-state__icon u-spin"
-            />
-            <p class="c-empty-state__text">
-              履歴を読み込み中...
-            </p>
-          </div>
+          <AppEmptyState
+            icon="loader"
+            title="履歴を読み込み中..."
+          />
         </template>
       </ClientOnly>
     </AppPanel>
 
     <!-- Dialogs -->
     <AppConfirmModal
-      v-model="isClearAllModalOpen"
-      title="履歴をすべて削除"
-      message="全ての履歴を削除しますか？この操作は取り消せません。"
-      confirm-text="削除する"
-      @confirm="confirmClearAll"
-    />
-
-    <AppConfirmModal
-      v-model="isDeleteModalOpen"
-      title="履歴を削除"
-      message="この履歴を削除しますか？"
-      confirm-text="削除する"
-      @confirm="confirmDelete"
+      v-model="isConfirmOpen"
+      :title="confirmTitle"
+      :message="confirmMessage"
+      :confirm-text="confirmBtnText"
+      :intent="confirmIntent"
+      @confirm="handleConfirm"
     />
   </div>
 </template>
@@ -192,9 +185,7 @@ watch(
   }
 
   &__grid {
-    display: grid;
-    grid-template-columns: 1fr; // スモールファースト
-    gap: var(--space-card-gap);
+    @include grid;
 
     @include cq("sm") {
       grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
@@ -208,20 +199,6 @@ watch(
     justify-content: center;
     padding: var(--space-layout-pad) 0;
     color: var(--color-text-muted);
-  }
-}
-
-.u-spin {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
   }
 }
 </style>

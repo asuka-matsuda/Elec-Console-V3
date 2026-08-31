@@ -63,33 +63,15 @@ const processedItems = computed(() => {
 .c-breadcrumb {
   @include text-caption;
   @include flex-start(var(--space-inline-gap));
+  @include border-base;
 
   position: relative;
   flex-wrap: wrap;
-  padding: var(--space-control-py-md) var(--space-control-px) var(--space-control-py-sm);
-
-  @include border-base;
-
+  padding: var(--space-control-py-sm) var(--space-control-px);
   text-transform: uppercase;
-
-  &::after {
-    @include text-badge;
-
-    content: "SYS.LOC";
-
-    position: absolute;
-    top: var(--space-control-py-sm);
-    left: var(--space-control-px);
-
-    color: var(--color-category-main);
-
-    @include cyber-text-glow(var(--color-category-main), 50%, var(--blur-sm));
-  }
 
   ol {
     @include inline-flex-start;
-
-    list-style: none;
   }
 
   li {
@@ -103,16 +85,21 @@ const processedItems = computed(() => {
     }
   }
 
-  a,
-  span:not(.current) {
-    @include text-meta;
+  a {
+    @include click-enabled;
     @include state-base;
+
+    color: var(--color-text-secondary);
+
+    &:hover {
+      color: var(--color-text-main);
+
+      @include cyber-text-glow(var(--color-text-main), 100%, var(--blur-sm));
+    }
   }
 
-  a:hover {
-    color: var(--color-text-main);
-
-    @include cyber-text-glow(var(--color-text-main), 100%, var(--blur-sm));
+  span:not(.current) {
+    @include disabled;
   }
 
   .current {

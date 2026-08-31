@@ -3,7 +3,7 @@
  * AppModal
  * ネイティブの dialog 要素を使用した、アクセシビリティ対応のモーダルコンポーネント。
  */
-import { ref, computed, watch, useId, onMounted } from "vue";
+import { ref, computed, watch, useId, onMounted, onUnmounted } from "vue";
 
 const isOpen = defineModel<boolean>({ default: false });
 
@@ -73,6 +73,13 @@ watch(
 onMounted(() => {
   if (isOpen.value) {
     dialogRef.value?.showModal();
+  }
+});
+
+onUnmounted(() => {
+  if (closeTimeout) {
+    clearTimeout(closeTimeout);
+    closeTimeout = null;
   }
 });
 </script>
@@ -201,10 +208,7 @@ onMounted(() => {
   }
 
   &__footer {
-    display: flex;
-    gap: var(--space-inline-gap);
-    align-items: center;
-    justify-content: flex-end;
+    @include flex-end;
   }
 }
 </style>

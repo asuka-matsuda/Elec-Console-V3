@@ -89,12 +89,12 @@ const badgeStyle = computed(() => {
   @include cyber-text-glow(var(--glow-color), 100%, var(--blur-sm));
 
   &--sm {
-    padding: 1px 4px;
-    font-size: 10px;
+    padding: var(--space-badge-p);
+    font-size: var(--font-size-2xs);
   }
 
   &--md {
-    padding: var(--space-badge-p);
+    padding: var(--space-tag-p);
   }
 }
 </style>

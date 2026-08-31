@@ -132,13 +132,11 @@ onMounted(() => {
 
 .c-link-button {
   display: block;
-  text-decoration: none;
 }
 
 .l-grid--2col-2-1 {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: var(--space-section-gap);
+  @include grid(2fr 1fr, var(--space-section-gap));
+
   align-items: flex-start;
 
   @include mq("lg") {

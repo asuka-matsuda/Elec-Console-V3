@@ -49,6 +49,26 @@
   justify-content: flex-start;
 }
 
+@mixin flex-end($gap: var(--space-inline-gap)) {
+  display: flex;
+  gap: $gap;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+@mixin inline-flex-end($gap: var(--space-inline-gap)) {
+  display: inline-flex;
+  gap: $gap;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+@mixin flex-baseline($gap: var(--space-inline-gap)) {
+  display: flex;
+  gap: $gap;
+  align-items: baseline;
+}
+
 @mixin flex-column($gap: var(--space-stack-gap)) {
   display: flex;
   flex-direction: column;
@@ -363,4 +383,14 @@
     background-color: $color;
     animation: ui-cursor-blink 1s step-end infinite;
   }
+}
+
+@mixin text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin spin($duration: 1s) {
+  animation: ui-spin $duration linear infinite;
 }

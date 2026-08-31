@@ -188,8 +188,6 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
   &__legend-list {
     @include flex-column(var(--space-stack-gap-sm));
-
-    list-style: none;
   }
 
   &__legend-item {

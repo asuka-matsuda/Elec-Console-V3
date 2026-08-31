@@ -32,7 +32,7 @@ withDefaults(
         :id="titleId"
         class="c-section-header__title"
         :class="[`c-section-header__title--${size}`]"
-        :style="`--section-color: var(--color-category-${variant})`"
+        :style="`--section-color: var(--color-category-${variant || 'main'})`"
       >
         <AppIcon
           v-if="icon"

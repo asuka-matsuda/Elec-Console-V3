@@ -8,14 +8,16 @@
  * 行（tr）ホバー時には発光エフェクト（ui-hover-glow）が適用されます。
  */
 
-export interface TableColumn {
-  key: string;
+export interface TableColumn<T = Record<string, unknown>> {
+  key: (keyof T & string) | string;
   label: string;
   sortable?: boolean;
+  width?: string;
+  align?: 'left' | 'center' | 'right';
 }
 
 const props = defineProps<{
-  columns?: TableColumn[];
+  columns?: TableColumn<T>[];
   data?: T[];
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
@@ -25,7 +27,7 @@ const emit = defineEmits<{
   (e: 'sort', payload: { key: string; order: 'asc' | 'desc' }): void;
 }>();
 
-const handleSort = (col: TableColumn) => {
+const handleSort = (col: TableColumn<T>) => {
   if (!col.sortable) return;
   
   let newOrder: 'asc' | 'desc' = 'asc';
@@ -46,16 +48,22 @@ const handleSort = (col: TableColumn) => {
             <th 
               v-for="col in columns" 
               :key="col.key"
-              :class="{ 'is-sortable': col.sortable }"
+              :class="{ 'is-sortable': col.sortable, 'is-sorted': sortBy === col.key }"
+              :style="{ width: col.width, textAlign: col.align }"
+              :aria-sort="col.sortable ? (sortBy === col.key ? (sortOrder === 'asc' ? 'ascending' : 'descending') : 'none') : undefined"
+              :title="col.sortable ? (sortBy === col.key ? (sortOrder === 'asc' ? 'クリックで降順' : 'クリックで昇順') : 'クリックで並び替え') : undefined"
               @click="handleSort(col)"
             >
-              <div class="c-table__th-inner">
+              <div 
+                class="c-table__th-inner"
+                :class="{ 'is-center': col.align === 'center', 'is-right': col.align === 'right' }"
+              >
                 <span>{{ col.label }}</span>
                 <AppIcon 
                   v-if="col.sortable && sortBy === col.key" 
                   :name="sortOrder === 'asc' ? 'chevron-up' : 'chevron-down'" 
                   size="sm" 
-                  class="c-table__sort-icon"
+                  class="c-table__sort-icon is-active"
                 />
                 <AppIcon 
                   v-else-if="col.sortable" 
@@ -133,7 +141,7 @@ const handleSort = (col: TableColumn) => {
     @include text-label;
 
     position: sticky;
-    z-index: 2;
+    z-index: var(--z-index-table-header);
     top: 0;
 
     border-bottom-width: calc(var(--border-width-base) * 2);
@@ -143,25 +151,41 @@ const handleSort = (col: TableColumn) => {
     backdrop-filter: blur(var(--blur-md));
 
     &.is-sortable {
-      cursor: pointer;
-      transition: background-color var(--transition-fast) ease;
+      @include click-enabled;
+
+      transition: background-color var(--transition-fast) ease, color var(--transition-fast) ease;
 
       &:hover {
+        color: var(--color-text-main);
         background-color: var(--color-bg-hover);
       }
     }
 
-    .c-table__sort-btn {
-      display: inline-flex;
-      gap: var(--space-inline-gap-sm);
-      align-items: center;
+    &.is-sorted {
+      border-bottom-color: var(--color-category-main);
+      color: var(--color-text-main);
+    }
+
+    .c-table__th-inner {
+      @include inline-flex-start(var(--space-inline-gap-sm));
+
+      &.is-center {
+        justify-content: center;
+      }
+
+      &.is-right {
+        justify-content: flex-end;
+      }
     }
 
     .c-table__sort-icon {
-      color: var(--color-text-main);
+      color: var(--color-text-muted);
+
+      &.is-active {
+        color: var(--color-category-main);
+      }
 
       &.is-inactive {
-        color: var(--color-text-muted);
         opacity: 0.3;
       }
     }

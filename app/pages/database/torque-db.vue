@@ -19,12 +19,12 @@ const flattenedData = computed(() => {
 });
 
 const tableColumns: TableColumn[] = [
-  { key: "category", label: "カテゴリ" },
-  { key: "size", label: "サイズ" },
-  { key: "torque_nm", label: "標準トルク (N・m)" },
-  { key: "range_nm", label: "許容範囲 (N・m)" },
-  { key: "note", label: "備考" },
-  { key: "reference", label: "参考規格" },
+  { key: "category", label: "カテゴリ", sortable: true },
+  { key: "size", label: "サイズ", sortable: true },
+  { key: "torque_nm", label: "標準トルク (N・m)", sortable: true },
+  { key: "range_nm", label: "許容範囲 (N・m)", sortable: true },
+  { key: "note", label: "備考", sortable: true },
+  { key: "reference", label: "参考規格", sortable: true },
 ];
 </script>
 

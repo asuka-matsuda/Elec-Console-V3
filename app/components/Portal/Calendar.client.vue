@@ -171,7 +171,7 @@ const calendarOptions = computed(() => ({
     if (typeDef) {
       info.el.style.setProperty('--event-theme-color', `var(--color-${typeDef.colorVar})`);
     } else {
-      info.el.style.setProperty('--event-theme-color', 'var(--color-primary)');
+      info.el.style.setProperty('--event-theme-color', 'var(--color-category-main)');
     }
   },
 
@@ -232,6 +232,9 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
   --fc-border-color: var(--color-border);
   --fc-page-bg-color: transparent;
   --fc-neutral-bg-color: transparent;
+  --calendar-saturday: #60a5fa;
+  --calendar-sunday: #f87171;
+  --calendar-holiday: #f87171;
 
   /* ==== 動的クラスによる装飾 ==== */
   
@@ -250,26 +253,23 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 
   :deep(.fc-theme-standard td), :deep(.fc-theme-standard th) {
     border-color: var(--color-border);
-    background-color: transparent;
   }
 
   :deep(.fc-daygrid-day-number) {
     color: var(--color-text-main);
-    text-decoration: none;
   }
 
   :deep(.fc-col-header-cell-cushion) {
     color: var(--color-text-main);
-    text-decoration: none;
   }
 
   :deep(.is-saturday) {
-    @include highlight-day(#60a5fa, 15%, 100%);
+    @include highlight-day(var(--calendar-saturday), 15%, 100%);
   }
 
   :deep(.is-sunday),
   :deep(.is-holiday) {
-    @include highlight-day(#f87171, 20%, 100%);
+    @include highlight-day(var(--calendar-sunday), 20%, 100%);
   }
 
   :deep(.fc-day-today) {
@@ -296,11 +296,10 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 
   /* イベントの動的カラー */
   :deep(.fc-daygrid-event) {
-    $event-color: var(--event-theme-color, var(--color-primary));
+    $event-color: var(--event-theme-color, var(--color-category-main));
 
     padding: var(--space-badge-p);
     border: 1px solid theme-color($event-color, 50%);
-    border-radius: var(--radius-sm);
 
     color: var(--color-text-main);
 

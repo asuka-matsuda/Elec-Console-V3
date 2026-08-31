@@ -24,15 +24,20 @@ const emit = defineEmits<{
 
 <style scoped lang="scss">
 .c-logo {
+  @include click-enabled;
   @include flex-start(var(--space-inline-gap));
   @include state-base;
 
-  &:hover {
+  &:is(:hover, :focus-visible) {
     .c-logo__icon {
       @include cyber-text-glow(var(--color-category-main), 60%, var(--blur-md));
 
       transform: scale(1.1);
     }
+  }
+
+  &:active {
+    @include state-active(var(--color-category-main));
   }
 
   &__icon {

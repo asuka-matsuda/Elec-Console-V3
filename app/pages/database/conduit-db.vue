@@ -7,12 +7,12 @@ import { conduitData } from "~/constants/data/conduitData";
 import type { TableColumn } from "~/components/AppTable.vue";
 
 const tableColumns: TableColumn[] = [
-  { key: "category", label: "配管種類" },
-  { key: "size", label: "呼び径" },
-  { key: "innerDiameter", label: "内径 (mm)" },
-  { key: "outerDiameter", label: "外径 (mm)" },
-  { key: "area", label: "断面積 (mm²)" },
-  { key: "standard", label: "規格" },
+  { key: "category", label: "配管種類", sortable: true },
+  { key: "size", label: "呼び径", sortable: true },
+  { key: "innerDiameter", label: "内径 (mm)", sortable: true },
+  { key: "outerDiameter", label: "外径 (mm)", sortable: true },
+  { key: "area", label: "断面積 (mm²)", sortable: true },
+  { key: "standard", label: "規格", sortable: true },
 ];
 </script>
 

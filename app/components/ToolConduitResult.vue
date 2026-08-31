@@ -177,10 +177,10 @@ const fill48 = computed(() =>
     }
 
     .c-conduit-result__main-value .value-text {
-      font-size: 1.5rem;
+      font-size: var(--font-size-3xl);
 
       &.c-conduit-result__percent {
-        font-size: 1rem;
+        font-size: var(--font-size-base);
       }
     }
   }
@@ -198,8 +198,6 @@ const fill48 = computed(() =>
     @include border-base;
 
     box-shadow: var(--shadow-sink);
-
-    @include border-base;
   }
 
   &__main-label {
@@ -210,13 +208,12 @@ const fill48 = computed(() =>
   }
 
   &__main-value {
-    display: flex;
-    gap: var(--space-inline-gap);
-    align-items: baseline;
+    @include flex-baseline(var(--space-inline-gap));
+
     font-family: var(--font-mono);
 
     .value-text {
-      font-size: 2rem;
+      font-size: var(--font-size-4xl);
       line-height: 1;
 
       &.c-conduit-result__percent {
