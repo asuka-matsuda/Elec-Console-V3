@@ -18,10 +18,18 @@ const rootTag = computed(() => {
 });
 
 const rootProps = computed(() => {
+  if (props.disabled) return { tabindex: -1 };
   if (props.to) return { to: props.to };
   if (props.href) return { href: props.href };
   return {};
 });
+
+const handleClick = (e: MouseEvent) => {
+  if (props.disabled) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+  }
+};
 </script>
 
 <template>
@@ -30,6 +38,7 @@ const rootProps = computed(() => {
     v-bind="rootProps"
     class="c-card"
     :class="{ 'is-disabled': disabled }"
+    @click="handleClick"
   >
     <slot />
   </component>
@@ -37,27 +46,26 @@ const rootProps = computed(() => {
 
 <style scoped lang="scss">
 .c-card {
-  position: relative;
-
   @include flex-column(var(--space-card-gap));
-
+  position: relative;
+  width: 100%;
   padding: var(--space-card-pad);
-
-  @include state-base;
+  
   @include border-base;
+  @include state-base;
 
-  &:is(a, button) {
+  &:is(a) {
     @include click-enabled;
 
-    &:not(.is-disabled):hover {
+    &:hover:not(.is-disabled) {
       @include state-hover(var(--theme-accent));
     }
 
-    &:not(.is-disabled):focus-visible {
+    &:focus-visible:not(.is-disabled) {
       @include state-focus(var(--theme-accent));
     }
 
-    &:not(.is-disabled):active {
+    &:active:not(.is-disabled) {
       @include state-active(var(--theme-accent));
     }
   }
