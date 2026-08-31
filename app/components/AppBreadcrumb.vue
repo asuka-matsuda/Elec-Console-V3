@@ -30,27 +30,32 @@ const processedItems = computed(() => {
 
 <template>
   <nav class="c-breadcrumb">
-    <ol>
+    <ol class="c-breadcrumb__list">
       <li
         v-for="item in processedItems"
         :key="item.uniqueKey"
+        class="c-breadcrumb__item"
       >
         <template v-if="!item.isLast">
           <NuxtLink
             v-if="item.href"
             :to="item.href"
+            class="c-breadcrumb__link"
           >
             {{ item.text }}
           </NuxtLink>
 
-          <span v-else>
+          <span
+            v-else
+            class="c-breadcrumb__text"
+          >
             {{ item.text }}
           </span>
         </template>
 
         <span
           v-else
-          class="current"
+          class="c-breadcrumb__current"
         >
           {{ item.text }}
         </span>
@@ -70,11 +75,11 @@ const processedItems = computed(() => {
   padding: var(--space-tag-p);
   text-transform: uppercase;
 
-  ol {
+  &__list {
     @include inline-flex-start;
   }
 
-  li {
+  &__item {
     &:not(:last-child)::after {
       @include text-badge;
 
@@ -83,7 +88,7 @@ const processedItems = computed(() => {
     }
   }
 
-  a {
+  &__link {
     @include click-enabled;
     @include state-base;
 
@@ -96,11 +101,11 @@ const processedItems = computed(() => {
     }
   }
 
-  span:not(.current) {
+  &__text {
     @include disabled;
   }
 
-  .current {
+  &__current {
     @include cyber-text-glow(var(--color-category-main), 60%, var(--blur-md));
     @include blinking-cursor;
 
