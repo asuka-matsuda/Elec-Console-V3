@@ -10,7 +10,10 @@ const { currentUser, logout } = useAuth();
 </script>
 
 <template>
-  <div class="l-app">
+  <div
+    class="l-app"
+    :style="{ '--theme-accent': breadcrumbAccent || 'var(--color-category-main)' }"
+  >
     <!-- Sidebar -->
     <LayoutGlobalNav
       v-model:is-open="isSidebarOpen"
@@ -21,7 +24,6 @@ const { currentUser, logout } = useAuth();
     <div class="l-main">
       <LayoutHeader
         :breadcrumbs="breadcrumbs"
-        :accent="breadcrumbAccent"
         @toggle-sidebar="isSidebarOpen = !isSidebarOpen"
       >
         <template #actions>

@@ -179,6 +179,7 @@
 
   // セマンティックカラー定義
   --color-category-main:       hsl(var(--color-category-main-base));
+  --theme-accent:              var(--color-category-main);
   --color-category-tool:       hsl(var(--color-category-tool-base));
   --color-category-database:   hsl(var(--color-category-database-base));
   --color-category-reference:  hsl(var(--color-category-reference-base));
