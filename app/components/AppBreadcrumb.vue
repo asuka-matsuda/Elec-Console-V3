@@ -64,12 +64,12 @@ const processedItems = computed(() => {
           </span>
         </template>
 
-        <span
-          v-else
-          class="c-breadcrumb__current"
-        >
-          {{ item.text }}
-        </span>
+        <template v-else>
+          <span class="c-breadcrumb__current">
+            {{ item.text }}
+          </span>
+          <span class="c-breadcrumb__cursor"></span>
+        </template>
       </li>
     </ol>
   </nav>
@@ -120,9 +120,12 @@ const processedItems = computed(() => {
 
   &__current {
     @include cyber-text-glow(var(--breadcrumb-color, var(--color-category-main)), 60%, var(--blur-md));
-    @include blinking-cursor;
-
     color: var(--breadcrumb-color, var(--color-category-main));
+  }
+
+  &__cursor {
+    @include blinking-cursor-base;
+    background-color: var(--breadcrumb-color, var(--color-category-main));
   }
 }
 </style>
