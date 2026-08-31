@@ -54,7 +54,6 @@ withDefaults(
     "sidebar-border": var(--sidebar-border),
   );
 
-  // Default (Horizontal)
   --divider-size-x: 100%;
   --divider-size-y: var(--border-width-base);
   --divider-min-h: auto;
@@ -68,14 +67,14 @@ withDefaults(
   position: relative;
   transform-origin: center;
 
-  overflow: hidden; // アニメーションの光がはみ出さないようにする
+  overflow: hidden; 
   flex-shrink: 0;
 
   width: var(--divider-size-x);
   height: var(--divider-size-y);
   min-height: var(--divider-min-h);
 
-  @include shadow("sink"); // 彫り込まれた溝の影
+  @include shadow("sink"); 
 
   animation: divider-scale-x 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
@@ -98,8 +97,6 @@ withDefaults(
 
   &.is-type-solid {
     background: var(--color-border);
-
-    // パルス発光用のData Flow（擬似要素）
 
     &::before {
       content: "";
@@ -188,7 +185,8 @@ withDefaults(
     60% {
       transform: translateX(450%);
       opacity: 0;
-    } // 100% + 300% travel + buffer
+    }
+
     100% {
       transform: translateX(450%);
       opacity: 0;
@@ -212,7 +210,8 @@ withDefaults(
     60% {
       transform: translateY(450%);
       opacity: 0;
-    } // 100% + 300% travel + buffer
+    }
+
     100% {
       transform: translateY(450%);
       opacity: 0;
