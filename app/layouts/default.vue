@@ -98,7 +98,7 @@ const { currentUser, logout } = useAuth();
   @include flex-start(var(--space-inline-gap));
 
   &__avatar {
-    --glow-color: theme-color(var(--color-category-main), 50%);
+    --glow-color: color-mix(in srgb, var(--color-category-main) 50%, transparent);
 
     @include flex-center;
 

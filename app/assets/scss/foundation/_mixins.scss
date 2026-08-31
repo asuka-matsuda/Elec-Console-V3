@@ -307,7 +307,7 @@
 }
 
 @mixin form-placeholder {
-  color: theme-color(var(--color-text-muted), 50%);
+  color: color-mix(in srgb, var(--color-text-muted) 50%, transparent);
 }
 
 @mixin click-enabled {
@@ -330,7 +330,7 @@
   $opacity: 50%,
   $blur: var(--blur-md)
 ) {
-  text-shadow: 0 0 $blur theme-color($color, $opacity);
+  text-shadow: 0 0 $blur color-mix(in srgb, $color $opacity, transparent);
 }
 
 @mixin border-base(
@@ -341,7 +341,7 @@
 }
 
 @mixin border-dim($color: var(--color-border), $opacity: 50%) {
-  border: var(--border-width-base) solid theme-color($color, $opacity);
+  border: var(--border-width-base) solid color-mix(in srgb, $color $opacity, transparent);
 }
 
 @mixin state-base($shadow: none, $transition: var(--transition-base)) {

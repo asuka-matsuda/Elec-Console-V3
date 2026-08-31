@@ -73,7 +73,7 @@ const inputId = useId();
   &:hover:not(.is-disabled) {
     // ラベルのグロウ効果
     .c-checkbox__label {
-      color: theme-color(var(--checkbox-color), 90%);
+      color: color-mix(in srgb, var(--checkbox-color) 90%, transparent);
 
       @include cyber-text-glow(var(--checkbox-color), 20%, var(--blur-sm));
     }

@@ -115,8 +115,8 @@ withDefaults(
   &__title {
     @include text-title("md");
 
-    color: #{theme-color(var(--p-theme-color), 100%)};
-    text-shadow: 0 0 var(--blur-md) #{theme-color(var(--p-theme-color), 40%)};
+    color: color-mix(in srgb, var(--p-theme-color) 100%, transparent);
+    text-shadow: 0 0 var(--blur-md) color-mix(in srgb, var(--p-theme-color) 40%, transparent);
   }
 
   &__content {
@@ -155,17 +155,17 @@ withDefaults(
   }
 
   &--hud {
-    --p-border-color: #{theme-color(var(--color-border), 50%)};
+    --p-border-color: color-mix(in srgb, var(--color-border) 50%, transparent);
     --p-box-shadow:
       inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border),
       var(--shadow-elevation-sm);
     --p-bracket-display: block;
     --p-bracket-size: var(--space-4);
-    --p-bracket-color: #{theme-color(var(--p-theme-color), 60%)};
+    --p-bracket-color: color-mix(in srgb, var(--p-theme-color) 60%, transparent);
   }
 
   &--simple {
-    --p-border-color: #{theme-color(var(--color-border), 50%)};
+    --p-border-color: color-mix(in srgb, var(--color-border) 50%, transparent);
     --p-box-shadow:
       inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent,
       var(--shadow-elevation-sm);
@@ -185,7 +185,7 @@ withDefaults(
       var(--shadow-elevation-sm);
     --p-bracket-display: block;
     --p-bracket-size: var(--space-3);
-    --p-bracket-color: #{theme-color(var(--p-theme-color), 40%)};
+    --p-bracket-color: color-mix(in srgb, var(--p-theme-color) 40%, transparent);
   }
 
   &--hybrid {
@@ -201,9 +201,9 @@ withDefaults(
       var(--shadow-elevation-sm);
     --p-bracket-display: block;
     --p-bracket-size: var(--space-4);
-    --p-bracket-color: #{theme-color(var(--p-theme-color), 80%)};
+    --p-bracket-color: color-mix(in srgb, var(--p-theme-color) 80%, transparent);
     --p-bracket-glow: drop-shadow(
-      0 0 var(--blur-md) #{theme-color(var(--p-theme-color), 60%)}
+      0 0 var(--blur-md) color-mix(in srgb, var(--p-theme-color) 60%, transparent)
     );
   }
 

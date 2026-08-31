@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import FullCalendar from '@fullcalendar/vue3';
-import type { CalendarOptions, EventClickArg, EventMountArg, DateSelectArg, EventDropArg, DayCellContentArg } from '@fullcalendar/core';
+import type {
+  CalendarOptions,
+  EventClickArg,
+  DateSelectArg,
+  EventDropArg,
+  DayCellContentArg,
+} from '@fullcalendar/core';
 import type { EventResizeDoneArg } from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -9,78 +15,89 @@ import listPlugin from '@fullcalendar/list';
 import jaLocale from '@fullcalendar/core/locales/ja';
 
 import { useCalendar } from '~/composables/portal/useCalendar';
+import type { EventType } from '~/composables/portal/useCalendar';
+import CalendarToolbar from './CalendarToolbar.vue';
+import CalendarEventBadge from './CalendarEventBadge.vue';
 import CalendarEventModal from './CalendarEventModal.vue';
+import CalendarTypeSettingsModal from './CalendarTypeSettingsModal.vue';
 
 const props = defineProps<{
   siteId: string;
 }>();
 
-const { events, settings, createEvent, updateEvent, deleteEvent } = useCalendar(props.siteId);
+const {
+  events,
+  settings,
+  createEvent,
+  updateEvent,
+  deleteEvent,
+  updateSettings,
+} = useCalendar(props.siteId);
 
 // ====================
-// Modal State
+// Event Modal Logic
 // ====================
 const isModalOpen = ref(false);
 const isEditing = ref(false);
-const hasTitleError = ref(false);
 const editingEventId = ref<string | null>(null);
 
 const form = ref({
   title: '',
-  type: '',
+  type: 'work',
   start: '',
   end: '',
-  allDay: false
+  allDay: false,
 });
 
-const formatDateTimeLocal = (dateStr: string, isAllDay: boolean) => {
-  if (!dateStr) return '';
-  if (isAllDay) {
-    return dateStr.split('T')[0];
-  }
-  if (dateStr.includes('T')) {
-    return dateStr.substring(0, 16);
-  }
-  return dateStr + 'T09:00';
-};
-
-hasTitleError.value = false;
-  const openCreateModal = (startStr: string, endStr: string, allDay: boolean) => {
+const openCreateModal = (startStr: string, endStr: string, allDay: boolean) => {
   isEditing.value = false;
   editingEventId.value = null;
-  
-  let initialEnd = endStr;
-  if (allDay && startStr && endStr) {
-    const sDate = new Date(startStr);
-    const eDate = new Date(endStr);
-    if (!isNaN(sDate.getTime()) && !isNaN(eDate.getTime())) {
-      // FullCalendar gives exclusive end date. If user selects 1 cell, diff is 1 day.
-      // We want to show the same day in UI.
-      eDate.setDate(eDate.getDate() - 1);
-      initialEnd = eDate.getFullYear() + '-' + String(eDate.getMonth() + 1).padStart(2, '0') + '-' + String(eDate.getDate()).padStart(2, '0');
-    }
+
+  let finalStart = startStr;
+  let finalEnd = endStr;
+
+  if (allDay && endStr) {
+    const d = new Date(endStr);
+    d.setDate(d.getDate() - 1);
+    finalEnd = d.toISOString().split('T')[0] || '';
   }
 
   form.value = {
     title: '',
-    type: settings.value?.eventTypes[0]?.id || 'other',
-    start: formatDateTimeLocal(startStr, allDay) || '',
-    end: formatDateTimeLocal(initialEnd, allDay) || '',
-    allDay
+    type: settings.value?.eventTypes?.[0]?.id || 'work',
+    start: finalStart,
+    end: finalEnd || finalStart,
+    allDay,
   };
   isModalOpen.value = true;
 };
 
-hasTitleError.value = false;
-  const openEditModal = (eventInfo: import('@fullcalendar/core').EventApi) => {
+const openEditModal = (calEvent: {
+  id: string;
+  title: string;
+  startStr: string;
+  endStr: string;
+  allDay: boolean;
+  extendedProps: { type?: string };
+}) => {
   isEditing.value = true;
-  editingEventId.value = eventInfo.id;
+  editingEventId.value = calEvent.id;
+
+  let finalStart = calEvent.startStr;
+  let finalEnd = calEvent.endStr;
+
+  if (calEvent.allDay && calEvent.endStr) {
+    const d = new Date(calEvent.endStr);
+    d.setDate(d.getDate() - 1);
+    finalEnd = d.toISOString().split('T')[0] || '';
+  }
+
   form.value = {
-      title: eventInfo.title,
-      type: eventInfo.extendedProps?.type || 'other',
-      start: formatDateTimeLocal(eventInfo.startStr, eventInfo.allDay) || '',
-    end: formatDateTimeLocal(eventInfo.endStr, eventInfo.allDay) || '',
-    allDay: eventInfo.allDay
+    title: calEvent.title,
+    type: calEvent.extendedProps.type || 'work',
+    start: finalStart,
+    end: finalEnd || finalStart,
+    allDay: calEvent.allDay,
   };
   isModalOpen.value = true;
 };
@@ -89,9 +106,9 @@ const closeModal = () => {
   isModalOpen.value = false;
 };
 
-const saveEvent = async (savedData: { title: string, type: string, start: string, end: string, allDay: boolean }) => {
-  let finalEnd = savedData.end || undefined;
-  
+const saveEvent = async (savedData: typeof form.value) => {
+  let finalEnd: string | undefined = savedData.end;
+
   if (savedData.allDay && savedData.start && savedData.end) {
     if (savedData.start === savedData.end) {
       finalEnd = undefined;
@@ -109,7 +126,7 @@ const saveEvent = async (savedData: { title: string, type: string, start: string
         type: savedData.type,
         start: savedData.start,
         end: finalEnd,
-        allDay: savedData.allDay
+        allDay: savedData.allDay,
       });
     } else {
       await createEvent({
@@ -117,12 +134,19 @@ const saveEvent = async (savedData: { title: string, type: string, start: string
         type: savedData.type,
         start: savedData.start,
         end: finalEnd,
-        allDay: savedData.allDay
+        allDay: savedData.allDay,
       });
     }
   } finally {
     isModalOpen.value = false;
   }
+};
+
+const isTypeSettingsOpen = ref(false);
+
+const handleSaveEventTypes = async (newTypes: EventType[]) => {
+  await updateSettings({ eventTypes: newTypes });
+  events.value = [...events.value];
 };
 
 const {
@@ -139,10 +163,10 @@ const removeEvent = () => {
   if (!editingEventId.value) return;
   const targetId = editingEventId.value;
   askConfirm({
-    title: "予定の削除",
+    title: '予定の削除',
     message: `「${form.value.title || 'この予定'}」を削除してもよろしいですか？`,
-    confirmText: "削除する",
-    intent: "danger",
+    confirmText: '削除する',
+    intent: 'danger',
     onConfirm: async () => {
       await deleteEvent(targetId);
       closeModal();
@@ -151,37 +175,49 @@ const removeEvent = () => {
 };
 
 // ====================
-// Calendar Config & Custom Toolbar
+// Calendar Config & Options
 // ====================
 const fullCalendarRef = ref<InstanceType<typeof FullCalendar> | null>(null);
 const currentTitle = ref('');
 const currentView = ref<'dayGridMonth' | 'listMonth'>('dayGridMonth');
 
-const handlePrev = () => {
-  fullCalendarRef.value?.getApi().prev();
-};
-
-const handleNext = () => {
-  fullCalendarRef.value?.getApi().next();
-};
-
-const handleToday = () => {
-  fullCalendarRef.value?.getApi().today();
-};
-
+const handlePrev = () => fullCalendarRef.value?.getApi().prev();
+const handleNext = () => fullCalendarRef.value?.getApi().next();
+const handleToday = () => fullCalendarRef.value?.getApi().today();
 const handleViewChange = (view: 'dayGridMonth' | 'listMonth') => {
   currentView.value = view;
   fullCalendarRef.value?.getApi().changeView(view);
 };
 
+const formattedEvents = computed(() => {
+  return events.value.map((evt) => {
+    const typeDef = settings.value?.eventTypes?.find((t) => t.id === evt.type);
+    const color = typeDef?.color || '#00f0ff';
+    return {
+      ...evt,
+      borderColor: color,
+      backgroundColor: 'transparent',
+      textColor: 'inherit',
+      extendedProps: {
+        ...evt.extendedProps,
+        type: evt.type,
+        themeColor: color,
+      },
+    };
+  });
+});
+
 const calendarOptions = computed(() => ({
   plugins: [dayGridPlugin, interactionPlugin, listPlugin],
   initialView: 'dayGridMonth',
   locale: jaLocale,
-  events: events.value,
+  events: formattedEvents.value,
   editable: true,
   selectable: true,
   headerToolbar: false,
+  dayMaxEvents: 3,
+  moreLinkClick: 'popover' as const,
+  moreLinkContent: (args: { num: number }) => `+${args.num}件`,
   datesSet: (arg: { view: { title: string; type: string } }) => {
     currentTitle.value = arg.view.title;
     currentView.value = arg.view.type as 'dayGridMonth' | 'listMonth';
@@ -195,48 +231,40 @@ const calendarOptions = computed(() => ({
   },
   dayCellClassNames: (arg: DayCellContentArg) => {
     const classes = [];
-    // 厳密なISOではないが、FullCalendarの内部日付に対応させる
-    const isoDate = arg.date.getFullYear() + '-' + String(arg.date.getMonth() + 1).padStart(2, '0') + '-' + String(arg.date.getDate()).padStart(2, '0');
-    
+    const isoDate =
+      arg.date.getFullYear() +
+      '-' +
+      String(arg.date.getMonth() + 1).padStart(2, '0') +
+      '-' +
+      String(arg.date.getDate()).padStart(2, '0');
+
     if (arg.date.getDay() === 0) classes.push('is-sunday');
     if (arg.date.getDay() === 6) classes.push('is-saturday');
     if (settings.value?.customHolidays?.includes(isoDate)) classes.push('is-holiday');
-    
+
     return classes;
-  },
-  eventDidMount: (info: EventMountArg) => {
-    // 予定種別からテーマカラーを取得してCSS変数として注入
-    const typeId = info.event.extendedProps.type;
-    const typeDef = settings.value?.eventTypes?.find(t => t.id === typeId);
-    if (typeDef) {
-      info.el.style.setProperty('--event-theme-color', `var(--color-${typeDef.colorVar})`);
-    } else {
-      info.el.style.setProperty('--event-theme-color', 'var(--color-category-main)');
-    }
   },
 
   select: (selectInfo: DateSelectArg) => {
-    // カレンダー選択時にモーダルを開く
     openCreateModal(selectInfo.startStr, selectInfo.endStr, selectInfo.allDay);
     selectInfo.view.calendar.unselect();
   },
   eventClick: (clickInfo: EventClickArg) => {
-    // イベントクリック時に編集モーダルを開く
     openEditModal(clickInfo.event);
   },
   eventDrop: async (dropInfo: EventDropArg) => {
     await updateEvent(dropInfo.event.id, {
       start: dropInfo.event.startStr,
       end: dropInfo.event.endStr || undefined,
-      allDay: dropInfo.event.allDay
+      allDay: dropInfo.event.allDay,
     });
   },
   eventResize: async (resizeInfo: EventResizeDoneArg) => {
     await updateEvent(resizeInfo.event.id, {
       start: resizeInfo.event.startStr,
-      end: resizeInfo.event.endStr || undefined
+      end: resizeInfo.event.endStr || undefined,
     });
-  }
+  },
 }));
 
 const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOptions);
@@ -244,58 +272,15 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 
 <template>
   <div class="c-calendar-wrapper">
-    <div class="c-calendar-toolbar">
-      <div class="c-calendar-toolbar__nav">
-        <AppButton
-          variant="secondary"
-          size="sm"
-          icon="chevron-left"
-          icon-only
-          aria-label="前月"
-          @click="handlePrev"
-        />
-        <AppButton
-          variant="secondary"
-          size="sm"
-          icon="chevron-right"
-          icon-only
-          aria-label="次月"
-          @click="handleNext"
-        />
-        <AppButton
-          variant="secondary"
-          size="sm"
-          @click="handleToday"
-        >
-          今日
-        </AppButton>
-      </div>
-
-      <div class="c-calendar-toolbar__center">
-        <h3 class="c-calendar-toolbar__title">
-          {{ currentTitle }}
-        </h3>
-      </div>
-
-      <div class="c-calendar-toolbar__views">
-        <AppButton
-          :variant="currentView === 'dayGridMonth' ? 'primary' : 'secondary'"
-          size="sm"
-          icon="calendar"
-          @click="handleViewChange('dayGridMonth')"
-        >
-          月表示
-        </AppButton>
-        <AppButton
-          :variant="currentView === 'listMonth' ? 'primary' : 'secondary'"
-          size="sm"
-          icon="list"
-          @click="handleViewChange('listMonth')"
-        >
-          リスト
-        </AppButton>
-      </div>
-    </div>
+    <CalendarToolbar
+      :title="currentTitle"
+      :current-view="currentView"
+      @prev="handlePrev"
+      @next="handleNext"
+      @today="handleToday"
+      @change-view="handleViewChange"
+      @open-type-settings="isTypeSettingsOpen = true"
+    />
 
     <AppPanel
       class="c-calendar"
@@ -304,7 +289,17 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
       <FullCalendar
         ref="fullCalendarRef"
         :options="typedCalendarOptions"
-      />
+      >
+        <template #eventContent="{ event }">
+          <CalendarEventBadge
+            :title="event.title"
+            :all-day="event.allDay"
+            :start="event.start"
+            :end="event.end"
+            :color="event.extendedProps?.themeColor"
+          />
+        </template>
+      </FullCalendar>
     </AppPanel>
 
     <!-- Event Modal -->
@@ -315,6 +310,13 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
       :initial-data="form"
       @save="saveEvent"
       @delete="removeEvent"
+    />
+
+    <!-- Type Settings Modal -->
+    <CalendarTypeSettingsModal
+      v-model="isTypeSettingsOpen"
+      :event-types="settings?.eventTypes || []"
+      @save="handleSaveEventTypes"
     />
 
     <!-- Confirm Modal -->
@@ -334,144 +336,161 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
   @include flex-column(var(--space-stack-gap));
 }
 
-.c-calendar-toolbar {
-  @include flex-between(var(--space-inline-gap));
-
-  flex-wrap: wrap;
-  padding: var(--space-card-pad-sm) var(--space-card-pad);
-
-  @include border-dim;
-
-  background-color: var(--color-surface);
-
-  &__nav {
-    @include flex-start(var(--space-inline-gap-sm));
-  }
-
-  &__center {
-    @include flex-center;
-
-    flex: 1;
-    min-width: 160px;
-  }
-
-  &__title {
-    @include text-title("md");
-
-    color: var(--color-category-main);
-
-    @include cyber-text-glow(var(--color-category-main), 60%, var(--blur-sm));
-  }
-
-  &__views {
-    @include flex-end(var(--space-inline-gap-sm));
-  }
-
-  @include mq("md") {
-    @include flex-column(var(--space-stack-gap-sm));
-
-    &__center {
-      order: -1;
-      width: 100%;
-    }
-
-    &__nav,
-    &__views {
-      @include flex-center;
-
-      width: 100%;
-    }
-  }
-}
-
 .c-calendar {
   --fc-border-color: var(--color-border);
   --fc-page-bg-color: transparent;
   --fc-neutral-bg-color: transparent;
-  --calendar-saturday: #60a5fa;
-  --calendar-sunday: #f87171;
-  --calendar-holiday: #f87171;
-
-  /* ==== 動的クラスによる装飾 ==== */
-  
-  @mixin highlight-day($color, $opacity-bg, $opacity-text) {
-    & .fc-daygrid-day-frame {
-      box-shadow: inset 0 0 24px theme-color($color, $opacity-bg);
-    }
-
-    & .fc-col-header-cell-cushion,
-    & .fc-daygrid-day-number {
-      color: theme-color($color, $opacity-text);
-    }
-  }
+  --fc-event-bg-color: transparent;
+  --fc-event-border-color: transparent;
+  --fc-event-text-color: var(--color-text-main);
+  --fc-event-selected-overlay-color: transparent;
 
   min-height: 500px;
 
-  :deep(.fc-theme-standard td), :deep(.fc-theme-standard th) {
+  :deep(.fc-theme-standard td),
+  :deep(.fc-theme-standard th) {
     border-color: var(--color-border);
   }
 
-  :deep(.fc-daygrid-day-number) {
-    color: var(--color-text-main);
-  }
-
+  /* 曜日ヘッダー文字 */
   :deep(.fc-col-header-cell-cushion) {
     color: var(--color-text-main);
   }
 
-  :deep(.is-saturday) {
-    @include highlight-day(var(--calendar-saturday), 15%, 100%);
-  }
+  /* ==== セルと曜日のCSS変数一元管理アーキテクチャ ==== */
+  :deep(.fc-daygrid-day) {
+    --cell-accent-color: var(--color-primary);
+    --cell-accent-opacity: 0%;
 
-  :deep(.is-sunday),
-  :deep(.is-holiday) {
-    @include highlight-day(var(--calendar-sunday), 20%, 100%);
-  }
+    &.is-saturday {
+      --cell-accent-color: var(--color-category-database);
+      --cell-accent-opacity: 15%;
 
-  :deep(.fc-day-today) {
-    .fc-daygrid-day-frame {
-      box-shadow: inset 0 0 20px theme-color(var(--color-category-main), 20%);
+      .fc-daygrid-day-number {
+        color: var(--color-category-database);
+      }
+    }
+
+    &.is-sunday,
+    &.is-holiday {
+      --cell-accent-color: var(--color-status-danger);
+      --cell-accent-opacity: 20%;
+
+      .fc-daygrid-day-number {
+        color: var(--color-status-danger);
+      }
+    }
+
+    &.fc-day-today {
+      --cell-accent-color: var(--color-primary);
+      --cell-accent-opacity: 20%;
+
+      .fc-daygrid-day-number {
+        font-weight: var(--font-weight-bold);
+        color: var(--color-primary);
+      }
     }
 
     .fc-daygrid-day-number {
-      font-weight: var(--font-weight-bold);
-      color: var(--color-category-main);
+      color: var(--color-text-main);
+    }
+
+    /* セル本体：変数ベースで基本背景＆ホバー枠線・発光を一元計算 */
+    .fc-daygrid-day-frame {
+      box-shadow: inset 0 0 24px color-mix(in srgb, var(--cell-accent-color) var(--cell-accent-opacity, transparent));
+      transition: box-shadow var(--duration-fast) var(--ease-smooth);
+
+      /* 平日・土曜・日曜祝日・今日すべてで枠線＋発光を均一適用 */
+      &:hover:not(:has(.fc-daygrid-event:hover)) {
+        box-shadow:
+          inset 0 0 var(--blur-lg) color-mix(in srgb, var(--cell-accent-color) calc(var(--cell-accent-opacity, transparent) + 15%)),
+          inset 0 0 0 1px color-mix(in srgb, var(--cell-accent-color) 50%, transparent);
+      }
     }
   }
 
-  /* セルのホバー */
-  :deep(.fc-daygrid-day-frame) {
-    transition: background-color var(--duration-fast) var(--ease-smooth), box-shadow var(--duration-fast) var(--ease-smooth);
-    
-    &:hover:not(:has(.fc-daygrid-event:hover)) {
-      box-shadow: 
-        inset 0 0 var(--blur-lg) theme-color(var(--color-category-main), 20%), 
-        inset 0 0 0 1px theme-color(var(--color-category-main), 50%);
-    }
-  }
-
-  /* イベントの動的カラー */
+  /* ==== イベントスタイル（FullCalendar ラッパーのクリーン化） ==== */
   :deep(.fc-daygrid-event) {
-    $event-color: var(--event-theme-color, var(--color-category-main));
+    @include click-enabled;
 
-    padding: var(--space-badge-p);
-    border: 1px solid theme-color($event-color, 50%);
+    overflow: visible;
 
-    color: var(--color-text-main);
+    margin-bottom: var(--space-stack-gap-xs);
+    padding: 0;
+    border: none;
+    border-radius: 0;
 
-    background-color: theme-color($event-color, 20%);
-
-    transition: var(--transition-glow);
+    background: transparent;
 
     &:hover {
-      border-color: $event-color;
-      box-shadow: 
-        inset 0 0 var(--blur-lg) theme-color($event-color, 50%), 
-        0 0 var(--blur-lg) theme-color($event-color, 30%);
+      border: none;
+      background: transparent;
     }
-    
-    .fc-event-main {
-      font-weight: var(--font-weight-medium);
+  }
+
+  /* 3件超過時の「+○件」展開リンク */
+  :deep(.fc-daygrid-more-link) {
+    @include text-meta(true);
+    @include state-base;
+    @include cyber-text-glow(var(--color-primary), 50%, var(--blur-sm));
+
+    display: inline-block;
+    padding: var(--space-badge-p);
+    border-bottom: 1px dashed var(--color-primary);
+    color: var(--color-primary);
+
+    &:hover {
+      @include cyber-text-glow(var(--color-primary), 100%, var(--blur-md));
+
+      transform: translateY(-1px);
+    }
+  }
+
+  /* ポップオーバーのサイバースタイル（すりガラス、角丸厳禁、発光枠線） */
+  :deep(.fc-popover) {
+    @include border-base;
+
+    z-index: var(--z-index-modal);
+
+    border-radius: 0;
+
+    background-color: color-mix(in srgb, var(--color-surface) 85%, transparent);
+    backdrop-filter: blur(var(--blur-md));
+    box-shadow: var(--shadow-modal);
+
+    .fc-popover-header {
+      @include flex-between;
+      @include border-dim;
+
+      padding: var(--space-control-py-sm) var(--space-control-px);
+      border-top: none;
+      border-right: none;
+      border-left: none;
+      border-radius: 0;
+
+      background-color: color-mix(in srgb, var(--color-surface-sunken) 85%, transparent);
+
+      .fc-popover-title {
+        @include text-desc(true);
+
+        color: var(--color-primary);
+      }
+
+      .fc-popover-close {
+        @include click-enabled;
+
+        color: var(--color-text-muted);
+        opacity: 0.8;
+
+        &:hover {
+          color: var(--color-text-main);
+          opacity: 1;
+        }
+      }
+    }
+
+    .fc-popover-body {
+      padding: var(--space-card-pad-sm);
     }
   }
 
@@ -496,7 +515,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
       @include state-base;
 
       &:hover td {
-        background-color: theme-color(var(--color-category-main), 15%);
+        background-color: color-mix(in srgb, var(--color-category-main) 15%, transparent);
       }
 
       td {
@@ -511,16 +530,20 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
       color: var(--color-text-main);
     }
 
+    .fc-list-event-dot {
+      border-color: var(--event-color, var(--color-primary));
+      box-shadow: var(--shadow-glow-sm);
+    }
+
     .fc-list-empty {
       @include text-body;
 
       padding: var(--space-card-pad);
       color: var(--color-text-muted);
       text-align: center;
-      background-color: transparent;
     }
   }
-  
+
   @include mq("md") {
     min-height: 400px;
   }

@@ -1,0 +1,129 @@
+<script setup lang="ts">
+import AppButton from '~/components/AppButton.vue';
+
+defineProps<{
+  title: string;
+  currentView: 'dayGridMonth' | 'listMonth';
+}>();
+
+const emit = defineEmits<{
+  (e: 'prev'): void;
+  (e: 'next'): void;
+  (e: 'today'): void;
+  (e: 'changeView', view: 'dayGridMonth' | 'listMonth'): void;
+  (e: 'openTypeSettings'): void;
+}>();
+</script>
+
+<template>
+  <div class="c-calendar-toolbar">
+    <div class="c-calendar-toolbar__nav">
+      <AppButton
+        variant="secondary"
+        size="sm"
+        icon="chevron-left"
+        icon-only
+        aria-label="前月"
+        @click="emit('prev')"
+      />
+      <AppButton
+        variant="secondary"
+        size="sm"
+        icon="chevron-right"
+        icon-only
+        aria-label="次月"
+        @click="emit('next')"
+      />
+      <AppButton
+        variant="secondary"
+        size="sm"
+        @click="emit('today')"
+      >
+        今日
+      </AppButton>
+    </div>
+
+    <div class="c-calendar-toolbar__center">
+      <h3 class="c-calendar-toolbar__title">
+        {{ title }}
+      </h3>
+    </div>
+
+    <div class="c-calendar-toolbar__views">
+      <AppButton
+        :variant="currentView === 'dayGridMonth' ? 'primary' : 'secondary'"
+        size="sm"
+        icon="calendar"
+        @click="emit('changeView', 'dayGridMonth')"
+      >
+        月表示
+      </AppButton>
+      <AppButton
+        :variant="currentView === 'listMonth' ? 'primary' : 'secondary'"
+        size="sm"
+        icon="list"
+        @click="emit('changeView', 'listMonth')"
+      >
+        リスト
+      </AppButton>
+      <AppButton
+        variant="secondary"
+        size="sm"
+        icon="settings"
+        @click="emit('openTypeSettings')"
+      >
+        種別設定
+      </AppButton>
+    </div>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.c-calendar-toolbar {
+  @include flex-between(var(--space-inline-gap));
+  @include border-dim;
+
+  flex-wrap: wrap;
+  padding: var(--space-card-pad-sm) var(--space-card-pad);
+  background-color: var(--color-surface);
+
+  &__nav {
+    @include flex-start(var(--space-inline-gap-sm));
+  }
+
+  &__center {
+    @include flex-center;
+
+    flex: 1;
+    min-width: 160px;
+  }
+
+  &__title {
+    @include text-title("md");
+
+    color: var(--color-category-main);
+
+    @include cyber-text-glow(var(--color-category-main), 60%, var(--blur-sm));
+  }
+
+  &__views {
+    @include flex-end(var(--space-inline-gap-sm));
+  }
+
+  @include mq("md") {
+    @include flex-column(var(--space-stack-gap-sm));
+
+    &__center {
+      order: -1;
+      width: 100%;
+    }
+
+    &__nav,
+    &__views {
+      @include flex-center;
+
+      width: 100%;
+    }
+  }
+}
+</style>

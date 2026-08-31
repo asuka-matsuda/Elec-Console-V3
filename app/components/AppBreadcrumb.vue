@@ -81,7 +81,7 @@ const processedItems = computed(() => {
       @include text-badge;
 
       content: "»";
-      color: theme-color(var(--color-category-main), 60%);
+      color: color-mix(in srgb, var(--color-category-main) 60%, transparent);
     }
   }
 

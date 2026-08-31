@@ -1,6 +1,1 @@
-///
-/// テーマカラーの透過色を算出するヘルパー関数 (color-mix ラッパー)
-///
-@function theme-color($color, $opacity: 50%) {
-  @return color-mix(in srgb, #{$color} $opacity, transparent);
-}
+// No custom functions currently needed.

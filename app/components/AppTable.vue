@@ -208,7 +208,7 @@ const handleSort = (col: TableColumn<T>) => {
 
       /* 行全体を光らせるため、セルの背景を上書きさせない */
       outline: var(--border-width-base) solid
-        theme-color(var(--color-category-main), 80%);
+        color-mix(in srgb, var(--color-category-main) 80%, transparent);
       outline-offset: calc(var(--border-width-base) * -1);
     }
   }

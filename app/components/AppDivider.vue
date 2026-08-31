@@ -114,7 +114,7 @@ withDefaults(
       background: linear-gradient(
         var(--grad-dir-pulse),
         transparent,
-        theme-color(var(--glow-color, var(--color-category-main)), 80%),
+        color-mix(in srgb, var(--glow-color var(--color-category-main, transparent)), 80%),
         transparent
       );
       box-shadow: var(--shadow-glow-md);

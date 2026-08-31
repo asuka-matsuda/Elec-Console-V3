@@ -13,7 +13,7 @@ export interface EventFormData {
 const props = defineProps<{
   modelValue: boolean;
   isEditing: boolean;
-  eventTypes: { id: string; name: string }[];
+  eventTypes: { id: string; name: string; color?: string }[];
   initialData: EventFormData;
 }>();
 

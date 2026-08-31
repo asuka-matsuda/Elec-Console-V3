@@ -71,16 +71,16 @@ const inputId = useId();
 
     /* 2. Checked State (ON) */
     &:checked + .c-toggle__track {
-      border-color: theme-color(var(--toggle-color), 80%);
+      border-color: color-mix(in srgb, var(--toggle-color) 80%, transparent);
       box-shadow:
-        0 0 10px theme-color(var(--toggle-color), 60%),
-        inset 0 0 var(--blur-sm) theme-color(var(--toggle-color), 40%);
+        0 0 10px color-mix(in srgb, var(--toggle-color) 60%, transparent),
+        inset 0 0 var(--blur-sm) color-mix(in srgb, var(--toggle-color) 40%, transparent);
 
       /* Slide and glow the thumb */
 
       .c-toggle__thumb {
         transform: translateX(calc(var(--track-w) - var(--thumb-w)));
-        border-color: theme-color(white, 80%);
+        border-color: color-mix(in srgb, white 80%, transparent);
         box-shadow:
           0 0 var(--blur-lg) var(--toggle-color),
           inset 0 0 var(--blur-md) var(--toggle-color),
@@ -129,7 +129,7 @@ const inputId = useId();
     /* Label slightly glows on hover */
 
     .c-toggle__label {
-      color: theme-color(var(--toggle-color), 90%);
+      color: color-mix(in srgb, var(--toggle-color) 90%, transparent);
 
       @include cyber-text-glow(var(--toggle-color), 20%, var(--blur-sm));
     }

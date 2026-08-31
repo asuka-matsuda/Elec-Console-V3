@@ -341,7 +341,7 @@ onUnmounted(() => {
 }
 
 .c-custom-select__dropdown {
-  --glow-color: theme-color(var(--color-category-main), 20%);
+  --glow-color: color-mix(in srgb, var(--color-category-main) 20%, transparent);
 
   position: absolute;
   z-index: var(--z-index-select);
@@ -356,9 +356,9 @@ onUnmounted(() => {
   box-shadow: var(--shadow-glow-inset-md), var(--shadow-elevation-md);
 
   .c-custom-select.is-error & {
-    --glow-color: theme-color(var(--color-status-danger), 20%);
+    --glow-color: color-mix(in srgb, var(--color-status-danger) 20%, transparent);
 
-    border-color: theme-color(var(--color-status-danger), 50%);
+    border-color: color-mix(in srgb, var(--color-status-danger) 50%, transparent);
     box-shadow: var(--shadow-glow-inset-md), var(--shadow-elevation-md);
   }
 }
@@ -389,7 +389,7 @@ onUnmounted(() => {
 
   &:hover:not(.is-disabled, .is-placeholder),
   &.is-focused:not(.is-disabled) {
-    --glow-color: theme-color(var(--color-category-main), 30%);
+    --glow-color: color-mix(in srgb, var(--color-category-main) 30%, transparent);
 
     transform: translateX(2px);
 
@@ -402,7 +402,7 @@ onUnmounted(() => {
   }
 
   &.is-selected {
-    --glow-color: theme-color(var(--color-category-main), 40%);
+    --glow-color: color-mix(in srgb, var(--color-category-main) 40%, transparent);
 
     border-left-color: var(--color-category-main);
     color: var(--color-category-main);

@@ -14,8 +14,16 @@ export interface CalendarEvent {
 export interface EventType {
   id: string;
   name: string;
-  colorVar: string; // CSS custom property name like 'primary', 'danger', 'category-database'
+  color: string; // CSS変数またはHEXカラー（例: 'var(--color-primary)', '#00f0ff'）
+  colorVar?: string;
 }
+
+export const DEFAULT_EVENT_TYPES: EventType[] = [
+  { id: 'work', name: '現場作業', color: '#00f0ff' },
+  { id: 'meeting', name: '打合せ', color: '#0ea5e9' },
+  { id: 'inspection', name: '立会検査', color: '#f59e0b' },
+  { id: 'delivery', name: '納品・搬入', color: '#10b981' },
+];
 
 export interface CalendarSettings {
   siteId: string;
@@ -37,6 +45,9 @@ export const useCalendar = (siteId: string) => {
 
   const { refresh: fetchSettings } = useAsyncData(`fetch-settings-${siteId}`, async () => {
     const data = await $api<CalendarSettings>(`/api/sites/${siteId}/calendar/settings`);
+    if (data && (!data.eventTypes || data.eventTypes.length === 0)) {
+      data.eventTypes = DEFAULT_EVENT_TYPES;
+    }
     settings.value = data;
     return data;
   });

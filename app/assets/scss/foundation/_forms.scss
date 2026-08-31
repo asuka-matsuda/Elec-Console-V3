@@ -15,7 +15,7 @@
 
   // --- ホバー ---
   #{$is-hover} {
-    border-color: theme-color(var(--color-category-main), 50%);
+    border-color: color-mix(in srgb, var(--color-category-main) 50%, transparent);
 
     @include state-hover(var(--color-category-main));
   }
@@ -37,12 +37,12 @@
 
   // --- エラー ---
   #{$is-error} {
-    border-color: theme-color(var(--color-status-danger), 50%);
+    border-color: color-mix(in srgb, var(--color-status-danger) 50%, transparent);
     color: var(--color-status-danger);
 
     // --- エラー時・ホバー ---
     &:hover:not(:disabled, :focus) {
-      border-color: theme-color(var(--color-status-danger), 70%);
+      border-color: color-mix(in srgb, var(--color-status-danger) 70%, transparent);
 
       @include state-hover(var(--color-status-danger));
     }
