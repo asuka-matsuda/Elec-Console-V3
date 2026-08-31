@@ -101,16 +101,19 @@
       @media (width <= $value) {
         @content;
       }
-    } @else if $direction == "up" {
+    }
+    @if $direction == "up" {
       @media (width >= $value) {
         @content;
       }
-    } @else if $direction == "up-strict" {
+    }
+    @if $direction == "up-strict" {
       @media (width > $value) {
         @content;
       }
     }
-  } @else {
+  }
+  @if not map.has-key($breakpoints, $breakpoint) {
     @warn "Invalid breakpoint: #{$breakpoint}.";
   }
 }
@@ -123,12 +126,14 @@
       @container (min-width: #{$value}) {
         @content;
       }
-    } @else if $direction == "down" {
+    }
+    @if $direction == "down" {
       @container (max-width: #{$value}) {
         @content;
       }
     }
-  } @else {
+  }
+  @if not map.has-key($container-breakpoints, $breakpoint) {
     @warn "Invalid container breakpoint: #{$breakpoint}.";
   }
 }

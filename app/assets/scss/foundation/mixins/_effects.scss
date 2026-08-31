@@ -9,16 +9,13 @@
   @if $type == "sink" {
     box-shadow: var(--shadow-sink);
   }
-
- @else if $type == "modal" {
+  @if $type == "modal" {
     box-shadow: var(--shadow-modal);
   }
-
- @else if $type == "none" {
+  @if $type == "none" {
     box-shadow: none;
   }
-
- @else {
+  @if $type != "sink" and $type != "modal" and $type != "none" {
     box-shadow: var(--shadow-elevation-#{$type});
   }
 }
