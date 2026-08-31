@@ -101,7 +101,6 @@ const processedItems = computed(() => {
   }
 
   .current {
-    @include flex-start;
     @include cyber-text-glow(var(--color-category-main), 60%, var(--blur-md));
     @include blinking-cursor;
 
