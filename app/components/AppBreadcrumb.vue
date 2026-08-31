@@ -80,6 +80,8 @@ const processedItems = computed(() => {
   }
 
   &__item {
+    @include flex-start(var(--space-inline-gap));
+
     &:not(:last-child)::after {
       @include text-badge;
 
