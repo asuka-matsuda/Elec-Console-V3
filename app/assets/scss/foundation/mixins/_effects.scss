@@ -6,12 +6,15 @@
 
 // シャドウ (物理的な影・へこみのカプセル化)
 @mixin shadow($type: "sm") {
-  $value: var(--shadow-elevation-#{$type});
-  @if $type == "sink" { $value: var(--shadow-sink); }
-  @if $type == "modal" { $value: var(--shadow-modal); }
-  @if $type == "none" { $value: none; }
-  
-  box-shadow: $value;
+  @if $type == "sink" {
+    box-shadow: var(--shadow-sink);
+  } @else if $type == "modal" {
+    box-shadow: var(--shadow-modal);
+  } @else if $type == "none" {
+    box-shadow: none;
+  } @else {
+    box-shadow: var(--shadow-elevation-#{$type});
+  }
 }
 
 // サイバー風テキスト発光

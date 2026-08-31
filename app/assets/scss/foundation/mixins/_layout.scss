@@ -94,7 +94,6 @@
 // レスポンシブ & コンテナクエリ Mixins
 // ==========================================================================
 @mixin mq($breakpoint, $direction: "down") {
-  /* stylelint-disable scss/at-rule-empty-line-before, rule-empty-line-before */
   @if map.has-key($breakpoints, $breakpoint) {
     $value: map.get($breakpoints, $breakpoint);
 
@@ -102,28 +101,21 @@
       @media (width <= $value) {
         @content;
       }
-    }
-
-    @if $direction == "up" {
+    } @else if $direction == "up" {
       @media (width >= $value) {
         @content;
       }
-    }
-
-    @if $direction == "up-strict" {
+    } @else if $direction == "up-strict" {
       @media (width > $value) {
         @content;
       }
     }
-  }
-  @if not map.has-key($breakpoints, $breakpoint) {
+  } @else {
     @warn "Invalid breakpoint: #{$breakpoint}.";
   }
-  /* stylelint-enable scss/at-rule-empty-line-before, rule-empty-line-before */
 }
 
 @mixin cq($breakpoint, $direction: "up") {
-  /* stylelint-disable scss/at-rule-empty-line-before, rule-empty-line-before */
   @if map.has-key($container-breakpoints, $breakpoint) {
     $value: map.get($container-breakpoints, $breakpoint);
 
@@ -131,16 +123,12 @@
       @container (min-width: #{$value}) {
         @content;
       }
-    }
-
-    @if $direction == "down" {
+    } @else if $direction == "down" {
       @container (max-width: #{$value}) {
         @content;
       }
     }
-  }
-  @if not map.has-key($container-breakpoints, $breakpoint) {
+  } @else {
     @warn "Invalid container breakpoint: #{$breakpoint}.";
   }
-  /* stylelint-enable scss/at-rule-empty-line-before, rule-empty-line-before */
 }

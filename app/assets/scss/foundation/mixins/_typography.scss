@@ -64,25 +64,27 @@
 }
 
 // セマンティック・タイポグラフィ Mixins
-$title-size-map: (
-  "4xl": (size: var(--font-size-4xl), tracking: var(--tracking-tighter)),
-  "3xl": (size: var(--font-size-3xl), tracking: var(--tracking-tighter)),
-  "2xl": (size: var(--font-size-2xl), tracking: var(--tracking-tight)),
-  "xl": (size: var(--font-size-2xl), tracking: var(--tracking-tight)),
-  "lg": (size: var(--font-size-xl), tracking: var(--tracking-tight)),
-  "md": (size: var(--font-size-lg), tracking: var(--tracking-normal)),
-  "sm": (size: var(--font-size-base), tracking: var(--tracking-wide))
-);
-
 @mixin text-title($size: "md", $color: null) {
-  $config: map.get($title-size-map, $size);
-  
-  @if not $config {
-    $config: map.get($title-size-map, "md");
+  @if $size == "4xl" {
+    font-size: var(--font-size-4xl);
+    letter-spacing: var(--tracking-tighter);
+  } @else if $size == "3xl" {
+    font-size: var(--font-size-3xl);
+    letter-spacing: var(--tracking-tighter);
+  } @else if $size == "2xl" or $size == "xl" {
+    font-size: var(--font-size-2xl);
+    letter-spacing: var(--tracking-tight);
+  } @else if $size == "lg" {
+    font-size: var(--font-size-xl);
+    letter-spacing: var(--tracking-tight);
+  } @else if $size == "sm" {
+    font-size: var(--font-size-base);
+    letter-spacing: var(--tracking-wide);
+  } @else {
+    // "md" (デフォルト)
+    font-size: var(--font-size-lg);
+    letter-spacing: var(--tracking-normal);
   }
-
-  font-size: map.get($config, size);
-  letter-spacing: map.get($config, tracking);
 
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
