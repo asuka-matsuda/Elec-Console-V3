@@ -80,21 +80,16 @@ const inputId = useId();
   @include text-desc;
   @include click-enabled;
 
-  // --- 状態 (Vue制御) ---
   &.is-disabled {
     @include disabled;
   }
 
-  // --- ホバー & アクティブ状態 (親要素への作用) ---
   &:hover:not(.is-disabled) {
-    // ラベルのグロウ効果
     .c-checkbox__label {
       color: color-mix(in srgb, var(--checkbox-color) 90%, transparent);
-
       @include cyber-text-glow(var(--checkbox-color), 20%, var(--blur-sm));
     }
 
-    // ホバー時のboxハイライト (inputがフォーカス/アクティブ/チェックされていない時のみ)
     .c-checkbox__input:not(:focus-visible, :active, :checked)
       + .c-checkbox__box {
       @include state-hover(var(--checkbox-color));
@@ -105,34 +100,28 @@ const inputId = useId();
     @include state-active(var(--checkbox-color));
   }
 
-  // --- input本体 (非表示にしつつ隣接セレクタでboxを操作) ---
   &__input {
-    // 視覚的には隠すがフォーカスは当たるようにする
     position: absolute;
     width: 0;
     height: 0;
     opacity: 0;
 
-    // フォーカス時のGlow
     &:focus-visible + .c-checkbox__box {
       @include state-focus(var(--checkbox-color));
       @include cyber-text-glow(var(--checkbox-color));
     }
 
-    // チェック時 & 一部選択時のベース状態（枠が光る）
     &:checked + .c-checkbox__box,
     &:indeterminate + .c-checkbox__box {
       @include state-active(var(--checkbox-color));
     }
 
-    // チェックアイコンの表示
     &:checked + .c-checkbox__box .c-checkbox__icon--check {
       opacity: 1;
       filter: drop-shadow(0 0 var(--blur-sm) var(--checkbox-color));
       stroke-dashoffset: 0;
     }
 
-    // Indeterminateアイコンの表示
     &:indeterminate + .c-checkbox__box .c-checkbox__icon--dash {
       opacity: 1;
       filter: drop-shadow(0 0 var(--blur-sm) var(--checkbox-color));
@@ -140,7 +129,6 @@ const inputId = useId();
     }
   }
 
-  // --- Box (四角い枠) ---
   &__box {
     @include flex-center;
     position: relative;
@@ -152,13 +140,10 @@ const inputId = useId();
     @include border-dim;
     @include state-base(var(--shadow-sink));
 
-    // アイコン (初期状態は透明かつstroke-dashoffsetで隠す)
     .c-checkbox__icon {
       position: absolute;
-
       width: 70%;
       height: 70%;
-
       opacity: 0;
       stroke: var(--checkbox-color);
       stroke-dasharray: 24;
@@ -168,7 +153,6 @@ const inputId = useId();
     }
   }
 
-  // --- ラベル ---
   &__label {
     @include state-base;
   }
