@@ -56,7 +56,7 @@ const inputId = useId();
 
 <style scoped lang="scss">
 .c-checkbox {
-  --checkbox-color: var(--color-category-main);
+  --checkbox-color: var(--theme-accent);
 
   @include text-desc;
   @include click-enabled;

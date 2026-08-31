@@ -43,7 +43,7 @@ withDefaults(
 <style scoped lang="scss">
 .c-divider {
   $accents: (
-    "main": var(--color-category-main),
+    "main": var(--theme-accent),
     "tool": var(--color-category-tool),
     "database": var(--color-category-database),
     "reference": var(--color-category-reference),
@@ -114,11 +114,11 @@ withDefaults(
       background: linear-gradient(
         var(--grad-dir-pulse),
         transparent,
-        color-mix(in srgb, var(--glow-color, var(--color-category-main, transparent)), 80%),
+        color-mix(in srgb, var(--theme-accent), 80%),
         transparent
       );
 
-      @include state-focus(var(--color-category-main));
+      @include state-focus(var(--theme-accent));
 
       animation: data-pulse-x 3s ease-in-out infinite;
     }

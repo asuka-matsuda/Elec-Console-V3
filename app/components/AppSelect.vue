@@ -341,7 +341,7 @@ onUnmounted(() => {
 }
 
 .c-custom-select__dropdown {
-  --glow-color: color-mix(in srgb, var(--color-category-main) 20%, transparent);
+  --glow-color: color-mix(in srgb, var(--theme-accent) 20%, transparent);
 
   position: absolute;
   z-index: var(--z-index-select);
@@ -349,12 +349,12 @@ onUnmounted(() => {
   width: max-content;
   max-width: 90vw;
 
-  @include border-dim(var(--color-category-main));
+  @include border-dim(var(--theme-accent));
 
   background-color: transparent;
   backdrop-filter: blur(var(--blur-md));
 
-  @include state-base(var(--shadow-elevation-md), none, var(--color-category-main));
+  @include state-base(var(--shadow-elevation-md), none, var(--theme-accent));
 
   .c-custom-select.is-error & {
     --glow-color: color-mix(in srgb, var(--color-status-danger) 20%, transparent);
@@ -368,7 +368,7 @@ onUnmounted(() => {
 .c-custom-select__list {
   --scrollbar-size: var(--space-2);
 
-  scrollbar-color: var(--color-category-main) transparent;
+  scrollbar-color: var(--theme-accent) transparent;
   scrollbar-width: thin;
 
   transform: translateZ(0);
@@ -391,24 +391,24 @@ onUnmounted(() => {
 
   &:hover:not(.is-disabled, .is-placeholder),
   &.is-focused:not(.is-disabled) {
-    --glow-color: color-mix(in srgb, var(--color-category-main) 30%, transparent);
+    --glow-color: color-mix(in srgb, var(--theme-accent) 30%, transparent);
 
     transform: translateX(2px);
-    border-left-color: var(--color-category-main);
-    color: var(--color-category-main);
+    border-left-color: var(--theme-accent);
+    color: var(--theme-accent);
     background-color: transparent;
 
-    @include state-active(var(--color-category-main));
+    @include state-active(var(--theme-accent));
   }
 
   &.is-selected {
-    --glow-color: color-mix(in srgb, var(--color-category-main) 40%, transparent);
+    --glow-color: color-mix(in srgb, var(--theme-accent) 40%, transparent);
 
-    border-left-color: var(--color-category-main);
-    color: var(--color-category-main);
+    border-left-color: var(--theme-accent);
+    color: var(--theme-accent);
     background-color: transparent;
 
-    @include state-active(var(--color-category-main));
+    @include state-active(var(--theme-accent));
   }
 
   &.is-disabled {

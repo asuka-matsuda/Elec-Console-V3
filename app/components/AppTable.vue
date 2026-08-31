@@ -162,7 +162,7 @@ const handleSort = (col: TableColumn<T>) => {
     }
 
     &.is-sorted {
-      border-bottom-color: var(--color-category-main);
+      border-bottom-color: var(--theme-accent);
       color: var(--color-text-main);
     }
 
@@ -182,7 +182,7 @@ const handleSort = (col: TableColumn<T>) => {
       color: var(--color-text-muted);
 
       &.is-active {
-        color: var(--color-category-main);
+        color: var(--theme-accent);
       }
 
       &.is-inactive {
@@ -208,7 +208,7 @@ const handleSort = (col: TableColumn<T>) => {
 
       /* 行全体を光らせるため、セルの背景を上書きさせない */
       outline: var(--border-width-base) solid
-        color-mix(in srgb, var(--color-category-main) 80%, transparent);
+        color-mix(in srgb, var(--theme-accent) 80%, transparent);
       outline-offset: calc(var(--border-width-base) * -1);
     }
   }

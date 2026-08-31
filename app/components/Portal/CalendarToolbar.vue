@@ -101,9 +101,9 @@ const emit = defineEmits<{
   &__title {
     @include text-title("md");
 
-    color: var(--color-category-main);
+    color: var(--theme-accent);
 
-    @include cyber-text-glow(var(--color-category-main), 60%, var(--blur-sm));
+    @include cyber-text-glow(var(--theme-accent), 60%, var(--blur-sm));
   }
 
   &__views {

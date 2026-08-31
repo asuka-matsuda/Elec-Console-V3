@@ -26,7 +26,7 @@ const timeText = computed(() => {
   return `${startStr} - ${format(props.end)}`;
 });
 
-const badgeColor = computed(() => props.color || 'var(--color-category-main)');
+const badgeColor = computed(() => props.color || 'var(--theme-accent)');
 </script>
 
 <template>

@@ -60,7 +60,7 @@ withDefaults(
   --p-bracket-size: var(--space-4);
   --p-bracket-color: var(--color-border);
   --p-bracket-glow: none;
-  --p-theme-color: var(--color-category-main);
+  --p-theme-color: var(--theme-accent);
 
   position: relative;
   padding: var(--space-card-pad);
@@ -127,7 +127,7 @@ withDefaults(
   }
 
   &--color-main {
-    --p-theme-color: var(--color-category-main);
+    --p-theme-color: var(--theme-accent);
   }
 
   &--color-tool {

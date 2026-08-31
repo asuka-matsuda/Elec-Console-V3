@@ -36,8 +36,8 @@ const props = withDefaults(
 
 const presetMap: Record<string, string> = {
   secondary: "var(--color-text-muted)",
-  primary: "var(--color-category-main)",
-  main: "var(--color-category-main)",
+  primary: "var(--theme-accent)",
+  main: "var(--theme-accent)",
   success: "var(--color-status-success)",
   warning: "var(--color-status-warning)",
   danger: "var(--color-status-danger)",

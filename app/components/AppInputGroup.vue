@@ -54,7 +54,7 @@
 
       padding: 0 var(--space-control-px-md);
 
-      @include border-dim(var(--color-category-main));
+      @include border-dim(var(--theme-accent));
 
       border-left: none;
       color: var(--color-text-main);

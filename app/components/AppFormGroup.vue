@@ -130,7 +130,7 @@ withDefaults(
   user-select: none;
 
   // Default state: slightly dimmed
-  color: color-mix(in srgb, var(--color-category-main) 70%, transparent);
+  color: color-mix(in srgb, var(--theme-accent) 70%, transparent);
   text-transform: uppercase;
 
   @include state-base;
@@ -138,7 +138,7 @@ withDefaults(
   // Cyber glowing dot
 
   &::before {
-    --glow-color: color-mix(in srgb, var(--color-category-main) 30%, transparent);
+    --glow-color: color-mix(in srgb, var(--theme-accent) 30%, transparent);
 
     content: "";
 
@@ -148,25 +148,25 @@ withDefaults(
     height: var(--space-2);
 
     @include border-base(
-      color-mix(in srgb, var(--color-category-main) 70%, transparent),
+      color-mix(in srgb, var(--theme-accent) 70%, transparent),
       var(--border-width-thick)
     );
 
     border-radius: 50%;
 
-    @include state-base(none, var(--transition-base), var(--color-category-main));
+    @include state-base(none, var(--transition-base), var(--theme-accent));
   }
 }
 
 // フォームグループ内がフォーカスされたらラベルを発光させる
 .c-form-group:focus-within .c-form-label {
-  color: var(--color-category-main);
+  color: var(--theme-accent);
 
-  @include cyber-text-glow(var(--color-category-main));
+  @include cyber-text-glow(var(--theme-accent));
 
   &::before {
     // state-focus を使って発光（box-shadowを隠蔽）
-    @include state-focus(var(--color-category-main));
+    @include state-focus(var(--theme-accent));
   }
 }
 

@@ -51,7 +51,7 @@ const getStyle = (option: RadioOption): StyleValue | undefined => option.color ?
 
 <style scoped lang="scss">
 .c-segmented-control {
-  --radio-color: var(--color-category-main); /* デフォルトの色 */
+  --radio-color: var(--theme-accent); /* デフォルトの色 */
 
   display: inline-flex;
   flex-shrink: 0;
@@ -104,7 +104,7 @@ const getStyle = (option: RadioOption): StyleValue | undefined => option.color ?
       border-color: var(--radio-color);
       color: var(--radio-color);
 
-      @include state-active(var(--color-category-main));
+      @include state-active(var(--theme-accent));
 
       @include cyber-text-glow(var(--radio-color), 60%, var(--blur-md));
     }

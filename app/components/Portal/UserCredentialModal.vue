@@ -99,7 +99,7 @@ const handleCopyPassword = () => {
     background: transparent;
     backdrop-filter: blur(var(--blur-sm));
 
-    @include border-dim(var(--color-category-main), 20%);
+    @include border-dim(var(--theme-accent), 20%);
   }
 
   &__credential-value {

@@ -100,19 +100,19 @@ const { currentUser, logout } = useAuth();
   @include flex-start(var(--space-inline-gap));
 
   &__avatar {
-    --glow-color: color-mix(in srgb, var(--color-category-main) 50%, transparent);
+    --glow-color: color-mix(in srgb, var(--theme-accent) 50%, transparent);
 
     @include flex-center;
 
     width: var(--size-control-sm);
     height: var(--size-control-sm);
 
-    @include border-base(var(--color-category-main), var(--border-width-thick));
+    @include border-base(var(--theme-accent), var(--border-width-thick));
 
     border-radius: 50%;
-    background: var(--color-category-main);
+    background: var(--theme-accent);
 
-    @include state-focus(var(--color-category-main));
+    @include state-focus(var(--theme-accent));
   }
 
   &__name {

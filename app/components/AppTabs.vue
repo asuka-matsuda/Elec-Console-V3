@@ -107,17 +107,17 @@ const selectTab = (option: TabOption) => {
   }
 
   &:active:not(.is-disabled) {
-    @include state-active(var(--color-category-main));
+    @include state-active(var(--theme-accent));
   }
 
   &.is-active {
-    --glow-color: var(--color-category-main);
+    --glow-color: var(--theme-accent);
 
     transform: translateY(0);
-    border-color: var(--color-category-main);
-    color: var(--color-category-main);
+    border-color: var(--theme-accent);
+    color: var(--theme-accent);
 
-    @include state-active(var(--color-category-main));
+    @include state-active(var(--theme-accent));
 
     .c-tabs__item-text {
       @include cyber-text-glow;

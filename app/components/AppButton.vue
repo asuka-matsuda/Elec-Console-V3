@@ -59,7 +59,7 @@ const componentTag = computed(() => {
 
 <style scoped lang="scss">
 .c-btn {
-  --btn-color: var(--color-category-main);
+  --btn-color: var(--theme-accent);
 
   @include inline-flex-center(var(--space-inline-gap));
   @include text-meta;

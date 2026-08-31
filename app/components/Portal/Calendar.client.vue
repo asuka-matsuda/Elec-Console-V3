@@ -511,7 +511,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
     .fc-list-day-side-text {
       @include text-desc(true);
 
-      color: var(--color-category-main);
+      color: var(--theme-accent);
     }
 
     .fc-list-event {
@@ -519,7 +519,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
       @include state-base;
 
       &:hover td {
-        background-color: color-mix(in srgb, var(--color-category-main) 15%, transparent);
+        background-color: color-mix(in srgb, var(--theme-accent) 15%, transparent);
       }
 
       td {

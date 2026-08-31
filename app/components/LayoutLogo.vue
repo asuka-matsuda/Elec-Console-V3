@@ -30,20 +30,20 @@ const emit = defineEmits<{
 
   &:is(:hover, :focus-visible) {
     .c-logo__icon {
-      @include cyber-text-glow(var(--color-category-main), 60%, var(--blur-md));
+      @include cyber-text-glow(var(--theme-accent), 60%, var(--blur-md));
 
       transform: scale(1.1);
     }
   }
 
   &:active {
-    @include state-active(var(--color-category-main));
+    @include state-active(var(--theme-accent));
   }
 
   &__icon {
     width: var(--icon-size-md);
     height: var(--icon-size-md);
-    color: var(--color-category-main);
+    color: var(--theme-accent);
 
     @include state-base;
   }

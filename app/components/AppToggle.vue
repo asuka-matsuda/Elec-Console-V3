@@ -41,7 +41,7 @@ const inputId = useId();
 
 <style scoped lang="scss">
 .c-toggle {
-  --toggle-color: var(--color-category-main);
+  --toggle-color: var(--theme-accent);
   --track-w: 44px;
   --track-h: var(--space-5);
   --thumb-w: var(--space-5);
