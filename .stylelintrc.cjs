@@ -31,6 +31,16 @@ module.exports = {
     // 一時的に空のブロックを許容
     "block-no-empty": null,
     // SCSSの演算子の後の改行を許容
-    "scss/operator-no-newline-after": null
+    "scss/operator-no-newline-after": null,
+    // @else の前に空行を強制挿入しないようにする（Sassの構文エラー回避）
+    "scss/at-else-empty-line-before": "never",
+    "at-rule-empty-line-before": [
+      "always",
+      {
+        except: ["blockless-after-same-name-blockless", "first-nested"],
+        ignore: ["after-comment"],
+        ignoreAtRules: ["else"]
+      }
+    ]
   }
 };
