@@ -35,7 +35,7 @@
   @if $opacity == 100% {
     border: $width solid $color;
   } @else {
-    border: $width solid color-mix(in srgb, #{$color} $opacity, transparent);
+    border: $width solid color-mix(in srgb, $color $opacity, transparent);
   }
 }
 
@@ -56,6 +56,7 @@
     }
   } @else {
     display: inline-block;
+    vertical-align: middle;
 
     width: $width;
     height: $height;
