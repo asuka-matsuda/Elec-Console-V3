@@ -56,10 +56,11 @@
     }
   } @else {
     display: inline-block;
-    vertical-align: middle;
 
     width: $width;
     height: $height;
+
+    vertical-align: middle;
 
     background-color: $color;
 
