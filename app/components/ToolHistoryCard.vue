@@ -139,10 +139,9 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
   @include flex-column;
 
   &__header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
+    @include flex-between(0);
 
+    align-items: flex-end;
     padding-bottom: var(--space-control-py-md);
     border-bottom: 1px solid var(--color-border);
   }

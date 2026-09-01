@@ -65,8 +65,10 @@ const { currentUser, logout } = useAuth()
 
 <style scoped lang="scss">
 .l-app {
-  display: flex;
+  @include flex-start(0);
+
   flex: 1;
+  align-items: stretch;
   min-height: 0;
 }
 

@@ -294,11 +294,11 @@ const dropStatusClass = computed(() => {
   }
 
   &__metrics {
-    display: flex;
+    @include flex-start(var(--space-inline-gap));
+
     flex-flow: row wrap; // 狭い場合は横並びラップ（スモールファースト）
     flex-shrink: 0;
-    gap: var(--space-inline-gap);
-
+    align-items: stretch;
     min-width: auto;
 
     // コンテナの幅が xs 以上の場合は縦積み

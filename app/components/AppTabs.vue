@@ -60,8 +60,7 @@ const selectTab = (option: TabOption) => {
   flex-wrap: wrap;
 
   &--grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    @include grid(repeat(auto-fit, minmax(120px, 1fr)), var(--space-inline-gap));
 
     .c-tabs__item {
       width: 100%;

@@ -126,9 +126,8 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
   &__body {
     /* PCファースト: カード内を左右2カラムに分割 */
-    display: flex;
-    flex-flow: row nowrap;
-    gap: var(--space-card-gap);
+    @include flex-start(var(--space-card-gap));
+
     align-items: flex-start;
   }
 
@@ -193,9 +192,8 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
   &__legend-item {
     @include text-body("md", "bold");
+    @include flex-start(var(--space-inline-gap-sm));
 
-    display: flex;
-    gap: var(--space-inline-gap-sm);
     align-items: flex-start;
     color: var(--color-text-secondary);
   }

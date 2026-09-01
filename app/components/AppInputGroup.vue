@@ -21,12 +21,16 @@
 
 <style scoped lang="scss">
 .c-input-group {
-  display: flex;
+  @include flex-start(0);
+
+  align-items: stretch;
   width: 100%;
 
   &__main {
-    display: flex;
+    @include flex-start(0);
+
     flex: 1;
+    align-items: stretch;
 
     /* AppInput のボーダーと角丸を調整 */
     :deep(.c-input) {
@@ -35,7 +39,9 @@
   }
 
   &__append {
-    display: flex;
+    @include flex-start(0);
+
+    align-items: stretch;
 
     /* AppSelect のボタンや addon のボーダーを調整 */
     :deep(.c-custom-select__value),

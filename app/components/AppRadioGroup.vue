@@ -53,10 +53,10 @@ const getStyle = (option: RadioOption): StyleValue | undefined => option.color ?
 .c-segmented-control {
   --radio-color: var(--theme-accent); /* デフォルトの色 */
 
-  display: inline-flex;
-  flex-shrink: 0;
-  gap: var(--space-0-5);
+  @include inline-flex-start(var(--space-0-5));
 
+  flex-shrink: 0;
+  align-items: stretch;
   width: max-content;
   padding: var(--space-0-5);
 

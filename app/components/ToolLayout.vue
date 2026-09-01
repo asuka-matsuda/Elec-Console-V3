@@ -84,9 +84,10 @@ const toggleDrawer = () => {
   }
 
   &__main {
-    display: flex;
+    @include flex-start(var(--space-card-gap));
+
     flex: 1;
-    gap: var(--space-card-gap);
+    align-items: stretch;
     min-height: 0;
   }
 

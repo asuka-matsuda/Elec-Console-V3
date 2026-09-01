@@ -170,10 +170,9 @@ const isChecked = ref(false)
 }
 
 .p-ds-flex {
-  display: flex;
+  @include flex-start(var(--space-card-gap));
+
   flex-wrap: wrap;
-  gap: var(--space-card-gap);
-  align-items: center;
 }
 
 .p-ds-stack {

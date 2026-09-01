@@ -97,11 +97,9 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
 
 <style scoped lang="scss">
 .p-dashboard {
-  display: flex;
-  flex-direction: row; /* Desktop default */
-  gap: var(--space-section-gap);
-  align-items: flex-start;
+  @include flex-start(var(--space-section-gap));
 
+  align-items: flex-start;
   padding-bottom: var(--space-layout-pad);
 
   @include mq("md") {
@@ -132,9 +130,8 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
 
   &__header {
     @include text-title("sm");
+    @include flex-start(var(--space-inline-gap-sm));
 
-    display: flex;
-    gap: var(--space-inline-gap-sm);
     align-items: flex-start;
 
     color: var(--theme-accent);
