@@ -133,14 +133,16 @@ const updateCount = (val: string | number | boolean | null | undefined) => {
 
 <style scoped lang="scss">
 .c-cable-row {
-  @include flex-column(var(--space-1));
+  @include flex-start-stretch($direction: column);
+
+  gap: var(--space-1);
 
   &__header {
-    @include flex-between;
+    @include flex-between-center;
   }
 
   &__title-group {
-    @include flex-start;
+    @include flex-start-center;
   }
 
   &__title {

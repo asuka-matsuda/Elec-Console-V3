@@ -52,7 +52,9 @@ defineEmits(['reset'])
   min-height: 0;
 
   &__content {
-    @include flex-column(var(--space-card-gap));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-card-gap);
   }
 }
 </style>

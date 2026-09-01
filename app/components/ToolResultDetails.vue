@@ -13,11 +13,11 @@
 
 <style scoped lang="scss">
 .p-result-details {
+  gap: var(--space-stack-gap-sm);
   margin: 0; // Reset dl margin
-
-  @include flex-column(var(--space-stack-gap-sm));
-
   padding-top: var(--space-card-pad-md);
   border-top: 1px solid var(--color-border);
+
+  @include flex-start-stretch($direction: column);
 }
 </style>

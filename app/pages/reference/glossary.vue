@@ -176,7 +176,7 @@ const categoryColorMap: Record<string, string> = {
   container-name: filter-layout;
   container-type: inline-size;
 
-  @include flex-column;
+  @include flex-start-stretch($direction: column);
 
   flex: 1;
 
@@ -185,9 +185,10 @@ const categoryColorMap: Record<string, string> = {
   min-height: 0;
 
   &__grid {
-    @include flex-column(var(--space-card-gap));
+    @include flex-start-stretch($direction: column);
 
     flex: 1;
+    gap: var(--space-card-gap);
     min-height: 0;
   }
 
@@ -196,7 +197,7 @@ const categoryColorMap: Record<string, string> = {
   }
 
   &__main {
-    @include flex-column;
+    @include flex-start-stretch($direction: column);
 
     flex: 1;
     min-width: 0;
@@ -205,23 +206,26 @@ const categoryColorMap: Record<string, string> = {
 }
 
 .c-glossary-list {
-  @include flex-column;
+  @include flex-start-stretch($direction: column);
 }
 
 .c-glossary-card {
-  @include flex-column;
+  @include flex-start-stretch($direction: column);
   @include state-base;
 
   &__header {
-    @include flex-between(var(--space-inline-gap));
+    @include flex-between-center;
 
+    gap: var(--space-inline-gap);
     padding-bottom: var(--space-control-py-sm);
     border-bottom: var(--border-width-base) solid transparent;
     border-image: linear-gradient(to right, transparent, var(--color-border) 50%, transparent) 1;
   }
 
   &__title {
-    @include flex-column(var(--space-1));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-1);
   }
 
   &__kana {
@@ -233,7 +237,9 @@ const categoryColorMap: Record<string, string> = {
   }
 
   &__body {
-    @include flex-column(var(--space-1));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-1);
   }
 
   &__desc {
@@ -243,8 +249,9 @@ const categoryColorMap: Record<string, string> = {
   }
 
   &__meta {
-    @include flex-column(var(--space-stack-gap-sm));
+    @include flex-start-stretch($direction: column);
 
+    gap: var(--space-stack-gap-sm);
     padding: var(--space-card-pad-md);
 
     @include border-base($opacity: 30%);

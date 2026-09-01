@@ -92,20 +92,24 @@ const handleCustomColorInput = (event: Event) => {
 
 <style scoped lang="scss">
 .c-color-picker {
-  @include flex-start(var(--space-inline-gap-sm));
+  @include flex-start-center;
 
   flex-wrap: wrap;
+  gap: var(--space-inline-gap-sm);
 
   &__presets {
-    @include flex-start(var(--space-inline-gap-xs));
+    @include flex-start-center;
 
     flex-wrap: wrap;
+    gap: var(--space-inline-gap-xs);
   }
 
   &__custom {
     position: relative;
 
-    @include flex-start(var(--space-inline-gap-xs));
+    @include flex-start-center;
+
+    gap: var(--space-inline-gap-xs);
   }
 
   &__native {
@@ -130,7 +134,7 @@ const handleCustomColorInput = (event: Event) => {
 }
 
 .c-color-swatch {
-  @include flex-center;
+  @include flex-center-center;
 
   flex-shrink: 0;
   width: var(--space-6);

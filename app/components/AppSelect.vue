@@ -313,7 +313,7 @@ onUnmounted(() => {
 
   overflow: hidden;
 
-  @include flex-start;
+  @include flex-start-center;
 
   width: 100%;
   height: var(--size-control-md);

@@ -57,11 +57,13 @@ onMounted(() => {
 <style scoped lang="scss">
 .p-portal-index {
   &__content {
-    @include flex-column(var(--space-card-gap));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-card-gap);
   }
 
   &__actions {
-    @include flex-start;
+    @include flex-start-center;
   }
 }
 </style>

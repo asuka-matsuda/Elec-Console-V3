@@ -75,12 +75,15 @@ const themeOptions = [
 .p-settings {
   container-type: inline-size;
 
-  @include flex-column(var(--space-section-gap));
+  @include flex-start-stretch($direction: column);
 
+  gap: var(--space-section-gap);
   padding-bottom: var(--space-layout-pad);
 
   &__panel-content {
-    @include flex-column(var(--space-card-gap));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-card-gap);
   }
 
   &__grid {
@@ -92,7 +95,9 @@ const themeOptions = [
   }
 
   &__stack {
-    @include flex-column(var(--space-stack-gap));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-stack-gap);
   }
 }
 </style>

@@ -113,12 +113,13 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 <style scoped lang="scss">
 .c-math-basis {
   overflow-y: auto;
-
-  @include flex-column(var(--space-card-gap));
-
   flex: 1;
+  gap: var(--space-card-gap);
+
   padding-right: var(--space-control-py-md);
   padding-bottom: var(--space-layout-pad);
+
+  @include flex-start-stretch($direction: column);
 
   &__card {
     gap: var(--space-stack-gap);
@@ -126,8 +127,9 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
   &__body {
     /* PCファースト: カード内を左右2カラムに分割 */
-    @include flex-start(var(--space-card-gap));
+    @include flex-start-center;
 
+    gap: var(--space-card-gap);
     align-items: flex-start;
   }
 
@@ -174,9 +176,10 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   }
 
   &__legend {
-    @include flex-column(var(--space-stack-gap-sm));
+    @include flex-start-stretch($direction: column);
 
     flex-shrink: 0;
+    gap: var(--space-stack-gap-sm);
     width: 250px;
   }
 
@@ -187,13 +190,16 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   }
 
   &__legend-list {
-    @include flex-column(var(--space-stack-gap-sm));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-stack-gap-sm);
   }
 
   &__legend-item {
     @include text-body("md", "bold");
-    @include flex-start(var(--space-inline-gap-sm));
+    @include flex-start-center;
 
+    gap: var(--space-inline-gap-sm);
     align-items: flex-start;
     color: var(--color-text-secondary);
   }

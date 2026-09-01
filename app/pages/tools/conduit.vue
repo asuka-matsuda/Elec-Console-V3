@@ -122,7 +122,9 @@ const handleSave = async () => {
 
 .p-conduit {
   &__section {
-    @include flex-column(var(--space-card-gap));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-card-gap);
   }
 
   &__section-title {
@@ -130,7 +132,9 @@ const handleSave = async () => {
   }
 
   &__cable-list {
-    @include flex-column(var(--space-card-gap));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-card-gap);
   }
 
   &__add-button {

@@ -63,6 +63,7 @@ withDefaults(
   --p-theme-color: var(--theme-accent);
 
   position: relative;
+  gap: var(--space-card-gap);
   padding: var(--space-card-pad);
   border-image: var(--p-border-image);
 
@@ -101,12 +102,15 @@ withDefaults(
 
   // 密度モディファイア
   &--density-compact {
+    gap: var(--space-card-gap-sm);
     padding: var(--space-card-pad-md);
 
-    @include flex-column(var(--space-card-gap-sm));
+    @include flex-start-stretch($direction: column);
 
     .c-panel__content {
-      @include flex-column(var(--space-card-gap-sm));
+      @include flex-start-stretch($direction: column);
+
+      gap: var(--space-card-gap-sm);
     }
   }
 
@@ -120,9 +124,10 @@ withDefaults(
   }
 
   &__content {
-    @include flex-column(var(--space-card-gap));
+    @include flex-start-stretch($direction: column);
 
     flex: 1;
+    gap: var(--space-card-gap);
     min-height: 0;
   }
 
@@ -207,7 +212,7 @@ withDefaults(
     );
   }
 
-  @include flex-column(var(--space-card-gap));
+  @include flex-start-stretch($direction: column);
 
   // Apply visual base
   @include border-base(var(--p-border-color), $width: var(--border-width-base));

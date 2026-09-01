@@ -65,17 +65,19 @@ const { currentUser, logout } = useAuth()
 
 <style scoped lang="scss">
 .l-app {
-  @include flex-start(0);
+  @include flex-start-center;
 
   flex: 1;
+  gap: 0;
   align-items: stretch;
   min-height: 0;
 }
 
 .l-main {
-  @include flex-column(0);
+  @include flex-start-stretch($direction: column);
 
   flex: 1;
+  gap: 0;
   min-width: 0; /* Prevent flex item from blowing out */
 
   @include mq("md") {
@@ -88,23 +90,25 @@ const { currentUser, logout } = useAuth()
 
   container-type: inline-size;
   overflow-y: auto;
-
-  @include flex-column(0);
-
   flex: 1;
+  gap: 0;
 
   min-height: 0;
   padding: var(--space-layout-pad);
+
+  @include flex-start-stretch($direction: column);
 }
 
 .l-header-user {
   @include text-title("sm");
-  @include flex-start(var(--space-inline-gap));
+  @include flex-start-center;
+
+  gap: var(--space-inline-gap);
 
   &__avatar {
     --glow-color: color-mix(in srgb, var(--theme-accent) 50%, transparent);
 
-    @include flex-center;
+    @include flex-center-center;
 
     width: var(--size-control-sm);
     height: var(--size-control-sm);

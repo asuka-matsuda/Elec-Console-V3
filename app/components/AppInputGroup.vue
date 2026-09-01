@@ -21,15 +21,17 @@
 
 <style scoped lang="scss">
 .c-input-group {
-  @include flex-start(0);
+  @include flex-start-center;
 
+  gap: 0;
   align-items: stretch;
   width: 100%;
 
   &__main {
-    @include flex-start(0);
+    @include flex-start-center;
 
     flex: 1;
+    gap: 0;
     align-items: stretch;
 
     /* AppInput のボーダーと角丸を調整 */
@@ -39,8 +41,9 @@
   }
 
   &__append {
-    @include flex-start(0);
+    @include flex-start-center;
 
+    gap: 0;
     align-items: stretch;
 
     /* AppSelect のボタンや addon のボーダーを調整 */
@@ -67,7 +70,7 @@
       white-space: nowrap;
 
       @include shadow("sink");
-      @include inline-flex-center;
+      @include flex-center-center($is-inline: true);
     }
   }
 }

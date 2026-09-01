@@ -260,18 +260,22 @@ const handleExport = () => {
 
 <style lang="scss" scoped>
 .c-site-settings {
-  @include flex-column(var(--space-card-gap));
+  @include flex-start-stretch($direction: column);
+
+  gap: var(--space-card-gap);
 
   &__content {
-    @include flex-column(var(--space-stack-gap));
+    @include flex-start-stretch($direction: column);
 
+    gap: var(--space-stack-gap);
     min-height: 300px;
   }
 
   &__workers {
-    @include flex-start(var(--space-inline-gap));
+    @include flex-start-center;
 
     flex-wrap: wrap;
+    gap: var(--space-inline-gap);
     min-height: 40px;
     padding: var(--space-card-pad-sm);
 
@@ -279,7 +283,9 @@ const handleExport = () => {
   }
 
   &__sync-actions {
-    @include flex-start(var(--space-inline-gap));
+    @include flex-start-center;
+
+    gap: var(--space-inline-gap);
   }
 
   &__sync-msg {
@@ -290,11 +296,15 @@ const handleExport = () => {
   }
 
   &__circuit-list {
-    @include flex-column(var(--space-stack-gap-sm));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-stack-gap-sm);
   }
 
   &__circuit-row {
-    @include flex-start(var(--space-inline-gap-sm));
+    @include flex-start-center;
+
+    gap: var(--space-inline-gap-sm);
 
     > *:first-child {
       flex: 1;

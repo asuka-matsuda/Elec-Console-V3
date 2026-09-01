@@ -202,7 +202,9 @@ const totalWeight = computed(() => {
 
 <style scoped lang="scss">
 .p-result-weight {
-  @include flex-column(var(--space-1));
+  @include flex-start-stretch($direction: column);
+
+  gap: var(--space-1);
 
   &__val {
     @include text-title("xl");
@@ -218,7 +220,9 @@ const totalWeight = computed(() => {
 
 .p-weight {
   &__sections {
-    @include flex-column(var(--space-card-gap));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-card-gap);
   }
 
   &__note {

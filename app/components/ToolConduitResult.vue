@@ -130,10 +130,12 @@ const fill48 = computed(() =>
 
 <style scoped lang="scss">
 .c-conduit-result {
-  @include flex-column(var(--space-card-gap));
+  @include flex-start-stretch($direction: column);
 
   flex: 1;
+  gap: var(--space-card-gap);
   align-items: stretch;
+
   min-height: 0;
   padding: var(--space-card-pad);
 
@@ -151,9 +153,10 @@ const fill48 = computed(() =>
   }
 
   &__col {
-    @include flex-column(var(--space-card-gap));
+    @include flex-start-stretch($direction: column);
 
     flex: 1;
+    gap: var(--space-card-gap);
     min-width: 0;
   }
 
@@ -191,9 +194,10 @@ const fill48 = computed(() =>
   }
 
   &__main {
-    @include flex-column(var(--space-stack-gap-sm));
+    @include flex-start-stretch($direction: column);
 
     flex: 1;
+    gap: var(--space-stack-gap-sm);
     align-items: center;
     justify-content: center;
 
@@ -212,7 +216,9 @@ const fill48 = computed(() =>
   }
 
   &__main-value {
-    @include flex-baseline(var(--space-inline-gap));
+    display: flex;
+    gap: var(--space-inline-gap);
+    align-items: baseline;
 
     .value-text {
       @include text-mono("4xl");

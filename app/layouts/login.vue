@@ -22,9 +22,10 @@ const pageTitle = computed(() => route.meta.title as string | undefined)
 
 <style scoped lang="scss">
 .l-login-layout {
-  @include flex-center(0);
+  @include flex-center-center;
 
   flex: 1;
+  gap: 0;
 
   &__panel {
     width: 100%;

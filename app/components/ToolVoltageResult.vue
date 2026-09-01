@@ -191,10 +191,12 @@ const dropStatusClass = computed(() => {
 
 <style scoped lang="scss">
 .c-voltage-result {
-  @include flex-column(var(--space-card-gap));
+  @include flex-start-stretch($direction: column);
 
   flex: 1;
+  gap: var(--space-card-gap);
   align-items: stretch;
+
   min-height: 0;
   padding: var(--space-card-pad);
 
@@ -258,9 +260,10 @@ const dropStatusClass = computed(() => {
   }
 
   &__main {
-    @include flex-column(var(--space-stack-gap-sm));
+    @include flex-start-stretch($direction: column);
 
     flex: 1;
+    gap: var(--space-stack-gap-sm);
     align-items: center;
     justify-content: center;
 
@@ -279,7 +282,9 @@ const dropStatusClass = computed(() => {
   }
 
   &__main-value {
-    @include flex-baseline(var(--space-inline-gap));
+    display: flex;
+    gap: var(--space-inline-gap);
+    align-items: baseline;
 
     .value-text {
       @include text-mono("4xl", "bold");
@@ -294,11 +299,13 @@ const dropStatusClass = computed(() => {
   }
 
   &__metrics {
-    @include flex-start(var(--space-inline-gap));
+    @include flex-start-center;
 
     flex-flow: row wrap; // 狭い場合は横並びラップ（スモールファースト）
     flex-shrink: 0;
+    gap: var(--space-inline-gap);
     align-items: stretch;
+
     min-width: auto;
 
     // コンテナの幅が xs 以上の場合は縦積み
@@ -309,11 +316,13 @@ const dropStatusClass = computed(() => {
   }
 
   .metric-card {
-    @include flex-column(var(--space-stack-gap-sm));
+    @include flex-start-stretch($direction: column);
 
     flex: 1;
+    gap: var(--space-stack-gap-sm);
     align-items: center;
     justify-content: center;
+
     padding: var(--space-card-pad-sm);
 
     @include border-base(var(--color-border), $width: 1px);
@@ -324,8 +333,9 @@ const dropStatusClass = computed(() => {
   }
 
   .metric-value {
-    @include flex-baseline(var(--space-1));
-
+    display: flex;
+    gap: var(--space-1);
+    align-items: baseline;
     margin: 0;
 
     @include text-mono("sm", "bold");

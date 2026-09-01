@@ -182,7 +182,9 @@ watch(
 .p-history-page {
   container-type: inline-size;
 
-  @include flex-column(var(--space-section-gap));
+  @include flex-start-stretch($direction: column);
+
+  gap: var(--space-section-gap);
 
   &__tabs {
     /* 親要素(p-history-page)のgapで管理されるためmargin-bottomは削除 */
@@ -197,11 +199,14 @@ watch(
   }
 
   &__empty {
-    @include flex-column(var(--space-stack-gap-sm));
+    @include flex-start-stretch($direction: column);
 
+    gap: var(--space-stack-gap-sm);
     align-items: center;
     justify-content: center;
+
     padding: var(--space-layout-pad) 0;
+
     color: var(--color-text-muted);
   }
 }

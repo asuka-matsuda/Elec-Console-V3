@@ -77,19 +77,23 @@ const emit = defineEmits<{
 
 <style scoped lang="scss">
 .c-calendar-toolbar {
-  @include flex-between(var(--space-inline-gap));
-  @include border-base($opacity: 30%);
+  @include flex-between-center;
 
   flex-wrap: wrap;
+  gap: var(--space-inline-gap);
   padding: var(--space-card-pad-sm) var(--space-card-pad);
   background-color: var(--color-surface);
 
+  @include border-base($opacity: 30%);
+
   &__nav {
-    @include flex-start(var(--space-inline-gap-sm));
+    @include flex-start-center;
+
+    gap: var(--space-inline-gap-sm);
   }
 
   &__center {
-    @include flex-center;
+    @include flex-center-center;
 
     flex: 1;
     min-width: 160px;
@@ -104,11 +108,15 @@ const emit = defineEmits<{
   }
 
   &__views {
-    @include flex-end(var(--space-inline-gap-sm));
+    @include flex-end-center;
+
+    gap: var(--space-inline-gap-sm);
   }
 
   @include mq("md") {
-    @include flex-column(var(--space-stack-gap-sm));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-stack-gap-sm);
 
     &__center {
       order: -1;
@@ -117,7 +125,7 @@ const emit = defineEmits<{
 
     &__nav,
     &__views {
-      @include flex-center;
+      @include flex-center-center;
 
       width: 100%;
     }

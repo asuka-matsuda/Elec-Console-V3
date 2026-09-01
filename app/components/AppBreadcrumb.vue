@@ -36,28 +36,20 @@ const processedItems = computed(() => {
         :key="item.uniqueKey"
         class="c-breadcrumb__item"
       >
-        <template v-if="!item.isLast">
-          <NuxtLink
-            v-if="item.href"
-            :to="item.href"
-            class="c-breadcrumb__link"
-          >
-            {{ item.text }}
-          </NuxtLink>
+        <NuxtLink
+          v-if="!item.isLast && item.href"
+          :to="item.href"
+          class="c-breadcrumb__link"
+        >
+          {{ item.text }}
+        </NuxtLink>
 
-          <span
-            v-else
-            class="c-breadcrumb__text"
-          >
-            {{ item.text }}
-          </span>
-        </template>
-
-        <template v-else>
-          <span class="c-breadcrumb__current">
-            {{ item.text }}
-          </span>
-        </template>
+        <span
+          v-else
+          :class="item.isLast ? 'c-breadcrumb__current' : 'c-breadcrumb__text'"
+        >
+          {{ item.text }}
+        </span>
       </li>
     </ol>
   </nav>
@@ -65,7 +57,7 @@ const processedItems = computed(() => {
 
 <style scoped lang="scss">
 .c-breadcrumb {
-  @include flex-start;
+  @include flex-start-center;
   @include text-caption;
   @include border-base;
 
@@ -75,11 +67,15 @@ const processedItems = computed(() => {
   text-transform: uppercase;
 
   &__list {
-    @include inline-flex-start(var(--space-inline-gap));
+    @include flex-start-center($is-inline: true);
+
+    gap: var(--space-inline-gap);
   }
 
   &__item {
-    @include inline-flex-start(var(--space-inline-gap));
+    @include flex-start-center($is-inline: true);
+
+    gap: var(--space-inline-gap);
 
     &:not(:last-child)::after {
       @include text-badge;

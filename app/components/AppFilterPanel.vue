@@ -69,19 +69,23 @@ defineProps<{
 <style scoped lang="scss">
 .c-filter-panel {
   &__stack {
-    @include flex-column(var(--space-card-gap));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-card-gap);
   }
 
   &__header {
     @include text-title("sm");
-    @include flex-start;
+    @include flex-start-center;
 
     padding-bottom: var(--space-control-py-sm);
     color: var(--color-text-muted);
   }
 
   &__header-wrapper {
-    @include flex-column(var(--space-stack-gap-sm));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-stack-gap-sm);
   }
 
   &__filters {

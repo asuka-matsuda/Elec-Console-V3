@@ -179,12 +179,15 @@ const closeModal = () => {
 
 <style scoped lang="scss">
 .p-event-form {
-  @include flex-column(var(--space-stack-gap));
+  @include flex-start-stretch($direction: column);
 
   container-type: inline-size;
+  gap: var(--space-stack-gap);
 
   &__field {
-    @include flex-column(var(--space-1));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-1);
 
     label {
       @include text-label;
@@ -200,7 +203,9 @@ const closeModal = () => {
   }
 
   &__row {
-    @include flex-start(var(--space-inline-gap));
+    @include flex-start-center;
+
+    gap: var(--space-inline-gap);
     > * { flex: 1; }
 
     @include cq("xs", "down") {
@@ -210,8 +215,9 @@ const closeModal = () => {
   }
 
   &__actions {
-    @include flex-start(var(--space-inline-gap));
+    @include flex-start-center;
 
+    gap: var(--space-inline-gap);
     padding-top: var(--space-card-pad-md);
     border-top: var(--border-width-base) solid var(--color-border);
   }

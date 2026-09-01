@@ -25,7 +25,10 @@ const emit = defineEmits<{
 <style scoped lang="scss">
 .c-logo {
   @include click-enabled;
-  @include flex-start(var(--space-inline-gap));
+  @include flex-start-center;
+
+  gap: var(--space-inline-gap);
+
   @include state-base;
 
   &:is(:hover, :focus-visible) {

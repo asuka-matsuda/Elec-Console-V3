@@ -51,29 +51,20 @@ const presetMap: Record<string, string> = {
   neutral: 'var(--color-status-neutral)',
 }
 
-const badgeStyle = computed(() => {
-  const resolvedColor = presetMap[props.color] || props.color
-
-  return {
-    '--glow-color': resolvedColor,
-  }
-})
+const resolvedColor = computed(() => presetMap[props.color] || props.color)
 </script>
 
 <template>
-  <span
-    class="c-badge"
-    :style="badgeStyle"
-  >
+  <span class="c-badge">
     <slot />
   </span>
 </template>
 
 <style scoped lang="scss">
 .c-badge {
-  --glow-color: var(--color-text-muted);
+  --glow-color: v-bind(resolvedColor);
 
-  @include inline-flex-center;
+  @include flex-center-center($is-inline: true);
   @include text-badge;
   @include cyber-text-glow(var(--glow-color), 100%, var(--blur-sm));
   @include border-base(var(--glow-color), 60%);

@@ -65,7 +65,7 @@ withDefaults(
   width: 100%;
 
   &__inner {
-    @include flex-column;
+    @include flex-start-stretch($direction: column);
 
     width: 100%;
 
@@ -93,13 +93,15 @@ withDefaults(
   }
 
   &__label-wrapper {
-    @include flex-start;
+    @include flex-start-center;
   }
 
   &__control {
     position: relative;
 
-    @include flex-column(var(--space-1));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-1);
   }
 
   &__error {
@@ -117,7 +119,7 @@ withDefaults(
 
 // Label Component Styles (Legacy _c-form-label)
 .c-form-label {
-  @include flex-start;
+  @include flex-start-center;
   @include text-label;
 
   user-select: none;

@@ -155,34 +155,41 @@ const handleSave = () => {
 
 <style scoped lang="scss">
 .p-type-settings {
-  @include flex-column(var(--space-card-gap));
+  @include flex-start-stretch($direction: column);
+
+  gap: var(--space-card-gap);
 
   &__lead {
     @include text-desc;
   }
 
   &__list {
-    @include flex-column(var(--space-stack-gap-md));
+    @include flex-start-stretch($direction: column);
 
     overflow-y: auto;
+    gap: var(--space-stack-gap-md);
     max-height: 400px;
     padding-right: var(--space-control-py-sm);
   }
 
   &__add {
-    @include flex-start;
+    @include flex-start-center;
   }
 }
 
 .p-type-item {
-  @include flex-column(var(--space-stack-gap-sm));
+  @include flex-start-stretch($direction: column);
+
+  gap: var(--space-stack-gap-sm);
+
   @include border-base($opacity: 30%);
 
   padding: var(--space-card-pad-sm);
 
   &__main {
-    @include flex-start(var(--space-inline-gap));
+    @include flex-start-center;
 
+    gap: var(--space-inline-gap);
     width: 100%;
   }
 
@@ -193,7 +200,7 @@ const handleSave = () => {
     width: var(--size-control-sm);
     height: var(--size-control-sm);
 
-    @include flex-center;
+    @include flex-center-center;
     @include state-focus(var(--preview-color, var(--color-primary)));
   }
 
@@ -213,9 +220,10 @@ const handleSave = () => {
   }
 
   &__colors {
-    @include flex-start(var(--space-inline-gap-sm));
+    @include flex-start-center;
 
     flex-wrap: wrap;
+    gap: var(--space-inline-gap-sm);
     padding-left: calc(var(--size-control-sm) + var(--space-inline-gap));
   }
 

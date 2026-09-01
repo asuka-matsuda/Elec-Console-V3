@@ -80,7 +80,9 @@ const handleSubmit = async () => {
 
 <style scoped lang="scss">
 .c-app-form-modal {
-  @include flex-column(var(--space-card-gap));
+  @include flex-start-stretch($direction: column);
+
+  gap: var(--space-card-gap);
 
   &__error {
     padding: var(--space-control-py-md) var(--space-control-px);
@@ -95,7 +97,9 @@ const handleSubmit = async () => {
   }
 
   &__body {
-    @include flex-column(var(--space-stack-gap));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-stack-gap);
   }
 }
 </style>

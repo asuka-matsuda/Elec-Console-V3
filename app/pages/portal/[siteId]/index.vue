@@ -109,19 +109,22 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .p-site-dashboard {
-  @include flex-column(var(--space-section-gap));
+  @include flex-start-stretch($direction: column);
 
+  gap: var(--space-section-gap);
   height: 100%;
 
   &__header {
-    @include flex-between;
+    @include flex-between-center;
 
     padding-bottom: var(--space-card-pad-sm);
     border-bottom: var(--border-width-base) solid var(--color-border);
   }
 
   &__title {
-    @include flex-start(var(--space-inline-gap));
+    @include flex-start-center;
+
+    gap: var(--space-inline-gap);
 
     h2 {
       @include text-title("lg");
@@ -131,7 +134,9 @@ onMounted(() => {
   }
 
   &__switcher {
-    @include flex-start(var(--space-inline-gap));
+    @include flex-start-center;
+
+    gap: var(--space-inline-gap);
   }
 
   &__select {
@@ -143,7 +148,9 @@ onMounted(() => {
   }
 
   &__sidebar {
-    @include flex-column(var(--space-card-gap));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-card-gap);
   }
 
   &__souden-btn {

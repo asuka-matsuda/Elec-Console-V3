@@ -168,7 +168,9 @@ const handleSort = (col: TableColumn<T>) => {
     }
 
     .c-table__th-inner {
-      @include inline-flex-start(var(--space-inline-gap-sm));
+      @include flex-start-center($is-inline: true);
+
+      gap: var(--space-inline-gap-sm);
 
       &.is-center {
         justify-content: center;

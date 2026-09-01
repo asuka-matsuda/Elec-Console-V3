@@ -188,7 +188,7 @@ onUnmounted(() => {
   }
 
   &__layout {
-    @include flex-column;
+    @include flex-start-stretch($direction: column);
 
     flex: 1;
     min-height: 0;
@@ -209,7 +209,7 @@ onUnmounted(() => {
   }
 
   &__footer {
-    @include flex-end;
+    @include flex-end-center;
   }
 }
 </style>

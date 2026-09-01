@@ -71,16 +71,20 @@ const handleClick = (e: MouseEvent) => {
 .c-btn {
   --btn-color: var(--theme-accent);
 
-  @include inline-flex-center(var(--space-inline-gap));
+  @include flex-center-center($is-inline: true);
+
+  position: relative;
+
+  flex-shrink: 0;
+  gap: var(--space-inline-gap);
+
+  height: var(--size-control-sm);
+  padding: 0 var(--space-control-px);
+
   @include text-meta("md", "semibold");
   @include click-enabled;
   @include border-base(var(--btn-color), 30%);
   @include state-base(var(--shadow-elevation-sm), var(--transition-fast), var(--btn-color));
-
-  position: relative;
-  flex-shrink: 0;
-  height: var(--size-control-sm);
-  padding: 0 var(--space-control-px);
 
   &:hover:not(:disabled, .is-disabled) {
     @include state-hover(var(--btn-color));

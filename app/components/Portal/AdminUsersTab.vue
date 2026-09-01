@@ -224,15 +224,19 @@ const confirmResetPassword = (row: User) => {
 <style scoped lang="scss">
 .c-admin-users {
   &__toolbar {
-    @include flex-end;
+    @include flex-end-center;
   }
 
   &__stack {
-    @include flex-column(var(--space-card-gap));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-card-gap);
   }
 
   &__actions {
-    @include flex-start(var(--space-inline-gap));
+    @include flex-start-center;
+
+    gap: var(--space-inline-gap);
   }
 
   &__meta {

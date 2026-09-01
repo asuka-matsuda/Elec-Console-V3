@@ -23,7 +23,7 @@ const currentYear = new Date().getFullYear()
 .l-footer {
   position: relative;
 
-  @include flex-column;
+  @include flex-start-stretch($direction: column);
 
   align-items: center;
 

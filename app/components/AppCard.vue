@@ -50,8 +50,9 @@ const handleClick = (e: MouseEvent) => {
 .c-card {
   position: relative;
 
-  @include flex-column(var(--space-card-gap));
+  @include flex-start-stretch($direction: column);
 
+  gap: var(--space-card-gap);
   width: 100%;
   padding: var(--space-card-pad);
 

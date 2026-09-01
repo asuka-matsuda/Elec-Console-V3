@@ -22,79 +22,146 @@ $container-breakpoints: (
 // ==========================================================================
 // レイアウト Mixins
 // ==========================================================================
-@mixin flex-center($gap: var(--space-inline-gap)) {
-  display: flex;
-  gap: $gap;
-  align-items: center;
-  justify-content: center;
+@mixin flex-start-start($direction: row, $is-inline: false) {
+  display: if($is-inline, inline-flex, flex);
+  flex-direction: $direction;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
-@mixin inline-flex-center($gap: var(--space-inline-gap)) {
-  display: inline-flex;
-  gap: $gap;
-  align-items: center;
-  justify-content: center;
+@mixin flex-start-end($direction: row, $is-inline: false) {
+  display: if($is-inline, inline-flex, flex);
+  flex-direction: $direction;
+  align-items: flex-end;
+  justify-content: flex-start;
 }
 
-@mixin flex-between($gap: var(--space-inline-gap)) {
-  display: flex;
-  gap: $gap;
-  align-items: center;
-  justify-content: space-between;
-}
-
-@mixin inline-flex-between($gap: var(--space-inline-gap)) {
-  display: inline-flex;
-  gap: $gap;
-  align-items: center;
-  justify-content: space-between;
-}
-
-@mixin flex-start($gap: var(--space-inline-gap)) {
-  display: flex;
-  gap: $gap;
+@mixin flex-start-center($direction: row, $is-inline: false) {
+  display: if($is-inline, inline-flex, flex);
+  flex-direction: $direction;
   align-items: center;
   justify-content: flex-start;
 }
 
-@mixin inline-flex-start($gap: var(--space-inline-gap)) {
-  display: inline-flex;
-  gap: $gap;
-  align-items: center;
+@mixin flex-start-stretch($direction: row, $is-inline: false) {
+  display: if($is-inline, inline-flex, flex);
+  flex-direction: $direction;
+  align-items: stretch;
   justify-content: flex-start;
 }
 
-@mixin flex-end($gap: var(--space-inline-gap)) {
-  display: flex;
-  gap: $gap;
+@mixin flex-end-start($direction: row, $is-inline: false) {
+  display: if($is-inline, inline-flex, flex);
+  flex-direction: $direction;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+@mixin flex-end-end($direction: row, $is-inline: false) {
+  display: if($is-inline, inline-flex, flex);
+  flex-direction: $direction;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+@mixin flex-end-center($direction: row, $is-inline: false) {
+  display: if($is-inline, inline-flex, flex);
+  flex-direction: $direction;
   align-items: center;
   justify-content: flex-end;
 }
 
-@mixin inline-flex-end($gap: var(--space-inline-gap)) {
-  display: inline-flex;
-  gap: $gap;
-  align-items: center;
+@mixin flex-end-stretch($direction: row, $is-inline: false) {
+  display: if($is-inline, inline-flex, flex);
+  flex-direction: $direction;
+  align-items: stretch;
   justify-content: flex-end;
 }
 
-@mixin flex-baseline($gap: var(--space-inline-gap)) {
-  display: flex;
-  gap: $gap;
-  align-items: baseline;
+@mixin flex-center-start($direction: row, $is-inline: false) {
+  display: if($is-inline, inline-flex, flex);
+  flex-direction: $direction;
+  align-items: flex-start;
+  justify-content: center;
 }
 
-@mixin flex-column($gap: var(--space-stack-gap)) {
-  display: flex;
-  flex-direction: column;
-  gap: $gap;
+@mixin flex-center-end($direction: row, $is-inline: false) {
+  display: if($is-inline, inline-flex, flex);
+  flex-direction: $direction;
+  align-items: flex-end;
+  justify-content: center;
 }
 
-@mixin inline-flex-column($gap: var(--space-stack-gap)) {
-  display: inline-flex;
-  flex-direction: column;
-  gap: $gap;
+@mixin flex-center-center($direction: row, $is-inline: false) {
+  display: if($is-inline, inline-flex, flex);
+  flex-direction: $direction;
+  align-items: center;
+  justify-content: center;
 }
+
+@mixin flex-center-stretch($direction: row, $is-inline: false) {
+  display: if($is-inline, inline-flex, flex);
+  flex-direction: $direction;
+  align-items: stretch;
+  justify-content: center;
+}
+
+@mixin flex-between-start($direction: row, $is-inline: false) {
+  display: if($is-inline, inline-flex, flex);
+  flex-direction: $direction;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+@mixin flex-between-end($direction: row, $is-inline: false) {
+  display: if($is-inline, inline-flex, flex);
+  flex-direction: $direction;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+@mixin flex-between-center($direction: row, $is-inline: false) {
+  display: if($is-inline, inline-flex, flex);
+  flex-direction: $direction;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-between-stretch($direction: row, $is-inline: false) {
+  display: if($is-inline, inline-flex, flex);
+  flex-direction: $direction;
+  align-items: stretch;
+  justify-content: space-between;
+}
+
+@mixin flex-around-start($direction: row, $is-inline: false) {
+  display: if($is-inline, inline-flex, flex);
+  flex-direction: $direction;
+  align-items: flex-start;
+  justify-content: space-around;
+}
+
+@mixin flex-around-end($direction: row, $is-inline: false) {
+  display: if($is-inline, inline-flex, flex);
+  flex-direction: $direction;
+  align-items: flex-end;
+  justify-content: space-around;
+}
+
+@mixin flex-around-center($direction: row, $is-inline: false) {
+  display: if($is-inline, inline-flex, flex);
+  flex-direction: $direction;
+  align-items: center;
+  justify-content: space-around;
+}
+
+@mixin flex-around-stretch($direction: row, $is-inline: false) {
+  display: if($is-inline, inline-flex, flex);
+  flex-direction: $direction;
+  align-items: stretch;
+  justify-content: space-around;
+}
+
 
 @mixin grid($cols: 1fr, $gap: var(--space-card-gap)) {
   display: grid;

@@ -32,7 +32,7 @@ const svgContent = computed(() => {
 
 <style scoped lang="scss">
 .c-icon {
-  @include inline-flex-center;
+  @include flex-center-center($is-inline: true);
 
   :deep(svg) {
     width: 100%;

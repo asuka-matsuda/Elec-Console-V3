@@ -256,7 +256,9 @@ const {
 
 <style scoped lang="scss">
 .p-result-rack {
-  @include flex-column(var(--space-1));
+  @include flex-start-stretch($direction: column);
+
+  gap: var(--space-1);
 
   &__val {
     @include text-title("lg");
@@ -280,7 +282,9 @@ const {
 
 .p-rack {
   &__sections {
-    @include flex-column(var(--space-card-gap));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-card-gap);
   }
 
   &__grid {
@@ -292,7 +296,7 @@ const {
   }
 
   &__card-header {
-    @include flex-between;
+    @include flex-between-center;
   }
 
   &__card-title {
@@ -300,11 +304,15 @@ const {
   }
 
   &__card-body {
-    @include flex-column(var(--space-card-gap));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-card-gap);
   }
 
   &__section {
-    @include flex-column(var(--space-stack-gap-sm));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-stack-gap-sm);
   }
 
   &__section-title {
@@ -312,7 +320,9 @@ const {
   }
 
   &__cable-list {
-    @include flex-column(var(--space-card-gap));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-card-gap);
   }
 
   &__add-button {

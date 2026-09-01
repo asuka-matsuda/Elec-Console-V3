@@ -93,8 +93,9 @@ const handleCopyPassword = () => {
   }
 
   &__credential-box {
-    @include flex-column(var(--space-stack-gap));
+    @include flex-start-stretch($direction: column);
 
+    gap: var(--space-stack-gap);
     padding: var(--space-card-pad);
     background: transparent;
     backdrop-filter: blur(var(--blur-sm));

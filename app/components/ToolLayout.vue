@@ -70,7 +70,7 @@ const toggleDrawer = () => {
 
 <style scoped lang="scss">
 .l-tool-layout {
-  @include flex-column;
+  @include flex-start-stretch($direction: column);
 
   flex: 1;
 
@@ -84,9 +84,10 @@ const toggleDrawer = () => {
   }
 
   &__main {
-    @include flex-start(var(--space-card-gap));
+    @include flex-start-center;
 
     flex: 1;
+    gap: var(--space-card-gap);
     align-items: stretch;
     min-height: 0;
   }
@@ -94,16 +95,17 @@ const toggleDrawer = () => {
   &__left {
     container-type: inline-size;
 
-    @include flex-column;
+    @include flex-start-stretch($direction: column);
 
     flex: 1;
     min-height: 0;
   }
 
   &__inputs {
-    @include flex-column(0);
+    @include flex-start-stretch($direction: column);
 
     flex: 3; // 3/4 ratio on PC (Default)
+    gap: 0;
     min-height: 0;
 
     @include mq("md") {
@@ -123,11 +125,11 @@ const toggleDrawer = () => {
 
   &__right {
     overflow-y: hidden; // No vertical scroll per user request
-
-    @include flex-column(0);
-
     flex: 1;
+    gap: 0;
     min-height: 0;
+
+    @include flex-start-stretch($direction: column);
 
     @include mq("md") {
       display: none; // Cut on mobile
@@ -137,11 +139,11 @@ const toggleDrawer = () => {
   /* Mobile Drawer & PC Results Layout */
   &__results {
     container-type: inline-size;
-
-    @include flex-column(0);
-
     flex: none; // コンテンツの高さに合わせて自動調整
+    gap: 0;
     min-height: 0;
+
+    @include flex-start-stretch($direction: column);
 
     // Mobile: Sticky Drawer
     @include mq("md") {
@@ -176,7 +178,7 @@ const toggleDrawer = () => {
     @include mq("md") {
       cursor: pointer;
 
-      @include flex-between;
+      @include flex-between-center;
 
       height: 48px;
       padding: 0 var(--space-card-pad-md);
@@ -197,9 +199,10 @@ const toggleDrawer = () => {
   }
 
   &__results-content {
-    @include flex-column(0);
+    @include flex-start-stretch($direction: column);
 
     flex: 1;
+    gap: 0;
     min-height: 0;
 
     @include mq("md") {

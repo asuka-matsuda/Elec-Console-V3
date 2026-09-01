@@ -26,7 +26,7 @@ textarea {
 
 body {
   @include text-body;
-  @include flex-column;
+  @include flex-start-stretch($direction: column);
 
   overflow: hidden;
 
@@ -75,7 +75,7 @@ input::-webkit-inner-spin-button {
 }
 
 #__nuxt {
-  @include flex-column;
+  @include flex-start-stretch($direction: column);
 
   flex: 1;
   min-height: 0;

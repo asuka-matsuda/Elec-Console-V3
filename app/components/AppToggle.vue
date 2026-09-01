@@ -46,10 +46,8 @@ const inputId = useId()
   --track-h: var(--space-5);
   --thumb-w: var(--space-5);
 
-  @include text-desc;
-  @include click-enabled;
-
   position: relative;
+  gap: var(--space-inline-gap);
 
   &:has(.c-toggle__input:disabled) {
     @include disabled;
@@ -140,6 +138,8 @@ const inputId = useId()
     }
   }
 
-  @include inline-flex-start(var(--space-inline-gap));
+  @include text-desc;
+  @include click-enabled;
+  @include flex-start-center($is-inline: true);
 }
 </style>

@@ -75,7 +75,10 @@ const inputId = useId()
 
   position: relative;
 
-  @include inline-flex-start(var(--space-inline-gap));
+  @include flex-start-center($is-inline: true);
+
+  gap: var(--space-inline-gap);
+
   @include text-desc;
   @include click-enabled;
 
@@ -130,7 +133,7 @@ const inputId = useId()
   }
 
   &__box {
-    @include flex-center;
+    @include flex-center-center;
 
     position: relative;
     flex-shrink: 0;

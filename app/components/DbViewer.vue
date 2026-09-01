@@ -77,7 +77,7 @@ const { sortBy, sortOrder, sortedData, handleSort } = useTableSort(filteredData)
   container-name: filter-layout;
   container-type: inline-size;
 
-  @include flex-column;
+  @include flex-start-stretch($direction: column);
 
   flex: 1;
 
@@ -86,9 +86,10 @@ const { sortBy, sortOrder, sortedData, handleSort } = useTableSort(filteredData)
   min-height: 0;
 
   &__grid {
-    @include flex-column(var(--space-card-gap));
+    @include flex-start-stretch($direction: column);
 
     flex: 1;
+    gap: var(--space-card-gap);
     min-height: 0;
   }
 
@@ -97,7 +98,7 @@ const { sortBy, sortOrder, sortedData, handleSort } = useTableSort(filteredData)
   }
 
   &__main {
-    @include flex-column;
+    @include flex-start-stretch($direction: column);
 
     flex: 1;
     min-width: 0;
@@ -106,7 +107,7 @@ const { sortBy, sortOrder, sortedData, handleSort } = useTableSort(filteredData)
 }
 
 .c-db {
-  @include flex-column;
+  @include flex-start-stretch($direction: column);
 
   flex: 1;
   min-height: 0;
@@ -115,7 +116,7 @@ const { sortBy, sortOrder, sortedData, handleSort } = useTableSort(filteredData)
 .c-db-panel {
   overflow: hidden;
 
-  @include flex-column;
+  @include flex-start-stretch($direction: column);
 
   flex: 1;
   min-height: 0;

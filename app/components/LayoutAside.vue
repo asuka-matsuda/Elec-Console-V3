@@ -91,10 +91,12 @@ const history = computed(() => dashboardData.value?.history || [])
     position: sticky;
     top: var(--space-layout-pad);
 
-    @include flex-column(var(--space-section-gap));
-
     flex-shrink: 0;
+    gap: var(--space-section-gap);
+
     width: var(--sidebar-width);
+
+    @include flex-start-stretch($direction: column);
 
     @include mq("md") {
       position: static;
@@ -103,11 +105,11 @@ const history = computed(() => dashboardData.value?.history || [])
   }
 
   &__aside-block {
-    @include flex-column;
+    @include flex-start-stretch($direction: column);
   }
 
   &__list {
-    @include flex-column;
+    @include flex-start-stretch($direction: column);
   }
 
   &__loading {
@@ -123,12 +125,13 @@ const history = computed(() => dashboardData.value?.history || [])
 
 /* List Item Card Styles */
 .p-dashboard-list-item {
-  @include flex-column(var(--space-stack-gap-sm));
+  @include flex-start-stretch($direction: column);
 
+  gap: var(--space-stack-gap-sm);
   padding: var(--space-card-pad-md);
 
   &__header {
-    @include flex-start;
+    @include flex-start-center;
   }
 
   &__title {

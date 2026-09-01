@@ -62,22 +62,26 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-section-header {
-  @include flex-column;
+  @include flex-start-stretch($direction: column);
 
   &__top {
-    @include flex-between(var(--space-card-gap));
+    @include flex-between-center;
 
+    gap: var(--space-card-gap);
     align-items: flex-end;
     width: 100%;
   }
 
   &__actions {
-    @include flex-start(var(--space-inline-gap));
+    @include flex-start-center;
+
+    gap: var(--space-inline-gap);
   }
 
   &__title {
-    @include flex-start(var(--space-inline-gap));
+    @include flex-start-center;
 
+    gap: var(--space-inline-gap);
     color: var(--color-text-main);
 
     &--lg {

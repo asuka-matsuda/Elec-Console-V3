@@ -50,7 +50,7 @@ defineProps<{
   }
 
   &__layout {
-    @include flex-column;
+    @include flex-start-stretch($direction: column);
   }
 }
 </style>

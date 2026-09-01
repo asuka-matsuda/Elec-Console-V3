@@ -48,14 +48,10 @@ const badgeColor = computed(() => props.color || 'var(--theme-accent)')
 
 <style scoped lang="scss">
 .c-cal-badge {
-  @include flex-start(var(--space-inline-gap-xs));
-
   // 親から渡された単一変数を参照するため color-mix が確実に機能する
   --badge-color-dim: color-mix(in srgb, var(--badge-color) 80%, transparent);
 
-  @include border-base(var(--badge-color-dim));
-  @include state-base(none, var(--transition-glow), var(--badge-color));
-
+  gap: var(--space-inline-gap-xs);
   width: 100%;
   padding: var(--space-badge-p);
 
@@ -75,5 +71,9 @@ const badgeColor = computed(() => props.color || 'var(--theme-accent)')
     min-width: 0;
     color: var(--color-text-main);
   }
+
+  @include flex-start-center;
+  @include border-base(var(--badge-color-dim));
+  @include state-base(none, var(--transition-glow), var(--badge-color));
 }
 </style>

@@ -103,7 +103,7 @@ const closeSidebar = () => {
   position: fixed;
   z-index: var(--z-index-nav);
 
-  @include flex-column;
+  @include flex-start-stretch($direction: column);
 
   width: var(--sidebar-width);
   height: 100dvh;
@@ -123,7 +123,7 @@ const closeSidebar = () => {
   }
 
   &__header {
-    @include flex-start;
+    @include flex-start-center;
 
     flex-shrink: 0;
     height: 64px; // Match standard header height
@@ -136,11 +136,11 @@ const closeSidebar = () => {
     --scrollbar-size: var(--space-2);
 
     overflow-y: auto;
-
-    @include flex-column(var(--space-card-gap));
-
     flex: 1;
+    gap: var(--space-card-gap);
     padding: var(--space-card-pad-md);
+
+    @include flex-start-stretch($direction: column);
   }
 
   &__section {
@@ -157,7 +157,7 @@ const closeSidebar = () => {
       "management": var(--color-category-management),
     );
 
-    @include flex-column;
+    @include flex-start-stretch($direction: column);
 
     @each $name, $var in $accents {
       &.has-accent-#{$name} {
@@ -167,8 +167,9 @@ const closeSidebar = () => {
   }
 
   &__section-header {
-    @include flex-column(var(--space-stack-gap-sm));
+    @include flex-start-stretch($direction: column);
 
+    gap: var(--space-stack-gap-sm);
     padding: var(--space-control-py-md) var(--space-control-px);
   }
 
@@ -180,8 +181,9 @@ const closeSidebar = () => {
 
   &__link {
     @include text-title("sm", "medium");
-    @include flex-start(var(--space-inline-gap));
+    @include flex-start-center;
 
+    gap: var(--space-inline-gap);
     padding: var(--space-control-py-md) var(--space-control-px);
     color: var(--color-text-secondary);
 

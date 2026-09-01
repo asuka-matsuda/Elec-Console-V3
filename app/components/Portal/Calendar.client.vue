@@ -344,7 +344,9 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 
 <style scoped lang="scss">
 .c-calendar-wrapper {
-  @include flex-column(var(--space-stack-gap));
+  @include flex-start-stretch($direction: column);
+
+  gap: var(--space-stack-gap);
 }
 
 .c-calendar {
@@ -475,7 +477,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
     @include shadow("modal");
 
     .fc-popover-header {
-      @include flex-between;
+      @include flex-between-center;
       @include border-base($opacity: 30%);
 
       padding: var(--space-control-py-sm) var(--space-control-px);

@@ -97,8 +97,9 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
 
 <style scoped lang="scss">
 .p-dashboard {
-  @include flex-start(var(--space-section-gap));
+  @include flex-start-center;
 
+  gap: var(--space-section-gap);
   align-items: flex-start;
   padding-bottom: var(--space-layout-pad);
 
@@ -108,13 +109,14 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
   }
 
   &__main {
-    @include flex-column(var(--space-section-gap));
+    @include flex-start-stretch($direction: column);
 
     flex: 1;
+    gap: var(--space-section-gap);
   }
 
   &__section {
-    @include flex-column;
+    @include flex-start-stretch($direction: column);
   }
 
   &__grid {
@@ -125,13 +127,16 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
 /* Inner Card Styles */
 .p-dashboard-card {
   &__layout {
-    @include flex-column(var(--space-1));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-1);
   }
 
   &__header {
     @include text-title("sm");
-    @include flex-start(var(--space-inline-gap-sm));
+    @include flex-start-center;
 
+    gap: var(--space-inline-gap-sm);
     align-items: flex-start;
 
     color: var(--theme-accent);

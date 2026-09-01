@@ -136,18 +136,21 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
 
 <style scoped lang="scss">
 .c-history-card {
-  @include flex-column;
+  @include flex-start-stretch($direction: column);
 
   &__header {
-    @include flex-between(0);
+    @include flex-between-center;
 
+    gap: 0;
     align-items: flex-end;
     padding-bottom: var(--space-control-py-md);
     border-bottom: 1px solid var(--color-border);
   }
 
   &__title-group {
-    @include flex-column(var(--space-stack-gap-sm));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-stack-gap-sm);
   }
 
   &__date {
@@ -156,17 +159,19 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
 
   &__title {
     @include text-title("sm");
-    @include flex-start;
+    @include flex-start-center;
 
     color: var(--color-text-main);
   }
 
   &__body {
-    @include flex-column;
+    @include flex-start-stretch($direction: column);
   }
 
   &__section {
-    @include flex-column(var(--space-stack-gap-sm));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-stack-gap-sm);
   }
 
   &__section-title {
@@ -193,7 +198,7 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
   }
 
   &__footer {
-    @include flex-end;
+    @include flex-end-center;
 
     margin-top: auto;
   }

@@ -22,7 +22,7 @@ defineProps<{
 <style scoped lang="scss">
 .p-result-details__row {
   @include text-desc;
-  @include flex-between;
+  @include flex-between-center;
 
   color: var(--color-text-secondary);
 

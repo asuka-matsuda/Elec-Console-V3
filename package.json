@@ -51,6 +51,7 @@
     "jsdoc-type-pratt-parser": "^8.0.0",
     "oxc-parser": "^0.147.0",
     "postcss-html": "^2.0.0",
+    "rolldown": "^1.2.6",
     "sass": "^1.102.0",
     "stylelint": "^17.14.1",
     "stylelint-config-clean-order": "^10.0.0",

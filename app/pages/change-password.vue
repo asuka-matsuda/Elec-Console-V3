@@ -97,7 +97,9 @@ const handleChangePassword = async () => {
 
 <style scoped lang="scss">
 .p-change-password {
-  @include flex-column(var(--space-stack-gap));
+  @include flex-start-stretch($direction: column);
+
+  gap: var(--space-stack-gap);
 
   &__desc {
     @include text-desc;
@@ -111,11 +113,13 @@ const handleChangePassword = async () => {
   }
 
   &__form {
-    @include flex-column(var(--space-stack-gap));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-stack-gap);
   }
 
   &__actions {
-    @include flex-center;
+    @include flex-center-center;
 
     width: 100%;
   }

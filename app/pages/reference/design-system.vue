@@ -146,17 +146,20 @@ const isChecked = ref(false)
 
 <style scoped lang="scss">
 .p-design-system {
-  @include flex-column(var(--space-section-gap));
+  @include flex-start-stretch($direction: column);
 
+  gap: var(--space-section-gap);
   padding-bottom: var(--space-layout-pad);
 
   &__content {
-    @include flex-column(var(--space-section-gap));
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-section-gap);
   }
 }
 
 .p-ds-section {
-  @include flex-column;
+  @include flex-start-stretch($direction: column);
 
   &__grid {
     @include grid-auto(350px, var(--space-card-gap));
@@ -170,12 +173,15 @@ const isChecked = ref(false)
 }
 
 .p-ds-flex {
-  @include flex-start(var(--space-card-gap));
+  @include flex-start-center;
 
   flex-wrap: wrap;
+  gap: var(--space-card-gap);
 }
 
 .p-ds-stack {
-  @include flex-column(var(--space-stack-gap));
+  @include flex-start-stretch($direction: column);
+
+  gap: var(--space-stack-gap);
 }
 </style>

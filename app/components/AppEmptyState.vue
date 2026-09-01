@@ -63,7 +63,10 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-empty-state {
-  @include flex-column(var(--space-card-gap));
+  @include flex-start-stretch($direction: column);
+
+  gap: var(--space-card-gap);
+
   @include border-base($opacity: 30%);
 
   align-items: center;
@@ -75,7 +78,7 @@ withDefaults(
   text-align: center;
 
   &__icon-wrapper {
-    @include flex-center;
+    @include flex-center-center;
 
     width: var(--size-control-lg);
     height: var(--size-control-lg);
@@ -92,8 +95,9 @@ withDefaults(
   }
 
   &__content {
-    @include flex-column(var(--space-stack-gap-sm));
+    @include flex-start-stretch($direction: column);
 
+    gap: var(--space-stack-gap-sm);
     align-items: center;
     max-width: 420px;
   }
@@ -111,8 +115,9 @@ withDefaults(
   }
 
   &__actions {
-    @include flex-center(var(--space-inline-gap));
+    @include flex-center-center;
 
+    gap: var(--space-inline-gap);
     margin-top: var(--space-control-py-sm);
   }
 }
