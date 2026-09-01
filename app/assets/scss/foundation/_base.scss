@@ -1,5 +1,7 @@
 @use "variables" as *;
-@use "mixins" as *;
+@use "mixins/layout" as *;
+@use "mixins/typography" as *;
+@use "mixins/effects" as *;
 
 
 *,
