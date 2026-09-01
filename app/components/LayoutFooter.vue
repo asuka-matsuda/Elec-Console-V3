@@ -38,9 +38,8 @@ const currentYear = new Date().getFullYear()
   }
 
   &__copyright {
-    @include text-meta;
+    @include text-mono("2xs");
 
-    font-family: var(--font-mono);
     color: var(--color-text-muted);
 
     @include state-base;

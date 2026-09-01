@@ -125,7 +125,7 @@
   @include resolve-size($size, var(--font-size-base));
   @include resolve-weight($weight, normal);
 
-  font-family: var(--font-family-mono);
+  font-family: var(--font-mono);
   line-height: var(--line-height-base);
   letter-spacing: var(--tracking-normal);
 }

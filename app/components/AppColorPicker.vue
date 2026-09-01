@@ -122,10 +122,10 @@ const handleCustomColorInput = (event: Event) => {
   }
 
   &__hex {
-    @include text-meta;
+    @include text-mono("2xs");
 
-    font-family: var(--font-family-mono);
     color: var(--color-text-muted);
+    letter-spacing: var(--tracking-wide);
   }
 }
 

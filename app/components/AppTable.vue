@@ -135,7 +135,7 @@ const handleSort = (col: TableColumn<T>) => {
   }
 
   :deep(td) {
-    font-family: var(--font-mono);
+    @include text-mono;
   }
 
   :deep(th) {

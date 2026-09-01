@@ -39,11 +39,11 @@ const inputId = useId()
   --form-control-px: var(--space-control-px-md);
   --form-control-py: var(--space-control-py-md);
 
-  @include text-desc;
+  @include text-mono("sm");
 
   width: 100%;
   padding: var(--form-control-py) var(--form-control-px);
-  font-family: var(--font-mono);
+  color: var(--color-text-muted);
 
   &--sm {
     --form-control-px: var(--space-control-px-sm);

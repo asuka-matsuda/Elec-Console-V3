@@ -294,12 +294,12 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .c-custom-select {
-  @include text-desc;
+  @include text-mono("sm");
 
   user-select: none;
   position: relative;
   width: 100%;
-  font-family: var(--font-mono);
+  color: var(--color-text-muted);
 
   &.is-disabled {
     @include disabled;

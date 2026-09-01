@@ -60,19 +60,19 @@ const badgeColor = computed(() => props.color || 'var(--theme-accent)')
   padding: var(--space-badge-p);
 
   &__time {
-    @include text-badge;
+    @include text-mono("2xs", "bold");
 
     flex-shrink: 0;
-    font-family: var(--font-mono);
     color: var(--badge-color-dim);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wider);
   }
 
   &__title {
-    @include text-caption;
+    @include text-mono("sm");
     @include text-truncate;
 
     min-width: 0;
-    font-family: var(--font-mono);
     color: var(--color-text-main);
   }
 }
