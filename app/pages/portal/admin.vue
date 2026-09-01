@@ -3,20 +3,21 @@
  * admin
  * ポータル管理画面 (開発者向け)
  */
-import { ref } from 'vue';
-import { useHead } from '#app';
+import { ref } from 'vue'
 
-useHead({ title: 'ポータル管理 - Elec-Console' });
+import { useHead } from '#app'
+
+useHead({ title: 'ポータル管理 - Elec-Console' })
 
 definePageMeta({
-  middleware: ['admin']
-});
+  middleware: ['admin'],
+})
 
 const tabs = [
   { value: 'users', label: 'ユーザー管理' },
   { value: 'site', label: '現場管理' },
-];
-const activeTab = ref('users');
+]
+const activeTab = ref('users')
 </script>
 
 <template>

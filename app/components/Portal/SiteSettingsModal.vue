@@ -1,108 +1,111 @@
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
-import type { Site } from "~/types/admin";
-import { useAdminUsers } from "~/composables/admin/useAdminUsers";
+import { computed, ref, watch } from 'vue'
+
+import { useAdminUsers } from '~/composables/admin/useAdminUsers'
+import type { Site } from '~/types/admin'
+
+const isOpen = defineModel<boolean>({ default: false })
 
 const props = defineProps<{
-  site: Site | null;
-}>();
+  site: Site | null
+}>()
 
 const emit = defineEmits<{
-  (e: "update:site", site: Site): void;
-  (e: "close"): void;
-}>();
+  (e: 'update:site', site: Site): void
+  (e: 'close'): void
+}>()
 
-const isOpen = defineModel<boolean>({ default: false });
-
-const { users, fetchUsers } = useAdminUsers();
+const { users, fetchUsers } = useAdminUsers()
 
 // Edit state
-const editData = ref<Partial<Site>>({});
-const excludedCircuitsList = ref<string[]>([]);
+const editData = ref<Partial<Site>>({})
+const excludedCircuitsList = ref<string[]>([])
 
 const addCircuit = () => {
-  excludedCircuitsList.value.push("");
-};
+  excludedCircuitsList.value.push('')
+}
 const removeCircuit = (idx: number) => {
-  excludedCircuitsList.value.splice(idx, 1);
-};
+  excludedCircuitsList.value.splice(idx, 1)
+}
 
 watch(() => props.site, (newSite) => {
   if (newSite) {
-    editData.value = { ...newSite };
-    excludedCircuitsList.value = [...(newSite.excludedCircuits || [])];
-  } else {
-    editData.value = {};
-    excludedCircuitsList.value = [];
+    editData.value = { ...newSite }
+    excludedCircuitsList.value = [...(newSite.excludedCircuits || [])]
   }
-}, { immediate: true });
+  else {
+    editData.value = {}
+    excludedCircuitsList.value = []
+  }
+}, { immediate: true })
 
 watch(isOpen, async (val) => {
   if (val && users.value.length === 0) {
-    await fetchUsers();
+    await fetchUsers()
   }
-});
+})
 
 const statusOptions = [
-  { label: "計画中", value: "planning" },
-  { label: "進行中", value: "in_progress" },
-  { label: "完了", value: "completed" },
-  { label: "保留", value: "on_hold" },
-];
+  { label: '計画中', value: 'planning' },
+  { label: '進行中', value: 'in_progress' },
+  { label: '完了', value: 'completed' },
+  { label: '保留', value: 'on_hold' },
+]
 
 const tabs = [
-  { value: "basic", label: "基本設定", icon: "info" },
-  { value: "integration", label: "連携設定", icon: "link" },
-  { value: "rules", label: "ルール設定", icon: "filter" },
-];
-const activeTab = ref("basic");
+  { value: 'basic', label: '基本設定', icon: 'info' },
+  { value: 'integration', label: '連携設定', icon: 'link' },
+  { value: 'rules', label: 'ルール設定', icon: 'filter' },
+]
+const activeTab = ref('basic')
 
 const editStatus = computed({
-  get: () => (editData.value.status || "") as string,
-  set: (val: string) => editData.value.status = val as typeof editData.value.status
-});
+  get: () => (editData.value.status || '') as string,
+  set: (val: string) => editData.value.status = val as typeof editData.value.status,
+})
 const editId = computed({
-  get: () => (editData.value.id || "") as string,
-  set: (val: string) => editData.value.id = val
-});
+  get: () => (editData.value.id || '') as string,
+  set: (val: string) => editData.value.id = val,
+})
 
 // ワーカー名解決
 const workerNames = computed(() => {
-    if (!props.site?.id || !users.value) return [];
-    const assignedUsers = users.value.filter(u => 
-      u.assignedSiteIds && u.assignedSiteIds.includes(props.site!.id)
-    );
-    return assignedUsers.map(u => `${u.lastName} ${u.firstName}`);
-  });
+  if (!props.site?.id || !users.value) return []
+  const assignedUsers = users.value.filter(u =>
+    u.assignedSiteIds && u.assignedSiteIds.includes(props.site!.id),
+  )
+
+  return assignedUsers.map(u => `${u.lastName} ${u.firstName}`)
+})
 
 const handleSave = async () => {
-  if (!props.site) return;
+  if (!props.site) return
   // Parse excluded circuits
-  const parsedCircuits = excludedCircuitsList.value.map(c => c.trim()).filter(c => c.length > 0);
-  
+  const parsedCircuits = excludedCircuitsList.value.map(c => c.trim()).filter(c => c.length > 0)
+
   const payload: Site = {
     ...props.site,
     ...editData.value,
-    excludedCircuits: parsedCircuits
-  };
-  
-  emit("update:site", payload);
-  isOpen.value = false;
-};
+    excludedCircuits: parsedCircuits,
+  }
+
+  emit('update:site', payload)
+  isOpen.value = false
+}
 
 // Dummy DB sync functions
-const showSyncMsg = ref(false);
-const syncMsg = ref("");
+const showSyncMsg = ref(false)
+const syncMsg = ref('')
 const handleImport = () => {
-  syncMsg.value = "Excelからデータの取込が完了しました（ダミー）";
-  showSyncMsg.value = true;
-  setTimeout(() => showSyncMsg.value = false, 3000);
-};
+  syncMsg.value = 'Excelからデータの取込が完了しました（ダミー）'
+  showSyncMsg.value = true
+  setTimeout(() => showSyncMsg.value = false, 3000)
+}
 const handleExport = () => {
-  syncMsg.value = "Excelへデータを書戻しました（ダミー）";
-  showSyncMsg.value = true;
-  setTimeout(() => showSyncMsg.value = false, 3000);
-};
+  syncMsg.value = 'Excelへデータを書戻しました（ダミー）'
+  showSyncMsg.value = true
+  setTimeout(() => showSyncMsg.value = false, 3000)
+}
 </script>
 
 <template>
@@ -272,7 +275,7 @@ const handleExport = () => {
     min-height: 40px;
     padding: var(--space-card-pad-sm);
 
-    @include border-dim;
+    @include border-base($opacity: 30%);
   }
 
   &__sync-actions {

@@ -3,92 +3,103 @@
  * ToolVoltageResult
  * 電圧降下やケーブルサイズの計算結果を視覚的に表示するコンポーネントです。
  */
-import { computed } from "vue";
-import type { VoltageCalcInputs, VoltageCalcResult } from "~/types/voltage";
-import { formatVal } from "~/utils/math";
+import { computed } from 'vue'
+
+import type { VoltageCalcInputs, VoltageCalcResult } from '~/types/voltage'
+import { formatVal } from '~/utils/math'
 
 const props = defineProps<{
-  inputs: VoltageCalcInputs;
-  result: VoltageCalcResult | null;
-  size?: "sm" | "md";
-}>();
+  inputs: VoltageCalcInputs
+  result: VoltageCalcResult | null
+  size?: 'sm' | 'md'
+}>()
 
-const isReady = computed(() => props.inputs?.isReady && props.result);
-const mode = computed(() => props.inputs?.mode || "drop");
+const isReady = computed(() => props.inputs?.isReady && props.result)
+const mode = computed(() => props.inputs?.mode || 'drop')
 
 const dropCableName = computed(() => {
-  if (!isReady.value) return "ーー";
-  return props.result?.optimal?.name || "ーー";
-});
+  if (!isReady.value) return 'ーー'
+
+  return props.result?.optimal?.name || 'ーー'
+})
 
 const mainLabel = computed(() =>
-  mode.value === "size" ? "選定ケーブルサイズ" : "電圧降下",
-);
+  mode.value === 'size' ? '選定ケーブルサイズ' : '電圧降下',
+)
 
 const mainValue = computed(() => {
-  if (!isReady.value) return "ーー";
-  if (mode.value === "size") {
-    const size = props.result?.optimal?.size;
-    return size ? String(size) : "選定不可";
-  } else {
-    return formatVal(props.result!.finalDropV, "ーー", 2);
+  if (!isReady.value) return 'ーー'
+  if (mode.value === 'size') {
+    const size = props.result?.optimal?.size
+
+    return size ? String(size) : '選定不可'
   }
-});
+  else {
+    return formatVal(props.result!.finalDropV, 'ーー', 2)
+  }
+})
 
 const mainUnit = computed(() => {
-  if (!isReady.value) return mode.value === "size" ? "sq" : "V";
-  if (mode.value === "size") {
-    return props.result?.optimal?.unit || "sq";
+  if (!isReady.value) return mode.value === 'size' ? 'sq' : 'V'
+  if (mode.value === 'size') {
+    return props.result?.optimal?.unit || 'sq'
   }
-  return "V";
-});
+
+  return 'V'
+})
 
 const mainStatusClass = computed(() => {
-  if (!isReady.value) return "is-neutral";
-  if (mode.value === "size") {
-    return props.result?.optimal ? "is-success" : "is-danger";
-  } else {
-    return (props.inputs.I || 0) <= props.result!.finalEffAmp
-      ? "is-success"
-      : "is-danger";
+  if (!isReady.value) return 'is-neutral'
+  if (mode.value === 'size') {
+    return props.result?.optimal ? 'is-success' : 'is-danger'
   }
-});
+  else {
+    return (props.inputs.I || 0) <= props.result!.finalEffAmp
+      ? 'is-success'
+      : 'is-danger'
+  }
+})
 
 const currentI = computed(() =>
-  isReady.value ? formatVal(props.inputs.I, "ーー", 1) : "ーー",
-);
+  isReady.value ? formatVal(props.inputs.I, 'ーー', 1) : 'ーー',
+)
 const maxI = computed(() =>
-  isReady.value ? formatVal(props.result!.finalEffAmp, "ーー", 1) : "ーー",
-);
+  isReady.value ? formatVal(props.result!.finalEffAmp, 'ーー', 1) : 'ーー',
+)
 
 const ampStatusClass = computed(() => {
-  if (!isReady.value) return "is-neutral";
+  if (!isReady.value) return 'is-neutral'
+
   return (props.inputs.I || 0) <= props.result!.finalEffAmp
-    ? "is-success"
-    : "is-danger";
-});
+    ? 'is-success'
+    : 'is-danger'
+})
 
 const dropV = computed(() =>
-  isReady.value ? formatVal(props.result!.finalDropV, "ーー", 2) : "ーー",
-);
+  isReady.value ? formatVal(props.result!.finalDropV, 'ーー', 2) : 'ーー',
+)
 const dropPercent = computed(() => {
-  if (!isReady.value) return "ーー";
-  const v = props.inputs.sys?.voltage;
-  if (!v) return "ーー";
-  return formatVal((props.result!.finalDropV / v) * 100, "ーー", 2);
-});
+  if (!isReady.value) return 'ーー'
+  const v = props.inputs.sys?.voltage
+
+  if (!v) return 'ーー'
+
+  return formatVal((props.result!.finalDropV / v) * 100, 'ーー', 2)
+})
 
 const dropStatusClass = computed(() => {
-  if (!isReady.value) return "is-neutral";
-  if (mode.value === "size" && props.inputs.targetDrop) {
-    const currentPercent =
-      (props.result!.finalDropV / props.inputs.sys!.voltage) * 100;
+  if (!isReady.value) return 'is-neutral'
+  if (mode.value === 'size' && props.inputs.targetDrop) {
+    const currentPercent
+      = (props.result!.finalDropV / props.inputs.sys!.voltage) * 100
+
     return currentPercent <= props.inputs.targetDrop
-      ? "is-success"
-      : "is-warning";
+      ? 'is-success'
+      : 'is-warning'
   }
-  return "is-success";
-});
+
+  return 'is-success'
+})
 </script>
 
 <template>
@@ -208,15 +219,15 @@ const dropStatusClass = computed(() => {
     }
 
     .c-voltage-result__main-value .value-text {
-      font-size: var(--font-size-3xl);
+      @include text-mono("3xl", "bold");
     }
 
     .c-voltage-result__drop-cable {
-      font-size: var(--font-size-2xl);
+      @include text-mono("2xl", "bold");
     }
 
     .c-voltage-result__drop-percent {
-      font-size: var(--font-size-base);
+      @include text-mono("base", "bold");
     }
 
     .metric-card {
@@ -257,7 +268,6 @@ const dropStatusClass = computed(() => {
     padding: var(--space-result-p);
 
     @include border-base;
-
     @include shadow("sink");
   }
 
@@ -271,12 +281,8 @@ const dropStatusClass = computed(() => {
   &__main-value {
     @include flex-baseline(var(--space-inline-gap));
 
-    font-family: var(--font-mono);
-
     .value-text {
-      font-size: var(--font-size-4xl);
-      font-weight: var(--font-weight-bold);
-      line-height: 1;
+      @include text-mono("4xl", "bold");
     }
 
     .value-unit {
@@ -310,7 +316,7 @@ const dropStatusClass = computed(() => {
     justify-content: center;
     padding: var(--space-card-pad-sm);
 
-    @include border-base(var(--color-border), 1px);
+    @include border-base(var(--color-border), $width: 1px);
   }
 
   .metric-label {
@@ -321,13 +327,11 @@ const dropStatusClass = computed(() => {
     @include flex-baseline(var(--space-1));
 
     margin: 0;
-    font-family: var(--font-mono);
 
-    @include text-title("sm");
+    @include text-mono("sm", "bold");
 
     .value-sep {
       margin: 0 2px;
-      font-weight: normal;
       color: var(--color-text-muted);
     }
 

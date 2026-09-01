@@ -1,17 +1,18 @@
-import { computed } from 'vue';
-import { calculateWeightAndDrum, generateMathData } from '~/utils/tools/weight/weightCalcLogic';
-import type { WeightCalcInputs, WeightCalcResult } from '~/utils/tools/weight/weightCalcLogic';
-import { cableData } from '~/constants/data/cableData';
-import { drumData } from '~/constants/data/drumData';
-import { mapWeightToHistory } from '~/utils/tools/weight/historyMapper';
-import { useToolPage } from '~/composables/tools/useToolPage';
+import { computed } from 'vue'
+
+import { useToolPage } from '~/composables/tools/useToolPage'
+import { cableData } from '~/constants/data/cableData'
+import { drumData } from '~/constants/data/drumData'
+import { mapWeightToHistory } from '~/utils/tools/weight/historyMapper'
+import type { WeightCalcInputs, WeightCalcResult } from '~/utils/tools/weight/weightCalcLogic'
+import { calculateWeightAndDrum, generateMathData } from '~/utils/tools/weight/weightCalcLogic'
 
 const defaultInputs: WeightCalcInputs = {
   category: '',
   cableIdx: '',
   L_input: null,
-  K: null
-};
+  K: null,
+}
 
 export function useWeightCalculator() {
   const {
@@ -28,19 +29,20 @@ export function useWeightCalculator() {
     defaultInputs,
     (inputs) => {
       if (!inputs.category || !inputs.cableIdx || !inputs.L_input || inputs.L_input <= 0 || !inputs.K) {
-        return { error: true };
+        return { error: true }
       }
-      return calculateWeightAndDrum(inputs, cableData, drumData);
+
+      return calculateWeightAndDrum(inputs, cableData, drumData)
     },
     {
       toHistory: (inputs, res) => mapWeightToHistory(inputs, res!)!,
-      fromHistory: () => JSON.parse(JSON.stringify(defaultInputs))
-    }
-  );
+      fromHistory: () => JSON.parse(JSON.stringify(defaultInputs)),
+    },
+  )
 
   const mathSteps = computed(() => {
-    return generateMathData(inputs.value, result.value, cableData);
-  });
+    return generateMathData(inputs.value, result.value, cableData)
+  })
 
   return {
     inputs,
@@ -50,6 +52,6 @@ export function useWeightCalculator() {
     openResetModal,
     confirmReset,
     handleSaveHistory,
-    mathSteps
-  };
+    mathSteps,
+  }
 }

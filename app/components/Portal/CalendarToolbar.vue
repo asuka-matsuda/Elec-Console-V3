@@ -1,18 +1,15 @@
 <script setup lang="ts">
-import AppButton from '~/components/AppButton.vue';
+import AppButton from '~/components/AppButton.vue'
 
 defineProps<{
-  title: string;
-  currentView: 'dayGridMonth' | 'listMonth';
-}>();
+  title: string
+  currentView: 'dayGridMonth' | 'listMonth'
+}>()
 
 const emit = defineEmits<{
-  (e: 'prev'): void;
-  (e: 'next'): void;
-  (e: 'today'): void;
-  (e: 'changeView', view: 'dayGridMonth' | 'listMonth'): void;
-  (e: 'openTypeSettings'): void;
-}>();
+  (e: 'prev' | 'next' | 'today' | 'openTypeSettings'): void
+  (e: 'changeView', view: 'dayGridMonth' | 'listMonth'): void
+}>()
 </script>
 
 <template>
@@ -81,7 +78,7 @@ const emit = defineEmits<{
 <style scoped lang="scss">
 .c-calendar-toolbar {
   @include flex-between(var(--space-inline-gap));
-  @include border-dim;
+  @include border-base($opacity: 30%);
 
   flex-wrap: wrap;
   padding: var(--space-card-pad-sm) var(--space-card-pad);

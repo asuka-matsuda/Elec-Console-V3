@@ -1,11 +1,12 @@
-import { computed } from 'vue';
-import { calculateRackSize, generateMathData } from '~/utils/tools/rack/rackCalcLogic';
-import type { RackCalcResult } from '~/utils/tools/rack/rackCalcLogic';
-import { mapRackToHistory } from '~/utils/tools/rack/historyMapper';
-import { useToolPage } from '~/composables/tools/useToolPage';
-import { STANDARD_RACK_SIZES } from '~/constants/rackConstants';
-import { mapFormToRackCalcInputs } from '~/utils/tools/rack/rackMapper';
-import type { RackInputs } from '~/utils/tools/rack/rackMapper';
+import { computed } from 'vue'
+
+import { useToolPage } from '~/composables/tools/useToolPage'
+import { STANDARD_RACK_SIZES } from '~/constants/rackConstants'
+import { mapRackToHistory } from '~/utils/tools/rack/historyMapper'
+import type { RackCalcResult } from '~/utils/tools/rack/rackCalcLogic'
+import { calculateRackSize, generateMathData } from '~/utils/tools/rack/rackCalcLogic'
+import type { RackInputs } from '~/utils/tools/rack/rackMapper'
+import { mapFormToRackCalcInputs } from '~/utils/tools/rack/rackMapper'
 
 const defaultInputs: RackInputs = {
   isStrong: true,
@@ -15,8 +16,8 @@ const defaultInputs: RackInputs = {
   rackHeight: null,
   separatorWidth: null,
   strongCablesUI: [{ id: crypto.randomUUID(), category: '', cableIdx: '', count: null }],
-  weakCablesUI: [{ id: crypto.randomUUID(), category: '', cableIdx: '', count: null }]
-};
+  weakCablesUI: [{ id: crypto.randomUUID(), category: '', cableIdx: '', count: null }],
+}
 
 export function useRackCalculator() {
   const {
@@ -32,12 +33,14 @@ export function useRackCalculator() {
     'ケーブルラック選定',
     defaultInputs,
     (inputs) => {
-      const logicInputs = mapFormToRackCalcInputs(inputs);
-      return calculateRackSize(logicInputs, STANDARD_RACK_SIZES);
+      const logicInputs = mapFormToRackCalcInputs(inputs)
+
+      return calculateRackSize(logicInputs, STANDARD_RACK_SIZES)
     },
     {
       toHistory: (inputs, res) => {
-        const logicInputs = mapFormToRackCalcInputs(inputs);
+        const logicInputs = mapFormToRackCalcInputs(inputs)
+
         return mapRackToHistory(
           {
             isStrong: logicInputs.isStrong,
@@ -46,41 +49,42 @@ export function useRackCalculator() {
             lWeak: logicInputs.lWeak,
             rackHeight: logicInputs.rackHeight,
             maxDepth: logicInputs.maxDepth,
-            separatorWidth: logicInputs.separatorWidth
+            separatorWidth: logicInputs.separatorWidth,
           },
           inputs.strongCablesUI,
           inputs.weakCablesUI,
-          res!
-        )!;
+          res!,
+        )!
       },
-      fromHistory: () => JSON.parse(JSON.stringify(defaultInputs))
-    }
-  );
+      fromHistory: () => JSON.parse(JSON.stringify(defaultInputs)),
+    },
+  )
 
-  const maxDepth = computed(() => Math.max(1, (inputs.value.rackHeight ?? 0) - 10));
+  const maxDepth = computed(() => Math.max(1, (inputs.value.rackHeight ?? 0) - 10))
 
   function addStrongCable() {
-    inputs.value.strongCablesUI.push({ id: crypto.randomUUID(), category: '', cableIdx: '', count: 1 });
+    inputs.value.strongCablesUI.push({ id: crypto.randomUUID(), category: '', cableIdx: '', count: 1 })
   }
 
   function removeStrongCable(id: string) {
-    if (inputs.value.strongCablesUI.length <= 1) return;
-    inputs.value.strongCablesUI = inputs.value.strongCablesUI.filter((c) => c.id !== id);
+    if (inputs.value.strongCablesUI.length <= 1) return
+    inputs.value.strongCablesUI = inputs.value.strongCablesUI.filter(c => c.id !== id)
   }
 
   function addWeakCable() {
-    inputs.value.weakCablesUI.push({ id: crypto.randomUUID(), category: '', cableIdx: '', count: 1 });
+    inputs.value.weakCablesUI.push({ id: crypto.randomUUID(), category: '', cableIdx: '', count: 1 })
   }
 
   function removeWeakCable(id: string) {
-    if (inputs.value.weakCablesUI.length <= 1) return;
-    inputs.value.weakCablesUI = inputs.value.weakCablesUI.filter((c) => c.id !== id);
+    if (inputs.value.weakCablesUI.length <= 1) return
+    inputs.value.weakCablesUI = inputs.value.weakCablesUI.filter(c => c.id !== id)
   }
 
   const mathSteps = computed(() => {
-    const logicInputs = mapFormToRackCalcInputs(inputs.value);
-    return generateMathData(logicInputs, result.value);
-  });
+    const logicInputs = mapFormToRackCalcInputs(inputs.value)
+
+    return generateMathData(logicInputs, result.value)
+  })
 
   return {
     inputs,
@@ -95,6 +99,6 @@ export function useRackCalculator() {
     openResetModal,
     confirmReset,
     handleSaveHistory,
-    mathSteps
-  };
+    mathSteps,
+  }
 }

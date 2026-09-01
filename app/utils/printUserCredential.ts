@@ -1,11 +1,13 @@
 /**
  * ユーザーのログイン情報（ID/パスワード等）を印刷用ウィンドウで表示するユーティリティ
  */
-export const printUserCredential = (user: { lastName: string; firstName: string; loginId: string; initialPassword?: string }) => {
-  const printWindow = window.open('', '_blank');
+export const printUserCredential = (user: { lastName: string, firstName: string, loginId: string, initialPassword?: string }) => {
+  const printWindow = window.open('', '_blank')
+
   if (!printWindow) {
-    alert('ポップアップブロックを解除してください。');
-    return;
+    alert('ポップアップブロックを解除してください。')
+
+    return
   }
 
   const html = `
@@ -104,11 +106,11 @@ export const printUserCredential = (user: { lastName: string; firstName: string;
       </div>
     </body>
     </html>
-  `;
+  `
 
-  printWindow.document.write(html);
-  printWindow.document.close();
+  printWindow.document.write(html)
+  printWindow.document.close()
   printWindow.onload = () => {
-    printWindow.print();
-  };
-};
+    printWindow.print()
+  }
+}

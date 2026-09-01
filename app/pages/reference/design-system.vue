@@ -3,11 +3,11 @@
  * DesignSystem
  * 社内用のUIカタログ（デザインシステム）画面のコンポーネントです。UIコンポーネントの見た目や状態を一覧で確認できます。
  */
-import { ref } from 'vue';
+import { ref } from 'vue'
 
-const inputText = ref('');
-const isToggled = ref(false);
-const isChecked = ref(false);
+const inputText = ref('')
+const isToggled = ref(false)
+const isChecked = ref(false)
 </script>
 
 <template>
@@ -164,9 +164,8 @@ const isChecked = ref(false);
 }
 
 .p-ds-card-title {
-  @include text-body;
+  @include text-body("md", "bold");
 
-  font-weight: var(--font-weight-bold);
   color: var(--color-text-secondary);
 }
 

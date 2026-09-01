@@ -4,11 +4,11 @@
  * ツール等の条件入力エリアを囲むパネルコンポーネントです。
  */
 defineProps<{
-  title?: string;
-  icon?: string;
-}>();
+  title?: string
+  icon?: string
+}>()
 
-defineEmits(["reset"]);
+defineEmits(['reset'])
 </script>
 
 <template>

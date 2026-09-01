@@ -3,31 +3,31 @@
  * AppSectionHeader
  * セクションのタイトル、アイコン、アクションボタン、および区切り線を表示するヘッダーコンポーネント。
  */
-import type { MenuSection } from "~/constants/data/menuData";
+import type { MenuSection } from '~/constants/data/menuData'
 
 withDefaults(
   defineProps<{
-    title?: string;
-    titleId?: string;
-    tag?: string;
-    icon?: string;
-    variant?: MenuSection["accent"];
-    size?: "sm" | "md" | "lg";
-    dividerType?: "default" | "fade-side" | "fade-center";
+    title?: string
+    titleId?: string
+    tag?: string
+    icon?: string
+    variant?: MenuSection['accent']
+    size?: 'sm' | 'md' | 'lg'
+    dividerType?: 'default' | 'fade-side' | 'fade-center'
   }>(),
   {
-    tag: "h2",
-    variant: "main",
-    size: "lg",
-    dividerType: "default",
+    tag: 'h2',
+    variant: 'main',
+    size: 'lg',
+    dividerType: 'default',
   },
-);
+)
 </script>
 
 <template>
   <header class="c-section-header">
     <div class="c-section-header__top">
-        <component
+      <component
         :is="tag"
         :id="titleId"
         class="c-section-header__title"

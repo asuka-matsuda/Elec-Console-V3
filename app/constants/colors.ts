@@ -1,6 +1,6 @@
 export interface ColorPreset {
-  name: string;
-  value: string; // HEX color code e.g. '#00f0ff'
+  name: string
+  value: string // HEX color code e.g. '#00f0ff'
 }
 
 export const DEFAULT_COLOR_PRESETS: ColorPreset[] = [
@@ -14,4 +14,4 @@ export const DEFAULT_COLOR_PRESETS: ColorPreset[] = [
   { name: 'ローズ', value: '#f43f5e' },
   { name: 'ライム', value: '#84cc16' },
   { name: 'スレート', value: '#94a3b8' },
-];
+]

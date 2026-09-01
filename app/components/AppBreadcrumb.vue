@@ -3,17 +3,17 @@
  * AppBreadcrumb
  * パンくずリストを表示するためのコンポーネント
  */
-import { computed } from "vue";
+import { computed } from 'vue'
 
 /** パンくずリストの各要素の型定義 */
 export type BreadcrumbItem = {
-  text: string;
-  href?: string;
-};
+  text: string
+  href?: string
+}
 
 const props = defineProps<{
-  items: BreadcrumbItem[];
-}>();
+  items: BreadcrumbItem[]
+}>()
 
 /**
  * テンプレートでの判定ロジックを減らすため、あらかじめ「最後の要素かどうか」を判定した配列を生成する
@@ -24,8 +24,8 @@ const processedItems = computed(() => {
     isLast: index === props.items.length - 1,
     /** keyとして使用できる一意なIDを生成。hrefがあればそれを使用、なければテキスト */
     uniqueKey: item.href ? item.href : `${item.text}-${index}`,
-  }));
-});
+  }))
+})
 </script>
 
 <template>
@@ -57,7 +57,6 @@ const processedItems = computed(() => {
           <span class="c-breadcrumb__current">
             {{ item.text }}
           </span>
-          <span class="c-breadcrumb__cursor"></span>
         </template>
       </li>
     </ol>
@@ -111,12 +110,8 @@ const processedItems = computed(() => {
     @include cyber-text-glow(var(--theme-accent), 60%, var(--blur-md));
 
     color: var(--theme-accent);
-  }
 
-  &__cursor {
-    @include blinking-cursor-base;
-
-    background-color: var(--theme-accent);
+    @include blinking-cursor($color: var(--theme-accent));
   }
 }
 </style>

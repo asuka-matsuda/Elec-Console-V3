@@ -5,24 +5,24 @@
  */
 withDefaults(
   defineProps<{
-    title?: string;
+    title?: string
     bracketColor?:
-      | "main"
-      | "tool"
-      | "database"
-      | "reference"
-      | "management"
-      | "danger"
-      | "success";
-    variant?: "hud" | "simple" | "gradient" | "hybrid";
-    density?: "normal" | "compact";
+      | 'main'
+      | 'tool'
+      | 'database'
+      | 'reference'
+      | 'management'
+      | 'danger'
+      | 'success'
+    variant?: 'hud' | 'simple' | 'gradient' | 'hybrid'
+    density?: 'normal' | 'compact'
   }>(),
   {
-    bracketColor: "main",
-    variant: "hud",
-    density: "normal",
+    bracketColor: 'main',
+    variant: 'hud',
+    density: 'normal',
   },
-);
+)
 </script>
 
 <template>
@@ -80,7 +80,7 @@ withDefaults(
     width: var(--p-bracket-size);
     height: var(--p-bracket-size);
 
-    @include border-base(var(--p-bracket-color), var(--border-width-thick));
+    @include border-base(var(--p-bracket-color), $width: var(--border-width-thick));
 
     filter: var(--p-bracket-glow);
   }
@@ -210,7 +210,7 @@ withDefaults(
   @include flex-column(var(--space-card-gap));
 
   // Apply visual base
-  @include border-base(var(--p-border-color), var(--border-width-base));
+  @include border-base(var(--p-border-color), $width: var(--border-width-base));
   @include state-base(var(--p-box-shadow));
 }
 </style>

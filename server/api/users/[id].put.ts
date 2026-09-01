@@ -1,15 +1,16 @@
-import { defineEventHandler, readBody, getRouterParam } from "h3";
-import { prisma } from "../../utils/prisma";
-import { requireAdminUser } from "../../utils/auth";
+import { defineEventHandler, getRouterParam, readBody } from 'h3'
+
+import { requireAdminUser } from '../../utils/auth'
+import { prisma } from '../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  await requireAdminUser(event);
-  const id = getRouterParam(event, "id");
-  const body = await readBody(event);
-  
-  if (!id) return null;
-  
-  const siteConnections = (body.assignedSiteIds || []).map((sid: string) => ({ id: sid }));
+  await requireAdminUser(event)
+  const id = getRouterParam(event, 'id')
+  const body = await readBody(event)
+
+  if (!id) return null
+
+  const siteConnections = (body.assignedSiteIds || []).map((sid: string) => ({ id: sid }))
 
   const updatedUser = await prisma.user.update({
     where: { id },
@@ -22,12 +23,13 @@ export default defineEventHandler(async (event) => {
       role: body.role,
       email: body.email,
       isActive: body.isActive,
-      assignedSites: { set: siteConnections } // Override relations
+      assignedSites: { set: siteConnections }, // Override relations
     },
-    include: { assignedSites: true }
-  });
+    include: { assignedSites: true },
+  })
 
-  const assignedSiteIds = updatedUser.assignedSites.map((s) => s.id);
-  const { password: _dbPassword, assignedSites: _assignedSites, ...restUser } = updatedUser;
-  return { ...restUser, assignedSiteIds };
-});
+  const assignedSiteIds = updatedUser.assignedSites.map(s => s.id)
+  const { password: _dbPassword, assignedSites: _assignedSites, ...restUser } = updatedUser
+
+  return { ...restUser, assignedSiteIds }
+})

@@ -3,13 +3,14 @@
  * Glossary
  * 用語集画面のコンポーネントです。専門用語の検索や、五十音・カテゴリ別での絞り込み機能を提供します。
  */
-import { ref, computed } from "vue";
-import { glossaryData } from "~/constants/data/glossaryData";
-import { useDbFilter } from "~/composables/useDbFilter";
+import { computed, ref } from 'vue'
+
+import { useDbFilter } from '~/composables/useDbFilter'
+import { glossaryData } from '~/constants/data/glossaryData'
 
 useHead({
-  title: "用語集",
-});
+  title: '用語集',
+})
 
 const {
   searchQuery,
@@ -18,60 +19,65 @@ const {
   filteredData: baseFilteredGlossary,
 } = useDbFilter({
   data: glossaryData,
-  searchMapper: (item) => `${item.term} ${item.kana || ""}`,
-});
+  searchMapper: item => `${item.term} ${item.kana || ''}`,
+})
 
-const activeKanas = ref<string[]>([]);
+const activeKanas = ref<string[]>([])
 
 function getKanaRow(kanaStr: string) {
-  if (!kanaStr) return "other";
-  const firstChar = kanaStr.charAt(0);
-  if (/[ぁ-おア-オ]/.test(firstChar)) return "a";
-  if (/[か-こカ-コが-ごガ-ゴ]/.test(firstChar)) return "k";
-  if (/[さ-そサ-ソざ-ぞザ-ゾ]/.test(firstChar)) return "s";
-  if (/[た-とタ-トだ-どダ-ド]/.test(firstChar)) return "t";
-  if (/[な-のナ-ノ]/.test(firstChar)) return "n";
-  if (/[\u306f-\u307b\u30cf-\u30db\u3070-\u307c\u30d0-\u30dc\u3071-\u307d\u30d1-\u30dd]/.test(firstChar)) return "h";
-  if (/[\u307e-\u3082\u30de-\u30e2]/.test(firstChar)) return "m";
-  if (/[や-よヤ-ヨ]/.test(firstChar)) return "y";
-  if (/[ら-ろラ-ロ]/.test(firstChar)) return "r";
-  if (/[わ-んワ-ン]/.test(firstChar)) return "w";
-  return "other";
+  if (!kanaStr) return 'other'
+  const firstChar = kanaStr.charAt(0)
+
+  if (/[ぁ-おア-オ]/.test(firstChar)) return 'a'
+  if (/[か-こカ-コが-ごガ-ゴ]/.test(firstChar)) return 'k'
+  if (/[さ-そサ-ソざ-ぞザ-ゾ]/.test(firstChar)) return 's'
+  if (/[た-とタ-トだ-どダ-ド]/.test(firstChar)) return 't'
+  if (/[な-のナ-ノ]/.test(firstChar)) return 'n'
+  if (/[\u306f-\u307b\u30cf-\u30db\u3070-\u307c\u30d0-\u30dc\u3071-\u307d\u30d1-\u30dd]/.test(firstChar)) return 'h'
+  if (/[\u307e-\u3082\u30de-\u30e2]/.test(firstChar)) return 'm'
+  if (/[や-よヤ-ヨ]/.test(firstChar)) return 'y'
+  if (/[ら-ろラ-ロ]/.test(firstChar)) return 'r'
+  if (/[わ-んワ-ン]/.test(firstChar)) return 'w'
+
+  return 'other'
 }
 
 const filteredGlossary = computed(() => {
   let result = [...baseFilteredGlossary.value].sort((a, b) =>
-    (a.kana || "").localeCompare(b.kana || "", "ja"),
-  );
+    (a.kana || '').localeCompare(b.kana || '', 'ja'),
+  )
 
   if (activeKanas.value.length > 0) {
     result = result.filter((item) => {
-      const row = getKanaRow(item.kana || "");
+      const row = getKanaRow(item.kana || '')
+
       return (
-        activeKanas.value.includes(row) ||
-        (activeKanas.value.includes("w") && row === "other")
-      );
-    });
+        activeKanas.value.includes(row)
+        || (activeKanas.value.includes('w') && row === 'other')
+      )
+    })
   }
 
-  return result;
-});
+  return result
+})
 
 const availableRows = computed(() => {
-  const rows = new Set<string>();
+  const rows = new Set<string>()
+
   baseFilteredGlossary.value.forEach((item) => {
-    rows.add(getKanaRow(item.kana || ""));
-  });
-  return rows;
-});
+    rows.add(getKanaRow(item.kana || ''))
+  })
+
+  return rows
+})
 
 const categoryColorMap: Record<string, string> = {
-  電気: "var(--trade-color-electric)",
-  建築: "var(--trade-color-architecture)",
-  "空調・換気": "var(--trade-color-hvac)",
-  衛生: "var(--trade-color-plumbing)",
-  雑学: "var(--trade-color-trivia)",
-};
+  電気: 'var(--trade-color-electric)',
+  建築: 'var(--trade-color-architecture)',
+  空調・換気: 'var(--trade-color-hvac)',
+  衛生: 'var(--trade-color-plumbing)',
+  雑学: 'var(--trade-color-trivia)',
+}
 </script>
 
 <template>
@@ -233,7 +239,6 @@ const categoryColorMap: Record<string, string> = {
   &__desc {
     @include text-title("sm");
 
-    line-height: 1.6;
     color: var(--color-text-secondary);
   }
 
@@ -242,7 +247,7 @@ const categoryColorMap: Record<string, string> = {
 
     padding: var(--space-card-pad-md);
 
-    @include border-dim;
+    @include border-base($opacity: 30%);
   }
 
   &__label {
@@ -252,7 +257,6 @@ const categoryColorMap: Record<string, string> = {
   &__text {
     @include text-desc;
 
-    line-height: 1.5;
     color: var(--color-text-secondary);
   }
 }

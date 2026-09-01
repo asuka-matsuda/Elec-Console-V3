@@ -29,42 +29,40 @@
 // ボーダー
 @mixin border-base(
   $color: var(--color-border),
+  $opacity: 100%,
   $width: var(--border-width-base)
 ) {
-  border: $width solid $color;
-}
-
-@mixin border-dim($color: var(--color-border), $opacity: 30%) {
-  border: var(--border-width-base) solid color-mix(in srgb, #{$color} $opacity, transparent);
+  @if $opacity == 100% {
+    border: $width solid $color;
+  } @else {
+    border: $width solid color-mix(in srgb, #{$color} $opacity, transparent);
+  }
 }
 
 // アニメーション・その他の効果
-@mixin blinking-cursor-base(
-  $width: var(--space-1),
-  $height: var(--space-3),
-  $color: currentcolor
-) {
-  display: inline-block;
-
-  width: $width;
-  height: $height;
-
-  background-color: $color;
-
-  animation: ui-cursor-blink 1s step-end infinite;
-}
-
 @mixin blinking-cursor(
   $width: var(--space-1),
   $height: var(--space-3),
   $color: currentcolor,
+  $pseudo: true,
   $gap: var(--space-1)
 ) {
-  &::after {
-    content: "";
-    margin-left: $gap;
+  @if $pseudo {
+    &::after {
+      content: "";
+      margin-left: $gap;
 
-    @include blinking-cursor-base($width, $height, $color);
+      @include blinking-cursor($width, $height, $color, $pseudo: false);
+    }
+  } @else {
+    display: inline-block;
+
+    width: $width;
+    height: $height;
+
+    background-color: $color;
+
+    animation: ui-cursor-blink 1s step-end infinite;
   }
 }
 

@@ -3,16 +3,16 @@
  * RackDbPage
  * ケーブルラックのデータベース情報を一覧表示・検索するためのページコンポーネントです。
  */
-import { rackData } from "~/constants/data/rackData";
-import type { TableColumn } from "~/components/AppTable.vue";
+import type { TableColumn } from '~/components/AppTable.vue'
+import { rackData } from '~/constants/data/rackData'
 
 const tableColumns: TableColumn[] = [
-  { key: "category", label: "カテゴリ", sortable: true },
-  { key: "size", label: "サイズ (呼び幅 mm)", sortable: true },
-  { key: "height", label: "親桁高さ (mm)", sortable: true },
-  { key: "weightPiece", label: "1本あたり質量 (kg/3m)", sortable: true },
-  { key: "weightMeter", label: "1mあたり質量 (kg/m)", sortable: true },
-];
+  { key: 'category', label: 'カテゴリ', sortable: true },
+  { key: 'size', label: 'サイズ (呼び幅 mm)', sortable: true },
+  { key: 'height', label: '親桁高さ (mm)', sortable: true },
+  { key: 'weightPiece', label: '1本あたり質量 (kg/3m)', sortable: true },
+  { key: 'weightMeter', label: '1mあたり質量 (kg/m)', sortable: true },
+]
 </script>
 
 <template>

@@ -3,49 +3,56 @@
  * Dashboard
  * ダッシュボード画面のコンポーネントです。各機能へのリンクやメニューをカード形式で一覧表示します。
  */
-import { menuData } from "~/constants/data/menuData";
-import { useAuth } from "~/composables/useAuth";
-import { useLocalStorage } from "@vueuse/core";
+import { useLocalStorage } from '@vueuse/core'
+
+import { useAuth } from '~/composables/useAuth'
+import { menuData } from '~/constants/data/menuData'
 
 /** Extract just the sections to show on the dashboard */
-const dashboardSections = menuData.filter((section) => section.showInDashboard);
+const dashboardSections = menuData.filter(section => section.showInDashboard)
 
-const { currentUser, isAuthenticated } = useAuth();
-const lastSiteId = useLocalStorage("last-accessed-site", "");
+const { currentUser, isAuthenticated } = useAuth()
+const lastSiteId = useLocalStorage('last-accessed-site', '')
 
 const getDynamicTo = (item: Record<string, unknown>) => {
-  if (getDynamicDisabled(item)) return undefined;
-  
-  if ((item.href === "/portal" || item.href === "/login") && isAuthenticated.value) {
-    const siteIds = currentUser.value?.assignedSiteIds || [];
+  if (getDynamicDisabled(item)) return undefined
+
+  if ((item.href === '/portal' || item.href === '/login') && isAuthenticated.value) {
+    const siteIds = currentUser.value?.assignedSiteIds || []
+
     if (siteIds.length > 0) {
-      const targetSiteId = siteIds.includes(lastSiteId.value) ? lastSiteId.value : siteIds[0];
-      return `/portal/${targetSiteId}`;
+      const targetSiteId = siteIds.includes(lastSiteId.value) ? lastSiteId.value : siteIds[0]
+
+      return `/portal/${targetSiteId}`
     }
   }
-  
-  return item.href as string;
-};
+
+  return item.href as string
+}
 
 const getDynamicDisabled = (item: Record<string, unknown>) => {
-  if (item.disabled) return true;
-  if (item.href === "/portal" || item.href === "/login") {
+  if (item.disabled) return true
+  if (item.href === '/portal' || item.href === '/login') {
     // ログイン済みかつアサイン現場が0件の場合はグレーアウト
     if (isAuthenticated.value && (!currentUser.value?.assignedSiteIds || currentUser.value.assignedSiteIds.length === 0)) {
-      return true;
+      return true
     }
   }
-  return false;
-};
+
+  return false
+}
 
 const getDynamicDesc = (item: Record<string, unknown>) => {
-  if ((item.href === "/portal" || item.href === "/login") && isAuthenticated.value) {
-    const siteIds = currentUser.value?.assignedSiteIds || [];
-    if (siteIds.length === 0) return "アサインされている現場がありません";
-    return `アサイン済みの現場ポータルへアクセスします（現在${siteIds.length}件）`;
+  if ((item.href === '/portal' || item.href === '/login') && isAuthenticated.value) {
+    const siteIds = currentUser.value?.assignedSiteIds || []
+
+    if (siteIds.length === 0) return 'アサインされている現場がありません'
+
+    return `アサイン済みの現場ポータルへアクセスします（現在${siteIds.length}件）`
   }
-  return item.desc || "※準備中…";
-};
+
+  return item.desc || '※準備中…'
+}
 </script>
 
 <template>

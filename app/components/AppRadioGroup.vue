@@ -3,29 +3,29 @@
  * AppRadioGroup
  * 複数の選択肢から1つを選択するための、セグメントコントロール風のラジオボタングループコンポーネント。
  */
-import { useId, computed } from "vue";
-import type { StyleValue } from "vue";
+import type { StyleValue } from 'vue'
+import { computed, useId } from 'vue'
 
 export interface RadioOption {
-  label: string;
-  value: string | number | boolean;
-  disabled?: boolean;
-  color?: string;
+  label: string
+  value: string | number | boolean
+  disabled?: boolean
+  color?: string
 }
 
-const model = defineModel<string | number | boolean>();
+const model = defineModel<string | number | boolean>()
 
 const props = defineProps<{
-  options: RadioOption[];
-  name?: string;
-}>();
+  options: RadioOption[]
+  name?: string
+}>()
 
 /**
  * ユニークなname属性を自動生成（複数グループが配置された際の干渉を防ぐため）
  */
-const uniqueName = useId();
-const groupName = computed(() => props.name || `radio-group-${uniqueName}`);
-const getStyle = (option: RadioOption): StyleValue | undefined => option.color ? ({ '--radio-color': option.color } as StyleValue) : undefined;
+const uniqueName = useId()
+const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
+const getStyle = (option: RadioOption): StyleValue | undefined => option.color ? ({ '--radio-color': option.color } as StyleValue) : undefined
 </script>
 
 <template>
@@ -61,7 +61,6 @@ const getStyle = (option: RadioOption): StyleValue | undefined => option.color ?
   padding: var(--space-0-5);
 
   @include border-base;
-
   @include shadow("none");
 
   &__label {
@@ -105,7 +104,6 @@ const getStyle = (option: RadioOption): StyleValue | undefined => option.color ?
       color: var(--radio-color);
 
       @include state-active(var(--theme-accent));
-
       @include cyber-text-glow(var(--radio-color), 60%, var(--blur-md));
     }
 
@@ -124,7 +122,7 @@ const getStyle = (option: RadioOption): StyleValue | undefined => option.color ?
   }
 
   &__text {
-    @include text-body(true);
+    @include text-body("md", "bold");
 
     padding: var(--space-control-py-sm) var(--space-control-px-sm);
 

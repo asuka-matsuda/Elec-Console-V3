@@ -5,42 +5,45 @@
  */
 
 const props = defineProps<{
-  modelValue: string[];
-  availableRows: Set<string>;
-}>();
+  modelValue: string[]
+  availableRows: Set<string>
+}>()
 
 const emit = defineEmits<{
-  (e: "update:modelValue", value: string[]): void;
-}>();
+  (e: 'update:modelValue', value: string[]): void
+}>()
 
 const kanaOptions = [
-  { label: "あ行", value: "a" },
-  { label: "か行", value: "k" },
-  { label: "さ行", value: "s" },
-  { label: "た行", value: "t" },
-  { label: "な行", value: "n" },
-  { label: "は行", value: "h" },
-  { label: "ま行", value: "m" },
-  { label: "や行", value: "y" },
-  { label: "ら行", value: "r" },
-  { label: "わ行他", value: "w" },
-];
+  { label: 'あ行', value: 'a' },
+  { label: 'か行', value: 'k' },
+  { label: 'さ行', value: 's' },
+  { label: 'た行', value: 't' },
+  { label: 'な行', value: 'n' },
+  { label: 'は行', value: 'h' },
+  { label: 'ま行', value: 'm' },
+  { label: 'や行', value: 'y' },
+  { label: 'ら行', value: 'r' },
+  { label: 'わ行他', value: 'w' },
+]
 
 function isKanaDisabled(row: string) {
-  if (row === "w") {
-    return !props.availableRows.has("w") && !props.availableRows.has("other");
+  if (row === 'w') {
+    return !props.availableRows.has('w') && !props.availableRows.has('other')
   }
-  return !props.availableRows.has(row);
+
+  return !props.availableRows.has(row)
 }
 
 function toggleKana(kana: string) {
-  let newValue = [...props.modelValue];
+  let newValue = [...props.modelValue]
+
   if (newValue.includes(kana)) {
-    newValue = newValue.filter((k) => k !== kana);
-  } else {
-    newValue.push(kana);
+    newValue = newValue.filter(k => k !== kana)
   }
-  emit("update:modelValue", newValue);
+  else {
+    newValue.push(kana)
+  }
+  emit('update:modelValue', newValue)
 }
 </script>
 

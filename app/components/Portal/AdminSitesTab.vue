@@ -3,24 +3,24 @@
  * PortalAdminSitesTab
  * ポータル管理 - 現場管理タブ
  */
-import { ref } from "vue";
-import { useAdminSites } from "~/composables/admin/useAdminSites";
+import { ref } from 'vue'
 
-import type { SiteStatus, Site } from "~/types/admin";
+import { useAdminSites } from '~/composables/admin/useAdminSites'
+import type { Site, SiteStatus } from '~/types/admin'
 
-const { sites, createSite, toggleDisableSite, updateSite } =
-  useAdminSites();
+const { sites, createSite, toggleDisableSite, updateSite }
+  = useAdminSites()
 
 // --- 一覧定義 ---
 
 const siteHeaders: TableColumn<Site>[] = [
-  { key: "id", label: "現場ID", sortable: true },
-  { key: "name", label: "現場名", sortable: true },
-  { key: "status", label: "ステータス", sortable: true },
-  { key: "createdAt", label: "作成日時", sortable: true },
-  { key: "disabledAt", label: "無効化日時", sortable: true },
-  { key: "actions", label: "操作" },
-];
+  { key: 'id', label: '現場ID', sortable: true },
+  { key: 'name', label: '現場名', sortable: true },
+  { key: 'status', label: 'ステータス', sortable: true },
+  { key: 'createdAt', label: '作成日時', sortable: true },
+  { key: 'disabledAt', label: '無効化日時', sortable: true },
+  { key: 'actions', label: '操作' },
+]
 
 const {
   sortBy: sortKey,
@@ -28,46 +28,46 @@ const {
   sortedData: sortedSites,
   handleSort,
 } = useTableSort(sites, {
-  defaultKey: "id",
-  defaultOrder: "asc",
-});
+  defaultKey: 'id',
+  defaultOrder: 'asc',
+})
 
 const getStatusLabel = (status: unknown) => {
   switch (status) {
-    case 'planning': return '計画中';
-    case 'in_progress': return '進行中';
-    case 'completed': return '完了';
-    case 'on_hold': return '保留';
-    default: return '不明';
+    case 'planning': return '計画中'
+    case 'in_progress': return '進行中'
+    case 'completed': return '完了'
+    case 'on_hold': return '保留'
+    default: return '不明'
   }
-};
+}
 
 const getStatusColor = (status: unknown) => {
   switch (status) {
-    case 'planning': return 'secondary';
-    case 'in_progress': return 'warning';
-    case 'completed': return 'success';
-    case 'on_hold': return 'danger';
-    default: return 'secondary';
+    case 'planning': return 'secondary'
+    case 'in_progress': return 'warning'
+    case 'completed': return 'success'
+    case 'on_hold': return 'danger'
+    default: return 'secondary'
   }
-};
+}
 
 // --- 新規登録モーダル ---
-const isCreateModalOpen = ref(false);
+const isCreateModalOpen = ref(false)
 const newSite = ref({
-  id: "",
-  name: "",
-  status: "planning" as SiteStatus,
-});
+  id: '',
+  name: '',
+  status: 'planning' as SiteStatus,
+})
 
 const handleCreateSite = async () => {
   if (!newSite.value.id || !newSite.value.name) {
-    throw new Error("現場IDと現場名を入力してください。");
+    throw new Error('現場IDと現場名を入力してください。')
   }
-  await createSite({ ...newSite.value });
-  isCreateModalOpen.value = false;
-  newSite.value = { id: "", name: "", status: "planning" };
-};
+  await createSite({ ...newSite.value })
+  isCreateModalOpen.value = false
+  newSite.value = { id: '', name: '', status: 'planning' }
+}
 
 // --- 無効化/有効化モーダル ---
 const {
@@ -78,42 +78,45 @@ const {
   intent: confirmIntent,
   askConfirm,
   handleConfirm: handleToggleDisable,
-} = useConfirmModal();
+} = useConfirmModal()
 
 const confirmToggleDisable = (row: Site) => {
-  const isCurrentlyDisabled = !!row.disabledAt;
+  const isCurrentlyDisabled = !!row.disabledAt
+
   askConfirm({
-    title: isCurrentlyDisabled ? "現場の有効化" : "現場の無効化",
+    title: isCurrentlyDisabled ? '現場の有効化' : '現場の無効化',
     message: isCurrentlyDisabled
       ? `現場「${row.name}」へのアクセスを再度有効にしますか？`
       : `現場「${row.name}」を無効化しますか？ 無効になると現場へのアクセスができなくなります。`,
-    confirmText: isCurrentlyDisabled ? "有効化する" : "無効化する",
-    intent: isCurrentlyDisabled ? "success" : "danger",
+    confirmText: isCurrentlyDisabled ? '有効化する' : '無効化する',
+    intent: isCurrentlyDisabled ? 'success' : 'danger',
     onConfirm: async () => {
-      await toggleDisableSite(row.id);
+      await toggleDisableSite(row.id)
     },
-  });
-};
+  })
+}
 
 // --- 現場設定モーダル (新) ---
-const isSettingsModalOpen = ref(false);
-const settingsTargetSite = ref<Site | null>(null);
+const isSettingsModalOpen = ref(false)
+const settingsTargetSite = ref<Site | null>(null)
 
 const openSettingsModal = (siteId: string) => {
-  const site = sites.value.find((s) => s.id === siteId);
+  const site = sites.value.find(s => s.id === siteId)
+
   if (site) {
-    settingsTargetSite.value = { ...site };
-    isSettingsModalOpen.value = true;
+    settingsTargetSite.value = { ...site }
+    isSettingsModalOpen.value = true
   }
-};
+}
 
 const handleSaveSettings = async (updatedSite: Site) => {
   if (settingsTargetSite.value) {
-    const originalId = settingsTargetSite.value.id;
-    await updateSite(originalId, updatedSite);
+    const originalId = settingsTargetSite.value.id
+
+    await updateSite(originalId, updatedSite)
   }
-  isSettingsModalOpen.value = false;
-};
+  isSettingsModalOpen.value = false
+}
 </script>
 
 <template>
@@ -130,8 +133,8 @@ const handleSaveSettings = async (updatedSite: Site) => {
           </AppButton>
         </div>
 
-        <AppTable 
-          :columns="siteHeaders" 
+        <AppTable
+          :columns="siteHeaders"
           :data="sortedSites"
           :sort-by="sortKey"
           :sort-order="sortOrder"
@@ -225,7 +228,7 @@ const handleSaveSettings = async (updatedSite: Site) => {
   &__toolbar {
     @include flex-end;
   }
-    
+
   &__stack {
     @include flex-column(var(--space-card-gap));
   }

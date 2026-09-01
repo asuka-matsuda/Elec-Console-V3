@@ -3,13 +3,14 @@
  * ConduitCalculator
  * 配管サイズ自動選定ツールのコンポーネントです。収容するケーブルの種類と数から、適切な配管サイズを計算します。
  */
-import { computed } from 'vue';
-import { useConduitCalculator } from '~/composables/tools/useConduitCalculator';
-import { conduitData } from '~/constants/data/conduitData';
+import { computed } from 'vue'
+
+import { useConduitCalculator } from '~/composables/tools/useConduitCalculator'
+import { conduitData } from '~/constants/data/conduitData'
 
 useHead({
   title: '配管サイズ自動選定',
-});
+})
 
 const {
   inputs,
@@ -20,19 +21,20 @@ const {
   isResetModalOpen,
   openResetModal,
   confirmReset,
-  mathSteps
-} = useConduitCalculator();
+  mathSteps,
+} = useConduitCalculator()
 
 /** 配管カテゴリの選択肢 */
 const conduitCategoryOptions = computed(() => {
-  const cats = [...new Set(conduitData.map(c => c.category))];
-  return cats.map(c => ({ value: c, label: c }));
-});
+  const cats = [...new Set(conduitData.map(c => c.category))]
+
+  return cats.map(c => ({ value: c, label: c }))
+})
 
 /** 保存ハンドラ */
 const handleSave = async () => {
-  await saveHistory();
-};
+  await saveHistory()
+}
 </script>
 
 <template>

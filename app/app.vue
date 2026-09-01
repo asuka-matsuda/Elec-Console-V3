@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { watchEffect } from "vue";
-import { useSettings } from "~/composables/useSettings";
+import { watchEffect } from 'vue'
 
-const { themeMode } = useSettings();
+import { useSettings } from '~/composables/useSettings'
+
+const { themeMode } = useSettings()
 
 if (import.meta.client) {
   watchEffect(() => {
-    document.documentElement.setAttribute("data-theme", themeMode.value);
-  });
+    document.documentElement.setAttribute('data-theme', themeMode.value)
+  })
 }
 </script>
 

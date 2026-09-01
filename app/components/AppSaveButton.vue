@@ -3,37 +3,39 @@
  * AppSaveButton
  * 非同期の保存処理をトリガーし、ローディング状態や成功状態を視覚的にフィードバックするボタンコンポーネント。
  */
-import { ref } from "vue";
-import type { AppButtonProps } from "./AppButton.vue";
+import { ref } from 'vue'
+
+import type { AppButtonProps } from './AppButton.vue'
 
 interface Props extends AppButtonProps {
   /** Promiseを返す保存関数 */
-  saveFunction: () => Promise<void>;
+  saveFunction: () => Promise<void>
   /** ボタンのラベル（通常時） */
-  label?: string;
+  label?: string
 }
 
-const props = defineProps<Props>();
+const props = defineProps<Props>()
 
-const state = ref<"idle" | "saving" | "success">("idle");
+const state = ref<'idle' | 'saving' | 'success'>('idle')
 
 const handleClick = async () => {
-  if (props.disabled || state.value !== "idle") return;
+  if (props.disabled || state.value !== 'idle') return
 
-  state.value = "saving";
+  state.value = 'saving'
   try {
-    await props.saveFunction();
-    state.value = "success";
+    await props.saveFunction()
+    state.value = 'success'
     // 2秒後に元の状態に戻す
     setTimeout(() => {
-      state.value = "idle";
-    }, 2000);
-  } catch (e) {
-    console.error("Failed to save:", e);
-    // エラー時はすぐに元に戻す
-    state.value = "idle";
+      state.value = 'idle'
+    }, 2000)
   }
-};
+  catch (e) {
+    console.error('Failed to save:', e)
+    // エラー時はすぐに元に戻す
+    state.value = 'idle'
+  }
+}
 </script>
 
 <template>

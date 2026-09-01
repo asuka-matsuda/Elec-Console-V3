@@ -3,45 +3,49 @@
  * login
  * ポータルログインページ
  */
-import { ref } from "vue";
-import { useHead, useRouter } from "#app";
-import { useAuth } from "~/composables/useAuth";
+import { ref } from 'vue'
 
-definePageMeta({ layout: "login", title: "Elec-Console v2" });
-useHead({ title: "ログイン - Elec-Console" });
+import { useHead, useRouter } from '#app'
+import { useAuth } from '~/composables/useAuth'
 
-const router = useRouter();
-const { login } = useAuth();
+definePageMeta({ layout: 'login', title: 'Elec-Console v2' })
+useHead({ title: 'ログイン - Elec-Console' })
+
+const router = useRouter()
+const { login } = useAuth()
 
 const formFields = [
-  { id: "userId", label: "ユーザーID", type: "text", placeholder: "master" },
-  { id: "password", label: "パスワード", type: "password", placeholder: "••••••••" },
-] as const;
+  { id: 'userId', label: 'ユーザーID', type: 'text', placeholder: 'master' },
+  { id: 'password', label: 'パスワード', type: 'password', placeholder: '••••••••' },
+] as const
 
 const formData = ref<Record<string, string>>({
-  userId: "",
-  password: "",
-});
-const errorMessage = ref("");
-const isLoading = ref(false);
+  userId: '',
+  password: '',
+})
+const errorMessage = ref('')
+const isLoading = ref(false)
 
 const handleLogin = async () => {
-  errorMessage.value = "";
+  errorMessage.value = ''
   if (!formData.value.userId || !formData.value.password) {
-    errorMessage.value = "IDとパスワードを入力してください";
-    return;
+    errorMessage.value = 'IDとパスワードを入力してください'
+
+    return
   }
 
-  isLoading.value = true;
-  const result = await login(formData.value.userId, formData.value.password);
-  isLoading.value = false;
+  isLoading.value = true
+  const result = await login(formData.value.userId, formData.value.password)
+
+  isLoading.value = false
 
   if (result.success) {
-    router.push("/");
-  } else {
-    errorMessage.value = result.message || "ログインに失敗しました";
+    router.push('/')
   }
-};
+  else {
+    errorMessage.value = result.message || 'ログインに失敗しました'
+  }
+}
 </script>
 
 <template>
@@ -99,7 +103,7 @@ const handleLogin = async () => {
   }
 
   &__error {
-    @include text-sm;
+    @include text-desc;
 
     padding: var(--space-alert-p);
     color: var(--color-status-danger);

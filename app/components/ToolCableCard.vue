@@ -3,61 +3,65 @@
  * ToolCableRowCard
  * ケーブルの種類、サイズ、本数を入力するためのカードコンポーネントです。
  */
-import { computed } from "vue";
-import { calculateCableArea } from "~/utils/tools/conduit/conduitCalcLogic";
-import { getCableCategories, getAvailableSizes } from "~/utils/cable";
-import { cableData } from "~/constants/data/cableData";
+import { computed } from 'vue'
+
+import { cableData } from '~/constants/data/cableData'
+import { getAvailableSizes, getCableCategories } from '~/utils/cable'
+import { calculateCableArea } from '~/utils/tools/conduit/conduitCalcLogic'
 
 /**
  * CableInput is used as a generic type here, but make sure
  * it matches { id: string, category: string, cableIdx: string, count: number | null }
  */
 const props = defineProps<{
-  modelValue: { id: string, category: string, cableIdx: string, count: number | null };
-  index: number;
-  removable?: boolean;
-}>();
+  modelValue: { id: string, category: string, cableIdx: string, count: number | null }
+  index: number
+  removable?: boolean
+}>()
 
 const emit = defineEmits<{
-  (e: "update:modelValue", value: { id: string, category: string, cableIdx: string, count: number | null }): void;
-  (e: "remove"): void;
-}>();
+  (e: 'update:modelValue', value: { id: string, category: string, cableIdx: string, count: number | null }): void
+  (e: 'remove'): void
+}>()
 
-const categories = computed(() => getCableCategories());
+const categories = computed(() => getCableCategories())
 const availableSizes = computed(() =>
   getAvailableSizes(props.modelValue.category),
-);
+)
 
 const singleCableArea = computed(() => {
-  const cableIdxStr = (props.modelValue.cableIdx || '');
-  if (!cableIdxStr || !cableIdxStr.startsWith("idx_")) return null;
-  const idx = parseInt(cableIdxStr.replace("idx_", ""), 10);
-  const def = cableData[idx];
-  if (!def) return null;
-  return calculateCableArea(def.diameter);
-});
+  const cableIdxStr = (props.modelValue.cableIdx || '')
+
+  if (!cableIdxStr || !cableIdxStr.startsWith('idx_')) return null
+  const idx = parseInt(cableIdxStr.replace('idx_', ''), 10)
+  const def = cableData[idx]
+
+  if (!def) return null
+
+  return calculateCableArea(def.diameter)
+})
 
 const onCategoryChange = (val: string | number | boolean | null | undefined) => {
-  emit("update:modelValue", {
+  emit('update:modelValue', {
     ...props.modelValue,
     category: String(val),
-    cableIdx: "",
-  });
-};
+    cableIdx: '',
+  })
+}
 
 const updateCableIdx = (val: string | number | boolean | null | undefined) => {
-  emit("update:modelValue", {
+  emit('update:modelValue', {
     ...props.modelValue,
     cableIdx: String(val),
-  });
-};
+  })
+}
 
 const updateCount = (val: string | number | boolean | null | undefined) => {
-  emit("update:modelValue", {
+  emit('update:modelValue', {
     ...props.modelValue,
     count: Number(val),
-  });
-};
+  })
+}
 </script>
 
 <template>

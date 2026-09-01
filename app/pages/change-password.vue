@@ -1,49 +1,53 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from '#app';
-import { useAuth } from '~/composables/useAuth';
+import { ref } from 'vue'
+
+import { useRouter } from '#app'
+import { useAuth } from '~/composables/useAuth'
 
 definePageMeta({
   layout: 'login',
-  title: '初回パスワード設定' // パスワード変更時はメニュー等への遷移を防ぐためログイン用レイアウトを使用
-});
+  title: '初回パスワード設定', // パスワード変更時はメニュー等への遷移を防ぐためログイン用レイアウトを使用
+})
 
-const router = useRouter();
-const { currentUser } = useAuth();
-const { $api } = useApi();
-const password = ref('');
-const passwordConfirm = ref('');
-const errorMsg = ref('');
-const isLoading = ref(false);
+const router = useRouter()
+const { currentUser } = useAuth()
+const { $api } = useApi()
+const password = ref('')
+const passwordConfirm = ref('')
+const errorMsg = ref('')
+const isLoading = ref(false)
 
 const handleChangePassword = async () => {
-  errorMsg.value = '';
+  errorMsg.value = ''
   if (!password.value || password.value.length < 8) {
-    errorMsg.value = 'パスワードは8文字以上で入力してください。';
-    return;
+    errorMsg.value = 'パスワードは8文字以上で入力してください。'
+
+    return
   }
   if (password.value !== passwordConfirm.value) {
-    errorMsg.value = '確認用パスワードが一致しません。';
-    return;
+    errorMsg.value = '確認用パスワードが一致しません。'
+
+    return
   }
 
-  isLoading.value = true;
+  isLoading.value = true
   try {
     await $api('/api/auth/password', {
       method: 'PUT',
-      body: { newPassword: password.value }
-    });
+      body: { newPassword: password.value },
+    })
 
     // 成功したらフロントの状態フラグを手動で消して遷移させる
     if (currentUser.value) {
-      currentUser.value.requirePasswordReset = false;
+      currentUser.value.requirePasswordReset = false
     }
-    router.push('/');
-  } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
-    errorMsg.value = err.data?.statusMessage || err.data?.message || 'パスワードの変更に失敗しました。';
-    isLoading.value = false;
+    router.push('/')
   }
-};
+  catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
+    errorMsg.value = err.data?.statusMessage || err.data?.message || 'パスワードの変更に失敗しました。'
+    isLoading.value = false
+  }
+}
 </script>
 
 <template>
@@ -100,7 +104,7 @@ const handleChangePassword = async () => {
   }
 
   &__error {
-    @include text-sm;
+    @include text-desc;
 
     padding: var(--space-alert-p);
     color: var(--color-status-danger);

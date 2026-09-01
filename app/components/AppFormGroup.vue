@@ -5,21 +5,20 @@
  */
 withDefaults(
   defineProps<{
-    label?: string;
-    required?: boolean;
-    error?: string;
-    help?: string;
+    label?: string
+    required?: boolean
+    error?: string
+    help?: string
   }>(),
   {
     required: false,
   },
-);
+)
 </script>
 
 <template>
   <div class="c-form-group">
     <div class="c-form-group__inner">
-      <!-- Label Area -->
       <div
         v-if="label || $slots.label"
         class="c-form-group__label-wrapper"
@@ -37,11 +36,9 @@ withDefaults(
         </AppBadge>
       </div>
 
-      <!-- Input Control Area -->
       <div class="c-form-group__control">
         <slot />
 
-        <!-- Error Message -->
         <transition name="fade-slide">
           <div
             v-if="error"
@@ -51,7 +48,6 @@ withDefaults(
           </div>
         </transition>
 
-        <!-- Help Text -->
         <div
           v-if="help && !error"
           class="c-form-group__help"
@@ -73,7 +69,6 @@ withDefaults(
 
     width: 100%;
 
-    // If the .c-form-group container is wide enough (>= xs), switch to horizontal layout
     @include cq("xs") {
       flex-direction: row;
       align-items: flex-start;
@@ -81,8 +76,6 @@ withDefaults(
       .c-form-group__label-wrapper {
         flex-shrink: 0;
         width: 140px;
-
-        // Align label with the text inside a medium input control
         padding-top: calc(
           (
               var(--size-control-md) - var(--line-height-base) *
@@ -128,14 +121,10 @@ withDefaults(
   @include text-label;
 
   user-select: none;
-
-  // Default state: slightly dimmed
   color: color-mix(in srgb, var(--theme-accent) 70%, transparent);
   text-transform: uppercase;
 
   @include state-base;
-
-  // Cyber glowing dot
 
   &::before {
     --glow-color: color-mix(in srgb, var(--theme-accent) 30%, transparent);
@@ -165,7 +154,6 @@ withDefaults(
   @include cyber-text-glow(var(--theme-accent));
 
   &::before {
-    // state-focus を使って発光（box-shadowを隠蔽）
     @include state-focus(var(--theme-accent));
   }
 }
@@ -177,7 +165,6 @@ withDefaults(
   @include cyber-text-glow(var(--color-status-danger));
 
   &::before {
-    // エラー時は危険を示すため hover と同じ強いオーラを放たせる
     @include state-hover(var(--color-status-danger));
   }
 }

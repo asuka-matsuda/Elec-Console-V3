@@ -3,18 +3,18 @@
  * AppIconButton
  * アイコンのみのボタンを表示するコンポーネントです。
  */
-import type { AppButtonProps } from "./AppButton.vue";
+import type { AppButtonProps } from './AppButton.vue'
 
 interface Props extends AppButtonProps {
   /** The icon name */
-  name: string;
+  name: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  type: "button",
-  size: "md",
+  type: 'button',
+  size: 'md',
   iconOnly: true,
-});
+})
 </script>
 
 <template>

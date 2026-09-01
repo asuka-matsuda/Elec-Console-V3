@@ -3,67 +3,72 @@
  * ToolConduitResult
  * 配管サイズ計算の結果を視覚的に表示する2カラムコンポーネントです。
  */
-import { computed } from "vue";
-import { formatVal } from "~/utils/math";
-import { CONDUIT_UI_LABELS } from "~/constants/conduitConstants";
+import { computed } from 'vue'
+
+import { CONDUIT_UI_LABELS } from '~/constants/conduitConstants'
+import { formatVal } from '~/utils/math'
 
 const props = defineProps<{
-  result: import('~/utils/tools/conduit/conduitCalcLogic').ConduitCalcResult | null;
-  inputs?: import('~/composables/tools/useConduitCalculator').ConduitInputs;
-  size?: "sm" | "md";
-}>();
+  result: import('~/utils/tools/conduit/conduitCalcLogic').ConduitCalcResult | null
+  inputs?: import('~/composables/tools/useConduitCalculator').ConduitInputs
+  size?: 'sm' | 'md'
+}>()
 
-const isReady = computed(() => props.result?.success && !props.result?.partial);
+const isReady = computed(() => props.result?.success && !props.result?.partial)
 
 // --- 32% (異種) ---
 const size32 = computed(() => {
-  if (!isReady.value) return CONDUIT_UI_LABELS.EMPTY_TEXT;
+  if (!isReady.value) return CONDUIT_UI_LABELS.EMPTY_TEXT
+
   return props.result!.isOversize32
     ? CONDUIT_UI_LABELS.OVERSIZE_TEXT
-    : props.result!.conduit32?.size;
-});
+    : props.result!.conduit32?.size
+})
 
 const status32Class = computed(() => {
-  if (!isReady.value) return "is-neutral";
-  return props.result!.isOversize32 ? "is-danger" : "is-success";
-});
+  if (!isReady.value) return 'is-neutral'
+
+  return props.result!.isOversize32 ? 'is-danger' : 'is-success'
+})
 
 const _allowable32 = computed(() =>
   isReady.value
     ? formatVal(props.result!.allowable32, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
     : CONDUIT_UI_LABELS.EMPTY_TEXT,
-);
+)
 
 const fill32 = computed(() =>
   isReady.value
     ? formatVal(props.result!.fill32, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
     : CONDUIT_UI_LABELS.EMPTY_TEXT,
-);
+)
 
 // --- 48% (同種) ---
 const size48 = computed(() => {
-  if (!isReady.value) return CONDUIT_UI_LABELS.EMPTY_TEXT;
+  if (!isReady.value) return CONDUIT_UI_LABELS.EMPTY_TEXT
+
   return props.result!.isOversize48
     ? CONDUIT_UI_LABELS.OVERSIZE_TEXT
-    : props.result!.conduit48?.size;
-});
+    : props.result!.conduit48?.size
+})
 
 const status48Class = computed(() => {
-  if (!isReady.value) return "is-neutral";
-  return props.result!.isOversize48 ? "is-danger" : "is-success";
-});
+  if (!isReady.value) return 'is-neutral'
+
+  return props.result!.isOversize48 ? 'is-danger' : 'is-success'
+})
 
 const _allowable48 = computed(() =>
   isReady.value
     ? formatVal(props.result!.allowable48, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
     : CONDUIT_UI_LABELS.EMPTY_TEXT,
-);
+)
 
 const fill48 = computed(() =>
   isReady.value
     ? formatVal(props.result!.fill48, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
     : CONDUIT_UI_LABELS.EMPTY_TEXT,
-);
+)
 </script>
 
 <template>
@@ -177,10 +182,10 @@ const fill48 = computed(() =>
     }
 
     .c-conduit-result__main-value .value-text {
-      font-size: var(--font-size-3xl);
+      @include text-mono("3xl");
 
       &.c-conduit-result__percent {
-        font-size: var(--font-size-base);
+        @include text-mono("base");
       }
     }
   }
@@ -196,7 +201,6 @@ const fill48 = computed(() =>
     padding: var(--space-result-p);
 
     @include border-base;
-
     @include shadow("sink");
   }
 
@@ -210,27 +214,24 @@ const fill48 = computed(() =>
   &__main-value {
     @include flex-baseline(var(--space-inline-gap));
 
-    font-family: var(--font-mono);
-
     .value-text {
-      font-size: var(--font-size-4xl);
-      line-height: 1;
+      @include text-mono("4xl");
 
       &.c-conduit-result__percent {
-        @include text-title("sm");
-
-        font-weight: normal;
+        @include text-title("sm", "normal");
       }
     }
 
     .value-sep {
+      @include text-body("md", "normal");
+
       margin: 0 2px;
-      font-weight: normal;
       color: var(--color-text-muted);
     }
 
     .value-unit {
-      font-weight: var(--font-weight-bold);
+      @include text-body("md", "bold");
+
       color: var(--color-text-secondary);
       opacity: 0.8;
     }

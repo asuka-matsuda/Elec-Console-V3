@@ -3,12 +3,12 @@
  * LayoutDashboardAside
  * ダッシュボードのサイドバー（お知らせや更新履歴などを表示）コンポーネント
  */
-const { data: dashboardData, pending } = await useFetch("/api/dashboard", {
+const { data: dashboardData, pending } = await useFetch('/api/dashboard', {
   /** Prevent blocking navigation while loading */
   lazy: true,
-});
-const announcements = computed(() => dashboardData.value?.announcements || []);
-const history = computed(() => dashboardData.value?.history || []);
+})
+const announcements = computed(() => dashboardData.value?.announcements || [])
+const history = computed(() => dashboardData.value?.history || [])
 </script>
 
 <template>

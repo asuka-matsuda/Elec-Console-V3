@@ -9,18 +9,19 @@
  */
 export const formatDate = (
   date: unknown,
-  fallback = "-"
+  fallback = '-',
 ): string => {
-  if (!date) return fallback;
-  const d = date instanceof Date ? date : new Date(String(date));
-  if (isNaN(d.getTime())) return fallback;
+  if (!date) return fallback
+  const d = date instanceof Date ? date : new Date(String(date))
 
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
+  if (isNaN(d.getTime())) return fallback
 
-  return `${y}/${m}/${day}`;
-};
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+
+  return `${y}/${m}/${day}`
+}
 
 /**
  * 日時を YYYY/MM/DD HH:mm 形式にフォーマット
@@ -29,34 +30,36 @@ export const formatDate = (
  */
 export const formatDateTime = (
   date: unknown,
-  fallback = "-"
+  fallback = '-',
 ): string => {
-  if (!date) return fallback;
-  const d = date instanceof Date ? date : new Date(String(date));
-  if (isNaN(d.getTime())) return fallback;
+  if (!date) return fallback
+  const d = date instanceof Date ? date : new Date(String(date))
 
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  const h = String(d.getHours()).padStart(2, "0");
-  const min = String(d.getMinutes()).padStart(2, "0");
+  if (isNaN(d.getTime())) return fallback
 
-  return `${y}/${m}/${day} ${h}:${min}`;
-};
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  const h = String(d.getHours()).padStart(2, '0')
+  const min = String(d.getMinutes()).padStart(2, '0')
+
+  return `${y}/${m}/${day} ${h}:${min}`
+}
 
 /**
  * 時刻を HH:mm 形式にフォーマット
  */
 export const formatTime = (
   date: unknown,
-  fallback = "-"
+  fallback = '-',
 ): string => {
-  if (!date) return fallback;
-  const d = date instanceof Date ? date : new Date(String(date));
-  if (isNaN(d.getTime())) return fallback;
+  if (!date) return fallback
+  const d = date instanceof Date ? date : new Date(String(date))
 
-  const h = String(d.getHours()).padStart(2, "0");
-  const min = String(d.getMinutes()).padStart(2, "0");
+  if (isNaN(d.getTime())) return fallback
 
-  return `${h}:${min}`;
-};
+  const h = String(d.getHours()).padStart(2, '0')
+  const min = String(d.getMinutes()).padStart(2, '0')
+
+  return `${h}:${min}`
+}

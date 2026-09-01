@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 
 const props = withDefaults(
   defineProps<{
-    title: string;
-    allDay?: boolean;
-    start?: Date | null;
-    end?: Date | null;
-    color?: string;
+    title: string
+    allDay?: boolean
+    start?: Date | null
+    end?: Date | null
+    color?: string
   }>(),
   {
     allDay: false,
@@ -15,18 +15,20 @@ const props = withDefaults(
     end: null,
     color: '#00f0ff',
   },
-);
+)
 
 const timeText = computed(() => {
-  if (props.allDay || !props.start) return '';
+  if (props.allDay || !props.start) return ''
   const format = (d: Date) =>
-    String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-  const startStr = format(props.start);
-  if (!props.end) return `${startStr}~`;
-  return `${startStr} - ${format(props.end)}`;
-});
+    String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0')
+  const startStr = format(props.start)
 
-const badgeColor = computed(() => props.color || 'var(--theme-accent)');
+  if (!props.end) return `${startStr}~`
+
+  return `${startStr} - ${format(props.end)}`
+})
+
+const badgeColor = computed(() => props.color || 'var(--theme-accent)')
 </script>
 
 <template>

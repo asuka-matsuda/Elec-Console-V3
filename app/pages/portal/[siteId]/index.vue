@@ -1,54 +1,57 @@
 <script setup lang="ts">
-import { computed, onMounted, watch } from 'vue';
-import { useRoute, useRouter } from '#app';
-import { useAdminSites } from '~/composables/admin/useAdminSites';
-import { useAuth } from '~/composables/useAuth';
-import { useLocalStorage } from '@vueuse/core';
-import Calendar from '~/components/Portal/Calendar.client.vue';
-import PersonalTodo from '~/components/Portal/PersonalTodo.client.vue';
+import { useLocalStorage } from '@vueuse/core'
+import { computed, onMounted, watch } from 'vue'
 
-const route = useRoute();
-const router = useRouter();
-const siteId = computed(() => route.params.siteId as string);
+import { useRoute, useRouter } from '#app'
+import Calendar from '~/components/Portal/Calendar.client.vue'
+import PersonalTodo from '~/components/Portal/PersonalTodo.client.vue'
+import { useAdminSites } from '~/composables/admin/useAdminSites'
+import { useAuth } from '~/composables/useAuth'
 
-const { sites, fetchSites } = useAdminSites();
-const { currentUser } = useAuth();
+const route = useRoute()
+const router = useRouter()
+const siteId = computed(() => route.params.siteId as string)
 
-const lastSiteId = useLocalStorage("last-accessed-site", "");
+const { sites, fetchSites } = useAdminSites()
+const { currentUser } = useAuth()
+
+const lastSiteId = useLocalStorage('last-accessed-site', '')
 
 watch(
   siteId,
   (newId) => {
     if (newId) {
-      lastSiteId.value = newId;
+      lastSiteId.value = newId
     }
   },
   { immediate: true },
-);
+)
 
-const currentSite = computed(() => sites.value.find((s) => s.id === siteId.value));
+const currentSite = computed(() => sites.value.find(s => s.id === siteId.value))
 
 // アサインされている現場のみを抽出
 const assignedSites = computed(() => {
-  const ids = currentUser.value?.assignedSiteIds || [];
-  return sites.value.filter((s) => ids.includes(s.id));
-});
+  const ids = currentUser.value?.assignedSiteIds || []
+
+  return sites.value.filter(s => ids.includes(s.id))
+})
 
 const siteOptions = computed(() =>
-  assignedSites.value.map((s) => ({ value: s.id, label: s.name })),
-);
+  assignedSites.value.map(s => ({ value: s.id, label: s.name })),
+)
 
 const handleSiteChange = (newSiteId: unknown) => {
-  const targetId = String(newSiteId);
-  if (!targetId || targetId === siteId.value) return;
-  router.push(`/portal/${targetId}`);
-};
+  const targetId = String(newSiteId)
+
+  if (!targetId || targetId === siteId.value) return
+  router.push(`/portal/${targetId}`)
+}
 
 onMounted(() => {
   if (sites.value.length === 0) {
-    fetchSites();
+    fetchSites()
   }
-});
+})
 </script>
 
 <template>
@@ -65,15 +68,15 @@ onMounted(() => {
         <h2>{{ currentSite?.name || '現場ダッシュボード' }}</h2>
       </div>
       <div class="p-site-dashboard__switcher">
-        <AppSelect 
-          :model-value="siteId" 
+        <AppSelect
+          :model-value="siteId"
           :options="siteOptions"
           class="p-site-dashboard__select"
           @update:model-value="handleSiteChange"
         />
       </div>
     </div>
-    
+
     <div class="l-grid l-grid--2col-2-1">
       <!-- 2/3: カレンダー -->
       <div class="p-site-dashboard__calendar">
@@ -83,7 +86,7 @@ onMounted(() => {
       <!-- 1/3: ToDo & ボタン -->
       <div class="p-site-dashboard__sidebar">
         <PersonalTodo :site-id="siteId" />
-        
+
         <NuxtLink
           :to="`/portal/${siteId}/souden`"
           class="c-link-button"
@@ -130,7 +133,7 @@ onMounted(() => {
   &__switcher {
     @include flex-start(var(--space-inline-gap));
   }
-  
+
   &__select {
     min-width: 200px;
   }

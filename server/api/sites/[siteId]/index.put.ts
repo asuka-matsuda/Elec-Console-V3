@@ -1,15 +1,16 @@
-import { defineEventHandler, readBody, getRouterParam } from "h3";
-import { prisma } from "../../../utils/prisma";
-import { requireAdminUser } from "../../../utils/auth";
+import { defineEventHandler, getRouterParam, readBody } from 'h3'
+
+import { requireAdminUser } from '../../../utils/auth'
+import { prisma } from '../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  await requireAdminUser(event);
-  const siteId = getRouterParam(event, "siteId");
-  const body = await readBody(event);
-  
-  if (!siteId) return null;
+  await requireAdminUser(event)
+  const siteId = getRouterParam(event, 'siteId')
+  const body = await readBody(event)
 
-  const siteData = body.site || body;
+  if (!siteId) return null
+
+  const siteData = body.site || body
 
   const updatedSite = await prisma.site.update({
     where: { id: siteId },
@@ -18,13 +19,13 @@ export default defineEventHandler(async (event) => {
       status: siteData.status,
       disabledAt: siteData.disabledAt !== undefined
         ? (siteData.disabledAt ? new Date(siteData.disabledAt) : null)
-        : undefined
-    }
-  });
+        : undefined,
+    },
+  })
 
   const settings = await prisma.siteSettings.findUnique({
-    where: { siteId }
-  });
+    where: { siteId },
+  })
 
-  return { site: updatedSite, settings };
-});
+  return { site: updatedSite, settings }
+})

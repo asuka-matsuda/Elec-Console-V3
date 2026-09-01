@@ -6,20 +6,19 @@
  */
 
 interface CategoryOption {
-  label: string;
-  value: string;
+  label: string
+  value: string
 }
 
-const searchQuery = defineModel<string>("searchQuery", { default: "" });
-const activeCats = defineModel<string[]>("activeCats", { default: () => [] });
+const searchQuery = defineModel<string>('searchQuery', { default: '' })
+const activeCats = defineModel<string[]>('activeCats', { default: () => [] })
 
 defineProps<{
   /** 検索プレースホルダー */
-  placeholder?: string;
+  placeholder?: string
   /** カテゴリ選択肢の配列 */
-  categoryOptions: CategoryOption[];
-}>();
-
+  categoryOptions: CategoryOption[]
+}>()
 </script>
 
 <template>

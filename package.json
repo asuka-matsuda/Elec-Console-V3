@@ -45,6 +45,7 @@
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/test-utils": "^2.4.11",
     "eslint": "^10.8.0",
+    "eslint-plugin-simple-import-sort": "^14.0.0",
     "eslint-plugin-vue": "^10.10.0",
     "happy-dom": "^20.11.2",
     "jsdoc-type-pratt-parser": "^8.0.0",

@@ -3,18 +3,18 @@
  * AppCheckbox
  * 真偽値を選択するためのチェックボックスコンポーネント
  */
-import { useId } from "vue";
+import { useId } from 'vue'
 
-const model = defineModel<boolean | unknown[]>();
+const model = defineModel<boolean | unknown[]>()
 
 defineProps<{
-  value?: unknown;
-  label?: string;
-  disabled?: boolean;
-  indeterminate?: boolean;
-}>();
+  value?: unknown
+  label?: string
+  disabled?: boolean
+  indeterminate?: boolean
+}>()
 
-const inputId = useId();
+const inputId = useId()
 </script>
 
 <template>
@@ -76,7 +76,6 @@ const inputId = useId();
   position: relative;
 
   @include inline-flex-start(var(--space-inline-gap));
-
   @include text-desc;
   @include click-enabled;
 
@@ -87,6 +86,7 @@ const inputId = useId();
   &:hover:not(.is-disabled) {
     .c-checkbox__label {
       color: color-mix(in srgb, var(--checkbox-color) 90%, transparent);
+
       @include cyber-text-glow(var(--checkbox-color), 20%, var(--blur-sm));
     }
 
@@ -131,20 +131,23 @@ const inputId = useId();
 
   &__box {
     @include flex-center;
-    position: relative;
 
+    position: relative;
     flex-shrink: 0;
     width: 1.4em;
     height: 1.4em;
 
-    @include border-dim;
+    @include border-base($opacity: 30%);
     @include state-base(var(--shadow-sink));
 
     .c-checkbox__icon {
       position: absolute;
+
       width: 70%;
       height: 70%;
+
       opacity: 0;
+
       stroke: var(--checkbox-color);
       stroke-dasharray: 24;
       stroke-dashoffset: 24;

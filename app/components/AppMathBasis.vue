@@ -3,51 +3,57 @@
  * AppMathBasis
  * KaTeXを利用して、数式とその凡例（変数の説明）をステップごとに表示するコンポーネント。
  */
-import katex from "katex";
-import "katex/dist/katex.min.css"; // Required for rendering KaTeX styles
+import 'katex/dist/katex.min.css' // Required for rendering KaTeX styles
+
+import katex from 'katex'
 
 export type MathStep = {
-  title?: string;
-  tex: string;
-  legend?: string[];
-};
+  title?: string
+  tex: string
+  legend?: string[]
+}
 
 defineProps<{
-  steps: MathStep[];
-}>();
+  steps: MathStep[]
+}>()
 
 /**
  * 各ステップの legend (string[]) をパースして使いやすいオブジェクト配列に変換する
  */
 const parseLegend = (legendArray: string[] | undefined) => {
-  if (!legendArray) return [];
+  if (!legendArray) return []
+
   return legendArray.map((leg) => {
-    const parts = leg.split(":");
-    let rawSymbol = parts[0]?.trim() || "";
+    const parts = leg.split(':')
+    let rawSymbol = parts[0]?.trim() || ''
+
     // KaTeXの renderToString は純粋な数式を期待するため、数式マーカーを剥がす
-    rawSymbol = rawSymbol.replace(/\\\(/g, "").replace(/\\\)/g, "").trim();
-    const name = parts.slice(1).join(":")?.trim() || leg;
-    return { symbol: rawSymbol, name };
-  });
-};
+    rawSymbol = rawSymbol.replace(/\\\(/g, '').replace(/\\\)/g, '').trim()
+    const name = parts.slice(1).join(':')?.trim() || leg
+
+    return { symbol: rawSymbol, name }
+  })
+}
 
 /**
  * Helper to safely render KaTeX string
  */
 const renderMath = (mathStr: string, isDisplay: boolean = true) => {
-  if (!mathStr) return "";
+  if (!mathStr) return ''
   try {
     return katex.renderToString(mathStr, {
       displayMode: isDisplay,
       throwOnError: false,
       trust: true,
       strict: false,
-    });
-  } catch (e) {
-    console.error("KaTeX render error:", e);
-    return mathStr;
+    })
   }
-};
+  catch (e) {
+    console.error('KaTeX render error:', e)
+
+    return mathStr
+  }
+}
 </script>
 
 <template>
@@ -69,7 +75,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
         <div class="c-math-basis__body">
           <!-- 左カラム：公式 -->
-          
+
           <div
             class="c-math-basis__math"
             v-html="renderMath(step.tex)"
@@ -131,13 +137,9 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
     // スクロールバー自体は非表示にしつつスクロールは可能にする
     scrollbar-width: none;
-
     overflow-x: auto;
     flex: 1;
-
     min-width: 0;
-
-    font-size: 1.1em;
 
     &::-webkit-scrollbar {
       display: none;
@@ -180,9 +182,8 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   }
 
   &__legend-title {
-    @include text-meta;
+    @include text-meta("md", "bold");
 
-    font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
   }
 
@@ -191,7 +192,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   }
 
   &__legend-item {
-    @include text-body(true);
+    @include text-body("md", "bold");
 
     display: flex;
     gap: var(--space-inline-gap-sm);

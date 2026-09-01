@@ -3,19 +3,19 @@
  * LayoutGlobalNav
  * アプリケーションのグローバルナビゲーション（サイドバーメニュー）を表示するコンポーネントです。
  */
-import type { MenuSection } from "~/constants/data/menuData";
-
-defineProps<{
-  menuData: MenuSection[];
-}>();
+import type { MenuSection } from '~/constants/data/menuData'
 
 /** For mobile responsive toggle */
-const isOpen = defineModel<boolean>("isOpen", { default: false });
+const isOpen = defineModel<boolean>('isOpen', { default: false })
+
+defineProps<{
+  menuData: MenuSection[]
+}>()
 
 /** Close sidebar on mobile when a link is clicked */
 const closeSidebar = () => {
-  isOpen.value = false;
-};
+  isOpen.value = false
+}
 </script>
 
 <template>
@@ -179,17 +179,15 @@ const closeSidebar = () => {
   }
 
   &__link {
-    @include text-title("sm");
+    @include text-title("sm", "medium");
     @include flex-start(var(--space-inline-gap));
 
     padding: var(--space-control-py-md) var(--space-control-px);
-    font-weight: var(--font-weight-medium);
     color: var(--color-text-secondary);
 
     @include state-base;
 
     &-text {
-      line-height: 1.4;
       word-break: keep-all; // 句読点やスペース、記号（・など）の区切りでのみ改行を許可
       line-break: strict;
       overflow-wrap: anywhere; // 万が一収まらない場合は強制改行
@@ -205,14 +203,13 @@ const closeSidebar = () => {
 
     // Hover & Focus
     &:is(:hover, :focus-visible):not(.is-disabled, .router-link-active) {
+      transform: translateX(var(--space-1));
+      color: var(--section-accent, var(--color-category-main));
       background-color: color-mix(
         in srgb,
         var(--section-accent, var(--color-category-main, transparent)),
         20%
       );
-
-      transform: translateX(var(--space-1));
-      color: var(--section-accent, var(--color-category-main));
 
       @include state-hover;
 
@@ -239,7 +236,6 @@ const closeSidebar = () => {
       color: var(--section-accent, var(--color-category-main));
 
       @include state-active(var(--color-category-main));
-
       @include blinking-cursor(
         var(--space-1),
         var(--font-size-base),

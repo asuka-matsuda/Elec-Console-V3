@@ -3,38 +3,40 @@
  * AppButton
  * 汎用的なボタンコンポーネント（ベース）
  */
-import { computed } from "vue";
+import { computed } from 'vue'
+
 export interface AppButtonProps {
-  to?: string;
-  href?: string;
-  type?: "button" | "submit" | "reset";
-  size?: "sm" | "md";
-  variant?: "primary" | "secondary" | "danger" | "success";
-  block?: boolean;
-  icon?: string;
-  iconOnly?: boolean;
-  disabled?: boolean;
+  to?: string
+  href?: string
+  type?: 'button' | 'submit' | 'reset'
+  size?: 'sm' | 'md'
+  variant?: 'primary' | 'secondary' | 'danger' | 'success'
+  block?: boolean
+  icon?: string
+  iconOnly?: boolean
+  disabled?: boolean
 }
 
 const props = withDefaults(defineProps<AppButtonProps>(), {
-  type: "button",
-  size: "sm",
-  variant: "primary",
+  type: 'button',
+  size: 'sm',
+  variant: 'primary',
   icon: undefined,
-});
+})
 
 const componentTag = computed(() => {
-  if (props.to) return "NuxtLink";
-  if (props.href) return "a";
-  return "button";
-});
+  if (props.to) return 'NuxtLink'
+  if (props.href) return 'a'
+
+  return 'button'
+})
 
 const handleClick = (e: MouseEvent) => {
   if (props.disabled) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
+    e.preventDefault()
+    e.stopImmediatePropagation()
   }
-};
+}
 </script>
 
 <template>
@@ -70,20 +72,15 @@ const handleClick = (e: MouseEvent) => {
   --btn-color: var(--theme-accent);
 
   @include inline-flex-center(var(--space-inline-gap));
-  @include text-meta;
+  @include text-meta("md", "semibold");
   @include click-enabled;
-  @include border-dim(var(--btn-color));
+  @include border-base(var(--btn-color), 30%);
   @include state-base(var(--shadow-elevation-sm), var(--transition-fast), var(--btn-color));
 
   position: relative;
-
   flex-shrink: 0;
-
   height: var(--size-control-sm);
   padding: 0 var(--space-control-px);
-
-  font-weight: var(--font-weight-semibold);
-
 
   &:hover:not(:disabled, .is-disabled) {
     @include state-hover(var(--btn-color));

@@ -4,8 +4,8 @@
  * アプリケーションのロゴを表示し、クリック時にホームへ遷移またはイベントを発火するコンポーネント。
  */
 const emit = defineEmits<{
-  (e: "click"): void;
-}>();
+  (e: 'click'): void
+}>()
 </script>
 
 <template>

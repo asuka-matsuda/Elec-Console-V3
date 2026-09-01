@@ -5,16 +5,16 @@
  */
 withDefaults(
   defineProps<{
-    icon?: string;
-    title?: string;
-    description?: string;
+    icon?: string
+    title?: string
+    description?: string
   }>(),
   {
-    icon: "inbox",
-    title: "データがありません",
+    icon: 'inbox',
+    title: 'データがありません',
     description: undefined,
-  }
-);
+  },
+)
 </script>
 
 <template>
@@ -64,7 +64,7 @@ withDefaults(
 <style scoped lang="scss">
 .c-empty-state {
   @include flex-column(var(--space-card-gap));
-  @include border-dim;
+  @include border-base($opacity: 30%);
 
   align-items: center;
   justify-content: center;
@@ -80,7 +80,7 @@ withDefaults(
     width: var(--size-control-lg);
     height: var(--size-control-lg);
 
-    @include border-dim(var(--color-text-muted), 30%);
+    @include border-base(var(--color-text-muted), 30%);
 
     color: var(--color-text-muted);
 

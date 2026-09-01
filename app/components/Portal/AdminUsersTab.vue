@@ -3,25 +3,26 @@
  * PortalAdminUsersTab
  * ポータル管理 - ユーザー管理タブ
  */
-import { ref, onMounted } from "vue";
-import { useAdminUsers } from "~/composables/admin/useAdminUsers";
-import type { User } from "~/types/auth";
+import { onMounted, ref } from 'vue'
 
-const { users, fetchUsers, deleteUser, resetUserPassword } = useAdminUsers();
+import { useAdminUsers } from '~/composables/admin/useAdminUsers'
+import type { User } from '~/types/auth'
+
+const { users, fetchUsers, deleteUser, resetUserPassword } = useAdminUsers()
 
 onMounted(() => {
-  fetchUsers();
-});
+  fetchUsers()
+})
 
 // --- ユーザー一覧の定義 ---
 const userHeaders: TableColumn<User>[] = [
-  { key: "id", label: "ID", sortable: true },
-  { key: "lastName", label: "名前", sortable: true },
-  { key: "loginId", label: "ログインID", sortable: true },
-  { key: "role", label: "権限", sortable: true },
-  { key: "lastLoginAt", label: "最終ログイン", sortable: true },
-  { key: "actions", label: "操作" },
-];
+  { key: 'id', label: 'ID', sortable: true },
+  { key: 'lastName', label: '名前', sortable: true },
+  { key: 'loginId', label: 'ログインID', sortable: true },
+  { key: 'role', label: '権限', sortable: true },
+  { key: 'lastLoginAt', label: '最終ログイン', sortable: true },
+  { key: 'actions', label: '操作' },
+]
 
 const {
   sortBy: sortKey,
@@ -29,24 +30,26 @@ const {
   sortedData: sortedUsers,
   handleSort,
 } = useTableSort(users, {
-  defaultKey: "id",
-  defaultOrder: "asc",
-});
+  defaultKey: 'id',
+  defaultOrder: 'asc',
+})
 
 const formatLastLogin = (row: unknown) => {
-  const user = row as User;
-  if (!user.lastLoginAt) return "未ログイン";
-  return formatDateTime(user.lastLoginAt as string);
-};
+  const user = row as User
+
+  if (!user.lastLoginAt) return '未ログイン'
+
+  return formatDateTime(user.lastLoginAt as string)
+}
 
 // --- モーダルステート管理 ---
-const isCreateModalOpen = ref(false);
-const isCredentialModalOpen = ref(false);
-const createdUserResult = ref<(User & { initialPassword?: string }) | null>(null);
+const isCreateModalOpen = ref(false)
+const isCredentialModalOpen = ref(false)
+const createdUserResult = ref<(User & { initialPassword?: string }) | null>(null)
 
-const isAssignModalOpen = ref(false);
-const assignTargetUserId = ref("");
-const assignTargetSiteIds = ref<string[]>([]);
+const isAssignModalOpen = ref(false)
+const assignTargetUserId = ref('')
+const assignTargetSiteIds = ref<string[]>([])
 
 const {
   isOpen: isConfirmOpen,
@@ -56,56 +59,59 @@ const {
   intent: confirmIntent,
   askConfirm,
   handleConfirm,
-} = useConfirmModal();
+} = useConfirmModal()
 
 // --- イベントハンドラ ---
 const handleUserCreated = (user: User) => {
-  createdUserResult.value = user;
-  isCredentialModalOpen.value = true;
-};
+  createdUserResult.value = user
+  isCredentialModalOpen.value = true
+}
 
 const handleOpenAssign = (row: User) => {
-  assignTargetUserId.value = row.id;
-  assignTargetSiteIds.value = [...(row.assignedSiteIds || [])];
-  isAssignModalOpen.value = true;
-};
+  assignTargetUserId.value = row.id
+  assignTargetSiteIds.value = [...(row.assignedSiteIds || [])]
+  isAssignModalOpen.value = true
+}
 
 const confirmDelete = (row: User) => {
-  if (row.id === "master") {
-    alert("マスターユーザーは削除できません。");
-    return;
+  if (row.id === 'master') {
+    alert('マスターユーザーは削除できません。')
+
+    return
   }
   askConfirm({
-    title: "ユーザー削除",
-    message: `ユーザー「${row.lastName || ""} ${row.firstName || ""}」を削除してもよろしいですか？`,
-    confirmText: "削除する",
-    intent: "danger",
+    title: 'ユーザー削除',
+    message: `ユーザー「${row.lastName || ''} ${row.firstName || ''}」を削除してもよろしいですか？`,
+    confirmText: '削除する',
+    intent: 'danger',
     onConfirm: async () => {
-      await deleteUser(row.id);
+      await deleteUser(row.id)
     },
-  });
-};
+  })
+}
 
 const confirmResetPassword = (row: User) => {
   askConfirm({
-    title: "パスワード初期化",
-    message: `ユーザー「${row.lastName || ""} ${row.firstName || ""}」のパスワードを強制的に初期化し、新しい初期パスワードを発行しますか？`,
-    confirmText: "初期化する",
-    intent: "danger",
+    title: 'パスワード初期化',
+    message: `ユーザー「${row.lastName || ''} ${row.firstName || ''}」のパスワードを強制的に初期化し、新しい初期パスワードを発行しますか？`,
+    confirmText: '初期化する',
+    intent: 'danger',
     onConfirm: async () => {
       try {
-        const newPassword = await resetUserPassword(row.id);
+        const newPassword = await resetUserPassword(row.id)
+
         createdUserResult.value = {
           ...row,
           initialPassword: newPassword,
-        };
-        isCredentialModalOpen.value = true;
-      } catch (e: unknown) {
-        alert((e as Error).message);
+        }
+        isCredentialModalOpen.value = true
+      }
+      catch (e: unknown) {
+        alert((e as Error).message)
       }
     },
-  });
-};
+  })
+}
 </script>
 
 <template>
@@ -122,8 +128,8 @@ const confirmResetPassword = (row: User) => {
           </AppButton>
         </div>
 
-        <AppTable 
-          :columns="userHeaders" 
+        <AppTable
+          :columns="userHeaders"
           :data="sortedUsers"
           :sort-by="sortKey"
           :sort-order="sortOrder"
@@ -220,7 +226,7 @@ const confirmResetPassword = (row: User) => {
   &__toolbar {
     @include flex-end;
   }
-    
+
   &__stack {
     @include flex-column(var(--space-card-gap));
   }

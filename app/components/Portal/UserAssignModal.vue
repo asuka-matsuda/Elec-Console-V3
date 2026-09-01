@@ -1,34 +1,35 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import { useAdminUsers } from "~/composables/admin/useAdminUsers";
-import { useAdminSites } from "~/composables/admin/useAdminSites";
+import { ref, watch } from 'vue'
+
+import { useAdminSites } from '~/composables/admin/useAdminSites'
+import { useAdminUsers } from '~/composables/admin/useAdminUsers'
+
+const isOpen = defineModel<boolean>({ default: false })
 
 const props = defineProps<{
-  userId: string;
-  initialSiteIds: string[];
-}>();
+  userId: string
+  initialSiteIds: string[]
+}>()
 
-const isOpen = defineModel<boolean>({ default: false });
 const emit = defineEmits<{
-  (e: "success"): void;
-}>();
+  (e: 'success'): void
+}>()
+const { assignSites } = useAdminUsers()
+const { sites } = useAdminSites()
 
-const { assignSites } = useAdminUsers();
-const { sites } = useAdminSites();
-
-const targetSiteIds = ref<string[]>([]);
+const targetSiteIds = ref<string[]>([])
 
 watch(isOpen, (newVal) => {
   if (newVal) {
-    targetSiteIds.value = [...props.initialSiteIds];
+    targetSiteIds.value = [...props.initialSiteIds]
   }
-});
+})
 
 const handleSave = async () => {
   // 例外は AppFormModal でキャッチされるため、単に await するだけでOK
-  await assignSites(props.userId, targetSiteIds.value);
-  emit("success");
-};
+  await assignSites(props.userId, targetSiteIds.value)
+  emit('success')
+}
 </script>
 
 <template>

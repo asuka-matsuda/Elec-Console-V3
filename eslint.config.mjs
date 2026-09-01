@@ -1,35 +1,44 @@
-import pluginVue from 'eslint-plugin-vue';
-import vueParser from 'vue-eslint-parser';
-import tsParser from '@typescript-eslint/parser';
-import tsPlugin from '@typescript-eslint/eslint-plugin';
+import simpleImportSort from 'eslint-plugin-simple-import-sort'
 
-export default [
+import withNuxt from './.nuxt/eslint.config.mjs'
+
+export default withNuxt(
   {
-    ignores: [
-      '.nuxt/**',
-      '.output/**',
-      'dist/**',
-      'node_modules/**',
-      '*.config.*',
-      'scripts/**',
-    ]
-  },
-  ...pluginVue.configs['flat/recommended'],
-  {
-    files: ['**/*.{js,mjs,cjs,ts,vue}'],
-    languageOptions: {
-      parser: vueParser,
-      parserOptions: {
-        parser: tsParser,
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-        extraFileExtensions: ['.vue']
-      }
-    },
     plugins: {
-      '@typescript-eslint': tsPlugin
+      'simple-import-sort': simpleImportSort,
     },
     rules: {
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
+      'vue/block-order': ['error', {
+        order: ['script', 'template', 'style'],
+      }],
+      'vue/define-macros-order': ['error', {
+        order: ['defineOptions', 'defineModel', 'defineProps', 'defineEmits', 'defineSlots'],
+      }],
+      'vue/padding-line-between-blocks': ['error', 'always'],
+      'vue/no-restricted-syntax': [
+        'error',
+        {
+          selector: 'VExpressionContainer TSAsExpression',
+          message: 'テンプレート内での as 型キャストは VS Code のシンタックスハイライトやパースを壊す原因になります。<script> 側で computed や関数を定義してキャストしてください。',
+        },
+      ],
+      '@stylistic/padding-line-between-statements': [
+        'error',
+        { blankLine: 'always', prev: '*', next: 'return' },
+        { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
+        { blankLine: 'any', prev: ['const', 'let', 'var'], next: ['const', 'let', 'var'] },
+        { blankLine: 'always', prev: 'directive', next: '*' },
+        { blankLine: 'any', prev: 'directive', next: 'directive' },
+        { blankLine: 'always', prev: 'import', next: '*' },
+        { blankLine: 'any', prev: 'import', next: 'import' },
+      ],
+      '@stylistic/spaced-comment': ['error', 'always', {
+        markers: ['/'],
+        exceptions: ['-', '+', '*'],
+      }],
+      // Custom overrides
       'vue/no-multiple-template-root': 'off',
       'vue/require-default-prop': 'off',
       'vue/multi-word-component-names': 'off',
@@ -44,26 +53,15 @@ export default [
         {
           argsIgnorePattern: '^_',
           varsIgnorePattern: '^_',
-          caughtErrorsIgnorePattern: '^_'
-        }
+          caughtErrorsIgnorePattern: '^_',
+        },
       ],
       'no-useless-assignment': 'warn',
       'vue/html-self-closing': ['warn', {
-        html: {
-          void: 'any',
-          normal: 'any',
-          component: 'any'
-        },
+        html: { void: 'any', normal: 'any', component: 'any' },
         svg: 'any',
-        math: 'any'
+        math: 'any',
       }],
-      'vue/no-restricted-syntax': [
-        'error',
-        {
-          selector: 'VExpressionContainer TSAsExpression',
-          message: 'テンプレート内での as 型キャストは VS Code のシンタックスハイライトやパースを壊す原因になります。<script> 側で computed や関数を定義してキャストしてください。'
-        }
-      ]
-    }
-  }
-];
+    },
+  },
+)

@@ -6,24 +6,24 @@
 withDefaults(
   defineProps<{
     variant?:
-      | "main"
-      | "tool"
-      | "database"
-      | "reference"
-      | "management"
-      | "danger"
-      | "success"
-      | "border"
-      | "sidebar-border";
-    type?: "solid" | "fade-center" | "fade-side";
-    vertical?: boolean;
+      | 'main'
+      | 'tool'
+      | 'database'
+      | 'reference'
+      | 'management'
+      | 'danger'
+      | 'success'
+      | 'border'
+      | 'sidebar-border'
+    type?: 'solid' | 'fade-center' | 'fade-side'
+    vertical?: boolean
   }>(),
   {
-    variant: "main",
-    type: "solid",
+    variant: 'main',
+    type: 'solid',
     vertical: false,
   },
-);
+)
 </script>
 
 <template>
@@ -67,14 +67,14 @@ withDefaults(
   position: relative;
   transform-origin: center;
 
-  overflow: hidden; 
+  overflow: hidden;
   flex-shrink: 0;
 
   width: var(--divider-size-x);
   height: var(--divider-size-y);
   min-height: var(--divider-min-h);
 
-  @include shadow("sink"); 
+  @include shadow("sink");
 
   animation: divider-scale-x 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 

@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed } from 'vue'
+
 /**
  * ToolResultPanel
  * ツールの計算結果や選定結果を表示し、保存アクション等を提供するパネルコンポーネントです。
  */
 const props = defineProps<{
-  title?: string;
-  icon?: string;
-  saveDisabled?: boolean;
-  saveFunction?: () => Promise<void>;
-}>();
-const typedSaveFunction = computed(() => props.saveFunction as (() => Promise<void>));
+  title?: string
+  icon?: string
+  saveDisabled?: boolean
+  saveFunction?: () => Promise<void>
+}>()
+const typedSaveFunction = computed(() => props.saveFunction as (() => Promise<void>))
 </script>
 
 <template>

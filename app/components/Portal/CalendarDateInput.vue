@@ -3,24 +3,24 @@
  * PortalEventDateInput
  * 日付や時間の入力に特化したフォームコントロールコンポーネントです。
  */
-import { useId } from "vue";
+import { useId } from 'vue'
 
-const model = defineModel<string>();
+const model = defineModel<string>()
 
 withDefaults(
   defineProps<{
-    type?: "date" | "datetime-local" | "time";
-    disabled?: boolean;
-    error?: boolean;
-    size?: "sm" | "md";
+    type?: 'date' | 'datetime-local' | 'time'
+    disabled?: boolean
+    error?: boolean
+    size?: 'sm' | 'md'
   }>(),
   {
-    type: "date",
-    size: "md",
-  }
-);
+    type: 'date',
+    size: 'md',
+  },
+)
 
-const inputId = useId();
+const inputId = useId()
 </script>
 
 <template>

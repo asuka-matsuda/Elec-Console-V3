@@ -8,7 +8,7 @@
   $is-active: "&:is(:focus, :focus-visible)",
   $is-hover: "&:hover:not(:disabled, .is-error, :focus)"
 ) {
-  @include border-dim(var(--color-category-main), 30%);
+  @include border-base(var(--color-category-main), 30%);
 
   // --- 通常状態 ---
   @include state-base(var(--shadow-sink), var(--transition-glow));

@@ -4,5 +4,5 @@
  * 実際のロジックは voltageCalcLogic と voltageFormulaGenerator に分離されています。
  */
 
-export { calculateDesignCurrent, calculateLogic } from './voltageCalcLogic';
-export { generateMathData } from './voltageFormulaGenerator';
+export { calculateDesignCurrent, calculateLogic } from './voltageCalcLogic'
+export { generateMathData } from './voltageFormulaGenerator'

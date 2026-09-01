@@ -1,29 +1,30 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import FullCalendar from '@fullcalendar/vue3';
 import type {
   CalendarOptions,
-  EventClickArg,
   DateSelectArg,
-  EventDropArg,
   DayCellContentArg,
-} from '@fullcalendar/core';
-import type { EventResizeDoneArg } from '@fullcalendar/interaction';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import listPlugin from '@fullcalendar/list';
-import jaLocale from '@fullcalendar/core/locales/ja';
+  EventClickArg,
+  EventDropArg,
+} from '@fullcalendar/core'
+import jaLocale from '@fullcalendar/core/locales/ja'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import type { EventResizeDoneArg } from '@fullcalendar/interaction'
+import interactionPlugin from '@fullcalendar/interaction'
+import listPlugin from '@fullcalendar/list'
+import FullCalendar from '@fullcalendar/vue3'
+import { computed, ref } from 'vue'
 
-import { useCalendar } from '~/composables/portal/useCalendar';
-import type { EventType } from '~/composables/portal/useCalendar';
-import CalendarToolbar from './CalendarToolbar.vue';
-import CalendarEventBadge from './CalendarEventBadge.vue';
-import CalendarEventModal from './CalendarEventModal.vue';
-import CalendarTypeSettingsModal from './CalendarTypeSettingsModal.vue';
+import type { EventType } from '~/composables/portal/useCalendar'
+import { useCalendar } from '~/composables/portal/useCalendar'
+
+import CalendarEventBadge from './CalendarEventBadge.vue'
+import CalendarEventModal from './CalendarEventModal.vue'
+import CalendarToolbar from './CalendarToolbar.vue'
+import CalendarTypeSettingsModal from './CalendarTypeSettingsModal.vue'
 
 const props = defineProps<{
-  siteId: string;
-}>();
+  siteId: string
+}>()
 
 const {
   events,
@@ -32,14 +33,14 @@ const {
   updateEvent,
   deleteEvent,
   updateSettings,
-} = useCalendar(props.siteId);
+} = useCalendar(props.siteId)
 
 // ====================
 // Event Modal Logic
 // ====================
-const isModalOpen = ref(false);
-const isEditing = ref(false);
-const editingEventId = ref<string | null>(null);
+const isModalOpen = ref(false)
+const isEditing = ref(false)
+const editingEventId = ref<string | null>(null)
 
 const form = ref({
   title: '',
@@ -47,19 +48,20 @@ const form = ref({
   start: '',
   end: '',
   allDay: false,
-});
+})
 
 const openCreateModal = (startStr: string, endStr: string, allDay: boolean) => {
-  isEditing.value = false;
-  editingEventId.value = null;
+  isEditing.value = false
+  editingEventId.value = null
 
-  let finalStart = startStr;
-  let finalEnd = endStr;
+  const finalStart = startStr
+  let finalEnd = endStr
 
   if (allDay && endStr) {
-    const d = new Date(endStr);
-    d.setDate(d.getDate() - 1);
-    finalEnd = d.toISOString().split('T')[0] || '';
+    const d = new Date(endStr)
+
+    d.setDate(d.getDate() - 1)
+    finalEnd = d.toISOString().split('T')[0] || ''
   }
 
   form.value = {
@@ -68,28 +70,29 @@ const openCreateModal = (startStr: string, endStr: string, allDay: boolean) => {
     start: finalStart,
     end: finalEnd || finalStart,
     allDay,
-  };
-  isModalOpen.value = true;
-};
+  }
+  isModalOpen.value = true
+}
 
 const openEditModal = (calEvent: {
-  id: string;
-  title: string;
-  startStr: string;
-  endStr: string;
-  allDay: boolean;
-  extendedProps: { type?: string };
+  id: string
+  title: string
+  startStr: string
+  endStr: string
+  allDay: boolean
+  extendedProps: { type?: string }
 }) => {
-  isEditing.value = true;
-  editingEventId.value = calEvent.id;
+  isEditing.value = true
+  editingEventId.value = calEvent.id
 
-  let finalStart = calEvent.startStr;
-  let finalEnd = calEvent.endStr;
+  const finalStart = calEvent.startStr
+  let finalEnd = calEvent.endStr
 
   if (calEvent.allDay && calEvent.endStr) {
-    const d = new Date(calEvent.endStr);
-    d.setDate(d.getDate() - 1);
-    finalEnd = d.toISOString().split('T')[0] || '';
+    const d = new Date(calEvent.endStr)
+
+    d.setDate(d.getDate() - 1)
+    finalEnd = d.toISOString().split('T')[0] || ''
   }
 
   form.value = {
@@ -98,24 +101,26 @@ const openEditModal = (calEvent: {
     start: finalStart,
     end: finalEnd || finalStart,
     allDay: calEvent.allDay,
-  };
-  isModalOpen.value = true;
-};
+  }
+  isModalOpen.value = true
+}
 
 const closeModal = () => {
-  isModalOpen.value = false;
-};
+  isModalOpen.value = false
+}
 
 const saveEvent = async (savedData: typeof form.value) => {
-  let finalEnd: string | undefined = savedData.end;
+  let finalEnd: string | undefined = savedData.end
 
   if (savedData.allDay && savedData.start && savedData.end) {
     if (savedData.start === savedData.end) {
-      finalEnd = undefined;
-    } else {
-      const endDate = new Date(savedData.end);
-      endDate.setDate(endDate.getDate() + 1);
-      finalEnd = endDate.toISOString().split('T')[0];
+      finalEnd = undefined
+    }
+    else {
+      const endDate = new Date(savedData.end)
+
+      endDate.setDate(endDate.getDate() + 1)
+      finalEnd = endDate.toISOString().split('T')[0]
     }
   }
 
@@ -127,27 +132,29 @@ const saveEvent = async (savedData: typeof form.value) => {
         start: savedData.start,
         end: finalEnd,
         allDay: savedData.allDay,
-      });
-    } else {
+      })
+    }
+    else {
       await createEvent({
         title: savedData.title,
         type: savedData.type,
         start: savedData.start,
         end: finalEnd,
         allDay: savedData.allDay,
-      });
+      })
     }
-  } finally {
-    isModalOpen.value = false;
   }
-};
+  finally {
+    isModalOpen.value = false
+  }
+}
 
-const isTypeSettingsOpen = ref(false);
+const isTypeSettingsOpen = ref(false)
 
 const handleSaveEventTypes = async (newTypes: EventType[]) => {
-  await updateSettings({ eventTypes: newTypes });
-  events.value = [...events.value];
-};
+  await updateSettings({ eventTypes: newTypes })
+  events.value = [...events.value]
+}
 
 const {
   isOpen: isConfirmOpen,
@@ -157,55 +164,57 @@ const {
   intent: confirmIntent,
   askConfirm,
   handleConfirm,
-} = useConfirmModal();
+} = useConfirmModal()
 
 const removeEvent = () => {
-  if (!editingEventId.value) return;
-  const targetId = editingEventId.value;
+  if (!editingEventId.value) return
+  const targetId = editingEventId.value
+
   askConfirm({
     title: '予定の削除',
     message: `「${form.value.title || 'この予定'}」を削除してもよろしいですか？`,
     confirmText: '削除する',
     intent: 'danger',
     onConfirm: async () => {
-      await deleteEvent(targetId);
-      closeModal();
+      await deleteEvent(targetId)
+      closeModal()
     },
-  });
-};
+  })
+}
 
 // ====================
 // Calendar Config & Options
 // ====================
-const fullCalendarRef = ref<InstanceType<typeof FullCalendar> | null>(null);
-const currentTitle = ref('');
-const currentView = ref<'dayGridMonth' | 'listMonth'>('dayGridMonth');
+const fullCalendarRef = ref<InstanceType<typeof FullCalendar> | null>(null)
+const currentTitle = ref('')
+const currentView = ref<'dayGridMonth' | 'listMonth'>('dayGridMonth')
 
-const handlePrev = () => fullCalendarRef.value?.getApi().prev();
-const handleNext = () => fullCalendarRef.value?.getApi().next();
-const handleToday = () => fullCalendarRef.value?.getApi().today();
+const handlePrev = () => fullCalendarRef.value?.getApi().prev()
+const handleNext = () => fullCalendarRef.value?.getApi().next()
+const handleToday = () => fullCalendarRef.value?.getApi().today()
 const handleViewChange = (view: 'dayGridMonth' | 'listMonth') => {
-  currentView.value = view;
-  fullCalendarRef.value?.getApi().changeView(view);
-};
+  currentView.value = view
+  fullCalendarRef.value?.getApi().changeView(view)
+}
 
 const formattedEvents = computed(() => {
   return events.value.map((evt) => {
-    const typeDef = settings.value?.eventTypes?.find((t) => t.id === evt.type);
-    const color = typeDef?.color || '#00f0ff';
+    const typeDef = settings.value?.eventTypes?.find(t => t.id === evt.type)
+    const color = typeDef?.color || '#00f0ff'
+
     return {
       ...evt,
       borderColor: color,
       backgroundColor: 'transparent',
       textColor: 'inherit',
       extendedProps: {
-        ...evt.extendedProps,
+
         type: evt.type,
         themeColor: color,
       },
-    };
-  });
-});
+    }
+  })
+})
 
 const calendarOptions = computed(() => ({
   plugins: [dayGridPlugin, interactionPlugin, listPlugin],
@@ -218,56 +227,58 @@ const calendarOptions = computed(() => ({
   dayMaxEvents: 3,
   moreLinkClick: 'popover' as const,
   moreLinkContent: (args: { num: number }) => `+${args.num}件`,
-  datesSet: (arg: { view: { title: string; type: string } }) => {
-    currentTitle.value = arg.view.title;
-    currentView.value = arg.view.type as 'dayGridMonth' | 'listMonth';
+  datesSet: (arg: { view: { title: string, type: string } }) => {
+    currentTitle.value = arg.view.title
+    currentView.value = arg.view.type as 'dayGridMonth' | 'listMonth'
   },
   height: 'auto',
   dayHeaderClassNames: (arg: { date: Date }) => {
-    const classes = [];
-    if (arg.date.getDay() === 0) classes.push('is-sunday');
-    if (arg.date.getDay() === 6) classes.push('is-saturday');
-    return classes;
+    const classes = []
+
+    if (arg.date.getDay() === 0) classes.push('is-sunday')
+    if (arg.date.getDay() === 6) classes.push('is-saturday')
+
+    return classes
   },
   dayCellClassNames: (arg: DayCellContentArg) => {
-    const classes = [];
-    const isoDate =
-      arg.date.getFullYear() +
-      '-' +
-      String(arg.date.getMonth() + 1).padStart(2, '0') +
-      '-' +
-      String(arg.date.getDate()).padStart(2, '0');
+    const classes = []
+    const isoDate
+      = arg.date.getFullYear()
+        + '-'
+        + String(arg.date.getMonth() + 1).padStart(2, '0')
+        + '-'
+        + String(arg.date.getDate()).padStart(2, '0')
 
-    if (arg.date.getDay() === 0) classes.push('is-sunday');
-    if (arg.date.getDay() === 6) classes.push('is-saturday');
-    if (settings.value?.customHolidays?.includes(isoDate)) classes.push('is-holiday');
+    if (arg.date.getDay() === 0) classes.push('is-sunday')
+    if (arg.date.getDay() === 6) classes.push('is-saturday')
+    if (settings.value?.customHolidays?.includes(isoDate)) classes.push('is-holiday')
 
-    return classes;
+    return classes
   },
 
   select: (selectInfo: DateSelectArg) => {
-    openCreateModal(selectInfo.startStr, selectInfo.endStr, selectInfo.allDay);
-    selectInfo.view.calendar.unselect();
+    openCreateModal(selectInfo.startStr, selectInfo.endStr, selectInfo.allDay)
+    selectInfo.view.calendar.unselect()
   },
   eventClick: (clickInfo: EventClickArg) => {
-    openEditModal(clickInfo.event);
+    openEditModal(clickInfo.event)
   },
   eventDrop: async (dropInfo: EventDropArg) => {
     await updateEvent(dropInfo.event.id, {
       start: dropInfo.event.startStr,
       end: dropInfo.event.endStr || undefined,
       allDay: dropInfo.event.allDay,
-    });
+    })
   },
   eventResize: async (resizeInfo: EventResizeDoneArg) => {
     await updateEvent(resizeInfo.event.id, {
       start: resizeInfo.event.startStr,
       end: resizeInfo.event.endStr || undefined,
-    });
+    })
   },
-}));
+}))
 
-const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOptions);
+const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOptions)
 </script>
 
 <template>
@@ -386,7 +397,8 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
       --cell-accent-opacity: 20%;
 
       .fc-daygrid-day-number {
-        font-weight: var(--font-weight-bold);
+        @include text-mono("sm", "bold");
+
         color: var(--color-primary);
       }
     }
@@ -435,7 +447,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 
   /* 3件超過時の「+○件」展開リンク */
   :deep(.fc-daygrid-more-link) {
-    @include text-meta(true);
+    @include text-meta("md", "bold");
     @include state-base;
     @include cyber-text-glow(var(--color-primary), 50%, var(--blur-sm));
 
@@ -464,7 +476,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 
     .fc-popover-header {
       @include flex-between;
-      @include border-dim;
+      @include border-base($opacity: 30%);
 
       padding: var(--space-control-py-sm) var(--space-control-px);
       border-top: none;
@@ -475,7 +487,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
       background-color: color-mix(in srgb, var(--color-surface-sunken) 85%, transparent);
 
       .fc-popover-title {
-        @include text-desc(true);
+        @include text-desc("md", "bold");
 
         color: var(--color-primary);
       }
@@ -509,7 +521,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 
     .fc-list-day-text,
     .fc-list-day-side-text {
-      @include text-desc(true);
+      @include text-desc("md", "bold");
 
       color: var(--theme-accent);
     }

@@ -1,10 +1,10 @@
-import { defineNuxtRouteMiddleware, navigateTo } from '#app';
-import { useAuth } from '~/composables/useAuth';
+import { defineNuxtRouteMiddleware, navigateTo } from '#app'
+import { useAuth } from '~/composables/useAuth'
 
 export default defineNuxtRouteMiddleware(() => {
-  const { isAdmin } = useAuth();
-  
+  const { isAdmin } = useAuth()
+
   if (!isAdmin.value) {
-    return navigateTo('/portal');
+    return navigateTo('/portal')
   }
-});
+})

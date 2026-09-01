@@ -3,21 +3,21 @@
  * ToolHistoryCard
  * 計算履歴を1件表示するカードコンポーネントです。入力条件と計算結果のプレビューを提供します。
  */
-import type { HistoryEntry } from "~/types/history";
+import type { HistoryEntry } from '~/types/history'
 
 const props = defineProps<{
-  entry: HistoryEntry;
-}>();
+  entry: HistoryEntry
+}>()
 
 const emit = defineEmits<{
-  (e: "delete", id: string): void;
-}>();
+  (e: 'delete', id: string): void
+}>()
 
 const handleDelete = () => {
-  emit("delete", props.entry.id);
-};
-const getInputs = (entry: HistoryEntry) => entry.rawInputs as never;
-const getResult = (entry: HistoryEntry) => entry.rawResult as never;
+  emit('delete', props.entry.id)
+}
+const getInputs = (entry: HistoryEntry) => entry.rawInputs as never
+const getResult = (entry: HistoryEntry) => entry.rawResult as never
 </script>
 
 <template>

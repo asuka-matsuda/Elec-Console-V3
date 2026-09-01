@@ -3,85 +3,86 @@
  * AppModal
  * ネイティブの dialog 要素を使用した、アクセシビリティ対応のモーダルコンポーネント。
  */
-import { ref, computed, watch, useId, onMounted, onUnmounted } from "vue";
+import { computed, onMounted, onUnmounted, ref, useId, watch } from 'vue'
 
-const isOpen = defineModel<boolean>({ default: false });
+const isOpen = defineModel<boolean>({ default: false })
 
 const props = withDefaults(
   defineProps<{
-    title?: string;
-    icon?: string;
+    title?: string
+    icon?: string
     variant?:
-      | "main"
-      | "tool"
-      | "database"
-      | "reference"
-      | "management"
-      | "danger"
-      | "success";
-    align?: "left" | "center";
+      | 'main'
+      | 'tool'
+      | 'database'
+      | 'reference'
+      | 'management'
+      | 'danger'
+      | 'success'
+    align?: 'left' | 'center'
   }>(),
   {
-    variant: "main",
+    variant: 'main',
   },
-);
+)
 
-const modalId = useId();
-const titleId = `modal-title-${modalId}`;
-const dialogRef = ref<HTMLDialogElement | null>(null);
-const isClosing = ref(false);
-let closeTimeout: ReturnType<typeof setTimeout> | null = null;
+const modalId = useId()
+const titleId = `modal-title-${modalId}`
+const dialogRef = ref<HTMLDialogElement | null>(null)
+const isClosing = ref(false)
+let closeTimeout: ReturnType<typeof setTimeout> | null = null
 
-const typedVariant = computed(() => props.variant as never);
+const typedVariant = computed(() => props.variant as never)
 
 const close = () => {
-  isOpen.value = false;
-};
+  isOpen.value = false
+}
 
 const onNativeClose = () => {
   if (isOpen.value) {
-    isOpen.value = false;
+    isOpen.value = false
   }
-};
+}
 
 watch(
   isOpen,
   (newVal) => {
     if (newVal) {
       if (closeTimeout) {
-        clearTimeout(closeTimeout);
-        closeTimeout = null;
+        clearTimeout(closeTimeout)
+        closeTimeout = null
       }
-      isClosing.value = false;
+      isClosing.value = false
       if (!dialogRef.value?.open) {
-        dialogRef.value?.showModal();
+        dialogRef.value?.showModal()
       }
-    } else {
+    }
+    else {
       if (dialogRef.value?.open) {
-        isClosing.value = true;
+        isClosing.value = true
         closeTimeout = setTimeout(() => {
-          dialogRef.value?.close();
-          isClosing.value = false;
-          closeTimeout = null;
-        }, 300);
+          dialogRef.value?.close()
+          isClosing.value = false
+          closeTimeout = null
+        }, 300)
       }
     }
   },
-  { flush: "post" },
-);
+  { flush: 'post' },
+)
 
 onMounted(() => {
   if (isOpen.value) {
-    dialogRef.value?.showModal();
+    dialogRef.value?.showModal()
   }
-});
+})
 
 onUnmounted(() => {
   if (closeTimeout) {
-    clearTimeout(closeTimeout);
-    closeTimeout = null;
+    clearTimeout(closeTimeout)
+    closeTimeout = null
   }
-});
+})
 </script>
 
 <template>

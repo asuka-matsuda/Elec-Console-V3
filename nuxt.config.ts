@@ -1,8 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
-  css: ['~/assets/scss/style.scss'],
+
+  modules: ['@nuxt/eslint', '@vueuse/nuxt'],
 
   components: [
     {
@@ -14,32 +13,39 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
   ],
+  devtools: { enabled: true },
 
   app: {
     head: {
       link: [
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;700&display=swap' }
+        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;700&display=swap' },
       ],
       script: [
-        { src: '/theme-init.js' }
-      ]
-    }
+        { src: '/theme-init.js' },
+      ],
+    },
   },
+  css: ['~/assets/scss/style.scss'],
+  compatibilityDate: '2025-07-15',
 
   vite: {
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: '@use "~/assets/scss/foundation/_shared.scss" as *;'
-        }
-      }
+          additionalData: '@use "~/assets/scss/foundation/_shared.scss" as *;',
+        },
+      },
     },
     build: {
-      target: 'esnext'
-    }
+      target: 'esnext',
+    },
   },
 
-  modules: ['@nuxt/eslint', '@vueuse/nuxt']
+  eslint: {
+    config: {
+      stylistic: true,
+    },
+  },
 })

@@ -1,31 +1,33 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useTodo } from '~/composables/portal/useTodo';
+import { computed, ref } from 'vue'
+
+import { useTodo } from '~/composables/portal/useTodo'
 
 const props = defineProps<{
-  siteId: string;
-}>();
+  siteId: string
+}>()
 
 // TODO: 本来は認証情報から取得するが、一時的に固定値
-const loginId = computed(() => 'guest');
-const { todos, addTodo, toggleTodo, deleteTodo } = useTodo(props.siteId, loginId.value);
+const loginId = computed(() => 'guest')
+const { todos, addTodo, toggleTodo, deleteTodo } = useTodo(props.siteId, loginId.value)
 
-const newTask = ref('');
+const newTask = ref('')
 
 const handleAdd = () => {
-  addTodo(newTask.value);
-  newTask.value = '';
-};
+  addTodo(newTask.value)
+  newTask.value = ''
+}
 
 // 未完了を上に、完了を下に
 const sortedTodos = computed(() => {
   return [...todos.value].sort((a, b) => {
     if (a.completed === b.completed) {
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     }
-    return a.completed ? 1 : -1;
-  });
-});
+
+    return a.completed ? 1 : -1
+  })
+})
 </script>
 
 <template>
@@ -35,15 +37,15 @@ const sortedTodos = computed(() => {
         <AppIcon
           name="check"
           size="sm"
-        /> 
+        />
         パーソナルToDo
       </h3>
     </div>
-    
+
     <div class="p-personal-todo__input">
-      <AppInput 
-        v-model="newTask" 
-        placeholder="新しいタスクを入力..." 
+      <AppInput
+        v-model="newTask"
+        placeholder="新しいタスクを入力..."
         @keyup.enter="handleAdd"
       />
       <AppButton
@@ -63,8 +65,8 @@ const sortedTodos = computed(() => {
         :key="todo.id"
         class="p-personal-todo__item"
       >
-        <AppCheckbox 
-          :model-value="todo.completed" 
+        <AppCheckbox
+          :model-value="todo.completed"
           :class="{ 'is-completed': todo.completed }"
           :label="todo.text"
           @update:model-value="toggleTodo(todo.id)"
@@ -95,7 +97,7 @@ const sortedTodos = computed(() => {
 
   &__header h3 {
     @include flex-start(var(--space-1));
-    @include text-md;
+    @include text-title("sm");
 
     color: var(--color-text-main);
   }
@@ -117,7 +119,7 @@ const sortedTodos = computed(() => {
 
     padding: var(--space-card-pad-sm);
     background-color: var(--color-bg-hover);
-    
+
     .is-completed {
       text-decoration: line-through;
       opacity: 0.5;

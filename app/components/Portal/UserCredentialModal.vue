@@ -1,29 +1,29 @@
 <script setup lang="ts">
-import { printUserCredential } from "~/utils/printUserCredential";
+import { printUserCredential } from '~/utils/printUserCredential'
+
+const isOpen = defineModel<boolean>({ default: false })
 
 const props = defineProps<{
   user: {
-    lastName: string;
-    firstName: string;
-    loginId: string;
-    initialPassword?: string;
-  } | null;
-}>();
-
-const isOpen = defineModel<boolean>({ default: false });
+    lastName: string
+    firstName: string
+    loginId: string
+    initialPassword?: string
+  } | null
+}>()
 
 const handlePrint = () => {
   if (props.user) {
-    printUserCredential(props.user);
+    printUserCredential(props.user)
   }
-};
+}
 
 const handleCopyPassword = () => {
   if (props.user?.initialPassword) {
-    navigator.clipboard.writeText(props.user.initialPassword);
-    alert("初期パスワードをコピーしました。");
+    navigator.clipboard.writeText(props.user.initialPassword)
+    alert('初期パスワードをコピーしました。')
   }
-};
+}
 </script>
 
 <template>
@@ -99,7 +99,7 @@ const handleCopyPassword = () => {
     background: transparent;
     backdrop-filter: blur(var(--blur-sm));
 
-    @include border-dim(var(--theme-accent), 20%);
+    @include border-base(var(--theme-accent), 20%);
   }
 
   &__credential-value {
@@ -108,10 +108,9 @@ const handleCopyPassword = () => {
     padding: var(--space-control-py-md) 0;
 
     &--password {
-      font-family: var(--font-mono);
-      font-size: var(--font-size-lg);
+      @include text-mono("lg", "bold");
+
       color: var(--color-status-success);
-      letter-spacing: 2px;
     }
   }
 }

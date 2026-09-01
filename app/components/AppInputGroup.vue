@@ -54,14 +54,13 @@
 
       padding: 0 var(--space-control-px-md);
 
-      @include border-dim(var(--theme-accent));
+      @include border-base(var(--theme-accent, 30%));
 
       border-left: none;
       color: var(--color-text-main);
       white-space: nowrap;
 
       @include shadow("sink");
-
       @include inline-flex-center;
     }
   }

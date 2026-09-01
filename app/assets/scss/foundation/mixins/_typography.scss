@@ -1,161 +1,131 @@
 @use "../variables" as *;
 
 // ==========================================================================
-// タイポグラフィ Mixins & 互換プレースホルダー
+// 内部ユーティリティ
 // ==========================================================================
-@mixin text-2xs {
-  font-size: var(--font-size-2xs);
-  line-height: var(--line-height-base);
-  letter-spacing: var(--tracking-wide);
-}
-
-@mixin text-xs {
-  font-size: var(--font-size-xs);
-  line-height: var(--line-height-base);
-  letter-spacing: var(--tracking-wide);
-}
-
-@mixin text-sm {
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-base);
-  letter-spacing: var(--tracking-wide);
-}
-
-@mixin text-base {
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-base);
-  letter-spacing: var(--tracking-wide);
-}
-
-@mixin text-md {
-  font-size: var(--font-size-md, var(--font-size-base));
-  line-height: var(--line-height-base);
-  letter-spacing: var(--tracking-wide);
-}
-
-@mixin text-lg {
-  font-size: var(--font-size-lg);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--tracking-normal);
-}
-
-@mixin text-xl {
-  font-size: var(--font-size-xl);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--tracking-tight);
-}
-
-@mixin text-2xl {
-  font-size: var(--font-size-2xl);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--tracking-tight);
-}
-
-@mixin text-3xl {
-  font-size: var(--font-size-3xl);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--tracking-tighter);
-}
-
-@mixin text-4xl {
-  font-size: var(--font-size-4xl);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--tracking-tighter);
-}
-
-// セマンティック・タイポグラフィ Mixins
-@mixin text-title($size: "md", $color: null) {
+@mixin resolve-size($size, $default-size) {
   @if $size == "4xl" {
     font-size: var(--font-size-4xl);
-    letter-spacing: var(--tracking-tighter);
   } @else if $size == "3xl" {
     font-size: var(--font-size-3xl);
-    letter-spacing: var(--tracking-tighter);
-  } @else if $size == "2xl" or $size == "xl" {
+  } @else if $size == "2xl" {
     font-size: var(--font-size-2xl);
-    letter-spacing: var(--tracking-tight);
-  } @else if $size == "lg" {
+  } @else if $size == "xl" {
     font-size: var(--font-size-xl);
-    letter-spacing: var(--tracking-tight);
-  } @else if $size == "sm" {
-    font-size: var(--font-size-base);
-    letter-spacing: var(--tracking-wide);
-  } @else {
-    // "md" (デフォルト)
+  } @else if $size == "lg" {
     font-size: var(--font-size-lg);
-    letter-spacing: var(--tracking-normal);
-  }
-
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-
-  @if $color {
-    color: $color;
+  } @else if $size == "md" {
+    font-size: $default-size;
+  } @else if $size == "sm" {
+    font-size: var(--font-size-sm);
+  } @else if $size == "xs" {
+    font-size: var(--font-size-xs);
+  } @else if $size == "2xs" {
+    font-size: var(--font-size-2xs);
+  } @else {
+    font-size: $default-size;
   }
 }
 
-@mixin text-body($bold: false, $color: null) {
-  font-size: var(--font-size-base);
+@mixin resolve-weight($weight, $default-weight) {
+  @if $weight {
+    font-weight: var(--font-weight-#{$weight});
+  } @else {
+    font-weight: $default-weight;
+  }
+}
+
+@mixin resolve-tracking($size) {
+  @if $size == "4xl" or $size == "3xl" {
+    letter-spacing: var(--tracking-tighter);
+  } @else if $size == "2xl" or $size == "xl" {
+    letter-spacing: var(--tracking-tight);
+  } @else if $size == "sm" or $size == "xs" or $size == "2xs" {
+    letter-spacing: var(--tracking-wide);
+  } @else {
+    letter-spacing: var(--tracking-normal);
+  }
+}
+
+// ==========================================================================
+// セマンティック・タイポグラフィ Mixins
+// ==========================================================================
+
+@mixin text-title($size: "md", $weight: null) {
+  @include resolve-size($size, var(--font-size-lg));
+  @include resolve-weight($weight, var(--font-weight-bold));
+  @include resolve-tracking($size);
+
+  line-height: var(--line-height-tight);
+}
+
+@mixin text-body($size: "md", $weight: null) {
+  @include resolve-size($size, var(--font-size-base));
+  @include resolve-weight($weight, normal);
+  
   line-height: var(--line-height-base);
   color: var(--color-text-main);
   letter-spacing: var(--tracking-wide);
-
-  @if $color {
-    color: $color;
-  }
-
-  @if $bold {
-    font-weight: var(--font-weight-bold);
-  }
 }
 
-@mixin text-desc($bold: false, $color: null) {
-  font-size: var(--font-size-sm);
+@mixin text-desc($size: "md", $weight: null) {
+  @include resolve-size($size, var(--font-size-sm));
+  @include resolve-weight($weight, normal);
+
   line-height: var(--line-height-base);
   color: var(--color-text-muted);
   letter-spacing: var(--tracking-normal);
-
-  @if $color {
-    color: $color;
-  }
-
-  @if $bold {
-    font-weight: var(--font-weight-bold);
-  }
 }
 
-@mixin text-meta($bold: false, $color: null) {
-  font-size: var(--font-size-2xs);
+@mixin text-meta($size: "md", $weight: null) {
+  @include resolve-size($size, var(--font-size-2xs));
+  @include resolve-weight($weight, normal);
+
   line-height: var(--line-height-base);
   color: var(--color-text-muted);
   letter-spacing: var(--tracking-wide);
-
-  @if $color {
-    color: $color;
-  }
-
-  @if $bold {
-    font-weight: var(--font-weight-bold);
-  }
 }
 
-@mixin text-badge {
-  font-size: var(--font-size-2xs);
-  font-weight: var(--font-weight-bold);
+@mixin text-badge($size: "md", $weight: null) {
+  @include resolve-size($size, var(--font-size-2xs));
+  @include resolve-weight($weight, var(--font-weight-bold));
+
   line-height: var(--line-height-tight);
   text-transform: uppercase;
   letter-spacing: var(--tracking-wider);
 }
 
-@mixin text-label {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-bold);
+@mixin text-label($size: "md", $weight: null) {
+  @include resolve-size($size, var(--font-size-base));
+  @include resolve-weight($weight, var(--font-weight-bold));
+
   line-height: var(--line-height-tight);
   letter-spacing: var(--tracking-wide);
 }
 
-@mixin text-caption {
-  font-size: var(--font-size-sm);
+@mixin text-caption($size: "md", $weight: null) {
+  @include resolve-size($size, var(--font-size-sm));
+  @include resolve-weight($weight, normal);
+
+  line-height: var(--line-height-base);
+  letter-spacing: var(--tracking-normal);
+}
+
+@mixin text-link($size: "md", $weight: null) {
+  @include resolve-size($size, var(--font-size-base));
+  @include resolve-weight($weight, normal);
+
+  cursor: pointer;
+  line-height: var(--line-height-base);
+  color: var(--theme-accent);
+  letter-spacing: var(--tracking-wide);
+}
+
+@mixin text-mono($size: "md", $weight: null) {
+  @include resolve-size($size, var(--font-size-base));
+  @include resolve-weight($weight, normal);
+
+  font-family: var(--font-family-mono);
   line-height: var(--line-height-base);
   letter-spacing: var(--tracking-normal);
 }

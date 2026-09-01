@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { menuData } from "~/constants/data/menuData";
+import { menuData } from '~/constants/data/menuData'
 
 // Mobile sidebar toggle state (Global)
-const isSidebarOpen = useState("sidebar-open", () => false);
+const isSidebarOpen = useState('sidebar-open', () => false)
 
 // Dynamic breadcrumbs based on current route
-const { items: breadcrumbs, accent: breadcrumbAccent } = useBreadcrumbs();
-const { currentUser, logout } = useAuth();
+const { items: breadcrumbs, accent: breadcrumbAccent } = useBreadcrumbs()
+const { currentUser, logout } = useAuth()
 </script>
 
 <template>
@@ -107,7 +107,7 @@ const { currentUser, logout } = useAuth();
     width: var(--size-control-sm);
     height: var(--size-control-sm);
 
-    @include border-base(var(--theme-accent), var(--border-width-thick));
+    @include border-base(var(--theme-accent), $width: var(--border-width-thick));
 
     border-radius: 50%;
     background: var(--theme-accent);
