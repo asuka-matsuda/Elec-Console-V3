@@ -103,43 +103,8 @@
   --space-section-gap:         clamp(var(--space-4), 2vw, var(--space-6));   // 16px 〜 24px
 
   // [2] パネル・カード (Card & Surface)
-  --space-card-pad-sm:         var(--space-2);                              // 8px
-  --space-card-pad-md:         var(--space-3);                              // 12px (コンパクト)
-  --space-card-pad-lg:         clamp(var(--space-3), 1.5vw, var(--space-5)); // 12px 〜 20px (標準)
-  --space-card-pad:            var(--space-card-pad-lg);                    // デフォルトエイリアス
-  --space-card-gap-sm:         var(--space-2);                              // 8px
-  --space-card-gap-md:         clamp(var(--space-2), 1.2vw, var(--space-4)); // 8px 〜 16px (標準)
-  --space-card-gap-lg:         var(--space-4);                              // 16px
-  --space-card-gap:            var(--space-card-gap-md);                    // デフォルトエイリアス
-  // [3] スタック・インライン フロー (Flow Gaps: xs / sm / md / lg / xl)
-  --space-stack-gap-xs:        var(--space-0-5);                            // 2px
-  --space-stack-gap-sm:        var(--space-1);                              // 4px  (フォーム内など)
-  --space-stack-gap-md:        var(--space-2);                              // 8px
-  --space-stack-gap-lg:        var(--space-3);                              // 12px (垂直標準)
-  --space-stack-gap-xl:        var(--space-4);                              // 16px
-  --space-stack-gap:           var(--space-stack-gap-lg);                   // デフォルトエイリアス
-  --space-inline-gap-xs:       var(--space-0-5);                            // 2px
-  --space-inline-gap-sm:       var(--space-1);                              // 4px  (タグ・アイコン隣接など)
-  --space-inline-gap-md:       var(--space-2);                              // 8px  (水平標準)
-  --space-inline-gap-lg:       var(--space-3);                              // 12px
-  --space-inline-gap-xl:       var(--space-4);                              // 16px
-  --space-inline-gap:          var(--space-inline-gap-md);                  // デフォルトエイリアス
-  // [4] UIコントロール内余白 (Control Paddings: sm / md / lg)
-  --space-control-px-sm:       var(--space-3);                              // 12px (コントロール左右 sm)
-  --space-control-px-md:       var(--space-4);                              // 16px (コントロール左右 md)
-  --space-control-px-lg:       var(--space-5);                              // 20px (コントロール左右 lg)
-  --space-control-px:          var(--space-control-px-sm);                  // デフォルトエイリアス
-  --space-control-py-sm:       var(--space-1);                              // 4px  (コントロール上下 sm)
-  --space-control-py-md:       var(--space-2);                              // 8px  (コントロール上下 md)
-  --space-control-py-lg:       var(--space-3);                              // 12px (コントロール上下 lg)
-  --space-control-py:          var(--space-control-py-md);                  // デフォルトエイリアス
-
-  // [5] 役割別コンポーネント内余白 (Role-based Component Paddings)
-  --space-table-cell-p:        var(--space-2) var(--space-3);               // 8px 12px (テーブルセル専用)
-  --space-alert-p:             var(--space-2) var(--space-3);               // 8px 12px (警告・免責・通知枠専用)
-  --space-result-p:            var(--space-2) var(--space-3);               // 8px 12px (ツール計算結果枠専用)
-  --space-badge-p:             var(--space-0-5) var(--space-1);             // 2px 4px (ステータスバッジ専用)
-  --space-tag-p:               var(--space-1) var(--space-2);               // 4px 8px (小タグ・チップ専用)
+  --space-card-pad:            clamp(var(--space-3), 1.5vw, var(--space-5)); // 12px 〜 20px (標準)
+  --space-card-gap:            clamp(var(--space-2), 1.2vw, var(--space-4)); // 8px 〜 16px (標準)
 
   // コントロール寸法 (Dimensions)
   --size-control-sm: 32px;

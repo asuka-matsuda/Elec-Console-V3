@@ -73,10 +73,9 @@ const themeOptions = [
 
 <style scoped lang="scss">
 .p-settings {
-  container-type: inline-size;
-
   @include flex-start-stretch($direction: column);
 
+  container-type: inline-size;
   gap: var(--space-section-gap);
   padding-bottom: var(--space-layout-pad);
 
@@ -97,7 +96,7 @@ const themeOptions = [
   &__stack {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-stack-gap);
+    gap: var(--space-3);
   }
 }
 </style>

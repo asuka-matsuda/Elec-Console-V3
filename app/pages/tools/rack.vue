@@ -271,7 +271,7 @@ const {
   &__warning {
     @include text-title("sm");
 
-    padding: var(--space-tag-p);
+    padding: var(--space-1) var(--space-2);
     color: var(--color-status-danger);
   }
 }
@@ -312,7 +312,7 @@ const {
   &__section {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-stack-gap-sm);
+    gap: var(--space-1);
   }
 
   &__section-title {

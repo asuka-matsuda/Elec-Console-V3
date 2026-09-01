@@ -97,10 +97,9 @@ withDefaults(
   }
 
   &__control {
-    position: relative;
-
     @include flex-start-stretch($direction: column);
 
+    position: relative;
     gap: var(--space-1);
   }
 
@@ -137,14 +136,12 @@ withDefaults(
 
     width: var(--space-2);
     height: var(--space-2);
+    border-radius: 50%;
 
     @include border-base(
       color-mix(in srgb, var(--theme-accent) 70%, transparent),
       var(--border-width-thick)
     );
-
-    border-radius: 50%;
-
     @include state-base(none, var(--transition-base), var(--theme-accent));
   }
 }

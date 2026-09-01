@@ -51,8 +51,8 @@ const inputId = useId()
 
 <style scoped lang="scss">
 .c-form-control {
-  --form-control-px: var(--space-control-px-md);
-  --form-control-py: var(--space-control-py-md);
+  --form-control-px: var(--space-4);
+  --form-control-py: var(--space-2);
 
   @include text-mono("sm");
 
@@ -60,13 +60,15 @@ const inputId = useId()
   padding: var(--form-control-py) var(--form-control-px);
   color: var(--color-text-muted);
 
+  @include form-control-base;
+
   &::placeholder {
     @include form-placeholder;
   }
 
   &--sm {
-    --form-control-px: var(--space-control-px-sm);
-    --form-control-py: var(--space-control-py-sm);
+    --form-control-px: var(--space-3);
+    --form-control-py: var(--space-1);
 
     @include text-meta;
 
@@ -91,7 +93,5 @@ const inputId = useId()
       resize: none;
     }
   }
-
-  @include form-control-base;
 }
 </style>

@@ -73,14 +73,12 @@ const inputId = useId()
 .c-checkbox {
   --checkbox-color: var(--theme-accent);
 
-  position: relative;
-
   @include flex-start-center($is-inline: true);
-
-  gap: var(--space-inline-gap);
-
   @include text-desc;
   @include click-enabled;
+
+  position: relative;
+  gap: var(--space-2);
 
   &.is-disabled {
     @include disabled;

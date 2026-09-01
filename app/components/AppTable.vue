@@ -128,7 +128,7 @@ const handleSort = (col: TableColumn<T>) => {
 
   :deep(th),
   :deep(td) {
-    padding: var(--space-table-cell-p);
+    padding: var(--space-2) var(--space-3);
     border-bottom: var(--border-width-base) solid var(--color-border);
     white-space: nowrap;
     vertical-align: middle;
@@ -170,7 +170,7 @@ const handleSort = (col: TableColumn<T>) => {
     .c-table__th-inner {
       @include flex-start-center($is-inline: true);
 
-      gap: var(--space-inline-gap-sm);
+      gap: var(--space-1);
 
       &.is-center {
         justify-content: center;
@@ -206,13 +206,13 @@ const handleSort = (col: TableColumn<T>) => {
     &:hover {
       z-index: 1;
 
-      /* テーブル行ホバー時の発光エフェクト */
-      @include state-hover;
-
       /* 行全体を光らせるため、セルの背景を上書きさせない */
       outline: var(--border-width-base) solid
         color-mix(in srgb, var(--theme-accent) 80%, transparent);
       outline-offset: calc(var(--border-width-base) * -1);
+
+      /* テーブル行ホバー時の発光エフェクト */
+      @include state-hover;
     }
   }
 }

@@ -60,17 +60,15 @@
 
     :deep(.c-input-addon) {
       @include text-desc;
+      @include flex-center-center($is-inline: true);
 
-      padding: 0 var(--space-control-px-md);
-
-      @include border-base(var(--theme-accent, 30%));
-
+      padding: 0 var(--space-4);
       border-left: none;
       color: var(--color-text-main);
       white-space: nowrap;
 
+      @include border-base(var(--theme-accent, 30%));
       @include shadow("sink");
-      @include flex-center-center($is-inline: true);
     }
   }
 }

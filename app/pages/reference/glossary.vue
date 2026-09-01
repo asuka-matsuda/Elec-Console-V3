@@ -173,11 +173,10 @@ const categoryColorMap: Record<string, string> = {
   --trade-color-plumbing: #06b6d4;
   --trade-color-trivia: var(--color-category-reference);
 
-  container-name: filter-layout;
-  container-type: inline-size;
-
   @include flex-start-stretch($direction: column);
 
+  container-name: filter-layout;
+  container-type: inline-size;
   flex: 1;
 
   width: 100%;
@@ -216,8 +215,8 @@ const categoryColorMap: Record<string, string> = {
   &__header {
     @include flex-between-center;
 
-    gap: var(--space-inline-gap);
-    padding-bottom: var(--space-control-py-sm);
+    gap: var(--space-2);
+    padding-bottom: var(--space-1);
     border-bottom: var(--border-width-base) solid transparent;
     border-image: linear-gradient(to right, transparent, var(--color-border) 50%, transparent) 1;
   }
@@ -251,8 +250,8 @@ const categoryColorMap: Record<string, string> = {
   &__meta {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-stack-gap-sm);
-    padding: var(--space-card-pad-md);
+    gap: var(--space-1);
+    padding: var(--space-3);
 
     @include border-base($opacity: 30%);
   }

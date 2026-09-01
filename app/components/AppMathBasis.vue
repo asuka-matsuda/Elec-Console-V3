@@ -112,17 +112,17 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
 
 <style scoped lang="scss">
 .c-math-basis {
+  @include flex-start-stretch($direction: column);
+
   overflow-y: auto;
   flex: 1;
   gap: var(--space-card-gap);
 
-  padding-right: var(--space-control-py-md);
+  padding-right: var(--space-2);
   padding-bottom: var(--space-layout-pad);
 
-  @include flex-start-stretch($direction: column);
-
   &__card {
-    gap: var(--space-stack-gap);
+    gap: var(--space-3);
   }
 
   &__body {
@@ -171,7 +171,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
     }
 
     :deep(.katex-display) {
-      padding: var(--space-control-py-sm);
+      padding: var(--space-1);
     }
   }
 
@@ -179,7 +179,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
     @include flex-start-stretch($direction: column);
 
     flex-shrink: 0;
-    gap: var(--space-stack-gap-sm);
+    gap: var(--space-1);
     width: 250px;
   }
 
@@ -192,14 +192,14 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   &__legend-list {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-stack-gap-sm);
+    gap: var(--space-1);
   }
 
   &__legend-item {
     @include text-body("md", "bold");
     @include flex-start-center;
 
-    gap: var(--space-inline-gap-sm);
+    gap: var(--space-1);
     align-items: flex-start;
     color: var(--color-text-secondary);
   }

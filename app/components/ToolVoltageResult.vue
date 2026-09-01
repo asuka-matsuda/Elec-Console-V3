@@ -200,6 +200,11 @@ const dropStatusClass = computed(() => {
   min-height: 0;
   padding: var(--space-card-pad);
 
+  // コンテナの幅が xs 以上の場合は横並び
+  @include cq("xs") {
+    flex-direction: row;
+  }
+
   &__drop-percent {
     @include text-title("lg");
   }
@@ -213,11 +218,11 @@ const dropStatusClass = computed(() => {
   }
 
   &.is-sm {
-    gap: var(--space-stack-gap);
+    gap: var(--space-3);
     padding: 0;
 
     .c-voltage-result__main {
-      padding: var(--space-tag-p);
+      padding: var(--space-1) var(--space-2);
     }
 
     .c-voltage-result__main-value .value-text {
@@ -233,7 +238,7 @@ const dropStatusClass = computed(() => {
     }
 
     .metric-card {
-      padding: var(--space-tag-p);
+      padding: var(--space-1) var(--space-2);
     }
   }
 
@@ -263,12 +268,12 @@ const dropStatusClass = computed(() => {
     @include flex-start-stretch($direction: column);
 
     flex: 1;
-    gap: var(--space-stack-gap-sm);
+    gap: var(--space-1);
     align-items: center;
     justify-content: center;
 
     min-width: 0;
-    padding: var(--space-result-p);
+    padding: var(--space-2) var(--space-3);
 
     @include border-base;
     @include shadow("sink");
@@ -283,7 +288,7 @@ const dropStatusClass = computed(() => {
 
   &__main-value {
     display: flex;
-    gap: var(--space-inline-gap);
+    gap: var(--space-2);
     align-items: baseline;
 
     .value-text {
@@ -303,7 +308,7 @@ const dropStatusClass = computed(() => {
 
     flex-flow: row wrap; // 狭い場合は横並びラップ（スモールファースト）
     flex-shrink: 0;
-    gap: var(--space-inline-gap);
+    gap: var(--space-2);
     align-items: stretch;
 
     min-width: auto;
@@ -319,11 +324,11 @@ const dropStatusClass = computed(() => {
     @include flex-start-stretch($direction: column);
 
     flex: 1;
-    gap: var(--space-stack-gap-sm);
+    gap: var(--space-1);
     align-items: center;
     justify-content: center;
 
-    padding: var(--space-card-pad-sm);
+    padding: var(--space-2);
 
     @include border-base(var(--color-border), $width: 1px);
   }
@@ -333,12 +338,12 @@ const dropStatusClass = computed(() => {
   }
 
   .metric-value {
+    @include text-mono("sm", "bold");
+
     display: flex;
     gap: var(--space-1);
     align-items: baseline;
     margin: 0;
-
-    @include text-mono("sm", "bold");
 
     .value-sep {
       margin: 0 2px;
@@ -351,11 +356,6 @@ const dropStatusClass = computed(() => {
       color: var(--color-text-secondary);
       opacity: 0.8;
     }
-  }
-
-  // コンテナの幅が xs 以上の場合は横並び
-  @include cq("xs") {
-    flex-direction: row;
   }
 }
 </style>

@@ -74,11 +74,10 @@ const { sortBy, sortOrder, sortedData, handleSort } = useTableSort(filteredData)
 
 <style scoped lang="scss">
 .l-filter-layout {
-  container-name: filter-layout;
-  container-type: inline-size;
-
   @include flex-start-stretch($direction: column);
 
+  container-name: filter-layout;
+  container-type: inline-size;
   flex: 1;
 
   width: 100%;
@@ -114,10 +113,9 @@ const { sortBy, sortOrder, sortedData, handleSort } = useTableSort(filteredData)
 }
 
 .c-db-panel {
-  overflow: hidden;
-
   @include flex-start-stretch($direction: column);
 
+  overflow: hidden;
   flex: 1;
   min-height: 0;
 }

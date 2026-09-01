@@ -78,32 +78,32 @@ defineProps<{
     @include text-title("sm");
     @include flex-start-center;
 
-    padding-bottom: var(--space-control-py-sm);
+    padding-bottom: var(--space-1);
     color: var(--color-text-muted);
   }
 
   &__header-wrapper {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-stack-gap-sm);
+    gap: var(--space-1);
   }
 
   &__filters {
     @include grid(280px 1fr, var(--space-card-gap));
 
-    /* extra-filters等で3つ目以降の要素が入った場合は、全幅（フルスパン）で下に落とす */
-    & > :nth-child(n + 3) {
-      grid-column: 1 / -1;
-    }
-
     /* スマホ時は縦積み */
     @include mq("md") {
       grid-template-columns: 1fr;
     }
+
+    /* extra-filters等で3つ目以降の要素が入った場合は、全幅（フルスパン）で下に落とす */
+    & > :nth-child(n + 3) {
+      grid-column: 1 / -1;
+    }
   }
 
   &__grid {
-    @include grid-auto(112px, var(--space-inline-gap));
+    @include grid-auto(112px, var(--space-2));
   }
 }
 </style>

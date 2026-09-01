@@ -58,10 +58,10 @@ const selectTab = (option: TabOption) => {
   @include flex-start-center;
 
   flex-wrap: wrap;
-  gap: var(--space-inline-gap);
+  gap: var(--space-2);
 
   &--grid {
-    @include grid(repeat(auto-fit, minmax(120px, 1fr)), var(--space-inline-gap));
+    @include grid(repeat(auto-fit, minmax(120px, 1fr)), var(--space-2));
 
     .c-tabs__item {
       width: 100%;
@@ -83,10 +83,20 @@ const selectTab = (option: TabOption) => {
 }
 
 .c-tabs__item {
+  @include click-enabled;
+  @include text-desc("md", "medium");
+  @include flex-center-center;
+
   position: relative;
-  gap: var(--space-inline-gap);
-  padding: var(--space-control-py-md) var(--space-control-px-md);
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
   color: var(--color-text-secondary);
+
+  @include border-base;
+  @include state-base(
+    inset 0 0 var(--blur-sm) var(--color-border),
+    var(--transition-fast)
+  );
 
   &:is(:hover, :focus-visible):not(.is-disabled, .is-active) {
     transform: translateY(-2px);
@@ -116,15 +126,6 @@ const selectTab = (option: TabOption) => {
   &.is-disabled {
     @include disabled;
   }
-
-  @include click-enabled;
-  @include text-desc("md", "medium");
-  @include border-base;
-  @include state-base(
-    inset 0 0 var(--blur-sm) var(--color-border),
-    var(--transition-fast)
-  );
-  @include flex-center-center;
 }
 
 .c-tabs__item-text {

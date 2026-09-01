@@ -27,15 +27,15 @@ const emit = defineEmits<{
   @include click-enabled;
   @include flex-start-center;
 
-  gap: var(--space-inline-gap);
+  gap: var(--space-2);
 
   @include state-base;
 
   &:is(:hover, :focus-visible) {
     .c-logo__icon {
-      @include cyber-text-glow(var(--theme-accent), 60%, var(--blur-md));
-
       transform: scale(1.1);
+
+      @include cyber-text-glow(var(--theme-accent), 60%, var(--blur-md));
     }
   }
 

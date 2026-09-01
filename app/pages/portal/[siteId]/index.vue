@@ -117,14 +117,14 @@ onMounted(() => {
   &__header {
     @include flex-between-center;
 
-    padding-bottom: var(--space-card-pad-sm);
+    padding-bottom: var(--space-2);
     border-bottom: var(--border-width-base) solid var(--color-border);
   }
 
   &__title {
     @include flex-start-center;
 
-    gap: var(--space-inline-gap);
+    gap: var(--space-2);
 
     h2 {
       @include text-title("lg");
@@ -136,7 +136,7 @@ onMounted(() => {
   &__switcher {
     @include flex-start-center;
 
-    gap: var(--space-inline-gap);
+    gap: var(--space-2);
   }
 
   &__select {

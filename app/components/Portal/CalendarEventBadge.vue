@@ -51,9 +51,14 @@ const badgeColor = computed(() => props.color || 'var(--theme-accent)')
   // 親から渡された単一変数を参照するため color-mix が確実に機能する
   --badge-color-dim: color-mix(in srgb, var(--badge-color) 80%, transparent);
 
-  gap: var(--space-inline-gap-xs);
+  @include flex-start-center;
+
+  gap: var(--space-0-5);
   width: 100%;
-  padding: var(--space-badge-p);
+  padding: var(--space-0-5) var(--space-1);
+
+  @include border-base(var(--badge-color-dim));
+  @include state-base(none, var(--transition-glow), var(--badge-color));
 
   &__time {
     @include text-mono("2xs", "bold");
@@ -71,9 +76,5 @@ const badgeColor = computed(() => props.color || 'var(--theme-accent)')
     min-width: 0;
     color: var(--color-text-main);
   }
-
-  @include flex-start-center;
-  @include border-base(var(--badge-color-dim));
-  @include state-base(none, var(--transition-glow), var(--badge-color));
 }
 </style>

@@ -213,7 +213,7 @@ const totalWeight = computed(() => {
   &__warning {
     @include text-desc;
 
-    padding: var(--space-tag-p);
+    padding: var(--space-1) var(--space-2);
     color: var(--color-status-danger);
   }
 }
@@ -228,7 +228,7 @@ const totalWeight = computed(() => {
   &__note {
     @include text-meta;
 
-    padding: 0 var(--space-card-pad-md);
+    padding: 0 var(--space-3);
     color: var(--color-text-muted);
   }
 

@@ -46,8 +46,12 @@ const inputId = useId()
   --track-h: var(--space-5);
   --thumb-w: var(--space-5);
 
+  @include text-desc;
+  @include click-enabled;
+  @include flex-start-center($is-inline: true);
+
   position: relative;
-  gap: var(--space-inline-gap);
+  gap: var(--space-2);
 
   &:has(.c-toggle__input:disabled) {
     @include disabled;
@@ -100,14 +104,14 @@ const inputId = useId()
     width: var(--thumb-w);
     height: var(--track-h);
 
-    @include border-base;
-    @include shadow("sm");
-
     transition:
       transform var(--duration-base) var(--ease-smooth),
       background-color var(--duration-base) var(--ease-base),
       box-shadow var(--duration-base) var(--ease-base),
       border-color var(--duration-base) var(--ease-base);
+
+    @include border-base;
+    @include shadow("sm");
   }
 
   /* 3. Hover State */
@@ -137,9 +141,5 @@ const inputId = useId()
       @include shadow("sink");
     }
   }
-
-  @include text-desc;
-  @include click-enabled;
-  @include flex-start-center($is-inline: true);
 }
 </style>

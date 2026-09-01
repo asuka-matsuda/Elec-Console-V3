@@ -74,9 +74,9 @@ withDefaults(
   height: var(--divider-size-y);
   min-height: var(--divider-min-h);
 
-  @include shadow("sink");
-
   animation: divider-scale-x 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+  @include shadow("sink");
 
   &--horizontal {
     width: 100%;
@@ -115,9 +115,9 @@ withDefaults(
         transparent
       );
 
-      @include state-focus(var(--theme-accent));
-
       animation: data-pulse-x 3s ease-in-out infinite;
+
+      @include state-focus(var(--theme-accent));
     }
   }
 

@@ -99,7 +99,7 @@ const handleChangePassword = async () => {
 .p-change-password {
   @include flex-start-stretch($direction: column);
 
-  gap: var(--space-stack-gap);
+  gap: var(--space-3);
 
   &__desc {
     @include text-desc;
@@ -108,14 +108,14 @@ const handleChangePassword = async () => {
   &__error {
     @include text-desc;
 
-    padding: var(--space-alert-p);
+    padding: var(--space-2) var(--space-3);
     color: var(--color-status-danger);
   }
 
   &__form {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-stack-gap);
+    gap: var(--space-3);
   }
 
   &__actions {

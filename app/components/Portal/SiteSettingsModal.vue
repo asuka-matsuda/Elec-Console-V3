@@ -267,7 +267,7 @@ const handleExport = () => {
   &__content {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-stack-gap);
+    gap: var(--space-3);
     min-height: 300px;
   }
 
@@ -275,9 +275,9 @@ const handleExport = () => {
     @include flex-start-center;
 
     flex-wrap: wrap;
-    gap: var(--space-inline-gap);
+    gap: var(--space-2);
     min-height: 40px;
-    padding: var(--space-card-pad-sm);
+    padding: var(--space-2);
 
     @include border-base($opacity: 30%);
   }
@@ -285,26 +285,26 @@ const handleExport = () => {
   &__sync-actions {
     @include flex-start-center;
 
-    gap: var(--space-inline-gap);
+    gap: var(--space-2);
   }
 
   &__sync-msg {
     @include text-meta;
 
-    padding: var(--space-tag-p);
+    padding: var(--space-1) var(--space-2);
     color: var(--color-status-success);
   }
 
   &__circuit-list {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-stack-gap-sm);
+    gap: var(--space-1);
   }
 
   &__circuit-row {
     @include flex-start-center;
 
-    gap: var(--space-inline-gap-sm);
+    gap: var(--space-1);
 
     > *:first-child {
       flex: 1;

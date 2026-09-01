@@ -85,10 +85,9 @@ const handleSubmit = async () => {
   gap: var(--space-card-gap);
 
   &__error {
-    padding: var(--space-control-py-md) var(--space-control-px);
-
     @include text-desc("md", "bold");
 
+    padding: var(--space-2) var(--space-3);
     color: var(--color-status-danger);
     background: transparent;
     backdrop-filter: blur(var(--blur-sm));
@@ -99,7 +98,7 @@ const handleSubmit = async () => {
   &__body {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-stack-gap);
+    gap: var(--space-3);
   }
 }
 </style>

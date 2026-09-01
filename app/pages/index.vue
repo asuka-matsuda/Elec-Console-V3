@@ -136,7 +136,7 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
     @include text-title("sm");
     @include flex-start-center;
 
-    gap: var(--space-inline-gap-sm);
+    gap: var(--space-1);
     align-items: flex-start;
 
     color: var(--theme-accent);

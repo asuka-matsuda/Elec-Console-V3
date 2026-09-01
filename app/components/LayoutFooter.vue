@@ -21,9 +21,9 @@ const currentYear = new Date().getFullYear()
 
 <style scoped lang="scss">
 .l-footer {
-  position: relative;
-
   @include flex-start-stretch($direction: column);
+
+  position: relative;
 
   align-items: center;
 

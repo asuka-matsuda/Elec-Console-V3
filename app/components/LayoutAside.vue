@@ -88,6 +88,8 @@ const history = computed(() => dashboardData.value?.history || [])
 <style scoped lang="scss">
 .p-dashboard {
   &__aside {
+    @include flex-start-stretch($direction: column);
+
     position: sticky;
     top: var(--space-layout-pad);
 
@@ -95,8 +97,6 @@ const history = computed(() => dashboardData.value?.history || [])
     gap: var(--space-section-gap);
 
     width: var(--sidebar-width);
-
-    @include flex-start-stretch($direction: column);
 
     @include mq("md") {
       position: static;
@@ -127,8 +127,8 @@ const history = computed(() => dashboardData.value?.history || [])
 .p-dashboard-list-item {
   @include flex-start-stretch($direction: column);
 
-  gap: var(--space-stack-gap-sm);
-  padding: var(--space-card-pad-md);
+  gap: var(--space-1);
+  padding: var(--space-3);
 
   &__header {
     @include flex-start-center;

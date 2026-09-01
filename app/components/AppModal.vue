@@ -166,17 +166,17 @@ onUnmounted(() => {
     transform: translateY(0);
     opacity: 1;
 
-    @starting-style {
-      transform: translateY(var(--space-2));
-      opacity: 0;
-    }
-
     &::backdrop {
       opacity: 1;
 
       @starting-style {
         opacity: 0;
       }
+    }
+
+    @starting-style {
+      transform: translateY(var(--space-2));
+      opacity: 0;
     }
   }
 

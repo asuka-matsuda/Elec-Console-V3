@@ -66,9 +66,6 @@ withDefaults(
   @include flex-start-stretch($direction: column);
 
   gap: var(--space-card-gap);
-
-  @include border-base($opacity: 30%);
-
   align-items: center;
   justify-content: center;
 
@@ -77,16 +74,16 @@ withDefaults(
 
   text-align: center;
 
+  @include border-base($opacity: 30%);
+
   &__icon-wrapper {
     @include flex-center-center;
 
     width: var(--size-control-lg);
     height: var(--size-control-lg);
-
-    @include border-base(var(--color-text-muted), 30%);
-
     color: var(--color-text-muted);
 
+    @include border-base(var(--color-text-muted), 30%);
     @include shadow("sink");
   }
 
@@ -97,7 +94,7 @@ withDefaults(
   &__content {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-stack-gap-sm);
+    gap: var(--space-1);
     align-items: center;
     max-width: 420px;
   }
@@ -117,8 +114,8 @@ withDefaults(
   &__actions {
     @include flex-center-center;
 
-    gap: var(--space-inline-gap);
-    margin-top: var(--space-control-py-sm);
+    gap: var(--space-2);
+    margin-top: var(--space-1);
   }
 }
 </style>

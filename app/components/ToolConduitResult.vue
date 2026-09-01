@@ -139,17 +139,17 @@ const fill48 = computed(() =>
   min-height: 0;
   padding: var(--space-card-pad);
 
+  // コンテナ幅が xs 以上の場合は横並び2カラム
+  @include cq("xs") {
+    flex-direction: row;
+  }
+
   &__percent {
     @include text-title("lg");
   }
 
   &__percent-unit {
     @include text-title("sm");
-  }
-
-  // コンテナ幅が xs 以上の場合は横並び2カラム
-  @include cq("xs") {
-    flex-direction: row;
   }
 
   &__col {
@@ -177,11 +177,11 @@ const fill48 = computed(() =>
   }
 
   &.is-sm {
-    gap: var(--space-stack-gap);
+    gap: var(--space-3);
     padding: 0;
 
     .c-conduit-result__main {
-      padding: var(--space-tag-p);
+      padding: var(--space-1) var(--space-2);
     }
 
     .c-conduit-result__main-value .value-text {
@@ -197,12 +197,12 @@ const fill48 = computed(() =>
     @include flex-start-stretch($direction: column);
 
     flex: 1;
-    gap: var(--space-stack-gap-sm);
+    gap: var(--space-1);
     align-items: center;
     justify-content: center;
 
     min-width: 0;
-    padding: var(--space-result-p);
+    padding: var(--space-2) var(--space-3);
 
     @include border-base;
     @include shadow("sink");
@@ -217,7 +217,7 @@ const fill48 = computed(() =>
 
   &__main-value {
     display: flex;
-    gap: var(--space-inline-gap);
+    gap: var(--space-2);
     align-items: baseline;
 
     .value-text {

@@ -101,13 +101,13 @@ const handleLogin = async () => {
   &__form {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-stack-gap);
+    gap: var(--space-3);
   }
 
   &__error {
     @include text-desc;
 
-    padding: var(--space-alert-p);
+    padding: var(--space-2) var(--space-3);
     color: var(--color-status-danger);
 
     @include border-base(var(--color-status-danger));

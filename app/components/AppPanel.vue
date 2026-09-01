@@ -62,10 +62,16 @@ withDefaults(
   --p-bracket-glow: none;
   --p-theme-color: var(--theme-accent);
 
+  @include flex-start-stretch($direction: column);
+
   position: relative;
   gap: var(--space-card-gap);
   padding: var(--space-card-pad);
   border-image: var(--p-border-image);
+
+  // Apply visual base
+  @include border-base(var(--p-border-color), $width: var(--border-width-base));
+  @include state-base(var(--p-box-shadow));
 
   // Cyber Brackets (Top-Left & Bottom-Right)
 
@@ -81,9 +87,9 @@ withDefaults(
     width: var(--p-bracket-size);
     height: var(--p-bracket-size);
 
-    @include border-base(var(--p-bracket-color), $width: var(--border-width-thick));
-
     filter: var(--p-bracket-glow);
+
+    @include border-base(var(--p-bracket-color), $width: var(--border-width-thick));
   }
 
   &::before {
@@ -102,15 +108,15 @@ withDefaults(
 
   // 密度モディファイア
   &--density-compact {
-    gap: var(--space-card-gap-sm);
-    padding: var(--space-card-pad-md);
-
     @include flex-start-stretch($direction: column);
+
+    gap: var(--space-2);
+    padding: var(--space-3);
 
     .c-panel__content {
       @include flex-start-stretch($direction: column);
 
-      gap: var(--space-card-gap-sm);
+      gap: var(--space-2);
     }
   }
 
@@ -211,11 +217,5 @@ withDefaults(
       0 0 var(--blur-md) color-mix(in srgb, var(--p-theme-color) 60%, transparent)
     );
   }
-
-  @include flex-start-stretch($direction: column);
-
-  // Apply visual base
-  @include border-base(var(--p-border-color), $width: var(--border-width-base));
-  @include state-base(var(--p-box-shadow));
 }
 </style>

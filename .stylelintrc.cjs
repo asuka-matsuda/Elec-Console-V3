@@ -42,5 +42,27 @@ module.exports = {
         ignoreAtRules: ['else'],
       },
     ],
+    // ①変数 ②構造Mixin ③プロパティ ④装飾Mixin ⑤ネスト の順序を強制する
+    'order/order': [
+      'dollar-variables',
+      'custom-properties',
+      {
+        type: 'at-rule',
+        name: 'include',
+        parameter: '^(flex|grid|inline-flex|text|font|click-enabled|reset)',
+      },
+      'declarations',
+      {
+        type: 'at-rule',
+        name: 'include',
+        parameter: '^(border|state|cyber|disabled|hover|focus|active|blinking)',
+      },
+      {
+        type: 'at-rule',
+        name: 'include',
+      },
+      'rules',
+      'at-rules',
+    ],
   },
 }

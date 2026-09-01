@@ -100,11 +100,10 @@ const closeSidebar = () => {
 .l-global-nav {
   --sidebar-border: var(--color-border);
 
-  position: fixed;
-  z-index: var(--z-index-nav);
-
   @include flex-start-stretch($direction: column);
 
+  position: fixed;
+  z-index: var(--z-index-nav);
   width: var(--sidebar-width);
   height: 100dvh;
 
@@ -127,7 +126,7 @@ const closeSidebar = () => {
 
     flex-shrink: 0;
     height: 64px; // Match standard header height
-    padding: 0 var(--space-control-px);
+    padding: 0 var(--space-3);
 
     @include shadow("sm"); // Replaced hardcoded shadow
   }
@@ -135,12 +134,12 @@ const closeSidebar = () => {
   &__nav {
     --scrollbar-size: var(--space-2);
 
+    @include flex-start-stretch($direction: column);
+
     overflow-y: auto;
     flex: 1;
     gap: var(--space-card-gap);
-    padding: var(--space-card-pad-md);
-
-    @include flex-start-stretch($direction: column);
+    padding: var(--space-3);
   }
 
   &__section {
@@ -169,8 +168,8 @@ const closeSidebar = () => {
   &__section-header {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-stack-gap-sm);
-    padding: var(--space-control-py-md) var(--space-control-px);
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-3);
   }
 
   &__heading {
@@ -183,8 +182,8 @@ const closeSidebar = () => {
     @include text-title("sm", "medium");
     @include flex-start-center;
 
-    gap: var(--space-inline-gap);
-    padding: var(--space-control-py-md) var(--space-control-px);
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
     color: var(--color-text-secondary);
 
     @include state-base;
@@ -255,9 +254,9 @@ const closeSidebar = () => {
     // Disabled
 
     &.is-disabled {
-      @include disabled;
-
       filter: grayscale(100%);
+
+      @include disabled;
     }
   }
 }

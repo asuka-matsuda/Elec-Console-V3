@@ -75,13 +75,13 @@ withDefaults(
   &__actions {
     @include flex-start-center;
 
-    gap: var(--space-inline-gap);
+    gap: var(--space-2);
   }
 
   &__title {
     @include flex-start-center;
 
-    gap: var(--space-inline-gap);
+    gap: var(--space-2);
     color: var(--color-text-main);
 
     &--lg {

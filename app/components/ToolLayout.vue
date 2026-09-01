@@ -93,10 +93,9 @@ const toggleDrawer = () => {
   }
 
   &__left {
-    container-type: inline-size;
-
     @include flex-start-stretch($direction: column);
 
+    container-type: inline-size;
     flex: 1;
     min-height: 0;
   }
@@ -124,12 +123,12 @@ const toggleDrawer = () => {
   }
 
   &__right {
+    @include flex-start-stretch($direction: column);
+
     overflow-y: hidden; // No vertical scroll per user request
     flex: 1;
     gap: 0;
     min-height: 0;
-
-    @include flex-start-stretch($direction: column);
 
     @include mq("md") {
       display: none; // Cut on mobile
@@ -138,12 +137,12 @@ const toggleDrawer = () => {
 
   /* Mobile Drawer & PC Results Layout */
   &__results {
+    @include flex-start-stretch($direction: column);
+
     container-type: inline-size;
     flex: none; // コンテンツの高さに合わせて自動調整
     gap: 0;
     min-height: 0;
-
-    @include flex-start-stretch($direction: column);
 
     // Mobile: Sticky Drawer
     @include mq("md") {
@@ -176,12 +175,11 @@ const toggleDrawer = () => {
     display: none; // Hidden on PC
 
     @include mq("md") {
-      cursor: pointer;
-
       @include flex-between-center;
 
+      cursor: pointer;
       height: 48px;
-      padding: 0 var(--space-card-pad-md);
+      padding: 0 var(--space-3);
       background: color-mix(in srgb, var(--color-category-tool) 10%, transparent);
     }
   }
@@ -209,7 +207,7 @@ const toggleDrawer = () => {
       --scrollbar-size: var(--space-2);
 
       overflow-y: auto;
-      padding: var(--space-card-pad-md);
+      padding: var(--space-3);
     }
   }
 

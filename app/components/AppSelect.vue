@@ -308,16 +308,15 @@ onUnmounted(() => {
 
 .c-custom-select__value {
   @include click-enabled;
+  @include flex-start-center;
 
   position: relative;
 
   overflow: hidden;
 
-  @include flex-start-center;
-
   width: 100%;
   height: var(--size-control-md);
-  padding: var(--space-control-py-md) calc(var(--space-control-px-md) + var(--icon-size-md) + var(--space-inline-gap-sm)) var(--space-control-py-md) var(--space-control-px-md);
+  padding: var(--space-2) calc(var(--space-4) + var(--icon-size-md) + var(--space-1)) var(--space-2) var(--space-4);
 
   text-align: left;
   text-overflow: ellipsis;
@@ -334,7 +333,7 @@ onUnmounted(() => {
 
     position: absolute;
     top: 50%;
-    right: var(--space-control-px-md);
+    right: var(--space-4);
     transform: translateY(-50%);
 
     width: var(--icon-size-md);
@@ -368,11 +367,10 @@ onUnmounted(() => {
   width: max-content;
   max-width: 90vw;
 
-  @include border-base(var(--theme-accent));
-
   background-color: transparent;
   backdrop-filter: blur(var(--blur-md));
 
+  @include border-base(var(--theme-accent));
   @include state-base(var(--shadow-elevation-md), none, var(--theme-accent));
 
   .c-custom-select.is-error & {
@@ -403,7 +401,7 @@ onUnmounted(() => {
   @include text-desc;
   @include text-truncate;
 
-  padding: var(--space-control-py-md) var(--space-control-px);
+  padding: var(--space-2) var(--space-3);
   border-left: var(--border-width-thick) solid transparent;
 
   @include state-base;

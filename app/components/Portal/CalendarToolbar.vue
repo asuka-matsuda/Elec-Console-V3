@@ -80,16 +80,34 @@ const emit = defineEmits<{
   @include flex-between-center;
 
   flex-wrap: wrap;
-  gap: var(--space-inline-gap);
-  padding: var(--space-card-pad-sm) var(--space-card-pad);
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-card-pad);
   background-color: var(--color-surface);
 
   @include border-base($opacity: 30%);
 
+  @include mq("md") {
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-1);
+
+    &__center {
+      order: -1;
+      width: 100%;
+    }
+
+    &__nav,
+    &__views {
+      @include flex-center-center;
+
+      width: 100%;
+    }
+  }
+
   &__nav {
     @include flex-start-center;
 
-    gap: var(--space-inline-gap-sm);
+    gap: var(--space-1);
   }
 
   &__center {
@@ -110,25 +128,7 @@ const emit = defineEmits<{
   &__views {
     @include flex-end-center;
 
-    gap: var(--space-inline-gap-sm);
-  }
-
-  @include mq("md") {
-    @include flex-start-stretch($direction: column);
-
-    gap: var(--space-stack-gap-sm);
-
-    &__center {
-      order: -1;
-      width: 100%;
-    }
-
-    &__nav,
-    &__views {
-      @include flex-center-center;
-
-      width: 100%;
-    }
+    gap: var(--space-1);
   }
 }
 </style>

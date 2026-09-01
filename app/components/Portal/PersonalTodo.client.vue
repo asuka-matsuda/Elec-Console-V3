@@ -95,15 +95,13 @@ const sortedTodos = computed(() => {
 .p-personal-todo {
   @include flex-start-stretch($direction: column);
 
-  gap: var(--space-stack-gap);
+  gap: var(--space-3);
 
   &__header h3 {
     @include flex-start-center;
-
-    gap: var(--space-1);
-
     @include text-title("sm");
 
+    gap: var(--space-1);
     color: var(--color-text-main);
   }
 
@@ -125,8 +123,8 @@ const sortedTodos = computed(() => {
   &__item {
     @include flex-between-center;
 
-    gap: var(--space-inline-gap-sm);
-    padding: var(--space-card-pad-sm);
+    gap: var(--space-1);
+    padding: var(--space-2);
     background-color: var(--color-bg-hover);
 
     .is-completed {

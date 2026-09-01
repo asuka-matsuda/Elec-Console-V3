@@ -182,6 +182,6 @@ const isChecked = ref(false)
 .p-ds-stack {
   @include flex-start-stretch($direction: column);
 
-  gap: var(--space-stack-gap);
+  gap: var(--space-3);
 }
 </style>

@@ -24,7 +24,7 @@ withDefaults(
   @include text-desc;
 
   width: 100%;
-  padding: var(--space-alert-p);
+  padding: var(--space-2) var(--space-3);
   color: var(--color-status-warning);
 }
 </style>

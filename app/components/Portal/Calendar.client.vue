@@ -346,7 +346,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 .c-calendar-wrapper {
   @include flex-start-stretch($direction: column);
 
-  gap: var(--space-stack-gap);
+  gap: var(--space-3);
 }
 
 .c-calendar {
@@ -359,6 +359,10 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
   --fc-event-selected-overlay-color: transparent;
 
   min-height: 500px;
+
+  @include mq("md") {
+    min-height: 400px;
+  }
 
   :deep(.fc-theme-standard td),
   :deep(.fc-theme-standard th) {
@@ -428,7 +432,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 
     overflow: visible;
 
-    margin-bottom: var(--space-stack-gap-xs);
+    margin-bottom: var(--space-0-5);
     padding: 0;
     border: none;
     border-radius: 0;
@@ -450,43 +454,44 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
   /* 3件超過時の「+○件」展開リンク */
   :deep(.fc-daygrid-more-link) {
     @include text-meta("md", "bold");
-    @include state-base;
-    @include cyber-text-glow(var(--color-primary), 50%, var(--blur-sm));
 
     display: inline-block;
-    padding: var(--space-badge-p);
+    padding: var(--space-0-5) var(--space-1);
     border-bottom: 1px dashed var(--color-primary);
     color: var(--color-primary);
 
-    &:hover {
-      @include cyber-text-glow(var(--color-primary), 100%, var(--blur-md));
+    @include state-base;
+    @include cyber-text-glow(var(--color-primary), 50%, var(--blur-sm));
 
+    &:hover {
       transform: translateY(-1px);
+
+      @include cyber-text-glow(var(--color-primary), 100%, var(--blur-md));
     }
   }
 
   /* ポップオーバーのサイバースタイル（すりガラス、角丸厳禁、発光枠線） */
   :deep(.fc-popover) {
-    @include border-base;
-
     z-index: var(--z-index-modal);
     border-radius: 0;
     background-color: color-mix(in srgb, var(--color-surface) 85%, transparent);
     backdrop-filter: blur(var(--blur-md));
 
+    @include border-base;
     @include shadow("modal");
 
     .fc-popover-header {
       @include flex-between-center;
-      @include border-base($opacity: 30%);
 
-      padding: var(--space-control-py-sm) var(--space-control-px);
+      padding: var(--space-1) var(--space-3);
       border-top: none;
       border-right: none;
       border-left: none;
       border-radius: 0;
 
       background-color: color-mix(in srgb, var(--color-surface-sunken) 85%, transparent);
+
+      @include border-base($opacity: 30%);
 
       .fc-popover-title {
         @include text-desc("md", "bold");
@@ -508,7 +513,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
     }
 
     .fc-popover-body {
-      padding: var(--space-card-pad-sm);
+      padding: var(--space-2);
     }
   }
 
@@ -517,7 +522,7 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
     border: none;
 
     .fc-list-day-cushion {
-      padding: var(--space-control-py-sm) var(--space-control-px);
+      padding: var(--space-1) var(--space-3);
       background-color: var(--color-bg-hover);
     }
 
@@ -561,10 +566,6 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
       color: var(--color-text-muted);
       text-align: center;
     }
-  }
-
-  @include mq("md") {
-    min-height: 400px;
   }
 }
 </style>

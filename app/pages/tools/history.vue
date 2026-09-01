@@ -180,10 +180,9 @@ watch(
 
 <style scoped lang="scss">
 .p-history-page {
-  container-type: inline-size;
-
   @include flex-start-stretch($direction: column);
 
+  container-type: inline-size;
   gap: var(--space-section-gap);
 
   &__tabs {
@@ -201,7 +200,7 @@ watch(
   &__empty {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-stack-gap-sm);
+    gap: var(--space-1);
     align-items: center;
     justify-content: center;
 

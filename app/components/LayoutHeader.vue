@@ -48,7 +48,7 @@ const emit = defineEmits<{
   &__left {
     @include flex-start-center;
 
-    gap: var(--space-inline-gap);
+    gap: var(--space-2);
   }
 
   &__menu-btn.c-btn {
@@ -62,7 +62,7 @@ const emit = defineEmits<{
   &__actions {
     @include flex-start-center;
 
-    gap: var(--space-inline-gap);
+    gap: var(--space-2);
   }
 }
 </style>

@@ -182,7 +182,7 @@ const closeModal = () => {
   @include flex-start-stretch($direction: column);
 
   container-type: inline-size;
-  gap: var(--space-stack-gap);
+  gap: var(--space-3);
 
   &__field {
     @include flex-start-stretch($direction: column);
@@ -205,20 +205,20 @@ const closeModal = () => {
   &__row {
     @include flex-start-center;
 
-    gap: var(--space-inline-gap);
-    > * { flex: 1; }
+    gap: var(--space-2);
 
     @include cq("xs", "down") {
       flex-direction: column;
       align-items: stretch;
     }
+    > * { flex: 1; }
   }
 
   &__actions {
     @include flex-start-center;
 
-    gap: var(--space-inline-gap);
-    padding-top: var(--space-card-pad-md);
+    gap: var(--space-2);
+    padding-top: var(--space-3);
     border-top: var(--border-width-base) solid var(--color-border);
   }
 }

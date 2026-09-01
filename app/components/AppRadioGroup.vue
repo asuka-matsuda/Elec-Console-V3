@@ -117,23 +117,21 @@ const getStyle = (option: RadioOption): StyleValue | undefined => option.color ?
 
     /* Disabled state */
     &:disabled + .c-segmented-control__text {
-      @include disabled;
-
       opacity: 0.3;
+
+      @include disabled;
     }
   }
 
   &__text {
     @include text-body("md", "bold");
+    @include flex-center-center($is-inline: true);
 
-    padding: var(--space-control-py-sm) var(--space-control-px-sm);
-
-    @include border-base(transparent);
-
+    padding: var(--space-1) var(--space-3);
     color: var(--color-text-muted);
 
+    @include border-base(transparent);
     @include state-base;
-    @include flex-center-center($is-inline: true);
   }
 }
 </style>

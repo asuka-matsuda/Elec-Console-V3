@@ -167,9 +167,9 @@ const handleSave = () => {
     @include flex-start-stretch($direction: column);
 
     overflow-y: auto;
-    gap: var(--space-stack-gap-md);
+    gap: var(--space-2);
     max-height: 400px;
-    padding-right: var(--space-control-py-sm);
+    padding-right: var(--space-1);
   }
 
   &__add {
@@ -180,35 +180,35 @@ const handleSave = () => {
 .p-type-item {
   @include flex-start-stretch($direction: column);
 
-  gap: var(--space-stack-gap-sm);
+  gap: var(--space-1);
+  padding: var(--space-2);
 
   @include border-base($opacity: 30%);
-
-  padding: var(--space-card-pad-sm);
 
   &__main {
     @include flex-start-center;
 
-    gap: var(--space-inline-gap);
+    gap: var(--space-2);
     width: 100%;
   }
 
   &__preview {
     --glow-color: var(--preview-color, var(--color-primary));
 
+    @include flex-center-center;
+
     flex-shrink: 0;
     width: var(--size-control-sm);
     height: var(--size-control-sm);
 
-    @include flex-center-center;
     @include state-focus(var(--preview-color, var(--color-primary)));
   }
 
   &__indicator {
-    @include border-base(var(--preview-color, var(--color-primary)));
-
     width: var(--space-2);
     height: var(--space-2);
+
+    @include border-base(var(--preview-color, var(--color-primary)));
   }
 
   &__input {
@@ -223,8 +223,8 @@ const handleSave = () => {
     @include flex-start-center;
 
     flex-wrap: wrap;
-    gap: var(--space-inline-gap-sm);
-    padding-left: calc(var(--size-control-sm) + var(--space-inline-gap));
+    gap: var(--space-1);
+    padding-left: calc(var(--size-control-sm) + var(--space-2));
   }
 
   &__color-label {

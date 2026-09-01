@@ -244,7 +244,7 @@ const handleSaveSettings = async (updatedSite: Site) => {
   &__actions {
     @include flex-start-center;
 
-    gap: var(--space-inline-gap);
+    gap: var(--space-2);
   }
 }
 </style>

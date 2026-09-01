@@ -62,17 +62,18 @@ const resolvedColor = computed(() => presetMap[props.color] || props.color)
 
 <style scoped lang="scss">
 .c-badge {
-  --glow-color: v-bind(resolvedColor);
+  --glow-color: v-bind('resolvedColor');
 
   @include flex-center-center($is-inline: true);
   @include text-badge;
+
+  user-select: none;
+  padding: var(--space-0-5) var(--space-1);
+  color: var(--glow-color);
+  white-space: nowrap;
+
   @include cyber-text-glow(var(--glow-color), 100%, var(--blur-sm));
   @include border-base(var(--glow-color), 60%);
   @include state-base(none, var(--transition-base), var(--glow-color));
-
-  user-select: none;
-  padding: var(--space-badge-p);
-  color: var(--glow-color);
-  white-space: nowrap;
 }
 </style>

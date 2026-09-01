@@ -95,24 +95,25 @@ const handleCustomColorInput = (event: Event) => {
   @include flex-start-center;
 
   flex-wrap: wrap;
-  gap: var(--space-inline-gap-sm);
+  gap: var(--space-1);
 
   &__presets {
     @include flex-start-center;
 
     flex-wrap: wrap;
-    gap: var(--space-inline-gap-xs);
+    gap: var(--space-0-5);
   }
 
   &__custom {
-    position: relative;
-
     @include flex-start-center;
 
-    gap: var(--space-inline-gap-xs);
+    position: relative;
+    gap: var(--space-0-5);
   }
 
   &__native {
+    @include click-enabled;
+
     position: absolute;
     top: 0;
     left: 0;
@@ -121,8 +122,6 @@ const handleCustomColorInput = (event: Event) => {
     height: 100%;
 
     opacity: 0;
-
-    @include click-enabled;
   }
 
   &__hex {
@@ -135,6 +134,7 @@ const handleCustomColorInput = (event: Event) => {
 
 .c-color-swatch {
   @include flex-center-center;
+  @include click-enabled;
 
   flex-shrink: 0;
   width: var(--space-6);
@@ -143,7 +143,6 @@ const handleCustomColorInput = (event: Event) => {
 
   @include border-base($opacity: 30%);
   @include state-base;
-  @include click-enabled;
 
   &__indicator {
     width: 100%;

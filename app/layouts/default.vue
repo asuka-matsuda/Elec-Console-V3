@@ -88,6 +88,8 @@ const { currentUser, logout } = useAuth()
 .l-content {
   --scrollbar-size: var(--space-2);
 
+  @include flex-start-stretch($direction: column);
+
   container-type: inline-size;
   overflow-y: auto;
   flex: 1;
@@ -95,15 +97,13 @@ const { currentUser, logout } = useAuth()
 
   min-height: 0;
   padding: var(--space-layout-pad);
-
-  @include flex-start-stretch($direction: column);
 }
 
 .l-header-user {
   @include text-title("sm");
   @include flex-start-center;
 
-  gap: var(--space-inline-gap);
+  gap: var(--space-2);
 
   &__avatar {
     --glow-color: color-mix(in srgb, var(--theme-accent) 50%, transparent);
@@ -112,12 +112,10 @@ const { currentUser, logout } = useAuth()
 
     width: var(--size-control-sm);
     height: var(--size-control-sm);
-
-    @include border-base(var(--theme-accent), $width: var(--border-width-thick));
-
     border-radius: 50%;
     background: var(--theme-accent);
 
+    @include border-base(var(--theme-accent), $width: var(--border-width-thick));
     @include state-focus(var(--theme-accent));
   }
 

@@ -31,6 +31,29 @@ const componentTag = computed(() => {
   return 'button'
 })
 
+const buttonClasses = computed(() => {
+  return [
+    'c-btn',
+    props.variant !== 'primary' ? `c-btn--${props.variant}` : '',
+    props.size !== 'sm' ? `c-btn--${props.size}` : '',
+    props.block ? 'c-btn--block' : '',
+    props.iconOnly ? 'c-btn--icon-only' : '',
+    props.disabled ? 'is-disabled' : '',
+  ].filter(Boolean)
+})
+
+const componentAttrs = computed(() => {
+  const isButton = componentTag.value === 'button'
+
+  return {
+    to: !props.disabled ? props.to : undefined,
+    href: !props.disabled ? props.href : undefined,
+    type: isButton ? props.type : undefined,
+    disabled: isButton ? props.disabled : undefined,
+    tabindex: props.disabled && !isButton ? -1 : undefined,
+  }
+})
+
 const handleClick = (e: MouseEvent) => {
   if (props.disabled) {
     e.preventDefault()
@@ -42,21 +65,8 @@ const handleClick = (e: MouseEvent) => {
 <template>
   <component
     :is="componentTag"
-    :to="!disabled ? to : undefined"
-    :href="!disabled ? href : undefined"
-    :type="componentTag === 'button' ? type : undefined"
-    :disabled="componentTag === 'button' ? disabled : undefined"
-    :tabindex="disabled && componentTag !== 'button' ? -1 : undefined"
-    class="c-btn"
-    :class="[
-      variant !== 'primary' && `c-btn--${variant}`,
-      size !== 'sm' && `c-btn--${size}`,
-      {
-        'c-btn--block': block,
-        'c-btn--icon-only': iconOnly,
-        'is-disabled': disabled,
-      },
-    ]"
+    v-bind="componentAttrs"
+    :class="buttonClasses"
     @click="handleClick"
   >
     <AppIcon
@@ -72,17 +82,17 @@ const handleClick = (e: MouseEvent) => {
   --btn-color: var(--theme-accent);
 
   @include flex-center-center($is-inline: true);
+  @include text-meta("md", "semibold");
+  @include click-enabled;
 
   position: relative;
 
   flex-shrink: 0;
-  gap: var(--space-inline-gap);
+  gap: var(--space-2);
 
   height: var(--size-control-sm);
-  padding: 0 var(--space-control-px);
+  padding: 0 var(--space-3);
 
-  @include text-meta("md", "semibold");
-  @include click-enabled;
   @include border-base(var(--btn-color), 30%);
   @include state-base(var(--shadow-elevation-sm), var(--transition-fast), var(--btn-color));
 
@@ -124,7 +134,7 @@ const handleClick = (e: MouseEvent) => {
     @include text-desc;
 
     height: var(--size-control-md);
-    padding: 0 var(--space-control-px-md);
+    padding: 0 var(--space-4);
   }
 
   &--icon-only {

@@ -3,10 +3,10 @@
  * AppBreadcrumb
  * パンくずリストを表示するためのコンポーネント
  */
-import { computed } from 'vue'
+import { computed, resolveComponent } from 'vue'
 
 /** パンくずリストの各要素の型定義 */
-export type BreadcrumbItem = {
+export interface BreadcrumbItem {
   text: string
   href?: string
 }
@@ -15,16 +15,23 @@ const props = defineProps<{
   items: BreadcrumbItem[]
 }>()
 
-/**
- * テンプレートでの判定ロジックを減らすため、あらかじめ「最後の要素かどうか」を判定した配列を生成する
- */
 const processedItems = computed(() => {
-  return props.items.map((item, index) => ({
-    ...item,
-    isLast: index === props.items.length - 1,
-    /** keyとして使用できる一意なIDを生成。hrefがあればそれを使用、なければテキスト */
-    uniqueKey: item.href ? item.href : `${item.text}-${index}`,
-  }))
+  const NuxtLink = resolveComponent('NuxtLink')
+
+  return props.items.map((item, index) => {
+    const isLast = index === props.items.length - 1
+    const isLink = !isLast && !!item.href
+
+    return {
+      text: item.text,
+      href: isLink ? item.href : undefined,
+      tag: isLink ? NuxtLink : 'span',
+      className: isLink
+        ? 'c-breadcrumb__link'
+        : isLast ? 'c-breadcrumb__current' : 'c-breadcrumb__text',
+      uniqueKey: item.href || `${item.text}-${index}`,
+    }
+  })
 })
 </script>
 
@@ -36,20 +43,13 @@ const processedItems = computed(() => {
         :key="item.uniqueKey"
         class="c-breadcrumb__item"
       >
-        <NuxtLink
-          v-if="!item.isLast && item.href"
+        <component
+          :is="item.tag"
           :to="item.href"
-          class="c-breadcrumb__link"
+          :class="item.className"
         >
           {{ item.text }}
-        </NuxtLink>
-
-        <span
-          v-else
-          :class="item.isLast ? 'c-breadcrumb__current' : 'c-breadcrumb__text'"
-        >
-          {{ item.text }}
-        </span>
+        </component>
       </li>
     </ol>
   </nav>
@@ -59,23 +59,24 @@ const processedItems = computed(() => {
 .c-breadcrumb {
   @include flex-start-center;
   @include text-caption;
-  @include border-base;
 
   position: relative;
   flex-wrap: wrap;
-  padding: var(--space-tag-p);
+  padding: var(--space-1) var(--space-2);
   text-transform: uppercase;
+
+  @include border-base;
 
   &__list {
     @include flex-start-center($is-inline: true);
 
-    gap: var(--space-inline-gap);
+    gap: var(--space-2);
   }
 
   &__item {
     @include flex-start-center($is-inline: true);
 
-    gap: var(--space-inline-gap);
+    gap: var(--space-2);
 
     &:not(:last-child)::after {
       @include text-badge;
@@ -87,14 +88,15 @@ const processedItems = computed(() => {
 
   &__link {
     @include click-enabled;
-    @include state-base;
 
     color: var(--color-text-secondary);
 
-    &:hover {
-      @include cyber-text-glow(var(--color-text-main), 100%, var(--blur-sm));
+    @include state-base;
 
+    &:hover {
       color: var(--color-text-main);
+
+      @include cyber-text-glow(var(--color-text-main), 100%, var(--blur-sm));
     }
   }
 
@@ -103,10 +105,9 @@ const processedItems = computed(() => {
   }
 
   &__current {
-    @include cyber-text-glow(var(--theme-accent), 60%, var(--blur-md));
-
     color: var(--theme-accent);
 
+    @include cyber-text-glow(var(--theme-accent), 60%, var(--blur-md));
     @include blinking-cursor($color: var(--theme-accent));
   }
 }

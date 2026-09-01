@@ -37,7 +37,7 @@ defineProps<{
   }
 
   &.has-top-border {
-    padding-top: var(--space-control-py-sm);
+    padding-top: var(--space-1);
     border-top: 1px solid var(--color-border);
   }
 }

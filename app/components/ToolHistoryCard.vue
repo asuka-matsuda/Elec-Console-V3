@@ -143,14 +143,14 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
 
     gap: 0;
     align-items: flex-end;
-    padding-bottom: var(--space-control-py-md);
+    padding-bottom: var(--space-2);
     border-bottom: 1px solid var(--color-border);
   }
 
   &__title-group {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-stack-gap-sm);
+    gap: var(--space-1);
   }
 
   &__date {
@@ -171,20 +171,20 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
   &__section {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-stack-gap-sm);
+    gap: var(--space-1);
   }
 
   &__section-title {
     @include text-title("sm");
 
-    padding-left: var(--space-control-py-sm);
+    padding-left: var(--space-1);
     border-left: 2px solid var(--color-category-tool);
     color: var(--color-text-main);
   }
 
   &__list {
     @include text-desc;
-    @include grid(auto 1fr, var(--space-stack-gap-sm) var(--space-inline-gap-lg));
+    @include grid(auto 1fr, var(--space-1) var(--space-3));
 
     dt {
       color: var(--color-text-muted);
