@@ -32,10 +32,6 @@ const safeHexColor = computed(() => {
   return '#00f0ff'
 })
 
-const isActive = (val: string) => {
-  return modelValue.value.toLowerCase() === val.toLowerCase()
-}
-
 const handleCustomColorInput = (event: Event) => {
   const target = event.target as HTMLInputElement
 
@@ -47,23 +43,21 @@ const handleCustomColorInput = (event: Event) => {
 
 <template>
   <div class="c-color-picker">
-    <!-- 1. プリセットカラー -->
     <div class="c-color-picker__presets">
       <button
-        v-for="p in presets"
-        :key="p.value"
+        v-for="preset in presets"
+        :key="preset.value"
         type="button"
         class="c-color-swatch"
-        :class="{ 'is-active': isActive(p.value) }"
-        :style="{ '--swatch-color': p.value }"
-        :title="`${p.name} (${p.value})`"
-        @click="modelValue = p.value"
+        :class="{ 'is-active': modelValue.toLowerCase() === preset.value.toLowerCase() }"
+        :style="{ '--swatch-color': preset.value }"
+        :title="`${preset.name} (${preset.value})`"
+        @click="modelValue = preset.value"
       >
-        <span class="c-color-swatch__indicator" />
+        <span class="c-color-swatch__indicator"></span>
       </button>
     </div>
 
-    <!-- 2. カスタムカラー -->
     <div class="c-color-picker__custom">
       <label
         class="c-color-swatch c-color-swatch--custom"
@@ -82,8 +76,6 @@ const handleCustomColorInput = (event: Event) => {
           class="c-color-swatch__icon"
         />
       </label>
-
-      <!-- カスタム時のみHEX値を表示 -->
       <span
         v-if="isCustomColor"
         class="c-color-picker__hex"
