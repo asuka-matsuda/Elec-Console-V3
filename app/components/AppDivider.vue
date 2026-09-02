@@ -63,6 +63,8 @@ withDefaults(
   --pulse-left: -30%;
   --grad-dir-fade: to right;
   --grad-dir-pulse: 90deg;
+  --anim-scale: divider-scale-x;
+  --anim-pulse: data-pulse-x;
 
   position: relative;
   transform-origin: center;
@@ -74,7 +76,7 @@ withDefaults(
   height: var(--divider-size-y);
   min-height: var(--divider-min-h);
 
-  animation: divider-scale-x 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: var(--anim-scale) 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
   @include shadow("sink");
 
@@ -93,6 +95,8 @@ withDefaults(
     --pulse-left: 0;
     --grad-dir-fade: to bottom;
     --grad-dir-pulse: 180deg;
+    --anim-scale: divider-scale-y;
+    --anim-pulse: data-pulse-y;
   }
 
   &.is-type-solid {
@@ -115,7 +119,7 @@ withDefaults(
         transparent
       );
 
-      animation: data-pulse-x 3s ease-in-out infinite;
+      animation: var(--anim-pulse) 3s ease-in-out infinite;
 
       @include state-focus(var(--theme-accent));
     }
