@@ -225,22 +225,46 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('resize', calculatePlacement)
 })
+
+const containerClasses = computed(() => [
+  'c-custom-select',
+  {
+    'is-disabled': props.disabled,
+    'is-error': props.error,
+  },
+])
+
+const buttonClasses = computed(() => [
+  'c-custom-select__value',
+  {
+    'is-placeholder': isPlaceholder.value,
+    'is-active': isOpen.value,
+  },
+])
+
+const dropdownClasses = computed(() => [
+  'c-custom-select__dropdown',
+  `is-${dynamicPlacement.value}`,
+])
+
+const getOptionClasses = (option: SelectOption, index: number) => [
+  'c-custom-select__option',
+  {
+    'is-selected': model.value === option.value,
+    'is-focused': index === focusedIndex.value,
+    'is-disabled': option.disabled,
+  },
+]
 </script>
 
 <template>
   <div
     ref="selectRef"
-    class="c-custom-select"
-    :class="{ 'is-disabled': disabled, 'is-error': error }"
+    :class="containerClasses"
   >
-    <!-- Trigger Element (Changed to button for native focus handling) -->
     <button
       type="button"
-      class="c-custom-select__value"
-      :class="{
-        'is-placeholder': isPlaceholder,
-        'is-active': isOpen,
-      }"
+      :class="buttonClasses"
       :disabled="disabled"
       @click="toggleDropdown"
       @keydown="handleKeydown"
@@ -248,14 +272,12 @@ onUnmounted(() => {
       {{ displayLabel }}
     </button>
 
-    <!-- Dropdown Menu -->
     <ClientOnly>
       <Teleport :to="teleportTarget">
         <transition name="dropdown-fade">
           <div
             v-if="isOpen"
-            class="c-custom-select__dropdown"
-            :class="[`is-${dynamicPlacement}`]"
+            :class="dropdownClasses"
             :style="dropdownStyle"
           >
             <ul
@@ -271,12 +293,7 @@ onUnmounted(() => {
               <li
                 v-for="(option, index) in options"
                 :key="String(option.value)"
-                class="c-custom-select__option"
-                :class="{
-                  'is-selected': model === option.value,
-                  'is-focused': index === focusedIndex,
-                  'is-disabled': option.disabled,
-                }"
+                :class="getOptionClasses(option, index)"
                 @click="selectOption(option)"
               >
                 {{ option.label }}
