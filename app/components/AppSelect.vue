@@ -194,6 +194,7 @@ const handleKeydown = (event: KeyboardEvent) => {
 
 watch(isOpen, (newVal) => {
   if (newVal) {
+    window.addEventListener('scroll', handleGlobalScroll, { capture: true, passive: true })
     calculatePlacement()
     const index = props.options.findIndex(opt => opt.value === model.value)
 
@@ -206,6 +207,7 @@ watch(isOpen, (newVal) => {
     }
   }
   else {
+    window.removeEventListener('scroll', handleGlobalScroll, { capture: true })
     focusedIndex.value = -1
   }
 })
@@ -217,15 +219,10 @@ onMounted(() => {
   if (modal) {
     teleportTarget.value = modal as HTMLElement
   }
-  window.addEventListener('scroll', handleGlobalScroll, {
-    capture: true,
-    passive: true,
-  })
   window.addEventListener('resize', calculatePlacement, { passive: true })
 })
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', handleGlobalScroll, { capture: true })
   window.removeEventListener('resize', calculatePlacement)
 })
 </script>
@@ -294,8 +291,6 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .c-custom-select {
-  @include text-mono("sm");
-
   user-select: none;
   position: relative;
   width: 100%;
@@ -347,7 +342,7 @@ onUnmounted(() => {
   }
 
   &.is-placeholder {
-    @include form-placeholder;
+    color: color-mix(in srgb, var(--color-text-muted) 50%, transparent);
   }
 
   &.is-active {
