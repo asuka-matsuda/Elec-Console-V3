@@ -51,27 +51,28 @@ const inputId = useId()
 
 <style scoped lang="scss">
 .c-form-control {
+  // ① パディング用のローカル変数
   --form-control-px: var(--space-4);
   --form-control-py: var(--space-2);
 
-  @include text-mono("sm");
-
+  // ② ベースのスタイルとタイポグラフィ
+  // ※もしサイバー感の演出ならtext-monoでもOKですが、通常は以下がおすすめです
+  @include text-desc;
+  
   width: 100%;
   padding: var(--form-control-py) var(--form-control-px);
-  color: var(--color-text-muted);
+  color: var(--color-text-main); // 💡 入力文字はハッキリした色に！
 
+  // ③ 外部Mixin
   @include form-control-base;
+  @include form-placeholder; // 💡 疑似要素(&::placeholder)はMixinに内包されているので直接呼ぶ
 
-  &::placeholder {
-    @include form-placeholder;
-  }
-
+  // ④ サイズバリエーション
   &--sm {
     --form-control-px: var(--space-3);
     --form-control-py: var(--space-1);
 
     @include text-meta;
-
     height: var(--size-control-sm);
   }
 
@@ -79,12 +80,12 @@ const inputId = useId()
     height: var(--size-control-md);
   }
 
+  // ⑤ Textarea固有のオーバーライド
   &--textarea {
     resize: vertical;
     min-height: calc(var(--size-control-md) * 2);
 
-    // Override fixed heights so rows/min-height can take over
-
+    // smやmdクラスが付いていても、textareaの場合は高さを固定せずautoにする
     &:is(.c-form-control--sm, .c-form-control--md) {
       height: auto;
     }
