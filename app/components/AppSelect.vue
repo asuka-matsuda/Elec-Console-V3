@@ -269,7 +269,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
       @click="toggleDropdown"
       @keydown="handleKeydown"
     >
-      {{ displayLabel }}
+      <span class="c-custom-select__text">{{ displayLabel }}</span>
     </button>
 
     <ClientOnly>
@@ -329,12 +329,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   width: 100%;
   min-height: 2.6em;
   padding-block: 0.3em;
-  padding-inline-start: 1.2em;
-  padding-inline-end: 2.5em; // アイコン分の余白を確保
-
-  text-align: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  padding-inline: 1.2em;
 
   @include form-control-base(
     $is-error: ".c-custom-select.is-error &",
@@ -344,13 +339,10 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   &::after {
     content: "";
 
-    position: absolute;
-    top: 50%;
-    right: 0.8em;
-    transform: translateY(-50%);
-
+    flex-shrink: 0;
     width: 1.2em;
     height: 1.2em;
+    margin-left: var(--space-2);
 
     background-image: var(--icon-select-arrow);
     background-repeat: no-repeat;
@@ -366,9 +358,17 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 
   &.is-active {
     &::after {
-      transform: translateY(-50%) rotate(180deg);
+      transform: rotate(180deg);
     }
   }
+}
+
+.c-custom-select__text {
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .c-custom-select__dropdown {
