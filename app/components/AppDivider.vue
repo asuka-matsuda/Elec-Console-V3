@@ -63,8 +63,6 @@ withDefaults(
   --pulse-left: -30%;
   --grad-dir-fade: to right;
   --grad-dir-pulse: 90deg;
-  --anim-scale: divider-scale-x;
-  --anim-pulse: data-pulse-x;
 
   position: relative;
   transform-origin: center;
@@ -76,13 +74,16 @@ withDefaults(
   height: var(--divider-size-y);
   min-height: var(--divider-min-h);
 
-  animation: var(--anim-scale) 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-
   @include shadow("sink");
 
   &--horizontal {
     width: 100%;
     height: 1px;
+    animation: divider-scale-x 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+    &.is-type-solid::before {
+      animation: data-pulse-x 3s ease-in-out infinite;
+    }
   }
 
   &--vertical {
@@ -95,8 +96,12 @@ withDefaults(
     --pulse-left: 0;
     --grad-dir-fade: to bottom;
     --grad-dir-pulse: 180deg;
-    --anim-scale: divider-scale-y;
-    --anim-pulse: data-pulse-y;
+
+    animation: divider-scale-y 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+    &.is-type-solid::before {
+      animation: data-pulse-y 3s ease-in-out infinite;
+    }
   }
 
   &.is-type-solid {
@@ -115,11 +120,9 @@ withDefaults(
       background: linear-gradient(
         var(--grad-dir-pulse),
         transparent,
-        color-mix(in srgb, var(--theme-accent), 80%),
+        color-mix(in srgb, var(--theme-accent) 80%, transparent),
         transparent
       );
-
-      animation: var(--anim-pulse) 3s ease-in-out infinite;
 
       @include state-focus(var(--theme-accent));
     }
