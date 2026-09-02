@@ -66,3 +66,16 @@
     opacity: 1; 
   }
 }
+
+// フォームアドオン (単位などの付加テキスト)
+.c-input-addon {
+  @include text-desc;
+  @include flex-center-center($is-inline: true);
+
+  padding: 0 var(--space-4);
+  color: var(--color-text-main);
+  white-space: nowrap;
+
+  @include border-base(var(--theme-accent), 30%);
+  @include shadow("sink");
+}
