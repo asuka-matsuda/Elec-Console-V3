@@ -51,44 +51,33 @@ const inputId = useId()
 
 <style scoped lang="scss">
 .c-form-control {
-  // ① パディング用のローカル変数
-  --form-control-px: var(--space-4);
-  --form-control-py: var(--space-2);
-
-  // ② ベースのスタイルとタイポグラフィ
-  // ※もしサイバー感の演出ならtext-monoでもOKですが、通常は以下がおすすめです
   @include text-desc;
   
   width: 100%;
-  padding: var(--form-control-py) var(--form-control-px);
-  color: var(--color-text-main); // 💡 入力文字はハッキリした色に！
+  
+  // AppButtonと同様にem単位を使用し、フォントサイズに合わせて箱のサイズが自動可変するように
+  min-height: 2.6em;
+  padding-block: 0.3em;
+  padding-inline: 1.2em;
 
-  // ③ 外部Mixin
+  color: var(--color-text-main);
+
   @include form-control-base;
-  @include form-placeholder; // 💡 疑似要素(&::placeholder)はMixinに内包されているので直接呼ぶ
+  @include form-placeholder;
 
-  // ④ サイズバリエーション
   &--sm {
-    --form-control-px: var(--space-3);
-    --form-control-py: var(--space-1);
-
     @include text-meta;
-    height: var(--size-control-sm);
+    // フォントサイズが下がることで、em指定の高さ・余白も自動的に縮小されます
   }
 
   &--md {
-    height: var(--size-control-md);
+    // デフォルト（text-desc）のフォントサイズのまま自動計算されます
   }
 
-  // ⑤ Textarea固有のオーバーライド
   &--textarea {
     resize: vertical;
-    min-height: calc(var(--size-control-md) * 2);
-
-    // smやmdクラスが付いていても、textareaの場合は高さを固定せずautoにする
-    &:is(.c-form-control--sm, .c-form-control--md) {
-      height: auto;
-    }
+    // textareaは文字行数に応じて最低限の高さを確保（2行分相当）
+    min-height: 5.2em;
 
     &:disabled {
       resize: none;
