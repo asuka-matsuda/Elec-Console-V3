@@ -74,6 +74,7 @@ const getStyle = (option: RadioOption): StyleValue | undefined => option.color ?
       &:hover {
         .c-segmented-control__input:not(:checked) + .c-segmented-control__text {
           color: var(--color-text-main);
+
           @include state-hover(var(--color-border));
         }
       }

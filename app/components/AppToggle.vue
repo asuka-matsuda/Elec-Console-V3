@@ -120,6 +120,7 @@ const inputId = useId()
     &:hover {
       .c-toggle__label {
         color: color-mix(in srgb, var(--toggle-color) 90%, transparent);
+
         @include cyber-text-glow(var(--toggle-color), 20%, var(--blur-sm));
       }
 

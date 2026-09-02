@@ -229,7 +229,6 @@ onUnmounted(() => {
 const containerClasses = computed(() => [
   'c-custom-select',
   {
-    'is-disabled': props.disabled,
     'is-error': props.error,
   },
 ])
@@ -261,6 +260,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   <div
     ref="selectRef"
     :class="containerClasses"
+    :data-disabled="disabled"
   >
     <button
       type="button"
@@ -313,7 +313,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   width: 100%;
   color: var(--color-text-main);
 
-  &.is-disabled {
+  &[data-disabled="true"] {
     @include disabled;
   }
 }
@@ -327,9 +327,11 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   overflow: hidden;
 
   width: 100%;
-  min-height: 2.6em;
+  min-height: calc(var(--control-height-ratio) * 1em);
   padding-block: 0.3em;
   padding-inline: 1.2em;
+
+  color: inherit;
 
   @include form-control-base(
     $is-error: ".c-custom-select.is-error &",
@@ -400,15 +402,13 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 .c-custom-select__list {
   --scrollbar-size: var(--space-2);
 
-  scrollbar-color: var(--theme-accent) transparent;
-  scrollbar-width: thin;
-
   transform: translateZ(0);
 
   overflow: hidden auto;
 
   width: 100%;
   max-height: min(250px, 40vh);
+  padding: var(--space-1);
 }
 
 .c-custom-select__option {
@@ -417,30 +417,9 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   @include text-truncate;
 
   padding: var(--space-2) var(--space-3);
-  border-left: var(--border-width-thick) solid transparent;
+  border-radius: var(--radius-sm);
 
   @include state-base;
-
-  &:is(:hover, .is-focused):not(:is(.is-disabled, .is-placeholder)) {
-    --glow-color: color-mix(in srgb, var(--theme-accent) 30%, transparent);
-
-    transform: translateX(2px);
-    border-left-color: var(--theme-accent);
-    color: var(--theme-accent);
-    background-color: transparent;
-
-    @include state-active(var(--theme-accent));
-  }
-
-  &.is-selected {
-    --glow-color: color-mix(in srgb, var(--theme-accent) 40%, transparent);
-
-    border-left-color: var(--theme-accent);
-    color: var(--theme-accent);
-    background-color: transparent;
-
-    @include state-active(var(--theme-accent));
-  }
 
   &.is-disabled {
     @include disabled;
@@ -451,15 +430,32 @@ const getOptionClasses = (option: SelectOption, index: number) => [
     font-style: italic;
     color: var(--color-text-muted);
   }
+
+  &:not(:is(.is-disabled, .is-placeholder)) {
+    &:is(:hover, .is-focused) {
+      --glow-color: color-mix(in srgb, var(--theme-accent) 30%, transparent);
+
+      color: var(--theme-accent);
+      background-color: transparent;
+
+      @include state-active(var(--theme-accent));
+    }
+
+    &.is-selected {
+      --glow-color: color-mix(in srgb, var(--theme-accent) 40%, transparent);
+
+      color: var(--theme-accent);
+
+      @include state-active(var(--theme-accent));
+    }
+  }
 }
 </style>
 
 <style lang="scss">
 .dropdown-fade-enter-active,
 .dropdown-fade-leave-active {
-  transition:
-    opacity 0.2s ease,
-    transform 0.2s ease;
+  transition: var(--transition-base);
 }
 
 .dropdown-fade-enter-from,

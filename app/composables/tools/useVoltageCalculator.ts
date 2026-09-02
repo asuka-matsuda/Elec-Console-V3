@@ -59,7 +59,10 @@ export function useVoltageCalculator() {
 
   watch(
     () => form.value.cableType,
-    (newVal) => {
+    (newVal, oldVal) => {
+      // hydration時にoldValが空の場合はスキップ
+      if (!oldVal) return
+
       const sizes = getAvailableSizes(newVal)
 
       if (!sizes.some(s => s.value === form.value.fixedSize)) {

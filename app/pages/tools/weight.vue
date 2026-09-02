@@ -27,7 +27,8 @@ const categories = computed(() => getCableCategories())
 const availableSizes = computed(() => getAvailableSizes(inputs.value.category))
 
 /** Categoryが変更されたらcableIdxをリセットする */
-watch(() => inputs.value.category, () => {
+watch(() => inputs.value.category, (newVal, oldVal) => {
+  if (!oldVal) return
   inputs.value.cableIdx = ''
 })
 

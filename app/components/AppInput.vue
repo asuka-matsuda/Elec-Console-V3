@@ -54,7 +54,7 @@ const inputId = useId()
   @include text-desc;
 
   width: 100%;
-  min-height: 2.6em;
+  min-height: calc(var(--control-height-ratio) * 1em);
   padding-block: 0.3em;
   padding-inline: 1.2em;
 
@@ -69,7 +69,7 @@ const inputId = useId()
 
   &--textarea {
     resize: vertical;
-    min-height: 5.2em;
+    min-height: calc(var(--control-height-ratio) * 2em);
 
     &:disabled {
       resize: none;

@@ -40,7 +40,6 @@
   &__append {
     @include flex-start-stretch;
 
-    /* AppSelect のボタンや addon のボーダーを調整 */
     :deep(.c-custom-select__value),
     :deep(.c-input-addon) {
       border-left: none;
@@ -48,10 +47,13 @@
       border-bottom-left-radius: 0;
     }
 
-    /* append領域に配置されたAppSelectは、単位選択などを想定しコンパクトな幅にする */
+    :deep(.c-custom-select__value) {
+      padding-inline: 0.8em;
+    }
+
     :deep(.c-custom-select) {
       flex-shrink: 0;
-      width: 5em;
+      width: 6em;
     }
   }
 }

@@ -23,9 +23,9 @@ withDefaults(
         v-if="label || $slots.label"
         class="c-form-group__label-wrapper"
       >
-        <label class="c-form-label">
+        <div class="c-form-label">
           <slot name="label">{{ label }}</slot>
-        </label>
+        </div>
         <AppBadge
           v-if="required"
           color="danger"
@@ -70,16 +70,15 @@ withDefaults(
     width: 100%;
 
     @include cq("xs") {
-      flex-direction: row;
-      align-items: flex-start;
+      @include flex-start-start;
 
       .c-form-group__label-wrapper {
         flex-shrink: 0;
         width: 140px;
         padding-top: calc(
           (
-              var(--size-control-md) - var(--line-height-base) *
-                var(--font-size-sm)
+              (var(--font-size-sm) * var(--control-height-ratio)) -
+              (var(--line-height-tight) * var(--font-size-base))
             ) /
             2
         );
@@ -114,14 +113,34 @@ withDefaults(
   &__help {
     @include text-meta;
   }
+
+  &:focus-within .c-form-label {
+    color: var(--theme-accent);
+
+    @include cyber-text-glow(var(--theme-accent));
+
+    &::before {
+      @include state-focus(var(--theme-accent));
+    }
+  }
+
+  &:has(.c-form-group__error, :invalid, .is-error) .c-form-label {
+    color: var(--color-status-danger);
+
+    @include cyber-text-glow(var(--color-status-danger));
+
+    &::before {
+      @include state-hover(var(--color-status-danger));
+    }
+  }
 }
 
-// Label Component Styles (Legacy _c-form-label)
 .c-form-label {
   @include flex-start-center;
   @include text-label;
 
   user-select: none;
+  gap: var(--space-1);
   color: color-mix(in srgb, var(--theme-accent) 70%, transparent);
   text-transform: uppercase;
 
@@ -145,37 +164,12 @@ withDefaults(
     @include state-base(none, var(--transition-base), var(--theme-accent));
   }
 }
-
-// フォームグループ内がフォーカスされたらラベルを発光させる
-.c-form-group:focus-within .c-form-label {
-  color: var(--theme-accent);
-
-  @include cyber-text-glow(var(--theme-accent));
-
-  &::before {
-    @include state-focus(var(--theme-accent));
-  }
-}
-
-// フォームグループ内にエラー要素（.c-form-group__error や .is-error 等）が存在する場合、ラベルを赤くする
-.c-form-group:has(.c-form-group__error, :invalid, .is-error) .c-form-label {
-  color: var(--color-status-danger);
-
-  @include cyber-text-glow(var(--color-status-danger));
-
-  &::before {
-    @include state-hover(var(--color-status-danger));
-  }
-}
 </style>
 
 <style lang="scss">
-// --- Fade Slide ---
 .fade-slide-enter-active,
 .fade-slide-leave-active {
-  transition:
-    opacity var(--duration-fast) var(--ease-base),
-    transform var(--duration-fast) var(--ease-base);
+  transition: var(--transition-fast);
 }
 
 .fade-slide-enter-from,

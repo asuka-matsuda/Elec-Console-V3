@@ -94,6 +94,7 @@
   --space-card-gap:            clamp(var(--space-2), 1.2vw, var(--space-4)); // 8px 〜 16px (標準)
 
   // コントロール寸法 (Dimensions)
+  --control-height-ratio: 2.6;
   --size-control-sm: 32px;
   --size-control-md: 40px;
   --size-control-lg: 48px;
