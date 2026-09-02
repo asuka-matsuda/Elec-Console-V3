@@ -74,7 +74,7 @@ const handleClick = (e: MouseEvent) => {
   --btn-color: var(--theme-accent);
 
   @include flex-center-center($is-inline: true);
-  @include text-meta("sm", "semibold");
+  @include text-label("sm", "semibold");
   @include click-enabled;
 
   position: relative;
@@ -82,11 +82,17 @@ const handleClick = (e: MouseEvent) => {
   flex-shrink: 0;
   gap: var(--space-2);
 
-  height: var(--size-control-sm);
-  padding: 0 var(--space-3);
+  min-height: 2.6em;
+  padding-block: 0.3em;
+  padding-inline: 1.2em;
 
   @include border-base(var(--btn-color), 30%);
   @include state-base("sm", var(--transition-fast), var(--btn-color));
+
+  :deep(.c-icon) {
+    width: 1.2em;
+    height: 1.2em;
+  }
 
   &:hover:not(:disabled, .is-disabled) {
     @include state-hover(var(--btn-color), 'md');
@@ -121,10 +127,7 @@ const handleClick = (e: MouseEvent) => {
   }
 
   &--md {
-    @include text-meta("md", "semibold");
-
-    height: var(--size-control-md);
-    padding: 0 var(--space-4);
+    @include text-label("md", "semibold");
   }
 }
 </style>

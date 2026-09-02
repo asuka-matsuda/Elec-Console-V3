@@ -184,6 +184,7 @@ const closeSidebar = () => {
 
     gap: var(--space-2);
     padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
     color: var(--color-text-secondary);
 
     @include state-base;
@@ -212,7 +213,7 @@ const closeSidebar = () => {
         20%
       );
 
-      @include state-hover;
+      @include state-hover(var(--section-accent, var(--color-category-main)));
 
       .l-global-nav__link-icon {
         color: var(--section-accent, var(--color-category-main));
@@ -236,7 +237,7 @@ const closeSidebar = () => {
       border-color: var(--section-accent, var(--color-category-main));
       color: var(--section-accent, var(--color-category-main));
 
-      @include state-active(var(--color-category-main));
+      @include state-active(var(--section-accent, var(--color-category-main)));
       @include blinking-cursor(
         var(--space-1),
         var(--font-size-base),

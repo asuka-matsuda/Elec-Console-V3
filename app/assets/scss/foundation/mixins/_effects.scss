@@ -34,12 +34,17 @@
 @mixin border-base(
   $color: var(--color-border),
   $opacity: 100%,
-  $width: var(--border-width-base)
+  $width: var(--border-width-base),
+  $radius: var(--radius-sm)
 ) {
   @if $opacity == 100% {
     border: $width solid $color;
   } @else {
     border: $width solid color-mix(in srgb, $color $opacity, transparent);
+  }
+
+  @if $radius {
+    border-radius: $radius;
   }
 }
 

@@ -33,32 +33,8 @@ const inputId = useId()
       :disabled="disabled"
     />
     <div class="c-checkbox__box">
-      <!-- Checkmark SVG -->
-      <svg
-        class="c-checkbox__icon c-checkbox__icon--check"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="3"
-        stroke-linecap="square"
-        stroke-linejoin="miter"
-      >
-        <polyline points="20 6 9 17 4 12" />
-      </svg>
-      <!-- Indeterminate (Dash) SVG -->
-      <svg
-        class="c-checkbox__icon c-checkbox__icon--dash"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="3"
-        stroke-linecap="square"
-        stroke-linejoin="miter"
-      >
-        <line x1="5" y1="12" x2="19" y2="12" />
-      </svg>
+      <AppIcon name="check" class="c-checkbox__icon c-checkbox__icon--check" />
+      <AppIcon name="minus" class="c-checkbox__icon c-checkbox__icon--dash" />
     </div>
     <span
       v-if="label || $slots.default"
@@ -118,15 +94,19 @@ const inputId = useId()
     }
 
     &:checked + .c-checkbox__box .c-checkbox__icon--check {
-      opacity: 1;
       filter: drop-shadow(0 0 var(--blur-sm) var(--checkbox-color));
-      stroke-dashoffset: 0;
+
+      :deep(polyline) {
+        stroke-dashoffset: 0;
+      }
     }
 
     &:indeterminate + .c-checkbox__box .c-checkbox__icon--dash {
-      opacity: 1;
       filter: drop-shadow(0 0 var(--blur-sm) var(--checkbox-color));
-      stroke-dashoffset: 0;
+
+      :deep(line) {
+        stroke-dashoffset: 0;
+      }
     }
   }
 
@@ -139,21 +119,31 @@ const inputId = useId()
     height: 1.4em;
 
     @include border-base($opacity: 30%);
-    @include state-base("sink");
+    @include state-base;
 
     .c-checkbox__icon {
       position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
 
       width: 70%;
       height: 70%;
 
-      opacity: 0;
+      color: var(--checkbox-color);
 
-      stroke: var(--checkbox-color);
-      stroke-dasharray: 24;
-      stroke-dashoffset: 24;
+      :deep(svg) {
+        stroke-linecap: square;
+        stroke-linejoin: miter;
+        stroke-width: 3;
+      }
 
-      @include state-base;
+      :deep(polyline),
+      :deep(line) {
+        stroke-dasharray: 24;
+        stroke-dashoffset: 24;
+        transition: stroke-dashoffset var(--duration-base) var(--ease-base);
+      }
     }
   }
 

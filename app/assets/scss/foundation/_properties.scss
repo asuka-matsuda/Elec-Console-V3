@@ -152,9 +152,10 @@
   --color-text-disabled:       hsl(var(--color-text-disabled-base));
   --color-border:              hsl(var(--color-border-main-base));
 
-  // ボーダー
+  // ボーダー & Radius
   --border-width-base:  1px;
   --border-width-thick: 2px;
+  --radius-sm: 4px;
 
   // エフェクト & インタラクション背景
   --color-bg-hover:      color-mix(in srgb, var(--color-overlay) 6%, transparent);

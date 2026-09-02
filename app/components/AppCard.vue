@@ -51,7 +51,10 @@ const handleClick = (e: MouseEvent) => {
   @include flex-start-stretch($direction: column);
 
   position: relative;
+
+  overflow: hidden;
   gap: var(--space-card-gap);
+
   width: 100%;
   padding: var(--space-card-pad);
 
