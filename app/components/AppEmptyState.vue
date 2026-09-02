@@ -31,7 +31,6 @@ withDefaults(
     </div>
 
     <div class="c-empty-state__content">
-      <!-- 💡 $slots.title を追加してバグを防止 -->
       <h3
         v-if="title || $slots.title"
         class="c-empty-state__title"
@@ -75,7 +74,7 @@ withDefaults(
 
   &__icon-wrapper {
     @include flex-center-center;
-    
+
     width: var(--size-control-lg);
     height: var(--size-control-lg);
     color: var(--color-text-muted);
@@ -97,19 +96,20 @@ withDefaults(
 
   &__title {
     @include text-title("sm");
+
     color: var(--color-text-secondary);
   }
 
   &__desc {
     @include text-desc;
+
     color: var(--color-text-muted);
   }
 
   &__actions {
     @include flex-center-center;
-    
+
     gap: var(--space-2);
-    margin-top: var(--space-1);
   }
 }
 </style>

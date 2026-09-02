@@ -52,10 +52,8 @@ const inputId = useId()
 <style scoped lang="scss">
 .c-form-control {
   @include text-desc;
-  
+
   width: 100%;
-  
-  // AppButtonと同様にem単位を使用し、フォントサイズに合わせて箱のサイズが自動可変するように
   min-height: 2.6em;
   padding-block: 0.3em;
   padding-inline: 1.2em;
@@ -67,16 +65,10 @@ const inputId = useId()
 
   &--sm {
     @include text-meta;
-    // フォントサイズが下がることで、em指定の高さ・余白も自動的に縮小されます
-  }
-
-  &--md {
-    // デフォルト（text-desc）のフォントサイズのまま自動計算されます
   }
 
   &--textarea {
     resize: vertical;
-    // textareaは文字行数に応じて最低限の高さを確保（2行分相当）
     min-height: 5.2em;
 
     &:disabled {
