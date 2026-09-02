@@ -324,8 +324,7 @@ onUnmounted(() => {
 
   @include form-control-base(
     $is-error: ".c-custom-select.is-error &",
-    $is-active: "&.is-active, &:focus, &:focus-visible",
-    $is-hover: "&:hover:not(:disabled):not(.is-active)"
+    $is-active: "&.is-active, &:focus, &:focus-visible"
   );
 
   &::after {
@@ -406,8 +405,7 @@ onUnmounted(() => {
 
   @include state-base;
 
-  &:hover:not(.is-disabled, .is-placeholder),
-  &.is-focused:not(.is-disabled) {
+  &:is(:hover, .is-focused):not(:is(.is-disabled, .is-placeholder)) {
     --glow-color: color-mix(in srgb, var(--theme-accent) 30%, transparent);
 
     transform: translateX(2px);

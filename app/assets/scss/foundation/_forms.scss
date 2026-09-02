@@ -6,63 +6,56 @@
 // --- フォーム要素のベーススタイル ---
 @mixin form-control-base(
   $is-error: "&.is-error",
-  $is-active: "&:is(:focus, :focus-visible)",
-  $is-hover: "&:hover:not(:disabled, .is-error, :focus)"
+  $is-active: "&:is(:focus, :focus-visible)"
 ) {
   @include border-base(var(--color-category-main), 30%);
-
-  // --- 通常状態 ---
   @include state-base("sink", var(--transition-glow));
 
-  // --- ホバー ---
-  #{$is-hover} {
-    border-color: color-mix(in srgb, var(--color-category-main) 50%, transparent);
-
-    @include state-hover(var(--color-category-main));
-  }
-
-  // --- クリック ---
-  &:active:not(:disabled, .is-error) {
-    border-color: var(--color-category-main);
-
-    @include state-active(var(--color-category-main));
-  }
-
-  // --- フォーカス ---
-  #{$is-active} {
-    border-color: var(--color-category-main);
-
-    @include state-focus(var(--color-category-main));
-    @include cyber-text-glow(var(--color-category-main));
-  }
-
-  // --- エラー ---
-  #{$is-error} {
-    border-color: color-mix(in srgb, var(--color-status-danger) 50%, transparent);
-    color: var(--color-status-danger);
-
-    // --- エラー時・ホバー ---
-    &:hover:not(:disabled, :focus) {
-      border-color: color-mix(in srgb, var(--color-status-danger) 70%, transparent);
-
-      @include state-hover(var(--color-status-danger));
-    }
-
-    // --- エラー時・クリック ---
-    &:active:not(:disabled) {
-      @include state-active(var(--color-status-danger));
-    }
-
-    // --- エラー時・フォーカス ---
-    &:is(:-moz-focusring, :focus, :focus-visible, .is-active) {
-      @include state-focus(var(--color-status-danger));
-      @include cyber-text-glow(var(--color-status-danger));
-    }
-  }
-
-  // --- 無効状態 ---
   &:is(:disabled, .is-disabled) {
     @include disabled;
+  }
+
+  // 非disabled時のみインタラクションを許可
+  &:not(:disabled, .is-disabled) {
+    // 1. Hover
+    &:hover {
+      border-color: color-mix(in srgb, var(--color-category-main) 50%, transparent);
+      @include state-hover(var(--color-category-main));
+    }
+
+    // 2. Active
+    &:active {
+      border-color: var(--color-category-main);
+      @include state-active(var(--color-category-main));
+    }
+
+    // 3. Focus (Hover/Activeより優先)
+    #{$is-active} {
+      border-color: var(--color-category-main);
+      @include state-focus(var(--color-category-main));
+      @include cyber-text-glow(var(--color-category-main));
+    }
+
+    // 4. Error (最優先)
+    #{$is-error} {
+      border-color: color-mix(in srgb, var(--color-status-danger) 50%, transparent);
+      color: var(--color-status-danger);
+
+      &:hover {
+        border-color: color-mix(in srgb, var(--color-status-danger) 70%, transparent);
+        @include state-hover(var(--color-status-danger));
+      }
+
+      &:active {
+        @include state-active(var(--color-status-danger));
+      }
+
+      #{$is-active} {
+        border-color: var(--color-status-danger);
+        @include state-focus(var(--color-status-danger));
+        @include cyber-text-glow(var(--color-status-danger));
+      }
+    }
   }
 }
 

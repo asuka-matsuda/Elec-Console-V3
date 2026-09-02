@@ -60,14 +60,14 @@ const inputId = useId()
     @include disabled;
   }
 
+  &:hover:not(.is-disabled) .c-checkbox__label {
+    color: color-mix(in srgb, var(--checkbox-color) 90%, transparent);
+
+    @include cyber-text-glow(var(--checkbox-color), 20%, var(--blur-sm));
+  }
+
   &:hover:not(.is-disabled) {
-    .c-checkbox__label {
-      color: color-mix(in srgb, var(--checkbox-color) 90%, transparent);
-
-      @include cyber-text-glow(var(--checkbox-color), 20%, var(--blur-sm));
-    }
-
-    .c-checkbox__input:not(:focus-visible, :active, :checked)
+    .c-checkbox__input:not(:focus-visible, :active, :checked, :indeterminate)
       + .c-checkbox__box {
       @include state-hover(var(--checkbox-color));
     }
@@ -88,25 +88,17 @@ const inputId = useId()
       @include cyber-text-glow(var(--checkbox-color));
     }
 
-    &:checked + .c-checkbox__box,
-    &:indeterminate + .c-checkbox__box {
+    &:is(:checked, :indeterminate) + .c-checkbox__box {
       @include state-active(var(--checkbox-color));
-    }
 
-    &:checked + .c-checkbox__box .c-checkbox__icon--check {
-      filter: drop-shadow(0 0 var(--blur-sm) var(--checkbox-color));
-
-      :deep(polyline) {
-        stroke-dashoffset: 0;
+      .c-checkbox__icon {
+        filter: drop-shadow(0 0 var(--blur-sm) var(--checkbox-color));
       }
     }
 
-    &:indeterminate + .c-checkbox__box .c-checkbox__icon--dash {
-      filter: drop-shadow(0 0 var(--blur-sm) var(--checkbox-color));
-
-      :deep(line) {
-        stroke-dashoffset: 0;
-      }
+    &:checked + .c-checkbox__box .c-checkbox__icon--check :deep(polyline),
+    &:indeterminate + .c-checkbox__box .c-checkbox__icon--dash :deep(line) {
+      stroke-dashoffset: 0;
     }
   }
 
@@ -138,8 +130,7 @@ const inputId = useId()
         stroke-width: 3;
       }
 
-      :deep(polyline),
-      :deep(line) {
+      :deep(:is(polyline, line)) {
         stroke-dasharray: 24;
         stroke-dashoffset: 24;
         transition: stroke-dashoffset var(--duration-base) var(--ease-base);

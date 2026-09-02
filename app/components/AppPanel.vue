@@ -6,19 +6,10 @@
 withDefaults(
   defineProps<{
     title?: string
-    bracketColor?:
-      | 'main'
-      | 'tool'
-      | 'database'
-      | 'reference'
-      | 'management'
-      | 'danger'
-      | 'success'
     variant?: 'hud' | 'simple' | 'gradient' | 'hybrid'
     density?: 'normal' | 'compact'
   }>(),
   {
-    bracketColor: 'main',
     variant: 'hud',
     density: 'normal',
   },
@@ -30,7 +21,6 @@ withDefaults(
     class="c-panel"
     :class="[
       `c-panel--${variant}`,
-      `c-panel--color-${bracketColor}`,
       `c-panel--density-${density}`,
     ]"
   >
@@ -54,12 +44,7 @@ withDefaults(
 <style scoped lang="scss">
 .c-panel {
   --p-border-color: var(--color-border);
-  --p-border-image: none;
   --p-box-shadow: none;
-  --p-bracket-display: none;
-  --p-bracket-size: var(--space-4);
-  --p-bracket-color: var(--color-border);
-  --p-bracket-glow: none;
   --p-theme-color: var(--theme-accent);
 
   @include flex-start-stretch($direction: column);
@@ -67,44 +52,10 @@ withDefaults(
   position: relative;
   gap: var(--space-card-gap);
   padding: var(--space-card-pad);
-  border-image: var(--p-border-image);
 
   // Apply visual base
   @include border-base(var(--p-border-color), $width: var(--border-width-base));
   @include state-base(var(--p-box-shadow));
-
-  // Cyber Brackets (Top-Left & Bottom-Right)
-
-  &::before,
-  &::after {
-    pointer-events: none;
-    content: "";
-
-    position: absolute;
-
-    display: var(--p-bracket-display);
-
-    width: var(--p-bracket-size);
-    height: var(--p-bracket-size);
-
-    filter: var(--p-bracket-glow);
-
-    @include border-base(var(--p-bracket-color), $width: var(--border-width-thick));
-  }
-
-  &::before {
-    top: -1px;
-    left: -1px;
-    border-right: none;
-    border-bottom: none;
-  }
-
-  &::after {
-    right: -1px;
-    bottom: -1px;
-    border-top: none;
-    border-left: none;
-  }
 
   // 密度モディファイア
   &--density-compact {
@@ -170,9 +121,6 @@ withDefaults(
     --p-box-shadow:
       inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border),
       var(--shadow-elevation-sm);
-    --p-bracket-display: block;
-    --p-bracket-size: var(--space-4);
-    --p-bracket-color: color-mix(in srgb, var(--p-theme-color) 60%, transparent);
   }
 
   &--simple {
@@ -180,42 +128,20 @@ withDefaults(
     --p-box-shadow:
       inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent,
       var(--shadow-elevation-sm);
-    --p-bracket-display: none;
   }
 
   &--gradient {
-    --p-border-color: transparent;
-    --p-border-image: linear-gradient(
-        135deg,
-        var(--color-border) 0%,
-        transparent 100%
-      )
-      1;
+    --p-border-color: color-mix(in srgb, var(--p-theme-color) 40%, transparent);
     --p-box-shadow:
       inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent,
       var(--shadow-elevation-sm);
-    --p-bracket-display: block;
-    --p-bracket-size: var(--space-3);
-    --p-bracket-color: color-mix(in srgb, var(--p-theme-color) 40%, transparent);
   }
 
   &--hybrid {
-    --p-border-color: transparent;
-    --p-border-image: linear-gradient(
-        135deg,
-        var(--color-border) 0%,
-        transparent 100%
-      )
-      1;
+    --p-border-color: color-mix(in srgb, var(--p-theme-color) 80%, transparent);
     --p-box-shadow:
       inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border),
       var(--shadow-elevation-sm);
-    --p-bracket-display: block;
-    --p-bracket-size: var(--space-4);
-    --p-bracket-color: color-mix(in srgb, var(--p-theme-color) 80%, transparent);
-    --p-bracket-glow: drop-shadow(
-      0 0 var(--blur-md) color-mix(in srgb, var(--p-theme-color) 60%, transparent)
-    );
   }
 }
 </style>

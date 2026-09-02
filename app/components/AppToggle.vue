@@ -114,31 +114,31 @@ const inputId = useId()
     @include shadow("sm");
   }
 
-  /* 3. Hover State */
+  /* --- インタラクション (Disabled時以外) --- */
+  &:not(:has(.c-toggle__input:disabled)) {
+    /* 3. Hover State */
+    &:hover {
+      .c-toggle__label {
+        color: color-mix(in srgb, var(--toggle-color) 90%, transparent);
+        @include cyber-text-glow(var(--toggle-color), 20%, var(--blur-sm));
+      }
 
-  &:hover:not(:has(.c-toggle__input:disabled)) {
-    .c-toggle__input:not(:focus-visible, :active) + .c-toggle__track {
-      @include state-hover(var(--toggle-color));
+      /* Hover時の箱発光 (FocusやActive/Checkedでない時) */
+      .c-toggle__input:not(:focus-visible, :active, :checked) + .c-toggle__track {
+        @include state-hover(var(--toggle-color));
+      }
     }
 
-    /* Label slightly glows on hover */
+    /* 4. Active (Press) State */
+    &:active {
+      .c-toggle__track {
+        transform: scale(0.95);
+        transition: transform var(--duration-slow) var(--ease-base);
+      }
 
-    .c-toggle__label {
-      color: color-mix(in srgb, var(--toggle-color) 90%, transparent);
-
-      @include cyber-text-glow(var(--toggle-color), 20%, var(--blur-sm));
-    }
-  }
-
-  /* 4. Active (Press) State */
-  &:active:not(:has(.c-toggle__input:disabled)) {
-    .c-toggle__track {
-      transform: scale(0.95);
-      transition: transform var(--duration-slow) var(--ease-base);
-    }
-
-    .c-toggle__thumb {
-      @include shadow("sink");
+      .c-toggle__thumb {
+        @include shadow("sink");
+      }
     }
   }
 }

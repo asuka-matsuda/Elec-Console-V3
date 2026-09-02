@@ -12,8 +12,9 @@ defineProps<{
 
 <template>
   <AppPanel
-    bracket-color="tool"
-    class="c-basis-panel"
+    title="計算の根拠"
+    variant="hud"
+    density="compact"
   >
     <template #header>
       <AppSectionHeader

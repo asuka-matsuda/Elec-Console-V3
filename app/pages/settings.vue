@@ -34,9 +34,8 @@ const themeOptions = [
       <div class="p-settings__stack">
         <!-- テーマ・カラー設定 -->
         <AppPanel
-          title="テーマ・カラー設定"
-          variant="hybrid"
-          bracket-color="tool"
+          title="一般設定"
+          variant="hud"
         >
           <template #header>
             <AppSectionHeader

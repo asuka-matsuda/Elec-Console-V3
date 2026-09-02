@@ -94,20 +94,22 @@ const handleClick = (e: MouseEvent) => {
     height: 1.2em;
   }
 
-  &:hover:not(:disabled, .is-disabled) {
-    @include state-hover(var(--btn-color), 'md');
-  }
-
-  &:focus-visible:not(:disabled, .is-disabled) {
-    @include state-focus(var(--btn-color), 'md');
-  }
-
-  &:active:not(:disabled, .is-disabled) {
-    @include state-active(var(--btn-color), 'md');
-  }
-
   &:is(:disabled, .is-disabled) {
     @include disabled;
+  }
+
+  &:not(:is(:disabled, .is-disabled)) {
+    &:hover {
+      @include state-hover(var(--btn-color), 'md');
+    }
+
+    &:focus-visible {
+      @include state-focus(var(--btn-color), 'md');
+    }
+
+    &:active {
+      @include state-active(var(--btn-color), 'md');
+    }
   }
 
   &--danger {

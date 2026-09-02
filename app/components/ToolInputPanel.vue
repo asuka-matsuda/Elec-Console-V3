@@ -13,8 +13,9 @@ defineEmits(['reset'])
 
 <template>
   <AppPanel
-    bracket-color="tool"
-    class="c-tool-panel"
+    title="入力"
+    variant="hud"
+    density="compact"
   >
     <template #header>
       <AppSectionHeader

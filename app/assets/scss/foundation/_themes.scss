@@ -48,9 +48,6 @@ body[data-border-style="hud"] {
     inset 0 0 0 1px var(--color-main-bg),
     inset 0 0 0 2px var(--color-border),
     var(--shadow-elevation-sm);
-  --panel-bracket-display: block;
-  --panel-bracket-size: 16px;
-  --panel-bracket-color: var(--color-border);
 }
 
 body[data-border-style="simple"] {
@@ -60,7 +57,6 @@ body[data-border-style="simple"] {
     inset 1px 1px 2px var(--color-border),
     inset -1px -1px 2px transparent,
     var(--shadow-elevation-sm);
-  --panel-bracket-display: none;
 }
 
 body[data-border-style="gradient"] {
@@ -70,9 +66,6 @@ body[data-border-style="gradient"] {
     inset 1px 1px 2px var(--color-border),
     inset -1px -1px 2px transparent,
     var(--shadow-elevation-sm);
-  --panel-bracket-display: block;
-  --panel-bracket-size: 12px;
-  --panel-bracket-color: var(--color-border);
 }
 
 body[data-border-style="hybrid"] {
@@ -82,10 +75,6 @@ body[data-border-style="hybrid"] {
     inset 0 0 0 1px var(--color-main-bg),
     inset 0 0 0 2px var(--color-border),
     var(--shadow-elevation-sm);
-  --panel-bracket-display: block;
-  --panel-bracket-size: 18px;
-  --panel-bracket-color: var(--color-border);
-  --panel-bracket-glow: drop-shadow(0 0 4px var(--color-border));
 }
 
 body {

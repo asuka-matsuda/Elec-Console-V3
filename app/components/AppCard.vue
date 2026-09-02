@@ -64,20 +64,22 @@ const handleClick = (e: MouseEvent) => {
   &:is(a, button) {
     @include click-enabled;
 
-    &:hover:not(:disabled, .is-disabled) {
-      @include state-hover(var(--theme-accent), 'md');
-    }
-
-    &:focus-visible:not(:disabled, .is-disabled) {
-      @include state-focus(var(--theme-accent), 'md');
-    }
-
-    &:active:not(:disabled, .is-disabled) {
-      @include state-active(var(--theme-accent), 'md');
-    }
-
     &:is(:disabled, .is-disabled) {
       @include disabled;
+    }
+
+    &:not(:is(:disabled, .is-disabled)) {
+      &:hover {
+        @include state-hover(var(--theme-accent), 'md');
+      }
+
+      &:focus-visible {
+        @include state-focus(var(--theme-accent), 'md');
+      }
+
+      &:active {
+        @include state-active(var(--theme-accent), 'md');
+      }
     }
   }
 }

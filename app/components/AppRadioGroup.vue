@@ -70,19 +70,18 @@ const getStyle = (option: RadioOption): StyleValue | undefined => option.color ?
 
     position: relative;
 
-    &:hover {
-      .c-segmented-control__input:not(:disabled, :checked)
-        + .c-segmented-control__text {
-        color: var(--color-text-main);
-
-        @include state-hover(var(--color-border));
+    &:not(:has(.c-segmented-control__input:disabled)) {
+      &:hover {
+        .c-segmented-control__input:not(:checked) + .c-segmented-control__text {
+          color: var(--color-text-main);
+          @include state-hover(var(--color-border));
+        }
       }
-    }
 
-    &:active {
-      .c-segmented-control__input:not(:disabled)
-        + .c-segmented-control__text {
-        @include state-active(var(--radio-color));
+      &:active {
+        .c-segmented-control__text {
+          @include state-active(var(--radio-color));
+        }
       }
     }
   }

@@ -97,7 +97,7 @@ onUnmounted(() => {
   >
     <AppPanel
       class="c-modal__panel"
-      :bracket-color="typedVariant"
+      :variant="panelVariant"
     >
       <!-- Header -->
       <template #header>
