@@ -30,9 +30,10 @@
 
     flex: 1;
 
-    /* AppInput のボーダーと角丸を調整 */
-    :deep(.c-input) {
+    :deep(.c-form-control) {
       flex: 1;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
     }
   }
 
@@ -43,6 +44,8 @@
     :deep(.c-custom-select__value),
     :deep(.c-input-addon) {
       border-left: none;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
     }
 
     /* append領域に配置されたAppSelectは、単位選択などを想定しコンパクトな幅にする */
