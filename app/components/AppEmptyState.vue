@@ -31,8 +31,9 @@ withDefaults(
     </div>
 
     <div class="c-empty-state__content">
+      <!-- 💡 $slots.title を追加してバグを防止 -->
       <h3
-        v-if="title"
+        v-if="title || $slots.title"
         class="c-empty-state__title"
       >
         <slot name="title">
@@ -63,22 +64,18 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-empty-state {
-  @include flex-start-stretch($direction: column);
+  @include flex-center-center(column);
 
   gap: var(--space-card-gap);
-  align-items: center;
-  justify-content: center;
-
   width: 100%;
   padding: var(--space-layout-pad) var(--space-card-pad);
-
   text-align: center;
 
   @include border-base($opacity: 30%);
 
   &__icon-wrapper {
     @include flex-center-center;
-
+    
     width: var(--size-control-lg);
     height: var(--size-control-lg);
     color: var(--color-text-muted);
@@ -92,28 +89,25 @@ withDefaults(
   }
 
   &__content {
-    @include flex-start-stretch($direction: column);
+    @include flex-start-center(column);
 
     gap: var(--space-1);
-    align-items: center;
     max-width: 420px;
   }
 
   &__title {
     @include text-title("sm");
-
     color: var(--color-text-secondary);
   }
 
   &__desc {
     @include text-desc;
-
     color: var(--color-text-muted);
   }
 
   &__actions {
     @include flex-center-center;
-
+    
     gap: var(--space-2);
     margin-top: var(--space-1);
   }
