@@ -311,7 +311,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   user-select: none;
   position: relative;
   width: 100%;
-  color: var(--color-text-muted);
+  color: var(--color-text-main);
 
   &.is-disabled {
     @include disabled;
@@ -340,6 +340,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
     content: "";
 
     flex-shrink: 0;
+
     width: 1.2em;
     height: 1.2em;
     margin-left: var(--space-2);
@@ -364,9 +365,10 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 }
 
 .c-custom-select__text {
-  flex: 1;
-  text-align: left;
   overflow: hidden;
+  flex: 1;
+
+  text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
