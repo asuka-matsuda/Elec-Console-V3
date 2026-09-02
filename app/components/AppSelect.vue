@@ -327,8 +327,10 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   overflow: hidden;
 
   width: 100%;
-  height: var(--size-control-md);
-  padding: var(--space-2) calc(var(--space-4) + var(--icon-size-md) + var(--space-1)) var(--space-2) var(--space-4);
+  min-height: 2.6em;
+  padding-block: 0.3em;
+  padding-inline-start: 1.2em;
+  padding-inline-end: 2.5em; // アイコン分の余白を確保
 
   text-align: left;
   text-overflow: ellipsis;
@@ -344,11 +346,11 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 
     position: absolute;
     top: 50%;
-    right: var(--space-4);
+    right: 0.8em;
     transform: translateY(-50%);
 
-    width: var(--icon-size-md);
-    height: var(--icon-size-sm);
+    width: 1.2em;
+    height: 1.2em;
 
     background-image: var(--icon-select-arrow);
     background-repeat: no-repeat;
