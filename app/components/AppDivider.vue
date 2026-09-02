@@ -124,7 +124,7 @@ withDefaults(
         transparent
       );
 
-      @include state-focus(var(--theme-accent));
+      box-shadow: 0 0 8px color-mix(in srgb, var(--theme-accent) 60%, transparent);
     }
   }
 
