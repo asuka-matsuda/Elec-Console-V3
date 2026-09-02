@@ -58,24 +58,24 @@ const handleClick = (e: MouseEvent) => {
   @include border-base;
   @include state-base;
 
-  &:is(a) {
+  &:is(a, button) {
     @include click-enabled;
 
-    &:hover:not(.is-disabled) {
-      @include state-hover(var(--theme-accent));
+    &:hover:not(:disabled, .is-disabled) {
+      @include state-hover(var(--theme-accent), 'md');
     }
 
-    &:focus-visible:not(.is-disabled) {
-      @include state-focus(var(--theme-accent));
+    &:focus-visible:not(:disabled, .is-disabled) {
+      @include state-focus(var(--theme-accent), 'md');
     }
 
-    &:active:not(.is-disabled) {
-      @include state-active(var(--theme-accent));
+    &:active:not(:disabled, .is-disabled) {
+      @include state-active(var(--theme-accent), 'md');
     }
-  }
 
-  &.is-disabled {
-    @include disabled;
+    &:is(:disabled, .is-disabled) {
+      @include disabled;
+    }
   }
 }
 </style>

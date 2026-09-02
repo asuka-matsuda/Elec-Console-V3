@@ -5,23 +5,16 @@
  */
 import { computed } from 'vue'
 
-export interface AppButtonProps {
-  to?: string
-  href?: string
-  type?: 'button' | 'submit' | 'reset'
-  size?: 'sm' | 'md'
-  variant?: 'primary' | 'secondary' | 'danger' | 'success'
-  block?: boolean
+import type { BaseButtonProps } from '~/types/components'
+
+export interface AppButtonProps extends BaseButtonProps {
   icon?: string
-  iconOnly?: boolean
-  disabled?: boolean
 }
 
 const props = withDefaults(defineProps<AppButtonProps>(), {
   type: 'button',
   size: 'sm',
   variant: 'primary',
-  icon: undefined,
 })
 
 const componentTag = computed(() => {
@@ -37,7 +30,6 @@ const buttonClasses = computed(() => {
     props.variant !== 'primary' ? `c-btn--${props.variant}` : '',
     props.size !== 'sm' ? `c-btn--${props.size}` : '',
     props.block ? 'c-btn--block' : '',
-    props.iconOnly ? 'c-btn--icon-only' : '',
     props.disabled ? 'is-disabled' : '',
   ].filter(Boolean)
 })
@@ -82,7 +74,7 @@ const handleClick = (e: MouseEvent) => {
   --btn-color: var(--theme-accent);
 
   @include flex-center-center($is-inline: true);
-  @include text-meta("md", "semibold");
+  @include text-meta("sm", "semibold");
   @include click-enabled;
 
   position: relative;
@@ -97,17 +89,15 @@ const handleClick = (e: MouseEvent) => {
   @include state-base(var(--shadow-elevation-sm), var(--transition-fast), var(--btn-color));
 
   &:hover:not(:disabled, .is-disabled) {
-    @include state-hover(var(--btn-color));
+    @include state-hover(var(--btn-color), 'md');
   }
 
-  &:focus-visible {
-    @include state-focus(var(--btn-color));
-    @include cyber-text-glow(var(--btn-color));
+  &:focus-visible:not(:disabled, .is-disabled) {
+    @include state-focus(var(--btn-color), 'md');
   }
 
   &:active:not(:disabled, .is-disabled) {
-    @include state-active(var(--btn-color));
-    @include cyber-text-glow(var(--btn-color));
+    @include state-active(var(--btn-color), 'md');
   }
 
   &:is(:disabled, .is-disabled) {
@@ -131,36 +121,10 @@ const handleClick = (e: MouseEvent) => {
   }
 
   &--md {
-    @include text-desc;
+    @include text-meta("md", "semibold");
 
     height: var(--size-control-md);
     padding: 0 var(--space-4);
-  }
-
-  &--icon-only {
-    width: var(--size-control-sm);
-    padding: 0;
-
-    :deep(.c-icon),
-    .c-icon {
-      width: 18px;
-      height: 18px;
-
-      svg {
-        width: 100%;
-        height: 100%;
-      }
-    }
-
-    &.c-btn--md {
-      width: var(--size-control-md);
-
-      :deep(.c-icon),
-      .c-icon {
-        width: 22px;
-        height: 22px;
-      }
-    }
   }
 }
 </style>

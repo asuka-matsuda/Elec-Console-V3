@@ -54,19 +54,6 @@
   --font-size-3xl: clamp(18px, 1.15rem + 0.85vw, 24px);
   --font-size-4xl: clamp(20px, 1.3rem + 1.1vw, 28px);
 
-  // エイリアス互換
-  --text-2xs: var(--font-size-2xs);
-  --text-xs:  var(--font-size-xs);
-  --text-sm:  var(--font-size-sm);
-  --text-base: var(--font-size-base);
-  --text-md:  var(--font-size-md);
-  --text-lg:  var(--font-size-lg);
-  --text-xl:  var(--font-size-xl);
-  --text-2xl: var(--font-size-2xl);
-  --text-3xl: var(--font-size-3xl);
-  --text-4xl: var(--font-size-4xl);
-
-  // タイポグラフィ基本
   --font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
   --font-base: var(--font-family);
   --font-mono: "Roboto Mono", var(--font-family);
@@ -205,13 +192,10 @@
   --duration-modal: 0.5s;
   --ease-base:   cubic-bezier(0.25, 1, 0.5, 1);
   --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
   --transition-fast: all var(--duration-fast) var(--ease-base);
   --transition-base: all var(--duration-base) var(--ease-base);
   --transition-slow: all var(--duration-slow) var(--ease-smooth);
   --transition-glow:
     box-shadow var(--duration-slow) var(--ease-base),
-    border-color var(--duration-slow) var(--ease-base),
-    background-color var(--duration-base) var(--ease-base),
-    color var(--duration-base) var(--ease-base);
+    border-color var(--duration-slow) var(--ease-base);
 }

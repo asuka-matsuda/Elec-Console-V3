@@ -52,82 +52,82 @@
 // ==========================================================================
 
 @mixin text-title($size: "md", $weight: null) {
+  line-height: var(--line-height-tight);
+
   @include resolve-size($size, var(--font-size-lg));
   @include resolve-weight($weight, var(--font-weight-bold));
   @include resolve-tracking($size);
-
-  line-height: var(--line-height-tight);
 }
 
 @mixin text-body($size: "md", $weight: null) {
-  @include resolve-size($size, var(--font-size-base));
-  @include resolve-weight($weight, normal);
-  
   line-height: var(--line-height-base);
   color: var(--color-text-main);
   letter-spacing: var(--tracking-wide);
+
+  @include resolve-size($size, var(--font-size-base));
+  @include resolve-weight($weight, normal);
 }
 
 @mixin text-desc($size: "md", $weight: null) {
-  @include resolve-size($size, var(--font-size-sm));
-  @include resolve-weight($weight, normal);
-
   line-height: var(--line-height-base);
   color: var(--color-text-muted);
   letter-spacing: var(--tracking-normal);
+
+  @include resolve-size($size, var(--font-size-sm));
+  @include resolve-weight($weight, normal);
 }
 
 @mixin text-meta($size: "md", $weight: null) {
-  @include resolve-size($size, var(--font-size-2xs));
-  @include resolve-weight($weight, normal);
-
   line-height: var(--line-height-base);
   color: var(--color-text-muted);
   letter-spacing: var(--tracking-wide);
+
+  @include resolve-size($size, var(--font-size-2xs));
+  @include resolve-weight($weight, normal);
 }
 
 @mixin text-badge($size: "md", $weight: null) {
-  @include resolve-size($size, var(--font-size-2xs));
-  @include resolve-weight($weight, var(--font-weight-bold));
-
   line-height: var(--line-height-tight);
   text-transform: uppercase;
   letter-spacing: var(--tracking-wider);
+
+  @include resolve-size($size, var(--font-size-2xs));
+  @include resolve-weight($weight, var(--font-weight-bold));
 }
 
 @mixin text-label($size: "md", $weight: null) {
-  @include resolve-size($size, var(--font-size-base));
-  @include resolve-weight($weight, var(--font-weight-bold));
-
   line-height: var(--line-height-tight);
   letter-spacing: var(--tracking-wide);
+
+  @include resolve-size($size, var(--font-size-base));
+  @include resolve-weight($weight, var(--font-weight-bold));
 }
 
 @mixin text-caption($size: "md", $weight: null) {
-  @include resolve-size($size, var(--font-size-sm));
-  @include resolve-weight($weight, normal);
-
   line-height: var(--line-height-base);
   letter-spacing: var(--tracking-normal);
+
+  @include resolve-size($size, var(--font-size-sm));
+  @include resolve-weight($weight, normal);
 }
 
 @mixin text-link($size: "md", $weight: null) {
-  @include resolve-size($size, var(--font-size-base));
-  @include resolve-weight($weight, normal);
-
   cursor: pointer;
   line-height: var(--line-height-base);
   color: var(--theme-accent);
   letter-spacing: var(--tracking-wide);
+
+  @include resolve-size($size, var(--font-size-base));
+  @include resolve-weight($weight, normal);
 }
 
 @mixin text-mono($size: "md", $weight: null) {
-  @include resolve-size($size, var(--font-size-base));
-  @include resolve-weight($weight, normal);
-
   font-family: var(--font-mono);
   line-height: var(--line-height-base);
   letter-spacing: var(--tracking-normal);
+
+  @include resolve-size($size, var(--font-size-base));
+  @include resolve-weight($weight, normal);
 }
 
 @mixin text-truncate {

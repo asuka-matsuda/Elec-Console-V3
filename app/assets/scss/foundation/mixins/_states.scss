@@ -1,9 +1,11 @@
-
+@use "sass:map";
+@use "sass:list";
 
 // ==========================================================================
 // インタラクション・状態 Mixins
 // ==========================================================================
-@mixin state-base($shadow: none, $transition: var(--transition-base), $color: null) {
+
+@mixin state-base($shadow: 0 0 transparent, $transition: var(--transition-base), $color: null) {
   --shadow-base: #{$shadow};
 
   position: relative;
@@ -12,7 +14,7 @@
 
   @if $color {
     box-shadow: 
-      inset 0 0 4px color-mix(in srgb, #{$color} 20%, transparent),
+      inset 0 0 4px color-mix(in srgb, $color 20%, transparent),
       0 2px 4px color-mix(in srgb, black 20%, transparent),
       var(--shadow-base);
   } @else {
@@ -20,44 +22,79 @@
   }
 }
 
-@mixin state-hover($color: var(--color-category-main), $transition: var(--transition-glow)) {
-  z-index: 2;
-  border-color: #{$color};
-  box-shadow: 
-    0 0 8px #{$color},
-    0 0 16px color-mix(in srgb, #{$color} 60%, transparent),
-    inset 0 0 6px color-mix(in srgb, #{$color} 40%, transparent),
-    var(--shadow-base, none);
-  transition: $transition;
+@function get-glow-shadow($color, $size: 'md', $state: 'hover') {
+  $config: (
+    'hover': (
+      'sm': (blur1: 4px,  blur2: 8px,  inset: null),
+      'md': (blur1: 8px,  blur2: 16px, inset: 6px),
+      'lg': (blur1: 12px, blur2: 24px, inset: 8px)
+    ),
+    'focus': (
+      'sm': (ring: 3px),
+      'md': (ring: 4px),
+      'lg': (ring: 6px)
+    ),
+    'active': (
+      'sm': (blur1: 2px, blur2: 4px,  inset: 6px),
+      'md': (blur1: 4px, blur2: 8px,  inset: 12px),
+      'lg': (blur1: 6px, blur2: 12px, inset: 16px)
+    )
+  );
+  $state-config: map.get($config, $state);
+  $values: map.get($state-config, $size);
+
+  @if not $values {
+    @return none;
+  }
+
+  @if $state == 'hover' {
+    $shadow: (
+      0 0 map.get($values, blur1) $color,
+      0 0 map.get($values, blur2) color-mix(in srgb, $color 60%, transparent)
+    );
+
+    @if map.get($values, inset) {
+      $shadow: list.append($shadow, inset 0 0 map.get($values, inset) color-mix(in srgb, $color 40%, transparent), comma);
+    }
+
+    @return $shadow;
+  } @else if $state == 'focus' {
+    @return (
+      0 0 0 2px var(--color-main-bg),
+      0 0 0 map.get($values, ring) color-mix(in srgb, $color 80%, transparent)
+    );
+  } @else if $state == 'active' {
+    @return (
+      0 0 map.get($values, blur1) $color,
+      0 0 map.get($values, blur2) color-mix(in srgb, $color 80%, transparent),
+      inset 0 0 map.get($values, inset) color-mix(in srgb, $color 60%, transparent)
+    );
+  }
+
+  @return none;
 }
 
-@mixin state-focus($color: var(--color-category-main), $transition: var(--transition-glow)) {
-  z-index: 2;
+@mixin state-hover($color: var(--color-category-main), $size: 'md') {
+  border-color: $color;
+  box-shadow: get-glow-shadow($color, $size, 'hover'), var(--shadow-base, 0 0 transparent);
+  transition: var(--transition-glow);
+}
 
-  border-color: color-mix(in srgb, #{$color} 60%, transparent);
-
+@mixin state-focus($color: var(--color-category-main), $size: 'md') {
+  border-color: color-mix(in srgb, $color 60%, transparent);
   outline: none;
-  box-shadow: 
-    0 0 0 2px var(--color-main-bg),
-    0 0 0 4px color-mix(in srgb, #{$color} 80%, transparent),
-    var(--shadow-base, none);
-
-  transition: $transition;
+  box-shadow: get-glow-shadow($color, $size, 'focus'), var(--shadow-base, 0 0 transparent);
+  transition: var(--transition-glow);
 }
 
-@mixin state-active($color: var(--color-category-main), $transition: var(--transition-glow)) {
-  z-index: 2;
-  border-color: #{$color};
-  box-shadow: 
-    0 0 4px #{$color},
-    0 0 8px color-mix(in srgb, #{$color} 80%, transparent),
-    inset 0 0 12px color-mix(in srgb, #{$color} 60%, transparent),
-    var(--shadow-base, none);
-  transition: $transition;
+@mixin state-active($color: var(--color-category-main), $size: 'md') {
+  border-color: $color;
+  box-shadow: get-glow-shadow($color, $size, 'active'), var(--shadow-base, 0 0 transparent);
+  transition: var(--transition-glow);
 
   svg {
-    filter: drop-shadow(0 0 2px #{$color});
-    stroke: #{$color};
+    filter: drop-shadow(0 0 2px $color);
+    stroke: $color;
   }
 }
 
@@ -67,12 +104,14 @@
 }
 
 @mixin disabled {
-  pointer-events: none;
   cursor: not-allowed;
   opacity: 0.5;
   filter: grayscale(100%);
 }
 
 @mixin form-placeholder {
-  color: color-mix(in srgb, var(--color-text-muted) 50%, transparent);
+  &::placeholder {
+    color: color-mix(in srgb, var(--color-text-muted) 50%, transparent);
+    opacity: 1; 
+  }
 }
