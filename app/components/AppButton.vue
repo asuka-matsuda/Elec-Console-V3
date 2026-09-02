@@ -86,7 +86,7 @@ const handleClick = (e: MouseEvent) => {
   padding: 0 var(--space-3);
 
   @include border-base(var(--btn-color), 30%);
-  @include state-base(var(--shadow-elevation-sm), var(--transition-fast), var(--btn-color));
+  @include state-base("sm", var(--transition-fast), var(--btn-color));
 
   &:hover:not(:disabled, .is-disabled) {
     @include state-hover(var(--btn-color), 'md');

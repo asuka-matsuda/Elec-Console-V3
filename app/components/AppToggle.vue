@@ -92,7 +92,7 @@ const inputId = useId()
     height: var(--track-h);
 
     @include border-base;
-    @include state-base(var(--shadow-sink), var(--transition-glow));
+    @include state-base("sink", var(--transition-glow));
   }
 
   &__thumb {

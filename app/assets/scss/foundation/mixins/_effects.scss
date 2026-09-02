@@ -4,17 +4,21 @@
 // 視覚効果・装飾 Mixins
 // ==========================================================================
 
+@function get-shadow($type: "sm") {
+  @if $type == "sink" {
+    @return var(--shadow-sink);
+  } @else if $type == "modal" {
+    @return var(--shadow-modal);
+  } @else if $type == "none" or not $type {
+    @return 0 0 transparent;
+  } @else {
+    @return var(--shadow-elevation-#{$type});
+  }
+}
+
 // シャドウ (物理的な影・へこみのカプセル化)
 @mixin shadow($type: "sm") {
-  @if $type == "sink" {
-    box-shadow: var(--shadow-sink);
-  } @else if $type == "modal" {
-    box-shadow: var(--shadow-modal);
-  } @else if $type == "none" {
-    box-shadow: none;
-  } @else {
-    box-shadow: var(--shadow-elevation-#{$type});
-  }
+  box-shadow: get-shadow($type);
 }
 
 // サイバー風テキスト発光

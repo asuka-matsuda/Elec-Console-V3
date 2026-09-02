@@ -139,7 +139,7 @@ const inputId = useId()
     height: 1.4em;
 
     @include border-base($opacity: 30%);
-    @include state-base(var(--shadow-sink));
+    @include state-base("sink");
 
     .c-checkbox__icon {
       position: absolute;

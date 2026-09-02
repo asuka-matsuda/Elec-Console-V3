@@ -61,7 +61,6 @@ const processedItems = computed(() => {
   @include text-caption;
 
   position: relative;
-  flex-wrap: wrap;
   padding: var(--space-1) var(--space-2);
   text-transform: uppercase;
 

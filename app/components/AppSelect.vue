@@ -371,14 +371,14 @@ onUnmounted(() => {
   backdrop-filter: blur(var(--blur-md));
 
   @include border-base(var(--theme-accent));
-  @include state-base(var(--shadow-elevation-md), none, var(--theme-accent));
+  @include state-base("md", none, var(--theme-accent));
 
   .c-custom-select.is-error & {
     --glow-color: color-mix(in srgb, var(--color-status-danger) 20%, transparent);
 
     border-color: color-mix(in srgb, var(--color-status-danger) 50%, transparent);
 
-    @include state-base(var(--shadow-elevation-md), none, var(--color-status-danger));
+    @include state-base("md", none, var(--color-status-danger));
   }
 }
 
