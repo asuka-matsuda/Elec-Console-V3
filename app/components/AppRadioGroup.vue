@@ -49,7 +49,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
 
 <style scoped lang="scss">
 .c-segmented-control {
-  --radio-color: var(--theme-accent); /* デフォルトの色 */
+  --radio-color: var(--theme-accent);
 
   @include flex-start-stretch($is-inline: true);
 
@@ -78,8 +78,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
 
     opacity: 0;
 
-    /* Hover & Active state (Not disabled & Not checked) */
-    &:not(:disabled):not(:checked) {
+    &:not(:disabled, :checked) {
       + .c-segmented-control__text {
         &:hover {
           color: var(--color-text-main);
@@ -93,7 +92,6 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
       }
     }
 
-    /* Checked state */
     &:checked + .c-segmented-control__text {
       --glow-color: var(--radio-color);
 
@@ -104,13 +102,11 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
       @include cyber-text-glow(var(--radio-color), 60%, var(--blur-md));
     }
 
-    /* Keyboard Focus state */
     &:focus-visible + .c-segmented-control__text {
       @include state-focus(var(--radio-color));
       @include cyber-text-glow(var(--radio-color), 60%, var(--blur-md));
     }
 
-    /* Disabled state */
     &:disabled + .c-segmented-control__text {
       opacity: 0.3;
 
