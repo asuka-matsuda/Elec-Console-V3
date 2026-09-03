@@ -215,7 +215,6 @@
   --transition-fast: all var(--duration-fast) var(--ease-base);
   --transition-base: all var(--duration-base) var(--ease-base);
   --transition-slow: all var(--duration-slow) var(--ease-smooth);
-  --transition-modal: all var(--duration-modal) var(--ease-smooth);
   --transition-glow:
     box-shadow var(--duration-slow) var(--ease-base),
     border-color var(--duration-slow) var(--ease-base);

@@ -107,7 +107,8 @@ onMounted(() => {
   outline: none;
 
   transition:
-    var(--transition-modal),
+    opacity var(--duration-modal) var(--ease-smooth),
+    transform var(--duration-modal) var(--ease-smooth),
     overlay var(--duration-modal) allow-discrete,
     display var(--duration-modal) allow-discrete;
 
@@ -115,7 +116,7 @@ onMounted(() => {
     opacity: 0;
     backdrop-filter: blur(var(--blur-md));
     transition:
-      var(--transition-modal),
+      opacity var(--duration-modal) var(--ease-smooth),
       overlay var(--duration-modal) allow-discrete,
       display var(--duration-modal) allow-discrete;
   }
