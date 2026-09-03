@@ -60,21 +60,12 @@ defineProps<{
 
   &__layout {
     @include flex-start-stretch($direction: column);
-
-    // パネル全体をflex-growさせつつはみ出た分だけスクロールさせる場合、
-    // ここで overflow や min-height の制御が必要な場合があります
-    flex: 1;
-    min-height: 0;
   }
 
   &__list {
     @include flex-start-stretch(column);
 
-    overflow-y: auto;
-    flex: 1;
     gap: var(--space-card-gap);
-    padding-right: var(--space-2);
-    padding-bottom: var(--space-layout-pad);
   }
 
   &__card {

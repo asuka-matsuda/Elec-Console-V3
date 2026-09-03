@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import "katex/dist/katex.min.css";
+
 import katex from "katex";
 import { computed } from "vue";
 
@@ -26,17 +27,21 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
     });
   } catch (e) {
     console.error("KaTeX render error:", e);
+
     return mathStr;
   }
 };
 
 const parseLegend = (legendArray: string[] | undefined) => {
   if (!legendArray) return [];
+
   return legendArray.map((leg) => {
     const parts = leg.split(":");
     let rawSymbol = parts[0]?.trim() || "";
+
     rawSymbol = rawSymbol.replace(/\\\(/g, "").replace(/\\\)/g, "").trim();
     const name = parts.slice(1).join(":")?.trim() || leg;
+
     return { symbol: rawSymbol, name };
   });
 };
@@ -70,17 +75,14 @@ const parsedLegend = computed(() => {
 
 <style scoped lang="scss">
 .c-math-basis {
-  @include flex-start-start;
+  @include flex-start-stretch(column);
 
-  flex-wrap: wrap;
   gap: var(--space-card-gap);
 
   &__math {
     scrollbar-width: none;
     overflow-x: auto;
 
-    // flex-grow: 1 により空き領域を埋め、flex-basis: 300px で基準幅を持たせる
-    flex: 1 1 300px;
     min-width: 0;
 
     &::-webkit-scrollbar {
@@ -94,14 +96,17 @@ const parsedLegend = computed(() => {
       .tex-status-success * {
         color: var(--color-status-success);
       }
+
       .tex-status-warning,
       .tex-status-warning * {
         color: var(--color-status-warning);
       }
+
       .tex-status-danger,
       .tex-status-danger * {
         color: var(--color-status-danger);
       }
+
       .tex-color-accent,
       .tex-color-accent * {
         color: var(--color-accent-main);
@@ -109,26 +114,24 @@ const parsedLegend = computed(() => {
     }
 
     :deep(.katex-display) {
-      padding: var(--space-1);
+      padding: var(--space-1) 0;
+      margin: 0;
     }
   }
 
   &__legend {
     @include flex-start-stretch(column);
 
-    flex-shrink: 0;
     gap: var(--space-1);
 
-    // デスクトップベース (幅固定)
-    flex: 0 0 250px;
-
-    @include mq("md") {
-      flex: 1 1 100%;
-    }
+    // 💡 MathとLegendを区切るためのわずかな装飾
+    padding-top: var(--space-2);
+    border-top: 1px dashed var(--color-border-main);
   }
 
   &__legend-title {
-    @include text-meta("md", "bold");
+    @include text-meta("sm", "bold");
+
     color: var(--color-text-muted);
   }
 
@@ -149,7 +152,7 @@ const parsedLegend = computed(() => {
     }
 
     dd {
-      @include text-body("md", "bold");
+      @include text-meta("sm", "regular");
 
       margin: 0;
       color: var(--color-text-secondary);
