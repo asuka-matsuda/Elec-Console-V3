@@ -3,7 +3,7 @@
  * AppModal
  * ネイティブの dialog 要素を使用したモーダルコンポーネント。
  */
-import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 const isOpen = defineModel<boolean>({ default: false })
 
@@ -27,8 +27,6 @@ withDefaults(
 )
 
 const dialogRef = ref<HTMLDialogElement | null>(null)
-const isClosing = ref(false)
-let closeTimeout: ReturnType<typeof setTimeout> | null = null
 
 const close = () => {
   isOpen.value = false
@@ -44,23 +42,13 @@ watch(
   isOpen,
   (newVal) => {
     if (newVal) {
-      if (closeTimeout) {
-        clearTimeout(closeTimeout)
-        closeTimeout = null
-      }
-      isClosing.value = false
       if (!dialogRef.value?.open) {
         dialogRef.value?.showModal()
       }
     }
     else {
       if (dialogRef.value?.open) {
-        isClosing.value = true
-        closeTimeout = setTimeout(() => {
-          dialogRef.value?.close()
-          isClosing.value = false
-          closeTimeout = null
-        }, 300)
+        dialogRef.value?.close()
       }
     }
   },
@@ -72,20 +60,12 @@ onMounted(() => {
     dialogRef.value?.showModal()
   }
 })
-
-onUnmounted(() => {
-  if (closeTimeout) {
-    clearTimeout(closeTimeout)
-    closeTimeout = null
-  }
-})
 </script>
 
 <template>
   <dialog
     ref="dialogRef"
     class="c-modal"
-    :class="{ 'is-closing': isClosing }"
     @close="onNativeClose"
     @click.self="close"
     @cancel.prevent="close"
@@ -98,7 +78,7 @@ onUnmounted(() => {
     >
       <div
         class="c-modal__body"
-        :class="{ 'is-center': align === 'center' }"
+        :class="align ? `is-align-${align}` : undefined"
       >
         <slot />
       </div>
@@ -124,15 +104,20 @@ onUnmounted(() => {
   border: none;
 
   opacity: 0;
-  background: transparent;
   outline: none;
 
-  transition: var(--transition-modal);
+  transition:
+    var(--transition-modal),
+    overlay var(--duration-modal) allow-discrete,
+    display var(--duration-modal) allow-discrete;
 
   &::backdrop {
     opacity: 0;
     backdrop-filter: blur(var(--blur-md));
-    transition: var(--transition-modal);
+    transition:
+      var(--transition-modal),
+      overlay var(--duration-modal) allow-discrete,
+      display var(--duration-modal) allow-discrete;
   }
 
   &[open] {
@@ -153,18 +138,7 @@ onUnmounted(() => {
     }
   }
 
-  &.is-closing {
-    transform: translateY(var(--space-2));
-    opacity: 0;
-
-    &::backdrop {
-      opacity: 0;
-    }
-  }
-
   &__panel {
-    backdrop-filter: blur(var(--blur-lg));
-
     @include shadow("modal");
   }
 
@@ -176,8 +150,12 @@ onUnmounted(() => {
     overflow-y: auto;
     flex: 1;
 
-    &.is-center {
+    &.is-align-center {
       text-align: center;
+    }
+
+    &.is-align-left {
+      text-align: left;
     }
   }
 }

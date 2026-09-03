@@ -67,7 +67,7 @@ withDefaults(
   gap: var(--space-card-gap);
   padding: var(--space-card-pad);
 
-  @include border-base($color: var(--color-border), $opacity: 50%);
+  @include border-base($color: var(--color-border), $opacity: 100%);
   @include state-base("sm");
 
   &__content {
