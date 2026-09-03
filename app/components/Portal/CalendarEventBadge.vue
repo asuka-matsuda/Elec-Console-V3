@@ -20,7 +20,9 @@ const props = withDefaults(
 const timeText = computed(() => {
   if (props.allDay || !props.start) return ''
   const format = (d: Date) =>
-    String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0')
+    String(d.getHours()).padStart(2, '0')
+    + ':'
+    + String(d.getMinutes()).padStart(2, '0')
   const startStr = format(props.start)
 
   if (!props.end) return `${startStr}~`
@@ -32,14 +34,8 @@ const badgeColor = computed(() => props.color || 'var(--theme-accent)')
 </script>
 
 <template>
-  <div
-    class="c-cal-badge"
-    :style="{ '--badge-color': badgeColor }"
-  >
-    <span
-      v-if="timeText"
-      class="c-cal-badge__time"
-    >
+  <div class="c-cal-badge" :style="{ '--badge-color': badgeColor }">
+    <span v-if="timeText" class="c-cal-badge__time">
       {{ timeText }}
     </span>
     <span class="c-cal-badge__title">{{ title }}</span>

@@ -20,7 +20,8 @@ export function mapWeightToHistory(
   }
 
   const name = formatCableName(
-    cableDef || { category: settings.category, size: '', cores: '' } as CableData,
+    cableDef
+    || ({ category: settings.category, size: '', cores: '' } as CableData),
     true,
     false,
   )
@@ -37,7 +38,12 @@ export function mapWeightToHistory(
     status = 'error'
   }
 
-  const results: { label: string, value: string, isMain?: boolean, color?: string }[] = [
+  const results: {
+    label: string
+    value: string
+    isMain?: boolean
+    color?: string
+  }[] = [
     {
       label: 'ケーブル総重量',
       value: `${result.cableWeight?.toFixed(1)} kg`,
@@ -45,7 +51,9 @@ export function mapWeightToHistory(
     },
     {
       label: '推奨ドラム',
-      value: result.bestDrum ? `${result.bestDrum.category} (${result.bestDrum.id})` : '選定不可',
+      value: result.bestDrum
+        ? `${result.bestDrum.category} (${result.bestDrum.id})`
+        : '選定不可',
       isMain: true,
     },
   ]

@@ -10,12 +10,19 @@ export function useToolPage<InputType, ResultType>(
   defaultInputs: InputType,
   calculateFn: (inputs: InputType) => ResultType,
   historyMapper: {
-    toHistory: (inputs: InputType, result: ResultType | null) => Omit<HistoryEntry, 'id' | 'timestamp'> | null
+    toHistory: (
+      inputs: InputType,
+      result: ResultType | null,
+    ) => Omit<HistoryEntry, 'id' | 'timestamp'> | null
     fromHistory: (entry: HistoryEntry) => InputType
   },
 ) {
   const { saveHistory } = useCalcHistory(`elec_calc_${toolId}_hist`)
-  const inputs = useLocalStorage<InputType>(`tool-inputs-${toolId}`, defaultInputs, { mergeDefaults: true })
+  const inputs = useLocalStorage<InputType>(
+    `tool-inputs-${toolId}`,
+    defaultInputs,
+    { mergeDefaults: true },
+  )
   const result = computed<ResultType | null>(() => {
     try {
       return calculateFn(inputs.value)

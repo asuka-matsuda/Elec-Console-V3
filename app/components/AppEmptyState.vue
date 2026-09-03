@@ -5,16 +5,16 @@
  */
 withDefaults(
   defineProps<{
-    icon?: string;
-    title?: string;
-    description?: string;
+    icon?: string
+    title?: string
+    description?: string
   }>(),
   {
-    icon: "inbox",
-    title: "データがありません",
+    icon: 'inbox',
+    title: 'データがありません',
     description: undefined,
   },
-);
+)
 </script>
 
 <template>

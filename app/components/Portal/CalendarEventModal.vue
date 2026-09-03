@@ -39,45 +39,66 @@ const autoFillEndDate = () => {
 
   const endDate = form.value.end ? new Date(form.value.end) : null
 
-  if (!form.value.end || !endDate || isNaN(endDate.getTime()) || endDate < startDate) {
+  if (
+    !form.value.end
+    || !endDate
+    || isNaN(endDate.getTime())
+    || endDate < startDate
+  ) {
     if (form.value.allDay) {
-      form.value.end = (startVal.split('T')[0] || '')
+      form.value.end = startVal.split('T')[0] || ''
     }
     else {
       const newEnd = new Date(startDate.getTime() + 60 * 60 * 1000)
 
-      form.value.end = newEnd.getFullYear() + '-'
-        + String(newEnd.getMonth() + 1).padStart(2, '0') + '-'
-        + String(newEnd.getDate()).padStart(2, '0') + 'T'
-        + String(newEnd.getHours()).padStart(2, '0') + ':'
-        + String(newEnd.getMinutes()).padStart(2, '0')
+      form.value.end
+        = newEnd.getFullYear()
+          + '-'
+          + String(newEnd.getMonth() + 1).padStart(2, '0')
+          + '-'
+          + String(newEnd.getDate()).padStart(2, '0')
+          + 'T'
+          + String(newEnd.getHours()).padStart(2, '0')
+          + ':'
+          + String(newEnd.getMinutes()).padStart(2, '0')
     }
   }
 }
 
 watch(() => form.value.start, autoFillEndDate)
 
-watch(() => form.value.end, (newEnd) => {
-  if (!newEnd) autoFillEndDate() // ユーザーが空にした時に自動補完
-})
+watch(
+  () => form.value.end,
+  (newEnd) => {
+    if (!newEnd) autoFillEndDate() // ユーザーが空にした時に自動補完
+  },
+)
 
-watch(() => form.value.allDay, (isAllDay) => {
-  if (!form.value.start) return
-  if (isAllDay) {
-    form.value.start = (form.value.start.split('T')[0] || '')
-    if (form.value.end) form.value.end = (form.value.end.split('T')[0] || '')
-  }
-  else {
-    if (!form.value.start.includes('T')) form.value.start += 'T09:00'
-    if (form.value.end && !form.value.end.includes('T')) form.value.end += 'T10:00'
-  }
-  autoFillEndDate()
-})
+watch(
+  () => form.value.allDay,
+  (isAllDay) => {
+    if (!form.value.start) return
+    if (isAllDay) {
+      form.value.start = form.value.start.split('T')[0] || ''
+      if (form.value.end) form.value.end = form.value.end.split('T')[0] || ''
+    }
+    else {
+      if (!form.value.start.includes('T')) form.value.start += 'T09:00'
+      if (form.value.end && !form.value.end.includes('T'))
+        form.value.end += 'T10:00'
+    }
+    autoFillEndDate()
+  },
+)
 
-watch(() => props.initialData, (newData) => {
-  form.value = { ...newData }
-  hasTitleError.value = false
-}, { deep: true, immediate: true })
+watch(
+  () => props.initialData,
+  (newData) => {
+    form.value = { ...newData }
+    hasTitleError.value = false
+  },
+  { deep: true, immediate: true },
+)
 
 const handleSave = () => {
   if (!form.value.title.trim()) {
@@ -113,16 +134,15 @@ const closeModal = () => {
           required
           :error="hasTitleError"
         />
-        <span
-          v-if="hasTitleError"
-          class="p-event-form__error"
-        >タイトルを入力してください</span>
+        <span v-if="hasTitleError" class="p-event-form__error"
+        >タイトルを入力してください</span
+        >
       </div>
       <div class="p-event-form__field">
         <label>予定種別</label>
         <AppSelect
           v-model="form.type"
-          :options="eventTypes.map(t => ({ label: t.name, value: t.id }))"
+          :options="eventTypes.map((t) => ({ label: t.name, value: t.id }))"
         />
       </div>
 
@@ -146,32 +166,17 @@ const closeModal = () => {
         </div>
       </div>
 
-      <AppCheckbox
-        v-model="form.allDay"
-        label="終日イベント"
-      />
+      <AppCheckbox v-model="form.allDay" label="終日イベント" />
 
       <div class="p-event-form__actions">
-        <AppButton
-          v-if="isEditing"
-          variant="danger"
-          @click="handleDelete"
-        >
+        <AppButton v-if="isEditing" variant="danger" @click="handleDelete">
           削除
         </AppButton>
         <div style="flex: 1"></div>
-        <AppButton
-          variant="secondary"
-          @click="closeModal"
-        >
+        <AppButton variant="secondary" @click="closeModal">
           キャンセル
         </AppButton>
-        <AppButton
-          variant="primary"
-          @click="handleSave"
-        >
-          保存
-        </AppButton>
+        <AppButton variant="primary" @click="handleSave"> 保存 </AppButton>
       </div>
     </div>
   </AppModal>
@@ -211,7 +216,9 @@ const closeModal = () => {
       flex-direction: column;
       align-items: stretch;
     }
-    > * { flex: 1; }
+    > * {
+      flex: 1;
+    }
   }
 
   &__actions {

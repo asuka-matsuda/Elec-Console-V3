@@ -6,24 +6,24 @@
 withDefaults(
   defineProps<{
     variant?:
-      | "main"
-      | "tool"
-      | "database"
-      | "reference"
-      | "management"
-      | "danger"
-      | "success"
-      | "border"
-      | "sidebar-border";
-    type?: "solid" | "fade-center" | "fade-side";
-    vertical?: boolean;
+      | 'main'
+      | 'tool'
+      | 'database'
+      | 'reference'
+      | 'management'
+      | 'danger'
+      | 'success'
+      | 'border'
+      | 'sidebar-border'
+    type?: 'solid' | 'fade-center' | 'fade-side'
+    vertical?: boolean
   }>(),
   {
-    variant: "main",
-    type: "solid",
+    variant: 'main',
+    type: 'solid',
     vertical: false,
   },
-);
+)
 </script>
 
 <template>

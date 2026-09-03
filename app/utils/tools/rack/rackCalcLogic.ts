@@ -57,7 +57,10 @@ export function getCableDiameters(cables: RackCableInput[]): number[] {
 /**
  * 指定された段数で積み重ねた場合のケーブル最大高さを計算する
  */
-export function getStackHeightFromDiams(diams: number[], layers: number): { height: number, detailStr: string } {
+export function getStackHeightFromDiams(
+  diams: number[],
+  layers: number,
+): { height: number, detailStr: string } {
   const sortedDiams = [...diams].sort((a, b) => b - a)
   let h = 0
   const terms: string[] = []
@@ -78,7 +81,9 @@ export function getStackHeightFromDiams(diams: number[], layers: number): { heig
 /**
  * ケーブルリストの総必要幅（1段積み換算）を算出するための基準和を計算する
  */
-export function calculateSectionSumFromCables(cables: RackCableInput[]): number {
+export function calculateSectionSumFromCables(
+  cables: RackCableInput[],
+): number {
   let sum = 0
 
   for (const cable of cables) {
@@ -96,7 +101,10 @@ export function calculateSectionSumFromCables(cables: RackCableInput[]): number 
 /**
  * ラック幅およびはみ出し判定などのメイン計算処理を行う
  */
-export function calculateRackSize(inputs: RackCalcInputs, standardRackSizes: number[]): RackCalcResult {
+export function calculateRackSize(
+  inputs: RackCalcInputs,
+  standardRackSizes: number[],
+): RackCalcResult {
   const {
     isStrong,
     isWeak,
@@ -121,13 +129,20 @@ export function calculateRackSize(inputs: RackCalcInputs, standardRackSizes: num
 
   if (isStrong) {
     sumStrong = calculateSectionSumFromCables(strongCables)
-    if (sumStrong > 0) wStrong = (1.2 * (sumStrong + 60)) / Math.max(1, lStrong ?? 1)
-    stackHStrong = getStackHeightFromDiams(getCableDiameters(strongCables), lStrong ?? 1)
+    if (sumStrong > 0)
+      wStrong = (1.2 * (sumStrong + 60)) / Math.max(1, lStrong ?? 1)
+    stackHStrong = getStackHeightFromDiams(
+      getCableDiameters(strongCables),
+      lStrong ?? 1,
+    )
   }
   if (isWeak) {
     sumWeak = calculateSectionSumFromCables(weakCables)
     if (sumWeak > 0) wWeak = (0.6 * (sumWeak + 120)) / Math.max(1, lWeak ?? 1)
-    stackHWeak = getStackHeightFromDiams(getCableDiameters(weakCables), lWeak ?? 1)
+    stackHWeak = getStackHeightFromDiams(
+      getCableDiameters(weakCables),
+      lWeak ?? 1,
+    )
   }
 
   let maxCableStackHeight: number
@@ -145,7 +160,12 @@ export function calculateRackSize(inputs: RackCalcInputs, standardRackSizes: num
   const maxDepthVal = maxDepth ?? 0
   const isOverflow = maxCableStackHeight > maxDepthVal
 
-  if (isStrong && isWeak && separatorWidth !== undefined && separatorWidth !== null) {
+  if (
+    isStrong
+    && isWeak
+    && separatorWidth !== undefined
+    && separatorWidth !== null
+  ) {
     wSep = separatorWidth
   }
 
@@ -204,14 +224,30 @@ export function generateMathData(
 
     const rightSideSym = `1.2 \\times \\{ \\sum (D + 10) + 60 \\}${divStrSym}`
     const rightSideSub = `1.2 \\times \\{ ${sumStrongHl} + 60 \\}${divStrSub}`
-    const resLine = result?.sumStrong !== undefined && result.sumStrong > 0 ? hlOk(result.wStrong.toFixed(1)) : '\\text{---}'
+    const resLine
+      = result?.sumStrong !== undefined && result.sumStrong > 0
+        ? hlOk(result.wStrong.toFixed(1))
+        : '\\text{---}'
 
-    const tex = buildFormula('W_{strong}', rightSideSym + ' \\\\ &= ' + rightSideSub, resLine, 'mm')
+    const tex = buildFormula(
+      'W_{strong}',
+      rightSideSym + ' \\\\ &= ' + rightSideSub,
+      resLine,
+      'mm',
+    )
 
-    mathStepData.push({ title: '① 強電ケーブルの必要幅算出', tex, legend: legendList })
+    mathStepData.push({
+      title: '① 強電ケーブルの必要幅算出',
+      tex,
+      legend: legendList,
+    })
   }
   else {
-    mathStepData.push({ title: '① 強電ケーブルの必要幅算出', tex: `W_{strong} = 0 \\text{ [mm]}`, legend: ['強電ケーブルなし'] })
+    mathStepData.push({
+      title: '① 強電ケーブルの必要幅算出',
+      tex: `W_{strong} = 0 \\text{ [mm]}`,
+      legend: ['強電ケーブルなし'],
+    })
   }
 
   // 2. 弱電ケーブルの必要幅算出
@@ -228,24 +264,44 @@ export function generateMathData(
 
     const rightSideSym = `0.6 \\times \\{ \\sum (D + 10) + 120 \\}${divStrSym}`
     const rightSideSub = `0.6 \\times \\{ ${sumWeakHl} + 120 \\}${divStrSub}`
-    const resLine = result?.sumWeak !== undefined && result.sumWeak > 0 ? hlOk(result.wWeak.toFixed(1)) : '\\text{---}'
+    const resLine
+      = result?.sumWeak !== undefined && result.sumWeak > 0
+        ? hlOk(result.wWeak.toFixed(1))
+        : '\\text{---}'
 
-    const tex = buildFormula('W_{weak}', rightSideSym + ' \\\\ &= ' + rightSideSub, resLine, 'mm')
+    const tex = buildFormula(
+      'W_{weak}',
+      rightSideSym + ' \\\\ &= ' + rightSideSub,
+      resLine,
+      'mm',
+    )
 
-    mathStepData.push({ title: '② 弱電ケーブルの必要幅算出', tex, legend: legendList })
+    mathStepData.push({
+      title: '② 弱電ケーブルの必要幅算出',
+      tex,
+      legend: legendList,
+    })
   }
   else {
-    mathStepData.push({ title: '② 弱電ケーブルの必要幅算出', tex: `W_{weak} = 0 \\text{ [mm]}`, legend: ['弱電ケーブルなし'] })
+    mathStepData.push({
+      title: '② 弱電ケーブルの必要幅算出',
+      tex: `W_{weak} = 0 \\text{ [mm]}`,
+      legend: ['弱電ケーブルなし'],
+    })
   }
 
   // 3. 合計ラック幅の算出
-  const legend3 = [
-    '\\(W_{total}\\): 合計ラック幅 [mm]',
-  ]
+  const legend3 = ['\\(W_{total}\\): 合計ラック幅 [mm]']
 
   if (isStrong) legend3.push('\\(W_{strong}\\): 強電幅 [mm]')
   if (isWeak) legend3.push('\\(W_{weak}\\): 弱電幅 [mm]')
-  if (isStrong && isWeak && (inputs.separatorWidth !== undefined && inputs.separatorWidth !== null && inputs.separatorWidth > 0)) {
+  if (
+    isStrong
+    && isWeak
+    && inputs.separatorWidth !== undefined
+    && inputs.separatorWidth !== null
+    && inputs.separatorWidth > 0
+  ) {
     legend3.push('\\(W_{sep}\\): セパレータ幅 [mm]')
   }
 
@@ -260,13 +316,23 @@ export function generateMathData(
     rightSideSym.push('W_{weak}')
     rightSideSub.push(wWeakHl)
   }
-  if (isStrong && isWeak && (inputs.separatorWidth !== undefined && inputs.separatorWidth !== null && inputs.separatorWidth > 0)) {
+  if (
+    isStrong
+    && isWeak
+    && inputs.separatorWidth !== undefined
+    && inputs.separatorWidth !== null
+    && inputs.separatorWidth > 0
+  ) {
     rightSideSym.push('W_{sep}')
     rightSideSub.push(wSepHl)
   }
 
   if (rightSideSym.length === 0) {
-    mathStepData.push({ title: '③ 合計ラック幅の算出', tex: `W_{total} = 0 \\text{ [mm]}`, legend: legend3 })
+    mathStepData.push({
+      title: '③ 合計ラック幅の算出',
+      tex: `W_{total} = 0 \\text{ [mm]}`,
+      legend: legend3,
+    })
 
     return mathStepData
   }
@@ -275,9 +341,18 @@ export function generateMathData(
   const subLine = rightSideSub.join(' + ')
   const resLine = result ? hlOk(result.totalWidth.toFixed(1)) : '\\text{---}'
 
-  const tex3 = buildFormula('W_{total}', symLine + ' \\\\ &= ' + subLine, resLine, 'mm')
+  const tex3 = buildFormula(
+    'W_{total}',
+    symLine + ' \\\\ &= ' + subLine,
+    resLine,
+    'mm',
+  )
 
-  mathStepData.push({ title: '③ 合計ラック幅の算出', tex: tex3, legend: legend3 })
+  mathStepData.push({
+    title: '③ 合計ラック幅の算出',
+    tex: tex3,
+    legend: legend3,
+  })
 
   return mathStepData
 }

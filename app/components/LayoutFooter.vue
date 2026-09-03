@@ -3,7 +3,7 @@
  * LayoutFooter
  * アプリケーションのフッター部分（コピーライト等）を表示するコンポーネントです。
  */
-const currentYear = new Date().getFullYear();
+const currentYear = new Date().getFullYear()
 </script>
 
 <template>

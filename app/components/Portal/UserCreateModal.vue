@@ -53,10 +53,7 @@ const handleCreateUser = async () => {
     :submit-fn="handleCreateUser"
     submit-text="登録する"
   >
-    <template
-      v-for="field in formFields"
-      :key="field.id"
-    >
+    <template v-for="field in formFields" :key="field.id">
       <AppFormGroup :label="field.label">
         <AppInput
           v-model="newUser[field.id]"
@@ -66,10 +63,7 @@ const handleCreateUser = async () => {
     </template>
 
     <AppFormGroup label="権限">
-      <AppSelect
-        v-model="newUser.role"
-        :options="roleOptions"
-      />
+      <AppSelect v-model="newUser.role" :options="roleOptions" />
     </AppFormGroup>
     <AppFormGroup>
       <AppCheckbox

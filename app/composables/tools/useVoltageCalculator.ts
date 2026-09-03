@@ -3,7 +3,10 @@ import { computed, watch } from 'vue'
 import { useToolPage } from '~/composables/tools/useToolPage'
 import type { VoltageCalcResult } from '~/types/voltage'
 import { getAvailableSizes } from '~/utils/cable'
-import { calculateLogic, generateMathData } from '~/utils/tools/voltage/calcVoltageEngine'
+import {
+  calculateLogic,
+  generateMathData,
+} from '~/utils/tools/voltage/calcVoltageEngine'
 import { mapVoltageToHistory } from '~/utils/tools/voltage/historyMapper'
 import type { VoltageFormState } from '~/utils/tools/voltage/voltageMapper'
 import { mapFormToVoltageCalcInputs } from '~/utils/tools/voltage/voltageMapper'
@@ -43,7 +46,14 @@ export function useVoltageCalculator() {
       return calculateLogic(calcInputs)
     },
     {
-      toHistory: (formInputs, res) => mapVoltageToHistory('電圧降下・ケーブルサイズ選定', mapFormToVoltageCalcInputs(formInputs) as unknown as import('~/types/voltage').VoltageCalcInputs, res as unknown as VoltageCalcResult), // Will not be used directly
+      toHistory: (formInputs, res) =>
+        mapVoltageToHistory(
+          '電圧降下・ケーブルサイズ選定',
+          mapFormToVoltageCalcInputs(
+            formInputs,
+          ) as unknown as import('~/types/voltage').VoltageCalcInputs,
+          res as unknown as VoltageCalcResult,
+        ), // Will not be used directly
       fromHistory: () => JSON.parse(JSON.stringify(defaultForm)),
     },
   )

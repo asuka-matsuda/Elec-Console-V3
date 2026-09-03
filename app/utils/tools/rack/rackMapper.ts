@@ -1,6 +1,9 @@
 import { cableData } from '~/constants/data/cableData'
 import type { CableData } from '~/types/database'
-import type { RackCableInput, RackCalcInputs } from '~/utils/tools/rack/rackCalcLogic'
+import type {
+  RackCableInput,
+  RackCalcInputs,
+} from '~/utils/tools/rack/rackCalcLogic'
 
 export interface RackCableUIInput {
   id: string
@@ -20,7 +23,9 @@ export interface RackInputs {
   weakCablesUI: RackCableUIInput[]
 }
 
-export function convertUIToRackCable(uiInput: RackCableUIInput): RackCableInput {
+export function convertUIToRackCable(
+  uiInput: RackCableUIInput,
+): RackCableInput {
   let def: CableData | undefined
 
   if (uiInput.cableIdx && uiInput.cableIdx.startsWith('idx_')) {
@@ -32,7 +37,9 @@ export function convertUIToRackCable(uiInput: RackCableUIInput): RackCableInput 
 
   if (def) {
     if (typeof def.diameter === 'string' && def.diameter.includes('×')) {
-      d = Math.max(...def.diameter.split('×').map((s: string) => parseFloat(s.trim())))
+      d = Math.max(
+        ...def.diameter.split('×').map((s: string) => parseFloat(s.trim())),
+      )
     }
     else {
       d = parseFloat(String(def.diameter))

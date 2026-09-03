@@ -45,7 +45,9 @@ const formatLastLogin = (row: unknown) => {
 // --- モーダルステート管理 ---
 const isCreateModalOpen = ref(false)
 const isCredentialModalOpen = ref(false)
-const createdUserResult = ref<(User & { initialPassword?: string }) | null>(null)
+const createdUserResult = ref<(User & { initialPassword?: string }) | null>(
+  null,
+)
 
 const isAssignModalOpen = ref(false)
 const assignTargetUserId = ref('')
@@ -160,7 +162,9 @@ const confirmResetPassword = (row: User) => {
               >
                 PWリセット要求
               </AppBadge>
-              <span class="c-admin-users__meta">{{ formatLastLogin(row) }}</span>
+              <span class="c-admin-users__meta">{{
+                formatLastLogin(row)
+              }}</span>
             </div>
           </template>
           <template #cell-actions="{ row }">
@@ -194,10 +198,7 @@ const confirmResetPassword = (row: User) => {
     </AppPanel>
 
     <!-- モーダル群 (関心の分離) -->
-    <UserCreateModal
-      v-model="isCreateModalOpen"
-      @success="handleUserCreated"
-    />
+    <UserCreateModal v-model="isCreateModalOpen" @success="handleUserCreated" />
 
     <UserCredentialModal
       v-model="isCredentialModalOpen"

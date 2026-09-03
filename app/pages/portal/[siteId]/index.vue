@@ -27,7 +27,9 @@ watch(
   { immediate: true },
 )
 
-const currentSite = computed(() => sites.value.find(s => s.id === siteId.value))
+const currentSite = computed(() =>
+  sites.value.find(s => s.id === siteId.value),
+)
 
 // アサインされている現場のみを抽出
 const assignedSites = computed(() => {
@@ -55,17 +57,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    :key="siteId"
-    class="p-site-dashboard"
-  >
+  <div :key="siteId" class="p-site-dashboard">
     <div class="p-site-dashboard__header">
       <div class="p-site-dashboard__title">
-        <AppIcon
-          name="map-pin"
-          class="u-text-muted"
-        />
-        <h2>{{ currentSite?.name || '現場ダッシュボード' }}</h2>
+        <AppIcon name="map-pin" class="u-text-muted" />
+        <h2>{{ currentSite?.name || "現場ダッシュボード" }}</h2>
       </div>
       <div class="p-site-dashboard__switcher">
         <AppSelect
@@ -87,18 +83,9 @@ onMounted(() => {
       <div class="p-site-dashboard__sidebar">
         <PersonalTodo :site-id="siteId" />
 
-        <NuxtLink
-          :to="`/portal/${siteId}/souden`"
-          class="c-link-button"
-        >
-          <AppButton
-            variant="primary"
-            class="p-site-dashboard__souden-btn"
-          >
-            <AppIcon
-              name="zap"
-              size="sm"
-            />
+        <NuxtLink :to="`/portal/${siteId}/souden`" class="c-link-button">
+          <AppButton variant="primary" class="p-site-dashboard__souden-btn">
+            <AppIcon name="zap" size="sm" />
             送電試験ダッシュボードへ
           </AppButton>
         </NuxtLink>

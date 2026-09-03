@@ -23,7 +23,8 @@ export function mapConduitToHistory(
       cableDef = cableData[idx]
     }
     const name = formatCableName(
-      cableDef || { category: c.category, size: '', cores: '' } as unknown as CableData,
+      cableDef
+      || ({ category: c.category, size: '', cores: '' } as unknown as CableData),
       true,
       false,
     )

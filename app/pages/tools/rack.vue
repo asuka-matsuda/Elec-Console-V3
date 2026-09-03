@@ -3,11 +3,11 @@
  * RackCalculator
  * ケーブルラック選定ツールのコンポーネントです。強電・弱電ケーブルのリストと段積み数から最適なラック幅を選定します。
  */
-import { useRackCalculator } from "~/composables/tools/useRackCalculator";
+import { useRackCalculator } from '~/composables/tools/useRackCalculator'
 
 useHead({
-  title: "ケーブルラック選定",
-});
+  title: 'ケーブルラック選定',
+})
 
 const {
   inputs,
@@ -22,7 +22,7 @@ const {
   openResetModal,
   confirmReset,
   mathSteps,
-} = useRackCalculator();
+} = useRackCalculator()
 </script>
 
 <template>

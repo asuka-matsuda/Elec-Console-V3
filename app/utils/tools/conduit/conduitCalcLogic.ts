@@ -48,7 +48,9 @@ export function calculateCableArea(diameterStr: string): number {
 
   if (diameterStr.includes('×')) {
     // VVFなどの平形ケーブルにおいては、安全側の設計とするため最大寸法を長径として扱う
-    const parts = diameterStr.split('×').map((s: string) => parseFloat(s.trim()))
+    const parts = diameterStr
+      .split('×')
+      .map((s: string) => parseFloat(s.trim()))
 
     diameter = Math.max(...parts)
   }
@@ -73,7 +75,14 @@ export function calculateConduitSize(
   cableData: CableData[],
 ): ConduitCalcResult {
   if (!inputCables || inputCables.length === 0) {
-    return { success: false, partial: false, totalArea: 0, cableDetails: [], error: 'INVALID_INPUT', message: '入力が不足しています' }
+    return {
+      success: false,
+      partial: false,
+      totalArea: 0,
+      cableDetails: [],
+      error: 'INVALID_INPUT',
+      message: '入力が不足しています',
+    }
   }
 
   let totalArea = 0
@@ -82,7 +91,8 @@ export function calculateConduitSize(
 
   // 選択された各ケーブルの外径から断面積を算出し、全体の総断面積を求める
   for (const input of inputCables) {
-    if (input.count === null || isNaN(input.count) || input.count <= 0) continue
+    if (input.count === null || isNaN(input.count) || input.count <= 0)
+      continue
 
     let cableDef: CableData | undefined
 
@@ -100,7 +110,11 @@ export function calculateConduitSize(
     let diameter: number
 
     if (cableDef.diameter.includes('×')) {
-      diameter = Math.max(...cableDef.diameter.split('×').map((s: string) => parseFloat(s.trim())))
+      diameter = Math.max(
+        ...cableDef.diameter
+          .split('×')
+          .map((s: string) => parseFloat(s.trim())),
+      )
     }
     else {
       diameter = parseFloat(cableDef.diameter)
@@ -125,7 +139,14 @@ export function calculateConduitSize(
   }
 
   if (totalCount === 0) {
-    return { success: false, partial: true, totalArea: 0, cableDetails: [], error: 'ZERO_CABLES', message: 'ケーブルの本数が0です' }
+    return {
+      success: false,
+      partial: true,
+      totalArea: 0,
+      cableDetails: [],
+      error: 'ZERO_CABLES',
+      message: 'ケーブルの本数が0です',
+    }
   }
 
   if (!conduitCategory) {
@@ -143,12 +164,23 @@ export function calculateConduitSize(
     .sort((a, b) => Number(a.innerDiameter) - Number(b.innerDiameter))
 
   if (targetConduits.length === 0) {
-    return { success: false, partial: false, totalArea, cableDetails, error: 'CONDUIT_NOT_FOUND', message: '指定された配管のデータがありません' }
+    return {
+      success: false,
+      partial: false,
+      totalArea,
+      cableDetails,
+      error: 'CONDUIT_NOT_FOUND',
+      message: '指定された配管のデータがありません',
+    }
   }
 
   const largest = targetConduits[targetConduits.length - 1]
 
-  function findOptimalConduit(conduits: ConduitData[], requiredArea: number, ruleField: 'area32' | 'area48') {
+  function findOptimalConduit(
+    conduits: ConduitData[],
+    requiredArea: number,
+    ruleField: 'area32' | 'area48',
+  ) {
     for (const conduit of conduits) {
       const allowable = Number(conduit[ruleField])
 
@@ -204,7 +236,9 @@ export function generateMathData(
   const totalKnownArea = res?.totalArea || 0
 
   const formulaVarStr = rowCount === 1 ? 'A_1' : '\\Sigma A_n'
-  const resultStr1 = allCablesKnown ? hlOk(totalKnownArea.toFixed(1)) : '\\text{---}'
+  const resultStr1 = allCablesKnown
+    ? hlOk(totalKnownArea.toFixed(1))
+    : '\\text{---}'
 
   const formula1 = buildFormula('A_{total}', formulaVarStr, resultStr1, 'mm^2')
 
@@ -224,7 +258,9 @@ export function generateMathData(
       tex: formula1,
       legend: [
         `\\( A_{total} \\) : ケーブル合計断面積 [mm²]`,
-        rowCount === 1 ? `\\( A_1 \\) : ケーブルの断面積 [mm²]` : `\\( A_n \\) : 各ケーブルの合計断面積 [mm²]`,
+        rowCount === 1
+          ? `\\( A_1 \\) : ケーブルの断面積 [mm²]`
+          : `\\( A_n \\) : 各ケーブルの合計断面積 [mm²]`,
       ],
     },
     {

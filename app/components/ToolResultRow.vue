@@ -4,9 +4,9 @@
  * 計算結果の詳細情報の各行を表示するコンポーネントです。ラベルと値を左右に配置します。
  */
 defineProps<{
-  label: string;
-  topBorder?: boolean;
-}>();
+  label: string
+  topBorder?: boolean
+}>()
 </script>
 
 <template>

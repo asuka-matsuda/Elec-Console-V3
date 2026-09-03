@@ -35,18 +35,16 @@ watch(
   { immediate: true, deep: true },
 )
 
-watch(
-  isOpen,
-  (open) => {
-    if (open) {
-      syncTypesFromProps()
-    }
-  },
-)
+watch(isOpen, (open) => {
+  if (open) {
+    syncTypesFromProps()
+  }
+})
 
 const handleAddType = () => {
   const newId = `type_${Date.now()}`
-  const defaultPreset = DEFAULT_COLOR_PRESETS[types.value.length % DEFAULT_COLOR_PRESETS.length]
+  const defaultPreset
+    = DEFAULT_COLOR_PRESETS[types.value.length % DEFAULT_COLOR_PRESETS.length]
 
   types.value.push({
     id: newId,
@@ -73,22 +71,14 @@ const handleSave = () => {
 </script>
 
 <template>
-  <AppModal
-    v-model="isOpen"
-    title="予定種別の設定"
-    align="left"
-  >
+  <AppModal v-model="isOpen" title="予定種別の設定" align="left">
     <div class="p-type-settings">
       <p class="p-type-settings__lead">
         カレンダーに表示する予定種別とテーマカラーを設定します。
       </p>
 
       <div class="p-type-settings__list">
-        <div
-          v-for="(t, index) in types"
-          :key="t.id"
-          class="p-type-item"
-        >
+        <div v-for="(t, index) in types" :key="t.id" class="p-type-item">
           <div class="p-type-item__main">
             <div
               class="p-type-item__preview"
@@ -136,17 +126,10 @@ const handleSave = () => {
     </div>
 
     <template #footer>
-      <AppButton
-        variant="secondary"
-        @click="isOpen = false"
-      >
+      <AppButton variant="secondary" @click="isOpen = false">
         キャンセル
       </AppButton>
-      <AppButton
-        variant="primary"
-        icon="check"
-        @click="handleSave"
-      >
+      <AppButton variant="primary" icon="check" @click="handleSave">
         設定を保存
       </AppButton>
     </template>

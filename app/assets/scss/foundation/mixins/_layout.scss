@@ -162,7 +162,6 @@ $container-breakpoints: (
   justify-content: space-around;
 }
 
-
 @mixin grid($cols: 1fr, $gap: var(--space-card-gap)) {
   display: grid;
   grid-template-columns: $cols;

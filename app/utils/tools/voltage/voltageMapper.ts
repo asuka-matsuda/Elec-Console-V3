@@ -20,7 +20,9 @@ export interface VoltageFormState {
   targetDrop: string
 }
 
-export function mapFormToVoltageCalcInputs(form: VoltageFormState): VoltageCalcInputs {
+export function mapFormToVoltageCalcInputs(
+  form: VoltageFormState,
+): VoltageCalcInputs {
   const mode = form.mode
   const sys = systemData.find(s => s.id === form.phase) || null
   const loadVal = form.loadValue
@@ -74,6 +76,8 @@ export function mapFormToVoltageCalcInputs(form: VoltageFormState): VoltageCalcI
     loadUnit,
     pf,
     isReady: validationResult.success,
-    missingFields: validationResult.success ? [] : validationResult.error.errors.map(e => String(e.path[0])),
+    missingFields: validationResult.success
+      ? []
+      : validationResult.error.errors.map(e => String(e.path[0])),
   }
 }

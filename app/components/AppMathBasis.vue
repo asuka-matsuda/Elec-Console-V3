@@ -3,56 +3,57 @@
  * AppMathBasis
  * KaTeXを利用して、数式とその凡例（変数の説明）をステップごとに表示するコンポーネント。
  */
-import "katex/dist/katex.min.css"; // Required for rendering KaTeX styles
+import 'katex/dist/katex.min.css' // Required for rendering KaTeX styles
 
-import katex from "katex";
+import katex from 'katex'
 
 export type MathStep = {
-  title?: string;
-  tex: string;
-  legend?: string[];
-};
+  title?: string
+  tex: string
+  legend?: string[]
+}
 
 defineProps<{
-  steps: MathStep[];
-}>();
+  steps: MathStep[]
+}>()
 
 /**
  * 各ステップの legend (string[]) をパースして使いやすいオブジェクト配列に変換する
  */
 const parseLegend = (legendArray: string[] | undefined) => {
-  if (!legendArray) return [];
+  if (!legendArray) return []
 
   return legendArray.map((leg) => {
-    const parts = leg.split(":");
-    let rawSymbol = parts[0]?.trim() || "";
+    const parts = leg.split(':')
+    let rawSymbol = parts[0]?.trim() || ''
 
     // KaTeXの renderToString は純粋な数式を期待するため、数式マーカーを剥がす
-    rawSymbol = rawSymbol.replace(/\\\(/g, "").replace(/\\\)/g, "").trim();
-    const name = parts.slice(1).join(":")?.trim() || leg;
+    rawSymbol = rawSymbol.replace(/\\\(/g, '').replace(/\\\)/g, '').trim()
+    const name = parts.slice(1).join(':')?.trim() || leg
 
-    return { symbol: rawSymbol, name };
-  });
-};
+    return { symbol: rawSymbol, name }
+  })
+}
 
 /**
  * Helper to safely render KaTeX string
  */
 const renderMath = (mathStr: string, isDisplay: boolean = true) => {
-  if (!mathStr) return "";
+  if (!mathStr) return ''
   try {
     return katex.renderToString(mathStr, {
       displayMode: isDisplay,
       throwOnError: false,
       trust: true,
       strict: false,
-    });
-  } catch (e) {
-    console.error("KaTeX render error:", e);
-
-    return mathStr;
+    })
   }
-};
+  catch (e) {
+    console.error('KaTeX render error:', e)
+
+    return mathStr
+  }
+}
 </script>
 
 <template>

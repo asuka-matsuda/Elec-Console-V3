@@ -1,20 +1,32 @@
 import { cableData as defaultCableData } from '~/constants/data/cableData'
 import type { CableData } from '~/types/database'
-import type { MathStep, VoltageCalcInputs, VoltageCalcResult } from '~/types/voltage'
+import type {
+  MathStep,
+  VoltageCalcInputs,
+  VoltageCalcResult,
+} from '~/types/voltage'
 import { buildFormula, hlOk, hlVal } from '~/utils/math'
 
 import { getAmbientTempDerating } from './voltageCalcLogic'
 
-function _getTargetCable(inputs: VoltageCalcInputs, result: VoltageCalcResult | null, cables: CableData[]): CableData | null {
+function _getTargetCable(
+  inputs: VoltageCalcInputs,
+  result: VoltageCalcResult | null,
+  cables: CableData[],
+): CableData | null {
   if (result && result.optimal) return result.optimal
 
   if (inputs && inputs.cableType && inputs.selectedSize !== null) {
     let candidates = cables.filter(
-      c => c.category === inputs.cableType && parseFloat(String(c.size)) === inputs.selectedSize,
+      c =>
+        c.category === inputs.cableType
+        && parseFloat(String(c.size)) === inputs.selectedSize,
     )
 
     if (inputs.selectedCores) {
-      candidates = candidates.filter(c => c.cores === inputs.selectedCores || !c.cores || c.cores === '-')
+      candidates = candidates.filter(
+        c => c.cores === inputs.selectedCores || !c.cores || c.cores === '-',
+      )
     }
 
     return candidates[0] || null
@@ -38,7 +50,8 @@ function _getUnitConversionFormula(inputs: VoltageCalcInputs): MathStep {
   const leg = []
   let rightSideSymbol = `\\frac{P`
 
-  if (loadUnit === 'kW' || loadUnit === 'kVA') rightSideSymbol += ` \\times 1000`
+  if (loadUnit === 'kW' || loadUnit === 'kVA')
+    rightSideSymbol += ` \\times 1000`
   rightSideSymbol += `}{V`
   if (sys && sys.id.startsWith('3P')) rightSideSymbol += ` \\times \\sqrt{3}`
   else if (!sys) rightSideSymbol += ` \\times \\alpha`
@@ -52,7 +65,8 @@ function _getUnitConversionFormula(inputs: VoltageCalcInputs): MathStep {
   }
   let rightSideSubst = `\\frac{${P_val}`
 
-  if (loadUnit === 'kW' || loadUnit === 'kVA') rightSideSubst += ` \\times 1000`
+  if (loadUnit === 'kW' || loadUnit === 'kVA')
+    rightSideSubst += ` \\times 1000`
   rightSideSubst += `}{${v_val}`
   if (sys && sys.id.startsWith('3P')) rightSideSubst += ` \\times \\sqrt{3}`
   else if (!sys) rightSideSubst += ` \\times \\alpha`
@@ -60,18 +74,31 @@ function _getUnitConversionFormula(inputs: VoltageCalcInputs): MathStep {
   rightSideSubst += `}`
 
   const resultVal = I !== null ? hlOk(I.toFixed(1)) : '\\text{---}'
-  const tex = buildFormula('I', rightSideSymbol + ` \\\\ &= ` + rightSideSubst, resultVal, 'A')
+  const tex = buildFormula(
+    'I',
+    rightSideSymbol + ` \\\\ &= ` + rightSideSubst,
+    resultVal,
+    'A',
+  )
 
-  if (loadUnit === 'kW') leg.push('\\( P \\): 負荷 [kW]', '\\( \\cos \\theta \\): 力率')
+  if (loadUnit === 'kW')
+    leg.push('\\( P \\): 負荷 [kW]', '\\( \\cos \\theta \\): 力率')
   else if (loadUnit === 'kVA') leg.push('\\( P \\): 負荷 [kVA]')
   else if (loadUnit === 'VA') leg.push('\\( P \\): 負荷 [VA]')
 
-  leg.push('\\( V \\): 基準電圧 [V]', '\\( \\alpha \\): 相係数 (単相=1, 三相=\\sqrt{3})')
+  leg.push(
+    '\\( V \\): 基準電圧 [V]',
+    '\\( \\alpha \\): 相係数 (単相=1, 三相=\\sqrt{3})',
+  )
 
   return { tex, legend: leg }
 }
 
-function _getTempDeratingFormula(inputs: VoltageCalcInputs, result: VoltageCalcResult | null, cables: CableData[]): MathStep {
+function _getTempDeratingFormula(
+  inputs: VoltageCalcInputs,
+  result: VoltageCalcResult | null,
+  cables: CableData[],
+): MathStep {
   const targetCable = _getTargetCable(inputs, result, cables)
   const amb = inputs.ambientTemp
 
@@ -83,7 +110,9 @@ function _getTempDeratingFormula(inputs: VoltageCalcInputs, result: VoltageCalcR
   const I_0_val = hlVal(targetCable?.ampacity, 'I_0')
 
   if (amb === null) {
-    const resultVal = targetCable?.ampacity ? hlOk(parseFloat(String(targetCable.ampacity)).toString()) : '\\text{---}'
+    const resultVal = targetCable?.ampacity
+      ? hlOk(parseFloat(String(targetCable.ampacity)).toString())
+      : '\\text{---}'
     const tex = buildFormula('I_0\'', 'I_0 \\\\ &= ' + I_0_val, resultVal, 'A')
 
     return { tex, legend: leg }
@@ -101,7 +130,12 @@ function _getTempDeratingFormula(inputs: VoltageCalcInputs, result: VoltageCalcR
 
   let resultVal = '\\text{---}'
 
-  if (targetCable?.maxTemp && targetCable?.baseTemp && !isNaN(parseFloat(String(targetCable.maxTemp))) && !isNaN(parseFloat(String(targetCable.baseTemp)))) {
+  if (
+    targetCable?.maxTemp
+    && targetCable?.baseTemp
+    && !isNaN(parseFloat(String(targetCable.maxTemp)))
+    && !isNaN(parseFloat(String(targetCable.baseTemp)))
+  ) {
     const baseAmp = parseFloat(String(targetCable.ampacity))
     const max = parseFloat(String(targetCable.maxTemp))
     const base = parseFloat(String(targetCable.baseTemp))
@@ -114,12 +148,21 @@ function _getTempDeratingFormula(inputs: VoltageCalcInputs, result: VoltageCalcR
 
   const symbolFormula = `I_0 \\times \\sqrt{\\frac{\\theta_{max} - \\theta_{amb}}{\\theta_{max} - \\theta_{base}}}`
   const substFormula = `${I_0_val} \\times \\sqrt{\\frac{${max_val} - ${amb_val}}{${max_val} - ${base_val}}}`
-  const tex = buildFormula('I_0\'', symbolFormula + ` \\\\ &= ` + substFormula, resultVal, 'A')
+  const tex = buildFormula(
+    'I_0\'',
+    symbolFormula + ` \\\\ &= ` + substFormula,
+    resultVal,
+    'A',
+  )
 
   return { tex, legend: leg }
 }
 
-function _getThermalLimitFormula(inputs: VoltageCalcInputs, result: VoltageCalcResult | null, cables: CableData[]): MathStep {
+function _getThermalLimitFormula(
+  inputs: VoltageCalcInputs,
+  result: VoltageCalcResult | null,
+  cables: CableData[],
+): MathStep {
   const { I, derating, parallel } = inputs
   const N_val = parallel !== null ? parallel : 1
   const N_hl = hlVal(parallel, 'N', 0)
@@ -145,18 +188,32 @@ function _getThermalLimitFormula(inputs: VoltageCalcInputs, result: VoltageCalcR
     let kValue = result?.tempDerating ?? 1.0
 
     if (inputs.ambientTemp !== null) {
-      kValue = result?.tempDerating || getAmbientTempDerating(targetCable.baseTemp || '', targetCable.maxTemp || '', inputs.ambientTemp)
+      kValue
+        = result?.tempDerating
+          || getAmbientTempDerating(
+            targetCable.baseTemp || '',
+            targetCable.maxTemp || '',
+            inputs.ambientTemp,
+          )
     }
-    const tempAmp = hlVal(parseFloat(String(targetCable.ampacity)) * kValue, 'I_0\'', 1)
+    const tempAmp = hlVal(
+      parseFloat(String(targetCable.ampacity)) * kValue,
+      'I_0\'',
+      1,
+    )
 
     rightSideSubst = `${tempAmp} \\times ${cdStr} \\times ${N_hl}`
 
     let effAmp
 
     if (derating !== null) {
-      effAmp = result?.finalEffAmp !== undefined
-        ? result.finalEffAmp
-        : parseFloat(String(targetCable.ampacity)) * kValue * derating * N_val
+      effAmp
+        = result?.finalEffAmp !== undefined
+          ? result.finalEffAmp
+          : parseFloat(String(targetCable.ampacity))
+            * kValue
+            * derating
+            * N_val
     }
     else {
       effAmp = parseFloat(String(targetCable.ampacity)) * kValue * N_val
@@ -170,14 +227,21 @@ function _getThermalLimitFormula(inputs: VoltageCalcInputs, result: VoltageCalcR
   return { tex, legend: leg }
 }
 
-function _getVoltageDropFormula(inputs: VoltageCalcInputs, result: VoltageCalcResult | null): MathStep {
+function _getVoltageDropFormula(
+  inputs: VoltageCalcInputs,
+  result: VoltageCalcResult | null,
+): MathStep {
   const { mode, sys, I, L, targetDrop, selectedSize, parallel } = inputs
   const isAuto = mode === 'size'
   const I_str = hlVal(I, 'I', 1)
   const K_val = hlVal(sys?.simpleK, 'K', 2)
   const L_val = hlVal(L, 'L', 1)
 
-  const TargetE = hlVal(sys && targetDrop !== null ? sys.voltage * (targetDrop / 100) : null, 'e', 2)
+  const TargetE = hlVal(
+    sys && targetDrop !== null ? sys.voltage * (targetDrop / 100) : null,
+    'e',
+    2,
+  )
 
   const A_val = hlVal(result?.convertedA ?? selectedSize, 'A', 2)
   const N_val = parallel !== null ? parallel : 1
@@ -201,13 +265,25 @@ function _getVoltageDropFormula(inputs: VoltageCalcInputs, result: VoltageCalcRe
 
     let resultLine = '\\text{---}'
 
-    if (result?.optimal && sys && targetDrop !== null && I !== null && L !== null) {
-      const calA_total = (sys.simpleK * L * I) / (1000 * (sys.voltage * (targetDrop / 100)))
+    if (
+      result?.optimal
+      && sys
+      && targetDrop !== null
+      && I !== null
+      && L !== null
+    ) {
+      const calA_total
+        = (sys.simpleK * L * I) / (1000 * (sys.voltage * (targetDrop / 100)))
       const calA_each = calA_total / N_val
 
       resultLine = hlOk(calA_each.toFixed(2))
     }
-    tex = buildFormula(leftSide, rightSideSymbol + ` \\\\ &= ` + rightSide, resultLine, 'sq')
+    tex = buildFormula(
+      leftSide,
+      rightSideSymbol + ` \\\\ &= ` + rightSide,
+      resultLine,
+      'sq',
+    )
   }
   else {
     const rightSideSymbol = `\\frac{K \\cdot L \\cdot I}{1000 \\times A \\times N}`
@@ -218,13 +294,22 @@ function _getVoltageDropFormula(inputs: VoltageCalcInputs, result: VoltageCalcRe
     if (result?.finalDropV !== undefined) {
       resultLine = hlOk(result.finalDropV.toFixed(2))
     }
-    tex = buildFormula('e', rightSideSymbol + ` \\\\ &= ` + rightSide, resultLine, 'V')
+    tex = buildFormula(
+      'e',
+      rightSideSymbol + ` \\\\ &= ` + rightSide,
+      resultLine,
+      'V',
+    )
   }
 
   return { tex, legend: leg }
 }
 
-export function generateMathData(inputs: VoltageCalcInputs, result: VoltageCalcResult | null, cableDataList: CableData[] | null = null): MathStep[] | null {
+export function generateMathData(
+  inputs: VoltageCalcInputs,
+  result: VoltageCalcResult | null,
+  cableDataList: CableData[] | null = null,
+): MathStep[] | null {
   if (!inputs) return null
   const cables = cableDataList || defaultCableData
 
@@ -236,17 +321,41 @@ export function generateMathData(inputs: VoltageCalcInputs, result: VoltageCalcR
   if (inputs.mode === 'size') {
     return [
       { title: '① 単位換算（負荷電流）', tex: step1.tex, legend: step1.legend },
-      { title: '② 使用ケーブルの電圧降下による最小サイズ', tex: step4.tex, legend: step4.legend },
-      { title: '③ ②で算出されたケーブルの温度補正による許容電流', tex: step2.tex, legend: step2.legend },
-      { title: '④ ③で算出された許容電流による最終サイズ', tex: step3.tex, legend: step3.legend },
+      {
+        title: '② 使用ケーブルの電圧降下による最小サイズ',
+        tex: step4.tex,
+        legend: step4.legend,
+      },
+      {
+        title: '③ ②で算出されたケーブルの温度補正による許容電流',
+        tex: step2.tex,
+        legend: step2.legend,
+      },
+      {
+        title: '④ ③で算出された許容電流による最終サイズ',
+        tex: step3.tex,
+        legend: step3.legend,
+      },
     ]
   }
   else {
     return [
       { title: '① 単位換算（負荷電流）', tex: step1.tex, legend: step1.legend },
-      { title: '② 選択ケーブルの温度補正による許容電流', tex: step2.tex, legend: step2.legend },
-      { title: '③ 選択ケーブルの許容電流チェック', tex: step3.tex, legend: step3.legend },
-      { title: '④ 選択ケーブルの電圧降下チェック', tex: step4.tex, legend: step4.legend },
+      {
+        title: '② 選択ケーブルの温度補正による許容電流',
+        tex: step2.tex,
+        legend: step2.legend,
+      },
+      {
+        title: '③ 選択ケーブルの許容電流チェック',
+        tex: step3.tex,
+        legend: step3.legend,
+      },
+      {
+        title: '④ 選択ケーブルの電圧降下チェック',
+        tex: step4.tex,
+        legend: step4.legend,
+      },
     ]
   }
 }

@@ -3,23 +3,23 @@
  * DbViewer
  * データベースのビューアコンポーネントです。検索やフィルタリング機能を提供し、結果をテーブルで表示します。
  */
-import type { TableColumn } from "~/components/AppTable.vue";
-import { useDbFilter } from "~/composables/useDbFilter";
+import type { TableColumn } from '~/components/AppTable.vue'
+import { useDbFilter } from '~/composables/useDbFilter'
 
 const props = defineProps<{
-  data: T[];
-  columns: TableColumn[];
-  searchMapper: (item: T) => string;
-  placeholder?: string;
-}>();
+  data: T[]
+  columns: TableColumn[]
+  searchMapper: (item: T) => string
+  placeholder?: string
+}>()
 
 const { searchQuery, activeCats, categoryOptions, filteredData } = useDbFilter({
   data: props.data,
   searchMapper: props.searchMapper,
-});
+})
 
-const { sortBy, sortOrder, sortedData, handleSort } =
-  useTableSort(filteredData);
+const { sortBy, sortOrder, sortedData, handleSort }
+  = useTableSort(filteredData)
 </script>
 
 <template>

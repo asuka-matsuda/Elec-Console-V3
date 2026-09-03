@@ -4,30 +4,41 @@ import type { Site, SiteSettings } from '~/types/admin'
 
 export const useAdminSites = () => {
   const sites = useState<Site[]>('admin-sites', () => [])
-  const siteSettings = useState<SiteSettings[]>('admin-site-settings', () => [])
+  const siteSettings = useState<SiteSettings[]>(
+    'admin-site-settings',
+    () => [],
+  )
   const { $api } = useApi()
 
   // 初期データの取得
-  const { refresh: fetchSites } = useAsyncData('admin-sites-fetch', async () => {
-    const data = await $api<{ sites: Site[], siteSettings: SiteSettings[] }>('/api/sites')
+  const { refresh: fetchSites } = useAsyncData(
+    'admin-sites-fetch',
+    async () => {
+      const data = await $api<{ sites: Site[], siteSettings: SiteSettings[] }>(
+        '/api/sites',
+      )
 
-    sites.value = data.sites || []
-    siteSettings.value = data.siteSettings || []
+      sites.value = data.sites || []
+      siteSettings.value = data.siteSettings || []
 
-    return data
-  })
+      return data
+    },
+  )
 
   const createSite = async (site: Omit<Site, 'createdAt' | 'disabledAt'>) => {
     try {
-      const res = await $api<{ site: Site, settings: SiteSettings }>('/api/sites', {
-        method: 'POST',
-        body: site,
-      })
+      const res = await $api<{ site: Site, settings: SiteSettings }>(
+        '/api/sites',
+        {
+          method: 'POST',
+          body: site,
+        },
+      )
 
       sites.value.push(res.site)
       siteSettings.value.push(res.settings)
     }
-    catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
+    catch (err: any) {
       if (err.data?.statusMessage) {
         throw new Error(err.data.statusMessage, { cause: err })
       }
@@ -35,17 +46,25 @@ export const useAdminSites = () => {
     }
   }
 
-  const updateSite = async (id: string, updates: Partial<Omit<Site, 'createdAt'>>) => {
-    const res = await $api<{ site: Site, settings: SiteSettings }>(`/api/sites/${id}`, {
-      method: 'PUT',
-      body: { site: updates },
-    })
+  const updateSite = async (
+    id: string,
+    updates: Partial<Omit<Site, 'createdAt'>>,
+  ) => {
+    const res = await $api<{ site: Site, settings: SiteSettings }>(
+      `/api/sites/${id}`,
+      {
+        method: 'PUT',
+        body: { site: updates },
+      },
+    )
 
     if (res.site) {
-      sites.value = sites.value.map(s => s.id === id ? res.site : s)
+      sites.value = sites.value.map(s => (s.id === id ? res.site : s))
     }
     if (res.settings) {
-      siteSettings.value = siteSettings.value.map(set => set.siteId === id ? res.settings : set)
+      siteSettings.value = siteSettings.value.map(set =>
+        set.siteId === id ? res.settings : set,
+      )
     }
   }
 
@@ -65,14 +84,22 @@ export const useAdminSites = () => {
     await updateSite(id, { disabledAt })
   }
 
-  const updateSettings = async (siteId: string, updates: Partial<Omit<SiteSettings, 'siteId'>>) => {
-    const res = await $api<{ site: Site, settings: SiteSettings }>(`/api/sites/${siteId}`, {
-      method: 'PUT',
-      body: { settings: updates },
-    })
+  const updateSettings = async (
+    siteId: string,
+    updates: Partial<Omit<SiteSettings, 'siteId'>>,
+  ) => {
+    const res = await $api<{ site: Site, settings: SiteSettings }>(
+      `/api/sites/${siteId}`,
+      {
+        method: 'PUT',
+        body: { settings: updates },
+      },
+    )
 
     if (res.settings) {
-      siteSettings.value = siteSettings.value.map(set => set.siteId === siteId ? res.settings : set)
+      siteSettings.value = siteSettings.value.map(set =>
+        set.siteId === siteId ? res.settings : set,
+      )
     }
   }
 

@@ -4,7 +4,10 @@ import { useToolPage } from '~/composables/tools/useToolPage'
 import { STANDARD_RACK_SIZES } from '~/constants/rackConstants'
 import { mapRackToHistory } from '~/utils/tools/rack/historyMapper'
 import type { RackCalcResult } from '~/utils/tools/rack/rackCalcLogic'
-import { calculateRackSize, generateMathData } from '~/utils/tools/rack/rackCalcLogic'
+import {
+  calculateRackSize,
+  generateMathData,
+} from '~/utils/tools/rack/rackCalcLogic'
 import type { RackInputs } from '~/utils/tools/rack/rackMapper'
 import { mapFormToRackCalcInputs } from '~/utils/tools/rack/rackMapper'
 
@@ -15,8 +18,12 @@ const defaultInputs: RackInputs = {
   lWeak: null,
   rackHeight: null,
   separatorWidth: null,
-  strongCablesUI: [{ id: crypto.randomUUID(), category: '', cableIdx: '', count: null }],
-  weakCablesUI: [{ id: crypto.randomUUID(), category: '', cableIdx: '', count: null }],
+  strongCablesUI: [
+    { id: crypto.randomUUID(), category: '', cableIdx: '', count: null },
+  ],
+  weakCablesUI: [
+    { id: crypto.randomUUID(), category: '', cableIdx: '', count: null },
+  ],
 }
 
 export function useRackCalculator() {
@@ -60,24 +67,40 @@ export function useRackCalculator() {
     },
   )
 
-  const maxDepth = computed(() => Math.max(1, (inputs.value.rackHeight ?? 0) - 10))
+  const maxDepth = computed(() =>
+    Math.max(1, (inputs.value.rackHeight ?? 0) - 10),
+  )
 
   function addStrongCable() {
-    inputs.value.strongCablesUI.push({ id: crypto.randomUUID(), category: '', cableIdx: '', count: 1 })
+    inputs.value.strongCablesUI.push({
+      id: crypto.randomUUID(),
+      category: '',
+      cableIdx: '',
+      count: 1,
+    })
   }
 
   function removeStrongCable(id: string) {
     if (inputs.value.strongCablesUI.length <= 1) return
-    inputs.value.strongCablesUI = inputs.value.strongCablesUI.filter(c => c.id !== id)
+    inputs.value.strongCablesUI = inputs.value.strongCablesUI.filter(
+      c => c.id !== id,
+    )
   }
 
   function addWeakCable() {
-    inputs.value.weakCablesUI.push({ id: crypto.randomUUID(), category: '', cableIdx: '', count: 1 })
+    inputs.value.weakCablesUI.push({
+      id: crypto.randomUUID(),
+      category: '',
+      cableIdx: '',
+      count: 1,
+    })
   }
 
   function removeWeakCable(id: string) {
     if (inputs.value.weakCablesUI.length <= 1) return
-    inputs.value.weakCablesUI = inputs.value.weakCablesUI.filter(c => c.id !== id)
+    inputs.value.weakCablesUI = inputs.value.weakCablesUI.filter(
+      c => c.id !== id,
+    )
   }
 
   const mathSteps = computed(() => {

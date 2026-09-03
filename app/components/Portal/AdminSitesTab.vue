@@ -8,8 +8,7 @@ import { ref } from 'vue'
 import { useAdminSites } from '~/composables/admin/useAdminSites'
 import type { Site, SiteStatus } from '~/types/admin'
 
-const { sites, createSite, toggleDisableSite, updateSite }
-  = useAdminSites()
+const { sites, createSite, toggleDisableSite, updateSite } = useAdminSites()
 
 // --- 一覧定義 ---
 
@@ -34,21 +33,31 @@ const {
 
 const getStatusLabel = (status: unknown) => {
   switch (status) {
-    case 'planning': return '計画中'
-    case 'in_progress': return '進行中'
-    case 'completed': return '完了'
-    case 'on_hold': return '保留'
-    default: return '不明'
+    case 'planning':
+      return '計画中'
+    case 'in_progress':
+      return '進行中'
+    case 'completed':
+      return '完了'
+    case 'on_hold':
+      return '保留'
+    default:
+      return '不明'
   }
 }
 
 const getStatusColor = (status: unknown) => {
   switch (status) {
-    case 'planning': return 'secondary'
-    case 'in_progress': return 'warning'
-    case 'completed': return 'success'
-    case 'on_hold': return 'danger'
-    default: return 'secondary'
+    case 'planning':
+      return 'secondary'
+    case 'in_progress':
+      return 'warning'
+    case 'completed':
+      return 'success'
+    case 'on_hold':
+      return 'danger'
+    default:
+      return 'secondary'
   }
 }
 
@@ -145,11 +154,7 @@ const handleSaveSettings = async (updatedSite: Site) => {
               <AppBadge :color="getStatusColor(value)">
                 {{ getStatusLabel(value) }}
               </AppBadge>
-              <AppBadge
-                v-if="row.disabledAt"
-                color="danger"
-                size="sm"
-              >
+              <AppBadge v-if="row.disabledAt" color="danger" size="sm">
                 無効
               </AppBadge>
             </div>
@@ -191,16 +196,10 @@ const handleSaveSettings = async (updatedSite: Site) => {
       submit-text="登録する"
     >
       <AppFormGroup label="現場ID (半角英数)">
-        <AppInput
-          v-model="newSite.id"
-          placeholder="例: site-tokyo-01"
-        />
+        <AppInput v-model="newSite.id" placeholder="例: site-tokyo-01" />
       </AppFormGroup>
       <AppFormGroup label="現場名">
-        <AppInput
-          v-model="newSite.name"
-          placeholder="例: 新宿プロジェクト"
-        />
+        <AppInput v-model="newSite.name" placeholder="例: 新宿プロジェクト" />
       </AppFormGroup>
     </AppFormModal>
 

@@ -37,19 +37,34 @@ export function mapVoltageToHistory(
 
   historyInputs.push({ label: getLabel('loadValue'), value: loadStr })
 
-  historyInputs.push({ label: getLabel('distance'), value: `${inputs.L ?? '--'}m` })
+  historyInputs.push({
+    label: getLabel('distance'),
+    value: `${inputs.L ?? '--'}m`,
+  })
 
   if (isAuto) {
-    historyInputs.push({ label: getLabel('targetDrop'), value: `規定 ${inputs.targetDrop}%` })
+    historyInputs.push({
+      label: getLabel('targetDrop'),
+      value: `規定 ${inputs.targetDrop}%`,
+    })
   }
 
-  historyInputs.push({ label: getLabel('parallel'), value: `${inputs.parallel ?? '--'}条` })
+  historyInputs.push({
+    label: getLabel('parallel'),
+    value: `${inputs.parallel ?? '--'}条`,
+  })
 
-  const tempStr = inputs.rawTempVal && inputs.rawTempVal !== 'none' ? `${inputs.ambientTemp}℃` : 'なし'
+  const tempStr
+    = inputs.rawTempVal && inputs.rawTempVal !== 'none'
+      ? `${inputs.ambientTemp}℃`
+      : 'なし'
 
   historyInputs.push({ label: getLabel('ambientTemp'), value: tempStr })
 
-  historyInputs.push({ label: getLabel('derating'), value: inputs.derating ? inputs.derating.toString() : '--' })
+  historyInputs.push({
+    label: getLabel('derating'),
+    value: inputs.derating ? inputs.derating.toString() : '--',
+  })
 
   if (!isAuto) {
     // ケーブル指定モードの場合は使用ケーブル情報も入力条件に含める
@@ -71,7 +86,12 @@ export function mapVoltageToHistory(
   }
 
   // -- 2. 計算結果 (Results) のマッピング --
-  const historyResults: { label: string, value: string, isMain?: boolean, color?: string }[] = []
+  const historyResults: {
+    label: string
+    value: string
+    isMain?: boolean
+    color?: string
+  }[] = []
 
   let mainResultText = 'エラー'
   let status: 'success' | 'error' | 'warning' = 'success'
@@ -88,14 +108,17 @@ export function mapVoltageToHistory(
   else {
     // 成功・エラー判定
     const maxDropV = inputs.sys.voltage * ((inputs.targetDrop || 100) / 100)
-    const isAmpOver = result.finalEffAmp > 0 && (inputs.I ?? 0) > result.finalEffAmp
+    const isAmpOver
+      = result.finalEffAmp > 0 && (inputs.I ?? 0) > result.finalEffAmp
     const isDropOver = !isAuto && result.finalDropV > maxDropV
     const hasError = isAmpOver || isDropOver
 
     if (hasError) status = 'error'
 
     // メイン結果テキストの生成
-    const cabType = isAuto ? result.optimal.category || '' : inputs.cableType || ''
+    const cabType = isAuto
+      ? result.optimal.category || ''
+      : inputs.cableType || ''
     const size = isAuto ? result.optimal.size : inputs.selectedSize
     let cableNameStr: string
 
@@ -115,7 +138,8 @@ export function mapVoltageToHistory(
 
     const parallelCount = inputs.parallel ?? 1
 
-    mainResultText = parallelCount > 1 ? `${cableNameStr} × ${parallelCount}条` : cableNameStr
+    mainResultText
+      = parallelCount > 1 ? `${cableNameStr} × ${parallelCount}条` : cableNameStr
 
     // 詳細結果の追加
     historyResults.push({
@@ -130,7 +154,10 @@ export function mapVoltageToHistory(
 
     historyResults.push({ label: '電圧降下', value: dropText })
 
-    historyResults.push({ label: '設計電流', value: `${inputs.I?.toFixed(1) ?? '--'}A` })
+    historyResults.push({
+      label: '設計電流',
+      value: `${inputs.I?.toFixed(1) ?? '--'}A`,
+    })
 
     historyResults.push({
       label: '許容電流',

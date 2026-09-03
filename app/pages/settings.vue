@@ -3,18 +3,18 @@
  * Settings
  * UIや個人の設定を行う画面のコンポーネントです。テーマや背景エフェクトなどのカスタマイズ機能を提供します。
  */
-import { useSettings } from "~/composables/useSettings";
+import { useSettings } from '~/composables/useSettings'
 
 useHead({
-  title: "UI・個人設定",
-});
+  title: 'UI・個人設定',
+})
 
-const { themeMode } = useSettings();
+const { themeMode } = useSettings()
 
 const themeOptions = [
-  { label: "ダークモード (標準)", value: "dark" },
-  { label: "ライトモード", value: "light" },
-];
+  { label: 'ダークモード (標準)', value: 'dark' },
+  { label: 'ライトモード', value: 'light' },
+]
 </script>
 
 <template>

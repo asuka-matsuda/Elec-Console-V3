@@ -31,11 +31,7 @@ const emit = defineEmits<{
         aria-label="次月"
         @click="emit('next')"
       />
-      <AppButton
-        variant="secondary"
-        size="sm"
-        @click="emit('today')"
-      >
+      <AppButton variant="secondary" size="sm" @click="emit('today')">
         今日
       </AppButton>
     </div>

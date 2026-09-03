@@ -79,8 +79,12 @@ export function calculateWeightAndDrum(
   const bendFactor = category.includes('6.6kV') ? 15 : 12
   const minD2 = bendFactor * diameter
 
-  const minDrumByWeight = drumData.find(d => Number(d.max_winding_weight) >= cableWeight)
-  const minDrumByRadius = drumData.find(d => Number(d.barrel_diameter) >= minD2)
+  const minDrumByWeight = drumData.find(
+    d => Number(d.max_winding_weight) >= cableWeight,
+  )
+  const minDrumByRadius = drumData.find(
+    d => Number(d.barrel_diameter) >= minD2,
+  )
 
   for (const drum of drumData) {
     const maxWindingWeight = Number(drum.max_winding_weight)
@@ -187,7 +191,12 @@ export function generateMathData(
   const drumWeightSym = 'W_{cable} &\\le W_{max}'
   let drumWeightSub = '\\text{---} \\text{ kg} &\\le \\text{---} \\text{ kg}'
 
-  if (result && !result.error && result.cableWeight !== undefined && result.bestDrum) {
+  if (
+    result
+    && !result.error
+    && result.cableWeight !== undefined
+    && result.bestDrum
+  ) {
     W_cable_res = result.cableWeight.toFixed(1)
     const W_max = Number(result.bestDrum.max_winding_weight)
 

@@ -1,16 +1,32 @@
 import { cableData as defaultCableData } from '~/constants/data/cableData'
 import type { CableData } from '~/types/database'
-import type { SystemData, VoltageCalcInputs, VoltageCalcResult } from '~/types/voltage'
+import type {
+  SystemData,
+  VoltageCalcInputs,
+  VoltageCalcResult,
+} from '~/types/voltage'
 
 /**
  * 容量と単位から設計電流(A)を逆算します。
  */
-export function calculateDesignCurrent(sys: SystemData | null | undefined, loadVal: number | null | undefined, loadUnit: string, pf?: number): number | null {
-  if (loadVal === null || loadVal === undefined || isNaN(loadVal) || loadVal <= 0) return null
+export function calculateDesignCurrent(
+  sys: SystemData | null | undefined,
+  loadVal: number | null | undefined,
+  loadUnit: string,
+  pf?: number,
+): number | null {
+  if (
+    loadVal === null
+    || loadVal === undefined
+    || isNaN(loadVal)
+    || loadVal <= 0
+  )
+    return null
   if (loadUnit === 'A') return loadVal
 
   if (!sys) return null
-  if (loadUnit === 'kW' && pf !== undefined && !isNaN(pf)) return (loadVal * 1000) / (sys.kwDivisor * pf)
+  if (loadUnit === 'kW' && pf !== undefined && !isNaN(pf))
+    return (loadVal * 1000) / (sys.kwDivisor * pf)
   if (loadUnit === 'kVA') return (loadVal * 1000) / sys.kwDivisor
   if (loadUnit === 'VA') return loadVal / sys.kwDivisor
 
@@ -20,7 +36,11 @@ export function calculateDesignCurrent(sys: SystemData | null | undefined, loadV
 /**
  * 周囲温度による許容電流の補正係数を算出する
  */
-export function getAmbientTempDerating(baseTempStr: string | number, maxTempStr: string | number, ambientTemp: number | null): number {
+export function getAmbientTempDerating(
+  baseTempStr: string | number,
+  maxTempStr: string | number,
+  ambientTemp: number | null,
+): number {
   if (!ambientTemp || isNaN(ambientTemp)) return 1.0
   const base = parseFloat(String(baseTempStr))
   const max = parseFloat(String(maxTempStr))
@@ -34,7 +54,10 @@ export function getAmbientTempDerating(baseTempStr: string | number, maxTempStr:
 /**
  * 指定された入力条件に基づいて、最適なケーブルサイズと電圧降下結果を算出します。
  */
-export function calculateLogic(inputs: VoltageCalcInputs, cableDataList: CableData[] | null = null): VoltageCalcResult | null {
+export function calculateLogic(
+  inputs: VoltageCalcInputs,
+  cableDataList: CableData[] | null = null,
+): VoltageCalcResult | null {
   if (!inputs || !inputs.isReady) return null
   const cables = cableDataList || defaultCableData
 
@@ -56,17 +79,40 @@ function _getEquivalentSq(size: number, unit: string): number {
   return Math.PI * Math.pow(size / 2, 2)
 }
 
-function _calculateVoltageDrop(inputs: VoltageCalcInputs, cables: CableData[]): VoltageCalcResult {
-  const { sys, I, L, cableType, selectedCores, derating, ambientTemp, parallel, selectedSize } = inputs
+function _calculateVoltageDrop(
+  inputs: VoltageCalcInputs,
+  cables: CableData[],
+): VoltageCalcResult {
+  const {
+    sys,
+    I,
+    L,
+    cableType,
+    selectedCores,
+    derating,
+    ambientTemp,
+    parallel,
+    selectedSize,
+  } = inputs
 
-  if (I === null || L === null || parallel === null || derating === null || selectedSize === null) throw new Error('Invalid inputs')
+  if (
+    I === null
+    || L === null
+    || parallel === null
+    || derating === null
+    || selectedSize === null
+  )
+    throw new Error('Invalid inputs')
 
   let candidates = cables.filter(
-    c => c.category === cableType && parseFloat(String(c.size)) === selectedSize,
+    c =>
+      c.category === cableType && parseFloat(String(c.size)) === selectedSize,
   )
 
   if (selectedCores) {
-    candidates = candidates.filter(c => c.cores === selectedCores || !c.cores || c.cores === '-')
+    candidates = candidates.filter(
+      c => c.cores === selectedCores || !c.cores || c.cores === '-',
+    )
   }
 
   const fixedCable = candidates[0] || null
@@ -84,11 +130,19 @@ function _calculateVoltageDrop(inputs: VoltageCalcInputs, cables: CableData[]): 
       fixedCable.maxTemp || '',
       ambientTemp,
     )
-    finalEffAmp = parseFloat(String(fixedCable.ampacity)) * derating * tempDerating * parallel
+    finalEffAmp
+      = parseFloat(String(fixedCable.ampacity))
+        * derating
+        * tempDerating
+        * parallel
   }
 
   return {
-    optimal: (fixedCable || { category: cableType, size: selectedSize || '', unit: unit }) as CableData,
+    optimal: (fixedCable || {
+      category: cableType,
+      size: selectedSize || '',
+      unit: unit,
+    }) as CableData,
     minAmpacityCable: fixedCable,
     finalEffAmp,
     finalDropV,
@@ -98,18 +152,42 @@ function _calculateVoltageDrop(inputs: VoltageCalcInputs, cables: CableData[]): 
   }
 }
 
-function _calculateSizeSelection(inputs: VoltageCalcInputs, cables: CableData[]): VoltageCalcResult | null {
-  const { sys, I, L, cableType, selectedCores, derating, ambientTemp, parallel, targetDrop } = inputs
+function _calculateSizeSelection(
+  inputs: VoltageCalcInputs,
+  cables: CableData[],
+): VoltageCalcResult | null {
+  const {
+    sys,
+    I,
+    L,
+    cableType,
+    selectedCores,
+    derating,
+    ambientTemp,
+    parallel,
+    targetDrop,
+  } = inputs
 
-  if (I === null || L === null || parallel === null || derating === null || targetDrop === null) throw new Error('Invalid inputs')
+  if (
+    I === null
+    || L === null
+    || parallel === null
+    || derating === null
+    || targetDrop === null
+  )
+    throw new Error('Invalid inputs')
 
   const maxDropV = sys.voltage * ((targetDrop || 0) / 100)
   const A_req = (sys.simpleK * L * I) / (1000 * maxDropV * parallel)
 
-  let candidates = cables.filter(c => c.category === cableType && c.ampacity !== '-')
+  let candidates = cables.filter(
+    c => c.category === cableType && c.ampacity !== '-',
+  )
 
   if (selectedCores) {
-    candidates = candidates.filter(c => c.cores === selectedCores || !c.cores || c.cores === '-')
+    candidates = candidates.filter(
+      c => c.cores === selectedCores || !c.cores || c.cores === '-',
+    )
   }
 
   candidates.sort((a, b) => {
@@ -123,15 +201,23 @@ function _calculateSizeSelection(inputs: VoltageCalcInputs, cables: CableData[])
   let minAreaCable: CableData | null = null
 
   for (const c of candidates) {
-    const sizeVal = typeof c.size === 'number' ? c.size : parseFloat(String(c.size))
+    const sizeVal
+      = typeof c.size === 'number' ? c.size : parseFloat(String(c.size))
     const c_sq = _getEquivalentSq(sizeVal, c.unit)
 
     if (!minAreaCable && c_sq >= A_req) {
       minAreaCable = c
     }
 
-    const finalTempDerating = getAmbientTempDerating(c.baseTemp || '', c.maxTemp || '', ambientTemp)
-    const ampacityVal = typeof c.ampacity === 'number' ? c.ampacity : parseFloat(String(c.ampacity))
+    const finalTempDerating = getAmbientTempDerating(
+      c.baseTemp || '',
+      c.maxTemp || '',
+      ambientTemp,
+    )
+    const ampacityVal
+      = typeof c.ampacity === 'number'
+        ? c.ampacity
+        : parseFloat(String(c.ampacity))
     const effAmp = ampacityVal * derating * finalTempDerating
     const totalEffAmp = effAmp * parallel
 

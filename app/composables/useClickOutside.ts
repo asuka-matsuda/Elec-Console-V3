@@ -30,6 +30,8 @@ export function useClickOutside(
   })
 
   onUnmounted(() => {
-    document.removeEventListener('click', handleClickOutside, { capture: true })
+    document.removeEventListener('click', handleClickOutside, {
+      capture: true,
+    })
   })
 }

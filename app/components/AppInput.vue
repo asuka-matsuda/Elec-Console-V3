@@ -3,35 +3,35 @@
  * AppInput
  * テキスト入力やテキストエリアを提供するフォームコントロールコンポーネントです。
  */
-import { useId } from "vue";
+import { useId } from 'vue'
 
-const model = defineModel<string | number | null>();
+const model = defineModel<string | number | null>()
 
 withDefaults(
   defineProps<{
     type?:
-      | "text"
-      | "password"
-      | "email"
-      | "number"
-      | "search"
-      | "tel"
-      | "url"
-      | "textarea";
-    placeholder?: string;
-    disabled?: boolean;
-    error?: boolean;
-    size?: "sm" | "md";
-    rows?: number;
+      | 'text'
+      | 'password'
+      | 'email'
+      | 'number'
+      | 'search'
+      | 'tel'
+      | 'url'
+      | 'textarea'
+    placeholder?: string
+    disabled?: boolean
+    error?: boolean
+    size?: 'sm' | 'md'
+    rows?: number
   }>(),
   {
-    type: "text",
-    size: "md",
+    type: 'text',
+    size: 'md',
     rows: 4,
   },
-);
+)
 
-const inputId = useId();
+const inputId = useId()
 </script>
 
 <template>

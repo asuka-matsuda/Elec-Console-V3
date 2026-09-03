@@ -1,4 +1,7 @@
-export interface HistoryEntry<TInputs = Record<string, unknown>, TResults = Record<string, unknown>> {
+export interface HistoryEntry<
+  TInputs = Record<string, unknown>,
+  TResults = Record<string, unknown>,
+> {
   id: string
   toolId?: string
   toolName: string

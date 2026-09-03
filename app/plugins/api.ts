@@ -2,7 +2,10 @@ import { defineNuxtPlugin, navigateTo, useCookie, useState } from '#app'
 import type { User } from '~/types/auth'
 
 export default defineNuxtPlugin(() => {
-  const token = useCookie<string | null>('auth_token', { default: () => null, maxAge: 60 * 60 * 24 })
+  const token = useCookie<string | null>('auth_token', {
+    default: () => null,
+    maxAge: 60 * 60 * 24,
+  })
   const currentUser = useState<User | null>('currentUser', () => null)
 
   const $api = $fetch.create({

@@ -65,13 +65,34 @@ export const useTableSort = <T extends Record<string, unknown>>(
       const numA = Number(valA)
       const numB = Number(valB)
 
-      if (!isNaN(numA) && !isNaN(numB) && typeof valA !== 'boolean' && typeof valB !== 'boolean' && String(valA).trim() !== '' && String(valB).trim() !== '') {
+      if (
+        !isNaN(numA)
+        && !isNaN(numB)
+        && typeof valA !== 'boolean'
+        && typeof valB !== 'boolean'
+        && String(valA).trim() !== ''
+        && String(valB).trim() !== ''
+      ) {
         return (numA - numB) * orderMultiplier
       }
 
       // 3. 日付比較
-      const dateA = valA instanceof Date ? valA.getTime() : (typeof valA === 'string' && !isNaN(Date.parse(valA)) && valA.includes('-') ? Date.parse(valA) : NaN)
-      const dateB = valB instanceof Date ? valB.getTime() : (typeof valB === 'string' && !isNaN(Date.parse(valB)) && valB.includes('-') ? Date.parse(valB) : NaN)
+      const dateA
+        = valA instanceof Date
+          ? valA.getTime()
+          : typeof valA === 'string'
+            && !isNaN(Date.parse(valA))
+            && valA.includes('-')
+            ? Date.parse(valA)
+            : NaN
+      const dateB
+        = valB instanceof Date
+          ? valB.getTime()
+          : typeof valB === 'string'
+            && !isNaN(Date.parse(valB))
+            && valB.includes('-')
+            ? Date.parse(valB)
+            : NaN
 
       if (!isNaN(dateA) && !isNaN(dateB)) {
         return (dateA - dateB) * orderMultiplier

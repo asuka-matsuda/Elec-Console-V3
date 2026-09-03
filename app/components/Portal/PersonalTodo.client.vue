@@ -9,7 +9,10 @@ const props = defineProps<{
 
 // TODO: 本来は認証情報から取得するが、一時的に固定値
 const loginId = computed(() => 'guest')
-const { todos, addTodo, toggleTodo, deleteTodo } = useTodo(props.siteId, loginId.value)
+const { todos, addTodo, toggleTodo, deleteTodo } = useTodo(
+  props.siteId,
+  loginId.value,
+)
 
 const newTask = ref('')
 
@@ -34,10 +37,7 @@ const sortedTodos = computed(() => {
   <AppPanel class="p-personal-todo">
     <div class="p-personal-todo__header">
       <h3>
-        <AppIcon
-          name="check"
-          size="sm"
-        />
+        <AppIcon name="check" size="sm" />
         パーソナルToDo
       </h3>
     </div>
@@ -48,14 +48,8 @@ const sortedTodos = computed(() => {
         placeholder="新しいタスクを入力..."
         @keyup.enter="handleAdd"
       />
-      <AppButton
-        variant="primary"
-        icon-only
-        @click="handleAdd"
-      >
-        <AppIcon
-          name="plus"
-        />
+      <AppButton variant="primary" icon-only @click="handleAdd">
+        <AppIcon name="plus" />
       </AppButton>
     </div>
 
@@ -77,9 +71,7 @@ const sortedTodos = computed(() => {
           icon-only
           @click="deleteTodo(todo.id)"
         >
-          <AppIcon
-            name="trash-2"
-          />
+          <AppIcon name="trash-2" />
         </AppButton>
       </li>
       <AppEmptyState
@@ -87,8 +79,8 @@ const sortedTodos = computed(() => {
         icon="check-circle"
         title="タスクはありません"
         description="上の入力欄から新しいタスクを追加してください。"
-      />
-    </ul></AppPanel>
+      /></ul
+    ></AppPanel>
 </template>
 
 <style scoped lang="scss">
@@ -109,7 +101,9 @@ const sortedTodos = computed(() => {
     @include flex-start-center;
 
     gap: var(--space-1);
-    > *:first-child { flex: 1; }
+    > *:first-child {
+      flex: 1;
+    }
   }
 
   &__list {

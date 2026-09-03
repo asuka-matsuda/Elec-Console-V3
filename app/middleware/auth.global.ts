@@ -28,7 +28,11 @@ export default defineNuxtRouteMiddleware(async (to) => {
       return navigateTo('/change-password')
     }
   }
-  else if (isAuthenticated.value && !currentUser.value?.requirePasswordReset && to.path === '/change-password') {
+  else if (
+    isAuthenticated.value
+    && !currentUser.value?.requirePasswordReset
+    && to.path === '/change-password'
+  ) {
     // 変更不要なユーザーがアクセスした場合はホームへ
     return navigateTo('/')
   }

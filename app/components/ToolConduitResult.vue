@@ -3,73 +3,73 @@
  * ToolConduitResult
  * 配管サイズ計算の結果を視覚的に表示する2カラムコンポーネントです。
  */
-import { computed } from "vue";
+import { computed } from 'vue'
 
-import { CONDUIT_UI_LABELS } from "~/constants/conduitConstants";
-import { formatVal } from "~/utils/math";
+import { CONDUIT_UI_LABELS } from '~/constants/conduitConstants'
+import { formatVal } from '~/utils/math'
 
 const props = defineProps<{
   result:
-    import("~/utils/tools/conduit/conduitCalcLogic").ConduitCalcResult | null;
-  inputs?: import("~/composables/tools/useConduitCalculator").ConduitInputs;
-  size?: "sm" | "md";
-}>();
+    import('~/utils/tools/conduit/conduitCalcLogic').ConduitCalcResult | null
+  inputs?: import('~/composables/tools/useConduitCalculator').ConduitInputs
+  size?: 'sm' | 'md'
+}>()
 
-const isReady = computed(() => props.result?.success && !props.result?.partial);
+const isReady = computed(() => props.result?.success && !props.result?.partial)
 
 // --- 32% (異種) ---
 const size32 = computed(() => {
-  if (!isReady.value) return CONDUIT_UI_LABELS.EMPTY_TEXT;
+  if (!isReady.value) return CONDUIT_UI_LABELS.EMPTY_TEXT
 
   return props.result!.isOversize32
     ? CONDUIT_UI_LABELS.OVERSIZE_TEXT
-    : props.result!.conduit32?.size;
-});
+    : props.result!.conduit32?.size
+})
 
 const status32Class = computed(() => {
-  if (!isReady.value) return "is-neutral";
+  if (!isReady.value) return 'is-neutral'
 
-  return props.result!.isOversize32 ? "is-danger" : "is-success";
-});
+  return props.result!.isOversize32 ? 'is-danger' : 'is-success'
+})
 
 const _allowable32 = computed(() =>
   isReady.value
     ? formatVal(props.result!.allowable32, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
     : CONDUIT_UI_LABELS.EMPTY_TEXT,
-);
+)
 
 const fill32 = computed(() =>
   isReady.value
     ? formatVal(props.result!.fill32, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
     : CONDUIT_UI_LABELS.EMPTY_TEXT,
-);
+)
 
 // --- 48% (同種) ---
 const size48 = computed(() => {
-  if (!isReady.value) return CONDUIT_UI_LABELS.EMPTY_TEXT;
+  if (!isReady.value) return CONDUIT_UI_LABELS.EMPTY_TEXT
 
   return props.result!.isOversize48
     ? CONDUIT_UI_LABELS.OVERSIZE_TEXT
-    : props.result!.conduit48?.size;
-});
+    : props.result!.conduit48?.size
+})
 
 const status48Class = computed(() => {
-  if (!isReady.value) return "is-neutral";
+  if (!isReady.value) return 'is-neutral'
 
-  return props.result!.isOversize48 ? "is-danger" : "is-success";
-});
+  return props.result!.isOversize48 ? 'is-danger' : 'is-success'
+})
 
 const _allowable48 = computed(() =>
   isReady.value
     ? formatVal(props.result!.allowable48, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
     : CONDUIT_UI_LABELS.EMPTY_TEXT,
-);
+)
 
 const fill48 = computed(() =>
   isReady.value
     ? formatVal(props.result!.fill48, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
     : CONDUIT_UI_LABELS.EMPTY_TEXT,
-);
+)
 </script>
 
 <template>

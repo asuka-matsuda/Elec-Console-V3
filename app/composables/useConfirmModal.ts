@@ -12,7 +12,9 @@ export interface ConfirmOptions {
 /**
  * 確認モーダル（AppConfirmModal）の開閉と状態管理を共通化するComposable
  */
-export const useConfirmModal = (defaultOptions: Partial<ConfirmOptions> = {}) => {
+export const useConfirmModal = (
+  defaultOptions: Partial<ConfirmOptions> = {},
+) => {
   const isOpen = ref(false)
   const options = ref<ConfirmOptions>({
     title: defaultOptions.title || '確認',
@@ -32,9 +34,14 @@ export const useConfirmModal = (defaultOptions: Partial<ConfirmOptions> = {}) =>
   const askConfirm = (customOptions: ConfirmOptions) => {
     options.value = {
       title: customOptions.title || defaultOptions.title || '確認',
-      message: customOptions.message || defaultOptions.message || 'この操作を実行しますか？',
-      confirmText: customOptions.confirmText || defaultOptions.confirmText || '確定する',
-      cancelText: customOptions.cancelText || defaultOptions.cancelText || 'キャンセル',
+      message:
+        customOptions.message
+        || defaultOptions.message
+        || 'この操作を実行しますか？',
+      confirmText:
+        customOptions.confirmText || defaultOptions.confirmText || '確定する',
+      cancelText:
+        customOptions.cancelText || defaultOptions.cancelText || 'キャンセル',
       intent: customOptions.intent || defaultOptions.intent || 'primary',
       onConfirm: customOptions.onConfirm,
     }

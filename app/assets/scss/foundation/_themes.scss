@@ -1,6 +1,5 @@
 @use "icons" as *;
 
-
 // ==========================================================================
 // 1. ライトテーマ定義
 // ==========================================================================
@@ -45,8 +44,7 @@ body[data-border-style="hud"] {
   --panel-border-color: var(--color-border);
   --panel-border-image: none;
   --panel-box-shadow:
-    inset 0 0 0 1px var(--color-main-bg),
-    inset 0 0 0 2px var(--color-border),
+    inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border),
     var(--shadow-elevation-sm);
 }
 
@@ -54,26 +52,33 @@ body[data-border-style="simple"] {
   --panel-border-color: var(--color-border);
   --panel-border-image: none;
   --panel-box-shadow:
-    inset 1px 1px 2px var(--color-border),
-    inset -1px -1px 2px transparent,
+    inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent,
     var(--shadow-elevation-sm);
 }
 
 body[data-border-style="gradient"] {
   --panel-border-color: transparent;
-  --panel-border-image: linear-gradient(135deg, var(--color-border) 0%, transparent 100%) 1;
+  --panel-border-image: linear-gradient(
+      135deg,
+      var(--color-border) 0%,
+      transparent 100%
+    )
+    1;
   --panel-box-shadow:
-    inset 1px 1px 2px var(--color-border),
-    inset -1px -1px 2px transparent,
+    inset 1px 1px 2px var(--color-border), inset -1px -1px 2px transparent,
     var(--shadow-elevation-sm);
 }
 
 body[data-border-style="hybrid"] {
   --panel-border-color: transparent;
-  --panel-border-image: linear-gradient(135deg, var(--color-border) 0%, transparent 100%) 1;
+  --panel-border-image: linear-gradient(
+      135deg,
+      var(--color-border) 0%,
+      transparent 100%
+    )
+    1;
   --panel-box-shadow:
-    inset 0 0 0 1px var(--color-main-bg),
-    inset 0 0 0 2px var(--color-border),
+    inset 0 0 0 1px var(--color-main-bg), inset 0 0 0 2px var(--color-border),
     var(--shadow-elevation-sm);
 }
 

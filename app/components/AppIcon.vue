@@ -3,21 +3,21 @@
  * AppIcon
  * feather-iconsを使用したアイコンを表示するコンポーネントです。
  */
-import feather from "feather-icons";
-import { computed } from "vue";
+import feather from 'feather-icons'
+import { computed } from 'vue'
 
 const props = defineProps<{
-  name: string;
-  size?: "sm" | "md" | "lg";
-}>();
+  name: string
+  size?: 'sm' | 'md' | 'lg'
+}>()
 
 const svgContent = computed(() => {
   if (feather.icons[props.name as keyof typeof feather.icons]) {
-    return feather.icons[props.name as keyof typeof feather.icons].toSvg();
+    return feather.icons[props.name as keyof typeof feather.icons].toSvg()
   }
 
-  return "";
-});
+  return ''
+})
 </script>
 
 <template>

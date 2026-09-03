@@ -3,14 +3,14 @@
  * WeightCalculator
  * ケーブル重量・ドラム選定ツールのコンポーネントです。ケーブルの種類と長さから重量を計算し、最適なドラムを選定します。
  */
-import { computed } from "vue";
+import { computed } from 'vue'
 
-import { useWeightCalculator } from "~/composables/tools/useWeightCalculator";
-import { getAvailableSizes, getCableCategories } from "~/utils/cable";
+import { useWeightCalculator } from '~/composables/tools/useWeightCalculator'
+import { getAvailableSizes, getCableCategories } from '~/utils/cable'
 
 useHead({
-  title: "ケーブル重量・ドラム選定",
-});
+  title: 'ケーブル重量・ドラム選定',
+})
 
 const {
   inputs,
@@ -20,30 +20,30 @@ const {
   openResetModal,
   confirmReset,
   mathSteps,
-} = useWeightCalculator();
+} = useWeightCalculator()
 
 /** ケーブル選択用データ */
-const categories = computed(() => getCableCategories());
-const availableSizes = computed(() => getAvailableSizes(inputs.value.category));
+const categories = computed(() => getCableCategories())
+const availableSizes = computed(() => getAvailableSizes(inputs.value.category))
 
 /** Categoryが変更されたらcableIdxをリセットする */
 watch(
   () => inputs.value.category,
   (newVal, oldVal) => {
-    if (!oldVal) return;
-    inputs.value.cableIdx = "";
+    if (!oldVal) return
+    inputs.value.cableIdx = ''
   },
-);
+)
 
 /** 総重量の計算 */
 const totalWeight = computed(() => {
-  if (!result.value || result.value?.error || !result.value?.bestDrum) return 0;
+  if (!result.value || result.value?.error || !result.value?.bestDrum) return 0
 
   return (
-    (result.value?.cableWeight || 0) +
-    parseFloat((result.value?.bestDrum?.weight as unknown as string) || "0")
-  );
-});
+    (result.value?.cableWeight || 0)
+    + parseFloat((result.value?.bestDrum?.weight as unknown as string) || '0')
+  )
+})
 </script>
 
 <template>

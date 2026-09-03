@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed } from 'vue'
 
-import { useRoute } from "#app";
+import { useRoute } from '#app'
 
 // ログインページ用の最小レイアウト
-const route = useRoute();
-const pageTitle = computed(() => route.meta.title as string | undefined);
+const route = useRoute()
+const pageTitle = computed(() => route.meta.title as string | undefined)
 </script>
 
 <template>

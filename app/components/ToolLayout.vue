@@ -3,14 +3,14 @@
  * ToolLayout
  * ツールページの全体レイアウト（免責事項、入力欄、結果表示、計算根拠パネルなど）を提供するレイアウト用コンポーネントです。
  */
-import { ref } from "vue";
+import { ref } from 'vue'
 
 /** Drawer state for mobile */
-const isDrawerOpen = ref(false);
+const isDrawerOpen = ref(false)
 
 const toggleDrawer = () => {
-  isDrawerOpen.value = !isDrawerOpen.value;
-};
+  isDrawerOpen.value = !isDrawerOpen.value
+}
 </script>
 
 <template>

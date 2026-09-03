@@ -33,28 +33,42 @@ export interface CalendarSettings {
 }
 
 export const useCalendar = (siteId: string) => {
-  const events = useState<CalendarEvent[]>(`calendar-events-${siteId}`, () => [])
-  const settings = useState<CalendarSettings | null>(`calendar-settings-${siteId}`, () => null)
+  const events = useState<CalendarEvent[]>(
+    `calendar-events-${siteId}`,
+    () => [],
+  )
+  const settings = useState<CalendarSettings | null>(
+    `calendar-settings-${siteId}`,
+    () => null,
+  )
   const { $api } = useApi()
 
-  const { refresh: fetchEvents } = useAsyncData(`fetch-events-${siteId}`, async () => {
-    const data = await $api<CalendarEvent[]>(`/api/sites/${siteId}/events`)
+  const { refresh: fetchEvents } = useAsyncData(
+    `fetch-events-${siteId}`,
+    async () => {
+      const data = await $api<CalendarEvent[]>(`/api/sites/${siteId}/events`)
 
-    events.value = data
+      events.value = data
 
-    return data
-  })
+      return data
+    },
+  )
 
-  const { refresh: fetchSettings } = useAsyncData(`fetch-settings-${siteId}`, async () => {
-    const data = await $api<CalendarSettings>(`/api/sites/${siteId}/calendar/settings`)
+  const { refresh: fetchSettings } = useAsyncData(
+    `fetch-settings-${siteId}`,
+    async () => {
+      const data = await $api<CalendarSettings>(
+        `/api/sites/${siteId}/calendar/settings`,
+      )
 
-    if (data && (!data.eventTypes || data.eventTypes.length === 0)) {
-      data.eventTypes = DEFAULT_EVENT_TYPES
-    }
-    settings.value = data
+      if (data && (!data.eventTypes || data.eventTypes.length === 0)) {
+        data.eventTypes = DEFAULT_EVENT_TYPES
+      }
+      settings.value = data
 
-    return data
-  })
+      return data
+    },
+  )
 
   const createEvent = async (event: Omit<CalendarEvent, 'id' | 'siteId'>) => {
     const res = await $api<CalendarEvent>(`/api/sites/${siteId}/events`, {
@@ -74,7 +88,7 @@ export const useCalendar = (siteId: string) => {
     })
 
     if (res) {
-      events.value = events.value.map(e => e.id === id ? res : e)
+      events.value = events.value.map(e => (e.id === id ? res : e))
     }
   }
 
@@ -84,10 +98,13 @@ export const useCalendar = (siteId: string) => {
   }
 
   const updateSettings = async (updates: Partial<CalendarSettings>) => {
-    const res = await $api<CalendarSettings>(`/api/sites/${siteId}/calendar/settings`, {
-      method: 'PUT',
-      body: updates,
-    })
+    const res = await $api<CalendarSettings>(
+      `/api/sites/${siteId}/calendar/settings`,
+      {
+        method: 'PUT',
+        body: updates,
+      },
+    )
 
     settings.value = res
   }

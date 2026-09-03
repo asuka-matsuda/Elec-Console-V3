@@ -3,19 +3,19 @@
  * LayoutGlobalNav
  * アプリケーションのグローバルナビゲーション（サイドバーメニュー）を表示するコンポーネントです。
  */
-import type { MenuSection } from "~/constants/data/menuData";
+import type { MenuSection } from '~/constants/data/menuData'
 
 /** For mobile responsive toggle */
-const isOpen = defineModel<boolean>("isOpen", { default: false });
+const isOpen = defineModel<boolean>('isOpen', { default: false })
 
 defineProps<{
-  menuData: MenuSection[];
-}>();
+  menuData: MenuSection[]
+}>()
 
 /** Close sidebar on mobile when a link is clicked */
 const closeSidebar = () => {
-  isOpen.value = false;
-};
+  isOpen.value = false
+}
 </script>
 
 <template>

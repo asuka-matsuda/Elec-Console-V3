@@ -19,10 +19,13 @@ export const useAdminUsers = () => {
 
   const createUser = async (user: Partial<User>) => {
     try {
-      const data = await $api<User & { initialPassword?: string }>('/api/users', {
-        method: 'POST',
-        body: user,
-      })
+      const data = await $api<User & { initialPassword?: string }>(
+        '/api/users',
+        {
+          method: 'POST',
+          body: user,
+        },
+      )
 
       await fetchUsers()
 
@@ -31,7 +34,11 @@ export const useAdminUsers = () => {
     catch (_e: unknown) {
       const e = _e as Error
 
-      throw new Error((e as Error & { data?: { statusMessage?: string } }).data?.statusMessage || 'ユーザー登録に失敗しました', { cause: _e })
+      throw new Error(
+        (e as Error & { data?: { statusMessage?: string } }).data
+          ?.statusMessage || 'ユーザー登録に失敗しました',
+        { cause: _e },
+      )
     }
   }
 
@@ -56,9 +63,12 @@ export const useAdminUsers = () => {
 
   const resetUserPassword = async (id: string) => {
     try {
-      const data = await $api<{ success: boolean, initialPassword?: string }>(`/api/users/${id}/reset-password`, {
-        method: 'POST',
-      })
+      const data = await $api<{ success: boolean, initialPassword?: string }>(
+        `/api/users/${id}/reset-password`,
+        {
+          method: 'POST',
+        },
+      )
 
       await fetchUsers()
 
@@ -67,7 +77,11 @@ export const useAdminUsers = () => {
     catch (_e: unknown) {
       const e = _e as Error
 
-      throw new Error((e as Error & { data?: { statusMessage?: string } }).data?.statusMessage || 'パスワード初期化に失敗しました', { cause: _e })
+      throw new Error(
+        (e as Error & { data?: { statusMessage?: string } }).data
+          ?.statusMessage || 'パスワード初期化に失敗しました',
+        { cause: _e },
+      )
     }
   }
 

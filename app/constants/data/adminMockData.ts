@@ -13,7 +13,9 @@ export const mockUsers: User[] = [
     assignedSiteIds: [],
     requirePasswordReset: false,
     lastLoginAt: '2026-08-25T08:00:00Z',
-    email: 'test@example.com', isActive: true, createdAt: '2026-08-01T10:00:00Z',
+    email: 'test@example.com',
+    isActive: true,
+    createdAt: '2026-08-01T10:00:00Z',
   },
   {
     id: 'u2',
@@ -26,7 +28,9 @@ export const mockUsers: User[] = [
     assignedSiteIds: [],
     requirePasswordReset: true,
     lastLoginAt: null,
-    email: 'test@example.com', isActive: true, createdAt: '2026-08-02T10:00:00Z',
+    email: 'test@example.com',
+    isActive: true,
+    createdAt: '2026-08-02T10:00:00Z',
   },
   {
     id: 'u3',
@@ -39,7 +43,9 @@ export const mockUsers: User[] = [
     assignedSiteIds: [],
     requirePasswordReset: false,
     lastLoginAt: '2026-08-24T15:00:00Z',
-    email: 'test@example.com', isActive: true, createdAt: '2026-08-03T10:00:00Z',
+    email: 'test@example.com',
+    isActive: true,
+    createdAt: '2026-08-03T10:00:00Z',
   },
 ]
 

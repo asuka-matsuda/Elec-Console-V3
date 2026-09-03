@@ -28,16 +28,20 @@ const removeCircuit = (idx: number) => {
   excludedCircuitsList.value.splice(idx, 1)
 }
 
-watch(() => props.site, (newSite) => {
-  if (newSite) {
-    editData.value = { ...newSite }
-    excludedCircuitsList.value = [...(newSite.excludedCircuits || [])]
-  }
-  else {
-    editData.value = {}
-    excludedCircuitsList.value = []
-  }
-}, { immediate: true })
+watch(
+  () => props.site,
+  (newSite) => {
+    if (newSite) {
+      editData.value = { ...newSite }
+      excludedCircuitsList.value = [...(newSite.excludedCircuits || [])]
+    }
+    else {
+      editData.value = {}
+      excludedCircuitsList.value = []
+    }
+  },
+  { immediate: true },
+)
 
 watch(isOpen, async (val) => {
   if (val && users.value.length === 0) {
@@ -61,18 +65,19 @@ const activeTab = ref('basic')
 
 const editStatus = computed({
   get: () => (editData.value.status || '') as string,
-  set: (val: string) => editData.value.status = val as typeof editData.value.status,
+  set: (val: string) =>
+    (editData.value.status = val as typeof editData.value.status),
 })
 const editId = computed({
   get: () => (editData.value.id || '') as string,
-  set: (val: string) => editData.value.id = val,
+  set: (val: string) => (editData.value.id = val),
 })
 
 // ワーカー名解決
 const workerNames = computed(() => {
   if (!props.site?.id || !users.value) return []
-  const assignedUsers = users.value.filter(u =>
-    u.assignedSiteIds && u.assignedSiteIds.includes(props.site!.id),
+  const assignedUsers = users.value.filter(
+    u => u.assignedSiteIds && u.assignedSiteIds.includes(props.site!.id),
   )
 
   return assignedUsers.map(u => `${u.lastName} ${u.firstName}`)
@@ -81,7 +86,9 @@ const workerNames = computed(() => {
 const handleSave = async () => {
   if (!props.site) return
   // Parse excluded circuits
-  const parsedCircuits = excludedCircuitsList.value.map(c => c.trim()).filter(c => c.length > 0)
+  const parsedCircuits = excludedCircuitsList.value
+    .map(c => c.trim())
+    .filter(c => c.length > 0)
 
   const payload: Site = {
     ...props.site,
@@ -99,12 +106,12 @@ const syncMsg = ref('')
 const handleImport = () => {
   syncMsg.value = 'Excelからデータの取込が完了しました（ダミー）'
   showSyncMsg.value = true
-  setTimeout(() => showSyncMsg.value = false, 3000)
+  setTimeout(() => (showSyncMsg.value = false), 3000)
 }
 const handleExport = () => {
   syncMsg.value = 'Excelへデータを書戻しました（ダミー）'
   showSyncMsg.value = true
-  setTimeout(() => showSyncMsg.value = false, 3000)
+  setTimeout(() => (showSyncMsg.value = false), 3000)
 }
 </script>
 
@@ -116,25 +123,16 @@ const handleExport = () => {
     @cancel="isOpen = false"
   >
     <div class="c-site-settings">
-      <AppTabs
-        v-model="activeTab"
-        :options="tabs"
-      />
+      <AppTabs v-model="activeTab" :options="tabs" />
 
       <div class="c-site-settings__content">
         <!-- 基本設定 -->
         <template v-if="activeTab === 'basic'">
           <AppFormGroup label="ステータス">
-            <AppSelect
-              v-model="editStatus"
-              :options="statusOptions"
-            />
+            <AppSelect v-model="editStatus" :options="statusOptions" />
           </AppFormGroup>
           <AppFormGroup label="現場ID (半角英数)">
-            <AppInput
-              v-model="editId"
-              placeholder="例: site-tokyo-01"
-            />
+            <AppInput v-model="editId" placeholder="例: site-tokyo-01" />
           </AppFormGroup>
           <AppFormGroup label="現場名">
             <AppInput v-model="editData.name" />
@@ -150,10 +148,7 @@ const handleExport = () => {
                   {{ name }}
                 </AppBadge>
               </template>
-              <div
-                v-else
-                class="u-text-muted u-text-sm"
-              >
+              <div v-else class="u-text-muted u-text-sm">
                 アサインされているワーカーはいません
               </div>
             </div>
@@ -175,30 +170,16 @@ const handleExport = () => {
             />
           </AppFormGroup>
 
-          <AppPanel
-            title="データベース連携"
-            class="u-mt-6"
-          >
+          <AppPanel title="データベース連携" class="u-mt-6">
             <div class="c-site-settings__sync-actions">
-              <AppButton
-                variant="danger"
-                icon="download"
-                @click="handleImport"
-              >
+              <AppButton variant="danger" icon="download" @click="handleImport">
                 Excelから取込 (初期化)
               </AppButton>
-              <AppButton
-                variant="primary"
-                icon="upload"
-                @click="handleExport"
-              >
+              <AppButton variant="primary" icon="upload" @click="handleExport">
                 Excelへ書戻し
               </AppButton>
             </div>
-            <div
-              v-if="showSyncMsg"
-              class="c-site-settings__sync-msg"
-            >
+            <div v-if="showSyncMsg" class="c-site-settings__sync-msg">
               {{ syncMsg }}
             </div>
           </AppPanel>
@@ -242,18 +223,10 @@ const handleExport = () => {
     </div>
 
     <template #footer>
-      <AppButton
-        variant="secondary"
-        @click="isOpen = false"
-      >
+      <AppButton variant="secondary" @click="isOpen = false">
         キャンセル
       </AppButton>
-      <AppButton
-        variant="primary"
-        @click="handleSave"
-      >
-        保存する
-      </AppButton>
+      <AppButton variant="primary" @click="handleSave"> 保存する </AppButton>
     </template>
   </AppModal>
 </template>

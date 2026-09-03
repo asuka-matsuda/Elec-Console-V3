@@ -64,7 +64,9 @@ export const systemData = [
  */
 export function getPhaseOptions(filterTag = 'all') {
   const filtered
-    = filterTag === 'all' ? systemData : systemData.filter(sys => sys.tags.includes(filterTag))
+    = filterTag === 'all'
+      ? systemData
+      : systemData.filter(sys => sys.tags.includes(filterTag))
 
   return [
     { value: '', text: '選択してください', disabled: true, selected: true },

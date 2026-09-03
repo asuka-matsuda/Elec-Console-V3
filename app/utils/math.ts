@@ -12,7 +12,12 @@ export const TEX_DANGER_CLASS = 'tex-status-danger'
  * ユーザーの入力や選択によって変動する値をオレンジ色でハイライトする
  */
 export function hl(value: string | number | undefined | null): string {
-  if (value === undefined || value === null || value === '' || Number.isNaN(value)) {
+  if (
+    value === undefined
+    || value === null
+    || value === ''
+    || Number.isNaN(value)
+  ) {
     return `\\htmlClass{${TEX_HL_CLASS}}{\\text{---}}`
   }
 
@@ -23,7 +28,12 @@ export function hl(value: string | number | undefined | null): string {
  * 数値をフォーマットし、指定されたCSSクラスでKaTeX用のhtmlClassコマンドでラップします。
  * 値が無効な場合（null/undefined/NaN）は、フォールバックの文字列（通常は変数名）をそのまま返します。
  */
-export function hlVal(val: number | string | null | undefined, fallback: string, dec = 1, className = TEX_HL_CLASS): string {
+export function hlVal(
+  val: number | string | null | undefined,
+  fallback: string,
+  dec = 1,
+  className = TEX_HL_CLASS,
+): string {
   if (val === null || val === undefined || val === '') return fallback
   const num = parseFloat(String(val))
 
@@ -36,7 +46,11 @@ export function hlVal(val: number | string | null | undefined, fallback: string,
 /**
  * 数値を指定桁数でフォーマットします。ハイライトは行いません。
  */
-export function formatVal(val: number | string | null | undefined, fallback: string, dec = 1): string {
+export function formatVal(
+  val: number | string | null | undefined,
+  fallback: string,
+  dec = 1,
+): string {
   if (val === null || val === undefined || val === '') return fallback
   const num = parseFloat(String(val))
 
@@ -78,7 +92,9 @@ export function buildFormula(
   if (resultStr !== undefined) {
     tex += ` \\\\ &= ${resultStr}`
     if (unit) {
-      const safeUnit = unit.includes('^') ? unit.replace(/\^(\d+)/g, '}^$1\\text{') : unit
+      const safeUnit = unit.includes('^')
+        ? unit.replace(/\^(\d+)/g, '}^$1\\text{')
+        : unit
 
       tex += ` \\text{ [${safeUnit}]}`
     }

@@ -1,6 +1,5 @@
 @use "icons" as *;
 
-
 :root {
   // ==========================================================================
   // 1. アイコン (Icons)
@@ -19,42 +18,43 @@
   // 2. トラッキング (Letter Spacings) & Z-Index
   // ==========================================================================
   --tracking-tighter: -0.04em;
-  --tracking-tight:   -0.02em;
-  --tracking-normal:  0em;
-  --tracking-wide:    0.02em;
-  --tracking-wider:   0.05em;
-  --tracking-widest:  0.1em;
-  --z-index-bg-canvas:         -3;
-  --z-index-footer:            10;
-  --z-index-table-header:      10;
-  --z-index-nav:               90;
-  --z-index-header:            99;
-  --z-index-dropdown:          100;
-  --z-index-fab:               100;
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.02em;
+  --tracking-wider: 0.05em;
+  --tracking-widest: 0.1em;
+  --z-index-bg-canvas: -3;
+  --z-index-footer: 10;
+  --z-index-table-header: 10;
+  --z-index-nav: 90;
+  --z-index-header: 99;
+  --z-index-dropdown: 100;
+  --z-index-fab: 100;
   --z-index-sidebar-container: 100;
-  --z-index-sidebar-overlay:   101;
-  --z-index-sidebar:           102;
-  --z-index-theme-switcher:    1000;
-  --z-index-modal:             9999;
-  --z-index-click-effect:      9999;
-  --z-index-select:            10000;
-  --z-index-debug:             999999;
+  --z-index-sidebar-overlay: 101;
+  --z-index-sidebar: 102;
+  --z-index-theme-switcher: 1000;
+  --z-index-modal: 9999;
+  --z-index-click-effect: 9999;
+  --z-index-select: 10000;
+  --z-index-debug: 999999;
 
   // ==========================================================================
   // 3. Fluid Typography (画面幅に応じて滑らかにスケーリング)
   // ==========================================================================
   --font-size-2xs: clamp(9px, 0.55rem + 0.1vw, 11px);
-  --font-size-xs:  clamp(10px, 0.65rem + 0.15vw, 12px);
-  --font-size-sm:  clamp(11px, 0.7rem + 0.2vw, 13px);
+  --font-size-xs: clamp(10px, 0.65rem + 0.15vw, 12px);
+  --font-size-sm: clamp(11px, 0.7rem + 0.2vw, 13px);
   --font-size-base: clamp(12px, 0.75rem + 0.25vw, 14px);
-  --font-size-md:  clamp(13px, 0.8rem + 0.3vw, 15px);
-  --font-size-lg:  clamp(13px, 0.82rem + 0.35vw, 16px);
-  --font-size-xl:  clamp(14px, 0.9rem + 0.5vw, 18px);
+  --font-size-md: clamp(13px, 0.8rem + 0.3vw, 15px);
+  --font-size-lg: clamp(13px, 0.82rem + 0.35vw, 16px);
+  --font-size-xl: clamp(14px, 0.9rem + 0.5vw, 18px);
   --font-size-2xl: clamp(16px, 1rem + 0.65vw, 20px);
   --font-size-3xl: clamp(18px, 1.15rem + 0.85vw, 24px);
   --font-size-4xl: clamp(20px, 1.3rem + 1.1vw, 28px);
 
-  --font-family: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  --font-family:
+    "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
   --font-base: var(--font-family);
   --font-mono: "Roboto Mono", var(--font-family);
   --font-weight-normal: 400;
@@ -71,27 +71,43 @@
   --sidebar-width: 280px;
 
   // --- 4-1. Primitive Spacing Scale (4px / 8px Grid) ---
-  --space-0:    0px;
-  --space-0-5:  2px;
-  --space-1:    4px;
-  --space-2:    8px;
-  --space-3:    12px;
-  --space-4:    16px;
-  --space-5:    20px;
-  --space-6:    24px;
-  --space-8:    32px;
-  --space-10:   40px;
-  --space-12:   48px;
-  --space-16:   64px;
+  --space-0: 0px;
+  --space-0-5: 2px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
 
   // --- 4-2. Semantic Spacing Tokens (用途別セマンティック余白) ---
   // [1] ページ・大枠レイアウト (Layout & Container)
-  --space-layout-pad:          clamp(var(--space-4), 2.5vw, var(--space-8)); // 16px 〜 32px
-  --space-section-gap:         clamp(var(--space-4), 2vw, var(--space-6));   // 16px 〜 24px
+  --space-layout-pad: clamp(
+    var(--space-4),
+    2.5vw,
+    var(--space-8)
+  ); // 16px 〜 32px
+  --space-section-gap: clamp(
+    var(--space-4),
+    2vw,
+    var(--space-6)
+  ); // 16px 〜 24px
 
   // [2] パネル・カード (Card & Surface)
-  --space-card-pad:            clamp(var(--space-3), 1.5vw, var(--space-5)); // 12px 〜 20px (標準)
-  --space-card-gap:            clamp(var(--space-2), 1.2vw, var(--space-4)); // 8px 〜 16px (標準)
+  --space-card-pad: clamp(
+    var(--space-3),
+    1.5vw,
+    var(--space-5)
+  ); // 12px 〜 20px (標準)
+  --space-card-gap: clamp(
+    var(--space-2),
+    1.2vw,
+    var(--space-4)
+  ); // 8px 〜 16px (標準)
 
   // コントロール寸法 (Dimensions)
   --control-height-ratio: 2.6;
@@ -110,57 +126,57 @@
   // ==========================================================================
   // 5. カラーベース (HSL Raw Values) & セマンティックカラー
   // ==========================================================================
-  --color-category-main-base:       245 84% 67%;
-  --color-category-tool-base:       189 94% 43%;
-  --color-category-database-base:   210 91% 60%;
-  --color-category-reference-base:  271 91% 65%;
+  --color-category-main-base: 245 84% 67%;
+  --color-category-tool-base: 189 94% 43%;
+  --color-category-database-base: 210 91% 60%;
+  --color-category-reference-base: 271 91% 65%;
   --color-category-management-base: 180 75% 40%;
-  --color-accent-main-base:         25 95% 53%;
-  --color-status-success-base:      141 79% 58%;
-  --color-status-warning-base:      38 92% 56%;
-  --color-status-danger-base:       0 84% 60%;
-  --color-status-stopped-base:      240 4% 46%;
-  --color-status-neutral-base:      240 5% 65%;
-  --color-status-emphasis-base:     0 100% 75%;
-  --color-main-bg-base:             0 0% 0%;
-  --color-overlay-base:             240 5% 90%;
-  --color-text-main-base:           240 5% 90%;
-  --color-text-secondary-base:      240 4% 83%;
-  --color-text-muted-base:          240 5% 65%;
-  --color-text-disabled-base:       240 5% 34%;
-  --color-border-main-base:         240 4% 16%;
+  --color-accent-main-base: 25 95% 53%;
+  --color-status-success-base: 141 79% 58%;
+  --color-status-warning-base: 38 92% 56%;
+  --color-status-danger-base: 0 84% 60%;
+  --color-status-stopped-base: 240 4% 46%;
+  --color-status-neutral-base: 240 5% 65%;
+  --color-status-emphasis-base: 0 100% 75%;
+  --color-main-bg-base: 0 0% 0%;
+  --color-overlay-base: 240 5% 90%;
+  --color-text-main-base: 240 5% 90%;
+  --color-text-secondary-base: 240 4% 83%;
+  --color-text-muted-base: 240 5% 65%;
+  --color-text-disabled-base: 240 5% 34%;
+  --color-border-main-base: 240 4% 16%;
 
   // セマンティックカラー定義
-  --color-category-main:       hsl(var(--color-category-main-base));
-  --theme-accent:              var(--color-category-main);
-  --color-category-tool:       hsl(var(--color-category-tool-base));
-  --color-category-database:   hsl(var(--color-category-database-base));
-  --color-category-reference:  hsl(var(--color-category-reference-base));
+  --color-category-main: hsl(var(--color-category-main-base));
+  --theme-accent: var(--color-category-main);
+  --color-category-tool: hsl(var(--color-category-tool-base));
+  --color-category-database: hsl(var(--color-category-database-base));
+  --color-category-reference: hsl(var(--color-category-reference-base));
   --color-category-management: hsl(var(--color-category-management-base));
-  --color-accent-main:         hsl(var(--color-accent-main-base));
-  --color-status-success:      hsl(var(--color-status-success-base));
-  --color-status-warning:      hsl(var(--color-status-warning-base));
-  --color-status-danger:       hsl(var(--color-status-danger-base));
-  --color-status-stopped:      hsl(var(--color-status-stopped-base));
-  --color-status-neutral:      hsl(var(--color-status-neutral-base));
-  --color-status-emphasis:     hsl(var(--color-status-emphasis-base));
-  --color-main-bg:             hsl(var(--color-main-bg-base));
-  --surface-bg:                transparent;
-  --color-overlay:             hsl(var(--color-overlay-base));
-  --color-text-main:           hsl(var(--color-text-main-base));
-  --color-text-secondary:      hsl(var(--color-text-secondary-base));
-  --color-text-muted:          hsl(var(--color-text-muted-base));
-  --color-text-disabled:       hsl(var(--color-text-disabled-base));
-  --color-border:              hsl(var(--color-border-main-base));
+  --color-accent-main: hsl(var(--color-accent-main-base));
+  --color-status-success: hsl(var(--color-status-success-base));
+  --color-status-warning: hsl(var(--color-status-warning-base));
+  --color-status-danger: hsl(var(--color-status-danger-base));
+  --color-status-stopped: hsl(var(--color-status-stopped-base));
+  --color-status-neutral: hsl(var(--color-status-neutral-base));
+  --color-status-emphasis: hsl(var(--color-status-emphasis-base));
+  --color-main-bg: hsl(var(--color-main-bg-base));
+  --surface-bg: transparent;
+  --color-overlay: hsl(var(--color-overlay-base));
+  --color-text-main: hsl(var(--color-text-main-base));
+  --color-text-secondary: hsl(var(--color-text-secondary-base));
+  --color-text-muted: hsl(var(--color-text-muted-base));
+  --color-text-disabled: hsl(var(--color-text-disabled-base));
+  --color-border: hsl(var(--color-border-main-base));
 
   // ボーダー & Radius
-  --border-width-base:  1px;
+  --border-width-base: 1px;
   --border-width-thick: 2px;
   --radius-sm: 4px;
 
   // エフェクト & インタラクション背景
-  --color-bg-hover:      color-mix(in srgb, var(--color-overlay) 6%, transparent);
-  --color-overlay-dark:  hsl(0deg 0% 0% / 60%);
+  --color-bg-hover: color-mix(in srgb, var(--color-overlay) 6%, transparent);
+  --color-overlay-dark: hsl(0deg 0% 0% / 60%);
   --color-overlay-light: hsl(0deg 0% 0% / 30%);
   --blur-sm: 4px;
   --blur-md: 8px;
@@ -183,16 +199,17 @@
     0 4px 8px color-mix(in srgb, var(--shadow-color) 20%, transparent),
     0 16px 32px color-mix(in srgb, var(--shadow-color) 20%, transparent),
     inset 0 1px 0 rgb(255 255 255 / 5%);
-  --shadow-sink: inset 0 2px 4px 0 color-mix(in srgb, var(--shadow-color) 60%, transparent);
+  --shadow-sink: inset 0 2px 4px 0
+    color-mix(in srgb, var(--shadow-color) 60%, transparent);
 
   // ==========================================================================
   // 7. アニメーション & トランジション
   // ==========================================================================
-  --duration-fast:  0.15s;
-  --duration-base:  0.25s;
-  --duration-slow:  0.4s;
+  --duration-fast: 0.15s;
+  --duration-base: 0.25s;
+  --duration-slow: 0.4s;
   --duration-modal: 0.5s;
-  --ease-base:   cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-base: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
   --transition-fast: all var(--duration-fast) var(--ease-base);
   --transition-base: all var(--duration-base) var(--ease-base);

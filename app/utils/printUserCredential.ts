@@ -1,7 +1,12 @@
 /**
  * ユーザーのログイン情報（ID/パスワード等）を印刷用ウィンドウで表示するユーティリティ
  */
-export const printUserCredential = (user: { lastName: string, firstName: string, loginId: string, initialPassword?: string }) => {
+export const printUserCredential = (user: {
+  lastName: string
+  firstName: string
+  loginId: string
+  initialPassword?: string
+}) => {
   const printWindow = window.open('', '_blank')
 
   if (!printWindow) {

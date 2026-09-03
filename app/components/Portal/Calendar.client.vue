@@ -208,7 +208,6 @@ const formattedEvents = computed(() => {
       backgroundColor: 'transparent',
       textColor: 'inherit',
       extendedProps: {
-
         type: evt.type,
         themeColor: color,
       },
@@ -251,7 +250,8 @@ const calendarOptions = computed(() => ({
 
     if (arg.date.getDay() === 0) classes.push('is-sunday')
     if (arg.date.getDay() === 6) classes.push('is-saturday')
-    if (settings.value?.customHolidays?.includes(isoDate)) classes.push('is-holiday')
+    if (settings.value?.customHolidays?.includes(isoDate))
+      classes.push('is-holiday')
 
     return classes
   },
@@ -278,7 +278,9 @@ const calendarOptions = computed(() => ({
   },
 }))
 
-const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOptions)
+const typedCalendarOptions = computed(
+  () => calendarOptions.value as CalendarOptions,
+)
 </script>
 
 <template>
@@ -293,14 +295,8 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
       @open-type-settings="isTypeSettingsOpen = true"
     />
 
-    <AppPanel
-      class="c-calendar"
-      variant="simple"
-    >
-      <FullCalendar
-        ref="fullCalendarRef"
-        :options="typedCalendarOptions"
-      >
+    <AppPanel class="c-calendar" variant="simple">
+      <FullCalendar ref="fullCalendarRef" :options="typedCalendarOptions">
         <template #eventContent="{ event }">
           <CalendarEventBadge
             :title="event.title"
@@ -415,7 +411,11 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
 
     /* セル本体：変数ベースで基本背景＆ホバー枠線・発光を一元計算 */
     .fc-daygrid-day-frame {
-      @include state-base(none, var(--transition-base), var(--cell-accent-color));
+      @include state-base(
+        none,
+        var(--transition-base),
+        var(--cell-accent-color)
+      );
 
       /* 平日・土曜・日曜祝日・今日すべてで統一のホバー発光を適用 */
       &:hover:not(:has(.fc-daygrid-event:hover)) {
@@ -489,7 +489,11 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
       border-left: none;
       border-radius: 0;
 
-      background-color: color-mix(in srgb, var(--color-surface-sunken) 85%, transparent);
+      background-color: color-mix(
+        in srgb,
+        var(--color-surface-sunken) 85%,
+        transparent
+      );
 
       @include border-base($opacity: 30%);
 
@@ -538,7 +542,11 @@ const typedCalendarOptions = computed(() => calendarOptions.value as CalendarOpt
       @include state-base;
 
       &:hover td {
-        background-color: color-mix(in srgb, var(--theme-accent) 15%, transparent);
+        background-color: color-mix(
+          in srgb,
+          var(--theme-accent) 15%,
+          transparent
+        );
       }
 
       td {

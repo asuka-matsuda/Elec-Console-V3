@@ -5,7 +5,10 @@ import { useApi } from '~/composables/useApi'
 import type { User } from '~/types/auth'
 
 export const useAuth = () => {
-  const token = useCookie<string | null>('auth_token', { default: () => null, maxAge: 60 * 60 * 24 })
+  const token = useCookie<string | null>('auth_token', {
+    default: () => null,
+    maxAge: 60 * 60 * 24,
+  })
   const currentUser = useState<User | null>('currentUser', () => null)
   const router = useRouter()
   const { $api } = useApi()
@@ -13,7 +16,9 @@ export const useAuth = () => {
   const initAuth = async (force = false) => {
     if (token.value && (!currentUser.value || force)) {
       try {
-        const data = await $api<{ success: boolean, user: User }>('/api/auth/me')
+        const data = await $api<{ success: boolean, user: User }>(
+          '/api/auth/me',
+        )
 
         if (data && data.success && data.user) {
           currentUser.value = data.user
@@ -53,8 +58,11 @@ export const useAuth = () => {
 
       return { success: false, message: 'ログインに失敗しました。' }
     }
-    catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
-      const msg = err.data?.statusMessage || err.data?.message || 'ログインIDまたはパスワードが違います。'
+    catch (err: any) {
+      const msg
+        = err.data?.statusMessage
+          || err.data?.message
+          || 'ログインIDまたはパスワードが違います。'
 
       return { success: false, message: msg }
     }

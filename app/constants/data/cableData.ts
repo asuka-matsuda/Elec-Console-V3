@@ -275,7 +275,7 @@ export const cableData = [
     voltage: 600,
     baseTemp: 30,
     maxTemp: 60,
-    resistance: 5.20,
+    resistance: 5.2,
     standard: 'フジクラ・ダイヤケーブル',
   },
   {
@@ -320,7 +320,7 @@ export const cableData = [
     voltage: 600,
     baseTemp: 30,
     maxTemp: 60,
-    resistance: 1.30,
+    resistance: 1.3,
     standard: 'フジクラ・ダイヤケーブル',
   },
   {
@@ -380,7 +380,7 @@ export const cableData = [
     voltage: 600,
     baseTemp: 30,
     maxTemp: 60,
-    resistance: 0.180,
+    resistance: 0.18,
     standard: 'フジクラ・ダイヤケーブル',
   },
   {
@@ -472,7 +472,7 @@ export const cableData = [
     voltage: 600,
     baseTemp: 40,
     maxTemp: 90,
-    resistance: 5.30,
+    resistance: 5.3,
     standard: 'JIS C 3605',
   },
   {
@@ -487,7 +487,7 @@ export const cableData = [
     voltage: 600,
     baseTemp: 40,
     maxTemp: 90,
-    resistance: 5.30,
+    resistance: 5.3,
     standard: 'JIS C 3605',
   },
   {
@@ -502,7 +502,7 @@ export const cableData = [
     voltage: 600,
     baseTemp: 40,
     maxTemp: 90,
-    resistance: 5.30,
+    resistance: 5.3,
     standard: 'JIS C 3605',
   },
   {
@@ -577,7 +577,7 @@ export const cableData = [
     voltage: 600,
     baseTemp: 40,
     maxTemp: 90,
-    resistance: 1.30,
+    resistance: 1.3,
     standard: 'JIS C 3605',
   },
   {
@@ -592,7 +592,7 @@ export const cableData = [
     voltage: 600,
     baseTemp: 40,
     maxTemp: 90,
-    resistance: 1.30,
+    resistance: 1.3,
     standard: 'JIS C 3605',
   },
   {
@@ -2108,7 +2108,7 @@ export const cableData = [
     voltage: 300,
     baseTemp: 30,
     maxTemp: 60,
-    resistance: 9.50,
+    resistance: 9.5,
     standard: 'JIS C 3306',
   },
   {
@@ -2123,7 +2123,7 @@ export const cableData = [
     voltage: 300,
     baseTemp: 30,
     maxTemp: 60,
-    resistance: 9.50,
+    resistance: 9.5,
     standard: 'JIS C 3306',
   },
   {
@@ -2138,7 +2138,7 @@ export const cableData = [
     voltage: 300,
     baseTemp: 30,
     maxTemp: 60,
-    resistance: 9.50,
+    resistance: 9.5,
     standard: 'JIS C 3306',
   },
   {
@@ -2153,7 +2153,7 @@ export const cableData = [
     voltage: 300,
     baseTemp: 30,
     maxTemp: 60,
-    resistance: 5.30,
+    resistance: 5.3,
     standard: 'JIS C 3306',
   },
   {
@@ -2168,7 +2168,7 @@ export const cableData = [
     voltage: 300,
     baseTemp: 30,
     maxTemp: 60,
-    resistance: 5.30,
+    resistance: 5.3,
     standard: 'JIS C 3306',
   },
   {
@@ -2183,7 +2183,7 @@ export const cableData = [
     voltage: 300,
     baseTemp: 30,
     maxTemp: 60,
-    resistance: 5.30,
+    resistance: 5.3,
     standard: 'JIS C 3306',
   },
   {
