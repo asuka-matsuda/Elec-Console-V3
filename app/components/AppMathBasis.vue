@@ -3,65 +3,81 @@
  * AppMathBasis
  * KaTeXを利用して、数式とその凡例（変数の説明）をステップごとに表示するコンポーネント。
  */
-import 'katex/dist/katex.min.css' // Required for rendering KaTeX styles
+import "katex/dist/katex.min.css"; // Required for rendering KaTeX styles
 
-import katex from 'katex'
+import katex from "katex";
 
 export type MathStep = {
-  title?: string
-  tex: string
-  legend?: string[]
-}
+  title?: string;
+  tex: string;
+  legend?: string[];
+};
 
 defineProps<{
-  steps: MathStep[]
-}>()
+  steps: MathStep[];
+}>();
 
 /**
  * 各ステップの legend (string[]) をパースして使いやすいオブジェクト配列に変換する
  */
 const parseLegend = (legendArray: string[] | undefined) => {
-  if (!legendArray) return []
+  if (!legendArray) return [];
 
   return legendArray.map((leg) => {
-    const parts = leg.split(':')
-    let rawSymbol = parts[0]?.trim() || ''
+    const parts = leg.split(":");
+    let rawSymbol = parts[0]?.trim() || "";
 
     // KaTeXの renderToString は純粋な数式を期待するため、数式マーカーを剥がす
-    rawSymbol = rawSymbol.replace(/\\\(/g, '').replace(/\\\)/g, '').trim()
-    const name = parts.slice(1).join(':')?.trim() || leg
+    rawSymbol = rawSymbol.replace(/\\\(/g, "").replace(/\\\)/g, "").trim();
+    const name = parts.slice(1).join(":")?.trim() || leg;
 
-    return { symbol: rawSymbol, name }
-  })
-}
+    return { symbol: rawSymbol, name };
+  });
+};
 
 /**
  * Helper to safely render KaTeX string
  */
 const renderMath = (mathStr: string, isDisplay: boolean = true) => {
-  if (!mathStr) return ''
+  if (!mathStr) return "";
   try {
     return katex.renderToString(mathStr, {
       displayMode: isDisplay,
       throwOnError: false,
       trust: true,
       strict: false,
-    })
-  }
-  catch (e) {
-    console.error('KaTeX render error:', e)
+    });
+  } catch (e) {
+    console.error("KaTeX render error:", e);
 
-    return mathStr
+    return mathStr;
   }
-}
+};
+
+/**
+ * 事前に全てのステップの数式と凡例をレンダリングしておく（パフォーマンス対策）
+ */
+const processedSteps = computed(() => {
+  return (props.steps || []).map((step) => {
+    return {
+      title: step.title,
+      renderedTex: renderMath(step.tex, true),
+      legend: parseLegend(step.legend).map((v) => ({
+        symbol: v.symbol,
+        name: v.name,
+        renderedSymbol: renderMath(v.symbol, false),
+      })),
+    };
+  });
+});
 </script>
 
 <template>
   <!-- eslint-disable vue/no-v-html -->
   <div class="c-math-basis">
-    <template v-if="steps && steps.length > 0">
+    <template v-if="processedSteps && processedSteps.length > 0">
       <AppCard
-        v-for="(step, index) in steps"
+        v-for="(step, index) in processedSteps"
         :key="index"
         class="c-math-basis__card"
       >
@@ -76,7 +92,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
         <div class="c-math-basis__body">
           <!-- 左カラム：公式 -->
 
-          <div class="c-math-basis__math" v-html="renderMath(step.tex)"></div>
+          <div class="c-math-basis__math" v-html="step.renderedTex"></div>
 
           <!-- 右カラム：凡例 -->
           <div
@@ -86,13 +102,13 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
             <h5 class="c-math-basis__legend-title">【凡例】</h5>
             <ul class="c-math-basis__legend-list">
               <li
-                v-for="v in parseLegend(step.legend)"
+                v-for="v in step.legend"
                 :key="v.symbol"
                 class="c-math-basis__legend-item"
               >
                 <span
                   class="c-math-basis__legend-symbol"
-                  v-html="renderMath(v.symbol, false)"
+                  v-html="v.renderedSymbol"
                 ></span>
                 <span class="c-math-basis__legend-sep">:</span>
                 <span class="c-math-basis__legend-name">{{ v.name }}</span>
@@ -124,6 +140,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
     /* PCファースト: カード内を左右2カラムに分割 */
     @include flex-start-center;
 
+    flex-wrap: wrap; /* スマホ時は縦積みにフォールバック */
     gap: var(--space-card-gap);
     align-items: flex-start;
   }
@@ -134,7 +151,7 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
     // スクロールバー自体は非表示にしつつスクロールは可能にする
     scrollbar-width: none;
     overflow-x: auto;
-    flex: 1;
+    flex: 1 1 300px; /* 余白があれば伸びるが、縮む場合は300pxを基準にする */
     min-width: 0;
 
     &::-webkit-scrollbar {
@@ -173,9 +190,9 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   &__legend {
     @include flex-start-stretch($direction: column);
 
-    flex-shrink: 0;
+    flex: 1 1 250px;
     gap: var(--space-1);
-    width: 250px;
+    min-width: 250px;
   }
 
   &__legend-title {
