@@ -4,13 +4,21 @@
  * ヘッダーや枠線（サイバー風のブラケットなど）を持ち、コンテンツを囲むパネルコンポーネント。
  */
 defineProps<{
-  title?: string
-  icon?: string
-}>()
+  title?: string;
+  icon?: string;
+  variant?:
+    | "main"
+    | "tool"
+    | "database"
+    | "reference"
+    | "management"
+    | "danger"
+    | "success";
+}>();
 </script>
 
 <template>
-  <section class="c-panel">
+  <section class="c-panel" :class="variant ? `c-panel--color-${variant}` : ''">
     <header v-if="title || $slots.header" class="c-panel__header">
       <slot name="header">
         <AppSectionHeader :title="title" :icon="icon" size="md" />
