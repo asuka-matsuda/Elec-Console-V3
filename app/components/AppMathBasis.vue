@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import "katex/dist/katex.min.css";
-
 import katex from "katex";
 import { computed } from "vue";
 
@@ -11,7 +10,8 @@ export type MathStep = {
 };
 
 const props = defineProps<{
-  steps: MathStep[];
+  tex: string;
+  legend?: string[];
 }>();
 
 // --- ヘルパー関数 ---
@@ -26,108 +26,66 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
     });
   } catch (e) {
     console.error("KaTeX render error:", e);
-
     return mathStr;
   }
 };
 
 const parseLegend = (legendArray: string[] | undefined) => {
   if (!legendArray) return [];
-
   return legendArray.map((leg) => {
     const parts = leg.split(":");
     let rawSymbol = parts[0]?.trim() || "";
-
     rawSymbol = rawSymbol.replace(/\\\(/g, "").replace(/\\\)/g, "").trim();
     const name = parts.slice(1).join(":")?.trim() || leg;
-
     return { symbol: rawSymbol, name };
   });
 };
 
 // 💡 改善1: computedを使って、データを事前にすべてHTML化しておく（再描画時の激重処理を回避）
-const parsedSteps = computed(() => {
-  return props.steps.map((step) => ({
-    ...step,
-    renderedTex: renderMath(step.tex, true),
-    parsedLegend: parseLegend(step.legend).map((leg) => ({
-      ...leg,
-      renderedSymbol: renderMath(leg.symbol, false),
-    })),
+const renderedTex = computed(() => renderMath(props.tex, true));
+
+const parsedLegend = computed(() => {
+  return parseLegend(props.legend).map((leg) => ({
+    ...leg,
+    renderedSymbol: renderMath(leg.symbol, false),
   }));
 });
 </script>
 
 <template>
-  <!-- 💡 無駄な template ラッパーを削除し、大元に v-if を統合 -->
-  <div v-if="parsedSteps.length > 0" class="c-math-basis">
-    <AppCard
-      v-for="(step, index) in parsedSteps"
-      :key="index"
-      class="c-math-basis__card"
-    >
-      <AppSectionHeader
-        v-if="step.title"
-        :title="step.title"
-        tag="h4"
-        variant="tool"
-        size="sm"
-      />
+  <div class="c-math-basis">
+    <div class="c-math-basis__math" v-html="renderedTex"></div>
 
-      <div class="c-math-basis__body">
-        <!-- 💡 計算済みのHTMLをバインドするだけなので超軽量！ -->
-        <div class="c-math-basis__math" v-html="step.renderedTex"></div>
-
-        <div v-if="step.parsedLegend.length > 0" class="c-math-basis__legend">
-          <h5 class="c-math-basis__legend-title">【凡例】</h5>
-          <dl class="c-math-basis__legend-list">
-            <template v-for="v in step.parsedLegend" :key="v.name">
-              <dt v-html="v.renderedSymbol"></dt>
-              <dd>{{ v.name }}</dd>
-            </template>
-          </dl>
-        </div>
-      </div>
-    </AppCard>
+    <div v-if="parsedLegend.length > 0" class="c-math-basis__legend">
+      <h5 class="c-math-basis__legend-title">【凡例】</h5>
+      <dl class="c-math-basis__legend-list">
+        <template v-for="v in parsedLegend" :key="v.name">
+          <dt v-html="v.renderedSymbol"></dt>
+          <dd>{{ v.name }}</dd>
+        </template>
+      </dl>
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 .c-math-basis {
-  @include flex-start-stretch(column);
+  @include flex-start-start;
 
-  overflow-y: auto;
-  flex: 1;
+  flex-wrap: wrap;
   gap: var(--space-card-gap);
 
-  padding-right: var(--space-2);
-  padding-bottom: var(--space-layout-pad);
-
-  &__card {
-    gap: var(--space-3);
-  }
-
-  &__body {
-    @include flex-start-start;
-
-    // 💡 改善2: wrapを許可して、スマホで縦積みになるようにする
-    flex-wrap: wrap;
-    gap: var(--space-card-gap);
-  }
-
   &__math {
-    // スクロールバー自体は非表示にしつつスクロールは可能にする（ノイズレスな美しいUI）
     scrollbar-width: none;
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
     overflow-x: auto;
 
     // flex-grow: 1 により空き領域を埋め、flex-basis: 300px で基準幅を持たせる
-    // flex-wrap: wrap 時に 300px 未満になれば自動で縦積みになる
     flex: 1 1 300px;
     min-width: 0;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
 
     :deep(.katex) {
       color: var(--color-text-main);
@@ -164,7 +122,6 @@ const parsedSteps = computed(() => {
     // デスクトップベース (幅固定)
     flex: 0 0 250px;
 
-    // 💡 改善2: スマホ(md以下)時は100%幅で下部に配置される
     @include mq("md") {
       flex: 1 1 100%;
     }
