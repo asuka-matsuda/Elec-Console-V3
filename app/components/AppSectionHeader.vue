@@ -52,8 +52,6 @@ withDefaults(
 .c-section-header {
   @include flex-start-stretch($direction: column);
 
-  padding-bottom: var(--space-1);
-
   &__top {
     @include flex-between-end;
 
