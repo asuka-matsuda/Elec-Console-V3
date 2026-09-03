@@ -1,60 +1,61 @@
 <script setup lang="ts">
-import "katex/dist/katex.min.css";
+import 'katex/dist/katex.min.css'
 
-import katex from "katex";
-import { computed } from "vue";
+import katex from 'katex'
+import { computed } from 'vue'
 
 export type MathStep = {
-  title?: string;
-  tex: string;
-  legend?: string[];
-};
+  title?: string
+  tex: string
+  legend?: string[]
+}
 
 const props = defineProps<{
-  tex: string;
-  legend?: string[];
-}>();
+  tex: string
+  legend?: string[]
+}>()
 
 // --- ヘルパー関数 ---
 const renderMath = (mathStr: string, isDisplay: boolean = true) => {
-  if (!mathStr) return "";
+  if (!mathStr) return ''
   try {
     return katex.renderToString(mathStr, {
       displayMode: isDisplay,
       throwOnError: false,
       trust: true,
       strict: false,
-    });
-  } catch (e) {
-    console.error("KaTeX render error:", e);
-
-    return mathStr;
+    })
   }
-};
+  catch (e) {
+    console.error('KaTeX render error:', e)
+
+    return mathStr
+  }
+}
 
 const parseLegend = (legendArray: string[] | undefined) => {
-  if (!legendArray) return [];
+  if (!legendArray) return []
 
   return legendArray.map((leg) => {
-    const parts = leg.split(":");
-    let rawSymbol = parts[0]?.trim() || "";
+    const parts = leg.split(':')
+    let rawSymbol = parts[0]?.trim() || ''
 
-    rawSymbol = rawSymbol.replace(/\\\(/g, "").replace(/\\\)/g, "").trim();
-    const name = parts.slice(1).join(":")?.trim() || leg;
+    rawSymbol = rawSymbol.replace(/\\\(/g, '').replace(/\\\)/g, '').trim()
+    const name = parts.slice(1).join(':')?.trim() || leg
 
-    return { symbol: rawSymbol, name };
-  });
-};
+    return { symbol: rawSymbol, name }
+  })
+}
 
 // 💡 改善1: computedを使って、データを事前にすべてHTML化しておく（再描画時の激重処理を回避）
-const renderedTex = computed(() => renderMath(props.tex, true));
+const renderedTex = computed(() => renderMath(props.tex, true))
 
 const parsedLegend = computed(() => {
-  return parseLegend(props.legend).map((leg) => ({
+  return parseLegend(props.legend).map(leg => ({
     ...leg,
     renderedSymbol: renderMath(leg.symbol, false),
-  }));
-});
+  }))
+})
 </script>
 
 <template>
@@ -127,10 +128,6 @@ const parsedLegend = computed(() => {
       &::after {
         content: ":";
         margin-left: var(--space-1);
-      }
-
-      :deep(.katex) {
-        color: var(--color-text-muted);
       }
     }
 
