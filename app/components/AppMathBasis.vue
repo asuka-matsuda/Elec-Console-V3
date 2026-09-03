@@ -118,17 +118,16 @@ const parsedSteps = computed(() => {
   &__math {
     // スクロールバー自体は非表示にしつつスクロールは可能にする（ノイズレスな美しいUI）
     scrollbar-width: none;
-
-    overflow-x: auto;
-    flex: 1 1 300px; // 最低300pxは確保し、それ以上は伸びる
-
-    // 💡 width: 100% を追加して、スマホ時に単独で全幅を取れるようにする
-    width: 100%;
-    min-width: 0;
-
     &::-webkit-scrollbar {
       display: none;
     }
+
+    overflow-x: auto;
+
+    // flex-grow: 1 により空き領域を埋め、flex-basis: 300px で基準幅を持たせる
+    // flex-wrap: wrap 時に 300px 未満になれば自動で縦積みになる
+    flex: 1 1 300px;
+    min-width: 0;
 
     :deep(.katex) {
       color: var(--color-text-main);
@@ -137,17 +136,14 @@ const parsedSteps = computed(() => {
       .tex-status-success * {
         color: var(--color-status-success);
       }
-
       .tex-status-warning,
       .tex-status-warning * {
         color: var(--color-status-warning);
       }
-
       .tex-status-danger,
       .tex-status-danger * {
         color: var(--color-status-danger);
       }
-
       .tex-color-accent,
       .tex-color-accent * {
         color: var(--color-accent-main);
@@ -162,19 +158,20 @@ const parsedSteps = computed(() => {
   &__legend {
     @include flex-start-stretch(column);
 
-    // 💡 改善2: スマホ時は100%幅で下部に配置され、PC時は250px幅になる
-    flex: 1 1 100%;
     flex-shrink: 0;
     gap: var(--space-1);
 
+    // デスクトップベース (幅固定)
+    flex: 0 0 250px;
+
+    // 💡 改善2: スマホ(md以下)時は100%幅で下部に配置される
     @include mq("md") {
-      flex: 0 0 250px;
+      flex: 1 1 100%;
     }
   }
 
   &__legend-title {
     @include text-meta("md", "bold");
-
     color: var(--color-text-muted);
   }
 
@@ -189,16 +186,16 @@ const parsedSteps = computed(() => {
 
       &::after {
         content: ":";
-        color: var(--color-text-muted);
         margin-left: var(--space-1);
+        color: var(--color-text-muted);
       }
     }
 
     dd {
+      @include text-body("md", "bold");
+
       margin: 0;
       color: var(--color-text-secondary);
-
-      @include text-body("md", "bold");
     }
   }
 }
