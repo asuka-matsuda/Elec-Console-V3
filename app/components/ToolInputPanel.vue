@@ -12,11 +12,7 @@ defineEmits(['reset'])
 </script>
 
 <template>
-  <AppPanel
-    title="入力"
-    variant="hud"
-    density="compact"
-  >
+  <AppPanel title="入力">
     <template #header>
       <AppSectionHeader
         :title="title || '条件入力'"

@@ -124,7 +124,7 @@ withDefaults(
     }
   }
 
-  &:has(.c-form-group__error, :invalid, .is-error) .c-form-label {
+  &:has(.c-form-group__error, .is-error) .c-form-label {
     color: var(--color-status-danger);
 
     @include cyber-text-glow(var(--color-status-danger));
@@ -136,8 +136,8 @@ withDefaults(
 }
 
 .c-form-label {
-  @include flex-start-center;
   @include text-label;
+  @include flex-start-center($is-inline: true);
 
   user-select: none;
   gap: var(--space-1);
@@ -151,15 +151,16 @@ withDefaults(
 
     content: "";
 
-    display: inline-block;
+    flex-shrink: 0;
 
     width: var(--space-2);
     height: var(--space-2);
     border-radius: 50%;
 
     @include border-base(
-      color-mix(in srgb, var(--theme-accent) 70%, transparent),
-      var(--border-width-thick)
+      $color: color-mix(in srgb, var(--theme-accent) 70%, transparent),
+      $width: var(--border-width-thick),
+      $radius: 50%
     );
     @include state-base(none, var(--transition-base), var(--theme-accent));
   }

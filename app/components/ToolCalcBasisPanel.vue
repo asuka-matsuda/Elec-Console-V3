@@ -11,11 +11,7 @@ defineProps<{
 </script>
 
 <template>
-  <AppPanel
-    title="計算の根拠"
-    variant="hud"
-    density="compact"
-  >
+  <AppPanel title="計算の根拠">
     <template #header>
       <AppSectionHeader
         title="計算根拠"

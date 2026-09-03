@@ -200,7 +200,7 @@ $container-breakpoints: (
   }
 }
 
-@mixin cq($breakpoint, $direction: "up") {
+@mixin cq($breakpoint, $direction: "down") {
   @if map.has-key($container-breakpoints, $breakpoint) {
     $value: map.get($container-breakpoints, $breakpoint);
 

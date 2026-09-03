@@ -14,96 +14,52 @@ const searchQuery = defineModel<string>('searchQuery', { default: '' })
 const activeCats = defineModel<string[]>('activeCats', { default: () => [] })
 
 defineProps<{
-  /** 検索プレースホルダー */
   placeholder?: string
-  /** カテゴリ選択肢の配列 */
   categoryOptions: CategoryOption[]
 }>()
 </script>
 
 <template>
-  <AppPanel>
-    <div class="c-filter-panel__stack">
-      <div class="c-filter-panel__header-wrapper">
-        <div class="c-filter-panel__header">
-          <AppIcon name="search" />
-          <span>絞り込み・検索</span>
+  <AppPanel title="絞り込み・検索" icon="search">
+    <div class="c-filter-panel__filters">
+      <AppFormGroup label="Keyword">
+        <AppInput v-model="searchQuery" :placeholder="placeholder" />
+      </AppFormGroup>
+
+      <AppFormGroup v-if="categoryOptions.length > 0" label="Category">
+        <div class="c-filter-panel__grid">
+          <AppCheckbox
+            v-for="cat in categoryOptions"
+            :key="cat.value"
+            v-model="activeCats"
+            :value="cat.value"
+          >
+            {{ cat.label }}
+          </AppCheckbox>
         </div>
-        <AppDivider
-          type="fade-center"
-          variant="border"
-        />
-      </div>
+      </AppFormGroup>
 
-      <div class="c-filter-panel__filters">
-        <AppFormGroup label="Keyword">
-          <AppInput
-            v-model="searchQuery"
-            :placeholder="placeholder"
-          />
-        </AppFormGroup>
-
-        <AppFormGroup
-          v-if="categoryOptions.length > 0"
-          label="Category"
-        >
-          <div class="c-filter-panel__grid">
-            <AppCheckbox
-              v-for="cat in categoryOptions"
-              :key="cat.value"
-              v-model="activeCats"
-              :value="cat.value"
-            >
-              {{ cat.label }}
-            </AppCheckbox>
-          </div>
-        </AppFormGroup>
-
-        <!-- スロットを追加して、特有のフィルター（五十音など）を拡張可能にする -->
-        <slot name="extra-filters" />
-      </div>
+      <slot name="extra-filters" />
     </div>
   </AppPanel>
 </template>
 
 <style scoped lang="scss">
 .c-filter-panel {
-  &__stack {
-    @include flex-start-stretch($direction: column);
-
-    gap: var(--space-card-gap);
-  }
-
-  &__header {
-    @include text-title("sm");
-    @include flex-start-center;
-
-    padding-bottom: var(--space-1);
-    color: var(--color-text-muted);
-  }
-
-  &__header-wrapper {
-    @include flex-start-stretch($direction: column);
-
-    gap: var(--space-1);
-  }
-
   &__filters {
-    @include grid(280px 1fr, var(--space-card-gap));
+    @include grid(1fr, var(--space-card-gap));
 
-    /* スマホ時は縦積み */
-    @include mq("md") {
+    @include cq("sm") {
       grid-template-columns: 1fr;
     }
 
-    /* extra-filters等で3つ目以降の要素が入った場合は、全幅（フルスパン）で下に落とす */
     & > :nth-child(n + 3) {
       grid-column: 1 / -1;
     }
   }
 
   &__grid {
-    @include grid-auto(112px, var(--space-2));
+    @include grid-auto(100px, var(--space-2));
   }
 }
 </style>

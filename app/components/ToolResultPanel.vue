@@ -17,8 +17,6 @@ const typedSaveFunction = computed(() => props.saveFunction as (() => Promise<vo
 <template>
   <AppPanel
     title="計算結果"
-    variant="hybrid"
-    density="compact"
   >
     <template #header>
       <AppSectionHeader

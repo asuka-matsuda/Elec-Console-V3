@@ -100,7 +100,7 @@ watch(
 
 <template>
   <div class="p-history-page">
-    <AppPanel variant="hud">
+    <AppPanel>
       <template #header>
         <AppSectionHeader
           title="計算履歴"

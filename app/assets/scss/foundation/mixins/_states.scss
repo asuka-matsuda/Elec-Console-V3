@@ -13,9 +13,9 @@
       'lg': (blur1: 6px, blur2: 12px)
     ),
     'focus': (
-      'sm': (ring: 3px),
-      'md': (ring: 4px),
-      'lg': (ring: 6px)
+      'sm': (blur1: 4px, blur2: 8px),
+      'md': (blur1: 6px, blur2: 12px),
+      'lg': (blur1: 8px, blur2: 16px)
     ),
     'active': (
       'sm': (blur1: 2px, blur2: 4px),
@@ -37,8 +37,9 @@
     );
   } @else if $state == 'focus' {
     @return (
-      0 0 0 2px var(--color-main-bg),
-      0 0 0 map.get($values, ring) color-mix(in srgb, $color 80%, transparent)
+      0 0 2px 1px $color,
+      0 0 map.get($values, blur1) color-mix(in srgb, $color 80%, transparent),
+      0 0 map.get($values, blur2) color-mix(in srgb, $color 40%, transparent)
     );
   } @else if $state == 'active' {
     @return (
