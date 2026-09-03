@@ -21,12 +21,12 @@ const history = computed(() => dashboardData.value?.history || [])
         データを読み込み中...
       </div>
       <div v-else class="p-dashboard__list">
-          <AppCard
-            v-for="item in announcements"
-            :key="item.title"
-            :title="item.title"
-            :description="`${item.date} ${item.desc}`"
-          />
+        <AppCard
+          v-for="item in announcements"
+          :key="item.title"
+          :title="item.title"
+          :description="`${item.date} ${item.desc}`"
+        />
       </div>
     </section>
 
@@ -37,20 +37,20 @@ const history = computed(() => dashboardData.value?.history || [])
         データを読み込み中...
       </div>
       <div v-else class="p-dashboard__list">
-          <AppCard
-            v-for="item in history"
-            :key="item.version"
-            :description="`${item.date} ${item.desc}`"
-          >
-            <template #header>
-              <AppBadge
-                :color="item.status === 'success' ? 'success' : 'secondary'"
-              >
-                {{ item.version }}
-              </AppBadge>
-              <span class="p-dashboard-list-item__title">{{ item.title }}</span>
-            </template>
-          </AppCard>
+        <AppCard
+          v-for="item in history"
+          :key="item.version"
+          :description="`${item.date} ${item.desc}`"
+        >
+          <template #header>
+            <AppBadge
+              :color="item.status === 'success' ? 'success' : 'secondary'"
+            >
+              {{ item.version }}
+            </AppBadge>
+            <span class="p-dashboard-list-item__title">{{ item.title }}</span>
+          </template>
+        </AppCard>
       </div>
     </section>
   </aside>

@@ -3,7 +3,7 @@
  * AppCard
  * コンテンツをまとめるためのカード型コンポーネント
  */
-import { computed, resolveComponent } from 'vue'
+import { computed, useSlots } from 'vue'
 
 const props = defineProps<{
   to?: string
@@ -14,27 +14,26 @@ const props = defineProps<{
   description?: string
 }>()
 
-const rootTag = computed(() => {
-  if (props.to) return resolveComponent('NuxtLink')
-  if (props.href) return 'a'
+const slots = useSlots()
 
-  return 'div'
+const isClickable = computed(() => !props.disabled && (!!props.to || !!props.href))
+
+const rootTag = computed(() => {
+  if (!isClickable.value) return 'div'
+  if (props.to) return 'NuxtLink'
+
+  return 'a'
 })
 
 const rootProps = computed(() => {
-  if (props.disabled) return { tabindex: -1 }
+  if (!isClickable.value) return {}
   if (props.to) return { to: props.to }
-  if (props.href) return { href: props.href }
 
-  return {}
+  return { href: props.href }
 })
 
-const handleClick = (e: MouseEvent) => {
-  if (props.disabled) {
-    e.preventDefault()
-    e.stopImmediatePropagation()
-  }
-}
+const hasHeader = computed(() => !!(slots.header || props.title || props.icon))
+const hasDescription = computed(() => !!(slots.description || props.description))
 </script>
 
 <template>
@@ -42,22 +41,26 @@ const handleClick = (e: MouseEvent) => {
     :is="rootTag"
     v-bind="rootProps"
     class="c-card"
-    :class="{ 'is-disabled': disabled }"
-    @click="handleClick"
+    :class="{
+      'is-clickable': isClickable,
+      'is-disabled': disabled,
+    }"
   >
-    <div v-if="$slots.header || title || icon || $slots.description || description" class="c-card__header-group">
-      <div v-if="$slots.header || title || icon" class="c-card__header">
+    <div v-if="hasHeader || hasDescription" class="c-card__header-group">
+      <div v-if="hasHeader" class="c-card__header">
         <slot name="header">
           <AppIcon v-if="icon" :name="icon" class="c-card__icon" />
           <span v-if="title" class="c-card__title">{{ title }}</span>
         </slot>
       </div>
-      <div v-if="$slots.description || description" class="c-card__desc">
+
+      <div v-if="hasDescription" class="c-card__desc">
         <slot name="description">
           {{ description }}
         </slot>
       </div>
     </div>
+
     <div v-if="$slots.default" class="c-card__content">
       <slot />
     </div>
@@ -76,26 +79,24 @@ const handleClick = (e: MouseEvent) => {
   @include border-base;
   @include state-base;
 
-  &:is(a, button) {
+  &.is-clickable {
     @include click-enabled;
 
-    &:is(:disabled, .is-disabled) {
-      @include disabled;
+    &:hover {
+      @include state-hover(var(--theme-accent), "md");
     }
 
-    &:not(:is(:disabled, .is-disabled)) {
-      &:hover {
-        @include state-hover(var(--theme-accent), "md");
-      }
-
-      &:focus-visible {
-        @include state-focus(var(--theme-accent), "md");
-      }
-
-      &:active {
-        @include state-active(var(--theme-accent), "md");
-      }
+    &:focus-visible {
+      @include state-focus(var(--theme-accent), "md");
     }
+
+    &:active {
+      @include state-active(var(--theme-accent), "md");
+    }
+  }
+
+  &.is-disabled {
+    @include disabled;
   }
 
   &__header-group {
@@ -124,8 +125,6 @@ const handleClick = (e: MouseEvent) => {
   }
 
   &__content {
-    @include flex-start-stretch($direction: column);
-
     flex: 1;
   }
 }

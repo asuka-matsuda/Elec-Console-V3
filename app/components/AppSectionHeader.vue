@@ -52,6 +52,8 @@ withDefaults(
 .c-section-header {
   @include flex-start-stretch($direction: column);
 
+  gap: var(--space-1);
+
   &__top {
     @include flex-between-end;
 
@@ -85,10 +87,6 @@ withDefaults(
 
   &__icon {
     color: var(--theme-accent);
-  }
-
-  &__desc {
-    @include text-desc;
   }
 }
 </style>
