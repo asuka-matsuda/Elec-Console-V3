@@ -15,7 +15,6 @@ const props = defineProps<{
   legend?: string[]
 }>()
 
-// --- ヘルパー関数 ---
 const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   if (!mathStr) return ''
   try {
@@ -47,7 +46,6 @@ const parseLegend = (legendArray: string[] | undefined) => {
   })
 }
 
-// 💡 改善1: computedを使って、データを事前にすべてHTML化しておく（再描画時の激重処理を回避）
 const renderedTex = computed(() => renderMath(props.tex, true))
 
 const parsedLegend = computed(() => {

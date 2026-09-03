@@ -55,10 +55,9 @@ withDefaults(
   @include flex-start-stretch($direction: column);
 
   &__top {
-    @include flex-between-center;
+    @include flex-between-end;
 
     gap: var(--space-card-gap);
-    align-items: flex-end;
   }
 
   &__actions {
