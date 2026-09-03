@@ -3,7 +3,7 @@
  * AppButton
  * 汎用的なボタンコンポーネント（ベース）
  */
-import { computed } from 'vue'
+import { computed, resolveComponent } from 'vue'
 
 import type { BaseButtonProps } from '~/types/components'
 
@@ -17,8 +17,11 @@ const props = withDefaults(defineProps<AppButtonProps>(), {
   variant: 'primary',
 })
 
+const isClickable = computed(() => !props.disabled)
+
 const componentTag = computed(() => {
-  if (props.to) return 'NuxtLink'
+  if (!isClickable.value) return 'button'
+  if (props.to) return resolveComponent('NuxtLink')
   if (props.href) return 'a'
 
   return 'button'
@@ -30,7 +33,6 @@ const buttonClasses = computed(() => {
     props.variant !== 'primary' ? `c-btn--${props.variant}` : '',
     props.size !== 'sm' ? `c-btn--${props.size}` : '',
     props.block ? 'c-btn--block' : '',
-    props.disabled ? 'is-disabled' : '',
   ].filter(Boolean)
 })
 
@@ -38,20 +40,12 @@ const componentAttrs = computed(() => {
   const isButton = componentTag.value === 'button'
 
   return {
-    to: !props.disabled ? props.to : undefined,
-    href: !props.disabled ? props.href : undefined,
+    to: props.to,
+    href: props.href,
     type: isButton ? props.type : undefined,
-    disabled: isButton ? props.disabled : undefined,
-    tabindex: props.disabled && !isButton ? -1 : undefined,
+    disabled: props.disabled ? true : undefined,
   }
 })
-
-const handleClick = (e: MouseEvent) => {
-  if (props.disabled) {
-    e.preventDefault()
-    e.stopImmediatePropagation()
-  }
-}
 </script>
 
 <template>
@@ -59,7 +53,6 @@ const handleClick = (e: MouseEvent) => {
     :is="componentTag"
     v-bind="componentAttrs"
     :class="buttonClasses"
-    @click="handleClick"
   >
     <AppIcon v-if="icon" :name="icon" />
     <slot />
@@ -91,11 +84,11 @@ const handleClick = (e: MouseEvent) => {
     height: 1.2em;
   }
 
-  &:is(:disabled, .is-disabled) {
+  &:disabled {
     @include disabled;
   }
 
-  &:not(:is(:disabled, .is-disabled)) {
+  &:not(:disabled) {
     &:hover {
       @include state-hover(var(--btn-color), "md");
     }
