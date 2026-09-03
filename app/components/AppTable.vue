@@ -8,34 +8,34 @@
  */
 
 export interface TableColumn<T = Record<string, unknown>> {
-  key: (keyof T & string) | string;
-  label: string;
-  sortable?: boolean;
-  width?: string;
-  align?: "left" | "center" | "right";
+  key: (keyof T & string) | string
+  label: string
+  sortable?: boolean
+  width?: string
+  align?: 'left' | 'center' | 'right'
 }
 
 const props = defineProps<{
-  columns?: TableColumn<T>[];
-  data?: T[];
-  sortBy?: string;
-  sortOrder?: "asc" | "desc";
-}>();
+  columns?: TableColumn<T>[]
+  data?: T[]
+  sortBy?: string
+  sortOrder?: 'asc' | 'desc'
+}>()
 
 const emit = defineEmits<{
-  (e: "sort", payload: { key: string; order: "asc" | "desc" }): void;
-}>();
+  (e: 'sort', payload: { key: string, order: 'asc' | 'desc' }): void
+}>()
 
 const handleSort = (col: TableColumn<T>) => {
-  if (!col.sortable) return;
+  if (!col.sortable) return
 
-  let newOrder: "asc" | "desc" = "asc";
+  let newOrder: 'asc' | 'desc' = 'asc'
 
   if (props.sortBy === col.key) {
-    newOrder = props.sortOrder === "asc" ? "desc" : "asc";
+    newOrder = props.sortOrder === 'asc' ? 'desc' : 'asc'
   }
-  emit("sort", { key: col.key, order: newOrder });
-};
+  emit('sort', { key: col.key, order: newOrder })
+}
 </script>
 
 <template>
