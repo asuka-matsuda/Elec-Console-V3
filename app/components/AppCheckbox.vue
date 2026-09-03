@@ -18,7 +18,7 @@ const inputId = useId()
 </script>
 
 <template>
-  <label class="c-checkbox" :class="{ 'is-disabled': disabled }" :for="inputId">
+  <label class="c-checkbox" :for="inputId">
     <input
       :id="inputId"
       v-model="model"
@@ -49,39 +49,49 @@ const inputId = useId()
   position: relative;
   gap: var(--space-2);
 
-  &.is-disabled {
-    @include disabled;
-  }
-
-  &:hover:not(.is-disabled) .c-checkbox__label {
-    color: color-mix(in srgb, var(--checkbox-color) 90%, transparent);
-
-    @include cyber-text-glow(var(--checkbox-color), 20%, var(--blur-sm));
-  }
-
-  &:hover:not(.is-disabled) {
-    .c-checkbox__input:not(:focus-visible, :active, :checked, :indeterminate)
-      + .c-checkbox__box {
-      @include state-hover(var(--checkbox-color));
-    }
-  }
-
-  &:active:not(.is-disabled) .c-checkbox__box {
-    @include state-active(var(--checkbox-color));
-  }
-
   &__input {
+    cursor: inherit;
+
     position: absolute;
-    width: 0;
-    height: 0;
+    z-index: 1;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
     opacity: 0;
 
-    &:focus-visible + .c-checkbox__box {
+    &:not(:disabled) {
+      &:hover {
+        ~ .c-checkbox__label {
+          color: color-mix(in srgb, var(--checkbox-color) 90%, transparent);
+
+          @include cyber-text-glow(var(--checkbox-color), 20%, var(--blur-sm));
+        }
+
+        &:not(:focus-visible, :active, :checked, :indeterminate) ~ .c-checkbox__box {
+          @include state-hover(var(--checkbox-color));
+        }
+      }
+
+      &:active ~ .c-checkbox__box {
+        @include state-active(var(--checkbox-color));
+      }
+    }
+
+    &:disabled {
+      ~ .c-checkbox__box,
+      ~ .c-checkbox__label {
+        @include disabled;
+      }
+    }
+
+    &:focus-visible ~ .c-checkbox__box {
       @include state-focus(var(--checkbox-color));
       @include cyber-text-glow(var(--checkbox-color));
     }
 
-    &:is(:checked, :indeterminate) + .c-checkbox__box {
+    &:is(:checked, :indeterminate) ~ .c-checkbox__box {
       @include state-active(var(--checkbox-color));
 
       .c-checkbox__icon {
@@ -89,8 +99,8 @@ const inputId = useId()
       }
     }
 
-    &:checked + .c-checkbox__box .c-checkbox__icon--check :deep(polyline),
-    &:indeterminate + .c-checkbox__box .c-checkbox__icon--dash :deep(line) {
+    &:checked ~ .c-checkbox__box .c-checkbox__icon--check :deep(polyline),
+    &:indeterminate ~ .c-checkbox__box .c-checkbox__icon--dash :deep(line) {
       stroke-dashoffset: 0;
     }
   }

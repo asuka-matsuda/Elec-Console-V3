@@ -64,10 +64,10 @@ const closeSidebar = () => {
               <span>{{ item.text }}</span>
             </NuxtLink>
 
-            <div v-else class="l-global-nav__link is-disabled">
+            <button v-else disabled class="l-global-nav__link">
               <AppIcon :name="item.icon" class="l-global-nav__link-icon" />
               <span>{{ item.text }}</span>
-            </div>
+            </button>
           </template>
         </section>
       </nav>
@@ -183,7 +183,7 @@ const closeSidebar = () => {
     }
 
     // Hover & Focus
-    &:is(:hover, :focus-visible):not(.is-disabled, .router-link-active) {
+    &:is(:hover, :focus-visible):not(:disabled, .router-link-active) {
       transform: translateX(var(--space-1));
       color: var(--section-accent, var(--color-category-main));
       background-color: color-mix(
@@ -208,7 +208,7 @@ const closeSidebar = () => {
     }
 
     // Press (Active)
-    &:active:not(.is-disabled) {
+    &:active:not(:disabled) {
       @include state-active(var(--section-accent, var(--color-category-main)));
     }
 
@@ -237,7 +237,7 @@ const closeSidebar = () => {
 
     // Disabled
 
-    &.is-disabled {
+    &:disabled {
       filter: grayscale(100%);
 
       @include disabled;

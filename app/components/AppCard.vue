@@ -19,6 +19,7 @@ const slots = useSlots()
 const isClickable = computed(() => !props.disabled && (!!props.to || !!props.href))
 
 const rootTag = computed(() => {
+  if (props.disabled) return 'button'
   if (!isClickable.value) return 'div'
   if (props.to) return resolveComponent('NuxtLink')
 
@@ -26,6 +27,7 @@ const rootTag = computed(() => {
 })
 
 const rootProps = computed(() => {
+  if (props.disabled) return { disabled: true }
   if (!isClickable.value) return {}
   if (props.to) return { to: props.to }
 
@@ -43,7 +45,6 @@ const hasDescription = computed(() => !!(slots.description || props.description)
     class="c-card"
     :class="{
       'is-clickable': isClickable,
-      'is-disabled': disabled,
     }"
   >
     <div v-if="hasHeader || hasDescription" class="c-card__header-group">
@@ -95,7 +96,7 @@ const hasDescription = computed(() => !!(slots.description || props.description)
     }
   }
 
-  &.is-disabled {
+  &:disabled {
     @include disabled;
   }
 

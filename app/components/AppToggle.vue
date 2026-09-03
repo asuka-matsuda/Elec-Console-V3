@@ -47,33 +47,58 @@ const inputId = useId()
   position: relative;
   gap: var(--space-2);
 
-  &:has(.c-toggle__input:disabled) {
-    @include disabled;
-  }
+  // removed :has
 
   &__input {
-    /* Hide native input visually, but keep accessible for keyboard focus */
     position: absolute;
-    width: 0;
-    height: 0;
+    inset: 0;
+    width: 100%;
+    height: 100%;
     opacity: 0;
+    z-index: 1;
+    cursor: inherit;
 
-    /* 1. Keyboard Focus State */
+    &:not(:disabled) {
+      &:hover {
+        ~ .c-toggle__label {
+          color: color-mix(in srgb, var(--toggle-color) 90%, transparent);
+          @include cyber-text-glow(var(--toggle-color), 20%, var(--blur-sm));
+        }
 
-    &:focus-visible + .c-toggle__track {
+        &:not(:focus-visible, :active, :checked) ~ .c-toggle__track {
+          @include state-hover(var(--toggle-color));
+        }
+      }
+
+      &:active {
+        ~ .c-toggle__track {
+          transform: scale(0.95);
+          transition: transform var(--duration-slow) var(--ease-base);
+
+          .c-toggle__thumb {
+            @include shadow("sink");
+          }
+        }
+      }
+    }
+
+    &:disabled {
+      ~ .c-toggle__track,
+      ~ .c-toggle__label {
+        @include disabled;
+      }
+    }
+
+    &:focus-visible ~ .c-toggle__track {
       @include state-focus(var(--toggle-color));
       @include cyber-text-glow(var(--toggle-color));
     }
 
-    /* 2. Checked State (ON) */
-    &:checked + .c-toggle__track {
+    &:checked ~ .c-toggle__track {
       @include state-active(var(--toggle-color));
-
-      /* Slide and glow the thumb */
 
       .c-toggle__thumb {
         transform: translateX(calc(var(--track-w) - var(--thumb-w)));
-
         @include state-hover(var(--toggle-color));
       }
     }
@@ -108,34 +133,5 @@ const inputId = useId()
     @include shadow("sm");
   }
 
-  /* --- インタラクション (Disabled時以外) --- */
-  &:not(:has(.c-toggle__input:disabled)) {
-    /* 3. Hover State */
-    &:hover {
-      .c-toggle__label {
-        color: color-mix(in srgb, var(--toggle-color) 90%, transparent);
-
-        @include cyber-text-glow(var(--toggle-color), 20%, var(--blur-sm));
-      }
-
-      /* Hover時の箱発光 (FocusやActive/Checkedでない時) */
-      .c-toggle__input:not(:focus-visible, :active, :checked)
-        + .c-toggle__track {
-        @include state-hover(var(--toggle-color));
-      }
-    }
-
-    /* 4. Active (Press) State */
-    &:active {
-      .c-toggle__track {
-        transform: scale(0.95);
-        transition: transform var(--duration-slow) var(--ease-base);
-      }
-
-      .c-toggle__thumb {
-        @include shadow("sink");
-      }
-    }
-  }
 }
 </style>
