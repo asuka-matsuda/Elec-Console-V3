@@ -9,15 +9,17 @@ withDefaults(
     required?: boolean
     error?: string
     help?: string
+    layout?: 'vertical' | 'horizontal'
   }>(),
   {
     required: false,
+    layout: 'vertical',
   },
 )
 </script>
 
 <template>
-  <div class="c-form-group">
+  <div class="c-form-group" :class="`c-form-group--layout-${layout}`">
     <div class="c-form-group__inner">
       <div
         v-if="label || $slots.label"
@@ -65,29 +67,41 @@ withDefaults(
   width: 100%;
 
   &__inner {
-    @include flex-start-stretch($direction: column);
-
     width: 100%;
+  }
 
-    @include cq("xs") {
+  &--layout-horizontal {
+    .c-form-group__inner {
       @include flex-start-start;
+    }
 
-      .c-form-group__label-wrapper {
-        flex-shrink: 0;
-        width: 140px;
-        padding-top: calc(
-          (
-              (var(--font-size-sm) * var(--control-height-ratio)) -
-              (var(--line-height-tight) * var(--font-size-base))
-            ) /
-            2
-        );
-      }
+    .c-form-group__label-wrapper {
+      flex-shrink: 0;
+      width: 140px;
+      padding-top: calc(
+        (
+            (var(--font-size-sm) * var(--control-height-ratio)) -
+            (var(--line-height-tight) * var(--font-size-base))
+          ) /
+          2
+      );
+    }
 
-      .c-form-group__control {
-        flex: 1;
-        min-width: 0;
-      }
+    .c-form-group__control {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
+  &--layout-vertical {
+    .c-form-group__inner {
+      @include flex-start-stretch($direction: column);
+    }
+
+    .c-form-group__label-wrapper {
+      width: 100%;
+      margin-bottom: var(--space-1);
+      padding-top: 0;
     }
   }
 
