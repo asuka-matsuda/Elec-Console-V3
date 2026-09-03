@@ -3,27 +3,11 @@
  * ToolCalculationBasisPanel
  * 計算ツールの計算根拠（数式やステップ）を表示するためのパネルコンポーネントです。
  */
-import { computed } from 'vue'
+import type { MathStep } from "~/components/AppMathBasis.vue";
 
-import type { MathStep } from '~/components/AppMathBasis.vue'
-import { parseLegend, renderMath } from '~/utils/mathUtils'
-
-const props = defineProps<{
-  steps: MathStep[] | null
-}>()
-
-const unifiedLegend = computed(() => {
-  if (!props.steps) return []
-
-  const allLegends = props.steps.flatMap(step => step.legend || [])
-  // 重複排除 (同じ文字列 "P: 電力" が複数回登場した場合、1つにまとめる)
-  const uniqueLegends = Array.from(new Set(allLegends))
-
-  return parseLegend(uniqueLegends).map(leg => ({
-    ...leg,
-    renderedSymbol: renderMath(leg.symbol, false),
-  }))
-})
+defineProps<{
+  steps: MathStep[] | null;
+}>();
 </script>
 
 <template>
@@ -53,18 +37,8 @@ const unifiedLegend = computed(() => {
               variant="tool"
               size="sm"
             />
-            <AppMathBasis :tex="step.tex" />
+            <AppMathBasis :tex="step.tex" :legend="step.legend" />
           </AppCard>
-
-          <div v-if="unifiedLegend.length > 0" class="c-basis-panel__legend">
-            <h5 class="c-basis-panel__legend-title">【凡例】</h5>
-            <dl class="c-basis-panel__legend-list">
-              <template v-for="v in unifiedLegend" :key="v.name">
-                <dt v-html="v.renderedSymbol"></dt>
-                <dd>{{ v.name }}</dd>
-              </template>
-            </dl>
-          </div>
         </div>
       </ClientOnly>
 
@@ -96,49 +70,6 @@ const unifiedLegend = computed(() => {
 
   &__card {
     gap: var(--space-3);
-  }
-
-  &__legend {
-    @include flex-start-stretch(column);
-
-    gap: var(--space-1);
-    padding: var(--space-2) var(--space-3);
-    background-color: var(--color-bg-base);
-    border-radius: var(--radius-md);
-  }
-
-  &__legend-title {
-    @include text-meta("xs", "bold");
-
-    color: var(--color-text-muted);
-  }
-
-  &__legend-list {
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    gap: var(--space-1) var(--space-2);
-    align-items: baseline;
-
-    dt {
-      color: var(--color-text-muted);
-
-      &::after {
-        content: ":";
-        margin-left: var(--space-1);
-        color: var(--color-text-muted);
-      }
-
-      :deep(.katex) {
-        color: var(--color-text-muted);
-      }
-    }
-
-    dd {
-      @include text-meta("2xs", "regular");
-
-      margin: 0;
-      color: var(--color-text-muted);
-    }
   }
 }
 </style>
