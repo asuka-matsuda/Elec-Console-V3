@@ -117,9 +117,6 @@ const parsedLegend = computed(() => {
   gap: var(--space-1);
   color: var(--color-text-muted);
 
-  &__title {
-    margin: 0;
-  }
 
   &__list {
     @include grid(max-content 1fr, var(--space-1) var(--space-2));
@@ -129,7 +126,6 @@ const parsedLegend = computed(() => {
     dt {
       &::after {
         content: ":";
-        margin-left: var(--space-1);
       }
 
       :deep(.katex) {
@@ -139,8 +135,6 @@ const parsedLegend = computed(() => {
 
     dd {
       @include text-meta("2xs", "regular");
-
-      margin: 0;
     }
   }
 }
