@@ -5,21 +5,21 @@
  */
 withDefaults(
   defineProps<{
-    label?: string;
-    required?: boolean;
-    error?: string;
-    help?: string;
-    layout?: "vertical" | "horizontal";
+    label?: string
+    required?: boolean
+    error?: string
+    help?: string
+    layout?: 'vertical' | 'horizontal'
   }>(),
   {
     required: false,
-    layout: "vertical",
+    layout: 'vertical',
   },
-);
+)
 </script>
 
 <template>
-  <div class="c-form-group" :class="`c-form-group--layout-${layout}`">
+  <div class="c-form-group" :class="`is-${layout}`">
     <div class="c-form-group__inner">
       <div v-if="label || $slots.label" class="c-form-group__label-wrapper">
         <div class="c-form-label">
@@ -54,12 +54,20 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-form-group {
-  &--layout-horizontal {
-    .c-form-group__inner {
+  &__inner {
+    .is-horizontal & {
       @include flex-start-start;
     }
 
-    .c-form-group__label-wrapper {
+    .is-vertical & {
+      @include flex-start-stretch($direction: column);
+    }
+  }
+
+  &__label-wrapper {
+    @include flex-start-center;
+
+    .is-horizontal & {
       flex-shrink: 0;
       width: 140px;
       padding-top: calc(
@@ -71,33 +79,24 @@ withDefaults(
       );
     }
 
-    .c-form-group__control {
-      flex: 1;
-      min-width: 0;
-    }
-  }
-
-  &--layout-vertical {
-    .c-form-group__inner {
-      @include flex-start-stretch($direction: column);
-    }
-
-    .c-form-group__label-wrapper {
+    .is-vertical & {
       width: 100%;
       margin-bottom: var(--space-1);
-      padding-top: 0;
     }
-  }
-
-  &__label-wrapper {
-    @include flex-start-center;
   }
 
   &__control {
-    @include flex-start-stretch($direction: column);
-
     position: relative;
     gap: var(--space-1);
+
+    .is-horizontal & {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .is-vertical & {
+      @include flex-start-stretch($direction: column);
+    }
   }
 
   &__error {
