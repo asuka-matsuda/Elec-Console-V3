@@ -216,6 +216,7 @@ const closeModal = () => {
       flex-direction: column;
       align-items: stretch;
     }
+
     > * {
       flex: 1;
     }

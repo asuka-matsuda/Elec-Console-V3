@@ -92,6 +92,7 @@ const sortedTodos = computed(() => {
     @include flex-start-center;
 
     gap: var(--space-1);
+
     > *:first-child {
       flex: 1;
     }

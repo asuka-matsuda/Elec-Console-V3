@@ -51,7 +51,7 @@ const getDynamicDisabled = (item: Record<string, unknown>) => {
   return false
 }
 
-const getDynamicDesc = (item: Record<string, unknown>) => {
+const getDynamicDesc = (item: Record<string, unknown>): string => {
   if (
     (item.href === '/portal' || item.href === '/login')
     && isAuthenticated.value
@@ -63,7 +63,7 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
     return `アサイン済みの現場ポータルへアクセスします（現在${siteIds.length}件）`
   }
 
-  return item.desc || '※準備中…'
+  return (typeof item.desc === 'string' ? item.desc : '') || '※準備中…'
 }
 </script>
 

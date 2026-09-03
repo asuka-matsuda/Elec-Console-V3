@@ -174,6 +174,7 @@ const categoryColorMap: Record<string, string> = {
   container-name: filter-layout;
   container-type: inline-size;
   flex: 1;
+
   max-width: 1400px;
   min-height: 0;
 

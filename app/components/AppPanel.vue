@@ -18,6 +18,8 @@ withDefaults(
       | 'management'
       | 'danger'
       | 'success'
+      | 'hud'
+      | 'simple'
   }>(),
   {
     size: 'md',

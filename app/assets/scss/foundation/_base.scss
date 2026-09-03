@@ -44,20 +44,25 @@ body {
 h1 {
   @include text-title("xl");
 }
+
 h2 {
   @include text-title("lg");
 }
+
 h3 {
   @include text-title("md");
 }
+
 h4,
 h5,
 h6 {
   @include text-title("sm");
 }
+
 p {
   @include text-body;
 }
+
 small {
   @include text-desc;
 }
@@ -77,6 +82,7 @@ input::-webkit-inner-spin-button {
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0;
   }
@@ -86,6 +92,7 @@ input::-webkit-inner-spin-button {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }

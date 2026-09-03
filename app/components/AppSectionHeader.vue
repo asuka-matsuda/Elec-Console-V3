@@ -3,15 +3,24 @@
  * AppSectionHeader
  * セクションのタイトル、アイコン、アクションボタン、および区切り線を表示するヘッダーコンポーネント。
  */
+import { computed } from 'vue'
+
 import type { MenuSection } from '~/constants/data/menuData'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     title?: string
     titleId?: string
     tag?: string
     icon?: string
-    variant?: MenuSection['accent']
+    variant?:
+      | MenuSection['accent']
+      | 'danger'
+      | 'success'
+      | 'border'
+      | 'sidebar-border'
+      | 'hud'
+      | 'simple'
     size?: 'sm' | 'md' | 'lg'
     dividerType?: 'default' | 'fade-side' | 'fade-center'
   }>(),
@@ -22,6 +31,13 @@ withDefaults(
     dividerType: 'default',
   },
 )
+
+const resolvedDividerVariant = computed(() => {
+  if (props.dividerType !== 'default') return 'border'
+  if (props.variant === 'hud' || props.variant === 'simple') return 'border'
+
+  return props.variant || 'main'
+})
 </script>
 
 <template>
@@ -42,7 +58,7 @@ withDefaults(
     </div>
 
     <AppDivider
-      :variant="dividerType === 'default' ? variant : 'border'"
+      :variant="resolvedDividerVariant"
       :type="dividerType === 'default' ? 'solid' : dividerType"
     />
   </header>
