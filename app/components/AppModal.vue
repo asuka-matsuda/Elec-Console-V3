@@ -127,16 +127,12 @@ onUnmounted(() => {
   background: transparent;
   outline: none;
 
-  transition:
-    opacity var(--duration-modal) var(--ease-smooth),
-    transform var(--duration-modal) var(--ease-smooth);
+  transition: var(--transition-modal);
 
   &::backdrop {
     opacity: 0;
     backdrop-filter: blur(var(--blur-md));
-    transition:
-      opacity var(--duration-modal) var(--ease-smooth),
-      backdrop-filter var(--duration-modal) var(--ease-smooth);
+    transition: var(--transition-modal);
   }
 
   &[open] {
