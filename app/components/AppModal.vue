@@ -168,6 +168,8 @@ onUnmounted(() => {
 
   &__panel {
     backdrop-filter: blur(var(--blur-lg));
+
+    @include shadow("modal");
   }
 
   &__body {
