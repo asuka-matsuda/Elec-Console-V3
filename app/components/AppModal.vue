@@ -1,9 +1,9 @@
 <script setup lang="ts">
 /**
  * AppModal
- * ネイティブの dialog 要素を使用した、アクセシビリティ対応のモーダルコンポーネント。
+ * ネイティブの dialog 要素を使用したモーダルコンポーネント。
  */
-import { computed, onMounted, onUnmounted, ref, useId, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 
 const isOpen = defineModel<boolean>({ default: false })
 
@@ -26,8 +26,6 @@ const props = withDefaults(
   },
 )
 
-const modalId = useId()
-const titleId = `modal-title-${modalId}`
 const dialogRef = ref<HTMLDialogElement | null>(null)
 const isClosing = ref(false)
 let closeTimeout: ReturnType<typeof setTimeout> | null = null
@@ -88,7 +86,6 @@ onUnmounted(() => {
 <template>
   <dialog
     ref="dialogRef"
-    :aria-labelledby="titleId"
     class="c-modal"
     :class="{ 'is-closing': isClosing }"
     @close="onNativeClose"
@@ -98,7 +95,6 @@ onUnmounted(() => {
     <AppPanel class="c-modal__panel" :variant="variant">
       <template #header>
         <AppSectionHeader
-          :title-id="titleId"
           :title="title"
           :icon="icon"
           :variant="typedVariant"

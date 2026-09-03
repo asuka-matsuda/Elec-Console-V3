@@ -3,7 +3,7 @@
  * AppSelect
  * キーボード操作や画面外へのはみ出し防止機能に対応した、カスタムのセレクトボックスコンポーネント。
  */
-import { computed, onMounted, onUnmounted, ref, useId, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 
 import { useClickOutside } from '~/composables/useClickOutside'
 
@@ -23,8 +23,8 @@ const props = defineProps<{
   placement?: 'top' | 'bottom'
 }>()
 
-const listboxId = useId()
 const selectRef = ref<HTMLElement | null>(null)
+const dropdownRef = ref<HTMLElement | null>(null)
 const isOpen = ref(false)
 const focusedIndex = ref(-1)
 const dynamicPlacement = ref<'top' | 'bottom'>('bottom')
@@ -94,9 +94,7 @@ const calculatePlacement = () => {
 
 const handleGlobalScroll = (e: Event) => {
   if (!isOpen.value) return
-  const dropdown = document.getElementById(listboxId)
-
-  if (dropdown && dropdown.contains(e.target as Node)) return
+  if (dropdownRef.value && dropdownRef.value.contains(e.target as Node)) return
   isOpen.value = false
 }
 
@@ -274,8 +272,13 @@ const getOptionClasses = (option: SelectOption, index: number) => [
     <ClientOnly>
       <Teleport :to="teleportTarget">
         <transition name="dropdown-fade">
-          <div v-if="isOpen" :class="dropdownClasses" :style="dropdownStyle">
-            <ul :id="listboxId" class="c-custom-select__list">
+          <div
+            v-if="isOpen"
+            ref="dropdownRef"
+            :class="dropdownClasses"
+            :style="dropdownStyle"
+          >
+            <ul class="c-custom-select__list">
               <li
                 v-if="isPlaceholder"
                 class="c-custom-select__option is-placeholder"

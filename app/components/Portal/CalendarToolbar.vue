@@ -20,7 +20,6 @@ const emit = defineEmits<{
         size="sm"
         icon="chevron-left"
         icon-only
-        aria-label="前月"
         @click="emit('prev')"
       />
       <AppButton
@@ -28,7 +27,6 @@ const emit = defineEmits<{
         size="sm"
         icon="chevron-right"
         icon-only
-        aria-label="次月"
         @click="emit('next')"
       />
       <AppButton variant="secondary" size="sm" @click="emit('today')">

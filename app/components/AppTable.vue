@@ -52,15 +52,6 @@ const handleSort = (col: TableColumn<T>) => {
                 'is-sorted': sortBy === col.key,
               }"
               :style="{ width: col.width, textAlign: col.align }"
-              :aria-sort="
-                col.sortable
-                  ? sortBy === col.key
-                    ? sortOrder === 'asc'
-                      ? 'ascending'
-                      : 'descending'
-                    : 'none'
-                  : undefined
-              "
               :title="
                 col.sortable
                   ? sortBy === col.key

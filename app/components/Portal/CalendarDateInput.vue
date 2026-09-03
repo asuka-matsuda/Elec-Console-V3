@@ -3,8 +3,6 @@
  * PortalEventDateInput
  * 日付や時間の入力に特化したフォームコントロールコンポーネントです。
  */
-import { useId } from 'vue'
-
 const model = defineModel<string>()
 
 withDefaults(
@@ -19,13 +17,10 @@ withDefaults(
     size: 'md',
   },
 )
-
-const inputId = useId()
 </script>
 
 <template>
   <input
-    :id="inputId"
     v-model="model"
     :type="type"
     class="c-form-control"

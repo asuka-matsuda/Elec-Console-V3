@@ -3,8 +3,6 @@
  * AppCheckbox
  * 真偽値を選択するためのチェックボックスコンポーネント
  */
-import { useId } from 'vue'
-
 const model = defineModel<boolean | unknown[]>()
 
 defineProps<{
@@ -13,14 +11,11 @@ defineProps<{
   disabled?: boolean
   indeterminate?: boolean
 }>()
-
-const inputId = useId()
 </script>
 
 <template>
-  <label class="c-checkbox" :for="inputId">
+  <label class="c-checkbox">
     <input
-      :id="inputId"
       v-model="model"
       type="checkbox"
       .indeterminate="indeterminate"

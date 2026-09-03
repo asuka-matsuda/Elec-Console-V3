@@ -3,22 +3,17 @@
  * AppToggle
  * トグルスイッチ（チェックボックス）のUIを提供するコンポーネントです。ON/OFFの切り替えに使用されます。
  */
-import { useId } from 'vue'
-
 const model = defineModel<boolean>()
 
 defineProps<{
   label?: string
   disabled?: boolean
 }>()
-
-const inputId = useId()
 </script>
 
 <template>
-  <label class="c-toggle" :for="inputId">
+  <label class="c-toggle">
     <input
-      :id="inputId"
       v-model="model"
       type="checkbox"
       class="c-toggle__input"

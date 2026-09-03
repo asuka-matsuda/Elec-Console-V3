@@ -3,8 +3,6 @@
  * AppInput
  * テキスト入力やテキストエリアを提供するフォームコントロールコンポーネントです。
  */
-import { useId } from 'vue'
-
 const model = defineModel<string | number | null>()
 
 withDefaults(
@@ -30,14 +28,11 @@ withDefaults(
     rows: 4,
   },
 )
-
-const inputId = useId()
 </script>
 
 <template>
   <textarea
     v-if="type === 'textarea'"
-    :id="inputId"
     v-model="model"
     class="c-form-control c-form-control--textarea"
     :class="[`c-form-control--${size}`, { 'is-error': error }]"
@@ -47,7 +42,6 @@ const inputId = useId()
   />
   <input
     v-else
-    :id="inputId"
     v-model="model"
     :type="type"
     class="c-form-control"

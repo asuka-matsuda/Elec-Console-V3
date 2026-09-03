@@ -10,7 +10,6 @@ import type { MenuSection } from '~/constants/data/menuData'
 const props = withDefaults(
   defineProps<{
     title?: string
-    titleId?: string
     tag?: string
     icon?: string
     variant?:
@@ -45,7 +44,6 @@ const resolvedDividerVariant = computed(() => {
     <div class="c-section-header__top">
       <component
         :is="tag"
-        :id="titleId"
         class="c-section-header__title"
         :class="[`c-section-header__title--${size}`]"
       >
