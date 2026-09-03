@@ -40,9 +40,7 @@ withDefaults(
         <slot name="actions" />
       </div>
     </div>
-    <div v-if="$slots.description" class="c-section-header__desc">
-      <slot name="description" />
-    </div>
+
     <AppDivider
       :variant="dividerType === 'default' ? variant : 'border'"
       :type="dividerType === 'default' ? 'solid' : dividerType"
@@ -53,6 +51,8 @@ withDefaults(
 <style scoped lang="scss">
 .c-section-header {
   @include flex-start-stretch($direction: column);
+
+  padding-bottom: var(--space-1);
 
   &__top {
     @include flex-between-end;

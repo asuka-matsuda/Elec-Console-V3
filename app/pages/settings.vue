@@ -24,11 +24,10 @@ const themeOptions = [
       icon="settings"
       variant="tool"
       size="lg"
-    >
-      <template #description>
-        このブラウザ固有のUI設定をカスタマイズします。
-      </template>
-    </AppSectionHeader>
+    />
+    <p class="p-settings__desc">
+      このブラウザ固有のUI設定をカスタマイズします。
+    </p>
 
     <div class="p-settings__grid">
       <div class="p-settings__stack">

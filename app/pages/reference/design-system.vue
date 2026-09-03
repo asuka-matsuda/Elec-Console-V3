@@ -16,11 +16,10 @@ const isChecked = ref(false)
       title="Design System (UI Catalog)"
       icon="layout"
       variant="main"
-    >
-      <template #description>
-        このページは社内用のUIカタログです。コンポーネントのデザインと状態を一覧で確認できます。
-      </template>
-    </AppSectionHeader>
+    />
+    <p class="p-design-system__desc">
+      UIコンポーネントのデザイン確認用ページです。
+    </p>
 
     <div class="p-design-system__content">
       <!-- Buttons -->
