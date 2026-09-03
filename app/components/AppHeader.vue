@@ -22,7 +22,6 @@ const emit = defineEmits<{
         class="c-header__menu-btn"
         @click="emit('toggle-sidebar')"
       />
-
       <AppLogo />
 
       <AppBreadcrumb v-if="breadcrumbs?.length" :items="breadcrumbs" />
