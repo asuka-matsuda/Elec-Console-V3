@@ -28,7 +28,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
     <label
       v-for="option in options"
       :key="String(option.value)"
-      class="c-segmented-control__label"
+      class="c-segmented-control__item"
       :style="option.color ? { '--radio-color': option.color } : undefined"
     >
       <input
@@ -39,7 +39,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
         :disabled="option.disabled"
         class="c-segmented-control__input"
       />
-      <span class="c-segmented-control__text">{{ option.label }}</span>
+      {{ option.label }}
     </label>
   </div>
 </template>
@@ -58,12 +58,6 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
   @include border-base;
   @include shadow("none");
 
-  &__label {
-    @include click-enabled;
-
-    position: relative;
-  }
-
   &__input {
     pointer-events: none;
 
@@ -73,24 +67,27 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
     height: 0;
 
     opacity: 0;
+  }
 
-    &:not(:disabled, :checked) {
-      + .c-segmented-control__text {
-        &:hover {
-          color: var(--color-text-main);
+  &__item {
+    @include click-enabled;
+    @include flex-center-center($is-inline: true);
+    @include text-body("md", "bold");
 
-          @include state-hover(var(--color-border));
-        }
+    position: relative;
+    padding: var(--space-1) var(--space-3);
+    color: var(--color-text-muted);
 
-        &:active {
-          @include state-active(var(--radio-color));
-        }
-      }
+    @include border-base(transparent);
+    @include state-base;
+
+    &:hover:not(:has(:disabled), :has(:checked)) {
+      color: var(--color-text-main);
+
+      @include state-hover(var(--color-border));
     }
 
-    &:checked + .c-segmented-control__text {
-      --glow-color: var(--radio-color);
-
+    &:has(:checked) {
       border-color: var(--radio-color);
       color: var(--radio-color);
 
@@ -98,27 +95,16 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
       @include cyber-text-glow(var(--radio-color), 60%, var(--blur-md));
     }
 
-    &:focus-visible + .c-segmented-control__text {
+    &:has(:focus-visible) {
       @include state-focus(var(--radio-color));
       @include cyber-text-glow(var(--radio-color), 60%, var(--blur-md));
     }
 
-    &:disabled + .c-segmented-control__text {
+    &:has(:disabled) {
       opacity: 0.3;
 
       @include disabled;
     }
-  }
-
-  &__text {
-    @include text-body("md", "bold");
-    @include flex-center-center($is-inline: true);
-
-    padding: var(--space-1) var(--space-3);
-    color: var(--color-text-muted);
-
-    @include border-base(transparent);
-    @include state-base;
   }
 }
 </style>

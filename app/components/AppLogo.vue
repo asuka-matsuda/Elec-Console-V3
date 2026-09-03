@@ -38,8 +38,6 @@ const emit = defineEmits<{
 
   &:is(:hover, :focus-visible) {
     :deep(.c-icon) {
-      transform: scale(1.1);
-
       @include cyber-text-glow(var(--theme-accent), 60%, var(--blur-md));
     }
   }

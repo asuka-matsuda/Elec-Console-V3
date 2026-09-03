@@ -3,7 +3,7 @@
  * AppSaveButton
  * 非同期の保存処理をトリガーし、ローディング状態や成功状態を視覚的にフィードバックするボタンコンポーネント。
  */
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import type { AppButtonProps } from './AppButton.vue'
 
@@ -15,6 +15,17 @@ interface Props extends AppButtonProps {
 const props = defineProps<Props>()
 
 const state = ref<'idle' | 'saving' | 'success'>('idle')
+
+const currentContent = computed(() => {
+  switch (state.value) {
+    case 'saving':
+      return { icon: 'loader', text: '保存中...' }
+    case 'success':
+      return { icon: 'check', text: '保存しました' }
+    default:
+      return { icon: 'save', text: props.label || '履歴に保存' }
+  }
+})
 
 const handleClick = async () => {
   if (props.disabled || state.value !== 'idle') return
@@ -39,32 +50,20 @@ const handleClick = async () => {
     v-bind="props"
     :variant="props.variant || 'success'"
     :disabled="disabled || state !== 'idle'"
-    :size="size || 'sm'"
     class="c-save-button"
-    :class="{ [`is-${state}`]: true }"
+    :class="`is-${state}`"
     @click="handleClick"
   >
-    <template v-if="state === 'idle'">
-      <AppIcon name="save" size="sm" />
-      {{ label || "履歴に保存" }}
-    </template>
-
-    <template v-else-if="state === 'saving'">
-      <AppIcon name="loader" size="sm" class="u-spin" />
-      保存中...
-    </template>
-
-    <template v-else-if="state === 'success'">
-      <AppIcon name="check" size="sm" class="c-save-button__check" />
-      保存しました
-    </template>
+    <AppIcon
+      :name="currentContent.icon"
+      :class="{ 'u-spin': state === 'saving' }"
+    />
+    {{ currentContent.text }}
   </AppButton>
 </template>
 
 <style scoped lang="scss">
 .c-save-button {
-  @include state-base;
-
   &.is-success {
     --btn-color: var(--color-status-success);
 
@@ -72,23 +71,5 @@ const handleClick = async () => {
     border-color: var(--color-status-success);
     color: var(--color-status-success);
   }
-}
-
-.u-spin {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.c-save-button__check {
-  color: var(--color-status-success);
 }
 </style>
