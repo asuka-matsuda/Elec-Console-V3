@@ -40,15 +40,15 @@ const selectTab = (option: TabOption) => {
     <button
       v-for="option in options"
       :key="String(option.value)"
+      type="button"
       class="c-tabs__item"
       :class="{
         'is-active': model === option.value,
-        'is-disabled': option.disabled,
       }"
       :disabled="option.disabled"
       @click="selectTab(option)"
     >
-      <span class="c-tabs__item-text">{{ option.label }}</span>
+      {{ option.label }}
     </button>
   </div>
 </template>
@@ -62,23 +62,10 @@ const selectTab = (option: TabOption) => {
 
   &--grid {
     @include grid(repeat(auto-fit, minmax(120px, 1fr)), var(--space-2));
-
-    .c-tabs__item {
-      width: 100%;
-      padding-right: 0;
-      padding-left: 0;
-    }
   }
 
   &--vertical {
     @include flex-start-stretch($direction: column);
-
-    align-items: stretch;
-
-    .c-tabs__item {
-      justify-content: flex-start;
-      width: 100%;
-    }
   }
 }
 
@@ -98,14 +85,25 @@ const selectTab = (option: TabOption) => {
     var(--transition-fast)
   );
 
-  &:is(:hover, :focus-visible):not(.is-disabled, .is-active) {
+  .c-tabs--grid & {
+    width: 100%;
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .c-tabs--vertical & {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  &:is(:hover, :focus-visible):not(:disabled, .is-active) {
     transform: translateY(-2px);
     color: var(--color-text-main);
 
     @include state-hover;
   }
 
-  &:active:not(.is-disabled) {
+  &:active:not(:disabled) {
     @include state-active(var(--theme-accent));
   }
 
@@ -117,19 +115,11 @@ const selectTab = (option: TabOption) => {
     color: var(--theme-accent);
 
     @include state-active(var(--theme-accent));
-
-    .c-tabs__item-text {
-      @include cyber-text-glow;
-    }
+    @include cyber-text-glow;
   }
 
-  &.is-disabled {
+  &:disabled {
     @include disabled;
   }
-}
-
-.c-tabs__item-text {
-  position: relative;
-  z-index: 1;
 }
 </style>

@@ -55,7 +55,6 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
 
   flex-shrink: 0;
   gap: var(--space-0-5);
-
   width: max-content;
   padding: var(--space-0-5);
 
