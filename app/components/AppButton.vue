@@ -3,39 +3,39 @@
  * AppButton
  * 汎用的なボタンコンポーネント（ベース）
  */
-import { computed } from "vue";
+import { computed } from 'vue'
 
-import type { BaseButtonProps } from "~/types/components";
+import type { BaseButtonProps } from '~/types/components'
 
 export interface AppButtonProps extends BaseButtonProps {
-  icon?: string;
+  icon?: string
 }
 
 const props = withDefaults(defineProps<AppButtonProps>(), {
-  type: "button",
-  size: "sm",
-  variant: "primary",
-});
+  type: 'button',
+  size: 'sm',
+  variant: 'primary',
+})
 
 const componentTag = computed(() => {
-  if (props.to) return "NuxtLink";
-  if (props.href) return "a";
+  if (props.to) return 'NuxtLink'
+  if (props.href) return 'a'
 
-  return "button";
-});
+  return 'button'
+})
 
 const buttonClasses = computed(() => {
   return [
-    "c-btn",
-    props.variant !== "primary" ? `c-btn--${props.variant}` : "",
-    props.size !== "sm" ? `c-btn--${props.size}` : "",
-    props.block ? "c-btn--block" : "",
-    props.disabled ? "is-disabled" : "",
-  ].filter(Boolean);
-});
+    'c-btn',
+    props.variant !== 'primary' ? `c-btn--${props.variant}` : '',
+    props.size !== 'sm' ? `c-btn--${props.size}` : '',
+    props.block ? 'c-btn--block' : '',
+    props.disabled ? 'is-disabled' : '',
+  ].filter(Boolean)
+})
 
 const componentAttrs = computed(() => {
-  const isButton = componentTag.value === "button";
+  const isButton = componentTag.value === 'button'
 
   return {
     to: !props.disabled ? props.to : undefined,
@@ -43,15 +43,15 @@ const componentAttrs = computed(() => {
     type: isButton ? props.type : undefined,
     disabled: isButton ? props.disabled : undefined,
     tabindex: props.disabled && !isButton ? -1 : undefined,
-  };
-});
+  }
+})
 
 const handleClick = (e: MouseEvent) => {
   if (props.disabled) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
+    e.preventDefault()
+    e.stopImmediatePropagation()
   }
-};
+}
 </script>
 
 <template>

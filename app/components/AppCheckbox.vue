@@ -3,18 +3,18 @@
  * AppCheckbox
  * 真偽値を選択するためのチェックボックスコンポーネント
  */
-import { useId } from "vue";
+import { useId } from 'vue'
 
-const model = defineModel<boolean | unknown[]>();
+const model = defineModel<boolean | unknown[]>()
 
 defineProps<{
-  value?: unknown;
-  label?: string;
-  disabled?: boolean;
-  indeterminate?: boolean;
-}>();
+  value?: unknown
+  label?: string
+  disabled?: boolean
+  indeterminate?: boolean
+}>()
 
-const inputId = useId();
+const inputId = useId()
 </script>
 
 <template>
