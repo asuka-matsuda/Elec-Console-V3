@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * LayoutLogo
+ * AppLogo
  * アプリケーションのロゴを表示し、クリック時にホームへ遷移またはイベントを発火するコンポーネント。
  */
 const emit = defineEmits<{
@@ -20,7 +20,9 @@ const emit = defineEmits<{
   @include click-enabled;
   @include flex-start-center;
 
+  flex-shrink: 0;
   gap: var(--space-2);
+  white-space: nowrap;
 
   @include state-base;
 

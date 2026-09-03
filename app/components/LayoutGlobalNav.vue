@@ -25,11 +25,6 @@ const closeSidebar = () => {
     />
 
     <aside class="l-global-nav" :class="{ 'is-open': isOpen }">
-      <header class="l-global-nav__header">
-        <LayoutLogo @click="closeSidebar" />
-      </header>
-      <AppDivider type="fade-center" variant="sidebar-border" />
-
       <nav class="l-global-nav__nav custom-scrollbar">
         <section
           v-for="section in menuData"
@@ -94,15 +89,7 @@ const closeSidebar = () => {
     }
   }
 
-  &__header {
-    @include flex-start-center;
 
-    flex-shrink: 0;
-    height: 64px; // Match standard header height
-    padding: 0 var(--space-3);
-
-    @include shadow("sm"); // Replaced hardcoded shadow
-  }
 
   &__nav {
     --scrollbar-size: var(--space-2);

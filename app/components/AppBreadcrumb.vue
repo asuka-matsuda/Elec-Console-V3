@@ -58,8 +58,10 @@ const processedItems = computed(() => {
   @include text-caption;
 
   position: relative;
+  flex-shrink: 0;
   padding: var(--space-1) var(--space-2);
   text-transform: uppercase;
+  white-space: nowrap;
 
   @include border-base;
 

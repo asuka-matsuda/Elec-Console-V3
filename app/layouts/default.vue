@@ -120,6 +120,10 @@ const { currentUser, logout } = useAuth()
 
   &__name {
     color: var(--color-text-main);
+
+    @include mq("md") {
+      display: none;
+    }
   }
 }
 </style>

@@ -23,6 +23,8 @@ const emit = defineEmits<{
         @click="emit('toggle-sidebar')"
       />
 
+      <AppLogo />
+
       <AppBreadcrumb v-if="breadcrumbs?.length" :items="breadcrumbs" />
     </div>
 
@@ -42,7 +44,13 @@ const emit = defineEmits<{
   &__main {
     @include flex-start-center;
 
-    gap: var(--space-2);
+    gap: var(--space-3);
+  }
+
+  :deep(.c-breadcrumb) {
+    @include mq("md") {
+      display: none;
+    }
   }
 
   :deep(.l-header__menu-btn) {
