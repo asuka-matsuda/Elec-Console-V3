@@ -3,7 +3,6 @@
 /* stylelint-disable no-descending-specificity */
 $default-size: 12px;
 
-// --- カスタムスクロールバー（HUD/ワイヤーフレーム） ---
 ::-webkit-scrollbar {
   width: var(--scrollbar-size, #{$default-size});
   height: var(--scrollbar-size, #{$default-size});
@@ -30,7 +29,6 @@ $default-size: 12px;
   }
 }
 
-// --- スクロールバーボタン ---
 ::-webkit-scrollbar-button {
   width: var(--scrollbar-size, #{$default-size});
   height: var(--scrollbar-size, #{$default-size});

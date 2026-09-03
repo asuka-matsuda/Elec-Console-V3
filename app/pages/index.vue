@@ -8,7 +8,6 @@ import { useLocalStorage } from '@vueuse/core'
 import { useAuth } from '~/composables/useAuth'
 import { menuData } from '~/constants/data/menuData'
 
-/** Extract just the sections to show on the dashboard */
 const dashboardSections = menuData.filter(section => section.showInDashboard)
 
 const { currentUser, isAuthenticated } = useAuth()
@@ -69,7 +68,6 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
 
 <template>
   <div class="p-dashboard">
-    <!-- Left Column: Menu Cards -->
     <div class="p-dashboard__main">
       <section
         v-for="section in dashboardSections"

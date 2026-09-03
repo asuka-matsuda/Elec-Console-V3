@@ -21,7 +21,6 @@ const handleAdd = () => {
   newTask.value = ''
 }
 
-// 未完了を上に、完了を下に
 const sortedTodos = computed(() => {
   return [...todos.value].sort((a, b) => {
     if (a.completed === b.completed) {

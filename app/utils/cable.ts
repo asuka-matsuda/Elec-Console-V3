@@ -28,7 +28,6 @@ export function getAvailableSizes(category: string): DropdownOption[] {
 
   return candidates.map((item) => {
     const c = item.cable
-    // nameプロパティが存在する場合はそれを利用し、なければフォールバック
     const label = c.name || `${c.size} ${c.unit}`
 
     return {

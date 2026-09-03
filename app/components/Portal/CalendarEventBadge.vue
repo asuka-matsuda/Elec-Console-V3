@@ -44,7 +44,6 @@ const badgeColor = computed(() => props.color || 'var(--theme-accent)')
 
 <style scoped lang="scss">
 .c-cal-badge {
-  // 親から渡された単一変数を参照するため color-mix が確実に機能する
   --badge-color-dim: color-mix(in srgb, var(--badge-color) 80%, transparent);
 
   @include flex-start-center;

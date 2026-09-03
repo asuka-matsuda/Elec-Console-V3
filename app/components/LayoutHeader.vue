@@ -17,18 +17,15 @@ const emit = defineEmits<{
 <template>
   <header class="l-header">
     <div class="l-header__left">
-      <!-- Mobile Sidebar Toggle -->
       <AppIconButton
         name="menu"
         @click="emit('toggle-sidebar')"
       />
 
-      <!-- Breadcrumbs / Page Title -->
       <AppBreadcrumb v-if="breadcrumbs?.length" :items="breadcrumbs" />
     </div>
 
     <div class="l-header__actions">
-      <!-- User profile, notifications, etc. will go here -->
       <slot name="actions" />
     </div>
   </header>

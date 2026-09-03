@@ -17,7 +17,6 @@ const props = defineProps<{
 
 const isReady = computed(() => props.result?.success && !props.result?.partial)
 
-// --- 32% (異種) ---
 const size32 = computed(() => {
   if (!isReady.value) return CONDUIT_UI_LABELS.EMPTY_TEXT
 
@@ -44,7 +43,6 @@ const fill32 = computed(() =>
     : CONDUIT_UI_LABELS.EMPTY_TEXT,
 )
 
-// --- 48% (同種) ---
 const size48 = computed(() => {
   if (!isReady.value) return CONDUIT_UI_LABELS.EMPTY_TEXT
 
@@ -96,7 +94,6 @@ const fill48 = computed(() =>
       </div>
     </div>
 
-    <!-- Right Column: 48% -->
     <div class="c-conduit-result__col">
       <div class="c-conduit-result__main">
         <div class="c-conduit-result__main-label">
@@ -131,7 +128,6 @@ const fill48 = computed(() =>
   min-height: 0;
   padding: var(--space-card-pad);
 
-  // コンテナ幅が xs 以上の場合は横並び2カラム
   @include cq("xs") {
     flex-direction: row;
   }

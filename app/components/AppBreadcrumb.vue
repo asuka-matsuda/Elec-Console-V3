@@ -5,7 +5,6 @@
  */
 import { computed, resolveComponent } from 'vue'
 
-/** パンくずリストの各要素の型定義 */
 export interface BreadcrumbItem {
   text: string
   href?: string

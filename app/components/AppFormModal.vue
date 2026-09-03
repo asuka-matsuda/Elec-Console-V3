@@ -28,8 +28,6 @@ const handleSubmit = async () => {
   isSubmitting.value = true
   try {
     await props.submitFn()
-    // 成功した場合は親側でモーダルを閉じるか、ここで閉じる。
-    // 一般的には成功時に isOpen = false にする
     isOpen.value = false
   }
   catch (e: unknown) {

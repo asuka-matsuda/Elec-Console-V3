@@ -58,7 +58,6 @@ export function useToolPage<InputType, ResultType>(
   }
 
   const resetInputs = () => {
-    // 深いコピーでリセット
     inputs.value = JSON.parse(JSON.stringify(defaultInputs))
   }
 

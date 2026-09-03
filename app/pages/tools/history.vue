@@ -123,13 +123,11 @@ watch(
         </AppSectionHeader>
       </template>
 
-      <!-- タブ部分 -->
       <div class="p-history-page__tabs">
         <AppTabs v-model="currentTab" :options="tabs" />
       </div>
 
       <ClientOnly>
-        <!-- 履歴一覧 -->
         <div
           v-if="historyList.length > 0"
           class="p-history-page__grid l-grid l-grid--auto-fill"
@@ -142,7 +140,6 @@ watch(
           />
         </div>
 
-        <!-- 空状態 -->
         <AppEmptyState
           v-else
           icon="inbox"
@@ -150,14 +147,12 @@ watch(
           description="計算ツールで計算を実行し、「履歴に保存」を行うとここに記録されます。"
         />
 
-        <!-- SSR時・ハイドレーション前のプレースホルダー -->
         <template #fallback>
           <AppEmptyState icon="loader" title="履歴を読み込み中..." />
         </template>
       </ClientOnly>
     </AppPanel>
 
-    <!-- Dialogs -->
     <AppConfirmModal
       v-model="isConfirmOpen"
       :title="confirmTitle"
@@ -175,10 +170,6 @@ watch(
 
   container-type: inline-size;
   gap: var(--space-section-gap);
-
-  &__tabs {
-    /* 親要素(p-history-page)のgapで管理されるためmargin-bottomは削除 */
-  }
 
   &__grid {
     @include grid;

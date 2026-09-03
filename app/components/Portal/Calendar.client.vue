@@ -35,9 +35,6 @@ const {
   updateSettings,
 } = useCalendar(props.siteId)
 
-// ====================
-// Event Modal Logic
-// ====================
 const isModalOpen = ref(false)
 const isEditing = ref(false)
 const editingEventId = ref<string | null>(null)
@@ -182,9 +179,6 @@ const removeEvent = () => {
   })
 }
 
-// ====================
-// Calendar Config & Options
-// ====================
 const fullCalendarRef = ref<InstanceType<typeof FullCalendar> | null>(null)
 const currentTitle = ref('')
 const currentView = ref<'dayGridMonth' | 'listMonth'>('dayGridMonth')
@@ -309,7 +303,6 @@ const typedCalendarOptions = computed(
       </FullCalendar>
     </AppPanel>
 
-    <!-- Event Modal -->
     <CalendarEventModal
       v-model="isModalOpen"
       :is-editing="isEditing"
@@ -319,14 +312,12 @@ const typedCalendarOptions = computed(
       @delete="removeEvent"
     />
 
-    <!-- Type Settings Modal -->
     <CalendarTypeSettingsModal
       v-model="isTypeSettingsOpen"
       :event-types="settings?.eventTypes || []"
       @save="handleSaveEventTypes"
     />
 
-    <!-- Confirm Modal -->
     <AppConfirmModal
       v-model="isConfirmOpen"
       :title="confirmTitle"

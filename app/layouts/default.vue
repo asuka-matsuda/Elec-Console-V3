@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { menuData } from '~/constants/data/menuData'
 
-// Mobile sidebar toggle state (Global)
 const isSidebarOpen = useState('sidebar-open', () => false)
 
-// Dynamic breadcrumbs based on current route
 const { items: breadcrumbs, accent: breadcrumbAccent } = useBreadcrumbs()
 const { currentUser, logout } = useAuth()
 </script>
@@ -16,17 +14,14 @@ const { currentUser, logout } = useAuth()
       '--theme-accent': `var(--color-category-${breadcrumbAccent || 'main'})`,
     }"
   >
-    <!-- Sidebar -->
     <LayoutGlobalNav v-model:is-open="isSidebarOpen" :menu-data="menuData" />
 
-    <!-- Main Content Area -->
     <div class="l-main">
       <LayoutHeader
         :breadcrumbs="breadcrumbs"
         @toggle-sidebar="isSidebarOpen = !isSidebarOpen"
       >
         <template #actions>
-          <!-- User Profile / Actions -->
           <div class="l-header-user">
             <AppIcon
               name="bell"
@@ -56,7 +51,6 @@ const { currentUser, logout } = useAuth()
         </template>
       </LayoutHeader>
 
-      <!-- Page Content -->
       <main class="l-content">
         <slot />
         <LayoutFooter />

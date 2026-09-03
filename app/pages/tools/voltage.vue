@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * VoltageCalculator
  * 電圧降下・ケーブルサイズ選定ツールのコンポーネントです。電圧降下の計算や、条件を満たすケーブルサイズの選定を行います。
@@ -79,7 +79,6 @@ const handleSaveToHistory = async () => {
 
     <template #inputs>
       <ToolInputPanel @reset="openResetModal">
-        <!-- 1. 計算モード切替 (AppRadioGroup) -->
         <AppRadioGroup v-model="form.mode" :options="modeOptions" />
 
         <div class="l-grid l-grid--2col">
@@ -95,7 +94,6 @@ const handleSaveToHistory = async () => {
                 :error="errorMessage"
                 :class="`js-field-${field.id}`"
               >
-                <!-- Select Only -->
                 <AppSelect
                   v-if="field.type === 'select'"
                   v-model="form[field.id]"
@@ -107,7 +105,6 @@ const handleSaveToHistory = async () => {
                   @blur="handleBlur"
                 />
 
-                <!-- Input + Select -->
                 <AppInputGroup v-else-if="field.type === 'input-select'">
                   <AppInput
                     v-model.number="form[field.id]"
@@ -140,7 +137,6 @@ const handleSaveToHistory = async () => {
                   </template>
                 </AppInputGroup>
 
-                <!-- Input + Addon -->
                 <AppInputGroup v-else-if="field.type === 'input-addon'">
                   <AppInput
                     v-model.number="form[field.id]"
@@ -166,7 +162,6 @@ const handleSaveToHistory = async () => {
     </template>
   </ToolLayout>
 
-  <!-- リセット確認モーダル -->
   <AppConfirmModal
     v-model="isResetModalOpen"
     title="リセットの確認"
@@ -177,15 +172,13 @@ const handleSaveToHistory = async () => {
 </template>
 
 <style scoped lang="scss">
-/* 2カラムグリッドを再現 */
 .l-grid {
   @include grid;
 
   &--2col {
-    grid-template-columns: 1fr; // スモールファースト
+    grid-template-columns: 1fr;
 
     @include cq("sm") {
-      // コンテナ幅が広い時は2カラム
       grid-template-columns: repeat(2, 1fr);
     }
   }

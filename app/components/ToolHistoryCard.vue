@@ -26,7 +26,6 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
     class="c-history-card"
     :class="[`is-${entry.status}`]"
   >
-    <!-- ヘッダー -->
     <header class="c-history-card__header">
       <div class="c-history-card__title-group">
         <span class="c-history-card__date">{{ entry.timestamp }}</span>
@@ -43,7 +42,6 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
     </header>
 
     <div class="c-history-card__body">
-      <!-- 計算結果 (動的コンポーネントでDRY化) -->
       <section class="c-history-card__section">
         <div>
           <ToolVoltageResult
@@ -62,7 +60,6 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
             :result="getResult(entry)"
             size="sm"
           />
-          <!-- 過去のデータなどrawデータがない場合のフォールバック -->
           <template v-else>
             <h4 class="c-history-card__section-title">計算結果</h4>
             <dl class="c-history-card__list">
@@ -89,7 +86,6 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
         </div>
       </section>
 
-      <!-- 入力条件 -->
       <section class="c-history-card__section">
         <h4 class="c-history-card__section-title">入力条件</h4>
         <dl class="c-history-card__list">
@@ -101,7 +97,6 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
       </section>
     </div>
 
-    <!-- フッター (削除アクション) -->
     <footer class="c-history-card__footer">
       <AppButton
         variant="danger"

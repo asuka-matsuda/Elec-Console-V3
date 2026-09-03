@@ -68,7 +68,6 @@ export function useConduitCalculator() {
     ]
   }
 
-  // 操作
   function addCable() {
     inputs.value.inputCables.push({
       id: uuidv4(),

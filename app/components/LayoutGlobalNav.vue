@@ -5,14 +5,12 @@
  */
 import type { MenuSection } from '~/constants/data/menuData'
 
-/** For mobile responsive toggle */
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 
 defineProps<{
   menuData: MenuSection[]
 }>()
 
-/** Close sidebar on mobile when a link is clicked */
 const closeSidebar = () => {
   isOpen.value = false
 }
@@ -20,22 +18,18 @@ const closeSidebar = () => {
 
 <template>
   <div>
-    <!-- Mobile Overlay -->
     <div
       class="l-global-nav-overlay"
       :class="{ 'is-open': isOpen }"
       @click="closeSidebar"
     />
 
-    <!-- Global-Nav -->
     <aside class="l-global-nav" :class="{ 'is-open': isOpen }">
-      <!-- Logo Header -->
       <header class="l-global-nav__header">
         <LayoutLogo @click="closeSidebar" />
       </header>
       <AppDivider type="fade-center" variant="sidebar-border" />
 
-      <!-- Navigation Content -->
       <nav class="l-global-nav__nav custom-scrollbar">
         <section
           v-for="section in menuData"
@@ -182,7 +176,6 @@ const closeSidebar = () => {
       @include state-base;
     }
 
-    // Hover & Focus
     &:is(:hover, :focus-visible):not(:disabled, .router-link-active) {
       transform: translateX(var(--space-1));
       color: var(--section-accent, var(--color-category-main));
@@ -207,12 +200,10 @@ const closeSidebar = () => {
       }
     }
 
-    // Press (Active)
     &:active:not(:disabled) {
       @include state-active(var(--section-accent, var(--color-category-main)));
     }
 
-    // Selected Route (Active Page)
     &.router-link-active {
       --glow-color: var(--section-accent, var(--color-category-main));
 
@@ -234,8 +225,6 @@ const closeSidebar = () => {
         );
       }
     }
-
-    // Disabled
 
     &:disabled {
       filter: grayscale(100%);

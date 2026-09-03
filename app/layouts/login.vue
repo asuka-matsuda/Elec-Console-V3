@@ -3,7 +3,6 @@ import { computed } from 'vue'
 
 import { useRoute } from '#app'
 
-// ログインページ用の最小レイアウト
 const route = useRoute()
 const pageTitle = computed(() => route.meta.title as string | undefined)
 </script>
@@ -26,7 +25,7 @@ const pageTitle = computed(() => route.meta.title as string | undefined)
 
   &__panel {
     min-width: 320px;
-    max-width: 480px; // 一般的なログインパネルの最大幅
+    max-width: 480px;
   }
 }
 </style>

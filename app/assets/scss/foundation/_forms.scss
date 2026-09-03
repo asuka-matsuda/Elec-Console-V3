@@ -3,7 +3,6 @@
 @use "mixins/typography" as *;
 @use "mixins/layout" as *;
 
-// --- フォーム要素のベーススタイル ---
 @mixin form-control-base(
   $is-error: "&.is-error",
   $is-active: "&:is(:focus, :focus-visible)"
@@ -15,9 +14,7 @@
     @include disabled;
   }
 
-  // 非disabled時のみインタラクションを許可
   &:not(:disabled, .is-disabled) {
-    // 1. Hover
     &:hover {
       border-color: color-mix(
         in srgb,
@@ -28,14 +25,12 @@
       @include state-hover(var(--color-category-main));
     }
 
-    // 2. Active
     &:active {
       border-color: var(--color-category-main);
 
       @include state-active(var(--color-category-main));
     }
 
-    // 3. Focus (Hover/Activeより優先)
     #{$is-active} {
       border-color: var(--color-category-main);
 
@@ -43,7 +38,6 @@
       @include cyber-text-glow(var(--color-category-main));
     }
 
-    // 4. Error (最優先)
     #{$is-error} {
       border-color: color-mix(
         in srgb,
@@ -76,7 +70,6 @@
   }
 }
 
-// プレースホルダー
 @mixin form-placeholder {
   &::placeholder {
     color: color-mix(in srgb, var(--color-text-muted) 50%, transparent);
@@ -84,7 +77,6 @@
   }
 }
 
-// フォームアドオン (単位などの付加テキスト)
 .c-input-addon {
   @include text-desc;
   @include flex-center-center($is-inline: true);

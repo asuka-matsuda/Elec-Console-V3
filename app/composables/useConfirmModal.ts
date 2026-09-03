@@ -27,10 +27,6 @@ export const useConfirmModal = (
 
   const isPending = ref(false)
 
-  /**
-   * 確認モーダルを開く
-   * @param customOptions 今回の呼び出し固有のオプション
-   */
   const askConfirm = (customOptions: ConfirmOptions) => {
     options.value = {
       title: customOptions.title || defaultOptions.title || '確認',
@@ -48,9 +44,6 @@ export const useConfirmModal = (
     isOpen.value = true
   }
 
-  /**
-   * モーダルで「確定」ボタンが押された時のハンドラ
-   */
   const handleConfirm = async () => {
     if (!options.value.onConfirm) {
       isOpen.value = false

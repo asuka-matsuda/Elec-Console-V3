@@ -67,7 +67,6 @@ const {
             </AppFormGroup>
           </div>
 
-          <!-- 強電エリア -->
           <AppPanel title="強電エリア" size="sm">
             <template #actions>
               <AppToggle v-model="inputs.isStrong" label="" />
@@ -106,7 +105,6 @@ const {
             </div>
           </AppPanel>
 
-          <!-- 弱電エリア -->
           <AppPanel title="弱電エリア" size="sm">
             <template #actions>
               <AppToggle v-model="inputs.isWeak" label="" />
@@ -219,7 +217,6 @@ const {
     </template>
   </ToolLayout>
 
-  <!-- リセット確認モーダル -->
   <AppConfirmModal
     v-model="isResetModalOpen"
     title="リセットの確認"

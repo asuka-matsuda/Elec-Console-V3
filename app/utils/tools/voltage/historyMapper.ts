@@ -25,7 +25,6 @@ export function mapVoltageToHistory(
 
   const isAuto = inputs.mode === 'size'
 
-  // -- 1. 入力条件 (Inputs) のマッピング --
   const historyInputs: { label: string, value: string }[] = []
 
   const sysName = inputs.sys ? inputs.sys.label : '未選択'
@@ -67,7 +66,6 @@ export function mapVoltageToHistory(
   })
 
   if (!isAuto) {
-    // ケーブル指定モードの場合は使用ケーブル情報も入力条件に含める
     let cabName: string
     const matched = cableData.find(
       (c: CableData) =>
@@ -85,7 +83,6 @@ export function mapVoltageToHistory(
     historyInputs.push({ label: getLabel('cableType'), value: cabName })
   }
 
-  // -- 2. 計算結果 (Results) のマッピング --
   const historyResults: {
     label: string
     value: string
@@ -106,7 +103,6 @@ export function mapVoltageToHistory(
     })
   }
   else {
-    // 成功・エラー判定
     const maxDropV = inputs.sys.voltage * ((inputs.targetDrop || 100) / 100)
     const isAmpOver
       = result.finalEffAmp > 0 && (inputs.I ?? 0) > result.finalEffAmp
@@ -115,7 +111,6 @@ export function mapVoltageToHistory(
 
     if (hasError) status = 'error'
 
-    // メイン結果テキストの生成
     const cabType = isAuto
       ? result.optimal.category || ''
       : inputs.cableType || ''
@@ -141,7 +136,6 @@ export function mapVoltageToHistory(
     mainResultText
       = parallelCount > 1 ? `${cableNameStr} × ${parallelCount}条` : cableNameStr
 
-    // 詳細結果の追加
     historyResults.push({
       label: isAuto ? '選定ケーブル' : '判定',
       value: mainResultText,

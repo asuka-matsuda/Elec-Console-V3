@@ -4,9 +4,6 @@
  * 状態、カテゴリ、タグなどを視覚的に示すためのバッジコンポーネント。
  */
 
-/**
- * プリセットカラー定義（型補完用）
- */
 export type BadgePresetColor
   = | 'secondary'
     | 'primary'
@@ -19,14 +16,10 @@ export type BadgePresetColor
     | 'reference'
     | 'neutral'
 
-/**
- * プリセット名または任意のCSSカラー（#HEX, rgb(), hsl(), var() など）
- */
 export type BadgeColor = BadgePresetColor | (string & {})
 
 const props = withDefaults(
   defineProps<{
-    /** 表示カラー（プリセット名 または 任意のカラーコード/CSS変数） */
     color?: BadgeColor
   }>(),
   {

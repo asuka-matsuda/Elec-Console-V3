@@ -62,7 +62,6 @@ const getStatusColor = (status: unknown) => {
   }
 }
 
-// --- 新規登録モーダル ---
 const isCreateModalOpen = ref(false)
 const newSite = ref({
   id: '',
@@ -79,7 +78,6 @@ const handleCreateSite = async () => {
   newSite.value = { id: '', name: '', status: 'planning' }
 }
 
-// --- 無効化/有効化モーダル ---
 const {
   isOpen: isConfirmDisableOpen,
   title: confirmTitle,
@@ -106,7 +104,6 @@ const confirmToggleDisable = (row: Site) => {
   })
 }
 
-// --- 現場設定モーダル (新) ---
 const isSettingsModalOpen = ref(false)
 const settingsTargetSite = ref<Site | null>(null)
 
@@ -204,14 +201,12 @@ const handleSaveSettings = async (updatedSite: Site) => {
       </AppFormGroup>
     </AppFormModal>
 
-    <!-- 現場設定モーダル (新) -->
     <SiteSettingsModal
       v-model="isSettingsModalOpen"
       :site="settingsTargetSite"
       @update:site="handleSaveSettings"
     />
 
-    <!-- 無効化/有効化の確認モーダル -->
     <AppConfirmModal
       v-model="isConfirmDisableOpen"
       :title="confirmTitle"

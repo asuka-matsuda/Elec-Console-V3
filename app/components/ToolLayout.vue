@@ -5,7 +5,6 @@
  */
 import { ref } from 'vue'
 
-/** Drawer state for mobile */
 const isDrawerOpen = ref(false)
 
 const toggleDrawer = () => {
@@ -15,7 +14,6 @@ const toggleDrawer = () => {
 
 <template>
   <div class="l-tool-layout">
-    <!-- Disclaimer -->
     <div class="l-tool-layout__disclaimer">
       <slot name="disclaimer">
         <AppDisclaimer />
@@ -23,14 +21,11 @@ const toggleDrawer = () => {
     </div>
 
     <div class="l-tool-layout__main">
-      <!-- Left Column -->
       <div class="l-tool-layout__left">
-        <!-- Results (Top 1/4 on PC, Drawer on Mobile) -->
         <div
           class="l-tool-layout__results"
           :class="{ 'is-drawer-open': isDrawerOpen }"
         >
-          <!-- Mobile Drawer Handle -->
           <div class="l-tool-layout__drawer-handle" @click="toggleDrawer">
             <span class="l-tool-layout__drawer-title">計算結果を見る</span>
             <AppIcon
@@ -38,26 +33,22 @@ const toggleDrawer = () => {
               class="l-tool-layout__drawer-icon"
             />
           </div>
-          <!-- Results Content -->
           <div class="l-tool-layout__results-content">
             <slot name="results"></slot>
           </div>
         </div>
 
-        <!-- Mobile Overlay -->
         <div
           v-if="isDrawerOpen"
           class="l-tool-layout__overlay"
           @click="toggleDrawer"
         ></div>
 
-        <!-- Inputs (Bottom 3/4 on PC, Full on Mobile) -->
         <div class="l-tool-layout__inputs">
           <slot name="inputs"></slot>
         </div>
       </div>
 
-      <!-- Right Column (Formulas - Hidden on Mobile) -->
       <div class="l-tool-layout__right">
         <slot name="basis"></slot>
       </div>

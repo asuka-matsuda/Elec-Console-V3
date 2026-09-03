@@ -24,20 +24,16 @@ const tableColumns: TableColumn[] = [
     :search-mapper="(item) => `${item.name} ${item.standard || ''}`"
     placeholder="種類、サイズなどを検索... (例: CVT 22)"
   >
-    <!-- 質量セル (kg/km -> kg/m) -->
     <template #cell-weight="{ value }">
       {{ isNaN(Number(value)) ? value : Number(value) / 1000 }}
     </template>
 
-    <!-- 耐電圧セル -->
     <template #cell-voltage="{ value }"> {{ value }} V </template>
 
-    <!-- 温度セル -->
     <template #cell-temp="{ row }">
       {{ row.baseTemp }}℃ / {{ row.maxTemp }}℃
     </template>
 
-    <!-- 規格セル -->
     <template #cell-standard="{ value }">
       <span class="c-db-meta">{{ value }}</span>
     </template>

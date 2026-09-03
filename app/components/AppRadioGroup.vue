@@ -19,9 +19,6 @@ const props = defineProps<{
   name?: string
 }>()
 
-/**
- * ユニークなname属性を自動生成（複数グループが配置された際の干渉を防ぐため）
- */
 const uniqueName = useId()
 const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
 </script>

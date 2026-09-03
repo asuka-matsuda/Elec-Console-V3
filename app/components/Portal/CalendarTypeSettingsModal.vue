@@ -54,12 +54,11 @@ const handleAddType = () => {
 }
 
 const handleRemoveType = (index: number) => {
-  if (types.value.length <= 1) return // 最低1件は保持
+  if (types.value.length <= 1) return
   types.value.splice(index, 1)
 }
 
 const handleSave = () => {
-  // 空の種別名をチェック・フォールバック
   const cleaned = types.value.map((t, idx) => ({
     ...t,
     name: t.name.trim() || `種別 ${idx + 1}`,
@@ -105,7 +104,6 @@ const handleSave = () => {
             />
           </div>
 
-          <!-- Color Picker -->
           <div class="p-type-item__colors">
             <span class="p-type-item__color-label">カラー:</span>
             <AppColorPicker v-model="t.color" />

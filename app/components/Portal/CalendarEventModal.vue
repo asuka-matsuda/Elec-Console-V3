@@ -27,7 +27,6 @@ const emit = defineEmits<{
 const form = ref<EventFormData>({ ...props.initialData })
 const hasTitleError = ref(false)
 
-// 自動補完ロジック
 const autoFillEndDate = () => {
   const startVal = form.value.start
 

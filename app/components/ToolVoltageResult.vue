@@ -124,9 +124,7 @@ const dropStatusClass = computed(() => {
       </div>
     </div>
 
-    <!-- サブ指標 -->
     <div class="c-voltage-result__metrics">
-      <!-- 電流チェック -->
       <dl class="metric-card">
         <dt class="metric-label">電流チェック (設計 / 許容)</dt>
         <dd class="metric-value" :class="ampStatusClass">
@@ -137,7 +135,6 @@ const dropStatusClass = computed(() => {
         </dd>
       </dl>
 
-      <!-- 電圧降下 (sizeモード) -->
       <dl v-if="mode === 'size'" class="metric-card">
         <dt class="metric-label">電圧降下</dt>
         <dd class="metric-value" :class="dropStatusClass">
@@ -150,7 +147,6 @@ const dropStatusClass = computed(() => {
         </dd>
       </dl>
 
-      <!-- 選択ケーブル (dropモード) -->
       <dl v-else class="metric-card">
         <dt class="metric-label">選択ケーブル</dt>
         <dd class="metric-value is-neutral">
@@ -280,14 +276,13 @@ const dropStatusClass = computed(() => {
   &__metrics {
     @include flex-start-center;
 
-    flex-flow: row wrap; // 狭い場合は横並びラップ（スモールファースト）
+    flex-flow: row wrap;
     flex-shrink: 0;
     gap: var(--space-2);
     align-items: stretch;
 
     min-width: auto;
 
-    // コンテナの幅が xs 以上の場合は縦積み
     @include cq("xs") {
       flex-flow: column nowrap;
       min-width: 220px;

@@ -31,7 +31,6 @@ const currentSite = computed(() =>
   sites.value.find(s => s.id === siteId.value),
 )
 
-// アサインされている現場のみを抽出
 const assignedSites = computed(() => {
   const ids = currentUser.value?.assignedSiteIds || []
 
@@ -74,12 +73,10 @@ onMounted(() => {
     </AppSectionHeader>
 
     <div class="l-grid l-grid--2col-2-1">
-      <!-- 2/3: カレンダー -->
       <div class="p-site-dashboard__calendar">
         <Calendar :site-id="siteId" />
       </div>
 
-      <!-- 1/3: ToDo & ボタン -->
       <div class="p-site-dashboard__sidebar">
         <PersonalTodo :site-id="siteId" />
 
@@ -106,7 +103,7 @@ onMounted(() => {
   }
 
   &__calendar {
-    min-height: 500px; // カレンダーが潰れないように
+    min-height: 500px;
   }
 
   &__sidebar {

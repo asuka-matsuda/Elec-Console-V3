@@ -47,8 +47,6 @@ const inputId = useId()
   position: relative;
   gap: var(--space-2);
 
-  // removed :has
-
   &__input {
     cursor: inherit;
 

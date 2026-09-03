@@ -27,7 +27,6 @@ export function useCalcHistory(storageKey: string) {
 
   const historyList = ref<HistoryEntry[]>(getInitialState())
 
-  // クライアント側のみ、値が変更されたらストレージに自動保存
   if (import.meta.client) {
     watch(
       historyList,
@@ -38,10 +37,6 @@ export function useCalcHistory(storageKey: string) {
     )
   }
 
-  /**
-   * 履歴を追加する
-   * @param entry 追加する履歴オブジェクト
-   */
   const saveHistory = async (entry: Omit<HistoryEntry, 'id' | 'timestamp'>) => {
     // 処理中アニメーションを見せるため、意図的に少し待機する（UX向上）
     await new Promise(resolve => setTimeout(resolve, 600))
@@ -52,10 +47,8 @@ export function useCalcHistory(storageKey: string) {
       timestamp: formatDateTime(new Date()),
     }
 
-    // 先頭に追加（最新が上）
     historyList.value.unshift(newEntry)
 
-    // 履歴の上限を30件に制限
     const MAX_HISTORY = 30
 
     if (historyList.value.length > MAX_HISTORY) {
@@ -63,17 +56,10 @@ export function useCalcHistory(storageKey: string) {
     }
   }
 
-  /**
-   * 履歴を1件削除する
-   * @param id 削除する履歴のID
-   */
   const deleteHistory = (id: string) => {
     historyList.value = historyList.value.filter(item => item.id !== id)
   }
 
-  /**
-   * 全ての履歴を削除する
-   */
   const clearAll = () => {
     historyList.value = []
   }

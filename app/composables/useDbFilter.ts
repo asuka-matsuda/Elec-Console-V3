@@ -2,14 +2,7 @@ import { computed, ref } from 'vue'
 
 export interface FilterOptions<T> {
   data: T[]
-  /**
-   * Function to map an item to a searchable string.
-   */
   searchMapper: (item: T) => string
-  /**
-   * The field name or function to extract the category from an item.
-   * By default, it expects a `category` property on the items.
-   */
   categoryMapper?: (item: T) => string
 }
 
@@ -23,7 +16,6 @@ export function useDbFilter<T extends Record<string, unknown>>(
   const searchQuery = ref('')
   const activeCats = ref<string[]>([])
 
-  // Get unique categories
   const categoryOptions = computed(() => {
     const cats = data.map(item => categoryMapper(item)).filter(Boolean)
 
@@ -33,7 +25,6 @@ export function useDbFilter<T extends Record<string, unknown>>(
     }))
   })
 
-  // Filtered result
   const filteredData = computed(() => {
     let result = [...data]
 

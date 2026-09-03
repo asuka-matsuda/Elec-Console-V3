@@ -26,7 +26,6 @@ watch(isOpen, (newVal) => {
 })
 
 const handleSave = async () => {
-  // 例外は AppFormModal でキャッチされるため、単に await するだけでOK
   await assignSites(props.userId, targetSiteIds.value)
   emit('success')
 }

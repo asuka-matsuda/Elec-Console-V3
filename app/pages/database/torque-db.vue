@@ -8,7 +8,6 @@ import { computed } from 'vue'
 import type { TableColumn } from '~/components/AppTable.vue'
 import { torqueData } from '~/constants/data/torqueData'
 
-/** Flatten the nested torqueData structure */
 const flattenedData = computed(() => {
   return torqueData.flatMap(cat =>
     cat.items.map(item => ({

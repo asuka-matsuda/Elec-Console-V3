@@ -96,7 +96,6 @@ onUnmounted(() => {
     @cancel.prevent="close"
   >
     <AppPanel class="c-modal__panel" :variant="variant">
-      <!-- Header -->
       <template #header>
         <AppSectionHeader
           :title-id="titleId"
@@ -112,7 +111,6 @@ onUnmounted(() => {
       </template>
 
       <div class="c-modal__layout">
-        <!-- Body -->
         <div
           class="c-modal__body"
           :class="align === 'center' ? 'c-modal__body--align-center' : ''"
@@ -120,7 +118,6 @@ onUnmounted(() => {
           <slot />
         </div>
 
-        <!-- Footer -->
         <footer v-if="$slots.footer" class="c-modal__footer">
           <slot name="footer" />
         </footer>

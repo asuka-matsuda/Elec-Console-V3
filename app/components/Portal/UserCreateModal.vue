@@ -37,11 +37,10 @@ const initialUserState = {
 
 const newUser = ref({ ...initialUserState })
 
-// submitFn は throw するか void を返す。AppFormModal がキャッチしてエラー表示する。
 const handleCreateUser = async () => {
   const result = await createUser(newUser.value)
 
-  newUser.value = { ...initialUserState } // フォームをリセット
+  newUser.value = { ...initialUserState }
   emit('success', result)
 }
 </script>
@@ -73,8 +72,3 @@ const handleCreateUser = async () => {
     </AppFormGroup>
   </AppFormModal>
 </template>
-
-<style scoped lang="scss">
-// エラー表示やボタンスタイリングの責務が AppFormModal に移ったため、
-// 固有のスタイルは不要になりました。
-</style>

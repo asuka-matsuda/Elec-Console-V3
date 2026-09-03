@@ -17,7 +17,6 @@ const emit = defineEmits<{
 
 const { users, fetchUsers } = useAdminUsers()
 
-// Edit state
 const editData = ref<Partial<Site>>({})
 const excludedCircuitsList = ref<string[]>([])
 
@@ -85,7 +84,6 @@ const workerNames = computed(() => {
 
 const handleSave = async () => {
   if (!props.site) return
-  // Parse excluded circuits
   const parsedCircuits = excludedCircuitsList.value
     .map(c => c.trim())
     .filter(c => c.length > 0)
@@ -100,7 +98,6 @@ const handleSave = async () => {
   isOpen.value = false
 }
 
-// Dummy DB sync functions
 const showSyncMsg = ref(false)
 const syncMsg = ref('')
 const handleImport = () => {
@@ -126,7 +123,6 @@ const handleExport = () => {
       <AppTabs v-model="activeTab" :options="tabs" />
 
       <div class="c-site-settings__content">
-        <!-- 基本設定 -->
         <template v-if="activeTab === 'basic'">
           <AppFormGroup label="ステータス">
             <AppSelect v-model="editStatus" :options="statusOptions" />
@@ -155,7 +151,6 @@ const handleExport = () => {
           </AppFormGroup>
         </template>
 
-        <!-- 連携設定 -->
         <template v-else-if="activeTab === 'integration'">
           <AppFormGroup label="Excel連携ファイル保存先 (絶対パス)">
             <AppInput
@@ -185,7 +180,6 @@ const handleExport = () => {
           </AppPanel>
         </template>
 
-        <!-- ルール設定 -->
         <template v-else-if="activeTab === 'rules'">
           <AppFormGroup label="除外回路の設定">
             <template #description>

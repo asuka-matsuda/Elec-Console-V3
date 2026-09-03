@@ -41,7 +41,6 @@ const handleSort = (col: TableColumn<T>) => {
 <template>
   <div class="c-table-wrapper">
     <table class="c-table">
-      <!-- 従来の手書き用スロットまたはcolumns propによる自動生成 -->
       <thead v-if="$slots.header || columns">
         <slot name="header">
           <tr v-if="columns">
@@ -99,7 +98,6 @@ const handleSort = (col: TableColumn<T>) => {
         </slot>
       </thead>
 
-      <!-- 従来の手書き用スロットまたはdata propによる自動生成 -->
       <tbody v-if="$slots.body || (data && columns)">
         <slot name="body">
           <template v-if="data && columns">
@@ -221,13 +219,10 @@ const handleSort = (col: TableColumn<T>) => {
 
     &:hover {
       z-index: 1;
-
-      /* 行全体を光らせるため、セルの背景を上書きさせない */
       outline: var(--border-width-base) solid
         color-mix(in srgb, var(--theme-accent) 80%, transparent);
       outline-offset: calc(var(--border-width-base) * -1);
 
-      /* テーブル行ホバー時の発光エフェクト */
       @include state-hover;
     }
   }

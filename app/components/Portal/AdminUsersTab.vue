@@ -15,7 +15,6 @@ onMounted(() => {
   fetchUsers()
 })
 
-// --- ユーザー一覧の定義 ---
 const userHeaders: TableColumn<User>[] = [
   { key: 'id', label: 'ID', sortable: true },
   { key: 'lastName', label: '名前', sortable: true },
@@ -43,7 +42,6 @@ const formatLastLogin = (row: unknown) => {
   return formatDateTime(user.lastLoginAt as string)
 }
 
-// --- モーダルステート管理 ---
 const isCreateModalOpen = ref(false)
 const isCredentialModalOpen = ref(false)
 const createdUserResult = ref<(User & { initialPassword?: string }) | null>(
@@ -64,7 +62,6 @@ const {
   handleConfirm,
 } = useConfirmModal()
 
-// --- イベントハンドラ ---
 const handleUserCreated = (user: User) => {
   createdUserResult.value = user
   isCredentialModalOpen.value = true
@@ -198,7 +195,6 @@ const confirmResetPassword = (row: User) => {
       </div>
     </AppPanel>
 
-    <!-- モーダル群 (関心の分離) -->
     <UserCreateModal v-model="isCreateModalOpen" @success="handleUserCreated" />
 
     <UserCredentialModal
