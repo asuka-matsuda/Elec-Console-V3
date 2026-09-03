@@ -3,7 +3,7 @@
  * AppCard
  * コンテンツをまとめるためのカード型コンポーネント
  */
-import { computed, useSlots } from 'vue'
+import { computed, resolveComponent, useSlots } from 'vue'
 
 const props = defineProps<{
   to?: string
@@ -20,7 +20,7 @@ const isClickable = computed(() => !props.disabled && (!!props.to || !!props.hre
 
 const rootTag = computed(() => {
   if (!isClickable.value) return 'div'
-  if (props.to) return 'NuxtLink'
+  if (props.to) return resolveComponent('NuxtLink')
 
   return 'a'
 })
@@ -110,6 +110,7 @@ const hasDescription = computed(() => !!(slots.description || props.description)
     @include flex-start-start;
 
     gap: var(--space-1);
+
     color: var(--theme-accent);
     word-break: keep-all;
     line-break: strict;
