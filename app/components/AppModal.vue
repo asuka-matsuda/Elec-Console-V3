@@ -103,9 +103,9 @@ onUnmounted(() => {
         <slot />
       </div>
 
-      <footer v-if="$slots.footer" class="c-modal__footer">
+      <template v-if="$slots.footer" #footer>
         <slot name="footer" />
-      </footer>
+      </template>
     </AppPanel>
   </dialog>
 </template>
@@ -181,12 +181,6 @@ onUnmounted(() => {
     &.is-center {
       text-align: center;
     }
-  }
-
-  &__footer {
-    @include flex-end-center;
-
-    gap: var(--space-2);
   }
 }
 </style>

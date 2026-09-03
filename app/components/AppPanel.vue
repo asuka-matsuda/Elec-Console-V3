@@ -50,6 +50,10 @@ withDefaults(
     <div class="c-panel__content">
       <slot />
     </div>
+
+    <footer v-if="$slots.footer" class="c-panel__footer">
+      <slot name="footer" />
+    </footer>
   </section>
 </template>
 
@@ -72,6 +76,12 @@ withDefaults(
     flex: 1;
     gap: var(--space-card-gap);
     min-height: 0;
+  }
+
+  &__footer {
+    @include flex-end-center;
+
+    gap: var(--space-2);
   }
 
   &--color-main {
