@@ -19,6 +19,7 @@ const emit = defineEmits<{
     <div class="l-header__left">
       <AppIconButton
         name="menu"
+        class="l-header__menu-btn"
         @click="emit('toggle-sidebar')"
       />
 
@@ -44,7 +45,8 @@ const emit = defineEmits<{
     gap: var(--space-2);
   }
 
-  &__menu-btn.c-btn {
+  :deep(&__menu-btn),
+  &__menu-btn {
     display: none; // Hidden on desktop
 
     @include mq("md") {
