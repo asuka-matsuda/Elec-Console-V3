@@ -95,7 +95,7 @@ onUnmounted(() => {
     @click.self="close"
     @cancel.prevent="close"
   >
-    <AppPanel class="c-modal__panel" :variant="panelVariant">
+    <AppPanel class="c-modal__panel" :variant="variant">
       <!-- Header -->
       <template #header>
         <AppSectionHeader

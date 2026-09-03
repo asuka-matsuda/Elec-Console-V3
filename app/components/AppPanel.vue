@@ -4,17 +4,17 @@
  * ヘッダーや枠線（サイバー風のブラケットなど）を持ち、コンテンツを囲むパネルコンポーネント。
  */
 defineProps<{
-  title?: string;
-  icon?: string;
+  title?: string
+  icon?: string
   variant?:
-    | "main"
-    | "tool"
-    | "database"
-    | "reference"
-    | "management"
-    | "danger"
-    | "success";
-}>();
+    | 'main'
+    | 'tool'
+    | 'database'
+    | 'reference'
+    | 'management'
+    | 'danger'
+    | 'success'
+}>()
 </script>
 
 <template>
