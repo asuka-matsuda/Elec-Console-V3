@@ -111,8 +111,7 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
   gap: var(--space-section-gap);
 
   @include cq("md") {
-    flex-direction: column;
-    align-items: stretch;
+    @include flex-start-stretch(column);
   }
 
   &__main {
