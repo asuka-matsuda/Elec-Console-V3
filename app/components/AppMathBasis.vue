@@ -1,61 +1,60 @@
 <script setup lang="ts">
-import 'katex/dist/katex.min.css'
+import "katex/dist/katex.min.css";
 
-import katex from 'katex'
-import { computed } from 'vue'
+import katex from "katex";
+import { computed } from "vue";
 
 export type MathStep = {
-  title?: string
-  tex: string
-  legend?: string[]
-}
+  title?: string;
+  tex: string;
+  legend?: string[];
+};
 
 const props = defineProps<{
-  tex: string
-  legend?: string[]
-}>()
+  tex: string;
+  legend?: string[];
+}>();
 
 // --- ヘルパー関数 ---
 const renderMath = (mathStr: string, isDisplay: boolean = true) => {
-  if (!mathStr) return ''
+  if (!mathStr) return "";
   try {
     return katex.renderToString(mathStr, {
       displayMode: isDisplay,
       throwOnError: false,
       trust: true,
       strict: false,
-    })
-  }
-  catch (e) {
-    console.error('KaTeX render error:', e)
+    });
+  } catch (e) {
+    console.error("KaTeX render error:", e);
 
-    return mathStr
+    return mathStr;
   }
-}
+};
 
 const parseLegend = (legendArray: string[] | undefined) => {
-  if (!legendArray) return []
+  if (!legendArray) return [];
 
   return legendArray.map((leg) => {
-    const parts = leg.split(':')
-    let rawSymbol = parts[0]?.trim() || ''
+    const parts = leg.split(":");
+    let rawSymbol = parts[0]?.trim() || "";
 
-    rawSymbol = rawSymbol.replace(/\\\(/g, '').replace(/\\\)/g, '').trim()
-    const name = parts.slice(1).join(':')?.trim() || leg
+    rawSymbol = rawSymbol.replace(/\\\(/g, "").replace(/\\\)/g, "").trim();
+    const name = parts.slice(1).join(":")?.trim() || leg;
 
-    return { symbol: rawSymbol, name }
-  })
-}
+    return { symbol: rawSymbol, name };
+  });
+};
 
 // 💡 改善1: computedを使って、データを事前にすべてHTML化しておく（再描画時の激重処理を回避）
-const renderedTex = computed(() => renderMath(props.tex, true))
+const renderedTex = computed(() => renderMath(props.tex, true));
 
 const parsedLegend = computed(() => {
-  return parseLegend(props.legend).map(leg => ({
+  return parseLegend(props.legend).map((leg) => ({
     ...leg,
     renderedSymbol: renderMath(leg.symbol, false),
-  }))
-})
+  }));
+});
 </script>
 
 <template>
@@ -81,14 +80,7 @@ const parsedLegend = computed(() => {
   gap: var(--space-card-gap);
 
   &__math {
-    scrollbar-width: none;
-    overflow-x: auto;
-
     min-width: 0;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
 
     :deep(.katex) {
       color: var(--color-text-main);
@@ -107,44 +99,34 @@ const parsedLegend = computed(() => {
       .tex-status-danger * {
         color: var(--color-status-danger);
       }
-
-      .tex-color-accent,
-      .tex-color-accent * {
-        color: var(--color-accent-main);
-      }
     }
 
     :deep(.katex-display) {
       padding: var(--space-1) 0;
-      margin: 0;
     }
   }
 }
 
 .c-math-legend {
   @include flex-start-stretch(column);
+  @include text-meta("xs", "bold");
 
   gap: var(--space-1);
+  color: var(--color-text-muted);
 
   &__title {
-    @include text-meta("xs", "bold");
-
-    color: var(--color-text-muted);
+    margin: 0;
   }
 
   &__list {
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    gap: var(--space-1) var(--space-2);
+    @include grid(max-content 1fr, var(--space-1) var(--space-2));
+
     align-items: baseline;
 
     dt {
-      color: var(--color-text-muted);
-
       &::after {
         content: ":";
         margin-left: var(--space-1);
-        color: var(--color-text-muted);
       }
 
       :deep(.katex) {
@@ -156,7 +138,6 @@ const parsedLegend = computed(() => {
       @include text-meta("2xs", "regular");
 
       margin: 0;
-      color: var(--color-text-muted);
     }
   }
 }
