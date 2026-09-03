@@ -100,9 +100,6 @@ const parsedLegend = computed(() => {
       }
     }
 
-    :deep(.katex-display) {
-      padding: var(--space-1) 0;
-    }
   }
 }
 
