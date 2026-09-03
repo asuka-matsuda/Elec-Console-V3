@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * RackCalculator
  * ケーブルラック選定ツールのコンポーネントです。強電・弱電ケーブルのリストと段積み数から最適なラック幅を選定します。
@@ -68,13 +68,12 @@ const {
           </div>
 
           <!-- 強電エリア -->
-          <AppCard variant="default">
-            <div class="p-rack__card-header">
-              <h3 class="p-rack__card-title">強電エリア</h3>
+          <AppPanel title="強電エリア" size="sm">
+            <template #actions>
               <AppToggle v-model="inputs.isStrong" label="" />
-            </div>
+            </template>
 
-            <div v-if="inputs.isStrong" class="p-rack__card-body">
+            <div v-if="inputs.isStrong" class="p-rack__panel-body">
               <AppFormGroup label="段積み数">
                 <AppInputGroup>
                   <AppInput v-model="inputs.lStrong" type="number" min="1" />
@@ -105,16 +104,15 @@ const {
                 </AppButton>
               </div>
             </div>
-          </AppCard>
+          </AppPanel>
 
           <!-- 弱電エリア -->
-          <AppCard variant="default">
-            <div class="p-rack__card-header">
-              <h3 class="p-rack__card-title">弱電エリア</h3>
+          <AppPanel title="弱電エリア" size="sm">
+            <template #actions>
               <AppToggle v-model="inputs.isWeak" label="" />
-            </div>
+            </template>
 
-            <div v-if="inputs.isWeak" class="p-rack__card-body">
+            <div v-if="inputs.isWeak" class="p-rack__panel-body">
               <AppFormGroup label="段積み数">
                 <AppInputGroup>
                   <AppInput v-model="inputs.lWeak" type="number" min="1" />
@@ -145,7 +143,7 @@ const {
                 </AppButton>
               </div>
             </div>
-          </AppCard>
+          </AppPanel>
         </div>
       </ToolInputPanel>
     </template>
@@ -272,15 +270,7 @@ const {
     }
   }
 
-  &__card-header {
-    @include flex-between-center;
-  }
-
-  &__card-title {
-    @include text-title("md");
-  }
-
-  &__card-body {
+  &__panel-body {
     @include flex-start-stretch($direction: column);
 
     gap: var(--space-card-gap);

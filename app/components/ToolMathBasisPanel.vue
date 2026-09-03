@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * ToolCalculationBasisPanel
  * 計算ツールの計算根拠（数式やステップ）を表示するためのパネルコンポーネントです。
@@ -11,17 +11,12 @@ defineProps<{
 </script>
 
 <template>
-  <AppPanel title="計算の根拠">
-    <template #header>
-      <AppSectionHeader
-        title="計算根拠"
-        divider-type="fade-center"
-        icon="book"
-        variant="tool"
-        size="md"
-      />
-    </template>
-
+  <AppPanel
+    title="計算根拠"
+    icon="book"
+    variant="tool"
+    size="md"
+  >
     <div class="c-basis-panel__layout">
       <ClientOnly>
         <div v-if="steps && steps.length > 0" class="c-basis-panel__list">
@@ -29,14 +24,8 @@ defineProps<{
             v-for="(step, index) in steps"
             :key="index"
             class="c-basis-panel__card"
+            :title="step.title"
           >
-            <AppSectionHeader
-              v-if="step.title"
-              :title="step.title"
-              tag="h4"
-              variant="tool"
-              size="sm"
-            />
             <ToolMathBasis :tex="step.tex" :legend="step.legend" />
           </AppCard>
         </div>

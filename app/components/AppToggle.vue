@@ -50,18 +50,22 @@ const inputId = useId()
   // removed :has
 
   &__input {
+    cursor: inherit;
+
     position: absolute;
+    z-index: 1;
     inset: 0;
+
     width: 100%;
     height: 100%;
+
     opacity: 0;
-    z-index: 1;
-    cursor: inherit;
 
     &:not(:disabled) {
       &:hover {
         ~ .c-toggle__label {
           color: color-mix(in srgb, var(--toggle-color) 90%, transparent);
+
           @include cyber-text-glow(var(--toggle-color), 20%, var(--blur-sm));
         }
 
@@ -99,6 +103,7 @@ const inputId = useId()
 
       .c-toggle__thumb {
         transform: translateX(calc(var(--track-w) - var(--thumb-w)));
+
         @include state-hover(var(--toggle-color));
       }
     }

@@ -58,20 +58,20 @@ onMounted(() => {
 
 <template>
   <div :key="siteId" class="p-site-dashboard">
-    <div class="p-site-dashboard__header">
-      <div class="p-site-dashboard__title">
-        <AppIcon name="map-pin" class="u-text-muted" />
-        <h2>{{ currentSite?.name || "現場ダッシュボード" }}</h2>
-      </div>
-      <div class="p-site-dashboard__switcher">
+    <AppSectionHeader
+      :title="currentSite?.name || '現場ダッシュボード'"
+      icon="map-pin"
+      size="lg"
+    >
+      <template #actions>
         <AppSelect
           :model-value="siteId"
           :options="siteOptions"
           class="p-site-dashboard__select"
           @update:model-value="handleSiteChange"
         />
-      </div>
-    </div>
+      </template>
+    </AppSectionHeader>
 
     <div class="l-grid l-grid--2col-2-1">
       <!-- 2/3: カレンダー -->
@@ -100,31 +100,6 @@ onMounted(() => {
 
   gap: var(--space-section-gap);
   height: 100%;
-
-  &__header {
-    @include flex-between-center;
-
-    padding-bottom: var(--space-2);
-    border-bottom: var(--border-width-base) solid var(--color-border);
-  }
-
-  &__title {
-    @include flex-start-center;
-
-    gap: var(--space-2);
-
-    h2 {
-      @include text-title("lg");
-
-      color: var(--color-text-main);
-    }
-  }
-
-  &__switcher {
-    @include flex-start-center;
-
-    gap: var(--space-2);
-  }
 
   &__select {
     min-width: 200px;

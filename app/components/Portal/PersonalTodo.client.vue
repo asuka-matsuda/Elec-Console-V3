@@ -34,13 +34,12 @@ const sortedTodos = computed(() => {
 </script>
 
 <template>
-  <AppPanel class="p-personal-todo">
-    <div class="p-personal-todo__header">
-      <h3>
-        <AppIcon name="check" size="sm" />
-        パーソナルToDo
-      </h3>
-    </div>
+  <AppPanel
+    title="パーソナルToDo"
+    icon="check"
+    size="sm"
+    class="p-personal-todo"
+  >
 
     <div class="p-personal-todo__input">
       <AppInput
@@ -88,14 +87,6 @@ const sortedTodos = computed(() => {
   @include flex-start-stretch($direction: column);
 
   gap: var(--space-3);
-
-  &__header h3 {
-    @include flex-start-center;
-    @include text-title("sm");
-
-    gap: var(--space-1);
-    color: var(--color-text-main);
-  }
 
   &__input {
     @include flex-start-center;

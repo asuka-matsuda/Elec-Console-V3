@@ -42,7 +42,7 @@ const history = computed(() => dashboardData.value?.history || [])
           :key="item.version"
           :description="`${item.date} ${item.desc}`"
         >
-          <template #header>
+          <template #title>
             <AppBadge
               :color="item.status === 'success' ? 'success' : 'secondary'"
             >

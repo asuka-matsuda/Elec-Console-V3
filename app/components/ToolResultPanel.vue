@@ -17,22 +17,17 @@ const typedSaveFunction = computed(
 </script>
 
 <template>
-  <AppPanel title="計算結果">
-    <template #header>
-      <AppSectionHeader
-        :title="title || '計算結果・選定結果'"
-        divider-type="fade-center"
-        :icon="icon || 'check-square'"
-        variant="tool"
-        size="md"
-      >
-        <template #actions>
-          <AppSaveButton
-            :disabled="saveDisabled"
-            :save-function="typedSaveFunction"
-          />
-        </template>
-      </AppSectionHeader>
+  <AppPanel
+    :title="title || '計算結果・選定結果'"
+    :icon="icon || 'check-square'"
+    variant="tool"
+    size="md"
+  >
+    <template #actions>
+      <AppSaveButton
+        :disabled="saveDisabled"
+        :save-function="typedSaveFunction"
+      />
     </template>
 
     <div class="c-tool-panel__content">

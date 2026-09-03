@@ -1,7 +1,8 @@
 <script setup lang="ts">
 /**
  * AppCard
- * コンテンツをまとめるためのカード型コンポーネント
+ * 単一の情報単位やリンク先をまとめるためのカード型コンポーネント。
+ * タイトル、説明文、およびコンテンツで構成されます。
  */
 import { computed, resolveComponent, useSlots } from 'vue'
 
@@ -34,7 +35,7 @@ const rootProps = computed(() => {
   return { href: props.href }
 })
 
-const hasHeader = computed(() => !!(slots.header || props.title || props.icon))
+const hasTitle = computed(() => !!(slots.title || slots.header || props.title || props.icon))
 const hasDescription = computed(() => !!(slots.description || props.description))
 </script>
 
@@ -47,11 +48,13 @@ const hasDescription = computed(() => !!(slots.description || props.description)
       'is-clickable': isClickable,
     }"
   >
-    <div v-if="hasHeader || hasDescription" class="c-card__header-group">
-      <div v-if="hasHeader" class="c-card__header">
-        <slot name="header">
-          <AppIcon v-if="icon" :name="icon" class="c-card__icon" />
-          <span v-if="title" class="c-card__title">{{ title }}</span>
+    <div v-if="hasTitle || hasDescription" class="c-card__title-group">
+      <div v-if="hasTitle" class="c-card__title">
+        <slot name="title">
+          <slot name="header">
+            <AppIcon v-if="icon" :name="icon" class="c-card__icon" />
+            <span v-if="title">{{ title }}</span>
+          </slot>
         </slot>
       </div>
 
@@ -62,9 +65,7 @@ const hasDescription = computed(() => !!(slots.description || props.description)
       </div>
     </div>
 
-    <div v-if="$slots.default" class="c-card__content">
-      <slot />
-    </div>
+    <slot />
   </component>
 </template>
 
@@ -100,13 +101,13 @@ const hasDescription = computed(() => !!(slots.description || props.description)
     @include disabled;
   }
 
-  &__header-group {
+  &__title-group {
     @include flex-start-stretch($direction: column);
 
     gap: var(--space-1);
   }
 
-  &__header {
+  &__title {
     @include text-title("sm");
     @include flex-start-start;
 
@@ -124,10 +125,6 @@ const hasDescription = computed(() => !!(slots.description || props.description)
 
   &__desc {
     @include text-desc;
-  }
-
-  &__content {
-    flex: 1;
   }
 }
 </style>

@@ -3,27 +3,47 @@
  * AppPanel
  * ヘッダーや枠線（サイバー風のブラケットなど）を持ち、コンテンツを囲むパネルコンポーネント。
  */
-defineProps<{
-  title?: string
-  icon?: string
-  variant?:
-    | 'main'
-    | 'tool'
-    | 'database'
-    | 'reference'
-    | 'management'
-    | 'danger'
-    | 'success'
-}>()
+withDefaults(
+  defineProps<{
+    title?: string
+    icon?: string
+    size?: 'sm' | 'md' | 'lg'
+    tag?: string
+    dividerType?: 'default' | 'fade-side' | 'fade-center'
+    variant?:
+      | 'main'
+      | 'tool'
+      | 'database'
+      | 'reference'
+      | 'management'
+      | 'danger'
+      | 'success'
+  }>(),
+  {
+    size: 'md',
+    tag: 'h3',
+    dividerType: 'fade-center',
+  },
+)
 </script>
 
 <template>
   <section class="c-panel" :class="variant ? `c-panel--color-${variant}` : ''">
-    <header v-if="title || $slots.header">
-      <slot name="header">
-        <AppSectionHeader :title="title" :icon="icon" size="md" />
-      </slot>
-    </header>
+    <slot name="header">
+      <AppSectionHeader
+        v-if="title"
+        :title="title"
+        :icon="icon"
+        :variant="variant"
+        :size="size"
+        :tag="tag"
+        :divider-type="dividerType"
+      >
+        <template v-if="$slots.actions" #actions>
+          <slot name="actions" />
+        </template>
+      </AppSectionHeader>
+    </slot>
 
     <div class="c-panel__content">
       <slot />
