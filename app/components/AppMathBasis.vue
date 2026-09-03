@@ -117,7 +117,6 @@ const parsedLegend = computed(() => {
   gap: var(--space-1);
   color: var(--color-text-muted);
 
-
   &__list {
     @include grid(max-content 1fr, var(--space-1) var(--space-2));
 

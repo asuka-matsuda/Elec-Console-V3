@@ -89,7 +89,7 @@ const categoryColorMap: Record<string, string> = {
   <div>
     <div class="l-filter-layout">
       <div class="l-filter-layout__grid">
-        <aside class="l-filter-layout__sidebar">
+        <aside>
           <AppFilterPanel
             v-model:search-query="searchQuery"
             v-model:active-cats="activeCats"

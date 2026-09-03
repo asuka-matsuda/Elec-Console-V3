@@ -83,7 +83,7 @@ const fill48 = computed(() =>
         <div class="c-conduit-result__main-value">
           <span class="value-text" :class="status32Class">{{ size32 }}</span>
           <template v-if="isReady && !result!.isOversize32">
-            <span class="value-sep c-conduit-result__paren">(</span>
+            <span class="value-sep">(</span>
             <span class="value-text c-conduit-result__percent is-neutral">{{
               fill32
             }}</span>
@@ -105,7 +105,7 @@ const fill48 = computed(() =>
         <div class="c-conduit-result__main-value">
           <span class="value-text" :class="status48Class">{{ size48 }}</span>
           <template v-if="isReady && !result!.isOversize48">
-            <span class="value-sep c-conduit-result__paren">(</span>
+            <span class="value-sep">(</span>
             <span class="value-text c-conduit-result__percent is-neutral">{{
               fill48
             }}</span>

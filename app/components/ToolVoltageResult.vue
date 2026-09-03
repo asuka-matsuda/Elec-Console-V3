@@ -112,7 +112,7 @@ const dropStatusClass = computed(() => {
         <span class="value-text" :class="mainStatusClass">{{ mainValue }}</span>
         <span v-if="mainUnit" class="value-unit">{{ mainUnit }}</span>
         <template v-if="mode === 'drop' && isReady">
-          <span class="value-sep c-voltage-result__drop-paren">(</span>
+          <span class="value-sep">(</span>
           <span
             class="value-text c-voltage-result__drop-percent"
             :class="mainStatusClass"

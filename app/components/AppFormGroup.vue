@@ -29,7 +29,6 @@ withDefaults(
           v-if="required"
           color="danger"
           size="sm"
-          class="c-form-group__required"
         >
           REQUIRED
         </AppBadge>

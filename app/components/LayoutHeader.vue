@@ -20,7 +20,6 @@ const emit = defineEmits<{
       <!-- Mobile Sidebar Toggle -->
       <AppIconButton
         name="menu"
-        class="l-header__menu-btn"
         @click="emit('toggle-sidebar')"
       />
 

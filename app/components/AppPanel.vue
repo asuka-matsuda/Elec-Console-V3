@@ -19,7 +19,7 @@ defineProps<{
 
 <template>
   <section class="c-panel" :class="variant ? `c-panel--color-${variant}` : ''">
-    <header v-if="title || $slots.header" class="c-panel__header">
+    <header v-if="title || $slots.header">
       <slot name="header">
         <AppSectionHeader :title="title" :icon="icon" size="md" />
       </slot>

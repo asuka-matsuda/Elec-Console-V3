@@ -48,7 +48,6 @@ const { currentUser, logout } = useAuth()
             <AppButton
               variant="secondary"
               size="sm"
-              class="l-header-user__logout"
               @click="logout"
             >
               ログアウト

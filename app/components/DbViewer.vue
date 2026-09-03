@@ -26,7 +26,7 @@ const { sortBy, sortOrder, sortedData, handleSort }
   <div class="c-db">
     <div class="l-filter-layout">
       <div class="l-filter-layout__grid">
-        <aside class="l-filter-layout__sidebar">
+        <aside>
           <AppFilterPanel
             v-model:search-query="searchQuery"
             v-model:active-cats="activeCats"
