@@ -8,7 +8,7 @@ const currentYear = new Date().getFullYear()
 
 <template>
   <footer class="l-footer">
-    <AppDivider type="fade-center" class="l-footer__divider" />
+    <AppDivider type="fade-center" />
     <p class="l-footer__copyright">
       &copy; {{ currentYear }} Mat.Operate &amp; Gemini 3.1 Pro. / Elec-Console
       All rights reserved.
@@ -18,21 +18,12 @@ const currentYear = new Date().getFullYear()
 
 <style scoped lang="scss">
 .l-footer {
-  @include flex-start-stretch($direction: column);
+  @include flex-start-center($direction: column);
 
-  position: relative;
-
-  align-items: center;
-
+  gap: var(--space-3);
   margin-top: auto;
   padding: var(--space-layout-pad) 0 0;
-
   text-align: center;
-
-  &__divider {
-    width: 100%;
-    max-width: var(--width-md);
-  }
 
   &__copyright {
     @include text-mono("2xs");
