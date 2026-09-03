@@ -1,3 +1,5 @@
+@use "sass:string";
+
 // ==========================================================================
 // 視覚効果・装飾 Mixins
 // ==========================================================================
@@ -9,8 +11,10 @@
     @return var(--shadow-modal);
   } @else if $type == "none" or not $type {
     @return 0 0 transparent;
-  } @else {
+  } @else if $type == "sm" or $type == "md" or $type == "lg" {
     @return var(--shadow-elevation-#{$type});
+  } @else {
+    @return $type;
   }
 }
 

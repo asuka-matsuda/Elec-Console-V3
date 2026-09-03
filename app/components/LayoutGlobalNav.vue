@@ -81,7 +81,7 @@ const closeSidebar = () => {
   height: 100dvh;
 
   @include state-base(
-    var(--shadow-elevation-md),
+    "md",
     transform var(--duration-slow) var(--ease-smooth)
   );
 
