@@ -3,7 +3,6 @@
  * AppRadioGroup
  * 複数の選択肢から1つを選択するための、セグメントコントロール風のラジオボタングループコンポーネント。
  */
-import type { StyleValue } from 'vue'
 import { computed, useId } from 'vue'
 
 export interface RadioOption {
@@ -25,8 +24,6 @@ const props = defineProps<{
  */
 const uniqueName = useId()
 const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
-const getStyle = (option: RadioOption): StyleValue | undefined =>
-  option.color ? ({ '--radio-color': option.color } as StyleValue) : undefined
 </script>
 
 <template>
@@ -35,7 +32,7 @@ const getStyle = (option: RadioOption): StyleValue | undefined =>
       v-for="option in options"
       :key="String(option.value)"
       class="c-segmented-control__label"
-      :style="getStyle(option)"
+      :style="option.color ? { '--radio-color': option.color } : undefined"
     >
       <input
         v-model="model"
@@ -54,11 +51,10 @@ const getStyle = (option: RadioOption): StyleValue | undefined =>
 .c-segmented-control {
   --radio-color: var(--theme-accent); /* デフォルトの色 */
 
-  @include flex-start-center($is-inline: true);
+  @include flex-start-stretch($is-inline: true);
 
   flex-shrink: 0;
   gap: var(--space-0-5);
-  align-items: stretch;
 
   width: max-content;
   padding: var(--space-0-5);
@@ -70,22 +66,6 @@ const getStyle = (option: RadioOption): StyleValue | undefined =>
     @include click-enabled;
 
     position: relative;
-
-    &:not(:has(.c-segmented-control__input:disabled)) {
-      &:hover {
-        .c-segmented-control__input:not(:checked) + .c-segmented-control__text {
-          color: var(--color-text-main);
-
-          @include state-hover(var(--color-border));
-        }
-      }
-
-      &:active {
-        .c-segmented-control__text {
-          @include state-active(var(--radio-color));
-        }
-      }
-    }
   }
 
   &__input {
@@ -98,15 +78,29 @@ const getStyle = (option: RadioOption): StyleValue | undefined =>
 
     opacity: 0;
 
-    /* Checked state */
+    /* Hover & Active state (Not disabled & Not checked) */
+    &:not(:disabled):not(:checked) {
+      + .c-segmented-control__text {
+        &:hover {
+          color: var(--color-text-main);
 
+          @include state-hover(var(--color-border));
+        }
+
+        &:active {
+          @include state-active(var(--radio-color));
+        }
+      }
+    }
+
+    /* Checked state */
     &:checked + .c-segmented-control__text {
       --glow-color: var(--radio-color);
 
       border-color: var(--radio-color);
       color: var(--radio-color);
 
-      @include state-active(var(--theme-accent));
+      @include state-active(var(--radio-color));
       @include cyber-text-glow(var(--radio-color), 60%, var(--blur-md));
     }
 
