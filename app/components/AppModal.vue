@@ -3,11 +3,11 @@
  * AppModal
  * ネイティブの dialog 要素を使用したモーダルコンポーネント。
  */
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 
 const isOpen = defineModel<boolean>({ default: false })
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     title?: string
     icon?: string
@@ -29,8 +29,6 @@ const props = withDefaults(
 const dialogRef = ref<HTMLDialogElement | null>(null)
 const isClosing = ref(false)
 let closeTimeout: ReturnType<typeof setTimeout> | null = null
-
-const typedVariant = computed(() => props.variant as never)
 
 const close = () => {
   isOpen.value = false
@@ -92,32 +90,22 @@ onUnmounted(() => {
     @click.self="close"
     @cancel.prevent="close"
   >
-    <AppPanel class="c-modal__panel" :variant="variant">
-      <template #header>
-        <AppSectionHeader
-          :title="title"
-          :icon="icon"
-          :variant="typedVariant"
-          divider-type="fade-center"
-        >
-          <template v-if="$slots.title">
-            <slot name="title" />
-          </template>
-        </AppSectionHeader>
-      </template>
-
-      <div class="c-modal__layout">
-        <div
-          class="c-modal__body"
-          :class="align === 'center' ? 'c-modal__body--align-center' : ''"
-        >
-          <slot />
-        </div>
-
-        <footer v-if="$slots.footer" class="c-modal__footer">
-          <slot name="footer" />
-        </footer>
+    <AppPanel
+      class="c-modal__panel"
+      :title="title"
+      :icon="icon"
+      :variant="variant"
+    >
+      <div
+        class="c-modal__body"
+        :class="{ 'is-center': align === 'center' }"
+      >
+        <slot />
       </div>
+
+      <footer v-if="$slots.footer" class="c-modal__footer">
+        <slot name="footer" />
+      </footer>
     </AppPanel>
   </dialog>
 </template>
@@ -132,9 +120,11 @@ onUnmounted(() => {
   max-width: 500px;
   max-height: 90vh;
   margin: auto;
+  padding: 0;
   border: none;
 
   opacity: 0;
+  background: transparent;
   outline: none;
 
   transition:
@@ -167,18 +157,17 @@ onUnmounted(() => {
     }
   }
 
-  &__panel {
-    width: 100%;
-    height: 100%;
-    max-height: 90vh;
-    backdrop-filter: blur(var(--blur-lg));
+  &.is-closing {
+    transform: translateY(var(--space-2));
+    opacity: 0;
+
+    &::backdrop {
+      opacity: 0;
+    }
   }
 
-  &__layout {
-    @include flex-start-stretch($direction: column);
-
-    flex: 1;
-    min-height: 0;
+  &__panel {
+    backdrop-filter: blur(var(--blur-lg));
   }
 
   &__body {
@@ -188,15 +177,16 @@ onUnmounted(() => {
 
     overflow-y: auto;
     flex: 1;
-    padding: var(--space-card-pad) 0;
 
-    &--align-center {
+    &.is-center {
       text-align: center;
     }
   }
 
   &__footer {
     @include flex-end-center;
+
+    gap: var(--space-2);
   }
 }
 </style>
