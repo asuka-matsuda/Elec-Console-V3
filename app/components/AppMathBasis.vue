@@ -1,12 +1,8 @@
 <script setup lang="ts">
-/**
- * AppMathBasis
- * KaTeXを利用して、数式とその凡例（変数の説明）をステップごとに表示するコンポーネント。
- */
-import "katex/dist/katex.min.css"; // Required for rendering KaTeX styles
+import "katex/dist/katex.min.css";
 
-import { computed } from "vue";
 import katex from "katex";
+import { computed } from "vue";
 
 export type MathStep = {
   title?: string;
@@ -18,27 +14,7 @@ const props = defineProps<{
   steps: MathStep[];
 }>();
 
-/**
- * 各ステップの legend (string[]) をパースして使いやすいオブジェクト配列に変換する
- */
-const parseLegend = (legendArray: string[] | undefined) => {
-  if (!legendArray) return [];
-
-  return legendArray.map((leg) => {
-    const parts = leg.split(":");
-    let rawSymbol = parts[0]?.trim() || "";
-
-    // KaTeXの renderToString は純粋な数式を期待するため、数式マーカーを剥がす
-    rawSymbol = rawSymbol.replace(/\\\(/g, "").replace(/\\\)/g, "").trim();
-    const name = parts.slice(1).join(":")?.trim() || leg;
-
-    return { symbol: rawSymbol, name };
-  });
-};
-
-/**
- * Helper to safely render KaTeX string
- */
+// --- ヘルパー関数 ---
 const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   if (!mathStr) return "";
   try {
@@ -55,76 +31,70 @@ const renderMath = (mathStr: string, isDisplay: boolean = true) => {
   }
 };
 
-/**
- * 事前に全てのステップの数式と凡例をレンダリングしておく（パフォーマンス対策）
- */
-const processedSteps = computed(() => {
-  return (props.steps || []).map((step) => {
-    return {
-      title: step.title,
-      renderedTex: renderMath(step.tex, true),
-      legend: parseLegend(step.legend).map((v) => ({
-        symbol: v.symbol,
-        name: v.name,
-        renderedSymbol: renderMath(v.symbol, false),
-      })),
-    };
+const parseLegend = (legendArray: string[] | undefined) => {
+  if (!legendArray) return [];
+
+  return legendArray.map((leg) => {
+    const parts = leg.split(":");
+    let rawSymbol = parts[0]?.trim() || "";
+
+    rawSymbol = rawSymbol.replace(/\\\(/g, "").replace(/\\\)/g, "").trim();
+    const name = parts.slice(1).join(":")?.trim() || leg;
+
+    return { symbol: rawSymbol, name };
   });
+};
+
+// 💡 改善1: computedを使って、データを事前にすべてHTML化しておく（再描画時の激重処理を回避）
+const parsedSteps = computed(() => {
+  return props.steps.map((step) => ({
+    ...step,
+    renderedTex: renderMath(step.tex, true),
+    parsedLegend: parseLegend(step.legend).map((leg) => ({
+      ...leg,
+      renderedSymbol: renderMath(leg.symbol, false),
+    })),
+  }));
 });
 </script>
 
 <template>
-  <!-- eslint-disable vue/no-v-html -->
-  <div class="c-math-basis">
-    <template v-if="processedSteps && processedSteps.length > 0">
-      <AppCard
-        v-for="(step, index) in processedSteps"
-        :key="index"
-        class="c-math-basis__card"
-      >
-        <AppSectionHeader
-          v-if="step.title"
-          :title="step.title"
-          tag="h4"
-          variant="tool"
-          size="sm"
-        />
+  <!-- 💡 無駄な template ラッパーを削除し、大元に v-if を統合 -->
+  <div v-if="parsedSteps.length > 0" class="c-math-basis">
+    <AppCard
+      v-for="(step, index) in parsedSteps"
+      :key="index"
+      class="c-math-basis__card"
+    >
+      <AppSectionHeader
+        v-if="step.title"
+        :title="step.title"
+        tag="h4"
+        variant="tool"
+        size="sm"
+      />
 
-        <div class="c-math-basis__body">
-          <!-- 左カラム：公式 -->
+      <div class="c-math-basis__body">
+        <!-- 💡 計算済みのHTMLをバインドするだけなので超軽量！ -->
+        <div class="c-math-basis__math" v-html="step.renderedTex"></div>
 
-          <div class="c-math-basis__math" v-html="step.renderedTex"></div>
-
-          <!-- 右カラム：凡例 -->
-          <div
-            v-if="step.legend && step.legend.length"
-            class="c-math-basis__legend"
-          >
-            <h5 class="c-math-basis__legend-title">【凡例】</h5>
-            <ul class="c-math-basis__legend-list">
-              <li
-                v-for="v in step.legend"
-                :key="v.symbol"
-                class="c-math-basis__legend-item"
-              >
-                <span
-                  class="c-math-basis__legend-symbol"
-                  v-html="v.renderedSymbol"
-                ></span>
-                <span class="c-math-basis__legend-sep">:</span>
-                <span class="c-math-basis__legend-name">{{ v.name }}</span>
-              </li>
-            </ul>
-          </div>
+        <div v-if="step.parsedLegend.length > 0" class="c-math-basis__legend">
+          <h5 class="c-math-basis__legend-title">【凡例】</h5>
+          <dl class="c-math-basis__legend-list">
+            <template v-for="v in step.parsedLegend" :key="v.name">
+              <dt v-html="v.renderedSymbol"></dt>
+              <dd>{{ v.name }}</dd>
+            </template>
+          </dl>
         </div>
-      </AppCard>
-    </template>
+      </div>
+    </AppCard>
   </div>
 </template>
 
 <style scoped lang="scss">
 .c-math-basis {
-  @include flex-start-stretch($direction: column);
+  @include flex-start-stretch(column);
 
   overflow-y: auto;
   flex: 1;
@@ -138,21 +108,22 @@ const processedSteps = computed(() => {
   }
 
   &__body {
-    /* PCファースト: カード内を左右2カラムに分割 */
-    @include flex-start-center;
+    @include flex-start-start;
 
-    flex-wrap: wrap; /* スマホ時は縦積みにフォールバック */
+    // 💡 改善2: wrapを許可して、スマホで縦積みになるようにする
+    flex-wrap: wrap;
     gap: var(--space-card-gap);
-    align-items: flex-start;
   }
 
   &__math {
-    --scrollbar-size: var(--space-2);
-
-    // スクロールバー自体は非表示にしつつスクロールは可能にする
+    // スクロールバー自体は非表示にしつつスクロールは可能にする（ノイズレスな美しいUI）
     scrollbar-width: none;
+
     overflow-x: auto;
-    flex: 1 1 300px; /* 余白があれば伸びるが、縮む場合は300pxを基準にする */
+    flex: 1 1 300px; // 最低300pxは確保し、それ以上は伸びる
+
+    // 💡 width: 100% を追加して、スマホ時に単独で全幅を取れるようにする
+    width: 100%;
     min-width: 0;
 
     &::-webkit-scrollbar {
@@ -189,11 +160,16 @@ const processedSteps = computed(() => {
   }
 
   &__legend {
-    @include flex-start-stretch($direction: column);
+    @include flex-start-stretch(column);
 
-    flex: 1 1 250px;
+    // 💡 改善2: スマホ時は100%幅で下部に配置され、PC時は250px幅になる
+    flex: 1 1 100%;
+    flex-shrink: 0;
     gap: var(--space-1);
-    min-width: 250px;
+
+    @include mq("md") {
+      flex: 0 0 250px;
+    }
   }
 
   &__legend-title {
@@ -203,30 +179,27 @@ const processedSteps = computed(() => {
   }
 
   &__legend-list {
-    @include flex-start-stretch($direction: column);
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--space-1) var(--space-2);
+    align-items: baseline;
 
-    gap: var(--space-1);
-  }
+    dt {
+      color: var(--color-text-main);
 
-  &__legend-item {
-    @include text-body("md", "bold");
-    @include flex-start-center;
+      &::after {
+        content: ":";
+        color: var(--color-text-muted);
+        margin-left: var(--space-1);
+      }
+    }
 
-    gap: var(--space-1);
-    align-items: flex-start;
-    color: var(--color-text-secondary);
-  }
+    dd {
+      margin: 0;
+      color: var(--color-text-secondary);
 
-  &__legend-symbol {
-    color: var(--color-text-main);
-  }
-
-  &__legend-sep {
-    color: var(--color-text-muted);
-  }
-
-  &__legend-name {
-    flex: 1;
+      @include text-body("md", "bold");
+    }
   }
 }
 </style>
