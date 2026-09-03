@@ -84,8 +84,6 @@ const parsedLegend = computed(() => {
     min-width: 0;
 
     :deep(.katex) {
-      color: var(--color-text-main);
-
       .tex-status-success,
       .tex-status-success * {
         color: var(--color-status-success);
