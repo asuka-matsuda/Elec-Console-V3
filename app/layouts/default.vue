@@ -14,28 +14,28 @@ const { currentUser, logout } = useAuth()
       '--theme-accent': `var(--color-category-${breadcrumbAccent || 'main'})`,
     }"
   >
-    <LayoutGlobalNav v-model:is-open="isSidebarOpen" :menu-data="menuData" />
+    <AppGlobalNav v-model:is-open="isSidebarOpen" :menu-data="menuData" />
 
     <div class="l-main">
-      <LayoutHeader
+      <AppHeader
         :breadcrumbs="breadcrumbs"
         @toggle-sidebar="isSidebarOpen = !isSidebarOpen"
       >
         <template #actions>
-          <div class="l-header-user">
+          <div class="c-header-user">
             <AppIcon
               name="bell"
               size="md"
               style="color: var(--color-text-secondary)"
             />
-            <div class="l-header-user__avatar">
+            <div class="c-header-user__avatar">
               <AppIcon
                 name="user"
                 size="sm"
                 style="color: var(--color-main-bg)"
               />
             </div>
-            <span class="l-header-user__name">{{
+            <span class="c-header-user__name">{{
               currentUser
                 ? `${currentUser.lastName} ${currentUser.firstName}`
                 : "ゲスト"
@@ -49,11 +49,11 @@ const { currentUser, logout } = useAuth()
             </AppButton>
           </div>
         </template>
-      </LayoutHeader>
+      </AppHeader>
 
       <main class="l-content">
         <slot />
-        <LayoutFooter />
+        <AppFooter />
       </main>
     </div>
   </div>
@@ -95,7 +95,7 @@ const { currentUser, logout } = useAuth()
   padding: var(--space-layout-pad);
 }
 
-.l-header-user {
+.c-header-user {
   @include text-title("sm");
   @include flex-start-center;
 

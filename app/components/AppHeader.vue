@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * LayoutHeader
+ * AppHeader
  * アプリケーションのヘッダー部分（パンくずリストやアクション等）を表示するコンポーネントです。
  */
 import type { BreadcrumbItem } from '~/components/AppBreadcrumb.vue'
@@ -15,11 +15,11 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <header class="l-header">
-    <div class="l-header__main">
+  <header class="c-header">
+    <div class="c-header__main">
       <AppIconButton
         name="menu"
-        class="l-header__menu-btn"
+        class="c-header__menu-btn"
         @click="emit('toggle-sidebar')"
       />
 
@@ -28,14 +28,14 @@ const emit = defineEmits<{
       <AppBreadcrumb v-if="breadcrumbs?.length" :items="breadcrumbs" />
     </div>
 
-    <div class="l-header__actions">
+    <div class="c-header__actions">
       <slot name="actions" />
     </div>
   </header>
 </template>
 
 <style scoped lang="scss">
-.l-header {
+.c-header {
   @include flex-between-center;
 
   height: 64px;
@@ -53,7 +53,7 @@ const emit = defineEmits<{
     }
   }
 
-  :deep(.l-header__menu-btn) {
+  :deep(.c-header__menu-btn) {
     display: none;
 
     @include mq("md") {

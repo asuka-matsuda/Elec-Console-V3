@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * LayoutGlobalNav
+ * AppGlobalNav
  * アプリケーションのグローバルナビゲーション（サイドバーメニュー）を表示するコンポーネントです。
  */
 import type { MenuSection } from '~/constants/data/menuData'
@@ -19,24 +19,24 @@ const closeSidebar = () => {
 <template>
   <div>
     <div
-      class="l-global-nav-overlay"
+      class="c-global-nav-overlay"
       :class="{ 'is-open': isOpen }"
       @click="closeSidebar"
     />
 
-    <aside class="l-global-nav" :class="{ 'is-open': isOpen }">
-      <nav class="l-global-nav__nav custom-scrollbar">
+    <aside class="c-global-nav" :class="{ 'is-open': isOpen }">
+      <nav class="c-global-nav__nav custom-scrollbar">
         <section
           v-for="section in menuData"
           :key="section.id || section.heading || section.globalNavHeading"
-          class="l-global-nav__section"
+          class="c-global-nav__section"
           :class="section.accent ? `has-accent-${section.accent}` : ''"
         >
           <header
             v-if="section.globalNavHeading || section.heading"
-            class="l-global-nav__section-header"
+            class="c-global-nav__section-header"
           >
-            <h3 class="l-global-nav__heading">
+            <h3 class="c-global-nav__heading">
               {{ section.globalNavHeading || section.heading }}
             </h3>
             <AppDivider type="fade-side" :variant="section.accent || 'main'" />
@@ -46,15 +46,15 @@ const closeSidebar = () => {
             <NuxtLink
               v-if="!item.disabled"
               :to="item.href"
-              class="l-global-nav__link"
+              class="c-global-nav__link"
               @click="closeSidebar"
             >
-              <AppIcon :name="item.icon" class="l-global-nav__link-icon" />
+              <AppIcon :name="item.icon" class="c-global-nav__link-icon" />
               <span>{{ item.text }}</span>
             </NuxtLink>
 
-            <button v-else disabled class="l-global-nav__link">
-              <AppIcon :name="item.icon" class="l-global-nav__link-icon" />
+            <button v-else disabled class="c-global-nav__link">
+              <AppIcon :name="item.icon" class="c-global-nav__link-icon" />
               <span>{{ item.text }}</span>
             </button>
           </template>
@@ -65,7 +65,7 @@ const closeSidebar = () => {
 </template>
 
 <style scoped lang="scss">
-.l-global-nav {
+.c-global-nav {
   --sidebar-border: var(--color-border);
 
   @include flex-start-stretch($direction: column);
@@ -89,8 +89,6 @@ const closeSidebar = () => {
     }
   }
 
-
-
   &__nav {
     --scrollbar-size: var(--space-2);
 
@@ -103,7 +101,6 @@ const closeSidebar = () => {
   }
 
   &__section {
-    // Dynamic accent color support using Map and @each
     $accents: (
       "primary": var(--color-category-main),
       "main": var(--color-category-main),
@@ -174,7 +171,7 @@ const closeSidebar = () => {
 
       @include state-hover(var(--section-accent, var(--color-category-main)));
 
-      .l-global-nav__link-icon {
+      .c-global-nav__link-icon {
         color: var(--section-accent, var(--color-category-main));
         filter: drop-shadow(
           0 0 var(--blur-sm)
@@ -205,7 +202,7 @@ const closeSidebar = () => {
         currentcolor
       );
 
-      .l-global-nav__link-icon {
+      .c-global-nav__link-icon {
         color: var(--section-accent, var(--color-category-main));
         filter: drop-shadow(
           0 0 var(--blur-sm) var(--section-accent, var(--color-category-main))
@@ -221,7 +218,7 @@ const closeSidebar = () => {
   }
 }
 
-.l-global-nav-overlay {
+.c-global-nav-overlay {
   display: none; // Hidden on desktop
 
   @include mq("md") {

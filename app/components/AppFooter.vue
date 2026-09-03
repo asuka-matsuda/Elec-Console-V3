@@ -1,15 +1,15 @@
 <script setup lang="ts">
 /**
- * LayoutFooter
+ * AppFooter
  * アプリケーションのフッター部分（コピーライト等）を表示するコンポーネントです。
  */
 const currentYear = new Date().getFullYear()
 </script>
 
 <template>
-  <footer class="l-footer">
+  <footer class="c-footer">
     <AppDivider type="fade-center" />
-    <p class="l-footer__copyright">
+    <p class="c-footer__copyright">
       &copy; {{ currentYear }} Mat.Operate &amp; Gemini 3.1 Pro. / Elec-Console
       All rights reserved.
     </p>
@@ -17,7 +17,7 @@ const currentYear = new Date().getFullYear()
 </template>
 
 <style scoped lang="scss">
-.l-footer {
+.c-footer {
   @include flex-start-center($direction: column);
 
   gap: var(--space-3);
