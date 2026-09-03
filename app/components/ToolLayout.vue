@@ -3,14 +3,14 @@
  * ToolLayout
  * ツールページの全体レイアウト（免責事項、入力欄、結果表示、計算根拠パネルなど）を提供するレイアウト用コンポーネントです。
  */
-import { ref } from 'vue'
+import { ref } from "vue";
 
 /** Drawer state for mobile */
-const isDrawerOpen = ref(false)
+const isDrawerOpen = ref(false);
 
 const toggleDrawer = () => {
-  isDrawerOpen.value = !isDrawerOpen.value
-}
+  isDrawerOpen.value = !isDrawerOpen.value;
+};
 </script>
 
 <template>
@@ -31,10 +31,7 @@ const toggleDrawer = () => {
           :class="{ 'is-drawer-open': isDrawerOpen }"
         >
           <!-- Mobile Drawer Handle -->
-          <div
-            class="l-tool-layout__drawer-handle"
-            @click="toggleDrawer"
-          >
+          <div class="l-tool-layout__drawer-handle" @click="toggleDrawer">
             <span class="l-tool-layout__drawer-title">計算結果を見る</span>
             <AppIcon
               :name="isDrawerOpen ? 'chevron-down' : 'chevron-up'"
@@ -73,8 +70,6 @@ const toggleDrawer = () => {
   @include flex-start-stretch($direction: column);
 
   flex: 1;
-
-  width: 100%;
   max-width: 1600px;
   min-height: 0;
   margin: 0 auto;
@@ -180,7 +175,11 @@ const toggleDrawer = () => {
       cursor: pointer;
       height: 48px;
       padding: 0 var(--space-3);
-      background: color-mix(in srgb, var(--color-category-tool) 10%, transparent);
+      background: color-mix(
+        in srgb,
+        var(--color-category-tool) 10%,
+        transparent
+      );
     }
   }
 

@@ -3,55 +3,41 @@
  * AppConfirmModal
  * 汎用的な確認モーダルコンポーネントです。
  */
-import { computed } from 'vue'
+import { computed } from "vue";
 
-const isOpen = defineModel<boolean>({ default: false })
+const isOpen = defineModel<boolean>({ default: false });
 
 const props = withDefaults(
   defineProps<{
-    title?: string
-    message?: string
-    confirmText?: string
-    cancelText?: string
-    intent?: 'primary' | 'secondary' | 'danger' | 'success'
+    title?: string;
+    message?: string;
+    confirmText?: string;
+    cancelText?: string;
+    intent?: "primary" | "secondary" | "danger" | "success";
   }>(),
   {
-    intent: 'danger',
+    intent: "danger",
   },
-)
+);
 
-defineEmits(['confirm'])
+defineEmits(["confirm"]);
 const _confirmButtonComponent = computed(() => {
-  if (props.intent === 'danger') return 'danger'
-  if (props.intent === 'success') return 'success'
+  if (props.intent === "danger") return "danger";
+  if (props.intent === "success") return "success";
 
-  return 'primary'
-})
+  return "primary";
+});
 </script>
 
 <template>
-  <AppModal
-    v-model="isOpen"
-    :title="title || '確認'"
-    align="center"
-  >
+  <AppModal v-model="isOpen" :title="title || '確認'" align="center">
     {{ message || "本当によろしいですか？" }}
     <template #footer>
-      <AppButton
-        variant="secondary"
-        @click="isOpen = false"
-      >
-        {{
-          cancelText || "キャンセル"
-        }}
+      <AppButton variant="secondary" @click="isOpen = false">
+        {{ cancelText || "キャンセル" }}
       </AppButton>
-      <AppButton
-        :variant="intent"
-        @click="$emit('confirm')"
-      >
-        {{
-          confirmText || "実行する"
-        }}
+      <AppButton :variant="intent" @click="$emit('confirm')">
+        {{ confirmText || "実行する" }}
       </AppButton>
     </template>
   </AppModal>

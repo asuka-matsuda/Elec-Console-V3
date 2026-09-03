@@ -10,10 +10,7 @@
     <div class="c-input-group__main">
       <slot />
     </div>
-    <div
-      v-if="$slots.append"
-      class="c-input-group__append"
-    >
+    <div v-if="$slots.append" class="c-input-group__append">
       <slot name="append" />
     </div>
   </div>
@@ -22,8 +19,6 @@
 <style scoped lang="scss">
 .c-input-group {
   @include flex-start-stretch;
-
-  width: 100%;
 
   &__main {
     @include flex-start-stretch;

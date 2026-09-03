@@ -3,21 +3,21 @@
  * ToolHistoryCard
  * 計算履歴を1件表示するカードコンポーネントです。入力条件と計算結果のプレビューを提供します。
  */
-import type { HistoryEntry } from '~/types/history'
+import type { HistoryEntry } from "~/types/history";
 
 const props = defineProps<{
-  entry: HistoryEntry
-}>()
+  entry: HistoryEntry;
+}>();
 
 const emit = defineEmits<{
-  (e: 'delete', id: string): void
-}>()
+  (e: "delete", id: string): void;
+}>();
 
 const handleDelete = () => {
-  emit('delete', props.entry.id)
-}
-const getInputs = (entry: HistoryEntry) => entry.rawInputs as never
-const getResult = (entry: HistoryEntry) => entry.rawResult as never
+  emit("delete", props.entry.id);
+};
+const getInputs = (entry: HistoryEntry) => entry.rawInputs as never;
+const getResult = (entry: HistoryEntry) => entry.rawResult as never;
 </script>
 
 <template>
@@ -32,16 +32,10 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
         <span class="c-history-card__date">{{ entry.timestamp }}</span>
         <h3 class="c-history-card__title">
           <span>{{ entry.toolName }}</span>
-          <AppBadge
-            v-if="entry.mode === 'サイズ選定'"
-            color="tool"
-          >
+          <AppBadge v-if="entry.mode === 'サイズ選定'" color="tool">
             {{ entry.mode }}
           </AppBadge>
-          <AppBadge
-            v-else-if="entry.mode === '電圧降下'"
-            color="primary"
-          >
+          <AppBadge v-else-if="entry.mode === '電圧降下'" color="primary">
             {{ entry.mode }}
           </AppBadge>
         </h3>
@@ -70,14 +64,9 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
           />
           <!-- 過去のデータなどrawデータがない場合のフォールバック -->
           <template v-else>
-            <h4 class="c-history-card__section-title">
-              計算結果
-            </h4>
+            <h4 class="c-history-card__section-title">計算結果</h4>
             <dl class="c-history-card__list">
-              <template
-                v-for="(res, idx) in entry.results"
-                :key="idx"
-              >
+              <template v-for="(res, idx) in entry.results" :key="idx">
                 <dt
                   :style="{
                     color: res.color,
@@ -102,14 +91,9 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
 
       <!-- 入力条件 -->
       <section class="c-history-card__section">
-        <h4 class="c-history-card__section-title">
-          入力条件
-        </h4>
+        <h4 class="c-history-card__section-title">入力条件</h4>
         <dl class="c-history-card__list">
-          <template
-            v-for="(input, idx) in entry.inputs"
-            :key="idx"
-          >
+          <template v-for="(input, idx) in entry.inputs" :key="idx">
             <dt>{{ input.label }}</dt>
             <dd>{{ input.value }}</dd>
           </template>
@@ -125,10 +109,7 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
         icon-only
         @click.prevent="handleDelete"
       >
-        <AppIcon
-          name="trash-2"
-          size="sm"
-        />
+        <AppIcon name="trash-2" size="sm" />
       </AppButton>
     </footer>
   </AppCard>

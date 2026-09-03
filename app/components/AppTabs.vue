@@ -4,29 +4,29 @@
  * タブ切り替えのためのコンポーネントです。垂直方向の配置やグリッド配置にも対応しています。
  */
 export type TabOption = {
-  label: string
-  value: string | number
-  disabled?: boolean
-}
+  label: string;
+  value: string | number;
+  disabled?: boolean;
+};
 
-const model = defineModel<string | number>()
+const model = defineModel<string | number>();
 
 withDefaults(
   defineProps<{
-    options: TabOption[]
-    vertical?: boolean
-    grid?: boolean
+    options: TabOption[];
+    vertical?: boolean;
+    grid?: boolean;
   }>(),
   {
     vertical: false,
     grid: false,
   },
-)
+);
 
 const selectTab = (option: TabOption) => {
-  if (option.disabled) return
-  model.value = option.value
-}
+  if (option.disabled) return;
+  model.value = option.value;
+};
 </script>
 
 <template>

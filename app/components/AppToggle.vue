@@ -3,23 +3,20 @@
  * AppToggle
  * トグルスイッチ（チェックボックス）のUIを提供するコンポーネントです。ON/OFFの切り替えに使用されます。
  */
-import { useId } from 'vue'
+import { useId } from "vue";
 
-const model = defineModel<boolean>()
+const model = defineModel<boolean>();
 
 defineProps<{
-  label?: string
-  disabled?: boolean
-}>()
+  label?: string;
+  disabled?: boolean;
+}>();
 
-const inputId = useId()
+const inputId = useId();
 </script>
 
 <template>
-  <label
-    class="c-toggle"
-    :for="inputId"
-  >
+  <label class="c-toggle" :for="inputId">
     <input
       :id="inputId"
       v-model="model"
@@ -30,10 +27,7 @@ const inputId = useId()
     <div class="c-toggle__track">
       <div class="c-toggle__thumb" />
     </div>
-    <span
-      v-if="label || $slots.default"
-      class="c-toggle__label"
-    >
+    <span v-if="label || $slots.default" class="c-toggle__label">
       <slot>{{ label }}</slot>
     </span>
   </label>
@@ -125,7 +119,8 @@ const inputId = useId()
       }
 
       /* Hover時の箱発光 (FocusやActive/Checkedでない時) */
-      .c-toggle__input:not(:focus-visible, :active, :checked) + .c-toggle__track {
+      .c-toggle__input:not(:focus-visible, :active, :checked)
+        + .c-toggle__track {
         @include state-hover(var(--toggle-color));
       }
     }

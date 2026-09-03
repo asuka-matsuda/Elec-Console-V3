@@ -3,25 +3,25 @@
  * AppSectionHeader
  * セクションのタイトル、アイコン、アクションボタン、および区切り線を表示するヘッダーコンポーネント。
  */
-import type { MenuSection } from '~/constants/data/menuData'
+import type { MenuSection } from "~/constants/data/menuData";
 
 withDefaults(
   defineProps<{
-    title?: string
-    titleId?: string
-    tag?: string
-    icon?: string
-    variant?: MenuSection['accent']
-    size?: 'sm' | 'md' | 'lg'
-    dividerType?: 'default' | 'fade-side' | 'fade-center'
+    title?: string;
+    titleId?: string;
+    tag?: string;
+    icon?: string;
+    variant?: MenuSection["accent"];
+    size?: "sm" | "md" | "lg";
+    dividerType?: "default" | "fade-side" | "fade-center";
   }>(),
   {
-    tag: 'h2',
-    variant: 'main',
-    size: 'lg',
-    dividerType: 'default',
+    tag: "h2",
+    variant: "main",
+    size: "lg",
+    dividerType: "default",
   },
-)
+);
 </script>
 
 <template>
@@ -33,24 +33,14 @@ withDefaults(
         class="c-section-header__title"
         :class="[`c-section-header__title--${size}`]"
       >
-        <AppIcon
-          v-if="icon"
-          :name="icon"
-          class="c-section-header__icon"
-        />
+        <AppIcon v-if="icon" :name="icon" class="c-section-header__icon" />
         <slot>{{ title }}</slot>
       </component>
-      <div
-        v-if="$slots.actions"
-        class="c-section-header__actions"
-      >
+      <div v-if="$slots.actions" class="c-section-header__actions">
         <slot name="actions" />
       </div>
     </div>
-    <div
-      v-if="$slots.description"
-      class="c-section-header__desc"
-    >
+    <div v-if="$slots.description" class="c-section-header__desc">
       <slot name="description" />
     </div>
     <AppDivider
@@ -69,7 +59,6 @@ withDefaults(
 
     gap: var(--space-card-gap);
     align-items: flex-end;
-    width: 100%;
   }
 
   &__actions {

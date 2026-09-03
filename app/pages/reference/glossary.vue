@@ -3,14 +3,14 @@
  * Glossary
  * 用語集画面のコンポーネントです。専門用語の検索や、五十音・カテゴリ別での絞り込み機能を提供します。
  */
-import { computed, ref } from 'vue'
+import { computed, ref } from "vue";
 
-import { useDbFilter } from '~/composables/useDbFilter'
-import { glossaryData } from '~/constants/data/glossaryData'
+import { useDbFilter } from "~/composables/useDbFilter";
+import { glossaryData } from "~/constants/data/glossaryData";
 
 useHead({
-  title: '用語集',
-})
+  title: "用語集",
+});
 
 const {
   searchQuery,
@@ -19,65 +19,70 @@ const {
   filteredData: baseFilteredGlossary,
 } = useDbFilter({
   data: glossaryData,
-  searchMapper: item => `${item.term} ${item.kana || ''}`,
-})
+  searchMapper: (item) => `${item.term} ${item.kana || ""}`,
+});
 
-const activeKanas = ref<string[]>([])
+const activeKanas = ref<string[]>([]);
 
 function getKanaRow(kanaStr: string) {
-  if (!kanaStr) return 'other'
-  const firstChar = kanaStr.charAt(0)
+  if (!kanaStr) return "other";
+  const firstChar = kanaStr.charAt(0);
 
-  if (/[ぁ-おア-オ]/.test(firstChar)) return 'a'
-  if (/[か-こカ-コが-ごガ-ゴ]/.test(firstChar)) return 'k'
-  if (/[さ-そサ-ソざ-ぞザ-ゾ]/.test(firstChar)) return 's'
-  if (/[た-とタ-トだ-どダ-ド]/.test(firstChar)) return 't'
-  if (/[な-のナ-ノ]/.test(firstChar)) return 'n'
-  if (/[\u306f-\u307b\u30cf-\u30db\u3070-\u307c\u30d0-\u30dc\u3071-\u307d\u30d1-\u30dd]/.test(firstChar)) return 'h'
-  if (/[\u307e-\u3082\u30de-\u30e2]/.test(firstChar)) return 'm'
-  if (/[や-よヤ-ヨ]/.test(firstChar)) return 'y'
-  if (/[ら-ろラ-ロ]/.test(firstChar)) return 'r'
-  if (/[わ-んワ-ン]/.test(firstChar)) return 'w'
+  if (/[ぁ-おア-オ]/.test(firstChar)) return "a";
+  if (/[か-こカ-コが-ごガ-ゴ]/.test(firstChar)) return "k";
+  if (/[さ-そサ-ソざ-ぞザ-ゾ]/.test(firstChar)) return "s";
+  if (/[た-とタ-トだ-どダ-ド]/.test(firstChar)) return "t";
+  if (/[な-のナ-ノ]/.test(firstChar)) return "n";
+  if (
+    /[\u306f-\u307b\u30cf-\u30db\u3070-\u307c\u30d0-\u30dc\u3071-\u307d\u30d1-\u30dd]/.test(
+      firstChar,
+    )
+  )
+    return "h";
+  if (/[\u307e-\u3082\u30de-\u30e2]/.test(firstChar)) return "m";
+  if (/[や-よヤ-ヨ]/.test(firstChar)) return "y";
+  if (/[ら-ろラ-ロ]/.test(firstChar)) return "r";
+  if (/[わ-んワ-ン]/.test(firstChar)) return "w";
 
-  return 'other'
+  return "other";
 }
 
 const filteredGlossary = computed(() => {
   let result = [...baseFilteredGlossary.value].sort((a, b) =>
-    (a.kana || '').localeCompare(b.kana || '', 'ja'),
-  )
+    (a.kana || "").localeCompare(b.kana || "", "ja"),
+  );
 
   if (activeKanas.value.length > 0) {
     result = result.filter((item) => {
-      const row = getKanaRow(item.kana || '')
+      const row = getKanaRow(item.kana || "");
 
       return (
-        activeKanas.value.includes(row)
-        || (activeKanas.value.includes('w') && row === 'other')
-      )
-    })
+        activeKanas.value.includes(row) ||
+        (activeKanas.value.includes("w") && row === "other")
+      );
+    });
   }
 
-  return result
-})
+  return result;
+});
 
 const availableRows = computed(() => {
-  const rows = new Set<string>()
+  const rows = new Set<string>();
 
   baseFilteredGlossary.value.forEach((item) => {
-    rows.add(getKanaRow(item.kana || ''))
-  })
+    rows.add(getKanaRow(item.kana || ""));
+  });
 
-  return rows
-})
+  return rows;
+});
 
 const categoryColorMap: Record<string, string> = {
-  電気: 'var(--trade-color-electric)',
-  建築: 'var(--trade-color-architecture)',
-  空調・換気: 'var(--trade-color-hvac)',
-  衛生: 'var(--trade-color-plumbing)',
-  雑学: 'var(--trade-color-trivia)',
-}
+  電気: "var(--trade-color-electric)",
+  建築: "var(--trade-color-architecture)",
+  空調・換気: "var(--trade-color-hvac)",
+  衛生: "var(--trade-color-plumbing)",
+  雑学: "var(--trade-color-trivia)",
+};
 </script>
 
 <template>
@@ -103,10 +108,7 @@ const categoryColorMap: Record<string, string> = {
         </aside>
 
         <main class="l-filter-layout__main">
-          <div
-            v-if="filteredGlossary.length > 0"
-            class="c-glossary-list"
-          >
+          <div v-if="filteredGlossary.length > 0" class="c-glossary-list">
             <AppCard
               v-for="item in filteredGlossary"
               :key="item.term"
@@ -130,20 +132,14 @@ const categoryColorMap: Record<string, string> = {
                   {{ item.desc }}
                 </p>
 
-                <div
-                  v-if="item.related"
-                  class="c-glossary-card__meta"
-                >
+                <div v-if="item.related" class="c-glossary-card__meta">
                   <span class="c-glossary-card__label">関連用語</span>
                   <p class="c-glossary-card__text">
                     {{ item.related }}
                   </p>
                 </div>
 
-                <div
-                  v-if="item.example"
-                  class="c-glossary-card__meta"
-                >
+                <div v-if="item.example" class="c-glossary-card__meta">
                   <span class="c-glossary-card__label">用例・備考</span>
                   <p class="c-glossary-card__text">
                     {{ item.example }}
@@ -178,8 +174,6 @@ const categoryColorMap: Record<string, string> = {
   container-name: filter-layout;
   container-type: inline-size;
   flex: 1;
-
-  width: 100%;
   max-width: 1400px;
   min-height: 0;
 
@@ -189,10 +183,6 @@ const categoryColorMap: Record<string, string> = {
     flex: 1;
     gap: var(--space-card-gap);
     min-height: 0;
-  }
-
-  &__sidebar {
-    width: 100%;
   }
 
   &__main {
@@ -218,7 +208,13 @@ const categoryColorMap: Record<string, string> = {
     gap: var(--space-2);
     padding-bottom: var(--space-1);
     border-bottom: var(--border-width-base) solid transparent;
-    border-image: linear-gradient(to right, transparent, var(--color-border) 50%, transparent) 1;
+    border-image: linear-gradient(
+        to right,
+        transparent,
+        var(--color-border) 50%,
+        transparent
+      )
+      1;
   }
 
   &__title {
@@ -258,7 +254,7 @@ const categoryColorMap: Record<string, string> = {
 
   &__label {
     @include text-meta;
-    }
+  }
 
   &__text {
     @include text-desc;

@@ -3,34 +3,28 @@
  * admin
  * ポータル管理画面 (開発者向け)
  */
-import { ref } from 'vue'
+import { ref } from "vue";
 
-import { useHead } from '#app'
+import { useHead } from "#app";
 
-useHead({ title: 'ポータル管理 - Elec-Console' })
+useHead({ title: "ポータル管理 - Elec-Console" });
 
 definePageMeta({
-  middleware: ['admin'],
-})
+  middleware: ["admin"],
+});
 
 const tabs = [
-  { value: 'users', label: 'ユーザー管理' },
-  { value: 'site', label: '現場管理' },
-]
-const activeTab = ref('users')
+  { value: "users", label: "ユーザー管理" },
+  { value: "site", label: "現場管理" },
+];
+const activeTab = ref("users");
 </script>
 
 <template>
   <div class="p-portal-admin">
-    <AppSectionHeader
-      title="ポータル管理 (開発者向け)"
-      icon="settings"
-    />
+    <AppSectionHeader title="ポータル管理 (開発者向け)" icon="settings" />
 
-    <AppTabs
-      v-model="activeTab"
-      :options="tabs"
-    />
+    <AppTabs v-model="activeTab" :options="tabs" />
 
     <div class="p-portal-admin__content">
       <AdminUsersTab v-if="activeTab === 'users'" />

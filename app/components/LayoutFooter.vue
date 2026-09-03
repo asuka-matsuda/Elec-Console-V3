@@ -3,15 +3,12 @@
  * LayoutFooter
  * アプリケーションのフッター部分（コピーライト等）を表示するコンポーネントです。
  */
-const currentYear = new Date().getFullYear()
+const currentYear = new Date().getFullYear();
 </script>
 
 <template>
   <footer class="l-footer">
-    <AppDivider
-      type="fade-center"
-      class="l-footer__divider"
-    />
+    <AppDivider type="fade-center" class="l-footer__divider" />
     <p class="l-footer__copyright">
       &copy; {{ currentYear }} Mat.Operate &amp; Gemini 3.1 Pro. / Elec-Console
       All rights reserved.

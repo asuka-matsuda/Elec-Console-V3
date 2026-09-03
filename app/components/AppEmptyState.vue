@@ -5,45 +5,32 @@
  */
 withDefaults(
   defineProps<{
-    icon?: string
-    title?: string
-    description?: string
+    icon?: string;
+    title?: string;
+    description?: string;
   }>(),
   {
-    icon: 'inbox',
-    title: 'データがありません',
+    icon: "inbox",
+    title: "データがありません",
     description: undefined,
   },
-)
+);
 </script>
 
 <template>
   <div class="c-empty-state">
-    <div
-      v-if="icon"
-      class="c-empty-state__icon-wrapper"
-    >
-      <AppIcon
-        :name="icon"
-        size="lg"
-        class="c-empty-state__icon"
-      />
+    <div v-if="icon" class="c-empty-state__icon-wrapper">
+      <AppIcon :name="icon" size="lg" class="c-empty-state__icon" />
     </div>
 
     <div class="c-empty-state__content">
-      <h3
-        v-if="title || $slots.title"
-        class="c-empty-state__title"
-      >
+      <h3 v-if="title || $slots.title" class="c-empty-state__title">
         <slot name="title">
           {{ title }}
         </slot>
       </h3>
 
-      <p
-        v-if="description || $slots.description"
-        class="c-empty-state__desc"
-      >
+      <p v-if="description || $slots.description" class="c-empty-state__desc">
         <slot name="description">
           {{ description }}
         </slot>
@@ -52,10 +39,7 @@ withDefaults(
       <slot />
     </div>
 
-    <div
-      v-if="$slots.actions"
-      class="c-empty-state__actions"
-    >
+    <div v-if="$slots.actions" class="c-empty-state__actions">
       <slot name="actions" />
     </div>
   </div>
@@ -66,7 +50,6 @@ withDefaults(
   @include flex-center-center(column);
 
   gap: var(--space-card-gap);
-  width: 100%;
   padding: var(--space-layout-pad) var(--space-card-pad);
   text-align: center;
 

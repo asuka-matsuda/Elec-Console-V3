@@ -3,36 +3,38 @@
  * AppBreadcrumb
  * パンくずリストを表示するためのコンポーネント
  */
-import { computed, resolveComponent } from 'vue'
+import { computed, resolveComponent } from "vue";
 
 /** パンくずリストの各要素の型定義 */
 export interface BreadcrumbItem {
-  text: string
-  href?: string
+  text: string;
+  href?: string;
 }
 
 const props = defineProps<{
-  items: BreadcrumbItem[]
-}>()
+  items: BreadcrumbItem[];
+}>();
 
 const processedItems = computed(() => {
-  const NuxtLink = resolveComponent('NuxtLink')
+  const NuxtLink = resolveComponent("NuxtLink");
 
   return props.items.map((item, index) => {
-    const isLast = index === props.items.length - 1
-    const isLink = !isLast && !!item.href
+    const isLast = index === props.items.length - 1;
+    const isLink = !isLast && !!item.href;
 
     return {
       text: item.text,
       href: isLink ? item.href : undefined,
-      tag: isLink ? NuxtLink : 'span',
+      tag: isLink ? NuxtLink : "span",
       className: isLink
-        ? 'c-breadcrumb__link'
-        : isLast ? 'c-breadcrumb__current' : 'c-breadcrumb__text',
+        ? "c-breadcrumb__link"
+        : isLast
+          ? "c-breadcrumb__current"
+          : "c-breadcrumb__text",
       uniqueKey: item.href || `${item.text}-${index}`,
-    }
-  })
-})
+    };
+  });
+});
 </script>
 
 <template>
@@ -43,11 +45,7 @@ const processedItems = computed(() => {
         :key="item.uniqueKey"
         class="c-breadcrumb__item"
       >
-        <component
-          :is="item.tag"
-          :to="item.href"
-          :class="item.className"
-        >
+        <component :is="item.tag" :to="item.href" :class="item.className">
           {{ item.text }}
         </component>
       </li>

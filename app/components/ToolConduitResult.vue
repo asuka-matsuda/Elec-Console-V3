@@ -3,79 +3,77 @@
  * ToolConduitResult
  * 配管サイズ計算の結果を視覚的に表示する2カラムコンポーネントです。
  */
-import { computed } from 'vue'
+import { computed } from "vue";
 
-import { CONDUIT_UI_LABELS } from '~/constants/conduitConstants'
-import { formatVal } from '~/utils/math'
+import { CONDUIT_UI_LABELS } from "~/constants/conduitConstants";
+import { formatVal } from "~/utils/math";
 
 const props = defineProps<{
-  result: import('~/utils/tools/conduit/conduitCalcLogic').ConduitCalcResult | null
-  inputs?: import('~/composables/tools/useConduitCalculator').ConduitInputs
-  size?: 'sm' | 'md'
-}>()
+  result:
+    import("~/utils/tools/conduit/conduitCalcLogic").ConduitCalcResult | null;
+  inputs?: import("~/composables/tools/useConduitCalculator").ConduitInputs;
+  size?: "sm" | "md";
+}>();
 
-const isReady = computed(() => props.result?.success && !props.result?.partial)
+const isReady = computed(() => props.result?.success && !props.result?.partial);
 
 // --- 32% (異種) ---
 const size32 = computed(() => {
-  if (!isReady.value) return CONDUIT_UI_LABELS.EMPTY_TEXT
+  if (!isReady.value) return CONDUIT_UI_LABELS.EMPTY_TEXT;
 
   return props.result!.isOversize32
     ? CONDUIT_UI_LABELS.OVERSIZE_TEXT
-    : props.result!.conduit32?.size
-})
+    : props.result!.conduit32?.size;
+});
 
 const status32Class = computed(() => {
-  if (!isReady.value) return 'is-neutral'
+  if (!isReady.value) return "is-neutral";
 
-  return props.result!.isOversize32 ? 'is-danger' : 'is-success'
-})
+  return props.result!.isOversize32 ? "is-danger" : "is-success";
+});
 
 const _allowable32 = computed(() =>
   isReady.value
     ? formatVal(props.result!.allowable32, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
     : CONDUIT_UI_LABELS.EMPTY_TEXT,
-)
+);
 
 const fill32 = computed(() =>
   isReady.value
     ? formatVal(props.result!.fill32, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
     : CONDUIT_UI_LABELS.EMPTY_TEXT,
-)
+);
 
 // --- 48% (同種) ---
 const size48 = computed(() => {
-  if (!isReady.value) return CONDUIT_UI_LABELS.EMPTY_TEXT
+  if (!isReady.value) return CONDUIT_UI_LABELS.EMPTY_TEXT;
 
   return props.result!.isOversize48
     ? CONDUIT_UI_LABELS.OVERSIZE_TEXT
-    : props.result!.conduit48?.size
-})
+    : props.result!.conduit48?.size;
+});
 
 const status48Class = computed(() => {
-  if (!isReady.value) return 'is-neutral'
+  if (!isReady.value) return "is-neutral";
 
-  return props.result!.isOversize48 ? 'is-danger' : 'is-success'
-})
+  return props.result!.isOversize48 ? "is-danger" : "is-success";
+});
 
 const _allowable48 = computed(() =>
   isReady.value
     ? formatVal(props.result!.allowable48, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
     : CONDUIT_UI_LABELS.EMPTY_TEXT,
-)
+);
 
 const fill48 = computed(() =>
   isReady.value
     ? formatVal(props.result!.fill48, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
     : CONDUIT_UI_LABELS.EMPTY_TEXT,
-)
+);
 </script>
 
 <template>
-  <div
-    class="c-conduit-result"
-    :class="[size === 'sm' ? 'is-sm' : '']"
-  >
+  <div class="c-conduit-result" :class="[size === 'sm' ? 'is-sm' : '']">
     <!-- Left Column: 32% -->
     <div class="c-conduit-result__col">
       <div class="c-conduit-result__main">
@@ -83,10 +81,7 @@ const fill48 = computed(() =>
           {{ CONDUIT_UI_LABELS.TITLE_32 }}
         </div>
         <div class="c-conduit-result__main-value">
-          <span
-            class="value-text"
-            :class="status32Class"
-          >{{ size32 }}</span>
+          <span class="value-text" :class="status32Class">{{ size32 }}</span>
           <template v-if="isReady && !result!.isOversize32">
             <span class="value-sep c-conduit-result__paren">(</span>
             <span class="value-text c-conduit-result__percent is-neutral">{{
@@ -108,10 +103,7 @@ const fill48 = computed(() =>
           {{ CONDUIT_UI_LABELS.TITLE_48 }}
         </div>
         <div class="c-conduit-result__main-value">
-          <span
-            class="value-text"
-            :class="status48Class"
-          >{{ size48 }}</span>
+          <span class="value-text" :class="status48Class">{{ size48 }}</span>
           <template v-if="isReady && !result!.isOversize48">
             <span class="value-sep c-conduit-result__paren">(</span>
             <span class="value-text c-conduit-result__percent is-neutral">{{

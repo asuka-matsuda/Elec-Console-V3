@@ -5,26 +5,23 @@
  */
 withDefaults(
   defineProps<{
-    label?: string
-    required?: boolean
-    error?: string
-    help?: string
-    layout?: 'vertical' | 'horizontal'
+    label?: string;
+    required?: boolean;
+    error?: string;
+    help?: string;
+    layout?: "vertical" | "horizontal";
   }>(),
   {
     required: false,
-    layout: 'vertical',
+    layout: "vertical",
   },
-)
+);
 </script>
 
 <template>
   <div class="c-form-group" :class="`c-form-group--layout-${layout}`">
     <div class="c-form-group__inner">
-      <div
-        v-if="label || $slots.label"
-        class="c-form-group__label-wrapper"
-      >
+      <div v-if="label || $slots.label" class="c-form-group__label-wrapper">
         <div class="c-form-label">
           <slot name="label">{{ label }}</slot>
         </div>
@@ -42,18 +39,12 @@ withDefaults(
         <slot />
 
         <transition name="fade-slide">
-          <div
-            v-if="error"
-            class="c-form-group__error"
-          >
+          <div v-if="error" class="c-form-group__error">
             {{ error }}
           </div>
         </transition>
 
-        <div
-          v-if="help && !error"
-          class="c-form-group__help"
-        >
+        <div v-if="help && !error" class="c-form-group__help">
           {{ help }}
         </div>
       </div>
@@ -63,13 +54,6 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-form-group {
-  container-type: inline-size;
-  width: 100%;
-
-  &__inner {
-    width: 100%;
-  }
-
   &--layout-horizontal {
     .c-form-group__inner {
       @include flex-start-start;
@@ -81,7 +65,7 @@ withDefaults(
       padding-top: calc(
         (
             (var(--font-size-sm) * var(--control-height-ratio)) -
-            (var(--line-height-tight) * var(--font-size-base))
+              (var(--line-height-tight) * var(--font-size-base))
           ) /
           2
       );

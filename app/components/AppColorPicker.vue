@@ -1,44 +1,44 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed } from "vue";
 
-import type { ColorPreset } from '~/constants/colors'
-import { DEFAULT_COLOR_PRESETS } from '~/constants/colors'
+import type { ColorPreset } from "~/constants/colors";
+import { DEFAULT_COLOR_PRESETS } from "~/constants/colors";
 
-const modelValue = defineModel<string>({ default: '#00f0ff' })
+const modelValue = defineModel<string>({ default: "#00f0ff" });
 
 const props = withDefaults(
   defineProps<{
-    presets?: ColorPreset[]
+    presets?: ColorPreset[];
   }>(),
   {
     presets: () => DEFAULT_COLOR_PRESETS,
   },
-)
+);
 
 const isCustomColor = computed(() => {
-  const current = modelValue.value.toLowerCase()
+  const current = modelValue.value.toLowerCase();
 
-  return !props.presets.some(p => p.value.toLowerCase() === current)
-})
+  return !props.presets.some((p) => p.value.toLowerCase() === current);
+});
 
 const safeHexColor = computed(() => {
-  const val = modelValue.value || ''
+  const val = modelValue.value || "";
 
-  if (/^#[0-9A-Fa-f]{6}$/.test(val)) return val
+  if (/^#[0-9A-Fa-f]{6}$/.test(val)) return val;
   if (/^#[0-9A-Fa-f]{3}$/.test(val)) {
-    return '#' + val[1] + val[1] + val[2] + val[2] + val[3] + val[3]
+    return "#" + val[1] + val[1] + val[2] + val[2] + val[3] + val[3];
   }
 
-  return '#00f0ff'
-})
+  return "#00f0ff";
+});
 
 const handleCustomColorInput = (event: Event) => {
-  const target = event.target as HTMLInputElement
+  const target = event.target as HTMLInputElement;
 
   if (target && target.value) {
-    modelValue.value = target.value
+    modelValue.value = target.value;
   }
-}
+};
 </script>
 
 <template>
@@ -49,7 +49,9 @@ const handleCustomColorInput = (event: Event) => {
         :key="preset.value"
         type="button"
         class="c-color-swatch"
-        :class="{ 'is-active': modelValue.toLowerCase() === preset.value.toLowerCase() }"
+        :class="{
+          'is-active': modelValue.toLowerCase() === preset.value.toLowerCase(),
+        }"
         :style="{ '--swatch-color': preset.value }"
         :title="`${preset.name} (${preset.value})`"
         @click="modelValue = preset.value"
@@ -71,15 +73,9 @@ const handleCustomColorInput = (event: Event) => {
           class="c-color-picker__native"
           @input="handleCustomColorInput"
         />
-        <AppIcon
-          name="plus"
-          class="c-color-swatch__icon"
-        />
+        <AppIcon name="plus" class="c-color-swatch__icon" />
       </label>
-      <span
-        v-if="isCustomColor"
-        class="c-color-picker__hex"
-      >
+      <span v-if="isCustomColor" class="c-color-picker__hex">
         {{ modelValue.toUpperCase() }}
       </span>
     </div>

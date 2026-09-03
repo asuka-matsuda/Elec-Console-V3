@@ -3,265 +3,256 @@
  * AppSelect
  * キーボード操作や画面外へのはみ出し防止機能に対応した、カスタムのセレクトボックスコンポーネント。
  */
-import { computed, onMounted, onUnmounted, ref, useId, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, useId, watch } from "vue";
 
-import { useClickOutside } from '~/composables/useClickOutside'
+import { useClickOutside } from "~/composables/useClickOutside";
 
 export interface SelectOption {
-  label: string
-  value: string | number | boolean
-  disabled?: boolean
+  label: string;
+  value: string | number | boolean;
+  disabled?: boolean;
 }
 
-const model = defineModel<string | number | boolean | null>()
+const model = defineModel<string | number | boolean | null>();
 
 const props = defineProps<{
-  options: SelectOption[]
-  placeholder?: string
-  disabled?: boolean
-  error?: boolean
-  placement?: 'top' | 'bottom'
-}>()
+  options: SelectOption[];
+  placeholder?: string;
+  disabled?: boolean;
+  error?: boolean;
+  placement?: "top" | "bottom";
+}>();
 
-const listboxId = useId()
-const selectRef = ref<HTMLElement | null>(null)
-const isOpen = ref(false)
-const focusedIndex = ref(-1)
-const dynamicPlacement = ref<'top' | 'bottom'>('bottom')
-const dropdownStyle = ref<Record<string, string>>({})
-const isMounted = ref(false)
-const teleportTarget = ref<HTMLElement | string>('body')
+const listboxId = useId();
+const selectRef = ref<HTMLElement | null>(null);
+const isOpen = ref(false);
+const focusedIndex = ref(-1);
+const dynamicPlacement = ref<"top" | "bottom">("bottom");
+const dropdownStyle = ref<Record<string, string>>({});
+const isMounted = ref(false);
+const teleportTarget = ref<HTMLElement | string>("body");
 
 useClickOutside(selectRef, () => {
-  isOpen.value = false
-})
+  isOpen.value = false;
+});
 
 const selectedOption = computed(() => {
-  return props.options.find(opt => opt.value === model.value)
-})
+  return props.options.find((opt) => opt.value === model.value);
+});
 
 const displayLabel = computed(() => {
-  if (!isMounted.value) return props.placeholder || ''
-  if (selectedOption.value) return selectedOption.value.label
+  if (!isMounted.value) return props.placeholder || "";
+  if (selectedOption.value) return selectedOption.value.label;
 
-  return props.placeholder || ''
-})
+  return props.placeholder || "";
+});
 
 const isPlaceholder = computed(() => {
-  if (!isMounted.value) return !!props.placeholder
+  if (!isMounted.value) return !!props.placeholder;
 
-  return !selectedOption.value && !!props.placeholder
-})
+  return !selectedOption.value && !!props.placeholder;
+});
 
 const calculatePlacement = () => {
-  if (!selectRef.value) return
+  if (!selectRef.value) return;
 
-  const rect = selectRef.value.getBoundingClientRect()
-  const spaceBelow = window.innerHeight - rect.bottom
-  const spaceAbove = rect.top
-  const DROPDOWN_MAX_HEIGHT = 250
+  const rect = selectRef.value.getBoundingClientRect();
+  const spaceBelow = window.innerHeight - rect.bottom;
+  const spaceAbove = rect.top;
+  const DROPDOWN_MAX_HEIGHT = 250;
 
-  let placement = props.placement
+  let placement = props.placement;
 
   if (!placement) {
     if (spaceBelow < DROPDOWN_MAX_HEIGHT && spaceAbove > spaceBelow) {
-      placement = 'top'
-    }
-    else {
-      placement = 'bottom'
+      placement = "top";
+    } else {
+      placement = "bottom";
     }
   }
 
-  dynamicPlacement.value = placement
+  dynamicPlacement.value = placement;
 
-  if (placement === 'top') {
+  if (placement === "top") {
     dropdownStyle.value = {
-      position: 'fixed',
+      position: "fixed",
       bottom: `${window.innerHeight - rect.top + 4}px`,
       left: `${rect.left}px`,
       minWidth: `${rect.width}px`,
-    }
-  }
-  else {
+    };
+  } else {
     dropdownStyle.value = {
-      position: 'fixed',
+      position: "fixed",
       top: `${rect.bottom + 4}px`,
       left: `${rect.left}px`,
       minWidth: `${rect.width}px`,
-    }
+    };
   }
-}
+};
 
 const handleGlobalScroll = (e: Event) => {
-  if (!isOpen.value) return
-  const dropdown = document.getElementById(listboxId)
+  if (!isOpen.value) return;
+  const dropdown = document.getElementById(listboxId);
 
-  if (dropdown && dropdown.contains(e.target as Node)) return
-  isOpen.value = false
-}
+  if (dropdown && dropdown.contains(e.target as Node)) return;
+  isOpen.value = false;
+};
 
 const toggleDropdown = () => {
-  if (props.disabled) return
-  isOpen.value = !isOpen.value
-}
+  if (props.disabled) return;
+  isOpen.value = !isOpen.value;
+};
 
 const selectOption = (option: SelectOption) => {
-  if (option.disabled) return
-  model.value = option.value
-  isOpen.value = false
-}
+  if (option.disabled) return;
+  model.value = option.value;
+  isOpen.value = false;
+};
 
 const focusNext = () => {
-  let nextIndex = focusedIndex.value + 1
+  let nextIndex = focusedIndex.value + 1;
 
   while (nextIndex < props.options.length) {
     if (!props.options[nextIndex]?.disabled) {
-      focusedIndex.value = nextIndex
+      focusedIndex.value = nextIndex;
 
-      return
+      return;
     }
-    nextIndex++
+    nextIndex++;
   }
-}
+};
 
 const focusPrev = () => {
-  let prevIndex = focusedIndex.value - 1
+  let prevIndex = focusedIndex.value - 1;
 
   while (prevIndex >= 0) {
     if (!props.options[prevIndex]?.disabled) {
-      focusedIndex.value = prevIndex
+      focusedIndex.value = prevIndex;
 
-      return
+      return;
     }
-    prevIndex--
+    prevIndex--;
   }
-}
+};
 
 const handleKeydown = (event: KeyboardEvent) => {
-  if (props.disabled) return
+  if (props.disabled) return;
 
   switch (event.key) {
-    case 'Delete':
-    case 'Backspace':
-      event.preventDefault()
-      model.value = undefined
-      isOpen.value = false
-      break
-    case 'Enter':
-    case ' ':
-      event.preventDefault()
+    case "Delete":
+    case "Backspace":
+      event.preventDefault();
+      model.value = undefined;
+      isOpen.value = false;
+      break;
+    case "Enter":
+    case " ":
+      event.preventDefault();
       if (isOpen.value) {
         if (
-          focusedIndex.value >= 0
-          && focusedIndex.value < props.options.length
+          focusedIndex.value >= 0 &&
+          focusedIndex.value < props.options.length
         ) {
-          selectOption(props.options[focusedIndex.value]!)
+          selectOption(props.options[focusedIndex.value]!);
+        } else {
+          isOpen.value = false;
         }
-        else {
-          isOpen.value = false
-        }
+      } else {
+        isOpen.value = true;
       }
-      else {
-        isOpen.value = true
-      }
-      break
-    case 'Escape':
+      break;
+    case "Escape":
       if (isOpen.value) {
-        isOpen.value = false
-        event.stopPropagation()
+        isOpen.value = false;
+        event.stopPropagation();
       }
-      break
-    case 'ArrowDown':
-      event.preventDefault()
+      break;
+    case "ArrowDown":
+      event.preventDefault();
       if (!isOpen.value) {
-        isOpen.value = true
+        isOpen.value = true;
+      } else {
+        focusNext();
       }
-      else {
-        focusNext()
-      }
-      break
-    case 'ArrowUp':
-      event.preventDefault()
+      break;
+    case "ArrowUp":
+      event.preventDefault();
       if (!isOpen.value) {
-        isOpen.value = true
+        isOpen.value = true;
+      } else {
+        focusPrev();
       }
-      else {
-        focusPrev()
-      }
-      break
+      break;
   }
-}
+};
 
 watch(isOpen, (newVal) => {
   if (newVal) {
-    window.addEventListener('scroll', handleGlobalScroll, { capture: true, passive: true })
-    calculatePlacement()
-    const index = props.options.findIndex(opt => opt.value === model.value)
+    window.addEventListener("scroll", handleGlobalScroll, {
+      capture: true,
+      passive: true,
+    });
+    calculatePlacement();
+    const index = props.options.findIndex((opt) => opt.value === model.value);
 
     if (index >= 0) {
-      focusedIndex.value = index
+      focusedIndex.value = index;
+    } else {
+      focusedIndex.value = -1;
+      focusNext();
     }
-    else {
-      focusedIndex.value = -1
-      focusNext()
-    }
+  } else {
+    window.removeEventListener("scroll", handleGlobalScroll, { capture: true });
+    focusedIndex.value = -1;
   }
-  else {
-    window.removeEventListener('scroll', handleGlobalScroll, { capture: true })
-    focusedIndex.value = -1
-  }
-})
+});
 
 onMounted(() => {
-  isMounted.value = true
-  const modal = selectRef.value?.closest('dialog')
+  isMounted.value = true;
+  const modal = selectRef.value?.closest("dialog");
 
   if (modal) {
-    teleportTarget.value = modal as HTMLElement
+    teleportTarget.value = modal as HTMLElement;
   }
-  window.addEventListener('resize', calculatePlacement, { passive: true })
-})
+  window.addEventListener("resize", calculatePlacement, { passive: true });
+});
 
 onUnmounted(() => {
-  window.removeEventListener('resize', calculatePlacement)
-})
+  window.removeEventListener("resize", calculatePlacement);
+});
 
 const containerClasses = computed(() => [
-  'c-custom-select',
+  "c-custom-select",
   {
-    'is-error': props.error,
+    "is-error": props.error,
   },
-])
+]);
 
 const buttonClasses = computed(() => [
-  'c-custom-select__value',
+  "c-custom-select__value",
   {
-    'is-placeholder': isPlaceholder.value,
-    'is-active': isOpen.value,
+    "is-placeholder": isPlaceholder.value,
+    "is-active": isOpen.value,
   },
-])
+]);
 
 const dropdownClasses = computed(() => [
-  'c-custom-select__dropdown',
+  "c-custom-select__dropdown",
   `is-${dynamicPlacement.value}`,
-])
+]);
 
 const getOptionClasses = (option: SelectOption, index: number) => [
-  'c-custom-select__option',
+  "c-custom-select__option",
   {
-    'is-selected': model.value === option.value,
-    'is-focused': index === focusedIndex.value,
-    'is-disabled': option.disabled,
+    "is-selected": model.value === option.value,
+    "is-focused": index === focusedIndex.value,
+    "is-disabled": option.disabled,
   },
-]
+];
 </script>
 
 <template>
-  <div
-    ref="selectRef"
-    :class="containerClasses"
-    :data-disabled="disabled"
-  >
+  <div ref="selectRef" :class="containerClasses" :data-disabled="disabled">
     <button
       type="button"
       :class="buttonClasses"
@@ -275,15 +266,8 @@ const getOptionClasses = (option: SelectOption, index: number) => [
     <ClientOnly>
       <Teleport :to="teleportTarget">
         <transition name="dropdown-fade">
-          <div
-            v-if="isOpen"
-            :class="dropdownClasses"
-            :style="dropdownStyle"
-          >
-            <ul
-              :id="listboxId"
-              class="c-custom-select__list"
-            >
+          <div v-if="isOpen" :class="dropdownClasses" :style="dropdownStyle">
+            <ul :id="listboxId" class="c-custom-select__list">
               <li
                 v-if="isPlaceholder"
                 class="c-custom-select__option is-placeholder"
@@ -391,9 +375,17 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   @include state-base("md", none, var(--theme-accent));
 
   .c-custom-select.is-error & {
-    --glow-color: color-mix(in srgb, var(--color-status-danger) 20%, transparent);
+    --glow-color: color-mix(
+      in srgb,
+      var(--color-status-danger) 20%,
+      transparent
+    );
 
-    border-color: color-mix(in srgb, var(--color-status-danger) 50%, transparent);
+    border-color: color-mix(
+      in srgb,
+      var(--color-status-danger) 50%,
+      transparent
+    );
 
     @include state-base("md", none, var(--color-status-danger));
   }

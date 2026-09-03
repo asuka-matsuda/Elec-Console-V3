@@ -3,14 +3,14 @@
  * ConduitCalculator
  * 配管サイズ自動選定ツールのコンポーネントです。収容するケーブルの種類と数から、適切な配管サイズを計算します。
  */
-import { computed } from 'vue'
+import { computed } from "vue";
 
-import { useConduitCalculator } from '~/composables/tools/useConduitCalculator'
-import { conduitData } from '~/constants/data/conduitData'
+import { useConduitCalculator } from "~/composables/tools/useConduitCalculator";
+import { conduitData } from "~/constants/data/conduitData";
 
 useHead({
-  title: '配管サイズ自動選定',
-})
+  title: "配管サイズ自動選定",
+});
 
 const {
   inputs,
@@ -22,19 +22,19 @@ const {
   openResetModal,
   confirmReset,
   mathSteps,
-} = useConduitCalculator()
+} = useConduitCalculator();
 
 /** 配管カテゴリの選択肢 */
 const conduitCategoryOptions = computed(() => {
-  const cats = [...new Set(conduitData.map(c => c.category))]
+  const cats = [...new Set(conduitData.map((c) => c.category))];
 
-  return cats.map(c => ({ value: c, label: c }))
-})
+  return cats.map((c) => ({ value: c, label: c }));
+});
 
 /** 保存ハンドラ */
 const handleSave = async () => {
-  await saveHistory()
-}
+  await saveHistory();
+};
 </script>
 
 <template>
@@ -57,9 +57,7 @@ const handleSave = async () => {
 
         <!-- 2. 収容するケーブル -->
         <div class="p-conduit__section">
-          <div class="p-conduit__section-title">
-            収容するケーブル
-          </div>
+          <div class="p-conduit__section-title">収容するケーブル</div>
 
           <div class="p-conduit__cable-list">
             <ToolCableCard
@@ -95,8 +93,9 @@ const handleSave = async () => {
     <template #basis>
       <ToolCalcBasisPanel :steps="mathSteps">
         <div class="p-basis-note">
-          <strong>内線規程（勧告）</strong><br>
-          3110-5 管の屈曲が少なく、容易に電線を引き入れ及び引き替えることができる場合（48％）<br>
+          <strong>内線規程（勧告）</strong><br />
+          3110-5
+          管の屈曲が少なく、容易に電線を引き入れ及び引き替えることができる場合（48％）<br />
           3110-6 異なる太さの絶縁電線を同一管内に収める場合（32％）
         </div>
       </ToolCalcBasisPanel>

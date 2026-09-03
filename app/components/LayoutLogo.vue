@@ -4,20 +4,13 @@
  * アプリケーションのロゴを表示し、クリック時にホームへ遷移またはイベントを発火するコンポーネント。
  */
 const emit = defineEmits<{
-  (e: 'click'): void
-}>()
+  (e: "click"): void;
+}>();
 </script>
 
 <template>
-  <NuxtLink
-    to="/"
-    class="c-logo"
-    @click="emit('click')"
-  >
-    <AppIcon
-      name="zap"
-      class="c-logo__icon"
-    />
+  <NuxtLink to="/" class="c-logo" @click="emit('click')">
+    <AppIcon name="zap" class="c-logo__icon" />
     <span class="c-logo__text">Elec-Console</span>
   </NuxtLink>
 </template>

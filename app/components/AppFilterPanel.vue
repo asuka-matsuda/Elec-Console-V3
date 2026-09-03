@@ -6,17 +6,17 @@
  */
 
 interface CategoryOption {
-  label: string
-  value: string
+  label: string;
+  value: string;
 }
 
-const searchQuery = defineModel<string>('searchQuery', { default: '' })
-const activeCats = defineModel<string[]>('activeCats', { default: () => [] })
+const searchQuery = defineModel<string>("searchQuery", { default: "" });
+const activeCats = defineModel<string[]>("activeCats", { default: () => [] });
 
 defineProps<{
-  placeholder?: string
-  categoryOptions: CategoryOption[]
-}>()
+  placeholder?: string;
+  categoryOptions: CategoryOption[];
+}>();
 </script>
 
 <template>

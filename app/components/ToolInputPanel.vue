@@ -4,11 +4,11 @@
  * ツール等の条件入力エリアを囲むパネルコンポーネントです。
  */
 defineProps<{
-  title?: string
-  icon?: string
-}>()
+  title?: string;
+  icon?: string;
+}>();
 
-defineEmits(['reset'])
+defineEmits(["reset"]);
 </script>
 
 <template>
@@ -22,15 +22,8 @@ defineEmits(['reset'])
         size="md"
       >
         <template #actions>
-          <AppButton
-            variant="danger"
-            size="sm"
-            @click="$emit('reset')"
-          >
-            <AppIcon
-              name="refresh-cw"
-              size="sm"
-            />
+          <AppButton variant="danger" size="sm" @click="$emit('reset')">
+            <AppIcon name="refresh-cw" size="sm" />
             リセット
           </AppButton>
         </template>

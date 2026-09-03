@@ -3,15 +3,15 @@
  * LayoutHeader
  * アプリケーションのヘッダー部分（パンくずリストやアクション等）を表示するコンポーネントです。
  */
-import type { BreadcrumbItem } from '~/components/AppBreadcrumb.vue'
+import type { BreadcrumbItem } from "~/components/AppBreadcrumb.vue";
 
 defineProps<{
-  breadcrumbs?: BreadcrumbItem[]
-}>()
+  breadcrumbs?: BreadcrumbItem[];
+}>();
 
 const emit = defineEmits<{
-  (e: 'toggle-sidebar'): void
-}>()
+  (e: "toggle-sidebar"): void;
+}>();
 </script>
 
 <template>
@@ -25,10 +25,7 @@ const emit = defineEmits<{
       />
 
       <!-- Breadcrumbs / Page Title -->
-      <AppBreadcrumb
-        v-if="breadcrumbs?.length"
-        :items="breadcrumbs"
-      />
+      <AppBreadcrumb v-if="breadcrumbs?.length" :items="breadcrumbs" />
     </div>
 
     <div class="l-header__actions">

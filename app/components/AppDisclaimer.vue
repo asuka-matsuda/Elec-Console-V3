@@ -5,12 +5,12 @@
  */
 withDefaults(
   defineProps<{
-    text?: string
+    text?: string;
   }>(),
   {
-    text: '本ツールによる計算結果は、規程に基づいた理論値（目安）です。選定や安全性については、必ず設計者自身の責任において各種関連法規・規程をご確認の上ご判断ください。',
+    text: "本ツールによる計算結果は、規程に基づいた理論値（目安）です。選定や安全性については、必ず設計者自身の責任において各種関連法規・規程をご確認の上ご判断ください。",
   },
-)
+);
 </script>
 
 <template>
@@ -22,8 +22,6 @@ withDefaults(
 <style scoped lang="scss">
 .c-disclaimer {
   @include text-desc;
-
-  width: 100%;
   padding: var(--space-2) var(--space-3);
   color: var(--color-status-warning);
 }

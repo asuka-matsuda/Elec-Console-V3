@@ -3,18 +3,18 @@
  * Settings
  * UIや個人の設定を行う画面のコンポーネントです。テーマや背景エフェクトなどのカスタマイズ機能を提供します。
  */
-import { useSettings } from '~/composables/useSettings'
+import { useSettings } from "~/composables/useSettings";
 
 useHead({
-  title: 'UI・個人設定',
-})
+  title: "UI・個人設定",
+});
 
-const { themeMode } = useSettings()
+const { themeMode } = useSettings();
 
 const themeOptions = [
-  { label: 'ダークモード (標準)', value: 'dark' },
-  { label: 'ライトモード', value: 'light' },
-]
+  { label: "ダークモード (標準)", value: "dark" },
+  { label: "ライトモード", value: "light" },
+];
 </script>
 
 <template>
@@ -33,10 +33,7 @@ const themeOptions = [
     <div class="p-settings__grid">
       <div class="p-settings__stack">
         <!-- テーマ・カラー設定 -->
-        <AppPanel
-          title="一般設定"
-          variant="hud"
-        >
+        <AppPanel title="一般設定" variant="hud">
           <template #header>
             <AppSectionHeader
               title="テーマ・カラー設定"
@@ -55,10 +52,7 @@ const themeOptions = [
               label="外観モード"
               help="全体の明るさを変更します（ダークモード推奨）"
             >
-              <AppSelect
-                v-model="themeMode"
-                :options="themeOptions"
-              />
+              <AppSelect v-model="themeMode" :options="themeOptions" />
             </AppFormGroup>
           </div>
         </AppPanel>

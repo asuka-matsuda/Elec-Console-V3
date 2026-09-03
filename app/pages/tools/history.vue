@@ -3,21 +3,21 @@
  * CalculationHistory
  * 計算履歴ツールのコンポーネントです。過去に実行した各種計算ツールの履歴を一覧表示し、管理します。
  */
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch } from "vue";
 
-import type { HistoryEntry } from '~/types/history'
+import type { HistoryEntry } from "~/types/history";
 
 useHead({
-  title: '計算履歴',
-})
+  title: "計算履歴",
+});
 
 const tabs = [
-  { value: 'voltage', label: '電圧降下計算' },
-  { value: 'conduit', label: '配管サイズ' },
-]
+  { value: "voltage", label: "電圧降下計算" },
+  { value: "conduit", label: "配管サイズ" },
+];
 
-const currentTab = ref('voltage')
-const historyList = ref<HistoryEntry[]>([])
+const currentTab = ref("voltage");
+const historyList = ref<HistoryEntry[]>([]);
 
 const {
   isOpen: isConfirmOpen,
@@ -27,75 +27,73 @@ const {
   intent: confirmIntent,
   askConfirm,
   handleConfirm,
-} = useConfirmModal()
+} = useConfirmModal();
 
 const storageKey = computed(() => {
-  return `elec_calc_${currentTab.value}_hist`
-})
+  return `elec_calc_${currentTab.value}_hist`;
+});
 
 const loadHistory = () => {
   if (import.meta.client) {
-    const stored = localStorage.getItem(storageKey.value)
+    const stored = localStorage.getItem(storageKey.value);
 
     if (stored) {
       try {
-        historyList.value = JSON.parse(stored)
+        historyList.value = JSON.parse(stored);
+      } catch {
+        historyList.value = [];
       }
-      catch {
-        historyList.value = []
-      }
-    }
-    else {
-      historyList.value = []
+    } else {
+      historyList.value = [];
     }
   }
-}
+};
 
 const deleteHistory = (id: string) => {
-  historyList.value = historyList.value.filter(item => item.id !== id)
-}
+  historyList.value = historyList.value.filter((item) => item.id !== id);
+};
 
 const handleClearAll = () => {
   askConfirm({
-    title: '履歴をすべて削除',
-    message: '全ての履歴を削除しますか？この操作は取り消せません。',
-    confirmText: '削除する',
-    intent: 'danger',
+    title: "履歴をすべて削除",
+    message: "全ての履歴を削除しますか？この操作は取り消せません。",
+    confirmText: "削除する",
+    intent: "danger",
     onConfirm: () => {
-      historyList.value = []
+      historyList.value = [];
     },
-  })
-}
+  });
+};
 
 const openDeleteModal = (id: string) => {
   askConfirm({
-    title: '履歴を削除',
-    message: 'この履歴を削除しますか？',
-    confirmText: '削除する',
-    intent: 'danger',
+    title: "履歴を削除",
+    message: "この履歴を削除しますか？",
+    confirmText: "削除する",
+    intent: "danger",
     onConfirm: () => {
-      deleteHistory(id)
+      deleteHistory(id);
     },
-  })
-}
+  });
+};
 
 watch(
   currentTab,
   () => {
-    loadHistory()
+    loadHistory();
   },
   { immediate: true },
-)
+);
 
 watch(
   historyList,
   (newVal) => {
     if (import.meta.client) {
-      localStorage.setItem(storageKey.value, JSON.stringify(newVal))
+      localStorage.setItem(storageKey.value, JSON.stringify(newVal));
     }
   },
   { deep: true },
-)
+);
 </script>
 
 <template>
@@ -116,10 +114,7 @@ watch(
               size="sm"
               @click="handleClearAll"
             >
-              <AppIcon
-                name="trash-2"
-                size="sm"
-              />
+              <AppIcon name="trash-2" size="sm" />
               全て削除
             </AppButton>
           </template>
@@ -128,10 +123,7 @@ watch(
 
       <!-- タブ部分 -->
       <div class="p-history-page__tabs">
-        <AppTabs
-          v-model="currentTab"
-          :options="tabs"
-        />
+        <AppTabs v-model="currentTab" :options="tabs" />
       </div>
 
       <ClientOnly>
@@ -158,10 +150,7 @@ watch(
 
         <!-- SSR時・ハイドレーション前のプレースホルダー -->
         <template #fallback>
-          <AppEmptyState
-            icon="loader"
-            title="履歴を読み込み中..."
-          />
+          <AppEmptyState icon="loader" title="履歴を読み込み中..." />
         </template>
       </ClientOnly>
     </AppPanel>

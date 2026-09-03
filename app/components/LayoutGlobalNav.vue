@@ -3,19 +3,19 @@
  * LayoutGlobalNav
  * アプリケーションのグローバルナビゲーション（サイドバーメニュー）を表示するコンポーネントです。
  */
-import type { MenuSection } from '~/constants/data/menuData'
+import type { MenuSection } from "~/constants/data/menuData";
 
 /** For mobile responsive toggle */
-const isOpen = defineModel<boolean>('isOpen', { default: false })
+const isOpen = defineModel<boolean>("isOpen", { default: false });
 
 defineProps<{
-  menuData: MenuSection[]
-}>()
+  menuData: MenuSection[];
+}>();
 
 /** Close sidebar on mobile when a link is clicked */
 const closeSidebar = () => {
-  isOpen.value = false
-}
+  isOpen.value = false;
+};
 </script>
 
 <template>
@@ -28,18 +28,12 @@ const closeSidebar = () => {
     />
 
     <!-- Global-Nav -->
-    <aside
-      class="l-global-nav"
-      :class="{ 'is-open': isOpen }"
-    >
+    <aside class="l-global-nav" :class="{ 'is-open': isOpen }">
       <!-- Logo Header -->
       <header class="l-global-nav__header">
         <LayoutLogo @click="closeSidebar" />
       </header>
-      <AppDivider
-        type="fade-center"
-        variant="sidebar-border"
-      />
+      <AppDivider type="fade-center" variant="sidebar-border" />
 
       <!-- Navigation Content -->
       <nav class="l-global-nav__nav custom-scrollbar">
@@ -56,37 +50,22 @@ const closeSidebar = () => {
             <h3 class="l-global-nav__heading">
               {{ section.globalNavHeading || section.heading }}
             </h3>
-            <AppDivider
-              type="fade-side"
-              :variant="section.accent || 'main'"
-            />
+            <AppDivider type="fade-side" :variant="section.accent || 'main'" />
           </header>
 
-          <template
-            v-for="item in section.items"
-            :key="item.href"
-          >
+          <template v-for="item in section.items" :key="item.href">
             <NuxtLink
               v-if="!item.disabled"
               :to="item.href"
               class="l-global-nav__link"
               @click="closeSidebar"
             >
-              <AppIcon
-                :name="item.icon"
-                class="l-global-nav__link-icon"
-              />
+              <AppIcon :name="item.icon" class="l-global-nav__link-icon" />
               <span>{{ item.text }}</span>
             </NuxtLink>
 
-            <div
-              v-else
-              class="l-global-nav__link is-disabled"
-            >
-              <AppIcon
-                :name="item.icon"
-                class="l-global-nav__link-icon"
-              />
+            <div v-else class="l-global-nav__link is-disabled">
+              <AppIcon :name="item.icon" class="l-global-nav__link-icon" />
               <span>{{ item.text }}</span>
             </div>
           </template>
@@ -219,7 +198,11 @@ const closeSidebar = () => {
         color: var(--section-accent, var(--color-category-main));
         filter: drop-shadow(
           0 0 var(--blur-sm)
-            color-mix(in srgb, var(--section-accent, var(--color-category-main, transparent)), 80%)
+            color-mix(
+              in srgb,
+              var(--section-accent, var(--color-category-main, transparent)),
+              80%
+            )
         );
       }
     }

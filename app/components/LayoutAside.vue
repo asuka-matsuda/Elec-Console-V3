@@ -3,12 +3,12 @@
  * LayoutDashboardAside
  * ダッシュボードのサイドバー（お知らせや更新履歴などを表示）コンポーネント
  */
-const { data: dashboardData, pending } = await useFetch('/api/dashboard', {
+const { data: dashboardData, pending } = await useFetch("/api/dashboard", {
   /** Prevent blocking navigation while loading */
   lazy: true,
-})
-const announcements = computed(() => dashboardData.value?.announcements || [])
-const history = computed(() => dashboardData.value?.history || [])
+});
+const announcements = computed(() => dashboardData.value?.announcements || []);
+const history = computed(() => dashboardData.value?.history || []);
 </script>
 
 <template>
@@ -16,21 +16,11 @@ const history = computed(() => dashboardData.value?.history || [])
   <aside class="p-dashboard__aside">
     <!-- Announcements -->
     <section class="p-dashboard__aside-block">
-      <AppSectionHeader
-        title="お知らせ"
-        icon="bell"
-        size="md"
-      />
-      <div
-        v-if="pending"
-        class="p-dashboard__loading"
-      >
+      <AppSectionHeader title="お知らせ" icon="bell" size="md" />
+      <div v-if="pending" class="p-dashboard__loading">
         データを読み込み中...
       </div>
-      <div
-        v-else
-        class="p-dashboard__list"
-      >
+      <div v-else class="p-dashboard__list">
         <AppCard
           v-for="item in announcements"
           :key="item.title"
@@ -48,21 +38,11 @@ const history = computed(() => dashboardData.value?.history || [])
 
     <!-- History -->
     <section class="p-dashboard__aside-block">
-      <AppSectionHeader
-        title="更新履歴"
-        icon="clock"
-        size="md"
-      />
-      <div
-        v-if="pending"
-        class="p-dashboard__loading"
-      >
+      <AppSectionHeader title="更新履歴" icon="clock" size="md" />
+      <div v-if="pending" class="p-dashboard__loading">
         データを読み込み中...
       </div>
-      <div
-        v-else
-        class="p-dashboard__list"
-      >
+      <div v-else class="p-dashboard__list">
         <AppCard
           v-for="item in history"
           :key="item.version"

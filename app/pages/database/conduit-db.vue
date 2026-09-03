@@ -3,17 +3,17 @@
  * ConduitDbPage
  * 電線管のデータベース情報を一覧表示・検索するためのページコンポーネントです。
  */
-import type { TableColumn } from '~/components/AppTable.vue'
-import { conduitData } from '~/constants/data/conduitData'
+import type { TableColumn } from "~/components/AppTable.vue";
+import { conduitData } from "~/constants/data/conduitData";
 
 const tableColumns: TableColumn[] = [
-  { key: 'category', label: '配管種類', sortable: true },
-  { key: 'size', label: '呼び径', sortable: true },
-  { key: 'innerDiameter', label: '内径 (mm)', sortable: true },
-  { key: 'outerDiameter', label: '外径 (mm)', sortable: true },
-  { key: 'area', label: '断面積 (mm²)', sortable: true },
-  { key: 'standard', label: '規格', sortable: true },
-]
+  { key: "category", label: "配管種類", sortable: true },
+  { key: "size", label: "呼び径", sortable: true },
+  { key: "innerDiameter", label: "内径 (mm)", sortable: true },
+  { key: "outerDiameter", label: "外径 (mm)", sortable: true },
+  { key: "area", label: "断面積 (mm²)", sortable: true },
+  { key: "standard", label: "規格", sortable: true },
+];
 </script>
 
 <template>

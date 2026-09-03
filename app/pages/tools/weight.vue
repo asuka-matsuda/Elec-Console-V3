@@ -3,14 +3,14 @@
  * WeightCalculator
  * ケーブル重量・ドラム選定ツールのコンポーネントです。ケーブルの種類と長さから重量を計算し、最適なドラムを選定します。
  */
-import { computed } from 'vue'
+import { computed } from "vue";
 
-import { useWeightCalculator } from '~/composables/tools/useWeightCalculator'
-import { getAvailableSizes, getCableCategories } from '~/utils/cable'
+import { useWeightCalculator } from "~/composables/tools/useWeightCalculator";
+import { getAvailableSizes, getCableCategories } from "~/utils/cable";
 
 useHead({
-  title: 'ケーブル重量・ドラム選定',
-})
+  title: "ケーブル重量・ドラム選定",
+});
 
 const {
   inputs,
@@ -20,24 +20,30 @@ const {
   openResetModal,
   confirmReset,
   mathSteps,
-} = useWeightCalculator()
+} = useWeightCalculator();
 
 /** ケーブル選択用データ */
-const categories = computed(() => getCableCategories())
-const availableSizes = computed(() => getAvailableSizes(inputs.value.category))
+const categories = computed(() => getCableCategories());
+const availableSizes = computed(() => getAvailableSizes(inputs.value.category));
 
 /** Categoryが変更されたらcableIdxをリセットする */
-watch(() => inputs.value.category, (newVal, oldVal) => {
-  if (!oldVal) return
-  inputs.value.cableIdx = ''
-})
+watch(
+  () => inputs.value.category,
+  (newVal, oldVal) => {
+    if (!oldVal) return;
+    inputs.value.cableIdx = "";
+  },
+);
 
 /** 総重量の計算 */
 const totalWeight = computed(() => {
-  if (!result.value || result.value?.error || !result.value?.bestDrum) return 0
+  if (!result.value || result.value?.error || !result.value?.bestDrum) return 0;
 
-  return (result.value?.cableWeight || 0) + parseFloat(result.value?.bestDrum?.weight as unknown as string || '0')
-})
+  return (
+    (result.value?.cableWeight || 0) +
+    parseFloat((result.value?.bestDrum?.weight as unknown as string) || "0")
+  );
+});
 </script>
 
 <template>
@@ -51,10 +57,7 @@ const totalWeight = computed(() => {
       <ToolInputPanel @reset="openResetModal">
         <div class="p-weight__sections">
           <div class="l-grid l-grid--2col">
-            <AppFormGroup
-              label="ケーブル種別"
-              required
-            >
+            <AppFormGroup label="ケーブル種別" required>
               <AppSelect
                 v-model="inputs.category"
                 :options="categories"
@@ -62,10 +65,7 @@ const totalWeight = computed(() => {
               />
             </AppFormGroup>
 
-            <AppFormGroup
-              label="ケーブルサイズ"
-              required
-            >
+            <AppFormGroup label="ケーブルサイズ" required>
               <AppSelect
                 v-model="inputs.cableIdx"
                 :options="availableSizes"
@@ -76,16 +76,9 @@ const totalWeight = computed(() => {
           </div>
 
           <div class="l-grid l-grid--2col">
-            <AppFormGroup
-              label="ケーブル長 (L)"
-              required
-            >
+            <AppFormGroup label="ケーブル長 (L)" required>
               <AppInputGroup>
-                <AppInput
-                  v-model="inputs.L_input"
-                  type="number"
-                  min="1"
-                />
+                <AppInput v-model="inputs.L_input" type="number" min="1" />
                 <template #append>
                   <span class="c-input-addon">m</span>
                 </template>
@@ -118,21 +111,19 @@ const totalWeight = computed(() => {
       >
         <AppResultBox
           title="推奨ドラム"
-          :status="result?.error ? 'empty' : (result?.bestDrum ? 'success' : 'error')"
+          :status="
+            result?.error ? 'empty' : result?.bestDrum ? 'success' : 'error'
+          "
           :is-empty="result?.error"
         >
           <template #value>
             <div class="p-result-weight">
               <div class="p-result-weight__val">
-                <template v-if="result?.error">
-                  ---
-                </template>
+                <template v-if="result?.error"> --- </template>
                 <template v-else-if="result?.bestDrum">
                   {{ result?.bestDrum?.category }} ({{ result?.bestDrum?.id }})
                 </template>
-                <template v-else>
-                  選定不可
-                </template>
+                <template v-else> 選定不可 </template>
               </div>
               <div
                 v-if="!result?.error && !result?.bestDrum"
@@ -152,16 +143,10 @@ const totalWeight = computed(() => {
             <ToolResultRow label="ドラム空重量">
               <strong>{{ result?.bestDrum?.weight }}</strong> kg
             </ToolResultRow>
-            <ToolResultRow
-              label="総重量 (ケーブル+ドラム)"
-              top-border
-            >
+            <ToolResultRow label="総重量 (ケーブル+ドラム)" top-border>
               <strong>{{ totalWeight?.toFixed(1) }}</strong> kg
             </ToolResultRow>
-            <ToolResultRow
-              label="最大巻取可能長"
-              class="u-mt-2"
-            >
+            <ToolResultRow label="最大巻取可能長" class="u-mt-2">
               <strong>{{ result?.maxCapacityMeters?.toFixed(1) }}</strong> m
             </ToolResultRow>
           </template>
@@ -172,7 +157,7 @@ const totalWeight = computed(() => {
     <template #basis>
       <ToolCalcBasisPanel :steps="mathSteps">
         <div class="p-weight__note">
-          <strong>【ドラム選定ロジック】</strong><br>
+          <strong>【ドラム選定ロジック】</strong><br />
           上記①〜③の計算をデータベース上のすべてのドラムに対して行い、重量要件、曲げ半径要件、容量要件のすべてをクリアするドラムのうち、「自重が最も軽いもの」を最適なドラムとして最終選定しています。
         </div>
 

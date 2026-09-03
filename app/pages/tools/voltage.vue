@@ -3,23 +3,23 @@
  * VoltageCalculator
  * 電圧降下・ケーブルサイズ選定ツールのコンポーネントです。電圧降下の計算や、条件を満たすケーブルサイズの選定を行います。
  */
-import { toTypedSchema } from '@vee-validate/zod'
-import { Field, useForm } from 'vee-validate'
-import { computed } from 'vue'
+import { toTypedSchema } from "@vee-validate/zod";
+import { Field, useForm } from "vee-validate";
+import { computed } from "vue";
 
-import { useRoute } from '#app'
-import { useCalcHistory } from '~/composables/tools/useCalcHistory'
-import { useVoltageCalculator } from '~/composables/tools/useVoltageCalculator'
-import { getVoltageFormFields } from '~/constants/config/voltageFormConfig'
-import { modeOptions } from '~/constants/toolOptions'
-import { mapVoltageToHistory } from '~/utils/tools/voltage/historyMapper'
-import { voltageSchema } from '~/utils/tools/voltage/voltageSchema'
+import { useRoute } from "#app";
+import { useCalcHistory } from "~/composables/tools/useCalcHistory";
+import { useVoltageCalculator } from "~/composables/tools/useVoltageCalculator";
+import { getVoltageFormFields } from "~/constants/config/voltageFormConfig";
+import { modeOptions } from "~/constants/toolOptions";
+import { mapVoltageToHistory } from "~/utils/tools/voltage/historyMapper";
+import { voltageSchema } from "~/utils/tools/voltage/voltageSchema";
 
 useHead({
-  title: '電圧降下・ケーブルサイズ選定',
-})
+  title: "電圧降下・ケーブルサイズ選定",
+});
 
-const route = useRoute()
+const route = useRoute();
 const {
   form,
   isResetModalOpen,
@@ -31,14 +31,14 @@ const {
   calcResult,
   mathSteps,
   openResetModal,
-} = useVoltageCalculator()
+} = useVoltageCalculator();
 
-const { saveHistory } = useCalcHistory('elec_calc_voltage_hist')
+const { saveHistory } = useCalcHistory("elec_calc_voltage_hist");
 
 useForm({
   validationSchema: toTypedSchema(voltageSchema),
   initialValues: form.value,
-})
+});
 
 const formFields = computed(() =>
   getVoltageFormFields(
@@ -47,15 +47,20 @@ const formFields = computed(() =>
     () => computedAvailableSizes.value,
     () => !!form.value.cableType,
   ),
-)
+);
 
 const handleSaveToHistory = async () => {
-  if (!calcInputs.value.isReady) return
-  const toolName = (route.meta.title as string) || '電圧降下・ケーブルサイズ選定'
-  const entry = mapVoltageToHistory(toolName, calcInputs.value, calcResult.value)
+  if (!calcInputs.value.isReady) return;
+  const toolName =
+    (route.meta.title as string) || "電圧降下・ケーブルサイズ選定";
+  const entry = mapVoltageToHistory(
+    toolName,
+    calcInputs.value,
+    calcResult.value,
+  );
 
-  await saveHistory(entry)
-}
+  await saveHistory(entry);
+};
 </script>
 
 <template>
@@ -67,10 +72,7 @@ const handleSaveToHistory = async () => {
         :save-function="handleSaveToHistory"
       >
         <ClientOnly>
-          <ToolVoltageResult
-            :inputs="calcInputs"
-            :result="calcResult"
-          />
+          <ToolVoltageResult :inputs="calcInputs" :result="calcResult" />
         </ClientOnly>
       </ToolResultPanel>
     </template>
@@ -78,16 +80,10 @@ const handleSaveToHistory = async () => {
     <template #inputs>
       <ToolInputPanel @reset="openResetModal">
         <!-- 1. 計算モード切替 (AppRadioGroup) -->
-        <AppRadioGroup
-          v-model="form.mode"
-          :options="modeOptions"
-        />
+        <AppRadioGroup v-model="form.mode" :options="modeOptions" />
 
         <div class="l-grid l-grid--2col">
-          <template
-            v-for="field in formFields"
-            :key="field.id"
-          >
+          <template v-for="field in formFields" :key="field.id">
             <Field
               v-if="!field.showIf || field.showIf()"
               v-slot="{ errorMessage, handleChange, handleBlur }"
@@ -125,7 +121,11 @@ const handleSaveToHistory = async () => {
                   <template #append>
                     <Field
                       v-if="field.secondaryId"
-                      v-slot="{ errorMessage: secError, handleChange: secChange, handleBlur: secBlur }"
+                      v-slot="{
+                        errorMessage: secError,
+                        handleChange: secChange,
+                        handleBlur: secBlur,
+                      }"
                       v-model="form[field.secondaryId!]"
                       :name="field.secondaryId"
                     >

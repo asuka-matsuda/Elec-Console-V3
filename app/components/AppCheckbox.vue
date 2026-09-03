@@ -3,26 +3,22 @@
  * AppCheckbox
  * 真偽値を選択するためのチェックボックスコンポーネント
  */
-import { useId } from 'vue'
+import { useId } from "vue";
 
-const model = defineModel<boolean | unknown[]>()
+const model = defineModel<boolean | unknown[]>();
 
 defineProps<{
-  value?: unknown
-  label?: string
-  disabled?: boolean
-  indeterminate?: boolean
-}>()
+  value?: unknown;
+  label?: string;
+  disabled?: boolean;
+  indeterminate?: boolean;
+}>();
 
-const inputId = useId()
+const inputId = useId();
 </script>
 
 <template>
-  <label
-    class="c-checkbox"
-    :class="{ 'is-disabled': disabled }"
-    :for="inputId"
-  >
+  <label class="c-checkbox" :class="{ 'is-disabled': disabled }" :for="inputId">
     <input
       :id="inputId"
       v-model="model"
@@ -36,10 +32,7 @@ const inputId = useId()
       <AppIcon name="check" class="c-checkbox__icon c-checkbox__icon--check" />
       <AppIcon name="minus" class="c-checkbox__icon c-checkbox__icon--dash" />
     </div>
-    <span
-      v-if="label || $slots.default"
-      class="c-checkbox__label"
-    >
+    <span v-if="label || $slots.default" class="c-checkbox__label">
       <slot>{{ label }}</slot>
     </span>
   </label>

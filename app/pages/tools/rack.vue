@@ -3,11 +3,11 @@
  * RackCalculator
  * ケーブルラック選定ツールのコンポーネントです。強電・弱電ケーブルのリストと段積み数から最適なラック幅を選定します。
  */
-import { useRackCalculator } from '~/composables/tools/useRackCalculator'
+import { useRackCalculator } from "~/composables/tools/useRackCalculator";
 
 useHead({
-  title: 'ケーブルラック選定',
-})
+  title: "ケーブルラック選定",
+});
 
 const {
   inputs,
@@ -22,7 +22,7 @@ const {
   openResetModal,
   confirmReset,
   mathSteps,
-} = useRackCalculator()
+} = useRackCalculator();
 </script>
 
 <template>
@@ -70,26 +70,14 @@ const {
           <!-- 強電エリア -->
           <AppCard variant="default">
             <div class="p-rack__card-header">
-              <h3 class="p-rack__card-title">
-                強電エリア
-              </h3>
-              <AppToggle
-                v-model="inputs.isStrong"
-                label=""
-              />
+              <h3 class="p-rack__card-title">強電エリア</h3>
+              <AppToggle v-model="inputs.isStrong" label="" />
             </div>
 
-            <div
-              v-if="inputs.isStrong"
-              class="p-rack__card-body"
-            >
+            <div v-if="inputs.isStrong" class="p-rack__card-body">
               <AppFormGroup label="段積み数">
                 <AppInputGroup>
-                  <AppInput
-                    v-model="inputs.lStrong"
-                    type="number"
-                    min="1"
-                  />
+                  <AppInput v-model="inputs.lStrong" type="number" min="1" />
                   <template #append>
                     <span class="c-input-addon">段</span>
                   </template>
@@ -97,9 +85,7 @@ const {
               </AppFormGroup>
 
               <div class="p-rack__section">
-                <div class="p-rack__section-title">
-                  強電ケーブルリスト
-                </div>
+                <div class="p-rack__section-title">強電ケーブルリスト</div>
                 <div class="p-rack__cable-list">
                   <ToolCableCard
                     v-for="(cable, index) in inputs.strongCablesUI"
@@ -124,26 +110,14 @@ const {
           <!-- 弱電エリア -->
           <AppCard variant="default">
             <div class="p-rack__card-header">
-              <h3 class="p-rack__card-title">
-                弱電エリア
-              </h3>
-              <AppToggle
-                v-model="inputs.isWeak"
-                label=""
-              />
+              <h3 class="p-rack__card-title">弱電エリア</h3>
+              <AppToggle v-model="inputs.isWeak" label="" />
             </div>
 
-            <div
-              v-if="inputs.isWeak"
-              class="p-rack__card-body"
-            >
+            <div v-if="inputs.isWeak" class="p-rack__card-body">
               <AppFormGroup label="段積み数">
                 <AppInputGroup>
-                  <AppInput
-                    v-model="inputs.lWeak"
-                    type="number"
-                    min="1"
-                  />
+                  <AppInput v-model="inputs.lWeak" type="number" min="1" />
                   <template #append>
                     <span class="c-input-addon">段</span>
                   </template>
@@ -151,9 +125,7 @@ const {
               </AppFormGroup>
 
               <div class="p-rack__section">
-                <div class="p-rack__section-title">
-                  弱電ケーブルリスト
-                </div>
+                <div class="p-rack__section-title">弱電ケーブルリスト</div>
                 <div class="p-rack__cable-list">
                   <ToolCableCard
                     v-for="(cable, index) in inputs.weakCablesUI"
@@ -192,21 +164,24 @@ const {
           <template #value>
             <div class="p-result-rack">
               <div class="p-result-rack__val">
-                <template v-if="result?.error || (!inputs.isStrong && !inputs.isWeak)">
+                <template
+                  v-if="result?.error || (!inputs.isStrong && !inputs.isWeak)"
+                >
                   ---
                 </template>
                 <template v-else-if="result?.selectedSize">
                   W{{ result?.selectedSize }}
                 </template>
                 <template v-else>
-                  規格外 ({{ result?.totalWidth ? Math.ceil(result.totalWidth) : 0 }}mm以上)
+                  規格外 ({{
+                    result?.totalWidth ? Math.ceil(result.totalWidth) : 0
+                  }}mm以上)
                 </template>
               </div>
-              <div
-                v-if="result?.isOverflow"
-                class="p-result-rack__warning"
-              >
-                ⚠️ ケーブルの高さがラックの有効深さ({{ maxDepth }}mm)を超過しています。
+              <div v-if="result?.isOverflow" class="p-result-rack__warning">
+                ⚠️ ケーブルの高さがラックの有効深さ({{
+                  maxDepth
+                }}mm)を超過しています。
               </div>
             </div>
           </template>
@@ -214,26 +189,28 @@ const {
 
         <ToolResultDetails>
           <ToolResultRow label="強電 必要幅">
-            <strong>{{ result?.wStrong?.toFixed(1) ?? '0.0' }}</strong> mm
+            <strong>{{ result?.wStrong?.toFixed(1) ?? "0.0" }}</strong> mm
           </ToolResultRow>
           <ToolResultRow label="弱電 必要幅">
-            <strong>{{ result?.wWeak?.toFixed(1) ?? '0.0' }}</strong> mm
+            <strong>{{ result?.wWeak?.toFixed(1) ?? "0.0" }}</strong> mm
           </ToolResultRow>
           <ToolResultRow
             v-if="inputs.isStrong && inputs.isWeak"
             label="セパレータ幅"
           >
-            <strong>{{ result?.wSep?.toFixed(1) ?? '0.0' }}</strong> mm
+            <strong>{{ result?.wSep?.toFixed(1) ?? "0.0" }}</strong> mm
           </ToolResultRow>
-          <ToolResultRow
-            label="合計 必要幅"
-            top-border
-          >
-            <strong>{{ result?.totalWidth ? Math.ceil(result.totalWidth) : 0 }}</strong> mm
+          <ToolResultRow label="合計 必要幅" top-border>
+            <strong>{{
+              result?.totalWidth ? Math.ceil(result.totalWidth) : 0
+            }}</strong>
+            mm
           </ToolResultRow>
           <ToolResultRow label="最大ケーブル高さ">
-            <strong :class="{ 'is-overflow': result?.isOverflow }">{{ result?.maxCableStackHeight?.toFixed(1) ?? '0.0' }}</strong> mm
-            (有効 {{ maxDepth }} mm)
+            <strong :class="{ 'is-overflow': result?.isOverflow }">{{
+              result?.maxCableStackHeight?.toFixed(1) ?? "0.0"
+            }}</strong>
+            mm (有効 {{ maxDepth }} mm)
           </ToolResultRow>
         </ToolResultDetails>
       </ToolResultPanel>

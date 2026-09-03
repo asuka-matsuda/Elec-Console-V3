@@ -1,5 +1,4 @@
-<script setup lang="ts" generic="T extends Record<string, unknown>
-">
+<script setup lang="ts" generic="T extends Record<string, unknown>">
 /**
  * AppTable
  *
@@ -9,34 +8,34 @@
  */
 
 export interface TableColumn<T = Record<string, unknown>> {
-  key: (keyof T & string) | string
-  label: string
-  sortable?: boolean
-  width?: string
-  align?: 'left' | 'center' | 'right'
+  key: (keyof T & string) | string;
+  label: string;
+  sortable?: boolean;
+  width?: string;
+  align?: "left" | "center" | "right";
 }
 
 const props = defineProps<{
-  columns?: TableColumn<T>[]
-  data?: T[]
-  sortBy?: string
-  sortOrder?: 'asc' | 'desc'
-}>()
+  columns?: TableColumn<T>[];
+  data?: T[];
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+}>();
 
 const emit = defineEmits<{
-  (e: 'sort', payload: { key: string, order: 'asc' | 'desc' }): void
-}>()
+  (e: "sort", payload: { key: string; order: "asc" | "desc" }): void;
+}>();
 
 const handleSort = (col: TableColumn<T>) => {
-  if (!col.sortable) return
+  if (!col.sortable) return;
 
-  let newOrder: 'asc' | 'desc' = 'asc'
+  let newOrder: "asc" | "desc" = "asc";
 
   if (props.sortBy === col.key) {
-    newOrder = props.sortOrder === 'asc' ? 'desc' : 'asc'
+    newOrder = props.sortOrder === "asc" ? "desc" : "asc";
   }
-  emit('sort', { key: col.key, order: newOrder })
-}
+  emit("sort", { key: col.key, order: newOrder });
+};
 </script>
 
 <template>
@@ -49,15 +48,37 @@ const handleSort = (col: TableColumn<T>) => {
             <th
               v-for="col in columns"
               :key="col.key"
-              :class="{ 'is-sortable': col.sortable, 'is-sorted': sortBy === col.key }"
+              :class="{
+                'is-sortable': col.sortable,
+                'is-sorted': sortBy === col.key,
+              }"
               :style="{ width: col.width, textAlign: col.align }"
-              :aria-sort="col.sortable ? (sortBy === col.key ? (sortOrder === 'asc' ? 'ascending' : 'descending') : 'none') : undefined"
-              :title="col.sortable ? (sortBy === col.key ? (sortOrder === 'asc' ? 'クリックで降順' : 'クリックで昇順') : 'クリックで並び替え') : undefined"
+              :aria-sort="
+                col.sortable
+                  ? sortBy === col.key
+                    ? sortOrder === 'asc'
+                      ? 'ascending'
+                      : 'descending'
+                    : 'none'
+                  : undefined
+              "
+              :title="
+                col.sortable
+                  ? sortBy === col.key
+                    ? sortOrder === 'asc'
+                      ? 'クリックで降順'
+                      : 'クリックで昇順'
+                    : 'クリックで並び替え'
+                  : undefined
+              "
               @click="handleSort(col)"
             >
               <div
                 class="c-table__th-inner"
-                :class="{ 'is-center': col.align === 'center', 'is-right': col.align === 'right' }"
+                :class="{
+                  'is-center': col.align === 'center',
+                  'is-right': col.align === 'right',
+                }"
               >
                 <span>{{ col.label }}</span>
                 <AppIcon
@@ -82,14 +103,8 @@ const handleSort = (col: TableColumn<T>) => {
       <tbody v-if="$slots.body || (data && columns)">
         <slot name="body">
           <template v-if="data && columns">
-            <tr
-              v-for="(row, index) in data"
-              :key="index"
-            >
-              <td
-                v-for="col in columns"
-                :key="col.key"
-              >
+            <tr v-for="(row, index) in data" :key="index">
+              <td v-for="col in columns" :key="col.key">
                 <slot
                   :name="`cell-${col.key}`"
                   :value="row[col.key]"
@@ -114,7 +129,6 @@ const handleSort = (col: TableColumn<T>) => {
 .c-table-wrapper {
   overflow: auto;
   flex: 1;
-  width: 100%;
   min-height: 0;
 
   @include border-base;
@@ -154,7 +168,9 @@ const handleSort = (col: TableColumn<T>) => {
     &.is-sortable {
       @include click-enabled;
 
-      transition: background-color var(--transition-fast) ease, color var(--transition-fast) ease;
+      transition:
+        background-color var(--transition-fast) ease,
+        color var(--transition-fast) ease;
 
       &:hover {
         color: var(--color-text-main);

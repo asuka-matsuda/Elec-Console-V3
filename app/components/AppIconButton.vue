@@ -1,24 +1,21 @@
 <script setup lang="ts">
-import type { BaseButtonProps } from '~/types/components'
+import type { BaseButtonProps } from "~/types/components";
 
-import AppButton from './AppButton.vue'
+import AppButton from "./AppButton.vue";
 
 export interface AppIconButtonProps extends BaseButtonProps {
-  name: string
+  name: string;
 }
 
 const props = withDefaults(defineProps<AppIconButtonProps>(), {
-  type: 'button',
-  size: 'md',
-  variant: 'primary',
-})
+  type: "button",
+  size: "md",
+  variant: "primary",
+});
 </script>
 
 <template>
-  <AppButton
-    v-bind="props"
-    class="c-icon-btn"
-  >
+  <AppButton v-bind="props" class="c-icon-btn">
     <AppIcon :name="name" />
   </AppButton>
 </template>

@@ -3,30 +3,30 @@
  * TorqueDbPage
  * 締付トルクのデータベース情報を一覧表示・検索するためのページコンポーネントです。
  */
-import { computed } from 'vue'
+import { computed } from "vue";
 
-import type { TableColumn } from '~/components/AppTable.vue'
-import { torqueData } from '~/constants/data/torqueData'
+import type { TableColumn } from "~/components/AppTable.vue";
+import { torqueData } from "~/constants/data/torqueData";
 
 /** Flatten the nested torqueData structure */
 const flattenedData = computed(() => {
-  return torqueData.flatMap(cat =>
-    cat.items.map(item => ({
+  return torqueData.flatMap((cat) =>
+    cat.items.map((item) => ({
       category: cat.category,
       reference: cat.reference,
       ...item,
     })),
-  )
-})
+  );
+});
 
 const tableColumns: TableColumn[] = [
-  { key: 'category', label: 'カテゴリ', sortable: true },
-  { key: 'size', label: 'サイズ', sortable: true },
-  { key: 'torque_nm', label: '標準トルク (N・m)', sortable: true },
-  { key: 'range_nm', label: '許容範囲 (N・m)', sortable: true },
-  { key: 'note', label: '備考', sortable: true },
-  { key: 'reference', label: '参考規格', sortable: true },
-]
+  { key: "category", label: "カテゴリ", sortable: true },
+  { key: "size", label: "サイズ", sortable: true },
+  { key: "torque_nm", label: "標準トルク (N・m)", sortable: true },
+  { key: "range_nm", label: "許容範囲 (N・m)", sortable: true },
+  { key: "note", label: "備考", sortable: true },
+  { key: "reference", label: "参考規格", sortable: true },
+];
 </script>
 
 <template>

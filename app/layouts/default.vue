@@ -1,24 +1,23 @@
 <script setup lang="ts">
-import { menuData } from '~/constants/data/menuData'
+import { menuData } from "~/constants/data/menuData";
 
 // Mobile sidebar toggle state (Global)
-const isSidebarOpen = useState('sidebar-open', () => false)
+const isSidebarOpen = useState("sidebar-open", () => false);
 
 // Dynamic breadcrumbs based on current route
-const { items: breadcrumbs, accent: breadcrumbAccent } = useBreadcrumbs()
-const { currentUser, logout } = useAuth()
+const { items: breadcrumbs, accent: breadcrumbAccent } = useBreadcrumbs();
+const { currentUser, logout } = useAuth();
 </script>
 
 <template>
   <div
     class="l-app"
-    :style="{ '--theme-accent': `var(--color-category-${breadcrumbAccent || 'main'})` }"
+    :style="{
+      '--theme-accent': `var(--color-category-${breadcrumbAccent || 'main'})`,
+    }"
   >
     <!-- Sidebar -->
-    <LayoutGlobalNav
-      v-model:is-open="isSidebarOpen"
-      :menu-data="menuData"
-    />
+    <LayoutGlobalNav v-model:is-open="isSidebarOpen" :menu-data="menuData" />
 
     <!-- Main Content Area -->
     <div class="l-main">
@@ -32,16 +31,20 @@ const { currentUser, logout } = useAuth()
             <AppIcon
               name="bell"
               size="md"
-              style="color: var(--color-text-secondary);"
+              style="color: var(--color-text-secondary)"
             />
             <div class="l-header-user__avatar">
               <AppIcon
                 name="user"
                 size="sm"
-                style="color: var(--color-main-bg);"
+                style="color: var(--color-main-bg)"
               />
             </div>
-            <span class="l-header-user__name">{{ currentUser ? `${currentUser.lastName} ${currentUser.firstName}` : 'ゲスト' }}</span>
+            <span class="l-header-user__name">{{
+              currentUser
+                ? `${currentUser.lastName} ${currentUser.firstName}`
+                : "ゲスト"
+            }}</span>
             <AppButton
               variant="secondary"
               size="sm"
@@ -115,7 +118,10 @@ const { currentUser, logout } = useAuth()
     border-radius: 50%;
     background: var(--theme-accent);
 
-    @include border-base(var(--theme-accent), $width: var(--border-width-thick));
+    @include border-base(
+      var(--theme-accent),
+      $width: var(--border-width-thick)
+    );
     @include state-focus(var(--theme-accent));
   }
 

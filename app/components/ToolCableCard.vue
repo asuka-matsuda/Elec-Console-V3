@@ -3,79 +3,88 @@
  * ToolCableRowCard
  * ケーブルの種類、サイズ、本数を入力するためのカードコンポーネントです。
  */
-import { computed } from 'vue'
+import { computed } from "vue";
 
-import { cableData } from '~/constants/data/cableData'
-import { getAvailableSizes, getCableCategories } from '~/utils/cable'
-import { calculateCableArea } from '~/utils/tools/conduit/conduitCalcLogic'
+import { cableData } from "~/constants/data/cableData";
+import { getAvailableSizes, getCableCategories } from "~/utils/cable";
+import { calculateCableArea } from "~/utils/tools/conduit/conduitCalcLogic";
 
 /**
  * CableInput is used as a generic type here, but make sure
  * it matches { id: string, category: string, cableIdx: string, count: number | null }
  */
 const props = defineProps<{
-  modelValue: { id: string, category: string, cableIdx: string, count: number | null }
-  index: number
-  removable?: boolean
-}>()
+  modelValue: {
+    id: string;
+    category: string;
+    cableIdx: string;
+    count: number | null;
+  };
+  index: number;
+  removable?: boolean;
+}>();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: { id: string, category: string, cableIdx: string, count: number | null }): void
-  (e: 'remove'): void
-}>()
+  (
+    e: "update:modelValue",
+    value: {
+      id: string;
+      category: string;
+      cableIdx: string;
+      count: number | null;
+    },
+  ): void;
+  (e: "remove"): void;
+}>();
 
-const categories = computed(() => getCableCategories())
+const categories = computed(() => getCableCategories());
 const availableSizes = computed(() =>
   getAvailableSizes(props.modelValue.category),
-)
+);
 
 const singleCableArea = computed(() => {
-  const cableIdxStr = (props.modelValue.cableIdx || '')
+  const cableIdxStr = props.modelValue.cableIdx || "";
 
-  if (!cableIdxStr || !cableIdxStr.startsWith('idx_')) return null
-  const idx = parseInt(cableIdxStr.replace('idx_', ''), 10)
-  const def = cableData[idx]
+  if (!cableIdxStr || !cableIdxStr.startsWith("idx_")) return null;
+  const idx = parseInt(cableIdxStr.replace("idx_", ""), 10);
+  const def = cableData[idx];
 
-  if (!def) return null
+  if (!def) return null;
 
-  return calculateCableArea(def.diameter)
-})
+  return calculateCableArea(def.diameter);
+});
 
-const onCategoryChange = (val: string | number | boolean | null | undefined) => {
-  emit('update:modelValue', {
+const onCategoryChange = (
+  val: string | number | boolean | null | undefined,
+) => {
+  emit("update:modelValue", {
     ...props.modelValue,
     category: String(val),
-    cableIdx: '',
-  })
-}
+    cableIdx: "",
+  });
+};
 
 const updateCableIdx = (val: string | number | boolean | null | undefined) => {
-  emit('update:modelValue', {
+  emit("update:modelValue", {
     ...props.modelValue,
     cableIdx: String(val),
-  })
-}
+  });
+};
 
 const updateCount = (val: string | number | boolean | null | undefined) => {
-  emit('update:modelValue', {
+  emit("update:modelValue", {
     ...props.modelValue,
     count: Number(val),
-  })
-}
+  });
+};
 </script>
 
 <template>
-  <AppCard
-    class="c-cable-row"
-    variant="default"
-  >
+  <AppCard class="c-cable-row" variant="default">
     <div class="c-cable-row__header">
       <div class="c-cable-row__title-group">
         <span class="c-cable-row__title">ケーブル {{ index + 1 }}</span>
-        <span
-          v-if="singleCableArea !== null"
-          class="c-cable-row__meta"
-        >
+        <span v-if="singleCableArea !== null" class="c-cable-row__meta">
           ( 断面積: {{ singleCableArea.toFixed(1) }} mm² / 本 )
         </span>
       </div>
@@ -86,10 +95,7 @@ const updateCount = (val: string | number | boolean | null | undefined) => {
         icon-only
         @click="emit('remove')"
       >
-        <AppIcon
-          name="trash-2"
-          size="sm"
-        />
+        <AppIcon name="trash-2" size="sm" />
       </AppButton>
     </div>
     <div>
