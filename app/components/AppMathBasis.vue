@@ -5,6 +5,7 @@
  */
 import "katex/dist/katex.min.css"; // Required for rendering KaTeX styles
 
+import { computed } from "vue";
 import katex from "katex";
 
 export type MathStep = {
@@ -13,7 +14,7 @@ export type MathStep = {
   legend?: string[];
 };
 
-defineProps<{
+const props = defineProps<{
   steps: MathStep[];
 }>();
 
