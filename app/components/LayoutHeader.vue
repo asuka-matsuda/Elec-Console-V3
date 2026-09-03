@@ -16,7 +16,7 @@ const emit = defineEmits<{
 
 <template>
   <header class="l-header">
-    <div class="l-header__left">
+    <div class="l-header__main">
       <AppIconButton
         name="menu"
         class="l-header__menu-btn"
@@ -39,15 +39,14 @@ const emit = defineEmits<{
   height: 64px;
   padding: 0 var(--space-layout-pad);
 
-  &__left {
+  &__main {
     @include flex-start-center;
 
     gap: var(--space-2);
   }
 
-  :deep(&__menu-btn),
-  &__menu-btn {
-    display: none; // Hidden on desktop
+  :deep(.l-header__menu-btn) {
+    display: none;
 
     @include mq("md") {
       display: inline-flex;
