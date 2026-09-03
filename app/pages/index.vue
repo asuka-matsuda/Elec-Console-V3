@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * Dashboard
  * ダッシュボード画面のコンポーネントです。各機能へのリンクやメニューをカード形式で一覧表示します。
@@ -106,10 +106,11 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
 
 <style scoped lang="scss">
 .p-dashboard {
-  @include flex-start-start;`n`n  gap: var(--space-section-gap);
-  padding-bottom: var(--space-layout-pad);
+  @include flex-start-start;
 
-  @include mq("md") {
+  gap: var(--space-section-gap);
+
+  @include cq("md") {
     flex-direction: column;
     align-items: stretch;
   }
