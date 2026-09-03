@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * RackCalculator
  * ケーブルラック選定ツールのコンポーネントです。強電・弱電ケーブルのリストと段積み数から最適なラック幅を選定します。
@@ -217,7 +217,7 @@ const {
     </template>
 
     <template #basis>
-      <ToolCalcBasisPanel :steps="mathSteps" />
+      <ToolMathBasisPanel :steps="mathSteps" />
     </template>
   </ToolLayout>
 

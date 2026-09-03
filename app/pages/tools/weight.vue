@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * WeightCalculator
  * ケーブル重量・ドラム選定ツールのコンポーネントです。ケーブルの種類と長さから重量を計算し、最適なドラムを選定します。
@@ -155,7 +155,7 @@ const totalWeight = computed(() => {
     </template>
 
     <template #basis>
-      <ToolCalcBasisPanel :steps="mathSteps">
+      <ToolMathBasisPanel :steps="mathSteps">
         <div class="p-weight__note">
           <strong>【ドラム選定ロジック】</strong><br />
           上記①〜③の計算をデータベース上のすべてのドラムに対して行い、重量要件、曲げ半径要件、容量要件のすべてをクリアするドラムのうち、「自重が最も軽いもの」を最適なドラムとして最終選定しています。
@@ -172,7 +172,7 @@ const totalWeight = computed(() => {
             <li>K: 補正係数</li>
           </ul>
         </div>
-      </ToolCalcBasisPanel>
+      </ToolMathBasisPanel>
     </template>
   </ToolLayout>
 

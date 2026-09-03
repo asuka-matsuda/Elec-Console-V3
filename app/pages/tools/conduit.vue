@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * ConduitCalculator
  * 配管サイズ自動選定ツールのコンポーネントです。収容するケーブルの種類と数から、適切な配管サイズを計算します。
@@ -91,14 +91,14 @@ const handleSave = async () => {
     </template>
 
     <template #basis>
-      <ToolCalcBasisPanel :steps="mathSteps">
+      <ToolMathBasisPanel :steps="mathSteps">
         <div class="p-basis-note">
           <strong>内線規程（勧告）</strong><br />
           3110-5
           管の屈曲が少なく、容易に電線を引き入れ及び引き替えることができる場合（48％）<br />
           3110-6 異なる太さの絶縁電線を同一管内に収める場合（32％）
         </div>
-      </ToolCalcBasisPanel>
+      </ToolMathBasisPanel>
     </template>
   </ToolLayout>
 
