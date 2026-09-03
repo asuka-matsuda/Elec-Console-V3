@@ -35,11 +35,7 @@ const currentYear = new Date().getFullYear()
     &:hover {
       color: var(--color-text-secondary);
 
-      @include cyber-text-glow(
-        var(--color-text-secondary),
-        30%,
-        var(--blur-sm)
-      );
+      @include cyber-text-glow(var(--color-text-secondary), 30%, var(--blur-sm));
     }
   }
 }
