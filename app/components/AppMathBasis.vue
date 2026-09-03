@@ -100,6 +100,11 @@ const parsedLegend = computed(() => {
       .tex-status-danger * {
         color: var(--color-status-danger);
       }
+
+      .tex-color-accent,
+      .tex-color-accent * {
+        color: var(--color-accent-main);
+      }
     }
 
   }
