@@ -85,17 +85,10 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
             :key="item.text"
             :to="getDynamicTo(item)"
             :disabled="getDynamicDisabled(item)"
-          >
-            <div class="p-dashboard-card__layout">
-              <div class="p-dashboard-card__header">
-                <AppIcon :name="item.icon" />
-                <span>{{ item.text }}</span>
-              </div>
-              <div class="p-dashboard-card__desc">
-                {{ getDynamicDesc(item) }}
-              </div>
-            </div>
-          </AppCard>
+            :title="item.text"
+            :icon="item.icon"
+            :description="getDynamicDesc(item)"
+          />
         </div>
       </section>
     </div>
@@ -129,32 +122,6 @@ const getDynamicDesc = (item: Record<string, unknown>) => {
 
   &__grid {
     @include grid-auto(280px, var(--space-card-gap));
-  }
-}
-
-/* Inner Card Styles */
-.p-dashboard-card {
-  &__layout {
-    @include flex-start-stretch($direction: column);
-
-    gap: var(--space-1);
-  }
-
-  &__header {
-    @include text-title("sm");
-    @include flex-start-center;
-
-    gap: var(--space-1);
-    align-items: flex-start;
-
-    color: var(--theme-accent);
-    word-break: keep-all;
-    line-break: strict;
-    overflow-wrap: anywhere;
-  }
-
-  &__desc {
-    @include text-desc;
   }
 }
 </style>

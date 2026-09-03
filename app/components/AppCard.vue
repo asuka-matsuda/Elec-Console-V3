@@ -9,6 +9,9 @@ const props = defineProps<{
   to?: string
   href?: string
   disabled?: boolean
+  title?: string
+  icon?: string
+  description?: string
 }>()
 
 const rootTag = computed(() => {
@@ -42,7 +45,22 @@ const handleClick = (e: MouseEvent) => {
     :class="{ 'is-disabled': disabled }"
     @click="handleClick"
   >
-    <slot />
+    <div v-if="$slots.header || title || icon || $slots.description || description" class="c-card__header-group">
+      <div v-if="$slots.header || title || icon" class="c-card__header">
+        <slot name="header">
+          <AppIcon v-if="icon" :name="icon" class="c-card__icon" />
+          <span v-if="title" class="c-card__title">{{ title }}</span>
+        </slot>
+      </div>
+      <div v-if="$slots.description || description" class="c-card__desc">
+        <slot name="description">
+          {{ description }}
+        </slot>
+      </div>
+    </div>
+    <div v-if="$slots.default" class="c-card__content">
+      <slot />
+    </div>
   </component>
 </template>
 
@@ -78,6 +96,37 @@ const handleClick = (e: MouseEvent) => {
         @include state-active(var(--theme-accent), "md");
       }
     }
+  }
+
+  &__header-group {
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-1);
+  }
+
+  &__header {
+    @include text-title("sm");
+    @include flex-start-start;
+
+    gap: var(--space-1);
+    color: var(--theme-accent);
+    word-break: keep-all;
+    line-break: strict;
+    overflow-wrap: anywhere;
+  }
+
+  &__icon {
+    flex-shrink: 0;
+  }
+
+  &__desc {
+    @include text-desc;
+  }
+
+  &__content {
+    @include flex-start-stretch($direction: column);
+
+    flex: 1;
   }
 }
 </style>

@@ -21,18 +21,12 @@ const history = computed(() => dashboardData.value?.history || [])
         データを読み込み中...
       </div>
       <div v-else class="p-dashboard__list">
-        <AppCard
-          v-for="item in announcements"
-          :key="item.title"
-          class="p-dashboard-list-item"
-        >
-          <div class="p-dashboard-list-item__title">
-            {{ item.title }}
-          </div>
-          <div class="p-dashboard-list-item__meta">
-            {{ item.date }} {{ item.desc }}
-          </div>
-        </AppCard>
+          <AppCard
+            v-for="item in announcements"
+            :key="item.title"
+            :title="item.title"
+            :description="`${item.date} ${item.desc}`"
+          />
       </div>
     </section>
 
@@ -43,23 +37,20 @@ const history = computed(() => dashboardData.value?.history || [])
         データを読み込み中...
       </div>
       <div v-else class="p-dashboard__list">
-        <AppCard
-          v-for="item in history"
-          :key="item.version"
-          class="p-dashboard-list-item"
-        >
-          <div class="p-dashboard-list-item__header">
-            <AppBadge
-              :color="item.status === 'success' ? 'success' : 'secondary'"
-            >
-              {{ item.version }}
-            </AppBadge>
-            <span class="p-dashboard-list-item__title">{{ item.title }}</span>
-          </div>
-          <div class="p-dashboard-list-item__meta">
-            {{ item.date }} {{ item.desc }}
-          </div>
-        </AppCard>
+          <AppCard
+            v-for="item in history"
+            :key="item.version"
+            :description="`${item.date} ${item.desc}`"
+          >
+            <template #header>
+              <AppBadge
+                :color="item.status === 'success' ? 'success' : 'secondary'"
+              >
+                {{ item.version }}
+              </AppBadge>
+              <span class="p-dashboard-list-item__title">{{ item.title }}</span>
+            </template>
+          </AppCard>
       </div>
     </section>
   </aside>
@@ -101,25 +92,9 @@ const history = computed(() => dashboardData.value?.history || [])
 
     @include border-base;
   }
-}
-
-/* List Item Card Styles */
-.p-dashboard-list-item {
-  @include flex-start-stretch($direction: column);
-
-  gap: var(--space-1);
-  padding: var(--space-3);
-
-  &__header {
-    @include flex-start-center;
-  }
 
   &__title {
     color: var(--color-text-main);
-  }
-
-  &__meta {
-    @include text-meta;
   }
 }
 </style>
