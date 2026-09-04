@@ -30,6 +30,7 @@ const toggleDrawer = () => {
             <span class="l-tool-layout__drawer-title">計算結果を見る</span>
             <AppIcon
               :name="isDrawerOpen ? 'chevron-down' : 'chevron-up'"
+              size="md"
               class="l-tool-layout__drawer-icon"
             />
           </div>
@@ -181,8 +182,6 @@ const toggleDrawer = () => {
   }
 
   &__drawer-icon {
-    width: var(--icon-size-md);
-    height: var(--icon-size-md);
     color: var(--color-category-tool);
   }
 

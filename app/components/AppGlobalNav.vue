@@ -53,7 +53,11 @@ const closeSidebar = () => {
             class="c-global-nav__link"
             @click="item.disabled ? undefined : closeSidebar()"
           >
-            <AppIcon :name="item.icon" class="c-global-nav__link-icon" />
+            <AppIcon
+              :name="item.icon"
+              size="md"
+              class="c-global-nav__link-icon"
+            />
             <span class="c-global-nav__link-text">{{ item.text }}</span>
           </component>
         </div>
@@ -148,10 +152,6 @@ const closeSidebar = () => {
     }
 
     &-icon {
-      flex-shrink: 0; // アイコンが潰れないように
-      width: var(--icon-size-md);
-      height: var(--icon-size-md);
-
       @include state-base;
     }
 

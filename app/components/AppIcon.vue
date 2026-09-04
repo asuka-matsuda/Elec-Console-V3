@@ -32,24 +32,26 @@ const svgContent = computed(() => {
 .c-icon {
   @include flex-center-center($is-inline: true);
 
+  flex-shrink: 0;
+
   :deep(svg) {
     width: 100%;
     height: 100%;
   }
 
   &--sm {
-    width: 14px;
-    height: 14px;
+    width: var(--icon-size-sm);
+    height: var(--icon-size-sm);
   }
 
   &--md {
-    width: 18px;
-    height: 18px;
+    width: var(--icon-size-md);
+    height: var(--icon-size-md);
   }
 
   &--lg {
-    width: 24px;
-    height: 24px;
+    width: var(--icon-size-lg);
+    height: var(--icon-size-lg);
   }
 }
 </style>

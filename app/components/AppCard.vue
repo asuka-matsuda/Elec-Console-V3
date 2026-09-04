@@ -54,7 +54,7 @@ const hasDescription = computed(() => !!(slots.description || props.description)
       <div v-if="hasTitle" class="c-card__title">
         <slot name="title">
           <slot name="header">
-            <AppIcon v-if="icon" :name="icon" class="c-card__icon" />
+            <AppIcon v-if="icon" :name="icon" />
             <span v-if="title">{{ title }}</span>
           </slot>
         </slot>
@@ -119,10 +119,6 @@ const hasDescription = computed(() => !!(slots.description || props.description)
     word-break: keep-all;
     line-break: strict;
     overflow-wrap: anywhere;
-  }
-
-  &__icon {
-    flex-shrink: 0;
   }
 
   &__desc {
