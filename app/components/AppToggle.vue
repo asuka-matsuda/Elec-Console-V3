@@ -54,29 +54,8 @@ defineProps<{
 
     opacity: 0;
 
-    &:not(:disabled) {
-      &:hover {
-        ~ .c-toggle__label {
-          color: color-mix(in srgb, var(--toggle-color) 90%, transparent);
-
-          @include cyber-text-glow(var(--toggle-color), 20%, var(--blur-sm));
-        }
-
-        &:not(:focus-visible, :active, :checked) ~ .c-toggle__track {
-          @include state-hover(var(--toggle-color));
-        }
-      }
-
-      &:active {
-        ~ .c-toggle__track {
-          transform: scale(0.95);
-          transition: transform var(--duration-slow) var(--ease-base);
-
-          .c-toggle__thumb {
-            @include shadow("sink");
-          }
-        }
-      }
+    &:checked ~ .c-toggle__track .c-toggle__thumb {
+      transform: translateX(calc(var(--track-w) - var(--thumb-w)));
     }
 
     &:disabled {
@@ -86,27 +65,51 @@ defineProps<{
       }
     }
 
-    &:focus-visible ~ .c-toggle__track {
-      @include state-focus(var(--toggle-color));
-      @include cyber-text-glow(var(--toggle-color));
-    }
+    &:not(:disabled) {
+      &:hover {
+        ~ .c-toggle__label {
+          color: color-mix(in srgb, var(--toggle-color) 90%, transparent);
 
-    &:checked ~ .c-toggle__track {
-      @include state-active(var(--toggle-color));
+          @include cyber-text-glow(var(--toggle-color), 20%, var(--blur-sm));
+        }
 
-      .c-toggle__thumb {
-        transform: translateX(calc(var(--track-w) - var(--thumb-w)));
+        &:not(:checked) ~ .c-toggle__track {
+          @include state-hover(var(--toggle-color));
+        }
+      }
 
-        @include state-hover(var(--toggle-color));
+      &:focus-visible ~ .c-toggle__track {
+        @include state-focus(var(--toggle-color));
+        @include cyber-text-glow(var(--toggle-color));
+      }
+
+      &:active ~ .c-toggle__track {
+        transform: scale(0.95);
+
+        .c-toggle__thumb {
+          @include shadow("sink");
+        }
+      }
+
+      &:checked ~ .c-toggle__track {
+        @include state-active(var(--toggle-color));
+
+        .c-toggle__thumb {
+          @include state-hover(var(--toggle-color));
+        }
       }
     }
   }
 
   &__track {
     position: relative;
+
     flex-shrink: 0;
+
     width: var(--track-w);
     height: var(--track-h);
+
+    transition: transform var(--duration-fast) var(--ease-base);
 
     @include border-base;
     @include state-base("sink", var(--transition-glow));
@@ -123,13 +126,11 @@ defineProps<{
 
     transition:
       transform var(--duration-base) var(--ease-smooth),
-      background-color var(--duration-base) var(--ease-base),
       box-shadow var(--duration-base) var(--ease-base),
       border-color var(--duration-base) var(--ease-base);
 
     @include border-base;
     @include shadow("sm");
   }
-
 }
 </style>
