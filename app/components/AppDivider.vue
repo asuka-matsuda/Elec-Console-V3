@@ -17,7 +17,6 @@ const props = withDefaults(
       | 'danger'
       | 'success'
       | 'border'
-      | 'sidebar-border'
     type?: 'solid' | 'fade-center' | 'fade-side'
     vertical?: boolean
   }>(),
@@ -29,15 +28,14 @@ const props = withDefaults(
 )
 
 const variantColorMap: Record<string, string> = {
-  'main': 'var(--theme-accent)',
-  'tool': 'var(--color-category-tool)',
-  'database': 'var(--color-category-database)',
-  'reference': 'var(--color-category-reference)',
-  'management': 'var(--color-category-management)',
-  'danger': 'var(--color-status-danger)',
-  'success': 'var(--color-status-success)',
-  'border': 'var(--color-border)',
-  'sidebar-border': 'var(--sidebar-border)',
+  main: 'var(--theme-accent)',
+  tool: 'var(--color-category-tool)',
+  database: 'var(--color-category-database)',
+  reference: 'var(--color-category-reference)',
+  management: 'var(--color-category-management)',
+  danger: 'var(--color-status-danger)',
+  success: 'var(--color-status-success)',
+  border: 'var(--color-border)',
 }
 
 const dividerColor = computed(

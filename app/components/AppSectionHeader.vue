@@ -17,7 +17,6 @@ const props = withDefaults(
       | 'danger'
       | 'success'
       | 'border'
-      | 'sidebar-border'
       | 'hud'
       | 'simple'
     size?: 'xs' | 'sm' | 'md' | 'lg'

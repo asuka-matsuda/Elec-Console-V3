@@ -93,6 +93,7 @@ async function main() {
 
   // Announcements
   if (fs.existsSync(path.join(dataDir, 'announcements.json'))) {
+    await prisma.announcement.deleteMany()
     const announcements = JSON.parse(fs.readFileSync(path.join(dataDir, 'announcements.json'), 'utf8'))
 
     for (const ann of announcements) {
@@ -108,6 +109,7 @@ async function main() {
 
   // History
   if (fs.existsSync(path.join(dataDir, 'history.json'))) {
+    await prisma.history.deleteMany()
     const histories = JSON.parse(fs.readFileSync(path.join(dataDir, 'history.json'), 'utf8'))
 
     for (const hist of histories) {

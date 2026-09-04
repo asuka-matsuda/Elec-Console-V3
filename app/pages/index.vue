@@ -5,10 +5,16 @@
  */
 import { useLocalStorage } from '@vueuse/core'
 
+import type { DashboardData } from '~/components/AppInfoAside.vue'
 import { useAuth } from '~/composables/useAuth'
 import { menuData } from '~/constants/data/menuData'
 
 const dashboardSections = menuData.filter(section => section.showInDashboard)
+
+const { data: dashboardData, pending: isDashboardPending } = await useFetch<DashboardData>('/api/dashboard', {
+  lazy: true,
+  default: () => ({ announcements: [], history: [] }),
+})
 
 const { currentUser, isAuthenticated } = useAuth()
 const lastSiteId = useLocalStorage('last-accessed-site', '')
@@ -91,7 +97,11 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
       </section>
     </div>
 
-    <AppInfoAside />
+    <AppInfoAside
+      :announcements="dashboardData?.announcements"
+      :history="dashboardData?.history"
+      :pending="isDashboardPending"
+    />
   </div>
 </template>
 

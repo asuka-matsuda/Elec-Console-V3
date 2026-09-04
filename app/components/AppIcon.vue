@@ -1,22 +1,20 @@
 <script setup lang="ts">
 /**
  * AppIcon
- * feather-iconsを使用したアイコンを表示するコンポーネントです。
+ * プロジェクト内で使用される Feather Icons を軽量なSVGマップで表示するコンポーネントです。
  */
-import feather from 'feather-icons'
 import { computed } from 'vue'
 
+import type { IconName } from '~/constants/icons'
+import { ICON_CONTENTS } from '~/constants/icons'
+
 const props = defineProps<{
-  name: string
+  name: IconName | string
   size?: 'sm' | 'md' | 'lg'
 }>()
 
-const svgContent = computed(() => {
-  if (feather.icons[props.name as keyof typeof feather.icons]) {
-    return feather.icons[props.name as keyof typeof feather.icons].toSvg()
-  }
-
-  return ''
+const iconInner = computed(() => {
+  return ICON_CONTENTS[props.name] || ''
 })
 </script>
 
@@ -24,8 +22,22 @@ const svgContent = computed(() => {
   <i
     class="c-icon"
     :class="[size ? `c-icon--${size}` : '']"
-    v-html="svgContent"
-  />
+  >
+    <svg
+      v-if="iconInner"
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      :class="`feather feather-${name}`"
+      v-html="iconInner"
+    />
+  </i>
 </template>
 
 <style scoped lang="scss">

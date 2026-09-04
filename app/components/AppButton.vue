@@ -10,15 +10,17 @@ import type { BaseButtonProps } from '~/types/components'
 
 export interface AppButtonProps extends BaseButtonProps {
   icon?: string
+  loading?: boolean
 }
 
 const props = withDefaults(defineProps<AppButtonProps>(), {
   type: 'button',
   size: 'sm',
   variant: 'primary',
+  loading: false,
 })
 
-const isClickable = computed(() => !props.disabled)
+const isClickable = computed(() => !props.disabled && !props.loading)
 
 const componentTag = computed(() => {
   if (!isClickable.value) return 'button'
@@ -34,6 +36,7 @@ const buttonClasses = computed(() => {
     props.variant !== 'primary' ? `c-btn--${props.variant}` : '',
     props.size !== 'sm' ? `c-btn--${props.size}` : '',
     props.block ? 'c-btn--block' : '',
+    props.loading ? 'c-btn--loading' : '',
   ].filter(Boolean)
 })
 
@@ -41,10 +44,11 @@ const componentAttrs = computed(() => {
   const isButton = componentTag.value === 'button'
 
   return {
-    to: props.to,
-    href: props.href,
-    type: isButton ? props.type : undefined,
-    disabled: props.disabled ? true : undefined,
+    'to': props.to,
+    'href': props.href,
+    'type': isButton ? props.type : undefined,
+    'disabled': !isClickable.value ? true : undefined,
+    'aria-busy': props.loading ? true : undefined,
   }
 })
 </script>
@@ -55,7 +59,8 @@ const componentAttrs = computed(() => {
     v-bind="componentAttrs"
     :class="buttonClasses"
   >
-    <AppIcon v-if="icon" :name="icon" />
+    <AppIcon v-if="loading" name="loader" class="u-spin c-btn__spinner" />
+    <AppIcon v-else-if="icon" :name="icon" />
     <slot />
   </component>
 </template>
@@ -117,6 +122,12 @@ const componentAttrs = computed(() => {
 
   &--block {
     width: 100%;
+  }
+
+  &--loading {
+    pointer-events: none;
+    cursor: wait;
+    opacity: 0.8;
   }
 
   &--md {

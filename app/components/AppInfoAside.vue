@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import { useFetch } from '#app'
-
 /**
  * AppInfoAside
  * お知らせや更新履歴などのインフォメーションを表示するサイドバーコンポーネント
@@ -28,19 +26,27 @@ export interface DashboardData {
   history: HistoryItem[]
 }
 
-const { data: dashboardData, pending } = await useFetch<DashboardData>('/api/dashboard', {
-  lazy: true,
-  default: () => ({ announcements: [], history: [] }),
-})
-
-const MAX_DISPLAY_COUNT = 4
+const props = withDefaults(
+  defineProps<{
+    announcements?: AnnouncementItem[]
+    history?: HistoryItem[]
+    pending?: boolean
+    maxCount?: number
+  }>(),
+  {
+    announcements: () => [],
+    history: () => [],
+    pending: false,
+    maxCount: 4,
+  },
+)
 
 const recentAnnouncements = computed(() =>
-  dashboardData.value.announcements.slice(0, MAX_DISPLAY_COUNT),
+  props.announcements.slice(0, props.maxCount),
 )
 
 const recentHistory = computed(() =>
-  dashboardData.value.history.slice(0, MAX_DISPLAY_COUNT),
+  props.history.slice(0, props.maxCount),
 )
 </script>
 
