@@ -180,7 +180,7 @@ const handleSaveSettings = async (updatedSite: Site) => {
     </AppPanel>
 
     <!-- 新規登録モーダル -->
-    <AppFormModal
+    <AppModal
       v-model="isCreateModalOpen"
       title="新規現場プロジェクト登録"
       :submit-fn="handleCreateSite"
@@ -192,7 +192,7 @@ const handleSaveSettings = async (updatedSite: Site) => {
       <AppFormGroup label="現場名">
         <AppInput v-model="newSite.name" placeholder="例: 新宿プロジェクト" />
       </AppFormGroup>
-    </AppFormModal>
+    </AppModal>
 
     <SiteSettingsModal
       v-model="isSettingsModalOpen"

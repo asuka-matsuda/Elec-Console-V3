@@ -46,7 +46,7 @@ const handleCreateUser = async () => {
 </script>
 
 <template>
-  <AppFormModal
+  <AppModal
     v-model="isOpen"
     title="新規ユーザー登録"
     :submit-fn="handleCreateUser"
@@ -70,5 +70,5 @@ const handleCreateUser = async () => {
         label="初回ログイン時にパスワード変更を要求する"
       />
     </AppFormGroup>
-  </AppFormModal>
+  </AppModal>
 </template>

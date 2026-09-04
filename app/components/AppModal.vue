@@ -7,7 +7,7 @@ import { onMounted, ref, watch } from 'vue'
 
 const isOpen = defineModel<boolean>({ default: false })
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     title?: string
     icon?: string
@@ -20,13 +20,20 @@ withDefaults(
       | 'danger'
       | 'success'
     align?: 'left' | 'center'
+    submitFn?: () => Promise<void>
+    submitText?: string
+    cancelText?: string
   }>(),
   {
     variant: 'main',
+    submitText: '保存する',
+    cancelText: 'キャンセル',
   },
 )
 
 const dialogRef = ref<HTMLDialogElement | null>(null)
+const isSubmitting = ref(false)
+const errorMsg = ref('')
 
 const close = () => {
   isOpen.value = false
@@ -38,10 +45,28 @@ const onNativeClose = () => {
   }
 }
 
+const handleSubmit = async () => {
+  if (!props.submitFn) return
+
+  errorMsg.value = ''
+  isSubmitting.value = true
+  try {
+    await props.submitFn()
+    isOpen.value = false
+  }
+  catch (e: unknown) {
+    errorMsg.value = (e as Error).message || '処理に失敗しました。'
+  }
+  finally {
+    isSubmitting.value = false
+  }
+}
+
 watch(
   isOpen,
   (newVal) => {
     if (newVal) {
+      errorMsg.value = ''
       if (!dialogRef.value?.open) {
         dialogRef.value?.showModal()
       }
@@ -80,11 +105,32 @@ onMounted(() => {
         class="c-modal__body"
         :class="align ? `is-align-${align}` : undefined"
       >
+        <div v-if="errorMsg" class="c-modal__error">
+          {{ errorMsg }}
+        </div>
+
         <slot />
       </div>
 
       <template v-if="$slots.footer" #footer>
         <slot name="footer" />
+      </template>
+
+      <template v-else-if="submitFn" #footer>
+        <AppButton
+          variant="secondary"
+          :disabled="isSubmitting"
+          @click="close"
+        >
+          {{ cancelText }}
+        </AppButton>
+        <AppButton
+          variant="primary"
+          :disabled="isSubmitting"
+          @click="handleSubmit"
+        >
+          {{ isSubmitting ? "処理中..." : submitText }}
+        </AppButton>
       </template>
     </AppPanel>
   </dialog>
@@ -146,14 +192,27 @@ onMounted(() => {
   &__body {
     --scrollbar-size: var(--space-2);
 
+    @include flex-start-stretch($direction: column);
     @include text-caption;
 
     overflow-y: auto;
     flex: 1;
+    gap: var(--space-3);
 
     &.is-align-center {
       text-align: center;
     }
+  }
+
+  &__error {
+    @include text-desc("md", "bold");
+
+    padding: var(--space-2) var(--space-3);
+    color: var(--color-status-danger);
+    background: transparent;
+    backdrop-filter: blur(var(--blur-sm));
+
+    @include border-base(var(--color-status-danger), 30%);
   }
 }
 </style>

@@ -32,7 +32,7 @@ const handleSave = async () => {
 </script>
 
 <template>
-  <AppFormModal
+  <AppModal
     v-model="isOpen"
     title="現場アサイン管理"
     :submit-fn="handleSave"
@@ -51,7 +51,7 @@ const handleSave = async () => {
         />
       </AppFormGroup>
     </template>
-  </AppFormModal>
+  </AppModal>
 </template>
 
 <style scoped lang="scss">
