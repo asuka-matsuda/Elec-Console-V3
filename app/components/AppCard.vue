@@ -4,7 +4,9 @@
  * 単一の情報単位やリンク先をまとめるためのカード型コンポーネント。
  * タイトル、説明文、およびコンテンツで構成されます。
  */
-import { computed, resolveComponent, useSlots } from 'vue'
+import { computed, useSlots } from 'vue'
+
+import { NuxtLink } from '#components'
 
 const props = defineProps<{
   to?: string
@@ -22,7 +24,7 @@ const isClickable = computed(() => !props.disabled && (!!props.to || !!props.hre
 const rootTag = computed(() => {
   if (props.disabled) return 'button'
   if (!isClickable.value) return 'div'
-  if (props.to) return resolveComponent('NuxtLink')
+  if (props.to) return NuxtLink
 
   return 'a'
 })

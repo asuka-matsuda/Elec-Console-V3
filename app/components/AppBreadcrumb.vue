@@ -3,7 +3,9 @@
  * AppBreadcrumb
  * パンくずリストを表示するためのコンポーネント
  */
-import { computed, resolveComponent } from 'vue'
+import { computed } from 'vue'
+
+import { NuxtLink } from '#components'
 
 export interface BreadcrumbItem {
   text: string
@@ -15,8 +17,6 @@ const props = defineProps<{
 }>()
 
 const processedItems = computed(() => {
-  const NuxtLink = resolveComponent('NuxtLink')
-
   return props.items.map((item, index) => {
     const isLast = index === props.items.length - 1
     const isLink = !isLast && !!item.href

@@ -3,8 +3,7 @@
  * AppGlobalNav
  * アプリケーションのグローバルナビゲーション（サイドバーメニュー）を表示するコンポーネントです。
  */
-import { resolveComponent } from 'vue'
-
+import { NuxtLink } from '#components'
 import type { MenuSection } from '~/constants/data/menuData'
 
 const isOpen = defineModel<boolean>('isOpen', { default: false })
@@ -44,7 +43,7 @@ const closeSidebar = () => {
         />
 
         <component
-          :is="item.disabled ? 'button' : resolveComponent('NuxtLink')"
+          :is="item.disabled ? 'button' : NuxtLink"
           v-for="item in section.items"
           :key="item.href"
           :to="item.disabled ? undefined : item.href"

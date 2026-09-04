@@ -3,8 +3,9 @@
  * AppButton
  * 汎用的なボタンコンポーネント（ベース）
  */
-import { computed, resolveComponent } from 'vue'
+import { computed } from 'vue'
 
+import { NuxtLink } from '#components'
 import type { BaseButtonProps } from '~/types/components'
 
 export interface AppButtonProps extends BaseButtonProps {
@@ -21,7 +22,7 @@ const isClickable = computed(() => !props.disabled)
 
 const componentTag = computed(() => {
   if (!isClickable.value) return 'button'
-  if (props.to) return resolveComponent('NuxtLink')
+  if (props.to) return NuxtLink
   if (props.href) return 'a'
 
   return 'button'
