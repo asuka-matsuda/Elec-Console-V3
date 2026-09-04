@@ -53,11 +53,7 @@ const closeSidebar = () => {
             class="c-global-nav__link"
             @click="item.disabled ? undefined : closeSidebar()"
           >
-            <AppIcon
-              :name="item.icon"
-              size="md"
-              class="c-global-nav__link-icon"
-            />
+            <AppIcon :name="item.icon" size="md" />
             <span class="c-global-nav__link-text">{{ item.text }}</span>
           </component>
         </div>
@@ -151,18 +147,13 @@ const closeSidebar = () => {
       overflow-wrap: anywhere; // 万が一収まらない場合は強制改行
     }
 
-    &-icon {
-      @include state-base;
-    }
-
     &:is(:hover, :focus-visible):not(:disabled, .router-link-active) {
       transform: translateX(var(--space-1));
       color: var(--section-accent);
 
       @include state-hover(var(--section-accent));
 
-      .c-global-nav__link-icon {
-        color: var(--section-accent);
+      :deep(.c-icon) {
         filter: drop-shadow(
           0 0 var(--blur-sm) var(--section-accent)
         );
@@ -187,8 +178,7 @@ const closeSidebar = () => {
         currentcolor
       );
 
-      .c-global-nav__link-icon {
-        color: var(--section-accent);
+      :deep(.c-icon) {
         filter: drop-shadow(
           0 0 var(--blur-sm) var(--section-accent)
         );
