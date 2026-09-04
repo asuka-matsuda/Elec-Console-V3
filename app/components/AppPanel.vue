@@ -30,7 +30,7 @@ withDefaults(
 </script>
 
 <template>
-  <section class="c-panel" :class="variant ? `c-panel--color-${variant}` : ''">
+  <section class="c-panel">
     <slot name="header">
       <AppSectionHeader
         v-if="title"
@@ -59,8 +59,6 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-panel {
-  --p-theme-color: var(--theme-accent);
-
   @include flex-start-stretch($direction: column);
 
   position: relative;
@@ -82,34 +80,6 @@ withDefaults(
     @include flex-end-center;
 
     gap: var(--space-2);
-  }
-
-  &--color-main {
-    --p-theme-color: var(--theme-accent);
-  }
-
-  &--color-tool {
-    --p-theme-color: var(--color-category-tool);
-  }
-
-  &--color-database {
-    --p-theme-color: var(--color-category-database);
-  }
-
-  &--color-reference {
-    --p-theme-color: var(--color-category-reference);
-  }
-
-  &--color-management {
-    --p-theme-color: var(--color-category-management);
-  }
-
-  &--color-danger {
-    --p-theme-color: var(--color-status-danger);
-  }
-
-  &--color-success {
-    --p-theme-color: var(--color-status-success);
   }
 }
 </style>
