@@ -6,7 +6,7 @@
 import type { TableColumn } from '~/components/AppTable.vue'
 import { cableData } from '~/constants/data/cableData'
 
-const tableColumns: TableColumn[] = [
+const tableColumns: TableColumn<(typeof cableData)[number]>[] = [
   { key: 'name', label: 'ケーブル名称', sortable: true },
   { key: 'ampacity', label: '許容電流 (A)', sortable: true },
   { key: 'diameter', label: '仕上外径 (mm)', sortable: true },
@@ -18,7 +18,7 @@ const tableColumns: TableColumn[] = [
 </script>
 
 <template>
-  <DbViewer
+  <DbLayout
     :data="cableData"
     :columns="tableColumns"
     :search-mapper="(item) => `${item.name} ${item.standard || ''}`"
@@ -37,7 +37,7 @@ const tableColumns: TableColumn[] = [
     <template #cell-standard="{ value }">
       <span class="c-db-meta">{{ value }}</span>
     </template>
-  </DbViewer>
+  </DbLayout>
 </template>
 
 <style scoped lang="scss">

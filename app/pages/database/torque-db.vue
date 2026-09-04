@@ -18,7 +18,7 @@ const flattenedData = computed(() => {
   )
 })
 
-const tableColumns: TableColumn[] = [
+const tableColumns: TableColumn<(typeof flattenedData.value)[number]>[] = [
   { key: 'category', label: 'カテゴリ', sortable: true },
   { key: 'size', label: 'サイズ', sortable: true },
   { key: 'torque_nm', label: '標準トルク (N・m)', sortable: true },
@@ -29,7 +29,7 @@ const tableColumns: TableColumn[] = [
 </script>
 
 <template>
-  <DbViewer
+  <DbLayout
     :data="flattenedData"
     :columns="tableColumns"
     :search-mapper="(item) => `${item.category} ${item.size} ${item.note}`"
@@ -42,7 +42,7 @@ const tableColumns: TableColumn[] = [
     <template #cell-reference="{ value }">
       <span class="c-db-meta">{{ value }}</span>
     </template>
-  </DbViewer>
+  </DbLayout>
 </template>
 
 <style scoped lang="scss">

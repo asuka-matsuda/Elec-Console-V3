@@ -6,7 +6,7 @@
 import type { TableColumn } from '~/components/AppTable.vue'
 import { conduitData } from '~/constants/data/conduitData'
 
-const tableColumns: TableColumn[] = [
+const tableColumns: TableColumn<(typeof conduitData)[number]>[] = [
   { key: 'category', label: '配管種類', sortable: true },
   { key: 'size', label: '呼び径', sortable: true },
   { key: 'innerDiameter', label: '内径 (mm)', sortable: true },
@@ -17,7 +17,7 @@ const tableColumns: TableColumn[] = [
 </script>
 
 <template>
-  <DbViewer
+  <DbLayout
     :data="conduitData"
     :columns="tableColumns"
     :search-mapper="
@@ -32,7 +32,7 @@ const tableColumns: TableColumn[] = [
     <template #cell-standard="{ value }">
       <span class="c-db-meta">{{ value }}</span>
     </template>
-  </DbViewer>
+  </DbLayout>
 </template>
 
 <style scoped lang="scss">

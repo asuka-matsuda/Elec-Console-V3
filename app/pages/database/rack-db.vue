@@ -6,7 +6,7 @@
 import type { TableColumn } from '~/components/AppTable.vue'
 import { rackData } from '~/constants/data/rackData'
 
-const tableColumns: TableColumn[] = [
+const tableColumns: TableColumn<(typeof rackData)[number]>[] = [
   { key: 'category', label: 'カテゴリ', sortable: true },
   { key: 'size', label: 'サイズ (呼び幅 mm)', sortable: true },
   { key: 'height', label: '親桁高さ (mm)', sortable: true },
@@ -16,7 +16,7 @@ const tableColumns: TableColumn[] = [
 </script>
 
 <template>
-  <DbViewer
+  <DbLayout
     :data="rackData"
     :columns="tableColumns"
     :search-mapper="(item) => `${item.category} ${item.size}`"
@@ -25,5 +25,5 @@ const tableColumns: TableColumn[] = [
     <template #cell-category="{ value }">
       <strong>{{ value }}</strong>
     </template>
-  </DbViewer>
+  </DbLayout>
 </template>

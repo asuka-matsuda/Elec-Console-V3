@@ -6,7 +6,7 @@
 import type { TableColumn } from '~/components/AppTable.vue'
 import { drumData } from '~/constants/data/drumData'
 
-const tableColumns: TableColumn[] = [
+const tableColumns: TableColumn<(typeof drumData)[number]>[] = [
   { key: 'category', label: 'カテゴリ', sortable: true },
   { key: 'id', label: 'ドラム記号 (ID)', sortable: true },
   { key: 'flange_diameter', label: 'ツバ径 (mm)', sortable: true },
@@ -19,7 +19,7 @@ const tableColumns: TableColumn[] = [
 </script>
 
 <template>
-  <DbViewer
+  <DbLayout
     :data="drumData"
     :columns="tableColumns"
     :search-mapper="(item) => `${item.category} ${item.id}`"
@@ -28,5 +28,5 @@ const tableColumns: TableColumn[] = [
     <template #cell-category="{ value }">
       <strong>{{ value }}</strong>
     </template>
-  </DbViewer>
+  </DbLayout>
 </template>
