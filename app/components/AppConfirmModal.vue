@@ -3,11 +3,9 @@
  * AppConfirmModal
  * 汎用的な確認モーダルコンポーネントです。
  */
-import { computed } from 'vue'
-
 const isOpen = defineModel<boolean>({ default: false })
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     title?: string
     message?: string
@@ -20,13 +18,9 @@ const props = withDefaults(
   },
 )
 
-defineEmits(['confirm'])
-const _confirmButtonComponent = computed(() => {
-  if (props.intent === 'danger') return 'danger'
-  if (props.intent === 'success') return 'success'
-
-  return 'primary'
-})
+defineEmits<{
+  (e: 'confirm'): void
+}>()
 </script>
 
 <template>
