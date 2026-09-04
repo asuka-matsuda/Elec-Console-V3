@@ -4,19 +4,7 @@
  * 状態、カテゴリ、タグなどを視覚的に示すためのバッジコンポーネント。
  */
 
-export type BadgePresetColor
-  = | 'secondary'
-    | 'primary'
-    | 'success'
-    | 'warning'
-    | 'danger'
-    | 'tool'
-    | 'portal'
-    | 'database'
-    | 'reference'
-    | 'neutral'
-
-export type BadgeColor = BadgePresetColor | (string & {})
+import type { BadgeColor } from '~/types/components'
 
 const props = withDefaults(
   defineProps<{

@@ -3,9 +3,9 @@
  * DbLayout
  * 規格データベースページの共通レイアウトです。検索・フィルタリングパネルとテーブル表示の枠組みを提供します。
  */
-import type { TableColumn } from '~/components/AppTable.vue'
 import { useDbFilter } from '~/composables/useDbFilter'
 import { useTableSort } from '~/composables/useTableSort'
+import type { TableColumn } from '~/types/components'
 
 const props = defineProps<{
   data: T[]

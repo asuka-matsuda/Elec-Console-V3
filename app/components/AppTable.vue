@@ -7,13 +7,7 @@
  * 行（tr）ホバー時には発光エフェクト（ui-hover-glow）が適用されます。
  */
 
-export interface TableColumn<T = Record<string, unknown>> {
-  key: (keyof T & string) | string
-  label: string
-  sortable?: boolean
-  width?: string
-  align?: 'left' | 'center' | 'right'
-}
+import type { TableColumn } from '~/types/components'
 
 const props = withDefaults(
   defineProps<{

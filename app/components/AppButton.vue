@@ -6,12 +6,7 @@
 import { computed } from 'vue'
 
 import { NuxtLink } from '#components'
-import type { BaseButtonProps } from '~/types/components'
-
-export interface AppButtonProps extends BaseButtonProps {
-  icon?: string
-  loading?: boolean
-}
+import type { AppButtonProps } from '~/types/components'
 
 const props = withDefaults(defineProps<AppButtonProps>(), {
   type: 'button',
@@ -81,6 +76,7 @@ const componentAttrs = computed(() => {
   min-height: 2.6em;
   padding-block: 0.3em;
   padding-inline: 1.2em;
+
   color: var(--btn-color);
 
   @include border-base(var(--btn-color), 30%);

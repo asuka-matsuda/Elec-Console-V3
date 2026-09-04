@@ -5,9 +5,9 @@
  */
 import { ref } from 'vue'
 
-import type { TableColumn } from '~/components/AppTable.vue'
 import { useAdminSites } from '~/composables/admin/useAdminSites'
 import type { Site, SiteStatus } from '~/types/admin'
+import type { TableColumn } from '~/types/components'
 
 const { sites, createSite, toggleDisableSite, updateSite } = useAdminSites()
 

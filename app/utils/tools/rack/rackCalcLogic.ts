@@ -1,4 +1,4 @@
-import type { MathStep } from '~/components/ToolMathBasisModal.vue'
+import type { MathStep } from '~/types/tools'
 import { buildFormula, hlOk, hlVal } from '~/utils/math'
 
 export interface RackCableInput {

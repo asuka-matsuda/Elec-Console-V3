@@ -3,8 +3,8 @@
  * ConduitDbPage
  * 電線管のデータベース情報を一覧表示・検索するためのページコンポーネントです。
  */
-import type { TableColumn } from '~/components/AppTable.vue'
 import { conduitData } from '~/constants/data/conduitData'
+import type { TableColumn } from '~/types/components'
 
 const tableColumns: TableColumn<(typeof conduitData)[number]>[] = [
   { key: 'category', label: '配管種類', sortable: true },

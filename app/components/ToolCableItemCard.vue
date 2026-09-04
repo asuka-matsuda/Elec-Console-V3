@@ -7,15 +7,9 @@
 import { computed } from 'vue'
 
 import { cableData } from '~/constants/data/cableData'
+import type { CableInputItem } from '~/types/tools'
 import { getAvailableSizes, getCableCategories } from '~/utils/cable'
 import { calculateCableArea } from '~/utils/tools/conduit/conduitCalcLogic'
-
-export interface CableInputItem {
-  id: string
-  category: string
-  cableIdx: string
-  count: number | null
-}
 
 const model = defineModel<CableInputItem>({ required: true })
 

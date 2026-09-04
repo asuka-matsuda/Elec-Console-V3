@@ -5,7 +5,7 @@
  */
 import { computed, onUnmounted, ref } from 'vue'
 
-import type { AppButtonProps } from './AppButton.vue'
+import type { AppButtonProps } from '~/types/components'
 
 interface Props extends AppButtonProps {
   saveFunction: () => Promise<void>

@@ -3,8 +3,8 @@
  * CableDbPage
  * ケーブルのデータベース情報を一覧表示・検索するためのページコンポーネントです。
  */
-import type { TableColumn } from '~/components/AppTable.vue'
 import { cableData } from '~/constants/data/cableData'
+import type { TableColumn } from '~/types/components'
 
 const tableColumns: TableColumn<(typeof cableData)[number]>[] = [
   { key: 'name', label: 'ケーブル名称', sortable: true },

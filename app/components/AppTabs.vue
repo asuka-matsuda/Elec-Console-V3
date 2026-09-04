@@ -3,11 +3,7 @@
  * AppTabs
  * タブ切り替えのためのコンポーネントです。垂直方向の配置やグリッド配置にも対応しています。
  */
-export type TabOption<V = string | number> = {
-  label: string
-  value: V
-  disabled?: boolean
-}
+import type { TabOption } from '~/types/components'
 
 const model = defineModel<T>()
 

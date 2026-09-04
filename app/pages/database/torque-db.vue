@@ -5,8 +5,8 @@
  */
 import { computed } from 'vue'
 
-import type { TableColumn } from '~/components/AppTable.vue'
 import { torqueData } from '~/constants/data/torqueData'
+import type { TableColumn } from '~/types/components'
 
 const flattenedData = computed(() => {
   return torqueData.flatMap(cat =>

@@ -3,8 +3,8 @@
  * DrumDbPage
  * ケーブルドラムのデータベース情報を一覧表示・検索するためのページコンポーネントです。
  */
-import type { TableColumn } from '~/components/AppTable.vue'
 import { drumData } from '~/constants/data/drumData'
+import type { TableColumn } from '~/types/components'
 
 const tableColumns: TableColumn<(typeof drumData)[number]>[] = [
   { key: 'category', label: 'カテゴリ', sortable: true },

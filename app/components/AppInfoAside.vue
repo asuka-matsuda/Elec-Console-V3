@@ -1,31 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+import type { AnnouncementItem, HistoryItem } from '~/types/components'
+
 /**
  * AppInfoAside
  * お知らせや更新履歴などのインフォメーションを表示するサイドバーコンポーネント
  */
-export interface AnnouncementItem {
-  id?: number | string
-  title: string
-  date: string
-  desc: string
-}
-
-export interface HistoryItem {
-  id?: number | string
-  version: string
-  title: string
-  date: string
-  desc: string
-  status?: string
-}
-
-export interface DashboardData {
-  announcements: AnnouncementItem[]
-  history: HistoryItem[]
-}
-
 const props = withDefaults(
   defineProps<{
     announcements?: AnnouncementItem[]

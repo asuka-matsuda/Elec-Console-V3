@@ -9,11 +9,7 @@ import 'katex/dist/katex.min.css'
 import katex from 'katex'
 import { computed, getCurrentInstance, inject, type Ref, ref } from 'vue'
 
-export type MathStep = {
-  title?: string
-  tex: string
-  legend?: string[]
-}
+import type { MathStep } from '~/types/tools'
 
 const modelValue = defineModel<boolean>()
 

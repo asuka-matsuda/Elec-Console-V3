@@ -5,9 +5,9 @@
  */
 import { useLocalStorage } from '@vueuse/core'
 
-import type { DashboardData } from '~/components/AppInfoAside.vue'
 import { useAuth } from '~/composables/useAuth'
 import { menuData } from '~/constants/data/menuData'
+import type { DashboardData } from '~/types/components'
 
 const dashboardSections = menuData.filter(section => section.showInDashboard)
 

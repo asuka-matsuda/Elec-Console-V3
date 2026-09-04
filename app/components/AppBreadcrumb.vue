@@ -6,11 +6,7 @@
 import { computed } from 'vue'
 
 import { NuxtLink } from '#components'
-
-export interface BreadcrumbItem {
-  text: string
-  href?: string
-}
+import type { BreadcrumbItem } from '~/types/components'
 
 const props = defineProps<{
   items: BreadcrumbItem[]

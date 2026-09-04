@@ -4,13 +4,8 @@
  * 配管サイズ自動選定ツールの条件入力コンポーネントです。
  * 対象の配管種類と収容するケーブルリストの入力を管理します。
  */
-import type { SelectOption } from '~/components/AppSelect.vue'
-import type { CableInputItem } from '~/components/ToolCableItemCard.vue'
-
-export interface ConduitInputData {
-  conduitCategory: string
-  inputCables: CableInputItem[]
-}
+import type { SelectOption } from '~/types/components'
+import type { ConduitInputData } from '~/types/tools'
 
 const inputs = defineModel<ConduitInputData>({ required: true })
 

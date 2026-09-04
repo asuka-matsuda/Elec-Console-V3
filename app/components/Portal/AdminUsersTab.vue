@@ -5,9 +5,9 @@
  */
 import { onMounted, ref } from 'vue'
 
-import type { TableColumn } from '~/components/AppTable.vue'
 import { useAdminUsers } from '~/composables/admin/useAdminUsers'
 import type { User } from '~/types/auth'
+import type { TableColumn } from '~/types/components'
 
 const { users, fetchUsers, deleteUser, resetUserPassword } = useAdminUsers()
 

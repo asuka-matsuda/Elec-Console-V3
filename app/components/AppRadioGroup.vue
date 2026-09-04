@@ -5,12 +5,7 @@
  */
 import { computed, useId } from 'vue'
 
-export interface RadioOption {
-  label: string
-  value: string | number | boolean
-  disabled?: boolean
-  color?: string
-}
+import type { RadioOption } from '~/types/components'
 
 const model = defineModel<string | number | boolean>()
 

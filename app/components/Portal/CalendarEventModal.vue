@@ -1,15 +1,9 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 
-import CalendarDateInput from './CalendarDateInput.vue'
+import type { EventFormData } from '~/types/portal'
 
-export interface EventFormData {
-  title: string
-  type: string
-  start: string
-  end: string
-  allDay: boolean
-}
+import CalendarDateInput from './CalendarDateInput.vue'
 
 const props = defineProps<{
   modelValue: boolean

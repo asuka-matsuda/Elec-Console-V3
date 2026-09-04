@@ -1,11 +1,7 @@
 <script setup lang="ts">
-import type { BaseButtonProps } from '~/types/components'
+import type { AppIconButtonProps } from '~/types/components'
 
 import AppButton from './AppButton.vue'
-
-export interface AppIconButtonProps extends BaseButtonProps {
-  name: string
-}
 
 const props = withDefaults(defineProps<AppIconButtonProps>(), {
   type: 'button',

@@ -6,12 +6,7 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 
 import { useClickOutside } from '~/composables/useClickOutside'
-
-export interface SelectOption {
-  label: string
-  value: string | number | boolean
-  disabled?: boolean
-}
+import type { SelectOption } from '~/types/components'
 
 const model = defineModel<string | number | boolean | null>()
 

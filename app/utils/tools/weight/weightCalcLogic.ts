@@ -1,5 +1,5 @@
-import type { MathStep } from '~/components/ToolMathBasisModal.vue'
 import type { CableData, DrumData } from '~/types/database'
+import type { MathStep } from '~/types/tools'
 import { hlOk, hlVal } from '~/utils/math'
 
 export interface WeightCalcInputs {

@@ -3,7 +3,7 @@
  * AppHeader
  * アプリケーションのヘッダー部分（パンくずリストやアクション等）を表示するコンポーネントです。
  */
-import type { BreadcrumbItem } from '~/components/AppBreadcrumb.vue'
+import type { BreadcrumbItem } from '~/types/components'
 
 defineProps<{
   breadcrumbs?: BreadcrumbItem[]

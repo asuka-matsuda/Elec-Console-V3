@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T extends Record<string, unknown>">
 import { computed } from 'vue'
 
-import type { TableColumn } from './AppTable.vue'
+import type { TableColumn } from '~/types/components'
 
 const props = defineProps<{
   column: TableColumn<T>
