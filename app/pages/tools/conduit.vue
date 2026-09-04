@@ -34,60 +34,33 @@ const handleSave = async () => {
 </script>
 
 <template>
-  <ToolLayout>
+  <ToolLayout
+    :save-disabled="!result?.success || result?.partial"
+    :save-function="handleSave"
+    @reset="openResetModal"
+  >
     <template #inputs>
-      <ToolInputPanel @reset="openResetModal">
-        <AppFormGroup label="対象の配管種類">
-          <AppSelect
-            v-model="inputs.conduitCategory"
-            :options="conduitCategoryOptions"
-            placeholder="選択してください"
-          />
-        </AppFormGroup>
-
-        <div class="p-conduit__section">
-          <h4>収容するケーブル</h4>
-
-          <div class="p-conduit__cable-list">
-            <ToolCableCard
-              v-for="(cable, index) in inputs.inputCables"
-              :key="cable.id"
-              v-model="inputs.inputCables[index]!"
-              :index="index"
-              :removable="inputs.inputCables.length > 1"
-              @remove="removeCable(cable.id)"
-            />
-          </div>
-
-          <AppButton
-            variant="success"
-            class="p-conduit__add-button"
-            @click="addCable"
-          >
-            <AppIcon name="plus" /> ケーブルを追加
-          </AppButton>
-        </div>
-      </ToolInputPanel>
+      <ToolConduitInput
+        v-model="inputs"
+        :category-options="conduitCategoryOptions"
+        @add-cable="addCable"
+        @remove-cable="removeCable"
+      />
     </template>
 
     <template #results>
-      <ToolResultPanel
-        :save-disabled="!result?.success || result?.partial"
-        :save-function="handleSave"
-      >
-        <ToolConduitResult :result="result" />
-      </ToolResultPanel>
+      <ToolConduitResult :result="result" />
     </template>
 
     <template #basis>
-      <ToolMathBasisPanel :steps="mathSteps">
+      <ToolMathBasisModal :steps="mathSteps">
         <div class="p-basis-note">
           <strong>内線規程（勧告）</strong><br />
           3110-5
           管の屈曲が少なく、容易に電線を引き入れ及び引き替えることができる場合（48％）<br />
           3110-6 異なる太さの絶縁電線を同一管内に収める場合（32％）
         </div>
-      </ToolMathBasisPanel>
+      </ToolMathBasisModal>
     </template>
   </ToolLayout>
 </template>
@@ -97,23 +70,5 @@ const handleSave = async () => {
   @include text-meta;
 
   color: var(--color-status-warning);
-}
-
-.p-conduit {
-  &__section {
-    @include flex-start-stretch($direction: column);
-
-    gap: var(--space-card-gap);
-  }
-
-  &__cable-list {
-    @include flex-start-stretch($direction: column);
-
-    gap: var(--space-card-gap);
-  }
-
-  &__add-button {
-    width: 100%;
-  }
 }
 </style>

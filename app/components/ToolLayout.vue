@@ -2,10 +2,32 @@
 /**
  * ToolLayout
  * 計算ツールページの全体レイアウトコンポーネント。
- * 左側に「条件入力」、右側に「計算結果」を広々と配置し、
- * 「計算根拠」はモーダルダイアログとして呼び出せる構成を提供します。
+ * 条件入力パネルと計算結果パネルの大枠、リセット・保存・計算根拠アクション、
+ * およびモバイルドロワー機構を一元管理します。
  */
 import { computed, provide, ref, useSlots } from 'vue'
+
+withDefaults(
+  defineProps<{
+    inputsTitle?: string
+    inputsIcon?: string
+    resultsTitle?: string
+    resultsIcon?: string
+    saveDisabled?: boolean
+    saveFunction?: () => Promise<void>
+  }>(),
+  {
+    inputsTitle: '条件入力',
+    inputsIcon: 'edit',
+    resultsTitle: '計算結果・選定結果',
+    resultsIcon: 'check-square',
+    saveDisabled: false,
+  },
+)
+
+const emit = defineEmits<{
+  reset: []
+}>()
 
 const slots = useSlots()
 const isDrawerOpen = ref(false)
@@ -23,24 +45,46 @@ const closeBasisModal = () => {
   isBasisModalOpen.value = false
 }
 
+const hasBasis = computed(() => !!slots.basis)
+
 provide('openToolBasis', openBasisModal)
-provide('hasToolBasis', computed(() => !!slots.basis))
+provide('hasToolBasis', hasBasis)
+provide('toolBasisModal', {
+  isOpen: isBasisModalOpen,
+  open: openBasisModal,
+  close: closeBasisModal,
+})
 </script>
 
 <template>
   <div class="l-tool-layout">
     <!-- 免責事項 -->
-    <header class="l-tool-layout__disclaimer">
-      <slot name="disclaimer">
-        <AppDisclaimer />
-      </slot>
-    </header>
+    <slot name="disclaimer">
+      <AppDisclaimer />
+    </slot>
 
     <!-- メイングリッド（左: 条件入力 / 右: 計算結果） -->
     <main class="l-tool-layout__main">
       <!-- 1. 条件入力（PC: 左側 50% / モバイル: 全面表示） -->
       <section class="l-tool-layout__inputs">
-        <slot name="inputs" :open-basis="openBasisModal" />
+        <AppPanel
+          class="l-tool-layout__panel"
+          :title="inputsTitle"
+          :icon="inputsIcon"
+          variant="tool"
+          size="md"
+        >
+          <template #actions>
+            <AppButton variant="danger" size="sm" @click="emit('reset')">
+              <AppIcon name="refresh-cw" size="sm" />
+              リセット
+            </AppButton>
+          </template>
+
+          <div class="l-tool-layout__panel-content">
+            <slot name="inputs" :open-basis="openBasisModal" />
+          </div>
+        </AppPanel>
       </section>
 
       <!-- 2. 計算結果（PC: 右側 50% / モバイル: 下部Stickyドロワー） -->
@@ -57,7 +101,34 @@ provide('hasToolBasis', computed(() => !!slots.basis))
           />
         </div>
         <div class="l-tool-layout__results-inner">
-          <slot name="results" :open-basis="openBasisModal" />
+          <AppPanel
+            class="l-tool-layout__panel"
+            :title="resultsTitle"
+            :icon="resultsIcon"
+            variant="tool"
+            size="md"
+          >
+            <template #actions>
+              <AppButton
+                v-if="hasBasis"
+                variant="secondary"
+                size="sm"
+                @click="openBasisModal"
+              >
+                <AppIcon name="book" size="sm" />
+                計算根拠
+              </AppButton>
+              <AppSaveButton
+                v-if="saveFunction"
+                :disabled="saveDisabled"
+                :save-function="saveFunction"
+              />
+            </template>
+
+            <div class="l-tool-layout__panel-content">
+              <slot name="results" :open-basis="openBasisModal" />
+            </div>
+          </AppPanel>
         </div>
       </section>
 
@@ -69,23 +140,8 @@ provide('hasToolBasis', computed(() => !!slots.basis))
       />
     </main>
 
-    <!-- 計算根拠モーダル -->
-    <AppModal
-      v-if="$slots.basis"
-      v-model="isBasisModalOpen"
-      title="計算根拠"
-      icon="book"
-      variant="tool"
-      size="lg"
-    >
-      <slot name="basis" />
-
-      <template #footer>
-        <AppButton variant="secondary" size="sm" @click="closeBasisModal">
-          閉じる
-        </AppButton>
-      </template>
-    </AppModal>
+    <!-- 計算根拠モーダルスロット -->
+    <slot name="basis" />
   </div>
 </template>
 
@@ -100,17 +156,11 @@ provide('hasToolBasis', computed(() => !!slots.basis))
   min-height: 0;
   margin: 0 auto;
 
-  &__disclaimer {
-    flex-shrink: 0;
-  }
-
   // 左右二等分（1:1）のメイングリッド: 左に入力、右に結果
   &__main {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    flex: 1;
-    gap: var(--space-card-gap);
+    @include grid(repeat(2, minmax(0, 1fr)));
 
+    flex: 1;
     min-height: 0;
 
     @include mq("md") {
@@ -122,6 +172,22 @@ provide('hasToolBasis', computed(() => !!slots.basis))
     @include flex-start-stretch($direction: column);
 
     min-height: 0;
+  }
+
+  &__panel {
+    flex: 1;
+    min-height: 0;
+  }
+
+  &__panel-content {
+    @include flex-start-stretch($direction: column);
+
+    overflow-y: auto;
+    flex: 1;
+    gap: var(--space-card-gap);
+
+    min-height: 0;
+    padding-right: var(--space-1);
   }
 
   &__results {

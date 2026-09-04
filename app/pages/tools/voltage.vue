@@ -4,14 +4,13 @@
  * 電圧降下・ケーブルサイズ選定ツールのコンポーネントです。電圧降下の計算や、条件を満たすケーブルサイズの選定を行います。
  */
 import { toTypedSchema } from '@vee-validate/zod'
-import { Field, useForm } from 'vee-validate'
+import { useForm } from 'vee-validate'
 import { computed } from 'vue'
 
 import { useRoute } from '#app'
 import { useCalcHistory } from '~/composables/tools/useCalcHistory'
 import { useVoltageCalculator } from '~/composables/tools/useVoltageCalculator'
 import { getVoltageFormFields } from '~/constants/config/voltageFormConfig'
-import { modeOptions } from '~/constants/toolOptions'
 import { mapVoltageToHistory } from '~/utils/tools/voltage/historyMapper'
 import { voltageSchema } from '~/utils/tools/voltage/voltageSchema'
 
@@ -62,115 +61,24 @@ const handleSaveToHistory = async () => {
 </script>
 
 <template>
-  <ToolLayout>
-    <template #results>
-      <ToolResultPanel
-        title="計算結果"
-        :save-disabled="!calcInputs.isReady"
-        :save-function="handleSaveToHistory"
-      >
-        <ClientOnly>
-          <ToolVoltageResult :inputs="calcInputs" :result="calcResult" />
-        </ClientOnly>
-      </ToolResultPanel>
+  <ToolLayout
+    results-title="計算結果"
+    :save-disabled="!calcInputs.isReady"
+    :save-function="handleSaveToHistory"
+    @reset="openResetModal"
+  >
+    <template #inputs>
+      <ToolVoltageInput v-model="form" :form-fields="formFields" />
     </template>
 
-    <template #inputs>
-      <ToolInputPanel @reset="openResetModal">
-        <AppRadioGroup v-model="form.mode" :options="modeOptions" />
-
-        <div class="l-grid l-grid--2col">
-          <template v-for="field in formFields" :key="field.id">
-            <Field
-              v-if="!field.showIf || field.showIf()"
-              v-slot="{ errorMessage, handleChange, handleBlur }"
-              v-model="form[field.id]"
-              :name="field.id"
-            >
-              <AppFormGroup
-                :label="field.label"
-                :error="errorMessage"
-                :class="`js-field-${field.id}`"
-              >
-                <AppSelect
-                  v-if="field.type === 'select'"
-                  v-model="form[field.id]"
-                  :options="field.options || []"
-                  :placeholder="field.placeholder"
-                  :disabled="field.disabled"
-                  :error="!!errorMessage"
-                  @update:model-value="handleChange"
-                  @blur="handleBlur"
-                />
-
-                <AppInputGroup v-else-if="field.type === 'input-select'">
-                  <AppInput
-                    v-model.number="form[field.id]"
-                    type="number"
-                    :placeholder="field.placeholder"
-                    :min="field.min"
-                    :step="field.step"
-                    :error="!!errorMessage"
-                    @blur="handleBlur"
-                  />
-                  <template #append>
-                    <Field
-                      v-if="field.secondaryId"
-                      v-slot="{
-                        errorMessage: secError,
-                        handleChange: secChange,
-                        handleBlur: secBlur,
-                      }"
-                      v-model="form[field.secondaryId!]"
-                      :name="field.secondaryId"
-                    >
-                      <AppSelect
-                        v-model="form[field.secondaryId!]"
-                        :options="field.secondaryOptions || []"
-                        :error="!!secError"
-                        @update:model-value="secChange"
-                        @blur="secBlur"
-                      />
-                    </Field>
-                  </template>
-                </AppInputGroup>
-
-                <AppInputGroup v-else-if="field.type === 'input-addon'">
-                  <AppInput
-                    v-model.number="form[field.id]"
-                    type="number"
-                    :placeholder="field.placeholder"
-                    :min="field.min"
-                    :error="!!errorMessage"
-                    @blur="handleBlur"
-                  />
-                  <template #append>
-                    <span class="c-input-addon">{{ field.addonText }}</span>
-                  </template>
-                </AppInputGroup>
-              </AppFormGroup>
-            </Field>
-          </template>
-        </div>
-      </ToolInputPanel>
+    <template #results>
+      <ClientOnly>
+        <ToolVoltageResult :inputs="calcInputs" :result="calcResult" />
+      </ClientOnly>
     </template>
 
     <template #basis>
-      <ToolMathBasisPanel :steps="mathSteps" />
+      <ToolMathBasisModal :steps="mathSteps" />
     </template>
   </ToolLayout>
 </template>
-
-<style scoped lang="scss">
-.l-grid {
-  @include grid;
-
-  &--2col {
-    grid-template-columns: 1fr;
-
-    @include cq("sm") {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-}
-</style>

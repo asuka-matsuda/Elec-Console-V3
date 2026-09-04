@@ -79,13 +79,16 @@ export function buildFormula(
   let tex = `\\begin{aligned} ${symbols}`
 
   if (substitution) {
-    // tools/mathUtils.ts は \\\\ &= だったが、mathUtils.ts は &=
-    // 既存のコードを壊さないよう、統一する
-    if (substitution.includes('=')) {
-      tex += ` \\\\ &= ${substitution}`
+    const trimmed = substitution.trim()
+
+    if (trimmed.startsWith('&=')) {
+      tex += ` ${trimmed}`
+    }
+    else if (trimmed.startsWith('=')) {
+      tex += ` &${trimmed}`
     }
     else {
-      tex += ` &= ${substitution}`
+      tex += ` &= ${trimmed}`
     }
   }
 

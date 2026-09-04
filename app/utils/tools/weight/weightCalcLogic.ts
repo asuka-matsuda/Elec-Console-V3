@@ -1,4 +1,4 @@
-﻿import type { MathStep } from '~/components/ToolMathBasis.vue'
+import type { MathStep } from '~/components/ToolMathBasisModal.vue'
 import type { CableData, DrumData } from '~/types/database'
 import { hlOk, hlVal } from '~/utils/math'
 

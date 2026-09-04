@@ -23,6 +23,7 @@ withDefaults(
 .c-disclaimer {
   @include text-desc;
 
+  flex-shrink: 0;
   padding: var(--space-2) var(--space-3);
   color: var(--color-status-warning);
 }

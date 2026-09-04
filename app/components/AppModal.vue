@@ -141,6 +141,8 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .c-modal {
+  @include flex-start-stretch($direction: column);
+
   transform: translateY(var(--space-2));
 
   overflow: visible;
@@ -201,6 +203,9 @@ onMounted(() => {
   }
 
   &__panel {
+    flex: 1;
+    min-height: 0;
+
     @include shadow("modal");
   }
 
@@ -213,6 +218,7 @@ onMounted(() => {
     overflow-y: auto;
     flex: 1;
     gap: var(--space-3);
+    min-height: 0;
 
     &.is-align-center {
       text-align: center;

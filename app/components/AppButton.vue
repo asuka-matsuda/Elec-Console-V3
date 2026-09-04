@@ -81,6 +81,7 @@ const componentAttrs = computed(() => {
   min-height: 2.6em;
   padding-block: 0.3em;
   padding-inline: 1.2em;
+  color: var(--btn-color);
 
   @include border-base(var(--btn-color), 30%);
   @include state-base("sm", var(--transition-fast), var(--btn-color));

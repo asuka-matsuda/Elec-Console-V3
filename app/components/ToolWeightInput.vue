@@ -1,0 +1,87 @@
+<script setup lang="ts">
+/**
+ * ToolWeightInput
+ * ケーブル重量・ドラム選定ツールの条件入力フォームコンポーネントです。
+ * 2等分グリッドで条件入力を提供します。
+ */
+import { computed, watch } from 'vue'
+
+import { getAvailableSizes, getCableCategories } from '~/utils/cable'
+import type { WeightCalcInputs } from '~/utils/tools/weight/weightCalcLogic'
+
+const inputs = defineModel<WeightCalcInputs>({ required: true })
+
+const categories = computed(() => getCableCategories())
+const availableSizes = computed(() => getAvailableSizes(inputs.value.category))
+
+watch(
+  () => inputs.value.category,
+  (newVal, oldVal) => {
+    if (!oldVal) return
+    inputs.value.cableIdx = ''
+  },
+)
+</script>
+
+<template>
+  <div class="c-weight-input">
+    <div class="c-weight-input__grid">
+      <AppFormGroup label="ケーブル種別" required>
+        <AppSelect
+          v-model="inputs.category"
+          :options="categories"
+          placeholder="選択してください"
+        />
+      </AppFormGroup>
+
+      <AppFormGroup label="ケーブルサイズ" required>
+        <AppSelect
+          v-model="inputs.cableIdx"
+          :options="availableSizes"
+          placeholder="選択してください"
+          :disabled="!inputs.category"
+        />
+      </AppFormGroup>
+
+      <AppFormGroup label="ケーブル長 (L)" required>
+        <AppInputGroup>
+          <AppInput v-model="inputs.L_input" type="number" min="1" />
+          <template #append>
+            <span class="c-input-addon">m</span>
+          </template>
+        </AppInputGroup>
+      </AppFormGroup>
+
+      <AppFormGroup label="ドラム占積率 (K)">
+        <AppInputGroup>
+          <AppInput
+            v-model="inputs.K"
+            type="number"
+            step="0.01"
+            min="0"
+            max="1"
+          />
+          <template #append>
+            <span class="c-input-addon">倍</span>
+          </template>
+        </AppInputGroup>
+      </AppFormGroup>
+    </div>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.c-weight-input {
+  @include flex-start-stretch($direction: column);
+
+  gap: var(--space-card-gap);
+
+  &__grid {
+    @include grid(repeat(2, minmax(0, 1fr)));
+
+    @include mq("sm") {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+</style>
