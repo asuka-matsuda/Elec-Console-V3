@@ -152,12 +152,7 @@ const closeSidebar = () => {
       .c-global-nav__link-icon {
         color: var(--section-accent);
         filter: drop-shadow(
-          0 0 var(--blur-sm)
-            color-mix(
-              in srgb,
-              var(--section-accent),
-              80%
-            )
+          0 0 var(--blur-sm) var(--section-accent)
         );
       }
     }
