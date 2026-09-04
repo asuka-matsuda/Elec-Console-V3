@@ -127,7 +127,7 @@ const closeSidebar = () => {
   &__list {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-1);
+    gap: var(--space-2);
   }
 
   &__link {
@@ -135,7 +135,7 @@ const closeSidebar = () => {
     @include flex-start-center;
 
     gap: var(--space-2);
-    padding: var(--space-2) var(--space-3);
+    padding: var(--space-1) var(--space-3);
     border-radius: var(--radius-sm);
     color: var(--color-text-secondary);
 
