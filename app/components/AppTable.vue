@@ -15,12 +15,22 @@ export interface TableColumn<T = Record<string, unknown>> {
   align?: 'left' | 'center' | 'right'
 }
 
-const props = defineProps<{
-  columns?: TableColumn<T>[]
-  data?: T[]
-  sortBy?: string
-  sortOrder?: 'asc' | 'desc'
-}>()
+const props = withDefaults(
+  defineProps<{
+    columns?: TableColumn<T>[]
+    data?: T[]
+    sortBy?: string
+    sortOrder?: 'asc' | 'desc'
+    rowKey?: string | ((row: T) => string | number)
+  }>(),
+  {
+    columns: undefined,
+    data: undefined,
+    sortBy: undefined,
+    sortOrder: 'asc',
+    rowKey: 'id',
+  },
+)
 
 const emit = defineEmits<{
   (e: 'sort', payload: { key: string, order: 'asc' | 'desc' }): void
@@ -35,6 +45,30 @@ const handleSort = (col: TableColumn<T>) => {
     newOrder = props.sortOrder === 'asc' ? 'desc' : 'asc'
   }
   emit('sort', { key: col.key, order: newOrder })
+}
+
+const getRowKey = (row: T, index: number): string | number => {
+  if (typeof props.rowKey === 'function') {
+    return props.rowKey(row)
+  }
+
+  if (props.rowKey && props.rowKey in row) {
+    const value = row[props.rowKey]
+
+    if (typeof value === 'string' || typeof value === 'number') {
+      return value
+    }
+  }
+
+  if ('id' in row) {
+    const idValue = row.id
+
+    if (typeof idValue === 'string' || typeof idValue === 'number') {
+      return idValue
+    }
+  }
+
+  return index
 }
 </script>
 
@@ -63,13 +97,7 @@ const handleSort = (col: TableColumn<T>) => {
               "
               @click="handleSort(col)"
             >
-              <div
-                class="c-table__th-inner"
-                :class="{
-                  'is-center': col.align === 'center',
-                  'is-right': col.align === 'right',
-                }"
-              >
+              <div class="c-table__th-inner">
                 <span>{{ col.label }}</span>
                 <AppIcon
                   v-if="col.sortable && sortBy === col.key"
@@ -91,19 +119,21 @@ const handleSort = (col: TableColumn<T>) => {
 
       <tbody v-if="$slots.body || (data && columns)">
         <slot name="body">
-          <template v-if="data && columns">
-            <tr v-for="(row, index) in data" :key="index">
-              <td v-for="col in columns" :key="col.key">
-                <slot
-                  :name="`cell-${col.key}`"
-                  :value="row[col.key]"
-                  :row="row"
-                >
-                  {{ row[col.key] }}
-                </slot>
-              </td>
-            </tr>
-          </template>
+          <tr v-for="(row, index) in data" :key="getRowKey(row, index)">
+            <td
+              v-for="col in columns"
+              :key="col.key"
+              :style="{ textAlign: col.align }"
+            >
+              <slot
+                :name="`cell-${col.key}`"
+                :value="row[col.key]"
+                :row="row"
+              >
+                {{ row[col.key] }}
+              </slot>
+            </td>
+          </tr>
         </slot>
       </tbody>
 
@@ -129,19 +159,19 @@ const handleSort = (col: TableColumn<T>) => {
   width: 100%;
   text-align: left;
 
-  :deep(th),
-  :deep(td) {
+  th,
+  td {
     padding: var(--space-2) var(--space-3);
     border-bottom: var(--border-width-base) solid var(--color-border);
     white-space: nowrap;
     vertical-align: middle;
   }
 
-  :deep(td) {
+  td {
     @include text-mono;
   }
 
-  :deep(th) {
+  th {
     @include text-label;
 
     position: sticky;
@@ -176,14 +206,6 @@ const handleSort = (col: TableColumn<T>) => {
       @include flex-start-center($is-inline: true);
 
       gap: var(--space-1);
-
-      &.is-center {
-        justify-content: center;
-      }
-
-      &.is-right {
-        justify-content: flex-end;
-      }
     }
 
     .c-table__sort-icon {
@@ -199,7 +221,7 @@ const handleSort = (col: TableColumn<T>) => {
     }
   }
 
-  :deep(tbody tr) {
+  tbody tr {
     position: relative; /* Required for z-index and box-shadow to appear correctly on rows */
 
     @include state-base;
