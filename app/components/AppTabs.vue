@@ -36,15 +36,11 @@ const selectTab = (option: TabOption<T>) => {
       'c-tabs--vertical': vertical,
       'c-tabs--grid': grid,
     }"
-    role="tablist"
-    :aria-orientation="vertical ? 'vertical' : 'horizontal'"
   >
     <button
       v-for="option in options"
       :key="String(option.value)"
       type="button"
-      role="tab"
-      :aria-selected="model === option.value"
       class="c-tabs__item"
       :class="{
         'is-active': model === option.value,
