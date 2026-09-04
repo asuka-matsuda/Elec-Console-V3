@@ -154,10 +154,6 @@ onMounted(() => {
     &.is-align-center {
       text-align: center;
     }
-
-    &.is-align-left {
-      text-align: left;
-    }
   }
 }
 </style>

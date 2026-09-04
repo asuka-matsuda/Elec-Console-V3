@@ -70,7 +70,7 @@ const handleSave = () => {
 </script>
 
 <template>
-  <AppModal v-model="isOpen" title="予定種別の設定" align="left">
+  <AppModal v-model="isOpen" title="予定種別の設定">
     <div class="p-type-settings">
       <p class="p-type-settings__lead">
         カレンダーに表示する予定種別とテーマカラーを設定します。
