@@ -6,10 +6,10 @@
  */
 import 'katex/dist/katex.min.css'
 
-import katex from 'katex'
 import { computed, getCurrentInstance, inject, type Ref, ref } from 'vue'
 
 import type { MathStep } from '~/types/tools'
+import { parseLegend, renderMath } from '~/utils/math'
 
 const modelValue = defineModel<boolean>()
 
@@ -57,40 +57,6 @@ const handleClose = () => {
     modalContext.close()
   }
   activeOpen.value = false
-}
-
-const renderMath = (mathStr: string, isDisplay: boolean = true) => {
-  if (!mathStr) return ''
-  try {
-    return katex.renderToString(mathStr, {
-      displayMode: isDisplay,
-      throwOnError: false,
-      trust: true,
-      strict: false,
-    })
-  }
-  catch (e) {
-    console.error('KaTeX render error:', e)
-
-    return mathStr
-  }
-}
-
-const parseLegend = (legendArray: string[] | undefined) => {
-  if (!legendArray) return []
-
-  return legendArray.map((leg) => {
-    const parts = leg.split(':')
-    let rawSymbol = parts[0]?.trim() || ''
-
-    rawSymbol = rawSymbol.replace(/\\\(/g, '').replace(/\\\)/g, '').trim()
-    const name = parts.slice(1).join(':')?.trim() || leg
-
-    return {
-      name,
-      renderedSymbol: renderMath(rawSymbol, false),
-    }
-  })
 }
 </script>
 

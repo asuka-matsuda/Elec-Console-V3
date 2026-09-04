@@ -8,6 +8,10 @@ import { ref } from 'vue'
 import { useAdminSites } from '~/composables/admin/useAdminSites'
 import type { Site, SiteStatus } from '~/types/admin'
 import type { TableColumn } from '~/types/components'
+import {
+  getSiteStatusColor as getStatusColor,
+  getSiteStatusLabel as getStatusLabel,
+} from '~/utils/portal'
 
 const { sites, createSite, toggleDisableSite, updateSite } = useAdminSites()
 
@@ -31,36 +35,6 @@ const {
   defaultKey: 'id',
   defaultOrder: 'asc',
 })
-
-const getStatusLabel = (status: unknown) => {
-  switch (status) {
-    case 'planning':
-      return '計画中'
-    case 'in_progress':
-      return '進行中'
-    case 'completed':
-      return '完了'
-    case 'on_hold':
-      return '保留'
-    default:
-      return '不明'
-  }
-}
-
-const getStatusColor = (status: unknown) => {
-  switch (status) {
-    case 'planning':
-      return 'secondary'
-    case 'in_progress':
-      return 'warning'
-    case 'completed':
-      return 'success'
-    case 'on_hold':
-      return 'danger'
-    default:
-      return 'secondary'
-  }
-}
 
 const isCreateModalOpen = ref(false)
 const newSite = ref({

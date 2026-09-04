@@ -1,3 +1,5 @@
+import katex from 'katex'
+
 /**
  * @fileoverview 数式生成用の汎用ユーティリティ
  * 計算根拠などをTeXで表示する際に使用する、フォーマットやハイライト機能を提供します。
@@ -106,4 +108,46 @@ export function buildFormula(
   tex += ` \\end{aligned}`
 
   return tex
+}
+
+/**
+ * KaTeX を用いて TeX 文字列を HTML 文字列へ変換する
+ */
+export function renderMath(mathStr: string, isDisplay = true): string {
+  if (!mathStr) return ''
+  try {
+    return katex.renderToString(mathStr, {
+      displayMode: isDisplay,
+      throwOnError: false,
+      trust: true,
+      strict: false,
+    })
+  }
+  catch (e) {
+    console.error('KaTeX render error:', e)
+
+    return mathStr
+  }
+}
+
+/**
+ * 凡例文字列配列（"記号: 説明"）をパースし、描画済みシンボルと説明に分解する
+ */
+export function parseLegend(
+  legendArray: string[] | undefined,
+): Array<{ name: string, renderedSymbol: string }> {
+  if (!legendArray) return []
+
+  return legendArray.map((leg) => {
+    const parts = leg.split(':')
+    let rawSymbol = parts[0]?.trim() || ''
+
+    rawSymbol = rawSymbol.replace(/\\\(/g, '').replace(/\\\)/g, '').trim()
+    const name = parts.slice(1).join(':')?.trim() || leg
+
+    return {
+      name,
+      renderedSymbol: renderMath(rawSymbol, false),
+    }
+  })
 }

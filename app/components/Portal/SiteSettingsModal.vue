@@ -3,6 +3,7 @@ import { computed, ref, watch } from 'vue'
 
 import { useAdminUsers } from '~/composables/admin/useAdminUsers'
 import type { Site } from '~/types/admin'
+import { getAssignedWorkerNames } from '~/utils/portal'
 
 const isOpen = defineModel<boolean>({ default: false })
 
@@ -73,14 +74,9 @@ const editId = computed({
 })
 
 // ワーカー名解決
-const workerNames = computed(() => {
-  if (!props.site?.id || !users.value) return []
-  const assignedUsers = users.value.filter(
-    u => u.assignedSiteIds && u.assignedSiteIds.includes(props.site!.id),
-  )
-
-  return assignedUsers.map(u => `${u.lastName} ${u.firstName}`)
-})
+const workerNames = computed(() =>
+  getAssignedWorkerNames(props.site?.id, users.value),
+)
 
 const handleSave = async () => {
   if (!props.site) return
