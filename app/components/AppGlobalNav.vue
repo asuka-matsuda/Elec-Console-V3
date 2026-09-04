@@ -25,7 +25,7 @@ const closeSidebar = () => {
   />
 
   <aside class="c-global-nav" :class="{ 'is-open': isOpen }">
-    <nav class="c-global-nav__nav custom-scrollbar">
+    <nav class="c-global-nav__nav">
       <section
         v-for="section in menuData"
         :key="section.id || section.heading || section.globalNavHeading"
