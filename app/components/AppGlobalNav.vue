@@ -147,48 +147,39 @@ const closeSidebar = () => {
       overflow-wrap: anywhere; // 万が一収まらない場合は強制改行
     }
 
-    &:is(:hover, :focus-visible):not(:disabled, .router-link-active) {
-      transform: translateX(var(--space-1));
-      color: var(--section-accent);
-
-      @include state-hover(var(--section-accent));
-
-      :deep(.c-icon) {
-        filter: drop-shadow(
-          0 0 var(--blur-sm) var(--section-accent)
-        );
-      }
-    }
-
-    &:active:not(:disabled) {
-      @include state-active(var(--section-accent));
-    }
-
-    &.router-link-active {
-      --glow-color: var(--section-accent);
-
-      transform: translateX(0);
-      border-color: var(--section-accent);
-      color: var(--section-accent);
-
-      @include state-active(var(--section-accent));
-      @include blinking-cursor(
-        var(--space-1),
-        var(--font-size-base),
-        currentcolor
-      );
-
-      :deep(.c-icon) {
-        filter: drop-shadow(
-          0 0 var(--blur-sm) var(--section-accent)
-        );
-      }
-    }
-
     &:disabled {
-      filter: grayscale(100%);
-
       @include disabled;
+    }
+
+    &:not(:disabled) {
+      &:is(:hover, :focus-visible, .router-link-active) {
+        color: var(--section-accent);
+
+        :deep(.c-icon) {
+          filter: drop-shadow(
+            0 0 var(--blur-sm) var(--section-accent)
+          );
+        }
+      }
+
+      &:is(:hover, :focus-visible):not(.router-link-active) {
+        transform: translateX(var(--space-1));
+
+        @include state-hover(var(--section-accent));
+      }
+
+      &:active {
+        @include state-active(var(--section-accent));
+      }
+
+      &.router-link-active {
+        @include state-active(var(--section-accent));
+        @include blinking-cursor(
+          var(--space-1),
+          var(--font-size-base),
+          currentcolor
+        );
+      }
     }
   }
 }
