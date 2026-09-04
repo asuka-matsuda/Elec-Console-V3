@@ -42,19 +42,21 @@ const closeSidebar = () => {
           class="c-global-nav__section-header"
         />
 
-        <component
-          :is="item.disabled ? 'button' : NuxtLink"
-          v-for="item in section.items"
-          :key="item.href"
-          :to="item.disabled ? undefined : item.href"
-          :type="item.disabled ? 'button' : undefined"
-          :disabled="item.disabled || undefined"
-          class="c-global-nav__link"
-          @click="item.disabled ? undefined : closeSidebar()"
-        >
-          <AppIcon :name="item.icon" class="c-global-nav__link-icon" />
-          <span class="c-global-nav__link-text">{{ item.text }}</span>
-        </component>
+        <div class="c-global-nav__list">
+          <component
+            :is="item.disabled ? 'button' : NuxtLink"
+            v-for="item in section.items"
+            :key="item.href"
+            :to="item.disabled ? undefined : item.href"
+            :type="item.disabled ? 'button' : undefined"
+            :disabled="item.disabled || undefined"
+            class="c-global-nav__link"
+            @click="item.disabled ? undefined : closeSidebar()"
+          >
+            <AppIcon :name="item.icon" class="c-global-nav__link-icon" />
+            <span class="c-global-nav__link-text">{{ item.text }}</span>
+          </component>
+        </div>
       </section>
     </nav>
   </aside>
@@ -89,7 +91,7 @@ const closeSidebar = () => {
 
     overflow-y: auto;
     flex: 1;
-    gap: var(--space-card-gap);
+    gap: var(--space-4);
     padding: var(--space-3);
   }
 
@@ -115,11 +117,17 @@ const closeSidebar = () => {
   }
 
   &__section-header {
-    padding: var(--space-2) var(--space-3);
+    padding: var(--space-1) var(--space-3);
 
     :deep(.c-section-header__title) {
       color: var(--section-accent);
     }
+  }
+
+  &__list {
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-1);
   }
 
   &__link {
