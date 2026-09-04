@@ -78,7 +78,7 @@ const handleCreateSite = async () => {
   newSite.value = { id: '', name: '', status: 'planning' }
 }
 
-const { askConfirm } = useConfirmModal()
+const { askConfirm } = useModal()
 
 const confirmToggleDisable = async (row: Site) => {
   const isCurrentlyDisabled = !!row.disabledAt

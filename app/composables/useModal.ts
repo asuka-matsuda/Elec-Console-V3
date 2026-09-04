@@ -29,9 +29,9 @@ watch(isOpen, (newVal) => {
 })
 
 /**
- * 確認モーダル（AppModal）の開閉と状態管理を共通化するComposable
+ * モーダル（AppModal）の開閉と状態管理を共通化するComposable
  */
-export const useConfirmModal = (
+export const useModal = (
   defaultOptions: Partial<ConfirmOptions> = {},
 ) => {
   const askConfirm = (customOptions: ConfirmOptions = {}): Promise<boolean> => {
@@ -98,3 +98,6 @@ export const useConfirmModal = (
     closeConfirm,
   }
 }
+
+// 後方互換用エイリアス
+export const useConfirmModal = useModal

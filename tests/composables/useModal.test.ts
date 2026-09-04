@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { useConfirmModal } from '../../app/composables/useConfirmModal'
+import { useConfirmModal, useModal } from '../../app/composables/useModal'
 
-describe('useConfirmModal', () => {
+describe('useModal', () => {
   it('should initialize with default options', () => {
     const { isOpen, title, message, intent } = useConfirmModal()
 
@@ -60,5 +60,9 @@ describe('useConfirmModal', () => {
     const result = await promise
 
     expect(result).toBe(false)
+  })
+
+  it('should export useConfirmModal as an alias of useModal', () => {
+    expect(useConfirmModal).toBe(useModal)
   })
 })

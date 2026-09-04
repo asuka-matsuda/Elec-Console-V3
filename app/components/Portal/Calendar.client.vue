@@ -153,7 +153,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
   events.value = [...events.value]
 }
 
-const { askConfirm } = useConfirmModal()
+const { askConfirm } = useModal()
 
 const removeEvent = async () => {
   if (!editingEventId.value) return

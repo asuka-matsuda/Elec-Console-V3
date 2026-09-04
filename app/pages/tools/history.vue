@@ -19,7 +19,7 @@ const tabs = [
 const currentTab = ref('voltage')
 const historyList = ref<HistoryEntry[]>([])
 
-const { askConfirm } = useConfirmModal()
+const { askConfirm } = useModal()
 
 const storageKey = computed(() => {
   return `elec_calc_${currentTab.value}_hist`

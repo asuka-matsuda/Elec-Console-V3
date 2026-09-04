@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { watchEffect } from 'vue'
 
-import { useConfirmModal } from '~/composables/useConfirmModal'
+import { useModal } from '~/composables/useModal'
 import { useSettings } from '~/composables/useSettings'
 
 const { themeMode } = useSettings()
@@ -14,7 +14,7 @@ const {
   intent: confirmIntent,
   handleCancel: onConfirmCancel,
   handleConfirm: onConfirmExecute,
-} = useConfirmModal()
+} = useModal()
 
 if (import.meta.client) {
   watchEffect(() => {

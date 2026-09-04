@@ -52,7 +52,7 @@ const isAssignModalOpen = ref(false)
 const assignTargetUserId = ref('')
 const assignTargetSiteIds = ref<string[]>([])
 
-const { askConfirm } = useConfirmModal()
+const { askConfirm } = useModal()
 
 const handleUserCreated = (user: User) => {
   createdUserResult.value = user

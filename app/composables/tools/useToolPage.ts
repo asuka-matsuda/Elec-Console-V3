@@ -2,7 +2,7 @@ import { useLocalStorage } from '@vueuse/core'
 import { computed, ref } from 'vue'
 
 import { useCalcHistory } from '~/composables/tools/useCalcHistory'
-import { useConfirmModal } from '~/composables/useConfirmModal'
+import { useModal } from '~/composables/useModal'
 import type { HistoryEntry } from '~/types/history'
 
 export function useToolPage<InputType, ResultType>(
@@ -58,7 +58,7 @@ export function useToolPage<InputType, ResultType>(
     }
   }
 
-  const { askConfirm } = useConfirmModal()
+  const { askConfirm } = useModal()
 
   const resetInputs = () => {
     inputs.value = JSON.parse(JSON.stringify(defaultInputs))
