@@ -103,16 +103,12 @@ defineProps<{
 
   &__track {
     position: relative;
-
     flex-shrink: 0;
-
     width: var(--track-w);
     height: var(--track-h);
 
-    transition: transform var(--duration-fast) var(--ease-base);
-
     @include border-base;
-    @include state-base("sink", var(--transition-glow));
+    @include state-base("sink", var(--transition-fast));
   }
 
   &__thumb {
@@ -124,10 +120,7 @@ defineProps<{
     width: var(--thumb-w);
     height: var(--track-h);
 
-    transition:
-      transform var(--duration-base) var(--ease-smooth),
-      box-shadow var(--duration-base) var(--ease-base),
-      border-color var(--duration-base) var(--ease-base);
+    transition: var(--transition-base);
 
     @include border-base;
     @include shadow("sm");
