@@ -55,42 +55,40 @@ const handleChangePassword = async () => {
 
 <template>
   <div class="p-change-password">
-    <div>
-      <small>
-        セキュリティのため、システムから配布された初期パスワードを変更してください。
-      </small>
+    <small>
+      セキュリティのため、システムから配布された初期パスワードを変更してください。
+    </small>
 
-      <div v-if="errorMsg" class="p-change-password__error">
-        {{ errorMsg }}
-      </div>
+    <div v-if="errorMsg" class="p-change-password__error">
+      {{ errorMsg }}
+    </div>
 
-      <div class="p-change-password__form">
-        <AppFormGroup label="新しいパスワード (8文字以上)">
-          <AppInput
-            v-model="password"
-            type="password"
-            placeholder="新しいパスワード"
-          />
-        </AppFormGroup>
-        <AppFormGroup label="新しいパスワード (確認用)">
-          <AppInput
-            v-model="passwordConfirm"
-            type="password"
-            placeholder="もう一度入力"
-            @keyup.enter="handleChangePassword"
-          />
-        </AppFormGroup>
-      </div>
+    <div class="p-change-password__form">
+      <AppFormGroup label="新しいパスワード (8文字以上)">
+        <AppInput
+          v-model="password"
+          type="password"
+          placeholder="新しいパスワード"
+        />
+      </AppFormGroup>
+      <AppFormGroup label="新しいパスワード (確認用)">
+        <AppInput
+          v-model="passwordConfirm"
+          type="password"
+          placeholder="もう一度入力"
+          @keyup.enter="handleChangePassword"
+        />
+      </AppFormGroup>
+    </div>
 
-      <div class="p-change-password__actions">
-        <AppButton
-          variant="primary"
-          :disabled="isLoading"
-          @click="handleChangePassword"
-        >
-          設定してはじめる
-        </AppButton>
-      </div>
+    <div class="p-change-password__actions">
+      <AppButton
+        variant="primary"
+        :disabled="isLoading"
+        @click="handleChangePassword"
+      >
+        設定してはじめる
+      </AppButton>
     </div>
   </div>
 </template>

@@ -125,59 +125,62 @@ const closeModal = () => {
     @update:model-value="emit('update:modelValue', $event)"
   >
     <div class="p-event-form">
-      <div class="p-event-form__field">
-        <label>タイトル</label>
+      <AppFormGroup
+        label="タイトル"
+        required
+        :error="hasTitleError ? 'タイトルを入力してください' : undefined"
+      >
         <AppInput
           v-model="form.title"
           placeholder="会議、送電試験など"
-          required
           :error="hasTitleError"
         />
-        <span v-if="hasTitleError" class="p-event-form__error"
-        >タイトルを入力してください</span
-        >
-      </div>
-      <div class="p-event-form__field">
-        <label>予定種別</label>
+      </AppFormGroup>
+
+      <AppFormGroup label="予定種別">
         <AppSelect
           v-model="form.type"
           :options="eventTypes.map((t) => ({ label: t.name, value: t.id }))"
         />
-      </div>
+      </AppFormGroup>
 
       <div class="p-event-form__row">
-        <div class="p-event-form__field">
-          <label>開始日時</label>
+        <AppFormGroup label="開始日時" required>
           <CalendarDateInput
             :key="'start-' + form.allDay"
             v-model="form.start"
             :type="form.allDay ? 'date' : 'datetime-local'"
             required
           />
-        </div>
-        <div class="p-event-form__field">
-          <label>終了日時</label>
+        </AppFormGroup>
+        <AppFormGroup label="終了日時">
           <CalendarDateInput
             :key="'end-' + form.allDay"
             v-model="form.end"
             :type="form.allDay ? 'date' : 'datetime-local'"
           />
-        </div>
+        </AppFormGroup>
       </div>
 
       <AppCheckbox v-model="form.allDay" label="終日イベント" />
-
-      <div class="p-event-form__actions">
-        <AppButton v-if="isEditing" variant="danger" @click="handleDelete">
-          削除
-        </AppButton>
-        <div style="flex: 1"></div>
-        <AppButton variant="secondary" @click="closeModal">
-          キャンセル
-        </AppButton>
-        <AppButton variant="primary" @click="handleSave"> 保存 </AppButton>
-      </div>
     </div>
+
+    <template #footer>
+      <AppButton
+        v-if="isEditing"
+        variant="danger"
+        style="margin-right: auto"
+        @click="handleDelete"
+      >
+        削除
+      </AppButton>
+      <AppButton variant="secondary" @click="closeModal">
+        キャンセル
+      </AppButton>
+      <AppButton variant="primary" @click="handleSave">
+        保存
+      </AppButton>
+    </template>
   </AppModal>
 </template>
 
@@ -185,48 +188,16 @@ const closeModal = () => {
 .p-event-form {
   @include flex-start-stretch($direction: column);
 
-  container-type: inline-size;
   gap: var(--space-3);
 
-  &__field {
-    @include flex-start-stretch($direction: column);
-
-    gap: var(--space-1);
-
-    label {
-      @include text-label;
-
-      color: var(--color-text-muted);
-    }
-  }
-
-  &__error {
-    @include text-caption;
-
-    color: var(--color-status-danger);
-  }
-
   &__row {
-    @include flex-start-center;
-
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-2);
 
-    @include cq("xs", "down") {
-      flex-direction: column;
-      align-items: stretch;
+    @include mq("sm") {
+      grid-template-columns: 1fr;
     }
-
-    > * {
-      flex: 1;
-    }
-  }
-
-  &__actions {
-    @include flex-start-center;
-
-    gap: var(--space-2);
-    padding-top: var(--space-3);
-    border-top: var(--border-width-base) solid var(--color-border);
   }
 }
 </style>

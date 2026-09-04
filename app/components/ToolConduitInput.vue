@@ -34,28 +34,27 @@ const emit = defineEmits<{
       />
     </AppFormGroup>
 
-    <div class="c-conduit-input__section">
-      <h4>収容するケーブル</h4>
+    <section class="c-conduit-input__section">
+      <h4 class="c-conduit-input__title">
+        収容するケーブル
+      </h4>
 
-      <div class="c-conduit-input__cable-list">
-        <ToolCableItemCard
-          v-for="(cable, index) in inputs.inputCables"
-          :key="cable.id"
-          v-model="inputs.inputCables[index]!"
-          :index="index"
-          :removable="inputs.inputCables.length > 1"
-          @remove="emit('remove-cable', cable.id)"
-        />
-      </div>
+      <ToolCableItemCard
+        v-for="(cable, index) in inputs.inputCables"
+        :key="cable.id"
+        v-model="inputs.inputCables[index]!"
+        :index="index"
+        :removable="inputs.inputCables.length > 1"
+        @remove="emit('remove-cable', cable.id)"
+      />
 
       <AppButton
         variant="success"
-        class="c-conduit-input__add-button"
         @click="emit('add-cable')"
       >
         <AppIcon name="plus" /> ケーブルを追加
       </AppButton>
-    </div>
+    </section>
   </div>
 </template>
 
@@ -71,14 +70,8 @@ const emit = defineEmits<{
     gap: var(--space-form-row-gap);
   }
 
-  &__cable-list {
-    @include flex-start-stretch($direction: column);
-
-    gap: var(--space-form-row-gap);
-  }
-
-  &__add-button {
-    width: 100%;
+  &__title {
+    @include text-title("sm");
   }
 }
 </style>

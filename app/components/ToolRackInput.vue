@@ -56,7 +56,7 @@ defineEmits<{
         <AppToggle v-model="inputs.isStrong" label="" />
       </template>
 
-      <div v-if="inputs.isStrong" class="c-rack-input__panel-body">
+      <template v-if="inputs.isStrong">
         <AppFormGroup label="段積み数">
           <AppInputGroup>
             <AppInput v-model="inputs.lStrong" type="number" min="1" />
@@ -66,27 +66,26 @@ defineEmits<{
           </AppInputGroup>
         </AppFormGroup>
 
-        <div class="c-rack-input__section">
-          <small class="c-rack-input__section-title">強電ケーブルリスト</small>
-          <div class="c-rack-input__cable-list">
-            <ToolCableItemCard
-              v-for="(cable, index) in inputs.strongCablesUI"
-              :key="cable.id"
-              v-model="inputs.strongCablesUI[index]!"
-              :index="index"
-              :removable="inputs.strongCablesUI.length > 1"
-              @remove="$emit('remove-strong-cable', cable.id)"
-            />
-          </div>
+        <section class="c-rack-input__section">
+          <h4 class="c-rack-input__section-title">
+            強電ケーブルリスト
+          </h4>
+          <ToolCableItemCard
+            v-for="(cable, index) in inputs.strongCablesUI"
+            :key="cable.id"
+            v-model="inputs.strongCablesUI[index]!"
+            :index="index"
+            :removable="inputs.strongCablesUI.length > 1"
+            @remove="$emit('remove-strong-cable', cable.id)"
+          />
           <AppButton
             variant="secondary"
-            class="c-rack-input__add-button"
             @click="$emit('add-strong-cable')"
           >
             <AppIcon name="plus" /> 強電ケーブルを追加
           </AppButton>
-        </div>
-      </div>
+        </section>
+      </template>
     </AppPanel>
 
     <!-- 弱電エリア -->
@@ -95,7 +94,7 @@ defineEmits<{
         <AppToggle v-model="inputs.isWeak" label="" />
       </template>
 
-      <div v-if="inputs.isWeak" class="c-rack-input__panel-body">
+      <template v-if="inputs.isWeak">
         <AppFormGroup label="段積み数">
           <AppInputGroup>
             <AppInput v-model="inputs.lWeak" type="number" min="1" />
@@ -105,27 +104,26 @@ defineEmits<{
           </AppInputGroup>
         </AppFormGroup>
 
-        <div class="c-rack-input__section">
-          <small class="c-rack-input__section-title">弱電ケーブルリスト</small>
-          <div class="c-rack-input__cable-list">
-            <ToolCableItemCard
-              v-for="(cable, index) in inputs.weakCablesUI"
-              :key="cable.id"
-              v-model="inputs.weakCablesUI[index]!"
-              :index="index"
-              :removable="inputs.weakCablesUI.length > 1"
-              @remove="$emit('remove-weak-cable', cable.id)"
-            />
-          </div>
+        <section class="c-rack-input__section">
+          <h4 class="c-rack-input__section-title">
+            弱電ケーブルリスト
+          </h4>
+          <ToolCableItemCard
+            v-for="(cable, index) in inputs.weakCablesUI"
+            :key="cable.id"
+            v-model="inputs.weakCablesUI[index]!"
+            :index="index"
+            :removable="inputs.weakCablesUI.length > 1"
+            @remove="$emit('remove-weak-cable', cable.id)"
+          />
           <AppButton
             variant="secondary"
-            class="c-rack-input__add-button"
             @click="$emit('add-weak-cable')"
           >
             <AppIcon name="plus" /> 弱電ケーブルを追加
           </AppButton>
-        </div>
-      </div>
+        </section>
+      </template>
     </AppPanel>
   </div>
 </template>
@@ -146,12 +144,6 @@ defineEmits<{
     }
   }
 
-  &__panel-body {
-    @include flex-start-stretch($direction: column);
-
-    gap: var(--space-form-row-gap);
-  }
-
   &__section {
     @include flex-start-stretch($direction: column);
 
@@ -160,16 +152,6 @@ defineEmits<{
 
   &__section-title {
     @include text-meta("xs", "bold");
-  }
-
-  &__cable-list {
-    @include flex-start-stretch($direction: column);
-
-    gap: var(--space-card-gap);
-  }
-
-  &__add-button {
-    width: 100%;
   }
 }
 </style>

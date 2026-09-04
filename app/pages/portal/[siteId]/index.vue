@@ -80,12 +80,14 @@ onMounted(() => {
       <div class="p-site-dashboard__sidebar">
         <PersonalTodo :site-id="siteId" />
 
-        <NuxtLink :to="`/portal/${siteId}/souden`" class="c-link-button">
-          <AppButton variant="primary" class="p-site-dashboard__souden-btn">
-            <AppIcon name="zap" size="sm" />
-            送電試験ダッシュボードへ
-          </AppButton>
-        </NuxtLink>
+        <AppButton
+          :to="`/portal/${siteId}/souden`"
+          variant="primary"
+          block
+        >
+          <AppIcon name="zap" size="sm" />
+          送電試験ダッシュボードへ
+        </AppButton>
       </div>
     </div>
   </div>
@@ -111,14 +113,6 @@ onMounted(() => {
 
     gap: var(--space-card-gap);
   }
-
-  &__souden-btn {
-    width: 100%;
-  }
-}
-
-.c-link-button {
-  display: block;
 }
 
 .l-grid--2col-2-1 {

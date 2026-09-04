@@ -81,9 +81,7 @@ provide('toolBasisModal', {
             </AppButton>
           </template>
 
-          <div class="l-tool-layout__panel-content">
-            <slot name="inputs" :open-basis="openBasisModal" />
-          </div>
+          <slot name="inputs" :open-basis="openBasisModal" />
         </AppPanel>
       </section>
 
@@ -125,9 +123,7 @@ provide('toolBasisModal', {
               />
             </template>
 
-            <div class="l-tool-layout__panel-content">
-              <slot name="results" :open-basis="openBasisModal" />
-            </div>
+            <slot name="results" :open-basis="openBasisModal" />
           </AppPanel>
         </div>
       </section>
@@ -177,17 +173,11 @@ provide('toolBasisModal', {
   &__panel {
     flex: 1;
     min-height: 0;
-  }
 
-  &__panel-content {
-    @include flex-start-stretch($direction: column);
-
-    overflow-y: auto;
-    flex: 1;
-    gap: var(--space-card-gap);
-
-    min-height: 0;
-    padding: var(--space-1) var(--space-2);
+    :deep(.c-panel__content) {
+      overflow-y: auto;
+      padding: var(--space-1) var(--space-2);
+    }
   }
 
   &__results {

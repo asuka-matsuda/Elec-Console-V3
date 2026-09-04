@@ -25,65 +25,57 @@ watch(
 
 <template>
   <div class="c-weight-input">
-    <div class="c-weight-input__grid">
-      <AppFormGroup label="ケーブル種別" required>
-        <AppSelect
-          v-model="inputs.category"
-          :options="categories"
-          placeholder="選択してください"
+    <AppFormGroup label="ケーブル種別" required>
+      <AppSelect
+        v-model="inputs.category"
+        :options="categories"
+        placeholder="選択してください"
+      />
+    </AppFormGroup>
+
+    <AppFormGroup label="ケーブルサイズ" required>
+      <AppSelect
+        v-model="inputs.cableIdx"
+        :options="availableSizes"
+        placeholder="選択してください"
+        :disabled="!inputs.category"
+      />
+    </AppFormGroup>
+
+    <AppFormGroup label="ケーブル長 (L)" required>
+      <AppInputGroup>
+        <AppInput v-model="inputs.L_input" type="number" min="1" />
+        <template #append>
+          <span class="c-input-addon">m</span>
+        </template>
+      </AppInputGroup>
+    </AppFormGroup>
+
+    <AppFormGroup label="ドラム占積率 (K)">
+      <AppInputGroup>
+        <AppInput
+          v-model="inputs.K"
+          type="number"
+          step="0.01"
+          min="0"
+          max="1"
         />
-      </AppFormGroup>
-
-      <AppFormGroup label="ケーブルサイズ" required>
-        <AppSelect
-          v-model="inputs.cableIdx"
-          :options="availableSizes"
-          placeholder="選択してください"
-          :disabled="!inputs.category"
-        />
-      </AppFormGroup>
-
-      <AppFormGroup label="ケーブル長 (L)" required>
-        <AppInputGroup>
-          <AppInput v-model="inputs.L_input" type="number" min="1" />
-          <template #append>
-            <span class="c-input-addon">m</span>
-          </template>
-        </AppInputGroup>
-      </AppFormGroup>
-
-      <AppFormGroup label="ドラム占積率 (K)">
-        <AppInputGroup>
-          <AppInput
-            v-model="inputs.K"
-            type="number"
-            step="0.01"
-            min="0"
-            max="1"
-          />
-          <template #append>
-            <span class="c-input-addon">倍</span>
-          </template>
-        </AppInputGroup>
-      </AppFormGroup>
-    </div>
+        <template #append>
+          <span class="c-input-addon">倍</span>
+        </template>
+      </AppInputGroup>
+    </AppFormGroup>
   </div>
 </template>
 
 <style scoped lang="scss">
 .c-weight-input {
-  @include flex-start-stretch($direction: column);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-form-row-gap) var(--space-form-col-gap);
 
-  gap: var(--space-form-row-gap);
-
-  &__grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-form-row-gap) var(--space-form-col-gap);
-
-    @include mq("sm") {
-      grid-template-columns: 1fr;
-    }
+  @include mq("sm") {
+    grid-template-columns: 1fr;
   }
 }
 </style>
