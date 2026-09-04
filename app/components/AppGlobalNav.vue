@@ -189,18 +189,14 @@ const closeSidebar = () => {
 
   @include mq("md") {
     position: fixed;
-    z-index: var(--z-index-sidebar-overlay); // Just below sidebar (102)
-    top: 0;
-    left: 0;
+    z-index: var(--z-index-sidebar-overlay);
+    inset: 0;
 
     display: block;
 
-    width: 100vw;
-    height: 100dvh;
-
     visibility: hidden;
     opacity: 0;
-    backdrop-filter: blur(4px) brightness(0.4);
+    backdrop-filter: blur(var(--blur-sm));
 
     transition:
       opacity var(--duration-slow) var(--ease-base),
