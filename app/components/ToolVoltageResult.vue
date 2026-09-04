@@ -6,7 +6,7 @@
 import { computed } from 'vue'
 
 import type { VoltageCalcInputs, VoltageCalcResult } from '~/types/voltage'
-import { formatVal } from '~/utils/math'
+import { formatVoltageResult } from '~/utils/tools/voltage/voltageResultPresenter'
 
 const props = defineProps<{
   inputs: VoltageCalcInputs
@@ -14,109 +14,26 @@ const props = defineProps<{
   size?: 'sm' | 'md'
 }>()
 
-const isReady = computed(() => props.inputs?.isReady && props.result)
-const mode = computed(() => props.inputs?.mode || 'drop')
-
-const dropCableName = computed(() => {
-  if (!isReady.value) return 'ーー'
-
-  return props.result?.optimal?.name || 'ーー'
-})
-
-const mainLabel = computed(() =>
-  mode.value === 'size' ? '選定ケーブルサイズ' : '電圧降下',
-)
-
-const mainValue = computed(() => {
-  if (!isReady.value) return 'ーー'
-  if (mode.value === 'size') {
-    const size = props.result?.optimal?.size
-
-    return size ? String(size) : '選定不可'
-  }
-  else {
-    return formatVal(props.result!.finalDropV, 'ーー', 2)
-  }
-})
-
-const mainUnit = computed(() => {
-  if (!isReady.value) return mode.value === 'size' ? 'sq' : 'V'
-  if (mode.value === 'size') {
-    return props.result?.optimal?.unit || 'sq'
-  }
-
-  return 'V'
-})
-
-const mainStatusClass = computed(() => {
-  if (!isReady.value) return 'is-neutral'
-  if (mode.value === 'size') {
-    return props.result?.optimal ? 'is-success' : 'is-danger'
-  }
-  else {
-    return (props.inputs.I || 0) <= props.result!.finalEffAmp
-      ? 'is-success'
-      : 'is-danger'
-  }
-})
-
-const currentI = computed(() =>
-  isReady.value ? formatVal(props.inputs.I, 'ーー', 1) : 'ーー',
-)
-const maxI = computed(() =>
-  isReady.value ? formatVal(props.result!.finalEffAmp, 'ーー', 1) : 'ーー',
-)
-
-const ampStatusClass = computed(() => {
-  if (!isReady.value) return 'is-neutral'
-
-  return (props.inputs.I || 0) <= props.result!.finalEffAmp
-    ? 'is-success'
-    : 'is-danger'
-})
-
-const dropV = computed(() =>
-  isReady.value ? formatVal(props.result!.finalDropV, 'ーー', 2) : 'ーー',
-)
-const dropPercent = computed(() => {
-  if (!isReady.value) return 'ーー'
-  const v = props.inputs.sys?.voltage
-
-  if (!v) return 'ーー'
-
-  return formatVal((props.result!.finalDropV / v) * 100, 'ーー', 2)
-})
-
-const dropStatusClass = computed(() => {
-  if (!isReady.value) return 'is-neutral'
-  if (mode.value === 'size' && props.inputs.targetDrop) {
-    const currentPercent
-      = (props.result!.finalDropV / props.inputs.sys!.voltage) * 100
-
-    return currentPercent <= props.inputs.targetDrop
-      ? 'is-success'
-      : 'is-warning'
-  }
-
-  return 'is-success'
-})
+const view = computed(() => formatVoltageResult(props.inputs, props.result))
 </script>
 
 <template>
   <div class="c-voltage-result" :class="[size === 'sm' ? 'is-sm' : '']">
     <div class="c-voltage-result__main">
       <div class="c-voltage-result__main-label">
-        {{ mainLabel }}
+        {{ view.mainLabel }}
       </div>
       <div class="c-voltage-result__main-value">
-        <span class="value-text" :class="mainStatusClass">{{ mainValue }}</span>
-        <span v-if="mainUnit" class="value-unit">{{ mainUnit }}</span>
-        <template v-if="mode === 'drop' && isReady">
+        <span class="value-text" :class="view.mainStatusClass">{{
+          view.mainValue
+        }}</span>
+        <span v-if="view.mainUnit" class="value-unit">{{ view.mainUnit }}</span>
+        <template v-if="view.mode === 'drop' && view.isReady">
           <span class="value-sep">(</span>
           <span
             class="value-text c-voltage-result__drop-percent"
-            :class="mainStatusClass"
-          >{{ dropPercent }}</span
+            :class="view.mainStatusClass"
+          >{{ view.dropPercent }}</span
           >
           <span class="value-unit c-voltage-result__drop-unit">%</span>
           <span class="value-sep">)</span>
@@ -127,21 +44,21 @@ const dropStatusClass = computed(() => {
     <div class="c-voltage-result__metrics">
       <dl class="metric-card">
         <dt class="metric-label">電流チェック (設計 / 許容)</dt>
-        <dd class="metric-value" :class="ampStatusClass">
-          <span class="value-text">{{ currentI }}</span>
+        <dd class="metric-value" :class="view.ampStatusClass">
+          <span class="value-text">{{ view.currentI }}</span>
           <span class="value-sep">/</span>
-          <span class="value-text">{{ maxI }}</span>
+          <span class="value-text">{{ view.maxI }}</span>
           <span class="value-unit">A</span>
         </dd>
       </dl>
 
-      <dl v-if="mode === 'size'" class="metric-card">
+      <dl v-if="view.mode === 'size'" class="metric-card">
         <dt class="metric-label">電圧降下</dt>
-        <dd class="metric-value" :class="dropStatusClass">
-          <span class="value-text">{{ dropV }}</span>
+        <dd class="metric-value" :class="view.dropStatusClass">
+          <span class="value-text">{{ view.dropV }}</span>
           <span class="value-unit">V</span>
           <span class="value-sep">(</span>
-          <span class="value-text">{{ dropPercent }}</span>
+          <span class="value-text">{{ view.dropPercent }}</span>
           <span class="value-unit">%</span>
           <span class="value-sep">)</span>
         </dd>
@@ -151,7 +68,7 @@ const dropStatusClass = computed(() => {
         <dt class="metric-label">選択ケーブル</dt>
         <dd class="metric-value is-neutral">
           <span class="value-text c-voltage-result__drop-cable">{{
-            dropCableName
+            view.dropCableName
           }}</span>
         </dd>
       </dl>
