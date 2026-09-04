@@ -40,13 +40,7 @@ const tableColumns: TableColumn<(typeof flattenedData.value)[number]>[] = [
     </template>
 
     <template #cell-reference="{ value }">
-      <span class="c-db-meta">{{ value }}</span>
+      <small>{{ value }}</small>
     </template>
   </DbLayout>
 </template>
-
-<style scoped lang="scss">
-.c-db-meta {
-  @include text-desc;
-}
-</style>

@@ -35,13 +35,7 @@ const tableColumns: TableColumn<(typeof cableData)[number]>[] = [
     </template>
 
     <template #cell-standard="{ value }">
-      <span class="c-db-meta">{{ value }}</span>
+      <small>{{ value }}</small>
     </template>
   </DbLayout>
 </template>
-
-<style scoped lang="scss">
-.c-db-meta {
-  @include text-desc;
-}
-</style>
