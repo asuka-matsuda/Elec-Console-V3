@@ -5,8 +5,9 @@
  * 左側に「条件入力」、右側に「計算結果」を広々と配置し、
  * 「計算根拠」はモーダルダイアログとして呼び出せる構成を提供します。
  */
-import { ref } from 'vue'
+import { computed, provide, ref, useSlots } from 'vue'
 
+const slots = useSlots()
 const isDrawerOpen = ref(false)
 const isBasisModalOpen = ref(false)
 
@@ -21,28 +22,18 @@ const openBasisModal = () => {
 const closeBasisModal = () => {
   isBasisModalOpen.value = false
 }
+
+provide('openToolBasis', openBasisModal)
+provide('hasToolBasis', computed(() => !!slots.basis))
 </script>
 
 <template>
   <div class="l-tool-layout">
-    <!-- ヘッダー（免責事項 ＋ 計算根拠ボタン） -->
-    <header class="l-tool-layout__header">
-      <div class="l-tool-layout__disclaimer">
-        <slot name="disclaimer">
-          <AppDisclaimer />
-        </slot>
-      </div>
-
-      <AppButton
-        v-if="$slots.basis"
-        variant="secondary"
-        size="sm"
-        class="l-tool-layout__basis-trigger"
-        @click="openBasisModal"
-      >
-        <AppIcon name="book" size="sm" />
-        計算根拠
-      </AppButton>
+    <!-- 免責事項 -->
+    <header class="l-tool-layout__disclaimer">
+      <slot name="disclaimer">
+        <AppDisclaimer />
+      </slot>
     </header>
 
     <!-- メイングリッド（左: 条件入力 / 右: 計算結果） -->
@@ -109,27 +100,8 @@ const closeBasisModal = () => {
   min-height: 0;
   margin: 0 auto;
 
-  &__header {
-    @include flex-between-center;
-
-    flex-shrink: 0;
-    gap: var(--space-card-gap);
-
-    @include mq("md") {
-      @include flex-start-stretch($direction: column);
-
-      gap: var(--space-2);
-    }
-  }
-
   &__disclaimer {
-    flex: 1;
-    min-width: 0;
-  }
-
-  &__basis-trigger {
     flex-shrink: 0;
-    white-space: nowrap;
   }
 
   // 左右二等分（1:1）のメイングリッド: 左に入力、右に結果

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, inject, type Ref, ref } from 'vue'
 
 /**
  * ToolResultPanel
@@ -11,6 +11,10 @@ const props = defineProps<{
   saveDisabled?: boolean
   saveFunction?: () => Promise<void>
 }>()
+
+const openBasis = inject<(() => void) | null>('openToolBasis', null)
+const hasBasis = inject<Ref<boolean>>('hasToolBasis', ref(false))
+
 const typedSaveFunction = computed(
   () => props.saveFunction as () => Promise<void>,
 )
@@ -25,6 +29,15 @@ const typedSaveFunction = computed(
     size="md"
   >
     <template #actions>
+      <AppButton
+        v-if="hasBasis && openBasis"
+        variant="secondary"
+        size="sm"
+        @click="openBasis"
+      >
+        <AppIcon name="book" size="sm" />
+        計算根拠
+      </AppButton>
       <AppSaveButton
         :disabled="saveDisabled"
         :save-function="typedSaveFunction"
