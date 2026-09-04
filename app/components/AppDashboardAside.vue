@@ -1,14 +1,40 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+
+import { useFetch } from '#app'
+
 /**
- * DashboardAside
+ * AppDashboardAside
  * ダッシュボードのサイドバー（お知らせや更新履歴などを表示）コンポーネント
  */
-const { data: dashboardData, pending } = await useFetch('/api/dashboard', {
-  /** Prevent blocking navigation while loading */
+export interface AnnouncementItem {
+  id?: number | string
+  title: string
+  date: string
+  desc: string
+}
+
+export interface HistoryItem {
+  id?: number | string
+  version: string
+  title: string
+  date: string
+  desc: string
+  status?: string
+}
+
+export interface DashboardData {
+  announcements: AnnouncementItem[]
+  history: HistoryItem[]
+}
+
+const { data: dashboardData, pending } = await useFetch<DashboardData>('/api/dashboard', {
   lazy: true,
+  default: () => ({ announcements: [], history: [] }),
 })
-const announcements = computed(() => dashboardData.value?.announcements || [])
-const history = computed(() => dashboardData.value?.history || [])
+
+const announcements = computed(() => dashboardData.value.announcements)
+const history = computed(() => dashboardData.value.history)
 </script>
 
 <template>
@@ -48,7 +74,7 @@ const history = computed(() => dashboardData.value?.history || [])
             >
               {{ item.version }}
             </AppBadge>
-            <span class="p-dashboard-list-item__title">{{ item.title }}</span>
+            <span class="p-dashboard__title">{{ item.title }}</span>
           </template>
         </AppCard>
       </div>
@@ -77,10 +103,14 @@ const history = computed(() => dashboardData.value?.history || [])
 
   &__aside-block {
     @include flex-start-stretch($direction: column);
+
+    gap: var(--space-card-gap);
   }
 
   &__list {
     @include flex-start-stretch($direction: column);
+
+    gap: var(--space-card-gap);
   }
 
   &__loading {
