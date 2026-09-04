@@ -80,10 +80,7 @@ const selectTab = (option: TabOption<T>) => {
   color: var(--color-text-secondary);
 
   @include border-base;
-  @include state-base(
-    inset 0 0 var(--blur-sm) var(--color-border),
-    var(--transition-fast)
-  );
+  @include state-base;
 
   .c-tabs--grid & {
     width: 100%;
