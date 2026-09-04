@@ -24,7 +24,11 @@ const emit = defineEmits<{
       />
       <AppLogo />
 
-      <AppBreadcrumb v-if="breadcrumbs?.length" :items="breadcrumbs" />
+      <AppBreadcrumb
+        v-if="breadcrumbs?.length"
+        :items="breadcrumbs"
+        class="c-header__breadcrumb"
+      />
     </div>
 
     <div class="c-header__actions">
@@ -46,13 +50,13 @@ const emit = defineEmits<{
     gap: var(--space-3);
   }
 
-  :deep(.c-breadcrumb) {
+  &__breadcrumb {
     @include mq("md") {
       display: none;
     }
   }
 
-  :deep(.c-header__menu-btn) {
+  &__menu-btn {
     display: none;
 
     @include mq("md") {

@@ -143,8 +143,6 @@ withDefaults(
   @include state-base;
 
   &::before {
-    --glow-color: color-mix(in srgb, var(--theme-accent) 30%, transparent);
-
     content: "";
 
     flex-shrink: 0;
@@ -161,9 +159,7 @@ withDefaults(
     @include state-base(none, var(--transition-base), var(--theme-accent));
   }
 }
-</style>
 
-<style lang="scss">
 .fade-slide-enter-active,
 .fade-slide-leave-active {
   transition: var(--transition-fast);

@@ -81,10 +81,17 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
     @include border-base(transparent);
     @include state-base;
 
-    &:hover:not(:has(:disabled), :has(:checked)) {
-      color: var(--color-text-main);
+    &:not(:has(:disabled)) {
+      &:hover:not(:has(:checked)) {
+        color: var(--color-text-main);
 
-      @include state-hover(var(--color-border));
+        @include state-hover(var(--color-border));
+      }
+
+      &:has(:focus-visible) {
+        @include state-focus(var(--radio-color));
+        @include cyber-text-glow(var(--radio-color), 60%, var(--blur-md));
+      }
     }
 
     &:has(:checked) {
@@ -95,14 +102,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
       @include cyber-text-glow(var(--radio-color), 60%, var(--blur-md));
     }
 
-    &:has(:focus-visible) {
-      @include state-focus(var(--radio-color));
-      @include cyber-text-glow(var(--radio-color), 60%, var(--blur-md));
-    }
-
     &:has(:disabled) {
-      opacity: 0.3;
-
       @include disabled;
     }
   }

@@ -44,6 +44,10 @@ defineProps<{
   position: relative;
   gap: var(--space-2);
 
+  &:has(:disabled) {
+    cursor: not-allowed;
+  }
+
   &__input {
     cursor: inherit;
 
@@ -55,6 +59,13 @@ defineProps<{
     height: 100%;
 
     opacity: 0;
+
+    &:disabled {
+      ~ .c-checkbox__box,
+      ~ .c-checkbox__label {
+        @include disabled;
+      }
+    }
 
     &:not(:disabled) {
       &:hover {
@@ -72,25 +83,18 @@ defineProps<{
       &:active ~ .c-checkbox__box {
         @include state-active(var(--checkbox-color));
       }
-    }
 
-    &:disabled {
-      ~ .c-checkbox__box,
-      ~ .c-checkbox__label {
-        @include disabled;
+      &:focus-visible ~ .c-checkbox__box {
+        @include state-focus(var(--checkbox-color));
+        @include cyber-text-glow(var(--checkbox-color));
       }
-    }
 
-    &:focus-visible ~ .c-checkbox__box {
-      @include state-focus(var(--checkbox-color));
-      @include cyber-text-glow(var(--checkbox-color));
-    }
+      &:is(:checked, :indeterminate) ~ .c-checkbox__box {
+        @include state-active(var(--checkbox-color));
 
-    &:is(:checked, :indeterminate) ~ .c-checkbox__box {
-      @include state-active(var(--checkbox-color));
-
-      .c-checkbox__icon {
-        filter: drop-shadow(0 0 var(--blur-sm) var(--checkbox-color));
+        .c-checkbox__icon {
+          filter: drop-shadow(0 0 var(--blur-sm) var(--checkbox-color));
+        }
       }
     }
 
