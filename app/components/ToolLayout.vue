@@ -2,30 +2,57 @@
 /**
  * ToolLayout
  * 計算ツールページの全体レイアウトコンポーネント。
- * CSS Grid により、左右2分割（1:1）、左側を上下（1:3）で
- * 計算結果・条件入力・計算根拠の3エリアを配置・管理します。
+ * 左側に「条件入力」、右側に「計算結果」を広々と配置し、
+ * 「計算根拠」はモーダルダイアログとして呼び出せる構成を提供します。
  */
 import { ref } from 'vue'
 
 const isDrawerOpen = ref(false)
+const isBasisModalOpen = ref(false)
 
 const toggleDrawer = () => {
   isDrawerOpen.value = !isDrawerOpen.value
+}
+
+const openBasisModal = () => {
+  isBasisModalOpen.value = true
+}
+
+const closeBasisModal = () => {
+  isBasisModalOpen.value = false
 }
 </script>
 
 <template>
   <div class="l-tool-layout">
-    <!-- 免責事項 -->
-    <header class="l-tool-layout__disclaimer">
-      <slot name="disclaimer">
-        <AppDisclaimer />
-      </slot>
+    <!-- ヘッダー（免責事項 ＋ 計算根拠ボタン） -->
+    <header class="l-tool-layout__header">
+      <div class="l-tool-layout__disclaimer">
+        <slot name="disclaimer">
+          <AppDisclaimer />
+        </slot>
+      </div>
+
+      <AppButton
+        v-if="$slots.basis"
+        variant="secondary"
+        size="sm"
+        class="l-tool-layout__basis-trigger"
+        @click="openBasisModal"
+      >
+        <AppIcon name="book" size="sm" />
+        計算根拠
+      </AppButton>
     </header>
 
-    <!-- メイングリッド（左右1:1、左上下1:3） -->
+    <!-- メイングリッド（左: 条件入力 / 右: 計算結果） -->
     <main class="l-tool-layout__main">
-      <!-- 1. 計算結果（PC: 左上 1fr / モバイル: 下部Stickyドロワー） -->
+      <!-- 1. 条件入力（PC: 左側 50% / モバイル: 全面表示） -->
+      <section class="l-tool-layout__inputs">
+        <slot name="inputs" :open-basis="openBasisModal" />
+      </section>
+
+      <!-- 2. 計算結果（PC: 右側 50% / モバイル: 下部Stickyドロワー） -->
       <section
         class="l-tool-layout__results"
         :class="{ 'is-drawer-open': isDrawerOpen }"
@@ -39,19 +66,9 @@ const toggleDrawer = () => {
           />
         </div>
         <div class="l-tool-layout__results-inner">
-          <slot name="results" />
+          <slot name="results" :open-basis="openBasisModal" />
         </div>
       </section>
-
-      <!-- 2. 条件入力（PC: 左下 3fr / モバイル: 全面表示） -->
-      <section class="l-tool-layout__inputs">
-        <slot name="inputs" />
-      </section>
-
-      <!-- 3. 計算根拠（PC: 右全面 / モバイル: 非表示） -->
-      <aside class="l-tool-layout__basis">
-        <slot name="basis" />
-      </aside>
 
       <!-- モバイルドロワー展開時の背景オーバーレイ -->
       <div
@@ -60,6 +77,24 @@ const toggleDrawer = () => {
         @click="toggleDrawer"
       />
     </main>
+
+    <!-- 計算根拠モーダル -->
+    <AppModal
+      v-if="$slots.basis"
+      v-model="isBasisModalOpen"
+      title="計算根拠"
+      icon="book"
+      variant="tool"
+      size="lg"
+    >
+      <slot name="basis" />
+
+      <template #footer>
+        <AppButton variant="secondary" size="sm" @click="closeBasisModal">
+          閉じる
+        </AppButton>
+      </template>
+    </AppModal>
   </div>
 </template>
 
@@ -74,30 +109,52 @@ const toggleDrawer = () => {
   min-height: 0;
   margin: 0 auto;
 
-  &__disclaimer {
+  &__header {
+    @include flex-between-center;
+
     flex-shrink: 0;
+    gap: var(--space-card-gap);
+
+    @include mq("md") {
+      @include flex-start-stretch($direction: column);
+
+      gap: var(--space-2);
+    }
   }
 
-  // 左右二等分（1:1）、左側上下（1:3）のグリッド制御
+  &__disclaimer {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__basis-trigger {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  // 左右二等分（1:1）のメイングリッド: 左に入力、右に結果
   &__main {
     display: grid;
-    grid-template:
-      "results basis" minmax(0, 1fr)
-      "inputs  basis" minmax(0, 3fr) / minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     flex: 1;
     gap: var(--space-card-gap);
 
     min-height: 0;
 
     @include mq("md") {
-      grid-template: "inputs" 1fr / 1fr;
+      grid-template-columns: 1fr;
     }
+  }
+
+  &__inputs {
+    @include flex-start-stretch($direction: column);
+
+    min-height: 0;
   }
 
   &__results {
     @include flex-start-stretch($direction: column);
 
-    grid-area: results;
     min-height: 0;
 
     // モバイル: 下部Stickyドロワー
@@ -160,24 +217,6 @@ const toggleDrawer = () => {
 
       overflow-y: auto;
       padding: var(--space-3);
-    }
-  }
-
-  &__inputs {
-    @include flex-start-stretch($direction: column);
-
-    grid-area: inputs;
-    min-height: 0;
-  }
-
-  &__basis {
-    @include flex-start-stretch($direction: column);
-
-    grid-area: basis;
-    min-height: 0;
-
-    @include mq("md") {
-      display: none;
     }
   }
 

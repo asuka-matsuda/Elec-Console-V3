@@ -20,12 +20,14 @@ const props = withDefaults(
       | 'danger'
       | 'success'
     align?: 'left' | 'center'
+    size?: 'sm' | 'md' | 'lg'
     submitFn?: () => Promise<void>
     submitText?: string
     cancelText?: string
   }>(),
   {
     variant: 'main',
+    size: 'md',
     submitText: '保存する',
     cancelText: 'キャンセル',
   },
@@ -91,6 +93,7 @@ onMounted(() => {
   <dialog
     ref="dialogRef"
     class="c-modal"
+    :class="size ? `c-modal--${size}` : ''"
     @close="onNativeClose"
     @click.self="close"
     @cancel.prevent="close"
@@ -143,7 +146,7 @@ onMounted(() => {
   overflow: visible;
 
   width: 90vw;
-  max-width: 500px;
+  max-width: 540px;
   max-height: 90vh;
   margin: auto;
   padding: 0;
@@ -157,6 +160,18 @@ onMounted(() => {
     transform var(--duration-modal) var(--ease-smooth),
     overlay var(--duration-modal) allow-discrete,
     display var(--duration-modal) allow-discrete;
+
+  &--sm {
+    max-width: 420px;
+  }
+
+  &--md {
+    max-width: 540px;
+  }
+
+  &--lg {
+    max-width: 760px;
+  }
 
   &::backdrop {
     opacity: 0;
