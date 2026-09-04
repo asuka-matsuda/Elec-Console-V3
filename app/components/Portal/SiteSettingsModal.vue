@@ -234,7 +234,7 @@ const handleExport = () => {
   &__content {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-3);
+    gap: var(--space-form-row-gap);
     min-height: 300px;
   }
 

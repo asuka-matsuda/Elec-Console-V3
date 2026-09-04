@@ -124,9 +124,7 @@ const fill48 = computed(() =>
   flex: 1;
   gap: var(--space-card-gap);
   align-items: stretch;
-
   min-height: 0;
-  padding: var(--space-card-pad);
 
   @include cq("xs") {
     flex-direction: row;
@@ -166,7 +164,6 @@ const fill48 = computed(() =>
 
   &.is-sm {
     gap: var(--space-3);
-    padding: 0;
 
     .c-conduit-result__main {
       padding: var(--space-1) var(--space-2);

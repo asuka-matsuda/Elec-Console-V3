@@ -111,7 +111,7 @@ const handleChangePassword = async () => {
   &__form {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-3);
+    gap: var(--space-form-row-gap);
   }
 
   &__actions {

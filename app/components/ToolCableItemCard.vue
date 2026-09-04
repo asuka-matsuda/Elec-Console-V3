@@ -112,14 +112,8 @@ const onCategoryChange = (val: unknown) => {
 
 <style scoped lang="scss">
 .c-cable-item {
-  :deep(.c-card__title) {
-    width: 100%;
-  }
-
   &__header {
     @include flex-between-center;
-
-    width: 100%;
   }
 
   &__title-group {
@@ -133,7 +127,9 @@ const onCategoryChange = (val: unknown) => {
   }
 
   &__grid {
-    @include grid(repeat(2, minmax(0, 1fr)));
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-form-row-gap) var(--space-form-col-gap);
 
     @include mq("sm") {
       grid-template-columns: 1fr;

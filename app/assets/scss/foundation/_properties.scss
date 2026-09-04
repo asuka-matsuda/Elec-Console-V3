@@ -87,15 +87,15 @@
   // --- 4-2. Semantic Spacing Tokens (用途別セマンティック余白) ---
   // [1] ページ・大枠レイアウト (Layout & Container)
   --space-layout-pad: clamp(
-    var(--space-4),
-    2.5vw,
-    var(--space-8)
-  ); // 16px 〜 32px
-  --space-section-gap: clamp(
-    var(--space-4),
+    var(--space-3),
     2vw,
     var(--space-6)
-  ); // 16px 〜 24px
+  ); // 12px 〜 24px
+  --space-section-gap: clamp(
+    var(--space-5),
+    2.5vw,
+    var(--space-8)
+  ); // 20px 〜 32px
 
   // [2] パネル・カード (Card & Surface)
   --space-card-pad: clamp(
@@ -108,6 +108,12 @@
     1.2vw,
     var(--space-4)
   ); // 8px 〜 16px (標準)
+
+  // [3] コンポーネント・フォーム間隔 (Components & Forms)
+  --space-form-row-gap: var(--space-3); // 12px (フォーム行間)
+  --space-form-col-gap: var(--space-4); // 16px (フォーム列間)
+  --space-item-gap: var(--space-2); // 8px (アイテム間)
+  --space-inline-gap: var(--space-1); // 4px (インライン要素間)
 
   // コントロール寸法 (Dimensions)
   --control-height-ratio: 2.6;

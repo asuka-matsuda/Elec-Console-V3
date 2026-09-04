@@ -319,8 +319,6 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 
   position: relative;
 
-  overflow: hidden;
-
   width: 100%;
   min-height: calc(var(--control-height-ratio) * 1em);
   padding-block: 0.3em;

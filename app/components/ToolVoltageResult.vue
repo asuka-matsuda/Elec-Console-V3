@@ -166,9 +166,7 @@ const dropStatusClass = computed(() => {
   flex: 1;
   gap: var(--space-card-gap);
   align-items: stretch;
-
   min-height: 0;
-  padding: var(--space-card-pad);
 
   // コンテナの幅が xs 以上の場合は横並び
   @include cq("xs") {
@@ -189,7 +187,6 @@ const dropStatusClass = computed(() => {
 
   &.is-sm {
     gap: var(--space-3);
-    padding: 0;
 
     .c-voltage-result__main {
       padding: var(--space-1) var(--space-2);

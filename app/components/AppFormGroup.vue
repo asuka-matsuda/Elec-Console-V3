@@ -20,32 +20,30 @@ withDefaults(
 
 <template>
   <div class="c-form-group" :class="`is-${layout}`">
-    <div class="c-form-group__inner">
-      <div v-if="label || $slots.label" class="c-form-group__label-wrapper">
-        <div class="c-form-label">
-          <slot name="label">{{ label }}</slot>
+    <label v-if="label || $slots.label" class="c-form-group__label">
+      <span class="c-form-group__label-text">
+        <slot name="label">{{ label }}</slot>
+      </span>
+      <AppBadge
+        v-if="required"
+        color="danger"
+        size="sm"
+      >
+        REQUIRED
+      </AppBadge>
+    </label>
+
+    <div class="c-form-group__control">
+      <slot />
+
+      <transition name="fade-slide">
+        <div v-if="error" class="c-form-group__error">
+          {{ error }}
         </div>
-        <AppBadge
-          v-if="required"
-          color="danger"
-          size="sm"
-        >
-          REQUIRED
-        </AppBadge>
-      </div>
+      </transition>
 
-      <div class="c-form-group__control">
-        <slot />
-
-        <transition name="fade-slide">
-          <div v-if="error" class="c-form-group__error">
-            {{ error }}
-          </div>
-        </transition>
-
-        <div v-if="help && !error" class="c-form-group__help">
-          {{ help }}
-        </div>
+      <div v-if="help && !error" class="c-form-group__help">
+        {{ help }}
       </div>
     </div>
   </div>
@@ -53,18 +51,19 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-form-group {
-  &__inner {
-    .is-horizontal & {
-      @include flex-start-start;
-    }
-
-    .is-vertical & {
-      @include flex-start-stretch($direction: column);
-    }
+  &.is-horizontal {
+    @include flex-start-start;
   }
 
-  &__label-wrapper {
+  &.is-vertical {
+    @include flex-start-stretch($direction: column);
+  }
+
+  &__label {
     @include flex-start-center;
+
+    cursor: pointer;
+    user-select: none;
 
     .is-horizontal & {
       flex-shrink: 0;
@@ -81,6 +80,34 @@ withDefaults(
     .is-vertical & {
       width: 100%;
       margin-bottom: var(--space-1);
+    }
+  }
+
+  &__label-text {
+    @include text-label;
+    @include flex-start-center($is-inline: true);
+
+    gap: var(--space-1);
+    color: color-mix(in srgb, var(--theme-accent) 70%, transparent);
+    text-transform: uppercase;
+
+    @include state-base;
+
+    &::before {
+      content: "";
+
+      flex-shrink: 0;
+
+      width: var(--space-2);
+      height: var(--space-2);
+      border-radius: 50%;
+
+      @include border-base(
+        $color: color-mix(in srgb, var(--theme-accent) 70%, transparent),
+        $width: var(--border-width-thick),
+        $radius: 50%
+      );
+      @include state-base(none, var(--transition-base), var(--theme-accent));
     }
   }
 
@@ -110,7 +137,7 @@ withDefaults(
     @include text-meta;
   }
 
-  &:focus-within .c-form-label {
+  &:focus-within &__label-text {
     color: var(--theme-accent);
 
     @include cyber-text-glow(var(--theme-accent));
@@ -120,7 +147,7 @@ withDefaults(
     }
   }
 
-  &:has(.c-form-group__error, .is-error) .c-form-label {
+  &:has(.c-form-group__error, .is-error) &__label-text {
     color: var(--color-status-danger);
 
     @include cyber-text-glow(var(--color-status-danger));
@@ -128,35 +155,6 @@ withDefaults(
     &::before {
       @include state-hover(var(--color-status-danger));
     }
-  }
-}
-
-.c-form-label {
-  @include text-label;
-  @include flex-start-center($is-inline: true);
-
-  user-select: none;
-  gap: var(--space-1);
-  color: color-mix(in srgb, var(--theme-accent) 70%, transparent);
-  text-transform: uppercase;
-
-  @include state-base;
-
-  &::before {
-    content: "";
-
-    flex-shrink: 0;
-
-    width: var(--space-2);
-    height: var(--space-2);
-    border-radius: 50%;
-
-    @include border-base(
-      $color: color-mix(in srgb, var(--theme-accent) 70%, transparent),
-      $width: var(--border-width-thick),
-      $radius: 50%
-    );
-    @include state-base(none, var(--transition-base), var(--theme-accent));
   }
 }
 

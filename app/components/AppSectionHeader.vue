@@ -67,9 +67,10 @@ const resolvedDividerVariant = computed(() => {
   gap: var(--space-1);
 
   &__top {
-    @include flex-between-end;
+    @include flex-between-center;
 
-    gap: var(--space-card-gap);
+    flex-wrap: wrap;
+    gap: var(--space-2);
   }
 
   &__actions {

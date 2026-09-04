@@ -63,18 +63,18 @@ const emit = defineEmits<{
 .c-conduit-input {
   @include flex-start-stretch($direction: column);
 
-  gap: var(--space-card-gap);
+  gap: var(--space-form-row-gap);
 
   &__section {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-card-gap);
+    gap: var(--space-form-row-gap);
   }
 
   &__cable-list {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-card-gap);
+    gap: var(--space-form-row-gap);
   }
 
   &__add-button {

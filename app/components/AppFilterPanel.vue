@@ -47,7 +47,7 @@ defineProps<{
 <style scoped lang="scss">
 .c-filter-panel {
   &__filters {
-    @include grid(1fr, var(--space-card-gap));
+    @include grid(1fr, var(--space-form-row-gap));
 
     & > :nth-child(n + 3) {
       grid-column: 1 / -1;

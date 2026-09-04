@@ -37,7 +37,8 @@ const rootProps = computed(() => {
   return { href: props.href }
 })
 
-const hasTitle = computed(() => !!(slots.title || slots.header || props.title || props.icon))
+const hasHeader = computed(() => !!slots.header)
+const hasTitle = computed(() => !!(slots.title || props.title || props.icon))
 const hasDescription = computed(() => !!(slots.description || props.description))
 </script>
 
@@ -50,22 +51,22 @@ const hasDescription = computed(() => !!(slots.description || props.description)
       'is-clickable': isClickable,
     }"
   >
-    <div v-if="hasTitle || hasDescription" class="c-card__title-group">
-      <div v-if="hasTitle" class="c-card__title">
-        <slot name="title">
-          <slot name="header">
+    <header v-if="hasHeader || hasTitle || hasDescription" class="c-card__header">
+      <slot name="header">
+        <div v-if="hasTitle" class="c-card__title">
+          <slot name="title">
             <AppIcon v-if="icon" :name="icon" />
             <span v-if="title">{{ title }}</span>
           </slot>
-        </slot>
-      </div>
+        </div>
 
-      <div v-if="hasDescription" class="c-card__desc">
-        <slot name="description">
-          {{ description }}
-        </slot>
-      </div>
-    </div>
+        <div v-if="hasDescription" class="c-card__desc">
+          <slot name="description">
+            {{ description }}
+          </slot>
+        </div>
+      </slot>
+    </header>
 
     <slot />
   </component>
@@ -103,6 +104,7 @@ const hasDescription = computed(() => !!(slots.description || props.description)
     @include disabled;
   }
 
+  &__header,
   &__title-group {
     @include flex-start-stretch($direction: column);
 

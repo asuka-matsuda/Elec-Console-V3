@@ -187,7 +187,7 @@ provide('toolBasisModal', {
     gap: var(--space-card-gap);
 
     min-height: 0;
-    padding-right: var(--space-1);
+    padding: var(--space-1) var(--space-2);
   }
 
   &__results {

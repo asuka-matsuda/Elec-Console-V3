@@ -134,10 +134,12 @@ defineEmits<{
 .c-rack-input {
   @include flex-start-stretch($direction: column);
 
-  gap: var(--space-card-gap);
+  gap: var(--space-form-row-gap);
 
   &__grid {
-    @include grid(repeat(2, minmax(0, 1fr)));
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-form-row-gap) var(--space-form-col-gap);
 
     @include mq("sm") {
       grid-template-columns: 1fr;
@@ -147,7 +149,7 @@ defineEmits<{
   &__panel-body {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-card-gap);
+    gap: var(--space-form-row-gap);
   }
 
   &__section {
