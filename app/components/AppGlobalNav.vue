@@ -103,6 +103,10 @@ const closeSidebar = () => {
     );
     --section-accent: var(--color-category-main);
 
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-1);
+
     @each $name, $var in $accents {
       &.has-accent-#{$name} {
         --section-accent: #{$var};
