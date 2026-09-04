@@ -2,6 +2,7 @@ import { useLocalStorage } from '@vueuse/core'
 import { computed, ref } from 'vue'
 
 import { useCalcHistory } from '~/composables/tools/useCalcHistory'
+import { useConfirmModal } from '~/composables/useConfirmModal'
 import type { HistoryEntry } from '~/types/history'
 
 export function useToolPage<InputType, ResultType>(
@@ -57,13 +58,24 @@ export function useToolPage<InputType, ResultType>(
     }
   }
 
+  const { askConfirm } = useConfirmModal()
+
   const resetInputs = () => {
     inputs.value = JSON.parse(JSON.stringify(defaultInputs))
   }
 
   const isResetModalOpen = ref(false)
-  const openResetModal = () => {
-    isResetModalOpen.value = true
+  const openResetModal = async () => {
+    const isConfirmed = await askConfirm({
+      title: 'リセットの確認',
+      message: '入力した条件をすべてリセットしますか？',
+      confirmText: 'リセットする',
+      intent: 'danger',
+    })
+
+    if (isConfirmed) {
+      resetInputs()
+    }
   }
   const confirmReset = () => {
     resetInputs()

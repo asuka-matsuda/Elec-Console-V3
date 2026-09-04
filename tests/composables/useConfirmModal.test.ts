@@ -41,4 +41,24 @@ describe('useConfirmModal', () => {
     expect(onConfirmMock).toHaveBeenCalledTimes(1)
     expect(isOpen.value).toBe(false)
   })
+
+  it('should resolve promise to true when handleConfirm is called', async () => {
+    const { askConfirm, handleConfirm } = useConfirmModal()
+    const promise = askConfirm({ title: 'Promiseテスト' })
+
+    await handleConfirm()
+    const result = await promise
+
+    expect(result).toBe(true)
+  })
+
+  it('should resolve promise to false when handleCancel is called', async () => {
+    const { askConfirm, handleCancel } = useConfirmModal()
+    const promise = askConfirm({ title: 'キャンセルテスト' })
+
+    handleCancel()
+    const result = await promise
+
+    expect(result).toBe(false)
+  })
 })

@@ -1,9 +1,20 @@
 <script setup lang="ts">
 import { watchEffect } from 'vue'
 
+import { useConfirmModal } from '~/composables/useConfirmModal'
 import { useSettings } from '~/composables/useSettings'
 
 const { themeMode } = useSettings()
+const {
+  isOpen: isConfirmOpen,
+  title: confirmTitle,
+  message: confirmMessage,
+  cancelText: confirmCancelText,
+  confirmText: confirmBtnText,
+  intent: confirmIntent,
+  handleCancel: onConfirmCancel,
+  handleConfirm: onConfirmExecute,
+} = useConfirmModal()
 
 if (import.meta.client) {
   watchEffect(() => {
@@ -16,4 +27,26 @@ if (import.meta.client) {
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
+
+  <AppModal
+    v-model="isConfirmOpen"
+    :title="confirmTitle"
+    align="center"
+  >
+    {{ confirmMessage }}
+    <template #footer>
+      <AppButton
+        variant="secondary"
+        @click="onConfirmCancel"
+      >
+        {{ confirmCancelText }}
+      </AppButton>
+      <AppButton
+        :variant="confirmIntent"
+        @click="onConfirmExecute"
+      >
+        {{ confirmBtnText }}
+      </AppButton>
+    </template>
+  </AppModal>
 </template>

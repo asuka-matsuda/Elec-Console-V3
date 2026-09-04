@@ -153,30 +153,23 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
   events.value = [...events.value]
 }
 
-const {
-  isOpen: isConfirmOpen,
-  title: confirmTitle,
-  message: confirmMessage,
-  confirmText: confirmBtnText,
-  intent: confirmIntent,
-  askConfirm,
-  handleConfirm,
-} = useConfirmModal()
+const { askConfirm } = useConfirmModal()
 
-const removeEvent = () => {
+const removeEvent = async () => {
   if (!editingEventId.value) return
   const targetId = editingEventId.value
 
-  askConfirm({
+  const isConfirmed = await askConfirm({
     title: '予定の削除',
     message: `「${form.value.title || 'この予定'}」を削除してもよろしいですか？`,
     confirmText: '削除する',
     intent: 'danger',
-    onConfirm: async () => {
-      await deleteEvent(targetId)
-      closeModal()
-    },
   })
+
+  if (isConfirmed) {
+    await deleteEvent(targetId)
+    closeModal()
+  }
 }
 
 const fullCalendarRef = ref<InstanceType<typeof FullCalendar> | null>(null)
@@ -316,15 +309,6 @@ const typedCalendarOptions = computed(
       v-model="isTypeSettingsOpen"
       :event-types="settings?.eventTypes || []"
       @save="handleSaveEventTypes"
-    />
-
-    <AppConfirmModal
-      v-model="isConfirmOpen"
-      :title="confirmTitle"
-      :message="confirmMessage"
-      :confirm-text="confirmBtnText"
-      :intent="confirmIntent"
-      @confirm="handleConfirm"
     />
   </div>
 </template>

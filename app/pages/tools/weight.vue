@@ -16,9 +16,7 @@ const {
   inputs,
   result,
   handleSaveHistory,
-  isResetModalOpen,
   openResetModal,
-  confirmReset,
   mathSteps,
 } = useWeightCalculator()
 
@@ -172,14 +170,6 @@ const totalWeight = computed(() => {
       </ToolMathBasisPanel>
     </template>
   </ToolLayout>
-
-  <AppConfirmModal
-    v-model="isResetModalOpen"
-    title="リセットの確認"
-    message="入力した条件をすべてリセットしますか？"
-    confirm-text="リセットする"
-    @confirm="confirmReset"
-  />
 </template>
 
 <style scoped lang="scss">

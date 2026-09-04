@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 export interface ConfirmOptions {
   title?: string
@@ -9,26 +9,33 @@ export interface ConfirmOptions {
   onConfirm?: () => void | Promise<void>
 }
 
+// グローバルな確認モーダルの状態
+const isOpen = ref(false)
+const isPending = ref(false)
+const currentOptions = ref<ConfirmOptions>({
+  title: '確認',
+  message: 'この操作を実行しますか？',
+  confirmText: '確定する',
+  cancelText: 'キャンセル',
+  intent: 'primary',
+})
+let resolvePromise: ((value: boolean) => void) | null = null
+
+watch(isOpen, (newVal) => {
+  if (!newVal && resolvePromise) {
+    resolvePromise(false)
+    resolvePromise = null
+  }
+})
+
 /**
- * 確認モーダル（AppConfirmModal）の開閉と状態管理を共通化するComposable
+ * 確認モーダル（AppModal）の開閉と状態管理を共通化するComposable
  */
 export const useConfirmModal = (
   defaultOptions: Partial<ConfirmOptions> = {},
 ) => {
-  const isOpen = ref(false)
-  const options = ref<ConfirmOptions>({
-    title: defaultOptions.title || '確認',
-    message: defaultOptions.message || 'この操作を実行しますか？',
-    confirmText: defaultOptions.confirmText || '確定する',
-    cancelText: defaultOptions.cancelText || 'キャンセル',
-    intent: defaultOptions.intent || 'primary',
-    onConfirm: defaultOptions.onConfirm,
-  })
-
-  const isPending = ref(false)
-
-  const askConfirm = (customOptions: ConfirmOptions) => {
-    options.value = {
+  const askConfirm = (customOptions: ConfirmOptions = {}): Promise<boolean> => {
+    currentOptions.value = {
       title: customOptions.title || defaultOptions.title || '確認',
       message:
         customOptions.message
@@ -39,21 +46,25 @@ export const useConfirmModal = (
       cancelText:
         customOptions.cancelText || defaultOptions.cancelText || 'キャンセル',
       intent: customOptions.intent || defaultOptions.intent || 'primary',
-      onConfirm: customOptions.onConfirm,
+      onConfirm: customOptions.onConfirm || defaultOptions.onConfirm,
     }
     isOpen.value = true
+
+    return new Promise<boolean>((resolve) => {
+      resolvePromise = resolve
+    })
   }
 
   const handleConfirm = async () => {
-    if (!options.value.onConfirm) {
-      isOpen.value = false
-
-      return
-    }
-
     try {
       isPending.value = true
-      await options.value.onConfirm()
+      if (currentOptions.value.onConfirm) {
+        await currentOptions.value.onConfirm()
+      }
+      if (resolvePromise) {
+        resolvePromise(true)
+        resolvePromise = null
+      }
       isOpen.value = false
     }
     finally {
@@ -61,20 +72,29 @@ export const useConfirmModal = (
     }
   }
 
-  const closeConfirm = () => {
+  const handleCancel = () => {
+    if (resolvePromise) {
+      resolvePromise(false)
+      resolvePromise = null
+    }
     isOpen.value = false
+  }
+
+  const closeConfirm = () => {
+    handleCancel()
   }
 
   return {
     isOpen,
     isPending: computed(() => isPending.value),
-    title: computed(() => options.value.title),
-    message: computed(() => options.value.message),
-    confirmText: computed(() => options.value.confirmText),
-    cancelText: computed(() => options.value.cancelText),
-    intent: computed(() => options.value.intent),
+    title: computed(() => currentOptions.value.title || '確認'),
+    message: computed(() => currentOptions.value.message || 'この操作を実行しますか？'),
+    confirmText: computed(() => currentOptions.value.confirmText || '確定する'),
+    cancelText: computed(() => currentOptions.value.cancelText || 'キャンセル'),
+    intent: computed(() => currentOptions.value.intent || 'primary'),
     askConfirm,
     handleConfirm,
+    handleCancel,
     closeConfirm,
   }
 }

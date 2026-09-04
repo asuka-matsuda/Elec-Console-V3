@@ -52,15 +52,7 @@ const isAssignModalOpen = ref(false)
 const assignTargetUserId = ref('')
 const assignTargetSiteIds = ref<string[]>([])
 
-const {
-  isOpen: isConfirmOpen,
-  title: confirmTitle,
-  message: confirmMessage,
-  confirmText: confirmBtnText,
-  intent: confirmIntent,
-  askConfirm,
-  handleConfirm,
-} = useConfirmModal()
+const { askConfirm } = useConfirmModal()
 
 const handleUserCreated = (user: User) => {
   createdUserResult.value = user
@@ -73,44 +65,46 @@ const handleOpenAssign = (row: User) => {
   isAssignModalOpen.value = true
 }
 
-const confirmDelete = (row: User) => {
+const confirmDelete = async (row: User) => {
   if (row.id === 'master') {
     alert('マスターユーザーは削除できません。')
 
     return
   }
-  askConfirm({
+  const isConfirmed = await askConfirm({
     title: 'ユーザー削除',
     message: `ユーザー「${row.lastName || ''} ${row.firstName || ''}」を削除してもよろしいですか？`,
     confirmText: '削除する',
     intent: 'danger',
-    onConfirm: async () => {
-      await deleteUser(row.id)
-    },
   })
+
+  if (isConfirmed) {
+    await deleteUser(row.id)
+  }
 }
 
-const confirmResetPassword = (row: User) => {
-  askConfirm({
+const confirmResetPassword = async (row: User) => {
+  const isConfirmed = await askConfirm({
     title: 'パスワード初期化',
     message: `ユーザー「${row.lastName || ''} ${row.firstName || ''}」のパスワードを強制的に初期化し、新しい初期パスワードを発行しますか？`,
     confirmText: '初期化する',
     intent: 'danger',
-    onConfirm: async () => {
-      try {
-        const newPassword = await resetUserPassword(row.id)
-
-        createdUserResult.value = {
-          ...row,
-          initialPassword: newPassword,
-        }
-        isCredentialModalOpen.value = true
-      }
-      catch (e: unknown) {
-        alert((e as Error).message)
-      }
-    },
   })
+
+  if (isConfirmed) {
+    try {
+      const newPassword = await resetUserPassword(row.id)
+
+      createdUserResult.value = {
+        ...row,
+        initialPassword: newPassword,
+      }
+      isCredentialModalOpen.value = true
+    }
+    catch (e: unknown) {
+      alert((e as Error).message)
+    }
+  }
 }
 </script>
 
@@ -206,15 +200,6 @@ const confirmResetPassword = (row: User) => {
       v-model="isAssignModalOpen"
       :user-id="assignTargetUserId"
       :initial-site-ids="assignTargetSiteIds"
-    />
-
-    <AppConfirmModal
-      v-model="isConfirmOpen"
-      :title="confirmTitle"
-      :message="confirmMessage"
-      :confirm-text="confirmBtnText"
-      :intent="confirmIntent"
-      @confirm="handleConfirm"
     />
   </div>
 </template>

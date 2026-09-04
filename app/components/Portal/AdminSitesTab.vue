@@ -78,30 +78,23 @@ const handleCreateSite = async () => {
   newSite.value = { id: '', name: '', status: 'planning' }
 }
 
-const {
-  isOpen: isConfirmDisableOpen,
-  title: confirmTitle,
-  message: confirmMessage,
-  confirmText: confirmBtnText,
-  intent: confirmIntent,
-  askConfirm,
-  handleConfirm: handleToggleDisable,
-} = useConfirmModal()
+const { askConfirm } = useConfirmModal()
 
-const confirmToggleDisable = (row: Site) => {
+const confirmToggleDisable = async (row: Site) => {
   const isCurrentlyDisabled = !!row.disabledAt
 
-  askConfirm({
+  const isConfirmed = await askConfirm({
     title: isCurrentlyDisabled ? '現場の有効化' : '現場の無効化',
     message: isCurrentlyDisabled
       ? `現場「${row.name}」へのアクセスを再度有効にしますか？`
       : `現場「${row.name}」を無効化しますか？ 無効になると現場へのアクセスができなくなります。`,
     confirmText: isCurrentlyDisabled ? '有効化する' : '無効化する',
     intent: isCurrentlyDisabled ? 'success' : 'danger',
-    onConfirm: async () => {
-      await toggleDisableSite(row.id)
-    },
   })
+
+  if (isConfirmed) {
+    await toggleDisableSite(row.id)
+  }
 }
 
 const isSettingsModalOpen = ref(false)
@@ -205,15 +198,6 @@ const handleSaveSettings = async (updatedSite: Site) => {
       v-model="isSettingsModalOpen"
       :site="settingsTargetSite"
       @update:site="handleSaveSettings"
-    />
-
-    <AppConfirmModal
-      v-model="isConfirmDisableOpen"
-      :title="confirmTitle"
-      :message="confirmMessage"
-      :confirm-text="confirmBtnText"
-      :intent="confirmIntent"
-      @confirm="handleToggleDisable"
     />
   </div>
 </template>

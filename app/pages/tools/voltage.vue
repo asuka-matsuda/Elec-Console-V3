@@ -22,8 +22,6 @@ useHead({
 const route = useRoute()
 const {
   form,
-  isResetModalOpen,
-  resetForm,
   isSizeCalcMode,
   isDropCalcMode,
   computedAvailableSizes,
@@ -161,14 +159,6 @@ const handleSaveToHistory = async () => {
       <ToolMathBasisPanel :steps="mathSteps" />
     </template>
   </ToolLayout>
-
-  <AppConfirmModal
-    v-model="isResetModalOpen"
-    title="リセットの確認"
-    message="入力した条件をすべてリセットしますか？"
-    confirm-text="リセットする"
-    @confirm="resetForm"
-  />
 </template>
 
 <style scoped lang="scss">

@@ -19,15 +19,7 @@ const tabs = [
 const currentTab = ref('voltage')
 const historyList = ref<HistoryEntry[]>([])
 
-const {
-  isOpen: isConfirmOpen,
-  title: confirmTitle,
-  message: confirmMessage,
-  confirmText: confirmBtnText,
-  intent: confirmIntent,
-  askConfirm,
-  handleConfirm,
-} = useConfirmModal()
+const { askConfirm } = useConfirmModal()
 
 const storageKey = computed(() => {
   return `elec_calc_${currentTab.value}_hist`
@@ -55,28 +47,30 @@ const deleteHistory = (id: string) => {
   historyList.value = historyList.value.filter(item => item.id !== id)
 }
 
-const handleClearAll = () => {
-  askConfirm({
+const handleClearAll = async () => {
+  const isConfirmed = await askConfirm({
     title: '履歴をすべて削除',
     message: '全ての履歴を削除しますか？この操作は取り消せません。',
     confirmText: '削除する',
     intent: 'danger',
-    onConfirm: () => {
-      historyList.value = []
-    },
   })
+
+  if (isConfirmed) {
+    historyList.value = []
+  }
 }
 
-const openDeleteModal = (id: string) => {
-  askConfirm({
+const openDeleteModal = async (id: string) => {
+  const isConfirmed = await askConfirm({
     title: '履歴を削除',
     message: 'この履歴を削除しますか？',
     confirmText: '削除する',
     intent: 'danger',
-    onConfirm: () => {
-      deleteHistory(id)
-    },
   })
+
+  if (isConfirmed) {
+    deleteHistory(id)
+  }
 }
 
 watch(
@@ -152,15 +146,6 @@ watch(
         </template>
       </ClientOnly>
     </AppPanel>
-
-    <AppConfirmModal
-      v-model="isConfirmOpen"
-      :title="confirmTitle"
-      :message="confirmMessage"
-      :confirm-text="confirmBtnText"
-      :intent="confirmIntent"
-      @confirm="handleConfirm"
-    />
   </div>
 </template>
 
