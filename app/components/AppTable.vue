@@ -77,42 +77,15 @@ const getRowKey = (row: T, index: number): string | number => {
     <table class="c-table">
       <thead v-if="$slots.header || columns">
         <slot name="header">
-          <tr v-if="columns">
-            <th
+          <tr>
+            <AppTableTh
               v-for="col in columns"
               :key="col.key"
-              :class="{
-                'is-sortable': col.sortable,
-                'is-sorted': sortBy === col.key,
-              }"
-              :style="{ width: col.width, textAlign: col.align }"
-              :title="
-                col.sortable
-                  ? sortBy === col.key
-                    ? sortOrder === 'asc'
-                      ? 'クリックで降順'
-                      : 'クリックで昇順'
-                    : 'クリックで並び替え'
-                  : undefined
-              "
-              @click="handleSort(col)"
-            >
-              <div class="c-table__th-inner">
-                <span>{{ col.label }}</span>
-                <AppIcon
-                  v-if="col.sortable && sortBy === col.key"
-                  :name="sortOrder === 'asc' ? 'chevron-up' : 'chevron-down'"
-                  size="sm"
-                  class="c-table__sort-icon is-active"
-                />
-                <AppIcon
-                  v-else-if="col.sortable"
-                  name="minus"
-                  size="sm"
-                  class="c-table__sort-icon is-inactive"
-                />
-              </div>
-            </th>
+              :column="col"
+              :sort-by="sortBy"
+              :sort-order="sortOrder"
+              @sort="handleSort"
+            />
           </tr>
         </slot>
       </thead>
@@ -169,56 +142,6 @@ const getRowKey = (row: T, index: number): string | number => {
 
   td {
     @include text-mono;
-  }
-
-  th {
-    @include text-label;
-
-    position: sticky;
-    z-index: var(--z-index-table-header);
-    top: 0;
-
-    border-bottom-width: calc(var(--border-width-base) * 2);
-
-    color: var(--color-text-muted);
-
-    backdrop-filter: blur(var(--blur-md));
-
-    &.is-sortable {
-      @include click-enabled;
-
-      transition:
-        background-color var(--transition-fast) ease,
-        color var(--transition-fast) ease;
-
-      &:hover {
-        color: var(--color-text-main);
-        background-color: var(--color-bg-hover);
-      }
-    }
-
-    &.is-sorted {
-      border-bottom-color: var(--theme-accent);
-      color: var(--color-text-main);
-    }
-
-    .c-table__th-inner {
-      @include flex-start-center($is-inline: true);
-
-      gap: var(--space-1);
-    }
-
-    .c-table__sort-icon {
-      color: var(--color-text-muted);
-
-      &.is-active {
-        color: var(--theme-accent);
-      }
-
-      &.is-inactive {
-        opacity: 0.3;
-      }
-    }
   }
 
   tbody tr {
