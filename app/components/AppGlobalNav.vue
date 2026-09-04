@@ -3,6 +3,8 @@
  * AppGlobalNav
  * アプリケーションのグローバルナビゲーション（サイドバーメニュー）を表示するコンポーネントです。
  */
+import { resolveComponent } from 'vue'
+
 import type { MenuSection } from '~/constants/data/menuData'
 
 const isOpen = defineModel<boolean>('isOpen', { default: false })
@@ -41,22 +43,19 @@ const closeSidebar = () => {
           class="c-global-nav__section-header"
         />
 
-        <template v-for="item in section.items" :key="item.href">
-          <NuxtLink
-            v-if="!item.disabled"
-            :to="item.href"
-            class="c-global-nav__link"
-            @click="closeSidebar"
-          >
-            <AppIcon :name="item.icon" class="c-global-nav__link-icon" />
-            <span>{{ item.text }}</span>
-          </NuxtLink>
-
-          <button v-else disabled class="c-global-nav__link">
-            <AppIcon :name="item.icon" class="c-global-nav__link-icon" />
-            <span>{{ item.text }}</span>
-          </button>
-        </template>
+        <component
+          :is="item.disabled ? 'button' : resolveComponent('NuxtLink')"
+          v-for="item in section.items"
+          :key="item.href"
+          :to="item.disabled ? undefined : item.href"
+          :type="item.disabled ? 'button' : undefined"
+          :disabled="item.disabled || undefined"
+          class="c-global-nav__link"
+          @click="item.disabled ? undefined : closeSidebar()"
+        >
+          <AppIcon :name="item.icon" class="c-global-nav__link-icon" />
+          <span class="c-global-nav__link-text">{{ item.text }}</span>
+        </component>
       </section>
     </nav>
   </aside>
@@ -108,6 +107,7 @@ const closeSidebar = () => {
       "reference": var(--color-category-reference),
       "management": var(--color-category-management),
     );
+    --section-accent: var(--color-category-main);
 
     @each $name, $var in $accents {
       &.has-accent-#{$name} {
@@ -120,7 +120,7 @@ const closeSidebar = () => {
     padding: var(--space-2) var(--space-3);
 
     :deep(.c-section-header__title) {
-      color: var(--section-accent, var(--color-text-secondary));
+      color: var(--section-accent);
     }
   }
 
@@ -151,22 +151,22 @@ const closeSidebar = () => {
 
     &:is(:hover, :focus-visible):not(:disabled, .router-link-active) {
       transform: translateX(var(--space-1));
-      color: var(--section-accent, var(--color-category-main));
+      color: var(--section-accent);
       background-color: color-mix(
         in srgb,
-        var(--section-accent, var(--color-category-main, transparent)),
+        var(--section-accent),
         20%
       );
 
-      @include state-hover(var(--section-accent, var(--color-category-main)));
+      @include state-hover(var(--section-accent));
 
       .c-global-nav__link-icon {
-        color: var(--section-accent, var(--color-category-main));
+        color: var(--section-accent);
         filter: drop-shadow(
           0 0 var(--blur-sm)
             color-mix(
               in srgb,
-              var(--section-accent, var(--color-category-main, transparent)),
+              var(--section-accent),
               80%
             )
         );
@@ -174,17 +174,17 @@ const closeSidebar = () => {
     }
 
     &:active:not(:disabled) {
-      @include state-active(var(--section-accent, var(--color-category-main)));
+      @include state-active(var(--section-accent));
     }
 
     &.router-link-active {
-      --glow-color: var(--section-accent, var(--color-category-main));
+      --glow-color: var(--section-accent);
 
       transform: translateX(0);
-      border-color: var(--section-accent, var(--color-category-main));
-      color: var(--section-accent, var(--color-category-main));
+      border-color: var(--section-accent);
+      color: var(--section-accent);
 
-      @include state-active(var(--section-accent, var(--color-category-main)));
+      @include state-active(var(--section-accent));
       @include blinking-cursor(
         var(--space-1),
         var(--font-size-base),
@@ -192,9 +192,9 @@ const closeSidebar = () => {
       );
 
       .c-global-nav__link-icon {
-        color: var(--section-accent, var(--color-category-main));
+        color: var(--section-accent);
         filter: drop-shadow(
-          0 0 var(--blur-sm) var(--section-accent, var(--color-category-main))
+          0 0 var(--blur-sm) var(--section-accent)
         );
       }
     }
