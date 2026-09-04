@@ -64,15 +64,10 @@ const closeSidebar = () => {
 .c-global-nav {
   @include flex-start-stretch($direction: column);
 
-  position: relative;
-  z-index: 1;
-
   width: var(--sidebar-width);
   height: 100dvh;
 
-  box-shadow: var(--shadow-elevation-md);
-
-  transition: var(--transition-slow);
+  @include state-base("md", var(--transition-slow));
 
   // Mobile layout (hide by default, fixed drawer)
   @include mq("md") {
