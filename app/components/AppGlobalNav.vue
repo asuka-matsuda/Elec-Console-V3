@@ -74,7 +74,7 @@ const closeSidebar = () => {
 
   box-shadow: var(--shadow-elevation-md);
 
-  transition: transform var(--duration-slow) var(--ease-smooth);
+  transition: var(--transition-slow);
 
   // Mobile layout (hide by default, fixed drawer)
   @include mq("md") {
@@ -103,10 +103,6 @@ const closeSidebar = () => {
   &__section {
     $accents: (
       "primary": var(--color-category-main),
-      "main": var(--color-category-main),
-      "success": var(--color-status-success),
-      "warning": var(--color-status-warning),
-      "danger": var(--color-status-danger),
       "tool": var(--color-category-tool),
       "database": var(--color-category-database),
       "reference": var(--color-category-reference),
