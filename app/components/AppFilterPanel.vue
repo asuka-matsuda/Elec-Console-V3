@@ -49,10 +49,6 @@ defineProps<{
   &__filters {
     @include grid(1fr, var(--space-card-gap));
 
-    @include cq("sm") {
-      grid-template-columns: 1fr;
-    }
-
     & > :nth-child(n + 3) {
       grid-column: 1 / -1;
     }
