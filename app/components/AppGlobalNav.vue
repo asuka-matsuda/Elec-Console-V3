@@ -146,11 +146,6 @@ const closeSidebar = () => {
     &:is(:hover, :focus-visible):not(:disabled, .router-link-active) {
       transform: translateX(var(--space-1));
       color: var(--section-accent);
-      background-color: color-mix(
-        in srgb,
-        var(--section-accent),
-        20%
-      );
 
       @include state-hover(var(--section-accent));
 
