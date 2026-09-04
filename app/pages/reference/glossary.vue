@@ -86,83 +86,79 @@ const categoryColorMap: Record<string, string> = {
 </script>
 
 <template>
-  <div>
-    <div class="l-filter-layout">
-      <div class="l-filter-layout__grid">
-        <aside>
-          <AppFilterPanel
-            v-model:search-query="searchQuery"
-            v-model:active-cats="activeCats"
-            :category-options="categoryOptions"
-            placeholder="用語名や説明を検索..."
-          >
-            <template #extra-filters>
-              <AppFormGroup label="INDEX (読み・五十音)">
-                <AppKanaFilter
-                  v-model="activeKanas"
-                  :available-rows="availableRows"
-                />
-              </AppFormGroup>
-            </template>
-          </AppFilterPanel>
-        </aside>
+  <div class="p-glossary">
+    <aside class="p-glossary__filter">
+      <AppFilterPanel
+        v-model:search-query="searchQuery"
+        v-model:active-cats="activeCats"
+        :category-options="categoryOptions"
+        placeholder="用語名や説明を検索..."
+      >
+        <template #extra-filters>
+          <AppFormGroup label="INDEX (読み・五十音)">
+            <AppKanaFilter
+              v-model="activeKanas"
+              :available-rows="availableRows"
+            />
+          </AppFormGroup>
+        </template>
+      </AppFilterPanel>
+    </aside>
 
-        <main class="l-filter-layout__main">
-          <div v-if="filteredGlossary.length > 0" class="c-glossary-list">
-            <AppCard
-              v-for="item in filteredGlossary"
-              :key="item.term"
-              class="c-glossary-card"
-              :style="{ '--card-accent': categoryColorMap[item.category] }"
-            >
-              <div class="c-glossary-card__header">
-                <div class="c-glossary-card__title">
-                  <span class="c-glossary-card__kana">{{ item.kana }}</span>
-                  <h2 class="c-glossary-card__term">
-                    {{ item.term }}
-                  </h2>
-                </div>
-                <AppBadge :color="categoryColorMap[item.category]">
-                  {{ item.category }}
-                </AppBadge>
-              </div>
-
-              <div class="c-glossary-card__body">
-                <p class="c-glossary-card__desc">
-                  {{ item.desc }}
-                </p>
-
-                <div v-if="item.related" class="c-glossary-card__meta">
-                  <span class="c-glossary-card__label">関連用語</span>
-                  <p class="c-glossary-card__text">
-                    {{ item.related }}
-                  </p>
-                </div>
-
-                <div v-if="item.example" class="c-glossary-card__meta">
-                  <span class="c-glossary-card__label">用例・備考</span>
-                  <p class="c-glossary-card__text">
-                    {{ item.example }}
-                  </p>
-                </div>
-              </div>
-            </AppCard>
+    <main class="p-glossary__main">
+      <div v-if="filteredGlossary.length > 0" class="c-glossary-list">
+        <AppCard
+          v-for="item in filteredGlossary"
+          :key="item.term"
+          class="c-glossary-card"
+          :style="{ '--card-accent': categoryColorMap[item.category] }"
+        >
+          <div class="c-glossary-card__header">
+            <div class="c-glossary-card__title">
+              <span class="c-glossary-card__kana">{{ item.kana }}</span>
+              <h2 class="c-glossary-card__term">
+                {{ item.term }}
+              </h2>
+            </div>
+            <AppBadge :color="categoryColorMap[item.category]">
+              {{ item.category }}
+            </AppBadge>
           </div>
 
-          <AppEmptyState
-            v-else
-            icon="search"
-            title="該当する用語が見つかりません"
-            description="検索キーワードまたは五十音・工種フィルターの条件を変更してください。"
-          />
-        </main>
+          <div class="c-glossary-card__body">
+            <p class="c-glossary-card__desc">
+              {{ item.desc }}
+            </p>
+
+            <div v-if="item.related" class="c-glossary-card__meta">
+              <span class="c-glossary-card__label">関連用語</span>
+              <p class="c-glossary-card__text">
+                {{ item.related }}
+              </p>
+            </div>
+
+            <div v-if="item.example" class="c-glossary-card__meta">
+              <span class="c-glossary-card__label">用例・備考</span>
+              <p class="c-glossary-card__text">
+                {{ item.example }}
+              </p>
+            </div>
+          </div>
+        </AppCard>
       </div>
-    </div>
+
+      <AppEmptyState
+        v-else
+        icon="search"
+        title="該当する用語が見つかりません"
+        description="検索キーワードまたは五十音・工種フィルターの条件を変更してください。"
+      />
+    </main>
   </div>
 </template>
 
 <style scoped lang="scss">
-.l-filter-layout {
+.p-glossary {
   --trade-color-electric: #eab308;
   --trade-color-architecture: #ea580c;
   --trade-color-hvac: #22c55e;
@@ -171,19 +167,13 @@ const categoryColorMap: Record<string, string> = {
 
   @include flex-start-stretch($direction: column);
 
-  container-name: filter-layout;
-  container-type: inline-size;
   flex: 1;
-
+  gap: var(--space-card-gap);
   max-width: 1400px;
   min-height: 0;
 
-  &__grid {
-    @include flex-start-stretch($direction: column);
-
-    flex: 1;
-    gap: var(--space-card-gap);
-    min-height: 0;
+  &__filter {
+    flex-shrink: 0;
   }
 
   &__main {

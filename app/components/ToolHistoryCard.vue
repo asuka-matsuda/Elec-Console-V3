@@ -163,7 +163,6 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
     @include grid(auto 1fr, var(--space-1) var(--space-3));
 
     dt {
-      color: var(--color-text-muted);
       white-space: nowrap;
     }
 

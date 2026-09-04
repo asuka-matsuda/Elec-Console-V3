@@ -81,7 +81,7 @@ const {
               </AppFormGroup>
 
               <div class="p-rack__section">
-                <div class="p-rack__section-title">強電ケーブルリスト</div>
+                <small>強電ケーブルリスト</small>
                 <div class="p-rack__cable-list">
                   <ToolCableCard
                     v-for="(cable, index) in inputs.strongCablesUI"
@@ -119,7 +119,7 @@ const {
               </AppFormGroup>
 
               <div class="p-rack__section">
-                <div class="p-rack__section-title">弱電ケーブルリスト</div>
+                <small>弱電ケーブルリスト</small>
                 <div class="p-rack__cable-list">
                   <ToolCableCard
                     v-for="(cable, index) in inputs.weakCablesUI"
@@ -267,10 +267,6 @@ const {
     @include flex-start-stretch($direction: column);
 
     gap: var(--space-1);
-  }
-
-  &__section-title {
-    @include text-desc;
   }
 
   &__cable-list {

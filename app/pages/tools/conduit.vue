@@ -51,7 +51,7 @@ const handleSave = async () => {
         </AppFormGroup>
 
         <div class="p-conduit__section">
-          <div class="p-conduit__section-title">収容するケーブル</div>
+          <h4>収容するケーブル</h4>
 
           <div class="p-conduit__cable-list">
             <ToolCableCard
@@ -109,10 +109,6 @@ const handleSave = async () => {
     @include flex-start-stretch($direction: column);
 
     gap: var(--space-card-gap);
-  }
-
-  &__section-title {
-    @include text-title("sm");
   }
 
   &__cable-list {

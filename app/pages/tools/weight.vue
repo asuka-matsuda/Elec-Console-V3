@@ -201,7 +201,6 @@ const totalWeight = computed(() => {
     @include text-meta;
 
     padding: 0 var(--space-3);
-    color: var(--color-text-muted);
   }
 
   &__note-list {

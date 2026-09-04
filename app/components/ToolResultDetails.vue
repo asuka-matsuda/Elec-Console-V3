@@ -6,17 +6,16 @@
 </script>
 
 <template>
-  <dl class="p-result-details">
+  <dl class="c-result-details">
     <slot />
   </dl>
 </template>
 
 <style scoped lang="scss">
-.p-result-details {
+.c-result-details {
   @include flex-start-stretch($direction: column);
 
   gap: var(--space-1);
-  margin: 0; // Reset dl margin
   padding-top: var(--space-3);
   border-top: 1px solid var(--color-border);
 }

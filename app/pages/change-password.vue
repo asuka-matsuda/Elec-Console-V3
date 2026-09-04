@@ -56,9 +56,9 @@ const handleChangePassword = async () => {
 <template>
   <div class="p-change-password">
     <div>
-      <p class="p-change-password__desc">
+      <small>
         セキュリティのため、システムから配布された初期パスワードを変更してください。
-      </p>
+      </small>
 
       <div v-if="errorMsg" class="p-change-password__error">
         {{ errorMsg }}
@@ -100,10 +100,6 @@ const handleChangePassword = async () => {
   @include flex-start-stretch($direction: column);
 
   gap: var(--space-3);
-
-  &__desc {
-    @include text-desc;
-  }
 
   &__error {
     @include text-desc;

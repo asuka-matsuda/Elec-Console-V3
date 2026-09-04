@@ -85,8 +85,6 @@ withDefaults(
 
   &__desc {
     @include text-desc;
-
-    color: var(--color-text-muted);
   }
 
   &__actions {
