@@ -20,7 +20,7 @@ const props = withDefaults(
       | 'sidebar-border'
       | 'hud'
       | 'simple'
-    size?: 'sm' | 'md' | 'lg'
+    size?: 'xs' | 'sm' | 'md' | 'lg'
     dividerType?: 'default' | 'fade-side' | 'fade-center'
   }>(),
   {
@@ -32,7 +32,6 @@ const props = withDefaults(
 )
 
 const resolvedDividerVariant = computed(() => {
-  if (props.dividerType !== 'default') return 'border'
   if (props.variant === 'hud' || props.variant === 'simple') return 'border'
 
   return props.variant || 'main'
@@ -96,6 +95,10 @@ const resolvedDividerVariant = computed(() => {
 
     &--sm {
       @include text-title("sm");
+    }
+
+    &--xs {
+      @include text-title("xs");
     }
   }
 

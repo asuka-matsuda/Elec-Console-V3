@@ -31,15 +31,15 @@ const closeSidebar = () => {
         class="c-global-nav__section"
         :class="section.accent ? `has-accent-${section.accent}` : ''"
       >
-        <header
+        <AppSectionHeader
           v-if="section.globalNavHeading || section.heading"
+          :title="section.globalNavHeading || section.heading"
+          tag="h3"
+          size="xs"
+          :variant="section.accent || 'main'"
+          divider-type="fade-side"
           class="c-global-nav__section-header"
-        >
-          <h3 class="c-global-nav__heading">
-            {{ section.globalNavHeading || section.heading }}
-          </h3>
-          <AppDivider type="fade-side" :variant="section.accent || 'main'" />
-        </header>
+        />
 
         <template v-for="item in section.items" :key="item.href">
           <NuxtLink
@@ -117,16 +117,11 @@ const closeSidebar = () => {
   }
 
   &__section-header {
-    @include flex-start-stretch($direction: column);
-
-    gap: var(--space-1);
     padding: var(--space-2) var(--space-3);
-  }
 
-  &__heading {
-    @include text-badge;
-
-    color: var(--section-accent, var(--color-text-secondary));
+    :deep(.c-section-header__title) {
+      color: var(--section-accent, var(--color-text-secondary));
+    }
   }
 
   &__link {
