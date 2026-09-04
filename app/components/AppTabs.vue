@@ -1,19 +1,19 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends string | number">
 /**
  * AppTabs
  * タブ切り替えのためのコンポーネントです。垂直方向の配置やグリッド配置にも対応しています。
  */
-export type TabOption = {
+export type TabOption<V = string | number> = {
   label: string
-  value: string | number
+  value: V
   disabled?: boolean
 }
 
-const model = defineModel<string | number>()
+const model = defineModel<T>()
 
 withDefaults(
   defineProps<{
-    options: TabOption[]
+    options: TabOption<T>[]
     vertical?: boolean
     grid?: boolean
   }>(),
@@ -23,7 +23,7 @@ withDefaults(
   },
 )
 
-const selectTab = (option: TabOption) => {
+const selectTab = (option: TabOption<T>) => {
   if (option.disabled) return
   model.value = option.value
 }
@@ -36,11 +36,15 @@ const selectTab = (option: TabOption) => {
       'c-tabs--vertical': vertical,
       'c-tabs--grid': grid,
     }"
+    role="tablist"
+    :aria-orientation="vertical ? 'vertical' : 'horizontal'"
   >
     <button
       v-for="option in options"
       :key="String(option.value)"
       type="button"
+      role="tab"
+      :aria-selected="model === option.value"
       class="c-tabs__item"
       :class="{
         'is-active': model === option.value,
@@ -96,30 +100,30 @@ const selectTab = (option: TabOption) => {
     width: 100%;
   }
 
-  &:is(:hover, :focus-visible):not(:disabled, .is-active) {
-    transform: translateY(-2px);
-    color: var(--color-text-main);
-
-    @include state-hover;
-  }
-
-  &:active:not(:disabled) {
-    @include state-active(var(--theme-accent));
-  }
-
-  &.is-active {
-    --glow-color: var(--theme-accent);
-
-    transform: translateY(0);
-    border-color: var(--theme-accent);
-    color: var(--theme-accent);
-
-    @include state-active(var(--theme-accent));
-    @include cyber-text-glow;
-  }
-
+  // 1. 無効状態
   &:disabled {
     @include disabled;
+  }
+
+  // 2. 有効状態
+  &:not(:disabled) {
+    &:is(:hover, :focus-visible):not(.is-active) {
+      transform: translateY(-2px);
+      color: var(--color-text-main);
+
+      @include state-hover;
+    }
+
+    &:active {
+      @include state-active(var(--theme-accent));
+    }
+
+    &.is-active {
+      color: var(--theme-accent);
+
+      @include state-active(var(--theme-accent));
+      @include cyber-text-glow;
+    }
   }
 }
 </style>
