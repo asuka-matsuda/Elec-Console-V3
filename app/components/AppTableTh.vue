@@ -75,13 +75,10 @@ th {
   &.is-sortable {
     @include click-enabled;
 
-    transition:
-      background-color var(--transition-fast) ease,
-      color var(--transition-fast) ease;
+    transition: color var(--duration-fast) var(--ease-base);
 
     &:hover {
       color: var(--color-text-main);
-      background-color: var(--color-bg-hover);
     }
   }
 
