@@ -3,8 +3,6 @@
  * AppFormModal
  * フォーム入力と非同期送信（ローディング・エラー管理）を内包した共通モーダル
  */
-import { ref } from 'vue'
-
 const isOpen = defineModel<boolean>({ default: false })
 
 const props = withDefaults(
@@ -84,7 +82,7 @@ const handleSubmit = async () => {
     background: transparent;
     backdrop-filter: blur(var(--blur-sm));
 
-    @include border-base(var(--color-status-danger, 30%));
+    @include border-base(var(--color-status-danger), 30%);
   }
 
   &__body {
