@@ -42,12 +42,7 @@ const totalWeight = computed(() => {
 </script>
 
 <template>
-  <ToolLayout
-    title="ケーブル重量・ドラム選定"
-    icon="package"
-    description="ケーブルの種類と長さから重量を計算し、最適なドラムを選定します。"
-    note="※ ドラムは木枠ドラム（L, M, S 等）から選定されます。"
-  >
+  <ToolLayout>
     <template #inputs>
       <ToolInputPanel @reset="openResetModal">
         <div class="p-weight__sections">

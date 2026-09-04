@@ -12,6 +12,7 @@ defineProps<{
 
 <template>
   <AppPanel
+    class="c-basis-panel"
     title="計算根拠"
     icon="book"
     variant="tool"
@@ -49,6 +50,13 @@ defineProps<{
 
   &__layout {
     @include flex-start-stretch($direction: column);
+
+    overflow-y: auto;
+    flex: 1;
+    gap: var(--space-card-gap);
+
+    min-height: 0;
+    padding-right: var(--space-1);
   }
 
   &__list {

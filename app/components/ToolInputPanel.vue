@@ -13,6 +13,7 @@ defineEmits(['reset'])
 
 <template>
   <AppPanel
+    class="c-tool-panel"
     :title="title || '条件入力'"
     :icon="icon || 'edit'"
     variant="tool"
@@ -39,7 +40,12 @@ defineEmits(['reset'])
   &__content {
     @include flex-start-stretch($direction: column);
 
+    overflow-y: auto;
+    flex: 1;
     gap: var(--space-card-gap);
+
+    min-height: 0;
+    padding-right: var(--space-1);
   }
 }
 </style>

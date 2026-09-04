@@ -1,7 +1,9 @@
 <script setup lang="ts">
 /**
  * ToolLayout
- * ツールページの全体レイアウト（免責事項、入力欄、結果表示、計算根拠パネルなど）を提供するレイアウト用コンポーネントです。
+ * 計算ツールページの全体レイアウトコンポーネント。
+ * CSS Grid により、左右2分割（1:1）、左側を上下（1:3）で
+ * 計算結果・条件入力・計算根拠の3エリアを配置・管理します。
  */
 import { ref } from 'vue'
 
@@ -14,46 +16,50 @@ const toggleDrawer = () => {
 
 <template>
   <div class="l-tool-layout">
-    <div class="l-tool-layout__disclaimer">
+    <!-- 免責事項 -->
+    <header class="l-tool-layout__disclaimer">
       <slot name="disclaimer">
         <AppDisclaimer />
       </slot>
-    </div>
+    </header>
 
-    <div class="l-tool-layout__main">
-      <div class="l-tool-layout__left">
-        <div
-          class="l-tool-layout__results"
-          :class="{ 'is-drawer-open': isDrawerOpen }"
-        >
-          <div class="l-tool-layout__drawer-handle" @click="toggleDrawer">
-            <span class="l-tool-layout__drawer-title">計算結果を見る</span>
-            <AppIcon
-              :name="isDrawerOpen ? 'chevron-down' : 'chevron-up'"
-              size="md"
-              class="l-tool-layout__drawer-icon"
-            />
-          </div>
-          <div class="l-tool-layout__results-content">
-            <slot name="results"></slot>
-          </div>
+    <!-- メイングリッド（左右1:1、左上下1:3） -->
+    <main class="l-tool-layout__main">
+      <!-- 1. 計算結果（PC: 左上 1fr / モバイル: 下部Stickyドロワー） -->
+      <section
+        class="l-tool-layout__results"
+        :class="{ 'is-drawer-open': isDrawerOpen }"
+      >
+        <div class="l-tool-layout__drawer-handle" @click="toggleDrawer">
+          <span class="l-tool-layout__drawer-title">計算結果を見る</span>
+          <AppIcon
+            :name="isDrawerOpen ? 'chevron-down' : 'chevron-up'"
+            size="md"
+            class="l-tool-layout__drawer-icon"
+          />
         </div>
-
-        <div
-          v-if="isDrawerOpen"
-          class="l-tool-layout__overlay"
-          @click="toggleDrawer"
-        ></div>
-
-        <div class="l-tool-layout__inputs">
-          <slot name="inputs"></slot>
+        <div class="l-tool-layout__results-inner">
+          <slot name="results" />
         </div>
-      </div>
+      </section>
 
-      <div class="l-tool-layout__right">
-        <slot name="basis"></slot>
-      </div>
-    </div>
+      <!-- 2. 条件入力（PC: 左下 3fr / モバイル: 全面表示） -->
+      <section class="l-tool-layout__inputs">
+        <slot name="inputs" />
+      </section>
+
+      <!-- 3. 計算根拠（PC: 右全面 / モバイル: 非表示） -->
+      <aside class="l-tool-layout__basis">
+        <slot name="basis" />
+      </aside>
+
+      <!-- モバイルドロワー展開時の背景オーバーレイ -->
+      <div
+        v-if="isDrawerOpen"
+        class="l-tool-layout__overlay"
+        @click="toggleDrawer"
+      />
+    </main>
   </div>
 </template>
 
@@ -62,6 +68,8 @@ const toggleDrawer = () => {
   @include flex-start-stretch($direction: column);
 
   flex: 1;
+  gap: var(--space-card-gap);
+
   max-width: 1600px;
   min-height: 0;
   margin: 0 auto;
@@ -70,77 +78,36 @@ const toggleDrawer = () => {
     flex-shrink: 0;
   }
 
+  // 左右二等分（1:1）、左側上下（1:3）のグリッド制御
   &__main {
-    @include flex-start-center;
-
+    display: grid;
+    grid-template:
+      "results basis" minmax(0, 1fr)
+      "inputs  basis" minmax(0, 3fr) / minmax(0, 1fr) minmax(0, 1fr);
     flex: 1;
     gap: var(--space-card-gap);
-    align-items: stretch;
-    min-height: 0;
-  }
 
-  &__left {
-    @include flex-start-stretch($direction: column);
-
-    container-type: inline-size;
-    flex: 1;
-    min-height: 0;
-  }
-
-  &__inputs {
-    @include flex-start-stretch($direction: column);
-
-    flex: 3; // 3/4 ratio on PC (Default)
-    gap: 0;
     min-height: 0;
 
     @include mq("md") {
-      flex: none; // Reset on mobile
-    }
-
-    // パネルの外側（ラッパー）ではなく、パネルの「中身」をスクロールさせる
-    :deep(.c-panel__content) {
-      --scrollbar-size: var(--space-2);
-
-      overflow-y: auto;
-
-      // スクロール時に要素がpaddingに食い込まないよう調整
-      padding-right: var(--space-2);
+      grid-template: "inputs" 1fr / 1fr;
     }
   }
 
-  &__right {
-    @include flex-start-stretch($direction: column);
-
-    overflow-y: hidden; // No vertical scroll per user request
-    flex: 1;
-    gap: 0;
-    min-height: 0;
-
-    @include mq("md") {
-      display: none; // Cut on mobile
-    }
-  }
-
-  /* Mobile Drawer & PC Results Layout */
   &__results {
     @include flex-start-stretch($direction: column);
 
-    container-type: inline-size;
-    flex: none; // コンテンツの高さに合わせて自動調整
-    gap: 0;
+    grid-area: results;
     min-height: 0;
 
-    // Mobile: Sticky Drawer
+    // モバイル: 下部Stickyドロワー
     @include mq("md") {
       position: fixed;
       z-index: var(--z-index-modal);
       right: 0;
       bottom: 0;
       left: 0;
-      transform: translateY(calc(100% - 48px)); // Show only handle
-
-      flex: none;
+      transform: translateY(calc(100% - 48px));
 
       max-height: 80vh;
       border-top: var(--border-width-base) solid var(--color-category-tool);
@@ -159,7 +126,7 @@ const toggleDrawer = () => {
   }
 
   &__drawer-handle {
-    display: none; // Hidden on PC
+    display: none;
 
     @include mq("md") {
       @include flex-between-center;
@@ -175,21 +142,17 @@ const toggleDrawer = () => {
     }
   }
 
-  &__drawer-title {
+  &__drawer-title,
+  &__drawer-icon {
     @include text-title("sm");
 
     color: var(--color-category-tool);
   }
 
-  &__drawer-icon {
-    color: var(--color-category-tool);
-  }
-
-  &__results-content {
+  &__results-inner {
     @include flex-start-stretch($direction: column);
 
     flex: 1;
-    gap: 0;
     min-height: 0;
 
     @include mq("md") {
@@ -200,15 +163,33 @@ const toggleDrawer = () => {
     }
   }
 
+  &__inputs {
+    @include flex-start-stretch($direction: column);
+
+    grid-area: inputs;
+    min-height: 0;
+  }
+
+  &__basis {
+    @include flex-start-stretch($direction: column);
+
+    grid-area: basis;
+    min-height: 0;
+
+    @include mq("md") {
+      display: none;
+    }
+  }
+
   &__overlay {
-    display: none; // Hidden on PC
+    display: none;
 
     @include mq("md") {
       position: fixed;
       z-index: calc(var(--z-index-modal) - 1);
       inset: 0;
 
-      display: block; // Show on mobile
+      display: block;
 
       background: var(--color-overlay-dark);
       backdrop-filter: blur(var(--blur-sm));

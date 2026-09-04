@@ -24,12 +24,7 @@ const {
 </script>
 
 <template>
-  <ToolLayout
-    title="ケーブルラック選定"
-    icon="align-justify"
-    description="強電・弱電ケーブルのリストと段積み数から、最適なラック幅を選定します。"
-    note="※ 内線規程に基づく概算です。"
-  >
+  <ToolLayout>
     <template #inputs>
       <ToolInputPanel @reset="openResetModal">
         <div class="p-rack__sections">

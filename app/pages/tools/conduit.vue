@@ -34,12 +34,7 @@ const handleSave = async () => {
 </script>
 
 <template>
-  <ToolLayout
-    title="配管サイズ自動選定"
-    icon="target"
-    description="内線規程に基づき、ケーブルの断面積（占積率32% / 48%）から適切な配管サイズを導き出します。"
-    note="本ツールによる計算結果は理論値です。平形ケーブル（VVF等）は長径を外径とみなして計算します。曲がりが多いルート等の場合は1サイズ余裕を見るなど、適宜ご判断ください。"
-  >
+  <ToolLayout>
     <template #inputs>
       <ToolInputPanel @reset="openResetModal">
         <AppFormGroup label="対象の配管種類">

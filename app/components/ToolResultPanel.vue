@@ -18,6 +18,7 @@ const typedSaveFunction = computed(
 
 <template>
   <AppPanel
+    class="c-tool-panel"
     :title="title || '計算結果・選定結果'"
     :icon="icon || 'check-square'"
     variant="tool"
@@ -44,7 +45,10 @@ const typedSaveFunction = computed(
   &__content {
     @include flex-start-stretch($direction: column);
 
+    overflow-y: auto;
+    flex: 1;
     gap: var(--space-card-gap);
+    min-height: 0;
   }
 }
 </style>
