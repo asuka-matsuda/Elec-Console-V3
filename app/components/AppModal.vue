@@ -209,7 +209,6 @@ onMounted(() => {
 
     padding: var(--space-2) var(--space-3);
     color: var(--color-status-danger);
-    background: transparent;
     backdrop-filter: blur(var(--blur-sm));
 
     @include border-base(var(--color-status-danger), 30%);

@@ -17,71 +17,71 @@ const closeSidebar = () => {
 </script>
 
 <template>
-  <div>
-    <div
-      class="c-global-nav-overlay"
-      :class="{ 'is-open': isOpen }"
-      @click="closeSidebar"
-    />
+  <div
+    class="c-global-nav-overlay"
+    :class="{ 'is-open': isOpen }"
+    @click="closeSidebar"
+  />
 
-    <aside class="c-global-nav" :class="{ 'is-open': isOpen }">
-      <nav class="c-global-nav__nav custom-scrollbar">
-        <section
-          v-for="section in menuData"
-          :key="section.id || section.heading || section.globalNavHeading"
-          class="c-global-nav__section"
-          :class="section.accent ? `has-accent-${section.accent}` : ''"
+  <aside class="c-global-nav" :class="{ 'is-open': isOpen }">
+    <nav class="c-global-nav__nav custom-scrollbar">
+      <section
+        v-for="section in menuData"
+        :key="section.id || section.heading || section.globalNavHeading"
+        class="c-global-nav__section"
+        :class="section.accent ? `has-accent-${section.accent}` : ''"
+      >
+        <header
+          v-if="section.globalNavHeading || section.heading"
+          class="c-global-nav__section-header"
         >
-          <header
-            v-if="section.globalNavHeading || section.heading"
-            class="c-global-nav__section-header"
+          <h3 class="c-global-nav__heading">
+            {{ section.globalNavHeading || section.heading }}
+          </h3>
+          <AppDivider type="fade-side" :variant="section.accent || 'main'" />
+        </header>
+
+        <template v-for="item in section.items" :key="item.href">
+          <NuxtLink
+            v-if="!item.disabled"
+            :to="item.href"
+            class="c-global-nav__link"
+            @click="closeSidebar"
           >
-            <h3 class="c-global-nav__heading">
-              {{ section.globalNavHeading || section.heading }}
-            </h3>
-            <AppDivider type="fade-side" :variant="section.accent || 'main'" />
-          </header>
+            <AppIcon :name="item.icon" class="c-global-nav__link-icon" />
+            <span>{{ item.text }}</span>
+          </NuxtLink>
 
-          <template v-for="item in section.items" :key="item.href">
-            <NuxtLink
-              v-if="!item.disabled"
-              :to="item.href"
-              class="c-global-nav__link"
-              @click="closeSidebar"
-            >
-              <AppIcon :name="item.icon" class="c-global-nav__link-icon" />
-              <span>{{ item.text }}</span>
-            </NuxtLink>
-
-            <button v-else disabled class="c-global-nav__link">
-              <AppIcon :name="item.icon" class="c-global-nav__link-icon" />
-              <span>{{ item.text }}</span>
-            </button>
-          </template>
-        </section>
-      </nav>
-    </aside>
-  </div>
+          <button v-else disabled class="c-global-nav__link">
+            <AppIcon :name="item.icon" class="c-global-nav__link-icon" />
+            <span>{{ item.text }}</span>
+          </button>
+        </template>
+      </section>
+    </nav>
+  </aside>
 </template>
 
 <style scoped lang="scss">
 .c-global-nav {
-  --sidebar-border: var(--color-border);
-
   @include flex-start-stretch($direction: column);
 
-  position: fixed;
-  z-index: var(--z-index-nav);
+  position: relative;
+  z-index: 1;
+
   width: var(--sidebar-width);
   height: 100dvh;
 
-  @include state-base(
-    "md",
-    transform var(--duration-slow) var(--ease-smooth)
-  );
+  box-shadow: var(--shadow-elevation-md);
 
-  // Mobile layout (hide by default)
+  transition: transform var(--duration-slow) var(--ease-smooth);
+
+  // Mobile layout (hide by default, fixed drawer)
   @include mq("md") {
+    position: fixed;
+    z-index: var(--z-index-sidebar);
+    top: 0;
+    left: 0;
     transform: translateX(-100%);
 
     &.is-open {
@@ -112,8 +112,6 @@ const closeSidebar = () => {
       "reference": var(--color-category-reference),
       "management": var(--color-category-management),
     );
-
-    @include flex-start-stretch($direction: column);
 
     @each $name, $var in $accents {
       &.has-accent-#{$name} {
@@ -223,7 +221,7 @@ const closeSidebar = () => {
 
   @include mq("md") {
     position: fixed;
-    z-index: var(--z-index-nav); // Just below sidebar
+    z-index: var(--z-index-sidebar-overlay); // Just below sidebar (102)
     top: 0;
     left: 0;
 
