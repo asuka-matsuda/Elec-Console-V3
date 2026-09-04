@@ -91,7 +91,7 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
       </section>
     </div>
 
-    <AppDashboardAside />
+    <AppInfoAside />
   </div>
 </template>
 
