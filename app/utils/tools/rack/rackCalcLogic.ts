@@ -226,7 +226,7 @@ export function generateMathData(
     mathStepData.push({
       title: '② 弱電必要幅（手入力加算）',
       tex: `W_{weak} = ${inputs.otherWidth > 0 ? hlOk(inputs.otherWidth.toFixed(1)) : '0'} \\text{ [mm]}`,
-      legend: ['\\(W_{weak}\\): 弱電側の必要幅 [mm]（相乗り時に入力）'],
+      legend: ['\\(W_{weak}\\): 弱電側の必要幅 [mm]'],
     })
 
     // 3. 合計ラック幅の算出
@@ -287,7 +287,7 @@ export function generateMathData(
     mathStepData.push({
       title: '② 強電必要幅（手入力加算）',
       tex: `W_{strong} = ${inputs.otherWidth > 0 ? hlOk(inputs.otherWidth.toFixed(1)) : '0'} \\text{ [mm]}`,
-      legend: ['\\(W_{strong}\\): 強電側の必要幅 [mm]（相乗り時に入力）'],
+      legend: ['\\(W_{strong}\\): 強電側の必要幅 [mm]'],
     })
 
     // 3. 合計ラック幅の算出
