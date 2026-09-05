@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { calculateRackSize } from '~/utils/tools/rack/rackCalcLogic'
+import { calculateRackSize } from '../../app/utils/tools/rack/rackCalcLogic'
 
 describe('rackCalcLogic', () => {
   describe('calculateRackSize', () => {
