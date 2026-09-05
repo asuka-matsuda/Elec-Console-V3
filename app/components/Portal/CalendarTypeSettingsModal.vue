@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { toRef } from 'vue'
 
 import AppColorPicker from '~/components/AppColorPicker.vue'
 import type { EventType } from '~/composables/portal/useCalendar'
-import { DEFAULT_EVENT_TYPES } from '~/composables/portal/useCalendar'
-import { DEFAULT_COLOR_PRESETS } from '~/constants/colors'
+import { useCalendarTypeSettings } from '~/composables/portal/useCalendarTypeSettings'
 
 const isOpen = defineModel<boolean>({ default: false })
 
@@ -16,57 +15,16 @@ const emit = defineEmits<{
   (e: 'save', types: EventType[]): void
 }>()
 
-const types = ref<EventType[]>([])
-
-const syncTypesFromProps = () => {
-  if (props.eventTypes && props.eventTypes.length > 0) {
-    types.value = JSON.parse(JSON.stringify(props.eventTypes))
-  }
-  else {
-    types.value = JSON.parse(JSON.stringify(DEFAULT_EVENT_TYPES))
-  }
-}
-
-watch(
-  () => props.eventTypes,
-  () => {
-    syncTypesFromProps()
-  },
-  { immediate: true, deep: true },
-)
-
-watch(isOpen, (open) => {
-  if (open) {
-    syncTypesFromProps()
-  }
+const {
+  types,
+  handleAddType,
+  handleRemoveType,
+  handleSave,
+} = useCalendarTypeSettings({
+  eventTypes: toRef(props, 'eventTypes'),
+  isOpen,
+  onSave: types => emit('save', types),
 })
-
-const handleAddType = () => {
-  const newId = `type_${Date.now()}`
-  const defaultPreset
-    = DEFAULT_COLOR_PRESETS[types.value.length % DEFAULT_COLOR_PRESETS.length]
-
-  types.value.push({
-    id: newId,
-    name: '',
-    color: defaultPreset ? defaultPreset.value : '#00f0ff',
-  })
-}
-
-const handleRemoveType = (index: number) => {
-  if (types.value.length <= 1) return
-  types.value.splice(index, 1)
-}
-
-const handleSave = () => {
-  const cleaned = types.value.map((t, idx) => ({
-    ...t,
-    name: t.name.trim() || `種別 ${idx + 1}`,
-  }))
-
-  emit('save', cleaned)
-  isOpen.value = false
-}
 </script>
 
 <template>
