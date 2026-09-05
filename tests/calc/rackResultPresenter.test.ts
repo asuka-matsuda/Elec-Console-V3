@@ -58,6 +58,40 @@ describe('rackResultPresenter', () => {
       sumStrong: 100,
       sumWeak: 0,
       isOverflow: false,
+      marginRate: 1.2,
+      cableSpacing: 10,
+      sideMargin: 60,
+      totalCablesCount: 3,
+      tier1: {
+        layers: 1,
+        title: '1段敷設（平置き・標準）',
+        isApplicable: true,
+        wMain: 120.4,
+        wOther: 80.2,
+        totalWidth: 200.6,
+        selectedSize: 300,
+        isOverflow: false,
+        isSizeOver: false,
+        maxCableStackHeight: 45.0,
+        stackHeightDetailStr: '45.0',
+        cablesWidth: 50.3,
+        cablesCount: 3,
+      },
+      tier2: {
+        layers: 2,
+        title: '2段敷設（省スペース）',
+        isApplicable: true,
+        wMain: 90.0,
+        wOther: 80.2,
+        totalWidth: 170.2,
+        selectedSize: 200,
+        isOverflow: false,
+        isSizeOver: false,
+        maxCableStackHeight: 70.0,
+        stackHeightDetailStr: '45.0 + 25.0',
+        cablesWidth: 25.0,
+        cablesCount: 3,
+      },
     }
 
     const vm = formatRackResult({
@@ -67,8 +101,10 @@ describe('rackResultPresenter', () => {
     })
 
     expect(vm.isEmpty).toBe(false)
-    expect(vm.displaySize).toBe('W300')
-    expect(vm.boxStatus).toBe('success')
+    expect(vm.tier1.displaySize).toBe('W300')
+    expect(vm.tier1.boxStatus).toBe('success')
+    expect(vm.tier2.displaySize).toBe('W200')
+    expect(vm.tier2.boxStatus).toBe('success')
     expect(vm.wStrong).toBe('120.4')
     expect(vm.wWeak).toBe('80.2')
     expect(vm.totalWidth).toBe('201')

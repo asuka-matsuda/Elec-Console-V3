@@ -16,11 +16,14 @@ export interface RackCableUIInput {
 export interface RackInputs {
   mode: RackMode
   rackHeight: number | null
-  lStrong: number | null
-  lWeak: number | null
+  lStrong?: number | null
+  lWeak?: number | null
   otherWidth: number | null
   strongCablesUI: RackCableUIInput[]
   weakCablesUI: RackCableUIInput[]
+  marginRate?: number | null
+  cableSpacing?: number | null
+  sideMargin?: number | null
 }
 
 export function convertUIToRackCable(
@@ -46,5 +49,8 @@ export function mapFormToRackCalcInputs(inputs: RackInputs): RackCalcInputs {
       ? inputs.strongCablesUI.map(convertUIToRackCable)
       : inputs.weakCablesUI.map(convertUIToRackCable),
     otherWidth: inputs.otherWidth ?? 0,
+    marginRate: inputs.marginRate ?? undefined,
+    cableSpacing: inputs.cableSpacing ?? undefined,
+    sideMargin: inputs.sideMargin ?? undefined,
   }
 }

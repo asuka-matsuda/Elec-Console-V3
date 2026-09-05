@@ -13,10 +13,11 @@ import { mapFormToRackCalcInputs } from '~/utils/tools/rack/rackMapper'
 
 const defaultInputs: RackInputs = {
   mode: 'strong',
-  lStrong: 1,
-  lWeak: 1,
   rackHeight: null,
   otherWidth: null,
+  marginRate: 1.2,
+  cableSpacing: 10,
+  sideMargin: 60,
   strongCablesUI: [
     { id: crypto.randomUUID(), category: '', cableIdx: '', count: null },
   ],
@@ -51,7 +52,6 @@ export function useRackCalculator() {
         return mapRackToHistory(
           {
             mode: logicInputs.mode,
-            layers: logicInputs.layers,
             rackHeight: logicInputs.rackHeight,
             maxDepth: logicInputs.maxDepth,
             otherWidth: logicInputs.otherWidth,
