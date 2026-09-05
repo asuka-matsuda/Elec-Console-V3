@@ -49,10 +49,7 @@ const vm = computed(() =>
       <ToolResultRow label="弱電 必要幅">
         <strong>{{ vm.wWeak }}</strong> mm
       </ToolResultRow>
-      <ToolResultRow label="合計 必要幅" top-border>
-        <strong>{{ vm.totalWidth }}</strong> mm
-      </ToolResultRow>
-      <ToolResultRow label="最大ケーブル高さ">
+      <ToolResultRow label="最大ケーブル高さ" top-border>
         <strong :class="{ 'is-overflow': vm.isMaxHeightOverflow }">{{
           vm.maxHeight
         }}</strong>
