@@ -68,35 +68,73 @@ describe('rackResultPresenter', () => {
 
     expect(vm.isEmpty).toBe(false)
     expect(vm.displaySize).toBe('W300')
-    expect(vm.boxVariant).toBe('default')
+    expect(vm.boxStatus).toBe('success')
     expect(vm.wStrong).toBe('120.4')
     expect(vm.wWeak).toBe('80.2')
     expect(vm.totalWidth).toBe('201')
     expect(vm.maxHeight).toBe('45.0')
     expect(vm.isOverflow).toBe(false)
-    expect(vm.overflowWarning).toBe('')
+    expect(vm.isSizeOver).toBe(false)
   })
 
-  it('should handle out of standard size and overflow correctly', () => {
+  it('should handle height overflow (boxStatus: warning) when within standard size', () => {
     const mockResult: RackCalcResult = {
-      selectedSize: undefined,
-      wStrong: 650.0,
+      mode: 'strong',
+      error: false,
+      selectedSize: 400,
+      wStrong: 350.0,
       wWeak: 0,
       wSep: 0,
-      totalWidth: 650.0,
-      maxCableStackHeight: 120.0,
+      totalWidth: 350.0,
+      maxCableStackHeight: 90.0,
+      maxStackDetailStr: '90.0',
+      maxDepth: 80,
+      rackHeight: 100,
+      sumStrong: 200,
+      sumWeak: 0,
       isOverflow: true,
     }
 
     const vm = formatRackResult({
       result: mockResult,
-      maxDepth: 100,
+      maxDepth: 80,
       mode: 'strong',
     })
 
     expect(vm.isEmpty).toBe(false)
-    expect(vm.displaySize).toBe('規格外 (650mm以上)')
+    expect(vm.displaySize).toBe('W400')
     expect(vm.isOverflow).toBe(true)
-    expect(vm.overflowWarning).toContain('超過しています')
+    expect(vm.isSizeOver).toBe(false)
+    expect(vm.boxStatus).toBe('warning')
+  })
+
+  it('should handle out of standard size (boxStatus: danger)', () => {
+    const mockResult: RackCalcResult = {
+      mode: 'strong',
+      error: true,
+      selectedSize: null,
+      wStrong: 1300.0,
+      wWeak: 0,
+      wSep: 0,
+      totalWidth: 1300.0,
+      maxCableStackHeight: 50.0,
+      maxStackDetailStr: '50.0',
+      maxDepth: 80,
+      rackHeight: 100,
+      sumStrong: 800,
+      sumWeak: 0,
+      isOverflow: false,
+    }
+
+    const vm = formatRackResult({
+      result: mockResult,
+      maxDepth: 80,
+      mode: 'strong',
+    })
+
+    expect(vm.isEmpty).toBe(false)
+    expect(vm.displaySize).toBe('規格外 (1300mm以上)')
+    expect(vm.isSizeOver).toBe(true)
+    expect(vm.boxStatus).toBe('danger')
   })
 })

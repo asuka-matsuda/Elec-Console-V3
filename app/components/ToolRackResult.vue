@@ -26,17 +26,21 @@ const vm = computed(() =>
 <template>
   <div class="c-rack-result">
     <AppResultBox
-      title="推奨ラックサイズ"
-      :variant="vm.boxVariant"
+      :status="vm.boxStatus"
       :is-empty="vm.isEmpty"
     >
+      <template #title>
+        <span class="c-rack-result__box-title">
+          推奨ラックサイズ
+          <AppBadge v-if="vm.isOverflow" color="warning">高さ不足</AppBadge>
+          <AppBadge v-else-if="vm.isSizeOver" color="danger">規格外</AppBadge>
+        </span>
+      </template>
+
       <template #value>
         <div class="c-rack-result__value-box">
           <div class="c-rack-result__val">
             {{ vm.displaySize }}
-          </div>
-          <div v-if="vm.isOverflow" class="c-rack-result__warning">
-            {{ vm.overflowWarning }}
           </div>
         </div>
       </template>
@@ -49,7 +53,7 @@ const vm = computed(() =>
       <ToolResultRow label="弱電 必要幅">
         <strong>{{ vm.wWeak }}</strong> mm
       </ToolResultRow>
-      <ToolResultRow label="最大ケーブル高さ" top-border>
+      <ToolResultRow label="最大ケーブル高さ">
         <strong :class="{ 'is-overflow': vm.isMaxHeightOverflow }">{{
           vm.maxHeight
         }}</strong>
@@ -65,6 +69,12 @@ const vm = computed(() =>
 
   gap: var(--space-card-gap);
 
+  &__box-title {
+    @include flex-center-center;
+
+    gap: var(--space-2);
+  }
+
   &__value-box {
     @include flex-start-center($direction: column);
 
@@ -74,15 +84,9 @@ const vm = computed(() =>
   &__val {
     @include text-mono("3xl", "bold");
   }
-
-  &__warning {
-    @include text-meta("sm", "bold");
-
-    color: var(--color-status-danger);
-  }
 }
 
 .is-overflow {
-  color: var(--color-status-danger);
+  color: var(--color-status-warning);
 }
 </style>

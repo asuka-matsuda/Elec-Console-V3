@@ -65,7 +65,7 @@ export function useRackCalculator() {
   )
 
   const maxDepth = computed(() =>
-    Math.max(1, (inputs.value.rackHeight ?? 0) - 10),
+    Math.max(1, (inputs.value.rackHeight ?? 0) - 20),
   )
 
   function addStrongCable() {

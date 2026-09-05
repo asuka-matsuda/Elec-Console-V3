@@ -3,8 +3,10 @@ import type { RackCalcResult } from '~/utils/tools/rack/rackCalcLogic'
 export interface RackResultViewModel {
   isEmpty: boolean
   boxVariant: 'default' | 'error'
+  boxStatus: 'neutral' | 'success' | 'warning' | 'danger'
   displaySize: string
   isOverflow: boolean
+  isSizeOver: boolean
   overflowWarning: string
   wStrong: string
   wWeak: string
@@ -27,12 +29,33 @@ export interface RackResultPresenterParams {
 export function formatRackResult(
   params: RackResultPresenterParams,
 ): RackResultViewModel {
-  const { result, maxDepth } = params
-  const isError = Boolean(result?.error)
-  const isEmpty = isError || !result
-  const boxVariant: RackResultViewModel['boxVariant'] = isError
+  const { result } = params
+
+  const isSizeOver = Boolean(
+    result && result.totalWidth > 0 && (!result.selectedSize || result.totalWidth > 1200),
+  )
+  const isZeroOrNoInput = !result || result.totalWidth === 0
+  const isError = Boolean(result?.error) && !isSizeOver
+  const isEmpty = isZeroOrNoInput || isError
+  const boxVariant: RackResultViewModel['boxVariant'] = (isError || isSizeOver)
     ? 'error'
     : 'default'
+
+  const isOverflow = Boolean(result?.isOverflow)
+
+  let boxStatus: 'neutral' | 'success' | 'warning' | 'danger' = 'neutral'
+
+  if (!isEmpty && result) {
+    if (isSizeOver) {
+      boxStatus = 'danger'
+    }
+    else if (isOverflow) {
+      boxStatus = 'warning'
+    }
+    else {
+      boxStatus = 'success'
+    }
+  }
 
   let displaySize = '---'
 
@@ -47,10 +70,7 @@ export function formatRackResult(
     }
   }
 
-  const isOverflow = Boolean(result?.isOverflow)
-  const overflowWarning = isOverflow
-    ? `⚠️ ケーブルの高さがラックの有効高さ(${maxDepth}mm)を超過しています。`
-    : ''
+  const overflowWarning = ''
 
   const wStrong = result?.wStrong?.toFixed(1) ?? '0.0'
   const wWeak = result?.wWeak?.toFixed(1) ?? '0.0'
@@ -62,8 +82,10 @@ export function formatRackResult(
   return {
     isEmpty,
     boxVariant,
+    boxStatus,
     displaySize,
     isOverflow,
+    isSizeOver,
     overflowWarning,
     wStrong,
     wWeak,

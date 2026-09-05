@@ -34,7 +34,7 @@ export function convertUIToRackCable(
 
 export function mapFormToRackCalcInputs(inputs: RackInputs): RackCalcInputs {
   const rH = inputs.rackHeight ?? 0
-  const maxDepth = Math.max(1, rH - 10)
+  const maxDepth = Math.max(1, rH - 20)
   const isStrong = inputs.mode === 'strong'
 
   return {
