@@ -8,11 +8,12 @@ import { onMounted } from 'vue'
 
 import { useHead, useRouter } from '#app'
 import { useAuth } from '~/composables/useAuth'
+import { STORAGE_KEYS } from '~/constants/storageKeys'
 
 useHead({ title: '現場ポータル - Elec-Console' })
 const router = useRouter()
 const { isAdmin, currentUser } = useAuth()
-const lastSiteId = useLocalStorage('last-accessed-site', '')
+const lastSiteId = useLocalStorage(STORAGE_KEYS.LAST_SITE_ID, '')
 
 onMounted(() => {
   const siteIds = currentUser.value?.assignedSiteIds || []

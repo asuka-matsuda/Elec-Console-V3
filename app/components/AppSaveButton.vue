@@ -28,7 +28,7 @@ const {
 })
 
 const buttonProps = computed(() => {
-  const { saveFunction: _, label: __, ...rest } = props
+  const { saveFunction: _, label: __, disabled: ___, ...rest } = props
 
   return rest
 })

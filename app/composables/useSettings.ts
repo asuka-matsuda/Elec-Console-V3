@@ -1,8 +1,10 @@
 import { useLocalStorage } from '@vueuse/core'
 
+import { STORAGE_KEYS } from '~/constants/storageKeys'
+
 export const useSettings = () => {
   const themeMode = useLocalStorage<'dark' | 'light'>(
-    'elec_theme_mode',
+    STORAGE_KEYS.THEME_MODE,
     'dark',
   )
 

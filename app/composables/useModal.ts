@@ -2,6 +2,7 @@ import type { Ref } from 'vue'
 import { computed, ref, watch } from 'vue'
 
 import { useState } from '#app'
+import { STATE_KEYS } from '~/constants/storageKeys'
 
 export interface ConfirmOptions {
   title?: string
@@ -41,10 +42,10 @@ const getSafeState = <T>(key: string, fallbackRef: Ref<T>, init: () => T): Ref<T
 export const useModal = (
   defaultOptions: Partial<ConfirmOptions> = {},
 ) => {
-  const isOpen = getSafeState<boolean>('global-modal-is-open', fallbackOpen, () => false)
-  const isPending = getSafeState<boolean>('global-modal-is-pending', fallbackPending, () => false)
+  const isOpen = getSafeState<boolean>(STATE_KEYS.GLOBAL_MODAL_OPEN, fallbackOpen, () => false)
+  const isPending = getSafeState<boolean>(STATE_KEYS.GLOBAL_MODAL_PENDING, fallbackPending, () => false)
   const currentOptions = getSafeState<ConfirmOptions>(
-    'global-modal-options',
+    STATE_KEYS.GLOBAL_MODAL_OPTIONS,
     fallbackOptions,
     () => ({
       title: '確認',

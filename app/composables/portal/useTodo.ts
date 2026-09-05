@@ -1,5 +1,7 @@
 import { useLocalStorage } from '@vueuse/core'
 
+import { STORAGE_KEYS } from '~/constants/storageKeys'
+
 export interface TodoItem {
   id: string
   text: string
@@ -9,7 +11,7 @@ export interface TodoItem {
 
 export const useTodo = (siteId: string, loginId: string) => {
   // localStorage のキーに loginId と siteId を含めて「パーソナル」にする
-  const storageKey = `elec-todos-${siteId}-${loginId}`
+  const storageKey = STORAGE_KEYS.PORTAL_TODOS(siteId, loginId)
   const todos = useLocalStorage<TodoItem[]>(storageKey, [])
 
   const addTodo = (text: string) => {

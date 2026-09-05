@@ -31,6 +31,7 @@ export function useVoltageCalculator() {
   const {
     inputs: form,
     result: calcResult,
+    saveToHistory,
     isResetModalOpen,
     openResetModal,
     confirmReset,
@@ -46,14 +47,13 @@ export function useVoltageCalculator() {
       return calculateLogic(calcInputs)
     },
     {
-      toHistory: (formInputs, res) =>
-        mapVoltageToHistory(
-          '電圧降下・ケーブルサイズ選定',
-          mapFormToVoltageCalcInputs(
-            formInputs,
-          ) as unknown as import('~/types/voltage').VoltageCalcInputs,
-          res as unknown as VoltageCalcResult,
-        ), // Will not be used directly
+      toHistory: (formInputs, res) => {
+        const inputs = mapFormToVoltageCalcInputs(formInputs)
+
+        if (!inputs.isReady || !res) return null
+
+        return mapVoltageToHistory('電圧降下・ケーブルサイズ選定', inputs, res)
+      },
       fromHistory: () => JSON.parse(JSON.stringify(defaultForm)),
     },
   )
@@ -92,6 +92,7 @@ export function useVoltageCalculator() {
     isResetModalOpen,
     openResetModal,
     resetForm,
+    handleSaveHistory: saveToHistory,
     isSizeCalcMode,
     isDropCalcMode,
     computedAvailableSizes,

@@ -1,11 +1,12 @@
 import { useAsyncData, useState } from '#app'
 import { useApi } from '~/composables/useApi'
+import { STATE_KEYS } from '~/constants/storageKeys'
 import type { Site, SiteSettings } from '~/types/admin'
 
 export const useAdminSites = () => {
-  const sites = useState<Site[]>('admin-sites', () => [])
+  const sites = useState<Site[]>(STATE_KEYS.ADMIN_SITES, () => [])
   const siteSettings = useState<SiteSettings[]>(
-    'admin-site-settings',
+    STATE_KEYS.ADMIN_SITE_SETTINGS,
     () => [],
   )
   const { $api } = useApi()

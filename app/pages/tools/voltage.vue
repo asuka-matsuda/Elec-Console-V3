@@ -7,18 +7,14 @@ import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
 import { computed } from 'vue'
 
-import { useRoute } from '#app'
-import { useCalcHistory } from '~/composables/tools/useCalcHistory'
 import { useVoltageCalculator } from '~/composables/tools/useVoltageCalculator'
 import { getVoltageFormFields } from '~/constants/config/voltageFormConfig'
-import { mapVoltageToHistory } from '~/utils/tools/voltage/historyMapper'
 import { voltageSchema } from '~/utils/tools/voltage/voltageSchema'
 
 useHead({
   title: '電圧降下・ケーブルサイズ選定',
 })
 
-const route = useRoute()
 const {
   form,
   isSizeCalcMode,
@@ -28,9 +24,8 @@ const {
   calcResult,
   mathSteps,
   openResetModal,
+  handleSaveHistory,
 } = useVoltageCalculator()
-
-const { saveHistory } = useCalcHistory('elec_calc_voltage_hist')
 
 useForm({
   validationSchema: toTypedSchema(voltageSchema),
@@ -45,26 +40,13 @@ const formFields = computed(() =>
     () => !!form.value.cableType,
   ),
 )
-
-const handleSaveToHistory = async () => {
-  if (!calcInputs.value.isReady) return
-  const toolName
-    = (route.meta.title as string) || '電圧降下・ケーブルサイズ選定'
-  const entry = mapVoltageToHistory(
-    toolName,
-    calcInputs.value,
-    calcResult.value,
-  )
-
-  await saveHistory(entry)
-}
 </script>
 
 <template>
   <ToolLayout
     results-title="計算結果"
     :save-disabled="!calcInputs.isReady"
-    :save-function="handleSaveToHistory"
+    :save-function="handleSaveHistory"
     @reset="openResetModal"
   >
     <template #inputs>

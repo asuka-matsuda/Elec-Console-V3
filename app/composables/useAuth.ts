@@ -2,6 +2,7 @@ import { computed } from 'vue'
 
 import { useCookie, useRouter, useState } from '#app'
 import { useApi } from '~/composables/useApi'
+import { STATE_KEYS } from '~/constants/storageKeys'
 import type { User } from '~/types/auth'
 
 export const useAuth = () => {
@@ -9,7 +10,7 @@ export const useAuth = () => {
     default: () => null,
     maxAge: 60 * 60 * 24,
   })
-  const currentUser = useState<User | null>('currentUser', () => null)
+  const currentUser = useState<User | null>(STATE_KEYS.CURRENT_USER, () => null)
   const router = useRouter()
   const { $api } = useApi()
 

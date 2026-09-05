@@ -12,6 +12,7 @@ const props = withDefaults(defineProps<AppButtonProps>(), {
   type: 'button',
   size: 'sm',
   variant: 'primary',
+  disabled: false,
   loading: false,
 })
 

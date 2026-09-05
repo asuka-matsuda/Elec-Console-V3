@@ -99,6 +99,7 @@ export function useConduitCalculator() {
     removeCable,
     reset: resetInputs,
     saveHistory,
+    handleSaveHistory: saveHistory,
     isResetModalOpen,
     openResetModal,
     confirmReset,

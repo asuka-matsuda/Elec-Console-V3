@@ -17,7 +17,7 @@ const {
   result,
   addCable,
   removeCable,
-  saveHistory,
+  handleSaveHistory,
   openResetModal,
   mathSteps,
 } = useConduitCalculator()
@@ -27,16 +27,12 @@ const conduitCategoryOptions = computed(() => {
 
   return cats.map(c => ({ value: c, label: c }))
 })
-
-const handleSave = async () => {
-  await saveHistory()
-}
 </script>
 
 <template>
   <ToolLayout
     :save-disabled="!result?.success || result?.partial"
-    :save-function="handleSave"
+    :save-function="handleSaveHistory"
     @reset="openResetModal"
   >
     <template #inputs>

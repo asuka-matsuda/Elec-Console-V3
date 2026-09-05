@@ -7,6 +7,7 @@ import Calendar from '~/components/Portal/Calendar.client.vue'
 import PersonalTodo from '~/components/Portal/PersonalTodo.client.vue'
 import { useAdminSites } from '~/composables/admin/useAdminSites'
 import { useAuth } from '~/composables/useAuth'
+import { STORAGE_KEYS } from '~/constants/storageKeys'
 
 const route = useRoute()
 const router = useRouter()
@@ -15,7 +16,7 @@ const siteId = computed(() => route.params.siteId as string)
 const { sites, fetchSites } = useAdminSites()
 const { currentUser } = useAuth()
 
-const lastSiteId = useLocalStorage('last-accessed-site', '')
+const lastSiteId = useLocalStorage(STORAGE_KEYS.LAST_SITE_ID, '')
 
 watch(
   siteId,

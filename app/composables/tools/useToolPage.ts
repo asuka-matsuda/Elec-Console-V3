@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 
 import { useCalcHistory } from '~/composables/tools/useCalcHistory'
 import { useModal } from '~/composables/useModal'
+import { STORAGE_KEYS } from '~/constants/storageKeys'
 import type { HistoryEntry } from '~/types/history'
 
 export function useToolPage<InputType, ResultType>(
@@ -18,9 +19,9 @@ export function useToolPage<InputType, ResultType>(
     fromHistory: (entry: HistoryEntry) => InputType
   },
 ) {
-  const { saveHistory } = useCalcHistory(`elec_calc_${toolId}_hist`)
+  const { saveHistory } = useCalcHistory(STORAGE_KEYS.TOOL_HISTORY(toolId))
   const inputs = useLocalStorage<InputType>(
-    `tool-inputs-${toolId}`,
+    STORAGE_KEYS.TOOL_INPUTS(toolId),
     defaultInputs,
     { mergeDefaults: true },
   )
@@ -85,6 +86,7 @@ export function useToolPage<InputType, ResultType>(
   return {
     inputs,
     result,
+    handleSaveHistory: saveToHistory,
     saveToHistory,
     loadFromHistory,
     resetInputs,
