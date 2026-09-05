@@ -5,69 +5,18 @@
  */
 import { computed } from 'vue'
 
+import type { ConduitInputs } from '~/composables/tools/useConduitCalculator'
 import { CONDUIT_UI_LABELS } from '~/constants/conduitConstants'
-import { formatVal } from '~/utils/math'
+import type { ConduitCalcResult } from '~/utils/tools/conduit/conduitCalcLogic'
+import { formatConduitResult } from '~/utils/tools/conduit/conduitResultPresenter'
 
 const props = defineProps<{
-  result:
-    import('~/utils/tools/conduit/conduitCalcLogic').ConduitCalcResult | null
-  inputs?: import('~/composables/tools/useConduitCalculator').ConduitInputs
+  result: ConduitCalcResult | null
+  inputs?: ConduitInputs
   size?: 'sm' | 'md'
 }>()
 
-const isReady = computed(() => props.result?.success && !props.result?.partial)
-
-const size32 = computed(() => {
-  if (!isReady.value) return CONDUIT_UI_LABELS.EMPTY_TEXT
-
-  return props.result!.isOversize32
-    ? CONDUIT_UI_LABELS.OVERSIZE_TEXT
-    : props.result!.conduit32?.size
-})
-
-const status32Class = computed(() => {
-  if (!isReady.value) return 'is-neutral'
-
-  return props.result!.isOversize32 ? 'is-danger' : 'is-success'
-})
-
-const _allowable32 = computed(() =>
-  isReady.value
-    ? formatVal(props.result!.allowable32, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
-    : CONDUIT_UI_LABELS.EMPTY_TEXT,
-)
-
-const fill32 = computed(() =>
-  isReady.value
-    ? formatVal(props.result!.fill32, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
-    : CONDUIT_UI_LABELS.EMPTY_TEXT,
-)
-
-const size48 = computed(() => {
-  if (!isReady.value) return CONDUIT_UI_LABELS.EMPTY_TEXT
-
-  return props.result!.isOversize48
-    ? CONDUIT_UI_LABELS.OVERSIZE_TEXT
-    : props.result!.conduit48?.size
-})
-
-const status48Class = computed(() => {
-  if (!isReady.value) return 'is-neutral'
-
-  return props.result!.isOversize48 ? 'is-danger' : 'is-success'
-})
-
-const _allowable48 = computed(() =>
-  isReady.value
-    ? formatVal(props.result!.allowable48, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
-    : CONDUIT_UI_LABELS.EMPTY_TEXT,
-)
-
-const fill48 = computed(() =>
-  isReady.value
-    ? formatVal(props.result!.fill48, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
-    : CONDUIT_UI_LABELS.EMPTY_TEXT,
-)
+const vm = computed(() => formatConduitResult(props.result))
 </script>
 
 <template>
@@ -79,11 +28,13 @@ const fill48 = computed(() =>
           {{ CONDUIT_UI_LABELS.TITLE_32 }}
         </div>
         <div class="c-conduit-result__main-value">
-          <span class="value-text" :class="status32Class">{{ size32 }}</span>
-          <template v-if="isReady && !result!.isOversize32">
+          <span class="value-text" :class="vm.status32Class">{{
+            vm.size32
+          }}</span>
+          <template v-if="vm.isReady && !vm.isOversize32">
             <span class="value-sep">(</span>
             <span class="value-text c-conduit-result__percent is-neutral">{{
-              fill32
+              vm.fill32
             }}</span>
             <span class="value-unit c-conduit-result__percent-unit">{{
               CONDUIT_UI_LABELS.UNIT_PERCENT
@@ -100,11 +51,13 @@ const fill48 = computed(() =>
           {{ CONDUIT_UI_LABELS.TITLE_48 }}
         </div>
         <div class="c-conduit-result__main-value">
-          <span class="value-text" :class="status48Class">{{ size48 }}</span>
-          <template v-if="isReady && !result!.isOversize48">
+          <span class="value-text" :class="vm.status48Class">{{
+            vm.size48
+          }}</span>
+          <template v-if="vm.isReady && !vm.isOversize48">
             <span class="value-sep">(</span>
             <span class="value-text c-conduit-result__percent is-neutral">{{
-              fill48
+              vm.fill48
             }}</span>
             <span class="value-unit c-conduit-result__percent-unit">{{
               CONDUIT_UI_LABELS.UNIT_PERCENT
