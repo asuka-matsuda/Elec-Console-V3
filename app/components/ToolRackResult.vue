@@ -3,38 +3,42 @@
  * ToolRackResult
  * ケーブルラック選定ツールの計算・選定結果表示コンポーネントです。
  */
-import type { RackCalcResult } from '~/utils/tools/rack/rackCalcLogic'
+import { computed } from 'vue'
 
-defineProps<{
+import type { RackCalcResult } from '~/utils/tools/rack/rackCalcLogic'
+import { formatRackResult } from '~/utils/tools/rack/rackResultPresenter'
+
+const props = defineProps<{
   result: RackCalcResult | null
   maxDepth: number
   isStrong: boolean
   isWeak: boolean
 }>()
+
+const vm = computed(() =>
+  formatRackResult({
+    result: props.result,
+    maxDepth: props.maxDepth,
+    isStrong: props.isStrong,
+    isWeak: props.isWeak,
+  }),
+)
 </script>
 
 <template>
   <div class="c-rack-result">
     <AppResultBox
       title="推奨ラックサイズ"
-      :variant="result?.error ? 'error' : 'default'"
-      :is-empty="result?.error || (!isStrong && !isWeak)"
+      :variant="vm.boxVariant"
+      :is-empty="vm.isEmpty"
     >
       <template #value>
         <div class="c-rack-result__value-box">
           <div class="c-rack-result__val">
-            <template v-if="result?.error || (!isStrong && !isWeak)">
-              ---
-            </template>
-            <template v-else-if="result?.selectedSize">
-              W{{ result?.selectedSize }}
-            </template>
-            <template v-else>
-              規格外 ({{ result?.totalWidth ? Math.ceil(result.totalWidth) : 0 }}mm以上)
-            </template>
+            {{ vm.displaySize }}
           </div>
-          <div v-if="result?.isOverflow" class="c-rack-result__warning">
-            ⚠️ ケーブルの高さがラックの有効深さ({{ maxDepth }}mm)を超過しています。
+          <div v-if="vm.isOverflow" class="c-rack-result__warning">
+            {{ vm.overflowWarning }}
           </div>
         </div>
       </template>
@@ -42,26 +46,23 @@ defineProps<{
 
     <ToolResultDetails>
       <ToolResultRow label="強電 必要幅">
-        <strong>{{ result?.wStrong?.toFixed(1) ?? "0.0" }}</strong> mm
+        <strong>{{ vm.wStrong }}</strong> mm
       </ToolResultRow>
       <ToolResultRow label="弱電 必要幅">
-        <strong>{{ result?.wWeak?.toFixed(1) ?? "0.0" }}</strong> mm
+        <strong>{{ vm.wWeak }}</strong> mm
       </ToolResultRow>
       <ToolResultRow
-        v-if="isStrong && isWeak"
+        v-if="vm.showSeparator"
         label="セパレータ幅"
       >
-        <strong>{{ result?.wSep?.toFixed(1) ?? "0.0" }}</strong> mm
+        <strong>{{ vm.wSep }}</strong> mm
       </ToolResultRow>
       <ToolResultRow label="合計 必要幅" top-border>
-        <strong>{{
-          result?.totalWidth ? Math.ceil(result.totalWidth) : 0
-        }}</strong>
-        mm
+        <strong>{{ vm.totalWidth }}</strong> mm
       </ToolResultRow>
       <ToolResultRow label="最大ケーブル高さ">
-        <strong :class="{ 'is-overflow': result?.isOverflow }">{{
-          result?.maxCableStackHeight?.toFixed(1) ?? "0.0"
+        <strong :class="{ 'is-overflow': vm.isMaxHeightOverflow }">{{
+          vm.maxHeight
         }}</strong>
         mm (有効 {{ maxDepth }} mm)
       </ToolResultRow>
