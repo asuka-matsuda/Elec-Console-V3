@@ -65,6 +65,15 @@ watch(
     }
   },
 )
+
+const handleAddCable = () => {
+  if (inputs.value.mode === 'strong') {
+    emit('add-strong-cable')
+  }
+  else {
+    emit('add-weak-cable')
+  }
+}
 </script>
 
 <template>
@@ -167,7 +176,7 @@ watch(
         <AppButton
           variant="secondary"
           size="sm"
-          @click="emit(inputs.mode === 'strong' ? 'add-strong-cable' : 'add-weak-cable')"
+          @click="handleAddCable"
         >
           <AppIcon name="plus" size="sm" />
           <span>{{ inputs.mode === 'strong' ? '強電ケーブルを追加' : '弱電ケーブルを追加' }}</span>
