@@ -79,8 +79,10 @@ const componentAttrs = computed(() => {
 
   color: var(--btn-color);
 
+  background-color: var(--surface-bg-elevated);
+
   @include border-base(var(--btn-color), 30%);
-  @include state-base("sm", var(--transition-fast), var(--btn-color));
+  @include state-base("sm", var(--transition-fast));
 
   :deep(.c-icon) {
     width: 1.2em;

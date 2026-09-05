@@ -1,4 +1,7 @@
+import type { Ref } from 'vue'
 import { computed, ref, watch } from 'vue'
+
+import { useState } from '#app'
 
 export interface ConfirmOptions {
   title?: string
@@ -9,31 +12,56 @@ export interface ConfirmOptions {
   onConfirm?: () => void | Promise<void>
 }
 
-// グローバルな確認モーダルの状態
-const isOpen = ref(false)
-const isPending = ref(false)
-const currentOptions = ref<ConfirmOptions>({
+// クライアント専用の Promise リゾルバー
+let resolvePromise: ((value: boolean) => void) | null = null
+
+// テスト環境（Nuxtコンテキスト外）用フォールバック
+const fallbackOpen = ref(false)
+const fallbackPending = ref(false)
+const fallbackOptions = ref<ConfirmOptions>({
   title: '確認',
   message: 'この操作を実行しますか？',
   confirmText: '確定する',
   cancelText: 'キャンセル',
   intent: 'primary',
 })
-let resolvePromise: ((value: boolean) => void) | null = null
 
-watch(isOpen, (newVal) => {
-  if (!newVal && resolvePromise) {
-    resolvePromise(false)
-    resolvePromise = null
+const getSafeState = <T>(key: string, fallbackRef: Ref<T>, init: () => T): Ref<T> => {
+  try {
+    return useState<T>(key, init)
   }
-})
+  catch {
+    return fallbackRef
+  }
+}
 
 /**
- * モーダル（AppModal）の開閉と状態管理を共通化するComposable
+ * モーダル（AppModal）の開閉と状態管理を共通化するComposable（SSR安全）
  */
 export const useModal = (
   defaultOptions: Partial<ConfirmOptions> = {},
 ) => {
+  const isOpen = getSafeState<boolean>('global-modal-is-open', fallbackOpen, () => false)
+  const isPending = getSafeState<boolean>('global-modal-is-pending', fallbackPending, () => false)
+  const currentOptions = getSafeState<ConfirmOptions>(
+    'global-modal-options',
+    fallbackOptions,
+    () => ({
+      title: '確認',
+      message: 'この操作を実行しますか？',
+      confirmText: '確定する',
+      cancelText: 'キャンセル',
+      intent: 'primary',
+    }),
+  )
+
+  watch(isOpen, (newVal) => {
+    if (!newVal && resolvePromise) {
+      resolvePromise(false)
+      resolvePromise = null
+    }
+  })
+
   const askConfirm = (customOptions: ConfirmOptions = {}): Promise<boolean> => {
     currentOptions.value = {
       title: customOptions.title || defaultOptions.title || '確認',

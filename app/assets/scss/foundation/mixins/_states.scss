@@ -59,20 +59,20 @@
 
   @if $state == "hover" {
     @return (
-      0 0 map.get($values, blur1) $color,
-      0 0 map.get($values, blur2) color-mix(in srgb, $color 60%, transparent)
+      0 0 map.get($values, blur1) color-mix(in srgb, $color 45%, transparent),
+      0 0 map.get($values, blur2) color-mix(in srgb, $color 20%, transparent)
     );
   } @else if $state == "focus" {
     @return (
-      0 0 2px 1px $color,
-      0 0 map.get($values, blur1) color-mix(in srgb, $color 80%, transparent),
-      0 0 map.get($values, blur2) color-mix(in srgb, $color 40%, transparent)
+      0 0 0 1px color-mix(in srgb, $color 70%, transparent),
+      0 0 map.get($values, blur1) color-mix(in srgb, $color 50%, transparent),
+      0 0 map.get($values, blur2) color-mix(in srgb, $color 20%, transparent)
     );
   } @else if $state == "active" {
     @return (
-      0 0 map.get($values, blur1) 1px $color,
-      0 0 map.get($values, blur2) color-mix(in srgb, $color 80%, transparent),
-      inset 0 0 2px color-mix(in srgb, $color 80%, transparent)
+      0 0 map.get($values, blur1) color-mix(in srgb, $color 60%, transparent),
+      0 0 map.get($values, blur2) color-mix(in srgb, $color 30%, transparent),
+      inset 0 0 2px color-mix(in srgb, $color 40%, transparent)
     );
   }
 
@@ -101,14 +101,14 @@
   }
 }
 
-@mixin state-hover($color: var(--color-category-main), $size: "md") {
+@mixin state-hover($color: var(--theme-accent), $size: "md") {
   border-color: $color;
   box-shadow:
     get-glow-shadow($color, $size, "hover"), var(--shadow-base, 0 0 transparent);
   transition: var(--transition-glow);
 }
 
-@mixin state-focus($color: var(--color-category-main), $size: "md") {
+@mixin state-focus($color: var(--theme-accent), $size: "md") {
   border-color: color-mix(in srgb, $color 60%, transparent);
   outline: none;
   box-shadow:
@@ -116,7 +116,7 @@
   transition: var(--transition-glow);
 }
 
-@mixin state-active($color: var(--color-category-main), $size: "md") {
+@mixin state-active($color: var(--theme-accent), $size: "md") {
   border-color: $color;
   box-shadow:
     get-glow-shadow($color, $size, "active"),

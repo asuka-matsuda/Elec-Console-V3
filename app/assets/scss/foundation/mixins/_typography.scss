@@ -121,6 +121,7 @@
 
 @mixin text-mono($size: "md", $weight: null) {
   font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
   line-height: var(--line-height-base);
   letter-spacing: var(--tracking-normal);
 

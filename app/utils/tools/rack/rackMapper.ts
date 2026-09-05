@@ -1,5 +1,4 @@
-import { cableData } from '~/constants/data/cableData'
-import type { CableData } from '~/types/database'
+import { findCableByIndexString, getEffectiveCableDiameter } from '~/utils/cable'
 import type {
   RackCableInput,
   RackCalcInputs,
@@ -26,25 +25,8 @@ export interface RackInputs {
 export function convertUIToRackCable(
   uiInput: RackCableUIInput,
 ): RackCableInput {
-  let def: CableData | undefined
-
-  if (uiInput.cableIdx && uiInput.cableIdx.startsWith('idx_')) {
-    const idx = parseInt(uiInput.cableIdx.replace('idx_', ''), 10)
-
-    def = cableData[idx]
-  }
-  let d = 0
-
-  if (def) {
-    if (typeof def.diameter === 'string' && def.diameter.includes('×')) {
-      d = Math.max(
-        ...def.diameter.split('×').map((s: string) => parseFloat(s.trim())),
-      )
-    }
-    else {
-      d = parseFloat(String(def.diameter))
-    }
-  }
+  const def = findCableByIndexString(uiInput.cableIdx)
+  const d = def ? getEffectiveCableDiameter(def.diameter) : 0
 
   return { d, n: uiInput.count ?? 0 }
 }

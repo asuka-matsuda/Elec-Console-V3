@@ -13,19 +13,16 @@ $default-size: 12px;
 }
 
 ::-webkit-scrollbar-thumb {
-  border: 1px solid hsl(var(--color-category-main-base) / 40%);
+  border-radius: var(--radius-sm);
+  background-color: color-mix(in srgb, var(--color-text-muted) 35%, transparent);
   background-clip: padding-box;
 
   &:hover {
-    border-color: var(--color-category-main);
-    box-shadow: inset 0 0 var(--blur-md)
-      hsl(var(--color-category-main-base) / 40%);
+    background-color: color-mix(in srgb, var(--color-text-muted) 55%, transparent);
   }
 
   &:active {
-    border-color: var(--color-category-main);
-    box-shadow: inset 0 0 var(--blur-lg)
-      hsl(var(--color-category-main-base) / 80%);
+    background-color: color-mix(in srgb, var(--color-text-muted) 75%, transparent);
   }
 }
 

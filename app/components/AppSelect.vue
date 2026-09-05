@@ -246,7 +246,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   width: max-content;
   max-width: 90vw;
 
-  background-color: transparent;
+  background-color: var(--surface-bg-solid);
   backdrop-filter: blur(var(--blur-md));
 
   @include border-base(var(--theme-accent));

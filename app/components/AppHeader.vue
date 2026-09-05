@@ -43,6 +43,10 @@ const emit = defineEmits<{
 
   height: 64px;
   padding: 0 var(--space-layout-pad);
+  border-bottom: var(--border-width-base) solid var(--color-border);
+
+  background-color: var(--surface-bg);
+  backdrop-filter: blur(var(--blur-md));
 
   &__main {
     @include flex-start-center;

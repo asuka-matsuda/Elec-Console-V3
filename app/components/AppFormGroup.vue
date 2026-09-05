@@ -7,12 +7,14 @@ withDefaults(
   defineProps<{
     label?: string
     required?: boolean
+    requiredLabel?: string
     error?: string
     help?: string
     layout?: 'vertical' | 'horizontal'
   }>(),
   {
     required: false,
+    requiredLabel: 'REQUIRED',
     layout: 'vertical',
   },
 )
@@ -29,7 +31,7 @@ withDefaults(
         color="danger"
         size="sm"
       >
-        REQUIRED
+        {{ requiredLabel }}
       </AppBadge>
     </label>
 
@@ -79,17 +81,17 @@ withDefaults(
 
     .is-vertical & {
       width: 100%;
-      margin-bottom: var(--space-1);
+      margin-bottom: var(--space-2);
     }
   }
 
   &__label-text {
-    @include text-label;
+    @include text-label("sm");
     @include flex-start-center($is-inline: true);
 
     gap: var(--space-1);
-    color: color-mix(in srgb, var(--theme-accent) 70%, transparent);
-    text-transform: uppercase;
+    color: var(--color-text-main);
+    letter-spacing: var(--tracking-wide);
 
     @include state-base;
 
@@ -98,16 +100,13 @@ withDefaults(
 
       flex-shrink: 0;
 
-      width: var(--space-2);
-      height: var(--space-2);
-      border-radius: 50%;
+      width: var(--space-0-5);
+      height: var(--font-size-xs);
+      border-radius: var(--radius-sm);
 
-      @include border-base(
-        $color: color-mix(in srgb, var(--theme-accent) 70%, transparent),
-        $width: var(--border-width-thick),
-        $radius: 50%
-      );
-      @include state-base(none, var(--transition-base), var(--theme-accent));
+      background-color: var(--theme-accent);
+
+      transition: var(--transition-fast);
     }
   }
 
@@ -140,20 +139,19 @@ withDefaults(
   &:focus-within &__label-text {
     color: var(--theme-accent);
 
-    @include cyber-text-glow(var(--theme-accent));
-
     &::before {
-      @include state-focus(var(--theme-accent));
+      transform: scaleY(1.2);
+      background-color: var(--theme-accent);
+      box-shadow: 0 0 var(--blur-sm) var(--theme-accent);
     }
   }
 
   &:has(.c-form-group__error, .is-error) &__label-text {
     color: var(--color-status-danger);
 
-    @include cyber-text-glow(var(--color-status-danger));
-
     &::before {
-      @include state-hover(var(--color-status-danger));
+      background-color: var(--color-status-danger);
+      box-shadow: 0 0 var(--blur-sm) var(--color-status-danger);
     }
   }
 }

@@ -65,21 +65,30 @@ export function mapVoltageToHistory(
     value: inputs.derating ? inputs.derating.toString() : '--',
   })
 
-  if (!isAuto) {
-    let cabName: string
+  const resolveVoltageCableName = (
+    category: string,
+    size: number | string | null,
+    cores: string | null,
+  ): string => {
+    if (!category || size === null || size === '') return ''
+    const sizeNum = parseFloat(String(size))
     const matched = cableData.find(
       (c: CableData) =>
-        c.category === inputs.cableType
-        && parseFloat(String(c.size)) === inputs.selectedSize
-        && (!inputs.selectedCores || c.cores === inputs.selectedCores),
+        c.category === category
+        && parseFloat(String(c.size)) === sizeNum
+        && (!cores || c.cores === cores),
     )
 
-    if (matched) {
-      cabName = matched.name || ''
-    }
-    else {
-      cabName = `${inputs.cableType} ${inputs.selectedSize}sq`
-    }
+    return matched?.name || `${category} ${size}sq`
+  }
+
+  if (!isAuto) {
+    const cabName = resolveVoltageCableName(
+      inputs.cableType,
+      inputs.selectedSize,
+      inputs.selectedCores,
+    )
+
     historyInputs.push({ label: getLabel('cableType'), value: cabName })
   }
 
@@ -115,21 +124,7 @@ export function mapVoltageToHistory(
       ? result.optimal.category || ''
       : inputs.cableType || ''
     const size = isAuto ? result.optimal.size : inputs.selectedSize
-    let cableNameStr: string
-
-    const matchedCable = cableData.find(
-      (c: CableData) =>
-        c.category === cabType
-        && parseFloat(String(c.size)) === parseFloat(String(size))
-        && (!inputs.selectedCores || c.cores === inputs.selectedCores),
-    )
-
-    if (matchedCable) {
-      cableNameStr = matchedCable.name || ''
-    }
-    else {
-      cableNameStr = `${cabType} ${size}sq`
-    }
+    const cableNameStr = resolveVoltageCableName(cabType, size, inputs.selectedCores)
 
     const parallelCount = inputs.parallel ?? 1
 

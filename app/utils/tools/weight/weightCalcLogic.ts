@@ -1,5 +1,6 @@
 import type { CableData, DrumData } from '~/types/database'
 import type { MathStep } from '~/types/tools'
+import { findCableByIndexString, getEffectiveCableDiameter } from '~/utils/cable'
 import { hlOk, hlVal } from '~/utils/math'
 
 export interface WeightCalcInputs {
@@ -32,17 +33,6 @@ export interface WeightCalcResult {
   }
 }
 
-function getMaxCableDiameter(diameterStr: string): number {
-  if (!diameterStr) return 0
-  if (diameterStr.includes('×')) {
-    const parts = diameterStr.split('×').map(s => parseFloat(s.trim()))
-
-    return Math.max(...parts)
-  }
-
-  return parseFloat(diameterStr)
-}
-
 /**
  * ケーブル重量計算と最適ドラム選定を行う
  */
@@ -55,16 +45,11 @@ export function calculateWeightAndDrum(
 
   if (L_input === null || K === null) throw new Error('Invalid inputs')
 
-  let cable: CableData | undefined
+  const cable = findCableByIndexString(cableIdx, cableData)
 
-  if (cableIdx && cableIdx.startsWith('idx_')) {
-    const idx = parseInt(cableIdx.replace('idx_', ''), 10)
-
-    cable = cableData[idx]
-  }
   if (!cable) return { error: true, reason: 'cable_not_found' }
 
-  const diameter = getMaxCableDiameter(cable.diameter)
+  const diameter = getEffectiveCableDiameter(cable.diameter)
 
   const weightPerKm = Number(cable.weight)
   const cableWeight = (weightPerKm * L_input) / 1000
@@ -172,14 +157,8 @@ export function generateMathData(
 ): MathStep[] {
   const L_req_hl = hlVal(inputs.L_input, 'L_{req}', 1)
 
-  let cable: CableData | undefined
-
-  if (inputs.cableIdx && inputs.cableIdx.startsWith('idx_')) {
-    const idx = parseInt(inputs.cableIdx.replace('idx_', ''), 10)
-
-    cable = cableData[idx]
-  }
-  const d_val = cable ? getMaxCableDiameter(cable.diameter) : null
+  const cable = findCableByIndexString(inputs.cableIdx, cableData)
+  const d_val = cable ? getEffectiveCableDiameter(cable.diameter) : null
   const d_hl = hlVal(d_val, 'd', 1)
   const w_unit_hl = hlVal(cable ? Number(cable.weight) : null, 'W_{unit}', 1)
   const bendFactor = inputs.category.includes('6.6kV') ? 15 : 12

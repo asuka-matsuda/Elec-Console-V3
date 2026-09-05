@@ -62,8 +62,13 @@ withDefaults(
   @include flex-start-stretch($direction: column);
 
   position: relative;
+
   gap: var(--space-card-gap);
+
   padding: var(--space-card-pad);
+
+  background-color: var(--surface-bg);
+  backdrop-filter: blur(var(--blur-sm));
 
   @include border-base($color: var(--color-border), $opacity: 100%);
   @include state-base("sm");

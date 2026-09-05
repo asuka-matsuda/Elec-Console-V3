@@ -7,7 +7,9 @@
   $is-error: "&.is-error",
   $is-active: "&:is(:focus, :focus-visible)"
 ) {
-  @include border-base(var(--color-category-main), 30%);
+  background-color: var(--surface-bg-elevated);
+
+  @include border-base(var(--color-border), 100%);
   @include state-base("sink", var(--transition-glow));
 
   &:is(:disabled, .is-disabled) {
@@ -18,53 +20,47 @@
     &:hover {
       border-color: color-mix(
         in srgb,
-        var(--color-category-main) 50%,
-        transparent
+        var(--theme-accent) 50%,
+        var(--color-border)
       );
 
-      @include state-hover(var(--color-category-main));
+      @include state-hover(var(--theme-accent), "sm");
     }
 
     &:active {
-      border-color: var(--color-category-main);
+      border-color: var(--theme-accent);
 
-      @include state-active(var(--color-category-main));
+      @include state-active(var(--theme-accent), "sm");
     }
 
     #{$is-active} {
-      border-color: var(--color-category-main);
+      border-color: var(--theme-accent);
 
-      @include state-focus(var(--color-category-main));
-      @include cyber-text-glow(var(--color-category-main));
+      @include state-focus(var(--theme-accent), "sm");
     }
 
     #{$is-error} {
       border-color: color-mix(
         in srgb,
-        var(--color-status-danger) 50%,
+        var(--color-status-danger) 60%,
         transparent
       );
       color: var(--color-status-danger);
 
       &:hover {
-        border-color: color-mix(
-          in srgb,
-          var(--color-status-danger) 70%,
-          transparent
-        );
+        border-color: var(--color-status-danger);
 
-        @include state-hover(var(--color-status-danger));
+        @include state-hover(var(--color-status-danger), "sm");
       }
 
       &:active {
-        @include state-active(var(--color-status-danger));
+        @include state-active(var(--color-status-danger), "sm");
       }
 
       #{$is-active} {
         border-color: var(--color-status-danger);
 
-        @include state-focus(var(--color-status-danger));
-        @include cyber-text-glow(var(--color-status-danger));
+        @include state-focus(var(--color-status-danger), "sm");
       }
     }
   }
@@ -82,9 +78,10 @@
   @include flex-center-center($is-inline: true);
 
   padding: 0 var(--space-4);
-  color: var(--color-text-main);
+  color: var(--color-text-secondary);
   white-space: nowrap;
+  background-color: var(--surface-bg-elevated);
 
-  @include border-base(var(--theme-accent), 30%);
+  @include border-base(var(--color-border), 100%);
   @include shadow("sink");
 }

@@ -77,9 +77,14 @@ const hasDescription = computed(() => !!(slots.description || props.description)
   @include flex-start-stretch($direction: column);
 
   position: relative;
+
   overflow: hidden;
   gap: var(--space-card-gap);
+
   padding: var(--space-card-pad);
+
+  background-color: var(--surface-bg);
+  backdrop-filter: blur(var(--blur-sm));
 
   @include border-base;
   @include state-base;
@@ -117,14 +122,21 @@ const hasDescription = computed(() => !!(slots.description || props.description)
 
     gap: var(--space-1);
 
-    color: var(--theme-accent);
+    color: var(--color-text-main);
     word-break: keep-all;
     line-break: strict;
     overflow-wrap: anywhere;
+
+    :deep(.c-icon) {
+      flex-shrink: 0;
+      color: var(--theme-accent);
+    }
   }
 
   &__desc {
     @include text-desc;
+
+    color: var(--color-text-secondary);
   }
 }
 </style>

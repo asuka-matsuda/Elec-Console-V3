@@ -115,7 +115,11 @@ const getRowKey = (row: T, index: number): string | number => {
 .c-table-wrapper {
   overflow: auto;
   flex: 1;
+
   min-height: 0;
+
+  background-color: var(--surface-bg);
+  backdrop-filter: blur(var(--blur-sm));
 
   @include border-base;
 }
@@ -136,6 +140,8 @@ const getRowKey = (row: T, index: number): string | number => {
 
   td {
     @include text-mono;
+
+    color: var(--color-text-main);
   }
 
   tbody tr {

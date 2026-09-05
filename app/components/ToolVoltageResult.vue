@@ -149,13 +149,10 @@ const view = computed(() => formatVoltageResult(props.inputs, props.result))
   }
 
   &__main {
-    @include flex-start-stretch($direction: column);
+    @include flex-center-center($direction: column);
 
     flex: 1;
     gap: var(--space-1);
-    align-items: center;
-    justify-content: center;
-
     min-width: 0;
     padding: var(--space-2) var(--space-3);
 
@@ -171,7 +168,8 @@ const view = computed(() => formatVoltageResult(props.inputs, props.result))
   }
 
   &__main-value {
-    display: flex;
+    @include flex-display;
+
     gap: var(--space-2);
     align-items: baseline;
 
@@ -188,13 +186,11 @@ const view = computed(() => formatVoltageResult(props.inputs, props.result))
   }
 
   &__metrics {
-    @include flex-start-center;
+    @include flex-start-stretch;
 
     flex-flow: row wrap;
     flex-shrink: 0;
     gap: var(--space-2);
-    align-items: stretch;
-
     min-width: auto;
 
     @include cq("xs") {
@@ -204,16 +200,13 @@ const view = computed(() => formatVoltageResult(props.inputs, props.result))
   }
 
   .metric-card {
-    @include flex-start-stretch($direction: column);
+    @include flex-center-center($direction: column);
 
     flex: 1;
     gap: var(--space-1);
-    align-items: center;
-    justify-content: center;
-
     padding: var(--space-2);
 
-    @include border-base(var(--color-border), $width: 1px);
+    @include border-base(var(--color-border), $width: var(--border-width-base));
   }
 
   .metric-label {
@@ -222,8 +215,8 @@ const view = computed(() => formatVoltageResult(props.inputs, props.result))
 
   .metric-value {
     @include text-mono("sm", "bold");
+    @include flex-display;
 
-    display: flex;
     gap: var(--space-1);
     align-items: baseline;
     margin: 0;

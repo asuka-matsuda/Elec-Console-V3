@@ -1,7 +1,5 @@
-import { cableData } from '~/constants/data/cableData'
-import type { CableData } from '~/types/database'
 import type { HistoryEntry } from '~/types/history'
-import { formatCableName } from '~/utils/cable'
+import { findCableByIndexString, getCableDisplayName } from '~/utils/cable'
 
 import type { WeightCalcInputs, WeightCalcResult } from './weightCalcLogic'
 
@@ -11,20 +9,8 @@ export function mapWeightToHistory(
 ): Omit<HistoryEntry, 'id' | 'timestamp'> | null {
   if (result.error) return null
 
-  let cableDef: CableData | undefined = undefined
-
-  if (settings.cableIdx && settings.cableIdx.startsWith('idx_')) {
-    const idx = parseInt(settings.cableIdx.replace('idx_', ''), 10)
-
-    cableDef = cableData[idx]
-  }
-
-  const name = formatCableName(
-    cableDef
-    || ({ category: settings.category, size: '', cores: '' } as CableData),
-    true,
-    false,
-  )
+  const cableDef = findCableByIndexString(settings.cableIdx)
+  const name = getCableDisplayName(cableDef, { category: settings.category }, true, false)
 
   const inputs = [
     { label: '対象ケーブル', value: name },

@@ -197,7 +197,7 @@ provide('toolBasisModal', {
       max-height: 80vh;
       border-top: var(--border-width-base) solid var(--color-category-tool);
 
-      background: var(--color-main-bg);
+      background: var(--surface-bg-solid, var(--color-main-bg));
 
       @include state-base(
         var(--shadow-elevation-md),

@@ -55,7 +55,7 @@
         position: relative;
         z-index: 2;
         margin-left: calc(var(--border-width-base) * -1);
-        border-left: var(--border-width-base) solid var(--color-category-main);
+        border-left: var(--border-width-base) solid var(--theme-accent);
       }
     }
 

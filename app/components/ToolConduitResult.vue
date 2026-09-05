@@ -132,13 +132,10 @@ const vm = computed(() => formatConduitResult(props.result))
   }
 
   &__main {
-    @include flex-start-stretch($direction: column);
+    @include flex-center-center($direction: column);
 
     flex: 1;
     gap: var(--space-1);
-    align-items: center;
-    justify-content: center;
-
     min-width: 0;
     padding: var(--space-2) var(--space-3);
 
@@ -154,7 +151,8 @@ const vm = computed(() => formatConduitResult(props.result))
   }
 
   &__main-value {
-    display: flex;
+    @include flex-display;
+
     gap: var(--space-2);
     align-items: baseline;
 

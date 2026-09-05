@@ -77,7 +77,7 @@ const vm = computed(() =>
   gap: var(--space-card-gap);
 
   &__value-box {
-    @include flex-start-stretch($direction: column);
+    @include flex-start-center($direction: column);
 
     gap: var(--space-1);
   }

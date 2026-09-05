@@ -1,5 +1,6 @@
 import type { CableData, ConduitData } from '~/types/database'
 import type { MathStep } from '~/types/tools'
+import { findCableByIndexString, getEffectiveCableDiameter } from '~/utils/cable'
 import { buildFormula, hlOk, hlVal } from '~/utils/math'
 
 export interface CableInput {
@@ -41,24 +42,10 @@ export interface ConduitCalcResult {
  * ケーブル外径から1本あたりの断面積を計算する
  * VVFなどの平形（6.2×9.4 等）の場合は長径を直径として計算する（内線規程）
  */
-export function calculateCableArea(diameterStr: string): number {
-  if (!diameterStr) return 0
+export function calculateCableArea(diameterStr: string | number): number {
+  const diameter = getEffectiveCableDiameter(diameterStr)
 
-  let diameter: number
-
-  if (diameterStr.includes('×')) {
-    // VVFなどの平形ケーブルにおいては、安全側の設計とするため最大寸法を長径として扱う
-    const parts = diameterStr
-      .split('×')
-      .map((s: string) => parseFloat(s.trim()))
-
-    diameter = Math.max(...parts)
-  }
-  else {
-    diameter = parseFloat(diameterStr)
-  }
-
-  if (isNaN(diameter) || diameter <= 0) return 0
+  if (diameter <= 0) return 0
 
   const radius = diameter / 2
 
@@ -94,32 +81,14 @@ export function calculateConduitSize(
     if (input.count === null || isNaN(input.count) || input.count <= 0)
       continue
 
-    let cableDef: CableData | undefined
-
-    if (input.cableIdx && input.cableIdx.startsWith('idx_')) {
-      const idx = parseInt(input.cableIdx.replace('idx_', ''), 10)
-
-      cableDef = cableData[idx]
-    }
+    const cableDef = findCableByIndexString(input.cableIdx, cableData)
 
     if (!cableDef) {
       // 途中のデータなどが含まれている場合
       continue
     }
 
-    let diameter: number
-
-    if (cableDef.diameter.includes('×')) {
-      diameter = Math.max(
-        ...cableDef.diameter
-          .split('×')
-          .map((s: string) => parseFloat(s.trim())),
-      )
-    }
-    else {
-      diameter = parseFloat(cableDef.diameter)
-    }
-
+    const diameter = getEffectiveCableDiameter(cableDef.diameter)
     const singleArea = calculateCableArea(cableDef.diameter)
     const count = input.count || 0
 

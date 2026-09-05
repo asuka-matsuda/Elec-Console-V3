@@ -6,9 +6,12 @@
  */
 import { computed } from 'vue'
 
-import { cableData } from '~/constants/data/cableData'
 import type { CableInputItem } from '~/types/tools'
-import { getAvailableSizes, getCableCategories } from '~/utils/cable'
+import {
+  findCableByIndexString,
+  getAvailableSizes,
+  getCableCategories,
+} from '~/utils/cable'
 import { calculateCableArea } from '~/utils/tools/conduit/conduitCalcLogic'
 
 const model = defineModel<CableInputItem>({ required: true })
@@ -26,11 +29,7 @@ const categories = computed(() => getCableCategories())
 const availableSizes = computed(() => getAvailableSizes(model.value.category))
 
 const singleCableArea = computed(() => {
-  const cableIdxStr = model.value.cableIdx || ''
-
-  if (!cableIdxStr || !cableIdxStr.startsWith('idx_')) return null
-  const idx = parseInt(cableIdxStr.replace('idx_', ''), 10)
-  const def = cableData[idx]
+  const def = findCableByIndexString(model.value.cableIdx)
 
   if (!def) return null
 

@@ -110,7 +110,7 @@
   ); // 8px 〜 16px (標準)
 
   // [3] コンポーネント・フォーム間隔 (Components & Forms)
-  --space-form-row-gap: var(--space-3); // 12px (フォーム行間)
+  --space-form-row-gap: var(--space-4); // 16px (フォーム行間をゆったり確保)
   --space-form-col-gap: var(--space-4); // 16px (フォーム列間)
   --space-item-gap: var(--space-2); // 8px (アイテム間)
   --space-inline-gap: var(--space-1); // 4px (インライン要素間)
@@ -132,7 +132,7 @@
   // ==========================================================================
   // 5. カラーベース (HSL Raw Values) & セマンティックカラー
   // ==========================================================================
-  --color-category-main-base: 245 84% 67%;
+  --color-category-main-base: 238 60% 64%;
   --color-category-tool-base: 189 94% 43%;
   --color-category-database-base: 210 91% 60%;
   --color-category-reference-base: 271 91% 65%;
@@ -144,13 +144,13 @@
   --color-status-stopped-base: 240 4% 46%;
   --color-status-neutral-base: 240 5% 65%;
   --color-status-emphasis-base: 0 100% 75%;
-  --color-main-bg-base: 0 0% 0%;
+  --color-main-bg-base: 222 20% 6%;
   --color-overlay-base: 240 5% 90%;
-  --color-text-main-base: 240 5% 90%;
-  --color-text-secondary-base: 240 4% 83%;
-  --color-text-muted-base: 240 5% 65%;
-  --color-text-disabled-base: 240 5% 34%;
-  --color-border-main-base: 240 4% 16%;
+  --color-text-main-base: 220 20% 96%;
+  --color-text-secondary-base: 220 14% 74%;
+  --color-text-muted-base: 220 10% 54%;
+  --color-text-disabled-base: 220 8% 35%;
+  --color-border-main-base: 220 14% 18%;
 
   // セマンティックカラー定義
   --color-category-main: hsl(var(--color-category-main-base));
@@ -167,13 +167,16 @@
   --color-status-neutral: hsl(var(--color-status-neutral-base));
   --color-status-emphasis: hsl(var(--color-status-emphasis-base));
   --color-main-bg: hsl(var(--color-main-bg-base));
-  --surface-bg: transparent;
+  --surface-bg: hsl(222deg 18% 10% / 70%);
+  --surface-bg-elevated: hsl(222deg 16% 14% / 80%);
+  --surface-bg-solid: hsl(222deg 18% 10%);
   --color-overlay: hsl(var(--color-overlay-base));
   --color-text-main: hsl(var(--color-text-main-base));
   --color-text-secondary: hsl(var(--color-text-secondary-base));
   --color-text-muted: hsl(var(--color-text-muted-base));
   --color-text-disabled: hsl(var(--color-text-disabled-base));
   --color-border: hsl(var(--color-border-main-base));
+  --color-border-subtle: hsl(220deg 14% 14%);
 
   // ボーダー & Radius
   --border-width-base: 1px;

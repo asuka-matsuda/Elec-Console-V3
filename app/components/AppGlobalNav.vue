@@ -68,6 +68,8 @@ const closeSidebar = () => {
 
   width: var(--sidebar-width);
   height: 100dvh;
+  border-right: var(--border-width-base) solid var(--color-border);
+  background-color: var(--surface-bg-solid);
 
   @include state-base("md", var(--transition-slow));
 
@@ -120,7 +122,13 @@ const closeSidebar = () => {
     padding: var(--space-1) var(--space-3);
 
     :deep(.c-section-header__title) {
+      color: var(--color-text-main);
+      letter-spacing: var(--tracking-wider);
+    }
+
+    :deep(.c-section-header__icon) {
       color: var(--section-accent);
+      filter: drop-shadow(0 0 var(--blur-sm) var(--section-accent));
     }
   }
 

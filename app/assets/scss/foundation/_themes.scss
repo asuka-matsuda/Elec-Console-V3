@@ -13,24 +13,28 @@
   --icon-sb-right: #{$icon-chevron-right-light};
   --icon-sb-right-hover: #{$icon-chevron-right-light-hover};
 
-  // ライトモードカラー
-  --color-main-bg-base: 0 0% 100%;
-  --color-overlay-base: 220 25% 15%;
-  --color-text-main-base: 220 25% 15%;
-  --color-text-secondary-base: 240 6% 35%;
-  --color-text-muted-base: 240 5% 55%;
-  --color-text-disabled-base: 240 5% 75%;
-  --color-border-main-base: 240 6% 85%;
+  // ライトモードカラー（紙とインクのような高い視認性と上質さ）
+  --color-main-bg-base: 220 20% 98%;
+  --color-overlay-base: 222 25% 12%;
+  --color-text-main-base: 222 30% 13%;
+  --color-text-secondary-base: 222 16% 36%;
+  --color-text-muted-base: 222 12% 52%;
+  --color-text-disabled-base: 220 10% 75%;
+  --color-border-main-base: 220 16% 86%;
+  --surface-bg: hsl(0deg 0% 100% / 88%);
+  --surface-bg-elevated: hsl(0deg 0% 100%);
+  --surface-bg-solid: hsl(0deg 0% 100%);
+  --color-border-subtle: hsl(220deg 14% 92%);
 
-  // セマンティックカラー（白背景調整）
-  --color-category-main-base: 245 75% 55%;
-  --color-category-tool-base: 189 85% 35%;
-  --color-category-database-base: 210 80% 45%;
-  --color-category-reference-base: 271 80% 50%;
-  --color-category-management-base: 180 75% 30%;
-  --color-overlay-dark: hsl(240deg 10% 15% / 40%);
-  --color-overlay-light: hsl(0deg 0% 100% / 50%);
-  --shadow-color: hsl(220deg 25% 15% / 20%);
+  // セマンティックカラー（白背景でくっきり映えるディープインク調）
+  --color-category-main-base: 238 60% 48%;
+  --color-category-tool-base: 196 90% 30%;
+  --color-category-database-base: 215 85% 38%;
+  --color-category-reference-base: 268 70% 45%;
+  --color-category-management-base: 165 80% 28%;
+  --color-overlay-dark: hsl(220deg 20% 10% / 40%);
+  --color-overlay-light: hsl(0deg 0% 100% / 60%);
+  --shadow-color: hsl(222deg 25% 10% / 12%);
 
   color-scheme: light;
 }

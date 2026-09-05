@@ -24,7 +24,18 @@ withDefaults(
   @include text-desc;
 
   flex-shrink: 0;
+
   padding: var(--space-2) var(--space-3);
-  color: var(--color-status-warning);
+  border: var(--border-width-base) solid
+    color-mix(in srgb, var(--color-status-warning) 20%, transparent);
+  border-radius: var(--radius-sm);
+
+  color: color-mix(in srgb, var(--color-status-warning) 85%, var(--color-text-main));
+
+  background-color: color-mix(
+    in srgb,
+    var(--color-status-warning) 6%,
+    var(--surface-bg)
+  );
 }
 </style>

@@ -1,7 +1,5 @@
-import { cableData } from '~/constants/data/cableData'
-import type { CableData } from '~/types/database'
 import type { HistoryEntry } from '~/types/history'
-import { formatCableName } from '~/utils/cable'
+import { findCableByIndexString, getCableDisplayName } from '~/utils/cable'
 
 import type { CableInput, ConduitCalcResult } from './conduitCalcLogic'
 
@@ -15,19 +13,8 @@ export function mapConduitToHistory(
   const inputs = [{ label: '配管種類', value: conduitCategory }]
 
   inputCables.forEach((c, i) => {
-    let cableDef: CableData | undefined = undefined
-
-    if (c.cableIdx && c.cableIdx.startsWith('idx_')) {
-      const idx = parseInt(c.cableIdx.replace('idx_', ''), 10)
-
-      cableDef = cableData[idx]
-    }
-    const name = formatCableName(
-      cableDef
-      || ({ category: c.category, size: '', cores: '' } as unknown as CableData),
-      true,
-      false,
-    )
+    const cableDef = findCableByIndexString(c.cableIdx)
+    const name = getCableDisplayName(cableDef, { category: c.category }, true, false)
 
     inputs.push({
       label: `ケーブル ${i + 1}`,

@@ -1,6 +1,6 @@
-import { cableData } from '~/constants/data/cableData'
 import { systemData } from '~/constants/data/systemData'
 import type { SystemData, VoltageCalcInputs } from '~/types/voltage'
+import { findCableByIndexString } from '~/utils/cable'
 import { calculateDesignCurrent } from '~/utils/tools/voltage/calcVoltageEngine'
 import { voltageSchema } from '~/utils/tools/voltage/voltageSchema'
 
@@ -38,9 +38,8 @@ export function mapFormToVoltageCalcInputs(
   if (mode === 'size') {
     selectedCores = form.cores || null
   }
-  else if (rawSize && rawSize.startsWith('idx_')) {
-    const idx = parseInt(rawSize.replace('idx_', ''), 10)
-    const cable = cableData[idx]
+  else {
+    const cable = findCableByIndexString(rawSize)
 
     if (cable) {
       selectedSize = parseFloat(String(cable.size))
