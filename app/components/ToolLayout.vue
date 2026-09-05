@@ -152,9 +152,9 @@ provide('toolBasisModal', {
   min-height: 0;
   margin: 0 auto;
 
-  // 左右二等分（1:1）のメイングリッド: 左に入力、右に結果
+  // 左右分割（4:3）のメイングリッド: 左に入力、右に結果
   &__main {
-    @include grid(repeat(2, minmax(0, 1fr)));
+    @include grid(minmax(0, 4fr) minmax(0, 3fr));
 
     flex: 1;
     min-height: 0;
