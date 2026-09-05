@@ -153,7 +153,9 @@ const handleClose = () => {
 
   &__math {
     overflow-x: auto;
+    overflow-y: hidden;
     min-width: 0;
+    padding: var(--space-1) 0;
     outline: none;
 
     :deep(.katex-display) {
