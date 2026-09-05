@@ -1,21 +1,11 @@
 <script setup lang="ts">
-import type {
-  CalendarOptions,
-  DateSelectArg,
-  DayCellContentArg,
-  EventClickArg,
-  EventDropArg,
-} from '@fullcalendar/core'
-import jaLocale from '@fullcalendar/core/locales/ja'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import type { EventResizeDoneArg } from '@fullcalendar/interaction'
-import interactionPlugin from '@fullcalendar/interaction'
-import listPlugin from '@fullcalendar/list'
 import FullCalendar from '@fullcalendar/vue3'
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 
 import type { EventType } from '~/composables/portal/useCalendar'
 import { useCalendar } from '~/composables/portal/useCalendar'
+import { useCalendarEventForm } from '~/composables/portal/useCalendarEventForm'
+import { useCalendarOptions } from '~/composables/portal/useCalendarOptions'
 
 import CalendarEventBadge from './CalendarEventBadge.vue'
 import CalendarEventModal from './CalendarEventModal.vue'
@@ -35,116 +25,54 @@ const {
   updateSettings,
 } = useCalendar(props.siteId)
 
-const isModalOpen = ref(false)
-const isEditing = ref(false)
-const editingEventId = ref<string | null>(null)
-
-const form = ref({
-  title: '',
-  type: 'work',
-  start: '',
-  end: '',
-  allDay: false,
+const {
+  isModalOpen,
+  isEditing,
+  form,
+  openCreateModal,
+  openEditModal,
+  saveEvent,
+  removeEvent,
+} = useCalendarEventForm({
+  settings,
+  createEvent,
+  updateEvent,
+  deleteEvent,
 })
 
-const openCreateModal = (startStr: string, endStr: string, allDay: boolean) => {
-  isEditing.value = false
-  editingEventId.value = null
-
-  const finalStart = startStr
-  let finalEnd = endStr
-
-  if (allDay && endStr) {
-    const d = new Date(endStr)
-
-    d.setDate(d.getDate() - 1)
-    finalEnd = d.toISOString().split('T')[0] || ''
-  }
-
-  form.value = {
-    title: '',
-    type: settings.value?.eventTypes?.[0]?.id || 'work',
-    start: finalStart,
-    end: finalEnd || finalStart,
-    allDay,
-  }
-  isModalOpen.value = true
-}
-
-const openEditModal = (calEvent: {
-  id: string
-  title: string
-  startStr: string
-  endStr: string
-  allDay: boolean
-  extendedProps: { type?: string }
-}) => {
-  isEditing.value = true
-  editingEventId.value = calEvent.id
-
-  const finalStart = calEvent.startStr
-  let finalEnd = calEvent.endStr
-
-  if (calEvent.allDay && calEvent.endStr) {
-    const d = new Date(calEvent.endStr)
-
-    d.setDate(d.getDate() - 1)
-    finalEnd = d.toISOString().split('T')[0] || ''
-  }
-
-  form.value = {
-    title: calEvent.title,
-    type: calEvent.extendedProps.type || 'work',
-    start: finalStart,
-    end: finalEnd || finalStart,
-    allDay: calEvent.allDay,
-  }
-  isModalOpen.value = true
-}
-
-const closeModal = () => {
-  isModalOpen.value = false
-}
-
-const saveEvent = async (savedData: typeof form.value) => {
-  let finalEnd: string | undefined = savedData.end
-
-  if (savedData.allDay && savedData.start && savedData.end) {
-    if (savedData.start === savedData.end) {
-      finalEnd = undefined
-    }
-    else {
-      const endDate = new Date(savedData.end)
-
-      endDate.setDate(endDate.getDate() + 1)
-      finalEnd = endDate.toISOString().split('T')[0]
-    }
-  }
-
-  try {
-    if (isEditing.value && editingEventId.value) {
-      await updateEvent(editingEventId.value, {
-        title: savedData.title,
-        type: savedData.type,
-        start: savedData.start,
-        end: finalEnd,
-        allDay: savedData.allDay,
-      })
-    }
-    else {
-      await createEvent({
-        title: savedData.title,
-        type: savedData.type,
-        start: savedData.start,
-        end: finalEnd,
-        allDay: savedData.allDay,
-      })
-    }
-  }
-  finally {
-    isModalOpen.value = false
-  }
-}
+const {
+  fullCalendarRef,
+  currentTitle,
+  currentView,
+  calendarOptions,
+  handlePrev,
+  handleNext,
+  handleToday,
+  handleViewChange,
+} = useCalendarOptions({
+  events,
+  settings,
+  onSelectDate: (selectInfo) => {
+    openCreateModal(selectInfo.startStr, selectInfo.endStr, selectInfo.allDay)
+    selectInfo.view.calendar.unselect()
+  },
+  onEventClick: (clickInfo) => {
+    openEditModal(clickInfo.event)
+  },
+  onEventDrop: async (dropInfo) => {
+    await updateEvent(dropInfo.event.id, {
+      start: dropInfo.event.startStr,
+      end: dropInfo.event.endStr || undefined,
+      allDay: dropInfo.event.allDay,
+    })
+  },
+  onEventResize: async (resizeInfo) => {
+    await updateEvent(resizeInfo.event.id, {
+      start: resizeInfo.event.startStr,
+      end: resizeInfo.event.endStr || undefined,
+    })
+  },
+})
 
 const isTypeSettingsOpen = ref(false)
 
@@ -152,122 +80,6 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
   await updateSettings({ eventTypes: newTypes })
   events.value = [...events.value]
 }
-
-const { askConfirm } = useModal()
-
-const removeEvent = async () => {
-  if (!editingEventId.value) return
-  const targetId = editingEventId.value
-
-  const isConfirmed = await askConfirm({
-    title: '予定の削除',
-    message: `「${form.value.title || 'この予定'}」を削除してもよろしいですか？`,
-    confirmText: '削除する',
-    intent: 'danger',
-  })
-
-  if (isConfirmed) {
-    await deleteEvent(targetId)
-    closeModal()
-  }
-}
-
-const fullCalendarRef = ref<InstanceType<typeof FullCalendar> | null>(null)
-const currentTitle = ref('')
-const currentView = ref<'dayGridMonth' | 'listMonth'>('dayGridMonth')
-
-const handlePrev = () => fullCalendarRef.value?.getApi().prev()
-const handleNext = () => fullCalendarRef.value?.getApi().next()
-const handleToday = () => fullCalendarRef.value?.getApi().today()
-const handleViewChange = (view: 'dayGridMonth' | 'listMonth') => {
-  currentView.value = view
-  fullCalendarRef.value?.getApi().changeView(view)
-}
-
-const formattedEvents = computed(() => {
-  return events.value.map((evt) => {
-    const typeDef = settings.value?.eventTypes?.find(t => t.id === evt.type)
-    const color = typeDef?.color || '#00f0ff'
-
-    return {
-      ...evt,
-      borderColor: color,
-      backgroundColor: 'transparent',
-      textColor: 'inherit',
-      extendedProps: {
-        type: evt.type,
-        themeColor: color,
-      },
-    }
-  })
-})
-
-const calendarOptions = computed(() => ({
-  plugins: [dayGridPlugin, interactionPlugin, listPlugin],
-  initialView: 'dayGridMonth',
-  locale: jaLocale,
-  events: formattedEvents.value,
-  editable: true,
-  selectable: true,
-  headerToolbar: false,
-  dayMaxEvents: 3,
-  moreLinkClick: 'popover' as const,
-  moreLinkContent: (args: { num: number }) => `+${args.num}件`,
-  datesSet: (arg: { view: { title: string, type: string } }) => {
-    currentTitle.value = arg.view.title
-    currentView.value = arg.view.type as 'dayGridMonth' | 'listMonth'
-  },
-  height: 'auto',
-  dayHeaderClassNames: (arg: { date: Date }) => {
-    const classes = []
-
-    if (arg.date.getDay() === 0) classes.push('is-sunday')
-    if (arg.date.getDay() === 6) classes.push('is-saturday')
-
-    return classes
-  },
-  dayCellClassNames: (arg: DayCellContentArg) => {
-    const classes = []
-    const isoDate
-      = arg.date.getFullYear()
-        + '-'
-        + String(arg.date.getMonth() + 1).padStart(2, '0')
-        + '-'
-        + String(arg.date.getDate()).padStart(2, '0')
-
-    if (arg.date.getDay() === 0) classes.push('is-sunday')
-    if (arg.date.getDay() === 6) classes.push('is-saturday')
-    if (settings.value?.customHolidays?.includes(isoDate))
-      classes.push('is-holiday')
-
-    return classes
-  },
-
-  select: (selectInfo: DateSelectArg) => {
-    openCreateModal(selectInfo.startStr, selectInfo.endStr, selectInfo.allDay)
-    selectInfo.view.calendar.unselect()
-  },
-  eventClick: (clickInfo: EventClickArg) => {
-    openEditModal(clickInfo.event)
-  },
-  eventDrop: async (dropInfo: EventDropArg) => {
-    await updateEvent(dropInfo.event.id, {
-      start: dropInfo.event.startStr,
-      end: dropInfo.event.endStr || undefined,
-      allDay: dropInfo.event.allDay,
-    })
-  },
-  eventResize: async (resizeInfo: EventResizeDoneArg) => {
-    await updateEvent(resizeInfo.event.id, {
-      start: resizeInfo.event.startStr,
-      end: resizeInfo.event.endStr || undefined,
-    })
-  },
-}))
-
-const typedCalendarOptions = computed(
-  () => calendarOptions.value as CalendarOptions,
-)
 </script>
 
 <template>
@@ -283,7 +95,7 @@ const typedCalendarOptions = computed(
     />
 
     <AppPanel class="c-calendar" variant="simple">
-      <FullCalendar ref="fullCalendarRef" :options="typedCalendarOptions">
+      <FullCalendar ref="fullCalendarRef" :options="calendarOptions">
         <template #eventContent="{ event }">
           <CalendarEventBadge
             :title="event.title"
