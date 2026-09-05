@@ -7,6 +7,11 @@ import { computed, ref } from 'vue'
 
 import { useDbFilter } from '~/composables/useDbFilter'
 import { glossaryData } from '~/constants/data/glossaryData'
+import {
+  collectAvailableKanaRows,
+  filterByKana,
+  sortByKana,
+} from '~/utils/kana'
 
 useHead({
   title: '用語集',
@@ -24,57 +29,15 @@ const {
 
 const activeKanas = ref<string[]>([])
 
-function getKanaRow(kanaStr: string) {
-  if (!kanaStr) return 'other'
-  const firstChar = kanaStr.charAt(0)
-
-  if (/[ぁ-おア-オ]/.test(firstChar)) return 'a'
-  if (/[か-こカ-コが-ごガ-ゴ]/.test(firstChar)) return 'k'
-  if (/[さ-そサ-ソざ-ぞザ-ゾ]/.test(firstChar)) return 's'
-  if (/[た-とタ-トだ-どダ-ド]/.test(firstChar)) return 't'
-  if (/[な-のナ-ノ]/.test(firstChar)) return 'n'
-  if (
-    /[\u306f-\u307b\u30cf-\u30db\u3070-\u307c\u30d0-\u30dc\u3071-\u307d\u30d1-\u30dd]/.test(
-      firstChar,
-    )
-  )
-    return 'h'
-  if (/[\u307e-\u3082\u30de-\u30e2]/.test(firstChar)) return 'm'
-  if (/[や-よヤ-ヨ]/.test(firstChar)) return 'y'
-  if (/[ら-ろラ-ロ]/.test(firstChar)) return 'r'
-  if (/[わ-んワ-ン]/.test(firstChar)) return 'w'
-
-  return 'other'
-}
-
 const filteredGlossary = computed(() => {
-  let result = [...baseFilteredGlossary.value].sort((a, b) =>
-    (a.kana || '').localeCompare(b.kana || '', 'ja'),
-  )
+  const sorted = sortByKana(baseFilteredGlossary.value, item => item.kana)
 
-  if (activeKanas.value.length > 0) {
-    result = result.filter((item) => {
-      const row = getKanaRow(item.kana || '')
-
-      return (
-        activeKanas.value.includes(row)
-        || (activeKanas.value.includes('w') && row === 'other')
-      )
-    })
-  }
-
-  return result
+  return filterByKana(sorted, activeKanas.value, item => item.kana)
 })
 
-const availableRows = computed(() => {
-  const rows = new Set<string>()
-
-  baseFilteredGlossary.value.forEach((item) => {
-    rows.add(getKanaRow(item.kana || ''))
-  })
-
-  return rows
-})
+const availableRows = computed(() =>
+  collectAvailableKanaRows(baseFilteredGlossary.value, item => item.kana),
+)
 
 const categoryColorMap: Record<string, string> = {
   電気: 'var(--trade-color-electric)',
