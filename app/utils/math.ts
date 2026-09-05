@@ -139,6 +139,13 @@ export function parseLegend(
   if (!legendArray) return []
 
   return legendArray.map((leg) => {
+    if (!leg.includes(':')) {
+      return {
+        name: leg.trim(),
+        renderedSymbol: renderMath('\\text{※}', false),
+      }
+    }
+
     const parts = leg.split(':')
     let rawSymbol = parts[0]?.trim() || ''
 

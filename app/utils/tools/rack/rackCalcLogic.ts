@@ -196,7 +196,8 @@ export function generateMathData(
     const legendList = [
       '\\(W_{strong}\\): 強電ケーブルの必要幅 [mm]',
       '\\(D\\): ケーブル外径 [mm]',
-      '※ 1.2は余裕係数、60は両端の離隔距離',
+      '\\(1.2\\): 余裕係数 (+20%)',
+      '\\(60\\): 両端の離隔距離 [mm]',
     ]
 
     if (lS > 1) legendList.push(`\\(L\\): 段積み数 [段]`)
@@ -256,6 +257,8 @@ export function generateMathData(
     const legendList = [
       '\\(W_{weak}\\): 弱電ケーブルの必要幅 [mm]',
       '\\(D\\): ケーブル外径 [mm]',
+      '\\(0.6\\): 集約低減係数',
+      '\\(120\\): 端部・セパレータ離隔距離 [mm]',
     ]
 
     if (lW > 1) legendList.push(`\\(L\\): 段積み数 [段]`)

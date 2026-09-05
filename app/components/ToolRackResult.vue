@@ -39,7 +39,7 @@ const vm = computed(() =>
 
       <template #value>
         <div class="c-rack-result__value-box">
-          <div class="c-rack-result__val">
+          <div class="value-text c-rack-result__val">
             {{ vm.displaySize }}
           </div>
         </div>

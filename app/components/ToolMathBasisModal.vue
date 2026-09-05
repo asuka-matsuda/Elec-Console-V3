@@ -154,6 +154,7 @@ const handleClose = () => {
   &__math {
     overflow-x: auto;
     min-width: 0;
+    outline: none;
 
     :deep(.katex-display) {
       margin: 0;
@@ -191,8 +192,8 @@ const handleClose = () => {
 
   gap: var(--space-1);
 
-  min-width: 180px;
-  max-width: 260px;
+  min-width: 200px;
+  max-width: 320px;
   padding-left: var(--space-3);
   border-left: 1px solid var(--color-border);
 
@@ -211,6 +212,8 @@ const handleClose = () => {
     align-items: baseline;
 
     dt {
+      white-space: nowrap;
+
       &::after {
         content: ":";
       }
@@ -222,6 +225,9 @@ const handleClose = () => {
 
     dd {
       @include text-meta("2xs", "regular");
+
+      min-width: 0;
+      word-break: break-word;
     }
   }
 }

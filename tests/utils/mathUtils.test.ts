@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { buildFormula, formatVal, hlNg, hlOk, hlVal, TEX_DANGER_CLASS, TEX_HL_CLASS, TEX_SUCCESS_CLASS } from '~/utils/math'
+import { buildFormula, formatVal, hlNg, hlOk, hlVal, parseLegend, TEX_DANGER_CLASS, TEX_HL_CLASS, TEX_SUCCESS_CLASS } from '~/utils/math'
 
 describe('mathUtils', () => {
   describe('hlVal', () => {
@@ -89,6 +89,29 @@ describe('mathUtils', () => {
       // ^(\d+) becomes }^$1\text{
       // mm^2 -> mm}^2\text{
       expect(tex).toBe('\\begin{aligned} A &= B \\times C \\\\ &= 100 \\text{ [mm}^2\\text{]} \\end{aligned}')
+    })
+  })
+
+  describe('parseLegend', () => {
+    it('should parse valid colon-separated legend items', () => {
+      const items = parseLegend(['\\(W_{strong}\\): 強電幅 [mm]', 'D: 外径 [mm]'])
+
+      expect(items).toHaveLength(2)
+      expect(items[0]?.name).toBe('強電幅 [mm]')
+      expect(items[1]?.name).toBe('外径 [mm]')
+    })
+
+    it('should fallback gracefully when items lack colons', () => {
+      const items = parseLegend(['※ 注意事項のテキストです'])
+
+      expect(items).toHaveLength(1)
+      expect(items[0]?.name).toBe('※ 注意事項のテキストです')
+      expect(items[0]?.renderedSymbol).toContain('※')
+    })
+
+    it('should handle empty or undefined legend array', () => {
+      expect(parseLegend(undefined)).toEqual([])
+      expect(parseLegend([])).toEqual([])
     })
   })
 })
