@@ -25,13 +25,13 @@ defineProps<{
       <template v-for="field in formFields" :key="field.id">
         <Field
           v-if="!field.showIf || field.showIf()"
-          v-slot="{ errorMessage, handleChange, handleBlur }"
+          v-slot="{ errorMessage, meta, handleChange, handleBlur }"
           v-model="form[field.id]"
           :name="field.id"
         >
           <AppFormGroup
             :label="field.label"
-            :error="errorMessage"
+            :error="meta.touched ? errorMessage : undefined"
             :class="`js-field-${field.id}`"
           >
             <!-- 1. Select 単体 -->
@@ -41,7 +41,7 @@ defineProps<{
               :options="field.options || []"
               :placeholder="field.placeholder"
               :disabled="field.disabled"
-              :error="!!errorMessage"
+              :error="meta.touched && !!errorMessage"
               @update:model-value="handleChange"
               @blur="handleBlur"
             />
@@ -54,7 +54,7 @@ defineProps<{
                 :placeholder="field.placeholder"
                 :min="field.min"
                 :step="field.step"
-                :error="!!errorMessage"
+                :error="meta.touched && !!errorMessage"
                 @blur="handleBlur"
               />
               <template #append>
@@ -62,6 +62,7 @@ defineProps<{
                   v-if="field.secondaryId"
                   v-slot="{
                     errorMessage: secError,
+                    meta: secMeta,
                     handleChange: secChange,
                     handleBlur: secBlur,
                   }"
@@ -71,7 +72,7 @@ defineProps<{
                   <AppSelect
                     v-model="form[field.secondaryId!]"
                     :options="field.secondaryOptions || []"
-                    :error="!!secError"
+                    :error="secMeta.touched && !!secError"
                     @update:model-value="secChange"
                     @blur="secBlur"
                   />
@@ -86,7 +87,7 @@ defineProps<{
                 type="number"
                 :placeholder="field.placeholder"
                 :min="field.min"
-                :error="!!errorMessage"
+                :error="meta.touched && !!errorMessage"
                 @blur="handleBlur"
               />
               <template #append>

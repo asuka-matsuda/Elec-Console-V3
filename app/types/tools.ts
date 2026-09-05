@@ -13,5 +13,6 @@ export interface CableInputItem {
 
 export interface ConduitInputData {
   conduitCategory: string
+  customFillRate?: number | null
   inputCables: CableInputItem[]
 }

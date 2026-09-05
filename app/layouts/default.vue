@@ -85,7 +85,6 @@ const { currentUser, logout } = useAuth()
 
   @include flex-start-stretch($direction: column);
 
-  container-type: inline-size;
   overflow-y: auto;
   flex: 1;
   gap: 0;

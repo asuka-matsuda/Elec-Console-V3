@@ -237,6 +237,7 @@ provide('toolBasisModal', {
   &__results-inner {
     @include flex-start-stretch($direction: column);
 
+    container-type: inline-size;
     flex: 1;
     min-height: 0;
 

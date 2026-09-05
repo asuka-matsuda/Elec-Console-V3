@@ -6,11 +6,45 @@ export interface DropdownOption {
   value: string
 }
 
+export const STRONG_CURRENT_CATEGORIES = [
+  'VVF',
+  'IV',
+  'CV',
+  'CVT',
+  '6.6kV CVT',
+  'VCTF',
+] as const
+
+export const WEAK_CURRENT_CATEGORIES = [
+  'CPEV',
+  'F-CPEV',
+  'HP',
+  'AE',
+  '同軸',
+] as const
+
 /**
  * 重複のないケーブルカテゴリ（種類）のリストを取得する
+ * filter を指定することで強電・弱電などのカテゴリに絞り込めます
  */
-export function getCableCategories(): DropdownOption[] {
-  const cats = [...new Set(cableData.map(c => c.category))]
+export function getCableCategories(
+  filter?: 'strong' | 'weak' | readonly string[] | string[],
+): DropdownOption[] {
+  let cats = [...new Set(cableData.map(c => c.category))]
+
+  if (filter === 'strong') {
+    cats = cats.filter(c =>
+      (STRONG_CURRENT_CATEGORIES as readonly string[]).includes(c),
+    )
+  }
+  else if (filter === 'weak') {
+    cats = cats.filter(c =>
+      (WEAK_CURRENT_CATEGORIES as readonly string[]).includes(c),
+    )
+  }
+  else if (Array.isArray(filter)) {
+    cats = cats.filter(c => filter.includes(c))
+  }
 
   return cats.map(c => ({ label: c, value: c }))
 }

@@ -45,26 +45,11 @@ const conduitCategoryOptions = computed(() => {
     </template>
 
     <template #results>
-      <ToolConduitResult :result="result" />
+      <ToolConduitResult :result="result" :inputs="inputs" />
     </template>
 
     <template #basis>
-      <ToolMathBasisModal :steps="mathSteps">
-        <div class="p-basis-note">
-          <strong>内線規程（勧告）</strong><br />
-          3110-5
-          管の屈曲が少なく、容易に電線を引き入れ及び引き替えることができる場合（48％）<br />
-          3110-6 異なる太さの絶縁電線を同一管内に収める場合（32％）
-        </div>
-      </ToolMathBasisModal>
+      <ToolMathBasisModal :steps="mathSteps" />
     </template>
   </ToolLayout>
 </template>
-
-<style scoped lang="scss">
-.p-basis-note {
-  @include text-meta;
-
-  color: var(--color-status-warning);
-}
-</style>

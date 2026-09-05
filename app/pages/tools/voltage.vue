@@ -7,7 +7,7 @@ import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
 import { computed } from 'vue'
 
-import { useVoltageCalculator } from '~/composables/tools/useVoltageCalculator'
+import { defaultForm, useVoltageCalculator } from '~/composables/tools/useVoltageCalculator'
 import { getVoltageFormFields } from '~/constants/config/voltageFormConfig'
 import { voltageSchema } from '~/utils/tools/voltage/voltageSchema'
 
@@ -25,12 +25,23 @@ const {
   mathSteps,
   openResetModal,
   handleSaveHistory,
+  isSinglePhase,
 } = useVoltageCalculator()
 
-useForm({
+const { resetForm: resetVeeValidate } = useForm({
   validationSchema: toTypedSchema(voltageSchema),
   initialValues: form.value,
 })
+
+const handleReset = async () => {
+  const confirmed = await openResetModal()
+
+  if (confirmed) {
+    resetVeeValidate({
+      values: JSON.parse(JSON.stringify(defaultForm)),
+    })
+  }
+}
 
 const formFields = computed(() =>
   getVoltageFormFields(
@@ -38,6 +49,7 @@ const formFields = computed(() =>
     () => isSizeCalcMode.value,
     () => computedAvailableSizes.value,
     () => !!form.value.cableType,
+    () => isSinglePhase.value,
   ),
 )
 </script>
@@ -47,7 +59,7 @@ const formFields = computed(() =>
     results-title="計算結果"
     :save-disabled="!calcInputs.isReady"
     :save-function="handleSaveHistory"
-    @reset="openResetModal"
+    @reset="handleReset"
   >
     <template #inputs>
       <ToolVoltageInput v-model="form" :form-fields="formFields" />

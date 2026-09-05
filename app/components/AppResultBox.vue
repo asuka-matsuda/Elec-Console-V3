@@ -86,6 +86,11 @@ const resolvedStatus = computed(() => {
 
   &.is-sm {
     padding: var(--space-1) var(--space-2);
+
+    :deep(.c-result-box__val),
+    :deep(.value-text) {
+      @include text-mono("2xl", "bold");
+    }
   }
 
   &__label {
@@ -100,6 +105,11 @@ const resolvedStatus = computed(() => {
 
     gap: var(--space-2);
     width: 100%;
+
+    :deep(.c-result-box__val),
+    :deep(.value-text) {
+      @include text-mono("3xl", "bold");
+    }
   }
 
   &__footer {

@@ -2,10 +2,9 @@
 /**
  * ToolRackInput
  * ケーブルラック選定ツールの条件入力コンポーネントです。
- * ラック深さ・セパレータ幅および強電・弱電エリアの条件を管理します。
+ * 強電／弱電タブ切替、ラック高さ、相乗り必要幅、およびケーブル条件を管理します。
  */
-import { computed } from 'vue'
-
+import { rackModeOptions } from '~/constants/rackConstants'
 import type { RackInputs } from '~/utils/tools/rack/rackMapper'
 
 const inputs = defineModel<RackInputs>({ required: true })
@@ -16,53 +15,19 @@ const emit = defineEmits<{
   'add-weak-cable': []
   'remove-weak-cable': [id: string]
 }>()
-
-const areaSections = computed(() => [
-  {
-    key: 'strong' as const,
-    title: '強電エリア',
-    cablesTitle: '強電ケーブルリスト',
-    addButtonText: '強電ケーブルを追加',
-    enabled: inputs.value.isStrong,
-    toggle: (val?: boolean) => {
-      inputs.value.isStrong = !!val
-    },
-    get layers() {
-      return inputs.value.lStrong
-    },
-    set layers(val: number | null) {
-      inputs.value.lStrong = val
-    },
-    cables: inputs.value.strongCablesUI,
-    onAdd: () => emit('add-strong-cable'),
-    onRemove: (id: string) => emit('remove-strong-cable', id),
-  },
-  {
-    key: 'weak' as const,
-    title: '弱電エリア',
-    cablesTitle: '弱電ケーブルリスト',
-    addButtonText: '弱電ケーブルを追加',
-    enabled: inputs.value.isWeak,
-    toggle: (val?: boolean) => {
-      inputs.value.isWeak = !!val
-    },
-    get layers() {
-      return inputs.value.lWeak
-    },
-    set layers(val: number | null) {
-      inputs.value.lWeak = val
-    },
-    cables: inputs.value.weakCablesUI,
-    onAdd: () => emit('add-weak-cable'),
-    onRemove: (id: string) => emit('remove-weak-cable', id),
-  },
-])
 </script>
 
 <template>
   <div class="c-rack-input">
+    <!-- 強電／弱電 タブ切り替え -->
+    <AppRadioGroup
+      v-model="inputs.mode"
+      :options="rackModeOptions"
+    />
+
+    <!-- 基本条件（ラック高さ、相乗り必要幅） -->
     <div class="c-rack-input__grid">
-      <AppFormGroup label="ラック深さ (H)">
+      <AppFormGroup label="ラック高さ (H)">
         <AppInputGroup>
           <AppInput
             v-model="inputs.rackHeight"
@@ -76,15 +41,13 @@ const areaSections = computed(() => [
         </AppInputGroup>
       </AppFormGroup>
 
-      <AppFormGroup
-        v-if="inputs.isStrong && inputs.isWeak"
-        label="セパレータ幅"
-      >
+      <AppFormGroup :label="inputs.mode === 'strong' ? '弱電必要幅' : '強電必要幅'">
         <AppInputGroup>
           <AppInput
-            v-model="inputs.separatorWidth"
+            v-model="inputs.otherWidth"
             type="number"
             min="0"
+            placeholder="相乗り時に指定"
           />
           <template #append>
             <span class="c-input-addon">mm</span>
@@ -93,51 +56,72 @@ const areaSections = computed(() => [
       </AppFormGroup>
     </div>
 
-    <!-- 強電／弱電エリア -->
+    <!-- ケーブル条件パネル -->
     <AppPanel
-      v-for="section in areaSections"
-      :key="section.key"
-      :title="section.title"
+      :title="inputs.mode === 'strong' ? '強電ケーブル条件' : '弱電ケーブル条件'"
       size="sm"
     >
-      <template #actions>
-        <AppToggle
-          :model-value="section.enabled"
-          label=""
-          @update:model-value="section.toggle"
-        />
-      </template>
+      <AppFormGroup label="段積み数">
+        <AppInputGroup>
+          <AppInput
+            v-if="inputs.mode === 'strong'"
+            v-model="inputs.lStrong"
+            type="number"
+            min="1"
+          />
+          <AppInput
+            v-else
+            v-model="inputs.lWeak"
+            type="number"
+            min="1"
+          />
+          <template #append>
+            <span class="c-input-addon">段</span>
+          </template>
+        </AppInputGroup>
+      </AppFormGroup>
 
-      <template v-if="section.enabled">
-        <AppFormGroup label="段積み数">
-          <AppInputGroup>
-            <AppInput v-model="section.layers" type="number" min="1" />
-            <template #append>
-              <span class="c-input-addon">段</span>
-            </template>
-          </AppInputGroup>
-        </AppFormGroup>
+      <section class="c-rack-input__section">
+        <h4 class="c-rack-input__section-title">
+          {{ inputs.mode === 'strong' ? '強電ケーブルリスト' : '弱電ケーブルリスト' }}
+        </h4>
 
-        <section class="c-rack-input__section">
-          <h4 class="c-rack-input__section-title">
-            {{ section.cablesTitle }}
-          </h4>
+        <template v-if="inputs.mode === 'strong'">
           <ToolCableItemCard
-            v-for="(cable, index) in section.cables"
+            v-for="(cable, index) in inputs.strongCablesUI"
             :key="cable.id"
-            v-model="section.cables[index]!"
+            v-model="inputs.strongCablesUI[index]!"
             :index="index"
-            :removable="section.cables.length > 1"
-            @remove="section.onRemove(cable.id)"
+            :filter="'strong'"
+            :removable="inputs.strongCablesUI.length > 1"
+            @remove="emit('remove-strong-cable', cable.id)"
           />
           <AppButton
             variant="secondary"
-            @click="section.onAdd"
+            @click="emit('add-strong-cable')"
           >
-            <AppIcon name="plus" /> {{ section.addButtonText }}
+            <AppIcon name="plus" /> 強電ケーブルを追加
           </AppButton>
-        </section>
-      </template>
+        </template>
+
+        <template v-else>
+          <ToolCableItemCard
+            v-for="(cable, index) in inputs.weakCablesUI"
+            :key="cable.id"
+            v-model="inputs.weakCablesUI[index]!"
+            :index="index"
+            :filter="'weak'"
+            :removable="inputs.weakCablesUI.length > 1"
+            @remove="emit('remove-weak-cable', cable.id)"
+          />
+          <AppButton
+            variant="secondary"
+            @click="emit('add-weak-cable')"
+          >
+            <AppIcon name="plus" /> 弱電ケーブルを追加
+          </AppButton>
+        </template>
+      </section>
     </AppPanel>
   </div>
 </template>

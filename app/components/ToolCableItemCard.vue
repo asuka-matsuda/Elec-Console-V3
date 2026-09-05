@@ -4,7 +4,7 @@
  * ケーブルの種類、サイズ、本数を入力するためのカードコンポーネントです。
  * 配管サイズ選定およびケーブルラック選定で共通して使用されます。
  */
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 
 import type { CableInputItem } from '~/types/tools'
 import {
@@ -16,17 +16,35 @@ import { calculateCableArea } from '~/utils/tools/conduit/conduitCalcLogic'
 
 const model = defineModel<CableInputItem>({ required: true })
 
-defineProps<{
+const props = defineProps<{
   index: number
   removable?: boolean
+  filter?: 'strong' | 'weak' | readonly string[] | string[]
 }>()
 
 const emit = defineEmits<{
   (e: 'remove'): void
 }>()
 
-const categories = computed(() => getCableCategories())
+const categories = computed(() => getCableCategories(props.filter))
 const availableSizes = computed(() => getAvailableSizes(model.value.category))
+
+watch(
+  () => props.filter,
+  () => {
+    if (model.value.category) {
+      const valid = categories.value.some(c => c.value === model.value.category)
+
+      if (!valid) {
+        model.value = {
+          ...model.value,
+          category: '',
+          cableIdx: '',
+        }
+      }
+    }
+  },
+)
 
 const singleCableArea = computed(() => {
   const def = findCableByIndexString(model.value.cableIdx)

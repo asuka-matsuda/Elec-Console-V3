@@ -27,7 +27,10 @@ export function mapFormToVoltageCalcInputs(
   const sys = systemData.find(s => s.id === form.phase) || null
   const loadVal = form.loadValue
   const loadUnit = form.loadUnit
-  const pf = form.powerFactor ? parseFloat(form.powerFactor) : null
+  const isSinglePhase = sys?.id.startsWith('1P')
+  const pf = isSinglePhase
+    ? 1.0
+    : (form.powerFactor ? parseFloat(form.powerFactor) : null)
   const L = form.distance
   const cableType = form.cableType || ''
   const rawSize = form.fixedSize || ''

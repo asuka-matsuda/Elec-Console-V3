@@ -21,13 +21,30 @@ const emit = defineEmits<{
 
 <template>
   <div class="c-conduit-input">
-    <AppFormGroup label="対象の配管種類">
-      <AppSelect
-        v-model="inputs.conduitCategory"
-        :options="categoryOptions"
-        placeholder="選択してください"
-      />
-    </AppFormGroup>
+    <div class="c-conduit-input__header-grid">
+      <AppFormGroup label="対象の配管種類" class="c-conduit-input__category">
+        <AppSelect
+          v-model="inputs.conduitCategory"
+          :options="categoryOptions"
+          placeholder="選択してください"
+        />
+      </AppFormGroup>
+
+      <AppFormGroup label="占積率" class="c-conduit-input__fill-rate">
+        <AppInputGroup>
+          <AppInput
+            v-model.number="inputs.customFillRate"
+            type="number"
+            min="1"
+            max="100"
+            placeholder="80"
+          />
+          <template #append>
+            <span class="c-input-addon">%</span>
+          </template>
+        </AppInputGroup>
+      </AppFormGroup>
+    </div>
 
     <section class="c-conduit-input__section">
       <h4 class="c-conduit-input__title">
@@ -58,6 +75,16 @@ const emit = defineEmits<{
   @include flex-start-stretch($direction: column);
 
   gap: var(--space-form-row-gap);
+
+  &__header-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.8fr) minmax(130px, 1fr);
+    gap: var(--space-form-row-gap);
+
+    @include mq("sm") {
+      grid-template-columns: 1fr;
+    }
+  }
 
   &__section {
     @include flex-start-stretch($direction: column);

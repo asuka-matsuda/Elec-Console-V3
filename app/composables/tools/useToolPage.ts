@@ -77,6 +77,8 @@ export function useToolPage<InputType, ResultType>(
     if (isConfirmed) {
       resetInputs()
     }
+
+    return isConfirmed
   }
   const confirmReset = () => {
     resetInputs()

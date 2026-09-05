@@ -21,9 +21,9 @@ export const defaultForm: VoltageFormState = {
   cableType: '',
   cores: '',
   fixedSize: '',
-  parallel: '',
-  derating: '',
-  ambientTemp: '',
+  parallel: '1',
+  derating: '1.0',
+  ambientTemp: 'none',
   targetDrop: '',
 }
 
@@ -81,6 +81,21 @@ export function useVoltageCalculator() {
     },
   )
 
+  const isSinglePhase = computed(() => {
+    return form.value.phase ? form.value.phase.startsWith('1P') : false
+  })
+
+  // 配電方式の変更を監視し、単相が選択されたら力率を 1.0 に固定
+  watch(
+    () => form.value.phase,
+    (newPhase) => {
+      if (newPhase && newPhase.startsWith('1P')) {
+        form.value.powerFactor = '1.0'
+      }
+    },
+    { immediate: true },
+  )
+
   const calcInputs = computed(() => mapFormToVoltageCalcInputs(form.value))
 
   const mathSteps = computed(() => {
@@ -99,5 +114,6 @@ export function useVoltageCalculator() {
     calcInputs,
     calcResult,
     mathSteps,
+    isSinglePhase,
   }
 }

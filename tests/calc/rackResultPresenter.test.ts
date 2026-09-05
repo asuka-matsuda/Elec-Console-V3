@@ -36,32 +36,36 @@ describe('rackResultPresenter', () => {
     expect(vmError.boxVariant).toBe('error')
   })
 
-  it('should format selected size correctly with separator', () => {
+  it('should format selected size correctly with width details', () => {
     const mockResult: RackCalcResult = {
+      mode: 'strong',
+      error: false,
       selectedSize: 300,
       wStrong: 120.4,
       wWeak: 80.2,
-      wSep: 30.0,
-      totalWidth: 230.6,
+      wSep: 0,
+      totalWidth: 200.6,
       maxCableStackHeight: 45.0,
+      maxStackDetailStr: '45.0',
+      maxDepth: 100,
+      rackHeight: 110,
+      sumStrong: 100,
+      sumWeak: 0,
       isOverflow: false,
     }
 
     const vm = formatRackResult({
       result: mockResult,
       maxDepth: 100,
-      isStrong: true,
-      isWeak: true,
+      mode: 'strong',
     })
 
     expect(vm.isEmpty).toBe(false)
     expect(vm.displaySize).toBe('W300')
     expect(vm.boxVariant).toBe('default')
-    expect(vm.showSeparator).toBe(true)
     expect(vm.wStrong).toBe('120.4')
     expect(vm.wWeak).toBe('80.2')
-    expect(vm.wSep).toBe('30.0')
-    expect(vm.totalWidth).toBe('231')
+    expect(vm.totalWidth).toBe('201')
     expect(vm.maxHeight).toBe('45.0')
     expect(vm.isOverflow).toBe(false)
     expect(vm.overflowWarning).toBe('')
@@ -81,13 +85,11 @@ describe('rackResultPresenter', () => {
     const vm = formatRackResult({
       result: mockResult,
       maxDepth: 100,
-      isStrong: true,
-      isWeak: false,
+      mode: 'strong',
     })
 
     expect(vm.isEmpty).toBe(false)
     expect(vm.displaySize).toBe('規格外 (650mm以上)')
-    expect(vm.showSeparator).toBe(false)
     expect(vm.isOverflow).toBe(true)
     expect(vm.overflowWarning).toContain('超過しています')
   })

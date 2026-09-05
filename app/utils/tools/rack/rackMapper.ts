@@ -4,6 +4,8 @@ import type {
   RackCalcInputs,
 } from '~/utils/tools/rack/rackCalcLogic'
 
+export type RackMode = 'strong' | 'weak'
+
 export interface RackCableUIInput {
   id: string
   category: string
@@ -12,12 +14,11 @@ export interface RackCableUIInput {
 }
 
 export interface RackInputs {
-  isStrong: boolean
-  isWeak: boolean
+  mode: RackMode
+  rackHeight: number | null
   lStrong: number | null
   lWeak: number | null
-  rackHeight: number | null
-  separatorWidth: number | null
+  otherWidth: number | null
   strongCablesUI: RackCableUIInput[]
   weakCablesUI: RackCableUIInput[]
 }
@@ -34,16 +35,16 @@ export function convertUIToRackCable(
 export function mapFormToRackCalcInputs(inputs: RackInputs): RackCalcInputs {
   const rH = inputs.rackHeight ?? 0
   const maxDepth = Math.max(1, rH - 10)
+  const isStrong = inputs.mode === 'strong'
 
   return {
-    isStrong: inputs.isStrong,
-    isWeak: inputs.isWeak,
-    lStrong: inputs.lStrong ?? 1,
-    lWeak: inputs.lWeak ?? 1,
+    mode: inputs.mode,
+    layers: isStrong ? (inputs.lStrong ?? 1) : (inputs.lWeak ?? 1),
     rackHeight: rH,
-    maxDepth: maxDepth,
-    strongCables: inputs.strongCablesUI.map(convertUIToRackCable),
-    weakCables: inputs.weakCablesUI.map(convertUIToRackCable),
-    separatorWidth: inputs.separatorWidth ?? 0,
+    maxDepth,
+    cables: isStrong
+      ? inputs.strongCablesUI.map(convertUIToRackCable)
+      : inputs.weakCablesUI.map(convertUIToRackCable),
+    otherWidth: inputs.otherWidth ?? 0,
   }
 }

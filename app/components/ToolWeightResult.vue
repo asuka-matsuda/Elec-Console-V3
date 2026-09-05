@@ -69,7 +69,7 @@ const vm = computed(() => formatWeightResult(props.result))
   }
 
   &__val {
-    @include text-title("xl");
+    @include text-mono("3xl", "bold");
   }
 
   &__warning {

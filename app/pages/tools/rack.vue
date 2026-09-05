@@ -26,7 +26,7 @@ const {
 <template>
   <ToolLayout
     results-title="選定結果"
-    :save-disabled="result?.error || (!inputs.isStrong && !inputs.isWeak)"
+    :save-disabled="Boolean(result?.error) || !result || result.totalWidth === 0"
     :save-function="handleSaveHistory"
     @reset="openResetModal"
   >
@@ -44,8 +44,7 @@ const {
       <ToolRackResult
         :result="result"
         :max-depth="maxDepth"
-        :is-strong="inputs.isStrong"
-        :is-weak="inputs.isWeak"
+        :mode="inputs.mode"
       />
     </template>
 

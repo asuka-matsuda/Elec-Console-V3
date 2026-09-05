@@ -8,10 +8,18 @@ describe('rackCalcLogic', () => {
 
     it('should calculate rack size for strong cables only', () => {
       // settings: strong only, L=1
-      // strongCables: d=20 (n=2), d=30 (n=1) -> totalW = 20*2 + 30*1 = 70
-      // rack size = ceil(70/100)*100 = 100
+      // cables: d=20 (n=2), d=30 (n=1)
+      // sum = (20+10)*2 + (30+10)*1 = 60 + 40 = 100
+      // wStrong = 1.2 * (100 + 60) / 1 = 192
       const res = calculateRackSize(
-        { isStrong: true, isWeak: false, lStrong: 1, lWeak: null, rackHeight: null, maxDepth: 100, separatorWidth: null, strongCables: [{ d: 20, n: 2 }, { d: 30, n: 1 }], weakCables: [] },
+        {
+          mode: 'strong',
+          layers: 1,
+          rackHeight: 110,
+          maxDepth: 100,
+          cables: [{ d: 20, n: 2 }, { d: 30, n: 1 }],
+          otherWidth: 0,
+        },
         standardRackSizes,
       )
 
@@ -22,10 +30,19 @@ describe('rackCalcLogic', () => {
     })
 
     it('should account for multi-layer stacking (L > 1)', () => {
-      // settings: strong only, L=2
-      // strongCables: d=20 (n=3) -> totalW = 60 / 2 = 30
+      // settings: strong, L=2
+      // cables: d=20 (n=3)
+      // sum = (20+10)*3 = 90
+      // wStrong = 1.2 * (90 + 60) / 2 = 90
       const res = calculateRackSize(
-        { isStrong: true, isWeak: false, lStrong: 2, lWeak: null, rackHeight: null, separatorWidth: null, strongCables: [{ d: 20, n: 3 }], weakCables: [] },
+        {
+          mode: 'strong',
+          layers: 2,
+          rackHeight: 100,
+          maxDepth: 90,
+          cables: [{ d: 20, n: 3 }],
+          otherWidth: 0,
+        },
         standardRackSizes,
       )
 
@@ -33,28 +50,41 @@ describe('rackCalcLogic', () => {
       expect(res.selectedSize).toBe(100)
     })
 
-    it('should calculate rack size for mixed strong and weak cables with separator', () => {
-      // settings: strong & weak, separator = 50
-      // strong: d=10 (n=5) -> W = 50 (L=1)
-      // weak: d=5 (n=10) -> W = 50 (L=1)
-      // total W = 50 + 50 + 50(separator) = 150
-      // optimal = 200
+    it('should calculate rack size with other width (weak cables required width)', () => {
+      // strong: d=10 (n=5) -> sum = 100 -> W = 1.2 * (100 + 60) = 192
+      // otherWidth (weak required): 150
+      // total W = 192 + 150 = 342
+      // optimal = 400
       const res = calculateRackSize(
-        { isStrong: true, isWeak: true, lStrong: 1, lWeak: 1, rackHeight: null, separatorWidth: 50, strongCables: [{ d: 10, n: 5 }], weakCables: [{ d: 5, n: 10 }] },
+        {
+          mode: 'strong',
+          layers: 1,
+          rackHeight: 100,
+          maxDepth: 90,
+          cables: [{ d: 10, n: 5 }],
+          otherWidth: 150,
+        },
         standardRackSizes,
       )
 
       expect(res.error).toBe(false)
       expect(res.wStrong).toBe(192)
-      expect(res.wWeak).toBe(162)
-      expect(res.totalWidth).toBe(404)
-      expect(res.selectedSize).toBe(500)
+      expect(res.wWeak).toBe(150)
+      expect(res.totalWidth).toBe(342)
+      expect(res.selectedSize).toBe(400)
     })
 
     it('should return error if inputs are invalid', () => {
       // missing standard sizes array
       const res = calculateRackSize(
-        { isStrong: true, isWeak: false, lStrong: 1, lWeak: null, rackHeight: null, separatorWidth: null, strongCables: [{ d: 20, n: 2 }], weakCables: [] },
+        {
+          mode: 'strong',
+          layers: 1,
+          rackHeight: 100,
+          maxDepth: 90,
+          cables: [{ d: 20, n: 2 }],
+          otherWidth: 0,
+        },
         [],
       )
 
@@ -62,9 +92,16 @@ describe('rackCalcLogic', () => {
     })
 
     it('should return SIZE_OVER if calculated size exceeds max standard size', () => {
-      // totalW = 1500, max size = 1200
+      // totalW = 2052, max size = 1200
       const res = calculateRackSize(
-        { isStrong: true, isWeak: false, lStrong: 1, lWeak: null, rackHeight: null, separatorWidth: null, strongCables: [{ d: 100, n: 15 }], weakCables: [] },
+        {
+          mode: 'strong',
+          layers: 1,
+          rackHeight: 100,
+          maxDepth: 90,
+          cables: [{ d: 100, n: 15 }],
+          otherWidth: 0,
+        },
         standardRackSizes,
       )
 

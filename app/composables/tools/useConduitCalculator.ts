@@ -17,11 +17,13 @@ const uuidv4 = () => crypto.randomUUID()
 
 export interface ConduitInputs {
   conduitCategory: string
+  customFillRate: number | null
   inputCables: CableInput[]
 }
 
 const defaultInputs: ConduitInputs = {
   conduitCategory: '',
+  customFillRate: 80,
   inputCables: [
     {
       id: uuidv4(),
@@ -51,15 +53,25 @@ export function useConduitCalculator() {
         inputs.inputCables,
         conduitData,
         cableData,
+        inputs.customFillRate,
       ),
     {
       toHistory: (inputs, res) =>
-        mapConduitToHistory(inputs.conduitCategory, inputs.inputCables, res!)!,
+        mapConduitToHistory(
+          inputs.conduitCategory,
+          inputs.inputCables,
+          res!,
+          inputs.customFillRate,
+        )!,
       fromHistory: () => {
         return JSON.parse(JSON.stringify(defaultInputs))
       },
     },
   )
+
+  if (inputs.value.customFillRate === undefined) {
+    inputs.value.customFillRate = 80
+  }
 
   // VueUseのuseLocalStorageで初期化される際にidが重複しないようにする等の対処は必要に応じて行う
   if (!inputs.value.inputCables || inputs.value.inputCables.length === 0) {

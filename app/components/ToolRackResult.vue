@@ -11,16 +11,14 @@ import { formatRackResult } from '~/utils/tools/rack/rackResultPresenter'
 const props = defineProps<{
   result: RackCalcResult | null
   maxDepth: number
-  isStrong: boolean
-  isWeak: boolean
+  mode?: 'strong' | 'weak'
 }>()
 
 const vm = computed(() =>
   formatRackResult({
     result: props.result,
     maxDepth: props.maxDepth,
-    isStrong: props.isStrong,
-    isWeak: props.isWeak,
+    mode: props.mode,
   }),
 )
 </script>
@@ -51,12 +49,6 @@ const vm = computed(() =>
       <ToolResultRow label="弱電 必要幅">
         <strong>{{ vm.wWeak }}</strong> mm
       </ToolResultRow>
-      <ToolResultRow
-        v-if="vm.showSeparator"
-        label="セパレータ幅"
-      >
-        <strong>{{ vm.wSep }}</strong> mm
-      </ToolResultRow>
       <ToolResultRow label="合計 必要幅" top-border>
         <strong>{{ vm.totalWidth }}</strong> mm
       </ToolResultRow>
@@ -83,7 +75,7 @@ const vm = computed(() =>
   }
 
   &__val {
-    @include text-title("xl");
+    @include text-mono("3xl", "bold");
   }
 
   &__warning {

@@ -12,12 +12,11 @@ import type { RackInputs } from '~/utils/tools/rack/rackMapper'
 import { mapFormToRackCalcInputs } from '~/utils/tools/rack/rackMapper'
 
 const defaultInputs: RackInputs = {
-  isStrong: true,
-  isWeak: false,
-  lStrong: null,
-  lWeak: null,
+  mode: 'strong',
+  lStrong: 1,
+  lWeak: 1,
   rackHeight: null,
-  separatorWidth: null,
+  otherWidth: null,
   strongCablesUI: [
     { id: crypto.randomUUID(), category: '', cableIdx: '', count: null },
   ],
@@ -47,19 +46,17 @@ export function useRackCalculator() {
     {
       toHistory: (inputs, res) => {
         const logicInputs = mapFormToRackCalcInputs(inputs)
+        const isStrong = inputs.mode === 'strong'
 
         return mapRackToHistory(
           {
-            isStrong: logicInputs.isStrong,
-            isWeak: logicInputs.isWeak,
-            lStrong: logicInputs.lStrong,
-            lWeak: logicInputs.lWeak,
+            mode: logicInputs.mode,
+            layers: logicInputs.layers,
             rackHeight: logicInputs.rackHeight,
             maxDepth: logicInputs.maxDepth,
-            separatorWidth: logicInputs.separatorWidth,
+            otherWidth: logicInputs.otherWidth,
           },
-          inputs.strongCablesUI,
-          inputs.weakCablesUI,
+          isStrong ? inputs.strongCablesUI : inputs.weakCablesUI,
           res!,
         )!
       },

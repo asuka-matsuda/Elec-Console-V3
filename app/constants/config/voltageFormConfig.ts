@@ -30,6 +30,7 @@ export function getVoltageFormFields(
   isSizeCalcMode: () => boolean,
   computedAvailableSizes: () => { label: string, value: string }[],
   isCableTypeSelected: () => boolean,
+  isSinglePhase?: () => boolean,
 ): FormField[] {
   return [
     {
@@ -55,6 +56,7 @@ export function getVoltageFormFields(
       type: 'select',
       options: powerFactorOptions,
       placeholder: '選択してください',
+      disabled: isSinglePhase ? isSinglePhase() : false,
     },
     {
       id: 'distance',

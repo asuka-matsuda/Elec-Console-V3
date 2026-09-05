@@ -34,6 +34,14 @@ export interface ConduitCalcResult {
   allowable48?: number
   isOversize48?: boolean
 
+  customFillRate?: number
+  conduitCustom?: ConduitData
+  fillCustom?: number
+  allowableCustom?: number
+  isOversizeCustom?: boolean
+
+  isSameSize?: boolean
+
   totalArea: number
   cableDetails: CableDetail[]
 }
@@ -60,6 +68,7 @@ export function calculateConduitSize(
   inputCables: CableInput[],
   conduitData: ConduitData[],
   cableData: CableData[],
+  customFillRateInput?: number | null,
 ): ConduitCalcResult {
   if (!inputCables || inputCables.length === 0) {
     return {
@@ -71,6 +80,14 @@ export function calculateConduitSize(
       message: '入力が不足しています',
     }
   }
+
+  const customFillRate
+    = customFillRateInput !== null
+      && customFillRateInput !== undefined
+      && !isNaN(customFillRateInput)
+      && customFillRateInput > 0
+      ? Number(customFillRateInput)
+      : 80
 
   let totalArea = 0
   let totalCount = 0
@@ -127,7 +144,7 @@ export function calculateConduitSize(
     }
   }
 
-  // 内線規程に基づき、異なるケーブル混在時(32%)と同一ケーブル時(48%)の両方の基準で最適な配管サイズを選定する
+  // 内線規程に基づき、異なるケーブル混在時(32%)と同一ケーブル時(48%)、およびユーザー設定占積率で最適な配管サイズを選定する
   const targetConduits = conduitData
     .filter(c => c.category === conduitCategory)
     .sort((a, b) => Number(a.innerDiameter) - Number(b.innerDiameter))
@@ -145,13 +162,13 @@ export function calculateConduitSize(
 
   const largest = targetConduits[targetConduits.length - 1]
 
-  function findOptimalConduit(
+  function findOptimalConduitByAllowable(
     conduits: ConduitData[],
     requiredArea: number,
-    ruleField: 'area32' | 'area48',
+    getAllowable: (c: ConduitData) => number,
   ) {
     for (const conduit of conduits) {
-      const allowable = Number(conduit[ruleField])
+      const allowable = getAllowable(conduit)
 
       if (requiredArea <= allowable) {
         return {
@@ -163,16 +180,34 @@ export function calculateConduitSize(
       }
     }
 
+    const largestAllowable = getAllowable(largest!)
+
     return {
       conduit: largest!,
       fillPercent: (requiredArea / Number(largest!.area)) * 100,
-      allowable: Number(largest![ruleField]),
-      isOversize: requiredArea > Number(largest![ruleField]),
+      allowable: largestAllowable,
+      isOversize: requiredArea > largestAllowable,
     }
   }
 
-  const result32 = findOptimalConduit(targetConduits, totalArea, 'area32')
-  const result48 = findOptimalConduit(targetConduits, totalArea, 'area48')
+  const result32 = findOptimalConduitByAllowable(
+    targetConduits,
+    totalArea,
+    c => Number(c.area32),
+  )
+  const result48 = findOptimalConduitByAllowable(
+    targetConduits,
+    totalArea,
+    c => Number(c.area48),
+  )
+  const resultCustom = findOptimalConduitByAllowable(
+    targetConduits,
+    totalArea,
+    c => Number(c.area) * (customFillRate / 100),
+  )
+
+  const uniqueDiameters = new Set(cableDetails.map(c => c.effectiveDiameter))
+  const isSameSize = uniqueDiameters.size === 1
 
   return {
     success: true,
@@ -186,6 +221,14 @@ export function calculateConduitSize(
     fill48: result48.fillPercent,
     allowable48: result48.allowable,
     isOversize48: result48.isOversize,
+
+    customFillRate,
+    conduitCustom: resultCustom.conduit,
+    fillCustom: resultCustom.fillPercent,
+    allowableCustom: resultCustom.allowable,
+    isOversizeCustom: resultCustom.isOversize,
+
+    isSameSize,
 
     totalArea,
     cableDetails,
@@ -211,14 +254,30 @@ export function generateMathData(
 
   const formula1 = buildFormula('A_{total}', formulaVarStr, resultStr1, 'mm^2')
 
-  let formula2 = `\\begin{aligned} \\text{32\\%以下:} \\quad A_{\\text{pipe}} \\times 0.32 &\\ge A_{total} \\\\ \\text{---} \\text{ mm}^2 &\\ge \\text{---} \\text{ mm}^2 \\\\\\\\ \\text{48\\%以下:} \\quad A_{\\text{pipe}} \\times 0.48 &\\ge A_{total} \\\\ \\text{---} \\text{ mm}^2 &\\ge \\text{---} \\text{ mm}^2 \\end{aligned}`
+  const rateStr = res?.customFillRate ? `${res.customFillRate}` : '80'
+  const rateFactor = (
+    res?.customFillRate ? res.customFillRate / 100 : 0.8
+  ).toFixed(2)
 
-  if (allCablesKnown && conduitCategory && res?.conduit32 && res?.conduit48) {
+  let formula2 = `\\begin{aligned} \\text{32\\%以下:} \\quad A_{\\text{pipe}} \\times 0.32 &\\ge A_{total} \\\\ \\text{---} \\text{ mm}^2 &\\ge \\text{---} \\text{ mm}^2 \\\\\\\\ \\text{48\\%以下:} \\quad A_{\\text{pipe}} \\times 0.48 &\\ge A_{total} \\\\ \\text{---} \\text{ mm}^2 &\\ge \\text{---} \\text{ mm}^2 \\\\\\\\ \\text{指定(${rateStr}\\%):} \\quad A_{\\text{pipe}} \\times ${rateFactor} &\\ge A_{total} \\\\ \\text{---} \\text{ mm}^2 &\\ge \\text{---} \\text{ mm}^2 \\end{aligned}`
+
+  if (
+    allCablesKnown
+    && conduitCategory
+    && res?.conduit32
+    && res?.conduit48
+    && res?.conduitCustom
+  ) {
     const totalAreaHl = hlVal(totalKnownArea, 'A_{total}', 1)
     const allow32Hl = hlVal(res.allowable32, 'A_{\\text{allow32}}', 1)
     const allow48Hl = hlVal(res.allowable48, 'A_{\\text{allow48}}', 1)
+    const allowCustomHl = hlVal(
+      res.allowableCustom,
+      'A_{\\text{allowCustom}}',
+      1,
+    )
 
-    formula2 = `\\begin{aligned} \\text{32\\%以下:} \\quad A_{\\text{pipe}} \\times 0.32 &\\ge A_{total} \\\\ ${allow32Hl} \\text{ mm}^2 &\\ge ${totalAreaHl} \\text{ mm}^2 \\\\ &\\rightarrow \\text{【 } ${hlOk(res.conduit32.size)} \\text{ 】選定} \\\\\\\\ \\text{48\\%以下:} \\quad A_{\\text{pipe}} \\times 0.48 &\\ge A_{total} \\\\ ${allow48Hl} \\text{ mm}^2 &\\ge ${totalAreaHl} \\text{ mm}^2 \\\\ &\\rightarrow \\text{【 } ${hlOk(res.conduit48.size)} \\text{ 】選定} \\end{aligned}`
+    formula2 = `\\begin{aligned} \\text{32\\%以下:} \\quad A_{\\text{pipe}} \\times 0.32 &\\ge A_{total} \\\\ ${allow32Hl} \\text{ mm}^2 &\\ge ${totalAreaHl} \\text{ mm}^2 \\\\ &\\rightarrow \\text{【 } ${hlOk(res.conduit32.size)} \\text{ 】選定} \\\\\\\\ \\text{48\\%以下:} \\quad A_{\\text{pipe}} \\times 0.48 &\\ge A_{total} \\\\ ${allow48Hl} \\text{ mm}^2 &\\ge ${totalAreaHl} \\text{ mm}^2 \\\\ &\\rightarrow \\text{【 } ${hlOk(res.conduit48.size)} \\text{ 】選定} \\\\\\\\ \\text{指定(${rateStr}\\%):} \\quad A_{\\text{pipe}} \\times ${rateFactor} &\\ge A_{total} \\\\ ${allowCustomHl} \\text{ mm}^2 &\\ge ${totalAreaHl} \\text{ mm}^2 \\\\ &\\rightarrow \\text{【 } ${hlOk(res.conduitCustom.size)} \\text{ 】選定} \\end{aligned}`
   }
 
   return [

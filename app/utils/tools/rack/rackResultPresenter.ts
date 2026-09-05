@@ -18,8 +18,7 @@ export interface RackResultViewModel {
 export interface RackResultPresenterParams {
   result: RackCalcResult | null | undefined
   maxDepth: number
-  isStrong: boolean
-  isWeak: boolean
+  mode?: 'strong' | 'weak'
 }
 
 /**
@@ -28,10 +27,9 @@ export interface RackResultPresenterParams {
 export function formatRackResult(
   params: RackResultPresenterParams,
 ): RackResultViewModel {
-  const { result, maxDepth, isStrong, isWeak } = params
-  const hasInput = isStrong || isWeak
+  const { result, maxDepth } = params
   const isError = Boolean(result?.error)
-  const isEmpty = isError || !hasInput
+  const isEmpty = isError || !result
   const boxVariant: RackResultViewModel['boxVariant'] = isError
     ? 'error'
     : 'default'
@@ -51,13 +49,13 @@ export function formatRackResult(
 
   const isOverflow = Boolean(result?.isOverflow)
   const overflowWarning = isOverflow
-    ? `⚠️ ケーブルの高さがラックの有効深さ(${maxDepth}mm)を超過しています。`
+    ? `⚠️ ケーブルの高さがラックの有効高さ(${maxDepth}mm)を超過しています。`
     : ''
 
   const wStrong = result?.wStrong?.toFixed(1) ?? '0.0'
   const wWeak = result?.wWeak?.toFixed(1) ?? '0.0'
-  const showSeparator = isStrong && isWeak
-  const wSep = result?.wSep?.toFixed(1) ?? '0.0'
+  const showSeparator = false
+  const wSep = '0.0'
   const totalWidth = String(result?.totalWidth ? Math.ceil(result.totalWidth) : 0)
   const maxHeight = result?.maxCableStackHeight?.toFixed(1) ?? '0.0'
 

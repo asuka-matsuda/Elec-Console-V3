@@ -29,8 +29,8 @@ const mainBoxStatus = computed(() =>
       :size="size"
     >
       <template #value>
-        <span class="value-text">{{ view.mainValue }}</span>
-        <span v-if="view.mainUnit" class="value-unit">{{ view.mainUnit }}</span>
+        <span class="value-text c-voltage-result__main-val">{{ view.mainValue }}</span>
+        <span v-if="view.mainUnit" class="value-unit c-voltage-result__main-unit">{{ view.mainUnit }}</span>
         <template v-if="view.mode === 'drop' && view.isReady">
           <span class="value-sep">(</span>
           <span
@@ -79,39 +79,60 @@ const mainBoxStatus = computed(() =>
 
 <style scoped lang="scss">
 .c-voltage-result {
-  @include flex-start-stretch($direction: column);
+  @include flex-start-stretch;
 
   flex: 1;
   gap: var(--space-card-gap);
-  align-items: stretch;
   min-height: 0;
 
-  // コンテナの幅が xs 以上の場合は横並び
-  @include cq("xs") {
-    flex-direction: row;
+  // コンテナ幅が狭い場合 (down <= 600px) は縦積みに切り替え
+  @include cq("sm") {
+    flex-direction: column;
+  }
+
+  // スロット内の自然な折り返しを許可
+  :deep(.c-result-box__value) {
+    flex-wrap: wrap;
+    row-gap: var(--space-1);
+  }
+
+  &__main-val {
+    @include text-mono("3xl", "bold");
+  }
+
+  &__main-unit {
+    @include text-body("base");
+
+    color: var(--color-text-secondary);
   }
 
   &__drop-percent {
-    @include text-title("lg");
+    @include text-mono("xl", "bold");
   }
 
   &__drop-unit {
-    @include text-title("sm");
+    @include text-body("sm");
+
+    color: var(--color-text-secondary);
   }
 
   &__drop-cable {
-    @include text-title("lg");
+    @include text-mono("sm", "bold");
   }
 
   &.is-sm {
     gap: var(--space-3);
 
-    .c-voltage-result__drop-cable {
+    .c-voltage-result__main-val {
       @include text-mono("2xl", "bold");
     }
 
     .c-voltage-result__drop-percent {
       @include text-mono("base", "bold");
+    }
+
+    .c-voltage-result__drop-cable {
+      @include text-mono("sm", "bold");
     }
 
     .metric-card {
@@ -142,16 +163,16 @@ const mainBoxStatus = computed(() =>
   }
 
   &__metrics {
-    @include flex-start-stretch;
+    @include flex-start-stretch($direction: column);
 
-    flex-flow: row wrap;
     flex-shrink: 0;
     gap: var(--space-2);
-    min-width: auto;
+    min-width: 220px;
 
-    @include cq("xs") {
-      flex-flow: column nowrap;
-      min-width: 220px;
+    // コンテナ幅が狭い場合 (down <= 600px) は下部に横並び
+    @include cq("sm") {
+      flex-flow: row wrap;
+      min-width: auto;
     }
   }
 
@@ -176,18 +197,19 @@ const mainBoxStatus = computed(() =>
     gap: var(--space-1);
     align-items: baseline;
     margin: 0;
+  }
 
-    .value-sep {
-      margin: 0 2px;
-      color: var(--color-text-muted);
-    }
+  .value-sep {
+    @include text-body("sm");
 
-    .value-unit {
-      @include text-meta;
+    margin: 0 2px;
+    color: var(--color-text-muted);
+  }
 
-      color: var(--color-text-secondary);
-      opacity: 0.8;
-    }
+  .value-unit {
+    @include text-body("sm");
+
+    color: var(--color-text-secondary);
   }
 }
 </style>

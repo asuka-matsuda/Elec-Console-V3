@@ -6,6 +6,9 @@ export interface ConduitResultViewModel {
   isReady: boolean
   isOversize32: boolean
   isOversize48: boolean
+  isOversizeCustom: boolean
+  isSameSize: boolean
+  isDiffSize: boolean
   size32: string
   status32Class: 'is-neutral' | 'is-success' | 'is-danger'
   fill32: string
@@ -14,6 +17,12 @@ export interface ConduitResultViewModel {
   status48Class: 'is-neutral' | 'is-success' | 'is-danger'
   fill48: string
   allowable48: string
+  customFillRate: number
+  titleCustom: string
+  sizeCustom: string
+  statusCustomClass: 'is-neutral' | 'is-success' | 'is-danger'
+  fillCustom: string
+  allowableCustom: string
 }
 
 /**
@@ -29,6 +38,9 @@ export function formatConduitResult(
       isReady: false,
       isOversize32: false,
       isOversize48: false,
+      isOversizeCustom: false,
+      isSameSize: false,
+      isDiffSize: false,
       size32: CONDUIT_UI_LABELS.EMPTY_TEXT,
       status32Class: 'is-neutral',
       fill32: CONDUIT_UI_LABELS.EMPTY_TEXT,
@@ -37,6 +49,12 @@ export function formatConduitResult(
       status48Class: 'is-neutral',
       fill48: CONDUIT_UI_LABELS.EMPTY_TEXT,
       allowable48: CONDUIT_UI_LABELS.EMPTY_TEXT,
+      customFillRate: 80,
+      titleCustom: 'ユーザー指定 (80%)',
+      sizeCustom: CONDUIT_UI_LABELS.EMPTY_TEXT,
+      statusCustomClass: 'is-neutral',
+      fillCustom: CONDUIT_UI_LABELS.EMPTY_TEXT,
+      allowableCustom: CONDUIT_UI_LABELS.EMPTY_TEXT,
     }
   }
 
@@ -68,10 +86,32 @@ export function formatConduitResult(
   )
   const fill48 = formatVal(result.fill48, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
 
+  const customFillRate = result.customFillRate || 80
+  const isOversizeCustom = Boolean(result.isOversizeCustom)
+  const sizeCustom = isOversizeCustom
+    ? CONDUIT_UI_LABELS.OVERSIZE_TEXT
+    : (result.conduitCustom?.size || CONDUIT_UI_LABELS.EMPTY_TEXT)
+  const statusCustomClass: ConduitResultViewModel['statusCustomClass'] = isOversizeCustom
+    ? 'is-danger'
+    : 'is-success'
+  const allowableCustom = formatVal(
+    result.allowableCustom,
+    CONDUIT_UI_LABELS.EMPTY_TEXT,
+    1,
+  )
+  const fillCustom = formatVal(result.fillCustom, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
+  const titleCustom = `ユーザー指定 (${customFillRate}%)`
+
+  const isSameSize = Boolean(result.isSameSize)
+  const isDiffSize = isReady && !isSameSize
+
   return {
     isReady: true,
     isOversize32,
     isOversize48,
+    isOversizeCustom,
+    isSameSize,
+    isDiffSize,
     size32,
     status32Class,
     fill32,
@@ -80,5 +120,11 @@ export function formatConduitResult(
     status48Class,
     fill48,
     allowable48,
+    customFillRate,
+    titleCustom,
+    sizeCustom,
+    statusCustomClass,
+    fillCustom,
+    allowableCustom,
   }
 }

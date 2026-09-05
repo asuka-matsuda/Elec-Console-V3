@@ -6,65 +6,51 @@ import type { RackCalcResult } from './rackCalcLogic'
 
 export function mapRackToHistory(
   settings: {
-    isStrong: boolean
-    isWeak: boolean
-    lStrong: number
-    lWeak: number
+    mode: 'strong' | 'weak'
+    layers: number
     rackHeight: number
     maxDepth: number
-    separatorWidth: number
+    otherWidth: number
   },
-  strongCables: RackCableUIInput[],
-  weakCables: RackCableUIInput[],
+  cables: RackCableUIInput[],
   result: RackCalcResult,
 ): Omit<HistoryEntry, 'id' | 'timestamp'> | null {
   if (result.error || result.totalWidth === 0) return null
 
   const inputs: { label: string, value: string }[] = []
 
+  const isStrong = settings.mode === 'strong'
+
   inputs.push({
-    label: 'ラック深さ / 最大有効深さ',
+    label: 'モード',
+    value: isStrong ? '強電' : '弱電',
+  })
+
+  inputs.push({
+    label: 'ラック高さ / 有効高さ',
     value: `${settings.rackHeight} mm / ${settings.maxDepth} mm`,
   })
 
-  if (settings.isStrong) {
+  inputs.push({
+    label: '段積み数',
+    value: `${settings.layers} 段`,
+  })
+
+  cables.forEach((c, i) => {
+    if (!c.count || c.count <= 0) return
+    const cableDef = findCableByIndexString(c.cableIdx)
+    const name = getCableDisplayName(cableDef, { category: c.category }, true, false)
+
     inputs.push({
-      label: '強電エリア',
-      value: `段積み数: ${settings.lStrong} 段`,
+      label: `${isStrong ? '強電' : '弱電'}ケーブル ${i + 1}`,
+      value: `${name} × ${c.count}本`,
     })
-    strongCables.forEach((c, i) => {
-      if (!c.count || c.count <= 0) return
-      const cableDef = findCableByIndexString(c.cableIdx)
-      const name = getCableDisplayName(cableDef, { category: c.category }, true, false)
+  })
 
-      inputs.push({
-        label: `強電ケーブル ${i + 1}`,
-        value: `${name} × ${c.count}本`,
-      })
-    })
-  }
-
-  if (settings.isWeak) {
+  if (settings.otherWidth > 0) {
     inputs.push({
-      label: '弱電エリア',
-      value: `段積み数: ${settings.lWeak} 段`,
-    })
-    weakCables.forEach((c, i) => {
-      if (!c.count || c.count <= 0) return
-      const cableDef = findCableByIndexString(c.cableIdx)
-      const name = getCableDisplayName(cableDef, { category: c.category }, true, false)
-
-      inputs.push({
-        label: `弱電ケーブル ${i + 1}`,
-        value: `${name} × ${c.count}本`,
-      })
-    })
-  }
-
-  if (settings.isStrong && settings.isWeak) {
-    inputs.push({
-      label: 'セパレータ',
-      value: `幅: ${settings.separatorWidth} mm`,
+      label: isStrong ? '弱電必要幅' : '強電必要幅',
+      value: `${settings.otherWidth} mm`,
     })
   }
 
