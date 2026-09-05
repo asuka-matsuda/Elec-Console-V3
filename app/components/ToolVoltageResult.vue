@@ -15,31 +15,32 @@ const props = defineProps<{
 }>()
 
 const view = computed(() => formatVoltageResult(props.inputs, props.result))
+
+const mainBoxStatus = computed(() =>
+  view.value.mainStatusClass.replace('is-', '') as 'neutral' | 'success' | 'warning' | 'danger',
+)
 </script>
 
 <template>
   <div class="c-voltage-result" :class="[size === 'sm' ? 'is-sm' : '']">
-    <div class="c-voltage-result__main">
-      <div class="c-voltage-result__main-label">
-        {{ view.mainLabel }}
-      </div>
-      <div class="c-voltage-result__main-value">
-        <span class="value-text" :class="view.mainStatusClass">{{
-          view.mainValue
-        }}</span>
+    <AppResultBox
+      :title="view.mainLabel"
+      :status="mainBoxStatus"
+      :size="size"
+    >
+      <template #value>
+        <span class="value-text">{{ view.mainValue }}</span>
         <span v-if="view.mainUnit" class="value-unit">{{ view.mainUnit }}</span>
         <template v-if="view.mode === 'drop' && view.isReady">
           <span class="value-sep">(</span>
           <span
             class="value-text c-voltage-result__drop-percent"
-            :class="view.mainStatusClass"
-          >{{ view.dropPercent }}</span
-          >
+          >{{ view.dropPercent }}</span>
           <span class="value-unit c-voltage-result__drop-unit">%</span>
           <span class="value-sep">)</span>
         </template>
-      </div>
-    </div>
+      </template>
+    </AppResultBox>
 
     <div class="c-voltage-result__metrics">
       <dl class="metric-card">
@@ -105,14 +106,6 @@ const view = computed(() => formatVoltageResult(props.inputs, props.result))
   &.is-sm {
     gap: var(--space-3);
 
-    .c-voltage-result__main {
-      padding: var(--space-1) var(--space-2);
-    }
-
-    .c-voltage-result__main-value .value-text {
-      @include text-mono("3xl", "bold");
-    }
-
     .c-voltage-result__drop-cable {
       @include text-mono("2xl", "bold");
     }
@@ -146,43 +139,6 @@ const view = computed(() => formatVoltageResult(props.inputs, props.result))
     color: var(--color-status-danger);
 
     @include cyber-text-glow(var(--color-status-danger), 40%, var(--blur-md));
-  }
-
-  &__main {
-    @include flex-center-center($direction: column);
-
-    flex: 1;
-    gap: var(--space-1);
-    min-width: 0;
-    padding: var(--space-2) var(--space-3);
-
-    @include border-base;
-    @include shadow("sink");
-  }
-
-  &__main-label {
-    @include text-meta;
-
-    color: var(--color-text-secondary);
-    text-transform: uppercase;
-  }
-
-  &__main-value {
-    @include flex-display;
-
-    gap: var(--space-2);
-    align-items: baseline;
-
-    .value-text {
-      @include text-mono("4xl", "bold");
-    }
-
-    .value-unit {
-      @include text-title("md");
-
-      color: var(--color-text-secondary);
-      opacity: 0.8;
-    }
   }
 
   &__metrics {

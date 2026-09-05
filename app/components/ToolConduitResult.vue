@@ -17,20 +17,26 @@ const props = defineProps<{
 }>()
 
 const vm = computed(() => formatConduitResult(props.result))
+
+const status32 = computed(() =>
+  vm.value.status32Class.replace('is-', '') as 'neutral' | 'success' | 'danger',
+)
+const status48 = computed(() =>
+  vm.value.status48Class.replace('is-', '') as 'neutral' | 'success' | 'danger',
+)
 </script>
 
 <template>
   <div class="c-conduit-result" :class="[size === 'sm' ? 'is-sm' : '']">
     <!-- Left Column: 32% -->
     <div class="c-conduit-result__col">
-      <div class="c-conduit-result__main">
-        <div class="c-conduit-result__main-label">
-          {{ CONDUIT_UI_LABELS.TITLE_32 }}
-        </div>
-        <div class="c-conduit-result__main-value">
-          <span class="value-text" :class="vm.status32Class">{{
-            vm.size32
-          }}</span>
+      <AppResultBox
+        :title="CONDUIT_UI_LABELS.TITLE_32"
+        :status="status32"
+        :size="size"
+      >
+        <template #value>
+          <span class="value-text">{{ vm.size32 }}</span>
           <template v-if="vm.isReady && !vm.isOversize32">
             <span class="value-sep">(</span>
             <span class="value-text c-conduit-result__percent is-neutral">{{
@@ -41,19 +47,18 @@ const vm = computed(() => formatConduitResult(props.result))
             }}</span>
             <span class="value-sep">)</span>
           </template>
-        </div>
-      </div>
+        </template>
+      </AppResultBox>
     </div>
 
     <div class="c-conduit-result__col">
-      <div class="c-conduit-result__main">
-        <div class="c-conduit-result__main-label">
-          {{ CONDUIT_UI_LABELS.TITLE_48 }}
-        </div>
-        <div class="c-conduit-result__main-value">
-          <span class="value-text" :class="vm.status48Class">{{
-            vm.size48
-          }}</span>
+      <AppResultBox
+        :title="CONDUIT_UI_LABELS.TITLE_48"
+        :status="status48"
+        :size="size"
+      >
+        <template #value>
+          <span class="value-text">{{ vm.size48 }}</span>
           <template v-if="vm.isReady && !vm.isOversize48">
             <span class="value-sep">(</span>
             <span class="value-text c-conduit-result__percent is-neutral">{{
@@ -64,8 +69,8 @@ const vm = computed(() => formatConduitResult(props.result))
             }}</span>
             <span class="value-sep">)</span>
           </template>
-        </div>
-      </div>
+        </template>
+      </AppResultBox>
     </div>
   </div>
 </template>
@@ -118,65 +123,23 @@ const vm = computed(() => formatConduitResult(props.result))
   &.is-sm {
     gap: var(--space-3);
 
-    .c-conduit-result__main {
-      padding: var(--space-1) var(--space-2);
-    }
-
-    .c-conduit-result__main-value .value-text {
-      @include text-mono("3xl");
-
-      &.c-conduit-result__percent {
-        @include text-mono("base");
-      }
+    .c-conduit-result__percent {
+      @include text-mono("base");
     }
   }
 
-  &__main {
-    @include flex-center-center($direction: column);
+  .value-sep {
+    @include text-body("md", "normal");
 
-    flex: 1;
-    gap: var(--space-1);
-    min-width: 0;
-    padding: var(--space-2) var(--space-3);
-
-    @include border-base;
-    @include shadow("sink");
+    margin: 0 2px;
+    color: var(--color-text-muted);
   }
 
-  &__main-label {
-    @include text-meta;
+  .value-unit {
+    @include text-body("md", "bold");
 
     color: var(--color-text-secondary);
-    text-transform: uppercase;
-  }
-
-  &__main-value {
-    @include flex-display;
-
-    gap: var(--space-2);
-    align-items: baseline;
-
-    .value-text {
-      @include text-mono("4xl");
-
-      &.c-conduit-result__percent {
-        @include text-title("sm", "normal");
-      }
-    }
-
-    .value-sep {
-      @include text-body("md", "normal");
-
-      margin: 0 2px;
-      color: var(--color-text-muted);
-    }
-
-    .value-unit {
-      @include text-body("md", "bold");
-
-      color: var(--color-text-secondary);
-      opacity: 0.8;
-    }
+    opacity: 0.8;
   }
 }
 </style>
