@@ -98,57 +98,63 @@ const getCableAreaText = (cableIdx: string): string => {
 
       <AppTable
         :columns="cableColumns"
-        :data="inputs.inputCables"
         class="c-conduit-input__table"
       >
-        <template #cell-no="{ row }">
-          {{ inputs.inputCables.indexOf(row) + 1 }}
-        </template>
-        <template #cell-category="{ row }">
-          <AppSelect
-            v-model="row.category"
-            :options="categories"
-            placeholder="選択"
-            size="sm"
-            @update:model-value="row.cableIdx = ''"
-          />
-        </template>
-        <template #cell-cableIdx="{ row }">
-          <AppSelect
-            v-model="row.cableIdx"
-            :options="getAvailableSizes(row.category)"
-            placeholder="選択"
-            size="sm"
-            :disabled="!row.category"
-          />
-        </template>
-        <template #cell-count="{ row }">
-          <AppInputGroup size="sm">
-            <AppInput
-              v-model.number="row.count"
-              type="number"
-              min="1"
-              size="sm"
-            />
-            <template #append>
-              <span class="c-input-addon">本</span>
-            </template>
-          </AppInputGroup>
-        </template>
-        <template #cell-spec="{ row }">
-          {{ getCableAreaText(row.cableIdx) }}
-        </template>
-        <template #cell-actions="{ row }">
-          <AppButton
-            variant="danger"
-            size="sm"
-            icon-only
-            :disabled="inputs.inputCables.length <= 1"
-            aria-label="削除"
-            @click="emit('remove-cable', row.id)"
+        <template #body>
+          <tr
+            v-for="(cable, index) in inputs.inputCables"
+            :key="cable.id"
           >
-            <AppIcon name="trash-2" size="sm" />
-          </AppButton>
+            <td style="text-align: center;">
+              {{ index + 1 }}
+            </td>
+            <td>
+              <AppSelect
+                v-model="cable.category"
+                :options="categories"
+                placeholder="選択"
+                size="sm"
+                @update:model-value="cable.cableIdx = ''"
+              />
+            </td>
+            <td>
+              <AppSelect
+                v-model="cable.cableIdx"
+                :options="getAvailableSizes(cable.category)"
+                placeholder="選択"
+                size="sm"
+                :disabled="!cable.category"
+              />
+            </td>
+            <td>
+              <AppInputGroup size="sm">
+                <AppInput
+                  v-model.number="cable.count"
+                  type="number"
+                  min="1"
+                  size="sm"
+                />
+                <template #append>
+                  <span class="c-input-addon">本</span>
+                </template>
+              </AppInputGroup>
+            </td>
+            <td style="text-align: right;">
+              {{ getCableAreaText(cable.cableIdx) }}
+            </td>
+            <td style="text-align: center;">
+              <AppButton
+                variant="danger"
+                size="sm"
+                icon-only
+                :disabled="inputs.inputCables.length <= 1"
+                aria-label="削除"
+                @click="emit('remove-cable', cable.id)"
+              >
+                <AppIcon name="trash-2" size="sm" />
+              </AppButton>
+            </td>
+          </tr>
         </template>
       </AppTable>
     </section>

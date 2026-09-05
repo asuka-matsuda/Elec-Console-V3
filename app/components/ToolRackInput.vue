@@ -178,57 +178,63 @@ watch(
       <AppTable
         v-if="inputs.mode === 'strong'"
         :columns="cableColumns"
-        :data="inputs.strongCablesUI"
         class="c-rack-input__table"
       >
-        <template #cell-no="{ row }">
-          {{ inputs.strongCablesUI.indexOf(row) + 1 }}
-        </template>
-        <template #cell-category="{ row }">
-          <AppSelect
-            v-model="row.category"
-            :options="strongCategories"
-            placeholder="選択"
-            size="sm"
-            @update:model-value="row.cableIdx = ''"
-          />
-        </template>
-        <template #cell-cableIdx="{ row }">
-          <AppSelect
-            v-model="row.cableIdx"
-            :options="getAvailableSizes(row.category)"
-            placeholder="選択"
-            size="sm"
-            :disabled="!row.category"
-          />
-        </template>
-        <template #cell-count="{ row }">
-          <AppInputGroup size="sm">
-            <AppInput
-              v-model.number="row.count"
-              type="number"
-              min="1"
-              size="sm"
-            />
-            <template #append>
-              <span class="c-input-addon">本</span>
-            </template>
-          </AppInputGroup>
-        </template>
-        <template #cell-spec="{ row }">
-          {{ getCableSpecText(row.cableIdx) }}
-        </template>
-        <template #cell-actions="{ row }">
-          <AppButton
-            variant="danger"
-            size="sm"
-            icon-only
-            :disabled="inputs.strongCablesUI.length <= 1"
-            aria-label="削除"
-            @click="emit('remove-strong-cable', row.id)"
+        <template #body>
+          <tr
+            v-for="(cable, index) in inputs.strongCablesUI"
+            :key="cable.id"
           >
-            <AppIcon name="trash-2" size="sm" />
-          </AppButton>
+            <td style="text-align: center;">
+              {{ index + 1 }}
+            </td>
+            <td>
+              <AppSelect
+                v-model="cable.category"
+                :options="strongCategories"
+                placeholder="選択"
+                size="sm"
+                @update:model-value="cable.cableIdx = ''"
+              />
+            </td>
+            <td>
+              <AppSelect
+                v-model="cable.cableIdx"
+                :options="getAvailableSizes(cable.category)"
+                placeholder="選択"
+                size="sm"
+                :disabled="!cable.category"
+              />
+            </td>
+            <td>
+              <AppInputGroup size="sm">
+                <AppInput
+                  v-model.number="cable.count"
+                  type="number"
+                  min="1"
+                  size="sm"
+                />
+                <template #append>
+                  <span class="c-input-addon">本</span>
+                </template>
+              </AppInputGroup>
+            </td>
+            <td style="text-align: right;">
+              {{ getCableSpecText(cable.cableIdx) }}
+            </td>
+            <td style="text-align: center;">
+              <AppButton
+                variant="danger"
+                size="sm"
+                icon-only
+                :disabled="inputs.strongCablesUI.length <= 1"
+                aria-label="削除"
+                @click="emit('remove-strong-cable', cable.id)"
+              >
+                <AppIcon name="trash-2" size="sm" />
+              </AppButton>
+            </td>
+          </tr>
         </template>
       </AppTable>
 
@@ -236,57 +242,63 @@ watch(
       <AppTable
         v-else
         :columns="cableColumns"
-        :data="inputs.weakCablesUI"
         class="c-rack-input__table"
       >
-        <template #cell-no="{ row }">
-          {{ inputs.weakCablesUI.indexOf(row) + 1 }}
-        </template>
-        <template #cell-category="{ row }">
-          <AppSelect
-            v-model="row.category"
-            :options="weakCategories"
-            placeholder="選択"
-            size="sm"
-            @update:model-value="row.cableIdx = ''"
-          />
-        </template>
-        <template #cell-cableIdx="{ row }">
-          <AppSelect
-            v-model="row.cableIdx"
-            :options="getAvailableSizes(row.category)"
-            placeholder="選択"
-            size="sm"
-            :disabled="!row.category"
-          />
-        </template>
-        <template #cell-count="{ row }">
-          <AppInputGroup size="sm">
-            <AppInput
-              v-model.number="row.count"
-              type="number"
-              min="1"
-              size="sm"
-            />
-            <template #append>
-              <span class="c-input-addon">本</span>
-            </template>
-          </AppInputGroup>
-        </template>
-        <template #cell-spec="{ row }">
-          {{ getCableSpecText(row.cableIdx) }}
-        </template>
-        <template #cell-actions="{ row }">
-          <AppButton
-            variant="danger"
-            size="sm"
-            icon-only
-            :disabled="inputs.weakCablesUI.length <= 1"
-            aria-label="削除"
-            @click="emit('remove-weak-cable', row.id)"
+        <template #body>
+          <tr
+            v-for="(cable, index) in inputs.weakCablesUI"
+            :key="cable.id"
           >
-            <AppIcon name="trash-2" size="sm" />
-          </AppButton>
+            <td style="text-align: center;">
+              {{ index + 1 }}
+            </td>
+            <td>
+              <AppSelect
+                v-model="cable.category"
+                :options="weakCategories"
+                placeholder="選択"
+                size="sm"
+                @update:model-value="cable.cableIdx = ''"
+              />
+            </td>
+            <td>
+              <AppSelect
+                v-model="cable.cableIdx"
+                :options="getAvailableSizes(cable.category)"
+                placeholder="選択"
+                size="sm"
+                :disabled="!cable.category"
+              />
+            </td>
+            <td>
+              <AppInputGroup size="sm">
+                <AppInput
+                  v-model.number="cable.count"
+                  type="number"
+                  min="1"
+                  size="sm"
+                />
+                <template #append>
+                  <span class="c-input-addon">本</span>
+                </template>
+              </AppInputGroup>
+            </td>
+            <td style="text-align: right;">
+              {{ getCableSpecText(cable.cableIdx) }}
+            </td>
+            <td style="text-align: center;">
+              <AppButton
+                variant="danger"
+                size="sm"
+                icon-only
+                :disabled="inputs.weakCablesUI.length <= 1"
+                aria-label="削除"
+                @click="emit('remove-weak-cable', cable.id)"
+              >
+                <AppIcon name="trash-2" size="sm" />
+              </AppButton>
+            </td>
+          </tr>
         </template>
       </AppTable>
     </section>
