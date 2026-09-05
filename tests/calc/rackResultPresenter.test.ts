@@ -8,8 +8,7 @@ describe('rackResultPresenter', () => {
     const vmNoInput = formatRackResult({
       result: null,
       maxDepth: 100,
-      isStrong: false,
-      isWeak: false,
+      mode: 'strong',
     })
 
     expect(vmNoInput.isEmpty).toBe(true)
@@ -18,18 +17,25 @@ describe('rackResultPresenter', () => {
 
     const vmError = formatRackResult({
       result: {
-        error: '入力エラー',
+        mode: 'strong',
+        error: true,
         wStrong: 0,
         wWeak: 0,
         wSep: 0,
         totalWidth: 0,
+        selectedSize: null,
         maxCableStackHeight: 0,
+        maxStackDetailStr: '0',
+        maxDepth: 100,
+        rackHeight: 110,
+        sumStrong: 0,
+        sumWeak: 0,
         isOverflow: false,
       },
       maxDepth: 100,
-      isStrong: true,
-      isWeak: false,
-    })
+      mode: 'strong',
+    },
+    )
 
     expect(vmError.isEmpty).toBe(true)
     expect(vmError.displaySize).toBe('---')
