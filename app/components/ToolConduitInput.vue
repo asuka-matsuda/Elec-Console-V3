@@ -4,8 +4,17 @@
  * 配管サイズ自動選定ツールの条件入力コンポーネントです。
  * 対象の配管種類と収容するケーブルリストの入力を管理します。
  */
-import type { SelectOption } from '~/types/components'
+import { computed } from 'vue'
+
+import type { SelectOption, TableColumn } from '~/types/components'
 import type { ConduitInputData } from '~/types/tools'
+import {
+  findCableByIndexString,
+  getAvailableSizes,
+  getCableCategories,
+  getEffectiveCableDiameter,
+} from '~/utils/cable'
+import { calculateCableArea } from '~/utils/tools/conduit/conduitCalcLogic'
 
 const inputs = defineModel<ConduitInputData>({ required: true })
 
@@ -17,6 +26,31 @@ const emit = defineEmits<{
   'add-cable': []
   'remove-cable': [id: string]
 }>()
+
+const categories = computed(() => getCableCategories())
+
+const cableColumns: TableColumn[] = [
+  { key: 'no', label: 'No.', width: '44px', align: 'center' },
+  { key: 'category', label: 'ケーブル種別', width: '32%' },
+  { key: 'cableIdx', label: 'サイズ', width: '36%' },
+  { key: 'count', label: '本数', width: '90px' },
+  { key: 'spec', label: '断面積', align: 'right' },
+  { key: 'actions', label: '', width: '44px', align: 'center' },
+]
+
+const getCableAreaText = (cableIdx: string): string => {
+  const def = findCableByIndexString(cableIdx)
+
+  if (!def) return '---'
+
+  const diameter = getEffectiveCableDiameter(def.diameter)
+
+  if (diameter <= 0) return '---'
+
+  const area = calculateCableArea(diameter)
+
+  return `${area.toFixed(1)} mm²`
+}
 </script>
 
 <template>
@@ -46,26 +80,77 @@ const emit = defineEmits<{
       </AppFormGroup>
     </div>
 
+    <!-- ケーブル条件セクション -->
     <section class="c-conduit-input__section">
       <div class="c-conduit-input__section-header">
-        <div class="c-conduit-input__title-group">
-          <AppIcon name="layers" size="sm" />
-          <h4 class="c-conduit-input__title">
-            収容するケーブル
-          </h4>
-          <span class="c-conduit-input__count-badge">
-            {{ inputs.inputCables.length }}件
-          </span>
-        </div>
+        <h4 class="c-conduit-input__title">
+          収容するケーブル
+        </h4>
+        <AppButton
+          variant="secondary"
+          size="sm"
+          @click="emit('add-cable')"
+        >
+          <AppIcon name="plus" size="sm" />
+          <span>ケーブルを追加</span>
+        </AppButton>
       </div>
 
-      <ToolCableTableInput
-        v-model="inputs.inputCables"
-        spec-type="area"
-        add-label="ケーブルを追加"
-        @add="emit('add-cable')"
-        @remove="(id) => emit('remove-cable', id)"
-      />
+      <AppTable
+        :columns="cableColumns"
+        :data="inputs.inputCables"
+        class="c-conduit-input__table"
+      >
+        <template #cell-no="{ row }">
+          {{ inputs.inputCables.indexOf(row) + 1 }}
+        </template>
+        <template #cell-category="{ row }">
+          <AppSelect
+            v-model="row.category"
+            :options="categories"
+            placeholder="選択"
+            size="sm"
+            @update:model-value="row.cableIdx = ''"
+          />
+        </template>
+        <template #cell-cableIdx="{ row }">
+          <AppSelect
+            v-model="row.cableIdx"
+            :options="getAvailableSizes(row.category)"
+            placeholder="選択"
+            size="sm"
+            :disabled="!row.category"
+          />
+        </template>
+        <template #cell-count="{ row }">
+          <AppInputGroup size="sm">
+            <AppInput
+              v-model.number="row.count"
+              type="number"
+              min="1"
+              size="sm"
+            />
+            <template #append>
+              <span class="c-input-addon">本</span>
+            </template>
+          </AppInputGroup>
+        </template>
+        <template #cell-spec="{ row }">
+          {{ getCableAreaText(row.cableIdx) }}
+        </template>
+        <template #cell-actions="{ row }">
+          <AppButton
+            variant="danger"
+            size="sm"
+            icon-only
+            :disabled="inputs.inputCables.length <= 1"
+            aria-label="削除"
+            @click="emit('remove-cable', row.id)"
+          >
+            <AppIcon name="trash-2" size="sm" />
+          </AppButton>
+        </template>
+      </AppTable>
     </section>
   </div>
 </template>
@@ -77,9 +162,7 @@ const emit = defineEmits<{
   gap: var(--space-form-row-gap);
 
   &__header-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.8fr) minmax(130px, 1fr);
-    gap: var(--space-form-row-gap);
+    @include grid(minmax(0, 1.8fr) minmax(130px, 1fr), var(--space-form-row-gap));
 
     @include mq("sm") {
       grid-template-columns: 1fr;
@@ -98,24 +181,12 @@ const emit = defineEmits<{
     padding: var(--space-1) 0;
   }
 
-  &__title-group {
-    @include flex-start-center;
-
-    gap: var(--space-2);
-    color: var(--color-text-main);
-  }
-
   &__title {
-    @include text-meta("xs", "bold");
+    @include text-title("sm");
   }
 
-  &__count-badge {
-    font-size: var(--font-size-2xs);
-    color: var(--color-text-muted);
-    background: var(--surface-bg-elevated);
-    border: 1px solid var(--color-border-subtle);
-    padding: var(--space-0-5) var(--space-1);
-    border-radius: var(--radius-full, 9999px);
+  &__table {
+    width: 100%;
   }
 }
 </style>

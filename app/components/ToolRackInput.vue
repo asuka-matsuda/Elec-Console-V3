@@ -4,9 +4,16 @@
  * ケーブルラック選定ツールの条件入力コンポーネントです。
  * 強電／弱電タブ切替、ラック高さ、相乗り必要幅、計算パラメータ、およびケーブル条件を管理します。
  */
-import { watch } from 'vue'
+import { computed, watch } from 'vue'
 
 import { RACK_DEFAULT_PARAMS, rackModeOptions } from '~/constants/rackConstants'
+import type { TableColumn } from '~/types/components'
+import {
+  findCableByIndexString,
+  getAvailableSizes,
+  getCableCategories,
+  getEffectiveCableDiameter,
+} from '~/utils/cable'
 import type { RackInputs } from '~/utils/tools/rack/rackMapper'
 
 const inputs = defineModel<RackInputs>({ required: true })
@@ -17,6 +24,30 @@ const emit = defineEmits<{
   'add-weak-cable': []
   'remove-weak-cable': [id: string]
 }>()
+
+const strongCategories = computed(() => getCableCategories('strong'))
+const weakCategories = computed(() => getCableCategories('weak'))
+
+const cableColumns: TableColumn[] = [
+  { key: 'no', label: 'No.', width: '44px', align: 'center' },
+  { key: 'category', label: 'ケーブル種別', width: '32%' },
+  { key: 'cableIdx', label: 'サイズ', width: '36%' },
+  { key: 'count', label: '本数', width: '90px' },
+  { key: 'spec', label: '外径', align: 'right' },
+  { key: 'actions', label: '', width: '44px', align: 'center' },
+]
+
+const getCableSpecText = (cableIdx: string): string => {
+  const def = findCableByIndexString(cableIdx)
+
+  if (!def) return '---'
+
+  const diameter = getEffectiveCableDiameter(def.diameter)
+
+  if (diameter <= 0) return '---'
+
+  return `φ${diameter.toFixed(1)}`
+}
 
 // モード切替時にデフォルトパラメータを適応（カスタム値がなければ自動追従）
 watch(
@@ -127,38 +158,137 @@ watch(
       </div>
     </details>
 
-    <!-- ケーブル条件セクション（テーブル形式） -->
+    <!-- ケーブル条件セクション -->
     <section class="c-rack-input__section">
       <div class="c-rack-input__section-header">
-        <div class="c-rack-input__section-title-group">
-          <AppIcon name="layers" size="sm" />
-          <h4 class="c-rack-input__section-title">
-            {{ inputs.mode === 'strong' ? '強電ケーブルリスト' : '弱電ケーブルリスト' }}
-          </h4>
-          <span class="c-rack-input__count-badge">
-            {{ (inputs.mode === 'strong' ? inputs.strongCablesUI : inputs.weakCablesUI).length }}件
-          </span>
-        </div>
+        <h4 class="c-rack-input__section-title">
+          {{ inputs.mode === 'strong' ? '強電ケーブル条件' : '弱電ケーブル条件' }}
+        </h4>
+        <AppButton
+          variant="secondary"
+          size="sm"
+          @click="emit(inputs.mode === 'strong' ? 'add-strong-cable' : 'add-weak-cable')"
+        >
+          <AppIcon name="plus" size="sm" />
+          <span>{{ inputs.mode === 'strong' ? '強電ケーブルを追加' : '弱電ケーブルを追加' }}</span>
+        </AppButton>
       </div>
 
-      <ToolCableTableInput
+      <!-- 強電ケーブルテーブル -->
+      <AppTable
         v-if="inputs.mode === 'strong'"
-        v-model="inputs.strongCablesUI"
-        filter="strong"
-        spec-type="diameter"
-        add-label="強電ケーブルを追加"
-        @add="emit('add-strong-cable')"
-        @remove="(id) => emit('remove-strong-cable', id)"
-      />
-      <ToolCableTableInput
+        :columns="cableColumns"
+        :data="inputs.strongCablesUI"
+        class="c-rack-input__table"
+      >
+        <template #cell-no="{ row }">
+          {{ inputs.strongCablesUI.indexOf(row) + 1 }}
+        </template>
+        <template #cell-category="{ row }">
+          <AppSelect
+            v-model="row.category"
+            :options="strongCategories"
+            placeholder="選択"
+            size="sm"
+            @update:model-value="row.cableIdx = ''"
+          />
+        </template>
+        <template #cell-cableIdx="{ row }">
+          <AppSelect
+            v-model="row.cableIdx"
+            :options="getAvailableSizes(row.category)"
+            placeholder="選択"
+            size="sm"
+            :disabled="!row.category"
+          />
+        </template>
+        <template #cell-count="{ row }">
+          <AppInputGroup size="sm">
+            <AppInput
+              v-model.number="row.count"
+              type="number"
+              min="1"
+              size="sm"
+            />
+            <template #append>
+              <span class="c-input-addon">本</span>
+            </template>
+          </AppInputGroup>
+        </template>
+        <template #cell-spec="{ row }">
+          {{ getCableSpecText(row.cableIdx) }}
+        </template>
+        <template #cell-actions="{ row }">
+          <AppButton
+            variant="danger"
+            size="sm"
+            icon-only
+            :disabled="inputs.strongCablesUI.length <= 1"
+            aria-label="削除"
+            @click="emit('remove-strong-cable', row.id)"
+          >
+            <AppIcon name="trash-2" size="sm" />
+          </AppButton>
+        </template>
+      </AppTable>
+
+      <!-- 弱電ケーブルテーブル -->
+      <AppTable
         v-else
-        v-model="inputs.weakCablesUI"
-        filter="weak"
-        spec-type="diameter"
-        add-label="弱電ケーブルを追加"
-        @add="emit('add-weak-cable')"
-        @remove="(id) => emit('remove-weak-cable', id)"
-      />
+        :columns="cableColumns"
+        :data="inputs.weakCablesUI"
+        class="c-rack-input__table"
+      >
+        <template #cell-no="{ row }">
+          {{ inputs.weakCablesUI.indexOf(row) + 1 }}
+        </template>
+        <template #cell-category="{ row }">
+          <AppSelect
+            v-model="row.category"
+            :options="weakCategories"
+            placeholder="選択"
+            size="sm"
+            @update:model-value="row.cableIdx = ''"
+          />
+        </template>
+        <template #cell-cableIdx="{ row }">
+          <AppSelect
+            v-model="row.cableIdx"
+            :options="getAvailableSizes(row.category)"
+            placeholder="選択"
+            size="sm"
+            :disabled="!row.category"
+          />
+        </template>
+        <template #cell-count="{ row }">
+          <AppInputGroup size="sm">
+            <AppInput
+              v-model.number="row.count"
+              type="number"
+              min="1"
+              size="sm"
+            />
+            <template #append>
+              <span class="c-input-addon">本</span>
+            </template>
+          </AppInputGroup>
+        </template>
+        <template #cell-spec="{ row }">
+          {{ getCableSpecText(row.cableIdx) }}
+        </template>
+        <template #cell-actions="{ row }">
+          <AppButton
+            variant="danger"
+            size="sm"
+            icon-only
+            :disabled="inputs.weakCablesUI.length <= 1"
+            aria-label="削除"
+            @click="emit('remove-weak-cable', row.id)"
+          >
+            <AppIcon name="trash-2" size="sm" />
+          </AppButton>
+        </template>
+      </AppTable>
     </section>
   </div>
 </template>
@@ -170,9 +300,7 @@ watch(
   gap: var(--space-form-row-gap);
 
   &__grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-form-row-gap) var(--space-form-col-gap);
+    @include grid(repeat(2, minmax(0, 1fr)), var(--space-form-col-gap));
 
     @include mq("sm") {
       grid-template-columns: 1fr;
@@ -205,9 +333,8 @@ watch(
   }
 
   &__params-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-form-row-gap) var(--space-form-col-gap);
+    @include grid(repeat(3, minmax(0, 1fr)), var(--space-form-col-gap));
+
     margin-top: var(--space-3);
 
     @include mq("sm") {
@@ -227,24 +354,12 @@ watch(
     padding: var(--space-1) 0;
   }
 
-  &__section-title-group {
-    @include flex-start-center;
-
-    gap: var(--space-2);
-    color: var(--color-text-main);
-  }
-
   &__section-title {
-    @include text-meta("xs", "bold");
+    @include text-title("sm");
   }
 
-  &__count-badge {
-    font-size: var(--font-size-2xs);
-    color: var(--color-text-muted);
-    background: var(--surface-bg-elevated);
-    border: 1px solid var(--color-border-subtle);
-    padding: var(--space-0-5) var(--space-1);
-    border-radius: var(--radius-full, 9999px);
+  &__table {
+    width: 100%;
   }
 }
 </style>
