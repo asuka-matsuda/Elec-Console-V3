@@ -127,53 +127,39 @@ watch(
       </div>
     </details>
 
-    <!-- ケーブル条件パネル -->
-    <AppPanel
-      :title="inputs.mode === 'strong' ? '強電ケーブル条件' : '弱電ケーブル条件'"
-      size="sm"
-    >
-      <section class="c-rack-input__section">
-        <h4 class="c-rack-input__section-title">
-          {{ inputs.mode === 'strong' ? '強電ケーブルリスト' : '弱電ケーブルリスト' }}
-        </h4>
+    <!-- ケーブル条件セクション（テーブル形式） -->
+    <section class="c-rack-input__section">
+      <div class="c-rack-input__section-header">
+        <div class="c-rack-input__section-title-group">
+          <AppIcon name="layers" size="sm" />
+          <h4 class="c-rack-input__section-title">
+            {{ inputs.mode === 'strong' ? '強電ケーブルリスト' : '弱電ケーブルリスト' }}
+          </h4>
+          <span class="c-rack-input__count-badge">
+            {{ (inputs.mode === 'strong' ? inputs.strongCablesUI : inputs.weakCablesUI).length }}件
+          </span>
+        </div>
+      </div>
 
-        <template v-if="inputs.mode === 'strong'">
-          <ToolCableItemCard
-            v-for="(cable, index) in inputs.strongCablesUI"
-            :key="cable.id"
-            v-model="inputs.strongCablesUI[index]!"
-            :index="index"
-            :filter="'strong'"
-            :removable="inputs.strongCablesUI.length > 1"
-            @remove="emit('remove-strong-cable', cable.id)"
-          />
-          <AppButton
-            variant="secondary"
-            @click="emit('add-strong-cable')"
-          >
-            <AppIcon name="plus" /> 強電ケーブルを追加
-          </AppButton>
-        </template>
-
-        <template v-else>
-          <ToolCableItemCard
-            v-for="(cable, index) in inputs.weakCablesUI"
-            :key="cable.id"
-            v-model="inputs.weakCablesUI[index]!"
-            :index="index"
-            :filter="'weak'"
-            :removable="inputs.weakCablesUI.length > 1"
-            @remove="emit('remove-weak-cable', cable.id)"
-          />
-          <AppButton
-            variant="secondary"
-            @click="emit('add-weak-cable')"
-          >
-            <AppIcon name="plus" /> 弱電ケーブルを追加
-          </AppButton>
-        </template>
-      </section>
-    </AppPanel>
+      <ToolCableTableInput
+        v-if="inputs.mode === 'strong'"
+        v-model="inputs.strongCablesUI"
+        filter="strong"
+        spec-type="diameter"
+        add-label="強電ケーブルを追加"
+        @add="emit('add-strong-cable')"
+        @remove="(id) => emit('remove-strong-cable', id)"
+      />
+      <ToolCableTableInput
+        v-else
+        v-model="inputs.weakCablesUI"
+        filter="weak"
+        spec-type="diameter"
+        add-label="弱電ケーブルを追加"
+        @add="emit('add-weak-cable')"
+        @remove="(id) => emit('remove-weak-cable', id)"
+      />
+    </section>
   </div>
 </template>
 
@@ -232,11 +218,33 @@ watch(
   &__section {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-card-gap);
+    gap: var(--space-item-gap);
+  }
+
+  &__section-header {
+    @include flex-between-center;
+
+    padding: var(--space-1) 0;
+  }
+
+  &__section-title-group {
+    @include flex-start-center;
+
+    gap: var(--space-2);
+    color: var(--color-text-main);
   }
 
   &__section-title {
     @include text-meta("xs", "bold");
+  }
+
+  &__count-badge {
+    font-size: var(--font-size-2xs);
+    color: var(--color-text-muted);
+    background: var(--surface-bg-elevated);
+    border: 1px solid var(--color-border-subtle);
+    padding: var(--space-0-5) var(--space-1);
+    border-radius: var(--radius-full, 9999px);
   }
 }
 </style>

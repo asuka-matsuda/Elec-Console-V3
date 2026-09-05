@@ -47,25 +47,25 @@ const emit = defineEmits<{
     </div>
 
     <section class="c-conduit-input__section">
-      <h4 class="c-conduit-input__title">
-        収容するケーブル
-      </h4>
+      <div class="c-conduit-input__section-header">
+        <div class="c-conduit-input__title-group">
+          <AppIcon name="layers" size="sm" />
+          <h4 class="c-conduit-input__title">
+            収容するケーブル
+          </h4>
+          <span class="c-conduit-input__count-badge">
+            {{ inputs.inputCables.length }}件
+          </span>
+        </div>
+      </div>
 
-      <ToolCableItemCard
-        v-for="(cable, index) in inputs.inputCables"
-        :key="cable.id"
-        v-model="inputs.inputCables[index]!"
-        :index="index"
-        :removable="inputs.inputCables.length > 1"
-        @remove="emit('remove-cable', cable.id)"
+      <ToolCableTableInput
+        v-model="inputs.inputCables"
+        spec-type="area"
+        add-label="ケーブルを追加"
+        @add="emit('add-cable')"
+        @remove="(id) => emit('remove-cable', id)"
       />
-
-      <AppButton
-        variant="success"
-        @click="emit('add-cable')"
-      >
-        <AppIcon name="plus" /> ケーブルを追加
-      </AppButton>
     </section>
   </div>
 </template>
@@ -89,11 +89,33 @@ const emit = defineEmits<{
   &__section {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-form-row-gap);
+    gap: var(--space-item-gap);
+  }
+
+  &__section-header {
+    @include flex-between-center;
+
+    padding: var(--space-1) 0;
+  }
+
+  &__title-group {
+    @include flex-start-center;
+
+    gap: var(--space-2);
+    color: var(--color-text-main);
   }
 
   &__title {
-    @include text-title("sm");
+    @include text-meta("xs", "bold");
+  }
+
+  &__count-badge {
+    font-size: var(--font-size-2xs);
+    color: var(--color-text-muted);
+    background: var(--surface-bg-elevated);
+    border: 1px solid var(--color-border-subtle);
+    padding: var(--space-0-5) var(--space-1);
+    border-radius: var(--radius-full, 9999px);
   }
 }
 </style>
