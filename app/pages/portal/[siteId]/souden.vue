@@ -1,0 +1,353 @@
+<script setup lang="ts">
+/**
+ * Souden Dashboard View
+ * 送電試験ダッシュボード（総合進捗・幹線/二次側の進捗および各フェーズへの導線）
+ */
+import { computed, onMounted } from 'vue'
+
+import { useHead, useRoute } from '#app'
+import { useSoudenDashboard } from '~/composables/portal/useSoudenDashboard'
+
+useHead({ title: '送電試験ダッシュボード - Elec-Console' })
+
+const route = useRoute()
+const siteId = computed(() => route.params.siteId as string)
+
+const {
+  stats,
+  isLoading,
+  isImporting,
+  error,
+  fetchStats,
+  importExcel,
+} = useSoudenDashboard(siteId)
+
+const handleReimport = async () => {
+  try {
+    await importExcel()
+  }
+  catch (err: unknown) {
+    console.error('Reimport error:', err)
+  }
+}
+
+onMounted(() => {
+  fetchStats()
+})
+</script>
+
+<template>
+  <div class="p-souden-dashboard">
+    <AppSectionHeader
+      title="送電試験ダッシュボード"
+      icon="zap"
+      size="lg"
+    >
+      <template #actions>
+        <AppButton
+          :to="`/portal/${siteId}`"
+          variant="secondary"
+          size="sm"
+        >
+          <AppIcon name="arrow-left" size="sm" />
+          ポータルへ戻る
+        </AppButton>
+
+        <AppButton
+          :to="`/portal/${siteId}/operation-logs`"
+          variant="secondary"
+          size="sm"
+        >
+          <AppIcon name="book-open" size="sm" />
+          操作ログ
+        </AppButton>
+
+        <AppButton
+          variant="primary"
+          size="sm"
+          :loading="isImporting"
+          @click="handleReimport"
+        >
+          <AppIcon name="refresh-cw" size="sm" />
+          Excelデータ再同期
+        </AppButton>
+      </template>
+    </AppSectionHeader>
+
+    <div v-if="error" class="p-souden-dashboard__error">
+      <AppIcon name="alert-triangle" />
+      <span>{{ error }}</span>
+    </div>
+
+    <!-- データ未取込時のエンプティステート -->
+    <AppEmptyState
+      v-if="!isLoading && stats && stats.totalCircuits === 0"
+      icon="database"
+      title="回路データが登録されていません"
+      description="Excelファイル（SMC_データベース.xlsxなど）を取り込んで送電試験を開始してください。"
+    >
+      <template #actions>
+        <AppButton
+          variant="primary"
+          :loading="isImporting"
+          @click="handleReimport"
+        >
+          <AppIcon name="download" size="sm" />
+          Excelからデータを取り込む
+        </AppButton>
+      </template>
+    </AppEmptyState>
+
+    <template v-else-if="stats">
+      <!-- 総合進捗カード -->
+      <AppPanel title="総合進捗" icon="activity" variant="hud">
+        <div class="p-souden-summary">
+          <div class="p-souden-summary__main">
+            <AppCircularGauge
+              :value="stats.totalPct"
+              size="lg"
+              label="全試験完了率"
+              variant="main"
+            />
+          </div>
+
+          <div class="p-souden-summary__details">
+            <!-- 幹線 詳細 -->
+            <div class="p-souden-summary__group">
+              <div class="p-souden-summary__sub-gauge">
+                <AppCircularGauge
+                  :value="stats.trunkOverallPct"
+                  size="sm"
+                  label="幹線 全体"
+                  variant="tool"
+                />
+              </div>
+
+              <div class="p-souden-summary__bars">
+                <AppProgressBar
+                  label="回路確認 (Phase 1)"
+                  :completed="stats.trunkP1"
+                  :total="stats.trunkTotal"
+                  :excluded="stats.trunkExcluded"
+                  :pct="stats.trunkP1Pct"
+                  variant="main"
+                />
+                <AppProgressBar
+                  label="絶縁抵抗 (Phase 2)"
+                  :completed="stats.trunkP2"
+                  :total="stats.trunkTotal"
+                  :excluded="stats.trunkExcluded"
+                  :pct="stats.trunkP2Pct"
+                  variant="tool"
+                />
+                <AppProgressBar
+                  label="送電・電圧 (Phase 3)"
+                  :completed="stats.trunkP3"
+                  :total="stats.trunkTotal"
+                  :excluded="stats.trunkExcluded"
+                  :pct="stats.trunkP3Pct"
+                  variant="success"
+                />
+              </div>
+            </div>
+
+            <AppDivider type="fade-center" />
+
+            <!-- 二次側 詳細 -->
+            <div class="p-souden-summary__group">
+              <div class="p-souden-summary__sub-gauge">
+                <AppCircularGauge
+                  :value="stats.secOverallPct"
+                  size="sm"
+                  label="二次側 全体"
+                  variant="management"
+                />
+              </div>
+
+              <div class="p-souden-summary__bars">
+                <AppProgressBar
+                  label="回路確認 (Phase 1)"
+                  :completed="stats.secP1"
+                  :total="stats.secTotal"
+                  :excluded="stats.secExcluded"
+                  :pct="stats.secP1Pct"
+                  variant="main"
+                />
+                <AppProgressBar
+                  label="絶縁抵抗 (Phase 2)"
+                  :completed="stats.secP2"
+                  :total="stats.secTotal"
+                  :excluded="stats.secExcluded"
+                  :pct="stats.secP2Pct"
+                  variant="tool"
+                />
+                <AppProgressBar
+                  label="送電・電圧 (Phase 3)"
+                  :completed="stats.secP3"
+                  :total="stats.secTotal"
+                  :excluded="stats.secExcluded"
+                  :pct="stats.secP3Pct"
+                  variant="success"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </AppPanel>
+
+      <!-- 幹線と二次側のフェーズ遷移カード (2カラム) -->
+      <div class="l-grid l-grid--2col">
+        <!-- 幹線カード -->
+        <AppPanel title="幹線" icon="zap" variant="tool">
+          <div class="p-souden-steps">
+            <SoudenStepIndicator
+              :step-num="1"
+              title="回路確認・増し締め"
+              :completed="stats.trunkP1"
+              :total="stats.trunkTotal"
+              :to="`/portal/${siteId}/phase1?kei_to=幹線`"
+            />
+            <SoudenStepIndicator
+              :step-num="2"
+              title="絶縁抵抗測定"
+              :completed="stats.trunkP2"
+              :total="stats.trunkTotal"
+              :to="`/portal/${siteId}/phase2?kei_to=幹線`"
+            />
+            <SoudenStepIndicator
+              :step-num="3"
+              title="送電・電圧測定"
+              :completed="stats.trunkP3"
+              :total="stats.trunkTotal"
+              :to="`/portal/${siteId}/phase3?kei_to=幹線`"
+            />
+          </div>
+        </AppPanel>
+
+        <!-- 二次側カード -->
+        <AppPanel title="二次側" icon="layers" variant="management">
+          <div class="p-souden-steps">
+            <SoudenStepIndicator
+              :step-num="1"
+              title="回路確認・増し締め"
+              :completed="stats.secP1"
+              :total="stats.secTotal"
+              :to="`/portal/${siteId}/phase1?kei_to=二次側`"
+            />
+            <SoudenStepIndicator
+              :step-num="2"
+              title="絶縁抵抗測定"
+              :completed="stats.secP2"
+              :total="stats.secTotal"
+              :to="`/portal/${siteId}/phase2?kei_to=二次側`"
+            />
+            <SoudenStepIndicator
+              :step-num="3"
+              title="送電・電圧測定"
+              :completed="stats.secP3"
+              :total="stats.secTotal"
+              :to="`/portal/${siteId}/phase3?kei_to=二次側`"
+            />
+          </div>
+        </AppPanel>
+      </div>
+    </template>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.p-souden-dashboard {
+  @include flex-start-stretch($direction: column);
+
+  gap: var(--space-section-gap);
+  height: 100%;
+
+  &__error {
+    @include flex-start-center;
+
+    gap: var(--space-2);
+
+    padding: var(--space-3);
+    border: 1px solid rgb(239 68 68 / 20%);
+    border-radius: var(--radius-sm);
+
+    color: var(--color-status-danger);
+
+    background-color: rgb(239 68 68 / 10%);
+  }
+}
+
+.p-souden-summary {
+  display: flex;
+  gap: var(--space-8);
+  align-items: center;
+  padding: var(--space-2) 0;
+
+  @include mq("lg") {
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  &__main {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 220px;
+  }
+
+  &__details {
+    @include flex-start-stretch($direction: column);
+
+    flex: 1;
+    gap: var(--space-5);
+  }
+
+  &__group {
+    display: flex;
+    gap: var(--space-6);
+    align-items: center;
+
+    @include mq("md") {
+      flex-direction: column;
+      gap: var(--space-3);
+      align-items: flex-start;
+    }
+  }
+
+  &__sub-gauge {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+
+    width: 120px;
+  }
+
+  &__bars {
+    @include flex-start-stretch($direction: column);
+
+    flex: 1;
+    gap: var(--space-3);
+    width: 100%;
+  }
+}
+
+.p-souden-steps {
+  @include flex-start-stretch($direction: column);
+
+  gap: var(--space-5);
+  padding: var(--space-2) 0;
+}
+
+.l-grid--2col {
+  @include grid(1fr 1fr, var(--space-section-gap));
+
+  align-items: flex-start;
+
+  @include mq("md") {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

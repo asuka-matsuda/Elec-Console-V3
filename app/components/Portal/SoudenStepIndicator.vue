@@ -1,0 +1,181 @@
+<script setup lang="ts">
+/**
+ * SoudenStepIndicator
+ * 送電試験ダッシュボード内のフェーズ遷移ステップインジケーター
+ */
+import { computed } from 'vue'
+
+const props = withDefaults(
+  defineProps<{
+    stepNum: number
+    title: string
+    completed: number
+    total: number
+    to: string
+    disabled?: boolean
+  }>(),
+  {
+    disabled: false,
+  },
+)
+
+const isCompleted = computed(() => props.total > 0 && props.completed >= props.total)
+const pct = computed(() => {
+  if (props.total <= 0) return 0
+
+  return Math.min(100, Math.round((props.completed / props.total) * 100))
+})
+</script>
+
+<template>
+  <div :class="['c-step-indicator__item', { 'is-completed': isCompleted, 'is-disabled': disabled }]">
+    <div class="c-step-indicator__node">
+      <AppIcon v-if="isCompleted" name="check" size="sm" />
+      <span v-else>{{ stepNum }}</span>
+    </div>
+
+    <div class="c-step-indicator__info">
+      <div class="c-step-indicator__details">
+        <h4 class="c-step-indicator__title">
+          {{ title }}
+        </h4>
+        <div class="c-step-indicator__progress">
+          <strong>{{ completed }}</strong> / {{ total }}
+          <span class="c-step-indicator__pct">({{ pct }}%)</span>
+        </div>
+      </div>
+
+      <AppButton
+        :to="to"
+        :variant="isCompleted ? 'success' : 'primary'"
+        size="sm"
+        :disabled="disabled"
+      >
+        <AppIcon name="edit-3" size="sm" />
+        試験入力
+      </AppButton>
+    </div>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.c-step-indicator__item {
+  position: relative;
+
+  display: flex;
+  gap: var(--space-4, 16px);
+  align-items: center;
+
+  width: 100%;
+
+  &::after {
+    content: "";
+
+    position: absolute;
+    z-index: 1;
+    top: var(--space-8, 32px);
+    left: 15px;
+
+    width: 2px;
+    height: calc(100% + var(--space-4, 16px));
+
+    background-color: rgb(255 255 255 / 10%);
+
+    transition: background-color 0.3s ease;
+  }
+
+  &:last-child::after {
+    display: none;
+  }
+
+  &.is-completed {
+    .c-step-indicator__node {
+      border-color: var(--color-status-success, #22c55e);
+      color: var(--color-status-success, #22c55e);
+      box-shadow: 0 0 10px rgb(34 197 94 / 40%);
+    }
+
+    &::after {
+      background-color: var(--color-status-success, #22c55e);
+    }
+  }
+
+  &.is-disabled {
+    pointer-events: none;
+    opacity: 0.6;
+  }
+}
+
+.c-step-indicator__node {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+  border: 2px solid rgb(255 255 255 / 20%);
+  border-radius: 50%;
+
+  font-family: var(--font-mono, monospace);
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: bold;
+  color: var(--color-text-muted, #94a3b8);
+
+  background-color: var(--surface-bg-elevated, #1e293b);
+
+  transition: all 0.3s ease;
+}
+
+.c-step-indicator__info {
+  display: flex;
+  flex: 1;
+  gap: var(--space-3, 12px);
+  align-items: center;
+  justify-content: space-between;
+
+  padding: var(--space-3, 12px) var(--space-4, 16px);
+  border: 1px solid rgb(255 255 255 / 8%);
+  border-radius: var(--radius-md, 8px);
+
+  background-color: rgb(255 255 255 / 3%);
+
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+
+  &:hover {
+    border-color: rgb(255 255 255 / 15%);
+    background-color: rgb(255 255 255 / 5%);
+  }
+}
+
+.c-step-indicator__details {
+  @include flex-start-stretch($direction: column);
+
+  gap: var(--space-1, 4px);
+}
+
+.c-step-indicator__title {
+  margin: 0;
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: var(--font-weight-bold, 700);
+  color: var(--color-text-main, #fff);
+}
+
+.c-step-indicator__progress {
+  font-family: var(--font-mono, monospace);
+  font-size: var(--text-xs, 0.75rem);
+  color: var(--color-text-muted, #94a3b8);
+
+  strong {
+    color: var(--color-text-main, #fff);
+  }
+}
+
+.c-step-indicator__pct {
+  margin-left: var(--space-1, 4px);
+  color: var(--color-text-secondary, #94a3b8);
+}
+</style>

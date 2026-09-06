@@ -39,6 +39,8 @@ model Site {
   events           Event[]
   settings         SiteSettings?
   calendarSettings CalendarSettings?
+  circuits         Circuit[]
+  operationLogs    OperationLog[]
 }
 
 model Event {
@@ -60,6 +62,8 @@ model SiteSettings {
   siteId                String  @unique
   phase2ThresholdMegOhm Float?  @default(1.0)
   enablePhase3          Boolean @default(true)
+  excludedCircuits      String? // Stored as JSON string "['予備', 'スペース']"
+  excelPath             String?
 
   site Site @relation(fields: [siteId], references: [id])
 }
@@ -72,6 +76,80 @@ model CalendarSettings {
   customHolidays String // Stored as JSON string "['YYYY-MM-DD']"
 
   site Site @relation(fields: [siteId], references: [id])
+}
+
+model Circuit {
+  id               String  @id @default(uuid())
+  siteId           String
+  excelRow         Int?
+  joutai           String?
+  keiTo            String // 幹線 / 二次側
+  banShubetsu      String // 電灯 / 動力
+  banMeisho        String // 1L-1, 1P-1 など
+  haidenHoushiki   String? // AC 1Φ3W 100/200V など
+  souShubetsu      String? // RNT, RN, TN, RST など
+  kairoKigou       String?
+  kairoBangou      String?
+  kairoMeisho      String?
+  shadankiShubetsu String?
+  shadankiYouryou  String?
+
+  cableList    String?
+  haisenJousuu String?
+  setsuchiUmu  String?
+  setsuchiList String?
+
+  // Phase 1 (回路確認・増し締め)
+  p1Kakunin        Boolean   @default(false)
+  p1Mashishime     Boolean   @default(false)
+  p1Worker         String?
+  p1ConfirmedAt    DateTime?
+  p1Remarks        String?
+  p1ModifiedFields String? // JSON array of modified field keys
+
+  // Phase 2 (絶縁抵抗測定)
+  zetsuenR      Float?
+  zetsuenS      Float?
+  zetsuenT      Float?
+  p2RStatus     String?
+  p2SStatus     String?
+  p2TStatus     String?
+  p2Worker      String?
+  p2ConfirmedAt DateTime?
+  p2Remarks     String?
+  p2IsComplete  Boolean   @default(false)
+
+  // Phase 3 (送電・電圧測定)
+  denatsuRs     Float?
+  denatsuSt     Float?
+  denatsuRt     Float?
+  kensou        String?
+  p3Worker      String?
+  p3ConfirmedAt DateTime?
+  p3Remarks     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@index([siteId, banMeisho])
+  @@index([siteId, keiTo])
+}
+
+model OperationLog {
+  id          String   @id @default(uuid())
+  siteId      String
+  timestamp   DateTime @default(now())
+  worker      String
+  action      String
+  targetBan   String?
+  targetKairo String?
+  details     String?
+
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@index([siteId, timestamp])
 }
 
 model Announcement {

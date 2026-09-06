@@ -23,6 +23,7 @@
     "@vee-validate/zod": "^4.15.1",
     "@vueuse/core": "^14.4.0",
     "@vueuse/nuxt": "^14.4.0",
+    "exceljs": "^4.4.0",
     "feather-icons": "^4.29.2",
     "glob": "^13.0.6",
     "katex": "^0.18.1",
