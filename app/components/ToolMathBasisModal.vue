@@ -152,8 +152,7 @@ const handleClose = () => {
   }
 
   &__math {
-    overflow-x: auto;
-    overflow-y: hidden;
+    overflow: auto hidden;
     min-width: 0;
     padding: var(--space-1) 0;
     outline: none;
@@ -229,7 +228,7 @@ const handleClose = () => {
       @include text-meta("2xs", "regular");
 
       min-width: 0;
-      word-break: break-word;
+      overflow-wrap: break-word;
     }
   }
 }

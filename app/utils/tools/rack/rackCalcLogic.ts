@@ -355,6 +355,7 @@ export function generateMathData(
 
   // ③ 相乗り必要幅（手入力加算）
   const otherVar = isStrong ? 'W_{weak}' : 'W_{strong}'
+
   mathStepData.push({
     title: `③ 相乗り必要幅（手入力加算）`,
     tex: `${otherVar} = ${inputs.otherWidth > 0 ? hlOk(inputs.otherWidth.toFixed(1)) : '0'} \\text{ [mm]}`,

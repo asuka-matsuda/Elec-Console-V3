@@ -145,21 +145,23 @@ export function formatRackResult(
   const isEmpty = isZeroOrNoInput || isError
 
   // tier1 が直接渡されていない場合のフォールバック（旧モックデータや後方互換対応）
-  const effectiveTier1: RackTierResult | undefined = result?.tier1 ?? (result && result.totalWidth > 0 ? {
-    layers: 1,
-    title: '1段敷設（平置き・標準）',
-    isApplicable: true,
-    wMain: result.wStrong ?? 0,
-    wOther: result.wWeak ?? 0,
-    totalWidth: result.totalWidth,
-    selectedSize: result.selectedSize,
-    isOverflow: result.isOverflow ?? false,
-    isSizeOver: result.selectedSize === null && result.totalWidth > 0,
-    maxCableStackHeight: result.maxCableStackHeight ?? 0,
-    stackHeightDetailStr: result.maxStackDetailStr ?? '',
-    cablesWidth: result.sumStrong ?? 0,
-    cablesCount: 1,
-  } : undefined)
+  const effectiveTier1: RackTierResult | undefined = result?.tier1 ?? (result && result.totalWidth > 0
+    ? {
+        layers: 1,
+        title: '1段敷設（平置き・標準）',
+        isApplicable: true,
+        wMain: result.wStrong ?? 0,
+        wOther: result.wWeak ?? 0,
+        totalWidth: result.totalWidth,
+        selectedSize: result.selectedSize,
+        isOverflow: result.isOverflow ?? false,
+        isSizeOver: result.selectedSize === null && result.totalWidth > 0,
+        maxCableStackHeight: result.maxCableStackHeight ?? 0,
+        stackHeightDetailStr: result.maxStackDetailStr ?? '',
+        cablesWidth: result.sumStrong ?? 0,
+        cablesCount: 1,
+      }
+    : undefined)
 
   const effectiveTier2: RackTierResult | undefined = result?.tier2
 

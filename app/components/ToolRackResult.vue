@@ -134,23 +134,23 @@ const vm = computed(() =>
     color: var(--color-text-secondary);
 
     strong {
-      color: var(--color-text-main);
       font-weight: var(--font-weight-bold);
+      color: var(--color-text-main);
     }
   }
 
   &__not-applicable {
     @include text-meta("xs", "regular");
 
-    color: var(--color-text-muted);
     padding: var(--space-1) 0;
+    color: var(--color-text-muted);
   }
 
   &__depth-note {
     @include text-meta("2xs", "regular");
 
-    color: var(--color-text-muted);
     margin-left: var(--space-1);
+    color: var(--color-text-muted);
   }
 }
 </style>
