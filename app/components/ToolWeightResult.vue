@@ -80,7 +80,6 @@ const vm = computed(() => formatWeightResult(props.result))
   .warning {
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-bold);
-    line-height: var(--line-height-base);
     color: var(--color-status-danger);
   }
 }

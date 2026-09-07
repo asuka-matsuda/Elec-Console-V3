@@ -161,7 +161,6 @@ const {
   --glow-color: var(--color-status-danger);
 
   font-size: var(--font-size-2xs);
-  line-height: var(--line-height-base);
   color: var(--color-status-danger);
   text-shadow: var(--text-glow-sm);
   letter-spacing: var(--tracking-wide);
@@ -169,7 +168,6 @@ const {
 
 .help {
   font-size: var(--font-size-2xs);
-  line-height: var(--line-height-base);
   color: var(--color-text-muted);
   letter-spacing: var(--tracking-wide);
 }

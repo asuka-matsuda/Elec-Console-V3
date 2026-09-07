@@ -191,14 +191,7 @@ const categoryColorMap: Record<string, string> = {
 
 .item-kana {
   font-size: var(--font-size-2xs);
-  line-height: var(--line-height-base);
   color: var(--color-text-muted);
-}
-
-.item-term {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
 }
 
 .item-body {
@@ -226,13 +219,11 @@ const categoryColorMap: Record<string, string> = {
 
 .meta-label {
   font-size: var(--font-size-2xs);
-  line-height: var(--line-height-base);
   color: var(--color-text-muted);
 }
 
 .meta-text {
   font-size: var(--font-size-sm);
-  line-height: var(--line-height-base);
   color: var(--color-text-secondary);
 }
 </style>

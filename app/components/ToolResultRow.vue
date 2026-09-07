@@ -23,7 +23,6 @@ defineProps<{
   justify-content: space-between;
 
   font-size: var(--font-size-sm);
-  line-height: var(--line-height-base);
   color: var(--color-text-secondary);
 
   /* stylelint-disable-next-line selector-pseudo-class-no-unknown */

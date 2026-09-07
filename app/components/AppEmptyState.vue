@@ -70,15 +70,12 @@ const {
 
   .title {
     font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-bold);
-    line-height: var(--line-height-tight);
     color: var(--color-text-secondary);
     letter-spacing: var(--tracking-wide);
   }
 
   .desc {
     font-size: var(--font-size-sm);
-    line-height: var(--line-height-base);
     color: var(--color-text-muted);
     letter-spacing: var(--tracking-normal);
   }

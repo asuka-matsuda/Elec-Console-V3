@@ -102,7 +102,6 @@ const handleChangePassword = async () => {
   &__error {
     padding: var(--space-2) var(--space-3);
     font-size: var(--font-size-sm);
-    line-height: var(--line-height-base);
     color: var(--color-status-danger);
   }
 

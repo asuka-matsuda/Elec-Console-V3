@@ -352,7 +352,6 @@ const handleAddCable = () => {
 
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-base);
   color: var(--color-text-secondary);
 
   &:hover {
@@ -382,12 +381,6 @@ const handleAddCable = () => {
   align-items: center;
   justify-content: space-between;
   padding: var(--space-1) 0;
-}
-
-.section-title {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
 }
 
 .rack-table {

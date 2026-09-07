@@ -137,7 +137,6 @@ const onCategoryChange = (val: unknown) => {
 
   .meta {
     font-size: var(--font-size-2xs);
-    line-height: var(--line-height-base);
     color: var(--color-text-muted);
   }
 

@@ -136,7 +136,6 @@ const target = computed(() => to || href)
 
   .tile-desc {
     font-size: var(--font-size-sm);
-    line-height: var(--line-height-base);
     color: var(--color-text-secondary);
     letter-spacing: var(--tracking-normal);
   }

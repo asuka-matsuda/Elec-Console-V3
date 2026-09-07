@@ -100,7 +100,6 @@ const {
 
   &__lead {
     font-size: var(--font-size-sm);
-    line-height: var(--line-height-base);
     color: var(--color-text-muted);
   }
 
@@ -180,7 +179,6 @@ const {
 
   &__color-label {
     font-size: var(--font-size-2xs);
-    line-height: var(--line-height-base);
     color: var(--color-text-muted);
   }
 }

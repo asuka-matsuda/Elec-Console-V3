@@ -159,10 +159,7 @@ const pct = computed(() => {
 }
 
 .c-step-indicator__title {
-  margin: 0;
-  font-size: var(--text-sm, 0.875rem);
-  font-weight: var(--font-weight-bold, 700);
-  color: var(--color-text-main, #fff);
+  color: var(--color-text-main);
 }
 
 .c-step-indicator__progress {

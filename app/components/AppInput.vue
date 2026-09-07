@@ -64,7 +64,6 @@ withDefaults(
   border-radius: var(--radius-sm);
 
   font-size: var(--font-size-sm);
-  line-height: var(--line-height-base);
   color: var(--color-text-main);
 
   background-color: var(--surface-bg-elevated);
@@ -127,7 +126,6 @@ withDefaults(
 
   &--sm {
     font-size: var(--font-size-2xs);
-    line-height: var(--line-height-base);
     color: var(--color-text-muted);
   }
 

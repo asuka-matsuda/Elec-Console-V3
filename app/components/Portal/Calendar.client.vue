@@ -261,7 +261,6 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
     font-size: var(--font-size-2xs);
     font-weight: var(--font-weight-bold);
-    line-height: var(--line-height-base);
     color: var(--color-primary);
     text-shadow: var(--text-glow-sm);
 
@@ -307,7 +306,6 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       .fc-popover-title {
         font-size: var(--font-size-sm);
         font-weight: var(--font-weight-bold);
-        line-height: var(--line-height-base);
         color: var(--color-primary);
       }
 
@@ -342,7 +340,6 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     .fc-list-day-side-text {
       font-size: var(--font-size-sm);
       font-weight: var(--font-weight-bold);
-      line-height: var(--line-height-base);
       color: var(--theme-accent);
     }
 
@@ -371,7 +368,6 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     .fc-list-event-title,
     .fc-list-event-time {
       font-size: var(--font-size-sm);
-      line-height: var(--line-height-base);
       color: var(--color-text-main);
     }
 
@@ -386,9 +382,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
     .fc-list-empty {
       padding: var(--space-card-pad);
-
       font-size: var(--font-size-base);
-      line-height: var(--line-height-base);
       color: var(--color-text-muted);
       text-align: center;
     }

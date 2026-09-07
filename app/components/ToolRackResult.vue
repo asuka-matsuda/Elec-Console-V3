@@ -138,7 +138,6 @@ const vm = computed(() =>
 
 .sub-val {
   font-size: var(--font-size-xs);
-  line-height: var(--line-height-base);
   color: var(--color-text-secondary);
 
   strong {
@@ -150,14 +149,12 @@ const vm = computed(() =>
 .not-applicable {
   padding: var(--space-1) 0;
   font-size: var(--font-size-xs);
-  line-height: var(--line-height-base);
   color: var(--color-text-muted);
 }
 
 .depth-note {
   margin-left: var(--space-1);
   font-size: var(--font-size-2xs);
-  line-height: var(--line-height-base);
   color: var(--color-text-muted);
 }
 </style>

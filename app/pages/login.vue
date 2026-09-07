@@ -97,7 +97,6 @@ const handleLogin = async () => {
     border-radius: var(--radius-sm);
 
     font-size: var(--font-size-sm);
-    line-height: var(--line-height-base);
     color: var(--color-status-danger);
   }
 

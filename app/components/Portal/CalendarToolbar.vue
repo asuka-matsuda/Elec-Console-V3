@@ -120,9 +120,6 @@ const emit = defineEmits<{
 .toolbar-title {
   --glow-color: var(--theme-accent);
 
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
   color: var(--theme-accent);
   text-shadow: var(--text-glow-sm);
 }

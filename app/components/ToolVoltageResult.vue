@@ -150,7 +150,6 @@ const mainBoxStatus = computed(() =>
 
 .main-unit {
   font-size: var(--font-size-base);
-  line-height: var(--line-height-base);
   color: var(--color-text-secondary);
 }
 
@@ -163,7 +162,6 @@ const mainBoxStatus = computed(() =>
 
 .drop-unit {
   font-size: var(--font-size-sm);
-  line-height: var(--line-height-base);
   color: var(--color-text-secondary);
 }
 
@@ -204,7 +202,6 @@ const mainBoxStatus = computed(() =>
 
 .metric-label {
   font-size: var(--font-size-2xs);
-  line-height: var(--line-height-base);
   color: var(--color-text-muted);
 }
 
@@ -212,8 +209,6 @@ const mainBoxStatus = computed(() =>
   display: flex;
   gap: var(--space-1);
   align-items: baseline;
-
-  margin: 0;
 
   font-family: var(--font-mono);
   font-size: var(--font-size-sm);
@@ -224,13 +219,11 @@ const mainBoxStatus = computed(() =>
 .value-sep {
   margin: 0 2px;
   font-size: var(--font-size-sm);
-  line-height: var(--line-height-base);
   color: var(--color-text-muted);
 }
 
 .value-unit {
   font-size: var(--font-size-sm);
-  line-height: var(--line-height-base);
   color: var(--color-text-secondary);
 }
 </style>

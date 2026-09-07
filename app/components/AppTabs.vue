@@ -86,7 +86,6 @@ const selectTab = (option: TabOption<T>) => {
 
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  line-height: var(--line-height-base);
   color: var(--color-text-secondary);
 
   transition: var(--transition-base);

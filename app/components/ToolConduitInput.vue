@@ -191,12 +191,6 @@ const getCableAreaText = (cableIdx: string): string => {
   padding: var(--space-1) 0;
 }
 
-.section-title {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-}
-
 .conduit-table {
   width: 100%;
 }

@@ -43,7 +43,6 @@ const {
   font-family: var(--font-mono);
   font-size: var(--font-size-2xs);
   font-variant-numeric: tabular-nums;
-  line-height: var(--line-height-base);
   color: var(--color-text-muted);
   letter-spacing: var(--tracking-normal);
 

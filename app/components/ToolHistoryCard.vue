@@ -133,17 +133,13 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
 
 .item-date {
   font-size: var(--font-size-2xs);
-  line-height: var(--line-height-base);
   color: var(--color-text-muted);
 }
 
 .item-title {
   display: flex;
   align-items: center;
-
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
   color: var(--color-text-main);
 }
 
@@ -161,10 +157,6 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
 .section-title {
   padding-left: var(--space-1);
   border-left: 2px solid var(--color-category-tool);
-
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
   color: var(--color-text-main);
 }
 
@@ -174,7 +166,6 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
   gap: var(--space-1) var(--space-3);
 
   font-size: var(--font-size-sm);
-  line-height: var(--line-height-base);
   color: var(--color-text-muted);
 
   dt {

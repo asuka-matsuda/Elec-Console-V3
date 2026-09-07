@@ -200,7 +200,6 @@ const handleClose = () => {
 
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-base);
   color: var(--color-text-muted);
 
   @include mq("sm") {
@@ -214,9 +213,7 @@ const handleClose = () => {
 }
 
 .legend-title {
-  margin: 0;
   font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
   color: var(--color-text-secondary);
 }
 
@@ -240,9 +237,7 @@ const handleClose = () => {
 
   dd {
     min-width: 0;
-
     font-size: var(--font-size-2xs);
-    line-height: var(--line-height-base);
     color: var(--color-text-muted);
     overflow-wrap: break-word;
   }

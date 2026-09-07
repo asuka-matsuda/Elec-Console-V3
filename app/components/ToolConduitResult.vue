@@ -157,7 +157,6 @@ const statusCustom = computed(() =>
 
   .percent-unit {
     font-size: var(--font-size-sm);
-    line-height: var(--line-height-base);
     color: var(--color-text-secondary);
   }
 
@@ -194,16 +193,13 @@ const statusCustom = computed(() =>
   .value-sep {
     margin: 0 2px;
     font-size: var(--font-size-base);
-    line-height: var(--line-height-base);
     color: var(--color-text-muted);
   }
 
   .value-unit {
     font-size: var(--font-size-base);
     font-weight: var(--font-weight-bold);
-    line-height: var(--line-height-base);
     color: var(--color-text-secondary);
-
     opacity: 0.8;
   }
 
@@ -226,7 +222,6 @@ const statusCustom = computed(() =>
 
       font-size: var(--font-size-sm);
       font-weight: var(--font-weight-bold);
-      line-height: var(--line-height-base);
       color: var(--color-status-warning);
     }
 
@@ -235,14 +230,8 @@ const statusCustom = computed(() =>
       flex-direction: column;
       gap: var(--space-1);
 
-      margin: 0;
-      padding-left: 0;
-
-      list-style: none;
-
       li {
         font-size: var(--font-size-2xs);
-        line-height: var(--line-height-base);
         color: var(--color-text-secondary);
       }
     }

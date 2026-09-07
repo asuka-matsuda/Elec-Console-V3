@@ -52,7 +52,6 @@ const {
   align-items: center;
 
   font-size: var(--font-size-sm);
-  line-height: var(--line-height-base);
   color: var(--color-text-muted);
   letter-spacing: var(--tracking-normal);
 

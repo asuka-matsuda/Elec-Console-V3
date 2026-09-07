@@ -50,7 +50,6 @@ defineProps<{
   border-radius: var(--radius-sm);
 
   font-size: var(--font-size-sm);
-  line-height: var(--line-height-base);
   text-transform: uppercase;
   white-space: nowrap;
 

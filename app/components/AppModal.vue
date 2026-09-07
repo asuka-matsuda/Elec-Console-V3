@@ -233,7 +233,6 @@ onMounted(() => {
     min-height: 0;
 
     font-size: var(--font-size-sm);
-    line-height: var(--line-height-base);
 
     &.is-align-center {
       text-align: center;
@@ -247,7 +246,6 @@ onMounted(() => {
 
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-bold);
-    line-height: var(--line-height-base);
     color: var(--color-status-danger);
 
     backdrop-filter: blur(var(--blur-sm));

@@ -33,7 +33,6 @@ const {
   border-radius: var(--radius-sm);
 
   font-size: var(--font-size-sm);
-  line-height: var(--line-height-base);
   color: color-mix(in srgb, var(--disclaimer-color) 85%, var(--color-text-main));
   letter-spacing: var(--tracking-normal);
 

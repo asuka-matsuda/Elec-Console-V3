@@ -105,7 +105,6 @@ const resolvedStatus = computed(() => {
 
   &__label {
     font-size: var(--font-size-2xs);
-    line-height: var(--line-height-base);
     color: var(--color-text-secondary);
     text-transform: uppercase;
   }

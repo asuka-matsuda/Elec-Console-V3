@@ -82,7 +82,6 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
 
     font-size: var(--font-size-base);
     font-weight: var(--font-weight-bold);
-    line-height: var(--line-height-base);
     color: var(--color-text-muted);
 
     transition: var(--transition-base);
