@@ -85,11 +85,11 @@ const handleCopyPassword = () => {
     gap: var(--space-3);
 
     padding: var(--space-card-pad);
+    border: var(--border-width-base) solid color-mix(in srgb, var(--theme-accent) 20%, transparent);
+    border-radius: var(--radius-sm);
 
     background: transparent;
     backdrop-filter: blur(var(--blur-sm));
-
-    @include border-base(var(--theme-accent), 20%);
   }
 
   &__credential-value {

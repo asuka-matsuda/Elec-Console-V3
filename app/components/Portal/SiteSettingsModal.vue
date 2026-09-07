@@ -422,8 +422,8 @@ const confirmResetImport = async () => {
 
     min-height: 40px;
     padding: var(--space-2);
-
-    @include border-base($opacity: 30%);
+    border: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 30%, transparent);
+    border-radius: var(--radius-sm);
   }
 
   &__sync-cards {

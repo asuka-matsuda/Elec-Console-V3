@@ -178,14 +178,18 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   color: var(--color-text-main);
 
   &[data-disabled="true"] {
-    @include disabled;
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.5;
   }
 }
 
 .c-custom-select__value {
-  @include click-enabled;
+  cursor: pointer;
+  user-select: none;
 
   position: relative;
+  z-index: 1;
 
   display: flex;
   align-items: center;
@@ -194,16 +198,85 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   min-height: calc(var(--control-height-ratio) * 1em);
   padding-block: 0.3em;
   padding-inline: 1.2em;
+  border: var(--border-width-base) solid var(--color-border);
+  border-radius: var(--radius-sm);
 
   color: inherit;
 
-  @include form-control-base(
-    $is-error: ".c-custom-select.is-error &",
-    $is-active: "&.is-active, &:focus, &:focus-visible"
-  );
+  background-color: var(--surface-bg-elevated);
+  box-shadow: var(--shadow-sink);
+
+  transition: var(--transition-glow);
+
+  &:is(:disabled, .is-disabled) {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &:not(:disabled, .is-disabled) {
+    &:hover {
+      border-color: var(--theme-accent);
+      box-shadow:
+        0 0 4px color-mix(in srgb, var(--theme-accent) 45%, transparent),
+        0 0 8px color-mix(in srgb, var(--theme-accent) 20%, transparent);
+    }
+
+    &:active {
+      border-color: var(--theme-accent);
+      box-shadow:
+        0 0 4px color-mix(in srgb, var(--theme-accent) 60%, transparent),
+        0 0 8px color-mix(in srgb, var(--theme-accent) 30%, transparent),
+        inset 0 0 2px color-mix(in srgb, var(--theme-accent) 40%, transparent);
+    }
+
+    &.is-active,
+    &:focus,
+    &:focus-visible {
+      border-color: color-mix(in srgb, var(--theme-accent) 60%, transparent);
+      outline: none;
+      box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--theme-accent) 70%, transparent),
+        0 0 6px color-mix(in srgb, var(--theme-accent) 50%, transparent),
+        0 0 12px color-mix(in srgb, var(--theme-accent) 20%, transparent);
+    }
+
+    .c-custom-select.is-error & {
+      border-color: color-mix(in srgb, var(--color-status-danger) 60%, transparent);
+      color: var(--color-status-danger);
+
+      &:hover {
+        border-color: var(--color-status-danger);
+        box-shadow:
+          0 0 4px color-mix(in srgb, var(--color-status-danger) 45%, transparent),
+          0 0 8px color-mix(in srgb, var(--color-status-danger) 20%, transparent);
+      }
+
+      &:active {
+        border-color: var(--color-status-danger);
+        box-shadow:
+          0 0 4px color-mix(in srgb, var(--color-status-danger) 60%, transparent),
+          0 0 8px color-mix(in srgb, var(--color-status-danger) 30%, transparent),
+          inset 0 0 2px color-mix(in srgb, var(--color-status-danger) 40%, transparent);
+      }
+
+      &.is-active,
+      &:focus,
+      &:focus-visible {
+        border-color: var(--color-status-danger);
+        outline: none;
+        box-shadow:
+          0 0 0 1px color-mix(in srgb, var(--color-status-danger) 70%, transparent),
+          0 0 6px color-mix(in srgb, var(--color-status-danger) 50%, transparent),
+          0 0 12px color-mix(in srgb, var(--color-status-danger) 20%, transparent);
+      }
+    }
+  }
 
   &::after {
     content: "";
+
+    position: relative;
+    z-index: 1;
 
     flex-shrink: 0;
 
@@ -216,7 +289,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
     background-position: center;
     background-size: contain;
 
-    @include state-base;
+    transition: var(--transition-base);
   }
 
   &.is-placeholder {
@@ -243,16 +316,20 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   --glow-color: color-mix(in srgb, var(--theme-accent) 20%, transparent);
 
   position: absolute;
+  position: relative;
   z-index: var(--z-index-select);
+  z-index: 1;
 
   width: max-content;
   max-width: 90vw;
+  border: var(--border-width-base) solid var(--theme-accent);
+  border-radius: var(--radius-sm);
 
   background-color: var(--surface-bg-solid);
   backdrop-filter: blur(var(--blur-md));
+  box-shadow: var(--shadow-elevation-md);
 
-  @include border-base(var(--theme-accent));
-  @include state-base("md", none, var(--theme-accent));
+  transition: var(--transition-base);
 
   .c-custom-select.is-error & {
     --glow-color: color-mix(
@@ -266,8 +343,8 @@ const getOptionClasses = (option: SelectOption, index: number) => [
       var(--color-status-danger) 50%,
       transparent
     );
-
-    @include state-base("md", none, var(--color-status-danger));
+    box-shadow: var(--shadow-elevation-md);
+    transition: var(--transition-base);
   }
 }
 
@@ -284,7 +361,11 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 }
 
 .c-custom-select__option {
-  @include click-enabled;
+  cursor: pointer;
+  user-select: none;
+
+  position: relative;
+  z-index: 1;
 
   overflow: hidden;
 
@@ -297,10 +378,12 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   text-overflow: ellipsis;
   white-space: nowrap;
 
-  @include state-base;
+  transition: var(--transition-base);
 
   &.is-disabled {
-    @include disabled;
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.5;
   }
 
   &.is-placeholder {
@@ -314,17 +397,25 @@ const getOptionClasses = (option: SelectOption, index: number) => [
       --glow-color: color-mix(in srgb, var(--theme-accent) 30%, transparent);
 
       color: var(--theme-accent);
-      background-color: transparent;
 
-      @include state-active(var(--theme-accent));
+      background-color: transparent;
+      background-color: color-mix(in srgb, var(--theme-accent) 15%, transparent);
+      box-shadow:
+        0 0 4px color-mix(in srgb, var(--theme-accent) 45%, transparent),
+        0 0 8px color-mix(in srgb, var(--theme-accent) 20%, transparent);
+
+      transition: var(--transition-glow);
     }
 
     &.is-selected {
       --glow-color: color-mix(in srgb, var(--theme-accent) 40%, transparent);
 
       color: var(--theme-accent);
-
-      @include state-active(var(--theme-accent));
+      background-color: color-mix(in srgb, var(--theme-accent) 15%, transparent);
+      box-shadow:
+        0 0 4px color-mix(in srgb, var(--theme-accent) 45%, transparent),
+        0 0 8px color-mix(in srgb, var(--theme-accent) 20%, transparent);
+      transition: var(--transition-glow);
     }
   }
 }

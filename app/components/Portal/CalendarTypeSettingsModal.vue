@@ -124,9 +124,10 @@ const {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
-  padding: var(--space-2);
 
-  @include border-base($opacity: 30%);
+  padding: var(--space-2);
+  border: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 30%, transparent);
+  border-radius: var(--radius-sm);
 
   &__main {
     display: flex;
@@ -145,15 +146,22 @@ const {
 
     width: var(--size-control-sm);
     height: var(--size-control-sm);
+    border-color: color-mix(in srgb, var(--preview-color, var(--color-primary)) 60%, transparent);
 
-    @include state-focus(var(--preview-color, var(--color-primary)));
+    outline: none;
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--preview-color, var(--color-primary)) 70%, transparent),
+      0 0 6px color-mix(in srgb, var(--preview-color, var(--color-primary)) 50%, transparent),
+      0 0 12px color-mix(in srgb, var(--preview-color, var(--color-primary)) 20%, transparent);
+
+    transition: var(--transition-glow);
   }
 
   &__indicator {
     width: var(--space-2);
     height: var(--space-2);
-
-    @include border-base(var(--preview-color, var(--color-primary)));
+    border: var(--border-width-base) solid var(--preview-color, var(--color-primary));
+    border-radius: var(--radius-sm);
   }
 
   &__input {

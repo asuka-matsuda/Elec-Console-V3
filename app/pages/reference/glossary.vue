@@ -157,10 +157,13 @@ const categoryColorMap: Record<string, string> = {
 }
 
 .c-glossary-card {
+  position: relative;
+  z-index: 1;
+
   display: flex;
   flex-direction: column;
 
-  @include state-base;
+  transition: var(--transition-base);
 
   &__header {
     display: flex;
@@ -214,9 +217,10 @@ const categoryColorMap: Record<string, string> = {
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
-    padding: var(--space-3);
 
-    @include border-base($opacity: 30%);
+    padding: var(--space-3);
+    border: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 30%, transparent);
+    border-radius: var(--radius-sm);
   }
 
   &__label {

@@ -49,9 +49,10 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
 
   width: max-content;
   padding: var(--space-0-5);
+  border: var(--border-width-base) solid var(--color-border);
+  border-radius: var(--radius-sm);
 
-  @include border-base;
-  @include shadow("none");
+  box-shadow: none;
 
   &__input {
     pointer-events: none;
@@ -65,47 +66,69 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
   }
 
   &__item {
-    @include click-enabled;
+    cursor: pointer;
+    user-select: none;
 
     position: relative;
+    z-index: 1;
 
     display: inline-flex;
     align-items: center;
     justify-content: center;
 
     padding: var(--space-1) var(--space-3);
+    border: var(--border-width-base) solid transparent;
+    border-radius: var(--radius-sm);
 
     font-size: var(--font-size-base);
     font-weight: var(--font-weight-bold);
     line-height: var(--line-height-base);
     color: var(--color-text-muted);
 
-    @include border-base(transparent);
-    @include state-base;
+    transition: var(--transition-base);
 
     &:not(:has(:disabled)) {
       &:hover:not(:has(:checked)) {
+        border-color: var(--color-border);
         color: var(--color-text-main);
-
-        @include state-hover(var(--color-border));
+        box-shadow:
+          0 0 4px color-mix(in srgb, var(--color-border) 45%, transparent),
+          0 0 8px color-mix(in srgb, var(--color-border) 20%, transparent);
+        transition: var(--transition-glow);
       }
 
       &:has(:focus-visible) {
-        @include state-focus(var(--radio-color));
-        @include cyber-text-glow(var(--radio-color), 60%, var(--blur-md));
+        border-color: color-mix(in srgb, var(--radio-color) 60%, transparent);
+
+        text-shadow: 0 0 var(--blur-md) color-mix(in srgb, var(--radio-color) 60%, transparent);
+
+        outline: none;
+        box-shadow:
+          0 0 0 1px color-mix(in srgb, var(--radio-color) 70%, transparent),
+          0 0 6px color-mix(in srgb, var(--radio-color) 50%, transparent),
+          0 0 12px color-mix(in srgb, var(--radio-color) 20%, transparent);
+
+        transition: var(--transition-glow);
       }
     }
 
     &:has(:checked) {
       border-color: var(--radio-color);
-      color: var(--radio-color);
 
-      @include state-active(var(--radio-color));
-      @include cyber-text-glow(var(--radio-color), 60%, var(--blur-md));
+      color: var(--radio-color);
+      text-shadow: 0 0 var(--blur-md) color-mix(in srgb, var(--radio-color) 60%, transparent);
+
+      box-shadow:
+        0 0 4px color-mix(in srgb, var(--radio-color) 60%, transparent),
+        0 0 8px color-mix(in srgb, var(--radio-color) 30%, transparent),
+        inset 0 0 2px color-mix(in srgb, var(--radio-color) 40%, transparent);
+
+      transition: var(--transition-glow);
     }
 
     &:has(:disabled) {
-      @include disabled;
+      cursor: not-allowed;
+      opacity: 0.5;
     }
   }
 }

@@ -93,11 +93,12 @@ const handleLogin = async () => {
 
   &__error {
     padding: var(--space-2) var(--space-3);
+    border: var(--border-width-base) solid var(--color-status-danger);
+    border-radius: var(--radius-sm);
+
     font-size: var(--font-size-sm);
     line-height: var(--line-height-base);
     color: var(--color-status-danger);
-
-    @include border-base(var(--color-status-danger));
   }
 
   &__actions {

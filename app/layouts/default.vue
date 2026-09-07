@@ -107,15 +107,19 @@ const { currentUser, logout } = useAuth()
 
     width: var(--size-control-sm);
     height: var(--size-control-sm);
+    border: var(--border-width-thick) solid var(--theme-accent);
+    border-color: color-mix(in srgb, var(--theme-accent) 60%, transparent);
     border-radius: 50%;
+    border-radius: var(--radius-sm);
 
     background: var(--theme-accent);
+    outline: none;
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--theme-accent) 70%, transparent),
+      0 0 6px color-mix(in srgb, var(--theme-accent) 50%, transparent),
+      0 0 12px color-mix(in srgb, var(--theme-accent) 20%, transparent);
 
-    @include border-base(
-      var(--theme-accent),
-      $width: var(--border-width-thick)
-    );
-    @include state-focus(var(--theme-accent));
+    transition: var(--transition-glow);
   }
 
   &__name {

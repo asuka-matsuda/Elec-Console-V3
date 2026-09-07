@@ -70,6 +70,9 @@ const resolvedStatus = computed(() => {
 
 <style scoped lang="scss">
 .c-result-box {
+  position: relative;
+  z-index: 1;
+
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -79,12 +82,14 @@ const resolvedStatus = computed(() => {
 
   min-width: 0;
   padding: var(--space-2) var(--space-3);
+  border: var(--border-width-base) solid var(--color-border);
+  border-radius: var(--radius-sm);
 
   background-color: var(--surface-bg);
   backdrop-filter: blur(var(--blur-sm));
+  box-shadow: var(--shadow-sink);
 
-  @include border-base;
-  @include state-base("sink");
+  transition: var(--transition-base);
 
   &.is-sm {
     padding: var(--space-1) var(--space-2);
@@ -136,8 +141,7 @@ const resolvedStatus = computed(() => {
     :deep(.c-result-box__val),
     :deep(.value-text) {
       color: var(--color-status-success);
-
-      @include cyber-text-glow(var(--color-status-success), 30%, var(--blur-sm));
+      text-shadow: 0 0 var(--blur-sm) color-mix(in srgb, var(--color-status-success) 30%, transparent);
     }
   }
 
@@ -147,8 +151,7 @@ const resolvedStatus = computed(() => {
     :deep(.c-result-box__val),
     :deep(.value-text) {
       color: var(--color-status-warning);
-
-      @include cyber-text-glow(var(--color-status-warning), 30%, var(--blur-sm));
+      text-shadow: 0 0 var(--blur-sm) color-mix(in srgb, var(--color-status-warning) 30%, transparent);
     }
   }
 
@@ -158,8 +161,7 @@ const resolvedStatus = computed(() => {
     :deep(.c-result-box__val),
     :deep(.value-text) {
       color: var(--color-status-danger);
-
-      @include cyber-text-glow(var(--color-status-danger), 30%, var(--blur-sm));
+      text-shadow: 0 0 var(--blur-sm) color-mix(in srgb, var(--color-status-danger) 30%, transparent);
     }
   }
 

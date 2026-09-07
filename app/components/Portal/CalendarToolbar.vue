@@ -78,10 +78,10 @@ const emit = defineEmits<{
   justify-content: space-between;
 
   padding: var(--space-2) var(--space-card-pad);
+  border: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 30%, transparent);
+  border-radius: var(--radius-sm);
 
   background-color: var(--color-surface);
-
-  @include border-base($opacity: 30%);
 
   @include mq("md") {
     display: flex;
@@ -122,8 +122,7 @@ const emit = defineEmits<{
     font-weight: var(--font-weight-bold);
     line-height: var(--line-height-tight);
     color: var(--theme-accent);
-
-    @include cyber-text-glow(var(--theme-accent), 60%, var(--blur-sm));
+    text-shadow: 0 0 var(--blur-sm) color-mix(in srgb, var(--theme-accent) 60%, transparent);
   }
 
   &__views {

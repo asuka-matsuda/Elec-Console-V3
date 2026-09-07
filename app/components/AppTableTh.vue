@@ -86,8 +86,8 @@ th {
   }
 
   &.is-sortable {
-    @include click-enabled;
-
+    cursor: pointer;
+    user-select: none;
     transition: color var(--duration-fast) var(--ease-base);
 
     &:hover {

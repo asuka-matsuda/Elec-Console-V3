@@ -117,11 +117,11 @@ const getRowKey = (row: T, index: number): string | number => {
   flex: 1;
 
   min-height: 0;
+  border: var(--border-width-base) solid var(--color-border);
+  border-radius: var(--radius-sm);
 
   background-color: var(--surface-bg);
   backdrop-filter: blur(var(--blur-sm));
-
-  @include border-base;
 }
 
 .c-table {
@@ -172,18 +172,24 @@ const getRowKey = (row: T, index: number): string | number => {
   }
 
   tbody tr,
-  :deep(tbody tr) {
-    position: relative; /* Required for z-index and box-shadow to appear correctly on rows */
-
-    @include state-base;
+  :deep(tbody tr) { /* Required for z-index and box-shadow to appear correctly on rows */
+    position: relative;
+    z-index: 1;
+    transition: var(--transition-base);
 
     &:hover {
       z-index: 1;
+
+      border-color: var(--theme-accent);
+
       outline: var(--border-width-base) solid
         color-mix(in srgb, var(--theme-accent) 80%, transparent);
       outline-offset: calc(var(--border-width-base) * -1);
+      box-shadow:
+        0 0 4px color-mix(in srgb, var(--theme-accent) 45%, transparent),
+        0 0 8px color-mix(in srgb, var(--theme-accent) 20%, transparent);
 
-      @include state-hover;
+      transition: var(--transition-glow);
     }
   }
 

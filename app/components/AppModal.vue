@@ -218,8 +218,7 @@ onMounted(() => {
   &__panel {
     flex: 1;
     min-height: 0;
-
-    @include shadow("modal");
+    box-shadow: var(--shadow-modal);
   }
 
   &__body {
@@ -243,6 +242,8 @@ onMounted(() => {
 
   &__error {
     padding: var(--space-2) var(--space-3);
+    border: var(--border-width-base) solid color-mix(in srgb, var(--color-status-danger) 30%, transparent);
+    border-radius: var(--radius-sm);
 
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-bold);
@@ -250,8 +251,6 @@ onMounted(() => {
     color: var(--color-status-danger);
 
     backdrop-filter: blur(var(--blur-sm));
-
-    @include border-base(var(--color-status-danger), 30%);
   }
 }
 </style>

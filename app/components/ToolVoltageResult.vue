@@ -163,20 +163,17 @@ const mainBoxStatus = computed(() =>
 
   .is-success {
     color: var(--color-status-success);
-
-    @include cyber-text-glow(var(--color-status-success), 40%, var(--blur-md));
+    text-shadow: 0 0 var(--blur-md) color-mix(in srgb, var(--color-status-success) 40%, transparent);
   }
 
   .is-warning {
     color: var(--color-status-warning);
-
-    @include cyber-text-glow(var(--color-status-warning), 40%, var(--blur-md));
+    text-shadow: 0 0 var(--blur-md) color-mix(in srgb, var(--color-status-warning) 40%, transparent);
   }
 
   .is-danger {
     color: var(--color-status-danger);
-
-    @include cyber-text-glow(var(--color-status-danger), 40%, var(--blur-md));
+    text-shadow: 0 0 var(--blur-md) color-mix(in srgb, var(--color-status-danger) 40%, transparent);
   }
 
   &__metrics {
@@ -203,8 +200,8 @@ const mainBoxStatus = computed(() =>
     justify-content: center;
 
     padding: var(--space-2);
-
-    @include border-base(var(--color-border), $width: var(--border-width-base));
+    border: var(--border-width-base) solid var(--color-border);
+    border-radius: var(--radius-sm);
   }
 
   .metric-label {

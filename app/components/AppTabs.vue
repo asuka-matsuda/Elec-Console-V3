@@ -69,9 +69,11 @@ const selectTab = (option: TabOption<T>) => {
 }
 
 .c-tabs__item {
-  @include click-enabled;
+  cursor: pointer;
+  user-select: none;
 
   position: relative;
+  z-index: 1;
 
   display: flex;
   gap: var(--space-2);
@@ -79,14 +81,15 @@ const selectTab = (option: TabOption<T>) => {
   justify-content: center;
 
   padding: var(--space-2) var(--space-4);
+  border: var(--border-width-base) solid var(--color-border);
+  border-radius: var(--radius-sm);
 
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-base);
   color: var(--color-text-secondary);
 
-  @include border-base;
-  @include state-base;
+  transition: var(--transition-base);
 
   .c-tabs--grid & {
     width: 100%;
@@ -101,27 +104,47 @@ const selectTab = (option: TabOption<T>) => {
 
   // 1. 無効状態
   &:disabled {
-    @include disabled;
+    cursor: not-allowed;
+    opacity: 0.5;
   }
 
   // 2. 有効状態
   &:not(:disabled) {
     &:is(:hover, :focus-visible):not(.is-active) {
       transform: translateY(-2px);
+
+      border-color: var(--theme-accent);
+
       color: var(--color-text-main);
 
-      @include state-hover;
+      box-shadow:
+        0 0 4px color-mix(in srgb, var(--theme-accent) 45%, transparent),
+        0 0 8px color-mix(in srgb, var(--theme-accent) 20%, transparent);
+
+      transition: var(--transition-glow);
     }
 
     &:active {
-      @include state-active(var(--theme-accent));
+      border-color: var(--theme-accent);
+      box-shadow:
+        0 0 4px color-mix(in srgb, var(--theme-accent) 60%, transparent),
+        0 0 8px color-mix(in srgb, var(--theme-accent) 30%, transparent),
+        inset 0 0 2px color-mix(in srgb, var(--theme-accent) 40%, transparent);
+      transition: var(--transition-glow);
     }
 
     &.is-active {
-      color: var(--theme-accent);
+      border-color: var(--theme-accent);
 
-      @include state-active(var(--theme-accent));
-      @include cyber-text-glow;
+      color: var(--theme-accent);
+      text-shadow: 0 0 var(--blur-md) color-mix(in srgb, currentcolor 50%, transparent);
+
+      box-shadow:
+        0 0 4px color-mix(in srgb, var(--theme-accent) 60%, transparent),
+        0 0 8px color-mix(in srgb, var(--theme-accent) 30%, transparent),
+        inset 0 0 2px color-mix(in srgb, var(--theme-accent) 40%, transparent);
+
+      transition: var(--transition-glow);
     }
   }
 }

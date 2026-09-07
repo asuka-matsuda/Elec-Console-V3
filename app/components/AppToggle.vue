@@ -35,7 +35,8 @@ defineProps<{
   --track-h: var(--space-5);
   --thumb-w: var(--space-5);
 
-  @include click-enabled;
+  cursor: pointer;
+  user-select: none;
 
   position: relative;
 
@@ -66,7 +67,8 @@ defineProps<{
     &:disabled {
       ~ .c-toggle__track,
       ~ .c-toggle__label {
-        @include disabled;
+        cursor: not-allowed;
+        opacity: 0.5;
       }
     }
 
@@ -74,33 +76,54 @@ defineProps<{
       &:hover {
         ~ .c-toggle__label {
           color: color-mix(in srgb, var(--toggle-color) 90%, transparent);
-
-          @include cyber-text-glow(var(--toggle-color), 20%, var(--blur-sm));
+          text-shadow: 0 0 var(--blur-sm) color-mix(in srgb, var(--toggle-color) 20%, transparent);
         }
 
         &:not(:checked) ~ .c-toggle__track {
-          @include state-hover(var(--toggle-color));
+          border-color: var(--toggle-color);
+          box-shadow:
+            0 0 4px color-mix(in srgb, var(--toggle-color) 45%, transparent),
+            0 0 8px color-mix(in srgb, var(--toggle-color) 20%, transparent);
+          transition: var(--transition-glow);
         }
       }
 
       &:focus-visible ~ .c-toggle__track {
-        @include state-focus(var(--toggle-color));
-        @include cyber-text-glow(var(--toggle-color));
+        border-color: color-mix(in srgb, var(--toggle-color) 60%, transparent);
+
+        text-shadow: 0 0 var(--blur-md) color-mix(in srgb, var(--toggle-color) 50%, transparent);
+
+        outline: none;
+        box-shadow:
+          0 0 0 1px color-mix(in srgb, var(--toggle-color) 70%, transparent),
+          0 0 6px color-mix(in srgb, var(--toggle-color) 50%, transparent),
+          0 0 12px color-mix(in srgb, var(--toggle-color) 20%, transparent);
+
+        transition: var(--transition-glow);
       }
 
       &:active ~ .c-toggle__track {
         transform: scale(0.95);
 
         .c-toggle__thumb {
-          @include shadow("sink");
+          box-shadow: var(--shadow-sink);
         }
       }
 
       &:checked ~ .c-toggle__track {
-        @include state-active(var(--toggle-color));
+        border-color: var(--toggle-color);
+        box-shadow:
+          0 0 4px color-mix(in srgb, var(--toggle-color) 60%, transparent),
+          0 0 8px color-mix(in srgb, var(--toggle-color) 30%, transparent),
+          inset 0 0 2px color-mix(in srgb, var(--toggle-color) 40%, transparent);
+        transition: var(--transition-glow);
 
         .c-toggle__thumb {
-          @include state-hover(var(--toggle-color));
+          border-color: var(--toggle-color);
+          box-shadow:
+            0 0 4px color-mix(in srgb, var(--toggle-color) 45%, transparent),
+            0 0 8px color-mix(in srgb, var(--toggle-color) 20%, transparent);
+          transition: var(--transition-glow);
         }
       }
     }
@@ -108,12 +131,18 @@ defineProps<{
 
   &__track {
     position: relative;
+    z-index: 1;
+
     flex-shrink: 0;
+
     width: var(--track-w);
     height: var(--track-h);
+    border: var(--border-width-base) solid var(--color-border);
+    border-radius: var(--radius-sm);
 
-    @include border-base;
-    @include state-base("sink", var(--transition-fast));
+    box-shadow: var(--shadow-sink);
+
+    transition: var(--transition-fast);
   }
 
   &__thumb {
@@ -124,11 +153,12 @@ defineProps<{
 
     width: var(--thumb-w);
     height: var(--track-h);
+    border: var(--border-width-base) solid var(--color-border);
+    border-radius: var(--radius-sm);
+
+    box-shadow: var(--shadow-elevation-sm);
 
     transition: var(--transition-base);
-
-    @include border-base;
-    @include shadow("sm");
   }
 }
 </style>

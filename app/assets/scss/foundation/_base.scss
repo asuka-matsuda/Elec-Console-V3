@@ -1,6 +1,3 @@
-@use "mixins/layout" as *;
-@use "mixins/typography" as *;
-@use "mixins/effects" as *;
 
 *,
 *::before,
@@ -112,7 +109,7 @@ input::-webkit-inner-spin-button {
 }
 
 .u-spin {
-  @include spin;
+  animation: ui-spin 1s linear infinite;
 }
 
 #__nuxt {

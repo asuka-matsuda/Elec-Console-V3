@@ -200,22 +200,25 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
     /* セル本体：変数ベースで基本背景＆ホバー枠線・発光を一元計算 */
     .fc-daygrid-day-frame {
-      @include state-base(
-        none,
-        var(--transition-base),
-        var(--cell-accent-color)
-      );
+      position: relative;
+      z-index: 1;
+      transition: var(--transition-base);
 
       /* 平日・土曜・日曜祝日・今日すべてで統一のホバー発光を適用 */
       &:hover:not(:has(.fc-daygrid-event:hover)) {
-        @include state-hover(var(--cell-accent-color));
+        border-color: var(--cell-accent-color);
+        box-shadow:
+          0 0 4px color-mix(in srgb, var(--cell-accent-color) 45%, transparent),
+          0 0 8px color-mix(in srgb, var(--cell-accent-color) 20%, transparent);
+        transition: var(--transition-glow);
       }
     }
   }
 
   /* ==== イベントスタイル（FullCalendar ラッパーのクリーン化） ==== */
   :deep(.fc-daygrid-event) {
-    @include click-enabled;
+    cursor: pointer;
+    user-select: none;
 
     z-index: 1;
 
@@ -235,13 +238,20 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
       // 子要素のバッジのホバースタイルを親から強制的に発火させる
       .c-cal-badge {
-        @include state-hover(var(--badge-color));
+        border-color: var(--badge-color);
+        box-shadow:
+          0 0 4px color-mix(in srgb, var(--badge-color) 45%, transparent),
+          0 0 8px color-mix(in srgb, var(--badge-color) 20%, transparent);
+        transition: var(--transition-glow);
       }
     }
   }
 
   /* 3件超過時の「+○件」展開リンク */
   :deep(.fc-daygrid-more-link) {
+    position: relative;
+    z-index: 1;
+
     display: inline-block;
 
     padding: var(--space-0-5) var(--space-1);
@@ -251,26 +261,27 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     font-weight: var(--font-weight-bold);
     line-height: var(--line-height-base);
     color: var(--color-primary);
+    text-shadow: 0 0 var(--blur-sm) color-mix(in srgb, var(--color-primary) 50%, transparent);
 
-    @include state-base;
-    @include cyber-text-glow(var(--color-primary), 50%, var(--blur-sm));
+    transition: var(--transition-base);
 
     &:hover {
       transform: translateY(-1px);
-
-      @include cyber-text-glow(var(--color-primary), 100%, var(--blur-md));
+      text-shadow: 0 0 var(--blur-md) color-mix(in srgb, var(--color-primary) 100%, transparent);
     }
   }
 
   /* ポップオーバーのサイバースタイル（すりガラス、角丸厳禁、発光枠線） */
   :deep(.fc-popover) {
     z-index: var(--z-index-modal);
+
+    border: var(--border-width-base) solid var(--color-border);
     border-radius: 0;
+    border-radius: var(--radius-sm);
+
     background-color: color-mix(in srgb, var(--color-surface) 85%, transparent);
     backdrop-filter: blur(var(--blur-md));
-
-    @include border-base;
-    @include shadow("modal");
+    box-shadow: var(--shadow-modal);
 
     .fc-popover-header {
       display: flex;
@@ -278,18 +289,18 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       justify-content: space-between;
 
       padding: var(--space-1) var(--space-3);
+      border: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 30%, transparent);
       border-top: none;
       border-right: none;
       border-left: none;
       border-radius: 0;
+      border-radius: var(--radius-sm);
 
       background-color: color-mix(
         in srgb,
         var(--color-surface-sunken) 85%,
         transparent
       );
-
-      @include border-base($opacity: 30%);
 
       .fc-popover-title {
         font-size: var(--font-size-sm);
@@ -299,8 +310,8 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       }
 
       .fc-popover-close {
-        @include click-enabled;
-
+        cursor: pointer;
+        user-select: none;
         color: var(--color-text-muted);
         opacity: 0.8;
 
@@ -334,8 +345,13 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     }
 
     .fc-list-event {
-      @include click-enabled;
-      @include state-base;
+      cursor: pointer;
+      user-select: none;
+
+      position: relative;
+      z-index: 1;
+
+      transition: var(--transition-base);
 
       &:hover td {
         background-color: color-mix(
@@ -359,8 +375,15 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
     .fc-list-event-dot {
       border-color: var(--event-color, var(--color-primary));
+      border-color: color-mix(in srgb, var(--event-color, var(--color-primary)) 60%, transparent);
 
-      @include state-focus(var(--event-color, var(--color-primary)));
+      outline: none;
+      box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--event-color, var(--color-primary)) 70%, transparent),
+        0 0 6px color-mix(in srgb, var(--event-color, var(--color-primary)) 50%, transparent),
+        0 0 12px color-mix(in srgb, var(--event-color, var(--color-primary)) 20%, transparent);
+
+      transition: var(--transition-glow);
     }
 
     .fc-list-empty {

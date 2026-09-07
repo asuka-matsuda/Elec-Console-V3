@@ -192,7 +192,9 @@ provide('toolBasisModal', {
     // モバイル: 下部Stickyドロワー
     @include mq("md") {
       position: fixed;
+      position: relative;
       z-index: var(--z-index-modal);
+      z-index: 1;
       right: 0;
       bottom: 0;
       left: 0;
@@ -202,11 +204,9 @@ provide('toolBasisModal', {
       border-top: var(--border-width-base) solid var(--color-category-tool);
 
       background: var(--surface-bg-solid, var(--color-main-bg));
+      box-shadow: var(--shadow-elevation-md);
 
-      @include state-base(
-        var(--shadow-elevation-md),
-        transform var(--transition-base)
-      );
+      transition: transform var(--transition-base);
 
       &.is-drawer-open {
         transform: translateY(0);

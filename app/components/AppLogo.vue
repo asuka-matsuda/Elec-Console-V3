@@ -19,7 +19,11 @@ const emit = defineEmits<{
 
 <style scoped lang="scss">
 .c-logo {
-  @include click-enabled;
+  cursor: pointer;
+  user-select: none;
+
+  position: relative;
+  z-index: 1;
 
   display: flex;
   flex-shrink: 0;
@@ -32,17 +36,18 @@ const emit = defineEmits<{
   color: var(--color-text-main);
   white-space: nowrap;
 
-  @include state-base;
+  transition: var(--transition-base);
 
   :deep(.c-icon) {
+    position: relative;
+    z-index: 1;
     color: var(--theme-accent);
-
-    @include state-base;
+    transition: var(--transition-base);
   }
 
   &:is(:hover, :focus-visible) {
     :deep(.c-icon) {
-      @include cyber-text-glow(var(--theme-accent), 60%, var(--blur-md));
+      text-shadow: 0 0 var(--blur-md) color-mix(in srgb, var(--theme-accent) 60%, transparent);
     }
   }
 }
