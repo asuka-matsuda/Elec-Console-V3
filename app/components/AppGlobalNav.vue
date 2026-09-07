@@ -146,6 +146,8 @@ onMounted(() => {
 }
 
 .section {
+  --glow-color: var(--section-accent);
+
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
@@ -161,7 +163,7 @@ onMounted(() => {
 
   :deep(.c-section-header__icon) {
     color: var(--section-accent);
-    filter: drop-shadow(0 0 var(--blur-sm) var(--section-accent));
+    filter: var(--drop-shadow-glow-sm);
   }
 }
 
@@ -179,7 +181,6 @@ onMounted(() => {
   padding: var(--space-1) var(--space-3);
   border-radius: var(--radius-sm);
 
-  font-family: var(--font-base);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-tight);
@@ -190,77 +191,63 @@ onMounted(() => {
 
   &-text {
     word-break: keep-all;
-    line-break: strict;
     overflow-wrap: anywhere;
   }
 
   &:disabled {
-    cursor: not-allowed;
+    pointer-events: none;
     opacity: 0.5;
     filter: grayscale(100%);
   }
 
-  &:not(:disabled) {
-    &:is(:hover, :focus-visible, .router-link-active) {
-      color: var(--section-accent);
+  &:hover,
+  &:focus-visible {
+    transform: translateX(var(--space-1));
 
-      :deep(.c-icon) {
-        filter: drop-shadow(0 0 var(--blur-sm) var(--section-accent));
-      }
+    border-color: var(--section-accent);
+
+    color: var(--section-accent);
+
+    box-shadow: var(--shadow-glow-hover);
+
+    transition: var(--transition-glow);
+
+    :deep(.c-icon) {
+      filter: var(--drop-shadow-glow-sm);
     }
+  }
 
-    &:is(:hover, :focus-visible):not(.router-link-active) {
-      transform: translateX(var(--space-1));
-      border-color: var(--section-accent);
-      box-shadow:
-        0 0 4px color-mix(in srgb, var(--section-accent) 45%, transparent),
-        0 0 8px color-mix(in srgb, var(--section-accent) 20%, transparent);
-      transition: var(--transition-glow);
+  &:active,
+  &.router-link-active {
+    transform: none;
+
+    border-color: var(--section-accent);
+
+    color: var(--section-accent);
+
+    box-shadow: var(--shadow-glow-active);
+
+    transition: var(--transition-glow);
+
+    :deep(.c-icon) {
+      filter: var(--drop-shadow-glow-sm);
     }
+  }
 
-    &:active {
-      border-color: var(--section-accent);
-      box-shadow:
-        0 0 4px color-mix(in srgb, var(--section-accent) 60%, transparent),
-        0 0 8px color-mix(in srgb, var(--section-accent) 30%, transparent),
-        inset 0 0 2px color-mix(in srgb, var(--section-accent) 40%, transparent);
-      transition: var(--transition-glow);
+  &.router-link-active::after {
+    content: "";
 
-      svg {
-        filter: drop-shadow(0 0 2px var(--section-accent));
-        stroke: var(--section-accent);
-      }
-    }
+    display: inline-block;
 
-    &.router-link-active {
-      border-color: var(--section-accent);
-      box-shadow:
-        0 0 4px color-mix(in srgb, var(--section-accent) 60%, transparent),
-        0 0 8px color-mix(in srgb, var(--section-accent) 30%, transparent),
-        inset 0 0 2px color-mix(in srgb, var(--section-accent) 40%, transparent);
-      transition: var(--transition-glow);
+    width: var(--space-1);
+    height: var(--font-size-base);
+    margin-left: var(--space-1);
 
-      svg {
-        filter: drop-shadow(0 0 2px var(--section-accent));
-        stroke: var(--section-accent);
-      }
+    vertical-align: middle;
 
-      &::after {
-        content: "";
+    background-color: currentcolor;
 
-        display: inline-block;
-
-        width: var(--space-1);
-        height: var(--font-size-base);
-        margin-left: var(--space-1);
-
-        vertical-align: middle;
-
-        background-color: currentcolor;
-
-        animation: ui-cursor-blink 1s step-end infinite;
-      }
-    }
+    animation: ui-cursor-blink 1s step-end infinite;
   }
 }
 
