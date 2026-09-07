@@ -24,7 +24,7 @@ const iconComponent = computed(() => {
 <template>
   <i
     class="app-icon c-icon"
-    :class="size ? [`is-${size}`, `c-icon--${size}`] : []"
+    :class="size && `is-${size}`"
   >
     <component
       :is="iconComponent"
@@ -49,20 +49,17 @@ const iconComponent = computed(() => {
     height: 100%;
   }
 
-  &.is-sm,
-  &.c-icon--sm {
+  &.is-sm {
     width: var(--icon-size-sm);
     height: var(--icon-size-sm);
   }
 
-  &.is-md,
-  &.c-icon--md {
+  &.is-md {
     width: var(--icon-size-md);
     height: var(--icon-size-md);
   }
 
-  &.is-lg,
-  &.c-icon--lg {
+  &.is-lg {
     width: var(--icon-size-lg);
     height: var(--icon-size-lg);
   }
