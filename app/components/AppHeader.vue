@@ -5,21 +5,23 @@
  */
 import type { BreadcrumbItem } from '~/types/components'
 
-defineProps<{
+interface Props {
   breadcrumbs?: BreadcrumbItem[]
-}>()
+}
+
+const { breadcrumbs } = defineProps<Props>()
 
 const emit = defineEmits<{
-  (e: 'toggle-sidebar'): void
+  'toggle-sidebar': []
 }>()
 </script>
 
 <template>
-  <header class="c-header">
-    <div class="c-header__main">
+  <header class="header">
+    <div class="main">
       <AppIconButton
         name="menu"
-        class="c-header__menu-btn"
+        class="menu-btn"
         @click="emit('toggle-sidebar')"
       />
       <AppLogo />
@@ -27,22 +29,24 @@ const emit = defineEmits<{
       <AppBreadcrumb
         v-if="breadcrumbs?.length"
         :items="breadcrumbs"
-        class="c-header__breadcrumb"
+        class="breadcrumb"
       />
     </div>
 
-    <div class="c-header__actions">
+    <div class="actions">
       <slot name="actions" />
     </div>
   </header>
 </template>
 
 <style scoped lang="scss">
-.c-header {
-  @include flex-between-center;
-
+.header {
   position: relative;
   z-index: 10;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   height: 64px;
   padding: 0 var(--space-layout-pad);
@@ -50,27 +54,27 @@ const emit = defineEmits<{
 
   background-color: var(--surface-bg);
   backdrop-filter: blur(var(--blur-md));
+}
 
-  &__main {
-    @include flex-start-center;
+.main {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
 
-    gap: var(--space-3);
+.menu-btn {
+  display: inline-flex;
+}
+
+.breadcrumb {
+  @media (width <= 768px) {
+    display: none;
   }
+}
 
-  &__breadcrumb {
-    @include mq("md") {
-      display: none;
-    }
-  }
-
-  &__menu-btn {
-    display: inline-flex;
-  }
-
-  &__actions {
-    @include flex-start-center;
-
-    gap: var(--space-2);
-  }
+.actions {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
 }
 </style>
