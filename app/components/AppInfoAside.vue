@@ -85,7 +85,7 @@ const sections = computed<SectionConfig[]>(() => [
         <span>{{ section.loadingText }}</span>
       </AppPanel>
 
-      <div v-else-if="section.items.length > 0" class="items">
+      <template v-else-if="section.items.length > 0">
         <AppPanel
           v-for="item in section.items"
           :key="item.key"
@@ -100,7 +100,7 @@ const sections = computed<SectionConfig[]>(() => [
           <time>{{ item.date }}</time>
           <p v-if="item.desc">{{ item.desc }}</p>
         </AppPanel>
-      </div>
+      </template>
 
       <AppPanel v-else class="status">
         <AppIcon name="inbox" size="sm" />
@@ -115,71 +115,42 @@ const sections = computed<SectionConfig[]>(() => [
   display: flex;
   flex-direction: column;
   gap: var(--space-section-gap);
-  width: 100%;
-}
 
-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-panel-gap);
-}
-
-.items {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-panel-gap);
-}
-
-.item {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  transition:
-    border-color var(--transition-fast),
-    background-color var(--transition-fast);
-
-  &:hover {
-    border-color: color-mix(in srgb, var(--theme-accent) 40%, var(--color-border));
+  section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-panel-gap);
   }
 
-  header {
-    display: flex;
-    gap: var(--space-1-5);
-    align-items: center;
+  .item {
+    gap: var(--space-1);
 
-    strong {
+    header {
+      display: flex;
+      gap: var(--space-1-5);
+      align-items: center;
       font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-bold);
-      line-height: var(--line-height-tight);
-      color: var(--color-text-main);
+    }
+
+    time {
+      font-size: var(--font-size-2xs);
+      color: var(--color-text-muted);
+    }
+
+    p {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-secondary);
     }
   }
 
-  time {
-    display: block;
+  .status {
+    flex-direction: row;
+    gap: var(--space-2);
+    align-items: center;
+    justify-content: center;
 
-    font-size: var(--font-size-2xs);
-    line-height: var(--line-height-tight);
-    color: var(--color-text-muted);
-    letter-spacing: var(--tracking-wide);
-  }
-
-  p {
     font-size: var(--font-size-xs);
-    line-height: var(--line-height-base);
-    color: var(--color-text-secondary);
+    color: var(--color-text-muted);
   }
-}
-
-.status {
-  display: flex;
-  gap: var(--space-2);
-  align-items: center;
-  justify-content: center;
-
-  padding: var(--space-4);
-
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
 }
 </style>
