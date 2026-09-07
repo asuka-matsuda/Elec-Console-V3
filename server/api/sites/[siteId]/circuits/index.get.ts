@@ -71,26 +71,29 @@ export default defineEventHandler(async (event) => {
 
   const panelOptions = Array.from(panelMap.values())
 
-  // 二次側アクセス時、同一盤名称の幹線がPhase 3まで完了しているかをチェック
+  // 同一盤名称の幹線がPhase 3まで完了しているかをチェック
   const panelsWithIncompleteKansen: string[] = []
+  const trunkCircuits = allSiteCircuits.filter(c => c.keiTo === '幹線')
+  const incompleteSet = new Set<string>()
 
-  if (keiTo === '二次側') {
-    const trunkCircuits = allSiteCircuits.filter(c => c.keiTo === '幹線')
-    const incompleteSet = new Set<string>()
+  for (const t of trunkCircuits) {
+    const name = (t.kairoMeisho || '').trim()
+    const isExcluded = !name || excludedKeywords.some(kw => kw && name.includes(kw))
 
-    for (const t of trunkCircuits) {
-      const name = (t.kairoMeisho || '').trim()
-      const isExcluded = !name || excludedKeywords.some(kw => kw && name.includes(kw))
+    if (isExcluded) continue
 
-      if (isExcluded) continue
+    if (!EXAM_LOGIC.PHASE3.isComplete(t)) {
+      incompleteSet.add(t.banMeisho)
+      // OP-1(1) などの枝番付き幹線の場合、ベースとなる盤名 OP-1 も未完了対象に含める
+      const baseBan = t.banMeisho.replace(/\([^)]*\)/g, '').trim()
 
-      if (!EXAM_LOGIC.PHASE3.isComplete(t)) {
-        incompleteSet.add(t.banMeisho)
+      if (baseBan) {
+        incompleteSet.add(baseBan)
       }
     }
-
-    panelsWithIncompleteKansen.push(...incompleteSet)
   }
+
+  panelsWithIncompleteKansen.push(...incompleteSet)
 
   // 絞り込み条件の構築
   const where: Record<string, unknown> = { siteId }

@@ -125,33 +125,58 @@ const getRowKey = (row: T, index: number): string | number => {
 }
 
 .c-table {
+  table-layout: fixed;
   border-spacing: 0;
   border-collapse: separate;
+
   width: 100%;
+
   text-align: left;
 
   th,
-  td {
-    padding: var(--space-2) var(--space-3);
-    border-bottom: var(--border-width-base) solid var(--color-border);
+  :deep(th) {
+    padding: var(--space-2);
+    border-right: var(--border-width-base) solid var(--color-border);
+    border-bottom: var(--border-width-base) solid
+      color-mix(in srgb, var(--color-border) 70%, var(--color-text-muted) 30%);
+
     white-space: nowrap;
     vertical-align: middle;
   }
 
-  td {
+  td,
+  :deep(td) {
+    overflow: hidden;
+
+    padding: var(--space-2);
+    border-right: var(--border-width-base) solid var(--color-border);
+    border-bottom: var(--border-width-base) solid
+      color-mix(in srgb, var(--color-border) 70%, var(--color-text-muted) 30%);
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  th:last-child,
+  td:last-child,
+  :deep(th:last-child),
+  :deep(td:last-child) {
+    border-right: none;
+  }
+
+  td,
+  :deep(td) {
     @include text-mono;
 
     color: var(--color-text-main);
   }
 
-  tbody tr {
+  tbody tr,
+  :deep(tbody tr) {
     position: relative; /* Required for z-index and box-shadow to appear correctly on rows */
 
     @include state-base;
-
-    &:last-child td {
-      border-bottom: none;
-    }
 
     &:hover {
       z-index: 1;
@@ -161,6 +186,11 @@ const getRowKey = (row: T, index: number): string | number => {
 
       @include state-hover;
     }
+  }
+
+  tbody tr:last-child td,
+  :deep(tbody tr:last-child td) {
+    border-bottom: none;
   }
 }
 </style>

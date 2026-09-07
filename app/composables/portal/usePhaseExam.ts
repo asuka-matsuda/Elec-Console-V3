@@ -79,9 +79,17 @@ export function usePhaseExam(
 
     const set = new Set<string>()
 
-    filtered.forEach(p => set.add(p.banMeisho))
+    filtered.forEach((p) => {
+      if (p.banMeisho) {
+        set.add(p.banMeisho)
+      }
+    })
 
-    const list = Array.from(set).map(m => ({ label: m, value: m }))
+    const sorted = Array.from(set).sort((a, b) =>
+      a.localeCompare(b, 'ja', { numeric: true, sensitivity: 'base' }),
+    )
+
+    const list = sorted.map(m => ({ label: m, value: m }))
 
     return [{ label: 'すべての盤', value: 'ALL' }, ...list]
   })
@@ -166,7 +174,12 @@ export function usePhaseExam(
     }
   })
 
-  // 二次側で幹線未完了の盤があるかどうかのチェック
+  // 該当する二次側回路が操作不可（幹線未完了）かどうか
+  const isCircuitLocked = (circuit: CircuitItem): boolean => {
+    return circuit.keiTo === '二次側' && panelsWithIncompleteKansen.value.includes(circuit.banMeisho)
+  }
+
+  // 二次側で幹線未完了の盤があるかどうかのチェック（バナー廃止に伴い内部保持）
   const hasIncompleteKansenWarning = computed(() => {
     if (selectedKeiTo.value !== '二次側') return false
 
@@ -429,10 +442,10 @@ export function usePhaseExam(
     }
   }
 
-  // Phase 2 一括OK確定（現在絞り込み中の未完了・非除外回路）
+  // Phase 2 一括OK確定（現在絞り込み中の未完了・非除外・非ロック回路）
   const batchConfirmPhase2 = async (defaultMegValue: number = 100) => {
     const targets = filteredCircuits.value.filter(
-      c => !c.isExcluded && (!c.p2ConfirmedAt || !c.p2IsComplete),
+      c => !c.isExcluded && !isCircuitLocked(c) && (!c.p2ConfirmedAt || !c.p2IsComplete),
     )
 
     if (targets.length === 0) {
@@ -559,10 +572,10 @@ export function usePhaseExam(
     }
   }
 
-  // Phase 3 一括確定（現在絞り込み中の未完了・非除外回路）
+  // Phase 3 一括確定（現在絞り込み中の未完了・非除外・非ロック回路）
   const batchConfirmPhase3 = async () => {
     const targets = filteredCircuits.value.filter(
-      c => !c.isExcluded && !c.p3ConfirmedAt,
+      c => !c.isExcluded && !isCircuitLocked(c) && !c.p3ConfirmedAt,
     )
 
     if (targets.length === 0) {
@@ -617,6 +630,7 @@ export function usePhaseExam(
     phaseStats,
     phase2ThresholdMegOhm,
     hasIncompleteKansenWarning,
+    isCircuitLocked,
     editingRowId,
     editForm,
     isLoading,

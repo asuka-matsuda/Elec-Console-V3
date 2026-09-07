@@ -8,6 +8,8 @@ import { computed, onMounted, watch } from 'vue'
 import { useHead, useRoute } from '#app'
 import ExamMinimap from '~/components/Portal/ExamMinimap.vue'
 import { usePhaseExam } from '~/composables/portal/usePhaseExam'
+import { useTableSort } from '~/composables/useTableSort'
+import type { TableColumn } from '~/types/components'
 import type { CircuitItem } from '~/types/souden'
 
 useHead({ title: 'フェーズ1：回路確認・増し締め - Elec-Console' })
@@ -24,7 +26,7 @@ const {
   selectedBanShubetsu,
   selectedBanMeisho,
   phaseStats,
-  hasIncompleteKansenWarning,
+  isCircuitLocked,
   editingRowId,
   editForm,
   isActionLoading,
@@ -83,6 +85,25 @@ const shubetsuTabOptions = computed(() => {
     value: s,
   }))
 })
+
+// テーブルカラム定義とソート
+const columns: TableColumn<CircuitItem>[] = [
+  { key: 'banMeisho', label: '盤情報', sortable: true, width: '95px' },
+  { key: 'kairoBangou', label: '回路番号', sortable: true, width: '80px', align: 'center' },
+  { key: 'kairoMeisho', label: '回路名称', sortable: true, width: '135px' },
+  { key: 'cableList', label: '配線 / 接地', sortable: true, width: '130px' },
+  { key: 'p1Kakunin', label: '確認 / 増締め', sortable: true, width: '115px', align: 'center' },
+  { key: 'p1Remarks', label: '備考', sortable: true },
+  { key: 'actions', label: '操作', width: '125px', align: 'center' },
+  { key: 'p1ConfirmedAt', label: '測定者 / 日時', sortable: true, width: '115px', align: 'center' },
+]
+
+const {
+  sortBy,
+  sortOrder,
+  sortedData: sortedCircuits,
+  handleSort,
+} = useTableSort(filteredCircuits)
 </script>
 
 <template>
@@ -104,47 +125,10 @@ const shubetsuTabOptions = computed(() => {
       </template>
     </AppSectionHeader>
 
-    <!-- 安全性警告バナー（二次側で幹線未完了盤がある場合） -->
-    <div v-if="hasIncompleteKansenWarning" class="p-phase1__warning">
-      <AppIcon name="alert-triangle" size="md" />
-      <div class="p-phase1__warning-content">
-        <strong>【安全注意】幹線未完了の盤が含まれています</strong>
-        <p>二次側の作業を開始する前に、該当する盤の幹線（一次側）試験（Phase 3まで）が完了していることを必ず確認してください。</p>
-      </div>
-    </div>
-
     <!-- 検索・絞り込み ＆ 進捗コントロールパネル -->
     <AppPanel variant="hud">
       <div class="p-phase1-controls">
         <div class="p-phase1-controls__filters">
-          <!-- 系統選択 -->
-          <div class="p-phase1-controls__row">
-            <span class="p-phase1-controls__label">系統:</span>
-            <div class="p-phase1-controls__pills">
-              <button
-                type="button"
-                :class="['p-phase1-pill', { 'is-active': selectedKeiTo === '幹線' }]"
-                @click="selectedKeiTo = '幹線'"
-              >
-                幹線
-              </button>
-              <button
-                type="button"
-                :class="['p-phase1-pill', { 'is-active': selectedKeiTo === '二次側' }]"
-                @click="selectedKeiTo = '二次側'"
-              >
-                二次側
-              </button>
-              <button
-                type="button"
-                :class="['p-phase1-pill', { 'is-active': selectedKeiTo === 'ALL' }]"
-                @click="selectedKeiTo = 'ALL'"
-              >
-                全系統
-              </button>
-            </div>
-          </div>
-
           <!-- 盤種別タブ -->
           <div class="p-phase1-controls__row">
             <span class="p-phase1-controls__label">盤種別:</span>
@@ -185,7 +169,7 @@ const shubetsuTabOptions = computed(() => {
 
           <!-- ミニマップ -->
           <ExamMinimap
-            :circuits="filteredCircuits"
+            :circuits="sortedCircuits"
             :phase="1"
             @select-circuit="scrollToCircuit"
           />
@@ -195,44 +179,16 @@ const shubetsuTabOptions = computed(() => {
 
     <!-- 回路一覧テーブル -->
     <div class="p-phase1__table-wrapper">
-      <AppTable>
-        <template #header>
-          <tr>
-            <th style="width: 110px;">
-              盤情報
-            </th>
-            <th style="width: 100px;">
-              回路番号
-            </th>
-            <th>回路名称</th>
-            <th style="width: 130px;">
-              ケーブルリスト
-            </th>
-            <th style="width: 90px;">
-              配線条数
-            </th>
-            <th style="width: 120px;">
-              接地リスト
-            </th>
-            <th style="width: 70px; text-align: center;">
-              確認
-            </th>
-            <th style="width: 70px; text-align: center;">
-              増締め
-            </th>
-            <th>備考</th>
-            <th style="width: 130px; text-align: center;">
-              操作
-            </th>
-            <th style="width: 120px; text-align: center;">
-              測定者 / 日時
-            </th>
-          </tr>
-        </template>
-
+      <AppTable
+        :columns="columns"
+        :data="sortedCircuits"
+        :sort-by="sortBy"
+        :sort-order="sortOrder"
+        @sort="handleSort"
+      >
         <template #body>
           <tr
-            v-for="circuit in filteredCircuits"
+            v-for="circuit in sortedCircuits"
             :id="`row-${circuit.id}`"
             :key="circuit.id"
             :class="[
@@ -240,6 +196,7 @@ const shubetsuTabOptions = computed(() => {
               {
                 'is-completed': isComplete(circuit),
                 'is-excluded': circuit.isExcluded,
+                'is-locked': isCircuitLocked(circuit),
                 'is-editing': editingRowId === circuit.id,
               },
             ]"
@@ -253,61 +210,68 @@ const shubetsuTabOptions = computed(() => {
             </td>
 
             <!-- 回路番号 -->
-            <td>
+            <td style="text-align: center;">
               <template v-if="editingRowId === circuit.id">
-                <AppInput v-model="editForm.kairoBangou" size="sm" />
+                <AppInput v-model="editForm.kairoBangou" size="sm" placeholder="番号" />
               </template>
-              <span v-else class="p-phase1-cell__text">{{ circuit.kairoBangou || '-' }}</span>
+              <div v-else class="p-phase1-cell__bangou-wrap">
+                <AppKairoIcon
+                  :kigou="circuit.kairoKigou"
+                  :bangou="circuit.kairoBangou"
+                />
+              </div>
             </td>
 
             <!-- 回路名称 -->
             <td>
               <template v-if="editingRowId === circuit.id">
-                <AppInput v-model="editForm.kairoMeisho" size="sm" />
+                <AppInput v-model="editForm.kairoMeisho" size="sm" placeholder="回路名称" />
               </template>
-              <span v-else class="p-phase1-cell__text p-phase1-cell__meisho">
+              <span v-else class="p-phase1-cell__text p-phase1-cell__meisho" :title="circuit.kairoMeisho || ''">
                 {{ circuit.kairoMeisho || '-' }}
               </span>
             </td>
 
-            <!-- ケーブルリスト -->
+            <!-- 配線 / 接地 -->
             <td>
               <template v-if="editingRowId === circuit.id">
-                <AppInput v-model="editForm.cableList" size="sm" />
+                <div class="p-phase1-cell__edit-col">
+                  <div class="p-phase1-cell__inline-inputs">
+                    <AppInput v-model="editForm.cableList" size="sm" placeholder="ケーブル" />
+                    <AppInput v-model="editForm.haisenJousuu" size="sm" placeholder="条数" style="width: 55px;" />
+                  </div>
+                  <AppInput v-model="editForm.setsuchiList" size="sm" placeholder="接地リスト" />
+                </div>
               </template>
-              <span v-else class="p-phase1-cell__text">{{ circuit.cableList || '-' }}</span>
+              <div v-else class="p-phase1-cell__wiring">
+                <div class="p-phase1-cell__cable-line">
+                  <span class="p-phase1-cell__cable">{{ circuit.cableList || '-' }}</span>
+                  <span v-if="circuit.haisenJousuu" class="p-phase1-cell__jousuu">({{ circuit.haisenJousuu }})</span>
+                </div>
+                <span class="p-phase1-cell__setsuchi" :title="circuit.setsuchiList || ''">
+                  {{ circuit.setsuchiList ? `E: ${circuit.setsuchiList}` : '-' }}
+                </span>
+              </div>
             </td>
 
-            <!-- 配線条数 -->
-            <td>
-              <template v-if="editingRowId === circuit.id">
-                <AppInput v-model="editForm.haisenJousuu" size="sm" />
-              </template>
-              <span v-else class="p-phase1-cell__text">{{ circuit.haisenJousuu || '-' }}</span>
-            </td>
-
-            <!-- 接地リスト -->
-            <td>
-              <template v-if="editingRowId === circuit.id">
-                <AppInput v-model="editForm.setsuchiList" size="sm" />
-              </template>
-              <span v-else class="p-phase1-cell__text">{{ circuit.setsuchiList || '-' }}</span>
-            </td>
-
-            <!-- 確認 (チェックボックス) -->
+            <!-- 確認 / 増締め (チェックボックス) -->
             <td style="text-align: center;">
-              <AppCheckbox
-                v-model="circuit.p1Kakunin"
-                :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded"
-              />
-            </td>
-
-            <!-- 増し締め (チェックボックス) -->
-            <td style="text-align: center;">
-              <AppCheckbox
-                v-model="circuit.p1Mashishime"
-                :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded"
-              />
+              <div class="p-phase1-cell__checks">
+                <label class="p-phase1-check-item" title="回路確認">
+                  <AppCheckbox
+                    v-model="circuit.p1Kakunin"
+                    :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
+                  />
+                  <span class="p-phase1-check-item__label">確認</span>
+                </label>
+                <label class="p-phase1-check-item" title="増締め確認">
+                  <AppCheckbox
+                    v-model="circuit.p1Mashishime"
+                    :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
+                  />
+                  <span class="p-phase1-check-item__label">増締</span>
+                </label>
+              </div>
             </td>
 
             <!-- 備考 -->
@@ -323,8 +287,13 @@ const shubetsuTabOptions = computed(() => {
             <!-- 操作 -->
             <td style="text-align: center;">
               <div class="p-phase1-actions">
+                <!-- 幹線未完了による操作不可 -->
+                <template v-if="isCircuitLocked(circuit)">
+                  <span class="c-text-note c-text-note--strong">⏸ 幹線未了</span>
+                </template>
+
                 <!-- 編集モード中 -->
-                <template v-if="editingRowId === circuit.id">
+                <template v-else-if="editingRowId === circuit.id">
                   <AppButton
                     variant="success"
                     size="sm"
@@ -401,28 +370,6 @@ const shubetsuTabOptions = computed(() => {
   gap: var(--space-section-gap);
   height: 100%;
 
-  &__warning {
-    display: flex;
-    gap: var(--space-3);
-    align-items: center;
-
-    padding: var(--space-3) var(--space-4);
-    border: 1px solid var(--color-status-danger);
-    border-radius: var(--radius-md);
-
-    color: var(--color-status-danger);
-
-    background-color: rgb(239 68 68 / 12%);
-
-    &-content {
-      p {
-        margin: var(--space-1) 0 0;
-        font-size: var(--text-xs);
-        color: var(--color-text-secondary);
-      }
-    }
-  }
-
   &__table-wrapper {
     flex: 1;
     min-height: 400px;
@@ -461,11 +408,6 @@ const shubetsuTabOptions = computed(() => {
     color: var(--color-text-secondary);
   }
 
-  &__pills {
-    display: flex;
-    gap: var(--space-2);
-  }
-
   &__select-group {
     display: flex;
     gap: var(--space-2);
@@ -483,34 +425,6 @@ const shubetsuTabOptions = computed(() => {
   }
 }
 
-.p-phase1-pill {
-  cursor: pointer;
-
-  padding: var(--space-1) var(--space-3);
-  border: 1px solid rgb(255 255 255 / 10%);
-  border-radius: var(--radius-full);
-
-  font-size: var(--text-xs);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-muted);
-
-  background-color: rgb(255 255 255 / 5%);
-
-  transition: all 0.2s ease;
-
-  &:hover {
-    color: var(--color-text-main);
-    background-color: rgb(255 255 255 / 10%);
-  }
-
-  &.is-active {
-    border-color: var(--color-category-main, #3b82f6);
-    color: #fff;
-    background-color: var(--color-category-main, #3b82f6);
-    box-shadow: 0 0 8px rgb(59 130 246 / 40%);
-  }
-}
-
 .p-phase1-row {
   transition: background-color 0.2s ease;
 
@@ -520,6 +434,10 @@ const shubetsuTabOptions = computed(() => {
 
   &.is-excluded {
     opacity: 0.5;
+  }
+
+  &.is-locked {
+    opacity: 0.6;
   }
 
   &.is-highlighted {
@@ -532,17 +450,78 @@ const shubetsuTabOptions = computed(() => {
   &__panel {
     @include flex-start-stretch($direction: column);
 
+    overflow: hidden;
     gap: 2px;
   }
 
   &__ban-name {
+    overflow: hidden;
+
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__shubetsu {
     font-size: 11px;
     color: var(--color-text-muted);
+  }
+
+  &__bangou-wrap {
+    @include flex-center-center;
+  }
+
+  &__wiring {
+    @include flex-start-stretch($direction: column);
+
+    gap: 2px;
+  }
+
+  &__cable-line {
+    @include flex-start-center;
+
+    gap: var(--space-1);
+  }
+
+  &__cable {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-main);
+  }
+
+  &__jousuu {
+    font-size: 11px;
+    color: var(--color-text-muted);
+  }
+
+  &__setsuchi {
+    overflow: hidden;
+
+    max-width: 140px;
+
+    font-size: 11px;
+    color: var(--color-text-muted);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__checks {
+    @include flex-center-center;
+
+    gap: var(--space-3);
+  }
+
+  &__edit-col {
+    @include flex-start-stretch($direction: column);
+
+    gap: var(--space-1);
+  }
+
+  &__inline-inputs {
+    display: flex;
+    gap: var(--space-1);
+    align-items: center;
   }
 
   &__text {
@@ -552,8 +531,15 @@ const shubetsuTabOptions = computed(() => {
 
   &__meisho {
     overflow: hidden;
-    max-width: 220px;
+    display: block;
+
+    max-width: 100%;
+
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-main);
     text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__remarks {
@@ -587,8 +573,36 @@ const shubetsuTabOptions = computed(() => {
 
 .p-phase1-actions {
   display: flex;
-  gap: var(--space-2);
+  gap: var(--space-1);
   align-items: center;
   justify-content: center;
+}
+
+.c-text-note {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+
+  font-size: var(--text-xs);
+  color: var(--color-status-warning, #f59e0b);
+
+  &--strong {
+    font-weight: var(--font-weight-bold, 700);
+  }
+}
+
+.p-phase1-check-item {
+  cursor: pointer;
+
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+
+  &__label {
+    user-select: none;
+    font-size: 10px;
+    color: var(--color-text-muted);
+  }
 }
 </style>

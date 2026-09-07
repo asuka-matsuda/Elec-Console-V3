@@ -141,11 +141,12 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .c-modal {
-  @include flex-start-stretch($direction: column);
+  pointer-events: none;
 
   transform: translateY(var(--space-2));
 
   overflow: visible;
+  display: none;
 
   width: 90vw;
   max-width: 540px;
@@ -162,6 +163,11 @@ onMounted(() => {
     transform var(--duration-modal) var(--ease-smooth),
     overlay var(--duration-modal) allow-discrete,
     display var(--duration-modal) allow-discrete;
+
+  &:not([open]) {
+    pointer-events: none;
+    display: none;
+  }
 
   &--sm {
     max-width: 420px;
@@ -185,6 +191,9 @@ onMounted(() => {
   }
 
   &[open] {
+    @include flex-start-stretch($direction: column);
+
+    pointer-events: auto;
     transform: translateY(0);
     opacity: 1;
 

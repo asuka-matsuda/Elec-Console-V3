@@ -11,7 +11,7 @@ export interface UseTableSortOptions<T> {
  * テーブルの並び替え（ソート）状態とロジックを管理する共通Composable
  * 文字列、数値、日付、null/undefined を自動判別してソートします。
  */
-export const useTableSort = <T extends Record<string, unknown>>(
+export const useTableSort = <T extends object = Record<string, unknown>>(
   sourceData: Ref<T[]> | ComputedRef<T[]> | T[],
   options: UseTableSortOptions<T> = {},
 ) => {
@@ -48,8 +48,8 @@ export const useTableSort = <T extends Record<string, unknown>>(
     const orderMultiplier = sortOrder.value === 'asc' ? 1 : -1
 
     return [...list].sort((a, b) => {
-      const valA = a[key]
-      const valB = b[key]
+      const valA = (a as Record<string, unknown>)[key]
+      const valB = (b as Record<string, unknown>)[key]
 
       // 1. null / undefined のハンドリング（常に末尾に寄せる）
       if (valA == null && valB == null) return 0
@@ -98,8 +98,11 @@ export const useTableSort = <T extends Record<string, unknown>>(
         return (dateA - dateB) * orderMultiplier
       }
 
-      // 4. 文字列比較 (日本語五十音・英数対応)
-      return String(valA).localeCompare(String(valB), 'ja') * orderMultiplier
+      // 4. 文字列比較 (日本語五十音・英数自然順対応)
+      return (
+        String(valA).localeCompare(String(valB), 'ja', { numeric: true, sensitivity: 'base' })
+        * orderMultiplier
+      )
     })
   })
 

@@ -46,7 +46,7 @@ const handleClick = () => {
     @click="handleClick"
   >
     <div class="c-table__th-inner">
-      <span>{{ column.label }}</span>
+      <span class="c-table__th-text">{{ column.label }}</span>
       <AppIcon
         v-if="column.sortable"
         :name="sortIconName"
@@ -66,11 +66,17 @@ th {
   z-index: var(--z-index-table-header);
   top: 0;
 
-  border-bottom-width: calc(var(--border-width-base) * 2);
+  border-right: var(--border-width-base) solid var(--color-border);
+  border-bottom: calc(var(--border-width-base) * 2) solid var(--color-border);
 
   color: var(--color-text-muted);
 
+  background-color: var(--surface-bg-elevated);
   backdrop-filter: blur(var(--blur-md));
+
+  &:last-child {
+    border-right: none;
+  }
 
   &.is-sortable {
     @include click-enabled;
@@ -90,19 +96,41 @@ th {
   .c-table__th-inner {
     @include flex-start-center($is-inline: true);
 
-    gap: var(--space-1);
+    gap: 4px;
+    width: 100%;
+    white-space: nowrap;
+  }
+
+  &[style*="text-align: center"] .c-table__th-inner {
+    justify-content: center;
+  }
+
+  .c-table__th-text {
+    white-space: nowrap;
   }
 
   .c-table__sort-icon {
+    flex-shrink: 0;
     color: var(--color-text-muted);
+    transition: all var(--duration-fast) var(--ease-base);
 
     &.is-active {
       color: var(--theme-accent);
+      opacity: 1;
     }
 
     &.is-inactive {
-      opacity: 0.3;
+      overflow: hidden;
+      width: 0;
+      margin-left: -4px;
+      opacity: 0;
     }
+  }
+
+  &:hover .c-table__sort-icon.is-inactive {
+    width: 12px;
+    margin-left: 0;
+    opacity: 0.5;
   }
 }
 </style>

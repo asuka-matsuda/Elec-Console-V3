@@ -16,20 +16,9 @@ const siteId = computed(() => route.params.siteId as string)
 const {
   stats,
   isLoading,
-  isImporting,
   error,
   fetchStats,
-  importExcel,
 } = useSoudenDashboard(siteId)
-
-const handleReimport = async () => {
-  try {
-    await importExcel()
-  }
-  catch (err: unknown) {
-    console.error('Reimport error:', err)
-  }
-}
 
 onMounted(() => {
   fetchStats()
@@ -61,16 +50,6 @@ onMounted(() => {
           <AppIcon name="book-open" size="sm" />
           操作ログ
         </AppButton>
-
-        <AppButton
-          variant="primary"
-          size="sm"
-          :loading="isImporting"
-          @click="handleReimport"
-        >
-          <AppIcon name="refresh-cw" size="sm" />
-          Excelデータ再同期
-        </AppButton>
       </template>
     </AppSectionHeader>
 
@@ -84,16 +63,16 @@ onMounted(() => {
       v-if="!isLoading && stats && stats.totalCircuits === 0"
       icon="database"
       title="回路データが登録されていません"
-      description="Excelファイル（SMC_データベース.xlsxなど）を取り込んで送電試験を開始してください。"
+      description="管理者の「現場設定」よりExcel連携ファイルの保存先設定および回路データの取り込みを行ってください。"
     >
       <template #actions>
         <AppButton
+          to="/portal/admin"
           variant="primary"
-          :loading="isImporting"
-          @click="handleReimport"
+          size="sm"
         >
-          <AppIcon name="download" size="sm" />
-          Excelからデータを取り込む
+          <AppIcon name="settings" size="sm" />
+          現場設定へ移動
         </AppButton>
       </template>
     </AppEmptyState>

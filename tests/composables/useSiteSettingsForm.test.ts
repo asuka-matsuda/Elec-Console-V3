@@ -15,6 +15,13 @@ vi.mock('../../app/composables/admin/useAdminUsers', () => ({
   }),
 }))
 
+// モック: useAdminSites
+vi.mock('../../app/composables/admin/useAdminSites', () => ({
+  useAdminSites: () => ({
+    updateSite: vi.fn().mockResolvedValue({ success: true }),
+  }),
+}))
+
 describe('useSiteSettingsForm', () => {
   const mockSite: Site = {
     id: 'site-1',

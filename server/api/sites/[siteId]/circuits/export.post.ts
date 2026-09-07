@@ -1,7 +1,7 @@
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { requireAuthUser } from '../../../../utils/auth'
-import { importCircuitsFromExcel } from '../../../../utils/circuitExcel'
+import { exportCircuitsToExcel } from '../../../../utils/circuitExcel'
 import { prisma } from '../../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
@@ -16,12 +16,8 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const body = (await readBody(event).catch(() => null)) as {
-    filePath?: string
-    mode?: 'merge' | 'reset'
-  } | null
+  const body = (await readBody(event).catch(() => null)) as { filePath?: string } | null
   let targetPath = body?.filePath?.trim().replace(/^["']+|["']+$/g, '').trim()
-  const mode = body?.mode === 'reset' ? 'reset' : 'merge'
 
   if (!targetPath) {
     const settings = await prisma.siteSettings.findUnique({
@@ -40,27 +36,22 @@ export default defineEventHandler(async (event) => {
 
   try {
     const workerName = `${user.lastName} ${user.firstName}`.trim() || user.loginId
-    const result = await importCircuitsFromExcel(siteId, targetPath, workerName, mode)
+    const result = await exportCircuitsToExcel(siteId, targetPath, workerName)
 
     return {
       success: true,
       count: result.count,
-      createdCount: result.createdCount ?? result.count,
-      updatedCount: result.updatedCount ?? 0,
-      keptCount: result.keptCount ?? 0,
-      deletedCount: result.deletedCount ?? 0,
-      mode,
       filePath: targetPath,
     }
   }
   catch (error: unknown) {
     const err = error as Error
 
-    console.error('Failed to import circuits from Excel:', err)
+    console.error('Failed to export circuits to Excel:', err)
 
     throw createError({
       statusCode: 500,
-      message: err.message || 'Excelファイルの取り込みに失敗しました',
+      message: err.message || 'Excelファイルへの書き戻しに失敗しました',
     })
   }
 })

@@ -2,7 +2,7 @@
 import { useLocalStorage } from '@vueuse/core'
 import { computed, onMounted, watch } from 'vue'
 
-import { useRoute, useRouter } from '#app'
+import { useHead, useRoute, useRouter } from '#app'
 import Calendar from '~/components/Portal/Calendar.client.vue'
 import PersonalTodo from '~/components/Portal/PersonalTodo.client.vue'
 import { useAdminSites } from '~/composables/admin/useAdminSites'
@@ -31,6 +31,10 @@ watch(
 const currentSite = computed(() =>
   sites.value.find(s => s.id === siteId.value),
 )
+
+useHead({
+  title: computed(() => `${currentSite.value?.name || '現場ダッシュボード'} - Elec-Console`),
+})
 
 const assignedSites = computed(() => {
   const ids = currentUser.value?.assignedSiteIds || []

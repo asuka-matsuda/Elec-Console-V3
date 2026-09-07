@@ -51,7 +51,6 @@ const pct = computed(() => {
         size="sm"
         :disabled="disabled"
       >
-        <AppIcon name="edit-3" size="sm" />
         試験入力
       </AppButton>
     </div>

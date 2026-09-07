@@ -3,46 +3,37 @@
  * AppBreadcrumb
  * パンくずリストを表示するためのコンポーネント
  */
-import { computed } from 'vue'
-
-import { NuxtLink } from '#components'
 import type { BreadcrumbItem } from '~/types/components'
 
-const props = defineProps<{
+defineProps<{
   items: BreadcrumbItem[]
 }>()
-
-const processedItems = computed(() => {
-  return props.items.map((item, index) => {
-    const isLast = index === props.items.length - 1
-    const isLink = !isLast && !!item.href
-
-    return {
-      text: item.text,
-      href: isLink ? item.href : undefined,
-      tag: isLink ? NuxtLink : 'span',
-      className: isLink
-        ? 'c-breadcrumb__link'
-        : isLast
-          ? 'c-breadcrumb__current'
-          : 'c-breadcrumb__text',
-      uniqueKey: item.href || `${item.text}-${index}`,
-    }
-  })
-})
 </script>
 
 <template>
   <nav class="c-breadcrumb">
     <ol class="c-breadcrumb__list">
       <li
-        v-for="item in processedItems"
-        :key="item.uniqueKey"
+        v-for="(item, index) in items"
+        :key="item.href || `${item.text}-${index}`"
         class="c-breadcrumb__item"
       >
-        <component :is="item.tag" :to="item.href" :class="item.className">
+        <!-- 中間リンク項目（現場名など） -->
+        <NuxtLink
+          v-if="item.href && index < items.length - 1"
+          :to="item.href"
+          class="c-breadcrumb__link"
+        >
           {{ item.text }}
-        </component>
+        </NuxtLink>
+
+        <!-- 非リンク項目（カテゴリ または 現在地） -->
+        <span
+          v-else
+          :class="index === items.length - 1 ? 'c-breadcrumb__current' : 'c-breadcrumb__text'"
+        >
+          {{ item.text }}
+        </span>
       </li>
     </ol>
   </nav>
@@ -79,6 +70,7 @@ const processedItems = computed(() => {
       @include text-badge;
 
       content: "»";
+      user-select: none;
       color: color-mix(in srgb, var(--theme-accent) 60%, transparent);
     }
   }
@@ -86,7 +78,10 @@ const processedItems = computed(() => {
   &__link {
     @include click-enabled;
 
+    display: inline-flex;
+    align-items: center;
     color: var(--color-text-secondary);
+    text-decoration: none;
 
     @include state-base;
 
@@ -98,10 +93,15 @@ const processedItems = computed(() => {
   }
 
   &__text {
-    @include disabled;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    color: var(--color-text-muted);
   }
 
   &__current {
+    display: inline-flex;
+    align-items: center;
     color: var(--theme-accent);
 
     @include cyber-text-glow(var(--theme-accent), 60%, var(--blur-md));

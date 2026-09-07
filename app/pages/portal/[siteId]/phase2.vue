@@ -8,6 +8,8 @@ import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useHead, useRoute } from '#app'
 import ExamMinimap from '~/components/Portal/ExamMinimap.vue'
 import { usePhaseExam } from '~/composables/portal/usePhaseExam'
+import { useTableSort } from '~/composables/useTableSort'
+import type { TableColumn } from '~/types/components'
 import type { CircuitItem } from '~/types/souden'
 
 useHead({ title: 'フェーズ2：絶縁抵抗測定 - Elec-Console' })
@@ -25,7 +27,7 @@ const {
   selectedBanMeisho,
   phaseStats,
   phase2ThresholdMegOhm,
-  hasIncompleteKansenWarning,
+  isCircuitLocked,
   isActionLoading,
   isBatchLoading,
   isThreePhase,
@@ -65,8 +67,12 @@ onMounted(() => {
   fetchCircuits()
 })
 
-const isComplete = (c: CircuitItem) => {
-  return Boolean(c.p2ConfirmedAt && c.p2IsComplete)
+const isComplete = (circuit: CircuitItem) => {
+  return Boolean(circuit.p2ConfirmedAt && circuit.p2IsComplete)
+}
+
+const isP1Complete = (circuit: CircuitItem) => {
+  return Boolean(circuit.p1ConfirmedAt && circuit.p1Kakunin && circuit.p1Mashishime)
 }
 
 const formatDate = (dateStr?: string | null) => {
@@ -171,6 +177,26 @@ const saveInput = async (circuit: CircuitItem) => {
 
   editingRowId.value = null
 }
+
+// テーブルカラム定義とソート
+const columns: TableColumn<CircuitItem>[] = [
+  { key: 'banMeisho', label: '盤情報', sortable: true, width: '95px' },
+  { key: 'kairoBangou', label: '回路番号', sortable: true, width: '80px', align: 'center' },
+  { key: 'kairoMeisho', label: '回路名称', sortable: true, width: '135px' },
+  { key: 'zetsuenR', label: '測定1', sortable: true, width: '100px', align: 'center' },
+  { key: 'zetsuenS', label: '測定2', sortable: true, width: '100px', align: 'center' },
+  { key: 'zetsuenT', label: '測定3', sortable: true, width: '100px', align: 'center' },
+  { key: 'p2Remarks', label: '備考', sortable: true },
+  { key: 'actions', label: '操作', width: '125px', align: 'center' },
+  { key: 'p2ConfirmedAt', label: '測定者 / 日時', sortable: true, width: '110px', align: 'center' },
+]
+
+const {
+  sortBy,
+  sortOrder,
+  sortedData: sortedCircuits,
+  handleSort,
+} = useTableSort(filteredCircuits)
 </script>
 
 <template>
@@ -202,47 +228,10 @@ const saveInput = async (circuit: CircuitItem) => {
       </template>
     </AppSectionHeader>
 
-    <!-- 安全性警告バナー（二次側で幹線未完了盤がある場合） -->
-    <div v-if="hasIncompleteKansenWarning" class="p-phase2__warning">
-      <AppIcon name="alert-triangle" size="md" />
-      <div class="p-phase2__warning-content">
-        <strong>【安全注意】幹線未完了の盤が含まれています</strong>
-        <p>二次側の測定作業を開始する前に、該当する盤の幹線（一次側）試験（Phase 3まで）が完了していることを必ず確認してください。</p>
-      </div>
-    </div>
-
     <!-- 検索・絞り込み ＆ 進捗コントロールパネル -->
     <AppPanel variant="hud">
       <div class="p-phase2-controls">
         <div class="p-phase2-controls__filters">
-          <!-- 系統選択 -->
-          <div class="p-phase2-controls__row">
-            <span class="p-phase2-controls__label">系統:</span>
-            <div class="p-phase2-controls__pills">
-              <button
-                type="button"
-                :class="['p-phase2-pill', { 'is-active': selectedKeiTo === '幹線' }]"
-                @click="selectedKeiTo = '幹線'"
-              >
-                幹線
-              </button>
-              <button
-                type="button"
-                :class="['p-phase2-pill', { 'is-active': selectedKeiTo === '二次側' }]"
-                @click="selectedKeiTo = '二次側'"
-              >
-                二次側
-              </button>
-              <button
-                type="button"
-                :class="['p-phase2-pill', { 'is-active': selectedKeiTo === 'ALL' }]"
-                @click="selectedKeiTo = 'ALL'"
-              >
-                全系統
-              </button>
-            </div>
-          </div>
-
           <!-- 盤種別タブ -->
           <div class="p-phase2-controls__row">
             <span class="p-phase2-controls__label">盤種別:</span>
@@ -290,7 +279,7 @@ const saveInput = async (circuit: CircuitItem) => {
 
           <!-- ミニマップ -->
           <ExamMinimap
-            :circuits="filteredCircuits"
+            :circuits="sortedCircuits"
             :phase="2"
             @select-circuit="scrollToCircuit"
           />
@@ -300,40 +289,16 @@ const saveInput = async (circuit: CircuitItem) => {
 
     <!-- 回路一覧テーブル -->
     <div class="p-phase2__table-wrapper">
-      <AppTable>
-        <template #header>
-          <tr>
-            <th style="width: 110px;">
-              盤情報
-            </th>
-            <th style="width: 140px;">
-              回路番号 / 名称
-            </th>
-            <th style="width: 100px; text-align: center;">
-              配電方式
-            </th>
-            <th style="width: 130px; text-align: center;">
-              測定1
-            </th>
-            <th style="width: 130px; text-align: center;">
-              測定2
-            </th>
-            <th style="width: 130px; text-align: center;">
-              測定3
-            </th>
-            <th>備考</th>
-            <th style="width: 150px; text-align: center;">
-              操作
-            </th>
-            <th style="width: 120px; text-align: center;">
-              測定者 / 日時
-            </th>
-          </tr>
-        </template>
-
+      <AppTable
+        :columns="columns"
+        :data="sortedCircuits"
+        :sort-by="sortBy"
+        :sort-order="sortOrder"
+        @sort="handleSort"
+      >
         <template #body>
           <tr
-            v-for="circuit in filteredCircuits"
+            v-for="circuit in sortedCircuits"
             :id="`row-${circuit.id}`"
             :key="circuit.id"
             :class="[
@@ -341,6 +306,7 @@ const saveInput = async (circuit: CircuitItem) => {
               {
                 'is-completed': isComplete(circuit),
                 'is-excluded': circuit.isExcluded,
+                'is-locked': isCircuitLocked(circuit) || !isP1Complete(circuit),
                 'is-editing': editingRowId === circuit.id,
               },
             ]"
@@ -353,20 +319,23 @@ const saveInput = async (circuit: CircuitItem) => {
               </div>
             </td>
 
-            <!-- 回路番号 / 回路名称 -->
-            <td>
-              <div class="p-phase2-cell__circuit">
-                <span class="p-phase2-cell__bangou">{{ circuit.kairoBangou || '-' }}</span>
-                <span class="p-phase2-cell__meisho" :title="circuit.kairoMeisho || ''">
-                  {{ circuit.kairoMeisho || '-' }}
+            <!-- 回路番号 -->
+            <td style="text-align: center;">
+              <div class="p-phase2-cell__bangou-wrap">
+                <span class="p-phase2-cell__type-badge" :class="{ 'is-three': isThreePhase(circuit) }">
+                  {{ isThreePhase(circuit) ? '動力' : '電灯' }}
                 </span>
+                <AppKairoIcon
+                  :kigou="circuit.kairoKigou"
+                  :bangou="circuit.kairoBangou"
+                />
               </div>
             </td>
 
-            <!-- 配電方式 / 相種別 -->
-            <td style="text-align: center;">
-              <span class="p-phase2-cell__type-badge" :class="{ 'is-three': isThreePhase(circuit) }">
-                {{ getPhaseLabels(circuit).typeText }}
+            <!-- 回路名称 -->
+            <td>
+              <span class="p-phase2-cell__text p-phase2-cell__meisho" :title="circuit.kairoMeisho || ''">
+                {{ circuit.kairoMeisho || '-' }}
               </span>
             </td>
 
@@ -503,8 +472,18 @@ const saveInput = async (circuit: CircuitItem) => {
             <!-- 操作 -->
             <td style="text-align: center;">
               <div class="p-phase2-actions">
+                <!-- 幹線未完了による操作不可 -->
+                <template v-if="isCircuitLocked(circuit)">
+                  <span class="c-text-note c-text-note--strong">⏸ 幹線未了</span>
+                </template>
+
+                <!-- 前フェーズ（P1）未完了による操作不可 -->
+                <template v-else-if="!isP1Complete(circuit)">
+                  <span class="c-text-note c-text-note--strong">⏸ P1未了</span>
+                </template>
+
                 <!-- 手入力編集モード中 -->
-                <template v-if="editingRowId === circuit.id">
+                <template v-else-if="editingRowId === circuit.id">
                   <AppButton
                     variant="success"
                     size="sm"
@@ -588,28 +567,6 @@ const saveInput = async (circuit: CircuitItem) => {
   gap: var(--space-section-gap);
   height: 100%;
 
-  &__warning {
-    display: flex;
-    gap: var(--space-3);
-    align-items: center;
-
-    padding: var(--space-3) var(--space-4);
-    border: 1px solid var(--color-status-danger);
-    border-radius: var(--radius-md);
-
-    color: var(--color-status-danger);
-
-    background-color: rgb(239 68 68 / 12%);
-
-    &-content {
-      p {
-        margin: var(--space-1) 0 0;
-        font-size: var(--text-xs);
-        color: var(--color-text-secondary);
-      }
-    }
-  }
-
   &__table-wrapper {
     flex: 1;
     min-height: 400px;
@@ -646,11 +603,6 @@ const saveInput = async (circuit: CircuitItem) => {
     font-size: var(--text-xs);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-secondary);
-  }
-
-  &__pills {
-    display: flex;
-    gap: var(--space-2);
   }
 
   &__select-group {
@@ -698,34 +650,6 @@ const saveInput = async (circuit: CircuitItem) => {
   }
 }
 
-.p-phase2-pill {
-  cursor: pointer;
-
-  padding: var(--space-1) var(--space-3);
-  border: 1px solid rgb(255 255 255 / 10%);
-  border-radius: var(--radius-full);
-
-  font-size: var(--text-xs);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-muted);
-
-  background-color: rgb(255 255 255 / 5%);
-
-  transition: all 0.2s ease;
-
-  &:hover {
-    color: var(--color-text-main);
-    background-color: rgb(255 255 255 / 10%);
-  }
-
-  &.is-active {
-    border-color: var(--color-category-main, #3b82f6);
-    color: #fff;
-    background-color: var(--color-category-main, #3b82f6);
-    box-shadow: 0 0 8px rgb(59 130 246 / 40%);
-  }
-}
-
 .p-phase2-row {
   transition: background-color 0.2s ease;
 
@@ -735,6 +659,10 @@ const saveInput = async (circuit: CircuitItem) => {
 
   &.is-excluded {
     opacity: 0.5;
+  }
+
+  &.is-locked {
+    opacity: 0.6;
   }
 
   &.is-highlighted {
@@ -747,12 +675,17 @@ const saveInput = async (circuit: CircuitItem) => {
   &__panel {
     @include flex-start-stretch($direction: column);
 
+    overflow: hidden;
     gap: 2px;
   }
 
   &__ban-name {
+    overflow: hidden;
+
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__shubetsu {
@@ -760,21 +693,18 @@ const saveInput = async (circuit: CircuitItem) => {
     color: var(--color-text-muted);
   }
 
-  &__circuit {
-    @include flex-start-stretch($direction: column);
+  &__bangou-wrap {
+    @include flex-center-center;
 
-    gap: 2px;
-  }
-
-  &__bangou {
-    font-size: 11px;
-    color: var(--color-text-muted);
+    flex-direction: column;
+    gap: 3px;
   }
 
   &__meisho {
     overflow: hidden;
+    display: block;
 
-    max-width: 150px;
+    max-width: 100%;
 
     font-size: var(--text-xs);
     font-weight: var(--font-weight-medium);
@@ -920,8 +850,21 @@ const saveInput = async (circuit: CircuitItem) => {
 
 .p-phase2-actions {
   display: flex;
-  gap: var(--space-2);
+  gap: var(--space-1);
   align-items: center;
   justify-content: center;
+}
+
+.c-text-note {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+
+  font-size: var(--text-xs);
+  color: var(--color-status-warning, #f59e0b);
+
+  &--strong {
+    font-weight: var(--font-weight-bold, 700);
+  }
 }
 </style>

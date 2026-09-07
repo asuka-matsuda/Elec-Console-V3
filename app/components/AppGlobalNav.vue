@@ -3,6 +3,9 @@
  * AppGlobalNav
  * アプリケーションのグローバルナビゲーション（サイドバーメニュー）を表示するコンポーネントです。
  */
+import { onMounted, onUnmounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
+
 import { NuxtLink } from '#components'
 import type { MenuSection } from '~/constants/data/menuData'
 
@@ -15,6 +18,23 @@ defineProps<{
 const closeSidebar = () => {
   isOpen.value = false
 }
+
+const route = useRoute()
+
+watch(() => route.fullPath, () => {
+  isOpen.value = false
+})
+
+onMounted(() => {
+  const onKeydown = (e: KeyboardEvent) => {
+    if (e.key === 'Escape' && isOpen.value) {
+      isOpen.value = false
+    }
+  }
+
+  window.addEventListener('keydown', onKeydown)
+  onUnmounted(() => window.removeEventListener('keydown', onKeydown))
+})
 </script>
 
 <template>
@@ -25,6 +45,16 @@ const closeSidebar = () => {
   />
 
   <aside class="c-global-nav" :class="{ 'is-open': isOpen }">
+    <div class="c-global-nav__header">
+      <AppLogo @click="closeSidebar" />
+      <AppIconButton
+        name="x"
+        size="sm"
+        variant="secondary"
+        @click="closeSidebar"
+      />
+    </div>
+
     <nav class="c-global-nav__nav">
       <section
         v-for="section in menuData"
@@ -66,24 +96,32 @@ const closeSidebar = () => {
 .c-global-nav {
   @include flex-start-stretch($direction: column);
 
+  position: fixed;
+  z-index: var(--z-index-sidebar);
+  top: 0;
+  left: 0;
+  transform: translateX(-100%);
+
   width: var(--sidebar-width);
   height: 100dvh;
   border-right: var(--border-width-base) solid var(--color-border);
+
   background-color: var(--surface-bg-solid);
+  box-shadow: 4px 0 24px rgb(0 0 0 / 50%);
 
-  @include state-base("md", var(--transition-slow));
+  transition: transform var(--duration-slow, 0.3s) var(--ease-base);
 
-  // Mobile layout (hide by default, fixed drawer)
-  @include mq("md") {
-    position: fixed;
-    z-index: var(--z-index-sidebar);
-    top: 0;
-    left: 0;
-    transform: translateX(-100%);
+  &.is-open {
+    transform: translateX(0);
+  }
 
-    &.is-open {
-      transform: translateX(0);
-    }
+  &__header {
+    @include flex-between-center;
+
+    height: 64px;
+    padding: 0 var(--space-4);
+    border-bottom: var(--border-width-base) solid var(--color-border);
+    background-color: var(--surface-bg-elevated);
   }
 
   &__nav {
@@ -193,28 +231,27 @@ const closeSidebar = () => {
 }
 
 .c-global-nav-overlay {
-  display: none; // Hidden on desktop
+  pointer-events: none;
 
-  @include mq("md") {
-    position: fixed;
-    z-index: var(--z-index-sidebar-overlay);
-    inset: 0;
+  position: fixed;
+  z-index: var(--z-index-sidebar-overlay);
+  inset: 0;
 
-    display: block;
+  display: block;
 
-    visibility: hidden;
-    opacity: 0;
-    backdrop-filter: blur(var(--blur-sm));
+  visibility: hidden;
+  opacity: 0;
+  background-color: rgb(0 0 0 / 50%);
+  backdrop-filter: blur(var(--blur-sm));
 
-    transition:
-      opacity var(--duration-slow) var(--ease-base),
-      visibility var(--duration-slow) var(--ease-base);
+  transition:
+    opacity var(--duration-slow) var(--ease-base),
+    visibility var(--duration-slow) var(--ease-base);
 
-    &.is-open {
-      pointer-events: auto;
-      visibility: visible;
-      opacity: 1;
-    }
+  &.is-open {
+    pointer-events: auto;
+    visibility: visible;
+    opacity: 1;
   }
 }
 </style>

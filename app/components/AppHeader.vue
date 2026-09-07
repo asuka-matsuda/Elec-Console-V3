@@ -41,6 +41,9 @@ const emit = defineEmits<{
 .c-header {
   @include flex-between-center;
 
+  position: relative;
+  z-index: 10;
+
   height: 64px;
   padding: 0 var(--space-layout-pad);
   border-bottom: var(--border-width-base) solid var(--color-border);
@@ -61,11 +64,7 @@ const emit = defineEmits<{
   }
 
   &__menu-btn {
-    display: none;
-
-    @include mq("md") {
-      display: inline-flex;
-    }
+    display: inline-flex;
   }
 
   &__actions {

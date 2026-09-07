@@ -1,7 +1,6 @@
 import type { Ref } from 'vue'
 import { ref, unref } from 'vue'
 
-import { useFetch } from '#app'
 import type { SoudenStats } from '~/types/portal'
 
 export function useSoudenDashboard(siteIdRef: Ref<string> | string) {
@@ -19,16 +18,12 @@ export function useSoudenDashboard(siteIdRef: Ref<string> | string) {
     error.value = null
 
     try {
-      const { data, error: fetchErr } = await useFetch<SoudenStats>(
+      const data = await $fetch<SoudenStats>(
         `/api/sites/${siteId}/souden/stats`,
       )
 
-      if (fetchErr.value) {
-        throw new Error(fetchErr.value.message || '進捗データの取得に失敗しました')
-      }
-
-      if (data.value) {
-        stats.value = data.value
+      if (data) {
+        stats.value = data
       }
     }
     catch (err: unknown) {
@@ -63,9 +58,9 @@ export function useSoudenDashboard(siteIdRef: Ref<string> | string) {
       return res
     }
     catch (err: unknown) {
-      const e = err as Error
+      const e = err as { data?: { message?: string }, message?: string }
 
-      error.value = e.message || 'Excelの取り込み中にエラーが発生しました'
+      error.value = e.data?.message || e.message || 'Excelの取り込み中にエラーが発生しました'
       throw err
     }
     finally {

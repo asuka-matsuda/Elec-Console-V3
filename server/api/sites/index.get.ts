@@ -14,5 +14,24 @@ export default defineEventHandler(async (event) => {
   })
   const siteSettings = await prisma.siteSettings.findMany()
 
-  return { sites, siteSettings }
+  const mappedSites = sites.map((site) => {
+    let parsedExcluded: string[] = []
+
+    if (site.settings?.excludedCircuits) {
+      try {
+        parsedExcluded = JSON.parse(site.settings.excludedCircuits)
+      }
+      catch {
+        parsedExcluded = []
+      }
+    }
+
+    return {
+      ...site,
+      excelPath: site.settings?.excelPath || undefined,
+      excludedCircuits: parsedExcluded,
+    }
+  })
+
+  return { sites: mappedSites, siteSettings }
 })

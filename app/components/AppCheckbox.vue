@@ -108,11 +108,15 @@ defineProps<{
     @include flex-center-center;
 
     position: relative;
+
     flex-shrink: 0;
+
     width: 1.4em;
     height: 1.4em;
 
-    @include border-base($opacity: 30%);
+    background-color: var(--surface-bg-elevated);
+
+    @include border-base;
     @include state-base;
 
     .c-checkbox__icon {
