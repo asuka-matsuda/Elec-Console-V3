@@ -179,6 +179,7 @@ onMounted(() => {
   align-items: center;
 
   padding: var(--space-1) var(--space-3);
+  border: var(--border-width-base) solid transparent;
   border-radius: var(--radius-sm);
 
   font-size: var(--font-size-sm);
