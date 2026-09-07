@@ -67,7 +67,7 @@ const emit = defineEmits<{
 }
 
 .breadcrumb {
-  @media (width <= 768px) {
+  @include mq("md") {
     display: none;
   }
 }
