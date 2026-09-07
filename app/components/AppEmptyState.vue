@@ -16,9 +16,7 @@ const {
 
 <template>
   <div class="c-empty-state" role="status">
-    <div v-if="icon" class="icon-box">
-      <AppIcon :name="icon" size="lg" class="icon" />
-    </div>
+    <AppIcon v-if="icon" :name="icon" class="icon" />
 
     <div class="content">
       <h3 v-if="title || $slots.title" class="title">
@@ -58,24 +56,11 @@ const {
 
   background-color: color-mix(in srgb, var(--surface-bg) 50%, transparent);
 
-  .icon-box {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: var(--size-control-lg);
-    height: var(--size-control-lg);
-    border: var(--border-width-base) solid color-mix(in srgb, var(--color-text-muted) 30%, transparent);
-    border-radius: var(--radius-sm);
-
+  .icon {
+    width: var(--icon-size-xxl);
+    height: var(--icon-size-xxl);
     color: var(--color-text-muted);
-
-    background-color: var(--surface-bg-elevated);
-    box-shadow: var(--shadow-sink);
-
-    .icon {
-      opacity: 0.7;
-    }
+    opacity: 0.5;
   }
 
   .content {
