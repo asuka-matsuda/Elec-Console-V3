@@ -21,8 +21,8 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
 </script>
 
 <template>
-  <AppCard
-    variant="tool"
+  <AppPanel
+    as="article"
     class="c-history-card"
     :class="[`is-${entry.status}`]"
   >
@@ -107,7 +107,7 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
         <AppIcon name="trash-2" size="sm" />
       </AppButton>
     </footer>
-  </AppCard>
+  </AppPanel>
 </template>
 
 <style scoped lang="scss">

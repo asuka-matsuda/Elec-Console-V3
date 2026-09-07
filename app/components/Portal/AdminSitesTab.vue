@@ -95,7 +95,8 @@ const handleSaveSettings = async (updatedSite: Site) => {
 
 <template>
   <div class="c-admin-sites">
-    <AppPanel title="現場プロジェクト一覧">
+    <AppPanel>
+      <AppSectionHeader title="現場プロジェクト一覧" />
       <div class="c-admin-sites__stack">
         <div class="c-admin-sites__toolbar">
           <AppButton

@@ -84,7 +84,7 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
         <AppSectionHeader :title="section.heading" :icon="section.icon" />
 
         <div class="p-dashboard__grid">
-          <AppCard
+          <MenuTile
             v-for="item in section.items"
             :key="item.text"
             :to="getDynamicTo(item)"

@@ -33,12 +33,12 @@ const sortedTodos = computed(() => {
 </script>
 
 <template>
-  <AppPanel
-    title="パーソナルToDo"
-    icon="check"
-    size="sm"
-    class="p-personal-todo"
-  >
+  <AppPanel class="p-personal-todo">
+    <AppSectionHeader
+      title="パーソナルToDo"
+      icon="check"
+      size="sm"
+    />
 
     <div class="p-personal-todo__input">
       <AppInput

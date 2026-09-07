@@ -31,7 +31,7 @@ const themeOptions = [
 
     <div class="p-settings__grid">
       <div class="p-settings__stack">
-        <AppPanel title="一般設定" variant="hud">
+        <AppPanel>
           <template #header>
             <AppSectionHeader
               title="テーマ・カラー設定"

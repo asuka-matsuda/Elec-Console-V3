@@ -191,13 +191,13 @@ $container-breakpoints: (
   justify-content: space-around;
 }
 
-@mixin grid($cols: 1fr, $gap: var(--space-card-gap)) {
+@mixin grid($cols: 1fr, $gap: var(--space-panel-gap)) {
   display: grid;
   grid-template-columns: $cols;
   gap: $gap;
 }
 
-@mixin grid-auto($min-width, $gap: var(--space-card-gap)) {
+@mixin grid-auto($min-width, $gap: var(--space-panel-gap)) {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(#{$min-width}, 1fr));
   gap: $gap;

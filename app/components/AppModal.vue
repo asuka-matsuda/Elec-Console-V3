@@ -98,12 +98,13 @@ onMounted(() => {
     @click.self="close"
     @cancel.prevent="close"
   >
-    <AppPanel
-      class="c-modal__panel"
-      :title="title"
-      :icon="icon"
-      :variant="variant"
-    >
+    <AppPanel class="c-modal__panel">
+      <AppSectionHeader
+        v-if="title"
+        :title="title"
+        :icon="icon"
+        :variant="variant"
+      />
       <div
         class="c-modal__body"
         :class="align ? `is-align-${align}` : undefined"

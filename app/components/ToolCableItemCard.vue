@@ -64,7 +64,7 @@ const onCategoryChange = (val: unknown) => {
 </script>
 
 <template>
-  <AppCard class="c-cable-item">
+  <AppPanel class="c-cable-item">
     <template #header>
       <div class="c-cable-item__header">
         <div class="c-cable-item__title-group">
@@ -118,7 +118,7 @@ const onCategoryChange = (val: unknown) => {
         </AppInputGroup>
       </AppFormGroup>
     </div>
-  </AppCard>
+  </AppPanel>
 </template>
 
 <style scoped lang="scss">

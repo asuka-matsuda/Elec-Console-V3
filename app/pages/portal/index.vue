@@ -58,14 +58,15 @@ onMounted(async () => {
 
 <template>
   <div class="p-portal-index">
-    <AppPanel title="現場ポータル" variant="hud">
+    <AppPanel>
+      <AppSectionHeader title="現場ポータル" variant="hud" />
       <div class="p-portal-index__content">
         <p class="u-text-muted">
           アクセスする現場ポータルを選択してください。
         </p>
 
         <div v-if="availableSites.length > 0" class="p-portal-index__grid">
-          <AppCard
+          <MenuTile
             v-for="site in availableSites"
             :key="site.id"
             :title="site.name"
@@ -80,7 +81,7 @@ onMounted(async () => {
             <div class="u-text-xs u-text-muted">
               現場ID: {{ site.id }}
             </div>
-          </AppCard>
+          </MenuTile>
         </div>
 
         <div v-else class="u-text-muted u-text-sm">

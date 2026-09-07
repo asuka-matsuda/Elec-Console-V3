@@ -97,17 +97,21 @@
     var(--space-8)
   ); // 20px 〜 32px
 
-  // [2] パネル・カード (Card & Surface)
-  --space-card-pad: clamp(
+  // [2] パネル・サーフェス余白 (Panel & Surface)
+  --space-panel-pad: clamp(
     var(--space-3),
     1.5vw,
     var(--space-5)
   ); // 12px 〜 20px (標準)
-  --space-card-gap: clamp(
+  --space-panel-gap: clamp(
     var(--space-2),
     1.2vw,
     var(--space-4)
   ); // 8px 〜 16px (標準)
+
+  // 互換用エイリアス
+  --space-card-pad: var(--space-panel-pad);
+  --space-card-gap: var(--space-panel-gap);
 
   // [3] コンポーネント・フォーム間隔 (Components & Forms)
   --space-form-row-gap: var(--space-4); // 16px (フォーム行間をゆったり確保)

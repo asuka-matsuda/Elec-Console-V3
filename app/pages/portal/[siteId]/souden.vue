@@ -79,7 +79,8 @@ onMounted(() => {
 
     <template v-else-if="stats">
       <!-- 総合進捗カード -->
-      <AppPanel title="総合進捗" icon="activity" variant="hud">
+      <AppPanel>
+        <AppSectionHeader title="総合進捗" icon="activity" variant="hud" />
         <div class="p-souden-summary">
           <div class="p-souden-summary__main">
             <AppCircularGauge
@@ -177,7 +178,8 @@ onMounted(() => {
       <!-- 幹線と二次側のフェーズ遷移カード (2カラム) -->
       <div class="l-grid l-grid--2col">
         <!-- 幹線カード -->
-        <AppPanel title="幹線" icon="zap" variant="tool">
+        <AppPanel>
+          <AppSectionHeader title="幹線" icon="zap" variant="tool" />
           <div class="p-souden-steps">
             <SoudenStepIndicator
               :step-num="1"
@@ -204,7 +206,8 @@ onMounted(() => {
         </AppPanel>
 
         <!-- 二次側カード -->
-        <AppPanel title="二次側" icon="layers" variant="management">
+        <AppPanel>
+          <AppSectionHeader title="二次側" icon="layers" variant="management" />
           <div class="p-souden-steps">
             <SoudenStepIndicator
               :step-num="1"

@@ -110,7 +110,8 @@ const confirmResetPassword = async (row: User) => {
 
 <template>
   <div class="c-admin-users">
-    <AppPanel title="ユーザー一覧">
+    <AppPanel>
+      <AppSectionHeader title="ユーザー一覧" />
       <div class="c-admin-users__stack">
         <div class="c-admin-users__toolbar">
           <AppButton

@@ -67,19 +67,20 @@ provide('toolBasisModal', {
     <main class="l-tool-layout__main">
       <!-- 1. 条件入力（PC: 左側 50% / モバイル: 全面表示） -->
       <section class="l-tool-layout__inputs">
-        <AppPanel
-          class="l-tool-layout__panel"
-          :title="inputsTitle"
-          :icon="inputsIcon"
-          variant="tool"
-          size="md"
-        >
-          <template #actions>
-            <AppButton variant="danger" size="sm" @click="emit('reset')">
-              <AppIcon name="refresh-cw" size="sm" />
-              リセット
-            </AppButton>
-          </template>
+        <AppPanel class="l-tool-layout__panel">
+          <AppSectionHeader
+            :title="inputsTitle"
+            :icon="inputsIcon"
+            variant="tool"
+            size="md"
+          >
+            <template #actions>
+              <AppButton variant="danger" size="sm" @click="emit('reset')">
+                <AppIcon name="refresh-cw" size="sm" />
+                リセット
+              </AppButton>
+            </template>
+          </AppSectionHeader>
 
           <slot name="inputs" :open-basis="openBasisModal" />
         </AppPanel>
@@ -99,29 +100,30 @@ provide('toolBasisModal', {
           />
         </div>
         <div class="l-tool-layout__results-inner">
-          <AppPanel
-            class="l-tool-layout__panel"
-            :title="resultsTitle"
-            :icon="resultsIcon"
-            variant="tool"
-            size="md"
-          >
-            <template #actions>
-              <AppButton
-                v-if="hasBasis"
-                variant="secondary"
-                size="sm"
-                @click="openBasisModal"
-              >
-                <AppIcon name="book" size="sm" />
-                計算根拠
-              </AppButton>
-              <AppSaveButton
-                v-if="saveFunction"
-                :disabled="saveDisabled"
-                :save-function="saveFunction"
-              />
-            </template>
+          <AppPanel class="l-tool-layout__panel">
+            <AppSectionHeader
+              :title="resultsTitle"
+              :icon="resultsIcon"
+              variant="tool"
+              size="md"
+            >
+              <template #actions>
+                <AppButton
+                  v-if="hasBasis"
+                  variant="secondary"
+                  size="sm"
+                  @click="openBasisModal"
+                >
+                  <AppIcon name="help-circle" size="sm" />
+                  計算根拠
+                </AppButton>
+                <AppSaveButton
+                  v-if="saveFunction"
+                  :disabled="saveDisabled"
+                  :save-function="saveFunction"
+                />
+              </template>
+            </AppSectionHeader>
 
             <slot name="results" :open-basis="openBasisModal" />
           </AppPanel>

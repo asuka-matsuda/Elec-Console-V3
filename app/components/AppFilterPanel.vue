@@ -20,7 +20,8 @@ defineProps<{
 </script>
 
 <template>
-  <AppPanel title="絞り込み・検索" icon="search">
+  <AppPanel>
+    <AppSectionHeader title="絞り込み・検索" icon="search" />
     <div class="c-filter-panel__filters">
       <AppFormGroup label="Keyword">
         <AppInput v-model="searchQuery" :placeholder="placeholder" />

@@ -70,9 +70,10 @@ const categoryColorMap: Record<string, string> = {
 
     <main class="p-glossary__main">
       <div v-if="filteredGlossary.length > 0" class="c-glossary-list">
-        <AppCard
+        <AppPanel
           v-for="item in filteredGlossary"
           :key="item.term"
+          as="article"
           class="c-glossary-card"
           :style="{ '--card-accent': categoryColorMap[item.category] }"
         >
@@ -107,7 +108,7 @@ const categoryColorMap: Record<string, string> = {
               </p>
             </div>
           </div>
-        </AppCard>
+        </AppPanel>
       </div>
 
       <AppEmptyState

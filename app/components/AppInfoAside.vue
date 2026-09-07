@@ -38,20 +38,26 @@ const recentHistory = computed(() =>
       <AppSectionHeader title="お知らせ" icon="bell" size="md" />
 
       <div v-if="pending" class="c-info-aside__list">
-        <AppCard description="お知らせを読み込み中..." />
+        <AppPanel class="c-info-card">
+          <p class="c-info-card__desc">お知らせを読み込み中...</p>
+        </AppPanel>
       </div>
 
       <div v-else-if="recentAnnouncements.length > 0" class="c-info-aside__list">
-        <AppCard
+        <AppPanel
           v-for="item in recentAnnouncements"
           :key="item.title"
-          :title="item.title"
-          :description="`${item.date} ${item.desc}`"
-        />
+          class="c-info-card"
+        >
+          <div class="c-info-card__title">{{ item.title }}</div>
+          <p class="c-info-card__desc">{{ item.date }} {{ item.desc }}</p>
+        </AppPanel>
       </div>
 
       <div v-else class="c-info-aside__list">
-        <AppCard description="現在新しいお知らせはありません。" />
+        <AppPanel class="c-info-card">
+          <p class="c-info-card__desc">現在新しいお知らせはありません。</p>
+        </AppPanel>
       </div>
     </section>
 
@@ -60,28 +66,33 @@ const recentHistory = computed(() =>
       <AppSectionHeader title="更新履歴" icon="clock" size="md" />
 
       <div v-if="pending" class="c-info-aside__list">
-        <AppCard description="更新履歴を読み込み中..." />
+        <AppPanel class="c-info-card">
+          <p class="c-info-card__desc">更新履歴を読み込み中...</p>
+        </AppPanel>
       </div>
 
       <div v-else-if="recentHistory.length > 0" class="c-info-aside__list">
-        <AppCard
+        <AppPanel
           v-for="item in recentHistory"
           :key="item.version"
-          :description="`${item.date} ${item.desc}`"
+          class="c-info-card"
         >
-          <template #title>
+          <div class="c-info-card__title">
             <AppBadge
               :color="item.status === 'success' ? 'var(--color-status-success)' : 'var(--color-text-muted)'"
             >
               {{ item.version }}
             </AppBadge>
             <span class="c-info-aside__item-title">{{ item.title }}</span>
-          </template>
-        </AppCard>
+          </div>
+          <p class="c-info-card__desc">{{ item.date }} {{ item.desc }}</p>
+        </AppPanel>
       </div>
 
       <div v-else class="c-info-aside__list">
-        <AppCard description="現在更新履歴はありません。" />
+        <AppPanel class="c-info-card">
+          <p class="c-info-card__desc">現在更新履歴はありません。</p>
+        </AppPanel>
       </div>
     </section>
   </aside>
@@ -122,6 +133,25 @@ const recentHistory = computed(() =>
 
   &__item-title {
     color: var(--color-text-main);
+  }
+
+  .c-info-card {
+    &__title {
+      display: flex;
+      gap: var(--space-1);
+      align-items: center;
+
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-bold);
+      line-height: var(--line-height-tight);
+      color: var(--color-text-main);
+    }
+
+    &__desc {
+      font-size: var(--font-size-xs);
+      line-height: var(--line-height-base);
+      color: var(--color-text-secondary);
+    }
   }
 }
 </style>

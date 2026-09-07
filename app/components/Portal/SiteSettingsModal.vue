@@ -110,7 +110,8 @@ const confirmResetImport = async () => {
           />
         </AppFormGroup>
 
-        <AppPanel title="データベース連携（Excel同期・エクスポート）" class="u-mt-6">
+        <AppPanel class="u-mt-6">
+          <AppSectionHeader title="データベース連携（Excel同期・エクスポート）" />
           <div class="c-site-settings__sync-cards">
             <!-- 差分再同期 (スマートマージ) -->
             <div class="c-site-settings__sync-item">

@@ -71,12 +71,12 @@ const handleClose = () => {
     <div class="c-basis-content">
       <ClientOnly>
         <div v-if="steps && steps.length > 0" class="c-basis-content__list">
-          <AppCard
+          <AppPanel
             v-for="(step, index) in steps"
             :key="index"
             class="c-basis-content__card"
-            :title="step.title"
           >
+            <AppSectionHeader v-if="step.title" :title="step.title" size="sm" />
             <div class="c-math-basis">
               <!-- 左側: 計算式 -->
               <div
@@ -101,7 +101,7 @@ const handleClose = () => {
                 </dl>
               </div>
             </div>
-          </AppCard>
+          </AppPanel>
         </div>
       </ClientOnly>
 
