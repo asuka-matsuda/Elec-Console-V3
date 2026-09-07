@@ -44,17 +44,13 @@ const {
 .c-empty-state {
   display: flex;
   flex-direction: column;
-  gap: var(--space-panel-gap);
+  gap: var(--space-3);
   align-items: center;
   justify-content: center;
 
-  padding: var(--space-layout-pad) var(--space-panel-pad);
-  border: var(--border-width-base) solid color-mix(in srgb, var(--color-border-main) 30%, transparent);
-  border-radius: var(--radius-sm);
+  padding: var(--space-8) var(--space-4);
 
   text-align: center;
-
-  background-color: color-mix(in srgb, var(--surface-bg) 50%, transparent);
 
   .icon {
     width: var(--icon-size-xxl);
