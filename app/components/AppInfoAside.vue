@@ -26,7 +26,7 @@ const recentHistory = computed(() => history.slice(0, maxCount))
 </script>
 
 <template>
-  <aside class="info-aside">
+  <div class="info-aside">
     <!-- Announcements -->
     <section class="section">
       <AppSectionHeader title="お知らせ" icon="bell" size="md" />
@@ -97,30 +97,15 @@ const recentHistory = computed(() => history.slice(0, maxCount))
         </AppPanel>
       </div>
     </section>
-  </aside>
+  </div>
 </template>
 
 <style scoped lang="scss">
 .info-aside {
-  position: sticky;
-  z-index: 1;
-  top: var(--space-layout-pad);
-
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  flex-shrink: 0;
   gap: var(--space-section-gap);
-
-  width: var(--sidebar-width);
-  max-height: calc(100dvh - var(--space-layout-pad) * 2);
-
-  @include mq("md") {
-    position: static;
-    overflow-y: visible;
-    width: 100%;
-    max-height: none;
-  }
+  width: 100%;
 }
 
 .section {

@@ -97,11 +97,13 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
       </section>
     </div>
 
-    <AppInfoAside
-      :announcements="dashboardData?.announcements"
-      :history="dashboardData?.history"
-      :pending="isDashboardPending"
-    />
+    <aside class="p-dashboard__aside">
+      <AppInfoAside
+        :announcements="dashboardData?.announcements"
+        :history="dashboardData?.history"
+        :pending="isDashboardPending"
+      />
+    </aside>
   </div>
 </template>
 
@@ -120,6 +122,24 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
 
     flex: 1;
     gap: var(--space-section-gap);
+  }
+
+  &__aside {
+    position: sticky;
+    top: var(--space-layout-pad);
+
+    overflow-y: auto;
+    flex-shrink: 0;
+
+    width: var(--sidebar-width);
+    max-height: calc(100dvh - var(--space-layout-pad) * 2);
+
+    @include mq("md") {
+      position: static;
+      overflow-y: visible;
+      width: 100%;
+      max-height: none;
+    }
   }
 
   &__section {
