@@ -109,8 +109,8 @@ const gaugeClasses = computed(() => [
     margin-top: var(--space-2, 8px);
 
     font-size: var(--text-xs, 0.75rem);
-    font-weight: bold;
-    color: var(--gauge-color);
+    font-weight: var(--font-weight-medium, 500);
+    color: var(--color-text-secondary);
   }
 
   &--sm {

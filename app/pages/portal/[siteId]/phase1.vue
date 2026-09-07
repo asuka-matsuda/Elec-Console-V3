@@ -150,7 +150,7 @@ const {
               />
             </div>
 
-            <AppBadge variant="info" size="sm">
+            <AppBadge color="var(--theme-accent)">
               対象回路: {{ phaseStats.allCount }} 件
             </AppBadge>
           </div>

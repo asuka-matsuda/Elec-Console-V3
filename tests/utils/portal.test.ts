@@ -20,11 +20,11 @@ describe('portal utils', () => {
 
   describe('getSiteStatusColor', () => {
     it('should return corresponding BadgeColor for each status', () => {
-      expect(getSiteStatusColor('planning')).toBe('secondary')
-      expect(getSiteStatusColor('in_progress')).toBe('warning')
-      expect(getSiteStatusColor('completed')).toBe('success')
-      expect(getSiteStatusColor('on_hold')).toBe('danger')
-      expect(getSiteStatusColor('unknown')).toBe('secondary')
+      expect(getSiteStatusColor('planning')).toBe('var(--color-text-muted)')
+      expect(getSiteStatusColor('in_progress')).toBe('var(--color-status-warning)')
+      expect(getSiteStatusColor('completed')).toBe('var(--color-status-success)')
+      expect(getSiteStatusColor('on_hold')).toBe('var(--color-status-danger)')
+      expect(getSiteStatusColor('unknown')).toBe('var(--color-text-muted)')
     })
   })
 

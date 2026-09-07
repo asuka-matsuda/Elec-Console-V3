@@ -28,8 +28,7 @@ withDefaults(
       </span>
       <AppBadge
         v-if="required"
-        color="danger"
-        size="sm"
+        color="var(--color-status-danger)"
       >
         {{ requiredLabel }}
       </AppBadge>

@@ -31,10 +31,10 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
         <span class="c-history-card__date">{{ entry.timestamp }}</span>
         <h3 class="c-history-card__title">
           <span>{{ entry.toolName }}</span>
-          <AppBadge v-if="entry.mode === 'サイズ選定'" color="tool">
+          <AppBadge v-if="entry.mode === 'サイズ選定'" color="var(--color-category-tool)">
             {{ entry.mode }}
           </AppBadge>
-          <AppBadge v-else-if="entry.mode === '電圧降下'" color="primary">
+          <AppBadge v-else-if="entry.mode === '電圧降下'" color="var(--theme-accent)">
             {{ entry.mode }}
           </AppBadge>
         </h3>

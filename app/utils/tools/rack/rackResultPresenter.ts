@@ -4,7 +4,7 @@ export interface RackTierCardViewModel {
   layers: 1 | 2
   title: string
   badgeText?: string
-  badgeColor?: 'success' | 'warning' | 'danger'
+  badgeColor?: string
   displaySize: string
   boxStatus: 'neutral' | 'success' | 'warning' | 'danger'
   totalWidth: string
@@ -84,21 +84,21 @@ function formatTierCard(
 
   let boxStatus: 'neutral' | 'success' | 'warning' | 'danger' = 'success'
   let badgeText: string | undefined
-  let badgeColor: 'success' | 'warning' | 'danger' | undefined
+  let badgeColor: string | undefined
 
   if (tier.isSizeOver) {
     boxStatus = 'danger'
     badgeText = '規格外'
-    badgeColor = 'danger'
+    badgeColor = 'var(--color-status-danger)'
   }
   else if (tier.isOverflow) {
     boxStatus = 'warning'
     badgeText = '高さ不足'
-    badgeColor = 'warning'
+    badgeColor = 'var(--color-status-warning)'
   }
   else if (!isTier2 && mode === 'strong') {
     badgeText = '放熱推奨'
-    badgeColor = 'success'
+    badgeColor = 'var(--color-status-success)'
   }
 
   let displaySize = '---'

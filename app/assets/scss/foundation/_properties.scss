@@ -211,6 +211,25 @@
   --shadow-sink: inset 0 2px 4px 0
     color-mix(in srgb, var(--shadow-color) 60%, transparent);
   --shadow-modal: var(--shadow-elevation-lg);
+  --shadow-glow-base:
+    inset 0 0 4px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 20%, transparent),
+    0 2px 4px color-mix(in srgb, black 20%, transparent);
+  --shadow-glow-hover:
+    0 0 4px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 45%, transparent),
+    0 0 8px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 20%, transparent),
+    var(--shadow-elevation-sm);
+  --shadow-glow-focus:
+    0 0 0 1px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 70%, transparent),
+    0 0 6px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 50%, transparent),
+    0 0 12px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 20%, transparent),
+    var(--shadow-elevation-sm);
+  --shadow-glow-active:
+    0 0 4px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 60%, transparent),
+    0 0 8px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 30%, transparent),
+    inset 0 0 2px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 40%, transparent),
+    var(--shadow-elevation-sm);
+
+
 
   // ==========================================================================
   // 7. アニメーション & トランジション

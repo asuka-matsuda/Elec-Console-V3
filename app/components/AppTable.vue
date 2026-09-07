@@ -137,8 +137,7 @@ const getRowKey = (row: T, index: number): string | number => {
   :deep(th) {
     padding: var(--space-2);
     border-right: var(--border-width-base) solid var(--color-border);
-    border-bottom: var(--border-width-base) solid
-      color-mix(in srgb, var(--color-border) 70%, var(--color-text-muted) 30%);
+    border-bottom: calc(var(--border-width-base) * 2) solid var(--color-border);
 
     white-space: nowrap;
     vertical-align: middle;

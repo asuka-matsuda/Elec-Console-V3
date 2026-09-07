@@ -119,7 +119,7 @@ const handleSaveSettings = async (updatedSite: Site) => {
               <AppBadge :color="getStatusColor(value)">
                 {{ getStatusLabel(value) }}
               </AppBadge>
-              <AppBadge v-if="row.disabledAt" color="danger" size="sm">
+              <AppBadge v-if="row.disabledAt" color="var(--color-status-danger)">
                 無効
               </AppBadge>
             </div>

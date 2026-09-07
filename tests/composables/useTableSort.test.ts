@@ -69,4 +69,20 @@ describe('useTableSort', () => {
 
     expect(sortedData.value.map(d => d.val)).toEqual([10, 50, null])
   })
+
+  it('should reset sort to default options with resetSort', () => {
+    const list = ref(sampleData)
+    const { sortBy, sortOrder, handleSort, resetSort } = useTableSort(list, {
+      defaultKey: 'count',
+      defaultOrder: 'asc',
+    })
+
+    handleSort({ key: 'name', order: 'desc' })
+    expect(sortBy.value).toBe('name')
+    expect(sortOrder.value).toBe('desc')
+
+    resetSort()
+    expect(sortBy.value).toBe('count')
+    expect(sortOrder.value).toBe('asc')
+  })
 })

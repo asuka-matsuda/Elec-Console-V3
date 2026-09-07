@@ -5,85 +5,71 @@
  */
 import { computed } from 'vue'
 
-import { NuxtLink } from '#components'
 import type { AppButtonProps } from '~/types/components'
 
-const props = withDefaults(defineProps<AppButtonProps>(), {
-  type: 'button',
-  size: 'sm',
-  variant: 'primary',
-  disabled: false,
-  loading: false,
-})
+const {
+  type = 'button',
+  size = 'sm',
+  variant = 'primary',
+  disabled = false,
+  loading = false,
+  icon,
+  block,
+} = defineProps<AppButtonProps>()
 
-const isClickable = computed(() => !props.disabled && !props.loading)
-
-const componentTag = computed(() => {
-  if (!isClickable.value) return 'button'
-  if (props.to) return NuxtLink
-  if (props.href) return 'a'
-
-  return 'button'
-})
-
-const buttonClasses = computed(() => {
-  return [
-    'c-btn',
-    props.variant !== 'primary' ? `c-btn--${props.variant}` : '',
-    props.size !== 'sm' ? `c-btn--${props.size}` : '',
-    props.block ? 'c-btn--block' : '',
-    props.loading ? 'c-btn--loading' : '',
-  ].filter(Boolean)
-})
-
-const componentAttrs = computed(() => {
-  const isButton = componentTag.value === 'button'
-
-  return {
-    'to': props.to,
-    'href': props.href,
-    'type': isButton ? props.type : undefined,
-    'disabled': !isClickable.value ? true : undefined,
-    'aria-busy': props.loading ? true : undefined,
-  }
-})
+const isClickable = computed(() => !disabled && !loading)
 </script>
 
 <template>
-  <component
-    :is="componentTag"
-    v-bind="componentAttrs"
-    :class="buttonClasses"
+  <button
+    :type="type"
+    :disabled="!isClickable ? true : undefined"
+    :aria-busy="loading ? true : undefined"
+    :class="[
+      'c-btn',
+      `c-btn--${variant}`,
+      `c-btn--${size}`,
+      { 'c-btn--block': block, 'c-btn--loading': loading },
+    ]"
   >
     <AppIcon v-if="loading" name="loader" class="u-spin c-btn__spinner" />
     <AppIcon v-else-if="icon" :name="icon" />
     <slot />
-  </component>
+  </button>
 </template>
 
 <style scoped lang="scss">
 .c-btn {
   --btn-color: var(--theme-accent);
 
-  @include flex-center-center($is-inline: true);
-  @include text-label("sm", "semibold");
-  @include click-enabled;
+  cursor: pointer;
+  user-select: none;
 
   position: relative;
+  z-index: 1;
 
+  display: inline-flex;
   flex-shrink: 0;
   gap: var(--space-2);
+  align-items: center;
+  justify-content: center;
 
   min-height: 2.6em;
   padding-block: 0.3em;
   padding-inline: 1.2em;
+  border: var(--border-width-base) solid color-mix(in srgb, var(--btn-color) 30%, transparent);
+  border-radius: var(--radius-sm);
 
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
   color: var(--btn-color);
+  letter-spacing: var(--tracking-wide);
 
   background-color: var(--surface-bg-elevated);
+  box-shadow: var(--shadow-elevation-sm);
 
-  @include border-base(var(--btn-color), 30%);
-  @include state-base("sm", var(--transition-fast));
+  transition: var(--transition-fast);
 
   :deep(.c-icon) {
     width: 1.2em;
@@ -91,20 +77,34 @@ const componentAttrs = computed(() => {
   }
 
   &:disabled {
-    @include disabled;
+    cursor: not-allowed;
+    opacity: 0.5;
+    filter: grayscale(100%);
   }
 
   &:not(:disabled) {
     &:hover {
-      @include state-hover(var(--btn-color), "md");
+      border-color: var(--btn-color);
+      box-shadow: var(--shadow-glow-hover);
+      transition: var(--transition-glow);
     }
 
     &:focus-visible {
-      @include state-focus(var(--btn-color), "md");
+      border-color: color-mix(in srgb, var(--btn-color) 60%, transparent);
+      outline: none;
+      box-shadow: var(--shadow-glow-focus);
+      transition: var(--transition-glow);
     }
 
     &:active {
-      @include state-active(var(--btn-color), "md");
+      border-color: var(--btn-color);
+      box-shadow: var(--shadow-glow-active);
+      transition: var(--transition-glow);
+
+      svg {
+        filter: drop-shadow(0 0 2px var(--btn-color));
+        stroke: var(--btn-color);
+      }
     }
   }
 
@@ -131,7 +131,7 @@ const componentAttrs = computed(() => {
   }
 
   &--md {
-    @include text-label("md", "semibold");
+    font-size: var(--font-size-base);
   }
 }
 </style>

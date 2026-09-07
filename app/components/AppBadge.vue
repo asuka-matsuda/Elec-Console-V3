@@ -3,58 +3,48 @@
  * AppBadge
  * 状態、カテゴリ、タグなどを視覚的に示すためのバッジコンポーネント。
  */
-
-import type { BadgeColor } from '~/types/components'
-
-const props = withDefaults(
-  defineProps<{
-    color?: BadgeColor
-  }>(),
-  {
-    color: 'secondary',
-  },
-)
-
-const presetMap: Record<string, string> = {
-  secondary: 'var(--color-text-muted)',
-  primary: 'var(--theme-accent)',
-  main: 'var(--theme-accent)',
-  success: 'var(--color-status-success)',
-  warning: 'var(--color-status-warning)',
-  danger: 'var(--color-status-danger)',
-  tool: 'var(--color-category-tool)',
-  portal: 'var(--color-category-management)',
-  management: 'var(--color-category-management)',
-  database: 'var(--color-category-database)',
-  reference: 'var(--color-category-reference)',
-  accent: 'var(--color-accent-main)',
-  stopped: 'var(--color-status-stopped)',
-  neutral: 'var(--color-status-neutral)',
-}
-
-const resolvedColor = computed(() => presetMap[props.color] || props.color)
+const { color = 'var(--color-text-muted)' } = defineProps<{
+  color?: string
+}>()
 </script>
 
 <template>
-  <span class="c-badge">
+  <span
+    class="c-badge"
+    :style="{ '--glow-color': color }"
+  >
     <slot />
   </span>
 </template>
 
 <style scoped lang="scss">
 .c-badge {
-  --glow-color: v-bind("resolvedColor");
-
-  @include flex-center-center($is-inline: true);
-  @include text-badge;
+  --glow-color: var(--color-text-muted);
 
   user-select: none;
+
+  position: relative;
+  z-index: 1;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
   padding: var(--space-0-5) var(--space-1);
+  border: var(--border-width-base) solid color-mix(in srgb, var(--glow-color) 60%, transparent);
+  border-radius: var(--radius-sm);
+
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
   color: var(--glow-color);
+  text-shadow: 0 0 var(--blur-sm) var(--glow-color);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wider);
   white-space: nowrap;
 
-  @include cyber-text-glow(var(--glow-color), 100%, var(--blur-sm));
-  @include border-base(var(--glow-color), 60%);
-  @include state-base(none, var(--transition-base), var(--glow-color));
+  box-shadow: var(--shadow-glow-base);
+
+  transition: var(--transition-base);
 }
 </style>

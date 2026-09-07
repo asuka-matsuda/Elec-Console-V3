@@ -260,7 +260,7 @@ const {
               <span class="p-phase2-controls__threshold-unit">MΩ</span>
             </div>
 
-            <AppBadge variant="info" size="sm">
+            <AppBadge color="var(--theme-accent)">
               対象回路: {{ phaseStats.allCount }} 件
             </AppBadge>
           </div>
@@ -334,7 +334,7 @@ const {
 
             <!-- 回路名称 -->
             <td>
-              <span class="p-phase2-cell__text p-phase2-cell__meisho" :title="circuit.kairoMeisho || ''">
+              <span class="p-phase2-cell__meisho" :title="circuit.kairoMeisho || ''">
                 {{ circuit.kairoMeisho || '-' }}
               </span>
             </td>
@@ -371,8 +371,7 @@ const {
                 </div>
                 <AppBadge
                   v-if="circuit.p2RStatus"
-                  :variant="circuit.p2RStatus === 'OK' ? 'success' : 'danger'"
-                  size="sm"
+                  :color="circuit.p2RStatus === 'OK' ? 'var(--color-status-success)' : 'var(--color-status-danger)'"
                 >
                   {{ circuit.p2RStatus }}
                 </AppBadge>
@@ -411,8 +410,7 @@ const {
                 </div>
                 <AppBadge
                   v-if="circuit.p2SStatus"
-                  :variant="circuit.p2SStatus === 'OK' ? 'success' : 'danger'"
-                  size="sm"
+                  :color="circuit.p2SStatus === 'OK' ? 'var(--color-status-success)' : 'var(--color-status-danger)'"
                 >
                   {{ circuit.p2SStatus }}
                 </AppBadge>
@@ -451,8 +449,7 @@ const {
                 </div>
                 <AppBadge
                   v-if="circuit.p2TStatus"
-                  :variant="circuit.p2TStatus === 'OK' ? 'success' : 'danger'"
-                  size="sm"
+                  :color="circuit.p2TStatus === 'OK' ? 'var(--color-status-success)' : 'var(--color-status-danger)'"
                 >
                   {{ circuit.p2TStatus }}
                 </AppBadge>

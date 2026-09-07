@@ -71,7 +71,7 @@ const recentHistory = computed(() =>
         >
           <template #title>
             <AppBadge
-              :color="item.status === 'success' ? 'success' : 'secondary'"
+              :color="item.status === 'success' ? 'var(--color-status-success)' : 'var(--color-text-muted)'"
             >
               {{ item.version }}
             </AppBadge>

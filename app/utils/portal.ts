@@ -1,5 +1,4 @@
 import type { User } from '~/types/auth'
-import type { BadgeColor } from '~/types/components'
 
 /**
  * 現場ステータスに対応する表示ラベルを取得する
@@ -22,18 +21,18 @@ export const getSiteStatusLabel = (status: unknown): string => {
 /**
  * 現場ステータスに対応するバッジカラーを取得する
  */
-export const getSiteStatusColor = (status: unknown): BadgeColor => {
+export const getSiteStatusColor = (status: unknown): string => {
   switch (status) {
     case 'planning':
-      return 'secondary'
+      return 'var(--color-text-muted)'
     case 'in_progress':
-      return 'warning'
+      return 'var(--color-status-warning)'
     case 'completed':
-      return 'success'
+      return 'var(--color-status-success)'
     case 'on_hold':
-      return 'danger'
+      return 'var(--color-status-danger)'
     default:
-      return 'secondary'
+      return 'var(--color-text-muted)'
   }
 }
 

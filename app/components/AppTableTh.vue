@@ -45,7 +45,13 @@ const handleClick = () => {
     :title="sortTitle"
     @click="handleClick"
   >
-    <div class="c-table__th-inner">
+    <div
+      class="c-table__th-inner"
+      :class="{
+        'is-align-center': column.align === 'center',
+        'is-align-right': column.align === 'right',
+      }"
+    >
       <span class="c-table__th-text">{{ column.label }}</span>
       <AppIcon
         v-if="column.sortable"
@@ -99,10 +105,14 @@ th {
     gap: 4px;
     width: 100%;
     white-space: nowrap;
-  }
 
-  &[style*="text-align: center"] .c-table__th-inner {
-    justify-content: center;
+    &.is-align-center {
+      justify-content: center;
+    }
+
+    &.is-align-right {
+      justify-content: flex-end;
+    }
   }
 
   .c-table__th-text {

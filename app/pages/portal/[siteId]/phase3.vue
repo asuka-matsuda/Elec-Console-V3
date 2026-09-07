@@ -253,7 +253,7 @@ const {
               />
             </div>
 
-            <AppBadge variant="info" size="sm">
+            <AppBadge color="var(--theme-accent)">
               対象回路: {{ phaseStats.allCount }} 件
             </AppBadge>
           </div>
@@ -327,7 +327,7 @@ const {
 
             <!-- 回路名称 -->
             <td>
-              <span class="p-phase3-cell__text p-phase3-cell__meisho" :title="circuit.kairoMeisho || ''">
+              <span class="p-phase3-cell__meisho" :title="circuit.kairoMeisho || ''">
                 {{ circuit.kairoMeisho || '-' }}
               </span>
             </td>
@@ -446,8 +446,7 @@ const {
               </template>
               <template v-else-if="circuit.kensou">
                 <AppBadge
-                  :variant="circuit.kensou === '正相' || circuit.kensou === '点灯確認(良)' ? 'success' : 'danger'"
-                  size="sm"
+                  :color="circuit.kensou === '正相' || circuit.kensou === '点灯確認(良)' ? 'var(--color-status-success)' : 'var(--color-status-danger)'"
                 >
                   {{ circuit.kensou }}
                 </AppBadge>
@@ -679,25 +678,6 @@ const {
     color: var(--color-text-main);
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-
-  &__type-badge {
-    display: inline-block;
-
-    padding: 2px 8px;
-    border: 1px solid rgb(255 255 255 / 10%);
-    border-radius: var(--radius-sm);
-
-    font-size: 10px;
-    color: var(--color-text-muted);
-
-    background-color: rgb(255 255 255 / 6%);
-
-    &.is-three {
-      border-color: rgb(245 158 11 / 30%);
-      color: #f59e0b;
-      background-color: rgb(245 158 11 / 10%);
-    }
   }
 
   &__remarks {

@@ -74,10 +74,6 @@ const { currentUser, logout } = useAuth()
   flex: 1;
   gap: 0;
   min-width: 0; /* Prevent flex item from blowing out */
-
-  @include mq("md") {
-    margin-left: 0;
-  }
 }
 
 .l-content {

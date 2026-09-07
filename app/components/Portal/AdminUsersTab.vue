@@ -136,10 +136,10 @@ const confirmResetPassword = async (row: User) => {
             <AppBadge
               :color="
                 row.role === 'admin'
-                  ? 'danger'
+                  ? 'var(--color-status-danger)'
                   : row.role === 'worker'
-                    ? 'success'
-                    : 'secondary'
+                    ? 'var(--color-status-success)'
+                    : 'var(--color-text-muted)'
               "
             >
               {{ row.role }}
@@ -149,8 +149,7 @@ const confirmResetPassword = async (row: User) => {
             <div class="c-admin-users__stack">
               <AppBadge
                 v-if="row.requirePasswordReset"
-                color="danger"
-                size="sm"
+                color="var(--color-status-danger)"
               >
                 PWリセット要求
               </AppBadge>

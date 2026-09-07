@@ -179,20 +179,6 @@ export function usePhaseExam(
     return circuit.keiTo === '二次側' && panelsWithIncompleteKansen.value.includes(circuit.banMeisho)
   }
 
-  // 二次側で幹線未完了の盤があるかどうかのチェック（バナー廃止に伴い内部保持）
-  const hasIncompleteKansenWarning = computed(() => {
-    if (selectedKeiTo.value !== '二次側') return false
-
-    if (selectedBanMeisho.value !== 'ALL') {
-      return panelsWithIncompleteKansen.value.includes(selectedBanMeisho.value)
-    }
-
-    // フィルタされた回路の中に幹線未完了の盤が含まれているか
-    return filteredCircuits.value.some(c =>
-      panelsWithIncompleteKansen.value.includes(c.banMeisho),
-    )
-  })
-
   // 行の編集開始
   const startEdit = (row: CircuitItem) => {
     editingRowId.value = row.id
@@ -629,7 +615,6 @@ export function usePhaseExam(
     selectedBanMeisho,
     phaseStats,
     phase2ThresholdMegOhm,
-    hasIncompleteKansenWarning,
     isCircuitLocked,
     editingRowId,
     editForm,

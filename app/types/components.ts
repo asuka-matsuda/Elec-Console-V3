@@ -54,19 +54,7 @@ export interface BreadcrumbItem {
   href?: string
 }
 
-export type BadgePresetColor
-  = | 'secondary'
-    | 'primary'
-    | 'success'
-    | 'warning'
-    | 'danger'
-    | 'tool'
-    | 'portal'
-    | 'database'
-    | 'reference'
-    | 'neutral'
-
-export type BadgeColor = BadgePresetColor | (string & {})
+export type BadgeColor = string
 
 export interface AnnouncementItem {
   id?: number | string

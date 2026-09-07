@@ -13,7 +13,6 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:site', site: Site): void
-  (e: 'close'): void
 }>()
 
 const {
@@ -86,7 +85,6 @@ const confirmResetImport = async () => {
               <AppBadge
                 v-for="(name, idx) in workerNames"
                 :key="idx"
-                color="secondary"
               >
                 {{ name }}
               </AppBadge>

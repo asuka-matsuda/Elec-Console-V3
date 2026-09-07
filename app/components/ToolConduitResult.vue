@@ -41,7 +41,7 @@ const statusCustom = computed(() =>
       <template #title>
         <span class="c-conduit-result__box-title">
           {{ CONDUIT_UI_LABELS.TITLE_32 }}
-          <AppBadge v-if="vm.isDiffSize" color="success">規程推奨</AppBadge>
+          <AppBadge v-if="vm.isDiffSize" color="var(--color-status-success)">規程推奨</AppBadge>
         </span>
       </template>
       <template #value>
@@ -67,8 +67,8 @@ const statusCustom = computed(() =>
       <template #title>
         <span class="c-conduit-result__box-title">
           {{ CONDUIT_UI_LABELS.TITLE_48 }}
-          <AppBadge v-if="vm.isSameSize" color="success">適用可 (屈曲小)</AppBadge>
-          <AppBadge v-else-if="vm.isDiffSize" color="warning">適用外 (異種混在)</AppBadge>
+          <AppBadge v-if="vm.isSameSize" color="var(--color-status-success)">適用可 (屈曲小)</AppBadge>
+          <AppBadge v-else-if="vm.isDiffSize" color="var(--color-status-warning)">適用外 (異種混在)</AppBadge>
         </span>
       </template>
       <template #value>

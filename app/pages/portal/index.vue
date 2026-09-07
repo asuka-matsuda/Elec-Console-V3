@@ -73,7 +73,7 @@ onMounted(async () => {
             icon="folder"
           >
             <template #badge>
-              <AppBadge :color="site.status === 'in_progress' ? 'success' : 'neutral'">
+              <AppBadge :color="site.status === 'in_progress' ? 'var(--color-status-success)' : 'var(--color-status-neutral)'">
                 {{ site.status === 'in_progress' ? '進行中' : '準備中' }}
               </AppBadge>
             </template>

@@ -368,7 +368,6 @@ export function useSiteSettingsForm(params: UseSiteSettingsFormParams) {
     isResultDialogOpen,
     handleMergeSync,
     handleResetImport,
-    handleImport: handleMergeSync,
     handleExport,
   }
 }

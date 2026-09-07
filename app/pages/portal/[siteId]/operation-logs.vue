@@ -74,18 +74,18 @@ const formatTimestamp = (ts: string) => {
   return `${y}/${m}/${day} ${hh}:${mm}:${ss}`
 }
 
-const getActionBadgeVariant = (action: string) => {
+const getActionBadgeColor = (action: string) => {
   if (action.includes('確定') || action.includes('完了')) {
-    return 'success'
+    return 'var(--color-status-success)'
   }
   if (action.includes('解除') || action.includes('削除')) {
-    return 'danger'
+    return 'var(--color-status-danger)'
   }
   if (action.includes('更新') || action.includes('変更') || action.includes('インポート')) {
-    return 'info'
+    return 'var(--theme-accent)'
   }
 
-  return 'neutral'
+  return 'var(--color-status-neutral)'
 }
 </script>
 
@@ -158,7 +158,7 @@ const getActionBadgeVariant = (action: string) => {
         </div>
 
         <div class="p-operation-logs-filters__badge">
-          <AppBadge variant="info" size="sm">
+          <AppBadge color="var(--theme-accent)">
             取得件数: {{ logs.length }} 件
           </AppBadge>
         </div>
@@ -217,7 +217,7 @@ const getActionBadgeVariant = (action: string) => {
 
             <!-- アクション -->
             <td style="text-align: center;">
-              <AppBadge :variant="getActionBadgeVariant(item.action)" size="sm">
+              <AppBadge :color="getActionBadgeColor(item.action)">
                 {{ item.action }}
               </AppBadge>
             </td>
