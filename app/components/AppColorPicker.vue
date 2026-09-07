@@ -6,19 +6,16 @@ import { DEFAULT_COLOR_PRESETS } from '~/constants/colors'
 
 const modelValue = defineModel<string>({ default: '#00f0ff' })
 
-const props = withDefaults(
-  defineProps<{
-    presets?: ColorPreset[]
-  }>(),
-  {
-    presets: () => DEFAULT_COLOR_PRESETS,
-  },
-)
+const {
+  presets = DEFAULT_COLOR_PRESETS,
+} = defineProps<{
+  presets?: ColorPreset[]
+}>()
 
 const isCustomColor = computed(() => {
   const current = modelValue.value.toLowerCase()
 
-  return !props.presets.some(p => p.value.toLowerCase() === current)
+  return !presets.some(p => p.value.toLowerCase() === current)
 })
 
 const safeHexColor = computed(() => {
@@ -43,12 +40,12 @@ const handleCustomColorInput = (event: Event) => {
 
 <template>
   <div class="c-color-picker">
-    <div class="c-color-picker__presets">
+    <div class="presets">
       <button
         v-for="preset in presets"
         :key="preset.value"
         type="button"
-        class="c-color-swatch"
+        class="swatch"
         :class="{
           'is-active': modelValue.toLowerCase() === preset.value.toLowerCase(),
         }"
@@ -56,13 +53,13 @@ const handleCustomColorInput = (event: Event) => {
         :title="`${preset.name} (${preset.value})`"
         @click="modelValue = preset.value"
       >
-        <span class="c-color-swatch__indicator"></span>
+        <span class="indicator" />
       </button>
     </div>
 
-    <div class="c-color-picker__custom">
+    <div class="custom">
       <label
-        class="c-color-swatch c-color-swatch--custom"
+        class="swatch is-custom"
         :class="{ 'is-active': isCustomColor }"
         :style="{ '--swatch-color': modelValue }"
         title="その他（カスタムカラー）"
@@ -70,12 +67,11 @@ const handleCustomColorInput = (event: Event) => {
         <input
           type="color"
           :value="safeHexColor"
-          class="c-color-picker__native"
           @input="handleCustomColorInput"
         />
-        <AppIcon name="plus" class="c-color-swatch__icon" />
+        <AppIcon name="plus" class="icon" />
       </label>
-      <span v-if="isCustomColor" class="c-color-picker__hex">
+      <span v-if="isCustomColor" class="hex">
         {{ modelValue.toUpperCase() }}
       </span>
     </div>
@@ -84,87 +80,132 @@ const handleCustomColorInput = (event: Event) => {
 
 <style scoped lang="scss">
 .c-color-picker {
-  @include flex-start-center;
-
+  display: flex;
   flex-wrap: wrap;
   gap: var(--space-1);
+  align-items: center;
 
-  &__presets,
-  &__custom {
-    @include flex-start-center;
+  .presets,
+  .custom {
+    display: flex;
+    align-items: center;
+  }
 
+  .presets {
+    flex-wrap: wrap;
     gap: var(--space-0-5);
   }
 
-  &__presets {
-    flex-wrap: wrap;
-  }
-
-  &__custom {
+  .custom {
     position: relative;
+    gap: var(--space-1);
+
+    input[type="color"] {
+      cursor: pointer;
+
+      position: absolute;
+      inset: 0;
+
+      width: 100%;
+      height: 100%;
+
+      opacity: 0;
+    }
   }
 
-  &__native {
-    @include click-enabled;
-
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-  }
-
-  &__hex {
-    @include text-mono("2xs");
-
+  .hex {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-2xs);
     color: var(--color-text-muted);
+    letter-spacing: var(--tracking-wide);
   }
 }
 
-.c-color-swatch {
-  @include flex-center-center;
-  @include click-enabled;
+.swatch {
+  --glow-color: var(--swatch-color);
 
+  cursor: pointer;
+  user-select: none;
+
+  position: relative;
+
+  display: flex;
   flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
   width: var(--space-6);
   height: var(--space-6);
   padding: var(--space-0-5);
+  border: var(--border-width-base) solid color-mix(in srgb, var(--color-border-main) 30%, transparent);
+  border-radius: var(--radius-sm);
 
-  @include border-base($opacity: 30%);
-  @include state-base;
+  background-color: var(--surface-bg-elevated);
 
-  &__indicator {
+  transition: var(--transition-base);
+
+  .indicator {
     width: 100%;
     height: 100%;
+    border: var(--border-width-base) solid var(--swatch-color);
+    border-radius: 2px;
 
-    @include border-base(var(--swatch-color));
-    @include state-base;
+    background-color: color-mix(in srgb, var(--swatch-color) 25%, transparent);
+
+    transition: var(--transition-base);
   }
 
   &:hover {
-    @include state-hover(var(--swatch-color));
+    border-color: var(--swatch-color);
+    box-shadow: var(--shadow-glow-hover);
+    transition: var(--transition-glow);
+
+    .indicator {
+      background-color: color-mix(in srgb, var(--swatch-color) 50%, transparent);
+    }
   }
 
-  &:is(:active, .is-active) {
-    @include state-active(var(--swatch-color));
+  &:focus-visible {
+    border-color: color-mix(in srgb, var(--swatch-color) 60%, transparent);
+    outline: none;
+    box-shadow: var(--shadow-glow-focus);
+    transition: var(--transition-glow);
   }
 
-  &--custom {
+  &:active,
+  &.is-active {
+    border-color: var(--swatch-color);
+    box-shadow: var(--shadow-glow-active);
+    transition: var(--transition-glow);
+
+    .indicator {
+      background-color: color-mix(in srgb, var(--swatch-color) 70%, transparent);
+    }
+  }
+
+  &.is-custom {
     border-style: dashed;
 
     &:focus-within {
-      @include state-focus(var(--swatch-color));
-      @include cyber-text-glow(var(--swatch-color));
+      border-color: color-mix(in srgb, var(--swatch-color) 60%, transparent);
+      outline: none;
+      box-shadow: var(--shadow-glow-focus);
+      transition: var(--transition-glow);
     }
 
-    .c-color-swatch__icon {
-      @include text-meta;
+    &.is-active {
+      background-color: color-mix(in srgb, var(--swatch-color) 25%, transparent);
+    }
 
+    .icon {
+      font-size: var(--font-size-xs);
       color: var(--color-text-muted);
-
-      @include state-base;
+      transition: var(--transition-base);
     }
 
-    &:is(:hover, :active, .is-active, :focus-within) .c-color-swatch__icon {
+    &:is(:hover, :active, .is-active, :focus-within) .icon {
       color: var(--color-text-main);
+      filter: var(--drop-shadow-glow-xs);
     }
   }
 }
