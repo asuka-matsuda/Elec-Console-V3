@@ -145,11 +145,11 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
   &__section {
     @include flex-start-stretch($direction: column);
 
-    gap: var(--space-card-gap);
+    gap: var(--space-panel-gap);
   }
 
   &__grid {
-    @include grid-auto(280px, var(--space-card-gap));
+    @include grid-auto(280px, var(--space-panel-gap));
   }
 }
 </style>

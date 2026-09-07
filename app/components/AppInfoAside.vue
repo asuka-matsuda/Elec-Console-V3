@@ -32,7 +32,7 @@ const recentHistory = computed(() => history.slice(0, maxCount))
       <AppSectionHeader title="お知らせ" icon="bell" size="md" />
 
       <div v-if="pending" class="list">
-        <AppPanel class="status-card">
+        <AppPanel class="status-panel">
           <AppIcon name="loader" class="u-spin" size="sm" />
           <span>お知らせを読み込み中...</span>
         </AppPanel>
@@ -42,18 +42,18 @@ const recentHistory = computed(() => history.slice(0, maxCount))
         <AppPanel
           v-for="item in recentAnnouncements"
           :key="item.title"
-          class="info-card"
+          class="info-item"
         >
-          <div class="card-header">
-            <span class="card-title">{{ item.title }}</span>
+          <div class="item-header">
+            <span class="item-title">{{ item.title }}</span>
           </div>
-          <div class="card-meta">{{ item.date }}</div>
-          <p v-if="item.desc" class="card-desc">{{ item.desc }}</p>
+          <div class="item-meta">{{ item.date }}</div>
+          <p v-if="item.desc" class="item-desc">{{ item.desc }}</p>
         </AppPanel>
       </div>
 
       <div v-else class="list">
-        <AppPanel class="status-card">
+        <AppPanel class="status-panel">
           <AppIcon name="inbox" size="sm" />
           <span>現在新しいお知らせはありません</span>
         </AppPanel>
@@ -65,7 +65,7 @@ const recentHistory = computed(() => history.slice(0, maxCount))
       <AppSectionHeader title="更新履歴" icon="clock" size="md" />
 
       <div v-if="pending" class="list">
-        <AppPanel class="status-card">
+        <AppPanel class="status-panel">
           <AppIcon name="loader" class="u-spin" size="sm" />
           <span>更新履歴を読み込み中...</span>
         </AppPanel>
@@ -75,23 +75,23 @@ const recentHistory = computed(() => history.slice(0, maxCount))
         <AppPanel
           v-for="item in recentHistory"
           :key="item.version"
-          class="info-card"
+          class="info-item"
         >
-          <div class="card-header">
+          <div class="item-header">
             <AppBadge
               :color="item.status === 'success' ? 'var(--color-status-success)' : 'var(--color-text-muted)'"
             >
               {{ item.version }}
             </AppBadge>
-            <span class="card-title">{{ item.title }}</span>
+            <span class="item-title">{{ item.title }}</span>
           </div>
-          <div class="card-meta">{{ item.date }}</div>
-          <p v-if="item.desc" class="card-desc">{{ item.desc }}</p>
+          <div class="item-meta">{{ item.date }}</div>
+          <p v-if="item.desc" class="item-desc">{{ item.desc }}</p>
         </AppPanel>
       </div>
 
       <div v-else class="list">
-        <AppPanel class="status-card">
+        <AppPanel class="status-panel">
           <AppIcon name="inbox" size="sm" />
           <span>現在更新履歴はありません</span>
         </AppPanel>
@@ -111,16 +111,16 @@ const recentHistory = computed(() => history.slice(0, maxCount))
 .section {
   display: flex;
   flex-direction: column;
-  gap: var(--space-card-gap);
+  gap: var(--space-panel-gap);
 }
 
 .list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-card-gap);
+  gap: var(--space-panel-gap);
 }
 
-.info-card {
+.info-item {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
@@ -133,33 +133,33 @@ const recentHistory = computed(() => history.slice(0, maxCount))
   }
 }
 
-.card-header {
+.item-header {
   display: flex;
   gap: var(--space-1-5);
   align-items: center;
 }
 
-.card-title {
+.item-title {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
   color: var(--color-text-main);
 }
 
-.card-meta {
+.item-meta {
   font-size: var(--font-size-2xs);
   line-height: var(--line-height-tight);
   color: var(--color-text-muted);
   letter-spacing: var(--tracking-wide);
 }
 
-.card-desc {
+.item-desc {
   font-size: var(--font-size-xs);
   line-height: var(--line-height-base);
   color: var(--color-text-secondary);
 }
 
-.status-card {
+.status-panel {
   display: flex;
   gap: var(--space-2);
   align-items: center;
