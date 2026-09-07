@@ -3,34 +3,31 @@
  * AppEmptyState
  * データが0件の場合や検索結果がない場合に表示する共通の空状態コンポーネント
  */
-withDefaults(
-  defineProps<{
-    icon?: string
-    title?: string
-    description?: string
-  }>(),
-  {
-    icon: 'inbox',
-    title: 'データがありません',
-    description: undefined,
-  },
-)
+const {
+  icon = 'inbox',
+  title = 'データがありません',
+  description,
+} = defineProps<{
+  icon?: string
+  title?: string
+  description?: string
+}>()
 </script>
 
 <template>
-  <div class="c-empty-state">
-    <div v-if="icon" class="c-empty-state__icon-wrapper">
-      <AppIcon :name="icon" size="lg" class="c-empty-state__icon" />
+  <div class="c-empty-state" role="status">
+    <div v-if="icon" class="icon-box">
+      <AppIcon :name="icon" size="lg" class="icon" />
     </div>
 
-    <div class="c-empty-state__content">
-      <h3 v-if="title || $slots.title" class="c-empty-state__title">
+    <div class="content">
+      <h3 v-if="title || $slots.title" class="title">
         <slot name="title">
           {{ title }}
         </slot>
       </h3>
 
-      <p v-if="description || $slots.description" class="c-empty-state__desc">
+      <p v-if="description || $slots.description" class="desc">
         <slot name="description">
           {{ description }}
         </slot>
@@ -39,7 +36,7 @@ withDefaults(
       <slot />
     </div>
 
-    <div v-if="$slots.actions" class="c-empty-state__actions">
+    <div v-if="$slots.actions" class="actions">
       <slot name="actions" />
     </div>
   </div>
@@ -47,50 +44,69 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-empty-state {
-  @include flex-center-center(column);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-panel-gap);
+  align-items: center;
+  justify-content: center;
 
-  gap: var(--space-card-gap);
-  padding: var(--space-layout-pad) var(--space-card-pad);
+  padding: var(--space-layout-pad) var(--space-panel-pad);
+  border: var(--border-width-base) solid color-mix(in srgb, var(--color-border-main) 30%, transparent);
+  border-radius: var(--radius-sm);
+
   text-align: center;
 
-  @include border-base($opacity: 30%);
+  background-color: color-mix(in srgb, var(--surface-bg) 50%, transparent);
 
-  &__icon-wrapper {
-    @include flex-center-center;
+  .icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     width: var(--size-control-lg);
     height: var(--size-control-lg);
+    border: var(--border-width-base) solid color-mix(in srgb, var(--color-text-muted) 30%, transparent);
+    border-radius: var(--radius-sm);
+
     color: var(--color-text-muted);
 
-    @include border-base(var(--color-text-muted), 30%);
-    @include shadow("sink");
+    background-color: var(--surface-bg-elevated);
+    box-shadow: var(--shadow-sink);
+
+    .icon {
+      opacity: 0.7;
+    }
   }
 
-  &__icon {
-    opacity: 0.6;
-  }
-
-  &__content {
-    @include flex-start-center(column);
-
+  .content {
+    display: flex;
+    flex-direction: column;
     gap: var(--space-1);
+    align-items: center;
+
     max-width: 420px;
   }
 
-  &__title {
-    @include text-title("sm");
-
+  .title {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
     color: var(--color-text-secondary);
+    letter-spacing: var(--tracking-wide);
   }
 
-  &__desc {
-    @include text-desc;
+  .desc {
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-base);
+    color: var(--color-text-muted);
+    letter-spacing: var(--tracking-normal);
   }
 
-  &__actions {
-    @include flex-center-center;
-
+  .actions {
+    display: flex;
     gap: var(--space-2);
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>
