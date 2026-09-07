@@ -10,25 +10,40 @@ interface CategoryOption {
   value: string
 }
 
+interface Props {
+  title?: string
+  icon?: string
+  placeholder?: string
+  categoryOptions?: CategoryOption[]
+}
+
 const searchQuery = defineModel<string>('searchQuery', { default: '' })
+
 const activeCats = defineModel<string[]>('activeCats', { default: () => [] })
 
-defineProps<{
-  placeholder?: string
-  categoryOptions: CategoryOption[]
-}>()
+const {
+  title = '絞り込み・検索',
+  icon = 'search',
+  placeholder,
+  categoryOptions = [],
+} = defineProps<Props>()
 </script>
 
 <template>
   <AppPanel>
-    <AppSectionHeader title="絞り込み・検索" icon="search" />
-    <div class="c-filter-panel__filters">
+    <template #header>
+      <slot name="header">
+        <AppSectionHeader :title="title" :icon="icon" />
+      </slot>
+    </template>
+
+    <div class="filters">
       <AppFormGroup label="Keyword">
         <AppInput v-model="searchQuery" :placeholder="placeholder" />
       </AppFormGroup>
 
       <AppFormGroup v-if="categoryOptions.length > 0" label="Category">
-        <div class="c-filter-panel__grid">
+        <div class="category-grid">
           <AppCheckbox
             v-for="cat in categoryOptions"
             :key="cat.value"
@@ -46,17 +61,19 @@ defineProps<{
 </template>
 
 <style scoped lang="scss">
-.c-filter-panel {
-  &__filters {
-    @include grid(1fr, var(--space-form-row-gap));
+.filters {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-form-row-gap);
 
-    & > :nth-child(n + 3) {
-      grid-column: 1 / -1;
-    }
+  & > :nth-child(n + 3) {
+    grid-column: 1 / -1;
   }
+}
 
-  &__grid {
-    @include grid-auto(100px, var(--space-2));
-  }
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: var(--space-2);
 }
 </style>
