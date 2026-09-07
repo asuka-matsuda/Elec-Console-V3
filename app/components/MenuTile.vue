@@ -32,18 +32,18 @@ const target = computed(() => to || href)
     :to="!disabled ? target : undefined"
     :type="disabled ? 'button' : undefined"
     :disabled="disabled ? true : undefined"
-    class="c-menu-tile"
+    class="menu-tile"
     :class="{ 'is-disabled': disabled }"
   >
-    <div v-if="icon || title || $slots.badge" class="c-menu-tile__head">
-      <div class="c-menu-tile__title-group">
-        <AppIcon v-if="icon" :name="icon" class="c-menu-tile__icon" />
-        <span v-if="title" class="c-menu-tile__title">{{ title }}</span>
+    <header v-if="icon || title || $slots.badge" class="tile-header">
+      <div class="tile-title">
+        <AppIcon v-if="icon" :name="icon" class="tile-icon" />
+        <span>{{ title }}</span>
       </div>
       <slot name="badge" />
-    </div>
+    </header>
 
-    <p v-if="description" class="c-menu-tile__desc">
+    <p v-if="description" class="tile-desc">
       {{ description }}
     </p>
 
@@ -52,7 +52,7 @@ const target = computed(() => to || href)
 </template>
 
 <style scoped lang="scss">
-.c-menu-tile {
+.menu-tile {
   cursor: pointer;
   user-select: none;
 
@@ -105,36 +105,36 @@ const target = computed(() => to || href)
     filter: grayscale(100%);
   }
 
-  &__head {
+  .tile-header {
     display: flex;
     gap: var(--space-2);
     align-items: center;
     justify-content: space-between;
   }
 
-  &__title-group {
+  .tile-title {
     display: flex;
     gap: var(--space-1);
     align-items: center;
+
+    span {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-bold);
+      line-height: var(--line-height-tight);
+      color: var(--color-text-main);
+      letter-spacing: var(--tracking-wide);
+      word-break: keep-all;
+      line-break: strict;
+      overflow-wrap: anywhere;
+    }
   }
 
-  &__icon {
+  .tile-icon {
     flex-shrink: 0;
     color: var(--theme-accent);
   }
 
-  &__title {
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-bold);
-    line-height: var(--line-height-tight);
-    color: var(--color-text-main);
-    letter-spacing: var(--tracking-wide);
-    word-break: keep-all;
-    line-break: strict;
-    overflow-wrap: anywhere;
-  }
-
-  &__desc {
+  .tile-desc {
     font-size: var(--font-size-sm);
     line-height: var(--line-height-base);
     color: var(--color-text-secondary);

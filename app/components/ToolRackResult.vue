@@ -25,14 +25,14 @@ const vm = computed(() =>
 </script>
 
 <template>
-  <div class="c-rack-result">
+  <div class="rack-result">
     <!-- 1段敷設（平置き・標準） -->
     <AppResultBox
       :status="vm.tier1.boxStatus"
       :is-empty="vm.isEmpty"
     >
       <template #title>
-        <span class="c-rack-result__box-title">
+        <span class="box-title">
           {{ vm.tier1.title }}
           <AppBadge v-if="vm.tier1.badgeText" :color="vm.tier1.badgeColor">{{
             vm.tier1.badgeText
@@ -41,13 +41,13 @@ const vm = computed(() =>
       </template>
 
       <template #value>
-        <div class="c-rack-result__value-box">
-          <div class="value-text c-rack-result__val">
+        <div class="value-box">
+          <div class="value-text val">
             {{ vm.tier1.displaySize }}
           </div>
           <div
             v-if="!vm.isEmpty && vm.tier1.totalWidth !== '0'"
-            class="c-rack-result__sub-val"
+            class="sub-val"
           >
             必要幅: <strong>{{ vm.tier1.totalWidth }}</strong> mm / 最大高さ: <strong>{{ vm.tier1.maxHeight }}</strong> mm
           </div>
@@ -61,7 +61,7 @@ const vm = computed(() =>
       :is-empty="vm.isEmpty"
     >
       <template #title>
-        <span class="c-rack-result__box-title">
+        <span class="box-title">
           {{ vm.tier2.title }}
           <AppBadge v-if="vm.tier2.badgeText" :color="vm.tier2.badgeColor">{{
             vm.tier2.badgeText
@@ -70,19 +70,19 @@ const vm = computed(() =>
       </template>
 
       <template #value>
-        <div class="c-rack-result__value-box">
+        <div class="value-box">
           <template v-if="vm.tier2.isApplicable">
-            <div class="value-text c-rack-result__val">
+            <div class="value-text val">
               {{ vm.tier2.displaySize }}
             </div>
             <div
               v-if="!vm.isEmpty && vm.tier2.totalWidth !== '0'"
-              class="c-rack-result__sub-val"
+              class="sub-val"
             >
               必要幅: <strong>{{ vm.tier2.totalWidth }}</strong> mm / 最大高さ: <strong>{{ vm.tier2.maxHeight }}</strong> mm
             </div>
           </template>
-          <div v-else class="c-rack-result__not-applicable">
+          <div v-else class="not-applicable">
             {{ vm.tier2.notApplicableText }}
           </div>
         </div>
@@ -99,65 +99,65 @@ const vm = computed(() =>
       </ToolResultRow>
       <ToolResultRow label="ラック有効高さ">
         <strong>{{ maxDepth }}</strong> mm
-        <span class="c-rack-result__depth-note">(親桁 H - 20mm)</span>
+        <span class="depth-note">(親桁 H - 20mm)</span>
       </ToolResultRow>
     </ToolResultDetails>
   </div>
 </template>
 
 <style scoped lang="scss">
-.c-rack-result {
+.rack-result {
   display: flex;
   flex-direction: column;
   gap: var(--space-card-gap);
+}
 
-  &__box-title {
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
-    justify-content: center;
-  }
+.box-title {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: center;
+}
 
-  &__value-box {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    align-items: center;
-    justify-content: flex-start;
+.value-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  align-items: center;
+  justify-content: flex-start;
 
-    width: 100%;
-  }
+  width: 100%;
+}
 
-  &__val {
-    font-family: var(--font-mono);
-    font-size: var(--font-size-3xl);
+.val {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.sub-val {
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-base);
+  color: var(--color-text-secondary);
+
+  strong {
     font-weight: var(--font-weight-bold);
-    font-variant-numeric: tabular-nums;
+    color: var(--color-text-main);
   }
+}
 
-  &__sub-val {
-    font-size: var(--font-size-xs);
-    line-height: var(--line-height-base);
-    color: var(--color-text-secondary);
+.not-applicable {
+  padding: var(--space-1) 0;
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-base);
+  color: var(--color-text-muted);
+}
 
-    strong {
-      font-weight: var(--font-weight-bold);
-      color: var(--color-text-main);
-    }
-  }
-
-  &__not-applicable {
-    padding: var(--space-1) 0;
-    font-size: var(--font-size-xs);
-    line-height: var(--line-height-base);
-    color: var(--color-text-muted);
-  }
-
-  &__depth-note {
-    margin-left: var(--space-1);
-    font-size: var(--font-size-2xs);
-    line-height: var(--line-height-base);
-    color: var(--color-text-muted);
-  }
+.depth-note {
+  margin-left: var(--space-1);
+  font-size: var(--font-size-2xs);
+  line-height: var(--line-height-base);
+  color: var(--color-text-muted);
 }
 </style>

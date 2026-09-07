@@ -64,12 +64,12 @@ const onCategoryChange = (val: unknown) => {
 </script>
 
 <template>
-  <AppPanel class="c-cable-item">
+  <AppPanel class="cable-item">
     <template #header>
-      <div class="c-cable-item__header">
-        <div class="c-cable-item__title-group">
+      <div class="header">
+        <div class="title-group">
           <span>ケーブル {{ index + 1 }}</span>
-          <span v-if="singleCableArea !== null" class="c-cable-item__meta">
+          <span v-if="singleCableArea !== null" class="meta">
             ( 断面積: {{ singleCableArea.toFixed(1) }} mm² / 本 )
           </span>
         </div>
@@ -86,7 +86,7 @@ const onCategoryChange = (val: unknown) => {
       </div>
     </template>
 
-    <div class="c-cable-item__grid">
+    <div class="grid">
       <AppFormGroup label="ケーブル種別">
         <AppSelect
           :model-value="model.category"
@@ -122,26 +122,26 @@ const onCategoryChange = (val: unknown) => {
 </template>
 
 <style scoped lang="scss">
-.c-cable-item {
-  &__header {
+.cable-item {
+  .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
 
-  &__title-group {
+  .title-group {
     display: flex;
     gap: var(--space-2);
     align-items: center;
   }
 
-  &__meta {
+  .meta {
     font-size: var(--font-size-2xs);
     line-height: var(--line-height-base);
     color: var(--color-text-muted);
   }
 
-  &__grid {
+  .grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-form-row-gap) var(--space-form-col-gap);

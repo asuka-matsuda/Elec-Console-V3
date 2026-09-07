@@ -22,28 +22,28 @@ const mainBoxStatus = computed(() =>
 </script>
 
 <template>
-  <div class="c-voltage-result" :class="[size === 'sm' ? 'is-sm' : '']">
+  <div class="voltage-result" :class="[size === 'sm' ? 'is-sm' : '']">
     <AppResultBox
       :title="view.mainLabel"
       :status="mainBoxStatus"
       :size="size"
     >
       <template #value>
-        <span class="value-text c-voltage-result__main-val">{{ view.mainValue }}</span>
-        <span v-if="view.mainUnit" class="value-unit c-voltage-result__main-unit">{{ view.mainUnit }}</span>
+        <span class="value-text main-val">{{ view.mainValue }}</span>
+        <span v-if="view.mainUnit" class="value-unit main-unit">{{ view.mainUnit }}</span>
         <template v-if="view.mode === 'drop' && view.isReady">
           <span class="value-sep">(</span>
           <span
-            class="value-text c-voltage-result__drop-percent"
+            class="value-text drop-percent"
           >{{ view.dropPercent }}</span>
-          <span class="value-unit c-voltage-result__drop-unit">%</span>
+          <span class="value-unit drop-unit">%</span>
           <span class="value-sep">)</span>
         </template>
       </template>
     </AppResultBox>
 
-    <div class="c-voltage-result__metrics">
-      <dl class="metric-card">
+    <div class="metrics">
+      <dl class="metric-box">
         <dt class="metric-label">電流チェック (設計 / 許容)</dt>
         <dd class="metric-value" :class="view.ampStatusClass">
           <span class="value-text">{{ view.currentI }}</span>
@@ -53,7 +53,7 @@ const mainBoxStatus = computed(() =>
         </dd>
       </dl>
 
-      <dl v-if="view.mode === 'size'" class="metric-card">
+      <dl v-if="view.mode === 'size'" class="metric-box">
         <dt class="metric-label">電圧降下</dt>
         <dd class="metric-value" :class="view.dropStatusClass">
           <span class="value-text">{{ view.dropV }}</span>
@@ -65,10 +65,10 @@ const mainBoxStatus = computed(() =>
         </dd>
       </dl>
 
-      <dl v-else class="metric-card">
+      <dl v-else class="metric-box">
         <dt class="metric-label">選択ケーブル</dt>
         <dd class="metric-value is-neutral">
-          <span class="value-text c-voltage-result__drop-cable">{{
+          <span class="value-text drop-cable">{{
             view.dropCableName
           }}</span>
         </dd>
@@ -78,7 +78,7 @@ const mainBoxStatus = computed(() =>
 </template>
 
 <style scoped lang="scss">
-.c-voltage-result {
+.voltage-result {
   display: flex;
   flex: 1;
   gap: var(--space-card-gap);
@@ -95,64 +95,22 @@ const mainBoxStatus = computed(() =>
     row-gap: var(--space-1);
   }
 
-  &__main-val {
-    font-family: var(--font-mono);
-    font-size: var(--font-size-3xl);
-    font-weight: var(--font-weight-bold);
-    font-variant-numeric: tabular-nums;
-  }
-
-  &__main-unit {
-    font-size: var(--font-size-base);
-    line-height: var(--line-height-base);
-    color: var(--color-text-secondary);
-  }
-
-  &__drop-percent {
-    font-family: var(--font-mono);
-    font-size: var(--font-size-xl);
-    font-weight: var(--font-weight-bold);
-    font-variant-numeric: tabular-nums;
-  }
-
-  &__drop-unit {
-    font-size: var(--font-size-sm);
-    line-height: var(--line-height-base);
-    color: var(--color-text-secondary);
-  }
-
-  &__drop-cable {
-    font-family: var(--font-mono);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-bold);
-    font-variant-numeric: tabular-nums;
-  }
-
   &.is-sm {
     gap: var(--space-3);
 
-    .c-voltage-result__main-val {
-      font-family: var(--font-mono);
+    .main-val {
       font-size: var(--font-size-2xl);
-      font-weight: var(--font-weight-bold);
-      font-variant-numeric: tabular-nums;
     }
 
-    .c-voltage-result__drop-percent {
-      font-family: var(--font-mono);
+    .drop-percent {
       font-size: var(--font-size-base);
-      font-weight: var(--font-weight-bold);
-      font-variant-numeric: tabular-nums;
     }
 
-    .c-voltage-result__drop-cable {
-      font-family: var(--font-mono);
+    .drop-cable {
       font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-bold);
-      font-variant-numeric: tabular-nums;
     }
 
-    .metric-card {
+    .metric-box {
       padding: var(--space-1) var(--space-2);
     }
   }
@@ -181,65 +139,98 @@ const mainBoxStatus = computed(() =>
     color: var(--color-status-danger);
     text-shadow: var(--text-glow-md);
   }
+}
 
-  &__metrics {
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-    gap: var(--space-2);
+.main-val {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
 
-    min-width: 220px;
+.main-unit {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--color-text-secondary);
+}
 
-    // コンテナ幅が狭い場合 (down <= 600px) は下部に横並び
-    @include cq("sm") {
-      flex-flow: row wrap;
-      min-width: auto;
-    }
+.drop-percent {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.drop-unit {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  color: var(--color-text-secondary);
+}
+
+.drop-cable {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.metrics {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: var(--space-2);
+
+  min-width: 220px;
+
+  // コンテナ幅が狭い場合 (down <= 600px) は下部に横並び
+  @include cq("sm") {
+    flex-flow: row wrap;
+    min-width: auto;
   }
+}
 
-  .metric-card {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: var(--space-1);
-    align-items: center;
-    justify-content: center;
+.metric-box {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-1);
+  align-items: center;
+  justify-content: center;
 
-    padding: var(--space-2);
-    border: var(--border-width-base) solid var(--color-border);
-    border-radius: var(--radius-sm);
-  }
+  padding: var(--space-2);
+  border: var(--border-width-base) solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
 
-  .metric-label {
-    font-size: var(--font-size-2xs);
-    line-height: var(--line-height-base);
-    color: var(--color-text-muted);
-  }
+.metric-label {
+  font-size: var(--font-size-2xs);
+  line-height: var(--line-height-base);
+  color: var(--color-text-muted);
+}
 
-  .metric-value {
-    display: flex;
-    gap: var(--space-1);
-    align-items: baseline;
+.metric-value {
+  display: flex;
+  gap: var(--space-1);
+  align-items: baseline;
 
-    margin: 0;
+  margin: 0;
 
-    font-family: var(--font-mono);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-bold);
-    font-variant-numeric: tabular-nums;
-  }
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
 
-  .value-sep {
-    margin: 0 2px;
-    font-size: var(--font-size-sm);
-    line-height: var(--line-height-base);
-    color: var(--color-text-muted);
-  }
+.value-sep {
+  margin: 0 2px;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  color: var(--color-text-muted);
+}
 
-  .value-unit {
-    font-size: var(--font-size-sm);
-    line-height: var(--line-height-base);
-    color: var(--color-text-secondary);
-  }
+.value-unit {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  color: var(--color-text-secondary);
 }
 </style>

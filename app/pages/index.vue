@@ -73,17 +73,17 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
 </script>
 
 <template>
-  <div class="p-dashboard">
-    <div class="p-dashboard__main">
+  <div class="dashboard">
+    <main class="dashboard-main">
       <section
         v-for="section in dashboardSections"
         :key="section.heading"
-        class="p-dashboard__section"
+        class="dashboard-section"
         :style="`--theme-accent: var(--color-category-${section.accent || 'main'})`"
       >
         <AppSectionHeader :title="section.heading" :icon="section.icon" />
 
-        <div class="p-dashboard__grid">
+        <div class="menu-grid">
           <MenuTile
             v-for="item in section.items"
             :key="item.text"
@@ -95,9 +95,9 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
           />
         </div>
       </section>
-    </div>
+    </main>
 
-    <aside class="p-dashboard__aside">
+    <aside class="dashboard-aside">
       <AppInfoAside
         :announcements="dashboardData?.announcements"
         :history="dashboardData?.history"
@@ -108,25 +108,23 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
 </template>
 
 <style scoped lang="scss">
-.p-dashboard {
+.dashboard {
   display: flex;
   gap: var(--space-section-gap);
   align-items: flex-start;
-  justify-content: flex-start;
 
   @include cq("md") {
-    display: flex;
     flex-direction: column;
   }
 
-  &__main {
+  &-main {
     display: flex;
     flex: 1;
     flex-direction: column;
     gap: var(--space-section-gap);
   }
 
-  &__aside {
+  &-aside {
     position: sticky;
     top: var(--space-layout-pad);
 
@@ -144,16 +142,16 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
     }
   }
 
-  &__section {
+  &-section {
     display: flex;
     flex-direction: column;
     gap: var(--space-panel-gap);
   }
+}
 
-  &__grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--space-panel-gap);
-  }
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-panel-gap);
 }
 </style>

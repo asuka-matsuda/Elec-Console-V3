@@ -18,19 +18,19 @@ const themeOptions = [
 </script>
 
 <template>
-  <div class="p-settings">
+  <main class="settings-view">
     <AppSectionHeader
       title="UI・個人設定"
       icon="settings"
       variant="tool"
       size="lg"
     />
-    <p class="p-settings__desc">
+    <p class="description">
       このブラウザ固有のUI設定をカスタマイズします。
     </p>
 
-    <div class="p-settings__grid">
-      <div class="p-settings__stack">
+    <div class="settings-grid">
+      <div class="settings-stack">
         <AppPanel>
           <template #header>
             <AppSectionHeader
@@ -41,8 +41,8 @@ const themeOptions = [
             />
           </template>
 
-          <div class="p-settings__panel-content">
-            <p class="p-settings__desc">
+          <div class="panel-body">
+            <p class="description">
               画面のテーマ（ライト/ダーク）を変更します。
             </p>
 
@@ -56,40 +56,47 @@ const themeOptions = [
         </AppPanel>
       </div>
 
-      <div class="p-settings__side"></div>
+      <div class="settings-side"></div>
     </div>
-  </div>
+  </main>
 </template>
 
 <style scoped lang="scss">
-.p-settings {
+.settings-view {
   container-type: inline-size;
   display: flex;
   flex-direction: column;
   gap: var(--space-section-gap);
 
   padding-bottom: var(--space-layout-pad);
+}
 
-  &__panel-content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-card-gap);
+.description {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  color: var(--color-text-secondary);
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-section-gap);
+
+  @include cq("md") {
+    grid-template-columns: 2fr 1fr;
   }
+}
 
-  &__grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-section-gap);
+.settings-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
 
-    @include cq("md") {
-      grid-template-columns: 2fr 1fr;
-    }
-  }
-
-  &__stack {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
+.panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-card-gap);
 }
 </style>

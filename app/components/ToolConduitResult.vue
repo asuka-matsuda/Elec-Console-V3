@@ -32,26 +32,26 @@ const statusCustom = computed(() =>
 </script>
 
 <template>
-  <div class="c-conduit-result" :class="[size === 'sm' ? 'is-sm' : '']">
+  <div class="conduit-result" :class="[size === 'sm' ? 'is-sm' : '']">
     <!-- Row 1: 32% (異種) -->
     <AppResultBox
       :status="status32"
       :size="size"
     >
       <template #title>
-        <span class="c-conduit-result__box-title">
+        <span class="box-title">
           {{ CONDUIT_UI_LABELS.TITLE_32 }}
           <AppBadge v-if="vm.isDiffSize" color="var(--color-status-success)">規程推奨</AppBadge>
         </span>
       </template>
       <template #value>
-        <span class="value-text c-conduit-result__main-val">{{ vm.size32 }}</span>
+        <span class="value-text main-val">{{ vm.size32 }}</span>
         <template v-if="vm.isReady && !vm.isOversize32">
           <span class="value-sep">(</span>
-          <span class="c-conduit-result__percent is-neutral">{{
+          <span class="percent is-neutral">{{
             vm.fill32
           }}</span>
-          <span class="value-unit c-conduit-result__percent-unit">{{
+          <span class="value-unit percent-unit">{{
             CONDUIT_UI_LABELS.UNIT_PERCENT
           }}</span>
           <span class="value-sep">)</span>
@@ -65,20 +65,20 @@ const statusCustom = computed(() =>
       :size="size"
     >
       <template #title>
-        <span class="c-conduit-result__box-title">
+        <span class="box-title">
           {{ CONDUIT_UI_LABELS.TITLE_48 }}
           <AppBadge v-if="vm.isSameSize" color="var(--color-status-success)">適用可 (屈曲小)</AppBadge>
           <AppBadge v-else-if="vm.isDiffSize" color="var(--color-status-warning)">適用外 (異種混在)</AppBadge>
         </span>
       </template>
       <template #value>
-        <span class="value-text c-conduit-result__main-val">{{ vm.size48 }}</span>
+        <span class="value-text main-val">{{ vm.size48 }}</span>
         <template v-if="vm.isReady && !vm.isOversize48">
           <span class="value-sep">(</span>
-          <span class="c-conduit-result__percent is-neutral">{{
+          <span class="percent is-neutral">{{
             vm.fill48
           }}</span>
-          <span class="value-unit c-conduit-result__percent-unit">{{
+          <span class="value-unit percent-unit">{{
             CONDUIT_UI_LABELS.UNIT_PERCENT
           }}</span>
           <span class="value-sep">)</span>
@@ -93,13 +93,13 @@ const statusCustom = computed(() =>
       :size="size"
     >
       <template #value>
-        <span class="value-text c-conduit-result__main-val">{{ vm.sizeCustom }}</span>
+        <span class="value-text main-val">{{ vm.sizeCustom }}</span>
         <template v-if="vm.isReady && !vm.isOversizeCustom">
           <span class="value-sep">(</span>
-          <span class="c-conduit-result__percent is-neutral">{{
+          <span class="percent is-neutral">{{
             vm.fillCustom
           }}</span>
-          <span class="value-unit c-conduit-result__percent-unit">{{
+          <span class="value-unit percent-unit">{{
             CONDUIT_UI_LABELS.UNIT_PERCENT
           }}</span>
           <span class="value-sep">)</span>
@@ -108,16 +108,16 @@ const statusCustom = computed(() =>
     </AppResultBox>
 
     <!-- Footer: 内線規程（勧告）内容 -->
-    <footer class="c-conduit-result__footer">
-      <div class="c-conduit-result__footer-title">
+    <footer class="conduit-footer">
+      <div class="footer-title">
         <AppIcon name="info" size="sm" /> 内線規程（勧告）
       </div>
-      <ul class="c-conduit-result__footer-list">
+      <ul class="footer-list">
         <li>
-          <span class="c-conduit-result__footer-code">3110-6 (32%以下)</span>: 異なる太さの絶縁電線を同一管内に収める場合（原則）
+          <span class="footer-code">3110-6 (32%以下)</span>: 異なる太さの絶縁電線を同一管内に収める場合（原則）
         </li>
         <li>
-          <span class="c-conduit-result__footer-code">3110-5 (48%以下)</span>: 同一太さで、かつ管の屈曲が少なく引き替えが容易な場合
+          <span class="footer-code">3110-5 (48%以下)</span>: 同一太さで、かつ管の屈曲が少なく引き替えが容易な場合
         </li>
       </ul>
     </footer>
@@ -125,37 +125,37 @@ const statusCustom = computed(() =>
 </template>
 
 <style scoped lang="scss">
-.c-conduit-result {
+.conduit-result {
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: var(--space-card-gap);
+  gap: var(--space-panel-gap);
   align-items: stretch;
 
   min-height: 0;
 
-  &__box-title {
+  .box-title {
     display: flex;
     gap: var(--space-2);
     align-items: center;
     justify-content: center;
   }
 
-  &__main-val {
+  .main-val {
     font-family: var(--font-mono);
     font-size: var(--font-size-3xl);
     font-weight: var(--font-weight-bold);
     font-variant-numeric: tabular-nums;
   }
 
-  &__percent {
+  .percent {
     font-family: var(--font-mono);
     font-size: var(--font-size-xl);
     font-weight: var(--font-weight-bold);
     font-variant-numeric: tabular-nums;
   }
 
-  &__percent-unit {
+  .percent-unit {
     font-size: var(--font-size-sm);
     line-height: var(--line-height-base);
     color: var(--color-text-secondary);
@@ -164,18 +164,12 @@ const statusCustom = computed(() =>
   &.is-sm {
     gap: var(--space-3);
 
-    .c-conduit-result__main-val {
-      font-family: var(--font-mono);
+    .main-val {
       font-size: var(--font-size-2xl);
-      font-weight: var(--font-weight-bold);
-      font-variant-numeric: tabular-nums;
     }
 
-    .c-conduit-result__percent {
-      font-family: var(--font-mono);
+    .percent {
       font-size: var(--font-size-base);
-      font-weight: var(--font-weight-bold);
-      font-variant-numeric: tabular-nums;
     }
   }
 
@@ -197,16 +191,6 @@ const statusCustom = computed(() =>
     text-shadow: var(--text-glow-md);
   }
 
-  &.is-sm {
-    gap: var(--space-3);
-
-    .c-conduit-result__percent {
-      font-family: var(--font-mono);
-      font-size: var(--font-size-base);
-      font-variant-numeric: tabular-nums;
-    }
-  }
-
   .value-sep {
     margin: 0 2px;
     font-size: var(--font-size-base);
@@ -223,7 +207,7 @@ const statusCustom = computed(() =>
     opacity: 0.8;
   }
 
-  &__footer {
+  .conduit-footer {
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
@@ -231,45 +215,45 @@ const statusCustom = computed(() =>
 
     padding: var(--space-3) var(--space-4);
     border: var(--border-width-base) solid var(--color-border-subtle);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
 
-    background: var(--color-surface-panel-subtle);
-  }
+    background: var(--surface-bg);
 
-  &__footer-title {
-    display: flex;
-    gap: var(--space-1);
-    align-items: center;
+    .footer-title {
+      display: flex;
+      gap: var(--space-1);
+      align-items: center;
 
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-bold);
-    line-height: var(--line-height-base);
-    color: var(--color-status-warning);
-  }
-
-  &__footer-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-
-    margin: 0;
-    padding-left: 0;
-
-    list-style: none;
-
-    li {
-      font-size: var(--font-size-2xs);
-      line-height: var(--line-height-normal);
-      color: var(--color-text-secondary);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-bold);
+      line-height: var(--line-height-base);
+      color: var(--color-status-warning);
     }
-  }
 
-  &__footer-code {
-    font-family: var(--font-mono);
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-bold);
-    font-variant-numeric: tabular-nums;
-    color: var(--color-text-main);
+    .footer-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+
+      margin: 0;
+      padding-left: 0;
+
+      list-style: none;
+
+      li {
+        font-size: var(--font-size-2xs);
+        line-height: var(--line-height-base);
+        color: var(--color-text-secondary);
+      }
+    }
+
+    .footer-code {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-bold);
+      font-variant-numeric: tabular-nums;
+      color: var(--color-text-main);
+    }
   }
 }
 </style>

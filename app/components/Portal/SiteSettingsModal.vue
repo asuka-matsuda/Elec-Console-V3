@@ -112,7 +112,7 @@ const confirmResetImport = async () => {
 
         <AppPanel class="u-mt-6">
           <AppSectionHeader title="データベース連携（Excel同期・エクスポート）" />
-          <div class="c-site-settings__sync-cards">
+          <div class="c-site-settings__sync-list">
             <!-- 差分再同期 (スマートマージ) -->
             <div class="c-site-settings__sync-item">
               <div class="c-site-settings__sync-info">
@@ -198,7 +198,7 @@ const confirmResetImport = async () => {
           <!-- 完了時のインライン件数サマリー表示 -->
           <div
             v-else-if="syncResultData"
-            class="c-site-settings__sync-result-card"
+            class="c-site-settings__sync-result-box"
           >
             <div class="c-site-settings__sync-result-header">
               <div class="c-site-settings__sync-result-tag">
@@ -326,21 +326,21 @@ const confirmResetImport = async () => {
         </div>
 
         <div class="c-site-settings__result-stats">
-          <div class="c-site-settings__result-stat-card c-site-settings__result-stat-card--add">
+          <div class="c-site-settings__result-stat-box c-site-settings__result-stat-box--add">
             <span class="c-site-settings__result-stat-label">追加された回路</span>
             <span class="c-site-settings__result-stat-val">
               +{{ syncResultData.createdCount ?? 0 }}<span class="c-site-settings__result-stat-unit">件</span>
             </span>
           </div>
 
-          <div class="c-site-settings__result-stat-card c-site-settings__result-stat-card--update">
+          <div class="c-site-settings__result-stat-box c-site-settings__result-stat-box--update">
             <span class="c-site-settings__result-stat-label">基本情報変更</span>
             <span class="c-site-settings__result-stat-val">
               {{ syncResultData.updatedCount ?? 0 }}<span class="c-site-settings__result-stat-unit">件</span>
             </span>
           </div>
 
-          <div class="c-site-settings__result-stat-card">
+          <div class="c-site-settings__result-stat-box">
             <span class="c-site-settings__result-stat-label">全回路総数</span>
             <span class="c-site-settings__result-stat-val">
               {{ syncResultData.count }}<span class="c-site-settings__result-stat-unit">件</span>
@@ -361,7 +361,7 @@ const confirmResetImport = async () => {
         </div>
 
         <div class="c-site-settings__result-stats c-site-settings__result-stats--single">
-          <div class="c-site-settings__result-stat-card c-site-settings__result-stat-card--add">
+          <div class="c-site-settings__result-stat-box c-site-settings__result-stat-box--add">
             <span class="c-site-settings__result-stat-label">取込回路総数</span>
             <span class="c-site-settings__result-stat-val">
               {{ syncResultData.count }}<span class="c-site-settings__result-stat-unit">件</span>
@@ -382,7 +382,7 @@ const confirmResetImport = async () => {
         </div>
 
         <div class="c-site-settings__result-stats c-site-settings__result-stats--single">
-          <div class="c-site-settings__result-stat-card c-site-settings__result-stat-card--info">
+          <div class="c-site-settings__result-stat-box c-site-settings__result-stat-box--info">
             <span class="c-site-settings__result-stat-label">書戻し回路数</span>
             <span class="c-site-settings__result-stat-val">
               {{ syncResultData.count }}<span class="c-site-settings__result-stat-unit">件</span>
@@ -426,7 +426,7 @@ const confirmResetImport = async () => {
     border-radius: var(--radius-sm);
   }
 
-  &__sync-cards {
+  &__sync-list {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
@@ -492,7 +492,7 @@ const confirmResetImport = async () => {
     }
   }
 
-  &__sync-result-card {
+  &__sync-result-box {
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
@@ -603,7 +603,7 @@ const confirmResetImport = async () => {
     }
   }
 
-  &__result-stat-card {
+  &__result-stat-box {
     display: flex;
     flex-direction: column;
     gap: var(--space-1);

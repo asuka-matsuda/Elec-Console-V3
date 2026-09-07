@@ -68,29 +68,29 @@ const handleClose = () => {
     variant="tool"
     size="lg"
   >
-    <div class="c-basis-content">
+    <div class="basis-content">
       <ClientOnly>
-        <div v-if="steps && steps.length > 0" class="c-basis-content__list">
+        <div v-if="steps && steps.length > 0" class="basis-list">
           <AppPanel
             v-for="(step, index) in steps"
             :key="index"
-            class="c-basis-content__card"
+            class="basis-item"
           >
             <AppSectionHeader v-if="step.title" :title="step.title" size="sm" />
-            <div class="c-math-basis">
+            <div class="math-basis">
               <!-- 左側: 計算式 -->
               <div
-                class="c-math-basis__math"
+                class="math-expr"
                 v-html="renderMath(step.tex, true)"
               />
 
               <!-- 右側: 凡例 -->
               <div
                 v-if="step.legend && step.legend.length > 0"
-                class="c-math-legend"
+                class="math-legend"
               >
-                <h5 class="c-math-legend__title">【凡例】</h5>
-                <dl class="c-math-legend__list">
+                <h5 class="legend-title">【凡例】</h5>
+                <dl class="legend-list">
                   <template
                     v-for="v in parseLegend(step.legend)"
                     :key="v.name"
@@ -105,7 +105,7 @@ const handleClose = () => {
         </div>
       </ClientOnly>
 
-      <div v-if="$slots.default" class="c-basis-content__extra">
+      <div v-if="$slots.default" class="basis-extra">
         <slot />
       </div>
     </div>
@@ -119,29 +119,29 @@ const handleClose = () => {
 </template>
 
 <style scoped lang="scss">
-.c-basis-content {
+.basis-content {
   display: flex;
   flex-direction: column;
   gap: var(--space-card-gap);
-
-  &__list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-card-gap);
-  }
-
-  &__card {
-    gap: var(--space-3);
-  }
-
-  &__extra {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-  }
 }
 
-.c-math-basis {
+.basis-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-card-gap);
+}
+
+.basis-item {
+  gap: var(--space-3);
+}
+
+.basis-extra {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.math-basis {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: var(--space-panel-gap);
@@ -151,44 +151,44 @@ const handleClose = () => {
     grid-template-columns: 1fr;
     align-items: stretch;
   }
+}
 
-  &__math {
-    overflow: auto hidden;
-    min-width: 0;
-    padding: var(--space-1) 0;
-    outline: none;
+.math-expr {
+  overflow: auto hidden;
+  min-width: 0;
+  padding: var(--space-1) 0;
+  outline: none;
 
-    :deep(.katex-display) {
-      margin: 0;
+  :deep(.katex-display) {
+    margin: 0;
+  }
+
+  :deep(.katex) {
+    color: var(--color-text-main);
+
+    .tex-status-success,
+    .tex-status-success * {
+      color: var(--color-status-success);
     }
 
-    :deep(.katex) {
-      color: var(--color-text-main);
+    .tex-status-warning,
+    .tex-status-warning * {
+      color: var(--color-status-warning);
+    }
 
-      .tex-status-success,
-      .tex-status-success * {
-        color: var(--color-status-success);
-      }
+    .tex-status-danger,
+    .tex-status-danger * {
+      color: var(--color-status-danger);
+    }
 
-      .tex-status-warning,
-      .tex-status-warning * {
-        color: var(--color-status-warning);
-      }
-
-      .tex-status-danger,
-      .tex-status-danger * {
-        color: var(--color-status-danger);
-      }
-
-      .tex-color-accent,
-      .tex-color-accent * {
-        color: var(--color-accent-main);
-      }
+    .tex-color-accent,
+    .tex-color-accent * {
+      color: var(--color-accent-main);
     }
   }
 }
 
-.c-math-legend {
+.math-legend {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
@@ -211,33 +211,40 @@ const handleClose = () => {
     border-top: 1px solid var(--color-border);
     border-left: none;
   }
+}
 
-  &__list {
-    display: grid;
-    grid-template-columns: max-content 1fr;
-    gap: var(--space-1) var(--space-2);
-    align-items: baseline;
+.legend-title {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-secondary);
+}
 
-    dt {
-      white-space: nowrap;
+.legend-list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--space-1) var(--space-2);
+  align-items: baseline;
 
-      &::after {
-        content: ":";
-      }
+  dt {
+    white-space: nowrap;
 
-      :deep(.katex) {
-        color: var(--color-text-muted);
-      }
+    &::after {
+      content: ":";
     }
 
-    dd {
-      min-width: 0;
-
-      font-size: var(--font-size-2xs);
-      line-height: var(--line-height-base);
+    :deep(.katex) {
       color: var(--color-text-muted);
-      overflow-wrap: break-word;
     }
+  }
+
+  dd {
+    min-width: 0;
+
+    font-size: var(--font-size-2xs);
+    line-height: var(--line-height-base);
+    color: var(--color-text-muted);
+    overflow-wrap: break-word;
   }
 }
 </style>

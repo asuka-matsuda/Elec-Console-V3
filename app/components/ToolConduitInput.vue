@@ -54,9 +54,9 @@ const getCableAreaText = (cableIdx: string): string => {
 </script>
 
 <template>
-  <div class="c-conduit-input">
-    <div class="c-conduit-input__header-grid">
-      <AppFormGroup label="対象の配管種類" class="c-conduit-input__category">
+  <div class="conduit-input">
+    <div class="header-grid">
+      <AppFormGroup label="対象の配管種類" class="category-select">
         <AppSelect
           v-model="inputs.conduitCategory"
           :options="categoryOptions"
@@ -64,7 +64,7 @@ const getCableAreaText = (cableIdx: string): string => {
         />
       </AppFormGroup>
 
-      <AppFormGroup label="占積率" class="c-conduit-input__fill-rate">
+      <AppFormGroup label="占積率" class="fill-rate">
         <AppInputGroup>
           <AppInput
             v-model.number="inputs.customFillRate"
@@ -81,9 +81,9 @@ const getCableAreaText = (cableIdx: string): string => {
     </div>
 
     <!-- ケーブル条件セクション -->
-    <section class="c-conduit-input__section">
-      <div class="c-conduit-input__section-header">
-        <h4 class="c-conduit-input__title">
+    <section class="input-section">
+      <div class="section-header">
+        <h4 class="section-title">
           収容するケーブル
         </h4>
         <AppButton
@@ -98,7 +98,7 @@ const getCableAreaText = (cableIdx: string): string => {
 
       <AppTable
         :columns="cableColumns"
-        class="c-conduit-input__table"
+        class="conduit-table"
       >
         <template #body>
           <tr
@@ -162,42 +162,42 @@ const getCableAreaText = (cableIdx: string): string => {
 </template>
 
 <style scoped lang="scss">
-.c-conduit-input {
+.conduit-input {
   display: flex;
   flex-direction: column;
   gap: var(--space-form-row-gap);
+}
 
-  &__header-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.8fr) minmax(130px, 1fr);
-    gap: var(--space-form-row-gap);
+.header-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(130px, 1fr);
+  gap: var(--space-form-row-gap);
 
-    @include mq("sm") {
-      grid-template-columns: 1fr;
-    }
+  @include mq("sm") {
+    grid-template-columns: 1fr;
   }
+}
 
-  &__section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-item-gap);
-  }
+.input-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-item-gap);
+}
 
-  &__section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--space-1) 0;
-  }
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-1) 0;
+}
 
-  &__title {
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-bold);
-    line-height: var(--line-height-tight);
-  }
+.section-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+}
 
-  &__table {
-    width: 100%;
-  }
+.conduit-table {
+  width: 100%;
 }
 </style>

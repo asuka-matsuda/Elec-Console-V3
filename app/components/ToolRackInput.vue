@@ -77,7 +77,7 @@ const handleAddCable = () => {
 </script>
 
 <template>
-  <div class="c-rack-input">
+  <div class="rack-input">
     <!-- 強電／弱電 タブ切り替え -->
     <AppRadioGroup
       v-model="inputs.mode"
@@ -85,7 +85,7 @@ const handleAddCable = () => {
     />
 
     <!-- 基本条件（ラック高さ、相乗り必要幅） -->
-    <div class="c-rack-input__grid">
+    <div class="header-grid">
       <AppFormGroup label="ラック高さ (H)">
         <AppInputGroup>
           <AppInput
@@ -116,12 +116,12 @@ const handleAddCable = () => {
     </div>
 
     <!-- 詳細設定（計算パラメータ） -->
-    <details class="c-rack-input__details">
-      <summary class="c-rack-input__details-summary">
+    <details class="details-panel">
+      <summary class="details-summary">
         <AppIcon name="sliders" size="sm" />
         <span>計算パラメータ設定（余裕係数・離隔など）</span>
       </summary>
-      <div class="c-rack-input__params-grid">
+      <div class="params-grid">
         <AppFormGroup label="余裕係数">
           <AppInputGroup>
             <AppInput
@@ -168,9 +168,9 @@ const handleAddCable = () => {
     </details>
 
     <!-- ケーブル条件セクション -->
-    <section class="c-rack-input__section">
-      <div class="c-rack-input__section-header">
-        <h4 class="c-rack-input__section-title">
+    <section class="input-section">
+      <div class="section-header">
+        <h4 class="section-title">
           {{ inputs.mode === 'strong' ? '強電ケーブル条件' : '弱電ケーブル条件' }}
         </h4>
         <AppButton
@@ -187,7 +187,7 @@ const handleAddCable = () => {
       <AppTable
         v-if="inputs.mode === 'strong'"
         :columns="cableColumns"
-        class="c-rack-input__table"
+        class="rack-table"
       >
         <template #body>
           <tr
@@ -251,7 +251,7 @@ const handleAddCable = () => {
       <AppTable
         v-else
         :columns="cableColumns"
-        class="c-rack-input__table"
+        class="rack-table"
       >
         <template #body>
           <tr
@@ -315,82 +315,82 @@ const handleAddCable = () => {
 </template>
 
 <style scoped lang="scss">
-.c-rack-input {
+.rack-input {
   display: flex;
   flex-direction: column;
   gap: var(--space-form-row-gap);
+}
 
-  &__grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-form-col-gap);
+.header-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-form-col-gap);
 
-    @include mq("sm") {
-      grid-template-columns: 1fr;
-    }
+  @include mq("sm") {
+    grid-template-columns: 1fr;
   }
+}
 
-  &__details {
-    padding: var(--space-2) var(--space-3);
-    border: var(--border-width-base) solid var(--color-border-subtle);
-    border-radius: var(--radius-md);
-    background: var(--color-surface-panel-subtle);
+.details-panel {
+  padding: var(--space-2) var(--space-3);
+  border: var(--border-width-base) solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-panel-subtle);
 
-    &[open] {
-      padding-bottom: var(--space-3);
-    }
+  &[open] {
+    padding-bottom: var(--space-3);
   }
+}
 
-  &__details-summary {
-    cursor: pointer;
-    user-select: none;
+.details-summary {
+  cursor: pointer;
+  user-select: none;
 
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
 
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-bold);
-    line-height: var(--line-height-base);
-    color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-base);
+  color: var(--color-text-secondary);
 
-    &:hover {
-      color: var(--color-text-main);
-    }
+  &:hover {
+    color: var(--color-text-main);
   }
+}
 
-  &__params-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-form-col-gap);
-    margin-top: var(--space-3);
+.params-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-form-col-gap);
+  margin-top: var(--space-3);
 
-    @include mq("sm") {
-      grid-template-columns: 1fr;
-    }
+  @include mq("sm") {
+    grid-template-columns: 1fr;
   }
+}
 
-  &__section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-item-gap);
-  }
+.input-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-item-gap);
+}
 
-  &__section-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--space-1) 0;
-  }
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-1) 0;
+}
 
-  &__section-title {
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-bold);
-    line-height: var(--line-height-tight);
-  }
+.section-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+}
 
-  &__table {
-    width: 100%;
-  }
+.rack-table {
+  width: 100%;
 }
 </style>

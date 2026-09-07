@@ -49,8 +49,8 @@ const categoryColorMap: Record<string, string> = {
 </script>
 
 <template>
-  <div class="p-glossary">
-    <aside class="p-glossary__filter">
+  <div class="glossary-view">
+    <aside class="filter-sidebar">
       <AppFilterPanel
         v-model:search-query="searchQuery"
         v-model:active-cats="activeCats"
@@ -68,42 +68,42 @@ const categoryColorMap: Record<string, string> = {
       </AppFilterPanel>
     </aside>
 
-    <main class="p-glossary__main">
-      <div v-if="filteredGlossary.length > 0" class="c-glossary-list">
+    <main class="glossary-main">
+      <div v-if="filteredGlossary.length > 0" class="glossary-list">
         <AppPanel
           v-for="item in filteredGlossary"
           :key="item.term"
           as="article"
-          class="c-glossary-card"
-          :style="{ '--card-accent': categoryColorMap[item.category] }"
+          class="glossary-item"
+          :style="{ '--item-accent': categoryColorMap[item.category] }"
         >
-          <div class="c-glossary-card__header">
-            <div class="c-glossary-card__title">
-              <span class="c-glossary-card__kana">{{ item.kana }}</span>
-              <h2 class="c-glossary-card__term">
+          <header class="item-header">
+            <div class="item-title">
+              <span class="item-kana">{{ item.kana }}</span>
+              <h2 class="item-term">
                 {{ item.term }}
               </h2>
             </div>
             <AppBadge :color="categoryColorMap[item.category]">
               {{ item.category }}
             </AppBadge>
-          </div>
+          </header>
 
-          <div class="c-glossary-card__body">
-            <p class="c-glossary-card__desc">
+          <div class="item-body">
+            <p class="item-desc">
               {{ item.desc }}
             </p>
 
-            <div v-if="item.related" class="c-glossary-card__meta">
-              <span class="c-glossary-card__label">関連用語</span>
-              <p class="c-glossary-card__text">
+            <div v-if="item.related" class="item-meta">
+              <span class="meta-label">関連用語</span>
+              <p class="meta-text">
                 {{ item.related }}
               </p>
             </div>
 
-            <div v-if="item.example" class="c-glossary-card__meta">
-              <span class="c-glossary-card__label">用例・備考</span>
-              <p class="c-glossary-card__text">
+            <div v-if="item.example" class="item-meta">
+              <span class="meta-label">用例・備考</span>
+              <p class="meta-text">
                 {{ item.example }}
               </p>
             </div>
@@ -122,7 +122,7 @@ const categoryColorMap: Record<string, string> = {
 </template>
 
 <style scoped lang="scss">
-.p-glossary {
+.glossary-view {
   --trade-color-electric: #eab308;
   --trade-color-architecture: #ea580c;
   --trade-color-hvac: #22c55e;
@@ -136,27 +136,27 @@ const categoryColorMap: Record<string, string> = {
 
   max-width: 1400px;
   min-height: 0;
-
-  &__filter {
-    flex-shrink: 0;
-  }
-
-  &__main {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-
-    min-width: 0;
-    min-height: 0;
-  }
 }
 
-.c-glossary-list {
+.filter-sidebar {
+  flex-shrink: 0;
+}
+
+.glossary-main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+
+  min-width: 0;
+  min-height: 0;
+}
+
+.glossary-list {
   display: flex;
   flex-direction: column;
 }
 
-.c-glossary-card {
+.glossary-item {
   position: relative;
   z-index: 1;
 
@@ -164,75 +164,75 @@ const categoryColorMap: Record<string, string> = {
   flex-direction: column;
 
   transition: var(--transition-base);
+}
 
-  &__header {
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
-    justify-content: space-between;
+.item-header {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: space-between;
 
-    padding-bottom: var(--space-1);
-    border-bottom: var(--border-width-base) solid transparent;
-    border-image: linear-gradient(
-        to right,
-        transparent,
-        var(--color-border) 50%,
-        transparent
-      )
-      1;
-  }
+  padding-bottom: var(--space-1);
+  border-bottom: var(--border-width-base) solid transparent;
+  border-image: linear-gradient(
+      to right,
+      transparent,
+      var(--color-border) 50%,
+      transparent
+    )
+    1;
+}
 
-  &__title {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-  }
+.item-title {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
 
-  &__kana {
-    font-size: var(--font-size-2xs);
-    line-height: var(--line-height-base);
-    color: var(--color-text-muted);
-  }
+.item-kana {
+  font-size: var(--font-size-2xs);
+  line-height: var(--line-height-base);
+  color: var(--color-text-muted);
+}
 
-  &__term {
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-bold);
-    line-height: var(--line-height-tight);
-  }
+.item-term {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+}
 
-  &__body {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-  }
+.item-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
 
-  &__desc {
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-bold);
-    line-height: var(--line-height-tight);
-    color: var(--color-text-secondary);
-  }
+.item-desc {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-secondary);
+}
 
-  &__meta {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
+.item-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
 
-    padding: var(--space-3);
-    border: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 30%, transparent);
-    border-radius: var(--radius-sm);
-  }
+  padding: var(--space-3);
+  border: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 30%, transparent);
+  border-radius: var(--radius-sm);
+}
 
-  &__label {
-    font-size: var(--font-size-2xs);
-    line-height: var(--line-height-base);
-    color: var(--color-text-muted);
-  }
+.meta-label {
+  font-size: var(--font-size-2xs);
+  line-height: var(--line-height-base);
+  color: var(--color-text-muted);
+}
 
-  &__text {
-    font-size: var(--font-size-sm);
-    line-height: var(--line-height-base);
-    color: var(--color-text-secondary);
-  }
+.meta-text {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  color: var(--color-text-secondary);
 }
 </style>

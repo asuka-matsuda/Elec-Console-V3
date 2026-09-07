@@ -38,17 +38,17 @@ const resolvedDividerVariant = computed(() => {
 </script>
 
 <template>
-  <header class="c-section-header">
-    <div class="c-section-header__top">
+  <header class="section-header">
+    <div class="top-row">
       <component
         :is="tag"
-        class="c-section-header__title"
-        :class="[`c-section-header__title--${size}`]"
+        class="title"
+        :class="[`is-${size}`]"
       >
-        <AppIcon v-if="icon" :name="icon" class="c-section-header__icon" />
+        <AppIcon v-if="icon" :name="icon" class="icon" />
         <slot>{{ title }}</slot>
       </component>
-      <div v-if="$slots.actions" class="c-section-header__actions">
+      <div v-if="$slots.actions" class="actions">
         <slot name="actions" />
       </div>
     </div>
@@ -61,12 +61,12 @@ const resolvedDividerVariant = computed(() => {
 </template>
 
 <style scoped lang="scss">
-.c-section-header {
+.section-header {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
 
-  &__top {
+  .top-row {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2);
@@ -74,44 +74,39 @@ const resolvedDividerVariant = computed(() => {
     justify-content: space-between;
   }
 
-  &__actions {
+  .actions {
     display: flex;
     gap: var(--space-2);
     align-items: center;
   }
 
-  &__title {
+  .title {
     display: flex;
     gap: var(--space-2);
     align-items: center;
     color: var(--color-text-main);
 
-    &--lg {
+    &.is-lg,
+    &.is-md {
       font-size: var(--font-size-lg);
       font-weight: var(--font-weight-bold);
       line-height: var(--line-height-tight);
     }
 
-    &--md {
-      font-size: var(--font-size-lg);
-      font-weight: var(--font-weight-bold);
-      line-height: var(--line-height-tight);
-    }
-
-    &--sm {
+    &.is-sm {
       font-size: var(--font-size-sm);
       font-weight: var(--font-weight-bold);
       line-height: var(--line-height-tight);
     }
 
-    &--xs {
+    &.is-xs {
       font-size: var(--font-size-xs);
       font-weight: var(--font-weight-bold);
       line-height: var(--line-height-tight);
     }
   }
 
-  &__icon {
+  .icon {
     color: var(--theme-accent);
   }
 }

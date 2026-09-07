@@ -26,7 +26,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-souden-dashboard">
+  <main class="souden-dashboard">
     <AppSectionHeader
       title="送電試験ダッシュボード"
       icon="zap"
@@ -53,7 +53,7 @@ onMounted(() => {
       </template>
     </AppSectionHeader>
 
-    <div v-if="error" class="p-souden-dashboard__error">
+    <div v-if="error" class="error-message">
       <AppIcon name="alert-triangle" />
       <span>{{ error }}</span>
     </div>
@@ -81,8 +81,8 @@ onMounted(() => {
       <!-- 総合進捗カード -->
       <AppPanel>
         <AppSectionHeader title="総合進捗" icon="activity" variant="hud" />
-        <div class="p-souden-summary">
-          <div class="p-souden-summary__main">
+        <div class="progress-summary">
+          <div class="summary-main">
             <AppCircularGauge
               :value="stats.totalPct"
               size="lg"
@@ -91,10 +91,10 @@ onMounted(() => {
             />
           </div>
 
-          <div class="p-souden-summary__details">
+          <div class="summary-details">
             <!-- 幹線 詳細 -->
-            <div class="p-souden-summary__group">
-              <div class="p-souden-summary__sub-gauge">
+            <div class="summary-group">
+              <div class="sub-gauge">
                 <AppCircularGauge
                   :value="stats.trunkOverallPct"
                   size="sm"
@@ -103,7 +103,7 @@ onMounted(() => {
                 />
               </div>
 
-              <div class="p-souden-summary__bars">
+              <div class="progress-bars">
                 <AppProgressBar
                   label="回路確認 (Phase 1)"
                   :completed="stats.trunkP1"
@@ -134,8 +134,8 @@ onMounted(() => {
             <AppDivider type="fade-center" />
 
             <!-- 二次側 詳細 -->
-            <div class="p-souden-summary__group">
-              <div class="p-souden-summary__sub-gauge">
+            <div class="summary-group">
+              <div class="sub-gauge">
                 <AppCircularGauge
                   :value="stats.secOverallPct"
                   size="sm"
@@ -144,7 +144,7 @@ onMounted(() => {
                 />
               </div>
 
-              <div class="p-souden-summary__bars">
+              <div class="progress-bars">
                 <AppProgressBar
                   label="回路確認 (Phase 1)"
                   :completed="stats.secP1"
@@ -180,7 +180,7 @@ onMounted(() => {
         <!-- 幹線カード -->
         <AppPanel>
           <AppSectionHeader title="幹線" icon="zap" variant="tool" />
-          <div class="p-souden-steps">
+          <div class="step-list">
             <SoudenStepIndicator
               :step-num="1"
               title="回路確認・増し締め"
@@ -208,7 +208,7 @@ onMounted(() => {
         <!-- 二次側カード -->
         <AppPanel>
           <AppSectionHeader title="二次側" icon="layers" variant="management" />
-          <div class="p-souden-steps">
+          <div class="step-list">
             <SoudenStepIndicator
               :step-num="1"
               title="回路確認・増し締め"
@@ -234,32 +234,32 @@ onMounted(() => {
         </AppPanel>
       </div>
     </template>
-  </div>
+  </main>
 </template>
 
 <style scoped lang="scss">
-.p-souden-dashboard {
+.souden-dashboard {
   display: flex;
   flex-direction: column;
   gap: var(--space-section-gap);
   height: 100%;
-
-  &__error {
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
-
-    padding: var(--space-3);
-    border: 1px solid rgb(239 68 68 / 20%);
-    border-radius: var(--radius-sm);
-
-    color: var(--color-status-danger);
-
-    background-color: rgb(239 68 68 / 10%);
-  }
 }
 
-.p-souden-summary {
+.error-message {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+
+  padding: var(--space-3);
+  border: 1px solid rgb(239 68 68 / 20%);
+  border-radius: var(--radius-sm);
+
+  color: var(--color-status-danger);
+
+  background-color: rgb(239 68 68 / 10%);
+}
+
+.progress-summary {
   display: flex;
   gap: var(--space-8);
   align-items: center;
@@ -269,62 +269,62 @@ onMounted(() => {
     flex-direction: column;
     gap: var(--space-6);
   }
+}
 
-  &__main {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
+.summary-main {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
 
-    min-width: 220px;
-  }
+  min-width: 220px;
+}
 
-  &__details {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: var(--space-5);
-  }
+.summary-details {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-5);
+}
 
-  &__group {
-    display: flex;
-    gap: var(--space-6);
-    align-items: center;
+.summary-group {
+  display: flex;
+  gap: var(--space-6);
+  align-items: center;
 
-    @include mq("md") {
-      flex-direction: column;
-      gap: var(--space-3);
-      align-items: flex-start;
-    }
-  }
-
-  &__sub-gauge {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-
-    width: 120px;
-  }
-
-  &__bars {
-    display: flex;
-    flex: 1;
+  @include mq("md") {
     flex-direction: column;
     gap: var(--space-3);
-
-    width: 100%;
+    align-items: flex-start;
   }
 }
 
-.p-souden-steps {
+.sub-gauge {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  width: 120px;
+}
+
+.progress-bars {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  width: 100%;
+}
+
+.step-list {
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
   padding: var(--space-2) 0;
 }
 
-.l-grid--2col {
+.two-col-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-section-gap);

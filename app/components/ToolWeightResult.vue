@@ -16,20 +16,20 @@ const vm = computed(() => formatWeightResult(props.result))
 </script>
 
 <template>
-  <div class="c-weight-result">
+  <div class="weight-result">
     <AppResultBox
       title="推奨ドラム"
       :status="vm.boxStatus"
       :is-empty="vm.isError"
     >
       <template #value>
-        <div class="c-weight-result__value-box">
-          <div class="c-weight-result__val">
+        <div class="value-box">
+          <div class="val">
             {{ vm.displayDrum }}
           </div>
           <div
             v-if="vm.warningText"
-            class="c-weight-result__warning"
+            class="warning"
           >
             {{ vm.warningText }}
           </div>
@@ -57,12 +57,12 @@ const vm = computed(() => formatWeightResult(props.result))
 </template>
 
 <style scoped lang="scss">
-.c-weight-result {
+.weight-result {
   display: flex;
   flex-direction: column;
-  gap: var(--space-card-gap);
+  gap: var(--space-panel-gap);
 
-  &__value-box {
+  .value-box {
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
@@ -70,14 +70,14 @@ const vm = computed(() => formatWeightResult(props.result))
     justify-content: flex-start;
   }
 
-  &__val {
+  .val {
     font-family: var(--font-mono);
     font-size: var(--font-size-3xl);
     font-weight: var(--font-weight-bold);
     font-variant-numeric: tabular-nums;
   }
 
-  &__warning {
+  .warning {
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-bold);
     line-height: var(--line-height-base);

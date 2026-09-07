@@ -23,13 +23,13 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
 <template>
   <AppPanel
     as="article"
-    class="c-history-card"
+    class="history-item"
     :class="[`is-${entry.status}`]"
   >
-    <header class="c-history-card__header">
-      <div class="c-history-card__title-group">
-        <span class="c-history-card__date">{{ entry.timestamp }}</span>
-        <h3 class="c-history-card__title">
+    <header class="item-header">
+      <div class="title-group">
+        <span class="item-date">{{ entry.timestamp }}</span>
+        <h3 class="item-title">
           <span>{{ entry.toolName }}</span>
           <AppBadge v-if="entry.mode === 'サイズ選定'" color="var(--color-category-tool)">
             {{ entry.mode }}
@@ -41,8 +41,8 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
       </div>
     </header>
 
-    <div class="c-history-card__body">
-      <section class="c-history-card__section">
+    <div class="item-body">
+      <section class="item-section">
         <div>
           <ToolVoltageResult
             v-if="
@@ -61,8 +61,8 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
             size="sm"
           />
           <template v-else>
-            <h4 class="c-history-card__section-title">計算結果</h4>
-            <dl class="c-history-card__list">
+            <h4 class="section-title">計算結果</h4>
+            <dl class="result-list">
               <template v-for="(res, idx) in entry.results" :key="idx">
                 <dt
                   :style="{
@@ -86,9 +86,9 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
         </div>
       </section>
 
-      <section class="c-history-card__section">
-        <h4 class="c-history-card__section-title">入力条件</h4>
-        <dl class="c-history-card__list">
+      <section class="item-section">
+        <h4 class="section-title">入力条件</h4>
+        <dl class="result-list">
           <template v-for="(input, idx) in entry.inputs" :key="idx">
             <dt>{{ input.label }}</dt>
             <dd>{{ input.value }}</dd>
@@ -97,7 +97,7 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
       </section>
     </div>
 
-    <footer class="c-history-card__footer">
+    <footer class="item-footer">
       <AppButton
         variant="danger"
         size="sm"
@@ -111,88 +111,86 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
 </template>
 
 <style scoped lang="scss">
-.c-history-card {
+.history-item {
   display: flex;
   flex-direction: column;
+}
 
-  &__header {
-    display: flex;
-    gap: 0;
-    align-items: center;
-    align-items: flex-end;
-    justify-content: space-between;
+.item-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
 
-    padding-bottom: var(--space-2);
-    border-bottom: 1px solid var(--color-border);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.title-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.item-date {
+  font-size: var(--font-size-2xs);
+  line-height: var(--line-height-base);
+  color: var(--color-text-muted);
+}
+
+.item-title {
+  display: flex;
+  align-items: center;
+
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-main);
+}
+
+.item-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.section-title {
+  padding-left: var(--space-1);
+  border-left: 2px solid var(--color-category-tool);
+
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-main);
+}
+
+.result-list {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  color: var(--color-text-muted);
+
+  dt {
+    white-space: nowrap;
   }
 
-  &__title-group {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-  }
-
-  &__date {
-    font-size: var(--font-size-2xs);
-    line-height: var(--line-height-base);
-    color: var(--color-text-muted);
-  }
-
-  &__title {
-    display: flex;
-    align-items: center;
-
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-bold);
-    line-height: var(--line-height-tight);
+  dd {
     color: var(--color-text-main);
+    text-align: right;
   }
+}
 
-  &__body {
-    display: flex;
-    flex-direction: column;
-  }
-
-  &__section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-  }
-
-  &__section-title {
-    padding-left: var(--space-1);
-    border-left: 2px solid var(--color-category-tool);
-
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-bold);
-    line-height: var(--line-height-tight);
-    color: var(--color-text-main);
-  }
-
-  &__list {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: var(--space-1) var(--space-3);
-
-    font-size: var(--font-size-sm);
-    line-height: var(--line-height-base);
-    color: var(--color-text-muted);
-
-    dt {
-      white-space: nowrap;
-    }
-
-    dd {
-      color: var(--color-text-main);
-      text-align: right;
-    }
-  }
-
-  &__footer {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    margin-top: auto;
-  }
+.item-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: auto;
 }
 </style>

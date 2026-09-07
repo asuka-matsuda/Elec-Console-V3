@@ -13,8 +13,8 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div class="c-calendar-toolbar">
-    <div class="c-calendar-toolbar__nav">
+  <nav class="calendar-toolbar" aria-label="カレンダーナビゲーション">
+    <div class="nav-controls">
       <AppButton
         variant="secondary"
         size="sm"
@@ -34,13 +34,13 @@ const emit = defineEmits<{
       </AppButton>
     </div>
 
-    <div class="c-calendar-toolbar__center">
-      <h3 class="c-calendar-toolbar__title">
+    <div class="toolbar-center">
+      <h3 class="toolbar-title">
         {{ title }}
       </h3>
     </div>
 
-    <div class="c-calendar-toolbar__views">
+    <div class="view-controls">
       <AppButton
         :variant="currentView === 'dayGridMonth' ? 'primary' : 'secondary'"
         size="sm"
@@ -66,11 +66,11 @@ const emit = defineEmits<{
         種別設定
       </AppButton>
     </div>
-  </div>
+  </nav>
 </template>
 
 <style scoped lang="scss">
-.c-calendar-toolbar {
+.calendar-toolbar {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
@@ -84,54 +84,53 @@ const emit = defineEmits<{
   background-color: var(--color-surface);
 
   @include mq("md") {
-    display: flex;
     flex-direction: column;
     gap: var(--space-1);
 
-    &__center {
+    .toolbar-center {
       order: -1;
       width: 100%;
     }
 
-    &__nav,
-    &__views {
+    .nav-controls,
+    .view-controls {
       display: flex;
       align-items: center;
       justify-content: center;
       width: 100%;
     }
   }
+}
 
-  &__nav {
-    display: flex;
-    gap: var(--space-1);
-    align-items: center;
-  }
+.nav-controls {
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
+}
 
-  &__center {
-    display: flex;
-    flex: 1;
-    align-items: center;
-    justify-content: center;
+.toolbar-center {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
 
-    min-width: 160px;
-  }
+  min-width: 160px;
+}
 
-  &__title {
-    --glow-color: var(--theme-accent);
+.toolbar-title {
+  --glow-color: var(--theme-accent);
 
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-bold);
-    line-height: var(--line-height-tight);
-    color: var(--theme-accent);
-    text-shadow: var(--text-glow-sm);
-  }
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--theme-accent);
+  text-shadow: var(--text-glow-sm);
+}
 
-  &__views {
-    display: flex;
-    gap: var(--space-1);
-    align-items: center;
-    justify-content: flex-end;
-  }
+.view-controls {
+  display: flex;
+  gap: var(--space-1);
+  align-items: center;
+  justify-content: flex-end;
 }
 </style>
