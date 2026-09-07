@@ -26,7 +26,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="souden-dashboard">
+  <div class="souden-dashboard">
     <AppSectionHeader
       title="送電試験ダッシュボード"
       icon="zap"
@@ -185,7 +185,7 @@ onMounted(() => {
         <!-- 幹線カード -->
         <AppPanel>
           <AppSectionHeader title="幹線" icon="zap" variant="tool" />
-          <div class="step-list">
+          <ol class="step-list">
             <SoudenStepIndicator
               :step-num="1"
               title="回路確認・増し締め"
@@ -207,13 +207,13 @@ onMounted(() => {
               :total="stats.trunkTotal"
               :to="`/portal/${siteId}/phase3?kei_to=幹線`"
             />
-          </div>
+          </ol>
         </AppPanel>
 
         <!-- 二次側カード -->
         <AppPanel>
           <AppSectionHeader title="二次側" icon="layers" variant="management" />
-          <div class="step-list">
+          <ol class="step-list">
             <SoudenStepIndicator
               :step-num="1"
               title="回路確認・増し締め"
@@ -235,11 +235,11 @@ onMounted(() => {
               :total="stats.secTotal"
               :to="`/portal/${siteId}/phase3?kei_to=二次側`"
             />
-          </div>
+          </ol>
         </AppPanel>
       </div>
     </template>
-  </main>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -326,7 +326,11 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
+
+  margin: 0;
   padding: var(--space-2) 0;
+
+  list-style: none;
 }
 
 .two-col-grid {

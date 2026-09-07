@@ -56,61 +56,66 @@ const handleChangePassword = async () => {
 </script>
 
 <template>
-  <div class="p-change-password">
-    <small>
+  <form class="p-change-password" @submit.prevent="handleChangePassword">
+    <p class="p-change-password__lead">
       セキュリティのため、システムから配布された初期パスワードを変更してください。
-    </small>
+    </p>
 
-    <div v-if="errorMsg" class="p-change-password__error">
+    <p v-if="errorMsg" class="p-change-password__error" role="alert">
       {{ errorMsg }}
-    </div>
+    </p>
 
-    <div class="p-change-password__form">
-      <AppFormGroup label="新しいパスワード (8文字以上)">
-        <AppInput
-          v-model="password"
-          type="password"
-          placeholder="新しいパスワード"
-        />
-      </AppFormGroup>
-      <AppFormGroup label="新しいパスワード (確認用)">
-        <AppInput
-          v-model="passwordConfirm"
-          type="password"
-          placeholder="もう一度入力"
-          @keyup.enter="handleChangePassword"
-        />
-      </AppFormGroup>
-    </div>
+    <AppFormGroup label="新しいパスワード (8文字以上)">
+      <AppInput
+        v-model="password"
+        type="password"
+        placeholder="新しいパスワード"
+        :disabled="isLoading"
+      />
+    </AppFormGroup>
+    <AppFormGroup label="新しいパスワード (確認用)">
+      <AppInput
+        v-model="passwordConfirm"
+        type="password"
+        placeholder="もう一度入力"
+        :disabled="isLoading"
+      />
+    </AppFormGroup>
 
     <div class="p-change-password__actions">
       <AppButton
+        type="submit"
         variant="primary"
+        block
         :disabled="isLoading"
-        @click="handleChangePassword"
       >
-        設定してはじめる
+        <template v-if="isLoading"> 設定中... </template>
+        <template v-else> 設定してはじめる </template>
       </AppButton>
     </div>
-  </div>
+  </form>
 </template>
 
 <style scoped lang="scss">
 .p-change-password {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-form-row-gap);
 
-  &__error {
-    padding: var(--space-2) var(--space-3);
+  &__lead {
+    margin: 0;
     font-size: var(--font-size-sm);
-    color: var(--color-status-danger);
+    color: var(--color-text-secondary);
   }
 
-  &__form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-form-row-gap);
+  &__error {
+    margin: 0;
+    padding: var(--space-2) var(--space-3);
+    border: var(--border-width-base) solid var(--color-status-danger);
+    border-radius: var(--radius-sm);
+
+    font-size: var(--font-size-sm);
+    color: var(--color-status-danger);
   }
 
   &__actions {

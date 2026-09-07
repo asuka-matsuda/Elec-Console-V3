@@ -40,16 +40,15 @@ const sortedTodos = computed(() => {
       size="sm"
     />
 
-    <div class="p-personal-todo__input">
+    <form class="p-personal-todo__input" @submit.prevent="handleAdd">
       <AppInput
         v-model="newTask"
         placeholder="新しいタスクを入力..."
-        @keyup.enter="handleAdd"
       />
-      <AppButton variant="primary" icon-only @click="handleAdd">
+      <AppButton type="submit" variant="primary" icon-only>
         <AppIcon name="plus" />
       </AppButton>
-    </div>
+    </form>
 
     <ul class="p-personal-todo__list">
       <li
@@ -77,8 +76,9 @@ const sortedTodos = computed(() => {
         icon="check-circle"
         title="タスクはありません"
         description="上の入力欄から新しいタスクを追加してください。"
-      /></ul
-    ></AppPanel>
+      />
+    </ul>
+  </AppPanel>
 </template>
 
 <style scoped lang="scss">
@@ -91,6 +91,7 @@ const sortedTodos = computed(() => {
     display: flex;
     gap: var(--space-1);
     align-items: center;
+    margin: 0;
 
     > *:first-child {
       flex: 1;
@@ -104,6 +105,10 @@ const sortedTodos = computed(() => {
     gap: var(--space-1);
 
     max-height: 400px;
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
   }
 
   &__item {

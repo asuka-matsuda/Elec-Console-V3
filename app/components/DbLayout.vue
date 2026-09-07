@@ -41,27 +41,26 @@ const { sortBy, sortOrder, sortedData, handleSort }
       </slot>
     </aside>
 
-    <main class="l-db-layout__main">
+    <div class="l-db-layout__main">
       <slot
         :sorted-data="sortedData"
         :sort-by="sortBy"
         :sort-order="sortOrder"
         :handle-sort="handleSort"
       >
-        <AppPanel v-if="sortedData.length > 0" class="l-db-layout__panel">
-          <AppTable
-            :columns="columns"
-            :data="sortedData"
-            :sort-by="sortBy"
-            :sort-order="sortOrder"
-            @sort="handleSort"
-          >
-            <!-- Pass through all slots for custom cells -->
-            <template v-for="(_, name) in $slots" #[name]="slotProps">
-              <slot :name="name" v-bind="slotProps ?? {}" />
-            </template>
-          </AppTable>
-        </AppPanel>
+        <AppTable
+          v-if="sortedData.length > 0"
+          :columns="columns"
+          :data="sortedData"
+          :sort-by="sortBy"
+          :sort-order="sortOrder"
+          @sort="handleSort"
+        >
+          <!-- Pass through all slots for custom cells -->
+          <template v-for="(_, name) in $slots" #[name]="slotProps">
+            <slot :name="name" v-bind="slotProps ?? {}" />
+          </template>
+        </AppTable>
 
         <AppEmptyState
           v-else
@@ -70,7 +69,7 @@ const { sortBy, sortOrder, sortedData, handleSort }
           description="検索キーワードまたはカテゴリーフィルターの条件を変更してください。"
         />
       </slot>
-    </main>
+    </div>
   </div>
 </template>
 
@@ -94,15 +93,6 @@ const { sortBy, sortOrder, sortedData, handleSort }
     flex-direction: column;
 
     min-width: 0;
-    min-height: 0;
-  }
-
-  &__panel {
-    overflow: hidden;
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-
     min-height: 0;
   }
 }

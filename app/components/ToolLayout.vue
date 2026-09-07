@@ -64,7 +64,7 @@ provide('toolBasisModal', {
     </slot>
 
     <!-- メイングリッド（左: 条件入力 / 右: 計算結果） -->
-    <main class="l-tool-layout__main">
+    <div class="l-tool-layout__main">
       <!-- 1. 条件入力（PC: 左側 50% / モバイル: 全面表示） -->
       <section class="l-tool-layout__inputs">
         <AppPanel class="l-tool-layout__panel">
@@ -82,7 +82,9 @@ provide('toolBasisModal', {
             </template>
           </AppSectionHeader>
 
-          <slot name="inputs" :open-basis="openBasisModal" />
+          <div class="l-tool-layout__panel-body">
+            <slot name="inputs" :open-basis="openBasisModal" />
+          </div>
         </AppPanel>
       </section>
 
@@ -91,14 +93,20 @@ provide('toolBasisModal', {
         class="l-tool-layout__results"
         :class="{ 'is-drawer-open': isDrawerOpen }"
       >
-        <div class="l-tool-layout__drawer-handle" @click="toggleDrawer">
+        <button
+          type="button"
+          class="l-tool-layout__drawer-handle"
+          :aria-expanded="isDrawerOpen"
+          aria-label="計算結果ドロワーの開閉"
+          @click="toggleDrawer"
+        >
           <span class="l-tool-layout__drawer-title">計算結果を見る</span>
           <AppIcon
             :name="isDrawerOpen ? 'chevron-down' : 'chevron-up'"
             size="md"
             class="l-tool-layout__drawer-icon"
           />
-        </div>
+        </button>
         <div class="l-tool-layout__results-inner">
           <AppPanel class="l-tool-layout__panel">
             <AppSectionHeader
@@ -125,7 +133,9 @@ provide('toolBasisModal', {
               </template>
             </AppSectionHeader>
 
-            <slot name="results" :open-basis="openBasisModal" />
+            <div class="l-tool-layout__panel-body">
+              <slot name="results" :open-basis="openBasisModal" />
+            </div>
           </AppPanel>
         </div>
       </section>
@@ -136,7 +146,7 @@ provide('toolBasisModal', {
         class="l-tool-layout__overlay"
         @click="toggleDrawer"
       />
-    </main>
+    </div>
 
     <!-- 計算根拠モーダルスロット -->
     <slot name="basis" />
@@ -177,11 +187,18 @@ provide('toolBasisModal', {
   &__panel {
     flex: 1;
     min-height: 0;
+  }
 
-    :deep(.c-panel__content) {
-      overflow-y: auto;
-      padding: var(--space-1) var(--space-2);
-    }
+  &__panel-body {
+    --scrollbar-size: var(--space-2);
+
+    overflow-y: auto;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    min-height: 0;
+    padding: var(--space-1) var(--space-2);
   }
 
   &__results {
@@ -192,9 +209,7 @@ provide('toolBasisModal', {
     // モバイル: 下部Stickyドロワー
     @include mq("md") {
       position: fixed;
-      position: relative;
       z-index: var(--z-index-modal);
-      z-index: 1;
       right: 0;
       bottom: 0;
       left: 0;
@@ -224,8 +239,12 @@ provide('toolBasisModal', {
       align-items: center;
       justify-content: space-between;
 
+      width: 100%;
       height: 48px;
       padding: 0 var(--space-3);
+      border: none;
+
+      font: inherit;
 
       background: color-mix(
         in srgb,

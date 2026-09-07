@@ -1,14 +1,9 @@
 import type { CableData, ConduitData } from '~/types/database'
-import type { MathStep } from '~/types/tools'
+import type { CableInputItem, MathStep } from '~/types/tools'
 import { findCableByIndexString, getEffectiveCableDiameter } from '~/utils/cable'
 import { buildFormula, hlOk, hlVal } from '~/utils/math'
 
-export interface CableInput {
-  id: string // for UI tracking
-  category: string
-  cableIdx: string
-  count: number | null
-}
+export type CableInput = CableInputItem
 
 export interface CableDetail {
   input: CableInput

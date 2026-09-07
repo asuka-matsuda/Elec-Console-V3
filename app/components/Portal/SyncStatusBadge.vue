@@ -193,8 +193,8 @@ const formatDateTime = (isoStr: string) => {
               現場で実際に測定された正確な時刻（実打鍵タイムスタンプ）とともにサーバーへ反映します。
             </p>
 
-            <div class="p-sync-queue-list">
-              <div
+            <ul class="p-sync-queue-list">
+              <li
                 v-for="item in queue.slice(0, 5)"
                 :key="item.id"
                 class="p-sync-queue-item"
@@ -203,11 +203,11 @@ const formatDateTime = (isoStr: string) => {
                 <span class="p-sync-queue-item__ban">{{ item.banMeisho }}</span>
                 <span class="p-sync-queue-item__kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
                 <span class="p-sync-queue-item__time">{{ formatDateTime(item.clientConfirmedAt) }}</span>
-              </div>
-              <div v-if="queue.length > 5" class="p-sync-queue-more">
+              </li>
+              <li v-if="queue.length > 5" class="p-sync-queue-more">
                 ... 他 {{ queue.length - 5 }} 件
-              </div>
-            </div>
+              </li>
+            </ul>
 
             <div v-if="syncResult" class="p-sync-result-box">
               <div v-if="syncResult.successCount > 0" class="c-text-success">
@@ -337,9 +337,12 @@ const formatDateTime = (isoStr: string) => {
   gap: var(--space-1);
 
   max-height: 180px;
+  margin: 0;
   padding: var(--space-2);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
+
+  list-style: none;
 
   background: var(--surface-bg-subtle);
 }

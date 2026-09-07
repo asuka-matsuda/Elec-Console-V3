@@ -66,9 +66,9 @@ const onCategoryChange = (val: unknown) => {
 <template>
   <AppPanel class="cable-item">
     <template #header>
-      <div class="header">
+      <header class="header">
         <div class="title-group">
-          <span>ケーブル {{ index + 1 }}</span>
+          <h4 class="title">ケーブル {{ index + 1 }}</h4>
           <span v-if="singleCableArea !== null" class="meta">
             ( 断面積: {{ singleCableArea.toFixed(1) }} mm² / 本 )
           </span>
@@ -83,7 +83,7 @@ const onCategoryChange = (val: unknown) => {
         >
           <AppIcon name="trash-2" size="sm" />
         </AppButton>
-      </div>
+      </header>
     </template>
 
     <div class="grid">
@@ -133,6 +133,13 @@ const onCategoryChange = (val: unknown) => {
     display: flex;
     gap: var(--space-2);
     align-items: center;
+
+    .title {
+      margin: 0;
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-main);
+    }
   }
 
   .meta {

@@ -94,65 +94,62 @@ const handleSaveSettings = async (updatedSite: Site) => {
 </script>
 
 <template>
-  <div class="c-admin-sites">
-    <AppPanel>
-      <AppSectionHeader title="現場プロジェクト一覧" />
-      <div class="c-admin-sites__stack">
-        <div class="c-admin-sites__toolbar">
+  <AppPanel class="c-admin-sites">
+    <AppSectionHeader title="現場プロジェクト一覧">
+      <template #actions>
+        <AppButton
+          variant="primary"
+          icon="plus"
+          @click="isCreateModalOpen = true"
+        >
+          新規現場登録
+        </AppButton>
+      </template>
+    </AppSectionHeader>
+
+    <AppTable
+      :columns="siteHeaders"
+      :data="sortedSites"
+      :sort-by="sortKey"
+      :sort-order="sortOrder"
+      @sort="handleSort"
+    >
+      <template #cell-status="{ value, row }">
+        <div class="c-admin-sites__status-stack">
+          <AppBadge :color="getStatusColor(value)">
+            {{ getStatusLabel(value) }}
+          </AppBadge>
+          <AppBadge v-if="row.disabledAt" color="var(--color-status-danger)">
+            無効
+          </AppBadge>
+        </div>
+      </template>
+      <template #cell-createdAt="{ value }">
+        {{ formatDateTime(value) }}
+      </template>
+      <template #cell-disabledAt="{ value }">
+        {{ formatDateTime(value) }}
+      </template>
+      <template #cell-actions="{ row }">
+        <div class="c-admin-sites__actions">
           <AppButton
-            variant="primary"
-            icon="plus"
-            @click="isCreateModalOpen = true"
+            variant="secondary"
+            size="sm"
+            icon="settings"
+            @click="openSettingsModal(String(row.id))"
           >
-            新規現場登録
+            現場設定
+          </AppButton>
+          <AppButton
+            :variant="row.disabledAt ? 'success' : 'danger'"
+            size="sm"
+            @click="confirmToggleDisable(row)"
+          >
+            {{ row.disabledAt ? "有効化" : "無効化" }}
           </AppButton>
         </div>
-
-        <AppTable
-          :columns="siteHeaders"
-          :data="sortedSites"
-          :sort-by="sortKey"
-          :sort-order="sortOrder"
-          @sort="handleSort"
-        >
-          <template #cell-status="{ value, row }">
-            <div class="c-admin-sites__status-stack">
-              <AppBadge :color="getStatusColor(value)">
-                {{ getStatusLabel(value) }}
-              </AppBadge>
-              <AppBadge v-if="row.disabledAt" color="var(--color-status-danger)">
-                無効
-              </AppBadge>
-            </div>
-          </template>
-          <template #cell-createdAt="{ value }">
-            {{ formatDateTime(value) }}
-          </template>
-          <template #cell-disabledAt="{ value }">
-            {{ formatDateTime(value) }}
-          </template>
-          <template #cell-actions="{ row }">
-            <div class="c-admin-sites__actions">
-              <AppButton
-                variant="secondary"
-                size="sm"
-                icon="settings"
-                @click="openSettingsModal(String(row.id))"
-              >
-                現場設定
-              </AppButton>
-              <AppButton
-                :variant="row.disabledAt ? 'success' : 'danger'"
-                size="sm"
-                @click="confirmToggleDisable(row)"
-              >
-                {{ row.disabledAt ? "有効化" : "無効化" }}
-              </AppButton>
-            </div>
-          </template>
-        </AppTable>
-      </div>
-    </AppPanel>
+      </template>
+    </AppTable>
 
     <!-- 新規登録モーダル -->
     <AppModal
@@ -174,23 +171,11 @@ const handleSaveSettings = async (updatedSite: Site) => {
       :site="settingsTargetSite"
       @update:site="handleSaveSettings"
     />
-  </div>
+  </AppPanel>
 </template>
 
 <style scoped lang="scss">
 .c-admin-sites {
-  &__toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-  }
-
-  &__stack {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-card-gap);
-  }
-
   &__status-stack {
     display: flex;
     flex-direction: column;

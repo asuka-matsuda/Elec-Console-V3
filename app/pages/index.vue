@@ -74,7 +74,7 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
 
 <template>
   <div class="dashboard">
-    <main class="dashboard-main">
+    <div class="dashboard-main">
       <section
         v-for="section in dashboardSections"
         :key="section.heading"
@@ -95,7 +95,7 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
           />
         </div>
       </section>
-    </main>
+    </div>
 
     <aside class="dashboard-aside">
       <AppInfoAside

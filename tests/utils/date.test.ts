@@ -3,6 +3,7 @@ import {
   calculateAutoEndDate,
   formatDate,
   formatDateTime,
+  formatShortDateTime,
   formatTime,
 } from '../../app/utils/date'
 
@@ -25,6 +26,14 @@ describe('date utils', () => {
     const d = new Date(2026, 7, 31, 9, 5) // 2026-08-31 09:05
 
     expect(formatDateTime(d)).toBe('2026/08/31 09:05')
+  })
+
+  it('formatShortDateTime should format valid dates as MM/DD HH:mm', () => {
+    const d = new Date(2026, 7, 31, 9, 5) // 2026-08-31 09:05
+
+    expect(formatShortDateTime(d)).toBe('08/31 09:05')
+    expect(formatShortDateTime(null)).toBe('-')
+    expect(formatShortDateTime('invalid-date')).toBe('-')
   })
 
   it('formatTime should format valid times as HH:mm', () => {

@@ -74,13 +74,6 @@ const isP2Complete = (c: CircuitItem) => {
   return Boolean(c.p2ConfirmedAt && c.p2IsComplete)
 }
 
-const formatDate = (dateStr?: string | null) => {
-  if (!dateStr) return '-'
-  const d = new Date(dateStr)
-
-  return `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
-}
-
 const scrollToCircuit = (circuit: CircuitItem) => {
   const el = document.getElementById(`row-${circuit.id}`)
 
@@ -294,286 +287,285 @@ const {
     </AppPanel>
 
     <!-- 回路一覧テーブル -->
-    <div class="p-phase3__table-wrapper">
-      <AppTable
-        :columns="columns"
-        :data="sortedCircuits"
-        :sort-by="sortBy"
-        :sort-order="sortOrder"
-        @sort="handleSort"
-      >
-        <template #body>
-          <tr
-            v-for="circuit in sortedCircuits"
-            :id="`row-${circuit.id}`"
-            :key="circuit.id"
-            :class="[
-              'p-phase3-row',
-              {
-                'is-completed': isComplete(circuit),
-                'is-excluded': circuit.isExcluded,
-                'is-locked': isCircuitLocked(circuit) || !isP2Complete(circuit),
-                'is-editing': editingRowId === circuit.id,
-              },
-            ]"
-          >
-            <!-- 盤種別 / 盤名称 -->
-            <td>
-              <div class="p-phase3-cell__panel">
-                <span class="p-phase3-cell__ban-name">{{ circuit.banMeisho }}</span>
-                <span class="p-phase3-cell__shubetsu">{{ circuit.banShubetsu }}</span>
-              </div>
-            </td>
+    <AppTable
+      class="p-phase3__table"
+      :columns="columns"
+      :data="sortedCircuits"
+      :sort-by="sortBy"
+      :sort-order="sortOrder"
+      @sort="handleSort"
+    >
+      <template #body>
+        <tr
+          v-for="circuit in sortedCircuits"
+          :id="`row-${circuit.id}`"
+          :key="circuit.id"
+          :class="[
+            'p-phase3-row',
+            {
+              'is-completed': isComplete(circuit),
+              'is-excluded': circuit.isExcluded,
+              'is-locked': isCircuitLocked(circuit) || !isP2Complete(circuit),
+              'is-editing': editingRowId === circuit.id,
+            },
+          ]"
+        >
+          <!-- 盤種別 / 盤名称 -->
+          <td>
+            <div class="p-phase3-cell__panel">
+              <span class="p-phase3-cell__ban-name">{{ circuit.banMeisho }}</span>
+              <span class="p-phase3-cell__shubetsu">{{ circuit.banShubetsu }}</span>
+            </div>
+          </td>
 
-            <!-- 回路番号 -->
-            <td style="text-align: center;">
-              <div class="p-phase3-cell__bangou-wrap">
-                <span class="p-phase3-cell__type-badge" :class="{ 'is-three': isThreePhase(circuit) }">
-                  {{ isThreePhase(circuit) ? '動力' : '電灯' }}
-                </span>
-                <AppKairoIcon
-                  :kigou="circuit.kairoKigou"
-                  :bangou="circuit.kairoBangou"
-                />
-              </div>
-            </td>
-
-            <!-- 回路名称 -->
-            <td>
-              <span class="p-phase3-cell__meisho" :title="circuit.kairoMeisho || ''">
-                {{ circuit.kairoMeisho || '-' }}
+          <!-- 回路番号 -->
+          <td style="text-align: center;">
+            <div class="p-phase3-cell__bangou-wrap">
+              <span class="p-phase3-cell__type-badge" :class="{ 'is-three': isThreePhase(circuit) }">
+                {{ isThreePhase(circuit) ? '動力' : '電灯' }}
               </span>
-            </td>
+              <AppKairoIcon
+                :kigou="circuit.kairoKigou"
+                :bangou="circuit.kairoBangou"
+              />
+            </div>
+          </td>
 
-            <!-- 電圧 1 (RS / RN) -->
-            <td style="text-align: center;">
-              <template v-if="editingRowId === circuit.id">
-                <div class="p-phase3-input-cell">
-                  <span class="p-phase3-input-cell__label">{{ getPhaseLabels(circuit).label1 }}</span>
-                  <div class="p-phase3-input-cell__box">
-                    <input
-                      v-model="inputForm.rs"
-                      type="number"
-                      step="any"
-                      inputmode="decimal"
-                      class="p-phase3-input"
-                      @focus="handleInputFocus"
-                      @keydown.enter.prevent="saveInput(circuit)"
-                    >
-                    <span class="p-phase3-input-cell__unit">V</span>
-                  </div>
-                </div>
-              </template>
-              <div v-else class="p-phase3-volt-cell">
-                <span class="p-phase3-volt-cell__label">{{ getPhaseLabels(circuit).label1 }}</span>
-                <div class="p-phase3-volt-cell__val-group">
-                  <span
-                    class="p-phase3-volt-cell__val"
-                    :class="{ 'is-active': circuit.denatsuRs !== null && circuit.denatsuRs !== undefined }"
+          <!-- 回路名称 -->
+          <td>
+            <span class="p-phase3-cell__meisho" :title="circuit.kairoMeisho || ''">
+              {{ circuit.kairoMeisho || '-' }}
+            </span>
+          </td>
+
+          <!-- 電圧 1 (RS / RN) -->
+          <td style="text-align: center;">
+            <template v-if="editingRowId === circuit.id">
+              <div class="p-phase3-input-cell">
+                <span class="p-phase3-input-cell__label">{{ getPhaseLabels(circuit).label1 }}</span>
+                <div class="p-phase3-input-cell__box">
+                  <input
+                    v-model="inputForm.rs"
+                    type="number"
+                    step="any"
+                    inputmode="decimal"
+                    class="p-phase3-input"
+                    @focus="handleInputFocus"
+                    @keydown.enter.prevent="saveInput(circuit)"
                   >
-                    {{ formatVoltage(circuit.denatsuRs) }}
-                  </span>
-                  <span v-if="circuit.denatsuRs !== null && circuit.denatsuRs !== undefined" class="p-phase3-volt-cell__unit">V</span>
+                  <span class="p-phase3-input-cell__unit">V</span>
                 </div>
               </div>
-            </td>
-
-            <!-- 電圧 2 (ST / TN) -->
-            <td style="text-align: center;">
-              <template v-if="editingRowId === circuit.id">
-                <div class="p-phase3-input-cell">
-                  <span class="p-phase3-input-cell__label">{{ getPhaseLabels(circuit).label2 }}</span>
-                  <div class="p-phase3-input-cell__box">
-                    <input
-                      v-model="inputForm.st"
-                      type="number"
-                      step="any"
-                      inputmode="decimal"
-                      class="p-phase3-input"
-                      @focus="handleInputFocus"
-                      @keydown.enter.prevent="saveInput(circuit)"
-                    >
-                    <span class="p-phase3-input-cell__unit">V</span>
-                  </div>
-                </div>
-              </template>
-              <div v-else class="p-phase3-volt-cell">
-                <span class="p-phase3-volt-cell__label">{{ getPhaseLabels(circuit).label2 }}</span>
-                <div class="p-phase3-volt-cell__val-group">
-                  <span
-                    class="p-phase3-volt-cell__val"
-                    :class="{ 'is-active': circuit.denatsuSt !== null && circuit.denatsuSt !== undefined }"
-                  >
-                    {{ formatVoltage(circuit.denatsuSt) }}
-                  </span>
-                  <span v-if="circuit.denatsuSt !== null && circuit.denatsuSt !== undefined" class="p-phase3-volt-cell__unit">V</span>
-                </div>
-              </div>
-            </td>
-
-            <!-- 電圧 3 (RT / RT) -->
-            <td style="text-align: center;">
-              <template v-if="editingRowId === circuit.id">
-                <div class="p-phase3-input-cell">
-                  <span class="p-phase3-input-cell__label">{{ getPhaseLabels(circuit).label3 }}</span>
-                  <div class="p-phase3-input-cell__box">
-                    <input
-                      v-model="inputForm.rt"
-                      type="number"
-                      step="any"
-                      inputmode="decimal"
-                      class="p-phase3-input"
-                      @focus="handleInputFocus"
-                      @keydown.enter.prevent="saveInput(circuit)"
-                    >
-                    <span class="p-phase3-input-cell__unit">V</span>
-                  </div>
-                </div>
-              </template>
-              <div v-else class="p-phase3-volt-cell">
-                <span class="p-phase3-volt-cell__label">{{ getPhaseLabels(circuit).label3 }}</span>
-                <div class="p-phase3-volt-cell__val-group">
-                  <span
-                    class="p-phase3-volt-cell__val"
-                    :class="{ 'is-active': circuit.denatsuRt !== null && circuit.denatsuRt !== undefined }"
-                  >
-                    {{ formatVoltage(circuit.denatsuRt) }}
-                  </span>
-                  <span v-if="circuit.denatsuRt !== null && circuit.denatsuRt !== undefined" class="p-phase3-volt-cell__unit">V</span>
-                </div>
-              </div>
-            </td>
-
-            <!-- 検相 / 点灯確認 -->
-            <td style="text-align: center;">
-              <template v-if="editingRowId === circuit.id">
-                <select v-model="inputForm.kensou" class="p-phase3-select">
-                  <template v-if="isThreePhase(circuit)">
-                    <option value="正相">
-                      正相
-                    </option>
-                    <option value="逆相">
-                      逆相
-                    </option>
-                  </template>
-                  <template v-else>
-                    <option value="点灯確認(良)">
-                      点灯確認(良)
-                    </option>
-                    <option value="点灯確認(否)">
-                      点灯確認(否)
-                    </option>
-                  </template>
-                </select>
-              </template>
-              <template v-else-if="circuit.kensou">
-                <AppBadge
-                  :color="circuit.kensou === '正相' || circuit.kensou === '点灯確認(良)' ? 'var(--color-status-success)' : 'var(--color-status-danger)'"
+            </template>
+            <div v-else class="p-phase3-volt-cell">
+              <span class="p-phase3-volt-cell__label">{{ getPhaseLabels(circuit).label1 }}</span>
+              <div class="p-phase3-volt-cell__val-group">
+                <span
+                  class="p-phase3-volt-cell__val"
+                  :class="{ 'is-active': circuit.denatsuRs !== null && circuit.denatsuRs !== undefined }"
                 >
-                  {{ circuit.kensou }}
-                </AppBadge>
-              </template>
-              <span v-else class="p-phase3-cell__dash">-</span>
-            </td>
-
-            <!-- 備考 -->
-            <td>
-              <template v-if="editingRowId === circuit.id">
-                <AppInput v-model="inputForm.remarks" size="sm" placeholder="備考" />
-              </template>
-              <span v-else class="p-phase3-cell__remarks" :title="circuit.p3Remarks || ''">
-                {{ circuit.p3Remarks || '-' }}
-              </span>
-            </td>
-
-            <!-- 操作 -->
-            <td style="text-align: center;">
-              <div class="p-phase3-actions">
-                <!-- 幹線未完了による操作不可 -->
-                <template v-if="isCircuitLocked(circuit)">
-                  <span class="c-text-note c-text-note--strong">⏸ 幹線未了</span>
-                </template>
-
-                <!-- 前フェーズ（P2）未完了による操作不可 -->
-                <template v-else-if="!isP2Complete(circuit)">
-                  <span class="c-text-note c-text-note--strong">⏸ P2未了</span>
-                </template>
-
-                <!-- 手入力編集モード中 -->
-                <template v-else-if="editingRowId === circuit.id">
-                  <AppButton
-                    variant="success"
-                    size="sm"
-                    :loading="isActionLoading[circuit.id]"
-                    @click="saveInput(circuit)"
-                  >
-                    確定
-                  </AppButton>
-                  <AppButton
-                    variant="secondary"
-                    size="sm"
-                    @click="cancelInput"
-                  >
-                    取消
-                  </AppButton>
-                </template>
-
-                <!-- 通常モード：確定済み -->
-                <template v-else-if="isComplete(circuit)">
-                  <AppButton
-                    variant="danger"
-                    size="sm"
-                    :loading="isActionLoading[circuit.id]"
-                    @click="clearPhase3(circuit)"
-                  >
-                    解除
-                  </AppButton>
-                  <AppButton
-                    variant="secondary"
-                    size="sm"
-                    @click="startInput(circuit)"
-                  >
-                    変更
-                  </AppButton>
-                </template>
-
-                <!-- 通常モード：未確定 -->
-                <template v-else>
-                  <AppButton
-                    variant="primary"
-                    size="sm"
-                    :disabled="circuit.isExcluded"
-                    :loading="isActionLoading[circuit.id]"
-                    @click="handleQuickStandard(circuit)"
-                  >
-                    標準値確定
-                  </AppButton>
-                  <AppButton
-                    variant="secondary"
-                    size="sm"
-                    :disabled="circuit.isExcluded"
-                    @click="startInput(circuit)"
-                  >
-                    手入力
-                  </AppButton>
-                </template>
+                  {{ formatVoltage(circuit.denatsuRs) }}
+                </span>
+                <span v-if="circuit.denatsuRs !== null && circuit.denatsuRs !== undefined" class="p-phase3-volt-cell__unit">V</span>
               </div>
-            </td>
+            </div>
+          </td>
 
-            <!-- 測定者 / 日時 -->
-            <td style="text-align: center;">
-              <template v-if="circuit.p3Worker">
-                <div class="p-phase3-cell__worker">
-                  <strong>{{ circuit.p3Worker }}</strong>
-                  <span class="p-phase3-cell__date">{{ formatDate(circuit.p3ConfirmedAt) }}</span>
+          <!-- 電圧 2 (ST / TN) -->
+          <td style="text-align: center;">
+            <template v-if="editingRowId === circuit.id">
+              <div class="p-phase3-input-cell">
+                <span class="p-phase3-input-cell__label">{{ getPhaseLabels(circuit).label2 }}</span>
+                <div class="p-phase3-input-cell__box">
+                  <input
+                    v-model="inputForm.st"
+                    type="number"
+                    step="any"
+                    inputmode="decimal"
+                    class="p-phase3-input"
+                    @focus="handleInputFocus"
+                    @keydown.enter.prevent="saveInput(circuit)"
+                  >
+                  <span class="p-phase3-input-cell__unit">V</span>
                 </div>
+              </div>
+            </template>
+            <div v-else class="p-phase3-volt-cell">
+              <span class="p-phase3-volt-cell__label">{{ getPhaseLabels(circuit).label2 }}</span>
+              <div class="p-phase3-volt-cell__val-group">
+                <span
+                  class="p-phase3-volt-cell__val"
+                  :class="{ 'is-active': circuit.denatsuSt !== null && circuit.denatsuSt !== undefined }"
+                >
+                  {{ formatVoltage(circuit.denatsuSt) }}
+                </span>
+                <span v-if="circuit.denatsuSt !== null && circuit.denatsuSt !== undefined" class="p-phase3-volt-cell__unit">V</span>
+              </div>
+            </div>
+          </td>
+
+          <!-- 電圧 3 (RT / RT) -->
+          <td style="text-align: center;">
+            <template v-if="editingRowId === circuit.id">
+              <div class="p-phase3-input-cell">
+                <span class="p-phase3-input-cell__label">{{ getPhaseLabels(circuit).label3 }}</span>
+                <div class="p-phase3-input-cell__box">
+                  <input
+                    v-model="inputForm.rt"
+                    type="number"
+                    step="any"
+                    inputmode="decimal"
+                    class="p-phase3-input"
+                    @focus="handleInputFocus"
+                    @keydown.enter.prevent="saveInput(circuit)"
+                  >
+                  <span class="p-phase3-input-cell__unit">V</span>
+                </div>
+              </div>
+            </template>
+            <div v-else class="p-phase3-volt-cell">
+              <span class="p-phase3-volt-cell__label">{{ getPhaseLabels(circuit).label3 }}</span>
+              <div class="p-phase3-volt-cell__val-group">
+                <span
+                  class="p-phase3-volt-cell__val"
+                  :class="{ 'is-active': circuit.denatsuRt !== null && circuit.denatsuRt !== undefined }"
+                >
+                  {{ formatVoltage(circuit.denatsuRt) }}
+                </span>
+                <span v-if="circuit.denatsuRt !== null && circuit.denatsuRt !== undefined" class="p-phase3-volt-cell__unit">V</span>
+              </div>
+            </div>
+          </td>
+
+          <!-- 検相 / 点灯確認 -->
+          <td style="text-align: center;">
+            <template v-if="editingRowId === circuit.id">
+              <select v-model="inputForm.kensou" class="p-phase3-select">
+                <template v-if="isThreePhase(circuit)">
+                  <option value="正相">
+                    正相
+                  </option>
+                  <option value="逆相">
+                    逆相
+                  </option>
+                </template>
+                <template v-else>
+                  <option value="点灯確認(良)">
+                    点灯確認(良)
+                  </option>
+                  <option value="点灯確認(否)">
+                    点灯確認(否)
+                  </option>
+                </template>
+              </select>
+            </template>
+            <template v-else-if="circuit.kensou">
+              <AppBadge
+                :color="circuit.kensou === '正相' || circuit.kensou === '点灯確認(良)' ? 'var(--color-status-success)' : 'var(--color-status-danger)'"
+              >
+                {{ circuit.kensou }}
+              </AppBadge>
+            </template>
+            <span v-else class="p-phase3-cell__dash">-</span>
+          </td>
+
+          <!-- 備考 -->
+          <td>
+            <template v-if="editingRowId === circuit.id">
+              <AppInput v-model="inputForm.remarks" size="sm" placeholder="備考" />
+            </template>
+            <span v-else class="p-phase3-cell__remarks" :title="circuit.p3Remarks || ''">
+              {{ circuit.p3Remarks || '-' }}
+            </span>
+          </td>
+
+          <!-- 操作 -->
+          <td style="text-align: center;">
+            <div class="p-phase3-actions">
+              <!-- 幹線未完了による操作不可 -->
+              <template v-if="isCircuitLocked(circuit)">
+                <span class="c-text-note c-text-note--strong">⏸ 幹線未了</span>
               </template>
-              <span v-else class="p-phase3-cell__dash">-</span>
-            </td>
-          </tr>
-        </template>
-      </AppTable>
-    </div>
+
+              <!-- 前フェーズ（P2）未完了による操作不可 -->
+              <template v-else-if="!isP2Complete(circuit)">
+                <span class="c-text-note c-text-note--strong">⏸ P2未了</span>
+              </template>
+
+              <!-- 手入力編集モード中 -->
+              <template v-else-if="editingRowId === circuit.id">
+                <AppButton
+                  variant="success"
+                  size="sm"
+                  :loading="isActionLoading[circuit.id]"
+                  @click="saveInput(circuit)"
+                >
+                  確定
+                </AppButton>
+                <AppButton
+                  variant="secondary"
+                  size="sm"
+                  @click="cancelInput"
+                >
+                  取消
+                </AppButton>
+              </template>
+
+              <!-- 通常モード：確定済み -->
+              <template v-else-if="isComplete(circuit)">
+                <AppButton
+                  variant="danger"
+                  size="sm"
+                  :loading="isActionLoading[circuit.id]"
+                  @click="clearPhase3(circuit)"
+                >
+                  解除
+                </AppButton>
+                <AppButton
+                  variant="secondary"
+                  size="sm"
+                  @click="startInput(circuit)"
+                >
+                  変更
+                </AppButton>
+              </template>
+
+              <!-- 通常モード：未確定 -->
+              <template v-else>
+                <AppButton
+                  variant="primary"
+                  size="sm"
+                  :disabled="circuit.isExcluded"
+                  :loading="isActionLoading[circuit.id]"
+                  @click="handleQuickStandard(circuit)"
+                >
+                  標準値確定
+                </AppButton>
+                <AppButton
+                  variant="secondary"
+                  size="sm"
+                  :disabled="circuit.isExcluded"
+                  @click="startInput(circuit)"
+                >
+                  手入力
+                </AppButton>
+              </template>
+            </div>
+          </td>
+
+          <!-- 測定者 / 日時 -->
+          <td style="text-align: center;">
+            <template v-if="circuit.p3Worker">
+              <div class="p-phase3-cell__worker">
+                <strong>{{ circuit.p3Worker }}</strong>
+                <span class="p-phase3-cell__date">{{ formatShortDateTime(circuit.p3ConfirmedAt) }}</span>
+              </div>
+            </template>
+            <span v-else class="p-phase3-cell__dash">-</span>
+          </td>
+        </tr>
+      </template>
+    </AppTable>
   </div>
 </template>
 
@@ -584,7 +576,7 @@ const {
   gap: var(--space-section-gap);
   height: 100%;
 
-  &__table-wrapper {
+  &__table {
     flex: 1;
     min-height: 400px;
   }

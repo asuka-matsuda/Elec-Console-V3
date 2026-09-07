@@ -109,85 +109,82 @@ const confirmResetPassword = async (row: User) => {
 </script>
 
 <template>
-  <div class="c-admin-users">
-    <AppPanel>
-      <AppSectionHeader title="ユーザー一覧" />
-      <div class="c-admin-users__stack">
-        <div class="c-admin-users__toolbar">
-          <AppButton
-            variant="primary"
-            icon="plus"
-            @click="isCreateModalOpen = true"
+  <AppPanel class="c-admin-users">
+    <AppSectionHeader title="ユーザー一覧">
+      <template #actions>
+        <AppButton
+          variant="primary"
+          icon="plus"
+          @click="isCreateModalOpen = true"
+        >
+          新規ユーザー登録
+        </AppButton>
+      </template>
+    </AppSectionHeader>
+
+    <AppTable
+      :columns="userHeaders"
+      :data="sortedUsers"
+      :sort-by="sortKey"
+      :sort-order="sortOrder"
+      @sort="handleSort"
+    >
+      <template #cell-lastName="{ row }">
+        {{ row.lastName }} {{ row.firstName }}
+      </template>
+      <template #cell-role="{ row }">
+        <AppBadge
+          :color="
+            row.role === 'admin'
+              ? 'var(--color-status-danger)'
+              : row.role === 'worker'
+                ? 'var(--color-status-success)'
+                : 'var(--color-text-muted)'
+          "
+        >
+          {{ row.role }}
+        </AppBadge>
+      </template>
+      <template #cell-lastLoginAt="{ row }">
+        <div class="c-admin-users__login-cell">
+          <AppBadge
+            v-if="row.requirePasswordReset"
+            color="var(--color-status-danger)"
           >
-            新規ユーザー登録
+            PWリセット要求
+          </AppBadge>
+          <span class="c-admin-users__meta">{{
+            formatLastLogin(row)
+          }}</span>
+        </div>
+      </template>
+      <template #cell-actions="{ row }">
+        <div class="c-admin-users__actions">
+          <AppButton
+            variant="secondary"
+            size="sm"
+            @click="handleOpenAssign(row)"
+          >
+            現場アサイン
+          </AppButton>
+          <AppButton
+            variant="secondary"
+            size="sm"
+            @click="confirmResetPassword(row)"
+          >
+            PW初期化
+          </AppButton>
+          <AppButton
+            variant="danger"
+            size="sm"
+            :disabled="row.id === 'master'"
+            @click="confirmDelete(row)"
+          >
+            削除
           </AppButton>
         </div>
-
-        <AppTable
-          :columns="userHeaders"
-          :data="sortedUsers"
-          :sort-by="sortKey"
-          :sort-order="sortOrder"
-          @sort="handleSort"
-        >
-          <template #cell-lastName="{ row }">
-            {{ row.lastName }} {{ row.firstName }}
-          </template>
-          <template #cell-role="{ row }">
-            <AppBadge
-              :color="
-                row.role === 'admin'
-                  ? 'var(--color-status-danger)'
-                  : row.role === 'worker'
-                    ? 'var(--color-status-success)'
-                    : 'var(--color-text-muted)'
-              "
-            >
-              {{ row.role }}
-            </AppBadge>
-          </template>
-          <template #cell-lastLoginAt="{ row }">
-            <div class="c-admin-users__stack">
-              <AppBadge
-                v-if="row.requirePasswordReset"
-                color="var(--color-status-danger)"
-              >
-                PWリセット要求
-              </AppBadge>
-              <span class="c-admin-users__meta">{{
-                formatLastLogin(row)
-              }}</span>
-            </div>
-          </template>
-          <template #cell-actions="{ row }">
-            <div class="c-admin-users__actions">
-              <AppButton
-                variant="secondary"
-                size="sm"
-                @click="handleOpenAssign(row)"
-              >
-                現場アサイン
-              </AppButton>
-              <AppButton
-                variant="secondary"
-                size="sm"
-                @click="confirmResetPassword(row)"
-              >
-                PW初期化
-              </AppButton>
-              <AppButton
-                variant="danger"
-                size="sm"
-                :disabled="row.id === 'master'"
-                @click="confirmDelete(row)"
-              >
-                削除
-              </AppButton>
-            </div>
-          </template>
-        </AppTable>
-      </div>
-    </AppPanel>
+      </template>
+    </AppTable>
 
     <UserCreateModal v-model="isCreateModalOpen" @success="handleUserCreated" />
 
@@ -201,21 +198,15 @@ const confirmResetPassword = async (row: User) => {
       :user-id="assignTargetUserId"
       :initial-site-ids="assignTargetSiteIds"
     />
-  </div>
+  </AppPanel>
 </template>
 
 <style scoped lang="scss">
 .c-admin-users {
-  &__toolbar {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-  }
-
-  &__stack {
+  &__login-cell {
     display: flex;
     flex-direction: column;
-    gap: var(--space-card-gap);
+    gap: var(--space-1);
   }
 
   &__actions {

@@ -222,16 +222,16 @@ const confirmResetImport = async () => {
 
         <AppPanel>
           <AppSectionHeader title="データベース連携（Excel同期・エクスポート）" />
-          <div class="c-site-settings__sync-list">
+          <ul class="c-site-settings__sync-list">
             <!-- 差分再同期 (スマートマージ) -->
-            <div class="c-site-settings__sync-item">
+            <li class="c-site-settings__sync-item">
               <div class="c-site-settings__sync-info">
-                <div class="c-site-settings__sync-title">
+                <h4 class="c-site-settings__sync-title">
                   {{ selectedFile ? '選択ファイルから差分同期 (スマートマージ)' : 'Excelから差分再同期 (スマートマージ)' }}
-                </div>
-                <div class="c-site-settings__sync-desc">
+                </h4>
+                <p class="c-site-settings__sync-desc">
                   Web上の試験結果（Phase 1〜3）を保持したまま、Excelで追加された回路や基本情報の変更のみを安全に同期します。
-                </div>
+                </p>
               </div>
               <AppButton
                 variant="primary"
@@ -242,17 +242,17 @@ const confirmResetImport = async () => {
               >
                 {{ selectedFile ? '選択ファイルから差分同期' : '差分再同期' }}
               </AppButton>
-            </div>
+            </li>
 
             <!-- Excel帳票ダウンロード (Web標準) -->
-            <div class="c-site-settings__sync-item">
+            <li class="c-site-settings__sync-item">
               <div class="c-site-settings__sync-info">
-                <div class="c-site-settings__sync-title">
+                <h4 class="c-site-settings__sync-title">
                   Excel帳票ダウンロード (ブラウザDL)
-                </div>
-                <div class="c-site-settings__sync-desc">
+                </h4>
+                <p class="c-site-settings__sync-desc">
                   Web上で入力・完了した最新の試験結果（Phase 1〜3）を含むExcel帳票ファイルをブラウザへ直接ダウンロードします。
-                </div>
+                </p>
               </div>
               <AppButton
                 variant="secondary"
@@ -263,20 +263,20 @@ const confirmResetImport = async () => {
               >
                 帳票ダウンロード
               </AppButton>
-            </div>
+            </li>
 
             <!-- PCローカルExcelへ書戻し (実エクスポート) -->
-            <div
+            <li
               v-if="editData.excelPath"
               class="c-site-settings__sync-item"
             >
               <div class="c-site-settings__sync-info">
-                <div class="c-site-settings__sync-title">
+                <h4 class="c-site-settings__sync-title">
                   PCローカルExcelへ書戻し (直接上書き)
-                </div>
-                <div class="c-site-settings__sync-desc">
+                </h4>
+                <p class="c-site-settings__sync-desc">
                   指定されたPCローカルのExcelファイルに最新試験結果を直接上書き保存します。
-                </div>
+                </p>
               </div>
               <AppButton
                 variant="secondary"
@@ -287,17 +287,17 @@ const confirmResetImport = async () => {
               >
                 指定パスへ書戻し
               </AppButton>
-            </div>
+            </li>
 
             <!-- 全件初期化取込 (完全リセット) -->
-            <div class="c-site-settings__sync-item c-site-settings__sync-item--danger">
+            <li class="c-site-settings__sync-item c-site-settings__sync-item--danger">
               <div class="c-site-settings__sync-info">
-                <div class="c-site-settings__sync-title">
+                <h4 class="c-site-settings__sync-title">
                   {{ selectedFile ? '選択ファイルで全件初期化取込' : '全件取込 (完全初期化)' }}
-                </div>
-                <div class="c-site-settings__sync-desc">
+                </h4>
+                <p class="c-site-settings__sync-desc">
                   Web上の試験結果を含むすべてのデータを破棄し、Excelからまっさらに最初から作り直します（現場初期設定用）。
-                </div>
+                </p>
               </div>
               <AppButton
                 variant="danger"
@@ -308,8 +308,8 @@ const confirmResetImport = async () => {
               >
                 {{ selectedFile ? '選択ファイルで初期化取込' : '全件初期化取込' }}
               </AppButton>
-            </div>
-          </div>
+            </li>
+          </ul>
 
           <!-- 実行中ステータス表示 -->
           <div
@@ -404,23 +404,25 @@ const confirmResetImport = async () => {
           <template #description>
             計算や連携の対象外とする回路を複数追加できます。
           </template>
-          <div class="c-site-settings__circuit-list">
-            <div
-              v-for="(_, idx) in excludedCircuitsList"
-              :key="idx"
-              class="c-site-settings__circuit-row"
-            >
-              <AppInput
-                v-model="excludedCircuitsList[idx]"
-                placeholder="例: 盤A-回路1"
-              />
-              <AppButton
-                variant="danger"
-                icon="trash-2"
-                size="sm"
-                @click="removeCircuit(idx)"
-              />
-            </div>
+          <div class="c-site-settings__circuit-container">
+            <ul v-if="excludedCircuitsList.length > 0" class="c-site-settings__circuit-list">
+              <li
+                v-for="(_, idx) in excludedCircuitsList"
+                :key="idx"
+                class="c-site-settings__circuit-row"
+              >
+                <AppInput
+                  v-model="excludedCircuitsList[idx]"
+                  placeholder="例: 盤A-回路1"
+                />
+                <AppButton
+                  variant="danger"
+                  icon="trash-2"
+                  size="sm"
+                  @click="removeCircuit(idx)"
+                />
+              </li>
+            </ul>
             <AppButton
               variant="secondary"
               icon="plus"
@@ -564,6 +566,11 @@ const confirmResetImport = async () => {
     display: flex;
     flex-direction: column;
     gap: var(--space-3);
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
   }
 
   &__sync-item {
@@ -591,12 +598,14 @@ const confirmResetImport = async () => {
   }
 
   &__sync-title {
+    margin: 0;
     font-size: var(--font-size-sm);
     font-weight: 600;
     color: var(--color-text-primary);
   }
 
   &__sync-desc {
+    margin: 0;
     font-size: var(--font-size-xs);
     line-height: 1.4;
     color: var(--color-text-muted);
@@ -818,10 +827,21 @@ font-size: var(--font-size-2xl);
     background: hsl(var(--color-status-success-base) / 10%);
   }
 
+  &__circuit-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
   &__circuit-list {
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
   }
 
   &__circuit-row {

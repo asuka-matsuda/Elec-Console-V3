@@ -43,9 +43,7 @@ const {
         </AppSectionHeader>
       </template>
 
-      <div class="p-history-page__tabs">
-        <AppTabs v-model="currentTab" :options="tabs" />
-      </div>
+      <AppTabs v-model="currentTab" :options="tabs" />
 
       <ClientOnly>
         <div
@@ -90,18 +88,6 @@ const {
     @include cq("sm") {
       grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
     }
-  }
-
-  &__empty {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    align-items: center;
-    justify-content: center;
-
-    padding: var(--space-layout-pad) 0;
-
-    color: var(--color-text-muted);
   }
 }
 </style>

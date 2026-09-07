@@ -277,7 +277,6 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     z-index: var(--z-index-modal);
 
     border: var(--border-width-base) solid var(--color-border);
-    border-radius: 0;
     border-radius: var(--radius-sm);
 
     background-color: color-mix(in srgb, var(--color-surface) 85%, transparent);
@@ -294,7 +293,6 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       border-top: none;
       border-right: none;
       border-left: none;
-      border-radius: 0;
       border-radius: var(--radius-sm);
 
       background-color: color-mix(

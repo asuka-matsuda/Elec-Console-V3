@@ -41,8 +41,4 @@ export interface VoltageCalcResult {
   tempDerating: number
 }
 
-export interface MathStep {
-  title?: string
-  tex: string
-  legend: string[]
-}
+export type { MathStep } from '~/types/tools'

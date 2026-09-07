@@ -18,7 +18,7 @@ const themeOptions = [
 </script>
 
 <template>
-  <main class="settings-view">
+  <div class="settings-view">
     <AppSectionHeader
       title="UI・個人設定"
       icon="settings"
@@ -29,45 +29,37 @@ const themeOptions = [
       このブラウザ固有のUI設定をカスタマイズします。
     </p>
 
-    <div class="settings-grid">
-      <div class="settings-stack">
-        <AppPanel>
-          <template #header>
-            <AppSectionHeader
-              title="テーマ・カラー設定"
-              icon="moon"
-              variant="tool"
-              size="md"
-            />
-          </template>
+    <div class="settings-content">
+      <AppPanel>
+        <template #header>
+          <AppSectionHeader
+            title="テーマ・カラー設定"
+            icon="moon"
+            variant="tool"
+            size="md"
+          />
+        </template>
 
-          <div class="panel-body">
-            <p class="description">
-              画面のテーマ（ライト/ダーク）を変更します。
-            </p>
+        <p class="description">
+          画面のテーマ（ライト/ダーク）を変更します。
+        </p>
 
-            <AppFormGroup
-              label="外観モード"
-              help="全体の明るさを変更します（ダークモード推奨）"
-            >
-              <AppSelect v-model="themeMode" :options="themeOptions" />
-            </AppFormGroup>
-          </div>
-        </AppPanel>
-      </div>
-
-      <div class="settings-side"></div>
+        <AppFormGroup
+          label="外観モード"
+          help="全体の明るさを変更します（ダークモード推奨）"
+        >
+          <AppSelect v-model="themeMode" :options="themeOptions" />
+        </AppFormGroup>
+      </AppPanel>
     </div>
-  </main>
+  </div>
 </template>
 
 <style scoped lang="scss">
 .settings-view {
-  container-type: inline-size;
   display: flex;
   flex-direction: column;
   gap: var(--space-section-gap);
-
   padding-bottom: var(--space-layout-pad);
 }
 
@@ -76,25 +68,10 @@ const themeOptions = [
   color: var(--color-text-secondary);
 }
 
-.settings-grid {
-  display: grid;
-  grid-template-columns: 1fr;
+.settings-content {
+  display: flex;
+  flex-direction: column;
   gap: var(--space-section-gap);
-
-  @include cq("md") {
-    grid-template-columns: 2fr 1fr;
-  }
-}
-
-.settings-stack {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.panel-body {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-card-gap);
+  max-width: 640px;
 }
 </style>

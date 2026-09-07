@@ -75,13 +75,6 @@ const isP1Complete = (circuit: CircuitItem) => {
   return Boolean(circuit.p1ConfirmedAt && circuit.p1Kakunin && circuit.p1Mashishime)
 }
 
-const formatDate = (dateStr?: string | null) => {
-  if (!dateStr) return '-'
-  const d = new Date(dateStr)
-
-  return `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
-}
-
 const scrollToCircuit = (circuit: CircuitItem) => {
   const el = document.getElementById(`row-${circuit.id}`)
 
@@ -301,284 +294,283 @@ const {
     </AppPanel>
 
     <!-- 回路一覧テーブル -->
-    <div class="p-phase2__table-wrapper">
-      <AppTable
-        :columns="columns"
-        :data="sortedCircuits"
-        :sort-by="sortBy"
-        :sort-order="sortOrder"
-        @sort="handleSort"
-      >
-        <template #body>
-          <tr
-            v-for="circuit in sortedCircuits"
-            :id="`row-${circuit.id}`"
-            :key="circuit.id"
-            :class="[
-              'p-phase2-row',
-              {
-                'is-completed': isComplete(circuit),
-                'is-excluded': circuit.isExcluded,
-                'is-locked': isCircuitLocked(circuit) || !isP1Complete(circuit),
-                'is-editing': editingRowId === circuit.id,
-              },
-            ]"
-          >
-            <!-- 盤種別 / 盤名称 -->
-            <td>
-              <div class="p-phase2-cell__panel">
-                <span class="p-phase2-cell__ban-name">{{ circuit.banMeisho }}</span>
-                <span class="p-phase2-cell__shubetsu">{{ circuit.banShubetsu }}</span>
-              </div>
-            </td>
+    <AppTable
+      class="p-phase2__table"
+      :columns="columns"
+      :data="sortedCircuits"
+      :sort-by="sortBy"
+      :sort-order="sortOrder"
+      @sort="handleSort"
+    >
+      <template #body>
+        <tr
+          v-for="circuit in sortedCircuits"
+          :id="`row-${circuit.id}`"
+          :key="circuit.id"
+          :class="[
+            'p-phase2-row',
+            {
+              'is-completed': isComplete(circuit),
+              'is-excluded': circuit.isExcluded,
+              'is-locked': isCircuitLocked(circuit) || !isP1Complete(circuit),
+              'is-editing': editingRowId === circuit.id,
+            },
+          ]"
+        >
+          <!-- 盤種別 / 盤名称 -->
+          <td>
+            <div class="p-phase2-cell__panel">
+              <span class="p-phase2-cell__ban-name">{{ circuit.banMeisho }}</span>
+              <span class="p-phase2-cell__shubetsu">{{ circuit.banShubetsu }}</span>
+            </div>
+          </td>
 
-            <!-- 回路番号 -->
-            <td style="text-align: center;">
-              <div class="p-phase2-cell__bangou-wrap">
-                <span class="p-phase2-cell__type-badge" :class="{ 'is-three': isThreePhase(circuit) }">
-                  {{ isThreePhase(circuit) ? '動力' : '電灯' }}
+          <!-- 回路番号 -->
+          <td style="text-align: center;">
+            <div class="p-phase2-cell__bangou-wrap">
+              <span class="p-phase2-cell__type-badge" :class="{ 'is-three': isThreePhase(circuit) }">
+                {{ isThreePhase(circuit) ? '動力' : '電灯' }}
+              </span>
+              <AppKairoIcon
+                :kigou="circuit.kairoKigou"
+                :bangou="circuit.kairoBangou"
+              />
+            </div>
+          </td>
+
+          <!-- 回路名称 -->
+          <td>
+            <span class="p-phase2-cell__meisho" :title="circuit.kairoMeisho || ''">
+              {{ circuit.kairoMeisho || '-' }}
+            </span>
+          </td>
+
+          <!-- 測定相 1 (R-S / R-N) -->
+          <td style="text-align: center;">
+            <template v-if="editingRowId === circuit.id">
+              <div class="p-phase2-input-cell">
+                <span class="p-phase2-input-cell__label">{{ getPhaseLabels(circuit).phase1 }}</span>
+                <div class="p-phase2-input-cell__box">
+                  <input
+                    v-model="inputForm.rVal"
+                    type="number"
+                    step="0.1"
+                    inputmode="decimal"
+                    class="p-phase2-input"
+                    placeholder="100"
+                    @focus="handleInputFocus"
+                    @keydown.enter.prevent="saveInput(circuit)"
+                  >
+                  <span class="p-phase2-input-cell__unit">MΩ</span>
+                </div>
+              </div>
+            </template>
+            <div v-else class="p-phase2-meas-cell">
+              <span class="p-phase2-meas-cell__label">{{ getPhaseLabels(circuit).phase1 }}</span>
+              <div class="p-phase2-meas-cell__val-group">
+                <span
+                  class="p-phase2-meas-cell__val"
+                  :class="{
+                    'is-ok': circuit.p2RStatus === 'OK' || (circuit.zetsuenR !== null && circuit.zetsuenR !== undefined && circuit.zetsuenR >= phase2ThresholdMegOhm),
+                    'is-ng': circuit.p2RStatus === 'NG' || (circuit.zetsuenR !== null && circuit.zetsuenR !== undefined && circuit.zetsuenR < phase2ThresholdMegOhm),
+                  }"
+                >
+                  {{ formatMegValue(circuit.zetsuenR) }}
                 </span>
-                <AppKairoIcon
-                  :kigou="circuit.kairoKigou"
-                  :bangou="circuit.kairoBangou"
-                />
+                <span v-if="circuit.zetsuenR !== null && circuit.zetsuenR !== undefined" class="p-phase2-meas-cell__unit">MΩ</span>
               </div>
-            </td>
+              <AppBadge
+                v-if="circuit.p2RStatus"
+                :color="circuit.p2RStatus === 'OK' ? 'var(--color-status-success)' : 'var(--color-status-danger)'"
+              >
+                {{ circuit.p2RStatus }}
+              </AppBadge>
+            </div>
+          </td>
 
-            <!-- 回路名称 -->
-            <td>
-              <span class="p-phase2-cell__meisho" :title="circuit.kairoMeisho || ''">
-                {{ circuit.kairoMeisho || '-' }}
-              </span>
-            </td>
-
-            <!-- 測定相 1 (R-S / R-N) -->
-            <td style="text-align: center;">
-              <template v-if="editingRowId === circuit.id">
-                <div class="p-phase2-input-cell">
-                  <span class="p-phase2-input-cell__label">{{ getPhaseLabels(circuit).phase1 }}</span>
-                  <div class="p-phase2-input-cell__box">
-                    <input
-                      v-model="inputForm.rVal"
-                      type="number"
-                      step="0.1"
-                      inputmode="decimal"
-                      class="p-phase2-input"
-                      placeholder="100"
-                      @focus="handleInputFocus"
-                      @keydown.enter.prevent="saveInput(circuit)"
-                    >
-                    <span class="p-phase2-input-cell__unit">MΩ</span>
-                  </div>
-                </div>
-              </template>
-              <div v-else class="p-phase2-meas-cell">
-                <span class="p-phase2-meas-cell__label">{{ getPhaseLabels(circuit).phase1 }}</span>
-                <div class="p-phase2-meas-cell__val-group">
-                  <span
-                    class="p-phase2-meas-cell__val"
-                    :class="{
-                      'is-ok': circuit.p2RStatus === 'OK' || (circuit.zetsuenR !== null && circuit.zetsuenR !== undefined && circuit.zetsuenR >= phase2ThresholdMegOhm),
-                      'is-ng': circuit.p2RStatus === 'NG' || (circuit.zetsuenR !== null && circuit.zetsuenR !== undefined && circuit.zetsuenR < phase2ThresholdMegOhm),
-                    }"
+          <!-- 測定相 2 (S-T / T-N) -->
+          <td style="text-align: center;">
+            <template v-if="editingRowId === circuit.id">
+              <div class="p-phase2-input-cell">
+                <span class="p-phase2-input-cell__label">{{ getPhaseLabels(circuit).phase2 }}</span>
+                <div class="p-phase2-input-cell__box">
+                  <input
+                    v-model="inputForm.sVal"
+                    type="number"
+                    step="0.1"
+                    inputmode="decimal"
+                    class="p-phase2-input"
+                    placeholder="100"
+                    @focus="handleInputFocus"
+                    @keydown.enter.prevent="saveInput(circuit)"
                   >
-                    {{ formatMegValue(circuit.zetsuenR) }}
-                  </span>
-                  <span v-if="circuit.zetsuenR !== null && circuit.zetsuenR !== undefined" class="p-phase2-meas-cell__unit">MΩ</span>
+                  <span class="p-phase2-input-cell__unit">MΩ</span>
                 </div>
-                <AppBadge
-                  v-if="circuit.p2RStatus"
-                  :color="circuit.p2RStatus === 'OK' ? 'var(--color-status-success)' : 'var(--color-status-danger)'"
+              </div>
+            </template>
+            <div v-else class="p-phase2-meas-cell">
+              <span class="p-phase2-meas-cell__label">{{ getPhaseLabels(circuit).phase2 }}</span>
+              <div class="p-phase2-meas-cell__val-group">
+                <span
+                  class="p-phase2-meas-cell__val"
+                  :class="{
+                    'is-ok': circuit.p2SStatus === 'OK' || (circuit.zetsuenS !== null && circuit.zetsuenS !== undefined && circuit.zetsuenS >= phase2ThresholdMegOhm),
+                    'is-ng': circuit.p2SStatus === 'NG' || (circuit.zetsuenS !== null && circuit.zetsuenS !== undefined && circuit.zetsuenS < phase2ThresholdMegOhm),
+                  }"
                 >
-                  {{ circuit.p2RStatus }}
-                </AppBadge>
+                  {{ formatMegValue(circuit.zetsuenS) }}
+                </span>
+                <span v-if="circuit.zetsuenS !== null && circuit.zetsuenS !== undefined" class="p-phase2-meas-cell__unit">MΩ</span>
               </div>
-            </td>
+              <AppBadge
+                v-if="circuit.p2SStatus"
+                :color="circuit.p2SStatus === 'OK' ? 'var(--color-status-success)' : 'var(--color-status-danger)'"
+              >
+                {{ circuit.p2SStatus }}
+              </AppBadge>
+            </div>
+          </td>
 
-            <!-- 測定相 2 (S-T / T-N) -->
-            <td style="text-align: center;">
-              <template v-if="editingRowId === circuit.id">
-                <div class="p-phase2-input-cell">
-                  <span class="p-phase2-input-cell__label">{{ getPhaseLabels(circuit).phase2 }}</span>
-                  <div class="p-phase2-input-cell__box">
-                    <input
-                      v-model="inputForm.sVal"
-                      type="number"
-                      step="0.1"
-                      inputmode="decimal"
-                      class="p-phase2-input"
-                      placeholder="100"
-                      @focus="handleInputFocus"
-                      @keydown.enter.prevent="saveInput(circuit)"
-                    >
-                    <span class="p-phase2-input-cell__unit">MΩ</span>
-                  </div>
-                </div>
-              </template>
-              <div v-else class="p-phase2-meas-cell">
-                <span class="p-phase2-meas-cell__label">{{ getPhaseLabels(circuit).phase2 }}</span>
-                <div class="p-phase2-meas-cell__val-group">
-                  <span
-                    class="p-phase2-meas-cell__val"
-                    :class="{
-                      'is-ok': circuit.p2SStatus === 'OK' || (circuit.zetsuenS !== null && circuit.zetsuenS !== undefined && circuit.zetsuenS >= phase2ThresholdMegOhm),
-                      'is-ng': circuit.p2SStatus === 'NG' || (circuit.zetsuenS !== null && circuit.zetsuenS !== undefined && circuit.zetsuenS < phase2ThresholdMegOhm),
-                    }"
+          <!-- 測定相 3 (R-T / R-T) -->
+          <td style="text-align: center;">
+            <template v-if="editingRowId === circuit.id">
+              <div class="p-phase2-input-cell">
+                <span class="p-phase2-input-cell__label">{{ getPhaseLabels(circuit).phase3 }}</span>
+                <div class="p-phase2-input-cell__box">
+                  <input
+                    v-model="inputForm.tVal"
+                    type="number"
+                    step="0.1"
+                    inputmode="decimal"
+                    class="p-phase2-input"
+                    placeholder="100"
+                    @focus="handleInputFocus"
+                    @keydown.enter.prevent="saveInput(circuit)"
                   >
-                    {{ formatMegValue(circuit.zetsuenS) }}
-                  </span>
-                  <span v-if="circuit.zetsuenS !== null && circuit.zetsuenS !== undefined" class="p-phase2-meas-cell__unit">MΩ</span>
+                  <span class="p-phase2-input-cell__unit">MΩ</span>
                 </div>
-                <AppBadge
-                  v-if="circuit.p2SStatus"
-                  :color="circuit.p2SStatus === 'OK' ? 'var(--color-status-success)' : 'var(--color-status-danger)'"
+              </div>
+            </template>
+            <div v-else class="p-phase2-meas-cell">
+              <span class="p-phase2-meas-cell__label">{{ getPhaseLabels(circuit).phase3 }}</span>
+              <div class="p-phase2-meas-cell__val-group">
+                <span
+                  class="p-phase2-meas-cell__val"
+                  :class="{
+                    'is-ok': circuit.p2TStatus === 'OK' || (circuit.zetsuenT !== null && circuit.zetsuenT !== undefined && circuit.zetsuenT >= phase2ThresholdMegOhm),
+                    'is-ng': circuit.p2TStatus === 'NG' || (circuit.zetsuenT !== null && circuit.zetsuenT !== undefined && circuit.zetsuenT < phase2ThresholdMegOhm),
+                  }"
                 >
-                  {{ circuit.p2SStatus }}
-                </AppBadge>
+                  {{ formatMegValue(circuit.zetsuenT) }}
+                </span>
+                <span v-if="circuit.zetsuenT !== null && circuit.zetsuenT !== undefined" class="p-phase2-meas-cell__unit">MΩ</span>
               </div>
-            </td>
+              <AppBadge
+                v-if="circuit.p2TStatus"
+                :color="circuit.p2TStatus === 'OK' ? 'var(--color-status-success)' : 'var(--color-status-danger)'"
+              >
+                {{ circuit.p2TStatus }}
+              </AppBadge>
+            </div>
+          </td>
 
-            <!-- 測定相 3 (R-T / R-T) -->
-            <td style="text-align: center;">
-              <template v-if="editingRowId === circuit.id">
-                <div class="p-phase2-input-cell">
-                  <span class="p-phase2-input-cell__label">{{ getPhaseLabels(circuit).phase3 }}</span>
-                  <div class="p-phase2-input-cell__box">
-                    <input
-                      v-model="inputForm.tVal"
-                      type="number"
-                      step="0.1"
-                      inputmode="decimal"
-                      class="p-phase2-input"
-                      placeholder="100"
-                      @focus="handleInputFocus"
-                      @keydown.enter.prevent="saveInput(circuit)"
-                    >
-                    <span class="p-phase2-input-cell__unit">MΩ</span>
-                  </div>
-                </div>
+          <!-- 備考 -->
+          <td>
+            <template v-if="editingRowId === circuit.id">
+              <AppInput v-model="inputForm.remarks" size="sm" placeholder="備考" />
+            </template>
+            <span v-else class="p-phase2-cell__remarks" :title="circuit.p2Remarks || ''">
+              {{ circuit.p2Remarks || '-' }}
+            </span>
+          </td>
+
+          <!-- 操作 -->
+          <td style="text-align: center;">
+            <div class="p-phase2-actions">
+              <!-- 幹線未完了による操作不可 -->
+              <template v-if="isCircuitLocked(circuit)">
+                <span class="c-text-note c-text-note--strong">⏸ 幹線未了</span>
               </template>
-              <div v-else class="p-phase2-meas-cell">
-                <span class="p-phase2-meas-cell__label">{{ getPhaseLabels(circuit).phase3 }}</span>
-                <div class="p-phase2-meas-cell__val-group">
-                  <span
-                    class="p-phase2-meas-cell__val"
-                    :class="{
-                      'is-ok': circuit.p2TStatus === 'OK' || (circuit.zetsuenT !== null && circuit.zetsuenT !== undefined && circuit.zetsuenT >= phase2ThresholdMegOhm),
-                      'is-ng': circuit.p2TStatus === 'NG' || (circuit.zetsuenT !== null && circuit.zetsuenT !== undefined && circuit.zetsuenT < phase2ThresholdMegOhm),
-                    }"
-                  >
-                    {{ formatMegValue(circuit.zetsuenT) }}
-                  </span>
-                  <span v-if="circuit.zetsuenT !== null && circuit.zetsuenT !== undefined" class="p-phase2-meas-cell__unit">MΩ</span>
-                </div>
-                <AppBadge
-                  v-if="circuit.p2TStatus"
-                  :color="circuit.p2TStatus === 'OK' ? 'var(--color-status-success)' : 'var(--color-status-danger)'"
+
+              <!-- 前フェーズ（P1）未完了による操作不可 -->
+              <template v-else-if="!isP1Complete(circuit)">
+                <span class="c-text-note c-text-note--strong">⏸ P1未了</span>
+              </template>
+
+              <!-- 手入力編集モード中 -->
+              <template v-else-if="editingRowId === circuit.id">
+                <AppButton
+                  variant="success"
+                  size="sm"
+                  :loading="isActionLoading[circuit.id]"
+                  @click="saveInput(circuit)"
                 >
-                  {{ circuit.p2TStatus }}
-                </AppBadge>
-              </div>
-            </td>
-
-            <!-- 備考 -->
-            <td>
-              <template v-if="editingRowId === circuit.id">
-                <AppInput v-model="inputForm.remarks" size="sm" placeholder="備考" />
+                  確定
+                </AppButton>
+                <AppButton
+                  variant="secondary"
+                  size="sm"
+                  @click="cancelInput"
+                >
+                  取消
+                </AppButton>
               </template>
-              <span v-else class="p-phase2-cell__remarks" :title="circuit.p2Remarks || ''">
-                {{ circuit.p2Remarks || '-' }}
-              </span>
-            </td>
 
-            <!-- 操作 -->
-            <td style="text-align: center;">
-              <div class="p-phase2-actions">
-                <!-- 幹線未完了による操作不可 -->
-                <template v-if="isCircuitLocked(circuit)">
-                  <span class="c-text-note c-text-note--strong">⏸ 幹線未了</span>
-                </template>
-
-                <!-- 前フェーズ（P1）未完了による操作不可 -->
-                <template v-else-if="!isP1Complete(circuit)">
-                  <span class="c-text-note c-text-note--strong">⏸ P1未了</span>
-                </template>
-
-                <!-- 手入力編集モード中 -->
-                <template v-else-if="editingRowId === circuit.id">
-                  <AppButton
-                    variant="success"
-                    size="sm"
-                    :loading="isActionLoading[circuit.id]"
-                    @click="saveInput(circuit)"
-                  >
-                    確定
-                  </AppButton>
-                  <AppButton
-                    variant="secondary"
-                    size="sm"
-                    @click="cancelInput"
-                  >
-                    取消
-                  </AppButton>
-                </template>
-
-                <!-- 通常モード：確定済み -->
-                <template v-else-if="isComplete(circuit)">
-                  <AppButton
-                    variant="danger"
-                    size="sm"
-                    :loading="isActionLoading[circuit.id]"
-                    @click="clearPhase2(circuit)"
-                  >
-                    解除
-                  </AppButton>
-                  <AppButton
-                    variant="secondary"
-                    size="sm"
-                    @click="startInput(circuit)"
-                  >
-                    変更
-                  </AppButton>
-                </template>
-
-                <!-- 通常モード：未確定 -->
-                <template v-else>
-                  <AppButton
-                    variant="primary"
-                    size="sm"
-                    :disabled="circuit.isExcluded"
-                    :loading="isActionLoading[circuit.id]"
-                    @click="handleQuickOk(circuit)"
-                  >
-                    全相OK
-                  </AppButton>
-                  <AppButton
-                    variant="secondary"
-                    size="sm"
-                    :disabled="circuit.isExcluded"
-                    @click="startInput(circuit)"
-                  >
-                    測定入力
-                  </AppButton>
-                </template>
-              </div>
-            </td>
-
-            <!-- 測定者 / 日時 -->
-            <td style="text-align: center;">
-              <template v-if="circuit.p2Worker">
-                <div class="p-phase2-cell__worker">
-                  <strong>{{ circuit.p2Worker }}</strong>
-                  <span class="p-phase2-cell__date">{{ formatDate(circuit.p2ConfirmedAt) }}</span>
-                </div>
+              <!-- 通常モード：確定済み -->
+              <template v-else-if="isComplete(circuit)">
+                <AppButton
+                  variant="danger"
+                  size="sm"
+                  :loading="isActionLoading[circuit.id]"
+                  @click="clearPhase2(circuit)"
+                >
+                  解除
+                </AppButton>
+                <AppButton
+                  variant="secondary"
+                  size="sm"
+                  @click="startInput(circuit)"
+                >
+                  変更
+                </AppButton>
               </template>
-              <span v-else class="p-phase2-cell__dash">-</span>
-            </td>
-          </tr>
-        </template>
-      </AppTable>
-    </div>
+
+              <!-- 通常モード：未確定 -->
+              <template v-else>
+                <AppButton
+                  variant="primary"
+                  size="sm"
+                  :disabled="circuit.isExcluded"
+                  :loading="isActionLoading[circuit.id]"
+                  @click="handleQuickOk(circuit)"
+                >
+                  全相OK
+                </AppButton>
+                <AppButton
+                  variant="secondary"
+                  size="sm"
+                  :disabled="circuit.isExcluded"
+                  @click="startInput(circuit)"
+                >
+                  測定入力
+                </AppButton>
+              </template>
+            </div>
+          </td>
+
+          <!-- 測定者 / 日時 -->
+          <td style="text-align: center;">
+            <template v-if="circuit.p2Worker">
+              <div class="p-phase2-cell__worker">
+                <strong>{{ circuit.p2Worker }}</strong>
+                <span class="p-phase2-cell__date">{{ formatShortDateTime(circuit.p2ConfirmedAt) }}</span>
+              </div>
+            </template>
+            <span v-else class="p-phase2-cell__dash">-</span>
+          </td>
+        </tr>
+      </template>
+    </AppTable>
   </div>
 </template>
 
@@ -589,7 +581,7 @@ const {
   gap: var(--space-section-gap);
   height: 100%;
 
-  &__table-wrapper {
+  &__table {
     flex: 1;
     min-height: 400px;
   }

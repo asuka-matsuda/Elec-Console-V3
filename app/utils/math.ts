@@ -119,8 +119,8 @@ export function renderMath(mathStr: string, isDisplay = true): string {
     return katex.renderToString(mathStr, {
       displayMode: isDisplay,
       throwOnError: false,
-      trust: false,
-      strict: false,
+      trust: true,
+      strict: 'ignore',
     })
   }
   catch (e) {

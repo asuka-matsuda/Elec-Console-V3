@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { toRef } from 'vue'
 
-import AppColorPicker from '~/components/AppColorPicker.vue'
 import type { EventType } from '~/composables/portal/useCalendar'
 import { useCalendarTypeSettings } from '~/composables/portal/useCalendarTypeSettings'
+import { DEFAULT_COLOR_PRESETS } from '~/constants/colors'
 
 const isOpen = defineModel<boolean>({ default: false })
 
@@ -14,6 +14,8 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'save', types: EventType[]): void
 }>()
+
+const PRESET_COLORS = DEFAULT_COLOR_PRESETS.map(p => p.value)
 
 const {
   types,
@@ -34,8 +36,8 @@ const {
         カレンダーに表示する予定種別とテーマカラーを設定します。
       </p>
 
-      <div class="p-type-settings__list">
-        <div v-for="(t, index) in types" :key="t.id" class="p-type-item">
+      <ul class="p-type-settings__list">
+        <li v-for="(t, index) in types" :key="t.id" class="p-type-item">
           <div class="p-type-item__main">
             <div
               class="p-type-item__preview"
@@ -63,11 +65,18 @@ const {
           </div>
 
           <div class="p-type-item__colors">
-            <span class="p-type-item__color-label">カラー:</span>
-            <AppColorPicker v-model="t.color" />
+            <button
+              v-for="c in PRESET_COLORS"
+              :key="c"
+              type="button"
+              class="p-type-item__color-dot"
+              :class="{ 'is-selected': t.color === c }"
+              :style="{ '--dot-color': c }"
+              @click="t.color = c"
+            ></button>
           </div>
-        </div>
-      </div>
+        </li>
+      </ul>
 
       <div class="p-type-settings__add">
         <AppButton
@@ -110,7 +119,11 @@ const {
     gap: var(--space-2);
 
     max-height: 400px;
+    margin: 0;
     padding-right: var(--space-1);
+    padding-left: 0;
+
+    list-style: none;
   }
 
   &__add {

@@ -62,13 +62,6 @@ const isComplete = (c: CircuitItem) => {
   return Boolean(c.p1ConfirmedAt && c.p1Kakunin && c.p1Mashishime)
 }
 
-const formatDate = (dateStr?: string | null) => {
-  if (!dateStr) return '-'
-  const d = new Date(dateStr)
-
-  return `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
-}
-
 const scrollToCircuit = (circuit: CircuitItem) => {
   const el = document.getElementById(`row-${circuit.id}`)
 
@@ -182,188 +175,187 @@ const {
     </AppPanel>
 
     <!-- 回路一覧テーブル -->
-    <div class="p-phase1__table-wrapper">
-      <AppTable
-        :columns="columns"
-        :data="sortedCircuits"
-        :sort-by="sortBy"
-        :sort-order="sortOrder"
-        @sort="handleSort"
-      >
-        <template #body>
-          <tr
-            v-for="circuit in sortedCircuits"
-            :id="`row-${circuit.id}`"
-            :key="circuit.id"
-            :class="[
-              'p-phase1-row',
-              {
-                'is-completed': isComplete(circuit),
-                'is-excluded': circuit.isExcluded,
-                'is-locked': isCircuitLocked(circuit),
-                'is-editing': editingRowId === circuit.id,
-              },
-            ]"
-          >
-            <!-- 盤種別 / 盤名称 -->
-            <td>
-              <div class="p-phase1-cell__panel">
-                <span class="p-phase1-cell__ban-name">{{ circuit.banMeisho }}</span>
-                <span class="p-phase1-cell__shubetsu">{{ circuit.banShubetsu }}</span>
-              </div>
-            </td>
+    <AppTable
+      class="p-phase1__table"
+      :columns="columns"
+      :data="sortedCircuits"
+      :sort-by="sortBy"
+      :sort-order="sortOrder"
+      @sort="handleSort"
+    >
+      <template #body>
+        <tr
+          v-for="circuit in sortedCircuits"
+          :id="`row-${circuit.id}`"
+          :key="circuit.id"
+          :class="[
+            'p-phase1-row',
+            {
+              'is-completed': isComplete(circuit),
+              'is-excluded': circuit.isExcluded,
+              'is-locked': isCircuitLocked(circuit),
+              'is-editing': editingRowId === circuit.id,
+            },
+          ]"
+        >
+          <!-- 盤種別 / 盤名称 -->
+          <td>
+            <div class="p-phase1-cell__panel">
+              <span class="p-phase1-cell__ban-name">{{ circuit.banMeisho }}</span>
+              <span class="p-phase1-cell__shubetsu">{{ circuit.banShubetsu }}</span>
+            </div>
+          </td>
 
-            <!-- 回路番号 -->
-            <td style="text-align: center;">
-              <template v-if="editingRowId === circuit.id">
-                <AppInput v-model="editForm.kairoBangou" size="sm" placeholder="番号" />
-              </template>
-              <div v-else class="p-phase1-cell__bangou-wrap">
-                <AppKairoIcon
-                  :kigou="circuit.kairoKigou"
-                  :bangou="circuit.kairoBangou"
+          <!-- 回路番号 -->
+          <td style="text-align: center;">
+            <template v-if="editingRowId === circuit.id">
+              <AppInput v-model="editForm.kairoBangou" size="sm" placeholder="番号" />
+            </template>
+            <div v-else class="p-phase1-cell__bangou-wrap">
+              <AppKairoIcon
+                :kigou="circuit.kairoKigou"
+                :bangou="circuit.kairoBangou"
+              />
+            </div>
+          </td>
+
+          <!-- 回路名称 -->
+          <td>
+            <template v-if="editingRowId === circuit.id">
+              <AppInput v-model="editForm.kairoMeisho" size="sm" placeholder="回路名称" />
+            </template>
+            <span v-else class="p-phase1-cell__text p-phase1-cell__meisho" :title="circuit.kairoMeisho || ''">
+              {{ circuit.kairoMeisho || '-' }}
+            </span>
+          </td>
+
+          <!-- 配線 / 接地 -->
+          <td>
+            <template v-if="editingRowId === circuit.id">
+              <div class="p-phase1-cell__edit-col">
+                <div class="p-phase1-cell__inline-inputs">
+                  <AppInput v-model="editForm.cableList" size="sm" placeholder="ケーブル" />
+                  <AppInput v-model="editForm.haisenJousuu" size="sm" placeholder="条数" style="width: 55px;" />
+                </div>
+                <AppInput v-model="editForm.setsuchiList" size="sm" placeholder="接地リスト" />
+              </div>
+            </template>
+            <div v-else class="p-phase1-cell__wiring">
+              <div class="p-phase1-cell__cable-line">
+                <span class="p-phase1-cell__cable">{{ circuit.cableList || '-' }}</span>
+                <span v-if="circuit.haisenJousuu" class="p-phase1-cell__jousuu">({{ circuit.haisenJousuu }})</span>
+              </div>
+              <span class="p-phase1-cell__setsuchi" :title="circuit.setsuchiList || ''">
+                {{ circuit.setsuchiList ? `E: ${circuit.setsuchiList}` : '-' }}
+              </span>
+            </div>
+          </td>
+
+          <!-- 確認 / 増締め (チェックボックス) -->
+          <td style="text-align: center;">
+            <div class="p-phase1-cell__checks">
+              <label class="p-phase1-check-item" title="回路確認">
+                <AppCheckbox
+                  v-model="circuit.p1Kakunin"
+                  :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
                 />
-              </div>
-            </td>
+                <span class="p-phase1-check-item__label">確認</span>
+              </label>
+              <label class="p-phase1-check-item" title="増締め確認">
+                <AppCheckbox
+                  v-model="circuit.p1Mashishime"
+                  :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
+                />
+                <span class="p-phase1-check-item__label">増締</span>
+              </label>
+            </div>
+          </td>
 
-            <!-- 回路名称 -->
-            <td>
-              <template v-if="editingRowId === circuit.id">
-                <AppInput v-model="editForm.kairoMeisho" size="sm" placeholder="回路名称" />
+          <!-- 備考 -->
+          <td>
+            <template v-if="editingRowId === circuit.id">
+              <AppInput v-model="editForm.remarks" size="sm" placeholder="備考" />
+            </template>
+            <span v-else class="p-phase1-cell__text p-phase1-cell__remarks">
+              {{ circuit.p1Remarks || '-' }}
+            </span>
+          </td>
+
+          <!-- 操作 -->
+          <td style="text-align: center;">
+            <div class="p-phase1-actions">
+              <!-- 幹線未完了による操作不可 -->
+              <template v-if="isCircuitLocked(circuit)">
+                <span class="c-text-note c-text-note--strong">⏸ 幹線未了</span>
               </template>
-              <span v-else class="p-phase1-cell__text p-phase1-cell__meisho" :title="circuit.kairoMeisho || ''">
-                {{ circuit.kairoMeisho || '-' }}
-              </span>
-            </td>
 
-            <!-- 配線 / 接地 -->
-            <td>
-              <template v-if="editingRowId === circuit.id">
-                <div class="p-phase1-cell__edit-col">
-                  <div class="p-phase1-cell__inline-inputs">
-                    <AppInput v-model="editForm.cableList" size="sm" placeholder="ケーブル" />
-                    <AppInput v-model="editForm.haisenJousuu" size="sm" placeholder="条数" style="width: 55px;" />
-                  </div>
-                  <AppInput v-model="editForm.setsuchiList" size="sm" placeholder="接地リスト" />
-                </div>
+              <!-- 編集モード中 -->
+              <template v-else-if="editingRowId === circuit.id">
+                <AppButton
+                  variant="success"
+                  size="sm"
+                  :loading="isActionLoading[circuit.id]"
+                  @click="saveEdit(circuit)"
+                >
+                  保存
+                </AppButton>
+                <AppButton
+                  variant="secondary"
+                  size="sm"
+                  @click="cancelEdit"
+                >
+                  取消
+                </AppButton>
               </template>
-              <div v-else class="p-phase1-cell__wiring">
-                <div class="p-phase1-cell__cable-line">
-                  <span class="p-phase1-cell__cable">{{ circuit.cableList || '-' }}</span>
-                  <span v-if="circuit.haisenJousuu" class="p-phase1-cell__jousuu">({{ circuit.haisenJousuu }})</span>
-                </div>
-                <span class="p-phase1-cell__setsuchi" :title="circuit.setsuchiList || ''">
-                  {{ circuit.setsuchiList ? `E: ${circuit.setsuchiList}` : '-' }}
-                </span>
-              </div>
-            </td>
 
-            <!-- 確認 / 増締め (チェックボックス) -->
-            <td style="text-align: center;">
-              <div class="p-phase1-cell__checks">
-                <label class="p-phase1-check-item" title="回路確認">
-                  <AppCheckbox
-                    v-model="circuit.p1Kakunin"
-                    :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
-                  />
-                  <span class="p-phase1-check-item__label">確認</span>
-                </label>
-                <label class="p-phase1-check-item" title="増締め確認">
-                  <AppCheckbox
-                    v-model="circuit.p1Mashishime"
-                    :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
-                  />
-                  <span class="p-phase1-check-item__label">増締</span>
-                </label>
-              </div>
-            </td>
-
-            <!-- 備考 -->
-            <td>
-              <template v-if="editingRowId === circuit.id">
-                <AppInput v-model="editForm.remarks" size="sm" placeholder="備考" />
+              <!-- 通常モード：確定済み -->
+              <template v-else-if="isComplete(circuit)">
+                <AppButton
+                  variant="danger"
+                  size="sm"
+                  :loading="isActionLoading[circuit.id]"
+                  @click="clearPhase1(circuit)"
+                >
+                  解除
+                </AppButton>
               </template>
-              <span v-else class="p-phase1-cell__text p-phase1-cell__remarks">
-                {{ circuit.p1Remarks || '-' }}
-              </span>
-            </td>
 
-            <!-- 操作 -->
-            <td style="text-align: center;">
-              <div class="p-phase1-actions">
-                <!-- 幹線未完了による操作不可 -->
-                <template v-if="isCircuitLocked(circuit)">
-                  <span class="c-text-note c-text-note--strong">⏸ 幹線未了</span>
-                </template>
-
-                <!-- 編集モード中 -->
-                <template v-else-if="editingRowId === circuit.id">
-                  <AppButton
-                    variant="success"
-                    size="sm"
-                    :loading="isActionLoading[circuit.id]"
-                    @click="saveEdit(circuit)"
-                  >
-                    保存
-                  </AppButton>
-                  <AppButton
-                    variant="secondary"
-                    size="sm"
-                    @click="cancelEdit"
-                  >
-                    取消
-                  </AppButton>
-                </template>
-
-                <!-- 通常モード：確定済み -->
-                <template v-else-if="isComplete(circuit)">
-                  <AppButton
-                    variant="danger"
-                    size="sm"
-                    :loading="isActionLoading[circuit.id]"
-                    @click="clearPhase1(circuit)"
-                  >
-                    解除
-                  </AppButton>
-                </template>
-
-                <!-- 通常モード：未確定 -->
-                <template v-else>
-                  <AppButton
-                    variant="primary"
-                    size="sm"
-                    :disabled="!circuit.p1Kakunin || !circuit.p1Mashishime || circuit.isExcluded"
-                    :loading="isActionLoading[circuit.id]"
-                    @click="confirmPhase1(circuit)"
-                  >
-                    確定
-                  </AppButton>
-                  <AppButton
-                    variant="secondary"
-                    size="sm"
-                    :disabled="circuit.isExcluded"
-                    @click="startEdit(circuit)"
-                  >
-                    編集
-                  </AppButton>
-                </template>
-              </div>
-            </td>
-
-            <!-- 測定者 / 日時 -->
-            <td style="text-align: center;">
-              <template v-if="circuit.p1Worker">
-                <div class="p-phase1-cell__worker">
-                  <strong>{{ circuit.p1Worker }}</strong>
-                  <span class="p-phase1-cell__date">{{ formatDate(circuit.p1ConfirmedAt) }}</span>
-                </div>
+              <!-- 通常モード：未確定 -->
+              <template v-else>
+                <AppButton
+                  variant="primary"
+                  size="sm"
+                  :disabled="!circuit.p1Kakunin || !circuit.p1Mashishime || circuit.isExcluded"
+                  :loading="isActionLoading[circuit.id]"
+                  @click="confirmPhase1(circuit)"
+                >
+                  確定
+                </AppButton>
+                <AppButton
+                  variant="secondary"
+                  size="sm"
+                  :disabled="circuit.isExcluded"
+                  @click="startEdit(circuit)"
+                >
+                  編集
+                </AppButton>
               </template>
-              <span v-else class="p-phase1-cell__dash">-</span>
-            </td>
-          </tr>
-        </template>
-      </AppTable>
-    </div>
+            </div>
+          </td>
+
+          <!-- 測定者 / 日時 -->
+          <td style="text-align: center;">
+            <template v-if="circuit.p1Worker">
+              <div class="p-phase1-cell__worker">
+                <strong>{{ circuit.p1Worker }}</strong>
+                <span class="p-phase1-cell__date">{{ formatShortDateTime(circuit.p1ConfirmedAt) }}</span>
+              </div>
+            </template>
+            <span v-else class="p-phase1-cell__dash">-</span>
+          </td>
+        </tr>
+      </template>
+    </AppTable>
   </div>
 </template>
 
@@ -374,7 +366,7 @@ const {
   gap: var(--space-section-gap);
   height: 100%;
 
-  &__table-wrapper {
+  &__table {
     flex: 1;
     min-height: 400px;
   }

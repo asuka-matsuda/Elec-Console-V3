@@ -28,7 +28,7 @@ const pct = computed(() => {
 </script>
 
 <template>
-  <div :class="['c-step-indicator__item', { 'is-completed': isCompleted, 'is-disabled': disabled }]">
+  <li :class="['c-step-indicator__item', { 'is-completed': isCompleted, 'is-disabled': disabled }]">
     <div class="c-step-indicator__node">
       <AppIcon v-if="isCompleted" name="check" size="sm" />
       <span v-else>{{ stepNum }}</span>
@@ -54,7 +54,7 @@ const pct = computed(() => {
         試験入力
       </AppButton>
     </div>
-  </div>
+  </li>
 </template>
 
 <style scoped lang="scss">
@@ -66,6 +66,8 @@ const pct = computed(() => {
   align-items: center;
 
   width: 100%;
+
+  list-style: none;
 
   &::after {
     content: "";

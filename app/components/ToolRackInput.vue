@@ -29,12 +29,11 @@ const strongCategories = computed(() => getCableCategories('strong'))
 const weakCategories = computed(() => getCableCategories('weak'))
 
 const cableColumns: TableColumn[] = [
-  { key: 'no', label: 'No.', width: '44px', align: 'center' },
-  { key: 'category', label: 'ケーブル種別', width: '32%' },
-  { key: 'cableIdx', label: 'サイズ', width: '36%' },
-  { key: 'count', label: '本数', width: '90px' },
-  { key: 'spec', label: '外径', align: 'right' },
-  { key: 'actions', label: '', width: '44px', align: 'center' },
+  { key: 'category', label: 'ケーブル種別', width: '27%' },
+  { key: 'cableIdx', label: 'サイズ', width: '31%' },
+  { key: 'count', label: '本数', width: '74px' },
+  { key: 'spec', label: '外径', width: '84px', align: 'right' },
+  { key: 'actions', label: '', width: '52px', align: 'center' },
 ]
 
 const getCableSpecText = (cableIdx: string): string => {
@@ -191,12 +190,9 @@ const handleAddCable = () => {
       >
         <template #body>
           <tr
-            v-for="(cable, index) in inputs.strongCablesUI"
+            v-for="cable in inputs.strongCablesUI"
             :key="cable.id"
           >
-            <td style="text-align: center;">
-              {{ index + 1 }}
-            </td>
             <td>
               <AppSelect
                 v-model="cable.category"
@@ -231,7 +227,7 @@ const handleAddCable = () => {
             <td style="text-align: right;">
               {{ getCableSpecText(cable.cableIdx) }}
             </td>
-            <td style="text-align: center;">
+            <td class="action-cell">
               <AppButton
                 variant="danger"
                 size="sm"
@@ -255,12 +251,9 @@ const handleAddCable = () => {
       >
         <template #body>
           <tr
-            v-for="(cable, index) in inputs.weakCablesUI"
+            v-for="cable in inputs.weakCablesUI"
             :key="cable.id"
           >
-            <td style="text-align: center;">
-              {{ index + 1 }}
-            </td>
             <td>
               <AppSelect
                 v-model="cable.category"
@@ -295,7 +288,7 @@ const handleAddCable = () => {
             <td style="text-align: right;">
               {{ getCableSpecText(cable.cableIdx) }}
             </td>
-            <td style="text-align: center;">
+            <td class="action-cell">
               <AppButton
                 variant="danger"
                 size="sm"
@@ -389,5 +382,10 @@ const handleAddCable = () => {
 
 .rack-table {
   width: 100%;
+}
+
+.action-cell {
+  padding-inline: var(--space-1) !important;
+  text-align: center;
 }
 </style>

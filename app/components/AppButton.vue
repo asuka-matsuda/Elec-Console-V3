@@ -17,6 +17,7 @@ const {
   disabled = false,
   loading = false,
   icon,
+  iconOnly = false,
   block,
 } = defineProps<AppButtonProps>()
 
@@ -38,6 +39,7 @@ const target = computed(() => to || href)
       {
         'c-btn--block': block,
         'c-btn--loading': loading,
+        'c-btn--icon-only': iconOnly,
         'is-disabled': !isClickable,
       },
     ]"
@@ -135,6 +137,12 @@ const target = computed(() => to || href)
 
   &--block {
     width: 100%;
+  }
+
+  &--icon-only {
+    width: 2.6em;
+    min-width: 2.6em;
+    padding-inline: 0;
   }
 
   &--loading {

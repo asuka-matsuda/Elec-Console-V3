@@ -3,10 +3,18 @@
  * AppInputGroup
  * Input と Select やテキストアドオンを連結して表示するためのレイアウトコンポーネント。
  */
+withDefaults(
+  defineProps<{
+    size?: 'sm' | 'md'
+  }>(),
+  {
+    size: 'md',
+  },
+)
 </script>
 
 <template>
-  <div class="c-input-group">
+  <div :class="['c-input-group', `c-input-group--${size}`]">
     <slot />
     <div v-if="$slots.append" class="c-input-group__append">
       <slot name="append" />
@@ -39,15 +47,33 @@
   &__append {
     display: flex;
 
-    :deep(.c-custom-select__value),
     :deep(.c-input-addon) {
+      user-select: none;
+
+      display: inline-flex;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+
+      padding-block: 0.3em;
+      padding-inline: 0.8em;
+      border: var(--border-width-base) solid var(--color-border);
       border-left: none;
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-secondary);
+      white-space: nowrap;
+
+      background-color: color-mix(in srgb, var(--surface-bg-elevated) 70%, var(--color-border) 30%);
     }
 
     :deep(.c-custom-select__value) {
       padding-inline: 0.8em;
+      border-left: none;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
 
       &:focus,
       &:focus-visible,
@@ -67,6 +93,13 @@
         position: relative;
         z-index: 2;
       }
+    }
+  }
+
+  &--sm {
+    :deep(.c-input-addon) {
+      padding-inline: 0.6em;
+      font-size: var(--font-size-xs);
     }
   }
 }

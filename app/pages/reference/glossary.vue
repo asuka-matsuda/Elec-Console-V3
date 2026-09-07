@@ -68,7 +68,7 @@ const categoryColorMap: Record<string, string> = {
       </AppFilterPanel>
     </aside>
 
-    <main class="glossary-main">
+    <div class="glossary-main">
       <div v-if="filteredGlossary.length > 0" class="glossary-list">
         <AppPanel
           v-for="item in filteredGlossary"
@@ -117,7 +117,7 @@ const categoryColorMap: Record<string, string> = {
         title="該当する用語が見つかりません"
         description="検索キーワードまたは五十音・工種フィルターの条件を変更してください。"
       />
-    </main>
+    </div>
   </div>
 </template>
 

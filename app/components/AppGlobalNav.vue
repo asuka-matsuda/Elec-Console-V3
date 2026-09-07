@@ -76,21 +76,25 @@ onMounted(() => {
           class="section-header"
         />
 
-        <div class="list">
-          <component
-            :is="item.disabled ? 'button' : NuxtLink"
+        <ul class="list">
+          <li
             v-for="item in section.items"
             :key="item.href"
-            :to="item.disabled ? undefined : item.href"
-            :type="item.disabled ? 'button' : undefined"
-            :disabled="item.disabled || undefined"
-            class="nav-link"
-            @click="item.disabled ? undefined : closeSidebar()"
+            class="nav-item"
           >
-            <AppIcon :name="item.icon" size="md" />
-            <span class="nav-link-text">{{ item.text }}</span>
-          </component>
-        </div>
+            <component
+              :is="item.disabled ? 'button' : NuxtLink"
+              :to="item.disabled ? undefined : item.href"
+              :type="item.disabled ? 'button' : undefined"
+              :disabled="item.disabled || undefined"
+              class="nav-link"
+              @click="item.disabled ? undefined : closeSidebar()"
+            >
+              <AppIcon :name="item.icon" size="md" />
+              <span class="nav-link-text">{{ item.text }}</span>
+            </component>
+          </li>
+        </ul>
       </section>
     </nav>
   </aside>
@@ -171,6 +175,17 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.nav-item {
+  display: flex;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-link {
@@ -187,6 +202,7 @@ onMounted(() => {
   gap: var(--space-2);
   align-items: center;
 
+  width: 100%;
   padding: var(--space-1) var(--space-3);
   border: var(--border-width-base) solid transparent;
   border-radius: var(--radius-sm);

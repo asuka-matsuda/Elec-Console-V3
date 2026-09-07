@@ -78,11 +78,11 @@ onMounted(() => {
     </AppSectionHeader>
 
     <div class="l-grid l-grid--2col-2-1">
-      <div class="p-site-dashboard__calendar">
+      <section class="p-site-dashboard__calendar" aria-label="現場スケジュール">
         <Calendar :site-id="siteId" />
-      </div>
+      </section>
 
-      <div class="p-site-dashboard__sidebar">
+      <aside class="p-site-dashboard__sidebar" aria-label="現場関連機能">
         <PersonalTodo :site-id="siteId" />
 
         <AppButton
@@ -93,7 +93,7 @@ onMounted(() => {
           <AppIcon name="zap" size="sm" />
           送電試験ダッシュボードへ
         </AppButton>
-      </div>
+      </aside>
     </div>
   </div>
 </template>

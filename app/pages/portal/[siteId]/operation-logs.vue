@@ -119,133 +119,129 @@ const getActionBadgeColor = (action: string) => {
     </AppSectionHeader>
 
     <!-- 検索・フィルタリングコントロール -->
-    <AppPanel variant="hud">
-      <div class="p-operation-logs-filters">
-        <div class="p-operation-logs-filters__group">
-          <label class="p-operation-logs-filters__label">作業者:</label>
-          <AppSelect
-            v-model="selectedWorker"
-            :options="workerOptions"
-            class="p-operation-logs-filters__select"
-          />
-        </div>
+    <AppPanel variant="hud" class="p-operation-logs-filters">
+      <div class="p-operation-logs-filters__group">
+        <label class="p-operation-logs-filters__label">作業者:</label>
+        <AppSelect
+          v-model="selectedWorker"
+          :options="workerOptions"
+          class="p-operation-logs-filters__select"
+        />
+      </div>
 
-        <div class="p-operation-logs-filters__group">
-          <label class="p-operation-logs-filters__label">アクション:</label>
-          <AppSelect
-            v-model="selectedAction"
-            :options="actionOptions"
-            class="p-operation-logs-filters__select"
-          />
-        </div>
+      <div class="p-operation-logs-filters__group">
+        <label class="p-operation-logs-filters__label">アクション:</label>
+        <AppSelect
+          v-model="selectedAction"
+          :options="actionOptions"
+          class="p-operation-logs-filters__select"
+        />
+      </div>
 
-        <div class="p-operation-logs-filters__group">
-          <label class="p-operation-logs-filters__label">対象盤:</label>
-          <AppSelect
-            v-model="selectedTargetBan"
-            :options="targetBanOptions"
-            class="p-operation-logs-filters__select"
-          />
-        </div>
+      <div class="p-operation-logs-filters__group">
+        <label class="p-operation-logs-filters__label">対象盤:</label>
+        <AppSelect
+          v-model="selectedTargetBan"
+          :options="targetBanOptions"
+          class="p-operation-logs-filters__select"
+        />
+      </div>
 
-        <div class="p-operation-logs-filters__group">
-          <label class="p-operation-logs-filters__label">表示件数:</label>
-          <AppSelect
-            v-model="limit"
-            :options="limitOptions"
-            class="p-operation-logs-filters__select p-operation-logs-filters__select--sm"
-          />
-        </div>
+      <div class="p-operation-logs-filters__group">
+        <label class="p-operation-logs-filters__label">表示件数:</label>
+        <AppSelect
+          v-model="limit"
+          :options="limitOptions"
+          class="p-operation-logs-filters__select p-operation-logs-filters__select--sm"
+        />
+      </div>
 
-        <div class="p-operation-logs-filters__badge">
-          <AppBadge color="var(--theme-accent)">
-            取得件数: {{ logs.length }} 件
-          </AppBadge>
-        </div>
+      <div class="p-operation-logs-filters__badge">
+        <AppBadge color="var(--theme-accent)">
+          取得件数: {{ logs.length }} 件
+        </AppBadge>
       </div>
     </AppPanel>
 
     <!-- ログ一覧テーブル -->
-    <div class="p-operation-logs__table-wrapper">
-      <AppTable>
-        <template #header>
-          <tr>
-            <th style="width: 170px;">
-              日時
-            </th>
-            <th style="width: 120px;">
-              作業者
-            </th>
-            <th style="width: 140px; text-align: center;">
-              アクション
-            </th>
-            <th style="width: 130px;">
-              対象盤
-            </th>
-            <th style="width: 140px;">
-              対象回路
-            </th>
-            <th>詳細内容</th>
-          </tr>
-        </template>
+    <AppTable class="p-operation-logs__table">
+      <template #header>
+        <tr>
+          <th style="width: 170px;">
+            日時
+          </th>
+          <th style="width: 120px;">
+            作業者
+          </th>
+          <th style="width: 140px; text-align: center;">
+            アクション
+          </th>
+          <th style="width: 130px;">
+            対象盤
+          </th>
+          <th style="width: 140px;">
+            対象回路
+          </th>
+          <th>詳細内容</th>
+        </tr>
+      </template>
 
-        <template #body>
-          <tr v-if="logs.length === 0" class="p-operation-logs-empty">
-            <td colspan="6" style=" padding: var(--space-6);text-align: center;">
-              操作ログが存在しないか、条件に一致するログがありません
-            </td>
-          </tr>
+      <template #body>
+        <tr v-if="logs.length === 0" class="p-operation-logs-empty">
+          <td colspan="6" style="padding: var(--space-6); text-align: center;">
+            操作ログが存在しないか、条件に一致するログがありません
+          </td>
+        </tr>
 
-          <tr
-            v-for="item in logs"
-            :key="item.id"
-            class="p-operation-logs-row"
-          >
-            <!-- タイムスタンプ -->
-            <td>
-              <span class="p-operation-logs-cell__time">
-                {{ formatTimestamp(item.timestamp) }}
-              </span>
-            </td>
+        <tr
+          v-for="item in logs"
+          :key="item.id"
+          class="p-operation-logs-row"
+        >
+          <!-- タイムスタンプ -->
+          <td>
+            <span class="p-operation-logs-cell__time">
+              {{ formatTimestamp(item.timestamp) }}
+            </span>
+          </td>
 
-            <!-- 作業者 -->
-            <td>
-              <span class="p-operation-logs-cell__worker">
-                {{ item.worker || '-' }}
-              </span>
-            </td>
+          <!-- 作業者 -->
+          <td>
+            <span class="p-operation-logs-cell__worker">
+              {{ item.worker || '-' }}
+            </span>
+          </td>
 
-            <!-- アクション -->
-            <td style="text-align: center;">
-              <AppBadge :color="getActionBadgeColor(item.action)">
-                {{ item.action }}
-              </AppBadge>
-            </td>
+          <!-- アクション -->
+          <td style="text-align: center;">
+            <AppBadge :color="getActionBadgeColor(item.action)">
+              {{ item.action }}
+            </AppBadge>
+          </td>
 
-            <!-- 対象盤 -->
-            <td>
-              <span class="p-operation-logs-cell__ban">
-                {{ item.targetBan || '-' }}
-              </span>
-            </td>
+          <!-- 対象盤 -->
+          <td>
+            <span class="p-operation-logs-cell__ban">
+              {{ item.targetBan || '-' }}
+            </span>
+          </td>
 
-            <!-- 対象回路 -->
-            <td>
-              <span class="p-operation-logs-cell__circuit">
-                {{ item.targetKairo || '-' }}
-              </span>
-            </td>
+          <!-- 対象回路 -->
+          <td>
+            <span class="p-operation-logs-cell__circuit">
+              {{ item.targetKairo || '-' }}
+            </span>
+          </td>
 
-            <!-- 詳細内容 -->
-            <td>
-              <span class="p-operation-logs-cell__details">
-                {{ item.details || '-' }}
-              </span>
-            </td>
-          </tr>
-        </template>
-      </AppTable>
-    </div>
+          <!-- 詳細内容 -->
+          <td>
+            <span class="p-operation-logs-cell__details">
+              {{ item.details || '-' }}
+            </span>
+          </td>
+        </tr>
+      </template>
+    </AppTable>
   </div>
 </template>
 
@@ -256,7 +252,7 @@ const getActionBadgeColor = (action: string) => {
   gap: var(--space-section-gap);
   height: 100%;
 
-  &__table-wrapper {
+  &__table {
     flex: 1;
     min-height: 400px;
   }

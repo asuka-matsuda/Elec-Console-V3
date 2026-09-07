@@ -4,7 +4,6 @@ import { menuData } from '~/constants/data/menuData'
 const isSidebarOpen = useState('sidebar-open', () => false)
 
 const { items: breadcrumbs, accent: breadcrumbAccent } = useBreadcrumbs()
-const { currentUser, logout } = useAuth()
 </script>
 
 <template>
@@ -22,32 +21,7 @@ const { currentUser, logout } = useAuth()
         @toggle-sidebar="isSidebarOpen = !isSidebarOpen"
       >
         <template #actions>
-          <div class="c-header-user">
-            <AppIcon
-              name="bell"
-              size="md"
-              style="color: var(--color-text-secondary)"
-            />
-            <div class="c-header-user__avatar">
-              <AppIcon
-                name="user"
-                size="sm"
-                style="color: var(--color-main-bg)"
-              />
-            </div>
-            <span class="c-header-user__name">{{
-              currentUser
-                ? `${currentUser.lastName} ${currentUser.firstName}`
-                : "ゲスト"
-            }}</span>
-            <AppButton
-              variant="secondary"
-              size="sm"
-              @click="logout"
-            >
-              ログアウト
-            </AppButton>
-          </div>
+          <AppHeaderUser />
         </template>
       </AppHeader>
 
@@ -87,42 +61,5 @@ const { currentUser, logout } = useAuth()
 
   min-height: 0;
   padding: var(--space-layout-pad);
-}
-
-.c-header-user {
-  display: flex;
-  gap: var(--space-2);
-  align-items: center;
-
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-
-  &__avatar {
-    --glow-color: var(--theme-accent);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    width: var(--size-control-sm);
-    height: var(--size-control-sm);
-    border: var(--border-width-thick) solid color-mix(in srgb, var(--glow-color) 60%, transparent);
-    border-radius: var(--radius-sm);
-
-    background: var(--theme-accent);
-    outline: none;
-    box-shadow: var(--shadow-glow-focus);
-
-    transition: var(--transition-glow);
-  }
-
-  &__name {
-    color: var(--color-text-main);
-
-    @include mq("md") {
-      display: none;
-    }
-  }
 }
 </style>

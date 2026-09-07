@@ -40,14 +40,14 @@ const {
       <slot />
 
       <transition name="fade-slide">
-        <div v-if="error" class="error">
+        <p v-if="error" class="error" role="alert">
           {{ error }}
-        </div>
+        </p>
       </transition>
 
-      <div v-if="help && !error" class="help">
+      <p v-if="help && !error" class="help">
         {{ help }}
-      </div>
+      </p>
     </div>
   </div>
 </template>
@@ -159,6 +159,8 @@ const {
 .error {
   --glow-color: var(--color-status-danger);
 
+  margin: 0;
+
   font-size: var(--font-size-2xs);
   color: var(--color-status-danger);
   text-shadow: var(--text-glow-sm);
@@ -166,6 +168,7 @@ const {
 }
 
 .help {
+  margin: 0;
   font-size: var(--font-size-2xs);
   color: var(--color-text-muted);
   letter-spacing: var(--tracking-wide);

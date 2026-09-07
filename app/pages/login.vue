@@ -56,9 +56,9 @@ const handleLogin = async () => {
 <template>
   <div class="p-login">
     <form class="p-login__form" @submit.prevent="handleLogin">
-      <div v-if="errorMessage" class="p-login__error">
+      <p v-if="errorMessage" class="p-login__error" role="alert">
         {{ errorMessage }}
-      </div>
+      </p>
 
       <template v-for="field in formFields" :key="field.id">
         <AppFormGroup :label="field.label">
@@ -92,6 +92,7 @@ const handleLogin = async () => {
   }
 
   &__error {
+    margin: 0;
     padding: var(--space-2) var(--space-3);
     border: var(--border-width-base) solid var(--color-status-danger);
     border-radius: var(--radius-sm);

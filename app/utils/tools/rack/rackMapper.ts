@@ -1,3 +1,4 @@
+import type { CableInputItem } from '~/types/tools'
 import { findCableByIndexString, getEffectiveCableDiameter } from '~/utils/cable'
 import type {
   RackCableInput,
@@ -6,12 +7,7 @@ import type {
 
 export type RackMode = 'strong' | 'weak'
 
-export interface RackCableUIInput {
-  id: string
-  category: string
-  cableIdx: string
-  count: number | null
-}
+export type RackCableUIInput = CableInputItem
 
 export interface RackInputs {
   mode: RackMode

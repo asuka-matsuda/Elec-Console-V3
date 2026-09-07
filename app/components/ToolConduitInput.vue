@@ -30,12 +30,11 @@ const emit = defineEmits<{
 const categories = computed(() => getCableCategories())
 
 const cableColumns: TableColumn[] = [
-  { key: 'no', label: 'No.', width: '44px', align: 'center' },
-  { key: 'category', label: 'ケーブル種別', width: '32%' },
-  { key: 'cableIdx', label: 'サイズ', width: '36%' },
-  { key: 'count', label: '本数', width: '90px' },
-  { key: 'spec', label: '断面積', align: 'right' },
-  { key: 'actions', label: '', width: '44px', align: 'center' },
+  { key: 'category', label: 'ケーブル種別', width: '27%' },
+  { key: 'cableIdx', label: 'サイズ', width: '31%' },
+  { key: 'count', label: '本数', width: '74px' },
+  { key: 'spec', label: '断面積', width: '90px', align: 'right' },
+  { key: 'actions', label: '', width: '52px', align: 'center' },
 ]
 
 const getCableAreaText = (cableIdx: string): string => {
@@ -102,12 +101,9 @@ const getCableAreaText = (cableIdx: string): string => {
       >
         <template #body>
           <tr
-            v-for="(cable, index) in inputs.inputCables"
+            v-for="cable in inputs.inputCables"
             :key="cable.id"
           >
-            <td style="text-align: center;">
-              {{ index + 1 }}
-            </td>
             <td>
               <AppSelect
                 v-model="cable.category"
@@ -142,7 +138,7 @@ const getCableAreaText = (cableIdx: string): string => {
             <td style="text-align: right;">
               {{ getCableAreaText(cable.cableIdx) }}
             </td>
-            <td style="text-align: center;">
+            <td class="action-cell">
               <AppButton
                 variant="danger"
                 size="sm"
@@ -193,5 +189,10 @@ const getCableAreaText = (cableIdx: string): string => {
 
 .conduit-table {
   width: 100%;
+}
+
+.action-cell {
+  padding-inline: var(--space-1) !important;
+  text-align: center;
 }
 </style>

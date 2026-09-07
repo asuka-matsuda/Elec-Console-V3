@@ -305,9 +305,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   --glow-color: color-mix(in srgb, var(--theme-accent) 20%, transparent);
 
   position: absolute;
-  position: relative;
   z-index: var(--z-index-select);
-  z-index: 1;
 
   width: max-content;
   max-width: 90vw;
