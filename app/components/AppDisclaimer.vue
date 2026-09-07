@@ -13,10 +13,9 @@ const {
 <template>
   <aside class="c-disclaimer" role="note" aria-label="免責事項">
     <AppIcon name="alert-triangle" size="sm" class="icon" />
-    <div class="body">
-      <strong class="label">免責事項:</strong>
-      <span class="text"><slot>{{ text }}</slot></span>
-    </div>
+    <p class="text">
+      <strong>免責事項:</strong> <slot>{{ text }}</slot>
+    </p>
   </aside>
 </template>
 
@@ -51,14 +50,13 @@ const {
     color: var(--disclaimer-color);
   }
 
-  .body {
+  .text {
     flex: 1;
-  }
 
-  .label {
-    margin-right: var(--space-1);
-    font-weight: var(--font-weight-bold);
-    color: var(--disclaimer-color);
+    strong {
+      font-weight: var(--font-weight-bold);
+      color: var(--disclaimer-color);
+    }
   }
 }
 </style>
