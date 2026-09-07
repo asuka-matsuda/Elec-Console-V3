@@ -35,13 +35,17 @@ defineProps<{
   --track-h: var(--space-5);
   --thumb-w: var(--space-5);
 
-  @include text-desc;
   @include click-enabled;
 
   position: relative;
+
   display: inline-flex;
   gap: var(--space-2);
   align-items: center;
+
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  color: var(--color-text-muted);
 
   &__input {
     cursor: inherit;

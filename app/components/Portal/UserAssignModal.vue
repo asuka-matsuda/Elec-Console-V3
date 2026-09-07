@@ -56,6 +56,8 @@ const handleSave = async () => {
 
 <style scoped lang="scss">
 .c-user-assign-modal__desc {
-  @include text-desc;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  color: var(--color-text-muted);
 }
 </style>

@@ -225,7 +225,9 @@ const confirmResetPassword = async (row: User) => {
   }
 
   &__meta {
-    @include text-meta;
+    font-size: var(--font-size-2xs);
+    line-height: var(--line-height-base);
+    color: var(--color-text-muted);
   }
 }
 </style>

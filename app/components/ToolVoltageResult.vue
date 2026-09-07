@@ -96,42 +96,60 @@ const mainBoxStatus = computed(() =>
   }
 
   &__main-val {
-    @include text-mono("3xl", "bold");
+    font-family: var(--font-mono);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    font-variant-numeric: tabular-nums;
   }
 
   &__main-unit {
-    @include text-body("base");
-
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
     color: var(--color-text-secondary);
   }
 
   &__drop-percent {
-    @include text-mono("xl", "bold");
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    font-variant-numeric: tabular-nums;
   }
 
   &__drop-unit {
-    @include text-body("sm");
-
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-base);
     color: var(--color-text-secondary);
   }
 
   &__drop-cable {
-    @include text-mono("sm", "bold");
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    font-variant-numeric: tabular-nums;
   }
 
   &.is-sm {
     gap: var(--space-3);
 
     .c-voltage-result__main-val {
-      @include text-mono("2xl", "bold");
+      font-family: var(--font-mono);
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-bold);
+      font-variant-numeric: tabular-nums;
     }
 
     .c-voltage-result__drop-percent {
-      @include text-mono("base", "bold");
+      font-family: var(--font-mono);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-bold);
+      font-variant-numeric: tabular-nums;
     }
 
     .c-voltage-result__drop-cable {
-      @include text-mono("sm", "bold");
+      font-family: var(--font-mono);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-bold);
+      font-variant-numeric: tabular-nums;
     }
 
     .metric-card {
@@ -190,28 +208,34 @@ const mainBoxStatus = computed(() =>
   }
 
   .metric-label {
-    @include text-meta;
+    font-size: var(--font-size-2xs);
+    line-height: var(--line-height-base);
+    color: var(--color-text-muted);
   }
 
   .metric-value {
-    @include text-mono("sm", "bold");
-
     display: flex;
     gap: var(--space-1);
     align-items: baseline;
+
     margin: 0;
+
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    font-variant-numeric: tabular-nums;
   }
 
   .value-sep {
-    @include text-body("sm");
-
     margin: 0 2px;
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-base);
     color: var(--color-text-muted);
   }
 
   .value-unit {
-    @include text-body("sm");
-
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-base);
     color: var(--color-text-secondary);
   }
 }

@@ -186,8 +186,10 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       --cell-accent-opacity: 20%;
 
       .fc-daygrid-day-number {
-        @include text-mono("sm", "bold");
-
+        font-family: var(--font-mono);
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-bold);
+        font-variant-numeric: tabular-nums;
         color: var(--color-primary);
       }
     }
@@ -240,11 +242,14 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
   /* 3件超過時の「+○件」展開リンク */
   :deep(.fc-daygrid-more-link) {
-    @include text-meta("md", "bold");
-
     display: inline-block;
+
     padding: var(--space-0-5) var(--space-1);
     border-bottom: 1px dashed var(--color-primary);
+
+    font-size: var(--font-size-2xs);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-base);
     color: var(--color-primary);
 
     @include state-base;
@@ -287,8 +292,9 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       @include border-base($opacity: 30%);
 
       .fc-popover-title {
-        @include text-desc("md", "bold");
-
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-bold);
+        line-height: var(--line-height-base);
         color: var(--color-primary);
       }
 
@@ -321,8 +327,9 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
     .fc-list-day-text,
     .fc-list-day-side-text {
-      @include text-desc("md", "bold");
-
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-bold);
+      line-height: var(--line-height-base);
       color: var(--theme-accent);
     }
 
@@ -345,8 +352,8 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
     .fc-list-event-title,
     .fc-list-event-time {
-      @include text-desc;
-
+      font-size: var(--font-size-sm);
+      line-height: var(--line-height-base);
       color: var(--color-text-main);
     }
 
@@ -357,9 +364,10 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     }
 
     .fc-list-empty {
-      @include text-body;
-
       padding: var(--space-card-pad);
+
+      font-size: var(--font-size-base);
+      line-height: var(--line-height-base);
       color: var(--color-text-muted);
       text-align: center;
     }

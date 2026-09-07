@@ -71,12 +71,16 @@ const vm = computed(() => formatWeightResult(props.result))
   }
 
   &__val {
-    @include text-mono("3xl", "bold");
+    font-family: var(--font-mono);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    font-variant-numeric: tabular-nums;
   }
 
   &__warning {
-    @include text-meta("sm", "bold");
-
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-base);
     color: var(--color-status-danger);
   }
 }

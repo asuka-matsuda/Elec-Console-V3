@@ -133,14 +133,18 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
   }
 
   &__date {
-    @include text-meta;
+    font-size: var(--font-size-2xs);
+    line-height: var(--line-height-base);
+    color: var(--color-text-muted);
   }
 
   &__title {
-    @include text-title("sm");
-
     display: flex;
     align-items: center;
+
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
     color: var(--color-text-main);
   }
 
@@ -156,19 +160,23 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
   }
 
   &__section-title {
-    @include text-title("sm");
-
     padding-left: var(--space-1);
     border-left: 2px solid var(--color-category-tool);
+
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
     color: var(--color-text-main);
   }
 
   &__list {
-    @include text-desc;
-
     display: grid;
     grid-template-columns: auto 1fr;
     gap: var(--space-1) var(--space-3);
+
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-base);
+    color: var(--color-text-muted);
 
     dt {
       white-space: nowrap;

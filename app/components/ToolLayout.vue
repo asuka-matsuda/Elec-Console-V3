@@ -237,8 +237,9 @@ provide('toolBasisModal', {
 
   &__drawer-title,
   &__drawer-icon {
-    @include text-title("sm");
-
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
     color: var(--color-category-tool);
   }
 

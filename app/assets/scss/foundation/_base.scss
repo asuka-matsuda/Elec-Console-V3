@@ -23,8 +23,6 @@ textarea {
 }
 
 body {
-  @include text-body;
-
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -33,6 +31,8 @@ body {
   min-height: 100dvh;
 
   font-family: var(--font-family, var(--font-base));
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
   color: var(--color-text-main);
 
   background-color: var(--color-main-bg);
@@ -43,29 +43,41 @@ body {
 }
 
 h1 {
-  @include text-title("xl");
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
 }
 
 h2 {
-  @include text-title("lg");
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
 }
 
 h3 {
-  @include text-title("md");
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
 }
 
 h4,
 h5,
 h6 {
-  @include text-title("sm");
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
 }
 
 p {
-  @include text-body;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  color: var(--color-text-main);
 }
 
 small {
-  @include text-desc;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  color: var(--color-text-muted);
 }
 
 input::-webkit-outer-spin-button,

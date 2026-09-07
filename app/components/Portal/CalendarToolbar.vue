@@ -118,8 +118,9 @@ const emit = defineEmits<{
   }
 
   &__title {
-    @include text-title("md");
-
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
     color: var(--theme-accent);
 
     @include cyber-text-glow(var(--theme-accent), 60%, var(--blur-sm));

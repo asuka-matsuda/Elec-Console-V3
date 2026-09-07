@@ -191,7 +191,9 @@ const getCableAreaText = (cableIdx: string): string => {
   }
 
   &__title {
-    @include text-title("sm");
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
   }
 
   &__table {

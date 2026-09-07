@@ -20,13 +20,15 @@ const emit = defineEmits<{
 <style scoped lang="scss">
 .c-logo {
   @include click-enabled;
-  @include text-title("md");
 
   display: flex;
   flex-shrink: 0;
   gap: var(--space-2);
   align-items: center;
 
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
   color: var(--color-text-main);
   white-space: nowrap;
 

@@ -225,8 +225,6 @@ onMounted(() => {
   &__body {
     --scrollbar-size: var(--space-2);
 
-    @include text-caption;
-
     overflow-y: auto;
     display: flex;
     flex: 1;
@@ -235,16 +233,22 @@ onMounted(() => {
 
     min-height: 0;
 
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-base);
+
     &.is-align-center {
       text-align: center;
     }
   }
 
   &__error {
-    @include text-desc("md", "bold");
-
     padding: var(--space-2) var(--space-3);
+
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-base);
     color: var(--color-status-danger);
+
     backdrop-filter: blur(var(--blur-sm));
 
     @include border-base(var(--color-status-danger), 30%);

@@ -285,11 +285,17 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 
 .c-custom-select__option {
   @include click-enabled;
-  @include text-desc;
-  @include text-truncate;
+
+  overflow: hidden;
 
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-sm);
+
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  color: var(--color-text-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
   @include state-base;
 

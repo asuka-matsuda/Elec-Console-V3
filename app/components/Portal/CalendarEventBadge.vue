@@ -57,20 +57,28 @@ const badgeColor = computed(() => props.color || 'var(--theme-accent)')
   @include state-base(none, var(--transition-glow), var(--badge-color));
 
   &__time {
-    @include text-mono("2xs", "bold");
-
     flex-shrink: 0;
+
+    font-family: var(--font-mono);
+    font-size: var(--font-size-2xs);
+    font-weight: var(--font-weight-bold);
+    font-variant-numeric: tabular-nums;
     color: var(--badge-color-dim);
     text-transform: uppercase;
     letter-spacing: var(--tracking-wider);
   }
 
   &__title {
-    @include text-mono("sm");
-    @include text-truncate;
+    overflow: hidden;
 
     min-width: 0;
+
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    font-variant-numeric: tabular-nums;
     color: var(--color-text-main);
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 </style>

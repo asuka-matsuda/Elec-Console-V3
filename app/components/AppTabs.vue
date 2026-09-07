@@ -70,7 +70,6 @@ const selectTab = (option: TabOption<T>) => {
 
 .c-tabs__item {
   @include click-enabled;
-  @include text-desc("md", "medium");
 
   position: relative;
 
@@ -81,6 +80,9 @@ const selectTab = (option: TabOption<T>) => {
 
   padding: var(--space-2) var(--space-4);
 
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-base);
   color: var(--color-text-secondary);
 
   @include border-base;

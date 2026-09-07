@@ -66,7 +66,6 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
 
   &__item {
     @include click-enabled;
-    @include text-body("md", "bold");
 
     position: relative;
 
@@ -76,6 +75,9 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
 
     padding: var(--space-1) var(--space-3);
 
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-base);
     color: var(--color-text-muted);
 
     @include border-base(transparent);

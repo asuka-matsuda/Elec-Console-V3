@@ -142,16 +142,22 @@ const statusCustom = computed(() =>
   }
 
   &__main-val {
-    @include text-mono("3xl", "bold");
+    font-family: var(--font-mono);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    font-variant-numeric: tabular-nums;
   }
 
   &__percent {
-    @include text-mono("xl", "bold");
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    font-variant-numeric: tabular-nums;
   }
 
   &__percent-unit {
-    @include text-body("sm");
-
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-base);
     color: var(--color-text-secondary);
   }
 
@@ -159,11 +165,17 @@ const statusCustom = computed(() =>
     gap: var(--space-3);
 
     .c-conduit-result__main-val {
-      @include text-mono("2xl", "bold");
+      font-family: var(--font-mono);
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-bold);
+      font-variant-numeric: tabular-nums;
     }
 
     .c-conduit-result__percent {
-      @include text-mono("base", "bold");
+      font-family: var(--font-mono);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-bold);
+      font-variant-numeric: tabular-nums;
     }
   }
 
@@ -187,21 +199,25 @@ const statusCustom = computed(() =>
     gap: var(--space-3);
 
     .c-conduit-result__percent {
-      @include text-mono("base");
+      font-family: var(--font-mono);
+      font-size: var(--font-size-base);
+      font-variant-numeric: tabular-nums;
     }
   }
 
   .value-sep {
-    @include text-body("md", "normal");
-
     margin: 0 2px;
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
     color: var(--color-text-muted);
   }
 
   .value-unit {
-    @include text-body("md", "bold");
-
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-base);
     color: var(--color-text-secondary);
+
     opacity: 0.8;
   }
 
@@ -219,11 +235,13 @@ const statusCustom = computed(() =>
   }
 
   &__footer-title {
-    @include text-desc("bold");
-
     display: flex;
     gap: var(--space-1);
     align-items: center;
+
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-base);
     color: var(--color-status-warning);
   }
 
@@ -238,17 +256,17 @@ const statusCustom = computed(() =>
     list-style: none;
 
     li {
-      @include text-meta;
-
+      font-size: var(--font-size-2xs);
       line-height: var(--line-height-normal);
       color: var(--color-text-secondary);
     }
   }
 
   &__footer-code {
-    @include text-mono("xs");
-
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
     font-weight: var(--font-weight-bold);
+    font-variant-numeric: tabular-nums;
     color: var(--color-text-main);
   }
 }

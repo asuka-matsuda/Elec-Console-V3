@@ -186,11 +186,15 @@ const categoryColorMap: Record<string, string> = {
   }
 
   &__kana {
-    @include text-meta;
+    font-size: var(--font-size-2xs);
+    line-height: var(--line-height-base);
+    color: var(--color-text-muted);
   }
 
   &__term {
-    @include text-title("md");
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
   }
 
   &__body {
@@ -200,8 +204,9 @@ const categoryColorMap: Record<string, string> = {
   }
 
   &__desc {
-    @include text-title("sm");
-
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
     color: var(--color-text-secondary);
   }
 
@@ -215,12 +220,14 @@ const categoryColorMap: Record<string, string> = {
   }
 
   &__label {
-    @include text-meta;
+    font-size: var(--font-size-2xs);
+    line-height: var(--line-height-base);
+    color: var(--color-text-muted);
   }
 
   &__text {
-    @include text-desc;
-
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-base);
     color: var(--color-text-secondary);
   }
 }

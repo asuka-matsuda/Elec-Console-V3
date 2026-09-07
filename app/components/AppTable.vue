@@ -166,8 +166,8 @@ const getRowKey = (row: T, index: number): string | number => {
 
   td,
   :deep(td) {
-    @include text-mono;
-
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
     color: var(--color-text-main);
   }
 

@@ -34,10 +34,12 @@ withDefaults(
   --form-control-px: var(--space-4);
   --form-control-py: var(--space-2);
 
-  @include text-mono("sm");
-
   width: 100%;
   padding: var(--form-control-py) var(--form-control-px);
+
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  font-variant-numeric: tabular-nums;
   color: var(--color-text-muted);
 
   @include form-control-base;
@@ -46,9 +48,10 @@ withDefaults(
     --form-control-px: var(--space-3);
     --form-control-py: var(--space-1);
 
-    @include text-meta;
-
     height: var(--size-control-sm);
+    font-size: var(--font-size-2xs);
+    line-height: var(--line-height-base);
+    color: var(--color-text-muted);
   }
 
   &--md {

@@ -66,8 +66,6 @@ const handleClick = () => {
 
 <style scoped lang="scss">
 th {
-  @include text-label;
-
   position: sticky;
   z-index: var(--z-index-table-header);
   top: 0;
@@ -75,6 +73,9 @@ th {
   border-right: var(--border-width-base) solid var(--color-border);
   border-bottom: calc(var(--border-width-base) * 2) solid var(--color-border);
 
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
   color: var(--color-text-muted);
 
   background-color: var(--surface-bg-elevated);

@@ -74,14 +74,14 @@
 }
 
 .c-input-addon {
-  @include text-desc;
-
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
   padding: 0 var(--space-4);
 
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
   color: var(--color-text-secondary);
   white-space: nowrap;
 

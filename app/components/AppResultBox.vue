@@ -91,13 +91,16 @@ const resolvedStatus = computed(() => {
 
     :deep(.c-result-box__val),
     :deep(.value-text) {
-      @include text-mono("2xl", "bold");
+      font-family: var(--font-mono);
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-bold);
+      font-variant-numeric: tabular-nums;
     }
   }
 
   &__label {
-    @include text-meta;
-
+    font-size: var(--font-size-2xs);
+    line-height: var(--line-height-base);
     color: var(--color-text-secondary);
     text-transform: uppercase;
   }
@@ -112,7 +115,10 @@ const resolvedStatus = computed(() => {
 
     :deep(.c-result-box__val),
     :deep(.value-text) {
-      @include text-mono("3xl", "bold");
+      font-family: var(--font-mono);
+      font-size: var(--font-size-3xl);
+      font-weight: var(--font-weight-bold);
+      font-variant-numeric: tabular-nums;
     }
   }
 

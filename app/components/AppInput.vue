@@ -53,20 +53,22 @@ withDefaults(
 
 <style scoped lang="scss">
 .c-form-control {
-  @include text-desc;
-
   width: 100%;
   min-height: calc(var(--control-height-ratio) * 1em);
   padding-block: 0.3em;
   padding-inline: 1.2em;
 
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
   color: var(--color-text-main);
 
   @include form-control-base;
   @include form-placeholder;
 
   &--sm {
-    @include text-meta;
+    font-size: var(--font-size-2xs);
+    line-height: var(--line-height-base);
+    color: var(--color-text-muted);
   }
 
   &--textarea {

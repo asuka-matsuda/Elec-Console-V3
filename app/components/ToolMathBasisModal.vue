@@ -189,8 +189,6 @@ const handleClose = () => {
 }
 
 .c-math-legend {
-  @include text-meta("xs", "bold");
-
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
@@ -199,6 +197,11 @@ const handleClose = () => {
   max-width: 320px;
   padding-left: var(--space-3);
   border-left: 1px solid var(--color-border);
+
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-base);
+  color: var(--color-text-muted);
 
   @include mq("sm") {
     min-width: 0;
@@ -228,9 +231,11 @@ const handleClose = () => {
     }
 
     dd {
-      @include text-meta("2xs", "regular");
-
       min-width: 0;
+
+      font-size: var(--font-size-2xs);
+      line-height: var(--line-height-base);
+      color: var(--color-text-muted);
       overflow-wrap: break-word;
     }
   }

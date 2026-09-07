@@ -342,8 +342,6 @@ const handleAddCable = () => {
   }
 
   &__details-summary {
-    @include text-meta("xs", "bold");
-
     cursor: pointer;
     user-select: none;
 
@@ -351,6 +349,9 @@ const handleAddCable = () => {
     gap: var(--space-2);
     align-items: center;
 
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-base);
     color: var(--color-text-secondary);
 
     &:hover {
@@ -383,7 +384,9 @@ const handleAddCable = () => {
   }
 
   &__section-title {
-    @include text-title("sm");
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
   }
 
   &__table {

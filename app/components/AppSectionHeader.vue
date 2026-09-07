@@ -87,19 +87,27 @@ const resolvedDividerVariant = computed(() => {
     color: var(--color-text-main);
 
     &--lg {
-      @include text-title("lg");
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+      line-height: var(--line-height-tight);
     }
 
     &--md {
-      @include text-title("md");
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+      line-height: var(--line-height-tight);
     }
 
     &--sm {
-      @include text-title("sm");
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-bold);
+      line-height: var(--line-height-tight);
     }
 
     &--xs {
-      @include text-title("xs");
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-bold);
+      line-height: var(--line-height-tight);
     }
   }
 

@@ -129,12 +129,15 @@ const vm = computed(() =>
   }
 
   &__val {
-    @include text-mono("3xl", "bold");
+    font-family: var(--font-mono);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    font-variant-numeric: tabular-nums;
   }
 
   &__sub-val {
-    @include text-meta("xs", "regular");
-
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-base);
     color: var(--color-text-secondary);
 
     strong {
@@ -144,16 +147,16 @@ const vm = computed(() =>
   }
 
   &__not-applicable {
-    @include text-meta("xs", "regular");
-
     padding: var(--space-1) 0;
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-base);
     color: var(--color-text-muted);
   }
 
   &__depth-note {
-    @include text-meta("2xs", "regular");
-
     margin-left: var(--space-1);
+    font-size: var(--font-size-2xs);
+    line-height: var(--line-height-base);
     color: var(--color-text-muted);
   }
 }

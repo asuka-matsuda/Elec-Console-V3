@@ -99,7 +99,9 @@ const {
   gap: var(--space-card-gap);
 
   &__lead {
-    @include text-desc;
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-base);
+    color: var(--color-text-muted);
   }
 
   &__list {
@@ -172,7 +174,9 @@ const {
   }
 
   &__color-label {
-    @include text-meta;
+    font-size: var(--font-size-2xs);
+    line-height: var(--line-height-base);
+    color: var(--color-text-muted);
   }
 }
 </style>

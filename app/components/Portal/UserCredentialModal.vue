@@ -74,7 +74,9 @@ const handleCopyPassword = () => {
 <style scoped lang="scss">
 .c-user-credential-modal {
   &__desc {
-    @include text-desc;
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-base);
+    color: var(--color-text-muted);
   }
 
   &__credential-box {
@@ -91,13 +93,16 @@ const handleCopyPassword = () => {
   }
 
   &__credential-value {
-    @include text-title("sm");
-
     padding: var(--space-2) 0;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
 
     &--password {
-      @include text-mono("lg", "bold");
-
+      font-family: var(--font-mono);
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+      font-variant-numeric: tabular-nums;
       color: var(--color-status-success);
     }
   }

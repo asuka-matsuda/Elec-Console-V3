@@ -90,11 +90,13 @@ const { currentUser, logout } = useAuth()
 }
 
 .c-header-user {
-  @include text-title("sm");
-
   display: flex;
   gap: var(--space-2);
   align-items: center;
+
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
 
   &__avatar {
     --glow-color: color-mix(in srgb, var(--theme-accent) 50%, transparent);

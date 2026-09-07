@@ -92,9 +92,9 @@ const handleLogin = async () => {
   }
 
   &__error {
-    @include text-desc;
-
     padding: var(--space-2) var(--space-3);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-base);
     color: var(--color-status-danger);
 
     @include border-base(var(--color-status-danger));

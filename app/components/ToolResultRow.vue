@@ -18,11 +18,12 @@ defineProps<{
 
 <style scoped lang="scss">
 .c-result-details__row {
-  @include text-desc;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
   color: var(--color-text-secondary);
 
   /* stylelint-disable-next-line selector-pseudo-class-no-unknown */
