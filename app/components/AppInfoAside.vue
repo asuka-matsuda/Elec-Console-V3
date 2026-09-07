@@ -5,7 +5,7 @@ import type { AnnouncementItem, HistoryItem } from '~/types/components'
 
 /**
  * AppInfoAside
- * お知らせや更新履歴などのインフォメーションを表示するサイドバーコンポーネント
+ * お知らせや更新履歴などのインフォメーションを表示するコンポーネント
  */
 interface Props {
   announcements?: AnnouncementItem[]
@@ -21,67 +21,85 @@ const {
   maxCount = 4,
 } = defineProps<Props>()
 
-const recentAnnouncements = computed(() => announcements.slice(0, maxCount))
-const recentHistory = computed(() => history.slice(0, maxCount))
+interface InfoItemDisplay {
+  key: string
+  title: string
+  date: string
+  desc?: string
+  badge?: {
+    text: string
+    color: string
+  }
+}
+
+interface SectionConfig {
+  title: string
+  icon: string
+  loadingText: string
+  emptyText: string
+  items: InfoItemDisplay[]
+}
+
+const sections = computed<SectionConfig[]>(() => [
+  {
+    title: 'お知らせ',
+    icon: 'bell',
+    loadingText: 'お知らせを読み込み中...',
+    emptyText: '現在新しいお知らせはありません',
+    items: announcements.slice(0, maxCount).map(item => ({
+      key: item.title,
+      title: item.title,
+      date: item.date,
+      desc: item.desc,
+    })),
+  },
+  {
+    title: '更新履歴',
+    icon: 'clock',
+    loadingText: '更新履歴を読み込み中...',
+    emptyText: '現在更新履歴はありません',
+    items: history.slice(0, maxCount).map(item => ({
+      key: item.version,
+      title: item.title,
+      date: item.date,
+      desc: item.desc,
+      badge: {
+        text: item.version,
+        color:
+          item.status === 'success'
+            ? 'var(--color-status-success)'
+            : 'var(--color-text-muted)',
+      },
+    })),
+  },
+])
 </script>
 
 <template>
   <div class="info-aside">
-    <!-- Announcements -->
-    <section class="section">
-      <AppSectionHeader title="お知らせ" icon="bell" size="md" />
+    <section
+      v-for="section in sections"
+      :key="section.title"
+      class="section"
+    >
+      <AppSectionHeader :title="section.title" :icon="section.icon" size="md" />
 
       <div v-if="pending" class="list">
         <AppPanel class="status-panel">
           <AppIcon name="loader" class="u-spin" size="sm" />
-          <span>お知らせを読み込み中...</span>
+          <span>{{ section.loadingText }}</span>
         </AppPanel>
       </div>
 
-      <div v-else-if="recentAnnouncements.length > 0" class="list">
+      <div v-else-if="section.items.length > 0" class="list">
         <AppPanel
-          v-for="item in recentAnnouncements"
-          :key="item.title"
+          v-for="item in section.items"
+          :key="item.key"
           class="info-item"
         >
           <div class="item-header">
-            <span class="item-title">{{ item.title }}</span>
-          </div>
-          <div class="item-meta">{{ item.date }}</div>
-          <p v-if="item.desc" class="item-desc">{{ item.desc }}</p>
-        </AppPanel>
-      </div>
-
-      <div v-else class="list">
-        <AppPanel class="status-panel">
-          <AppIcon name="inbox" size="sm" />
-          <span>現在新しいお知らせはありません</span>
-        </AppPanel>
-      </div>
-    </section>
-
-    <!-- History -->
-    <section class="section">
-      <AppSectionHeader title="更新履歴" icon="clock" size="md" />
-
-      <div v-if="pending" class="list">
-        <AppPanel class="status-panel">
-          <AppIcon name="loader" class="u-spin" size="sm" />
-          <span>更新履歴を読み込み中...</span>
-        </AppPanel>
-      </div>
-
-      <div v-else-if="recentHistory.length > 0" class="list">
-        <AppPanel
-          v-for="item in recentHistory"
-          :key="item.version"
-          class="info-item"
-        >
-          <div class="item-header">
-            <AppBadge
-              :color="item.status === 'success' ? 'var(--color-status-success)' : 'var(--color-text-muted)'"
-            >
-              {{ item.version }}
+            <AppBadge v-if="item.badge" :color="item.badge.color">
+              {{ item.badge.text }}
             </AppBadge>
             <span class="item-title">{{ item.title }}</span>
           </div>
@@ -93,7 +111,7 @@ const recentHistory = computed(() => history.slice(0, maxCount))
       <div v-else class="list">
         <AppPanel class="status-panel">
           <AppIcon name="inbox" size="sm" />
-          <span>現在更新履歴はありません</span>
+          <span>{{ section.emptyText }}</span>
         </AppPanel>
       </div>
     </section>
