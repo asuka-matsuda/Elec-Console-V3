@@ -1,10 +1,11 @@
-import { createError, defineEventHandler, getRouterParam } from 'h3'
+import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
-import { requireAuthUser } from '../../../../../../utils/auth'
+import { requireSiteAccess } from '../../../../../../utils/auth'
+import { checkOptimisticLock } from '../../../../../../utils/optimisticLock'
 import { prisma } from '../../../../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  const user = await requireAuthUser(event)
+  const user = await requireSiteAccess(event)
   const siteId = getRouterParam(event, 'siteId')
   const circuitId = getRouterParam(event, 'id')
 
@@ -15,6 +16,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const body = await readBody(event).catch(() => ({}))
   const workerName = `${user.lastName} ${user.firstName}`.trim() || user.loginId
 
   const circuit = await prisma.circuit.findFirst({
@@ -27,6 +29,8 @@ export default defineEventHandler(async (event) => {
       message: '指定された回路が見つかりません',
     })
   }
+
+  checkOptimisticLock(circuit, body?.expectedUpdatedAt)
 
   const updated = await prisma.circuit.update({
     where: { id: circuitId },
@@ -43,14 +47,19 @@ export default defineEventHandler(async (event) => {
     },
   })
 
+  const clearedAt = body?.clientConfirmedAt ? new Date(body.clientConfirmedAt) : new Date()
+
   await prisma.operationLog.create({
     data: {
       siteId,
       worker: workerName,
-      action: 'フェーズ2 解除',
+      timestamp: clearedAt,
+      action: body?.isOfflineSync ? 'フェーズ2 解除 (オフライン同期)' : 'フェーズ2 解除',
       targetBan: circuit.banMeisho,
       targetKairo: circuit.kairoBangou || circuit.kairoMeisho || '',
-      details: 'フェーズ2の確定状態を解除しました',
+      details: body?.isOfflineSync
+        ? `フェーズ2の確定状態を解除しました [同期: ${new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}]`
+        : 'フェーズ2の確定状態を解除しました',
     },
   })
 

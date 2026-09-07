@@ -119,7 +119,7 @@ export function renderMath(mathStr: string, isDisplay = true): string {
     return katex.renderToString(mathStr, {
       displayMode: isDisplay,
       throwOnError: false,
-      trust: true,
+      trust: false,
       strict: false,
     })
   }

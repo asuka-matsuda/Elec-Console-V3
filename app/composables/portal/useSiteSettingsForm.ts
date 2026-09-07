@@ -131,12 +131,18 @@ export function useSiteSettingsForm(params: UseSiteSettingsFormParams) {
     isOpen.value = false
   }
 
+  const selectedFile = ref<File | null>(null)
+
+  const handleFileSelect = (file: File | null) => {
+    selectedFile.value = file
+  }
+
   const { updateSite } = useAdminSites()
 
   const showSyncMsg = ref(false)
   const syncMsg = ref('')
   const syncMsgType = ref<'success' | 'error' | 'info'>('info')
-  const syncAction = ref<'merge' | 'reset' | 'export' | null>(null)
+  const syncAction = ref<'merge' | 'reset' | 'export' | 'download' | null>(null)
   const isSyncing = computed(() => syncAction.value !== null)
 
   const syncResultData = ref<SyncResultInfo | null>(null)
@@ -171,9 +177,10 @@ export function useSiteSettingsForm(params: UseSiteSettingsFormParams) {
     if (!site.value?.id) return
 
     const filePath = getCleanPath()
+    const file = selectedFile.value
 
-    if (!filePath) {
-      syncMsg.value = 'Excel連携ファイルの絶対パスを入力してください'
+    if (!file && !filePath) {
+      syncMsg.value = 'Excelファイルを選択するか、絶対パスを入力してください'
       syncMsgType.value = 'error'
       showSyncMsg.value = true
 
@@ -186,6 +193,19 @@ export function useSiteSettingsForm(params: UseSiteSettingsFormParams) {
     showSyncMsg.value = true
 
     try {
+      let body: FormData | { filePath: string, mode: string }
+
+      if (file) {
+        const fd = new FormData()
+
+        fd.append('file', file)
+        fd.append('mode', 'merge')
+        body = fd
+      }
+      else {
+        body = { filePath, mode: 'merge' }
+      }
+
       const res = await $fetch<{
         success: boolean
         count: number
@@ -195,7 +215,7 @@ export function useSiteSettingsForm(params: UseSiteSettingsFormParams) {
         deletedCount?: number
       }>(`/api/sites/${site.value.id}/circuits/import`, {
         method: 'POST',
-        body: { filePath, mode: 'merge' },
+        body,
       })
 
       syncMsg.value = `差分同期完了: ${res.createdCount}件追加、${res.updatedCount}件更新（Web入力値は保護されました）`
@@ -213,7 +233,9 @@ export function useSiteSettingsForm(params: UseSiteSettingsFormParams) {
       }
       isResultDialogOpen.value = true
 
-      await persistSettings(filePath)
+      if (filePath) {
+        await persistSettings(filePath)
+      }
     }
     catch (err: unknown) {
       const e = err as { data?: { message?: string }, message?: string }
@@ -236,9 +258,10 @@ export function useSiteSettingsForm(params: UseSiteSettingsFormParams) {
     if (!site.value?.id) return
 
     const filePath = getCleanPath()
+    const file = selectedFile.value
 
-    if (!filePath) {
-      syncMsg.value = 'Excel連携ファイルの絶対パスを入力してください'
+    if (!file && !filePath) {
+      syncMsg.value = 'Excelファイルを選択するか、絶対パスを入力してください'
       syncMsgType.value = 'error'
       showSyncMsg.value = true
 
@@ -251,11 +274,24 @@ export function useSiteSettingsForm(params: UseSiteSettingsFormParams) {
     showSyncMsg.value = true
 
     try {
+      let body: FormData | { filePath: string, mode: string }
+
+      if (file) {
+        const fd = new FormData()
+
+        fd.append('file', file)
+        fd.append('mode', 'reset')
+        body = fd
+      }
+      else {
+        body = { filePath, mode: 'reset' }
+      }
+
       const res = await $fetch<{ success: boolean, count: number }>(
         `/api/sites/${site.value.id}/circuits/import`,
         {
           method: 'POST',
-          body: { filePath, mode: 'reset' },
+          body,
         },
       )
 
@@ -268,11 +304,13 @@ export function useSiteSettingsForm(params: UseSiteSettingsFormParams) {
         count: res.count,
         createdCount: res.count,
         updatedCount: 0,
-        message: `Excelファイルから全 ${res.count} 件の回路情報を取り込みました。`,
+        message: `全 ${res.count} 件の回路情報を取り込みました。`,
       }
       isResultDialogOpen.value = true
 
-      await persistSettings(filePath)
+      if (filePath) {
+        await persistSettings(filePath)
+      }
     }
     catch (err: unknown) {
       const e = err as { data?: { message?: string }, message?: string }
@@ -347,6 +385,57 @@ export function useSiteSettingsForm(params: UseSiteSettingsFormParams) {
     }
   }
 
+  // 4. ブラウザへ直接Excel帳票ダウンロード
+  const handleDownloadExcel = async () => {
+    if (!site.value?.id) return
+
+    syncAction.value = 'download'
+    syncMsg.value = '最新試験結果入りExcel帳票を生成中...'
+    syncMsgType.value = 'info'
+    showSyncMsg.value = true
+
+    try {
+      const response = await fetch(`/api/sites/${site.value.id}/circuits/export`, {
+        method: 'GET',
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null)
+
+        throw new Error(errorData?.message || 'Excel帳票のダウンロードに失敗しました')
+      }
+
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      const safeName = (site.value.name || '現場').replace(/[\\/:*?"<>|]/g, '_')
+
+      a.href = url
+      a.download = `${safeName}_回路試験結果.xlsx`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+
+      syncMsg.value = 'Excel帳票のダウンロードが完了しました'
+      syncMsgType.value = 'success'
+    }
+    catch (err: unknown) {
+      const e = err as Error
+
+      syncMsg.value = e.message || 'Excel帳票のダウンロードに失敗しました'
+      syncMsgType.value = 'error'
+    }
+    finally {
+      syncAction.value = null
+      setTimeout(() => {
+        if (syncMsgType.value === 'success') {
+          showSyncMsg.value = false
+        }
+      }, 5000)
+    }
+  }
+
   return {
     editData,
     editStatus,
@@ -359,6 +448,8 @@ export function useSiteSettingsForm(params: UseSiteSettingsFormParams) {
     statusOptions: SITE_SETTINGS_STATUS_OPTIONS,
     workerNames,
     handleSave,
+    selectedFile,
+    handleFileSelect,
     showSyncMsg,
     syncMsg,
     syncMsgType,
@@ -369,5 +460,6 @@ export function useSiteSettingsForm(params: UseSiteSettingsFormParams) {
     handleMergeSync,
     handleResetImport,
     handleExport,
+    handleDownloadExcel,
   }
 }

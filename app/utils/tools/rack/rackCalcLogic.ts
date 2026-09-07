@@ -296,11 +296,8 @@ export function generateMathData(
   const sideMargin = inputs.sideMargin ?? (isStrong ? 60 : 120)
 
   const marginRateHl = hlVal(marginRate, 'K', 1)
-  const cableSpacingHl = hlVal(cableSpacing, 'S', 0)
   const sideMarginHl = hlVal(sideMargin, 'W_{side}', 0)
-  const otherHl = hlVal(inputs.otherWidth, isStrong ? 'W_{weak}' : 'W_{strong}', 1)
 
-  const modeVar = isStrong ? 'W_{strong}' : 'W_{weak}'
   const modeVar1 = isStrong ? 'W_{strong,1}' : 'W_{weak,1}'
   const modeVar2 = isStrong ? 'W_{strong,2}' : 'W_{weak,2}'
 

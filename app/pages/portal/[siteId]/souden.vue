@@ -33,6 +33,11 @@ onMounted(() => {
       size="lg"
     >
       <template #actions>
+        <SyncStatusBadge
+          :site-id="siteId"
+          @synced="fetchStats"
+        />
+
         <AppButton
           :to="`/portal/${siteId}`"
           variant="secondary"

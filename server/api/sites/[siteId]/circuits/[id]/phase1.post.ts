@@ -1,10 +1,11 @@
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
-import { requireAuthUser } from '../../../../../utils/auth'
+import { requireSiteAccess } from '../../../../../utils/auth'
+import { checkOptimisticLock } from '../../../../../utils/optimisticLock'
 import { prisma } from '../../../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  const user = await requireAuthUser(event)
+  const user = await requireSiteAccess(event)
   const siteId = getRouterParam(event, 'siteId')
   const circuitId = getRouterParam(event, 'id')
 
@@ -29,11 +30,15 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  checkOptimisticLock(circuit, body.expectedUpdatedAt)
+
+  const confirmedAt = body.clientConfirmedAt ? new Date(body.clientConfirmedAt) : new Date()
+
   const updateData: Record<string, unknown> = {
     p1Kakunin: body.kakunin ?? true,
     p1Mashishime: body.mashishime ?? true,
     p1Worker: workerName,
-    p1ConfirmedAt: new Date(),
+    p1ConfirmedAt: confirmedAt,
   }
 
   if (body.remarks !== undefined) updateData.p1Remarks = body.remarks
@@ -70,11 +75,18 @@ export default defineEventHandler(async (event) => {
     detailsParts.push(`備考: ${body.remarks}`)
   }
 
+  if (body.isOfflineSync) {
+    const syncTimeStr = new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })
+
+    detailsParts.push(`[同期: ${syncTimeStr}]`)
+  }
+
   await prisma.operationLog.create({
     data: {
       siteId,
       worker: workerName,
-      action: 'フェーズ1 確定',
+      timestamp: confirmedAt,
+      action: body.isOfflineSync ? 'フェーズ1 確定 (オフライン同期)' : 'フェーズ1 確定',
       targetBan: circuit.banMeisho,
       targetKairo: circuit.kairoBangou || circuit.kairoMeisho || '',
       details: detailsParts.join(' | ') || '接続確認・増し締め完了',

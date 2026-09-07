@@ -1,10 +1,11 @@
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
-import { requireAuthUser } from '../../../../../utils/auth'
+import { requireSiteAccess } from '../../../../../utils/auth'
+import { checkOptimisticLock } from '../../../../../utils/optimisticLock'
 import { prisma } from '../../../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  const user = await requireAuthUser(event)
+  const user = await requireSiteAccess(event)
   const siteId = getRouterParam(event, 'siteId')
   const circuitId = getRouterParam(event, 'id')
 
@@ -29,6 +30,10 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  checkOptimisticLock(circuit, body.expectedUpdatedAt)
+
+  const confirmedAt = body.clientConfirmedAt ? new Date(body.clientConfirmedAt) : new Date()
+
   const updated = await prisma.circuit.update({
     where: { id: circuitId },
     data: {
@@ -41,7 +46,7 @@ export default defineEventHandler(async (event) => {
       p2Remarks: body.remarks !== undefined ? body.remarks : circuit.p2Remarks,
       p2Worker: workerName,
       p2IsComplete: body.isComplete !== undefined ? Boolean(body.isComplete) : true,
-      p2ConfirmedAt: new Date(),
+      p2ConfirmedAt: confirmedAt,
     },
   })
 
@@ -53,11 +58,18 @@ export default defineEventHandler(async (event) => {
   if (body.tStatus) logDetails.push(`T:${body.tStatus}${body.tVal ? `(${body.tVal}MΩ)` : ''}`)
   if (body.remarks) logDetails.push(`備考:${body.remarks}`)
 
+  if (body.isOfflineSync) {
+    const syncTimeStr = new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })
+
+    logDetails.push(`[同期: ${syncTimeStr}]`)
+  }
+
   await prisma.operationLog.create({
     data: {
       siteId,
       worker: workerName,
-      action: 'フェーズ2 確定',
+      timestamp: confirmedAt,
+      action: body.isOfflineSync ? 'フェーズ2 確定 (オフライン同期)' : 'フェーズ2 確定',
       targetBan: circuit.banMeisho,
       targetKairo: circuit.kairoBangou || circuit.kairoMeisho || '',
       details: logDetails.join(' | ') || '絶縁抵抗測定完了',

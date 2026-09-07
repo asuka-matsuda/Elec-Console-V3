@@ -1,10 +1,10 @@
 import { createError, defineEventHandler, getRouterParam } from 'h3'
 
-import { requireAuthUser } from '../../../../utils/auth'
+import { requireSiteAccess } from '../../../../utils/auth'
 import { getSoudenStats } from '../../../../utils/stats'
 
 export default defineEventHandler(async (event) => {
-  await requireAuthUser(event)
+  await requireSiteAccess(event)
 
   const siteId = getRouterParam(event, 'siteId')
 

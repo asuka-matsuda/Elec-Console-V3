@@ -101,16 +101,9 @@ function formatTierCard(
     badgeColor = 'var(--color-status-success)'
   }
 
-  let displaySize = '---'
-
-  if (tier.selectedSize) {
-    displaySize = `W${tier.selectedSize}`
-  }
-  else {
-    const minRequired = tier.totalWidth ? Math.ceil(tier.totalWidth) : 0
-
-    displaySize = `規格外 (${minRequired}mm以上)`
-  }
+  const displaySize = tier.selectedSize
+    ? `W${tier.selectedSize}`
+    : `規格外 (${tier.totalWidth ? Math.ceil(tier.totalWidth) : 0}mm以上)`
 
   return {
     layers,

@@ -1,11 +1,11 @@
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
-import { requireAuthUser } from '../../../../utils/auth'
-import { exportCircuitsToExcel } from '../../../../utils/circuitExcel'
+import { requireSiteAccess } from '../../../../utils/auth'
+import { exportCircuitsToExcel, validateSafeExcelPath } from '../../../../utils/circuitExcel'
 import { prisma } from '../../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  const user = await requireAuthUser(event)
+  const user = await requireSiteAccess(event)
 
   const siteId = getRouterParam(event, 'siteId')
 
@@ -31,6 +31,16 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 400,
       message: 'Excel連携ファイル保存先が設定されていません。現場設定にてExcelファイルの絶対パスを指定・保存してください。',
+    })
+  }
+
+  try {
+    targetPath = validateSafeExcelPath(targetPath)
+  }
+  catch (pathErr: unknown) {
+    throw createError({
+      statusCode: 400,
+      message: pathErr instanceof Error ? pathErr.message : '無効なファイルパスです',
     })
   }
 

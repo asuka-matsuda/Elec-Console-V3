@@ -114,6 +114,10 @@ const {
       size="lg"
     >
       <template #actions>
+        <SyncStatusBadge
+          :site-id="siteId"
+          @synced="fetchCircuits"
+        />
         <AppButton
           :to="`/portal/${siteId}/souden`"
           variant="secondary"

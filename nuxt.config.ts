@@ -30,6 +30,20 @@ export default defineNuxtConfig({
   css: ['~/assets/scss/style.scss'],
   compatibilityDate: '2025-07-15',
 
+  nitro: {
+    routeRules: {
+      '/**': {
+        headers: {
+          'X-Content-Type-Options': 'nosniff',
+          'X-Frame-Options': 'SAMEORIGIN',
+          'Referrer-Policy': 'strict-origin-when-cross-origin',
+          'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
+          'Cross-Origin-Opener-Policy': 'same-origin',
+        },
+      },
+    },
+  },
+
   vite: {
     css: {
       preprocessorOptions: {

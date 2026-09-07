@@ -111,6 +111,7 @@ const {
 
       &:is(:checked, :indeterminate) ~ .box {
         border-color: var(--checkbox-color);
+        background-color: color-mix(in srgb, var(--checkbox-color) 15%, var(--surface-bg-elevated));
         box-shadow: var(--shadow-glow-active);
         transition: var(--transition-glow);
 
@@ -120,9 +121,14 @@ const {
       }
     }
 
-    &:checked ~ .box .is-check :deep(polyline),
-    &:indeterminate ~ .box .is-dash :deep(line) {
-      stroke-dashoffset: 0;
+    &:checked ~ .box .is-check,
+    &:indeterminate ~ .box .is-dash {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+
+      :deep(:is(path, polyline, line)) {
+        stroke-dashoffset: 0;
+      }
     }
   }
 
@@ -148,12 +154,17 @@ const {
       position: absolute;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%) scale(0.6);
 
-      width: 70%;
-      height: 70%;
+      width: 75%;
+      height: 75%;
 
       color: var(--checkbox-color);
+
+      opacity: 0;
+
+      transition: opacity var(--duration-base) var(--ease-base),
+        transform var(--duration-base) var(--ease-base);
 
       :deep(svg) {
         stroke-linecap: square;
@@ -161,7 +172,7 @@ const {
         stroke-width: 3;
       }
 
-      :deep(:is(polyline, line)) {
+      :deep(:is(path, polyline, line)) {
         stroke-dasharray: 24;
         stroke-dashoffset: 24;
         transition: stroke-dashoffset var(--duration-base) var(--ease-base);

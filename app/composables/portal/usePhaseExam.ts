@@ -1,6 +1,8 @@
 import type { Ref } from 'vue'
 import { computed, ref, unref } from 'vue'
 
+import { useOfflineSync } from '~/composables/portal/useOfflineSync'
+import { useAuth } from '~/composables/useAuth'
 import type { CircuitItem, CircuitsResponse, PanelOption } from '~/types/souden'
 
 export function usePhaseExam(
@@ -8,6 +10,9 @@ export function usePhaseExam(
   initialKeiTo: string = '幹線',
   phaseNumber: number = 1,
 ) {
+  const { getAccurateNow, currentUser } = useAuth()
+  const { enqueue } = useOfflineSync(siteIdRef)
+
   const circuits = ref<CircuitItem[]>([])
   const panelOptions = ref<PanelOption[]>([])
   const panelsWithIncompleteKansen = ref<string[]>([])
@@ -23,6 +28,25 @@ export function usePhaseExam(
 
   const editingRowId = ref<string | null>(null)
   const editForm = ref<Record<string, string>>({})
+
+  // ネットワーク・圏外エラー判定ヘルパー
+  const isNetworkError = (err: unknown): boolean => {
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+      return true
+    }
+
+    const e = err as { name?: string, message?: string, statusCode?: number }
+
+    if (e?.name === 'TypeError' && (e?.message?.includes('fetch') || e?.message?.includes('Network'))) {
+      return true
+    }
+
+    if (e?.name === 'FetchError' && !e?.statusCode) {
+      return true
+    }
+
+    return false
+  }
 
   const fetchCircuits = async () => {
     const siteId = unref(siteIdRef)
@@ -198,6 +222,44 @@ export function usePhaseExam(
     editForm.value = {}
   }
 
+  // 排他制御 (409 Conflict) エラーの共通ハンドリング
+  const handleConflictError = (circuitId: string, err: unknown): boolean => {
+    const fetchErr = err as {
+      statusCode?: number
+      status?: number
+      data?: {
+        message?: string
+        data?: { currentCircuit?: CircuitItem }
+      }
+    }
+
+    const isConflict = fetchErr?.statusCode === 409 || fetchErr?.status === 409
+
+    if (isConflict) {
+      const current = fetchErr.data?.data?.currentCircuit
+
+      if (current) {
+        const idx = circuits.value.findIndex(c => c.id === circuitId)
+
+        if (idx !== -1) {
+          circuits.value[idx] = {
+            ...circuits.value[idx],
+            ...current,
+          }
+        }
+      }
+
+      alert(
+        fetchErr.data?.message
+        || '他の作業員によってこの回路が更新されました。最新状態を反映しました。',
+      )
+
+      return true
+    }
+
+    return false
+  }
+
   // Phase 1 確定実行
   const confirmPhase1 = async (
     circuit: CircuitItem,
@@ -215,20 +277,29 @@ export function usePhaseExam(
 
     isActionLoading.value[circuit.id] = true
 
-    try {
-      const payload = {
-        kakunin: overrideData?.kakunin ?? circuit.p1Kakunin ?? true,
-        mashishime: overrideData?.mashishime ?? circuit.p1Mashishime ?? true,
-        remarks: overrideData?.remarks ?? circuit.p1Remarks ?? '',
-        modifiedFields: overrideData?.modifiedFields ?? [],
-        ...overrideData,
-      }
+    const clientConfirmedAt = getAccurateNow().toISOString()
+    const workerName = currentUser.value
+      ? `${currentUser.value.lastName} ${currentUser.value.firstName}`.trim() || currentUser.value.loginId
+      : '現場作業員'
 
+    const payload = {
+      kakunin: overrideData?.kakunin ?? circuit.p1Kakunin ?? true,
+      mashishime: overrideData?.mashishime ?? circuit.p1Mashishime ?? true,
+      remarks: overrideData?.remarks ?? circuit.p1Remarks ?? '',
+      modifiedFields: overrideData?.modifiedFields ?? [],
+      expectedUpdatedAt: circuit.updatedAt,
+      ...overrideData,
+    }
+
+    try {
       const res = await $fetch<{ success: boolean, circuit: CircuitItem }>(
         `/api/sites/${siteId}/circuits/${circuit.id}/phase1`,
         {
           method: 'POST',
-          body: payload,
+          body: {
+            ...payload,
+            clientConfirmedAt,
+          },
         },
       )
 
@@ -248,6 +319,44 @@ export function usePhaseExam(
       return res
     }
     catch (err: unknown) {
+      if (handleConflictError(circuit.id, err)) {
+        return
+      }
+
+      if (isNetworkError(err)) {
+        enqueue({
+          siteId,
+          circuitId: circuit.id,
+          banMeisho: circuit.banMeisho,
+          kairoBangou: circuit.kairoBangou || '',
+          kairoMeisho: circuit.kairoMeisho || '',
+          phase: 1,
+          actionType: 'confirm',
+          payload,
+          clientConfirmedAt,
+          expectedUpdatedAt: circuit.updatedAt,
+          workerName,
+        })
+
+        const idx = circuits.value.findIndex(c => c.id === circuit.id)
+        const target = circuits.value[idx]
+
+        if (idx !== -1 && target) {
+          circuits.value[idx] = {
+            ...target,
+            p1Kakunin: Boolean(payload.kakunin),
+            p1Mashishime: Boolean(payload.mashishime),
+            p1Remarks: String(payload.remarks || ''),
+            p1Worker: workerName,
+            p1ConfirmedAt: clientConfirmedAt,
+          }
+        }
+
+        cancelEdit()
+
+        return { success: true, isOffline: true }
+      }
+
       const e = err as Error
 
       alert(`確定に失敗しました: ${e.message}`)
@@ -270,11 +379,17 @@ export function usePhaseExam(
 
     isActionLoading.value[circuit.id] = true
 
+    const clientConfirmedAt = getAccurateNow().toISOString()
+
     try {
       const res = await $fetch<{ success: boolean, circuit: CircuitItem }>(
         `/api/sites/${siteId}/circuits/${circuit.id}/phase1/clear`,
         {
           method: 'POST',
+          body: {
+            expectedUpdatedAt: circuit.updatedAt,
+            clientConfirmedAt,
+          },
         },
       )
 
@@ -292,6 +407,40 @@ export function usePhaseExam(
       return res
     }
     catch (err: unknown) {
+      if (handleConflictError(circuit.id, err)) {
+        return
+      }
+
+      if (isNetworkError(err)) {
+        enqueue({
+          siteId,
+          circuitId: circuit.id,
+          banMeisho: circuit.banMeisho,
+          kairoBangou: circuit.kairoBangou || '',
+          kairoMeisho: circuit.kairoMeisho || '',
+          phase: 1,
+          actionType: 'clear',
+          payload: {},
+          clientConfirmedAt,
+          expectedUpdatedAt: circuit.updatedAt,
+        })
+
+        const idx = circuits.value.findIndex(c => c.id === circuit.id)
+        const target = circuits.value[idx]
+
+        if (idx !== -1 && target) {
+          circuits.value[idx] = {
+            ...target,
+            p1Kakunin: false,
+            p1Mashishime: false,
+            p1Worker: null,
+            p1ConfirmedAt: null,
+          }
+        }
+
+        return { success: true, isOffline: true }
+      }
+
       const e = err as Error
 
       alert(`確定解除に失敗しました: ${e.message}`)
@@ -351,12 +500,21 @@ export function usePhaseExam(
 
     isActionLoading.value[circuit.id] = true
 
+    const clientConfirmedAt = getAccurateNow().toISOString()
+    const workerName = currentUser.value
+      ? `${currentUser.value.lastName} ${currentUser.value.firstName}`.trim() || currentUser.value.loginId
+      : '現場作業員'
+
     try {
       const res = await $fetch<{ success: boolean, circuit: CircuitItem }>(
         `/api/sites/${siteId}/circuits/${circuit.id}/phase2`,
         {
           method: 'POST',
-          body: payload,
+          body: {
+            ...payload,
+            clientConfirmedAt,
+            expectedUpdatedAt: circuit.updatedAt,
+          },
         },
       )
 
@@ -374,6 +532,47 @@ export function usePhaseExam(
       return res
     }
     catch (err: unknown) {
+      if (handleConflictError(circuit.id, err)) {
+        return
+      }
+
+      if (isNetworkError(err)) {
+        enqueue({
+          siteId,
+          circuitId: circuit.id,
+          banMeisho: circuit.banMeisho,
+          kairoBangou: circuit.kairoBangou || '',
+          kairoMeisho: circuit.kairoMeisho || '',
+          phase: 2,
+          actionType: 'confirm',
+          payload,
+          clientConfirmedAt,
+          expectedUpdatedAt: circuit.updatedAt,
+          workerName,
+        })
+
+        const idx = circuits.value.findIndex(c => c.id === circuit.id)
+        const target = circuits.value[idx]
+
+        if (idx !== -1 && target) {
+          circuits.value[idx] = {
+            ...target,
+            zetsuenR: payload.rVal !== undefined ? payload.rVal : target.zetsuenR,
+            zetsuenS: payload.sVal !== undefined ? payload.sVal : target.zetsuenS,
+            zetsuenT: payload.tVal !== undefined ? payload.tVal : target.zetsuenT,
+            p2RStatus: payload.rStatus !== undefined ? payload.rStatus : target.p2RStatus,
+            p2SStatus: payload.sStatus !== undefined ? payload.sStatus : target.p2SStatus,
+            p2TStatus: payload.tStatus !== undefined ? payload.tStatus : target.p2TStatus,
+            p2Remarks: payload.remarks !== undefined ? payload.remarks : target.p2Remarks,
+            p2Worker: workerName,
+            p2IsComplete: payload.isComplete !== undefined ? payload.isComplete : true,
+            p2ConfirmedAt: clientConfirmedAt,
+          }
+        }
+
+        return { success: true, isOffline: true }
+      }
+
       const e = err as Error
 
       alert(`フェーズ2の確定に失敗しました: ${e.message}`)
@@ -396,11 +595,17 @@ export function usePhaseExam(
 
     isActionLoading.value[circuit.id] = true
 
+    const clientConfirmedAt = getAccurateNow().toISOString()
+
     try {
       const res = await $fetch<{ success: boolean, circuit: CircuitItem }>(
         `/api/sites/${siteId}/circuits/${circuit.id}/phase2/clear`,
         {
           method: 'POST',
+          body: {
+            expectedUpdatedAt: circuit.updatedAt,
+            clientConfirmedAt,
+          },
         },
       )
 
@@ -418,6 +623,45 @@ export function usePhaseExam(
       return res
     }
     catch (err: unknown) {
+      if (handleConflictError(circuit.id, err)) {
+        return
+      }
+
+      if (isNetworkError(err)) {
+        enqueue({
+          siteId,
+          circuitId: circuit.id,
+          banMeisho: circuit.banMeisho,
+          kairoBangou: circuit.kairoBangou || '',
+          kairoMeisho: circuit.kairoMeisho || '',
+          phase: 2,
+          actionType: 'clear',
+          payload: {},
+          clientConfirmedAt,
+          expectedUpdatedAt: circuit.updatedAt,
+        })
+
+        const idx = circuits.value.findIndex(c => c.id === circuit.id)
+        const target = circuits.value[idx]
+
+        if (idx !== -1 && target) {
+          circuits.value[idx] = {
+            ...target,
+            zetsuenR: null,
+            zetsuenS: null,
+            zetsuenT: null,
+            p2RStatus: null,
+            p2SStatus: null,
+            p2TStatus: null,
+            p2Worker: null,
+            p2ConfirmedAt: null,
+            p2IsComplete: false,
+          }
+        }
+
+        return { success: true, isOffline: true }
+      }
+
       const e = err as Error
 
       alert(`フェーズ2の解除に失敗しました: ${e.message}`)
@@ -481,12 +725,21 @@ export function usePhaseExam(
 
     isActionLoading.value[circuit.id] = true
 
+    const clientConfirmedAt = getAccurateNow().toISOString()
+    const workerName = currentUser.value
+      ? `${currentUser.value.lastName} ${currentUser.value.firstName}`.trim() || currentUser.value.loginId
+      : '現場作業員'
+
     try {
       const res = await $fetch<{ success: boolean, circuit: CircuitItem }>(
         `/api/sites/${siteId}/circuits/${circuit.id}/phase3`,
         {
           method: 'POST',
-          body: payload,
+          body: {
+            ...payload,
+            clientConfirmedAt,
+            expectedUpdatedAt: circuit.updatedAt,
+          },
         },
       )
 
@@ -504,6 +757,44 @@ export function usePhaseExam(
       return res
     }
     catch (err: unknown) {
+      if (handleConflictError(circuit.id, err)) {
+        return
+      }
+
+      if (isNetworkError(err)) {
+        enqueue({
+          siteId,
+          circuitId: circuit.id,
+          banMeisho: circuit.banMeisho,
+          kairoBangou: circuit.kairoBangou || '',
+          kairoMeisho: circuit.kairoMeisho || '',
+          phase: 3,
+          actionType: 'confirm',
+          payload,
+          clientConfirmedAt,
+          expectedUpdatedAt: circuit.updatedAt,
+          workerName,
+        })
+
+        const idx = circuits.value.findIndex(c => c.id === circuit.id)
+        const target = circuits.value[idx]
+
+        if (idx !== -1 && target) {
+          circuits.value[idx] = {
+            ...target,
+            denatsuRs: payload.rs !== undefined ? payload.rs : target.denatsuRs,
+            denatsuSt: payload.st !== undefined ? payload.st : target.denatsuSt,
+            denatsuRt: payload.rt !== undefined ? payload.rt : target.denatsuRt,
+            kensou: payload.kensou !== undefined ? payload.kensou : target.kensou,
+            p3Remarks: payload.remarks !== undefined ? payload.remarks : target.p3Remarks,
+            p3Worker: workerName,
+            p3ConfirmedAt: clientConfirmedAt,
+          }
+        }
+
+        return { success: true, isOffline: true }
+      }
+
       const e = err as Error
 
       alert(`フェーズ3の確定に失敗しました: ${e.message}`)
@@ -526,11 +817,17 @@ export function usePhaseExam(
 
     isActionLoading.value[circuit.id] = true
 
+    const clientConfirmedAt = getAccurateNow().toISOString()
+
     try {
       const res = await $fetch<{ success: boolean, circuit: CircuitItem }>(
         `/api/sites/${siteId}/circuits/${circuit.id}/phase3/clear`,
         {
           method: 'POST',
+          body: {
+            expectedUpdatedAt: circuit.updatedAt,
+            clientConfirmedAt,
+          },
         },
       )
 
@@ -548,6 +845,42 @@ export function usePhaseExam(
       return res
     }
     catch (err: unknown) {
+      if (handleConflictError(circuit.id, err)) {
+        return
+      }
+
+      if (isNetworkError(err)) {
+        enqueue({
+          siteId,
+          circuitId: circuit.id,
+          banMeisho: circuit.banMeisho,
+          kairoBangou: circuit.kairoBangou || '',
+          kairoMeisho: circuit.kairoMeisho || '',
+          phase: 3,
+          actionType: 'clear',
+          payload: {},
+          clientConfirmedAt,
+          expectedUpdatedAt: circuit.updatedAt,
+        })
+
+        const idx = circuits.value.findIndex(c => c.id === circuit.id)
+        const target = circuits.value[idx]
+
+        if (idx !== -1 && target) {
+          circuits.value[idx] = {
+            ...target,
+            denatsuRs: null,
+            denatsuSt: null,
+            denatsuRt: null,
+            kensou: null,
+            p3Worker: null,
+            p3ConfirmedAt: null,
+          }
+        }
+
+        return { success: true, isOffline: true }
+      }
+
       const e = err as Error
 
       alert(`フェーズ3の解除に失敗しました: ${e.message}`)

@@ -6,6 +6,9 @@
 export const STORAGE_KEYS = {
   THEME_MODE: 'elec_theme_mode',
   LAST_SITE_ID: 'last-accessed-site',
+  CACHED_USER: 'elec_cached_user',
+  SERVER_TIME_OFFSET: 'elec_server_time_offset',
+  OFFLINE_SYNC_QUEUE: (siteId: string) => `elec_offline_sync_queue_${siteId}`,
   TOOL_INPUTS: (toolId: string) => `tool-inputs-${toolId}`,
   TOOL_HISTORY: (toolId: string) => `elec_calc_${toolId}_hist`,
   PORTAL_TODOS: (siteId: string, loginId: string) =>

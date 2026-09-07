@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { toRef } from 'vue'
+import { ref, toRef } from 'vue'
 
 import { useSiteSettingsForm } from '~/composables/portal/useSiteSettingsForm'
 import { useModal } from '~/composables/useModal'
@@ -27,6 +27,8 @@ const {
   statusOptions,
   workerNames,
   handleSave,
+  selectedFile,
+  handleFileSelect,
   showSyncMsg,
   syncMsg,
   syncMsgType,
@@ -37,6 +39,7 @@ const {
   handleMergeSync,
   handleResetImport,
   handleExport,
+  handleDownloadExcel,
 } = useSiteSettingsForm({
   site: toRef(props, 'site'),
   isOpen,
@@ -44,6 +47,47 @@ const {
 })
 
 const { askConfirm } = useModal()
+
+const fileInputRef = ref<HTMLInputElement | null>(null)
+const isDragging = ref(false)
+
+const triggerFileInput = () => {
+  fileInputRef.value?.click()
+}
+
+const onFileInputChange = (e: Event) => {
+  const target = e.target as HTMLInputElement
+  const file = target.files?.[0] ?? null
+
+  handleFileSelect(file)
+}
+
+const onDragOver = (e: DragEvent) => {
+  e.preventDefault()
+  isDragging.value = true
+}
+
+const onDragLeave = () => {
+  isDragging.value = false
+}
+
+const onDrop = (e: DragEvent) => {
+  e.preventDefault()
+  isDragging.value = false
+
+  const file = e.dataTransfer?.files?.[0]
+
+  if (file && (file.name.endsWith('.xlsx') || file.name.endsWith('.xlsm') || file.name.endsWith('.xls'))) {
+    handleFileSelect(file)
+  }
+}
+
+const formatFileSize = (bytes: number) => {
+  if (bytes < 1024) return `${bytes} B`
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}
 
 const confirmResetImport = async () => {
   const isConfirmed = await askConfirm({
@@ -97,18 +141,84 @@ const confirmResetImport = async () => {
       </template>
 
       <template v-else-if="activeTab === 'integration'">
-        <AppFormGroup label="Excel連携ファイル保存先 (絶対パス)">
-          <AppInput
-            v-model="editData.excelPath"
-            placeholder="例: D:\Data\site_a.xlsm"
-          />
-        </AppFormGroup>
-        <AppFormGroup label="帳票テンプレート保存先 (絶対パス)">
-          <AppInput
-            v-model="editData.reportTemplatePath"
-            placeholder="例: D:\Templates\report.xlsx"
-          />
-        </AppFormGroup>
+        <!-- 非表示ファイル入力 -->
+        <input
+          ref="fileInputRef"
+          type="file"
+          accept=".xlsx,.xlsm,.xls"
+          style="display: none"
+          @change="onFileInputChange"
+        >
+
+        <!-- ファイル直接アップロード エリア -->
+        <div class="c-site-settings__upload-section">
+          <div class="c-site-settings__section-label">
+            <AppIcon name="file-spreadsheet" size="sm" />
+            <span>Excelファイルから直接取り込む</span>
+          </div>
+
+          <div
+            class="c-site-settings__dropzone"
+            :class="{ 'is-dragging': isDragging, 'has-file': !!selectedFile }"
+            @dragover="onDragOver"
+            @dragleave="onDragLeave"
+            @drop="onDrop"
+            @click="triggerFileInput"
+          >
+            <template v-if="!selectedFile">
+              <AppIcon name="upload-cloud" size="lg" class="c-site-settings__dropzone-icon" />
+              <div class="c-site-settings__dropzone-text">
+                <strong>クリックしてファイルを選択</strong> またはここにドラッグ＆ドロップ
+              </div>
+              <div class="c-site-settings__dropzone-hint">
+                対応形式: .xlsx, .xlsm
+              </div>
+            </template>
+            <template v-else>
+              <div class="c-site-settings__file-preview">
+                <AppIcon name="file-check" size="md" class="u-text-success" />
+                <div class="c-site-settings__file-info">
+                  <div class="c-site-settings__file-name">
+                    {{ selectedFile.name }}
+                  </div>
+                  <div class="c-site-settings__file-size">
+                    {{ formatFileSize(selectedFile.size) }}
+                  </div>
+                </div>
+                <AppButton
+                  variant="secondary"
+                  size="sm"
+                  title="選択を解除"
+                  @click.stop="handleFileSelect(null)"
+                >
+                  <AppIcon name="x" size="sm" />
+                </AppButton>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- PCローカル絶対パス設定 (高度な設定・後方互換用) -->
+        <details class="c-site-settings__advanced-details">
+          <summary class="c-site-settings__advanced-summary">
+            <AppIcon name="folder" size="sm" />
+            <span>PCローカル絶対パス連携 (任意)</span>
+          </summary>
+          <div class="c-site-settings__advanced-content">
+            <AppFormGroup label="Excel連携ファイル保存先 (絶対パス)">
+              <AppInput
+                v-model="editData.excelPath"
+                placeholder="例: D:\Data\site_a.xlsm"
+              />
+            </AppFormGroup>
+            <AppFormGroup label="帳票テンプレート保存先 (絶対パス)">
+              <AppInput
+                v-model="editData.reportTemplatePath"
+                placeholder="例: D:\Templates\report.xlsx"
+              />
+            </AppFormGroup>
+          </div>
+        </details>
 
         <AppPanel>
           <AppSectionHeader title="データベース連携（Excel同期・エクスポート）" />
@@ -117,10 +227,10 @@ const confirmResetImport = async () => {
             <div class="c-site-settings__sync-item">
               <div class="c-site-settings__sync-info">
                 <div class="c-site-settings__sync-title">
-                  Excelから差分再同期 (スマートマージ)
+                  {{ selectedFile ? '選択ファイルから差分同期 (スマートマージ)' : 'Excelから差分再同期 (スマートマージ)' }}
                 </div>
                 <div class="c-site-settings__sync-desc">
-                  Web上の試験結果（Phase 1〜3）を保持したまま、Excelで追加された回路や基本情報の変更のみを安全に同期します（途中行の挿入にも対応）。
+                  Web上の試験結果（Phase 1〜3）を保持したまま、Excelで追加された回路や基本情報の変更のみを安全に同期します。
                 </div>
               </div>
               <AppButton
@@ -130,18 +240,42 @@ const confirmResetImport = async () => {
                 :disabled="isSyncing"
                 @click="handleMergeSync"
               >
-                差分再同期
+                {{ selectedFile ? '選択ファイルから差分同期' : '差分再同期' }}
               </AppButton>
             </div>
 
-            <!-- Excelへ書戻し (実エクスポート) -->
+            <!-- Excel帳票ダウンロード (Web標準) -->
             <div class="c-site-settings__sync-item">
               <div class="c-site-settings__sync-info">
                 <div class="c-site-settings__sync-title">
-                  Excelへ書戻し (エクスポート)
+                  Excel帳票ダウンロード (ブラウザDL)
                 </div>
                 <div class="c-site-settings__sync-desc">
-                  Web上で入力・完了した最新の試験結果（Phase 1〜3の確認・測定値・作業者等）を元のExcelファイルに上書き保存します。
+                  Web上で入力・完了した最新の試験結果（Phase 1〜3）を含むExcel帳票ファイルをブラウザへ直接ダウンロードします。
+                </div>
+              </div>
+              <AppButton
+                variant="secondary"
+                icon="download"
+                :loading="syncAction === 'download'"
+                :disabled="isSyncing"
+                @click="handleDownloadExcel"
+              >
+                帳票ダウンロード
+              </AppButton>
+            </div>
+
+            <!-- PCローカルExcelへ書戻し (実エクスポート) -->
+            <div
+              v-if="editData.excelPath"
+              class="c-site-settings__sync-item"
+            >
+              <div class="c-site-settings__sync-info">
+                <div class="c-site-settings__sync-title">
+                  PCローカルExcelへ書戻し (直接上書き)
+                </div>
+                <div class="c-site-settings__sync-desc">
+                  指定されたPCローカルのExcelファイルに最新試験結果を直接上書き保存します。
                 </div>
               </div>
               <AppButton
@@ -151,7 +285,7 @@ const confirmResetImport = async () => {
                 :disabled="isSyncing"
                 @click="handleExport"
               >
-                Excelへ書戻し
+                指定パスへ書戻し
               </AppButton>
             </div>
 
@@ -159,7 +293,7 @@ const confirmResetImport = async () => {
             <div class="c-site-settings__sync-item c-site-settings__sync-item--danger">
               <div class="c-site-settings__sync-info">
                 <div class="c-site-settings__sync-title">
-                  全件取込 (完全初期化)
+                  {{ selectedFile ? '選択ファイルで全件初期化取込' : '全件取込 (完全初期化)' }}
                 </div>
                 <div class="c-site-settings__sync-desc">
                   Web上の試験結果を含むすべてのデータを破棄し、Excelからまっさらに最初から作り直します（現場初期設定用）。
@@ -172,7 +306,7 @@ const confirmResetImport = async () => {
                 :disabled="isSyncing"
                 @click="confirmResetImport"
               >
-                全件初期化取込
+                {{ selectedFile ? '選択ファイルで初期化取込' : '全件初期化取込' }}
               </AppButton>
             </div>
           </div>
@@ -698,6 +832,147 @@ font-size: var(--font-size-2xl);
     > *:first-child {
       flex: 1;
     }
+  }
+
+  &__upload-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  &__section-label {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text-main);
+  }
+
+  &__dropzone {
+    cursor: pointer;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: center;
+    justify-content: center;
+
+    padding: var(--space-4) var(--space-3);
+    border: 2px dashed var(--color-border);
+    border-radius: var(--radius-md);
+
+    text-align: center;
+
+    background: var(--color-bg-surface-elevated);
+
+    transition: all 0.2s ease;
+
+    &:hover,
+    &.is-dragging {
+      border-color: var(--color-category-main, #3b82f6);
+      background: color-mix(in srgb, var(--color-category-main, #3b82f6) 8%, var(--color-bg-surface-elevated));
+    }
+
+    &.has-file {
+      border-color: color-mix(in srgb, var(--color-status-success) 40%, var(--color-border));
+      border-style: solid;
+      background: color-mix(in srgb, var(--color-status-success) 5%, var(--color-bg-surface-elevated));
+    }
+  }
+
+  &__dropzone-icon {
+    color: var(--color-text-muted);
+  }
+
+  &__dropzone-text {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-main);
+
+    strong {
+      color: var(--color-category-main, #3b82f6);
+    }
+  }
+
+  &__dropzone-hint {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+  }
+
+  &__file-preview {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+
+    width: 100%;
+    max-width: 450px;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid color-mix(in srgb, var(--color-status-success) 30%, transparent);
+    border-radius: var(--radius-sm);
+
+    background: color-mix(in srgb, var(--color-status-success) 10%, transparent);
+  }
+
+  &__file-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+
+    min-width: 0;
+
+    text-align: left;
+  }
+
+  &__file-name {
+    overflow: hidden;
+
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text-main);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__file-size {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+  }
+
+  &__advanced-details {
+    margin: var(--space-1) 0;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-surface);
+  }
+
+  &__advanced-summary {
+    cursor: pointer;
+    user-select: none;
+
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+
+    padding: var(--space-2) var(--space-3);
+
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    color: var(--color-text-muted);
+
+    &:hover {
+      color: var(--color-text-main);
+    }
+  }
+
+  &__advanced-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+
+    padding: var(--space-2) var(--space-3) var(--space-3);
+    border-top: 1px dashed var(--color-border-subtle);
   }
 }
 </style>

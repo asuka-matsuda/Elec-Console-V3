@@ -152,6 +152,14 @@ const cancelInput = () => {
   editingRowId.value = null
 }
 
+const handleInputFocus = (event: FocusEvent) => {
+  const target = event.target as HTMLInputElement | null
+
+  if (target) {
+    target.select()
+  }
+}
+
 // 手入力内容の確定
 const saveInput = async (circuit: CircuitItem) => {
   const rNum = typeof inputForm.rVal === 'string' && inputForm.rVal !== '' ? parseFloat(inputForm.rVal) : typeof inputForm.rVal === 'number' ? inputForm.rVal : null
@@ -207,6 +215,11 @@ const {
       size="lg"
     >
       <template #actions>
+        <SyncStatusBadge
+          :site-id="siteId"
+          @synced="fetchCircuits"
+        />
+
         <AppButton
           variant="primary"
           size="sm"
@@ -349,7 +362,11 @@ const {
                       v-model="inputForm.rVal"
                       type="number"
                       step="0.1"
+                      inputmode="decimal"
                       class="p-phase2-input"
+                      placeholder="100"
+                      @focus="handleInputFocus"
+                      @keydown.enter.prevent="saveInput(circuit)"
                     >
                     <span class="p-phase2-input-cell__unit">MΩ</span>
                   </div>
@@ -388,7 +405,11 @@ const {
                       v-model="inputForm.sVal"
                       type="number"
                       step="0.1"
+                      inputmode="decimal"
                       class="p-phase2-input"
+                      placeholder="100"
+                      @focus="handleInputFocus"
+                      @keydown.enter.prevent="saveInput(circuit)"
                     >
                     <span class="p-phase2-input-cell__unit">MΩ</span>
                   </div>
@@ -427,7 +448,11 @@ const {
                       v-model="inputForm.tVal"
                       type="number"
                       step="0.1"
+                      inputmode="decimal"
                       class="p-phase2-input"
+                      placeholder="100"
+                      @focus="handleInputFocus"
+                      @keydown.enter.prevent="saveInput(circuit)"
                     >
                     <span class="p-phase2-input-cell__unit">MΩ</span>
                   </div>

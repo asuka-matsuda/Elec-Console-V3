@@ -43,10 +43,12 @@ const handleChangePassword = async () => {
     }
     router.push('/')
   }
-  catch (err: any) {
+  catch (err: unknown) {
+    const fetchErr = err as { data?: { statusMessage?: string, message?: string } }
+
     errorMsg.value
-      = err.data?.statusMessage
-        || err.data?.message
+      = fetchErr.data?.statusMessage
+        || fetchErr.data?.message
         || 'パスワードの変更に失敗しました。'
     isLoading.value = false
   }

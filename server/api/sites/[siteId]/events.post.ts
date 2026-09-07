@@ -1,10 +1,10 @@
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
-import { requireAuthUser } from '../../../utils/auth'
+import { requireSiteAccess } from '../../../utils/auth'
 import { prisma } from '../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  await requireAuthUser(event)
+  await requireSiteAccess(event)
 
   try {
     const siteId = getRouterParam(event, 'siteId')
