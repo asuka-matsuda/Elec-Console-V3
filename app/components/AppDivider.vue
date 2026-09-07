@@ -19,9 +19,8 @@ const {
     | 'database'
     | 'reference'
     | 'management'
-    | 'danger'
-    | 'success'
     | 'border'
+    | (string & {})
   type?: 'solid' | 'fade-center' | 'fade-side' | 'default'
   vertical?: boolean
 }>()
@@ -32,8 +31,6 @@ const variantColorMap: Record<string, string> = {
   database: 'var(--color-category-database)',
   reference: 'var(--color-category-reference)',
   management: 'var(--color-category-management)',
-  danger: 'var(--color-status-danger)',
-  success: 'var(--color-status-success)',
   border: 'var(--color-border)',
 }
 
