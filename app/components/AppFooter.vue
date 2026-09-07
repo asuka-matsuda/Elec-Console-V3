@@ -3,38 +3,55 @@
  * AppFooter
  * アプリケーションのフッター部分（コピーライト等）を表示するコンポーネントです。
  */
-const currentYear = new Date().getFullYear()
+
+interface Props {
+  year?: number | string
+  text?: string
+}
+
+const {
+  year = new Date().getFullYear(),
+  text,
+} = defineProps<Props>()
 </script>
 
 <template>
-  <footer class="c-footer">
+  <footer class="footer">
     <AppDivider type="fade-center" />
-    <p class="c-footer__copyright">
-      &copy; {{ currentYear }} Mat.Operate &amp; Gemini 3.1 Pro. / Elec-Console
-      All rights reserved.
+    <p class="copyright">
+      <slot>
+        {{ text || `© ${year} Mat.Operate & Gemini 3.1 Pro. / Elec-Console All rights reserved.` }}
+      </slot>
     </p>
   </footer>
 </template>
 
 <style scoped lang="scss">
-.c-footer {
-  @include flex-start-center($direction: column);
-
+.footer {
+  display: flex;
+  flex-direction: column;
   gap: var(--space-3);
+  align-items: center;
+
   margin-top: auto;
-  padding: var(--space-layout-pad) 0 0;
+  padding-top: var(--space-layout-pad);
+
   text-align: center;
+}
 
-  &__copyright {
-    @include text-mono("2xs");
+.copyright {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2xs);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--line-height-base);
+  color: var(--color-text-muted);
+  letter-spacing: var(--tracking-normal);
 
-    color: var(--color-text-muted);
+  transition: var(--transition-base);
 
-    @include state-base;
-
-    &:hover {
-      @include cyber-text-glow(var(--color-text-secondary), 100%, var(--blur-sm));
-    }
+  &:hover {
+    color: var(--color-text-secondary);
+    text-shadow: 0 0 var(--blur-sm) var(--color-text-secondary);
   }
 }
 </style>
