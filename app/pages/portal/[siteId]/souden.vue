@@ -87,7 +87,7 @@ onMounted(() => {
               :value="stats.totalPct"
               size="lg"
               label="全試験完了率"
-              variant="main"
+              color="var(--color-category-main)"
             />
           </div>
 
@@ -99,7 +99,7 @@ onMounted(() => {
                   :value="stats.trunkOverallPct"
                   size="sm"
                   label="幹線 全体"
-                  variant="tool"
+                  color="var(--color-category-tool)"
                 />
               </div>
 
@@ -140,7 +140,7 @@ onMounted(() => {
                   :value="stats.secOverallPct"
                   size="sm"
                   label="二次側 全体"
-                  variant="management"
+                  color="var(--color-category-management)"
                 />
               </div>
 

@@ -5,7 +5,12 @@
  */
 const model = defineModel<boolean | unknown[]>()
 
-defineProps<{
+const {
+  value,
+  label,
+  disabled = false,
+  indeterminate = false,
+} = defineProps<{
   value?: unknown
   label?: string
   disabled?: boolean
@@ -19,15 +24,14 @@ defineProps<{
       v-model="model"
       type="checkbox"
       .indeterminate="indeterminate"
-      class="c-checkbox__input"
       :value="value"
       :disabled="disabled"
     />
-    <div class="c-checkbox__box">
-      <AppIcon name="check" class="c-checkbox__icon c-checkbox__icon--check" />
-      <AppIcon name="minus" class="c-checkbox__icon c-checkbox__icon--dash" />
-    </div>
-    <span v-if="label || $slots.default" class="c-checkbox__label">
+    <span class="box">
+      <AppIcon name="check" class="icon is-check" />
+      <AppIcon name="minus" class="icon is-dash" />
+    </span>
+    <span v-if="label || $slots.default" class="label">
       <slot>{{ label }}</slot>
     </span>
   </label>
@@ -36,19 +40,27 @@ defineProps<{
 <style scoped lang="scss">
 .c-checkbox {
   --checkbox-color: var(--theme-accent);
+  --glow-color: var(--checkbox-color);
 
-  @include flex-start-center($is-inline: true);
-  @include text-desc;
-  @include click-enabled;
+  cursor: pointer;
+  user-select: none;
 
   position: relative;
+
+  display: inline-flex;
   gap: var(--space-2);
+  align-items: center;
+
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  color: var(--color-text-muted);
+  letter-spacing: var(--tracking-normal);
 
   &:has(:disabled) {
     cursor: not-allowed;
   }
 
-  &__input {
+  input {
     cursor: inherit;
 
     position: absolute;
@@ -61,65 +73,77 @@ defineProps<{
     opacity: 0;
 
     &:disabled {
-      ~ .c-checkbox__box,
-      ~ .c-checkbox__label {
-        @include disabled;
+      ~ .box,
+      ~ .label {
+        cursor: not-allowed;
+        opacity: 0.5;
+        filter: grayscale(100%);
       }
     }
 
     &:not(:disabled) {
       &:hover {
-        ~ .c-checkbox__label {
+        ~ .label {
           color: color-mix(in srgb, var(--checkbox-color) 90%, transparent);
-
-          @include cyber-text-glow(var(--checkbox-color), 20%, var(--blur-sm));
+          text-shadow: 0 0 var(--blur-sm) color-mix(in srgb, var(--checkbox-color) 20%, transparent);
         }
 
-        &:not(:focus-visible, :active, :checked, :indeterminate) ~ .c-checkbox__box {
-          @include state-hover(var(--checkbox-color));
+        &:not(:focus-visible, :active, :checked, :indeterminate) ~ .box {
+          border-color: var(--checkbox-color);
+          box-shadow: var(--shadow-glow-hover);
+          transition: var(--transition-glow);
         }
       }
 
-      &:active ~ .c-checkbox__box {
-        @include state-active(var(--checkbox-color));
+      &:active ~ .box {
+        border-color: var(--checkbox-color);
+        box-shadow: var(--shadow-glow-active);
+        transition: var(--transition-glow);
       }
 
-      &:focus-visible ~ .c-checkbox__box {
-        @include state-focus(var(--checkbox-color));
-        @include cyber-text-glow(var(--checkbox-color));
+      &:focus-visible ~ .box {
+        border-color: color-mix(in srgb, var(--checkbox-color) 60%, transparent);
+        outline: none;
+        box-shadow: var(--shadow-glow-focus);
+        transition: var(--transition-glow);
       }
 
-      &:is(:checked, :indeterminate) ~ .c-checkbox__box {
-        @include state-active(var(--checkbox-color));
+      &:is(:checked, :indeterminate) ~ .box {
+        border-color: var(--checkbox-color);
+        box-shadow: var(--shadow-glow-active);
+        transition: var(--transition-glow);
 
-        .c-checkbox__icon {
-          filter: drop-shadow(0 0 var(--blur-sm) var(--checkbox-color));
+        .icon {
+          filter: var(--drop-shadow-glow-sm);
         }
       }
     }
 
-    &:checked ~ .c-checkbox__box .c-checkbox__icon--check :deep(polyline),
-    &:indeterminate ~ .c-checkbox__box .c-checkbox__icon--dash :deep(line) {
+    &:checked ~ .box .is-check :deep(polyline),
+    &:indeterminate ~ .box .is-dash :deep(line) {
       stroke-dashoffset: 0;
     }
   }
 
-  &__box {
-    @include flex-center-center;
-
+  .box {
     position: relative;
+    z-index: 1;
 
+    display: flex;
     flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
 
     width: 1.4em;
     height: 1.4em;
+    border: var(--border-width-base) solid var(--color-border);
+    border-radius: var(--radius-sm);
 
     background-color: var(--surface-bg-elevated);
 
-    @include border-base;
-    @include state-base;
+    transition: var(--transition-base);
 
-    .c-checkbox__icon {
+    .icon {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -144,8 +168,8 @@ defineProps<{
     }
   }
 
-  &__label {
-    @include state-base;
+  .label {
+    transition: var(--transition-base);
   }
 }
 </style>

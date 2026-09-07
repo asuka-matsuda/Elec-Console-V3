@@ -191,6 +191,7 @@
   --color-bg-hover: color-mix(in srgb, var(--color-overlay) 6%, transparent);
   --color-overlay-dark: hsl(0deg 0% 0% / 60%);
   --color-overlay-light: hsl(0deg 0% 0% / 30%);
+  --blur-xs: 2px;
   --blur-sm: 4px;
   --blur-md: 8px;
   --blur-lg: 12px;
@@ -232,6 +233,40 @@
     0 0 8px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 30%, transparent),
     inset 0 0 2px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 40%, transparent),
     var(--shadow-elevation-sm);
+
+  // SVG / アイコン / メーター用 ドロップシャドウ発光 (サイズ別)
+  --drop-shadow-glow-xs: drop-shadow(
+    0 0 var(--glow-blur, var(--blur-xs))
+    color-mix(
+      in srgb,
+      var(--glow-color, var(--theme-accent)) 50%,
+      transparent
+    )
+  );
+  --drop-shadow-glow-sm: drop-shadow(
+    0 0 var(--glow-blur, var(--blur-sm))
+    color-mix(
+      in srgb,
+      var(--glow-color, var(--theme-accent)) 50%,
+      transparent
+    )
+  );
+  --drop-shadow-glow: drop-shadow(
+    0 0 var(--glow-blur, var(--blur-md))
+    color-mix(
+      in srgb,
+      var(--glow-color, var(--theme-accent)) 50%,
+      transparent
+    )
+  );
+  --drop-shadow-glow-lg: drop-shadow(
+    0 0 var(--glow-blur, var(--blur-lg))
+    color-mix(
+      in srgb,
+      var(--glow-color, var(--theme-accent)) 50%,
+      transparent
+    )
+  );
 
 
 

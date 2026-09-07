@@ -94,7 +94,7 @@ const target = computed(() => to || href)
     transition: var(--transition-glow);
 
     svg {
-      filter: drop-shadow(0 0 2px var(--theme-accent));
+      filter: var(--drop-shadow-glow-xs);
       stroke: var(--theme-accent);
     }
   }

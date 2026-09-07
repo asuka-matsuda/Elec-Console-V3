@@ -1,13 +1,16 @@
 <script setup lang="ts">
 /**
  * AppButton
- * 汎用的なボタンコンポーネント（ベース）
+ * 汎用的なボタン・リンクボタンコンポーネント（ベース）
  */
 import { computed } from 'vue'
 
+import { NuxtLink } from '#components'
 import type { AppButtonProps } from '~/types/components'
 
 const {
+  to,
+  href,
   type = 'button',
   size = 'sm',
   variant = 'primary',
@@ -18,29 +21,37 @@ const {
 } = defineProps<AppButtonProps>()
 
 const isClickable = computed(() => !disabled && !loading)
+const target = computed(() => to || href)
 </script>
 
 <template>
-  <button
-    :type="type"
+  <component
+    :is="target && isClickable ? NuxtLink : 'button'"
+    :to="target && isClickable ? target : undefined"
+    :type="!target ? type : undefined"
     :disabled="!isClickable ? true : undefined"
     :aria-busy="loading ? true : undefined"
     :class="[
       'c-btn',
       `c-btn--${variant}`,
       `c-btn--${size}`,
-      { 'c-btn--block': block, 'c-btn--loading': loading },
+      {
+        'c-btn--block': block,
+        'c-btn--loading': loading,
+        'is-disabled': !isClickable,
+      },
     ]"
   >
     <AppIcon v-if="loading" name="loader" class="u-spin c-btn__spinner" />
     <AppIcon v-else-if="icon" :name="icon" />
     <slot />
-  </button>
+  </component>
 </template>
 
 <style scoped lang="scss">
 .c-btn {
   --btn-color: var(--theme-accent);
+  --glow-color: var(--btn-color);
 
   cursor: pointer;
   user-select: none;
@@ -64,6 +75,7 @@ const isClickable = computed(() => !disabled && !loading)
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-tight);
   color: var(--btn-color);
+  text-decoration: none;
   letter-spacing: var(--tracking-wide);
 
   background-color: var(--surface-bg-elevated);
@@ -76,13 +88,14 @@ const isClickable = computed(() => !disabled && !loading)
     height: 1.2em;
   }
 
-  &:disabled {
+  &:disabled,
+  &.is-disabled {
     cursor: not-allowed;
     opacity: 0.5;
     filter: grayscale(100%);
   }
 
-  &:not(:disabled) {
+  &:not(:disabled, .is-disabled) {
     &:hover {
       border-color: var(--btn-color);
       box-shadow: var(--shadow-glow-hover);
@@ -102,7 +115,7 @@ const isClickable = computed(() => !disabled && !loading)
       transition: var(--transition-glow);
 
       svg {
-        filter: drop-shadow(0 0 2px var(--btn-color));
+        filter: var(--drop-shadow-glow-xs);
         stroke: var(--btn-color);
       }
     }

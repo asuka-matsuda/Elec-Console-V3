@@ -5,51 +5,49 @@
  */
 import { computed } from 'vue'
 
-const props = withDefaults(
-  defineProps<{
-    value: number
-    label?: string
-    size?: 'sm' | 'md' | 'lg'
-    variant?: 'main' | 'tool' | 'management' | 'success' | 'warning' | 'danger'
-  }>(),
-  {
-    size: 'md',
-    variant: 'main',
-  },
-)
+const {
+  value = 0,
+  label,
+  size = 'md',
+  color = 'var(--theme-accent, var(--color-category-main))',
+} = defineProps<{
+  value?: number
+  label?: string
+  size?: 'sm' | 'md' | 'lg'
+  color?: string
+}>()
 
 const normalizedValue = computed(() => {
-  if (isNaN(props.value)) return 0
+  if (isNaN(value)) return 0
 
-  return Math.min(100, Math.max(0, Math.round(props.value)))
+  return Math.min(100, Math.max(0, Math.round(value)))
 })
-
-const gaugeClasses = computed(() => [
-  'c-circular-gauge',
-  `c-circular-gauge--${props.size}`,
-  `c-circular-gauge--${props.variant}`,
-])
 </script>
 
 <template>
   <div
-    :class="gaugeClasses"
-    :style="{ '--progress': `${normalizedValue}%` }"
+    class="c-circular-gauge"
+    :class="`is-${size}`"
+    :style="{
+      '--progress': `${normalizedValue}%`,
+      '--gauge-color': color,
+      '--glow-color': color,
+    }"
   >
-    <div class="c-circular-gauge__value">
-      {{ normalizedValue }}<span class="c-circular-gauge__unit">%</span>
+    <div class="value">
+      {{ normalizedValue }}<span class="unit">%</span>
     </div>
-    <div v-if="label" class="c-circular-gauge__label">
+    <span v-if="label" class="label">
       {{ label }}
-    </div>
+    </span>
   </div>
 </template>
 
 <style scoped lang="scss">
 .c-circular-gauge {
-  --gauge-color: var(--color-category-main, #3b82f6);
   --gauge-size: 160px;
   --gauge-thickness: 8px;
+  --gauge-glow: var(--drop-shadow-glow);
 
   position: relative;
 
@@ -75,7 +73,7 @@ const gaugeClasses = computed(() => [
       var(--gauge-color) var(--progress, 0%),
       rgb(255 255 255 / 8%) 0
     );
-    filter: drop-shadow(0 0 10px rgb(59 130 246 / 50%));
+    filter: var(--gauge-glow);
 
     mask: radial-gradient(
       circle at center,
@@ -84,71 +82,53 @@ const gaugeClasses = computed(() => [
     );
   }
 
-  &__value {
+  .value {
     position: relative;
     z-index: 2;
 
-    font-family: var(--font-mono, monospace);
-    font-size: var(--text-3xl, 1.875rem);
-    font-weight: var(--font-weight-bold, 700);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
     line-height: 1;
-    color: var(--color-text-main, #fff);
+    color: var(--color-text-main);
   }
 
-  &__unit {
-    margin-left: var(--space-1, 4px);
-    font-size: var(--text-base, 1rem);
+  .unit {
+    margin-left: var(--space-1);
+    font-size: var(--font-size-base);
     font-weight: normal;
-    color: var(--color-text-secondary, #94a3b8);
-  }
-
-  &__label {
-    position: relative;
-    z-index: 2;
-
-    margin-top: var(--space-2, 8px);
-
-    font-size: var(--text-xs, 0.75rem);
-    font-weight: var(--font-weight-medium, 500);
     color: var(--color-text-secondary);
   }
 
-  &--sm {
+  .label {
+    position: relative;
+    z-index: 2;
+
+    margin-top: var(--space-2);
+
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+  }
+
+  &.is-sm {
     --gauge-size: 110px;
     --gauge-thickness: 6px;
+    --gauge-glow: var(--drop-shadow-glow-sm);
 
-    .c-circular-gauge__value {
-      font-size: var(--text-xl, 1.25rem);
+    .value {
+      font-size: var(--font-size-xl);
     }
   }
 
-  &--lg {
+  &.is-lg {
     --gauge-size: 200px;
     --gauge-thickness: 12px;
+    --gauge-glow: var(--drop-shadow-glow-lg);
 
-    .c-circular-gauge__value {
-      font-size: var(--text-4xl, 2.5rem);
+    .value {
+      font-size: var(--font-size-4xl);
     }
-  }
-
-  &--tool {
-    --gauge-color: var(--color-category-tool, #0ea5e9);
-  }
-
-  &--management {
-    --gauge-color: var(--color-category-management, #10b981);
-  }
-
-  &--success {
-    --gauge-color: var(--color-status-success, #22c55e);
-  }
-
-  &--warning {
-    --gauge-color: var(--color-status-warning, #f59e0b);
-  }
-
-  &--danger {
-    --gauge-color: var(--color-status-danger, #ef4444);
   }
 }
 </style>
