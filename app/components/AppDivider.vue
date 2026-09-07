@@ -85,6 +85,8 @@ const normalizedType = computed(() => (type === 'default' ? 'solid' : type))
     background: var(--color-border);
 
     &:not(.is-vertical)::before {
+      --glow-color: var(--divider-color);
+
       content: "";
 
       position: absolute;
@@ -100,7 +102,7 @@ const normalizedType = computed(() => (type === 'default' ? 'solid' : type))
         color-mix(in srgb, var(--divider-color) 80%, transparent),
         transparent
       );
-      box-shadow: 0 0 var(--blur-md) color-mix(in srgb, var(--divider-color) 60%, transparent);
+      box-shadow: var(--shadow-glow-hover);
 
       animation: data-pulse-x 3s ease-in-out infinite;
     }

@@ -34,7 +34,7 @@ body {
 
   background-color: var(--color-main-bg);
 
-  transition: background-color var(--duration-modal) ease;
+  transition: background-color var(--duration-modal) var(--ease-smooth);
 
   -webkit-font-smoothing: antialiased;
 }

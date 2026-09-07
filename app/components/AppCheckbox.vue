@@ -84,8 +84,10 @@ const {
     &:not(:disabled) {
       &:hover {
         ~ .label {
+          --glow-color: var(--checkbox-color);
+
           color: color-mix(in srgb, var(--checkbox-color) 90%, transparent);
-          text-shadow: 0 0 var(--blur-sm) color-mix(in srgb, var(--checkbox-color) 20%, transparent);
+          text-shadow: var(--text-glow-sm);
         }
 
         &:not(:focus-visible, :active, :checked, :indeterminate) ~ .box {

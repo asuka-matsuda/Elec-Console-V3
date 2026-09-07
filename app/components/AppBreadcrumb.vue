@@ -82,8 +82,10 @@ defineProps<{
     transition: var(--transition-base);
 
     &:hover {
+      --glow-color: var(--color-text-main);
+
       color: var(--color-text-main);
-      text-shadow: 0 0 var(--blur-sm) var(--color-text-main);
+      text-shadow: var(--text-glow-sm);
     }
   }
 
@@ -92,8 +94,10 @@ defineProps<{
     color: var(--color-text-muted);
 
     &.is-current {
+      --glow-color: var(--theme-accent);
+
       color: var(--theme-accent);
-      text-shadow: 0 0 var(--blur-md) color-mix(in srgb, var(--theme-accent) 60%, transparent);
+      text-shadow: var(--text-glow-md);
 
       &::after {
         content: "";

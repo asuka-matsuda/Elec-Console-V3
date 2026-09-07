@@ -80,7 +80,7 @@ const pct = computed(() => {
 
     background-color: rgb(255 255 255 / 10%);
 
-    transition: background-color 0.3s ease;
+    transition: background-color var(--duration-base) var(--ease-base);
   }
 
   &:last-child::after {
@@ -89,9 +89,11 @@ const pct = computed(() => {
 
   &.is-completed {
     .c-step-indicator__node {
-      border-color: var(--color-status-success, #22c55e);
-      color: var(--color-status-success, #22c55e);
-      box-shadow: 0 0 10px rgb(34 197 94 / 40%);
+      --glow-color: var(--color-status-success);
+
+      border-color: var(--color-status-success);
+      color: var(--color-status-success);
+      box-shadow: var(--shadow-glow-sm);
     }
 
     &::after {
@@ -126,7 +128,7 @@ const pct = computed(() => {
 
   background-color: var(--surface-bg-elevated, #1e293b);
 
-  transition: all 0.3s ease;
+  transition: var(--transition-base);
 }
 
 .c-step-indicator__info {
@@ -142,7 +144,7 @@ const pct = computed(() => {
 
   background-color: rgb(255 255 255 / 3%);
 
-  transition: border-color 0.2s ease, background-color 0.2s ease;
+  transition: border-color var(--duration-base) var(--ease-base), background-color var(--duration-base) var(--ease-base);
 
   &:hover {
     border-color: rgb(255 255 255 / 15%);

@@ -206,10 +206,10 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
       /* 平日・土曜・日曜祝日・今日すべてで統一のホバー発光を適用 */
       &:hover:not(:has(.fc-daygrid-event:hover)) {
-        border-color: var(--cell-accent-color);
-        box-shadow:
-          0 0 4px color-mix(in srgb, var(--cell-accent-color) 45%, transparent),
-          0 0 8px color-mix(in srgb, var(--cell-accent-color) 20%, transparent);
+        --glow-color: var(--cell-accent-color);
+
+        border-color: var(--glow-color);
+        box-shadow: var(--shadow-glow-hover);
         transition: var(--transition-glow);
       }
     }
@@ -238,10 +238,10 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
       // 子要素のバッジのホバースタイルを親から強制的に発火させる
       .c-cal-badge {
-        border-color: var(--badge-color);
-        box-shadow:
-          0 0 4px color-mix(in srgb, var(--badge-color) 45%, transparent),
-          0 0 8px color-mix(in srgb, var(--badge-color) 20%, transparent);
+        --glow-color: var(--badge-color);
+
+        border-color: var(--glow-color);
+        box-shadow: var(--shadow-glow-hover);
         transition: var(--transition-glow);
       }
     }
@@ -249,6 +249,8 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
   /* 3件超過時の「+○件」展開リンク */
   :deep(.fc-daygrid-more-link) {
+    --glow-color: var(--color-primary);
+
     position: relative;
     z-index: 1;
 
@@ -261,13 +263,13 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     font-weight: var(--font-weight-bold);
     line-height: var(--line-height-base);
     color: var(--color-primary);
-    text-shadow: 0 0 var(--blur-sm) color-mix(in srgb, var(--color-primary) 50%, transparent);
+    text-shadow: var(--text-glow-sm);
 
     transition: var(--transition-base);
 
     &:hover {
       transform: translateY(-1px);
-      text-shadow: 0 0 var(--blur-md) color-mix(in srgb, var(--color-primary) 100%, transparent);
+      text-shadow: var(--text-glow-md);
     }
   }
 
@@ -374,15 +376,11 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     }
 
     .fc-list-event-dot {
-      border-color: var(--event-color, var(--color-primary));
-      border-color: color-mix(in srgb, var(--event-color, var(--color-primary)) 60%, transparent);
+      --glow-color: var(--event-color, var(--color-primary));
 
+      border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
       outline: none;
-      box-shadow:
-        0 0 0 1px color-mix(in srgb, var(--event-color, var(--color-primary)) 70%, transparent),
-        0 0 6px color-mix(in srgb, var(--event-color, var(--color-primary)) 50%, transparent),
-        0 0 12px color-mix(in srgb, var(--event-color, var(--color-primary)) 20%, transparent);
-
+      box-shadow: var(--shadow-glow-focus);
       transition: var(--transition-glow);
     }
 

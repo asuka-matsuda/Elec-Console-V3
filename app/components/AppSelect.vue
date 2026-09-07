@@ -214,60 +214,48 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   }
 
   &:not(:disabled, .is-disabled) {
+    --glow-color: var(--theme-accent);
+
     &:hover {
-      border-color: var(--theme-accent);
-      box-shadow:
-        0 0 4px color-mix(in srgb, var(--theme-accent) 45%, transparent),
-        0 0 8px color-mix(in srgb, var(--theme-accent) 20%, transparent);
+      border-color: var(--glow-color);
+      box-shadow: var(--shadow-glow-hover);
     }
 
     &:active {
-      border-color: var(--theme-accent);
-      box-shadow:
-        0 0 4px color-mix(in srgb, var(--theme-accent) 60%, transparent),
-        0 0 8px color-mix(in srgb, var(--theme-accent) 30%, transparent),
-        inset 0 0 2px color-mix(in srgb, var(--theme-accent) 40%, transparent);
+      border-color: var(--glow-color);
+      box-shadow: var(--shadow-glow-active);
     }
 
     &.is-active,
     &:focus,
     &:focus-visible {
-      border-color: color-mix(in srgb, var(--theme-accent) 60%, transparent);
+      border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
       outline: none;
-      box-shadow:
-        0 0 0 1px color-mix(in srgb, var(--theme-accent) 70%, transparent),
-        0 0 6px color-mix(in srgb, var(--theme-accent) 50%, transparent),
-        0 0 12px color-mix(in srgb, var(--theme-accent) 20%, transparent);
+      box-shadow: var(--shadow-glow-focus);
     }
 
     .c-custom-select.is-error & {
-      border-color: color-mix(in srgb, var(--color-status-danger) 60%, transparent);
-      color: var(--color-status-danger);
+      --glow-color: var(--color-status-danger);
+
+      border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
+      color: var(--glow-color);
 
       &:hover {
-        border-color: var(--color-status-danger);
-        box-shadow:
-          0 0 4px color-mix(in srgb, var(--color-status-danger) 45%, transparent),
-          0 0 8px color-mix(in srgb, var(--color-status-danger) 20%, transparent);
+        border-color: var(--glow-color);
+        box-shadow: var(--shadow-glow-hover);
       }
 
       &:active {
-        border-color: var(--color-status-danger);
-        box-shadow:
-          0 0 4px color-mix(in srgb, var(--color-status-danger) 60%, transparent),
-          0 0 8px color-mix(in srgb, var(--color-status-danger) 30%, transparent),
-          inset 0 0 2px color-mix(in srgb, var(--color-status-danger) 40%, transparent);
+        border-color: var(--glow-color);
+        box-shadow: var(--shadow-glow-active);
       }
 
       &.is-active,
       &:focus,
       &:focus-visible {
-        border-color: var(--color-status-danger);
+        border-color: var(--glow-color);
         outline: none;
-        box-shadow:
-          0 0 0 1px color-mix(in srgb, var(--color-status-danger) 70%, transparent),
-          0 0 6px color-mix(in srgb, var(--color-status-danger) 50%, transparent),
-          0 0 12px color-mix(in srgb, var(--color-status-danger) 20%, transparent);
+        box-shadow: var(--shadow-glow-focus);
       }
     }
   }
@@ -394,27 +382,20 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 
   &:not(:is(.is-disabled, .is-placeholder)) {
     &:is(:hover, .is-focused) {
-      --glow-color: color-mix(in srgb, var(--theme-accent) 30%, transparent);
+      --glow-color: var(--theme-accent);
 
       color: var(--theme-accent);
-
-      background-color: transparent;
       background-color: color-mix(in srgb, var(--theme-accent) 15%, transparent);
-      box-shadow:
-        0 0 4px color-mix(in srgb, var(--theme-accent) 45%, transparent),
-        0 0 8px color-mix(in srgb, var(--theme-accent) 20%, transparent);
-
+      box-shadow: var(--shadow-glow-hover);
       transition: var(--transition-glow);
     }
 
     &.is-selected {
-      --glow-color: color-mix(in srgb, var(--theme-accent) 40%, transparent);
+      --glow-color: var(--theme-accent);
 
       color: var(--theme-accent);
       background-color: color-mix(in srgb, var(--theme-accent) 15%, transparent);
-      box-shadow:
-        0 0 4px color-mix(in srgb, var(--theme-accent) 45%, transparent),
-        0 0 8px color-mix(in srgb, var(--theme-accent) 20%, transparent);
+      box-shadow: var(--shadow-glow-hover);
       transition: var(--transition-glow);
     }
   }

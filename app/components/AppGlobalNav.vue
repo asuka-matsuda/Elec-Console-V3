@@ -112,9 +112,9 @@ onMounted(() => {
   border-right: var(--border-width-base) solid var(--color-border);
 
   background-color: var(--surface-bg-solid);
-  box-shadow: 4px 0 24px rgb(0 0 0 / 50%);
+  box-shadow: var(--shadow-nav);
 
-  transition: transform var(--duration-slow, 0.3s) var(--ease-base);
+  transition: transform var(--duration-slow) var(--ease-base);
 
   &.is-open {
     transform: translateX(0);

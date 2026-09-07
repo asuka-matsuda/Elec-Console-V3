@@ -89,39 +89,37 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
 
     &:not(:has(:disabled)) {
       &:hover:not(:has(:checked)) {
+        --glow-color: var(--color-border);
+
         border-color: var(--color-border);
         color: var(--color-text-main);
-        box-shadow:
-          0 0 4px color-mix(in srgb, var(--color-border) 45%, transparent),
-          0 0 8px color-mix(in srgb, var(--color-border) 20%, transparent);
+        box-shadow: var(--shadow-glow-hover);
         transition: var(--transition-glow);
       }
 
       &:has(:focus-visible) {
+        --glow-color: var(--radio-color);
+
         border-color: color-mix(in srgb, var(--radio-color) 60%, transparent);
 
-        text-shadow: 0 0 var(--blur-md) color-mix(in srgb, var(--radio-color) 60%, transparent);
+        text-shadow: var(--text-glow-md);
 
         outline: none;
-        box-shadow:
-          0 0 0 1px color-mix(in srgb, var(--radio-color) 70%, transparent),
-          0 0 6px color-mix(in srgb, var(--radio-color) 50%, transparent),
-          0 0 12px color-mix(in srgb, var(--radio-color) 20%, transparent);
+        box-shadow: var(--shadow-glow-focus);
 
         transition: var(--transition-glow);
       }
     }
 
     &:has(:checked) {
+      --glow-color: var(--radio-color);
+
       border-color: var(--radio-color);
 
       color: var(--radio-color);
-      text-shadow: 0 0 var(--blur-md) color-mix(in srgb, var(--radio-color) 60%, transparent);
+      text-shadow: var(--text-glow-md);
 
-      box-shadow:
-        0 0 4px color-mix(in srgb, var(--radio-color) 60%, transparent),
-        0 0 8px color-mix(in srgb, var(--radio-color) 30%, transparent),
-        inset 0 0 2px color-mix(in srgb, var(--radio-color) 40%, transparent);
+      box-shadow: var(--shadow-glow-active);
 
       transition: var(--transition-glow);
     }

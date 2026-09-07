@@ -118,11 +118,13 @@ const emit = defineEmits<{
   }
 
   &__title {
+    --glow-color: var(--theme-accent);
+
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-bold);
     line-height: var(--line-height-tight);
     color: var(--theme-accent);
-    text-shadow: 0 0 var(--blur-sm) color-mix(in srgb, var(--theme-accent) 60%, transparent);
+    text-shadow: var(--text-glow-sm);
   }
 
   &__views {

@@ -146,13 +146,10 @@ const {
 
     width: var(--size-control-sm);
     height: var(--size-control-sm);
-    border-color: color-mix(in srgb, var(--preview-color, var(--color-primary)) 60%, transparent);
+    border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
 
     outline: none;
-    box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--preview-color, var(--color-primary)) 70%, transparent),
-      0 0 6px color-mix(in srgb, var(--preview-color, var(--color-primary)) 50%, transparent),
-      0 0 12px color-mix(in srgb, var(--preview-color, var(--color-primary)) 20%, transparent);
+    box-shadow: var(--shadow-glow-focus);
 
     transition: var(--transition-glow);
   }

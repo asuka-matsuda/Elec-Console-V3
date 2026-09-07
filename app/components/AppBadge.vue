@@ -38,7 +38,7 @@ const { color = 'var(--color-text-muted)' } = defineProps<{
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
   color: var(--glow-color);
-  text-shadow: 0 0 var(--blur-sm) var(--glow-color);
+  text-shadow: var(--text-glow-sm);
   text-transform: uppercase;
   letter-spacing: var(--tracking-wider);
   white-space: nowrap;

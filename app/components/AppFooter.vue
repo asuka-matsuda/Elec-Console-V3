@@ -50,8 +50,10 @@ const {
   transition: var(--transition-base);
 
   &:hover {
+    --glow-color: var(--color-text-secondary);
+
     color: var(--color-text-secondary);
-    text-shadow: 0 0 var(--blur-sm) var(--color-text-secondary);
+    text-shadow: var(--text-glow-sm);
   }
 }
 </style>

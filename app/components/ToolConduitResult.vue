@@ -184,13 +184,17 @@ const statusCustom = computed(() =>
   }
 
   .is-success {
+    --glow-color: var(--color-status-success);
+
     color: var(--color-status-success);
-    text-shadow: 0 0 var(--blur-md) color-mix(in srgb, var(--color-status-success) 40%, transparent);
+    text-shadow: var(--text-glow-md);
   }
 
   .is-danger {
+    --glow-color: var(--color-status-danger);
+
     color: var(--color-status-danger);
-    text-shadow: 0 0 var(--blur-md) color-mix(in srgb, var(--color-status-danger) 40%, transparent);
+    text-shadow: var(--text-glow-md);
   }
 
   &.is-sm {

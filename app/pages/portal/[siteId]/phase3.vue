@@ -619,7 +619,7 @@ const {
 }
 
 .p-phase3-row {
-  transition: background-color 0.2s ease;
+  transition: background-color var(--duration-base) var(--ease-base);
 
   &.is-completed {
     background-color: rgb(34 197 94 / 5%);

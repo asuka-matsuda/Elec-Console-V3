@@ -68,8 +68,10 @@ const {
     color: var(--theme-accent);
 
     &::before {
+      --glow-color: var(--theme-accent);
+
       transform: scaleY(1.2);
-      box-shadow: 0 0 var(--blur-sm) var(--theme-accent);
+      box-shadow: var(--shadow-glow-sm);
     }
   }
 
@@ -77,8 +79,10 @@ const {
     color: var(--color-status-danger);
 
     &::before {
+      --glow-color: var(--color-status-danger);
+
       background-color: var(--color-status-danger);
-      box-shadow: 0 0 var(--blur-sm) var(--color-status-danger);
+      box-shadow: var(--shadow-glow-sm);
     }
   }
 }
@@ -118,7 +122,7 @@ const {
   color: var(--color-text-main);
   letter-spacing: var(--tracking-wide);
 
-  transition: color var(--transition-base);
+  transition: var(--transition-base);
 
   &::before {
     content: "";
@@ -154,10 +158,12 @@ const {
 }
 
 .error {
+  --glow-color: var(--color-status-danger);
+
   font-size: var(--font-size-2xs);
   line-height: var(--line-height-base);
   color: var(--color-status-danger);
-  text-shadow: 0 0 var(--blur-sm) color-mix(in srgb, var(--color-status-danger) 30%, transparent);
+  text-shadow: var(--text-glow-sm);
   letter-spacing: var(--tracking-wide);
 }
 
@@ -171,8 +177,8 @@ const {
 .fade-slide-enter-active,
 .fade-slide-leave-active {
   transition:
-    opacity var(--transition-fast),
-    transform var(--transition-fast);
+    opacity var(--duration-fast) var(--ease-base),
+    transform var(--duration-fast) var(--ease-base);
 }
 
 .fade-slide-enter-from,

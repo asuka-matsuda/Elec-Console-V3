@@ -206,7 +206,7 @@ provide('toolBasisModal', {
       background: var(--surface-bg-solid, var(--color-main-bg));
       box-shadow: var(--shadow-elevation-md);
 
-      transition: transform var(--transition-base);
+      transition: var(--transition-transform);
 
       &.is-drawer-open {
         transform: translateY(0);

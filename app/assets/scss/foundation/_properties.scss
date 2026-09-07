@@ -234,6 +234,16 @@
     inset 0 0 2px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 40%, transparent),
     var(--shadow-elevation-sm);
 
+  // ナビゲーション / サイドバー用 投影シャドウ
+  --shadow-nav: 4px 0 24px color-mix(in srgb, black 50%, transparent);
+
+  // マイクロインジケータ用 小発光
+  --shadow-glow-sm: 0 0 6px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 60%, transparent);
+
+  // テキスト発光 (Cyber Text Glow)
+  --text-glow-sm: 0 0 var(--blur-sm) color-mix(in srgb, var(--glow-color, currentcolor) 50%, transparent);
+  --text-glow-md: 0 0 var(--blur-md) color-mix(in srgb, var(--glow-color, currentcolor) 60%, transparent);
+
   // SVG / アイコン / メーター用 ドロップシャドウ発光 (サイズ別)
   --drop-shadow-glow-xs: drop-shadow(
     0 0 var(--glow-blur, var(--blur-xs))
@@ -268,8 +278,6 @@
     )
   );
 
-
-
   // ==========================================================================
   // 7. アニメーション & トランジション
   // ==========================================================================
@@ -279,9 +287,15 @@
   --duration-modal: 0.5s;
   --ease-base: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out: ease-out;
   --transition-fast: all var(--duration-fast) var(--ease-base);
   --transition-base: all var(--duration-base) var(--ease-base);
   --transition-slow: all var(--duration-slow) var(--ease-smooth);
+  --transition-colors:
+    background-color var(--duration-fast) var(--ease-base),
+    border-color var(--duration-fast) var(--ease-base),
+    color var(--duration-fast) var(--ease-base);
+  --transition-transform: transform var(--duration-base) var(--ease-base);
   --transition-glow:
     box-shadow var(--duration-slow) var(--ease-base),
     border-color var(--duration-slow) var(--ease-base);

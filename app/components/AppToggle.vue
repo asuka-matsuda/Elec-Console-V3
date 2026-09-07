@@ -75,29 +75,30 @@ defineProps<{
     &:not(:disabled) {
       &:hover {
         ~ .c-toggle__label {
+          --glow-color: var(--toggle-color);
+
           color: color-mix(in srgb, var(--toggle-color) 90%, transparent);
-          text-shadow: 0 0 var(--blur-sm) color-mix(in srgb, var(--toggle-color) 20%, transparent);
+          text-shadow: var(--text-glow-sm);
         }
 
         &:not(:checked) ~ .c-toggle__track {
+          --glow-color: var(--toggle-color);
+
           border-color: var(--toggle-color);
-          box-shadow:
-            0 0 4px color-mix(in srgb, var(--toggle-color) 45%, transparent),
-            0 0 8px color-mix(in srgb, var(--toggle-color) 20%, transparent);
+          box-shadow: var(--shadow-glow-hover);
           transition: var(--transition-glow);
         }
       }
 
       &:focus-visible ~ .c-toggle__track {
+        --glow-color: var(--toggle-color);
+
         border-color: color-mix(in srgb, var(--toggle-color) 60%, transparent);
 
-        text-shadow: 0 0 var(--blur-md) color-mix(in srgb, var(--toggle-color) 50%, transparent);
+        text-shadow: var(--text-glow-md);
 
         outline: none;
-        box-shadow:
-          0 0 0 1px color-mix(in srgb, var(--toggle-color) 70%, transparent),
-          0 0 6px color-mix(in srgb, var(--toggle-color) 50%, transparent),
-          0 0 12px color-mix(in srgb, var(--toggle-color) 20%, transparent);
+        box-shadow: var(--shadow-glow-focus);
 
         transition: var(--transition-glow);
       }
@@ -111,18 +112,17 @@ defineProps<{
       }
 
       &:checked ~ .c-toggle__track {
+        --glow-color: var(--toggle-color);
+
         border-color: var(--toggle-color);
-        box-shadow:
-          0 0 4px color-mix(in srgb, var(--toggle-color) 60%, transparent),
-          0 0 8px color-mix(in srgb, var(--toggle-color) 30%, transparent),
-          inset 0 0 2px color-mix(in srgb, var(--toggle-color) 40%, transparent);
+        box-shadow: var(--shadow-glow-active);
         transition: var(--transition-glow);
 
         .c-toggle__thumb {
+          --glow-color: var(--toggle-color);
+
           border-color: var(--toggle-color);
-          box-shadow:
-            0 0 4px color-mix(in srgb, var(--toggle-color) 45%, transparent),
-            0 0 8px color-mix(in srgb, var(--toggle-color) 20%, transparent);
+          box-shadow: var(--shadow-glow-hover);
           transition: var(--transition-glow);
         }
       }

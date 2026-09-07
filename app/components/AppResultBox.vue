@@ -140,8 +140,10 @@ const resolvedStatus = computed(() => {
 
     :deep(.c-result-box__val),
     :deep(.value-text) {
+      --glow-color: var(--color-status-success);
+
       color: var(--color-status-success);
-      text-shadow: 0 0 var(--blur-sm) color-mix(in srgb, var(--color-status-success) 30%, transparent);
+      text-shadow: var(--text-glow-sm);
     }
   }
 
@@ -150,8 +152,10 @@ const resolvedStatus = computed(() => {
 
     :deep(.c-result-box__val),
     :deep(.value-text) {
+      --glow-color: var(--color-status-warning);
+
       color: var(--color-status-warning);
-      text-shadow: 0 0 var(--blur-sm) color-mix(in srgb, var(--color-status-warning) 30%, transparent);
+      text-shadow: var(--text-glow-sm);
     }
   }
 
@@ -160,8 +164,10 @@ const resolvedStatus = computed(() => {
 
     :deep(.c-result-box__val),
     :deep(.value-text) {
+      --glow-color: var(--color-status-danger);
+
       color: var(--color-status-danger);
-      text-shadow: 0 0 var(--blur-sm) color-mix(in srgb, var(--color-status-danger) 30%, transparent);
+      text-shadow: var(--text-glow-sm);
     }
   }
 

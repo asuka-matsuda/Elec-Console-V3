@@ -113,32 +113,43 @@ const calculatedPct = computed(() => {
   background-color: rgb(255 255 255 / 8%);
 
   &__fill {
+
+    --glow-color: var(--color-status-success);
+
     height: 100%;
     border-radius: var(--radius-full, 9999px);
 
-    background: linear-gradient(90deg, #10b981, #34d399);
-    box-shadow: 0 0 8px rgb(16 185 129 / 50%);
+    background: linear-gradient(90deg, var(--color-status-success), color-mix(in srgb, var(--color-status-success) 80%, white));
+    box-shadow: var(--shadow-glow-sm);
 
-    transition: width 0.4s ease-out;
+    transition: width var(--duration-slow) var(--ease-out);
 
     &--main {
-      background: linear-gradient(90deg, #3b82f6, #60a5fa);
-      box-shadow: 0 0 8px rgb(59 130 246 / 50%);
+      --glow-color: var(--color-category-main);
+
+      background: linear-gradient(90deg, var(--color-category-main), color-mix(in srgb, var(--color-category-main) 80%, white));
+      box-shadow: var(--shadow-glow-sm);
     }
 
     &--tool {
-      background: linear-gradient(90deg, #0ea5e9, #38bdf8);
-      box-shadow: 0 0 8px rgb(14 165 233 / 50%);
+      --glow-color: var(--color-category-tool);
+
+      background: linear-gradient(90deg, var(--color-category-tool), color-mix(in srgb, var(--color-category-tool) 80%, white));
+      box-shadow: var(--shadow-glow-sm);
     }
 
     &--success {
-      background: linear-gradient(90deg, #22c55e, #4ade80);
-      box-shadow: 0 0 8px rgb(34 197 94 / 50%);
+      --glow-color: var(--color-status-success);
+
+      background: linear-gradient(90deg, var(--color-status-success), color-mix(in srgb, var(--color-status-success) 80%, white));
+      box-shadow: var(--shadow-glow-sm);
     }
 
     &--warning {
-      background: linear-gradient(90deg, #f59e0b, #fbbf24);
-      box-shadow: 0 0 8px rgb(245 158 11 / 50%);
+      --glow-color: var(--color-status-warning);
+
+      background: linear-gradient(90deg, var(--color-status-warning), color-mix(in srgb, var(--color-status-warning) 80%, white));
+      box-shadow: var(--shadow-glow-sm);
     }
   }
 }

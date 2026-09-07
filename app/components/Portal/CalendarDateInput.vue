@@ -58,56 +58,44 @@ withDefaults(
   }
 
   &:not(:disabled, .is-disabled) {
+    --glow-color: var(--theme-accent);
+
     &:hover {
-      border-color: var(--theme-accent);
-      box-shadow:
-        0 0 4px color-mix(in srgb, var(--theme-accent) 45%, transparent),
-        0 0 8px color-mix(in srgb, var(--theme-accent) 20%, transparent);
+      border-color: var(--glow-color);
+      box-shadow: var(--shadow-glow-hover);
     }
 
     &:active {
-      border-color: var(--theme-accent);
-      box-shadow:
-        0 0 4px color-mix(in srgb, var(--theme-accent) 60%, transparent),
-        0 0 8px color-mix(in srgb, var(--theme-accent) 30%, transparent),
-        inset 0 0 2px color-mix(in srgb, var(--theme-accent) 40%, transparent);
+      border-color: var(--glow-color);
+      box-shadow: var(--shadow-glow-active);
     }
 
     &:is(:focus, :focus-visible) {
-      border-color: color-mix(in srgb, var(--theme-accent) 60%, transparent);
+      border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
       outline: none;
-      box-shadow:
-        0 0 0 1px color-mix(in srgb, var(--theme-accent) 70%, transparent),
-        0 0 6px color-mix(in srgb, var(--theme-accent) 50%, transparent),
-        0 0 12px color-mix(in srgb, var(--theme-accent) 20%, transparent);
+      box-shadow: var(--shadow-glow-focus);
     }
 
     &.is-error {
-      border-color: color-mix(in srgb, var(--color-status-danger) 60%, transparent);
-      color: var(--color-status-danger);
+      --glow-color: var(--color-status-danger);
+
+      border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
+      color: var(--glow-color);
 
       &:hover {
-        border-color: var(--color-status-danger);
-        box-shadow:
-          0 0 4px color-mix(in srgb, var(--color-status-danger) 45%, transparent),
-          0 0 8px color-mix(in srgb, var(--color-status-danger) 20%, transparent);
+        border-color: var(--glow-color);
+        box-shadow: var(--shadow-glow-hover);
       }
 
       &:active {
-        border-color: var(--color-status-danger);
-        box-shadow:
-          0 0 4px color-mix(in srgb, var(--color-status-danger) 60%, transparent),
-          0 0 8px color-mix(in srgb, var(--color-status-danger) 30%, transparent),
-          inset 0 0 2px color-mix(in srgb, var(--color-status-danger) 40%, transparent);
+        border-color: var(--glow-color);
+        box-shadow: var(--shadow-glow-active);
       }
 
       &:is(:focus, :focus-visible) {
-        border-color: var(--color-status-danger);
+        border-color: var(--glow-color);
         outline: none;
-        box-shadow:
-          0 0 0 1px color-mix(in srgb, var(--color-status-danger) 70%, transparent),
-          0 0 6px color-mix(in srgb, var(--color-status-danger) 50%, transparent),
-          0 0 12px color-mix(in srgb, var(--color-status-danger) 20%, transparent);
+        box-shadow: var(--shadow-glow-focus);
       }
     }
   }

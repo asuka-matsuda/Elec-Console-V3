@@ -178,6 +178,8 @@ const getRowKey = (row: T, index: number): string | number => {
     transition: var(--transition-base);
 
     &:hover {
+      --glow-color: var(--theme-accent);
+
       z-index: 1;
 
       border-color: var(--theme-accent);
@@ -185,9 +187,7 @@ const getRowKey = (row: T, index: number): string | number => {
       outline: var(--border-width-base) solid
         color-mix(in srgb, var(--theme-accent) 80%, transparent);
       outline-offset: calc(var(--border-width-base) * -1);
-      box-shadow:
-        0 0 4px color-mix(in srgb, var(--theme-accent) 45%, transparent),
-        0 0 8px color-mix(in srgb, var(--theme-accent) 20%, transparent);
+      box-shadow: var(--shadow-glow-hover);
 
       transition: var(--transition-glow);
     }

@@ -111,38 +111,37 @@ const selectTab = (option: TabOption<T>) => {
   // 2. 有効状態
   &:not(:disabled) {
     &:is(:hover, :focus-visible):not(.is-active) {
+
+      --glow-color: var(--theme-accent);
+
       transform: translateY(-2px);
 
       border-color: var(--theme-accent);
 
       color: var(--color-text-main);
 
-      box-shadow:
-        0 0 4px color-mix(in srgb, var(--theme-accent) 45%, transparent),
-        0 0 8px color-mix(in srgb, var(--theme-accent) 20%, transparent);
+      box-shadow: var(--shadow-glow-hover);
 
       transition: var(--transition-glow);
     }
 
     &:active {
+      --glow-color: var(--theme-accent);
+
       border-color: var(--theme-accent);
-      box-shadow:
-        0 0 4px color-mix(in srgb, var(--theme-accent) 60%, transparent),
-        0 0 8px color-mix(in srgb, var(--theme-accent) 30%, transparent),
-        inset 0 0 2px color-mix(in srgb, var(--theme-accent) 40%, transparent);
+      box-shadow: var(--shadow-glow-active);
       transition: var(--transition-glow);
     }
 
     &.is-active {
+      --glow-color: var(--theme-accent);
+
       border-color: var(--theme-accent);
 
       color: var(--theme-accent);
-      text-shadow: 0 0 var(--blur-md) color-mix(in srgb, currentcolor 50%, transparent);
+      text-shadow: var(--text-glow-md);
 
-      box-shadow:
-        0 0 4px color-mix(in srgb, var(--theme-accent) 60%, transparent),
-        0 0 8px color-mix(in srgb, var(--theme-accent) 30%, transparent),
-        inset 0 0 2px color-mix(in srgb, var(--theme-accent) 40%, transparent);
+      box-shadow: var(--shadow-glow-active);
 
       transition: var(--transition-glow);
     }

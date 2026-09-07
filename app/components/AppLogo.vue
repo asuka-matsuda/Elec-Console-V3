@@ -47,7 +47,9 @@ const emit = defineEmits<{
 
   &:is(:hover, :focus-visible) {
     :deep(.c-icon) {
-      text-shadow: 0 0 var(--blur-md) color-mix(in srgb, var(--theme-accent) 60%, transparent);
+      --glow-color: var(--theme-accent);
+
+      text-shadow: var(--text-glow-md);
     }
   }
 }

@@ -99,7 +99,7 @@ const { currentUser, logout } = useAuth()
   line-height: var(--line-height-tight);
 
   &__avatar {
-    --glow-color: color-mix(in srgb, var(--theme-accent) 50%, transparent);
+    --glow-color: var(--theme-accent);
 
     display: flex;
     align-items: center;
@@ -107,17 +107,12 @@ const { currentUser, logout } = useAuth()
 
     width: var(--size-control-sm);
     height: var(--size-control-sm);
-    border: var(--border-width-thick) solid var(--theme-accent);
-    border-color: color-mix(in srgb, var(--theme-accent) 60%, transparent);
-    border-radius: 50%;
+    border: var(--border-width-thick) solid color-mix(in srgb, var(--glow-color) 60%, transparent);
     border-radius: var(--radius-sm);
 
     background: var(--theme-accent);
     outline: none;
-    box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--theme-accent) 70%, transparent),
-      0 0 6px color-mix(in srgb, var(--theme-accent) 50%, transparent),
-      0 0 12px color-mix(in srgb, var(--theme-accent) 20%, transparent);
+    box-shadow: var(--shadow-glow-focus);
 
     transition: var(--transition-glow);
   }

@@ -92,7 +92,7 @@ const tiles = computed(() => {
 
     background-color: rgb(255 255 255 / 10%);
 
-    transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+    transition: transform var(--duration-fast) var(--ease-base), background-color var(--duration-fast) var(--ease-base), border-color var(--duration-fast) var(--ease-base);
 
     &:hover {
       z-index: 2;
@@ -101,9 +101,11 @@ const tiles = computed(() => {
     }
 
     &.is-completed {
-      border-color: var(--color-status-success, #22c55e);
-      background-color: var(--color-status-success, #22c55e);
-      box-shadow: 0 0 6px rgb(34 197 94 / 60%);
+      --glow-color: var(--color-status-success);
+
+      border-color: var(--color-status-success);
+      background-color: var(--color-status-success);
+      box-shadow: var(--shadow-glow-sm);
     }
 
     &.is-excluded {

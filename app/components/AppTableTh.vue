@@ -125,7 +125,7 @@ th {
   .c-table__sort-icon {
     flex-shrink: 0;
     color: var(--color-text-muted);
-    transition: all var(--duration-fast) var(--ease-base);
+    transition: var(--transition-fast);
 
     &.is-active {
       color: var(--theme-accent);

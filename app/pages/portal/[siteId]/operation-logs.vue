@@ -295,7 +295,7 @@ const getActionBadgeColor = (action: string) => {
 }
 
 .p-operation-logs-row {
-  transition: background-color 0.15s ease;
+  transition: background-color var(--duration-fast) var(--ease-base);
 
   &:hover {
     background-color: rgb(255 255 255 / 3%);
