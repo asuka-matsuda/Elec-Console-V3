@@ -11,9 +11,11 @@ import type { MenuSection } from '~/constants/data/menuData'
 
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 
-defineProps<{
+defineProps<Props>()
+
+interface Props {
   menuData: MenuSection[]
-}>()
+}
 
 const closeSidebar = () => {
   isOpen.value = false
@@ -39,13 +41,13 @@ onMounted(() => {
 
 <template>
   <div
-    class="c-global-nav-overlay"
+    class="overlay"
     :class="{ 'is-open': isOpen }"
     @click="closeSidebar"
   />
 
-  <aside class="c-global-nav" :class="{ 'is-open': isOpen }">
-    <div class="c-global-nav__header">
+  <aside class="global-nav" :class="{ 'is-open': isOpen }">
+    <div class="header">
       <AppLogo @click="closeSidebar" />
       <AppIconButton
         name="x"
@@ -55,12 +57,14 @@ onMounted(() => {
       />
     </div>
 
-    <nav class="c-global-nav__nav">
+    <nav class="nav">
       <section
         v-for="section in menuData"
         :key="section.id || section.heading || section.globalNavHeading"
-        class="c-global-nav__section"
-        :class="section.accent ? `has-accent-${section.accent}` : ''"
+        class="section"
+        :style="{
+          '--section-accent': `var(--color-category-${section.accent || 'main'})`,
+        }"
       >
         <AppSectionHeader
           v-if="section.globalNavHeading || section.heading"
@@ -69,10 +73,10 @@ onMounted(() => {
           size="xs"
           :variant="section.accent || 'main'"
           divider-type="fade-side"
-          class="c-global-nav__section-header"
+          class="section-header"
         />
 
-        <div class="c-global-nav__list">
+        <div class="list">
           <component
             :is="item.disabled ? 'button' : NuxtLink"
             v-for="item in section.items"
@@ -80,11 +84,11 @@ onMounted(() => {
             :to="item.disabled ? undefined : item.href"
             :type="item.disabled ? 'button' : undefined"
             :disabled="item.disabled || undefined"
-            class="c-global-nav__link"
+            class="nav-link"
             @click="item.disabled ? undefined : closeSidebar()"
           >
             <AppIcon :name="item.icon" size="md" />
-            <span class="c-global-nav__link-text">{{ item.text }}</span>
+            <span class="nav-link-text">{{ item.text }}</span>
           </component>
         </div>
       </section>
@@ -93,14 +97,15 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-.c-global-nav {
-  @include flex-start-stretch($direction: column);
-
+.global-nav {
   position: fixed;
   z-index: var(--z-index-sidebar);
   top: 0;
   left: 0;
   transform: translateX(-100%);
+
+  display: flex;
+  flex-direction: column;
 
   width: var(--sidebar-width);
   height: 100dvh;
@@ -114,123 +119,152 @@ onMounted(() => {
   &.is-open {
     transform: translateX(0);
   }
+}
 
-  &__header {
-    @include flex-between-center;
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-    height: 64px;
-    padding: 0 var(--space-4);
-    border-bottom: var(--border-width-base) solid var(--color-border);
-    background-color: var(--surface-bg-elevated);
+  height: 64px;
+  padding: 0 var(--space-4);
+  border-bottom: var(--border-width-base) solid var(--color-border);
+
+  background-color: var(--surface-bg-elevated);
+}
+
+.nav {
+  --scrollbar-size: var(--space-2);
+
+  overflow-y: auto;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  padding: var(--space-3);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.section-header {
+  padding: var(--space-1) var(--space-3);
+
+  :deep(.c-section-header__title) {
+    color: var(--color-text-main);
+    letter-spacing: var(--tracking-wider);
   }
 
-  &__nav {
-    --scrollbar-size: var(--space-2);
+  :deep(.c-section-header__icon) {
+    color: var(--section-accent);
+    filter: drop-shadow(0 0 var(--blur-sm) var(--section-accent));
+  }
+}
 
-    @include flex-start-stretch($direction: column);
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
 
-    overflow-y: auto;
-    flex: 1;
-    gap: var(--space-4);
-    padding: var(--space-3);
+.nav-link {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+
+  font-family: var(--font-base);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-secondary);
+  letter-spacing: var(--tracking-wide);
+
+  transition: var(--transition-base);
+
+  &-text {
+    word-break: keep-all;
+    line-break: strict;
+    overflow-wrap: anywhere;
   }
 
-  &__section {
-    $accents: (
-      "primary": var(--color-category-main),
-      "tool": var(--color-category-tool),
-      "database": var(--color-category-database),
-      "reference": var(--color-category-reference),
-      "management": var(--color-category-management),
-    );
-    --section-accent: var(--color-category-main);
-
-    @include flex-start-stretch($direction: column);
-
-    gap: var(--space-1);
-
-    @each $name, $var in $accents {
-      &.has-accent-#{$name} {
-        --section-accent: #{$var};
-      }
-    }
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    filter: grayscale(100%);
   }
 
-  &__section-header {
-    padding: var(--space-1) var(--space-3);
-
-    :deep(.c-section-header__title) {
-      color: var(--color-text-main);
-      letter-spacing: var(--tracking-wider);
-    }
-
-    :deep(.c-section-header__icon) {
+  &:not(:disabled) {
+    &:is(:hover, :focus-visible, .router-link-active) {
       color: var(--section-accent);
-      filter: drop-shadow(0 0 var(--blur-sm) var(--section-accent));
-    }
-  }
 
-  &__list {
-    @include flex-start-stretch($direction: column);
-
-    gap: var(--space-2);
-  }
-
-  &__link {
-    @include text-title("sm", "medium");
-    @include flex-start-center;
-
-    gap: var(--space-2);
-    padding: var(--space-1) var(--space-3);
-    border-radius: var(--radius-sm);
-    color: var(--color-text-secondary);
-
-    @include state-base;
-
-    &-text {
-      word-break: keep-all; // 句読点やスペース、記号（・など）の区切りでのみ改行を許可
-      line-break: strict;
-      overflow-wrap: anywhere; // 万が一収まらない場合は強制改行
+      :deep(.c-icon) {
+        filter: drop-shadow(0 0 var(--blur-sm) var(--section-accent));
+      }
     }
 
-    &:disabled {
-      @include disabled;
+    &:is(:hover, :focus-visible):not(.router-link-active) {
+      transform: translateX(var(--space-1));
+      border-color: var(--section-accent);
+      box-shadow:
+        0 0 4px color-mix(in srgb, var(--section-accent) 45%, transparent),
+        0 0 8px color-mix(in srgb, var(--section-accent) 20%, transparent);
+      transition: var(--transition-glow);
     }
 
-    &:not(:disabled) {
-      &:is(:hover, :focus-visible, .router-link-active) {
-        color: var(--section-accent);
+    &:active {
+      border-color: var(--section-accent);
+      box-shadow:
+        0 0 4px color-mix(in srgb, var(--section-accent) 60%, transparent),
+        0 0 8px color-mix(in srgb, var(--section-accent) 30%, transparent),
+        inset 0 0 2px color-mix(in srgb, var(--section-accent) 40%, transparent);
+      transition: var(--transition-glow);
 
-        :deep(.c-icon) {
-          filter: drop-shadow(
-            0 0 var(--blur-sm) var(--section-accent)
-          );
-        }
+      svg {
+        filter: drop-shadow(0 0 2px var(--section-accent));
+        stroke: var(--section-accent);
+      }
+    }
+
+    &.router-link-active {
+      border-color: var(--section-accent);
+      box-shadow:
+        0 0 4px color-mix(in srgb, var(--section-accent) 60%, transparent),
+        0 0 8px color-mix(in srgb, var(--section-accent) 30%, transparent),
+        inset 0 0 2px color-mix(in srgb, var(--section-accent) 40%, transparent);
+      transition: var(--transition-glow);
+
+      svg {
+        filter: drop-shadow(0 0 2px var(--section-accent));
+        stroke: var(--section-accent);
       }
 
-      &:is(:hover, :focus-visible):not(.router-link-active) {
-        transform: translateX(var(--space-1));
+      &::after {
+        content: "";
 
-        @include state-hover(var(--section-accent));
-      }
+        display: inline-block;
 
-      &:active {
-        @include state-active(var(--section-accent));
-      }
+        width: var(--space-1);
+        height: var(--font-size-base);
+        margin-left: var(--space-1);
 
-      &.router-link-active {
-        @include state-active(var(--section-accent));
-        @include blinking-cursor(
-          var(--space-1),
-          var(--font-size-base),
-          currentcolor
-        );
+        vertical-align: middle;
+
+        background-color: currentcolor;
+
+        animation: ui-cursor-blink 1s step-end infinite;
       }
     }
   }
 }
 
-.c-global-nav-overlay {
+.overlay {
   pointer-events: none;
 
   position: fixed;
