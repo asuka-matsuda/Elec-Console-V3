@@ -8,20 +8,22 @@ import { computed } from 'vue'
 import type { IconName } from '~/constants/icons'
 import { ICON_CONTENTS } from '~/constants/icons'
 
-const props = defineProps<{
+interface Props {
   name: IconName | string
   size?: 'sm' | 'md' | 'lg'
-}>()
+}
+
+const { name, size } = defineProps<Props>()
 
 const iconInner = computed(() => {
-  return ICON_CONTENTS[props.name] || ''
+  return ICON_CONTENTS[name] || ''
 })
 </script>
 
 <template>
   <i
-    class="c-icon"
-    :class="[size ? `c-icon--${size}` : '']"
+    class="app-icon c-icon"
+    :class="size ? [`is-${size}`, `c-icon--${size}`] : []"
   >
     <svg
       v-if="iconInner"
@@ -41,27 +43,31 @@ const iconInner = computed(() => {
 </template>
 
 <style scoped lang="scss">
-.c-icon {
-  @include flex-center-center($is-inline: true);
-
+.app-icon {
+  display: inline-flex;
   flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
 
-  :deep(svg) {
+  svg {
     width: 100%;
     height: 100%;
   }
 
-  &--sm {
+  &.is-sm,
+  &.c-icon--sm {
     width: var(--icon-size-sm);
     height: var(--icon-size-sm);
   }
 
-  &--md {
+  &.is-md,
+  &.c-icon--md {
     width: var(--icon-size-md);
     height: var(--icon-size-md);
   }
 
-  &--lg {
+  &.is-lg,
+  &.c-icon--lg {
     width: var(--icon-size-lg);
     height: var(--icon-size-lg);
   }
