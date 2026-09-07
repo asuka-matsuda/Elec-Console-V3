@@ -6,26 +6,25 @@
  */
 import { computed } from 'vue'
 
-const props = withDefaults(
-  defineProps<{
-    variant?:
-      | 'main'
-      | 'tool'
-      | 'database'
-      | 'reference'
-      | 'management'
-      | 'danger'
-      | 'success'
-      | 'border'
-    type?: 'solid' | 'fade-center' | 'fade-side'
-    vertical?: boolean
-  }>(),
-  {
-    variant: 'main',
-    type: 'solid',
-    vertical: false,
-  },
-)
+const {
+  color,
+  variant = 'main',
+  type = 'solid',
+  vertical = false,
+} = defineProps<{
+  color?: string
+  variant?:
+    | 'main'
+    | 'tool'
+    | 'database'
+    | 'reference'
+    | 'management'
+    | 'danger'
+    | 'success'
+    | 'border'
+  type?: 'solid' | 'fade-center' | 'fade-side' | 'default'
+  vertical?: boolean
+}>()
 
 const variantColorMap: Record<string, string> = {
   main: 'var(--theme-accent)',
@@ -38,50 +37,57 @@ const variantColorMap: Record<string, string> = {
   border: 'var(--color-border)',
 }
 
-const dividerColor = computed(
-  () => variantColorMap[props.variant] || 'var(--theme-accent)',
+const resolvedColor = computed(
+  () => color || variantColorMap[variant] || 'var(--theme-accent)',
 )
+
+const normalizedType = computed(() => (type === 'default' ? 'solid' : type))
 </script>
 
 <template>
   <div
     class="c-divider"
     :class="[
-      `is-type-${type}`,
-      vertical ? 'c-divider--vertical' : 'c-divider--horizontal',
+      `is-${normalizedType}`,
+      { 'is-vertical': vertical },
     ]"
-    :style="{ '--divider-color': dividerColor }"
+    :style="{ '--divider-color': resolvedColor }"
     role="separator"
+    :aria-orientation="vertical ? 'vertical' : 'horizontal'"
   />
 </template>
 
 <style scoped lang="scss">
 .c-divider {
   --divider-color: var(--theme-accent);
+  --glow-color: var(--divider-color);
 
   position: relative;
+
   overflow: hidden;
   flex-shrink: 0;
 
-  @include shadow("sink");
+  // デフォルト: 横向き (Horizontal)
+  width: 100%;
+  height: 1px;
 
-  &--horizontal {
-    width: 100%;
-    height: 1px;
-    animation: divider-scale-x 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
+  box-shadow: var(--shadow-sink);
 
-  &--vertical {
+  animation: divider-scale-x 0.6s var(--ease-smooth) forwards;
+
+  // 縦向き (Vertical)
+  &.is-vertical {
     width: 1px;
     height: 100%;
     min-height: 1em;
+    animation: none;
   }
 
   // 1. ソリッド型（ダッシュボード等で走るサイバーパルス光アニメーション）
-  &.is-type-solid {
+  &.is-solid {
     background: var(--color-border);
 
-    &::before {
+    &:not(.is-vertical)::before {
       content: "";
 
       position: absolute;
@@ -97,30 +103,46 @@ const dividerColor = computed(
         color-mix(in srgb, var(--divider-color) 80%, transparent),
         transparent
       );
-      box-shadow: 0 0 8px
-        color-mix(in srgb, var(--divider-color) 60%, transparent);
+      box-shadow: 0 0 var(--blur-md) color-mix(in srgb, var(--divider-color) 60%, transparent);
 
       animation: data-pulse-x 3s ease-in-out infinite;
     }
   }
 
   // 2. センターフェード型
-  &.is-type-fade-center {
+  &.is-fade-center {
     background: linear-gradient(
       to right,
       transparent 0%,
       var(--divider-color) 50%,
       transparent 100%
     );
+
+    &.is-vertical {
+      background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        var(--divider-color) 50%,
+        transparent 100%
+      );
+    }
   }
 
   // 3. サイドフェード型
-  &.is-type-fade-side {
+  &.is-fade-side {
     background: linear-gradient(
       to right,
       var(--divider-color) 0%,
       transparent 100%
     );
+
+    &.is-vertical {
+      background: linear-gradient(
+        to bottom,
+        var(--divider-color) 0%,
+        transparent 100%
+      );
+    }
   }
 }
 
