@@ -3,27 +3,29 @@
  * AppFormGroup
  * フォームのラベル、入力項目、エラーメッセージ、ヘルプテキストをグループ化して表示するコンポーネントです。
  */
-withDefaults(
-  defineProps<{
-    label?: string
-    required?: boolean
-    requiredLabel?: string
-    error?: string
-    help?: string
-    layout?: 'vertical' | 'horizontal'
-  }>(),
-  {
-    required: false,
-    requiredLabel: 'REQUIRED',
-    layout: 'vertical',
-  },
-)
+interface Props {
+  label?: string
+  required?: boolean
+  requiredLabel?: string
+  error?: string
+  help?: string
+  layout?: 'vertical' | 'horizontal'
+}
+
+const {
+  label,
+  required = false,
+  requiredLabel = 'REQUIRED',
+  error,
+  help,
+  layout = 'vertical',
+} = defineProps<Props>()
 </script>
 
 <template>
-  <div class="c-form-group" :class="`is-${layout}`">
-    <label v-if="label || $slots.label" class="c-form-group__label">
-      <span class="c-form-group__label-text">
+  <div class="form-group" :class="`is-${layout}`">
+    <label v-if="label || $slots.label" class="label">
+      <span class="label-text">
         <slot name="label">{{ label }}</slot>
       </span>
       <AppBadge
@@ -34,16 +36,16 @@ withDefaults(
       </AppBadge>
     </label>
 
-    <div class="c-form-group__control">
+    <div class="control">
       <slot />
 
       <transition name="fade-slide">
-        <div v-if="error" class="c-form-group__error">
+        <div v-if="error" class="error">
           {{ error }}
         </div>
       </transition>
 
-      <div v-if="help && !error" class="c-form-group__help">
+      <div v-if="help && !error" class="help">
         {{ help }}
       </div>
     </div>
@@ -51,101 +53,27 @@ withDefaults(
 </template>
 
 <style scoped lang="scss">
-.c-form-group {
+.form-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
   &.is-horizontal {
-    @include flex-start-start;
+    flex-direction: row;
+    gap: var(--space-form-col-gap);
+    align-items: flex-start;
   }
 
-  &.is-vertical {
-    @include flex-start-stretch($direction: column);
-  }
-
-  &__label {
-    @include flex-start-center;
-
-    cursor: pointer;
-    user-select: none;
-
-    .is-horizontal & {
-      flex-shrink: 0;
-      width: 140px;
-      padding-top: calc(
-        (
-            (var(--font-size-sm) * var(--control-height-ratio)) -
-              (var(--line-height-tight) * var(--font-size-base))
-          ) /
-          2
-      );
-    }
-
-    .is-vertical & {
-      width: 100%;
-      margin-bottom: var(--space-2);
-    }
-  }
-
-  &__label-text {
-    @include text-label("sm");
-    @include flex-start-center($is-inline: true);
-
-    gap: var(--space-1);
-    color: var(--color-text-main);
-    letter-spacing: var(--tracking-wide);
-
-    @include state-base;
-
-    &::before {
-      content: "";
-
-      flex-shrink: 0;
-
-      width: var(--space-0-5);
-      height: var(--font-size-xs);
-      border-radius: var(--radius-sm);
-
-      background-color: var(--theme-accent);
-
-      transition: var(--transition-fast);
-    }
-  }
-
-  &__control {
-    position: relative;
-    gap: var(--space-1);
-
-    .is-horizontal & {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .is-vertical & {
-      @include flex-start-stretch($direction: column);
-    }
-  }
-
-  &__error {
-    @include text-meta;
-
-    color: var(--color-status-danger);
-
-    @include cyber-text-glow(var(--color-status-danger), 30%, var(--blur-sm));
-  }
-
-  &__help {
-    @include text-meta;
-  }
-
-  &:focus-within &__label-text {
+  &:focus-within .label-text {
     color: var(--theme-accent);
 
     &::before {
       transform: scaleY(1.2);
-      background-color: var(--theme-accent);
       box-shadow: 0 0 var(--blur-sm) var(--theme-accent);
     }
   }
 
-  &:has(.c-form-group__error, .is-error) &__label-text {
+  &:has(.error, .is-error) .label-text {
     color: var(--color-status-danger);
 
     &::before {
@@ -155,9 +83,96 @@ withDefaults(
   }
 }
 
+.label {
+  cursor: pointer;
+  user-select: none;
+
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+
+  width: 100%;
+  margin-bottom: var(--space-2);
+
+  .is-horizontal & {
+    flex-shrink: 0;
+    width: 140px;
+    margin-bottom: 0;
+    padding-top: calc(
+      (
+          (var(--font-size-sm) * var(--control-height-ratio)) -
+            (var(--line-height-tight) * var(--font-size-base))
+        ) / 2
+    );
+  }
+}
+
+.label-text {
+  display: inline-flex;
+  gap: var(--space-1);
+  align-items: center;
+
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-main);
+  letter-spacing: var(--tracking-wide);
+
+  transition: color var(--transition-base);
+
+  &::before {
+    content: "";
+
+    flex-shrink: 0;
+
+    width: var(--space-0-5);
+    height: var(--font-size-xs);
+    border-radius: var(--radius-sm);
+
+    background-color: var(--theme-accent);
+
+    transition:
+      transform var(--transition-fast),
+      background-color var(--transition-fast),
+      box-shadow var(--transition-fast);
+  }
+}
+
+.control {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+
+  width: 100%;
+
+  .is-horizontal & {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.error {
+  font-size: var(--font-size-2xs);
+  line-height: var(--line-height-base);
+  color: var(--color-status-danger);
+  text-shadow: 0 0 var(--blur-sm) color-mix(in srgb, var(--color-status-danger) 30%, transparent);
+  letter-spacing: var(--tracking-wide);
+}
+
+.help {
+  font-size: var(--font-size-2xs);
+  line-height: var(--line-height-base);
+  color: var(--color-text-muted);
+  letter-spacing: var(--tracking-wide);
+}
+
 .fade-slide-enter-active,
 .fade-slide-leave-active {
-  transition: var(--transition-fast);
+  transition:
+    opacity var(--transition-fast),
+    transform var(--transition-fast);
 }
 
 .fade-slide-enter-from,
