@@ -95,6 +95,10 @@ defineProps<{
     &.is-current {
       --glow-color: var(--theme-accent);
 
+      display: inline-flex;
+      gap: var(--space-1);
+      align-items: center;
+
       color: var(--theme-accent);
       text-shadow: var(--text-glow-md);
 
@@ -105,7 +109,6 @@ defineProps<{
 
         width: var(--space-1);
         height: var(--space-3);
-        margin-left: var(--space-1);
 
         vertical-align: middle;
 

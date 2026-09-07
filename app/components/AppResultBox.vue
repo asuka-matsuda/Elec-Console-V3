@@ -130,7 +130,6 @@ const resolvedStatus = computed(() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: var(--space-1);
   }
 
   // ステータスに応じた演出

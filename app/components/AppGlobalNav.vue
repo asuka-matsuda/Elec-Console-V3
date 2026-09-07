@@ -244,6 +244,12 @@ onMounted(() => {
     }
   }
 
+  &.router-link-active {
+    display: inline-flex;
+    gap: var(--space-1);
+    align-items: center;
+  }
+
   &.router-link-active::after {
     content: "";
 
@@ -251,7 +257,6 @@ onMounted(() => {
 
     width: var(--space-1);
     height: var(--font-size-base);
-    margin-left: var(--space-1);
 
     vertical-align: middle;
 

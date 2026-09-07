@@ -217,7 +217,6 @@ const mainBoxStatus = computed(() =>
 }
 
 .value-sep {
-  margin: 0 2px;
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
 }

@@ -88,7 +88,7 @@ onMounted(async () => {
           アサインされている現場がありません。
         </div>
 
-        <div v-if="isAdmin" class="p-portal-index__actions u-mt-4">
+        <div v-if="isAdmin" class="p-portal-index__actions">
           <AppButton variant="secondary" @click="router.push('/portal/admin')">
             ポータル管理画面へ
           </AppButton>

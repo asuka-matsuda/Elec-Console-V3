@@ -48,7 +48,7 @@ const vm = computed(() => formatWeightResult(props.result))
         <ToolResultRow label="総重量 (ケーブル+ドラム)" top-border>
           <strong>{{ vm.totalWeight }}</strong> kg
         </ToolResultRow>
-        <ToolResultRow label="最大巻取可能長" class="u-mt-2">
+        <ToolResultRow label="最大巻取可能長">
           <strong>{{ vm.maxCapacityMeters }}</strong> m
         </ToolResultRow>
       </template>

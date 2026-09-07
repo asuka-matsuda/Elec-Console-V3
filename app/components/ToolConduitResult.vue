@@ -191,7 +191,6 @@ const statusCustom = computed(() =>
   }
 
   .value-sep {
-    margin: 0 2px;
     font-size: var(--font-size-base);
     color: var(--color-text-muted);
   }

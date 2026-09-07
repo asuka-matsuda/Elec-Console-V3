@@ -12,7 +12,7 @@ defineProps<{
 <template>
   <div class="c-result-details__row" :class="{ 'has-top-border': topBorder }">
     <dt>{{ label }}</dt>
-    <dd><slot /></dd>
+    <dd class="val-content"><slot /></dd>
   </div>
 </template>
 

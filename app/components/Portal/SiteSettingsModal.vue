@@ -110,7 +110,7 @@ const confirmResetImport = async () => {
           />
         </AppFormGroup>
 
-        <AppPanel class="u-mt-6">
+        <AppPanel>
           <AppSectionHeader title="データベース連携（Excel同期・エクスポート）" />
           <div class="c-site-settings__sync-list">
             <!-- 差分再同期 (スマートマージ) -->
@@ -652,14 +652,17 @@ const confirmResetImport = async () => {
   }
 
   &__result-stat-val {
-    font-size: var(--font-size-2xl);
+    display: inline-flex;
+    gap: 2px;
+    align-items: baseline;
+
+font-size: var(--font-size-2xl);
     font-weight: 700;
     line-height: 1.1;
     color: var(--color-text-main);
   }
 
   &__result-stat-unit {
-    margin-left: 2px;
     font-size: var(--font-size-xs);
     font-weight: 400;
     color: var(--color-text-muted);

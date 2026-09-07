@@ -192,7 +192,9 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   z-index: 1;
 
   display: flex;
+  gap: var(--space-2);
   align-items: center;
+  justify-content: space-between;
 
   width: 100%;
   min-height: calc(var(--control-height-ratio) * 1em);
@@ -270,7 +272,6 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 
     width: 1.2em;
     height: 1.2em;
-    margin-left: var(--space-2);
 
     background-image: var(--icon-select-arrow);
     background-repeat: no-repeat;

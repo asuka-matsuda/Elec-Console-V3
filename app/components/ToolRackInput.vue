@@ -332,9 +332,14 @@ const handleAddCable = () => {
 }
 
 .details-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
   padding: var(--space-2) var(--space-3);
   border: var(--border-width-base) solid var(--color-border-subtle);
   border-radius: var(--radius-md);
+
   background: var(--color-surface-panel-subtle);
 
   &[open] {
@@ -363,7 +368,6 @@ const handleAddCable = () => {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-form-col-gap);
-  margin-top: var(--space-3);
 
   @include mq("sm") {
     grid-template-columns: 1fr;

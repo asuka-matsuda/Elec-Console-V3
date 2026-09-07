@@ -56,6 +56,7 @@ const {
 .form-group {
   display: flex;
   flex-direction: column;
+  gap: var(--space-2);
   width: 100%;
 
   &.is-horizontal {
@@ -96,12 +97,10 @@ const {
   align-items: center;
 
   width: 100%;
-  margin-bottom: var(--space-2);
 
   .is-horizontal & {
     flex-shrink: 0;
     width: 140px;
-    margin-bottom: 0;
     padding-top: calc(
       (
           (var(--font-size-sm) * var(--control-height-ratio)) -

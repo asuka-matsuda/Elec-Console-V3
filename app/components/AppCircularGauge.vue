@@ -53,6 +53,7 @@ const normalizedValue = computed(() => {
 
   display: flex;
   flex-direction: column;
+  gap: var(--space-1);
   align-items: center;
   justify-content: center;
 
@@ -86,6 +87,10 @@ const normalizedValue = computed(() => {
     position: relative;
     z-index: 2;
 
+    display: inline-flex;
+    gap: var(--space-1);
+    align-items: baseline;
+
     font-family: var(--font-mono);
     font-size: var(--font-size-3xl);
     font-weight: var(--font-weight-bold);
@@ -94,7 +99,6 @@ const normalizedValue = computed(() => {
   }
 
   .unit {
-    margin-left: var(--space-1);
     font-size: var(--font-size-base);
     font-weight: normal;
     color: var(--color-text-secondary);
@@ -103,8 +107,6 @@ const normalizedValue = computed(() => {
   .label {
     position: relative;
     z-index: 2;
-
-    margin-top: var(--space-2);
 
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);

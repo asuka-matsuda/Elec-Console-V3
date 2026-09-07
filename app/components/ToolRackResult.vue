@@ -153,7 +153,6 @@ const vm = computed(() =>
 }
 
 .depth-note {
-  margin-left: var(--space-1);
   font-size: var(--font-size-2xs);
   color: var(--color-text-muted);
 }
