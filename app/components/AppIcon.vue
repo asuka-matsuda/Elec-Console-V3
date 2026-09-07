@@ -1,12 +1,13 @@
 <script setup lang="ts">
 /**
  * AppIcon
- * プロジェクト内で使用される Feather Icons を軽量なSVGマップで表示するコンポーネントです。
+ * @lucide/vue をベースにしたモダンなアイコンコンポーネントです。
+ * v-html を使用せず、Vue のコンポーネントとして最適化された SVG を描画します。
  */
 import { computed } from 'vue'
 
 import type { IconName } from '~/constants/icons'
-import { ICON_CONTENTS } from '~/constants/icons'
+import { ICONS } from '~/constants/icons'
 
 interface Props {
   name: IconName | string
@@ -15,8 +16,8 @@ interface Props {
 
 const { name, size } = defineProps<Props>()
 
-const iconInner = computed(() => {
-  return ICON_CONTENTS[name] || ''
+const iconComponent = computed(() => {
+  return ICONS[name] || null
 })
 </script>
 
@@ -25,19 +26,12 @@ const iconInner = computed(() => {
     class="app-icon c-icon"
     :class="size ? [`is-${size}`, `c-icon--${size}`] : []"
   >
-    <svg
-      v-if="iconInner"
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      :class="`feather feather-${name}`"
-      v-html="iconInner"
+    <component
+      :is="iconComponent"
+      v-if="iconComponent"
+      class="icon-svg"
+      :stroke-width="2"
+      aria-hidden="true"
     />
   </i>
 </template>
@@ -49,7 +43,8 @@ const iconInner = computed(() => {
   align-items: center;
   justify-content: center;
 
-  svg {
+  .icon-svg,
+  :deep(svg) {
     width: 100%;
     height: 100%;
   }
