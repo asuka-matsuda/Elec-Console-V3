@@ -174,6 +174,15 @@ onMounted(() => {
 }
 
 .nav-link {
+  --nav-glow-hover:
+    0 0 4px color-mix(in srgb, var(--section-accent) 45%, transparent),
+    0 0 8px color-mix(in srgb, var(--section-accent) 20%, transparent);
+  --nav-glow-active:
+    0 0 4px color-mix(in srgb, var(--section-accent) 60%, transparent),
+    0 0 8px color-mix(in srgb, var(--section-accent) 30%, transparent),
+    inset 0 0 2px color-mix(in srgb, var(--section-accent) 40%, transparent);
+  --nav-icon-glow: drop-shadow(0 0 var(--blur-sm) var(--section-accent));
+
   display: flex;
   gap: var(--space-2);
   align-items: center;
@@ -209,12 +218,12 @@ onMounted(() => {
 
     color: var(--section-accent);
 
-    box-shadow: var(--shadow-glow-hover);
+    box-shadow: var(--nav-glow-hover);
 
     transition: var(--transition-glow);
 
     :deep(.c-icon) {
-      filter: var(--drop-shadow-glow-sm);
+      filter: var(--nav-icon-glow);
     }
   }
 
@@ -226,12 +235,12 @@ onMounted(() => {
 
     color: var(--section-accent);
 
-    box-shadow: var(--shadow-glow-active);
+    box-shadow: var(--nav-glow-active);
 
     transition: var(--transition-glow);
 
     :deep(.c-icon) {
-      filter: var(--drop-shadow-glow-sm);
+      filter: var(--nav-icon-glow);
     }
   }
 
