@@ -17,6 +17,10 @@ export default defineNuxtConfig({
 
   app: {
     head: {
+      meta: [
+        { name: 'robots', content: 'noindex, nofollow, noarchive, nosnippet' },
+        { name: 'googlebot', content: 'noindex, nofollow, noarchive, nosnippet' },
+      ],
       link: [
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
@@ -34,6 +38,7 @@ export default defineNuxtConfig({
     routeRules: {
       '/**': {
         headers: {
+          'X-Robots-Tag': 'noindex, nofollow, noarchive, nosnippet',
           'X-Content-Type-Options': 'nosniff',
           'X-Frame-Options': 'SAMEORIGIN',
           'Referrer-Policy': 'strict-origin-when-cross-origin',
