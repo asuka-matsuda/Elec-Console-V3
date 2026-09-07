@@ -77,43 +77,35 @@ const sections = computed<SectionConfig[]>(() => [
 
 <template>
   <div class="info-aside">
-    <section
-      v-for="section in sections"
-      :key="section.title"
-      class="section"
-    >
+    <section v-for="section in sections" :key="section.title">
       <AppSectionHeader :title="section.title" :icon="section.icon" size="md" />
 
-      <div v-if="pending" class="list">
-        <AppPanel class="status-panel">
-          <AppIcon name="loader" class="u-spin" size="sm" />
-          <span>{{ section.loadingText }}</span>
-        </AppPanel>
-      </div>
+      <AppPanel v-if="pending" class="status">
+        <AppIcon name="loader" class="u-spin" size="sm" />
+        <span>{{ section.loadingText }}</span>
+      </AppPanel>
 
-      <div v-else-if="section.items.length > 0" class="list">
+      <div v-else-if="section.items.length > 0" class="items">
         <AppPanel
           v-for="item in section.items"
           :key="item.key"
-          class="info-item"
+          class="item"
         >
-          <div class="item-header">
+          <header>
             <AppBadge v-if="item.badge" :color="item.badge.color">
               {{ item.badge.text }}
             </AppBadge>
-            <span class="item-title">{{ item.title }}</span>
-          </div>
-          <div class="item-meta">{{ item.date }}</div>
-          <p v-if="item.desc" class="item-desc">{{ item.desc }}</p>
+            <strong>{{ item.title }}</strong>
+          </header>
+          <time>{{ item.date }}</time>
+          <p v-if="item.desc">{{ item.desc }}</p>
         </AppPanel>
       </div>
 
-      <div v-else class="list">
-        <AppPanel class="status-panel">
-          <AppIcon name="inbox" size="sm" />
-          <span>{{ section.emptyText }}</span>
-        </AppPanel>
-      </div>
+      <AppPanel v-else class="status">
+        <AppIcon name="inbox" size="sm" />
+        <span>{{ section.emptyText }}</span>
+      </AppPanel>
     </section>
   </div>
 </template>
@@ -126,19 +118,19 @@ const sections = computed<SectionConfig[]>(() => [
   width: 100%;
 }
 
-.section {
+section {
   display: flex;
   flex-direction: column;
   gap: var(--space-panel-gap);
 }
 
-.list {
+.items {
   display: flex;
   flex-direction: column;
   gap: var(--space-panel-gap);
 }
 
-.info-item {
+.item {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
@@ -149,35 +141,37 @@ const sections = computed<SectionConfig[]>(() => [
   &:hover {
     border-color: color-mix(in srgb, var(--theme-accent) 40%, var(--color-border));
   }
+
+  header {
+    display: flex;
+    gap: var(--space-1-5);
+    align-items: center;
+
+    strong {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-bold);
+      line-height: var(--line-height-tight);
+      color: var(--color-text-main);
+    }
+  }
+
+  time {
+    display: block;
+
+    font-size: var(--font-size-2xs);
+    line-height: var(--line-height-tight);
+    color: var(--color-text-muted);
+    letter-spacing: var(--tracking-wide);
+  }
+
+  p {
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-base);
+    color: var(--color-text-secondary);
+  }
 }
 
-.item-header {
-  display: flex;
-  gap: var(--space-1-5);
-  align-items: center;
-}
-
-.item-title {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  color: var(--color-text-main);
-}
-
-.item-meta {
-  font-size: var(--font-size-2xs);
-  line-height: var(--line-height-tight);
-  color: var(--color-text-muted);
-  letter-spacing: var(--tracking-wide);
-}
-
-.item-desc {
-  font-size: var(--font-size-xs);
-  line-height: var(--line-height-base);
-  color: var(--color-text-secondary);
-}
-
-.status-panel {
+.status {
   display: flex;
   gap: var(--space-2);
   align-items: center;
