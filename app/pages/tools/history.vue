@@ -77,13 +77,15 @@ const {
 
 <style scoped lang="scss">
 .p-history-page {
-  @include flex-start-stretch($direction: column);
-
   container-type: inline-size;
+  display: flex;
+  flex-direction: column;
   gap: var(--space-section-gap);
 
   &__grid {
-    @include grid;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-panel-gap);
 
     @include cq("sm") {
       grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
@@ -91,8 +93,8 @@ const {
   }
 
   &__empty {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-1);
     align-items: center;
     justify-content: center;

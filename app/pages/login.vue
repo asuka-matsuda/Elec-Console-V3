@@ -86,8 +86,8 @@ const handleLogin = async () => {
   padding: var(--space-card-pad);
 
   &__form {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-form-row-gap);
   }
 
@@ -101,7 +101,9 @@ const handleLogin = async () => {
   }
 
   &__actions {
-    @include flex-center-center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>

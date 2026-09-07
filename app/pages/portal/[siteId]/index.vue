@@ -100,8 +100,8 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .p-site-dashboard {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-section-gap);
   height: 100%;
 
@@ -114,15 +114,16 @@ onMounted(() => {
   }
 
   &__sidebar {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-card-gap);
   }
 }
 
 .l-grid--2col-2-1 {
-  @include grid(2fr 1fr, var(--space-section-gap));
-
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-section-gap);
   align-items: flex-start;
 
   @include mq("lg") {

@@ -78,10 +78,12 @@ const handleCopyPassword = () => {
   }
 
   &__credential-box {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-3);
+
     padding: var(--space-card-pad);
+
     background: transparent;
     backdrop-filter: blur(var(--blur-sm));
 

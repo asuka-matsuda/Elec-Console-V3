@@ -145,9 +145,9 @@ provide('toolBasisModal', {
 
 <style scoped lang="scss">
 .l-tool-layout {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
   flex: 1;
+  flex-direction: column;
   gap: var(--space-card-gap);
 
   max-width: 1600px;
@@ -156,9 +156,11 @@ provide('toolBasisModal', {
 
   // 左右分割（4:3）のメイングリッド: 左に入力、右に結果
   &__main {
-    @include grid(minmax(0, 4fr) minmax(0, 3fr));
-
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 3fr);
     flex: 1;
+    gap: var(--space-panel-gap);
+
     min-height: 0;
 
     @include mq("md") {
@@ -167,8 +169,8 @@ provide('toolBasisModal', {
   }
 
   &__inputs {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     min-height: 0;
   }
 
@@ -183,8 +185,8 @@ provide('toolBasisModal', {
   }
 
   &__results {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     min-height: 0;
 
     // モバイル: 下部Stickyドロワー
@@ -216,11 +218,15 @@ provide('toolBasisModal', {
     display: none;
 
     @include mq("md") {
-      @include flex-between-center;
-
       cursor: pointer;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
       height: 48px;
       padding: 0 var(--space-3);
+
       background: color-mix(
         in srgb,
         var(--color-category-tool) 10%,
@@ -237,10 +243,11 @@ provide('toolBasisModal', {
   }
 
   &__results-inner {
-    @include flex-start-stretch($direction: column);
-
     container-type: inline-size;
+    display: flex;
     flex: 1;
+    flex-direction: column;
+
     min-height: 0;
 
     @include mq("md") {

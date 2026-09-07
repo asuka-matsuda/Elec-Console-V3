@@ -151,8 +151,8 @@ const pct = computed(() => {
 }
 
 .c-step-indicator__details {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-1, 4px);
 }
 

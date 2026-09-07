@@ -63,20 +63,23 @@ const themeOptions = [
 
 <style scoped lang="scss">
 .p-settings {
-  @include flex-start-stretch($direction: column);
-
   container-type: inline-size;
+  display: flex;
+  flex-direction: column;
   gap: var(--space-section-gap);
+
   padding-bottom: var(--space-layout-pad);
 
   &__panel-content {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-card-gap);
   }
 
   &__grid {
-    @include grid(1fr, var(--space-section-gap));
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-section-gap);
 
     @include cq("md") {
       grid-template-columns: 2fr 1fr;
@@ -84,8 +87,8 @@ const themeOptions = [
   }
 
   &__stack {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-3);
   }
 }

@@ -101,8 +101,8 @@ onMounted(async () => {
 <style scoped lang="scss">
 .p-portal-index {
   &__content {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-card-gap);
   }
 
@@ -113,7 +113,8 @@ onMounted(async () => {
   }
 
   &__actions {
-    @include flex-start-center;
+    display: flex;
+    align-items: center;
   }
 }
 </style>

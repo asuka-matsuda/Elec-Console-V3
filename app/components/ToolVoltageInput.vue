@@ -103,8 +103,8 @@ defineProps<{
 
 <style scoped lang="scss">
 .c-voltage-input {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-form-row-gap);
 
   &__grid {

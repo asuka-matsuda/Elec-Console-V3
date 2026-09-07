@@ -107,20 +107,24 @@ const vm = computed(() =>
 
 <style scoped lang="scss">
 .c-rack-result {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-card-gap);
 
   &__box-title {
-    @include flex-center-center;
-
+    display: flex;
     gap: var(--space-2);
+    align-items: center;
+    justify-content: center;
   }
 
   &__value-box {
-    @include flex-start-center($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-1);
+    align-items: center;
+    justify-content: flex-start;
+
     width: 100%;
   }
 

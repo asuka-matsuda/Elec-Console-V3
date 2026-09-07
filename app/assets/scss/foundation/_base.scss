@@ -24,9 +24,10 @@ textarea {
 
 body {
   @include text-body;
-  @include flex-start-stretch($direction: column);
 
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 
   height: 100dvh;
   min-height: 100dvh;
@@ -103,8 +104,8 @@ input::-webkit-inner-spin-button {
 }
 
 #__nuxt {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
   flex: 1;
+  flex-direction: column;
   min-height: 0;
 }

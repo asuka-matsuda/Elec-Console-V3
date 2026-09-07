@@ -112,20 +112,23 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
 
 <style scoped lang="scss">
 .c-history-card {
-  @include flex-start-stretch($direction: column);
+  display: flex;
+  flex-direction: column;
 
   &__header {
-    @include flex-between-center;
-
+    display: flex;
     gap: 0;
+    align-items: center;
     align-items: flex-end;
+    justify-content: space-between;
+
     padding-bottom: var(--space-2);
     border-bottom: 1px solid var(--color-border);
   }
 
   &__title-group {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-1);
   }
 
@@ -135,18 +138,20 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
 
   &__title {
     @include text-title("sm");
-    @include flex-start-center;
 
+    display: flex;
+    align-items: center;
     color: var(--color-text-main);
   }
 
   &__body {
-    @include flex-start-stretch($direction: column);
+    display: flex;
+    flex-direction: column;
   }
 
   &__section {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-1);
   }
 
@@ -160,7 +165,10 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
 
   &__list {
     @include text-desc;
-    @include grid(auto 1fr, var(--space-1) var(--space-3));
+
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-1) var(--space-3);
 
     dt {
       white-space: nowrap;
@@ -173,8 +181,9 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
   }
 
   &__footer {
-    @include flex-end-center;
-
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     margin-top: auto;
   }
 }

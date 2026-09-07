@@ -239,15 +239,15 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .p-souden-dashboard {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-section-gap);
   height: 100%;
 
   &__error {
-    @include flex-start-center;
-
+    display: flex;
     gap: var(--space-2);
+    align-items: center;
 
     padding: var(--space-3);
     border: 1px solid rgb(239 68 68 / 20%);
@@ -280,9 +280,9 @@ onMounted(() => {
   }
 
   &__details {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
     flex: 1;
+    flex-direction: column;
     gap: var(--space-5);
   }
 
@@ -308,24 +308,26 @@ onMounted(() => {
   }
 
   &__bars {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
     flex: 1;
+    flex-direction: column;
     gap: var(--space-3);
+
     width: 100%;
   }
 }
 
 .p-souden-steps {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-5);
   padding: var(--space-2) 0;
 }
 
 .l-grid--2col {
-  @include grid(1fr 1fr, var(--space-section-gap));
-
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-section-gap);
   align-items: flex-start;
 
   @include mq("md") {

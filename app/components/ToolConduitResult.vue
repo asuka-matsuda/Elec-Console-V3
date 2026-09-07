@@ -126,17 +126,19 @@ const statusCustom = computed(() =>
 
 <style scoped lang="scss">
 .c-conduit-result {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
   flex: 1;
+  flex-direction: column;
   gap: var(--space-card-gap);
   align-items: stretch;
+
   min-height: 0;
 
   &__box-title {
-    @include flex-center-center;
-
+    display: flex;
     gap: var(--space-2);
+    align-items: center;
+    justify-content: center;
   }
 
   &__main-val {
@@ -204,8 +206,8 @@ const statusCustom = computed(() =>
   }
 
   &__footer {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     flex-shrink: 0;
     gap: var(--space-2);
 
@@ -218,18 +220,21 @@ const statusCustom = computed(() =>
 
   &__footer-title {
     @include text-desc("bold");
-    @include flex-start-center;
 
+    display: flex;
     gap: var(--space-1);
+    align-items: center;
     color: var(--color-status-warning);
   }
 
   &__footer-list {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-1);
+
     margin: 0;
     padding-left: 0;
+
     list-style: none;
 
     li {

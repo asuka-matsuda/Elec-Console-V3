@@ -149,8 +149,8 @@ const closeModal = () => {
 
 <style scoped lang="scss">
 .p-event-form {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-3);
 
   &__row {

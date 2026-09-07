@@ -184,9 +184,11 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 
 .c-custom-select__value {
   @include click-enabled;
-  @include flex-start-center;
 
   position: relative;
+
+  display: flex;
+  align-items: center;
 
   width: 100%;
   min-height: calc(var(--control-height-ratio) * 1em);

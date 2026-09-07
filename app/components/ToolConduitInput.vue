@@ -163,12 +163,14 @@ const getCableAreaText = (cableIdx: string): string => {
 
 <style scoped lang="scss">
 .c-conduit-input {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-form-row-gap);
 
   &__header-grid {
-    @include grid(minmax(0, 1.8fr) minmax(130px, 1fr), var(--space-form-row-gap));
+    display: grid;
+    grid-template-columns: minmax(0, 1.8fr) minmax(130px, 1fr);
+    gap: var(--space-form-row-gap);
 
     @include mq("sm") {
       grid-template-columns: 1fr;
@@ -176,14 +178,15 @@ const getCableAreaText = (cableIdx: string): string => {
   }
 
   &__section {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-item-gap);
   }
 
   &__section-header {
-    @include flex-between-center;
-
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: var(--space-1) 0;
   }
 

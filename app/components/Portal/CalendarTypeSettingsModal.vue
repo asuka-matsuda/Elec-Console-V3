@@ -94,8 +94,8 @@ const {
 
 <style scoped lang="scss">
 .p-type-settings {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-card-gap);
 
   &__lead {
@@ -103,40 +103,44 @@ const {
   }
 
   &__list {
-    @include flex-start-stretch($direction: column);
-
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
     gap: var(--space-2);
+
     max-height: 400px;
     padding-right: var(--space-1);
   }
 
   &__add {
-    @include flex-start-center;
+    display: flex;
+    align-items: center;
   }
 }
 
 .p-type-item {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-1);
   padding: var(--space-2);
 
   @include border-base($opacity: 30%);
 
   &__main {
-    @include flex-start-center;
-
+    display: flex;
     gap: var(--space-2);
+    align-items: center;
     width: 100%;
   }
 
   &__preview {
     --glow-color: var(--preview-color, var(--color-primary));
 
-    @include flex-center-center;
-
+    display: flex;
     flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+
     width: var(--size-control-sm);
     height: var(--size-control-sm);
 
@@ -159,10 +163,11 @@ const {
   }
 
   &__colors {
-    @include flex-start-center;
-
+    display: flex;
     flex-wrap: wrap;
     gap: var(--space-1);
+    align-items: center;
+
     padding-left: calc(var(--size-control-sm) + var(--space-2));
   }
 

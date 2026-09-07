@@ -70,10 +70,12 @@ const resolvedStatus = computed(() => {
 
 <style scoped lang="scss">
 .c-result-box {
-  @include flex-center-center($direction: column);
-
+  display: flex;
   flex: 1;
+  flex-direction: column;
   gap: var(--space-1);
+  align-items: center;
+  justify-content: center;
 
   min-width: 0;
   padding: var(--space-2) var(--space-3);
@@ -101,9 +103,11 @@ const resolvedStatus = computed(() => {
   }
 
   &__value {
-    @include flex-center-center;
-
+    display: flex;
     gap: var(--space-2);
+    align-items: center;
+    justify-content: center;
+
     width: 100%;
 
     :deep(.c-result-box__val),
@@ -113,8 +117,9 @@ const resolvedStatus = computed(() => {
   }
 
   &__footer {
-    @include flex-center-center;
-
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-top: var(--space-1);
   }
 

@@ -56,14 +56,15 @@ const calculatedPct = computed(() => {
 
 <style scoped lang="scss">
 .c-progress-wrap {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-1, 4px);
   width: 100%;
 
   &__header {
-    @include flex-between-center;
-
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     font-size: var(--text-xs, 0.75rem);
   }
 
@@ -73,9 +74,11 @@ const calculatedPct = computed(() => {
   }
 
   &__meta {
-    @include flex-end-center;
-
+    display: flex;
     gap: var(--space-2, 8px);
+    align-items: center;
+    justify-content: flex-end;
+
     font-family: var(--font-mono, monospace);
     color: var(--color-text-muted, #64748b);
   }

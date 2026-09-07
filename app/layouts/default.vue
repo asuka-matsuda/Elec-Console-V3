@@ -61,28 +61,28 @@ const { currentUser, logout } = useAuth()
 
 <style scoped lang="scss">
 .l-app {
-  @include flex-start-stretch;
-
+  display: flex;
   flex: 1;
   gap: 0;
   min-height: 0;
 }
 
 .l-main {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
   flex: 1;
+  flex-direction: column;
   gap: 0;
+
   min-width: 0; /* Prevent flex item from blowing out */
 }
 
 .l-content {
   --scrollbar-size: var(--space-2);
 
-  @include flex-start-stretch($direction: column);
-
   overflow-y: auto;
+  display: flex;
   flex: 1;
+  flex-direction: column;
   gap: 0;
 
   min-height: 0;
@@ -91,18 +91,22 @@ const { currentUser, logout } = useAuth()
 
 .c-header-user {
   @include text-title("sm");
-  @include flex-start-center;
 
+  display: flex;
   gap: var(--space-2);
+  align-items: center;
 
   &__avatar {
     --glow-color: color-mix(in srgb, var(--theme-accent) 50%, transparent);
 
-    @include flex-center-center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     width: var(--size-control-sm);
     height: var(--size-control-sm);
     border-radius: 50%;
+
     background: var(--theme-accent);
 
     @include border-base(

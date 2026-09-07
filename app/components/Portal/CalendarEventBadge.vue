@@ -46,9 +46,10 @@ const badgeColor = computed(() => props.color || 'var(--theme-accent)')
 .c-cal-badge {
   --badge-color-dim: color-mix(in srgb, var(--badge-color) 80%, transparent);
 
-  @include flex-start-center;
-
+  display: flex;
   gap: var(--space-0-5);
+  align-items: center;
+
   width: 100%;
   padding: var(--space-0-5) var(--space-1);
 

@@ -76,10 +76,11 @@ const { sortBy, sortOrder, sortedData, handleSort }
 
 <style scoped lang="scss">
 .l-db-layout {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
   flex: 1;
+  flex-direction: column;
   gap: var(--space-card-gap);
+
   max-width: 1400px;
   min-height: 0;
 
@@ -88,18 +89,20 @@ const { sortBy, sortOrder, sortedData, handleSort }
   }
 
   &__main {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
     flex: 1;
+    flex-direction: column;
+
     min-width: 0;
     min-height: 0;
   }
 
   &__panel {
-    @include flex-start-stretch($direction: column);
-
     overflow: hidden;
+    display: flex;
     flex: 1;
+    flex-direction: column;
+
     min-height: 0;
   }
 }

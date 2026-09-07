@@ -408,17 +408,18 @@ const confirmResetImport = async () => {
 <style lang="scss" scoped>
 .c-site-settings {
   &__content {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-form-row-gap);
     min-height: 300px;
   }
 
   &__workers {
-    @include flex-start-center;
-
+    display: flex;
     flex-wrap: wrap;
     gap: var(--space-2);
+    align-items: center;
+
     min-height: 40px;
     padding: var(--space-2);
 
@@ -426,15 +427,16 @@ const confirmResetImport = async () => {
   }
 
   &__sync-cards {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-3);
   }
 
   &__sync-item {
-    @include flex-between-center;
-
+    display: flex;
     gap: var(--space-3);
+    align-items: center;
+    justify-content: space-between;
 
     padding: var(--space-3);
     border: 1px solid var(--color-border-subtle);
@@ -448,9 +450,9 @@ const confirmResetImport = async () => {
   }
 
   &__sync-info {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
     flex: 1;
+    flex-direction: column;
     gap: var(--space-1);
   }
 
@@ -467,9 +469,9 @@ const confirmResetImport = async () => {
   }
 
   &__sync-status {
-    @include flex-start-center;
-
+    display: flex;
     gap: var(--space-2);
+    align-items: center;
 
     padding: var(--space-2) var(--space-3);
     border-radius: var(--radius-sm);
@@ -491,8 +493,8 @@ const confirmResetImport = async () => {
   }
 
   &__sync-result-card {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-2);
 
     padding: var(--space-3);
@@ -503,23 +505,26 @@ const confirmResetImport = async () => {
   }
 
   &__sync-result-header {
-    @include flex-between-center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
   &__sync-result-tag {
-    @include flex-start-center;
-
+    display: flex;
     gap: var(--space-2);
+    align-items: center;
+
     font-size: var(--font-size-sm);
     font-weight: 600;
     color: var(--color-status-success);
   }
 
   &__sync-badges {
-    @include flex-start-center;
-
+    display: flex;
     flex-wrap: wrap;
     gap: var(--space-2);
+    align-items: center;
   }
 
   &__stat-badge {
@@ -576,8 +581,8 @@ const confirmResetImport = async () => {
   }
 
   &__result-body {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-3);
     padding: var(--space-1) 0;
   }
@@ -599,8 +604,8 @@ const confirmResetImport = async () => {
   }
 
   &__result-stat-card {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-1);
     align-items: center;
 
@@ -661,9 +666,9 @@ const confirmResetImport = async () => {
   }
 
   &__result-alert {
-    @include flex-start-center;
-
+    display: flex;
     gap: var(--space-2);
+    align-items: center;
 
     padding: var(--space-2) var(--space-3);
     border: 1px solid hsl(var(--color-status-success-base) / 30%);
@@ -677,15 +682,15 @@ const confirmResetImport = async () => {
   }
 
   &__circuit-list {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-1);
   }
 
   &__circuit-row {
-    @include flex-start-center;
-
+    display: flex;
     gap: var(--space-1);
+    align-items: center;
 
     > *:first-child {
       flex: 1;

@@ -75,11 +75,16 @@
 
 .c-input-addon {
   @include text-desc;
-  @include flex-center-center($is-inline: true);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
   padding: 0 var(--space-4);
+
   color: var(--color-text-secondary);
   white-space: nowrap;
+
   background-color: var(--surface-bg-elevated);
 
   @include border-base(var(--color-border), 100%);

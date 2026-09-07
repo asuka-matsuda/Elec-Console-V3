@@ -120,13 +120,13 @@ const handleClose = () => {
 
 <style scoped lang="scss">
 .c-basis-content {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-card-gap);
 
   &__list {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-card-gap);
   }
 
@@ -135,15 +135,16 @@ const handleClose = () => {
   }
 
   &__extra {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-2);
   }
 }
 
 .c-math-basis {
-  @include grid(1fr auto);
-
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-panel-gap);
   align-items: center;
 
   @include mq("sm") {
@@ -188,9 +189,10 @@ const handleClose = () => {
 }
 
 .c-math-legend {
-  @include flex-start-stretch(column);
   @include text-meta("xs", "bold");
 
+  display: flex;
+  flex-direction: column;
   gap: var(--space-1);
 
   min-width: 200px;
@@ -208,8 +210,9 @@ const handleClose = () => {
   }
 
   &__list {
-    @include grid(max-content 1fr, var(--space-1) var(--space-2));
-
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--space-1) var(--space-2);
     align-items: baseline;
 
     dt {

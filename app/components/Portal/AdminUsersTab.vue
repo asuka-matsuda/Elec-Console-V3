@@ -207,19 +207,21 @@ const confirmResetPassword = async (row: User) => {
 <style scoped lang="scss">
 .c-admin-users {
   &__toolbar {
-    @include flex-end-center;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
   }
 
   &__stack {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-card-gap);
   }
 
   &__actions {
-    @include flex-start-center;
-
+    display: flex;
     gap: var(--space-2);
+    align-items: center;
   }
 
   &__meta {

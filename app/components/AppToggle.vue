@@ -37,10 +37,11 @@ defineProps<{
 
   @include text-desc;
   @include click-enabled;
-  @include flex-start-center($is-inline: true);
 
   position: relative;
+  display: inline-flex;
   gap: var(--space-2);
+  align-items: center;
 
   &__input {
     cursor: inherit;

@@ -13,9 +13,10 @@
 
 <style scoped lang="scss">
 .c-result-details {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-1);
+
   padding-top: var(--space-3);
   border-top: 1px solid var(--color-border);
 }

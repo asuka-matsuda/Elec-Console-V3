@@ -62,27 +62,28 @@ const resolvedDividerVariant = computed(() => {
 
 <style scoped lang="scss">
 .c-section-header {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-1);
 
   &__top {
-    @include flex-between-center;
-
+    display: flex;
     flex-wrap: wrap;
     gap: var(--space-2);
+    align-items: center;
+    justify-content: space-between;
   }
 
   &__actions {
-    @include flex-start-center;
-
+    display: flex;
     gap: var(--space-2);
+    align-items: center;
   }
 
   &__title {
-    @include flex-start-center;
-
+    display: flex;
     gap: var(--space-2);
+    align-items: center;
     color: var(--color-text-main);
 
     &--lg {

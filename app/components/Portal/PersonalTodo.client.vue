@@ -83,14 +83,14 @@ const sortedTodos = computed(() => {
 
 <style scoped lang="scss">
 .p-personal-todo {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-3);
 
   &__input {
-    @include flex-start-center;
-
+    display: flex;
     gap: var(--space-1);
+    align-items: center;
 
     > *:first-child {
       flex: 1;
@@ -98,18 +98,22 @@ const sortedTodos = computed(() => {
   }
 
   &__list {
-    @include flex-start-stretch($direction: column);
-
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
     gap: var(--space-1);
+
     max-height: 400px;
   }
 
   &__item {
-    @include flex-between-center;
-
+    display: flex;
     gap: var(--space-1);
+    align-items: center;
+    justify-content: space-between;
+
     padding: var(--space-2);
+
     background-color: var(--color-bg-hover);
 
     .is-completed {

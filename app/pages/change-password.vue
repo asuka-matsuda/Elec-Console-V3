@@ -95,8 +95,8 @@ const handleChangePassword = async () => {
 
 <style scoped lang="scss">
 .p-change-password {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-3);
 
   &__error {
@@ -107,13 +107,15 @@ const handleChangePassword = async () => {
   }
 
   &__form {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-form-row-gap);
   }
 
   &__actions {
-    @include flex-center-center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 </style>

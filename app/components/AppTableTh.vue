@@ -100,10 +100,12 @@ th {
   }
 
   .c-table__th-inner {
-    @include flex-start-center($is-inline: true);
-
+    display: inline-flex;
     gap: 4px;
+    align-items: center;
+
     width: 100%;
+
     white-space: nowrap;
 
     &.is-align-center {

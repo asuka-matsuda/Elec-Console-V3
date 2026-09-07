@@ -127,8 +127,8 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
 <style scoped lang="scss">
 .c-calendar-wrapper {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-3);
 }
 
@@ -268,7 +268,9 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     @include shadow("modal");
 
     .fc-popover-header {
-      @include flex-between-center;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
 
       padding: var(--space-1) var(--space-3);
       border-top: none;

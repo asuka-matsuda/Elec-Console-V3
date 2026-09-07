@@ -251,8 +251,8 @@ const getActionBadgeColor = (action: string) => {
 
 <style scoped lang="scss">
 .p-operation-logs {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-section-gap);
   height: 100%;
 

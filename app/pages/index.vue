@@ -109,18 +109,20 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
 
 <style scoped lang="scss">
 .p-dashboard {
-  @include flex-start-start;
-
+  display: flex;
   gap: var(--space-section-gap);
+  align-items: flex-start;
+  justify-content: flex-start;
 
   @include cq("md") {
-    @include flex-start-stretch(column);
+    display: flex;
+    flex-direction: column;
   }
 
   &__main {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
     flex: 1;
+    flex-direction: column;
     gap: var(--space-section-gap);
   }
 
@@ -143,13 +145,15 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
   }
 
   &__section {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-panel-gap);
   }
 
   &__grid {
-    @include grid-auto(280px, var(--space-panel-gap));
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-panel-gap);
   }
 }
 </style>

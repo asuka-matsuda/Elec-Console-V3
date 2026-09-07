@@ -124,13 +124,15 @@ const onCategoryChange = (val: unknown) => {
 <style scoped lang="scss">
 .c-cable-item {
   &__header {
-    @include flex-between-center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
   &__title-group {
-    @include flex-start-center;
-
+    display: flex;
     gap: var(--space-2);
+    align-items: center;
   }
 
   &__meta {

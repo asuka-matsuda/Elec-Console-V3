@@ -35,15 +35,16 @@ const activeTab = ref('users')
 
 <style scoped lang="scss">
 .p-portal-admin {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-section-gap);
 
   &__content {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
     flex: 1;
+    flex-direction: column;
     gap: var(--space-card-gap);
+
     min-height: 0;
   }
 }

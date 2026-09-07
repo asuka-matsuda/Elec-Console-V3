@@ -180,25 +180,27 @@ const handleSaveSettings = async (updatedSite: Site) => {
 <style scoped lang="scss">
 .c-admin-sites {
   &__toolbar {
-    @include flex-end-center;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
   }
 
   &__stack {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-card-gap);
   }
 
   &__status-stack {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-1);
   }
 
   &__actions {
-    @include flex-start-center;
-
+    display: flex;
     gap: var(--space-2);
+    align-items: center;
   }
 }
 </style>

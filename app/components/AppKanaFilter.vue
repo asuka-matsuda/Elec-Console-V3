@@ -48,6 +48,8 @@ function isKanaDisabled(row: string) {
 
 <style scoped lang="scss">
 .c-kana-filter {
-  @include grid-auto(80px, var(--space-1));
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: var(--space-1);
 }
 </style>

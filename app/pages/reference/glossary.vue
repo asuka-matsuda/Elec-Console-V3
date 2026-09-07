@@ -129,10 +129,11 @@ const categoryColorMap: Record<string, string> = {
   --trade-color-plumbing: #06b6d4;
   --trade-color-trivia: var(--color-category-reference);
 
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
   flex: 1;
+  flex-direction: column;
   gap: var(--space-card-gap);
+
   max-width: 1400px;
   min-height: 0;
 
@@ -141,26 +142,32 @@ const categoryColorMap: Record<string, string> = {
   }
 
   &__main {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
     flex: 1;
+    flex-direction: column;
+
     min-width: 0;
     min-height: 0;
   }
 }
 
 .c-glossary-list {
-  @include flex-start-stretch($direction: column);
+  display: flex;
+  flex-direction: column;
 }
 
 .c-glossary-card {
-  @include flex-start-stretch($direction: column);
+  display: flex;
+  flex-direction: column;
+
   @include state-base;
 
   &__header {
-    @include flex-between-center;
-
+    display: flex;
     gap: var(--space-2);
+    align-items: center;
+    justify-content: space-between;
+
     padding-bottom: var(--space-1);
     border-bottom: var(--border-width-base) solid transparent;
     border-image: linear-gradient(
@@ -173,8 +180,8 @@ const categoryColorMap: Record<string, string> = {
   }
 
   &__title {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-1);
   }
 
@@ -187,8 +194,8 @@ const categoryColorMap: Record<string, string> = {
   }
 
   &__body {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-1);
   }
 
@@ -199,8 +206,8 @@ const categoryColorMap: Record<string, string> = {
   }
 
   &__meta {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-1);
     padding: var(--space-3);
 

@@ -316,12 +316,14 @@ const handleAddCable = () => {
 
 <style scoped lang="scss">
 .c-rack-input {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-form-row-gap);
 
   &__grid {
-    @include grid(repeat(2, minmax(0, 1fr)), var(--space-form-col-gap));
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-form-col-gap);
 
     @include mq("sm") {
       grid-template-columns: 1fr;
@@ -340,12 +342,15 @@ const handleAddCable = () => {
   }
 
   &__details-summary {
-    @include flex-start-center;
     @include text-meta("xs", "bold");
 
     cursor: pointer;
     user-select: none;
+
+    display: flex;
     gap: var(--space-2);
+    align-items: center;
+
     color: var(--color-text-secondary);
 
     &:hover {
@@ -354,8 +359,9 @@ const handleAddCable = () => {
   }
 
   &__params-grid {
-    @include grid(repeat(3, minmax(0, 1fr)), var(--space-form-col-gap));
-
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-form-col-gap);
     margin-top: var(--space-3);
 
     @include mq("sm") {
@@ -364,14 +370,15 @@ const handleAddCable = () => {
   }
 
   &__section {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-item-gap);
   }
 
   &__section-header {
-    @include flex-between-center;
-
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: var(--space-1) 0;
   }
 

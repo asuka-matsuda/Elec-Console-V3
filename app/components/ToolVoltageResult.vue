@@ -79,8 +79,7 @@ const mainBoxStatus = computed(() =>
 
 <style scoped lang="scss">
 .c-voltage-result {
-  @include flex-start-stretch;
-
+  display: flex;
   flex: 1;
   gap: var(--space-card-gap);
   min-height: 0;
@@ -163,10 +162,11 @@ const mainBoxStatus = computed(() =>
   }
 
   &__metrics {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     flex-shrink: 0;
     gap: var(--space-2);
+
     min-width: 220px;
 
     // コンテナ幅が狭い場合 (down <= 600px) は下部に横並び
@@ -177,10 +177,13 @@ const mainBoxStatus = computed(() =>
   }
 
   .metric-card {
-    @include flex-center-center($direction: column);
-
+    display: flex;
     flex: 1;
+    flex-direction: column;
     gap: var(--space-1);
+    align-items: center;
+    justify-content: center;
+
     padding: var(--space-2);
 
     @include border-base(var(--color-border), $width: var(--border-width-base));
@@ -192,8 +195,8 @@ const mainBoxStatus = computed(() =>
 
   .metric-value {
     @include text-mono("sm", "bold");
-    @include flex-display;
 
+    display: flex;
     gap: var(--space-1);
     align-items: baseline;
     margin: 0;

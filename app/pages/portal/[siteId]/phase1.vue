@@ -365,8 +365,8 @@ const {
 
 <style scoped lang="scss">
 .p-phase1 {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-section-gap);
   height: 100%;
 
@@ -377,8 +377,9 @@ const {
 }
 
 .p-phase1-controls {
-  @include grid(1fr 1fr, var(--space-card-gap));
-
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-card-gap);
   align-items: flex-start;
 
   @include mq("lg") {
@@ -386,8 +387,8 @@ const {
   }
 
   &__filters {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-3);
   }
 
@@ -419,8 +420,8 @@ const {
   }
 
   &__progress {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-3);
   }
 }
@@ -448,9 +449,9 @@ const {
 
 .p-phase1-cell {
   &__panel {
-    @include flex-start-stretch($direction: column);
-
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
     gap: 2px;
   }
 
@@ -469,19 +470,21 @@ const {
   }
 
   &__bangou-wrap {
-    @include flex-center-center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   &__wiring {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: 2px;
   }
 
   &__cable-line {
-    @include flex-start-center;
-
+    display: flex;
     gap: var(--space-1);
+    align-items: center;
   }
 
   &__cable {
@@ -507,14 +510,15 @@ const {
   }
 
   &__checks {
-    @include flex-center-center;
-
+    display: flex;
     gap: var(--space-3);
+    align-items: center;
+    justify-content: center;
   }
 
   &__edit-col {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-1);
   }
 
@@ -549,8 +553,8 @@ const {
   }
 
   &__worker {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: 2px;
     align-items: center;
 

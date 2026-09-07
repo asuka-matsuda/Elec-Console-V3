@@ -62,8 +62,8 @@ const tiles = computed(() => {
 
 <style scoped lang="scss">
 .c-minimap {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-2, 8px);
 
   padding: var(--space-3, 12px);

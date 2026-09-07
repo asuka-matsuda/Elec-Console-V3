@@ -16,7 +16,7 @@
 
 <style scoped lang="scss">
 .c-input-group {
-  @include flex-start-stretch;
+  display: flex;
 
   :deep(> *:not(.c-input-group__append)) {
     flex: 1;
@@ -37,7 +37,7 @@
   }
 
   &__append {
-    @include flex-start-stretch;
+    display: flex;
 
     :deep(.c-custom-select__value),
     :deep(.c-input-addon) {

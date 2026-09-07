@@ -43,10 +43,10 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
 .c-segmented-control {
   --radio-color: var(--theme-accent);
 
-  @include flex-start-stretch($is-inline: true);
-
+  display: inline-flex;
   flex-shrink: 0;
   gap: var(--space-0-5);
+
   width: max-content;
   padding: var(--space-0-5);
 
@@ -66,11 +66,16 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
 
   &__item {
     @include click-enabled;
-    @include flex-center-center($is-inline: true);
     @include text-body("md", "bold");
 
     position: relative;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
     padding: var(--space-1) var(--space-3);
+
     color: var(--color-text-muted);
 
     @include border-base(transparent);

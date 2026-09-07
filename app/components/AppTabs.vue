@@ -51,28 +51,36 @@ const selectTab = (option: TabOption<T>) => {
 
 <style scoped lang="scss">
 .c-tabs {
-  @include flex-start-center;
-
+  display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
+  align-items: center;
 
   &--grid {
-    @include grid(repeat(auto-fit, minmax(120px, 1fr)), var(--space-2));
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: var(--space-2);
   }
 
   &--vertical {
-    @include flex-start-stretch($direction: column);
+    display: flex;
+    flex-direction: column;
   }
 }
 
 .c-tabs__item {
   @include click-enabled;
   @include text-desc("md", "medium");
-  @include flex-center-center;
 
   position: relative;
+
+  display: flex;
   gap: var(--space-2);
+  align-items: center;
+  justify-content: center;
+
   padding: var(--space-2) var(--space-4);
+
   color: var(--color-text-secondary);
 
   @include border-base;

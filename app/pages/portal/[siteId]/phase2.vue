@@ -559,8 +559,8 @@ const {
 
 <style scoped lang="scss">
 .p-phase2 {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-section-gap);
   height: 100%;
 
@@ -571,8 +571,9 @@ const {
 }
 
 .p-phase2-controls {
-  @include grid(1fr 1fr, var(--space-card-gap));
-
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-card-gap);
   align-items: flex-start;
 
   @include mq("lg") {
@@ -580,8 +581,8 @@ const {
   }
 
   &__filters {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-3);
   }
 
@@ -641,8 +642,8 @@ const {
   }
 
   &__progress {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-3);
   }
 }
@@ -670,9 +671,9 @@ const {
 
 .p-phase2-cell {
   &__panel {
-    @include flex-start-stretch($direction: column);
-
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
     gap: 2px;
   }
 
@@ -691,10 +692,11 @@ const {
   }
 
   &__bangou-wrap {
-    @include flex-center-center;
-
+    display: flex;
     flex-direction: column;
     gap: 3px;
+    align-items: center;
+    justify-content: center;
   }
 
   &__meisho {
@@ -741,8 +743,8 @@ const {
   }
 
   &__worker {
-    @include flex-start-stretch($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: 2px;
     align-items: center;
 
@@ -764,8 +766,8 @@ const {
 }
 
 .p-phase2-meas-cell {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: 4px;
   align-items: center;
 
@@ -804,8 +806,8 @@ const {
 }
 
 .p-phase2-input-cell {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: 2px;
   align-items: center;
 

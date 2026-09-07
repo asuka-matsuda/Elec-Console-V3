@@ -20,11 +20,13 @@ const emit = defineEmits<{
 <style scoped lang="scss">
 .c-logo {
   @include click-enabled;
-  @include flex-start-center;
   @include text-title("md");
 
+  display: flex;
   flex-shrink: 0;
   gap: var(--space-2);
+  align-items: center;
+
   color: var(--color-text-main);
   white-space: nowrap;
 

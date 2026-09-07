@@ -192,10 +192,13 @@ onMounted(() => {
   }
 
   &[open] {
-    @include flex-start-stretch($direction: column);
-
     pointer-events: auto;
+
     transform: translateY(0);
+
+    display: flex;
+    flex-direction: column;
+
     opacity: 1;
 
     &::backdrop {
@@ -222,12 +225,14 @@ onMounted(() => {
   &__body {
     --scrollbar-size: var(--space-2);
 
-    @include flex-start-stretch($direction: column);
     @include text-caption;
 
     overflow-y: auto;
+    display: flex;
     flex: 1;
+    flex-direction: column;
     gap: var(--space-3);
+
     min-height: 0;
 
     &.is-align-center {

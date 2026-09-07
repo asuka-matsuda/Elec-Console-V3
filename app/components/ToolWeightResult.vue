@@ -58,14 +58,16 @@ const vm = computed(() => formatWeightResult(props.result))
 
 <style scoped lang="scss">
 .c-weight-result {
-  @include flex-start-stretch($direction: column);
-
+  display: flex;
+  flex-direction: column;
   gap: var(--space-card-gap);
 
   &__value-box {
-    @include flex-start-center($direction: column);
-
+    display: flex;
+    flex-direction: column;
     gap: var(--space-1);
+    align-items: center;
+    justify-content: flex-start;
   }
 
   &__val {
