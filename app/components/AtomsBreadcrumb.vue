@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
- * AppBreadcrumb
- * パンくずリストを表示するためのコンポーネント
+ * AtomsBreadcrumb
+ * [Atoms] パンくずリストを表示するための最小UIコンポーネント
  */
 import type { BreadcrumbItem } from '~/types/components'
 
@@ -11,11 +11,15 @@ defineProps<{
 </script>
 
 <template>
-  <nav class="breadcrumb">
-    <ol>
+  <nav
+    class="relative flex shrink-0 items-center py-1 px-2 whitespace-nowrap breadcrumb"
+    aria-label="パンくずリスト"
+  >
+    <ol class="inline-flex items-center gap-2">
       <li
         v-for="(item, index) in items"
         :key="item.href || `${item.text}-${index}`"
+        class="inline-flex items-center gap-2"
       >
         <!-- 中間リンク項目（現場名など） -->
         <NuxtLink
@@ -28,9 +32,25 @@ defineProps<{
         <!-- 非リンク項目（カテゴリ または 現在地） -->
         <span
           v-else
+          class="inline-flex items-center gap-1"
           :class="{ 'is-current': index === items.length - 1 }"
         >
-          {{ item.text }}
+          <span>{{ item.text }}</span>
+          <!-- 現在地を示す点滅カーソル -->
+          <span
+            v-if="index === items.length - 1"
+            class="cursor-bar"
+            aria-hidden="true"
+          />
+        </span>
+
+        <!-- 階層の区切り文字 -->
+        <span
+          v-if="index < items.length - 1"
+          class="separator"
+          aria-hidden="true"
+        >
+          »
         </span>
       </li>
     </ol>
@@ -39,29 +59,12 @@ defineProps<{
 
 <style scoped lang="scss">
 .breadcrumb {
-  position: relative;
-
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-
-  padding: var(--space-1) var(--space-2);
   border: var(--border-width-base) solid var(--color-border);
   border-radius: var(--radius-sm);
-
   font-size: var(--font-size-sm);
   text-transform: uppercase;
-  white-space: nowrap;
 
-  ol,
-  li {
-    display: inline-flex;
-    gap: var(--space-2);
-    align-items: center;
-  }
-
-  li:not(:last-child)::after {
-    content: "»";
+  .separator {
     user-select: none;
 
     font-size: var(--font-size-2xs);
@@ -95,28 +98,22 @@ defineProps<{
     &.is-current {
       --glow-color: var(--theme-accent);
 
-      display: inline-flex;
-      gap: var(--space-1);
-      align-items: center;
-
       color: var(--theme-accent);
       text-shadow: var(--text-glow-md);
-
-      &::after {
-        content: "";
-
-        display: inline-block;
-
-        width: var(--space-1);
-        height: var(--space-3);
-
-        vertical-align: middle;
-
-        background-color: var(--theme-accent);
-
-        animation: ui-cursor-blink 1s step-end infinite;
-      }
     }
+  }
+
+  .cursor-bar {
+    display: inline-block;
+
+    width: var(--space-1);
+    height: var(--space-3);
+
+    vertical-align: middle;
+
+    background-color: var(--theme-accent);
+
+    animation: ui-cursor-blink 1s step-end infinite;
   }
 }
 </style>

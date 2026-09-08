@@ -25,7 +25,6 @@ const emit = defineEmits<{
 .logo {
   cursor: pointer;
   user-select: none;
-  white-space: nowrap;
 
   z-index: 1;
 
@@ -33,6 +32,7 @@ const emit = defineEmits<{
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
   color: var(--color-text-main);
+  white-space: nowrap;
 
   transition: var(--transition-base);
 

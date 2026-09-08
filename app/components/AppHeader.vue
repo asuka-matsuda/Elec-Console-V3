@@ -26,7 +26,7 @@ const emit = defineEmits<{
       />
       <AtomsLogo />
 
-      <AppBreadcrumb
+      <AtomsBreadcrumb
         v-if="breadcrumbs?.length"
         :items="breadcrumbs"
         class="breadcrumb"
