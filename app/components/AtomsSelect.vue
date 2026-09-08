@@ -12,13 +12,21 @@ import type { SelectOption } from '~/types/components'
 
 const model = defineModel<string | number | boolean | null>()
 
-const props = defineProps<{
-  options: SelectOption[]
-  placeholder?: string
-  disabled?: boolean
-  error?: boolean
-  placement?: 'top' | 'bottom'
-}>()
+const props = withDefaults(
+  defineProps<{
+    options: SelectOption[]
+    placeholder?: string
+    disabled?: boolean
+    error?: boolean
+    placement?: 'top' | 'bottom'
+    size?: 'sm' | 'md'
+  }>(),
+  {
+    disabled: false,
+    error: false,
+    size: 'md',
+  },
+)
 
 const selectRef = ref<HTMLElement | null>(null)
 const dropdownRef = ref<HTMLElement | null>(null)
@@ -110,7 +118,10 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   <div
     ref="selectRef"
     class="relative w-full custom-select"
-    :class="{ 'is-error': error }"
+    :class="[
+      size === 'sm' ? 'is-sm' : '',
+      { 'is-error': error },
+    ]"
     :data-disabled="disabled"
   >
     <button
@@ -135,7 +146,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
           v-if="isOpen"
           ref="dropdownRef"
           class="absolute w-max max-w-[90vw] overflow-x-hidden overflow-y-auto p-1 custom-select__dropdown"
-          :class="`is-${dynamicPlacement}`"
+          :class="[`is-${dynamicPlacement}`, size === 'sm' ? 'is-sm' : '']"
           :style="dropdownStyle"
         >
           <li
@@ -163,7 +174,12 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 <style scoped lang="scss">
 .custom-select {
   user-select: none;
+  font-size: var(--font-size-sm);
   color: var(--color-text-main);
+
+  &.is-sm {
+    font-size: var(--font-size-2xs);
+  }
 
   &[data-disabled="true"] {
     pointer-events: none;
@@ -186,6 +202,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   border: var(--border-width-base) solid var(--color-border);
   border-radius: var(--radius-sm);
 
+  font-size: inherit;
   color: inherit;
 
   background-color: var(--surface-bg-elevated);
@@ -320,6 +337,12 @@ const getOptionClasses = (option: SelectOption, index: number) => [
     &.is-selected {
       font-weight: var(--font-weight-semibold);
     }
+  }
+
+  .custom-select__dropdown.is-sm & {
+    padding-block: var(--space-1);
+    padding-inline: var(--space-2);
+    font-size: var(--font-size-2xs);
   }
 }
 </style>

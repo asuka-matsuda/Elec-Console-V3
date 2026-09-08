@@ -98,6 +98,11 @@ withDefaults(defineProps<Props>(), {
       padding-inline: 0.6em;
       font-size: var(--font-size-xs);
     }
+
+    :deep(.form-control),
+    :deep(.custom-select) {
+      font-size: var(--font-size-2xs);
+    }
   }
 }
 </style>

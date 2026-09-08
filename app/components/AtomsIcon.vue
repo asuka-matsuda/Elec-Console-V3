@@ -38,6 +38,9 @@ const iconComponent = computed(() => {
 
 <style scoped lang="scss">
 .app-icon {
+  width: 1.2em;
+  height: 1.2em;
+
   .icon-svg,
   :deep(svg) {
     width: 100%;
