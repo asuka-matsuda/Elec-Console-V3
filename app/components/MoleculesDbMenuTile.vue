@@ -28,23 +28,14 @@ const {
     :class="{ 'is-disabled': disabled }"
     :aria-disabled="disabled ? 'true' : undefined"
   >
-    <header v-if="icon || title || $slots.icon || $slots.title || $slots.badge" class="flex items-center justify-between gap-2">
-      <div class="flex items-center gap-1 min-w-0 tile-title">
-        <slot name="icon">
-          <AtomsIcon v-if="icon" :name="icon" class="shrink-0" />
-        </slot>
-        <slot name="title">
-          <span v-if="title">{{ title }}</span>
-        </slot>
-      </div>
-      <slot name="badge" />
+    <header v-if="icon || title" class="flex items-center gap-1 min-w-0 tile-title">
+      <AtomsIcon v-if="icon" :name="icon" class="shrink-0" />
+      <span v-if="title">{{ title }}</span>
     </header>
 
-    <slot name="description">
-      <p v-if="description" class="tile-desc">
-        {{ description }}
-      </p>
-    </slot>
+    <p v-if="description" class="tile-desc">
+      {{ description }}
+    </p>
   </component>
 </template>
 

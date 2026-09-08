@@ -22,12 +22,12 @@ withDefaults(defineProps<Props>(), {
   <div class="flex flex-col gap-2 w-full form-group">
     <!-- ラベル領域 -->
     <label
-      v-if="label || $slots.label"
+      v-if="label"
       :for="forId"
       class="flex items-center gap-2 select-none cursor-pointer"
     >
       <span class="inline-flex items-center gap-1 label-text">
-        <slot name="label">{{ label }}</slot>
+        {{ label }}
       </span>
       <AtomsBadge
         v-if="required"
@@ -43,14 +43,14 @@ withDefaults(defineProps<Props>(), {
 
       <!-- エラーメッセージ -->
       <transition name="fade-slide">
-        <p v-if="error || $slots.error" class="error" role="alert">
-          <slot name="error">{{ error }}</slot>
+        <p v-if="error" class="error" role="alert">
+          {{ error }}
         </p>
       </transition>
 
       <!-- ヘルプテキスト -->
       <p v-if="help && !error" class="help">
-        <slot name="help">{{ help }}</slot>
+        {{ help }}
       </p>
     </div>
   </div>

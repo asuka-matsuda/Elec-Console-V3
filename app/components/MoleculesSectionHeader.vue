@@ -42,7 +42,7 @@ const dividerColorMap: Record<string, string> = {
 const resolvedDividerColor = computed(() => {
   if (props.variant === 'hud' || props.variant === 'simple') return 'var(--color-border)'
 
-  return dividerColorMap[props.variant] || 'var(--theme-accent)'
+  return (props.variant && dividerColorMap[props.variant]) || 'var(--theme-accent)'
 })
 </script>
 
@@ -61,9 +61,7 @@ const resolvedDividerColor = computed(() => {
       <slot name="actions" />
     </div>
 
-    <slot name="divider">
-      <AtomsDivider :color="resolvedDividerColor" />
-    </slot>
+    <AtomsDivider :color="resolvedDividerColor" />
   </header>
 </template>
 
