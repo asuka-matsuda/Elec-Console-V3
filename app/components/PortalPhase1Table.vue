@@ -1,10 +1,10 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * PortalPhase1Table
  * フェーズ1（回路確認・増し締め）の回路一覧テーブルOrganismコンポーネント。
  * 回路確認・増締めチェック、インライン編集（回路番号・名称・配線・備考）、確定および解除操作を管理します。
  */
-import { computed } from 'vue'
+import { computed, reactive, ref } from 'vue'
 
 import { useTableSort } from '~/composables/useTableSort'
 import { PHASE1_TABLE_COLUMNS } from '~/constants/soudenConstants'
@@ -14,17 +14,43 @@ const props = defineProps<{
   circuits: CircuitItem[]
   isCircuitLocked: (circuit: CircuitItem) => boolean
   isActionLoading: Record<string, boolean>
-  editingRowId: string | null
-  editForm: Record<string, string>
 }>()
 
-defineEmits<{
-  (e: 'confirm', circuit: CircuitItem): void
-  (e: 'clear', circuit: CircuitItem): void
-  (e: 'start-edit', circuit: CircuitItem): void
-  (e: 'cancel-edit'): void
-  (e: 'save-edit', circuit: CircuitItem): void
+const emit = defineEmits<{
+  'confirm': [circuit: CircuitItem]
+  'clear': [circuit: CircuitItem]
+  'save-edit': [circuit: CircuitItem, form: Record<string, string>]
 }>()
+
+// 各行の編集状態
+const editingRowId = ref<string | null>(null)
+const editForm = reactive<Record<string, string>>({
+  kairoBangou: '',
+  kairoMeisho: '',
+  cableList: '',
+  haisenJousuu: '',
+  setsuchiList: '',
+  remarks: '',
+})
+
+const startEdit = (circuit: CircuitItem) => {
+  editingRowId.value = circuit.id
+  editForm.kairoBangou = circuit.kairoBangou || ''
+  editForm.kairoMeisho = circuit.kairoMeisho || ''
+  editForm.cableList = circuit.cableList || ''
+  editForm.haisenJousuu = circuit.haisenJousuu || ''
+  editForm.setsuchiList = circuit.setsuchiList || ''
+  editForm.remarks = circuit.p1Remarks || ''
+}
+
+const cancelEdit = () => {
+  editingRowId.value = null
+}
+
+const saveEdit = (circuit: CircuitItem) => {
+  emit('save-edit', circuit, { ...editForm })
+  editingRowId.value = null
+}
 
 const isComplete = (c: CircuitItem) => Boolean(c.p1ConfirmedAt && c.p1Kakunin && c.p1Mashishime)
 
@@ -73,10 +99,10 @@ const {
         <!-- 回路番号 -->
         <td style="text-align: center;">
           <template v-if="editingRowId === circuit.id">
-            <AppInput v-model="editForm.kairoBangou" size="sm" placeholder="番号" />
+            <AtomsInput v-model="editForm.kairoBangou" size="sm" placeholder="番号" />
           </template>
           <div v-else class="phase1-cell__bangou-wrap">
-            <AppKairoIcon
+            <AtomsPortalKairoSymbol
               :kigou="circuit.kairoKigou"
               :bangou="circuit.kairoBangou"
             />
@@ -86,7 +112,7 @@ const {
         <!-- 回路名称 -->
         <td>
           <template v-if="editingRowId === circuit.id">
-            <AppInput v-model="editForm.kairoMeisho" size="sm" placeholder="回路名称" />
+            <AtomsInput v-model="editForm.kairoMeisho" size="sm" placeholder="回路名称" />
           </template>
           <span v-else class="phase1-cell__text phase1-cell__meisho" :title="circuit.kairoMeisho || ''">
             {{ circuit.kairoMeisho || '-' }}
@@ -98,10 +124,10 @@ const {
           <template v-if="editingRowId === circuit.id">
             <div class="phase1-cell__edit-col">
               <div class="phase1-cell__inline-inputs">
-                <AppInput v-model="editForm.cableList" size="sm" placeholder="ケーブル" />
-                <AppInput v-model="editForm.haisenJousuu" size="sm" placeholder="条数" style="width: 55px;" />
+                <AtomsInput v-model="editForm.cableList" size="sm" placeholder="ケーブル" />
+                <AtomsInput v-model="editForm.haisenJousuu" size="sm" placeholder="条数" style="width: 55px;" />
               </div>
-              <AppInput v-model="editForm.setsuchiList" size="sm" placeholder="接地リスト" />
+              <AtomsInput v-model="editForm.setsuchiList" size="sm" placeholder="接地リスト" />
             </div>
           </template>
           <div v-else class="phase1-cell__wiring">
@@ -119,14 +145,14 @@ const {
         <td style="text-align: center;">
           <div class="phase1-cell__checks">
             <label class="phase1-check-item" title="回路確認">
-              <AppCheckbox
+              <AtomsCheckbox
                 v-model="circuit.p1Kakunin"
                 :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
               />
               <span class="phase1-check-item__label">確認</span>
             </label>
             <label class="phase1-check-item" title="増締め確認">
-              <AppCheckbox
+              <AtomsCheckbox
                 v-model="circuit.p1Mashishime"
                 :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
               />
@@ -138,7 +164,7 @@ const {
         <!-- 備考 -->
         <td>
           <template v-if="editingRowId === circuit.id">
-            <AppInput v-model="editForm.remarks" size="sm" placeholder="備考" />
+            <AtomsInput v-model="editForm.remarks" size="sm" placeholder="備考" />
           </template>
           <span v-else class="phase1-cell__text phase1-cell__remarks">
             {{ circuit.p1Remarks || '-' }}
@@ -159,14 +185,14 @@ const {
                 variant="success"
                 size="sm"
                 :loading="isActionLoading[circuit.id]"
-                @click="$emit('save-edit', circuit)"
+                @click="saveEdit(circuit)"
               >
                 保存
               </AtomsButton>
               <AtomsButton
                 variant="secondary"
                 size="sm"
-                @click="$emit('cancel-edit')"
+                @click="cancelEdit"
               >
                 取消
               </AtomsButton>
@@ -199,7 +225,7 @@ const {
                 variant="secondary"
                 size="sm"
                 :disabled="circuit.isExcluded"
-                @click="$emit('start-edit', circuit)"
+                @click="startEdit(circuit)"
               >
                 編集
               </AtomsButton>

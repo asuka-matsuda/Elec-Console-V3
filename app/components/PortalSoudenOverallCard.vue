@@ -16,7 +16,7 @@ defineProps<{
     <AppSectionHeader title="総合進捗" icon="activity" variant="hud" />
     <div class="progress-summary">
       <div class="summary-main">
-        <AppCircularGauge
+        <AtomsCircularGauge
           :value="stats.totalPct"
           size="lg"
           label="全試験完了率"
@@ -40,7 +40,7 @@ defineProps<{
           :p3-pct="stats.trunkP3Pct"
         />
 
-        <AppDivider type="fade-center" />
+        <AtomsDivider type="fade-center" />
 
         <!-- 二次側 詳細 -->
         <PortalSoudenProgressGroup

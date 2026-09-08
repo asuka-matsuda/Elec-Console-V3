@@ -1,41 +1,46 @@
 <script setup lang="ts">
 /**
- * AppInput
- * テキスト入力やテキストエリアを提供するフォームコントロールコンポーネントです。
+ * AtomsInput
+ * テキスト入力やテキストエリアを提供する最小フォームコントロールコンポーネントです。
  */
+export interface AtomsInputProps {
+  type?:
+    | 'text'
+    | 'password'
+    | 'email'
+    | 'number'
+    | 'search'
+    | 'tel'
+    | 'url'
+    | 'textarea'
+  placeholder?: string
+  disabled?: boolean
+  error?: boolean
+  size?: 'sm' | 'md'
+  rows?: number
+}
+
 const model = defineModel<string | number | null>()
 
-withDefaults(
-  defineProps<{
-    type?:
-      | 'text'
-      | 'password'
-      | 'email'
-      | 'number'
-      | 'search'
-      | 'tel'
-      | 'url'
-      | 'textarea'
-    placeholder?: string
-    disabled?: boolean
-    error?: boolean
-    size?: 'sm' | 'md'
-    rows?: number
-  }>(),
-  {
-    type: 'text',
-    size: 'md',
-    rows: 4,
-  },
-)
+const {
+  type = 'text',
+  placeholder,
+  disabled = false,
+  error = false,
+  size = 'md',
+  rows = 4,
+} = defineProps<AtomsInputProps>()
 </script>
 
 <template>
   <textarea
     v-if="type === 'textarea'"
     v-model="model"
-    class="form-control form-control--textarea"
-    :class="[`form-control--${size}`, { 'is-error': error }]"
+    class="form-control relative z-[1] w-full"
+    :class="[
+      size === 'sm' ? 'is-sm' : '',
+      { 'is-error': error },
+    ]"
     :placeholder="placeholder"
     :disabled="disabled"
     :rows="rows"
@@ -44,8 +49,11 @@ withDefaults(
     v-else
     v-model="model"
     :type="type"
-    class="form-control"
-    :class="[`form-control--${size}`, { 'is-error': error }]"
+    class="form-control relative z-[1] w-full"
+    :class="[
+      size === 'sm' ? 'is-sm' : '',
+      { 'is-error': error },
+    ]"
     :placeholder="placeholder"
     :disabled="disabled"
   />
@@ -53,10 +61,6 @@ withDefaults(
 
 <style scoped lang="scss">
 .form-control {
-  position: relative;
-  z-index: 1;
-
-  width: 100%;
   min-height: calc(var(--control-height-ratio) * 1em);
   padding-block: 0.3em;
   padding-inline: 1.2em;
@@ -71,12 +75,12 @@ withDefaults(
 
   transition: var(--transition-glow);
 
-  &:is(:disabled, .is-disabled) {
+  &:disabled {
     cursor: not-allowed;
     opacity: 0.5;
   }
 
-  &:not(:disabled, .is-disabled) {
+  &:not(:disabled) {
     --glow-color: var(--theme-accent);
 
     &:hover {
@@ -124,18 +128,18 @@ withDefaults(
     opacity: 1;
   }
 
-  &--sm {
+  &.is-sm {
     font-size: var(--font-size-2xs);
     color: var(--color-text-muted);
   }
+}
 
-  &--textarea {
-    resize: vertical;
-    min-height: calc(var(--control-height-ratio) * 2em);
+textarea.form-control {
+  resize: vertical;
+  min-height: calc(var(--control-height-ratio) * 2em);
 
-    &:disabled {
-      resize: none;
-    }
+  &:disabled {
+    resize: none;
   }
 }
 </style>

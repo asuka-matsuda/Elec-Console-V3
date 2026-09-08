@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
- * AppCircularGauge
- * 送電試験などの進捗率を表現する円形プログレスゲージコンポーネント
+ * AtomsCircularGauge
+ * [Atoms] 送電試験などの進捗率を表現する円形プログレスゲージコンポーネント
  */
 import { computed } from 'vue'
 
@@ -26,7 +26,7 @@ const normalizedValue = computed(() => {
 
 <template>
   <div
-    class="circular-gauge"
+    class="relative flex flex-col items-center justify-center gap-1 rounded-full circular-gauge"
     :class="`is-${size}`"
     :style="{
       '--progress': `${normalizedValue}%`,
@@ -34,10 +34,10 @@ const normalizedValue = computed(() => {
       '--glow-color': color,
     }"
   >
-    <div class="value">
+    <div class="relative inline-flex items-baseline gap-1 value">
       {{ normalizedValue }}<span class="unit">%</span>
     </div>
-    <span v-if="label" class="label">
+    <span v-if="label" class="relative label">
       {{ label }}
     </span>
   </div>
@@ -49,17 +49,8 @@ const normalizedValue = computed(() => {
   --gauge-thickness: 8px;
   --gauge-glow: var(--drop-shadow-glow);
 
-  position: relative;
-
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  align-items: center;
-  justify-content: center;
-
   width: var(--gauge-size);
   height: var(--gauge-size);
-  border-radius: 50%;
 
   &::before {
     content: "";
@@ -84,12 +75,7 @@ const normalizedValue = computed(() => {
   }
 
   .value {
-    position: relative;
     z-index: 2;
-
-    display: inline-flex;
-    gap: var(--space-1);
-    align-items: baseline;
 
     font-family: var(--font-mono);
     font-size: var(--font-size-3xl);
@@ -105,9 +91,7 @@ const normalizedValue = computed(() => {
   }
 
   .label {
-    position: relative;
     z-index: 2;
-
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
     color: var(--color-text-secondary);

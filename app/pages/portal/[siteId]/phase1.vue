@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * Phase 1 View
  * フェーズ1：回路確認・増し締め
@@ -23,12 +23,8 @@ const {
   selectedBanMeisho,
   phaseStats,
   isCircuitLocked,
-  editingRowId,
-  editForm,
   isActionLoading,
   fetchCircuits,
-  startEdit,
-  cancelEdit,
   saveEdit,
   confirmPhase1,
   clearPhase1,
@@ -105,12 +101,8 @@ const shubetsuTabOptions = computed(() => {
       :circuits="filteredCircuits"
       :is-circuit-locked="isCircuitLocked"
       :is-action-loading="isActionLoading"
-      :editing-row-id="editingRowId"
-      :edit-form="editForm"
       @confirm="confirmPhase1"
       @clear="clearPhase1"
-      @start-edit="startEdit"
-      @cancel-edit="cancelEdit"
       @save-edit="saveEdit"
     />
   </PortalPhaseExamTemplate>

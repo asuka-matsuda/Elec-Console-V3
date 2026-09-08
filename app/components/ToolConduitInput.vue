@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * ToolConduitInput
  * 配管サイズ自動選定ツールの条件入力コンポーネントです。
@@ -58,7 +58,7 @@ const getCableAreaText = (cableIdx: string): string => {
 
       <AppFormGroup label="占積率" class="fill-rate">
         <AppInputGroup>
-          <AppInput
+          <AtomsInput
             v-model.number="inputs.customFillRate"
             type="number"
             min="1"
@@ -117,7 +117,7 @@ const getCableAreaText = (cableIdx: string): string => {
             </td>
             <td>
               <AppInputGroup size="sm">
-                <AppInput
+                <AtomsInput
                   v-model.number="cable.count"
                   type="number"
                   min="1"

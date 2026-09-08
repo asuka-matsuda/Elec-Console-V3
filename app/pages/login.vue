@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * login
  * ポータルログインページ
@@ -53,7 +53,7 @@ const handleLogin = async () => {
 
       <template v-for="field in LOGIN_FORM_FIELDS" :key="field.id">
         <AppFormGroup :label="field.label">
-          <AppInput
+          <AtomsInput
             v-model="formData[field.id]"
             :type="field.type"
             :placeholder="field.placeholder"

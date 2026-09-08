@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * SoudenPhaseControls
  * 送電試験（フェーズ1〜3）共通のコントロールパネルコンポーネント。
@@ -65,14 +65,21 @@ const emit = defineEmits<{
 
       <!-- 全体進捗バー & ミニマップ -->
       <div class="phase-controls__progress">
-        <AppProgressBar
-          :label="progressLabel || `フェーズ${phase} 進捗状況`"
-          :completed="stats.completed"
-          :total="stats.total"
-          :excluded="stats.excluded"
-          :pct="stats.pct"
-          variant="success"
-        />
+        <div class="flex flex-col w-full gap-1">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-medium text-[var(--color-text-main)]">
+              {{ progressLabel || `フェーズ${phase} 進捗状況` }}
+            </span>
+            <div class="flex items-center gap-2 font-mono text-[var(--color-text-muted)]">
+              <span><strong class="text-[var(--color-text-main)]">{{ stats.completed }}</strong> / {{ stats.total }}</span>
+              <span class="text-[var(--color-text-main)]">({{ stats.pct }}%)</span>
+              <AtomsBadge v-if="stats.excluded && stats.excluded > 0" color="var(--color-text-muted)">
+                除外: {{ stats.excluded }}
+              </AtomsBadge>
+            </div>
+          </div>
+          <AtomsProgressBar :value="stats.completed" :max="stats.total" color="var(--color-status-success)" />
+        </div>
 
         <!-- ミニマップ -->
         <PortalExamMinimap

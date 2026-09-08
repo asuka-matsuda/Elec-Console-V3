@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { ref, watch } from 'vue'
 
 import type { EventFormData } from '~/types/portal'
@@ -93,7 +93,7 @@ const closeModal = () => {
         required
         :error="hasTitleError ? 'タイトルを入力してください' : undefined"
       >
-        <AppInput
+        <AtomsInput
           v-model="form.title"
           placeholder="会議、送電試験など"
           :error="hasTitleError"
@@ -125,7 +125,7 @@ const closeModal = () => {
         </AppFormGroup>
       </div>
 
-      <AppCheckbox v-model="form.allDay" label="終日イベント" />
+      <AtomsCheckbox v-model="form.allDay" label="終日イベント" />
     </div>
 
     <template #footer>

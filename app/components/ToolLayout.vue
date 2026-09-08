@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * ToolLayout
  * 計算ツールページの全体レイアウトコンポーネント。
@@ -60,7 +60,7 @@ provide('toolBasisModal', {
   <div class="tool-layout">
     <!-- 免責事項 -->
     <slot name="disclaimer">
-      <AppDisclaimer />
+      <AtomsDisclaimer />
     </slot>
 
     <!-- メイングリッド（左: 条件入力 / 右: 計算結果） -->

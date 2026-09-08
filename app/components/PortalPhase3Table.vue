@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * PortalPhase3Table
  * フェーズ3（送電・電圧測定・検相）の回路一覧テーブルOrganismコンポーネント。
@@ -23,8 +23,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (
-    e: 'confirm',
+  confirm: [
     circuit: CircuitItem,
     values: {
       rs: number | null
@@ -32,9 +31,9 @@ const emit = defineEmits<{
       rt: number | null
       kensou?: string
       remarks?: string
-    }
-  ): void
-  (e: 'clear', circuit: CircuitItem): void
+    },
+  ]
+  clear: [circuit: CircuitItem]
 }>()
 
 // 各行の編集・手入力状態
@@ -188,7 +187,7 @@ const {
             <AtomsBadge :color="isThreePhase(circuit) ? 'var(--color-status-warning)' : 'var(--color-text-muted)'">
               {{ isThreePhase(circuit) ? '動力' : '電灯' }}
             </AtomsBadge>
-            <AppKairoIcon
+            <AtomsPortalKairoSymbol
               :kigou="circuit.kairoKigou"
               :bangou="circuit.kairoBangou"
             />
@@ -208,7 +207,7 @@ const {
             <div class="phase3-input-cell">
               <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label1 }}</span>
               <AppInputGroup size="sm" style="width: 80px;">
-                <AppInput
+                <AtomsInput
                   v-model="inputForm.rs"
                   type="number"
                   size="sm"
@@ -243,7 +242,7 @@ const {
             <div class="phase3-input-cell">
               <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label2 }}</span>
               <AppInputGroup size="sm" style="width: 80px;">
-                <AppInput
+                <AtomsInput
                   v-model="inputForm.st"
                   type="number"
                   size="sm"
@@ -278,7 +277,7 @@ const {
             <div class="phase3-input-cell">
               <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label3 }}</span>
               <AppInputGroup size="sm" style="width: 80px;">
-                <AppInput
+                <AtomsInput
                   v-model="inputForm.rt"
                   type="number"
                   size="sm"
@@ -329,7 +328,7 @@ const {
         <!-- 備考 -->
         <td>
           <template v-if="editingRowId === circuit.id">
-            <AppInput v-model="inputForm.remarks" size="sm" placeholder="備考" />
+            <AtomsInput v-model="inputForm.remarks" size="sm" placeholder="備考" />
           </template>
           <span v-else class="phase3-cell__remarks" :title="circuit.p3Remarks || ''">
             {{ circuit.p3Remarks || '-' }}

@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { ref } from 'vue'
 
 import { useRouter } from '#app'
@@ -66,7 +66,7 @@ const handleChangePassword = async () => {
     </p>
 
     <AppFormGroup label="新しいパスワード (8文字以上)">
-      <AppInput
+      <AtomsInput
         v-model="password"
         type="password"
         placeholder="新しいパスワード"
@@ -74,7 +74,7 @@ const handleChangePassword = async () => {
       />
     </AppFormGroup>
     <AppFormGroup label="新しいパスワード (確認用)">
-      <AppInput
+      <AtomsInput
         v-model="passwordConfirm"
         type="password"
         placeholder="もう一度入力"

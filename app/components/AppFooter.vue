@@ -17,7 +17,7 @@ const {
 
 <template>
   <footer class="footer">
-    <AppDivider type="fade-center" />
+    <AtomsDivider type="fade-center" />
     <p class="copyright">
       <slot>
         {{ text || `© ${year} Mat.Operate & Gemini 3.1 Pro. / Elec-Console All rights reserved.` }}

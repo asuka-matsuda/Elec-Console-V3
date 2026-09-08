@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * PortalAdminSitesTab
  * ポータル管理 - 現場管理タブ
@@ -148,10 +148,10 @@ const handleSaveSettings = async (updatedSite: Site) => {
       submit-text="登録する"
     >
       <AppFormGroup label="現場ID (半角英数)">
-        <AppInput v-model="newSite.id" placeholder="例: site-tokyo-01" />
+        <AtomsInput v-model="newSite.id" placeholder="例: site-tokyo-01" />
       </AppFormGroup>
       <AppFormGroup label="現場名">
-        <AppInput v-model="newSite.name" placeholder="例: 新宿プロジェクト" />
+        <AtomsInput v-model="newSite.name" placeholder="例: 新宿プロジェクト" />
       </AppFormGroup>
     </AppModal>
 

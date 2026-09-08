@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { computed, ref } from 'vue'
 
 import { useTodo } from '~/composables/portal/useTodo'
@@ -41,7 +41,7 @@ const sortedTodos = computed(() => {
     />
 
     <form class="personal-todo__input" @submit.prevent="handleAdd">
-      <AppInput
+      <AtomsInput
         v-model="newTask"
         placeholder="新しいタスクを入力..."
       />
@@ -56,7 +56,7 @@ const sortedTodos = computed(() => {
         :key="todo.id"
         class="personal-todo__item"
       >
-        <AppCheckbox
+        <AtomsCheckbox
           :model-value="todo.completed"
           :class="{ 'is-completed': todo.completed }"
           :label="todo.text"

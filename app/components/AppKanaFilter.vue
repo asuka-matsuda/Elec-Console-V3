@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppKanaFilter
  * 五十音（あ行〜わ行他）による絞り込み機能を提供するフィルターコンポーネント。
@@ -34,7 +34,7 @@ function isKanaDisabled(row: string) {
 
 <template>
   <div class="kana-filter">
-    <AppCheckbox
+    <AtomsCheckbox
       v-for="kana in kanaOptions"
       :key="kana.value"
       v-model="selectedKanas"
@@ -42,7 +42,7 @@ function isKanaDisabled(row: string) {
       :disabled="isKanaDisabled(kana.value)"
     >
       {{ kana.label }}
-    </AppCheckbox>
+    </AtomsCheckbox>
   </div>
 </template>
 

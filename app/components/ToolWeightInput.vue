@@ -44,7 +44,7 @@ watch(
 
     <AppFormGroup label="ケーブル長 (L)" required>
       <AppInputGroup>
-        <AppInput v-model="inputs.L_input" type="number" min="1" />
+        <AtomsInput v-model="inputs.L_input" type="number" min="1" />
         <template #append>
           <span class="input-addon">m</span>
         </template>
@@ -53,7 +53,7 @@ watch(
 
     <AppFormGroup label="ドラム占積率 (K)">
       <AppInputGroup>
-        <AppInput
+        <AtomsInput
           v-model="inputs.K"
           type="number"
           step="0.01"

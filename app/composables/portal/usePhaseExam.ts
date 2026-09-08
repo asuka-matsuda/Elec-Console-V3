@@ -452,12 +452,13 @@ export function usePhaseExam(
   }
 
   // インライン編集の保存
-  const saveEdit = async (circuit: CircuitItem) => {
+  const saveEdit = async (circuit: CircuitItem, formPayload?: Record<string, string>) => {
+    const form = formPayload || editForm.value
     const modifiedFields: string[] = []
 
     const checkMod = (key: keyof CircuitItem, formKey: string) => {
       const oldVal = (circuit[key] || '') as string
-      const newVal = (editForm.value[formKey] || '') as string
+      const newVal = (form[formKey] || '') as string
 
       if (oldVal !== newVal) {
         modifiedFields.push(String(key))
@@ -470,12 +471,12 @@ export function usePhaseExam(
     checkMod('haisenJousuu', 'haisenJousuu')
     checkMod('setsuchiList', 'setsuchiList')
 
-    if ((circuit.p1Remarks || '') !== (editForm.value.remarks || '')) {
+    if ((circuit.p1Remarks || '') !== (form.remarks || '')) {
       modifiedFields.push('p1Remarks')
     }
 
     await confirmPhase1(circuit, {
-      ...editForm.value,
+      ...form,
       modifiedFields,
     })
   }

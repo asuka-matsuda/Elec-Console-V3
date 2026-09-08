@@ -39,19 +39,19 @@ const {
 
     <div class="filters">
       <AppFormGroup label="Keyword">
-        <AppInput v-model="searchQuery" :placeholder="placeholder" />
+        <AtomsInput v-model="searchQuery" :placeholder="placeholder" />
       </AppFormGroup>
 
       <AppFormGroup v-if="categoryOptions.length > 0" label="Category">
         <div class="category-grid">
-          <AppCheckbox
+          <AtomsCheckbox
             v-for="cat in categoryOptions"
             :key="cat.value"
             v-model="activeCats"
             :value="cat.value"
           >
             {{ cat.label }}
-          </AppCheckbox>
+          </AtomsCheckbox>
         </div>
       </AppFormGroup>
 

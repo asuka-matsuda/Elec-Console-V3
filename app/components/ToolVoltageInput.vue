@@ -48,7 +48,7 @@ defineProps<{
 
             <!-- 2. 数値入力 + セレクト -->
             <AppInputGroup v-else-if="field.type === 'input-select'">
-              <AppInput
+              <AtomsInput
                 v-model.number="form[field.id]"
                 type="number"
                 :placeholder="field.placeholder"
@@ -82,7 +82,7 @@ defineProps<{
 
             <!-- 3. 数値入力 + 単位アドオン -->
             <AppInputGroup v-else-if="field.type === 'input-addon'">
-              <AppInput
+              <AtomsInput
                 v-model.number="form[field.id]"
                 type="number"
                 :placeholder="field.placeholder"

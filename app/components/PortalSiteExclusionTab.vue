@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * PortalSiteExclusionTab
  * 現場設定モーダル - 除外回路設定タブOrganismコンポーネント。
@@ -26,7 +26,7 @@ defineProps<{
             :key="idx"
             class="portal-site-exclusion-tab__row"
           >
-            <AppInput
+            <AtomsInput
               v-model="excludedCircuitsList[idx]"
               placeholder="例: 盤A-回路1"
             />

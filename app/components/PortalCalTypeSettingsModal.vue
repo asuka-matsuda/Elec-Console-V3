@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { toRef } from 'vue'
 
 import type { EventType } from '~/composables/portal/useCalendar'
@@ -47,7 +47,7 @@ const {
             </div>
 
             <div class="type-item__input">
-              <AppInput
+              <AtomsInput
                 v-model="t.name"
                 :placeholder="`種別名（例: 現場作業）`"
                 required

@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * ToolRackInput
  * ケーブルラック選定ツールの条件入力コンポーネントです。
@@ -79,7 +79,7 @@ const handleAddCable = () => {
     <div class="header-grid">
       <AppFormGroup label="ラック高さ (H)">
         <AppInputGroup>
-          <AppInput
+          <AtomsInput
             v-model="inputs.rackHeight"
             type="number"
             min="50"
@@ -93,7 +93,7 @@ const handleAddCable = () => {
 
       <AppFormGroup :label="inputs.mode === 'strong' ? '弱電必要幅' : '強電必要幅'">
         <AppInputGroup>
-          <AppInput
+          <AtomsInput
             v-model="inputs.otherWidth"
             type="number"
             min="0"
@@ -115,7 +115,7 @@ const handleAddCable = () => {
       <div class="params-grid">
         <AppFormGroup label="余裕係数">
           <AppInputGroup>
-            <AppInput
+            <AtomsInput
               v-model.number="inputs.marginRate"
               type="number"
               step="0.05"
@@ -130,7 +130,7 @@ const handleAddCable = () => {
 
         <AppFormGroup label="ケーブル間隔">
           <AppInputGroup>
-            <AppInput
+            <AtomsInput
               v-model.number="inputs.cableSpacing"
               type="number"
               min="0"
@@ -144,7 +144,7 @@ const handleAddCable = () => {
 
         <AppFormGroup label="親桁クリアランス">
           <AppInputGroup>
-            <AppInput
+            <AtomsInput
               v-model.number="inputs.sideMargin"
               type="number"
               min="0"
@@ -205,7 +205,7 @@ const handleAddCable = () => {
             </td>
             <td>
               <AppInputGroup size="sm">
-                <AppInput
+                <AtomsInput
                   v-model.number="cable.count"
                   type="number"
                   min="1"
@@ -266,7 +266,7 @@ const handleAddCable = () => {
             </td>
             <td>
               <AppInputGroup size="sm">
-                <AppInput
+                <AtomsInput
                   v-model.number="cable.count"
                   type="number"
                   min="1"

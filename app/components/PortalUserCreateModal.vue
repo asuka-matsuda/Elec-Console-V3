@@ -44,7 +44,7 @@ const handleCreateUser = async () => {
   >
     <template v-for="field in USER_CREATE_FORM_FIELDS" :key="field.id">
       <AppFormGroup :label="field.label">
-        <AppInput
+        <AtomsInput
           v-model="newUser[field.id]"
           :placeholder="field.placeholder"
         />
@@ -55,7 +55,7 @@ const handleCreateUser = async () => {
       <AppSelect v-model="newUser.role" :options="USER_ROLE_OPTIONS" />
     </AppFormGroup>
     <AppFormGroup>
-      <AppCheckbox
+      <AtomsCheckbox
         v-model="newUser.requirePasswordReset"
         label="初回ログイン時にパスワード変更を要求する"
       />

@@ -1,7 +1,7 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
- * AppCheckbox
- * 真偽値を選択するためのチェックボックスコンポーネント
+ * AtomsCheckbox
+ * [Atoms] 真偽値を選択するためのチェックボックスコンポーネント
  */
 const model = defineModel<boolean | unknown[]>()
 
@@ -19,17 +19,18 @@ const {
 </script>
 
 <template>
-  <label class="checkbox">
+  <label class="relative inline-flex items-center gap-2 checkbox">
     <input
       v-model="model"
       type="checkbox"
+      class="absolute inset-0 w-full h-full"
       .indeterminate="indeterminate"
       :value="value"
       :disabled="disabled"
-    />
-    <span class="box">
-      <AtomsIcon name="check" class="icon is-check" />
-      <AtomsIcon name="minus" class="icon is-dash" />
+    >
+    <span class="relative flex shrink-0 items-center justify-center box">
+      <AtomsIcon name="check" class="absolute top-1/2 left-1/2 icon is-check" />
+      <AtomsIcon name="minus" class="absolute top-1/2 left-1/2 icon is-dash" />
     </span>
     <span v-if="label || $slots.default" class="label">
       <slot>{{ label }}</slot>
@@ -45,12 +46,6 @@ const {
   cursor: pointer;
   user-select: none;
 
-  position: relative;
-
-  display: inline-flex;
-  gap: var(--space-2);
-  align-items: center;
-
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
   letter-spacing: var(--tracking-normal);
@@ -61,14 +56,7 @@ const {
 
   input {
     cursor: inherit;
-
-    position: absolute;
     z-index: 1;
-    inset: 0;
-
-    width: 100%;
-    height: 100%;
-
     opacity: 0;
 
     &:disabled {
@@ -133,13 +121,7 @@ const {
   }
 
   .box {
-    position: relative;
     z-index: 1;
-
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
 
     width: 1.4em;
     height: 1.4em;
@@ -151,9 +133,6 @@ const {
     transition: var(--transition-base);
 
     .icon {
-      position: absolute;
-      top: 50%;
-      left: 50%;
       transform: translate(-50%, -50%) scale(0.6);
 
       width: 75%;

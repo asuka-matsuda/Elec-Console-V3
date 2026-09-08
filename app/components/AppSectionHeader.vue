@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * AppSectionHeader
  * セクションのタイトル、アイコン、アクションボタン、および区切り線を表示するヘッダーコンポーネント。
@@ -30,10 +30,21 @@ const props = withDefaults(
   },
 )
 
-const resolvedDividerVariant = computed(() => {
-  if (props.variant === 'hud' || props.variant === 'simple') return 'border'
+const dividerColorMap: Record<string, string> = {
+  main: 'var(--theme-accent)',
+  tool: 'var(--color-category-tool)',
+  database: 'var(--color-category-database)',
+  reference: 'var(--color-category-reference)',
+  management: 'var(--color-category-management)',
+  border: 'var(--color-border)',
+  danger: 'var(--color-danger, #ef4444)',
+  success: 'var(--color-success, #22c55e)',
+}
 
-  return props.variant || 'main'
+const resolvedDividerColor = computed(() => {
+  if (props.variant === 'hud' || props.variant === 'simple') return 'var(--color-border)'
+
+  return dividerColorMap[props.variant] || 'var(--theme-accent)'
 })
 </script>
 
@@ -53,8 +64,8 @@ const resolvedDividerVariant = computed(() => {
       </div>
     </div>
 
-    <AppDivider
-      :variant="resolvedDividerVariant"
+    <AtomsDivider
+      :color="resolvedDividerColor"
       :type="dividerType === 'default' ? 'solid' : dividerType"
     />
   </header>

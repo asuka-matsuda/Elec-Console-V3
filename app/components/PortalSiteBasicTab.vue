@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * PortalSiteBasicTab
  * 現場設定モーダル - 基本設定タブOrganismコンポーネント。
@@ -23,11 +23,11 @@ defineProps<{
     </AppFormGroup>
 
     <AppFormGroup label="現場ID (半角英数)">
-      <AppInput v-model="editId" placeholder="例: site-tokyo-01" />
+      <AtomsInput v-model="editId" placeholder="例: site-tokyo-01" />
     </AppFormGroup>
 
     <AppFormGroup label="現場名">
-      <AppInput v-model="editName" />
+      <AtomsInput v-model="editName" />
     </AppFormGroup>
 
     <AppFormGroup label="アサイン済ワーカー">

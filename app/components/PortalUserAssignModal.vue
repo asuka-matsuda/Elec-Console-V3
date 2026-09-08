@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ref, watch } from 'vue'
 
 import { useAdminSites } from '~/composables/admin/useAdminSites'
@@ -44,7 +44,7 @@ const handleSave = async () => {
 
     <template v-for="site in sites" :key="site.id">
       <AppFormGroup>
-        <AppCheckbox
+        <AtomsCheckbox
           v-model="targetSiteIds"
           :value="site.id"
           :label="site.name"
