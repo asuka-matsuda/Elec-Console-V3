@@ -156,255 +156,248 @@ const {
     :data="sortedCircuits"
     :sort-by="sortBy"
     :sort-order="sortOrder"
+    :row-id="(circuit) => `row-${circuit.id}`"
+    :row-class="(circuit) => [
+      'phase3-row',
+      {
+        'is-completed': isComplete(circuit),
+        'is-excluded': circuit.isExcluded,
+        'is-locked': isCircuitLocked(circuit) || !isP2Complete(circuit),
+        'is-editing': editingRowId === circuit.id,
+      },
+    ]"
     @sort="handleSort"
   >
-    <template #body>
-      <tr
-        v-for="circuit in sortedCircuits"
-        :id="`row-${circuit.id}`"
-        :key="circuit.id"
-        :class="[
-          'phase3-row',
-          {
-            'is-completed': isComplete(circuit),
-            'is-excluded': circuit.isExcluded,
-            'is-locked': isCircuitLocked(circuit) || !isP2Complete(circuit),
-            'is-editing': editingRowId === circuit.id,
-          },
-        ]"
-      >
-        <!-- 盤種別 / 盤名称 -->
-        <td>
-          <PortalSoudenBanCell
-            :ban-meisho="circuit.banMeisho"
-            :ban-shubetsu="circuit.banShubetsu"
-          />
-        </td>
+    <!-- 盤種別 / 盤名称 -->
+    <template #cell-banMeisho="{ row: circuit }">
+      <PortalSoudenBanCell
+        :ban-meisho="circuit.banMeisho"
+        :ban-shubetsu="circuit.banShubetsu"
+      />
+    </template>
 
-        <!-- 回路番号 -->
-        <td style="text-align: center;">
-          <div class="phase3-cell__bangou-wrap">
-            <AtomsBadge :color="isThreePhase(circuit) ? 'var(--color-status-warning)' : 'var(--color-text-muted)'">
-              {{ isThreePhase(circuit) ? '動力' : '電灯' }}
-            </AtomsBadge>
-            <AtomsPortalKairoSymbol
-              :kigou="circuit.kairoKigou"
-              :bangou="circuit.kairoBangou"
+    <!-- 回路番号 -->
+    <template #cell-kairoBangou="{ row: circuit }">
+      <div class="phase3-cell__bangou-wrap">
+        <AtomsBadge :color="isThreePhase(circuit) ? 'var(--color-status-warning)' : 'var(--color-text-muted)'">
+          {{ isThreePhase(circuit) ? '動力' : '電灯' }}
+        </AtomsBadge>
+        <AtomsPortalKairoSymbol
+          :kigou="circuit.kairoKigou"
+          :bangou="circuit.kairoBangou"
+        />
+      </div>
+    </template>
+
+    <!-- 回路名称 -->
+    <template #cell-kairoMeisho="{ row: circuit }">
+      <span class="phase3-cell__meisho" :title="circuit.kairoMeisho || ''">
+        {{ circuit.kairoMeisho || '-' }}
+      </span>
+    </template>
+
+    <!-- 電圧 1 (RS / RN) -->
+    <template #cell-denatsuRs="{ row: circuit }">
+      <template v-if="editingRowId === circuit.id">
+        <div class="phase3-input-cell">
+          <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label1 }}</span>
+          <MoleculesInputGroup addon="V" style="width: 80px;">
+            <AtomsInput
+              v-model="inputForm.rs"
+              type="number"
+              step="any"
+              inputmode="decimal"
+              @focus="handleInputFocus"
+              @keydown.enter.prevent="saveInput(circuit)"
             />
-          </div>
-        </td>
-
-        <!-- 回路名称 -->
-        <td>
-          <span class="phase3-cell__meisho" :title="circuit.kairoMeisho || ''">
-            {{ circuit.kairoMeisho || '-' }}
+          </MoleculesInputGroup>
+        </div>
+      </template>
+      <div v-else class="phase3-volt-cell">
+        <span class="phase3-volt-cell__label">{{ getPhaseLabels(circuit).label1 }}</span>
+        <div class="phase3-volt-cell__val-group">
+          <span
+            class="phase3-volt-cell__val"
+            :class="{ 'is-active': circuit.denatsuRs !== null && circuit.denatsuRs !== undefined }"
+          >
+            {{ formatVoltage(circuit.denatsuRs) }}
           </span>
-        </td>
+          <span v-if="circuit.denatsuRs !== null && circuit.denatsuRs !== undefined" class="phase3-volt-cell__unit">V</span>
+        </div>
+      </div>
+    </template>
 
-        <!-- 電圧 1 (RS / RN) -->
-        <td style="text-align: center;">
-          <template v-if="editingRowId === circuit.id">
-            <div class="phase3-input-cell">
-              <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label1 }}</span>
-              <MoleculesInputGroup addon="V" style="width: 80px;">
-                <AtomsInput
-                  v-model="inputForm.rs"
-                  type="number"
-                  step="any"
-                  inputmode="decimal"
-                  @focus="handleInputFocus"
-                  @keydown.enter.prevent="saveInput(circuit)"
-                />
-              </MoleculesInputGroup>
-            </div>
-          </template>
-          <div v-else class="phase3-volt-cell">
-            <span class="phase3-volt-cell__label">{{ getPhaseLabels(circuit).label1 }}</span>
-            <div class="phase3-volt-cell__val-group">
-              <span
-                class="phase3-volt-cell__val"
-                :class="{ 'is-active': circuit.denatsuRs !== null && circuit.denatsuRs !== undefined }"
-              >
-                {{ formatVoltage(circuit.denatsuRs) }}
-              </span>
-              <span v-if="circuit.denatsuRs !== null && circuit.denatsuRs !== undefined" class="phase3-volt-cell__unit">V</span>
-            </div>
-          </div>
-        </td>
-
-        <!-- 電圧 2 (ST / TN) -->
-        <td style="text-align: center;">
-          <template v-if="editingRowId === circuit.id">
-            <div class="phase3-input-cell">
-              <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label2 }}</span>
-              <MoleculesInputGroup addon="V" style="width: 80px;">
-                <AtomsInput
-                  v-model="inputForm.st"
-                  type="number"
-                  step="any"
-                  inputmode="decimal"
-                  @focus="handleInputFocus"
-                  @keydown.enter.prevent="saveInput(circuit)"
-                />
-              </MoleculesInputGroup>
-            </div>
-          </template>
-          <div v-else class="phase3-volt-cell">
-            <span class="phase3-volt-cell__label">{{ getPhaseLabels(circuit).label2 }}</span>
-            <div class="phase3-volt-cell__val-group">
-              <span
-                class="phase3-volt-cell__val"
-                :class="{ 'is-active': circuit.denatsuSt !== null && circuit.denatsuSt !== undefined }"
-              >
-                {{ formatVoltage(circuit.denatsuSt) }}
-              </span>
-              <span v-if="circuit.denatsuSt !== null && circuit.denatsuSt !== undefined" class="phase3-volt-cell__unit">V</span>
-            </div>
-          </div>
-        </td>
-
-        <!-- 電圧 3 (RT / RT) -->
-        <td style="text-align: center;">
-          <template v-if="editingRowId === circuit.id">
-            <div class="phase3-input-cell">
-              <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label3 }}</span>
-              <MoleculesInputGroup addon="V" style="width: 80px;">
-                <AtomsInput
-                  v-model="inputForm.rt"
-                  type="number"
-                  step="any"
-                  inputmode="decimal"
-                  @focus="handleInputFocus"
-                  @keydown.enter.prevent="saveInput(circuit)"
-                />
-              </MoleculesInputGroup>
-            </div>
-          </template>
-          <div v-else class="phase3-volt-cell">
-            <span class="phase3-volt-cell__label">{{ getPhaseLabels(circuit).label3 }}</span>
-            <div class="phase3-volt-cell__val-group">
-              <span
-                class="phase3-volt-cell__val"
-                :class="{ 'is-active': circuit.denatsuRt !== null && circuit.denatsuRt !== undefined }"
-              >
-                {{ formatVoltage(circuit.denatsuRt) }}
-              </span>
-              <span v-if="circuit.denatsuRt !== null && circuit.denatsuRt !== undefined" class="phase3-volt-cell__unit">V</span>
-            </div>
-          </div>
-        </td>
-
-        <!-- 検相 / 点灯確認 -->
-        <td style="text-align: center;">
-          <template v-if="editingRowId === circuit.id">
-            <AtomsSelect
-              v-model="inputForm.kensou"
-              :options="getKensouOptions(circuit)"
-              style="min-width: 96px;"
+    <!-- 電圧 2 (ST / TN) -->
+    <template #cell-denatsuSt="{ row: circuit }">
+      <template v-if="editingRowId === circuit.id">
+        <div class="phase3-input-cell">
+          <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label2 }}</span>
+          <MoleculesInputGroup addon="V" style="width: 80px;">
+            <AtomsInput
+              v-model="inputForm.st"
+              type="number"
+              step="any"
+              inputmode="decimal"
+              @focus="handleInputFocus"
+              @keydown.enter.prevent="saveInput(circuit)"
             />
-          </template>
-          <template v-else-if="circuit.kensou">
-            <AtomsBadge
-              :color="circuit.kensou === '正相' || circuit.kensou === '点灯確認(良)' ? 'var(--color-status-success)' : 'var(--color-status-danger)'"
-            >
-              {{ circuit.kensou }}
-            </AtomsBadge>
-          </template>
-          <span v-else class="phase3-cell__dash">-</span>
-        </td>
-
-        <!-- 備考 -->
-        <td>
-          <template v-if="editingRowId === circuit.id">
-            <AtomsInput v-model="inputForm.remarks" placeholder="備考" />
-          </template>
-          <span v-else class="phase3-cell__remarks" :title="circuit.p3Remarks || ''">
-            {{ circuit.p3Remarks || '-' }}
+          </MoleculesInputGroup>
+        </div>
+      </template>
+      <div v-else class="phase3-volt-cell">
+        <span class="phase3-volt-cell__label">{{ getPhaseLabels(circuit).label2 }}</span>
+        <div class="phase3-volt-cell__val-group">
+          <span
+            class="phase3-volt-cell__val"
+            :class="{ 'is-active': circuit.denatsuSt !== null && circuit.denatsuSt !== undefined }"
+          >
+            {{ formatVoltage(circuit.denatsuSt) }}
           </span>
-        </td>
+          <span v-if="circuit.denatsuSt !== null && circuit.denatsuSt !== undefined" class="phase3-volt-cell__unit">V</span>
+        </div>
+      </div>
+    </template>
 
-        <!-- 操作 -->
-        <td style="text-align: center;">
-          <div class="phase3-actions">
-            <!-- 幹線未完了による操作不可 -->
-            <template v-if="isCircuitLocked(circuit)">
-              <span class="text-note text-note--strong">⏸ 幹線未了</span>
-            </template>
+    <!-- 電圧 3 (RT / RT) -->
+    <template #cell-denatsuRt="{ row: circuit }">
+      <template v-if="editingRowId === circuit.id">
+        <div class="phase3-input-cell">
+          <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label3 }}</span>
+          <MoleculesInputGroup addon="V" style="width: 80px;">
+            <AtomsInput
+              v-model="inputForm.rt"
+              type="number"
+              step="any"
+              inputmode="decimal"
+              @focus="handleInputFocus"
+              @keydown.enter.prevent="saveInput(circuit)"
+            />
+          </MoleculesInputGroup>
+        </div>
+      </template>
+      <div v-else class="phase3-volt-cell">
+        <span class="phase3-volt-cell__label">{{ getPhaseLabels(circuit).label3 }}</span>
+        <div class="phase3-volt-cell__val-group">
+          <span
+            class="phase3-volt-cell__val"
+            :class="{ 'is-active': circuit.denatsuRt !== null && circuit.denatsuRt !== undefined }"
+          >
+            {{ formatVoltage(circuit.denatsuRt) }}
+          </span>
+          <span v-if="circuit.denatsuRt !== null && circuit.denatsuRt !== undefined" class="phase3-volt-cell__unit">V</span>
+        </div>
+      </div>
+    </template>
 
-            <!-- 前フェーズ（P2）未完了による操作不可 -->
-            <template v-else-if="!isP2Complete(circuit)">
-              <span class="text-note text-note--strong">⏸ P2未了</span>
-            </template>
+    <!-- 検相 / 点灯確認 -->
+    <template #cell-kensou="{ row: circuit }">
+      <template v-if="editingRowId === circuit.id">
+        <AtomsSelect
+          v-model="inputForm.kensou"
+          :options="getKensouOptions(circuit)"
+          style="min-width: 96px;"
+        />
+      </template>
+      <template v-else-if="circuit.kensou">
+        <AtomsBadge
+          :color="circuit.kensou === '正相' || circuit.kensou === '点灯確認(良)' ? 'var(--color-status-success)' : 'var(--color-status-danger)'"
+        >
+          {{ circuit.kensou }}
+        </AtomsBadge>
+      </template>
+      <span v-else class="phase3-cell__dash">-</span>
+    </template>
 
-            <!-- 手入力編集モード中 -->
-            <template v-else-if="editingRowId === circuit.id">
-              <AtomsButton
-                variant="success"
-                size="sm"
-                :loading="isActionLoading[circuit.id]"
-                @click="saveInput(circuit)"
-              >
-                確定
-              </AtomsButton>
-              <AtomsButton
-                variant="secondary"
-                size="sm"
-                @click="cancelInput"
-              >
-                取消
-              </AtomsButton>
-            </template>
+    <!-- 備考 -->
+    <template #cell-p3Remarks="{ row: circuit }">
+      <template v-if="editingRowId === circuit.id">
+        <AtomsInput v-model="inputForm.remarks" placeholder="備考" />
+      </template>
+      <span v-else class="phase3-cell__remarks" :title="circuit.p3Remarks || ''">
+        {{ circuit.p3Remarks || '-' }}
+      </span>
+    </template>
 
-            <!-- 通常モード：確定済み -->
-            <template v-else-if="isComplete(circuit)">
-              <AtomsButton
-                variant="danger"
-                size="sm"
-                :loading="isActionLoading[circuit.id]"
-                @click="$emit('clear', circuit)"
-              >
-                解除
-              </AtomsButton>
-              <AtomsButton
-                variant="secondary"
-                size="sm"
-                @click="startInput(circuit)"
-              >
-                変更
-              </AtomsButton>
-            </template>
+    <!-- 操作 -->
+    <template #cell-actions="{ row: circuit }">
+      <div class="phase3-actions">
+        <!-- 幹線未完了による操作不可 -->
+        <template v-if="isCircuitLocked(circuit)">
+          <span class="text-note text-note--strong">⏸ 幹線未了</span>
+        </template>
 
-            <!-- 通常モード：未確定 -->
-            <template v-else>
-              <AtomsButton
-                variant="primary"
-                size="sm"
-                :disabled="circuit.isExcluded"
-                :loading="isActionLoading[circuit.id]"
-                @click="handleQuickStandard(circuit)"
-              >
-                標準値確定
-              </AtomsButton>
-              <AtomsButton
-                variant="secondary"
-                size="sm"
-                :disabled="circuit.isExcluded"
-                @click="startInput(circuit)"
-              >
-                手入力
-              </AtomsButton>
-            </template>
-          </div>
-        </td>
+        <!-- 前フェーズ（P2）未完了による操作不可 -->
+        <template v-else-if="!isP2Complete(circuit)">
+          <span class="text-note text-note--strong">⏸ P2未了</span>
+        </template>
 
-        <!-- 測定者 / 日時 -->
-        <td style="text-align: center;">
-          <PortalSoudenWorkerCell
-            :worker="circuit.p3Worker"
-            :confirmed-at="circuit.p3ConfirmedAt"
-          />
-        </td>
-      </tr>
+        <!-- 手入力編集モード中 -->
+        <template v-else-if="editingRowId === circuit.id">
+          <AtomsButton
+            variant="success"
+            size="sm"
+            :loading="isActionLoading[circuit.id]"
+            @click="saveInput(circuit)"
+          >
+            確定
+          </AtomsButton>
+          <AtomsButton
+            variant="secondary"
+            size="sm"
+            @click="cancelInput"
+          >
+            取消
+          </AtomsButton>
+        </template>
+
+        <!-- 通常モード：確定済み -->
+        <template v-else-if="isComplete(circuit)">
+          <AtomsButton
+            variant="danger"
+            size="sm"
+            :loading="isActionLoading[circuit.id]"
+            @click="$emit('clear', circuit)"
+          >
+            解除
+          </AtomsButton>
+          <AtomsButton
+            variant="secondary"
+            size="sm"
+            @click="startInput(circuit)"
+          >
+            変更
+          </AtomsButton>
+        </template>
+
+        <!-- 通常モード：未確定 -->
+        <template v-else>
+          <AtomsButton
+            variant="primary"
+            size="sm"
+            :disabled="circuit.isExcluded"
+            :loading="isActionLoading[circuit.id]"
+            @click="handleQuickStandard(circuit)"
+          >
+            標準値確定
+          </AtomsButton>
+          <AtomsButton
+            variant="secondary"
+            size="sm"
+            :disabled="circuit.isExcluded"
+            @click="startInput(circuit)"
+          >
+            手入力
+          </AtomsButton>
+        </template>
+      </div>
+    </template>
+
+    <!-- 測定者 / 日時 -->
+    <template #cell-p3ConfirmedAt="{ row: circuit }">
+      <PortalSoudenWorkerCell
+        :worker="circuit.p3Worker"
+        :confirmed-at="circuit.p3ConfirmedAt"
+      />
     </template>
   </MoleculesTable>
 </template>
@@ -415,7 +408,7 @@ const {
   min-height: 400px;
 }
 
-.phase3-row {
+:deep(.phase3-row) {
   transition: background-color var(--duration-base) var(--ease-base);
 
   &.is-completed {

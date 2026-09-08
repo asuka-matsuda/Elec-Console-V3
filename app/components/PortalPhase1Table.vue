@@ -71,176 +71,169 @@ const {
     :data="sortedCircuits"
     :sort-by="sortBy"
     :sort-order="sortOrder"
+    :row-id="(circuit) => `row-${circuit.id}`"
+    :row-class="(circuit) => [
+      'phase1-row',
+      {
+        'is-completed': isComplete(circuit),
+        'is-excluded': circuit.isExcluded,
+        'is-locked': isCircuitLocked(circuit),
+        'is-editing': editingRowId === circuit.id,
+      },
+    ]"
     @sort="handleSort"
   >
-    <template #body>
-      <tr
-        v-for="circuit in sortedCircuits"
-        :id="`row-${circuit.id}`"
-        :key="circuit.id"
-        :class="[
-          'phase1-row',
-          {
-            'is-completed': isComplete(circuit),
-            'is-excluded': circuit.isExcluded,
-            'is-locked': isCircuitLocked(circuit),
-            'is-editing': editingRowId === circuit.id,
-          },
-        ]"
-      >
-        <!-- 盤種別 / 盤名称 -->
-        <td>
-          <PortalSoudenBanCell
-            :ban-meisho="circuit.banMeisho"
-            :ban-shubetsu="circuit.banShubetsu"
+    <!-- 盤種別 / 盤名称 -->
+    <template #cell-banMeisho="{ row: circuit }">
+      <PortalSoudenBanCell
+        :ban-meisho="circuit.banMeisho"
+        :ban-shubetsu="circuit.banShubetsu"
+      />
+    </template>
+
+    <!-- 回路番号 -->
+    <template #cell-kairoBangou="{ row: circuit }">
+      <template v-if="editingRowId === circuit.id">
+        <AtomsInput v-model="editForm.kairoBangou" size="sm" placeholder="番号" />
+      </template>
+      <div v-else class="phase1-cell__bangou-wrap">
+        <AtomsPortalKairoSymbol
+          :kigou="circuit.kairoKigou"
+          :bangou="circuit.kairoBangou"
+        />
+      </div>
+    </template>
+
+    <!-- 回路名称 -->
+    <template #cell-kairoMeisho="{ row: circuit }">
+      <template v-if="editingRowId === circuit.id">
+        <AtomsInput v-model="editForm.kairoMeisho" size="sm" placeholder="回路名称" />
+      </template>
+      <span v-else class="phase1-cell__text phase1-cell__meisho" :title="circuit.kairoMeisho || ''">
+        {{ circuit.kairoMeisho || '-' }}
+      </span>
+    </template>
+
+    <!-- 配線 / 接地 -->
+    <template #cell-cableList="{ row: circuit }">
+      <template v-if="editingRowId === circuit.id">
+        <div class="phase1-cell__edit-col">
+          <div class="phase1-cell__inline-inputs">
+            <AtomsInput v-model="editForm.cableList" size="sm" placeholder="ケーブル" />
+            <AtomsInput v-model="editForm.haisenJousuu" size="sm" placeholder="条数" style="width: 55px;" />
+          </div>
+          <AtomsInput v-model="editForm.setsuchiList" size="sm" placeholder="接地リスト" />
+        </div>
+      </template>
+      <div v-else class="phase1-cell__wiring">
+        <div class="phase1-cell__cable-line">
+          <span class="phase1-cell__cable">{{ circuit.cableList || '-' }}</span>
+          <span v-if="circuit.haisenJousuu" class="phase1-cell__jousuu">({{ circuit.haisenJousuu }})</span>
+        </div>
+        <span class="phase1-cell__setsuchi" :title="circuit.setsuchiList || ''">
+          {{ circuit.setsuchiList ? `E: ${circuit.setsuchiList}` : '-' }}
+        </span>
+      </div>
+    </template>
+
+    <!-- 確認 / 増締め (チェックボックス) -->
+    <template #cell-p1Kakunin="{ row: circuit }">
+      <div class="phase1-cell__checks">
+        <label class="phase1-check-item" title="回路確認">
+          <AtomsCheckbox
+            v-model="circuit.p1Kakunin"
+            :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
           />
-        </td>
-
-        <!-- 回路番号 -->
-        <td style="text-align: center;">
-          <template v-if="editingRowId === circuit.id">
-            <AtomsInput v-model="editForm.kairoBangou" size="sm" placeholder="番号" />
-          </template>
-          <div v-else class="phase1-cell__bangou-wrap">
-            <AtomsPortalKairoSymbol
-              :kigou="circuit.kairoKigou"
-              :bangou="circuit.kairoBangou"
-            />
-          </div>
-        </td>
-
-        <!-- 回路名称 -->
-        <td>
-          <template v-if="editingRowId === circuit.id">
-            <AtomsInput v-model="editForm.kairoMeisho" size="sm" placeholder="回路名称" />
-          </template>
-          <span v-else class="phase1-cell__text phase1-cell__meisho" :title="circuit.kairoMeisho || ''">
-            {{ circuit.kairoMeisho || '-' }}
-          </span>
-        </td>
-
-        <!-- 配線 / 接地 -->
-        <td>
-          <template v-if="editingRowId === circuit.id">
-            <div class="phase1-cell__edit-col">
-              <div class="phase1-cell__inline-inputs">
-                <AtomsInput v-model="editForm.cableList" size="sm" placeholder="ケーブル" />
-                <AtomsInput v-model="editForm.haisenJousuu" size="sm" placeholder="条数" style="width: 55px;" />
-              </div>
-              <AtomsInput v-model="editForm.setsuchiList" size="sm" placeholder="接地リスト" />
-            </div>
-          </template>
-          <div v-else class="phase1-cell__wiring">
-            <div class="phase1-cell__cable-line">
-              <span class="phase1-cell__cable">{{ circuit.cableList || '-' }}</span>
-              <span v-if="circuit.haisenJousuu" class="phase1-cell__jousuu">({{ circuit.haisenJousuu }})</span>
-            </div>
-            <span class="phase1-cell__setsuchi" :title="circuit.setsuchiList || ''">
-              {{ circuit.setsuchiList ? `E: ${circuit.setsuchiList}` : '-' }}
-            </span>
-          </div>
-        </td>
-
-        <!-- 確認 / 増締め (チェックボックス) -->
-        <td style="text-align: center;">
-          <div class="phase1-cell__checks">
-            <label class="phase1-check-item" title="回路確認">
-              <AtomsCheckbox
-                v-model="circuit.p1Kakunin"
-                :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
-              />
-              <span class="phase1-check-item__label">確認</span>
-            </label>
-            <label class="phase1-check-item" title="増締め確認">
-              <AtomsCheckbox
-                v-model="circuit.p1Mashishime"
-                :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
-              />
-              <span class="phase1-check-item__label">増締</span>
-            </label>
-          </div>
-        </td>
-
-        <!-- 備考 -->
-        <td>
-          <template v-if="editingRowId === circuit.id">
-            <AtomsInput v-model="editForm.remarks" size="sm" placeholder="備考" />
-          </template>
-          <span v-else class="phase1-cell__text phase1-cell__remarks">
-            {{ circuit.p1Remarks || '-' }}
-          </span>
-        </td>
-
-        <!-- 操作 -->
-        <td style="text-align: center;">
-          <div class="phase1-actions">
-            <!-- 幹線未完了による操作不可 -->
-            <template v-if="isCircuitLocked(circuit)">
-              <span class="text-note text-note--strong">⏸ 幹線未了</span>
-            </template>
-
-            <!-- 編集モード中 -->
-            <template v-else-if="editingRowId === circuit.id">
-              <AtomsButton
-                variant="success"
-                size="sm"
-                :loading="isActionLoading[circuit.id]"
-                @click="saveEdit(circuit)"
-              >
-                保存
-              </AtomsButton>
-              <AtomsButton
-                variant="secondary"
-                size="sm"
-                @click="cancelEdit"
-              >
-                取消
-              </AtomsButton>
-            </template>
-
-            <!-- 通常モード：確定済み -->
-            <template v-else-if="isComplete(circuit)">
-              <AtomsButton
-                variant="danger"
-                size="sm"
-                :loading="isActionLoading[circuit.id]"
-                @click="$emit('clear', circuit)"
-              >
-                解除
-              </AtomsButton>
-            </template>
-
-            <!-- 通常モード：未確定 -->
-            <template v-else>
-              <AtomsButton
-                variant="primary"
-                size="sm"
-                :disabled="!circuit.p1Kakunin || !circuit.p1Mashishime || circuit.isExcluded"
-                :loading="isActionLoading[circuit.id]"
-                @click="$emit('confirm', circuit)"
-              >
-                確定
-              </AtomsButton>
-              <AtomsButton
-                variant="secondary"
-                size="sm"
-                :disabled="circuit.isExcluded"
-                @click="startEdit(circuit)"
-              >
-                編集
-              </AtomsButton>
-            </template>
-          </div>
-        </td>
-
-        <!-- 測定者 / 日時 -->
-        <td style="text-align: center;">
-          <PortalSoudenWorkerCell
-            :worker="circuit.p1Worker"
-            :confirmed-at="circuit.p1ConfirmedAt"
+          <span class="phase1-check-item__label">確認</span>
+        </label>
+        <label class="phase1-check-item" title="増締め確認">
+          <AtomsCheckbox
+            v-model="circuit.p1Mashishime"
+            :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
           />
-        </td>
-      </tr>
+          <span class="phase1-check-item__label">増締</span>
+        </label>
+      </div>
+    </template>
+
+    <!-- 備考 -->
+    <template #cell-p1Remarks="{ row: circuit }">
+      <template v-if="editingRowId === circuit.id">
+        <AtomsInput v-model="editForm.remarks" size="sm" placeholder="備考" />
+      </template>
+      <span v-else class="phase1-cell__text phase1-cell__remarks">
+        {{ circuit.p1Remarks || '-' }}
+      </span>
+    </template>
+
+    <!-- 操作 -->
+    <template #cell-actions="{ row: circuit }">
+      <div class="phase1-actions">
+        <!-- 幹線未完了による操作不可 -->
+        <template v-if="isCircuitLocked(circuit)">
+          <span class="text-note text-note--strong">⏸ 幹線未了</span>
+        </template>
+
+        <!-- 編集モード中 -->
+        <template v-else-if="editingRowId === circuit.id">
+          <AtomsButton
+            variant="success"
+            size="sm"
+            :loading="isActionLoading[circuit.id]"
+            @click="saveEdit(circuit)"
+          >
+            保存
+          </AtomsButton>
+          <AtomsButton
+            variant="secondary"
+            size="sm"
+            @click="cancelEdit"
+          >
+            取消
+          </AtomsButton>
+        </template>
+
+        <!-- 通常モード：確定済み -->
+        <template v-else-if="isComplete(circuit)">
+          <AtomsButton
+            variant="danger"
+            size="sm"
+            :loading="isActionLoading[circuit.id]"
+            @click="$emit('clear', circuit)"
+          >
+            解除
+          </AtomsButton>
+        </template>
+
+        <!-- 通常モード：未確定 -->
+        <template v-else>
+          <AtomsButton
+            variant="primary"
+            size="sm"
+            :disabled="!circuit.p1Kakunin || !circuit.p1Mashishime || circuit.isExcluded"
+            :loading="isActionLoading[circuit.id]"
+            @click="$emit('confirm', circuit)"
+          >
+            確定
+          </AtomsButton>
+          <AtomsButton
+            variant="secondary"
+            size="sm"
+            :disabled="circuit.isExcluded"
+            @click="startEdit(circuit)"
+          >
+            編集
+          </AtomsButton>
+        </template>
+      </div>
+    </template>
+
+    <!-- 測定者 / 日時 -->
+    <template #cell-p1ConfirmedAt="{ row: circuit }">
+      <PortalSoudenWorkerCell
+        :worker="circuit.p1Worker"
+        :confirmed-at="circuit.p1ConfirmedAt"
+      />
     </template>
   </MoleculesTable>
 </template>
@@ -251,7 +244,7 @@ const {
   min-height: 400px;
 }
 
-.phase1-row {
+:deep(.phase1-row) {
   transition: background-color var(--duration-base) var(--ease-base);
 
   &.is-completed {

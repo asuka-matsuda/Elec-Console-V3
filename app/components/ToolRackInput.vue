@@ -163,54 +163,54 @@ const handleAddCable = () => {
       <MoleculesTable
         v-if="inputs.mode === 'strong'"
         :columns="RACK_CABLE_COLUMNS"
+        :data="inputs.strongCablesUI"
         class="rack-table"
       >
-        <template #body>
-          <tr
-            v-for="cable in inputs.strongCablesUI"
-            :key="cable.id"
-          >
-            <td>
-              <AtomsSelect
-                v-model="cable.category"
-                :options="strongCategories"
-                placeholder="選択"
-                @update:model-value="cable.cableIdx = ''"
-              />
-            </td>
-            <td>
-              <AtomsSelect
-                v-model="cable.cableIdx"
-                :options="getAvailableSizes(cable.category)"
-                placeholder="選択"
-                :disabled="!cable.category"
-              />
-            </td>
-            <td>
-              <MoleculesInputGroup addon="本">
-                <AtomsInput
-                  v-model.number="cable.count"
-                  type="number"
-                  min="1"
-                />
-              </MoleculesInputGroup>
-            </td>
-            <td style="text-align: right;">
-              {{ getCableSpecText(cable.cableIdx) }}
-            </td>
-            <td class="action-cell">
-              <AtomsButton
-                variant="danger"
-                size="sm"
-                icon-only
-                :disabled="inputs.strongCablesUI.length <= 1"
-                aria-label="削除"
-                @click="emit('remove-strong-cable', cable.id)"
-              >
-                <AtomsIcon name="trash-2" size="sm" />
-              </AtomsButton>
-            </td>
-          </tr>
+        <template #cell-category="{ row }">
+          <AtomsSelect
+            v-model="row.category"
+            :options="strongCategories"
+            placeholder="選択"
+            @update:model-value="row.cableIdx = ''"
+          />
+        </template>
+
+        <template #cell-cableIdx="{ row }">
+          <AtomsSelect
+            v-model="row.cableIdx"
+            :options="getAvailableSizes(row.category)"
+            placeholder="選択"
+            :disabled="!row.category"
+          />
+        </template>
+
+        <template #cell-count="{ row }">
+          <MoleculesInputGroup addon="本">
+            <AtomsInput
+              v-model.number="row.count"
+              type="number"
+              min="1"
+            />
+          </MoleculesInputGroup>
+        </template>
+
+        <template #cell-spec="{ row }">
+          {{ getCableSpecText(row.cableIdx) }}
+        </template>
+
+        <template #cell-actions="{ row }">
+          <div class="flex justify-center items-center">
+            <AtomsButton
+              variant="danger"
+              size="sm"
+              icon-only
+              :disabled="inputs.strongCablesUI.length <= 1"
+              aria-label="削除"
+              @click="emit('remove-strong-cable', row.id)"
+            >
+              <AtomsIcon name="trash-2" size="sm" />
+            </AtomsButton>
+          </div>
         </template>
       </MoleculesTable>
 
@@ -218,54 +218,54 @@ const handleAddCable = () => {
       <MoleculesTable
         v-else
         :columns="RACK_CABLE_COLUMNS"
+        :data="inputs.weakCablesUI"
         class="rack-table"
       >
-        <template #body>
-          <tr
-            v-for="cable in inputs.weakCablesUI"
-            :key="cable.id"
-          >
-            <td>
-              <AtomsSelect
-                v-model="cable.category"
-                :options="weakCategories"
-                placeholder="選択"
-                @update:model-value="cable.cableIdx = ''"
-              />
-            </td>
-            <td>
-              <AtomsSelect
-                v-model="cable.cableIdx"
-                :options="getAvailableSizes(cable.category)"
-                placeholder="選択"
-                :disabled="!cable.category"
-              />
-            </td>
-            <td>
-              <MoleculesInputGroup addon="本">
-                <AtomsInput
-                  v-model.number="cable.count"
-                  type="number"
-                  min="1"
-                />
-              </MoleculesInputGroup>
-            </td>
-            <td style="text-align: right;">
-              {{ getCableSpecText(cable.cableIdx) }}
-            </td>
-            <td class="action-cell">
-              <AtomsButton
-                variant="danger"
-                size="sm"
-                icon-only
-                :disabled="inputs.weakCablesUI.length <= 1"
-                aria-label="削除"
-                @click="emit('remove-weak-cable', cable.id)"
-              >
-                <AtomsIcon name="trash-2" size="sm" />
-              </AtomsButton>
-            </td>
-          </tr>
+        <template #cell-category="{ row }">
+          <AtomsSelect
+            v-model="row.category"
+            :options="weakCategories"
+            placeholder="選択"
+            @update:model-value="row.cableIdx = ''"
+          />
+        </template>
+
+        <template #cell-cableIdx="{ row }">
+          <AtomsSelect
+            v-model="row.cableIdx"
+            :options="getAvailableSizes(row.category)"
+            placeholder="選択"
+            :disabled="!row.category"
+          />
+        </template>
+
+        <template #cell-count="{ row }">
+          <MoleculesInputGroup addon="本">
+            <AtomsInput
+              v-model.number="row.count"
+              type="number"
+              min="1"
+            />
+          </MoleculesInputGroup>
+        </template>
+
+        <template #cell-spec="{ row }">
+          {{ getCableSpecText(row.cableIdx) }}
+        </template>
+
+        <template #cell-actions="{ row }">
+          <div class="flex justify-center items-center">
+            <AtomsButton
+              variant="danger"
+              size="sm"
+              icon-only
+              :disabled="inputs.weakCablesUI.length <= 1"
+              aria-label="削除"
+              @click="emit('remove-weak-cable', row.id)"
+            >
+              <AtomsIcon name="trash-2" size="sm" />
+            </AtomsButton>
+          </div>
         </template>
       </MoleculesTable>
     </section>

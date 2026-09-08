@@ -41,6 +41,7 @@ const handleClick = () => {
 
 <template>
   <th
+    class="p-2 align-middle"
     :class="{
       'is-sortable': column.sortable,
       'is-sorted': isSorted,

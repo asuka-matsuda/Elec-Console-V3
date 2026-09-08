@@ -1,27 +1,27 @@
-<script setup lang="ts" generic="T extends Record<string, any> = Record<string, any>">
+<script setup lang="ts" generic="T = unknown">
 /**
  * MoleculesTable
- * [Molecules] 汎用的なデータテーブル用コンポーネントです。
- * ヘッダー（th）のみglass-colorを使用し、ボディは透明。
- * 行（tr）ホバー時には発光エフェクト（ui-hover-glow）が適用されます。
+ * [Molecules] カラム定義とデータ配列を受け取り表示する純粋なデータテーブルコンポーネント。
  */
-
 import type { TableColumn } from '~/types/components'
 
 const props = withDefaults(
   defineProps<{
-    columns?: TableColumn<T>[]
+    columns: TableColumn<unknown>[]
     data?: T[]
     sortBy?: string
     sortOrder?: 'asc' | 'desc'
     rowKey?: string | ((row: T) => string | number)
+    rowClass?: (row: T, index: number) => string | Record<string, boolean | undefined> | (string | Record<string, boolean | undefined>)[] | undefined
+    rowId?: (row: T, index: number) => string
   }>(),
   {
-    columns: undefined,
-    data: undefined,
+    data: () => [],
     sortBy: undefined,
     sortOrder: 'asc',
     rowKey: 'id',
+    rowClass: undefined,
+    rowId: undefined,
   },
 )
 
@@ -29,7 +29,11 @@ const emit = defineEmits<{
   (e: 'sort', payload: { key: string, order: 'asc' | 'desc' }): void
 }>()
 
-const handleSort = (col: TableColumn<T>) => {
+defineSlots<{
+  [K in `cell-${string}`]?: (props: { value: unknown, row: T, index: number }) => unknown
+}>()
+
+const handleSort = (col: TableColumn<unknown>) => {
   if (!col.sortable) return
 
   let newOrder: 'asc' | 'desc' = 'asc'
@@ -45,16 +49,18 @@ const getRowKey = (row: T, index: number): string | number => {
     return props.rowKey(row)
   }
 
-  if (props.rowKey && props.rowKey in row) {
-    const value = row[props.rowKey]
+  const record = row as Record<string, unknown>
+
+  if (props.rowKey && record && props.rowKey in record) {
+    const value = record[props.rowKey]
 
     if (typeof value === 'string' || typeof value === 'number') {
       return value
     }
   }
 
-  if ('id' in row) {
-    const idValue = row.id
+  if (record && 'id' in record) {
+    const idValue = record.id
 
     if (typeof idValue === 'string' || typeof idValue === 'number') {
       return idValue
@@ -63,49 +69,55 @@ const getRowKey = (row: T, index: number): string | number => {
 
   return index
 }
+
+const getCellValue = (row: T, key: string): unknown => {
+  if (!row || typeof row !== 'object') return undefined
+
+  return (row as Record<string, unknown>)[key]
+}
 </script>
 
 <template>
   <div class="table-wrapper flex-1 min-h-0 overflow-auto">
-    <table class="table w-full table-fixed text-left">
-      <thead v-if="$slots.header || columns">
-        <slot name="header">
-          <tr>
-            <AtomsTableTh
-              v-for="col in columns"
-              :key="col.key"
-              :column="col"
-              :sort-by="sortBy"
-              :sort-order="sortOrder"
-              @sort="handleSort"
-            />
-          </tr>
-        </slot>
+    <table class="w-full table-fixed text-left border-separate border-spacing-0">
+      <thead>
+        <tr>
+          <AtomsTableTh
+            v-for="col in columns"
+            :key="col.key"
+            :column="col"
+            :sort-by="sortBy"
+            :sort-order="sortOrder"
+            @sort="handleSort"
+          />
+        </tr>
       </thead>
 
-      <tbody v-if="$slots.body || (data && columns)">
-        <slot name="body">
-          <tr v-for="(row, index) in data" :key="getRowKey(row, index)">
-            <td
-              v-for="col in columns"
-              :key="col.key"
-              :style="{ textAlign: col.align }"
+      <tbody>
+        <tr
+          v-for="(row, index) in data"
+          :id="rowId?.(row, index)"
+          :key="getRowKey(row, index)"
+          class="table-row"
+          :class="rowClass?.(row, index)"
+        >
+          <td
+            v-for="col in columns"
+            :key="col.key"
+            class="table-cell p-2 truncate align-middle"
+            :style="{ textAlign: col.align }"
+          >
+            <slot
+              :name="`cell-${col.key}`"
+              :value="getCellValue(row, col.key)"
+              :row="row"
+              :index="index"
             >
-              <slot
-                :name="`cell-${col.key}`"
-                :value="row[col.key]"
-                :row="row"
-              >
-                {{ row[col.key] }}
-              </slot>
-            </td>
-          </tr>
-        </slot>
+              {{ getCellValue(row, col.key) }}
+            </slot>
+          </td>
+        </tr>
       </tbody>
-
-      <tfoot v-if="$slots.footer">
-        <slot name="footer" />
-      </tfoot>
     </table>
   </div>
 </template>
@@ -118,64 +130,32 @@ const getRowKey = (row: T, index: number): string | number => {
   backdrop-filter: blur(var(--blur-sm));
 }
 
-.table {
-  border-spacing: 0;
-  border-collapse: separate;
+.table-row {
+  position: relative;
+  z-index: 1;
+  transition: var(--transition-base);
 
-  th,
-  :deep(th) {
-    padding: var(--space-2);
-    border-right: var(--border-width-base) solid var(--color-border);
-    border-bottom: calc(var(--border-width-base) * 2) solid var(--color-border);
-
-    white-space: nowrap;
-    vertical-align: middle;
+  &:hover {
+    background-color: var(--color-bg-hover);
+    transition: background-color var(--duration-fast) var(--ease-base);
   }
 
-  td,
-  :deep(td) {
-    overflow: hidden;
-
-    padding: var(--space-2);
-    border-right: var(--border-width-base) solid var(--color-border);
-    border-bottom: var(--border-width-base) solid
-      color-mix(in srgb, var(--color-border) 70%, var(--color-text-muted) 30%);
-
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    vertical-align: middle;
-  }
-
-  th:last-child,
-  td:last-child,
-  :deep(th:last-child),
-  :deep(td:last-child) {
-    border-right: none;
-  }
-
-  td,
-  :deep(td) {
-    font-family: var(--font-mono);
-    font-variant-numeric: tabular-nums;
-    color: var(--color-text-main);
-  }
-
-  tbody tr,
-  :deep(tbody tr) { /* Required for z-index and box-shadow to appear correctly on rows */
-    position: relative;
-    z-index: 1;
-    transition: var(--transition-base);
-
-    &:hover {
-      z-index: 1;
-      background-color: var(--color-bg-hover);
-      transition: background-color var(--duration-fast) var(--ease-base);
-    }
-  }
-
-  tbody tr:last-child td,
-  :deep(tbody tr:last-child td) {
+  &:last-child .table-cell {
     border-bottom: none;
+  }
+}
+
+.table-cell {
+  border-right: var(--border-width-base) solid var(--color-border);
+  border-bottom: var(--border-width-base) solid
+    color-mix(in srgb, var(--color-border) 70%, var(--color-text-muted) 30%);
+
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-main);
+
+  &:last-child {
+    border-right: none;
   }
 }
 </style>

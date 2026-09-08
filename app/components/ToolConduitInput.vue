@@ -87,54 +87,54 @@ const getCableAreaText = (cableIdx: string): string => {
 
       <MoleculesTable
         :columns="CONDUIT_CABLE_COLUMNS"
+        :data="inputs.inputCables"
         class="conduit-table"
       >
-        <template #body>
-          <tr
-            v-for="cable in inputs.inputCables"
-            :key="cable.id"
-          >
-            <td>
-              <AtomsSelect
-                v-model="cable.category"
-                :options="categories"
-                placeholder="選択"
-                @update:model-value="cable.cableIdx = ''"
-              />
-            </td>
-            <td>
-              <AtomsSelect
-                v-model="cable.cableIdx"
-                :options="getAvailableSizes(cable.category)"
-                placeholder="選択"
-                :disabled="!cable.category"
-              />
-            </td>
-            <td>
-              <MoleculesInputGroup addon="本">
-                <AtomsInput
-                  v-model.number="cable.count"
-                  type="number"
-                  min="1"
-                />
-              </MoleculesInputGroup>
-            </td>
-            <td style="text-align: right;">
-              {{ getCableAreaText(cable.cableIdx) }}
-            </td>
-            <td class="action-cell">
-              <AtomsButton
-                variant="danger"
-                size="sm"
-                icon-only
-                :disabled="inputs.inputCables.length <= 1"
-                aria-label="削除"
-                @click="emit('remove-cable', cable.id)"
-              >
-                <AtomsIcon name="trash-2" size="sm" />
-              </AtomsButton>
-            </td>
-          </tr>
+        <template #cell-category="{ row }">
+          <AtomsSelect
+            v-model="row.category"
+            :options="categories"
+            placeholder="選択"
+            @update:model-value="row.cableIdx = ''"
+          />
+        </template>
+
+        <template #cell-cableIdx="{ row }">
+          <AtomsSelect
+            v-model="row.cableIdx"
+            :options="getAvailableSizes(row.category)"
+            placeholder="選択"
+            :disabled="!row.category"
+          />
+        </template>
+
+        <template #cell-count="{ row }">
+          <MoleculesInputGroup addon="本">
+            <AtomsInput
+              v-model.number="row.count"
+              type="number"
+              min="1"
+            />
+          </MoleculesInputGroup>
+        </template>
+
+        <template #cell-spec="{ row }">
+          {{ getCableAreaText(row.cableIdx) }}
+        </template>
+
+        <template #cell-actions="{ row }">
+          <div class="flex justify-center items-center">
+            <AtomsButton
+              variant="danger"
+              size="sm"
+              icon-only
+              :disabled="inputs.inputCables.length <= 1"
+              aria-label="削除"
+              @click="emit('remove-cable', row.id)"
+            >
+              <AtomsIcon name="trash-2" size="sm" />
+            </AtomsButton>
+          </div>
         </template>
       </MoleculesTable>
     </section>
