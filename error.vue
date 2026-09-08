@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { computed } from 'vue'
 
 import type { NuxtError } from '#app'
@@ -28,7 +28,7 @@ const handleReset = () => {
       </div>
 
       <div class="error-page__badge">
-        <AppIcon
+        <AtomsIcon
           :name="isNotFound ? 'compass' : 'alert-triangle'"
           size="lg"
           :class="isNotFound ? 'u-text-primary' : 'u-text-danger'"
@@ -49,14 +49,14 @@ const handleReset = () => {
       </p>
 
       <div class="error-page__actions">
-        <AppButton
+        <AtomsButton
           variant="primary"
           icon="home"
           size="md"
           @click="handleReset"
         >
           ホームへ戻る
-        </AppButton>
+        </AtomsButton>
       </div>
 
       <details
@@ -64,7 +64,7 @@ const handleReset = () => {
         class="error-page__details"
       >
         <summary class="error-page__summary">
-          <AppIcon name="chevron-right" size="sm" />
+          <AtomsIcon name="chevron-right" size="sm" />
           <span>詳細なエラー情報</span>
         </summary>
         <pre class="error-page__stack">{{ error.message }}</pre>
@@ -86,7 +86,7 @@ const handleReset = () => {
   background-image:
     radial-gradient(
       circle at 50% 20%,
-      color-mix(in srgb, var(--color-category-main, #3b82f6) 12%, transparent),
+      color-mix(in srgb, var(--color-category-main) 12%, transparent),
       transparent 70%
     );
 

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * ToolLayout
  * 計算ツールページの全体レイアウトコンポーネント。
@@ -75,10 +75,10 @@ provide('toolBasisModal', {
             size="md"
           >
             <template #actions>
-              <AppButton variant="danger" size="sm" @click="emit('reset')">
-                <AppIcon name="refresh-cw" size="sm" />
+              <AtomsButton variant="danger" size="sm" @click="emit('reset')">
+                <AtomsIcon name="refresh-cw" size="sm" />
                 リセット
-              </AppButton>
+              </AtomsButton>
             </template>
           </AppSectionHeader>
 
@@ -101,7 +101,7 @@ provide('toolBasisModal', {
           @click="toggleDrawer"
         >
           <span class="tool-layout__drawer-title">計算結果を見る</span>
-          <AppIcon
+          <AtomsIcon
             :name="isDrawerOpen ? 'chevron-down' : 'chevron-up'"
             size="md"
             class="tool-layout__drawer-icon"
@@ -116,15 +116,15 @@ provide('toolBasisModal', {
               size="md"
             >
               <template #actions>
-                <AppButton
+                <AtomsButton
                   v-if="hasBasis"
                   variant="secondary"
                   size="sm"
                   @click="openBasisModal"
                 >
-                  <AppIcon name="help-circle" size="sm" />
+                  <AtomsIcon name="help-circle" size="sm" />
                   計算根拠
-                </AppButton>
+                </AtomsButton>
                 <AppSaveButton
                   v-if="saveFunction"
                   :disabled="saveDisabled"

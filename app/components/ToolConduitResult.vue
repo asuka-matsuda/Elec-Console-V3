@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * ToolConduitResult
  * 配管サイズ計算の結果を視覚的に表示する3段縦積みコンポーネントです。
@@ -41,7 +41,7 @@ const statusCustom = computed(() =>
       <template #title>
         <span class="box-title">
           {{ CONDUIT_UI_LABELS.TITLE_32 }}
-          <AppBadge v-if="vm.isDiffSize" color="var(--color-status-success)">規程推奨</AppBadge>
+          <AtomsBadge v-if="vm.isDiffSize" color="var(--color-status-success)">規程推奨</AtomsBadge>
         </span>
       </template>
       <template #value>
@@ -67,8 +67,8 @@ const statusCustom = computed(() =>
       <template #title>
         <span class="box-title">
           {{ CONDUIT_UI_LABELS.TITLE_48 }}
-          <AppBadge v-if="vm.isSameSize" color="var(--color-status-success)">適用可 (屈曲小)</AppBadge>
-          <AppBadge v-else-if="vm.isDiffSize" color="var(--color-status-warning)">適用外 (異種混在)</AppBadge>
+          <AtomsBadge v-if="vm.isSameSize" color="var(--color-status-success)">適用可 (屈曲小)</AtomsBadge>
+          <AtomsBadge v-else-if="vm.isDiffSize" color="var(--color-status-warning)">適用外 (異種混在)</AtomsBadge>
         </span>
       </template>
       <template #value>
@@ -110,7 +110,7 @@ const statusCustom = computed(() =>
     <!-- Footer: 内線規程（勧告）内容 -->
     <footer class="conduit-footer">
       <div class="footer-title">
-        <AppIcon name="info" size="sm" /> 内線規程（勧告）
+        <AtomsIcon name="info" size="sm" /> 内線規程（勧告）
       </div>
       <ul class="footer-list">
         <li>

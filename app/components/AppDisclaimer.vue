@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppDisclaimer
  * 免責事項（注意事項）を表示するコンポーネントです。
@@ -12,7 +12,7 @@ const {
 
 <template>
   <aside class="disclaimer" role="note" aria-label="免責事項">
-    <AppIcon name="alert-triangle" size="sm" class="icon" />
+    <AtomsIcon name="alert-triangle" size="sm" class="icon" />
     <p class="text">
       <strong>免責事項:</strong> <slot>{{ text }}</slot>
     </p>

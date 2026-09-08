@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * PortalAdminSitesTab
  * ポータル管理 - 現場管理タブ
@@ -86,13 +86,13 @@ const handleSaveSettings = async (updatedSite: Site) => {
   <AppPanel class="admin-sites">
     <AppSectionHeader title="現場プロジェクト一覧">
       <template #actions>
-        <AppButton
+        <AtomsButton
           variant="primary"
           icon="plus"
           @click="isCreateModalOpen = true"
         >
           新規現場登録
-        </AppButton>
+        </AtomsButton>
       </template>
     </AppSectionHeader>
 
@@ -105,12 +105,12 @@ const handleSaveSettings = async (updatedSite: Site) => {
     >
       <template #cell-status="{ value, row }">
         <div class="admin-sites__status-stack">
-          <AppBadge :color="getStatusColor(value)">
+          <AtomsBadge :color="getStatusColor(value)">
             {{ getStatusLabel(value) }}
-          </AppBadge>
-          <AppBadge v-if="row.disabledAt" color="var(--color-status-danger)">
+          </AtomsBadge>
+          <AtomsBadge v-if="row.disabledAt" color="var(--color-status-danger)">
             無効
-          </AppBadge>
+          </AtomsBadge>
         </div>
       </template>
       <template #cell-createdAt="{ value }">
@@ -121,21 +121,21 @@ const handleSaveSettings = async (updatedSite: Site) => {
       </template>
       <template #cell-actions="{ row }">
         <div class="admin-sites__actions">
-          <AppButton
+          <AtomsButton
             variant="secondary"
             size="sm"
             icon="settings"
             @click="openSettingsModal(String(row.id))"
           >
             現場設定
-          </AppButton>
-          <AppButton
+          </AtomsButton>
+          <AtomsButton
             :variant="row.disabledAt ? 'success' : 'danger'"
             size="sm"
             @click="confirmToggleDisable(row)"
           >
             {{ row.disabledAt ? "有効化" : "無効化" }}
-          </AppButton>
+          </AtomsButton>
         </div>
       </template>
     </AppTable>

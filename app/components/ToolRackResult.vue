@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * ToolRackResult
  * ケーブルラック選定ツールの計算・選定結果表示コンポーネントです。
@@ -34,9 +34,9 @@ const vm = computed(() =>
       <template #title>
         <span class="box-title">
           {{ vm.tier1.title }}
-          <AppBadge v-if="vm.tier1.badgeText" :color="vm.tier1.badgeColor">{{
+          <AtomsBadge v-if="vm.tier1.badgeText" :color="vm.tier1.badgeColor">{{
             vm.tier1.badgeText
-          }}</AppBadge>
+          }}</AtomsBadge>
         </span>
       </template>
 
@@ -63,9 +63,9 @@ const vm = computed(() =>
       <template #title>
         <span class="box-title">
           {{ vm.tier2.title }}
-          <AppBadge v-if="vm.tier2.badgeText" :color="vm.tier2.badgeColor">{{
+          <AtomsBadge v-if="vm.tier2.badgeText" :color="vm.tier2.badgeColor">{{
             vm.tier2.badgeText
-          }}</AppBadge>
+          }}</AtomsBadge>
         </span>
       </template>
 

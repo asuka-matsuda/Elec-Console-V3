@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * ToolHistoryCard
  * 計算履歴を1件表示するカードコンポーネントです。入力条件と計算結果のプレビューを提供します。
@@ -31,12 +31,12 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
         <span class="item-date">{{ entry.timestamp }}</span>
         <h3 class="item-title">
           <span>{{ entry.toolName }}</span>
-          <AppBadge v-if="entry.mode === 'サイズ選定'" color="var(--color-category-tool)">
+          <AtomsBadge v-if="entry.mode === 'サイズ選定'" color="var(--color-category-tool)">
             {{ entry.mode }}
-          </AppBadge>
-          <AppBadge v-else-if="entry.mode === '電圧降下'" color="var(--theme-accent)">
+          </AtomsBadge>
+          <AtomsBadge v-else-if="entry.mode === '電圧降下'" color="var(--theme-accent)">
             {{ entry.mode }}
-          </AppBadge>
+          </AtomsBadge>
         </h3>
       </div>
     </header>
@@ -98,14 +98,14 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
     </div>
 
     <footer class="item-footer">
-      <AppButton
+      <AtomsButton
         variant="danger"
         size="sm"
         icon-only
         @click.prevent="handleDelete"
       >
-        <AppIcon name="trash-2" size="sm" />
-      </AppButton>
+        <AtomsIcon name="trash-2" size="sm" />
+      </AtomsButton>
     </footer>
   </AppPanel>
 </template>

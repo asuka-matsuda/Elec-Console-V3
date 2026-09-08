@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppFormGroup
  * フォームのラベル、入力項目、エラーメッセージ、ヘルプテキストをグループ化して表示するコンポーネントです。
@@ -28,12 +28,12 @@ const {
       <span class="label-text">
         <slot name="label">{{ label }}</slot>
       </span>
-      <AppBadge
+      <AtomsBadge
         v-if="required"
         color="var(--color-status-danger)"
       >
         {{ requiredLabel }}
-      </AppBadge>
+      </AtomsBadge>
     </label>
 
     <div class="control">

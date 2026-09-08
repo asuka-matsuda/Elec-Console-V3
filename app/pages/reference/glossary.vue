@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * Glossary
  * 用語集画面のコンポーネントです。専門用語の検索や、五十音・カテゴリ別での絞り込み機能を提供します。
@@ -84,9 +84,9 @@ const categoryColorMap: Record<string, string> = {
                 {{ item.term }}
               </h2>
             </div>
-            <AppBadge :color="categoryColorMap[item.category]">
+            <AtomsBadge :color="categoryColorMap[item.category]">
               {{ item.category }}
-            </AppBadge>
+            </AtomsBadge>
           </header>
 
           <div class="item-body">
@@ -123,10 +123,10 @@ const categoryColorMap: Record<string, string> = {
 
 <style scoped lang="scss">
 .glossary-view {
-  --trade-color-electric: #eab308;
-  --trade-color-architecture: #ea580c;
-  --trade-color-hvac: #22c55e;
-  --trade-color-plumbing: #06b6d4;
+  --trade-color-electric: var(--color-status-warning);
+  --trade-color-architecture: var(--color-accent-main);
+  --trade-color-hvac: var(--color-status-success);
+  --trade-color-plumbing: var(--color-category-tool);
   --trade-color-trivia: var(--color-category-reference);
 
   display: flex;

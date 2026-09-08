@@ -1,5 +1,5 @@
-<script setup lang="ts">
-import AppButton from '~/components/AppButton.vue'
+﻿<script setup lang="ts">
+import AtomsButton from '~/components/AtomsButton.vue'
 
 defineProps<{
   title: string
@@ -15,23 +15,23 @@ const emit = defineEmits<{
 <template>
   <nav class="calendar-toolbar" aria-label="カレンダーナビゲーション">
     <div class="nav-controls">
-      <AppButton
+      <AtomsButton
         variant="secondary"
         size="sm"
         icon="chevron-left"
         icon-only
         @click="emit('prev')"
       />
-      <AppButton
+      <AtomsButton
         variant="secondary"
         size="sm"
         icon="chevron-right"
         icon-only
         @click="emit('next')"
       />
-      <AppButton variant="secondary" size="sm" @click="emit('today')">
+      <AtomsButton variant="secondary" size="sm" @click="emit('today')">
         今日
-      </AppButton>
+      </AtomsButton>
     </div>
 
     <div class="toolbar-center">
@@ -41,30 +41,30 @@ const emit = defineEmits<{
     </div>
 
     <div class="view-controls">
-      <AppButton
+      <AtomsButton
         :variant="currentView === 'dayGridMonth' ? 'primary' : 'secondary'"
         size="sm"
         icon="calendar"
         @click="emit('changeView', 'dayGridMonth')"
       >
         月表示
-      </AppButton>
-      <AppButton
+      </AtomsButton>
+      <AtomsButton
         :variant="currentView === 'listMonth' ? 'primary' : 'secondary'"
         size="sm"
         icon="list"
         @click="emit('changeView', 'listMonth')"
       >
         リスト
-      </AppButton>
-      <AppButton
+      </AtomsButton>
+      <AtomsButton
         variant="secondary"
         size="sm"
         icon="settings"
         @click="emit('openTypeSettings')"
       >
         種別設定
-      </AppButton>
+      </AtomsButton>
     </div>
   </nav>
 </template>

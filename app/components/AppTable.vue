@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends Record<string, unknown>">
+<script setup lang="ts" generic="T extends Record<string, any> = Record<string, any>">
 /**
  * AppTable
  *
@@ -178,18 +178,9 @@ const getRowKey = (row: T, index: number): string | number => {
     transition: var(--transition-base);
 
     &:hover {
-      --glow-color: var(--theme-accent);
-
       z-index: 1;
-
-      border-color: var(--theme-accent);
-
-      outline: var(--border-width-base) solid
-        color-mix(in srgb, var(--theme-accent) 80%, transparent);
-      outline-offset: calc(var(--border-width-base) * -1);
-      box-shadow: var(--shadow-glow-hover);
-
-      transition: var(--transition-glow);
+      background-color: var(--color-bg-hover);
+      transition: background-color var(--duration-fast) var(--ease-base);
     }
   }
 

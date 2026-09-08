@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * Souden Dashboard View
  * 送電試験ダッシュボード（総合進捗・幹線/二次側の進捗および各フェーズへの導線）
@@ -38,28 +38,28 @@ onMounted(() => {
           @synced="fetchStats"
         />
 
-        <AppButton
+        <AtomsButton
           :to="`/portal/${siteId}`"
           variant="secondary"
           size="sm"
         >
-          <AppIcon name="arrow-left" size="sm" />
+          <AtomsIcon name="arrow-left" size="sm" />
           ポータルへ戻る
-        </AppButton>
+        </AtomsButton>
 
-        <AppButton
+        <AtomsButton
           :to="`/portal/${siteId}/operation-logs`"
           variant="secondary"
           size="sm"
         >
-          <AppIcon name="book-open" size="sm" />
+          <AtomsIcon name="book-open" size="sm" />
           操作ログ
-        </AppButton>
+        </AtomsButton>
       </template>
     </AppSectionHeader>
 
     <div v-if="error" class="error-message">
-      <AppIcon name="alert-triangle" />
+      <AtomsIcon name="alert-triangle" />
       <span>{{ error }}</span>
     </div>
 
@@ -71,124 +71,46 @@ onMounted(() => {
       description="管理者の「現場設定」よりExcel連携ファイルの保存先設定および回路データの取り込みを行ってください。"
     >
       <template #actions>
-        <AppButton
+        <AtomsButton
           to="/portal/admin"
           variant="primary"
           size="sm"
         >
-          <AppIcon name="settings" size="sm" />
+          <AtomsIcon name="settings" size="sm" />
           現場設定へ移動
-        </AppButton>
+        </AtomsButton>
       </template>
     </AppEmptyState>
 
     <template v-else-if="stats">
-      <!-- 総合進捗カード -->
-      <AppPanel>
-        <AppSectionHeader title="総合進捗" icon="activity" variant="hud" />
-        <div class="progress-summary">
-          <div class="summary-main">
-            <AppCircularGauge
-              :value="stats.totalPct"
-              size="lg"
-              label="全試験完了率"
-              color="var(--color-category-main)"
-            />
-          </div>
+      <!-- 総合進捗カード (Organism) -->
+      <PortalSoudenOverallCard :stats="stats" />
 
-          <div class="summary-details">
-            <!-- 幹線 詳細 -->
-            <PortalSoudenProgressGroup
-              label="幹線"
-              :overall-pct="stats.trunkOverallPct"
-              color="var(--color-category-tool)"
-              :total="stats.trunkTotal"
-              :excluded="stats.trunkExcluded"
-              :p1-completed="stats.trunkP1"
-              :p1-pct="stats.trunkP1Pct"
-              :p2-completed="stats.trunkP2"
-              :p2-pct="stats.trunkP2Pct"
-              :p3-completed="stats.trunkP3"
-              :p3-pct="stats.trunkP3Pct"
-            />
-
-            <AppDivider type="fade-center" />
-
-            <!-- 二次側 詳細 -->
-            <PortalSoudenProgressGroup
-              label="二次側"
-              :overall-pct="stats.secOverallPct"
-              color="var(--color-category-management)"
-              :total="stats.secTotal"
-              :excluded="stats.secExcluded"
-              :p1-completed="stats.secP1"
-              :p1-pct="stats.secP1Pct"
-              :p2-completed="stats.secP2"
-              :p2-pct="stats.secP2Pct"
-              :p3-completed="stats.secP3"
-              :p3-pct="stats.secP3Pct"
-            />
-          </div>
-        </div>
-      </AppPanel>
-
-      <!-- 幹線と二次側のフェーズ遷移カード (2カラム) -->
+      <!-- 幹線と二次側のフェーズ遷移カード (2カラム, Organism) -->
       <div class="two-col-grid">
-        <!-- 幹線カード -->
-        <AppPanel>
-          <AppSectionHeader title="幹線" icon="zap" variant="tool" />
-          <ol class="step-list">
-            <PortalSoudenStepIndicator
-              :step-num="1"
-              title="回路確認・増し締め"
-              :completed="stats.trunkP1"
-              :total="stats.trunkTotal"
-              :to="`/portal/${siteId}/phase1?kei_to=幹線`"
-            />
-            <PortalSoudenStepIndicator
-              :step-num="2"
-              title="絶縁抵抗測定"
-              :completed="stats.trunkP2"
-              :total="stats.trunkTotal"
-              :to="`/portal/${siteId}/phase2?kei_to=幹線`"
-            />
-            <PortalSoudenStepIndicator
-              :step-num="3"
-              title="送電・電圧測定"
-              :completed="stats.trunkP3"
-              :total="stats.trunkTotal"
-              :to="`/portal/${siteId}/phase3?kei_to=幹線`"
-            />
-          </ol>
-        </AppPanel>
+        <PortalSoudenPhaseNavCard
+          title="幹線"
+          icon="zap"
+          variant="tool"
+          :site-id="siteId"
+          kei-to="幹線"
+          :p1-completed="stats.trunkP1"
+          :p2-completed="stats.trunkP2"
+          :p3-completed="stats.trunkP3"
+          :total="stats.trunkTotal"
+        />
 
-        <!-- 二次側カード -->
-        <AppPanel>
-          <AppSectionHeader title="二次側" icon="layers" variant="management" />
-          <ol class="step-list">
-            <PortalSoudenStepIndicator
-              :step-num="1"
-              title="回路確認・増し締め"
-              :completed="stats.secP1"
-              :total="stats.secTotal"
-              :to="`/portal/${siteId}/phase1?kei_to=二次側`"
-            />
-            <PortalSoudenStepIndicator
-              :step-num="2"
-              title="絶縁抵抗測定"
-              :completed="stats.secP2"
-              :total="stats.secTotal"
-              :to="`/portal/${siteId}/phase2?kei_to=二次側`"
-            />
-            <PortalSoudenStepIndicator
-              :step-num="3"
-              title="送電・電圧測定"
-              :completed="stats.secP3"
-              :total="stats.secTotal"
-              :to="`/portal/${siteId}/phase3?kei_to=二次側`"
-            />
-          </ol>
-        </AppPanel>
+        <PortalSoudenPhaseNavCard
+          title="二次側"
+          icon="layers"
+          variant="management"
+          :site-id="siteId"
+          kei-to="二次側"
+          :p1-completed="stats.secP1"
+          :p2-completed="stats.secP2"
+          :p3-completed="stats.secP3"
+          :total="stats.secTotal"
+        />
       </div>
     </template>
   </div>
@@ -208,51 +130,12 @@ onMounted(() => {
   align-items: center;
 
   padding: var(--space-3);
-  border: 1px solid rgb(239 68 68 / 20%);
+  border: 1px solid color-mix(in srgb, var(--color-status-danger) 25%, transparent);
   border-radius: var(--radius-sm);
 
   color: var(--color-status-danger);
 
-  background-color: rgb(239 68 68 / 10%);
-}
-
-.progress-summary {
-  display: flex;
-  gap: var(--space-8);
-  align-items: center;
-  padding: var(--space-2) 0;
-
-  @include mq("lg") {
-    flex-direction: column;
-    gap: var(--space-6);
-  }
-}
-
-.summary-main {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-
-  min-width: 220px;
-}
-
-.summary-details {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: var(--space-5);
-}
-
-.step-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
-
-  margin: 0;
-  padding: var(--space-2) 0;
-
-  list-style: none;
+  background-color: color-mix(in srgb, var(--color-status-danger) 10%, transparent);
 }
 
 .two-col-grid {

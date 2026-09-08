@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppSectionHeader
  * セクションのタイトル、アイコン、アクションボタン、および区切り線を表示するヘッダーコンポーネント。
@@ -45,7 +45,7 @@ const resolvedDividerVariant = computed(() => {
         class="title"
         :class="[`is-${size}`]"
       >
-        <AppIcon v-if="icon" :name="icon" class="icon" />
+        <AtomsIcon v-if="icon" :name="icon" class="icon" />
         <slot>{{ title }}</slot>
       </component>
       <div v-if="$slots.actions" class="actions">

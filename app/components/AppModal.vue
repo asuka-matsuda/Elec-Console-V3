@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppModal
  * ネイティブの dialog 要素を使用したモーダルコンポーネント。
@@ -121,20 +121,20 @@ onMounted(() => {
       </template>
 
       <template v-else-if="submitFn" #footer>
-        <AppButton
+        <AtomsButton
           variant="secondary"
           :disabled="isSubmitting"
           @click="close"
         >
           {{ cancelText }}
-        </AppButton>
-        <AppButton
+        </AtomsButton>
+        <AtomsButton
           variant="primary"
           :disabled="isSubmitting"
           @click="handleSubmit"
         >
           {{ isSubmitting ? "処理中..." : submitText }}
-        </AppButton>
+        </AtomsButton>
       </template>
     </AppPanel>
   </dialog>

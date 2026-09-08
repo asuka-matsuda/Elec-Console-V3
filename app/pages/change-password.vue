@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ref } from 'vue'
 
 import { useRouter } from '#app'
@@ -83,7 +83,7 @@ const handleChangePassword = async () => {
     </AppFormGroup>
 
     <div class="change-password-page__actions">
-      <AppButton
+      <AtomsButton
         type="submit"
         variant="primary"
         block
@@ -91,7 +91,7 @@ const handleChangePassword = async () => {
       >
         <template v-if="isLoading"> 設定中... </template>
         <template v-else> 設定してはじめる </template>
-      </AppButton>
+      </AtomsButton>
     </div>
   </form>
 </template>

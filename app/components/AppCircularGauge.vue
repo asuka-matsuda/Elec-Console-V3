@@ -72,7 +72,7 @@ const normalizedValue = computed(() => {
 
     background: conic-gradient(
       var(--gauge-color) var(--progress, 0%),
-      rgb(255 255 255 / 8%) 0
+      var(--color-track-bg) 0
     );
     filter: var(--gauge-glow);
 

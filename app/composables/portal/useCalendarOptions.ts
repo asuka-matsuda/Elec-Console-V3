@@ -17,6 +17,7 @@ import type {
   CalendarEvent,
   CalendarSettings,
 } from '~/composables/portal/useCalendar'
+import { DEFAULT_COLOR } from '~/constants/colors'
 
 export interface UseCalendarOptionsConfig {
   events: Ref<CalendarEvent[]>
@@ -53,7 +54,7 @@ export function useCalendarOptions({
   const formattedEvents = computed(() => {
     return events.value.map((evt) => {
       const typeDef = settings.value?.eventTypes?.find(t => t.id === evt.type)
-      const color = typeDef?.color || '#00f0ff'
+      const color = typeDef?.color || DEFAULT_COLOR
 
       return {
         ...evt,

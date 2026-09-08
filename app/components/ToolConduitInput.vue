@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * ToolConduitInput
  * 配管サイズ自動選定ツールの条件入力コンポーネントです。
@@ -78,14 +78,14 @@ const getCableAreaText = (cableIdx: string): string => {
         <h4 class="section-title">
           収容するケーブル
         </h4>
-        <AppButton
+        <AtomsButton
           variant="secondary"
           size="sm"
           @click="emit('add-cable')"
         >
-          <AppIcon name="plus" size="sm" />
+          <AtomsIcon name="plus" size="sm" />
           <span>ケーブルを追加</span>
-        </AppButton>
+        </AtomsButton>
       </div>
 
       <AppTable
@@ -132,7 +132,7 @@ const getCableAreaText = (cableIdx: string): string => {
               {{ getCableAreaText(cable.cableIdx) }}
             </td>
             <td class="action-cell">
-              <AppButton
+              <AtomsButton
                 variant="danger"
                 size="sm"
                 icon-only
@@ -140,8 +140,8 @@ const getCableAreaText = (cableIdx: string): string => {
                 aria-label="削除"
                 @click="emit('remove-cable', cable.id)"
               >
-                <AppIcon name="trash-2" size="sm" />
-              </AppButton>
+                <AtomsIcon name="trash-2" size="sm" />
+              </AtomsButton>
             </td>
           </tr>
         </template>

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { computed } from 'vue'
 
 import type { AnnouncementItem, HistoryItem } from '~/types/components'
@@ -81,7 +81,7 @@ const sections = computed<SectionConfig[]>(() => [
       <AppSectionHeader :title="section.title" :icon="section.icon" size="md" />
 
       <AppPanel v-if="pending" class="status">
-        <AppIcon name="loader" class="u-spin" size="sm" />
+        <AtomsIcon name="loader" class="u-spin" size="sm" />
         <span>{{ section.loadingText }}</span>
       </AppPanel>
 
@@ -92,9 +92,9 @@ const sections = computed<SectionConfig[]>(() => [
           class="item"
         >
           <header>
-            <AppBadge v-if="item.badge" :color="item.badge.color">
+            <AtomsBadge v-if="item.badge" :color="item.badge.color">
               {{ item.badge.text }}
-            </AppBadge>
+            </AtomsBadge>
             <strong>{{ item.title }}</strong>
           </header>
           <time>{{ item.date }}</time>
@@ -103,7 +103,7 @@ const sections = computed<SectionConfig[]>(() => [
       </template>
 
       <AppPanel v-else class="status">
-        <AppIcon name="inbox" size="sm" />
+        <AtomsIcon name="inbox" size="sm" />
         <span>{{ section.emptyText }}</span>
       </AppPanel>
     </section>

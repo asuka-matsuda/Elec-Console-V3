@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ref, watch } from 'vue'
 
 import type { EventFormData } from '~/types/portal'
@@ -129,20 +129,20 @@ const closeModal = () => {
     </div>
 
     <template #footer>
-      <AppButton
+      <AtomsButton
         v-if="isEditing"
         variant="danger"
         style="margin-right: auto"
         @click="handleDelete"
       >
         削除
-      </AppButton>
-      <AppButton variant="secondary" @click="closeModal">
+      </AtomsButton>
+      <AtomsButton variant="secondary" @click="closeModal">
         キャンセル
-      </AppButton>
-      <AppButton variant="primary" @click="handleSave">
+      </AtomsButton>
+      <AtomsButton variant="primary" @click="handleSave">
         保存
-      </AppButton>
+      </AtomsButton>
     </template>
   </AppModal>
 </template>

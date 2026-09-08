@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * Portal Index
  * 現場ポータルのトップ（現場選択など）
@@ -60,9 +60,9 @@ onMounted(async () => {
   <AppPanel class="portal-index">
     <AppSectionHeader title="現場ポータル" variant="hud">
       <template v-if="isAdmin" #actions>
-        <AppButton variant="secondary" size="sm" @click="router.push('/portal/admin')">
+        <AtomsButton variant="secondary" size="sm" @click="router.push('/portal/admin')">
           ポータル管理画面へ
-        </AppButton>
+        </AtomsButton>
       </template>
     </AppSectionHeader>
 
@@ -79,9 +79,9 @@ onMounted(async () => {
         icon="folder"
       >
         <template #badge>
-          <AppBadge :color="site.status === 'in_progress' ? 'var(--color-status-success)' : 'var(--color-status-neutral)'">
+          <AtomsBadge :color="site.status === 'in_progress' ? 'var(--color-status-success)' : 'var(--color-status-neutral)'">
             {{ site.status === 'in_progress' ? '進行中' : '準備中' }}
-          </AppBadge>
+          </AtomsBadge>
         </template>
         <div class="u-text-xs u-text-muted">
           現場ID: {{ site.id }}
@@ -89,9 +89,12 @@ onMounted(async () => {
       </MenuTile>
     </div>
 
-    <div v-else class="u-text-muted u-text-sm">
-      アサインされている現場がありません。
-    </div>
+    <AppEmptyState
+      v-else
+      icon="folder"
+      title="アサインされている現場がありません"
+      description="管理者に現場へのアサインを依頼してください。"
+    />
   </AppPanel>
 </template>
 

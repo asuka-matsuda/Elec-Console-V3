@@ -1,12 +1,12 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
- * AppButton
- * 汎用的なボタン・リンクボタンコンポーネント（ベース）
+ * AtomsButton
+ * [Atoms] 汎用的なボタン・リンクボタンコンポーネント（最小パーツ）
  */
 import { computed } from 'vue'
 
 import { NuxtLink } from '#components'
-import type { AppButtonProps } from '~/types/components'
+import type { AtomsButtonProps } from '~/types/components'
 
 const {
   to,
@@ -19,7 +19,7 @@ const {
   icon,
   iconOnly = false,
   block,
-} = defineProps<AppButtonProps>()
+} = defineProps<AtomsButtonProps>()
 
 const isClickable = computed(() => !disabled && !loading)
 const target = computed(() => to || href)
@@ -32,20 +32,20 @@ const target = computed(() => to || href)
     :type="!target ? type : undefined"
     :disabled="!isClickable ? true : undefined"
     :aria-busy="loading ? true : undefined"
+    class="relative inline-flex shrink-0 items-center justify-center gap-2 btn"
     :class="[
-      'btn',
       `btn--${variant}`,
       `btn--${size}`,
       {
-        'btn--block': block,
+        'w-full btn--block': block,
         'btn--loading': loading,
         'btn--icon-only': iconOnly,
         'is-disabled': !isClickable,
       },
     ]"
   >
-    <AppIcon v-if="loading" name="loader" class="u-spin btn__spinner" />
-    <AppIcon v-else-if="icon" :name="icon" />
+    <AtomsIcon v-if="loading" name="loader" class="u-spin btn__spinner" />
+    <AtomsIcon v-else-if="icon" :name="icon" />
     <slot />
   </component>
 </template>
@@ -58,14 +58,7 @@ const target = computed(() => to || href)
   cursor: pointer;
   user-select: none;
 
-  position: relative;
   z-index: 1;
-
-  display: inline-flex;
-  flex-shrink: 0;
-  gap: var(--space-2);
-  align-items: center;
-  justify-content: center;
 
   min-height: 2.6em;
   padding-block: 0.3em;
@@ -123,6 +116,24 @@ const target = computed(() => to || href)
     }
   }
 
+  &--primary {
+    border-color: transparent;
+    color: hsl(0deg 0% 100%);
+    background-color: var(--btn-color);
+
+    &:not(:disabled, .is-disabled) {
+      &:hover {
+        color: hsl(0deg 0% 100%);
+        background-color: color-mix(in srgb, var(--btn-color) 85%, white);
+      }
+
+      &:active {
+        color: hsl(0deg 0% 100%);
+        background-color: color-mix(in srgb, var(--btn-color) 85%, black);
+      }
+    }
+  }
+
   &--danger {
     --btn-color: var(--color-status-danger);
   }
@@ -132,7 +143,17 @@ const target = computed(() => to || href)
   }
 
   &--secondary {
-    --btn-color: var(--color-status-neutral);
+    --btn-color: var(--color-border);
+
+    color: var(--color-text-main);
+
+    &:not(:disabled, .is-disabled) {
+      &:hover {
+        border-color: var(--color-text-muted);
+        color: var(--color-text-main);
+        background-color: var(--color-bg-hover);
+      }
+    }
   }
 
   &--block {

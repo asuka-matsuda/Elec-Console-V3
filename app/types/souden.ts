@@ -47,6 +47,8 @@ export interface CircuitItem {
   isExcluded?: boolean
   createdAt?: string
   updatedAt?: string
+
+  [key: string]: unknown
 }
 
 export interface PanelOption {

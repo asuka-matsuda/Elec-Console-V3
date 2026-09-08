@@ -19,10 +19,10 @@ export interface EventType {
 }
 
 export const DEFAULT_EVENT_TYPES: EventType[] = [
-  { id: 'work', name: '現場作業', color: '#00f0ff' },
-  { id: 'meeting', name: '打合せ', color: '#0ea5e9' },
-  { id: 'inspection', name: '立会検査', color: '#f59e0b' },
-  { id: 'delivery', name: '納品・搬入', color: '#10b981' },
+  { id: 'work', name: '現場作業', color: '#39c5cf' },
+  { id: 'meeting', name: '打合せ', color: '#2f81f7' },
+  { id: 'inspection', name: '立会検査', color: '#d29922' },
+  { id: 'delivery', name: '納品・搬入', color: '#3fb950' },
 ]
 
 export interface CalendarSettings {

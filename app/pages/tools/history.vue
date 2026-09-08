@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * CalculationHistory
  * 計算履歴ツールのコンポーネントです。過去に実行した各種計算ツールの履歴を一覧表示し、管理します。
@@ -30,15 +30,15 @@ const {
           size="lg"
         >
           <template #actions>
-            <AppButton
+            <AtomsButton
               v-if="historyList.length > 0"
               variant="danger"
               size="sm"
               @click="handleClearAll"
             >
-              <AppIcon name="trash-2" size="sm" />
+              <AtomsIcon name="trash-2" size="sm" />
               全て削除
-            </AppButton>
+            </AtomsButton>
           </template>
         </AppSectionHeader>
       </template>

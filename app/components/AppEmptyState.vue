@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppEmptyState
  * データが0件の場合や検索結果がない場合に表示する共通の空状態コンポーネント
@@ -16,7 +16,7 @@ const {
 
 <template>
   <div class="empty-state" role="status">
-    <AppIcon v-if="icon" :name="icon" class="icon" />
+    <AtomsIcon v-if="icon" :name="icon" class="icon" />
 
     <div class="content">
       <h3 v-if="title || $slots.title" class="title">

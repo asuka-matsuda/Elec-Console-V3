@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * SoudenStepIndicator
  * 送電試験ダッシュボード内のフェーズ遷移ステップインジケーター
@@ -30,7 +30,7 @@ const pct = computed(() => {
 <template>
   <li :class="['step-indicator__item', { 'is-completed': isCompleted, 'is-disabled': disabled }]">
     <div class="step-indicator__node">
-      <AppIcon v-if="isCompleted" name="check" size="sm" />
+      <AtomsIcon v-if="isCompleted" name="check" size="sm" />
       <span v-else>{{ stepNum }}</span>
     </div>
 
@@ -45,14 +45,14 @@ const pct = computed(() => {
         </div>
       </div>
 
-      <AppButton
+      <AtomsButton
         :to="to"
         :variant="isCompleted ? 'success' : 'primary'"
         size="sm"
         :disabled="disabled"
       >
         試験入力
-      </AppButton>
+      </AtomsButton>
     </div>
   </li>
 </template>
@@ -80,7 +80,7 @@ const pct = computed(() => {
     width: 2px;
     height: calc(100% + var(--space-4, 16px));
 
-    background-color: rgb(255 255 255 / 10%);
+    background-color: var(--color-border);
 
     transition: background-color var(--duration-base) var(--ease-base);
   }
@@ -99,7 +99,7 @@ const pct = computed(() => {
     }
 
     &::after {
-      background-color: var(--color-status-success, #22c55e);
+      background-color: var(--color-status-success);
     }
   }
 
@@ -120,15 +120,15 @@ const pct = computed(() => {
 
   width: 32px;
   height: 32px;
-  border: 2px solid rgb(255 255 255 / 20%);
+  border: 2px solid var(--color-border);
   border-radius: 50%;
 
   font-family: var(--font-mono, monospace);
   font-size: var(--text-sm, 0.875rem);
   font-weight: bold;
-  color: var(--color-text-muted, #94a3b8);
+  color: var(--color-text-muted);
 
-  background-color: var(--surface-bg-elevated, #1e293b);
+  background-color: var(--surface-bg-elevated);
 
   transition: var(--transition-base);
 }
@@ -141,16 +141,16 @@ const pct = computed(() => {
   justify-content: space-between;
 
   padding: var(--space-3, 12px) var(--space-4, 16px);
-  border: 1px solid rgb(255 255 255 / 8%);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-md, 8px);
 
-  background-color: rgb(255 255 255 / 3%);
+  background-color: var(--surface-bg-solid);
 
   transition: border-color var(--duration-base) var(--ease-base), background-color var(--duration-base) var(--ease-base);
 
   &:hover {
-    border-color: rgb(255 255 255 / 15%);
-    background-color: rgb(255 255 255 / 5%);
+    border-color: color-mix(in srgb, var(--color-border) 80%, var(--color-text-muted));
+    background-color: var(--color-bg-hover);
   }
 }
 
@@ -171,14 +171,14 @@ const pct = computed(() => {
 
   font-family: var(--font-mono, monospace);
   font-size: var(--text-xs, 0.75rem);
-  color: var(--color-text-muted, #94a3b8);
+  color: var(--color-text-muted);
 
   strong {
-    color: var(--color-text-main, #fff);
+    color: var(--color-text-main);
   }
 }
 
 .step-indicator__pct {
-  color: var(--color-text-secondary, #94a3b8);
+  color: var(--color-text-secondary);
 }
 </style>

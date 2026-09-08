@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * login
  * ポータルログインページ
@@ -63,10 +63,10 @@ const handleLogin = async () => {
       </template>
 
       <div class="login-page__actions">
-        <AppButton type="submit" variant="primary" block :disabled="isLoading">
+        <AtomsButton type="submit" variant="primary" block :disabled="isLoading">
           <template v-if="isLoading"> ログイン中... </template>
           <template v-else> ログイン </template>
-        </AppButton>
+        </AtomsButton>
       </div>
     </form>
   </div>

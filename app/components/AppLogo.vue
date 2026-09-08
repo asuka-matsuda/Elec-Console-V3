@@ -1,9 +1,9 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppLogo
  * アプリケーションのロゴを表示し、クリック時にホームへ遷移またはイベントを発火するコンポーネント。
  */
-import AppIcon from './AppIcon.vue'
+import AtomsIcon from './AtomsIcon.vue'
 
 const emit = defineEmits<{
   (e: 'click'): void
@@ -12,7 +12,7 @@ const emit = defineEmits<{
 
 <template>
   <NuxtLink to="/" class="logo" @click="emit('click')">
-    <AppIcon name="zap" size="md" />
+    <AtomsIcon name="zap" size="md" />
     <span>Elec-Console</span>
   </NuxtLink>
 </template>

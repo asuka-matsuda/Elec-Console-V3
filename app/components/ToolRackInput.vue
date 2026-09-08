@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * ToolRackInput
  * ケーブルラック選定ツールの条件入力コンポーネントです。
@@ -109,7 +109,7 @@ const handleAddCable = () => {
     <!-- 詳細設定（計算パラメータ） -->
     <details class="details-panel">
       <summary class="details-summary">
-        <AppIcon name="sliders" size="sm" />
+        <AtomsIcon name="sliders" size="sm" />
         <span>計算パラメータ設定（余裕係数・離隔など）</span>
       </summary>
       <div class="params-grid">
@@ -164,14 +164,14 @@ const handleAddCable = () => {
         <h4 class="section-title">
           {{ inputs.mode === 'strong' ? '強電ケーブル条件' : '弱電ケーブル条件' }}
         </h4>
-        <AppButton
+        <AtomsButton
           variant="secondary"
           size="sm"
           @click="handleAddCable"
         >
-          <AppIcon name="plus" size="sm" />
+          <AtomsIcon name="plus" size="sm" />
           <span>{{ inputs.mode === 'strong' ? '強電ケーブルを追加' : '弱電ケーブルを追加' }}</span>
-        </AppButton>
+        </AtomsButton>
       </div>
 
       <!-- 強電ケーブルテーブル -->
@@ -220,7 +220,7 @@ const handleAddCable = () => {
               {{ getCableSpecText(cable.cableIdx) }}
             </td>
             <td class="action-cell">
-              <AppButton
+              <AtomsButton
                 variant="danger"
                 size="sm"
                 icon-only
@@ -228,8 +228,8 @@ const handleAddCable = () => {
                 aria-label="削除"
                 @click="emit('remove-strong-cable', cable.id)"
               >
-                <AppIcon name="trash-2" size="sm" />
-              </AppButton>
+                <AtomsIcon name="trash-2" size="sm" />
+              </AtomsButton>
             </td>
           </tr>
         </template>
@@ -281,7 +281,7 @@ const handleAddCable = () => {
               {{ getCableSpecText(cable.cableIdx) }}
             </td>
             <td class="action-cell">
-              <AppButton
+              <AtomsButton
                 variant="danger"
                 size="sm"
                 icon-only
@@ -289,8 +289,8 @@ const handleAddCable = () => {
                 aria-label="削除"
                 @click="emit('remove-weak-cable', cable.id)"
               >
-                <AppIcon name="trash-2" size="sm" />
-              </AppButton>
+                <AtomsIcon name="trash-2" size="sm" />
+              </AtomsButton>
             </td>
           </tr>
         </template>

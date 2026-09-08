@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
- * AppIcon
- * @lucide/vue をベースにしたモダンなアイコンコンポーネントです。
+ * AtomsIcon
+ * [Atoms] @lucide/vue をベースにしたモダンなアイコンコンポーネントです。
  * v-html を使用せず、Vue のコンポーネントとして最適化された SVG を描画します。
  */
 import { computed } from 'vue'
@@ -23,13 +23,13 @@ const iconComponent = computed(() => {
 
 <template>
   <i
-    class="app-icon icon"
+    class="inline-flex shrink-0 items-center justify-center app-icon icon"
     :class="size && `is-${size}`"
   >
     <component
       :is="iconComponent"
       v-if="iconComponent"
-      class="icon-svg"
+      class="w-full h-full icon-svg"
       :stroke-width="2"
       aria-hidden="true"
     />
@@ -38,11 +38,6 @@ const iconComponent = computed(() => {
 
 <style scoped lang="scss">
 .app-icon {
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-
   .icon-svg,
   :deep(svg) {
     width: 100%;

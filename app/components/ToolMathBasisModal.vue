@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * ToolMathBasisModal
  * 計算ツールの計算根拠（数式やステップ）を表示するためのモーダルコンポーネントです。
@@ -111,9 +111,9 @@ const handleClose = () => {
     </div>
 
     <template #footer>
-      <AppButton variant="secondary" size="sm" @click="handleClose">
+      <AtomsButton variant="secondary" size="sm" @click="handleClose">
         閉じる
-      </AppButton>
+      </AtomsButton>
     </template>
   </AppModal>
 </template>

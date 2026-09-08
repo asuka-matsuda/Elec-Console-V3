@@ -70,7 +70,7 @@ const tiles = computed(() => {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md, 8px);
 
-  background-color: rgb(255 255 255 / 2%);
+  background-color: var(--surface-bg-solid);
 
   &__grid {
     overflow-y: auto;
@@ -87,17 +87,17 @@ const tiles = computed(() => {
     width: 10px;
     height: 10px;
     padding: 0;
-    border: 1px solid rgb(255 255 255 / 15%);
+    border: 1px solid var(--color-tile-empty-border);
     border-radius: 2px;
 
-    background-color: rgb(255 255 255 / 10%);
+    background-color: var(--color-tile-empty-bg);
 
     transition: transform var(--duration-fast) var(--ease-base), background-color var(--duration-fast) var(--ease-base), border-color var(--duration-fast) var(--ease-base);
 
     &:hover {
       z-index: 2;
       transform: scale(1.4);
-      border-color: #fff;
+      border-color: var(--color-tile-hover-border);
     }
 
     &.is-completed {
@@ -109,9 +109,9 @@ const tiles = computed(() => {
     }
 
     &.is-excluded {
-      border-color: rgb(148 163 184 / 30%);
+      border-color: var(--color-tile-excluded-border);
       opacity: 0.5;
-      background-color: rgb(148 163 184 / 20%);
+      background-color: var(--color-tile-excluded-bg);
     }
   }
 }

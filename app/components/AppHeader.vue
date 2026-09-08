@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppHeader
  * アプリケーションのヘッダー部分（パンくずリストやアクション等）を表示するコンポーネントです。
@@ -19,7 +19,7 @@ const emit = defineEmits<{
 <template>
   <header class="header">
     <div class="main">
-      <AppIconButton
+      <MoleculesIconButton
         name="menu"
         class="menu-btn"
         @click="emit('toggle-sidebar')"

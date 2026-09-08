@@ -13,28 +13,66 @@
   --icon-sb-right: #{$icon-chevron-right-light};
   --icon-sb-right-hover: #{$icon-chevron-right-light-hover};
 
-  // ライトモードカラー（紙とインクのような高い視認性と上質さ）
-  --color-main-bg-base: 220 20% 98%;
-  --color-overlay-base: 222 25% 12%;
-  --color-text-main-base: 222 30% 13%;
-  --color-text-secondary-base: 222 16% 36%;
-  --color-text-muted-base: 222 12% 52%;
-  --color-text-disabled-base: 220 10% 75%;
-  --color-border-main-base: 220 16% 86%;
-  --surface-bg: hsl(0deg 0% 100% / 88%);
+  // 1. GitHub Light Canvas & Surface 構造 (白 on 白のフラット化解消)
+  --color-main-bg-base: 210 29% 97%; // GitHub Canvas Subtle (#f6f8fa)
+  --color-overlay-base: 213 13% 14%;
+  --color-text-main-base: 213 13% 14%; // GitHub Text (#1f2328)
+  --color-text-secondary-base: 212 8% 38%; // GitHub Secondary (#57606a - くっきりとした副情報)
+  --color-text-muted-base: 213 9% 46%; // GitHub Muted (#6e7681 - 視認性十分な注記)
+  --color-text-disabled-base: 211 12% 70%; // GitHub Disabled (#afb8c1)
+  --color-border-main-base: 210 18% 85%; // GitHub Border (#d0d7de)
+  --surface-bg: hsl(0deg 0% 100%); // パネル・カードはクリーンな白
   --surface-bg-elevated: hsl(0deg 0% 100%);
   --surface-bg-solid: hsl(0deg 0% 100%);
-  --color-border-subtle: hsl(220deg 14% 92%);
+  --color-border-subtle: hsl(210deg 18% 87%); // GitHub Border Muted (#d8dee4)
 
-  // セマンティックカラー（白背景でくっきり映えるディープインク調）
-  --color-category-main-base: 238 60% 48%;
-  --color-category-tool-base: 196 90% 30%;
-  --color-category-database-base: 215 85% 38%;
-  --color-category-reference-base: 268 70% 45%;
-  --color-category-management-base: 165 80% 28%;
-  --color-overlay-dark: hsl(220deg 20% 10% / 40%);
-  --color-overlay-light: hsl(0deg 0% 100% / 60%);
-  --shadow-color: hsl(222deg 25% 10% / 12%);
+  // 2. セマンティックカラー (GitHub Primer Light)
+  --color-category-main-base: 214 92% 45%; // GitHub Blue (#0969da)
+  --color-category-tool-base: 213 94% 35%; // GitHub Deep Cyan (#0550ae)
+  --color-category-database-base: 214 92% 45%; // GitHub Blue (#0969da)
+  --color-category-reference-base: 260 67% 59%; // GitHub Purple (#8250df)
+  --color-category-management-base: 137 66% 30%; // GitHub Green (#1a7f37)
+  --color-accent-main-base: 24 100% 37%; // GitHub Orange (#bc4c00)
+  --color-status-success-base: 137 66% 30%; // GitHub Green (#1a7f37)
+  --color-status-warning-base: 40 100% 30%; // GitHub Attention (#9a6700)
+  --color-status-danger-base: 356 72% 47%; // GitHub Red (#cf222e)
+  --color-status-stopped-base: 213 9% 46%; // GitHub Inactive (#6e7681)
+  --color-status-neutral-base: 212 8% 38%; // GitHub Muted Gray (#57606a)
+  --color-status-emphasis-base: 356 72% 47%;
+
+  // 3. 専用セマンティックトークン (ライトモード)
+  --color-track-bg: hsl(210deg 18% 90%); // #e1e4e8
+  --color-tile-empty-bg: hsl(210deg 18% 93%); // GitHub Contributions empty (#ebedf0)
+  --color-tile-empty-border: hsl(210deg 18% 85% / 80%);
+  --color-tile-hover-border: hsl(213deg 13% 14%);
+  --color-tile-excluded-bg: hsl(210deg 18% 88% / 50%);
+  --color-tile-excluded-border: hsl(210deg 18% 78% / 50%);
+  --color-selection-bg: hsl(214deg 92% 45% / 12%);
+  --color-selection-outline: hsl(214deg 92% 45%);
+  --color-completed-row-bg: hsl(137deg 66% 30% / 8%);
+
+  --color-bg-hover: hsl(210deg 29% 94%); // #edf0f2
+  --color-overlay-dark: hsl(213deg 13% 14% / 40%);
+  --color-overlay-light: hsl(0deg 0% 0% / 6%);
+
+  // 4. GitHub Light 用シャドウ & グローの完全無効化 (滲みの完全撤廃)
+  --shadow-color: hsl(213deg 13% 14% / 10%);
+  --shadow-elevation-sm: 0 1px 3px hsl(213deg 13% 14% / 12%), 0 1px 2px hsl(213deg 13% 14% / 6%);
+  --shadow-elevation-md: 0 3px 6px hsl(213deg 13% 14% / 12%), 0 2px 4px hsl(213deg 13% 14% / 8%);
+  --shadow-elevation-lg: 0 8px 24px hsl(213deg 13% 14% / 12%);
+  --shadow-sink: inset 0 1px 2px hsl(213deg 13% 14% / 8%);
+
+  --text-glow-sm: none;
+  --text-glow-md: none;
+  --shadow-glow-base: none;
+  --drop-shadow-glow-xs: none;
+  --drop-shadow-glow-sm: none;
+  --drop-shadow-glow: none;
+  --drop-shadow-glow-lg: none;
+
+  --shadow-glow-hover: 0 1px 3px hsl(213deg 13% 14% / 12%);
+  --shadow-glow-focus: 0 0 0 3px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 30%, transparent);
+  --shadow-glow-active: inset 0 1px 2px hsl(213deg 13% 14% / 15%);
 
   color-scheme: light;
 }
@@ -45,8 +83,4 @@ body {
 
 :root {
   color-scheme: dark;
-}
-
-html[data-theme="light"] body {
-  background-color: hsl(240deg 5% 96%);
 }

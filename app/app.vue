@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { watchEffect } from 'vue'
 
 import { useModal } from '~/composables/useModal'
@@ -35,18 +35,18 @@ if (import.meta.client) {
   >
     {{ confirmMessage }}
     <template #footer>
-      <AppButton
+      <AtomsButton
         variant="secondary"
         @click="onConfirmCancel"
       >
         {{ confirmCancelText }}
-      </AppButton>
-      <AppButton
+      </AtomsButton>
+      <AtomsButton
         :variant="confirmIntent"
         @click="onConfirmExecute"
       >
         {{ confirmBtnText }}
-      </AppButton>
+      </AtomsButton>
     </template>
   </AppModal>
 </template>

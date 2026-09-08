@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import type { AppIconButtonProps } from '~/types/components'
+/**
+ * MoleculesIconButton
+ * [Molecules] AtomsButton と AtomsIcon を組み合わせた、アイコン専用ボタンコンポーネント
+ */
+import type { MoleculesIconButtonProps } from '~/types/components'
 
-import AppButton from './AppButton.vue'
-
-const props = withDefaults(defineProps<AppIconButtonProps>(), {
+const props = withDefaults(defineProps<MoleculesIconButtonProps>(), {
   type: 'button',
   size: 'md',
   variant: 'primary',
@@ -11,15 +13,14 @@ const props = withDefaults(defineProps<AppIconButtonProps>(), {
 </script>
 
 <template>
-  <AppButton v-bind="props" class="icon-btn">
-    <AppIcon :name="name" />
-  </AppButton>
+  <AtomsButton v-bind="props" class="p-0 icon-btn">
+    <AtomsIcon :name="name" />
+  </AtomsButton>
 </template>
 
 <style scoped lang="scss">
 .icon-btn {
   width: var(--size-control-sm);
-  padding: 0;
 
   :deep(.icon),
   .icon {

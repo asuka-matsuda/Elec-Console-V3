@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppHeaderUser
  * ヘッダーに表示されるユーザー情報、アバター、通知アイコン、ログアウトアクションのコンポーネントです。
@@ -9,7 +9,7 @@ const { currentUser, logout } = useAuth()
 <template>
   <div class="header-user">
     <div class="avatar" aria-hidden="true">
-      <AppIcon
+      <AtomsIcon
         name="user"
         size="sm"
         style="color: var(--color-main-bg)"
@@ -22,13 +22,13 @@ const { currentUser, logout } = useAuth()
           : "ゲスト"
       }}
     </span>
-    <AppButton
+    <AtomsButton
       variant="secondary"
       size="sm"
       @click="logout"
     >
       ログアウト
-    </AppButton>
+    </AtomsButton>
   </div>
 </template>
 

@@ -1,23 +1,23 @@
-export type AppButtonVariant = 'primary' | 'secondary' | 'danger' | 'success'
+export type AtomsButtonVariant = 'primary' | 'secondary' | 'danger' | 'success'
 
 export interface BaseButtonProps {
   to?: string
   href?: string
   type?: 'button' | 'submit' | 'reset'
   size?: 'sm' | 'md'
-  variant?: AppButtonVariant
+  variant?: AtomsButtonVariant
   block?: boolean
   disabled?: boolean
 }
 
-export interface AppButtonProps extends BaseButtonProps {
+export interface AtomsButtonProps extends BaseButtonProps {
   icon?: string
   iconRight?: string
   iconOnly?: boolean
   loading?: boolean
 }
 
-export interface AppIconButtonProps extends BaseButtonProps {
+export interface MoleculesIconButtonProps extends BaseButtonProps {
   name: string
   label?: string
 }

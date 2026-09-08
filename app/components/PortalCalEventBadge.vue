@@ -13,7 +13,7 @@ const props = withDefaults(
     allDay: false,
     start: null,
     end: null,
-    color: '#00f0ff',
+    color: 'var(--theme-accent)',
   },
 )
 

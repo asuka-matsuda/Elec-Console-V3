@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { computed, ref } from 'vue'
 
 import { useTodo } from '~/composables/portal/useTodo'
@@ -45,9 +45,9 @@ const sortedTodos = computed(() => {
         v-model="newTask"
         placeholder="新しいタスクを入力..."
       />
-      <AppButton type="submit" variant="primary" icon-only>
-        <AppIcon name="plus" />
-      </AppButton>
+      <AtomsButton type="submit" variant="primary" icon-only>
+        <AtomsIcon name="plus" />
+      </AtomsButton>
     </form>
 
     <ul class="personal-todo__list">
@@ -62,14 +62,14 @@ const sortedTodos = computed(() => {
           :label="todo.text"
           @update:model-value="toggleTodo(todo.id)"
         />
-        <AppButton
+        <AtomsButton
           variant="secondary"
           size="sm"
           icon-only
           @click="deleteTodo(todo.id)"
         >
-          <AppIcon name="trash-2" />
-        </AppButton>
+          <AtomsIcon name="trash-2" />
+        </AtomsButton>
       </li>
       <AppEmptyState
         v-if="todos.length === 0"

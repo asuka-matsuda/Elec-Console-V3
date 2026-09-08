@@ -134,27 +134,27 @@
   --icon-size-xxl: 40px;
 
   // ==========================================================================
-  // 5. カラーベース (HSL Raw Values) & セマンティックカラー
+  // 5. カラーベース (HSL Raw Values) & セマンティックカラー (GitHub Primer)
   // ==========================================================================
-  --color-category-main-base: 238 60% 64%;
-  --color-category-tool-base: 189 94% 43%;
-  --color-category-database-base: 210 91% 60%;
-  --color-category-reference-base: 271 91% 65%;
-  --color-category-management-base: 180 75% 40%;
-  --color-accent-main-base: 25 95% 53%;
-  --color-status-success-base: 141 79% 58%;
-  --color-status-warning-base: 38 92% 56%;
-  --color-status-danger-base: 0 84% 60%;
-  --color-status-stopped-base: 240 4% 46%;
-  --color-status-neutral-base: 240 5% 65%;
-  --color-status-emphasis-base: 0 100% 75%;
-  --color-main-bg-base: 222 20% 6%;
-  --color-overlay-base: 240 5% 90%;
-  --color-text-main-base: 220 20% 96%;
-  --color-text-secondary-base: 220 14% 74%;
-  --color-text-muted-base: 220 10% 54%;
-  --color-text-disabled-base: 220 8% 35%;
-  --color-border-main-base: 220 14% 18%;
+  --color-category-main-base: 215 93% 58%; // GitHub Blue (#2f81f7)
+  --color-category-tool-base: 184 60% 52%; // GitHub Cyan (#39c5cf)
+  --color-category-database-base: 213 100% 67%; // GitHub Sky (#58a6ff)
+  --color-category-reference-base: 265 90% 71%; // GitHub Purple (#a371f7)
+  --color-category-management-base: 128 57% 62%; // GitHub Green (#3fb950)
+  --color-accent-main-base: 25 87% 59%; // GitHub Orange (#f0883e)
+  --color-status-success-base: 128 57% 62%; // GitHub Green (#3fb950)
+  --color-status-warning-base: 41 73% 48%; // GitHub Attention / Yellow (#d29922)
+  --color-status-danger-base: 3 93% 63%; // GitHub Severe / Red (#f85149)
+  --color-status-stopped-base: 214 10% 31%; // GitHub Inactive (#484f58)
+  --color-status-neutral-base: 215 8% 59%; // GitHub Muted Gray (#8b949e)
+  --color-status-emphasis-base: 3 93% 63%;
+  --color-main-bg-base: 216 28% 7%; // GitHub Dark Canvas (#0d1117)
+  --color-overlay-base: 210 34% 96%;
+  --color-text-main-base: 210 34% 96%; // GitHub Dark Text (#f0f6fc)
+  --color-text-secondary-base: 215 8% 59%; // GitHub Dark Secondary (#8b949e)
+  --color-text-muted-base: 215 8% 47%; // GitHub Dark Muted (#6e7681)
+  --color-text-disabled-base: 214 10% 31%; // GitHub Dark Disabled (#484f58)
+  --color-border-main-base: 213 12% 21%; // GitHub Dark Border (#30363d)
 
   // セマンティックカラー定義
   --color-category-main: hsl(var(--color-category-main-base));
@@ -171,26 +171,40 @@
   --color-status-neutral: hsl(var(--color-status-neutral-base));
   --color-status-emphasis: hsl(var(--color-status-emphasis-base));
   --color-main-bg: hsl(var(--color-main-bg-base));
-  --surface-bg: hsl(222deg 18% 10% / 70%);
-  --surface-bg-elevated: hsl(222deg 16% 14% / 80%);
-  --surface-bg-solid: hsl(222deg 18% 10%);
+  --surface-bg: hsl(216deg 21% 11% / 80%);
+  --surface-bg-elevated: hsl(216deg 21% 13%);
+  --surface-bg-solid: hsl(216deg 21% 11%);
   --color-overlay: hsl(var(--color-overlay-base));
   --color-text-main: hsl(var(--color-text-main-base));
   --color-text-secondary: hsl(var(--color-text-secondary-base));
   --color-text-muted: hsl(var(--color-text-muted-base));
   --color-text-disabled: hsl(var(--color-text-disabled-base));
   --color-border: hsl(var(--color-border-main-base));
-  --color-border-subtle: hsl(220deg 14% 14%);
+  --color-border-subtle: hsl(215deg 14% 15%);
+
+  // 専用セマンティックトークン (ハードコード撲滅用)
+  --color-track-bg: hsl(215deg 14% 19%);
+  --color-tile-empty-bg: hsl(216deg 21% 15%);
+  --color-tile-empty-border: hsl(213deg 12% 21%);
+  --color-tile-hover-border: hsl(210deg 34% 96%);
+  --color-tile-excluded-bg: hsl(215deg 14% 20% / 50%);
+  --color-tile-excluded-border: hsl(215deg 14% 30% / 50%);
+  --color-selection-bg: hsl(215deg 93% 58% / 18%);
+  --color-selection-outline: hsl(215deg 93% 58%);
+  --color-completed-row-bg: hsl(128deg 57% 62% / 8%);
 
   // ボーダー & Radius
   --border-width-base: 1px;
   --border-width-thick: 2px;
-  --radius-sm: 4px;
+  --radius-sm: 6px; // GitHub rounded-md standard (6px)
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
 
   // エフェクト & インタラクション背景
   --color-bg-hover: color-mix(in srgb, var(--color-overlay) 6%, transparent);
-  --color-overlay-dark: hsl(0deg 0% 0% / 60%);
-  --color-overlay-light: hsl(0deg 0% 0% / 30%);
+  --color-overlay-dark: hsl(216deg 28% 7% / 70%);
+  --color-overlay-light: hsl(0deg 0% 100% / 15%);
   --blur-xs: 2px;
   --blur-sm: 4px;
   --blur-md: 8px;
@@ -198,21 +212,21 @@
   --blur-xl: 16px;
 
   // ==========================================================================
-  // 6. シャドウ & グロー演出 (HUD / Cyber Visuals)
+  // 6. シャドウ & グロー演出 (GitHub Primer Enhanced)
   // ==========================================================================
-  --shadow-color: color-mix(in srgb, black 90%, transparent);
+  --shadow-color: color-mix(in srgb, black 85%, transparent);
   --shadow-elevation-sm:
     0 1px 2px color-mix(in srgb, var(--shadow-color) 40%, transparent),
-    0 4px 8px color-mix(in srgb, var(--shadow-color) 20%, transparent),
-    inset 0 1px 0 rgb(255 255 255 / 5%);
+    0 3px 6px color-mix(in srgb, var(--shadow-color) 20%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--color-overlay) 5%, transparent);
   --shadow-elevation-md:
     0 2px 4px color-mix(in srgb, var(--shadow-color) 30%, transparent),
     0 8px 16px color-mix(in srgb, var(--shadow-color) 20%, transparent),
-    inset 0 1px 0 rgb(255 255 255 / 5%);
+    inset 0 1px 0 color-mix(in srgb, var(--color-overlay) 5%, transparent);
   --shadow-elevation-lg:
     0 4px 8px color-mix(in srgb, var(--shadow-color) 20%, transparent),
     0 16px 32px color-mix(in srgb, var(--shadow-color) 20%, transparent),
-    inset 0 1px 0 rgb(255 255 255 / 5%);
+    inset 0 1px 0 color-mix(in srgb, var(--color-overlay) 5%, transparent);
   --shadow-sink: inset 0 2px 4px 0
     color-mix(in srgb, var(--shadow-color) 60%, transparent);
   --shadow-modal: var(--shadow-elevation-lg);
@@ -224,14 +238,11 @@
     0 0 8px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 20%, transparent),
     var(--shadow-elevation-sm);
   --shadow-glow-focus:
-    0 0 0 1px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 70%, transparent),
-    0 0 6px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 50%, transparent),
-    0 0 12px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 20%, transparent),
+    0 0 0 3px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 35%, transparent),
     var(--shadow-elevation-sm);
   --shadow-glow-active:
-    0 0 4px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 60%, transparent),
-    0 0 8px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 30%, transparent),
-    inset 0 0 2px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 40%, transparent),
+    0 0 4px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 50%, transparent),
+    inset 0 0 2px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 30%, transparent),
     var(--shadow-elevation-sm);
 
   // ナビゲーション / サイドバー用 投影シャドウ

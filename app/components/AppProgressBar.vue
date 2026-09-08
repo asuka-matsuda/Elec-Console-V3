@@ -70,7 +70,7 @@ const calculatedPct = computed(() => {
 
   &__label {
     font-weight: var(--font-weight-medium, 500);
-    color: var(--color-text-main, #fff);
+    color: var(--color-text-main);
   }
 
   &__meta {
@@ -80,26 +80,26 @@ const calculatedPct = computed(() => {
     justify-content: flex-end;
 
     font-family: var(--font-mono, monospace);
-    color: var(--color-text-muted, #64748b);
+    color: var(--color-text-muted);
   }
 
   &__count {
     strong {
-      color: var(--color-text-main, #fff);
+      color: var(--color-text-main);
     }
   }
 
   &__pct {
-    color: var(--color-text-main, #fff);
+    color: var(--color-text-main);
   }
 
   &__unit {
-    color: var(--color-text-secondary, #94a3b8);
+    color: var(--color-text-secondary);
   }
 
   &__note {
     font-size: 10px;
-    color: var(--color-text-muted, #64748b);
+    color: var(--color-text-muted);
   }
 }
 
@@ -108,18 +108,17 @@ const calculatedPct = computed(() => {
 
   width: 100%;
   height: 8px;
-  border-radius: var(--radius-full, 9999px);
+  border-radius: var(--radius-full);
 
-  background-color: rgb(255 255 255 / 8%);
+  background-color: var(--color-track-bg);
 
   &__fill {
-
     --glow-color: var(--color-status-success);
 
     height: 100%;
-    border-radius: var(--radius-full, 9999px);
+    border-radius: var(--radius-full);
 
-    background: linear-gradient(90deg, var(--color-status-success), color-mix(in srgb, var(--color-status-success) 80%, white));
+    background: linear-gradient(90deg, var(--color-status-success), color-mix(in srgb, var(--color-status-success) 85%, var(--color-overlay)));
     box-shadow: var(--shadow-glow-sm);
 
     transition: width var(--duration-slow) var(--ease-out);
@@ -127,28 +126,28 @@ const calculatedPct = computed(() => {
     &--main {
       --glow-color: var(--color-category-main);
 
-      background: linear-gradient(90deg, var(--color-category-main), color-mix(in srgb, var(--color-category-main) 80%, white));
+      background: linear-gradient(90deg, var(--color-category-main), color-mix(in srgb, var(--color-category-main) 85%, var(--color-overlay)));
       box-shadow: var(--shadow-glow-sm);
     }
 
     &--tool {
       --glow-color: var(--color-category-tool);
 
-      background: linear-gradient(90deg, var(--color-category-tool), color-mix(in srgb, var(--color-category-tool) 80%, white));
+      background: linear-gradient(90deg, var(--color-category-tool), color-mix(in srgb, var(--color-category-tool) 85%, var(--color-overlay)));
       box-shadow: var(--shadow-glow-sm);
     }
 
     &--success {
       --glow-color: var(--color-status-success);
 
-      background: linear-gradient(90deg, var(--color-status-success), color-mix(in srgb, var(--color-status-success) 80%, white));
+      background: linear-gradient(90deg, var(--color-status-success), color-mix(in srgb, var(--color-status-success) 85%, var(--color-overlay)));
       box-shadow: var(--shadow-glow-sm);
     }
 
     &--warning {
       --glow-color: var(--color-status-warning);
 
-      background: linear-gradient(90deg, var(--color-status-warning), color-mix(in srgb, var(--color-status-warning) 80%, white));
+      background: linear-gradient(90deg, var(--color-status-warning), color-mix(in srgb, var(--color-status-warning) 85%, var(--color-overlay)));
       box-shadow: var(--shadow-glow-sm);
     }
   }

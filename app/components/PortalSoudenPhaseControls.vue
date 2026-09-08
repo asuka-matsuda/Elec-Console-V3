@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * SoudenPhaseControls
  * 送電試験（フェーズ1〜3）共通のコントロールパネルコンポーネント。
@@ -57,9 +57,9 @@ const emit = defineEmits<{
           <!-- 追加フィルター（Phase 2 基準値表示などのスロット） -->
           <slot name="filters-extra" />
 
-          <AppBadge color="var(--theme-accent)">
+          <AtomsBadge color="var(--theme-accent)">
             対象回路: {{ stats.allCount }} 件
-          </AppBadge>
+          </AtomsBadge>
         </div>
       </div>
 

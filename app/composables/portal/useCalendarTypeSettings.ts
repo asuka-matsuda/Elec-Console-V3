@@ -3,7 +3,7 @@ import { ref, watch } from 'vue'
 
 import type { EventType } from '~/composables/portal/useCalendar'
 import { DEFAULT_EVENT_TYPES } from '~/composables/portal/useCalendar'
-import { DEFAULT_COLOR_PRESETS } from '~/constants/colors'
+import { DEFAULT_COLOR, DEFAULT_COLOR_PRESETS } from '~/constants/colors'
 
 export interface UseCalendarTypeSettingsParams {
   eventTypes: Ref<EventType[]> | ComputedRef<EventType[]>
@@ -46,7 +46,7 @@ export function useCalendarTypeSettings(params: UseCalendarTypeSettingsParams) {
     types.value.push({
       id: newId,
       name: '',
-      color: defaultPreset ? defaultPreset.value : '#00f0ff',
+      color: defaultPreset?.value ?? DEFAULT_COLOR,
     })
   }
 

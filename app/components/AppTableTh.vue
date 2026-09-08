@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends Record<string, unknown>">
+﻿<script setup lang="ts" generic="T extends Record<string, unknown>">
 import { computed } from 'vue'
 
 import type { TableColumn } from '~/types/components'
@@ -53,7 +53,7 @@ const handleClick = () => {
       }"
     >
       <span class="table__th-text">{{ column.label }}</span>
-      <AppIcon
+      <AtomsIcon
         v-if="column.sortable"
         :name="sortIconName"
         size="sm"
@@ -73,12 +73,12 @@ th {
   border-right: var(--border-width-base) solid var(--color-border);
   border-bottom: calc(var(--border-width-base) * 2) solid var(--color-border);
 
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
-  color: var(--color-text-muted);
+  color: var(--color-text-secondary);
 
-  background-color: var(--surface-bg-elevated);
+  background-color: var(--color-bg-hover);
   backdrop-filter: blur(var(--blur-md));
 
   &:last-child {

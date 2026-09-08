@@ -360,7 +360,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   border-radius: var(--radius-sm);
 
   font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
+  color: var(--color-text-main);
   text-overflow: ellipsis;
   white-space: nowrap;
 
@@ -380,21 +380,16 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 
   &:not(:is(.is-disabled, .is-placeholder)) {
     &:is(:hover, .is-focused) {
-      --glow-color: var(--theme-accent);
-
       color: var(--theme-accent);
-      background-color: color-mix(in srgb, var(--theme-accent) 15%, transparent);
-      box-shadow: var(--shadow-glow-hover);
-      transition: var(--transition-glow);
+      background-color: var(--color-selection-bg);
+      transition: background-color var(--duration-fast) var(--ease-base);
     }
 
     &.is-selected {
-      --glow-color: var(--theme-accent);
-
+      font-weight: var(--font-weight-semibold);
       color: var(--theme-accent);
-      background-color: color-mix(in srgb, var(--theme-accent) 15%, transparent);
-      box-shadow: var(--shadow-glow-hover);
-      transition: var(--transition-glow);
+      background-color: var(--color-selection-bg);
+      transition: background-color var(--duration-fast) var(--ease-base);
     }
   }
 }

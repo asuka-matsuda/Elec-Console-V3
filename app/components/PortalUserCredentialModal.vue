@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { printUserCredential } from '~/utils/printUserCredential'
 
 const isOpen = defineModel<boolean>({ default: false })
@@ -56,17 +56,17 @@ const handleCopyPassword = () => {
     </div>
 
     <template #footer>
-      <AppButton
+      <AtomsButton
         variant="secondary"
         icon="document"
         @click="handleCopyPassword"
       >
         PWをコピー
-      </AppButton>
-      <AppButton variant="secondary" icon="document" @click="handlePrint">
+      </AtomsButton>
+      <AtomsButton variant="secondary" icon="document" @click="handlePrint">
         印刷する
-      </AppButton>
-      <AppButton variant="primary" @click="isOpen = false"> 閉じる </AppButton>
+      </AtomsButton>
+      <AtomsButton variant="primary" @click="isOpen = false"> 閉じる </AtomsButton>
     </template>
   </AppModal>
 </template>

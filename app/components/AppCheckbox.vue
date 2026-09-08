@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppCheckbox
  * 真偽値を選択するためのチェックボックスコンポーネント
@@ -28,8 +28,8 @@ const {
       :disabled="disabled"
     />
     <span class="box">
-      <AppIcon name="check" class="icon is-check" />
-      <AppIcon name="minus" class="icon is-dash" />
+      <AtomsIcon name="check" class="icon is-check" />
+      <AtomsIcon name="minus" class="icon is-dash" />
     </span>
     <span v-if="label || $slots.default" class="label">
       <slot>{{ label }}</slot>

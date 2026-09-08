@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
- * AppBadge
- * 状態、カテゴリ、タグなどを視覚的に示すためのバッジコンポーネント。
+ * AtomsBadge
+ * [Atoms] 状態、カテゴリ、タグなどを視覚的に示すためのバッジコンポーネント。
  */
 const { color = 'var(--color-text-muted)' } = defineProps<{
   color?: string
@@ -10,7 +10,7 @@ const { color = 'var(--color-text-muted)' } = defineProps<{
 
 <template>
   <span
-    class="badge"
+    class="relative inline-flex items-center justify-center py-0.5 px-1 whitespace-nowrap badge"
     :style="{ '--glow-color': color }"
   >
     <slot />
@@ -23,14 +23,8 @@ const { color = 'var(--color-text-muted)' } = defineProps<{
 
   user-select: none;
 
-  position: relative;
   z-index: 1;
 
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: var(--space-0-5) var(--space-1);
   border: var(--border-width-base) solid color-mix(in srgb, var(--glow-color) 60%, transparent);
   border-radius: var(--radius-sm);
 
@@ -41,7 +35,6 @@ const { color = 'var(--color-text-muted)' } = defineProps<{
   text-shadow: var(--text-glow-sm);
   text-transform: uppercase;
   letter-spacing: var(--tracking-wider);
-  white-space: nowrap;
 
   box-shadow: var(--shadow-glow-base);
 

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { useLocalStorage } from '@vueuse/core'
 import { computed, onMounted, watch } from 'vue'
 
@@ -85,14 +85,14 @@ onMounted(() => {
       <aside class="site-dashboard__sidebar" aria-label="現場関連機能">
         <PortalPersonalTodo :site-id="siteId" />
 
-        <AppButton
+        <AtomsButton
           :to="`/portal/${siteId}/souden`"
           variant="primary"
           block
         >
-          <AppIcon name="zap" size="sm" />
+          <AtomsIcon name="zap" size="sm" />
           送電試験ダッシュボードへ
-        </AppButton>
+        </AtomsButton>
       </aside>
     </div>
   </div>

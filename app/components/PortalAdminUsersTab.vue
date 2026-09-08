@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * PortalAdminUsersTab
  * ポータル管理 - ユーザー管理タブ
@@ -103,13 +103,13 @@ const confirmResetPassword = async (row: User) => {
   <AppPanel class="admin-users">
     <AppSectionHeader title="ユーザー一覧">
       <template #actions>
-        <AppButton
+        <AtomsButton
           variant="primary"
           icon="plus"
           @click="isCreateModalOpen = true"
         >
           新規ユーザー登録
-        </AppButton>
+        </AtomsButton>
       </template>
     </AppSectionHeader>
 
@@ -124,7 +124,7 @@ const confirmResetPassword = async (row: User) => {
         {{ row.lastName }} {{ row.firstName }}
       </template>
       <template #cell-role="{ row }">
-        <AppBadge
+        <AtomsBadge
           :color="
             row.role === 'admin'
               ? 'var(--color-status-danger)'
@@ -134,16 +134,16 @@ const confirmResetPassword = async (row: User) => {
           "
         >
           {{ row.role }}
-        </AppBadge>
+        </AtomsBadge>
       </template>
       <template #cell-lastLoginAt="{ row }">
         <div class="admin-users__login-cell">
-          <AppBadge
+          <AtomsBadge
             v-if="row.requirePasswordReset"
             color="var(--color-status-danger)"
           >
             PWリセット要求
-          </AppBadge>
+          </AtomsBadge>
           <span class="admin-users__meta">{{
             formatLastLogin(row)
           }}</span>
@@ -151,28 +151,28 @@ const confirmResetPassword = async (row: User) => {
       </template>
       <template #cell-actions="{ row }">
         <div class="admin-users__actions">
-          <AppButton
+          <AtomsButton
             variant="secondary"
             size="sm"
             @click="handleOpenAssign(row)"
           >
             現場アサイン
-          </AppButton>
-          <AppButton
+          </AtomsButton>
+          <AtomsButton
             variant="secondary"
             size="sm"
             @click="confirmResetPassword(row)"
           >
             PW初期化
-          </AppButton>
-          <AppButton
+          </AtomsButton>
+          <AtomsButton
             variant="danger"
             size="sm"
             :disabled="row.id === 'master'"
             @click="confirmDelete(row)"
           >
             削除
-          </AppButton>
+          </AtomsButton>
         </div>
       </template>
     </AppTable>

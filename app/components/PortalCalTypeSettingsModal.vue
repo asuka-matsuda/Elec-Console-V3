@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { toRef } from 'vue'
 
 import type { EventType } from '~/composables/portal/useCalendar'
@@ -54,7 +54,7 @@ const {
               />
             </div>
 
-            <AppButton
+            <AtomsButton
               v-if="types.length > 1"
               variant="danger"
               size="sm"
@@ -79,24 +79,24 @@ const {
       </ul>
 
       <div class="type-settings__add">
-        <AppButton
+        <AtomsButton
           variant="secondary"
           icon="plus"
           size="sm"
           @click="handleAddType"
         >
           種別を追加
-        </AppButton>
+        </AtomsButton>
       </div>
     </div>
 
     <template #footer>
-      <AppButton variant="secondary" @click="isOpen = false">
+      <AtomsButton variant="secondary" @click="isOpen = false">
         キャンセル
-      </AppButton>
-      <AppButton variant="primary" icon="check" @click="handleSave">
+      </AtomsButton>
+      <AtomsButton variant="primary" icon="check" @click="handleSave">
         設定を保存
-      </AppButton>
+      </AtomsButton>
     </template>
   </AppModal>
 </template>

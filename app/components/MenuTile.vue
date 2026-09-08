@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * MenuTile
  * ダッシュボードやポータルで機能・現場を選択するためのナビゲーションタイル。
@@ -37,7 +37,7 @@ const target = computed(() => to || href)
   >
     <header v-if="icon || title || $slots.badge" class="tile-header">
       <div class="tile-title">
-        <AppIcon v-if="icon" :name="icon" class="tile-icon" />
+        <AtomsIcon v-if="icon" :name="icon" class="tile-icon" />
         <span>{{ title }}</span>
       </div>
       <slot name="badge" />

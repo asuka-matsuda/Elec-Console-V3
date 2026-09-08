@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppSaveButton
  * 非同期の保存処理をトリガーし、ローディング状態や成功状態を視覚的にフィードバックするボタンコンポーネント。
@@ -6,9 +6,9 @@
 import { computed, toRef } from 'vue'
 
 import { useAsyncActionFeedback } from '~/composables/useAsyncActionFeedback'
-import type { AppButtonProps } from '~/types/components'
+import type { AtomsButtonProps } from '~/types/components'
 
-interface Props extends AppButtonProps {
+interface Props extends AtomsButtonProps {
   saveFunction: () => Promise<void>
   label?: string
 }
@@ -35,7 +35,7 @@ const buttonProps = computed(() => {
 </script>
 
 <template>
-  <AppButton
+  <AtomsButton
     v-bind="buttonProps"
     :variant="buttonVariant"
     :disabled="disabled || state !== 'idle'"
@@ -44,12 +44,12 @@ const buttonProps = computed(() => {
     :class="`is-${state}`"
     @click="handleClick"
   >
-    <AppIcon
+    <AtomsIcon
       v-if="state !== 'saving'"
       :name="currentContent.icon"
     />
     {{ currentContent.text }}
-  </AppButton>
+  </AtomsButton>
 </template>
 
 <style scoped lang="scss">
