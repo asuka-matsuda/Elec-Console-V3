@@ -25,6 +25,7 @@ defineProps<{
         <NuxtLink
           v-if="item.href && index < items.length - 1"
           :to="item.href"
+          class="item-link"
         >
           {{ item.text }}
         </NuxtLink>
@@ -32,10 +33,10 @@ defineProps<{
         <!-- 非リンク項目（カテゴリ または 現在地） -->
         <span
           v-else
-          class="inline-flex items-center gap-1"
+          class="inline-flex items-center gap-1 item-label"
           :class="{ 'is-current': index === items.length - 1 }"
         >
-          <span>{{ item.text }}</span>
+          {{ item.text }}
           <!-- 現在地を示す点滅カーソル -->
           <span
             v-if="index === items.length - 1"
@@ -74,7 +75,7 @@ defineProps<{
     letter-spacing: var(--tracking-wider);
   }
 
-  a {
+  .item-link {
     cursor: pointer;
     user-select: none;
 
@@ -91,7 +92,7 @@ defineProps<{
     }
   }
 
-  span {
+  .item-label {
     user-select: none;
     color: var(--color-text-muted);
 
