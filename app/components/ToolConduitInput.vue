@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * ToolConduitInput
  * 配管サイズ自動選定ツールの条件入力コンポーネントです。
@@ -85,7 +85,7 @@ const getCableAreaText = (cableIdx: string): string => {
         </AtomsButton>
       </div>
 
-      <AppTable
+      <MoleculesTable
         :columns="CONDUIT_CABLE_COLUMNS"
         class="conduit-table"
       >
@@ -136,7 +136,7 @@ const getCableAreaText = (cableIdx: string): string => {
             </td>
           </tr>
         </template>
-      </AppTable>
+      </MoleculesTable>
     </section>
   </div>
 </template>

@@ -48,7 +48,7 @@ const { sortBy, sortOrder, sortedData, handleSort }
         :sort-order="sortOrder"
         :handle-sort="handleSort"
       >
-        <AppTable
+        <MoleculesTable
           v-if="sortedData.length > 0"
           :columns="columns"
           :data="sortedData"
@@ -60,7 +60,7 @@ const { sortBy, sortOrder, sortedData, handleSort }
           <template v-for="(_, name) in $slots" #[name]="slotProps">
             <slot :name="name" v-bind="slotProps ?? {}" />
           </template>
-        </AppTable>
+        </MoleculesTable>
 
         <MoleculesEmptyState
           v-else

@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * PortalAdminSitesTab
  * ポータル管理 - 現場管理タブ
@@ -96,7 +96,7 @@ const handleSaveSettings = async (updatedSite: Site) => {
       </template>
     </MoleculesSectionHeader>
 
-    <AppTable
+    <MoleculesTable
       :columns="ADMIN_SITE_COLUMNS"
       :data="sortedSites"
       :sort-by="sortKey"
@@ -138,7 +138,7 @@ const handleSaveSettings = async (updatedSite: Site) => {
           </AtomsButton>
         </div>
       </template>
-    </AppTable>
+    </MoleculesTable>
 
     <!-- 新規登録モーダル -->
     <AppModal

@@ -1,8 +1,7 @@
 <script setup lang="ts" generic="T extends Record<string, any> = Record<string, any>">
 /**
- * AppTable
- *
- * 汎用的なデータテーブル用コンポーネントです。
+ * MoleculesTable
+ * [Molecules] 汎用的なデータテーブル用コンポーネントです。
  * ヘッダー（th）のみglass-colorを使用し、ボディは透明。
  * 行（tr）ホバー時には発光エフェクト（ui-hover-glow）が適用されます。
  */
@@ -67,8 +66,8 @@ const getRowKey = (row: T, index: number): string | number => {
 </script>
 
 <template>
-  <div class="table-wrapper">
-    <table class="table">
+  <div class="table-wrapper flex-1 min-h-0 overflow-auto">
+    <table class="table w-full table-fixed text-left">
       <thead v-if="$slots.header || columns">
         <slot name="header">
           <tr>
@@ -113,25 +112,15 @@ const getRowKey = (row: T, index: number): string | number => {
 
 <style scoped lang="scss">
 .table-wrapper {
-  overflow: auto;
-  flex: 1;
-
-  min-height: 0;
   border: var(--border-width-base) solid var(--color-border);
   border-radius: var(--radius-sm);
-
   background-color: var(--surface-bg);
   backdrop-filter: blur(var(--blur-sm));
 }
 
 .table {
-  table-layout: fixed;
   border-spacing: 0;
   border-collapse: separate;
-
-  width: 100%;
-
-  text-align: left;
 
   th,
   :deep(th) {

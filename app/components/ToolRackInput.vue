@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * ToolRackInput
  * ケーブルラック選定ツールの条件入力コンポーネントです。
@@ -160,7 +160,7 @@ const handleAddCable = () => {
       </div>
 
       <!-- 強電ケーブルテーブル -->
-      <AppTable
+      <MoleculesTable
         v-if="inputs.mode === 'strong'"
         :columns="RACK_CABLE_COLUMNS"
         class="rack-table"
@@ -212,10 +212,10 @@ const handleAddCable = () => {
             </td>
           </tr>
         </template>
-      </AppTable>
+      </MoleculesTable>
 
       <!-- 弱電ケーブルテーブル -->
-      <AppTable
+      <MoleculesTable
         v-else
         :columns="RACK_CABLE_COLUMNS"
         class="rack-table"
@@ -267,7 +267,7 @@ const handleAddCable = () => {
             </td>
           </tr>
         </template>
-      </AppTable>
+      </MoleculesTable>
     </section>
   </div>
 </template>

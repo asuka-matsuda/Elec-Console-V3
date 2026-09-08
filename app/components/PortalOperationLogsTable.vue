@@ -43,7 +43,7 @@ const getActionBadgeColor = (action: unknown) => {
 
 <template>
   <div class="portal-operation-logs-table">
-    <AppTable
+    <MoleculesTable
       v-if="logs.length > 0"
       class="operation-logs__table"
       :columns="OPERATION_LOG_COLUMNS"
@@ -84,7 +84,7 @@ const getActionBadgeColor = (action: unknown) => {
           {{ value || '-' }}
         </span>
       </template>
-    </AppTable>
+    </MoleculesTable>
 
     <!-- ログが存在しない場合のエンプティステート -->
     <MoleculesEmptyState

@@ -113,7 +113,7 @@ const confirmResetPassword = async (row: User) => {
       </template>
     </MoleculesSectionHeader>
 
-    <AppTable
+    <MoleculesTable
       :columns="ADMIN_USER_COLUMNS"
       :data="sortedUsers"
       :sort-by="sortKey"
@@ -175,7 +175,7 @@ const confirmResetPassword = async (row: User) => {
           </AtomsButton>
         </div>
       </template>
-    </AppTable>
+    </MoleculesTable>
 
     <PortalUserCreateModal v-model="isCreateModalOpen" @success="handleUserCreated" />
 

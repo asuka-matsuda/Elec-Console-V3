@@ -65,7 +65,7 @@ const {
 </script>
 
 <template>
-  <AppTable
+  <MoleculesTable
     class="portal-phase1-table"
     :columns="PHASE1_TABLE_COLUMNS"
     :data="sortedCircuits"
@@ -242,7 +242,7 @@ const {
         </td>
       </tr>
     </template>
-  </AppTable>
+  </MoleculesTable>
 </template>
 
 <style scoped lang="scss">
