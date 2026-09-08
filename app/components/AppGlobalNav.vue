@@ -66,15 +66,15 @@ onMounted(() => {
           '--section-accent': `var(--color-category-${section.accent || 'main'})`,
         }"
       >
-        <MoleculesSectionHeader
+        <div
           v-if="section.globalNavHeading || section.heading"
-          :title="section.globalNavHeading || section.heading"
-          tag="h3"
-          size="xs"
-          :variant="section.accent || 'main'"
-          divider-type="fade-side"
-          class="section-header"
-        />
+          class="flex flex-col gap-1 section-title-wrap"
+        >
+          <h3 class="section-title">
+            {{ section.globalNavHeading || section.heading }}
+          </h3>
+          <AtomsDivider color="var(--section-accent)" type="fade-side" />
+        </div>
 
         <ul class="list">
           <li
@@ -157,18 +157,16 @@ onMounted(() => {
   gap: var(--space-1);
 }
 
-.section-header {
+.section-title-wrap {
   padding: var(--space-1) var(--space-3);
+}
 
-  :deep(.section-header__title) {
-    color: var(--color-text-main);
-    letter-spacing: var(--tracking-wider);
-  }
-
-  :deep(.section-header__icon) {
-    color: var(--section-accent);
-    filter: var(--drop-shadow-glow-sm);
-  }
+.section-title {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-main);
+  letter-spacing: var(--tracking-wider);
 }
 
 .list {

@@ -20,13 +20,11 @@ const props = withDefaults(
       | 'hud'
       | 'simple'
     size?: 'xs' | 'sm' | 'md' | 'lg'
-    dividerType?: 'default' | 'fade-side' | 'fade-center'
   }>(),
   {
     tag: 'h2',
     variant: 'main',
     size: 'lg',
-    dividerType: 'default',
   },
 )
 
@@ -63,10 +61,7 @@ const resolvedDividerColor = computed(() => {
       <slot name="actions" />
     </div>
 
-    <AtomsDivider
-      :color="resolvedDividerColor"
-      :type="dividerType === 'default' ? 'solid' : dividerType"
-    />
+    <AtomsDivider :color="resolvedDividerColor" />
   </header>
 </template>
 

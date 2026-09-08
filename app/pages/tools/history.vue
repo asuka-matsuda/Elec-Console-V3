@@ -23,7 +23,6 @@ const {
     <AtomsPanel class="flex flex-col gap-4">
       <MoleculesSectionHeader
         title="計算履歴"
-        divider-type="fade-center"
         icon="clock"
         variant="tool"
         size="lg"
