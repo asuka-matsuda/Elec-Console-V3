@@ -29,33 +29,27 @@ const {
 
 <template>
   <AtomsPanel class="flex flex-col gap-4">
-    <slot name="header">
-      <MoleculesSectionHeader :title="title" :icon="icon" />
-    </slot>
+    <MoleculesSectionHeader :title="title" :icon="icon" />
 
     <div class="flex flex-col gap-4">
-      <slot name="keyword">
-        <MoleculesFormGroup label="Keyword">
-          <AtomsInput v-model="searchQuery" :placeholder="placeholder" />
-        </MoleculesFormGroup>
-      </slot>
+      <MoleculesFormGroup label="Keyword">
+        <AtomsInput v-model="searchQuery" :placeholder="placeholder" />
+      </MoleculesFormGroup>
 
-      <slot name="categories">
-        <MoleculesFormGroup v-if="categoryOptions.length > 0" label="Category">
-          <div class="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-2">
-            <AtomsCheckbox
-              v-for="cat in categoryOptions"
-              :key="cat.value"
-              v-model="activeCats"
-              :value="cat.value"
-            >
-              {{ cat.label }}
-            </AtomsCheckbox>
-          </div>
-        </MoleculesFormGroup>
-      </slot>
+      <MoleculesFormGroup v-if="categoryOptions.length > 0" label="Category">
+        <div class="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-2">
+          <AtomsCheckbox
+            v-for="cat in categoryOptions"
+            :key="cat.value"
+            v-model="activeCats"
+            :value="cat.value"
+          >
+            {{ cat.label }}
+          </AtomsCheckbox>
+        </div>
+      </MoleculesFormGroup>
 
-      <slot name="extra-filters" />
+      <slot />
     </div>
   </AtomsPanel>
 </template>
