@@ -1,7 +1,7 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
- * MenuTile
- * ダッシュボードやポータルで機能・現場を選択するためのナビゲーションタイル。
+ * MoleculesMenuTile
+ * [Molecules] ダッシュボードやポータルで機能・現場を選択するためのナビゲーションタイル。
  */
 import { computed } from 'vue'
 
@@ -32,13 +32,13 @@ const target = computed(() => to || href)
     :to="!disabled ? target : undefined"
     :type="disabled ? 'button' : undefined"
     :disabled="disabled ? true : undefined"
-    class="menu-tile"
+    class="relative flex flex-col gap-[var(--space-panel-gap)] p-[var(--space-panel-pad)] overflow-hidden menu-tile"
     :class="{ 'is-disabled': disabled }"
   >
-    <header v-if="icon || title || $slots.badge" class="tile-header">
-      <div class="tile-title">
-        <AtomsIcon v-if="icon" :name="icon" class="tile-icon" />
-        <span>{{ title }}</span>
+    <header v-if="icon || title || $slots.badge" class="flex items-center justify-between gap-2 tile-header">
+      <div class="flex items-center gap-1 min-w-0 tile-title">
+        <AtomsIcon v-if="icon" :name="icon" class="shrink-0 tile-icon" />
+        <span v-if="title">{{ title }}</span>
       </div>
       <slot name="badge" />
     </header>
@@ -56,15 +56,8 @@ const target = computed(() => to || href)
   cursor: pointer;
   user-select: none;
 
-  position: relative;
   z-index: 1;
 
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-panel-gap);
-
-  padding: var(--space-panel-pad);
   border: var(--border-width-base) solid var(--color-border);
   border-radius: var(--radius-sm);
 
@@ -105,18 +98,7 @@ const target = computed(() => to || href)
     filter: grayscale(100%);
   }
 
-  .tile-header {
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
-    justify-content: space-between;
-  }
-
   .tile-title {
-    display: flex;
-    gap: var(--space-1);
-    align-items: center;
-
     span {
       font-size: var(--font-size-sm);
       font-weight: var(--font-weight-bold);
@@ -130,7 +112,6 @@ const target = computed(() => to || href)
   }
 
   .tile-icon {
-    flex-shrink: 0;
     color: var(--theme-accent);
   }
 

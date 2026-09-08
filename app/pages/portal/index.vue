@@ -71,7 +71,7 @@ onMounted(async () => {
     </p>
 
     <div v-if="availableSites.length > 0" class="portal-index__grid">
-      <MenuTile
+      <MoleculesMenuTile
         v-for="site in availableSites"
         :key="site.id"
         :title="site.name"
@@ -86,7 +86,7 @@ onMounted(async () => {
         <div class="u-text-xs u-text-muted">
           現場ID: {{ site.id }}
         </div>
-      </MenuTile>
+      </MoleculesMenuTile>
     </div>
 
     <AppEmptyState

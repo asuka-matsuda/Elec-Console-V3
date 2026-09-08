@@ -84,7 +84,7 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
         <MoleculesSectionHeader :title="section.heading" :icon="section.icon" />
 
         <div class="menu-grid">
-          <MenuTile
+          <MoleculesMenuTile
             v-for="item in section.items"
             :key="item.text"
             :to="getDynamicTo(item)"
