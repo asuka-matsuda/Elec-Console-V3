@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * Glossary
  * 用語集画面のコンポーネントです。専門用語の検索や、五十音・カテゴリ別での絞り込み機能を提供します。
@@ -51,7 +51,7 @@ const categoryColorMap: Record<string, string> = {
 <template>
   <div class="glossary-view">
     <aside class="filter-sidebar">
-      <AppFilterPanel
+      <MoleculesFilterPanel
         v-model:search-query="searchQuery"
         v-model:active-cats="activeCats"
         :category-options="categoryOptions"
@@ -65,7 +65,7 @@ const categoryColorMap: Record<string, string> = {
             />
           </MoleculesFormGroup>
         </template>
-      </AppFilterPanel>
+      </MoleculesFilterPanel>
     </aside>
 
     <div class="glossary-main">

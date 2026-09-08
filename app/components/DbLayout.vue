@@ -32,7 +32,7 @@ const { sortBy, sortOrder, sortedData, handleSort }
         :active-cats="activeCats"
         :category-options="categoryOptions"
       >
-        <AppFilterPanel
+        <MoleculesFilterPanel
           v-model:search-query="searchQuery"
           v-model:active-cats="activeCats"
           :category-options="categoryOptions"
