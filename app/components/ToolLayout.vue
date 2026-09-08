@@ -5,9 +5,11 @@
  * 条件入力パネルと計算結果パネルの大枠、リセット・保存・計算根拠アクション、
  * およびモバイルドロワー機構を一元管理します。
  */
-import { computed, provide, ref, useSlots } from 'vue'
+import { computed, provide, ref, toRef, useSlots } from 'vue'
 
-withDefaults(
+import { useAsyncActionFeedback } from '~/composables/useAsyncActionFeedback'
+
+const props = withDefaults(
   defineProps<{
     inputsTitle?: string
     inputsIcon?: string
@@ -28,6 +30,18 @@ withDefaults(
 const emit = defineEmits<{
   reset: []
 }>()
+
+const {
+  state: saveState,
+  buttonVariant: saveButtonVariant,
+  currentContent: saveButtonContent,
+  execute: handleSave,
+} = useAsyncActionFeedback({
+  action: () => props.saveFunction ? props.saveFunction() : Promise.resolve(),
+  disabled: toRef(props, 'saveDisabled'),
+  label: '履歴に保存',
+  defaultVariant: 'success',
+})
 
 const slots = useSlots()
 const isDrawerOpen = ref(false)
@@ -125,11 +139,21 @@ provide('toolBasisModal', {
                   <AtomsIcon name="help-circle" size="sm" />
                   計算根拠
                 </AtomsButton>
-                <AppSaveButton
+                <AtomsButton
                   v-if="saveFunction"
-                  :disabled="saveDisabled"
-                  :save-function="saveFunction"
-                />
+                  :variant="saveButtonVariant"
+                  size="sm"
+                  :disabled="saveDisabled || saveState !== 'idle'"
+                  :loading="saveState === 'saving'"
+                  @click="handleSave"
+                >
+                  <AtomsIcon
+                    v-if="saveState !== 'saving'"
+                    :name="saveButtonContent.icon"
+                    size="sm"
+                  />
+                  {{ saveButtonContent.text }}
+                </AtomsButton>
               </template>
             </AppSectionHeader>
 
