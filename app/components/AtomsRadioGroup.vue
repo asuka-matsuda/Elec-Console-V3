@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends string | number | boolean = string | number | boolean">
 /**
  * AtomsRadioGroup
  * [Atoms] 複数の選択肢から1つを選択するための、セグメントコントロール風のラジオボタングループコンポーネント。
@@ -7,15 +7,22 @@ import { computed, useId } from 'vue'
 
 import type { RadioOption } from '~/types/components'
 
-const model = defineModel<string | number | boolean>()
+const model = defineModel<T>()
 
 const props = defineProps<{
-  options: RadioOption[]
+  options: RadioOption<T>[]
   name?: string
 }>()
 
 const uniqueName = useId()
 const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
+
+const isSelected = (value: T) => model.value === value
+
+const updateValue = (value: T, disabled?: boolean) => {
+  if (disabled) return
+  model.value = value
+}
 </script>
 
 <template>
@@ -24,15 +31,20 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
       v-for="option in options"
       :key="String(option.value)"
       class="relative inline-flex items-center justify-center py-1 px-3 item"
+      :class="{
+        'is-active': isSelected(option.value),
+        'is-disabled': option.disabled,
+      }"
       :style="option.color ? { '--radio-color': option.color } : undefined"
     >
       <input
-        v-model="model"
         type="radio"
         :name="groupName"
         :value="option.value"
+        :checked="isSelected(option.value)"
         :disabled="option.disabled"
         class="pointer-events-none absolute w-0 h-0 opacity-0"
+        @change="updateValue(option.value, option.disabled)"
       />
       {{ option.label }}
     </label>
@@ -62,8 +74,8 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
 
     transition: var(--transition-base);
 
-    &:not(:has(:disabled)) {
-      &:hover:not(:has(:checked)) {
+    &:not(.is-disabled) {
+      &:hover:not(.is-active) {
         --glow-color: var(--color-border);
 
         border-color: var(--color-border);
@@ -72,7 +84,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
         transition: var(--transition-glow);
       }
 
-      &:has(:focus-visible) {
+      &:focus-within {
         --glow-color: var(--radio-color);
 
         border-color: color-mix(in srgb, var(--radio-color) 60%, transparent);
@@ -86,7 +98,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
       }
     }
 
-    &:has(:checked) {
+    &.is-active {
       --glow-color: var(--radio-color);
 
       border-color: var(--radio-color);
@@ -99,7 +111,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
       transition: var(--transition-glow);
     }
 
-    &:has(:disabled) {
+    &.is-disabled {
       cursor: not-allowed;
       opacity: 0.5;
     }
