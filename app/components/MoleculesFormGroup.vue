@@ -9,27 +9,22 @@ interface Props {
   requiredLabel?: string
   error?: string
   help?: string
-  layout?: 'vertical' | 'horizontal'
   forId?: string
 }
 
 withDefaults(defineProps<Props>(), {
   required: false,
   requiredLabel: 'REQUIRED',
-  layout: 'vertical',
 })
 </script>
 
 <template>
-  <div
-    class="flex flex-col gap-2 w-full form-group"
-    :class="`is-${layout}`"
-  >
+  <div class="flex flex-col gap-2 w-full form-group">
     <!-- ラベル領域 -->
     <label
       v-if="label || $slots.label"
       :for="forId"
-      class="flex items-center gap-2 w-full select-none cursor-pointer label"
+      class="flex items-center gap-2 select-none cursor-pointer"
     >
       <span class="inline-flex items-center gap-1 label-text">
         <slot name="label">{{ label }}</slot>
@@ -43,18 +38,18 @@ withDefaults(defineProps<Props>(), {
     </label>
 
     <!-- コントロール領域 -->
-    <div class="relative flex flex-col gap-1 w-full control">
+    <div class="flex flex-col gap-1 control">
       <slot />
 
       <!-- エラーメッセージ -->
       <transition name="fade-slide">
-        <p v-if="error || $slots.error" class="m-0 error" role="alert">
+        <p v-if="error || $slots.error" class="error" role="alert">
           <slot name="error">{{ error }}</slot>
         </p>
       </transition>
 
       <!-- ヘルプテキスト -->
-      <p v-if="help && !error" class="m-0 help">
+      <p v-if="help && !error" class="help">
         <slot name="help">{{ help }}</slot>
       </p>
     </div>
@@ -63,12 +58,6 @@ withDefaults(defineProps<Props>(), {
 
 <style scoped lang="scss">
 .form-group {
-  &.is-horizontal {
-    flex-direction: row;
-    gap: var(--space-form-col-gap);
-    align-items: flex-start;
-  }
-
   &:focus-within .label-text {
     color: var(--theme-accent);
 
@@ -89,19 +78,6 @@ withDefaults(defineProps<Props>(), {
       background-color: var(--color-status-danger);
       box-shadow: var(--shadow-glow-sm);
     }
-  }
-}
-
-.label {
-  .is-horizontal & {
-    flex-shrink: 0;
-    width: 140px;
-    padding-top: calc(
-      (
-          (var(--font-size-sm) * var(--control-height-ratio)) -
-            (var(--line-height-tight) * var(--font-size-base))
-        ) / 2
-    );
   }
 }
 
@@ -134,11 +110,6 @@ withDefaults(defineProps<Props>(), {
 
 .control {
   font-size: var(--font-size-sm);
-
-  .is-horizontal & {
-    flex: 1;
-    min-width: 0;
-  }
 }
 
 .error {
