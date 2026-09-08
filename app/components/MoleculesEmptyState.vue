@@ -28,7 +28,7 @@ const {
       <slot name="description">{{ description }}</slot>
     </p>
 
-    <div v-if="$slots.actions" class="flex items-center justify-center gap-2 mt-2 actions">
+    <div v-if="$slots.actions" class="flex items-center justify-center gap-2 mt-2">
       <slot name="actions" />
     </div>
   </div>
@@ -50,10 +50,6 @@ const {
   .desc {
     font-size: var(--font-size-sm);
     letter-spacing: var(--tracking-normal);
-  }
-
-  .actions {
-    opacity: 1;
   }
 }
 </style>
