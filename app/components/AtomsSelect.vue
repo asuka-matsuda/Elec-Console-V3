@@ -127,36 +127,32 @@ const getOptionClasses = (option: SelectOption, index: number) => [
       <span class="flex-1 text-left truncate">{{ displayLabel }}</span>
     </button>
 
-    <ClientOnly>
-      <Teleport :to="teleportTarget">
-        <transition name="dropdown-fade">
-          <div
-            v-if="isOpen"
-            ref="dropdownRef"
-            class="absolute w-max max-w-[90vw] custom-select__dropdown"
-            :class="`is-${dynamicPlacement}`"
-            :style="dropdownStyle"
+    <Teleport :to="teleportTarget">
+      <transition name="dropdown-fade">
+        <ul
+          v-if="isOpen"
+          ref="dropdownRef"
+          class="absolute w-max max-w-[90vw] overflow-x-hidden overflow-y-auto p-1 custom-select__dropdown"
+          :class="`is-${dynamicPlacement}`"
+          :style="dropdownStyle"
+        >
+          <li
+            v-if="isPlaceholder"
+            class="relative overflow-hidden py-2 px-3 truncate custom-select__option is-placeholder"
           >
-            <ul class="w-full overflow-x-hidden overflow-y-auto p-1 custom-select__list">
-              <li
-                v-if="isPlaceholder"
-                class="relative overflow-hidden py-2 px-3 truncate custom-select__option is-placeholder"
-              >
-                {{ placeholder }}
-              </li>
-              <li
-                v-for="(option, index) in options"
-                :key="String(option.value)"
-                :class="getOptionClasses(option, index)"
-                @click="selectOption(option)"
-              >
-                {{ option.label }}
-              </li>
-            </ul>
-          </div>
-        </transition>
-      </Teleport>
-    </ClientOnly>
+            {{ placeholder }}
+          </li>
+          <li
+            v-for="(option, index) in options"
+            :key="String(option.value)"
+            :class="getOptionClasses(option, index)"
+            @click="selectOption(option)"
+          >
+            {{ option.label }}
+          </li>
+        </ul>
+      </transition>
+    </Teleport>
   </div>
 </template>
 
@@ -261,9 +257,12 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 
 .custom-select__dropdown {
   --dropdown-border-color: var(--theme-accent);
+  --scrollbar-size: var(--space-2);
 
   z-index: var(--z-index-select);
+  transform: translateZ(0);
 
+  max-height: min(250px, 40vh);
   border: var(--border-width-base) solid var(--dropdown-border-color);
   border-radius: var(--radius-sm);
 
@@ -280,13 +279,6 @@ const getOptionClasses = (option: SelectOption, index: number) => [
       transparent
     );
   }
-}
-
-.custom-select__list {
-  --scrollbar-size: var(--space-2);
-
-  transform: translateZ(0);
-  max-height: min(250px, 40vh);
 }
 
 .custom-select__option {
