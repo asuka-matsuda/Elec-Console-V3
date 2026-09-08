@@ -78,31 +78,25 @@ const handleAddCable = () => {
     <!-- 基本条件（ラック高さ、相乗り必要幅） -->
     <div class="header-grid">
       <AppFormGroup label="ラック高さ (H)">
-        <AppInputGroup>
+        <MoleculesInputGroup addon="mm">
           <AtomsInput
             v-model="inputs.rackHeight"
             type="number"
             min="50"
             step="10"
           />
-          <template #append>
-            <span class="input-addon">mm</span>
-          </template>
-        </AppInputGroup>
+        </MoleculesInputGroup>
       </AppFormGroup>
 
       <AppFormGroup :label="inputs.mode === 'strong' ? '弱電必要幅' : '強電必要幅'">
-        <AppInputGroup>
+        <MoleculesInputGroup addon="mm">
           <AtomsInput
             v-model="inputs.otherWidth"
             type="number"
             min="0"
             placeholder="相乗り時に指定"
           />
-          <template #append>
-            <span class="input-addon">mm</span>
-          </template>
-        </AppInputGroup>
+        </MoleculesInputGroup>
       </AppFormGroup>
     </div>
 
@@ -114,7 +108,7 @@ const handleAddCable = () => {
       </summary>
       <div class="params-grid">
         <AppFormGroup label="余裕係数">
-          <AppInputGroup>
+          <MoleculesInputGroup addon="倍">
             <AtomsInput
               v-model.number="inputs.marginRate"
               type="number"
@@ -122,38 +116,29 @@ const handleAddCable = () => {
               min="0.1"
               :placeholder="inputs.mode === 'strong' ? '1.2' : '0.6'"
             />
-            <template #append>
-              <span class="input-addon">倍</span>
-            </template>
-          </AppInputGroup>
+          </MoleculesInputGroup>
         </AppFormGroup>
 
         <AppFormGroup label="ケーブル間隔">
-          <AppInputGroup>
+          <MoleculesInputGroup addon="mm">
             <AtomsInput
               v-model.number="inputs.cableSpacing"
               type="number"
               min="0"
               placeholder="10"
             />
-            <template #append>
-              <span class="input-addon">mm</span>
-            </template>
-          </AppInputGroup>
+          </MoleculesInputGroup>
         </AppFormGroup>
 
         <AppFormGroup label="親桁クリアランス">
-          <AppInputGroup>
+          <MoleculesInputGroup addon="mm">
             <AtomsInput
               v-model.number="inputs.sideMargin"
               type="number"
               min="0"
               :placeholder="inputs.mode === 'strong' ? '60' : '120'"
             />
-            <template #append>
-              <span class="input-addon">mm</span>
-            </template>
-          </AppInputGroup>
+          </MoleculesInputGroup>
         </AppFormGroup>
       </div>
     </details>
@@ -204,17 +189,14 @@ const handleAddCable = () => {
               />
             </td>
             <td>
-              <AppInputGroup size="sm">
+              <MoleculesInputGroup size="sm" addon="本">
                 <AtomsInput
                   v-model.number="cable.count"
                   type="number"
                   min="1"
                   size="sm"
                 />
-                <template #append>
-                  <span class="input-addon">本</span>
-                </template>
-              </AppInputGroup>
+              </MoleculesInputGroup>
             </td>
             <td style="text-align: right;">
               {{ getCableSpecText(cable.cableIdx) }}
@@ -265,17 +247,14 @@ const handleAddCable = () => {
               />
             </td>
             <td>
-              <AppInputGroup size="sm">
+              <MoleculesInputGroup size="sm" addon="本">
                 <AtomsInput
                   v-model.number="cable.count"
                   type="number"
                   min="1"
                   size="sm"
                 />
-                <template #append>
-                  <span class="input-addon">本</span>
-                </template>
-              </AppInputGroup>
+              </MoleculesInputGroup>
             </td>
             <td style="text-align: right;">
               {{ getCableSpecText(cable.cableIdx) }}

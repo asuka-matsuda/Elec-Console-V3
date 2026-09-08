@@ -47,7 +47,7 @@ defineProps<{
             />
 
             <!-- 2. 数値入力 + セレクト -->
-            <AppInputGroup v-else-if="field.type === 'input-select'">
+            <MoleculesInputGroup v-else-if="field.type === 'input-select'">
               <AtomsInput
                 v-model.number="form[field.id]"
                 type="number"
@@ -78,10 +78,13 @@ defineProps<{
                   />
                 </Field>
               </template>
-            </AppInputGroup>
+            </MoleculesInputGroup>
 
             <!-- 3. 数値入力 + 単位アドオン -->
-            <AppInputGroup v-else-if="field.type === 'input-addon'">
+            <MoleculesInputGroup
+              v-else-if="field.type === 'input-addon'"
+              :addon="field.addonText"
+            >
               <AtomsInput
                 v-model.number="form[field.id]"
                 type="number"
@@ -90,10 +93,7 @@ defineProps<{
                 :error="meta.touched && !!errorMessage"
                 @blur="handleBlur"
               />
-              <template #append>
-                <span class="input-addon">{{ field.addonText }}</span>
-              </template>
-            </AppInputGroup>
+            </MoleculesInputGroup>
           </AppFormGroup>
         </Field>
       </template>

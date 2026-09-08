@@ -43,16 +43,13 @@ watch(
     </AppFormGroup>
 
     <AppFormGroup label="ケーブル長 (L)" required>
-      <AppInputGroup>
+      <MoleculesInputGroup addon="m">
         <AtomsInput v-model="inputs.L_input" type="number" min="1" />
-        <template #append>
-          <span class="input-addon">m</span>
-        </template>
-      </AppInputGroup>
+      </MoleculesInputGroup>
     </AppFormGroup>
 
     <AppFormGroup label="ドラム占積率 (K)">
-      <AppInputGroup>
+      <MoleculesInputGroup addon="倍">
         <AtomsInput
           v-model="inputs.K"
           type="number"
@@ -60,10 +57,7 @@ watch(
           min="0"
           max="1"
         />
-        <template #append>
-          <span class="input-addon">倍</span>
-        </template>
-      </AppInputGroup>
+      </MoleculesInputGroup>
     </AppFormGroup>
   </div>
 </template>

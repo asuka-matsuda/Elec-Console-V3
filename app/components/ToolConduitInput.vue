@@ -57,7 +57,7 @@ const getCableAreaText = (cableIdx: string): string => {
       </AppFormGroup>
 
       <AppFormGroup label="占積率" class="fill-rate">
-        <AppInputGroup>
+        <MoleculesInputGroup addon="%">
           <AtomsInput
             v-model.number="inputs.customFillRate"
             type="number"
@@ -65,10 +65,7 @@ const getCableAreaText = (cableIdx: string): string => {
             max="100"
             placeholder="80"
           />
-          <template #append>
-            <span class="input-addon">%</span>
-          </template>
-        </AppInputGroup>
+        </MoleculesInputGroup>
       </AppFormGroup>
     </div>
 
@@ -116,17 +113,14 @@ const getCableAreaText = (cableIdx: string): string => {
               />
             </td>
             <td>
-              <AppInputGroup size="sm">
+              <MoleculesInputGroup size="sm" addon="本">
                 <AtomsInput
                   v-model.number="cable.count"
                   type="number"
                   min="1"
                   size="sm"
                 />
-                <template #append>
-                  <span class="input-addon">本</span>
-                </template>
-              </AppInputGroup>
+              </MoleculesInputGroup>
             </td>
             <td style="text-align: right;">
               {{ getCableAreaText(cable.cableIdx) }}

@@ -202,7 +202,7 @@ const {
           <template v-if="editingRowId === circuit.id">
             <div class="phase2-input-cell">
               <span class="phase2-input-cell__label">{{ getPhaseLabels(circuit).phase1 }}</span>
-              <AppInputGroup size="sm" style="width: 85px;">
+              <MoleculesInputGroup size="sm" addon="MΩ" style="width: 85px;">
                 <AtomsInput
                   v-model="inputForm.rVal"
                   type="number"
@@ -213,10 +213,7 @@ const {
                   @focus="handleInputFocus"
                   @keydown.enter.prevent="saveInput(circuit)"
                 />
-                <template #append>
-                  <span class="input-addon">MΩ</span>
-                </template>
-              </AppInputGroup>
+              </MoleculesInputGroup>
             </div>
           </template>
           <div v-else class="phase2-meas-cell">
@@ -247,7 +244,7 @@ const {
           <template v-if="editingRowId === circuit.id">
             <div class="phase2-input-cell">
               <span class="phase2-input-cell__label">{{ getPhaseLabels(circuit).phase2 }}</span>
-              <AppInputGroup size="sm" style="width: 85px;">
+              <MoleculesInputGroup size="sm" addon="MΩ" style="width: 85px;">
                 <AtomsInput
                   v-model="inputForm.sVal"
                   type="number"
@@ -258,10 +255,7 @@ const {
                   @focus="handleInputFocus"
                   @keydown.enter.prevent="saveInput(circuit)"
                 />
-                <template #append>
-                  <span class="input-addon">MΩ</span>
-                </template>
-              </AppInputGroup>
+              </MoleculesInputGroup>
             </div>
           </template>
           <div v-else class="phase2-meas-cell">
@@ -292,7 +286,7 @@ const {
           <template v-if="editingRowId === circuit.id">
             <div class="phase2-input-cell">
               <span class="phase2-input-cell__label">{{ getPhaseLabels(circuit).phase3 }}</span>
-              <AppInputGroup size="sm" style="width: 85px;">
+              <MoleculesInputGroup size="sm" addon="MΩ" style="width: 85px;">
                 <AtomsInput
                   v-model="inputForm.tVal"
                   type="number"
@@ -303,10 +297,7 @@ const {
                   @focus="handleInputFocus"
                   @keydown.enter.prevent="saveInput(circuit)"
                 />
-                <template #append>
-                  <span class="input-addon">MΩ</span>
-                </template>
-              </AppInputGroup>
+              </MoleculesInputGroup>
             </div>
           </template>
           <div v-else class="phase2-meas-cell">
