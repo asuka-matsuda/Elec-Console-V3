@@ -17,7 +17,7 @@ const {
 <template>
   <div class="flex flex-col items-center justify-center gap-1.5 py-8 px-4 text-center empty-state" role="status">
     <slot name="icon">
-      <AtomsIcon v-if="icon" :name="icon" class="mb-1.5 icon" />
+      <AtomsIcon v-if="icon" :name="icon" size="xxl" class="mb-1.5 icon" />
     </slot>
 
     <h3 class="title">
@@ -40,8 +40,6 @@ const {
   margin-inline: auto;
 
   .icon {
-    width: var(--icon-size-xxl);
-    height: var(--icon-size-xxl);
     color: var(--color-text-muted);
     opacity: 0.5;
   }

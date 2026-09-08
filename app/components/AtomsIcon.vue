@@ -11,7 +11,7 @@ import { ICONS } from '~/constants/icons'
 
 interface Props {
   name: IconName | string
-  size?: 'sm' | 'md' | 'lg'
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
 }
 
 const { name, size } = defineProps<Props>()
@@ -57,6 +57,16 @@ const iconComponent = computed(() => {
   &.is-lg {
     width: var(--icon-size-lg);
     height: var(--icon-size-lg);
+  }
+
+  &.is-xl {
+    width: var(--icon-size-xl);
+    height: var(--icon-size-xl);
+  }
+
+  &.is-xxl {
+    width: var(--icon-size-xxl);
+    height: var(--icon-size-xxl);
   }
 }
 </style>
