@@ -82,7 +82,7 @@ provide('toolBasisModal', {
       <!-- 1. 条件入力（PC: 左側 50% / モバイル: 全面表示） -->
       <section class="tool-layout__inputs">
         <AtomsPanel class="flex flex-col gap-[var(--space-panel-gap)] tool-layout__panel">
-          <AppSectionHeader
+          <MoleculesSectionHeader
             :title="inputsTitle"
             :icon="inputsIcon"
             variant="tool"
@@ -94,7 +94,7 @@ provide('toolBasisModal', {
                 リセット
               </AtomsButton>
             </template>
-          </AppSectionHeader>
+          </MoleculesSectionHeader>
 
           <div class="tool-layout__panel-body">
             <slot name="inputs" :open-basis="openBasisModal" />
@@ -123,7 +123,7 @@ provide('toolBasisModal', {
         </button>
         <div class="tool-layout__results-inner">
           <AtomsPanel class="flex flex-col gap-[var(--space-panel-gap)] tool-layout__panel">
-            <AppSectionHeader
+            <MoleculesSectionHeader
               :title="resultsTitle"
               :icon="resultsIcon"
               variant="tool"
@@ -155,7 +155,7 @@ provide('toolBasisModal', {
                   {{ saveButtonContent.text }}
                 </AtomsButton>
               </template>
-            </AppSectionHeader>
+            </MoleculesSectionHeader>
 
             <div class="tool-layout__panel-body">
               <slot name="results" :open-basis="openBasisModal" />

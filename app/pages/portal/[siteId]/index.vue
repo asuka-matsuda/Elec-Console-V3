@@ -62,7 +62,7 @@ onMounted(() => {
 
 <template>
   <div :key="siteId" class="site-dashboard">
-    <AppSectionHeader
+    <MoleculesSectionHeader
       :title="currentSite?.name || '現場ダッシュボード'"
       icon="map-pin"
       size="lg"
@@ -75,7 +75,7 @@ onMounted(() => {
           @update:model-value="handleSiteChange"
         />
       </template>
-    </AppSectionHeader>
+    </MoleculesSectionHeader>
 
     <div class="site-dashboard__grid">
       <section class="site-dashboard__calendar" aria-label="現場スケジュール">

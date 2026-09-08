@@ -21,7 +21,7 @@ const {
 <template>
   <div class="history-page">
     <AtomsPanel class="flex flex-col gap-4">
-      <AppSectionHeader
+      <MoleculesSectionHeader
         title="計算履歴"
         divider-type="fade-center"
         icon="clock"
@@ -39,7 +39,7 @@ const {
             全て削除
           </AtomsButton>
         </template>
-      </AppSectionHeader>
+      </MoleculesSectionHeader>
 
       <AtomsTabs v-model="currentTab" :options="tabs" />
 

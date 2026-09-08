@@ -15,7 +15,7 @@ const { themeMode } = useSettings()
 
 <template>
   <div class="settings-view">
-    <AppSectionHeader
+    <MoleculesSectionHeader
       title="UI・個人設定"
       icon="settings"
       variant="tool"
@@ -27,7 +27,7 @@ const { themeMode } = useSettings()
 
     <div class="settings-content">
       <AtomsPanel class="flex flex-col gap-4">
-        <AppSectionHeader
+        <MoleculesSectionHeader
           title="テーマ・カラー設定"
           icon="moon"
           variant="tool"

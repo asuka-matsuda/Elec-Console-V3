@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * Operation Logs View
  * 送電試験 操作ログ画面
@@ -52,7 +52,7 @@ const targetBanOptions = computed(() => [
 
 <template>
   <div class="operation-logs">
-    <AppSectionHeader
+    <MoleculesSectionHeader
       title="送電試験 操作ログ"
       icon="history"
       size="lg"
@@ -77,7 +77,7 @@ const targetBanOptions = computed(() => [
           ダッシュボードへ戻る
         </AtomsButton>
       </template>
-    </AppSectionHeader>
+    </MoleculesSectionHeader>
 
     <!-- 検索・フィルタリングコントロール (Organism) -->
     <PortalOperationLogsFilter

@@ -10,7 +10,7 @@ const pageTitle = computed(() => route.meta.title as string | undefined)
 <template>
   <main class="login-layout">
     <AtomsPanel class="login-layout__panel">
-      <AppSectionHeader v-if="pageTitle" :title="pageTitle" />
+      <MoleculesSectionHeader v-if="pageTitle" :title="pageTitle" />
       <slot />
     </AtomsPanel>
   </main>

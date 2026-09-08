@@ -99,7 +99,7 @@ onMounted(() => {
     @cancel.prevent="close"
   >
     <AtomsPanel class="flex flex-col gap-4 modal__panel">
-      <AppSectionHeader
+      <MoleculesSectionHeader
         v-if="title"
         :title="title"
         :icon="icon"

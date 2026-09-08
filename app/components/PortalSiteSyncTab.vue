@@ -166,7 +166,7 @@ const confirmResetImport = async () => {
     </details>
 
     <AtomsPanel>
-      <AppSectionHeader title="データベース連携（Excel同期・エクスポート）" />
+      <MoleculesSectionHeader title="データベース連携（Excel同期・エクスポート）" />
       <ul class="portal-site-sync-tab__sync-list">
         <!-- 差分再同期 (スマートマージ) -->
         <li class="portal-site-sync-tab__sync-item">

@@ -78,7 +78,7 @@ const sections = computed<SectionConfig[]>(() => [
 <template>
   <div class="info-aside">
     <section v-for="section in sections" :key="section.title">
-      <AppSectionHeader :title="section.title" :icon="section.icon" size="md" />
+      <MoleculesSectionHeader :title="section.title" :icon="section.icon" size="md" />
 
       <AtomsPanel v-if="pending" class="status">
         <AtomsIcon name="loader" class="u-spin" size="sm" />

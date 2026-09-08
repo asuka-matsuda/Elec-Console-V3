@@ -81,7 +81,7 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
         class="dashboard-section"
         :style="`--theme-accent: var(--color-category-${section.accent || 'main'})`"
       >
-        <AppSectionHeader :title="section.heading" :icon="section.icon" />
+        <MoleculesSectionHeader :title="section.heading" :icon="section.icon" />
 
         <div class="menu-grid">
           <MenuTile

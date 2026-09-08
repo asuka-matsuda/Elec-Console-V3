@@ -58,13 +58,13 @@ onMounted(async () => {
 
 <template>
   <AtomsPanel class="portal-index">
-    <AppSectionHeader title="現場ポータル" variant="hud">
+    <MoleculesSectionHeader title="現場ポータル" variant="hud">
       <template v-if="isAdmin" #actions>
         <AtomsButton variant="secondary" size="sm" @click="router.push('/portal/admin')">
           ポータル管理画面へ
         </AtomsButton>
       </template>
-    </AppSectionHeader>
+    </MoleculesSectionHeader>
 
     <p class="u-text-muted">
       アクセスする現場ポータルを選択してください。

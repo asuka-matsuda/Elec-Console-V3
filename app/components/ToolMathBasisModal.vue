@@ -76,7 +76,7 @@ const handleClose = () => {
             :key="index"
             class="basis-item"
           >
-            <AppSectionHeader v-if="step.title" :title="step.title" size="sm" />
+            <MoleculesSectionHeader v-if="step.title" :title="step.title" size="sm" />
             <div class="math-basis">
               <!-- 左側: 計算式 -->
               <div

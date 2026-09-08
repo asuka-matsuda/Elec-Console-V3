@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * Souden Dashboard View
  * 送電試験ダッシュボード（総合進捗・幹線/二次側の進捗および各フェーズへの導線）
@@ -27,7 +27,7 @@ onMounted(() => {
 
 <template>
   <div class="souden-dashboard">
-    <AppSectionHeader
+    <MoleculesSectionHeader
       title="送電試験ダッシュボード"
       icon="zap"
       size="lg"
@@ -56,7 +56,7 @@ onMounted(() => {
           操作ログ
         </AtomsButton>
       </template>
-    </AppSectionHeader>
+    </MoleculesSectionHeader>
 
     <div v-if="error" class="error-message">
       <AtomsIcon name="alert-triangle" />

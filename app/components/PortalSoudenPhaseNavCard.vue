@@ -18,7 +18,7 @@ defineProps<{
 
 <template>
   <AtomsPanel class="portal-souden-phase-nav-card">
-    <AppSectionHeader :title="title" :icon="icon" :variant="variant || 'tool'" />
+    <MoleculesSectionHeader :title="title" :icon="icon" :variant="variant || 'tool'" />
     <ol class="step-list">
       <PortalSoudenStepIndicator
         :step-num="1"

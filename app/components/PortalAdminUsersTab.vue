@@ -101,7 +101,7 @@ const confirmResetPassword = async (row: User) => {
 
 <template>
   <AtomsPanel class="admin-users">
-    <AppSectionHeader title="ユーザー一覧">
+    <MoleculesSectionHeader title="ユーザー一覧">
       <template #actions>
         <AtomsButton
           variant="primary"
@@ -111,7 +111,7 @@ const confirmResetPassword = async (row: User) => {
           新規ユーザー登録
         </AtomsButton>
       </template>
-    </AppSectionHeader>
+    </MoleculesSectionHeader>
 
     <AppTable
       :columns="ADMIN_USER_COLUMNS"

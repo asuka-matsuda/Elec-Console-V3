@@ -34,7 +34,7 @@ const sortedTodos = computed(() => {
 
 <template>
   <AtomsPanel class="personal-todo">
-    <AppSectionHeader
+    <MoleculesSectionHeader
       title="パーソナルToDo"
       icon="check"
       size="sm"

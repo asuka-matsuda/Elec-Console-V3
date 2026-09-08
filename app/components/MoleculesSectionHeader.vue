@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
- * AppSectionHeader
- * セクションのタイトル、アイコン、アクションボタン、および区切り線を表示するヘッダーコンポーネント。
+ * MoleculesSectionHeader
+ * [Molecules] セクションのタイトル、アイコン、アクションボタン、および区切り線を表示するヘッダーコンポーネント。
  */
 import { computed } from 'vue'
 
@@ -49,19 +49,18 @@ const resolvedDividerColor = computed(() => {
 </script>
 
 <template>
-  <header class="section-header">
-    <div class="top-row">
-      <component
-        :is="tag"
-        class="title"
-        :class="[`is-${size}`]"
-      >
-        <AtomsIcon v-if="icon" :name="icon" class="icon" />
-        <slot>{{ title }}</slot>
-      </component>
-      <div v-if="$slots.actions" class="actions">
-        <slot name="actions" />
-      </div>
+  <header class="flex flex-wrap items-center justify-between gap-y-1 gap-x-2 section-header">
+    <component
+      :is="tag || 'h2'"
+      class="flex items-center gap-2 title"
+      :class="[`is-${size}`]"
+    >
+      <AtomsIcon v-if="icon" :name="icon" class="icon" />
+      <slot>{{ title }}</slot>
+    </component>
+
+    <div v-if="$slots.actions" class="flex items-center gap-2">
+      <slot name="actions" />
     </div>
 
     <AtomsDivider
@@ -73,28 +72,7 @@ const resolvedDividerColor = computed(() => {
 
 <style scoped lang="scss">
 .section-header {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-
-  .top-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .actions {
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
-  }
-
   .title {
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
     color: var(--color-text-main);
 
     &.is-lg,

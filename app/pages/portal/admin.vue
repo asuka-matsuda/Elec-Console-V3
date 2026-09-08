@@ -19,7 +19,7 @@ const activeTab = ref('users')
 
 <template>
   <div class="portal-admin">
-    <AppSectionHeader title="ポータル管理 (開発者向け)" icon="settings" />
+    <MoleculesSectionHeader title="ポータル管理 (開発者向け)" icon="settings" />
 
     <AtomsTabs v-model="activeTab" :options="ADMIN_TABS" />
 

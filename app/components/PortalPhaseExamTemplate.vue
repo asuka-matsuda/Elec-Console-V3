@@ -33,7 +33,7 @@ defineEmits<{
 <template>
   <div class="portal-phase-exam-template">
     <!-- ページヘッダー -->
-    <AppSectionHeader
+    <MoleculesSectionHeader
       :title="title"
       :icon="icon"
       size="lg"
@@ -41,7 +41,7 @@ defineEmits<{
       <template #actions>
         <slot name="header-actions" />
       </template>
-    </AppSectionHeader>
+    </MoleculesSectionHeader>
 
     <!-- 検索・絞り込み ＆ 進捗コントロールパネル -->
     <PortalSoudenPhaseControls

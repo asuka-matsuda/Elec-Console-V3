@@ -13,7 +13,7 @@ defineProps<{
 
 <template>
   <AtomsPanel class="portal-souden-overall-card">
-    <AppSectionHeader title="総合進捗" icon="activity" variant="hud" />
+    <MoleculesSectionHeader title="総合進捗" icon="activity" variant="hud" />
     <div class="progress-summary">
       <div class="summary-main">
         <AtomsCircularGauge

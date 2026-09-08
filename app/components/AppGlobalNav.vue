@@ -66,7 +66,7 @@ onMounted(() => {
           '--section-accent': `var(--color-category-${section.accent || 'main'})`,
         }"
       >
-        <AppSectionHeader
+        <MoleculesSectionHeader
           v-if="section.globalNavHeading || section.heading"
           :title="section.globalNavHeading || section.heading"
           tag="h3"

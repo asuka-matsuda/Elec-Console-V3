@@ -84,7 +84,7 @@ const handleSaveSettings = async (updatedSite: Site) => {
 
 <template>
   <AtomsPanel class="admin-sites">
-    <AppSectionHeader title="現場プロジェクト一覧">
+    <MoleculesSectionHeader title="現場プロジェクト一覧">
       <template #actions>
         <AtomsButton
           variant="primary"
@@ -94,7 +94,7 @@ const handleSaveSettings = async (updatedSite: Site) => {
           新規現場登録
         </AtomsButton>
       </template>
-    </AppSectionHeader>
+    </MoleculesSectionHeader>
 
     <AppTable
       :columns="ADMIN_SITE_COLUMNS"
