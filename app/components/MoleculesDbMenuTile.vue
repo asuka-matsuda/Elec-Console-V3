@@ -28,10 +28,10 @@ const {
     :class="{ 'is-disabled': disabled }"
     :aria-disabled="disabled ? 'true' : undefined"
   >
-    <header v-if="icon || title || $slots.icon || $slots.title || $slots.badge" class="flex items-center justify-between gap-2 tile-header">
+    <header v-if="icon || title || $slots.icon || $slots.title || $slots.badge" class="flex items-center justify-between gap-2">
       <div class="flex items-center gap-1 min-w-0 tile-title">
         <slot name="icon">
-          <AtomsIcon v-if="icon" :name="icon" class="shrink-0 tile-icon" />
+          <AtomsIcon v-if="icon" :name="icon" class="shrink-0" />
         </slot>
         <slot name="title">
           <span v-if="title">{{ title }}</span>
@@ -100,20 +100,14 @@ const {
   }
 
   .tile-title {
-    span {
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-bold);
-      line-height: var(--line-height-tight);
-      color: var(--color-text-main);
-      letter-spacing: var(--tracking-wide);
-      word-break: keep-all;
-      line-break: strict;
-      overflow-wrap: anywhere;
-    }
-  }
-
-  .tile-icon {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
     color: var(--theme-accent);
+    letter-spacing: var(--tracking-wide);
+    word-break: keep-all;
+    line-break: strict;
+    overflow-wrap: anywhere;
   }
 
   .tile-desc {
