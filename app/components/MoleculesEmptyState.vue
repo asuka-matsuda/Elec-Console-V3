@@ -17,7 +17,7 @@ const {
 <template>
   <div class="flex flex-col items-center justify-center gap-1.5 py-8 px-4 text-center empty-state" role="status">
     <slot name="icon">
-      <AtomsIcon v-if="icon" :name="icon" size="xxl" class="mb-1.5 icon" />
+      <AtomsIcon v-if="icon" :name="icon" size="xxl" class="mb-1.5" />
     </slot>
 
     <h3 class="title">
@@ -28,7 +28,7 @@ const {
       <slot name="description">{{ description }}</slot>
     </p>
 
-    <div v-if="$slots.actions" class="flex items-center justify-center gap-2 mt-2">
+    <div v-if="$slots.actions" class="flex items-center justify-center gap-2 mt-2 actions">
       <slot name="actions" />
     </div>
   </div>
@@ -38,22 +38,22 @@ const {
 .empty-state {
   max-width: 420px;
   margin-inline: auto;
-
-  .icon {
-    color: var(--color-text-muted);
-    opacity: 0.5;
-  }
+  color: var(--color-text-muted);
+  opacity: 0.8;
 
   .title {
     font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-bold);
     letter-spacing: var(--tracking-wide);
   }
 
   .desc {
     font-size: var(--font-size-sm);
-    color: var(--color-text-muted);
     letter-spacing: var(--tracking-normal);
+  }
+
+  .actions {
+    opacity: 1;
   }
 }
 </style>
