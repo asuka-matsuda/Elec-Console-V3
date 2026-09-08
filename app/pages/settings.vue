@@ -44,7 +44,7 @@ const { themeMode } = useSettings()
           label="外観モード"
           help="全体の明るさを変更します（ダークモード推奨）"
         >
-          <AppSelect v-model="themeMode" :options="THEME_OPTIONS" />
+          <AtomsSelect v-model="themeMode" :options="THEME_OPTIONS" />
         </AppFormGroup>
       </AppPanel>
     </div>

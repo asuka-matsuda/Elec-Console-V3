@@ -47,7 +47,7 @@ const emit = defineEmits<{
         <div class="phase-controls__row phase-controls__row--inline">
           <div class="phase-controls__select-group">
             <span class="phase-controls__label">盤名称:</span>
-            <AppSelect
+            <AtomsSelect
               v-model="selectedBanMeisho"
               :options="banMeishoOptions"
               class="phase-controls__select"

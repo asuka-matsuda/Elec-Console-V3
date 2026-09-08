@@ -26,7 +26,7 @@ watch(
 <template>
   <div class="weight-input">
     <AppFormGroup label="ケーブル種別" required>
-      <AppSelect
+      <AtomsSelect
         v-model="inputs.category"
         :options="categories"
         placeholder="選択してください"
@@ -34,7 +34,7 @@ watch(
     </AppFormGroup>
 
     <AppFormGroup label="ケーブルサイズ" required>
-      <AppSelect
+      <AtomsSelect
         v-model="inputs.cableIdx"
         :options="availableSizes"
         placeholder="選択してください"

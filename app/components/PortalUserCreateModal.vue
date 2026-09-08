@@ -52,7 +52,7 @@ const handleCreateUser = async () => {
     </template>
 
     <AppFormGroup label="権限">
-      <AppSelect v-model="newUser.role" :options="USER_ROLE_OPTIONS" />
+      <AtomsSelect v-model="newUser.role" :options="USER_ROLE_OPTIONS" />
     </AppFormGroup>
     <AppFormGroup>
       <AtomsCheckbox

@@ -186,7 +186,7 @@ const handleAddCable = () => {
             :key="cable.id"
           >
             <td>
-              <AppSelect
+              <AtomsSelect
                 v-model="cable.category"
                 :options="strongCategories"
                 placeholder="選択"
@@ -195,7 +195,7 @@ const handleAddCable = () => {
               />
             </td>
             <td>
-              <AppSelect
+              <AtomsSelect
                 v-model="cable.cableIdx"
                 :options="getAvailableSizes(cable.category)"
                 placeholder="選択"
@@ -247,7 +247,7 @@ const handleAddCable = () => {
             :key="cable.id"
           >
             <td>
-              <AppSelect
+              <AtomsSelect
                 v-model="cable.category"
                 :options="weakCategories"
                 placeholder="選択"
@@ -256,7 +256,7 @@ const handleAddCable = () => {
               />
             </td>
             <td>
-              <AppSelect
+              <AtomsSelect
                 v-model="cable.cableIdx"
                 :options="getAvailableSizes(cable.category)"
                 placeholder="選択"

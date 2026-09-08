@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * PortalOperationLogsFilter
  * 送電試験操作ログの絞り込みパネルOrganismコンポーネント。
@@ -24,7 +24,7 @@ defineProps<{
   <AppPanel variant="hud" class="portal-operation-logs-filter">
     <div class="logs-filters__group">
       <label class="logs-filters__label">作業者:</label>
-      <AppSelect
+      <AtomsSelect
         v-model="selectedWorker"
         :options="workerOptions"
         class="logs-filters__select"
@@ -33,7 +33,7 @@ defineProps<{
 
     <div class="logs-filters__group">
       <label class="logs-filters__label">アクション:</label>
-      <AppSelect
+      <AtomsSelect
         v-model="selectedAction"
         :options="actionOptions"
         class="logs-filters__select"
@@ -42,7 +42,7 @@ defineProps<{
 
     <div class="logs-filters__group">
       <label class="logs-filters__label">盤:</label>
-      <AppSelect
+      <AtomsSelect
         v-model="selectedTargetBan"
         :options="targetBanOptions"
         class="logs-filters__select"
@@ -51,7 +51,7 @@ defineProps<{
 
     <div class="logs-filters__group">
       <label class="logs-filters__label">表示件数:</label>
-      <AppSelect
+      <AtomsSelect
         v-model="limit"
         :options="OPERATION_LOG_LIMIT_OPTIONS"
         class="logs-filters__select logs-filters__select--sm"

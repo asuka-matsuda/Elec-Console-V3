@@ -49,7 +49,7 @@ const getCableAreaText = (cableIdx: string): string => {
   <div class="conduit-input">
     <div class="header-grid">
       <AppFormGroup label="対象の配管種類" class="category-select">
-        <AppSelect
+        <AtomsSelect
           v-model="inputs.conduitCategory"
           :options="categoryOptions"
           placeholder="選択してください"
@@ -98,7 +98,7 @@ const getCableAreaText = (cableIdx: string): string => {
             :key="cable.id"
           >
             <td>
-              <AppSelect
+              <AtomsSelect
                 v-model="cable.category"
                 :options="categories"
                 placeholder="選択"
@@ -107,7 +107,7 @@ const getCableAreaText = (cableIdx: string): string => {
               />
             </td>
             <td>
-              <AppSelect
+              <AtomsSelect
                 v-model="cable.cableIdx"
                 :options="getAvailableSizes(cable.category)"
                 placeholder="選択"

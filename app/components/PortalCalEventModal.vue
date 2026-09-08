@@ -101,7 +101,7 @@ const closeModal = () => {
       </AppFormGroup>
 
       <AppFormGroup label="予定種別">
-        <AppSelect
+        <AtomsSelect
           v-model="form.type"
           :options="eventTypes.map((t) => ({ label: t.name, value: t.id }))"
         />

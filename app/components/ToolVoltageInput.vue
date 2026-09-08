@@ -35,7 +35,7 @@ defineProps<{
             :class="`js-field-${field.id}`"
           >
             <!-- 1. Select 単体 -->
-            <AppSelect
+            <AtomsSelect
               v-if="field.type === 'select'"
               v-model="form[field.id]"
               :options="field.options || []"
@@ -69,7 +69,7 @@ defineProps<{
                   v-model="form[field.secondaryId!]"
                   :name="field.secondaryId"
                 >
-                  <AppSelect
+                  <AtomsSelect
                     v-model="form[field.secondaryId!]"
                     :options="field.secondaryOptions || []"
                     :error="secMeta.touched && !!secError"

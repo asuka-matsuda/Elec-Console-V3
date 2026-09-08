@@ -309,7 +309,7 @@ const {
         <!-- 検相 / 点灯確認 -->
         <td style="text-align: center;">
           <template v-if="editingRowId === circuit.id">
-            <AppSelect
+            <AtomsSelect
               v-model="inputForm.kensou"
               :options="getKensouOptions(circuit)"
               style="min-width: 96px;"

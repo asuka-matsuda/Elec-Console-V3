@@ -19,7 +19,7 @@ defineProps<{
 <template>
   <div class="portal-site-basic-tab">
     <AppFormGroup label="ステータス">
-      <AppSelect v-model="editStatus" :options="statusOptions" />
+      <AtomsSelect v-model="editStatus" :options="statusOptions" />
     </AppFormGroup>
 
     <AppFormGroup label="現場ID (半角英数)">

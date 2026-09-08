@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
- * AppSelect
- * キーボード操作や画面外へのはみ出し防止機能に対応した、カスタムのセレクトボックスコンポーネント。
+ * AtomsSelect
+ * [Atoms] キーボード操作や画面外へのはみ出し防止機能に対応した、カスタムのセレクトボックスコンポーネント。
  */
 import { computed, onMounted, ref, toRef, watch } from 'vue'
 
@@ -96,28 +96,8 @@ onMounted(() => {
   isMounted.value = true
 })
 
-const containerClasses = computed(() => [
-  'custom-select',
-  {
-    'is-error': props.error,
-  },
-])
-
-const buttonClasses = computed(() => [
-  'custom-select__value',
-  {
-    'is-placeholder': isPlaceholder.value,
-    'is-active': isOpen.value,
-  },
-])
-
-const dropdownClasses = computed(() => [
-  'custom-select__dropdown',
-  `is-${dynamicPlacement.value}`,
-])
-
 const getOptionClasses = (option: SelectOption, index: number) => [
-  'custom-select__option',
+  'relative z-1 overflow-hidden py-2 px-3 truncate custom-select__option',
   {
     'is-selected': model.value === option.value,
     'is-focused': index === focusedIndex.value,
@@ -127,15 +107,24 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 </script>
 
 <template>
-  <div ref="selectRef" :class="containerClasses" :data-disabled="disabled">
+  <div
+    ref="selectRef"
+    class="relative w-full custom-select"
+    :class="{ 'is-error': error }"
+    :data-disabled="disabled"
+  >
     <button
       type="button"
-      :class="buttonClasses"
+      class="relative z-1 flex w-full items-center justify-between gap-2 custom-select__value"
+      :class="{
+        'is-placeholder': isPlaceholder,
+        'is-active': isOpen,
+      }"
       :disabled="disabled"
       @click="toggleDropdown"
       @keydown="handleKeydown"
     >
-      <span class="custom-select__text">{{ displayLabel }}</span>
+      <span class="flex-1 text-left truncate">{{ displayLabel }}</span>
     </button>
 
     <ClientOnly>
@@ -144,13 +133,14 @@ const getOptionClasses = (option: SelectOption, index: number) => [
           <div
             v-if="isOpen"
             ref="dropdownRef"
-            :class="dropdownClasses"
+            class="absolute w-max max-w-[90vw] custom-select__dropdown"
+            :class="`is-${dynamicPlacement}`"
             :style="dropdownStyle"
           >
-            <ul class="custom-select__list">
+            <ul class="w-full overflow-x-hidden overflow-y-auto p-1 custom-select__list">
               <li
                 v-if="isPlaceholder"
-                class="custom-select__option is-placeholder"
+                class="relative z-1 overflow-hidden py-2 px-3 truncate custom-select__option is-placeholder"
               >
                 {{ placeholder }}
               </li>
@@ -173,8 +163,6 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 <style scoped lang="scss">
 .custom-select {
   user-select: none;
-  position: relative;
-  width: 100%;
   color: var(--color-text-main);
 
   &[data-disabled="true"] {
@@ -188,15 +176,6 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   cursor: pointer;
   user-select: none;
 
-  position: relative;
-  z-index: 1;
-
-  display: flex;
-  gap: var(--space-2);
-  align-items: center;
-  justify-content: space-between;
-
-  width: 100%;
   min-height: calc(var(--control-height-ratio) * 1em);
   padding-block: 0.3em;
   padding-inline: 1.2em;
@@ -292,23 +271,11 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   }
 }
 
-.custom-select__text {
-  overflow: hidden;
-  flex: 1;
-
-  text-align: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .custom-select__dropdown {
   --glow-color: color-mix(in srgb, var(--theme-accent) 20%, transparent);
 
-  position: absolute;
   z-index: var(--z-index-select);
 
-  width: max-content;
-  max-width: 90vw;
   border: var(--border-width-base) solid var(--theme-accent);
   border-radius: var(--radius-sm);
 
@@ -339,30 +306,17 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   --scrollbar-size: var(--space-2);
 
   transform: translateZ(0);
-
-  overflow: hidden auto;
-
-  width: 100%;
   max-height: min(250px, 40vh);
-  padding: var(--space-1);
 }
 
 .custom-select__option {
   cursor: pointer;
   user-select: none;
 
-  position: relative;
-  z-index: 1;
-
-  overflow: hidden;
-
-  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-sm);
 
   font-size: var(--font-size-sm);
   color: var(--color-text-main);
-  text-overflow: ellipsis;
-  white-space: nowrap;
 
   transition: var(--transition-base);
 

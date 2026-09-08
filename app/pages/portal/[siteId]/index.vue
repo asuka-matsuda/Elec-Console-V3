@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { useLocalStorage } from '@vueuse/core'
 import { computed, onMounted, watch } from 'vue'
 
@@ -68,7 +68,7 @@ onMounted(() => {
       size="lg"
     >
       <template #actions>
-        <AppSelect
+        <AtomsSelect
           :model-value="siteId"
           :options="siteOptions"
           class="site-dashboard__select"
