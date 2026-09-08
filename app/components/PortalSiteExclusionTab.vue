@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * PortalSiteExclusionTab
  * 現場設定モーダル - 除外回路設定タブOrganismコンポーネント。
@@ -14,7 +14,7 @@ defineProps<{
 
 <template>
   <div class="portal-site-exclusion-tab">
-    <AppFormGroup label="除外回路の設定">
+    <MoleculesFormGroup label="除外回路の設定">
       <template #description>
         計算や連携の対象外とする回路を複数追加できます。
       </template>
@@ -56,7 +56,7 @@ defineProps<{
           除外回路を追加する
         </AtomsButton>
       </div>
-    </AppFormGroup>
+    </MoleculesFormGroup>
   </div>
 </template>
 

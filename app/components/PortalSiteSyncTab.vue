@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * PortalSiteSyncTab
  * 現場設定モーダル - Excelデータベース連携・同期設定タブOrganismコンポーネント。
@@ -150,18 +150,18 @@ const confirmResetImport = async () => {
         <span>PCローカル絶対パス連携 (任意)</span>
       </summary>
       <div class="portal-site-sync-tab__advanced-content">
-        <AppFormGroup label="Excel連携ファイル保存先 (絶対パス)">
+        <MoleculesFormGroup label="Excel連携ファイル保存先 (絶対パス)">
           <AtomsInput
             v-model="excelPath"
             placeholder="例: D:\Data\site_a.xlsm"
           />
-        </AppFormGroup>
-        <AppFormGroup label="帳票テンプレート保存先 (絶対パス)">
+        </MoleculesFormGroup>
+        <MoleculesFormGroup label="帳票テンプレート保存先 (絶対パス)">
           <AtomsInput
             v-model="reportTemplatePath"
             placeholder="例: D:\Templates\report.xlsx"
           />
-        </AppFormGroup>
+        </MoleculesFormGroup>
       </div>
     </details>
 

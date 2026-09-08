@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * Settings
  * UIや個人の設定を行う画面のコンポーネントです。テーマや背景エフェクトなどのカスタマイズ機能を提供します。
@@ -38,12 +38,12 @@ const { themeMode } = useSettings()
           画面のテーマ（ライト/ダーク）を変更します。
         </p>
 
-        <AppFormGroup
+        <MoleculesFormGroup
           label="外観モード"
           help="全体の明るさを変更します（ダークモード推奨）"
         >
           <AtomsSelect v-model="themeMode" :options="THEME_OPTIONS" />
-        </AppFormGroup>
+        </MoleculesFormGroup>
       </AtomsPanel>
     </div>
   </div>

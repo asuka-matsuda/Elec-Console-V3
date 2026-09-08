@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * Glossary
  * 用語集画面のコンポーネントです。専門用語の検索や、五十音・カテゴリ別での絞り込み機能を提供します。
@@ -58,12 +58,12 @@ const categoryColorMap: Record<string, string> = {
         placeholder="用語名や説明を検索..."
       >
         <template #extra-filters>
-          <AppFormGroup label="INDEX (読み・五十音)">
+          <MoleculesFormGroup label="INDEX (読み・五十音)">
             <AppKanaFilter
               v-model="activeKanas"
               :available-rows="availableRows"
             />
-          </AppFormGroup>
+          </MoleculesFormGroup>
         </template>
       </AppFilterPanel>
     </aside>

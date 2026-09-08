@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ref, watch } from 'vue'
 
 import type { EventFormData } from '~/types/portal'
@@ -86,7 +86,7 @@ const closeModal = () => {
     @update:model-value="emit('update:modelValue', $event)"
   >
     <div class="event-form">
-      <AppFormGroup
+      <MoleculesFormGroup
         label="タイトル"
         required
         :error="hasTitleError ? 'タイトルを入力してください' : undefined"
@@ -96,31 +96,31 @@ const closeModal = () => {
           placeholder="会議、送電試験など"
           :error="hasTitleError"
         />
-      </AppFormGroup>
+      </MoleculesFormGroup>
 
-      <AppFormGroup label="予定種別">
+      <MoleculesFormGroup label="予定種別">
         <AtomsSelect
           v-model="form.type"
           :options="eventTypes.map((t) => ({ label: t.name, value: t.id }))"
         />
-      </AppFormGroup>
+      </MoleculesFormGroup>
 
       <div class="event-form__row">
-        <AppFormGroup label="開始日時" required>
+        <MoleculesFormGroup label="開始日時" required>
           <AtomsInput
             :key="'start-' + form.allDay"
             v-model="form.start"
             :type="form.allDay ? 'date' : 'datetime-local'"
             required
           />
-        </AppFormGroup>
-        <AppFormGroup label="終了日時">
+        </MoleculesFormGroup>
+        <MoleculesFormGroup label="終了日時">
           <AtomsInput
             :key="'end-' + form.allDay"
             v-model="form.end"
             :type="form.allDay ? 'date' : 'datetime-local'"
           />
-        </AppFormGroup>
+        </MoleculesFormGroup>
       </div>
 
       <AtomsCheckbox v-model="form.allDay" label="終日イベント" />

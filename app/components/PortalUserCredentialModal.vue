@@ -35,23 +35,23 @@ const handleCopyPassword = () => {
       </p>
 
       <div v-if="user" class="user-credential-modal__credential-box">
-        <AppFormGroup label="氏名">
+        <MoleculesFormGroup label="氏名">
           <div class="user-credential-modal__credential-value">
             {{ user.lastName }} {{ user.firstName }}
           </div>
-        </AppFormGroup>
-        <AppFormGroup label="ログインID">
+        </MoleculesFormGroup>
+        <MoleculesFormGroup label="ログインID">
           <div class="user-credential-modal__credential-value">
             {{ user.loginId }}
           </div>
-        </AppFormGroup>
-        <AppFormGroup label="初期パスワード">
+        </MoleculesFormGroup>
+        <MoleculesFormGroup label="初期パスワード">
           <div
             class="user-credential-modal__credential-value user-credential-modal__credential-value--password"
           >
             {{ user.initialPassword || "（既に設定済みです）" }}
           </div>
-        </AppFormGroup>
+        </MoleculesFormGroup>
       </div>
     </div>
 

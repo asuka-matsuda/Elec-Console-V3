@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ref } from 'vue'
 
 import { useRouter } from '#app'
@@ -65,22 +65,22 @@ const handleChangePassword = async () => {
       {{ errorMsg }}
     </p>
 
-    <AppFormGroup label="新しいパスワード (8文字以上)">
+    <MoleculesFormGroup label="新しいパスワード (8文字以上)">
       <AtomsInput
         v-model="password"
         type="password"
         placeholder="新しいパスワード"
         :disabled="isLoading"
       />
-    </AppFormGroup>
-    <AppFormGroup label="新しいパスワード (確認用)">
+    </MoleculesFormGroup>
+    <MoleculesFormGroup label="新しいパスワード (確認用)">
       <AtomsInput
         v-model="passwordConfirm"
         type="password"
         placeholder="もう一度入力"
         :disabled="isLoading"
       />
-    </AppFormGroup>
+    </MoleculesFormGroup>
 
     <div class="change-password-page__actions">
       <AtomsButton

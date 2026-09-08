@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * ToolVoltageInput
  * 電圧降下・ケーブルサイズ選定ツールの条件入力フォームコンポーネントです。
@@ -29,7 +29,7 @@ defineProps<{
           v-model="form[field.id]"
           :name="field.id"
         >
-          <AppFormGroup
+          <MoleculesFormGroup
             :label="field.label"
             :error="meta.touched ? errorMessage : undefined"
             :class="`js-field-${field.id}`"
@@ -94,7 +94,7 @@ defineProps<{
                 @blur="handleBlur"
               />
             </MoleculesInputGroup>
-          </AppFormGroup>
+          </MoleculesFormGroup>
         </Field>
       </template>
     </div>

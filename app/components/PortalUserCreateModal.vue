@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { ref } from 'vue'
 
 import { useAdminUsers } from '~/composables/admin/useAdminUsers'
@@ -43,22 +43,22 @@ const handleCreateUser = async () => {
     submit-text="登録する"
   >
     <template v-for="field in USER_CREATE_FORM_FIELDS" :key="field.id">
-      <AppFormGroup :label="field.label">
+      <MoleculesFormGroup :label="field.label">
         <AtomsInput
           v-model="newUser[field.id]"
           :placeholder="field.placeholder"
         />
-      </AppFormGroup>
+      </MoleculesFormGroup>
     </template>
 
-    <AppFormGroup label="権限">
+    <MoleculesFormGroup label="権限">
       <AtomsSelect v-model="newUser.role" :options="USER_ROLE_OPTIONS" />
-    </AppFormGroup>
-    <AppFormGroup>
+    </MoleculesFormGroup>
+    <MoleculesFormGroup>
       <AtomsCheckbox
         v-model="newUser.requirePasswordReset"
         label="初回ログイン時にパスワード変更を要求する"
       />
-    </AppFormGroup>
+    </MoleculesFormGroup>
   </AppModal>
 </template>

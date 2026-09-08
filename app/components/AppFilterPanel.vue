@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * AppFilterPanel
  *
@@ -36,11 +36,11 @@ const {
     </slot>
 
     <div class="filters">
-      <AppFormGroup label="Keyword">
+      <MoleculesFormGroup label="Keyword">
         <AtomsInput v-model="searchQuery" :placeholder="placeholder" />
-      </AppFormGroup>
+      </MoleculesFormGroup>
 
-      <AppFormGroup v-if="categoryOptions.length > 0" label="Category">
+      <MoleculesFormGroup v-if="categoryOptions.length > 0" label="Category">
         <div class="category-grid">
           <AtomsCheckbox
             v-for="cat in categoryOptions"
@@ -51,7 +51,7 @@ const {
             {{ cat.label }}
           </AtomsCheckbox>
         </div>
-      </AppFormGroup>
+      </MoleculesFormGroup>
 
       <slot name="extra-filters" />
     </div>

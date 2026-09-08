@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * ToolWeightInput
  * ケーブル重量・ドラム選定ツールの条件入力フォームコンポーネントです。
@@ -25,30 +25,30 @@ watch(
 
 <template>
   <div class="weight-input">
-    <AppFormGroup label="ケーブル種別" required>
+    <MoleculesFormGroup label="ケーブル種別" required>
       <AtomsSelect
         v-model="inputs.category"
         :options="categories"
         placeholder="選択してください"
       />
-    </AppFormGroup>
+    </MoleculesFormGroup>
 
-    <AppFormGroup label="ケーブルサイズ" required>
+    <MoleculesFormGroup label="ケーブルサイズ" required>
       <AtomsSelect
         v-model="inputs.cableIdx"
         :options="availableSizes"
         placeholder="選択してください"
         :disabled="!inputs.category"
       />
-    </AppFormGroup>
+    </MoleculesFormGroup>
 
-    <AppFormGroup label="ケーブル長 (L)" required>
+    <MoleculesFormGroup label="ケーブル長 (L)" required>
       <MoleculesInputGroup addon="m">
         <AtomsInput v-model="inputs.L_input" type="number" min="1" />
       </MoleculesInputGroup>
-    </AppFormGroup>
+    </MoleculesFormGroup>
 
-    <AppFormGroup label="ドラム占積率 (K)">
+    <MoleculesFormGroup label="ドラム占積率 (K)">
       <MoleculesInputGroup addon="倍">
         <AtomsInput
           v-model="inputs.K"
@@ -58,7 +58,7 @@ watch(
           max="1"
         />
       </MoleculesInputGroup>
-    </AppFormGroup>
+    </MoleculesFormGroup>
   </div>
 </template>
 

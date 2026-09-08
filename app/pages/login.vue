@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * login
  * ポータルログインページ
@@ -52,14 +52,14 @@ const handleLogin = async () => {
       </p>
 
       <template v-for="field in LOGIN_FORM_FIELDS" :key="field.id">
-        <AppFormGroup :label="field.label">
+        <MoleculesFormGroup :label="field.label">
           <AtomsInput
             v-model="formData[field.id]"
             :type="field.type"
             :placeholder="field.placeholder"
             :disabled="isLoading"
           />
-        </AppFormGroup>
+        </MoleculesFormGroup>
       </template>
 
       <div class="login-page__actions">

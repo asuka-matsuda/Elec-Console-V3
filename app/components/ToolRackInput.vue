@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * ToolRackInput
  * ケーブルラック選定ツールの条件入力コンポーネントです。
@@ -77,7 +77,7 @@ const handleAddCable = () => {
 
     <!-- 基本条件（ラック高さ、相乗り必要幅） -->
     <div class="header-grid">
-      <AppFormGroup label="ラック高さ (H)">
+      <MoleculesFormGroup label="ラック高さ (H)">
         <MoleculesInputGroup addon="mm">
           <AtomsInput
             v-model="inputs.rackHeight"
@@ -86,9 +86,9 @@ const handleAddCable = () => {
             step="10"
           />
         </MoleculesInputGroup>
-      </AppFormGroup>
+      </MoleculesFormGroup>
 
-      <AppFormGroup :label="inputs.mode === 'strong' ? '弱電必要幅' : '強電必要幅'">
+      <MoleculesFormGroup :label="inputs.mode === 'strong' ? '弱電必要幅' : '強電必要幅'">
         <MoleculesInputGroup addon="mm">
           <AtomsInput
             v-model="inputs.otherWidth"
@@ -97,7 +97,7 @@ const handleAddCable = () => {
             placeholder="相乗り時に指定"
           />
         </MoleculesInputGroup>
-      </AppFormGroup>
+      </MoleculesFormGroup>
     </div>
 
     <!-- 詳細設定（計算パラメータ） -->
@@ -107,7 +107,7 @@ const handleAddCable = () => {
         <span>計算パラメータ設定（余裕係数・離隔など）</span>
       </summary>
       <div class="params-grid">
-        <AppFormGroup label="余裕係数">
+        <MoleculesFormGroup label="余裕係数">
           <MoleculesInputGroup addon="倍">
             <AtomsInput
               v-model.number="inputs.marginRate"
@@ -117,9 +117,9 @@ const handleAddCable = () => {
               :placeholder="inputs.mode === 'strong' ? '1.2' : '0.6'"
             />
           </MoleculesInputGroup>
-        </AppFormGroup>
+        </MoleculesFormGroup>
 
-        <AppFormGroup label="ケーブル間隔">
+        <MoleculesFormGroup label="ケーブル間隔">
           <MoleculesInputGroup addon="mm">
             <AtomsInput
               v-model.number="inputs.cableSpacing"
@@ -128,9 +128,9 @@ const handleAddCable = () => {
               placeholder="10"
             />
           </MoleculesInputGroup>
-        </AppFormGroup>
+        </MoleculesFormGroup>
 
-        <AppFormGroup label="親桁クリアランス">
+        <MoleculesFormGroup label="親桁クリアランス">
           <MoleculesInputGroup addon="mm">
             <AtomsInput
               v-model.number="inputs.sideMargin"
@@ -139,7 +139,7 @@ const handleAddCable = () => {
               :placeholder="inputs.mode === 'strong' ? '60' : '120'"
             />
           </MoleculesInputGroup>
-        </AppFormGroup>
+        </MoleculesFormGroup>
       </div>
     </details>
 

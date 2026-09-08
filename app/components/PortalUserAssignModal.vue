@@ -43,13 +43,13 @@ const handleSave = async () => {
     </p>
 
     <template v-for="site in sites" :key="site.id">
-      <AppFormGroup>
+      <MoleculesFormGroup>
         <AtomsCheckbox
           v-model="targetSiteIds"
           :value="site.id"
           :label="site.name"
         />
-      </AppFormGroup>
+      </MoleculesFormGroup>
     </template>
   </AppModal>
 </template>

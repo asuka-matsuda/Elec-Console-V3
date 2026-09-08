@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 /**
  * PortalSiteBasicTab
  * 現場設定モーダル - 基本設定タブOrganismコンポーネント。
@@ -18,19 +18,19 @@ defineProps<{
 
 <template>
   <div class="portal-site-basic-tab">
-    <AppFormGroup label="ステータス">
+    <MoleculesFormGroup label="ステータス">
       <AtomsSelect v-model="editStatus" :options="statusOptions" />
-    </AppFormGroup>
+    </MoleculesFormGroup>
 
-    <AppFormGroup label="現場ID (半角英数)">
+    <MoleculesFormGroup label="現場ID (半角英数)">
       <AtomsInput v-model="editId" placeholder="例: site-tokyo-01" />
-    </AppFormGroup>
+    </MoleculesFormGroup>
 
-    <AppFormGroup label="現場名">
+    <MoleculesFormGroup label="現場名">
       <AtomsInput v-model="editName" />
-    </AppFormGroup>
+    </MoleculesFormGroup>
 
-    <AppFormGroup label="アサイン済ワーカー">
+    <MoleculesFormGroup label="アサイン済ワーカー">
       <div class="portal-site-basic-tab__workers">
         <template v-if="workerNames.length > 0">
           <AtomsBadge
@@ -48,7 +48,7 @@ defineProps<{
           description="管理者よりワーカーをアサインしてください。"
         />
       </div>
-    </AppFormGroup>
+    </MoleculesFormGroup>
   </div>
 </template>
 

@@ -1,7 +1,7 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
- * AppFormGroup
- * フォームのラベル、入力項目、エラーメッセージ、ヘルプテキストをグループ化して表示するコンポーネントです。
+ * MoleculesFormGroup
+ * [Molecules] フォームのラベル、入力項目、エラーメッセージ、ヘルプテキストをグループ化して表示するコンポーネント。
  */
 interface Props {
   label?: string
@@ -10,22 +10,28 @@ interface Props {
   error?: string
   help?: string
   layout?: 'vertical' | 'horizontal'
+  forId?: string
 }
 
-const {
-  label,
-  required = false,
-  requiredLabel = 'REQUIRED',
-  error,
-  help,
-  layout = 'vertical',
-} = defineProps<Props>()
+withDefaults(defineProps<Props>(), {
+  required: false,
+  requiredLabel: 'REQUIRED',
+  layout: 'vertical',
+})
 </script>
 
 <template>
-  <div class="form-group" :class="`is-${layout}`">
-    <label v-if="label || $slots.label" class="label">
-      <span class="label-text">
+  <div
+    class="flex flex-col gap-2 w-full form-group"
+    :class="`is-${layout}`"
+  >
+    <!-- ラベル領域 -->
+    <label
+      v-if="label || $slots.label"
+      :for="forId"
+      class="flex items-center gap-2 w-full select-none cursor-pointer label"
+    >
+      <span class="inline-flex items-center gap-1 label-text">
         <slot name="label">{{ label }}</slot>
       </span>
       <AtomsBadge
@@ -36,17 +42,20 @@ const {
       </AtomsBadge>
     </label>
 
-    <div class="control">
+    <!-- コントロール領域 -->
+    <div class="relative flex flex-col gap-1 w-full control">
       <slot />
 
+      <!-- エラーメッセージ -->
       <transition name="fade-slide">
-        <p v-if="error" class="error" role="alert">
-          {{ error }}
+        <p v-if="error || $slots.error" class="m-0 error" role="alert">
+          <slot name="error">{{ error }}</slot>
         </p>
       </transition>
 
-      <p v-if="help && !error" class="help">
-        {{ help }}
+      <!-- ヘルプテキスト -->
+      <p v-if="help && !error" class="m-0 help">
+        <slot name="help">{{ help }}</slot>
       </p>
     </div>
   </div>
@@ -54,11 +63,6 @@ const {
 
 <style scoped lang="scss">
 .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  width: 100%;
-
   &.is-horizontal {
     flex-direction: row;
     gap: var(--space-form-col-gap);
@@ -89,15 +93,6 @@ const {
 }
 
 .label {
-  cursor: pointer;
-  user-select: none;
-
-  display: flex;
-  gap: var(--space-2);
-  align-items: center;
-
-  width: 100%;
-
   .is-horizontal & {
     flex-shrink: 0;
     width: 140px;
@@ -111,10 +106,6 @@ const {
 }
 
 .label-text {
-  display: inline-flex;
-  gap: var(--space-1);
-  align-items: center;
-
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
@@ -142,13 +133,7 @@ const {
 }
 
 .control {
-  position: relative;
-
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-
-  width: 100%;
+  font-size: var(--font-size-sm);
 
   .is-horizontal & {
     flex: 1;
@@ -159,8 +144,6 @@ const {
 .error {
   --glow-color: var(--color-status-danger);
 
-  margin: 0;
-
   font-size: var(--font-size-2xs);
   color: var(--color-status-danger);
   text-shadow: var(--text-glow-sm);
@@ -168,7 +151,6 @@ const {
 }
 
 .help {
-  margin: 0;
   font-size: var(--font-size-2xs);
   color: var(--color-text-muted);
   letter-spacing: var(--tracking-wide);
