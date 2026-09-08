@@ -1,8 +1,8 @@
 <script setup lang="ts">
 /**
- * MoleculesFilterPanel
- * [Molecules] データベース画面や一覧画面用の検索・カテゴリ絞り込みパネル。
- * AtomsPanel, MoleculesSectionHeader, MoleculesFormGroup, AtomsInput, AtomsCheckbox を組み合わせた純粋なUIブロック。
+ * OrganismsFilterPanel
+ * [Organisms] データベース画面や一覧画面用の検索・カテゴリ絞り込みパネル。
+ * AtomsPanel, MoleculesSectionHeader, MoleculesFormGroup, AtomsInput, AtomsCheckbox を組み合わせた独立セクション。
  */
 interface CategoryOption {
   label: string

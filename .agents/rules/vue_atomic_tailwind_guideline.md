@@ -54,31 +54,34 @@ app/components/
 ---
 
 ### 2.2. `Molecules...` （分子）
-Atomsを2〜3個組み合わせた、純粋なUIブロック。
+Atomsを2〜3個組み合わせた、単一機能の最小UIブロック。
 
-- **命名規則:** `Molecules{ComponentName}.vue` （例: `MoleculesSearchForm.vue`, `MoleculesFormGroup.vue`, `MoleculesKanaFilter.vue`）
-- **判定基準:** 複数のAtomsを組み合わせているが、特定の機能・データに依存していないか？
+- **命名規則:** `Molecules{ComponentName}.vue` （例: `MoleculesInputGroup.vue`, `MoleculesFormGroup.vue`, `MoleculesKanaFilter.vue`）
+- **判定基準:** **他のMoleculesを内包しておらず、純粋にAtomsのみを組み合わせた最小単位か？**
 - **ルール:**
   - 汎用性を保つ（API通信やPiniaは禁止のDumbコンポーネント）。
-  - **スロットの積極活用（バケツリレー・Props爆発の防止）:**
-    - Moleculesの主責務は「Atoms同士のレイアウト・配置・余白」を規定すること。
-    - 内部に組み込むAtoms（Badge, Button, Divider, Icon等）の詳細設定（色、バリアント等）をすべてMoleculesのPropsとして受け取って中継（バケツリレー）しない。
-    - 基本は手軽なPropsでデフォルト描画（例: `title`, `icon`）しつつ、スロット（例: `<slot name="actions" />`, `<slot name="badge" />`, `<slot name="divider"><AtomsDivider /></slot>`）を開放して親からAtomsを直接注入・カスタマイズできるハイブリッド設計とする。
+  - **他のMoleculesを内包してはならない**（Moleculesを内包・合成した段階で `Organisms` に分類される）。
+  - **過剰なスロット化の禁止（YAGNI原則）:**
+    - 差し替える予定のない固定パーツ（アイコン、タイトル、説明文、区切り線等）を安易に `<slot name="...">` で囲って過剰設計しない。
+    - 基本は Props による直接描画とし、外部から自由なコンテンツを差し込む必要がある場合のみ、シンプルなデフォルトスロット `<slot />` を開放する。
 - **CSS方針:**
   - Tailwind が主役。Atoms同士の余白（`gap`）や配置（`flex`, `grid`）をTailwindクラスで指定する。
 
 ---
 
 ### 2.3. `Organisms...` （有機体）
-具体的な機能やデータを持った、独立したセクション。
+MoleculesやAtomsを組み合わせて構築する、画面の独立した機能セクション。
 
-- **命名規則:** `Organisms{ComponentName}.vue` （例: `OrganismsHeader.vue`, `OrganismsPhase1Table.vue`, `OrganismsSiteSettingsModal.vue`）
-- **判定基準:** アプリ固有のデータ（User型など）を扱っている、またはAPIやPiniaと繋がっているか？
+- **命名規則:** `Organisms{ComponentName}.vue` （例: `OrganismsHeader.vue`, `OrganismsFilterPanel.vue`, `OrganismsPhase1Table.vue`, `OrganismsSiteSettingsModal.vue`）
+- **判定基準:** 以下のいずれかに該当するか？
+  1. **他のMoleculesを複数内包・合成している**（例: `OrganismsFilterPanel` ＝ Panel + SectionHeader + 複数のFormGroup）
+  2. **画面の独立した機能セクション（ヘッダー、検索サイドバー、モーダル、複雑なデータテーブル等）を構成している**
+  3. アプリ固有のデータ型を扱っている、またはAPIやPiniaと連携している
 - **ルール:**
   - AtomsとMoleculesを組み合わせて構築する。
-  - ここからビジネスロジック（データの取得・保存）を持ってよい。個人開発ではOrganismsが直接APIを叩く設計を推奨。
+  - ビジネスロジック（データ取得・保存）や状態を持ってもよい。
 - **CSS方針:**
-  - 内部のレイアウト調整（セクションの配置や余白）をTailwindで行うのみ。
+  - 内部のレイアウト調整（セクションの配置や余白）をTailwindで行う。
 
 ---
 
@@ -104,11 +107,18 @@ URL（ルーティング）と1対1で紐づく画面そのもの。
 
 ## 3. 迷った時の「一発判定」テスト
 
-開発中、コンポーネントの分類に迷った際（特に Molecules と Organisms の境界）は、以下のテストを実施してください。
+開発中、コンポーネントの分類に迷った際（特に Molecules と Organisms の境界）は、以下の判定フローに従ってください。
 
-> **Q. そのコンポーネントに「User」や「Article」など、アプリ専用のデータ型やAPI処理が混ざっているか？**
+> **STEP 1: 構成要素のチェック**
+> - **Q. 他の「Molecules」を内包しているか？ または画面の独立セクション（検索サイドバー、ヘッダー、モーダル等）を形成しているか？**
+>   - **YES ➔ `Organisms...`**（高分子・セクション）
 >
-> - **NO** ➔ `Molecules...` （純粋なUI部品）
-> - **YES** ➔ `Organisms...` （アプリ固有の機能部品）
+> **STEP 2: データのチェック**
+> - **Q. アプリ専用のデータ型（User型等）やAPI通信・Piniaが混ざっているか？**
+>   - **YES ➔ `Organisms...`**（アプリ固有機能部品）
+>
+> **STEP 3: 最小単位のチェック**
+> - **上記がすべて NO で、純粋に Atoms のみを組み合わせた最小UIブロックか？**
+>   - **YES ➔ `Molecules...`**（純粋な分子部品）
 
-この基準を厳守することで、ディレクトリを細分化しなくても、ファイル名のプレフィックスだけでコンポーネントの責務と階層がひと目で判別でき、一貫したプロジェクト構造を維持できます。
+この基準を厳守することで、直感と構造が完全に一致し、破綻のない美しいアトミックデザインを維持できます。

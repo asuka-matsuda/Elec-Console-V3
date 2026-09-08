@@ -51,7 +51,7 @@ const categoryColorMap: Record<string, string> = {
 <template>
   <div class="glossary-view">
     <aside class="filter-sidebar">
-      <MoleculesFilterPanel
+      <OrganismsFilterPanel
         v-model:search-query="searchQuery"
         v-model:active-cats="activeCats"
         :category-options="categoryOptions"
@@ -63,7 +63,7 @@ const categoryColorMap: Record<string, string> = {
             :available-rows="availableRows"
           />
         </MoleculesFormGroup>
-      </MoleculesFilterPanel>
+      </OrganismsFilterPanel>
     </aside>
 
     <div class="glossary-main">
