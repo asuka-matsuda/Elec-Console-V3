@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * PortalSyncQueueModal
  * オフライン同期待ちキューの確認・手動同期実行・競合解決を行うOrganismモーダルコンポーネント。
@@ -185,7 +185,7 @@ const formatDateTime = (isoStr: string) => {
             </li>
           </ul>
 
-          <AppEmptyState
+          <MoleculesEmptyState
             v-else
             icon="check-circle"
             title="未送信データはありません"

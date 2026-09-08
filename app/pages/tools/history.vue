@@ -55,7 +55,7 @@ const {
           />
         </div>
 
-        <AppEmptyState
+        <MoleculesEmptyState
           v-else
           icon="inbox"
           title="保存された履歴はありません"
@@ -63,7 +63,7 @@ const {
         />
 
         <template #fallback>
-          <AppEmptyState icon="loader" title="履歴を読み込み中..." />
+          <MoleculesEmptyState icon="loader" title="履歴を読み込み中..." />
         </template>
       </ClientOnly>
     </AtomsPanel>

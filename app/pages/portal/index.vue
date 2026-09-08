@@ -59,7 +59,7 @@ onMounted(async () => {
       </template>
     </MoleculesSectionHeader>
 
-    <AppEmptyState
+    <MoleculesEmptyState
       icon="folder"
       title="アサインされている現場がありません"
       description="管理者に現場へのアサインを依頼してください。"

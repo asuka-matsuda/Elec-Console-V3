@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * PortalOperationLogsTable
  * 送電試験操作ログ一覧テーブルOrganismコンポーネント。
@@ -87,7 +87,7 @@ const getActionBadgeColor = (action: unknown) => {
     </AppTable>
 
     <!-- ログが存在しない場合のエンプティステート -->
-    <AppEmptyState
+    <MoleculesEmptyState
       v-else-if="!isLoading"
       icon="history"
       title="操作ログが存在しません"

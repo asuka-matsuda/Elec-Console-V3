@@ -71,7 +71,7 @@ const sortedTodos = computed(() => {
           <AtomsIcon name="trash-2" />
         </AtomsButton>
       </li>
-      <AppEmptyState
+      <MoleculesEmptyState
         v-if="todos.length === 0"
         icon="check-circle"
         title="タスクはありません"

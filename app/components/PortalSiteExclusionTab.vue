@@ -40,7 +40,7 @@ defineProps<{
           </li>
         </ul>
 
-        <AppEmptyState
+        <MoleculesEmptyState
           v-else
           icon="slash"
           title="除外回路は設定されていません"

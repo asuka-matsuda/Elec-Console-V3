@@ -41,7 +41,7 @@ defineProps<{
             {{ name }}
           </AtomsBadge>
         </template>
-        <AppEmptyState
+        <MoleculesEmptyState
           v-else
           icon="users"
           title="アサインされているワーカーはいません"
