@@ -72,7 +72,7 @@ const getRowKey = (row: T, index: number): string | number => {
       <thead v-if="$slots.header || columns">
         <slot name="header">
           <tr>
-            <AppTableTh
+            <AtomsTableTh
               v-for="col in columns"
               :key="col.key"
               :column="col"

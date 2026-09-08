@@ -1,4 +1,8 @@
-﻿<script setup lang="ts" generic="T extends Record<string, unknown>">
+<script setup lang="ts" generic="T extends Record<string, unknown>">
+/**
+ * AtomsTableTh
+ * [Atoms] テーブルのヘッダーセル（ソート・整列機能付き）。
+ */
 import { computed } from 'vue'
 
 import type { TableColumn } from '~/types/components'
@@ -23,7 +27,7 @@ const sortTitle = computed(() => {
 })
 
 const sortIconName = computed(() => {
-  if (!isSorted.value) return 'minus'
+  if (!isSorted.value) return 'chevron-up'
 
   return props.sortOrder === 'asc' ? 'chevron-up' : 'chevron-down'
 })
@@ -46,19 +50,19 @@ const handleClick = () => {
     @click="handleClick"
   >
     <div
-      class="table__th-inner"
+      class="inline-flex items-center gap-1 w-full"
       :class="{
-        'is-align-center': column.align === 'center',
-        'is-align-right': column.align === 'right',
+        'justify-center': column.align === 'center',
+        'justify-end': column.align === 'right',
       }"
     >
-      <span class="table__th-text">{{ column.label }}</span>
+      {{ column.label }}
       <AtomsIcon
         v-if="column.sortable"
         :name="sortIconName"
         size="sm"
-        class="table__sort-icon"
-        :class="{ 'is-active': isSorted, 'is-inactive': !isSorted }"
+        class="sort-icon"
+        :class="{ 'is-active': isSorted }"
       />
     </div>
   </th>
@@ -77,6 +81,7 @@ th {
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
   color: var(--color-text-secondary);
+  white-space: nowrap;
 
   background-color: var(--color-bg-hover);
   backdrop-filter: blur(var(--blur-md));
@@ -92,6 +97,10 @@ th {
 
     &:hover {
       color: var(--color-text-main);
+
+      .sort-icon:not(.is-active) {
+        opacity: 0.5;
+      }
     }
   }
 
@@ -100,50 +109,16 @@ th {
     color: var(--color-text-main);
   }
 
-  .table__th-inner {
-    display: inline-flex;
-    gap: 4px;
-    align-items: center;
-
-    width: 100%;
-
-    white-space: nowrap;
-
-    &.is-align-center {
-      justify-content: center;
-    }
-
-    &.is-align-right {
-      justify-content: flex-end;
-    }
-  }
-
-  .table__th-text {
-    white-space: nowrap;
-  }
-
-  .table__sort-icon {
+  .sort-icon {
     flex-shrink: 0;
     color: var(--color-text-muted);
+    opacity: 0;
     transition: var(--transition-fast);
 
     &.is-active {
       color: var(--theme-accent);
       opacity: 1;
     }
-
-    &.is-inactive {
-      overflow: hidden;
-      width: 0;
-      margin-left: -4px;
-      opacity: 0;
-    }
-  }
-
-  &:hover .table__sort-icon.is-inactive {
-    width: 12px;
-    margin-left: 0;
-    opacity: 0.5;
   }
 }
 </style>
