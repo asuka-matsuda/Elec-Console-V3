@@ -7,22 +7,13 @@ import { ref } from 'vue'
 
 import { useHead, useRouter } from '#app'
 import { useAuth } from '~/composables/useAuth'
+import { LOGIN_FORM_FIELDS } from '~/constants/constants'
 
 definePageMeta({ layout: 'login', title: 'Elec-Console v2' })
 useHead({ title: 'ログイン - Elec-Console' })
 
 const router = useRouter()
 const { login } = useAuth()
-
-const formFields = [
-  { id: 'userId', label: 'ユーザーID', type: 'text', placeholder: 'master' },
-  {
-    id: 'password',
-    label: 'パスワード',
-    type: 'password',
-    placeholder: '••••••••',
-  },
-] as const
 
 const formData = ref<Record<string, string>>({
   userId: '',
@@ -60,7 +51,7 @@ const handleLogin = async () => {
         {{ errorMessage }}
       </p>
 
-      <template v-for="field in formFields" :key="field.id">
+      <template v-for="field in LOGIN_FORM_FIELDS" :key="field.id">
         <AppFormGroup :label="field.label">
           <AppInput
             v-model="formData[field.id]"

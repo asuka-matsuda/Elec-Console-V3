@@ -4,22 +4,13 @@
  * 電線管のデータベース情報を一覧表示・検索するためのページコンポーネントです。
  */
 import { conduitData } from '~/constants/data/conduitData'
-import type { TableColumn } from '~/types/components'
-
-const tableColumns: TableColumn<(typeof conduitData)[number]>[] = [
-  { key: 'category', label: '配管種類', sortable: true },
-  { key: 'size', label: '呼び径', sortable: true },
-  { key: 'innerDiameter', label: '内径 (mm)', sortable: true },
-  { key: 'outerDiameter', label: '外径 (mm)', sortable: true },
-  { key: 'area', label: '断面積 (mm²)', sortable: true },
-  { key: 'standard', label: '規格', sortable: true },
-]
+import { CONDUIT_DB_COLUMNS } from '~/constants/databaseConstants'
 </script>
 
 <template>
   <DbLayout
     :data="conduitData"
-    :columns="tableColumns"
+    :columns="CONDUIT_DB_COLUMNS"
     :search-mapper="
       (item) => `${item.category} ${item.size} ${item.standard || ''}`
     "

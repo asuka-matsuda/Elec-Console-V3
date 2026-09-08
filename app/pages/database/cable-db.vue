@@ -4,23 +4,13 @@
  * ケーブルのデータベース情報を一覧表示・検索するためのページコンポーネントです。
  */
 import { cableData } from '~/constants/data/cableData'
-import type { TableColumn } from '~/types/components'
-
-const tableColumns: TableColumn<(typeof cableData)[number]>[] = [
-  { key: 'name', label: 'ケーブル名称', sortable: true },
-  { key: 'ampacity', label: '許容電流 (A)', sortable: true },
-  { key: 'diameter', label: '仕上外径 (mm)', sortable: true },
-  { key: 'weight', label: '概算質量 (kg/m)', sortable: true },
-  { key: 'voltage', label: '耐電圧', sortable: true },
-  { key: 'temp', label: '基底/最高温度', sortable: true },
-  { key: 'standard', label: '参考規格/メーカー', sortable: true },
-]
+import { CABLE_DB_COLUMNS } from '~/constants/databaseConstants'
 </script>
 
 <template>
   <DbLayout
     :data="cableData"
-    :columns="tableColumns"
+    :columns="CABLE_DB_COLUMNS"
     :search-mapper="(item) => `${item.name} ${item.standard || ''}`"
     placeholder="種類、サイズなどを検索... (例: CVT 22)"
   >

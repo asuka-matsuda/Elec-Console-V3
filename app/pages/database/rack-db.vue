@@ -4,21 +4,13 @@
  * ケーブルラックのデータベース情報を一覧表示・検索するためのページコンポーネントです。
  */
 import { rackData } from '~/constants/data/rackData'
-import type { TableColumn } from '~/types/components'
-
-const tableColumns: TableColumn<(typeof rackData)[number]>[] = [
-  { key: 'category', label: 'カテゴリ', sortable: true },
-  { key: 'size', label: 'サイズ (呼び幅 mm)', sortable: true },
-  { key: 'height', label: '親桁高さ (mm)', sortable: true },
-  { key: 'weightPiece', label: '1本あたり質量 (kg/3m)', sortable: true },
-  { key: 'weightMeter', label: '1mあたり質量 (kg/m)', sortable: true },
-]
+import { RACK_DB_COLUMNS } from '~/constants/databaseConstants'
 </script>
 
 <template>
   <DbLayout
     :data="rackData"
-    :columns="tableColumns"
+    :columns="RACK_DB_COLUMNS"
     :search-mapper="(item) => `${item.category} ${item.size}`"
     placeholder="種類、サイズなどを検索... (例: SR 300)"
   >

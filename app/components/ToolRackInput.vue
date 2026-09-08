@@ -6,8 +6,8 @@
  */
 import { computed, watch } from 'vue'
 
+import { RACK_CABLE_COLUMNS } from '~/constants/cableConstants'
 import { RACK_DEFAULT_PARAMS, rackModeOptions } from '~/constants/rackConstants'
-import type { TableColumn } from '~/types/components'
 import {
   findCableByIndexString,
   getAvailableSizes,
@@ -27,14 +27,6 @@ const emit = defineEmits<{
 
 const strongCategories = computed(() => getCableCategories('strong'))
 const weakCategories = computed(() => getCableCategories('weak'))
-
-const cableColumns: TableColumn[] = [
-  { key: 'category', label: 'ケーブル種別', width: '27%' },
-  { key: 'cableIdx', label: 'サイズ', width: '31%' },
-  { key: 'count', label: '本数', width: '74px' },
-  { key: 'spec', label: '外径', width: '84px', align: 'right' },
-  { key: 'actions', label: '', width: '52px', align: 'center' },
-]
 
 const getCableSpecText = (cableIdx: string): string => {
   const def = findCableByIndexString(cableIdx)
@@ -185,7 +177,7 @@ const handleAddCable = () => {
       <!-- 強電ケーブルテーブル -->
       <AppTable
         v-if="inputs.mode === 'strong'"
-        :columns="cableColumns"
+        :columns="RACK_CABLE_COLUMNS"
         class="rack-table"
       >
         <template #body>
@@ -246,7 +238,7 @@ const handleAddCable = () => {
       <!-- 弱電ケーブルテーブル -->
       <AppTable
         v-else
-        :columns="cableColumns"
+        :columns="RACK_CABLE_COLUMNS"
         class="rack-table"
       >
         <template #body>

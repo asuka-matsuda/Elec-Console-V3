@@ -6,25 +6,14 @@
 import { ref } from 'vue'
 
 import { useAdminSites } from '~/composables/admin/useAdminSites'
+import { ADMIN_SITE_COLUMNS } from '~/constants/adminConstants'
 import type { Site, SiteStatus } from '~/types/admin'
-import type { TableColumn } from '~/types/components'
 import {
   getSiteStatusColor as getStatusColor,
   getSiteStatusLabel as getStatusLabel,
 } from '~/utils/portal'
 
 const { sites, createSite, toggleDisableSite, updateSite } = useAdminSites()
-
-// --- 一覧定義 ---
-
-const siteHeaders: TableColumn<Site>[] = [
-  { key: 'id', label: '現場ID', sortable: true },
-  { key: 'name', label: '現場名', sortable: true },
-  { key: 'status', label: 'ステータス', sortable: true },
-  { key: 'createdAt', label: '作成日時', sortable: true },
-  { key: 'disabledAt', label: '無効化日時', sortable: true },
-  { key: 'actions', label: '操作' },
-]
 
 const {
   sortBy: sortKey,
@@ -108,7 +97,7 @@ const handleSaveSettings = async (updatedSite: Site) => {
     </AppSectionHeader>
 
     <AppTable
-      :columns="siteHeaders"
+      :columns="ADMIN_SITE_COLUMNS"
       :data="sortedSites"
       :sort-by="sortKey"
       :sort-order="sortOrder"

@@ -7,19 +7,12 @@ import { computed, onMounted, watch } from 'vue'
 
 import { useHead, useRoute } from '#app'
 import { useOperationLogs } from '~/composables/portal/useOperationLogs'
-import type { TableColumn } from '~/types/components'
-import type { OperationLogItem } from '~/types/souden'
+import {
+  OPERATION_LOG_COLUMNS,
+  OPERATION_LOG_LIMIT_OPTIONS,
+} from '~/constants/soudenConstants'
 
 useHead({ title: '送電試験 操作ログ - Elec-Console' })
-
-const columns: TableColumn<OperationLogItem>[] = [
-  { key: 'timestamp', label: '日時', width: '170px' },
-  { key: 'worker', label: '作業者', width: '120px' },
-  { key: 'action', label: 'アクション', width: '140px', align: 'center' },
-  { key: 'targetBan', label: '対象盤', width: '130px' },
-  { key: 'targetKairo', label: '対象回路', width: '140px' },
-  { key: 'details', label: '詳細内容' },
-]
 
 const route = useRoute()
 const siteId = computed(() => route.params.siteId as string)
@@ -65,12 +58,6 @@ const targetBanOptions = computed(() => {
     ...availableTargetBans.value.map(b => ({ label: b, value: b })),
   ]
 })
-
-const limitOptions = [
-  { label: '最新 50 件', value: 50 },
-  { label: '最新 100 件', value: 100 },
-  { label: '最新 200 件', value: 200 },
-]
 
 const formatTimestamp = (ts: unknown) => {
   if (!ts || typeof ts !== 'string') return '-'
@@ -151,7 +138,7 @@ const getActionBadgeColor = (action: unknown) => {
       </div>
 
       <div class="logs-filters__group">
-        <label class="logs-filters__label">対象盤:</label>
+        <label class="logs-filters__label">盤:</label>
         <AppSelect
           v-model="selectedTargetBan"
           :options="targetBanOptions"
@@ -163,7 +150,7 @@ const getActionBadgeColor = (action: unknown) => {
         <label class="logs-filters__label">表示件数:</label>
         <AppSelect
           v-model="limit"
-          :options="limitOptions"
+          :options="OPERATION_LOG_LIMIT_OPTIONS"
           class="logs-filters__select logs-filters__select--sm"
         />
       </div>
@@ -179,7 +166,7 @@ const getActionBadgeColor = (action: unknown) => {
     <AppTable
       v-if="logs.length > 0"
       class="operation-logs__table"
-      :columns="columns"
+      :columns="OPERATION_LOG_COLUMNS"
       :data="logs"
     >
       <template #cell-timestamp="{ value }">

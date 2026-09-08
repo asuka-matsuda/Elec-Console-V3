@@ -1,3 +1,7 @@
+import {
+  STRONG_CURRENT_CATEGORIES,
+  WEAK_CURRENT_CATEGORIES,
+} from '~/constants/cableConstants'
 import { cableData } from '~/constants/data/cableData'
 import type { CableData } from '~/types/database'
 
@@ -6,22 +10,7 @@ export interface DropdownOption {
   value: string
 }
 
-export const STRONG_CURRENT_CATEGORIES = [
-  'VVF',
-  'IV',
-  'CV',
-  'CVT',
-  '6.6kV CVT',
-  'VCTF',
-] as const
-
-export const WEAK_CURRENT_CATEGORIES = [
-  'CPEV',
-  'F-CPEV',
-  'HP',
-  'AE',
-  '同軸',
-] as const
+export { STRONG_CURRENT_CATEGORIES, WEAK_CURRENT_CATEGORIES }
 
 /**
  * 重複のないケーブルカテゴリ（種類）のリストを取得する

@@ -7,7 +7,12 @@ import { computed, onMounted, reactive, ref, watch } from 'vue'
 
 import { usePhaseExam } from '~/composables/portal/usePhaseExam'
 import { useTableSort } from '~/composables/useTableSort'
-import type { SelectOption, TableColumn } from '~/types/components'
+import {
+  KENSOU_OPTIONS_1P,
+  KENSOU_OPTIONS_3P,
+  PHASE3_TABLE_COLUMNS,
+} from '~/constants/soudenConstants'
+import type { SelectOption } from '~/types/components'
 import type { CircuitItem } from '~/types/souden'
 
 useHead({ title: 'フェーズ3：送電・電圧測定・検相 - Elec-Console' })
@@ -118,15 +123,7 @@ const getPhaseLabels = (circuit: CircuitItem) => {
 
 // 検相 / 点灯確認の選択肢
 const getKensouOptions = (circuit: CircuitItem): SelectOption[] => {
-  return isThreePhase(circuit)
-    ? [
-        { label: '正相', value: '正相' },
-        { label: '逆相', value: '逆相' },
-      ]
-    : [
-        { label: '点灯確認(良)', value: '点灯確認(良)' },
-        { label: '点灯確認(否)', value: '点灯確認(否)' },
-      ]
+  return isThreePhase(circuit) ? KENSOU_OPTIONS_3P : KENSOU_OPTIONS_1P
 }
 
 // 電圧フォーマット（数値と単位を分離して表示）
@@ -189,20 +186,6 @@ const saveInput = async (circuit: CircuitItem) => {
   editingRowId.value = null
 }
 
-// テーブルカラム定義とソート
-const columns: TableColumn<CircuitItem>[] = [
-  { key: 'banMeisho', label: '盤情報', sortable: true, width: '95px' },
-  { key: 'kairoBangou', label: '回路番号', sortable: true, width: '80px', align: 'center' },
-  { key: 'kairoMeisho', label: '回路名称', sortable: true, width: '135px' },
-  { key: 'denatsuRs', label: '電圧1', sortable: true, width: '75px', align: 'center' },
-  { key: 'denatsuSt', label: '電圧2', sortable: true, width: '75px', align: 'center' },
-  { key: 'denatsuRt', label: '電圧3', sortable: true, width: '75px', align: 'center' },
-  { key: 'kensou', label: '検相 / 点灯', sortable: true, width: '100px', align: 'center' },
-  { key: 'p3Remarks', label: '備考', sortable: true },
-  { key: 'actions', label: '操作', width: '125px', align: 'center' },
-  { key: 'p3ConfirmedAt', label: '測定者 / 日時', sortable: true, width: '115px', align: 'center' },
-]
-
 const {
   sortBy,
   sortOrder,
@@ -260,7 +243,7 @@ const {
     <!-- 回路一覧テーブル -->
     <AppTable
       class="phase3__table"
-      :columns="columns"
+      :columns="PHASE3_TABLE_COLUMNS"
       :data="sortedCircuits"
       :sort-by="sortBy"
       :sort-order="sortOrder"

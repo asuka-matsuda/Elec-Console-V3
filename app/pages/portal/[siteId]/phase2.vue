@@ -8,7 +8,7 @@ import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { useHead, useRoute } from '#app'
 import { usePhaseExam } from '~/composables/portal/usePhaseExam'
 import { useTableSort } from '~/composables/useTableSort'
-import type { TableColumn } from '~/types/components'
+import { PHASE2_TABLE_COLUMNS } from '~/constants/soudenConstants'
 import type { CircuitItem } from '~/types/souden'
 
 useHead({ title: 'フェーズ2：絶縁抵抗測定 - Elec-Console' })
@@ -178,19 +178,6 @@ const saveInput = async (circuit: CircuitItem) => {
   editingRowId.value = null
 }
 
-// テーブルカラム定義とソート
-const columns: TableColumn<CircuitItem>[] = [
-  { key: 'banMeisho', label: '盤情報', sortable: true, width: '95px' },
-  { key: 'kairoBangou', label: '回路番号', sortable: true, width: '80px', align: 'center' },
-  { key: 'kairoMeisho', label: '回路名称', sortable: true, width: '135px' },
-  { key: 'zetsuenR', label: '測定1', sortable: true, width: '100px', align: 'center' },
-  { key: 'zetsuenS', label: '測定2', sortable: true, width: '100px', align: 'center' },
-  { key: 'zetsuenT', label: '測定3', sortable: true, width: '100px', align: 'center' },
-  { key: 'p2Remarks', label: '備考', sortable: true },
-  { key: 'actions', label: '操作', width: '125px', align: 'center' },
-  { key: 'p2ConfirmedAt', label: '測定者 / 日時', sortable: true, width: '110px', align: 'center' },
-]
-
 const {
   sortBy,
   sortOrder,
@@ -256,7 +243,7 @@ const {
     <!-- 回路一覧テーブル -->
     <AppTable
       class="phase2__table"
-      :columns="columns"
+      :columns="PHASE2_TABLE_COLUMNS"
       :data="sortedCircuits"
       :sort-by="sortBy"
       :sort-order="sortOrder"

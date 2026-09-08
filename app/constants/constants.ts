@@ -1,4 +1,4 @@
-import type { RadioOption } from '~/types/components'
+import type { RadioOption, SelectOption } from '~/types/components'
 
 /**
  * 汎用的なトグル（あり / なし）
@@ -24,3 +24,24 @@ export const CALC_MODE_OPTIONS: RadioOption[] = [
   { label: 'Drop', value: 'drop' },
   { label: 'Size', value: 'size' },
 ]
+
+/**
+ * テーマ選択肢（ダークモード / ライトモード）
+ */
+export const THEME_OPTIONS: SelectOption<string>[] = [
+  { label: 'ダークモード (標準)', value: 'dark' },
+  { label: 'ライトモード', value: 'light' },
+]
+
+/**
+ * ログインフォーム 入力フィールド定義
+ */
+export const LOGIN_FORM_FIELDS = [
+  { id: 'userId', label: 'ユーザーID', type: 'text', placeholder: 'master' },
+  {
+    id: 'password',
+    label: 'パスワード',
+    type: 'password',
+    placeholder: '••••••••',
+  },
+] as const

@@ -6,7 +6,7 @@
 import { computed } from 'vue'
 
 import { torqueData } from '~/constants/data/torqueData'
-import type { TableColumn } from '~/types/components'
+import { TORQUE_DB_COLUMNS } from '~/constants/databaseConstants'
 
 const flattenedData = computed(() => {
   return torqueData.flatMap(cat =>
@@ -17,21 +17,12 @@ const flattenedData = computed(() => {
     })),
   )
 })
-
-const tableColumns: TableColumn<(typeof flattenedData.value)[number]>[] = [
-  { key: 'category', label: 'カテゴリ', sortable: true },
-  { key: 'size', label: 'サイズ', sortable: true },
-  { key: 'torque_nm', label: '標準トルク (N・m)', sortable: true },
-  { key: 'range_nm', label: '許容範囲 (N・m)', sortable: true },
-  { key: 'note', label: '備考', sortable: true },
-  { key: 'reference', label: '参考規格', sortable: true },
-]
 </script>
 
 <template>
   <DbLayout
     :data="flattenedData"
-    :columns="tableColumns"
+    :columns="TORQUE_DB_COLUMNS"
     :search-mapper="(item) => `${item.category} ${item.size} ${item.note}`"
     placeholder="種類、サイズなどを検索... (例: M8)"
   >

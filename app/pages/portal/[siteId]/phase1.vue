@@ -8,7 +8,7 @@ import { computed, onMounted, watch } from 'vue'
 import { useHead, useRoute } from '#app'
 import { usePhaseExam } from '~/composables/portal/usePhaseExam'
 import { useTableSort } from '~/composables/useTableSort'
-import type { TableColumn } from '~/types/components'
+import { PHASE1_TABLE_COLUMNS } from '~/constants/soudenConstants'
 import type { CircuitItem } from '~/types/souden'
 
 useHead({ title: 'フェーズ1：回路確認・増し締め - Elec-Console' })
@@ -78,18 +78,7 @@ const shubetsuTabOptions = computed(() => {
   }))
 })
 
-// テーブルカラム定義とソート
-const columns: TableColumn<CircuitItem>[] = [
-  { key: 'banMeisho', label: '盤情報', sortable: true, width: '95px' },
-  { key: 'kairoBangou', label: '回路番号', sortable: true, width: '80px', align: 'center' },
-  { key: 'kairoMeisho', label: '回路名称', sortable: true, width: '135px' },
-  { key: 'cableList', label: '配線 / 接地', sortable: true, width: '130px' },
-  { key: 'p1Kakunin', label: '確認 / 増締め', sortable: true, width: '115px', align: 'center' },
-  { key: 'p1Remarks', label: '備考', sortable: true },
-  { key: 'actions', label: '操作', width: '125px', align: 'center' },
-  { key: 'p1ConfirmedAt', label: '測定者 / 日時', sortable: true, width: '115px', align: 'center' },
-]
-
+// ソート管理
 const {
   sortBy,
   sortOrder,
@@ -136,7 +125,7 @@ const {
     <!-- 回路一覧テーブル -->
     <AppTable
       class="phase1__table"
-      :columns="columns"
+      :columns="PHASE1_TABLE_COLUMNS"
       :data="sortedCircuits"
       :sort-by="sortBy"
       :sort-order="sortOrder"

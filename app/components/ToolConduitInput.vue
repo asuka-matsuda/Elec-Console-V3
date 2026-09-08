@@ -6,7 +6,8 @@
  */
 import { computed } from 'vue'
 
-import type { SelectOption, TableColumn } from '~/types/components'
+import { CONDUIT_CABLE_COLUMNS } from '~/constants/cableConstants'
+import type { SelectOption } from '~/types/components'
 import type { ConduitInputData } from '~/types/tools'
 import {
   findCableByIndexString,
@@ -28,14 +29,6 @@ const emit = defineEmits<{
 }>()
 
 const categories = computed(() => getCableCategories())
-
-const cableColumns: TableColumn[] = [
-  { key: 'category', label: 'ケーブル種別', width: '27%' },
-  { key: 'cableIdx', label: 'サイズ', width: '31%' },
-  { key: 'count', label: '本数', width: '74px' },
-  { key: 'spec', label: '断面積', width: '90px', align: 'right' },
-  { key: 'actions', label: '', width: '52px', align: 'center' },
-]
 
 const getCableAreaText = (cableIdx: string): string => {
   const def = findCableByIndexString(cableIdx)
@@ -96,7 +89,7 @@ const getCableAreaText = (cableIdx: string): string => {
       </div>
 
       <AppTable
-        :columns="cableColumns"
+        :columns="CONDUIT_CABLE_COLUMNS"
         class="conduit-table"
       >
         <template #body>

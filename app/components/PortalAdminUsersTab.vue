@@ -6,23 +6,14 @@
 import { onMounted, ref } from 'vue'
 
 import { useAdminUsers } from '~/composables/admin/useAdminUsers'
+import { ADMIN_USER_COLUMNS } from '~/constants/adminConstants'
 import type { User } from '~/types/auth'
-import type { TableColumn } from '~/types/components'
 
 const { users, fetchUsers, deleteUser, resetUserPassword } = useAdminUsers()
 
 onMounted(() => {
   fetchUsers()
 })
-
-const userHeaders: TableColumn<User>[] = [
-  { key: 'id', label: 'ID', sortable: true },
-  { key: 'lastName', label: '名前', sortable: true },
-  { key: 'loginId', label: 'ログインID', sortable: true },
-  { key: 'role', label: '権限', sortable: true },
-  { key: 'lastLoginAt', label: '最終ログイン', sortable: true },
-  { key: 'actions', label: '操作' },
-]
 
 const {
   sortBy: sortKey,
@@ -123,7 +114,7 @@ const confirmResetPassword = async (row: User) => {
     </AppSectionHeader>
 
     <AppTable
-      :columns="userHeaders"
+      :columns="ADMIN_USER_COLUMNS"
       :data="sortedUsers"
       :sort-by="sortKey"
       :sort-order="sortOrder"

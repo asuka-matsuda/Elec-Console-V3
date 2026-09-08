@@ -6,6 +6,7 @@
 import { ref } from 'vue'
 
 import { useHead } from '#app'
+import { ADMIN_TABS } from '~/constants/adminConstants'
 
 useHead({ title: 'ポータル管理 - Elec-Console' })
 
@@ -13,10 +14,6 @@ definePageMeta({
   middleware: ['admin'],
 })
 
-const tabs = [
-  { value: 'users', label: 'ユーザー管理' },
-  { value: 'site', label: '現場管理' },
-]
 const activeTab = ref('users')
 </script>
 
@@ -24,7 +21,7 @@ const activeTab = ref('users')
   <div class="portal-admin">
     <AppSectionHeader title="ポータル管理 (開発者向け)" icon="settings" />
 
-    <AppTabs v-model="activeTab" :options="tabs" />
+    <AppTabs v-model="activeTab" :options="ADMIN_TABS" />
 
     <div class="portal-admin__content">
       <PortalAdminUsersTab v-if="activeTab === 'users'" />

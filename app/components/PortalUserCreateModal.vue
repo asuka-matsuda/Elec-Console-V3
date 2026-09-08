@@ -2,6 +2,10 @@
 import { ref } from 'vue'
 
 import { useAdminUsers } from '~/composables/admin/useAdminUsers'
+import {
+  USER_CREATE_FORM_FIELDS,
+  USER_ROLE_OPTIONS,
+} from '~/constants/adminConstants'
 import type { User, UserRole } from '~/types/auth'
 
 const isOpen = defineModel<boolean>({ default: false })
@@ -9,20 +13,6 @@ const emit = defineEmits<{
   (e: 'success', user: User): void
 }>()
 const { createUser } = useAdminUsers()
-
-const roleOptions = [
-  { value: 'admin', label: '管理者 (admin)' },
-  { value: 'worker', label: '作業員 (worker)' },
-  { value: 'viewer', label: '閲覧者 (viewer)' },
-]
-
-const formFields = [
-  { id: 'id', label: '管理ID', placeholder: '例: EMP001' },
-  { id: 'lastName', label: '姓', placeholder: '例: 松田' },
-  { id: 'lastNameKana', label: '姓（ふりがな）', placeholder: '例: まつだ' },
-  { id: 'firstName', label: '名', placeholder: '例: 飛鳥' },
-  { id: 'firstNameKana', label: '名（ふりがな）', placeholder: '例: あすか' },
-] as const
 
 const initialUserState = {
   id: '',
@@ -52,7 +42,7 @@ const handleCreateUser = async () => {
     :submit-fn="handleCreateUser"
     submit-text="登録する"
   >
-    <template v-for="field in formFields" :key="field.id">
+    <template v-for="field in USER_CREATE_FORM_FIELDS" :key="field.id">
       <AppFormGroup :label="field.label">
         <AppInput
           v-model="newUser[field.id]"
@@ -62,7 +52,7 @@ const handleCreateUser = async () => {
     </template>
 
     <AppFormGroup label="権限">
-      <AppSelect v-model="newUser.role" :options="roleOptions" />
+      <AppSelect v-model="newUser.role" :options="USER_ROLE_OPTIONS" />
     </AppFormGroup>
     <AppFormGroup>
       <AppCheckbox

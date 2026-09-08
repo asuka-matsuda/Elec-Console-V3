@@ -3,6 +3,10 @@ import { computed, ref, watch } from 'vue'
 
 import { useAdminSites } from '~/composables/admin/useAdminSites'
 import { useAdminUsers } from '~/composables/admin/useAdminUsers'
+import {
+  SITE_SETTINGS_TABS,
+  SITE_STATUS_OPTIONS,
+} from '~/constants/adminConstants'
 import type { Site } from '~/types/admin'
 import { getAssignedWorkerNames } from '~/utils/portal'
 
@@ -23,18 +27,8 @@ export interface UseSiteSettingsFormParams {
   onSave: (site: Site) => void
 }
 
-export const SITE_SETTINGS_STATUS_OPTIONS = [
-  { label: '計画中', value: 'planning' },
-  { label: '進行中', value: 'in_progress' },
-  { label: '完了', value: 'completed' },
-  { label: '保留', value: 'on_hold' },
-]
-
-export const SITE_SETTINGS_TABS = [
-  { value: 'basic', label: '基本設定', icon: 'info' },
-  { value: 'integration', label: '連携設定', icon: 'link' },
-  { value: 'rules', label: 'ルール設定', icon: 'filter' },
-]
+export const SITE_SETTINGS_STATUS_OPTIONS = SITE_STATUS_OPTIONS
+export { SITE_SETTINGS_TABS }
 
 export function useSiteSettingsForm(params: UseSiteSettingsFormParams) {
   const { site, isOpen, onSave } = params
