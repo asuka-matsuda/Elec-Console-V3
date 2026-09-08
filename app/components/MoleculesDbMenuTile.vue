@@ -1,39 +1,32 @@
 <script setup lang="ts">
 /**
- * MoleculesMenuTile
- * [Molecules] ダッシュボードやポータルで機能・現場を選択するためのナビゲーションタイル。
+ * MoleculesDbMenuTile
+ * [Molecules] ダッシュボード（Dashboard）で各機能を選択するための専用ナビゲーションタイル。
  */
-import { computed } from 'vue'
-
 import { NuxtLink } from '#components'
 
 const {
   to,
-  href,
   disabled = false,
   title,
   icon,
   description,
 } = defineProps<{
   to?: string
-  href?: string
   disabled?: boolean
   title?: string
   icon?: string
   description?: string
 }>()
-
-const target = computed(() => to || href)
 </script>
 
 <template>
   <component
-    :is="disabled ? 'button' : NuxtLink"
-    :to="!disabled ? target : undefined"
-    :type="disabled ? 'button' : undefined"
-    :disabled="disabled ? true : undefined"
+    :is="disabled ? 'div' : NuxtLink"
+    :to="!disabled ? to : undefined"
     class="relative flex flex-col gap-[var(--space-panel-gap)] p-[var(--space-panel-pad)] overflow-hidden menu-tile"
     :class="{ 'is-disabled': disabled }"
+    :aria-disabled="disabled ? 'true' : undefined"
   >
     <header v-if="icon || title || $slots.badge" class="flex items-center justify-between gap-2 tile-header">
       <div class="flex items-center gap-1 min-w-0 tile-title">
@@ -66,34 +59,38 @@ const target = computed(() => to || href)
 
   transition: var(--transition-base);
 
-  &:hover:not(.is-disabled) {
-    border-color: var(--theme-accent);
-    box-shadow: var(--shadow-glow-hover);
-    transition: var(--transition-glow);
-  }
-
-  &:focus-visible:not(.is-disabled) {
-    border-color: color-mix(in srgb, var(--theme-accent) 60%, transparent);
-    outline: none;
-    box-shadow: var(--shadow-glow-focus);
-    transition: var(--transition-glow);
-  }
-
-  &:active:not(.is-disabled) {
-    border-color: var(--theme-accent);
-    box-shadow: var(--shadow-glow-active);
-    transition: var(--transition-glow);
-
-    svg {
-      filter: var(--drop-shadow-glow-xs);
-      stroke: var(--theme-accent);
-    }
-  }
-
+  // 非活性状態
   &.is-disabled {
     cursor: not-allowed;
     opacity: 0.5;
     filter: grayscale(100%);
+  }
+
+  // 通常時のインタラクション状態
+  &:not(.is-disabled) {
+    &:hover {
+      border-color: var(--theme-accent);
+      box-shadow: var(--shadow-glow-hover);
+      transition: var(--transition-glow);
+    }
+
+    &:focus-visible {
+      border-color: color-mix(in srgb, var(--theme-accent) 60%, transparent);
+      outline: none;
+      box-shadow: var(--shadow-glow-focus);
+      transition: var(--transition-glow);
+    }
+
+    &:active {
+      border-color: var(--theme-accent);
+      box-shadow: var(--shadow-glow-active);
+      transition: var(--transition-glow);
+
+      svg {
+        filter: var(--drop-shadow-glow-xs);
+        stroke: var(--theme-accent);
+      }
+    }
   }
 
   .tile-title {
