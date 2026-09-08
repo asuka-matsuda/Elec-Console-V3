@@ -58,7 +58,7 @@ const categoryColorMap: Record<string, string> = {
         placeholder="用語名や説明を検索..."
       >
         <MoleculesFormGroup label="INDEX (読み・五十音)">
-          <AppKanaFilter
+          <MoleculesKanaFilter
             v-model="activeKanas"
             :available-rows="availableRows"
           />

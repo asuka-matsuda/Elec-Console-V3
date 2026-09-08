@@ -1,9 +1,8 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
- * AppKanaFilter
- * 五十音（あ行〜わ行他）による絞り込み機能を提供するフィルターコンポーネント。
+ * MoleculesKanaFilter
+ * [Molecules] 五十音（あ行〜わ行他）による絞り込み機能を提供するフィルターコンポーネント。
  */
-
 const selectedKanas = defineModel<string[]>({ default: () => [] })
 
 const props = defineProps<{
@@ -33,7 +32,7 @@ function isKanaDisabled(row: string) {
 </script>
 
 <template>
-  <div class="kana-filter">
+  <div class="grid grid-cols-[repeat(auto-fill,minmax(80px,1fr))] gap-1">
     <AtomsCheckbox
       v-for="kana in kanaOptions"
       :key="kana.value"
@@ -45,11 +44,3 @@ function isKanaDisabled(row: string) {
     </AtomsCheckbox>
   </div>
 </template>
-
-<style scoped lang="scss">
-.kana-filter {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-  gap: var(--space-1);
-}
-</style>
