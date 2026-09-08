@@ -19,11 +19,11 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
 </script>
 
 <template>
-  <div class="inline-flex shrink-0 w-max gap-0.5 p-0.5 segmented-control">
+  <div class="inline-flex shrink-0 w-max gap-0.5 p-0.5 radio-group">
     <label
       v-for="option in options"
       :key="String(option.value)"
-      class="relative inline-flex items-center justify-center py-1 px-3 segmented-control__item"
+      class="relative inline-flex items-center justify-center py-1 px-3 item"
       :style="option.color ? { '--radio-color': option.color } : undefined"
     >
       <input
@@ -40,14 +40,14 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
 </template>
 
 <style scoped lang="scss">
-.segmented-control {
+.radio-group {
   --radio-color: var(--theme-accent);
 
   border: var(--border-width-base) solid var(--color-border);
   border-radius: var(--radius-sm);
   box-shadow: none;
 
-  &__item {
+  .item {
     cursor: pointer;
     user-select: none;
 
