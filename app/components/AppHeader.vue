@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * AppHeader
  * アプリケーションのヘッダー部分（パンくずリストやアクション等）を表示するコンポーネントです。
@@ -24,7 +24,7 @@ const emit = defineEmits<{
         class="menu-btn"
         @click="emit('toggle-sidebar')"
       />
-      <AppLogo />
+      <AtomsLogo />
 
       <AppBreadcrumb
         v-if="breadcrumbs?.length"

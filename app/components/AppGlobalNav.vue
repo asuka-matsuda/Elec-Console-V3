@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * AppGlobalNav
  * アプリケーションのグローバルナビゲーション（サイドバーメニュー）を表示するコンポーネントです。
@@ -48,7 +48,7 @@ onMounted(() => {
 
   <aside class="global-nav" :class="{ 'is-open': isOpen }">
     <div class="header">
-      <AppLogo @click="closeSidebar" />
+      <AtomsLogo @click="closeSidebar" />
       <MoleculesIconButton
         name="x"
         size="sm"

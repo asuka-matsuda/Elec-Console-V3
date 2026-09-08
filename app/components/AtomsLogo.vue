@@ -1,6 +1,6 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
- * AppLogo
+ * AtomsLogo
  * アプリケーションのロゴを表示し、クリック時にホームへ遷移またはイベントを発火するコンポーネント。
  */
 import AtomsIcon from './AtomsIcon.vue'
@@ -11,7 +11,11 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <NuxtLink to="/" class="logo" @click="emit('click')">
+  <NuxtLink
+    to="/"
+    class="relative flex shrink-0 items-center gap-2 logo"
+    @click="emit('click')"
+  >
     <AtomsIcon name="zap" size="md" />
     <span>Elec-Console</span>
   </NuxtLink>
@@ -21,20 +25,14 @@ const emit = defineEmits<{
 .logo {
   cursor: pointer;
   user-select: none;
+  white-space: nowrap;
 
-  position: relative;
   z-index: 1;
-
-  display: flex;
-  flex-shrink: 0;
-  gap: var(--space-2);
-  align-items: center;
 
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
   color: var(--color-text-main);
-  white-space: nowrap;
 
   transition: var(--transition-base);
 
