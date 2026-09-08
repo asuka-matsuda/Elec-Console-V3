@@ -7,8 +7,19 @@ import { computed, onMounted, watch } from 'vue'
 
 import { useHead, useRoute } from '#app'
 import { useOperationLogs } from '~/composables/portal/useOperationLogs'
+import type { TableColumn } from '~/types/components'
+import type { OperationLogItem } from '~/types/souden'
 
 useHead({ title: '送電試験 操作ログ - Elec-Console' })
+
+const columns: TableColumn<OperationLogItem>[] = [
+  { key: 'timestamp', label: '日時', width: '170px' },
+  { key: 'worker', label: '作業者', width: '120px' },
+  { key: 'action', label: 'アクション', width: '140px', align: 'center' },
+  { key: 'targetBan', label: '対象盤', width: '130px' },
+  { key: 'targetKairo', label: '対象回路', width: '140px' },
+  { key: 'details', label: '詳細内容' },
+]
 
 const route = useRoute()
 const siteId = computed(() => route.params.siteId as string)
@@ -61,8 +72,8 @@ const limitOptions = [
   { label: '最新 200 件', value: 200 },
 ]
 
-const formatTimestamp = (ts: string) => {
-  if (!ts) return '-'
+const formatTimestamp = (ts: unknown) => {
+  if (!ts || typeof ts !== 'string') return '-'
   const d = new Date(ts)
   const y = d.getFullYear()
   const m = String(d.getMonth() + 1).padStart(2, '0')
@@ -74,7 +85,8 @@ const formatTimestamp = (ts: string) => {
   return `${y}/${m}/${day} ${hh}:${mm}:${ss}`
 }
 
-const getActionBadgeColor = (action: string) => {
+const getActionBadgeColor = (action: unknown) => {
+  if (typeof action !== 'string') return 'var(--color-status-neutral)'
   if (action.includes('確定') || action.includes('完了')) {
     return 'var(--color-status-success)'
   }
@@ -164,84 +176,56 @@ const getActionBadgeColor = (action: string) => {
     </AppPanel>
 
     <!-- ログ一覧テーブル -->
-    <AppTable class="operation-logs__table">
-      <template #header>
-        <tr>
-          <th style="width: 170px;">
-            日時
-          </th>
-          <th style="width: 120px;">
-            作業者
-          </th>
-          <th style="width: 140px; text-align: center;">
-            アクション
-          </th>
-          <th style="width: 130px;">
-            対象盤
-          </th>
-          <th style="width: 140px;">
-            対象回路
-          </th>
-          <th>詳細内容</th>
-        </tr>
+    <AppTable
+      v-if="logs.length > 0"
+      class="operation-logs__table"
+      :columns="columns"
+      :data="logs"
+    >
+      <template #cell-timestamp="{ value }">
+        <span class="logs-cell__time">
+          {{ formatTimestamp(value) }}
+        </span>
       </template>
 
-      <template #body>
-        <tr v-if="logs.length === 0" class="logs-empty">
-          <td colspan="6" style="padding: var(--space-6); text-align: center;">
-            操作ログが存在しないか、条件に一致するログがありません
-          </td>
-        </tr>
+      <template #cell-worker="{ value }">
+        <span class="logs-cell__worker">
+          {{ value || '-' }}
+        </span>
+      </template>
 
-        <tr
-          v-for="item in logs"
-          :key="item.id"
-          class="logs-row"
-        >
-          <!-- タイムスタンプ -->
-          <td>
-            <span class="logs-cell__time">
-              {{ formatTimestamp(item.timestamp) }}
-            </span>
-          </td>
+      <template #cell-action="{ value }">
+        <AppBadge :color="getActionBadgeColor(value)">
+          {{ value }}
+        </AppBadge>
+      </template>
 
-          <!-- 作業者 -->
-          <td>
-            <span class="logs-cell__worker">
-              {{ item.worker || '-' }}
-            </span>
-          </td>
+      <template #cell-targetBan="{ value }">
+        <span class="logs-cell__ban">
+          {{ value || '-' }}
+        </span>
+      </template>
 
-          <!-- アクション -->
-          <td style="text-align: center;">
-            <AppBadge :color="getActionBadgeColor(item.action)">
-              {{ item.action }}
-            </AppBadge>
-          </td>
+      <template #cell-targetKairo="{ value }">
+        <span class="logs-cell__circuit">
+          {{ value || '-' }}
+        </span>
+      </template>
 
-          <!-- 対象盤 -->
-          <td>
-            <span class="logs-cell__ban">
-              {{ item.targetBan || '-' }}
-            </span>
-          </td>
-
-          <!-- 対象回路 -->
-          <td>
-            <span class="logs-cell__circuit">
-              {{ item.targetKairo || '-' }}
-            </span>
-          </td>
-
-          <!-- 詳細内容 -->
-          <td>
-            <span class="logs-cell__details">
-              {{ item.details || '-' }}
-            </span>
-          </td>
-        </tr>
+      <template #cell-details="{ value }">
+        <span class="logs-cell__details">
+          {{ value || '-' }}
+        </span>
       </template>
     </AppTable>
+
+    <!-- ログが存在しない場合のエンプティステート -->
+    <AppEmptyState
+      v-else-if="!isLoading"
+      icon="history"
+      title="操作ログが存在しません"
+      description="条件に一致するログがないか、操作履歴がまだ記録されていません。"
+    />
   </div>
 </template>
 
@@ -290,14 +274,6 @@ const getActionBadgeColor = (action: string) => {
   }
 }
 
-.logs-row {
-  transition: background-color var(--duration-fast) var(--ease-base);
-
-  &:hover {
-    background-color: rgb(255 255 255 / 3%);
-  }
-}
-
 .logs-cell {
   &__time {
     font-family: var(--font-mono);
@@ -326,10 +302,5 @@ const getActionBadgeColor = (action: string) => {
     color: var(--color-text-main);
     word-break: break-all;
   }
-}
-
-.logs-empty {
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
 }
 </style>

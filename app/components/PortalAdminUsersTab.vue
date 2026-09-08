@@ -186,14 +186,14 @@ const confirmResetPassword = async (row: User) => {
       </template>
     </AppTable>
 
-    <UserCreateModal v-model="isCreateModalOpen" @success="handleUserCreated" />
+    <PortalUserCreateModal v-model="isCreateModalOpen" @success="handleUserCreated" />
 
-    <UserCredentialModal
+    <PortalUserCredentialModal
       v-model="isCredentialModalOpen"
       :user="createdUserResult"
     />
 
-    <UserAssignModal
+    <PortalUserAssignModal
       v-model="isAssignModalOpen"
       :user-id="assignTargetUserId"
       :initial-site-ids="assignTargetSiteIds"

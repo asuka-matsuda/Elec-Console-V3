@@ -33,7 +33,7 @@ onMounted(() => {
       size="lg"
     >
       <template #actions>
-        <SyncStatusBadge
+        <PortalSyncStatusBadge
           :site-id="siteId"
           @synced="fetchStats"
         />
@@ -98,84 +98,36 @@ onMounted(() => {
 
           <div class="summary-details">
             <!-- 幹線 詳細 -->
-            <div class="summary-group">
-              <div class="sub-gauge">
-                <AppCircularGauge
-                  :value="stats.trunkOverallPct"
-                  size="sm"
-                  label="幹線 全体"
-                  color="var(--color-category-tool)"
-                />
-              </div>
-
-              <div class="progress-bars">
-                <AppProgressBar
-                  label="回路確認 (Phase 1)"
-                  :completed="stats.trunkP1"
-                  :total="stats.trunkTotal"
-                  :excluded="stats.trunkExcluded"
-                  :pct="stats.trunkP1Pct"
-                  variant="main"
-                />
-                <AppProgressBar
-                  label="絶縁抵抗 (Phase 2)"
-                  :completed="stats.trunkP2"
-                  :total="stats.trunkTotal"
-                  :excluded="stats.trunkExcluded"
-                  :pct="stats.trunkP2Pct"
-                  variant="tool"
-                />
-                <AppProgressBar
-                  label="送電・電圧 (Phase 3)"
-                  :completed="stats.trunkP3"
-                  :total="stats.trunkTotal"
-                  :excluded="stats.trunkExcluded"
-                  :pct="stats.trunkP3Pct"
-                  variant="success"
-                />
-              </div>
-            </div>
+            <PortalSoudenProgressGroup
+              label="幹線"
+              :overall-pct="stats.trunkOverallPct"
+              color="var(--color-category-tool)"
+              :total="stats.trunkTotal"
+              :excluded="stats.trunkExcluded"
+              :p1-completed="stats.trunkP1"
+              :p1-pct="stats.trunkP1Pct"
+              :p2-completed="stats.trunkP2"
+              :p2-pct="stats.trunkP2Pct"
+              :p3-completed="stats.trunkP3"
+              :p3-pct="stats.trunkP3Pct"
+            />
 
             <AppDivider type="fade-center" />
 
             <!-- 二次側 詳細 -->
-            <div class="summary-group">
-              <div class="sub-gauge">
-                <AppCircularGauge
-                  :value="stats.secOverallPct"
-                  size="sm"
-                  label="二次側 全体"
-                  color="var(--color-category-management)"
-                />
-              </div>
-
-              <div class="progress-bars">
-                <AppProgressBar
-                  label="回路確認 (Phase 1)"
-                  :completed="stats.secP1"
-                  :total="stats.secTotal"
-                  :excluded="stats.secExcluded"
-                  :pct="stats.secP1Pct"
-                  variant="main"
-                />
-                <AppProgressBar
-                  label="絶縁抵抗 (Phase 2)"
-                  :completed="stats.secP2"
-                  :total="stats.secTotal"
-                  :excluded="stats.secExcluded"
-                  :pct="stats.secP2Pct"
-                  variant="tool"
-                />
-                <AppProgressBar
-                  label="送電・電圧 (Phase 3)"
-                  :completed="stats.secP3"
-                  :total="stats.secTotal"
-                  :excluded="stats.secExcluded"
-                  :pct="stats.secP3Pct"
-                  variant="success"
-                />
-              </div>
-            </div>
+            <PortalSoudenProgressGroup
+              label="二次側"
+              :overall-pct="stats.secOverallPct"
+              color="var(--color-category-management)"
+              :total="stats.secTotal"
+              :excluded="stats.secExcluded"
+              :p1-completed="stats.secP1"
+              :p1-pct="stats.secP1Pct"
+              :p2-completed="stats.secP2"
+              :p2-pct="stats.secP2Pct"
+              :p3-completed="stats.secP3"
+              :p3-pct="stats.secP3Pct"
+            />
           </div>
         </div>
       </AppPanel>
@@ -186,21 +138,21 @@ onMounted(() => {
         <AppPanel>
           <AppSectionHeader title="幹線" icon="zap" variant="tool" />
           <ol class="step-list">
-            <SoudenStepIndicator
+            <PortalSoudenStepIndicator
               :step-num="1"
               title="回路確認・増し締め"
               :completed="stats.trunkP1"
               :total="stats.trunkTotal"
               :to="`/portal/${siteId}/phase1?kei_to=幹線`"
             />
-            <SoudenStepIndicator
+            <PortalSoudenStepIndicator
               :step-num="2"
               title="絶縁抵抗測定"
               :completed="stats.trunkP2"
               :total="stats.trunkTotal"
               :to="`/portal/${siteId}/phase2?kei_to=幹線`"
             />
-            <SoudenStepIndicator
+            <PortalSoudenStepIndicator
               :step-num="3"
               title="送電・電圧測定"
               :completed="stats.trunkP3"
@@ -214,21 +166,21 @@ onMounted(() => {
         <AppPanel>
           <AppSectionHeader title="二次側" icon="layers" variant="management" />
           <ol class="step-list">
-            <SoudenStepIndicator
+            <PortalSoudenStepIndicator
               :step-num="1"
               title="回路確認・増し締め"
               :completed="stats.secP1"
               :total="stats.secTotal"
               :to="`/portal/${siteId}/phase1?kei_to=二次側`"
             />
-            <SoudenStepIndicator
+            <PortalSoudenStepIndicator
               :step-num="2"
               title="絶縁抵抗測定"
               :completed="stats.secP2"
               :total="stats.secTotal"
               :to="`/portal/${siteId}/phase2?kei_to=二次側`"
             />
-            <SoudenStepIndicator
+            <PortalSoudenStepIndicator
               :step-num="3"
               title="送電・電圧測定"
               :completed="stats.secP3"
@@ -290,36 +242,6 @@ onMounted(() => {
   flex: 1;
   flex-direction: column;
   gap: var(--space-5);
-}
-
-.summary-group {
-  display: flex;
-  gap: var(--space-6);
-  align-items: center;
-
-  @include mq("md") {
-    flex-direction: column;
-    gap: var(--space-3);
-    align-items: flex-start;
-  }
-}
-
-.sub-gauge {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-
-  width: 120px;
-}
-
-.progress-bars {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: var(--space-3);
-
-  width: 100%;
 }
 
 .step-list {

@@ -5,11 +5,9 @@
  */
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 
-import { useHead, useRoute } from '#app'
-import ExamMinimap from '~/components/Portal/ExamMinimap.vue'
 import { usePhaseExam } from '~/composables/portal/usePhaseExam'
 import { useTableSort } from '~/composables/useTableSort'
-import type { TableColumn } from '~/types/components'
+import type { SelectOption, TableColumn } from '~/types/components'
 import type { CircuitItem } from '~/types/souden'
 
 useHead({ title: 'フェーズ3：送電・電圧測定・検相 - Elec-Console' })
@@ -118,6 +116,19 @@ const getPhaseLabels = (circuit: CircuitItem) => {
   }
 }
 
+// 検相 / 点灯確認の選択肢
+const getKensouOptions = (circuit: CircuitItem): SelectOption[] => {
+  return isThreePhase(circuit)
+    ? [
+        { label: '正相', value: '正相' },
+        { label: '逆相', value: '逆相' },
+      ]
+    : [
+        { label: '点灯確認(良)', value: '点灯確認(良)' },
+        { label: '点灯確認(否)', value: '点灯確認(否)' },
+      ]
+}
+
 // 電圧フォーマット（数値と単位を分離して表示）
 const formatVoltage = (val: number | null | undefined) => {
   if (val === null || val === undefined) return '-'
@@ -208,7 +219,7 @@ const {
       size="lg"
     >
       <template #actions>
-        <SyncStatusBadge
+        <PortalSyncStatusBadge
           :site-id="siteId"
           @synced="fetchCircuits"
         />
@@ -235,56 +246,16 @@ const {
     </AppSectionHeader>
 
     <!-- 検索・絞り込み ＆ 進捗コントロールパネル -->
-    <AppPanel variant="hud">
-      <div class="phase3-controls">
-        <div class="phase3-controls__filters">
-          <!-- 盤種別タブ -->
-          <div class="phase3-controls__row">
-            <span class="phase3-controls__label">盤種別:</span>
-            <AppTabs
-              v-model="selectedBanShubetsu"
-              :options="shubetsuTabOptions"
-              variant="pills"
-            />
-          </div>
-
-          <!-- 盤名称セレクト & 件数表示 -->
-          <div class="phase3-controls__row phase3-controls__row--inline">
-            <div class="phase3-controls__select-group">
-              <span class="phase3-controls__label">盤名称:</span>
-              <AppSelect
-                v-model="selectedBanMeisho"
-                :options="availableBanMeishoList"
-                class="phase3-controls__select"
-              />
-            </div>
-
-            <AppBadge color="var(--theme-accent)">
-              対象回路: {{ phaseStats.allCount }} 件
-            </AppBadge>
-          </div>
-        </div>
-
-        <!-- 全体進捗バー & ミニマップ -->
-        <div class="phase3-controls__progress">
-          <AppProgressBar
-            label="フェーズ3 進捗状況"
-            :completed="phaseStats.completed"
-            :total="phaseStats.total"
-            :excluded="phaseStats.excluded"
-            :pct="phaseStats.pct"
-            variant="success"
-          />
-
-          <!-- ミニマップ -->
-          <ExamMinimap
-            :circuits="sortedCircuits"
-            :phase="3"
-            @select-circuit="scrollToCircuit"
-          />
-        </div>
-      </div>
-    </AppPanel>
+    <PortalSoudenPhaseControls
+      v-model:shubetsu="selectedBanShubetsu"
+      v-model:ban-meisho="selectedBanMeisho"
+      :shubetsu-options="shubetsuTabOptions"
+      :ban-meisho-options="availableBanMeishoList"
+      :stats="phaseStats"
+      :circuits="sortedCircuits"
+      :phase="3"
+      @select-circuit="scrollToCircuit"
+    />
 
     <!-- 回路一覧テーブル -->
     <AppTable
@@ -312,10 +283,10 @@ const {
         >
           <!-- 盤種別 / 盤名称 -->
           <td>
-            <div class="phase3-cell__panel">
-              <span class="phase3-cell__ban-name">{{ circuit.banMeisho }}</span>
-              <span class="phase3-cell__shubetsu">{{ circuit.banShubetsu }}</span>
-            </div>
+            <PortalSoudenBanCell
+              :ban-meisho="circuit.banMeisho"
+              :ban-shubetsu="circuit.banShubetsu"
+            />
           </td>
 
           <!-- 回路番号 -->
@@ -344,15 +315,16 @@ const {
               <div class="phase3-input-cell">
                 <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label1 }}</span>
                 <div class="phase3-input-cell__box">
-                  <input
+                  <AppInput
                     v-model="inputForm.rs"
                     type="number"
+                    size="sm"
                     step="any"
                     inputmode="decimal"
-                    class="phase3-input"
+                    style="width: 58px;"
                     @focus="handleInputFocus"
                     @keydown.enter.prevent="saveInput(circuit)"
-                  >
+                  />
                   <span class="phase3-input-cell__unit">V</span>
                 </div>
               </div>
@@ -377,15 +349,16 @@ const {
               <div class="phase3-input-cell">
                 <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label2 }}</span>
                 <div class="phase3-input-cell__box">
-                  <input
+                  <AppInput
                     v-model="inputForm.st"
                     type="number"
+                    size="sm"
                     step="any"
                     inputmode="decimal"
-                    class="phase3-input"
+                    style="width: 58px;"
                     @focus="handleInputFocus"
                     @keydown.enter.prevent="saveInput(circuit)"
-                  >
+                  />
                   <span class="phase3-input-cell__unit">V</span>
                 </div>
               </div>
@@ -410,15 +383,16 @@ const {
               <div class="phase3-input-cell">
                 <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label3 }}</span>
                 <div class="phase3-input-cell__box">
-                  <input
+                  <AppInput
                     v-model="inputForm.rt"
                     type="number"
+                    size="sm"
                     step="any"
                     inputmode="decimal"
-                    class="phase3-input"
+                    style="width: 58px;"
                     @focus="handleInputFocus"
                     @keydown.enter.prevent="saveInput(circuit)"
-                  >
+                  />
                   <span class="phase3-input-cell__unit">V</span>
                 </div>
               </div>
@@ -440,24 +414,11 @@ const {
           <!-- 検相 / 点灯確認 -->
           <td style="text-align: center;">
             <template v-if="editingRowId === circuit.id">
-              <select v-model="inputForm.kensou" class="phase3-select">
-                <template v-if="isThreePhase(circuit)">
-                  <option value="正相">
-                    正相
-                  </option>
-                  <option value="逆相">
-                    逆相
-                  </option>
-                </template>
-                <template v-else>
-                  <option value="点灯確認(良)">
-                    点灯確認(良)
-                  </option>
-                  <option value="点灯確認(否)">
-                    点灯確認(否)
-                  </option>
-                </template>
-              </select>
+              <AppSelect
+                v-model="inputForm.kensou"
+                :options="getKensouOptions(circuit)"
+                style="min-width: 96px;"
+              />
             </template>
             <template v-else-if="circuit.kensou">
               <AppBadge
@@ -555,13 +516,10 @@ const {
 
           <!-- 測定者 / 日時 -->
           <td style="text-align: center;">
-            <template v-if="circuit.p3Worker">
-              <div class="phase3-cell__worker">
-                <strong>{{ circuit.p3Worker }}</strong>
-                <span class="phase3-cell__date">{{ formatShortDateTime(circuit.p3ConfirmedAt) }}</span>
-              </div>
-            </template>
-            <span v-else class="phase3-cell__dash">-</span>
+            <PortalSoudenWorkerCell
+              :worker="circuit.p3Worker"
+              :confirmed-at="circuit.p3ConfirmedAt"
+            />
           </td>
         </tr>
       </template>
@@ -579,56 +537,6 @@ const {
   &__table {
     flex: 1;
     min-height: 400px;
-  }
-}
-
-.phase3-controls {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-card-gap);
-  align-items: flex-start;
-
-  @include mq("lg") {
-    grid-template-columns: 1fr;
-  }
-
-  &__filters {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-
-  &__row {
-    display: flex;
-    gap: var(--space-3);
-    align-items: center;
-
-    &--inline {
-      flex-wrap: wrap;
-    }
-  }
-
-  &__label {
-    min-width: 50px;
-    font-size: var(--text-xs);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-secondary);
-  }
-
-  &__select-group {
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
-  }
-
-  &__select {
-    min-width: 160px;
-  }
-
-  &__progress {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
   }
 }
 
@@ -654,33 +562,31 @@ const {
 }
 
 .phase3-cell {
-  &__panel {
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  &__ban-name {
-    overflow: hidden;
-
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-main);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  &__shubetsu {
-    font-size: 11px;
-    color: var(--color-text-muted);
-  }
-
   &__bangou-wrap {
     display: flex;
     flex-direction: column;
     gap: 3px;
     align-items: center;
     justify-content: center;
+  }
+
+  &__type-badge {
+    display: inline-block;
+
+    padding: 2px 8px;
+    border: 1px solid rgb(255 255 255 / 10%);
+    border-radius: var(--radius-sm);
+
+    font-size: 10px;
+    color: var(--color-text-muted);
+
+    background-color: rgb(255 255 255 / 6%);
+
+    &.is-three {
+      border-color: rgb(245 158 11 / 30%);
+      color: #f59e0b;
+      background-color: rgb(245 158 11 / 10%);
+    }
   }
 
   &__meisho {
@@ -705,24 +611,6 @@ const {
     color: var(--color-text-secondary);
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-
-  &__worker {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    align-items: center;
-
-    strong {
-      font-size: var(--text-xs);
-      color: var(--color-status-success);
-    }
-  }
-
-  &__date {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--color-text-muted);
   }
 
   &__dash {
@@ -786,41 +674,6 @@ const {
   &__unit {
     font-size: 10px;
     color: var(--color-text-muted);
-  }
-}
-
-.phase3-input {
-  width: 52px;
-  padding: 2px 4px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-text-main);
-  text-align: right;
-
-  background-color: rgb(255 255 255 / 8%);
-
-  &:focus {
-    border-color: var(--color-category-main, #3b82f6);
-    outline: none;
-  }
-}
-
-.phase3-select {
-  padding: 3px 6px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-
-  font-size: var(--text-xs);
-  color: var(--color-text-main);
-
-  background-color: rgb(255 255 255 / 8%);
-
-  &:focus {
-    border-color: var(--color-category-main, #3b82f6);
-    outline: none;
   }
 }
 

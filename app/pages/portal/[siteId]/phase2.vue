@@ -6,7 +6,6 @@
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 
 import { useHead, useRoute } from '#app'
-import ExamMinimap from '~/components/Portal/ExamMinimap.vue'
 import { usePhaseExam } from '~/composables/portal/usePhaseExam'
 import { useTableSort } from '~/composables/useTableSort'
 import type { TableColumn } from '~/types/components'
@@ -208,7 +207,7 @@ const {
       size="lg"
     >
       <template #actions>
-        <SyncStatusBadge
+        <PortalSyncStatusBadge
           :site-id="siteId"
           @synced="fetchCircuits"
         />
@@ -235,63 +234,24 @@ const {
     </AppSectionHeader>
 
     <!-- 検索・絞り込み ＆ 進捗コントロールパネル -->
-    <AppPanel variant="hud">
-      <div class="phase2-controls">
-        <div class="phase2-controls__filters">
-          <!-- 盤種別タブ -->
-          <div class="phase2-controls__row">
-            <span class="phase2-controls__label">盤種別:</span>
-            <AppTabs
-              v-model="selectedBanShubetsu"
-              :options="shubetsuTabOptions"
-              variant="pills"
-            />
-          </div>
-
-          <!-- 盤名称セレクト & 基準値表示 -->
-          <div class="phase2-controls__row phase2-controls__row--inline">
-            <div class="phase2-controls__select-group">
-              <span class="phase2-controls__label">盤名称:</span>
-              <AppSelect
-                v-model="selectedBanMeisho"
-                :options="availableBanMeishoList"
-                class="phase2-controls__select"
-              />
-            </div>
-
-            <!-- 基準値バッジ（数値のみ着色、単位はミュート） -->
-            <div class="phase2-controls__threshold">
-              <span class="phase2-controls__threshold-label">基準値: ≧</span>
-              <span class="phase2-controls__threshold-val">{{ phase2ThresholdMegOhm.toFixed(1) }}</span>
-              <span class="phase2-controls__threshold-unit">MΩ</span>
-            </div>
-
-            <AppBadge color="var(--theme-accent)">
-              対象回路: {{ phaseStats.allCount }} 件
-            </AppBadge>
-          </div>
+    <PortalSoudenPhaseControls
+      v-model:shubetsu="selectedBanShubetsu"
+      v-model:ban-meisho="selectedBanMeisho"
+      :shubetsu-options="shubetsuTabOptions"
+      :ban-meisho-options="availableBanMeishoList"
+      :stats="phaseStats"
+      :circuits="sortedCircuits"
+      :phase="2"
+      @select-circuit="scrollToCircuit"
+    >
+      <template #filters-extra>
+        <div class="phase2-threshold">
+          <span class="phase2-threshold__label">基準値: ≧</span>
+          <span class="phase2-threshold__val">{{ phase2ThresholdMegOhm.toFixed(1) }}</span>
+          <span class="phase2-threshold__unit">MΩ</span>
         </div>
-
-        <!-- 全体進捗バー & ミニマップ -->
-        <div class="phase2-controls__progress">
-          <AppProgressBar
-            label="フェーズ2 進捗状況"
-            :completed="phaseStats.completed"
-            :total="phaseStats.total"
-            :excluded="phaseStats.excluded"
-            :pct="phaseStats.pct"
-            variant="success"
-          />
-
-          <!-- ミニマップ -->
-          <ExamMinimap
-            :circuits="sortedCircuits"
-            :phase="2"
-            @select-circuit="scrollToCircuit"
-          />
-        </div>
-      </div>
-    </AppPanel>
+      </template>
+    </PortalSoudenPhaseControls>
 
     <!-- 回路一覧テーブル -->
     <AppTable
@@ -319,10 +279,10 @@ const {
         >
           <!-- 盤種別 / 盤名称 -->
           <td>
-            <div class="phase2-cell__panel">
-              <span class="phase2-cell__ban-name">{{ circuit.banMeisho }}</span>
-              <span class="phase2-cell__shubetsu">{{ circuit.banShubetsu }}</span>
-            </div>
+            <PortalSoudenBanCell
+              :ban-meisho="circuit.banMeisho"
+              :ban-shubetsu="circuit.banShubetsu"
+            />
           </td>
 
           <!-- 回路番号 -->
@@ -351,16 +311,17 @@ const {
               <div class="phase2-input-cell">
                 <span class="phase2-input-cell__label">{{ getPhaseLabels(circuit).phase1 }}</span>
                 <div class="phase2-input-cell__box">
-                  <input
+                  <AppInput
                     v-model="inputForm.rVal"
                     type="number"
+                    size="sm"
                     step="0.1"
                     inputmode="decimal"
-                    class="phase2-input"
                     placeholder="100"
+                    style="width: 58px;"
                     @focus="handleInputFocus"
                     @keydown.enter.prevent="saveInput(circuit)"
-                  >
+                  />
                   <span class="phase2-input-cell__unit">MΩ</span>
                 </div>
               </div>
@@ -394,16 +355,17 @@ const {
               <div class="phase2-input-cell">
                 <span class="phase2-input-cell__label">{{ getPhaseLabels(circuit).phase2 }}</span>
                 <div class="phase2-input-cell__box">
-                  <input
+                  <AppInput
                     v-model="inputForm.sVal"
                     type="number"
+                    size="sm"
                     step="0.1"
                     inputmode="decimal"
-                    class="phase2-input"
                     placeholder="100"
+                    style="width: 58px;"
                     @focus="handleInputFocus"
                     @keydown.enter.prevent="saveInput(circuit)"
-                  >
+                  />
                   <span class="phase2-input-cell__unit">MΩ</span>
                 </div>
               </div>
@@ -437,16 +399,17 @@ const {
               <div class="phase2-input-cell">
                 <span class="phase2-input-cell__label">{{ getPhaseLabels(circuit).phase3 }}</span>
                 <div class="phase2-input-cell__box">
-                  <input
+                  <AppInput
                     v-model="inputForm.tVal"
                     type="number"
+                    size="sm"
                     step="0.1"
                     inputmode="decimal"
-                    class="phase2-input"
                     placeholder="100"
+                    style="width: 58px;"
                     @focus="handleInputFocus"
                     @keydown.enter.prevent="saveInput(circuit)"
-                  >
+                  />
                   <span class="phase2-input-cell__unit">MΩ</span>
                 </div>
               </div>
@@ -560,13 +523,10 @@ const {
 
           <!-- 測定者 / 日時 -->
           <td style="text-align: center;">
-            <template v-if="circuit.p2Worker">
-              <div class="phase2-cell__worker">
-                <strong>{{ circuit.p2Worker }}</strong>
-                <span class="phase2-cell__date">{{ formatShortDateTime(circuit.p2ConfirmedAt) }}</span>
-              </div>
-            </template>
-            <span v-else class="phase2-cell__dash">-</span>
+            <PortalSoudenWorkerCell
+              :worker="circuit.p2Worker"
+              :confirmed-at="circuit.p2ConfirmedAt"
+            />
           </td>
         </tr>
       </template>
@@ -587,81 +547,31 @@ const {
   }
 }
 
-.phase2-controls {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-card-gap);
-  align-items: flex-start;
+.phase2-threshold {
+  display: flex;
+  gap: 4px;
+  align-items: center;
 
-  @include mq("lg") {
-    grid-template-columns: 1fr;
-  }
+  padding: 2px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
 
-  &__filters {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
+  font-size: var(--text-xs);
 
-  &__row {
-    display: flex;
-    gap: var(--space-3);
-    align-items: center;
-
-    &--inline {
-      flex-wrap: wrap;
-    }
-  }
+  background-color: rgb(255 255 255 / 4%);
 
   &__label {
-    min-width: 50px;
-    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  &__val {
+    font-family: var(--font-mono);
     font-weight: var(--font-weight-bold);
-    color: var(--color-text-secondary);
+    color: var(--color-status-info, #38bdf8);
   }
 
-  &__select-group {
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
-  }
-
-  &__select {
-    min-width: 160px;
-  }
-
-  &__threshold {
-    display: flex;
-    gap: 4px;
-    align-items: center;
-
-    padding: 2px 10px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-
-    font-size: var(--text-xs);
-
-    background-color: rgb(255 255 255 / 4%);
-
-    &-label {
-      color: var(--color-text-muted);
-    }
-
-    &-val {
-      font-family: var(--font-mono);
-      font-weight: var(--font-weight-bold);
-      color: var(--color-status-info, #38bdf8);
-    }
-
-    &-unit {
-      color: var(--color-text-muted);
-    }
-  }
-
-  &__progress {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
+  &__unit {
+    color: var(--color-text-muted);
   }
 }
 
@@ -687,27 +597,6 @@ const {
 }
 
 .phase2-cell {
-  &__panel {
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  &__ban-name {
-    overflow: hidden;
-
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-main);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  &__shubetsu {
-    font-size: 11px;
-    color: var(--color-text-muted);
-  }
-
   &__bangou-wrap {
     display: flex;
     flex-direction: column;
@@ -757,28 +646,6 @@ const {
     color: var(--color-text-secondary);
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-
-  &__worker {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    align-items: center;
-
-    strong {
-      font-size: var(--text-xs);
-      color: var(--color-status-success);
-    }
-  }
-
-  &__date {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--color-text-muted);
-  }
-
-  &__dash {
-    color: var(--color-text-muted);
   }
 }
 
@@ -842,25 +709,6 @@ const {
   &__unit {
     font-size: 10px;
     color: var(--color-text-muted);
-  }
-}
-
-.phase2-input {
-  width: 58px;
-  padding: 2px 4px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-
-  font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--color-text-main);
-  text-align: right;
-
-  background-color: rgb(255 255 255 / 8%);
-
-  &:focus {
-    border-color: var(--color-category-main, #3b82f6);
-    outline: none;
   }
 }
 

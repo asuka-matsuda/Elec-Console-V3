@@ -4,7 +4,7 @@ import { ref, watch } from 'vue'
 import type { EventFormData } from '~/types/portal'
 import { adjustDateRangeForAllDay, calculateAutoEndDate } from '~/utils/date'
 
-import CalendarDateInput from './CalendarDateInput.vue'
+import PortalCalDateInput from './PortalCalDateInput.vue'
 
 const props = defineProps<{
   modelValue: boolean
@@ -109,7 +109,7 @@ const closeModal = () => {
 
       <div class="event-form__row">
         <AppFormGroup label="開始日時" required>
-          <CalendarDateInput
+          <PortalCalDateInput
             :key="'start-' + form.allDay"
             v-model="form.start"
             :type="form.allDay ? 'date' : 'datetime-local'"
@@ -117,7 +117,7 @@ const closeModal = () => {
           />
         </AppFormGroup>
         <AppFormGroup label="終了日時">
-          <CalendarDateInput
+          <PortalCalDateInput
             :key="'end-' + form.allDay"
             v-model="form.end"
             :type="form.allDay ? 'date' : 'datetime-local'"

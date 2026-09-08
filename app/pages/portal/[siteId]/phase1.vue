@@ -6,7 +6,6 @@
 import { computed, onMounted, watch } from 'vue'
 
 import { useHead, useRoute } from '#app'
-import ExamMinimap from '~/components/Portal/ExamMinimap.vue'
 import { usePhaseExam } from '~/composables/portal/usePhaseExam'
 import { useTableSort } from '~/composables/useTableSort'
 import type { TableColumn } from '~/types/components'
@@ -107,7 +106,7 @@ const {
       size="lg"
     >
       <template #actions>
-        <SyncStatusBadge
+        <PortalSyncStatusBadge
           :site-id="siteId"
           @synced="fetchCircuits"
         />
@@ -123,56 +122,16 @@ const {
     </AppSectionHeader>
 
     <!-- 検索・絞り込み ＆ 進捗コントロールパネル -->
-    <AppPanel variant="hud">
-      <div class="phase1-controls">
-        <div class="phase1-controls__filters">
-          <!-- 盤種別タブ -->
-          <div class="phase1-controls__row">
-            <span class="phase1-controls__label">盤種別:</span>
-            <AppTabs
-              v-model="selectedBanShubetsu"
-              :options="shubetsuTabOptions"
-              variant="pills"
-            />
-          </div>
-
-          <!-- 盤名称セレクト & 件数表示 -->
-          <div class="phase1-controls__row phase1-controls__row--inline">
-            <div class="phase1-controls__select-group">
-              <span class="phase1-controls__label">盤名称:</span>
-              <AppSelect
-                v-model="selectedBanMeisho"
-                :options="availableBanMeishoList"
-                class="phase1-controls__select"
-              />
-            </div>
-
-            <AppBadge color="var(--theme-accent)">
-              対象回路: {{ phaseStats.allCount }} 件
-            </AppBadge>
-          </div>
-        </div>
-
-        <!-- 全体進捗バー -->
-        <div class="phase1-controls__progress">
-          <AppProgressBar
-            label="フェーズ1 進捗状況"
-            :completed="phaseStats.completed"
-            :total="phaseStats.total"
-            :excluded="phaseStats.excluded"
-            :pct="phaseStats.pct"
-            variant="success"
-          />
-
-          <!-- ミニマップ -->
-          <ExamMinimap
-            :circuits="sortedCircuits"
-            :phase="1"
-            @select-circuit="scrollToCircuit"
-          />
-        </div>
-      </div>
-    </AppPanel>
+    <PortalSoudenPhaseControls
+      v-model:shubetsu="selectedBanShubetsu"
+      v-model:ban-meisho="selectedBanMeisho"
+      :shubetsu-options="shubetsuTabOptions"
+      :ban-meisho-options="availableBanMeishoList"
+      :stats="phaseStats"
+      :circuits="sortedCircuits"
+      :phase="1"
+      @select-circuit="scrollToCircuit"
+    />
 
     <!-- 回路一覧テーブル -->
     <AppTable
@@ -200,10 +159,10 @@ const {
         >
           <!-- 盤種別 / 盤名称 -->
           <td>
-            <div class="phase1-cell__panel">
-              <span class="phase1-cell__ban-name">{{ circuit.banMeisho }}</span>
-              <span class="phase1-cell__shubetsu">{{ circuit.banShubetsu }}</span>
-            </div>
+            <PortalSoudenBanCell
+              :ban-meisho="circuit.banMeisho"
+              :ban-shubetsu="circuit.banShubetsu"
+            />
           </td>
 
           <!-- 回路番号 -->
@@ -345,13 +304,10 @@ const {
 
           <!-- 測定者 / 日時 -->
           <td style="text-align: center;">
-            <template v-if="circuit.p1Worker">
-              <div class="phase1-cell__worker">
-                <strong>{{ circuit.p1Worker }}</strong>
-                <span class="phase1-cell__date">{{ formatShortDateTime(circuit.p1ConfirmedAt) }}</span>
-              </div>
-            </template>
-            <span v-else class="phase1-cell__dash">-</span>
+            <PortalSoudenWorkerCell
+              :worker="circuit.p1Worker"
+              :confirmed-at="circuit.p1ConfirmedAt"
+            />
           </td>
         </tr>
       </template>
@@ -369,56 +325,6 @@ const {
   &__table {
     flex: 1;
     min-height: 400px;
-  }
-}
-
-.phase1-controls {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-card-gap);
-  align-items: flex-start;
-
-  @include mq("lg") {
-    grid-template-columns: 1fr;
-  }
-
-  &__filters {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-
-  &__row {
-    display: flex;
-    gap: var(--space-3);
-    align-items: center;
-
-    &--inline {
-      flex-wrap: wrap;
-    }
-  }
-
-  &__label {
-    min-width: 50px;
-    font-size: var(--text-xs);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-secondary);
-  }
-
-  &__select-group {
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
-  }
-
-  &__select {
-    min-width: 160px;
-  }
-
-  &__progress {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
   }
 }
 
@@ -444,27 +350,6 @@ const {
 }
 
 .phase1-cell {
-  &__panel {
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  &__ban-name {
-    overflow: hidden;
-
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-main);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  &__shubetsu {
-    font-size: 11px;
-    color: var(--color-text-muted);
-  }
-
   &__bangou-wrap {
     display: flex;
     align-items: center;
@@ -546,28 +431,6 @@ const {
     overflow: hidden;
     max-width: 160px;
     text-overflow: ellipsis;
-  }
-
-  &__worker {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    align-items: center;
-
-    strong {
-      font-size: var(--text-xs);
-      color: var(--color-status-success);
-    }
-  }
-
-  &__date {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--color-text-muted);
-  }
-
-  &__dash {
-    color: var(--color-text-muted);
   }
 }
 

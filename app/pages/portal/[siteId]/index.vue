@@ -3,8 +3,8 @@ import { useLocalStorage } from '@vueuse/core'
 import { computed, onMounted, watch } from 'vue'
 
 import { useHead, useRoute, useRouter } from '#app'
-import Calendar from '~/components/Portal/Calendar.client.vue'
-import PersonalTodo from '~/components/Portal/PersonalTodo.client.vue'
+import PortalCal from '~/components/PortalCal.client.vue'
+import PortalPersonalTodo from '~/components/PortalPersonalTodo.client.vue'
 import { useAdminSites } from '~/composables/admin/useAdminSites'
 import { useAuth } from '~/composables/useAuth'
 import { STORAGE_KEYS } from '~/constants/storageKeys'
@@ -79,11 +79,11 @@ onMounted(() => {
 
     <div class="site-dashboard__grid">
       <section class="site-dashboard__calendar" aria-label="現場スケジュール">
-        <Calendar :site-id="siteId" />
+        <PortalCal :site-id="siteId" />
       </section>
 
       <aside class="site-dashboard__sidebar" aria-label="現場関連機能">
-        <PersonalTodo :site-id="siteId" />
+        <PortalPersonalTodo :site-id="siteId" />
 
         <AppButton
           :to="`/portal/${siteId}/souden`"

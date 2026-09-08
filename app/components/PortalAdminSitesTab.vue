@@ -166,7 +166,7 @@ const handleSaveSettings = async (updatedSite: Site) => {
       </AppFormGroup>
     </AppModal>
 
-    <SiteSettingsModal
+    <PortalSiteSettingsModal
       v-model="isSettingsModalOpen"
       :site="settingsTargetSite"
       @update:site="handleSaveSettings"

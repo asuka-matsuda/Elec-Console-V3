@@ -7,10 +7,10 @@ import { useCalendar } from '~/composables/portal/useCalendar'
 import { useCalendarEventForm } from '~/composables/portal/useCalendarEventForm'
 import { useCalendarOptions } from '~/composables/portal/useCalendarOptions'
 
-import CalendarEventBadge from './CalendarEventBadge.vue'
-import CalendarEventModal from './CalendarEventModal.vue'
-import CalendarToolbar from './CalendarToolbar.vue'
-import CalendarTypeSettingsModal from './CalendarTypeSettingsModal.vue'
+import PortalCalEventBadge from './PortalCalEventBadge.vue'
+import PortalCalEventModal from './PortalCalEventModal.vue'
+import PortalCalToolbar from './PortalCalToolbar.vue'
+import PortalCalTypeSettingsModal from './PortalCalTypeSettingsModal.vue'
 
 const props = defineProps<{
   siteId: string
@@ -84,7 +84,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
 <template>
   <div class="calendar-wrapper">
-    <CalendarToolbar
+    <PortalCalToolbar
       :title="currentTitle"
       :current-view="currentView"
       @prev="handlePrev"
@@ -97,7 +97,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     <AppPanel class="calendar" variant="simple">
       <FullCalendar ref="fullCalendarRef" :options="calendarOptions">
         <template #eventContent="{ event }">
-          <CalendarEventBadge
+          <PortalCalEventBadge
             :title="event.title"
             :all-day="event.allDay"
             :start="event.start"
@@ -108,7 +108,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       </FullCalendar>
     </AppPanel>
 
-    <CalendarEventModal
+    <PortalCalEventModal
       v-model="isModalOpen"
       :is-editing="isEditing"
       :event-types="settings?.eventTypes || []"
@@ -117,7 +117,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       @delete="removeEvent"
     />
 
-    <CalendarTypeSettingsModal
+    <PortalCalTypeSettingsModal
       v-model="isTypeSettingsOpen"
       :event-types="settings?.eventTypes || []"
       @save="handleSaveEventTypes"
