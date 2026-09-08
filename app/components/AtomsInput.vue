@@ -12,6 +12,9 @@ export interface AtomsInputProps {
     | 'search'
     | 'tel'
     | 'url'
+    | 'date'
+    | 'datetime-local'
+    | 'time'
     | 'textarea'
   placeholder?: string
   disabled?: boolean
@@ -70,6 +73,7 @@ const {
   border-radius: var(--radius-sm);
 
   font-size: var(--font-size-sm);
+  font-variant-numeric: tabular-nums;
   color: var(--color-text-main);
 
   background-color: var(--surface-bg-elevated);
