@@ -121,7 +121,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   >
     <button
       type="button"
-      class="relative flex w-full items-center justify-between gap-2 custom-select__value"
+      class="relative z-[1] flex w-full items-center justify-between gap-2 custom-select__value"
       :class="{
         'is-placeholder': isPlaceholder,
         'is-active': isOpen,
@@ -184,8 +184,6 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 
   cursor: pointer;
   user-select: none;
-
-  z-index: 1;
 
   min-height: calc(var(--control-height-ratio) * 1em);
   padding-block: 0.3em;
@@ -255,7 +253,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
     background-position: center;
     background-size: contain;
 
-    transition: var(--transition-base);
+    transition: var(--transition-transform);
   }
 
   &.is-placeholder {
@@ -304,7 +302,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   font-size: var(--font-size-sm);
   color: var(--color-text-main);
 
-  transition: var(--transition-base);
+  transition: var(--transition-colors);
 
   &.is-disabled {
     pointer-events: none;
@@ -322,7 +320,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
     &:is(:hover, .is-focused, .is-selected) {
       color: var(--theme-accent);
       background-color: var(--color-selection-bg);
-      transition: background-color var(--duration-fast) var(--ease-base);
+      transition: var(--transition-colors);
     }
 
     &.is-selected {

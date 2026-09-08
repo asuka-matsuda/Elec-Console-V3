@@ -23,7 +23,7 @@ const {
     <input
       v-model="model"
       type="checkbox"
-      class="absolute inset-0 w-full h-full"
+      class="absolute inset-0 w-full h-full z-[1] opacity-0 cursor-inherit"
       .indeterminate="indeterminate"
       :value="value"
       :disabled="disabled"
@@ -55,10 +55,6 @@ const {
   }
 
   input {
-    cursor: inherit;
-    z-index: 1;
-    opacity: 0;
-
     &:disabled {
       ~ .box,
       ~ .label {
@@ -142,8 +138,7 @@ const {
 
       opacity: 0;
 
-      transition: opacity var(--duration-base) var(--ease-base),
-        transform var(--duration-base) var(--ease-base);
+      transition: var(--transition-base);
 
       :deep(svg) {
         stroke-linecap: square;

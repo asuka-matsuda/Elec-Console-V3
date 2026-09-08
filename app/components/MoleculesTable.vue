@@ -98,7 +98,7 @@ const getCellValue = (row: T, key: string): unknown => {
           v-for="(row, index) in data"
           :id="rowId?.(row, index)"
           :key="getRowKey(row, index)"
-          class="table-row"
+          class="table-row relative z-[1]"
           :class="rowClass?.(row, index)"
         >
           <td
@@ -131,13 +131,10 @@ const getCellValue = (row: T, key: string): unknown => {
 }
 
 .table-row {
-  position: relative;
-  z-index: 1;
-  transition: var(--transition-base);
+  transition: var(--transition-colors);
 
   &:hover {
     background-color: var(--color-bg-hover);
-    transition: background-color var(--duration-fast) var(--ease-base);
   }
 
   &:last-child .table-cell {

@@ -13,7 +13,7 @@ defineProps<Props>()
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center gap-1.5 py-8 px-4 text-center empty-state" role="status">
+  <div class="flex flex-col items-center justify-center gap-1.5 max-w-[420px] mx-auto py-8 px-4 text-center empty-state" role="status">
     <AtomsIcon v-if="icon" :name="icon" size="xxl" class="mb-1.5" />
 
     <h3 v-if="title || $slots.default" class="title">
@@ -32,8 +32,6 @@ defineProps<Props>()
 
 <style scoped lang="scss">
 .empty-state {
-  max-width: 420px;
-  margin-inline: auto;
   color: var(--color-text-muted);
   opacity: 0.8;
 

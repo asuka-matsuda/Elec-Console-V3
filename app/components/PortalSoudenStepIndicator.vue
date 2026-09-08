@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * SoudenStepIndicator
  * 送電試験ダッシュボード内のフェーズ遷移ステップインジケーター
@@ -82,7 +82,7 @@ const pct = computed(() => {
 
     background-color: var(--color-border);
 
-    transition: background-color var(--duration-base) var(--ease-base);
+    transition: var(--transition-colors);
   }
 
   &:last-child::after {
@@ -146,7 +146,7 @@ const pct = computed(() => {
 
   background-color: var(--surface-bg-solid);
 
-  transition: border-color var(--duration-base) var(--ease-base), background-color var(--duration-base) var(--ease-base);
+  transition: var(--transition-colors);
 
   &:hover {
     border-color: color-mix(in srgb, var(--color-border) 80%, var(--color-text-muted));

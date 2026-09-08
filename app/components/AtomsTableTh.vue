@@ -41,7 +41,7 @@ const handleClick = () => {
 
 <template>
   <th
-    class="p-2 align-middle"
+    class="sticky top-0 p-2 align-middle"
     :class="{
       'is-sortable': column.sortable,
       'is-sorted': isSorted,
@@ -71,9 +71,7 @@ const handleClick = () => {
 
 <style scoped lang="scss">
 th {
-  position: sticky;
   z-index: var(--z-index-table-header);
-  top: 0;
 
   border-right: var(--border-width-base) solid var(--color-border);
   border-bottom: calc(var(--border-width-base) * 2) solid var(--color-border);
@@ -94,7 +92,7 @@ th {
   &.is-sortable {
     cursor: pointer;
     user-select: none;
-    transition: color var(--duration-fast) var(--ease-base);
+    transition: var(--transition-colors);
 
     &:hover {
       color: var(--color-text-main);

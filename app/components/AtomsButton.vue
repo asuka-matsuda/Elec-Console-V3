@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * AtomsButton
  * [Atoms] 汎用的なボタン・リンクボタンコンポーネント（最小パーツ）
@@ -32,7 +32,7 @@ const target = computed(() => to || href)
     :type="!target ? type : undefined"
     :disabled="!isClickable ? true : undefined"
     :aria-busy="loading ? true : undefined"
-    class="relative inline-flex shrink-0 items-center justify-center gap-2 btn"
+    class="relative z-[1] inline-flex shrink-0 items-center justify-center gap-2 btn"
     :class="[
       `btn--${variant}`,
       `btn--${size}`,
@@ -57,8 +57,6 @@ const target = computed(() => to || href)
 
   cursor: pointer;
   user-select: none;
-
-  z-index: 1;
 
   min-height: 2.6em;
   padding-block: 0.3em;

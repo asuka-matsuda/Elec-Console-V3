@@ -416,7 +416,7 @@ const {
 }
 
 :deep(.phase2-row) {
-  transition: background-color var(--duration-base) var(--ease-base);
+  transition: var(--transition-colors);
 
   &.is-completed {
     background-color: var(--color-completed-row-bg);

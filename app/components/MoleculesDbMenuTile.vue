@@ -24,7 +24,7 @@ const {
   <component
     :is="disabled ? 'div' : NuxtLink"
     :to="!disabled ? to : undefined"
-    class="relative flex flex-col gap-[var(--space-panel-gap)] p-[var(--space-panel-pad)] overflow-hidden menu-tile"
+    class="relative z-[1] flex flex-col gap-[var(--space-panel-gap)] p-[var(--space-panel-pad)] overflow-hidden menu-tile"
     :class="{ 'is-disabled': disabled }"
     :aria-disabled="disabled ? 'true' : undefined"
   >
@@ -43,8 +43,6 @@ const {
 .menu-tile {
   cursor: pointer;
   user-select: none;
-
-  z-index: 1;
 
   border: var(--border-width-base) solid var(--color-border);
   border-radius: var(--radius-sm);

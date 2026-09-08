@@ -13,7 +13,7 @@ const emit = defineEmits<{
 <template>
   <NuxtLink
     to="/"
-    class="relative flex shrink-0 items-center gap-2 logo"
+    class="relative z-[1] flex shrink-0 items-center gap-2 logo"
     @click="emit('click')"
   >
     <AtomsIcon name="zap" size="md" />
@@ -25,8 +25,6 @@ const emit = defineEmits<{
 .logo {
   cursor: pointer;
   user-select: none;
-
-  z-index: 1;
 
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);

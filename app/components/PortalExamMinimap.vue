@@ -92,7 +92,7 @@ const tiles = computed(() => {
 
     background-color: var(--color-tile-empty-bg);
 
-    transition: transform var(--duration-fast) var(--ease-base), background-color var(--duration-fast) var(--ease-base), border-color var(--duration-fast) var(--ease-base);
+    transition: var(--transition-fast);
 
     &:hover {
       z-index: 2;

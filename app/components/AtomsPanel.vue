@@ -11,7 +11,7 @@ defineProps<{
 <template>
   <component
     :is="as || 'section'"
-    class="relative overflow-hidden panel"
+    class="relative z-[1] overflow-hidden panel"
   >
     <slot />
   </component>
@@ -19,8 +19,6 @@ defineProps<{
 
 <style scoped lang="scss">
 .panel {
-  z-index: 1;
-
   padding: var(--space-panel-pad);
   border: var(--border-width-base) solid var(--color-border);
   border-radius: var(--radius-sm);

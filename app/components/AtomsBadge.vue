@@ -10,7 +10,7 @@ const { color = 'var(--color-text-muted)' } = defineProps<{
 
 <template>
   <span
-    class="relative inline-flex items-center justify-center py-0.5 px-1 whitespace-nowrap badge"
+    class="relative z-[1] inline-flex items-center justify-center py-0.5 px-1 whitespace-nowrap badge"
     :style="{ '--glow-color': color }"
   >
     <slot />
@@ -22,8 +22,6 @@ const { color = 'var(--color-text-muted)' } = defineProps<{
   --glow-color: var(--color-text-muted);
 
   user-select: none;
-
-  z-index: 1;
 
   border: var(--border-width-base) solid color-mix(in srgb, var(--glow-color) 60%, transparent);
   border-radius: var(--radius-sm);

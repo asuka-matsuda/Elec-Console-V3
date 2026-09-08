@@ -101,10 +101,7 @@ withDefaults(defineProps<Props>(), {
 
     background-color: var(--theme-accent);
 
-    transition:
-      transform var(--transition-fast),
-      background-color var(--transition-fast),
-      box-shadow var(--transition-fast);
+    transition: var(--transition-fast);
   }
 }
 
@@ -129,9 +126,7 @@ withDefaults(defineProps<Props>(), {
 
 .fade-slide-enter-active,
 .fade-slide-leave-active {
-  transition:
-    opacity var(--duration-fast) var(--ease-base),
-    transform var(--duration-fast) var(--ease-base);
+  transition: var(--transition-fast);
 }
 
 .fade-slide-enter-from,
