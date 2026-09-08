@@ -201,7 +201,7 @@ const {
 </script>
 
 <template>
-  <div class="p-phase2">
+  <div class="phase2">
     <AppSectionHeader
       title="フェーズ2：絶縁抵抗測定（メガ測定）"
       icon="activity"
@@ -236,11 +236,11 @@ const {
 
     <!-- 検索・絞り込み ＆ 進捗コントロールパネル -->
     <AppPanel variant="hud">
-      <div class="p-phase2-controls">
-        <div class="p-phase2-controls__filters">
+      <div class="phase2-controls">
+        <div class="phase2-controls__filters">
           <!-- 盤種別タブ -->
-          <div class="p-phase2-controls__row">
-            <span class="p-phase2-controls__label">盤種別:</span>
+          <div class="phase2-controls__row">
+            <span class="phase2-controls__label">盤種別:</span>
             <AppTabs
               v-model="selectedBanShubetsu"
               :options="shubetsuTabOptions"
@@ -249,21 +249,21 @@ const {
           </div>
 
           <!-- 盤名称セレクト & 基準値表示 -->
-          <div class="p-phase2-controls__row p-phase2-controls__row--inline">
-            <div class="p-phase2-controls__select-group">
-              <span class="p-phase2-controls__label">盤名称:</span>
+          <div class="phase2-controls__row phase2-controls__row--inline">
+            <div class="phase2-controls__select-group">
+              <span class="phase2-controls__label">盤名称:</span>
               <AppSelect
                 v-model="selectedBanMeisho"
                 :options="availableBanMeishoList"
-                class="p-phase2-controls__select"
+                class="phase2-controls__select"
               />
             </div>
 
             <!-- 基準値バッジ（数値のみ着色、単位はミュート） -->
-            <div class="p-phase2-controls__threshold">
-              <span class="p-phase2-controls__threshold-label">基準値: ≧</span>
-              <span class="p-phase2-controls__threshold-val">{{ phase2ThresholdMegOhm.toFixed(1) }}</span>
-              <span class="p-phase2-controls__threshold-unit">MΩ</span>
+            <div class="phase2-controls__threshold">
+              <span class="phase2-controls__threshold-label">基準値: ≧</span>
+              <span class="phase2-controls__threshold-val">{{ phase2ThresholdMegOhm.toFixed(1) }}</span>
+              <span class="phase2-controls__threshold-unit">MΩ</span>
             </div>
 
             <AppBadge color="var(--theme-accent)">
@@ -273,7 +273,7 @@ const {
         </div>
 
         <!-- 全体進捗バー & ミニマップ -->
-        <div class="p-phase2-controls__progress">
+        <div class="phase2-controls__progress">
           <AppProgressBar
             label="フェーズ2 進捗状況"
             :completed="phaseStats.completed"
@@ -295,7 +295,7 @@ const {
 
     <!-- 回路一覧テーブル -->
     <AppTable
-      class="p-phase2__table"
+      class="phase2__table"
       :columns="columns"
       :data="sortedCircuits"
       :sort-by="sortBy"
@@ -308,7 +308,7 @@ const {
           :id="`row-${circuit.id}`"
           :key="circuit.id"
           :class="[
-            'p-phase2-row',
+            'phase2-row',
             {
               'is-completed': isComplete(circuit),
               'is-excluded': circuit.isExcluded,
@@ -319,16 +319,16 @@ const {
         >
           <!-- 盤種別 / 盤名称 -->
           <td>
-            <div class="p-phase2-cell__panel">
-              <span class="p-phase2-cell__ban-name">{{ circuit.banMeisho }}</span>
-              <span class="p-phase2-cell__shubetsu">{{ circuit.banShubetsu }}</span>
+            <div class="phase2-cell__panel">
+              <span class="phase2-cell__ban-name">{{ circuit.banMeisho }}</span>
+              <span class="phase2-cell__shubetsu">{{ circuit.banShubetsu }}</span>
             </div>
           </td>
 
           <!-- 回路番号 -->
           <td style="text-align: center;">
-            <div class="p-phase2-cell__bangou-wrap">
-              <span class="p-phase2-cell__type-badge" :class="{ 'is-three': isThreePhase(circuit) }">
+            <div class="phase2-cell__bangou-wrap">
+              <span class="phase2-cell__type-badge" :class="{ 'is-three': isThreePhase(circuit) }">
                 {{ isThreePhase(circuit) ? '動力' : '電灯' }}
               </span>
               <AppKairoIcon
@@ -340,7 +340,7 @@ const {
 
           <!-- 回路名称 -->
           <td>
-            <span class="p-phase2-cell__meisho" :title="circuit.kairoMeisho || ''">
+            <span class="phase2-cell__meisho" :title="circuit.kairoMeisho || ''">
               {{ circuit.kairoMeisho || '-' }}
             </span>
           </td>
@@ -348,28 +348,28 @@ const {
           <!-- 測定相 1 (R-S / R-N) -->
           <td style="text-align: center;">
             <template v-if="editingRowId === circuit.id">
-              <div class="p-phase2-input-cell">
-                <span class="p-phase2-input-cell__label">{{ getPhaseLabels(circuit).phase1 }}</span>
-                <div class="p-phase2-input-cell__box">
+              <div class="phase2-input-cell">
+                <span class="phase2-input-cell__label">{{ getPhaseLabels(circuit).phase1 }}</span>
+                <div class="phase2-input-cell__box">
                   <input
                     v-model="inputForm.rVal"
                     type="number"
                     step="0.1"
                     inputmode="decimal"
-                    class="p-phase2-input"
+                    class="phase2-input"
                     placeholder="100"
                     @focus="handleInputFocus"
                     @keydown.enter.prevent="saveInput(circuit)"
                   >
-                  <span class="p-phase2-input-cell__unit">MΩ</span>
+                  <span class="phase2-input-cell__unit">MΩ</span>
                 </div>
               </div>
             </template>
-            <div v-else class="p-phase2-meas-cell">
-              <span class="p-phase2-meas-cell__label">{{ getPhaseLabels(circuit).phase1 }}</span>
-              <div class="p-phase2-meas-cell__val-group">
+            <div v-else class="phase2-meas-cell">
+              <span class="phase2-meas-cell__label">{{ getPhaseLabels(circuit).phase1 }}</span>
+              <div class="phase2-meas-cell__val-group">
                 <span
-                  class="p-phase2-meas-cell__val"
+                  class="phase2-meas-cell__val"
                   :class="{
                     'is-ok': circuit.p2RStatus === 'OK' || (circuit.zetsuenR !== null && circuit.zetsuenR !== undefined && circuit.zetsuenR >= phase2ThresholdMegOhm),
                     'is-ng': circuit.p2RStatus === 'NG' || (circuit.zetsuenR !== null && circuit.zetsuenR !== undefined && circuit.zetsuenR < phase2ThresholdMegOhm),
@@ -377,7 +377,7 @@ const {
                 >
                   {{ formatMegValue(circuit.zetsuenR) }}
                 </span>
-                <span v-if="circuit.zetsuenR !== null && circuit.zetsuenR !== undefined" class="p-phase2-meas-cell__unit">MΩ</span>
+                <span v-if="circuit.zetsuenR !== null && circuit.zetsuenR !== undefined" class="phase2-meas-cell__unit">MΩ</span>
               </div>
               <AppBadge
                 v-if="circuit.p2RStatus"
@@ -391,28 +391,28 @@ const {
           <!-- 測定相 2 (S-T / T-N) -->
           <td style="text-align: center;">
             <template v-if="editingRowId === circuit.id">
-              <div class="p-phase2-input-cell">
-                <span class="p-phase2-input-cell__label">{{ getPhaseLabels(circuit).phase2 }}</span>
-                <div class="p-phase2-input-cell__box">
+              <div class="phase2-input-cell">
+                <span class="phase2-input-cell__label">{{ getPhaseLabels(circuit).phase2 }}</span>
+                <div class="phase2-input-cell__box">
                   <input
                     v-model="inputForm.sVal"
                     type="number"
                     step="0.1"
                     inputmode="decimal"
-                    class="p-phase2-input"
+                    class="phase2-input"
                     placeholder="100"
                     @focus="handleInputFocus"
                     @keydown.enter.prevent="saveInput(circuit)"
                   >
-                  <span class="p-phase2-input-cell__unit">MΩ</span>
+                  <span class="phase2-input-cell__unit">MΩ</span>
                 </div>
               </div>
             </template>
-            <div v-else class="p-phase2-meas-cell">
-              <span class="p-phase2-meas-cell__label">{{ getPhaseLabels(circuit).phase2 }}</span>
-              <div class="p-phase2-meas-cell__val-group">
+            <div v-else class="phase2-meas-cell">
+              <span class="phase2-meas-cell__label">{{ getPhaseLabels(circuit).phase2 }}</span>
+              <div class="phase2-meas-cell__val-group">
                 <span
-                  class="p-phase2-meas-cell__val"
+                  class="phase2-meas-cell__val"
                   :class="{
                     'is-ok': circuit.p2SStatus === 'OK' || (circuit.zetsuenS !== null && circuit.zetsuenS !== undefined && circuit.zetsuenS >= phase2ThresholdMegOhm),
                     'is-ng': circuit.p2SStatus === 'NG' || (circuit.zetsuenS !== null && circuit.zetsuenS !== undefined && circuit.zetsuenS < phase2ThresholdMegOhm),
@@ -420,7 +420,7 @@ const {
                 >
                   {{ formatMegValue(circuit.zetsuenS) }}
                 </span>
-                <span v-if="circuit.zetsuenS !== null && circuit.zetsuenS !== undefined" class="p-phase2-meas-cell__unit">MΩ</span>
+                <span v-if="circuit.zetsuenS !== null && circuit.zetsuenS !== undefined" class="phase2-meas-cell__unit">MΩ</span>
               </div>
               <AppBadge
                 v-if="circuit.p2SStatus"
@@ -434,28 +434,28 @@ const {
           <!-- 測定相 3 (R-T / R-T) -->
           <td style="text-align: center;">
             <template v-if="editingRowId === circuit.id">
-              <div class="p-phase2-input-cell">
-                <span class="p-phase2-input-cell__label">{{ getPhaseLabels(circuit).phase3 }}</span>
-                <div class="p-phase2-input-cell__box">
+              <div class="phase2-input-cell">
+                <span class="phase2-input-cell__label">{{ getPhaseLabels(circuit).phase3 }}</span>
+                <div class="phase2-input-cell__box">
                   <input
                     v-model="inputForm.tVal"
                     type="number"
                     step="0.1"
                     inputmode="decimal"
-                    class="p-phase2-input"
+                    class="phase2-input"
                     placeholder="100"
                     @focus="handleInputFocus"
                     @keydown.enter.prevent="saveInput(circuit)"
                   >
-                  <span class="p-phase2-input-cell__unit">MΩ</span>
+                  <span class="phase2-input-cell__unit">MΩ</span>
                 </div>
               </div>
             </template>
-            <div v-else class="p-phase2-meas-cell">
-              <span class="p-phase2-meas-cell__label">{{ getPhaseLabels(circuit).phase3 }}</span>
-              <div class="p-phase2-meas-cell__val-group">
+            <div v-else class="phase2-meas-cell">
+              <span class="phase2-meas-cell__label">{{ getPhaseLabels(circuit).phase3 }}</span>
+              <div class="phase2-meas-cell__val-group">
                 <span
-                  class="p-phase2-meas-cell__val"
+                  class="phase2-meas-cell__val"
                   :class="{
                     'is-ok': circuit.p2TStatus === 'OK' || (circuit.zetsuenT !== null && circuit.zetsuenT !== undefined && circuit.zetsuenT >= phase2ThresholdMegOhm),
                     'is-ng': circuit.p2TStatus === 'NG' || (circuit.zetsuenT !== null && circuit.zetsuenT !== undefined && circuit.zetsuenT < phase2ThresholdMegOhm),
@@ -463,7 +463,7 @@ const {
                 >
                   {{ formatMegValue(circuit.zetsuenT) }}
                 </span>
-                <span v-if="circuit.zetsuenT !== null && circuit.zetsuenT !== undefined" class="p-phase2-meas-cell__unit">MΩ</span>
+                <span v-if="circuit.zetsuenT !== null && circuit.zetsuenT !== undefined" class="phase2-meas-cell__unit">MΩ</span>
               </div>
               <AppBadge
                 v-if="circuit.p2TStatus"
@@ -479,22 +479,22 @@ const {
             <template v-if="editingRowId === circuit.id">
               <AppInput v-model="inputForm.remarks" size="sm" placeholder="備考" />
             </template>
-            <span v-else class="p-phase2-cell__remarks" :title="circuit.p2Remarks || ''">
+            <span v-else class="phase2-cell__remarks" :title="circuit.p2Remarks || ''">
               {{ circuit.p2Remarks || '-' }}
             </span>
           </td>
 
           <!-- 操作 -->
           <td style="text-align: center;">
-            <div class="p-phase2-actions">
+            <div class="phase2-actions">
               <!-- 幹線未完了による操作不可 -->
               <template v-if="isCircuitLocked(circuit)">
-                <span class="c-text-note c-text-note--strong">⏸ 幹線未了</span>
+                <span class="text-note text-note--strong">⏸ 幹線未了</span>
               </template>
 
               <!-- 前フェーズ（P1）未完了による操作不可 -->
               <template v-else-if="!isP1Complete(circuit)">
-                <span class="c-text-note c-text-note--strong">⏸ P1未了</span>
+                <span class="text-note text-note--strong">⏸ P1未了</span>
               </template>
 
               <!-- 手入力編集モード中 -->
@@ -561,12 +561,12 @@ const {
           <!-- 測定者 / 日時 -->
           <td style="text-align: center;">
             <template v-if="circuit.p2Worker">
-              <div class="p-phase2-cell__worker">
+              <div class="phase2-cell__worker">
                 <strong>{{ circuit.p2Worker }}</strong>
-                <span class="p-phase2-cell__date">{{ formatShortDateTime(circuit.p2ConfirmedAt) }}</span>
+                <span class="phase2-cell__date">{{ formatShortDateTime(circuit.p2ConfirmedAt) }}</span>
               </div>
             </template>
-            <span v-else class="p-phase2-cell__dash">-</span>
+            <span v-else class="phase2-cell__dash">-</span>
           </td>
         </tr>
       </template>
@@ -575,7 +575,7 @@ const {
 </template>
 
 <style scoped lang="scss">
-.p-phase2 {
+.phase2 {
   display: flex;
   flex-direction: column;
   gap: var(--space-section-gap);
@@ -587,7 +587,7 @@ const {
   }
 }
 
-.p-phase2-controls {
+.phase2-controls {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-card-gap);
@@ -665,7 +665,7 @@ const {
   }
 }
 
-.p-phase2-row {
+.phase2-row {
   transition: background-color var(--duration-base) var(--ease-base);
 
   &.is-completed {
@@ -686,7 +686,7 @@ const {
   }
 }
 
-.p-phase2-cell {
+.phase2-cell {
   &__panel {
     overflow: hidden;
     display: flex;
@@ -782,7 +782,7 @@ const {
   }
 }
 
-.p-phase2-meas-cell {
+.phase2-meas-cell {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -822,7 +822,7 @@ const {
   }
 }
 
-.p-phase2-input-cell {
+.phase2-input-cell {
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -845,7 +845,7 @@ const {
   }
 }
 
-.p-phase2-input {
+.phase2-input {
   width: 58px;
   padding: 2px 4px;
   border: 1px solid var(--color-border);
@@ -864,14 +864,14 @@ const {
   }
 }
 
-.p-phase2-actions {
+.phase2-actions {
   display: flex;
   gap: var(--space-1);
   align-items: center;
   justify-content: center;
 }
 
-.c-text-note {
+.text-note {
   display: inline-flex;
   gap: 4px;
   align-items: center;

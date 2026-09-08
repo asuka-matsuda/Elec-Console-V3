@@ -160,12 +160,12 @@ onMounted(() => {
 .section-header {
   padding: var(--space-1) var(--space-3);
 
-  :deep(.c-section-header__title) {
+  :deep(.section-header__title) {
     color: var(--color-text-main);
     letter-spacing: var(--tracking-wider);
   }
 
-  :deep(.c-section-header__icon) {
+  :deep(.section-header__icon) {
     color: var(--section-accent);
     filter: var(--drop-shadow-glow-sm);
   }
@@ -238,7 +238,7 @@ onMounted(() => {
 
     transition: var(--transition-glow);
 
-    :deep(.c-icon) {
+    :deep(.icon) {
       filter: var(--nav-icon-glow);
     }
   }
@@ -255,7 +255,7 @@ onMounted(() => {
 
     transition: var(--transition-glow);
 
-    :deep(.c-icon) {
+    :deep(.icon) {
       filter: var(--nav-icon-glow);
     }
   }

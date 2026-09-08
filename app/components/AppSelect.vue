@@ -97,14 +97,14 @@ onMounted(() => {
 })
 
 const containerClasses = computed(() => [
-  'c-custom-select',
+  'custom-select',
   {
     'is-error': props.error,
   },
 ])
 
 const buttonClasses = computed(() => [
-  'c-custom-select__value',
+  'custom-select__value',
   {
     'is-placeholder': isPlaceholder.value,
     'is-active': isOpen.value,
@@ -112,12 +112,12 @@ const buttonClasses = computed(() => [
 ])
 
 const dropdownClasses = computed(() => [
-  'c-custom-select__dropdown',
+  'custom-select__dropdown',
   `is-${dynamicPlacement.value}`,
 ])
 
 const getOptionClasses = (option: SelectOption, index: number) => [
-  'c-custom-select__option',
+  'custom-select__option',
   {
     'is-selected': model.value === option.value,
     'is-focused': index === focusedIndex.value,
@@ -135,7 +135,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
       @click="toggleDropdown"
       @keydown="handleKeydown"
     >
-      <span class="c-custom-select__text">{{ displayLabel }}</span>
+      <span class="custom-select__text">{{ displayLabel }}</span>
     </button>
 
     <ClientOnly>
@@ -147,10 +147,10 @@ const getOptionClasses = (option: SelectOption, index: number) => [
             :class="dropdownClasses"
             :style="dropdownStyle"
           >
-            <ul class="c-custom-select__list">
+            <ul class="custom-select__list">
               <li
                 v-if="isPlaceholder"
-                class="c-custom-select__option is-placeholder"
+                class="custom-select__option is-placeholder"
               >
                 {{ placeholder }}
               </li>
@@ -171,7 +171,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 </template>
 
 <style scoped lang="scss">
-.c-custom-select {
+.custom-select {
   user-select: none;
   position: relative;
   width: 100%;
@@ -184,7 +184,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   }
 }
 
-.c-custom-select__value {
+.custom-select__value {
   cursor: pointer;
   user-select: none;
 
@@ -236,7 +236,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
       box-shadow: var(--shadow-glow-focus);
     }
 
-    .c-custom-select.is-error & {
+    .custom-select.is-error & {
       --glow-color: var(--color-status-danger);
 
       border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
@@ -292,7 +292,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   }
 }
 
-.c-custom-select__text {
+.custom-select__text {
   overflow: hidden;
   flex: 1;
 
@@ -301,7 +301,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   white-space: nowrap;
 }
 
-.c-custom-select__dropdown {
+.custom-select__dropdown {
   --glow-color: color-mix(in srgb, var(--theme-accent) 20%, transparent);
 
   position: absolute;
@@ -318,7 +318,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 
   transition: var(--transition-base);
 
-  .c-custom-select.is-error & {
+  .custom-select.is-error & {
     --glow-color: color-mix(
       in srgb,
       var(--color-status-danger) 20%,
@@ -335,7 +335,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   }
 }
 
-.c-custom-select__list {
+.custom-select__list {
   --scrollbar-size: var(--space-2);
 
   transform: translateZ(0);
@@ -347,7 +347,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   padding: var(--space-1);
 }
 
-.c-custom-select__option {
+.custom-select__option {
   cursor: pointer;
   user-select: none;
 

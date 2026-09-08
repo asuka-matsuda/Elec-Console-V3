@@ -24,7 +24,7 @@ watch(
 </script>
 
 <template>
-  <div class="c-weight-input">
+  <div class="weight-input">
     <AppFormGroup label="ケーブル種別" required>
       <AppSelect
         v-model="inputs.category"
@@ -46,7 +46,7 @@ watch(
       <AppInputGroup>
         <AppInput v-model="inputs.L_input" type="number" min="1" />
         <template #append>
-          <span class="c-input-addon">m</span>
+          <span class="input-addon">m</span>
         </template>
       </AppInputGroup>
     </AppFormGroup>
@@ -61,7 +61,7 @@ watch(
           max="1"
         />
         <template #append>
-          <span class="c-input-addon">倍</span>
+          <span class="input-addon">倍</span>
         </template>
       </AppInputGroup>
     </AppFormGroup>
@@ -69,7 +69,7 @@ watch(
 </template>
 
 <style scoped lang="scss">
-.c-weight-input {
+.weight-input {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-form-row-gap) var(--space-form-col-gap);

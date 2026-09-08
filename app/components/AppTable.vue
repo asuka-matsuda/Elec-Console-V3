@@ -67,8 +67,8 @@ const getRowKey = (row: T, index: number): string | number => {
 </script>
 
 <template>
-  <div class="c-table-wrapper">
-    <table class="c-table">
+  <div class="table-wrapper">
+    <table class="table">
       <thead v-if="$slots.header || columns">
         <slot name="header">
           <tr>
@@ -112,7 +112,7 @@ const getRowKey = (row: T, index: number): string | number => {
 </template>
 
 <style scoped lang="scss">
-.c-table-wrapper {
+.table-wrapper {
   overflow: auto;
   flex: 1;
 
@@ -124,7 +124,7 @@ const getRowKey = (row: T, index: number): string | number => {
   backdrop-filter: blur(var(--blur-sm));
 }
 
-.c-table {
+.table {
   table-layout: fixed;
   border-spacing: 0;
   border-collapse: separate;

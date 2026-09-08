@@ -8,8 +8,8 @@ const pageTitle = computed(() => route.meta.title as string | undefined)
 </script>
 
 <template>
-  <main class="l-login-layout">
-    <AppPanel class="l-login-layout__panel">
+  <main class="login-layout">
+    <AppPanel class="login-layout__panel">
       <AppSectionHeader v-if="pageTitle" :title="pageTitle" />
       <slot />
     </AppPanel>
@@ -17,7 +17,7 @@ const pageTitle = computed(() => route.meta.title as string | undefined)
 </template>
 
 <style scoped lang="scss">
-.l-login-layout {
+.login-layout {
   display: flex;
   flex: 1;
   gap: 0;

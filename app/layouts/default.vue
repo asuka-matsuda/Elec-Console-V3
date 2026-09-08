@@ -8,14 +8,14 @@ const { items: breadcrumbs, accent: breadcrumbAccent } = useBreadcrumbs()
 
 <template>
   <div
-    class="l-app"
+    class="app-root"
     :style="{
       '--theme-accent': `var(--color-category-${breadcrumbAccent || 'main'})`,
     }"
   >
     <AppGlobalNav v-model:is-open="isSidebarOpen" :menu-data="menuData" />
 
-    <div class="l-main">
+    <div class="main-container">
       <AppHeader
         :breadcrumbs="breadcrumbs"
         @toggle-sidebar="isSidebarOpen = !isSidebarOpen"
@@ -25,7 +25,7 @@ const { items: breadcrumbs, accent: breadcrumbAccent } = useBreadcrumbs()
         </template>
       </AppHeader>
 
-      <main class="l-content">
+      <main class="content-container">
         <slot />
         <AppFooter />
       </main>
@@ -34,14 +34,14 @@ const { items: breadcrumbs, accent: breadcrumbAccent } = useBreadcrumbs()
 </template>
 
 <style scoped lang="scss">
-.l-app {
+.app-root {
   display: flex;
   flex: 1;
   gap: 0;
   min-height: 0;
 }
 
-.l-main {
+.main-container {
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -50,7 +50,7 @@ const { items: breadcrumbs, accent: breadcrumbAccent } = useBreadcrumbs()
   min-width: 0; /* Prevent flex item from blowing out */
 }
 
-.l-content {
+.content-container {
   --scrollbar-size: var(--space-2);
 
   overflow-y: auto;

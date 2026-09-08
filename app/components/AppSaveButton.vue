@@ -40,7 +40,7 @@ const buttonProps = computed(() => {
     :variant="buttonVariant"
     :disabled="disabled || state !== 'idle'"
     :loading="state === 'saving'"
-    class="c-save-button"
+    class="save-button"
     :class="`is-${state}`"
     @click="handleClick"
   >
@@ -53,7 +53,7 @@ const buttonProps = computed(() => {
 </template>
 
 <style scoped lang="scss">
-.c-save-button {
+.save-button {
   &.is-success {
     --btn-color: var(--color-status-success);
 

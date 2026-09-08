@@ -201,7 +201,7 @@ const {
 </script>
 
 <template>
-  <div class="p-phase3">
+  <div class="phase3">
     <AppSectionHeader
       title="フェーズ3：送電・電圧測定・検相"
       icon="zap"
@@ -236,11 +236,11 @@ const {
 
     <!-- 検索・絞り込み ＆ 進捗コントロールパネル -->
     <AppPanel variant="hud">
-      <div class="p-phase3-controls">
-        <div class="p-phase3-controls__filters">
+      <div class="phase3-controls">
+        <div class="phase3-controls__filters">
           <!-- 盤種別タブ -->
-          <div class="p-phase3-controls__row">
-            <span class="p-phase3-controls__label">盤種別:</span>
+          <div class="phase3-controls__row">
+            <span class="phase3-controls__label">盤種別:</span>
             <AppTabs
               v-model="selectedBanShubetsu"
               :options="shubetsuTabOptions"
@@ -249,13 +249,13 @@ const {
           </div>
 
           <!-- 盤名称セレクト & 件数表示 -->
-          <div class="p-phase3-controls__row p-phase3-controls__row--inline">
-            <div class="p-phase3-controls__select-group">
-              <span class="p-phase3-controls__label">盤名称:</span>
+          <div class="phase3-controls__row phase3-controls__row--inline">
+            <div class="phase3-controls__select-group">
+              <span class="phase3-controls__label">盤名称:</span>
               <AppSelect
                 v-model="selectedBanMeisho"
                 :options="availableBanMeishoList"
-                class="p-phase3-controls__select"
+                class="phase3-controls__select"
               />
             </div>
 
@@ -266,7 +266,7 @@ const {
         </div>
 
         <!-- 全体進捗バー & ミニマップ -->
-        <div class="p-phase3-controls__progress">
+        <div class="phase3-controls__progress">
           <AppProgressBar
             label="フェーズ3 進捗状況"
             :completed="phaseStats.completed"
@@ -288,7 +288,7 @@ const {
 
     <!-- 回路一覧テーブル -->
     <AppTable
-      class="p-phase3__table"
+      class="phase3__table"
       :columns="columns"
       :data="sortedCircuits"
       :sort-by="sortBy"
@@ -301,7 +301,7 @@ const {
           :id="`row-${circuit.id}`"
           :key="circuit.id"
           :class="[
-            'p-phase3-row',
+            'phase3-row',
             {
               'is-completed': isComplete(circuit),
               'is-excluded': circuit.isExcluded,
@@ -312,16 +312,16 @@ const {
         >
           <!-- 盤種別 / 盤名称 -->
           <td>
-            <div class="p-phase3-cell__panel">
-              <span class="p-phase3-cell__ban-name">{{ circuit.banMeisho }}</span>
-              <span class="p-phase3-cell__shubetsu">{{ circuit.banShubetsu }}</span>
+            <div class="phase3-cell__panel">
+              <span class="phase3-cell__ban-name">{{ circuit.banMeisho }}</span>
+              <span class="phase3-cell__shubetsu">{{ circuit.banShubetsu }}</span>
             </div>
           </td>
 
           <!-- 回路番号 -->
           <td style="text-align: center;">
-            <div class="p-phase3-cell__bangou-wrap">
-              <span class="p-phase3-cell__type-badge" :class="{ 'is-three': isThreePhase(circuit) }">
+            <div class="phase3-cell__bangou-wrap">
+              <span class="phase3-cell__type-badge" :class="{ 'is-three': isThreePhase(circuit) }">
                 {{ isThreePhase(circuit) ? '動力' : '電灯' }}
               </span>
               <AppKairoIcon
@@ -333,7 +333,7 @@ const {
 
           <!-- 回路名称 -->
           <td>
-            <span class="p-phase3-cell__meisho" :title="circuit.kairoMeisho || ''">
+            <span class="phase3-cell__meisho" :title="circuit.kairoMeisho || ''">
               {{ circuit.kairoMeisho || '-' }}
             </span>
           </td>
@@ -341,32 +341,32 @@ const {
           <!-- 電圧 1 (RS / RN) -->
           <td style="text-align: center;">
             <template v-if="editingRowId === circuit.id">
-              <div class="p-phase3-input-cell">
-                <span class="p-phase3-input-cell__label">{{ getPhaseLabels(circuit).label1 }}</span>
-                <div class="p-phase3-input-cell__box">
+              <div class="phase3-input-cell">
+                <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label1 }}</span>
+                <div class="phase3-input-cell__box">
                   <input
                     v-model="inputForm.rs"
                     type="number"
                     step="any"
                     inputmode="decimal"
-                    class="p-phase3-input"
+                    class="phase3-input"
                     @focus="handleInputFocus"
                     @keydown.enter.prevent="saveInput(circuit)"
                   >
-                  <span class="p-phase3-input-cell__unit">V</span>
+                  <span class="phase3-input-cell__unit">V</span>
                 </div>
               </div>
             </template>
-            <div v-else class="p-phase3-volt-cell">
-              <span class="p-phase3-volt-cell__label">{{ getPhaseLabels(circuit).label1 }}</span>
-              <div class="p-phase3-volt-cell__val-group">
+            <div v-else class="phase3-volt-cell">
+              <span class="phase3-volt-cell__label">{{ getPhaseLabels(circuit).label1 }}</span>
+              <div class="phase3-volt-cell__val-group">
                 <span
-                  class="p-phase3-volt-cell__val"
+                  class="phase3-volt-cell__val"
                   :class="{ 'is-active': circuit.denatsuRs !== null && circuit.denatsuRs !== undefined }"
                 >
                   {{ formatVoltage(circuit.denatsuRs) }}
                 </span>
-                <span v-if="circuit.denatsuRs !== null && circuit.denatsuRs !== undefined" class="p-phase3-volt-cell__unit">V</span>
+                <span v-if="circuit.denatsuRs !== null && circuit.denatsuRs !== undefined" class="phase3-volt-cell__unit">V</span>
               </div>
             </div>
           </td>
@@ -374,32 +374,32 @@ const {
           <!-- 電圧 2 (ST / TN) -->
           <td style="text-align: center;">
             <template v-if="editingRowId === circuit.id">
-              <div class="p-phase3-input-cell">
-                <span class="p-phase3-input-cell__label">{{ getPhaseLabels(circuit).label2 }}</span>
-                <div class="p-phase3-input-cell__box">
+              <div class="phase3-input-cell">
+                <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label2 }}</span>
+                <div class="phase3-input-cell__box">
                   <input
                     v-model="inputForm.st"
                     type="number"
                     step="any"
                     inputmode="decimal"
-                    class="p-phase3-input"
+                    class="phase3-input"
                     @focus="handleInputFocus"
                     @keydown.enter.prevent="saveInput(circuit)"
                   >
-                  <span class="p-phase3-input-cell__unit">V</span>
+                  <span class="phase3-input-cell__unit">V</span>
                 </div>
               </div>
             </template>
-            <div v-else class="p-phase3-volt-cell">
-              <span class="p-phase3-volt-cell__label">{{ getPhaseLabels(circuit).label2 }}</span>
-              <div class="p-phase3-volt-cell__val-group">
+            <div v-else class="phase3-volt-cell">
+              <span class="phase3-volt-cell__label">{{ getPhaseLabels(circuit).label2 }}</span>
+              <div class="phase3-volt-cell__val-group">
                 <span
-                  class="p-phase3-volt-cell__val"
+                  class="phase3-volt-cell__val"
                   :class="{ 'is-active': circuit.denatsuSt !== null && circuit.denatsuSt !== undefined }"
                 >
                   {{ formatVoltage(circuit.denatsuSt) }}
                 </span>
-                <span v-if="circuit.denatsuSt !== null && circuit.denatsuSt !== undefined" class="p-phase3-volt-cell__unit">V</span>
+                <span v-if="circuit.denatsuSt !== null && circuit.denatsuSt !== undefined" class="phase3-volt-cell__unit">V</span>
               </div>
             </div>
           </td>
@@ -407,32 +407,32 @@ const {
           <!-- 電圧 3 (RT / RT) -->
           <td style="text-align: center;">
             <template v-if="editingRowId === circuit.id">
-              <div class="p-phase3-input-cell">
-                <span class="p-phase3-input-cell__label">{{ getPhaseLabels(circuit).label3 }}</span>
-                <div class="p-phase3-input-cell__box">
+              <div class="phase3-input-cell">
+                <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label3 }}</span>
+                <div class="phase3-input-cell__box">
                   <input
                     v-model="inputForm.rt"
                     type="number"
                     step="any"
                     inputmode="decimal"
-                    class="p-phase3-input"
+                    class="phase3-input"
                     @focus="handleInputFocus"
                     @keydown.enter.prevent="saveInput(circuit)"
                   >
-                  <span class="p-phase3-input-cell__unit">V</span>
+                  <span class="phase3-input-cell__unit">V</span>
                 </div>
               </div>
             </template>
-            <div v-else class="p-phase3-volt-cell">
-              <span class="p-phase3-volt-cell__label">{{ getPhaseLabels(circuit).label3 }}</span>
-              <div class="p-phase3-volt-cell__val-group">
+            <div v-else class="phase3-volt-cell">
+              <span class="phase3-volt-cell__label">{{ getPhaseLabels(circuit).label3 }}</span>
+              <div class="phase3-volt-cell__val-group">
                 <span
-                  class="p-phase3-volt-cell__val"
+                  class="phase3-volt-cell__val"
                   :class="{ 'is-active': circuit.denatsuRt !== null && circuit.denatsuRt !== undefined }"
                 >
                   {{ formatVoltage(circuit.denatsuRt) }}
                 </span>
-                <span v-if="circuit.denatsuRt !== null && circuit.denatsuRt !== undefined" class="p-phase3-volt-cell__unit">V</span>
+                <span v-if="circuit.denatsuRt !== null && circuit.denatsuRt !== undefined" class="phase3-volt-cell__unit">V</span>
               </div>
             </div>
           </td>
@@ -440,7 +440,7 @@ const {
           <!-- 検相 / 点灯確認 -->
           <td style="text-align: center;">
             <template v-if="editingRowId === circuit.id">
-              <select v-model="inputForm.kensou" class="p-phase3-select">
+              <select v-model="inputForm.kensou" class="phase3-select">
                 <template v-if="isThreePhase(circuit)">
                   <option value="正相">
                     正相
@@ -466,7 +466,7 @@ const {
                 {{ circuit.kensou }}
               </AppBadge>
             </template>
-            <span v-else class="p-phase3-cell__dash">-</span>
+            <span v-else class="phase3-cell__dash">-</span>
           </td>
 
           <!-- 備考 -->
@@ -474,22 +474,22 @@ const {
             <template v-if="editingRowId === circuit.id">
               <AppInput v-model="inputForm.remarks" size="sm" placeholder="備考" />
             </template>
-            <span v-else class="p-phase3-cell__remarks" :title="circuit.p3Remarks || ''">
+            <span v-else class="phase3-cell__remarks" :title="circuit.p3Remarks || ''">
               {{ circuit.p3Remarks || '-' }}
             </span>
           </td>
 
           <!-- 操作 -->
           <td style="text-align: center;">
-            <div class="p-phase3-actions">
+            <div class="phase3-actions">
               <!-- 幹線未完了による操作不可 -->
               <template v-if="isCircuitLocked(circuit)">
-                <span class="c-text-note c-text-note--strong">⏸ 幹線未了</span>
+                <span class="text-note text-note--strong">⏸ 幹線未了</span>
               </template>
 
               <!-- 前フェーズ（P2）未完了による操作不可 -->
               <template v-else-if="!isP2Complete(circuit)">
-                <span class="c-text-note c-text-note--strong">⏸ P2未了</span>
+                <span class="text-note text-note--strong">⏸ P2未了</span>
               </template>
 
               <!-- 手入力編集モード中 -->
@@ -556,12 +556,12 @@ const {
           <!-- 測定者 / 日時 -->
           <td style="text-align: center;">
             <template v-if="circuit.p3Worker">
-              <div class="p-phase3-cell__worker">
+              <div class="phase3-cell__worker">
                 <strong>{{ circuit.p3Worker }}</strong>
-                <span class="p-phase3-cell__date">{{ formatShortDateTime(circuit.p3ConfirmedAt) }}</span>
+                <span class="phase3-cell__date">{{ formatShortDateTime(circuit.p3ConfirmedAt) }}</span>
               </div>
             </template>
-            <span v-else class="p-phase3-cell__dash">-</span>
+            <span v-else class="phase3-cell__dash">-</span>
           </td>
         </tr>
       </template>
@@ -570,7 +570,7 @@ const {
 </template>
 
 <style scoped lang="scss">
-.p-phase3 {
+.phase3 {
   display: flex;
   flex-direction: column;
   gap: var(--space-section-gap);
@@ -582,7 +582,7 @@ const {
   }
 }
 
-.p-phase3-controls {
+.phase3-controls {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-card-gap);
@@ -632,7 +632,7 @@ const {
   }
 }
 
-.p-phase3-row {
+.phase3-row {
   transition: background-color var(--duration-base) var(--ease-base);
 
   &.is-completed {
@@ -653,7 +653,7 @@ const {
   }
 }
 
-.p-phase3-cell {
+.phase3-cell {
   &__panel {
     overflow: hidden;
     display: flex;
@@ -730,7 +730,7 @@ const {
   }
 }
 
-.p-phase3-volt-cell {
+.phase3-volt-cell {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -766,7 +766,7 @@ const {
   }
 }
 
-.p-phase3-input-cell {
+.phase3-input-cell {
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -789,7 +789,7 @@ const {
   }
 }
 
-.p-phase3-input {
+.phase3-input {
   width: 52px;
   padding: 2px 4px;
   border: 1px solid var(--color-border);
@@ -808,7 +808,7 @@ const {
   }
 }
 
-.p-phase3-select {
+.phase3-select {
   padding: 3px 6px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
@@ -824,14 +824,14 @@ const {
   }
 }
 
-.p-phase3-actions {
+.phase3-actions {
   display: flex;
   gap: var(--space-1);
   align-items: center;
   justify-content: center;
 }
 
-.c-text-note {
+.text-note {
   display: inline-flex;
   gap: 4px;
   align-items: center;

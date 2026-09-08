@@ -11,7 +11,7 @@ defineProps<{
 </script>
 
 <template>
-  <nav class="c-breadcrumb">
+  <nav class="breadcrumb">
     <ol>
       <li
         v-for="(item, index) in items"
@@ -38,7 +38,7 @@ defineProps<{
 </template>
 
 <style scoped lang="scss">
-.c-breadcrumb {
+.breadcrumb {
   position: relative;
 
   display: flex;

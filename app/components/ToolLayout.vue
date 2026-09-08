@@ -57,17 +57,17 @@ provide('toolBasisModal', {
 </script>
 
 <template>
-  <div class="l-tool-layout">
+  <div class="tool-layout">
     <!-- 免責事項 -->
     <slot name="disclaimer">
       <AppDisclaimer />
     </slot>
 
     <!-- メイングリッド（左: 条件入力 / 右: 計算結果） -->
-    <div class="l-tool-layout__main">
+    <div class="tool-layout__main">
       <!-- 1. 条件入力（PC: 左側 50% / モバイル: 全面表示） -->
-      <section class="l-tool-layout__inputs">
-        <AppPanel class="l-tool-layout__panel">
+      <section class="tool-layout__inputs">
+        <AppPanel class="tool-layout__panel">
           <AppSectionHeader
             :title="inputsTitle"
             :icon="inputsIcon"
@@ -82,7 +82,7 @@ provide('toolBasisModal', {
             </template>
           </AppSectionHeader>
 
-          <div class="l-tool-layout__panel-body">
+          <div class="tool-layout__panel-body">
             <slot name="inputs" :open-basis="openBasisModal" />
           </div>
         </AppPanel>
@@ -90,25 +90,25 @@ provide('toolBasisModal', {
 
       <!-- 2. 計算結果（PC: 右側 50% / モバイル: 下部Stickyドロワー） -->
       <section
-        class="l-tool-layout__results"
+        class="tool-layout__results"
         :class="{ 'is-drawer-open': isDrawerOpen }"
       >
         <button
           type="button"
-          class="l-tool-layout__drawer-handle"
+          class="tool-layout__drawer-handle"
           :aria-expanded="isDrawerOpen"
           aria-label="計算結果ドロワーの開閉"
           @click="toggleDrawer"
         >
-          <span class="l-tool-layout__drawer-title">計算結果を見る</span>
+          <span class="tool-layout__drawer-title">計算結果を見る</span>
           <AppIcon
             :name="isDrawerOpen ? 'chevron-down' : 'chevron-up'"
             size="md"
-            class="l-tool-layout__drawer-icon"
+            class="tool-layout__drawer-icon"
           />
         </button>
-        <div class="l-tool-layout__results-inner">
-          <AppPanel class="l-tool-layout__panel">
+        <div class="tool-layout__results-inner">
+          <AppPanel class="tool-layout__panel">
             <AppSectionHeader
               :title="resultsTitle"
               :icon="resultsIcon"
@@ -133,7 +133,7 @@ provide('toolBasisModal', {
               </template>
             </AppSectionHeader>
 
-            <div class="l-tool-layout__panel-body">
+            <div class="tool-layout__panel-body">
               <slot name="results" :open-basis="openBasisModal" />
             </div>
           </AppPanel>
@@ -143,7 +143,7 @@ provide('toolBasisModal', {
       <!-- モバイルドロワー展開時の背景オーバーレイ -->
       <div
         v-if="isDrawerOpen"
-        class="l-tool-layout__overlay"
+        class="tool-layout__overlay"
         @click="toggleDrawer"
       />
     </div>
@@ -154,7 +154,7 @@ provide('toolBasisModal', {
 </template>
 
 <style scoped lang="scss">
-.l-tool-layout {
+.tool-layout {
   display: flex;
   flex: 1;
   flex-direction: column;

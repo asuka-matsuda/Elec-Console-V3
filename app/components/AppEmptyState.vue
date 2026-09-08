@@ -15,7 +15,7 @@ const {
 </script>
 
 <template>
-  <div class="c-empty-state" role="status">
+  <div class="empty-state" role="status">
     <AppIcon v-if="icon" :name="icon" class="icon" />
 
     <div class="content">
@@ -41,7 +41,7 @@ const {
 </template>
 
 <style scoped lang="scss">
-.c-empty-state {
+.empty-state {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);

@@ -33,7 +33,7 @@ function isKanaDisabled(row: string) {
 </script>
 
 <template>
-  <div class="c-kana-filter">
+  <div class="kana-filter">
     <AppCheckbox
       v-for="kana in kanaOptions"
       :key="kana.value"
@@ -47,7 +47,7 @@ function isKanaDisabled(row: string) {
 </template>
 
 <style scoped lang="scss">
-.c-kana-filter {
+.kana-filter {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   gap: var(--space-1);

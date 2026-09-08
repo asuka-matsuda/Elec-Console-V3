@@ -46,18 +46,18 @@ const handleClick = () => {
     @click="handleClick"
   >
     <div
-      class="c-table__th-inner"
+      class="table__th-inner"
       :class="{
         'is-align-center': column.align === 'center',
         'is-align-right': column.align === 'right',
       }"
     >
-      <span class="c-table__th-text">{{ column.label }}</span>
+      <span class="table__th-text">{{ column.label }}</span>
       <AppIcon
         v-if="column.sortable"
         :name="sortIconName"
         size="sm"
-        class="c-table__sort-icon"
+        class="table__sort-icon"
         :class="{ 'is-active': isSorted, 'is-inactive': !isSorted }"
       />
     </div>
@@ -100,7 +100,7 @@ th {
     color: var(--color-text-main);
   }
 
-  .c-table__th-inner {
+  .table__th-inner {
     display: inline-flex;
     gap: 4px;
     align-items: center;
@@ -118,11 +118,11 @@ th {
     }
   }
 
-  .c-table__th-text {
+  .table__th-text {
     white-space: nowrap;
   }
 
-  .c-table__sort-icon {
+  .table__sort-icon {
     flex-shrink: 0;
     color: var(--color-text-muted);
     transition: var(--transition-fast);
@@ -140,7 +140,7 @@ th {
     }
   }
 
-  &:hover .c-table__sort-icon.is-inactive {
+  &:hover .table__sort-icon.is-inactive {
     width: 12px;
     margin-left: 0;
     opacity: 0.5;

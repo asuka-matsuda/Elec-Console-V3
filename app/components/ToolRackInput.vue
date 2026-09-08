@@ -94,7 +94,7 @@ const handleAddCable = () => {
             step="10"
           />
           <template #append>
-            <span class="c-input-addon">mm</span>
+            <span class="input-addon">mm</span>
           </template>
         </AppInputGroup>
       </AppFormGroup>
@@ -108,7 +108,7 @@ const handleAddCable = () => {
             placeholder="相乗り時に指定"
           />
           <template #append>
-            <span class="c-input-addon">mm</span>
+            <span class="input-addon">mm</span>
           </template>
         </AppInputGroup>
       </AppFormGroup>
@@ -131,7 +131,7 @@ const handleAddCable = () => {
               :placeholder="inputs.mode === 'strong' ? '1.2' : '0.6'"
             />
             <template #append>
-              <span class="c-input-addon">倍</span>
+              <span class="input-addon">倍</span>
             </template>
           </AppInputGroup>
         </AppFormGroup>
@@ -145,7 +145,7 @@ const handleAddCable = () => {
               placeholder="10"
             />
             <template #append>
-              <span class="c-input-addon">mm</span>
+              <span class="input-addon">mm</span>
             </template>
           </AppInputGroup>
         </AppFormGroup>
@@ -159,7 +159,7 @@ const handleAddCable = () => {
               :placeholder="inputs.mode === 'strong' ? '60' : '120'"
             />
             <template #append>
-              <span class="c-input-addon">mm</span>
+              <span class="input-addon">mm</span>
             </template>
           </AppInputGroup>
         </AppFormGroup>
@@ -220,7 +220,7 @@ const handleAddCable = () => {
                   size="sm"
                 />
                 <template #append>
-                  <span class="c-input-addon">本</span>
+                  <span class="input-addon">本</span>
                 </template>
               </AppInputGroup>
             </td>
@@ -281,7 +281,7 @@ const handleAddCable = () => {
                   size="sm"
                 />
                 <template #append>
-                  <span class="c-input-addon">本</span>
+                  <span class="input-addon">本</span>
                 </template>
               </AppInputGroup>
             </td>

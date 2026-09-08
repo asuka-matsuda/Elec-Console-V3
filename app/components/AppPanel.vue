@@ -9,17 +9,17 @@ defineProps<{
 </script>
 
 <template>
-  <component :is="as || 'section'" class="c-panel">
+  <component :is="as || 'section'" class="panel">
     <slot name="header" />
     <slot />
-    <footer v-if="$slots.footer" class="c-panel__footer">
+    <footer v-if="$slots.footer" class="panel__footer">
       <slot name="footer" />
     </footer>
   </component>
 </template>
 
 <style scoped lang="scss">
-.c-panel {
+.panel {
   position: relative;
   z-index: 1;
 

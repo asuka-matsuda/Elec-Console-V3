@@ -109,7 +109,7 @@ const confirmResetPassword = async (row: User) => {
 </script>
 
 <template>
-  <AppPanel class="c-admin-users">
+  <AppPanel class="admin-users">
     <AppSectionHeader title="ユーザー一覧">
       <template #actions>
         <AppButton
@@ -146,20 +146,20 @@ const confirmResetPassword = async (row: User) => {
         </AppBadge>
       </template>
       <template #cell-lastLoginAt="{ row }">
-        <div class="c-admin-users__login-cell">
+        <div class="admin-users__login-cell">
           <AppBadge
             v-if="row.requirePasswordReset"
             color="var(--color-status-danger)"
           >
             PWリセット要求
           </AppBadge>
-          <span class="c-admin-users__meta">{{
+          <span class="admin-users__meta">{{
             formatLastLogin(row)
           }}</span>
         </div>
       </template>
       <template #cell-actions="{ row }">
-        <div class="c-admin-users__actions">
+        <div class="admin-users__actions">
           <AppButton
             variant="secondary"
             size="sm"
@@ -202,7 +202,7 @@ const confirmResetPassword = async (row: User) => {
 </template>
 
 <style scoped lang="scss">
-.c-admin-users {
+.admin-users {
   &__login-cell {
     display: flex;
     flex-direction: column;

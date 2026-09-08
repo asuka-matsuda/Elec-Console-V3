@@ -92,13 +92,13 @@ onMounted(() => {
 <template>
   <dialog
     ref="dialogRef"
-    class="c-modal"
-    :class="size ? `c-modal--${size}` : ''"
+    class="modal"
+    :class="size ? `modal--${size}` : ''"
     @close="onNativeClose"
     @click.self="close"
     @cancel.prevent="close"
   >
-    <AppPanel class="c-modal__panel">
+    <AppPanel class="modal__panel">
       <AppSectionHeader
         v-if="title"
         :title="title"
@@ -106,10 +106,10 @@ onMounted(() => {
         :variant="variant"
       />
       <div
-        class="c-modal__body"
+        class="modal__body"
         :class="align ? `is-align-${align}` : undefined"
       >
-        <div v-if="errorMsg" class="c-modal__error">
+        <div v-if="errorMsg" class="modal__error">
           {{ errorMsg }}
         </div>
 
@@ -141,7 +141,7 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-.c-modal {
+.modal {
   pointer-events: none;
 
   transform: translateY(var(--space-2));

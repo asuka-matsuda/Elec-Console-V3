@@ -57,7 +57,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <AppPanel class="p-portal-index">
+  <AppPanel class="portal-index">
     <AppSectionHeader title="現場ポータル" variant="hud">
       <template v-if="isAdmin" #actions>
         <AppButton variant="secondary" size="sm" @click="router.push('/portal/admin')">
@@ -70,7 +70,7 @@ onMounted(async () => {
       アクセスする現場ポータルを選択してください。
     </p>
 
-    <div v-if="availableSites.length > 0" class="p-portal-index__grid">
+    <div v-if="availableSites.length > 0" class="portal-index__grid">
       <MenuTile
         v-for="site in availableSites"
         :key="site.id"
@@ -96,7 +96,7 @@ onMounted(async () => {
 </template>
 
 <style scoped lang="scss">
-.p-portal-index {
+.portal-index {
   &__grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

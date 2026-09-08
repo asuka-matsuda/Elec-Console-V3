@@ -90,7 +90,7 @@ const mainBoxStatus = computed(() =>
   }
 
   // スロット内の自然な折り返しを許可
-  :deep(.c-result-box__value) {
+  :deep(.result-box__value) {
     flex-wrap: wrap;
     row-gap: var(--space-1);
   }

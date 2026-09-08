@@ -19,11 +19,11 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
 </script>
 
 <template>
-  <div class="c-segmented-control">
+  <div class="segmented-control">
     <label
       v-for="option in options"
       :key="String(option.value)"
-      class="c-segmented-control__item"
+      class="segmented-control__item"
       :style="option.color ? { '--radio-color': option.color } : undefined"
     >
       <input
@@ -32,7 +32,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
         :name="groupName"
         :value="option.value"
         :disabled="option.disabled"
-        class="c-segmented-control__input"
+        class="segmented-control__input"
       />
       {{ option.label }}
     </label>
@@ -40,7 +40,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
 </template>
 
 <style scoped lang="scss">
-.c-segmented-control {
+.segmented-control {
   --radio-color: var(--theme-accent);
 
   display: inline-flex;

@@ -33,25 +33,25 @@ const target = computed(() => to || href)
     :disabled="!isClickable ? true : undefined"
     :aria-busy="loading ? true : undefined"
     :class="[
-      'c-btn',
-      `c-btn--${variant}`,
-      `c-btn--${size}`,
+      'btn',
+      `btn--${variant}`,
+      `btn--${size}`,
       {
-        'c-btn--block': block,
-        'c-btn--loading': loading,
-        'c-btn--icon-only': iconOnly,
+        'btn--block': block,
+        'btn--loading': loading,
+        'btn--icon-only': iconOnly,
         'is-disabled': !isClickable,
       },
     ]"
   >
-    <AppIcon v-if="loading" name="loader" class="u-spin c-btn__spinner" />
+    <AppIcon v-if="loading" name="loader" class="u-spin btn__spinner" />
     <AppIcon v-else-if="icon" :name="icon" />
     <slot />
   </component>
 </template>
 
 <style scoped lang="scss">
-.c-btn {
+.btn {
   --btn-color: var(--theme-accent);
   --glow-color: var(--btn-color);
 
@@ -85,7 +85,7 @@ const target = computed(() => to || href)
 
   transition: var(--transition-fast);
 
-  :deep(.c-icon) {
+  :deep(.icon) {
     width: 1.2em;
     height: 1.2em;
   }

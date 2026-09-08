@@ -21,12 +21,12 @@ const activeTab = ref('users')
 </script>
 
 <template>
-  <div class="p-portal-admin">
+  <div class="portal-admin">
     <AppSectionHeader title="ポータル管理 (開発者向け)" icon="settings" />
 
     <AppTabs v-model="activeTab" :options="tabs" />
 
-    <div class="p-portal-admin__content">
+    <div class="portal-admin__content">
       <AdminUsersTab v-if="activeTab === 'users'" />
       <AdminSitesTab v-if="activeTab === 'site'" />
     </div>
@@ -34,7 +34,7 @@ const activeTab = ref('users')
 </template>
 
 <style scoped lang="scss">
-.p-portal-admin {
+.portal-admin {
   display: flex;
   flex-direction: column;
   gap: var(--space-section-gap);

@@ -31,22 +31,22 @@ const {
 
 <template>
   <AppModal v-model="isOpen" title="予定種別の設定">
-    <div class="p-type-settings">
-      <p class="p-type-settings__lead">
+    <div class="type-settings">
+      <p class="type-settings__lead">
         カレンダーに表示する予定種別とテーマカラーを設定します。
       </p>
 
-      <ul class="p-type-settings__list">
-        <li v-for="(t, index) in types" :key="t.id" class="p-type-item">
-          <div class="p-type-item__main">
+      <ul class="type-settings__list">
+        <li v-for="(t, index) in types" :key="t.id" class="type-item">
+          <div class="type-item__main">
             <div
-              class="p-type-item__preview"
+              class="type-item__preview"
               :style="{ '--preview-color': t.color }"
             >
-              <span class="p-type-item__indicator"></span>
+              <span class="type-item__indicator"></span>
             </div>
 
-            <div class="p-type-item__input">
+            <div class="type-item__input">
               <AppInput
                 v-model="t.name"
                 :placeholder="`種別名（例: 現場作業）`"
@@ -59,17 +59,17 @@ const {
               variant="danger"
               size="sm"
               icon="trash-2"
-              class="p-type-item__delete-btn"
+              class="type-item__delete-btn"
               @click="handleRemoveType(index)"
             />
           </div>
 
-          <div class="p-type-item__colors">
+          <div class="type-item__colors">
             <button
               v-for="c in PRESET_COLORS"
               :key="c"
               type="button"
-              class="p-type-item__color-dot"
+              class="type-item__color-dot"
               :class="{ 'is-selected': t.color === c }"
               :style="{ '--dot-color': c }"
               @click="t.color = c"
@@ -78,7 +78,7 @@ const {
         </li>
       </ul>
 
-      <div class="p-type-settings__add">
+      <div class="type-settings__add">
         <AppButton
           variant="secondary"
           icon="plus"
@@ -102,7 +102,7 @@ const {
 </template>
 
 <style scoped lang="scss">
-.p-type-settings {
+.type-settings {
   display: flex;
   flex-direction: column;
   gap: var(--space-card-gap);
@@ -132,7 +132,7 @@ const {
   }
 }
 
-.p-type-item {
+.type-item {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);

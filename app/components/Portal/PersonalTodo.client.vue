@@ -33,14 +33,14 @@ const sortedTodos = computed(() => {
 </script>
 
 <template>
-  <AppPanel class="p-personal-todo">
+  <AppPanel class="personal-todo">
     <AppSectionHeader
       title="パーソナルToDo"
       icon="check"
       size="sm"
     />
 
-    <form class="p-personal-todo__input" @submit.prevent="handleAdd">
+    <form class="personal-todo__input" @submit.prevent="handleAdd">
       <AppInput
         v-model="newTask"
         placeholder="新しいタスクを入力..."
@@ -50,11 +50,11 @@ const sortedTodos = computed(() => {
       </AppButton>
     </form>
 
-    <ul class="p-personal-todo__list">
+    <ul class="personal-todo__list">
       <li
         v-for="todo in sortedTodos"
         :key="todo.id"
-        class="p-personal-todo__item"
+        class="personal-todo__item"
       >
         <AppCheckbox
           :model-value="todo.completed"
@@ -82,7 +82,7 @@ const sortedTodos = computed(() => {
 </template>
 
 <style scoped lang="scss">
-.p-personal-todo {
+.personal-todo {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);

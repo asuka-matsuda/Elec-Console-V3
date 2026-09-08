@@ -34,16 +34,16 @@ const badgeColor = computed(() => props.color || 'var(--theme-accent)')
 </script>
 
 <template>
-  <div class="c-cal-badge" :style="{ '--badge-color': badgeColor }">
-    <span v-if="timeText" class="c-cal-badge__time">
+  <div class="cal-badge" :style="{ '--badge-color': badgeColor }">
+    <span v-if="timeText" class="cal-badge__time">
       {{ timeText }}
     </span>
-    <span class="c-cal-badge__title">{{ title }}</span>
+    <span class="cal-badge__title">{{ title }}</span>
   </div>
 </template>
 
 <style scoped lang="scss">
-.c-cal-badge {
+.cal-badge {
   --badge-color-dim: color-mix(in srgb, var(--badge-color) 80%, transparent);
 
   --glow-color: var(--badge-color);

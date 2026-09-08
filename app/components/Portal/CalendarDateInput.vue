@@ -23,14 +23,14 @@ withDefaults(
   <input
     v-model="model"
     :type="type"
-    class="c-form-control"
-    :class="[`c-form-control--${size}`, { 'is-error': error }]"
+    class="form-control"
+    :class="[`form-control--${size}`, { 'is-error': error }]"
     :disabled="disabled"
   />
 </template>
 
 <style scoped lang="scss">
-.c-form-control {
+.form-control {
   --form-control-px: var(--space-4);
   --form-control-py: var(--space-2);
 

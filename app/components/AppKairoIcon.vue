@@ -53,9 +53,9 @@ const tooltipTitle = computed(() => {
 
 <template>
   <div
-    class="c-kairo-icon"
+    class="kairo-icon"
     :class="[
-      `c-kairo-icon--${size}`,
+      `kairo-icon--${size}`,
       { 'has-symbol': !!normalizedKigou },
     ]"
     :title="tooltipTitle"
@@ -63,7 +63,7 @@ const tooltipTitle = computed(() => {
     <!-- 背景透明の回路記号SVG -->
     <svg
       v-if="normalizedKigou"
-      class="c-kairo-icon__svg"
+      class="kairo-icon__svg"
       viewBox="0 0 40 40"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
@@ -172,12 +172,12 @@ const tooltipTitle = computed(() => {
     </svg>
 
     <!-- 回路番号テキスト -->
-    <span class="c-kairo-icon__text">{{ displayText }}</span>
+    <span class="kairo-icon__text">{{ displayText }}</span>
   </div>
 </template>
 
 <style scoped lang="scss">
-.c-kairo-icon {
+.kairo-icon {
   position: relative;
   z-index: 0;
 
@@ -239,7 +239,7 @@ const tooltipTitle = computed(() => {
     height: auto;
     padding: 0;
 
-    .c-kairo-icon__text {
+    .kairo-icon__text {
       color: var(--color-text-main);
     }
   }

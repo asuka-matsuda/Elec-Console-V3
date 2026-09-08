@@ -73,7 +73,7 @@ const getCableAreaText = (cableIdx: string): string => {
             placeholder="80"
           />
           <template #append>
-            <span class="c-input-addon">%</span>
+            <span class="input-addon">%</span>
           </template>
         </AppInputGroup>
       </AppFormGroup>
@@ -131,7 +131,7 @@ const getCableAreaText = (cableIdx: string): string => {
                   size="sm"
                 />
                 <template #append>
-                  <span class="c-input-addon">本</span>
+                  <span class="input-addon">本</span>
                 </template>
               </AppInputGroup>
             </td>

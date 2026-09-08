@@ -6,13 +6,13 @@
 </script>
 
 <template>
-  <dl class="c-result-details">
+  <dl class="result-details">
     <slot />
   </dl>
 </template>
 
 <style scoped lang="scss">
-.c-result-details {
+.result-details {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);

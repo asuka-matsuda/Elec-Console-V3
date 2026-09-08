@@ -23,7 +23,7 @@ const iconComponent = computed(() => {
 
 <template>
   <i
-    class="app-icon c-icon"
+    class="app-icon icon"
     :class="size && `is-${size}`"
   >
     <component

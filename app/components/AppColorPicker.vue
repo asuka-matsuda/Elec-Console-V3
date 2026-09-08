@@ -39,7 +39,7 @@ const handleCustomColorInput = (event: Event) => {
 </script>
 
 <template>
-  <div class="c-color-picker">
+  <div class="color-picker">
     <div class="presets">
       <button
         v-for="preset in presets"
@@ -79,7 +79,7 @@ const handleCustomColorInput = (event: Event) => {
 </template>
 
 <style scoped lang="scss">
-.c-color-picker {
+.color-picker {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-1);

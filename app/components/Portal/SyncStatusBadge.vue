@@ -72,27 +72,27 @@ const formatDateTime = (isoStr: string) => {
 </script>
 
 <template>
-  <div class="p-sync-badge">
+  <div class="sync-badge">
     <!-- 未同期がある場合のボタン -->
     <template v-if="hasPending">
       <button
         type="button"
-        class="p-sync-btn is-pending"
+        class="sync-btn is-pending"
         :class="{ 'is-loading': isSyncing }"
         :disabled="isSyncing"
         @click="openModal"
       >
-        <span class="p-sync-btn__icon">⚡</span>
-        <span class="p-sync-btn__text">未同期 {{ pendingCount }}件</span>
-        <span class="p-sync-btn__action">同期実行 📤</span>
+        <span class="sync-btn__icon">⚡</span>
+        <span class="sync-btn__text">未同期 {{ pendingCount }}件</span>
+        <span class="sync-btn__action">同期実行 📤</span>
       </button>
     </template>
 
     <!-- 通常時（同期完了状態） -->
     <template v-else>
-      <div class="p-sync-status is-synced">
-        <span class="p-sync-status__dot" />
-        <span class="p-sync-status__text">同期済</span>
+      <div class="sync-status is-synced">
+        <span class="sync-status__dot" />
+        <span class="sync-status__text">同期済</span>
       </div>
     </template>
 
@@ -102,10 +102,10 @@ const formatDateTime = (isoStr: string) => {
       title="現場データのサーバー同期"
       @close="closeModal"
     >
-      <div class="p-sync-modal">
+      <div class="sync-modal">
         <!-- 競合解決ビュー -->
         <template v-if="conflictItems.length > 0">
-          <div class="p-sync-conflict-alert">
+          <div class="sync-conflict-alert">
             ⚠️ <strong>{{ conflictItems.length }}件</strong> の回路で別の作業者との更新競合が発生しました。<br>
             内容を確認し、どちらの値を採用するか選択してください。
           </div>
@@ -113,26 +113,26 @@ const formatDateTime = (isoStr: string) => {
           <div
             v-for="item in conflictItems"
             :key="item.id"
-            class="p-sync-conflict-card"
+            class="sync-conflict-card"
           >
-            <div class="p-sync-conflict-card__header">
-              <span class="p-sync-conflict-card__ban">{{ item.banMeisho }}</span>
-              <span class="p-sync-conflict-card__kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
+            <div class="sync-conflict-card__header">
+              <span class="sync-conflict-card__ban">{{ item.banMeisho }}</span>
+              <span class="sync-conflict-card__kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
               <AppBadge color="var(--color-status-warning)">
                 フェーズ{{ item.phase }}
               </AppBadge>
             </div>
 
-            <div class="p-sync-conflict-card__grid">
+            <div class="sync-conflict-card__grid">
               <!-- サーバー側の値 -->
-              <div class="p-sync-conflict-col is-server">
-                <div class="p-sync-conflict-col__title">
+              <div class="sync-conflict-col is-server">
+                <div class="sync-conflict-col__title">
                   🌐 サーバー側の最新データ
                 </div>
-                <div class="p-sync-conflict-col__meta">
+                <div class="sync-conflict-col__meta">
                   更新日時: {{ formatDateTime(String(item.serverCircuitData?.updatedAt || '')) }}
                 </div>
-                <div class="p-sync-conflict-col__details">
+                <div class="sync-conflict-col__details">
                   <template v-if="item.phase === 1">
                     確認: {{ item.serverCircuitData?.p1Kakunin ? '済' : '未' }} / 増締: {{ item.serverCircuitData?.p1Mashishime ? '済' : '未' }}
                   </template>
@@ -146,7 +146,7 @@ const formatDateTime = (isoStr: string) => {
                 <AppButton
                   variant="secondary"
                   size="sm"
-                  class="u-mt-sm"
+                  class="mt-sm"
                   @click="handleResolve(item, 'discard')"
                 >
                   サーバーの値を残す
@@ -154,14 +154,14 @@ const formatDateTime = (isoStr: string) => {
               </div>
 
               <!-- 端末側（オフライン入力）の値 -->
-              <div class="p-sync-conflict-col is-client">
-                <div class="p-sync-conflict-col__title">
+              <div class="sync-conflict-col is-client">
+                <div class="sync-conflict-col__title">
                   📱 あなたのオフライン入力
                 </div>
-                <div class="p-sync-conflict-col__meta">
+                <div class="sync-conflict-col__meta">
                   実測定時刻: {{ formatDateTime(item.clientConfirmedAt) }}
                 </div>
-                <div class="p-sync-conflict-col__details">
+                <div class="sync-conflict-col__details">
                   <template v-if="item.phase === 1">
                     確認: {{ item.payload.kakunin ? '済' : '未' }} / 増締: {{ item.payload.mashishime ? '済' : '未' }}
                   </template>
@@ -175,7 +175,7 @@ const formatDateTime = (isoStr: string) => {
                 <AppButton
                   variant="primary"
                   size="sm"
-                  class="u-mt-sm"
+                  class="mt-sm"
                   @click="handleResolve(item, 'overwrite')"
                 >
                   自分の値で上書きする
@@ -187,39 +187,39 @@ const formatDateTime = (isoStr: string) => {
 
         <!-- 同期実行・結果ビュー -->
         <template v-else>
-          <div class="p-sync-summary">
-            <p class="p-sync-summary__desc">
+          <div class="sync-summary">
+            <p class="sync-summary__desc">
               地下受変電室等で記録された <strong>{{ pendingCount }}件</strong> の未送信データがあります。<br>
               現場で実際に測定された正確な時刻（実打鍵タイムスタンプ）とともにサーバーへ反映します。
             </p>
 
-            <ul class="p-sync-queue-list">
+            <ul class="sync-queue-list">
               <li
                 v-for="item in queue.slice(0, 5)"
                 :key="item.id"
-                class="p-sync-queue-item"
+                class="sync-queue-item"
               >
-                <span class="p-sync-queue-item__badge">P{{ item.phase }}</span>
-                <span class="p-sync-queue-item__ban">{{ item.banMeisho }}</span>
-                <span class="p-sync-queue-item__kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
-                <span class="p-sync-queue-item__time">{{ formatDateTime(item.clientConfirmedAt) }}</span>
+                <span class="sync-queue-item__badge">P{{ item.phase }}</span>
+                <span class="sync-queue-item__ban">{{ item.banMeisho }}</span>
+                <span class="sync-queue-item__kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
+                <span class="sync-queue-item__time">{{ formatDateTime(item.clientConfirmedAt) }}</span>
               </li>
-              <li v-if="queue.length > 5" class="p-sync-queue-more">
+              <li v-if="queue.length > 5" class="sync-queue-more">
                 ... 他 {{ queue.length - 5 }} 件
               </li>
             </ul>
 
-            <div v-if="syncResult" class="p-sync-result-box">
-              <div v-if="syncResult.successCount > 0" class="c-text-success">
+            <div v-if="syncResult" class="sync-result-box">
+              <div v-if="syncResult.successCount > 0" class="text-success">
                 ✅ {{ syncResult.successCount }} 件のデータを正常に同期しました。
               </div>
-              <div v-if="syncResult.errorCount > 0" class="c-text-danger">
+              <div v-if="syncResult.errorCount > 0" class="text-danger">
                 ❌ {{ syncResult.errorCount }} 件の送信に失敗しました（電波状況を確認してください）。
               </div>
             </div>
           </div>
 
-          <div class="p-sync-modal__actions">
+          <div class="sync-modal__actions">
             <AppButton
               variant="secondary"
               @click="closeModal"
@@ -242,12 +242,12 @@ const formatDateTime = (isoStr: string) => {
 </template>
 
 <style scoped lang="scss">
-.p-sync-badge {
+.sync-badge {
   display: inline-flex;
   align-items: center;
 }
 
-.p-sync-btn {
+.sync-btn {
   cursor: pointer;
 
   display: inline-flex;
@@ -282,7 +282,7 @@ const formatDateTime = (isoStr: string) => {
   }
 }
 
-.p-sync-status {
+.sync-status {
   display: inline-flex;
   gap: var(--space-1);
   align-items: center;
@@ -302,7 +302,7 @@ const formatDateTime = (isoStr: string) => {
   }
 }
 
-.p-sync-modal {
+.sync-modal {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
@@ -317,7 +317,7 @@ const formatDateTime = (isoStr: string) => {
   }
 }
 
-.p-sync-summary {
+.sync-summary {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -330,7 +330,7 @@ const formatDateTime = (isoStr: string) => {
   }
 }
 
-.p-sync-queue-list {
+.sync-queue-list {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -347,7 +347,7 @@ const formatDateTime = (isoStr: string) => {
   background: var(--surface-bg-subtle);
 }
 
-.p-sync-queue-item {
+.sync-queue-item {
   display: flex;
   gap: var(--space-2);
   align-items: center;
@@ -382,21 +382,33 @@ const formatDateTime = (isoStr: string) => {
   }
 }
 
-.p-sync-queue-more {
+.sync-queue-more {
   padding: var(--space-1);
   font-size: var(--font-size-xs);
   color: var(--color-text-dim);
   text-align: center;
 }
 
-.p-sync-result-box {
+.sync-result-box {
   padding: var(--space-3);
   border-radius: var(--radius-sm);
   font-size: var(--font-size-sm);
   background: var(--surface-bg-elevated);
+
+  .text-success {
+    color: var(--color-status-success);
+  }
+
+  .text-danger {
+    color: var(--color-status-danger);
+  }
 }
 
-.p-sync-conflict-alert {
+.mt-sm {
+  margin-top: var(--space-2);
+}
+
+.sync-conflict-alert {
   padding: var(--space-3);
   border: 1px solid var(--color-status-warning);
   border-radius: var(--radius-sm);
@@ -408,7 +420,7 @@ const formatDateTime = (isoStr: string) => {
   background: color-mix(in srgb, var(--color-status-warning) 10%, var(--surface-bg-elevated));
 }
 
-.p-sync-conflict-card {
+.sync-conflict-card {
   padding: var(--space-3);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-base);
@@ -435,7 +447,7 @@ const formatDateTime = (isoStr: string) => {
   }
 }
 
-.p-sync-conflict-col {
+.sync-conflict-col {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);

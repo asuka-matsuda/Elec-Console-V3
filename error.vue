@@ -21,26 +21,26 @@ const handleReset = () => {
 </script>
 
 <template>
-  <div class="p-error-page">
-    <div class="p-error-page__card">
-      <div class="p-error-page__header">
+  <div class="error-page">
+    <div class="error-page__card">
+      <div class="error-page__header">
         <AppLogo />
       </div>
 
-      <div class="p-error-page__badge">
+      <div class="error-page__badge">
         <AppIcon
           :name="isNotFound ? 'compass' : 'alert-triangle'"
           size="lg"
           :class="isNotFound ? 'u-text-primary' : 'u-text-danger'"
         />
-        <span class="p-error-page__code">{{ statusCode }}</span>
+        <span class="error-page__code">{{ statusCode }}</span>
       </div>
 
-      <h1 class="p-error-page__title">
+      <h1 class="error-page__title">
         {{ isNotFound ? "指定されたページが見つかりません" : "システムエラーが発生しました" }}
       </h1>
 
-      <p class="p-error-page__desc">
+      <p class="error-page__desc">
         {{
           isNotFound
             ? "アクセスしようとしたページは削除されたか、URLが変更された可能性があります。"
@@ -48,7 +48,7 @@ const handleReset = () => {
         }}
       </p>
 
-      <div class="p-error-page__actions">
+      <div class="error-page__actions">
         <AppButton
           variant="primary"
           icon="home"
@@ -61,20 +61,20 @@ const handleReset = () => {
 
       <details
         v-if="error?.message && !isNotFound"
-        class="p-error-page__details"
+        class="error-page__details"
       >
-        <summary class="p-error-page__summary">
+        <summary class="error-page__summary">
           <AppIcon name="chevron-right" size="sm" />
           <span>詳細なエラー情報</span>
         </summary>
-        <pre class="p-error-page__stack">{{ error.message }}</pre>
+        <pre class="error-page__stack">{{ error.message }}</pre>
       </details>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.p-error-page {
+.error-page {
   display: flex;
   align-items: center;
   justify-content: center;

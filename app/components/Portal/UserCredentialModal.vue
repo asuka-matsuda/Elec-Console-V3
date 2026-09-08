@@ -28,26 +28,26 @@ const handleCopyPassword = () => {
 
 <template>
   <AppModal v-model="isOpen" title="ログイン情報の発行完了">
-    <div class="c-user-credential-modal">
-      <p class="c-user-credential-modal__desc">
+    <div class="user-credential-modal">
+      <p class="user-credential-modal__desc">
         以下のログイン情報を作業員へお伝えください。<br />
         （初期パスワードはこの画面を閉じると二度と表示されません）
       </p>
 
-      <div v-if="user" class="c-user-credential-modal__credential-box">
+      <div v-if="user" class="user-credential-modal__credential-box">
         <AppFormGroup label="氏名">
-          <div class="c-user-credential-modal__credential-value">
+          <div class="user-credential-modal__credential-value">
             {{ user.lastName }} {{ user.firstName }}
           </div>
         </AppFormGroup>
         <AppFormGroup label="ログインID">
-          <div class="c-user-credential-modal__credential-value">
+          <div class="user-credential-modal__credential-value">
             {{ user.loginId }}
           </div>
         </AppFormGroup>
         <AppFormGroup label="初期パスワード">
           <div
-            class="c-user-credential-modal__credential-value c-user-credential-modal__credential-value--password"
+            class="user-credential-modal__credential-value user-credential-modal__credential-value--password"
           >
             {{ user.initialPassword || "（既に設定済みです）" }}
           </div>
@@ -72,7 +72,7 @@ const handleCopyPassword = () => {
 </template>
 
 <style scoped lang="scss">
-.c-user-credential-modal {
+.user-credential-modal {
   &__desc {
     font-size: var(--font-size-sm);
     color: var(--color-text-muted);

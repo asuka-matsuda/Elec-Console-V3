@@ -11,18 +11,18 @@ const props = withDefaults(defineProps<AppIconButtonProps>(), {
 </script>
 
 <template>
-  <AppButton v-bind="props" class="c-icon-btn">
+  <AppButton v-bind="props" class="icon-btn">
     <AppIcon :name="name" />
   </AppButton>
 </template>
 
 <style scoped lang="scss">
-.c-icon-btn {
+.icon-btn {
   width: var(--size-control-sm);
   padding: 0;
 
-  :deep(.c-icon),
-  .c-icon {
+  :deep(.icon),
+  .icon {
     width: 18px;
     height: 18px;
 
@@ -32,11 +32,11 @@ const props = withDefaults(defineProps<AppIconButtonProps>(), {
     }
   }
 
-  &.c-btn--md {
+  &.btn--md {
     width: var(--size-control-md);
 
-    :deep(.c-icon),
-    .c-icon {
+    :deep(.icon),
+    .icon {
       width: 22px;
       height: 22px;
     }

@@ -28,20 +28,20 @@ const pct = computed(() => {
 </script>
 
 <template>
-  <li :class="['c-step-indicator__item', { 'is-completed': isCompleted, 'is-disabled': disabled }]">
-    <div class="c-step-indicator__node">
+  <li :class="['step-indicator__item', { 'is-completed': isCompleted, 'is-disabled': disabled }]">
+    <div class="step-indicator__node">
       <AppIcon v-if="isCompleted" name="check" size="sm" />
       <span v-else>{{ stepNum }}</span>
     </div>
 
-    <div class="c-step-indicator__info">
-      <div class="c-step-indicator__details">
-        <h4 class="c-step-indicator__title">
+    <div class="step-indicator__info">
+      <div class="step-indicator__details">
+        <h4 class="step-indicator__title">
           {{ title }}
         </h4>
-        <div class="c-step-indicator__progress">
+        <div class="step-indicator__progress">
           <strong>{{ completed }}</strong> / {{ total }}
-          <span class="c-step-indicator__pct">({{ pct }}%)</span>
+          <span class="step-indicator__pct">({{ pct }}%)</span>
         </div>
       </div>
 
@@ -58,7 +58,7 @@ const pct = computed(() => {
 </template>
 
 <style scoped lang="scss">
-.c-step-indicator__item {
+.step-indicator__item {
   position: relative;
 
   display: flex;
@@ -90,7 +90,7 @@ const pct = computed(() => {
   }
 
   &.is-completed {
-    .c-step-indicator__node {
+    .step-indicator__node {
       --glow-color: var(--color-status-success);
 
       border-color: var(--color-status-success);
@@ -109,7 +109,7 @@ const pct = computed(() => {
   }
 }
 
-.c-step-indicator__node {
+.step-indicator__node {
   position: relative;
   z-index: 2;
 
@@ -133,7 +133,7 @@ const pct = computed(() => {
   transition: var(--transition-base);
 }
 
-.c-step-indicator__info {
+.step-indicator__info {
   display: flex;
   flex: 1;
   gap: var(--space-3, 12px);
@@ -154,17 +154,17 @@ const pct = computed(() => {
   }
 }
 
-.c-step-indicator__details {
+.step-indicator__details {
   display: flex;
   flex-direction: column;
   gap: var(--space-1, 4px);
 }
 
-.c-step-indicator__title {
+.step-indicator__title {
   color: var(--color-text-main);
 }
 
-.c-step-indicator__progress {
+.step-indicator__progress {
   display: inline-flex;
   gap: var(--space-1, 4px);
   align-items: baseline;
@@ -178,7 +178,7 @@ const pct = computed(() => {
   }
 }
 
-.c-step-indicator__pct {
+.step-indicator__pct {
   color: var(--color-text-secondary, #94a3b8);
 }
 </style>

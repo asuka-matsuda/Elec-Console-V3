@@ -112,7 +112,7 @@ const confirmResetImport = async () => {
   >
     <AppTabs v-model="activeTab" :options="tabs" />
 
-    <div class="c-site-settings__content">
+    <div class="site-settings__content">
       <template v-if="activeTab === 'basic'">
         <AppFormGroup label="ステータス">
           <AppSelect v-model="editStatus" :options="statusOptions" />
@@ -124,7 +124,7 @@ const confirmResetImport = async () => {
           <AppInput v-model="editData.name" />
         </AppFormGroup>
         <AppFormGroup label="アサイン済ワーカー">
-          <div class="c-site-settings__workers">
+          <div class="site-settings__workers">
             <template v-if="workerNames.length > 0">
               <AppBadge
                 v-for="(name, idx) in workerNames"
@@ -151,14 +151,14 @@ const confirmResetImport = async () => {
         >
 
         <!-- ファイル直接アップロード エリア -->
-        <div class="c-site-settings__upload-section">
-          <div class="c-site-settings__section-label">
+        <div class="site-settings__upload-section">
+          <div class="site-settings__section-label">
             <AppIcon name="file-spreadsheet" size="sm" />
             <span>Excelファイルから直接取り込む</span>
           </div>
 
           <div
-            class="c-site-settings__dropzone"
+            class="site-settings__dropzone"
             :class="{ 'is-dragging': isDragging, 'has-file': !!selectedFile }"
             @dragover="onDragOver"
             @dragleave="onDragLeave"
@@ -166,22 +166,22 @@ const confirmResetImport = async () => {
             @click="triggerFileInput"
           >
             <template v-if="!selectedFile">
-              <AppIcon name="upload-cloud" size="lg" class="c-site-settings__dropzone-icon" />
-              <div class="c-site-settings__dropzone-text">
+              <AppIcon name="upload-cloud" size="lg" class="site-settings__dropzone-icon" />
+              <div class="site-settings__dropzone-text">
                 <strong>クリックしてファイルを選択</strong> またはここにドラッグ＆ドロップ
               </div>
-              <div class="c-site-settings__dropzone-hint">
+              <div class="site-settings__dropzone-hint">
                 対応形式: .xlsx, .xlsm
               </div>
             </template>
             <template v-else>
-              <div class="c-site-settings__file-preview">
+              <div class="site-settings__file-preview">
                 <AppIcon name="file-check" size="md" class="u-text-success" />
-                <div class="c-site-settings__file-info">
-                  <div class="c-site-settings__file-name">
+                <div class="site-settings__file-info">
+                  <div class="site-settings__file-name">
                     {{ selectedFile.name }}
                   </div>
-                  <div class="c-site-settings__file-size">
+                  <div class="site-settings__file-size">
                     {{ formatFileSize(selectedFile.size) }}
                   </div>
                 </div>
@@ -199,12 +199,12 @@ const confirmResetImport = async () => {
         </div>
 
         <!-- PCローカル絶対パス設定 (高度な設定・後方互換用) -->
-        <details class="c-site-settings__advanced-details">
-          <summary class="c-site-settings__advanced-summary">
+        <details class="site-settings__advanced-details">
+          <summary class="site-settings__advanced-summary">
             <AppIcon name="folder" size="sm" />
             <span>PCローカル絶対パス連携 (任意)</span>
           </summary>
-          <div class="c-site-settings__advanced-content">
+          <div class="site-settings__advanced-content">
             <AppFormGroup label="Excel連携ファイル保存先 (絶対パス)">
               <AppInput
                 v-model="editData.excelPath"
@@ -222,14 +222,14 @@ const confirmResetImport = async () => {
 
         <AppPanel>
           <AppSectionHeader title="データベース連携（Excel同期・エクスポート）" />
-          <ul class="c-site-settings__sync-list">
+          <ul class="site-settings__sync-list">
             <!-- 差分再同期 (スマートマージ) -->
-            <li class="c-site-settings__sync-item">
-              <div class="c-site-settings__sync-info">
-                <h4 class="c-site-settings__sync-title">
+            <li class="site-settings__sync-item">
+              <div class="site-settings__sync-info">
+                <h4 class="site-settings__sync-title">
                   {{ selectedFile ? '選択ファイルから差分同期 (スマートマージ)' : 'Excelから差分再同期 (スマートマージ)' }}
                 </h4>
-                <p class="c-site-settings__sync-desc">
+                <p class="site-settings__sync-desc">
                   Web上の試験結果（Phase 1〜3）を保持したまま、Excelで追加された回路や基本情報の変更のみを安全に同期します。
                 </p>
               </div>
@@ -245,12 +245,12 @@ const confirmResetImport = async () => {
             </li>
 
             <!-- Excel帳票ダウンロード (Web標準) -->
-            <li class="c-site-settings__sync-item">
-              <div class="c-site-settings__sync-info">
-                <h4 class="c-site-settings__sync-title">
+            <li class="site-settings__sync-item">
+              <div class="site-settings__sync-info">
+                <h4 class="site-settings__sync-title">
                   Excel帳票ダウンロード (ブラウザDL)
                 </h4>
-                <p class="c-site-settings__sync-desc">
+                <p class="site-settings__sync-desc">
                   Web上で入力・完了した最新の試験結果（Phase 1〜3）を含むExcel帳票ファイルをブラウザへ直接ダウンロードします。
                 </p>
               </div>
@@ -268,13 +268,13 @@ const confirmResetImport = async () => {
             <!-- PCローカルExcelへ書戻し (実エクスポート) -->
             <li
               v-if="editData.excelPath"
-              class="c-site-settings__sync-item"
+              class="site-settings__sync-item"
             >
-              <div class="c-site-settings__sync-info">
-                <h4 class="c-site-settings__sync-title">
+              <div class="site-settings__sync-info">
+                <h4 class="site-settings__sync-title">
                   PCローカルExcelへ書戻し (直接上書き)
                 </h4>
-                <p class="c-site-settings__sync-desc">
+                <p class="site-settings__sync-desc">
                   指定されたPCローカルのExcelファイルに最新試験結果を直接上書き保存します。
                 </p>
               </div>
@@ -290,12 +290,12 @@ const confirmResetImport = async () => {
             </li>
 
             <!-- 全件初期化取込 (完全リセット) -->
-            <li class="c-site-settings__sync-item c-site-settings__sync-item--danger">
-              <div class="c-site-settings__sync-info">
-                <h4 class="c-site-settings__sync-title">
+            <li class="site-settings__sync-item site-settings__sync-item--danger">
+              <div class="site-settings__sync-info">
+                <h4 class="site-settings__sync-title">
                   {{ selectedFile ? '選択ファイルで全件初期化取込' : '全件取込 (完全初期化)' }}
                 </h4>
-                <p class="c-site-settings__sync-desc">
+                <p class="site-settings__sync-desc">
                   Web上の試験結果を含むすべてのデータを破棄し、Excelからまっさらに最初から作り直します（現場初期設定用）。
                 </p>
               </div>
@@ -314,7 +314,7 @@ const confirmResetImport = async () => {
           <!-- 実行中ステータス表示 -->
           <div
             v-if="isSyncing"
-            class="c-site-settings__sync-status c-site-settings__sync-status--loading"
+            class="site-settings__sync-status site-settings__sync-status--loading"
           >
             <AppIcon name="loader" size="sm" class="u-spin" />
             <span>{{ syncMsg }}</span>
@@ -323,7 +323,7 @@ const confirmResetImport = async () => {
           <!-- エラー発生時の表示 -->
           <div
             v-else-if="showSyncMsg && syncMsgType === 'error'"
-            class="c-site-settings__sync-status c-site-settings__sync-status--error"
+            class="site-settings__sync-status site-settings__sync-status--error"
           >
             <AppIcon name="alert-circle" size="sm" />
             <span>{{ syncMsg }}</span>
@@ -332,10 +332,10 @@ const confirmResetImport = async () => {
           <!-- 完了時のインライン件数サマリー表示 -->
           <div
             v-else-if="syncResultData"
-            class="c-site-settings__sync-result-box"
+            class="site-settings__sync-result-box"
           >
-            <div class="c-site-settings__sync-result-header">
-              <div class="c-site-settings__sync-result-tag">
+            <div class="site-settings__sync-result-header">
+              <div class="site-settings__sync-result-tag">
                 <AppIcon name="check-circle" size="sm" class="u-text-success" />
                 <span class="u-font-bold">{{ syncResultData.title }}</span>
               </div>
@@ -351,15 +351,15 @@ const confirmResetImport = async () => {
             <!-- 差分再同期の場合のバッジ -->
             <div
               v-if="syncResultData.type === 'merge'"
-              class="c-site-settings__sync-badges"
+              class="site-settings__sync-badges"
             >
-              <span class="c-site-settings__stat-badge c-site-settings__stat-badge--add">
+              <span class="site-settings__stat-badge site-settings__stat-badge--add">
                 追加: <strong>+{{ syncResultData.createdCount ?? 0 }}</strong> 件
               </span>
-              <span class="c-site-settings__stat-badge c-site-settings__stat-badge--update">
+              <span class="site-settings__stat-badge site-settings__stat-badge--update">
                 変更: <strong>{{ syncResultData.updatedCount ?? 0 }}</strong> 件
               </span>
-              <span class="c-site-settings__stat-badge">
+              <span class="site-settings__stat-badge">
                 全回路数: <strong>{{ syncResultData.count }}</strong> 件
               </span>
             </div>
@@ -367,9 +367,9 @@ const confirmResetImport = async () => {
             <!-- 全件初期化取込の場合のバッジ -->
             <div
               v-else-if="syncResultData.type === 'reset'"
-              class="c-site-settings__sync-badges"
+              class="site-settings__sync-badges"
             >
-              <span class="c-site-settings__stat-badge c-site-settings__stat-badge--add">
+              <span class="site-settings__stat-badge site-settings__stat-badge--add">
                 取込総数: <strong>{{ syncResultData.count }}</strong> 件
               </span>
             </div>
@@ -377,14 +377,14 @@ const confirmResetImport = async () => {
             <!-- Excel書戻しの場合のバッジ -->
             <div
               v-else-if="syncResultData.type === 'export'"
-              class="c-site-settings__sync-badges"
+              class="site-settings__sync-badges"
             >
-              <span class="c-site-settings__stat-badge c-site-settings__stat-badge--info">
+              <span class="site-settings__stat-badge site-settings__stat-badge--info">
                 書戻し完了: <strong>{{ syncResultData.count }}</strong> 件
               </span>
             </div>
 
-            <div class="c-site-settings__sync-result-note">
+            <div class="site-settings__sync-result-note">
               <template v-if="syncResultData.type === 'merge'">
                 ※ Web上で登録された試験結果（Phase 1〜3）はすべて保持されました。
               </template>
@@ -404,12 +404,12 @@ const confirmResetImport = async () => {
           <template #description>
             計算や連携の対象外とする回路を複数追加できます。
           </template>
-          <div class="c-site-settings__circuit-container">
-            <ul v-if="excludedCircuitsList.length > 0" class="c-site-settings__circuit-list">
+          <div class="site-settings__circuit-container">
+            <ul v-if="excludedCircuitsList.length > 0" class="site-settings__circuit-list">
               <li
                 v-for="(_, idx) in excludedCircuitsList"
                 :key="idx"
-                class="c-site-settings__circuit-row"
+                class="site-settings__circuit-row"
               >
                 <AppInput
                   v-model="excludedCircuitsList[idx]"
@@ -453,38 +453,38 @@ const confirmResetImport = async () => {
     size="sm"
     @cancel="isResultDialogOpen = false"
   >
-    <div v-if="syncResultData" class="c-site-settings__result-body">
+    <div v-if="syncResultData" class="site-settings__result-body">
       <!-- 差分再同期 (スマートマージ) の場合 -->
       <template v-if="syncResultData.type === 'merge'">
-        <div class="c-site-settings__result-desc">
+        <div class="site-settings__result-desc">
           Excelファイルとの差分同期が正常に完了しました。<br />
           Web上で入力された試験結果（Phase 1〜3）は安全に保持されています。
         </div>
 
-        <div class="c-site-settings__result-stats">
-          <div class="c-site-settings__result-stat-box c-site-settings__result-stat-box--add">
-            <span class="c-site-settings__result-stat-label">追加された回路</span>
-            <span class="c-site-settings__result-stat-val">
-              +{{ syncResultData.createdCount ?? 0 }}<span class="c-site-settings__result-stat-unit">件</span>
+        <div class="site-settings__result-stats">
+          <div class="site-settings__result-stat-box site-settings__result-stat-box--add">
+            <span class="site-settings__result-stat-label">追加された回路</span>
+            <span class="site-settings__result-stat-val">
+              +{{ syncResultData.createdCount ?? 0 }}<span class="site-settings__result-stat-unit">件</span>
             </span>
           </div>
 
-          <div class="c-site-settings__result-stat-box c-site-settings__result-stat-box--update">
-            <span class="c-site-settings__result-stat-label">基本情報変更</span>
-            <span class="c-site-settings__result-stat-val">
-              {{ syncResultData.updatedCount ?? 0 }}<span class="c-site-settings__result-stat-unit">件</span>
+          <div class="site-settings__result-stat-box site-settings__result-stat-box--update">
+            <span class="site-settings__result-stat-label">基本情報変更</span>
+            <span class="site-settings__result-stat-val">
+              {{ syncResultData.updatedCount ?? 0 }}<span class="site-settings__result-stat-unit">件</span>
             </span>
           </div>
 
-          <div class="c-site-settings__result-stat-box">
-            <span class="c-site-settings__result-stat-label">全回路総数</span>
-            <span class="c-site-settings__result-stat-val">
-              {{ syncResultData.count }}<span class="c-site-settings__result-stat-unit">件</span>
+          <div class="site-settings__result-stat-box">
+            <span class="site-settings__result-stat-label">全回路総数</span>
+            <span class="site-settings__result-stat-val">
+              {{ syncResultData.count }}<span class="site-settings__result-stat-unit">件</span>
             </span>
           </div>
         </div>
 
-        <div class="c-site-settings__result-alert">
+        <div class="site-settings__result-alert">
           <AppIcon name="check" size="sm" class="u-text-success" />
           <span>Web側の試験進捗・測定値データはそのまま維持されています。</span>
         </div>
@@ -492,20 +492,20 @@ const confirmResetImport = async () => {
 
       <!-- 全件初期化取込の場合 -->
       <template v-else-if="syncResultData.type === 'reset'">
-        <div class="c-site-settings__result-desc">
+        <div class="site-settings__result-desc">
           Excelファイルから全回路データを初期化取り込みしました。
         </div>
 
-        <div class="c-site-settings__result-stats c-site-settings__result-stats--single">
-          <div class="c-site-settings__result-stat-box c-site-settings__result-stat-box--add">
-            <span class="c-site-settings__result-stat-label">取込回路総数</span>
-            <span class="c-site-settings__result-stat-val">
-              {{ syncResultData.count }}<span class="c-site-settings__result-stat-unit">件</span>
+        <div class="site-settings__result-stats site-settings__result-stats--single">
+          <div class="site-settings__result-stat-box site-settings__result-stat-box--add">
+            <span class="site-settings__result-stat-label">取込回路総数</span>
+            <span class="site-settings__result-stat-val">
+              {{ syncResultData.count }}<span class="site-settings__result-stat-unit">件</span>
             </span>
           </div>
         </div>
 
-        <div class="c-site-settings__result-alert">
+        <div class="site-settings__result-alert">
           <AppIcon name="check" size="sm" class="u-text-success" />
           <span>全回路データが初期化され、最新のExcel内容で登録されました。</span>
         </div>
@@ -513,20 +513,20 @@ const confirmResetImport = async () => {
 
       <!-- Excel書戻しの場合 -->
       <template v-else-if="syncResultData.type === 'export'">
-        <div class="c-site-settings__result-desc">
+        <div class="site-settings__result-desc">
           Web上の最新試験結果（Phase 1〜3）をExcelファイルに書き戻しました。
         </div>
 
-        <div class="c-site-settings__result-stats c-site-settings__result-stats--single">
-          <div class="c-site-settings__result-stat-box c-site-settings__result-stat-box--info">
-            <span class="c-site-settings__result-stat-label">書戻し回路数</span>
-            <span class="c-site-settings__result-stat-val">
-              {{ syncResultData.count }}<span class="c-site-settings__result-stat-unit">件</span>
+        <div class="site-settings__result-stats site-settings__result-stats--single">
+          <div class="site-settings__result-stat-box site-settings__result-stat-box--info">
+            <span class="site-settings__result-stat-label">書戻し回路数</span>
+            <span class="site-settings__result-stat-val">
+              {{ syncResultData.count }}<span class="site-settings__result-stat-unit">件</span>
             </span>
           </div>
         </div>
 
-        <div class="c-site-settings__result-alert">
+        <div class="site-settings__result-alert">
           <AppIcon name="check" size="sm" class="u-text-primary" />
           <span>Excelファイルへの上書き保存が正常に完了しました。</span>
         </div>
@@ -542,7 +542,7 @@ const confirmResetImport = async () => {
 </template>
 
 <style lang="scss" scoped>
-.c-site-settings {
+.site-settings {
   &__content {
     display: flex;
     flex-direction: column;
@@ -764,7 +764,7 @@ const confirmResetImport = async () => {
       border-color: hsl(var(--color-status-success-base) / 50%);
       background: hsl(var(--color-status-success-base) / 8%);
 
-      .c-site-settings__result-stat-val {
+      .site-settings__result-stat-val {
         color: var(--color-status-success);
       }
     }
@@ -773,7 +773,7 @@ const confirmResetImport = async () => {
       border-color: hsl(var(--color-category-main-base) / 50%);
       background: hsl(var(--color-category-main-base) / 8%);
 
-      .c-site-settings__result-stat-val {
+      .site-settings__result-stat-val {
         color: var(--color-category-main);
       }
     }
@@ -782,7 +782,7 @@ const confirmResetImport = async () => {
       border-color: hsl(var(--color-category-tool-base) / 50%);
       background: hsl(var(--color-category-tool-base) / 8%);
 
-      .c-site-settings__result-stat-val {
+      .site-settings__result-stat-val {
         color: var(--color-category-tool);
       }
     }

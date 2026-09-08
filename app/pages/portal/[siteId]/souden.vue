@@ -181,7 +181,7 @@ onMounted(() => {
       </AppPanel>
 
       <!-- 幹線と二次側のフェーズ遷移カード (2カラム) -->
-      <div class="l-grid l-grid--2col">
+      <div class="two-col-grid">
         <!-- 幹線カード -->
         <AppPanel>
           <AppSectionHeader title="幹線" icon="zap" variant="tool" />

@@ -56,12 +56,12 @@ const handleChangePassword = async () => {
 </script>
 
 <template>
-  <form class="p-change-password" @submit.prevent="handleChangePassword">
-    <p class="p-change-password__lead">
+  <form class="change-password-page" @submit.prevent="handleChangePassword">
+    <p class="change-password-page__lead">
       セキュリティのため、システムから配布された初期パスワードを変更してください。
     </p>
 
-    <p v-if="errorMsg" class="p-change-password__error" role="alert">
+    <p v-if="errorMsg" class="change-password-page__error" role="alert">
       {{ errorMsg }}
     </p>
 
@@ -82,7 +82,7 @@ const handleChangePassword = async () => {
       />
     </AppFormGroup>
 
-    <div class="p-change-password__actions">
+    <div class="change-password-page__actions">
       <AppButton
         type="submit"
         variant="primary"
@@ -97,7 +97,7 @@ const handleChangePassword = async () => {
 </template>
 
 <style scoped lang="scss">
-.p-change-password {
+.change-password-page {
   display: flex;
   flex-direction: column;
   gap: var(--space-form-row-gap);

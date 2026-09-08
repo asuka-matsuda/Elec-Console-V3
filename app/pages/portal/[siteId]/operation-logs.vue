@@ -90,7 +90,7 @@ const getActionBadgeColor = (action: string) => {
 </script>
 
 <template>
-  <div class="p-operation-logs">
+  <div class="operation-logs">
     <AppSectionHeader
       title="送電試験 操作ログ"
       icon="history"
@@ -119,44 +119,44 @@ const getActionBadgeColor = (action: string) => {
     </AppSectionHeader>
 
     <!-- 検索・フィルタリングコントロール -->
-    <AppPanel variant="hud" class="p-operation-logs-filters">
-      <div class="p-operation-logs-filters__group">
-        <label class="p-operation-logs-filters__label">作業者:</label>
+    <AppPanel variant="hud" class="logs-filters">
+      <div class="logs-filters__group">
+        <label class="logs-filters__label">作業者:</label>
         <AppSelect
           v-model="selectedWorker"
           :options="workerOptions"
-          class="p-operation-logs-filters__select"
+          class="logs-filters__select"
         />
       </div>
 
-      <div class="p-operation-logs-filters__group">
-        <label class="p-operation-logs-filters__label">アクション:</label>
+      <div class="logs-filters__group">
+        <label class="logs-filters__label">アクション:</label>
         <AppSelect
           v-model="selectedAction"
           :options="actionOptions"
-          class="p-operation-logs-filters__select"
+          class="logs-filters__select"
         />
       </div>
 
-      <div class="p-operation-logs-filters__group">
-        <label class="p-operation-logs-filters__label">対象盤:</label>
+      <div class="logs-filters__group">
+        <label class="logs-filters__label">対象盤:</label>
         <AppSelect
           v-model="selectedTargetBan"
           :options="targetBanOptions"
-          class="p-operation-logs-filters__select"
+          class="logs-filters__select"
         />
       </div>
 
-      <div class="p-operation-logs-filters__group">
-        <label class="p-operation-logs-filters__label">表示件数:</label>
+      <div class="logs-filters__group">
+        <label class="logs-filters__label">表示件数:</label>
         <AppSelect
           v-model="limit"
           :options="limitOptions"
-          class="p-operation-logs-filters__select p-operation-logs-filters__select--sm"
+          class="logs-filters__select logs-filters__select--sm"
         />
       </div>
 
-      <div class="p-operation-logs-filters__badge">
+      <div class="logs-filters__badge">
         <AppBadge color="var(--theme-accent)">
           取得件数: {{ logs.length }} 件
         </AppBadge>
@@ -164,7 +164,7 @@ const getActionBadgeColor = (action: string) => {
     </AppPanel>
 
     <!-- ログ一覧テーブル -->
-    <AppTable class="p-operation-logs__table">
+    <AppTable class="operation-logs__table">
       <template #header>
         <tr>
           <th style="width: 170px;">
@@ -187,7 +187,7 @@ const getActionBadgeColor = (action: string) => {
       </template>
 
       <template #body>
-        <tr v-if="logs.length === 0" class="p-operation-logs-empty">
+        <tr v-if="logs.length === 0" class="logs-empty">
           <td colspan="6" style="padding: var(--space-6); text-align: center;">
             操作ログが存在しないか、条件に一致するログがありません
           </td>
@@ -196,18 +196,18 @@ const getActionBadgeColor = (action: string) => {
         <tr
           v-for="item in logs"
           :key="item.id"
-          class="p-operation-logs-row"
+          class="logs-row"
         >
           <!-- タイムスタンプ -->
           <td>
-            <span class="p-operation-logs-cell__time">
+            <span class="logs-cell__time">
               {{ formatTimestamp(item.timestamp) }}
             </span>
           </td>
 
           <!-- 作業者 -->
           <td>
-            <span class="p-operation-logs-cell__worker">
+            <span class="logs-cell__worker">
               {{ item.worker || '-' }}
             </span>
           </td>
@@ -221,21 +221,21 @@ const getActionBadgeColor = (action: string) => {
 
           <!-- 対象盤 -->
           <td>
-            <span class="p-operation-logs-cell__ban">
+            <span class="logs-cell__ban">
               {{ item.targetBan || '-' }}
             </span>
           </td>
 
           <!-- 対象回路 -->
           <td>
-            <span class="p-operation-logs-cell__circuit">
+            <span class="logs-cell__circuit">
               {{ item.targetKairo || '-' }}
             </span>
           </td>
 
           <!-- 詳細内容 -->
           <td>
-            <span class="p-operation-logs-cell__details">
+            <span class="logs-cell__details">
               {{ item.details || '-' }}
             </span>
           </td>
@@ -246,7 +246,7 @@ const getActionBadgeColor = (action: string) => {
 </template>
 
 <style scoped lang="scss">
-.p-operation-logs {
+.operation-logs {
   display: flex;
   flex-direction: column;
   gap: var(--space-section-gap);
@@ -258,7 +258,7 @@ const getActionBadgeColor = (action: string) => {
   }
 }
 
-.p-operation-logs-filters {
+.logs-filters {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-4);
@@ -290,7 +290,7 @@ const getActionBadgeColor = (action: string) => {
   }
 }
 
-.p-operation-logs-row {
+.logs-row {
   transition: background-color var(--duration-fast) var(--ease-base);
 
   &:hover {
@@ -298,7 +298,7 @@ const getActionBadgeColor = (action: string) => {
   }
 }
 
-.p-operation-logs-cell {
+.logs-cell {
   &__time {
     font-family: var(--font-mono);
     font-size: var(--text-xs);
@@ -328,7 +328,7 @@ const getActionBadgeColor = (action: string) => {
   }
 }
 
-.p-operation-logs-empty {
+.logs-empty {
   font-size: var(--text-sm);
   color: var(--color-text-muted);
 }

@@ -10,7 +10,7 @@ const { color = 'var(--color-text-muted)' } = defineProps<{
 
 <template>
   <span
-    class="c-badge"
+    class="badge"
     :style="{ '--glow-color': color }"
   >
     <slot />
@@ -18,7 +18,7 @@ const { color = 'var(--color-text-muted)' } = defineProps<{
 </template>
 
 <style scoped lang="scss">
-.c-badge {
+.badge {
   --glow-color: var(--color-text-muted);
 
   user-select: none;

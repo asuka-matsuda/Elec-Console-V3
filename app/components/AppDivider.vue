@@ -43,7 +43,7 @@ const normalizedType = computed(() => (type === 'default' ? 'solid' : type))
 
 <template>
   <div
-    class="c-divider"
+    class="divider"
     :class="[
       `is-${normalizedType}`,
       { 'is-vertical': vertical },
@@ -55,7 +55,7 @@ const normalizedType = computed(() => (type === 'default' ? 'solid' : type))
 </template>
 
 <style scoped lang="scss">
-.c-divider {
+.divider {
   --divider-color: var(--theme-accent);
   --glow-color: var(--divider-color);
 

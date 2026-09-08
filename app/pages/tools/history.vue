@@ -19,7 +19,7 @@ const {
 </script>
 
 <template>
-  <div class="p-history-page">
+  <div class="history-page">
     <AppPanel>
       <template #header>
         <AppSectionHeader
@@ -48,7 +48,7 @@ const {
       <ClientOnly>
         <div
           v-if="historyList.length > 0"
-          class="p-history-page__grid l-grid l-grid--auto-fill"
+          class="history-page__grid"
         >
           <ToolHistoryCard
             v-for="entry in historyList"
@@ -74,7 +74,7 @@ const {
 </template>
 
 <style scoped lang="scss">
-.p-history-page {
+.history-page {
   container-type: inline-size;
   display: flex;
   flex-direction: column;

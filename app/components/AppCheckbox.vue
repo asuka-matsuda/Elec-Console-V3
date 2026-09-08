@@ -19,7 +19,7 @@ const {
 </script>
 
 <template>
-  <label class="c-checkbox">
+  <label class="checkbox">
     <input
       v-model="model"
       type="checkbox"
@@ -38,7 +38,7 @@ const {
 </template>
 
 <style scoped lang="scss">
-.c-checkbox {
+.checkbox {
   --checkbox-color: var(--theme-accent);
   --glow-color: var(--checkbox-color);
 

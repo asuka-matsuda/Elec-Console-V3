@@ -10,14 +10,14 @@ defineProps<{
 </script>
 
 <template>
-  <div class="c-result-details__row" :class="{ 'has-top-border': topBorder }">
+  <div class="result-details__row" :class="{ 'has-top-border': topBorder }">
     <dt>{{ label }}</dt>
     <dd class="val-content"><slot /></dd>
   </div>
 </template>
 
 <style scoped lang="scss">
-.c-result-details__row {
+.result-details__row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -31,7 +31,7 @@ defineProps<{
   }
 
   /* stylelint-disable-next-line selector-pseudo-class-no-unknown */
-  :slotted(.c-badge) {
+  :slotted(.badge) {
     flex-shrink: 0;
   }
 

@@ -40,14 +40,14 @@ const tiles = computed(() => {
 </script>
 
 <template>
-  <div class="c-minimap">
-    <div class="c-minimap__grid">
+  <div class="minimap">
+    <div class="minimap__grid">
       <button
         v-for="item in tiles"
         :key="item.circuit.id"
         type="button"
         :class="[
-          'c-minimap__tile',
+          'minimap__tile',
           {
             'is-completed': item.isCompleted,
             'is-excluded': item.isExcluded,
@@ -61,7 +61,7 @@ const tiles = computed(() => {
 </template>
 
 <style scoped lang="scss">
-.c-minimap {
+.minimap {
   display: flex;
   flex-direction: column;
   gap: var(--space-2, 8px);

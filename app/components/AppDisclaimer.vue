@@ -11,7 +11,7 @@ const {
 </script>
 
 <template>
-  <aside class="c-disclaimer" role="note" aria-label="免責事項">
+  <aside class="disclaimer" role="note" aria-label="免責事項">
     <AppIcon name="alert-triangle" size="sm" class="icon" />
     <p class="text">
       <strong>免責事項:</strong> <slot>{{ text }}</slot>
@@ -20,7 +20,7 @@ const {
 </template>
 
 <style scoped lang="scss">
-.c-disclaimer {
+.disclaimer {
   --disclaimer-color: var(--color-status-warning);
 
   display: flex;

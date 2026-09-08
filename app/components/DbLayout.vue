@@ -24,8 +24,8 @@ const { sortBy, sortOrder, sortedData, handleSort }
 </script>
 
 <template>
-  <div class="l-db-layout">
-    <aside class="l-db-layout__filter">
+  <div class="db-layout">
+    <aside class="db-layout__filter">
       <slot
         name="filter"
         :search-query="searchQuery"
@@ -41,7 +41,7 @@ const { sortBy, sortOrder, sortedData, handleSort }
       </slot>
     </aside>
 
-    <div class="l-db-layout__main">
+    <div class="db-layout__main">
       <slot
         :sorted-data="sortedData"
         :sort-by="sortBy"
@@ -74,7 +74,7 @@ const { sortBy, sortOrder, sortedData, handleSort }
 </template>
 
 <style scoped lang="scss">
-.l-db-layout {
+.db-layout {
   display: flex;
   flex: 1;
   flex-direction: column;

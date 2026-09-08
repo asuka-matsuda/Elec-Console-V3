@@ -83,7 +83,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 </script>
 
 <template>
-  <div class="c-calendar-wrapper">
+  <div class="calendar-wrapper">
     <CalendarToolbar
       :title="currentTitle"
       :current-view="currentView"
@@ -94,7 +94,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       @open-type-settings="isTypeSettingsOpen = true"
     />
 
-    <AppPanel class="c-calendar" variant="simple">
+    <AppPanel class="calendar" variant="simple">
       <FullCalendar ref="fullCalendarRef" :options="calendarOptions">
         <template #eventContent="{ event }">
           <CalendarEventBadge
@@ -126,13 +126,13 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 </template>
 
 <style scoped lang="scss">
-.c-calendar-wrapper {
+.calendar-wrapper {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
 }
 
-.c-calendar {
+.calendar {
   --fc-border-color: var(--color-border);
   --fc-page-bg-color: transparent;
   --fc-neutral-bg-color: transparent;
@@ -237,7 +237,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       background: transparent;
 
       // 子要素のバッジのホバースタイルを親から強制的に発火させる
-      .c-cal-badge {
+      .cal-badge {
         --glow-color: var(--badge-color);
 
         border-color: var(--glow-color);

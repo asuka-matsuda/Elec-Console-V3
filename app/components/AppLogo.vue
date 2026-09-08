@@ -11,14 +11,14 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <NuxtLink to="/" class="c-logo" @click="emit('click')">
+  <NuxtLink to="/" class="logo" @click="emit('click')">
     <AppIcon name="zap" size="md" />
     <span>Elec-Console</span>
   </NuxtLink>
 </template>
 
 <style scoped lang="scss">
-.c-logo {
+.logo {
   cursor: pointer;
   user-select: none;
 
@@ -38,7 +38,7 @@ const emit = defineEmits<{
 
   transition: var(--transition-base);
 
-  :deep(.c-icon) {
+  :deep(.icon) {
     position: relative;
     z-index: 1;
     color: var(--theme-accent);
@@ -46,7 +46,7 @@ const emit = defineEmits<{
   }
 
   &:is(:hover, :focus-visible) {
-    :deep(.c-icon) {
+    :deep(.icon) {
       --glow-color: var(--theme-accent);
 
       text-shadow: var(--text-glow-md);

@@ -12,24 +12,24 @@ defineProps<{
 </script>
 
 <template>
-  <label class="c-toggle">
+  <label class="toggle">
     <input
       v-model="model"
       type="checkbox"
-      class="c-toggle__input"
+      class="toggle__input"
       :disabled="disabled"
     />
-    <div class="c-toggle__track">
-      <div class="c-toggle__thumb" />
+    <div class="toggle__track">
+      <div class="toggle__thumb" />
     </div>
-    <span v-if="label || $slots.default" class="c-toggle__label">
+    <span v-if="label || $slots.default" class="toggle__label">
       <slot>{{ label }}</slot>
     </span>
   </label>
 </template>
 
 <style scoped lang="scss">
-.c-toggle {
+.toggle {
   --toggle-color: var(--theme-accent);
   --track-w: 44px;
   --track-h: var(--space-5);
@@ -59,13 +59,13 @@ defineProps<{
 
     opacity: 0;
 
-    &:checked ~ .c-toggle__track .c-toggle__thumb {
+    &:checked ~ .toggle__track .toggle__thumb {
       transform: translateX(calc(var(--track-w) - var(--thumb-w)));
     }
 
     &:disabled {
-      ~ .c-toggle__track,
-      ~ .c-toggle__label {
+      ~ .toggle__track,
+      ~ .toggle__label {
         cursor: not-allowed;
         opacity: 0.5;
       }
@@ -73,14 +73,14 @@ defineProps<{
 
     &:not(:disabled) {
       &:hover {
-        ~ .c-toggle__label {
+        ~ .toggle__label {
           --glow-color: var(--toggle-color);
 
           color: color-mix(in srgb, var(--toggle-color) 90%, transparent);
           text-shadow: var(--text-glow-sm);
         }
 
-        &:not(:checked) ~ .c-toggle__track {
+        &:not(:checked) ~ .toggle__track {
           --glow-color: var(--toggle-color);
 
           border-color: var(--toggle-color);
@@ -89,7 +89,7 @@ defineProps<{
         }
       }
 
-      &:focus-visible ~ .c-toggle__track {
+      &:focus-visible ~ .toggle__track {
         --glow-color: var(--toggle-color);
 
         border-color: color-mix(in srgb, var(--toggle-color) 60%, transparent);
@@ -102,22 +102,22 @@ defineProps<{
         transition: var(--transition-glow);
       }
 
-      &:active ~ .c-toggle__track {
+      &:active ~ .toggle__track {
         transform: scale(0.95);
 
-        .c-toggle__thumb {
+        .toggle__thumb {
           box-shadow: var(--shadow-sink);
         }
       }
 
-      &:checked ~ .c-toggle__track {
+      &:checked ~ .toggle__track {
         --glow-color: var(--toggle-color);
 
         border-color: var(--toggle-color);
         box-shadow: var(--shadow-glow-active);
         transition: var(--transition-glow);
 
-        .c-toggle__thumb {
+        .toggle__thumb {
           --glow-color: var(--toggle-color);
 
           border-color: var(--toggle-color);

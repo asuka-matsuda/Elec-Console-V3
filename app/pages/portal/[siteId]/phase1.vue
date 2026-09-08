@@ -100,7 +100,7 @@ const {
 </script>
 
 <template>
-  <div class="p-phase1">
+  <div class="phase1">
     <AppSectionHeader
       title="フェーズ1：回路確認・増し締め"
       icon="check-square"
@@ -124,11 +124,11 @@ const {
 
     <!-- 検索・絞り込み ＆ 進捗コントロールパネル -->
     <AppPanel variant="hud">
-      <div class="p-phase1-controls">
-        <div class="p-phase1-controls__filters">
+      <div class="phase1-controls">
+        <div class="phase1-controls__filters">
           <!-- 盤種別タブ -->
-          <div class="p-phase1-controls__row">
-            <span class="p-phase1-controls__label">盤種別:</span>
+          <div class="phase1-controls__row">
+            <span class="phase1-controls__label">盤種別:</span>
             <AppTabs
               v-model="selectedBanShubetsu"
               :options="shubetsuTabOptions"
@@ -137,13 +137,13 @@ const {
           </div>
 
           <!-- 盤名称セレクト & 件数表示 -->
-          <div class="p-phase1-controls__row p-phase1-controls__row--inline">
-            <div class="p-phase1-controls__select-group">
-              <span class="p-phase1-controls__label">盤名称:</span>
+          <div class="phase1-controls__row phase1-controls__row--inline">
+            <div class="phase1-controls__select-group">
+              <span class="phase1-controls__label">盤名称:</span>
               <AppSelect
                 v-model="selectedBanMeisho"
                 :options="availableBanMeishoList"
-                class="p-phase1-controls__select"
+                class="phase1-controls__select"
               />
             </div>
 
@@ -154,7 +154,7 @@ const {
         </div>
 
         <!-- 全体進捗バー -->
-        <div class="p-phase1-controls__progress">
+        <div class="phase1-controls__progress">
           <AppProgressBar
             label="フェーズ1 進捗状況"
             :completed="phaseStats.completed"
@@ -176,7 +176,7 @@ const {
 
     <!-- 回路一覧テーブル -->
     <AppTable
-      class="p-phase1__table"
+      class="phase1__table"
       :columns="columns"
       :data="sortedCircuits"
       :sort-by="sortBy"
@@ -189,7 +189,7 @@ const {
           :id="`row-${circuit.id}`"
           :key="circuit.id"
           :class="[
-            'p-phase1-row',
+            'phase1-row',
             {
               'is-completed': isComplete(circuit),
               'is-excluded': circuit.isExcluded,
@@ -200,9 +200,9 @@ const {
         >
           <!-- 盤種別 / 盤名称 -->
           <td>
-            <div class="p-phase1-cell__panel">
-              <span class="p-phase1-cell__ban-name">{{ circuit.banMeisho }}</span>
-              <span class="p-phase1-cell__shubetsu">{{ circuit.banShubetsu }}</span>
+            <div class="phase1-cell__panel">
+              <span class="phase1-cell__ban-name">{{ circuit.banMeisho }}</span>
+              <span class="phase1-cell__shubetsu">{{ circuit.banShubetsu }}</span>
             </div>
           </td>
 
@@ -211,7 +211,7 @@ const {
             <template v-if="editingRowId === circuit.id">
               <AppInput v-model="editForm.kairoBangou" size="sm" placeholder="番号" />
             </template>
-            <div v-else class="p-phase1-cell__bangou-wrap">
+            <div v-else class="phase1-cell__bangou-wrap">
               <AppKairoIcon
                 :kigou="circuit.kairoKigou"
                 :bangou="circuit.kairoBangou"
@@ -224,7 +224,7 @@ const {
             <template v-if="editingRowId === circuit.id">
               <AppInput v-model="editForm.kairoMeisho" size="sm" placeholder="回路名称" />
             </template>
-            <span v-else class="p-phase1-cell__text p-phase1-cell__meisho" :title="circuit.kairoMeisho || ''">
+            <span v-else class="phase1-cell__text phase1-cell__meisho" :title="circuit.kairoMeisho || ''">
               {{ circuit.kairoMeisho || '-' }}
             </span>
           </td>
@@ -232,20 +232,20 @@ const {
           <!-- 配線 / 接地 -->
           <td>
             <template v-if="editingRowId === circuit.id">
-              <div class="p-phase1-cell__edit-col">
-                <div class="p-phase1-cell__inline-inputs">
+              <div class="phase1-cell__edit-col">
+                <div class="phase1-cell__inline-inputs">
                   <AppInput v-model="editForm.cableList" size="sm" placeholder="ケーブル" />
                   <AppInput v-model="editForm.haisenJousuu" size="sm" placeholder="条数" style="width: 55px;" />
                 </div>
                 <AppInput v-model="editForm.setsuchiList" size="sm" placeholder="接地リスト" />
               </div>
             </template>
-            <div v-else class="p-phase1-cell__wiring">
-              <div class="p-phase1-cell__cable-line">
-                <span class="p-phase1-cell__cable">{{ circuit.cableList || '-' }}</span>
-                <span v-if="circuit.haisenJousuu" class="p-phase1-cell__jousuu">({{ circuit.haisenJousuu }})</span>
+            <div v-else class="phase1-cell__wiring">
+              <div class="phase1-cell__cable-line">
+                <span class="phase1-cell__cable">{{ circuit.cableList || '-' }}</span>
+                <span v-if="circuit.haisenJousuu" class="phase1-cell__jousuu">({{ circuit.haisenJousuu }})</span>
               </div>
-              <span class="p-phase1-cell__setsuchi" :title="circuit.setsuchiList || ''">
+              <span class="phase1-cell__setsuchi" :title="circuit.setsuchiList || ''">
                 {{ circuit.setsuchiList ? `E: ${circuit.setsuchiList}` : '-' }}
               </span>
             </div>
@@ -253,20 +253,20 @@ const {
 
           <!-- 確認 / 増締め (チェックボックス) -->
           <td style="text-align: center;">
-            <div class="p-phase1-cell__checks">
-              <label class="p-phase1-check-item" title="回路確認">
+            <div class="phase1-cell__checks">
+              <label class="phase1-check-item" title="回路確認">
                 <AppCheckbox
                   v-model="circuit.p1Kakunin"
                   :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
                 />
-                <span class="p-phase1-check-item__label">確認</span>
+                <span class="phase1-check-item__label">確認</span>
               </label>
-              <label class="p-phase1-check-item" title="増締め確認">
+              <label class="phase1-check-item" title="増締め確認">
                 <AppCheckbox
                   v-model="circuit.p1Mashishime"
                   :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
                 />
-                <span class="p-phase1-check-item__label">増締</span>
+                <span class="phase1-check-item__label">増締</span>
               </label>
             </div>
           </td>
@@ -276,17 +276,17 @@ const {
             <template v-if="editingRowId === circuit.id">
               <AppInput v-model="editForm.remarks" size="sm" placeholder="備考" />
             </template>
-            <span v-else class="p-phase1-cell__text p-phase1-cell__remarks">
+            <span v-else class="phase1-cell__text phase1-cell__remarks">
               {{ circuit.p1Remarks || '-' }}
             </span>
           </td>
 
           <!-- 操作 -->
           <td style="text-align: center;">
-            <div class="p-phase1-actions">
+            <div class="phase1-actions">
               <!-- 幹線未完了による操作不可 -->
               <template v-if="isCircuitLocked(circuit)">
-                <span class="c-text-note c-text-note--strong">⏸ 幹線未了</span>
+                <span class="text-note text-note--strong">⏸ 幹線未了</span>
               </template>
 
               <!-- 編集モード中 -->
@@ -346,12 +346,12 @@ const {
           <!-- 測定者 / 日時 -->
           <td style="text-align: center;">
             <template v-if="circuit.p1Worker">
-              <div class="p-phase1-cell__worker">
+              <div class="phase1-cell__worker">
                 <strong>{{ circuit.p1Worker }}</strong>
-                <span class="p-phase1-cell__date">{{ formatShortDateTime(circuit.p1ConfirmedAt) }}</span>
+                <span class="phase1-cell__date">{{ formatShortDateTime(circuit.p1ConfirmedAt) }}</span>
               </div>
             </template>
-            <span v-else class="p-phase1-cell__dash">-</span>
+            <span v-else class="phase1-cell__dash">-</span>
           </td>
         </tr>
       </template>
@@ -360,7 +360,7 @@ const {
 </template>
 
 <style scoped lang="scss">
-.p-phase1 {
+.phase1 {
   display: flex;
   flex-direction: column;
   gap: var(--space-section-gap);
@@ -372,7 +372,7 @@ const {
   }
 }
 
-.p-phase1-controls {
+.phase1-controls {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-card-gap);
@@ -422,7 +422,7 @@ const {
   }
 }
 
-.p-phase1-row {
+.phase1-row {
   transition: background-color var(--duration-base) var(--ease-base);
 
   &.is-completed {
@@ -443,7 +443,7 @@ const {
   }
 }
 
-.p-phase1-cell {
+.phase1-cell {
   &__panel {
     overflow: hidden;
     display: flex;
@@ -571,14 +571,14 @@ const {
   }
 }
 
-.p-phase1-actions {
+.phase1-actions {
   display: flex;
   gap: var(--space-1);
   align-items: center;
   justify-content: center;
 }
 
-.c-text-note {
+.text-note {
   display: inline-flex;
   gap: 4px;
   align-items: center;
@@ -591,7 +591,7 @@ const {
   }
 }
 
-.p-phase1-check-item {
+.phase1-check-item {
   cursor: pointer;
 
   display: inline-flex;

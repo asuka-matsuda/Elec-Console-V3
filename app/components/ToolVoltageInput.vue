@@ -18,10 +18,10 @@ defineProps<{
 </script>
 
 <template>
-  <div class="c-voltage-input">
+  <div class="voltage-input">
     <AppRadioGroup v-model="form.mode" :options="modeOptions" />
 
-    <div class="c-voltage-input__grid">
+    <div class="voltage-input__grid">
       <template v-for="field in formFields" :key="field.id">
         <Field
           v-if="!field.showIf || field.showIf()"
@@ -91,7 +91,7 @@ defineProps<{
                 @blur="handleBlur"
               />
               <template #append>
-                <span class="c-input-addon">{{ field.addonText }}</span>
+                <span class="input-addon">{{ field.addonText }}</span>
               </template>
             </AppInputGroup>
           </AppFormGroup>
@@ -102,7 +102,7 @@ defineProps<{
 </template>
 
 <style scoped lang="scss">
-.c-voltage-input {
+.voltage-input {
   display: flex;
   flex-direction: column;
   gap: var(--space-form-row-gap);

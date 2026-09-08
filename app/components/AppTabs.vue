@@ -27,17 +27,17 @@ const selectTab = (option: TabOption<T>) => {
 
 <template>
   <div
-    class="c-tabs"
+    class="tabs"
     :class="{
-      'c-tabs--vertical': vertical,
-      'c-tabs--grid': grid,
+      'tabs--vertical': vertical,
+      'tabs--grid': grid,
     }"
   >
     <button
       v-for="option in options"
       :key="String(option.value)"
       type="button"
-      class="c-tabs__item"
+      class="tabs__item"
       :class="{
         'is-active': model === option.value,
       }"
@@ -50,7 +50,7 @@ const selectTab = (option: TabOption<T>) => {
 </template>
 
 <style scoped lang="scss">
-.c-tabs {
+.tabs {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
@@ -68,7 +68,7 @@ const selectTab = (option: TabOption<T>) => {
   }
 }
 
-.c-tabs__item {
+.tabs__item {
   cursor: pointer;
   user-select: none;
 
@@ -90,13 +90,13 @@ const selectTab = (option: TabOption<T>) => {
 
   transition: var(--transition-base);
 
-  .c-tabs--grid & {
+  .tabs--grid & {
     width: 100%;
     padding-right: 0;
     padding-left: 0;
   }
 
-  .c-tabs--vertical & {
+  .tabs--vertical & {
     justify-content: flex-start;
     width: 100%;
   }

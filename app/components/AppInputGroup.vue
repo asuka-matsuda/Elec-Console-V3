@@ -14,24 +14,24 @@ withDefaults(
 </script>
 
 <template>
-  <div :class="['c-input-group', `c-input-group--${size}`]">
+  <div :class="['input-group', `input-group--${size}`]">
     <slot />
-    <div v-if="$slots.append" class="c-input-group__append">
+    <div v-if="$slots.append" class="input-group__append">
       <slot name="append" />
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.c-input-group {
+.input-group {
   display: flex;
 
-  :deep(> *:not(.c-input-group__append)) {
+  :deep(> *:not(.input-group__append)) {
     flex: 1;
     min-width: 0;
   }
 
-  :deep(.c-form-control) {
+  :deep(.form-control) {
     flex: 1;
     min-width: 0;
     border-top-right-radius: 0;
@@ -47,7 +47,7 @@ withDefaults(
   &__append {
     display: flex;
 
-    :deep(.c-input-addon) {
+    :deep(.input-addon) {
       user-select: none;
 
       display: inline-flex;
@@ -69,7 +69,7 @@ withDefaults(
       background-color: color-mix(in srgb, var(--surface-bg-elevated) 70%, var(--color-border) 30%);
     }
 
-    :deep(.c-custom-select__value) {
+    :deep(.custom-select__value) {
       padding-inline: 0.8em;
       border-left: none;
       border-top-left-radius: 0;
@@ -85,7 +85,7 @@ withDefaults(
       }
     }
 
-    :deep(.c-custom-select) {
+    :deep(.custom-select) {
       flex-shrink: 0;
       width: 6em;
 
@@ -97,7 +97,7 @@ withDefaults(
   }
 
   &--sm {
-    :deep(.c-input-addon) {
+    :deep(.input-addon) {
       padding-inline: 0.6em;
       font-size: var(--font-size-xs);
     }

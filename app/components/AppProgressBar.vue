@@ -29,25 +29,25 @@ const calculatedPct = computed(() => {
 </script>
 
 <template>
-  <div class="c-progress-wrap">
-    <div class="c-progress-wrap__header">
-      <span class="c-progress-wrap__label">{{ label }}</span>
-      <div class="c-progress-wrap__meta">
-        <span class="c-progress-wrap__count">
+  <div class="progress-wrap">
+    <div class="progress-wrap__header">
+      <span class="progress-wrap__label">{{ label }}</span>
+      <div class="progress-wrap__meta">
+        <span class="progress-wrap__count">
           <strong>{{ completed }}</strong> / {{ total }}
         </span>
-        <span class="c-progress-wrap__pct">
-          ({{ calculatedPct }}<span class="c-progress-wrap__unit">%</span>)
+        <span class="progress-wrap__pct">
+          ({{ calculatedPct }}<span class="progress-wrap__unit">%</span>)
         </span>
-        <span v-if="excluded && excluded > 0" class="c-progress-wrap__note">
+        <span v-if="excluded && excluded > 0" class="progress-wrap__note">
           (除外: {{ excluded }})
         </span>
       </div>
     </div>
 
-    <div class="c-progress-bar">
+    <div class="progress-bar">
       <div
-        :class="['c-progress-bar__fill', `c-progress-bar__fill--${variant}`]"
+        :class="['progress-bar__fill', `progress-bar__fill--${variant}`]"
         :style="{ width: `${calculatedPct}%` }"
       />
     </div>
@@ -55,7 +55,7 @@ const calculatedPct = computed(() => {
 </template>
 
 <style scoped lang="scss">
-.c-progress-wrap {
+.progress-wrap {
   display: flex;
   flex-direction: column;
   gap: var(--space-1, 4px);
@@ -103,7 +103,7 @@ const calculatedPct = computed(() => {
   }
 }
 
-.c-progress-bar {
+.progress-bar {
   overflow: hidden;
 
   width: 100%;

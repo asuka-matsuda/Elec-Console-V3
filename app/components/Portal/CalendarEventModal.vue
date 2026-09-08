@@ -87,7 +87,7 @@ const closeModal = () => {
     :title="isEditing ? '予定の編集' : '新しい予定'"
     @update:model-value="emit('update:modelValue', $event)"
   >
-    <div class="p-event-form">
+    <div class="event-form">
       <AppFormGroup
         label="タイトル"
         required
@@ -107,7 +107,7 @@ const closeModal = () => {
         />
       </AppFormGroup>
 
-      <div class="p-event-form__row">
+      <div class="event-form__row">
         <AppFormGroup label="開始日時" required>
           <CalendarDateInput
             :key="'start-' + form.allDay"
@@ -148,7 +148,7 @@ const closeModal = () => {
 </template>
 
 <style scoped lang="scss">
-.p-event-form {
+.event-form {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);

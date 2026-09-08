@@ -113,7 +113,7 @@ const onCategoryChange = (val: unknown) => {
             min="1"
           />
           <template #append>
-            <span class="c-input-addon">本</span>
+            <span class="input-addon">本</span>
           </template>
         </AppInputGroup>
       </AppFormGroup>

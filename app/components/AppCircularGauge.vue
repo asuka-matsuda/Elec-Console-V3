@@ -26,7 +26,7 @@ const normalizedValue = computed(() => {
 
 <template>
   <div
-    class="c-circular-gauge"
+    class="circular-gauge"
     :class="`is-${size}`"
     :style="{
       '--progress': `${normalizedValue}%`,
@@ -44,7 +44,7 @@ const normalizedValue = computed(() => {
 </template>
 
 <style scoped lang="scss">
-.c-circular-gauge {
+.circular-gauge {
   --gauge-size: 160px;
   --gauge-thickness: 8px;
   --gauge-glow: var(--drop-shadow-glow);

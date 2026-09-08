@@ -61,7 +61,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div :key="siteId" class="p-site-dashboard">
+  <div :key="siteId" class="site-dashboard">
     <AppSectionHeader
       :title="currentSite?.name || '現場ダッシュボード'"
       icon="map-pin"
@@ -71,18 +71,18 @@ onMounted(() => {
         <AppSelect
           :model-value="siteId"
           :options="siteOptions"
-          class="p-site-dashboard__select"
+          class="site-dashboard__select"
           @update:model-value="handleSiteChange"
         />
       </template>
     </AppSectionHeader>
 
-    <div class="l-grid l-grid--2col-2-1">
-      <section class="p-site-dashboard__calendar" aria-label="現場スケジュール">
+    <div class="site-dashboard__grid">
+      <section class="site-dashboard__calendar" aria-label="現場スケジュール">
         <Calendar :site-id="siteId" />
       </section>
 
-      <aside class="p-site-dashboard__sidebar" aria-label="現場関連機能">
+      <aside class="site-dashboard__sidebar" aria-label="現場関連機能">
         <PersonalTodo :site-id="siteId" />
 
         <AppButton
@@ -99,7 +99,7 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-.p-site-dashboard {
+.site-dashboard {
   display: flex;
   flex-direction: column;
   gap: var(--space-section-gap);
@@ -107,6 +107,17 @@ onMounted(() => {
 
   &__select {
     min-width: 200px;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--space-section-gap);
+    align-items: flex-start;
+
+    @include mq("lg") {
+      grid-template-columns: 1fr;
+    }
   }
 
   &__calendar {
@@ -117,17 +128,6 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     gap: var(--space-card-gap);
-  }
-}
-
-.l-grid--2col-2-1 {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: var(--space-section-gap);
-  align-items: flex-start;
-
-  @include mq("lg") {
-    grid-template-columns: 1fr;
   }
 }
 </style>

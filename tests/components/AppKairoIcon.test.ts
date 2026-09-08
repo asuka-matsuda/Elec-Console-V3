@@ -11,7 +11,7 @@ describe('AppKairoIcon.vue', () => {
 
     expect(wrapper.classes()).toContain('has-symbol')
     expect(wrapper.find('circle').exists()).toBe(true)
-    expect(wrapper.find('.c-kairo-icon__text').text()).toBe('1')
+    expect(wrapper.find('.kairo-icon__text').text()).toBe('1')
   })
 
   it('renders double circle SVG when kigou is "二重丸" or "◎"', () => {
@@ -21,7 +21,7 @@ describe('AppKairoIcon.vue', () => {
 
     expect(wrapper.classes()).toContain('has-symbol')
     expect(wrapper.findAll('circle').length).toBe(2)
-    expect(wrapper.find('.c-kairo-icon__text').text()).toBe('2')
+    expect(wrapper.find('.kairo-icon__text').text()).toBe('2')
   })
 
   it('renders ellipse SVG when kigou is "楕円"', () => {
@@ -30,7 +30,7 @@ describe('AppKairoIcon.vue', () => {
     })
 
     expect(wrapper.find('ellipse').exists()).toBe(true)
-    expect(wrapper.find('.c-kairo-icon__text').text()).toBe('3')
+    expect(wrapper.find('.kairo-icon__text').text()).toBe('3')
   })
 
   it('renders double ellipse SVG when kigou is "二重楕円"', () => {
@@ -39,7 +39,7 @@ describe('AppKairoIcon.vue', () => {
     })
 
     expect(wrapper.findAll('ellipse').length).toBe(2)
-    expect(wrapper.find('.c-kairo-icon__text').text()).toBe('4')
+    expect(wrapper.find('.kairo-icon__text').text()).toBe('4')
   })
 
   it('renders rect SVG when kigou is "四角" or "□"', () => {
@@ -48,7 +48,7 @@ describe('AppKairoIcon.vue', () => {
     })
 
     expect(wrapper.find('rect').exists()).toBe(true)
-    expect(wrapper.find('.c-kairo-icon__text').text()).toBe('5')
+    expect(wrapper.find('.kairo-icon__text').text()).toBe('5')
   })
 
   it('renders double rect SVG when kigou is "二重四角"', () => {
@@ -57,7 +57,7 @@ describe('AppKairoIcon.vue', () => {
     })
 
     expect(wrapper.findAll('rect').length).toBe(2)
-    expect(wrapper.find('.c-kairo-icon__text').text()).toBe('6')
+    expect(wrapper.find('.kairo-icon__text').text()).toBe('6')
   })
 
   it('renders plain text without SVG when kigou is empty or unrecognized', () => {
@@ -67,7 +67,7 @@ describe('AppKairoIcon.vue', () => {
 
     expect(wrapper.classes()).not.toContain('has-symbol')
     expect(wrapper.find('svg').exists()).toBe(false)
-    expect(wrapper.find('.c-kairo-icon__text').text()).toBe('7')
+    expect(wrapper.find('.kairo-icon__text').text()).toBe('7')
   })
 
   it('renders fallback dash when bangou is null or empty', () => {
@@ -75,7 +75,7 @@ describe('AppKairoIcon.vue', () => {
       props: { kigou: '丸', bangou: null },
     })
 
-    expect(wrapper.find('.c-kairo-icon__text').text()).toBe('-')
+    expect(wrapper.find('.kairo-icon__text').text()).toBe('-')
   })
 
   it('sets title tooltip correctly', () => {

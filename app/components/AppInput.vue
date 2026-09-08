@@ -34,8 +34,8 @@ withDefaults(
   <textarea
     v-if="type === 'textarea'"
     v-model="model"
-    class="c-form-control c-form-control--textarea"
-    :class="[`c-form-control--${size}`, { 'is-error': error }]"
+    class="form-control form-control--textarea"
+    :class="[`form-control--${size}`, { 'is-error': error }]"
     :placeholder="placeholder"
     :disabled="disabled"
     :rows="rows"
@@ -44,15 +44,15 @@ withDefaults(
     v-else
     v-model="model"
     :type="type"
-    class="c-form-control"
-    :class="[`c-form-control--${size}`, { 'is-error': error }]"
+    class="form-control"
+    :class="[`form-control--${size}`, { 'is-error': error }]"
     :placeholder="placeholder"
     :disabled="disabled"
   />
 </template>
 
 <style scoped lang="scss">
-.c-form-control {
+.form-control {
   position: relative;
   z-index: 1;
 

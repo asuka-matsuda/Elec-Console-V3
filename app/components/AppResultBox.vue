@@ -44,32 +44,32 @@ const resolvedStatus = computed(() => {
 
 <template>
   <div
-    class="c-result-box"
+    class="result-box"
     :class="[
       `is-${resolvedStatus}`,
       `is-${size}`,
     ]"
   >
-    <div v-if="title || $slots.title" class="c-result-box__label">
+    <div v-if="title || $slots.title" class="result-box__label">
       <slot name="title">
         {{ title }}
       </slot>
     </div>
 
-    <div class="c-result-box__value">
+    <div class="result-box__value">
       <slot name="value">
         <slot />
       </slot>
     </div>
 
-    <div v-if="$slots.footer" class="c-result-box__footer">
+    <div v-if="$slots.footer" class="result-box__footer">
       <slot name="footer" />
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.c-result-box {
+.result-box {
   position: relative;
   z-index: 1;
 
@@ -94,7 +94,7 @@ const resolvedStatus = computed(() => {
   &.is-sm {
     padding: var(--space-1) var(--space-2);
 
-    :deep(.c-result-box__val),
+    :deep(.result-box__val),
     :deep(.value-text) {
       font-family: var(--font-mono);
       font-size: var(--font-size-2xl);
@@ -117,7 +117,7 @@ const resolvedStatus = computed(() => {
 
     width: 100%;
 
-    :deep(.c-result-box__val),
+    :deep(.result-box__val),
     :deep(.value-text) {
       font-family: var(--font-mono);
       font-size: var(--font-size-3xl);
@@ -136,7 +136,7 @@ const resolvedStatus = computed(() => {
   &.is-success {
     border-color: color-mix(in srgb, var(--color-status-success) 40%, transparent);
 
-    :deep(.c-result-box__val),
+    :deep(.result-box__val),
     :deep(.value-text) {
       --glow-color: var(--color-status-success);
 
@@ -148,7 +148,7 @@ const resolvedStatus = computed(() => {
   &.is-warning {
     border-color: color-mix(in srgb, var(--color-status-warning) 40%, transparent);
 
-    :deep(.c-result-box__val),
+    :deep(.result-box__val),
     :deep(.value-text) {
       --glow-color: var(--color-status-warning);
 
@@ -160,7 +160,7 @@ const resolvedStatus = computed(() => {
   &.is-danger {
     border-color: color-mix(in srgb, var(--color-status-danger) 40%, transparent);
 
-    :deep(.c-result-box__val),
+    :deep(.result-box__val),
     :deep(.value-text) {
       --glow-color: var(--color-status-danger);
 
@@ -170,7 +170,7 @@ const resolvedStatus = computed(() => {
   }
 
   &.is-neutral {
-    :deep(.c-result-box__val),
+    :deep(.result-box__val),
     :deep(.value-text) {
       color: var(--color-text-main);
     }
@@ -179,7 +179,7 @@ const resolvedStatus = computed(() => {
   &.is-empty {
     opacity: 0.7;
 
-    :deep(.c-result-box__val),
+    :deep(.result-box__val),
     :deep(.value-text) {
       color: var(--color-text-muted);
     }

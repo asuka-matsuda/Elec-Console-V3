@@ -94,7 +94,7 @@ const handleSaveSettings = async (updatedSite: Site) => {
 </script>
 
 <template>
-  <AppPanel class="c-admin-sites">
+  <AppPanel class="admin-sites">
     <AppSectionHeader title="現場プロジェクト一覧">
       <template #actions>
         <AppButton
@@ -115,7 +115,7 @@ const handleSaveSettings = async (updatedSite: Site) => {
       @sort="handleSort"
     >
       <template #cell-status="{ value, row }">
-        <div class="c-admin-sites__status-stack">
+        <div class="admin-sites__status-stack">
           <AppBadge :color="getStatusColor(value)">
             {{ getStatusLabel(value) }}
           </AppBadge>
@@ -131,7 +131,7 @@ const handleSaveSettings = async (updatedSite: Site) => {
         {{ formatDateTime(value) }}
       </template>
       <template #cell-actions="{ row }">
-        <div class="c-admin-sites__actions">
+        <div class="admin-sites__actions">
           <AppButton
             variant="secondary"
             size="sm"
@@ -175,7 +175,7 @@ const handleSaveSettings = async (updatedSite: Site) => {
 </template>
 
 <style scoped lang="scss">
-.c-admin-sites {
+.admin-sites {
   &__status-stack {
     display: flex;
     flex-direction: column;

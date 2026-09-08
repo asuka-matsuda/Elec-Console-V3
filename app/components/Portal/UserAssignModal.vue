@@ -38,7 +38,7 @@ const handleSave = async () => {
     :submit-fn="handleSave"
     submit-text="アサインを保存"
   >
-    <p class="c-user-assign-modal__desc">
+    <p class="user-assign-modal__desc">
       このユーザーが参加・閲覧できる現場を選択してください。
     </p>
 
@@ -55,7 +55,7 @@ const handleSave = async () => {
 </template>
 
 <style scoped lang="scss">
-.c-user-assign-modal__desc {
+.user-assign-modal__desc {
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
 }

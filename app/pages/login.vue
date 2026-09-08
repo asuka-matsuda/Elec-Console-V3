@@ -54,9 +54,9 @@ const handleLogin = async () => {
 </script>
 
 <template>
-  <div class="p-login">
-    <form class="p-login__form" @submit.prevent="handleLogin">
-      <p v-if="errorMessage" class="p-login__error" role="alert">
+  <div class="login-page">
+    <form class="login-page__form" @submit.prevent="handleLogin">
+      <p v-if="errorMessage" class="login-page__error" role="alert">
         {{ errorMessage }}
       </p>
 
@@ -71,7 +71,7 @@ const handleLogin = async () => {
         </AppFormGroup>
       </template>
 
-      <div class="p-login__actions">
+      <div class="login-page__actions">
         <AppButton type="submit" variant="primary" block :disabled="isLoading">
           <template v-if="isLoading"> ログイン中... </template>
           <template v-else> ログイン </template>
@@ -82,7 +82,7 @@ const handleLogin = async () => {
 </template>
 
 <style scoped lang="scss">
-.p-login {
+.login-page {
   padding: var(--space-card-pad);
 
   &__form {
