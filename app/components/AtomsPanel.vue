@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * AtomsPanel
- * [Atoms] コンテンツやセクションを囲むための汎用パネルコンポーネント。
+ * [Atoms] 背景・枠線・角丸・影などの装飾のみを提供する純粋なサーフェス枠コンポーネント。
  */
 defineProps<{
   as?: string
@@ -11,13 +11,9 @@ defineProps<{
 <template>
   <component
     :is="as || 'section'"
-    class="relative overflow-hidden flex flex-col gap-[var(--space-panel-gap)] p-[var(--space-panel-pad)] panel"
+    class="relative overflow-hidden panel"
   >
-    <slot name="header" />
     <slot />
-    <footer v-if="$slots.footer" class="flex items-center justify-end gap-2">
-      <slot name="footer" />
-    </footer>
   </component>
 </template>
 
@@ -25,6 +21,7 @@ defineProps<{
 .panel {
   z-index: 1;
 
+  padding: var(--space-panel-pad);
   border: var(--border-width-base) solid var(--color-border);
   border-radius: var(--radius-sm);
 

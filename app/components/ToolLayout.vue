@@ -67,7 +67,7 @@ provide('toolBasisModal', {
     <div class="tool-layout__main">
       <!-- 1. 条件入力（PC: 左側 50% / モバイル: 全面表示） -->
       <section class="tool-layout__inputs">
-        <AtomsPanel class="tool-layout__panel">
+        <AtomsPanel class="flex flex-col gap-[var(--space-panel-gap)] tool-layout__panel">
           <AppSectionHeader
             :title="inputsTitle"
             :icon="inputsIcon"
@@ -108,7 +108,7 @@ provide('toolBasisModal', {
           />
         </button>
         <div class="tool-layout__results-inner">
-          <AtomsPanel class="tool-layout__panel">
+          <AtomsPanel class="flex flex-col gap-[var(--space-panel-gap)] tool-layout__panel">
             <AppSectionHeader
               :title="resultsTitle"
               :icon="resultsIcon"

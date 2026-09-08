@@ -26,15 +26,13 @@ const { themeMode } = useSettings()
     </p>
 
     <div class="settings-content">
-      <AtomsPanel>
-        <template #header>
-          <AppSectionHeader
-            title="テーマ・カラー設定"
-            icon="moon"
-            variant="tool"
-            size="md"
-          />
-        </template>
+      <AtomsPanel class="flex flex-col gap-4">
+        <AppSectionHeader
+          title="テーマ・カラー設定"
+          icon="moon"
+          variant="tool"
+          size="md"
+        />
 
         <p class="description">
           画面のテーマ（ライト/ダーク）を変更します。

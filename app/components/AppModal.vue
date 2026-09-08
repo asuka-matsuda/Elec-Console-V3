@@ -98,7 +98,7 @@ onMounted(() => {
     @click.self="close"
     @cancel.prevent="close"
   >
-    <AtomsPanel class="modal__panel">
+    <AtomsPanel class="flex flex-col gap-4 modal__panel">
       <AppSectionHeader
         v-if="title"
         :title="title"
@@ -116,11 +116,11 @@ onMounted(() => {
         <slot />
       </div>
 
-      <template v-if="$slots.footer" #footer>
+      <footer v-if="$slots.footer" class="flex items-center justify-end gap-2 modal__footer">
         <slot name="footer" />
-      </template>
+      </footer>
 
-      <template v-else-if="submitFn" #footer>
+      <footer v-else-if="submitFn" class="flex items-center justify-end gap-2 modal__footer">
         <AtomsButton
           variant="secondary"
           :disabled="isSubmitting"
@@ -135,7 +135,7 @@ onMounted(() => {
         >
           {{ isSubmitting ? "処理中..." : submitText }}
         </AtomsButton>
-      </template>
+      </footer>
     </AtomsPanel>
   </dialog>
 </template>

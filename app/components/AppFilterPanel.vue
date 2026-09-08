@@ -30,12 +30,10 @@ const {
 </script>
 
 <template>
-  <AtomsPanel>
-    <template #header>
-      <slot name="header">
-        <AppSectionHeader :title="title" :icon="icon" />
-      </slot>
-    </template>
+  <AtomsPanel class="flex flex-col gap-4">
+    <slot name="header">
+      <AppSectionHeader :title="title" :icon="icon" />
+    </slot>
 
     <div class="filters">
       <AppFormGroup label="Keyword">

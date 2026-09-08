@@ -20,28 +20,26 @@ const {
 
 <template>
   <div class="history-page">
-    <AtomsPanel>
-      <template #header>
-        <AppSectionHeader
-          title="計算履歴"
-          divider-type="fade-center"
-          icon="clock"
-          variant="tool"
-          size="lg"
-        >
-          <template #actions>
-            <AtomsButton
-              v-if="historyList.length > 0"
-              variant="danger"
-              size="sm"
-              @click="handleClearAll"
-            >
-              <AtomsIcon name="trash-2" size="sm" />
-              全て削除
-            </AtomsButton>
-          </template>
-        </AppSectionHeader>
-      </template>
+    <AtomsPanel class="flex flex-col gap-4">
+      <AppSectionHeader
+        title="計算履歴"
+        divider-type="fade-center"
+        icon="clock"
+        variant="tool"
+        size="lg"
+      >
+        <template #actions>
+          <AtomsButton
+            v-if="historyList.length > 0"
+            variant="danger"
+            size="sm"
+            @click="handleClearAll"
+          >
+            <AtomsIcon name="trash-2" size="sm" />
+            全て削除
+          </AtomsButton>
+        </template>
+      </AppSectionHeader>
 
       <AtomsTabs v-model="currentTab" :options="tabs" />
 
