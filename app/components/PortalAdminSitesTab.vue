@@ -83,7 +83,7 @@ const handleSaveSettings = async (updatedSite: Site) => {
 </script>
 
 <template>
-  <AppPanel class="admin-sites">
+  <AtomsPanel class="admin-sites">
     <AppSectionHeader title="現場プロジェクト一覧">
       <template #actions>
         <AtomsButton
@@ -160,7 +160,7 @@ const handleSaveSettings = async (updatedSite: Site) => {
       :site="settingsTargetSite"
       @update:site="handleSaveSettings"
     />
-  </AppPanel>
+  </AtomsPanel>
 </template>
 
 <style scoped lang="scss">

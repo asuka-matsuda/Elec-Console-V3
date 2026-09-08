@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * ToolMathBasisModal
  * 計算ツールの計算根拠（数式やステップ）を表示するためのモーダルコンポーネントです。
@@ -71,7 +71,7 @@ const handleClose = () => {
     <div class="basis-content">
       <ClientOnly>
         <div v-if="steps && steps.length > 0" class="basis-list">
-          <AppPanel
+          <AtomsPanel
             v-for="(step, index) in steps"
             :key="index"
             class="basis-item"
@@ -101,7 +101,7 @@ const handleClose = () => {
                 </dl>
               </div>
             </div>
-          </AppPanel>
+          </AtomsPanel>
         </div>
       </ClientOnly>
 

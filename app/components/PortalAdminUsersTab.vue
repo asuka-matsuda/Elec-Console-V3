@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * PortalAdminUsersTab
  * ポータル管理 - ユーザー管理タブ
@@ -100,7 +100,7 @@ const confirmResetPassword = async (row: User) => {
 </script>
 
 <template>
-  <AppPanel class="admin-users">
+  <AtomsPanel class="admin-users">
     <AppSectionHeader title="ユーザー一覧">
       <template #actions>
         <AtomsButton
@@ -189,7 +189,7 @@ const confirmResetPassword = async (row: User) => {
       :user-id="assignTargetUserId"
       :initial-site-ids="assignTargetSiteIds"
     />
-  </AppPanel>
+  </AtomsPanel>
 </template>
 
 <style scoped lang="scss">

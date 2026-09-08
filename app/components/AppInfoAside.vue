@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { computed } from 'vue'
 
 import type { AnnouncementItem, HistoryItem } from '~/types/components'
@@ -80,13 +80,13 @@ const sections = computed<SectionConfig[]>(() => [
     <section v-for="section in sections" :key="section.title">
       <AppSectionHeader :title="section.title" :icon="section.icon" size="md" />
 
-      <AppPanel v-if="pending" class="status">
+      <AtomsPanel v-if="pending" class="status">
         <AtomsIcon name="loader" class="u-spin" size="sm" />
         <span>{{ section.loadingText }}</span>
-      </AppPanel>
+      </AtomsPanel>
 
       <template v-else-if="section.items.length > 0">
-        <AppPanel
+        <AtomsPanel
           v-for="item in section.items"
           :key="item.key"
           class="item"
@@ -99,13 +99,13 @@ const sections = computed<SectionConfig[]>(() => [
           </header>
           <time>{{ item.date }}</time>
           <p v-if="item.desc">{{ item.desc }}</p>
-        </AppPanel>
+        </AtomsPanel>
       </template>
 
-      <AppPanel v-else class="status">
+      <AtomsPanel v-else class="status">
         <AtomsIcon name="inbox" size="sm" />
         <span>{{ section.emptyText }}</span>
-      </AppPanel>
+      </AtomsPanel>
     </section>
   </div>
 </template>

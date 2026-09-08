@@ -21,7 +21,7 @@ defineProps<{
 </script>
 
 <template>
-  <AppPanel variant="hud" class="portal-operation-logs-filter">
+  <AtomsPanel class="portal-operation-logs-filter">
     <div class="logs-filters__group">
       <label class="logs-filters__label">作業者:</label>
       <AtomsSelect
@@ -63,7 +63,7 @@ defineProps<{
         取得件数: {{ logCount }} 件
       </AtomsBadge>
     </div>
-  </AppPanel>
+  </AtomsPanel>
 </template>
 
 <style scoped lang="scss">

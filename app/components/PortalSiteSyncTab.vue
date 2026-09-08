@@ -165,7 +165,7 @@ const confirmResetImport = async () => {
       </div>
     </details>
 
-    <AppPanel>
+    <AtomsPanel>
       <AppSectionHeader title="データベース連携（Excel同期・エクスポート）" />
       <ul class="portal-site-sync-tab__sync-list">
         <!-- 差分再同期 (スマートマージ) -->
@@ -316,7 +316,7 @@ const confirmResetImport = async () => {
           </div>
         </template>
       </AppResultBox>
-    </AppPanel>
+    </AtomsPanel>
 
     <!-- 処理完了・件数確認モーダルダイアログ -->
     <AppModal

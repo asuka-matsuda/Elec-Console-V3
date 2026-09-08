@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * ToolHistoryCard
  * 計算履歴を1件表示するカードコンポーネントです。入力条件と計算結果のプレビューを提供します。
@@ -21,7 +21,7 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
 </script>
 
 <template>
-  <AppPanel
+  <AtomsPanel
     as="article"
     class="history-item"
     :class="[`is-${entry.status}`]"
@@ -107,7 +107,7 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
         <AtomsIcon name="trash-2" size="sm" />
       </AtomsButton>
     </footer>
-  </AppPanel>
+  </AtomsPanel>
 </template>
 
 <style scoped lang="scss">

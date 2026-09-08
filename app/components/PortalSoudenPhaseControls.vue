@@ -30,7 +30,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <AppPanel variant="hud">
+  <AtomsPanel>
     <div class="phase-controls">
       <div class="phase-controls__filters">
         <!-- 盤種別タブ -->
@@ -88,7 +88,7 @@ const emit = defineEmits<{
         />
       </div>
     </div>
-  </AppPanel>
+  </AtomsPanel>
 </template>
 
 <style scoped lang="scss">

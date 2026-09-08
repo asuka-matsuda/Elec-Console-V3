@@ -33,7 +33,7 @@ const sortedTodos = computed(() => {
 </script>
 
 <template>
-  <AppPanel class="personal-todo">
+  <AtomsPanel class="personal-todo">
     <AppSectionHeader
       title="パーソナルToDo"
       icon="check"
@@ -78,7 +78,7 @@ const sortedTodos = computed(() => {
         description="上の入力欄から新しいタスクを追加してください。"
       />
     </ul>
-  </AppPanel>
+  </AtomsPanel>
 </template>
 
 <style scoped lang="scss">

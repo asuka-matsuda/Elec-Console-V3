@@ -17,7 +17,7 @@ defineProps<{
 </script>
 
 <template>
-  <AppPanel class="portal-souden-phase-nav-card">
+  <AtomsPanel class="portal-souden-phase-nav-card">
     <AppSectionHeader :title="title" :icon="icon" :variant="variant || 'tool'" />
     <ol class="step-list">
       <PortalSoudenStepIndicator
@@ -42,7 +42,7 @@ defineProps<{
         :to="`/portal/${siteId}/phase3?kei_to=${keiTo}`"
       />
     </ol>
-  </AppPanel>
+  </AtomsPanel>
 </template>
 
 <style scoped lang="scss">

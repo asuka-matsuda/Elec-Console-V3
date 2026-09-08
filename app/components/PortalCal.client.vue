@@ -94,7 +94,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       @open-type-settings="isTypeSettingsOpen = true"
     />
 
-    <AppPanel class="calendar" variant="simple">
+    <AtomsPanel class="calendar">
       <FullCalendar ref="fullCalendarRef" :options="calendarOptions">
         <template #eventContent="{ event }">
           <PortalCalEventBadge
@@ -106,7 +106,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
           />
         </template>
       </FullCalendar>
-    </AppPanel>
+    </AtomsPanel>
 
     <PortalCalEventModal
       v-model="isModalOpen"

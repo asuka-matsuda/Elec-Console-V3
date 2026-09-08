@@ -26,7 +26,7 @@ const { themeMode } = useSettings()
     </p>
 
     <div class="settings-content">
-      <AppPanel>
+      <AtomsPanel>
         <template #header>
           <AppSectionHeader
             title="テーマ・カラー設定"
@@ -46,7 +46,7 @@ const { themeMode } = useSettings()
         >
           <AtomsSelect v-model="themeMode" :options="THEME_OPTIONS" />
         </AppFormGroup>
-      </AppPanel>
+      </AtomsPanel>
     </div>
   </div>
 </template>

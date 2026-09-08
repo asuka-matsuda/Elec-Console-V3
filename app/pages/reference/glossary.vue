@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * Glossary
  * 用語集画面のコンポーネントです。専門用語の検索や、五十音・カテゴリ別での絞り込み機能を提供します。
@@ -70,7 +70,7 @@ const categoryColorMap: Record<string, string> = {
 
     <div class="glossary-main">
       <div v-if="filteredGlossary.length > 0" class="glossary-list">
-        <AppPanel
+        <AtomsPanel
           v-for="item in filteredGlossary"
           :key="item.term"
           as="article"
@@ -108,7 +108,7 @@ const categoryColorMap: Record<string, string> = {
               </p>
             </div>
           </div>
-        </AppPanel>
+        </AtomsPanel>
       </div>
 
       <AppEmptyState

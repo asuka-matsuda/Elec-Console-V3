@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * AppModal
  * ネイティブの dialog 要素を使用したモーダルコンポーネント。
@@ -98,7 +98,7 @@ onMounted(() => {
     @click.self="close"
     @cancel.prevent="close"
   >
-    <AppPanel class="modal__panel">
+    <AtomsPanel class="modal__panel">
       <AppSectionHeader
         v-if="title"
         :title="title"
@@ -136,7 +136,7 @@ onMounted(() => {
           {{ isSubmitting ? "処理中..." : submitText }}
         </AtomsButton>
       </template>
-    </AppPanel>
+    </AtomsPanel>
   </dialog>
 </template>
 

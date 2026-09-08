@@ -20,7 +20,7 @@ const {
 
 <template>
   <div class="history-page">
-    <AppPanel>
+    <AtomsPanel>
       <template #header>
         <AppSectionHeader
           title="計算履歴"
@@ -69,7 +69,7 @@ const {
           <AppEmptyState icon="loader" title="履歴を読み込み中..." />
         </template>
       </ClientOnly>
-    </AppPanel>
+    </AtomsPanel>
   </div>
 </template>
 

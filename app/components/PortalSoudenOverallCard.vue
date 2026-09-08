@@ -12,7 +12,7 @@ defineProps<{
 </script>
 
 <template>
-  <AppPanel class="portal-souden-overall-card">
+  <AtomsPanel class="portal-souden-overall-card">
     <AppSectionHeader title="総合進捗" icon="activity" variant="hud" />
     <div class="progress-summary">
       <div class="summary-main">
@@ -58,7 +58,7 @@ defineProps<{
         />
       </div>
     </div>
-  </AppPanel>
+  </AtomsPanel>
 </template>
 
 <style scoped lang="scss">

@@ -67,7 +67,7 @@ provide('toolBasisModal', {
     <div class="tool-layout__main">
       <!-- 1. 条件入力（PC: 左側 50% / モバイル: 全面表示） -->
       <section class="tool-layout__inputs">
-        <AppPanel class="tool-layout__panel">
+        <AtomsPanel class="tool-layout__panel">
           <AppSectionHeader
             :title="inputsTitle"
             :icon="inputsIcon"
@@ -85,7 +85,7 @@ provide('toolBasisModal', {
           <div class="tool-layout__panel-body">
             <slot name="inputs" :open-basis="openBasisModal" />
           </div>
-        </AppPanel>
+        </AtomsPanel>
       </section>
 
       <!-- 2. 計算結果（PC: 右側 50% / モバイル: 下部Stickyドロワー） -->
@@ -108,7 +108,7 @@ provide('toolBasisModal', {
           />
         </button>
         <div class="tool-layout__results-inner">
-          <AppPanel class="tool-layout__panel">
+          <AtomsPanel class="tool-layout__panel">
             <AppSectionHeader
               :title="resultsTitle"
               :icon="resultsIcon"
@@ -136,7 +136,7 @@ provide('toolBasisModal', {
             <div class="tool-layout__panel-body">
               <slot name="results" :open-basis="openBasisModal" />
             </div>
-          </AppPanel>
+          </AtomsPanel>
         </div>
       </section>
 

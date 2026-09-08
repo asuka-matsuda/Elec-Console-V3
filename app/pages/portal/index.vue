@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * Portal Index
  * 現場ポータルのトップ（現場選択など）
@@ -57,7 +57,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <AppPanel class="portal-index">
+  <AtomsPanel class="portal-index">
     <AppSectionHeader title="現場ポータル" variant="hud">
       <template v-if="isAdmin" #actions>
         <AtomsButton variant="secondary" size="sm" @click="router.push('/portal/admin')">
@@ -95,7 +95,7 @@ onMounted(async () => {
       title="アサインされている現場がありません"
       description="管理者に現場へのアサインを依頼してください。"
     />
-  </AppPanel>
+  </AtomsPanel>
 </template>
 
 <style scoped lang="scss">

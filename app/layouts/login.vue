@@ -9,10 +9,10 @@ const pageTitle = computed(() => route.meta.title as string | undefined)
 
 <template>
   <main class="login-layout">
-    <AppPanel class="login-layout__panel">
+    <AtomsPanel class="login-layout__panel">
       <AppSectionHeader v-if="pageTitle" :title="pageTitle" />
       <slot />
-    </AppPanel>
+    </AtomsPanel>
   </main>
 </template>
 

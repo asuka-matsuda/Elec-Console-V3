@@ -30,7 +30,7 @@ const {
 </script>
 
 <template>
-  <AppPanel>
+  <AtomsPanel>
     <template #header>
       <slot name="header">
         <AppSectionHeader :title="title" :icon="icon" />
@@ -57,7 +57,7 @@ const {
 
       <slot name="extra-filters" />
     </div>
-  </AppPanel>
+  </AtomsPanel>
 </template>
 
 <style scoped lang="scss">

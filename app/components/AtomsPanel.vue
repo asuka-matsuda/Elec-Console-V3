@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
- * AppPanel
- * コンテンツやセクションを囲むための汎用パネルコンポーネント。
+ * AtomsPanel
+ * [Atoms] コンテンツやセクションを囲むための汎用パネルコンポーネント。
  */
 defineProps<{
   as?: string
@@ -9,10 +9,13 @@ defineProps<{
 </script>
 
 <template>
-  <component :is="as || 'section'" class="panel">
+  <component
+    :is="as || 'section'"
+    class="relative overflow-hidden flex flex-col gap-[var(--space-panel-gap)] p-[var(--space-panel-pad)] panel"
+  >
     <slot name="header" />
     <slot />
-    <footer v-if="$slots.footer" class="panel__footer">
+    <footer v-if="$slots.footer" class="flex items-center justify-end gap-2">
       <slot name="footer" />
     </footer>
   </component>
@@ -20,15 +23,8 @@ defineProps<{
 
 <style scoped lang="scss">
 .panel {
-  position: relative;
   z-index: 1;
 
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-panel-gap);
-
-  padding: var(--space-panel-pad);
   border: var(--border-width-base) solid var(--color-border);
   border-radius: var(--radius-sm);
 
@@ -37,12 +33,5 @@ defineProps<{
   box-shadow: var(--shadow-elevation-sm);
 
   transition: var(--transition-base);
-
-  &__footer {
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
-    justify-content: flex-end;
-  }
 }
 </style>
