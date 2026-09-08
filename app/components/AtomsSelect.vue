@@ -97,7 +97,7 @@ onMounted(() => {
 })
 
 const getOptionClasses = (option: SelectOption, index: number) => [
-  'relative z-1 overflow-hidden py-2 px-3 truncate custom-select__option',
+  'relative overflow-hidden py-2 px-3 truncate custom-select__option',
   {
     'is-selected': model.value === option.value,
     'is-focused': index === focusedIndex.value,
@@ -115,7 +115,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   >
     <button
       type="button"
-      class="relative z-1 flex w-full items-center justify-between gap-2 custom-select__value"
+      class="relative flex w-full items-center justify-between gap-2 custom-select__value"
       :class="{
         'is-placeholder': isPlaceholder,
         'is-active': isOpen,
@@ -140,7 +140,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
             <ul class="w-full overflow-x-hidden overflow-y-auto p-1 custom-select__list">
               <li
                 v-if="isPlaceholder"
-                class="relative z-1 overflow-hidden py-2 px-3 truncate custom-select__option is-placeholder"
+                class="relative overflow-hidden py-2 px-3 truncate custom-select__option is-placeholder"
               >
                 {{ placeholder }}
               </li>
@@ -175,6 +175,8 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 .custom-select__value {
   cursor: pointer;
   user-select: none;
+
+  z-index: 1;
 
   min-height: calc(var(--control-height-ratio) * 1em);
   padding-block: 0.3em;
@@ -312,6 +314,8 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 .custom-select__option {
   cursor: pointer;
   user-select: none;
+
+  z-index: 1;
 
   border-radius: var(--radius-sm);
 

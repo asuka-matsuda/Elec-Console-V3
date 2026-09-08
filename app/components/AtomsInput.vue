@@ -36,7 +36,7 @@ const {
   <textarea
     v-if="type === 'textarea'"
     v-model="model"
-    class="form-control relative z-[1] w-full"
+    class="form-control relative w-full"
     :class="[
       size === 'sm' ? 'is-sm' : '',
       { 'is-error': error },
@@ -49,7 +49,7 @@ const {
     v-else
     v-model="model"
     :type="type"
-    class="form-control relative z-[1] w-full"
+    class="form-control relative w-full"
     :class="[
       size === 'sm' ? 'is-sm' : '',
       { 'is-error': error },
@@ -61,6 +61,8 @@ const {
 
 <style scoped lang="scss">
 .form-control {
+  z-index: 1;
+
   min-height: calc(var(--control-height-ratio) * 1em);
   padding-block: 0.3em;
   padding-inline: 1.2em;
