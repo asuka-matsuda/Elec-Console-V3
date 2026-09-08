@@ -15,44 +15,14 @@ defineProps<{
     class="relative flex shrink-0 items-center py-1 px-2 whitespace-nowrap breadcrumb"
     aria-label="パンくずリスト"
   >
-    <ol class="inline-flex items-center gap-2">
+    <ol class="flex items-center gap-2">
       <li
         v-for="(item, index) in items"
-        :key="item.href || `${item.text}-${index}`"
-        class="inline-flex items-center gap-2"
+        :key="`${item.text}-${index}`"
+        class="flex items-center"
+        :class="{ 'is-current': index === items.length - 1 }"
       >
-        <!-- 中間リンク項目（現場名など） -->
-        <NuxtLink
-          v-if="item.href && index < items.length - 1"
-          :to="item.href"
-          class="item-link"
-        >
-          {{ item.text }}
-        </NuxtLink>
-
-        <!-- 非リンク項目（カテゴリ または 現在地） -->
-        <span
-          v-else
-          class="inline-flex items-center gap-1 item-label"
-          :class="{ 'is-current': index === items.length - 1 }"
-        >
-          {{ item.text }}
-          <!-- 現在地を示す点滅カーソル -->
-          <span
-            v-if="index === items.length - 1"
-            class="cursor-bar"
-            aria-hidden="true"
-          />
-        </span>
-
-        <!-- 階層の区切り文字 -->
-        <span
-          v-if="index < items.length - 1"
-          class="separator"
-          aria-hidden="true"
-        >
-          »
-        </span>
+        {{ item.text }}
       </li>
     </ol>
   </nav>
@@ -65,56 +35,44 @@ defineProps<{
   font-size: var(--font-size-sm);
   text-transform: uppercase;
 
-  .separator {
-    user-select: none;
-
-    font-size: var(--font-size-2xs);
-    font-weight: var(--font-weight-bold);
-    line-height: var(--line-height-tight);
-    color: color-mix(in srgb, var(--theme-accent) 60%, transparent);
-    letter-spacing: var(--tracking-wider);
-  }
-
-  .item-link {
-    cursor: pointer;
-    user-select: none;
-
-    color: var(--color-text-secondary);
-    text-decoration: none;
-
-    transition: var(--transition-base);
-
-    &:hover {
-      --glow-color: var(--color-text-main);
-
-      color: var(--color-text-main);
-      text-shadow: var(--text-glow-sm);
-    }
-  }
-
-  .item-label {
+  li {
     user-select: none;
     color: var(--color-text-muted);
+
+    &:not(:last-child)::after {
+      content: "»";
+
+      margin-left: var(--space-2);
+
+      font-size: var(--font-size-2xs);
+      font-weight: var(--font-weight-bold);
+      line-height: var(--line-height-tight);
+      color: color-mix(in srgb, var(--theme-accent) 60%, transparent);
+      letter-spacing: var(--tracking-wider);
+    }
 
     &.is-current {
       --glow-color: var(--theme-accent);
 
       color: var(--theme-accent);
       text-shadow: var(--text-glow-md);
+
+      &::after {
+        content: "";
+
+        display: inline-block;
+
+        width: var(--space-1);
+        height: var(--space-3);
+        margin-left: var(--space-1);
+
+        vertical-align: middle;
+
+        background-color: var(--theme-accent);
+
+        animation: ui-cursor-blink 1s step-end infinite;
+      }
     }
-  }
-
-  .cursor-bar {
-    display: inline-block;
-
-    width: var(--space-1);
-    height: var(--space-3);
-
-    vertical-align: middle;
-
-    background-color: var(--theme-accent);
-
-    animation: ui-cursor-blink 1s step-end infinite;
   }
 }
 </style>
