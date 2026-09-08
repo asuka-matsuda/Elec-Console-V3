@@ -1,23 +1,15 @@
 <script setup lang="ts" generic="T extends string | number">
 /**
  * AtomsTabs
- * [Atoms] タブ切り替えのための最小UIコンポーネント。垂直方向の配置やグリッド配置にも対応しています。
+ * [Atoms] タブ切り替えのための最小UIコンポーネント。
  */
 import type { TabOption } from '~/types/components'
 
 const model = defineModel<T>()
 
-withDefaults(
-  defineProps<{
-    options: TabOption<T>[]
-    vertical?: boolean
-    grid?: boolean
-  }>(),
-  {
-    vertical: false,
-    grid: false,
-  },
-)
+defineProps<{
+  options: TabOption<T>[]
+}>()
 
 const selectTab = (option: TabOption<T>) => {
   if (option.disabled) return
@@ -26,14 +18,7 @@ const selectTab = (option: TabOption<T>) => {
 </script>
 
 <template>
-  <div
-    class="flex gap-2 tabs"
-    :class="{
-      'flex-col': vertical,
-      'tabs--grid': grid,
-      'flex-wrap items-center': !vertical && !grid,
-    }"
-  >
+  <div class="flex flex-wrap items-center gap-2 tabs">
     <button
       v-for="option in options"
       :key="String(option.value)"
@@ -51,13 +36,6 @@ const selectTab = (option: TabOption<T>) => {
 </template>
 
 <style scoped lang="scss">
-.tabs {
-  &--grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  }
-}
-
 .tabs__item {
   --glow-color: var(--theme-accent);
 
@@ -74,16 +52,6 @@ const selectTab = (option: TabOption<T>) => {
   color: var(--color-text-secondary);
 
   transition: var(--transition-base);
-
-  .tabs--grid & {
-    width: 100%;
-    padding-inline: 0;
-  }
-
-  .tabs--vertical & {
-    justify-content: flex-start;
-    width: 100%;
-  }
 
   &:disabled {
     cursor: not-allowed;

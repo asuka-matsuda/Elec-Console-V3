@@ -39,7 +39,6 @@ const emit = defineEmits<{
           <AtomsTabs
             v-model="selectedShubetsu"
             :options="shubetsuOptions"
-            variant="pills"
           />
         </div>
 
