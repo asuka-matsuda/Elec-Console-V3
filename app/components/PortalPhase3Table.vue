@@ -206,11 +206,10 @@ const {
           <template v-if="editingRowId === circuit.id">
             <div class="phase3-input-cell">
               <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label1 }}</span>
-              <MoleculesInputGroup size="sm" addon="V" style="width: 80px;">
+              <MoleculesInputGroup addon="V" style="width: 80px;">
                 <AtomsInput
                   v-model="inputForm.rs"
                   type="number"
-                  size="sm"
                   step="any"
                   inputmode="decimal"
                   @focus="handleInputFocus"
@@ -238,11 +237,10 @@ const {
           <template v-if="editingRowId === circuit.id">
             <div class="phase3-input-cell">
               <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label2 }}</span>
-              <MoleculesInputGroup size="sm" addon="V" style="width: 80px;">
+              <MoleculesInputGroup addon="V" style="width: 80px;">
                 <AtomsInput
                   v-model="inputForm.st"
                   type="number"
-                  size="sm"
                   step="any"
                   inputmode="decimal"
                   @focus="handleInputFocus"
@@ -270,11 +268,10 @@ const {
           <template v-if="editingRowId === circuit.id">
             <div class="phase3-input-cell">
               <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label3 }}</span>
-              <MoleculesInputGroup size="sm" addon="V" style="width: 80px;">
+              <MoleculesInputGroup addon="V" style="width: 80px;">
                 <AtomsInput
                   v-model="inputForm.rt"
                   type="number"
-                  size="sm"
                   step="any"
                   inputmode="decimal"
                   @focus="handleInputFocus"
@@ -319,7 +316,7 @@ const {
         <!-- 備考 -->
         <td>
           <template v-if="editingRowId === circuit.id">
-            <AtomsInput v-model="inputForm.remarks" size="sm" placeholder="備考" />
+            <AtomsInput v-model="inputForm.remarks" placeholder="備考" />
           </template>
           <span v-else class="phase3-cell__remarks" :title="circuit.p3Remarks || ''">
             {{ circuit.p3Remarks || '-' }}
@@ -537,6 +534,8 @@ const {
   flex-direction: column;
   gap: 2px;
   align-items: center;
+
+  font-size: var(--font-size-2xs);
 
   &__label {
     font-size: 10px;

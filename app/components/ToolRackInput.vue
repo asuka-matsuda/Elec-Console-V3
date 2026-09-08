@@ -175,7 +175,6 @@ const handleAddCable = () => {
                 v-model="cable.category"
                 :options="strongCategories"
                 placeholder="選択"
-                size="sm"
                 @update:model-value="cable.cableIdx = ''"
               />
             </td>
@@ -184,17 +183,15 @@ const handleAddCable = () => {
                 v-model="cable.cableIdx"
                 :options="getAvailableSizes(cable.category)"
                 placeholder="選択"
-                size="sm"
                 :disabled="!cable.category"
               />
             </td>
             <td>
-              <MoleculesInputGroup size="sm" addon="本">
+              <MoleculesInputGroup addon="本">
                 <AtomsInput
                   v-model.number="cable.count"
                   type="number"
                   min="1"
-                  size="sm"
                 />
               </MoleculesInputGroup>
             </td>
@@ -233,7 +230,6 @@ const handleAddCable = () => {
                 v-model="cable.category"
                 :options="weakCategories"
                 placeholder="選択"
-                size="sm"
                 @update:model-value="cable.cableIdx = ''"
               />
             </td>
@@ -242,17 +238,15 @@ const handleAddCable = () => {
                 v-model="cable.cableIdx"
                 :options="getAvailableSizes(cable.category)"
                 placeholder="選択"
-                size="sm"
                 :disabled="!cable.category"
               />
             </td>
             <td>
-              <MoleculesInputGroup size="sm" addon="本">
+              <MoleculesInputGroup addon="本">
                 <AtomsInput
                   v-model.number="cable.count"
                   type="number"
                   min="1"
-                  size="sm"
                 />
               </MoleculesInputGroup>
             </td>
@@ -353,6 +347,7 @@ const handleAddCable = () => {
 
 .rack-table {
   width: 100%;
+  font-size: var(--font-size-xs);
 }
 
 .action-cell {

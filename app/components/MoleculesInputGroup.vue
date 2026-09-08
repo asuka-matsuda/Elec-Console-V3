@@ -5,16 +5,13 @@
  */
 interface Props {
   addon?: string
-  size?: 'sm' | 'md'
 }
 
-withDefaults(defineProps<Props>(), {
-  size: 'md',
-})
+defineProps<Props>()
 </script>
 
 <template>
-  <div class="flex input-group" :class="`input-group--${size}`">
+  <div class="flex input-group">
     <!-- メイン入力欄 (AtomsInput 等) -->
     <slot />
 
@@ -57,7 +54,7 @@ withDefaults(defineProps<Props>(), {
     border-left: none;
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 
-    font-size: var(--font-size-sm);
+    font-size: inherit;
     font-weight: var(--font-weight-medium);
     color: var(--color-text-secondary);
     white-space: nowrap;
@@ -90,18 +87,6 @@ withDefaults(defineProps<Props>(), {
         position: relative;
         z-index: 2;
       }
-    }
-  }
-
-  &--sm {
-    .addon {
-      padding-inline: 0.6em;
-      font-size: var(--font-size-xs);
-    }
-
-    :deep(.form-control),
-    :deep(.custom-select) {
-      font-size: var(--font-size-2xs);
     }
   }
 }

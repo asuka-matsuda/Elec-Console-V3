@@ -202,11 +202,10 @@ const {
           <template v-if="editingRowId === circuit.id">
             <div class="phase2-input-cell">
               <span class="phase2-input-cell__label">{{ getPhaseLabels(circuit).phase1 }}</span>
-              <MoleculesInputGroup size="sm" addon="MΩ" style="width: 85px;">
+              <MoleculesInputGroup addon="MΩ" style="width: 85px;">
                 <AtomsInput
                   v-model="inputForm.rVal"
                   type="number"
-                  size="sm"
                   step="0.1"
                   inputmode="decimal"
                   placeholder="100"
@@ -244,11 +243,10 @@ const {
           <template v-if="editingRowId === circuit.id">
             <div class="phase2-input-cell">
               <span class="phase2-input-cell__label">{{ getPhaseLabels(circuit).phase2 }}</span>
-              <MoleculesInputGroup size="sm" addon="MΩ" style="width: 85px;">
+              <MoleculesInputGroup addon="MΩ" style="width: 85px;">
                 <AtomsInput
                   v-model="inputForm.sVal"
                   type="number"
-                  size="sm"
                   step="0.1"
                   inputmode="decimal"
                   placeholder="100"
@@ -286,11 +284,10 @@ const {
           <template v-if="editingRowId === circuit.id">
             <div class="phase2-input-cell">
               <span class="phase2-input-cell__label">{{ getPhaseLabels(circuit).phase3 }}</span>
-              <MoleculesInputGroup size="sm" addon="MΩ" style="width: 85px;">
+              <MoleculesInputGroup addon="MΩ" style="width: 85px;">
                 <AtomsInput
                   v-model="inputForm.tVal"
                   type="number"
-                  size="sm"
                   step="0.1"
                   inputmode="decimal"
                   placeholder="100"
@@ -544,6 +541,8 @@ const {
   flex-direction: column;
   gap: 2px;
   align-items: center;
+
+  font-size: var(--font-size-2xs);
 
   &__label {
     font-size: 10px;

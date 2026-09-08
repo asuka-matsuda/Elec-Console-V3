@@ -19,7 +19,6 @@ export interface AtomsInputProps {
   placeholder?: string
   disabled?: boolean
   error?: boolean
-  size?: 'sm' | 'md'
   rows?: number
 }
 
@@ -30,7 +29,6 @@ const {
   placeholder,
   disabled = false,
   error = false,
-  size = 'md',
   rows = 4,
 } = defineProps<AtomsInputProps>()
 </script>
@@ -40,10 +38,7 @@ const {
     v-if="type === 'textarea'"
     v-model="model"
     class="form-control relative w-full"
-    :class="[
-      size === 'sm' ? 'is-sm' : '',
-      { 'is-error': error },
-    ]"
+    :class="{ 'is-error': error }"
     :placeholder="placeholder"
     :disabled="disabled"
     :rows="rows"
@@ -53,10 +48,7 @@ const {
     v-model="model"
     :type="type"
     class="form-control relative w-full"
-    :class="[
-      size === 'sm' ? 'is-sm' : '',
-      { 'is-error': error },
-    ]"
+    :class="{ 'is-error': error }"
     :placeholder="placeholder"
     :disabled="disabled"
   />
@@ -72,7 +64,7 @@ const {
   border: var(--border-width-base) solid var(--color-border);
   border-radius: var(--radius-sm);
 
-  font-size: var(--font-size-sm);
+  font-size: inherit;
   font-variant-numeric: tabular-nums;
   color: var(--color-text-main);
 
@@ -132,11 +124,6 @@ const {
   &::placeholder {
     color: color-mix(in srgb, var(--color-text-muted) 50%, transparent);
     opacity: 1;
-  }
-
-  &.is-sm {
-    font-size: var(--font-size-2xs);
-    color: var(--color-text-muted);
   }
 }
 

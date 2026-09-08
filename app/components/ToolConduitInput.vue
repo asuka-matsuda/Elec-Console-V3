@@ -99,7 +99,6 @@ const getCableAreaText = (cableIdx: string): string => {
                 v-model="cable.category"
                 :options="categories"
                 placeholder="選択"
-                size="sm"
                 @update:model-value="cable.cableIdx = ''"
               />
             </td>
@@ -108,17 +107,15 @@ const getCableAreaText = (cableIdx: string): string => {
                 v-model="cable.cableIdx"
                 :options="getAvailableSizes(cable.category)"
                 placeholder="選択"
-                size="sm"
                 :disabled="!cable.category"
               />
             </td>
             <td>
-              <MoleculesInputGroup size="sm" addon="本">
+              <MoleculesInputGroup addon="本">
                 <AtomsInput
                   v-model.number="cable.count"
                   type="number"
                   min="1"
-                  size="sm"
                 />
               </MoleculesInputGroup>
             </td>
@@ -176,6 +173,7 @@ const getCableAreaText = (cableIdx: string): string => {
 
 .conduit-table {
   width: 100%;
+  font-size: var(--font-size-xs);
 }
 
 .action-cell {
