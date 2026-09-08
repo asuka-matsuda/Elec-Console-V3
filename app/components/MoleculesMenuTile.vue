@@ -46,8 +46,6 @@ const target = computed(() => to || href)
     <p v-if="description" class="tile-desc">
       {{ description }}
     </p>
-
-    <slot />
   </component>
 </template>
 
