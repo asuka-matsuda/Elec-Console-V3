@@ -60,6 +60,10 @@ Atomsを2〜3個組み合わせた、純粋なUIブロック。
 - **判定基準:** 複数のAtomsを組み合わせているが、特定の機能・データに依存していないか？
 - **ルール:**
   - 汎用性を保つ（API通信やPiniaは禁止のDumbコンポーネント）。
+  - **スロットの積極活用（バケツリレー・Props爆発の防止）:**
+    - Moleculesの主責務は「Atoms同士のレイアウト・配置・余白」を規定すること。
+    - 内部に組み込むAtoms（Badge, Button, Divider, Icon等）の詳細設定（色、バリアント等）をすべてMoleculesのPropsとして受け取って中継（バケツリレー）しない。
+    - 基本は手軽なPropsでデフォルト描画（例: `title`, `icon`）しつつ、スロット（例: `<slot name="actions" />`, `<slot name="badge" />`, `<slot name="divider"><AtomsDivider /></slot>`）を開放して親からAtomsを直接注入・カスタマイズできるハイブリッド設計とする。
 - **CSS方針:**
   - Tailwind が主役。Atoms同士の余白（`gap`）や配置（`flex`, `grid`）をTailwindクラスで指定する。
 

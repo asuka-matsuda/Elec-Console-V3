@@ -61,7 +61,9 @@ const resolvedDividerColor = computed(() => {
       <slot name="actions" />
     </div>
 
-    <AtomsDivider :color="resolvedDividerColor" />
+    <slot name="divider">
+      <AtomsDivider :color="resolvedDividerColor" />
+    </slot>
   </header>
 </template>
 
