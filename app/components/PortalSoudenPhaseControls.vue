@@ -36,7 +36,7 @@ const emit = defineEmits<{
         <!-- 盤種別タブ -->
         <div class="phase-controls__row">
           <span class="phase-controls__label">盤種別:</span>
-          <AppTabs
+          <AtomsTabs
             v-model="selectedShubetsu"
             :options="shubetsuOptions"
             variant="pills"

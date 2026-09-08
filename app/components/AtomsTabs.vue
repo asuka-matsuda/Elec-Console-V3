@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T extends string | number">
 /**
- * AppTabs
- * タブ切り替えのためのコンポーネントです。垂直方向の配置やグリッド配置にも対応しています。
+ * AtomsTabs
+ * [Atoms] タブ切り替えのための最小UIコンポーネント。垂直方向の配置やグリッド配置にも対応しています。
  */
 import type { TabOption } from '~/types/components'
 
@@ -27,17 +27,18 @@ const selectTab = (option: TabOption<T>) => {
 
 <template>
   <div
-    class="tabs"
+    class="flex gap-2 tabs"
     :class="{
-      'tabs--vertical': vertical,
+      'flex-col': vertical,
       'tabs--grid': grid,
+      'flex-wrap items-center': !vertical && !grid,
     }"
   >
     <button
       v-for="option in options"
       :key="String(option.value)"
       type="button"
-      class="tabs__item"
+      class="relative flex items-center justify-center gap-2 py-2 px-4 tabs__item"
       :class="{
         'is-active': model === option.value,
       }"
@@ -51,36 +52,20 @@ const selectTab = (option: TabOption<T>) => {
 
 <style scoped lang="scss">
 .tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  align-items: center;
-
   &--grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: var(--space-2);
-  }
-
-  &--vertical {
-    display: flex;
-    flex-direction: column;
   }
 }
 
 .tabs__item {
+  --glow-color: var(--theme-accent);
+
   cursor: pointer;
   user-select: none;
 
-  position: relative;
   z-index: 1;
 
-  display: flex;
-  gap: var(--space-2);
-  align-items: center;
-  justify-content: center;
-
-  padding: var(--space-2) var(--space-4);
   border: var(--border-width-base) solid var(--color-border);
   border-radius: var(--radius-sm);
 
@@ -92,8 +77,7 @@ const selectTab = (option: TabOption<T>) => {
 
   .tabs--grid & {
     width: 100%;
-    padding-right: 0;
-    padding-left: 0;
+    padding-inline: 0;
   }
 
   .tabs--vertical & {
@@ -101,21 +85,16 @@ const selectTab = (option: TabOption<T>) => {
     width: 100%;
   }
 
-  // 1. 無効状態
   &:disabled {
     cursor: not-allowed;
     opacity: 0.5;
   }
 
-  // 2. 有効状態
   &:not(:disabled) {
     &:is(:hover, :focus-visible):not(.is-active) {
-
-      --glow-color: var(--theme-accent);
-
       transform: translateY(-2px);
 
-      border-color: var(--theme-accent);
+      border-color: var(--glow-color);
 
       color: var(--color-text-main);
 
@@ -125,19 +104,15 @@ const selectTab = (option: TabOption<T>) => {
     }
 
     &:active {
-      --glow-color: var(--theme-accent);
-
-      border-color: var(--theme-accent);
+      border-color: var(--glow-color);
       box-shadow: var(--shadow-glow-active);
       transition: var(--transition-glow);
     }
 
     &.is-active {
-      --glow-color: var(--theme-accent);
+      border-color: var(--glow-color);
 
-      border-color: var(--theme-accent);
-
-      color: var(--theme-accent);
+      color: var(--glow-color);
       text-shadow: var(--text-glow-md);
 
       box-shadow: var(--shadow-glow-active);

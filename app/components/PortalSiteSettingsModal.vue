@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * PortalSiteSettingsModal
  * 現場設定モーダルコンポーネント。
@@ -57,7 +57,7 @@ const {
     icon="settings"
     @cancel="isOpen = false"
   >
-    <AppTabs v-model="activeTab" :options="tabs" />
+    <AtomsTabs v-model="activeTab" :options="tabs" />
 
     <div class="site-settings__content">
       <!-- 基本設定タブ (Organism) -->

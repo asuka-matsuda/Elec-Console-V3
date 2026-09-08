@@ -21,7 +21,7 @@ const activeTab = ref('users')
   <div class="portal-admin">
     <AppSectionHeader title="ポータル管理 (開発者向け)" icon="settings" />
 
-    <AppTabs v-model="activeTab" :options="ADMIN_TABS" />
+    <AtomsTabs v-model="activeTab" :options="ADMIN_TABS" />
 
     <div class="portal-admin__content">
       <PortalAdminUsersTab v-if="activeTab === 'users'" />
