@@ -173,6 +173,8 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 }
 
 .custom-select__value {
+  --glow-color: var(--theme-accent);
+
   cursor: pointer;
   user-select: none;
 
@@ -197,8 +199,6 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   }
 
   &:not(:disabled, .is-disabled) {
-    --glow-color: var(--theme-accent);
-
     &:hover {
       border-color: var(--glow-color);
       box-shadow: var(--shadow-glow-hover);
@@ -223,22 +223,10 @@ const getOptionClasses = (option: SelectOption, index: number) => [
       border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
       color: var(--glow-color);
 
-      &:hover {
-        border-color: var(--glow-color);
-        box-shadow: var(--shadow-glow-hover);
-      }
-
-      &:active {
-        border-color: var(--glow-color);
-        box-shadow: var(--shadow-glow-active);
-      }
-
       &.is-active,
       &:focus,
       &:focus-visible {
         border-color: var(--glow-color);
-        outline: none;
-        box-shadow: var(--shadow-glow-focus);
       }
     }
   }
@@ -266,19 +254,17 @@ const getOptionClasses = (option: SelectOption, index: number) => [
     color: color-mix(in srgb, var(--color-text-muted) 50%, transparent);
   }
 
-  &.is-active {
-    &::after {
-      transform: rotate(180deg);
-    }
+  &.is-active::after {
+    transform: rotate(180deg);
   }
 }
 
 .custom-select__dropdown {
-  --glow-color: color-mix(in srgb, var(--theme-accent) 20%, transparent);
+  --dropdown-border-color: var(--theme-accent);
 
   z-index: var(--z-index-select);
 
-  border: var(--border-width-base) solid var(--theme-accent);
+  border: var(--border-width-base) solid var(--dropdown-border-color);
   border-radius: var(--radius-sm);
 
   background-color: var(--surface-bg-solid);
@@ -288,19 +274,11 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   transition: var(--transition-base);
 
   .custom-select.is-error & {
-    --glow-color: color-mix(
-      in srgb,
-      var(--color-status-danger) 20%,
-      transparent
-    );
-
-    border-color: color-mix(
+    --dropdown-border-color: color-mix(
       in srgb,
       var(--color-status-danger) 50%,
       transparent
     );
-    box-shadow: var(--shadow-elevation-md);
-    transition: var(--transition-base);
   }
 }
 
@@ -337,7 +315,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   }
 
   &:not(:is(.is-disabled, .is-placeholder)) {
-    &:is(:hover, .is-focused) {
+    &:is(:hover, .is-focused, .is-selected) {
       color: var(--theme-accent);
       background-color: var(--color-selection-bg);
       transition: background-color var(--duration-fast) var(--ease-base);
@@ -345,9 +323,6 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 
     &.is-selected {
       font-weight: var(--font-weight-semibold);
-      color: var(--theme-accent);
-      background-color: var(--color-selection-bg);
-      transition: background-color var(--duration-fast) var(--ease-base);
     }
   }
 }
