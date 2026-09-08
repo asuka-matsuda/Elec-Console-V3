@@ -30,7 +30,9 @@ const selectTab = (option: TabOption<T>) => {
       :disabled="option.disabled"
       @click="selectTab(option)"
     >
-      {{ option.label }}
+      <slot name="tab" :option="option" :is-active="model === option.value">
+        {{ option.label }}
+      </slot>
     </button>
   </div>
 </template>

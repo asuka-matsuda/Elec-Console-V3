@@ -124,7 +124,9 @@ const getOptionClasses = (option: SelectOption, index: number) => [
       @click="toggleDropdown"
       @keydown="handleKeydown"
     >
-      <span class="flex-1 text-left truncate">{{ displayLabel }}</span>
+      <slot name="selected" :option="selectedOption" :label="displayLabel">
+        <span class="flex-1 text-left truncate">{{ displayLabel }}</span>
+      </slot>
     </button>
 
     <Teleport :to="teleportTarget">
@@ -148,7 +150,9 @@ const getOptionClasses = (option: SelectOption, index: number) => [
             :class="getOptionClasses(option, index)"
             @click="selectOption(option)"
           >
-            {{ option.label }}
+            <slot name="option" :option="option" :is-selected="model === option.value">
+              {{ option.label }}
+            </slot>
           </li>
         </ul>
       </transition>

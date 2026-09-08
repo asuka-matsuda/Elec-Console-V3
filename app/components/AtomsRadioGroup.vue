@@ -46,7 +46,9 @@ const updateValue = (value: T, disabled?: boolean) => {
         class="pointer-events-none absolute w-0 h-0 opacity-0"
         @change="updateValue(option.value, option.disabled)"
       />
-      {{ option.label }}
+      <slot name="option" :option="option" :is-selected="isSelected(option.value)">
+        {{ option.label }}
+      </slot>
     </label>
   </div>
 </template>
