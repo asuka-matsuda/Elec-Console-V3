@@ -70,7 +70,7 @@ const handleAddCable = () => {
 <template>
   <div class="rack-input">
     <!-- 強電／弱電 タブ切り替え -->
-    <AppRadioGroup
+    <AtomsRadioGroup
       v-model="inputs.mode"
       :options="rackModeOptions"
     />

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
- * AppRadioGroup
- * 複数の選択肢から1つを選択するための、セグメントコントロール風のラジオボタングループコンポーネント。
+ * AtomsRadioGroup
+ * [Atoms] 複数の選択肢から1つを選択するための、セグメントコントロール風のラジオボタングループコンポーネント。
  */
 import { computed, useId } from 'vue'
 
@@ -19,11 +19,11 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
 </script>
 
 <template>
-  <div class="segmented-control">
+  <div class="inline-flex shrink-0 w-max gap-0.5 p-0.5 segmented-control">
     <label
       v-for="option in options"
       :key="String(option.value)"
-      class="segmented-control__item"
+      class="relative inline-flex items-center justify-center py-1 px-3 segmented-control__item"
       :style="option.color ? { '--radio-color': option.color } : undefined"
     >
       <input
@@ -32,7 +32,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
         :name="groupName"
         :value="option.value"
         :disabled="option.disabled"
-        class="segmented-control__input"
+        class="pointer-events-none absolute w-0 h-0 opacity-0"
       />
       {{ option.label }}
     </label>
@@ -43,40 +43,16 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
 .segmented-control {
   --radio-color: var(--theme-accent);
 
-  display: inline-flex;
-  flex-shrink: 0;
-  gap: var(--space-0-5);
-
-  width: max-content;
-  padding: var(--space-0-5);
   border: var(--border-width-base) solid var(--color-border);
   border-radius: var(--radius-sm);
-
   box-shadow: none;
-
-  &__input {
-    pointer-events: none;
-
-    position: absolute;
-
-    width: 0;
-    height: 0;
-
-    opacity: 0;
-  }
 
   &__item {
     cursor: pointer;
     user-select: none;
 
-    position: relative;
     z-index: 1;
 
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-
-    padding: var(--space-1) var(--space-3);
     border: var(--border-width-base) solid transparent;
     border-radius: var(--radius-sm);
 

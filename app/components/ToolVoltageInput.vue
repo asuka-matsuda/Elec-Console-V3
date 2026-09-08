@@ -19,7 +19,7 @@ defineProps<{
 
 <template>
   <div class="voltage-input">
-    <AppRadioGroup v-model="form.mode" :options="modeOptions" />
+    <AtomsRadioGroup v-model="form.mode" :options="modeOptions" />
 
     <div class="voltage-input__grid">
       <template v-for="field in formFields" :key="field.id">
