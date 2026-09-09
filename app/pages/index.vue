@@ -98,11 +98,37 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
     </div>
 
     <aside class="dashboard-aside">
-      <OrganismsInfoAside
-        :announcements="dashboardData?.announcements"
-        :history="dashboardData?.history"
-        :pending="isDashboardPending"
-      />
+      <div class="flex flex-col gap-[var(--space-section-gap)]">
+        <section class="flex flex-col gap-[var(--space-panel-gap)]">
+          <MoleculesSectionHeader title="お知らせ" icon="bell" size="md" />
+          <MoleculesInfoCard
+            :items="dashboardData?.announcements"
+            :pending="isDashboardPending"
+            loading-text="お知らせを読み込み中..."
+            empty-text="現在新しいお知らせはありません"
+          />
+        </section>
+
+        <section class="flex flex-col gap-[var(--space-panel-gap)]">
+          <MoleculesSectionHeader title="更新履歴" icon="clock" size="md" />
+          <MoleculesInfoCard
+            :items="dashboardData?.history"
+            :pending="isDashboardPending"
+            loading-text="更新履歴を読み込み中..."
+            empty-text="現在更新履歴はありません"
+          >
+            <template #badge="{ item }">
+              <AtomsBadge
+                v-if="item.version"
+                :color="item.status === 'success' ? 'var(--color-status-success)' : 'var(--color-text-muted)'"
+                class="shrink-0"
+              >
+                {{ item.version }}
+              </AtomsBadge>
+            </template>
+          </MoleculesInfoCard>
+        </section>
+      </div>
     </aside>
   </div>
 </template>

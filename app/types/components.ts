@@ -84,9 +84,17 @@ export interface OrganismsFooterProps {
   text?: string
 }
 
-export interface OrganismsInfoAsideProps {
-  announcements?: AnnouncementItem[]
-  history?: HistoryItem[]
+export interface InfoCardItem {
+  id?: string | number
+  date: string
+  title: string
+  desc?: string
+}
+
+export interface MoleculesInfoCardProps<T extends InfoCardItem = InfoCardItem> {
+  items?: T[]
   pending?: boolean
+  loadingText?: string
+  emptyText?: string
   maxCount?: number
 }
