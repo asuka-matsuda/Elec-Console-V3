@@ -1,21 +1,18 @@
 <script setup lang="ts">
 /**
- * AppGlobalNav
- * アプリケーションのグローバルナビゲーション（サイドバーメニュー）を表示するコンポーネントです。
+ * OrganismsGlobalNav
+ * [Organisms] アプリケーションのグローバルナビゲーション（ドロワーサイドバー）。
+ * オーバーレイ、ロゴ・閉じるボタンヘッダー、セクション別メニューリンク（ホバー・アクティブ発光演出）を表示します。
  */
 import { onMounted, onUnmounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { NuxtLink } from '#components'
-import type { MenuSection } from '~/constants/data/menuData'
+import type { OrganismsGlobalNavProps } from '~/types/components'
 
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 
-defineProps<Props>()
-
-interface Props {
-  menuData: MenuSection[]
-}
+defineProps<OrganismsGlobalNavProps>()
 
 const closeSidebar = () => {
   isOpen.value = false
@@ -41,56 +38,59 @@ onMounted(() => {
 
 <template>
   <div
-    class="overlay"
+    class="fixed inset-0 z-[var(--z-index-sidebar-overlay)] overlay"
     :class="{ 'is-open': isOpen }"
     @click="closeSidebar"
   />
 
-  <aside class="global-nav" :class="{ 'is-open': isOpen }">
-    <div class="header">
+  <aside
+    class="fixed top-0 left-0 z-[var(--z-index-sidebar)] flex flex-col w-[var(--sidebar-width)] h-[100dvh] global-nav"
+    :class="{ 'is-open': isOpen }"
+  >
+    <header class="flex items-center justify-between h-16 px-[var(--space-4)] header">
       <AtomsLogo @click="closeSidebar" />
       <MoleculesIconButton
         name="x"
         size="sm"
         @click="closeSidebar"
       />
-    </div>
+    </header>
 
-    <nav class="nav">
+    <nav class="flex-1 overflow-y-auto flex flex-col gap-[var(--space-4)] p-[var(--space-3)] nav">
       <section
         v-for="section in menuData"
         :key="section.id || section.heading || section.globalNavHeading"
-        class="section"
+        class="flex flex-col gap-[var(--space-1)] section"
         :style="{
           '--section-accent': `var(--color-category-${section.accent || 'main'})`,
         }"
       >
         <div
           v-if="section.globalNavHeading || section.heading"
-          class="flex flex-col gap-1 section-title-wrap"
+          class="flex flex-col gap-1 py-[var(--space-1)] px-[var(--space-3)]"
         >
-          <h3 class="section-title">
+          <h3>
             {{ section.globalNavHeading || section.heading }}
           </h3>
           <AtomsDivider color="var(--section-accent)" type="fade-side" />
         </div>
 
-        <ul class="list">
+        <ul class="m-0 p-0 flex flex-col gap-[var(--space-2)] list-none">
           <li
             v-for="item in section.items"
             :key="item.href"
-            class="nav-item"
+            class="flex m-0 p-0"
           >
             <component
               :is="item.disabled ? 'button' : NuxtLink"
               :to="item.disabled ? undefined : item.href"
               :type="item.disabled ? 'button' : undefined"
               :disabled="item.disabled || undefined"
-              class="nav-link"
+              class="w-full flex items-center gap-[var(--space-2)] py-[var(--space-1)] px-[var(--space-3)] nav-link"
               @click="item.disabled ? undefined : closeSidebar()"
             >
               <AtomsIcon :name="item.icon" size="md" />
-              <span class="nav-link-text">{{ item.text }}</span>
+              <span>{{ item.text }}</span>
             </component>
           </li>
         </ul>
@@ -100,18 +100,28 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
+.overlay {
+  pointer-events: none;
+
+  visibility: hidden;
+  opacity: 0;
+  background-color: var(--color-overlay-dark);
+  backdrop-filter: blur(var(--blur-sm));
+
+  transition:
+    opacity var(--duration-slow) var(--ease-base),
+    visibility var(--duration-slow) var(--ease-base);
+
+  &.is-open {
+    pointer-events: auto;
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
 .global-nav {
-  position: fixed;
-  z-index: var(--z-index-sidebar);
-  top: 0;
-  left: 0;
   transform: translateX(-100%);
 
-  display: flex;
-  flex-direction: column;
-
-  width: var(--sidebar-width);
-  height: 100dvh;
   border-right: var(--border-width-base) solid var(--color-border);
 
   background-color: var(--surface-bg-solid);
@@ -125,64 +135,24 @@ onMounted(() => {
 }
 
 .header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  height: 64px;
-  padding: 0 var(--space-4);
   border-bottom: var(--border-width-base) solid var(--color-border);
-
   background-color: var(--surface-bg-elevated);
 }
 
 .nav {
   --scrollbar-size: var(--space-2);
-
-  overflow-y: auto;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: var(--space-4);
-
-  padding: var(--space-3);
 }
 
 .section {
   --glow-color: var(--section-accent);
 
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
-.section-title-wrap {
-  padding: var(--space-1) var(--space-3);
-}
-
-.section-title {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  color: var(--color-text-main);
-  letter-spacing: var(--tracking-wider);
-}
-
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-
-  margin: 0;
-  padding: 0;
-
-  list-style: none;
-}
-
-.nav-item {
-  display: flex;
-  margin: 0;
-  padding: 0;
+  h3 {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    color: var(--color-text-main);
+    letter-spacing: var(--tracking-wider);
+  }
 }
 
 .nav-link {
@@ -195,12 +165,6 @@ onMounted(() => {
     inset 0 0 2px color-mix(in srgb, var(--section-accent) 40%, transparent);
   --nav-icon-glow: drop-shadow(0 0 var(--blur-sm) var(--section-accent));
 
-  display: flex;
-  gap: var(--space-2);
-  align-items: center;
-
-  width: 100%;
-  padding: var(--space-1) var(--space-3);
   border: var(--border-width-base) solid transparent;
   border-radius: var(--radius-sm);
 
@@ -212,7 +176,7 @@ onMounted(() => {
 
   transition: var(--transition-base);
 
-  &-text {
+  span {
     word-break: keep-all;
     overflow-wrap: anywhere;
   }
@@ -261,46 +225,21 @@ onMounted(() => {
     display: inline-flex;
     gap: var(--space-1);
     align-items: center;
-  }
 
-  &.router-link-active::after {
-    content: "";
+    &::after {
+      content: "";
 
-    display: inline-block;
+      display: inline-block;
 
-    width: var(--space-1);
-    height: var(--font-size-base);
+      width: var(--space-1);
+      height: var(--font-size-base);
 
-    vertical-align: middle;
+      vertical-align: middle;
 
-    background-color: currentcolor;
+      background-color: currentcolor;
 
-    animation: ui-cursor-blink 1s step-end infinite;
-  }
-}
-
-.overlay {
-  pointer-events: none;
-
-  position: fixed;
-  z-index: var(--z-index-sidebar-overlay);
-  inset: 0;
-
-  display: block;
-
-  visibility: hidden;
-  opacity: 0;
-  background-color: var(--color-overlay-dark);
-  backdrop-filter: blur(var(--blur-sm));
-
-  transition:
-    opacity var(--duration-slow) var(--ease-base),
-    visibility var(--duration-slow) var(--ease-base);
-
-  &.is-open {
-    pointer-events: auto;
-    visibility: visible;
-    opacity: 1;
+      animation: ui-cursor-blink 1s step-end infinite;
+    }
   }
 }
 </style>

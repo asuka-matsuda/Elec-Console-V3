@@ -98,3 +98,8 @@ export interface MoleculesInfoCardProps<T extends InfoCardItem = InfoCardItem> {
   emptyText?: string
   maxCount?: number
 }
+
+export interface OrganismsGlobalNavProps {
+  menuData: import('~/constants/data/menuData').MenuSection[]
+}
+

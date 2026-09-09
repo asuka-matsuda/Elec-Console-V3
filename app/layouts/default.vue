@@ -13,7 +13,7 @@ const { items: breadcrumbs, accent: breadcrumbAccent } = useBreadcrumbs()
       '--theme-accent': `var(--color-category-${breadcrumbAccent || 'main'})`,
     }"
   >
-    <AppGlobalNav v-model:is-open="isSidebarOpen" :menu-data="menuData" />
+    <OrganismsGlobalNav v-model:is-open="isSidebarOpen" :menu-data="menuData" />
 
     <div class="main-container">
       <OrganismsHeader
