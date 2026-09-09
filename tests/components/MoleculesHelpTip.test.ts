@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import AtomsPopover from '../../app/components/common/atoms/Popover.vue'
+import MoleculesHelpTip from '../../app/components/common/molecules/HelpTip.vue'
 
-describe('AtomsPopover.vue', () => {
+describe('MoleculesHelpTip.vue', () => {
   const commonStubs = {
     AtomsIcon: {
       props: ['name'],
@@ -11,8 +11,8 @@ describe('AtomsPopover.vue', () => {
     },
   }
 
-  it('初期状態ではポップオーバーパネルが非表示であること', () => {
-    const wrapper = mount(AtomsPopover, {
+  it('初期状態ではヘルプチップパネルが非表示であること', () => {
+    const wrapper = mount(MoleculesHelpTip, {
       props: {
         text: 'テスト解説文',
       },
@@ -26,7 +26,7 @@ describe('AtomsPopover.vue', () => {
   })
 
   it('クリックで開閉トグルすること', async () => {
-    const wrapper = mount(AtomsPopover, {
+    const wrapper = mount(MoleculesHelpTip, {
       props: {
         text: 'テスト解説文',
       },
@@ -47,8 +47,8 @@ describe('AtomsPopover.vue', () => {
     expect(wrapper.find('[role="tooltip"]').exists()).toBe(false)
   })
 
-  it('helpId を指定するとマスタからタイトル・本文・参考規格が自動解決されること', async () => {
-    const wrapper = mount(AtomsPopover, {
+  it('helpId を指定するとマスタから解説文・参考規格が自動解決されること', async () => {
+    const wrapper = mount(MoleculesHelpTip, {
       props: {
         helpId: 'marginRate',
       },
@@ -61,30 +61,12 @@ describe('AtomsPopover.vue', () => {
     await button.trigger('click')
 
     expect(wrapper.find('[role="tooltip"]').exists()).toBe(true)
-    expect(wrapper.text()).toContain('余裕係数')
     expect(wrapper.text()).toContain('内線規程に基づき')
     expect(wrapper.text()).toContain('内線規程・JEAC 8001')
   })
 
-  it('title を直接指定した場合、タイトルが表示されること', async () => {
-    const wrapper = mount(AtomsPopover, {
-      props: {
-        title: 'カスタムタイトル',
-        text: 'カスタム本文',
-      },
-      global: {
-        stubs: commonStubs,
-      },
-    })
-
-    await wrapper.find('button').trigger('click')
-
-    expect(wrapper.text()).toContain('カスタムタイトル')
-    expect(wrapper.text()).toContain('カスタム本文')
-  })
-
   it('カスタムスロットが正しく描画されること', async () => {
-    const wrapper = mount(AtomsPopover, {
+    const wrapper = mount(MoleculesHelpTip, {
       slots: {
         default: '<div class="custom-content">カスタムスロットの中身</div>',
       },

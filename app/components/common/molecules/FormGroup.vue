@@ -41,7 +41,7 @@ withDefaults(defineProps<Props>(), {
       >
         {{ requiredLabel }}
       </AtomsBadge>
-      <AtomsPopover
+      <MoleculesHelpTip
         v-if="helpId || helpTip"
         :help-id="helpId"
         :text="helpTip"
