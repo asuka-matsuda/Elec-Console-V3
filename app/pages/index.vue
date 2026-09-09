@@ -98,7 +98,7 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
     </div>
 
     <aside class="dashboard-aside">
-      <AppInfoAside
+      <OrganismsInfoAside
         :announcements="dashboardData?.announcements"
         :history="dashboardData?.history"
         :pending="isDashboardPending"

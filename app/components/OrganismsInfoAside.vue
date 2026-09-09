@@ -1,25 +1,19 @@
 <script setup lang="ts">
+/**
+ * OrganismsInfoAside
+ * [Organisms] ダッシュボード等のサイドバーに配置されるお知らせ・更新履歴の表示コンポーネント。
+ * セクション見出し（MoleculesSectionHeader）とパネル（AtomsPanel）、バッジ（AtomsBadge）、アイコン（AtomsIcon）を内包します。
+ */
 import { computed } from 'vue'
 
-import type { AnnouncementItem, HistoryItem } from '~/types/components'
-
-/**
- * AppInfoAside
- * お知らせや更新履歴などのインフォメーションを表示するコンポーネント
- */
-interface Props {
-  announcements?: AnnouncementItem[]
-  history?: HistoryItem[]
-  pending?: boolean
-  maxCount?: number
-}
+import type { OrganismsInfoAsideProps } from '~/types/components'
 
 const {
   announcements = [],
   history = [],
   pending = false,
   maxCount = 4,
-} = defineProps<Props>()
+} = defineProps<OrganismsInfoAsideProps>()
 
 interface InfoItemDisplay {
   key: string
@@ -76,11 +70,18 @@ const sections = computed<SectionConfig[]>(() => [
 </script>
 
 <template>
-  <div class="info-aside">
-    <section v-for="section in sections" :key="section.title">
+  <div class="flex flex-col gap-[var(--space-section-gap)] info-aside">
+    <section
+      v-for="section in sections"
+      :key="section.title"
+      class="flex flex-col gap-[var(--space-panel-gap)]"
+    >
       <MoleculesSectionHeader :title="section.title" :icon="section.icon" size="md" />
 
-      <AtomsPanel v-if="pending" class="status">
+      <AtomsPanel
+        v-if="pending"
+        class="flex flex-row items-center justify-center gap-[var(--space-2)] text-[var(--font-size-xs)] status-panel"
+      >
         <AtomsIcon name="loader" class="u-spin" size="sm" />
         <span>{{ section.loadingText }}</span>
       </AtomsPanel>
@@ -89,20 +90,23 @@ const sections = computed<SectionConfig[]>(() => [
         <AtomsPanel
           v-for="item in section.items"
           :key="item.key"
-          class="item"
+          class="flex flex-col gap-[var(--space-1)] info-item"
         >
-          <header>
-            <AtomsBadge v-if="item.badge" :color="item.badge.color">
+          <header class="flex items-center gap-[var(--space-1-5)] text-[var(--font-size-sm)]">
+            <AtomsBadge v-if="item.badge" :color="item.badge.color" class="shrink-0">
               {{ item.badge.text }}
             </AtomsBadge>
-            <strong>{{ item.title }}</strong>
+            <strong class="min-w-0 font-medium tracking-tight">{{ item.title }}</strong>
           </header>
-          <time>{{ item.date }}</time>
-          <p v-if="item.desc">{{ item.desc }}</p>
+          <time class="font-mono text-[var(--font-size-2xs)] tabular-nums info-time">{{ item.date }}</time>
+          <p v-if="item.desc" class="text-[var(--font-size-xs)] leading-relaxed info-desc">{{ item.desc }}</p>
         </AtomsPanel>
       </template>
 
-      <AtomsPanel v-else class="status">
+      <AtomsPanel
+        v-else
+        class="flex flex-row items-center justify-center gap-[var(--space-2)] text-[var(--font-size-xs)] status-panel"
+      >
         <AtomsIcon name="inbox" size="sm" />
         <span>{{ section.emptyText }}</span>
       </AtomsPanel>
@@ -111,46 +115,15 @@ const sections = computed<SectionConfig[]>(() => [
 </template>
 
 <style scoped lang="scss">
-.info-aside {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-section-gap);
+.info-time {
+  color: var(--color-text-muted);
+}
 
-  section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-panel-gap);
-  }
+.info-desc {
+  color: var(--color-text-secondary);
+}
 
-  .item {
-    gap: var(--space-1);
-
-    header {
-      display: flex;
-      gap: var(--space-1-5);
-      align-items: center;
-      font-size: var(--font-size-sm);
-    }
-
-    time {
-      font-size: var(--font-size-2xs);
-      color: var(--color-text-muted);
-    }
-
-    p {
-      font-size: var(--font-size-xs);
-      color: var(--color-text-secondary);
-    }
-  }
-
-  .status {
-    flex-direction: row;
-    gap: var(--space-2);
-    align-items: center;
-    justify-content: center;
-
-    font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
-  }
+.status-panel {
+  color: var(--color-text-muted);
 }
 </style>

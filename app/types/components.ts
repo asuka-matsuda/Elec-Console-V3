@@ -84,3 +84,9 @@ export interface OrganismsFooterProps {
   text?: string
 }
 
+export interface OrganismsInfoAsideProps {
+  announcements?: AnnouncementItem[]
+  history?: HistoryItem[]
+  pending?: boolean
+  maxCount?: number
+}
