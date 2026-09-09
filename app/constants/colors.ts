@@ -7,10 +7,11 @@ export const DEFAULT_COLOR = '#2f81f7'
 
 export const DEFAULT_COLOR_PRESETS: ColorPreset[] = [
   { name: 'GitHub Blue (プライマリ)', value: DEFAULT_COLOR },
-  { name: 'GitHub Green (現場管理)', value: '#3fb950' },
+  { name: 'Forest Green (現場管理)', value: '#3ea26c' },
   { name: 'GitHub Cyan (計算ツール)', value: '#39c5cf' },
   { name: 'GitHub Purple (データベース)', value: '#a371f7' },
   { name: 'GitHub Magenta (用語解説)', value: '#ea60a7' },
+  { name: 'Neon Green (合格判定)', value: '#2bf068' },
   { name: 'GitHub Yellow (アテンション)', value: '#d29922' },
   { name: 'GitHub Red (デンジャー)', value: '#f85149' },
   { name: 'GitHub Coral (コーラル)', value: '#f778ba' },
