@@ -141,80 +141,77 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <span
+  <!-- トリガーアイコンボタン（不要なラッパーspanを撤廃） -->
+  <button
     ref="triggerRef"
-    class="relative inline-flex items-center text-left leading-none"
+    type="button"
+    class="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full text-[var(--color-text-muted)] hover:text-[var(--theme-accent)] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--theme-accent)] cursor-pointer"
+    :aria-label="ariaLabel"
+    :aria-expanded="isOpen"
+    tabindex="0"
+    @click="toggle"
     @mouseenter="show"
     @mouseleave="hide"
     @focusin="show"
     @focusout="hide"
   >
-    <!-- トリガーアイコンボタン -->
-    <button
-      type="button"
-      class="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full text-[var(--color-text-muted)] hover:text-[var(--theme-accent)] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--theme-accent)] cursor-pointer"
-      :aria-label="ariaLabel"
-      :aria-expanded="isOpen"
-      tabindex="0"
-      @click="toggle"
-    >
-      <AtomsIcon name="help-circle" size="sm" class="w-3.5 h-3.5" />
-    </button>
+    <AtomsIcon name="help-circle" size="sm" class="w-3.5 h-3.5" />
+  </button>
 
-    <!-- 最前面にTeleportされるコンパクト吹き出しツールチップ -->
-    <Teleport to="body">
-      <transition name="helptip-fade">
+  <!-- 最前面にTeleportされるコンパクト吹き出しツールチップ -->
+  <Teleport to="body">
+    <transition name="helptip-fade">
+      <div
+        v-if="isOpen && (displayText || $slots.default)"
+        ref="panelRef"
+        class="helptip-panel fixed z-[9999] w-[200px] px-2.5 py-2 leading-[1.4] whitespace-normal pointer-events-none sm:pointer-events-auto"
+        :class="[position.isTopPlacement ? '-translate-y-full' : '']"
+        :style="{
+          top: `${position.top}px`,
+          left: `${position.left}px`,
+        }"
+        role="tooltip"
+        @mouseenter="show"
+        @mouseleave="hide"
+      >
+        <!-- アロー（極小矢印） -->
         <div
-          v-if="isOpen && (displayText || $slots.default)"
-          ref="panelRef"
-          class="helptip-panel fixed z-[9999] w-[200px] px-2.5 py-2 pointer-events-none sm:pointer-events-auto"
-          :class="[position.isTopPlacement ? '-translate-y-full' : '']"
-          :style="{
-            top: `${position.top}px`,
-            left: `${position.left}px`,
-          }"
-          role="tooltip"
-          @mouseenter="show"
-          @mouseleave="hide"
+          class="arrow absolute w-1.5 h-1.5 rotate-45"
+          :style="{ left: `${position.arrowLeft}px` }"
+          :class="[
+            position.isTopPlacement
+              ? 'bottom-[-4px] border-t-0 border-l-0'
+              : 'top-[-4px] border-b-0 border-r-0',
+          ]"
+        />
+
+        <!-- 解説本文（ラッパーdivを排除し直下へ） -->
+        <slot :help="resolvedHelp">
+          {{ displayText }}
+        </slot>
+
+        <!-- 準拠規格バッジ -->
+        <div
+          v-if="displayReference"
+          class="helptip-reference mt-1.5 pt-1 flex items-center justify-between"
         >
-          <!-- アロー（極小矢印） -->
-          <div
-            class="arrow absolute w-1.5 h-1.5 rotate-45"
-            :style="{ left: `${position.arrowLeft}px` }"
-            :class="[
-              position.isTopPlacement
-                ? 'bottom-[-4px] border-t-0 border-l-0'
-                : 'top-[-4px] border-b-0 border-r-0',
-            ]"
-          />
-
-          <!-- 解説本文（極小フォント 11px） -->
-          <div class="helptip-content leading-[1.4] whitespace-normal">
-            <slot :help="resolvedHelp">
-              {{ displayText }}
-            </slot>
-          </div>
-
-          <!-- 準拠規格バッジ -->
-          <div
-            v-if="displayReference"
-            class="helptip-reference mt-1.5 pt-1 flex items-center justify-between"
-          >
-            <span class="helptip-reference__label">規格:</span>
-            <span class="helptip-reference__value">
-              {{ displayReference }}
-            </span>
-          </div>
+          <span class="label">規格:</span>
+          <span class="value">
+            {{ displayReference }}
+          </span>
         </div>
-      </transition>
-    </Teleport>
-  </span>
+      </div>
+    </transition>
+  </Teleport>
 </template>
 
 <style scoped lang="scss">
 .helptip-panel {
   border: var(--border-width-base) solid var(--color-border);
   border-radius: var(--radius-sm);
+
+  font-size: var(--font-size-2xs);
+  color: var(--color-text-secondary);
 
   // チップとして引き締まった濃色ソリッド背景
   background-color: color-mix(in srgb, var(--color-main-bg) 92%, black);
@@ -227,20 +224,14 @@ onBeforeUnmount(() => {
   background-color: color-mix(in srgb, var(--color-main-bg) 92%, black);
 }
 
-.helptip-content {
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-secondary);
-}
-
 .helptip-reference {
   border-top: var(--border-width-base) solid var(--color-border-subtle);
-  font-size: var(--font-size-2xs);
 
-  &__label {
+  .label {
     color: var(--color-text-muted);
   }
 
-  &__value {
+  .value {
     font-weight: var(--font-weight-medium);
     color: var(--theme-accent);
   }
