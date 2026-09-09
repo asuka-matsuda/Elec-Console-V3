@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import MoleculesResultBox from '../../app/components/MoleculesResultBox.vue'
+import MoleculesResultBox from '../../app/components/common/molecules/ResultBox.vue'
 
 describe('MoleculesResultBox.vue', () => {
   it('renders title and default slot value', () => {

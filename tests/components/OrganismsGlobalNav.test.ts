@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 
-import OrganismsGlobalNav from '../../app/components/OrganismsGlobalNav.vue'
+import OrganismsGlobalNav from '../../app/components/common/organisms/GlobalNav.vue'
 import type { MenuSection } from '../../app/constants/data/menuData'
 
 vi.mock('vue-router', () => ({

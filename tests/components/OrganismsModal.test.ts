@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import OrganismsModal from '../../app/components/OrganismsModal.vue'
+import OrganismsModal from '../../app/components/common/organisms/Modal.vue'
 
 describe('OrganismsModal.vue', () => {
   beforeEach(() => {

@@ -1,14 +1,13 @@
 <script setup lang="ts">
 /**
- * AtomsPortalKairoSymbol
- *
- * 回路記号（丸・二重丸・楕円・二重楕円・四角・二重四角）を読み取り、
- * 背景透明のSVG枠線として回路番号の周囲・背面に描画するAtomコンポーネントです。
+ * KairoSymbol
+ * [Portal Atom] 回路記号（丸・二重丸・楕円・二重楕円・四角・二重四角）を読み取り、
+ * 背景透明のSVG枠線として回路番号の周囲・背面に描画するコンポーネントです。
  * 親要素の文字サイズ（font-size）に自動追従します。
  */
 import { computed } from 'vue'
 
-export interface AtomsPortalKairoSymbolProps {
+export interface PortalKairoSymbolProps {
   kigou?: string | null
   bangou?: string | number | null
 }
@@ -19,7 +18,7 @@ interface SymbolPaths {
 }
 
 const props = withDefaults(
-  defineProps<AtomsPortalKairoSymbolProps>(),
+  defineProps<PortalKairoSymbolProps>(),
   {
     kigou: null,
     bangou: '',

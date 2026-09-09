@@ -1,10 +1,8 @@
 <script setup lang="ts">
 /**
- * AtomsLogo
- * アプリケーションのロゴを表示し、クリック時にホームへ遷移またはイベントを発火するコンポーネント。
+ * Logo
+ * [Atom] アプリケーションのロゴを表示し、クリック時にホームへ遷移またはイベントを発火するコンポーネント。
  */
-import AtomsIcon from './AtomsIcon.vue'
-
 const emit = defineEmits<{
   (e: 'click'): void
 }>()

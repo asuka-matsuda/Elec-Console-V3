@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import OrganismsFooter from '../../app/components/OrganismsFooter.vue'
+import OrganismsFooter from '../../app/components/common/organisms/Footer.vue'
 
 describe('OrganismsFooter.vue', () => {
   it('renders default copyright with current year', () => {

@@ -1,6 +1,4 @@
-﻿<script setup lang="ts">
-import AtomsButton from '~/components/AtomsButton.vue'
-
+<script setup lang="ts">
 defineProps<{
   title: string
   currentView: 'dayGridMonth' | 'listMonth'

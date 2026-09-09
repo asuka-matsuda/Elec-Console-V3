@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import MoleculesTable from '../../app/components/MoleculesTable.vue'
+import MoleculesTable from '../../app/components/common/molecules/Table.vue'
 
 describe('MoleculesTable.vue', () => {
   const sampleColumns = [
