@@ -72,7 +72,7 @@ describe('ToolRackInput (app/components/tool/RackInput.vue)', () => {
     const inputs = ref(createMockInputs())
     const wrapper = mount(RackInput, {
       props: {
-        modelValue: inputs.value,
+        'modelValue': inputs.value,
         'onUpdate:modelValue': (val: RackInputs) => {
           inputs.value = val
         },
@@ -100,7 +100,7 @@ describe('ToolRackInput (app/components/tool/RackInput.vue)', () => {
     const inputs = ref(createMockInputs({ mode: 'strong' }))
     const wrapper = mount(RackInput, {
       props: {
-        modelValue: inputs.value,
+        'modelValue': inputs.value,
         'onUpdate:modelValue': (val: RackInputs) => {
           inputs.value = val
         },
@@ -111,6 +111,7 @@ describe('ToolRackInput (app/components/tool/RackInput.vue)', () => {
     })
 
     const addButton = wrapper.findAll('button').find(b => b.text().includes('強電ケーブルを追加'))
+
     expect(addButton).toBeDefined()
     await addButton?.trigger('click')
 
@@ -122,7 +123,7 @@ describe('ToolRackInput (app/components/tool/RackInput.vue)', () => {
     const inputs = ref(createMockInputs({ mode: 'weak' }))
     const wrapper = mount(RackInput, {
       props: {
-        modelValue: inputs.value,
+        'modelValue': inputs.value,
         'onUpdate:modelValue': (val: RackInputs) => {
           inputs.value = val
         },
@@ -137,6 +138,7 @@ describe('ToolRackInput (app/components/tool/RackInput.vue)', () => {
     expect(wrapper.text()).toContain('弱電ケーブルを追加')
 
     const addButton = wrapper.findAll('button').find(b => b.text().includes('弱電ケーブルを追加'))
+
     await addButton?.trigger('click')
 
     expect(wrapper.emitted('add-weak-cable')).toBeTruthy()
@@ -147,7 +149,7 @@ describe('ToolRackInput (app/components/tool/RackInput.vue)', () => {
     const inputs = ref(createMockInputs({ mode: 'strong' }))
     const wrapper = mount(RackInput, {
       props: {
-        modelValue: inputs.value,
+        'modelValue': inputs.value,
         'onUpdate:modelValue': (val: RackInputs) => {
           inputs.value = val
         },
@@ -159,6 +161,7 @@ describe('ToolRackInput (app/components/tool/RackInput.vue)', () => {
 
     // テーブル内の最初の削除ボタンをクリック
     const deleteButtons = wrapper.findAll('button[aria-label="削除"]')
+
     expect(deleteButtons.length).toBe(2)
     await deleteButtons[0].trigger('click')
 
@@ -175,7 +178,7 @@ describe('ToolRackInput (app/components/tool/RackInput.vue)', () => {
     )
     const wrapper = mount(RackInput, {
       props: {
-        modelValue: inputs.value,
+        'modelValue': inputs.value,
         'onUpdate:modelValue': (val: RackInputs) => {
           inputs.value = val
         },
@@ -186,6 +189,7 @@ describe('ToolRackInput (app/components/tool/RackInput.vue)', () => {
     })
 
     const deleteButton = wrapper.find('button[aria-label="削除"]')
+
     expect(deleteButton.attributes('disabled')).toBeDefined()
   })
 })

@@ -3,18 +3,24 @@
  * MoleculesFormGroup
  * [Molecules] フォームのラベル、入力項目、エラーメッセージ、ヘルプテキストをグループ化して表示するコンポーネント。
  */
+import type { HelpId } from '~/constants/helpConstants'
+
 interface Props {
   label?: string
   required?: boolean
   requiredLabel?: string
   error?: string
   help?: string
+  helpId?: HelpId
+  helpTip?: string
   forId?: string
 }
 
 withDefaults(defineProps<Props>(), {
   required: false,
   requiredLabel: 'REQUIRED',
+  helpId: undefined,
+  helpTip: undefined,
 })
 </script>
 
@@ -22,12 +28,12 @@ withDefaults(defineProps<Props>(), {
   <div class="flex flex-col gap-2 w-full form-group">
     <!-- ラベル領域 -->
     <label
-      v-if="label"
+      v-if="label || $slots.label"
       :for="forId"
       class="flex items-center gap-2 select-none cursor-pointer"
     >
       <span class="inline-flex items-center gap-1 label-text">
-        {{ label }}
+        <slot name="label">{{ label }}</slot>
       </span>
       <AtomsBadge
         v-if="required"
@@ -35,6 +41,11 @@ withDefaults(defineProps<Props>(), {
       >
         {{ requiredLabel }}
       </AtomsBadge>
+      <AtomsPopover
+        v-if="helpId || helpTip"
+        :help-id="helpId"
+        :text="helpTip"
+      />
     </label>
 
     <!-- コントロール領域 -->
