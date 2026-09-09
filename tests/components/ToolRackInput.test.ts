@@ -192,4 +192,32 @@ describe('ToolRackInput (app/components/tool/RackInput.vue)', () => {
 
     expect(deleteButton.attributes('disabled')).toBeDefined()
   })
+
+  it('ケーブル本数に応じて外径が動的に計算・表示されること', () => {
+    const inputs = ref(
+      createMockInputs({
+        mode: 'strong',
+        strongCablesUI: [
+          { id: 'cable-single', category: 'CV', cableIdx: 'idx_0', count: 1 },
+          { id: 'cable-multi', category: 'CV', cableIdx: 'idx_0', count: 3 },
+        ],
+      }),
+    )
+    const wrapper = mount(RackInput, {
+      props: {
+        'modelValue': inputs.value,
+        'onUpdate:modelValue': (val: RackInputs) => {
+          inputs.value = val
+        },
+      },
+      global: {
+        stubs: commonStubs,
+      },
+    })
+
+    // 1行目 (count=1): 単体外径のみ
+    // 2行目 (count=3): 3本分の合計外径と (φ...×3) の内訳表記
+    const text = wrapper.text()
+    expect(text).toContain('×3')
+  })
 })

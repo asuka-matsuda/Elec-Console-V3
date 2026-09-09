@@ -13,7 +13,7 @@ import { mapFormToRackCalcInputs } from '~/utils/tools/rack/rackMapper'
 
 const defaultInputs: RackInputs = {
   mode: 'strong',
-  rackHeight: null,
+  rackHeight: 100,
   otherWidth: null,
   marginRate: 1.2,
   cableSpacing: 10,

@@ -34,16 +34,23 @@ const currentCablesUI = computed(() =>
   inputs.value.mode === 'strong' ? inputs.value.strongCablesUI : inputs.value.weakCablesUI,
 )
 
-const getCableSpecText = (cableIdx: string): string => {
+const getSingleDiameter = (cableIdx: string): number => {
   const def = findCableByIndexString(cableIdx)
 
-  if (!def) return '---'
+  if (!def) return 0
 
-  const diameter = getEffectiveCableDiameter(def.diameter)
+  return getEffectiveCableDiameter(def.diameter)
+}
+
+const getCableSpecText = (cableIdx: string, count?: number | null): string => {
+  const diameter = getSingleDiameter(cableIdx)
 
   if (diameter <= 0) return '---'
 
-  return `φ${diameter.toFixed(1)}`
+  const n = count && count > 0 ? count : 1
+  const totalDiameter = diameter * n
+
+  return `φ${totalDiameter.toFixed(1)}`
 }
 
 // モード切替時にデフォルトパラメータを適応（カスタム値がなければ自動追従）
@@ -206,7 +213,17 @@ const handleRemoveCable = (id: string) => {
         </template>
 
         <template #cell-spec="{ row }">
-          {{ getCableSpecText(row.cableIdx) }}
+          <div class="flex flex-col items-end leading-tight">
+            <span class="font-medium font-mono text-[var(--color-text-main)]">
+              {{ getCableSpecText(row.cableIdx, row.count) }}
+            </span>
+            <span
+              v-if="row.count && row.count > 1 && getSingleDiameter(row.cableIdx) > 0"
+              class="text-[10px] text-[var(--color-text-muted)] font-mono whitespace-nowrap"
+            >
+              (φ{{ getSingleDiameter(row.cableIdx).toFixed(1) }}×{{ row.count }})
+            </span>
+          </div>
         </template>
 
         <template #cell-actions="{ row }">
