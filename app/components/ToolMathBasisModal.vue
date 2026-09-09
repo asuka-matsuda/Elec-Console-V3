@@ -61,7 +61,7 @@ const handleClose = () => {
 </script>
 
 <template>
-  <AppModal
+  <OrganismsModal
     v-model="activeOpen"
     :title="title || '計算根拠'"
     icon="book"
@@ -115,7 +115,7 @@ const handleClose = () => {
         閉じる
       </AtomsButton>
     </template>
-  </AppModal>
+  </OrganismsModal>
 </template>
 
 <style scoped lang="scss">

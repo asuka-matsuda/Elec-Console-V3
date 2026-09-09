@@ -319,7 +319,7 @@ const confirmResetImport = async () => {
     </AtomsPanel>
 
     <!-- 処理完了・件数確認モーダルダイアログ -->
-    <AppModal
+    <OrganismsModal
       v-model="isResultDialogOpen"
       :title="syncResultData?.title || '処理結果'"
       icon="check-circle"
@@ -344,7 +344,7 @@ const confirmResetImport = async () => {
           </AtomsBadge>
         </div>
       </div>
-    </AppModal>
+    </OrganismsModal>
   </div>
 </template>
 

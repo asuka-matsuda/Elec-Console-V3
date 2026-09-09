@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { watchEffect } from 'vue'
 
 import { useModal } from '~/composables/useModal'
@@ -28,7 +28,7 @@ if (import.meta.client) {
     <NuxtPage />
   </NuxtLayout>
 
-  <AppModal
+  <OrganismsModal
     v-model="isConfirmOpen"
     :title="confirmTitle"
     align="center"
@@ -48,5 +48,5 @@ if (import.meta.client) {
         {{ confirmBtnText }}
       </AtomsButton>
     </template>
-  </AppModal>
+  </OrganismsModal>
 </template>

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 /**
- * AppModal
- * ネイティブの dialog 要素を使用したモーダルコンポーネント。
+ * OrganismsModal
+ * [Organisms] ネイティブの dialog 要素を使用したモーダルダイアログ。
+ * AtomsPanel, MoleculesSectionHeader, AtomsButton を組み合わせた独立機能セクション。
  */
 import { onMounted, ref, watch } from 'vue'
 
@@ -92,13 +93,17 @@ onMounted(() => {
 <template>
   <dialog
     ref="dialogRef"
-    class="modal"
-    :class="size ? `modal--${size}` : ''"
+    class="modal w-[90vw] max-h-[90vh] m-auto p-0 border-none outline-none"
+    :class="{
+      'max-w-[420px]': size === 'sm',
+      'max-w-[540px]': size === 'md',
+      'max-w-[760px]': size === 'lg',
+    }"
     @close="onNativeClose"
     @click.self="close"
     @cancel.prevent="close"
   >
-    <AtomsPanel class="flex flex-col gap-4 modal__panel">
+    <AtomsPanel class="flex flex-1 flex-col gap-4 min-h-0 modal-panel">
       <MoleculesSectionHeader
         v-if="title"
         :title="title"
@@ -106,21 +111,21 @@ onMounted(() => {
         :variant="variant"
       />
       <div
-        class="modal__body"
-        :class="align ? `is-align-${align}` : undefined"
+        class="overflow-y-auto flex flex-1 flex-col gap-[var(--space-3)] min-h-0 modal-body"
+        :class="align === 'center' ? 'text-center' : undefined"
       >
-        <div v-if="errorMsg" class="modal__error">
+        <div v-if="errorMsg" class="px-[var(--space-3)] py-[var(--space-2)] modal-error">
           {{ errorMsg }}
         </div>
 
         <slot />
       </div>
 
-      <footer v-if="$slots.footer" class="flex items-center justify-end gap-2 modal__footer">
+      <footer v-if="$slots.footer" class="flex items-center justify-end gap-2">
         <slot name="footer" />
       </footer>
 
-      <footer v-else-if="submitFn" class="flex items-center justify-end gap-2 modal__footer">
+      <footer v-else-if="submitFn" class="flex items-center justify-end gap-2">
         <AtomsButton
           variant="secondary"
           :disabled="isSubmitting"
@@ -149,15 +154,7 @@ onMounted(() => {
   overflow: visible;
   display: none;
 
-  width: 90vw;
-  max-width: 540px;
-  max-height: 90vh;
-  margin: auto;
-  padding: 0;
-  border: none;
-
   opacity: 0;
-  outline: none;
 
   transition:
     opacity var(--duration-modal) var(--ease-smooth),
@@ -168,18 +165,6 @@ onMounted(() => {
   &:not([open]) {
     pointer-events: none;
     display: none;
-  }
-
-  &--sm {
-    max-width: 420px;
-  }
-
-  &--md {
-    max-width: 540px;
-  }
-
-  &--lg {
-    max-width: 760px;
   }
 
   &::backdrop {
@@ -215,32 +200,17 @@ onMounted(() => {
     }
   }
 
-  &__panel {
-    flex: 1;
-    min-height: 0;
+  .modal-panel {
     box-shadow: var(--shadow-modal);
   }
 
-  &__body {
+  .modal-body {
     --scrollbar-size: var(--space-2);
 
-    overflow-y: auto;
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: var(--space-3);
-
-    min-height: 0;
-
     font-size: var(--font-size-sm);
-
-    &.is-align-center {
-      text-align: center;
-    }
   }
 
-  &__error {
-    padding: var(--space-2) var(--space-3);
+  .modal-error {
     border: var(--border-width-base) solid color-mix(in srgb, var(--color-status-danger) 30%, transparent);
     border-radius: var(--radius-sm);
 

@@ -30,7 +30,7 @@ const {
 </script>
 
 <template>
-  <AppModal v-model="isOpen" title="予定種別の設定">
+  <OrganismsModal v-model="isOpen" title="予定種別の設定">
     <div class="type-settings">
       <p class="type-settings__lead">
         カレンダーに表示する予定種別とテーマカラーを設定します。
@@ -98,7 +98,7 @@ const {
         設定を保存
       </AtomsButton>
     </template>
-  </AppModal>
+  </OrganismsModal>
 </template>
 
 <style scoped lang="scss">

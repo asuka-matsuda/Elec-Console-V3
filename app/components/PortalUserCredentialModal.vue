@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { printUserCredential } from '~/utils/printUserCredential'
 
 const isOpen = defineModel<boolean>({ default: false })
@@ -27,7 +27,7 @@ const handleCopyPassword = () => {
 </script>
 
 <template>
-  <AppModal v-model="isOpen" title="ログイン情報の発行完了">
+  <OrganismsModal v-model="isOpen" title="ログイン情報の発行完了">
     <div class="user-credential-modal">
       <p class="user-credential-modal__desc">
         以下のログイン情報を作業員へお伝えください。<br />
@@ -68,7 +68,7 @@ const handleCopyPassword = () => {
       </AtomsButton>
       <AtomsButton variant="primary" @click="isOpen = false"> 閉じる </AtomsButton>
     </template>
-  </AppModal>
+  </OrganismsModal>
 </template>
 
 <style scoped lang="scss">

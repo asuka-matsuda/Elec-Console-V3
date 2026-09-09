@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { ref, watch } from 'vue'
 
 import { useAdminSites } from '~/composables/admin/useAdminSites'
@@ -32,7 +32,7 @@ const handleSave = async () => {
 </script>
 
 <template>
-  <AppModal
+  <OrganismsModal
     v-model="isOpen"
     title="現場アサイン管理"
     :submit-fn="handleSave"
@@ -51,7 +51,7 @@ const handleSave = async () => {
         />
       </MoleculesFormGroup>
     </template>
-  </AppModal>
+  </OrganismsModal>
 </template>
 
 <style scoped lang="scss">

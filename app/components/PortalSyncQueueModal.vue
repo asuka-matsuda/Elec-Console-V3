@@ -71,7 +71,7 @@ const formatDateTime = (isoStr: string) => {
 </script>
 
 <template>
-  <AppModal
+  <OrganismsModal
     :is-open="isOpen"
     title="現場データのサーバー同期"
     @close="closeModal"
@@ -227,7 +227,7 @@ const formatDateTime = (isoStr: string) => {
         </div>
       </template>
     </div>
-  </AppModal>
+  </OrganismsModal>
 </template>
 
 <style scoped lang="scss">

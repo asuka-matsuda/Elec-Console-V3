@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { ref, watch } from 'vue'
 
 import type { EventFormData } from '~/types/portal'
@@ -80,7 +80,7 @@ const closeModal = () => {
 </script>
 
 <template>
-  <AppModal
+  <OrganismsModal
     :model-value="modelValue"
     :title="isEditing ? '予定の編集' : '新しい予定'"
     @update:model-value="emit('update:modelValue', $event)"
@@ -142,7 +142,7 @@ const closeModal = () => {
         保存
       </AtomsButton>
     </template>
-  </AppModal>
+  </OrganismsModal>
 </template>
 
 <style scoped lang="scss">

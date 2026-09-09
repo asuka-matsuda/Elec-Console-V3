@@ -51,7 +51,7 @@ const {
 </script>
 
 <template>
-  <AppModal
+  <OrganismsModal
     v-model="isOpen"
     title="現場設定"
     icon="settings"
@@ -106,7 +106,7 @@ const {
         保存する
       </AtomsButton>
     </template>
-  </AppModal>
+  </OrganismsModal>
 </template>
 
 <style scoped lang="scss">

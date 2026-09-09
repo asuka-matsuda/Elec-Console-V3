@@ -141,7 +141,7 @@ const handleSaveSettings = async (updatedSite: Site) => {
     </MoleculesTable>
 
     <!-- 新規登録モーダル -->
-    <AppModal
+    <OrganismsModal
       v-model="isCreateModalOpen"
       title="新規現場プロジェクト登録"
       :submit-fn="handleCreateSite"
@@ -153,7 +153,7 @@ const handleSaveSettings = async (updatedSite: Site) => {
       <MoleculesFormGroup label="現場名">
         <AtomsInput v-model="newSite.name" placeholder="例: 新宿プロジェクト" />
       </MoleculesFormGroup>
-    </AppModal>
+    </OrganismsModal>
 
     <PortalSiteSettingsModal
       v-model="isSettingsModalOpen"

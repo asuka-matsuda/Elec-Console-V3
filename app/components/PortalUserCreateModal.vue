@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { ref } from 'vue'
 
 import { useAdminUsers } from '~/composables/admin/useAdminUsers'
@@ -36,7 +36,7 @@ const handleCreateUser = async () => {
 </script>
 
 <template>
-  <AppModal
+  <OrganismsModal
     v-model="isOpen"
     title="新規ユーザー登録"
     :submit-fn="handleCreateUser"
@@ -60,5 +60,5 @@ const handleCreateUser = async () => {
         label="初回ログイン時にパスワード変更を要求する"
       />
     </MoleculesFormGroup>
-  </AppModal>
+  </OrganismsModal>
 </template>
