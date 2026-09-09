@@ -40,7 +40,7 @@ describe('weightResultPresenter', () => {
     expect(vm.isError).toBe(false)
     expect(vm.hasBestDrum).toBe(true)
     expect(vm.boxStatus).toBe('success')
-    expect(vm.displayDrum).toBe('木製ドラム (D-12)')
+    expect(vm.displayDrum).toBe('D-12')
     expect(vm.warningText).toBe('')
     expect(vm.cableWeight).toBe('154.2')
     expect(vm.drumWeight).toBe('45')

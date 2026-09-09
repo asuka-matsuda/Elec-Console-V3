@@ -30,7 +30,7 @@ export function formatWeightResult(
 
   if (!isError && result) {
     if (hasBestDrum && result.bestDrum) {
-      displayDrum = `${result.bestDrum.category} (${result.bestDrum.id})`
+      displayDrum = result.bestDrum.id
     }
     else {
       displayDrum = '選定不可'
