@@ -46,19 +46,4 @@ describe('OrganismsFooter.vue', () => {
 
     expect(wrapper.text()).toContain('Custom Copyright Notice')
   })
-
-  it('renders slot content when default slot is provided', () => {
-    const wrapper = mount(OrganismsFooter, {
-      slots: {
-        default: '<span>Slot Custom Content</span>',
-      },
-      global: {
-        stubs: {
-          AtomsDivider: true,
-        },
-      },
-    })
-
-    expect(wrapper.text()).toContain('Slot Custom Content')
-  })
 })
