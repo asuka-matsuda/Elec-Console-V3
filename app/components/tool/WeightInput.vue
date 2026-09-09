@@ -1,7 +1,7 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
- * ToolWeightInput
- * ケーブル重量・ドラム選定ツールの条件入力フォームコンポーネントです。
+ * WeightInput
+ * [Tool Organism] ケーブル重量・ドラム選定ツールの条件入力フォームコンポーネント。
  * 2等分グリッドで条件入力を提供します。
  */
 import { computed, watch } from 'vue'
@@ -24,7 +24,7 @@ watch(
 </script>
 
 <template>
-  <div class="weight-input">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-[var(--space-form-col-gap)] gap-y-[var(--space-form-row-gap)]">
     <MoleculesFormGroup label="ケーブル種別" required>
       <AtomsSelect
         v-model="inputs.category"
@@ -61,15 +61,3 @@ watch(
     </MoleculesFormGroup>
   </div>
 </template>
-
-<style scoped lang="scss">
-.weight-input {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-form-row-gap) var(--space-form-col-gap);
-
-  @include mq("sm") {
-    grid-template-columns: 1fr;
-  }
-}
-</style>
