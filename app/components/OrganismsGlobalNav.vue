@@ -2,7 +2,7 @@
 /**
  * OrganismsGlobalNav
  * [Organisms] アプリケーションのグローバルナビゲーション（ドロワーサイドバー）。
- * オーバーレイ、ロゴ・閉じるボタンヘッダー、セクション別メニューリンク（ホバー・アクティブ発光演出）を表示します。
+ * オーバーレイ、閉じるボタンヘッダー、セクション別メニューリンク（ホバー・アクティブ発光演出）を表示します。
  */
 import { onMounted, onUnmounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
@@ -44,10 +44,10 @@ onMounted(() => {
   />
 
   <aside
-    class="fixed top-0 left-0 z-[var(--z-index-sidebar)] flex flex-col w-[var(--sidebar-width)] h-[100dvh] global-nav"
+    class="fixed top-0 left-0 z-[var(--z-index-sidebar)] flex flex-col w-[var(--sidebar-width)] h-[100dvh]"
     :class="{ 'is-open': isOpen }"
   >
-    <header class="flex items-center justify-between h-16 px-[var(--space-4)] header">
+    <header class="flex items-center justify-between h-16 px-[var(--space-4)]">
       <span class="text-[var(--font-size-sm)] font-semibold tracking-wider text-[var(--color-text-muted)]">
         メニュー
       </span>
@@ -58,11 +58,11 @@ onMounted(() => {
       />
     </header>
 
-    <nav class="flex-1 overflow-y-auto flex flex-col gap-[var(--space-4)] p-[var(--space-3)] nav">
+    <nav class="flex-1 overflow-y-auto flex flex-col gap-[var(--space-4)] p-[var(--space-3)]">
       <section
         v-for="section in menuData"
         :key="section.id || section.heading || section.globalNavHeading"
-        class="flex flex-col gap-[var(--space-1)] section"
+        class="flex flex-col gap-[var(--space-1)]"
         :style="{
           '--section-accent': `var(--color-category-${section.accent || 'main'})`,
         }"
@@ -85,7 +85,7 @@ onMounted(() => {
             :to="item.disabled ? undefined : item.href"
             :type="item.disabled ? 'button' : undefined"
             :disabled="item.disabled || undefined"
-            class="w-full flex items-center gap-[var(--space-2)] py-[var(--space-1)] px-[var(--space-3)] nav-link"
+            class="w-full flex items-center gap-[var(--space-2)] py-[var(--space-1)] px-[var(--space-3)]"
             @click="item.disabled ? undefined : closeSidebar()"
           >
             <AtomsIcon :name="item.icon" size="md" />
@@ -117,7 +117,7 @@ onMounted(() => {
   }
 }
 
-.global-nav {
+aside {
   transform: translateX(-100%);
 
   border-right: var(--border-width-base) solid var(--color-border);
@@ -130,105 +130,105 @@ onMounted(() => {
   &.is-open {
     transform: translateX(0);
   }
-}
 
-.header {
-  border-bottom: var(--border-width-base) solid var(--color-border);
-  background-color: var(--surface-bg-elevated);
-}
-
-.nav {
-  --scrollbar-size: var(--space-2);
-}
-
-.section {
-  --glow-color: var(--section-accent);
-}
-
-.nav-link {
-  --nav-glow-hover:
-    0 0 4px color-mix(in srgb, var(--section-accent) 45%, transparent),
-    0 0 8px color-mix(in srgb, var(--section-accent) 20%, transparent);
-  --nav-glow-active:
-    0 0 4px color-mix(in srgb, var(--section-accent) 60%, transparent),
-    0 0 8px color-mix(in srgb, var(--section-accent) 30%, transparent),
-    inset 0 0 2px color-mix(in srgb, var(--section-accent) 40%, transparent);
-  --nav-icon-glow: drop-shadow(0 0 var(--blur-sm) var(--section-accent));
-
-  border: var(--border-width-base) solid transparent;
-  border-radius: var(--radius-sm);
-
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  line-height: var(--line-height-tight);
-  color: var(--color-text-secondary);
-  letter-spacing: var(--tracking-wide);
-
-  transition: var(--transition-base);
-
-  span {
-    word-break: keep-all;
-    overflow-wrap: anywhere;
+  header {
+    border-bottom: var(--border-width-base) solid var(--color-border);
   }
 
-  &:disabled {
-    pointer-events: none;
-    opacity: 0.5;
-    filter: grayscale(100%);
+  nav {
+    --scrollbar-size: var(--space-2);
   }
 
-  &:hover,
-  &:focus-visible {
-    transform: translateX(var(--space-1));
+  section {
+    --glow-color: var(--section-accent);
+  }
 
-    border-color: var(--section-accent);
+  a,
+  button {
+    --nav-glow-hover:
+      0 0 4px color-mix(in srgb, var(--section-accent) 45%, transparent),
+      0 0 8px color-mix(in srgb, var(--section-accent) 20%, transparent);
+    --nav-glow-active:
+      0 0 4px color-mix(in srgb, var(--section-accent) 60%, transparent),
+      0 0 8px color-mix(in srgb, var(--section-accent) 30%, transparent),
+      inset 0 0 2px color-mix(in srgb, var(--section-accent) 40%, transparent);
+    --nav-icon-glow: drop-shadow(0 0 var(--blur-sm) var(--section-accent));
 
-    color: var(--section-accent);
+    border: var(--border-width-base) solid transparent;
+    border-radius: var(--radius-sm);
 
-    box-shadow: var(--nav-glow-hover);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-tight);
+    color: var(--color-text-secondary);
+    letter-spacing: var(--tracking-wide);
 
-    transition: var(--transition-glow);
+    transition: var(--transition-base);
 
-    :deep(.icon) {
-      filter: var(--nav-icon-glow);
+    span {
+      word-break: keep-all;
+      overflow-wrap: anywhere;
     }
-  }
 
-  &:active,
-  &.router-link-active {
-    transform: none;
-
-    border-color: var(--section-accent);
-
-    color: var(--section-accent);
-
-    box-shadow: var(--nav-glow-active);
-
-    transition: var(--transition-glow);
-
-    :deep(.icon) {
-      filter: var(--nav-icon-glow);
+    &:disabled {
+      pointer-events: none;
+      opacity: 0.5;
+      filter: grayscale(100%);
     }
-  }
 
-  &.router-link-active {
-    display: inline-flex;
-    gap: var(--space-1);
-    align-items: center;
+    &:hover,
+    &:focus-visible {
+      transform: translateX(var(--space-1));
 
-    &::after {
-      content: "";
+      border-color: var(--section-accent);
 
-      display: inline-block;
+      color: var(--section-accent);
 
-      width: var(--space-1);
-      height: var(--font-size-base);
+      box-shadow: var(--nav-glow-hover);
 
-      vertical-align: middle;
+      transition: var(--transition-glow);
 
-      background-color: currentcolor;
+      :deep(.icon) {
+        filter: var(--nav-icon-glow);
+      }
+    }
 
-      animation: ui-cursor-blink 1s step-end infinite;
+    &:active,
+    &.router-link-active {
+      transform: none;
+
+      border-color: var(--section-accent);
+
+      color: var(--section-accent);
+
+      box-shadow: var(--nav-glow-active);
+
+      transition: var(--transition-glow);
+
+      :deep(.icon) {
+        filter: var(--nav-icon-glow);
+      }
+    }
+
+    &.router-link-active {
+      display: inline-flex;
+      gap: var(--space-1);
+      align-items: center;
+
+      &::after {
+        content: "";
+
+        display: inline-block;
+
+        width: var(--space-1);
+        height: var(--font-size-base);
+
+        vertical-align: middle;
+
+        background-color: currentcolor;
+
+        animation: ui-cursor-blink 1s step-end infinite;
+      }
     }
   }
 }
