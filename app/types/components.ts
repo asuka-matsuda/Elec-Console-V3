@@ -78,3 +78,9 @@ export interface DashboardData {
   announcements: AnnouncementItem[]
   history: HistoryItem[]
 }
+
+export interface OrganismsFooterProps {
+  year?: number | string
+  text?: string
+}
+

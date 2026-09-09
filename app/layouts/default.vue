@@ -23,7 +23,7 @@ const { items: breadcrumbs, accent: breadcrumbAccent } = useBreadcrumbs()
 
       <main class="content-container">
         <slot />
-        <AppFooter />
+        <OrganismsFooter />
       </main>
     </div>
   </div>
