@@ -54,6 +54,7 @@ const updatePosition = () => {
 
   // 水平方向の位置計算（右端・左端クランプ）
   let left = rect.left - 6
+
   if (left + tipWidth > windowWidth - margin) {
     left = Math.max(margin, windowWidth - tipWidth - margin)
   }
@@ -118,6 +119,7 @@ const handleScrollOrResize = () => {
 const handleOutsideClick = (e: MouseEvent) => {
   if (!isOpen.value) return
   const target = e.target as Node
+
   if (triggerRef.value?.contains(target) || panelRef.value?.contains(target)) return
   isOpen.value = false
 }
@@ -165,7 +167,7 @@ onBeforeUnmount(() => {
         <div
           v-if="isOpen && (displayText || $slots.default)"
           ref="panelRef"
-          class="helptip-panel fixed z-[9999] w-[200px] px-2.5 py-2 rounded-md border border-[#334155] bg-[#0f172a]/95 text-[#cbd5e1] shadow-lg shadow-black/50 backdrop-blur-sm pointer-events-none sm:pointer-events-auto"
+          class="helptip-panel fixed z-[9999] w-[200px] px-2.5 py-2 pointer-events-none sm:pointer-events-auto"
           :class="[position.isTopPlacement ? '-translate-y-full' : '']"
           :style="{
             top: `${position.top}px`,
@@ -177,7 +179,7 @@ onBeforeUnmount(() => {
         >
           <!-- アロー（極小矢印） -->
           <div
-            class="arrow absolute w-1.5 h-1.5 rotate-45 border border-[#334155] bg-[#0f172a]"
+            class="arrow absolute w-1.5 h-1.5 rotate-45"
             :style="{ left: `${position.arrowLeft}px` }"
             :class="[
               position.isTopPlacement
@@ -187,7 +189,7 @@ onBeforeUnmount(() => {
           />
 
           <!-- 解説本文（極小フォント 11px） -->
-          <div class="text-[11px] leading-[1.4] whitespace-normal">
+          <div class="helptip-content leading-[1.4] whitespace-normal">
             <slot :help="resolvedHelp">
               {{ displayText }}
             </slot>
@@ -196,10 +198,10 @@ onBeforeUnmount(() => {
           <!-- 準拠規格バッジ -->
           <div
             v-if="displayReference"
-            class="mt-1.5 pt-1 border-t border-[#334155]/60 flex items-center justify-between text-[10px]"
+            class="helptip-reference mt-1.5 pt-1 flex items-center justify-between"
           >
-            <span class="text-[#64748b]">規格:</span>
-            <span class="font-medium text-cyan-400">
+            <span class="helptip-reference__label">規格:</span>
+            <span class="helptip-reference__value">
               {{ displayReference }}
             </span>
           </div>
@@ -210,6 +212,40 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped lang="scss">
+.helptip-panel {
+  border: var(--border-width-base) solid var(--color-border);
+  border-radius: var(--radius-sm);
+
+  // チップとして引き締まった濃色ソリッド背景
+  background-color: color-mix(in srgb, var(--color-main-bg) 92%, black);
+  backdrop-filter: blur(var(--blur-sm));
+  box-shadow: var(--shadow-elevation-md);
+}
+
+.arrow {
+  border: var(--border-width-base) solid var(--color-border);
+  background-color: color-mix(in srgb, var(--color-main-bg) 92%, black);
+}
+
+.helptip-content {
+  font-size: var(--font-size-2xs);
+  color: var(--color-text-secondary);
+}
+
+.helptip-reference {
+  border-top: var(--border-width-base) solid var(--color-border-subtle);
+  font-size: clamp(9px, 0.5rem + 0.1vw, 10px);
+
+  &__label {
+    color: var(--color-text-muted);
+  }
+
+  &__value {
+    font-weight: var(--font-weight-medium);
+    color: var(--theme-accent);
+  }
+}
+
 .helptip-fade-enter-active,
 .helptip-fade-leave-active {
   transition: transform var(--transition-fast), opacity var(--transition-fast);
