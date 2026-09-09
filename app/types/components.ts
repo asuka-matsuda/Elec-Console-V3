@@ -1,4 +1,4 @@
-export type AtomsButtonVariant = 'primary' | 'secondary' | 'danger' | 'success' | 'ghost'
+export type AtomsButtonVariant = 'primary' | 'secondary' | 'danger' | 'success'
 
 export type ResultBoxStatus = 'success' | 'warning' | 'danger' | 'error' | 'default' | 'neutral' | 'empty'
 

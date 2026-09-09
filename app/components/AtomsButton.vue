@@ -71,8 +71,8 @@ const target = computed(() => to || href)
   text-decoration: none;
   letter-spacing: var(--tracking-wide);
 
-  background-color: var(--surface-bg-elevated);
-  box-shadow: var(--shadow-elevation-sm);
+  background-color: transparent;
+  box-shadow: none;
 
   transition: var(--transition-fast);
 
@@ -115,19 +115,21 @@ const target = computed(() => to || href)
   }
 
   &--primary {
-    border-color: transparent;
-    color: hsl(0deg 0% 100%);
-    background-color: var(--btn-color);
+    border-color: color-mix(in srgb, var(--btn-color) 40%, transparent);
+    color: var(--btn-color);
+    background-color: transparent;
 
     &:not(:disabled, .is-disabled) {
       &:hover {
-        color: hsl(0deg 0% 100%);
-        background-color: color-mix(in srgb, var(--btn-color) 85%, white);
+        border-color: var(--btn-color);
+        color: var(--btn-color);
+        background-color: color-mix(in srgb, var(--btn-color) 12%, transparent);
+        box-shadow: var(--shadow-glow-hover);
       }
 
       &:active {
-        color: hsl(0deg 0% 100%);
-        background-color: color-mix(in srgb, var(--btn-color) 85%, black);
+        background-color: color-mix(in srgb, var(--btn-color) 24%, transparent);
+        box-shadow: var(--shadow-glow-active);
       }
     }
   }
@@ -143,29 +145,15 @@ const target = computed(() => to || href)
   &--secondary {
     --btn-color: var(--color-border);
 
+    border-color: var(--color-border);
     color: var(--color-text-main);
+    background-color: transparent;
 
     &:not(:disabled, .is-disabled) {
       &:hover {
         border-color: var(--color-text-muted);
         color: var(--color-text-main);
         background-color: var(--color-bg-hover);
-      }
-    }
-  }
-
-  &--ghost {
-    border-color: transparent;
-    color: var(--color-text-secondary);
-    background-color: transparent;
-    box-shadow: none;
-
-    &:not(:disabled, .is-disabled) {
-      &:hover {
-        border-color: transparent;
-        color: var(--theme-accent);
-        background-color: var(--color-bg-hover);
-        box-shadow: none;
       }
 
       &:active {
