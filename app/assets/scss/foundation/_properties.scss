@@ -230,64 +230,9 @@
   --shadow-sink: inset 0 2px 4px 0
     color-mix(in srgb, var(--shadow-color) 60%, transparent);
   --shadow-modal: var(--shadow-elevation-lg);
-  --shadow-glow-base:
-    inset 0 0 4px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 20%, transparent),
-    0 2px 4px color-mix(in srgb, black 20%, transparent);
-  --shadow-glow-hover:
-    0 0 4px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 45%, transparent),
-    0 0 8px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 20%, transparent),
-    var(--shadow-elevation-sm);
-  --shadow-glow-focus:
-    0 0 0 3px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 35%, transparent),
-    var(--shadow-elevation-sm);
-  --shadow-glow-active:
-    0 0 4px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 50%, transparent),
-    inset 0 0 2px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 30%, transparent),
-    var(--shadow-elevation-sm);
 
   // ナビゲーション / サイドバー用 投影シャドウ
   --shadow-nav: 4px 0 24px color-mix(in srgb, black 50%, transparent);
-
-  // マイクロインジケータ用 小発光
-  --shadow-glow-sm: 0 0 6px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 60%, transparent);
-
-  // テキスト発光 (Cyber Text Glow)
-  --text-glow-sm: 0 0 var(--blur-sm) color-mix(in srgb, var(--glow-color, currentcolor) 50%, transparent);
-  --text-glow-md: 0 0 var(--blur-md) color-mix(in srgb, var(--glow-color, currentcolor) 60%, transparent);
-
-  // SVG / アイコン / メーター用 ドロップシャドウ発光 (サイズ別)
-  --drop-shadow-glow-xs: drop-shadow(
-    0 0 var(--glow-blur, var(--blur-xs))
-    color-mix(
-      in srgb,
-      var(--glow-color, var(--theme-accent)) 50%,
-      transparent
-    )
-  );
-  --drop-shadow-glow-sm: drop-shadow(
-    0 0 var(--glow-blur, var(--blur-sm))
-    color-mix(
-      in srgb,
-      var(--glow-color, var(--theme-accent)) 50%,
-      transparent
-    )
-  );
-  --drop-shadow-glow: drop-shadow(
-    0 0 var(--glow-blur, var(--blur-md))
-    color-mix(
-      in srgb,
-      var(--glow-color, var(--theme-accent)) 50%,
-      transparent
-    )
-  );
-  --drop-shadow-glow-lg: drop-shadow(
-    0 0 var(--glow-blur, var(--blur-lg))
-    color-mix(
-      in srgb,
-      var(--glow-color, var(--theme-accent)) 50%,
-      transparent
-    )
-  );
 
   // ==========================================================================
   // 7. アニメーション & トランジション
@@ -310,4 +255,45 @@
   --transition-glow:
     box-shadow var(--duration-slow) var(--ease-base),
     border-color var(--duration-slow) var(--ease-base);
+}
+
+// ==========================================================================
+// 8. 動的グロー演出トークン (要素ごとの --glow-color や --theme-accent に追従)
+// ==========================================================================
+*,
+*::before,
+*::after {
+  --shadow-glow-base:
+    inset 0 0 4px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 20%, transparent),
+    0 2px 4px color-mix(in srgb, black 20%, transparent);
+  --shadow-glow-hover:
+    0 0 4px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 45%, transparent),
+    0 0 8px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 20%, transparent),
+    var(--shadow-elevation-sm);
+  --shadow-glow-focus:
+    0 0 0 3px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 35%, transparent),
+    var(--shadow-elevation-sm);
+  --shadow-glow-active:
+    0 0 4px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 50%, transparent),
+    inset 0 0 2px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 30%, transparent),
+    var(--shadow-elevation-sm);
+  --shadow-glow-sm: 0 0 6px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 60%, transparent);
+  --text-glow-sm: 0 0 var(--blur-sm) color-mix(in srgb, var(--glow-color, currentcolor) 50%, transparent);
+  --text-glow-md: 0 0 var(--blur-md) color-mix(in srgb, var(--glow-color, currentcolor) 60%, transparent);
+  --drop-shadow-glow-xs: drop-shadow(
+    0 0 var(--glow-blur, var(--blur-xs))
+      color-mix(in srgb, var(--glow-color, var(--theme-accent)) 50%, transparent)
+  );
+  --drop-shadow-glow-sm: drop-shadow(
+    0 0 var(--glow-blur, var(--blur-sm))
+      color-mix(in srgb, var(--glow-color, var(--theme-accent)) 50%, transparent)
+  );
+  --drop-shadow-glow-md: drop-shadow(
+    0 0 var(--glow-blur, var(--blur-md))
+      color-mix(in srgb, var(--glow-color, var(--theme-accent)) 50%, transparent)
+  );
+  --drop-shadow-glow-lg: drop-shadow(
+    0 0 var(--glow-blur, var(--blur-lg))
+      color-mix(in srgb, var(--glow-color, var(--theme-accent)) 50%, transparent)
+  );
 }
