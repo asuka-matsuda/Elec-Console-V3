@@ -72,7 +72,7 @@ const target = computed(() => to || href)
   letter-spacing: var(--tracking-wide);
 
   background-color: transparent;
-  box-shadow: none;
+  box-shadow: var(--shadow-elevation-sm);
 
   transition: var(--transition-fast);
 
