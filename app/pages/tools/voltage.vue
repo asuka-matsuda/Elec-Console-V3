@@ -67,7 +67,7 @@ const formFields = computed(() =>
 
     <template #results>
       <ClientOnly>
-        <ToolVoltageResult :inputs="calcInputs" :result="calcResult" />
+        <ToolOrganismsVoltageResult :inputs="calcInputs" :result="calcResult" />
       </ClientOnly>
     </template>
 

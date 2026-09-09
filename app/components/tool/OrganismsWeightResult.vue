@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * WeightResult
+ * OrganismsWeightResult
  * [Tool Organism] ケーブル重量・ドラム選定ツールの計算結果表示コンポーネント。
  */
 import { computed } from 'vue'
@@ -35,7 +35,7 @@ const detailItems = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-[var(--space-panel-gap)]">
+  <div class="flex flex-col gap-[var(--space-card-gap)]">
     <MoleculesResultBox
       title="使用ドラム（想定）"
       :status="vm.boxStatus"
@@ -44,20 +44,10 @@ const detailItems = computed(() => {
       <span class="value-text">{{ vm.displayDrum }}</span>
 
       <template v-if="vm.warningText" #footer>
-        <p class="warning-text text-center">
-          {{ vm.warningText }}
-        </p>
+        {{ vm.warningText }}
       </template>
     </MoleculesResultBox>
 
     <MoleculesResultDetails v-if="!vm.isError && detailItems.length > 0" :items="detailItems" />
   </div>
 </template>
-
-<style scoped lang="scss">
-.warning-text {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-status-danger);
-}
-</style>

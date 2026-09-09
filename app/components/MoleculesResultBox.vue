@@ -38,51 +38,49 @@ const resolvedStatus = computed(() => {
   <AtomsPanel
     as="div"
     class="result-box flex flex-1 flex-col items-center justify-center gap-1 w-full min-w-0"
-    :class="[
-      `is-${resolvedStatus}`,
-      `is-${size}`,
-      size === 'sm' ? '!py-1 !px-2' : '!py-2 !px-3',
-    ]"
+    :class="[`is-${resolvedStatus}`, `is-${size}`]"
   >
     <!-- ラベル領域 -->
-    <div v-if="title || $slots.title" class="label">
+    <header v-if="title || $slots.title">
       <slot name="title">
         {{ title }}
       </slot>
-    </div>
+    </header>
 
     <!-- 数値・メイン表示領域 -->
-    <div class="value flex items-center justify-center gap-2 w-full font-mono tabular-nums">
+    <div class="value flex items-center justify-center gap-2">
       <slot name="value">
         <slot />
       </slot>
     </div>
 
     <!-- アクション領域 -->
-    <div v-if="$slots.actions" class="actions flex items-center justify-center">
+    <div v-if="$slots.actions">
       <slot name="actions" />
     </div>
 
     <!-- フッター領域 -->
-    <div v-if="$slots.footer" class="footer flex items-center justify-center">
+    <footer v-if="$slots.footer">
       <slot name="footer" />
-    </div>
+    </footer>
   </AtomsPanel>
 </template>
 
 <style scoped lang="scss">
 .result-box {
+  padding: var(--space-2) var(--space-3);
   box-shadow: var(--shadow-sink);
   transition: var(--transition-glow);
 
   &.is-sm {
-    .value,
-    :deep(.value-text) {
+    padding: var(--space-1) var(--space-2);
+
+    .value {
       font-size: var(--font-size-2xl);
     }
   }
 
-  .label {
+  header {
     font-size: var(--font-size-2xs);
     color: var(--color-text-secondary);
     text-transform: uppercase;
@@ -90,17 +88,24 @@ const resolvedStatus = computed(() => {
   }
 
   .value {
+    font-family: var(--font-mono);
     font-size: var(--font-size-3xl);
     font-weight: var(--font-weight-bold);
+    font-variant-numeric: tabular-nums;
     line-height: var(--line-height-tight);
 
-    :deep(.value-text) {
-      font-family: inherit;
-      font-size: inherit;
-      font-weight: inherit;
-      font-variant-numeric: inherit;
-      color: inherit;
-      text-shadow: inherit;
+    :deep(.unit),
+    :deep(small) {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-normal);
+      color: var(--color-text-secondary);
+      text-shadow: none;
+    }
+
+    :deep(.sep) {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-muted);
+      text-shadow: none;
     }
 
     :deep(.not-applicable) {
@@ -110,7 +115,7 @@ const resolvedStatus = computed(() => {
     }
   }
 
-  .footer {
+  footer {
     font-size: var(--font-size-xs);
     color: var(--color-text-secondary);
     text-shadow: none;
@@ -118,48 +123,42 @@ const resolvedStatus = computed(() => {
     :deep(strong) {
       font-weight: var(--font-weight-bold);
       color: var(--color-text-main);
-      text-shadow: none;
+    }
+
+    :deep(p) {
+      margin: 0;
+    }
+
+    :deep(small) {
+      font-size: var(--font-size-2xs);
+      color: var(--color-text-muted);
     }
   }
 
-  // ステータスに応じた発光・色演出
-  &.is-success {
-    border-color: color-mix(in srgb, var(--color-status-success) 40%, transparent);
+  // ステータス共通管理（CSS変数で一括設定）
+  &.is-success { --status-color: var(--color-status-success); }
+  &.is-warning { --status-color: var(--color-status-warning); }
+  &.is-danger  { --status-color: var(--color-status-danger); }
 
-    .value {
-      --glow-color: var(--color-status-success);
-
-      color: var(--color-status-success);
-      text-shadow: var(--text-glow-sm);
-    }
-  }
-
-  &.is-warning {
-    border-color: color-mix(in srgb, var(--color-status-warning) 40%, transparent);
-
-    .value {
-      --glow-color: var(--color-status-warning);
-
-      color: var(--color-status-warning);
-      text-shadow: var(--text-glow-sm);
-    }
-  }
-
+  &.is-success,
+  &.is-warning,
   &.is-danger {
-    border-color: color-mix(in srgb, var(--color-status-danger) 40%, transparent);
+    border-color: color-mix(in srgb, var(--status-color) 40%, transparent);
 
     .value {
-      --glow-color: var(--color-status-danger);
+      --glow-color: var(--status-color);
 
-      color: var(--color-status-danger);
+      color: var(--status-color);
       text-shadow: var(--text-glow-sm);
+    }
+
+    footer {
+      color: var(--status-color);
     }
   }
 
-  &.is-neutral {
-    .value {
-      color: var(--color-text-main);
-    }
+  &.is-neutral .value {
+    color: var(--color-text-main);
   }
 
   &.is-empty {

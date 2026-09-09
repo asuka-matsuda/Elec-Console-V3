@@ -44,7 +44,7 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
     <div class="item-body">
       <section class="item-section">
         <div>
-          <ToolVoltageResult
+          <ToolOrganismsVoltageResult
             v-if="
               entry.toolId === 'voltage' && entry.rawInputs && entry.rawResult
             "
@@ -52,7 +52,7 @@ const getResult = (entry: HistoryEntry) => entry.rawResult as never
             :result="getResult(entry)"
             size="sm"
           />
-          <ToolConduitResult
+          <ToolOrganismsConduitResult
             v-else-if="
               entry.toolId === 'conduit' && entry.rawInputs && entry.rawResult
             "

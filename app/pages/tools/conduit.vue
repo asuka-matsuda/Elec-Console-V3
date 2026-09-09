@@ -45,7 +45,7 @@ const conduitCategoryOptions = computed(() => {
     </template>
 
     <template #results>
-      <ToolConduitResult :result="result" :inputs="inputs" />
+      <ToolOrganismsConduitResult :result="result" :inputs="inputs" />
     </template>
 
     <template #basis>
