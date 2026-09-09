@@ -32,13 +32,14 @@ export interface VoltageCalcInputs {
 }
 
 export interface VoltageCalcResult {
-  optimal: CableData
+  optimal: CableData | null
   minAmpacityCable: CableData | null
   finalEffAmp: number
   finalDropV: number
   parallelCount: number
   convertedA: number
   tempDerating: number
+  errorId?: string
 }
 
 export type { MathStep } from '~/types/tools'

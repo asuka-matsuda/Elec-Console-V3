@@ -1,3 +1,4 @@
+import { getToolError, type ToolErrorInfo } from '~/constants/toolErrorConstants'
 import type { VoltageCalcInputs, VoltageCalcResult } from '~/types/voltage'
 import { formatVal } from '~/utils/math'
 
@@ -15,6 +16,7 @@ export interface VoltageResultViewModel {
   dropV: string
   dropPercent: string
   dropStatusClass: 'is-neutral' | 'is-success' | 'is-warning'
+  errorInfo?: ToolErrorInfo
 }
 
 /**
@@ -26,9 +28,12 @@ export function formatVoltageResult(
 ): VoltageResultViewModel {
   const isReady = Boolean(inputs?.isReady && result)
   const mode = inputs?.mode || 'drop'
+  const errorInfo = result?.errorId ? getToolError(result.errorId) : undefined
 
   // ドロップ時のケーブル名
-  const dropCableName = !isReady ? 'ーー' : (result?.optimal?.name || 'ーー')
+  const dropCableName = !isReady
+    ? 'ーー'
+    : (result?.optimal?.name || (errorInfo ? errorInfo.title : 'ーー'))
 
   // メイン指標（降下電圧 または 選定サイズ）
   const mainLabel = mode === 'size' ? '選定ケーブルサイズ' : '電圧降下'
@@ -41,9 +46,16 @@ export function formatVoltageResult(
     if (mode === 'size') {
       const size = result.optimal?.size
 
-      mainValue = size ? String(size) : '選定不可'
-      mainUnit = result.optimal?.unit || 'sq'
-      mainStatusClass = result.optimal ? 'is-success' : 'is-danger'
+      if (result.optimal && size) {
+        mainValue = String(size)
+        mainUnit = result.optimal.unit || 'sq'
+        mainStatusClass = 'is-success'
+      }
+      else {
+        mainValue = errorInfo ? errorInfo.title : '選定不可'
+        mainUnit = ''
+        mainStatusClass = 'is-danger'
+      }
     }
     else {
       mainValue = formatVal(result.finalDropV, 'ーー', 2)
@@ -99,5 +111,6 @@ export function formatVoltageResult(
     dropV,
     dropPercent,
     dropStatusClass,
+    errorInfo,
   }
 }

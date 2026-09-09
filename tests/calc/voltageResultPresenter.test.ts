@@ -104,4 +104,33 @@ describe('voltageResultPresenter', () => {
     expect(vm.ampStatusClass).toBe('is-danger')
     expect(vm.mainStatusClass).toBe('is-danger')
   })
+
+  it('should handle oversize selection error with errorInfo and is-danger', () => {
+    const mockInputs: Partial<VoltageCalcInputs> = {
+      isReady: true,
+      mode: 'size',
+      I: 10,
+      targetDrop: 2.0,
+      sys: { key: '1P3W', name: '単相3線式', k: 1, voltage: 100 },
+    }
+    const mockResult: Partial<VoltageCalcResult> = {
+      optimal: null,
+      errorId: 'VOLTAGE_SIZE_OVER',
+      finalDropV: 0,
+      finalEffAmp: 0,
+    }
+
+    const vm = formatVoltageResult(
+      mockInputs as VoltageCalcInputs,
+      mockResult as VoltageCalcResult,
+    )
+
+    expect(vm.isReady).toBe(true)
+    expect(vm.mainValue).toBe('選定不可（規格上限超過）')
+    expect(vm.mainUnit).toBe('')
+    expect(vm.mainStatusClass).toBe('is-danger')
+    expect(vm.errorInfo).toBeDefined()
+    expect(vm.errorInfo?.id).toBe('VOLTAGE_SIZE_OVER')
+    expect(vm.errorInfo?.message).toContain('規格上限を超過')
+  })
 })

@@ -80,6 +80,36 @@ describe('voltageCalcLogic', () => {
     })
   })
 
-  // Note: calculateLogic testing involves mocking or using defaultCableData,
-  // which might be extensive. We can add core cases here.
+  describe('calculateLogic', () => {
+    it('should return errorId VOLTAGE_SIZE_OVER when required size exceeds available cable range', async () => {
+      const { calculateLogic } = await import('~/utils/tools/voltage/voltageCalcLogic')
+      const { systemData } = await import('~/constants/data/systemData')
+
+      const sys1P3W = systemData.find(s => s.id === '1P3W200')!
+
+      const res = calculateLogic({
+        mode: 'size',
+        sys: sys1P3W,
+        I: 10,
+        L: 100,
+        cableType: 'VVF',
+        selectedCores: null,
+        derating: 1.0,
+        rawTempVal: 'none',
+        ambientTemp: null,
+        parallel: 1,
+        targetDrop: 2.0,
+        selectedSize: null,
+        loadVal: 10,
+        loadUnit: 'A',
+        pf: 1.0,
+        isReady: true,
+        missingFields: [],
+      })
+
+      expect(res).not.toBeNull()
+      expect(res?.optimal).toBeNull()
+      expect(res?.errorId).toBe('VOLTAGE_SIZE_OVER')
+    })
+  })
 })

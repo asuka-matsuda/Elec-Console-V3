@@ -46,6 +46,18 @@ const dropStatus = computed(() =>
         <span class="value-unit drop-unit">%</span>
         <span class="value-sep">)</span>
       </template>
+
+      <!-- エラー・警告時のサジェストフッター -->
+      <template v-if="view.errorInfo" #footer>
+        <div class="voltage-error-box text-center leading-tight">
+          <p class="font-medium text-[var(--font-size-2xs)] text-[var(--color-status-danger)]">
+            {{ view.errorInfo.message }}
+          </p>
+          <p v-if="view.errorInfo.suggestion" class="mt-0.5 text-[10px] text-[var(--color-text-muted)]">
+            {{ view.errorInfo.suggestion }}
+          </p>
+        </div>
+      </template>
     </MoleculesResultBox>
 
     <!-- サブ結果 1: 電流チェック (設計 / 許容) -->

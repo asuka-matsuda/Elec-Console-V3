@@ -1,5 +1,6 @@
 import { getVoltageFormFields } from '~/constants/config/voltageFormConfig'
 import { cableData } from '~/constants/data/cableData'
+import { getToolError } from '~/constants/toolErrorConstants'
 import type { CableData } from '~/types/database'
 import type { HistoryEntry } from '~/types/history'
 import type { VoltageCalcInputs, VoltageCalcResult } from '~/types/voltage'
@@ -116,20 +117,29 @@ export function mapVoltageToHistory(
     const isAmpOver
       = result.finalEffAmp > 0 && (inputs.I ?? 0) > result.finalEffAmp
     const isDropOver = !isAuto && result.finalDropV > maxDropV
-    const hasError = isAmpOver || isDropOver
+    const isSelectionOver = isAuto && !result.optimal
+    const hasError = isAmpOver || isDropOver || isSelectionOver
 
     if (hasError) status = 'error'
 
-    const cabType = isAuto
-      ? result.optimal.category || ''
-      : inputs.cableType || ''
-    const size = isAuto ? result.optimal.size : inputs.selectedSize
-    const cableNameStr = resolveVoltageCableName(cabType, size, inputs.selectedCores)
+    if (isSelectionOver) {
+      const err = getToolError(result.errorId)
 
-    const parallelCount = inputs.parallel ?? 1
+      mainResultText = err ? err.title : '選定不可'
+    }
+    else {
+      const cabType = isAuto
+        ? result.optimal?.category || ''
+        : inputs.cableType || ''
+      const size = isAuto
+        ? (result.optimal?.size ?? null)
+        : (inputs.selectedSize ?? null)
+      const cableNameStr = resolveVoltageCableName(cabType, size, inputs.selectedCores)
+      const parallelCount = inputs.parallel ?? 1
 
-    mainResultText
-      = parallelCount > 1 ? `${cableNameStr} × ${parallelCount}条` : cableNameStr
+      mainResultText
+        = parallelCount > 1 ? `${cableNameStr} × ${parallelCount}条` : cableNameStr
+    }
 
     historyResults.push({
       label: isAuto ? '選定ケーブル' : '判定',

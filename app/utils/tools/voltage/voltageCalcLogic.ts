@@ -149,6 +149,7 @@ function _calculateVoltageDrop(
     parallelCount: parallel,
     convertedA: A,
     tempDerating,
+    errorId: finalEffAmp > 0 && I > finalEffAmp ? 'VOLTAGE_AMP_OVER' : undefined,
   }
 }
 
@@ -241,5 +242,35 @@ function _calculateSizeSelection(
     }
   }
 
-  return null
+  // 条件を満たすケーブルが存在しない場合（選定不可）
+  let errorId: string
+
+  if (candidates.length === 0) {
+    errorId = 'VOLTAGE_NO_MATCHING_CABLE'
+  }
+  else if (!minAreaCable) {
+    errorId = 'VOLTAGE_SIZE_OVER'
+  }
+  else {
+    errorId = 'VOLTAGE_AMP_OVER'
+  }
+
+  const maxCable = candidates[candidates.length - 1] || null
+  const maxCableSq = maxCable
+    ? _getEquivalentSq(
+        typeof maxCable.size === 'number' ? maxCable.size : parseFloat(String(maxCable.size)),
+        maxCable.unit,
+      )
+    : 0
+
+  return {
+    optimal: null,
+    minAmpacityCable,
+    finalEffAmp: 0,
+    finalDropV: maxCableSq > 0 ? (sys.simpleK * L * I) / (1000 * maxCableSq * parallel) : 0,
+    parallelCount: parallel,
+    convertedA: maxCableSq,
+    tempDerating: 1.0,
+    errorId,
+  }
 }
