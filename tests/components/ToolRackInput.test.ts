@@ -86,8 +86,7 @@ describe('ToolRackInput (app/components/tool/RackInput.vue)', () => {
     expect(wrapper.text()).toContain('ラック高さ (H)')
     expect(wrapper.text()).toContain('弱電必要幅')
 
-    // 計算パラメータ設定パネルが常時表示されていること
-    expect(wrapper.text()).toContain('計算パラメータ設定（余裕係数・離隔など）')
+    // パラメータラベル
     expect(wrapper.text()).toContain('余裕係数')
     expect(wrapper.text()).toContain('ケーブル間隔')
     expect(wrapper.text()).toContain('親桁クリアランス')

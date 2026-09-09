@@ -90,6 +90,43 @@ const handleRemoveCable = (id: string) => {
       :options="rackModeOptions"
     />
 
+    <!-- パラメータ設定（余裕係数、ケーブル間隔、親桁クリアランス） -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-[var(--space-form-col-gap)]">
+      <MoleculesFormGroup label="余裕係数">
+        <MoleculesInputGroup addon="倍">
+          <AtomsInput
+            v-model.number="inputs.marginRate"
+            type="number"
+            step="0.05"
+            min="0.1"
+            :placeholder="inputs.mode === 'strong' ? '1.2' : '0.6'"
+          />
+        </MoleculesInputGroup>
+      </MoleculesFormGroup>
+
+      <MoleculesFormGroup label="ケーブル間隔">
+        <MoleculesInputGroup addon="mm">
+          <AtomsInput
+            v-model.number="inputs.cableSpacing"
+            type="number"
+            min="0"
+            placeholder="10"
+          />
+        </MoleculesInputGroup>
+      </MoleculesFormGroup>
+
+      <MoleculesFormGroup label="親桁クリアランス">
+        <MoleculesInputGroup addon="mm">
+          <AtomsInput
+            v-model.number="inputs.sideMargin"
+            type="number"
+            min="0"
+            :placeholder="inputs.mode === 'strong' ? '60' : '120'"
+          />
+        </MoleculesInputGroup>
+      </MoleculesFormGroup>
+    </div>
+
     <!-- 基本条件（ラック高さ、相乗り必要幅） -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-[var(--space-form-col-gap)]">
       <MoleculesFormGroup label="ラック高さ (H)">
@@ -113,49 +150,6 @@ const handleRemoveCable = (id: string) => {
           />
         </MoleculesInputGroup>
       </MoleculesFormGroup>
-    </div>
-
-    <!-- 詳細設定（計算パラメータ：常時表示パネル） -->
-    <div class="flex flex-col gap-[var(--space-2)] p-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--color-border-subtle)] bg-[var(--color-surface-panel-subtle)]">
-      <div class="flex items-center gap-[var(--space-2)] text-[var(--font-size-xs)] font-bold text-[var(--color-text-secondary)]">
-        <AtomsIcon name="sliders" size="sm" />
-        <span>計算パラメータ設定（余裕係数・離隔など）</span>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-[var(--space-form-col-gap)]">
-        <MoleculesFormGroup label="余裕係数">
-          <MoleculesInputGroup addon="倍">
-            <AtomsInput
-              v-model.number="inputs.marginRate"
-              type="number"
-              step="0.05"
-              min="0.1"
-              :placeholder="inputs.mode === 'strong' ? '1.2' : '0.6'"
-            />
-          </MoleculesInputGroup>
-        </MoleculesFormGroup>
-
-        <MoleculesFormGroup label="ケーブル間隔">
-          <MoleculesInputGroup addon="mm">
-            <AtomsInput
-              v-model.number="inputs.cableSpacing"
-              type="number"
-              min="0"
-              placeholder="10"
-            />
-          </MoleculesInputGroup>
-        </MoleculesFormGroup>
-
-        <MoleculesFormGroup label="親桁クリアランス">
-          <MoleculesInputGroup addon="mm">
-            <AtomsInput
-              v-model.number="inputs.sideMargin"
-              type="number"
-              min="0"
-              :placeholder="inputs.mode === 'strong' ? '60' : '120'"
-            />
-          </MoleculesInputGroup>
-        </MoleculesFormGroup>
-      </div>
     </div>
 
     <!-- ケーブル条件セクション -->
