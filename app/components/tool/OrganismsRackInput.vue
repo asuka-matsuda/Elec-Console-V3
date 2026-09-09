@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
- * ToolRackInput
- * ケーブルラック選定ツールの条件入力コンポーネントです。
+ * OrganismsRackInput
+ * [Tool Organism] ケーブルラック選定ツールの条件入力フォームコンポーネント。
  * 強電／弱電タブ切替、ラック高さ、相乗り必要幅、計算パラメータ、およびケーブル条件を管理します。
  */
 import { computed, watch } from 'vue'
@@ -30,10 +30,6 @@ const weakCategories = computed(() => getCableCategories('weak'))
 const currentCategories = computed(() =>
   inputs.value.mode === 'strong' ? strongCategories.value : weakCategories.value,
 )
-const currentCablesUI = computed(() =>
-  inputs.value.mode === 'strong' ? inputs.value.strongCablesUI : inputs.value.weakCablesUI,
-)
-
 const getSingleDiameter = (cableIdx: string): number => {
   const def = findCableByIndexString(cableIdx)
 
@@ -52,6 +48,36 @@ const getCableSpecText = (cableIdx: string, count?: number | null): string => {
 
   return `φ${totalDiameter.toFixed(1)}`
 }
+
+const getCableSpecDetailText = (cableIdx: string, count?: number | null): string => {
+  const diameter = getSingleDiameter(cableIdx)
+
+  if (diameter <= 0) return ''
+
+  const n = count && count > 0 ? count : 1
+
+  if (n > 1) {
+    return `(φ${diameter.toFixed(1)}×${n})`
+  }
+
+  return ''
+}
+
+const currentCablesUI = computed(() => {
+  const cables = inputs.value.mode === 'strong' ? inputs.value.strongCablesUI : inputs.value.weakCablesUI
+
+  return cables.map(cable => new Proxy(cable, {
+    get(target, prop, receiver) {
+      if (prop === 'spec') return getCableSpecText(target.cableIdx, target.count)
+      if (prop === 'specDetail') return getCableSpecDetailText(target.cableIdx, target.count)
+
+      return Reflect.get(target, prop, receiver)
+    },
+    set(target, prop, value, receiver) {
+      return Reflect.set(target, prop, value, receiver)
+    },
+  }))
+})
 
 // モード切替時にデフォルトパラメータを適応（カスタム値がなければ自動追従）
 watch(
@@ -164,10 +190,7 @@ const handleRemoveCable = (id: string) => {
 
     <!-- ケーブル条件セクション -->
     <section class="flex flex-col gap-[var(--space-item-gap)]">
-      <div class="flex items-center justify-between py-[var(--space-1)]">
-        <h4 class="font-bold text-[var(--font-size-sm)] text-[var(--color-text-main)]">
-          {{ inputs.mode === 'strong' ? '強電ケーブル条件' : '弱電ケーブル条件' }}
-        </h4>
+      <div class="flex items-center justify-end py-[var(--space-1)]">
         <AtomsButton
           variant="secondary"
           size="sm"
@@ -182,7 +205,7 @@ const handleRemoveCable = (id: string) => {
       <MoleculesTable
         :columns="RACK_CABLE_COLUMNS"
         :data="currentCablesUI"
-        class="w-full text-[var(--font-size-xs)]"
+        class="w-full"
       >
         <template #cell-category="{ row }">
           <AtomsSelect
@@ -203,27 +226,13 @@ const handleRemoveCable = (id: string) => {
         </template>
 
         <template #cell-count="{ row }">
-          <MoleculesInputGroup addon="本">
+          <MoleculesInputGroup addon="条">
             <AtomsInput
               v-model.number="row.count"
               type="number"
               min="1"
             />
           </MoleculesInputGroup>
-        </template>
-
-        <template #cell-spec="{ row }">
-          <div class="flex flex-col items-end leading-tight">
-            <span class="font-medium font-mono text-[var(--color-text-main)]">
-              {{ getCableSpecText(row.cableIdx, row.count) }}
-            </span>
-            <span
-              v-if="row.count && row.count > 1 && getSingleDiameter(row.cableIdx) > 0"
-              class="text-[10px] text-[var(--color-text-muted)] font-mono whitespace-nowrap"
-            >
-              (φ{{ getSingleDiameter(row.cableIdx).toFixed(1) }}×{{ row.count }})
-            </span>
-          </div>
         </template>
 
         <template #cell-actions="{ row }">

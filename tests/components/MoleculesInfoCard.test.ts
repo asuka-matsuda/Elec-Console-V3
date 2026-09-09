@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import MoleculesInfoCard from '../../app/components/common/molecules/InfoCard.vue'
+import MoleculesInfoCard from '../../app/components/MoleculesInfoCard.vue'
 import type { InfoCardItem } from '../../app/types/components'
 
 describe('MoleculesInfoCard.vue', () => {

@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import MoleculesHelpTip from '../../app/components/common/molecules/HelpTip.vue'
+import MoleculesHelpTip from '../../app/components/MoleculesHelpTip.vue'
 
 describe('MoleculesHelpTip.vue', () => {
   const commonStubs = {

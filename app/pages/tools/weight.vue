@@ -25,7 +25,7 @@ const {
     @reset="openResetModal"
   >
     <template #inputs>
-      <ToolWeightInput v-model="inputs" />
+      <ToolOrganismsWeightInput v-model="inputs" />
     </template>
 
     <template #results>

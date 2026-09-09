@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import MoleculesTable from '../../app/components/common/molecules/Table.vue'
+import MoleculesTable from '../../app/components/MoleculesTable.vue'
 
 describe('MoleculesTable.vue', () => {
   const sampleColumns = [
@@ -78,5 +78,35 @@ describe('MoleculesTable.vue', () => {
       expect(wrapper.emitted('sort')).toBeTruthy()
       expect(wrapper.emitted('sort')?.[0]).toEqual([{ key: 'name', order: 'desc' }])
     }
+  })
+
+  it('subKeyが指定された列で二段表示（メインとサブ情報）が正しく描画されること', () => {
+    const columnsWithSubKey = [
+      { key: 'name', label: '名前' },
+      { key: 'role', subKey: 'department', label: '役職/部署', align: 'right' as const },
+    ]
+    const dataWithSub = [
+      { id: 1, name: '山田太郎', role: '課長', department: '電設部' },
+      { id: 2, name: '佐藤花子', role: '主任', department: '' },
+    ]
+
+    const wrapper = mount(MoleculesTable, {
+      props: {
+        columns: columnsWithSubKey,
+        data: dataWithSub,
+      },
+    })
+
+    const stackedWrappers = wrapper.findAll('.table-cell__stacked')
+
+    expect(stackedWrappers.length).toBe(2)
+    // 1行目: メインとサブの両方が存在
+    expect(stackedWrappers[0].find('.table-cell__main').text()).toBe('課長')
+    expect(stackedWrappers[0].find('.table-cell__sub').text()).toBe('電設部')
+    expect(stackedWrappers[0].classes()).toContain('items-end')
+
+    // 2行目: サブが空文字の場合はサブ表示要素が存在しない
+    expect(stackedWrappers[1].find('.table-cell__main').text()).toBe('主任')
+    expect(stackedWrappers[1].find('.table-cell__sub').exists()).toBe(false)
   })
 })

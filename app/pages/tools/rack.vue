@@ -31,7 +31,7 @@ const {
     @reset="openResetModal"
   >
     <template #inputs>
-      <ToolRackInput
+      <ToolOrganismsRackInput
         v-model="inputs"
         @add-strong-cable="addStrongCable"
         @remove-strong-cable="removeStrongCable"
@@ -41,7 +41,7 @@ const {
     </template>
 
     <template #results>
-      <ToolRackResult
+      <ToolOrganismsRackResult
         :result="result"
         :max-depth="maxDepth"
         :mode="inputs.mode"

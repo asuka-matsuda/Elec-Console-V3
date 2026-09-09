@@ -2,10 +2,10 @@ import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { ref } from 'vue'
 
-import WeightInput from '../../app/components/tool/WeightInput.vue'
+import OrganismsWeightInput from '../../app/components/tool/OrganismsWeightInput.vue'
 import type { WeightCalcInputs } from '../../app/utils/tools/weight/weightCalcLogic'
 
-describe('ToolWeightInput (app/components/tool/WeightInput.vue)', () => {
+describe('ToolOrganismsWeightInput (app/components/tool/OrganismsWeightInput.vue)', () => {
   const createMockInputs = (overrides: Partial<WeightCalcInputs> = {}): WeightCalcInputs => ({
     category: 'CV',
     cableIdx: '0',
@@ -37,7 +37,7 @@ describe('ToolWeightInput (app/components/tool/WeightInput.vue)', () => {
 
   it('renders correctly with pure Tailwind grid layout classes', () => {
     const inputs = ref(createMockInputs())
-    const wrapper = mount(WeightInput, {
+    const wrapper = mount(OrganismsWeightInput, {
       props: {
         'modelValue': inputs.value,
         'onUpdate:modelValue': (val: WeightCalcInputs) => {
@@ -59,7 +59,7 @@ describe('ToolWeightInput (app/components/tool/WeightInput.vue)', () => {
 
   it('renders all required form groups', () => {
     const inputs = ref(createMockInputs())
-    const wrapper = mount(WeightInput, {
+    const wrapper = mount(OrganismsWeightInput, {
       props: {
         modelValue: inputs.value,
       },
@@ -78,7 +78,7 @@ describe('ToolWeightInput (app/components/tool/WeightInput.vue)', () => {
 
   it('disables cable size select when category is empty', () => {
     const inputs = ref(createMockInputs({ category: '', cableIdx: '' }))
-    const wrapper = mount(WeightInput, {
+    const wrapper = mount(OrganismsWeightInput, {
       props: {
         modelValue: inputs.value,
       },
@@ -95,7 +95,7 @@ describe('ToolWeightInput (app/components/tool/WeightInput.vue)', () => {
 
   it('enables cable size select when category is provided', () => {
     const inputs = ref(createMockInputs({ category: 'CV', cableIdx: '0' }))
-    const wrapper = mount(WeightInput, {
+    const wrapper = mount(OrganismsWeightInput, {
       props: {
         modelValue: inputs.value,
       },
@@ -112,7 +112,7 @@ describe('ToolWeightInput (app/components/tool/WeightInput.vue)', () => {
   it('resets cableIdx when category changes', async () => {
     const inputs = ref(createMockInputs({ category: 'CV', cableIdx: '0' }))
 
-    mount(WeightInput, {
+    mount(OrganismsWeightInput, {
       props: {
         'modelValue': inputs.value,
         'onUpdate:modelValue': (val: WeightCalcInputs) => {

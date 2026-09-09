@@ -29,7 +29,7 @@ export const WEAK_CURRENT_CATEGORIES = [
 export const CONDUIT_CABLE_COLUMNS: TableColumn[] = [
   { key: 'category', label: 'ケーブル種別', width: '27%' },
   { key: 'cableIdx', label: 'サイズ', width: '31%' },
-  { key: 'count', label: '本数', width: '74px', align: 'center' },
+  { key: 'count', label: '条数', width: '74px', align: 'center' },
   { key: 'spec', label: '断面積', width: '90px', align: 'right' },
   { key: 'actions', label: '', width: '52px', align: 'center' },
 ]
@@ -40,7 +40,7 @@ export const CONDUIT_CABLE_COLUMNS: TableColumn[] = [
 export const RACK_CABLE_COLUMNS: TableColumn[] = [
   { key: 'category', label: 'ケーブル種別', width: '27%' },
   { key: 'cableIdx', label: 'サイズ', width: '31%' },
-  { key: 'count', label: '本数', width: '74px', align: 'center' },
-  { key: 'spec', label: '外径', width: '84px', align: 'right' },
+  { key: 'count', label: '条数', width: '74px', align: 'center' },
+  { key: 'spec', subKey: 'specDetail', label: '外径計', width: '88px', align: 'right' },
   { key: 'actions', label: '', width: '52px', align: 'center' },
 ]

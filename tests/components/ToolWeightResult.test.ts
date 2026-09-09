@@ -16,12 +16,17 @@ describe('ToolWeightResult (app/components/tool/WeightResult.vue)', () => {
         </div>
       `,
     },
-    ToolResultDetails: {
-      template: '<div class="result-details-stub"><slot /></div>',
-    },
-    ToolResultRow: {
-      props: ['label'],
-      template: '<div class="result-row-stub"><span class="label">{{ label }}</span><slot /></div>',
+    MoleculesResultDetails: {
+      props: ['items'],
+      template: `
+        <div class="result-details-stub">
+          <div v-for="item in items" :key="item.label" class="detail-row">
+            <span>{{ item.label }}</span>
+            <span>{{ item.value }}</span>
+            <span v-if="item.unit">{{ item.unit }}</span>
+          </div>
+        </div>
+      `,
     },
   }
 
@@ -101,7 +106,7 @@ describe('ToolWeightResult (app/components/tool/WeightResult.vue)', () => {
 
     expect(resultBox.props('isEmpty')).toBe(true)
 
-    const details = wrapper.findComponent(commonStubs.ToolResultDetails)
+    const details = wrapper.findComponent(commonStubs.MoleculesResultDetails)
 
     expect(details.exists()).toBe(false)
   })

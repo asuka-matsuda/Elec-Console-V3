@@ -2,6 +2,14 @@ export type AtomsButtonVariant = 'primary' | 'secondary' | 'danger' | 'success'
 
 export type ResultBoxStatus = 'success' | 'warning' | 'danger' | 'error' | 'default' | 'neutral' | 'empty'
 
+export interface ResultDetailItem {
+  label: string
+  value: string | number
+  unit?: string
+  note?: string
+  topBorder?: boolean
+}
+
 export interface BaseButtonProps {
   to?: string
   href?: string
@@ -45,6 +53,7 @@ export type TabOption<V = string | number> = {
 
 export interface TableColumn<T = Record<string, unknown>> {
   key: (keyof T & string) | string
+  subKey?: (keyof T & string) | string
   label: string
   sortable?: boolean
   width?: string
@@ -102,4 +111,3 @@ export interface MoleculesInfoCardProps<T extends InfoCardItem = InfoCardItem> {
 export interface OrganismsGlobalNavProps {
   menuData: import('~/constants/data/menuData').MenuSection[]
 }
-

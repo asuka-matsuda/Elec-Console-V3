@@ -62,7 +62,7 @@ const formFields = computed(() =>
     @reset="handleReset"
   >
     <template #inputs>
-      <ToolVoltageInput v-model="form" :form-fields="formFields" />
+      <ToolOrganismsVoltageInput v-model="form" :form-fields="formFields" />
     </template>
 
     <template #results>

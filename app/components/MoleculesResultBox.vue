@@ -45,26 +45,26 @@ const resolvedStatus = computed(() => {
     ]"
   >
     <!-- ラベル領域 -->
-    <div v-if="title || $slots.title" class="result-box__label">
+    <div v-if="title || $slots.title" class="label">
       <slot name="title">
         {{ title }}
       </slot>
     </div>
 
     <!-- 数値・メイン表示領域 -->
-    <div class="result-box__value flex items-center justify-center gap-2 w-full font-mono tabular-nums">
+    <div class="value flex items-center justify-center gap-2 w-full font-mono tabular-nums">
       <slot name="value">
         <slot />
       </slot>
     </div>
 
     <!-- アクション領域 -->
-    <div v-if="$slots.actions" class="result-box__actions flex items-center justify-center">
+    <div v-if="$slots.actions" class="actions flex items-center justify-center">
       <slot name="actions" />
     </div>
 
     <!-- フッター領域 -->
-    <div v-if="$slots.footer" class="result-box__footer flex items-center justify-center">
+    <div v-if="$slots.footer" class="footer flex items-center justify-center">
       <slot name="footer" />
     </div>
   </AtomsPanel>
@@ -76,26 +76,24 @@ const resolvedStatus = computed(() => {
   transition: var(--transition-glow);
 
   &.is-sm {
-    .result-box__value,
-    :deep(.result-box__val),
+    .value,
     :deep(.value-text) {
       font-size: var(--font-size-2xl);
     }
   }
 
-  &__label {
+  .label {
     font-size: var(--font-size-2xs);
     color: var(--color-text-secondary);
     text-transform: uppercase;
     letter-spacing: var(--tracking-wide);
   }
 
-  &__value {
+  .value {
     font-size: var(--font-size-3xl);
     font-weight: var(--font-weight-bold);
     line-height: var(--line-height-tight);
 
-    :deep(.result-box__val),
     :deep(.value-text) {
       font-family: inherit;
       font-size: inherit;
@@ -104,13 +102,31 @@ const resolvedStatus = computed(() => {
       color: inherit;
       text-shadow: inherit;
     }
+
+    :deep(.not-applicable) {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-muted);
+      text-shadow: none;
+    }
+  }
+
+  .footer {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-secondary);
+    text-shadow: none;
+
+    :deep(strong) {
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-main);
+      text-shadow: none;
+    }
   }
 
   // ステータスに応じた発光・色演出
   &.is-success {
     border-color: color-mix(in srgb, var(--color-status-success) 40%, transparent);
 
-    .result-box__value {
+    .value {
       --glow-color: var(--color-status-success);
 
       color: var(--color-status-success);
@@ -121,7 +137,7 @@ const resolvedStatus = computed(() => {
   &.is-warning {
     border-color: color-mix(in srgb, var(--color-status-warning) 40%, transparent);
 
-    .result-box__value {
+    .value {
       --glow-color: var(--color-status-warning);
 
       color: var(--color-status-warning);
@@ -132,7 +148,7 @@ const resolvedStatus = computed(() => {
   &.is-danger {
     border-color: color-mix(in srgb, var(--color-status-danger) 40%, transparent);
 
-    .result-box__value {
+    .value {
       --glow-color: var(--color-status-danger);
 
       color: var(--color-status-danger);
@@ -141,7 +157,7 @@ const resolvedStatus = computed(() => {
   }
 
   &.is-neutral {
-    .result-box__value {
+    .value {
       color: var(--color-text-main);
     }
   }
@@ -149,7 +165,7 @@ const resolvedStatus = computed(() => {
   &.is-empty {
     opacity: 0.7;
 
-    .result-box__value {
+    .value {
       color: var(--color-text-muted);
     }
   }

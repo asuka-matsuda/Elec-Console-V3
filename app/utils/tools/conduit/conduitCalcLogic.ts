@@ -126,7 +126,7 @@ export function calculateConduitSize(
       totalArea: 0,
       cableDetails: [],
       error: 'ZERO_CABLES',
-      message: 'ケーブルの本数が0です',
+      message: 'ケーブルの条数が0です',
     }
   }
 

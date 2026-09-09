@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * WeightInput
+ * OrganismsWeightInput
  * [Tool Organism] ケーブル重量・ドラム選定ツールの条件入力フォームコンポーネント。
  * 2等分グリッドで条件入力を提供します。
  */

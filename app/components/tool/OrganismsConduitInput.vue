@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * ConduitInput
+ * OrganismsConduitInput
  * [Tool Organism] 配管サイズ自動選定ツールの条件入力コンポーネント。
  * 対象の配管種類と収容するケーブルリストの入力を管理します。
  */
@@ -71,10 +71,7 @@ const getCableAreaText = (cableIdx: string): string => {
 
     <!-- ケーブル条件セクション -->
     <section class="flex flex-col gap-[var(--space-item-gap)]">
-      <div class="flex items-center justify-between py-[var(--space-1)]">
-        <h4 class="font-bold text-[var(--font-size-sm)] text-[var(--color-text-main)]">
-          収容するケーブル
-        </h4>
+      <div class="flex items-center justify-end py-[var(--space-1)]">
         <AtomsButton
           variant="secondary"
           size="sm"
@@ -88,7 +85,7 @@ const getCableAreaText = (cableIdx: string): string => {
       <MoleculesTable
         :columns="CONDUIT_CABLE_COLUMNS"
         :data="inputs.inputCables"
-        class="w-full text-[var(--font-size-xs)]"
+        class="w-full"
       >
         <template #cell-category="{ row }">
           <AtomsSelect
@@ -109,7 +106,7 @@ const getCableAreaText = (cableIdx: string): string => {
         </template>
 
         <template #cell-count="{ row }">
-          <MoleculesInputGroup addon="本">
+          <MoleculesInputGroup addon="条">
             <AtomsInput
               v-model.number="row.count"
               type="number"

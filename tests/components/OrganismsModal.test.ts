@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import OrganismsModal from '../../app/components/common/organisms/Modal.vue'
+import OrganismsModal from '../../app/components/OrganismsModal.vue'
 
 describe('OrganismsModal.vue', () => {
   beforeEach(() => {
@@ -80,6 +80,7 @@ describe('OrganismsModal.vue', () => {
     })
 
     const buttons = wrapper.findAll('button')
+
     expect(buttons.length).toBe(2)
     expect(buttons[0].text()).toBe('閉じる')
     expect(buttons[1].text()).toBe('確定する')
@@ -105,6 +106,7 @@ describe('OrganismsModal.vue', () => {
     })
 
     const buttons = wrapper.findAll('button')
+
     await buttons[1].trigger('click')
 
     expect(wrapper.text()).toContain('送信エラーが発生しました')

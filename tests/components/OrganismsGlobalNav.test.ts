@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 
-import OrganismsGlobalNav from '../../app/components/common/organisms/GlobalNav.vue'
+import OrganismsGlobalNav from '../../app/components/OrganismsGlobalNav.vue'
 import type { MenuSection } from '../../app/constants/data/menuData'
 
 vi.mock('vue-router', () => ({
@@ -58,8 +58,10 @@ describe('OrganismsGlobalNav.vue', () => {
     })
 
     const aside = wrapper.find('aside')
+
     expect(aside.classes()).not.toContain('is-open')
     const overlay = wrapper.find('.overlay')
+
     expect(overlay.classes()).not.toContain('is-open')
   })
 
@@ -75,8 +77,10 @@ describe('OrganismsGlobalNav.vue', () => {
     })
 
     const aside = wrapper.find('aside')
+
     expect(aside.classes()).toContain('is-open')
     const overlay = wrapper.find('.overlay')
+
     expect(overlay.classes()).toContain('is-open')
   })
 

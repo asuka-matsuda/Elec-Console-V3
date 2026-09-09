@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
 
-import OrganismsHeader from '../../app/components/common/organisms/Header.vue'
+import OrganismsHeader from '../../app/components/OrganismsHeader.vue'
 
 const mockCurrentUser = ref<{ firstName: string, lastName: string } | null>(null)
 const mockLogout = vi.fn()

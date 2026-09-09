@@ -2,10 +2,10 @@ import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { ref } from 'vue'
 
-import RackInput from '../../app/components/tool/RackInput.vue'
+import OrganismsRackInput from '../../app/components/tool/OrganismsRackInput.vue'
 import type { RackInputs } from '../../app/utils/tools/rack/rackMapper'
 
-describe('ToolRackInput (app/components/tool/RackInput.vue)', () => {
+describe('ToolOrganismsRackInput (app/components/tool/OrganismsRackInput.vue)', () => {
   const createMockInputs = (overrides: Partial<RackInputs> = {}): RackInputs => ({
     mode: 'strong',
     rackHeight: 100,
@@ -60,7 +60,7 @@ describe('ToolRackInput (app/components/tool/RackInput.vue)', () => {
             <slot name="cell-category" :row="row" />
             <slot name="cell-cableIdx" :row="row" />
             <slot name="cell-count" :row="row" />
-            <slot name="cell-spec" :row="row" />
+            <slot name="cell-spec" :row="row">{{ row.spec }} {{ row.specDetail }}</slot>
             <slot name="cell-actions" :row="row" />
           </div>
         </div>
@@ -70,7 +70,7 @@ describe('ToolRackInput (app/components/tool/RackInput.vue)', () => {
 
   it('強電モードで正しく初期描画されること', () => {
     const inputs = ref(createMockInputs())
-    const wrapper = mount(RackInput, {
+    const wrapper = mount(OrganismsRackInput, {
       props: {
         'modelValue': inputs.value,
         'onUpdate:modelValue': (val: RackInputs) => {
@@ -91,14 +91,12 @@ describe('ToolRackInput (app/components/tool/RackInput.vue)', () => {
     expect(wrapper.text()).toContain('ケーブル間隔')
     expect(wrapper.text()).toContain('親桁クリアランス')
 
-    // セクションタイトル
-    expect(wrapper.text()).toContain('強電ケーブル条件')
     expect(wrapper.text()).toContain('強電ケーブルを追加')
   })
 
   it('ケーブル追加ボタンをクリックすると add-strong-cable が emit されること', async () => {
     const inputs = ref(createMockInputs({ mode: 'strong' }))
-    const wrapper = mount(RackInput, {
+    const wrapper = mount(OrganismsRackInput, {
       props: {
         'modelValue': inputs.value,
         'onUpdate:modelValue': (val: RackInputs) => {
@@ -121,7 +119,7 @@ describe('ToolRackInput (app/components/tool/RackInput.vue)', () => {
 
   it('弱電モード時、タイトルと追加ボタンが弱電用になり add-weak-cable が emit されること', async () => {
     const inputs = ref(createMockInputs({ mode: 'weak' }))
-    const wrapper = mount(RackInput, {
+    const wrapper = mount(OrganismsRackInput, {
       props: {
         'modelValue': inputs.value,
         'onUpdate:modelValue': (val: RackInputs) => {
@@ -134,7 +132,6 @@ describe('ToolRackInput (app/components/tool/RackInput.vue)', () => {
     })
 
     expect(wrapper.text()).toContain('強電必要幅')
-    expect(wrapper.text()).toContain('弱電ケーブル条件')
     expect(wrapper.text()).toContain('弱電ケーブルを追加')
 
     const addButton = wrapper.findAll('button').find(b => b.text().includes('弱電ケーブルを追加'))
@@ -147,7 +144,7 @@ describe('ToolRackInput (app/components/tool/RackInput.vue)', () => {
 
   it('ケーブル削除ボタンをクリックすると remove-strong-cable が emit されること', async () => {
     const inputs = ref(createMockInputs({ mode: 'strong' }))
-    const wrapper = mount(RackInput, {
+    const wrapper = mount(OrganismsRackInput, {
       props: {
         'modelValue': inputs.value,
         'onUpdate:modelValue': (val: RackInputs) => {
@@ -176,7 +173,7 @@ describe('ToolRackInput (app/components/tool/RackInput.vue)', () => {
         strongCablesUI: [{ id: 'single-cable', category: 'CV', cableIdx: '0', count: 1 }],
       }),
     )
-    const wrapper = mount(RackInput, {
+    const wrapper = mount(OrganismsRackInput, {
       props: {
         'modelValue': inputs.value,
         'onUpdate:modelValue': (val: RackInputs) => {
@@ -193,7 +190,7 @@ describe('ToolRackInput (app/components/tool/RackInput.vue)', () => {
     expect(deleteButton.attributes('disabled')).toBeDefined()
   })
 
-  it('ケーブル本数に応じて外径が動的に計算・表示されること', () => {
+  it('ケーブル条数に応じて外径が動的に計算・表示されること', () => {
     const inputs = ref(
       createMockInputs({
         mode: 'strong',
@@ -203,7 +200,7 @@ describe('ToolRackInput (app/components/tool/RackInput.vue)', () => {
         ],
       }),
     )
-    const wrapper = mount(RackInput, {
+    const wrapper = mount(OrganismsRackInput, {
       props: {
         'modelValue': inputs.value,
         'onUpdate:modelValue': (val: RackInputs) => {
@@ -216,8 +213,9 @@ describe('ToolRackInput (app/components/tool/RackInput.vue)', () => {
     })
 
     // 1行目 (count=1): 単体外径のみ
-    // 2行目 (count=3): 3本分の合計外径と (φ...×3) の内訳表記
+    // 2行目 (count=3): 3条分の合計外径と (φ...×3) の内訳表記
     const text = wrapper.text()
+
     expect(text).toContain('×3')
   })
 })

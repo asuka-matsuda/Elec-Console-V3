@@ -30,7 +30,7 @@ const emit = defineEmits<{
 }>()
 
 defineSlots<{
-  [K in `cell-${string}`]?: (props: { value: unknown, row: T, index: number }) => unknown
+  [K in `cell-${string}`]?: (props: { value: unknown, subValue?: unknown, row: T, index: number }) => unknown
 }>()
 
 const handleSort = (col: TableColumn<unknown>) => {
@@ -110,10 +110,33 @@ const getCellValue = (row: T, key: string): unknown => {
             <slot
               :name="`cell-${col.key}`"
               :value="getCellValue(row, col.key)"
+              :sub-value="col.subKey ? getCellValue(row, col.subKey) : undefined"
               :row="row"
               :index="index"
             >
-              {{ getCellValue(row, col.key) }}
+              <template v-if="col.subKey">
+                <div
+                  class="table-cell__stacked flex flex-col leading-tight min-w-0"
+                  :class="{
+                    'items-start text-left': !col.align || col.align === 'left',
+                    'items-center text-center': col.align === 'center',
+                    'items-end text-right': col.align === 'right',
+                  }"
+                >
+                  <span class="table-cell__main truncate w-full">
+                    {{ getCellValue(row, col.key) ?? '-' }}
+                  </span>
+                  <span
+                    v-if="getCellValue(row, col.subKey)"
+                    class="table-cell__sub truncate w-full"
+                  >
+                    {{ getCellValue(row, col.subKey) }}
+                  </span>
+                </div>
+              </template>
+              <template v-else>
+                {{ getCellValue(row, col.key) }}
+              </template>
             </slot>
           </td>
         </tr>
@@ -153,6 +176,11 @@ const getCellValue = (row: T, key: string): unknown => {
 
   &:last-child {
     border-right: none;
+  }
+
+  &__sub {
+    font-size: var(--font-size-2xs);
+    color: var(--color-text-muted);
   }
 }
 </style>

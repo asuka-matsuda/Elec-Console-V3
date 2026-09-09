@@ -36,7 +36,7 @@ const conduitCategoryOptions = computed(() => {
     @reset="openResetModal"
   >
     <template #inputs>
-      <ToolConduitInput
+      <ToolOrganismsConduitInput
         v-model="inputs"
         :category-options="conduitCategoryOptions"
         @add-cable="addCable"

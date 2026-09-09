@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * VoltageInput
+ * OrganismsVoltageInput
  * [Tool Organism] 電圧降下・ケーブルサイズ選定ツールの条件入力フォームコンポーネント。
  * 計算モード切替とグリッドレイアウトによる条件入力を提供します。
  */

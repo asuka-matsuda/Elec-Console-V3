@@ -5,6 +5,7 @@
  */
 import { computed } from 'vue'
 
+import type { ResultDetailItem } from '~/types/components'
 import type { WeightCalcResult } from '~/utils/tools/weight/weightCalcLogic'
 import { formatWeightResult } from '~/utils/tools/weight/weightResultPresenter'
 
@@ -13,6 +14,24 @@ const props = defineProps<{
 }>()
 
 const vm = computed(() => formatWeightResult(props.result))
+
+const detailItems = computed(() => {
+  if (vm.value.isError) return []
+
+  const items: ResultDetailItem[] = [
+    { label: 'ケーブル総重量', value: vm.value.cableWeight, unit: 'kg' },
+  ]
+
+  if (vm.value.hasBestDrum) {
+    items.push(
+      { label: 'ドラム空重量', value: vm.value.drumWeight, unit: 'kg' },
+      { label: '総重量 (ケーブル+ドラム)', value: vm.value.totalWeight, unit: 'kg', topBorder: true },
+      { label: '最大巻取可能長', value: vm.value.maxCapacityMeters, unit: 'm' },
+    )
+  }
+
+  return items
+})
 </script>
 
 <template>
@@ -25,27 +44,20 @@ const vm = computed(() => formatWeightResult(props.result))
       <span class="value-text">{{ vm.displayDrum }}</span>
 
       <template v-if="vm.warningText" #footer>
-        <div class="text-center font-bold text-[var(--font-size-sm)] text-[var(--color-status-danger)]">
+        <p class="warning-text text-center">
           {{ vm.warningText }}
-        </div>
+        </p>
       </template>
     </MoleculesResultBox>
 
-    <ToolResultDetails v-if="!vm.isError">
-      <ToolResultRow label="ケーブル総重量">
-        <strong>{{ vm.cableWeight }}</strong> kg
-      </ToolResultRow>
-      <template v-if="vm.hasBestDrum">
-        <ToolResultRow label="ドラム空重量">
-          <strong>{{ vm.drumWeight }}</strong> kg
-        </ToolResultRow>
-        <ToolResultRow label="総重量 (ケーブル+ドラム)" top-border>
-          <strong>{{ vm.totalWeight }}</strong> kg
-        </ToolResultRow>
-        <ToolResultRow label="最大巻取可能長">
-          <strong>{{ vm.maxCapacityMeters }}</strong> m
-        </ToolResultRow>
-      </template>
-    </ToolResultDetails>
+    <MoleculesResultDetails v-if="!vm.isError && detailItems.length > 0" :items="detailItems" />
   </div>
 </template>
+
+<style scoped lang="scss">
+.warning-text {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-status-danger);
+}
+</style>
