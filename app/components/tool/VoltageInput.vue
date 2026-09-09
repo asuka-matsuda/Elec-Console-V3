@@ -1,8 +1,8 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
- * ToolVoltageInput
- * 電圧降下・ケーブルサイズ選定ツールの条件入力フォームコンポーネントです。
- * 計算モード切替と2等分グリッドによる条件入力を提供します。
+ * VoltageInput
+ * [Tool Organism] 電圧降下・ケーブルサイズ選定ツールの条件入力フォームコンポーネント。
+ * 計算モード切替とグリッドレイアウトによる条件入力を提供します。
  */
 import { Field } from 'vee-validate'
 
@@ -18,10 +18,10 @@ defineProps<{
 </script>
 
 <template>
-  <div class="voltage-input">
+  <div class="flex flex-col gap-[var(--space-form-row-gap)]">
     <AtomsRadioGroup v-model="form.mode" :options="modeOptions" />
 
-    <div class="voltage-input__grid">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-[var(--space-form-col-gap)] gap-y-[var(--space-form-row-gap)]">
       <template v-for="field in formFields" :key="field.id">
         <Field
           v-if="!field.showIf || field.showIf()"
@@ -100,21 +100,3 @@ defineProps<{
     </div>
   </div>
 </template>
-
-<style scoped lang="scss">
-.voltage-input {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-form-row-gap);
-
-  &__grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-form-row-gap) var(--space-form-col-gap);
-
-    @include mq("sm") {
-      grid-template-columns: 1fr;
-    }
-  }
-}
-</style>

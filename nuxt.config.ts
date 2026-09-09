@@ -5,8 +5,44 @@ export default defineNuxtConfig({
 
   components: [
     {
+      path: '~/components/common/atoms',
+      prefix: 'Atoms',
+      pathPrefix: false,
+    },
+    {
+      path: '~/components/common/molecules',
+      prefix: 'Molecules',
+      pathPrefix: false,
+    },
+    {
+      path: '~/components/common/organisms',
+      prefix: 'Organisms',
+      pathPrefix: false,
+    },
+    {
+      path: '~/components/common/templates',
+      prefix: 'Templates',
+      pathPrefix: false,
+    },
+    {
+      path: '~/components/tool',
+      prefix: 'Tool',
+      pathPrefix: false,
+    },
+    {
+      path: '~/components/portal',
+      prefix: 'Portal',
+      pathPrefix: false,
+    },
+    {
+      path: '~/components/database',
+      prefix: 'Db',
+      pathPrefix: false,
+    },
+    {
       path: '~/components',
       pathPrefix: false,
+      ignore: ['common/**', 'tool/**', 'portal/**', 'database/**'],
     },
   ],
   devtools: { enabled: true },

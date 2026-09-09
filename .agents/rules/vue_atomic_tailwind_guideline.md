@@ -23,19 +23,41 @@ Tailwind CSSは**レイアウト・配置・余白・寸法に関するものだ
 
 ---
 
-## 2. コンポーネント命名規則・判定ルール（プレフィックス方式）
+## 2. コンポーネントディレクトリ設計・命名規則（ドメイン・アトミック統合方式）
 
-コンポーネントのディレクトリ階層化（サブディレクトリ分割）は行わず、**`app/components/` 直下にフラット配置**します。
-アトミックデザインの階層分類は、従来の `App...` プレフィックスから **`Atoms...` / `Molecules...` / `Organisms...` / `Templates...` などのプレフィックスへの変更**によって表現します。
+ファイル名の肥大化を防ぎ、開発時の見通しを最大化するため、**「業務ドメイン（機能）」と「アトミックデザイン」を組み合わせたディレクトリ分割**を採用します。
+Nuxt 3 のコンポーネント自動プレフィックス機能（`nuxt.config.ts`）により、**ファイル名は短く保ちつつ、テンプレート呼び出しタグは既存のプレフィックスを維持**します。
+
+### ディレクトリ構造とタグ名の対応関係
 
 ```
 app/components/
-├── AtomsBadge.vue          # [Atoms] 最小パーツ
-├── AtomsButton.vue         # [Atoms] 最小パーツ
-├── MoleculesFormGroup.vue  # [Molecules] Atomsの組み合わせ
-├── OrganismsHeader.vue     # [Organisms] データ・APIと連携するセクション
-...
+├── common/                  # 全画面共通パーツ
+│   ├── atoms/               # Button.vue ➔ <AtomsButton>
+│   ├── molecules/           # FormGroup.vue ➔ <MoleculesFormGroup>
+│   ├── organisms/           # Header.vue ➔ <OrganismsHeader>, Modal.vue ➔ <OrganismsModal>
+│   └── templates/           # 共通レイアウト枠（必要時）
+│
+├── tool/                    # 電卓・計算ツール専用（本質的にOrganisms）
+│   ├── VoltageInput.vue     # ➔ <ToolVoltageInput>
+│   ├── VoltageResult.vue    # ➔ <ToolVoltageResult>
+│   ├── ConduitInput.vue     # ➔ <ToolConduitInput>
+│   └── HistoryCard.vue      # ➔ <ToolHistoryCard>
+│
+├── portal/                  # 送電ポータル・現場管理専用（本質的にOrganisms）
+│   ├── Phase1Table.vue      # ➔ <PortalPhase1Table>
+│   ├── SiteSettingsModal.vue# ➔ <PortalSiteSettingsModal>
+│   └── CalToolbar.vue       # ➔ <PortalCalToolbar>
+│
+└── database/                # 規格データベース専用
+    ├── DbLayout.vue         # ➔ <DbLayout>
+    └── DbMenuTile.vue       # ➔ <DbMenuTile>
 ```
+
+### なぜこの設計にするのか？
+1. **ファイル名の短縮**: `OrganismsToolVoltageInput.vue` のような冗長なファイル名を避け、`tool/VoltageInput.vue` のように直感的で短いファイル名にできる。
+2. **テンプレート呼び出しタグの安定性**: Nuxtの `prefix` 設定（例: `tool/` ➔ `Tool`、`common/atoms/` ➔ `Atoms`）により、既存の `<ToolVoltageInput>` や `<AtomsButton>` などの呼び出しタグをそのまま維持でき、移行リスクが極めて低い。
+3. **ドメイン隔離**: 特定画面専用の部品と共通部品が物理的に分離され、コードの見通しと保守性が向上する。
 
 ---
 
