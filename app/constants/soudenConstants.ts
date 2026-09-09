@@ -66,11 +66,11 @@ export const KENSOU_OPTIONS_1P: SelectOption[] = [
  * 送電試験 操作ログ テーブルカラム定義
  */
 export const OPERATION_LOG_COLUMNS: TableColumn<OperationLogItem>[] = [
-  { key: 'timestamp', label: '日時', width: '170px' },
+  { key: 'timestamp', label: '日時', width: '170px', align: 'center' },
   { key: 'worker', label: '作業者', width: '120px' },
   { key: 'action', label: 'アクション', width: '140px', align: 'center' },
   { key: 'targetBan', label: '対象盤', width: '130px' },
-  { key: 'targetKairo', label: '対象回路', width: '140px' },
+  { key: 'targetKairo', label: '対象回路', width: '140px', align: 'center' },
   { key: 'details', label: '詳細内容' },
 ]
 

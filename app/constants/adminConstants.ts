@@ -14,24 +14,24 @@ export const ADMIN_TABS: TabOption[] = [
  * ユーザー管理 テーブルカラム定義
  */
 export const ADMIN_USER_COLUMNS: TableColumn<User>[] = [
-  { key: 'id', label: 'ID', sortable: true },
+  { key: 'id', label: 'ID', sortable: true, align: 'center' },
   { key: 'lastName', label: '名前', sortable: true },
   { key: 'loginId', label: 'ログインID', sortable: true },
-  { key: 'role', label: '権限', sortable: true },
-  { key: 'lastLoginAt', label: '最終ログイン', sortable: true },
-  { key: 'actions', label: '操作' },
+  { key: 'role', label: '権限', sortable: true, align: 'center' },
+  { key: 'lastLoginAt', label: '最終ログイン', sortable: true, align: 'center' },
+  { key: 'actions', label: '操作', align: 'center' },
 ]
 
 /**
  * 現場管理 テーブルカラム定義
  */
 export const ADMIN_SITE_COLUMNS: TableColumn<Site>[] = [
-  { key: 'id', label: '現場ID', sortable: true },
+  { key: 'id', label: '現場ID', sortable: true, align: 'center' },
   { key: 'name', label: '現場名', sortable: true },
-  { key: 'status', label: 'ステータス', sortable: true },
-  { key: 'createdAt', label: '作成日時', sortable: true },
-  { key: 'disabledAt', label: '無効化日時', sortable: true },
-  { key: 'actions', label: '操作' },
+  { key: 'status', label: 'ステータス', sortable: true, align: 'center' },
+  { key: 'createdAt', label: '作成日時', sortable: true, align: 'center' },
+  { key: 'disabledAt', label: '無効化日時', sortable: true, align: 'center' },
+  { key: 'actions', label: '操作', align: 'center' },
 ]
 
 /**
