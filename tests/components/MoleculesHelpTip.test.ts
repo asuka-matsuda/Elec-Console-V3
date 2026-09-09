@@ -52,7 +52,7 @@ describe('MoleculesHelpTip.vue', () => {
   it('helpId を指定するとマスタから解説文・参考規格が自動解決されること', async () => {
     const wrapper = mount(MoleculesHelpTip, {
       props: {
-        helpId: 'marginRate',
+        helpId: 'conduitFillRate',
       },
       global: {
         stubs: commonStubs,
@@ -66,8 +66,8 @@ describe('MoleculesHelpTip.vue', () => {
     const tooltip = document.body.querySelector('[role="tooltip"]')
 
     expect(tooltip).not.toBeNull()
-    expect(tooltip?.textContent).toContain('内線規程に基づき')
-    expect(tooltip?.textContent).toContain('内線規程・JEAC 8001')
+    expect(tooltip?.textContent).toContain('電線管の内断面積に対する全ケーブル断面積の割合')
+    expect(tooltip?.textContent).toContain('内線規程 3105-3')
   })
 
   it('カスタムスロットが正しく描画されること', async () => {
