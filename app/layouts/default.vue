@@ -16,14 +16,10 @@ const { items: breadcrumbs, accent: breadcrumbAccent } = useBreadcrumbs()
     <AppGlobalNav v-model:is-open="isSidebarOpen" :menu-data="menuData" />
 
     <div class="main-container">
-      <AppHeader
+      <OrganismsHeader
         :breadcrumbs="breadcrumbs"
         @toggle-sidebar="isSidebarOpen = !isSidebarOpen"
-      >
-        <template #actions>
-          <AppHeaderUser />
-        </template>
-      </AppHeader>
+      />
 
       <main class="content-container">
         <slot />
