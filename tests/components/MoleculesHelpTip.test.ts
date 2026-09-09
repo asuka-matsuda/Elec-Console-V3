@@ -40,6 +40,7 @@ describe('MoleculesHelpTip.vue', () => {
     // 1回目のクリックで開く (Teleport先: document.body)
     await button.trigger('click')
     const tooltip = document.body.querySelector('[role="tooltip"]')
+
     expect(tooltip).not.toBeNull()
     expect(tooltip?.textContent).toContain('テスト解説文')
 
@@ -59,9 +60,11 @@ describe('MoleculesHelpTip.vue', () => {
     })
 
     const button = wrapper.find('button')
+
     await button.trigger('click')
 
     const tooltip = document.body.querySelector('[role="tooltip"]')
+
     expect(tooltip).not.toBeNull()
     expect(tooltip?.textContent).toContain('内線規程に基づき')
     expect(tooltip?.textContent).toContain('内線規程・JEAC 8001')
@@ -80,6 +83,7 @@ describe('MoleculesHelpTip.vue', () => {
     await wrapper.find('button').trigger('click')
 
     const customContent = document.body.querySelector('.custom-content')
+
     expect(customContent).not.toBeNull()
     expect(customContent?.textContent).toBe('カスタムスロットの中身')
   })

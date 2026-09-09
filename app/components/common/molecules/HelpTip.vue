@@ -47,13 +47,13 @@ const updatePosition = () => {
   if (!triggerRef.value || !import.meta.client) return
 
   const rect = triggerRef.value.getBoundingClientRect()
-  const tipWidth = 240 // パネルの基本幅
+  const tipWidth = 200 // チップのコンパクト幅
   const margin = 12
   const windowWidth = window.innerWidth
   const windowHeight = window.innerHeight
 
   // 水平方向の位置計算（右端・左端クランプ）
-  let left = rect.left - 8
+  let left = rect.left - 6
   if (left + tipWidth > windowWidth - margin) {
     left = Math.max(margin, windowWidth - tipWidth - margin)
   }
@@ -63,12 +63,12 @@ const updatePosition = () => {
 
   // アロー（矢印）の位置: トリガーアイコンの中心を追従
   const triggerCenterX = rect.left + rect.width / 2
-  const arrowLeft = Math.max(8, Math.min(tipWidth - 16, triggerCenterX - left - 4))
+  const arrowLeft = Math.max(8, Math.min(tipWidth - 16, triggerCenterX - left - 3))
 
   // 垂直方向の位置計算（基本は下、画面下端に近い場合は上）
-  const expectedHeight = 120
+  const expectedHeight = 80
   const isTopPlacement = rect.bottom + expectedHeight > windowHeight - margin && rect.top > expectedHeight
-  const top = isTopPlacement ? rect.top - 6 : rect.bottom + 6
+  const top = isTopPlacement ? rect.top - 5 : rect.bottom + 5
 
   position.value = {
     top,
@@ -150,7 +150,7 @@ onBeforeUnmount(() => {
     <!-- トリガーアイコンボタン -->
     <button
       type="button"
-      class="inline-flex items-center justify-center w-4 h-4 rounded-full text-[var(--color-text-muted)] hover:text-[var(--theme-accent)] hover:bg-[var(--color-bg-hover)] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--theme-accent)] cursor-pointer"
+      class="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full text-[var(--color-text-muted)] hover:text-[var(--theme-accent)] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--theme-accent)] cursor-pointer"
       :aria-label="ariaLabel"
       :aria-expanded="isOpen"
       tabindex="0"
@@ -159,13 +159,13 @@ onBeforeUnmount(() => {
       <AtomsIcon name="help-circle" size="sm" class="w-3.5 h-3.5" />
     </button>
 
-    <!-- 最前面にTeleportされる吹き出しツールチップ -->
+    <!-- 最前面にTeleportされるコンパクト吹き出しツールチップ -->
     <Teleport to="body">
       <transition name="helptip-fade">
         <div
           v-if="isOpen && (displayText || $slots.default)"
           ref="panelRef"
-          class="helptip-panel fixed z-[9999] w-[240px] p-2.5 rounded-[var(--radius-md)] border border-[var(--color-border)] shadow-xl"
+          class="helptip-panel fixed z-[9999] w-[200px] px-2.5 py-2 rounded-md border border-[#334155] bg-[#0f172a]/95 text-[#cbd5e1] shadow-lg shadow-black/50 backdrop-blur-sm pointer-events-none sm:pointer-events-auto"
           :class="[position.isTopPlacement ? '-translate-y-full' : '']"
           :style="{
             top: `${position.top}px`,
@@ -175,19 +175,19 @@ onBeforeUnmount(() => {
           @mouseenter="show"
           @mouseleave="hide"
         >
-          <!-- アロー（矢印） -->
+          <!-- アロー（極小矢印） -->
           <div
-            class="arrow absolute w-2 h-2 rotate-45 border border-[var(--color-border)] bg-[var(--surface-bg-elevated)]"
+            class="arrow absolute w-1.5 h-1.5 rotate-45 border border-[#334155] bg-[#0f172a]"
             :style="{ left: `${position.arrowLeft}px` }"
             :class="[
               position.isTopPlacement
-                ? 'bottom-[-5px] border-t-0 border-l-0'
-                : 'top-[-5px] border-b-0 border-r-0',
+                ? 'bottom-[-4px] border-t-0 border-l-0'
+                : 'top-[-4px] border-b-0 border-r-0',
             ]"
           />
 
-          <!-- 解説本文 -->
-          <div class="text-[var(--font-size-xs)] leading-normal text-[var(--color-text-main)] font-normal whitespace-normal">
+          <!-- 解説本文（極小フォント 11px） -->
+          <div class="text-[11px] leading-[1.4] whitespace-normal">
             <slot :help="resolvedHelp">
               {{ displayText }}
             </slot>
@@ -196,10 +196,10 @@ onBeforeUnmount(() => {
           <!-- 準拠規格バッジ -->
           <div
             v-if="displayReference"
-            class="mt-1.5 pt-1 border-t border-[var(--color-border-subtle)] flex items-center justify-between text-[var(--font-size-2xs)]"
+            class="mt-1.5 pt-1 border-t border-[#334155]/60 flex items-center justify-between text-[10px]"
           >
-            <span class="text-[var(--color-text-muted)] font-normal">規格:</span>
-            <span class="font-medium text-[var(--theme-accent)]">
+            <span class="text-[#64748b]">規格:</span>
+            <span class="font-medium text-cyan-400">
               {{ displayReference }}
             </span>
           </div>
@@ -210,11 +210,6 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped lang="scss">
-.helptip-panel {
-  background-color: var(--surface-bg-elevated);
-  backdrop-filter: blur(var(--blur-md));
-}
-
 .helptip-fade-enter-active,
 .helptip-fade-leave-active {
   transition: transform var(--transition-fast), opacity var(--transition-fast);
