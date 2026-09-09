@@ -41,6 +41,7 @@ const resolvedStatus = computed(() => {
     :class="[
       `is-${resolvedStatus}`,
       `is-${size}`,
+      size === 'sm' ? '!py-1 !px-2' : '!py-2 !px-3',
     ]"
   >
     <!-- ラベル領域 -->
@@ -71,13 +72,10 @@ const resolvedStatus = computed(() => {
 
 <style scoped lang="scss">
 .result-box {
-  padding: var(--space-2) var(--space-3);
   box-shadow: var(--shadow-sink);
   transition: var(--transition-glow);
 
   &.is-sm {
-    padding: var(--space-1) var(--space-2);
-
     .result-box__value,
     :deep(.result-box__val),
     :deep(.value-text) {

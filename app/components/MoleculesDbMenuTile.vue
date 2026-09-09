@@ -89,7 +89,7 @@ const {
   }
 
   .tile-title {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-md);
     font-weight: var(--font-weight-bold);
     line-height: var(--line-height-tight);
     color: var(--theme-accent);
@@ -100,7 +100,7 @@ const {
   }
 
   .tile-desc {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-xs);
     color: var(--color-text-secondary);
     letter-spacing: var(--tracking-normal);
   }
