@@ -1,5 +1,7 @@
 export type AtomsButtonVariant = 'primary' | 'secondary' | 'danger' | 'success'
 
+export type ResultBoxStatus = 'success' | 'warning' | 'danger' | 'error' | 'default' | 'neutral' | 'empty'
+
 export interface BaseButtonProps {
   to?: string
   href?: string

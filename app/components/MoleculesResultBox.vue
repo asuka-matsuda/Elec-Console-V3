@@ -1,34 +1,26 @@
 <script setup lang="ts">
 /**
- * AppResultBox
- * 計算ツールの主結果表示エリアの大枠（外枠・タイトル・状態表現）を提供するコンポーネントです。
- * 内部のレイアウトやメトリクスはツールごとに柔軟にスロットで構成できます。
+ * MoleculesResultBox
+ * [Molecules] 計算ツールやサマリー画面で、主要な結果数値・ステータス（判定）を表示するための特化ボックス。
+ * AtomsPanel を土台とし、計器風の凹みシャドウ（--shadow-sink）、等幅数値フォント、判定ステータスに応じた発光演出を提供します。
  */
 import { computed } from 'vue'
 
-export type ResultBoxStatus
-  = | 'success'
-    | 'warning'
-    | 'danger'
-    | 'error'
-    | 'default'
-    | 'neutral'
-    | 'empty'
+import type { ResultBoxStatus } from '~/types/components'
 
-const props = withDefaults(
-  defineProps<{
-    title?: string
-    status?: ResultBoxStatus
-    variant?: ResultBoxStatus
-    isEmpty?: boolean
-    size?: 'sm' | 'md'
-  }>(),
-  {
-    status: 'neutral',
-    isEmpty: false,
-    size: 'md',
-  },
-)
+interface Props {
+  title?: string
+  status?: ResultBoxStatus
+  variant?: ResultBoxStatus
+  isEmpty?: boolean
+  size?: 'sm' | 'md'
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  status: 'neutral',
+  isEmpty: false,
+  size: 'md',
+})
 
 const resolvedStatus = computed(() => {
   if (props.isEmpty) return 'empty'
@@ -43,63 +35,53 @@ const resolvedStatus = computed(() => {
 </script>
 
 <template>
-  <div
-    class="result-box"
+  <AtomsPanel
+    as="div"
+    class="result-box flex flex-1 flex-col items-center justify-center gap-1 w-full min-w-0"
     :class="[
       `is-${resolvedStatus}`,
       `is-${size}`,
     ]"
   >
+    <!-- ラベル領域 -->
     <div v-if="title || $slots.title" class="result-box__label">
       <slot name="title">
         {{ title }}
       </slot>
     </div>
 
-    <div class="result-box__value">
+    <!-- 数値・メイン表示領域 -->
+    <div class="result-box__value flex items-center justify-center gap-2 w-full font-mono tabular-nums">
       <slot name="value">
         <slot />
       </slot>
     </div>
 
-    <div v-if="$slots.footer" class="result-box__footer">
+    <!-- アクション領域 -->
+    <div v-if="$slots.actions" class="result-box__actions flex items-center justify-center">
+      <slot name="actions" />
+    </div>
+
+    <!-- フッター領域 -->
+    <div v-if="$slots.footer" class="result-box__footer flex items-center justify-center">
       <slot name="footer" />
     </div>
-  </div>
+  </AtomsPanel>
 </template>
 
 <style scoped lang="scss">
 .result-box {
-  position: relative;
-  z-index: 1;
-
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: var(--space-1);
-  align-items: center;
-  justify-content: center;
-
-  min-width: 0;
   padding: var(--space-2) var(--space-3);
-  border: var(--border-width-base) solid var(--color-border);
-  border-radius: var(--radius-sm);
-
-  background-color: var(--surface-bg);
-  backdrop-filter: blur(var(--blur-sm));
   box-shadow: var(--shadow-sink);
-
-  transition: var(--transition-base);
+  transition: var(--transition-glow);
 
   &.is-sm {
     padding: var(--space-1) var(--space-2);
 
+    .result-box__value,
     :deep(.result-box__val),
     :deep(.value-text) {
-      font-family: var(--font-mono);
       font-size: var(--font-size-2xl);
-      font-weight: var(--font-weight-bold);
-      font-variant-numeric: tabular-nums;
     }
   }
 
@@ -107,37 +89,30 @@ const resolvedStatus = computed(() => {
     font-size: var(--font-size-2xs);
     color: var(--color-text-secondary);
     text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
   }
 
   &__value {
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
-    justify-content: center;
-
-    width: 100%;
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
 
     :deep(.result-box__val),
     :deep(.value-text) {
-      font-family: var(--font-mono);
-      font-size: var(--font-size-3xl);
-      font-weight: var(--font-weight-bold);
-      font-variant-numeric: tabular-nums;
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      font-variant-numeric: inherit;
+      color: inherit;
+      text-shadow: inherit;
     }
   }
 
-  &__footer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  // ステータスに応じた演出
+  // ステータスに応じた発光・色演出
   &.is-success {
     border-color: color-mix(in srgb, var(--color-status-success) 40%, transparent);
 
-    :deep(.result-box__val),
-    :deep(.value-text) {
+    .result-box__value {
       --glow-color: var(--color-status-success);
 
       color: var(--color-status-success);
@@ -148,8 +123,7 @@ const resolvedStatus = computed(() => {
   &.is-warning {
     border-color: color-mix(in srgb, var(--color-status-warning) 40%, transparent);
 
-    :deep(.result-box__val),
-    :deep(.value-text) {
+    .result-box__value {
       --glow-color: var(--color-status-warning);
 
       color: var(--color-status-warning);
@@ -160,8 +134,7 @@ const resolvedStatus = computed(() => {
   &.is-danger {
     border-color: color-mix(in srgb, var(--color-status-danger) 40%, transparent);
 
-    :deep(.result-box__val),
-    :deep(.value-text) {
+    .result-box__value {
       --glow-color: var(--color-status-danger);
 
       color: var(--color-status-danger);
@@ -170,8 +143,7 @@ const resolvedStatus = computed(() => {
   }
 
   &.is-neutral {
-    :deep(.result-box__val),
-    :deep(.value-text) {
+    .result-box__value {
       color: var(--color-text-main);
     }
   }
@@ -179,8 +151,7 @@ const resolvedStatus = computed(() => {
   &.is-empty {
     opacity: 0.7;
 
-    :deep(.result-box__val),
-    :deep(.value-text) {
+    .result-box__value {
       color: var(--color-text-muted);
     }
   }

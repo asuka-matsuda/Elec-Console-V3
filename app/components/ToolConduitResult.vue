@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * ToolConduitResult
  * 配管サイズ計算の結果を視覚的に表示する3段縦積みコンポーネントです。
@@ -34,7 +34,7 @@ const statusCustom = computed(() =>
 <template>
   <div class="conduit-result" :class="[size === 'sm' ? 'is-sm' : '']">
     <!-- Row 1: 32% (異種) -->
-    <AppResultBox
+    <MoleculesResultBox
       :status="status32"
       :size="size"
     >
@@ -57,10 +57,10 @@ const statusCustom = computed(() =>
           <span class="value-sep">)</span>
         </template>
       </template>
-    </AppResultBox>
+    </MoleculesResultBox>
 
     <!-- Row 2: 48% (同種) -->
-    <AppResultBox
+    <MoleculesResultBox
       :status="status48"
       :size="size"
     >
@@ -84,10 +84,10 @@ const statusCustom = computed(() =>
           <span class="value-sep">)</span>
         </template>
       </template>
-    </AppResultBox>
+    </MoleculesResultBox>
 
     <!-- Row 3: ユーザー指定 (customFillRate%) -->
-    <AppResultBox
+    <MoleculesResultBox
       :title="vm.titleCustom"
       :status="statusCustom"
       :size="size"
@@ -105,7 +105,7 @@ const statusCustom = computed(() =>
           <span class="value-sep">)</span>
         </template>
       </template>
-    </AppResultBox>
+    </MoleculesResultBox>
 
     <!-- Footer: 内線規程（勧告）内容 -->
     <footer class="conduit-footer">

@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * ToolRackResult
  * ケーブルラック選定ツールの計算・選定結果表示コンポーネントです。
@@ -27,7 +27,7 @@ const vm = computed(() =>
 <template>
   <div class="rack-result">
     <!-- 1段敷設（平置き・標準） -->
-    <AppResultBox
+    <MoleculesResultBox
       :status="vm.tier1.boxStatus"
       :is-empty="vm.isEmpty"
     >
@@ -53,10 +53,10 @@ const vm = computed(() =>
           </div>
         </div>
       </template>
-    </AppResultBox>
+    </MoleculesResultBox>
 
     <!-- 2段敷設（省スペース） -->
-    <AppResultBox
+    <MoleculesResultBox
       :status="vm.tier2.boxStatus"
       :is-empty="vm.isEmpty"
     >
@@ -87,7 +87,7 @@ const vm = computed(() =>
           </div>
         </div>
       </template>
-    </AppResultBox>
+    </MoleculesResultBox>
 
     <!-- 詳細内訳 -->
     <ToolResultDetails>

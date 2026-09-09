@@ -192,8 +192,8 @@ const formatDateTime = (isoStr: string) => {
             description="すべてのデータがサーバーと正常に同期されています。"
           />
 
-          <!-- 同期結果ボックス (AppResultBox) -->
-          <AppResultBox
+          <!-- 同期結果ボックス (MoleculesResultBox) -->
+          <MoleculesResultBox
             v-if="syncResult"
             :status="syncResult.errorCount > 0 ? 'danger' : 'success'"
             :title="syncResult.errorCount > 0 ? '同期エラー' : '同期完了'"
@@ -206,7 +206,7 @@ const formatDateTime = (isoStr: string) => {
                 ❌ {{ syncResult.errorCount }} 件の送信に失敗しました（電波状況を確認してください）。
               </div>
             </template>
-          </AppResultBox>
+          </MoleculesResultBox>
         </div>
 
         <div class="sync-modal__actions">

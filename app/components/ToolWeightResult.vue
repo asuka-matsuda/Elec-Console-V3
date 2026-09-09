@@ -17,7 +17,7 @@ const vm = computed(() => formatWeightResult(props.result))
 
 <template>
   <div class="weight-result">
-    <AppResultBox
+    <MoleculesResultBox
       title="推奨ドラム"
       :status="vm.boxStatus"
       :is-empty="vm.isError"
@@ -35,7 +35,7 @@ const vm = computed(() => formatWeightResult(props.result))
           </div>
         </div>
       </template>
-    </AppResultBox>
+    </MoleculesResultBox>
 
     <ToolResultDetails v-if="!vm.isError">
       <ToolResultRow label="ケーブル総重量">

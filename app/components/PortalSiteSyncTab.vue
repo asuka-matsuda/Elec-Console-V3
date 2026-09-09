@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * PortalSiteSyncTab
  * 現場設定モーダル - Excelデータベース連携・同期設定タブOrganismコンポーネント。
@@ -274,8 +274,8 @@ const confirmResetImport = async () => {
         <span>{{ syncMsg }}</span>
       </div>
 
-      <!-- 完了時のインライン件数サマリー表示 (AppResultBox & AtomsBadge) -->
-      <AppResultBox
+      <!-- 完了時のインライン件数サマリー表示 (MoleculesResultBox & AtomsBadge) -->
+      <MoleculesResultBox
         v-else-if="syncResultData"
         status="success"
         :title="syncResultData.title"
@@ -315,7 +315,7 @@ const confirmResetImport = async () => {
             </template>
           </div>
         </template>
-      </AppResultBox>
+      </MoleculesResultBox>
     </AtomsPanel>
 
     <!-- 処理完了・件数確認モーダルダイアログ -->
