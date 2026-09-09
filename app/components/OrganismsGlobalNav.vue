@@ -65,35 +65,31 @@ onMounted(() => {
           '--section-accent': `var(--color-category-${section.accent || 'main'})`,
         }"
       >
-        <div
+        <MoleculesSectionHeader
           v-if="section.globalNavHeading || section.heading"
-          class="flex flex-col gap-1 py-[var(--space-1)] px-[var(--space-3)]"
-        >
-          <h3>
-            {{ section.globalNavHeading || section.heading }}
-          </h3>
-          <AtomsDivider color="var(--section-accent)" type="fade-side" />
-        </div>
+          :title="section.globalNavHeading || section.heading"
+          :icon="section.icon"
+          :variant="section.accent || 'main'"
+          size="xs"
+          tag="h3"
+          class="px-[var(--space-2)]"
+        />
 
-        <ul class="m-0 p-0 flex flex-col gap-[var(--space-2)] list-none">
-          <li
+        <div class="flex flex-col gap-[var(--space-1)]">
+          <component
+            :is="item.disabled ? 'button' : NuxtLink"
             v-for="item in section.items"
             :key="item.href"
-            class="flex m-0 p-0"
+            :to="item.disabled ? undefined : item.href"
+            :type="item.disabled ? 'button' : undefined"
+            :disabled="item.disabled || undefined"
+            class="w-full flex items-center gap-[var(--space-2)] py-[var(--space-1)] px-[var(--space-3)] nav-link"
+            @click="item.disabled ? undefined : closeSidebar()"
           >
-            <component
-              :is="item.disabled ? 'button' : NuxtLink"
-              :to="item.disabled ? undefined : item.href"
-              :type="item.disabled ? 'button' : undefined"
-              :disabled="item.disabled || undefined"
-              class="w-full flex items-center gap-[var(--space-2)] py-[var(--space-1)] px-[var(--space-3)] nav-link"
-              @click="item.disabled ? undefined : closeSidebar()"
-            >
-              <AtomsIcon :name="item.icon" size="md" />
-              <span>{{ item.text }}</span>
-            </component>
-          </li>
-        </ul>
+            <AtomsIcon :name="item.icon" size="md" />
+            <span>{{ item.text }}</span>
+          </component>
+        </div>
       </section>
     </nav>
   </aside>
@@ -145,14 +141,6 @@ onMounted(() => {
 
 .section {
   --glow-color: var(--section-accent);
-
-  h3 {
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-bold);
-    line-height: var(--line-height-tight);
-    color: var(--color-text-main);
-    letter-spacing: var(--tracking-wider);
-  }
 }
 
 .nav-link {

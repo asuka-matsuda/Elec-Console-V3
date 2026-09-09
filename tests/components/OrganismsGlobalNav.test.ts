@@ -37,6 +37,10 @@ describe('OrganismsGlobalNav.vue', () => {
     MoleculesIconButton: {
       template: '<button class="close-btn" @click="$emit(\'click\')">X</button>',
     },
+    MoleculesSectionHeader: {
+      template: '<div class="section-header-stub">{{ title }}</div>',
+      props: ['title'],
+    },
     AtomsDivider: true,
     AtomsIcon: true,
     NuxtLink: {
