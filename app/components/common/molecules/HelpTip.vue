@@ -234,7 +234,7 @@ onBeforeUnmount(() => {
 
 .helptip-reference {
   border-top: var(--border-width-base) solid var(--color-border-subtle);
-  font-size: clamp(9px, 0.5rem + 0.1vw, 10px);
+  font-size: var(--font-size-2xs);
 
   &__label {
     color: var(--color-text-muted);
