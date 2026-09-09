@@ -54,6 +54,17 @@ const target = computed(() => to || href)
 .btn {
   --btn-color: var(--theme-accent);
   --glow-color: var(--btn-color);
+  --shadow-glow-hover:
+    0 0 4px color-mix(in srgb, var(--glow-color) 45%, transparent),
+    0 0 8px color-mix(in srgb, var(--glow-color) 20%, transparent),
+    var(--shadow-elevation-sm);
+  --shadow-glow-focus:
+    0 0 0 3px color-mix(in srgb, var(--glow-color) 35%, transparent),
+    var(--shadow-elevation-sm);
+  --shadow-glow-active:
+    0 0 4px color-mix(in srgb, var(--glow-color) 50%, transparent),
+    inset 0 0 2px color-mix(in srgb, var(--glow-color) 30%, transparent),
+    var(--shadow-elevation-sm);
 
   cursor: pointer;
   user-select: none;
