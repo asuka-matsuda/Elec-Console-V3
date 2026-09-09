@@ -27,6 +27,12 @@ const emit = defineEmits<{
 
 const strongCategories = computed(() => getCableCategories('strong'))
 const weakCategories = computed(() => getCableCategories('weak'))
+const currentCategories = computed(() =>
+  inputs.value.mode === 'strong' ? strongCategories.value : weakCategories.value,
+)
+const currentCablesUI = computed(() =>
+  inputs.value.mode === 'strong' ? inputs.value.strongCablesUI : inputs.value.weakCablesUI,
+)
 
 const getCableSpecText = (cableIdx: string): string => {
   const def = findCableByIndexString(cableIdx)
@@ -65,10 +71,19 @@ const handleAddCable = () => {
     emit('add-weak-cable')
   }
 }
+
+const handleRemoveCable = (id: string) => {
+  if (inputs.value.mode === 'strong') {
+    emit('remove-strong-cable', id)
+  }
+  else {
+    emit('remove-weak-cable', id)
+  }
+}
 </script>
 
 <template>
-  <div class="rack-input">
+  <div class="flex flex-col gap-[var(--space-form-row-gap)]">
     <!-- 強電／弱電 タブ切り替え -->
     <AtomsRadioGroup
       v-model="inputs.mode"
@@ -76,7 +91,7 @@ const handleAddCable = () => {
     />
 
     <!-- 基本条件（ラック高さ、相乗り必要幅） -->
-    <div class="header-grid">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-[var(--space-form-col-gap)]">
       <MoleculesFormGroup label="ラック高さ (H)">
         <MoleculesInputGroup addon="mm">
           <AtomsInput
@@ -100,13 +115,13 @@ const handleAddCable = () => {
       </MoleculesFormGroup>
     </div>
 
-    <!-- 詳細設定（計算パラメータ） -->
-    <details class="details-panel">
-      <summary class="details-summary">
+    <!-- 詳細設定（計算パラメータ：常時表示パネル） -->
+    <div class="flex flex-col gap-[var(--space-2)] p-[var(--space-3)] rounded-[var(--radius-md)] border border-[var(--color-border-subtle)] bg-[var(--color-surface-panel-subtle)]">
+      <div class="flex items-center gap-[var(--space-2)] text-[var(--font-size-xs)] font-bold text-[var(--color-text-secondary)]">
         <AtomsIcon name="sliders" size="sm" />
         <span>計算パラメータ設定（余裕係数・離隔など）</span>
-      </summary>
-      <div class="params-grid">
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-[var(--space-form-col-gap)]">
         <MoleculesFormGroup label="余裕係数">
           <MoleculesInputGroup addon="倍">
             <AtomsInput
@@ -141,12 +156,12 @@ const handleAddCable = () => {
           </MoleculesInputGroup>
         </MoleculesFormGroup>
       </div>
-    </details>
+    </div>
 
     <!-- ケーブル条件セクション -->
-    <section class="input-section">
-      <div class="section-header">
-        <h4 class="section-title">
+    <section class="flex flex-col gap-[var(--space-item-gap)]">
+      <div class="flex items-center justify-between py-[var(--space-1)]">
+        <h4 class="font-bold text-[var(--font-size-sm)] text-[var(--color-text-main)]">
           {{ inputs.mode === 'strong' ? '強電ケーブル条件' : '弱電ケーブル条件' }}
         </h4>
         <AtomsButton
@@ -159,17 +174,16 @@ const handleAddCable = () => {
         </AtomsButton>
       </div>
 
-      <!-- 強電ケーブルテーブル -->
+      <!-- ケーブルテーブル（強電/弱電 共通テンプレート） -->
       <MoleculesTable
-        v-if="inputs.mode === 'strong'"
         :columns="RACK_CABLE_COLUMNS"
-        :data="inputs.strongCablesUI"
-        class="rack-table"
+        :data="currentCablesUI"
+        class="w-full text-[var(--font-size-xs)]"
       >
         <template #cell-category="{ row }">
           <AtomsSelect
             v-model="row.category"
-            :options="strongCategories"
+            :options="currentCategories"
             placeholder="選択"
             @update:model-value="row.cableIdx = ''"
           />
@@ -204,64 +218,9 @@ const handleAddCable = () => {
               variant="danger"
               size="sm"
               icon-only
-              :disabled="inputs.strongCablesUI.length <= 1"
+              :disabled="currentCablesUI.length <= 1"
               aria-label="削除"
-              @click="emit('remove-strong-cable', row.id)"
-            >
-              <AtomsIcon name="trash-2" size="sm" />
-            </AtomsButton>
-          </div>
-        </template>
-      </MoleculesTable>
-
-      <!-- 弱電ケーブルテーブル -->
-      <MoleculesTable
-        v-else
-        :columns="RACK_CABLE_COLUMNS"
-        :data="inputs.weakCablesUI"
-        class="rack-table"
-      >
-        <template #cell-category="{ row }">
-          <AtomsSelect
-            v-model="row.category"
-            :options="weakCategories"
-            placeholder="選択"
-            @update:model-value="row.cableIdx = ''"
-          />
-        </template>
-
-        <template #cell-cableIdx="{ row }">
-          <AtomsSelect
-            v-model="row.cableIdx"
-            :options="getAvailableSizes(row.category)"
-            placeholder="選択"
-            :disabled="!row.category"
-          />
-        </template>
-
-        <template #cell-count="{ row }">
-          <MoleculesInputGroup addon="本">
-            <AtomsInput
-              v-model.number="row.count"
-              type="number"
-              min="1"
-            />
-          </MoleculesInputGroup>
-        </template>
-
-        <template #cell-spec="{ row }">
-          {{ getCableSpecText(row.cableIdx) }}
-        </template>
-
-        <template #cell-actions="{ row }">
-          <div class="flex justify-center items-center">
-            <AtomsButton
-              variant="danger"
-              size="sm"
-              icon-only
-              :disabled="inputs.weakCablesUI.length <= 1"
-              aria-label="削除"
-              @click="emit('remove-weak-cable', row.id)"
+              @click="handleRemoveCable(row.id)"
             >
               <AtomsIcon name="trash-2" size="sm" />
             </AtomsButton>
@@ -271,87 +230,3 @@ const handleAddCable = () => {
     </section>
   </div>
 </template>
-
-<style scoped lang="scss">
-.rack-input {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-form-row-gap);
-}
-
-.header-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-form-col-gap);
-
-  @include mq("sm") {
-    grid-template-columns: 1fr;
-  }
-}
-
-.details-panel {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-
-  padding: var(--space-2) var(--space-3);
-  border: var(--border-width-base) solid var(--color-border-subtle);
-  border-radius: var(--radius-md);
-
-  background: var(--color-surface-panel-subtle);
-
-  &[open] {
-    padding-bottom: var(--space-3);
-  }
-}
-
-.details-summary {
-  cursor: pointer;
-  user-select: none;
-
-  display: flex;
-  gap: var(--space-2);
-  align-items: center;
-
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-secondary);
-
-  &:hover {
-    color: var(--color-text-main);
-  }
-}
-
-.params-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-form-col-gap);
-
-  @include mq("sm") {
-    grid-template-columns: 1fr;
-  }
-}
-
-.input-section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-item-gap);
-}
-
-.section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-1) 0;
-}
-
-.rack-table {
-  width: 100%;
-  font-size: var(--font-size-xs);
-}
-
-.action-cell {
-  padding-inline: var(--space-1) !important;
-  text-align: center;
-}
-</style>
