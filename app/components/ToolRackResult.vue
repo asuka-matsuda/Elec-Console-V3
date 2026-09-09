@@ -41,16 +41,17 @@ const vm = computed(() =>
       </template>
 
       <template #value>
-        <div class="value-box">
-          <div class="value-text val">
-            {{ vm.tier1.displaySize }}
-          </div>
-          <div
-            v-if="!vm.isEmpty && vm.tier1.totalWidth !== '0'"
-            class="sub-val"
-          >
-            必要幅: <strong>{{ vm.tier1.totalWidth }}</strong> mm / 最大高さ: <strong>{{ vm.tier1.maxHeight }}</strong> mm
-          </div>
+        <span class="value-text val">
+          {{ vm.tier1.displaySize }}
+        </span>
+      </template>
+
+      <template
+        v-if="!vm.isEmpty && vm.tier1.totalWidth !== '0'"
+        #footer
+      >
+        <div class="sub-val">
+          必要幅: <strong>{{ vm.tier1.totalWidth }}</strong> mm / 最大高さ: <strong>{{ vm.tier1.maxHeight }}</strong> mm
         </div>
       </template>
     </MoleculesResultBox>
@@ -70,21 +71,20 @@ const vm = computed(() =>
       </template>
 
       <template #value>
-        <div class="value-box">
-          <template v-if="vm.tier2.isApplicable">
-            <div class="value-text val">
-              {{ vm.tier2.displaySize }}
-            </div>
-            <div
-              v-if="!vm.isEmpty && vm.tier2.totalWidth !== '0'"
-              class="sub-val"
-            >
-              必要幅: <strong>{{ vm.tier2.totalWidth }}</strong> mm / 最大高さ: <strong>{{ vm.tier2.maxHeight }}</strong> mm
-            </div>
-          </template>
-          <div v-else class="not-applicable">
-            {{ vm.tier2.notApplicableText }}
-          </div>
+        <span v-if="vm.tier2.isApplicable" class="value-text val">
+          {{ vm.tier2.displaySize }}
+        </span>
+        <span v-else class="not-applicable">
+          {{ vm.tier2.notApplicableText }}
+        </span>
+      </template>
+
+      <template
+        v-if="vm.tier2.isApplicable && !vm.isEmpty && vm.tier2.totalWidth !== '0'"
+        #footer
+      >
+        <div class="sub-val">
+          必要幅: <strong>{{ vm.tier2.totalWidth }}</strong> mm / 最大高さ: <strong>{{ vm.tier2.maxHeight }}</strong> mm
         </div>
       </template>
     </MoleculesResultBox>
@@ -119,16 +119,6 @@ const vm = computed(() =>
   justify-content: center;
 }
 
-.value-box {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  align-items: center;
-  justify-content: flex-start;
-
-  width: 100%;
-}
-
 .val {
   font-family: var(--font-mono);
   font-size: var(--font-size-3xl);
@@ -139,10 +129,12 @@ const vm = computed(() =>
 .sub-val {
   font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
+  text-shadow: none;
 
   strong {
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
+    text-shadow: none;
   }
 }
 
