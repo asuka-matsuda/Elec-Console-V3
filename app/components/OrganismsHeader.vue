@@ -72,12 +72,18 @@ const { currentUser, logout } = useAuth()
 }
 
 .avatar {
-  border: var(--border-width-base) solid color-mix(in srgb, var(--theme-accent) 80%, transparent);
-  background: var(--theme-accent);
+  border: var(--border-width-base) solid color-mix(in srgb, var(--theme-accent) 40%, var(--color-border));
+  background: color-mix(in srgb, var(--theme-accent) 15%, var(--surface-bg-elevated));
   box-shadow: var(--shadow-elevation-sm);
+  transition: var(--transition-colors);
 
   &__icon {
-    color: var(--color-main-bg);
+    color: var(--theme-accent);
+  }
+
+  &:hover {
+    border-color: var(--theme-accent);
+    box-shadow: var(--shadow-glow-sm);
   }
 }
 

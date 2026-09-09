@@ -154,6 +154,26 @@ const target = computed(() => to || href)
     }
   }
 
+  &--ghost {
+    border-color: transparent;
+    color: var(--color-text-secondary);
+    background-color: transparent;
+    box-shadow: none;
+
+    &:not(:disabled, .is-disabled) {
+      &:hover {
+        border-color: transparent;
+        color: var(--theme-accent);
+        background-color: var(--color-bg-hover);
+        box-shadow: none;
+      }
+
+      &:active {
+        background-color: color-mix(in srgb, var(--color-overlay) 10%, transparent);
+      }
+    }
+  }
+
   &--block {
     width: 100%;
   }

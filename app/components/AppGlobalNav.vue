@@ -52,7 +52,6 @@ onMounted(() => {
       <MoleculesIconButton
         name="x"
         size="sm"
-        variant="secondary"
         @click="closeSidebar"
       />
     </div>

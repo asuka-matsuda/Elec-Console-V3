@@ -8,7 +8,7 @@ import type { MoleculesIconButtonProps } from '~/types/components'
 const props = withDefaults(defineProps<MoleculesIconButtonProps>(), {
   type: 'button',
   size: 'md',
-  variant: 'primary',
+  variant: 'ghost',
 })
 </script>
 
