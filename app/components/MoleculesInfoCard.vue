@@ -22,109 +22,94 @@ const displayItems = computed(() => {
 </script>
 
 <template>
-  <AtomsPanel class="info-card">
+  <AtomsPanel class="!p-0 overflow-hidden">
     <!-- ローディング・空状態 -->
-    <div v-if="pending || displayItems.length === 0" class="flex items-center justify-center gap-[var(--space-2)] status">
+    <div
+      v-if="pending || displayItems.length === 0"
+      class="flex items-center justify-center gap-[var(--space-2)] p-[var(--space-panel-pad)] status"
+    >
       <AtomsIcon :name="pending ? 'loader' : 'inbox'" :class="{ 'u-spin': pending }" size="sm" />
       <span>{{ pending ? loadingText : emptyText }}</span>
     </div>
 
     <!-- 一覧表示 -->
-    <ul v-else class="flex flex-col list">
+    <ul v-else class="m-0 p-0 flex flex-col divide-y divide-[var(--color-border-subtle)] list-none">
       <li
         v-for="(item, index) in displayItems"
         :key="item.id ? String(item.id) : `${item.date}-${index}`"
-        class="flex flex-col gap-[var(--space-1)] item"
+        class="relative flex flex-col gap-[var(--space-1)] p-[var(--space-panel-pad)] item"
       >
         <header class="flex items-center justify-between gap-[var(--space-2)]">
-          <time>{{ item.date }}</time>
+          <time class="time">{{ item.date }}</time>
           <slot name="badge" :item="item" />
         </header>
 
-        <strong>{{ item.title }}</strong>
+        <strong class="title">{{ item.title }}</strong>
 
-        <p v-if="item.desc">{{ item.desc }}</p>
+        <p v-if="item.desc" class="m-0 desc">{{ item.desc }}</p>
       </li>
     </ul>
   </AtomsPanel>
 </template>
 
 <style scoped lang="scss">
-.info-card {
-  padding: 0;
+.status {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
 
-  .status {
-    padding: var(--space-panel-pad);
-    font-size: var(--font-size-xs);
+.item {
+  transition: var(--transition-base);
+
+  &::before {
+    content: "";
+
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+
+    width: 2px;
+
+    background-color: transparent;
+
+    transition: var(--transition-base);
+  }
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--color-surface-hover) 80%, transparent);
+
+    &::before {
+      background-color: var(--theme-accent, var(--color-primary));
+      box-shadow: 0 0 8px var(--theme-accent, var(--color-primary));
+    }
+
+    .title {
+      color: var(--color-text-primary);
+    }
+  }
+
+  .time {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-2xs);
+    font-variant-numeric: tabular-nums;
     color: var(--color-text-muted);
   }
 
-  .list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  .title {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-tight);
+    color: var(--color-text-base);
+    letter-spacing: var(--tracking-tight);
 
-    .item {
-      position: relative;
-      padding: var(--space-panel-pad);
-      transition: var(--transition-base);
+    transition: var(--transition-base);
+  }
 
-      & + .item {
-        border-top: var(--border-width-base) solid var(--color-border-subtle);
-      }
-
-      &::before {
-        content: "";
-
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-
-        width: 2px;
-
-        background-color: transparent;
-
-        transition: var(--transition-base);
-      }
-
-      &:hover {
-        background-color: color-mix(in srgb, var(--color-surface-hover) 80%, transparent);
-
-        &::before {
-          background-color: var(--theme-accent, var(--color-primary));
-          box-shadow: 0 0 8px var(--theme-accent, var(--color-primary));
-        }
-
-        strong {
-          color: var(--color-text-primary);
-        }
-      }
-
-      time {
-        font-family: var(--font-mono);
-        font-size: var(--font-size-2xs);
-        font-variant-numeric: tabular-nums;
-        color: var(--color-text-muted);
-      }
-
-      strong {
-        font-size: var(--font-size-sm);
-        font-weight: var(--font-weight-medium);
-        line-height: var(--line-height-tight);
-        color: var(--color-text-base);
-        letter-spacing: var(--tracking-tight);
-
-        transition: var(--transition-base);
-      }
-
-      p {
-        margin: 0;
-        font-size: var(--font-size-xs);
-        line-height: var(--line-height-normal);
-        color: var(--color-text-secondary);
-      }
-    }
+  .desc {
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-normal);
+    color: var(--color-text-secondary);
   }
 }
 </style>
