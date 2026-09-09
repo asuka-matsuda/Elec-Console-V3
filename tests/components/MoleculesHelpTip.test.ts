@@ -22,7 +22,7 @@ describe('MoleculesHelpTip.vue', () => {
     })
 
     expect(wrapper.find('button').exists()).toBe(true)
-    expect(wrapper.find('[role="tooltip"]').exists()).toBe(false)
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull()
   })
 
   it('クリックで開閉トグルすること', async () => {
@@ -37,14 +37,15 @@ describe('MoleculesHelpTip.vue', () => {
 
     const button = wrapper.find('button')
 
-    // 1回目のクリックで開く
+    // 1回目のクリックで開く (Teleport先: document.body)
     await button.trigger('click')
-    expect(wrapper.find('[role="tooltip"]').exists()).toBe(true)
-    expect(wrapper.text()).toContain('テスト解説文')
+    const tooltip = document.body.querySelector('[role="tooltip"]')
+    expect(tooltip).not.toBeNull()
+    expect(tooltip?.textContent).toContain('テスト解説文')
 
     // 2回目のクリックで閉じる
     await button.trigger('click')
-    expect(wrapper.find('[role="tooltip"]').exists()).toBe(false)
+    expect(document.body.querySelector('[role="tooltip"]')).toBeNull()
   })
 
   it('helpId を指定するとマスタから解説文・参考規格が自動解決されること', async () => {
@@ -60,9 +61,10 @@ describe('MoleculesHelpTip.vue', () => {
     const button = wrapper.find('button')
     await button.trigger('click')
 
-    expect(wrapper.find('[role="tooltip"]').exists()).toBe(true)
-    expect(wrapper.text()).toContain('内線規程に基づき')
-    expect(wrapper.text()).toContain('内線規程・JEAC 8001')
+    const tooltip = document.body.querySelector('[role="tooltip"]')
+    expect(tooltip).not.toBeNull()
+    expect(tooltip?.textContent).toContain('内線規程に基づき')
+    expect(tooltip?.textContent).toContain('内線規程・JEAC 8001')
   })
 
   it('カスタムスロットが正しく描画されること', async () => {
@@ -77,7 +79,8 @@ describe('MoleculesHelpTip.vue', () => {
 
     await wrapper.find('button').trigger('click')
 
-    expect(wrapper.find('.custom-content').exists()).toBe(true)
-    expect(wrapper.find('.custom-content').text()).toBe('カスタムスロットの中身')
+    const customContent = document.body.querySelector('.custom-content')
+    expect(customContent).not.toBeNull()
+    expect(customContent?.textContent).toBe('カスタムスロットの中身')
   })
 })
