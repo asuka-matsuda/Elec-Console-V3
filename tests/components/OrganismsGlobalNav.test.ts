@@ -31,9 +31,6 @@ describe('OrganismsGlobalNav.vue', () => {
   ]
 
   const defaultStubs = {
-    AtomsLogo: {
-      template: '<div class="logo-stub" @click="$emit(\'click\')">Logo</div>',
-    },
     MoleculesIconButton: {
       template: '<button class="close-btn" @click="$emit(\'click\')">X</button>',
     },
