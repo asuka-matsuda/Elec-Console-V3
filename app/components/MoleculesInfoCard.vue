@@ -40,13 +40,13 @@ const displayItems = computed(() => {
         class="relative flex flex-col gap-[var(--space-1)] p-[var(--space-panel-pad)] item"
       >
         <header class="flex items-center justify-between gap-[var(--space-2)]">
-          <time class="time">{{ item.date }}</time>
+          <time>{{ item.date }}</time>
           <slot name="badge" :item="item" />
         </header>
 
-        <strong class="title">{{ item.title }}</strong>
+        <strong>{{ item.title }}</strong>
 
-        <p v-if="item.desc" class="m-0 desc">{{ item.desc }}</p>
+        <p v-if="item.desc" class="m-0">{{ item.desc }}</p>
       </li>
     </ul>
   </AtomsPanel>
@@ -84,31 +84,25 @@ const displayItems = computed(() => {
       box-shadow: 0 0 8px var(--theme-accent, var(--color-primary));
     }
 
-    .title {
+    strong {
       color: var(--color-text-primary);
     }
   }
 
-  .time {
+  time {
     font-family: var(--font-mono);
     font-size: var(--font-size-2xs);
-    font-variant-numeric: tabular-nums;
     color: var(--color-text-muted);
   }
 
-  .title {
+  strong {
     font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-    line-height: var(--line-height-tight);
     color: var(--color-text-base);
-    letter-spacing: var(--tracking-tight);
-
     transition: var(--transition-base);
   }
 
-  .desc {
+  p {
     font-size: var(--font-size-xs);
-    line-height: var(--line-height-normal);
     color: var(--color-text-secondary);
   }
 }
