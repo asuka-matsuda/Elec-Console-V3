@@ -1,11 +1,11 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import PortalKairoSymbol from '../../app/components/portal/KairoSymbol.vue'
+import PortalAtomKairoSymbol from '../../app/components/portal/AtomKairoSymbol.vue'
 
-describe('PortalKairoSymbol.vue', () => {
+describe('PortalAtomKairoSymbol.vue', () => {
   it('renders circle path when kigou is "丸" or "○"', () => {
-    const wrapper = mount(PortalKairoSymbol, {
+    const wrapper = mount(PortalAtomKairoSymbol, {
       props: { kigou: '丸', bangou: '1' },
     })
 
@@ -15,7 +15,7 @@ describe('PortalKairoSymbol.vue', () => {
   })
 
   it('renders double circle paths when kigou is "二重丸" or "◎"', () => {
-    const wrapper = mount(PortalKairoSymbol, {
+    const wrapper = mount(PortalAtomKairoSymbol, {
       props: { kigou: '◎', bangou: 2 },
     })
 
@@ -25,7 +25,7 @@ describe('PortalKairoSymbol.vue', () => {
   })
 
   it('renders ellipse path when kigou is "楕円"', () => {
-    const wrapper = mount(PortalKairoSymbol, {
+    const wrapper = mount(PortalAtomKairoSymbol, {
       props: { kigou: '楕円', bangou: '3' },
     })
 
@@ -35,7 +35,7 @@ describe('PortalKairoSymbol.vue', () => {
   })
 
   it('renders double ellipse paths when kigou is "二重楕円"', () => {
-    const wrapper = mount(PortalKairoSymbol, {
+    const wrapper = mount(PortalAtomKairoSymbol, {
       props: { kigou: '二重楕円', bangou: '4' },
     })
 
@@ -45,7 +45,7 @@ describe('PortalKairoSymbol.vue', () => {
   })
 
   it('renders rect path when kigou is "四角" or "□"', () => {
-    const wrapper = mount(PortalKairoSymbol, {
+    const wrapper = mount(PortalAtomKairoSymbol, {
       props: { kigou: '□', bangou: '5' },
     })
 
@@ -55,7 +55,7 @@ describe('PortalKairoSymbol.vue', () => {
   })
 
   it('renders double rect paths when kigou is "二重四角"', () => {
-    const wrapper = mount(PortalKairoSymbol, {
+    const wrapper = mount(PortalAtomKairoSymbol, {
       props: { kigou: '二重四角', bangou: '6' },
     })
 
@@ -65,7 +65,7 @@ describe('PortalKairoSymbol.vue', () => {
   })
 
   it('renders plain text without SVG when kigou is empty or unrecognized', () => {
-    const wrapper = mount(PortalKairoSymbol, {
+    const wrapper = mount(PortalAtomKairoSymbol, {
       props: { kigou: null, bangou: '7' },
     })
 
@@ -74,7 +74,7 @@ describe('PortalKairoSymbol.vue', () => {
   })
 
   it('renders fallback dash when bangou is null or empty', () => {
-    const wrapper = mount(PortalKairoSymbol, {
+    const wrapper = mount(PortalAtomKairoSymbol, {
       props: { kigou: '丸', bangou: null },
     })
 
@@ -82,7 +82,7 @@ describe('PortalKairoSymbol.vue', () => {
   })
 
   it('sets title tooltip correctly', () => {
-    const wrapper = mount(PortalKairoSymbol, {
+    const wrapper = mount(PortalAtomKairoSymbol, {
       props: { kigou: '丸', bangou: '10' },
     })
 
