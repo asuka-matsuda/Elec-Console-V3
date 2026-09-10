@@ -31,6 +31,7 @@ export function getVoltageFormFields(
   computedAvailableSizes: () => { label: string, value: string }[],
   isCableTypeSelected: () => boolean,
   isSinglePhase?: () => boolean,
+  computedAvailableCores?: () => { label: string, value: string }[],
 ): FormField[] {
   return [
     {
@@ -72,6 +73,14 @@ export function getVoltageFormFields(
       type: 'select',
       options: cableTypeOptions,
       placeholder: '選択してください',
+    },
+    {
+      id: 'cores',
+      label: '心数',
+      type: 'select',
+      options: computedAvailableCores ? computedAvailableCores() : [],
+      placeholder: '選択してください',
+      showIf: () => isSizeCalcMode() && Boolean(computedAvailableCores && computedAvailableCores().length > 0),
     },
     {
       id: 'fixedSize',

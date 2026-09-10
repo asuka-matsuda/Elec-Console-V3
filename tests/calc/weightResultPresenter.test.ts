@@ -9,6 +9,7 @@ describe('weightResultPresenter', () => {
 
     expect(vmNull.isError).toBe(true)
     expect(vmNull.displayDrum).toBe('---')
+    expect(vmNull.displayTotalWeight).toBe('---')
     expect(vmNull.boxStatus).toBe('empty')
 
     const vmErr = formatWeightResult({
@@ -41,6 +42,7 @@ describe('weightResultPresenter', () => {
     expect(vm.hasBestDrum).toBe(true)
     expect(vm.boxStatus).toBe('success')
     expect(vm.displayDrum).toBe('D-12')
+    expect(vm.displayTotalWeight).toBe('199.2')
     expect(vm.warningText).toBe('')
     expect(vm.cableWeight).toBe('154.2')
     expect(vm.drumWeight).toBe('45')
@@ -59,8 +61,9 @@ describe('weightResultPresenter', () => {
     expect(vm.isError).toBe(false)
     expect(vm.hasBestDrum).toBe(false)
     expect(vm.boxStatus).toBe('error')
-    expect(vm.displayDrum).toBe('選定不可')
-    expect(vm.warningText).toContain('条件に合うドラムが見つかりませんでした')
+    expect(vm.displayDrum).toBe('ERROR')
+    expect(vm.displayTotalWeight).toBe('ERROR')
+    expect(vm.badgeText).toBe('適合ドラムなし')
     expect(vm.cableWeight).toBe('800.0')
   })
 })

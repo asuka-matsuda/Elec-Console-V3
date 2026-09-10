@@ -30,19 +30,53 @@ const emit = defineEmits<{
 
 const categories = computed(() => getCableCategories())
 
-const getCableAreaText = (cableIdx: string): string => {
+const getSingleArea = (cableIdx: string): number => {
   const def = findCableByIndexString(cableIdx)
 
-  if (!def) return '---'
-
+  if (!def) return 0
   const diameter = getEffectiveCableDiameter(def.diameter)
 
-  if (diameter <= 0) return '---'
+  if (diameter <= 0) return 0
 
-  const area = calculateCableArea(diameter)
-
-  return `${area.toFixed(1)} mm²`
+  return calculateCableArea(diameter)
 }
+
+const getCableSpecText = (cableIdx: string, count?: number | null): string => {
+  const area = getSingleArea(cableIdx)
+
+  if (area <= 0) return '---'
+  const n = count && count > 0 ? count : 1
+  const totalArea = area * n
+
+  return `${totalArea.toFixed(1)} mm²`
+}
+
+const getCableSpecDetailText = (cableIdx: string, count?: number | null): string => {
+  const area = getSingleArea(cableIdx)
+
+  if (area <= 0) return ''
+  const n = count && count > 0 ? count : 1
+
+  if (n > 1) {
+    return `(${area.toFixed(1)}×${n})`
+  }
+
+  return ''
+}
+
+const currentCablesUI = computed(() => {
+  return inputs.value.inputCables.map(cable => new Proxy(cable, {
+    get(target, prop, receiver) {
+      if (prop === 'spec') return getCableSpecText(target.cableIdx, target.count)
+      if (prop === 'specDetail') return getCableSpecDetailText(target.cableIdx, target.count)
+
+      return Reflect.get(target, prop, receiver)
+    },
+    set(target, prop, value, receiver) {
+      return Reflect.set(target, prop, value, receiver)
+    },
+  }))
+})
 </script>
 
 <template>
@@ -84,7 +118,7 @@ const getCableAreaText = (cableIdx: string): string => {
 
       <MoleculesTable
         :columns="CONDUIT_CABLE_COLUMNS"
-        :data="inputs.inputCables"
+        :data="currentCablesUI"
         class="w-full"
       >
         <template #cell-category="{ row }">
@@ -113,10 +147,6 @@ const getCableAreaText = (cableIdx: string): string => {
               min="1"
             />
           </MoleculesInputGroup>
-        </template>
-
-        <template #cell-spec="{ row }">
-          {{ getCableAreaText(row.cableIdx) }}
         </template>
 
         <template #cell-actions="{ row }">

@@ -39,76 +39,55 @@ const dropStatus = computed(() =>
     <MoleculesResultBox
       :title="view.mainLabel"
       :status="mainBoxStatus"
+      :badge="view.mainBadgeText"
       :size="size"
     >
       <span>{{ view.mainValue }}</span>
       <small v-if="view.mainUnit" class="unit">{{ view.mainUnit }}</small>
-      <template v-if="view.mode === 'drop' && view.isReady">
-        <small class="sep">(</small>
-        <span class="sub-val">{{ view.dropPercent }}</span>
-        <small class="unit">%</small>
-        <small class="sep">)</small>
-      </template>
-
-      <!-- エラー・警告時のサジェストフッター -->
-      <template v-if="view.errorInfo" #footer>
-        <div class="flex flex-col items-center leading-tight">
-          <p>{{ view.errorInfo.message }}</p>
-          <small v-if="view.errorInfo.suggestion">{{ view.errorInfo.suggestion }}</small>
-        </div>
-      </template>
     </MoleculesResultBox>
 
     <!-- サブ結果 1: 電流チェック (設計 / 許容) -->
     <MoleculesResultBox
       title="電流チェック (設計 / 許容)"
       :status="ampStatus"
+      :badge="view.ampBadgeText"
       size="sm"
     >
-      <span>{{ view.currentI }}</span>
-      <small class="sep">/</small>
-      <span>{{ view.maxI }}</span>
-      <small class="unit">A</small>
+      <span v-if="view.currentI === 'ERROR'">ERROR</span>
+      <template v-else>
+        <span>{{ view.currentI }}</span>
+        <small class="sep">/</small>
+        <span>{{ view.maxI }}</span>
+        <small class="unit">A</small>
+      </template>
     </MoleculesResultBox>
 
-    <!-- サブ結果 2: 電圧降下 または 選択ケーブル -->
+    <!-- サブ結果 2: 電圧降下（導体断面積モード時のみ表示） -->
     <MoleculesResultBox
       v-if="view.mode === 'size'"
       title="電圧降下"
       :status="dropStatus"
+      :badge="view.dropBadgeText"
       size="sm"
     >
-      <span>{{ view.dropV }}</span>
-      <small class="unit">V</small>
-      <small class="sep">(</small>
-      <span class="sub-val">{{ view.dropPercent }}</span>
-      <small class="unit">%</small>
-      <small class="sep">)</small>
+      <span v-if="view.dropV === 'ERROR'">ERROR</span>
+      <template v-else>
+        <span>{{ view.dropV }}</span>
+        <small class="unit">V</small>
+        <small class="sep">(</small>
+        <span>{{ view.dropPercent }}</span>
+        <small class="unit">%</small>
+        <small class="sep">)</small>
+      </template>
     </MoleculesResultBox>
 
-    <MoleculesResultBox
-      v-else
-      title="選択ケーブル"
-      status="neutral"
-      size="sm"
-    >
-      <span class="cable-name">{{ view.dropCableName }}</span>
-    </MoleculesResultBox>
+    <!-- サブ情報（電圧降下モード時のみ表示） -->
+    <MoleculesResultDetails
+      v-if="view.mode === 'drop'"
+      :items="[
+        { label: '選択ケーブル', value: view.dropCableName },
+        { label: '電圧降下率', value: view.dropRateText },
+      ]"
+    />
   </div>
 </template>
-
-<style scoped lang="scss">
-.sub-val {
-  font-size: var(--font-size-xl);
-}
-
-.cable-name {
-  font-size: var(--font-size-sm);
-}
-
-.is-sm {
-  .sub-val {
-    font-size: var(--font-size-base);
-  }
-}
-</style>

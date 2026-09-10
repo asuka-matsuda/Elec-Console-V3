@@ -81,7 +81,7 @@ describe('voltageCalcLogic', () => {
   })
 
   describe('calculateLogic', () => {
-    it('should return errorId VOLTAGE_SIZE_OVER when required size exceeds available cable range', async () => {
+    it('should return errorId VOLTAGE_TARGET_DROP_OVER and optimal max cable when required size exceeds available cable range due to voltage drop', async () => {
       const { calculateLogic } = await import('~/utils/tools/voltage/voltageCalcLogic')
       const { systemData } = await import('~/constants/data/systemData')
 
@@ -108,8 +108,104 @@ describe('voltageCalcLogic', () => {
       })
 
       expect(res).not.toBeNull()
+      expect(res?.optimal).not.toBeNull()
+      expect(res?.optimal?.name).toBe('VVF 2.6mm -3C')
+      expect(res?.errorId).toBe('VOLTAGE_TARGET_DROP_OVER')
+    })
+
+    it('should return errorId VOLTAGE_AMP_OVER when design current exceeds all available cable ampacities', async () => {
+      const { calculateLogic } = await import('~/utils/tools/voltage/voltageCalcLogic')
+      const { systemData } = await import('~/constants/data/systemData')
+
+      const sys1P3W = systemData.find(s => s.id === '1P3W200')!
+
+      const res = calculateLogic({
+        mode: 'size',
+        sys: sys1P3W,
+        I: 100, // VVFの最大許容電流を超える電流
+        L: 10,
+        cableType: 'VVF',
+        selectedCores: null,
+        derating: 1.0,
+        rawTempVal: 'none',
+        ambientTemp: null,
+        parallel: 1,
+        targetDrop: 2.0,
+        selectedSize: null,
+        loadVal: 100,
+        loadUnit: 'A',
+        pf: 1.0,
+        isReady: true,
+        missingFields: [],
+      })
+
+      expect(res).not.toBeNull()
       expect(res?.optimal).toBeNull()
-      expect(res?.errorId).toBe('VOLTAGE_SIZE_OVER')
+      expect(res?.errorId).toBe('VOLTAGE_AMP_OVER')
+    })
+
+    it('should select 3C cable and calculate correct ampacity (19A) when selectedCores is 3C', async () => {
+      const { calculateLogic } = await import('~/utils/tools/voltage/voltageCalcLogic')
+      const { systemData } = await import('~/constants/data/systemData')
+
+      const sys1P3W = systemData.find(s => s.id === '1P3W200')!
+
+      const res = calculateLogic({
+        mode: 'size',
+        sys: sys1P3W,
+        I: 18,
+        L: 10,
+        cableType: 'VVF',
+        selectedCores: '3C',
+        derating: 1.0,
+        rawTempVal: 'none',
+        ambientTemp: null,
+        parallel: 1,
+        targetDrop: 2.0,
+        selectedSize: null,
+        loadVal: 18,
+        loadUnit: 'A',
+        pf: 1.0,
+        isReady: true,
+        missingFields: [],
+      })
+
+      expect(res).not.toBeNull()
+      expect(res?.optimal?.name).toBe('VVF 2.0mm -3C')
+      expect(res?.optimal?.cores).toBe('3C')
+      expect(res?.finalEffAmp).toBe(20) // 3Cの許容電流は 20A
+    })
+
+    it('should select 2C cable and calculate correct ampacity (23A) when selectedCores is 2C', async () => {
+      const { calculateLogic } = await import('~/utils/tools/voltage/voltageCalcLogic')
+      const { systemData } = await import('~/constants/data/systemData')
+
+      const sys1P2W = systemData.find(s => s.id === '1P2W100')!
+
+      const res = calculateLogic({
+        mode: 'size',
+        sys: sys1P2W,
+        I: 15,
+        L: 10,
+        cableType: 'VVF',
+        selectedCores: '2C',
+        derating: 1.0,
+        rawTempVal: 'none',
+        ambientTemp: null,
+        parallel: 1,
+        targetDrop: 2.0,
+        selectedSize: null,
+        loadVal: 15,
+        loadUnit: 'A',
+        pf: 1.0,
+        isReady: true,
+        missingFields: [],
+      })
+
+      expect(res).not.toBeNull()
+      expect(res?.optimal?.name).toBe('VVF 2.0mm -2C')
+      expect(res?.optimal?.cores).toBe('2C')
+      expect(res?.finalEffAmp).toBe(23) // 2Cの許容電流は 23A
     })
   })
 })

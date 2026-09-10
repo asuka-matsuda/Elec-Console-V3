@@ -45,7 +45,7 @@ export interface RackResultPresenterParams {
 function formatTierCard(
   tier: RackTierResult | undefined,
   isEmpty: boolean,
-  mode?: 'strong' | 'weak',
+  _mode?: 'strong' | 'weak',
 ): RackTierCardViewModel {
   const isTier2 = tier?.layers === 2
   const layers = isTier2 ? 2 : 1
@@ -70,9 +70,9 @@ function formatTierCard(
     return {
       layers,
       title,
-      badgeText: '適用不可',
+      badgeText: '段積み不可',
       displaySize: '---',
-      boxStatus: 'neutral',
+      boxStatus: 'warning',
       totalWidth: String(Math.ceil(tier.totalWidth)),
       maxHeight: tier.maxCableStackHeight.toFixed(1),
       isOverflow: false,
@@ -96,14 +96,10 @@ function formatTierCard(
     badgeText = '高さ不足'
     badgeColor = 'var(--color-status-warning)'
   }
-  else if (!isTier2 && mode === 'strong') {
-    badgeText = '放熱推奨'
-    badgeColor = 'var(--color-status-success)'
-  }
 
   const displaySize = tier.selectedSize
     ? `W${tier.selectedSize}`
-    : `規格外 (${tier.totalWidth ? Math.ceil(tier.totalWidth) : 0}mm以上)`
+    : (tier.isSizeOver ? 'ERROR' : '---')
 
   return {
     layers,

@@ -24,7 +24,7 @@ const status32 = computed(() =>
   vm.value.status32Class.replace('is-', '') as 'neutral' | 'success' | 'danger',
 )
 const status48 = computed(() =>
-  vm.value.status48Class.replace('is-', '') as 'neutral' | 'success' | 'danger',
+  vm.value.status48Class.replace('is-', '') as 'neutral' | 'success' | 'warning' | 'danger',
 )
 const statusCustom = computed(() =>
   vm.value.statusCustomClass.replace('is-', '') as 'neutral' | 'success' | 'danger',
@@ -38,20 +38,16 @@ const statusCustom = computed(() =>
   >
     <!-- Row 1: 32% (異種) -->
     <MoleculesResultBox
+      :title="CONDUIT_UI_LABELS.TITLE_32"
       :status="status32"
+      :badge="vm.badge32"
       :size="size"
     >
-      <template #title>
-        <span class="flex items-center justify-center gap-2">
-          {{ CONDUIT_UI_LABELS.TITLE_32 }}
-          <AtomsBadge v-if="vm.isDiffSize" color="var(--color-status-success)">規程推奨</AtomsBadge>
-        </span>
-      </template>
       <template #value>
         <span>{{ vm.size32 }}</span>
         <template v-if="vm.isReady && !vm.isOversize32">
           <small class="sep">(</small>
-          <span class="sub-val">{{ vm.fill32 }}</span>
+          <span>{{ vm.fill32 }}</span>
           <small class="unit">{{ CONDUIT_UI_LABELS.UNIT_PERCENT }}</small>
           <small class="sep">)</small>
         </template>
@@ -60,21 +56,16 @@ const statusCustom = computed(() =>
 
     <!-- Row 2: 48% (同種) -->
     <MoleculesResultBox
+      :title="CONDUIT_UI_LABELS.TITLE_48"
       :status="status48"
+      :badge="vm.badge48"
       :size="size"
     >
-      <template #title>
-        <span class="flex items-center justify-center gap-2">
-          {{ CONDUIT_UI_LABELS.TITLE_48 }}
-          <AtomsBadge v-if="vm.isSameSize" color="var(--color-status-success)">適用可 (屈曲小)</AtomsBadge>
-          <AtomsBadge v-else-if="vm.isDiffSize" color="var(--color-status-warning)">適用外 (異種混在)</AtomsBadge>
-        </span>
-      </template>
       <template #value>
         <span>{{ vm.size48 }}</span>
         <template v-if="vm.isReady && !vm.isOversize48">
           <small class="sep">(</small>
-          <span class="sub-val">{{ vm.fill48 }}</span>
+          <span>{{ vm.fill48 }}</span>
           <small class="unit">{{ CONDUIT_UI_LABELS.UNIT_PERCENT }}</small>
           <small class="sep">)</small>
         </template>
@@ -85,64 +76,26 @@ const statusCustom = computed(() =>
     <MoleculesResultBox
       :title="vm.titleCustom"
       :status="statusCustom"
+      :badge="vm.badgeCustom"
       :size="size"
     >
       <template #value>
         <span>{{ vm.sizeCustom }}</span>
         <template v-if="vm.isReady && !vm.isOversizeCustom">
           <small class="sep">(</small>
-          <span class="sub-val">{{ vm.fillCustom }}</span>
+          <span>{{ vm.fillCustom }}</span>
           <small class="unit">{{ CONDUIT_UI_LABELS.UNIT_PERCENT }}</small>
           <small class="sep">)</small>
         </template>
       </template>
     </MoleculesResultBox>
 
-    <!-- Footer: 内線規程（勧告）内容 -->
-    <AtomsPanel as="footer" class="flex flex-col gap-2 p-3">
-      <div class="footer-title flex items-center gap-1">
-        <AtomsIcon name="info" size="sm" />
-        <span>内線規程（勧告）</span>
-      </div>
-      <ul class="footer-list m-0 p-0 flex flex-col gap-1 list-none">
-        <li>
-          <code>3110-6 (32%以下)</code>: 異なる太さの絶縁電線を同一管内に収める場合（原則）
-        </li>
-        <li>
-          <code>3110-5 (48%以下)</code>: 同一太さで、かつ管の屈曲が少なく引き替えが容易な場合
-        </li>
+    <!-- サブ情報: 内線規程（勧告）根拠 -->
+    <MoleculesResultDetails>
+      <ul class="m-0 p-0 flex flex-col gap-1 list-none">
+        <li>3110-6 (32%以下): 異なる太さの絶縁電線を同一管内に収める場合（原則）</li>
+        <li>3110-5 (48%以下): 同一太さで、かつ管の屈曲が少なく引き替えが容易な場合</li>
       </ul>
-    </AtomsPanel>
+    </MoleculesResultDetails>
   </div>
 </template>
-
-<style scoped lang="scss">
-.sub-val {
-  font-size: var(--font-size-xl);
-}
-
-.is-sm .sub-val {
-  font-size: var(--font-size-base);
-}
-
-footer {
-  .footer-title {
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-status-warning);
-  }
-
-  li {
-    font-size: var(--font-size-2xs);
-    color: var(--color-text-secondary);
-  }
-
-  code {
-    font-family: var(--font-mono);
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-bold);
-    font-variant-numeric: tabular-nums;
-    color: var(--color-text-main);
-  }
-}
-</style>

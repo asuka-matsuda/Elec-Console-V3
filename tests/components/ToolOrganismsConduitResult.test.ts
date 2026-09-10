@@ -7,10 +7,10 @@ import type { ConduitCalcResult } from '../../app/utils/tools/conduit/conduitCal
 describe('ToolOrganismsConduitResult (app/components/tool/OrganismsConduitResult.vue)', () => {
   const commonStubs = {
     MoleculesResultBox: {
-      props: ['title', 'status', 'size'],
+      props: ['title', 'status', 'badge', 'size'],
       template: `
         <div class="result-box-stub" :class="[status, size ? 'is-' + size : '']">
-          <div class="title"><slot name="title">{{ title }}</slot></div>
+          <div class="title"><slot name="title">{{ title }}</slot><span v-if="badge" class="badge-stub">{{ badge }}</span></div>
           <div class="value"><slot name="value"><slot /></slot></div>
         </div>
       `,
@@ -51,8 +51,7 @@ describe('ToolOrganismsConduitResult (app/components/tool/OrganismsConduitResult
 
     const text = wrapper.text()
 
-    expect(text).toContain('規程推奨')
-    expect(text).toContain('適用外 (異種混在)')
+    expect(text).toContain('異種混在')
     expect(text).toContain('E31')
     expect(text).toContain('28.5')
     expect(text).toContain('E25')
@@ -61,7 +60,7 @@ describe('ToolOrganismsConduitResult (app/components/tool/OrganismsConduitResult
     expect(text).toContain('3110-5 (48%以下)')
   })
 
-  it('renders applicable badge for same cable sizes (同種)', () => {
+  it('renders sizes without badge for same cable sizes (同種・正常時)', () => {
     const mockResult = {
       success: true,
       partial: false,
@@ -86,7 +85,6 @@ describe('ToolOrganismsConduitResult (app/components/tool/OrganismsConduitResult
 
     const text = wrapper.text()
 
-    expect(text).toContain('適用可 (屈曲小)')
     expect(text).toContain('E25')
     expect(text).toContain('E19')
   })

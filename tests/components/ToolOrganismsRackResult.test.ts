@@ -7,12 +7,11 @@ import type { RackCalcResult } from '../../app/utils/tools/rack/rackCalcLogic'
 describe('ToolOrganismsRackResult (app/components/tool/OrganismsRackResult.vue)', () => {
   const commonStubs = {
     MoleculesResultBox: {
-      props: ['status', 'isEmpty'],
+      props: ['title', 'status', 'badge', 'isEmpty'],
       template: `
         <div class="result-box-stub" :class="[status, { 'is-empty': isEmpty }]">
-          <div class="title"><slot name="title" /></div>
-          <div class="value"><slot name="value" /></div>
-          <div class="footer"><slot name="footer" /></div>
+          <div class="title"><slot name="title">{{ title }}</slot><span v-if="badge">{{ badge }}</span></div>
+          <div class="value"><slot name="value"><slot /></slot></div>
         </div>
       `,
     },

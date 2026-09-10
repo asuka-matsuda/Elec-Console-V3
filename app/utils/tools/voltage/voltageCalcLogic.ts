@@ -242,19 +242,7 @@ function _calculateSizeSelection(
     }
   }
 
-  // 条件を満たすケーブルが存在しない場合（選定不可）
-  let errorId: string
-
-  if (candidates.length === 0) {
-    errorId = 'VOLTAGE_NO_MATCHING_CABLE'
-  }
-  else if (!minAreaCable) {
-    errorId = 'VOLTAGE_SIZE_OVER'
-  }
-  else {
-    errorId = 'VOLTAGE_AMP_OVER'
-  }
-
+  // 条件を満たすケーブルが存在しない場合
   const maxCable = candidates[candidates.length - 1] || null
   const maxCableSq = maxCable
     ? _getEquivalentSq(
@@ -263,14 +251,50 @@ function _calculateSizeSelection(
       )
     : 0
 
+  const maxCableTempDerating = maxCable
+    ? getAmbientTempDerating(maxCable.baseTemp || '', maxCable.maxTemp || '', ambientTemp)
+    : 1.0
+  const maxCableAmpacity = maxCable
+    ? (typeof maxCable.ampacity === 'number' ? maxCable.ampacity : parseFloat(String(maxCable.ampacity)))
+    : 0
+  const maxCableEffAmp = maxCableAmpacity * derating * maxCableTempDerating * parallel
+  const maxCableDropV = maxCableSq > 0 ? (sys.simpleK * L * I) / (1000 * maxCableSq * parallel) : 0
+
+  let errorId: string
+  let optimal: CableData | null = null
+  let finalEffAmp = 0
+  let finalDropV = 0
+
+  if (candidates.length === 0) {
+    errorId = 'VOLTAGE_NO_MATCHING_CABLE'
+  }
+  else if (!minAmpacityCable) {
+    // 許容電流不足（最大サイズでも許容電流が設計電流を満たさない）
+    errorId = 'VOLTAGE_AMP_OVER'
+    finalEffAmp = maxCableEffAmp
+    finalDropV = 0
+  }
+  else if (!minAreaCable) {
+    // 電圧降下のみ超過（許容電流は満たすが、最大サイズでも目標電圧降下率を超過）
+    errorId = 'VOLTAGE_TARGET_DROP_OVER'
+    optimal = maxCable // 最大サイズを通常表示できるように提供
+    finalEffAmp = maxCableEffAmp
+    finalDropV = maxCableDropV
+  }
+  else {
+    errorId = 'VOLTAGE_SIZE_OVER'
+    finalEffAmp = maxCableEffAmp
+    finalDropV = maxCableDropV
+  }
+
   return {
-    optimal: null,
+    optimal,
     minAmpacityCable,
-    finalEffAmp: 0,
-    finalDropV: maxCableSq > 0 ? (sys.simpleK * L * I) / (1000 * maxCableSq * parallel) : 0,
+    finalEffAmp,
+    finalDropV,
     parallelCount: parallel,
     convertedA: maxCableSq,
-    tempDerating: 1.0,
+    tempDerating: maxCableTempDerating,
     errorId,
   }
 }

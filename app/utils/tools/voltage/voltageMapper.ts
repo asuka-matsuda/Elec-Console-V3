@@ -37,6 +37,7 @@ export function mapFormToVoltageCalcInputs(
 
   let selectedSize: number | null = null
   let selectedCores: string | null = null
+  let selectedCableName: string | null = null
 
   if (mode === 'size') {
     selectedCores = form.cores || null
@@ -47,6 +48,7 @@ export function mapFormToVoltageCalcInputs(
     if (cable) {
       selectedSize = parseFloat(String(cable.size))
       selectedCores = cable.cores || null
+      selectedCableName = cable.name || null
     }
   }
 
@@ -74,6 +76,7 @@ export function mapFormToVoltageCalcInputs(
     parallel,
     targetDrop,
     selectedSize,
+    selectedCableName,
     loadVal,
     loadUnit,
     pf,

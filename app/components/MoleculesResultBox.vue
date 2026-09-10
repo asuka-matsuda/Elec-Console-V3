@@ -12,6 +12,7 @@ interface Props {
   title?: string
   status?: ResultBoxStatus
   variant?: ResultBoxStatus
+  badge?: string
   isEmpty?: boolean
   size?: 'sm' | 'md'
 }
@@ -32,6 +33,13 @@ const resolvedStatus = computed(() => {
 
   return raw || 'neutral'
 })
+
+const badgeColor = computed(() => {
+  if (resolvedStatus.value === 'danger') return 'var(--color-status-danger)'
+  if (resolvedStatus.value === 'warning') return 'var(--color-status-warning)'
+
+  return 'var(--color-text-muted)'
+})
 </script>
 
 <template>
@@ -40,10 +48,18 @@ const resolvedStatus = computed(() => {
     class="result-box flex flex-1 flex-col items-center justify-center gap-1 w-full min-w-0"
     :class="[`is-${resolvedStatus}`, `is-${size}`]"
   >
-    <!-- ラベル領域 -->
-    <header v-if="title || $slots.title">
+    <!-- ラベル領域 ＋ バッジ -->
+    <header v-if="title || badge || $slots.title || $slots.badge" class="flex items-center justify-center gap-1.5">
       <slot name="title">
-        {{ title }}
+        <span>{{ title }}</span>
+      </slot>
+      <slot name="badge">
+        <AtomsBadge
+          v-if="badge && (resolvedStatus === 'warning' || resolvedStatus === 'danger')"
+          :color="badgeColor"
+        >
+          {{ badge }}
+        </AtomsBadge>
       </slot>
     </header>
 
@@ -54,15 +70,10 @@ const resolvedStatus = computed(() => {
       </slot>
     </div>
 
-    <!-- アクション領域 -->
+    <!-- アクション領域（必要時のみ） -->
     <div v-if="$slots.actions">
       <slot name="actions" />
     </div>
-
-    <!-- フッター領域 -->
-    <footer v-if="$slots.footer">
-      <slot name="footer" />
-    </footer>
   </AtomsPanel>
 </template>
 
@@ -81,9 +92,10 @@ const resolvedStatus = computed(() => {
   }
 
   header {
-    font-size: var(--font-size-2xs);
-    color: var(--color-text-secondary);
-    text-transform: uppercase;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-main);
+    text-shadow: none;
     letter-spacing: var(--tracking-wide);
   }
 
@@ -115,26 +127,6 @@ const resolvedStatus = computed(() => {
     }
   }
 
-  footer {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-secondary);
-    text-shadow: none;
-
-    :deep(strong) {
-      font-weight: var(--font-weight-bold);
-      color: var(--color-text-main);
-    }
-
-    :deep(p) {
-      margin: 0;
-    }
-
-    :deep(small) {
-      font-size: var(--font-size-2xs);
-      color: var(--color-text-muted);
-    }
-  }
-
   // ステータス共通管理（CSS変数で一括設定）
   &.is-success { --status-color: var(--color-status-success); }
   &.is-warning { --status-color: var(--color-status-warning); }
@@ -150,10 +142,6 @@ const resolvedStatus = computed(() => {
 
       color: var(--status-color);
       text-shadow: var(--text-glow-sm);
-    }
-
-    footer {
-      color: var(--status-color);
     }
   }
 

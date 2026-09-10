@@ -1,5 +1,5 @@
 import type { MathStep } from '~/types/tools'
-import { buildFormula, hlOk, hlVal } from '~/utils/math'
+import { buildFormula, hlVal } from '~/utils/math'
 
 export interface RackCableInput {
   d: number
@@ -304,7 +304,7 @@ export function generateMathData(
   // ① 1段敷設（平置き）の必要幅
   const t1 = result?.tier1
   const t1SumHl = hlVal(t1?.cablesWidth, '\\Sigma(D+S)', 1)
-  const t1ResHl = t1 && t1.wMain > 0 ? hlOk(t1.wMain.toFixed(1)) : '\\text{---}'
+  const t1ResHl = t1 && t1.wMain > 0 ? t1.wMain.toFixed(1) : '\\text{---}'
 
   const t1Sub = `${marginRateHl} \\times ${t1SumHl} + ${sideMarginHl}`
   const t1Tex = buildFormula(
@@ -329,7 +329,7 @@ export function generateMathData(
   // ② 2段敷設（省スペース）の必要幅
   const t2 = result?.tier2
   const t2SumHl = hlVal(t2?.cablesWidth, 'W_{cables}', 1)
-  const t2ResHl = t2 && t2.wMain > 0 ? hlOk(t2.wMain.toFixed(1)) : '\\text{---}'
+  const t2ResHl = t2 && t2.wMain > 0 ? t2.wMain.toFixed(1) : '\\text{---}'
 
   const t2Tex = buildFormula(
     modeVar2,
@@ -352,16 +352,21 @@ export function generateMathData(
 
   // ③ 相乗り必要幅（手入力加算）
   const otherVar = isStrong ? 'W_{weak}' : 'W_{strong}'
+  const otherValHl = hlVal(inputs.otherWidth, '0', 1)
 
   mathStepData.push({
     title: `③ 相乗り必要幅（手入力加算）`,
-    tex: `${otherVar} = ${inputs.otherWidth > 0 ? hlOk(inputs.otherWidth.toFixed(1)) : '0'} \\text{ [mm]}`,
+    tex: `${otherVar} = ${otherValHl} \\text{ [mm]}`,
     legend: [`\\(${otherVar}\\): 相乗り側の必要幅 [mm]`],
   })
 
   // ④ 合計ラック幅の算出（1段基準）
-  const t1TotalHl = t1 && t1.totalWidth > 0 ? hlOk(t1.totalWidth.toFixed(1)) : '\\text{---}'
-  const t2TotalHl = t2 && t2.totalWidth > 0 ? hlOk(t2.totalWidth.toFixed(1)) : '\\text{---}'
+  const t1TotalHl = t1 && t1.totalWidth > 0
+    ? t1.totalWidth.toFixed(1)
+    : '\\text{---}'
+  const t2TotalHl = t2 && t2.totalWidth > 0
+    ? t2.totalWidth.toFixed(1)
+    : '\\text{---}'
 
   const t4Tex = `\\begin{aligned} \\text{1段合計:} \\quad W_{total1} &= ${modeVar1} + ${otherVar} = ${t1TotalHl} \\text{ [mm]} \\\\ \\text{2段合計:} \\quad W_{total2} &= ${modeVar2} + ${otherVar} = ${t2TotalHl} \\text{ [mm]} \\end{aligned}`
 

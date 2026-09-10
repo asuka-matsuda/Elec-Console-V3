@@ -24,6 +24,7 @@ export interface VoltageCalcInputs {
   parallel: number | null
   targetDrop: number | null
   selectedSize: number | null
+  selectedCableName?: string | null
   loadVal: number | null
   loadUnit: string
   pf: number | null

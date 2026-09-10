@@ -99,7 +99,7 @@ describe('ToolOrganismsVoltageResult (app/components/tool/OrganismsVoltageResult
     expect(text).toContain('1.56')
   })
 
-  it('renders error and suggestion in footer when result has error', () => {
+  it('renders ERROR and danger badge when result has error', () => {
     const mockInputs = {
       isReady: true,
       mode: 'size',
@@ -124,7 +124,7 @@ describe('ToolOrganismsVoltageResult (app/components/tool/OrganismsVoltageResult
 
     const text = wrapper.text()
 
-    expect(text).toContain('目標電圧降下率を満たすケーブルサイズが対象種別の規格上限を超過')
+    expect(text).toContain('ERROR')
   })
 
   it('applies is-sm class when size="sm"', () => {

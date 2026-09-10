@@ -2,7 +2,11 @@ import { computed, watch } from 'vue'
 
 import { useToolPage } from '~/composables/tools/useToolPage'
 import type { VoltageCalcResult } from '~/types/voltage'
-import { getAvailableSizes } from '~/utils/cable'
+import {
+  getAvailableCores,
+  getAvailableSizes,
+  getDefaultCoreForPhase,
+} from '~/utils/cable'
 import {
   calculateLogic,
   generateMathData,
@@ -67,6 +71,10 @@ export function useVoltageCalculator() {
     return getAvailableSizes(form.value.cableType)
   })
 
+  const computedAvailableCores = computed(() => {
+    return getAvailableCores(form.value.cableType)
+  })
+
   watch(
     () => form.value.cableType,
     (newVal, oldVal) => {
@@ -79,6 +87,30 @@ export function useVoltageCalculator() {
         form.value.fixedSize = ''
       }
     },
+  )
+
+  // ケーブル種別または配電方式の変更に応じて心数を自動設定
+  watch(
+    [() => form.value.phase, () => form.value.cableType],
+    ([newPhase, newType], [oldPhase, oldType]) => {
+      const cores = getAvailableCores(newType)
+
+      if (cores.length === 0) {
+        form.value.cores = ''
+
+        return
+      }
+
+      const defaultCore = getDefaultCoreForPhase(newPhase, cores)
+      const isCurrentCoreValid = cores.some(c => c.value === form.value.cores)
+      const isPhaseChanged = Boolean(oldPhase && newPhase !== oldPhase)
+      const isTypeChanged = Boolean(oldType && newType !== oldType)
+
+      if (!form.value.cores || !isCurrentCoreValid || isPhaseChanged || isTypeChanged) {
+        form.value.cores = defaultCore
+      }
+    },
+    { immediate: true },
   )
 
   const isSinglePhase = computed(() => {
@@ -111,6 +143,7 @@ export function useVoltageCalculator() {
     isSizeCalcMode,
     isDropCalcMode,
     computedAvailableSizes,
+    computedAvailableCores,
     calcInputs,
     calcResult,
     mathSteps,

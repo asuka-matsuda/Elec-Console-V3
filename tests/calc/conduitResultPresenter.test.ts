@@ -30,6 +30,7 @@ describe('conduitResultPresenter', () => {
     const mockResult: ConduitCalcResult = {
       success: true,
       partial: false,
+      isSameSize: true,
       conduit32: {
         category: 'e',
         name: 'E25',
@@ -73,6 +74,7 @@ describe('conduitResultPresenter', () => {
     const mockResult: ConduitCalcResult = {
       success: true,
       partial: false,
+      isSameSize: true,
       isOversize32: true,
       fill32: 35.0,
       conduit32: undefined,
@@ -93,7 +95,8 @@ describe('conduitResultPresenter', () => {
 
     expect(vm.isReady).toBe(true)
     expect(vm.isOversize32).toBe(true)
-    expect(vm.size32).toBe('サイズ超過')
+    expect(vm.size32).toBe('ERROR')
+    expect(vm.badge32).toBe('規格上限超過')
     expect(vm.status32Class).toBe('is-danger')
 
     expect(vm.isOversize48).toBe(false)

@@ -16,6 +16,12 @@ export const TOOL_ERRORS: Record<string, ToolErrorInfo> = {
     message: '目標電圧降下率を満たすケーブルサイズが対象種別の規格上限を超過。',
     suggestion: 'ケーブル種別をCV等に変更するか、敷設条数の増加を推奨。',
   },
+  VOLTAGE_TARGET_DROP_OVER: {
+    id: 'VOLTAGE_TARGET_DROP_OVER',
+    title: '降下率超過',
+    message: '最大サイズでも目標電圧降下率を超過。',
+    suggestion: 'より太いケーブル種別への変更、または敷設条数の増加を推奨。',
+  },
   VOLTAGE_AMP_OVER: {
     id: 'VOLTAGE_AMP_OVER',
     title: '許容電流不足',

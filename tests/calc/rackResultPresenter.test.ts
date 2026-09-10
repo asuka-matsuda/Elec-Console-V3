@@ -169,7 +169,7 @@ describe('rackResultPresenter', () => {
     })
 
     expect(vm.isEmpty).toBe(false)
-    expect(vm.displaySize).toBe('規格外 (1300mm以上)')
+    expect(vm.displaySize).toBe('ERROR')
     expect(vm.isSizeOver).toBe(true)
     expect(vm.boxStatus).toBe('danger')
   })

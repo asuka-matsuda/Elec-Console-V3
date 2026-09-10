@@ -20,6 +20,7 @@ const {
   isSizeCalcMode,
   isDropCalcMode,
   computedAvailableSizes,
+  computedAvailableCores,
   calcInputs,
   calcResult,
   mathSteps,
@@ -50,6 +51,7 @@ const formFields = computed(() =>
     () => computedAvailableSizes.value,
     () => !!form.value.cableType,
     () => isSinglePhase.value,
+    () => computedAvailableCores.value,
   ),
 )
 </script>

@@ -60,6 +60,56 @@ export function getAvailableSizes(category: string): DropdownOption[] {
   })
 }
 
+/**
+ * 指定されたケーブル種別（category）で利用可能な心数（cores）の一覧を取得する
+ */
+export function getAvailableCores(category: string): DropdownOption[] {
+  if (!category) return []
+
+  const coresList = [...new Set(
+    cableData
+      .filter(c => c.category === category && c.cores && c.cores !== '-')
+      .map(c => String(c.cores)),
+  )]
+
+  coresList.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+
+  const labelMap: Record<string, string> = {
+    '1C': '単心 (1C)',
+    '2C': '2心 (2C)',
+    '3C': '3心 (3C)',
+    '4C': '4心 (4C)',
+  }
+
+  return coresList.map(c => ({
+    label: labelMap[c] || c,
+    value: c,
+  }))
+}
+
+/**
+ * 配電方式から推奨されるデフォルト心数を判定する
+ */
+export function getDefaultCoreForPhase(
+  phase: string,
+  availableCores: DropdownOption[],
+): string {
+  if (!availableCores.length) return ''
+
+  const coreValues = availableCores.map(c => c.value)
+
+  // 単相2線式 (1P2W) -> 2C
+  if (phase.startsWith('1P2W')) {
+    if (coreValues.includes('2C')) return '2C'
+  }
+  // 単相3線式 (1P3W) または 三相3線式 (3P3W) -> 3C
+  if (phase.startsWith('1P3W') || phase.startsWith('3P3W')) {
+    if (coreValues.includes('3C')) return '3C'
+  }
+
+  return coreValues[0] || ''
+}
+
 export function parseCableIndex(cableIdxStr?: string | null): number | null {
   if (!cableIdxStr || !cableIdxStr.startsWith('idx_')) {
     return null

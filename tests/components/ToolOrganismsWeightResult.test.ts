@@ -88,8 +88,7 @@ describe('ToolOrganismsWeightResult (app/components/tool/OrganismsWeightResult.v
 
     const text = wrapper.text()
 
-    expect(text).toContain('選定不可')
-    expect(text).toContain('条件に合うドラムが見つかりませんでした')
+    expect(text).toContain('ERROR')
   })
 
   it('renders empty state when result is null', () => {
@@ -108,6 +107,12 @@ describe('ToolOrganismsWeightResult (app/components/tool/OrganismsWeightResult.v
 
     const details = wrapper.findComponent(commonStubs.MoleculesResultDetails)
 
-    expect(details.exists()).toBe(false)
+    expect(details.exists()).toBe(true)
+    const items = details.props('items') as Array<{ label: string, value: string }>
+
+    expect(items).toHaveLength(3)
+    expect(items[0].value).toBe('ーー')
+    expect(items[1].value).toBe('ーー')
+    expect(items[2].value).toBe('ーー')
   })
 })

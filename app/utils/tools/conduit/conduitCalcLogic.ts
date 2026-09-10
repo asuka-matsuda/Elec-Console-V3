@@ -1,7 +1,7 @@
 import type { CableData, ConduitData } from '~/types/database'
 import type { CableInputItem, MathStep } from '~/types/tools'
 import { findCableByIndexString, getEffectiveCableDiameter } from '~/utils/cable'
-import { buildFormula, hlOk, hlVal } from '~/utils/math'
+import { buildFormula, hlVal } from '~/utils/math'
 
 export type CableInput = CableInputItem
 
@@ -243,18 +243,39 @@ export function generateMathData(
   const totalKnownArea = res?.totalArea || 0
 
   const formulaVarStr = rowCount === 1 ? 'A_1' : '\\Sigma A_n'
+  let substStr = ''
+
+  if (res?.cableDetails && res.cableDetails.length > 0) {
+    if (res.cableDetails.length === 1 && res.cableDetails[0]) {
+      substStr = hlVal(res.cableDetails[0].subTotalArea, 'A_1', 1)
+    }
+    else {
+      substStr = res.cableDetails
+        .map((c, i) => hlVal(c.subTotalArea, `A_{${i + 1}}`, 1))
+        .join(' + ')
+    }
+  }
+
   const resultStr1 = allCablesKnown
-    ? hlOk(totalKnownArea.toFixed(1))
+    ? totalKnownArea.toFixed(1)
     : '\\text{---}'
 
-  const formula1 = buildFormula('A_{total}', formulaVarStr, resultStr1, 'mm^2')
+  const formula1 = buildFormula(
+    'A_{total}',
+    substStr ? `${formulaVarStr} \\\\ &= ${substStr}` : formulaVarStr,
+    resultStr1,
+    'mm^2',
+  )
 
   const rateStr = res?.customFillRate ? `${res.customFillRate}` : '80'
   const rateFactor = (
     res?.customFillRate ? res.customFillRate / 100 : 0.8
   ).toFixed(2)
+  const rateHl = hlVal(rateStr, 'rate', 0)
+  const rateFactorHl = hlVal(rateFactor, 'factor', 2)
+  const totalAreaHl = hlVal(totalKnownArea, 'A_{total}', 1)
 
-  let formula2 = `\\begin{aligned} \\text{32\\%以下:} \\quad A_{\\text{pipe}} \\times 0.32 &\\ge A_{total} \\\\ \\text{---} \\text{ mm}^2 &\\ge \\text{---} \\text{ mm}^2 \\\\\\\\ \\text{48\\%以下:} \\quad A_{\\text{pipe}} \\times 0.48 &\\ge A_{total} \\\\ \\text{---} \\text{ mm}^2 &\\ge \\text{---} \\text{ mm}^2 \\\\\\\\ \\text{指定(${rateStr}\\%):} \\quad A_{\\text{pipe}} \\times ${rateFactor} &\\ge A_{total} \\\\ \\text{---} \\text{ mm}^2 &\\ge \\text{---} \\text{ mm}^2 \\end{aligned}`
+  let formula2 = `\\begin{aligned} \\text{32\\%以下:} \\quad A_{\\text{pipe}} \\times 0.32 &\\ge A_{total} \\\\ \\text{---} \\text{ mm}^2 &\\ge \\text{---} \\text{ mm}^2 \\\\\\\\ \\text{48\\%以下:} \\quad A_{\\text{pipe}} \\times 0.48 &\\ge A_{total} \\\\ \\text{---} \\text{ mm}^2 &\\ge \\text{---} \\text{ mm}^2 \\\\\\\\ \\text{指定(${rateHl}\\%):} \\quad A_{\\text{pipe}} \\times ${rateFactorHl} &\\ge A_{total} \\\\ \\text{---} \\text{ mm}^2 &\\ge \\text{---} \\text{ mm}^2 \\end{aligned}`
 
   if (
     allCablesKnown
@@ -263,16 +284,15 @@ export function generateMathData(
     && res?.conduit48
     && res?.conduitCustom
   ) {
-    const totalAreaHl = hlVal(totalKnownArea, 'A_{total}', 1)
-    const allow32Hl = hlVal(res.allowable32, 'A_{\\text{allow32}}', 1)
-    const allow48Hl = hlVal(res.allowable48, 'A_{\\text{allow48}}', 1)
-    const allowCustomHl = hlVal(
-      res.allowableCustom,
-      'A_{\\text{allowCustom}}',
-      1,
-    )
+    const allow32Str = res.allowable32 !== undefined ? res.allowable32.toFixed(1) : '---'
+    const allow48Str = res.allowable48 !== undefined ? res.allowable48.toFixed(1) : '---'
+    const allowCustomStr = res.allowableCustom !== undefined ? res.allowableCustom.toFixed(1) : '---'
 
-    formula2 = `\\begin{aligned} \\text{32\\%以下:} \\quad A_{\\text{pipe}} \\times 0.32 &\\ge A_{total} \\\\ ${allow32Hl} \\text{ mm}^2 &\\ge ${totalAreaHl} \\text{ mm}^2 \\\\ &\\rightarrow \\text{【 } ${hlOk(res.conduit32.size)} \\text{ 】選定} \\\\\\\\ \\text{48\\%以下:} \\quad A_{\\text{pipe}} \\times 0.48 &\\ge A_{total} \\\\ ${allow48Hl} \\text{ mm}^2 &\\ge ${totalAreaHl} \\text{ mm}^2 \\\\ &\\rightarrow \\text{【 } ${hlOk(res.conduit48.size)} \\text{ 】選定} \\\\\\\\ \\text{指定(${rateStr}\\%):} \\quad A_{\\text{pipe}} \\times ${rateFactor} &\\ge A_{total} \\\\ ${allowCustomHl} \\text{ mm}^2 &\\ge ${totalAreaHl} \\text{ mm}^2 \\\\ &\\rightarrow \\text{【 } ${hlOk(res.conduitCustom.size)} \\text{ 】選定} \\end{aligned}`
+    const res32Str = res.conduit32.size
+    const res48Str = res.conduit48.size
+    const resCustomStr = res.conduitCustom.size
+
+    formula2 = `\\begin{aligned} \\text{32\\%以下:} \\quad A_{\\text{pipe}} \\times 0.32 &\\ge A_{total} \\\\ ${allow32Str} \\text{ mm}^2 &\\ge ${totalAreaHl} \\text{ mm}^2 \\\\ &\\rightarrow \\text{【 } ${res32Str} \\text{ 】選定} \\\\\\\\ \\text{48\\%以下:} \\quad A_{\\text{pipe}} \\times 0.48 &\\ge A_{total} \\\\ ${allow48Str} \\text{ mm}^2 &\\ge ${totalAreaHl} \\text{ mm}^2 \\\\ &\\rightarrow \\text{【 } ${res48Str} \\text{ 】選定} \\\\\\\\ \\text{指定(${rateHl}\\%):} \\quad A_{\\text{pipe}} \\times ${rateFactorHl} &\\ge A_{total} \\\\ ${allowCustomStr} \\text{ mm}^2 &\\ge ${totalAreaHl} \\text{ mm}^2 \\\\ &\\rightarrow \\text{【 } ${resCustomStr} \\text{ 】選定} \\end{aligned}`
   }
 
   return [

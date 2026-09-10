@@ -5,7 +5,7 @@ import type {
   VoltageCalcInputs,
   VoltageCalcResult,
 } from '~/types/voltage'
-import { buildFormula, hlOk, hlVal } from '~/utils/math'
+import { buildFormula, hlVal } from '~/utils/math'
 
 import { getAmbientTempDerating } from './voltageCalcLogic'
 
@@ -41,7 +41,7 @@ function _getUnitConversionFormula(inputs: VoltageCalcInputs): MathStep {
   const Cos_val = hlVal(pf, '\\cos \\theta', 2)
 
   if (loadUnit === 'A') {
-    const resultVal = I !== null ? hlOk(I.toFixed(1)) : '\\text{---}'
+    const resultVal = I !== null ? I.toFixed(1) : '\\text{---}'
     const tex = buildFormula('I', P_val, resultVal, 'A')
 
     return { tex, legend: ['\\( I \\): 設計電流 [A]'] }
@@ -73,7 +73,7 @@ function _getUnitConversionFormula(inputs: VoltageCalcInputs): MathStep {
   if (loadUnit === 'kW') rightSideSubst += ` \\times ${Cos_val}`
   rightSideSubst += `}`
 
-  const resultVal = I !== null ? hlOk(I.toFixed(1)) : '\\text{---}'
+  const resultVal = I !== null ? I.toFixed(1) : '\\text{---}'
   const tex = buildFormula(
     'I',
     rightSideSymbol + ` \\\\ &= ` + rightSideSubst,
@@ -111,7 +111,7 @@ function _getTempDeratingFormula(
 
   if (amb === null) {
     const resultVal = targetCable?.ampacity
-      ? hlOk(parseFloat(String(targetCable.ampacity)).toString())
+      ? parseFloat(String(targetCable.ampacity)).toString()
       : '\\text{---}'
     const tex = buildFormula('I_0\'', 'I_0 \\\\ &= ' + I_0_val, resultVal, 'A')
 
@@ -143,7 +143,7 @@ function _getTempDeratingFormula(
 
     const tempAmp = baseAmp * k
 
-    resultVal = hlOk(tempAmp.toFixed(1))
+    resultVal = tempAmp.toFixed(1)
   }
 
   const symbolFormula = `I_0 \\times \\sqrt{\\frac{\\theta_{max} - \\theta_{amb}}{\\theta_{max} - \\theta_{base}}}`
@@ -219,7 +219,7 @@ function _getThermalLimitFormula(
       effAmp = parseFloat(String(targetCable.ampacity)) * kValue * N_val
     }
 
-    resultLine = hlOk(effAmp.toFixed(1))
+    resultLine = effAmp.toFixed(1)
   }
 
   const tex = `\\begin{aligned} I &\\le ${rightSideSymbol} \\\\ ${I_str_left} &\\le ${rightSideSubst} \\\\ ${I_str_left} &\\le ${resultLine} \\text{ [A]} \\end{aligned}`
@@ -276,7 +276,7 @@ function _getVoltageDropFormula(
         = (sys.simpleK * L * I) / (1000 * (sys.voltage * (targetDrop / 100)))
       const calA_each = calA_total / N_val
 
-      resultLine = hlOk(calA_each.toFixed(2))
+      resultLine = calA_each.toFixed(2)
     }
     tex = buildFormula(
       leftSide,
@@ -292,7 +292,7 @@ function _getVoltageDropFormula(
     let resultLine = '\\text{---}'
 
     if (result?.finalDropV !== undefined) {
-      resultLine = hlOk(result.finalDropV.toFixed(2))
+      resultLine = result.finalDropV.toFixed(2)
     }
     tex = buildFormula(
       'e',

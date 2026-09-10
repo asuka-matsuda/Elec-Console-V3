@@ -42,15 +42,35 @@ describe('MoleculesResultBox.vue', () => {
     expect(wrapper.find('.result-box').classes()).toContain('is-empty')
   })
 
-  it('renders footer slot when provided', () => {
-    const wrapper = mount(MoleculesResultBox, {
-      slots: {
-        default: '48%',
-        footer: '<span class="test-footer">推奨範囲内</span>',
+  it('displays badge for warning or danger status, but hides for success', () => {
+    // warning の場合はバッジを表示
+    const wrapperWarning = mount(MoleculesResultBox, {
+      props: {
+        status: 'warning',
+        badge: '許容電流注意',
       },
     })
 
-    expect(wrapper.find('.test-footer').exists()).toBe(true)
-    expect(wrapper.find('.test-footer').text()).toBe('推奨範囲内')
+    expect(wrapperWarning.text()).toContain('許容電流注意')
+
+    // danger の場合はバッジを表示
+    const wrapperDanger = mount(MoleculesResultBox, {
+      props: {
+        status: 'danger',
+        badge: '許容電流不足',
+      },
+    })
+
+    expect(wrapperDanger.text()).toContain('許容電流不足')
+
+    // success の場合はバッジを非表示
+    const wrapperSuccess = mount(MoleculesResultBox, {
+      props: {
+        status: 'success',
+        badge: 'OK',
+      },
+    })
+
+    expect(wrapperSuccess.text()).not.toContain('OK')
   })
 })

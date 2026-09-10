@@ -1,7 +1,7 @@
 import type { CableData, DrumData } from '~/types/database'
 import type { MathStep } from '~/types/tools'
 import { findCableByIndexString, getEffectiveCableDiameter } from '~/utils/cable'
-import { hlOk, hlVal } from '~/utils/math'
+import { hlVal } from '~/utils/math'
 
 export interface WeightCalcInputs {
   category: string
@@ -179,8 +179,8 @@ export function generateMathData(
     W_cable_res = result.cableWeight.toFixed(1)
     const W_max = Number(result.bestDrum.max_winding_weight)
 
-    drumWeightSub = `${hlVal(result.cableWeight, 'W_{cable}', 1)} \\text{ kg} &\\le ${hlOk(W_max.toFixed(1))} \\text{ kg}`
-    drumWeightSub += ` \\\\ &\\rightarrow \\text{【 } ${hlOk(result.bestDrum.id)} \\text{ 】}`
+    drumWeightSub = `${W_cable_res} \\text{ kg} &\\le ${W_max.toFixed(1)} \\text{ kg}`
+    drumWeightSub += ` \\\\ &\\rightarrow \\text{【 } ${result.bestDrum.id} \\text{ 】}`
   }
   const tex1 = `\\begin{aligned} W_{cable} &= ${W_cable_sym} \\\\ &= ${W_cable_sub} \\\\ &= ${W_cable_res} \\text{ [kg]} \\\\\\\\ ${drumWeightSym} \\\\ ${drumWeightSub} \\end{aligned}`
   const leg1 = [
@@ -201,7 +201,7 @@ export function generateMathData(
     minD2_res = result.bestMathParams.minD2.toFixed(1)
     const D2 = result.bestMathParams.D2
 
-    drumRadiusSub = `${hlVal(result.bestMathParams.minD2, 'D_{min}', 1)} \\text{ mm} &\\le ${hlOk(D2.toFixed(1))} \\text{ mm}`
+    drumRadiusSub = `${minD2_res} \\text{ mm} &\\le ${D2.toFixed(1)} \\text{ mm}`
   }
   const tex2 = `\\begin{aligned} D_{min} &= ${minD2_sym} \\\\ &= ${minD2_sub} \\\\ &= ${minD2_res} \\text{ [mm]} \\\\\\\\ ${drumRadiusSym} \\\\ ${drumRadiusSub} \\end{aligned}`
   const leg2 = [
@@ -225,7 +225,7 @@ export function generateMathData(
     const D2_hl = hlVal(D2, 'D_2', 1)
 
     const L_cap_sub = `\\pi \\times ${m_hl} \\times ${n_hl} (${D2_hl} + ${n_hl} \\times ${d_hl}) \\times 10^{-3}`
-    const capCheckSub = `${L_req_hl} \\text{ m} &\\le ${hlOk(L.toFixed(1))} \\text{ m}`
+    const capCheckSub = `${L_req_hl} \\text{ m} &\\le ${L.toFixed(1)} \\text{ m}`
 
     tex3 = `\\begin{aligned} L_{cap} &= \\pi m n (D_2 + n d) \\times 10^{-3} \\\\ &= ${L_cap_sub} \\\\ &= ${L.toFixed(1)} \\text{ [m]} \\\\\\\\ L_{req} &\\le L_{cap} \\\\ ${capCheckSub} \\end{aligned}`
   }
