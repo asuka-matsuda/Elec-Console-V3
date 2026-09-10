@@ -10,7 +10,6 @@ describe('ToolOrganismsWeightInput (app/components/tool/OrganismsWeightInput.vue
     category: 'CV',
     cableIdx: '0',
     L_input: 100,
-    K: 0.8,
     ...overrides,
   })
 
@@ -73,7 +72,7 @@ describe('ToolOrganismsWeightInput (app/components/tool/OrganismsWeightInput.vue
     expect(text).toContain('ケーブル種別')
     expect(text).toContain('ケーブルサイズ')
     expect(text).toContain('ケーブル長 (L)')
-    expect(text).toContain('ドラム占積率 (K)')
+    expect(text).not.toContain('ドラム占積率')
   })
 
   it('disables cable size select when category is empty', () => {

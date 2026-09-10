@@ -52,7 +52,7 @@ describe('mathUtils', () => {
     })
   })
 
-  describe('hlOk / hlNg', () => {
+  describe('hlOk / hlNg / hlAccent', () => {
     it('should wrap value with success class', () => {
       expect(hlOk('OK')).toBe(`\\htmlClass{${TEX_SUCCESS_CLASS}}{OK}`)
       expect(hlOk(100)).toBe(`\\htmlClass{${TEX_SUCCESS_CLASS}}{100}`)
@@ -61,6 +61,10 @@ describe('mathUtils', () => {
     it('should wrap value with danger class', () => {
       expect(hlNg('NG')).toBe(`\\htmlClass{${TEX_DANGER_CLASS}}{NG}`)
       expect(hlNg(0)).toBe(`\\htmlClass{${TEX_DANGER_CLASS}}{0}`)
+    })
+
+    it('should wrap value with accent class', () => {
+      expect(hlAccent('ACCENT')).toBe(`\\htmlClass{${TEX_HL_CLASS}}{ACCENT}`)
     })
   })
 

@@ -47,17 +47,5 @@ watch(
         <AtomsInput v-model="inputs.L_input" type="number" min="1" />
       </MoleculesInputGroup>
     </MoleculesFormGroup>
-
-    <MoleculesFormGroup label="ドラム占積率 (K)">
-      <MoleculesInputGroup addon="倍">
-        <AtomsInput
-          v-model="inputs.K"
-          type="number"
-          step="0.01"
-          min="0"
-          max="1"
-        />
-      </MoleculesInputGroup>
-    </MoleculesFormGroup>
   </div>
 </template>

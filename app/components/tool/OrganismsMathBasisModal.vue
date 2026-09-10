@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
- * ToolMathBasisModal
- * 計算ツールの計算根拠（数式やステップ）を表示するためのモーダルコンポーネントです。
+ * OrganismsMathBasisModal
+ * [Tool Organism] 計算ツールの計算根拠（数式やステップ）を表示するためのモーダルコンポーネント。
  * KaTeX による数式レンダリングと凡例の2カラム表示、およびモーダル制御をすべて包括します。
  */
 import 'katex/dist/katex.min.css'
@@ -9,7 +9,7 @@ import 'katex/dist/katex.min.css'
 import { computed, getCurrentInstance, inject, type Ref, ref } from 'vue'
 
 import type { MathStep } from '~/types/tools'
-import { parseLegend, renderMath } from '~/utils/math'
+import { renderMath } from '~/utils/math'
 
 const modelValue = defineModel<boolean>()
 
@@ -68,44 +68,30 @@ const handleClose = () => {
     variant="tool"
     size="lg"
   >
-    <div class="basis-content">
+    <div class="flex flex-col gap-card-gap">
       <ClientOnly>
-        <div v-if="steps && steps.length > 0" class="basis-list">
+        <div v-if="steps && steps.length > 0" class="flex flex-col gap-card-gap">
           <AtomsPanel
             v-for="(step, index) in steps"
             :key="index"
-            class="basis-item"
+            class="flex flex-col gap-3"
           >
             <MoleculesSectionHeader v-if="step.title" :title="step.title" size="sm" />
-            <div class="math-basis">
+            <div class="grid grid-cols-1 items-stretch sm:grid-cols-[1fr_auto] sm:items-center gap-panel-gap">
               <!-- 左側: 計算式 -->
               <div
-                class="math-expr"
+                class="math-expr min-w-0 overflow-x-hidden overflow-y-hidden py-1"
                 v-html="renderMath(step.tex, true)"
               />
 
               <!-- 右側: 凡例 -->
-              <div
-                v-if="step.legend && step.legend.length > 0"
-                class="math-legend"
-              >
-                <h5 class="legend-title">【凡例】</h5>
-                <dl class="legend-list">
-                  <template
-                    v-for="v in parseLegend(step.legend)"
-                    :key="v.name"
-                  >
-                    <dt v-html="v.renderedSymbol" />
-                    <dd>{{ v.name }}</dd>
-                  </template>
-                </dl>
-              </div>
+              <ToolMoleculesMathLegend :items="step.legend" />
             </div>
           </AtomsPanel>
         </div>
       </ClientOnly>
 
-      <div v-if="$slots.default" class="basis-extra">
+      <div v-if="$slots.default" class="flex flex-col gap-2">
         <slot />
       </div>
     </div>
@@ -119,44 +105,8 @@ const handleClose = () => {
 </template>
 
 <style scoped lang="scss">
-.basis-content {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-card-gap);
-}
-
-.basis-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-card-gap);
-}
-
-.basis-item {
-  gap: var(--space-3);
-}
-
-.basis-extra {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-
-.math-basis {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: var(--space-panel-gap);
-  align-items: center;
-
-  @include mq("sm") {
-    grid-template-columns: 1fr;
-    align-items: stretch;
-  }
-}
-
 .math-expr {
-  overflow: auto hidden;
-  min-width: 0;
-  padding: var(--space-1) 0;
+  overflow-x: hidden;
   outline: none;
 
   :deep(.katex-display) {
@@ -185,61 +135,6 @@ const handleClose = () => {
     .tex-color-accent * {
       color: var(--color-accent-main);
     }
-  }
-}
-
-.math-legend {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-
-  min-width: 200px;
-  max-width: 320px;
-  padding-left: var(--space-3);
-  border-left: 1px solid var(--color-border);
-
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-muted);
-
-  @include mq("sm") {
-    min-width: 0;
-    max-width: none;
-    padding-top: var(--space-2);
-    padding-left: 0;
-    border-top: 1px solid var(--color-border);
-    border-left: none;
-  }
-}
-
-.legend-title {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-}
-
-.legend-list {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: var(--space-1) var(--space-2);
-  align-items: baseline;
-
-  dt {
-    white-space: nowrap;
-
-    &::after {
-      content: ":";
-    }
-
-    :deep(.katex) {
-      color: var(--color-text-muted);
-    }
-  }
-
-  dd {
-    min-width: 0;
-    font-size: var(--font-size-2xs);
-    color: var(--color-text-muted);
-    overflow-wrap: break-word;
   }
 }
 </style>

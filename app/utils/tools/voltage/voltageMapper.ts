@@ -11,13 +11,16 @@ export interface VoltageFormState {
   loadUnit: string
   powerFactor: string
   distance: number | null
-  cableType: string
+  category: string
   cores: string
-  fixedSize: string
+  cableIdx: string
   parallel: string
   derating: string
   ambientTemp: string
   targetDrop: string
+  // 旧プロパティとの下位互換性（保存済みLocalStorage復元用）
+  cableType?: string
+  fixedSize?: string
 }
 
 export function mapFormToVoltageCalcInputs(
@@ -32,8 +35,8 @@ export function mapFormToVoltageCalcInputs(
     ? 1.0
     : (form.powerFactor ? parseFloat(form.powerFactor) : null)
   const L = form.distance
-  const cableType = form.cableType || ''
-  const rawSize = form.fixedSize || ''
+  const category = form.category || form.cableType || ''
+  const rawIdx = form.cableIdx || form.fixedSize || ''
 
   let selectedSize: number | null = null
   let selectedCores: string | null = null
@@ -43,7 +46,7 @@ export function mapFormToVoltageCalcInputs(
     selectedCores = form.cores || null
   }
   else {
-    const cable = findCableByIndexString(rawSize)
+    const cable = findCableByIndexString(rawIdx)
 
     if (cable) {
       selectedSize = parseFloat(String(cable.size))
@@ -61,14 +64,21 @@ export function mapFormToVoltageCalcInputs(
 
   const I = calculateDesignCurrent(sys, loadVal, loadUnit, pf ?? undefined)
 
-  const validationResult = voltageSchema.safeParse(form)
+  // バリデーション用正規化オブジェクト
+  const normalizedForm = {
+    ...form,
+    category,
+    cableIdx: rawIdx,
+  }
+
+  const validationResult = voltageSchema.safeParse(normalizedForm)
 
   return {
     mode,
     sys: sys as SystemData,
     I,
     L,
-    cableType,
+    cableType: category,
     selectedCores,
     derating,
     rawTempVal,

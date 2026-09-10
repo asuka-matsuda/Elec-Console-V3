@@ -15,7 +15,6 @@ export function mapWeightToHistory(
   const inputs = [
     { label: '対象ケーブル', value: name },
     { label: 'ケーブル長', value: `${settings.L_input} m` },
-    { label: '占積率 (K)', value: `${((settings.K ?? 0) * 100).toFixed(0)}%` },
   ]
 
   let status: HistoryEntry['status'] = 'success'

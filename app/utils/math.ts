@@ -69,6 +69,10 @@ export function hlNg(value: string | number): string {
   return `\\htmlClass{${TEX_DANGER_CLASS}}{${value}}`
 }
 
+export function hlAccent(value: string | number): string {
+  return `\\htmlClass{${TEX_HL_CLASS}}{${value}}`
+}
+
 /**
  * 数式の基本的なフォーマット（文字式 = 代入式 = 結果）を組み立てる
  */

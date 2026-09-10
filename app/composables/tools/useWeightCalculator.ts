@@ -17,7 +17,6 @@ const defaultInputs: WeightCalcInputs = {
   category: '',
   cableIdx: '',
   L_input: null,
-  K: null,
 }
 
 export function useWeightCalculator() {
@@ -39,7 +38,6 @@ export function useWeightCalculator() {
         || !inputs.cableIdx
         || !inputs.L_input
         || inputs.L_input <= 0
-        || !inputs.K
       ) {
         return { error: true }
       }

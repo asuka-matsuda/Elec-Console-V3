@@ -30,7 +30,7 @@ const conduitCategoryOptions = computed(() => {
 </script>
 
 <template>
-  <ToolLayout
+  <ToolTemplatesLayout
     :save-disabled="!result?.success || result?.partial"
     :save-function="handleSaveHistory"
     @reset="openResetModal"
@@ -49,7 +49,7 @@ const conduitCategoryOptions = computed(() => {
     </template>
 
     <template #basis>
-      <ToolMathBasisModal :steps="mathSteps" />
+      <ToolOrganismsMathBasisModal :steps="mathSteps" />
     </template>
-  </ToolLayout>
+  </ToolTemplatesLayout>
 </template>

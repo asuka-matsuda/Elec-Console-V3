@@ -22,9 +22,9 @@ export const defaultForm: VoltageFormState = {
   loadUnit: 'A',
   powerFactor: '',
   distance: null,
-  cableType: '',
+  category: '',
   cores: '',
-  fixedSize: '',
+  cableIdx: '',
   parallel: '1',
   derating: '1.0',
   ambientTemp: 'none',
@@ -68,30 +68,30 @@ export function useVoltageCalculator() {
   const isDropCalcMode = computed(() => form.value.mode === 'drop')
 
   const computedAvailableSizes = computed(() => {
-    return getAvailableSizes(form.value.cableType)
+    return getAvailableSizes(form.value.category)
   })
 
   const computedAvailableCores = computed(() => {
-    return getAvailableCores(form.value.cableType)
+    return getAvailableCores(form.value.category)
   })
 
   watch(
-    () => form.value.cableType,
+    () => form.value.category,
     (newVal, oldVal) => {
       // hydration時にoldValが空の場合はスキップ
       if (!oldVal) return
 
       const sizes = getAvailableSizes(newVal)
 
-      if (!sizes.some(s => s.value === form.value.fixedSize)) {
-        form.value.fixedSize = ''
+      if (!sizes.some(s => s.value === form.value.cableIdx)) {
+        form.value.cableIdx = ''
       }
     },
   )
 
   // ケーブル種別または配電方式の変更に応じて心数を自動設定
   watch(
-    [() => form.value.phase, () => form.value.cableType],
+    [() => form.value.phase, () => form.value.category],
     ([newPhase, newType], [oldPhase, oldType]) => {
       const cores = getAvailableCores(newType)
 

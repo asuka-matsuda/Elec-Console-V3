@@ -1,5 +1,5 @@
 import type { MathStep } from '~/types/tools'
-import { buildFormula, hlVal } from '~/utils/math'
+import { buildFormula, formatVal, hlAccent, hlOk } from '~/utils/math'
 
 export interface RackCableInput {
   d: number
@@ -295,22 +295,22 @@ export function generateMathData(
   const cableSpacing = inputs.cableSpacing ?? 10
   const sideMargin = inputs.sideMargin ?? (isStrong ? 60 : 120)
 
-  const marginRateHl = hlVal(marginRate, 'K', 1)
-  const sideMarginHl = hlVal(sideMargin, 'W_{side}', 0)
+  const marginRateStr = formatVal(marginRate, 'K', 2)
+  const sideMarginStr = formatVal(sideMargin, 'W_{side}', 0)
 
   const modeVar1 = isStrong ? 'W_{strong,1}' : 'W_{weak,1}'
   const modeVar2 = isStrong ? 'W_{strong,2}' : 'W_{weak,2}'
 
   // ① 1段敷設（平置き）の必要幅
   const t1 = result?.tier1
-  const t1SumHl = hlVal(t1?.cablesWidth, '\\Sigma(D+S)', 1)
-  const t1ResHl = t1 && t1.wMain > 0 ? t1.wMain.toFixed(1) : '\\text{---}'
+  const t1SumStr = formatVal(t1?.cablesWidth, '\\Sigma(D+S)', 1)
+  const t1ResStr = t1 && t1.wMain > 0 ? t1.wMain.toFixed(1) : '\\text{---}'
 
-  const t1Sub = `${marginRateHl} \\times ${t1SumHl} + ${sideMarginHl}`
+  const t1Sub = `${marginRateStr} \\times ${t1SumStr} + ${sideMarginStr}`
   const t1Tex = buildFormula(
     modeVar1,
     `K \\times \\Sigma(D + S) + W_{side} \\\\ &= ${t1Sub}`,
-    t1ResHl,
+    t1ResStr,
     'mm',
   )
 
@@ -328,13 +328,13 @@ export function generateMathData(
 
   // ② 2段敷設（省スペース）の必要幅
   const t2 = result?.tier2
-  const t2SumHl = hlVal(t2?.cablesWidth, 'W_{cables}', 1)
-  const t2ResHl = t2 && t2.wMain > 0 ? t2.wMain.toFixed(1) : '\\text{---}'
+  const t2SumStr = formatVal(t2?.cablesWidth, 'W_{cables}', 1)
+  const t2ResStr = t2 && t2.wMain > 0 ? t2.wMain.toFixed(1) : '\\text{---}'
 
   const t2Tex = buildFormula(
     modeVar2,
-    `K \\times \\max(W_{lower}, W_{upper}) + W_{side} \\\\ &= ${marginRateHl} \\times ${t2SumHl} + ${sideMarginHl}`,
-    t2ResHl,
+    `K \\times \\max(W_{lower}, W_{upper}) + W_{side} \\\\ &= ${marginRateStr} \\times ${t2SumStr} + ${sideMarginStr}`,
+    t2ResStr,
     'mm',
   )
 
@@ -352,30 +352,44 @@ export function generateMathData(
 
   // ③ 相乗り必要幅（手入力加算）
   const otherVar = isStrong ? 'W_{weak}' : 'W_{strong}'
-  const otherValHl = hlVal(inputs.otherWidth, '0', 1)
+  const otherValStr = formatVal(inputs.otherWidth, '0', 1)
 
   mathStepData.push({
-    title: `③ 相乗り必要幅（手入力加算）`,
-    tex: `${otherVar} = ${otherValHl} \\text{ [mm]}`,
+    title: '③ 相乗り必要幅（手入力加算）',
+    tex: `${otherVar} = ${otherValStr} \\text{ [mm]}`,
     legend: [`\\(${otherVar}\\): 相乗り側の必要幅 [mm]`],
   })
 
-  // ④ 合計ラック幅の算出（1段基準）
-  const t1TotalHl = t1 && t1.totalWidth > 0
-    ? t1.totalWidth.toFixed(1)
-    : '\\text{---}'
-  const t2TotalHl = t2 && t2.totalWidth > 0
-    ? t2.totalWidth.toFixed(1)
-    : '\\text{---}'
+  // ④ 合計ラック幅と推奨規格サイズ選定
+  const t1TotalVal = t1 && t1.totalWidth > 0 ? t1.totalWidth.toFixed(1) : '\\text{---}'
+  const t2TotalVal = t2 && t2.totalWidth > 0 ? t2.totalWidth.toFixed(1) : '\\text{---}'
 
-  const t4Tex = `\\begin{aligned} \\text{1段合計:} \\quad W_{total1} &= ${modeVar1} + ${otherVar} = ${t1TotalHl} \\text{ [mm]} \\\\ \\text{2段合計:} \\quad W_{total2} &= ${modeVar2} + ${otherVar} = ${t2TotalHl} \\text{ [mm]} \\end{aligned}`
+  const t1SizeStr = t1?.selectedSize != null ? hlAccent(`\\text{【 ${t1.selectedSize} mm 】}`) : '【 --- 】'
+  const t2SizeStr = t2?.selectedSize != null ? hlAccent(`\\text{【 ${t2.selectedSize} mm 】}`) : '【 --- 】'
+
+  let t4Tex: string
+
+  if (result && !result.error && t1 && t1.totalWidth > 0) {
+    const t1Check = t1.selectedSize != null
+      ? `${t1TotalVal} \\text{ mm} \\le ${t1.selectedSize} \\text{ mm} \\quad ${hlOk('\\text{(適合)}')}`
+      : '\\text{規格サイズ超過 (1200mm超)}'
+    const t2Check = t2 && t2.selectedSize != null
+      ? `${t2TotalVal} \\text{ mm} \\le ${t2.selectedSize} \\text{ mm} \\quad ${hlOk('\\text{(適合)}')}`
+      : t2 && t2.isApplicable ? '\\text{規格サイズ超過 (1200mm超)}' : '\\text{2段敷設対象外 (1本のみ)}'
+
+    t4Tex = `\\begin{aligned} &\\textbf{【 1段敷設（平置き） 】} \\\\ &\\quad \\text{合計必要幅:} \\\\ &\\qquad W_{total1} = ${modeVar1} + ${otherVar} = ${t1TotalVal} \\text{ mm} \\\\ &\\quad \\text{選定ラック幅:} \\quad ${t1SizeStr} \\\\ &\\quad \\text{規格適合判定:} \\quad ${t1Check} \\\\[8pt] &\\textbf{【 2段敷設（多段・省スペース） 】} \\\\ &\\quad \\text{合計必要幅:} \\\\ &\\qquad W_{total2} = ${modeVar2} + ${otherVar} = ${t2TotalVal} \\text{ mm} \\\\ &\\quad \\text{選定ラック幅:} \\quad ${t2SizeStr} \\\\ &\\quad \\text{規格適合判定:} \\quad ${t2Check} \\end{aligned}`
+  }
+  else {
+    t4Tex = `\\begin{aligned} \\text{1段合計:} &\\quad W_{total1} = ${modeVar1} + ${otherVar} = ${t1TotalVal} \\text{ [mm]} \\\\ \\text{2段合計:} &\\quad W_{total2} = ${modeVar2} + ${otherVar} = ${t2TotalVal} \\text{ [mm]} \\end{aligned}`
+  }
 
   mathStepData.push({
-    title: '④ 合計ラック幅と推奨サイズ選定',
+    title: '④ 合計ラック幅と推奨規格サイズ選定',
     tex: t4Tex,
     legend: [
       '\\(W_{total1}\\): 1段敷設時の合計ラック幅 [mm]',
       '\\(W_{total2}\\): 2段敷設時の合計ラック幅 [mm]',
+      '\\(W_{rack}\\): JIS標準規格ラック幅 (100, 150, 200, 300, 400, 500, 600... mm)',
     ],
   })
 

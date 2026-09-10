@@ -24,7 +24,7 @@ const {
 </script>
 
 <template>
-  <ToolLayout
+  <ToolTemplatesLayout
     results-title="選定結果"
     :save-disabled="Boolean(result?.error) || !result || result.totalWidth === 0"
     :save-function="handleSaveHistory"
@@ -49,7 +49,7 @@ const {
     </template>
 
     <template #basis>
-      <ToolMathBasisModal :steps="mathSteps" />
+      <ToolOrganismsMathBasisModal :steps="mathSteps" />
     </template>
-  </ToolLayout>
+  </ToolTemplatesLayout>
 </template>

@@ -5,7 +5,7 @@ import type {
   VoltageCalcInputs,
   VoltageCalcResult,
 } from '~/types/voltage'
-import { buildFormula, hlVal } from '~/utils/math'
+import { buildFormula, formatVal, hlAccent, hlNg, hlOk } from '~/utils/math'
 
 import { getAmbientTempDerating } from './voltageCalcLogic'
 
@@ -37,8 +37,8 @@ function _getTargetCable(
 
 function _getUnitConversionFormula(inputs: VoltageCalcInputs): MathStep {
   const { sys, I, loadVal, loadUnit, pf } = inputs
-  const P_val = hlVal(loadVal, 'P', 1)
-  const Cos_val = hlVal(pf, '\\cos \\theta', 2)
+  const P_val = formatVal(loadVal, 'P', 1)
+  const Cos_val = formatVal(pf, '\\cos \\theta', 2)
 
   if (loadUnit === 'A') {
     const resultVal = I !== null ? I.toFixed(1) : '\\text{---}'
@@ -58,10 +58,10 @@ function _getUnitConversionFormula(inputs: VoltageCalcInputs): MathStep {
   if (loadUnit === 'kW') rightSideSymbol += ` \\times \\cos \\theta`
   rightSideSymbol += `}`
 
-  let v_val = hlVal(null, 'V')
+  let v_val = formatVal(null, 'V')
 
   if (sys) {
-    v_val = sys.id === '1P3W200' ? hlVal(200, 'V') : hlVal(sys.voltage, 'V')
+    v_val = sys.id === '1P3W200' ? formatVal(200, 'V') : formatVal(sys.voltage, 'V')
   }
   let rightSideSubst = `\\frac{${P_val}`
 
@@ -107,7 +107,7 @@ function _getTempDeratingFormula(
     '\\( I_0 \\): 基準許容電流 [A]',
   ]
 
-  const I_0_val = hlVal(targetCable?.ampacity, 'I_0')
+  const I_0_val = formatVal(targetCable?.ampacity, 'I_0')
 
   if (amb === null) {
     const resultVal = targetCable?.ampacity
@@ -124,9 +124,9 @@ function _getTempDeratingFormula(
     '\\( \\theta_{amb} \\): 周囲温度 [℃]',
   )
 
-  const max_val = hlVal(targetCable?.maxTemp, '\\theta_{max}')
-  const base_val = hlVal(targetCable?.baseTemp, '\\theta_{base}')
-  const amb_val = hlVal(amb, '\\theta_{amb}')
+  const max_val = formatVal(targetCable?.maxTemp, '\\theta_{max}')
+  const base_val = formatVal(targetCable?.baseTemp, '\\theta_{base}')
+  const amb_val = formatVal(amb, '\\theta_{amb}')
 
   let resultVal = '\\text{---}'
 
@@ -165,14 +165,14 @@ function _getThermalLimitFormula(
 ): MathStep {
   const { I, derating, parallel } = inputs
   const N_val = parallel !== null ? parallel : 1
-  const N_hl = hlVal(parallel, 'N', 0)
-  const cdStr = hlVal(derating, 'C_d', 2)
-  const I_str_left = hlVal(I, 'I', 1)
+  const N_str = formatVal(parallel, 'N', 0)
+  const cdStr = formatVal(derating, 'C_d', 2)
+  const I_str_left = formatVal(I, 'I', 1)
 
   const leg = [
     '\\( I \\): 設計電流 [A]',
     '\\( I_0\' \\): 補正後許容電流 [A]',
-    '\\( C_d \\): 減少係数',
+    '\\( C_d \\): 低減係数',
     '\\( N \\): 条数',
   ]
 
@@ -182,7 +182,7 @@ function _getThermalLimitFormula(
   let resultLine = '\\text{---}'
 
   if (!targetCable) {
-    rightSideSubst = `I_0' \\times ${cdStr} \\times ${N_hl}`
+    rightSideSubst = `I_0' \\times ${cdStr} \\times ${N_str}`
   }
   else {
     let kValue = result?.tempDerating ?? 1.0
@@ -196,13 +196,13 @@ function _getThermalLimitFormula(
             inputs.ambientTemp,
           )
     }
-    const tempAmp = hlVal(
+    const tempAmp = formatVal(
       parseFloat(String(targetCable.ampacity)) * kValue,
       'I_0\'',
       1,
     )
 
-    rightSideSubst = `${tempAmp} \\times ${cdStr} \\times ${N_hl}`
+    rightSideSubst = `${tempAmp} \\times ${cdStr} \\times ${N_str}`
 
     let effAmp
 
@@ -222,7 +222,24 @@ function _getThermalLimitFormula(
     resultLine = effAmp.toFixed(1)
   }
 
-  const tex = `\\begin{aligned} I &\\le ${rightSideSymbol} \\\\ ${I_str_left} &\\le ${rightSideSubst} \\\\ ${I_str_left} &\\le ${resultLine} \\text{ [A]} \\end{aligned}`
+  let finalSelectionLine = ''
+
+  if (inputs.mode === 'size' && result?.optimal) {
+    const isUp = result.minAmpacityCable && result.optimal.size !== result.minAmpacityCable.size
+    const badge = hlAccent(`\\text{【 ${result.optimal.size} sq 】}`)
+    const reasonStr = isUp
+      ? `\\\\ &\\quad \\text{※ 許容電流不足のため } ${result.minAmpacityCable?.size} \\text{ sq} \\rightarrow ${badge} \\text{ へサイズアップ}`
+      : `\\\\ &\\quad \\text{※ 仮選定サイズにて許容電流条件も適合}`
+
+    finalSelectionLine = `\\\\[6pt] &\\textbf{【 最終推奨ケーブルサイズ 】} \\\\ &\\quad \\text{選定サイズ:} \\quad ${badge} ${reasonStr}`
+  }
+
+  const isPass = I !== null && !isNaN(parseFloat(resultLine)) && I <= parseFloat(resultLine)
+  const passStr = isPass
+    ? `\\quad ${hlOk('\\text{(適合)}')}`
+    : (I !== null && !isNaN(parseFloat(resultLine)) ? `\\quad ${hlNg('\\text{(超過)}')}` : '')
+
+  const tex = `\\begin{aligned} I &\\le ${rightSideSymbol} \\\\ ${I_str_left} &\\le ${rightSideSubst} \\\\ ${I_str_left} \\text{ A} &\\le ${resultLine} \\text{ A} ${passStr} ${finalSelectionLine} \\end{aligned}`
 
   return { tex, legend: leg }
 }
@@ -233,21 +250,21 @@ function _getVoltageDropFormula(
 ): MathStep {
   const { mode, sys, I, L, targetDrop, selectedSize, parallel } = inputs
   const isAuto = mode === 'size'
-  const I_str = hlVal(I, 'I', 1)
-  const K_val = hlVal(sys?.simpleK, 'K', 2)
-  const L_val = hlVal(L, 'L', 1)
+  const I_str = formatVal(I, 'I', 1)
+  const K_val = formatVal(sys?.simpleK, 'K', 2)
+  const L_val = formatVal(L, 'L', 1)
 
-  const TargetE = hlVal(
+  const TargetE = formatVal(
     sys && targetDrop !== null ? sys.voltage * (targetDrop / 100) : null,
     'e',
     2,
   )
 
-  const A_val = hlVal(result?.convertedA ?? selectedSize, 'A', 2)
+  const A_val = formatVal(result?.convertedA ?? selectedSize, 'A', 2)
   const N_val = parallel !== null ? parallel : 1
-  const N_hl = hlVal(parallel, 'N', 0)
+  const N_str = formatVal(parallel, 'N', 0)
 
-  let tex
+  let tex: string
   const leg = [
     '\\( K \\): 方式係数',
     '\\( L \\): 距離 [m]',
@@ -259,11 +276,12 @@ function _getVoltageDropFormula(
   ]
 
   if (isAuto) {
-    const leftSide = `A_{\\text{each}}`
+    const leftSide = `A_{\\text{calc}}`
     const rightSideSymbol = `\\frac{K \\cdot L \\cdot I}{1000 \\times e \\times N}`
-    const rightSide = `\\frac{${K_val} \\cdot ${L_val} \\cdot ${I_str}}{1000 \\times ${TargetE} \\times ${N_hl}}`
+    const rightSide = `\\frac{${K_val} \\cdot ${L_val} \\cdot ${I_str}}{1000 \\times ${TargetE} \\times ${N_str}}`
 
     let resultLine = '\\text{---}'
+    let provLine = ''
 
     if (
       result?.optimal
@@ -277,29 +295,33 @@ function _getVoltageDropFormula(
       const calA_each = calA_total / N_val
 
       resultLine = calA_each.toFixed(2)
+      const provSize = result.minAmpacityCable ? result.minAmpacityCable.size : result.optimal.size
+      const badge = hlAccent(`\\text{【 ${provSize} sq 】}`)
+      const passMark = hlOk('\\text{(適合)}')
+
+      provLine = `\\\\[6pt] &\\textbf{【 電圧降下による仮選定 】} \\\\ &\\quad \\text{仮選定公称サイズ:} \\quad ${badge} \\\\ &\\quad \\text{判定条件:} \\quad ${resultLine} \\text{ sq} \\le ${provSize} \\text{ sq} \\quad ${passMark}`
     }
-    tex = buildFormula(
-      leftSide,
-      rightSideSymbol + ` \\\\ &= ` + rightSide,
-      resultLine,
-      'sq',
-    )
+
+    tex = `\\begin{aligned} ${leftSide} &= ${rightSideSymbol} \\\\ &= ${rightSide} \\\\ &= ${resultLine} \\text{ [sq]} ${provLine} \\end{aligned}`
   }
   else {
     const rightSideSymbol = `\\frac{K \\cdot L \\cdot I}{1000 \\times A \\times N}`
-    const rightSide = `\\frac{${K_val} \\cdot ${L_val} \\cdot ${I_str}}{1000 \\times ${A_val} \\times ${N_hl}}`
+    const rightSide = `\\frac{${K_val} \\cdot ${L_val} \\cdot ${I_str}}{1000 \\times ${A_val} \\times ${N_str}}`
 
     let resultLine = '\\text{---}'
+    let dropRateLine = ''
 
-    if (result?.finalDropV !== undefined) {
+    if (result?.finalDropV !== undefined && sys) {
       resultLine = result.finalDropV.toFixed(2)
+      const dropRate = (result.finalDropV / sys.voltage) * 100
+      const targetRate = targetDrop ?? 2.0
+      const isPass = dropRate <= targetRate
+      const passStr = isPass ? hlOk('\\text{(適合)}') : hlNg('\\text{(超過)}')
+
+      dropRateLine = `\\\\[6pt] &\\textbf{【 電圧降下率の判定 】} \\\\ &\\quad \\text{計算降下率:} \\quad \\Delta V\\% = \\frac{e}{V} \\times 100 = \\frac{${resultLine}}{${sys.voltage}} \\times 100 = ${dropRate.toFixed(2)}\\% \\\\ &\\quad \\text{目標判定:} \\quad \\Delta V\\% \\le ${targetRate.toFixed(1)}\\% \\quad (${dropRate.toFixed(2)}\\% \\le ${targetRate.toFixed(1)}\\% \\quad ${passStr})`
     }
-    tex = buildFormula(
-      'e',
-      rightSideSymbol + ` \\\\ &= ` + rightSide,
-      resultLine,
-      'V',
-    )
+
+    tex = `\\begin{aligned} e &= ${rightSideSymbol} \\\\ &= ${rightSide} \\\\ &= ${resultLine} \\text{ [V]} ${dropRateLine} \\end{aligned}`
   }
 
   return { tex, legend: leg }

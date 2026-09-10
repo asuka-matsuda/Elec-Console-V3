@@ -49,7 +49,7 @@ const formFields = computed(() =>
     () => isDropCalcMode.value,
     () => isSizeCalcMode.value,
     () => computedAvailableSizes.value,
-    () => !!form.value.cableType,
+    () => !!form.value.category,
     () => isSinglePhase.value,
     () => computedAvailableCores.value,
   ),
@@ -57,7 +57,7 @@ const formFields = computed(() =>
 </script>
 
 <template>
-  <ToolLayout
+  <ToolTemplatesLayout
     results-title="計算結果"
     :save-disabled="!calcInputs.isReady"
     :save-function="handleSaveHistory"
@@ -74,7 +74,7 @@ const formFields = computed(() =>
     </template>
 
     <template #basis>
-      <ToolMathBasisModal :steps="mathSteps" />
+      <ToolOrganismsMathBasisModal :steps="mathSteps" />
     </template>
-  </ToolLayout>
+  </ToolTemplatesLayout>
 </template>

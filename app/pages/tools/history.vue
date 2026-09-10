@@ -47,7 +47,7 @@ const {
           v-if="historyList.length > 0"
           class="history-page__grid"
         >
-          <ToolHistoryCard
+          <ToolOrganismsHistoryCard
             v-for="entry in historyList"
             :key="entry.id"
             :entry="entry"

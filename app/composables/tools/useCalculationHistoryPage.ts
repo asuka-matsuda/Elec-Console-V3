@@ -6,6 +6,8 @@ import type { HistoryEntry } from '~/types/history'
 export const CALC_HISTORY_TABS = [
   { value: 'voltage', label: '電圧降下計算' },
   { value: 'conduit', label: '配管サイズ' },
+  { value: 'rack', label: 'ケーブルラック' },
+  { value: 'weight', label: '重量・ドラム' },
 ]
 
 export function useCalculationHistoryPage() {

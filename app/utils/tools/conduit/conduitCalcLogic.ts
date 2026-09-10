@@ -1,7 +1,7 @@
 import type { CableData, ConduitData } from '~/types/database'
 import type { CableInputItem, MathStep } from '~/types/tools'
 import { findCableByIndexString, getEffectiveCableDiameter } from '~/utils/cable'
-import { buildFormula, hlVal } from '~/utils/math'
+import { buildFormula, formatVal, hlAccent, hlOk } from '~/utils/math'
 
 export type CableInput = CableInputItem
 
@@ -242,17 +242,32 @@ export function generateMathData(
   const allCablesKnown = res?.success && !res.partial
   const totalKnownArea = res?.totalArea || 0
 
-  const formulaVarStr = rowCount === 1 ? 'A_1' : '\\Sigma A_n'
+  const formulaVarStr = rowCount === 1 ? 'A_1' : '\\sum A_k'
   let substStr = ''
+  const cableRowsTex: string[] = []
 
   if (res?.cableDetails && res.cableDetails.length > 0) {
     if (res.cableDetails.length === 1 && res.cableDetails[0]) {
-      substStr = hlVal(res.cableDetails[0].subTotalArea, 'A_1', 1)
+      const c = res.cableDetails[0]
+      const dVal = c.effectiveDiameter.toFixed(1)
+      const count = c.input.count || 1
+
+      substStr = `\\frac{\\pi \\times (${dVal})^2}{4} \\times ${count} = ${c.subTotalArea.toFixed(1)}`
     }
     else {
-      substStr = res.cableDetails
-        .map((c, i) => hlVal(c.subTotalArea, `A_{${i + 1}}`, 1))
-        .join(' + ')
+      res.cableDetails.forEach((c, i) => {
+        const dVal = c.effectiveDiameter.toFixed(1)
+        const aVal = c.singleArea.toFixed(1)
+        const count = c.input.count || 1
+
+        cableRowsTex.push(
+          `A_{${i + 1}} &= \\frac{\\pi \\times (${dVal})^2}{4} \\times ${count} = ${aVal} \\times ${count} = ${c.subTotalArea.toFixed(1)} \\text{ [mm}^2\\text{]}`,
+        )
+      })
+      const sumTerms = res.cableDetails.map((_, i) => `A_{${i + 1}}`).join(' + ')
+      const numTerms = res.cableDetails.map(c => c.subTotalArea.toFixed(1)).join(' + ')
+
+      substStr = `${sumTerms} \\\\ &= ${numTerms}`
     }
   }
 
@@ -260,22 +275,25 @@ export function generateMathData(
     ? totalKnownArea.toFixed(1)
     : '\\text{---}'
 
-  const formula1 = buildFormula(
-    'A_{total}',
-    substStr ? `${formulaVarStr} \\\\ &= ${substStr}` : formulaVarStr,
-    resultStr1,
-    'mm^2',
-  )
+  let formula1: string
+
+  if (cableRowsTex.length > 0) {
+    formula1 = `\\begin{aligned} ${cableRowsTex.join(' \\\\ ')} \\\\\\\\ A_{total} &= ${substStr} \\\\ &= ${resultStr1} \\text{ [mm}^2\\text{]} \\end{aligned}`
+  }
+  else {
+    formula1 = buildFormula(
+      'A_{total}',
+      substStr ? `${formulaVarStr} \\\\ &= ${substStr}` : formulaVarStr,
+      resultStr1,
+      'mm^2',
+    )
+  }
 
   const rateStr = res?.customFillRate ? `${res.customFillRate}` : '80'
-  const rateFactor = (
-    res?.customFillRate ? res.customFillRate / 100 : 0.8
-  ).toFixed(2)
-  const rateHl = hlVal(rateStr, 'rate', 0)
-  const rateFactorHl = hlVal(rateFactor, 'factor', 2)
-  const totalAreaHl = hlVal(totalKnownArea, 'A_{total}', 1)
+  const customRate = res?.customFillRate ?? 80
+  const totalAreaStr = formatVal(totalKnownArea, 'A_{total}', 1)
 
-  let formula2 = `\\begin{aligned} \\text{32\\%以下:} \\quad A_{\\text{pipe}} \\times 0.32 &\\ge A_{total} \\\\ \\text{---} \\text{ mm}^2 &\\ge \\text{---} \\text{ mm}^2 \\\\\\\\ \\text{48\\%以下:} \\quad A_{\\text{pipe}} \\times 0.48 &\\ge A_{total} \\\\ \\text{---} \\text{ mm}^2 &\\ge \\text{---} \\text{ mm}^2 \\\\\\\\ \\text{指定(${rateHl}\\%):} \\quad A_{\\text{pipe}} \\times ${rateFactorHl} &\\ge A_{total} \\\\ \\text{---} \\text{ mm}^2 &\\ge \\text{---} \\text{ mm}^2 \\end{aligned}`
+  let formula2 = `\\begin{aligned} &\\textbf{【 32\\%以下基準（異なる太さの電線等） 】} \\\\ &\\quad \\text{選定サイズ:} \\quad \\text{【 --- 】} \\\\ &\\quad \\text{判定条件:} \\quad A_{\\text{pipe}} \\times 0.32 \\ge A_{total} \\\\[6pt] &\\textbf{【 48\\%以下基準（同じ太さの電線等） 】} \\\\ &\\quad \\text{選定サイズ:} \\quad \\text{【 --- 】} \\\\ &\\quad \\text{判定条件:} \\quad A_{\\text{pipe}} \\times 0.48 \\ge A_{total} \\\\[6pt] &\\textbf{【 指定占積率(${rateStr}\\%以下) 】} \\\\ &\\quad \\text{選定サイズ:} \\quad \\text{【 --- 】} \\\\ &\\quad \\text{判定条件:} \\quad A_{\\text{pipe}} \\times ${(customRate / 100).toFixed(2)} \\ge A_{total} \\end{aligned}`
 
   if (
     allCablesKnown
@@ -284,15 +302,27 @@ export function generateMathData(
     && res?.conduit48
     && res?.conduitCustom
   ) {
+    const pipe32Area = Number(res.conduit32.area).toFixed(1)
+    const pipe32InnerD = Number(res.conduit32.innerDiameter).toFixed(1)
     const allow32Str = res.allowable32 !== undefined ? res.allowable32.toFixed(1) : '---'
+    const fill32Str = res.fill32 !== undefined ? res.fill32.toFixed(1) : '---'
+
+    const pipe48Area = Number(res.conduit48.area).toFixed(1)
+    const pipe48InnerD = Number(res.conduit48.innerDiameter).toFixed(1)
     const allow48Str = res.allowable48 !== undefined ? res.allowable48.toFixed(1) : '---'
+    const fill48Str = res.fill48 !== undefined ? res.fill48.toFixed(1) : '---'
+
+    const pipeCustomArea = Number(res.conduitCustom.area).toFixed(1)
+    const pipeCustomInnerD = Number(res.conduitCustom.innerDiameter).toFixed(1)
     const allowCustomStr = res.allowableCustom !== undefined ? res.allowableCustom.toFixed(1) : '---'
+    const fillCustomStr = res.fillCustom !== undefined ? res.fillCustom.toFixed(1) : '---'
 
-    const res32Str = res.conduit32.size
-    const res48Str = res.conduit48.size
-    const resCustomStr = res.conduitCustom.size
+    const size32Badge = hlAccent(`\\text{【 ${res.conduit32.size} 】}`)
+    const size48Badge = hlAccent(`\\text{【 ${res.conduit48.size} 】}`)
+    const sizeCustomBadge = hlAccent(`\\text{【 ${res.conduitCustom.size} 】}`)
+    const passTag = hlOk('\\text{(適合)}')
 
-    formula2 = `\\begin{aligned} \\text{32\\%以下:} \\quad A_{\\text{pipe}} \\times 0.32 &\\ge A_{total} \\\\ ${allow32Str} \\text{ mm}^2 &\\ge ${totalAreaHl} \\text{ mm}^2 \\\\ &\\rightarrow \\text{【 } ${res32Str} \\text{ 】選定} \\\\\\\\ \\text{48\\%以下:} \\quad A_{\\text{pipe}} \\times 0.48 &\\ge A_{total} \\\\ ${allow48Str} \\text{ mm}^2 &\\ge ${totalAreaHl} \\text{ mm}^2 \\\\ &\\rightarrow \\text{【 } ${res48Str} \\text{ 】選定} \\\\\\\\ \\text{指定(${rateHl}\\%):} \\quad A_{\\text{pipe}} \\times ${rateFactorHl} &\\ge A_{total} \\\\ ${allowCustomStr} \\text{ mm}^2 &\\ge ${totalAreaHl} \\text{ mm}^2 \\\\ &\\rightarrow \\text{【 } ${resCustomStr} \\text{ 】選定} \\end{aligned}`
+    formula2 = `\\begin{aligned} &\\textbf{【 32\\%以下基準（異なる太さの電線等） 】} \\\\ &\\quad \\text{選定サイズ:} \\quad ${size32Badge} \\\\ &\\quad \\text{管スペック:} \\quad \\text{内径 } ${pipe32InnerD} \\text{ mm} \\quad (A_{\\text{pipe}} = ${pipe32Area} \\text{ mm}^2) \\\\ &\\quad \\text{許容断面積:} \\quad A_{allow} = ${pipe32Area} \\times 0.32 = ${allow32Str} \\text{ mm}^2 \\\\ &\\qquad (${allow32Str} \\text{ mm}^2 \\ge ${totalAreaStr} \\text{ mm}^2 \\quad ${passTag}) \\\\ &\\quad \\text{実計算占積率:} \\quad \\eta = \\frac{${totalAreaStr}}{${pipe32Area}} \\times 100 = ${fill32Str}\\% \\\\ &\\qquad (${fill32Str}\\% \\le 32.0\\% \\quad ${passTag}) \\\\[8pt] &\\textbf{【 48\\%以下基準（同じ太さの電線等） 】} \\\\ &\\quad \\text{選定サイズ:} \\quad ${size48Badge} \\\\ &\\quad \\text{管スペック:} \\quad \\text{内径 } ${pipe48InnerD} \\text{ mm} \\quad (A_{\\text{pipe}} = ${pipe48Area} \\text{ mm}^2) \\\\ &\\quad \\text{許容断面積:} \\quad A_{allow} = ${pipe48Area} \\times 0.48 = ${allow48Str} \\text{ mm}^2 \\\\ &\\qquad (${allow48Str} \\text{ mm}^2 \\ge ${totalAreaStr} \\text{ mm}^2 \\quad ${passTag}) \\\\ &\\quad \\text{実計算占積率:} \\quad \\eta = \\frac{${totalAreaStr}}{${pipe48Area}} \\times 100 = ${fill48Str}\\% \\\\ &\\qquad (${fill48Str}\\% \\le 48.0\\% \\quad ${passTag}) \\\\[8pt] &\\textbf{【 指定占積率(${rateStr}\\%以下) 】} \\\\ &\\quad \\text{選定サイズ:} \\quad ${sizeCustomBadge} \\\\ &\\quad \\text{管スペック:} \\quad \\text{内径 } ${pipeCustomInnerD} \\text{ mm} \\quad (A_{\\text{pipe}} = ${pipeCustomArea} \\text{ mm}^2) \\\\ &\\quad \\text{許容断面積:} \\quad A_{allow} = ${pipeCustomArea} \\times ${(customRate / 100).toFixed(2)} = ${allowCustomStr} \\text{ mm}^2 \\\\ &\\qquad (${allowCustomStr} \\text{ mm}^2 \\ge ${totalAreaStr} \\text{ mm}^2 \\quad ${passTag}) \\\\ &\\quad \\text{実計算占積率:} \\quad \\eta = \\frac{${totalAreaStr}}{${pipeCustomArea}} \\times 100 = ${fillCustomStr}\\% \\\\ &\\qquad (${fillCustomStr}\\% \\le ${customRate}.0\\% \\quad ${passTag}) \\end{aligned}`
   }
 
   return [
@@ -300,16 +330,20 @@ export function generateMathData(
       title: '① ケーブルの断面積算出',
       tex: formula1,
       legend: [
-        `\\( A_{total} \\) : ケーブル合計断面積 [mm²]`,
-        rowCount === 1
-          ? `\\( A_1 \\) : ケーブルの断面積 [mm²]`
-          : `\\( A_n \\) : 各ケーブルの合計断面積 [mm²]`,
+        `\\( A_{total} \\): ケーブル合計断面積 [mm²]`,
+        `\\( A_k \\): 各条の断面積小計 [mm²]`,
+        `\\( d \\): ケーブル仕上外径 [mm]`,
       ],
     },
     {
-      title: '② 最小配管サイズの抽出',
+      title: '② 電線管サイズの選定と占積率判定',
       tex: formula2,
-      legend: [`\\( A_{\\text{pipe}} \\) : 選定管の断面積 [mm²]`],
+      legend: [
+        `\\( A_{\\text{pipe}} \\): 電線管の内断面積 [mm²]`,
+        `\\( A_{allow} \\): 許容断面積 [mm²]`,
+        `\\( \\eta \\): 実計算占積率 [\\%]`,
+        `\\( A_{total} \\): ケーブル合計断面積 [mm²]`,
+      ],
     },
   ]
 }

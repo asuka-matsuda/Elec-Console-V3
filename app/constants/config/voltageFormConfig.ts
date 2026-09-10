@@ -1,7 +1,6 @@
 import type { defaultForm } from '~/composables/tools/useVoltageCalculator'
 import {
   ambientTempOptions,
-  cableTypeOptions,
   deratingOptions,
   loadUnitOptions,
   parallelOptions,
@@ -9,6 +8,7 @@ import {
   powerFactorOptions,
   targetDropOptions,
 } from '~/constants/toolOptions'
+import { getCableCategories } from '~/utils/cable'
 
 export type FormField = {
   id: keyof typeof defaultForm
@@ -29,7 +29,7 @@ export function getVoltageFormFields(
   isDropCalcMode: () => boolean,
   isSizeCalcMode: () => boolean,
   computedAvailableSizes: () => { label: string, value: string }[],
-  isCableTypeSelected: () => boolean,
+  isCategorySelected: () => boolean,
   isSinglePhase?: () => boolean,
   computedAvailableCores?: () => { label: string, value: string }[],
 ): FormField[] {
@@ -68,10 +68,10 @@ export function getVoltageFormFields(
       addonText: 'm',
     },
     {
-      id: 'cableType',
+      id: 'category',
       label: 'ケーブル種別',
       type: 'select',
-      options: cableTypeOptions,
+      options: getCableCategories('strong'),
       placeholder: '選択してください',
     },
     {
@@ -83,13 +83,13 @@ export function getVoltageFormFields(
       showIf: () => isSizeCalcMode() && Boolean(computedAvailableCores && computedAvailableCores().length > 0),
     },
     {
-      id: 'fixedSize',
+      id: 'cableIdx',
       label: 'ケーブルサイズ',
       type: 'select',
       options: computedAvailableSizes(),
       placeholder: '選択してください',
       showIf: isDropCalcMode,
-      disabled: !isCableTypeSelected(),
+      disabled: !isCategorySelected(),
     },
     {
       id: 'parallel',

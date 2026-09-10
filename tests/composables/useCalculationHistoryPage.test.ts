@@ -22,7 +22,7 @@ describe('useCalculationHistoryPage', () => {
 
     expect(page.currentTab.value).toBe('voltage')
     expect(page.historyList.value).toEqual([])
-    expect(page.tabs.length).toBe(2)
+    expect(page.tabs.length).toBe(4)
   })
 
   it('should load stored history from localStorage on tab change', () => {

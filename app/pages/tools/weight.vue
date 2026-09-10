@@ -19,7 +19,7 @@ const {
 </script>
 
 <template>
-  <ToolLayout
+  <ToolTemplatesLayout
     :save-disabled="result?.error"
     :save-function="handleSaveHistory"
     @reset="openResetModal"
@@ -33,7 +33,7 @@ const {
     </template>
 
     <template #basis>
-      <ToolMathBasisModal :steps="mathSteps" />
+      <ToolOrganismsMathBasisModal :steps="mathSteps" />
     </template>
-  </ToolLayout>
+  </ToolTemplatesLayout>
 </template>

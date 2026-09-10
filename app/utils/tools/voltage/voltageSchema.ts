@@ -24,20 +24,20 @@ export const voltageSchema = z
       .refine(val => val !== null && val > 0, {
         message: '0より大きい数値を入力してください',
       }),
-    cableType: z.string().min(1, 'ケーブル種別を選択してください'),
+    category: z.string().min(1, 'ケーブル種別を選択してください'),
     cores: z.string().optional(),
-    fixedSize: z.string().optional(),
+    cableIdx: z.string().optional(),
     parallel: z.string().optional(),
     derating: z.string().min(1, '布設条件（電流減少係数）を選択してください'),
     ambientTemp: z.string().optional(),
     targetDrop: z.string().optional(),
   })
   .superRefine((data, ctx) => {
-    if (data.mode === 'drop' && !data.fixedSize) {
+    if (data.mode === 'drop' && !data.cableIdx) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: 'サイズを指定してください',
-        path: ['fixedSize'],
+        path: ['cableIdx'],
       })
     }
     if (data.mode === 'size' && !data.targetDrop) {

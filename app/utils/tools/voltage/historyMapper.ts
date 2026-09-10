@@ -90,7 +90,7 @@ export function mapVoltageToHistory(
       inputs.selectedCores,
     )
 
-    historyInputs.push({ label: getLabel('cableType'), value: cabName })
+    historyInputs.push({ label: getLabel('category'), value: cabName })
   }
 
   const historyResults: {
