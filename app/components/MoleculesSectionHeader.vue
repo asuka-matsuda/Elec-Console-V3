@@ -44,10 +44,21 @@ const resolvedDividerColor = computed(() => {
 
   return (props.variant && dividerColorMap[props.variant]) || 'var(--theme-accent)'
 })
+
+const resolvedIconColor = computed(() => {
+  if (props.variant === 'hud' || props.variant === 'simple' || props.variant === 'border') {
+    return 'var(--theme-accent)'
+  }
+
+  return (props.variant && dividerColorMap[props.variant]) || 'var(--theme-accent)'
+})
 </script>
 
 <template>
-  <header class="flex flex-wrap items-center justify-between gap-y-1 gap-x-2 section-header">
+  <header
+    class="flex flex-wrap items-center justify-between gap-y-1 gap-x-2 section-header"
+    :style="{ '--section-icon-color': resolvedIconColor }"
+  >
     <component
       :is="tag || 'h2'"
       class="flex items-center gap-2 title"
@@ -91,7 +102,7 @@ const resolvedDividerColor = computed(() => {
   }
 
   .icon {
-    color: var(--theme-accent);
+    color: var(--section-icon-color);
   }
 }
 </style>
