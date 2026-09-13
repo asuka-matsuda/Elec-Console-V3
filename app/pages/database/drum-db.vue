@@ -8,7 +8,7 @@ import { DRUM_DB_COLUMNS } from '~/constants/databaseConstants'
 </script>
 
 <template>
-  <DbLayout
+  <DbTemplatesLayout
     :data="drumData"
     :columns="DRUM_DB_COLUMNS"
     :search-mapper="(item) => `${item.category} ${item.id}`"
@@ -17,5 +17,5 @@ import { DRUM_DB_COLUMNS } from '~/constants/databaseConstants'
     <template #cell-category="{ value }">
       <strong>{{ value }}</strong>
     </template>
-  </DbLayout>
+  </DbTemplatesLayout>
 </template>

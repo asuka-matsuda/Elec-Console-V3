@@ -97,16 +97,16 @@ describe('MoleculesTable.vue', () => {
       },
     })
 
-    const stackedWrappers = wrapper.findAll('.table-cell__stacked')
+    const stackedWrappers = wrapper.findAll('.stacked-cell')
 
     expect(stackedWrappers.length).toBe(2)
     // 1行目: メインとサブの両方が存在
-    expect(stackedWrappers[0].find('.table-cell__main').text()).toBe('課長')
-    expect(stackedWrappers[0].find('.table-cell__sub').text()).toBe('電設部')
+    expect(stackedWrappers[0].find('.main-text').text()).toBe('課長')
+    expect(stackedWrappers[0].find('.sub-text').text()).toBe('電設部')
     expect(stackedWrappers[0].classes()).toContain('items-end')
 
     // 2行目: サブが空文字の場合はサブ表示要素が存在しない
-    expect(stackedWrappers[1].find('.table-cell__main').text()).toBe('主任')
-    expect(stackedWrappers[1].find('.table-cell__sub').exists()).toBe(false)
+    expect(stackedWrappers[1].find('.main-text').text()).toBe('主任')
+    expect(stackedWrappers[1].find('.sub-text').exists()).toBe(false)
   })
 })

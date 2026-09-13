@@ -2,26 +2,34 @@
 /**
  * MoleculesTable
  * [Molecules] カラム定義とデータ配列を受け取り表示する純粋なデータテーブルコンポーネント。
+ * データの最大文字長に応じた動的列幅の自動最適化と、コンテナ幅100%均等配分を提供します。
  */
+import { ref } from 'vue'
+
+import { useTableAutoWidth } from '~/composables/useTableAutoWidth'
 import type { TableColumn } from '~/types/components'
 
 const props = withDefaults(
   defineProps<{
     columns: TableColumn<unknown>[]
     data?: T[]
+    fullData?: T[]
     sortBy?: string
     sortOrder?: 'asc' | 'desc'
     rowKey?: string | ((row: T) => string | number)
     rowClass?: (row: T, index: number) => string | Record<string, boolean | undefined> | (string | Record<string, boolean | undefined>)[] | undefined
     rowId?: (row: T, index: number) => string
+    autoWidth?: boolean
   }>(),
   {
     data: () => [],
+    fullData: undefined,
     sortBy: undefined,
     sortOrder: 'asc',
     rowKey: 'id',
     rowClass: undefined,
     rowId: undefined,
+    autoWidth: true,
   },
 )
 
@@ -32,6 +40,17 @@ const emit = defineEmits<{
 defineSlots<{
   [K in `cell-${string}`]?: (props: { value: unknown, subValue?: unknown, row: T, index: number }) => unknown
 }>()
+
+// テーブルコンテナ要素
+const tableWrapperRef = ref<HTMLElement | null>(null)
+
+// 列幅自動計算 Composable
+const { columnWidthStyles } = useTableAutoWidth(tableWrapperRef, {
+  columns: () => props.columns,
+  data: () => props.data,
+  fullData: () => props.fullData,
+  autoWidth: () => props.autoWidth,
+})
 
 const handleSort = (col: TableColumn<unknown>) => {
   if (!col.sortable) return
@@ -78,7 +97,10 @@ const getCellValue = (row: T, key: string): unknown => {
 </script>
 
 <template>
-  <div class="table-wrapper flex-1 min-h-0 overflow-auto">
+  <div
+    ref="tableWrapperRef"
+    class="table-wrapper flex-1 min-h-0 overflow-y-auto"
+  >
     <table class="w-full table-fixed text-left border-separate border-spacing-0">
       <thead>
         <tr>
@@ -86,6 +108,7 @@ const getCellValue = (row: T, key: string): unknown => {
             v-for="col in columns"
             :key="col.key"
             :column="col"
+            :width="columnWidthStyles[String(col.key)]"
             :sort-by="sortBy"
             :sort-order="sortOrder"
             @sort="handleSort"
@@ -101,44 +124,24 @@ const getCellValue = (row: T, key: string): unknown => {
           class="table-row relative z-[1]"
           :class="rowClass?.(row, index)"
         >
-          <td
+          <AtomsTableTd
             v-for="col in columns"
             :key="col.key"
-            class="table-cell p-2 truncate align-middle"
-            :style="{ textAlign: col.align }"
+            :column="col"
+            :width="columnWidthStyles[String(col.key)]"
+            :value="getCellValue(row, col.key)"
+            :sub-value="col.subKey ? getCellValue(row, col.subKey) : undefined"
           >
-            <slot
-              :name="`cell-${col.key}`"
-              :value="getCellValue(row, col.key)"
-              :sub-value="col.subKey ? getCellValue(row, col.subKey) : undefined"
-              :row="row"
-              :index="index"
-            >
-              <template v-if="col.subKey">
-                <div
-                  class="table-cell__stacked flex flex-col leading-tight min-w-0"
-                  :class="{
-                    'items-start text-left': !col.align || col.align === 'left',
-                    'items-center text-center': col.align === 'center',
-                    'items-end text-right': col.align === 'right',
-                  }"
-                >
-                  <span class="table-cell__main truncate w-full">
-                    {{ getCellValue(row, col.key) ?? '-' }}
-                  </span>
-                  <span
-                    v-if="getCellValue(row, col.subKey)"
-                    class="table-cell__sub truncate w-full"
-                  >
-                    {{ getCellValue(row, col.subKey) }}
-                  </span>
-                </div>
-              </template>
-              <template v-else>
-                {{ getCellValue(row, col.key) }}
-              </template>
-            </slot>
-          </td>
+            <template v-if="$slots[`cell-${col.key}`]" #default="{ value, subValue }">
+              <slot
+                :name="`cell-${col.key}`"
+                :value="value"
+                :sub-value="subValue"
+                :row="row"
+                :index="index"
+              />
+            </template>
+          </AtomsTableTd>
         </tr>
       </tbody>
     </table>
@@ -160,27 +163,8 @@ const getCellValue = (row: T, key: string): unknown => {
     background-color: var(--color-bg-hover);
   }
 
-  &:last-child .table-cell {
+  &:last-child :deep(td) {
     border-bottom: none;
-  }
-}
-
-.table-cell {
-  border-right: var(--border-width-base) solid var(--color-border);
-  border-bottom: var(--border-width-base) solid
-    color-mix(in srgb, var(--color-border) 70%, var(--color-text-muted) 30%);
-
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
-  color: var(--color-text-main);
-
-  &:last-child {
-    border-right: none;
-  }
-
-  &__sub {
-    font-size: var(--font-size-2xs);
-    color: var(--color-text-muted);
   }
 }
 </style>

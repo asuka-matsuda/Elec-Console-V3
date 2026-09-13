@@ -8,6 +8,7 @@ import type { SoudenStats } from '~/types/portal'
 
 defineProps<{
   stats: SoudenStats
+  siteId?: string
 }>()
 </script>
 
@@ -38,6 +39,8 @@ defineProps<{
           :p2-pct="stats.trunkP2Pct"
           :p3-completed="stats.trunkP3"
           :p3-pct="stats.trunkP3Pct"
+          :site-id="siteId"
+          kei-to="幹線"
         />
 
         <AtomsDivider type="fade-center" />
@@ -55,6 +58,8 @@ defineProps<{
           :p2-pct="stats.secP2Pct"
           :p3-completed="stats.secP3"
           :p3-pct="stats.secP3Pct"
+          :site-id="siteId"
+          kei-to="二次側"
         />
       </div>
     </div>

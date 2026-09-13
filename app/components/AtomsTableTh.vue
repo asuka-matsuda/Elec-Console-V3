@@ -9,6 +9,7 @@ import type { TableColumn } from '~/types/components'
 
 const props = defineProps<{
   column: TableColumn<T>
+  width?: string
   sortBy?: string
   sortOrder?: 'asc' | 'desc'
 }>()
@@ -46,7 +47,7 @@ const handleClick = () => {
       'is-sortable': column.sortable,
       'is-sorted': isSorted,
     }"
-    :style="{ width: column.width, textAlign: column.align }"
+    :style="{ width: width || column.width, textAlign: column.align }"
     :title="sortTitle"
     @click="handleClick"
   >

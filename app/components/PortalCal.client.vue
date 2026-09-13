@@ -7,7 +7,7 @@ import { useCalendar } from '~/composables/portal/useCalendar'
 import { useCalendarEventForm } from '~/composables/portal/useCalendarEventForm'
 import { useCalendarOptions } from '~/composables/portal/useCalendarOptions'
 
-import PortalCalEventBadge from './PortalCalEventBadge.vue'
+import PortalAtomsCalEventBadge from './portal/AtomsCalEventBadge.vue'
 import PortalCalEventModal from './PortalCalEventModal.vue'
 import PortalCalToolbar from './PortalCalToolbar.vue'
 import PortalCalTypeSettingsModal from './PortalCalTypeSettingsModal.vue'
@@ -97,7 +97,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     <AtomsPanel class="calendar">
       <FullCalendar ref="fullCalendarRef" :options="calendarOptions">
         <template #eventContent="{ event }">
-          <PortalCalEventBadge
+          <PortalAtomsCalEventBadge
             :title="event.title"
             :all-day="event.allDay"
             :start="event.start"

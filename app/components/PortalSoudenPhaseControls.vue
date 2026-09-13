@@ -81,7 +81,7 @@ const emit = defineEmits<{
         </div>
 
         <!-- ミニマップ -->
-        <PortalExamMinimap
+        <PortalMoleculesExamMinimap
           :circuits="circuits"
           :phase="phase"
           @select-circuit="emit('select-circuit', $event)"

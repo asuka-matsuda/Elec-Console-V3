@@ -8,7 +8,7 @@ import { RACK_DB_COLUMNS } from '~/constants/databaseConstants'
 </script>
 
 <template>
-  <DbLayout
+  <DbTemplatesLayout
     :data="rackData"
     :columns="RACK_DB_COLUMNS"
     :search-mapper="(item) => `${item.category} ${item.size}`"
@@ -17,5 +17,5 @@ import { RACK_DB_COLUMNS } from '~/constants/databaseConstants'
     <template #cell-category="{ value }">
       <strong>{{ value }}</strong>
     </template>
-  </DbLayout>
+  </DbTemplatesLayout>
 </template>

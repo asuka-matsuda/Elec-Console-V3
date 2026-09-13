@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * MoleculesDbMenuTile
+ * MoleculesDashboardMenuTile
  * [Molecules] ダッシュボード（Dashboard）で各機能を選択するための専用ナビゲーションタイル。
  */
 import { NuxtLink } from '#components'
@@ -24,7 +24,7 @@ const {
   <component
     :is="disabled ? 'div' : NuxtLink"
     :to="!disabled ? to : undefined"
-    class="relative z-[1] flex flex-col gap-[var(--space-panel-gap)] p-[var(--space-panel-pad)] overflow-hidden menu-tile"
+    class="relative z-[1] flex flex-col gap-panel-gap p-panel-pad overflow-hidden menu-tile"
     :class="{ 'is-disabled': disabled }"
     :aria-disabled="disabled ? 'true' : undefined"
   >

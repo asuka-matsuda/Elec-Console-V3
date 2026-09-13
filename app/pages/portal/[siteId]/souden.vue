@@ -84,34 +84,7 @@ onMounted(() => {
 
     <template v-else-if="stats">
       <!-- 総合進捗カード (Organism) -->
-      <PortalSoudenOverallCard :stats="stats" />
-
-      <!-- 幹線と二次側のフェーズ遷移カード (2カラム, Organism) -->
-      <div class="two-col-grid">
-        <PortalSoudenPhaseNavCard
-          title="幹線"
-          icon="zap"
-          variant="tool"
-          :site-id="siteId"
-          kei-to="幹線"
-          :p1-completed="stats.trunkP1"
-          :p2-completed="stats.trunkP2"
-          :p3-completed="stats.trunkP3"
-          :total="stats.trunkTotal"
-        />
-
-        <PortalSoudenPhaseNavCard
-          title="二次側"
-          icon="layers"
-          variant="management"
-          :site-id="siteId"
-          kei-to="二次側"
-          :p1-completed="stats.secP1"
-          :p2-completed="stats.secP2"
-          :p3-completed="stats.secP3"
-          :total="stats.secTotal"
-        />
-      </div>
+      <PortalSoudenOverallCard :stats="stats" :site-id="siteId" />
     </template>
   </div>
 </template>
@@ -136,16 +109,5 @@ onMounted(() => {
   color: var(--color-status-danger);
 
   background-color: color-mix(in srgb, var(--color-status-danger) 10%, transparent);
-}
-
-.two-col-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-section-gap);
-  align-items: flex-start;
-
-  @include mq("md") {
-    grid-template-columns: 1fr;
-  }
 }
 </style>

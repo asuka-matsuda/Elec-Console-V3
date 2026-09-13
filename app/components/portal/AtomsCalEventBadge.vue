@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * AtomsCalEventBadge
+ * カレンダーイベント表示用の発光バッジコンポーネント。
+ * 時刻フォーマットと長文タイトルの省略表示、イベントカラーに応じたネオングローを提供します。
+ */
 import { computed } from 'vue'
 
 const props = withDefaults(
@@ -34,59 +39,34 @@ const badgeColor = computed(() => props.color || 'var(--theme-accent)')
 </script>
 
 <template>
-  <div class="cal-badge" :style="{ '--badge-color': badgeColor }">
-    <span v-if="timeText" class="cal-badge__time">
+  <div
+    class="cal-badge relative z-[1] flex items-center gap-1 w-full px-1 py-0.5 rounded-sm overflow-hidden"
+    :style="{ '--badge-color': badgeColor }"
+  >
+    <span
+      v-if="timeText"
+      class="cal-badge-time shrink-0 font-mono font-bold uppercase tracking-wider tabular-nums"
+    >
       {{ timeText }}
     </span>
-    <span class="cal-badge__title">{{ title }}</span>
+    <span class="min-w-0 flex-1 truncate font-mono text-xs tabular-nums text-[var(--color-text-main)]">
+      {{ title }}
+    </span>
   </div>
 </template>
 
 <style scoped lang="scss">
 .cal-badge {
   --badge-color-dim: color-mix(in srgb, var(--badge-color) 80%, transparent);
-
   --glow-color: var(--badge-color);
 
-  position: relative;
-  z-index: 1;
-
-  display: flex;
-  gap: var(--space-0-5);
-  align-items: center;
-
-  width: 100%;
-  padding: var(--space-0-5) var(--space-1);
   border: var(--border-width-base) solid var(--badge-color-dim);
-  border-radius: var(--radius-sm);
-
   box-shadow: var(--shadow-glow-base);
-
   transition: var(--transition-glow);
+}
 
-  &__time {
-    flex-shrink: 0;
-
-    font-family: var(--font-mono);
-    font-size: var(--font-size-2xs);
-    font-weight: var(--font-weight-bold);
-    font-variant-numeric: tabular-nums;
-    color: var(--badge-color-dim);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-wider);
-  }
-
-  &__title {
-    overflow: hidden;
-
-    min-width: 0;
-
-    font-family: var(--font-mono);
-    font-size: var(--font-size-sm);
-    font-variant-numeric: tabular-nums;
-    color: var(--color-text-main);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+.cal-badge-time {
+  font-size: var(--font-size-2xs);
+  color: var(--badge-color-dim);
 }
 </style>

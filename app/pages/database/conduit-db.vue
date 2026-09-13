@@ -8,7 +8,7 @@ import { CONDUIT_DB_COLUMNS } from '~/constants/databaseConstants'
 </script>
 
 <template>
-  <DbLayout
+  <DbTemplatesLayout
     :data="conduitData"
     :columns="CONDUIT_DB_COLUMNS"
     :search-mapper="
@@ -23,5 +23,5 @@ import { CONDUIT_DB_COLUMNS } from '~/constants/databaseConstants'
     <template #cell-standard="{ value }">
       <small>{{ value }}</small>
     </template>
-  </DbLayout>
+  </DbTemplatesLayout>
 </template>

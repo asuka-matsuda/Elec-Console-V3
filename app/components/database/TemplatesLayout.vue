@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="T extends Record<string, unknown>">
 /**
- * DbLayout
- * 規格データベースページの共通レイアウトです。検索・フィルタリングパネルとテーブル表示の枠組みを提供します。
+ * TemplatesLayout
+ * [Db Template] 規格データベースページの全体テンプレートコンポーネント。
+ * 検索・フィルタリングパネルとテーブル表示の枠組みを提供します。
  */
 import { useDbFilter } from '~/composables/useDbFilter'
 import { useTableSort } from '~/composables/useTableSort'
@@ -24,8 +25,8 @@ const { sortBy, sortOrder, sortedData, handleSort }
 </script>
 
 <template>
-  <div class="db-layout">
-    <aside class="db-layout__filter">
+  <div class="db-layout flex flex-1 flex-col gap-card-gap w-full max-w-[1400px] min-h-0 mx-auto">
+    <aside class="shrink-0">
       <slot
         name="filter"
         :search-query="searchQuery"
@@ -41,7 +42,7 @@ const { sortBy, sortOrder, sortedData, handleSort }
       </slot>
     </aside>
 
-    <div class="db-layout__main">
+    <div class="flex flex-1 flex-col min-w-0 min-h-0">
       <slot
         :sorted-data="sortedData"
         :sort-by="sortBy"
@@ -72,28 +73,3 @@ const { sortBy, sortOrder, sortedData, handleSort }
     </div>
   </div>
 </template>
-
-<style scoped lang="scss">
-.db-layout {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: var(--space-card-gap);
-
-  max-width: 1400px;
-  min-height: 0;
-
-  &__filter {
-    flex-shrink: 0;
-  }
-
-  &__main {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-
-    min-width: 0;
-    min-height: 0;
-  }
-}
-</style>

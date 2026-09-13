@@ -88,7 +88,42 @@ export interface ExportCircuitResult {
   error?: string
 }
 
-function getCellString(row: ExcelJS.Row, colNumber: number): string {
+/**
+ * 文字列内の改行コード（\r\n, \r）を \n に統一し、前後の不要な空白・空行をトリム
+ * ただし内部の改行構造は完全に維持する
+ */
+export function normalizeNewlines(str: string): string {
+  if (!str) return ''
+
+  return str.replace(/\r\n|\r/g, '\n').trim()
+}
+
+/**
+ * セルにテキストを設定し、改行が含まれる場合は Excel 標準の \r\n に変換して wrapText: true を付与する
+ */
+export function setCellStringWithNewlines(
+  cell: ExcelJS.Cell,
+  value: string | null | undefined,
+): void {
+  if (value === null || value === undefined) return
+  const str = String(value).trim()
+
+  if (!str) return
+
+  if (str.includes('\n')) {
+    // Windows/Excel標準の \r\n に揃え、セル内折り返し（wrapText: true）を有効化
+    cell.value = str.replace(/\r?\n/g, '\r\n')
+    cell.alignment = {
+      ...(cell.alignment || {}),
+      wrapText: true,
+    }
+  }
+  else {
+    cell.value = str
+  }
+}
+
+export function getCellString(row: ExcelJS.Row, colNumber: number): string {
   const cell = row.getCell(colNumber)
   const v = cell.value
 
@@ -96,15 +131,15 @@ function getCellString(row: ExcelJS.Row, colNumber: number): string {
 
   if (typeof v === 'object') {
     if ('result' in v && v.result !== undefined && v.result !== null) {
-      return String(v.result).trim()
+      return normalizeNewlines(String(v.result))
     }
 
     if ('richText' in v && Array.isArray(v.richText)) {
-      return v.richText.map(t => t.text).join('').trim()
+      return normalizeNewlines(v.richText.map(t => t.text).join(''))
     }
   }
 
-  return String(v).trim()
+  return normalizeNewlines(String(v))
 }
 
 function isKansen(v: unknown): string {
@@ -141,13 +176,15 @@ function parseP2Value(valRaw: unknown, keiTo: string) {
   return { status: '入力', value: val }
 }
 
-function makeCircuitKey(
+export function makeCircuitKey(
   keiTo: string,
   banMeisho: string,
   kairoBangou: string | null | undefined,
   kairoMeisho: string | null | undefined,
 ): string {
-  return `${keiTo.trim()}::${banMeisho.trim()}::${(kairoBangou || '').trim()}::${(kairoMeisho || '').trim()}`
+  const norm = (s: string | null | undefined) => normalizeNewlines(s || '')
+
+  return `${norm(keiTo)}::${norm(banMeisho)}::${norm(kairoBangou)}::${norm(kairoMeisho)}`
 }
 
 /**
@@ -461,13 +498,13 @@ export async function importCircuitsFromExcel(
   }
 }
 
-function applyCircuitToRow(row: ExcelJS.Row, c: Circuit) {
+export function applyCircuitToRow(row: ExcelJS.Row, c: Circuit) {
   // Phase 1 書戻し
   if (c.p1ConfirmedAt && c.p1Kakunin && c.p1Mashishime) {
-    row.getCell(24).value = c.p1Worker || '確認済' // Col X
+    setCellStringWithNewlines(row.getCell(24), c.p1Worker || '確認済') // Col X
   }
   if (c.p1Remarks) {
-    row.getCell(25).value = c.p1Remarks // Col Y
+    setCellStringWithNewlines(row.getCell(25), c.p1Remarks) // Col Y
   }
 
   // Phase 2 書戻し
@@ -497,10 +534,10 @@ function applyCircuitToRow(row: ExcelJS.Row, c: Circuit) {
     }
 
     if (c.p2Worker) {
-      row.getCell(29).value = c.p2Worker // Col AC
+      setCellStringWithNewlines(row.getCell(29), c.p2Worker) // Col AC
     }
     if (c.p2Remarks) {
-      row.getCell(30).value = c.p2Remarks // Col AD
+      setCellStringWithNewlines(row.getCell(30), c.p2Remarks) // Col AD
     }
   }
 
@@ -516,14 +553,23 @@ function applyCircuitToRow(row: ExcelJS.Row, c: Circuit) {
       row.getCell(33).value = c.denatsuRt // Col AG
     }
     if (c.kensou) {
-      row.getCell(34).value = c.kensou // Col AH
+      setCellStringWithNewlines(row.getCell(34), c.kensou) // Col AH
     }
     if (c.p3Worker) {
-      row.getCell(35).value = c.p3Worker // Col AI
+      setCellStringWithNewlines(row.getCell(35), c.p3Worker) // Col AI
     }
     if (c.p3Remarks) {
-      row.getCell(36).value = c.p3Remarks // Col AJ
+      setCellStringWithNewlines(row.getCell(36), c.p3Remarks) // Col AJ
     }
+  }
+
+  // Web側で編集された基本情報（回路番号・回路名称・ケーブル等）がある場合の書戻し
+  if (c.p1ModifiedFields && c.p1ModifiedFields !== '[]') {
+    if (c.kairoBangou) setCellStringWithNewlines(row.getCell(13), c.kairoBangou)
+    if (c.kairoMeisho) setCellStringWithNewlines(row.getCell(14), c.kairoMeisho)
+    if (c.cableList) setCellStringWithNewlines(row.getCell(15), c.cableList)
+    if (c.haisenJousuu) setCellStringWithNewlines(row.getCell(16), c.haisenJousuu)
+    if (c.setsuchiList) setCellStringWithNewlines(row.getCell(18), c.setsuchiList)
   }
 }
 
@@ -629,20 +675,20 @@ export async function generateCircuitsExcelBuffer(
     for (const c of circuits) {
       const row = sheet.getRow(currentRowNum)
 
-      row.getCell(5).value = c.banMeisho
-      row.getCell(6).value = c.banShubetsu
-      row.getCell(7).value = c.haidenHoushiki
-      row.getCell(9).value = c.souShubetsu
-      row.getCell(10).value = c.shadankiShubetsu
-      row.getCell(11).value = c.shadankiYouryou
-      row.getCell(12).value = c.kairoKigou
-      row.getCell(13).value = c.kairoBangou
-      row.getCell(14).value = c.kairoMeisho
-      row.getCell(15).value = c.cableList
-      row.getCell(16).value = c.haisenJousuu
-      row.getCell(17).value = c.setsuchiUmu
-      row.getCell(18).value = c.setsuchiList
-      row.getCell(22).value = c.keiTo
+      setCellStringWithNewlines(row.getCell(5), c.banMeisho)
+      setCellStringWithNewlines(row.getCell(6), c.banShubetsu)
+      setCellStringWithNewlines(row.getCell(7), c.haidenHoushiki)
+      setCellStringWithNewlines(row.getCell(9), c.souShubetsu)
+      setCellStringWithNewlines(row.getCell(10), c.shadankiShubetsu)
+      setCellStringWithNewlines(row.getCell(11), c.shadankiYouryou)
+      setCellStringWithNewlines(row.getCell(12), c.kairoKigou)
+      setCellStringWithNewlines(row.getCell(13), c.kairoBangou)
+      setCellStringWithNewlines(row.getCell(14), c.kairoMeisho)
+      setCellStringWithNewlines(row.getCell(15), c.cableList)
+      setCellStringWithNewlines(row.getCell(16), c.haisenJousuu)
+      setCellStringWithNewlines(row.getCell(17), c.setsuchiUmu)
+      setCellStringWithNewlines(row.getCell(18), c.setsuchiList)
+      setCellStringWithNewlines(row.getCell(22), c.keiTo)
 
       applyCircuitToRow(row, c)
       currentRowNum++

@@ -8,7 +8,7 @@ import { CABLE_DB_COLUMNS } from '~/constants/databaseConstants'
 </script>
 
 <template>
-  <DbLayout
+  <DbTemplatesLayout
     :data="cableData"
     :columns="CABLE_DB_COLUMNS"
     :search-mapper="(item) => `${item.name} ${item.standard || ''}`"
@@ -27,5 +27,5 @@ import { CABLE_DB_COLUMNS } from '~/constants/databaseConstants'
     <template #cell-standard="{ value }">
       <small>{{ value }}</small>
     </template>
-  </DbLayout>
+  </DbTemplatesLayout>
 </template>

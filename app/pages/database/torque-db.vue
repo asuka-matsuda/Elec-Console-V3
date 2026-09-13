@@ -20,7 +20,7 @@ const flattenedData = computed(() => {
 </script>
 
 <template>
-  <DbLayout
+  <DbTemplatesLayout
     :data="flattenedData"
     :columns="TORQUE_DB_COLUMNS"
     :search-mapper="(item) => `${item.category} ${item.size} ${item.note}`"
@@ -33,5 +33,5 @@ const flattenedData = computed(() => {
     <template #cell-reference="{ value }">
       <small>{{ value }}</small>
     </template>
-  </DbLayout>
+  </DbTemplatesLayout>
 </template>

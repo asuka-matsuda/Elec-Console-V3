@@ -57,6 +57,9 @@ export interface TableColumn<T = Record<string, unknown>> {
   label: string
   sortable?: boolean
   width?: string
+  minWidth?: string
+  maxWidth?: string
+  fixedWidth?: boolean
   align?: 'left' | 'center' | 'right'
 }
 

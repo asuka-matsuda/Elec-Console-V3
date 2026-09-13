@@ -14,9 +14,11 @@ import {
 } from '~/constants/soudenConstants'
 import type { SelectOption } from '~/types/components'
 import type { CircuitItem } from '~/types/souden'
+import { formatShortDateTime } from '~/utils/date'
 
 const props = defineProps<{
   circuits: CircuitItem[]
+  fullCircuits?: CircuitItem[]
   isCircuitLocked: (circuit: CircuitItem) => boolean
   isActionLoading: Record<string, boolean>
   isThreePhase: (circuit: CircuitItem) => boolean
@@ -150,32 +152,18 @@ const {
 </script>
 
 <template>
-  <MoleculesTable
+  <PortalSoudenCircuitTable
     class="portal-phase3-table"
     :columns="PHASE3_TABLE_COLUMNS"
-    :data="sortedCircuits"
+    :circuits="sortedCircuits"
+    :full-circuits="fullCircuits || circuits"
     :sort-by="sortBy"
     :sort-order="sortOrder"
-    :row-id="(circuit) => `row-${circuit.id}`"
-    :row-class="(circuit) => [
-      'phase3-row',
-      {
-        'is-completed': isComplete(circuit),
-        'is-excluded': circuit.isExcluded,
-        'is-locked': isCircuitLocked(circuit) || !isP2Complete(circuit),
-        'is-editing': editingRowId === circuit.id,
-      },
-    ]"
+    :is-circuit-locked="(circuit) => isCircuitLocked(circuit) || !isP2Complete(circuit)"
+    :is-complete="isComplete"
+    :editing-row-id="editingRowId"
     @sort="handleSort"
   >
-    <!-- 盤種別 / 盤名称 -->
-    <template #cell-banMeisho="{ row: circuit }">
-      <PortalSoudenBanCell
-        :ban-meisho="circuit.banMeisho"
-        :ban-shubetsu="circuit.banShubetsu"
-      />
-    </template>
-
     <!-- 回路番号 -->
     <template #cell-kairoBangou="{ row: circuit }">
       <div class="phase3-cell__bangou-wrap">
@@ -311,7 +299,12 @@ const {
     <!-- 備考 -->
     <template #cell-p3Remarks="{ row: circuit }">
       <template v-if="editingRowId === circuit.id">
-        <AtomsInput v-model="inputForm.remarks" placeholder="備考" />
+        <AtomsInput
+          v-model="inputForm.remarks"
+          type="textarea"
+          :rows="2"
+          placeholder="備考"
+        />
       </template>
       <span v-else class="phase3-cell__remarks" :title="circuit.p3Remarks || ''">
         {{ circuit.p3Remarks || '-' }}
@@ -394,12 +387,13 @@ const {
 
     <!-- 測定者 / 日時 -->
     <template #cell-p3ConfirmedAt="{ row: circuit }">
-      <PortalSoudenWorkerCell
-        :worker="circuit.p3Worker"
-        :confirmed-at="circuit.p3ConfirmedAt"
-      />
+      <div v-if="circuit.p3Worker" class="souden-worker-cell flex flex-col items-center gap-[2px]">
+        <strong class="souden-worker-cell__worker">{{ circuit.p3Worker }}</strong>
+        <span class="souden-worker-cell__date">{{ formatShortDateTime(circuit.p3ConfirmedAt) }}</span>
+      </div>
+      <span v-else class="souden-worker-cell__dash">-</span>
     </template>
-  </MoleculesTable>
+  </PortalSoudenCircuitTable>
 </template>
 
 <style scoped lang="scss">
@@ -472,8 +466,9 @@ const {
 
   &__remarks {
     overflow: hidden;
+    display: block;
 
-    max-width: 140px;
+    max-width: 100%;
 
     font-size: var(--text-xs);
     color: var(--color-text-secondary);
@@ -564,6 +559,24 @@ const {
 
   &--strong {
     font-weight: var(--font-weight-bold, 700);
+  }
+}
+
+.souden-worker-cell {
+  &__worker {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-status-success);
+  }
+
+  &__date {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-text-muted);
+  }
+
+  &__dash {
+    color: var(--color-text-muted);
   }
 }
 </style>

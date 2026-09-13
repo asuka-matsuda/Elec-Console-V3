@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * Phase 3 View
  * フェーズ3：送電・電圧測定・検相
@@ -15,6 +15,7 @@ const siteId = computed(() => route.params.siteId as string)
 const initialKeiTo = computed(() => (route.query.kei_to as string) || '幹線')
 
 const {
+  circuits,
   filteredCircuits,
   availableShubetsuList,
   availableBanMeishoList,
@@ -52,14 +53,9 @@ onMounted(() => {
   fetchCircuits()
 })
 
+const { scrollToRow } = useTableScrollTo()
 const scrollToCircuit = (circuit: CircuitItem) => {
-  const el = document.getElementById(`row-${circuit.id}`)
-
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    el.classList.add('is-highlighted')
-    setTimeout(() => el.classList.remove('is-highlighted'), 2000)
-  }
+  scrollToRow(circuit.id)
 }
 
 const shubetsuTabOptions = computed(() => {
@@ -111,6 +107,7 @@ const shubetsuTabOptions = computed(() => {
 
     <PortalPhase3Table
       :circuits="filteredCircuits"
+      :full-circuits="circuits"
       :is-circuit-locked="isCircuitLocked"
       :is-action-loading="isActionLoading"
       :is-three-phase="isThreePhase"

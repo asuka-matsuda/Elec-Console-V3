@@ -16,6 +16,8 @@ defineProps<{
   p2Pct: number
   p3Completed: number
   p3Pct: number
+  siteId?: string
+  keiTo?: '幹線' | '二次側'
 }>()
 </script>
 
@@ -34,7 +36,17 @@ defineProps<{
       <!-- Phase 1 -->
       <div class="flex flex-col gap-1">
         <div class="flex items-center justify-between text-xs">
-          <span class="font-medium text-[var(--color-text-main)]">回路確認 (Phase 1)</span>
+          <div class="flex items-center gap-2">
+            <span class="font-medium text-[var(--color-text-main)]">回路確認 (Phase 1)</span>
+            <AtomsButton
+              v-if="siteId && keiTo"
+              :to="`/portal/${siteId}/phase1?kei_to=${keiTo}`"
+              size="sm"
+              :variant="p1Completed >= total && total > 0 ? 'success' : 'primary'"
+            >
+              試験入力
+            </AtomsButton>
+          </div>
           <div class="flex items-center gap-2 font-mono text-[var(--color-text-muted)]">
             <span><strong class="text-[var(--color-text-main)]">{{ p1Completed }}</strong> / {{ total }}</span>
             <span class="text-[var(--color-text-main)]">({{ p1Pct }}%)</span>
@@ -49,7 +61,17 @@ defineProps<{
       <!-- Phase 2 -->
       <div class="flex flex-col gap-1">
         <div class="flex items-center justify-between text-xs">
-          <span class="font-medium text-[var(--color-text-main)]">絶縁抵抗 (Phase 2)</span>
+          <div class="flex items-center gap-2">
+            <span class="font-medium text-[var(--color-text-main)]">絶縁抵抗 (Phase 2)</span>
+            <AtomsButton
+              v-if="siteId && keiTo"
+              :to="`/portal/${siteId}/phase2?kei_to=${keiTo}`"
+              size="sm"
+              :variant="p2Completed >= total && total > 0 ? 'success' : 'primary'"
+            >
+              試験入力
+            </AtomsButton>
+          </div>
           <div class="flex items-center gap-2 font-mono text-[var(--color-text-muted)]">
             <span><strong class="text-[var(--color-text-main)]">{{ p2Completed }}</strong> / {{ total }}</span>
             <span class="text-[var(--color-text-main)]">({{ p2Pct }}%)</span>
@@ -64,7 +86,17 @@ defineProps<{
       <!-- Phase 3 -->
       <div class="flex flex-col gap-1">
         <div class="flex items-center justify-between text-xs">
-          <span class="font-medium text-[var(--color-text-main)]">送電・電圧 (Phase 3)</span>
+          <div class="flex items-center gap-2">
+            <span class="font-medium text-[var(--color-text-main)]">送電・電圧 (Phase 3)</span>
+            <AtomsButton
+              v-if="siteId && keiTo"
+              :to="`/portal/${siteId}/phase3?kei_to=${keiTo}`"
+              size="sm"
+              :variant="p3Completed >= total && total > 0 ? 'success' : 'primary'"
+            >
+              試験入力
+            </AtomsButton>
+          </div>
           <div class="flex items-center gap-2 font-mono text-[var(--color-text-muted)]">
             <span><strong class="text-[var(--color-text-main)]">{{ p3Completed }}</strong> / {{ total }}</span>
             <span class="text-[var(--color-text-main)]">({{ p3Pct }}%)</span>

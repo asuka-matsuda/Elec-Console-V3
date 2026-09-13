@@ -34,10 +34,12 @@ Nuxt 3 のコンポーネント自動プレフィックス機能（`nuxt.config.
 app/components/
 ├── AtomsButton.vue                  # ➔ <AtomsButton>
 ├── MoleculesFormGroup.vue           # ➔ <MoleculesFormGroup>
+├── MoleculesDashboardMenuTile.vue   # ➔ <MoleculesDashboardMenuTile>
 ├── OrganismsHeader.vue              # ➔ <OrganismsHeader>
 ├── OrganismsModal.vue               # ➔ <OrganismsModal>
 │
 ├── tool/                            # 電卓・計算ツール専用
+│   ├── TemplatesLayout.vue          # ➔ <ToolTemplatesLayout>
 │   ├── OrganismsVoltageInput.vue    # ➔ <ToolOrganismsVoltageInput>
 │   ├── OrganismsVoltageResult.vue   # ➔ <ToolOrganismsVoltageResult>
 │   ├── OrganismsConduitInput.vue    # ➔ <ToolOrganismsConduitInput>
@@ -50,8 +52,7 @@ app/components/
 │   └── OrganismsSiteSettingsModal.vue# ➔ <PortalOrganismsSiteSettingsModal>
 │
 └── database/                        # 規格データベース専用
-    ├── OrganismsDbLayout.vue        # ➔ <DbOrganismsDbLayout>
-    └── MoleculesDbMenuTile.vue      # ➔ <DbMoleculesDbMenuTile>
+    └── TemplatesLayout.vue          # ➔ <DbTemplatesLayout>
 ```
 
 ### なぜこの設計にするのか？

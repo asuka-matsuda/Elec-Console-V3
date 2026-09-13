@@ -1,7 +1,8 @@
 <script setup lang="ts">
 /**
- * ExamMinimap
- * 試験画面（Phase 1〜3）用の回路進捗ミニマップ
+ * MoleculesExamMinimap
+ * 試験画面（Phase 1〜3）用の回路進捗ミニマップコンポーネント。
+ * 回路全体の完了・除外・未着手状態をタイルグリッドで俯瞰表示し、回路選択操作を提供します。
  */
 import { computed } from 'vue'
 
@@ -40,14 +41,14 @@ const tiles = computed(() => {
 </script>
 
 <template>
-  <div class="minimap">
-    <div class="minimap__grid">
+  <AtomsPanel as="div" class="p-2.5">
+    <div class="flex flex-wrap gap-1 max-h-20 overflow-y-auto">
       <button
         v-for="item in tiles"
         :key="item.circuit.id"
         type="button"
         :class="[
-          'minimap__tile',
+          'minimap-tile cursor-pointer w-2.5 h-2.5 p-0 rounded-[2px] transition-all hover:scale-125 hover:z-[2]',
           {
             'is-completed': item.isCompleted,
             'is-excluded': item.isExcluded,
@@ -57,62 +58,30 @@ const tiles = computed(() => {
         @click="emit('selectCircuit', item.circuit)"
       />
     </div>
-  </div>
+  </AtomsPanel>
 </template>
 
 <style scoped lang="scss">
-.minimap {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2, 8px);
+.minimap-tile {
+  border: 1px solid var(--color-tile-empty-border);
+  background-color: var(--color-tile-empty-bg);
 
-  padding: var(--space-3, 12px);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md, 8px);
-
-  background-color: var(--surface-bg-solid);
-
-  &__grid {
-    overflow-y: auto;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-
-    max-height: 80px;
+  &:hover {
+    border-color: var(--color-tile-hover-border);
   }
 
-  &__tile {
-    cursor: pointer;
+  &.is-completed {
+    --glow-color: var(--color-status-success);
 
-    width: 10px;
-    height: 10px;
-    padding: 0;
-    border: 1px solid var(--color-tile-empty-border);
-    border-radius: 2px;
+    border-color: var(--color-status-success);
+    background-color: var(--color-status-success);
+    box-shadow: var(--shadow-glow-sm);
+  }
 
-    background-color: var(--color-tile-empty-bg);
-
-    transition: var(--transition-fast);
-
-    &:hover {
-      z-index: 2;
-      transform: scale(1.4);
-      border-color: var(--color-tile-hover-border);
-    }
-
-    &.is-completed {
-      --glow-color: var(--color-status-success);
-
-      border-color: var(--color-status-success);
-      background-color: var(--color-status-success);
-      box-shadow: var(--shadow-glow-sm);
-    }
-
-    &.is-excluded {
-      border-color: var(--color-tile-excluded-border);
-      opacity: 0.5;
-      background-color: var(--color-tile-excluded-bg);
-    }
+  &.is-excluded {
+    border-color: var(--color-tile-excluded-border);
+    opacity: 0.5;
+    background-color: var(--color-tile-excluded-bg);
   }
 }
 </style>
