@@ -322,8 +322,8 @@ const confirmResetImport = async () => {
                 placeholder="例: 盤A-回路1"
                 @update:model-value="emit('update:circuit', { index: idx, value: String($event ?? '') })"
               />
-              <MoleculesIconButton
-                name="trash-2"
+              <AtomsButton
+                icon="trash-2"
                 variant="danger"
                 title="除外回路を削除"
                 @click="emit('remove-circuit', idx)"

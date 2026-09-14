@@ -12,13 +12,11 @@ import { getHelpContent, type HelpId } from '~/constants/helpConstants'
 interface Props {
   helpId?: HelpId
   text?: string
-  ariaLabel?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
   helpId: undefined,
   text: undefined,
-  ariaLabel: 'ヘルプを表示',
 })
 
 const isOpen = ref(false)
@@ -146,8 +144,6 @@ onBeforeUnmount(() => {
     ref="triggerRef"
     type="button"
     class="helptip-trigger inline-flex items-center justify-center rounded-full text-[var(--color-text-muted)] hover:text-[var(--theme-accent)] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--theme-accent)] cursor-pointer"
-    :aria-label="ariaLabel"
-    :aria-expanded="isOpen"
     tabindex="0"
     @click="toggle"
     @mouseenter="show"
@@ -170,7 +166,6 @@ onBeforeUnmount(() => {
           top: `${position.top}px`,
           left: `${position.left}px`,
         }"
-        role="tooltip"
         @mouseenter="show"
         @mouseleave="hide"
       >

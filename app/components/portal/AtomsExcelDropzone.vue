@@ -109,8 +109,8 @@ const formatFileSize = (bytes: number): string => {
           {{ formatFileSize(modelValue.size) }}
         </div>
       </div>
-      <MoleculesIconButton
-        name="x"
+      <AtomsButton
+        icon="x"
         variant="secondary"
         title="選択を解除"
         :disabled="disabled"

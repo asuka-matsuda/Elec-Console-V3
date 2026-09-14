@@ -86,8 +86,6 @@ defineExpose({
     <button
       type="button"
       class="handle hidden max-md:flex items-center justify-between w-full h-12 px-3 cursor-pointer font-bold leading-tight"
-      :aria-expanded="isOpen"
-      aria-label="計算結果ドロワーの開閉"
       @click="toggleDrawer"
     >
       <span>{{ drawerTitle }}</span>

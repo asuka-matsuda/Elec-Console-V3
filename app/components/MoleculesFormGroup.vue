@@ -54,7 +54,7 @@ withDefaults(defineProps<Props>(), {
 
       <!-- エラーメッセージ -->
       <transition name="fade-slide">
-        <p v-if="error" class="error" role="alert">
+        <p v-if="error" class="error">
           {{ error }}
         </p>
       </transition>

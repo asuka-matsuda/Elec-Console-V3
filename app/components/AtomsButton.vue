@@ -3,7 +3,7 @@
  * AtomsButton
  * [Atoms] 汎用的なボタン・リンクボタンコンポーネント（最小パーツ）
  */
-import { computed } from 'vue'
+import { computed, useSlots } from 'vue'
 
 import { NuxtLink } from '#components'
 import type { AtomsButtonProps } from '~/types/components'
@@ -20,7 +20,9 @@ const {
   block,
 } = defineProps<AtomsButtonProps>()
 
+const slots = useSlots()
 const isClickable = computed(() => !disabled && !loading)
+const isIconOnly = computed(() => iconOnly || (Boolean(icon) && !slots.default))
 const target = computed(() => to || href)
 </script>
 
@@ -30,14 +32,13 @@ const target = computed(() => to || href)
     :to="target && isClickable ? target : undefined"
     :type="!target ? type : undefined"
     :disabled="!isClickable ? true : undefined"
-    :aria-busy="loading ? true : undefined"
     class="relative z-[1] inline-flex shrink-0 items-center justify-center gap-2 btn"
     :class="[
       `btn--${variant}`,
       {
-        'w-full btn--block': block,
+        'w-full': block,
         'btn--loading': loading,
-        'btn--icon-only': iconOnly,
+        'btn--icon-only': isIconOnly,
         'is-disabled': !isClickable,
       },
     ]"
@@ -50,7 +51,15 @@ const target = computed(() => to || href)
 
 <style scoped lang="scss">
 .btn {
+  // デフォルト変数 (primary / theme-accent 基準)
   --btn-color: var(--theme-accent);
+  --btn-bg: transparent;
+  --btn-bg-hover: color-mix(in srgb, var(--btn-color) 12%, transparent);
+  --btn-bg-active: color-mix(in srgb, var(--btn-color) 24%, transparent);
+  --btn-border: color-mix(in srgb, var(--btn-color) 40%, transparent);
+  --btn-border-hover: var(--btn-color);
+  --btn-text: var(--btn-color);
+  --btn-text-hover: var(--btn-color);
   --glow-color: var(--btn-color);
 
   cursor: pointer;
@@ -59,17 +68,17 @@ const target = computed(() => to || href)
   min-height: 2.6em;
   padding-block: 0.3em;
   padding-inline: 1.2em;
-  border: var(--border-width-base) solid color-mix(in srgb, var(--btn-color) 30%, transparent);
+  border: var(--border-width-base) solid var(--btn-border);
   border-radius: var(--radius-sm);
 
   font-size: inherit;
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-tight);
-  color: var(--btn-color);
+  color: var(--btn-text);
   text-decoration: none;
   letter-spacing: var(--tracking-wide);
 
-  background-color: transparent;
+  background-color: var(--btn-bg);
   box-shadow: var(--shadow-elevation-sm);
 
   transition: var(--transition-fast);
@@ -88,8 +97,13 @@ const target = computed(() => to || href)
 
   &:not(:disabled, .is-disabled) {
     &:hover {
-      border-color: var(--btn-color);
+      border-color: var(--btn-border-hover);
+
+      color: var(--btn-text-hover);
+
+      background-color: var(--btn-bg-hover);
       box-shadow: var(--shadow-glow-hover);
+
       transition: var(--transition-glow);
     }
 
@@ -101,33 +115,14 @@ const target = computed(() => to || href)
     }
 
     &:active {
-      border-color: var(--btn-color);
+      border-color: var(--btn-border-hover);
+      background-color: var(--btn-bg-active);
       box-shadow: var(--shadow-glow-active);
       transition: var(--transition-glow);
 
       svg {
         filter: var(--drop-shadow-glow-xs);
         stroke: var(--btn-color);
-      }
-    }
-  }
-
-  &--primary {
-    border-color: color-mix(in srgb, var(--btn-color) 40%, transparent);
-    color: var(--btn-color);
-    background-color: transparent;
-
-    &:not(:disabled, .is-disabled) {
-      &:hover {
-        border-color: var(--btn-color);
-        color: var(--btn-color);
-        background-color: color-mix(in srgb, var(--btn-color) 12%, transparent);
-        box-shadow: var(--shadow-glow-hover);
-      }
-
-      &:active {
-        background-color: color-mix(in srgb, var(--btn-color) 24%, transparent);
-        box-shadow: var(--shadow-glow-active);
       }
     }
   }
@@ -142,32 +137,17 @@ const target = computed(() => to || href)
 
   &--secondary {
     --btn-color: var(--color-border);
-
-    border-color: var(--color-border);
-    color: var(--color-text-main);
-    background-color: transparent;
-
-    &:not(:disabled, .is-disabled) {
-      &:hover {
-        border-color: var(--color-text-muted);
-        color: var(--color-text-main);
-        background-color: var(--color-bg-hover);
-      }
-
-      &:active {
-        background-color: color-mix(in srgb, var(--color-overlay) 10%, transparent);
-      }
-    }
-  }
-
-  &--block {
-    width: 100%;
+    --btn-border: var(--color-border);
+    --btn-border-hover: var(--color-text-muted);
+    --btn-text: var(--color-text-main);
+    --btn-text-hover: var(--color-text-main);
+    --btn-bg-hover: var(--color-bg-hover);
+    --btn-bg-active: color-mix(in srgb, var(--color-overlay) 10%, transparent);
   }
 
   &--icon-only {
-    width: 2.6em;
-    min-width: 2.6em;
-    padding-inline: 0;
+    aspect-ratio: 1;
+    padding: 0;
   }
 
   &--loading {

@@ -78,11 +78,11 @@ onMounted(() => {
     </MoleculesSectionHeader>
 
     <div class="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-section-gap items-start">
-      <section class="min-h-[500px]" aria-label="現場スケジュール">
+      <section class="min-h-[500px]">
         <PortalCal :site-id="siteId" />
       </section>
 
-      <aside class="flex flex-col gap-card-gap" aria-label="現場関連機能">
+      <aside class="flex flex-col gap-card-gap">
         <PortalPersonalTodo :site-id="siteId" />
 
         <AtomsButton

@@ -13,7 +13,6 @@ const emit = defineEmits<{
 <template>
   <nav
     class="calendar-toolbar flex flex-col md:flex-row flex-wrap items-center justify-between gap-1 md:gap-2 px-card-pad py-2"
-    aria-label="カレンダーナビゲーション"
   >
     <div class="flex items-center justify-center md:justify-start w-full md:w-auto gap-1">
       <AtomsButton

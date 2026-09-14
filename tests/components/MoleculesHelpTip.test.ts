@@ -22,7 +22,7 @@ describe('MoleculesHelpTip.vue', () => {
     })
 
     expect(wrapper.find('button').exists()).toBe(true)
-    expect(document.body.querySelector('[role="tooltip"]')).toBeNull()
+    expect(document.body.querySelector('.helptip-panel')).toBeNull()
   })
 
   it('クリックで開閉トグルすること', async () => {
@@ -39,14 +39,14 @@ describe('MoleculesHelpTip.vue', () => {
 
     // 1回目のクリックで開く (Teleport先: document.body)
     await button.trigger('click')
-    const tooltip = document.body.querySelector('[role="tooltip"]')
+    const tooltip = document.body.querySelector('.helptip-panel')
 
     expect(tooltip).not.toBeNull()
     expect(tooltip?.textContent).toContain('テスト解説文')
 
     // 2回目のクリックで閉じる
     await button.trigger('click')
-    expect(document.body.querySelector('[role="tooltip"]')).toBeNull()
+    expect(document.body.querySelector('.helptip-panel')).toBeNull()
   })
 
   it('helpId を指定するとマスタから解説文・参考規格が自動解決されること', async () => {
@@ -63,7 +63,7 @@ describe('MoleculesHelpTip.vue', () => {
 
     await button.trigger('click')
 
-    const tooltip = document.body.querySelector('[role="tooltip"]')
+    const tooltip = document.body.querySelector('.helptip-panel')
 
     expect(tooltip).not.toBeNull()
     expect(tooltip?.textContent).toContain('電線管の内断面積に対する全ケーブル断面積の割合')

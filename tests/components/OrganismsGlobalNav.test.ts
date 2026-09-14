@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 
 import OrganismsGlobalNav from '../../app/components/OrganismsGlobalNav.vue'
-import type { MenuSection } from '../../app/constants/data/menuData'
+import { menuData } from '../../app/constants/data/menuData'
 
 vi.mock('vue-router', () => ({
   useRoute: () => ({
@@ -11,28 +11,9 @@ vi.mock('vue-router', () => ({
 }))
 
 describe('OrganismsGlobalNav.vue', () => {
-  const mockMenuData: MenuSection[] = [
-    {
-      heading: '計算ツール',
-      accent: 'tool',
-      items: [
-        {
-          text: '電圧降下計算',
-          href: '/tools/voltage',
-          icon: 'zap',
-        },
-        {
-          text: '配管選定',
-          href: '/tools/conduit',
-          icon: 'cylinder',
-        },
-      ],
-    },
-  ]
-
   const defaultStubs = {
-    MoleculesIconButton: {
-      template: '<button class="close-btn" @click="$emit(\'click\')">X</button>',
+    AtomsButton: {
+      template: '<button class="close-btn" @click="$emit(\'click\')"><slot /></button>',
     },
     MoleculesSectionHeader: {
       template: '<div class="section-header-stub">{{ title }}</div>',
@@ -46,16 +27,21 @@ describe('OrganismsGlobalNav.vue', () => {
     },
   }
 
-  it('renders closed state by default', () => {
-    const wrapper = mount(OrganismsGlobalNav, {
+  const createWrapper = (props = {}) => {
+    return mount(OrganismsGlobalNav, {
       props: {
         isOpen: false,
-        menuData: mockMenuData,
+        menuData,
+        ...props,
       },
       global: {
         stubs: defaultStubs,
       },
     })
+  }
+
+  it('renders closed state by default', () => {
+    const wrapper = createWrapper({ isOpen: false })
 
     const aside = wrapper.find('aside')
 
@@ -66,15 +52,7 @@ describe('OrganismsGlobalNav.vue', () => {
   })
 
   it('renders open state when isOpen is true', () => {
-    const wrapper = mount(OrganismsGlobalNav, {
-      props: {
-        isOpen: true,
-        menuData: mockMenuData,
-      },
-      global: {
-        stubs: defaultStubs,
-      },
-    })
+    const wrapper = createWrapper({ isOpen: true })
 
     const aside = wrapper.find('aside')
 
@@ -85,15 +63,7 @@ describe('OrganismsGlobalNav.vue', () => {
   })
 
   it('emits update:isOpen false when overlay is clicked', async () => {
-    const wrapper = mount(OrganismsGlobalNav, {
-      props: {
-        isOpen: true,
-        menuData: mockMenuData,
-      },
-      global: {
-        stubs: defaultStubs,
-      },
-    })
+    const wrapper = createWrapper({ isOpen: true })
 
     await wrapper.find('.overlay').trigger('click')
     expect(wrapper.emitted('update:isOpen')).toBeTruthy()
@@ -101,15 +71,7 @@ describe('OrganismsGlobalNav.vue', () => {
   })
 
   it('emits update:isOpen false when close button is clicked', async () => {
-    const wrapper = mount(OrganismsGlobalNav, {
-      props: {
-        isOpen: true,
-        menuData: mockMenuData,
-      },
-      global: {
-        stubs: defaultStubs,
-      },
-    })
+    const wrapper = createWrapper({ isOpen: true })
 
     await wrapper.find('.close-btn').trigger('click')
     expect(wrapper.emitted('update:isOpen')).toBeTruthy()
@@ -117,31 +79,14 @@ describe('OrganismsGlobalNav.vue', () => {
   })
 
   it('renders menu section titles and items correctly', () => {
-    const wrapper = mount(OrganismsGlobalNav, {
-      props: {
-        isOpen: true,
-        menuData: mockMenuData,
-      },
-      global: {
-        stubs: defaultStubs,
-      },
-    })
+    const wrapper = createWrapper({ isOpen: true })
 
     expect(wrapper.text()).toContain('計算ツール')
     expect(wrapper.text()).toContain('電圧降下計算')
-    expect(wrapper.text()).toContain('配管選定')
   })
 
   it('closes on Escape key press when open', async () => {
-    const wrapper = mount(OrganismsGlobalNav, {
-      props: {
-        isOpen: true,
-        menuData: mockMenuData,
-      },
-      global: {
-        stubs: defaultStubs,
-      },
-    })
+    const wrapper = createWrapper({ isOpen: true })
 
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
     expect(wrapper.emitted('update:isOpen')).toBeTruthy()

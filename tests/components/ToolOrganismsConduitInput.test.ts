@@ -122,7 +122,7 @@ describe('ToolOrganismsConduitInput (app/components/tool/OrganismsConduitInput.v
       },
     })
 
-    const deleteButtons = wrapper.findAll('button[aria-label="削除"]')
+    const deleteButtons = wrapper.findAll('button[title="削除"]')
 
     expect(deleteButtons.length).toBe(2)
     await deleteButtons[0].trigger('click')

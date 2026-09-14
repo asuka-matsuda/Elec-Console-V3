@@ -23,9 +23,8 @@ const { currentUser, logout } = useAuth()
   <header class="relative z-10 flex h-16 items-center justify-between px-[var(--space-layout-pad)] header">
     <!-- 左側: メインナビゲーション部 -->
     <div class="flex items-center gap-3">
-      <MoleculesIconButton
-        name="menu"
-        class="inline-flex"
+      <AtomsButton
+        icon="menu"
         @click="emit('toggle-sidebar')"
       />
       <AtomsLogo />
@@ -42,7 +41,7 @@ const { currentUser, logout } = useAuth()
       <slot name="actions" />
 
       <div class="flex items-center gap-2">
-        <div class="flex shrink-0 items-center justify-center w-8 h-8 rounded-full avatar" aria-hidden="true">
+        <div class="flex shrink-0 items-center justify-center w-8 h-8 rounded-full avatar">
           <AtomsIcon
             name="user"
             size="sm"

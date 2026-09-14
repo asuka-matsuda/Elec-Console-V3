@@ -59,8 +59,8 @@ onMounted(() => {
       <span class="header-title font-semibold tracking-wider text-[var(--color-text-muted)]">
         メニュー
       </span>
-      <MoleculesIconButton
-        name="x"
+      <AtomsButton
+        icon="x"
         @click="closeSidebar"
       />
     </header>

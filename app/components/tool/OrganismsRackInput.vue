@@ -240,7 +240,7 @@ const handleRemoveCable = (id: string) => {
               variant="danger"
               icon-only
               :disabled="currentCablesUI.length <= 1"
-              aria-label="削除"
+              title="削除"
               @click="handleRemoveCable(row.id)"
             >
               <AtomsIcon name="trash-2" />

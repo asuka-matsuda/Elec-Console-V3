@@ -26,7 +26,6 @@ const {
     :to="!disabled ? to : undefined"
     class="relative z-[1] flex flex-col gap-panel-gap p-panel-pad overflow-hidden menu-tile"
     :class="{ 'is-disabled': disabled }"
-    :aria-disabled="disabled ? 'true' : undefined"
   >
     <header v-if="icon || title" class="flex items-center gap-1 min-w-0 tile-title">
       <AtomsIcon v-if="icon" :name="icon" class="shrink-0" />

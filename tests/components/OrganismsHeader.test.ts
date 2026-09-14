@@ -23,7 +23,6 @@ describe('OrganismsHeader.vue', () => {
           NuxtLink: true,
           AtomsLogo: true,
           AtomsBreadcrumb: true,
-          MoleculesIconButton: true,
           AtomsButton: {
             template: '<button @click="$emit(\'click\')"><slot /></button>',
           },
@@ -43,7 +42,6 @@ describe('OrganismsHeader.vue', () => {
           NuxtLink: true,
           AtomsLogo: true,
           AtomsBreadcrumb: true,
-          MoleculesIconButton: true,
           AtomsButton: {
             template: '<button @click="$emit(\'click\')"><slot /></button>',
           },
@@ -63,7 +61,6 @@ describe('OrganismsHeader.vue', () => {
           NuxtLink: true,
           AtomsLogo: true,
           AtomsBreadcrumb: true,
-          MoleculesIconButton: true,
           AtomsButton: {
             template: '<button @click="$emit(\'click\')"><slot /></button>',
           },
@@ -72,9 +69,10 @@ describe('OrganismsHeader.vue', () => {
       },
     })
 
-    const button = wrapper.find('button')
+    const buttons = wrapper.findAll('button')
+    const logoutBtn = buttons.find(b => b.text().includes('ログアウト')) || buttons[buttons.length - 1]
 
-    await button.trigger('click')
+    await logoutBtn.trigger('click')
     expect(mockLogout).toHaveBeenCalled()
   })
 })

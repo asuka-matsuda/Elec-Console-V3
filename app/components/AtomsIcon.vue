@@ -31,7 +31,6 @@ const iconComponent = computed(() => {
       v-if="iconComponent"
       class="w-full h-full icon-svg"
       :stroke-width="2"
-      aria-hidden="true"
     />
   </i>
 </template>

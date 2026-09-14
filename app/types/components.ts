@@ -26,11 +26,6 @@ export interface AtomsButtonProps extends BaseButtonProps {
   loading?: boolean
 }
 
-export interface MoleculesIconButtonProps extends BaseButtonProps {
-  name: string
-  label?: string
-}
-
 export interface SelectOption<T = string | number | boolean> {
   label: string
   value: T

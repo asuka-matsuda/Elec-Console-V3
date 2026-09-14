@@ -25,10 +25,6 @@ const pct = computed(() => {
 <template>
   <div
     class="w-full h-2 overflow-hidden rounded-full bar-track"
-    role="progressbar"
-    :aria-valuenow="value"
-    :aria-valuemin="0"
-    :aria-valuemax="max"
     :style="{ '--bar-color': color }"
   >
     <div

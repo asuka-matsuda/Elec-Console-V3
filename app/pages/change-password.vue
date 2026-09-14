@@ -61,7 +61,7 @@ const handleChangePassword = async () => {
       セキュリティのため、システムから配布された初期パスワードを変更してください。
     </p>
 
-    <p v-if="errorMsg" class="change-password-page__error m-0 px-3 py-2" role="alert">
+    <p v-if="errorMsg" class="change-password-page__error m-0 px-3 py-2">
       {{ errorMsg }}
     </p>
 

@@ -106,7 +106,6 @@ const tooltipTitle = computed(() => {
       viewBox="0 0 40 40"
       fill="none"
       stroke="currentColor"
-      aria-hidden="true"
     >
       <path :d="symbolPaths.outer" stroke-width="1.5" />
       <path v-if="symbolPaths.inner" :d="symbolPaths.inner" stroke-width="1.2" />

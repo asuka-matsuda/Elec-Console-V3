@@ -55,21 +55,18 @@ describe('ToolOrganismsResultDrawer.vue', () => {
     const handle = wrapper.find('button.handle')
     const section = wrapper.find('section.result-drawer')
 
-    expect(handle.attributes('aria-expanded')).toBe('false')
     expect(section.classes()).not.toContain('is-open')
     expect(wrapper.find('.overlay').exists()).toBe(false)
 
     // 1回目クリック: 開く
     await handle.trigger('click')
 
-    expect(handle.attributes('aria-expanded')).toBe('true')
     expect(section.classes()).toContain('is-open')
     expect(wrapper.find('.overlay').exists()).toBe(true)
 
     // 2回目クリック: 閉じる
     await handle.trigger('click')
 
-    expect(handle.attributes('aria-expanded')).toBe('false')
     expect(section.classes()).not.toContain('is-open')
     expect(wrapper.find('.overlay').exists()).toBe(false)
   })
@@ -131,7 +128,6 @@ describe('ToolOrganismsResultDrawer.vue', () => {
 
     await overlay.trigger('click')
 
-    expect(handle.attributes('aria-expanded')).toBe('false')
     expect(wrapper.find('.overlay').exists()).toBe(false)
   })
 })

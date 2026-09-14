@@ -221,7 +221,6 @@ const formattedPreview = computed(() => {
             type="button"
             class="inline-flex items-center justify-center p-0.5 rounded-full cursor-pointer delete-btn"
             title="削除"
-            aria-label="削除"
             @click="handleRemoveWord(index)"
           >
             <AtomsIcon name="x" size="sm" />

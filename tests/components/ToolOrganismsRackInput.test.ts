@@ -157,7 +157,7 @@ describe('ToolOrganismsRackInput (app/components/tool/OrganismsRackInput.vue)', 
     })
 
     // テーブル内の最初の削除ボタンをクリック
-    const deleteButtons = wrapper.findAll('button[aria-label="削除"]')
+    const deleteButtons = wrapper.findAll('button[title="削除"]')
 
     expect(deleteButtons.length).toBe(2)
     await deleteButtons[0].trigger('click')
@@ -185,7 +185,7 @@ describe('ToolOrganismsRackInput (app/components/tool/OrganismsRackInput.vue)', 
       },
     })
 
-    const deleteButton = wrapper.find('button[aria-label="削除"]')
+    const deleteButton = wrapper.find('button[title="削除"]')
 
     expect(deleteButton.attributes('disabled')).toBeDefined()
   })

@@ -13,7 +13,6 @@ defineProps<{
 <template>
   <nav
     class="relative flex shrink-0 items-center py-1 px-2 whitespace-nowrap breadcrumb"
-    aria-label="パンくずリスト"
   >
     <ol class="flex items-center gap-2">
       <li

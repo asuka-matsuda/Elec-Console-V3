@@ -50,6 +50,5 @@ describe('MoleculesDashboardMenuTile.vue', () => {
     expect(wrapper.find('a.nuxt-link-stub').exists()).toBe(false)
     expect(wrapper.element.tagName.toLowerCase()).toBe('div')
     expect(wrapper.classes()).toContain('is-disabled')
-    expect(wrapper.attributes('aria-disabled')).toBe('true')
   })
 })

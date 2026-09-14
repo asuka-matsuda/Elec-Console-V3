@@ -24,8 +24,6 @@ const resolvedColor = computed(() => color || 'var(--theme-accent)')
     class="divider relative w-full h-px shrink-0 overflow-hidden"
     :class="`is-${type}`"
     :style="{ '--divider-color': resolvedColor }"
-    role="separator"
-    aria-orientation="horizontal"
   />
 </template>
 

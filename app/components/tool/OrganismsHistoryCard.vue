@@ -187,7 +187,7 @@ const weightResult = computed(() => {
       <AtomsButton
         variant="danger"
         icon-only
-        aria-label="履歴を削除"
+        title="履歴を削除"
         @click.prevent="handleDelete"
       >
         <AtomsIcon name="trash-2" />

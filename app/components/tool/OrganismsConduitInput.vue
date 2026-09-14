@@ -154,7 +154,7 @@ const currentCablesUI = computed(() => {
               variant="danger"
               icon-only
               :disabled="inputs.inputCables.length <= 1"
-              aria-label="削除"
+              title="削除"
               @click="emit('remove-cable', row.id)"
             >
               <AtomsIcon name="trash-2" />

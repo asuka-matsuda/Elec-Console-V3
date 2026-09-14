@@ -105,14 +105,15 @@ describe('ToolTemplatesLayout.vue', () => {
     })
 
     const drawerHandle = wrapper.find('button.handle')
+    const drawer = wrapper.find('section.result-drawer')
 
     expect(drawerHandle.exists()).toBe(true)
-    expect(drawerHandle.attributes('aria-expanded')).toBe('false')
+    expect(drawer.classes()).not.toContain('is-open')
 
     await drawerHandle.trigger('click')
-    expect(drawerHandle.attributes('aria-expanded')).toBe('true')
+    expect(drawer.classes()).toContain('is-open')
 
     await drawerHandle.trigger('click')
-    expect(drawerHandle.attributes('aria-expanded')).toBe('false')
+    expect(drawer.classes()).not.toContain('is-open')
   })
 })
