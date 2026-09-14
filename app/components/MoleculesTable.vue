@@ -15,7 +15,7 @@ const props = withDefaults(
     data?: T[]
     fullData?: T[]
     sortBy?: string
-    sortOrder?: 'asc' | 'desc'
+    sortOrder?: 'asc' | 'desc' | null
     rowKey?: string | ((row: T) => string | number)
     rowClass?: (row: T, index: number) => string | Record<string, boolean | undefined> | (string | Record<string, boolean | undefined>)[] | undefined
     rowId?: (row: T, index: number) => string
@@ -34,7 +34,7 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: 'sort', payload: { key: string, order: 'asc' | 'desc' }): void
+  (e: 'sort', payload: { key: string, order: 'asc' | 'desc' | null }): void
 }>()
 
 defineSlots<{
@@ -53,13 +53,22 @@ const { columnWidthStyles } = useTableAutoWidth(tableWrapperRef, {
 })
 
 const handleSort = (col: TableColumn<unknown>) => {
-  if (!col.sortable) return
+  if (col.sortable === false) return
 
-  let newOrder: 'asc' | 'desc' = 'asc'
+  let newOrder: 'asc' | 'desc' | null = 'asc'
 
   if (props.sortBy === col.key) {
-    newOrder = props.sortOrder === 'asc' ? 'desc' : 'asc'
+    if (props.sortOrder === 'asc') {
+      newOrder = 'desc'
+    }
+    else if (props.sortOrder === 'desc') {
+      newOrder = null
+    }
+    else {
+      newOrder = 'asc'
+    }
   }
+
   emit('sort', { key: col.key, order: newOrder })
 }
 

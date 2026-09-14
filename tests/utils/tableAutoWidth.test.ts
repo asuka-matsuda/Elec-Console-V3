@@ -5,6 +5,7 @@ import {
   calculateColumnBaseWidths,
   distributeColumnWidths,
   getDisplayWidth,
+  measureCellIntrinsicWidth,
   parsePixelWidth,
 } from '../../app/utils/tableAutoWidth'
 
@@ -131,13 +132,85 @@ describe('tableAutoWidth utility', () => {
       expect(sum).toBe(600)
     })
 
-    it('preserves base widths when container is narrower without forced compression', () => {
-      // コンテナ幅 300px が totalBaseWidth (400px) より狭い場合、文字潰れを防ぐためベース幅を維持
+    it('proportionally shrinks flex columns down to natural header min width when container is narrow', () => {
+      // コンテナ幅 300px が totalBaseWidth (400px) より狭い場合、
+      // 見出しの最小必要幅を下限として自動按分縮小し、コンテナ幅にフィット
       const distributed = distributeColumnWidths(columns, baseWidths, 300)
 
+      expect(distributed.fixed).toBe(100) // 固定列はそのまま100px
+      expect(distributed.c1).toBeLessThan(100) // c1 は縮小
+      expect(distributed.c2).toBeLessThan(200) // c2 も縮小
+      expect(distributed.c1 + distributed.c2 + distributed.fixed).toBe(300) // コンテナ幅300pxにジャストフィット
+    })
+
+    it('proportionally shrinks flex columns with explicit minWidth when container is narrow', () => {
+      const colsWithMin: TableColumn<unknown>[] = [
+        { key: 'c1', label: 'C1', minWidth: '80px' }, // base 100, min 80 -> canShrink: 20
+        { key: 'c2', label: 'C2', minWidth: '160px' }, // base 200, min 160 -> canShrink: 40
+        { key: 'fixed', label: 'Fixed', width: '100px' },
+      ]
+      // totalBaseWidth = 400px
+      // containerWidth = 370px ➔ neededShrink = 30px
+      // totalShrinkable = 20 + 40 = 60px
+      // 30px を c1(10px), c2(20px) で縮小
+      const distributed = distributeColumnWidths(colsWithMin, baseWidths, 370)
+
       expect(distributed.fixed).toBe(100)
-      expect(distributed.c1).toBe(100)
-      expect(distributed.c2).toBe(200)
+      expect(distributed.c1).toBe(90) // 100 - 10
+      expect(distributed.c2).toBe(180) // 200 - 20
+      expect(distributed.c1 + distributed.c2 + distributed.fixed).toBe(370)
+    })
+
+    it('protects action columns down to measuredMinWidths when measured dynamically from DOM', () => {
+      const colsWithActions: TableColumn<unknown>[] = [
+        { key: 'c1', label: 'C1' },
+        { key: 'actions', label: '操作' }, // ハードコード minWidth なし！
+      ]
+      const bases = { c1: 200, actions: 240 }
+
+      // DOM実測された 240px が measuredMinWidths として渡された場合
+      const distributed = distributeColumnWidths(colsWithActions, bases, 300, {
+        measuredMinWidths: { actions: 240 },
+      })
+
+      // actions 列は実測下限 240px を下回らず保護され、c1 がヘッダー最小幅(71px)まで縮小される
+      expect(distributed.actions).toBe(240)
+      expect(distributed.c1).toBe(71) // 200 - 129 (ヘッダー最小幅71pxでストップ)
+    })
+  })
+
+  describe('DOM intrinsic width measurement', () => {
+    it('measures cell width with multiple buttons correctly', () => {
+      const td = document.createElement('td')
+      const actionDiv = document.createElement('div')
+
+      actionDiv.style.display = 'flex'
+      actionDiv.style.gap = '8px'
+
+      const b1 = document.createElement('button')
+
+      b1.textContent = 'ボタン1'
+      Object.defineProperty(b1, 'offsetWidth', { value: 80 })
+
+      const b2 = document.createElement('button')
+
+      b2.textContent = 'ボタン2'
+      Object.defineProperty(b2, 'offsetWidth', { value: 60 })
+
+      const b3 = document.createElement('button')
+
+      b3.textContent = 'ボタン3'
+      Object.defineProperty(b3, 'offsetWidth', { value: 50 })
+
+      actionDiv.appendChild(b1)
+      actionDiv.appendChild(b2)
+      actionDiv.appendChild(b3)
+      td.appendChild(actionDiv)
+
+      // 80 + 60 + 50 + gap(8*2=16) = 206px + padding(16) = 222px
+      const measured = measureCellIntrinsicWidth(td)
+
+      expect(measured).toBeGreaterThanOrEqual(206)
     })
   })
 })

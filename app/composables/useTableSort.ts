@@ -1,6 +1,6 @@
 import { computed, type ComputedRef, isRef, type Ref, ref } from 'vue'
 
-export type SortOrder = 'asc' | 'desc'
+export type SortOrder = 'asc' | 'desc' | null
 
 export interface UseTableSortOptions<T> {
   defaultKey?: (keyof T & string) | string
@@ -10,6 +10,7 @@ export interface UseTableSortOptions<T> {
 /**
  * テーブルの並び替え（ソート）状態とロジックを管理する共通Composable
  * 文字列、数値、日付、null/undefined を自動判別してソートします。
+ * ソート順序は 昇順(asc) ➔ 降順(desc) ➔ 元に戻す(null) の3段階で循環します。
  */
 export const useTableSort = <T extends object = Record<string, unknown>>(
   sourceData: Ref<T[]> | ComputedRef<T[]> | T[],
@@ -19,17 +20,35 @@ export const useTableSort = <T extends object = Record<string, unknown>>(
   const sortOrder = ref<SortOrder>(options.defaultOrder || 'asc')
 
   const handleSort = (payload: { key: string, order?: SortOrder }) => {
-    if (sortBy.value === payload.key) {
-      if (payload.order) {
-        sortOrder.value = payload.order
+    if (payload.order !== undefined) {
+      if (payload.order === null) {
+        sortBy.value = ''
+        sortOrder.value = 'asc'
       }
       else {
-        sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
+        sortBy.value = payload.key
+        sortOrder.value = payload.order
+      }
+
+      return
+    }
+
+    if (sortBy.value === payload.key) {
+      // 3段階トグル: asc -> desc -> 解除(null) -> asc
+      if (sortOrder.value === 'asc') {
+        sortOrder.value = 'desc'
+      }
+      else if (sortOrder.value === 'desc') {
+        sortBy.value = ''
+        sortOrder.value = 'asc'
+      }
+      else {
+        sortOrder.value = 'asc'
       }
     }
     else {
       sortBy.value = payload.key
-      sortOrder.value = payload.order || 'asc'
+      sortOrder.value = 'asc'
     }
   }
 
@@ -42,7 +61,7 @@ export const useTableSort = <T extends object = Record<string, unknown>>(
     const list = isRef(sourceData) ? sourceData.value : sourceData
 
     if (!list || !Array.isArray(list)) return []
-    if (!sortBy.value) return list
+    if (!sortBy.value || sortOrder.value === null) return list
 
     const key = sortBy.value
     const orderMultiplier = sortOrder.value === 'asc' ? 1 : -1

@@ -146,4 +146,11 @@ describe('Site Access Authorization (User Requirement: Only master has global si
     expect(canAccessSite(workerUser, 'site-a')).toBe(true)
     expect(canAccessSite(workerUser, 'site-b')).toBe(false)
   })
+
+  it('should restrict master-only functions strictly to loginId === "master"', () => {
+    // マスター管理画面や改行禁止設定は isSuperUser (loginId === 'master') のみ許可
+    expect(isSuperUser(masterUser)).toBe(true)
+    expect(isSuperUser(subAdminUser)).toBe(false)
+    expect(isSuperUser({ ...subAdminUser, role: 'master' })).toBe(false) // role 詐称でも loginId が master でなければ不可
+  })
 })

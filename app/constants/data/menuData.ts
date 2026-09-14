@@ -6,6 +6,7 @@ export type MenuItem = {
   activePrefixes?: string[]
   desc?: string
   disabled?: boolean
+  masterOnly?: boolean
 }
 
 export type MenuSection = {
@@ -46,9 +47,18 @@ export const menuData: MenuSection[] = [
         customClass: 'global-nav__link--management',
         desc: 'システム全体の設定を行う管理者用コンソールです。',
       },
+      {
+        text: 'マスター管理（masterのみ）',
+        href: '/master',
+        icon: 'sliders',
+        customClass: 'global-nav__link--management',
+        desc: '改行禁止ワード・お知らせ設定などの全体設定を行います。',
+        masterOnly: true,
+      },
     ],
     showInDashboard: true,
   },
+
   {
     id: 'tools',
     heading: '計算ツール',

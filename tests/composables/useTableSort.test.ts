@@ -85,4 +85,36 @@ describe('useTableSort', () => {
     expect(sortBy.value).toBe('count')
     expect(sortOrder.value).toBe('asc')
   })
+
+  it('should cycle through 3-stage sorting (asc -> desc -> reset to original)', () => {
+    const list = ref(sampleData)
+    const { sortBy, sortOrder, sortedData, handleSort } = useTableSort(list)
+
+    // 初期状態: ソートなし（元の順序: 東京, 大阪, 名古屋）
+    expect(sortBy.value).toBe('')
+    expect(sortedData.value.map(d => d.id)).toEqual(['2', '1', '3'])
+
+    // 1回目クリック: count 昇順 (5, 20, 100)
+    handleSort({ key: 'count' })
+    expect(sortBy.value).toBe('count')
+    expect(sortOrder.value).toBe('asc')
+    expect(sortedData.value.map(d => d.count)).toEqual([5, 20, 100])
+
+    // 2回目クリック: count 降順 (100, 20, 5)
+    handleSort({ key: 'count' })
+    expect(sortBy.value).toBe('count')
+    expect(sortOrder.value).toBe('desc')
+    expect(sortedData.value.map(d => d.count)).toEqual([100, 20, 5])
+
+    // 3回目クリック: ソート解除（元の順序: 東京, 大阪, 名古屋）
+    handleSort({ key: 'count' })
+    expect(sortBy.value).toBe('')
+    expect(sortedData.value.map(d => d.id)).toEqual(['2', '1', '3'])
+
+    // 4回目クリック: 再び昇順
+    handleSort({ key: 'count' })
+    expect(sortBy.value).toBe('count')
+    expect(sortOrder.value).toBe('asc')
+    expect(sortedData.value.map(d => d.count)).toEqual([5, 20, 100])
+  })
 })

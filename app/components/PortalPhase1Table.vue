@@ -95,7 +95,12 @@ const {
     <!-- 回路名称 -->
     <template #cell-kairoMeisho="{ row: circuit }">
       <template v-if="editingRowId === circuit.id">
-        <AtomsInput v-model="editForm.kairoMeisho" size="sm" placeholder="回路名称" />
+        <AtomsInput
+          v-model="editForm.kairoMeisho"
+          type="textarea"
+          :rows="2"
+          placeholder="回路名称"
+        />
       </template>
       <span v-else class="phase1-cell__text phase1-cell__meisho" :title="circuit.kairoMeisho || ''">
         {{ circuit.kairoMeisho || '-' }}
@@ -320,7 +325,7 @@ const {
   }
 
   &__text {
-    font-size: var(--text-xs);
+    font-size: inherit;
     color: var(--color-text-main);
   }
 
@@ -329,8 +334,8 @@ const {
 
     max-width: 100%;
 
-    font-size: var(--text-xs);
-    font-weight: var(--font-weight-medium);
+    font-size: inherit;
+    font-weight: var(--font-weight-normal, 400);
     line-height: 1.3;
     color: var(--color-text-main);
     white-space: pre-line;
@@ -359,11 +364,11 @@ const {
   gap: 4px;
   align-items: center;
 
-  font-size: var(--text-xs);
+  font-size: inherit;
   color: var(--color-status-warning);
 
   &--strong {
-    font-weight: var(--font-weight-bold, 700);
+    font-weight: var(--font-weight-normal, 400);
   }
 }
 
@@ -384,8 +389,8 @@ const {
 
 .souden-worker-cell {
   &__worker {
-    font-size: var(--text-xs);
-    font-weight: var(--font-weight-bold);
+    font-size: inherit;
+    font-weight: var(--font-weight-normal, 400);
     color: var(--color-status-success);
   }
 

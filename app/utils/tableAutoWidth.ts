@@ -58,14 +58,55 @@ export interface ColumnWidthCalculationOptions {
   marginPx?: number
   sortIconPx?: number
   defaultMinWidthPx?: number
+  actionsMinWidthPx?: number
+  measuredMinWidths?: Record<string, number>
 }
 
-const DEFAULT_OPTIONS: Required<ColumnWidthCalculationOptions> = {
+const DEFAULT_OPTIONS: Required<Omit<ColumnWidthCalculationOptions, 'measuredMinWidths'>> & { measuredMinWidths?: Record<string, number> } = {
   charWidthPx: 8.5,
   paddingPx: 16,
   marginPx: 12,
   sortIconPx: 24,
   defaultMinWidthPx: 60,
+  actionsMinWidthPx: 120,
+  measuredMinWidths: undefined,
+}
+
+/**
+ * カラムの見出しラベル・ソートアイコン・余白から「見出しの最小必要幅（Natural Min Width）」を算出
+ */
+export function calculateHeaderMinWidth(
+  col: TableColumn<unknown>,
+  options: ColumnWidthCalculationOptions = {},
+): number {
+  const opt = { ...DEFAULT_OPTIONS, ...options }
+  const colKey = String(col.key)
+  const explicitMinPx = parsePixelWidth(col.minWidth)
+
+  // DOM実測されたコンテンツ最小必要幅があれば、それを最優先の物理下限とする
+  const measuredPx = opt.measuredMinWidths?.[colKey]
+
+  if (measuredPx !== undefined && measuredPx > 0) {
+    return explicitMinPx !== undefined ? Math.max(explicitMinPx, measuredPx) : measuredPx
+  }
+
+  // 操作列（ボタンUIが描画されるカスタムセル）の場合の最小幅担保
+  if (col.key === 'actions' || col.key === 'action') {
+    const actionsMin = opt.actionsMinWidthPx
+
+    return explicitMinPx !== undefined ? Math.max(explicitMinPx, actionsMin) : actionsMin
+  }
+
+  let labelCharCount = getDisplayWidth(col.label)
+
+  // ソート可能ならソートアイコン分の文字幅を考慮
+  if (col.sortable !== false) {
+    labelCharCount += Math.ceil(opt.sortIconPx / opt.charWidthPx)
+  }
+
+  const headerPx = Math.ceil(labelCharCount * opt.charWidthPx) + opt.paddingPx + opt.marginPx
+
+  return explicitMinPx !== undefined ? Math.max(explicitMinPx, headerPx) : Math.max(opt.defaultMinWidthPx, headerPx)
 }
 
 /**
@@ -96,7 +137,7 @@ export function calculateColumnBaseWidths<T>(
     let maxCharCount = getDisplayWidth(col.label)
 
     // ソート可能ならソートアイコン分の文字幅相当を考慮
-    if (col.sortable) {
+    if (col.sortable !== false) {
       maxCharCount += Math.ceil(opt.sortIconPx / opt.charWidthPx)
     }
 
@@ -128,11 +169,11 @@ export function calculateColumnBaseWidths<T>(
     // ピクセル換算
     let calculatedPx = Math.ceil(maxCharCount * opt.charWidthPx) + opt.paddingPx + opt.marginPx
 
-    // minWidth / maxWidth ガード
-    const minPx = parsePixelWidth(col.minWidth) ?? opt.defaultMinWidthPx
+    // 自然な最小幅（見出しラベル幅・ソートアイコン・余白、または明示的minWidth）/ maxWidth ガード
+    const naturalMinPx = calculateHeaderMinWidth(col, opt)
     const maxPx = parsePixelWidth(col.maxWidth)
 
-    calculatedPx = Math.max(calculatedPx, minPx)
+    calculatedPx = Math.max(calculatedPx, naturalMinPx)
     if (maxPx !== undefined) {
       calculatedPx = Math.min(calculatedPx, maxPx)
     }
@@ -153,6 +194,7 @@ export function distributeColumnWidths(
   columns: TableColumn<unknown>[],
   baseWidths: Record<string, number>,
   containerWidth: number,
+  options: ColumnWidthCalculationOptions = {},
 ): Record<string, number> {
   const result: Record<string, number> = {}
 
@@ -257,11 +299,31 @@ export function distributeColumnWidths(
 
         // 今ラウンドで全く配分が進まなかった場合（全員が上限に達した場合）
         if (allocatedThisRound === 0) {
-          // 全可変列が上限に達した場合、上限なし列、または最後の可変列に残余を配分
-          const fallbackCol = activeCols.find(k => parsePixelWidth(colMap.get(k)?.maxWidth) === undefined)
-            || flexCols[flexCols.length - 1]!
+          const uncappedCol = activeCols.find(k => parsePixelWidth(colMap.get(k)?.maxWidth) === undefined)
 
-          currentWidths[fallbackCol] = (currentWidths[fallbackCol] ?? 80) + remainingExtra
+          if (uncappedCol) {
+            currentWidths[uncappedCol] = (currentWidths[uncappedCol] ?? 80) + remainingExtra
+          }
+          else {
+            // 全可変列が上限に達した場合、特定列に押し付けず全列に均等分配
+            const perCol = Math.floor(remainingExtra / columns.length)
+            let allocated = 0
+
+            for (let i = 0; i < columns.length; i++) {
+              const col = columns[i]!
+              const key = String(col.key)
+              const isLast = i === columns.length - 1
+              const add = isLast ? (remainingExtra - allocated) : perCol
+
+              allocated += add
+              if (flexCols.includes(key)) {
+                currentWidths[key] = (currentWidths[key] ?? 80) + add
+              }
+              else {
+                result[key] = (result[key] ?? baseWidths[key] ?? 80) + add
+              }
+            }
+          }
           break
         }
 
@@ -292,6 +354,195 @@ export function distributeColumnWidths(
   }
 
   // ケース2: 画面幅が不足している場合（containerWidth < totalBaseWidth）
-  // 各列の算出された基本必要幅（baseWidths）をそのまま維持
-  return { ...baseWidths }
+  // 可変列（flexCols）をそれぞれの minWidth を下限として比例縮小し、画面幅（containerWidth）にフィット
+  const neededShrink = totalBaseWidth - containerWidth
+  const colMap = new Map<string, TableColumn<unknown>>()
+
+  for (const col of columns) {
+    colMap.set(String(col.key), col)
+  }
+
+  // 固定列はベース幅を維持
+  for (const key of fixedCols) {
+    result[key] = baseWidths[key] ?? 80
+  }
+
+  if (flexCols.length > 0) {
+    // 各可変列の縮小可能幅（baseWidth - minWidth）を計算
+    const shrinkableWidths: Record<string, number> = {}
+    let totalShrinkable = 0
+
+    for (const key of flexCols) {
+      const col = colMap.get(key)
+
+      if (!col) continue
+
+      // 自然な最小幅（見出しラベル幅・ソートアイコン・余白、または明示的minWidth）を算出
+      const naturalMinPx = calculateHeaderMinWidth(col, options)
+      const curPx = baseWidths[key] ?? 80
+      const canShrink = Math.max(0, curPx - naturalMinPx)
+
+      shrinkableWidths[key] = canShrink
+      totalShrinkable += canShrink
+    }
+
+    if (totalShrinkable > 0) {
+      const actualShrink = Math.min(neededShrink, totalShrinkable)
+      let allocatedShrink = 0
+
+      for (let i = 0; i < flexCols.length; i++) {
+        const key = flexCols[i]!
+        const canShrink = shrinkableWidths[key] ?? 0
+        const isLast = i === flexCols.length - 1
+        const shrinkAmount = isLast
+          ? (actualShrink - allocatedShrink)
+          : Math.floor(actualShrink * (canShrink / totalShrinkable))
+
+        allocatedShrink += shrinkAmount
+        result[key] = (baseWidths[key] ?? 80) - shrinkAmount
+      }
+    }
+    else {
+      // 縮小余地がない場合は baseWidths を維持
+      for (const key of flexCols) {
+        result[key] = baseWidths[key] ?? 80
+      }
+    }
+  }
+
+  return result
+}
+
+/**
+ * セル（td要素）内のコンテンツ（ボタンUIやカスタムスロット要素など）の
+ * 「折り返さずに自然に収まる最小必要幅（Intrinsic Width）」を実測する
+ */
+export function measureCellIntrinsicWidth(td: HTMLElement): number {
+  if (!td) return 0
+
+  let maxRowContentWidth = 0
+  const children = Array.from(td.children) as HTMLElement[]
+
+  if (children.length === 0) {
+    // 子要素（カスタムUI）がないプレーンテキストセルは文字数ベース計算に任せる
+    return 0
+  }
+
+  for (const child of children) {
+    let width = 0
+    const subChildren = Array.from(child.children) as HTMLElement[]
+
+    if (subChildren.length > 0) {
+      let isRowLayout = true
+      let gap = 0
+
+      if (typeof window !== 'undefined' && window.getComputedStyle) {
+        const computed = window.getComputedStyle(child)
+        const isFlex = computed.display.includes('flex')
+        const isColumn = computed.flexDirection.includes('column')
+
+        isRowLayout = !isFlex || !isColumn
+        gap = Number.parseFloat(computed.gap || computed.columnGap || '0') || 0
+      }
+
+      if (isRowLayout) {
+        // 横並び（ボタン群など）：各要素の幅の合計＋gap
+        let totalRowWidth = 0
+
+        for (const sub of subChildren) {
+          const rect = sub.getBoundingClientRect()
+
+          totalRowWidth += rect.width || sub.offsetWidth || 0
+        }
+        if (subChildren.length > 1) {
+          totalRowWidth += gap * (subChildren.length - 1)
+        }
+        width = Math.ceil(totalRowWidth)
+      }
+      else {
+        // 縦並び（バッジと日時など）：各要素の中での最大幅
+        let maxSubWidth = 0
+
+        for (const sub of subChildren) {
+          const rect = sub.getBoundingClientRect()
+
+          maxSubWidth = Math.max(maxSubWidth, rect.width || sub.offsetWidth || 0)
+        }
+        width = Math.ceil(maxSubWidth)
+      }
+    }
+    else {
+      // 単一要素（単一ボタンや単一バッジ）
+      // block要素（divなど）の場合は親幅いっぱいに広がるため除外
+      let isBlock = false
+
+      if (typeof window !== 'undefined' && window.getComputedStyle) {
+        const comp = window.getComputedStyle(child)
+
+        isBlock = comp.display === 'block'
+      }
+
+      if (!isBlock) {
+        const rect = child.getBoundingClientRect()
+
+        width = Math.ceil(rect.width || child.offsetWidth || 0)
+      }
+    }
+
+    maxRowContentWidth = Math.max(maxRowContentWidth, width)
+  }
+
+  if (maxRowContentWidth === 0) return 0
+
+  // セル左右のパディングを加算
+  let padLeft = 8
+  let padRight = 8
+
+  if (typeof window !== 'undefined' && window.getComputedStyle) {
+    const tdStyle = window.getComputedStyle(td)
+
+    padLeft = Number.parseFloat(tdStyle.paddingLeft || '8') || 8
+    padRight = Number.parseFloat(tdStyle.paddingRight || '8') || 8
+  }
+
+  return Math.ceil(maxRowContentWidth + padLeft + padRight)
+}
+
+/**
+ * テーブル要素から、各列のセルコンテンツの実測最小必要幅をサンプリング計測する
+ */
+export function measureTableContentWidths(
+  tableEl: HTMLElement,
+  columns: TableColumn<unknown>[],
+  maxSampleRows = 5,
+): Record<string, number> {
+  const result: Record<string, number> = {}
+
+  if (!tableEl || !columns.length) return result
+
+  const rows = tableEl.querySelectorAll('tbody tr')
+
+  if (rows.length === 0) return result
+
+  const sampleCount = Math.min(rows.length, maxSampleRows)
+
+  for (let r = 0; r < sampleCount; r++) {
+    const row = rows[r]!
+    const cells = row.querySelectorAll('td')
+
+    cells.forEach((td, colIndex) => {
+      const col = columns[colIndex]
+
+      if (!col) return
+      const key = String(col.key)
+
+      const measured = measureCellIntrinsicWidth(td as HTMLElement)
+
+      if (measured > 0) {
+        result[key] = Math.max(result[key] ?? 0, measured)
+      }
+    })
+  }
+
+  return result
 }

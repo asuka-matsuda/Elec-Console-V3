@@ -18,7 +18,7 @@ const props = withDefaults(
     fullCircuits?: CircuitItem[]
     columns: TableColumn<CircuitItem>[]
     sortBy?: string
-    sortOrder?: 'asc' | 'desc'
+    sortOrder?: 'asc' | 'desc' | null
     isCircuitLocked?: (circuit: CircuitItem) => boolean
     isComplete?: (circuit: CircuitItem) => boolean
     editingRowId?: string | null
@@ -36,7 +36,7 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: 'sort', payload: { key: string, order: 'asc' | 'desc' }): void
+  (e: 'sort', payload: { key: string, order: 'asc' | 'desc' | null }): void
 }>()
 
 defineSlots<{
@@ -54,13 +54,22 @@ const { columnWidthStyles } = useTableAutoWidth(tableWrapperRef, {
 })
 
 const handleSort = (col: TableColumn<unknown>) => {
-  if (!col.sortable) return
+  if (col.sortable === false) return
 
-  let newOrder: 'asc' | 'desc' = 'asc'
+  let newOrder: 'asc' | 'desc' | null = 'asc'
 
   if (props.sortBy === col.key) {
-    newOrder = props.sortOrder === 'asc' ? 'desc' : 'asc'
+    if (props.sortOrder === 'asc') {
+      newOrder = 'desc'
+    }
+    else if (props.sortOrder === 'desc') {
+      newOrder = null
+    }
+    else {
+      newOrder = 'asc'
+    }
   }
+
   emit('sort', { key: col.key, order: newOrder })
 }
 
@@ -208,8 +217,8 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
 
 .souden-cell {
   &__meisho {
-    font-size: var(--text-xs);
-    font-weight: var(--font-weight-medium);
+    font-size: inherit;
+    font-weight: var(--font-weight-normal, 400);
     line-height: 1.3;
     color: var(--color-text-main);
     white-space: pre-line;
@@ -218,8 +227,8 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
 
 .souden-worker-cell {
   &__worker {
-    font-size: var(--text-xs);
-    font-weight: var(--font-weight-bold);
+    font-size: inherit;
+    font-weight: var(--font-weight-normal, 400);
     color: var(--color-text-main);
   }
 

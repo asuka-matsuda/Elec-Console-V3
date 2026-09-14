@@ -80,6 +80,44 @@ describe('MoleculesTable.vue', () => {
     }
   })
 
+  it('降順(desc)状態の列を再度クリックするとorder: null（ソート解除）がemitされること', async () => {
+    const wrapper = mount(MoleculesTable, {
+      props: {
+        columns: sampleColumns,
+        data: sampleData,
+        sortBy: 'name',
+        sortOrder: 'desc',
+      },
+    })
+
+    const thComponent = wrapper.findComponent({ name: 'AtomsTableTh' })
+
+    if (thComponent.exists()) {
+      await thComponent.vm.$emit('sort', sampleColumns[0])
+      expect(wrapper.emitted('sort')).toBeTruthy()
+      expect(wrapper.emitted('sort')?.[0]).toEqual([{ key: 'name', order: null }])
+    }
+  })
+
+  it('sortable: false が指定された列ではソートイベントがemitされないこと', async () => {
+    const nonSortableColumns = [
+      { key: 'action', label: '操作', sortable: false },
+    ]
+    const wrapper = mount(MoleculesTable, {
+      props: {
+        columns: nonSortableColumns,
+        data: sampleData,
+      },
+    })
+
+    const thComponent = wrapper.findComponent({ name: 'AtomsTableTh' })
+
+    if (thComponent.exists()) {
+      await thComponent.vm.$emit('sort', nonSortableColumns[0])
+      expect(wrapper.emitted('sort')).toBeFalsy()
+    }
+  })
+
   it('subKeyが指定された列で二段表示（メインとサブ情報）が正しく描画されること', () => {
     const columnsWithSubKey = [
       { key: 'name', label: '名前' },

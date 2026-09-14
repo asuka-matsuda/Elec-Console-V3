@@ -4,19 +4,28 @@
  * ダッシュボード画面のコンポーネントです。各機能へのリンクやメニューをカード形式で一覧表示します。
  */
 import { useLocalStorage } from '@vueuse/core'
+import { computed } from 'vue'
 
 import { useAuth } from '~/composables/useAuth'
 import { menuData } from '~/constants/data/menuData'
 import type { DashboardData } from '~/types/components'
 
-const dashboardSections = menuData.filter(section => section.showInDashboard)
+const { currentUser, isAuthenticated, isMaster } = useAuth()
+
+const dashboardSections = computed(() => {
+  return menuData
+    .filter(section => section.showInDashboard)
+    .map(section => ({
+      ...section,
+      items: section.items.filter(item => !item.masterOnly || isMaster.value),
+    }))
+})
 
 const { data: dashboardData, pending: isDashboardPending } = await useFetch<DashboardData>('/api/dashboard', {
   lazy: true,
   default: () => ({ announcements: [], history: [] }),
 })
 
-const { currentUser, isAuthenticated } = useAuth()
 const lastSiteId = useLocalStorage('last-accessed-site', '')
 
 const getDynamicTo = (item: Record<string, unknown>) => {

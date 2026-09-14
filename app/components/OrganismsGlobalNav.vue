@@ -8,11 +8,19 @@ import { onMounted, onUnmounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { NuxtLink } from '#components'
+import { useAuth } from '~/composables/useAuth'
+import type { MenuItem } from '~/constants/data/menuData'
 import type { OrganismsGlobalNavProps } from '~/types/components'
 
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 
 defineProps<OrganismsGlobalNavProps>()
+
+const { isMaster } = useAuth()
+
+const getVisibleItems = (items: MenuItem[]) => {
+  return items.filter(item => !item.masterOnly || isMaster.value)
+}
 
 const closeSidebar = () => {
   isOpen.value = false
@@ -80,7 +88,7 @@ onMounted(() => {
         <div class="flex flex-col gap-[var(--space-1)]">
           <component
             :is="item.disabled ? 'button' : NuxtLink"
-            v-for="item in section.items"
+            v-for="item in getVisibleItems(section.items)"
             :key="item.href"
             :to="item.disabled ? undefined : item.href"
             :type="item.disabled ? 'button' : undefined"

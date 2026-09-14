@@ -96,8 +96,8 @@ const tooltipTitle = computed(() => {
 
 <template>
   <div
-    class="kairo-symbol relative z-0 inline-flex items-center justify-center leading-none"
-    :class="symbolPaths ? 'min-w-[2.5em] h-[2.5em] px-[0.4em]' : ''"
+    class="kairo-symbol relative z-0 inline-flex items-center justify-center"
+    :class="{ 'has-symbol': symbolPaths }"
     :title="tooltipTitle"
   >
     <!-- 背景透明の回路記号SVG -->
@@ -114,7 +114,7 @@ const tooltipTitle = computed(() => {
     </svg>
 
     <!-- 回路番号テキスト -->
-    <span class="relative z-[1] text-center whitespace-nowrap font-bold font-mono">
+    <span class="relative z-[1]">
       {{ displayText }}
     </span>
   </div>
@@ -122,10 +122,25 @@ const tooltipTitle = computed(() => {
 
 <style scoped lang="scss">
 .kairo-symbol {
+  line-height: 1;
   color: var(--color-text-main);
+
+  &.has-symbol {
+    min-width: 2.5em;
+    height: 2.5em;
+    padding-inline: 0.4em;
+  }
 
   svg {
     color: var(--color-text-muted);
+  }
+
+  span {
+    font-family: var(--font-mono);
+    font-size: inherit;
+    font-weight: var(--font-weight-normal, 400);
+    text-align: center;
+    white-space: nowrap;
   }
 }
 </style>

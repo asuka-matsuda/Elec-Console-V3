@@ -456,8 +456,8 @@ const {
 
     max-width: 100%;
 
-    font-size: var(--text-xs);
-    font-weight: var(--font-weight-medium);
+    font-size: inherit;
+    font-weight: var(--font-weight-normal, 400);
     line-height: 1.3;
     color: var(--color-text-main);
     white-space: pre-line;
@@ -469,7 +469,7 @@ const {
 
     max-width: 100%;
 
-    font-size: var(--text-xs);
+    font-size: inherit;
     color: var(--color-text-secondary);
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -488,7 +488,7 @@ const {
 
   &__label {
     font-size: 10px;
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-normal, 400);
     color: var(--color-text-secondary);
   }
 
@@ -500,8 +500,8 @@ const {
 
   &__val {
     font-family: var(--font-mono);
-    font-size: var(--text-sm);
-    font-weight: var(--font-weight-bold);
+    font-size: inherit;
+    font-weight: var(--font-weight-normal, 400);
     color: var(--color-text-main);
 
     &.is-active {
@@ -553,18 +553,18 @@ const {
   gap: 4px;
   align-items: center;
 
-  font-size: var(--text-xs);
+  font-size: inherit;
   color: var(--color-status-warning);
 
   &--strong {
-    font-weight: var(--font-weight-bold, 700);
+    font-weight: var(--font-weight-normal, 400);
   }
 }
 
 .souden-worker-cell {
   &__worker {
-    font-size: var(--text-xs);
-    font-weight: var(--font-weight-bold);
+    font-size: inherit;
+    font-weight: var(--font-weight-normal, 400);
     color: var(--color-status-success);
   }
 

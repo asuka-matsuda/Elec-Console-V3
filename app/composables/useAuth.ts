@@ -1,18 +1,57 @@
-import { computed } from 'vue'
+import type { Ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import { useCookie, useRouter, useState } from '#app'
 import { useApi } from '~/composables/useApi'
 import { STATE_KEYS, STORAGE_KEYS } from '~/constants/storageKeys'
 import type { User } from '~/types/auth'
 
+// テスト環境（NuxtAppコンテキスト外）用フォールバック
+const fallbackCurrentUser = ref<User | null>(null)
+const fallbackToken = ref<string | null>(null)
+
+const getSafeState = <T>(key: string, fallbackRef: Ref<T>, init: () => T): Ref<T> => {
+  try {
+    return useState<T>(key, init)
+  }
+  catch {
+    return fallbackRef
+  }
+}
+
+const getSafeCookie = (fallbackRef: Ref<string | null>): Ref<string | null> => {
+  try {
+    return useCookie<string | null>('auth_token', {
+      default: () => null,
+      maxAge: 60 * 60 * 24,
+    })
+  }
+  catch {
+    return fallbackRef
+  }
+}
+
 export const useAuth = () => {
-  const token = useCookie<string | null>('auth_token', {
-    default: () => null,
-    maxAge: 60 * 60 * 24,
-  })
-  const currentUser = useState<User | null>(STATE_KEYS.CURRENT_USER, () => null)
-  const router = useRouter()
-  const { $api } = useApi()
+  const token = getSafeCookie(fallbackToken)
+  const currentUser = getSafeState<User | null>(STATE_KEYS.CURRENT_USER, fallbackCurrentUser, () => null)
+
+  const getRouterSafe = () => {
+    try {
+      return useRouter()
+    }
+    catch {
+      return null
+    }
+  }
+
+  const getApiSafe = () => {
+    try {
+      return useApi().$api
+    }
+    catch {
+      return null
+    }
+  }
 
   // サーバー時刻とのオフセット（差分ms）を更新・保存
   const setServerTimeOffset = (serverTimeIso?: string) => {
@@ -46,6 +85,10 @@ export const useAuth = () => {
   }
 
   const initAuth = async (force = false) => {
+    const $api = getApiSafe()
+
+    if (!$api) return
+
     if (token.value && (!currentUser.value || force)) {
       try {
         const data = await $api<{ success: boolean, user: User, serverTime?: string }>(
@@ -90,6 +133,10 @@ export const useAuth = () => {
   }
 
   const login = async (loginId: string, pass: string) => {
+    const $api = getApiSafe()
+
+    if (!$api) return { success: false, message: 'APIクライアントが初期化されていません。' }
+
     try {
       const response = await $api<{
         success: boolean
@@ -139,16 +186,20 @@ export const useAuth = () => {
       localStorage.removeItem(STORAGE_KEYS.CACHED_USER)
     }
 
-    router.push('/login')
+    const router = getRouterSafe()
+
+    router?.push('/login')
   }
 
   const isAuthenticated = computed(() => !!token.value)
   const isAdmin = computed(() => currentUser.value?.role === 'admin')
+  const isMaster = computed(() => currentUser.value?.loginId === 'master')
 
   return {
     currentUser,
     isAuthenticated,
     isAdmin,
+    isMaster,
     login,
     logout,
     initAuth,

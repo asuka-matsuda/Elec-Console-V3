@@ -4,6 +4,9 @@
  * [Atoms] テーブルのデータセル（2段組サブテキスト・整列・幅指定対応）。
  * AtomsTableTh と対になるセマンティックな td コンポーネントです。
  */
+import { onMounted } from 'vue'
+
+import { useNoBreakWords } from '~/composables/useNoBreakWords'
 import type { TableColumn } from '~/types/components'
 
 defineProps<{
@@ -13,17 +16,23 @@ defineProps<{
   subValue?: unknown
 }>()
 
-const formatDisplayText = (val: unknown): unknown => {
-  if (typeof val !== 'string') return val
+const { applyNoBreak, fetchWords } = useNoBreakWords()
 
-  // 英数字・数字間のハイフン（例: 1-1, A-2）を改行禁止ハイフン(\u2011)に置換して中途半端な改行を防止
-  return val.replace(/([a-zA-Z0-9])-([a-zA-Z0-9])/g, '$1\u2011$2')
+onMounted(() => {
+  fetchWords()
+})
+
+const formatDisplayText = (val: unknown): unknown => {
+  return applyNoBreak(val)
 }
 </script>
 
 <template>
   <td
-    class="p-2 truncate align-middle"
+    class="py-1.5 px-2 align-middle"
+    :class="{
+      truncate: !column.subKey && !$slots.default,
+    }"
     :style="{
       width: width || column.width,
       maxWidth: width || column.width,
@@ -33,7 +42,7 @@ const formatDisplayText = (val: unknown): unknown => {
     <slot :value="value" :sub-value="subValue">
       <div
         v-if="column.subKey"
-        class="stacked-cell flex flex-col leading-tight min-w-0"
+        class="stacked-cell flex flex-col gap-0.5 leading-tight min-w-0"
         :class="{
           'items-start text-left': !column.align || column.align === 'left',
           'items-center text-center': column.align === 'center',
@@ -64,7 +73,10 @@ td {
     color-mix(in srgb, var(--color-border) 70%, var(--color-text-muted) 30%);
 
   font-family: var(--font-mono);
+  font-size: var(--font-size-xs, 12px);
+  font-weight: var(--font-weight-normal, 400);
   font-variant-numeric: tabular-nums;
+  line-height: 1.3;
   color: var(--color-text-main);
 
   &:last-child {
@@ -72,15 +84,35 @@ td {
   }
 
   .main-text {
-    line-height: 1.3;
+    font-size: inherit;
+    font-weight: var(--font-weight-normal, 400);
+    line-height: inherit;
     color: var(--color-text-main);
     word-break: auto-phrase;
+    line-break: strict;
+    overflow-wrap: anywhere;
     white-space: normal;
   }
 
   .sub-text {
-    font-size: var(--font-size-2xs);
+    font-size: var(--font-size-2xs, 10px);
+    line-height: 1.2;
     color: var(--color-text-muted);
+  }
+
+  :deep(strong),
+  :deep(b) {
+    font-weight: var(--font-weight-normal, 400);
+  }
+
+  :deep(.btn) {
+    min-height: 2.2em;
+    padding-block: 0.25em;
+    padding-inline: 0.8em;
+
+    font-size: var(--font-size-xs, 12px);
+    font-weight: var(--font-weight-normal, 400);
+    letter-spacing: normal;
   }
 }
 </style>

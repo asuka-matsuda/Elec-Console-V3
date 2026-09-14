@@ -262,3 +262,20 @@ export async function requireSiteAccess(event: H3Event, siteId?: string): Promis
 
   return user
 }
+
+/**
+ * システム全体設定等の操作権限を持つマスターユーザー (loginId === 'master') か検証
+ */
+export async function requireMasterUser(event: H3Event): Promise<SafeUser> {
+  const user = await requireAuthUser(event)
+
+  if (!isSuperUser(user)) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: 'Forbidden',
+      message: 'マスター権限が必要です。',
+    })
+  }
+
+  return user
+}

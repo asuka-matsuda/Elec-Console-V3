@@ -11,30 +11,31 @@ const props = defineProps<{
   column: TableColumn<T>
   width?: string
   sortBy?: string
-  sortOrder?: 'asc' | 'desc'
+  sortOrder?: 'asc' | 'desc' | null
 }>()
 
 const emit = defineEmits<{
   (e: 'sort', column: TableColumn<T>): void
 }>()
 
-const isSorted = computed(() => props.sortBy === props.column.key)
+const isSorted = computed(() => Boolean(props.sortBy && props.sortBy === props.column.key && props.sortOrder !== null))
+const isSortable = computed(() => props.column.sortable !== false)
 
 const sortTitle = computed(() => {
-  if (!props.column.sortable) return undefined
-  if (!isSorted.value) return 'クリックで並び替え'
+  if (!isSortable.value) return undefined
+  if (!isSorted.value) return 'クリックで昇順に並べ替え'
 
-  return props.sortOrder === 'asc' ? 'クリックで降順' : 'クリックで昇順'
+  return props.sortOrder === 'asc' ? 'クリックで降順に並べ替え' : 'クリックで元の並び順に戻す'
 })
 
 const sortIconName = computed(() => {
-  if (!isSorted.value) return 'chevron-up'
+  if (!isSorted.value) return 'minus'
 
   return props.sortOrder === 'asc' ? 'chevron-up' : 'chevron-down'
 })
 
 const handleClick = () => {
-  if (props.column.sortable) {
+  if (isSortable.value) {
     emit('sort', props.column)
   }
 }
@@ -44,7 +45,7 @@ const handleClick = () => {
   <th
     class="sticky top-0 p-2 align-middle"
     :class="{
-      'is-sortable': column.sortable,
+      'is-sortable': isSortable,
       'is-sorted': isSorted,
     }"
     :style="{ width: width || column.width, textAlign: column.align }"
@@ -60,7 +61,7 @@ const handleClick = () => {
     >
       {{ column.label }}
       <AtomsIcon
-        v-if="column.sortable"
+        v-if="isSortable"
         :name="sortIconName"
         size="sm"
         class="sort-icon"
@@ -99,7 +100,7 @@ th {
       color: var(--color-text-main);
 
       .sort-icon:not(.is-active) {
-        opacity: 0.5;
+        opacity: 0.85;
       }
     }
   }
@@ -112,7 +113,7 @@ th {
   .sort-icon {
     flex-shrink: 0;
     color: var(--color-text-muted);
-    opacity: 0;
+    opacity: 0.45;
     transition: var(--transition-fast);
 
     &.is-active {

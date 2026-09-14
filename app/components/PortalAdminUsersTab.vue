@@ -370,12 +370,17 @@ const confirmResetPassword = async (row: User) => {
     display: flex;
     flex-direction: column;
     gap: var(--space-1);
+    align-items: center;
   }
 
   &__actions {
     display: flex;
+    flex-wrap: nowrap;
     gap: var(--space-2);
     align-items: center;
+    justify-content: center;
+
+    white-space: nowrap;
   }
 
   &__meta {
