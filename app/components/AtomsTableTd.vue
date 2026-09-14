@@ -12,6 +12,13 @@ defineProps<{
   value?: unknown
   subValue?: unknown
 }>()
+
+const formatDisplayText = (val: unknown): unknown => {
+  if (typeof val !== 'string') return val
+
+  // 英数字・数字間のハイフン（例: 1-1, A-2）を改行禁止ハイフン(\u2011)に置換して中途半端な改行を防止
+  return val.replace(/([a-zA-Z0-9])-([a-zA-Z0-9])/g, '$1\u2011$2')
+}
 </script>
 
 <template>
@@ -34,7 +41,7 @@ defineProps<{
         }"
       >
         <span class="main-text w-full">
-          {{ value ?? '-' }}
+          {{ formatDisplayText(value) ?? '-' }}
         </span>
         <span
           v-if="subValue"
