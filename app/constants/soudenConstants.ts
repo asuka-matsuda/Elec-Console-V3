@@ -5,7 +5,7 @@ import type { CircuitItem, OperationLogItem } from '~/types/souden'
  * フェーズ1：回路確認・増し締め テーブルカラム定義
  */
 export const PHASE1_TABLE_COLUMNS: TableColumn<CircuitItem>[] = [
-  { key: 'banMeisho', subKey: 'banShubetsu', label: '盤情報', sortable: true, minWidth: '100px', maxWidth: '220px' },
+  { key: 'banMeisho', subKey: 'banShubetsu', label: '盤情報', sortable: true, width: '95px', fixedWidth: true },
   { key: 'kairoBangou', label: '回路番号', sortable: true, width: '80px', fixedWidth: true, align: 'center' },
   { key: 'kairoMeisho', label: '回路名称', sortable: true, minWidth: '140px' },
   { key: 'cableList', label: '配線 / 接地', sortable: true, minWidth: '120px', maxWidth: '240px' },
@@ -19,7 +19,7 @@ export const PHASE1_TABLE_COLUMNS: TableColumn<CircuitItem>[] = [
  * フェーズ2：絶縁抵抗測定 テーブルカラム定義
  */
 export const PHASE2_TABLE_COLUMNS: TableColumn<CircuitItem>[] = [
-  { key: 'banMeisho', subKey: 'banShubetsu', label: '盤情報', sortable: true, minWidth: '100px', maxWidth: '220px' },
+  { key: 'banMeisho', subKey: 'banShubetsu', label: '盤情報', sortable: true, width: '95px', fixedWidth: true },
   { key: 'kairoBangou', label: '回路番号', sortable: true, width: '80px', fixedWidth: true, align: 'center' },
   { key: 'kairoMeisho', label: '回路名称', sortable: true, minWidth: '140px' },
   { key: 'zetsuenR', label: '測定1', sortable: true, width: '100px', fixedWidth: true, align: 'center' },
@@ -34,7 +34,7 @@ export const PHASE2_TABLE_COLUMNS: TableColumn<CircuitItem>[] = [
  * フェーズ3：送電・電圧測定 テーブルカラム定義
  */
 export const PHASE3_TABLE_COLUMNS: TableColumn<CircuitItem>[] = [
-  { key: 'banMeisho', subKey: 'banShubetsu', label: '盤情報', sortable: true, minWidth: '100px', maxWidth: '220px' },
+  { key: 'banMeisho', subKey: 'banShubetsu', label: '盤情報', sortable: true, width: '95px', fixedWidth: true },
   { key: 'kairoBangou', label: '回路番号', sortable: true, width: '80px', fixedWidth: true, align: 'center' },
   { key: 'kairoMeisho', label: '回路名称', sortable: true, minWidth: '140px' },
   { key: 'denatsuRs', label: '電圧1', sortable: true, width: '75px', fixedWidth: true, align: 'center' },
