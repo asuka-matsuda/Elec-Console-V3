@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * AtomsProgressBar
- * [Atoms] 汎用プログレスバーコンポーネント（最小パーツ）
+ * [Portal Atoms] プログレスバーコンポーネント（最小パーツ）
  */
 import { computed } from 'vue'
 

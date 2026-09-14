@@ -30,7 +30,7 @@ const updateValue = (value: T, disabled?: boolean) => {
     <label
       v-for="option in options"
       :key="String(option.value)"
-      class="relative z-[1] inline-flex items-center justify-center py-1 px-3 item"
+      class="relative z-[1] inline-flex items-center justify-center item"
       :class="{
         'is-active': isSelected(option.value),
         'is-disabled': option.disabled,
@@ -65,10 +65,11 @@ const updateValue = (value: T, disabled?: boolean) => {
     cursor: pointer;
     user-select: none;
 
+    padding: 0.3em 0.8em;
     border: var(--border-width-base) solid transparent;
     border-radius: var(--radius-sm);
 
-    font-size: var(--font-size-base);
+    font-size: inherit;
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
 

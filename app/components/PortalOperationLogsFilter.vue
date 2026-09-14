@@ -21,44 +21,44 @@ defineProps<{
 </script>
 
 <template>
-  <AtomsPanel class="portal-operation-logs-filter">
-    <div class="logs-filters__group">
+  <AtomsPanel class="flex flex-wrap items-center gap-4 px-4 py-3">
+    <div class="flex items-center gap-2">
       <label class="logs-filters__label">作業者:</label>
       <AtomsSelect
         v-model="selectedWorker"
         :options="workerOptions"
-        class="logs-filters__select"
+        class="min-w-[140px]"
       />
     </div>
 
-    <div class="logs-filters__group">
+    <div class="flex items-center gap-2">
       <label class="logs-filters__label">アクション:</label>
       <AtomsSelect
         v-model="selectedAction"
         :options="actionOptions"
-        class="logs-filters__select"
+        class="min-w-[140px]"
       />
     </div>
 
-    <div class="logs-filters__group">
+    <div class="flex items-center gap-2">
       <label class="logs-filters__label">盤:</label>
       <AtomsSelect
         v-model="selectedTargetBan"
         :options="targetBanOptions"
-        class="logs-filters__select"
+        class="min-w-[140px]"
       />
     </div>
 
-    <div class="logs-filters__group">
+    <div class="flex items-center gap-2">
       <label class="logs-filters__label">表示件数:</label>
       <AtomsSelect
         v-model="limit"
         :options="OPERATION_LOG_LIMIT_OPTIONS"
-        class="logs-filters__select logs-filters__select--sm"
+        class="min-w-[90px]"
       />
     </div>
 
-    <div class="logs-filters__badge">
+    <div class="w-full md:w-auto md:ml-auto">
       <AtomsBadge color="var(--theme-accent)">
         取得件数: {{ logCount }} 件
       </AtomsBadge>
@@ -67,44 +67,10 @@ defineProps<{
 </template>
 
 <style scoped lang="scss">
-.portal-operation-logs-filter {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-4);
-  align-items: center;
-
-  padding: var(--space-3) var(--space-4);
-}
-
-.logs-filters {
-  &__group {
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
-  }
-
-  &__label {
-    font-size: var(--text-xs);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-secondary);
-    white-space: nowrap;
-  }
-
-  &__select {
-    min-width: 140px;
-
-    &--sm {
-      min-width: 90px;
-    }
-  }
-
-  &__badge {
-    margin-left: auto;
-
-    @include mq("md") {
-      width: 100%;
-      margin-left: 0;
-    }
-  }
+.logs-filters__label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
 }
 </style>

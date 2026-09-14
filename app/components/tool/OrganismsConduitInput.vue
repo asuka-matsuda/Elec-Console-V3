@@ -108,10 +108,9 @@ const currentCablesUI = computed(() => {
       <div class="flex items-center justify-end py-[var(--space-1)]">
         <AtomsButton
           variant="secondary"
-          size="sm"
           @click="emit('add-cable')"
         >
-          <AtomsIcon name="plus" size="sm" />
+          <AtomsIcon name="plus" />
           <span>ケーブルを追加</span>
         </AtomsButton>
       </div>
@@ -153,13 +152,12 @@ const currentCablesUI = computed(() => {
           <div class="flex justify-center items-center">
             <AtomsButton
               variant="danger"
-              size="sm"
               icon-only
               :disabled="inputs.inputCables.length <= 1"
               aria-label="削除"
               @click="emit('remove-cable', row.id)"
             >
-              <AtomsIcon name="trash-2" size="sm" />
+              <AtomsIcon name="trash-2" />
             </AtomsButton>
           </div>
         </template>

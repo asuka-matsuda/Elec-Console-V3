@@ -23,7 +23,7 @@ const selectTab = (option: TabOption<T>) => {
       v-for="option in options"
       :key="String(option.value)"
       type="button"
-      class="relative z-[1] flex items-center justify-center gap-2 py-2 px-4 tabs__item"
+      class="relative z-[1] flex items-center justify-center gap-2 tabs__item"
       :class="{
         'is-active': model === option.value,
       }"
@@ -44,10 +44,11 @@ const selectTab = (option: TabOption<T>) => {
   cursor: pointer;
   user-select: none;
 
+  padding: 0.4em 0.9em;
   border: var(--border-width-base) solid var(--color-border);
   border-radius: var(--radius-sm);
 
-  font-size: var(--font-size-sm);
+  font-size: inherit;
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
 

@@ -31,7 +31,7 @@ defineEmits<{
 </script>
 
 <template>
-  <div class="portal-phase-exam-template">
+  <div class="flex flex-1 flex-col gap-4 min-h-0">
     <!-- ページヘッダー -->
     <MoleculesSectionHeader
       :title="title"
@@ -60,26 +60,8 @@ defineEmits<{
     </PortalSoudenPhaseControls>
 
     <!-- メインコンテンツ（各フェーズのテーブル等） -->
-    <main class="portal-phase-exam-template__main">
+    <main class="flex flex-1 flex-col min-h-0">
       <slot />
     </main>
   </div>
 </template>
-
-<style scoped lang="scss">
-.portal-phase-exam-template {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: var(--space-4);
-
-  min-height: 0;
-
-  &__main {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    min-height: 0;
-  }
-}
-</style>

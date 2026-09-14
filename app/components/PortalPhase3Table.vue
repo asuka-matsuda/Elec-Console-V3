@@ -153,7 +153,7 @@ const {
 
 <template>
   <PortalSoudenCircuitTable
-    class="portal-phase3-table"
+    class="flex-1 min-h-[400px]"
     :columns="PHASE3_TABLE_COLUMNS"
     :circuits="sortedCircuits"
     :full-circuits="fullCircuits || circuits"
@@ -166,7 +166,7 @@ const {
   >
     <!-- 回路番号 -->
     <template #cell-kairoBangou="{ row: circuit }">
-      <div class="phase3-cell__bangou-wrap">
+      <div class="flex flex-col items-center justify-center gap-[3px]">
         <AtomsBadge :color="isThreePhase(circuit) ? 'var(--color-status-warning)' : 'var(--color-text-muted)'">
           {{ isThreePhase(circuit) ? '動力' : '電灯' }}
         </AtomsBadge>
@@ -187,7 +187,7 @@ const {
     <!-- 電圧 1 (RS / RN) -->
     <template #cell-denatsuRs="{ row: circuit }">
       <template v-if="editingRowId === circuit.id">
-        <div class="phase3-input-cell">
+        <div class="flex flex-col items-center gap-[2px] text-2xs">
           <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label1 }}</span>
           <MoleculesInputGroup addon="V" style="width: 80px;">
             <AtomsInput
@@ -201,9 +201,9 @@ const {
           </MoleculesInputGroup>
         </div>
       </template>
-      <div v-else class="phase3-volt-cell">
+      <div v-else class="flex flex-col items-center gap-1">
         <span class="phase3-volt-cell__label">{{ getPhaseLabels(circuit).label1 }}</span>
-        <div class="phase3-volt-cell__val-group">
+        <div class="flex items-baseline gap-[2px]">
           <span
             class="phase3-volt-cell__val"
             :class="{ 'is-active': circuit.denatsuRs !== null && circuit.denatsuRs !== undefined }"
@@ -218,7 +218,7 @@ const {
     <!-- 電圧 2 (ST / TN) -->
     <template #cell-denatsuSt="{ row: circuit }">
       <template v-if="editingRowId === circuit.id">
-        <div class="phase3-input-cell">
+        <div class="flex flex-col items-center gap-[2px] text-2xs">
           <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label2 }}</span>
           <MoleculesInputGroup addon="V" style="width: 80px;">
             <AtomsInput
@@ -232,9 +232,9 @@ const {
           </MoleculesInputGroup>
         </div>
       </template>
-      <div v-else class="phase3-volt-cell">
+      <div v-else class="flex flex-col items-center gap-1">
         <span class="phase3-volt-cell__label">{{ getPhaseLabels(circuit).label2 }}</span>
-        <div class="phase3-volt-cell__val-group">
+        <div class="flex items-baseline gap-[2px]">
           <span
             class="phase3-volt-cell__val"
             :class="{ 'is-active': circuit.denatsuSt !== null && circuit.denatsuSt !== undefined }"
@@ -249,7 +249,7 @@ const {
     <!-- 電圧 3 (RT / RT) -->
     <template #cell-denatsuRt="{ row: circuit }">
       <template v-if="editingRowId === circuit.id">
-        <div class="phase3-input-cell">
+        <div class="flex flex-col items-center gap-[2px] text-2xs">
           <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label3 }}</span>
           <MoleculesInputGroup addon="V" style="width: 80px;">
             <AtomsInput
@@ -263,9 +263,9 @@ const {
           </MoleculesInputGroup>
         </div>
       </template>
-      <div v-else class="phase3-volt-cell">
+      <div v-else class="flex flex-col items-center gap-1">
         <span class="phase3-volt-cell__label">{{ getPhaseLabels(circuit).label3 }}</span>
-        <div class="phase3-volt-cell__val-group">
+        <div class="flex items-baseline gap-[2px]">
           <span
             class="phase3-volt-cell__val"
             :class="{ 'is-active': circuit.denatsuRt !== null && circuit.denatsuRt !== undefined }"
@@ -313,22 +313,21 @@ const {
 
     <!-- 操作 -->
     <template #cell-actions="{ row: circuit }">
-      <div class="phase3-actions">
+      <div class="flex items-center justify-center gap-1">
         <!-- 幹線未完了による操作不可 -->
         <template v-if="isCircuitLocked(circuit)">
-          <span class="text-note text-note--strong">⏸ 幹線未了</span>
+          <span class="text-note text-note--strong inline-flex items-center gap-1">⏸ 幹線未了</span>
         </template>
 
         <!-- 前フェーズ（P2）未完了による操作不可 -->
         <template v-else-if="!isP2Complete(circuit)">
-          <span class="text-note text-note--strong">⏸ P2未了</span>
+          <span class="text-note text-note--strong inline-flex items-center gap-1">⏸ P2未了</span>
         </template>
 
         <!-- 手入力編集モード中 -->
         <template v-else-if="editingRowId === circuit.id">
           <AtomsButton
             variant="success"
-            size="sm"
             :loading="isActionLoading[circuit.id]"
             @click="saveInput(circuit)"
           >
@@ -336,7 +335,6 @@ const {
           </AtomsButton>
           <AtomsButton
             variant="secondary"
-            size="sm"
             @click="cancelInput"
           >
             取消
@@ -347,7 +345,6 @@ const {
         <template v-else-if="isComplete(circuit)">
           <AtomsButton
             variant="danger"
-            size="sm"
             :loading="isActionLoading[circuit.id]"
             @click="$emit('clear', circuit)"
           >
@@ -355,7 +352,6 @@ const {
           </AtomsButton>
           <AtomsButton
             variant="secondary"
-            size="sm"
             @click="startInput(circuit)"
           >
             変更
@@ -366,7 +362,6 @@ const {
         <template v-else>
           <AtomsButton
             variant="primary"
-            size="sm"
             :disabled="circuit.isExcluded"
             :loading="isActionLoading[circuit.id]"
             @click="handleQuickStandard(circuit)"
@@ -375,7 +370,6 @@ const {
           </AtomsButton>
           <AtomsButton
             variant="secondary"
-            size="sm"
             :disabled="circuit.isExcluded"
             @click="startInput(circuit)"
           >
@@ -397,11 +391,6 @@ const {
 </template>
 
 <style scoped lang="scss">
-.portal-phase3-table {
-  flex: 1;
-  min-height: 400px;
-}
-
 :deep(.phase3-row) {
   transition: var(--transition-colors);
 
@@ -424,33 +413,6 @@ const {
 }
 
 .phase3-cell {
-  &__bangou-wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    align-items: center;
-    justify-content: center;
-  }
-
-  &__type-badge {
-    display: inline-block;
-
-    padding: 2px 8px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-
-    font-size: 10px;
-    color: var(--color-text-muted);
-
-    background-color: var(--color-bg-hover);
-
-    &.is-three {
-      border-color: color-mix(in srgb, var(--color-status-warning) 30%, transparent);
-      color: var(--color-status-warning);
-      background-color: color-mix(in srgb, var(--color-status-warning) 10%, transparent);
-    }
-  }
-
   &__meisho {
     display: block;
 
@@ -481,21 +443,10 @@ const {
 }
 
 .phase3-volt-cell {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  align-items: center;
-
   &__label {
     font-size: 10px;
     font-weight: var(--font-weight-normal, 400);
     color: var(--color-text-secondary);
-  }
-
-  &__val-group {
-    display: flex;
-    gap: 2px;
-    align-items: baseline;
   }
 
   &__val {
@@ -517,42 +468,13 @@ const {
 }
 
 .phase3-input-cell {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  align-items: center;
-
-  font-size: var(--font-size-2xs);
-
   &__label {
     font-size: 10px;
     color: var(--color-text-secondary);
   }
-
-  &__box {
-    display: flex;
-    gap: 2px;
-    align-items: center;
-  }
-
-  &__unit {
-    font-size: 10px;
-    color: var(--color-text-secondary);
-  }
-}
-
-.phase3-actions {
-  display: flex;
-  gap: var(--space-1);
-  align-items: center;
-  justify-content: center;
 }
 
 .text-note {
-  display: inline-flex;
-  gap: 4px;
-  align-items: center;
-
   font-size: inherit;
   color: var(--color-status-warning);
 

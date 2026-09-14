@@ -83,7 +83,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 </script>
 
 <template>
-  <div class="calendar-wrapper">
+  <div class="flex flex-col gap-3">
     <PortalCalToolbar
       :title="currentTitle"
       :current-view="currentView"
@@ -126,12 +126,6 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 </template>
 
 <style scoped lang="scss">
-.calendar-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
 .calendar {
   --fc-border-color: var(--color-border);
   --fc-page-bg-color: transparent;

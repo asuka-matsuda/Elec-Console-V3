@@ -85,7 +85,7 @@ defineExpose({
     <!-- モバイル開閉ハンドル -->
     <button
       type="button"
-      class="handle hidden max-md:flex items-center justify-between w-full h-12 px-3 cursor-pointer text-sm font-bold leading-tight"
+      class="handle hidden max-md:flex items-center justify-between w-full h-12 px-3 cursor-pointer font-bold leading-tight"
       :aria-expanded="isOpen"
       aria-label="計算結果ドロワーの開閉"
       @click="toggleDrawer"
@@ -110,16 +110,14 @@ defineExpose({
             <AtomsButton
               v-if="isBasisAvailable"
               variant="secondary"
-              size="sm"
               @click="handleOpenBasis"
             >
-              <AtomsIcon name="help-circle" size="sm" />
+              <AtomsIcon name="help-circle" />
               計算根拠
             </AtomsButton>
             <AtomsButton
               v-if="saveFunction"
               :variant="saveButtonVariant"
-              size="sm"
               :disabled="saveDisabled || saveState !== 'idle'"
               :loading="saveState === 'saving'"
               @click="handleSave"
@@ -127,7 +125,6 @@ defineExpose({
               <AtomsIcon
                 v-if="saveState !== 'saving'"
                 :name="saveButtonContent.icon"
-                size="sm"
               />
               {{ saveButtonContent.text }}
             </AtomsButton>
@@ -169,7 +166,7 @@ defineExpose({
 
   .handle {
     border: none;
-    font: inherit;
+    font-size: var(--font-size-sm);
     color: var(--color-category-tool);
     background: color-mix(
       in srgb,

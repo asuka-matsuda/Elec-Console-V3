@@ -89,26 +89,24 @@ const shubetsuTabOptions = computed(() => {
 
       <AtomsButton
         variant="primary"
-        size="sm"
         :loading="isBatchLoading"
         @click="batchConfirmPhase2(100)"
       >
-        <AtomsIcon name="check-check" size="sm" />
+        <AtomsIcon name="check-check" />
         一括 100MΩ(OK) 確定
       </AtomsButton>
 
       <AtomsButton
         :to="`/portal/${siteId}/souden`"
         variant="secondary"
-        size="sm"
       >
-        <AtomsIcon name="arrow-left" size="sm" />
+        <AtomsIcon name="arrow-left" />
         ダッシュボードへ戻る
       </AtomsButton>
     </template>
 
     <template #filters-extra>
-      <div class="phase2-threshold">
+      <div class="phase2-threshold flex items-center gap-1 py-0.5 px-2.5">
         <span class="phase2-threshold__label">基準値: ≧</span>
         <span class="phase2-threshold__val">{{ phase2ThresholdMegOhm.toFixed(1) }}</span>
         <span class="phase2-threshold__unit">MΩ</span>
@@ -131,16 +129,9 @@ const shubetsuTabOptions = computed(() => {
 
 <style scoped lang="scss">
 .phase2-threshold {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-
-  padding: 2px 10px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-
-  font-size: var(--text-xs);
-
+  font-size: var(--font-size-xs);
   background-color: var(--color-bg-hover);
 
   &__label {

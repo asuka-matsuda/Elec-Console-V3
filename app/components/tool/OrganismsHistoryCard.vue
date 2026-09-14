@@ -86,7 +86,7 @@ const weightResult = computed(() => {
     <header class="flex items-end justify-between pb-2">
       <div class="flex flex-col gap-1 min-w-0">
         <span class="text-date font-medium">{{ entry.timestamp }}</span>
-        <h3 class="flex items-center gap-2 text-sm font-bold text-title m-0">
+        <h3 class="flex items-center gap-2 font-bold text-title m-0">
           <span>{{ entry.toolName }}</span>
           <AtomsBadge v-if="entry.mode === 'サイズ選定'" color="var(--color-category-tool)">
             {{ entry.mode }}
@@ -135,10 +135,10 @@ const weightResult = computed(() => {
 
           <!-- フォールバック: 汎用結果リスト -->
           <template v-else>
-            <h4 class="section-title text-xs font-bold pl-1 m-0">
+            <h4 class="section-title font-bold pl-1 m-0">
               計算結果
             </h4>
-            <dl class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm list-desc m-0">
+            <dl class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 list-desc m-0">
               <template v-for="(res, idx) in entry.results" :key="idx">
                 <dt
                   class="whitespace-nowrap"
@@ -166,10 +166,10 @@ const weightResult = computed(() => {
 
       <!-- 2. 入力条件セクション -->
       <section class="flex flex-col gap-1 min-h-0">
-        <h4 class="section-title text-xs font-bold pl-1 m-0">
+        <h4 class="section-title font-bold pl-1 m-0">
           入力条件
         </h4>
-        <dl class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm list-desc m-0">
+        <dl class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 list-desc m-0">
           <template v-for="(input, idx) in entry.inputs" :key="idx">
             <dt class="whitespace-nowrap">
               {{ input.label }}
@@ -186,12 +186,11 @@ const weightResult = computed(() => {
     <footer class="flex items-center justify-end mt-auto pt-2">
       <AtomsButton
         variant="danger"
-        size="sm"
         icon-only
         aria-label="履歴を削除"
         @click.prevent="handleDelete"
       >
-        <AtomsIcon name="trash-2" size="sm" />
+        <AtomsIcon name="trash-2" />
       </AtomsButton>
     </footer>
   </AtomsPanel>
@@ -209,15 +208,18 @@ const weightResult = computed(() => {
   }
 
   .text-title {
+    font-size: var(--font-size-sm);
     color: var(--color-text-main);
   }
 
   .section-title {
     border-left: 2px solid var(--color-category-tool);
+    font-size: var(--font-size-xs);
     color: var(--color-text-main);
   }
 
   .list-desc {
+    font-size: var(--font-size-sm);
     color: var(--color-text-muted);
   }
 

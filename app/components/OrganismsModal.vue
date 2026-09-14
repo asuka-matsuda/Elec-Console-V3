@@ -111,10 +111,10 @@ onMounted(() => {
         :variant="variant"
       />
       <div
-        class="overflow-y-auto flex flex-1 flex-col gap-[var(--space-3)] min-h-0 modal-body"
-        :class="align === 'center' ? 'text-center' : undefined"
+        class="overflow-y-auto flex flex-1 flex-col gap-3 min-h-0 modal-body"
+        :class="{ 'text-center': align === 'center' }"
       >
-        <div v-if="errorMsg" class="px-[var(--space-3)] py-[var(--space-2)] modal-error">
+        <div v-if="errorMsg" class="px-3 py-2 modal-error">
           {{ errorMsg }}
         </div>
 

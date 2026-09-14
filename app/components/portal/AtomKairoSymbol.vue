@@ -97,7 +97,6 @@ const tooltipTitle = computed(() => {
 <template>
   <div
     class="kairo-symbol relative z-0 inline-flex items-center justify-center"
-    :class="{ 'has-symbol': symbolPaths }"
     :title="tooltipTitle"
   >
     <!-- 背景透明の回路記号SVG -->
@@ -122,25 +121,13 @@ const tooltipTitle = computed(() => {
 
 <style scoped lang="scss">
 .kairo-symbol {
+  min-width: 2.5em;
+  height: 2.5em;
+  padding-inline: 0.4em;
   line-height: 1;
-  color: var(--color-text-main);
-
-  &.has-symbol {
-    min-width: 2.5em;
-    height: 2.5em;
-    padding-inline: 0.4em;
-  }
 
   svg {
     color: var(--color-text-muted);
-  }
-
-  span {
-    font-family: var(--font-mono);
-    font-size: inherit;
-    font-weight: var(--font-weight-normal, 400);
-    text-align: center;
-    white-space: nowrap;
   }
 }
 </style>

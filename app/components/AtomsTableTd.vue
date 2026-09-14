@@ -73,7 +73,7 @@ td {
     color-mix(in srgb, var(--color-border) 70%, var(--color-text-muted) 30%);
 
   font-family: var(--font-mono);
-  font-size: var(--font-size-xs, 12px);
+  font-size: var(--font-size-xs);
   font-weight: var(--font-weight-normal, 400);
   font-variant-numeric: tabular-nums;
   line-height: 1.3;
@@ -95,7 +95,7 @@ td {
   }
 
   .sub-text {
-    font-size: var(--font-size-2xs, 10px);
+    font-size: 0.85em;
     line-height: 1.2;
     color: var(--color-text-muted);
   }
@@ -103,16 +103,6 @@ td {
   :deep(strong),
   :deep(b) {
     font-weight: var(--font-weight-normal, 400);
-  }
-
-  :deep(.btn) {
-    min-height: 2.2em;
-    padding-block: 0.25em;
-    padding-inline: 0.8em;
-
-    font-size: var(--font-size-xs, 12px);
-    font-weight: var(--font-weight-normal, 400);
-    letter-spacing: normal;
   }
 }
 </style>

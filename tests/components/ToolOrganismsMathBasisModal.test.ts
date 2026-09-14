@@ -33,7 +33,7 @@ describe('ToolOrganismsMathBasisModal.vue', () => {
       template: '<div class="section-header-stub">{{ title }}</div>',
     },
     AtomsButton: {
-      props: ['variant', 'size'],
+      props: ['variant'],
       template: '<button class="button-stub"><slot /></button>',
     },
     ClientOnly: {

@@ -70,8 +70,8 @@ provide('toolBasisModal', {
             size="md"
           >
             <template #actions>
-              <AtomsButton variant="danger" size="sm" @click="emit('reset')">
-                <AtomsIcon name="refresh-cw" size="sm" />
+              <AtomsButton variant="danger" @click="emit('reset')">
+                <AtomsIcon name="refresh-cw" />
                 リセット
               </AtomsButton>
             </template>

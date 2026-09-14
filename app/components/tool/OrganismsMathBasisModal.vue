@@ -97,7 +97,7 @@ const handleClose = () => {
     </div>
 
     <template #footer>
-      <AtomsButton variant="secondary" size="sm" @click="handleClose">
+      <AtomsButton variant="secondary" @click="handleClose">
         閉じる
       </AtomsButton>
     </template>

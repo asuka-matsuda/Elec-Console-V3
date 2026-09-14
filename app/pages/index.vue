@@ -82,17 +82,17 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
 </script>
 
 <template>
-  <div class="dashboard">
-    <div class="dashboard-main">
+  <div class="flex flex-col md:flex-row gap-section-gap items-start">
+    <div class="flex flex-1 flex-col gap-section-gap w-full min-w-0">
       <section
         v-for="section in dashboardSections"
         :key="section.heading"
-        class="dashboard-section"
+        class="flex flex-col gap-panel-gap"
         :style="`--theme-accent: var(--color-category-${section.accent || 'main'})`"
       >
         <MoleculesSectionHeader :title="section.heading" :icon="section.icon" />
 
-        <div class="menu-grid">
+        <div class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-panel-gap">
           <MoleculesDashboardMenuTile
             v-for="item in section.items"
             :key="item.text"
@@ -106,9 +106,9 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
       </section>
     </div>
 
-    <aside class="dashboard-aside">
-      <div class="flex flex-col gap-[var(--space-section-gap)]">
-        <section class="flex flex-col gap-[var(--space-panel-gap)]">
+    <aside class="w-full md:w-sidebar-w md:sticky md:top-layout-pad md:overflow-y-auto shrink-0 md:max-h-[calc(100dvh-var(--space-layout-pad)*2)]">
+      <div class="flex flex-col gap-section-gap">
+        <section class="flex flex-col gap-panel-gap">
           <MoleculesSectionHeader title="お知らせ" icon="bell" size="md" />
           <MoleculesInfoCard
             :items="dashboardData?.announcements"
@@ -118,7 +118,7 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
           />
         </section>
 
-        <section class="flex flex-col gap-[var(--space-panel-gap)]">
+        <section class="flex flex-col gap-panel-gap">
           <MoleculesSectionHeader title="更新履歴" icon="clock" size="md" />
           <MoleculesInfoCard
             :items="dashboardData?.history"
@@ -141,52 +141,3 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
     </aside>
   </div>
 </template>
-
-<style scoped lang="scss">
-.dashboard {
-  display: flex;
-  gap: var(--space-section-gap);
-  align-items: flex-start;
-
-  @include cq("md") {
-    flex-direction: column;
-  }
-
-  &-main {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: var(--space-section-gap);
-  }
-
-  &-aside {
-    position: sticky;
-    top: var(--space-layout-pad);
-
-    overflow-y: auto;
-    flex-shrink: 0;
-
-    width: var(--sidebar-width);
-    max-height: calc(100dvh - var(--space-layout-pad) * 2);
-
-    @include mq("md") {
-      position: static;
-      overflow-y: visible;
-      width: 100%;
-      max-height: none;
-    }
-  }
-
-  &-section {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-panel-gap);
-  }
-}
-
-.menu-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--space-panel-gap);
-}
-</style>

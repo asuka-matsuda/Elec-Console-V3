@@ -85,7 +85,7 @@ const closeModal = () => {
     :title="isEditing ? '予定の編集' : '新しい予定'"
     @update:model-value="emit('update:modelValue', $event)"
   >
-    <div class="event-form">
+    <div class="flex flex-col gap-3">
       <MoleculesFormGroup
         label="タイトル"
         required
@@ -105,7 +105,7 @@ const closeModal = () => {
         />
       </MoleculesFormGroup>
 
-      <div class="event-form__row">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <MoleculesFormGroup label="開始日時" required>
           <AtomsInput
             :key="'start-' + form.allDay"
@@ -130,7 +130,7 @@ const closeModal = () => {
       <AtomsButton
         v-if="isEditing"
         variant="danger"
-        style="margin-right: auto"
+        class="mr-auto"
         @click="handleDelete"
       >
         削除
@@ -144,21 +144,3 @@ const closeModal = () => {
     </template>
   </OrganismsModal>
 </template>
-
-<style scoped lang="scss">
-.event-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-
-  &__row {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-2);
-
-    @include mq("sm") {
-      grid-template-columns: 1fr;
-    }
-  }
-}
-</style>

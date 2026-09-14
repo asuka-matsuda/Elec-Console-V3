@@ -49,8 +49,8 @@ const categoryColorMap: Record<string, string> = {
 </script>
 
 <template>
-  <div class="glossary-view">
-    <aside class="filter-sidebar">
+  <div class="glossary-view flex flex-1 flex-col gap-card-gap max-w-[1400px] min-h-0">
+    <aside class="shrink-0">
       <OrganismsFilterPanel
         v-model:search-query="searchQuery"
         v-model:active-cats="activeCats"
@@ -66,17 +66,17 @@ const categoryColorMap: Record<string, string> = {
       </OrganismsFilterPanel>
     </aside>
 
-    <div class="glossary-main">
-      <div v-if="filteredGlossary.length > 0" class="glossary-list">
+    <div class="flex flex-1 flex-col min-w-0 min-h-0">
+      <div v-if="filteredGlossary.length > 0" class="flex flex-col gap-card-gap">
         <AtomsPanel
           v-for="item in filteredGlossary"
           :key="item.term"
           as="article"
-          class="glossary-item"
+          class="relative z-[1] flex flex-col glossary-item"
           :style="{ '--item-accent': categoryColorMap[item.category] }"
         >
-          <header class="item-header">
-            <div class="item-title">
+          <header class="flex items-center justify-between gap-2 pb-1 item-header">
+            <div class="flex flex-col gap-1">
               <span class="item-kana">{{ item.kana }}</span>
               <h2 class="item-term">
                 {{ item.term }}
@@ -87,19 +87,19 @@ const categoryColorMap: Record<string, string> = {
             </AtomsBadge>
           </header>
 
-          <div class="item-body">
+          <div class="flex flex-col gap-1">
             <p class="item-desc">
               {{ item.desc }}
             </p>
 
-            <div v-if="item.related" class="item-meta">
+            <div v-if="item.related" class="flex flex-col gap-1 p-3 item-meta">
               <span class="meta-label">関連用語</span>
               <p class="meta-text">
                 {{ item.related }}
               </p>
             </div>
 
-            <div v-if="item.example" class="item-meta">
+            <div v-if="item.example" class="flex flex-col gap-1 p-3 item-meta">
               <span class="meta-label">用例・備考</span>
               <p class="meta-text">
                 {{ item.example }}
@@ -126,51 +126,13 @@ const categoryColorMap: Record<string, string> = {
   --trade-color-hvac: var(--color-status-success);
   --trade-color-plumbing: var(--color-category-tool);
   --trade-color-trivia: var(--color-category-reference);
-
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: var(--space-card-gap);
-
-  max-width: 1400px;
-  min-height: 0;
-}
-
-.filter-sidebar {
-  flex-shrink: 0;
-}
-
-.glossary-main {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-
-  min-width: 0;
-  min-height: 0;
-}
-
-.glossary-list {
-  display: flex;
-  flex-direction: column;
 }
 
 .glossary-item {
-  position: relative;
-  z-index: 1;
-
-  display: flex;
-  flex-direction: column;
-
   transition: var(--transition-base);
 }
 
 .item-header {
-  display: flex;
-  gap: var(--space-2);
-  align-items: center;
-  justify-content: space-between;
-
-  padding-bottom: var(--space-1);
   border-bottom: var(--border-width-base) solid transparent;
   border-image: linear-gradient(
       to right,
@@ -181,21 +143,9 @@ const categoryColorMap: Record<string, string> = {
     1;
 }
 
-.item-title {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-}
-
 .item-kana {
   font-size: var(--font-size-2xs);
   color: var(--color-text-muted);
-}
-
-.item-body {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
 }
 
 .item-desc {
@@ -206,11 +156,6 @@ const categoryColorMap: Record<string, string> = {
 }
 
 .item-meta {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-
-  padding: var(--space-3);
   border: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 30%, transparent);
   border-radius: var(--radius-sm);
 }

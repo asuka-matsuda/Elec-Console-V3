@@ -22,7 +22,7 @@ const { currentUser, logout } = useAuth()
 <template>
   <header class="relative z-10 flex h-16 items-center justify-between px-[var(--space-layout-pad)] header">
     <!-- 左側: メインナビゲーション部 -->
-    <div class="flex items-center gap-3 main">
+    <div class="flex items-center gap-3">
       <MoleculesIconButton
         name="menu"
         class="inline-flex"
@@ -38,10 +38,10 @@ const { currentUser, logout } = useAuth()
     </div>
 
     <!-- 右側: アクション & ユーザー情報部 -->
-    <div class="flex items-center gap-3 actions">
+    <div class="flex items-center gap-3">
       <slot name="actions" />
 
-      <div class="flex items-center gap-2 user-info">
+      <div class="flex items-center gap-2">
         <div class="flex shrink-0 items-center justify-center w-8 h-8 rounded-full avatar" aria-hidden="true">
           <AtomsIcon
             name="user"
@@ -49,12 +49,11 @@ const { currentUser, logout } = useAuth()
             class="avatar__icon"
           />
         </div>
-        <span class="font-bold text-sm leading-tight max-md:hidden user-name">
+        <span class="font-bold leading-tight max-md:hidden user-name">
           {{ currentUser ? `${currentUser.lastName} ${currentUser.firstName}` : 'ゲスト' }}
         </span>
         <AtomsButton
           variant="secondary"
-          size="sm"
           @click="logout"
         >
           ログアウト
@@ -87,6 +86,7 @@ const { currentUser, logout } = useAuth()
 }
 
 .user-name {
+  font-size: var(--font-size-sm);
   color: var(--color-text-main);
 }
 </style>

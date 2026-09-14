@@ -49,7 +49,7 @@ const badgeColor = computed(() => props.color || 'var(--theme-accent)')
     >
       {{ timeText }}
     </span>
-    <span class="min-w-0 flex-1 truncate font-mono text-xs tabular-nums text-[var(--color-text-main)]">
+    <span class="cal-badge-title min-w-0 flex-1 truncate font-mono tabular-nums text-[var(--color-text-main)]">
       {{ title }}
     </span>
   </div>
@@ -68,5 +68,9 @@ const badgeColor = computed(() => props.color || 'var(--theme-accent)')
 .cal-badge-time {
   font-size: var(--font-size-2xs);
   color: var(--badge-color-dim);
+}
+
+.cal-badge-title {
+  font-size: var(--font-size-xs);
 }
 </style>

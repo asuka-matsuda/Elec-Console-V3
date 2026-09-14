@@ -42,10 +42,10 @@ const getActionBadgeColor = (action: unknown) => {
 </script>
 
 <template>
-  <div class="portal-operation-logs-table">
+  <div class="flex flex-1 flex-col min-h-0">
     <MoleculesTable
       v-if="logs.length > 0"
-      class="operation-logs__table"
+      class="flex-1 min-h-[400px]"
       :columns="OPERATION_LOG_COLUMNS"
       :data="logs"
     >
@@ -80,7 +80,7 @@ const getActionBadgeColor = (action: unknown) => {
       </template>
 
       <template #cell-details="{ value }">
-        <span class="logs-cell__details">
+        <span class="truncate block max-w-[300px] logs-cell__details">
           {{ value || '-' }}
         </span>
       </template>
@@ -97,53 +97,34 @@ const getActionBadgeColor = (action: unknown) => {
 </template>
 
 <style scoped lang="scss">
-.portal-operation-logs-table {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  min-height: 0;
-}
-
-.operation-logs__table {
-  flex: 1;
-  min-height: 400px;
-}
-
 .logs-cell {
   &__time {
     font-family: var(--font-mono);
-    font-size: var(--text-xs);
+    font-size: var(--font-size-xs);
     color: var(--color-text-secondary);
     white-space: nowrap;
   }
 
   &__worker {
-    font-size: var(--text-xs);
+    font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
     color: var(--color-text-main);
   }
 
   &__ban {
-    font-size: var(--text-xs);
+    font-size: var(--font-size-xs);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
 
   &__circuit {
-    font-size: var(--text-xs);
+    font-size: var(--font-size-xs);
     color: var(--color-text-secondary);
   }
 
   &__details {
-    overflow: hidden;
-    display: block;
-
-    max-width: 300px;
-
-    font-size: var(--text-xs);
+    font-size: var(--font-size-xs);
     color: var(--color-text-secondary);
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 }
 </style>

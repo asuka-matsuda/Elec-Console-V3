@@ -153,10 +153,7 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
               </span>
 
               <!-- 測定者/日時の送電試験標準描画（スロット指定がない場合） -->
-              <div
-                v-else-if="col.key.endsWith('ConfirmedAt')"
-                class="souden-worker-cell-wrapper"
-              >
+              <div v-else-if="col.key.endsWith('ConfirmedAt')">
                 <div
                   v-if="circuit.p1Worker || circuit.p2Worker || circuit.p3Worker"
                   class="souden-worker-cell flex flex-col items-center gap-[2px]"
@@ -168,7 +165,7 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
                     {{ formatShortDateTime(circuit.p3ConfirmedAt || circuit.p2ConfirmedAt || circuit.p1ConfirmedAt) }}
                   </span>
                 </div>
-                <span v-else class="souden-worker-cell__dash text-center block text-[var(--color-text-muted)]">-</span>
+                <span v-else class="text-center block text-[var(--color-text-muted)]">-</span>
               </div>
             </template>
           </AtomsTableTd>

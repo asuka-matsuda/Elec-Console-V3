@@ -15,7 +15,7 @@ const {
 <template>
   <footer class="mt-auto flex flex-col items-center gap-[var(--space-3)] pt-[var(--space-layout-pad)] text-center footer">
     <AtomsDivider type="fade-center" />
-    <p class="font-mono text-[var(--font-size-2xs)] tabular-nums tracking-[var(--tracking-normal)] copyright">
+    <p class="font-mono tabular-nums tracking-[var(--tracking-normal)] copyright">
       {{ text || `© ${year} Mat.Operate & Gemini 3.1 Pro. / Elec-Console All rights reserved.` }}
     </p>
   </footer>
@@ -23,6 +23,7 @@ const {
 
 <style scoped lang="scss">
 .copyright {
+  font-size: var(--font-size-2xs);
   color: var(--color-text-muted);
   transition: var(--transition-base);
 

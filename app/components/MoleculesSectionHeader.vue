@@ -19,7 +19,7 @@ const props = withDefaults(
       | 'border'
       | 'hud'
       | 'simple'
-    size?: 'xs' | 'sm' | 'md' | 'lg'
+    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   }>(),
   {
     tag: 'h2',
@@ -81,9 +81,20 @@ const resolvedIconColor = computed(() => {
   .title {
     color: var(--color-text-main);
 
-    &.is-lg,
-    &.is-md {
+    &.is-xl {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-bold);
+      line-height: var(--line-height-tight);
+    }
+
+    &.is-lg {
       font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+      line-height: var(--line-height-tight);
+    }
+
+    &.is-md {
+      font-size: var(--font-size-base);
       font-weight: var(--font-weight-bold);
       line-height: var(--line-height-tight);
     }

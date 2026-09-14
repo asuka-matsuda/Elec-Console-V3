@@ -14,7 +14,6 @@ export interface BaseButtonProps {
   to?: string
   href?: string
   type?: 'button' | 'submit' | 'reset'
-  size?: 'sm' | 'md'
   variant?: AtomsButtonVariant
   block?: boolean
   disabled?: boolean

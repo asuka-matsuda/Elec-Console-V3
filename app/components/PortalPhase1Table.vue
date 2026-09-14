@@ -68,7 +68,7 @@ const {
 
 <template>
   <PortalSoudenCircuitTable
-    class="portal-phase1-table"
+    class="flex-1 min-h-[400px]"
     :columns="PHASE1_TABLE_COLUMNS"
     :circuits="sortedCircuits"
     :full-circuits="fullCircuits || circuits"
@@ -82,9 +82,9 @@ const {
     <!-- 回路番号 -->
     <template #cell-kairoBangou="{ row: circuit }">
       <template v-if="editingRowId === circuit.id">
-        <AtomsInput v-model="editForm.kairoBangou" size="sm" placeholder="番号" />
+        <AtomsInput v-model="editForm.kairoBangou" placeholder="番号" />
       </template>
-      <div v-else class="phase1-cell__bangou-wrap">
+      <div v-else class="flex items-center justify-center">
         <PortalAtomKairoSymbol
           :kigou="circuit.kairoKigou"
           :bangou="circuit.kairoBangou"
@@ -110,16 +110,16 @@ const {
     <!-- 配線 / 接地 -->
     <template #cell-cableList="{ row: circuit }">
       <template v-if="editingRowId === circuit.id">
-        <div class="phase1-cell__edit-col">
-          <div class="phase1-cell__inline-inputs">
-            <AtomsInput v-model="editForm.cableList" size="sm" placeholder="ケーブル" />
-            <AtomsInput v-model="editForm.haisenJousuu" size="sm" placeholder="条数" style="width: 55px;" />
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center gap-1">
+            <AtomsInput v-model="editForm.cableList" placeholder="ケーブル" />
+            <AtomsInput v-model="editForm.haisenJousuu" placeholder="条数" style="width: 55px;" />
           </div>
-          <AtomsInput v-model="editForm.setsuchiList" size="sm" placeholder="接地リスト" />
+          <AtomsInput v-model="editForm.setsuchiList" placeholder="接地リスト" />
         </div>
       </template>
-      <div v-else class="phase1-cell__wiring">
-        <div class="phase1-cell__cable-line">
+      <div v-else class="flex flex-col gap-[2px]">
+        <div class="flex items-center gap-1">
           <span class="phase1-cell__cable">{{ circuit.cableList || '-' }}</span>
           <span v-if="circuit.haisenJousuu" class="phase1-cell__jousuu">({{ circuit.haisenJousuu }})</span>
         </div>
@@ -131,15 +131,15 @@ const {
 
     <!-- 確認 / 増締め (チェックボックス) -->
     <template #cell-p1Kakunin="{ row: circuit }">
-      <div class="phase1-cell__checks">
-        <label class="phase1-check-item" title="回路確認">
+      <div class="flex items-center justify-center gap-3">
+        <label class="inline-flex flex-col items-center gap-[2px] cursor-pointer" title="回路確認">
           <AtomsCheckbox
             v-model="circuit.p1Kakunin"
             :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
           />
           <span class="phase1-check-item__label">確認</span>
         </label>
-        <label class="phase1-check-item" title="増締め確認">
+        <label class="inline-flex flex-col items-center gap-[2px] cursor-pointer" title="増締め確認">
           <AtomsCheckbox
             v-model="circuit.p1Mashishime"
             :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
@@ -166,17 +166,16 @@ const {
 
     <!-- 操作 -->
     <template #cell-actions="{ row: circuit }">
-      <div class="phase1-actions">
+      <div class="flex items-center justify-center gap-1">
         <!-- 幹線未完了による操作不可 -->
         <template v-if="isCircuitLocked(circuit)">
-          <span class="text-note text-note--strong">⏸ 幹線未了</span>
+          <span class="text-note text-note--strong inline-flex items-center gap-1">⏸ 幹線未了</span>
         </template>
 
         <!-- 編集モード中 -->
         <template v-else-if="editingRowId === circuit.id">
           <AtomsButton
             variant="success"
-            size="sm"
             :loading="isActionLoading[circuit.id]"
             @click="saveEdit(circuit)"
           >
@@ -184,7 +183,6 @@ const {
           </AtomsButton>
           <AtomsButton
             variant="secondary"
-            size="sm"
             @click="cancelEdit"
           >
             取消
@@ -195,7 +193,6 @@ const {
         <template v-else-if="isComplete(circuit)">
           <AtomsButton
             variant="danger"
-            size="sm"
             :loading="isActionLoading[circuit.id]"
             @click="$emit('clear', circuit)"
           >
@@ -207,7 +204,6 @@ const {
         <template v-else>
           <AtomsButton
             variant="primary"
-            size="sm"
             :disabled="!circuit.p1Kakunin || !circuit.p1Mashishime || circuit.isExcluded"
             :loading="isActionLoading[circuit.id]"
             @click="$emit('confirm', circuit)"
@@ -216,7 +212,6 @@ const {
           </AtomsButton>
           <AtomsButton
             variant="secondary"
-            size="sm"
             :disabled="circuit.isExcluded"
             @click="startEdit(circuit)"
           >
@@ -238,11 +233,6 @@ const {
 </template>
 
 <style scoped lang="scss">
-.portal-phase1-table {
-  flex: 1;
-  min-height: 400px;
-}
-
 :deep(.phase1-row) {
   transition: var(--transition-colors);
 
@@ -265,32 +255,14 @@ const {
 }
 
 .phase1-cell {
-  &__bangou-wrap {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  &__wiring {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  &__cable-line {
-    display: flex;
-    gap: var(--space-1);
-    align-items: center;
-  }
-
   &__cable {
-    font-size: var(--text-xs);
+    font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
     color: var(--color-text-main);
   }
 
   &__jousuu {
-    font-size: 11px;
+    font-size: var(--font-size-xs);
     color: var(--color-text-secondary);
   }
 
@@ -303,25 +275,6 @@ const {
     color: var(--color-text-secondary);
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-
-  &__checks {
-    display: flex;
-    gap: var(--space-3);
-    align-items: center;
-    justify-content: center;
-  }
-
-  &__edit-col {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-  }
-
-  &__inline-inputs {
-    display: flex;
-    gap: var(--space-1);
-    align-items: center;
   }
 
   &__text {
@@ -352,18 +305,7 @@ const {
   }
 }
 
-.phase1-actions {
-  display: flex;
-  gap: var(--space-1);
-  align-items: center;
-  justify-content: center;
-}
-
 .text-note {
-  display: inline-flex;
-  gap: 4px;
-  align-items: center;
-
   font-size: inherit;
   color: var(--color-status-warning);
 
@@ -373,13 +315,6 @@ const {
 }
 
 .phase1-check-item {
-  cursor: pointer;
-
-  display: inline-flex;
-  flex-direction: column;
-  gap: 2px;
-  align-items: center;
-
   &__label {
     user-select: none;
     font-size: 10px;

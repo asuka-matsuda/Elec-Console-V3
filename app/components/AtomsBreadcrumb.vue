@@ -32,7 +32,7 @@ defineProps<{
 .breadcrumb {
   border: var(--border-width-base) solid var(--color-border);
   border-radius: var(--radius-sm);
-  font-size: var(--font-size-sm);
+  font-size: inherit;
   text-transform: uppercase;
 
   li {
@@ -44,7 +44,7 @@ defineProps<{
 
       margin-left: var(--space-2);
 
-      font-size: var(--font-size-2xs);
+      font-size: 0.85em;
       font-weight: var(--font-weight-bold);
       line-height: var(--line-height-tight);
       color: color-mix(in srgb, var(--theme-accent) 60%, transparent);

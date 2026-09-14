@@ -31,22 +31,22 @@ const {
 
 <template>
   <OrganismsModal v-model="isOpen" title="予定種別の設定">
-    <div class="type-settings">
+    <div class="type-settings flex flex-col gap-card-gap">
       <p class="type-settings__lead">
         カレンダーに表示する予定種別とテーマカラーを設定します。
       </p>
 
-      <ul class="type-settings__list">
-        <li v-for="(t, index) in types" :key="t.id" class="type-item">
-          <div class="type-item__main">
+      <ul class="type-settings__list flex flex-col gap-2 max-h-[400px] overflow-y-auto m-0 pl-0 pr-1 list-none">
+        <li v-for="(t, index) in types" :key="t.id" class="type-item flex flex-col gap-1 p-2">
+          <div class="flex items-center gap-2 w-full">
             <div
-              class="type-item__preview"
+              class="type-item__preview flex shrink-0 items-center justify-center"
               :style="{ '--preview-color': t.color }"
             >
               <span class="type-item__indicator"></span>
             </div>
 
-            <div class="type-item__input">
+            <div class="flex-1">
               <AtomsInput
                 v-model="t.name"
                 :placeholder="`種別名（例: 現場作業）`"
@@ -57,14 +57,13 @@ const {
             <AtomsButton
               v-if="types.length > 1"
               variant="danger"
-              size="sm"
               icon="trash-2"
-              class="type-item__delete-btn"
+              class="shrink-0"
               @click="handleRemoveType(index)"
             />
           </div>
 
-          <div class="type-item__colors">
+          <div class="type-item__colors flex flex-wrap items-center gap-1">
             <button
               v-for="c in PRESET_COLORS"
               :key="c"
@@ -78,11 +77,10 @@ const {
         </li>
       </ul>
 
-      <div class="type-settings__add">
+      <div class="flex items-center">
         <AtomsButton
           variant="secondary"
           icon="plus"
-          size="sm"
           @click="handleAddType"
         >
           種別を追加
@@ -103,58 +101,18 @@ const {
 
 <style scoped lang="scss">
 .type-settings {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-card-gap);
-
   &__lead {
     font-size: var(--font-size-sm);
     color: var(--color-text-muted);
   }
-
-  &__list {
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-
-    max-height: 400px;
-    margin: 0;
-    padding-right: var(--space-1);
-    padding-left: 0;
-
-    list-style: none;
-  }
-
-  &__add {
-    display: flex;
-    align-items: center;
-  }
 }
 
 .type-item {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-
-  padding: var(--space-2);
   border: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 30%, transparent);
   border-radius: var(--radius-sm);
 
-  &__main {
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
-    width: 100%;
-  }
-
   &__preview {
     --glow-color: var(--preview-color, var(--color-primary));
-
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
 
     width: var(--size-control-sm);
     height: var(--size-control-sm);
@@ -173,26 +131,8 @@ const {
     border-radius: var(--radius-sm);
   }
 
-  &__input {
-    flex: 1;
-  }
-
-  &__delete-btn {
-    flex-shrink: 0;
-  }
-
   &__colors {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-1);
-    align-items: center;
-
     padding-left: calc(var(--size-control-sm) + var(--space-2));
-  }
-
-  &__color-label {
-    font-size: var(--font-size-2xs);
-    color: var(--color-text-muted);
   }
 }
 </style>

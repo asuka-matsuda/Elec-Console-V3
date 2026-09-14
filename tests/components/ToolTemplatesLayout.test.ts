@@ -21,7 +21,7 @@ describe('ToolTemplatesLayout.vue', () => {
       `,
     },
     AtomsButton: {
-      props: ['variant', 'size', 'disabled', 'loading'],
+      props: ['variant', 'disabled', 'loading'],
       template: '<button class="button-stub"><slot /></button>',
     },
     AtomsIcon: {

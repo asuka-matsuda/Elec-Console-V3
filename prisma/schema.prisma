@@ -2,10 +2,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-
-
-
-
 datasource db {
   provider = "sqlite"
   url      = "file:./dev.db"
@@ -177,7 +173,6 @@ model History {
 model SystemSetting {
   id        String   @id @default(uuid())
   key       String   @unique
-  value     String   // JSON string
+  value     String // JSON string
   updatedAt DateTime @updatedAt
 }
-

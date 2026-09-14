@@ -89,7 +89,7 @@ const {
   }
 
   .tile-title {
-    font-size: var(--font-size-md);
+    font-size: var(--font-size-base);
     font-weight: var(--font-weight-bold);
     line-height: var(--line-height-tight);
     color: var(--theme-accent);

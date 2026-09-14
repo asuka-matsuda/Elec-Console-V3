@@ -193,10 +193,9 @@ const handleRemoveCable = (id: string) => {
       <div class="flex items-center justify-end py-[var(--space-1)]">
         <AtomsButton
           variant="secondary"
-          size="sm"
           @click="handleAddCable"
         >
-          <AtomsIcon name="plus" size="sm" />
+          <AtomsIcon name="plus" />
           <span>{{ inputs.mode === 'strong' ? '強電ケーブルを追加' : '弱電ケーブルを追加' }}</span>
         </AtomsButton>
       </div>
@@ -239,13 +238,12 @@ const handleRemoveCable = (id: string) => {
           <div class="flex justify-center items-center">
             <AtomsButton
               variant="danger"
-              size="sm"
               icon-only
               :disabled="currentCablesUI.length <= 1"
               aria-label="削除"
               @click="handleRemoveCable(row.id)"
             >
-              <AtomsIcon name="trash-2" size="sm" />
+              <AtomsIcon name="trash-2" />
             </AtomsButton>
           </div>
         </template>

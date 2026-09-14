@@ -185,7 +185,6 @@ const formattedPreview = computed(() => {
         <div class="flex items-center gap-2">
           <AtomsButton
             v-if="hasUnsavedChanges"
-            size="sm"
             variant="secondary"
             :disabled="isSaving"
             @click="handleReset"
@@ -193,7 +192,6 @@ const formattedPreview = computed(() => {
             元に戻す
           </AtomsButton>
           <AtomsButton
-            size="sm"
             variant="primary"
             icon="check"
             :loading="isSaving"

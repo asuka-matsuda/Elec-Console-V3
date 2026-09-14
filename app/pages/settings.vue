@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * Settings
  * UIや個人の設定を行う画面のコンポーネントです。テーマや背景エフェクトなどのカスタマイズ機能を提供します。
@@ -14,18 +14,18 @@ const { themeMode } = useSettings()
 </script>
 
 <template>
-  <div class="settings-view">
+  <div class="flex flex-col gap-section-gap pb-layout-pad">
     <MoleculesSectionHeader
       title="UI・個人設定"
       icon="settings"
       variant="tool"
       size="lg"
     />
-    <p class="description">
+    <p class="description m-0">
       このブラウザ固有のUI設定をカスタマイズします。
     </p>
 
-    <div class="settings-content">
+    <div class="flex flex-col gap-section-gap max-w-[640px]">
       <AtomsPanel class="flex flex-col gap-4">
         <MoleculesSectionHeader
           title="テーマ・カラー設定"
@@ -34,7 +34,7 @@ const { themeMode } = useSettings()
           size="md"
         />
 
-        <p class="description">
+        <p class="description m-0">
           画面のテーマ（ライト/ダーク）を変更します。
         </p>
 
@@ -50,22 +50,8 @@ const { themeMode } = useSettings()
 </template>
 
 <style scoped lang="scss">
-.settings-view {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-section-gap);
-  padding-bottom: var(--space-layout-pad);
-}
-
 .description {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
-}
-
-.settings-content {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-section-gap);
-  max-width: 640px;
 }
 </style>

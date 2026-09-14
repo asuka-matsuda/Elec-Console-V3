@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { ref } from 'vue'
 
 import { useRouter } from '#app'
@@ -56,12 +56,12 @@ const handleChangePassword = async () => {
 </script>
 
 <template>
-  <form class="change-password-page" @submit.prevent="handleChangePassword">
-    <p class="change-password-page__lead">
+  <form class="flex flex-col gap-form-row-gap" @submit.prevent="handleChangePassword">
+    <p class="change-password-page__lead m-0">
       セキュリティのため、システムから配布された初期パスワードを変更してください。
     </p>
 
-    <p v-if="errorMsg" class="change-password-page__error" role="alert">
+    <p v-if="errorMsg" class="change-password-page__error m-0 px-3 py-2" role="alert">
       {{ errorMsg }}
     </p>
 
@@ -82,7 +82,7 @@ const handleChangePassword = async () => {
       />
     </MoleculesFormGroup>
 
-    <div class="change-password-page__actions">
+    <div class="flex items-center justify-center">
       <AtomsButton
         type="submit"
         variant="primary"
@@ -98,30 +98,16 @@ const handleChangePassword = async () => {
 
 <style scoped lang="scss">
 .change-password-page {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-form-row-gap);
-
   &__lead {
-    margin: 0;
     font-size: var(--font-size-sm);
     color: var(--color-text-secondary);
   }
 
   &__error {
-    margin: 0;
-    padding: var(--space-2) var(--space-3);
     border: var(--border-width-base) solid var(--color-status-danger);
     border-radius: var(--radius-sm);
-
     font-size: var(--font-size-sm);
     color: var(--color-status-danger);
-  }
-
-  &__actions {
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 }
 </style>

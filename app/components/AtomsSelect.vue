@@ -44,6 +44,17 @@ const {
   preferredPlacement: props.placement,
 })
 
+const syncedDropdownStyle = computed(() => {
+  const triggerFs = (import.meta.client && selectRef.value)
+    ? getComputedStyle(selectRef.value).fontSize
+    : undefined
+
+  return {
+    ...dropdownStyle.value,
+    fontSize: triggerFs,
+  }
+})
+
 const selectOption = (option: SelectOption) => {
   if (option.disabled) return
   model.value = option.value
@@ -103,7 +114,7 @@ onMounted(() => {
 })
 
 const getOptionClasses = (option: SelectOption, index: number) => [
-  'relative overflow-hidden py-2 px-3 truncate custom-select__option',
+  'relative overflow-hidden truncate custom-select__option',
   {
     'is-selected': model.value === option.value,
     'is-focused': index === focusedIndex.value,
@@ -142,11 +153,11 @@ const getOptionClasses = (option: SelectOption, index: number) => [
           ref="dropdownRef"
           class="absolute w-max max-w-[90vw] overflow-x-hidden overflow-y-auto p-1 custom-select__dropdown"
           :class="`is-${dynamicPlacement}`"
-          :style="dropdownStyle"
+          :style="syncedDropdownStyle"
         >
           <li
             v-if="isPlaceholder"
-            class="relative overflow-hidden py-2 px-3 truncate custom-select__option is-placeholder"
+            class="relative overflow-hidden truncate custom-select__option is-placeholder"
           >
             {{ placeholder }}
           </li>
@@ -297,9 +308,10 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 
   z-index: 1;
 
+  padding: 0.4em 0.8em;
   border-radius: var(--radius-sm);
 
-  font-size: var(--font-size-sm);
+  font-size: inherit;
   color: var(--color-text-main);
 
   transition: var(--transition-colors);

@@ -31,11 +31,11 @@ const emit = defineEmits<{
 
 <template>
   <AtomsPanel>
-    <div class="phase-controls">
-      <div class="phase-controls__filters">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-card-gap items-start">
+      <div class="flex flex-col gap-3">
         <!-- 盤種別タブ -->
-        <div class="phase-controls__row">
-          <span class="phase-controls__label">盤種別:</span>
+        <div class="flex items-center gap-3">
+          <span class="phase-controls__label min-w-[50px]">盤種別:</span>
           <AtomsTabs
             v-model="selectedShubetsu"
             :options="shubetsuOptions"
@@ -43,13 +43,13 @@ const emit = defineEmits<{
         </div>
 
         <!-- 盤名称セレクト & フィルター拡張/件数表示 -->
-        <div class="phase-controls__row phase-controls__row--inline">
-          <div class="phase-controls__select-group">
-            <span class="phase-controls__label">盤名称:</span>
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center gap-2">
+            <span class="phase-controls__label min-w-[50px]">盤名称:</span>
             <AtomsSelect
               v-model="selectedBanMeisho"
               :options="banMeishoOptions"
-              class="phase-controls__select"
+              class="min-w-[160px]"
             />
           </div>
 
@@ -63,9 +63,9 @@ const emit = defineEmits<{
       </div>
 
       <!-- 全体進捗バー & ミニマップ -->
-      <div class="phase-controls__progress">
+      <div class="flex flex-col gap-3">
         <div class="flex flex-col w-full gap-1">
-          <div class="flex items-center justify-between text-xs">
+          <div class="phase-controls__stats-header flex items-center justify-between">
             <span class="font-medium text-[var(--color-text-main)]">
               {{ progressLabel || `フェーズ${phase} 進捗状況` }}
             </span>
@@ -77,7 +77,7 @@ const emit = defineEmits<{
               </AtomsBadge>
             </div>
           </div>
-          <AtomsProgressBar :value="stats.completed" :max="stats.total" color="var(--color-status-success)" />
+          <PortalAtomsProgressBar :value="stats.completed" :max="stats.total" color="var(--color-status-success)" />
         </div>
 
         <!-- ミニマップ -->
@@ -93,52 +93,14 @@ const emit = defineEmits<{
 
 <style scoped lang="scss">
 .phase-controls {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-card-gap);
-  align-items: flex-start;
-
-  @include mq("lg") {
-    grid-template-columns: 1fr;
-  }
-
-  &__filters {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-
-  &__row {
-    display: flex;
-    gap: var(--space-3);
-    align-items: center;
-
-    &--inline {
-      flex-wrap: wrap;
-    }
+  &__stats-header {
+    font-size: var(--font-size-xs);
   }
 
   &__label {
-    min-width: 50px;
-    font-size: var(--text-xs);
+    font-size: var(--font-size-xs);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-secondary);
-  }
-
-  &__select-group {
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
-  }
-
-  &__select {
-    min-width: 160px;
-  }
-
-  &__progress {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
   }
 }
 </style>

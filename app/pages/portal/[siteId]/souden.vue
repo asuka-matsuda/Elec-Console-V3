@@ -26,7 +26,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="souden-dashboard">
+  <div class="flex flex-col gap-section-gap h-full">
     <MoleculesSectionHeader
       title="送電試験ダッシュボード"
       icon="zap"
@@ -41,24 +41,22 @@ onMounted(() => {
         <AtomsButton
           :to="`/portal/${siteId}`"
           variant="secondary"
-          size="sm"
         >
-          <AtomsIcon name="arrow-left" size="sm" />
+          <AtomsIcon name="arrow-left" />
           ポータルへ戻る
         </AtomsButton>
 
         <AtomsButton
           :to="`/portal/${siteId}/operation-logs`"
           variant="secondary"
-          size="sm"
         >
-          <AtomsIcon name="book-open" size="sm" />
+          <AtomsIcon name="book-open" />
           操作ログ
         </AtomsButton>
       </template>
     </MoleculesSectionHeader>
 
-    <div v-if="error" class="error-message">
+    <div v-if="error" class="error-message flex items-center gap-2 p-3">
       <AtomsIcon name="alert-triangle" />
       <span>{{ error }}</span>
     </div>
@@ -74,9 +72,8 @@ onMounted(() => {
         <AtomsButton
           to="/portal/admin"
           variant="primary"
-          size="sm"
         >
-          <AtomsIcon name="settings" size="sm" />
+          <AtomsIcon name="settings" />
           現場設定へ移動
         </AtomsButton>
       </template>
@@ -84,30 +81,16 @@ onMounted(() => {
 
     <template v-else-if="stats">
       <!-- 総合進捗カード (Organism) -->
-      <PortalSoudenOverallCard :stats="stats" :site-id="siteId" />
+      <PortalOrganismsSoudenOverallCard :stats="stats" :site-id="siteId" />
     </template>
   </div>
 </template>
 
 <style scoped lang="scss">
-.souden-dashboard {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-section-gap);
-  height: 100%;
-}
-
 .error-message {
-  display: flex;
-  gap: var(--space-2);
-  align-items: center;
-
-  padding: var(--space-3);
   border: 1px solid color-mix(in srgb, var(--color-status-danger) 25%, transparent);
   border-radius: var(--radius-sm);
-
   color: var(--color-status-danger);
-
   background-color: color-mix(in srgb, var(--color-status-danger) 10%, transparent);
 }
 </style>

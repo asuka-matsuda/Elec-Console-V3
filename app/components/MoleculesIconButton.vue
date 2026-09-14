@@ -7,7 +7,6 @@ import type { MoleculesIconButtonProps } from '~/types/components'
 
 const props = withDefaults(defineProps<MoleculesIconButtonProps>(), {
   type: 'button',
-  size: 'md',
   variant: 'primary',
 })
 </script>
@@ -20,26 +19,17 @@ const props = withDefaults(defineProps<MoleculesIconButtonProps>(), {
 
 <style scoped lang="scss">
 .icon-btn {
-  width: var(--size-control-sm);
+  width: 2.6em;
+  min-width: 2.6em;
 
   :deep(.icon),
   .icon {
-    width: 18px;
-    height: 18px;
+    width: 1.2em;
+    height: 1.2em;
 
     svg {
       width: 100%;
       height: 100%;
-    }
-  }
-
-  &.btn--md {
-    width: var(--size-control-md);
-
-    :deep(.icon),
-    .icon {
-      width: 22px;
-      height: 22px;
     }
   }
 }

@@ -119,16 +119,15 @@ onMounted(() => {
         </slot>
         <AtomsButton
           variant="secondary"
-          size="sm"
           class="shrink-0 ml-2"
           @click="close"
         >
-          <AtomsIcon name="x" size="sm" />
+          <AtomsIcon name="x" />
         </AtomsButton>
       </header>
 
       <!-- メインコンテンツ -->
-      <div class="drawer-body overflow-y-auto flex-1 flex flex-col gap-panel-gap min-h-0 p-panel-pad">
+      <div class="overflow-y-auto flex-1 flex flex-col gap-panel-gap min-h-0 p-panel-pad">
         <div v-if="errorMsg" class="drawer-error px-3 py-2">
           {{ errorMsg }}
         </div>

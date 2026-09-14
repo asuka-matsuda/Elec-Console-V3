@@ -56,12 +56,11 @@ onMounted(() => {
     :class="{ 'is-open': isOpen }"
   >
     <header class="flex items-center justify-between h-16 px-[var(--space-4)]">
-      <span class="text-[var(--font-size-sm)] font-semibold tracking-wider text-[var(--color-text-muted)]">
+      <span class="header-title font-semibold tracking-wider text-[var(--color-text-muted)]">
         メニュー
       </span>
       <MoleculesIconButton
         name="x"
-        size="sm"
         @click="closeSidebar"
       />
     </header>
@@ -141,6 +140,10 @@ aside {
 
   header {
     border-bottom: var(--border-width-base) solid var(--color-border);
+
+    .header-title {
+      font-size: var(--font-size-sm);
+    }
   }
 
   nav {

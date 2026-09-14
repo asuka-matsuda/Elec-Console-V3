@@ -51,7 +51,7 @@ const targetBanOptions = computed(() => [
 </script>
 
 <template>
-  <div class="operation-logs">
+  <div class="flex flex-1 flex-col gap-section-gap h-full min-h-0">
     <MoleculesSectionHeader
       title="送電試験 操作ログ"
       icon="history"
@@ -60,20 +60,18 @@ const targetBanOptions = computed(() => [
       <template #actions>
         <AtomsButton
           variant="secondary"
-          size="sm"
           :loading="isLoading"
           @click="fetchLogs"
         >
-          <AtomsIcon name="refresh-cw" size="sm" />
+          <AtomsIcon name="refresh-cw" />
           最新に更新
         </AtomsButton>
 
         <AtomsButton
           :to="`/portal/${siteId}/souden`"
           variant="secondary"
-          size="sm"
         >
-          <AtomsIcon name="arrow-left" size="sm" />
+          <AtomsIcon name="arrow-left" />
           ダッシュボードへ戻る
         </AtomsButton>
       </template>
@@ -98,15 +96,3 @@ const targetBanOptions = computed(() => [
     />
   </div>
 </template>
-
-<style scoped lang="scss">
-.operation-logs {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: var(--space-section-gap);
-
-  height: 100%;
-  min-height: 0;
-}
-</style>

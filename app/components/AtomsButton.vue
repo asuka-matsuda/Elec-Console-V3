@@ -12,7 +12,6 @@ const {
   to,
   href,
   type = 'button',
-  size = 'sm',
   variant = 'primary',
   disabled = false,
   loading = false,
@@ -35,7 +34,6 @@ const target = computed(() => to || href)
     class="relative z-[1] inline-flex shrink-0 items-center justify-center gap-2 btn"
     :class="[
       `btn--${variant}`,
-      `btn--${size}`,
       {
         'w-full btn--block': block,
         'btn--loading': loading,
@@ -64,7 +62,7 @@ const target = computed(() => to || href)
   border: var(--border-width-base) solid color-mix(in srgb, var(--btn-color) 30%, transparent);
   border-radius: var(--radius-sm);
 
-  font-size: var(--font-size-sm);
+  font-size: inherit;
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-tight);
   color: var(--btn-color);
@@ -176,10 +174,6 @@ const target = computed(() => to || href)
     pointer-events: none;
     cursor: wait;
     opacity: 0.8;
-  }
-
-  &--md {
-    font-size: var(--font-size-base);
   }
 }
 </style>

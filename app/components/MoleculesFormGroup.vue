@@ -93,7 +93,7 @@ withDefaults(defineProps<Props>(), {
 }
 
 .label-text {
-  font-size: var(--font-size-sm);
+  font-size: inherit;
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
   color: var(--color-text-main);
@@ -107,7 +107,7 @@ withDefaults(defineProps<Props>(), {
     flex-shrink: 0;
 
     width: var(--space-0-5);
-    height: var(--font-size-xs);
+    height: 0.9em;
     border-radius: var(--radius-sm);
 
     background-color: var(--theme-accent);
@@ -117,20 +117,20 @@ withDefaults(defineProps<Props>(), {
 }
 
 .control {
-  font-size: var(--font-size-sm);
+  font-size: inherit;
 }
 
 .error {
   --glow-color: var(--color-status-danger);
 
-  font-size: var(--font-size-2xs);
+  font-size: 0.85em;
   color: var(--color-status-danger);
   text-shadow: var(--text-glow-sm);
   letter-spacing: var(--tracking-wide);
 }
 
 .help {
-  font-size: var(--font-size-2xs);
+  font-size: 0.85em;
   color: var(--color-text-muted);
   letter-spacing: var(--tracking-wide);
 }

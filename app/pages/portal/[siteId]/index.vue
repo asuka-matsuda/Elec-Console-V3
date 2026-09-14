@@ -61,7 +61,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div :key="siteId" class="site-dashboard">
+  <div :key="siteId" class="flex flex-col gap-section-gap h-full">
     <MoleculesSectionHeader
       :title="currentSite?.name || '現場ダッシュボード'"
       icon="map-pin"
@@ -71,18 +71,18 @@ onMounted(() => {
         <AtomsSelect
           :model-value="siteId"
           :options="siteOptions"
-          class="site-dashboard__select"
+          class="min-w-[200px]"
           @update:model-value="handleSiteChange"
         />
       </template>
     </MoleculesSectionHeader>
 
-    <div class="site-dashboard__grid">
-      <section class="site-dashboard__calendar" aria-label="現場スケジュール">
+    <div class="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-section-gap items-start">
+      <section class="min-h-[500px]" aria-label="現場スケジュール">
         <PortalCal :site-id="siteId" />
       </section>
 
-      <aside class="site-dashboard__sidebar" aria-label="現場関連機能">
+      <aside class="flex flex-col gap-card-gap" aria-label="現場関連機能">
         <PortalPersonalTodo :site-id="siteId" />
 
         <AtomsButton
@@ -90,44 +90,10 @@ onMounted(() => {
           variant="primary"
           block
         >
-          <AtomsIcon name="zap" size="sm" />
+          <AtomsIcon name="zap" />
           送電試験ダッシュボードへ
         </AtomsButton>
       </aside>
     </div>
   </div>
 </template>
-
-<style scoped lang="scss">
-.site-dashboard {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-section-gap);
-  height: 100%;
-
-  &__select {
-    min-width: 200px;
-  }
-
-  &__grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: var(--space-section-gap);
-    align-items: flex-start;
-
-    @include mq("lg") {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  &__calendar {
-    min-height: 500px;
-  }
-
-  &__sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-card-gap);
-  }
-}
-</style>

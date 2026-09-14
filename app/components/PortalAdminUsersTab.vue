@@ -200,7 +200,7 @@ const confirmResetPassword = async (row: User) => {
         </AtomsBadge>
       </template>
       <template #cell-lastLoginAt="{ row }">
-        <div class="admin-users__login-cell">
+        <div class="flex flex-col items-center gap-1">
           <AtomsBadge
             v-if="row.requirePasswordReset"
             color="var(--color-status-danger)"
@@ -213,24 +213,21 @@ const confirmResetPassword = async (row: User) => {
         </div>
       </template>
       <template #cell-actions="{ row }">
-        <div class="admin-users__actions">
+        <div class="flex flex-nowrap items-center justify-center gap-2 whitespace-nowrap">
           <AtomsButton
             variant="secondary"
-            size="sm"
             @click="handleOpenAssign(row)"
           >
             現場アサイン
           </AtomsButton>
           <AtomsButton
             variant="secondary"
-            size="sm"
             @click="confirmResetPassword(row)"
           >
             PW初期化
           </AtomsButton>
           <AtomsButton
             variant="danger"
-            size="sm"
             :disabled="row.id === 'master'"
             @click="confirmDelete(row)"
           >
@@ -366,23 +363,6 @@ const confirmResetPassword = async (row: User) => {
 
 <style scoped lang="scss">
 .admin-users {
-  &__login-cell {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    align-items: center;
-  }
-
-  &__actions {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: var(--space-2);
-    align-items: center;
-    justify-content: center;
-
-    white-space: nowrap;
-  }
-
   &__meta {
     font-size: var(--font-size-2xs);
     color: var(--color-text-muted);
@@ -401,7 +381,7 @@ const confirmResetPassword = async (row: User) => {
 }
 
 .credential-value {
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-base);
   font-weight: var(--font-weight-bold);
 }
 </style>

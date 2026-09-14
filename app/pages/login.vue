@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 /**
  * login
  * ポータルログインページ
@@ -45,9 +45,9 @@ const handleLogin = async () => {
 </script>
 
 <template>
-  <div class="login-page">
-    <form class="login-page__form" @submit.prevent="handleLogin">
-      <p v-if="errorMessage" class="login-page__error" role="alert">
+  <div class="p-card-pad">
+    <form class="flex flex-col gap-form-row-gap" @submit.prevent="handleLogin">
+      <p v-if="errorMessage" class="login-page__error m-0 px-3 py-2" role="alert">
         {{ errorMessage }}
       </p>
 
@@ -62,7 +62,7 @@ const handleLogin = async () => {
         </MoleculesFormGroup>
       </template>
 
-      <div class="login-page__actions">
+      <div class="flex items-center justify-center">
         <AtomsButton type="submit" variant="primary" block :disabled="isLoading">
           <template v-if="isLoading"> ログイン中... </template>
           <template v-else> ログイン </template>
@@ -73,29 +73,10 @@ const handleLogin = async () => {
 </template>
 
 <style scoped lang="scss">
-.login-page {
-  padding: var(--space-card-pad);
-
-  &__form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-form-row-gap);
-  }
-
-  &__error {
-    margin: 0;
-    padding: var(--space-2) var(--space-3);
-    border: var(--border-width-base) solid var(--color-status-danger);
-    border-radius: var(--radius-sm);
-
-    font-size: var(--font-size-sm);
-    color: var(--color-status-danger);
-  }
-
-  &__actions {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+.login-page__error {
+  border: var(--border-width-base) solid var(--color-status-danger);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-status-danger);
 }
 </style>

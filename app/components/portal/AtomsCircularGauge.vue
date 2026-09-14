@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * AtomsCircularGauge
- * [Atoms] 送電試験などの進捗率を表現する円形プログレスゲージコンポーネント
+ * [Portal Atoms] 送電試験などの進捗率を表現する円形プログレスゲージコンポーネント
  */
 import { computed } from 'vue'
 

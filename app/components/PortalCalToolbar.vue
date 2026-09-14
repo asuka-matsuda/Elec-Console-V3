@@ -11,37 +11,37 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <nav class="calendar-toolbar" aria-label="カレンダーナビゲーション">
-    <div class="nav-controls">
+  <nav
+    class="calendar-toolbar flex flex-col md:flex-row flex-wrap items-center justify-between gap-1 md:gap-2 px-card-pad py-2"
+    aria-label="カレンダーナビゲーション"
+  >
+    <div class="flex items-center justify-center md:justify-start w-full md:w-auto gap-1">
       <AtomsButton
         variant="secondary"
-        size="sm"
         icon="chevron-left"
         icon-only
         @click="emit('prev')"
       />
       <AtomsButton
         variant="secondary"
-        size="sm"
         icon="chevron-right"
         icon-only
         @click="emit('next')"
       />
-      <AtomsButton variant="secondary" size="sm" @click="emit('today')">
+      <AtomsButton variant="secondary" @click="emit('today')">
         今日
       </AtomsButton>
     </div>
 
-    <div class="toolbar-center">
+    <div class="order-first md:order-none flex flex-1 items-center justify-center w-full md:w-auto min-w-[160px]">
       <h3 class="toolbar-title">
         {{ title }}
       </h3>
     </div>
 
-    <div class="view-controls">
+    <div class="flex items-center justify-center md:justify-end w-full md:w-auto gap-1">
       <AtomsButton
         :variant="currentView === 'dayGridMonth' ? 'primary' : 'secondary'"
-        size="sm"
         icon="calendar"
         @click="emit('changeView', 'dayGridMonth')"
       >
@@ -49,7 +49,6 @@ const emit = defineEmits<{
       </AtomsButton>
       <AtomsButton
         :variant="currentView === 'listMonth' ? 'primary' : 'secondary'"
-        size="sm"
         icon="list"
         @click="emit('changeView', 'listMonth')"
       >
@@ -57,7 +56,6 @@ const emit = defineEmits<{
       </AtomsButton>
       <AtomsButton
         variant="secondary"
-        size="sm"
         icon="settings"
         @click="emit('openTypeSettings')"
       >
@@ -69,50 +67,9 @@ const emit = defineEmits<{
 
 <style scoped lang="scss">
 .calendar-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  align-items: center;
-  justify-content: space-between;
-
-  padding: var(--space-2) var(--space-card-pad);
   border: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 30%, transparent);
   border-radius: var(--radius-sm);
-
   background-color: var(--color-surface);
-
-  @include mq("md") {
-    flex-direction: column;
-    gap: var(--space-1);
-
-    .toolbar-center {
-      order: -1;
-      width: 100%;
-    }
-
-    .nav-controls,
-    .view-controls {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-    }
-  }
-}
-
-.nav-controls {
-  display: flex;
-  gap: var(--space-1);
-  align-items: center;
-}
-
-.toolbar-center {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-
-  min-width: 160px;
 }
 
 .toolbar-title {
@@ -120,12 +77,5 @@ const emit = defineEmits<{
 
   color: var(--theme-accent);
   text-shadow: var(--text-glow-sm);
-}
-
-.view-controls {
-  display: flex;
-  gap: var(--space-1);
-  align-items: center;
-  justify-content: flex-end;
 }
 </style>

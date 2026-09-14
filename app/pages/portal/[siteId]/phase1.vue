@@ -86,9 +86,8 @@ const shubetsuTabOptions = computed(() => {
       <AtomsButton
         :to="`/portal/${siteId}/souden`"
         variant="secondary"
-        size="sm"
       >
-        <AtomsIcon name="arrow-left" size="sm" />
+        <AtomsIcon name="arrow-left" />
         ダッシュボードへ戻る
       </AtomsButton>
     </template>

@@ -19,7 +19,7 @@ const {
 </script>
 
 <template>
-  <div class="history-page">
+  <div class="flex flex-col gap-section-gap">
     <AtomsPanel class="flex flex-col gap-4">
       <MoleculesSectionHeader
         title="計算履歴"
@@ -31,10 +31,9 @@ const {
           <AtomsButton
             v-if="historyList.length > 0"
             variant="danger"
-            size="sm"
             @click="handleClearAll"
           >
-            <AtomsIcon name="trash-2" size="sm" />
+            <AtomsIcon name="trash-2" />
             全て削除
           </AtomsButton>
         </template>
@@ -45,7 +44,7 @@ const {
       <ClientOnly>
         <div
           v-if="historyList.length > 0"
-          class="history-page__grid"
+          class="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-panel-gap"
         >
           <ToolOrganismsHistoryCard
             v-for="entry in historyList"
@@ -69,22 +68,3 @@ const {
     </AtomsPanel>
   </div>
 </template>
-
-<style scoped lang="scss">
-.history-page {
-  container-type: inline-size;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-section-gap);
-
-  &__grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--space-panel-gap);
-
-    @include cq("sm") {
-      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-    }
-  }
-}
-</style>

@@ -145,7 +145,7 @@ onBeforeUnmount(() => {
   <button
     ref="triggerRef"
     type="button"
-    class="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full text-[var(--color-text-muted)] hover:text-[var(--theme-accent)] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--theme-accent)] cursor-pointer"
+    class="helptip-trigger inline-flex items-center justify-center rounded-full text-[var(--color-text-muted)] hover:text-[var(--theme-accent)] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--theme-accent)] cursor-pointer"
     :aria-label="ariaLabel"
     :aria-expanded="isOpen"
     tabindex="0"
@@ -155,7 +155,7 @@ onBeforeUnmount(() => {
     @focusin="show"
     @focusout="hide"
   >
-    <AtomsIcon name="help-circle" size="sm" class="w-3.5 h-3.5" />
+    <AtomsIcon name="help-circle" class="w-full h-full" />
   </button>
 
   <!-- 最前面にTeleportされるコンパクト吹き出しツールチップ -->
@@ -165,7 +165,7 @@ onBeforeUnmount(() => {
         v-if="isOpen && (displayText || $slots.default)"
         ref="panelRef"
         class="helptip-panel fixed z-[9999] w-[200px] px-2.5 py-2 leading-[1.4] whitespace-normal pointer-events-none sm:pointer-events-auto"
-        :class="[position.isTopPlacement ? '-translate-y-full' : '']"
+        :class="{ '-translate-y-full': position.isTopPlacement }"
         :style="{
           top: `${position.top}px`,
           left: `${position.left}px`,
@@ -178,11 +178,9 @@ onBeforeUnmount(() => {
         <div
           class="arrow absolute w-1.5 h-1.5 rotate-45"
           :style="{ left: `${position.arrowLeft}px` }"
-          :class="[
-            position.isTopPlacement
-              ? 'bottom-[-4px] border-t-0 border-l-0'
-              : 'top-[-4px] border-b-0 border-r-0',
-          ]"
+          :class="position.isTopPlacement
+            ? 'bottom-[-4px] border-t-0 border-l-0'
+            : 'top-[-4px] border-b-0 border-r-0'"
         />
 
         <!-- 解説本文（ラッパーdivを排除し直下へ） -->
@@ -206,6 +204,11 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped lang="scss">
+.helptip-trigger {
+  width: 1.1em;
+  height: 1.1em;
+}
+
 .helptip-panel {
   border: var(--border-width-base) solid var(--color-border);
   border-radius: var(--radius-sm);

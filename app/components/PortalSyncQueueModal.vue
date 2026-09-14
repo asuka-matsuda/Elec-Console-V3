@@ -76,10 +76,10 @@ const formatDateTime = (isoStr: string) => {
     title="現場データのサーバー同期"
     @close="closeModal"
   >
-    <div class="sync-modal">
+    <div class="flex flex-col gap-4">
       <!-- 競合解決ビュー -->
       <template v-if="conflictItems.length > 0">
-        <div class="sync-conflict-alert">
+        <div class="sync-conflict-alert p-3">
           ⚠️ <strong>{{ conflictItems.length }}件</strong> の回路で別の作業者との更新競合が発生しました。<br>
           内容を確認し、どちらの値を採用するか選択してください。
         </div>
@@ -87,26 +87,26 @@ const formatDateTime = (isoStr: string) => {
         <div
           v-for="item in conflictItems"
           :key="item.id"
-          class="sync-conflict-card"
+          class="sync-conflict-card flex flex-col gap-2 p-3"
         >
-          <div class="sync-conflict-card__header">
+          <div class="flex items-center gap-2 pb-2 sync-conflict-card__header">
             <span class="sync-conflict-card__ban">{{ item.banMeisho }}</span>
-            <span class="sync-conflict-card__kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
+            <span class="flex-1 sync-conflict-card__kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
             <AtomsBadge color="var(--color-status-warning)">
               フェーズ{{ item.phase }}
             </AtomsBadge>
           </div>
 
-          <div class="sync-conflict-card__grid">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <!-- サーバー側の値 -->
-            <div class="sync-conflict-col is-server">
+            <div class="sync-conflict-col is-server flex flex-col gap-2 p-3">
               <div class="sync-conflict-col__title">
                 🌐 サーバー側の最新データ
               </div>
               <div class="sync-conflict-col__meta">
                 更新日時: {{ formatDateTime(String(item.serverCircuitData?.updatedAt || '')) }}
               </div>
-              <div class="sync-conflict-col__details">
+              <div class="sync-conflict-col__details p-2">
                 <template v-if="item.phase === 1">
                   確認: {{ item.serverCircuitData?.p1Kakunin ? '済' : '未' }} / 増締: {{ item.serverCircuitData?.p1Mashishime ? '済' : '未' }}
                 </template>
@@ -119,8 +119,7 @@ const formatDateTime = (isoStr: string) => {
               </div>
               <AtomsButton
                 variant="secondary"
-                size="sm"
-                class="mt-sm"
+                class="mt-2"
                 @click="handleResolve(item, 'discard')"
               >
                 サーバーの値を残す
@@ -128,14 +127,14 @@ const formatDateTime = (isoStr: string) => {
             </div>
 
             <!-- 端末側（オフライン入力）の値 -->
-            <div class="sync-conflict-col is-client">
+            <div class="sync-conflict-col is-client flex flex-col gap-2 p-3">
               <div class="sync-conflict-col__title">
                 📱 あなたのオフライン入力
               </div>
               <div class="sync-conflict-col__meta">
                 実測定時刻: {{ formatDateTime(item.clientConfirmedAt) }}
               </div>
-              <div class="sync-conflict-col__details">
+              <div class="sync-conflict-col__details p-2">
                 <template v-if="item.phase === 1">
                   確認: {{ item.payload.kakunin ? '済' : '未' }} / 増締: {{ item.payload.mashishime ? '済' : '未' }}
                 </template>
@@ -148,8 +147,7 @@ const formatDateTime = (isoStr: string) => {
               </div>
               <AtomsButton
                 variant="primary"
-                size="sm"
-                class="mt-sm"
+                class="mt-2"
                 @click="handleResolve(item, 'overwrite')"
               >
                 自分の値で上書きする
@@ -161,26 +159,26 @@ const formatDateTime = (isoStr: string) => {
 
       <!-- 同期実行・結果ビュー -->
       <template v-else>
-        <div class="sync-summary">
-          <p class="sync-summary__desc">
+        <div class="flex flex-col gap-3">
+          <p class="sync-summary__desc m-0">
             地下受変電室等で記録された <strong>{{ pendingCount }}件</strong> の未送信データがあります。<br>
             現場で実際に測定された正確な時刻（実打鍵タイムスタンプ）とともにサーバーへ反映します。
           </p>
 
-          <ul v-if="queue.length > 0" class="sync-queue-list">
+          <ul v-if="queue.length > 0" class="sync-queue-list overflow-y-auto flex flex-col gap-1 max-h-[180px] m-0 p-2 list-none">
             <li
               v-for="item in queue.slice(0, 5)"
               :key="item.id"
-              class="sync-queue-item"
+              class="flex items-center gap-2 px-2 py-1 sync-queue-item"
             >
               <AtomsBadge color="var(--color-category-tool)">
                 P{{ item.phase }}
               </AtomsBadge>
               <span class="sync-queue-item__ban">{{ item.banMeisho }}</span>
-              <span class="sync-queue-item__kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
+              <span class="flex-1 sync-queue-item__kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
               <span class="sync-queue-item__time">{{ formatDateTime(item.clientConfirmedAt) }}</span>
             </li>
-            <li v-if="queue.length > 5" class="sync-queue-more">
+            <li v-if="queue.length > 5" class="sync-queue-more p-1 text-center">
               ... 他 {{ queue.length - 5 }} 件
             </li>
           </ul>
@@ -209,7 +207,7 @@ const formatDateTime = (isoStr: string) => {
           </MoleculesResultBox>
         </div>
 
-        <div class="sync-modal__actions">
+        <div class="flex items-center justify-end gap-3 pt-3 sync-modal__actions">
           <AtomsButton
             variant="secondary"
             @click="closeModal"
@@ -231,58 +229,23 @@ const formatDateTime = (isoStr: string) => {
 </template>
 
 <style scoped lang="scss">
-.sync-modal {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-
-  &__actions {
-    display: flex;
-    gap: var(--space-3);
-    justify-content: flex-end;
-
-    padding-top: var(--space-3);
-    border-top: 1px solid var(--color-border);
-  }
+.sync-modal__actions {
+  border-top: 1px solid var(--color-border);
 }
 
-.sync-summary {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-
-  &__desc {
-    margin: 0;
-    font-size: var(--font-size-sm);
-    line-height: var(--leading-relaxed);
-    color: var(--color-text-muted);
-  }
+.sync-summary__desc {
+  font-size: var(--font-size-sm);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-muted);
 }
 
 .sync-queue-list {
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-
-  max-height: 180px;
-  margin: 0;
-  padding: var(--space-2);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-
-  list-style: none;
-
   background: var(--surface-bg-subtle);
 }
 
 .sync-queue-item {
-  display: flex;
-  gap: var(--space-2);
-  align-items: center;
-
-  padding: var(--space-1) var(--space-2);
-
   font-size: var(--font-size-xs);
 
   &__ban {
@@ -291,7 +254,6 @@ const formatDateTime = (isoStr: string) => {
   }
 
   &__kairo {
-    flex: 1;
     color: var(--color-text-muted);
   }
 
@@ -302,14 +264,11 @@ const formatDateTime = (isoStr: string) => {
 }
 
 .sync-queue-more {
-  padding: var(--space-1);
   font-size: var(--font-size-xs);
   color: var(--color-text-dim);
-  text-align: center;
 }
 
 .sync-conflict-alert {
-  padding: var(--space-3);
   border: 1px solid color-mix(in srgb, var(--color-status-warning) 30%, transparent);
   border-radius: var(--radius-sm);
 
@@ -321,22 +280,11 @@ const formatDateTime = (isoStr: string) => {
 }
 
 .sync-conflict-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-
-  padding: var(--space-3);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-
   background: var(--surface-bg-elevated);
 
   &__header {
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
-
-    padding-bottom: var(--space-2);
     border-bottom: 1px solid var(--color-border);
   }
 
@@ -346,31 +294,14 @@ const formatDateTime = (isoStr: string) => {
   }
 
   &__kairo {
-    flex: 1;
     font-size: var(--font-size-sm);
     color: var(--color-text-muted);
-  }
-
-  &__grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-3);
-
-    @include mq("sm") {
-      grid-template-columns: 1fr;
-    }
   }
 }
 
 .sync-conflict-col {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-
-  padding: var(--space-3);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xs);
-
   background: var(--surface-bg-subtle);
 
   &.is-server {
@@ -394,7 +325,6 @@ const formatDateTime = (isoStr: string) => {
   }
 
   &__details {
-    padding: var(--space-2);
     border-radius: var(--radius-xs);
 
     font-family: var(--font-family-mono);
@@ -404,9 +334,5 @@ const formatDateTime = (isoStr: string) => {
 
     background: var(--surface-bg-elevated);
   }
-}
-
-.mt-sm {
-  margin-top: var(--space-2);
 }
 </style>

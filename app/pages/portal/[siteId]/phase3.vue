@@ -87,20 +87,18 @@ const shubetsuTabOptions = computed(() => {
 
       <AtomsButton
         variant="primary"
-        size="sm"
         :loading="isBatchLoading"
         @click="batchConfirmPhase3"
       >
-        <AtomsIcon name="check-check" size="sm" />
+        <AtomsIcon name="check-check" />
         一括標準値確定
       </AtomsButton>
 
       <AtomsButton
         :to="`/portal/${siteId}/souden`"
         variant="secondary"
-        size="sm"
       >
-        <AtomsIcon name="arrow-left" size="sm" />
+        <AtomsIcon name="arrow-left" />
         ダッシュボードへ戻る
       </AtomsButton>
     </template>
