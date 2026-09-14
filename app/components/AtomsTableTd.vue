@@ -33,7 +33,7 @@ defineProps<{
           'items-end text-right': column.align === 'right',
         }"
       >
-        <span class="main-text truncate w-full">
+        <span class="main-text w-full">
           {{ value ?? '-' }}
         </span>
         <span
@@ -65,7 +65,10 @@ td {
   }
 
   .main-text {
+    line-height: 1.3;
     color: var(--color-text-main);
+    word-break: auto-phrase;
+    white-space: normal;
   }
 
   .sub-text {

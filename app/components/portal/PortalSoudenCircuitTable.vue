@@ -134,10 +134,10 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
                 />
               </div>
 
-              <!-- 回路名称の送電試験標準描画（スロット指定がない場合） -->
+              <!-- 回路名称の送電試験標準描画（スロット指定がない場合・Excel改行を保持） -->
               <span
                 v-else-if="col.key === 'kairoMeisho'"
-                class="souden-cell__meisho truncate block"
+                class="souden-cell__meisho block"
                 :title="circuit.kairoMeisho || ''"
               >
                 {{ circuit.kairoMeisho || '-' }}
@@ -203,6 +203,16 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
 
   &:last-child :deep(td) {
     border-bottom: none;
+  }
+}
+
+.souden-cell {
+  &__meisho {
+    font-size: var(--text-xs);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.3;
+    color: var(--color-text-main);
+    white-space: pre-line;
   }
 }
 

@@ -452,16 +452,15 @@ const {
   }
 
   &__meisho {
-    overflow: hidden;
     display: block;
 
     max-width: 100%;
 
     font-size: var(--text-xs);
     font-weight: var(--font-weight-medium);
+    line-height: 1.3;
     color: var(--color-text-main);
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: pre-line;
   }
 
   &__remarks {
