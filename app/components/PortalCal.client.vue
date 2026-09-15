@@ -8,9 +8,9 @@ import { useCalendarEventForm } from '~/composables/portal/useCalendarEventForm'
 import { useCalendarOptions } from '~/composables/portal/useCalendarOptions'
 
 import PortalAtomsCalEventBadge from './portal/AtomsCalEventBadge.vue'
+import PortalMoleculesCalToolbar from './portal/MoleculesCalToolbar.vue'
 import PortalOrganismsCalEventModal from './portal/OrganismsCalEventModal.vue'
 import PortalOrganismsCalTypeSettingsModal from './portal/OrganismsCalTypeSettingsModal.vue'
-import PortalCalToolbar from './PortalCalToolbar.vue'
 
 const props = defineProps<{
   siteId: string
@@ -84,7 +84,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
 <template>
   <div class="flex flex-col gap-3">
-    <PortalCalToolbar
+    <PortalMoleculesCalToolbar
       :title="currentTitle"
       :current-view="currentView"
       @prev="handlePrev"
