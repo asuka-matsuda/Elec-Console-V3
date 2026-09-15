@@ -67,7 +67,7 @@ const shubetsuTabOptions = computed(() => {
 </script>
 
 <template>
-  <PortalPhaseExamTemplate
+  <PortalOrganismsPhaseExamTemplate
     v-model:shubetsu="selectedBanShubetsu"
     v-model:ban-meisho="selectedBanMeisho"
     title="フェーズ3：送電・電圧測定・検相"
@@ -103,7 +103,7 @@ const shubetsuTabOptions = computed(() => {
       </AtomsButton>
     </template>
 
-    <PortalPhase3Table
+    <PortalOrganismsPhase3Table
       :circuits="filteredCircuits"
       :full-circuits="circuits"
       :is-circuit-locked="isCircuitLocked"
@@ -112,5 +112,5 @@ const shubetsuTabOptions = computed(() => {
       @confirm="confirmPhase3"
       @clear="clearPhase3"
     />
-  </PortalPhaseExamTemplate>
+  </PortalOrganismsPhaseExamTemplate>
 </template>

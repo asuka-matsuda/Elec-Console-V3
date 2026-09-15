@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PortalPhase3Table
+ * PortalOrganismsPhase3Table
  * フェーズ3（送電・電圧測定・検相）の回路一覧テーブルOrganismコンポーネント。
  * 回路情報の表示、手入力モード（各相電圧・検相・備考の入力）、標準値確定、および解除の各操作を管理します。
  */
@@ -179,7 +179,7 @@ const {
 
     <!-- 回路名称 -->
     <template #cell-kairoMeisho="{ row: circuit }">
-      <span class="phase3-cell__meisho" :title="circuit.kairoMeisho || ''">
+      <span class="cell-meisho" :title="circuit.kairoMeisho || ''">
         {{ circuit.kairoMeisho || '-' }}
       </span>
     </template>
@@ -187,9 +187,9 @@ const {
     <!-- 電圧 1 (RS / RN) -->
     <template #cell-denatsuRs="{ row: circuit }">
       <template v-if="editingRowId === circuit.id">
-        <div class="flex flex-col items-center gap-[2px] text-2xs">
-          <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label1 }}</span>
-          <MoleculesInputGroup addon="V" style="width: 80px;">
+        <div class="flex flex-col items-center gap-0.5 text-2xs">
+          <span class="input-label">{{ getPhaseLabels(circuit).label1 }}</span>
+          <MoleculesInputGroup addon="V" class="w-20">
             <AtomsInput
               v-model="inputForm.rs"
               type="number"
@@ -202,15 +202,15 @@ const {
         </div>
       </template>
       <div v-else class="flex flex-col items-center gap-1">
-        <span class="phase3-volt-cell__label">{{ getPhaseLabels(circuit).label1 }}</span>
-        <div class="flex items-baseline gap-[2px]">
+        <span class="volt-label">{{ getPhaseLabels(circuit).label1 }}</span>
+        <div class="flex items-baseline gap-0.5">
           <span
-            class="phase3-volt-cell__val"
+            class="volt-val"
             :class="{ 'is-active': circuit.denatsuRs !== null && circuit.denatsuRs !== undefined }"
           >
             {{ formatVoltage(circuit.denatsuRs) }}
           </span>
-          <span v-if="circuit.denatsuRs !== null && circuit.denatsuRs !== undefined" class="phase3-volt-cell__unit">V</span>
+          <span v-if="circuit.denatsuRs !== null && circuit.denatsuRs !== undefined" class="volt-unit">V</span>
         </div>
       </div>
     </template>
@@ -218,9 +218,9 @@ const {
     <!-- 電圧 2 (ST / TN) -->
     <template #cell-denatsuSt="{ row: circuit }">
       <template v-if="editingRowId === circuit.id">
-        <div class="flex flex-col items-center gap-[2px] text-2xs">
-          <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label2 }}</span>
-          <MoleculesInputGroup addon="V" style="width: 80px;">
+        <div class="flex flex-col items-center gap-0.5 text-2xs">
+          <span class="input-label">{{ getPhaseLabels(circuit).label2 }}</span>
+          <MoleculesInputGroup addon="V" class="w-20">
             <AtomsInput
               v-model="inputForm.st"
               type="number"
@@ -233,15 +233,15 @@ const {
         </div>
       </template>
       <div v-else class="flex flex-col items-center gap-1">
-        <span class="phase3-volt-cell__label">{{ getPhaseLabels(circuit).label2 }}</span>
-        <div class="flex items-baseline gap-[2px]">
+        <span class="volt-label">{{ getPhaseLabels(circuit).label2 }}</span>
+        <div class="flex items-baseline gap-0.5">
           <span
-            class="phase3-volt-cell__val"
+            class="volt-val"
             :class="{ 'is-active': circuit.denatsuSt !== null && circuit.denatsuSt !== undefined }"
           >
             {{ formatVoltage(circuit.denatsuSt) }}
           </span>
-          <span v-if="circuit.denatsuSt !== null && circuit.denatsuSt !== undefined" class="phase3-volt-cell__unit">V</span>
+          <span v-if="circuit.denatsuSt !== null && circuit.denatsuSt !== undefined" class="volt-unit">V</span>
         </div>
       </div>
     </template>
@@ -249,9 +249,9 @@ const {
     <!-- 電圧 3 (RT / RT) -->
     <template #cell-denatsuRt="{ row: circuit }">
       <template v-if="editingRowId === circuit.id">
-        <div class="flex flex-col items-center gap-[2px] text-2xs">
-          <span class="phase3-input-cell__label">{{ getPhaseLabels(circuit).label3 }}</span>
-          <MoleculesInputGroup addon="V" style="width: 80px;">
+        <div class="flex flex-col items-center gap-0.5 text-2xs">
+          <span class="input-label">{{ getPhaseLabels(circuit).label3 }}</span>
+          <MoleculesInputGroup addon="V" class="w-20">
             <AtomsInput
               v-model="inputForm.rt"
               type="number"
@@ -264,15 +264,15 @@ const {
         </div>
       </template>
       <div v-else class="flex flex-col items-center gap-1">
-        <span class="phase3-volt-cell__label">{{ getPhaseLabels(circuit).label3 }}</span>
-        <div class="flex items-baseline gap-[2px]">
+        <span class="volt-label">{{ getPhaseLabels(circuit).label3 }}</span>
+        <div class="flex items-baseline gap-0.5">
           <span
-            class="phase3-volt-cell__val"
+            class="volt-val"
             :class="{ 'is-active': circuit.denatsuRt !== null && circuit.denatsuRt !== undefined }"
           >
             {{ formatVoltage(circuit.denatsuRt) }}
           </span>
-          <span v-if="circuit.denatsuRt !== null && circuit.denatsuRt !== undefined" class="phase3-volt-cell__unit">V</span>
+          <span v-if="circuit.denatsuRt !== null && circuit.denatsuRt !== undefined" class="volt-unit">V</span>
         </div>
       </div>
     </template>
@@ -283,7 +283,7 @@ const {
         <AtomsSelect
           v-model="inputForm.kensou"
           :options="getKensouOptions(circuit)"
-          style="min-width: 96px;"
+          class="min-w-24"
         />
       </template>
       <template v-else-if="circuit.kensou">
@@ -293,7 +293,7 @@ const {
           {{ circuit.kensou }}
         </AtomsBadge>
       </template>
-      <span v-else class="phase3-cell__dash">-</span>
+      <span v-else class="cell-dash">-</span>
     </template>
 
     <!-- 備考 -->
@@ -306,7 +306,7 @@ const {
           placeholder="備考"
         />
       </template>
-      <span v-else class="phase3-cell__remarks" :title="circuit.p3Remarks || ''">
+      <span v-else class="cell-remarks" :title="circuit.p3Remarks || ''">
         {{ circuit.p3Remarks || '-' }}
       </span>
     </template>
@@ -316,12 +316,12 @@ const {
       <div class="flex items-center justify-center gap-1">
         <!-- 幹線未完了による操作不可 -->
         <template v-if="isCircuitLocked(circuit)">
-          <span class="text-note text-note--strong inline-flex items-center gap-1">⏸ 幹線未了</span>
+          <span class="text-note inline-flex items-center gap-1">⏸ 幹線未了</span>
         </template>
 
         <!-- 前フェーズ（P2）未完了による操作不可 -->
         <template v-else-if="!isP2Complete(circuit)">
-          <span class="text-note text-note--strong inline-flex items-center gap-1">⏸ P2未了</span>
+          <span class="text-note inline-flex items-center gap-1">⏸ P2未了</span>
         </template>
 
         <!-- 手入力編集モード中 -->
@@ -381,102 +381,93 @@ const {
 
     <!-- 測定者 / 日時 -->
     <template #cell-p3ConfirmedAt="{ row: circuit }">
-      <div v-if="circuit.p3Worker" class="souden-worker-cell flex flex-col items-center gap-0.5">
-        <strong class="souden-worker-cell__worker">{{ circuit.p3Worker }}</strong>
-        <span class="souden-worker-cell__date">{{ formatShortDateTime(circuit.p3ConfirmedAt) }}</span>
+      <div v-if="circuit.p3Worker" class="worker-cell flex flex-col items-center gap-0.5">
+        <strong class="worker-name">{{ circuit.p3Worker }}</strong>
+        <span class="worker-date">{{ formatShortDateTime(circuit.p3ConfirmedAt) }}</span>
       </div>
-      <span v-else class="souden-worker-cell__dash">-</span>
+      <span v-else class="worker-dash">-</span>
     </template>
   </PortalOrganismsSoudenCircuitTable>
 </template>
 
 <style scoped lang="scss">
-.phase3-cell {
-  &__meisho {
-    display: block;
+.cell-meisho {
+  display: block;
 
-    max-width: 100%;
+  max-width: 100%;
 
-    font-size: inherit;
-    font-weight: var(--font-weight-normal);
-    line-height: 1.3;
-    color: var(--color-text-main);
-    white-space: pre-line;
-  }
+  font-size: inherit;
+  font-weight: var(--font-weight-normal);
+  line-height: 1.3;
+  color: var(--color-text-main);
+  white-space: pre-line;
+}
 
-  &__remarks {
-    overflow: hidden;
-    display: block;
+.cell-remarks {
+  overflow: hidden;
+  display: block;
 
-    max-width: 100%;
+  max-width: 100%;
 
-    font-size: inherit;
-    color: var(--color-text-secondary);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+  font-size: inherit;
+  color: var(--color-text-secondary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
-  &__dash {
-    color: var(--color-text-muted);
+.cell-dash {
+  color: var(--color-text-muted);
+}
+
+.volt-label {
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-secondary);
+}
+
+.volt-val {
+  font-family: var(--font-mono);
+  font-size: inherit;
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-main);
+
+  &.is-active {
+    color: var(--color-category-tool);
   }
 }
 
-.phase3-volt-cell {
-  &__label {
-    font-size: var(--font-size-2xs);
-    font-weight: var(--font-weight-normal);
-    color: var(--color-text-secondary);
-  }
-
-  &__val {
-    font-family: var(--font-mono);
-    font-size: inherit;
-    font-weight: var(--font-weight-normal);
-    color: var(--color-text-main);
-
-    &.is-active {
-      color: var(--color-category-tool);
-    }
-  }
-
-  &__unit {
-    font-family: var(--font-base);
-    font-size: var(--font-size-2xs);
-    color: var(--color-text-secondary);
-  }
+.volt-unit {
+  font-family: var(--font-base);
+  font-size: var(--font-size-2xs);
+  color: var(--color-text-secondary);
 }
 
-.phase3-input-cell {
-  &__label {
-    font-size: var(--font-size-2xs);
-    color: var(--color-text-secondary);
-  }
+.input-label {
+  font-size: var(--font-size-2xs);
+  color: var(--color-text-secondary);
 }
 
 .text-note {
   font-size: inherit;
+  font-weight: var(--font-weight-normal);
   color: var(--color-status-warning);
-
-  &--strong {
-    font-weight: var(--font-weight-normal);
-  }
 }
 
-.souden-worker-cell {
-  &__worker {
+.worker-cell {
+  .worker-name {
     font-size: inherit;
     font-weight: var(--font-weight-normal);
     color: var(--color-status-success);
   }
 
-  &__date {
+  .worker-date {
     font-family: var(--font-mono);
     font-size: var(--font-size-2xs);
     color: var(--color-text-muted);
   }
+}
 
-  &__dash {
-    color: var(--color-text-muted);
-  }
+.worker-dash {
+  color: var(--color-text-muted);
 }
 </style>

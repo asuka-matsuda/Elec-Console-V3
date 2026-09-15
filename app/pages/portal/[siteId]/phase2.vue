@@ -69,7 +69,7 @@ const shubetsuTabOptions = computed(() => {
 </script>
 
 <template>
-  <PortalPhaseExamTemplate
+  <PortalOrganismsPhaseExamTemplate
     v-model:shubetsu="selectedBanShubetsu"
     v-model:ban-meisho="selectedBanMeisho"
     title="フェーズ2：絶縁抵抗測定（メガ測定）"
@@ -106,14 +106,14 @@ const shubetsuTabOptions = computed(() => {
     </template>
 
     <template #filters-extra>
-      <div class="phase2-threshold flex items-center gap-1 py-0.5 px-2.5">
-        <span class="phase2-threshold__label">基準値: ≧</span>
-        <span class="phase2-threshold__val">{{ phase2ThresholdMegOhm.toFixed(1) }}</span>
-        <span class="phase2-threshold__unit">MΩ</span>
+      <div class="threshold-badge flex items-center gap-1 py-0.5 px-2.5">
+        <span class="threshold-label">基準値: ≧</span>
+        <span class="threshold-val">{{ phase2ThresholdMegOhm.toFixed(1) }}</span>
+        <span class="threshold-unit">MΩ</span>
       </div>
     </template>
 
-    <PortalPhase2Table
+    <PortalOrganismsPhase2Table
       :circuits="filteredCircuits"
       :full-circuits="circuits"
       :is-circuit-locked="isCircuitLocked"
@@ -124,28 +124,28 @@ const shubetsuTabOptions = computed(() => {
       @confirm="confirmPhase2"
       @clear="clearPhase2"
     />
-  </PortalPhaseExamTemplate>
+  </PortalOrganismsPhaseExamTemplate>
 </template>
 
 <style scoped lang="scss">
-.phase2-threshold {
+.threshold-badge {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   font-size: var(--font-size-xs);
   background-color: var(--color-bg-hover);
+}
 
-  &__label {
-    color: var(--color-text-muted);
-  }
+.threshold-label {
+  color: var(--color-text-muted);
+}
 
-  &__val {
-    font-family: var(--font-mono);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-category-tool);
-  }
+.threshold-val {
+  font-family: var(--font-mono);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-category-tool);
+}
 
-  &__unit {
-    color: var(--color-text-muted);
-  }
+.threshold-unit {
+  color: var(--color-text-muted);
 }
 </style>

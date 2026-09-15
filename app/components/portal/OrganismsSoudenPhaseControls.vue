@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * SoudenPhaseControls
+ * PortalOrganismsSoudenPhaseControls
  * 送電試験（フェーズ1〜3）共通のコントロールパネルコンポーネント。
  * 盤種別タブ、盤名称セレクト、件数表示バッジ、全体進捗バー、ミニマップを一元管理します。
  */
@@ -35,7 +35,7 @@ const emit = defineEmits<{
       <div class="flex flex-col gap-3">
         <!-- 盤種別タブ -->
         <div class="flex items-center gap-3">
-          <span class="phase-controls__label min-w-[50px]">盤種別:</span>
+          <span class="controls-label min-w-[50px]">盤種別:</span>
           <AtomsTabs
             v-model="selectedShubetsu"
             :options="shubetsuOptions"
@@ -45,7 +45,7 @@ const emit = defineEmits<{
         <!-- 盤名称セレクト & フィルター拡張/件数表示 -->
         <div class="flex flex-wrap items-center gap-3">
           <div class="flex items-center gap-2">
-            <span class="phase-controls__label min-w-[50px]">盤名称:</span>
+            <span class="controls-label min-w-[50px]">盤名称:</span>
             <AtomsSelect
               v-model="selectedBanMeisho"
               :options="banMeishoOptions"
@@ -65,11 +65,11 @@ const emit = defineEmits<{
       <!-- 全体進捗バー & ミニマップ -->
       <div class="flex flex-col gap-3">
         <div class="flex flex-col w-full gap-1">
-          <div class="phase-controls__stats-header flex items-center justify-between">
-            <span class="phase-controls__stats-title">
+          <div class="stats-header flex items-center justify-between">
+            <span class="stats-title">
               {{ progressLabel || `フェーズ${phase} 進捗状況` }}
             </span>
-            <div class="phase-controls__stats-numbers flex items-center gap-2">
+            <div class="stats-numbers flex items-center gap-2">
               <span><strong>{{ stats.completed }}</strong> / {{ stats.total }}</span>
               <span>({{ stats.pct }}%)</span>
               <AtomsBadge v-if="stats.excluded && stats.excluded > 0" color="var(--color-text-muted)">
@@ -92,34 +92,32 @@ const emit = defineEmits<{
 </template>
 
 <style scoped lang="scss">
-.phase-controls {
-  &__stats-header {
-    font-size: var(--font-size-xs);
-  }
+.stats-header {
+  font-size: var(--font-size-xs);
+}
 
-  &__stats-title {
-    font-weight: var(--font-weight-medium);
+.stats-title {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-main);
+}
+
+.stats-numbers {
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+
+  strong {
+    font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
 
-  &__stats-numbers {
-    font-family: var(--font-mono);
-    color: var(--color-text-muted);
-
-    strong {
-      font-weight: var(--font-weight-bold);
-      color: var(--color-text-main);
-    }
-
-    span {
-      color: var(--color-text-main);
-    }
+  span {
+    color: var(--color-text-main);
   }
+}
 
-  &__label {
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-secondary);
-  }
+.controls-label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-secondary);
 }
 </style>

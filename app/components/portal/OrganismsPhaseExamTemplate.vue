@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PortalPhaseExamTemplate
+ * PortalOrganismsPhaseExamTemplate
  * 送電試験（フェーズ1〜3）共通のテンプレート（Layout）コンポーネント。
  * ヘッダー、同期状態、絞り込み＆進捗コントロールパネル、およびメインコンテンツ（テーブル）の骨組みを提供します。
  */
@@ -44,7 +44,7 @@ defineEmits<{
     </MoleculesSectionHeader>
 
     <!-- 検索・絞り込み ＆ 進捗コントロールパネル -->
-    <PortalSoudenPhaseControls
+    <PortalOrganismsSoudenPhaseControls
       v-model:shubetsu="selectedShubetsu"
       v-model:ban-meisho="selectedBanMeisho"
       :shubetsu-options="shubetsuOptions"
@@ -57,7 +57,7 @@ defineEmits<{
       <template #filters-extra>
         <slot name="filters-extra" />
       </template>
-    </PortalSoudenPhaseControls>
+    </PortalOrganismsSoudenPhaseControls>
 
     <!-- メインコンテンツ（各フェーズのテーブル等） -->
     <main class="flex flex-1 flex-col min-h-0">

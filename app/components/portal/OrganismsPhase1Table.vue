@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PortalPhase1Table
+ * PortalOrganismsPhase1Table
  * フェーズ1（回路確認・増し締め）の回路一覧テーブルOrganismコンポーネント。
  * 回路確認・増締めチェック、インライン編集（回路番号・名称・配線・備考）、確定および解除操作を管理します。
  */
@@ -102,7 +102,7 @@ const {
           placeholder="回路名称"
         />
       </template>
-      <span v-else class="phase1-cell__text phase1-cell__meisho" :title="circuit.kairoMeisho || ''">
+      <span v-else class="cell-text cell-meisho" :title="circuit.kairoMeisho || ''">
         {{ circuit.kairoMeisho || '-' }}
       </span>
     </template>
@@ -113,17 +113,17 @@ const {
         <div class="flex flex-col gap-1">
           <div class="flex items-center gap-1">
             <AtomsInput v-model="editForm.cableList" placeholder="ケーブル" />
-            <AtomsInput v-model="editForm.haisenJousuu" placeholder="条数" style="width: 55px;" />
+            <AtomsInput v-model="editForm.haisenJousuu" placeholder="条数" class="w-14" />
           </div>
           <AtomsInput v-model="editForm.setsuchiList" placeholder="接地リスト" />
         </div>
       </template>
       <div v-else class="flex flex-col gap-0.5">
         <div class="flex items-center gap-1">
-          <span class="phase1-cell__cable">{{ circuit.cableList || '-' }}</span>
-          <span v-if="circuit.haisenJousuu" class="phase1-cell__jousuu">({{ circuit.haisenJousuu }})</span>
+          <span class="cell-cable">{{ circuit.cableList || '-' }}</span>
+          <span v-if="circuit.haisenJousuu" class="cell-jousuu">({{ circuit.haisenJousuu }})</span>
         </div>
-        <span class="phase1-cell__setsuchi" :title="circuit.setsuchiList || ''">
+        <span class="cell-setsuchi" :title="circuit.setsuchiList || ''">
           {{ circuit.setsuchiList ? `E: ${circuit.setsuchiList}` : '-' }}
         </span>
       </div>
@@ -132,19 +132,19 @@ const {
     <!-- 確認 / 増締め (チェックボックス) -->
     <template #cell-p1Kakunin="{ row: circuit }">
       <div class="flex items-center justify-center gap-3">
-        <label class="phase1-check-item inline-flex flex-col items-center gap-0.5" title="回路確認">
+        <label class="check-item inline-flex flex-col items-center gap-0.5" title="回路確認">
           <AtomsCheckbox
             v-model="circuit.p1Kakunin"
             :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
           />
-          <span class="phase1-check-item__label">確認</span>
+          <span class="check-item-label">確認</span>
         </label>
-        <label class="phase1-check-item inline-flex flex-col items-center gap-0.5" title="増締め確認">
+        <label class="check-item inline-flex flex-col items-center gap-0.5" title="増締め確認">
           <AtomsCheckbox
             v-model="circuit.p1Mashishime"
             :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
           />
-          <span class="phase1-check-item__label">増締</span>
+          <span class="check-item-label">増締</span>
         </label>
       </div>
     </template>
@@ -159,7 +159,7 @@ const {
           placeholder="備考"
         />
       </template>
-      <span v-else class="phase1-cell__text phase1-cell__remarks" :title="circuit.p1Remarks || ''">
+      <span v-else class="cell-text cell-remarks" :title="circuit.p1Remarks || ''">
         {{ circuit.p1Remarks || '-' }}
       </span>
     </template>
@@ -169,7 +169,7 @@ const {
       <div class="flex items-center justify-center gap-1">
         <!-- 幹線未完了による操作不可 -->
         <template v-if="isCircuitLocked(circuit)">
-          <span class="text-note text-note--strong inline-flex items-center gap-1">⏸ 幹線未了</span>
+          <span class="text-note inline-flex items-center gap-1">⏸ 幹線未了</span>
         </template>
 
         <!-- 編集モード中 -->
@@ -223,101 +223,96 @@ const {
 
     <!-- 測定者 / 日時 -->
     <template #cell-p1ConfirmedAt="{ row: circuit }">
-      <div v-if="circuit.p1Worker" class="souden-worker-cell flex flex-col items-center gap-0.5">
-        <strong class="souden-worker-cell__worker">{{ circuit.p1Worker }}</strong>
-        <span class="souden-worker-cell__date">{{ formatShortDateTime(circuit.p1ConfirmedAt) }}</span>
+      <div v-if="circuit.p1Worker" class="worker-cell flex flex-col items-center gap-0.5">
+        <strong class="worker-name">{{ circuit.p1Worker }}</strong>
+        <span class="worker-date">{{ formatShortDateTime(circuit.p1ConfirmedAt) }}</span>
       </div>
-      <span v-else class="souden-worker-cell__dash">-</span>
+      <span v-else class="worker-dash">-</span>
     </template>
   </PortalOrganismsSoudenCircuitTable>
 </template>
 
 <style scoped lang="scss">
-.phase1-cell {
-  &__cable {
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-main);
-  }
+.cell-cable {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-main);
+}
 
-  &__jousuu {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-secondary);
-  }
+.cell-jousuu {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
 
-  &__setsuchi {
-    overflow: hidden;
+.cell-setsuchi {
+  overflow: hidden;
 
-    max-width: 140px;
+  max-width: 140px;
 
-    font-size: var(--font-size-2xs);
-    color: var(--color-text-secondary);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+  font-size: var(--font-size-2xs);
+  color: var(--color-text-secondary);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
-  &__text {
-    font-size: inherit;
-    color: var(--color-text-main);
-  }
+.cell-text {
+  font-size: inherit;
+  color: var(--color-text-main);
+}
 
-  &__meisho {
-    display: block;
+.cell-meisho {
+  display: block;
 
-    max-width: 100%;
+  max-width: 100%;
 
-    font-size: inherit;
-    font-weight: var(--font-weight-normal);
-    line-height: 1.3;
-    color: var(--color-text-main);
-    white-space: pre-line;
-  }
+  font-size: inherit;
+  font-weight: var(--font-weight-normal);
+  line-height: 1.3;
+  color: var(--color-text-main);
+  white-space: pre-line;
+}
 
-  &__remarks {
-    overflow: hidden;
-    display: block;
+.cell-remarks {
+  overflow: hidden;
+  display: block;
 
-    max-width: 100%;
+  max-width: 100%;
 
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .text-note {
   font-size: inherit;
+  font-weight: var(--font-weight-normal);
   color: var(--color-status-warning);
-
-  &--strong {
-    font-weight: var(--font-weight-normal);
-  }
 }
 
-.phase1-check-item {
+.check-item {
   cursor: pointer;
 
-  &__label {
+  &-label {
     user-select: none;
     font-size: var(--font-size-2xs);
     color: var(--color-text-muted);
   }
 }
 
-.souden-worker-cell {
-  &__worker {
+.worker-cell {
+  .worker-name {
     font-size: inherit;
     font-weight: var(--font-weight-normal);
     color: var(--color-status-success);
   }
 
-  &__date {
+  .worker-date {
     font-family: var(--font-mono);
     font-size: var(--font-size-2xs);
     color: var(--color-text-muted);
   }
+}
 
-  &__dash {
-    color: var(--color-text-muted);
-  }
+.worker-dash {
+  color: var(--color-text-muted);
 }
 </style>
