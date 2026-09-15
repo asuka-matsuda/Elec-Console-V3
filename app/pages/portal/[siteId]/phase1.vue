@@ -78,7 +78,7 @@ const shubetsuTabOptions = computed(() => {
     @select-circuit="scrollToCircuit"
   >
     <template #header-actions>
-      <PortalSyncStatusBadge
+      <PortalOrganismsSyncStatusBadge
         :site-id="siteId"
         @synced="fetchCircuits"
       />
