@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PortalAdminSitesTab
+ * PortalOrganismsAdminSitesTab
  * ポータル管理 - 現場管理（PC管理コンソール型 2ペインレイアウト）
  * 左ペイン（現場一覧・検索・新規登録）と右ペイン（現場詳細設定・Excel連携・除外ルール）を常時展開します。
  */

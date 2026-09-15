@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PortalAdminUsersTab
+ * PortalOrganismsAdminUsersTab
  * ポータル管理 - ユーザー管理（PC管理コンソール型 2ペインレイアウト）
  * 左ペイン（ユーザー一覧・検索・新規登録）と右ペイン（ユーザー詳細設定・基本情報・現場アサイン）を常時展開します。
  */

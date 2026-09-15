@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
 
-import PortalAdminSitesTab from '../../app/components/PortalAdminSitesTab.vue'
+import OrganismsAdminSitesTab from '../../../app/components/portal/OrganismsAdminSitesTab.vue'
 import type { Site } from '../../app/types/admin'
 
 const mockSites = ref<Site[]>([
@@ -26,16 +26,16 @@ vi.mock('~/composables/admin/useAdminUsers', () => ({
   }),
 }))
 
-describe('PortalAdminSitesTab.vue', () => {
+describe('OrganismsAdminSitesTab.vue', () => {
   it('renders 2-pane master detail components', () => {
-    const wrapper = mount(PortalAdminSitesTab)
+    const wrapper = mount(OrganismsAdminSitesTab)
 
     expect(wrapper.findComponent({ name: 'PortalOrganismsSiteListMaster' }).exists()).toBe(true)
     expect(wrapper.findComponent({ name: 'PortalOrganismsSiteSettingsDetail' }).exists()).toBe(true)
   })
 
   it('selects first site by default and shows its name in detail', () => {
-    const wrapper = mount(PortalAdminSitesTab)
+    const wrapper = mount(OrganismsAdminSitesTab)
 
     expect(wrapper.text()).toContain('現場A')
     expect(wrapper.text()).toContain('現場B')

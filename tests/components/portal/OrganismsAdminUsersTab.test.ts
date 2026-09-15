@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
 
-import PortalAdminUsersTab from '../../app/components/PortalAdminUsersTab.vue'
+import OrganismsAdminUsersTab from '../../../app/components/portal/OrganismsAdminUsersTab.vue'
 import type { User } from '../../app/types/auth'
 
 const mockUsers = ref<User[]>([
@@ -28,16 +28,16 @@ vi.mock('~/composables/admin/useAdminSites', () => ({
   }),
 }))
 
-describe('PortalAdminUsersTab.vue', () => {
+describe('OrganismsAdminUsersTab.vue', () => {
   it('renders 2-pane master detail components', () => {
-    const wrapper = mount(PortalAdminUsersTab)
+    const wrapper = mount(OrganismsAdminUsersTab)
 
     expect(wrapper.findComponent({ name: 'PortalOrganismsUserListMaster' }).exists()).toBe(true)
     expect(wrapper.findComponent({ name: 'PortalOrganismsUserSettingsDetail' }).exists()).toBe(true)
   })
 
   it('selects first user by default and shows its name in detail', () => {
-    const wrapper = mount(PortalAdminUsersTab)
+    const wrapper = mount(OrganismsAdminUsersTab)
 
     expect(wrapper.text()).toContain('山田 太郎')
     expect(wrapper.text()).toContain('佐藤 次郎')

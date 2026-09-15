@@ -22,8 +22,8 @@ const activeTab = ref('users')
     <AtomsTabs v-model="activeTab" :options="ADMIN_TABS" />
 
     <div class="flex flex-1 flex-col gap-card-gap min-h-0">
-      <PortalAdminUsersTab v-if="activeTab === 'users'" />
-      <PortalAdminSitesTab v-if="activeTab === 'site'" />
+      <PortalOrganismsAdminUsersTab v-if="activeTab === 'users'" />
+      <PortalOrganismsAdminSitesTab v-if="activeTab === 'site'" />
     </div>
   </div>
 </template>
