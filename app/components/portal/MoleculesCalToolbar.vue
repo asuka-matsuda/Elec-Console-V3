@@ -45,13 +45,13 @@ const getOptionIcon = (option: RadioOption<CalendarView>): string => {
   >
     <div class="flex items-center justify-center md:justify-start w-full md:w-auto gap-1">
       <AtomsButton
-        variant="secondary"
+        variant="ghost"
         icon="chevron-left"
         icon-only
         @click="emit('prev')"
       />
       <AtomsButton
-        variant="secondary"
+        variant="ghost"
         icon="chevron-right"
         icon-only
         @click="emit('next')"

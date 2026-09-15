@@ -40,7 +40,7 @@ onMounted(() => {
 
         <AtomsButton
           :to="`/portal/${siteId}`"
-          variant="secondary"
+          variant="ghost"
         >
           <AtomsIcon name="arrow-left" />
           ポータルへ戻る
@@ -48,7 +48,7 @@ onMounted(() => {
 
         <AtomsButton
           :to="`/portal/${siteId}/operation-logs`"
-          variant="secondary"
+          variant="ghost"
         >
           <AtomsIcon name="book-open" />
           操作ログ

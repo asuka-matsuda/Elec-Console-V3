@@ -86,7 +86,7 @@ const shubetsuTabOptions = computed(() => {
       />
 
       <AtomsButton
-        variant="secondary"
+        variant="success"
         :loading="isBatchLoading"
         @click="batchConfirmPhase3"
       >
@@ -96,7 +96,7 @@ const shubetsuTabOptions = computed(() => {
 
       <AtomsButton
         :to="`/portal/${siteId}/souden`"
-        variant="secondary"
+        variant="ghost"
       >
         <AtomsIcon name="arrow-left" />
         ダッシュボードへ戻る

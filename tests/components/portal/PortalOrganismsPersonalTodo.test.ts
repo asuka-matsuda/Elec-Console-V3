@@ -16,6 +16,6 @@ describe('OrganismsPersonalTodo.client.vue', () => {
     const btn = wrapper.findComponent({ name: 'AtomsButton' })
 
     expect(btn.exists()).toBe(true)
-    expect(btn.props('variant')).toBe('secondary')
+    expect(btn.props('variant')).toBe('ghost')
   })
 })

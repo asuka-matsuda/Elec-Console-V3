@@ -278,7 +278,7 @@ const {
         <!-- 通常モード：未確定 -->
         <template v-else>
           <AtomsButton
-            variant="secondary"
+            variant="success"
             :disabled="circuit.isExcluded"
             :loading="isActionLoading[circuit.id]"
             @click="handleQuickOk(circuit)"
