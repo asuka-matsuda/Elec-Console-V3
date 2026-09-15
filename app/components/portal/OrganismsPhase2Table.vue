@@ -9,7 +9,6 @@ import { computed, reactive, ref } from 'vue'
 import { useTableSort } from '~/composables/useTableSort'
 import { PHASE2_TABLE_COLUMNS } from '~/constants/soudenConstants'
 import type { CircuitItem } from '~/types/souden'
-import { formatShortDateTime } from '~/utils/date'
 
 const props = defineProps<{
   circuits: CircuitItem[]
@@ -67,14 +66,6 @@ const getPhaseLabels = (circuit: CircuitItem) => {
     phase3: 'R - T',
     typeText: '電灯（単相）',
   }
-}
-
-// 数値フォーマット（数値と単位を分離して表示するため）
-const formatMegValue = (val: number | null | undefined) => {
-  if (val === null || val === undefined) return '-'
-  if (val >= 100) return '100'
-
-  return val.toFixed(1)
 }
 
 // クイック全相OK確定（100MΩ）
@@ -182,125 +173,44 @@ const {
 
     <!-- 測定相 1 (R-S / R-N) -->
     <template #cell-zetsuenR="{ row: circuit }">
-      <template v-if="editingRowId === circuit.id">
-        <div class="flex flex-col items-center gap-0.5 text-2xs">
-          <span class="input-label">{{ getPhaseLabels(circuit).phase1 }}</span>
-          <MoleculesInputGroup addon="MΩ" class="w-[85px]">
-            <AtomsInput
-              v-model="inputForm.rVal"
-              type="number"
-              step="0.1"
-              inputmode="decimal"
-              placeholder="100"
-              @focus="handleInputFocus"
-              @keydown.enter.prevent="saveInput(circuit)"
-            />
-          </MoleculesInputGroup>
-        </div>
-      </template>
-      <div v-else class="flex flex-col items-center gap-1">
-        <span class="meas-label">{{ getPhaseLabels(circuit).phase1 }}</span>
-        <div class="flex items-baseline gap-0.5">
-          <span
-            class="meas-val"
-            :class="{
-              'is-ok': circuit.p2RStatus === 'OK' || (circuit.zetsuenR !== null && circuit.zetsuenR !== undefined && circuit.zetsuenR >= phase2ThresholdMegOhm),
-              'is-ng': circuit.p2RStatus === 'NG' || (circuit.zetsuenR !== null && circuit.zetsuenR !== undefined && circuit.zetsuenR < phase2ThresholdMegOhm),
-            }"
-          >
-            {{ formatMegValue(circuit.zetsuenR) }}
-          </span>
-          <span v-if="circuit.zetsuenR !== null && circuit.zetsuenR !== undefined" class="meas-unit">MΩ</span>
-        </div>
-        <AtomsBadge
-          v-if="circuit.p2RStatus"
-          :color="circuit.p2RStatus === 'OK' ? 'var(--color-status-success)' : 'var(--color-status-danger)'"
-        >
-          {{ circuit.p2RStatus }}
-        </AtomsBadge>
-      </div>
+      <PortalMoleculesPhase2MeasCell
+        v-model="inputForm.rVal"
+        :label="getPhaseLabels(circuit).phase1"
+        :val="circuit.zetsuenR"
+        :status="circuit.p2RStatus"
+        :is-editing="editingRowId === circuit.id"
+        :threshold="phase2ThresholdMegOhm"
+        @focus="handleInputFocus"
+        @enter="saveInput(circuit)"
+      />
     </template>
 
     <!-- 測定相 2 (S-T / T-N) -->
     <template #cell-zetsuenS="{ row: circuit }">
-      <template v-if="editingRowId === circuit.id">
-        <div class="flex flex-col items-center gap-0.5 text-2xs">
-          <span class="input-label">{{ getPhaseLabels(circuit).phase2 }}</span>
-          <MoleculesInputGroup addon="MΩ" class="w-[85px]">
-            <AtomsInput
-              v-model="inputForm.sVal"
-              type="number"
-              step="0.1"
-              inputmode="decimal"
-              placeholder="100"
-              @focus="handleInputFocus"
-              @keydown.enter.prevent="saveInput(circuit)"
-            />
-          </MoleculesInputGroup>
-        </div>
-      </template>
-      <div v-else class="flex flex-col items-center gap-1">
-        <span class="meas-label">{{ getPhaseLabels(circuit).phase2 }}</span>
-        <div class="flex items-baseline gap-0.5">
-          <span
-            class="meas-val"
-            :class="{
-              'is-ok': circuit.p2SStatus === 'OK' || (circuit.zetsuenS !== null && circuit.zetsuenS !== undefined && circuit.zetsuenS >= phase2ThresholdMegOhm),
-              'is-ng': circuit.p2SStatus === 'NG' || (circuit.zetsuenS !== null && circuit.zetsuenS !== undefined && circuit.zetsuenS < phase2ThresholdMegOhm),
-            }"
-          >
-            {{ formatMegValue(circuit.zetsuenS) }}
-          </span>
-          <span v-if="circuit.zetsuenR !== null && circuit.zetsuenR !== undefined" class="meas-unit">MΩ</span>
-        </div>
-        <AtomsBadge
-          v-if="circuit.p2SStatus"
-          :color="circuit.p2SStatus === 'OK' ? 'var(--color-status-success)' : 'var(--color-status-danger)'"
-        >
-          {{ circuit.p2SStatus }}
-        </AtomsBadge>
-      </div>
+      <PortalMoleculesPhase2MeasCell
+        v-model="inputForm.sVal"
+        :label="getPhaseLabels(circuit).phase2"
+        :val="circuit.zetsuenS"
+        :status="circuit.p2SStatus"
+        :is-editing="editingRowId === circuit.id"
+        :threshold="phase2ThresholdMegOhm"
+        @focus="handleInputFocus"
+        @enter="saveInput(circuit)"
+      />
     </template>
 
     <!-- 測定相 3 (R-T / R-T) -->
     <template #cell-zetsuenT="{ row: circuit }">
-      <template v-if="editingRowId === circuit.id">
-        <div class="flex flex-col items-center gap-0.5 text-2xs">
-          <span class="input-label">{{ getPhaseLabels(circuit).phase3 }}</span>
-          <MoleculesInputGroup addon="MΩ" class="w-[85px]">
-            <AtomsInput
-              v-model="inputForm.tVal"
-              type="number"
-              step="0.1"
-              inputmode="decimal"
-              placeholder="100"
-              @focus="handleInputFocus"
-              @keydown.enter.prevent="saveInput(circuit)"
-            />
-          </MoleculesInputGroup>
-        </div>
-      </template>
-      <div v-else class="flex flex-col items-center gap-1">
-        <span class="meas-label">{{ getPhaseLabels(circuit).phase3 }}</span>
-        <div class="flex items-baseline gap-0.5">
-          <span
-            class="meas-val"
-            :class="{
-              'is-ok': circuit.p2TStatus === 'OK' || (circuit.zetsuenT !== null && circuit.zetsuenT !== undefined && circuit.zetsuenT >= phase2ThresholdMegOhm),
-              'is-ng': circuit.p2TStatus === 'NG' || (circuit.zetsuenT !== null && circuit.zetsuenT !== undefined && circuit.zetsuenT < phase2ThresholdMegOhm),
-            }"
-          >
-            {{ formatMegValue(circuit.zetsuenT) }}
-          </span>
-          <span v-if="circuit.zetsuenT !== null && circuit.zetsuenT !== undefined" class="meas-unit">MΩ</span>
-        </div>
-        <AtomsBadge
-          v-if="circuit.p2TStatus"
-          :color="circuit.p2TStatus === 'OK' ? 'var(--color-status-success)' : 'var(--color-status-danger)'"
-        >
-          {{ circuit.p2TStatus }}
-        </AtomsBadge>
-      </div>
+      <PortalMoleculesPhase2MeasCell
+        v-model="inputForm.tVal"
+        :label="getPhaseLabels(circuit).phase3"
+        :val="circuit.zetsuenT"
+        :status="circuit.p2TStatus"
+        :is-editing="editingRowId === circuit.id"
+        :threshold="phase2ThresholdMegOhm"
+        @focus="handleInputFocus"
+        @enter="saveInput(circuit)"
+      />
     </template>
 
     <!-- 備考 -->
@@ -388,11 +298,10 @@ const {
 
     <!-- 測定者 / 日時 -->
     <template #cell-p2ConfirmedAt="{ row: circuit }">
-      <div v-if="circuit.p2Worker" class="worker-cell flex flex-col items-center gap-0.5">
-        <strong class="worker-name">{{ circuit.p2Worker }}</strong>
-        <span class="worker-date">{{ formatShortDateTime(circuit.p2ConfirmedAt) }}</span>
-      </div>
-      <span v-else class="worker-dash">-</span>
+      <PortalMoleculesSoudenWorkerCell
+        :worker="circuit.p2Worker"
+        :confirmed-at="circuit.p2ConfirmedAt"
+      />
     </template>
   </PortalOrganismsSoudenCircuitTable>
 </template>
@@ -422,59 +331,9 @@ const {
   white-space: nowrap;
 }
 
-.meas-label {
-  font-size: var(--font-size-2xs);
-  font-weight: var(--font-weight-normal);
-  color: var(--color-text-secondary);
-}
-
-.meas-val {
-  font-family: var(--font-mono);
-  font-size: inherit;
-  font-weight: var(--font-weight-normal);
-  color: var(--color-text-main);
-
-  &.is-ok {
-    color: var(--color-status-success);
-  }
-
-  &.is-ng {
-    color: var(--color-status-danger);
-  }
-}
-
-.meas-unit {
-  font-family: var(--font-base);
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-secondary);
-}
-
-.input-label {
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-secondary);
-}
-
 .text-note {
   font-size: inherit;
   font-weight: var(--font-weight-normal);
   color: var(--color-status-warning);
-}
-
-.worker-cell {
-  .worker-name {
-    font-size: inherit;
-    font-weight: var(--font-weight-normal);
-    color: var(--color-status-success);
-  }
-
-  .worker-date {
-    font-family: var(--font-mono);
-    font-size: var(--font-size-2xs);
-    color: var(--color-text-muted);
-  }
-}
-
-.worker-dash {
-  color: var(--color-text-muted);
 }
 </style>

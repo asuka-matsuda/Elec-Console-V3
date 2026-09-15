@@ -9,7 +9,6 @@ import { computed, reactive, ref } from 'vue'
 import { useTableSort } from '~/composables/useTableSort'
 import { PHASE1_TABLE_COLUMNS } from '~/constants/soudenConstants'
 import type { CircuitItem } from '~/types/souden'
-import { formatShortDateTime } from '~/utils/date'
 
 const props = defineProps<{
   circuits: CircuitItem[]
@@ -223,11 +222,10 @@ const {
 
     <!-- 測定者 / 日時 -->
     <template #cell-p1ConfirmedAt="{ row: circuit }">
-      <div v-if="circuit.p1Worker" class="worker-cell flex flex-col items-center gap-0.5">
-        <strong class="worker-name">{{ circuit.p1Worker }}</strong>
-        <span class="worker-date">{{ formatShortDateTime(circuit.p1ConfirmedAt) }}</span>
-      </div>
-      <span v-else class="worker-dash">-</span>
+      <PortalMoleculesSoudenWorkerCell
+        :worker="circuit.p1Worker"
+        :confirmed-at="circuit.p1ConfirmedAt"
+      />
     </template>
   </PortalOrganismsSoudenCircuitTable>
 </template>
@@ -296,23 +294,5 @@ const {
     font-size: var(--font-size-2xs);
     color: var(--color-text-muted);
   }
-}
-
-.worker-cell {
-  .worker-name {
-    font-size: inherit;
-    font-weight: var(--font-weight-normal);
-    color: var(--color-status-success);
-  }
-
-  .worker-date {
-    font-family: var(--font-mono);
-    font-size: var(--font-size-2xs);
-    color: var(--color-text-muted);
-  }
-}
-
-.worker-dash {
-  color: var(--color-text-muted);
 }
 </style>
