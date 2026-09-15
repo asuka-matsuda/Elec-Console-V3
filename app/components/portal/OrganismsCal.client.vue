@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * PortalOrganismsCal
+ * [Organisms] ポータル現場専用のスケジュールカレンダー（クライアント限定コンポーネント）。
+ * FullCalendar を内包し、月表示/リスト表示、イベント登録/編集モーダル、種別設定モーダルを統合します。
+ */
 import FullCalendar from '@fullcalendar/vue3'
 import { ref } from 'vue'
 
@@ -7,10 +12,10 @@ import { useCalendar } from '~/composables/portal/useCalendar'
 import { useCalendarEventForm } from '~/composables/portal/useCalendarEventForm'
 import { useCalendarOptions } from '~/composables/portal/useCalendarOptions'
 
-import PortalAtomsCalEventBadge from './portal/AtomsCalEventBadge.vue'
-import PortalMoleculesCalToolbar from './portal/MoleculesCalToolbar.vue'
-import PortalOrganismsCalEventModal from './portal/OrganismsCalEventModal.vue'
-import PortalOrganismsCalTypeSettingsModal from './portal/OrganismsCalTypeSettingsModal.vue'
+import AtomsCalEventBadge from './AtomsCalEventBadge.vue'
+import MoleculesCalToolbar from './MoleculesCalToolbar.vue'
+import OrganismsCalEventModal from './OrganismsCalEventModal.vue'
+import OrganismsCalTypeSettingsModal from './OrganismsCalTypeSettingsModal.vue'
 
 const props = defineProps<{
   siteId: string
@@ -84,7 +89,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
 <template>
   <div class="flex flex-col gap-3">
-    <PortalMoleculesCalToolbar
+    <MoleculesCalToolbar
       :title="currentTitle"
       :current-view="currentView"
       @prev="handlePrev"
@@ -97,7 +102,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     <AtomsPanel class="calendar">
       <FullCalendar ref="fullCalendarRef" :options="calendarOptions">
         <template #eventContent="{ event }">
-          <PortalAtomsCalEventBadge
+          <AtomsCalEventBadge
             :title="event.title"
             :all-day="event.allDay"
             :start="event.start"
@@ -108,7 +113,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       </FullCalendar>
     </AtomsPanel>
 
-    <PortalOrganismsCalEventModal
+    <OrganismsCalEventModal
       v-model="isModalOpen"
       :is-editing="isEditing"
       :event-types="settings?.eventTypes || []"
@@ -117,7 +122,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       @delete="removeEvent"
     />
 
-    <PortalOrganismsCalTypeSettingsModal
+    <OrganismsCalTypeSettingsModal
       v-model="isTypeSettingsOpen"
       :event-types="settings?.eventTypes || []"
       @save="handleSaveEventTypes"
@@ -258,7 +263,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     display: inline-block;
 
     padding: var(--space-0-5) var(--space-1);
-    border-bottom: 1px dashed var(--theme-accent);
+    border-bottom: var(--border-width-base) dashed var(--theme-accent);
 
     font-size: var(--font-size-2xs);
     font-weight: var(--font-weight-bold);
@@ -271,7 +276,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     }
   }
 
-  /* ポップオーバーのサイバースタイル（すりガラス、角丸厳禁、発光枠線） */
+  /* ポップオーバーのPrimerスタイル（すりガラス、控えめな枠線） */
   :deep(.fc-popover) {
     z-index: var(--z-index-modal);
 
@@ -350,11 +355,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       transition: var(--transition-interactive);
 
       &:hover td {
-        background-color: color-mix(
-          in srgb,
-          var(--theme-accent) 15%,
-          transparent
-        );
+        background-color: var(--color-bg-hover);
       }
 
       td {

@@ -3,7 +3,6 @@ import { useLocalStorage } from '@vueuse/core'
 import { computed, onMounted, watch } from 'vue'
 
 import { useHead, useRoute, useRouter } from '#app'
-import PortalCal from '~/components/PortalCal.client.vue'
 import { useAdminSites } from '~/composables/admin/useAdminSites'
 import { useAuth } from '~/composables/useAuth'
 import { STORAGE_KEYS } from '~/constants/storageKeys'
@@ -78,7 +77,7 @@ onMounted(() => {
 
     <div class="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-section-gap items-start">
       <section class="min-h-[500px]">
-        <PortalCal :site-id="siteId" />
+        <PortalOrganismsCal :site-id="siteId" />
       </section>
 
       <aside class="flex flex-col gap-card-gap">
