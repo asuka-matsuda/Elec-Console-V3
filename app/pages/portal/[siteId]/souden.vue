@@ -71,7 +71,7 @@ onMounted(() => {
       <template #actions>
         <AtomsButton
           to="/portal/admin"
-          variant="primary"
+          variant="secondary"
         >
           <AtomsIcon name="settings" />
           現場設定へ移動

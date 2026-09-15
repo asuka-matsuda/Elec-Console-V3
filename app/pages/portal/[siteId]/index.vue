@@ -35,6 +35,10 @@ useHead({
 })
 
 const assignedSites = computed(() => {
+  if (currentUser.value?.role === 'admin') {
+    return sites.value
+  }
+
   const ids = currentUser.value?.assignedSiteIds || []
 
   return sites.value.filter(s => ids.includes(s.id))
@@ -77,15 +81,19 @@ onMounted(() => {
 
     <div class="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-section-gap items-start">
       <section class="min-h-[500px]">
-        <PortalOrganismsCal :site-id="siteId" />
+        <ClientOnly>
+          <PortalOrganismsCal :site-id="siteId" />
+        </ClientOnly>
       </section>
 
       <aside class="flex flex-col gap-card-gap">
-        <PortalOrganismsPersonalTodo :site-id="siteId" />
+        <ClientOnly>
+          <PortalOrganismsPersonalTodo :site-id="siteId" />
+        </ClientOnly>
 
         <AtomsButton
           :to="`/portal/${siteId}/souden`"
-          variant="primary"
+          variant="secondary"
           block
         >
           <AtomsIcon name="zap" />

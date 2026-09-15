@@ -65,7 +65,7 @@ const phases = computed<PhaseItem[]>(() => [
           <AtomsButton
             v-if="siteId && keiTo"
             :to="`/portal/${siteId}/phase${item.phase}?kei_to=${keiTo}`"
-            :variant="item.completed >= total && total > 0 ? 'success' : 'primary'"
+            variant="secondary"
           >
             試験入力
           </AtomsButton>

@@ -202,7 +202,7 @@ const {
         <!-- 通常モード：未確定 -->
         <template v-else>
           <AtomsButton
-            variant="primary"
+            variant="secondary"
             :disabled="!circuit.p1Kakunin || !circuit.p1Mashishime || circuit.isExcluded"
             :loading="isActionLoading[circuit.id]"
             @click="$emit('confirm', circuit)"

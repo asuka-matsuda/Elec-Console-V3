@@ -51,7 +51,7 @@ const sortedTodos = computed(() => {
         placeholder="新しいタスクを入力..."
         class="flex-1"
       />
-      <AtomsButton type="submit" variant="primary" icon-only>
+      <AtomsButton type="submit" variant="secondary" icon-only>
         <AtomsIcon name="plus" />
       </AtomsButton>
     </form>
