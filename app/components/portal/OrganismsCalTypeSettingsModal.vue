@@ -33,7 +33,7 @@ const {
 
 <template>
   <OrganismsModal v-model="isOpen" title="予定種別の設定">
-    <div class="flex flex-col gap-card-gap">
+    <div class="flex flex-col gap-panel-gap">
       <p class="m-0 lead-text">
         カレンダーに表示する予定種別とテーマカラーを設定します。
       </p>

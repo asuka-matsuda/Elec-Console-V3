@@ -39,7 +39,7 @@ const detailItems = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-[var(--space-card-gap)]">
+  <div class="flex flex-col gap-panel-gap">
     <!-- メイン結果 1: 使用ドラム（想定） -->
     <MoleculesResultBox
       title="使用ドラム（想定）"

@@ -33,7 +33,7 @@ const detailItems = computed(() => [
 </script>
 
 <template>
-  <div class="flex flex-col gap-[var(--space-card-gap)]">
+  <div class="flex flex-col gap-panel-gap">
     <!-- 1段敷設（平置き・標準） -->
     <MoleculesResultBox
       :title="vm.tier1.title"

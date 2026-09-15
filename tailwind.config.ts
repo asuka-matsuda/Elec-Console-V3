@@ -50,8 +50,6 @@ export default <Config>{
         'section-gap': 'var(--space-section-gap)',
         'panel-pad': 'var(--space-panel-pad)',
         'panel-gap': 'var(--space-panel-gap)',
-        'card-pad': 'var(--space-card-pad)',
-        'card-gap': 'var(--space-card-gap)',
         'form-row-gap': 'var(--space-form-row-gap)',
         'form-col-gap': 'var(--space-form-col-gap)',
         'item-gap': 'var(--space-item-gap)',

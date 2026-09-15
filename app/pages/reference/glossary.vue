@@ -49,7 +49,7 @@ const categoryColorMap: Record<string, string> = {
 </script>
 
 <template>
-  <div class="glossary-view flex flex-1 flex-col gap-card-gap max-w-[1400px] min-h-0">
+  <div class="glossary-view flex flex-1 flex-col gap-panel-gap max-w-[1400px] min-h-0">
     <aside class="shrink-0">
       <OrganismsFilterPanel
         v-model:search-query="searchQuery"
@@ -67,7 +67,7 @@ const categoryColorMap: Record<string, string> = {
     </aside>
 
     <div class="flex flex-1 flex-col min-w-0 min-h-0">
-      <div v-if="filteredGlossary.length > 0" class="flex flex-col gap-card-gap">
+      <div v-if="filteredGlossary.length > 0" class="flex flex-col gap-panel-gap">
         <AtomsPanel
           v-for="item in filteredGlossary"
           :key="item.term"
@@ -120,14 +120,6 @@ const categoryColorMap: Record<string, string> = {
 </template>
 
 <style scoped lang="scss">
-.glossary-view {
-  --trade-color-electric: var(--color-trade-electric);
-  --trade-color-architecture: var(--color-trade-architecture);
-  --trade-color-hvac: var(--color-trade-hvac);
-  --trade-color-plumbing: var(--color-trade-plumbing);
-  --trade-color-trivia: var(--color-trade-trivia);
-}
-
 .glossary-item {
   transition: var(--transition-base);
 }

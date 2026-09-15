@@ -127,6 +127,3 @@ export const useModal = (
     closeConfirm,
   }
 }
-
-// 後方互換用エイリアス
-export const useConfirmModal = useModal

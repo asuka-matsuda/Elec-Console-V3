@@ -14,7 +14,7 @@ export interface CalendarEvent {
 export interface EventType {
   id: string
   name: string
-  color: string // CSS変数またはHEXカラー（例: 'var(--color-primary)', '#00f0ff'）
+  color: string // CSS変数またはHEXカラー（例: 'var(--theme-accent)', '#00f0ff'）
   colorVar?: string
 }
 

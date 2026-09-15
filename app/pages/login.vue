@@ -45,7 +45,7 @@ const handleLogin = async () => {
 </script>
 
 <template>
-  <div class="p-card-pad">
+  <div class="p-panel-pad">
     <form class="flex flex-col gap-form-row-gap" @submit.prevent="handleLogin">
       <p v-if="errorMessage" class="login-page__error m-0 px-3 py-2">
         {{ errorMessage }}

@@ -68,9 +68,9 @@ const handleClose = () => {
     variant="tool"
     size="lg"
   >
-    <div class="flex flex-col gap-card-gap">
+    <div class="flex flex-col gap-panel-gap">
       <ClientOnly>
-        <div v-if="steps && steps.length > 0" class="flex flex-col gap-card-gap">
+        <div v-if="steps && steps.length > 0" class="flex flex-col gap-panel-gap">
           <AtomsPanel
             v-for="(step, index) in steps"
             :key="index"

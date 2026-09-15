@@ -31,7 +31,7 @@ const emit = defineEmits<{
 
 <template>
   <AtomsPanel>
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-card-gap items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-panel-gap items-start">
       <div class="flex flex-col gap-3">
         <!-- 盤種別タブ -->
         <div class="flex items-center gap-3">

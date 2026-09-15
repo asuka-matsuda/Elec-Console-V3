@@ -41,7 +41,7 @@ const getOptionIcon = (option: RadioOption<CalendarView>): string => {
 
 <template>
   <nav
-    class="calendar-toolbar flex flex-col md:flex-row flex-wrap items-center justify-between gap-1 md:gap-2 px-card-pad py-2"
+    class="calendar-toolbar flex flex-col md:flex-row flex-wrap items-center justify-between gap-1 md:gap-2 px-panel-pad py-2"
   >
     <div class="flex items-center justify-center md:justify-start w-full md:w-auto gap-1">
       <AtomsButton

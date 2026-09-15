@@ -38,7 +38,7 @@ const MASTER_TABS: TabOption<'word-break' | 'announcements'>[] = [
       :options="MASTER_TABS"
     />
 
-    <div class="flex-1 min-h-0 flex flex-col gap-card-gap">
+    <div class="flex-1 min-h-0 flex flex-col gap-panel-gap">
       <MasterWordBreakTab v-if="activeTab === 'word-break'" />
       <MoleculesEmptyState
         v-else-if="activeTab === 'announcements'"

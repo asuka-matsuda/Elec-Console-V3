@@ -52,7 +52,7 @@ provide('toolBasisModal', {
 </script>
 
 <template>
-  <div class="tool-layout flex flex-1 flex-col gap-card-gap min-h-0 w-full max-w-[1600px] mx-auto">
+  <div class="tool-layout flex flex-1 flex-col gap-panel-gap min-h-0 w-full max-w-[1600px] mx-auto">
     <!-- 免責事項 -->
     <slot name="disclaimer">
       <AtomsDisclaimer />

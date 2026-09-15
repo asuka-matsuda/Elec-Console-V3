@@ -25,7 +25,7 @@ const { sortBy, sortOrder, sortedData, handleSort }
 </script>
 
 <template>
-  <div class="flex flex-1 flex-col gap-card-gap w-full max-w-[1400px] min-h-0 mx-auto">
+  <div class="flex flex-1 flex-col gap-panel-gap w-full max-w-[1400px] min-h-0 mx-auto">
     <aside class="shrink-0">
       <slot
         name="filter"

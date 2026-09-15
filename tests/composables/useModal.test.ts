@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { useConfirmModal, useModal } from '../../app/composables/useModal'
+import { useModal } from '../../app/composables/useModal'
 
 describe('useModal', () => {
   it('should initialize with default options', () => {
-    const { isOpen, title, message, intent } = useConfirmModal()
+    const { isOpen, title, message, intent } = useModal()
 
     expect(isOpen.value).toBe(false)
     expect(title.value).toBe('確認')
@@ -13,7 +13,7 @@ describe('useModal', () => {
   })
 
   it('should open modal with custom options when askConfirm is called', () => {
-    const { isOpen, title, message, intent, askConfirm } = useConfirmModal()
+    const { isOpen, title, message, intent, askConfirm } = useModal()
 
     askConfirm({
       title: '削除確認',
@@ -29,7 +29,7 @@ describe('useModal', () => {
 
   it('should execute onConfirm callback and close modal on handleConfirm', async () => {
     const onConfirmMock = vi.fn()
-    const { isOpen, askConfirm, handleConfirm } = useConfirmModal()
+    const { isOpen, askConfirm, handleConfirm } = useModal()
 
     askConfirm({
       title: 'テスト',
@@ -43,7 +43,7 @@ describe('useModal', () => {
   })
 
   it('should resolve promise to true when handleConfirm is called', async () => {
-    const { askConfirm, handleConfirm } = useConfirmModal()
+    const { askConfirm, handleConfirm } = useModal()
     const promise = askConfirm({ title: 'Promiseテスト' })
 
     await handleConfirm()
@@ -53,16 +53,12 @@ describe('useModal', () => {
   })
 
   it('should resolve promise to false when handleCancel is called', async () => {
-    const { askConfirm, handleCancel } = useConfirmModal()
+    const { askConfirm, handleCancel } = useModal()
     const promise = askConfirm({ title: 'キャンセルテスト' })
 
     handleCancel()
     const result = await promise
 
     expect(result).toBe(false)
-  })
-
-  it('should export useConfirmModal as an alias of useModal', () => {
-    expect(useConfirmModal).toBe(useModal)
   })
 })

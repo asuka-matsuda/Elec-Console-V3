@@ -33,7 +33,7 @@ const dropStatus = computed(() =>
 <template>
   <div
     class="flex flex-1 flex-col min-h-0"
-    :class="[size === 'sm' ? 'gap-3 is-sm' : 'gap-[var(--space-card-gap)]']"
+    :class="[size === 'sm' ? 'gap-3 is-sm' : 'gap-panel-gap']"
   >
     <!-- 主結果 (電圧降下 or 電線サイズ) -->
     <MoleculesResultBox

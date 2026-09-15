@@ -378,7 +378,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     }
 
     .fc-list-empty {
-      padding: var(--space-card-pad);
+      padding: var(--space-panel-pad);
       font-size: var(--font-size-base);
       color: var(--color-text-muted);
       text-align: center;
