@@ -8,9 +8,9 @@ import { useCalendarEventForm } from '~/composables/portal/useCalendarEventForm'
 import { useCalendarOptions } from '~/composables/portal/useCalendarOptions'
 
 import PortalAtomsCalEventBadge from './portal/AtomsCalEventBadge.vue'
+import PortalOrganismsCalTypeSettingsModal from './portal/OrganismsCalTypeSettingsModal.vue'
 import PortalCalEventModal from './PortalCalEventModal.vue'
 import PortalCalToolbar from './PortalCalToolbar.vue'
-import PortalCalTypeSettingsModal from './PortalCalTypeSettingsModal.vue'
 
 const props = defineProps<{
   siteId: string
@@ -117,7 +117,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       @delete="removeEvent"
     />
 
-    <PortalCalTypeSettingsModal
+    <PortalOrganismsCalTypeSettingsModal
       v-model="isTypeSettingsOpen"
       :event-types="settings?.eventTypes || []"
       @save="handleSaveEventTypes"

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * PortalOrganismsCalTypeSettingsModal
+ * [Organisms] カレンダーの予定種別とテーマカラーを設定するモーダルコンポーネント。
+ */
 import { toRef } from 'vue'
 
 import type { EventType } from '~/composables/portal/useCalendar'
@@ -15,8 +19,6 @@ const emit = defineEmits<{
   (e: 'save', types: EventType[]): void
 }>()
 
-const PRESET_COLORS = DEFAULT_COLOR_PRESETS.map(p => p.value)
-
 const {
   types,
   handleAddType,
@@ -31,25 +33,23 @@ const {
 
 <template>
   <OrganismsModal v-model="isOpen" title="予定種別の設定">
-    <div class="type-settings flex flex-col gap-card-gap">
-      <p class="type-settings__lead">
+    <div class="flex flex-col gap-card-gap">
+      <p class="m-0 lead-text">
         カレンダーに表示する予定種別とテーマカラーを設定します。
       </p>
 
-      <ul class="type-settings__list flex flex-col gap-2 max-h-[400px] overflow-y-auto m-0 pl-0 pr-1 list-none">
-        <li v-for="(t, index) in types" :key="t.id" class="type-item flex flex-col gap-1 p-2">
+      <ul class="flex flex-col gap-2 max-h-[400px] overflow-y-auto m-0 pl-0 pr-1 list-none">
+        <li v-for="(t, index) in types" :key="t.id" class="flex flex-col gap-2 p-2.5 type-item">
           <div class="flex items-center gap-2 w-full">
             <div
-              class="type-item__preview flex shrink-0 items-center justify-center"
+              class="w-6 h-6 shrink-0 color-preview"
               :style="{ '--preview-color': t.color }"
-            >
-              <span class="type-item__indicator"></span>
-            </div>
+            />
 
             <div class="flex-1">
               <AtomsInput
                 v-model="t.name"
-                :placeholder="`種別名（例: 現場作業）`"
+                placeholder="種別名（例: 現場作業）"
                 required
               />
             </div>
@@ -63,16 +63,17 @@ const {
             />
           </div>
 
-          <div class="type-item__colors flex flex-wrap items-center gap-1">
+          <div class="flex flex-wrap items-center gap-1.5 pl-8">
             <button
-              v-for="c in PRESET_COLORS"
-              :key="c"
+              v-for="preset in DEFAULT_COLOR_PRESETS"
+              :key="preset.value"
               type="button"
-              class="type-item__color-dot"
-              :class="{ 'is-selected': t.color === c }"
-              :style="{ '--dot-color': c }"
-              @click="t.color = c"
-            ></button>
+              class="w-5 h-5 color-dot"
+              :aria-pressed="t.color === preset.value"
+              :style="{ '--dot-color': preset.value }"
+              :title="preset.name"
+              @click="t.color = preset.value"
+            />
           </div>
         </li>
       </ul>
@@ -100,39 +101,42 @@ const {
 </template>
 
 <style scoped lang="scss">
-.type-settings {
-  &__lead {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-muted);
-  }
+.lead-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
 }
 
 .type-item {
-  border: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 30%, transparent);
+  border: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 40%, transparent);
   border-radius: var(--radius-sm);
+  background: var(--surface-bg-elevated);
+}
 
-  &__preview {
-    --glow-color: var(--preview-color, var(--theme-accent));
+.color-preview {
+  border: 1px solid color-mix(in srgb, var(--preview-color, var(--theme-accent)) 60%, transparent);
+  border-radius: var(--radius-sm);
+  background: var(--preview-color, var(--theme-accent));
+}
 
-    width: var(--size-control-sm);
-    height: var(--size-control-sm);
-    border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
+.color-dot {
+  cursor: pointer;
 
-    outline: none;
-    box-shadow: var(--shadow-glow-focus);
+  border: 1px solid color-mix(in srgb, black 15%, transparent);
+  border-radius: 50%;
 
-    transition: var(--transition-interactive);
+  background: var(--dot-color);
+
+  transition: var(--transition-interactive);
+
+  @include state-control-interactive {
+    &:hover {
+      transform: scale(1.18);
+    }
   }
 
-  &__indicator {
-    width: var(--space-2);
-    height: var(--space-2);
-    border: var(--border-width-base) solid var(--preview-color, var(--theme-accent));
-    border-radius: var(--radius-sm);
-  }
-
-  &__colors {
-    padding-left: calc(var(--size-control-sm) + var(--space-2));
+  &[aria-pressed='true'] {
+    outline: 2px solid var(--color-text-main);
+    outline-offset: 2px;
   }
 }
 </style>
