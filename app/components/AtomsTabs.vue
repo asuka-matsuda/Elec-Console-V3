@@ -18,7 +18,7 @@ const selectTab = (option: TabOption<T>) => {
 </script>
 
 <template>
-  <nav class="flex flex-wrap items-center gap-1 tabs" aria-label="Tabs">
+  <nav class="flex flex-wrap items-center gap-1 tabs">
     <button
       v-for="option in options"
       :key="String(option.value)"

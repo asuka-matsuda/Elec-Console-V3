@@ -103,11 +103,15 @@ module.exports = {
             '/^hsla?\\(/',
           ],
         },
-        // 状態セレクタの手書きを禁止し、@include state-* の使用を強制
+        // 状態セレクタの手書きを禁止し、純粋な支援アクセシビリティセレクタ（aria-*, role）を禁止
         'selector-disallowed-list': [
-          '/^&(:disabled|\\.is-(interactive|selected|disabled))/',
+          [
+            '/^&(:disabled|\\.is-(interactive|selected|disabled))/',
+            '/aria-/',
+            '/role=/',
+          ],
           {
-            message: '状態セレクタの手書きは禁止されています。@include state-interactive / state-selected / state-control-interactive / state-loading / state-disabled を使用してください。',
+            message: '純粋な支援アクセシビリティセレクタ（aria-*, role）および未許可の状態セレクタの手書きは禁止されています。',
           },
         ],
         // レイアウト・配置・z-index関連プロパティのScoped CSS記述を禁止（Tailwind記述を強制）

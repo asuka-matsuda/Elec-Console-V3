@@ -69,7 +69,7 @@ const {
               :key="preset.value"
               type="button"
               class="w-5 h-5 color-dot"
-              :aria-pressed="t.color === preset.value"
+              :class="{ 'is-active': t.color === preset.value }"
               :style="{ '--dot-color': preset.value }"
               :title="preset.name"
               @click="t.color = preset.value"
@@ -134,7 +134,7 @@ const {
     }
   }
 
-  &[aria-pressed='true'] {
+  &.is-active {
     outline: 2px solid var(--color-text-main);
     outline-offset: 2px;
   }
