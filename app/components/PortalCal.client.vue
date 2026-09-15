@@ -8,8 +8,8 @@ import { useCalendarEventForm } from '~/composables/portal/useCalendarEventForm'
 import { useCalendarOptions } from '~/composables/portal/useCalendarOptions'
 
 import PortalAtomsCalEventBadge from './portal/AtomsCalEventBadge.vue'
+import PortalOrganismsCalEventModal from './portal/OrganismsCalEventModal.vue'
 import PortalOrganismsCalTypeSettingsModal from './portal/OrganismsCalTypeSettingsModal.vue'
-import PortalCalEventModal from './PortalCalEventModal.vue'
 import PortalCalToolbar from './PortalCalToolbar.vue'
 
 const props = defineProps<{
@@ -108,7 +108,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       </FullCalendar>
     </AtomsPanel>
 
-    <PortalCalEventModal
+    <PortalOrganismsCalEventModal
       v-model="isModalOpen"
       :is-editing="isEditing"
       :event-types="settings?.eventTypes || []"

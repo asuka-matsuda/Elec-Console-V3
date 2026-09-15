@@ -1,18 +1,22 @@
 <script setup lang="ts">
+/**
+ * PortalOrganismsCalEventModal
+ * [Organisms] カレンダー予定の新規作成および編集・削除を行うモーダルコンポーネント。
+ */
 import { ref, watch } from 'vue'
 
 import type { EventFormData } from '~/types/portal'
 import { adjustDateRangeForAllDay, calculateAutoEndDate } from '~/utils/date'
 
+const isOpen = defineModel<boolean>({ default: false })
+
 const props = defineProps<{
-  modelValue: boolean
   isEditing: boolean
   eventTypes: { id: string, name: string, color?: string }[]
   initialData: EventFormData
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: boolean): void
   (e: 'save', data: EventFormData): void
   (e: 'delete'): void
 }>()
@@ -75,15 +79,14 @@ const handleDelete = () => {
 }
 
 const closeModal = () => {
-  emit('update:modelValue', false)
+  isOpen.value = false
 }
 </script>
 
 <template>
   <OrganismsModal
-    :model-value="modelValue"
+    v-model="isOpen"
     :title="isEditing ? '予定の編集' : '新しい予定'"
-    @update:model-value="emit('update:modelValue', $event)"
   >
     <div class="flex flex-col gap-3">
       <MoleculesFormGroup
@@ -130,6 +133,7 @@ const closeModal = () => {
       <AtomsButton
         v-if="isEditing"
         variant="danger"
+        icon="trash-2"
         class="mr-auto"
         @click="handleDelete"
       >
@@ -138,7 +142,11 @@ const closeModal = () => {
       <AtomsButton variant="secondary" @click="closeModal">
         キャンセル
       </AtomsButton>
-      <AtomsButton variant="primary" @click="handleSave">
+      <AtomsButton
+        variant="primary"
+        icon="check"
+        @click="handleSave"
+      >
         保存
       </AtomsButton>
     </template>
