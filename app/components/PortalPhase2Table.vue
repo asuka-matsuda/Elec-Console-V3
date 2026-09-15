@@ -468,7 +468,7 @@ const {
   }
 
   &__unit {
-    font-family: var(--font-sans);
+    font-family: var(--font-base);
     font-size: 10px;
     color: var(--color-text-secondary);
   }

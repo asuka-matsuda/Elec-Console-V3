@@ -132,14 +132,14 @@ const formatFileSize = (bytes: number): string => {
   color: var(--color-text-muted);
   text-align: center;
 
-  background-color: var(--color-bg-subtle);
+  background-color: var(--surface-bg-elevated);
 
-  transition: var(--transition-base);
+  transition: var(--transition-panel);
 
   &:hover:not(.is-disabled),
   &.is-dragging {
     border-color: var(--color-category-main);
-    background-color: color-mix(in srgb, var(--color-category-main) 5%, var(--color-bg-subtle));
+    background-color: color-mix(in srgb, var(--color-category-main) 6%, var(--surface-bg-elevated));
   }
 
   &.has-file {

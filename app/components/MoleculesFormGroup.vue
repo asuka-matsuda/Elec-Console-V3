@@ -30,7 +30,7 @@ withDefaults(defineProps<Props>(), {
     <label
       v-if="label || $slots.label"
       :for="forId"
-      class="flex items-center gap-2 select-none cursor-pointer"
+      class="flex items-center gap-2 select-none form-group__label"
     >
       <span class="inline-flex items-center gap-1 label-text">
         <slot name="label">{{ label }}</slot>
@@ -68,6 +68,10 @@ withDefaults(defineProps<Props>(), {
 </template>
 
 <style scoped lang="scss">
+.form-group__label {
+  cursor: pointer;
+}
+
 .form-group {
   &:focus-within .label-text {
     color: var(--theme-accent);

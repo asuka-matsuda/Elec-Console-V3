@@ -31,7 +31,7 @@ const formatDisplayText = (val: unknown): unknown => {
   <td
     class="py-1.5 px-2 align-middle"
     :class="{
-      truncate: !column.subKey && !$slots.default,
+      'is-truncate': !column.subKey && !$slots.default,
     }"
     :style="{
       width: width || column.width,
@@ -42,7 +42,7 @@ const formatDisplayText = (val: unknown): unknown => {
     <slot :value="value" :sub-value="subValue">
       <div
         v-if="column.subKey"
-        class="stacked-cell flex flex-col gap-0.5 leading-tight min-w-0"
+        class="stacked-cell flex flex-col gap-0.5 min-w-0"
         :class="{
           'items-start text-left': !column.align || column.align === 'left',
           'items-center text-center': column.align === 'center',
@@ -54,7 +54,7 @@ const formatDisplayText = (val: unknown): unknown => {
         </span>
         <span
           v-if="subValue"
-          class="sub-text truncate w-full"
+          class="sub-text w-full"
         >
           {{ subValue }}
         </span>
@@ -83,6 +83,16 @@ td {
     border-right: none;
   }
 
+  &.is-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .stacked-cell {
+    line-height: var(--leading-tight, 1.25);
+  }
+
   .main-text {
     font-size: inherit;
     font-weight: var(--font-weight-normal, 400);
@@ -95,9 +105,13 @@ td {
   }
 
   .sub-text {
+    overflow: hidden;
+
     font-size: 0.85em;
     line-height: 1.2;
     color: var(--color-text-muted);
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   :deep(strong),

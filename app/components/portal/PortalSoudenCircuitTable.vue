@@ -85,7 +85,7 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
     ref="tableWrapperRef"
     class="portal-souden-circuit-table flex-1 min-h-[400px] overflow-y-auto"
   >
-    <table class="w-full table-fixed text-left border-separate border-spacing-0">
+    <table class="w-full table-fixed text-left">
       <thead>
         <tr>
           <AtomsTableTh
@@ -165,7 +165,7 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
                     {{ formatShortDateTime(circuit.p3ConfirmedAt || circuit.p2ConfirmedAt || circuit.p1ConfirmedAt) }}
                   </span>
                 </div>
-                <span v-else class="text-center block text-[var(--color-text-muted)]">-</span>
+                <span v-else class="souden-empty-cell text-center block">-</span>
               </div>
             </template>
           </AtomsTableTd>
@@ -176,6 +176,11 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
 </template>
 
 <style scoped lang="scss">
+table {
+  border-spacing: 0;
+  border-collapse: separate;
+}
+
 .portal-souden-circuit-table {
   border: var(--border-width-base) solid var(--color-border);
   border-radius: var(--radius-sm);
@@ -183,8 +188,12 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
   backdrop-filter: blur(var(--blur-sm));
 }
 
+.souden-empty-cell {
+  color: var(--color-text-muted);
+}
+
 .souden-circuit-row {
-  transition: var(--transition-colors);
+  transition: var(--transition-interactive);
 
   &:hover {
     background-color: var(--color-bg-hover);

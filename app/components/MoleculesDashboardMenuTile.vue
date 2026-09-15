@@ -21,11 +21,12 @@ const {
 </script>
 
 <template>
-  <component
-    :is="disabled ? 'div' : NuxtLink"
+  <AtomsPanel
+    :as="disabled ? 'div' : NuxtLink"
     :to="!disabled ? to : undefined"
-    class="relative z-[1] flex flex-col gap-panel-gap p-panel-pad overflow-hidden menu-tile"
-    :class="{ 'is-disabled': disabled }"
+    interactive
+    :disabled="disabled"
+    class="flex flex-col gap-panel-gap menu-tile"
   >
     <header v-if="icon || title" class="flex items-center gap-1 min-w-0 tile-title">
       <AtomsIcon v-if="icon" :name="icon" class="shrink-0" />
@@ -35,57 +36,12 @@ const {
     <p v-if="description" class="tile-desc">
       {{ description }}
     </p>
-  </component>
+  </AtomsPanel>
 </template>
 
 <style scoped lang="scss">
 .menu-tile {
-  cursor: pointer;
-  user-select: none;
-
-  border: var(--border-width-base) solid var(--color-border);
-  border-radius: var(--radius-sm);
-
   text-decoration: none;
-
-  background-color: var(--surface-bg);
-  backdrop-filter: blur(var(--blur-sm));
-
-  transition: var(--transition-base);
-
-  // 非活性状態
-  &.is-disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
-    filter: grayscale(100%);
-  }
-
-  // 通常時のインタラクション状態
-  &:not(.is-disabled) {
-    &:hover {
-      border-color: var(--theme-accent);
-      box-shadow: var(--shadow-glow-hover);
-      transition: var(--transition-glow);
-    }
-
-    &:focus-visible {
-      border-color: color-mix(in srgb, var(--theme-accent) 60%, transparent);
-      outline: none;
-      box-shadow: var(--shadow-glow-focus);
-      transition: var(--transition-glow);
-    }
-
-    &:active {
-      border-color: var(--theme-accent);
-      box-shadow: var(--shadow-glow-active);
-      transition: var(--transition-glow);
-
-      svg {
-        filter: var(--drop-shadow-glow-xs);
-        stroke: var(--theme-accent);
-      }
-    }
-  }
 
   .tile-title {
     font-size: var(--font-size-base);

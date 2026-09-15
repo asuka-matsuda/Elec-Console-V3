@@ -81,7 +81,7 @@ const badgeColor = computed(() => {
 .result-box {
   padding: var(--space-2) var(--space-3);
   box-shadow: var(--shadow-sink);
-  transition: var(--transition-glow);
+  transition: var(--transition-panel);
 
   &.is-sm {
     padding: var(--space-1) var(--space-2);

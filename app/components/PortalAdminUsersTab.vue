@@ -1,15 +1,15 @@
 <script setup lang="ts">
 /**
  * PortalAdminUsersTab
- * ポータル管理 - ユーザー管理タブ
- * 右サイドドロワー（OrganismsDrawer）により、ユーザー登録・認証情報確認・現場アサインを同一画面内で管理します。
+ * ポータル管理 - ユーザー管理（PC管理コンソール型 2ペインレイアウト）
+ * 左ペイン（ユーザー一覧・検索・新規登録）と右ペイン（ユーザー詳細設定・基本情報・現場アサイン）を常時展開します。
  */
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 import { useAdminSites } from '~/composables/admin/useAdminSites'
 import { useAdminUsers } from '~/composables/admin/useAdminUsers'
+import { useModal } from '~/composables/useModal'
 import {
-  ADMIN_USER_COLUMNS,
   USER_CREATE_FORM_FIELDS,
   USER_ROLE_OPTIONS,
 } from '~/constants/adminConstants'
@@ -17,7 +17,7 @@ import type { Site } from '~/types/admin'
 import type { User, UserRole } from '~/types/auth'
 import { printUserCredential } from '~/utils/printUserCredential'
 
-const { users, fetchUsers, deleteUser, resetUserPassword, createUser, assignSites } = useAdminUsers()
+const { users, fetchUsers, deleteUser, resetUserPassword, createUser, updateUser } = useAdminUsers()
 const { sites, fetchSites } = useAdminSites()
 
 const siteList = computed<Site[]>(() => sites.value || [])
@@ -27,35 +27,52 @@ onMounted(() => {
   fetchSites()
 })
 
-const {
-  sortBy: sortKey,
-  sortOrder,
-  sortedData: sortedUsers,
-  handleSort,
-} = useTableSort(users, {
-  defaultKey: 'id',
-  defaultOrder: 'asc',
+// --- 選択中のユーザー管理 ---
+const selectedUserId = ref<string | null>(null)
+
+// usersが読み込まれたら自動的に先頭を選択
+watch(
+  users,
+  (loadedUsers) => {
+    if (loadedUsers.length > 0) {
+      if (!selectedUserId.value || !loadedUsers.some(u => u.id === selectedUserId.value)) {
+        selectedUserId.value = loadedUsers[0]?.id || null
+      }
+    }
+    else {
+      selectedUserId.value = null
+    }
+  },
+  { immediate: true },
+)
+
+const selectedUser = computed<User | null>(() => {
+  if (!selectedUserId.value) return null
+
+  return users.value.find(u => u.id === selectedUserId.value) || null
 })
 
-const formatLastLogin = (row: unknown) => {
-  const user = row as User
-
-  if (!user.lastLoginAt) return '未ログイン'
-
-  return formatDateTime(user.lastLoginAt as string)
+const handleSelectUser = (user: User) => {
+  selectedUserId.value = user.id
 }
 
-// ドロワー管理 (モード: 'create' | 'credential' | 'assign' | null)
-type DrawerMode = 'create' | 'credential' | 'assign' | null
-const drawerMode = ref<DrawerMode>(null)
-const isDrawerOpen = computed({
-  get: () => drawerMode.value !== null,
-  set: (val: boolean) => {
-    if (!val) drawerMode.value = null
-  },
-})
+// --- ユーザー情報の保存 ---
+const isSaving = ref(false)
 
-// --- 新規登録用ステート ---
+const handleSaveUser = async (updates: Partial<User>) => {
+  if (!selectedUser.value) return
+
+  isSaving.value = true
+  try {
+    await updateUser(selectedUser.value.id, updates)
+  }
+  finally {
+    isSaving.value = false
+  }
+}
+
+// --- 新規登録モーダル ---
+const isCreateModalOpen = ref(false)
 const initialUserState = {
   id: '',
   lastName: '',
@@ -68,19 +85,26 @@ const initialUserState = {
 }
 const newUser = ref({ ...initialUserState })
 
-const openCreateDrawer = () => {
+const openCreateModal = () => {
   newUser.value = { ...initialUserState }
-  drawerMode.value = 'create'
+  isCreateModalOpen.value = true
 }
 
 const handleCreateUser = async () => {
+  if (!newUser.value.id || !newUser.value.lastName || !newUser.value.firstName) {
+    throw new Error('ID、姓、名を入力してください。')
+  }
+
   const result = await createUser(newUser.value)
 
   createdUserResult.value = result
-  drawerMode.value = 'credential'
+  selectedUserId.value = result.id
+  isCreateModalOpen.value = false
+  isCredentialModalOpen.value = true
 }
 
-// --- 認証情報表示用ステート ---
+// --- 認証情報モーダル（新規作成後 & PW初期化後） ---
+const isCredentialModalOpen = ref(false)
 const createdUserResult = ref<(User & { initialPassword?: string, loginId?: string }) | null>(null)
 
 const handleCopyPassword = () => {
@@ -101,22 +125,7 @@ const handlePrint = () => {
   }
 }
 
-// --- 現場アサイン用ステート ---
-const assignTargetUser = ref<User | null>(null)
-const assignTargetSiteIds = ref<string[]>([])
-
-const handleOpenAssign = (row: User) => {
-  assignTargetUser.value = row
-  assignTargetSiteIds.value = [...(row.assignedSiteIds || [])]
-  drawerMode.value = 'assign'
-}
-
-const handleSaveAssign = async () => {
-  if (!assignTargetUser.value) return
-  await assignSites(assignTargetUser.value.id, assignTargetSiteIds.value)
-}
-
-// --- 確認モーダル（削除・PWリセット） ---
+// --- 削除 & パスワード初期化 確認モーダル ---
 const { askConfirm } = useModal()
 
 const confirmDelete = async (row: User) => {
@@ -153,7 +162,7 @@ const confirmResetPassword = async (row: User) => {
         ...row,
         initialPassword: newPassword,
       }
-      drawerMode.value = 'credential'
+      isCredentialModalOpen.value = true
     }
     catch (e: unknown) {
       alert((e as Error).message)
@@ -163,181 +172,100 @@ const confirmResetPassword = async (row: User) => {
 </script>
 
 <template>
-  <AtomsPanel class="admin-users">
-    <MoleculesSectionHeader title="ユーザー一覧">
-      <template #actions>
-        <AtomsButton
-          variant="primary"
-          icon="plus"
-          @click="openCreateDrawer"
-        >
-          新規ユーザー登録
-        </AtomsButton>
-      </template>
-    </MoleculesSectionHeader>
+  <AtomsPanel>
+    <div class="flex flex-col lg:flex-row gap-6 items-start">
+      <!-- 左ペイン: Master (幅約340px) -->
+      <div class="w-full lg:w-[340px] shrink-0">
+        <PortalOrganismsUserListMaster
+          :users="users"
+          :selected-user-id="selectedUserId"
+          @select="handleSelectUser"
+          @create="openCreateModal"
+        />
+      </div>
 
-    <MoleculesTable
-      :columns="ADMIN_USER_COLUMNS"
-      :data="sortedUsers"
-      :sort-by="sortKey"
-      :sort-order="sortOrder"
-      @sort="handleSort"
+      <div class="pane-divider hidden lg:block w-px self-stretch" />
+
+      <!-- 右ペイン: Detail (残りワイド領域) -->
+      <div class="flex-1 min-w-0 w-full">
+        <PortalOrganismsUserSettingsDetail
+          :user="selectedUser"
+          :site-list="siteList"
+          :is-saving="isSaving"
+          @save="handleSaveUser"
+          @reset-password="confirmResetPassword"
+          @delete="confirmDelete"
+        />
+      </div>
+    </div>
+
+    <!-- 新規登録モーダル (中央ダイアログ) -->
+    <OrganismsModal
+      v-model="isCreateModalOpen"
+      title="新規ユーザー登録"
+      icon="plus-circle"
+      size="md"
+      :submit-fn="handleCreateUser"
+      submit-text="登録する"
+      @cancel="isCreateModalOpen = false"
     >
-      <template #cell-lastName="{ row }">
-        {{ row.lastName }} {{ row.firstName }}
-      </template>
-      <template #cell-role="{ row }">
-        <AtomsBadge
-          :color="
-            row.role === 'admin'
-              ? 'var(--color-status-danger)'
-              : row.role === 'worker'
-                ? 'var(--color-status-success)'
-                : 'var(--color-text-muted)'
-          "
-        >
-          {{ row.role }}
-        </AtomsBadge>
-      </template>
-      <template #cell-lastLoginAt="{ row }">
-        <div class="flex flex-col items-center gap-1">
-          <AtomsBadge
-            v-if="row.requirePasswordReset"
-            color="var(--color-status-danger)"
-          >
-            PWリセット要求
-          </AtomsBadge>
-          <span class="admin-users__meta">{{
-            formatLastLogin(row)
-          }}</span>
-        </div>
-      </template>
-      <template #cell-actions="{ row }">
-        <div class="flex flex-nowrap items-center justify-center gap-2 whitespace-nowrap">
-          <AtomsButton
-            variant="secondary"
-            @click="handleOpenAssign(row)"
-          >
-            現場アサイン
-          </AtomsButton>
-          <AtomsButton
-            variant="secondary"
-            @click="confirmResetPassword(row)"
-          >
-            PW初期化
-          </AtomsButton>
-          <AtomsButton
-            variant="danger"
-            :disabled="row.id === 'master'"
-            @click="confirmDelete(row)"
-          >
-            削除
-          </AtomsButton>
-        </div>
-      </template>
-    </MoleculesTable>
-
-    <!-- 右サイドドロワー: ユーザー管理操作を集約 -->
-    <OrganismsDrawer
-      v-model="isDrawerOpen"
-      :title="
-        drawerMode === 'create'
-          ? '新規ユーザー登録'
-          : drawerMode === 'credential'
-            ? '認証情報の発行完了'
-            : `現場アサイン管理 (${assignTargetUser?.lastName || ''} ${assignTargetUser?.firstName || ''})`
-      "
-      :icon="
-        drawerMode === 'create'
-          ? 'plus'
-          : drawerMode === 'credential'
-            ? 'check'
-            : 'edit'
-      "
-      :submit-fn="
-        drawerMode === 'create'
-          ? handleCreateUser
-          : drawerMode === 'assign'
-            ? handleSaveAssign
-            : undefined
-      "
-      :submit-text="drawerMode === 'create' ? '登録する' : 'アサインを保存'"
-    >
-      <!-- 1. 新規登録モード -->
-      <template v-if="drawerMode === 'create'">
-        <div class="flex flex-col gap-4">
-          <template v-for="field in USER_CREATE_FORM_FIELDS" :key="field.id">
-            <MoleculesFormGroup :label="field.label">
-              <AtomsInput
-                v-model="newUser[field.id]"
-                :placeholder="field.placeholder"
-              />
-            </MoleculesFormGroup>
-          </template>
-
-          <MoleculesFormGroup label="権限">
-            <AtomsSelect v-model="newUser.role" :options="USER_ROLE_OPTIONS" />
-          </MoleculesFormGroup>
-          <MoleculesFormGroup>
-            <AtomsCheckbox
-              v-model="newUser.requirePasswordReset"
-              label="初回ログイン時にパスワード変更を要求する"
+      <div class="flex flex-col gap-4">
+        <template v-for="field in USER_CREATE_FORM_FIELDS" :key="field.id">
+          <MoleculesFormGroup :label="field.label">
+            <AtomsInput
+              v-model="newUser[field.id]"
+              :placeholder="field.placeholder"
             />
           </MoleculesFormGroup>
-        </div>
-      </template>
+        </template>
 
-      <!-- 2. 認証情報表示モード -->
-      <template v-else-if="drawerMode === 'credential'">
-        <div class="flex flex-col gap-4">
-          <p class="drawer-desc">
-            以下のログイン情報を作業員へお伝えください。<br />
-            （初期パスワードはこの画面を閉じると二度と表示されません）
-          </p>
+        <MoleculesFormGroup label="権限">
+          <AtomsSelect v-model="newUser.role" :options="USER_ROLE_OPTIONS" />
+        </MoleculesFormGroup>
+        <MoleculesFormGroup>
+          <AtomsCheckbox
+            v-model="newUser.requirePasswordReset"
+            label="初回ログイン時にパスワード変更を要求する"
+          />
+        </MoleculesFormGroup>
+      </div>
+    </OrganismsModal>
 
-          <div v-if="createdUserResult" class="credential-box flex flex-col gap-3 p-4">
-            <MoleculesFormGroup label="氏名">
-              <div class="credential-value">
-                {{ createdUserResult.lastName }} {{ createdUserResult.firstName }}
-              </div>
-            </MoleculesFormGroup>
-            <MoleculesFormGroup label="ログインID">
-              <div class="credential-value font-mono">
-                {{ createdUserResult.loginId || createdUserResult.id }}
-              </div>
-            </MoleculesFormGroup>
-            <MoleculesFormGroup label="初期パスワード">
-              <div class="credential-value font-mono text-[var(--color-status-success)]">
-                {{ createdUserResult.initialPassword || "（既に設定済みです）" }}
-              </div>
-            </MoleculesFormGroup>
-          </div>
-        </div>
-      </template>
+    <!-- 認証情報発行完了モーダル (中央ダイアログ) -->
+    <OrganismsModal
+      v-model="isCredentialModalOpen"
+      title="認証情報の発行完了"
+      icon="check-circle"
+      variant="success"
+      size="md"
+      @cancel="isCredentialModalOpen = false"
+    >
+      <div class="flex flex-col gap-4">
+        <p class="credential-desc">
+          以下のログイン情報を作業員へお伝えください。<br />
+          （初期パスワードはこの画面を閉じると二度と表示されません）
+        </p>
 
-      <!-- 3. 現場アサインモード -->
-      <template v-else-if="drawerMode === 'assign'">
-        <div class="flex flex-col gap-3">
-          <p class="drawer-desc">
-            このユーザーが参加・閲覧できる現場を選択してください。
-          </p>
+        <AtomsPanel v-if="createdUserResult" class="flex flex-col gap-3">
+          <MoleculesFormGroup label="氏名">
+            <div class="user-value">
+              {{ createdUserResult.lastName }} {{ createdUserResult.firstName }}
+            </div>
+          </MoleculesFormGroup>
+          <MoleculesFormGroup label="ログインID">
+            <div class="user-value is-mono">
+              {{ createdUserResult.loginId || createdUserResult.id }}
+            </div>
+          </MoleculesFormGroup>
+          <MoleculesFormGroup label="初期パスワード">
+            <div class="user-value is-mono is-success">
+              {{ createdUserResult.initialPassword || "（既に設定済みです）" }}
+            </div>
+          </MoleculesFormGroup>
+        </AtomsPanel>
+      </div>
 
-          <div class="flex flex-col gap-2">
-            <template v-for="site in siteList" :key="site.id">
-              <MoleculesFormGroup>
-                <AtomsCheckbox
-                  v-model="assignTargetSiteIds"
-                  :value="site.id"
-                  :label="site.name"
-                />
-              </MoleculesFormGroup>
-            </template>
-          </div>
-        </div>
-      </template>
-
-      <!-- フッターのカスタマイズ (credentialモード時) -->
-      <template v-if="drawerMode === 'credential'" #footer>
+      <template #footer>
         <AtomsButton
           variant="secondary"
           @click="handleCopyPassword"
@@ -352,36 +280,36 @@ const confirmResetPassword = async (row: User) => {
         </AtomsButton>
         <AtomsButton
           variant="primary"
-          @click="isDrawerOpen = false"
+          @click="isCredentialModalOpen = false"
         >
           完了
         </AtomsButton>
       </template>
-    </OrganismsDrawer>
+    </OrganismsModal>
   </AtomsPanel>
 </template>
 
 <style scoped lang="scss">
-.admin-users {
-  &__meta {
-    font-size: var(--font-size-2xs);
-    color: var(--color-text-muted);
-  }
+.pane-divider {
+  background: var(--color-border);
 }
 
-.drawer-desc {
+.credential-desc {
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
 }
 
-.credential-box {
-  border: var(--border-width-base) solid color-mix(in srgb, var(--theme-accent) 30%, transparent);
-  border-radius: var(--radius-sm);
-  background-color: color-mix(in srgb, var(--surface-bg) 60%, transparent);
-}
-
-.credential-value {
+.user-value {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-bold);
+  color: var(--color-text-main);
+
+  &.is-mono {
+    font-family: var(--font-mono);
+  }
+
+  &.is-success {
+    color: var(--color-status-success);
+  }
 }
 </style>

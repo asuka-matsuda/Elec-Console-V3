@@ -69,7 +69,7 @@ const {
   background-color: var(--surface-bg-elevated);
   box-shadow: var(--shadow-sink);
 
-  transition: var(--transition-glow);
+  transition: var(--transition-interactive);
 
   &:disabled {
     cursor: not-allowed;

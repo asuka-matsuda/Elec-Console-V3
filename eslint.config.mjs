@@ -1,13 +1,26 @@
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 
 import withNuxt from './.nuxt/eslint.config.mjs'
+import noHoverTransitionOverride from './eslint-rules/no-hover-transition-override.mjs'
+import noLegacyCssVars from './eslint-rules/no-legacy-css-vars.mjs'
+import noTailwindDecoration from './eslint-rules/no-tailwind-decoration.mjs'
 
 export default withNuxt(
   {
     plugins: {
       'simple-import-sort': simpleImportSort,
+      'local': {
+        rules: {
+          'no-tailwind-decoration': noTailwindDecoration,
+          'no-hover-transition-override': noHoverTransitionOverride,
+          'no-legacy-css-vars': noLegacyCssVars,
+        },
+      },
     },
     rules: {
+      'local/no-tailwind-decoration': 'error',
+      'local/no-hover-transition-override': 'error',
+      'local/no-legacy-css-vars': 'error',
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
       'vue/block-order': ['error', {

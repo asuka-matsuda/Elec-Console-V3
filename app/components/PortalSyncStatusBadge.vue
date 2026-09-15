@@ -70,6 +70,8 @@ const openModal = () => {
 }
 
 .sync-btn {
+  --glow-color: var(--color-status-warning);
+
   cursor: pointer;
 
   display: inline-flex;
@@ -78,20 +80,20 @@ const openModal = () => {
 
   padding: var(--space-1) var(--space-3);
   border: 1px solid var(--color-status-warning);
-  border-radius: var(--radius-base);
+  border-radius: var(--radius-sm);
 
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-bold);
   color: var(--color-status-warning);
 
   background: color-mix(in srgb, var(--color-status-warning) 12%, var(--surface-bg-elevated));
-  box-shadow: 0 0 10px color-mix(in srgb, var(--color-status-warning) 25%, transparent);
+  box-shadow: var(--shadow-glow-sm);
 
-  transition: var(--transition-base);
+  transition: var(--transition-interactive);
 
   &:hover:not(:disabled) {
     background: color-mix(in srgb, var(--color-status-warning) 22%, var(--surface-bg-elevated));
-    box-shadow: 0 0 14px color-mix(in srgb, var(--color-status-warning) 40%, transparent);
+    box-shadow: var(--shadow-glow-hover);
   }
 
   &__icon {
@@ -112,15 +114,17 @@ const openModal = () => {
   padding: var(--space-1) var(--space-2);
 
   font-size: var(--font-size-xs);
-  color: var(--color-text-dim);
+  color: var(--color-text-muted);
 
   &__dot {
+    --glow-color: var(--color-status-success);
+
     width: 6px;
     height: 6px;
     border-radius: 50%;
 
     background: var(--color-status-success);
-    box-shadow: 0 0 6px var(--color-status-success);
+    box-shadow: var(--shadow-glow-sm);
   }
 }
 

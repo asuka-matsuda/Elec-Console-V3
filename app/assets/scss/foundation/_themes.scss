@@ -55,12 +55,19 @@
   --color-overlay-dark: hsl(213deg 13% 14% / 40%);
   --color-overlay-light: hsl(0deg 0% 0% / 6%);
 
-  // 4. GitHub Light 用シャドウ & グローの完全無効化 (滲みの完全撤廃)
+  // 4. GitHub Light 用シャドウ & グロー（ホバー時に確実に浮上する階層設計）
   --shadow-color: hsl(213deg 13% 14% / 10%);
-  --shadow-elevation-sm: 0 1px 3px hsl(213deg 13% 14% / 12%), 0 1px 2px hsl(213deg 13% 14% / 6%);
-  --shadow-elevation-md: 0 3px 6px hsl(213deg 13% 14% / 12%), 0 2px 4px hsl(213deg 13% 14% / 8%);
-  --shadow-elevation-lg: 0 8px 24px hsl(213deg 13% 14% / 12%);
-  --shadow-sink: inset 0 1px 2px hsl(213deg 13% 14% / 8%);
+  --shadow-elevation-sm:
+    0 1px 3px hsl(213deg 13% 14% / 12%),
+    0 1px 2px hsl(213deg 13% 14% / 6%);
+  --shadow-elevation-md:
+    0 4px 8px hsl(213deg 13% 14% / 12%),
+    0 2px 4px hsl(213deg 13% 14% / 8%);
+  --shadow-elevation-lg:
+    0 12px 28px hsl(213deg 13% 14% / 14%),
+    0 4px 8px hsl(213deg 13% 14% / 8%);
+  --shadow-sink: inset 0 1px 2px hsl(213deg 13% 14% / 10%);
+  --shadow-2xl: -8px 0 24px hsl(213deg 13% 14% / 15%);
 
   --text-glow-sm: none;
   --text-glow-md: none;
@@ -70,9 +77,17 @@
   --drop-shadow-glow: none;
   --drop-shadow-glow-lg: none;
 
-  --shadow-glow-hover: 0 1px 3px hsl(213deg 13% 14% / 12%);
-  --shadow-glow-focus: 0 0 0 3px color-mix(in srgb, var(--glow-color, var(--btn-color, var(--theme-accent))) 30%, transparent);
-  --shadow-glow-active: inset 0 1px 2px hsl(213deg 13% 14% / 15%);
+  --shadow-glow-hover:
+    0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 25%, transparent),
+    var(--shadow-elevation-md);
+  --shadow-glow-focus:
+    0 0 0 3px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 35%, transparent),
+    var(--shadow-elevation-sm);
+  --shadow-glow-active:
+    inset 0 1px 2px hsl(213deg 13% 14% / 15%),
+    var(--shadow-elevation-sm);
+  --shadow-glow-sm:
+    0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 40%, transparent);
 
   color-scheme: light;
 }

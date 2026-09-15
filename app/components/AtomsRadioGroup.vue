@@ -73,16 +73,13 @@ const updateValue = (value: T, disabled?: boolean) => {
     font-weight: var(--font-weight-bold);
     color: var(--color-text-muted);
 
-    transition: var(--transition-base);
+    transition: var(--transition-interactive);
 
     &:not(.is-disabled) {
       &:hover:not(.is-active) {
-        --glow-color: var(--color-border);
-
         border-color: var(--color-border);
         color: var(--color-text-main);
-        box-shadow: var(--shadow-glow-hover);
-        transition: var(--transition-glow);
+        background-color: var(--color-bg-hover);
       }
 
       &:focus-within {
@@ -90,12 +87,11 @@ const updateValue = (value: T, disabled?: boolean) => {
 
         border-color: color-mix(in srgb, var(--radio-color) 60%, transparent);
 
+        color: var(--radio-color);
         text-shadow: var(--text-glow-md);
 
         outline: none;
         box-shadow: var(--shadow-glow-focus);
-
-        transition: var(--transition-glow);
       }
     }
 
@@ -103,13 +99,9 @@ const updateValue = (value: T, disabled?: boolean) => {
       --glow-color: var(--radio-color);
 
       border-color: var(--radio-color);
-
       color: var(--radio-color);
       text-shadow: var(--text-glow-md);
-
       box-shadow: var(--shadow-glow-active);
-
-      transition: var(--transition-glow);
     }
 
     &.is-disabled {

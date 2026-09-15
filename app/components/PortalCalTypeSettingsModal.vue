@@ -112,7 +112,7 @@ const {
   border-radius: var(--radius-sm);
 
   &__preview {
-    --glow-color: var(--preview-color, var(--color-primary));
+    --glow-color: var(--preview-color, var(--theme-accent));
 
     width: var(--size-control-sm);
     height: var(--size-control-sm);
@@ -121,13 +121,13 @@ const {
     outline: none;
     box-shadow: var(--shadow-glow-focus);
 
-    transition: var(--transition-glow);
+    transition: var(--transition-interactive);
   }
 
   &__indicator {
     width: var(--space-2);
     height: var(--space-2);
-    border: var(--border-width-base) solid var(--preview-color, var(--color-primary));
+    border: var(--border-width-base) solid var(--preview-color, var(--theme-accent));
     border-radius: var(--radius-sm);
   }
 

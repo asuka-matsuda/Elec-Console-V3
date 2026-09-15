@@ -68,7 +68,7 @@ const emit = defineEmits<{
 .calendar-toolbar {
   border: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 30%, transparent);
   border-radius: var(--radius-sm);
-  background-color: var(--color-surface);
+  background-color: var(--surface-bg);
 }
 
 .toolbar-title {

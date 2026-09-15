@@ -56,7 +56,7 @@ const resolvedColor = computed(() => color || 'var(--theme-accent)')
         color-mix(in srgb, var(--divider-color) 80%, transparent),
         transparent
       );
-      box-shadow: var(--shadow-glow-hover);
+      box-shadow: var(--shadow-glow-sm);
 
       animation: data-pulse-x 3s ease-in-out infinite;
     }

@@ -92,7 +92,7 @@ onMounted(() => {
 <template>
   <dialog
     ref="dialogRef"
-    class="drawer fixed top-0 right-0 h-screen max-h-screen m-0 p-0 w-full border-none outline-none"
+    class="drawer fixed top-0 right-0 h-screen max-h-screen m-0 p-0 w-full"
     :class="{
       'max-w-[360px]': size === 'sm',
       'max-w-[460px]': size === 'md',
@@ -170,8 +170,10 @@ onMounted(() => {
 
   margin-right: 0;
   margin-left: auto;
+  border: none;
 
   opacity: 0;
+  outline: none;
 
   transition:
     opacity var(--duration-modal) var(--ease-smooth),

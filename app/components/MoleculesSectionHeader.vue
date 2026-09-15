@@ -35,8 +35,8 @@ const dividerColorMap: Record<string, string> = {
   reference: 'var(--color-category-reference)',
   management: 'var(--color-category-management)',
   border: 'var(--color-border)',
-  danger: 'var(--color-danger, #ef4444)',
-  success: 'var(--color-success, #22c55e)',
+  danger: 'var(--color-status-danger)',
+  success: 'var(--color-status-success)',
 }
 
 const resolvedDividerColor = computed(() => {

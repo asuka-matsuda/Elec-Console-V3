@@ -48,7 +48,7 @@ const tiles = computed(() => {
         :key="item.circuit.id"
         type="button"
         :class="[
-          'minimap-tile cursor-pointer w-2.5 h-2.5 p-0 rounded-[2px] transition-all hover:scale-125 hover:z-[2]',
+          'minimap-tile w-2.5 h-2.5 p-0 hover:z-[2]',
           {
             'is-completed': item.isCompleted,
             'is-excluded': item.isExcluded,
@@ -63,10 +63,17 @@ const tiles = computed(() => {
 
 <style scoped lang="scss">
 .minimap-tile {
+  cursor: pointer;
+
   border: 1px solid var(--color-tile-empty-border);
+  border-radius: 2px;
+
   background-color: var(--color-tile-empty-bg);
 
+  transition: var(--transition-interactive);
+
   &:hover {
+    transform: scale(1.25);
     border-color: var(--color-tile-hover-border);
   }
 

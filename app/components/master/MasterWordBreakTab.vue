@@ -112,14 +112,14 @@ const formattedPreview = computed(() => {
   <div class="flex flex-col gap-6 master-word-break">
     <!-- 説明・ルールカード -->
     <AtomsPanel class="rule-panel">
-      <div class="flex items-center gap-2 mb-2 font-semibold">
+      <div class="flex items-center gap-2 mb-2 rule-panel__title">
         <AtomsIcon name="info" size="sm" />
         <span>改行禁止ルールの概要</span>
       </div>
       <p class="mb-3">
         テーブルの盤名称やテキスト表示時に、単語の途中で不自然に折り返されるのを防止する設定です。現場別ではなくシステム全体に適用されます。
       </p>
-      <div class="flex flex-col gap-2 p-3 rounded sub-rule-box">
+      <div class="flex flex-col gap-2 p-3 sub-rule-box">
         <div class="flex items-start gap-2">
           <AtomsBadge color="var(--glow-color)">
             初期自動ルール
@@ -130,7 +130,7 @@ const formattedPreview = computed(() => {
           </span>
         </div>
         <div class="flex items-start gap-2">
-          <AtomsBadge color="var(--color-primary)">
+          <AtomsBadge color="var(--theme-accent)">
             手動登録ワード
           </AtomsBadge>
           <span>
@@ -177,7 +177,7 @@ const formattedPreview = computed(() => {
           <AtomsBadge color="var(--color-text-muted)">
             {{ localWords.length }}件
           </AtomsBadge>
-          <AtomsBadge v-if="hasUnsavedChanges" color="var(--color-warning)" class="animate-pulse">
+          <AtomsBadge v-if="hasUnsavedChanges" color="var(--color-status-warning)" class="animate-pulse">
             未保存の変更あり
           </AtomsBadge>
         </div>
@@ -204,7 +204,7 @@ const formattedPreview = computed(() => {
       </div>
 
       <!-- 保存完了メッセージ -->
-      <div v-if="saveSuccessMessage" class="flex items-center gap-2 p-2 mb-3 rounded success-banner">
+      <div v-if="saveSuccessMessage" class="flex items-center gap-2 p-2 mb-3 success-banner">
         <AtomsIcon name="check-circle" size="sm" />
         <span>{{ saveSuccessMessage }}</span>
       </div>
@@ -214,12 +214,12 @@ const formattedPreview = computed(() => {
         <span
           v-for="(word, index) in localWords"
           :key="`${word}-${index}`"
-          class="inline-flex items-center gap-1.5 py-1 px-2.5 rounded word-tag"
+          class="inline-flex items-center gap-1.5 py-1 px-2.5 word-tag"
         >
           <span>{{ word }}</span>
           <button
             type="button"
-            class="inline-flex items-center justify-center p-0.5 rounded-full cursor-pointer delete-btn"
+            class="inline-flex items-center justify-center p-0.5 delete-btn"
             title="削除"
             @click="handleRemoveWord(index)"
           >
@@ -253,7 +253,7 @@ const formattedPreview = computed(() => {
         </div>
         <div>
           <label class="block mb-1">表示シミュレーション（幅100px・文節折り返し）</label>
-          <div class="p-2 rounded preview-box">
+          <div class="p-2 preview-box">
             <span>
               {{ formattedPreview }}
             </span>
@@ -283,50 +283,67 @@ const formattedPreview = computed(() => {
   .rule-panel {
     border-left: 4px solid var(--glow-color);
 
+    .rule-panel__title {
+      font-weight: var(--font-weight-semibold);
+    }
+
     .sub-rule-box {
       border: var(--border-width-base) solid var(--color-border-subtle, var(--color-border));
+      border-radius: var(--radius-sm);
+
       font-size: var(--font-size-xs);
       color: var(--color-text-main);
-      background-color: var(--color-bg-subtle, rgb(255 255 255 / 3%));
+
+      background-color: var(--surface-bg-elevated);
     }
   }
 
   .error-text {
     font-size: var(--font-size-xs);
-    color: var(--color-danger);
+    color: var(--color-status-danger);
   }
 
   .success-banner {
-    border: 1px solid var(--color-success);
+    border: 1px solid var(--color-status-success);
+    border-radius: var(--radius-sm);
+
     font-size: var(--font-size-xs);
-    color: var(--color-success);
-    background-color: color-mix(in srgb, var(--color-success) 15%, transparent);
+    color: var(--color-status-success);
+
+    background-color: color-mix(in srgb, var(--color-status-success) 15%, transparent);
   }
 
   .word-tag {
     border: var(--border-width-base) solid var(--color-border);
+    border-radius: var(--radius-sm);
 
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
     color: var(--color-text-main);
 
-    background-color: var(--color-bg-subtle, rgb(255 255 255 / 5%));
+    background-color: var(--surface-bg-elevated);
 
-    transition: var(--transition-base);
+    transition: var(--transition-interactive);
 
     &:hover {
       border-color: var(--glow-color);
-      box-shadow: 0 0 8px color-mix(in srgb, var(--glow-color) 30%, transparent);
+      box-shadow: var(--shadow-glow-sm);
     }
 
     .delete-btn {
+      cursor: pointer;
+
       border: none;
+      border-radius: var(--radius-full);
+
       color: var(--color-text-muted);
+
       background: none;
-      transition: color var(--transition-fast, 0.15s ease);
+
+      transition: var(--transition-interactive);
 
       &:hover {
-        color: var(--color-danger);
+        color: var(--color-status-danger);
       }
     }
   }
@@ -335,7 +352,9 @@ const formattedPreview = computed(() => {
     width: 100px;
     min-height: 60px;
     border: var(--border-width-base) solid var(--color-border);
-    background-color: var(--color-bg-base);
+    border-radius: var(--radius-sm);
+
+    background-color: var(--surface-bg);
 
     span {
       display: block;

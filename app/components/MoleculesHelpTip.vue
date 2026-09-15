@@ -143,7 +143,7 @@ onBeforeUnmount(() => {
   <button
     ref="triggerRef"
     type="button"
-    class="helptip-trigger inline-flex items-center justify-center rounded-full text-[var(--color-text-muted)] hover:text-[var(--theme-accent)] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--theme-accent)] cursor-pointer"
+    class="helptip-trigger inline-flex items-center justify-center"
     tabindex="0"
     @click="toggle"
     @mouseenter="show"
@@ -160,7 +160,7 @@ onBeforeUnmount(() => {
       <div
         v-if="isOpen && (displayText || $slots.default)"
         ref="panelRef"
-        class="helptip-panel fixed z-[9999] w-[200px] px-2.5 py-2 leading-[1.4] whitespace-normal pointer-events-none sm:pointer-events-auto"
+        class="helptip-panel fixed z-[9999] w-[200px] px-2.5 py-2 whitespace-normal pointer-events-none sm:pointer-events-auto"
         :class="{ '-translate-y-full': position.isTopPlacement }"
         :style="{
           top: `${position.top}px`,
@@ -200,8 +200,24 @@ onBeforeUnmount(() => {
 
 <style scoped lang="scss">
 .helptip-trigger {
+  cursor: pointer;
+
   width: 1.1em;
   height: 1.1em;
+  border-radius: var(--radius-full);
+
+  color: var(--color-text-muted);
+
+  transition: var(--transition-colors);
+
+  &:hover {
+    color: var(--theme-accent);
+  }
+
+  &:focus-visible {
+    outline: 1px solid var(--theme-accent);
+    outline-offset: 1px;
+  }
 }
 
 .helptip-panel {
@@ -209,6 +225,7 @@ onBeforeUnmount(() => {
   border-radius: var(--radius-sm);
 
   font-size: var(--font-size-2xs);
+  line-height: 1.4;
   color: var(--color-text-secondary);
 
   // チップとして引き締まった濃色ソリッド背景

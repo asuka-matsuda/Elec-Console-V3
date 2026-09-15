@@ -1,9 +1,26 @@
 import type { Config } from 'tailwindcss'
 
 export default <Config>{
-  // 既存の destyle.css / SCSS との競合を防ぐため preflight は false
+  // 規約に基づき「レイアウト・配置・余白・寸法」以外の装飾ユーティリティ生成を完全無効化
   corePlugins: {
     preflight: false,
+    fontSize: false,
+    fontWeight: false,
+    fontFamily: false,
+    letterSpacing: false,
+    lineHeight: false,
+    textColor: false,
+    backgroundColor: false,
+    borderRadius: false,
+    borderColor: false,
+    borderWidth: false,
+    borderStyle: false,
+    boxShadow: false,
+    dropShadow: false,
+    opacity: false,
+    filter: false,
+    backdropFilter: false,
+    cursor: false,
   },
   content: [
     './app/components/**/*.{vue,js,ts}',

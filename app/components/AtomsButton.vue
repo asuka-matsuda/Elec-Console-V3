@@ -81,7 +81,7 @@ const target = computed(() => to || href)
   background-color: var(--btn-bg);
   box-shadow: var(--shadow-elevation-sm);
 
-  transition: var(--transition-fast);
+  transition: var(--transition-interactive);
 
   :deep(.icon) {
     width: 1.2em;
@@ -98,27 +98,22 @@ const target = computed(() => to || href)
   &:not(:disabled, .is-disabled) {
     &:hover {
       border-color: var(--btn-border-hover);
-
       color: var(--btn-text-hover);
-
       background-color: var(--btn-bg-hover);
       box-shadow: var(--shadow-glow-hover);
-
-      transition: var(--transition-glow);
     }
 
     &:focus-visible {
       border-color: color-mix(in srgb, var(--btn-color) 60%, transparent);
       outline: none;
       box-shadow: var(--shadow-glow-focus);
-      transition: var(--transition-glow);
     }
 
     &:active {
+      transform: scale(0.98);
       border-color: var(--btn-border-hover);
       background-color: var(--btn-bg-active);
       box-shadow: var(--shadow-glow-active);
-      transition: var(--transition-glow);
 
       svg {
         filter: var(--drop-shadow-glow-xs);
@@ -143,6 +138,7 @@ const target = computed(() => to || href)
     --btn-text-hover: var(--color-text-main);
     --btn-bg-hover: var(--color-bg-hover);
     --btn-bg-active: color-mix(in srgb, var(--color-overlay) 10%, transparent);
+    --glow-color: var(--color-text-muted);
   }
 
   &--icon-only {

@@ -52,7 +52,7 @@ const selectTab = (option: TabOption<T>) => {
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
 
-  transition: var(--transition-base);
+  transition: var(--transition-interactive);
 
   &:disabled {
     cursor: not-allowed;
@@ -61,32 +61,21 @@ const selectTab = (option: TabOption<T>) => {
 
   &:not(:disabled) {
     &:is(:hover, :focus-visible):not(.is-active) {
-      transform: translateY(-2px);
-
-      border-color: var(--glow-color);
-
+      transform: translateY(-1px);
+      border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
       color: var(--color-text-main);
-
-      box-shadow: var(--shadow-glow-hover);
-
-      transition: var(--transition-glow);
+      background-color: var(--color-bg-hover);
     }
 
     &:active {
+      transform: translateY(0);
       border-color: var(--glow-color);
-      box-shadow: var(--shadow-glow-active);
-      transition: var(--transition-glow);
     }
 
     &.is-active {
       border-color: var(--glow-color);
-
       color: var(--glow-color);
-      text-shadow: var(--text-glow-md);
-
-      box-shadow: var(--shadow-glow-active);
-
-      transition: var(--transition-glow);
+      text-shadow: var(--text-glow-sm);
     }
   }
 }

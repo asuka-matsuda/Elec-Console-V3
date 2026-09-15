@@ -66,12 +66,12 @@ const emit = defineEmits<{
       <div class="flex flex-col gap-3">
         <div class="flex flex-col w-full gap-1">
           <div class="phase-controls__stats-header flex items-center justify-between">
-            <span class="font-medium text-[var(--color-text-main)]">
+            <span class="phase-controls__stats-title">
               {{ progressLabel || `フェーズ${phase} 進捗状況` }}
             </span>
-            <div class="flex items-center gap-2 font-mono text-[var(--color-text-muted)]">
-              <span><strong class="text-[var(--color-text-main)]">{{ stats.completed }}</strong> / {{ stats.total }}</span>
-              <span class="text-[var(--color-text-main)]">({{ stats.pct }}%)</span>
+            <div class="phase-controls__stats-numbers flex items-center gap-2">
+              <span><strong>{{ stats.completed }}</strong> / {{ stats.total }}</span>
+              <span>({{ stats.pct }}%)</span>
               <AtomsBadge v-if="stats.excluded && stats.excluded > 0" color="var(--color-text-muted)">
                 除外: {{ stats.excluded }}
               </AtomsBadge>
@@ -95,6 +95,25 @@ const emit = defineEmits<{
 .phase-controls {
   &__stats-header {
     font-size: var(--font-size-xs);
+  }
+
+  &__stats-title {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-main);
+  }
+
+  &__stats-numbers {
+    font-family: var(--font-mono);
+    color: var(--color-text-muted);
+
+    strong {
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-main);
+    }
+
+    span {
+      color: var(--color-text-main);
+    }
   }
 
   &__label {

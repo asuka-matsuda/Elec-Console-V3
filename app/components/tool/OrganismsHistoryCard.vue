@@ -85,8 +85,8 @@ const weightResult = computed(() => {
     <!-- ヘッダー部: 日時、ツール名、モードバッジ -->
     <header class="flex items-end justify-between pb-2">
       <div class="flex flex-col gap-1 min-w-0">
-        <span class="text-date font-medium">{{ entry.timestamp }}</span>
-        <h3 class="flex items-center gap-2 font-bold text-title m-0">
+        <span class="text-date">{{ entry.timestamp }}</span>
+        <h3 class="flex items-center gap-2 text-title m-0">
           <span>{{ entry.toolName }}</span>
           <AtomsBadge v-if="entry.mode === 'サイズ選定'" color="var(--color-category-tool)">
             {{ entry.mode }}
@@ -135,7 +135,7 @@ const weightResult = computed(() => {
 
           <!-- フォールバック: 汎用結果リスト -->
           <template v-else>
-            <h4 class="section-title font-bold pl-1 m-0">
+            <h4 class="section-title pl-1 m-0">
               計算結果
             </h4>
             <dl class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 list-desc m-0">
@@ -166,7 +166,7 @@ const weightResult = computed(() => {
 
       <!-- 2. 入力条件セクション -->
       <section class="flex flex-col gap-1 min-h-0">
-        <h4 class="section-title font-bold pl-1 m-0">
+        <h4 class="section-title pl-1 m-0">
           入力条件
         </h4>
         <dl class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 list-desc m-0">
@@ -204,17 +204,20 @@ const weightResult = computed(() => {
 
   .text-date {
     font-size: var(--font-size-2xs);
+    font-weight: var(--font-weight-medium);
     color: var(--color-text-muted);
   }
 
   .text-title {
     font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
 
   .section-title {
     border-left: 2px solid var(--color-category-tool);
     font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
 

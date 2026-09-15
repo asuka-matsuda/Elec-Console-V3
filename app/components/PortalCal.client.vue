@@ -153,7 +153,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
   /* ==== セルと曜日のCSS変数一元管理アーキテクチャ ==== */
   :deep(.fc-daygrid-day) {
-    --cell-accent-color: var(--color-primary);
+    --cell-accent-color: var(--theme-accent);
     --cell-accent-opacity: 0%;
 
     &.is-saturday {
@@ -176,7 +176,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     }
 
     &.fc-day-today {
-      --cell-accent-color: var(--color-primary);
+      --cell-accent-color: var(--theme-accent);
       --cell-accent-opacity: 20%;
 
       .fc-daygrid-day-number {
@@ -184,7 +184,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
         font-size: var(--font-size-sm);
         font-weight: var(--font-weight-bold);
         font-variant-numeric: tabular-nums;
-        color: var(--color-primary);
+        color: var(--theme-accent);
       }
     }
 
@@ -196,7 +196,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     .fc-daygrid-day-frame {
       position: relative;
       z-index: 1;
-      transition: var(--transition-base);
+      transition: var(--transition-interactive);
 
       /* 平日・土曜・日曜祝日・今日すべてで統一のホバー発光を適用 */
       &:hover:not(:has(.fc-daygrid-event:hover)) {
@@ -204,7 +204,6 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
         border-color: var(--glow-color);
         box-shadow: var(--shadow-glow-hover);
-        transition: var(--transition-glow);
       }
     }
   }
@@ -236,14 +235,13 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
         border-color: var(--glow-color);
         box-shadow: var(--shadow-glow-hover);
-        transition: var(--transition-glow);
       }
     }
   }
 
   /* 3件超過時の「+○件」展開リンク */
   :deep(.fc-daygrid-more-link) {
-    --glow-color: var(--color-primary);
+    --glow-color: var(--theme-accent);
 
     position: relative;
     z-index: 1;
@@ -251,14 +249,14 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     display: inline-block;
 
     padding: var(--space-0-5) var(--space-1);
-    border-bottom: 1px dashed var(--color-primary);
+    border-bottom: 1px dashed var(--theme-accent);
 
     font-size: var(--font-size-2xs);
     font-weight: var(--font-weight-bold);
-    color: var(--color-primary);
+    color: var(--theme-accent);
     text-shadow: var(--text-glow-sm);
 
-    transition: var(--transition-base);
+    transition: var(--transition-interactive);
 
     &:hover {
       transform: translateY(-1px);
@@ -273,7 +271,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     border: var(--border-width-base) solid var(--color-border);
     border-radius: var(--radius-sm);
 
-    background-color: color-mix(in srgb, var(--color-surface) 85%, transparent);
+    background-color: color-mix(in srgb, var(--surface-bg) 85%, transparent);
     backdrop-filter: blur(var(--blur-md));
     box-shadow: var(--shadow-modal);
 
@@ -291,14 +289,14 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
       background-color: color-mix(
         in srgb,
-        var(--color-surface-sunken) 85%,
+        var(--surface-bg-elevated) 85%,
         transparent
       );
 
       .fc-popover-title {
         font-size: var(--font-size-sm);
         font-weight: var(--font-weight-bold);
-        color: var(--color-primary);
+        color: var(--theme-accent);
       }
 
       .fc-popover-close {
@@ -342,7 +340,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       position: relative;
       z-index: 1;
 
-      transition: var(--transition-base);
+      transition: var(--transition-interactive);
 
       &:hover td {
         background-color: color-mix(
@@ -364,12 +362,11 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     }
 
     .fc-list-event-dot {
-      --glow-color: var(--event-color, var(--color-primary));
+      --glow-color: var(--event-color, var(--theme-accent));
 
       border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
       outline: none;
       box-shadow: var(--shadow-glow-focus);
-      transition: var(--transition-glow);
     }
 
     .fc-list-empty {

@@ -137,7 +137,7 @@ const confirmToggleDisable = async (row: Site) => {
         />
       </div>
 
-      <div class="hidden lg:block w-px self-stretch bg-[var(--color-border)]" />
+      <div class="pane-divider hidden lg:block w-px self-stretch" />
 
       <!-- 右ペイン: Detail (残りワイド領域) -->
       <div class="flex-1 min-w-0 w-full">
@@ -192,3 +192,9 @@ const confirmToggleDisable = async (row: Site) => {
     </OrganismsModal>
   </AtomsPanel>
 </template>
+
+<style scoped lang="scss">
+.pane-divider {
+  background: var(--color-border);
+}
+</style>

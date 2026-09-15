@@ -235,14 +235,14 @@ const formatDateTime = (isoStr: string) => {
 
 .sync-summary__desc {
   font-size: var(--font-size-sm);
-  line-height: var(--leading-relaxed);
+  line-height: var(--line-height-base);
   color: var(--color-text-muted);
 }
 
 .sync-queue-list {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  background: var(--surface-bg-subtle);
+  background: var(--surface-bg-solid);
 }
 
 .sync-queue-item {
@@ -250,7 +250,7 @@ const formatDateTime = (isoStr: string) => {
 
   &__ban {
     font-weight: var(--font-weight-bold);
-    color: var(--color-text-base);
+    color: var(--color-text-main);
   }
 
   &__kairo {
@@ -258,14 +258,14 @@ const formatDateTime = (isoStr: string) => {
   }
 
   &__time {
-    font-family: var(--font-family-mono);
-    color: var(--color-text-dim);
+    font-family: var(--font-mono);
+    color: var(--color-text-muted);
   }
 }
 
 .sync-queue-more {
   font-size: var(--font-size-xs);
-  color: var(--color-text-dim);
+  color: var(--color-text-muted);
 }
 
 .sync-conflict-alert {
@@ -273,7 +273,7 @@ const formatDateTime = (isoStr: string) => {
   border-radius: var(--radius-sm);
 
   font-size: var(--font-size-sm);
-  line-height: var(--leading-relaxed);
+  line-height: var(--line-height-base);
   color: var(--color-status-warning);
 
   background: color-mix(in srgb, var(--color-status-warning) 10%, transparent);
@@ -290,7 +290,7 @@ const formatDateTime = (isoStr: string) => {
 
   &__ban {
     font-weight: var(--font-weight-bold);
-    color: var(--color-text-base);
+    color: var(--color-text-main);
   }
 
   &__kairo {
@@ -301,35 +301,35 @@ const formatDateTime = (isoStr: string) => {
 
 .sync-conflict-col {
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-xs);
-  background: var(--surface-bg-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--surface-bg-solid);
 
   &.is-server {
     border-color: color-mix(in srgb, var(--color-status-neutral) 30%, transparent);
   }
 
   &.is-client {
-    border-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
-    background: color-mix(in srgb, var(--color-primary) 5%, var(--surface-bg-subtle));
+    border-color: color-mix(in srgb, var(--theme-accent) 30%, transparent);
+    background: color-mix(in srgb, var(--theme-accent) 5%, var(--surface-bg-solid));
   }
 
   &__title {
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-bold);
-    color: var(--color-text-base);
+    color: var(--color-text-main);
   }
 
   &__meta {
     font-size: var(--font-size-2xs);
-    color: var(--color-text-dim);
+    color: var(--color-text-muted);
   }
 
   &__details {
-    border-radius: var(--radius-xs);
+    border-radius: var(--radius-sm);
 
-    font-family: var(--font-family-mono);
+    font-family: var(--font-mono);
     font-size: var(--font-size-xs);
-    line-height: var(--leading-normal);
+    line-height: var(--line-height-ui);
     color: var(--color-text-muted);
 
     background: var(--surface-bg-elevated);

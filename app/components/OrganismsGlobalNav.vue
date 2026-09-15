@@ -56,7 +56,7 @@ onMounted(() => {
     :class="{ 'is-open': isOpen }"
   >
     <header class="flex items-center justify-between h-16 px-[var(--space-4)]">
-      <span class="header-title font-semibold tracking-wider text-[var(--color-text-muted)]">
+      <span class="header-title">
         メニュー
       </span>
       <AtomsButton
@@ -143,6 +143,9 @@ aside {
 
     .header-title {
       font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-muted);
+      letter-spacing: var(--tracking-wider);
     }
   }
 
@@ -174,7 +177,7 @@ aside {
     color: var(--color-text-secondary);
     letter-spacing: var(--tracking-wide);
 
-    transition: var(--transition-base);
+    transition: var(--transition-interactive);
 
     span {
       word-break: keep-all;
@@ -190,14 +193,9 @@ aside {
     &:hover,
     &:focus-visible {
       transform: translateX(var(--space-1));
-
       border-color: var(--section-accent);
-
       color: var(--section-accent);
-
       box-shadow: var(--nav-glow-hover);
-
-      transition: var(--transition-glow);
 
       :deep(.icon) {
         filter: var(--nav-icon-glow);
@@ -207,14 +205,9 @@ aside {
     &:active,
     &.router-link-active {
       transform: none;
-
       border-color: var(--section-accent);
-
       color: var(--section-accent);
-
       box-shadow: var(--nav-glow-active);
-
-      transition: var(--transition-glow);
 
       :deep(.icon) {
         filter: var(--nav-icon-glow);

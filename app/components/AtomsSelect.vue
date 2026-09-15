@@ -142,7 +142,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
       @keydown="handleKeydown"
     >
       <slot name="selected" :option="selectedOption" :label="displayLabel">
-        <span class="flex-1 text-left truncate">{{ displayLabel }}</span>
+        <span class="flex-1 text-left custom-select__label">{{ displayLabel }}</span>
       </slot>
     </button>
 
@@ -157,7 +157,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
         >
           <li
             v-if="isPlaceholder"
-            class="relative overflow-hidden truncate custom-select__option is-placeholder"
+            class="relative overflow-hidden custom-select__option is-placeholder"
           >
             {{ placeholder }}
           </li>
@@ -208,7 +208,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   background-color: var(--surface-bg-elevated);
   box-shadow: var(--shadow-sink);
 
-  transition: var(--transition-glow);
+  transition: var(--transition-interactive);
 
   &:is(:disabled, .is-disabled) {
     cursor: not-allowed;
@@ -302,17 +302,27 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   }
 }
 
+.custom-select__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .custom-select__option {
   cursor: pointer;
   user-select: none;
 
   z-index: 1;
 
+  overflow: hidden;
+
   padding: 0.4em 0.8em;
   border-radius: var(--radius-sm);
 
   font-size: inherit;
   color: var(--color-text-main);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
   transition: var(--transition-colors);
 
@@ -332,7 +342,6 @@ const getOptionClasses = (option: SelectOption, index: number) => [
     &:is(:hover, .is-focused, .is-selected) {
       color: var(--theme-accent);
       background-color: var(--color-selection-bg);
-      transition: var(--transition-colors);
     }
 
     &.is-selected {

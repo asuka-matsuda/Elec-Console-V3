@@ -23,10 +23,10 @@ describe('MoleculesSiteListItem.vue', () => {
     expect(wrapper.text()).toContain('新宿ビル改修工事')
     expect(wrapper.text()).toContain('site-shinjuku-01')
     expect(wrapper.text()).toContain('進行中')
-    expect(wrapper.classes()).not.toContain('is-active')
+    expect(wrapper.classes()).not.toContain('is-selected')
   })
 
-  it('applies is-active class when isSelected is true', () => {
+  it('applies is-selected class when isSelected is true', () => {
     const wrapper = mount(MoleculesSiteListItem, {
       props: {
         site: dummySite,
@@ -34,7 +34,7 @@ describe('MoleculesSiteListItem.vue', () => {
       },
     })
 
-    expect(wrapper.classes()).toContain('is-active')
+    expect(wrapper.classes()).toContain('is-selected')
   })
 
   it('emits select event when item is clicked', async () => {

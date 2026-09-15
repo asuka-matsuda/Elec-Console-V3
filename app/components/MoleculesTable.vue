@@ -110,7 +110,7 @@ const getCellValue = (row: T, key: string): unknown => {
     ref="tableWrapperRef"
     class="table-wrapper flex-1 min-h-0 overflow-y-auto"
   >
-    <table class="w-full table-fixed text-left border-separate border-spacing-0">
+    <table class="w-full table-fixed text-left">
       <thead>
         <tr>
           <AtomsTableTh
@@ -158,6 +158,11 @@ const getCellValue = (row: T, key: string): unknown => {
 </template>
 
 <style scoped lang="scss">
+table {
+  border-spacing: 0;
+  border-collapse: separate;
+}
+
 .table-wrapper {
   border: var(--border-width-base) solid var(--color-border);
   border-radius: var(--radius-sm);

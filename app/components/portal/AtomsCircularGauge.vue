@@ -26,7 +26,7 @@ const normalizedValue = computed(() => {
 
 <template>
   <div
-    class="relative flex flex-col items-center justify-center gap-1 rounded-full circular-gauge"
+    class="relative flex flex-col items-center justify-center gap-1 circular-gauge"
     :class="`is-${size}`"
     :style="{
       '--progress': `${normalizedValue}%`,
@@ -51,6 +51,7 @@ const normalizedValue = computed(() => {
 
   width: var(--gauge-size);
   height: var(--gauge-size);
+  border-radius: var(--radius-full);
 
   &::before {
     content: "";

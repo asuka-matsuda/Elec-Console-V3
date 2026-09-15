@@ -93,7 +93,7 @@ onMounted(() => {
 <template>
   <dialog
     ref="dialogRef"
-    class="modal w-[90vw] max-h-[90vh] m-auto p-0 border-none outline-none"
+    class="modal w-[90vw] max-h-[90vh] m-auto p-0"
     :class="{
       'max-w-[420px]': size === 'sm',
       'max-w-[540px]': size === 'md',
@@ -154,7 +154,10 @@ onMounted(() => {
   overflow: visible;
   display: none;
 
+  border: none;
+
   opacity: 0;
+  outline: none;
 
   transition:
     opacity var(--duration-modal) var(--ease-smooth),

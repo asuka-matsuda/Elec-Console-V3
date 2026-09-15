@@ -59,7 +59,7 @@ const displayItems = computed(() => {
 }
 
 .item {
-  transition: var(--transition-base);
+  transition: var(--transition-interactive);
 
   &::before {
     content: "";
@@ -73,19 +73,21 @@ const displayItems = computed(() => {
 
     background-color: transparent;
 
-    transition: var(--transition-base);
+    transition: var(--transition-interactive);
   }
 
   &:hover {
-    background-color: color-mix(in srgb, var(--color-surface-hover) 80%, transparent);
+    background-color: var(--color-bg-hover);
 
     &::before {
-      background-color: var(--theme-accent, var(--color-primary));
-      box-shadow: 0 0 8px var(--theme-accent, var(--color-primary));
+      --glow-color: var(--theme-accent);
+
+      background-color: var(--theme-accent);
+      box-shadow: var(--shadow-glow-sm);
     }
 
     strong {
-      color: var(--color-text-primary);
+      color: var(--theme-accent);
     }
   }
 
@@ -97,8 +99,8 @@ const displayItems = computed(() => {
 
   strong {
     font-size: var(--font-size-sm);
-    color: var(--color-text-base);
-    transition: var(--transition-base);
+    color: var(--color-text-main);
+    transition: var(--transition-interactive);
   }
 
   p {

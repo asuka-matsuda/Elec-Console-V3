@@ -19,8 +19,6 @@ const activeTab = ref('users')
 
 <template>
   <div class="flex flex-col gap-section-gap">
-    <MoleculesSectionHeader title="ポータル管理 (開発者向け)" icon="settings" />
-
     <AtomsTabs v-model="activeTab" :options="ADMIN_TABS" />
 
     <div class="flex flex-1 flex-col gap-card-gap min-h-0">

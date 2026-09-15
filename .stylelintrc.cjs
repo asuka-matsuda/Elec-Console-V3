@@ -65,4 +65,20 @@ module.exports = {
       'at-rules',
     ],
   },
+  overrides: [
+    {
+      files: ['app/components/**/*.vue', 'app/pages/**/*.vue', 'app/layouts/**/*.vue'],
+      rules: {
+        // ハードコードされたシャドウの直接指定を禁止し、var(--shadow-*) トークンを強制
+        'declaration-property-value-disallowed-list': {
+          'box-shadow': [
+            '/^[0-9]/',
+            '/^#[0-9a-fA-F]/',
+            '/^rgba?\\(/',
+            '/^hsla?\\(/',
+          ],
+        },
+      },
+    },
+  ],
 }

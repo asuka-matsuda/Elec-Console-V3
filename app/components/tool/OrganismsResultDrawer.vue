@@ -85,7 +85,7 @@ defineExpose({
     <!-- モバイル開閉ハンドル -->
     <button
       type="button"
-      class="handle hidden max-md:flex items-center justify-between w-full h-12 px-3 cursor-pointer font-bold leading-tight"
+      class="handle hidden max-md:flex items-center justify-between w-full h-12 px-3"
       @click="toggleDrawer"
     >
       <span>{{ drawerTitle }}</span>
@@ -163,9 +163,15 @@ defineExpose({
   }
 
   .handle {
+    cursor: pointer;
+
     border: none;
+
     font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--leading-tight, 1.25);
     color: var(--color-category-tool);
+
     background: color-mix(
       in srgb,
       var(--color-category-tool) 10%,

@@ -41,14 +41,14 @@ const { currentUser, logout } = useAuth()
       <slot name="actions" />
 
       <div class="flex items-center gap-2">
-        <div class="flex shrink-0 items-center justify-center w-8 h-8 rounded-full avatar">
+        <div class="flex shrink-0 items-center justify-center w-8 h-8 avatar">
           <AtomsIcon
             name="user"
             size="sm"
             class="avatar__icon"
           />
         </div>
-        <span class="font-bold leading-tight max-md:hidden user-name">
+        <span class="max-md:hidden user-name">
           {{ currentUser ? `${currentUser.lastName} ${currentUser.firstName}` : 'ゲスト' }}
         </span>
         <AtomsButton
@@ -71,8 +71,9 @@ const { currentUser, logout } = useAuth()
 
 .avatar {
   border: var(--border-width-base) solid color-mix(in srgb, var(--theme-accent) 40%, var(--color-border));
+  border-radius: var(--radius-full);
   box-shadow: var(--shadow-elevation-sm);
-  transition: var(--transition-colors);
+  transition: var(--transition-interactive);
 
   &__icon {
     color: var(--theme-accent);
@@ -86,6 +87,8 @@ const { currentUser, logout } = useAuth()
 
 .user-name {
   font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--leading-tight, 1.25);
   color: var(--color-text-main);
 }
 </style>

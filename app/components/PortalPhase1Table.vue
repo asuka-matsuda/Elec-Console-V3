@@ -132,14 +132,14 @@ const {
     <!-- 確認 / 増締め (チェックボックス) -->
     <template #cell-p1Kakunin="{ row: circuit }">
       <div class="flex items-center justify-center gap-3">
-        <label class="inline-flex flex-col items-center gap-[2px] cursor-pointer" title="回路確認">
+        <label class="phase1-check-item inline-flex flex-col items-center gap-[2px]" title="回路確認">
           <AtomsCheckbox
             v-model="circuit.p1Kakunin"
             :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
           />
           <span class="phase1-check-item__label">確認</span>
         </label>
-        <label class="inline-flex flex-col items-center gap-[2px] cursor-pointer" title="増締め確認">
+        <label class="phase1-check-item inline-flex flex-col items-center gap-[2px]" title="増締め確認">
           <AtomsCheckbox
             v-model="circuit.p1Mashishime"
             :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
@@ -315,6 +315,8 @@ const {
 }
 
 .phase1-check-item {
+  cursor: pointer;
+
   &__label {
     user-select: none;
     font-size: 10px;

@@ -80,7 +80,7 @@ const getActionBadgeColor = (action: unknown) => {
       </template>
 
       <template #cell-details="{ value }">
-        <span class="truncate block max-w-[300px] logs-cell__details">
+        <span class="block max-w-[300px] logs-cell__details">
           {{ value || '-' }}
         </span>
       </template>
@@ -123,8 +123,12 @@ const getActionBadgeColor = (action: unknown) => {
   }
 
   &__details {
+    overflow: hidden;
+
     font-size: var(--font-size-xs);
     color: var(--color-text-secondary);
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 </style>

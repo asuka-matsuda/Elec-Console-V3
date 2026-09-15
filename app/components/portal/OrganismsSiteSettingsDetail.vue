@@ -78,7 +78,7 @@ const confirmResetImport = async () => {
         icon="layout"
         title="現場が選択されていません"
         description="左側の現場一覧から、設定やデータ連携を行う現場を選択してください。"
-        class="min-h-[400px] flex items-center justify-center border border-dashed border-[var(--color-border)] rounded-md"
+        class="placeholder-empty min-h-[400px] flex items-center justify-center"
       />
     </template>
 
@@ -99,7 +99,7 @@ const confirmResetImport = async () => {
             <AtomsBadge v-if="site.disabledAt" color="var(--color-status-danger)">
               無効
             </AtomsBadge>
-            <span class="site-id-label font-mono text-[var(--color-text-muted)] font-normal ml-1">
+            <span class="site-id-label ml-1">
               (ID: {{ site.id }})
             </span>
           </div>
@@ -186,7 +186,7 @@ const confirmResetImport = async () => {
             icon="upload-cloud"
             size="sm"
           />
-          <p class="desc-text m-0 text-[var(--color-text-muted)] leading-relaxed">
+          <p class="desc-text m-0">
             回路情報・現場基本情報の更新は「差分同期」、新規立ち上げ時は「全件初期化取込」を行います。
           </p>
 
@@ -226,7 +226,7 @@ const confirmResetImport = async () => {
             icon="file-spreadsheet"
             size="sm"
           />
-          <p class="desc-text m-0 text-[var(--color-text-muted)] leading-relaxed">
+          <p class="desc-text m-0">
             Web上で完了した最新の試験結果（Phase 1〜3）を含むExcel帳票ファイルをダウンロードします。
           </p>
 
@@ -246,7 +246,7 @@ const confirmResetImport = async () => {
         <!-- 実行中ステータス表示 -->
         <div
           v-if="isSyncing"
-          class="status-msg flex items-center gap-2 p-3 rounded-sm text-[var(--color-category-main)] bg-[color-mix(in_srgb,var(--color-category-main)_10%,transparent)]"
+          class="status-msg is-info flex items-center gap-2 p-3"
         >
           <AtomsIcon name="loader" size="sm" class="u-spin" />
           <span>{{ syncMsg }}</span>
@@ -255,7 +255,7 @@ const confirmResetImport = async () => {
         <!-- エラー発生時の表示 -->
         <div
           v-else-if="showSyncMsg && syncMsgType === 'error'"
-          class="status-msg flex items-center gap-2 p-3 rounded-sm text-[var(--color-status-danger)] bg-[color-mix(in_srgb,var(--color-status-danger)_10%,transparent)]"
+          class="status-msg is-error flex items-center gap-2 p-3"
         >
           <AtomsIcon name="alert-circle" size="sm" />
           <span>{{ syncMsg }}</span>
@@ -306,7 +306,7 @@ const confirmResetImport = async () => {
           icon="slash"
           size="sm"
         />
-        <p class="desc-text m-0 text-[var(--color-text-muted)] leading-relaxed">
+        <p class="desc-text m-0">
           計算や試験連携の対象外とする盤・回路を指定します。
         </p>
 
@@ -360,7 +360,7 @@ const confirmResetImport = async () => {
         @cancel="isResultDialogOpen = false"
       >
         <div v-if="syncResultData" class="flex flex-col gap-3">
-          <div class="result-msg text-[var(--color-text-muted)]">
+          <div class="result-msg">
             {{ syncResultData.title }}が正常に完了しました。
           </div>
 
@@ -382,13 +382,40 @@ const confirmResetImport = async () => {
 </template>
 
 <style scoped lang="scss">
-.site-id-label,
-.desc-text {
-  font-size: var(--font-size-xs);
+.placeholder-empty {
+  border: var(--border-width-base) dashed var(--color-border);
+  border-radius: var(--radius-md, 6px);
 }
 
-.status-msg,
+.site-id-label {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.desc-text {
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-base);
+  color: var(--color-text-muted);
+}
+
+.status-msg {
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+
+  &.is-info {
+    color: var(--color-category-main);
+    background: color-mix(in srgb, var(--color-category-main) 10%, transparent);
+  }
+
+  &.is-error {
+    color: var(--color-status-danger);
+    background: color-mix(in srgb, var(--color-status-danger) 10%, transparent);
+  }
+}
+
 .result-msg {
   font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
 }
 </style>

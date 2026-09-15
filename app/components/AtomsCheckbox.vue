@@ -76,28 +76,24 @@ const {
         &:not(:focus-visible, :active, :checked, :indeterminate) ~ .box {
           border-color: var(--checkbox-color);
           box-shadow: var(--shadow-glow-hover);
-          transition: var(--transition-glow);
         }
       }
 
       &:active ~ .box {
         border-color: var(--checkbox-color);
         box-shadow: var(--shadow-glow-active);
-        transition: var(--transition-glow);
       }
 
       &:focus-visible ~ .box {
         border-color: color-mix(in srgb, var(--checkbox-color) 60%, transparent);
         outline: none;
         box-shadow: var(--shadow-glow-focus);
-        transition: var(--transition-glow);
       }
 
       &:is(:checked, :indeterminate) ~ .box {
         border-color: var(--checkbox-color);
         background-color: color-mix(in srgb, var(--checkbox-color) 15%, var(--surface-bg-elevated));
         box-shadow: var(--shadow-glow-active);
-        transition: var(--transition-glow);
 
         .icon {
           filter: var(--drop-shadow-glow-sm);
@@ -126,7 +122,7 @@ const {
 
     background-color: var(--surface-bg-elevated);
 
-    transition: var(--transition-base);
+    transition: var(--transition-interactive);
 
     .icon {
       transform: translate(-50%, -50%) scale(0.6);
@@ -155,7 +151,7 @@ const {
   }
 
   .label {
-    transition: var(--transition-base);
+    transition: var(--transition-interactive);
   }
 }
 </style>

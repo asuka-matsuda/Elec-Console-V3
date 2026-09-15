@@ -55,7 +55,7 @@ const sortedTodos = computed(() => {
       <li
         v-for="todo in sortedTodos"
         :key="todo.id"
-        class="flex items-center justify-between gap-1 p-2 bg-[var(--color-bg-hover)]"
+        class="todo-item flex items-center justify-between gap-1 p-2"
       >
         <AtomsCheckbox
           :model-value="todo.completed"
@@ -82,6 +82,10 @@ const sortedTodos = computed(() => {
 </template>
 
 <style scoped lang="scss">
+.todo-item {
+  background-color: var(--color-bg-hover);
+}
+
 .is-completed {
   text-decoration: line-through;
   opacity: 0.5;

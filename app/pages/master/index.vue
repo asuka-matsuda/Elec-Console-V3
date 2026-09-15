@@ -32,19 +32,13 @@ const MASTER_TABS: TabOption<'word-break' | 'announcements'>[] = [
 </script>
 
 <template>
-  <div class="flex flex-col gap-6 master-page">
-    <MoleculesSectionHeader
-      title="マスター管理"
-      icon="sliders"
-      variant="management"
-    />
-
+  <div class="flex flex-col gap-section-gap">
     <AtomsTabs
       v-model="activeTab"
       :options="MASTER_TABS"
     />
 
-    <div class="flex-1 min-h-0 flex flex-col gap-[var(--space-card-gap)]">
+    <div class="flex-1 min-h-0 flex flex-col gap-card-gap">
       <MasterWordBreakTab v-if="activeTab === 'word-break'" />
       <MoleculesEmptyState
         v-else-if="activeTab === 'announcements'"
@@ -56,9 +50,3 @@ const MASTER_TABS: TabOption<'word-break' | 'announcements'>[] = [
     </div>
   </div>
 </template>
-
-<style scoped lang="scss">
-.master-page {
-  --theme-accent: var(--color-category-management, var(--color-accent-teal));
-}
-</style>
