@@ -3,14 +3,15 @@
  * OrganismsUserSettingsDetail
  * [Portal Organisms] ユーザー管理の右ペイン（Detail）。
  * 選択されたユーザーの基本設定（氏名、権限、PWリセット要求）、現場アサイン、PW初期化・削除を一括提供します。
+ * 内部コンポーネントとして以下の Molecules をオーケストレートします:
+ * - PortalMoleculesUserBasicSettings
+ * - PortalMoleculesUserSiteAssignment
  */
 import { ref, watch } from 'vue'
 
-import { USER_ROLE_OPTIONS } from '~/constants/adminConstants'
 import type { Site } from '~/types/admin'
 import type { User, UserRole } from '~/types/auth'
 import type { RadioOption } from '~/types/components'
-import { formatDateTime } from '~/utils/date'
 
 const props = defineProps<{
   user: User | null
@@ -67,12 +68,6 @@ const handleSave = () => {
     assignedSiteIds: editAssignedSiteIds.value,
   })
 }
-
-const formatLastLogin = (user: User) => {
-  if (!user.lastLoginAt) return '未ログイン'
-
-  return formatDateTime(user.lastLoginAt as string)
-}
 </script>
 
 <template>
@@ -89,7 +84,7 @@ const formatLastLogin = (user: User) => {
 
     <!-- ユーザー選択時 -->
     <template v-else>
-      <!-- 上部ヘッダー: ユーザー名 + 権限 + アクションボタン (MoleculesSectionHeader size="lg") -->
+      <!-- 上部ヘッダー: ユーザー名 + 権限 + アクションボタン -->
       <MoleculesSectionHeader
         :title="`${user.lastName || ''} ${user.firstName || ''}`"
         icon="user"
@@ -154,91 +149,29 @@ const formatLastLogin = (user: User) => {
       </div>
 
       <!-- 1. 基本情報設定 -->
-      <div v-if="activeCategory === 'basic'" class="flex flex-col gap-5 max-w-xl">
-        <MoleculesSectionHeader
-          title="ユーザー基本情報"
-          icon="info"
-          size="sm"
-        />
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <MoleculesFormGroup label="姓">
-            <AtomsInput v-model="editLastName" placeholder="例: 松田" />
-          </MoleculesFormGroup>
-          <MoleculesFormGroup label="名">
-            <AtomsInput v-model="editFirstName" placeholder="例: 飛鳥" />
-          </MoleculesFormGroup>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <MoleculesFormGroup label="姓（ふりがな）">
-            <AtomsInput v-model="editLastNameKana" placeholder="例: まつだ" />
-          </MoleculesFormGroup>
-          <MoleculesFormGroup label="名（ふりがな）">
-            <AtomsInput v-model="editFirstNameKana" placeholder="例: あすか" />
-          </MoleculesFormGroup>
-        </div>
-
-        <MoleculesFormGroup label="ログインID">
-          <AtomsInput
-            :model-value="user.loginId || user.id"
-            disabled
-          />
-        </MoleculesFormGroup>
-
-        <MoleculesFormGroup label="権限">
-          <AtomsSelect
-            v-model="editRole"
-            :options="USER_ROLE_OPTIONS"
-            :disabled="user.id === 'master'"
-          />
-        </MoleculesFormGroup>
-
-        <MoleculesFormGroup>
-          <AtomsCheckbox
-            v-model="editRequirePasswordReset"
-            label="次回ログイン時にパスワード変更を要求する"
-          />
-        </MoleculesFormGroup>
-
-        <MoleculesFormGroup label="最終ログイン日時">
-          <div class="last-login-text pt-1">
-            {{ formatLastLogin(user) }}
-          </div>
-        </MoleculesFormGroup>
-      </div>
+      <PortalMoleculesUserBasicSettings
+        v-if="activeCategory === 'basic'"
+        :user="user"
+        :last-name="editLastName"
+        :first-name="editFirstName"
+        :last-name-kana="editLastNameKana"
+        :first-name-kana="editFirstNameKana"
+        :user-role="editRole"
+        :require-password-reset="editRequirePasswordReset"
+        @update:last-name="editLastName = $event"
+        @update:first-name="editFirstName = $event"
+        @update:last-name-kana="editLastNameKana = $event"
+        @update:first-name-kana="editFirstNameKana = $event"
+        @update:user-role="editRole = $event"
+        @update:require-password-reset="editRequirePasswordReset = $event"
+      />
 
       <!-- 2. 現場アサイン設定 -->
-      <div v-else-if="activeCategory === 'assign'" class="flex flex-col gap-4 max-w-xl">
-        <MoleculesSectionHeader
-          title="参加現場アサイン"
-          icon="building"
-          size="sm"
-        />
-
-        <p class="desc-text">
-          このユーザーが参加・閲覧できる現場を選択してください。
-        </p>
-
-        <div v-if="siteList.length > 0" class="flex flex-col gap-2">
-          <template v-for="site in siteList" :key="site.id">
-            <MoleculesFormGroup>
-              <AtomsCheckbox
-                v-model="editAssignedSiteIds"
-                :value="site.id"
-                :label="`${site.name} (${site.id})`"
-              />
-            </MoleculesFormGroup>
-          </template>
-        </div>
-
-        <MoleculesEmptyState
-          v-else
-          icon="inbox"
-          title="登録された現場がありません"
-          description="現場管理タブから現場を作成してください。"
-        />
-      </div>
+      <PortalMoleculesUserSiteAssignment
+        v-else-if="activeCategory === 'assign'"
+        v-model="editAssignedSiteIds"
+        :site-list="siteList"
+      />
     </template>
   </div>
 </template>
@@ -246,16 +179,6 @@ const formatLastLogin = (user: User) => {
 <style scoped lang="scss">
 .user-id-label {
   font-family: var(--font-mono);
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-}
-
-.last-login-text {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-}
-
-.desc-text {
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
 }

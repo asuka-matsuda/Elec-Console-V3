@@ -3,12 +3,14 @@
  * OrganismsSiteSettingsDetail
  * [Portal Organisms] 現場管理の右ペイン（Detail）。
  * 選択された現場の基本設定、Excelデータ連携（取込・DL）、除外回路ルールを統合提供します。
- * Organisms規約に基づき独自のクラス定義スタイルは持たず、Atoms / Molecules を純粋にレイアウトします。
+ * 内部コンポーネントとして以下の Molecules をオーケストレートします:
+ * - PortalMoleculesSiteBasicSettings
+ * - PortalMoleculesSiteExcelIntegration
+ * - PortalMoleculesSiteExcludedRules
  */
 import { ref } from 'vue'
 
 import type { SyncResultInfo } from '~/composables/portal/useSiteSettingsForm'
-import { useModal } from '~/composables/useModal'
 import type { Site } from '~/types/admin'
 import type { RadioOption } from '~/types/components'
 import { getSiteStatusColor, getSiteStatusLabel } from '~/utils/portal'
@@ -52,22 +54,7 @@ const categoryOptions: RadioOption<'basic' | 'integration' | 'rules'>[] = [
   { label: '除外回路ルール', value: 'rules' },
 ]
 
-// 初期化取込の危険確認モーダル
-const { askConfirm } = useModal()
 const isResultDialogOpen = ref(false)
-
-const confirmResetImport = async () => {
-  const isConfirmed = await askConfirm({
-    title: '全件初期化取込の確認',
-    message: '現在の回路データおよびWeb上で入力された試験結果がすべて破棄され、選択したExcelの内容で最初から再構築されます。本当に実行しますか？',
-    confirmText: '全件初期化して取り込む',
-    intent: 'danger',
-  })
-
-  if (isConfirmed) {
-    emit('reset-import')
-  }
-}
 </script>
 
 <template>
@@ -84,7 +71,7 @@ const confirmResetImport = async () => {
 
     <!-- 現場選択時の設定コンソール -->
     <template v-else>
-      <!-- 上部ヘッダー: 現場名 + ステータス + 一括保存ボタン (MoleculesSectionHeader) -->
+      <!-- 上部ヘッダー: 現場名 + ステータス + 一括保存ボタン -->
       <MoleculesSectionHeader
         :title="site.name"
         icon="settings"
@@ -125,230 +112,43 @@ const confirmResetImport = async () => {
       </div>
 
       <!-- 1. 基本情報設定 -->
-      <div v-if="activeCategory === 'basic'" class="flex flex-col gap-5 max-w-xl">
-        <MoleculesSectionHeader
-          title="現場基本情報"
-          icon="info"
-          size="sm"
-        />
-
-        <MoleculesFormGroup label="ステータス">
-          <AtomsSelect
-            :model-value="editStatus"
-            :options="statusOptions"
-            @update:model-value="emit('update:editStatus', String($event ?? ''))"
-          />
-        </MoleculesFormGroup>
-
-        <MoleculesFormGroup label="現場ID (半角英数)">
-          <AtomsInput
-            :model-value="editId"
-            placeholder="例: site-tokyo-01"
-            @update:model-value="emit('update:editId', String($event ?? ''))"
-          />
-        </MoleculesFormGroup>
-
-        <MoleculesFormGroup label="現場名">
-          <AtomsInput
-            :model-value="editData.name"
-            placeholder="例: 新宿プロジェクト"
-            @update:model-value="emit('update:name', String($event ?? ''))"
-          />
-        </MoleculesFormGroup>
-
-        <MoleculesFormGroup label="アサイン済ワーカー">
-          <div class="flex flex-wrap items-center gap-2">
-            <template v-if="workerNames.length > 0">
-              <AtomsBadge
-                v-for="(name, idx) in workerNames"
-                :key="idx"
-                color="var(--color-category-main)"
-              >
-                {{ name }}
-              </AtomsBadge>
-            </template>
-            <MoleculesEmptyState
-              v-else
-              icon="users"
-              title="アサインされているワーカーはいません"
-              description="ユーザー管理画面からワーカーをアサインしてください。"
-            />
-          </div>
-        </MoleculesFormGroup>
-      </div>
+      <PortalMoleculesSiteBasicSettings
+        v-if="activeCategory === 'basic'"
+        :edit-status="editStatus"
+        :edit-id="editId"
+        :edit-data="editData"
+        :status-options="statusOptions"
+        :worker-names="workerNames"
+        @update:edit-status="emit('update:editStatus', $event)"
+        @update:edit-id="emit('update:editId', $event)"
+        @update:name="emit('update:name', $event)"
+      />
 
       <!-- 2. Excelデータ連携 (取込 & 帳票DL) -->
-      <div v-else-if="activeCategory === 'integration'" class="flex flex-col gap-6">
-        <!-- 取込セクション -->
-        <div class="flex flex-col gap-3">
-          <MoleculesSectionHeader
-            title="Excelデータ取込 (差分同期 / 初期設定)"
-            icon="upload-cloud"
-            size="sm"
-          />
-          <p class="desc-text m-0">
-            回路情報・現場基本情報の更新は「差分同期」、新規立ち上げ時は「全件初期化取込」を行います。
-          </p>
-
-          <PortalAtomsExcelDropzone
-            :model-value="selectedFile"
-            :disabled="isSyncing"
-            @update:model-value="emit('file-select', $event)"
-          />
-
-          <div class="flex flex-wrap items-center gap-3 mt-1">
-            <AtomsButton
-              variant="primary"
-              icon="refresh-cw"
-              :loading="syncAction === 'merge'"
-              :disabled="!selectedFile || isSyncing"
-              @click="emit('merge-sync')"
-            >
-              {{ selectedFile ? '選択ファイルから差分同期' : 'ファイルを選択して差分同期' }}
-            </AtomsButton>
-
-            <AtomsButton
-              variant="danger"
-              icon="trash-2"
-              :loading="syncAction === 'reset'"
-              :disabled="!selectedFile || isSyncing"
-              @click="confirmResetImport"
-            >
-              全件初期化取込
-            </AtomsButton>
-          </div>
-        </div>
-
-        <!-- 出力セクション -->
-        <div class="flex flex-col gap-3">
-          <MoleculesSectionHeader
-            title="最新結果の帳票出力"
-            icon="file-spreadsheet"
-            size="sm"
-          />
-          <p class="desc-text m-0">
-            Web上で完了した最新の試験結果（Phase 1〜3）を含むExcel帳票ファイルをダウンロードします。
-          </p>
-
-          <div>
-            <AtomsButton
-              variant="secondary"
-              icon="download"
-              :loading="syncAction === 'download'"
-              :disabled="isSyncing"
-              @click="emit('download-excel')"
-            >
-              Excel帳票ダウンロード (ブラウザDL)
-            </AtomsButton>
-          </div>
-        </div>
-
-        <!-- 実行中ステータス表示 -->
-        <div
-          v-if="isSyncing"
-          class="status-msg is-info flex items-center gap-2 p-3"
-        >
-          <AtomsIcon name="loader" size="sm" class="u-spin" />
-          <span>{{ syncMsg }}</span>
-        </div>
-
-        <!-- エラー発生時の表示 -->
-        <div
-          v-else-if="showSyncMsg && syncMsgType === 'error'"
-          class="status-msg is-error flex items-center gap-2 p-3"
-        >
-          <AtomsIcon name="alert-circle" size="sm" />
-          <span>{{ syncMsg }}</span>
-        </div>
-
-        <!-- 完了時のインライン件数サマリー表示 (MoleculesResultBox) -->
-        <MoleculesResultBox
-          v-else-if="syncResultData"
-          status="success"
-          :title="syncResultData.title"
-        >
-          <template #actions>
-            <AtomsButton
-              variant="secondary"
-              @click="isResultDialogOpen = true"
-            >
-              詳細を表示
-            </AtomsButton>
-          </template>
-
-          <template #value>
-            <div class="flex flex-wrap gap-2 mt-2">
-              <template v-if="syncResultData.type === 'merge'">
-                <AtomsBadge color="var(--color-status-success)">
-                  追加: +{{ syncResultData.createdCount ?? 0 }} 件
-                </AtomsBadge>
-                <AtomsBadge color="var(--color-category-tool)">
-                  変更: {{ syncResultData.updatedCount ?? 0 }} 件
-                </AtomsBadge>
-                <AtomsBadge color="var(--color-text-muted)">
-                  全回路数: {{ syncResultData.count }} 件
-                </AtomsBadge>
-              </template>
-              <template v-else-if="syncResultData.type === 'reset'">
-                <AtomsBadge color="var(--color-status-success)">
-                  取込総数: {{ syncResultData.count }} 件
-                </AtomsBadge>
-              </template>
-            </div>
-          </template>
-        </MoleculesResultBox>
-      </div>
+      <PortalMoleculesSiteExcelIntegration
+        v-else-if="activeCategory === 'integration'"
+        :selected-file="selectedFile"
+        :is-syncing="isSyncing"
+        :sync-action="syncAction"
+        :show-sync-msg="showSyncMsg"
+        :sync-msg="syncMsg"
+        :sync-msg-type="syncMsgType"
+        :sync-result-data="syncResultData"
+        @file-select="emit('file-select', $event)"
+        @merge-sync="emit('merge-sync')"
+        @reset-import="emit('reset-import')"
+        @download-excel="emit('download-excel')"
+        @show-result-detail="isResultDialogOpen = true"
+      />
 
       <!-- 3. 除外回路ルール設定 -->
-      <div v-else-if="activeCategory === 'rules'" class="flex flex-col gap-4 max-w-xl">
-        <MoleculesSectionHeader
-          title="除外回路の設定"
-          icon="slash"
-          size="sm"
-        />
-        <p class="desc-text m-0">
-          計算や試験連携の対象外とする盤・回路を指定します。
-        </p>
-
-        <div class="flex flex-col gap-3">
-          <ul v-if="excludedCircuitsList.length > 0" class="m-0 flex flex-col gap-2 p-0 list-none">
-            <li
-              v-for="(circuit, idx) in excludedCircuitsList"
-              :key="idx"
-              class="flex items-center gap-2"
-            >
-              <AtomsInput
-                :model-value="circuit"
-                placeholder="例: 盤A-回路1"
-                @update:model-value="emit('update:circuit', { index: idx, value: String($event ?? '') })"
-              />
-              <AtomsButton
-                icon="trash-2"
-                variant="danger"
-                title="除外回路を削除"
-                @click="emit('remove-circuit', idx)"
-              />
-            </li>
-          </ul>
-
-          <MoleculesEmptyState
-            v-else
-            icon="slash"
-            title="除外回路は設定されていません"
-            description="すべての回路が計算・連携の対象となります。"
-          />
-
-          <div>
-            <AtomsButton
-              variant="secondary"
-              icon="plus"
-              @click="emit('add-circuit')"
-            >
-              除外回路を追加する
-            </AtomsButton>
-          </div>
-        </div>
-      </div>
+      <PortalMoleculesSiteExcludedRules
+        v-else-if="activeCategory === 'rules'"
+        :excluded-circuits-list="excludedCircuitsList"
+        @add-circuit="emit('add-circuit')"
+        @remove-circuit="emit('remove-circuit', $event)"
+        @update:circuit="emit('update:circuit', $event)"
+      />
 
       <!-- 処理完了詳細モーダル -->
       <OrganismsModal
@@ -391,27 +191,6 @@ const confirmResetImport = async () => {
   font-family: var(--font-mono);
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
-}
-
-.desc-text {
-  font-size: var(--font-size-xs);
-  line-height: var(--line-height-base);
-  color: var(--color-text-muted);
-}
-
-.status-msg {
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-sm);
-
-  &.is-info {
-    color: var(--color-category-main);
-    background: color-mix(in srgb, var(--color-category-main) 10%, transparent);
-  }
-
-  &.is-error {
-    color: var(--color-status-danger);
-    background: color-mix(in srgb, var(--color-status-danger) 10%, transparent);
-  }
 }
 
 .result-msg {
