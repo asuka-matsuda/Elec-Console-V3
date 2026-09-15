@@ -28,8 +28,10 @@ const VIEW_OPTIONS: CalendarViewOption[] = [
   { value: 'listMonth', label: 'リスト', icon: 'list' },
 ]
 
-const handleViewChange = (view: CalendarView) => {
-  emit('changeView', view)
+const handleViewChange = (val: unknown) => {
+  if (val === 'dayGridMonth' || val === 'listMonth') {
+    emit('changeView', val)
+  }
 }
 
 const getOptionIcon = (option: RadioOption<CalendarView>): string => {
