@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
- * PortalOperationLogsTable
- * 送電試験操作ログ一覧テーブルOrganismコンポーネント。
+ * PortalOrganismsOperationLogsTable
+ * [Portal Organisms] 送電試験操作ログ一覧テーブルコンポーネント。
  * ログ一覧、日時フォーマット、アクション別AtomsBadge装飾、およびエンプティステートを管理します。
  */
 import { OPERATION_LOG_COLUMNS } from '~/constants/soudenConstants'

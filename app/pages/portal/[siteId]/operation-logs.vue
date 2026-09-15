@@ -77,8 +77,8 @@ const targetBanOptions = computed(() => [
       </template>
     </MoleculesSectionHeader>
 
-    <!-- 検索・フィルタリングコントロール (Organism) -->
-    <PortalOperationLogsFilter
+    <!-- 検索・フィルタリングコントロール (Molecules) -->
+    <PortalMoleculesOperationLogsFilter
       v-model:worker="selectedWorker"
       v-model:action="selectedAction"
       v-model:target-ban="selectedTargetBan"
@@ -90,7 +90,7 @@ const targetBanOptions = computed(() => [
     />
 
     <!-- ログ一覧テーブル (Organism) -->
-    <PortalOperationLogsTable
+    <PortalOrganismsOperationLogsTable
       :logs="logs"
       :is-loading="isLoading"
     />

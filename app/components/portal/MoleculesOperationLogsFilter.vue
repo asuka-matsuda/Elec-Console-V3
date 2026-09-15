@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
- * PortalOperationLogsFilter
- * 送電試験操作ログの絞り込みパネルOrganismコンポーネント。
+ * PortalMoleculesOperationLogsFilter
+ * [Portal Molecules] 送電試験操作ログの絞り込みパネルコンポーネント。
  * 作業者、アクション、盤、表示件数の各セレクトと取得件数バッジを提供します。
  */
 import { OPERATION_LOG_LIMIT_OPTIONS } from '~/constants/soudenConstants'
