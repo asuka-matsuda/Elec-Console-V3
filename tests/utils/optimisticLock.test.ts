@@ -111,4 +111,3 @@ describe('atomicUpdateCircuit', () => {
     expect(typeof atomicUpdateCircuit).toBe('function')
   })
 })
-

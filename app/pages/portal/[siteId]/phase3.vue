@@ -5,7 +5,7 @@
  */
 import { computed, onMounted, watch } from 'vue'
 
-import { usePhaseExam } from '~/composables/portal/usePhaseExam'
+import { usePhase3Exam } from '~/composables/portal/phase/usePhase3Exam'
 import type { CircuitItem } from '~/types/souden'
 
 useHead({ title: 'フェーズ3：送電・電圧測定・検相 - Elec-Console' })
@@ -31,7 +31,7 @@ const {
   confirmPhase3,
   clearPhase3,
   batchConfirmPhase3,
-} = usePhaseExam(siteId, initialKeiTo.value, 3)
+} = usePhase3Exam(siteId, initialKeiTo.value)
 
 watch(
   () => route.query.kei_to,
