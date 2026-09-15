@@ -245,7 +245,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
       // 子要素のバッジのホバースタイルを親から強制的に発火させる
       :deep(.cal-badge) {
-        --glow-color: var(--badge-color);
+        --glow-color: var(--badge-color, var(--theme-accent));
 
         border-color: var(--glow-color);
         box-shadow: var(--shadow-glow-hover);

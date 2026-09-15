@@ -63,7 +63,7 @@ const handleLogin = async () => {
       </template>
 
       <div class="flex items-center justify-center">
-        <AtomsButton type="submit" variant="primary" block :disabled="isLoading">
+        <AtomsButton type="submit" variant="success" block :disabled="isLoading">
           <template v-if="isLoading"> ログイン中... </template>
           <template v-else> ログイン </template>
         </AtomsButton>

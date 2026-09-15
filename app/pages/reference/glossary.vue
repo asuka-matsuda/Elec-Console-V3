@@ -40,11 +40,11 @@ const availableRows = computed(() =>
 )
 
 const categoryColorMap: Record<string, string> = {
-  電気: 'var(--trade-color-electric)',
-  建築: 'var(--trade-color-architecture)',
-  空調・換気: 'var(--trade-color-hvac)',
-  衛生: 'var(--trade-color-plumbing)',
-  雑学: 'var(--trade-color-trivia)',
+  電気: 'var(--color-category-main)',
+  建築: 'var(--color-category-tool)',
+  空調・換気: 'var(--color-category-database)',
+  衛生: 'var(--color-category-reference)',
+  雑学: 'var(--color-category-management)',
 }
 </script>
 

@@ -85,7 +85,7 @@ const handleChangePassword = async () => {
     <div class="flex items-center justify-center">
       <AtomsButton
         type="submit"
-        variant="primary"
+        variant="success"
         block
         :disabled="isLoading"
       >

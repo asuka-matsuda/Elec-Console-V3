@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { computed } from 'vue'
 
 import type { NuxtError } from '#app'
@@ -50,7 +50,7 @@ const handleReset = () => {
 
       <div class="error-page__actions">
         <AtomsButton
-          variant="primary"
+          variant="secondary"
           icon="home"
           size="md"
           @click="handleReset"
@@ -82,7 +82,7 @@ const handleReset = () => {
   min-height: 100vh;
   padding: var(--space-4);
 
-  background-color: var(--color-bg-base);
+  background-color: var(--color-main-bg);
   background-image:
     radial-gradient(
       circle at 50% 20%,
@@ -103,8 +103,8 @@ const handleReset = () => {
 
     text-align: center;
 
-    background-color: var(--color-bg-surface-elevated);
-    box-shadow: var(--shadow-lg);
+    background-color: var(--surface-bg-elevated);
+    box-shadow: var(--shadow-elevation-lg);
   }
 
   &__header {
@@ -121,7 +121,7 @@ const handleReset = () => {
     border: 1px solid var(--color-border-subtle);
     border-radius: var(--radius-full);
 
-    background-color: var(--color-bg-surface);
+    background-color: var(--surface-bg);
   }
 
   &__code {
@@ -159,7 +159,7 @@ const handleReset = () => {
 
     text-align: left;
 
-    background-color: var(--color-bg-surface);
+    background-color: var(--surface-bg);
   }
 
   &__summary {

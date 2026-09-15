@@ -14,6 +14,11 @@ const props = defineProps<{
   name?: string
 }>()
 
+defineSlots<{
+  default?: (props: Record<string, never>) => unknown
+  option?: (props: { option: RadioOption<T>, isSelected: boolean }) => unknown
+}>()
+
 const uniqueName = useId()
 const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
 

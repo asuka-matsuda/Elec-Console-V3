@@ -72,7 +72,7 @@ const formatDateTime = (isoStr: string) => {
 
 <template>
   <OrganismsModal
-    :is-open="isOpen"
+    v-model="isOpen"
     title="現場データのサーバー同期"
     @close="closeModal"
   >
