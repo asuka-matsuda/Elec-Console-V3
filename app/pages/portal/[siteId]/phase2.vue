@@ -69,7 +69,7 @@ const shubetsuTabOptions = computed(() => {
 </script>
 
 <template>
-  <PortalOrganismsPhaseExamTemplate
+  <PortalTemplatesPhaseExam
     v-model:shubetsu="selectedBanShubetsu"
     v-model:ban-meisho="selectedBanMeisho"
     title="フェーズ2：絶縁抵抗測定（メガ測定）"
@@ -82,7 +82,7 @@ const shubetsuTabOptions = computed(() => {
     @select-circuit="scrollToCircuit"
   >
     <template #header-actions>
-      <PortalOrganismsSyncStatusBadge
+      <PortalMoleculesSyncStatusBadge
         :site-id="siteId"
         @synced="fetchCircuits"
       />
@@ -124,7 +124,7 @@ const shubetsuTabOptions = computed(() => {
       @confirm="confirmPhase2"
       @clear="clearPhase2"
     />
-  </PortalOrganismsPhaseExamTemplate>
+  </PortalTemplatesPhaseExam>
 </template>
 
 <style scoped lang="scss">

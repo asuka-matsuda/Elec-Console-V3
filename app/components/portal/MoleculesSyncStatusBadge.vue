@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
- * PortalOrganismsSyncStatusBadge
- * [Organisms] オフライン同期状態（同期済／未同期件数）を表示し、クリックで同期モーダルを開くコンポーネント。
+ * PortalMoleculesSyncStatusBadge
+ * [Molecules] オフライン同期状態（同期済／未同期件数）を表示し、クリックで同期モーダルを開くコンポーネント。
  */
 import { ref, toRef } from 'vue'
 

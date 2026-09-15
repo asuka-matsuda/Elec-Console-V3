@@ -2,7 +2,7 @@
 /**
  * OrganismsSoudenCircuitTable
  * 送電試験（Phase 1〜3）専用の回路一覧テーブルコンポーネント。
- * 回路記号SVG（PortalAtomKairoSymbol）専用列の完全保護、行ステータス装飾、
+ * 回路記号SVG（PortalAtomsKairoSymbol）専用列の完全保護、行ステータス装飾、
  * 測定者/日時セルの標準内包、および各フェーズ固有の測定・操作スロットを提供します。
  */
 import { ref } from 'vue'
@@ -137,7 +137,7 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
                 v-else-if="col.key === 'kairoBangou'"
                 class="flex items-center justify-center"
               >
-                <PortalAtomKairoSymbol
+                <PortalAtomsKairoSymbol
                   :kigou="circuit.kairoKigou"
                   :bangou="circuit.kairoBangou"
                 />

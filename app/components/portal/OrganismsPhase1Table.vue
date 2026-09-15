@@ -85,7 +85,7 @@ const {
         <AtomsInput v-model="editForm.kairoBangou" placeholder="番号" />
       </template>
       <div v-else class="flex items-center justify-center">
-        <PortalAtomKairoSymbol
+        <PortalAtomsKairoSymbol
           :kigou="circuit.kairoKigou"
           :bangou="circuit.kairoBangou"
         />

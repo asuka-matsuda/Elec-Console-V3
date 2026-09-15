@@ -170,7 +170,7 @@ const {
         <AtomsBadge :color="isThreePhase(circuit) ? 'var(--color-status-warning)' : 'var(--color-text-muted)'">
           {{ isThreePhase(circuit) ? '動力' : '電灯' }}
         </AtomsBadge>
-        <PortalAtomKairoSymbol
+        <PortalAtomsKairoSymbol
           :kigou="circuit.kairoKigou"
           :bangou="circuit.kairoBangou"
         />

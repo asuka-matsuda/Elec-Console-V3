@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PortalOrganismsPhaseExamTemplate
+ * PortalTemplatesPhaseExam
  * 送電試験（フェーズ1〜3）共通のテンプレート（Layout）コンポーネント。
  * ヘッダー、同期状態、絞り込み＆進捗コントロールパネル、およびメインコンテンツ（テーブル）の骨組みを提供します。
  */

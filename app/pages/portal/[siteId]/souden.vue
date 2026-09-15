@@ -33,7 +33,7 @@ onMounted(() => {
       size="lg"
     >
       <template #actions>
-        <PortalOrganismsSyncStatusBadge
+        <PortalMoleculesSyncStatusBadge
           :site-id="siteId"
           @synced="fetchStats"
         />
