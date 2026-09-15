@@ -151,7 +151,7 @@ const formatDateTime = (isoStr: string) => {
                 </template>
               </div>
               <AtomsButton
-                variant="primary"
+                variant="secondary"
                 class="mt-2"
                 @click="handleResolve(item, 'overwrite')"
               >

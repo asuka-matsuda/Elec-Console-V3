@@ -279,7 +279,7 @@ const confirmResetPassword = async (row: User) => {
           印刷する
         </AtomsButton>
         <AtomsButton
-          variant="primary"
+          variant="secondary"
           @click="isCredentialModalOpen = false"
         >
           完了

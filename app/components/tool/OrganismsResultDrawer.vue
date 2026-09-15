@@ -168,7 +168,7 @@ defineExpose({
 
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-bold);
-    line-height: var(--leading-tight, 1.25);
+    line-height: var(--line-height-tight);
     color: var(--color-category-tool);
 
     background: color-mix(

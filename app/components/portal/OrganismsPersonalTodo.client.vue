@@ -69,8 +69,9 @@ const sortedTodos = computed(() => {
           @update:model-value="toggleTodo(todo.id)"
         />
         <AtomsButton
-          variant="secondary"
+          variant="danger"
           icon-only
+          title="タスクを削除"
           @click="deleteTodo(todo.id)"
         >
           <AtomsIcon name="trash-2" />
@@ -91,8 +92,11 @@ const sortedTodos = computed(() => {
   background-color: var(--color-bg-hover);
 }
 
-.is-completed {
-  text-decoration: line-through;
+:deep(.is-completed) {
   opacity: 0.5;
+
+  .label {
+    text-decoration: line-through;
+  }
 }
 </style>

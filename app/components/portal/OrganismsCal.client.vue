@@ -244,7 +244,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       background: transparent;
 
       // 子要素のバッジのホバースタイルを親から強制的に発火させる
-      .cal-badge {
+      :deep(.cal-badge) {
         --glow-color: var(--badge-color);
 
         border-color: var(--glow-color);
@@ -370,7 +370,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     }
 
     .fc-list-event-dot {
-      --glow-color: var(--event-color, var(--theme-accent));
+      --glow-color: var(--theme-accent);
 
       border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
       outline: none;

@@ -90,7 +90,7 @@ td {
   }
 
   .stacked-cell {
-    line-height: var(--leading-tight, 1.25);
+    line-height: var(--line-height-tight);
   }
 
   .main-text {

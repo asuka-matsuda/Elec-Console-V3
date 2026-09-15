@@ -26,7 +26,7 @@ const emit = defineEmits<{
     interactive
     :selected="isSelected"
     :disabled="!!site.disabledAt"
-    class="site-item !p-3 flex items-center justify-between gap-3"
+    class="site-item flex items-center justify-between gap-3"
     @click="emit('select', site)"
   >
     <div class="flex-1 min-w-0">
@@ -59,6 +59,8 @@ const emit = defineEmits<{
 
 <style scoped lang="scss">
 .site-item {
+  padding: var(--space-3);
+
   .site-name {
     overflow: hidden;
 

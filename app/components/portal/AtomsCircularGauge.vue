@@ -47,7 +47,7 @@ const normalizedValue = computed(() => {
 .circular-gauge {
   --gauge-size: 160px;
   --gauge-thickness: 8px;
-  --gauge-glow: var(--drop-shadow-glow);
+  --gauge-glow: drop-shadow(0 0 6px color-mix(in srgb, var(--gauge-color, var(--theme-accent)) 40%, transparent));
 
   width: var(--gauge-size);
   height: var(--gauge-size);
@@ -97,7 +97,7 @@ const normalizedValue = computed(() => {
   &.is-sm {
     --gauge-size: 110px;
     --gauge-thickness: 6px;
-    --gauge-glow: var(--drop-shadow-glow-sm);
+    --gauge-glow: drop-shadow(0 0 4px color-mix(in srgb, var(--gauge-color, var(--theme-accent)) 35%, transparent));
 
     .value {
       font-size: var(--font-size-xl);
@@ -107,7 +107,7 @@ const normalizedValue = computed(() => {
   &.is-lg {
     --gauge-size: 200px;
     --gauge-thickness: 12px;
-    --gauge-glow: var(--drop-shadow-glow-lg);
+    --gauge-glow: drop-shadow(0 0 10px color-mix(in srgb, var(--gauge-color, var(--theme-accent)) 45%, transparent));
 
     .value {
       font-size: var(--font-size-4xl);

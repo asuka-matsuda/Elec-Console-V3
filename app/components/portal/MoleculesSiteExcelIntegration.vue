@@ -63,7 +63,7 @@ const confirmResetImport = async () => {
 
       <div class="flex flex-wrap items-center gap-3 mt-1">
         <AtomsButton
-          variant="primary"
+          variant="secondary"
           icon="refresh-cw"
           :loading="syncAction === 'merge'"
           :disabled="!selectedFile || isSyncing"

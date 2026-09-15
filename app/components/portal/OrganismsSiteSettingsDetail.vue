@@ -13,7 +13,6 @@ import { ref } from 'vue'
 import type { SyncResultInfo } from '~/composables/portal/useSiteSettingsForm'
 import type { Site } from '~/types/admin'
 import type { RadioOption } from '~/types/components'
-import { getSiteStatusColor, getSiteStatusLabel } from '~/utils/portal'
 
 defineProps<{
   site: Site | null
@@ -78,15 +77,9 @@ const isResultDialogOpen = ref(false)
         size="lg"
       >
         <template #default>
-          <div class="flex flex-wrap items-center gap-2">
+          <div class="flex items-baseline gap-2">
             <span>{{ site.name }}</span>
-            <AtomsBadge :color="getSiteStatusColor(site.status)">
-              {{ getSiteStatusLabel(site.status) }}
-            </AtomsBadge>
-            <AtomsBadge v-if="site.disabledAt" color="var(--color-status-danger)">
-              無効
-            </AtomsBadge>
-            <span class="site-id-label ml-1">
+            <span class="site-id-label">
               (ID: {{ site.id }})
             </span>
           </div>
@@ -182,11 +175,6 @@ const isResultDialogOpen = ref(false)
 </template>
 
 <style scoped lang="scss">
-.placeholder-empty {
-  border: var(--border-width-base) dashed var(--color-border);
-  border-radius: var(--radius-md, 6px);
-}
-
 .site-id-label {
   font-family: var(--font-mono);
   font-size: var(--font-size-xs);

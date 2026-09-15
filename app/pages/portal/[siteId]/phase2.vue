@@ -88,7 +88,7 @@ const shubetsuTabOptions = computed(() => {
       />
 
       <AtomsButton
-        variant="primary"
+        variant="secondary"
         :loading="isBatchLoading"
         @click="batchConfirmPhase2(100)"
       >

@@ -156,7 +156,7 @@ const formattedPreview = computed(() => {
         </div>
         <AtomsButton
           type="submit"
-          variant="primary"
+          variant="secondary"
           icon="plus"
         >
           追加する
@@ -266,7 +266,7 @@ const formattedPreview = computed(() => {
 
 <style scoped lang="scss">
 .master-word-break {
-  --glow-color: var(--color-category-management, var(--color-accent-teal));
+  --glow-color: var(--color-category-management, var(--color-category-tool));
 
   h3 {
     font-size: var(--font-size-sm);

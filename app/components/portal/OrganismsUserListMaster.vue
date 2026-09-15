@@ -64,7 +64,7 @@ const filteredUsers = computed(() => {
     >
       <template #actions>
         <AtomsButton
-          variant="primary"
+          variant="secondary"
           icon="plus"
           @click="emit('create')"
         >

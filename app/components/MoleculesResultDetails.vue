@@ -38,7 +38,7 @@ defineProps<{
 <style scoped lang="scss">
 .result-details {
   font-size: var(--font-size-xs);
-  line-height: var(--line-height-normal);
+  line-height: var(--line-height-ui);
   color: var(--color-text-muted);
 
   .label,

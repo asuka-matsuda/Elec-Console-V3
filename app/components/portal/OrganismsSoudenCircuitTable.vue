@@ -154,7 +154,7 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
               <!-- 測定者/日時の送電試験標準描画（スロット指定がない場合） -->
               <PortalMoleculesSoudenWorkerCell
                 v-else-if="col.key.endsWith('ConfirmedAt')"
-                :worker-name="circuit.p3Worker || circuit.p2Worker || circuit.p1Worker"
+                :worker="circuit.p3Worker || circuit.p2Worker || circuit.p1Worker"
                 :confirmed-at="circuit.p3ConfirmedAt || circuit.p2ConfirmedAt || circuit.p1ConfirmedAt"
               />
             </template>

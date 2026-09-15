@@ -182,9 +182,4 @@ const handleSave = () => {
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
 }
-
-.placeholder-empty {
-  border: var(--border-width-base) dashed var(--color-border);
-  border-radius: var(--radius-md, 6px);
-}
 </style>

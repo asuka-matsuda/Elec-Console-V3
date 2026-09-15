@@ -21,7 +21,7 @@ const emit = defineEmits<{
     as="div"
     interactive
     :selected="isSelected"
-    class="user-item !p-3 flex items-center justify-between gap-3"
+    class="user-item flex items-center justify-between gap-3"
     @click="emit('select', user)"
   >
     <div class="flex-1 min-w-0">
@@ -53,6 +53,8 @@ const emit = defineEmits<{
 
 <style scoped lang="scss">
 .user-item {
+  padding: var(--space-3);
+
   .user-name {
     overflow: hidden;
 
