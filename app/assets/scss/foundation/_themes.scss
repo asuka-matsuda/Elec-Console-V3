@@ -51,6 +51,10 @@
   --color-selection-outline: hsl(214deg 92% 45%);
   --color-completed-row-bg: hsl(137deg 66% 30% / 8%);
 
+  // カレンダー専用セマンティックトークン (ライトモード)
+  --color-calendar-saturday: hsl(212deg 92% 45%);
+  --color-calendar-sunday: hsl(356deg 72% 47%);
+
   // ライトモード用 ボタン & コントロール セマンティックトークン
   --color-text-on-emphasis: hsl(0deg 0% 100%);
   --btn-primary-bg-hover: color-mix(in srgb, var(--theme-accent) 88%, black);

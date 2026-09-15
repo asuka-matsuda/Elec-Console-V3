@@ -152,27 +152,35 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     color: var(--color-text-main);
   }
 
+  :deep(.is-saturday .fc-col-header-cell-cushion) {
+    color: var(--color-calendar-saturday);
+  }
+
+  :deep(.is-sunday .fc-col-header-cell-cushion) {
+    color: var(--color-calendar-sunday);
+  }
+
   /* ==== セルと曜日のCSS変数一元管理アーキテクチャ ==== */
   :deep(.fc-daygrid-day) {
     --cell-accent-color: var(--theme-accent);
     --cell-accent-opacity: 0%;
 
     &.is-saturday {
-      --cell-accent-color: var(--color-category-database);
+      --cell-accent-color: var(--color-calendar-saturday);
       --cell-accent-opacity: 15%;
 
       .fc-daygrid-day-number {
-        color: var(--color-category-database);
+        color: var(--color-calendar-saturday);
       }
     }
 
     &.is-sunday,
     &.is-holiday {
-      --cell-accent-color: var(--color-status-danger);
+      --cell-accent-color: var(--color-calendar-sunday);
       --cell-accent-opacity: 20%;
 
       .fc-daygrid-day-number {
-        color: var(--color-status-danger);
+        color: var(--color-calendar-sunday);
       }
     }
 

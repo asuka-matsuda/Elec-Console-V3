@@ -194,6 +194,10 @@
   --color-selection-outline: hsl(215deg 93% 58%);
   --color-completed-row-bg: hsl(128deg 57% 62% / 8%);
 
+  // カレンダー専用セマンティックトークン（休日セマンティクス）
+  --color-calendar-saturday: hsl(212deg 92% 66%);
+  --color-calendar-sunday: hsl(358deg 85% 68%);
+
   // ボタン専用セマンティックトークン (GitHub Primer Solid Hierarchy)
   --btn-primary-bg: var(--theme-accent);
   --btn-primary-bg-hover: color-mix(in srgb, var(--theme-accent) 88%, white);
