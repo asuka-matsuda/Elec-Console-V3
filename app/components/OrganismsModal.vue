@@ -182,6 +182,7 @@ onMounted(() => {
   &[open] {
     pointer-events: auto;
     transform: translateY(0);
+    display: flex;
     opacity: 1;
 
     &::backdrop {
