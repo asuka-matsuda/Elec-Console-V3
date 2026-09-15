@@ -153,10 +153,7 @@ const {
   >
     <!-- 回路番号 -->
     <template #cell-kairoBangou="{ row: circuit }">
-      <div class="flex flex-col items-center justify-center gap-1">
-        <AtomsBadge :color="isThreePhase(circuit) ? 'var(--color-status-warning)' : 'var(--color-text-muted)'">
-          {{ isThreePhase(circuit) ? '動力' : '電灯' }}
-        </AtomsBadge>
+      <div class="flex items-center justify-center">
         <PortalAtomsKairoSymbol
           :kigou="circuit.kairoKigou"
           :bangou="circuit.kairoBangou"
