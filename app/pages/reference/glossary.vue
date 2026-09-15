@@ -40,11 +40,11 @@ const availableRows = computed(() =>
 )
 
 const categoryColorMap: Record<string, string> = {
-  電気: 'var(--color-category-main)',
-  建築: 'var(--color-category-tool)',
-  空調・換気: 'var(--color-category-database)',
-  衛生: 'var(--color-category-reference)',
-  雑学: 'var(--color-category-management)',
+  電気: 'var(--color-trade-electric)',
+  建築: 'var(--color-trade-architecture)',
+  空調・換気: 'var(--color-trade-hvac)',
+  衛生: 'var(--color-trade-plumbing)',
+  雑学: 'var(--color-trade-trivia)',
 }
 </script>
 
@@ -121,11 +121,11 @@ const categoryColorMap: Record<string, string> = {
 
 <style scoped lang="scss">
 .glossary-view {
-  --trade-color-electric: var(--color-status-warning);
-  --trade-color-architecture: var(--color-accent-main);
-  --trade-color-hvac: var(--color-status-success);
-  --trade-color-plumbing: var(--color-category-tool);
-  --trade-color-trivia: var(--color-category-reference);
+  --trade-color-electric: var(--color-trade-electric);
+  --trade-color-architecture: var(--color-trade-architecture);
+  --trade-color-hvac: var(--color-trade-hvac);
+  --trade-color-plumbing: var(--color-trade-plumbing);
+  --trade-color-trivia: var(--color-trade-trivia);
 }
 
 .glossary-item {

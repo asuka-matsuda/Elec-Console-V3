@@ -198,6 +198,20 @@
   --color-calendar-saturday: hsl(212deg 92% 66%);
   --color-calendar-sunday: hsl(358deg 85% 68%);
 
+  // 工種・専門領域セマンティックトークン (Trade Domains: 設備・施工・図面セマンティクス)
+  --color-trade-electric: hsl(42deg 90% 50%); // 電気: アンバー / イエロー (電気設備)
+  --color-trade-architecture: hsl(22deg 88% 54%); // 建築: テラコッタ / オレンジ (躯体・建築工事)
+  --color-trade-hvac: hsl(145deg 65% 44%); // 空調・換気: エアーグリーン (空調換気設備・風)
+  --color-trade-plumbing: hsl(198deg 85% 48%); // 衛生: 水道ブルー / シアン (給排水衛生設備・水)
+  --color-trade-trivia: hsl(265deg 70% 65%); // 雑学: パープル / ナレッジ (知見コラム)
+
+  // 互換用エイリアス
+  --trade-color-electric: var(--color-trade-electric);
+  --trade-color-architecture: var(--color-trade-architecture);
+  --trade-color-hvac: var(--color-trade-hvac);
+  --trade-color-plumbing: var(--color-trade-plumbing);
+  --trade-color-trivia: var(--color-trade-trivia);
+
   // ボタン専用セマンティックトークン (GitHub Primer Solid Hierarchy)
   --btn-primary-bg: var(--theme-accent);
   --btn-primary-bg-hover: color-mix(in srgb, var(--theme-accent) 88%, white);
