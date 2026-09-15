@@ -59,7 +59,8 @@ const updateValue = (value: T, disabled?: boolean) => {
 
   border: var(--border-width-base) solid var(--color-border);
   border-radius: var(--radius-sm);
-  box-shadow: none;
+  background-color: var(--surface-bg-elevated);
+  box-shadow: var(--shadow-sink);
 
   .item {
     cursor: pointer;
@@ -70,44 +71,34 @@ const updateValue = (value: T, disabled?: boolean) => {
     border-radius: var(--radius-sm);
 
     font-size: inherit;
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-muted);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
 
     transition: var(--transition-interactive);
 
     &:not(.is-disabled) {
       &:hover:not(.is-active) {
-        border-color: var(--color-border);
         color: var(--color-text-main);
         background-color: var(--color-bg-hover);
       }
 
       &:focus-within {
-        --glow-color: var(--radio-color);
-
-        border-color: color-mix(in srgb, var(--radio-color) 60%, transparent);
-
-        color: var(--radio-color);
-        text-shadow: var(--text-glow-md);
-
         outline: none;
         box-shadow: var(--shadow-glow-focus);
       }
     }
 
     &.is-active {
-      --glow-color: var(--radio-color);
+      border-color: var(--color-border);
 
-      border-color: var(--radio-color);
-      color: var(--radio-color);
-      text-shadow: var(--text-glow-md);
-      box-shadow: var(--shadow-glow-active);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-main);
+
+      background-color: var(--surface-bg-solid);
+      box-shadow: var(--shadow-elevation-sm);
     }
 
-    &.is-disabled {
-      cursor: not-allowed;
-      opacity: 0.5;
-    }
+    @include state-disabled;
   }
 }
 </style>

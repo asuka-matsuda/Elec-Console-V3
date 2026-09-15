@@ -114,7 +114,7 @@ onMounted(() => {
 })
 
 const getOptionClasses = (option: SelectOption, index: number) => [
-  'relative overflow-hidden truncate custom-select__option',
+  'relative z-[1] overflow-hidden truncate custom-select__option',
   {
     'is-selected': model.value === option.value,
     'is-focused': index === focusedIndex.value,
@@ -132,7 +132,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   >
     <button
       type="button"
-      class="relative z-[1] flex w-full items-center justify-between gap-2 custom-select__value"
+      class="relative z-[1] focus:z-[2] flex w-full items-center justify-between gap-2 custom-select__value"
       :class="{
         'is-placeholder': isPlaceholder,
         'is-active': isOpen,
@@ -144,6 +144,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
       <slot name="selected" :option="selectedOption" :label="displayLabel">
         <span class="flex-1 text-left custom-select__label">{{ displayLabel }}</span>
       </slot>
+      <span class="relative z-[1] shrink-0 custom-select__arrow" />
     </button>
 
     <Teleport :to="teleportTarget">
@@ -151,13 +152,13 @@ const getOptionClasses = (option: SelectOption, index: number) => [
         <ul
           v-if="isOpen"
           ref="dropdownRef"
-          class="absolute w-max max-w-[90vw] overflow-x-hidden overflow-y-auto p-1 custom-select__dropdown"
+          class="absolute z-select w-max max-w-[90vw] overflow-x-hidden overflow-y-auto p-1 custom-select__dropdown"
           :class="`is-${dynamicPlacement}`"
           :style="syncedDropdownStyle"
         >
           <li
             v-if="isPlaceholder"
-            class="relative overflow-hidden custom-select__option is-placeholder"
+            class="relative z-[1] overflow-hidden custom-select__option is-placeholder"
           >
             {{ placeholder }}
           </li>
@@ -248,39 +249,31 @@ const getOptionClasses = (option: SelectOption, index: number) => [
     }
   }
 
-  &::after {
-    content: "";
-
-    position: relative;
-    z-index: 1;
-
-    flex-shrink: 0;
-
-    width: 1.2em;
-    height: 1.2em;
-
-    background-image: var(--icon-select-arrow);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-
-    transition: var(--transition-transform);
-  }
-
   &.is-placeholder {
     color: color-mix(in srgb, var(--color-text-muted) 50%, transparent);
   }
 
-  &.is-active::after {
+  &.is-active .custom-select__arrow {
     transform: rotate(180deg);
   }
+}
+
+.custom-select__arrow {
+  width: 1.2em;
+  height: 1.2em;
+
+  background-image: var(--icon-select-arrow);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+
+  transition: var(--transition-transform);
 }
 
 .custom-select__dropdown {
   --dropdown-border-color: var(--theme-accent);
   --scrollbar-size: var(--space-2);
 
-  z-index: var(--z-index-select);
   transform: translateZ(0);
 
   max-height: min(250px, 40vh);
@@ -312,8 +305,6 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   cursor: pointer;
   user-select: none;
 
-  z-index: 1;
-
   overflow: hidden;
 
   padding: 0.4em 0.8em;
@@ -326,12 +317,6 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 
   transition: var(--transition-colors);
 
-  &.is-disabled {
-    pointer-events: none;
-    cursor: not-allowed;
-    opacity: 0.5;
-  }
-
   &.is-placeholder {
     cursor: default;
     font-style: italic;
@@ -343,11 +328,9 @@ const getOptionClasses = (option: SelectOption, index: number) => [
       color: var(--theme-accent);
       background-color: var(--color-selection-bg);
     }
-
-    &.is-selected {
-      font-weight: var(--font-weight-semibold);
-    }
   }
+
+  @include state-disabled;
 }
 </style>
 

@@ -138,10 +138,7 @@ const badgeColor = computed(() => {
     border-color: color-mix(in srgb, var(--status-color) 40%, transparent);
 
     .value {
-      --glow-color: var(--status-color);
-
       color: var(--status-color);
-      text-shadow: var(--text-glow-sm);
     }
   }
 

@@ -85,10 +85,6 @@ const displayItems = computed(() => {
       background-color: var(--theme-accent);
       box-shadow: var(--shadow-glow-sm);
     }
-
-    strong {
-      color: var(--theme-accent);
-    }
   }
 
   time {

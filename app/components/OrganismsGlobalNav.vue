@@ -60,7 +60,9 @@ onMounted(() => {
         メニュー
       </span>
       <AtomsButton
+        variant="ghost"
         icon="x"
+        icon-only
         @click="closeSidebar"
       />
     </header>
@@ -159,15 +161,6 @@ aside {
 
   a,
   button {
-    --nav-glow-hover:
-      0 0 4px color-mix(in srgb, var(--section-accent) 45%, transparent),
-      0 0 8px color-mix(in srgb, var(--section-accent) 20%, transparent);
-    --nav-glow-active:
-      0 0 4px color-mix(in srgb, var(--section-accent) 60%, transparent),
-      0 0 8px color-mix(in srgb, var(--section-accent) 30%, transparent),
-      inset 0 0 2px color-mix(in srgb, var(--section-accent) 40%, transparent);
-    --nav-icon-glow: drop-shadow(0 0 var(--blur-sm) var(--section-accent));
-
     border: var(--border-width-base) solid transparent;
     border-radius: var(--radius-sm);
 
@@ -184,40 +177,18 @@ aside {
       overflow-wrap: anywhere;
     }
 
-    &:disabled {
-      pointer-events: none;
-      opacity: 0.5;
-      filter: grayscale(100%);
-    }
-
     &:hover,
     &:focus-visible {
-      transform: translateX(var(--space-1));
-      border-color: var(--section-accent);
-      color: var(--section-accent);
-      box-shadow: var(--nav-glow-hover);
-
-      :deep(.icon) {
-        filter: var(--nav-icon-glow);
-      }
+      color: var(--color-text-main);
+      background-color: var(--color-bg-hover);
     }
 
     &:active,
     &.router-link-active {
-      transform: none;
-      border-color: var(--section-accent);
+      border-color: color-mix(in srgb, var(--section-accent) 30%, transparent);
+      font-weight: var(--font-weight-semibold);
       color: var(--section-accent);
-      box-shadow: var(--nav-glow-active);
-
-      :deep(.icon) {
-        filter: var(--nav-icon-glow);
-      }
-    }
-
-    &.router-link-active {
-      display: inline-flex;
-      gap: var(--space-1);
-      align-items: center;
+      background-color: color-mix(in srgb, var(--section-accent) 12%, transparent);
 
       &::after {
         content: "";
@@ -234,6 +205,8 @@ aside {
         animation: ui-cursor-blink 1s step-end infinite;
       }
     }
+
+    @include state-disabled;
   }
 }
 </style>

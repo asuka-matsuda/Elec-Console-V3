@@ -51,10 +51,7 @@ defineProps<{
     }
 
     &.is-current {
-      --glow-color: var(--theme-accent);
-
       color: var(--theme-accent);
-      text-shadow: var(--text-glow-md);
 
       &::after {
         content: "";

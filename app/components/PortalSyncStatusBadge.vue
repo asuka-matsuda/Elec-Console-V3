@@ -30,12 +30,12 @@ const openModal = () => {
 </script>
 
 <template>
-  <div class="portal-sync-status-badge">
+  <div class="inline-flex items-center portal-sync-status-badge">
     <!-- 未同期がある場合のボタン -->
     <template v-if="hasPending">
       <button
         type="button"
-        class="sync-btn is-pending"
+        class="inline-flex items-center gap-2 sync-btn is-pending"
         :class="{ 'is-loading': isSyncing }"
         :disabled="isSyncing"
         @click="openModal"
@@ -48,7 +48,7 @@ const openModal = () => {
 
     <!-- 通常時（同期完了状態） -->
     <template v-else>
-      <div class="sync-status is-synced">
+      <div class="inline-flex items-center gap-1 sync-status is-synced">
         <span class="sync-status__dot" />
         <span class="sync-status__text">同期済</span>
       </div>
@@ -65,18 +65,13 @@ const openModal = () => {
 
 <style scoped lang="scss">
 .portal-sync-status-badge {
-  display: inline-flex;
-  align-items: center;
+  // Scoped layout removed
 }
 
 .sync-btn {
   --glow-color: var(--color-status-warning);
 
   cursor: pointer;
-
-  display: inline-flex;
-  gap: var(--space-2);
-  align-items: center;
 
   padding: var(--space-1) var(--space-3);
   border: 1px solid var(--color-status-warning);
@@ -107,12 +102,7 @@ const openModal = () => {
 }
 
 .sync-status {
-  display: inline-flex;
-  gap: var(--space-1);
-  align-items: center;
-
   padding: var(--space-1) var(--space-2);
-
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
 

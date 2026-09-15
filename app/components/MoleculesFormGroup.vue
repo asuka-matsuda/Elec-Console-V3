@@ -33,6 +33,7 @@ withDefaults(defineProps<Props>(), {
       class="flex items-center gap-2 select-none form-group__label"
     >
       <span class="inline-flex items-center gap-1 label-text">
+        <span class="shrink-0 label-bar" />
         <slot name="label">{{ label }}</slot>
       </span>
       <AtomsBadge
@@ -68,26 +69,21 @@ withDefaults(defineProps<Props>(), {
 </template>
 
 <style scoped lang="scss">
-.form-group__label {
-  cursor: pointer;
-}
-
 .form-group {
-  &:focus-within .label-text {
-    color: var(--theme-accent);
+  position: relative;
+  font-size: var(--font-size-sm);
 
-    &::before {
-      --glow-color: var(--theme-accent);
+  &:focus-within .label-bar {
+    --glow-color: var(--theme-accent);
 
-      transform: scaleY(1.2);
-      box-shadow: var(--shadow-glow-sm);
-    }
+    transform: scaleY(1.2);
+    box-shadow: var(--shadow-glow-sm);
   }
 
   &:has(.error, .is-error) .label-text {
     color: var(--color-status-danger);
 
-    &::before {
+    .label-bar {
       --glow-color: var(--color-status-danger);
 
       background-color: var(--color-status-danger);
@@ -104,20 +100,16 @@ withDefaults(defineProps<Props>(), {
   letter-spacing: var(--tracking-wide);
 
   transition: var(--transition-base);
+}
 
-  &::before {
-    content: "";
+.label-bar {
+  width: var(--space-0-5);
+  height: 0.9em;
+  border-radius: var(--radius-sm);
 
-    flex-shrink: 0;
+  background-color: var(--theme-accent);
 
-    width: var(--space-0-5);
-    height: 0.9em;
-    border-radius: var(--radius-sm);
-
-    background-color: var(--theme-accent);
-
-    transition: var(--transition-fast);
-  }
+  transition: var(--transition-fast);
 }
 
 .control {
@@ -125,11 +117,8 @@ withDefaults(defineProps<Props>(), {
 }
 
 .error {
-  --glow-color: var(--color-status-danger);
-
   font-size: 0.85em;
   color: var(--color-status-danger);
-  text-shadow: var(--text-glow-sm);
   letter-spacing: var(--tracking-wide);
 }
 

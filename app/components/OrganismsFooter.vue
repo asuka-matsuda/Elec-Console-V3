@@ -32,10 +32,7 @@ const {
   transition: var(--transition-base);
 
   &:hover {
-    --glow-color: var(--color-text-secondary);
-
     color: var(--color-text-secondary);
-    text-shadow: var(--text-glow-sm);
   }
 }
 </style>

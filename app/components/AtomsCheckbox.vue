@@ -23,12 +23,12 @@ const {
     <input
       v-model="model"
       type="checkbox"
-      class="absolute inset-0 w-full h-full z-[1] opacity-0 cursor-inherit"
+      class="absolute inset-0 z-[1] w-full h-full checkbox__input"
       .indeterminate="indeterminate"
       :value="value"
       :disabled="disabled"
     >
-    <span class="relative flex shrink-0 items-center justify-center box">
+    <span class="relative z-[1] flex shrink-0 items-center justify-center box">
       <AtomsIcon name="check" class="absolute top-1/2 left-1/2 icon is-check" />
       <AtomsIcon name="minus" class="absolute top-1/2 left-1/2 icon is-dash" />
     </span>
@@ -42,37 +42,35 @@ const {
 .checkbox {
   --checkbox-color: var(--theme-accent);
   --glow-color: var(--checkbox-color);
+  --control-checked-bg: var(--checkbox-color);
+  --control-checked-icon: var(--color-text-on-emphasis);
 
   cursor: pointer;
   user-select: none;
 
   font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
+  color: var(--color-text-main);
   letter-spacing: var(--tracking-normal);
 
   &:has(:disabled) {
     cursor: not-allowed;
   }
 
-  input {
-    &:disabled {
+  &__input {
+    cursor: inherit;
+    opacity: 0;
+
+    &[disabled] {
       ~ .box,
       ~ .label {
         cursor: not-allowed;
-        opacity: 0.5;
+        opacity: 0.55;
         filter: grayscale(100%);
       }
     }
 
     &:not(:disabled) {
       &:hover {
-        ~ .label {
-          --glow-color: var(--checkbox-color);
-
-          color: color-mix(in srgb, var(--checkbox-color) 90%, transparent);
-          text-shadow: var(--text-glow-sm);
-        }
-
         &:not(:focus-visible, :active, :checked, :indeterminate) ~ .box {
           border-color: var(--checkbox-color);
           box-shadow: var(--shadow-glow-hover);
@@ -85,18 +83,18 @@ const {
       }
 
       &:focus-visible ~ .box {
-        border-color: color-mix(in srgb, var(--checkbox-color) 60%, transparent);
+        border-color: var(--checkbox-color);
         outline: none;
         box-shadow: var(--shadow-glow-focus);
       }
 
       &:is(:checked, :indeterminate) ~ .box {
-        border-color: var(--checkbox-color);
-        background-color: color-mix(in srgb, var(--checkbox-color) 15%, var(--surface-bg-elevated));
+        border-color: var(--control-checked-bg);
+        background-color: var(--control-checked-bg);
         box-shadow: var(--shadow-glow-active);
 
         .icon {
-          filter: var(--drop-shadow-glow-sm);
+          color: var(--control-checked-icon);
         }
       }
     }
@@ -113,8 +111,6 @@ const {
   }
 
   .box {
-    z-index: 1;
-
     width: 1.4em;
     height: 1.4em;
     border: var(--border-width-base) solid var(--color-border);
@@ -130,7 +126,7 @@ const {
       width: 75%;
       height: 75%;
 
-      color: var(--checkbox-color);
+      color: var(--control-checked-icon);
 
       opacity: 0;
 

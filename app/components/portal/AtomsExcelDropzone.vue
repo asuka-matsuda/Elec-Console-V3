@@ -147,11 +147,6 @@ const formatFileSize = (bytes: number): string => {
     border-style: solid;
   }
 
-  &.is-disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-
   strong {
     color: var(--color-text-main);
   }
@@ -177,5 +172,7 @@ const formatFileSize = (bytes: number): string => {
   .file-icon {
     color: var(--color-status-success);
   }
+
+  @include state-disabled;
 }
 </style>

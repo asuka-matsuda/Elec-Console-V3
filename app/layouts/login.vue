@@ -8,7 +8,7 @@ const pageTitle = computed(() => route.meta.title as string | undefined)
 </script>
 
 <template>
-  <main class="login-layout">
+  <main class="flex flex-1 items-center justify-center gap-0 login-layout">
     <AtomsPanel class="login-layout__panel">
       <MoleculesSectionHeader v-if="pageTitle" :title="pageTitle" />
       <slot />
@@ -18,12 +18,6 @@ const pageTitle = computed(() => route.meta.title as string | undefined)
 
 <style scoped lang="scss">
 .login-layout {
-  display: flex;
-  flex: 1;
-  gap: 0;
-  align-items: center;
-  justify-content: center;
-
   &__panel {
     min-width: 320px;
     max-width: 480px;

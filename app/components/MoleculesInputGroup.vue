@@ -21,7 +21,7 @@ defineProps<Props>()
     </span>
 
     <!-- セレクトボックス等のカスタム連結 -->
-    <div v-else-if="$slots.append" class="flex items-stretch append">
+    <div v-else-if="$slots.append" class="flex shrink-0 items-stretch append">
       <slot name="append" />
     </div>
   </div>
@@ -39,12 +39,6 @@ defineProps<Props>()
     min-width: 0;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-
-    &:focus,
-    &:focus-visible {
-      position: relative;
-      z-index: 2;
-    }
   }
 
   .addon {
@@ -72,21 +66,13 @@ defineProps<Props>()
       &:focus,
       &:focus-visible,
       &.is-active {
-        position: relative;
-        z-index: 2;
         margin-left: calc(var(--border-width-base) * -1);
         border-left: var(--border-width-base) solid var(--theme-accent);
       }
     }
 
     :deep(.custom-select) {
-      flex-shrink: 0;
       width: 6em;
-
-      &:focus-within {
-        position: relative;
-        z-index: 2;
-      }
     }
   }
 }

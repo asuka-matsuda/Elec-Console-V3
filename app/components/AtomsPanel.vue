@@ -37,46 +37,8 @@ defineProps<{
 
   transition: var(--transition-panel);
 
-  &.is-interactive:not(.is-disabled) {
-    cursor: pointer;
-    user-select: none;
-
-    &:hover,
-    &:focus-visible {
-      border-color: var(--theme-accent);
-      background: color-mix(in srgb, var(--theme-accent) 8%, var(--surface-bg));
-      box-shadow: var(--shadow-glow-hover);
-    }
-
-    &:active {
-      transform: scale(0.992);
-      background: color-mix(in srgb, var(--theme-accent) 12%, var(--surface-bg));
-      box-shadow: var(--shadow-glow-active);
-    }
-  }
-
-  &.is-selected {
-    border-color: var(--theme-accent);
-    background: color-mix(in srgb, var(--theme-accent) 12%, var(--surface-bg));
-    box-shadow: var(--shadow-glow-sm);
-
-    &.is-interactive:not(.is-disabled) {
-      &:hover,
-      &:focus-visible {
-        background: color-mix(in srgb, var(--theme-accent) 16%, var(--surface-bg));
-        box-shadow: var(--shadow-glow-hover);
-      }
-
-      &:active {
-        background: color-mix(in srgb, var(--theme-accent) 18%, var(--surface-bg));
-        box-shadow: var(--shadow-glow-active);
-      }
-    }
-  }
-
-  &.is-disabled {
-    cursor: not-allowed;
-    opacity: 0.55;
-  }
+  @include state-interactive;
+  @include state-selected;
+  @include state-disabled;
 }
 </style>

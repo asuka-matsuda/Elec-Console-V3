@@ -43,7 +43,7 @@ const handleClick = () => {
 
 <template>
   <th
-    class="sticky top-0 p-2 align-middle"
+    class="sticky top-0 z-table-header p-2 align-middle"
     :class="{
       'is-sortable': isSortable,
       'is-sorted': isSorted,
@@ -64,7 +64,7 @@ const handleClick = () => {
         v-if="isSortable"
         :name="sortIconName"
         size="sm"
-        class="sort-icon"
+        class="shrink-0 sort-icon"
         :class="{ 'is-active': isSorted }"
       />
     </div>
@@ -73,8 +73,6 @@ const handleClick = () => {
 
 <style scoped lang="scss">
 th {
-  z-index: var(--z-index-table-header);
-
   border-right: var(--border-width-base) solid var(--color-border);
   border-bottom: calc(var(--border-width-base) * 2) solid var(--color-border);
 
@@ -111,7 +109,6 @@ th {
   }
 
   .sort-icon {
-    flex-shrink: 0;
     color: var(--color-text-muted);
     opacity: 0.45;
     transition: var(--transition-fast);

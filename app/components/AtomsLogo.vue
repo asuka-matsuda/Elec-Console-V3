@@ -14,7 +14,7 @@ const emit = defineEmits<{
     class="relative z-[1] flex shrink-0 items-center gap-2 logo"
     @click="emit('click')"
   >
-    <AtomsIcon name="zap" size="md" />
+    <AtomsIcon name="zap" size="md" class="relative z-[1]" />
     <span>Elec-Console</span>
   </NuxtLink>
 </template>
@@ -33,17 +33,13 @@ const emit = defineEmits<{
   transition: var(--transition-base);
 
   :deep(.icon) {
-    position: relative;
-    z-index: 1;
     color: var(--theme-accent);
     transition: var(--transition-base);
   }
 
   &:is(:hover, :focus-visible) {
     :deep(.icon) {
-      --glow-color: var(--theme-accent);
-
-      text-shadow: var(--text-glow-md);
+      transform: scale(1.08);
     }
   }
 }

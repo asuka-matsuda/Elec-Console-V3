@@ -34,10 +34,10 @@ const normalizedValue = computed(() => {
       '--glow-color': color,
     }"
   >
-    <div class="relative inline-flex items-baseline gap-1 value">
+    <div class="relative z-[2] inline-flex items-baseline gap-1 value">
       {{ normalizedValue }}<span class="unit">%</span>
     </div>
-    <span v-if="label" class="relative label">
+    <span v-if="label" class="relative z-[2] label">
       {{ label }}
     </span>
   </div>
@@ -57,7 +57,6 @@ const normalizedValue = computed(() => {
     content: "";
 
     position: absolute;
-    z-index: 1;
     inset: 0;
 
     border-radius: 50%;
@@ -76,8 +75,6 @@ const normalizedValue = computed(() => {
   }
 
   .value {
-    z-index: 2;
-
     font-family: var(--font-mono);
     font-size: var(--font-size-3xl);
     font-weight: var(--font-weight-bold);
@@ -92,7 +89,6 @@ const normalizedValue = computed(() => {
   }
 
   .label {
-    z-index: 2;
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
     color: var(--color-text-secondary);

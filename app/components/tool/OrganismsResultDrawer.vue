@@ -79,7 +79,7 @@ defineExpose({
 <template>
   <!-- ドロワー本体（PC: グリッド右側、モバイル: 下部Sticky） -->
   <section
-    class="result-drawer flex flex-col min-h-0 max-md:fixed max-md:inset-x-0 max-md:bottom-0 max-md:max-h-[80vh]"
+    class="result-drawer flex flex-col min-h-0 max-md:fixed max-md:inset-x-0 max-md:bottom-0 max-md:max-h-[80vh] md:z-modal"
     :class="{ 'is-open': isOpen }"
   >
     <!-- モバイル開閉ハンドル -->
@@ -139,7 +139,7 @@ defineExpose({
   <!-- モバイル展開時の暗幕オーバーレイ -->
   <div
     v-if="isOpen"
-    class="overlay fixed inset-0 hidden max-md:block"
+    class="overlay fixed inset-0 hidden max-md:block z-[calc(var(--z-index-modal)-1)]"
     @click="closeDrawer"
   />
 </template>
@@ -147,7 +147,6 @@ defineExpose({
 <style scoped lang="scss">
 .result-drawer {
   @include mq("md") {
-    z-index: var(--z-index-modal);
     transform: translateY(calc(100% - 48px));
 
     border-top: var(--border-width-base) solid var(--color-category-tool);
@@ -191,7 +190,6 @@ defineExpose({
 }
 
 .overlay {
-  z-index: calc(var(--z-index-modal) - 1);
   background: var(--color-overlay-dark);
   backdrop-filter: blur(var(--blur-sm));
 }

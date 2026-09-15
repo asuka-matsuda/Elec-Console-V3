@@ -178,6 +178,8 @@
   --color-text-secondary: hsl(var(--color-text-secondary-base));
   --color-text-muted: hsl(var(--color-text-muted-base));
   --color-text-disabled: hsl(var(--color-text-disabled-base));
+  --color-text-on-emphasis: hsl(0deg 0% 100%); // アクセント/Danger背景用の高コントラスト白
+  --color-text-inverse: hsl(0deg 0% 100%);
   --color-border: hsl(var(--color-border-main-base));
   --color-border-subtle: hsl(215deg 14% 15%);
 
@@ -191,6 +193,40 @@
   --color-selection-bg: hsl(215deg 93% 58% / 18%);
   --color-selection-outline: hsl(215deg 93% 58%);
   --color-completed-row-bg: hsl(128deg 57% 62% / 8%);
+
+  // ボタン専用セマンティックトークン (GitHub Primer Solid Hierarchy)
+  --btn-primary-bg: var(--theme-accent);
+  --btn-primary-bg-hover: color-mix(in srgb, var(--theme-accent) 88%, white);
+  --btn-primary-bg-active: color-mix(in srgb, var(--theme-accent) 76%, black);
+  --btn-primary-border: var(--theme-accent);
+  --btn-primary-border-hover: var(--btn-primary-bg-hover);
+  --btn-primary-text: var(--color-text-on-emphasis);
+
+  --btn-secondary-bg: var(--surface-bg-elevated);
+  --btn-secondary-bg-hover: var(--color-bg-hover);
+  --btn-secondary-bg-active: color-mix(in srgb, var(--color-overlay) 10%, transparent);
+  --btn-secondary-border: var(--color-border);
+  --btn-secondary-border-hover: var(--color-text-muted);
+  --btn-secondary-text: var(--color-text-main);
+
+  --btn-danger-bg: var(--color-status-danger);
+  --btn-danger-bg-hover: color-mix(in srgb, var(--color-status-danger) 85%, white);
+  --btn-danger-bg-active: color-mix(in srgb, var(--color-status-danger) 75%, black);
+  --btn-danger-border: var(--color-status-danger);
+  --btn-danger-text: var(--color-text-on-emphasis);
+
+  --btn-success-bg: var(--color-status-success);
+  --btn-success-bg-hover: color-mix(in srgb, var(--color-status-success) 85%, white);
+  --btn-success-bg-active: color-mix(in srgb, var(--color-status-success) 75%, black);
+  --btn-success-border: var(--color-status-success);
+  --btn-success-text: var(--color-text-on-emphasis);
+
+  // コントロール・選択ピル用トークン (Tabs, Radio, Checkbox)
+  --control-pill-bg: color-mix(in srgb, var(--theme-accent) 15%, var(--surface-bg-elevated));
+  --control-pill-border: color-mix(in srgb, var(--theme-accent) 60%, transparent);
+  --control-pill-text: var(--theme-accent);
+  --control-checked-bg: var(--theme-accent);
+  --control-checked-icon: var(--color-text-on-emphasis);
 
   // ボーダー & Radius
   --border-width-base: 1px;
@@ -305,37 +341,24 @@
 *,
 *::before,
 *::after {
-  --shadow-glow-base:
-    inset 0 0 4px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 20%, transparent),
-    0 2px 4px color-mix(in srgb, black 20%, transparent);
+  --shadow-glow-base: none;
   --shadow-glow-hover:
-    0 0 8px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 40%, transparent),
-    var(--shadow-elevation-md);
+    0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 40%, transparent),
+    var(--shadow-elevation-sm);
   --shadow-glow-focus:
-    0 0 0 2px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 60%, transparent),
-    0 0 10px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 30%, transparent),
+    0 0 0 3px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 35%, transparent),
     var(--shadow-elevation-sm);
   --shadow-glow-active:
-    0 0 4px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 50%, transparent),
-    inset 0 0 4px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 30%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 60%, transparent),
     var(--shadow-elevation-sm);
-  --shadow-glow-sm: 0 0 6px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 60%, transparent);
-  --text-glow-sm: 0 0 var(--blur-sm) color-mix(in srgb, var(--glow-color, currentcolor) 50%, transparent);
-  --text-glow-md: 0 0 var(--blur-md) color-mix(in srgb, var(--glow-color, currentcolor) 60%, transparent);
-  --drop-shadow-glow-xs: drop-shadow(
-    0 0 var(--glow-blur, var(--blur-xs))
-      color-mix(in srgb, var(--glow-color, var(--theme-accent)) 50%, transparent)
-  );
-  --drop-shadow-glow-sm: drop-shadow(
-    0 0 var(--glow-blur, var(--blur-sm))
-      color-mix(in srgb, var(--glow-color, var(--theme-accent)) 50%, transparent)
-  );
-  --drop-shadow-glow-md: drop-shadow(
-    0 0 var(--glow-blur, var(--blur-md))
-      color-mix(in srgb, var(--glow-color, var(--theme-accent)) 50%, transparent)
-  );
-  --drop-shadow-glow-lg: drop-shadow(
-    0 0 var(--glow-blur, var(--blur-lg))
-      color-mix(in srgb, var(--glow-color, var(--theme-accent)) 50%, transparent)
-  );
+  --shadow-glow-sm: 0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 40%, transparent);
+
+  // 文字発光 (text-shadow) およびアイコン発光 (drop-shadow) の完全廃止（Primer標準のクリスプな可読性を維持）
+  --text-glow-sm: none;
+  --text-glow-md: none;
+  --drop-shadow-glow-xs: none;
+  --drop-shadow-glow-sm: none;
+  --drop-shadow-glow-md: none;
+  --drop-shadow-glow-lg: none;
 }
+

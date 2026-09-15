@@ -12,7 +12,7 @@ const {
   to,
   href,
   type = 'button',
-  variant = 'primary',
+  variant = 'secondary',
   disabled = false,
   loading = false,
   icon,
@@ -37,8 +37,8 @@ const target = computed(() => to || href)
       `btn--${variant}`,
       {
         'w-full': block,
-        'btn--loading': loading,
         'btn--icon-only': isIconOnly,
+        'is-loading': loading,
         'is-disabled': !isClickable,
       },
     ]"
@@ -51,28 +51,27 @@ const target = computed(() => to || href)
 
 <style scoped lang="scss">
 .btn {
-  // デフォルト変数 (primary / theme-accent 基準)
-  --btn-color: var(--theme-accent);
-  --btn-bg: transparent;
-  --btn-bg-hover: color-mix(in srgb, var(--btn-color) 12%, transparent);
-  --btn-bg-active: color-mix(in srgb, var(--btn-color) 24%, transparent);
-  --btn-border: color-mix(in srgb, var(--btn-color) 40%, transparent);
-  --btn-border-hover: var(--btn-color);
-  --btn-text: var(--btn-color);
-  --btn-text-hover: var(--btn-color);
-  --glow-color: var(--btn-color);
+  // デフォルト変数: Secondary (GitHub Primer Default Button)
+  --btn-bg: var(--btn-secondary-bg);
+  --btn-bg-hover: var(--btn-secondary-bg-hover);
+  --btn-bg-active: var(--btn-secondary-bg-active);
+  --btn-border: var(--btn-secondary-border);
+  --btn-border-hover: var(--btn-secondary-border-hover);
+  --btn-text: var(--btn-secondary-text);
+  --btn-text-hover: var(--btn-secondary-text);
+  --glow-color: var(--color-border);
 
   cursor: pointer;
   user-select: none;
 
-  min-height: 2.6em;
+  min-height: 2.4em;
   padding-block: 0.3em;
-  padding-inline: 1.2em;
+  padding-inline: 1.1em;
   border: var(--border-width-base) solid var(--btn-border);
   border-radius: var(--radius-sm);
 
   font-size: inherit;
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-medium);
   line-height: var(--line-height-tight);
   color: var(--btn-text);
   text-decoration: none;
@@ -83,19 +82,7 @@ const target = computed(() => to || href)
 
   transition: var(--transition-interactive);
 
-  :deep(.icon) {
-    width: 1.2em;
-    height: 1.2em;
-  }
-
-  &:disabled,
-  &.is-disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
-    filter: grayscale(100%);
-  }
-
-  &:not(:disabled, .is-disabled) {
+  @include state-control-interactive {
     &:hover {
       border-color: var(--btn-border-hover);
       color: var(--btn-text-hover);
@@ -104,7 +91,7 @@ const target = computed(() => to || href)
     }
 
     &:focus-visible {
-      border-color: color-mix(in srgb, var(--btn-color) 60%, transparent);
+      border-color: var(--btn-border-hover);
       outline: none;
       box-shadow: var(--shadow-glow-focus);
     }
@@ -114,42 +101,85 @@ const target = computed(() => to || href)
       border-color: var(--btn-border-hover);
       background-color: var(--btn-bg-active);
       box-shadow: var(--shadow-glow-active);
-
-      svg {
-        filter: var(--drop-shadow-glow-xs);
-        stroke: var(--btn-color);
-      }
     }
   }
 
+  :deep(.icon) {
+    width: 1.15em;
+    height: 1.15em;
+  }
+
+  // Primary: 明示的に指定された場合のみ、ソリッドベタ塗りの主CTAとして目立たせる
+  &--primary {
+    --btn-bg: var(--btn-primary-bg);
+    --btn-bg-hover: var(--btn-primary-bg-hover);
+    --btn-bg-active: var(--btn-primary-bg-active);
+    --btn-border: var(--btn-primary-border);
+    --btn-border-hover: var(--btn-primary-border-hover);
+    --btn-text: var(--btn-primary-text);
+    --btn-text-hover: var(--btn-primary-text);
+    --glow-color: var(--btn-primary-bg);
+
+    font-weight: var(--font-weight-semibold);
+  }
+
+  // Secondary: 標準ボタン
+  &--secondary {
+    --btn-bg: var(--btn-secondary-bg);
+    --btn-bg-hover: var(--btn-secondary-bg-hover);
+    --btn-bg-active: var(--btn-secondary-bg-active);
+    --btn-border: var(--btn-secondary-border);
+    --btn-border-hover: var(--btn-secondary-border-hover);
+    --btn-text: var(--btn-secondary-text);
+    --btn-text-hover: var(--btn-secondary-text);
+    --glow-color: var(--color-border);
+  }
+
+  // Ghost: ヘッダーメニューやクローズボタンなど枠・背景なしのアイコンボタン
+  &--ghost {
+    --btn-bg: transparent;
+    --btn-bg-hover: var(--color-bg-hover);
+    --btn-bg-active: color-mix(in srgb, var(--color-overlay) 10%, transparent);
+    --btn-border: transparent;
+    --btn-border-hover: transparent;
+    --btn-text: var(--color-text-secondary);
+    --btn-text-hover: var(--color-text-main);
+    --glow-color: var(--color-border);
+
+    box-shadow: none;
+  }
+
+  // Danger: Primer仕様。通常時は控えめな枠線＋赤文字、ホバー時に警告として赤ベタ塗り
   &--danger {
-    --btn-color: var(--color-status-danger);
+    --btn-bg: var(--btn-secondary-bg);
+    --btn-bg-hover: var(--btn-danger-bg);
+    --btn-bg-active: var(--btn-danger-bg-active);
+    --btn-border: var(--color-border);
+    --btn-border-hover: var(--btn-danger-border);
+    --btn-text: var(--color-status-danger);
+    --btn-text-hover: var(--btn-danger-text);
+    --glow-color: var(--btn-danger-bg);
   }
 
   &--success {
-    --btn-color: var(--color-status-success);
-  }
-
-  &--secondary {
-    --btn-color: var(--color-border);
+    --btn-bg: var(--btn-secondary-bg);
+    --btn-bg-hover: var(--btn-success-bg);
+    --btn-bg-active: var(--btn-success-bg-active);
     --btn-border: var(--color-border);
-    --btn-border-hover: var(--color-text-muted);
-    --btn-text: var(--color-text-main);
-    --btn-text-hover: var(--color-text-main);
-    --btn-bg-hover: var(--color-bg-hover);
-    --btn-bg-active: color-mix(in srgb, var(--color-overlay) 10%, transparent);
-    --glow-color: var(--color-text-muted);
+    --btn-border-hover: var(--btn-success-border);
+    --btn-text: var(--color-status-success);
+    --btn-text-hover: var(--btn-success-text);
+    --glow-color: var(--btn-success-bg);
   }
 
   &--icon-only {
     aspect-ratio: 1;
+    width: 2.4em;
+    min-height: 2.4em;
     padding: 0;
   }
 
-  &--loading {
-    pointer-events: none;
-    cursor: wait;
-    opacity: 0.8;
-  }
+  @include state-loading;
+  @include state-disabled;
 }
 </style>

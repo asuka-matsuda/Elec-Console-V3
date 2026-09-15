@@ -126,6 +126,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 </template>
 
 <style scoped lang="scss">
+/* stylelint-disable property-disallowed-list -- FullCalendarライブラリ動的生成DOMの配置スタイリングのため例外許可 */
 .calendar {
   --fc-border-color: var(--color-border);
   --fc-page-bg-color: transparent;
@@ -254,13 +255,11 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
     font-size: var(--font-size-2xs);
     font-weight: var(--font-weight-bold);
     color: var(--theme-accent);
-    text-shadow: var(--text-glow-sm);
 
     transition: var(--transition-interactive);
 
     &:hover {
       transform: translateY(-1px);
-      text-shadow: var(--text-glow-md);
     }
   }
 

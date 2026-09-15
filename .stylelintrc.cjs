@@ -42,7 +42,7 @@ module.exports = {
         ignoreAtRules: ['else'],
       },
     ],
-    // ①変数 ②構造Mixin ③プロパティ ④装飾Mixin ⑤ネスト の順序を強制する
+    // ①変数 ②構造Mixin ③プロパティ ④状態Mixin(interactive➔selected➔disabled) ⑤装飾Mixin ⑥ネスト の順序を強制する
     'order/order': [
       'dollar-variables',
       'custom-properties',
@@ -55,13 +55,38 @@ module.exports = {
       {
         type: 'at-rule',
         name: 'include',
-        parameter: '^(border|state|cyber|disabled|hover|focus|active|blinking)',
+        parameter: '^state-interactive',
+      },
+      {
+        type: 'at-rule',
+        name: 'include',
+        parameter: '^state-control-interactive',
+      },
+      {
+        type: 'at-rule',
+        name: 'include',
+        parameter: '^state-selected',
+      },
+      {
+        type: 'at-rule',
+        name: 'include',
+        parameter: '^(border|cyber|hover|focus|active|blinking)',
       },
       {
         type: 'at-rule',
         name: 'include',
       },
       'rules',
+      {
+        type: 'at-rule',
+        name: 'include',
+        parameter: '^state-loading',
+      },
+      {
+        type: 'at-rule',
+        name: 'include',
+        parameter: '^state-disabled',
+      },
       'at-rules',
     ],
   },
@@ -78,6 +103,34 @@ module.exports = {
             '/^hsla?\\(/',
           ],
         },
+        // 状態セレクタの手書きを禁止し、@include state-* の使用を強制
+        'selector-disallowed-list': [
+          '/^&(:disabled|\\.is-(interactive|selected|disabled))/',
+          {
+            message: '状態セレクタの手書きは禁止されています。@include state-interactive / state-selected / state-control-interactive / state-loading / state-disabled を使用してください。',
+          },
+        ],
+        // レイアウト・配置・z-index関連プロパティのScoped CSS記述を禁止（Tailwind記述を強制）
+        'property-disallowed-list': [
+          [
+            'z-index',
+            'justify-content',
+            'align-items',
+            'align-content',
+            'align-self',
+            'flex-direction',
+            'flex-wrap',
+            'flex-grow',
+            'flex-shrink',
+            'grid-template-columns',
+            'grid-template-rows',
+            'row-gap',
+            'column-gap',
+          ],
+          {
+            message: 'レイアウト・配置・z-index関連プロパティ（"%s"）はTailwindクラスで記述してください。Scoped CSSへの記述は規約により禁止されています。',
+          },
+        ],
       },
     },
   ],

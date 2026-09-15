@@ -72,9 +72,6 @@ const emit = defineEmits<{
 }
 
 .toolbar-title {
-  --glow-color: var(--theme-accent);
-
   color: var(--theme-accent);
-  text-shadow: var(--text-glow-sm);
 }
 </style>

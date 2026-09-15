@@ -92,7 +92,7 @@ onMounted(() => {
 <template>
   <dialog
     ref="dialogRef"
-    class="drawer fixed top-0 right-0 h-screen max-h-screen m-0 p-0 w-full"
+    class="drawer fixed top-0 right-0 h-screen max-h-screen m-0 p-0 w-full open:flex open:flex-col"
     :class="{
       'max-w-[360px]': size === 'sm',
       'max-w-[460px]': size === 'md',
@@ -198,12 +198,7 @@ onMounted(() => {
 
   &[open] {
     pointer-events: auto;
-
     transform: translateX(0);
-
-    display: flex;
-    flex-direction: column;
-
     opacity: 1;
 
     &::backdrop {

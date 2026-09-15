@@ -24,7 +24,9 @@ const { currentUser, logout } = useAuth()
     <!-- 左側: メインナビゲーション部 -->
     <div class="flex items-center gap-3">
       <AtomsButton
+        variant="ghost"
         icon="menu"
+        icon-only
         @click="emit('toggle-sidebar')"
       />
       <AtomsLogo />

@@ -1,0 +1,110 @@
+// ==========================================================================
+// 状態管理（State Management）共通 Mixins
+// ==========================================================================
+
+// --------------------------------------------------------------------------
+// 1. サーフェス系（パネル、タイル、カード、リスト行、ドロップゾーン）
+// --------------------------------------------------------------------------
+
+// 1-1. 操作可能時の挙動（ホバー 8%・フォーカス・アクティブ 12% + scale 0.992）
+@mixin state-interactive {
+  &.is-interactive:not(:disabled, .is-disabled) {
+    cursor: pointer;
+    user-select: none;
+
+    &:hover,
+    &:focus-visible {
+      border-color: var(--theme-accent);
+      background: color-mix(in srgb, var(--theme-accent) 8%, var(--surface-bg));
+      box-shadow: var(--shadow-glow-hover);
+    }
+
+    &:active {
+      transform: scale(0.992);
+      background: color-mix(in srgb, var(--theme-accent) 12%, var(--surface-bg));
+      box-shadow: var(--shadow-glow-active);
+    }
+  }
+}
+
+// 1-2. 選択状態（135deg 対角グラデーション 14%〜22% + ソフトグロー）
+@mixin state-selected {
+  &.is-selected {
+    border-color: var(--theme-accent);
+    background:
+      linear-gradient(
+        135deg,
+        color-mix(in srgb, var(--theme-accent) 14%, var(--surface-bg)),
+        var(--surface-bg)
+      );
+    box-shadow: var(--shadow-glow-sm);
+
+    &.is-interactive:not(:disabled, .is-disabled) {
+      &:hover,
+      &:focus-visible {
+        background:
+          linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--theme-accent) 18%, var(--surface-bg)),
+            var(--surface-bg)
+          );
+        box-shadow: var(--shadow-glow-hover);
+      }
+
+      &:active {
+        background:
+          linear-gradient(
+            135deg,
+            color-mix(in srgb, var(--theme-accent) 22%, var(--surface-bg)),
+            var(--surface-bg)
+          );
+        box-shadow: var(--shadow-glow-active);
+      }
+    }
+  }
+}
+
+// --------------------------------------------------------------------------
+// 2. コントロール系（ボタン、タブ、入力、セレクト等）
+// --------------------------------------------------------------------------
+
+// 2-1. コントロール操作可能時ガード
+@mixin state-control-interactive {
+  &:not(:disabled, .is-disabled) {
+    @content;
+  }
+}
+
+// 2-2. フォーカスリング（アクセシビリティ標準）
+@mixin state-focus-ring($color: var(--theme-accent)) {
+  &:focus-visible {
+    border-color: color-mix(in srgb, $color 60%, transparent);
+    outline: none;
+    box-shadow: var(--shadow-glow-focus);
+  }
+}
+
+// --------------------------------------------------------------------------
+// 3. 全コンポーネント共通の終端状態（Loading / Disabled）
+// --------------------------------------------------------------------------
+
+// 3-1. ローディング待機状態（Disabled の 1 つ手前に配置）
+@mixin state-loading {
+  &.is-loading,
+  &--loading {
+    pointer-events: none;
+    cursor: wait;
+    opacity: 0.75;
+  }
+}
+
+// 3-2. 無効状態（最優先上書き・カスケード最末尾）
+@mixin state-disabled {
+  &:disabled,
+  &.is-disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.55;
+    filter: grayscale(100%);
+  }
+}

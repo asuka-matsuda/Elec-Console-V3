@@ -20,6 +20,14 @@ Tailwind CSSは**レイアウト・配置・余白・寸法に関するものだ
   - **対象:** 複雑な装飾、境界線、カラー、特殊な状態、長いCSSプロパティが必要なもの。
   - **目的:** スタイルをコンポーネント内にカプセル化し、Tailwindクラスが肥大化するのを防ぐ。
   - **使用例:** `color`, `border` (color-mix等), `background` (グラデーション等), `box-shadow`, `transition`, `animation`, 擬似要素 (`::before`/`::after`)
+  - **※ レイアウト・配置・z-index・flex関連（`z-index`, `flex-direction`, `align-items`, `justify-content`, `gap`, `flex-shrink` 等）をScoped CSSに直接書くのは禁止。**
+
+### 双方向リント監視（完全機械的ガード）
+本方針を人手任せにせず確実に徹底するため、リントツールによる「双方向の機械的チェック」を敷いています：
+1. **ESLint (`eslint-rules/no-tailwind-decoration.mjs`):**
+   - テンプレート内での装飾系Tailwindクラス（`bg-*`, `text-*`, `rounded-*`, `border-*`, `shadow-*` 等）の使用を完全禁止し、Scoped CSSへの分離を強制。
+2. **Stylelint (`.stylelintrc.cjs` - `property-disallowed-list`):**
+   - Scoped CSS内でのレイアウト関連プロパティ（`z-index`, `justify-content`, `align-items`, `flex-direction`, `flex-shrink`, `row-gap`, `column-gap` 等）の記述を完全禁止し、Tailwindクラス記述を強制。
 
 ---
 
@@ -160,4 +168,79 @@ URL（ルーティング）と1対1で紐づく画面そのもの。
 
 - **ヘッダー連動**: カラム定義に `align` を指定することで、見出し（`<th>`）とデータセル（`<td>`）が自動で同じ揃えになります。
 - **テンプレート簡素化**: カラム定義で `align: 'center'` などを指定している場合、テンプレート側で不要な `<div class="flex justify-center">` などのセンタリング用ラッパーを書かず、テーブルの標準配置に委ねることを推奨します。
+
+---
+
+## 5. 状態管理（State Management）の書き方・書き順規約
+
+UIコンポーネントにおけるすべてのインタラクション状態（操作可能、選択中、処理中、無効化など）は、**手書きコードの乱立を防ぎデザインの一貫性を保証するため、プロジェクト共通の状態 Mixin（`_states.scss`）を使用** します。
+
+### 5.1. 状態 Mixin 体系（`_states.scss`）
+
+| カテゴリ | Mixin 名 | 適用対象 | 役割・内包スタイル概要 |
+| :--- | :--- | :--- | :--- |
+| **サーフェス系** | `@include state-interactive;` | パネル、カード、タイル等 | `is-interactive` 時の hover（8%ティント）、focus-visible、active（12%ティント + 縮小） |
+| **サーフェス系** | `@include state-selected;` | パネル、選択行、カード等 | `is-selected` 時の 135deg 対角グラデーション（14%）および操作連動（18% / 22%） |
+| **コントロール系** | `@include state-control-interactive { ... }` | ボタン、タブ、入力欄等 | 操作可能時（`&:not(:disabled, .is-disabled)`）のホバー・フォーカス・アクティブのガード |
+| **共通終端** | `@include state-loading;` | ボタン、パネル、モーダル等 | `is-loading` / `--loading` 時のポインター無効化・カーソル wait・透過度 0.75 |
+| **共通終端** | `@include state-disabled;` | **全コンポーネント共通** | `&:disabled` / `is-disabled` 時のポインター無効化・透過度 0.55・grayscale 100%（最優先打ち消し） |
+
+### 5.2. 書き順（Order）の原則
+
+CSS カスケードの論理（後から書いたスタイルが優先）に従い、以下の書き順を厳守します。
+
+#### サーフェス系テンプレート（例: `AtomsPanel`）
+```scss
+.panel {
+  // ① 静的宣言 (Base Declarations)
+  border: var(--border-width-base) solid var(--color-border);
+  background: var(--surface-bg);
+  transition: var(--transition-panel);
+
+  // ② 状態管理 (State Management)
+  @include state-interactive; // 1. 通常操作
+  @include state-selected;    // 2. 選択状態
+  @include state-disabled;    // 3. 無効化（最末尾）
+}
+```
+
+#### コントロール系テンプレート（例: `AtomsButton`）
+```scss
+.btn {
+  // ① 静的宣言 (Base Declarations)
+  cursor: pointer;
+  background-color: var(--btn-bg);
+  transition: var(--transition-interactive);
+
+  // ② 操作ガード (Interactive Guard)
+  @include state-control-interactive {
+    &:hover { ... }
+    &:focus-visible { ... }
+    &:active { ... }
+  }
+
+  // ③ バリアント・子要素ルール (Variants & Sub-rules)
+  &--danger { ... }
+  &--secondary { ... }
+
+  // ④ 終端状態 (Terminal States) - カスケード最末尾
+  @include state-loading;
+  @include state-disabled;
+}
+```
+
+### 5.3. Stylelint による自動監視・強制
+
+本規約は、`.stylelintrc.cjs` によりエディタ上および CI でリアルタイムに自動強制されます。
+
+1. **手書き（ハードコード）の禁止 (`selector-disallowed-list`)**:
+   - 生の `&:disabled`、`&.is-disabled`、`&.is-interactive`、`&.is-loading` を手書きした瞬間にビルド・Lint エラーとなります。
+2. **書き順（Order）違反の検知 (`order/order`)**:
+   - `state-interactive` ➔ `state-control-interactive` ➔ `state-selected` ➔ `rules` ➔ `state-loading` ➔ `state-disabled` の順序が崩れていると Lint エラーになります（`--fix` で自動修復可能）。
+
+### 5.4. コンポーネント構造の原則（YAGNI / DRY）
+
+- リストアイテム（`MoleculesSiteListItem` など）やタイル（`MoleculesDashboardMenuTile` など）は、自身で状態 CSS を書かず、`<AtomsPanel interactive :selected="selected" :disabled="disabled">` にサーフェス状態の責務を一任することを最優先とします。
+
+
 

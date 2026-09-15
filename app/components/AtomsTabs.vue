@@ -18,7 +18,7 @@ const selectTab = (option: TabOption<T>) => {
 </script>
 
 <template>
-  <div class="flex flex-wrap items-center gap-2 tabs">
+  <nav class="flex flex-wrap items-center gap-1 tabs" aria-label="Tabs">
     <button
       v-for="option in options"
       :key="String(option.value)"
@@ -34,49 +34,53 @@ const selectTab = (option: TabOption<T>) => {
         {{ option.label }}
       </slot>
     </button>
-  </div>
+  </nav>
 </template>
 
 <style scoped lang="scss">
-.tabs__item {
-  --glow-color: var(--theme-accent);
+.tabs {
+  border-bottom: var(--border-width-base) solid var(--color-border);
+}
 
+.tabs__item {
   cursor: pointer;
   user-select: none;
 
-  padding: 0.4em 0.9em;
-  border: var(--border-width-base) solid var(--color-border);
-  border-radius: var(--radius-sm);
+  position: relative;
+
+  margin-bottom: -1px;
+  padding-block: 0.5em;
+  padding-inline: 0.9em;
+  border: none;
+  border-bottom: 2px solid transparent;
 
   font-size: inherit;
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
 
-  transition: var(--transition-interactive);
+  background-color: transparent;
 
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
-  }
+  transition: var(--transition-interactive);
 
   &:not(:disabled) {
     &:is(:hover, :focus-visible):not(.is-active) {
-      transform: translateY(-1px);
-      border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
       color: var(--color-text-main);
       background-color: var(--color-bg-hover);
     }
 
-    &:active {
-      transform: translateY(0);
-      border-color: var(--glow-color);
-    }
-
     &.is-active {
-      border-color: var(--glow-color);
-      color: var(--glow-color);
-      text-shadow: var(--text-glow-sm);
+      border-bottom-color: var(--theme-accent);
+      border-radius: 0;
+
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-main);
+
+      background-color: transparent;
+      box-shadow: none;
     }
   }
+
+  @include state-disabled;
 }
 </style>

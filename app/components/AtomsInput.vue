@@ -37,7 +37,7 @@ const {
   <textarea
     v-if="type === 'textarea'"
     v-model="model"
-    class="form-control relative z-[1] w-full"
+    class="form-control relative z-[1] focus:z-[2] w-full"
     :class="{ 'is-error': error }"
     :placeholder="placeholder"
     :disabled="disabled"
@@ -47,7 +47,7 @@ const {
     v-else
     v-model="model"
     :type="type"
-    class="form-control relative z-[1] w-full"
+    class="form-control relative z-[1] focus:z-[2] w-full"
     :class="{ 'is-error': error }"
     :placeholder="placeholder"
     :disabled="disabled"
@@ -70,11 +70,6 @@ const {
   box-shadow: var(--shadow-sink);
 
   transition: var(--transition-interactive);
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
-  }
 
   &:not(:disabled) {
     --glow-color: var(--theme-accent);
@@ -123,13 +118,15 @@ const {
     color: color-mix(in srgb, var(--color-text-muted) 50%, transparent);
     opacity: 1;
   }
+
+  @include state-disabled;
 }
 
 textarea.form-control {
   resize: vertical;
   min-height: calc(var(--control-height-ratio) * 2em);
 
-  &:disabled {
+  &[disabled] {
     resize: none;
   }
 }
