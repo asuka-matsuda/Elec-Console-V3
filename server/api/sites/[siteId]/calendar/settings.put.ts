@@ -1,6 +1,14 @@
 import { defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { requireSiteAccess } from '../../../../utils/auth'
+import {
+  parseCustomHolidays,
+  parseEventTypes,
+  parseHolidayDays,
+  serializeCustomHolidays,
+  serializeEventTypes,
+  serializeHolidayDays,
+} from '../../../../utils/jsonFields'
 import { prisma } from '../../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
@@ -12,25 +20,29 @@ export default defineEventHandler(async (event) => {
 
   const body = await readBody(event)
 
+  const eventTypesSerialized = serializeEventTypes(body.eventTypes)
+  const holidayDaysSerialized = serializeHolidayDays(body.holidayDays)
+  const customHolidaysSerialized = serializeCustomHolidays(body.customHolidays)
+
   const updated = await prisma.calendarSettings.upsert({
     where: { siteId },
     update: {
-      eventTypes: JSON.stringify(body.eventTypes || []),
-      holidayDays: JSON.stringify(body.holidayDays || []),
-      customHolidays: JSON.stringify(body.customHolidays || []),
+      eventTypes: eventTypesSerialized,
+      holidayDays: holidayDaysSerialized,
+      customHolidays: customHolidaysSerialized,
     },
     create: {
       siteId,
-      eventTypes: JSON.stringify(body.eventTypes || []),
-      holidayDays: JSON.stringify(body.holidayDays || []),
-      customHolidays: JSON.stringify(body.customHolidays || []),
+      eventTypes: eventTypesSerialized,
+      holidayDays: holidayDaysSerialized,
+      customHolidays: customHolidaysSerialized,
     },
   })
 
   return {
     siteId: updated.siteId,
-    eventTypes: JSON.parse(updated.eventTypes),
-    holidayDays: JSON.parse(updated.holidayDays),
-    customHolidays: JSON.parse(updated.customHolidays),
+    eventTypes: parseEventTypes(updated.eventTypes),
+    holidayDays: parseHolidayDays(updated.holidayDays),
+    customHolidays: parseCustomHolidays(updated.customHolidays),
   }
 })

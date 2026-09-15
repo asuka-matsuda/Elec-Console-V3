@@ -1,6 +1,7 @@
 import type { SoudenStats } from '~/types/portal'
 
 import { EXAM_LOGIC } from './examLogic'
+import { parseExcludedCircuits } from './jsonFields'
 import { prisma } from './prisma'
 
 export type { SoudenStats }
@@ -17,16 +18,7 @@ export async function getSoudenStats(siteId: string): Promise<SoudenStats> {
     where: { siteId },
   })
 
-  let excludedKeywords: string[] = []
-
-  if (settings?.excludedCircuits) {
-    try {
-      excludedKeywords = JSON.parse(settings.excludedCircuits)
-    }
-    catch {
-      excludedKeywords = []
-    }
-  }
+  const excludedKeywords = parseExcludedCircuits(settings?.excludedCircuits)
 
   // 現場の全回路を取得
   const circuits = await prisma.circuit.findMany({

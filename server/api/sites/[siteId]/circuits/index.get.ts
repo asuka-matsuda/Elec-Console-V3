@@ -2,6 +2,7 @@ import { createError, defineEventHandler, getQuery, getRouterParam } from 'h3'
 
 import { requireSiteAccess } from '../../../../utils/auth'
 import { EXAM_LOGIC } from '../../../../utils/examLogic'
+import { parseExcludedCircuits } from '../../../../utils/jsonFields'
 import { prisma } from '../../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
@@ -27,16 +28,7 @@ export default defineEventHandler(async (event) => {
     where: { siteId },
   })
 
-  let excludedKeywords: string[] = []
-
-  if (settings?.excludedCircuits) {
-    try {
-      excludedKeywords = JSON.parse(settings.excludedCircuits)
-    }
-    catch {
-      excludedKeywords = []
-    }
-  }
+  const excludedKeywords = parseExcludedCircuits(settings?.excludedCircuits)
 
   // 現場全体のパネル選択肢を取得
   const allSiteCircuits = await prisma.circuit.findMany({

@@ -1,6 +1,7 @@
 import { defineEventHandler } from 'h3'
 
 import { isSuperUser, requireAuthUser } from '../../utils/auth'
+import { parseExcludedCircuits } from '../../utils/jsonFields'
 import { prisma } from '../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
@@ -37,21 +38,10 @@ export default defineEventHandler(async (event) => {
   })
 
   const mappedSites = sites.map((site) => {
-    let parsedExcluded: string[] = []
-
-    if (site.settings?.excludedCircuits) {
-      try {
-        parsedExcluded = JSON.parse(site.settings.excludedCircuits)
-      }
-      catch {
-        parsedExcluded = []
-      }
-    }
-
     return {
       ...site,
       excelPath: site.settings?.excelPath || undefined,
-      excludedCircuits: parsedExcluded,
+      excludedCircuits: parseExcludedCircuits(site.settings?.excludedCircuits),
     }
   })
 

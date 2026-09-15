@@ -1,6 +1,7 @@
 import { defineEventHandler, getRouterParam } from 'h3'
 
 import { requireSiteAccess } from '../../../../utils/auth'
+import { parseCustomHolidays, parseEventTypes, parseHolidayDays } from '../../../../utils/jsonFields'
 import { prisma } from '../../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
@@ -15,7 +16,7 @@ export default defineEventHandler(async (event) => {
   })
 
   if (setting) {
-    const parsedTypes = JSON.parse(setting.eventTypes || '[]')
+    const parsedTypes = parseEventTypes(setting.eventTypes)
     // 旧 colorVar があれば HEX に変換
     const colorVarMap: Record<string, string> = {
       'category-main': '#2f81f7',
@@ -25,17 +26,17 @@ export default defineEventHandler(async (event) => {
       'status-danger': '#f85149',
       'status-success': '#3fb950',
     }
-    const normalizedTypes = parsedTypes.map((t: { id: string, name: string, color?: string, colorVar?: string }) => ({
+    const normalizedTypes = parsedTypes.map((t: { id: string, name?: string, label?: string, color?: string, colorVar?: string }) => ({
       id: t.id,
-      name: t.name,
+      name: t.name || t.label || '',
       color: t.color || (t.colorVar ? colorVarMap[t.colorVar] || '#2f81f7' : '#2f81f7'),
     }))
 
     return {
       siteId: setting.siteId,
       eventTypes: normalizedTypes,
-      holidayDays: JSON.parse(setting.holidayDays || '[]'),
-      customHolidays: JSON.parse(setting.customHolidays || '[]'),
+      holidayDays: parseHolidayDays(setting.holidayDays),
+      customHolidays: parseCustomHolidays(setting.customHolidays),
     }
   }
 

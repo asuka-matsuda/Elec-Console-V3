@@ -1,6 +1,7 @@
 import { defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { requireAdminUser } from '../../../utils/auth'
+import { parseExcludedCircuits, serializeExcludedCircuits } from '../../../utils/jsonFields'
 import { prisma } from '../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
@@ -31,20 +32,14 @@ export default defineEventHandler(async (event) => {
     ? rawExcelPath.trim().replace(/^["']+|["']+$/g, '').trim()
     : rawExcelPath
 
-  const newExcluded = siteData.excludedCircuits !== undefined
-    ? (Array.isArray(siteData.excludedCircuits)
-        ? JSON.stringify(siteData.excludedCircuits)
-        : siteData.excludedCircuits)
-    : (body.settings?.excludedCircuits !== undefined
-        ? (Array.isArray(body.settings.excludedCircuits)
-            ? JSON.stringify(body.settings.excludedCircuits)
-            : body.settings.excludedCircuits)
-        : undefined)
+  const rawExcluded = siteData.excludedCircuits !== undefined
+    ? siteData.excludedCircuits
+    : body.settings?.excludedCircuits
 
   const settingsUpdates: Record<string, unknown> = {}
 
   if (newExcelPath !== undefined) settingsUpdates.excelPath = newExcelPath
-  if (newExcluded !== undefined) settingsUpdates.excludedCircuits = newExcluded
+  if (rawExcluded !== undefined) settingsUpdates.excludedCircuits = serializeExcludedCircuits(rawExcluded)
   if (body.settings?.phase2ThresholdMegOhm !== undefined) {
     settingsUpdates.phase2ThresholdMegOhm = body.settings.phase2ThresholdMegOhm
   }
@@ -65,21 +60,10 @@ export default defineEventHandler(async (event) => {
         where: { siteId },
       })
 
-  let parsedExcluded: string[] = []
-
-  if (settings?.excludedCircuits) {
-    try {
-      parsedExcluded = JSON.parse(settings.excludedCircuits)
-    }
-    catch {
-      parsedExcluded = []
-    }
-  }
-
   const returnedSite = {
     ...updatedSite,
     excelPath: settings?.excelPath || undefined,
-    excludedCircuits: parsedExcluded,
+    excludedCircuits: parseExcludedCircuits(settings?.excludedCircuits),
   }
 
   return { site: returnedSite, settings }
