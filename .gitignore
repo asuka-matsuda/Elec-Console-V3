@@ -31,3 +31,8 @@ storybook-static
 *.db-journal
 *.db-shm
 *.db-wal
+
+# Test outputs
+test-results/
+playwright-report/
+

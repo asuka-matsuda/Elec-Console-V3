@@ -12,5 +12,7 @@ export default defineVitestConfig({
   test: {
     environment: 'happy-dom',
     globals: true,
+    include: ['tests/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    exclude: ['**/node_modules/**', '**/dist/**', '**/e2e/**'],
   },
 })

@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare",
     "typecheck": "nuxi typecheck",
     "test": "vitest",
+    "test:e2e": "playwright test",
     "lint": "eslint .",
     "lint:style": "stylelint \"**/*.{vue,css,scss}\""
   },
@@ -39,6 +40,7 @@
     "@nuxt/test-utils": "^4.1.0",
     "@nuxtjs/tailwindcss": "^6.14.0",
     "@oxc-parser/binding-win32-x64-msvc": "^0.147.0",
+    "@playwright/test": "^1.63.0",
     "@rolldown/binding-win32-x64-msvc": "^1.2.2",
     "@types/katex": "^0.16.8",
     "@typescript-eslint/eslint-plugin": "^8.68.0",
