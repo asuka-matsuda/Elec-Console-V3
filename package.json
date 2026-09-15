@@ -43,6 +43,7 @@
     "@types/katex": "^0.16.8",
     "@typescript-eslint/eslint-plugin": "^8.68.0",
     "@typescript-eslint/parser": "^8.68.0",
+    "@vite-pwa/nuxt": "^1.1.1",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/test-utils": "^2.4.11",
     "eslint": "^10.8.0",

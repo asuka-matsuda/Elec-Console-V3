@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b0f19" />
+      <stop offset="100%" stop-color="#141e33" />
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00e5ff" />
+      <stop offset="100%" stop-color="#0077ff" />
+    </linearGradient>
+    <linearGradient id="boltGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffea00" />
+      <stop offset="100%" stop-color="#ff9100" />
+    </linearGradient>
+    <filter id="hudGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="512" height="512" rx="108" fill="url(#bgGrad)" />
+
+  <!-- Outer HUD Ring -->
+  <circle cx="256" cy="256" r="210" fill="none" stroke="#1e293b" stroke-width="6" />
+  <circle cx="256" cy="256" r="210" fill="none" stroke="url(#glowGrad)" stroke-width="6" stroke-dasharray="120 40 80 40 180 50" opacity="0.85" />
+
+  <!-- Inner HUD Tech Ring -->
+  <circle cx="256" cy="256" r="170" fill="none" stroke="#00e5ff" stroke-width="2" stroke-dasharray="8 8" opacity="0.4" />
+
+  <!-- Corner Brackets -->
+  <path d="M 120 160 L 120 120 L 160 120" fill="none" stroke="#00e5ff" stroke-width="5" stroke-linecap="round" opacity="0.7" />
+  <path d="M 392 160 L 392 120 L 352 120" fill="none" stroke="#00e5ff" stroke-width="5" stroke-linecap="round" opacity="0.7" />
+  <path d="M 120 352 L 120 392 L 160 392" fill="none" stroke="#00e5ff" stroke-width="5" stroke-linecap="round" opacity="0.7" />
+  <path d="M 392 352 L 392 392 L 352 392" fill="none" stroke="#00e5ff" stroke-width="5" stroke-linecap="round" opacity="0.7" />
+
+  <!-- Center Hexagon Grid -->
+  <polygon points="256,120 370,186 370,326 256,392 142,326 142,186" fill="#0f172a" stroke="#00e5ff" stroke-width="3" opacity="0.6" />
+
+  <!-- Electric Bolt Icon (HUD Styled) -->
+  <polygon points="275,150 185,275 250,275 235,362 335,235 270,235" fill="url(#boltGrad)" filter="url(#hudGlow)" />
+
+  <!-- Phase Markers (R, S, T) -->
+  <circle cx="190" cy="180" r="10" fill="#ef4444" opacity="0.85" />
+  <circle cx="322" cy="180" r="10" fill="#eab308" opacity="0.85" />
+  <circle cx="256" cy="355" r="10" fill="#3b82f6" opacity="0.85" />
+</svg>
