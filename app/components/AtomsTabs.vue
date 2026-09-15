@@ -2,14 +2,21 @@
 /**
  * AtomsTabs
  * [Atoms] タブ切り替えのための最小UIコンポーネント。
+ * 下線スタイル（underline）とセグメントコントロール風のピルスタイル（pill）に対応します。
  */
 import type { TabOption } from '~/types/components'
 
 const model = defineModel<T>()
 
-defineProps<{
-  options: TabOption<T>[]
-}>()
+withDefaults(
+  defineProps<{
+    options: TabOption<T>[]
+    variant?: 'underline' | 'pill'
+  }>(),
+  {
+    variant: 'underline',
+  },
+)
 
 const selectTab = (option: TabOption<T>) => {
   if (option.disabled) return
@@ -18,7 +25,10 @@ const selectTab = (option: TabOption<T>) => {
 </script>
 
 <template>
-  <nav class="flex flex-wrap items-center gap-1 tabs">
+  <nav
+    class="flex flex-wrap items-center gap-1 tabs"
+    :class="`tabs--${variant}`"
+  >
     <button
       v-for="option in options"
       :key="String(option.value)"
@@ -39,47 +49,88 @@ const selectTab = (option: TabOption<T>) => {
 
 <style scoped lang="scss">
 .tabs {
-  border-bottom: var(--border-width-base) solid var(--color-border);
+  &.tabs--underline {
+    border-bottom: var(--border-width-base) solid var(--color-border);
+
+    .tabs__item {
+      margin-bottom: -1px;
+      padding-block: 0.5em;
+      padding-inline: 0.9em;
+      border: none;
+      border-bottom: 2px solid transparent;
+
+      background-color: transparent;
+
+      &:not(:disabled) {
+        &:is(:hover, :focus-visible):not(.is-active) {
+          border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+          color: var(--color-text-main);
+          background-color: var(--color-bg-hover);
+        }
+
+        &.is-active {
+          border-bottom-color: var(--theme-accent);
+          border-radius: 0;
+
+          font-weight: var(--font-weight-semibold);
+          color: var(--color-text-main);
+
+          background-color: transparent;
+          box-shadow: none;
+        }
+      }
+    }
+  }
+
+  &.tabs--pill {
+    display: inline-flex;
+
+    padding: 0.2em;
+    border: var(--border-width-base) solid var(--color-border);
+    border-radius: var(--radius-sm);
+
+    background-color: var(--surface-bg-elevated);
+    box-shadow: var(--shadow-sink);
+
+    .tabs__item {
+      padding: 0.3em 0.8em;
+      border: var(--border-width-base) solid transparent;
+      border-radius: var(--radius-sm);
+
+      &:not(:disabled) {
+        &:hover:not(.is-active) {
+          color: var(--color-text-main);
+          background-color: var(--color-bg-hover);
+        }
+
+        &:focus-visible {
+          outline: none;
+          box-shadow: var(--shadow-glow-focus);
+        }
+
+        &.is-active {
+          border-color: var(--color-border);
+
+          font-weight: var(--font-weight-semibold);
+          color: var(--color-text-main);
+
+          background-color: var(--surface-bg-solid);
+          box-shadow: var(--shadow-elevation-sm);
+        }
+      }
+    }
+  }
 }
 
 .tabs__item {
   cursor: pointer;
   user-select: none;
 
-  position: relative;
-
-  margin-bottom: -1px;
-  padding-block: 0.5em;
-  padding-inline: 0.9em;
-  border: none;
-  border-bottom: 2px solid transparent;
-
   font-size: inherit;
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
 
-  background-color: transparent;
-
   transition: var(--transition-interactive);
-
-  &:not(:disabled) {
-    &:is(:hover, :focus-visible):not(.is-active) {
-      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-      color: var(--color-text-main);
-      background-color: var(--color-bg-hover);
-    }
-
-    &.is-active {
-      border-bottom-color: var(--theme-accent);
-      border-radius: 0;
-
-      font-weight: var(--font-weight-semibold);
-      color: var(--color-text-main);
-
-      background-color: transparent;
-      box-shadow: none;
-    }
-  }
 
   @include state-disabled;
 }

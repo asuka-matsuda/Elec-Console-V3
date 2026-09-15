@@ -3,8 +3,9 @@
  * OrganismsModal
  * [Organisms] ネイティブの dialog 要素を使用したモーダルダイアログ。
  * AtomsPanel, MoleculesSectionHeader, AtomsButton を組み合わせた独立機能セクション。
+ * 標準的なイベント駆動（@submit, @cancel, :loading）および非同期関数（:submit-fn）の両方に対応します。
  */
-import { onMounted, ref, watch } from 'vue'
+import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue'
 
 import type { AtomsButtonVariant } from '~/types/components'
 
@@ -28,6 +29,9 @@ const props = withDefaults(
     submitText?: string
     cancelText?: string
     submitVariant?: AtomsButtonVariant
+    loading?: boolean
+    errorMessage?: string
+    showFooter?: boolean
   }>(),
   {
     variant: 'main',
@@ -35,37 +39,67 @@ const props = withDefaults(
     submitText: '保存する',
     cancelText: 'キャンセル',
     submitVariant: undefined,
+    loading: false,
+    errorMessage: '',
+    showFooter: undefined,
   },
 )
 
+const emit = defineEmits<{
+  submit: []
+  confirm: []
+  cancel: []
+}>()
+
+const instance = getCurrentInstance()
+const hasSubmitListener = computed(() => {
+  const vnodeProps = instance?.vnode.props || {}
+
+  return Boolean(vnodeProps.onSubmit || vnodeProps.onConfirm)
+})
+
+const shouldShowDefaultFooter = computed(() => {
+  if (props.showFooter !== undefined) return props.showFooter
+
+  return Boolean(props.submitFn || hasSubmitListener.value)
+})
+
 const dialogRef = ref<HTMLDialogElement | null>(null)
-const isSubmitting = ref(false)
-const errorMsg = ref('')
+const isInternalSubmitting = ref(false)
+const internalErrorMsg = ref('')
+
+const isBusy = computed(() => props.loading || isInternalSubmitting.value)
+const displayError = computed(() => props.errorMessage || internalErrorMsg.value)
 
 const close = () => {
+  emit('cancel')
   isOpen.value = false
 }
 
 const onNativeClose = () => {
   if (isOpen.value) {
+    emit('cancel')
     isOpen.value = false
   }
 }
 
 const handleSubmit = async () => {
+  emit('submit')
+  emit('confirm')
+
   if (!props.submitFn) return
 
-  errorMsg.value = ''
-  isSubmitting.value = true
+  internalErrorMsg.value = ''
+  isInternalSubmitting.value = true
   try {
     await props.submitFn()
     isOpen.value = false
   }
   catch (e: unknown) {
-    errorMsg.value = (e as Error).message || '処理に失敗しました。'
+    internalErrorMsg.value = (e as Error).message || '処理に失敗しました。'
   }
   finally {
-    isSubmitting.value = false
+    isInternalSubmitting.value = false
   }
 }
 
@@ -73,7 +107,7 @@ watch(
   isOpen,
   (newVal) => {
     if (newVal) {
-      errorMsg.value = ''
+      internalErrorMsg.value = ''
       if (!dialogRef.value?.open) {
         dialogRef.value?.showModal()
       }
@@ -118,8 +152,8 @@ onMounted(() => {
         class="overflow-y-auto flex flex-1 flex-col gap-3 min-h-0 modal-body"
         :class="{ 'text-center': align === 'center' }"
       >
-        <div v-if="errorMsg" class="px-3 py-2 modal-error">
-          {{ errorMsg }}
+        <div v-if="displayError" class="px-3 py-2 modal-error">
+          {{ displayError }}
         </div>
 
         <slot />
@@ -129,20 +163,21 @@ onMounted(() => {
         <slot name="footer" />
       </footer>
 
-      <footer v-else-if="submitFn" class="flex items-center justify-end gap-2">
+      <footer v-else-if="shouldShowDefaultFooter" class="flex items-center justify-end gap-2">
         <AtomsButton
           variant="secondary"
-          :disabled="isSubmitting"
+          :disabled="isBusy"
           @click="close"
         >
           {{ cancelText }}
         </AtomsButton>
         <AtomsButton
           :variant="submitVariant || (variant === 'danger' ? 'danger' : 'success')"
-          :disabled="isSubmitting"
+          :disabled="isBusy"
+          :loading="isBusy"
           @click="handleSubmit"
         >
-          {{ isSubmitting ? "処理中..." : submitText }}
+          {{ isBusy ? "処理中..." : submitText }}
         </AtomsButton>
       </footer>
     </AtomsPanel>
@@ -161,67 +196,66 @@ onMounted(() => {
   border: none;
 
   opacity: 0;
-  outline: none;
+  background: transparent;
 
   transition:
-    opacity var(--duration-modal) var(--ease-smooth),
-    transform var(--duration-modal) var(--ease-smooth),
-    overlay var(--duration-modal) allow-discrete,
-    display var(--duration-modal) allow-discrete;
-
-  &:not([open]) {
-    pointer-events: none;
-    display: none;
-  }
+    opacity var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out),
+    display var(--duration-fast) allow-discrete,
+    overlay var(--duration-fast) allow-discrete;
 
   &::backdrop {
     opacity: 0;
-    backdrop-filter: blur(var(--blur-md));
+    background-color: var(--color-overlay-base);
+    backdrop-filter: blur(var(--blur-backdrop));
     transition:
-      opacity var(--duration-modal) var(--ease-smooth),
-      overlay var(--duration-modal) allow-discrete,
-      display var(--duration-modal) allow-discrete;
+      opacity var(--duration-fast) var(--ease-out),
+      display var(--duration-fast) allow-discrete,
+      overlay var(--duration-fast) allow-discrete;
   }
 
   &[open] {
     pointer-events: auto;
     transform: translateY(0);
-    display: flex;
     opacity: 1;
 
     &::backdrop {
       opacity: 1;
+    }
+  }
 
-      @starting-style {
+  @starting-style {
+    &[open] {
+      transform: translateY(var(--space-2));
+      opacity: 0;
+
+      &::backdrop {
         opacity: 0;
       }
     }
-
-    @starting-style {
-      transform: translateY(var(--space-2));
-      opacity: 0;
-    }
   }
+}
 
-  .modal-panel {
-    box-shadow: var(--shadow-modal);
-  }
+.modal-panel {
+  box-shadow: var(--shadow-modal);
+}
 
-  .modal-body {
-    --scrollbar-size: var(--space-2);
+.modal-body {
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-secondary);
+}
 
-    font-size: var(--font-size-sm);
-  }
+.modal-error {
+  border: var(--border-width-base) solid var(--color-status-danger);
+  border-radius: var(--radius-sm);
 
-  .modal-error {
-    border: var(--border-width-base) solid color-mix(in srgb, var(--color-status-danger) 30%, transparent);
-    border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  color: var(--color-status-danger);
 
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-status-danger);
-
-    backdrop-filter: blur(var(--blur-sm));
-  }
+  background-color: color-mix(
+    in srgb,
+    var(--color-status-danger) 10%,
+    transparent
+  );
 }
 </style>

@@ -128,4 +128,57 @@ describe('OrganismsModal.vue', () => {
 
     expect(wrapper.text()).toContain('Custom Footer')
   })
+
+  it('emits submit, confirm, and cancel events when default footer is enabled', async () => {
+    const wrapper = mount(OrganismsModal, {
+      props: {
+        modelValue: true,
+        showFooter: true,
+        submitText: '実行する',
+        cancelText: 'やめる',
+      },
+      slots: {
+        default: 'Body',
+      },
+      global: {
+        stubs: commonStubs,
+      },
+    })
+
+    const buttons = wrapper.findAll('button')
+
+    expect(buttons.length).toBe(2)
+
+    // 送信ボタンのクリック
+    await buttons[1].trigger('click')
+    expect(wrapper.emitted('submit')).toBeTruthy()
+    expect(wrapper.emitted('confirm')).toBeTruthy()
+
+    // キャンセルボタンのクリック
+    await buttons[0].trigger('click')
+    expect(wrapper.emitted('cancel')).toBeTruthy()
+  })
+
+  it('reflects external loading and errorMessage props', () => {
+    const wrapper = mount(OrganismsModal, {
+      props: {
+        modelValue: true,
+        showFooter: true,
+        loading: true,
+        errorMessage: 'サーバーエラーが発生しました',
+      },
+      slots: {
+        default: 'Body',
+      },
+      global: {
+        stubs: commonStubs,
+      },
+    })
+
+    expect(wrapper.text()).toContain('サーバーエラーが発生しました')
+    const buttons = wrapper.findAll('button')
+
+    expect(buttons[0].attributes('disabled')).toBeDefined()
+    expect(buttons[1].attributes('disabled')).toBeDefined()
+  })
 })

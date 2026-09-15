@@ -12,7 +12,7 @@ import { ref } from 'vue'
 
 import type { SyncResultInfo } from '~/composables/portal/useSiteSettingsForm'
 import type { Site } from '~/types/admin'
-import type { RadioOption } from '~/types/components'
+import type { TabOption } from '~/types/components'
 
 defineProps<{
   site: Site | null
@@ -47,7 +47,7 @@ const emit = defineEmits<{
 
 const activeCategory = ref<'basic' | 'integration' | 'rules'>('basic')
 
-const categoryOptions: RadioOption<'basic' | 'integration' | 'rules'>[] = [
+const categoryOptions: TabOption<'basic' | 'integration' | 'rules'>[] = [
   { label: '基本情報', value: 'basic' },
   { label: 'Excelデータ連携', value: 'integration' },
   { label: '除外回路ルール', value: 'rules' },
@@ -96,52 +96,54 @@ const isResultDialogOpen = ref(false)
         </template>
       </MoleculesSectionHeader>
 
-      <!-- 設定カテゴリ選択 (AtomsRadioGroup) -->
-      <div class="overflow-x-auto pb-1">
-        <AtomsRadioGroup
-          v-model="activeCategory"
-          :options="categoryOptions"
-        />
-      </div>
+      <!-- 設定カテゴリタブ (MoleculesTabs: ピル型セグメント表示) -->
+      <MoleculesTabs
+        v-model="activeCategory"
+        :options="categoryOptions"
+        variant="pill"
+      >
+        <!-- 1. 基本情報設定 -->
+        <template #basic>
+          <PortalMoleculesSiteBasicSettings
+            :edit-status="editStatus"
+            :edit-id="editId"
+            :edit-data="editData"
+            :status-options="statusOptions"
+            :worker-names="workerNames"
+            @update:edit-status="emit('update:editStatus', $event)"
+            @update:edit-id="emit('update:editId', $event)"
+            @update:name="emit('update:name', $event)"
+          />
+        </template>
 
-      <!-- 1. 基本情報設定 -->
-      <PortalMoleculesSiteBasicSettings
-        v-if="activeCategory === 'basic'"
-        :edit-status="editStatus"
-        :edit-id="editId"
-        :edit-data="editData"
-        :status-options="statusOptions"
-        :worker-names="workerNames"
-        @update:edit-status="emit('update:editStatus', $event)"
-        @update:edit-id="emit('update:editId', $event)"
-        @update:name="emit('update:name', $event)"
-      />
+        <!-- 2. Excelデータ連携 (取込 & 帳票DL) -->
+        <template #integration>
+          <PortalMoleculesSiteExcelIntegration
+            :selected-file="selectedFile"
+            :is-syncing="isSyncing"
+            :sync-action="syncAction"
+            :show-sync-msg="showSyncMsg"
+            :sync-msg="syncMsg"
+            :sync-msg-type="syncMsgType"
+            :sync-result-data="syncResultData"
+            @file-select="emit('file-select', $event)"
+            @merge-sync="emit('merge-sync')"
+            @reset-import="emit('reset-import')"
+            @download-excel="emit('download-excel')"
+            @show-result-detail="isResultDialogOpen = true"
+          />
+        </template>
 
-      <!-- 2. Excelデータ連携 (取込 & 帳票DL) -->
-      <PortalMoleculesSiteExcelIntegration
-        v-else-if="activeCategory === 'integration'"
-        :selected-file="selectedFile"
-        :is-syncing="isSyncing"
-        :sync-action="syncAction"
-        :show-sync-msg="showSyncMsg"
-        :sync-msg="syncMsg"
-        :sync-msg-type="syncMsgType"
-        :sync-result-data="syncResultData"
-        @file-select="emit('file-select', $event)"
-        @merge-sync="emit('merge-sync')"
-        @reset-import="emit('reset-import')"
-        @download-excel="emit('download-excel')"
-        @show-result-detail="isResultDialogOpen = true"
-      />
-
-      <!-- 3. 除外回路ルール設定 -->
-      <PortalMoleculesSiteExcludedRules
-        v-else-if="activeCategory === 'rules'"
-        :excluded-circuits-list="excludedCircuitsList"
-        @add-circuit="emit('add-circuit')"
-        @remove-circuit="emit('remove-circuit', $event)"
-        @update:circuit="emit('update:circuit', $event)"
-      />
+        <!-- 3. 除外回路ルール設定 -->
+        <template #rules>
+          <PortalMoleculesSiteExcludedRules
+            :excluded-circuits-list="excludedCircuitsList"
+            @add-circuit="emit('add-circuit')"
+            @remove-circuit="emit('remove-circuit', $event)"
+            @update:circuit="emit('update:circuit', $event)"
+          />
+        </template>
+      </MoleculesTabs>
 
       <!-- 処理完了詳細モーダル -->
       <OrganismsModal

@@ -1,56 +1,50 @@
 <script setup lang="ts">
 /**
- * AtomsInput
- * テキスト入力や数値入力を提供する最小フォームコントロールコンポーネントです。
+ * AtomsTextarea
+ * [Atoms] 複数行のテキスト入力エリアを提供する最小フォームコントロールコンポーネント。
  */
-export interface AtomsInputProps {
-  type?:
-    | 'text'
-    | 'password'
-    | 'email'
-    | 'number'
-    | 'search'
-    | 'tel'
-    | 'url'
-    | 'date'
-    | 'datetime-local'
-    | 'time'
+export interface AtomsTextareaProps {
   placeholder?: string
   disabled?: boolean
   error?: boolean
+  rows?: number
 }
 
-const model = defineModel<string | number | null>()
+const model = defineModel<string | null>()
 
-const {
-  type = 'text',
-  placeholder,
-  disabled = false,
-  error = false,
-} = defineProps<AtomsInputProps>()
+withDefaults(
+  defineProps<AtomsTextareaProps>(),
+  {
+    disabled: false,
+    error: false,
+    rows: 4,
+  },
+)
 </script>
 
 <template>
-  <input
+  <textarea
     v-model="model"
-    :type="type"
     class="form-control relative z-[1] focus:z-[2] w-full"
     :class="{ 'is-error': error }"
     :placeholder="placeholder"
     :disabled="disabled"
+    :rows="rows"
   />
 </template>
 
 <style scoped lang="scss">
 .form-control {
-  min-height: calc(var(--control-height-ratio) * 1em);
-  padding-block: 0.3em;
+  resize: vertical;
+
+  min-height: calc(var(--control-height-ratio) * 2em);
+  padding-block: 0.5em;
   padding-inline: 1.2em;
   border: var(--border-width-base) solid var(--color-border);
   border-radius: var(--radius-sm);
 
   font-size: inherit;
-  font-variant-numeric: tabular-nums;
+  line-height: var(--line-height-base);
   color: var(--color-text-main);
 
   background-color: var(--surface-bg-elevated);
@@ -104,6 +98,10 @@ const {
   &::placeholder {
     color: color-mix(in srgb, var(--color-text-muted) 50%, transparent);
     opacity: 1;
+  }
+
+  &[disabled] {
+    resize: none;
   }
 
   @include state-disabled;
