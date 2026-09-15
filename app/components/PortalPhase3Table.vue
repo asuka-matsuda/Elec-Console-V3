@@ -152,7 +152,7 @@ const {
 </script>
 
 <template>
-  <PortalSoudenCircuitTable
+  <PortalOrganismsSoudenCircuitTable
     class="flex-1 min-h-[400px]"
     :columns="PHASE3_TABLE_COLUMNS"
     :circuits="sortedCircuits"
@@ -166,7 +166,7 @@ const {
   >
     <!-- 回路番号 -->
     <template #cell-kairoBangou="{ row: circuit }">
-      <div class="flex flex-col items-center justify-center gap-[3px]">
+      <div class="flex flex-col items-center justify-center gap-1">
         <AtomsBadge :color="isThreePhase(circuit) ? 'var(--color-status-warning)' : 'var(--color-text-muted)'">
           {{ isThreePhase(circuit) ? '動力' : '電灯' }}
         </AtomsBadge>
@@ -381,37 +381,16 @@ const {
 
     <!-- 測定者 / 日時 -->
     <template #cell-p3ConfirmedAt="{ row: circuit }">
-      <div v-if="circuit.p3Worker" class="souden-worker-cell flex flex-col items-center gap-[2px]">
+      <div v-if="circuit.p3Worker" class="souden-worker-cell flex flex-col items-center gap-0.5">
         <strong class="souden-worker-cell__worker">{{ circuit.p3Worker }}</strong>
         <span class="souden-worker-cell__date">{{ formatShortDateTime(circuit.p3ConfirmedAt) }}</span>
       </div>
       <span v-else class="souden-worker-cell__dash">-</span>
     </template>
-  </PortalSoudenCircuitTable>
+  </PortalOrganismsSoudenCircuitTable>
 </template>
 
 <style scoped lang="scss">
-:deep(.phase3-row) {
-  transition: var(--transition-colors);
-
-  &.is-completed {
-    background-color: var(--color-completed-row-bg);
-  }
-
-  &.is-excluded {
-    opacity: 0.5;
-  }
-
-  &.is-locked {
-    opacity: 0.6;
-  }
-
-  &.is-highlighted {
-    background-color: var(--color-selection-bg) !important;
-    outline: 2px solid var(--color-selection-outline);
-  }
-}
-
 .phase3-cell {
   &__meisho {
     display: block;
@@ -419,7 +398,7 @@ const {
     max-width: 100%;
 
     font-size: inherit;
-    font-weight: var(--font-weight-normal, 400);
+    font-weight: var(--font-weight-normal);
     line-height: 1.3;
     color: var(--color-text-main);
     white-space: pre-line;
@@ -444,15 +423,15 @@ const {
 
 .phase3-volt-cell {
   &__label {
-    font-size: 10px;
-    font-weight: var(--font-weight-normal, 400);
+    font-size: var(--font-size-2xs);
+    font-weight: var(--font-weight-normal);
     color: var(--color-text-secondary);
   }
 
   &__val {
     font-family: var(--font-mono);
     font-size: inherit;
-    font-weight: var(--font-weight-normal, 400);
+    font-weight: var(--font-weight-normal);
     color: var(--color-text-main);
 
     &.is-active {
@@ -462,14 +441,14 @@ const {
 
   &__unit {
     font-family: var(--font-base);
-    font-size: 10px;
+    font-size: var(--font-size-2xs);
     color: var(--color-text-secondary);
   }
 }
 
 .phase3-input-cell {
   &__label {
-    font-size: 10px;
+    font-size: var(--font-size-2xs);
     color: var(--color-text-secondary);
   }
 }
@@ -479,20 +458,20 @@ const {
   color: var(--color-status-warning);
 
   &--strong {
-    font-weight: var(--font-weight-normal, 400);
+    font-weight: var(--font-weight-normal);
   }
 }
 
 .souden-worker-cell {
   &__worker {
     font-size: inherit;
-    font-weight: var(--font-weight-normal, 400);
+    font-weight: var(--font-weight-normal);
     color: var(--color-status-success);
   }
 
   &__date {
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: var(--font-size-2xs);
     color: var(--color-text-muted);
   }
 

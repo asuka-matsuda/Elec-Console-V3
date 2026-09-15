@@ -7,6 +7,8 @@ module.exports = {
   rules: {
     // クラス名のパターン（BEMなどを許容するため）
     'selector-class-pattern': null,
+    // !important の使用を禁止
+    'declaration-no-important': true,
     // Vueの:deep()など疑似クラスのパースエラー回避
     'selector-pseudo-class-no-unknown': [
       true,

@@ -67,7 +67,7 @@ const {
 </script>
 
 <template>
-  <PortalSoudenCircuitTable
+  <PortalOrganismsSoudenCircuitTable
     class="flex-1 min-h-[400px]"
     :columns="PHASE1_TABLE_COLUMNS"
     :circuits="sortedCircuits"
@@ -118,7 +118,7 @@ const {
           <AtomsInput v-model="editForm.setsuchiList" placeholder="接地リスト" />
         </div>
       </template>
-      <div v-else class="flex flex-col gap-[2px]">
+      <div v-else class="flex flex-col gap-0.5">
         <div class="flex items-center gap-1">
           <span class="phase1-cell__cable">{{ circuit.cableList || '-' }}</span>
           <span v-if="circuit.haisenJousuu" class="phase1-cell__jousuu">({{ circuit.haisenJousuu }})</span>
@@ -132,14 +132,14 @@ const {
     <!-- 確認 / 増締め (チェックボックス) -->
     <template #cell-p1Kakunin="{ row: circuit }">
       <div class="flex items-center justify-center gap-3">
-        <label class="phase1-check-item inline-flex flex-col items-center gap-[2px]" title="回路確認">
+        <label class="phase1-check-item inline-flex flex-col items-center gap-0.5" title="回路確認">
           <AtomsCheckbox
             v-model="circuit.p1Kakunin"
             :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
           />
           <span class="phase1-check-item__label">確認</span>
         </label>
-        <label class="phase1-check-item inline-flex flex-col items-center gap-[2px]" title="増締め確認">
+        <label class="phase1-check-item inline-flex flex-col items-center gap-0.5" title="増締め確認">
           <AtomsCheckbox
             v-model="circuit.p1Mashishime"
             :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
@@ -223,37 +223,16 @@ const {
 
     <!-- 測定者 / 日時 -->
     <template #cell-p1ConfirmedAt="{ row: circuit }">
-      <div v-if="circuit.p1Worker" class="souden-worker-cell flex flex-col items-center gap-[2px]">
+      <div v-if="circuit.p1Worker" class="souden-worker-cell flex flex-col items-center gap-0.5">
         <strong class="souden-worker-cell__worker">{{ circuit.p1Worker }}</strong>
         <span class="souden-worker-cell__date">{{ formatShortDateTime(circuit.p1ConfirmedAt) }}</span>
       </div>
       <span v-else class="souden-worker-cell__dash">-</span>
     </template>
-  </PortalSoudenCircuitTable>
+  </PortalOrganismsSoudenCircuitTable>
 </template>
 
 <style scoped lang="scss">
-:deep(.phase1-row) {
-  transition: var(--transition-colors);
-
-  &.is-completed {
-    background-color: var(--color-completed-row-bg);
-  }
-
-  &.is-excluded {
-    opacity: 0.5;
-  }
-
-  &.is-locked {
-    opacity: 0.6;
-  }
-
-  &.is-highlighted {
-    background-color: var(--color-selection-bg) !important;
-    outline: 2px solid var(--color-selection-outline);
-  }
-}
-
 .phase1-cell {
   &__cable {
     font-size: var(--font-size-xs);
@@ -271,7 +250,7 @@ const {
 
     max-width: 140px;
 
-    font-size: 11px;
+    font-size: var(--font-size-2xs);
     color: var(--color-text-secondary);
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -288,7 +267,7 @@ const {
     max-width: 100%;
 
     font-size: inherit;
-    font-weight: var(--font-weight-normal, 400);
+    font-weight: var(--font-weight-normal);
     line-height: 1.3;
     color: var(--color-text-main);
     white-space: pre-line;
@@ -310,7 +289,7 @@ const {
   color: var(--color-status-warning);
 
   &--strong {
-    font-weight: var(--font-weight-normal, 400);
+    font-weight: var(--font-weight-normal);
   }
 }
 
@@ -319,7 +298,7 @@ const {
 
   &__label {
     user-select: none;
-    font-size: 10px;
+    font-size: var(--font-size-2xs);
     color: var(--color-text-muted);
   }
 }
@@ -327,13 +306,13 @@ const {
 .souden-worker-cell {
   &__worker {
     font-size: inherit;
-    font-weight: var(--font-weight-normal, 400);
+    font-weight: var(--font-weight-normal);
     color: var(--color-status-success);
   }
 
   &__date {
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: var(--font-size-2xs);
     color: var(--color-text-muted);
   }
 

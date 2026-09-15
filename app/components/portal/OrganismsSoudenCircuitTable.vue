@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PortalSoudenCircuitTable
+ * OrganismsSoudenCircuitTable
  * 送電試験（Phase 1〜3）専用の回路一覧テーブルコンポーネント。
  * 回路記号SVG（PortalAtomKairoSymbol）専用列の完全保護、行ステータス装飾、
  * 測定者/日時セルの標準内包、および各フェーズ固有の測定・操作スロットを提供します。
@@ -83,7 +83,7 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
 <template>
   <div
     ref="tableWrapperRef"
-    class="portal-souden-circuit-table flex-1 min-h-[400px] overflow-y-auto"
+    class="souden-circuit-table flex-1 min-h-[400px] overflow-y-auto"
   >
     <table class="w-full table-fixed text-left">
       <thead>
@@ -105,12 +105,12 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
           v-for="(circuit, index) in circuits"
           :id="`${rowIdPrefix}${circuit.id}`"
           :key="circuit.id"
-          class="souden-circuit-row relative z-[1]"
+          class="circuit-row relative z-[1]"
           :class="{
             'is-completed': isComplete(circuit),
             'is-excluded': circuit.isExcluded,
             'is-locked': isCircuitLocked(circuit),
-            'is-editing': editingRowId === circuit.id,
+            'is-highlighted': editingRowId === circuit.id,
           }"
         >
           <AtomsTableTd
@@ -135,7 +135,7 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
               <!-- 回路番号の送電試験標準描画（スロット指定がない場合） -->
               <div
                 v-else-if="col.key === 'kairoBangou'"
-                class="souden-cell__bangou-wrap flex items-center justify-center"
+                class="flex items-center justify-center"
               >
                 <PortalAtomKairoSymbol
                   :kigou="circuit.kairoKigou"
@@ -146,7 +146,7 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
               <!-- 回路名称の送電試験標準描画（スロット指定がない場合・Excel改行を保持） -->
               <span
                 v-else-if="col.key === 'kairoMeisho'"
-                class="souden-cell__meisho block"
+                class="circuit-meisho block"
                 :title="circuit.kairoMeisho || ''"
               >
                 {{ circuit.kairoMeisho || '-' }}
@@ -156,16 +156,16 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
               <div v-else-if="col.key.endsWith('ConfirmedAt')">
                 <div
                   v-if="circuit.p1Worker || circuit.p2Worker || circuit.p3Worker"
-                  class="souden-worker-cell flex flex-col items-center gap-[2px]"
+                  class="flex flex-col items-center gap-0.5"
                 >
-                  <strong class="souden-worker-cell__worker">
+                  <strong class="worker-name">
                     {{ circuit.p3Worker || circuit.p2Worker || circuit.p1Worker }}
                   </strong>
-                  <span class="souden-worker-cell__date">
+                  <span class="worker-date">
                     {{ formatShortDateTime(circuit.p3ConfirmedAt || circuit.p2ConfirmedAt || circuit.p1ConfirmedAt) }}
                   </span>
                 </div>
-                <span v-else class="souden-empty-cell text-center block">-</span>
+                <span v-else class="empty-cell text-center block">-</span>
               </div>
             </template>
           </AtomsTableTd>
@@ -181,18 +181,18 @@ table {
   border-collapse: separate;
 }
 
-.portal-souden-circuit-table {
+.souden-circuit-table {
   border: var(--border-width-base) solid var(--color-border);
   border-radius: var(--radius-sm);
   background-color: var(--surface-bg);
   backdrop-filter: blur(var(--blur-sm));
 }
 
-.souden-empty-cell {
+.empty-cell {
   color: var(--color-text-muted);
 }
 
-.souden-circuit-row {
+.circuit-row {
   transition: var(--transition-interactive);
 
   &:hover {
@@ -212,7 +212,7 @@ table {
   }
 
   &.is-highlighted {
-    background-color: var(--color-selection-bg) !important;
+    background-color: var(--color-selection-bg);
     outline: 2px solid var(--color-selection-outline);
   }
 
@@ -221,27 +221,23 @@ table {
   }
 }
 
-.souden-cell {
-  &__meisho {
-    font-size: inherit;
-    font-weight: var(--font-weight-normal, 400);
-    line-height: 1.3;
-    color: var(--color-text-main);
-    white-space: pre-line;
-  }
+.circuit-meisho {
+  font-size: inherit;
+  font-weight: var(--font-weight-normal);
+  line-height: 1.3;
+  color: var(--color-text-main);
+  white-space: pre-line;
 }
 
-.souden-worker-cell {
-  &__worker {
-    font-size: inherit;
-    font-weight: var(--font-weight-normal, 400);
-    color: var(--color-text-main);
-  }
+.worker-name {
+  font-size: inherit;
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-main);
+}
 
-  &__date {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--color-text-muted);
-  }
+.worker-date {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2xs);
+  color: var(--color-text-muted);
 }
 </style>
