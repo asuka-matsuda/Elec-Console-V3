@@ -10,7 +10,6 @@ import { ref } from 'vue'
 import { useTableAutoWidth } from '~/composables/useTableAutoWidth'
 import type { TableColumn } from '~/types/components'
 import type { CircuitItem } from '~/types/souden'
-import { formatShortDateTime } from '~/utils/date'
 
 const props = withDefaults(
   defineProps<{
@@ -153,20 +152,11 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
               </span>
 
               <!-- 測定者/日時の送電試験標準描画（スロット指定がない場合） -->
-              <div v-else-if="col.key.endsWith('ConfirmedAt')">
-                <div
-                  v-if="circuit.p1Worker || circuit.p2Worker || circuit.p3Worker"
-                  class="flex flex-col items-center gap-0.5"
-                >
-                  <strong class="worker-name">
-                    {{ circuit.p3Worker || circuit.p2Worker || circuit.p1Worker }}
-                  </strong>
-                  <span class="worker-date">
-                    {{ formatShortDateTime(circuit.p3ConfirmedAt || circuit.p2ConfirmedAt || circuit.p1ConfirmedAt) }}
-                  </span>
-                </div>
-                <span v-else class="empty-cell text-center block">-</span>
-              </div>
+              <PortalMoleculesSoudenWorkerCell
+                v-else-if="col.key.endsWith('ConfirmedAt')"
+                :worker-name="circuit.p3Worker || circuit.p2Worker || circuit.p1Worker"
+                :confirmed-at="circuit.p3ConfirmedAt || circuit.p2ConfirmedAt || circuit.p1ConfirmedAt"
+              />
             </template>
           </AtomsTableTd>
         </tr>
@@ -186,10 +176,6 @@ table {
   border-radius: var(--radius-sm);
   background-color: var(--surface-bg);
   backdrop-filter: blur(var(--blur-sm));
-}
-
-.empty-cell {
-  color: var(--color-text-muted);
 }
 
 .circuit-row {
@@ -227,17 +213,5 @@ table {
   line-height: 1.3;
   color: var(--color-text-main);
   white-space: pre-line;
-}
-
-.worker-name {
-  font-size: inherit;
-  font-weight: var(--font-weight-normal);
-  color: var(--color-text-main);
-}
-
-.worker-date {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-muted);
 }
 </style>
