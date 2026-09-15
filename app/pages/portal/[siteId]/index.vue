@@ -4,7 +4,6 @@ import { computed, onMounted, watch } from 'vue'
 
 import { useHead, useRoute, useRouter } from '#app'
 import PortalCal from '~/components/PortalCal.client.vue'
-import PortalPersonalTodo from '~/components/PortalPersonalTodo.client.vue'
 import { useAdminSites } from '~/composables/admin/useAdminSites'
 import { useAuth } from '~/composables/useAuth'
 import { STORAGE_KEYS } from '~/constants/storageKeys'
@@ -83,7 +82,7 @@ onMounted(() => {
       </section>
 
       <aside class="flex flex-col gap-card-gap">
-        <PortalPersonalTodo :site-id="siteId" />
+        <PortalOrganismsPersonalTodo :site-id="siteId" />
 
         <AtomsButton
           :to="`/portal/${siteId}/souden`"

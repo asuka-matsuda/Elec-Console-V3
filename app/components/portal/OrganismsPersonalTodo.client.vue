@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * PortalOrganismsPersonalTodo
+ * [Portal Organisms] 現場ダッシュボードのパーソナルToDo管理コンポーネント。
+ * タスクの追加・一覧・完了トグル・削除をカプセル化して提供します。
+ */
 import { computed, ref } from 'vue'
 
 import { useTodo } from '~/composables/portal/useTodo'
