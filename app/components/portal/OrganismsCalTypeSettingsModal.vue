@@ -93,7 +93,7 @@ const {
       <AtomsButton variant="secondary" @click="isOpen = false">
         キャンセル
       </AtomsButton>
-      <AtomsButton variant="primary" icon="check" @click="handleSave">
+      <AtomsButton variant="success" icon="check" @click="handleSave">
         設定を保存
       </AtomsButton>
     </template>

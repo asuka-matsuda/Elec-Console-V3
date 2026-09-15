@@ -87,7 +87,7 @@ const isResultDialogOpen = ref(false)
 
         <template #actions>
           <AtomsButton
-            variant="primary"
+            variant="success"
             icon="save"
             @click="emit('save')"
           >

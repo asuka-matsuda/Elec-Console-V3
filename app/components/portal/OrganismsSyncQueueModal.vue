@@ -222,7 +222,7 @@ const formatDateTime = (isoStr: string) => {
             閉じる
           </AtomsButton>
           <AtomsButton
-            variant="primary"
+            variant="success"
             :loading="isSyncing"
             :disabled="pendingCount === 0"
             @click="handleStartSync"

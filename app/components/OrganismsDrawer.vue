@@ -6,6 +6,8 @@
  */
 import { onMounted, ref, watch } from 'vue'
 
+import type { AtomsButtonVariant } from '~/types/components'
+
 const isOpen = defineModel<boolean>({ default: false })
 
 const props = withDefaults(
@@ -24,12 +26,14 @@ const props = withDefaults(
     submitFn?: () => Promise<void>
     submitText?: string
     cancelText?: string
+    submitVariant?: AtomsButtonVariant
   }>(),
   {
     variant: 'management',
     size: 'md',
     submitText: '保存する',
     cancelText: '閉じる',
+    submitVariant: undefined,
   },
 )
 
@@ -149,7 +153,7 @@ onMounted(() => {
           {{ cancelText }}
         </AtomsButton>
         <AtomsButton
-          variant="primary"
+          :variant="submitVariant || (variant === 'danger' ? 'danger' : 'success')"
           :disabled="isSubmitting"
           @click="handleSubmit"
         >

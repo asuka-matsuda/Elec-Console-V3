@@ -192,7 +192,7 @@ const formattedPreview = computed(() => {
             元に戻す
           </AtomsButton>
           <AtomsButton
-            variant="primary"
+            variant="success"
             icon="check"
             :loading="isSaving"
             :disabled="!hasUnsavedChanges || isSaving"

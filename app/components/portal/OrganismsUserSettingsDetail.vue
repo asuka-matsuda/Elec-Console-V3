@@ -129,7 +129,7 @@ const handleSave = () => {
               削除
             </AtomsButton>
             <AtomsButton
-              variant="primary"
+              variant="success"
               icon="save"
               :disabled="isSaving"
               @click="handleSave"

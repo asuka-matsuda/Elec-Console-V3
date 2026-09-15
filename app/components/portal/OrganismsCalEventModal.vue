@@ -143,7 +143,7 @@ const closeModal = () => {
         キャンセル
       </AtomsButton>
       <AtomsButton
-        variant="primary"
+        variant="success"
         icon="check"
         @click="handleSave"
       >
