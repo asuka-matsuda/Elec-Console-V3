@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
- * PortalSyncQueueModal
- * オフライン同期待ちキューの確認・手動同期実行・競合解決を行うOrganismモーダルコンポーネント。
+ * PortalOrganismsSyncQueueModal
+ * [Organisms] オフライン同期待ちキューの確認・手動同期実行・競合解決を行うモーダルコンポーネント。
  */
 import { computed, ref, toRef } from 'vue'
 
@@ -79,19 +79,22 @@ const formatDateTime = (isoStr: string) => {
     <div class="flex flex-col gap-4">
       <!-- 競合解決ビュー -->
       <template v-if="conflictItems.length > 0">
-        <div class="sync-conflict-alert p-3">
-          ⚠️ <strong>{{ conflictItems.length }}件</strong> の回路で別の作業者との更新競合が発生しました。<br>
-          内容を確認し、どちらの値を採用するか選択してください。
+        <div class="flex items-start gap-2 p-3 conflict-alert">
+          <AtomsIcon name="alert-triangle" size="sm" class="shrink-0 mt-0.5" />
+          <div>
+            <strong>{{ conflictItems.length }}件</strong> の回路で別の作業者との更新競合が発生しました。<br>
+            内容を確認し、どちらの値を採用するか選択してください。
+          </div>
         </div>
 
         <div
           v-for="item in conflictItems"
           :key="item.id"
-          class="sync-conflict-card flex flex-col gap-2 p-3"
+          class="flex flex-col gap-2 p-3 conflict-card"
         >
-          <div class="flex items-center gap-2 pb-2 sync-conflict-card__header">
-            <span class="sync-conflict-card__ban">{{ item.banMeisho }}</span>
-            <span class="flex-1 sync-conflict-card__kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
+          <div class="flex items-center gap-2 pb-2 card-header">
+            <span class="card-ban">{{ item.banMeisho }}</span>
+            <span class="flex-1 card-kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
             <AtomsBadge color="var(--color-status-warning)">
               フェーズ{{ item.phase }}
             </AtomsBadge>
@@ -99,14 +102,15 @@ const formatDateTime = (isoStr: string) => {
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <!-- サーバー側の値 -->
-            <div class="sync-conflict-col is-server flex flex-col gap-2 p-3">
-              <div class="sync-conflict-col__title">
-                🌐 サーバー側の最新データ
+            <div class="flex flex-col gap-2 p-3 conflict-col server-col">
+              <div class="flex items-center gap-1.5 col-title">
+                <AtomsIcon name="database" size="sm" />
+                <span>サーバー側の最新データ</span>
               </div>
-              <div class="sync-conflict-col__meta">
+              <div class="col-meta">
                 更新日時: {{ formatDateTime(String(item.serverCircuitData?.updatedAt || '')) }}
               </div>
-              <div class="sync-conflict-col__details p-2">
+              <div class="p-2 col-details">
                 <template v-if="item.phase === 1">
                   確認: {{ item.serverCircuitData?.p1Kakunin ? '済' : '未' }} / 増締: {{ item.serverCircuitData?.p1Mashishime ? '済' : '未' }}
                 </template>
@@ -127,14 +131,15 @@ const formatDateTime = (isoStr: string) => {
             </div>
 
             <!-- 端末側（オフライン入力）の値 -->
-            <div class="sync-conflict-col is-client flex flex-col gap-2 p-3">
-              <div class="sync-conflict-col__title">
-                📱 あなたのオフライン入力
+            <div class="flex flex-col gap-2 p-3 conflict-col client-col">
+              <div class="flex items-center gap-1.5 col-title">
+                <AtomsIcon name="user" size="sm" />
+                <span>あなたのオフライン入力</span>
               </div>
-              <div class="sync-conflict-col__meta">
+              <div class="col-meta">
                 実測定時刻: {{ formatDateTime(item.clientConfirmedAt) }}
               </div>
-              <div class="sync-conflict-col__details p-2">
+              <div class="p-2 col-details">
                 <template v-if="item.phase === 1">
                   確認: {{ item.payload.kakunin ? '済' : '未' }} / 増締: {{ item.payload.mashishime ? '済' : '未' }}
                 </template>
@@ -160,25 +165,25 @@ const formatDateTime = (isoStr: string) => {
       <!-- 同期実行・結果ビュー -->
       <template v-else>
         <div class="flex flex-col gap-3">
-          <p class="sync-summary__desc m-0">
+          <p class="m-0 summary-desc">
             地下受変電室等で記録された <strong>{{ pendingCount }}件</strong> の未送信データがあります。<br>
             現場で実際に測定された正確な時刻（実打鍵タイムスタンプ）とともにサーバーへ反映します。
           </p>
 
-          <ul v-if="queue.length > 0" class="sync-queue-list overflow-y-auto flex flex-col gap-1 max-h-[180px] m-0 p-2 list-none">
+          <ul v-if="queue.length > 0" class="overflow-y-auto flex flex-col gap-1 max-h-[180px] m-0 p-2 list-none queue-list">
             <li
               v-for="item in queue.slice(0, 5)"
               :key="item.id"
-              class="flex items-center gap-2 px-2 py-1 sync-queue-item"
+              class="flex items-center gap-2 px-2 py-1 queue-item"
             >
               <AtomsBadge color="var(--color-category-tool)">
                 P{{ item.phase }}
               </AtomsBadge>
-              <span class="sync-queue-item__ban">{{ item.banMeisho }}</span>
-              <span class="flex-1 sync-queue-item__kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
-              <span class="sync-queue-item__time">{{ formatDateTime(item.clientConfirmedAt) }}</span>
+              <span class="item-ban">{{ item.banMeisho }}</span>
+              <span class="flex-1 item-kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
+              <span class="item-time">{{ formatDateTime(item.clientConfirmedAt) }}</span>
             </li>
-            <li v-if="queue.length > 5" class="sync-queue-more p-1 text-center">
+            <li v-if="queue.length > 5" class="p-1 text-center queue-more">
               ... 他 {{ queue.length - 5 }} 件
             </li>
           </ul>
@@ -197,17 +202,19 @@ const formatDateTime = (isoStr: string) => {
             :title="syncResult.errorCount > 0 ? '同期エラー' : '同期完了'"
           >
             <template #value>
-              <div v-if="syncResult.successCount > 0" class="u-text-success">
-                ✅ {{ syncResult.successCount }} 件のデータを正常に同期しました。
+              <div v-if="syncResult.successCount > 0" class="flex items-center gap-1.5 result-success">
+                <AtomsIcon name="check-circle" size="sm" />
+                <span>{{ syncResult.successCount }} 件のデータを正常に同期しました。</span>
               </div>
-              <div v-if="syncResult.errorCount > 0" class="u-text-danger">
-                ❌ {{ syncResult.errorCount }} 件の送信に失敗しました（電波状況を確認してください）。
+              <div v-if="syncResult.errorCount > 0" class="flex items-center gap-1.5 result-danger">
+                <AtomsIcon name="alert-circle" size="sm" />
+                <span>{{ syncResult.errorCount }} 件の送信に失敗しました（電波状況を確認してください）。</span>
               </div>
             </template>
           </MoleculesResultBox>
         </div>
 
-        <div class="flex items-center justify-end gap-3 pt-3 sync-modal__actions">
+        <div class="flex items-center justify-end gap-3 pt-3 modal-actions">
           <AtomsButton
             variant="secondary"
             @click="closeModal"
@@ -220,7 +227,8 @@ const formatDateTime = (isoStr: string) => {
             :disabled="pendingCount === 0"
             @click="handleStartSync"
           >
-            サーバーへ送信実行 📤
+            <AtomsIcon name="upload" />
+            サーバーへ送信実行
           </AtomsButton>
         </div>
       </template>
@@ -229,46 +237,46 @@ const formatDateTime = (isoStr: string) => {
 </template>
 
 <style scoped lang="scss">
-.sync-modal__actions {
+.modal-actions {
   border-top: 1px solid var(--color-border);
 }
 
-.sync-summary__desc {
+.summary-desc {
   font-size: var(--font-size-sm);
   line-height: var(--line-height-base);
   color: var(--color-text-muted);
 }
 
-.sync-queue-list {
+.queue-list {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   background: var(--surface-bg-solid);
 }
 
-.sync-queue-item {
+.queue-item {
   font-size: var(--font-size-xs);
 
-  &__ban {
+  .item-ban {
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
 
-  &__kairo {
+  .item-kairo {
     color: var(--color-text-muted);
   }
 
-  &__time {
+  .item-time {
     font-family: var(--font-mono);
     color: var(--color-text-muted);
   }
 }
 
-.sync-queue-more {
+.queue-more {
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
 }
 
-.sync-conflict-alert {
+.conflict-alert {
   border: 1px solid color-mix(in srgb, var(--color-status-warning) 30%, transparent);
   border-radius: var(--radius-sm);
 
@@ -279,52 +287,52 @@ const formatDateTime = (isoStr: string) => {
   background: color-mix(in srgb, var(--color-status-warning) 10%, transparent);
 }
 
-.sync-conflict-card {
+.conflict-card {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   background: var(--surface-bg-elevated);
 
-  &__header {
+  .card-header {
     border-bottom: 1px solid var(--color-border);
   }
 
-  &__ban {
+  .card-ban {
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
 
-  &__kairo {
+  .card-kairo {
     font-size: var(--font-size-sm);
     color: var(--color-text-muted);
   }
 }
 
-.sync-conflict-col {
+.conflict-col {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   background: var(--surface-bg-solid);
 
-  &.is-server {
+  &.server-col {
     border-color: color-mix(in srgb, var(--color-status-neutral) 30%, transparent);
   }
 
-  &.is-client {
+  &.client-col {
     border-color: color-mix(in srgb, var(--theme-accent) 30%, transparent);
     background: color-mix(in srgb, var(--theme-accent) 5%, var(--surface-bg-solid));
   }
 
-  &__title {
+  .col-title {
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
 
-  &__meta {
+  .col-meta {
     font-size: var(--font-size-2xs);
     color: var(--color-text-muted);
   }
 
-  &__details {
+  .col-details {
     border-radius: var(--radius-sm);
 
     font-family: var(--font-mono);
@@ -334,5 +342,13 @@ const formatDateTime = (isoStr: string) => {
 
     background: var(--surface-bg-elevated);
   }
+}
+
+.result-success {
+  color: var(--color-status-success);
+}
+
+.result-danger {
+  color: var(--color-status-danger);
 }
 </style>

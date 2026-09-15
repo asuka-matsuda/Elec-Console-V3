@@ -68,7 +68,7 @@ const openModal = () => {
     </template>
 
     <!-- 同期モーダル (Organism) -->
-    <PortalSyncQueueModal
+    <PortalOrganismsSyncQueueModal
       v-model="isModalOpen"
       :site-id="siteId"
       @synced="emit('synced')"
