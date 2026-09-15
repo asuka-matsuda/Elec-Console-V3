@@ -47,6 +47,7 @@ export interface CircuitItem {
   isExcluded?: boolean
   createdAt?: string
   updatedAt?: string
+  version?: number
 
   [key: string]: unknown
 }

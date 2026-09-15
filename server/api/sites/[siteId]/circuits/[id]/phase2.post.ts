@@ -1,7 +1,7 @@
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { requireSiteAccess } from '../../../../../utils/auth'
-import { checkOptimisticLock } from '../../../../../utils/optimisticLock'
+import { atomicUpdateCircuit } from '../../../../../utils/optimisticLock'
 import { prisma } from '../../../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
@@ -18,32 +18,21 @@ export default defineEventHandler(async (event) => {
 
   const body = await readBody(event)
   const workerName = `${user.lastName} ${user.firstName}`.trim() || user.loginId
-
-  const circuit = await prisma.circuit.findFirst({
-    where: { id: circuitId, siteId },
-  })
-
-  if (!circuit) {
-    throw createError({
-      statusCode: 404,
-      message: '指定された回路が見つかりません',
-    })
-  }
-
-  checkOptimisticLock(circuit, body.expectedUpdatedAt)
-
   const confirmedAt = body.clientConfirmedAt ? new Date(body.clientConfirmedAt) : new Date()
 
-  const updated = await prisma.circuit.update({
-    where: { id: circuitId },
+  const updated = await atomicUpdateCircuit({
+    circuitId,
+    siteId,
+    expectedVersion: typeof body.expectedVersion === 'number' ? body.expectedVersion : undefined,
+    expectedUpdatedAt: body.expectedUpdatedAt,
     data: {
-      zetsuenR: body.rVal !== undefined ? (body.rVal === null ? null : parseFloat(body.rVal)) : circuit.zetsuenR,
-      zetsuenS: body.sVal !== undefined ? (body.sVal === null ? null : parseFloat(body.sVal)) : circuit.zetsuenS,
-      zetsuenT: body.tVal !== undefined ? (body.tVal === null ? null : parseFloat(body.tVal)) : circuit.zetsuenT,
-      p2RStatus: body.rStatus !== undefined ? body.rStatus : circuit.p2RStatus,
-      p2SStatus: body.sStatus !== undefined ? body.sStatus : circuit.p2SStatus,
-      p2TStatus: body.tStatus !== undefined ? body.tStatus : circuit.p2TStatus,
-      p2Remarks: body.remarks !== undefined ? body.remarks : circuit.p2Remarks,
+      zetsuenR: body.rVal !== undefined ? (body.rVal === null ? null : parseFloat(body.rVal)) : undefined,
+      zetsuenS: body.sVal !== undefined ? (body.sVal === null ? null : parseFloat(body.sVal)) : undefined,
+      zetsuenT: body.tVal !== undefined ? (body.tVal === null ? null : parseFloat(body.tVal)) : undefined,
+      p2RStatus: body.rStatus !== undefined ? body.rStatus : undefined,
+      p2SStatus: body.sStatus !== undefined ? body.sStatus : undefined,
+      p2TStatus: body.tStatus !== undefined ? body.tStatus : undefined,
+      p2Remarks: body.remarks !== undefined ? body.remarks : undefined,
       p2Worker: workerName,
       p2IsComplete: body.isComplete !== undefined ? Boolean(body.isComplete) : true,
       p2ConfirmedAt: confirmedAt,
@@ -70,8 +59,8 @@ export default defineEventHandler(async (event) => {
       worker: workerName,
       timestamp: confirmedAt,
       action: body.isOfflineSync ? 'フェーズ2 確定 (オフライン同期)' : 'フェーズ2 確定',
-      targetBan: circuit.banMeisho,
-      targetKairo: circuit.kairoBangou || circuit.kairoMeisho || '',
+      targetBan: updated.banMeisho,
+      targetKairo: updated.kairoBangou || updated.kairoMeisho || '',
       details: logDetails.join(' | ') || '絶縁抵抗測定完了',
     },
   })

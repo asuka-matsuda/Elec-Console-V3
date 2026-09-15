@@ -288,6 +288,7 @@ export function usePhaseExam(
       remarks: overrideData?.remarks ?? circuit.p1Remarks ?? '',
       modifiedFields: overrideData?.modifiedFields ?? [],
       expectedUpdatedAt: circuit.updatedAt,
+      expectedVersion: circuit.version,
       ...overrideData,
     }
 
@@ -335,6 +336,7 @@ export function usePhaseExam(
           payload,
           clientConfirmedAt,
           expectedUpdatedAt: circuit.updatedAt,
+          expectedVersion: circuit.version,
           workerName,
         })
 
@@ -388,6 +390,7 @@ export function usePhaseExam(
           method: 'POST',
           body: {
             expectedUpdatedAt: circuit.updatedAt,
+            expectedVersion: circuit.version,
             clientConfirmedAt,
           },
         },
@@ -423,6 +426,7 @@ export function usePhaseExam(
           payload: {},
           clientConfirmedAt,
           expectedUpdatedAt: circuit.updatedAt,
+          expectedVersion: circuit.version,
         })
 
         const idx = circuits.value.findIndex(c => c.id === circuit.id)
@@ -515,6 +519,7 @@ export function usePhaseExam(
             ...payload,
             clientConfirmedAt,
             expectedUpdatedAt: circuit.updatedAt,
+            expectedVersion: circuit.version,
           },
         },
       )
@@ -549,6 +554,7 @@ export function usePhaseExam(
           payload,
           clientConfirmedAt,
           expectedUpdatedAt: circuit.updatedAt,
+          expectedVersion: circuit.version,
           workerName,
         })
 
@@ -605,6 +611,7 @@ export function usePhaseExam(
           method: 'POST',
           body: {
             expectedUpdatedAt: circuit.updatedAt,
+            expectedVersion: circuit.version,
             clientConfirmedAt,
           },
         },
@@ -640,6 +647,7 @@ export function usePhaseExam(
           payload: {},
           clientConfirmedAt,
           expectedUpdatedAt: circuit.updatedAt,
+          expectedVersion: circuit.version,
         })
 
         const idx = circuits.value.findIndex(c => c.id === circuit.id)
@@ -740,6 +748,7 @@ export function usePhaseExam(
             ...payload,
             clientConfirmedAt,
             expectedUpdatedAt: circuit.updatedAt,
+            expectedVersion: circuit.version,
           },
         },
       )
@@ -774,6 +783,7 @@ export function usePhaseExam(
           payload,
           clientConfirmedAt,
           expectedUpdatedAt: circuit.updatedAt,
+          expectedVersion: circuit.version,
           workerName,
         })
 
@@ -827,6 +837,7 @@ export function usePhaseExam(
           method: 'POST',
           body: {
             expectedUpdatedAt: circuit.updatedAt,
+            expectedVersion: circuit.version,
             clientConfirmedAt,
           },
         },
@@ -862,6 +873,7 @@ export function usePhaseExam(
           payload: {},
           clientConfirmedAt,
           expectedUpdatedAt: circuit.updatedAt,
+          expectedVersion: circuit.version,
         })
 
         const idx = circuits.value.findIndex(c => c.id === circuit.id)

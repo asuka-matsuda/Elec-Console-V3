@@ -1,7 +1,7 @@
 import type { Circuit } from '@prisma/client'
 import { describe, expect, it } from 'vitest'
 
-import { checkOptimisticLock } from '../../../server/utils/optimisticLock'
+import { checkOptimisticLock } from '../../server/utils/optimisticLock'
 
 describe('checkOptimisticLock', () => {
   const baseCircuit: Circuit = {
@@ -46,11 +46,12 @@ describe('checkOptimisticLock', () => {
     p3Worker: null,
     p3ConfirmedAt: null,
     p3Remarks: null,
+    version: 1,
     createdAt: new Date('2026-09-01T10:00:00.000Z'),
     updatedAt: new Date('2026-09-01T10:00:00.000Z'),
   }
 
-  it('expectedUpdatedAt が指定されていない場合は例外を投げない（後方互換）', () => {
+  it('expectedUpdatedAt および expectedVersion が指定されていない場合は例外を投げない（後方互換）', () => {
     expect(() => checkOptimisticLock(baseCircuit, null)).not.toThrow()
     expect(() => checkOptimisticLock(baseCircuit, undefined)).not.toThrow()
   })
@@ -79,4 +80,35 @@ describe('checkOptimisticLock', () => {
       expect(e.data.currentCircuit.id).toBe('circuit-1')
     }
   })
+
+  it('expectedVersion が一致する場合は例外を投げない', () => {
+    expect(() => checkOptimisticLock(baseCircuit, undefined, 1)).not.toThrow()
+    // updatedAt に乖離があっても expectedVersion が一致していれば優先して通過
+    expect(() => checkOptimisticLock(baseCircuit, '2026-09-01T09:00:00.000Z', 1)).not.toThrow()
+  })
+
+  it('expectedVersion が不一致の場合は 409 Conflict をスローする', () => {
+    expect(() => {
+      checkOptimisticLock(baseCircuit, undefined, 0)
+    }).toThrowError(/他の作業員/)
+
+    try {
+      checkOptimisticLock(baseCircuit, undefined, 0)
+    }
+    catch (err: unknown) {
+      const e = err as { statusCode: number, data: { currentCircuit: Circuit } }
+
+      expect(e.statusCode).toBe(409)
+      expect(e.data.currentCircuit.version).toBe(1)
+    }
+  })
 })
+
+describe('atomicUpdateCircuit', () => {
+  it('エクスポートされていること', async () => {
+    const { atomicUpdateCircuit } = await import('../../server/utils/optimisticLock')
+
+    expect(typeof atomicUpdateCircuit).toBe('function')
+  })
+})
+

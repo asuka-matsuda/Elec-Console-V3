@@ -128,6 +128,7 @@ model Circuit {
   p3ConfirmedAt DateTime?
   p3Remarks     String?
 
+  version   Int      @default(1)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

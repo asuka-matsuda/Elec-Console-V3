@@ -15,6 +15,7 @@ export interface PendingSyncItem {
   payload: Record<string, unknown>
   clientConfirmedAt: string
   expectedUpdatedAt?: string
+  expectedVersion?: number
   workerName?: string
   createdAt: string
   status: 'pending' | 'syncing' | 'conflict' | 'error'
@@ -158,6 +159,7 @@ export function useOfflineSync(
             clientConfirmedAt: item.clientConfirmedAt,
             isOfflineSync: true,
             expectedUpdatedAt: item.expectedUpdatedAt,
+            expectedVersion: item.expectedVersion,
           },
         })
 
@@ -166,14 +168,22 @@ export function useOfflineSync(
         result.successCount++
       }
       catch (err: unknown) {
-        const fetchErr = err as { statusCode?: number, status?: number, data?: { message?: string, current?: Record<string, unknown> } }
+        const fetchErr = err as {
+          statusCode?: number
+          status?: number
+          data?: {
+            message?: string
+            current?: Record<string, unknown>
+            data?: { currentCircuit?: Record<string, unknown> }
+          }
+        }
         const status = fetchErr.statusCode || fetchErr.status
 
         if (status === 409) {
           // 競合発生
           item.status = 'conflict'
           item.errorMessage = '別の作業者によって更新されています'
-          item.serverCircuitData = fetchErr.data?.current
+          item.serverCircuitData = fetchErr.data?.data?.currentCircuit || fetchErr.data?.current
 
           result.conflictCount++
           result.conflicts.push(item)
@@ -204,9 +214,12 @@ export function useOfflineSync(
       return
     }
 
-    // 上書きの場合：サーバーの最新 updatedAt をセットして再送信
+    // 上書きの場合：サーバーの最新 updatedAt / version をセットして再送信
     if (resolution === 'overwrite') {
       const serverUpdated = item.serverCircuitData?.updatedAt as string | undefined
+      const serverVersion = typeof item.serverCircuitData?.version === 'number'
+        ? item.serverCircuitData.version
+        : undefined
 
       try {
         const endpoint = item.actionType === 'clear'
@@ -220,6 +233,7 @@ export function useOfflineSync(
             clientConfirmedAt: item.clientConfirmedAt,
             isOfflineSync: true,
             expectedUpdatedAt: serverUpdated,
+            expectedVersion: serverVersion,
           },
         })
 
