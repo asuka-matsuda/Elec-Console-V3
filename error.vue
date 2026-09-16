@@ -49,14 +49,12 @@ const handleReset = () => {
       </p>
 
       <div class="error-page__actions">
-        <AtomsButton
-          variant="secondary"
+        <Button
           icon="home"
-          size="md"
           @click="handleReset"
         >
           ホームへ戻る
-        </AtomsButton>
+        </Button>
       </div>
 
       <details

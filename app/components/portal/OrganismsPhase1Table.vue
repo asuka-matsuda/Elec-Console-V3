@@ -171,49 +171,47 @@ const {
 
         <!-- 編集モード中 -->
         <template v-else-if="editingRowId === circuit.id">
-          <AtomsButton
+          <Button
             variant="success"
             :loading="isActionLoading[circuit.id]"
             @click="saveEdit(circuit)"
           >
             保存
-          </AtomsButton>
-          <AtomsButton
-            variant="secondary"
+          </Button>
+          <Button
             @click="cancelEdit"
           >
             取消
-          </AtomsButton>
+          </Button>
         </template>
 
         <!-- 通常モード：確定済み -->
         <template v-else-if="isComplete(circuit)">
-          <AtomsButton
+          <Button
             variant="danger"
             :loading="isActionLoading[circuit.id]"
             @click="$emit('clear', circuit)"
           >
             解除
-          </AtomsButton>
+          </Button>
         </template>
 
         <!-- 通常モード：未確定 -->
         <template v-else>
-          <AtomsButton
+          <Button
             variant="success"
             :disabled="!circuit.p1Kakunin || !circuit.p1Mashishime || circuit.isExcluded"
             :loading="isActionLoading[circuit.id]"
             @click="$emit('confirm', circuit)"
           >
             確定
-          </AtomsButton>
-          <AtomsButton
-            variant="secondary"
+          </Button>
+          <Button
             :disabled="circuit.isExcluded"
             @click="startEdit(circuit)"
           >
             編集
-          </AtomsButton>
+          </Button>
         </template>
       </div>
     </template>

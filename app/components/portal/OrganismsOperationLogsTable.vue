@@ -2,9 +2,10 @@
 /**
  * PortalOrganismsOperationLogsTable
  * [Portal Organisms] 送電試験操作ログ一覧テーブルコンポーネント。
- * ログ一覧、日時フォーマット、アクション別AtomsBadge装飾、およびエンプティステートを管理します。
+ * ログ一覧、日時フォーマット、アクション別Badge装飾、およびエンプティステートを管理します。
  */
 import { OPERATION_LOG_COLUMNS } from '~/constants/soudenConstants'
+import type { BadgePresetId } from '~/types/components'
 import type { OperationLogItem } from '~/types/souden'
 
 defineProps<{
@@ -25,19 +26,19 @@ const formatTimestamp = (ts: unknown) => {
   return `${y}/${m}/${day} ${hh}:${mm}:${ss}`
 }
 
-const getActionBadgeColor = (action: unknown) => {
-  if (typeof action !== 'string') return 'var(--color-status-neutral)'
+const getActionBadgeId = (action: unknown): BadgePresetId => {
+  if (typeof action !== 'string') return 'log:neutral'
   if (action.includes('確定') || action.includes('完了')) {
-    return 'var(--color-status-success)'
+    return 'log:success'
   }
   if (action.includes('解除') || action.includes('削除')) {
-    return 'var(--color-status-danger)'
+    return 'log:danger'
   }
   if (action.includes('更新') || action.includes('変更') || action.includes('インポート')) {
-    return 'var(--theme-accent)'
+    return 'log:accent'
   }
 
-  return 'var(--color-status-neutral)'
+  return 'log:neutral'
 }
 </script>
 
@@ -62,9 +63,9 @@ const getActionBadgeColor = (action: unknown) => {
       </template>
 
       <template #cell-action="{ value }">
-        <AtomsBadge :color="getActionBadgeColor(value)">
+        <Badge :id="getActionBadgeId(value)">
           {{ value }}
-        </AtomsBadge>
+        </Badge>
       </template>
 
       <template #cell-targetBan="{ value }">

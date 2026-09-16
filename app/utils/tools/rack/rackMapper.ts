@@ -12,8 +12,6 @@ export type RackCableUIInput = CableInputItem
 export interface RackInputs {
   mode: RackMode
   rackHeight: number | null
-  lStrong?: number | null
-  lWeak?: number | null
   otherWidth: number | null
   strongCablesUI: RackCableUIInput[]
   weakCablesUI: RackCableUIInput[]
@@ -38,7 +36,6 @@ export function mapFormToRackCalcInputs(inputs: RackInputs): RackCalcInputs {
 
   return {
     mode: inputs.mode,
-    layers: isStrong ? (inputs.lStrong ?? 1) : (inputs.lWeak ?? 1),
     rackHeight: rH,
     maxDepth,
     cables: isStrong

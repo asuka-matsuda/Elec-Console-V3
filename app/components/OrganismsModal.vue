@@ -2,12 +2,12 @@
 /**
  * OrganismsModal
  * [Organisms] ネイティブの dialog 要素を使用したモーダルダイアログ。
- * AtomsPanel, MoleculesSectionHeader, AtomsButton を組み合わせた独立機能セクション。
+ * AtomsPanel, MoleculesSectionHeader, Button を組み合わせた独立機能セクション。
  * 標準的なイベント駆動（@submit, @cancel, :loading）および非同期関数（:submit-fn）の両方に対応します。
  */
 import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue'
 
-import type { AtomsButtonVariant } from '~/types/components'
+import type { ButtonVariant } from '~/types/components'
 
 const isOpen = defineModel<boolean>({ default: false })
 
@@ -28,7 +28,7 @@ const props = withDefaults(
     submitFn?: () => Promise<void>
     submitText?: string
     cancelText?: string
-    submitVariant?: AtomsButtonVariant
+    submitVariant?: ButtonVariant
     loading?: boolean
     errorMessage?: string
     showFooter?: boolean
@@ -47,7 +47,6 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   submit: []
-  confirm: []
   cancel: []
 }>()
 
@@ -55,7 +54,7 @@ const instance = getCurrentInstance()
 const hasSubmitListener = computed(() => {
   const vnodeProps = instance?.vnode.props || {}
 
-  return Boolean(vnodeProps.onSubmit || vnodeProps.onConfirm)
+  return Boolean(vnodeProps.onSubmit)
 })
 
 const shouldShowDefaultFooter = computed(() => {
@@ -85,7 +84,6 @@ const onNativeClose = () => {
 
 const handleSubmit = async () => {
   emit('submit')
-  emit('confirm')
 
   if (!props.submitFn) return
 
@@ -164,21 +162,19 @@ onMounted(() => {
       </footer>
 
       <footer v-else-if="shouldShowDefaultFooter" class="flex items-center justify-end gap-2">
-        <AtomsButton
-          variant="secondary"
+        <Button
           :disabled="isBusy"
           @click="close"
         >
           {{ cancelText }}
-        </AtomsButton>
-        <AtomsButton
+        </Button>
+        <Button
           :variant="submitVariant || (variant === 'danger' ? 'danger' : 'success')"
-          :disabled="isBusy"
           :loading="isBusy"
           @click="handleSubmit"
         >
           {{ isBusy ? "処理中..." : submitText }}
-        </AtomsButton>
+        </Button>
       </footer>
     </AtomsPanel>
   </dialog>
@@ -191,7 +187,6 @@ onMounted(() => {
   transform: translateY(var(--space-2));
 
   overflow: visible;
-  display: none;
 
   border: none;
 
@@ -204,10 +199,15 @@ onMounted(() => {
     display var(--duration-fast) allow-discrete,
     overlay var(--duration-fast) allow-discrete;
 
+  &:not([open]) {
+    pointer-events: none;
+    display: none;
+  }
+
   &::backdrop {
     opacity: 0;
-    background-color: var(--color-overlay-base);
-    backdrop-filter: blur(var(--blur-backdrop));
+    background-color: var(--color-overlay-dark);
+    backdrop-filter: blur(var(--blur-sm));
     transition:
       opacity var(--duration-fast) var(--ease-out),
       display var(--duration-fast) allow-discrete,
@@ -217,6 +217,7 @@ onMounted(() => {
   &[open] {
     pointer-events: auto;
     transform: translateY(0);
+    display: flex;
     opacity: 1;
 
     &::backdrop {

@@ -1,4 +1,9 @@
-export type AtomsButtonVariant = 'primary' | 'secondary' | 'danger' | 'success' | 'ghost'
+import type { BadgePresetId } from '~/constants/badgeConfig'
+import type { IconName } from '~/constants/icons'
+
+export type { BadgePresetId }
+
+export type ButtonVariant = 'default' | 'success' | 'danger'
 
 export type ResultBoxStatus = 'success' | 'warning' | 'danger' | 'error' | 'default' | 'neutral' | 'empty'
 
@@ -14,14 +19,15 @@ export interface BaseButtonProps {
   to?: string
   href?: string
   type?: 'button' | 'submit' | 'reset'
-  variant?: AtomsButtonVariant
+  variant?: ButtonVariant
   block?: boolean
   disabled?: boolean
+  title?: string
 }
 
-export interface AtomsButtonProps extends BaseButtonProps {
-  icon?: string
-  iconRight?: string
+export interface ButtonProps extends BaseButtonProps {
+  icon?: IconName
+  iconRight?: IconName
   iconOnly?: boolean
   loading?: boolean
 }
@@ -59,10 +65,16 @@ export interface TableColumn<T = Record<string, unknown>> {
 
 export interface BreadcrumbItem {
   text: string
-  href?: string
 }
 
 export type BadgeColor = string
+
+export interface BadgeProps {
+  /** プリセット定義ID（例: 'role:admin', 'site:completed' 等） */
+  id?: BadgePresetId
+  /** バッジの基調色（直接指定する場合） */
+  color?: BadgeColor
+}
 
 export interface AnnouncementItem {
   id?: number | string
@@ -107,4 +119,13 @@ export interface MoleculesInfoCardProps<T extends InfoCardItem = InfoCardItem> {
 
 export interface OrganismsGlobalNavProps {
   menuData: import('~/constants/data/menuData').MenuSection[]
+}
+
+export interface AtomsCheckboxProps {
+  value?: unknown
+  label?: string
+  disabled?: boolean
+  indeterminate?: boolean
+  trueValue?: unknown
+  falseValue?: unknown
 }

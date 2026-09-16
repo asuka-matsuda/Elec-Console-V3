@@ -59,13 +59,12 @@ const filteredSites = computed(() => {
       size="sm"
     >
       <template #actions>
-        <AtomsButton
-          variant="secondary"
+        <Button
           icon="plus"
           @click="emit('create')"
         >
           新規登録
-        </AtomsButton>
+        </Button>
       </template>
     </MoleculesSectionHeader>
 

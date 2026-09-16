@@ -35,18 +35,17 @@ if (import.meta.client) {
   >
     {{ confirmMessage }}
     <template #footer>
-      <AtomsButton
-        variant="secondary"
+      <Button
         @click="onConfirmCancel"
       >
         {{ confirmCancelText }}
-      </AtomsButton>
-      <AtomsButton
+      </Button>
+      <Button
         :variant="confirmIntent"
         @click="onConfirmExecute"
       >
         {{ confirmBtnText }}
-      </AtomsButton>
+      </Button>
     </template>
   </OrganismsModal>
 </template>

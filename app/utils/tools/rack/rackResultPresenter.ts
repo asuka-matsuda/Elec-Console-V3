@@ -22,18 +22,6 @@ export interface RackResultViewModel {
   wStrong: string
   wWeak: string
   maxDepth: string
-  // 後方互換性用フィールド
-  boxVariant: 'default' | 'error'
-  boxStatus: 'neutral' | 'success' | 'warning' | 'danger'
-  displaySize: string
-  isOverflow: boolean
-  isSizeOver: boolean
-  overflowWarning: string
-  showSeparator: boolean
-  wSep: string
-  totalWidth: string
-  maxHeight: string
-  isMaxHeightOverflow: boolean
 }
 
 export interface RackResultPresenterParams {
@@ -126,39 +114,17 @@ export function formatRackResult(
 
   const isSizeOver = Boolean(
     result?.tier1?.isSizeOver
-    || result?.tier2?.isSizeOver
-    || (result?.selectedSize === null && (result?.totalWidth ?? 0) > 0),
+    || result?.tier2?.isSizeOver,
   )
-  const isZeroOrNoInput = !result || result.totalWidth === 0
+  const isZeroOrNoInput = !result || (result.tier1.totalWidth === 0 && result.tier2.totalWidth === 0)
   const isError = Boolean(result?.error) && !isSizeOver
   const isEmpty = isZeroOrNoInput || isError
 
-  // tier1 が直接渡されていない場合のフォールバック（旧モックデータや後方互換対応）
-  const effectiveTier1: RackTierResult | undefined = result?.tier1 ?? (result && result.totalWidth > 0
-    ? {
-        layers: 1,
-        title: '1段敷設（平置き・標準）',
-        isApplicable: true,
-        wMain: result.wStrong ?? 0,
-        wOther: result.wWeak ?? 0,
-        totalWidth: result.totalWidth,
-        selectedSize: result.selectedSize,
-        isOverflow: result.isOverflow ?? false,
-        isSizeOver: result.selectedSize === null && result.totalWidth > 0,
-        maxCableStackHeight: result.maxCableStackHeight ?? 0,
-        stackHeightDetailStr: result.maxStackDetailStr ?? '',
-        cablesWidth: result.sumStrong ?? 0,
-        cablesCount: 1,
-      }
-    : undefined)
+  const tier1 = formatTierCard(result?.tier1, isEmpty, mode)
+  const tier2 = formatTierCard(result?.tier2, isEmpty, mode)
 
-  const effectiveTier2: RackTierResult | undefined = result?.tier2
-
-  const tier1 = formatTierCard(effectiveTier1, isEmpty, mode)
-  const tier2 = formatTierCard(effectiveTier2, isEmpty, mode)
-
-  const wStrong = result?.wStrong?.toFixed(1) ?? '0.0'
-  const wWeak = result?.wWeak?.toFixed(1) ?? '0.0'
+  const wStrong = (result?.mode === 'strong' ? result?.tier1?.wMain : result?.tier1?.wOther)?.toFixed(1) ?? '0.0'
+  const wWeak = (result?.mode === 'strong' ? result?.tier1?.wOther : result?.tier1?.wMain)?.toFixed(1) ?? '0.0'
 
   return {
     isEmpty,
@@ -167,17 +133,5 @@ export function formatRackResult(
     wStrong,
     wWeak,
     maxDepth: String(maxDepth),
-    // 後方互換用フィールド（tier1平置き基準）
-    boxVariant: (isError || tier1.boxStatus === 'danger') ? 'error' : 'default',
-    boxStatus: tier1.boxStatus,
-    displaySize: tier1.displaySize,
-    isOverflow: tier1.isOverflow,
-    isSizeOver: tier1.isSizeOver,
-    overflowWarning: '',
-    showSeparator: false,
-    wSep: '0.0',
-    totalWidth: tier1.totalWidth,
-    maxHeight: tier1.maxHeight,
-    isMaxHeightOverflow: tier1.isOverflow,
   }
 }

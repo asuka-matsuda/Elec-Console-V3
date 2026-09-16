@@ -21,9 +21,9 @@ describe('OrganismsModal.vue', () => {
       props: ['title', 'icon', 'variant'],
       template: '<div class="section-header-stub">{{ title }}</div>',
     },
-    AtomsButton: {
-      props: ['variant', 'disabled'],
-      template: '<button :disabled="disabled"><slot /></button>',
+    Button: {
+      props: ['variant', 'disabled', 'loading'],
+      template: '<button :disabled="disabled || loading"><slot /></button>',
     },
   }
 
@@ -129,7 +129,7 @@ describe('OrganismsModal.vue', () => {
     expect(wrapper.text()).toContain('Custom Footer')
   })
 
-  it('emits submit, confirm, and cancel events when default footer is enabled', async () => {
+  it('emits submit and cancel events when default footer is enabled', async () => {
     const wrapper = mount(OrganismsModal, {
       props: {
         modelValue: true,
@@ -152,7 +152,6 @@ describe('OrganismsModal.vue', () => {
     // 送信ボタンのクリック
     await buttons[1].trigger('click')
     expect(wrapper.emitted('submit')).toBeTruthy()
-    expect(wrapper.emitted('confirm')).toBeTruthy()
 
     // キャンセルボタンのクリック
     await buttons[0].trigger('click')

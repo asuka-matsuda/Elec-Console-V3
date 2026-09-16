@@ -109,9 +109,8 @@ const formatFileSize = (bytes: number): string => {
           {{ formatFileSize(modelValue.size) }}
         </div>
       </div>
-      <AtomsButton
+      <Button
         icon="x"
-        variant="secondary"
         title="選択を解除"
         :disabled="disabled"
         @click.prevent.stop="clearFile"

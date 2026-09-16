@@ -7,7 +7,6 @@ import type { RackCalcResult } from './rackCalcLogic'
 export function mapRackToHistory(
   settings: {
     mode: 'strong' | 'weak'
-    layers?: number
     rackHeight: number
     maxDepth: number
     otherWidth: number

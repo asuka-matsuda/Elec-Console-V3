@@ -93,20 +93,8 @@ const handleSave = () => {
         <template #default>
           <div class="flex flex-wrap items-center gap-2">
             <span>{{ user.lastName }} {{ user.firstName }}</span>
-            <AtomsBadge
-              :color="
-                user.role === 'admin'
-                  ? 'var(--color-status-danger)'
-                  : user.role === 'worker'
-                    ? 'var(--color-status-success)'
-                    : 'var(--color-text-muted)'
-              "
-            >
-              {{ user.role === 'admin' ? '管理者' : user.role === 'worker' ? '作業員' : user.role }}
-            </AtomsBadge>
-            <AtomsBadge v-if="user.requirePasswordReset" color="var(--color-status-danger)">
-              PWリセット要求
-            </AtomsBadge>
+            <Badge :id="`role:${user.role}`" />
+            <Badge v-if="user.requirePasswordReset" id="user:pwd-reset" />
             <span class="user-id-label ml-1">
               (ID: {{ user.loginId || user.id }})
             </span>
@@ -115,27 +103,26 @@ const handleSave = () => {
 
         <template #actions>
           <div class="flex flex-wrap items-center gap-2">
-            <AtomsButton
-              variant="secondary"
+            <Button
               @click="emit('reset-password', user)"
             >
               PW初期化
-            </AtomsButton>
-            <AtomsButton
+            </Button>
+            <Button
               variant="danger"
               :disabled="user.id === 'master'"
               @click="emit('delete', user)"
             >
               削除
-            </AtomsButton>
-            <AtomsButton
+            </Button>
+            <Button
               variant="success"
               icon="save"
-              :disabled="isSaving"
+              :loading="isSaving"
               @click="handleSave"
             >
               {{ isSaving ? '保存中...' : '変更を保存' }}
-            </AtomsButton>
+            </Button>
           </div>
         </template>
       </MoleculesSectionHeader>

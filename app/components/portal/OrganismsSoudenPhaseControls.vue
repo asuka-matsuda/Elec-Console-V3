@@ -56,9 +56,9 @@ const emit = defineEmits<{
           <!-- 追加フィルター（Phase 2 基準値表示などのスロット） -->
           <slot name="filters-extra" />
 
-          <AtomsBadge color="var(--theme-accent)">
-            対象回路: {{ stats.allCount }} 件
-          </AtomsBadge>
+          <span class="phase-target-count">
+            対象回路: <strong class="phase-target-count__num">{{ stats.allCount }}</strong> 件
+          </span>
         </div>
       </div>
 
@@ -72,9 +72,9 @@ const emit = defineEmits<{
             <div class="stats-numbers flex items-center gap-2">
               <span><strong>{{ stats.completed }}</strong> / {{ stats.total }}</span>
               <span>({{ stats.pct }}%)</span>
-              <AtomsBadge v-if="stats.excluded && stats.excluded > 0" color="var(--color-text-muted)">
+              <Badge v-if="stats.excluded && stats.excluded > 0" id="exam:excluded">
                 除外: {{ stats.excluded }}
-              </AtomsBadge>
+              </Badge>
             </div>
           </div>
           <PortalAtomsProgressBar :value="stats.completed" :max="stats.total" color="var(--color-status-success)" />
@@ -119,5 +119,17 @@ const emit = defineEmits<{
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-secondary);
+}
+
+.phase-target-count {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+
+  &__num {
+    font-family: var(--font-mono);
+    font-weight: var(--font-weight-bold);
+    color: var(--theme-accent);
+  }
 }
 </style>

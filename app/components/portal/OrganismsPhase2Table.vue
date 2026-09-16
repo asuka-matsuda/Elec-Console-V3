@@ -239,55 +239,52 @@ const {
 
         <!-- 手入力編集モード中 -->
         <template v-else-if="editingRowId === circuit.id">
-          <AtomsButton
+          <Button
             variant="success"
             :loading="isActionLoading[circuit.id]"
             @click="saveInput(circuit)"
           >
             確定
-          </AtomsButton>
-          <AtomsButton
-            variant="secondary"
+          </Button>
+          <Button
             @click="cancelInput"
           >
             取消
-          </AtomsButton>
+          </Button>
         </template>
 
         <!-- 通常モード：確定済み -->
         <template v-else-if="isComplete(circuit)">
-          <AtomsButton
+          <Button
             variant="danger"
             :loading="isActionLoading[circuit.id]"
             @click="$emit('clear', circuit)"
           >
             解除
-          </AtomsButton>
-          <AtomsButton
-            variant="secondary"
+          </Button>
+          <Button
             @click="startInput(circuit)"
           >
             変更
-          </AtomsButton>
+          </Button>
         </template>
 
         <!-- 通常モード：未確定 -->
         <template v-else>
-          <AtomsButton
+          <Button
             variant="success"
             :disabled="circuit.isExcluded"
             :loading="isActionLoading[circuit.id]"
             @click="handleQuickOk(circuit)"
           >
             全相OK
-          </AtomsButton>
-          <AtomsButton
-            variant="secondary"
+          </Button>
+          <Button
             :disabled="circuit.isExcluded"
             @click="startInput(circuit)"
           >
             測定入力
-          </AtomsButton>
+          </Button>
         </template>
       </div>
     </template>

@@ -53,9 +53,9 @@ onMounted(async () => {
   <AtomsPanel class="flex flex-col gap-4">
     <MoleculesSectionHeader title="現場ポータル" variant="hud">
       <template v-if="isAdmin" #actions>
-        <AtomsButton variant="secondary" @click="router.push('/portal/admin')">
+        <Button @click="router.push('/portal/admin')">
           ポータル管理画面へ
-        </AtomsButton>
+        </Button>
       </template>
     </MoleculesSectionHeader>
 

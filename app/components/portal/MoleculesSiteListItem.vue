@@ -5,10 +5,6 @@
  * 選択状態のハイライト、現場名、ID、ステータスバッジ、有効/無効化操作を提供します。
  */
 import type { Site } from '~/types/admin'
-import {
-  getSiteStatusColor,
-  getSiteStatusLabel,
-} from '~/utils/portal'
 
 defineProps<{
   site: Site
@@ -26,7 +22,7 @@ const emit = defineEmits<{
     interactive
     :selected="isSelected"
     :disabled="!!site.disabledAt"
-    class="site-item flex items-center justify-between gap-3"
+    class="site-item flex items-center justify-between gap-3 p-3 w-full"
     @click="emit('select', site)"
   >
     <div class="flex-1 min-w-0">
@@ -34,12 +30,8 @@ const emit = defineEmits<{
         <span class="site-name">
           {{ site.name }}
         </span>
-        <AtomsBadge :color="getSiteStatusColor(site.status)">
-          {{ getSiteStatusLabel(site.status) }}
-        </AtomsBadge>
-        <AtomsBadge v-if="site.disabledAt" color="var(--color-status-danger)">
-          無効
-        </AtomsBadge>
+        <Badge :id="`site:${site.status}`" />
+        <Badge v-if="site.disabledAt" id="site:disabled" />
       </div>
       <div class="site-id">
         ID: {{ site.id }}
@@ -47,12 +39,12 @@ const emit = defineEmits<{
     </div>
 
     <div class="flex shrink-0 items-center gap-1" @click.stop>
-      <AtomsButton
+      <Button
         :variant="site.disabledAt ? 'success' : 'danger'"
         @click="emit('toggle-disable', site)"
       >
         {{ site.disabledAt ? '有効化' : '無効化' }}
-      </AtomsButton>
+      </Button>
     </div>
   </AtomsPanel>
 </template>

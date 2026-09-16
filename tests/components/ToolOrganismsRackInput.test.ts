@@ -44,7 +44,7 @@ describe('ToolOrganismsRackInput (app/components/tool/OrganismsRackInput.vue)', 
       props: ['name'],
       template: '<span class="icon-stub">{{ name }}</span>',
     },
-    AtomsButton: {
+    Button: {
       props: ['disabled'],
       template: '<button :disabled="disabled"><slot /></button>',
     },

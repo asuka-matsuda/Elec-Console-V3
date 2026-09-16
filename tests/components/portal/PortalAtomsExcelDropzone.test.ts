@@ -28,7 +28,7 @@ describe('PortalAtomsExcelDropzone.vue', () => {
 
     expect(wrapper.text()).toContain('sample_circuits.xlsx')
     expect(wrapper.text()).toContain('B')
-    expect(wrapper.findComponent({ name: 'AtomsButton' }).exists()).toBe(true)
+    expect(wrapper.findComponent({ name: 'Button' }).exists()).toBe(true)
   })
 
   it('emits update:modelValue with null when clear button is clicked', async () => {
@@ -40,7 +40,7 @@ describe('PortalAtomsExcelDropzone.vue', () => {
       },
     })
 
-    const clearBtn = wrapper.findComponent({ name: 'AtomsButton' })
+    const clearBtn = wrapper.findComponent({ name: 'Button' })
 
     await clearBtn.trigger('click')
 

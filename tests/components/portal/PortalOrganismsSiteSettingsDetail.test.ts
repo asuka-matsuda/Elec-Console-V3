@@ -65,7 +65,7 @@ describe('OrganismsSiteSettingsDetail.vue', () => {
       },
     })
 
-    const saveBtn = wrapper.findComponent({ name: 'AtomsButton' })
+    const saveBtn = wrapper.findComponent({ name: 'Button' })
 
     await saveBtn.trigger('click')
 

@@ -91,14 +91,13 @@ onMounted(() => {
           <PortalOrganismsPersonalTodo :site-id="siteId" />
         </ClientOnly>
 
-        <AtomsButton
+        <Button
+          icon="zap"
           :to="`/portal/${siteId}/souden`"
-          variant="secondary"
           block
         >
-          <AtomsIcon name="zap" />
           送電試験ダッシュボードへ
-        </AtomsButton>
+        </Button>
       </aside>
     </div>
   </div>

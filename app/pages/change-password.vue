@@ -83,15 +83,14 @@ const handleChangePassword = async () => {
     </MoleculesFormGroup>
 
     <div class="flex items-center justify-center">
-      <AtomsButton
+      <Button
         type="submit"
         variant="success"
         block
-        :disabled="isLoading"
+        :loading="isLoading"
       >
-        <template v-if="isLoading"> 設定中... </template>
-        <template v-else> 設定してはじめる </template>
-      </AtomsButton>
+        設定してはじめる
+      </Button>
     </div>
   </form>
 </template>

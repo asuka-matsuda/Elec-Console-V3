@@ -23,7 +23,7 @@ describe('MoleculesCalToolbar.vue', () => {
       },
     })
 
-    const buttons = wrapper.findAllComponents({ name: 'AtomsButton' })
+    const buttons = wrapper.findAllComponents({ name: 'Button' })
 
     // ボタン順: 0: prev, 1: next, 2: today, 3: openTypeSettings
     await buttons[0]?.trigger('click')

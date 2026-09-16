@@ -83,13 +83,12 @@ const shubetsuTabOptions = computed(() => {
         @synced="fetchCircuits"
       />
 
-      <AtomsButton
+      <Button
+        icon="arrow-left"
         :to="`/portal/${siteId}/souden`"
-        variant="ghost"
       >
-        <AtomsIcon name="arrow-left" />
         ダッシュボードへ戻る
-      </AtomsButton>
+      </Button>
     </template>
 
     <PortalOrganismsPhase1Table

@@ -121,18 +121,14 @@ const formattedPreview = computed(() => {
       </p>
       <div class="flex flex-col gap-2 p-3 sub-rule-box">
         <div class="flex items-start gap-2">
-          <AtomsBadge color="var(--glow-color)">
-            初期自動ルール
-          </AtomsBadge>
+          <span class="shrink-0 sub-rule-label">初期自動ルール:</span>
           <span>
             <strong>「〇-〇」</strong>（例: <code>1-1</code>, <code>1L-1</code>）および
             <strong>「〇〇盤」</strong>（例: <code>分電盤</code>, <code>電灯盤</code>, <code>動力盤</code> など）はシステムで自動的に改行禁止になります。手動で登録する必要はありません。
           </span>
         </div>
         <div class="flex items-start gap-2">
-          <AtomsBadge color="var(--theme-accent)">
-            手動登録ワード
-          </AtomsBadge>
+          <span class="shrink-0 sub-rule-label sub-rule-label--manual">手動登録ワード:</span>
           <span>
             「自動倉庫」などの施設名や特殊な単語を以下で追加してください。
           </span>
@@ -154,13 +150,12 @@ const formattedPreview = computed(() => {
             @keydown.enter.prevent="handleAddWord"
           />
         </div>
-        <AtomsButton
+        <Button
           type="submit"
-          variant="secondary"
           icon="plus"
         >
           追加する
-        </AtomsButton>
+        </Button>
       </form>
       <p v-if="inputError" class="mt-2 error-text">
         {{ inputError }}
@@ -174,32 +169,27 @@ const formattedPreview = computed(() => {
           <h3>
             登録済みワード一覧
           </h3>
-          <AtomsBadge color="var(--color-text-muted)">
-            {{ localWords.length }}件
-          </AtomsBadge>
-          <AtomsBadge v-if="hasUnsavedChanges" color="var(--color-status-warning)" class="animate-pulse">
-            未保存の変更あり
-          </AtomsBadge>
+          <span class="words-count">({{ localWords.length }}件)</span>
+          <Badge v-if="hasUnsavedChanges" id="system:unsaved" class="animate-pulse" />
         </div>
 
         <div class="flex items-center gap-2">
-          <AtomsButton
+          <Button
             v-if="hasUnsavedChanges"
-            variant="secondary"
             :disabled="isSaving"
             @click="handleReset"
           >
             元に戻す
-          </AtomsButton>
-          <AtomsButton
+          </Button>
+          <Button
             variant="success"
             icon="check"
             :loading="isSaving"
-            :disabled="!hasUnsavedChanges || isSaving"
+            :disabled="!hasUnsavedChanges"
             @click="handleSave"
           >
             変更を保存
-          </AtomsButton>
+          </Button>
         </div>
       </div>
 
@@ -365,6 +355,23 @@ const formattedPreview = computed(() => {
       word-break: auto-phrase;
       white-space: normal;
     }
+  }
+
+  .sub-rule-label {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-main);
+
+    &--manual {
+      color: var(--theme-accent);
+    }
+  }
+
+  .words-count {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text-muted);
   }
 }
 </style>

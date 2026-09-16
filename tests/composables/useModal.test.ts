@@ -9,7 +9,7 @@ describe('useModal', () => {
     expect(isOpen.value).toBe(false)
     expect(title.value).toBe('確認')
     expect(message.value).toBe('この操作を実行しますか？')
-    expect(intent.value).toBe('primary')
+    expect(intent.value).toBe('success')
   })
 
   it('should open modal with custom options when askConfirm is called', () => {

@@ -29,20 +29,8 @@ const emit = defineEmits<{
         <span class="user-name">
           {{ user.lastName }} {{ user.firstName }}
         </span>
-        <AtomsBadge
-          :color="
-            user.role === 'admin'
-              ? 'var(--color-status-danger)'
-              : user.role === 'worker'
-                ? 'var(--color-status-success)'
-                : 'var(--color-text-muted)'
-          "
-        >
-          {{ user.role === 'admin' ? '管理者' : user.role === 'worker' ? '作業員' : user.role }}
-        </AtomsBadge>
-        <AtomsBadge v-if="user.requirePasswordReset" color="var(--color-status-danger)">
-          PWリセット要求
-        </AtomsBadge>
+        <Badge :id="`role:${user.role}`" />
+        <Badge v-if="user.requirePasswordReset" id="user:pwd-reset" />
       </div>
       <div class="user-id">
         ID: {{ user.loginId || user.id }}

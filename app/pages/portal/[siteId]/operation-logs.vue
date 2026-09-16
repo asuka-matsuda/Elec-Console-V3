@@ -58,22 +58,20 @@ const targetBanOptions = computed(() => [
       size="lg"
     >
       <template #actions>
-        <AtomsButton
-          variant="secondary"
+        <Button
+          icon="refresh-cw"
           :loading="isLoading"
           @click="fetchLogs"
         >
-          <AtomsIcon name="refresh-cw" />
           最新に更新
-        </AtomsButton>
+        </Button>
 
-        <AtomsButton
+        <Button
+          icon="arrow-left"
           :to="`/portal/${siteId}/souden`"
-          variant="secondary"
         >
-          <AtomsIcon name="arrow-left" />
           ダッシュボードへ戻る
-        </AtomsButton>
+        </Button>
       </template>
     </MoleculesSectionHeader>
 

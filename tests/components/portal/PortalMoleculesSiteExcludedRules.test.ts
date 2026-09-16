@@ -17,7 +17,7 @@ describe('MoleculesSiteExcludedRules.vue', () => {
 
     expect(inputs).toHaveLength(2)
 
-    const addBtn = wrapper.findAllComponents({ name: 'AtomsButton' }).find(b => b.text().includes('除外回路を追加する'))
+    const addBtn = wrapper.findAllComponents({ name: 'Button' }).find(b => b.text().includes('除外回路を追加する'))
 
     expect(addBtn).toBeDefined()
 

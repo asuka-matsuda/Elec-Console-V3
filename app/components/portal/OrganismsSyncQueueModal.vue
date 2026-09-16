@@ -95,9 +95,9 @@ const formatDateTime = (isoStr: string) => {
           <div class="flex items-center gap-2 pb-2 card-header">
             <span class="card-ban">{{ item.banMeisho }}</span>
             <span class="flex-1 card-kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
-            <AtomsBadge color="var(--color-status-warning)">
+            <Badge id="souden:phase-warning">
               フェーズ{{ item.phase }}
-            </AtomsBadge>
+            </Badge>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -121,13 +121,12 @@ const formatDateTime = (isoStr: string) => {
                   RS: {{ item.serverCircuitData?.denatsuRs ?? '-' }}V / ST: {{ item.serverCircuitData?.denatsuSt ?? '-' }}V / TR: {{ item.serverCircuitData?.denatsuRt ?? '-' }}V
                 </template>
               </div>
-              <AtomsButton
-                variant="secondary"
+              <Button
                 class="mt-2"
                 @click="handleResolve(item, 'discard')"
               >
                 サーバーの値を残す
-              </AtomsButton>
+              </Button>
             </div>
 
             <!-- 端末側（オフライン入力）の値 -->
@@ -150,13 +149,12 @@ const formatDateTime = (isoStr: string) => {
                   RS: {{ item.payload.rs ?? '-' }}V / ST: {{ item.payload.st ?? '-' }}V / TR: {{ item.payload.rt ?? '-' }}V
                 </template>
               </div>
-              <AtomsButton
-                variant="secondary"
+              <Button
                 class="mt-2"
                 @click="handleResolve(item, 'overwrite')"
               >
                 自分の値で上書きする
-              </AtomsButton>
+              </Button>
             </div>
           </div>
         </div>
@@ -176,9 +174,9 @@ const formatDateTime = (isoStr: string) => {
               :key="item.id"
               class="flex items-center gap-2 px-2 py-1 queue-item"
             >
-              <AtomsBadge color="var(--color-category-tool)">
+              <Badge id="souden:phase-tool">
                 P{{ item.phase }}
-              </AtomsBadge>
+              </Badge>
               <span class="item-ban">{{ item.banMeisho }}</span>
               <span class="flex-1 item-kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
               <span class="item-time">{{ formatDateTime(item.clientConfirmedAt) }}</span>
@@ -215,21 +213,20 @@ const formatDateTime = (isoStr: string) => {
         </div>
 
         <div class="flex items-center justify-end gap-3 pt-3 modal-actions">
-          <AtomsButton
-            variant="secondary"
+          <Button
             @click="closeModal"
           >
             閉じる
-          </AtomsButton>
-          <AtomsButton
+          </Button>
+          <Button
             variant="success"
+            icon="upload"
             :loading="isSyncing"
             :disabled="pendingCount === 0"
             @click="handleStartSync"
           >
-            <AtomsIcon name="upload" />
             サーバーへ送信実行
-          </AtomsButton>
+          </Button>
         </div>
       </template>
     </div>

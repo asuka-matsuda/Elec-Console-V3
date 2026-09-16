@@ -23,15 +23,15 @@ const { currentUser, logout } = useAuth()
   <header class="relative z-10 flex h-16 items-center justify-between px-[var(--space-layout-pad)] header">
     <!-- 左側: メインナビゲーション部 -->
     <div class="flex items-center gap-3">
-      <AtomsButton
-        variant="ghost"
+      <Button
         icon="menu"
         icon-only
+        title="メニューを開閉"
         @click="emit('toggle-sidebar')"
       />
       <AtomsLogo />
 
-      <AtomsBreadcrumb
+      <Breadcrumb
         v-if="breadcrumbs?.length"
         :items="breadcrumbs"
         class="max-md:hidden"
@@ -53,12 +53,11 @@ const { currentUser, logout } = useAuth()
         <span class="max-md:hidden user-name">
           {{ currentUser ? `${currentUser.lastName} ${currentUser.firstName}` : 'ゲスト' }}
         </span>
-        <AtomsButton
-          variant="secondary"
+        <Button
           @click="logout"
         >
           ログアウト
-        </AtomsButton>
+        </Button>
       </div>
     </div>
   </header>

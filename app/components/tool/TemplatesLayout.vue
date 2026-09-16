@@ -70,10 +70,13 @@ provide('toolBasisModal', {
             size="md"
           >
             <template #actions>
-              <AtomsButton variant="danger" @click="emit('reset')">
-                <AtomsIcon name="refresh-cw" />
+              <Button
+                variant="danger"
+                icon="refresh-cw"
+                @click="emit('reset')"
+              >
                 リセット
-              </AtomsButton>
+              </Button>
             </template>
           </MoleculesSectionHeader>
 

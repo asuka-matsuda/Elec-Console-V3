@@ -88,12 +88,12 @@ const weightResult = computed(() => {
         <span class="text-date">{{ entry.timestamp }}</span>
         <h3 class="flex items-center gap-2 text-title m-0">
           <span>{{ entry.toolName }}</span>
-          <AtomsBadge v-if="entry.mode === 'サイズ選定'" color="var(--color-category-tool)">
+          <Badge v-if="entry.mode === 'サイズ選定'" id="tool:size-select">
             {{ entry.mode }}
-          </AtomsBadge>
-          <AtomsBadge v-else-if="entry.mode === '電圧降下'" color="var(--theme-accent)">
+          </Badge>
+          <Badge v-else-if="entry.mode === '電圧降下'" id="tool:voltage-drop">
             {{ entry.mode }}
-          </AtomsBadge>
+          </Badge>
         </h3>
       </div>
     </header>
@@ -184,14 +184,12 @@ const weightResult = computed(() => {
 
     <!-- フッター部: 削除ボタン -->
     <footer class="flex items-center justify-end mt-auto pt-2">
-      <AtomsButton
+      <Button
         variant="danger"
-        icon-only
+        icon="trash-2"
         title="履歴を削除"
         @click.prevent="handleDelete"
-      >
-        <AtomsIcon name="trash-2" />
-      </AtomsButton>
+      />
     </footer>
   </AtomsPanel>
 </template>

@@ -26,7 +26,7 @@ const {
 <template>
   <ToolTemplatesLayout
     results-title="選定結果"
-    :save-disabled="Boolean(result?.error) || !result || result.totalWidth === 0"
+    :save-disabled="Boolean(result?.error) || !result || (result.tier1.totalWidth === 0 && result.tier2.totalWidth === 0)"
     :save-function="handleSaveHistory"
     @reset="openResetModal"
   >

@@ -51,9 +51,7 @@ const sortedTodos = computed(() => {
         placeholder="新しいタスクを入力..."
         class="flex-1"
       />
-      <AtomsButton type="submit" variant="ghost" icon-only title="タスクを追加">
-        <AtomsIcon name="plus" />
-      </AtomsButton>
+      <Button type="submit" icon="plus" title="タスクを追加" />
     </form>
 
     <ul class="overflow-y-auto flex flex-col gap-1 max-h-[400px] m-0 p-0 list-none">
@@ -68,14 +66,12 @@ const sortedTodos = computed(() => {
           :label="todo.text"
           @update:model-value="toggleTodo(todo.id)"
         />
-        <AtomsButton
+        <Button
           variant="danger"
-          icon-only
+          icon="trash-2"
           title="タスクを削除"
           @click="deleteTodo(todo.id)"
-        >
-          <AtomsIcon name="trash-2" />
-        </AtomsButton>
+        />
       </li>
       <MoleculesEmptyState
         v-if="todos.length === 0"

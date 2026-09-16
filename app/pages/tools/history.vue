@@ -28,14 +28,14 @@ const {
         size="lg"
       >
         <template #actions>
-          <AtomsButton
+          <Button
             v-if="historyList.length > 0"
             variant="danger"
+            icon="trash-2"
             @click="handleClearAll"
           >
-            <AtomsIcon name="trash-2" />
             全て削除
-          </AtomsButton>
+          </Button>
         </template>
       </MoleculesSectionHeader>
 

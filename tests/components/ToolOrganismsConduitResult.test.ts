@@ -15,7 +15,7 @@ describe('ToolOrganismsConduitResult (app/components/tool/OrganismsConduitResult
         </div>
       `,
     },
-    AtomsBadge: {
+    Badge: {
       template: '<span class="badge-stub"><slot /></span>',
     },
     AtomsPanel: {

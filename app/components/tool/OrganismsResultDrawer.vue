@@ -2,7 +2,7 @@
 /**
  * OrganismsResultDrawer
  * [Tool Organism] 計算ツールの結果表示エリア全体を包括する独立機能セクション。
- * AtomsPanel, MoleculesSectionHeader, AtomsButton, AtomsIcon を内包し、
+ * AtomsPanel, MoleculesSectionHeader, Button, AtomsIcon を内包し、
  * PC時は通常パネル、モバイル時は下部Stickyドロワーとして開閉・結果表示・履歴保存・計算根拠呼び出しを提供します。
  */
 import { computed, inject, type Ref, ref, toRef } from 'vue'
@@ -105,27 +105,23 @@ defineExpose({
           size="md"
         >
           <template #actions>
-            <AtomsButton
+            <Button
               v-if="isBasisAvailable"
-              variant="secondary"
+              icon="help-circle"
               @click="handleOpenBasis"
             >
-              <AtomsIcon name="help-circle" />
               計算根拠
-            </AtomsButton>
-            <AtomsButton
+            </Button>
+            <Button
               v-if="saveFunction"
               :variant="saveButtonVariant"
+              :icon="saveButtonContent.icon"
               :disabled="saveDisabled || saveState !== 'idle'"
               :loading="saveState === 'saving'"
               @click="handleSave"
             >
-              <AtomsIcon
-                v-if="saveState !== 'saving'"
-                :name="saveButtonContent.icon"
-              />
               {{ saveButtonContent.text }}
-            </AtomsButton>
+            </Button>
           </template>
         </MoleculesSectionHeader>
 

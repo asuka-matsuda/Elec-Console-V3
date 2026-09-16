@@ -5,6 +5,10 @@ export default defineNuxtConfig({
 
   components: [
     {
+      path: '~/components/common',
+      pathPrefix: false,
+    },
+    {
       path: '~/components/tool',
       prefix: 'Tool',
       pathPrefix: false,
@@ -20,9 +24,14 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
     {
+      path: '~/components/master',
+      prefix: 'Master',
+      pathPrefix: false,
+    },
+    {
       path: '~/components',
       pathPrefix: false,
-      ignore: ['tool/**', 'portal/**', 'database/**'],
+      ignore: ['common/**', 'tool/**', 'portal/**', 'database/**', 'master/**'],
     },
   ],
   devtools: { enabled: true },

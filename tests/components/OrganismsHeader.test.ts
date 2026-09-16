@@ -22,8 +22,8 @@ describe('OrganismsHeader.vue', () => {
         stubs: {
           NuxtLink: true,
           AtomsLogo: true,
-          AtomsBreadcrumb: true,
-          AtomsButton: {
+          Breadcrumb: true,
+          Button: {
             template: '<button @click="$emit(\'click\')"><slot /></button>',
           },
           AtomsIcon: true,
@@ -41,8 +41,8 @@ describe('OrganismsHeader.vue', () => {
         stubs: {
           NuxtLink: true,
           AtomsLogo: true,
-          AtomsBreadcrumb: true,
-          AtomsButton: {
+          Breadcrumb: true,
+          Button: {
             template: '<button @click="$emit(\'click\')"><slot /></button>',
           },
           AtomsIcon: true,
@@ -60,8 +60,8 @@ describe('OrganismsHeader.vue', () => {
         stubs: {
           NuxtLink: true,
           AtomsLogo: true,
-          AtomsBreadcrumb: true,
-          AtomsButton: {
+          Breadcrumb: true,
+          Button: {
             template: '<button @click="$emit(\'click\')"><slot /></button>',
           },
           AtomsIcon: true,

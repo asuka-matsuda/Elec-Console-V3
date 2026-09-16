@@ -38,7 +38,7 @@ const emit = defineEmits<{
             placeholder="例: 盤A-回路1"
             @update:model-value="emit('update:circuit', { index: idx, value: String($event ?? '') })"
           />
-          <AtomsButton
+          <Button
             icon="trash-2"
             variant="danger"
             title="除外回路を削除"
@@ -55,13 +55,12 @@ const emit = defineEmits<{
       />
 
       <div>
-        <AtomsButton
-          variant="secondary"
+        <Button
           icon="plus"
           @click="emit('add-circuit')"
         >
           除外回路を追加する
-        </AtomsButton>
+        </Button>
       </div>
     </div>
   </div>

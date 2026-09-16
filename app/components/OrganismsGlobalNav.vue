@@ -59,10 +59,10 @@ onMounted(() => {
       <span class="header-title">
         メニュー
       </span>
-      <AtomsButton
-        variant="ghost"
+      <Button
         icon="x"
         icon-only
+        title="メニューを閉じる"
         @click="closeSidebar"
       />
     </header>

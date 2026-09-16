@@ -60,7 +60,7 @@ export const systemData = [
 /**
  * 指定されたタグに一致する方式のオプションデータ配列を生成します。
  * @param {string} filterTag - 抽出するタグ ('lighting', 'power', 'all' 等)
- * @returns {Array<Object>} FormBuilder互換のオプション配列
+ * @returns {Array<Object>} セレクトボックス用のオプション配列
  */
 export function getPhaseOptions(filterTag = 'all') {
   const filtered

@@ -51,7 +51,7 @@ describe('checkOptimisticLock', () => {
     updatedAt: new Date('2026-09-01T10:00:00.000Z'),
   }
 
-  it('expectedUpdatedAt および expectedVersion が指定されていない場合は例外を投げない（後方互換）', () => {
+  it('expectedUpdatedAt および expectedVersion が指定されていない場合は例外を投げない', () => {
     expect(() => checkOptimisticLock(baseCircuit, null)).not.toThrow()
     expect(() => checkOptimisticLock(baseCircuit, undefined)).not.toThrow()
   })

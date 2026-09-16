@@ -12,7 +12,7 @@ vi.mock('vue-router', () => ({
 
 describe('OrganismsGlobalNav.vue', () => {
   const defaultStubs = {
-    AtomsButton: {
+    Button: {
       template: '<button class="close-btn" @click="$emit(\'click\')"><slot /></button>',
     },
     MoleculesSectionHeader: {

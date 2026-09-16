@@ -18,9 +18,6 @@ export interface VoltageFormState {
   derating: string
   ambientTemp: string
   targetDrop: string
-  // 旧プロパティとの下位互換性（保存済みLocalStorage復元用）
-  cableType?: string
-  fixedSize?: string
 }
 
 export function mapFormToVoltageCalcInputs(
@@ -35,8 +32,8 @@ export function mapFormToVoltageCalcInputs(
     ? 1.0
     : (form.powerFactor ? parseFloat(form.powerFactor) : null)
   const L = form.distance
-  const category = form.category || form.cableType || ''
-  const rawIdx = form.cableIdx || form.fixedSize || ''
+  const category = form.category || ''
+  const rawIdx = form.cableIdx || ''
 
   let selectedSize: number | null = null
   let selectedCores: string | null = null

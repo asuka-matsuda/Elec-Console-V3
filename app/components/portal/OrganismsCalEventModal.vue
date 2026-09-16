@@ -130,7 +130,7 @@ const closeModal = () => {
     </div>
 
     <template #footer>
-      <AtomsButton
+      <Button
         v-if="isEditing"
         variant="danger"
         icon="trash-2"
@@ -138,17 +138,17 @@ const closeModal = () => {
         @click="handleDelete"
       >
         削除
-      </AtomsButton>
-      <AtomsButton variant="secondary" @click="closeModal">
+      </Button>
+      <Button @click="closeModal">
         キャンセル
-      </AtomsButton>
-      <AtomsButton
+      </Button>
+      <Button
         variant="success"
         icon="check"
         @click="handleSave"
       >
         保存
-      </AtomsButton>
+      </Button>
     </template>
   </OrganismsModal>
 </template>

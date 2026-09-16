@@ -62,17 +62,16 @@ const confirmResetImport = async () => {
       />
 
       <div class="flex flex-wrap items-center gap-3 mt-1">
-        <AtomsButton
-          variant="secondary"
+        <Button
           icon="refresh-cw"
           :loading="syncAction === 'merge'"
           :disabled="!selectedFile || isSyncing"
           @click="emit('merge-sync')"
         >
           {{ selectedFile ? '選択ファイルから差分同期' : 'ファイルを選択して差分同期' }}
-        </AtomsButton>
+        </Button>
 
-        <AtomsButton
+        <Button
           variant="danger"
           icon="trash-2"
           :loading="syncAction === 'reset'"
@@ -80,7 +79,7 @@ const confirmResetImport = async () => {
           @click="confirmResetImport"
         >
           全件初期化取込
-        </AtomsButton>
+        </Button>
       </div>
     </div>
 
@@ -96,15 +95,14 @@ const confirmResetImport = async () => {
       </p>
 
       <div>
-        <AtomsButton
-          variant="secondary"
+        <Button
           icon="download"
           :loading="syncAction === 'download'"
           :disabled="isSyncing"
           @click="emit('download-excel')"
         >
           Excel帳票ダウンロード (ブラウザDL)
-        </AtomsButton>
+        </Button>
       </div>
     </div>
 
@@ -133,31 +131,30 @@ const confirmResetImport = async () => {
       :title="syncResultData.title"
     >
       <template #actions>
-        <AtomsButton
-          variant="secondary"
+        <Button
           @click="emit('show-result-detail')"
         >
           詳細を表示
-        </AtomsButton>
+        </Button>
       </template>
 
       <template #value>
-        <div class="flex flex-wrap gap-2 mt-2">
+        <div class="flex flex-wrap items-center gap-2 mt-2">
           <template v-if="syncResultData.type === 'merge'">
-            <AtomsBadge color="var(--color-status-success)">
+            <Badge id="sync:added">
               追加: +{{ syncResultData.createdCount ?? 0 }} 件
-            </AtomsBadge>
-            <AtomsBadge color="var(--color-category-tool)">
+            </Badge>
+            <Badge id="sync:updated">
               変更: {{ syncResultData.updatedCount ?? 0 }} 件
-            </AtomsBadge>
-            <AtomsBadge color="var(--color-text-muted)">
+            </Badge>
+            <span class="sync-total-count">
               全回路数: {{ syncResultData.count }} 件
-            </AtomsBadge>
+            </span>
           </template>
           <template v-else-if="syncResultData.type === 'reset'">
-            <AtomsBadge color="var(--color-status-success)">
+            <Badge id="sync:imported">
               取込総数: {{ syncResultData.count }} 件
-            </AtomsBadge>
+            </Badge>
           </template>
         </div>
       </template>
@@ -185,5 +182,10 @@ const confirmResetImport = async () => {
     color: var(--color-status-danger);
     background: color-mix(in srgb, var(--color-status-danger) 10%, transparent);
   }
+}
+
+.sync-total-count {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
 }
 </style>

@@ -51,7 +51,7 @@ describe('OrganismsUserSettingsDetail.vue', () => {
       },
     })
 
-    const saveBtn = wrapper.findAllComponents({ name: 'AtomsButton' }).find(b => b.text().includes('変更を保存'))
+    const saveBtn = wrapper.findAllComponents({ name: 'Button' }).find(b => b.text().includes('変更を保存'))
 
     expect(saveBtn).toBeDefined()
 

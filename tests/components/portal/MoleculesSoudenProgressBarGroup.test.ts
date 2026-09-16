@@ -72,7 +72,7 @@ describe('PortalMoleculesSoudenProgressBarGroup.vue', () => {
       global: globalOptions,
     })
 
-    const buttons = wrapper.findAllComponents({ name: 'AtomsButton' })
+    const buttons = wrapper.findAllComponents({ name: 'Button' })
 
     expect(buttons.length).toBe(3)
     expect(buttons[0]?.props('to')).toBe('/portal/site-123/phase1?kei_to=幹線')

@@ -15,7 +15,7 @@ describe('ToolOrganismsRackResult (app/components/tool/OrganismsRackResult.vue)'
         </div>
       `,
     },
-    AtomsBadge: {
+    Badge: {
       props: ['color'],
       template: '<span class="badge-stub"><slot /></span>',
     },

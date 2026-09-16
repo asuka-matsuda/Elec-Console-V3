@@ -18,9 +18,9 @@ describe('OrganismsDrawer.vue', () => {
       props: ['title', 'icon', 'variant'],
       template: '<div class="section-header-stub">{{ title }}</div>',
     },
-    AtomsButton: {
-      props: ['variant', 'disabled'],
-      template: '<button :disabled="disabled"><slot /></button>',
+    Button: {
+      props: ['variant', 'disabled', 'loading'],
+      template: '<button :disabled="disabled || loading"><slot /></button>',
     },
     AtomsIcon: {
       props: ['name'],

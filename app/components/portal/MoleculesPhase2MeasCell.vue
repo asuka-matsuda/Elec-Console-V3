@@ -72,12 +72,12 @@ const isNg = () => {
       </span>
       <span v-if="val !== null && val !== undefined" class="meas-unit">MΩ</span>
     </div>
-    <AtomsBadge
+    <Badge
       v-if="status"
-      :color="status === 'OK' ? 'var(--color-status-success)' : 'var(--color-status-danger)'"
+      :id="status === 'OK' ? 'exam:pass' : 'exam:fail'"
     >
       {{ status }}
-    </AtomsBadge>
+    </Badge>
   </div>
 </template>
 

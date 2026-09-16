@@ -38,21 +38,19 @@ onMounted(() => {
           @synced="fetchStats"
         />
 
-        <AtomsButton
+        <Button
+          icon="arrow-left"
           :to="`/portal/${siteId}`"
-          variant="ghost"
         >
-          <AtomsIcon name="arrow-left" />
           ポータルへ戻る
-        </AtomsButton>
+        </Button>
 
-        <AtomsButton
+        <Button
+          icon="book-open"
           :to="`/portal/${siteId}/operation-logs`"
-          variant="ghost"
         >
-          <AtomsIcon name="book-open" />
           操作ログ
-        </AtomsButton>
+        </Button>
       </template>
     </MoleculesSectionHeader>
 
@@ -69,13 +67,12 @@ onMounted(() => {
       description="管理者の「現場設定」よりExcel連携ファイルの保存先設定および回路データの取り込みを行ってください。"
     >
       <template #actions>
-        <AtomsButton
+        <Button
+          icon="settings"
           to="/portal/admin"
-          variant="secondary"
         >
-          <AtomsIcon name="settings" />
           現場設定へ移動
-        </AtomsButton>
+        </Button>
       </template>
     </MoleculesEmptyState>
 

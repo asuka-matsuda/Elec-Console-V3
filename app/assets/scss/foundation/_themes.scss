@@ -57,14 +57,10 @@
 
   // ライトモード用 ボタン & コントロール セマンティックトークン
   --color-text-on-emphasis: hsl(0deg 0% 100%);
-  --btn-primary-bg-hover: color-mix(in srgb, var(--theme-accent) 88%, black);
-  --btn-primary-bg-active: color-mix(in srgb, var(--theme-accent) 76%, black);
-  --btn-secondary-bg: hsl(210deg 29% 97%);
-  --btn-secondary-bg-hover: hsl(210deg 29% 92%);
-  --btn-secondary-border: hsl(210deg 18% 85%);
-  --btn-secondary-border-hover: hsl(213deg 13% 14%);
-  --btn-danger-bg-hover: color-mix(in srgb, var(--color-status-danger) 85%, black);
-  --btn-danger-bg-active: color-mix(in srgb, var(--color-status-danger) 75%, black);
+  --btn-default-bg: hsl(210deg 29% 97%);
+  --btn-default-bg-hover: hsl(210deg 29% 92%);
+  --btn-default-border: hsl(210deg 18% 85%);
+  --btn-default-border-hover: hsl(213deg 13% 14%);
   --control-pill-bg: color-mix(in srgb, var(--theme-accent) 12%, hsl(0deg 0% 100%));
   --control-pill-border: color-mix(in srgb, var(--theme-accent) 40%, transparent);
 

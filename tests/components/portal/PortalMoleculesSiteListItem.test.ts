@@ -57,7 +57,7 @@ describe('MoleculesSiteListItem.vue', () => {
       },
     })
 
-    const button = wrapper.findComponent({ name: 'AtomsButton' })
+    const button = wrapper.findComponent({ name: 'Button' })
 
     await button.trigger('click')
 

@@ -201,32 +201,34 @@
   --color-trade-plumbing: hsl(198deg 85% 48%); // 衛生: 水道ブルー / シアン (給排水衛生設備・水)
   --color-trade-trivia: hsl(265deg 70% 65%); // 雑学: パープル / ナレッジ (知見コラム)
 
-  // ボタン専用セマンティックトークン (GitHub Primer Solid Hierarchy)
-  --btn-primary-bg: var(--theme-accent);
-  --btn-primary-bg-hover: color-mix(in srgb, var(--theme-accent) 88%, white);
-  --btn-primary-bg-active: color-mix(in srgb, var(--theme-accent) 76%, black);
-  --btn-primary-border: var(--theme-accent);
-  --btn-primary-border-hover: var(--btn-primary-bg-hover);
-  --btn-primary-text: var(--color-text-on-emphasis);
+  // ユーザーロール・権限セマンティックトークン (User Roles & Authority)
+  --color-role-admin: hsl(263deg 85% 68%); // 管理者: パープル（特権・セキュリティ権限）
+  --color-role-worker: hsl(152deg 68% 45%); // 作業員: エメラルド（現場・作業担当）
+  --color-role-viewer: hsl(var(--color-text-muted-base)); // 閲覧者: ミュートグレー（読み取り専用）
 
-  --btn-secondary-bg: var(--surface-bg-elevated);
-  --btn-secondary-bg-hover: var(--color-bg-hover);
-  --btn-secondary-bg-active: color-mix(in srgb, var(--color-overlay) 10%, transparent);
-  --btn-secondary-border: var(--color-border);
-  --btn-secondary-border-hover: var(--color-text-muted);
-  --btn-secondary-text: var(--color-text-main);
+  // ボタン専用セマンティックトークン (Default / Danger / Success 3体系)
+  --btn-default-bg: var(--surface-bg-elevated);
+  --btn-default-bg-hover: var(--color-bg-hover);
+  --btn-default-bg-active: color-mix(in srgb, var(--color-overlay) 10%, transparent);
+  --btn-default-border: var(--color-border);
+  --btn-default-border-hover: var(--color-text-muted);
+  --btn-default-text: var(--color-text-main);
 
-  --btn-danger-bg: var(--color-status-danger);
-  --btn-danger-bg-hover: color-mix(in srgb, var(--color-status-danger) 85%, white);
-  --btn-danger-bg-active: color-mix(in srgb, var(--color-status-danger) 75%, black);
-  --btn-danger-border: var(--color-status-danger);
-  --btn-danger-text: var(--color-text-on-emphasis);
+  --btn-danger-bg: var(--surface-bg-elevated);
+  --btn-danger-bg-hover: color-mix(in srgb, var(--color-status-danger) 50%, var(--surface-bg-elevated));
+  --btn-danger-bg-active: color-mix(in srgb, var(--color-status-danger) 65%, var(--surface-bg-elevated));
+  --btn-danger-border: var(--color-border);
+  --btn-danger-border-hover: var(--color-status-danger);
+  --btn-danger-text: var(--color-status-danger);
+  --btn-danger-text-hover: var(--color-status-danger);
 
-  --btn-success-bg: var(--color-status-success);
-  --btn-success-bg-hover: color-mix(in srgb, var(--color-status-success) 85%, white);
-  --btn-success-bg-active: color-mix(in srgb, var(--color-status-success) 75%, black);
-  --btn-success-border: var(--color-status-success);
-  --btn-success-text: var(--color-text-on-emphasis);
+  --btn-success-bg: var(--surface-bg-elevated);
+  --btn-success-bg-hover: color-mix(in srgb, var(--color-status-success) 50%, var(--surface-bg-elevated));
+  --btn-success-bg-active: color-mix(in srgb, var(--color-status-success) 65%, var(--surface-bg-elevated));
+  --btn-success-border: var(--color-border);
+  --btn-success-border-hover: var(--color-status-success);
+  --btn-success-text: var(--color-status-success);
+  --btn-success-text-hover: var(--color-status-success);
 
   // コントロール・選択ピル用トークン (Tabs, Radio, Checkbox)
   --control-pill-bg: color-mix(in srgb, var(--theme-accent) 15%, var(--surface-bg-elevated));

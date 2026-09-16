@@ -266,24 +266,21 @@ const confirmResetPassword = async (row: User) => {
       </div>
 
       <template #footer>
-        <AtomsButton
-          variant="secondary"
+        <Button
           @click="handleCopyPassword"
         >
           PWをコピー
-        </AtomsButton>
-        <AtomsButton
-          variant="secondary"
+        </Button>
+        <Button
           @click="handlePrint"
         >
           印刷する
-        </AtomsButton>
-        <AtomsButton
-          variant="secondary"
+        </Button>
+        <Button
           @click="isCredentialModalOpen = false"
         >
           完了
-        </AtomsButton>
+        </Button>
       </template>
     </OrganismsModal>
   </AtomsPanel>

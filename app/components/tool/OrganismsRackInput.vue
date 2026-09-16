@@ -191,13 +191,12 @@ const handleRemoveCable = (id: string) => {
     <!-- ケーブル条件セクション -->
     <section class="flex flex-col gap-[var(--space-item-gap)]">
       <div class="flex items-center justify-end py-[var(--space-1)]">
-        <AtomsButton
-          variant="secondary"
+        <Button
+          icon="plus"
           @click="handleAddCable"
         >
-          <AtomsIcon name="plus" />
-          <span>{{ inputs.mode === 'strong' ? '強電ケーブルを追加' : '弱電ケーブルを追加' }}</span>
-        </AtomsButton>
+          {{ inputs.mode === 'strong' ? '強電ケーブルを追加' : '弱電ケーブルを追加' }}
+        </Button>
       </div>
 
       <!-- ケーブルテーブル（強電/弱電 共通テンプレート） -->
@@ -236,15 +235,13 @@ const handleRemoveCable = (id: string) => {
 
         <template #cell-actions="{ row }">
           <div class="flex justify-center items-center">
-            <AtomsButton
+            <Button
               variant="danger"
-              icon-only
+              icon="trash-2"
               :disabled="currentCablesUI.length <= 1"
               title="削除"
               @click="handleRemoveCable(row.id)"
-            >
-              <AtomsIcon name="trash-2" />
-            </AtomsButton>
+            />
           </div>
         </template>
       </MoleculesTable>

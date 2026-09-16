@@ -3,13 +3,14 @@ import { computed, ref, watch } from 'vue'
 
 import { useState } from '#app'
 import { STATE_KEYS } from '~/constants/storageKeys'
+import type { ButtonVariant } from '~/types/components'
 
 export interface ConfirmOptions {
   title?: string
   message?: string
   confirmText?: string
   cancelText?: string
-  intent?: 'primary' | 'secondary' | 'danger' | 'success'
+  intent?: ButtonVariant
   onConfirm?: () => void | Promise<void>
 }
 
@@ -24,7 +25,7 @@ const fallbackOptions = ref<ConfirmOptions>({
   message: 'この操作を実行しますか？',
   confirmText: '確定する',
   cancelText: 'キャンセル',
-  intent: 'primary',
+  intent: 'success',
 })
 
 const getSafeState = <T>(key: string, fallbackRef: Ref<T>, init: () => T): Ref<T> => {
@@ -52,7 +53,7 @@ export const useModal = (
       message: 'この操作を実行しますか？',
       confirmText: '確定する',
       cancelText: 'キャンセル',
-      intent: 'primary',
+      intent: 'success',
     }),
   )
 
@@ -74,7 +75,7 @@ export const useModal = (
         customOptions.confirmText || defaultOptions.confirmText || '確定する',
       cancelText:
         customOptions.cancelText || defaultOptions.cancelText || 'キャンセル',
-      intent: customOptions.intent || defaultOptions.intent || 'primary',
+      intent: customOptions.intent || defaultOptions.intent || 'success',
       onConfirm: customOptions.onConfirm || defaultOptions.onConfirm,
     }
     isOpen.value = true
@@ -120,7 +121,7 @@ export const useModal = (
     message: computed(() => currentOptions.value.message || 'この操作を実行しますか？'),
     confirmText: computed(() => currentOptions.value.confirmText || '確定する'),
     cancelText: computed(() => currentOptions.value.cancelText || 'キャンセル'),
-    intent: computed(() => currentOptions.value.intent || 'primary'),
+    intent: computed(() => currentOptions.value.intent || 'success'),
     askConfirm,
     handleConfirm,
     handleCancel,

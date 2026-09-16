@@ -62,20 +62,19 @@ const phases = computed<PhaseItem[]>(() => [
       <div class="progress-row-header flex items-center justify-between">
         <div class="flex items-center gap-2">
           <span class="phase-title">{{ item.title }}</span>
-          <AtomsButton
+          <Button
             v-if="siteId && keiTo"
             :to="`/portal/${siteId}/phase${item.phase}?kei_to=${keiTo}`"
-            variant="secondary"
           >
             試験入力
-          </AtomsButton>
+          </Button>
         </div>
         <div class="phase-stat flex items-center gap-2">
           <span><strong>{{ item.completed }}</strong> / {{ total }}</span>
           <span class="stat-pct">({{ item.pct }}%)</span>
-          <AtomsBadge v-if="excluded && excluded > 0" color="var(--color-text-muted)">
+          <Badge v-if="excluded && excluded > 0" id="exam:excluded">
             除外: {{ excluded }}
-          </AtomsBadge>
+          </Badge>
         </div>
       </div>
       <PortalAtomsProgressBar :value="item.completed" :max="total" :color="item.color" />

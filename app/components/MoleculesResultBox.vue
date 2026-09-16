@@ -6,7 +6,7 @@
  */
 import { computed } from 'vue'
 
-import type { ResultBoxStatus } from '~/types/components'
+import type { BadgePresetId, ResultBoxStatus } from '~/types/components'
 
 interface Props {
   title?: string
@@ -34,11 +34,11 @@ const resolvedStatus = computed(() => {
   return raw || 'neutral'
 })
 
-const badgeColor = computed(() => {
-  if (resolvedStatus.value === 'danger') return 'var(--color-status-danger)'
-  if (resolvedStatus.value === 'warning') return 'var(--color-status-warning)'
+const badgeId = computed<BadgePresetId>(() => {
+  if (resolvedStatus.value === 'danger') return 'status:danger'
+  if (resolvedStatus.value === 'warning') return 'status:warning'
 
-  return 'var(--color-text-muted)'
+  return 'status:neutral'
 })
 </script>
 
@@ -54,12 +54,12 @@ const badgeColor = computed(() => {
         <span>{{ title }}</span>
       </slot>
       <slot name="badge">
-        <AtomsBadge
+        <Badge
           v-if="badge && (resolvedStatus === 'warning' || resolvedStatus === 'danger')"
-          :color="badgeColor"
+          :id="badgeId"
         >
           {{ badge }}
-        </AtomsBadge>
+        </Badge>
       </slot>
     </header>
 

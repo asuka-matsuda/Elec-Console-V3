@@ -7,6 +7,7 @@ import { computed, ref } from 'vue'
 
 import { useDbFilter } from '~/composables/useDbFilter'
 import { glossaryData } from '~/constants/data/glossaryData'
+import type { BadgePresetId } from '~/types/components'
 import {
   collectAvailableKanaRows,
   filterByKana,
@@ -38,6 +39,14 @@ const filteredGlossary = computed(() => {
 const availableRows = computed(() =>
   collectAvailableKanaRows(baseFilteredGlossary.value, item => item.kana),
 )
+
+const categoryPresetMap: Record<string, BadgePresetId> = {
+  電気: 'trade:electric',
+  建築: 'trade:architecture',
+  空調・換気: 'trade:hvac',
+  衛生: 'trade:plumbing',
+  雑学: 'trade:trivia',
+}
 
 const categoryColorMap: Record<string, string> = {
   電気: 'var(--color-trade-electric)',
@@ -82,9 +91,12 @@ const categoryColorMap: Record<string, string> = {
                 {{ item.term }}
               </h2>
             </div>
-            <AtomsBadge :color="categoryColorMap[item.category]">
+            <Badge
+              v-if="categoryPresetMap[item.category]"
+              :id="categoryPresetMap[item.category]"
+            >
               {{ item.category }}
-            </AtomsBadge>
+            </Badge>
           </header>
 
           <div class="flex flex-col gap-1">

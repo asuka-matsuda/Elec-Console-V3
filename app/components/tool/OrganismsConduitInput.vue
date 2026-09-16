@@ -106,13 +106,12 @@ const currentCablesUI = computed(() => {
     <!-- ケーブル条件セクション -->
     <section class="flex flex-col gap-[var(--space-item-gap)]">
       <div class="flex items-center justify-end py-[var(--space-1)]">
-        <AtomsButton
-          variant="secondary"
+        <Button
+          icon="plus"
           @click="emit('add-cable')"
         >
-          <AtomsIcon name="plus" />
-          <span>ケーブルを追加</span>
-        </AtomsButton>
+          ケーブルを追加
+        </Button>
       </div>
 
       <MoleculesTable
@@ -150,15 +149,13 @@ const currentCablesUI = computed(() => {
 
         <template #cell-actions="{ row }">
           <div class="flex justify-center items-center">
-            <AtomsButton
+            <Button
               variant="danger"
-              icon-only
+              icon="trash-2"
               :disabled="inputs.inputCables.length <= 1"
               title="削除"
               @click="emit('remove-cable', row.id)"
-            >
-              <AtomsIcon name="trash-2" />
-            </AtomsButton>
+            />
           </div>
         </template>
       </MoleculesTable>

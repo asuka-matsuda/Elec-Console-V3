@@ -56,13 +56,13 @@ const emit = defineEmits<{
     <MoleculesFormGroup label="アサイン済ワーカー">
       <div class="flex flex-wrap items-center gap-2">
         <template v-if="workerNames.length > 0">
-          <AtomsBadge
+          <Badge
             v-for="(name, idx) in workerNames"
+            id="site:worker-tag"
             :key="idx"
-            color="var(--color-category-main)"
           >
             {{ name }}
-          </AtomsBadge>
+          </Badge>
         </template>
         <MoleculesEmptyState
           v-else

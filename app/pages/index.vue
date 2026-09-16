@@ -127,13 +127,13 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
             empty-text="現在更新履歴はありません"
           >
             <template #badge="{ item }">
-              <AtomsBadge
+              <Badge
                 v-if="item.version"
-                :color="item.status === 'success' ? 'var(--color-status-success)' : 'var(--color-text-muted)'"
+                :id="item.status === 'success' ? 'version:release' : 'version:muted'"
                 class="shrink-0"
               >
                 {{ item.version }}
-              </AtomsBadge>
+              </Badge>
             </template>
           </MoleculesInfoCard>
         </section>

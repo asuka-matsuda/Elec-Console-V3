@@ -57,7 +57,7 @@ describe('OrganismsSiteListMaster.vue', () => {
       },
     })
 
-    const createBtn = wrapper.findComponent({ name: 'AtomsButton' })
+    const createBtn = wrapper.findComponent({ name: 'Button' })
 
     await createBtn.trigger('click')
 

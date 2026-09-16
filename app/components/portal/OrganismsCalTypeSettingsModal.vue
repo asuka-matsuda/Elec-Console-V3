@@ -54,7 +54,7 @@ const {
               />
             </div>
 
-            <AtomsButton
+            <Button
               v-if="types.length > 1"
               variant="danger"
               icon="trash-2"
@@ -79,23 +79,22 @@ const {
       </ul>
 
       <div class="flex items-center">
-        <AtomsButton
-          variant="secondary"
+        <Button
           icon="plus"
           @click="handleAddType"
         >
           種別を追加
-        </AtomsButton>
+        </Button>
       </div>
     </div>
 
     <template #footer>
-      <AtomsButton variant="secondary" @click="isOpen = false">
+      <Button @click="isOpen = false">
         キャンセル
-      </AtomsButton>
-      <AtomsButton variant="success" icon="check" @click="handleSave">
+      </Button>
+      <Button variant="success" icon="check" @click="handleSave">
         設定を保存
-      </AtomsButton>
+      </Button>
     </template>
   </OrganismsModal>
 </template>

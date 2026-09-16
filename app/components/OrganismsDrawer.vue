@@ -6,7 +6,7 @@
  */
 import { onMounted, ref, watch } from 'vue'
 
-import type { AtomsButtonVariant } from '~/types/components'
+import type { ButtonVariant } from '~/types/components'
 
 const isOpen = defineModel<boolean>({ default: false })
 
@@ -26,7 +26,7 @@ const props = withDefaults(
     submitFn?: () => Promise<void>
     submitText?: string
     cancelText?: string
-    submitVariant?: AtomsButtonVariant
+    submitVariant?: ButtonVariant
   }>(),
   {
     variant: 'management',
@@ -121,13 +121,12 @@ onMounted(() => {
             class="flex-1 min-w-0"
           />
         </slot>
-        <AtomsButton
-          variant="secondary"
+        <Button
+          icon="x"
+          title="閉じる"
           class="shrink-0 ml-2"
           @click="close"
-        >
-          <AtomsIcon name="x" />
-        </AtomsButton>
+        />
       </header>
 
       <!-- メインコンテンツ -->
@@ -145,20 +144,19 @@ onMounted(() => {
       </footer>
 
       <footer v-else-if="submitFn" class="drawer-footer flex items-center justify-end gap-2 p-panel-pad shrink-0">
-        <AtomsButton
-          variant="secondary"
+        <Button
           :disabled="isSubmitting"
           @click="close"
         >
           {{ cancelText }}
-        </AtomsButton>
-        <AtomsButton
+        </Button>
+        <Button
           :variant="submitVariant || (variant === 'danger' ? 'danger' : 'success')"
-          :disabled="isSubmitting"
+          :loading="isSubmitting"
           @click="handleSubmit"
         >
           {{ isSubmitting ? "処理中..." : submitText }}
-        </AtomsButton>
+        </Button>
       </footer>
     </div>
   </dialog>

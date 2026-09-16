@@ -86,13 +86,13 @@ const isResultDialogOpen = ref(false)
         </template>
 
         <template #actions>
-          <AtomsButton
+          <Button
             variant="success"
             icon="save"
             @click="emit('save')"
           >
             変更を保存
-          </AtomsButton>
+          </Button>
         </template>
       </MoleculesSectionHeader>
 
@@ -159,16 +159,16 @@ const isResultDialogOpen = ref(false)
             {{ syncResultData.title }}が正常に完了しました。
           </div>
 
-          <div class="flex flex-wrap gap-2">
-            <AtomsBadge v-if="syncResultData.createdCount !== undefined" color="var(--color-status-success)">
+          <div class="flex flex-wrap items-center gap-2">
+            <Badge v-if="syncResultData.createdCount !== undefined" id="sync:added">
               追加: +{{ syncResultData.createdCount }} 件
-            </AtomsBadge>
-            <AtomsBadge v-if="syncResultData.updatedCount !== undefined" color="var(--color-category-tool)">
+            </Badge>
+            <Badge v-if="syncResultData.updatedCount !== undefined" id="sync:updated">
               基本情報変更: {{ syncResultData.updatedCount }} 件
-            </AtomsBadge>
-            <AtomsBadge color="var(--color-text-muted)">
+            </Badge>
+            <span class="sync-total-count">
               全回路総数: {{ syncResultData.count }} 件
-            </AtomsBadge>
+            </span>
           </div>
         </div>
       </OrganismsModal>
@@ -185,6 +185,11 @@ const isResultDialogOpen = ref(false)
 
 .result-msg {
   font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.sync-total-count {
+  font-size: var(--font-size-xs);
   color: var(--color-text-muted);
 }
 </style>

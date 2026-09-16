@@ -85,22 +85,21 @@ const shubetsuTabOptions = computed(() => {
         @synced="fetchCircuits"
       />
 
-      <AtomsButton
+      <Button
         variant="success"
+        icon="check-check"
         :loading="isBatchLoading"
         @click="batchConfirmPhase3"
       >
-        <AtomsIcon name="check-check" />
         一括標準値確定
-      </AtomsButton>
+      </Button>
 
-      <AtomsButton
+      <Button
+        icon="arrow-left"
         :to="`/portal/${siteId}/souden`"
-        variant="ghost"
       >
-        <AtomsIcon name="arrow-left" />
         ダッシュボードへ戻る
-      </AtomsButton>
+      </Button>
     </template>
 
     <PortalOrganismsPhase3Table

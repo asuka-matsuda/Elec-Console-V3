@@ -108,7 +108,7 @@ export async function atomicUpdateCircuit(
     })
   }
 
-  // 2. expectedVersion が指定されていない場合は従来の日時検証と更新（後方互換対応）
+  // 2. expectedVersion が指定されていない場合は更新日時 (expectedUpdatedAt) による検証と更新
   const circuit = await prisma.circuit.findFirst({
     where: { id: circuitId, siteId },
   })

@@ -1,7 +1,7 @@
 ﻿import type { ComputedRef, Ref } from 'vue'
 import { computed, getCurrentInstance, onUnmounted, ref, toValue } from 'vue'
 
-import type { AtomsButtonVariant } from '~/types/components'
+import type { ButtonVariant } from '~/types/components'
 
 export type AsyncActionState = 'idle' | 'saving' | 'success' | 'error'
 
@@ -13,9 +13,9 @@ export interface UseAsyncActionFeedbackOptions {
     | boolean
   label?: Ref<string | undefined> | ComputedRef<string | undefined> | string
   defaultVariant?:
-    | Ref<AtomsButtonVariant | undefined>
-    | ComputedRef<AtomsButtonVariant | undefined>
-    | AtomsButtonVariant
+    | Ref<ButtonVariant | undefined>
+    | ComputedRef<ButtonVariant | undefined>
+    | ButtonVariant
   successDuration?: number
   errorDuration?: number
 }
@@ -51,7 +51,7 @@ export function useAsyncActionFeedback(options: UseAsyncActionFeedbackOptions) {
     })
   }
 
-  const buttonVariant = computed<AtomsButtonVariant>(() => {
+  const buttonVariant = computed<ButtonVariant>(() => {
     if (state.value === 'error') return 'danger'
     if (state.value === 'success') return 'success'
 

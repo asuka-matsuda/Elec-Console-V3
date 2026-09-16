@@ -8,7 +8,6 @@ export interface RackCableInput {
 
 export interface RackCalcInputs {
   mode: 'strong' | 'weak'
-  layers?: number // 互換性のため残すが、tier1/tier2同時算出を行う
   rackHeight: number
   maxDepth: number
   cables: RackCableInput[]
@@ -45,17 +44,6 @@ export interface RackCalcResult {
   cableSpacing: number
   sideMargin: number
   totalCablesCount: number
-  // 既存コード互換用フィールド（基本はtier1平置きの値を参照）
-  wStrong: number
-  wWeak: number
-  wSep: number
-  totalWidth: number
-  selectedSize: number | null
-  isOverflow: boolean
-  maxCableStackHeight: number
-  maxStackDetailStr: string
-  sumStrong: number
-  sumWeak: number
 }
 
 /**
@@ -152,27 +140,6 @@ export function getStackHeightFromDiams(
 }
 
 /**
- * ケーブルリストの総必要幅（1段積み換算）を算出するための基準和を計算する（後方互換性）
- */
-export function calculateSectionSumFromCables(
-  cables: RackCableInput[],
-  cableSpacing = 10,
-): number {
-  let sum = 0
-
-  for (const cable of cables) {
-    const d = cable.d ?? 0
-    const n = cable.n ?? 0
-
-    if (d > 0 && n > 0) {
-      sum += (d + cableSpacing) * n
-    }
-  }
-
-  return sum
-}
-
-/**
  * ケーブルラックサイズ選定のメイン計算処理（1段・2段同時算出）
  */
 export function calculateRackSize(
@@ -253,10 +220,6 @@ export function calculateRackSize(
     cablesCount: totalCablesCount,
   }
 
-  // 後方互換フィールド
-  const wStrong = isStrong ? tier1WMain : (otherWidth || 0)
-  const wWeak = isStrong ? (otherWidth || 0) : tier1WMain
-
   return {
     error: tier1Result.isSizeOver && tier2Result.isSizeOver,
     mode,
@@ -268,16 +231,6 @@ export function calculateRackSize(
     cableSpacing,
     sideMargin,
     totalCablesCount,
-    wStrong,
-    wWeak,
-    wSep: 0,
-    totalWidth: tier1TotalWidth,
-    selectedSize: tier1Selected,
-    isOverflow: tier1Overflow,
-    maxCableStackHeight: tier1Stack.height,
-    maxStackDetailStr: tier1Stack.detailStr,
-    sumStrong: isStrong ? tier1CablesWidth : 0,
-    sumWeak: isStrong ? 0 : tier1CablesWidth,
   }
 }
 

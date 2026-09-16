@@ -9,10 +9,10 @@ describe('ToolOrganismsHistoryCard.vue', () => {
     AtomsPanel: {
       template: '<article class="panel-stub"><slot /></article>',
     },
-    AtomsBadge: {
+    Badge: {
       template: '<span class="badge-stub"><slot /></span>',
     },
-    AtomsButton: {
+    Button: {
       props: ['variant', 'iconOnly'],
       template: '<button class="button-stub"><slot /></button>',
     },

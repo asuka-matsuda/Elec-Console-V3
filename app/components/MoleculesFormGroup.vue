@@ -36,12 +36,12 @@ withDefaults(defineProps<Props>(), {
         <span class="shrink-0 label-bar" />
         <slot name="label">{{ label }}</slot>
       </span>
-      <AtomsBadge
+      <Badge
         v-if="required"
-        color="var(--color-status-danger)"
+        id="form:required"
       >
         {{ requiredLabel }}
-      </AtomsBadge>
+      </Badge>
       <MoleculesHelpTip
         v-if="helpId || helpTip"
         :help-id="helpId"

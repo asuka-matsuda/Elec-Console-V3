@@ -2,8 +2,26 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { useAdminSites } from '~/composables/admin/useAdminSites'
-import { menuData } from '~/constants/data/menuData'
+import { menuData, type MenuItem, type MenuSection } from '~/constants/data/menuData'
 import type { BreadcrumbItem } from '~/types/components'
+
+export type BreadcrumbAccent = NonNullable<MenuSection['accent']>
+
+export interface BreadcrumbsData {
+  items: BreadcrumbItem[]
+  accent: BreadcrumbAccent
+}
+
+function createMenuBreadcrumbs(section: MenuSection, item: MenuItem): BreadcrumbsData {
+  const crumbs: BreadcrumbItem[] = []
+
+  if (section.heading) {
+    crumbs.push({ text: section.heading })
+  }
+  crumbs.push({ text: item.text })
+
+  return { items: crumbs, accent: section.accent || 'main' }
+}
 
 export function useBreadcrumbs() {
   const route = useRoute()
@@ -13,7 +31,7 @@ export function useBreadcrumbs() {
     fetchSites()
   }
 
-  const data = computed<{ items: BreadcrumbItem[], accent: string }>(() => {
+  const data = computed<BreadcrumbsData>(() => {
     // ホーム画面ではパンくずを表示しない
     if (route.path === '/') {
       return { items: [], accent: 'main' }
@@ -30,11 +48,11 @@ export function useBreadcrumbs() {
         const site = sites.value.find(s => s.id === siteId)
         const siteName = site?.name || siteId
 
-        // カテゴリ: 現場管理（非リンク）
+        // カテゴリ: 現場管理
         const categoryItem: BreadcrumbItem = { text: '現場管理' }
 
         // 送電試験ダッシュボード および 各フェーズ (Phase 1〜3)
-        // 表示: 現場管理 » 現場名（リンク） » 送電試験（現在地・非リンク）
+        // 表示: 現場管理 » 現場名 » 送電試験
         if (
           subPath === 'souden'
           || subPath.startsWith('phase')
@@ -42,7 +60,7 @@ export function useBreadcrumbs() {
           return {
             items: [
               categoryItem,
-              { text: siteName, href: `/portal/${siteId}` },
+              { text: siteName },
               { text: '送電試験' },
             ],
             accent: 'management',
@@ -54,8 +72,8 @@ export function useBreadcrumbs() {
           return {
             items: [
               categoryItem,
-              { text: siteName, href: `/portal/${siteId}` },
-              { text: '送電試験', href: `/portal/${siteId}/souden` },
+              { text: siteName },
+              { text: '送電試験' },
               { text: '操作ログ' },
             ],
             accent: 'management',
@@ -63,7 +81,7 @@ export function useBreadcrumbs() {
         }
 
         // 現場トップ (/portal/:siteId)
-        // 表示: 現場管理 » 現場名（現在地・非リンク）
+        // 表示: 現場管理 » 現場名
         if (!subPath) {
           return {
             items: [
@@ -78,7 +96,7 @@ export function useBreadcrumbs() {
         return {
           items: [
             categoryItem,
-            { text: siteName, href: `/portal/${siteId}` },
+            { text: siteName },
             { text: subPath },
           ],
           accent: 'management',
@@ -92,14 +110,7 @@ export function useBreadcrumbs() {
 
       for (const item of section.items) {
         if (route.path === item.href) {
-          const crumbs: BreadcrumbItem[] = []
-
-          if (section.heading) {
-            crumbs.push({ text: section.heading })
-          }
-          crumbs.push({ text: item.text })
-
-          return { items: crumbs, accent: section.accent || 'main' }
+          return createMenuBreadcrumbs(section, item)
         }
       }
     }
@@ -124,28 +135,16 @@ export function useBreadcrumbs() {
         }
 
         if (isMatch) {
-          const crumbs: BreadcrumbItem[] = []
-
-          if (section.heading) {
-            crumbs.push({ text: section.heading })
-          }
-          crumbs.push({ text: item.text })
-
-          return { items: crumbs, accent: section.accent || 'main' }
+          return createMenuBreadcrumbs(section, item)
         }
       }
     }
 
     // 4. フォールバック (menuDataに定義されていない動的/未知のURL)
     const segments = route.path.split('/').filter(Boolean)
-    const dynamicCrumbs: BreadcrumbItem[] = segments.map((seg, idx) => {
-      const isLast = idx === segments.length - 1
-
-      return {
-        text: seg.charAt(0).toUpperCase() + seg.slice(1),
-        href: isLast ? undefined : '/' + segments.slice(0, idx + 1).join('/'),
-      }
-    })
+    const dynamicCrumbs: BreadcrumbItem[] = segments.map(seg => ({
+      text: seg.charAt(0).toUpperCase() + seg.slice(1),
+    }))
 
     return { items: dynamicCrumbs, accent: 'main' }
   })

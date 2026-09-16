@@ -58,10 +58,10 @@ defineProps<{
       />
     </div>
 
-    <div class="w-full md:w-auto md:ml-auto">
-      <AtomsBadge color="var(--theme-accent)">
-        取得件数: {{ logCount }} 件
-      </AtomsBadge>
+    <div class="flex items-center w-full md:w-auto md:ml-auto">
+      <span class="logs-count">
+        取得件数: <strong class="logs-count__num">{{ logCount }}</strong> 件
+      </span>
     </div>
   </AtomsPanel>
 </template>
@@ -72,5 +72,17 @@ defineProps<{
   font-weight: var(--font-weight-bold);
   color: var(--color-text-secondary);
   white-space: nowrap;
+}
+
+.logs-count {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+
+  &__num {
+    font-family: var(--font-mono);
+    font-weight: var(--font-weight-bold);
+    color: var(--theme-accent);
+  }
 }
 </style>

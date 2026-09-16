@@ -38,7 +38,7 @@ describe('ToolOrganismsConduitInput (app/components/tool/OrganismsConduitInput.v
       props: ['name'],
       template: '<span class="icon-stub">{{ name }}</span>',
     },
-    AtomsButton: {
+    Button: {
       props: ['disabled'],
       template: '<button :disabled="disabled"><slot /></button>',
     },
