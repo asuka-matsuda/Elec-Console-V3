@@ -33,7 +33,7 @@ function isKanaDisabled(row: string) {
 
 <template>
   <div class="grid grid-cols-[repeat(auto-fill,minmax(80px,1fr))] gap-1">
-    <AtomsCheckbox
+    <Checkbox
       v-for="kana in kanaOptions"
       :key="kana.value"
       v-model="selectedKanas"
@@ -41,6 +41,6 @@ function isKanaDisabled(row: string) {
       :disabled="isKanaDisabled(kana.value)"
     >
       {{ kana.label }}
-    </AtomsCheckbox>
+    </Checkbox>
   </div>
 </template>

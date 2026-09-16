@@ -38,14 +38,12 @@ const pct = computed(() => {
 .bar-track {
   --bar-color: var(--color-status-success);
 
-  border-radius: var(--radius-full);
   background-color: var(--color-track-bg);
 }
 
 .bar-fill {
   --glow-color: var(--bar-color);
 
-  border-radius: var(--radius-full);
   background: linear-gradient(
     90deg,
     var(--bar-color),

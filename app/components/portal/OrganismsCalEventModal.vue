@@ -126,7 +126,7 @@ const closeModal = () => {
         </MoleculesFormGroup>
       </div>
 
-      <AtomsCheckbox v-model="form.allDay" label="終日イベント" />
+      <Checkbox v-model="form.allDay" label="終日イベント" />
     </div>
 
     <template #footer>

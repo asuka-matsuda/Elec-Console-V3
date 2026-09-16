@@ -237,13 +237,10 @@
   --control-checked-bg: var(--theme-accent);
   --control-checked-icon: var(--color-text-on-emphasis);
 
-  // ボーダー & Radius
+  // ボーダー & Radius（真円以外は完全撲滅・直角統一規約）
   --border-width-base: 1px;
   --border-width-thick: 2px;
-  --radius-sm: 6px; // GitHub rounded-md standard (6px)
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-full: 9999px;
+  --radius-circle: 50%; // 正方形要素（アバター・ステータスインジケーター）専用
 
   // エフェクト & インタラクション背景
   --color-bg-hover: color-mix(in srgb, var(--color-overlay) 6%, transparent);

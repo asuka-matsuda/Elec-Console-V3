@@ -42,7 +42,6 @@ export const printUserCredential = (user: {
         }
         .box {
           border: 2px solid #333;
-          border-radius: 8px;
           padding: 30px;
           margin: 0 auto 30px auto;
           max-width: 500px;

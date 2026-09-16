@@ -160,7 +160,7 @@ onBeforeUnmount(() => {
       <div
         v-if="isOpen && (displayText || $slots.default)"
         ref="panelRef"
-        class="helptip-panel fixed z-[9999] w-[200px] px-2.5 py-2 whitespace-normal pointer-events-none sm:pointer-events-auto"
+        class="helptip-panel fixed z-[9999] w-[200px] px-2.5 py-2 whitespace-normal"
         :class="{ '-translate-y-full': position.isTopPlacement }"
         :style="{
           top: `${position.top}px`,
@@ -204,7 +204,6 @@ onBeforeUnmount(() => {
 
   width: 1.1em;
   height: 1.1em;
-  border-radius: var(--radius-full);
 
   color: var(--color-text-muted);
 
@@ -221,8 +220,9 @@ onBeforeUnmount(() => {
 }
 
 .helptip-panel {
+  pointer-events: none;
+
   border: var(--border-width-base) solid var(--color-border);
-  border-radius: var(--radius-sm);
 
   font-size: var(--font-size-2xs);
   line-height: 1.4;
@@ -232,6 +232,10 @@ onBeforeUnmount(() => {
   background-color: color-mix(in srgb, var(--color-main-bg) 92%, black);
   backdrop-filter: blur(var(--blur-sm));
   box-shadow: var(--shadow-elevation-md);
+
+  @media (width >= 640px) {
+    pointer-events: auto;
+  }
 }
 
 .arrow {

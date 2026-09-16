@@ -24,11 +24,8 @@ const {
   --disclaimer-color: var(--color-status-warning);
 
   border: var(--border-width-base) solid color-mix(in srgb, var(--disclaimer-color) 20%, transparent);
-  border-radius: var(--radius-sm);
-
   color: var(--disclaimer-color);
   letter-spacing: var(--tracking-normal);
-
   background-color: color-mix(
     in srgb,
     var(--disclaimer-color) 6%,

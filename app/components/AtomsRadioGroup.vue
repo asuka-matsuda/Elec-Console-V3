@@ -48,7 +48,7 @@ const updateValue = (value: T, disabled?: boolean) => {
         :value="option.value"
         :checked="isSelected(option.value)"
         :disabled="option.disabled"
-        class="pointer-events-none absolute w-0 h-0 opacity-0"
+        class="radio-native-input"
         @change="updateValue(option.value, option.disabled)"
       />
       <slot name="option" :option="option" :is-selected="isSelected(option.value)">
@@ -63,9 +63,19 @@ const updateValue = (value: T, disabled?: boolean) => {
   --radio-color: var(--theme-accent);
 
   border: var(--border-width-base) solid var(--color-border);
-  border-radius: var(--radius-sm);
   background-color: var(--surface-bg-elevated);
   box-shadow: var(--shadow-sink);
+
+  .radio-native-input {
+    pointer-events: none;
+
+    position: absolute;
+
+    width: 0;
+    height: 0;
+
+    opacity: 0;
+  }
 
   .item {
     cursor: pointer;
@@ -73,7 +83,6 @@ const updateValue = (value: T, disabled?: boolean) => {
 
     padding: 0.3em 0.8em;
     border: var(--border-width-base) solid transparent;
-    border-radius: var(--radius-sm);
 
     font-size: inherit;
     font-weight: var(--font-weight-medium);

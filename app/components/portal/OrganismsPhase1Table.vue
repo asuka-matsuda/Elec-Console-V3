@@ -131,14 +131,14 @@ const {
     <template #cell-p1Kakunin="{ row: circuit }">
       <div class="flex items-center justify-center gap-3">
         <label class="check-item inline-flex flex-col items-center gap-0.5" title="回路確認">
-          <AtomsCheckbox
+          <Checkbox
             v-model="circuit.p1Kakunin"
             :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
           />
           <span class="check-item-label">確認</span>
         </label>
         <label class="check-item inline-flex flex-col items-center gap-0.5" title="増締め確認">
-          <AtomsCheckbox
+          <Checkbox
             v-model="circuit.p1Mashishime"
             :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
           />

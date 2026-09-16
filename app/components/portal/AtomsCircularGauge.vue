@@ -51,7 +51,7 @@ const normalizedValue = computed(() => {
 
   width: var(--gauge-size);
   height: var(--gauge-size);
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-circle);
 
   &::before {
     content: "";
@@ -59,7 +59,7 @@ const normalizedValue = computed(() => {
     position: absolute;
     inset: 0;
 
-    border-radius: 50%;
+    border-radius: var(--radius-circle);
 
     background: conic-gradient(
       var(--gauge-color) var(--progress, 0%),

@@ -201,7 +201,6 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   padding-block: 0.3em;
   padding-inline: 1.2em;
   border: var(--border-width-base) solid var(--color-border);
-  border-radius: var(--radius-sm);
 
   font-size: inherit;
   color: inherit;
@@ -278,7 +277,6 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 
   max-height: min(250px, 40vh);
   border: var(--border-width-base) solid var(--dropdown-border-color);
-  border-radius: var(--radius-sm);
 
   background-color: var(--surface-bg-solid);
   backdrop-filter: blur(var(--blur-md));
@@ -308,7 +306,6 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   overflow: hidden;
 
   padding: 0.4em 0.8em;
-  border-radius: var(--radius-sm);
 
   font-size: inherit;
   color: var(--color-text-main);

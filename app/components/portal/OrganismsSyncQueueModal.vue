@@ -246,7 +246,6 @@ const formatDateTime = (isoStr: string) => {
 
 .queue-list {
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
   background: var(--surface-bg-solid);
 }
 
@@ -275,7 +274,6 @@ const formatDateTime = (isoStr: string) => {
 
 .conflict-alert {
   border: 1px solid color-mix(in srgb, var(--color-status-warning) 30%, transparent);
-  border-radius: var(--radius-sm);
 
   font-size: var(--font-size-sm);
   line-height: var(--line-height-base);
@@ -286,7 +284,6 @@ const formatDateTime = (isoStr: string) => {
 
 .conflict-card {
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
   background: var(--surface-bg-elevated);
 
   .card-header {
@@ -306,7 +303,6 @@ const formatDateTime = (isoStr: string) => {
 
 .conflict-col {
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
   background: var(--surface-bg-solid);
 
   &.server-col {
@@ -330,8 +326,6 @@ const formatDateTime = (isoStr: string) => {
   }
 
   .col-details {
-    border-radius: var(--radius-sm);
-
     font-family: var(--font-mono);
     font-size: var(--font-size-xs);
     line-height: var(--line-height-ui);

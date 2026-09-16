@@ -117,6 +117,60 @@ module.exports = {
           },
         ],
         // レイアウト・配置・z-index関連プロパティのScoped CSS記述を禁止（Tailwind記述を強制）
+        // および角丸（border-radius）の直接記述を原則全面禁止（真円以外撲滅・直角統一規約）
+        'property-disallowed-list': [
+          [
+            'border-radius',
+            '/^border-(top|bottom)-(left|right)-radius$/',
+            'z-index',
+            'justify-content',
+            'align-items',
+            'align-content',
+            'align-self',
+            'flex-direction',
+            'flex-wrap',
+            'flex-grow',
+            'flex-shrink',
+            'grid-template-columns',
+            'grid-template-rows',
+            'row-gap',
+            'column-gap',
+          ],
+          {
+            message: 'プロパティ「%s」の記述は禁止されています。レイアウト系はTailwindを使用し、border-radiusは直角がデフォルトのため記述不要です（真円例外等は.stylelintrc.cjsのoverridesを参照）。',
+          },
+        ],
+      },
+    },
+    {
+      files: ['app/assets/scss/**/*.scss', 'error.vue'],
+      rules: {
+        // SCSSおよびerror.vue内でも border-radius の直接記述を禁止（真円以外撲滅・直角統一規約）
+        'property-disallowed-list': [
+          [
+            'border-radius',
+            '/^border-(top|bottom)-(left|right)-radius$/',
+          ],
+          {
+            message: '「%s」の直接記述は禁止されています。直角はデフォルトで適用されます。',
+          },
+        ],
+      },
+    },
+    // -------------------------------------------------------------------------
+    // 【厳格規約】真円（50% / var(--radius-circle)）例外許可リスト
+    // ※ AIアシスタントおよび開発者は、Lintエラー回避を目的としてこのリストへ勝手に
+    //   ファイルを追加してはならない。必ず正方形（1:1）のアバターやインジケーター等の
+    //   幾何学的真円要素に限り、設計者の明示的な承認を得た上で追加すること。
+    // -------------------------------------------------------------------------
+    {
+      files: [
+        'app/components/OrganismsHeader.vue',
+        'app/components/portal/MoleculesSyncStatusBadge.vue',
+        'app/components/portal/AtomsCircularGauge.vue',
+        'app/components/portal/OrganismsCalTypeSettingsModal.vue',
+      ],
+      rules: {
         'property-disallowed-list': [
           [
             'z-index',
@@ -133,10 +187,42 @@ module.exports = {
             'row-gap',
             'column-gap',
           ],
-          {
-            message: 'レイアウト・配置・z-index関連プロパティ（"%s"）はTailwindクラスで記述してください。Scoped CSSへの記述は規約により禁止されています。',
-          },
         ],
+        'declaration-property-value-allowed-list': {
+          'border-radius': ['50%', 'var(--radius-circle)'],
+        },
+      },
+    },
+    // -------------------------------------------------------------------------
+    // 【厳格規約】外部ライブラリ等の角丸リセット（0）例外許可リスト
+    // ※ 外部パッケージ組み込みの角丸を強制リセットする場合のみ登録。
+    // -------------------------------------------------------------------------
+    {
+      files: [
+        'app/components/portal/OrganismsCal.client.vue',
+        'app/assets/scss/foundation/_reset.scss',
+      ],
+      rules: {
+        'property-disallowed-list': [
+          [
+            'z-index',
+            'justify-content',
+            'align-items',
+            'align-content',
+            'align-self',
+            'flex-direction',
+            'flex-wrap',
+            'flex-grow',
+            'flex-shrink',
+            'grid-template-columns',
+            'grid-template-rows',
+            'row-gap',
+            'column-gap',
+          ],
+        ],
+        'declaration-property-value-allowed-list': {
+          'border-radius': ['0'],
+        },
       },
     },
   ],

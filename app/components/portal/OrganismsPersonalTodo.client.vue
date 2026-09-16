@@ -60,7 +60,7 @@ const sortedTodos = computed(() => {
         :key="todo.id"
         class="todo-item flex items-center justify-between gap-1 p-2"
       >
-        <AtomsCheckbox
+        <Checkbox
           :model-value="todo.completed"
           :class="{ 'is-completed': todo.completed }"
           :label="todo.text"

@@ -25,12 +25,12 @@ withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <div class="flex flex-col gap-2 w-full form-group">
+  <div class="flex flex-col gap-2 form-group">
     <!-- ラベル領域 -->
     <label
       v-if="label || $slots.label"
       :for="forId"
-      class="flex items-center gap-2 select-none form-group__label"
+      class="flex items-center gap-2 form-group__label"
     >
       <span class="inline-flex items-center gap-1 label-text">
         <span class="shrink-0 label-bar" />
@@ -73,6 +73,10 @@ withDefaults(defineProps<Props>(), {
   position: relative;
   font-size: var(--font-size-sm);
 
+  &__label {
+    user-select: none;
+  }
+
   &:focus-within .label-bar {
     --glow-color: var(--theme-accent);
 
@@ -105,10 +109,7 @@ withDefaults(defineProps<Props>(), {
 .label-bar {
   width: var(--space-0-5);
   height: 0.9em;
-  border-radius: var(--radius-sm);
-
   background-color: var(--theme-accent);
-
   transition: var(--transition-fast);
 }
 

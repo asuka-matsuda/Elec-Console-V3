@@ -28,6 +28,7 @@ const DECORATION_PATTERNS = [
   { category: 'シャドウ', regex: /^(shadow(-.+)?|drop-shadow(-.+)?)$/ },
   { category: 'エフェクト/フィルター', regex: /^(blur(-.+)?|backdrop-blur(-.+)?|grayscale(-.+)?|filter)$/ },
   { category: 'カーソル', regex: /^cursor-(pointer|not-allowed|default|wait|text|move|help)$/ },
+  { category: '挙動/インタラクション', regex: /^(pointer-events-(none|auto)|select-(none|text|all|auto)|resize(-[xynone])?)$/ },
 ]
 
 function extractTokens(classStr) {
@@ -49,10 +50,11 @@ export default {
   meta: {
     type: 'problem',
     docs: {
-      description: 'Disallow non-layout Tailwind CSS classes in templates',
+      description: 'Disallow non-layout Tailwind CSS classes in templates and redundant sizing',
     },
     messages: {
-      forbidden: 'Tailwindの装飾クラス「{{ token }}」（{{ category }}）は規約により禁止されています。レイアウト（flex, gap, padding等）のみTailwindを使用し、装飾はScoped CSSにデザイントークンで定義してください。',
+      forbidden: 'Tailwindの装飾・挙動クラス「{{ token }}」（{{ category }}）は規約により禁止されています。レイアウト（flex, gap, padding等）のみTailwindを使用し、装飾や挙動はScoped CSSに定義してください。',
+      redundantSizing: '「{{ insetToken }}」が指定されているため、「{{ token }}」の指定は冗長です。削除してください。',
     },
     schema: [],
   },
@@ -61,9 +63,13 @@ export default {
       if (!rawStr || typeof rawStr !== 'string') return
       const tokens = extractTokens(rawStr)
 
+      const cleanTokens = []
+
       for (let token of tokens) {
         if (token.startsWith('!')) token = token.slice(1)
         const cleanToken = token.replace(/^(sm|md|lg|xl|2xl|hover|focus|focus-visible|active|disabled):/, '')
+
+        cleanTokens.push({ raw: token, clean: cleanToken })
 
         if (LAYOUT_EXACT.has(cleanToken)) continue
 
@@ -80,6 +86,38 @@ export default {
             break
           }
         }
+      }
+
+      // inset-0 / inset-x-0 / inset-y-0 と w-full / h-full の冗長な重複指定を検知
+      const cleanList = cleanTokens.map(t => t.clean)
+      const hasInset0 = cleanList.includes('inset-0')
+      const hasInsetX0 = cleanList.includes('inset-x-0')
+      const hasInsetY0 = cleanList.includes('inset-y-0')
+
+      const wFullToken = cleanTokens.find(t => t.clean === 'w-full')
+
+      if ((hasInset0 || hasInsetX0) && wFullToken) {
+        context.report({
+          node: reportNode,
+          messageId: 'redundantSizing',
+          data: {
+            insetToken: hasInset0 ? 'inset-0' : 'inset-x-0',
+            token: wFullToken.raw,
+          },
+        })
+      }
+
+      const hFullToken = cleanTokens.find(t => t.clean === 'h-full')
+
+      if ((hasInset0 || hasInsetY0) && hFullToken) {
+        context.report({
+          node: reportNode,
+          messageId: 'redundantSizing',
+          data: {
+            insetToken: hasInset0 ? 'inset-0' : 'inset-y-0',
+            token: hFullToken.raw,
+          },
+        })
       }
     }
 

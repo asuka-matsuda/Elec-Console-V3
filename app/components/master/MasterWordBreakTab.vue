@@ -279,11 +279,8 @@ const formattedPreview = computed(() => {
 
     .sub-rule-box {
       border: var(--border-width-base) solid var(--color-border-subtle, var(--color-border));
-      border-radius: var(--radius-sm);
-
       font-size: var(--font-size-xs);
       color: var(--color-text-main);
-
       background-color: var(--surface-bg-elevated);
     }
   }
@@ -295,17 +292,13 @@ const formattedPreview = computed(() => {
 
   .success-banner {
     border: 1px solid var(--color-status-success);
-    border-radius: var(--radius-sm);
-
     font-size: var(--font-size-xs);
     color: var(--color-status-success);
-
     background-color: color-mix(in srgb, var(--color-status-success) 15%, transparent);
   }
 
   .word-tag {
     border: var(--border-width-base) solid var(--color-border);
-    border-radius: var(--radius-sm);
 
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
@@ -324,7 +317,6 @@ const formattedPreview = computed(() => {
       cursor: pointer;
 
       border: none;
-      border-radius: var(--radius-full);
 
       color: var(--color-text-muted);
 
@@ -342,8 +334,6 @@ const formattedPreview = computed(() => {
     width: 100px;
     min-height: 60px;
     border: var(--border-width-base) solid var(--color-border);
-    border-radius: var(--radius-sm);
-
     background-color: var(--surface-bg);
 
     span {

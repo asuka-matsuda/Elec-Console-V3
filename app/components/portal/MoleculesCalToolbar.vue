@@ -95,7 +95,6 @@ const getOptionIcon = (option: RadioOption<CalendarView>): string => {
 <style scoped lang="scss">
 .calendar-toolbar {
   border: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 30%, transparent);
-  border-radius: var(--radius-sm);
   background-color: var(--surface-bg);
 }
 

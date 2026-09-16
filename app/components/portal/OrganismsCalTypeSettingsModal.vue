@@ -107,13 +107,11 @@ const {
 
 .type-item {
   border: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 40%, transparent);
-  border-radius: var(--radius-sm);
   background: var(--surface-bg-elevated);
 }
 
 .color-preview {
   border: 1px solid color-mix(in srgb, var(--preview-color, var(--theme-accent)) 60%, transparent);
-  border-radius: var(--radius-sm);
   background: var(--preview-color, var(--theme-accent));
 }
 
@@ -121,7 +119,7 @@ const {
   cursor: pointer;
 
   border: 1px solid color-mix(in srgb, black 15%, transparent);
-  border-radius: 50%;
+  border-radius: var(--radius-circle);
 
   background: var(--dot-color);
 

@@ -72,7 +72,7 @@ const { currentUser, logout } = useAuth()
 
 .avatar {
   border: var(--border-width-base) solid color-mix(in srgb, var(--theme-accent) 40%, var(--color-border));
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-circle);
   box-shadow: var(--shadow-elevation-sm);
   transition: var(--transition-interactive);
 

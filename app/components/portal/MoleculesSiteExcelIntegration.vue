@@ -170,7 +170,6 @@ const confirmResetImport = async () => {
 }
 
 .status-msg {
-  border-radius: var(--radius-sm);
   font-size: var(--font-size-sm);
 
   &.is-info {

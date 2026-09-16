@@ -1,11 +1,11 @@
 <script setup lang="ts">
 /**
- * AtomsCheckbox
+ * Checkbox
  * [Atoms] 真偽値の選択や複数項目の選択を提供するチェックボックスコンポーネント
  */
 import { computed, useAttrs } from 'vue'
 
-import type { AtomsCheckboxProps } from '~/types/components'
+import type { CheckboxProps } from '~/types/components'
 
 defineOptions({
   inheritAttrs: false,
@@ -20,7 +20,7 @@ const {
   indeterminate = false,
   trueValue = true,
   falseValue = false,
-} = defineProps<AtomsCheckboxProps>()
+} = defineProps<CheckboxProps>()
 
 const attrs = useAttrs()
 
@@ -54,16 +54,16 @@ const inputAttrs = computed(() => {
         v-model="model"
         v-bind="inputAttrs"
         type="checkbox"
-        class="absolute inset-0 m-0 w-full h-full opacity-0 checkbox-input"
+        class="absolute inset-0 m-0 opacity-0 checkbox-input"
         :value="value"
         :disabled="disabled"
         :true-value="trueValue"
         :false-value="falseValue"
         .indeterminate="indeterminate"
       >
-      <span class="pointer-events-none relative w-full h-full checkbox-box">
-        <AtomsIcon name="check" class="absolute top-1/2 left-1/2 icon is-check" />
-        <AtomsIcon name="minus" class="absolute top-1/2 left-1/2 icon is-dash" />
+      <span class="checkbox-box">
+        <AtomsIcon name="check" class="icon is-check" />
+        <AtomsIcon name="minus" class="icon is-dash" />
       </span>
     </span>
 
@@ -87,23 +87,25 @@ const inputAttrs = computed(() => {
     cursor: inherit;
 
     &:not(:disabled) {
-      &:hover ~ .checkbox-box {
+      &:is(:hover, :active, :focus-visible, :checked, :indeterminate) ~ .checkbox-box {
         border-color: var(--control-color);
+      }
+
+      &:hover ~ .checkbox-box {
         box-shadow: var(--shadow-glow-hover);
       }
 
       &:active ~ .checkbox-box {
-        border-color: var(--control-color);
         box-shadow: var(--shadow-glow-active);
       }
 
       &:focus-visible ~ .checkbox-box {
-        border-color: var(--control-color);
         outline: none;
         box-shadow: var(--shadow-glow-focus);
       }
 
-      &:is(:checked, :indeterminate) ~ .checkbox-box {
+      &:is(:checked, :indeterminate) ~ .checkbox-box,
+      .checkbox.is-indeterminate & ~ .checkbox-box {
         border-color: var(--control-color);
         background-color: var(--control-color);
         box-shadow: var(--shadow-glow-active);
@@ -115,27 +117,9 @@ const inputAttrs = computed(() => {
     }
 
     &:checked ~ .checkbox-box .is-check,
-    &:indeterminate ~ .checkbox-box .is-dash {
-      transform: translate(-50%, -50%) scale(1);
-      opacity: 1;
-
-      :deep(:is(path, polyline, line)) {
-        stroke-dashoffset: 0;
-      }
-    }
-  }
-
-  &.is-indeterminate .checkbox-box {
-    border-color: var(--control-color);
-    background-color: var(--control-color);
-    box-shadow: var(--shadow-glow-active);
-
-    .icon {
-      color: var(--control-icon);
-    }
-
-    .is-dash {
-      transform: translate(-50%, -50%) scale(1);
+    &:indeterminate ~ .checkbox-box .is-dash,
+    .checkbox.is-indeterminate & ~ .checkbox-box .is-dash {
+      transform: scale(1);
       opacity: 1;
 
       :deep(:is(path, polyline, line)) {
@@ -145,20 +129,28 @@ const inputAttrs = computed(() => {
   }
 
   &-box {
+    pointer-events: none;
+
+    position: relative;
+
+    display: grid;
+    place-items: center;
+
+    width: 100%;
+    height: 100%;
     border: var(--border-width-base) solid var(--color-border);
-    border-radius: var(--radius-sm);
+
     background-color: var(--surface-bg-elevated);
+
     transition: var(--transition-interactive);
 
     .icon {
-      pointer-events: none;
+      transform: scale(0.6);
 
-      transform: translate(-50%, -50%) scale(0.6);
+      grid-area: 1 / 1;
 
       width: 75%;
       height: 75%;
-
-      color: var(--control-icon);
 
       opacity: 0;
 

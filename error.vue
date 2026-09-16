@@ -97,7 +97,6 @@ const handleReset = () => {
     max-width: 520px;
     padding: var(--space-6) var(--space-5);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
 
     text-align: center;
 
@@ -117,7 +116,6 @@ const handleReset = () => {
     margin-bottom: var(--space-3);
     padding: var(--space-1) var(--space-3);
     border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-full);
 
     background-color: var(--surface-bg);
   }
@@ -153,7 +151,6 @@ const handleReset = () => {
     width: 100%;
     margin-top: var(--space-5);
     border: 1px solid var(--color-border-subtle);
-    border-radius: var(--radius-sm);
 
     text-align: left;
 

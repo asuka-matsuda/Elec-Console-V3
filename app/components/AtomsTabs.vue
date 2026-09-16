@@ -63,14 +63,12 @@ const selectTab = (option: TabOption<T>) => {
 
       &:not(:disabled) {
         &:is(:hover, :focus-visible):not(.is-active) {
-          border-radius: var(--radius-sm) var(--radius-sm) 0 0;
           color: var(--color-text-main);
           background-color: var(--color-bg-hover);
         }
 
         &.is-active {
           border-bottom-color: var(--theme-accent);
-          border-radius: 0;
 
           font-weight: var(--font-weight-semibold);
           color: var(--color-text-main);
@@ -87,7 +85,6 @@ const selectTab = (option: TabOption<T>) => {
 
     padding: 0.2em;
     border: var(--border-width-base) solid var(--color-border);
-    border-radius: var(--radius-sm);
 
     background-color: var(--surface-bg-elevated);
     box-shadow: var(--shadow-sink);
@@ -95,7 +92,6 @@ const selectTab = (option: TabOption<T>) => {
     .tabs__item {
       padding: 0.3em 0.8em;
       border: var(--border-width-base) solid transparent;
-      border-radius: var(--radius-sm);
 
       &:not(:disabled) {
         &:hover:not(.is-active) {

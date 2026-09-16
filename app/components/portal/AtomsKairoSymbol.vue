@@ -102,7 +102,7 @@ const tooltipTitle = computed(() => {
     <!-- 背景透明の回路記号SVG -->
     <svg
       v-if="symbolPaths"
-      class="pointer-events-none absolute inset-0 w-full h-full"
+      class="absolute inset-0"
       viewBox="0 0 40 40"
       fill="none"
       stroke="currentColor"
@@ -126,6 +126,9 @@ const tooltipTitle = computed(() => {
   line-height: 1;
 
   svg {
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
     color: var(--color-text-muted);
   }
 }

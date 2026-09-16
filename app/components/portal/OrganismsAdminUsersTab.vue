@@ -223,7 +223,7 @@ const confirmResetPassword = async (row: User) => {
           <AtomsSelect v-model="newUser.role" :options="USER_ROLE_OPTIONS" />
         </MoleculesFormGroup>
         <MoleculesFormGroup>
-          <AtomsCheckbox
+          <Checkbox
             v-model="newUser.requirePasswordReset"
             label="初回ログイン時にパスワード変更を要求する"
           />

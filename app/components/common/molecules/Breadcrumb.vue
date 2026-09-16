@@ -36,7 +36,6 @@ withDefaults(
 <style scoped lang="scss">
 .breadcrumb {
   border: var(--border-width-base) solid var(--color-border);
-  border-radius: var(--radius-sm);
   font-size: inherit;
 
   li {

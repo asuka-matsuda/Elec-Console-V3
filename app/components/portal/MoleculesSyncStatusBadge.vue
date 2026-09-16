@@ -79,7 +79,6 @@ const openModal = () => {
 <style scoped lang="scss">
 .sync-btn {
   border: 1px solid var(--color-status-warning);
-  border-radius: var(--radius-sm);
 
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-bold);
@@ -111,7 +110,7 @@ const openModal = () => {
   color: var(--color-text-muted);
 
   .dot {
-    border-radius: 50%;
+    border-radius: var(--radius-circle);
     background: var(--color-status-success);
   }
 }

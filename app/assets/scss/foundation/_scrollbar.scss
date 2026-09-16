@@ -13,7 +13,6 @@ $default-size: 12px;
 }
 
 ::-webkit-scrollbar-thumb {
-  border-radius: var(--radius-sm);
   background-color: color-mix(in srgb, var(--color-text-muted) 35%, transparent);
   background-clip: padding-box;
 

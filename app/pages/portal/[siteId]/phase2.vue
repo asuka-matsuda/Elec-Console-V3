@@ -129,7 +129,6 @@ const shubetsuTabOptions = computed(() => {
 <style scoped lang="scss">
 .threshold-badge {
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
   font-size: var(--font-size-xs);
   background-color: var(--color-bg-hover);
 }

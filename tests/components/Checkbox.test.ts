@@ -1,11 +1,11 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import AtomsCheckbox from '../../app/components/AtomsCheckbox.vue'
+import Checkbox from '../../app/components/common/atoms/Checkbox.vue'
 
-describe('AtomsCheckbox', () => {
+describe('Checkbox', () => {
   it('renders correctly with default props', () => {
-    const wrapper = mount(AtomsCheckbox, {
+    const wrapper = mount(Checkbox, {
       props: {
         modelValue: false,
         label: '利用規約に同意する',
@@ -20,7 +20,7 @@ describe('AtomsCheckbox', () => {
   })
 
   it('updates boolean modelValue when input is toggled', async () => {
-    const wrapper = mount(AtomsCheckbox, {
+    const wrapper = mount(Checkbox, {
       props: {
         'modelValue': false,
         'onUpdate:modelValue': (val: boolean) => wrapper.setProps({ modelValue: val }),
@@ -36,7 +36,7 @@ describe('AtomsCheckbox', () => {
   })
 
   it('handles array modelValue for multiple checkboxes', async () => {
-    const wrapper = mount(AtomsCheckbox, {
+    const wrapper = mount(Checkbox, {
       props: {
         'modelValue': ['site-a'],
         'value': 'site-b',
@@ -52,7 +52,7 @@ describe('AtomsCheckbox', () => {
   })
 
   it('supports custom true-value and false-value', async () => {
-    const wrapper = mount(AtomsCheckbox, {
+    const wrapper = mount(Checkbox, {
       props: {
         'modelValue': 'N',
         'trueValue': 'Y',
@@ -70,7 +70,7 @@ describe('AtomsCheckbox', () => {
   })
 
   it('reflects indeterminate state in property and class', () => {
-    const wrapper = mount(AtomsCheckbox, {
+    const wrapper = mount(Checkbox, {
       props: {
         modelValue: false,
         indeterminate: true,
@@ -84,7 +84,7 @@ describe('AtomsCheckbox', () => {
   })
 
   it('disables input and applies disabled class when disabled prop is true', () => {
-    const wrapper = mount(AtomsCheckbox, {
+    const wrapper = mount(Checkbox, {
       props: {
         modelValue: false,
         disabled: true,
@@ -98,7 +98,7 @@ describe('AtomsCheckbox', () => {
   })
 
   it('delegates form attributes to input and merges class into root label', () => {
-    const wrapper = mount(AtomsCheckbox, {
+    const wrapper = mount(Checkbox, {
       props: {
         modelValue: false,
       },
@@ -125,7 +125,7 @@ describe('AtomsCheckbox', () => {
   })
 
   it('renders slot content over label prop when provided', () => {
-    const wrapper = mount(AtomsCheckbox, {
+    const wrapper = mount(Checkbox, {
       props: {
         modelValue: false,
         label: 'デフォルトラベル',

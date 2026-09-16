@@ -41,7 +41,6 @@ withDefaults(
   padding-block: 0.5em;
   padding-inline: 1.2em;
   border: var(--border-width-base) solid var(--color-border);
-  border-radius: var(--radius-sm);
 
   font-size: inherit;
   line-height: var(--line-height-base);

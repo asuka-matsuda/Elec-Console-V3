@@ -16,7 +16,7 @@ defineProps<Props>()
     <slot />
 
     <!-- 単位テキストアドオン -->
-    <span v-if="addon" class="inline-flex shrink-0 items-center justify-center select-none addon">
+    <span v-if="addon" class="inline-flex shrink-0 items-center justify-center addon">
       {{ addon }}
     </span>
 
@@ -37,16 +37,15 @@ defineProps<Props>()
   :deep(.form-control) {
     flex: 1;
     min-width: 0;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
   }
 
   .addon {
+    user-select: none;
+
     padding-block: 0.3em;
     padding-inline: 0.8em;
     border: var(--border-width-base) solid var(--color-border);
     border-left: none;
-    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 
     font-size: inherit;
     font-weight: var(--font-weight-medium);
@@ -60,8 +59,6 @@ defineProps<Props>()
     :deep(.custom-select__value) {
       padding-inline: 0.8em;
       border-left: none;
-      border-top-left-radius: 0;
-      border-bottom-left-radius: 0;
 
       &:focus,
       &:focus-visible,

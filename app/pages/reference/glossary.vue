@@ -161,7 +161,6 @@ const categoryColorMap: Record<string, string> = {
 
 .item-meta {
   border: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 30%, transparent);
-  border-radius: var(--radius-sm);
 }
 
 .meta-label {

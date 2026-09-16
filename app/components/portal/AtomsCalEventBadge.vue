@@ -61,7 +61,6 @@ const badgeColor = computed(() => props.color || 'var(--theme-accent)')
   --glow-color: var(--badge-color);
 
   border: var(--border-width-base) solid var(--badge-color-dim);
-  border-radius: var(--radius-sm);
   box-shadow: var(--shadow-glow-base);
   transition: var(--transition-interactive);
 }

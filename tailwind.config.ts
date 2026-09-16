@@ -21,6 +21,9 @@ export default <Config>{
     filter: false,
     backdropFilter: false,
     cursor: false,
+    pointerEvents: false,
+    userSelect: false,
+    resize: false,
   },
   content: [
     './app/components/**/*.{vue,js,ts}',

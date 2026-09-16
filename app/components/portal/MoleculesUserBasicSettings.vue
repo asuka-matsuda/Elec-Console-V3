@@ -97,7 +97,7 @@ const formatLastLogin = (user: User) => {
     </MoleculesFormGroup>
 
     <MoleculesFormGroup>
-      <AtomsCheckbox
+      <Checkbox
         :model-value="requirePasswordReset"
         label="次回ログイン時にパスワード変更を要求する"
         @update:model-value="emit('update:requirePasswordReset', !!$event)"

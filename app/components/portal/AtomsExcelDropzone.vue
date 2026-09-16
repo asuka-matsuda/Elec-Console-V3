@@ -125,7 +125,6 @@ const formatFileSize = (bytes: number): string => {
   user-select: none;
 
   border: 2px dashed var(--color-border);
-  border-radius: var(--radius-md);
 
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);

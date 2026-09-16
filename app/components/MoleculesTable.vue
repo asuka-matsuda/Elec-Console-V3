@@ -165,7 +165,6 @@ table {
 
 .table-wrapper {
   border: var(--border-width-base) solid var(--color-border);
-  border-radius: var(--radius-sm);
   background-color: var(--surface-bg);
   backdrop-filter: blur(var(--blur-sm));
 }

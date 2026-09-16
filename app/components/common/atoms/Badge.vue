@@ -52,7 +52,6 @@ const defaultLabel = computed(() => {
 
   padding: 0.15em 0.5em;
   border: var(--border-width-base) solid color-mix(in srgb, var(--glow-color) 35%, transparent);
-  border-radius: var(--radius-sm);
 
   font-size: 0.8em;
   font-weight: var(--font-weight-bold);

@@ -64,12 +64,8 @@ const tiles = computed(() => {
 <style scoped lang="scss">
 .minimap-tile {
   cursor: pointer;
-
   border: 1px solid var(--color-tile-empty-border);
-  border-radius: 2px;
-
   background-color: var(--color-tile-empty-bg);
-
   transition: var(--transition-interactive);
 
   &:hover {

@@ -29,7 +29,6 @@ defineProps<{
 <style scoped lang="scss">
 .panel {
   border: var(--border-width-base) solid var(--color-border);
-  border-radius: var(--radius-sm);
 
   background: var(--surface-bg);
   backdrop-filter: blur(var(--blur-sm));

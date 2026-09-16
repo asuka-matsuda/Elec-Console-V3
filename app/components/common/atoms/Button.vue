@@ -48,7 +48,7 @@ const computedType = computed(() => {
     :type="computedType"
     :disabled="!isClickable ? true : undefined"
     :title="title"
-    class="inline-flex shrink-0 items-center justify-center gap-[0.5em] select-none btn"
+    class="inline-flex shrink-0 items-center justify-center gap-[0.5em] btn"
     :class="[
       `btn--${variant}`,
       {
@@ -90,7 +90,6 @@ const computedType = computed(() => {
   padding-block: 0.3em;
   padding-inline: 1.1em;
   border: var(--border-width-base) solid var(--btn-border);
-  border-radius: var(--radius-sm);
 
   font-size: inherit;
   font-weight: var(--font-weight-medium);

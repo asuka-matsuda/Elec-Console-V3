@@ -2,7 +2,7 @@
 /**
  * OrganismsFilterPanel
  * [Organisms] データベース画面や一覧画面用の検索・カテゴリ絞り込みパネル。
- * AtomsPanel, MoleculesSectionHeader, MoleculesFormGroup, AtomsInput, AtomsCheckbox を組み合わせた独立セクション。
+ * AtomsPanel, MoleculesSectionHeader, MoleculesFormGroup, AtomsInput, Checkbox を組み合わせた独立セクション。
  */
 interface CategoryOption {
   label: string
@@ -38,14 +38,14 @@ const {
 
       <MoleculesFormGroup v-if="categoryOptions.length > 0" label="Category">
         <div class="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-2">
-          <AtomsCheckbox
+          <Checkbox
             v-for="cat in categoryOptions"
             :key="cat.value"
             v-model="activeCats"
             :value="cat.value"
           >
             {{ cat.label }}
-          </AtomsCheckbox>
+          </Checkbox>
         </div>
       </MoleculesFormGroup>
 

@@ -86,7 +86,6 @@ onMounted(() => {
 <style scoped lang="scss">
 .error-message {
   border: 1px solid color-mix(in srgb, var(--color-status-danger) 25%, transparent);
-  border-radius: var(--radius-sm);
   color: var(--color-status-danger);
   background-color: color-mix(in srgb, var(--color-status-danger) 10%, transparent);
 }

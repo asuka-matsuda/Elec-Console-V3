@@ -121,7 +121,7 @@ export interface OrganismsGlobalNavProps {
   menuData: import('~/constants/data/menuData').MenuSection[]
 }
 
-export interface AtomsCheckboxProps {
+export interface CheckboxProps {
   value?: unknown
   label?: string
   disabled?: boolean
@@ -129,3 +129,5 @@ export interface AtomsCheckboxProps {
   trueValue?: unknown
   falseValue?: unknown
 }
+
+export type AtomsCheckboxProps = CheckboxProps

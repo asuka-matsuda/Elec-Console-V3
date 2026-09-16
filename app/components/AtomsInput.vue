@@ -47,7 +47,6 @@ const {
   padding-block: 0.3em;
   padding-inline: 1.2em;
   border: var(--border-width-base) solid var(--color-border);
-  border-radius: var(--radius-sm);
 
   font-size: inherit;
   font-variant-numeric: tabular-nums;

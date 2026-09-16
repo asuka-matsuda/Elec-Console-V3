@@ -236,11 +236,8 @@ onMounted(() => {
 
 .drawer-error {
   border: var(--border-width-base) solid var(--color-status-danger);
-  border-radius: var(--radius-sm);
-
   font-size: var(--font-size-xs);
   color: var(--color-status-danger);
-
   background-color: color-mix(in srgb, var(--color-status-danger) 10%, transparent);
 }
 </style>

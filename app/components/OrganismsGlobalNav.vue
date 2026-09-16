@@ -162,7 +162,6 @@ aside {
   a,
   button {
     border: var(--border-width-base) solid transparent;
-    border-radius: var(--radius-sm);
 
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
