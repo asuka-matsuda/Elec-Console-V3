@@ -89,7 +89,7 @@ const formatFileSize = (bytes: number): string => {
 
     <!-- ファイル未選択時の表示 -->
     <div v-if="!modelValue" class="flex flex-col items-center">
-      <AtomsIcon name="upload-cloud" size="lg" class="mb-2" />
+      <Icon name="upload-cloud" size="lg" class="mb-2" />
       <div>
         <strong>クリックしてファイルを選択</strong> またはここにドラッグ＆ドロップ
       </div>
@@ -100,7 +100,7 @@ const formatFileSize = (bytes: number): string => {
 
     <!-- ファイル選択時のプレビュー表示 -->
     <div v-else class="preview-box flex items-center gap-3 w-full">
-      <AtomsIcon name="file-check" size="md" class="file-icon shrink-0" />
+      <Icon name="file-check" size="md" class="file-icon shrink-0" />
       <div class="flex-1 min-w-0">
         <div class="file-name">
           {{ modelValue.name }}

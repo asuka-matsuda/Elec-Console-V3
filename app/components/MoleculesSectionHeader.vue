@@ -6,12 +6,13 @@
 import { computed } from 'vue'
 
 import type { MenuSection } from '~/constants/data/menuData'
+import type { IconName } from '~/constants/icons'
 
 const props = withDefaults(
   defineProps<{
     title?: string
     tag?: string
-    icon?: string
+    icon?: IconName
     variant?:
       | MenuSection['accent']
       | 'danger'
@@ -64,7 +65,7 @@ const resolvedIconColor = computed(() => {
       class="flex items-center gap-2 title"
       :class="[`is-${size}`]"
     >
-      <AtomsIcon v-if="icon" :name="icon" class="icon" />
+      <Icon v-if="icon" :name="icon" class="icon" />
       <slot>{{ title }}</slot>
     </component>
 

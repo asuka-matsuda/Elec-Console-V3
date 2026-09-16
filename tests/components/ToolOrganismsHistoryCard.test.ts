@@ -16,7 +16,7 @@ describe('ToolOrganismsHistoryCard.vue', () => {
       props: ['variant', 'iconOnly'],
       template: '<button class="button-stub"><slot /></button>',
     },
-    AtomsIcon: {
+    Icon: {
       props: ['name', 'size'],
       template: '<i class="icon-stub" />',
     },

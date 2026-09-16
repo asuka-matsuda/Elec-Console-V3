@@ -5,12 +5,13 @@
  * 月送り/今日移動、年月タイトル、月表示/リスト切り替え（AtomsRadioGroupセグメントコントロール）、
  * および種別設定モーダルオープンボタンを提供します。
  */
+import type { IconName } from '~/constants/icons'
 import type { RadioOption } from '~/types/components'
 
 type CalendarView = 'dayGridMonth' | 'listMonth'
 
 interface CalendarViewOption extends RadioOption<CalendarView> {
-  icon: string
+  icon: IconName
 }
 
 defineProps<{
@@ -34,8 +35,8 @@ const handleViewChange = (val: unknown) => {
   }
 }
 
-const getOptionIcon = (option: RadioOption<CalendarView>): string => {
-  return (option as CalendarViewOption).icon || ''
+const getOptionIcon = (option: RadioOption<CalendarView>): IconName => {
+  return (option as CalendarViewOption).icon || 'calendar'
 }
 </script>
 
@@ -76,7 +77,7 @@ const getOptionIcon = (option: RadioOption<CalendarView>): string => {
       >
         <template #option="{ option }">
           <div class="flex items-center gap-1.5">
-            <AtomsIcon :name="getOptionIcon(option)" />
+            <Icon :name="getOptionIcon(option)" />
             <span>{{ option.label }}</span>
           </div>
         </template>

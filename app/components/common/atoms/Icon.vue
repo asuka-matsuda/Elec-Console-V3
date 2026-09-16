@@ -1,50 +1,42 @@
 <script setup lang="ts">
 /**
- * AtomsIcon
+ * Icon
  * [Atoms] @lucide/vue をベースにしたモダンなアイコンコンポーネントです。
  * v-html を使用せず、Vue のコンポーネントとして最適化された SVG を描画します。
  */
 import { computed } from 'vue'
 
-import type { IconName } from '~/constants/icons'
 import { ICONS } from '~/constants/icons'
+import type { IconProps } from '~/types/components'
 
-interface Props {
-  name: IconName | string
-  size?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
-}
-
-const { name, size } = defineProps<Props>()
+const props = withDefaults(defineProps<IconProps>(), {
+  size: undefined,
+  strokeWidth: 2,
+  spin: false,
+})
 
 const iconComponent = computed(() => {
-  return ICONS[name] || null
+  return ICONS[props.name] || null
 })
 </script>
 
 <template>
-  <i
-    class="inline-flex shrink-0 items-center justify-center app-icon icon"
-    :class="size && `is-${size}`"
-  >
-    <component
-      :is="iconComponent"
-      v-if="iconComponent"
-      class="w-full h-full icon-svg"
-      :stroke-width="2"
-    />
-  </i>
+  <component
+    :is="iconComponent"
+    v-if="iconComponent"
+    class="inline-block shrink-0 align-middle app-icon icon"
+    :class="[
+      props.size && `is-${props.size}`,
+      { 'u-spin': props.spin },
+    ]"
+    :stroke-width="props.strokeWidth"
+  />
 </template>
 
 <style scoped lang="scss">
 .app-icon {
   width: 1.2em;
   height: 1.2em;
-
-  .icon-svg,
-  :deep(svg) {
-    width: 100%;
-    height: 100%;
-  }
 
   &.is-sm {
     width: var(--icon-size-sm);

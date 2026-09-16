@@ -3,8 +3,10 @@
  * MoleculesEmptyState
  * [Molecules] データが0件の場合や未選択状態を分かりやすくユーザーに伝えるためのメッセージコンポーネント。
  */
+import type { IconName } from '~/constants/icons'
+
 interface Props {
-  icon?: string
+  icon?: IconName
   title?: string
   description?: string
 }
@@ -14,7 +16,7 @@ defineProps<Props>()
 
 <template>
   <div class="flex flex-col items-center justify-center gap-1.5 max-w-[420px] mx-auto py-8 px-4 text-center empty-state">
-    <AtomsIcon v-if="icon" :name="icon" size="xxl" class="mb-1.5" />
+    <Icon v-if="icon" :name="icon" size="xxl" :spin="icon === 'loader'" class="mb-1.5" />
 
     <h3 v-if="title || $slots.default" class="title">
       <slot>{{ title }}</slot>

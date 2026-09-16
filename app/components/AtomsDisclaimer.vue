@@ -12,7 +12,7 @@ const {
 
 <template>
   <div class="disclaimer flex shrink-0 items-center gap-2 py-2 px-3">
-    <AtomsIcon name="alert-triangle" size="sm" />
+    <Icon name="alert-triangle" size="sm" />
     <p class="flex-1">
       <strong>免責事項:</strong> <slot>{{ text }}</slot>
     </p>

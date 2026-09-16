@@ -44,7 +44,7 @@ const { currentUser, logout } = useAuth()
 
       <div class="flex items-center gap-2">
         <div class="flex shrink-0 items-center justify-center w-8 h-8 avatar">
-          <AtomsIcon
+          <Icon
             name="user"
             size="sm"
             class="avatar__icon"

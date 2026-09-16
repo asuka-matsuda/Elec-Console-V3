@@ -28,7 +28,7 @@ const displayItems = computed(() => {
       v-if="pending || displayItems.length === 0"
       class="flex items-center justify-center gap-[var(--space-2)] p-[var(--space-panel-pad)] status"
     >
-      <AtomsIcon :name="pending ? 'loader' : 'inbox'" :class="{ 'u-spin': pending }" size="sm" />
+      <Icon :name="pending ? 'loader' : 'inbox'" :spin="pending" size="sm" />
       <span>{{ pending ? loadingText : emptyText }}</span>
     </div>
 

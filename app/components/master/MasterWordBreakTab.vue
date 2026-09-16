@@ -113,7 +113,7 @@ const formattedPreview = computed(() => {
     <!-- 説明・ルールカード -->
     <AtomsPanel class="rule-panel">
       <div class="flex items-center gap-2 mb-2 rule-panel__title">
-        <AtomsIcon name="info" size="sm" />
+        <Icon name="info" size="sm" />
         <span>改行禁止ルールの概要</span>
       </div>
       <p class="mb-3">
@@ -195,7 +195,7 @@ const formattedPreview = computed(() => {
 
       <!-- 保存完了メッセージ -->
       <div v-if="saveSuccessMessage" class="flex items-center gap-2 p-2 mb-3 success-banner">
-        <AtomsIcon name="check-circle" size="sm" />
+        <Icon name="check-circle" size="sm" />
         <span>{{ saveSuccessMessage }}</span>
       </div>
 
@@ -213,7 +213,7 @@ const formattedPreview = computed(() => {
             title="削除"
             @click="handleRemoveWord(index)"
           >
-            <AtomsIcon name="x" size="sm" />
+            <Icon name="x" size="sm" />
           </button>
         </span>
       </div>

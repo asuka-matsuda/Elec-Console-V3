@@ -7,6 +7,7 @@
  */
 import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue'
 
+import type { IconName } from '~/constants/icons'
 import type { ButtonVariant } from '~/types/components'
 
 const isOpen = defineModel<boolean>({ default: false })
@@ -14,7 +15,7 @@ const isOpen = defineModel<boolean>({ default: false })
 const props = withDefaults(
   defineProps<{
     title?: string
-    icon?: string
+    icon?: IconName
     variant?:
       | 'main'
       | 'tool'

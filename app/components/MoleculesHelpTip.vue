@@ -151,7 +151,7 @@ onBeforeUnmount(() => {
     @focusin="show"
     @focusout="hide"
   >
-    <AtomsIcon name="help-circle" class="w-full h-full" />
+    <Icon name="help-circle" />
   </button>
 
   <!-- 最前面にTeleportされるコンパクト吹き出しツールチップ -->

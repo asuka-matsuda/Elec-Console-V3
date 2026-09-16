@@ -4,6 +4,7 @@
  * [Molecules] ダッシュボード（Dashboard）で各機能を選択するための専用ナビゲーションタイル。
  */
 import { NuxtLink } from '#components'
+import type { IconName } from '~/constants/icons'
 
 const {
   to,
@@ -15,7 +16,7 @@ const {
   to?: string
   disabled?: boolean
   title?: string
-  icon?: string
+  icon?: IconName
   description?: string
 }>()
 </script>
@@ -29,7 +30,7 @@ const {
     class="flex flex-col gap-panel-gap menu-tile"
   >
     <header v-if="icon || title" class="flex items-center gap-1 min-w-0 tile-title">
-      <AtomsIcon v-if="icon" :name="icon" class="shrink-0" />
+      <Icon v-if="icon" :name="icon" class="shrink-0" />
       <span v-if="title">{{ title }}</span>
     </header>
 

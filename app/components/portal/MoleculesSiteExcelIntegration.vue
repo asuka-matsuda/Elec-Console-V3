@@ -111,7 +111,7 @@ const confirmResetImport = async () => {
       v-if="isSyncing"
       class="status-msg is-info flex items-center gap-2 p-3"
     >
-      <AtomsIcon name="loader" size="sm" class="u-spin" />
+      <Icon name="loader" size="sm" spin />
       <span>{{ syncMsg }}</span>
     </div>
 
@@ -120,7 +120,7 @@ const confirmResetImport = async () => {
       v-else-if="showSyncMsg && syncMsgType === 'error'"
       class="status-msg is-error flex items-center gap-2 p-3"
     >
-      <AtomsIcon name="alert-circle" size="sm" />
+      <Icon name="alert-circle" size="sm" />
       <span>{{ syncMsg }}</span>
     </div>
 

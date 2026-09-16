@@ -11,7 +11,7 @@ describe('Button.vue', () => {
       },
       global: {
         stubs: {
-          AtomsIcon: true,
+          Icon: true,
           NuxtLink: true,
         },
       },
@@ -26,14 +26,14 @@ describe('Button.vue', () => {
   it('renders success and danger variants properly', () => {
     const wrapperSuccess = mount(Button, {
       props: { variant: 'success' },
-      global: { stubs: { AtomsIcon: true, NuxtLink: true } },
+      global: { stubs: { Icon: true, NuxtLink: true } },
     })
 
     expect(wrapperSuccess.classes()).toContain('btn--success')
 
     const wrapperDanger = mount(Button, {
       props: { variant: 'danger' },
-      global: { stubs: { AtomsIcon: true, NuxtLink: true } },
+      global: { stubs: { Icon: true, NuxtLink: true } },
     })
 
     expect(wrapperDanger.classes()).toContain('btn--danger')
@@ -50,7 +50,7 @@ describe('Button.vue', () => {
       },
       global: {
         stubs: {
-          AtomsIcon: {
+          Icon: {
             props: ['name'],
             template: '<i :data-name="name" class="stub-icon" />',
           },
@@ -77,7 +77,7 @@ describe('Button.vue', () => {
       },
       global: {
         stubs: {
-          AtomsIcon: {
+          Icon: {
             props: ['name'],
             template: '<i :data-name="name" class="stub-icon" />',
           },
@@ -103,7 +103,7 @@ describe('Button.vue', () => {
       },
       global: {
         stubs: {
-          AtomsIcon: true,
+          Icon: true,
           NuxtLink: {
             props: ['to'],
             template: '<a :href="to"><slot /></a>',
@@ -123,7 +123,7 @@ describe('Button.vue', () => {
       },
       global: {
         stubs: {
-          AtomsIcon: true,
+          Icon: true,
           NuxtLink: true,
         },
       },
@@ -141,7 +141,7 @@ describe('Button.vue', () => {
       },
       global: {
         stubs: {
-          AtomsIcon: true,
+          Icon: true,
           NuxtLink: true,
         },
       },
@@ -158,7 +158,7 @@ describe('Button.vue', () => {
       },
       global: {
         stubs: {
-          AtomsIcon: true,
+          Icon: true,
           NuxtLink: true,
         },
       },
@@ -178,7 +178,7 @@ describe('Button.vue', () => {
       },
       global: {
         stubs: {
-          AtomsIcon: {
+          Icon: {
             props: ['name'],
             template: '<i :data-name="name" class="stub-icon" />',
           },

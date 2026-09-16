@@ -5,7 +5,7 @@ import MoleculesHelpTip from '../../app/components/MoleculesHelpTip.vue'
 
 describe('MoleculesHelpTip.vue', () => {
   const commonStubs = {
-    AtomsIcon: {
+    Icon: {
       props: ['name'],
       template: '<span class="atoms-icon-stub">{{ name }}</span>',
     },

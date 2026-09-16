@@ -60,7 +60,7 @@ const handleClick = () => {
       }"
     >
       {{ column.label }}
-      <AtomsIcon
+      <Icon
         v-if="isSortable"
         :name="sortIconName"
         size="sm"

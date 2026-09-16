@@ -4,6 +4,8 @@
  * [Organisms] データベース画面や一覧画面用の検索・カテゴリ絞り込みパネル。
  * AtomsPanel, MoleculesSectionHeader, MoleculesFormGroup, AtomsInput, Checkbox を組み合わせた独立セクション。
  */
+import type { IconName } from '~/constants/icons'
+
 interface CategoryOption {
   label: string
   value: string
@@ -11,7 +13,7 @@ interface CategoryOption {
 
 interface Props {
   title?: string
-  icon?: string
+  icon?: IconName
   placeholder?: string
   categoryOptions?: CategoryOption[]
 }

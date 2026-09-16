@@ -4,6 +4,7 @@
  * Tree-shaking を最大限に活かしつつ、v-html を排除した型安全なアイコン表示を実現します。
  */
 import {
+  Activity,
   AlertCircle,
   AlertTriangle,
   AlignJustify,
@@ -36,10 +37,13 @@ import {
   Edit,
   ExternalLink,
   File,
+  FileCheck,
+  FileSpreadsheet,
   Filter,
   Folder,
   Hash,
   HelpCircle,
+  History,
   Home,
   Inbox,
   Info,
@@ -66,8 +70,11 @@ import {
   Trash2,
   Type,
   Upload,
+  UploadCloud,
   User,
   Users,
+  Wifi,
+  WifiOff,
   Wrench,
   X,
   Zap,
@@ -75,6 +82,7 @@ import {
 import type { Component } from 'vue'
 
 export const ICONS: Record<string, Component> = {
+  'activity': Activity,
   'alert-circle': AlertCircle,
   'alert-triangle': AlertTriangle,
   'align-justify': AlignJustify,
@@ -107,10 +115,13 @@ export const ICONS: Record<string, Component> = {
   'edit': Edit,
   'external-link': ExternalLink,
   'file': File,
+  'file-check': FileCheck,
+  'file-spreadsheet': FileSpreadsheet,
   'filter': Filter,
   'folder': Folder,
   'hash': Hash,
   'help-circle': HelpCircle,
+  'history': History,
   'home': Home,
   'inbox': Inbox,
   'info': Info,
@@ -138,11 +149,14 @@ export const ICONS: Record<string, Component> = {
   'trash-2': Trash2,
   'type': Type,
   'upload': Upload,
+  'upload-cloud': UploadCloud,
   'user': User,
   'users': Users,
+  'wifi': Wifi,
+  'wifi-off': WifiOff,
   'wrench': Wrench,
   'x': X,
   'zap': Zap,
 }
 
-export type IconName = keyof typeof ICONS | (string & {})
+export type IconName = keyof typeof ICONS

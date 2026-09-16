@@ -97,7 +97,7 @@ onMounted(() => {
             class="w-full flex items-center gap-[var(--space-2)] py-[var(--space-1)] px-[var(--space-3)]"
             @click="item.disabled ? undefined : closeSidebar()"
           >
-            <AtomsIcon :name="item.icon" size="md" />
+            <Icon :name="item.icon" size="md" />
             <span>{{ item.text }}</span>
           </component>
         </div>

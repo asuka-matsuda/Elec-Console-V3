@@ -80,7 +80,7 @@ const formatDateTime = (isoStr: string) => {
       <!-- 競合解決ビュー -->
       <template v-if="conflictItems.length > 0">
         <div class="flex items-start gap-2 p-3 conflict-alert">
-          <AtomsIcon name="alert-triangle" size="sm" class="shrink-0 mt-0.5" />
+          <Icon name="alert-triangle" size="sm" class="shrink-0 mt-0.5" />
           <div>
             <strong>{{ conflictItems.length }}件</strong> の回路で別の作業者との更新競合が発生しました。<br>
             内容を確認し、どちらの値を採用するか選択してください。
@@ -104,7 +104,7 @@ const formatDateTime = (isoStr: string) => {
             <!-- サーバー側の値 -->
             <div class="flex flex-col gap-2 p-3 conflict-col server-col">
               <div class="flex items-center gap-1.5 col-title">
-                <AtomsIcon name="database" size="sm" />
+                <Icon name="database" size="sm" />
                 <span>サーバー側の最新データ</span>
               </div>
               <div class="col-meta">
@@ -132,7 +132,7 @@ const formatDateTime = (isoStr: string) => {
             <!-- 端末側（オフライン入力）の値 -->
             <div class="flex flex-col gap-2 p-3 conflict-col client-col">
               <div class="flex items-center gap-1.5 col-title">
-                <AtomsIcon name="user" size="sm" />
+                <Icon name="user" size="sm" />
                 <span>あなたのオフライン入力</span>
               </div>
               <div class="col-meta">
@@ -201,11 +201,11 @@ const formatDateTime = (isoStr: string) => {
           >
             <template #value>
               <div v-if="syncResult.successCount > 0" class="flex items-center gap-1.5 result-success">
-                <AtomsIcon name="check-circle" size="sm" />
+                <Icon name="check-circle" size="sm" />
                 <span>{{ syncResult.successCount }} 件のデータを正常に同期しました。</span>
               </div>
               <div v-if="syncResult.errorCount > 0" class="flex items-center gap-1.5 result-danger">
-                <AtomsIcon name="alert-circle" size="sm" />
+                <Icon name="alert-circle" size="sm" />
                 <span>{{ syncResult.errorCount }} 件の送信に失敗しました（電波状況を確認してください）。</span>
               </div>
             </template>

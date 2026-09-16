@@ -29,7 +29,7 @@ watch(isOnline, (online, wasOnline) => {
       v-if="!isOnline"
       class="offline-banner offline w-full z-header flex items-center justify-center gap-2 py-1 px-4 text-center"
     >
-      <AtomsIcon name="wifi-off" class="w-4 h-4 text-warning" />
+      <Icon name="wifi-off" />
       <span class="banner-text">
         <strong>圏外（オフライン）</strong>で動作中 — 入力データは端末内に保護され、電波復帰時に安全に同期できます
       </span>
@@ -39,7 +39,7 @@ watch(isOnline, (online, wasOnline) => {
       v-else-if="showBackOnline"
       class="offline-banner online w-full z-header flex items-center justify-center gap-2 py-1 px-4 text-center"
     >
-      <AtomsIcon name="wifi" class="w-4 h-4 text-success" />
+      <Icon name="wifi" />
       <span class="banner-text">
         <strong>オンラインに復帰しました</strong>
       </span>

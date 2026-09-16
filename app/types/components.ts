@@ -131,3 +131,14 @@ export interface CheckboxProps {
 }
 
 export type AtomsCheckboxProps = CheckboxProps
+
+export type IconSize = 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
+
+export interface IconProps {
+  name: IconName
+  size?: IconSize
+  strokeWidth?: number | string
+  spin?: boolean
+}
+
+export type AtomsIconProps = IconProps

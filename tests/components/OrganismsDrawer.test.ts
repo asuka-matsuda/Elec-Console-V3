@@ -22,7 +22,7 @@ describe('OrganismsDrawer.vue', () => {
       props: ['variant', 'disabled', 'loading'],
       template: '<button :disabled="disabled || loading"><slot /></button>',
     },
-    AtomsIcon: {
+    Icon: {
       props: ['name'],
       template: '<i :class="name" />',
     },

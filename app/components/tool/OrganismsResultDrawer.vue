@@ -2,17 +2,18 @@
 /**
  * OrganismsResultDrawer
  * [Tool Organism] 計算ツールの結果表示エリア全体を包括する独立機能セクション。
- * AtomsPanel, MoleculesSectionHeader, Button, AtomsIcon を内包し、
+ * AtomsPanel, MoleculesSectionHeader, Button, Icon を内包し、
  * PC時は通常パネル、モバイル時は下部Stickyドロワーとして開閉・結果表示・履歴保存・計算根拠呼び出しを提供します。
  */
 import { computed, inject, type Ref, ref, toRef } from 'vue'
 
 import { useAsyncActionFeedback } from '~/composables/useAsyncActionFeedback'
+import type { IconName } from '~/constants/icons'
 
 const props = withDefaults(
   defineProps<{
     title?: string
-    icon?: string
+    icon?: IconName
     drawerTitle?: string
     hasBasis?: boolean
     saveDisabled?: boolean
@@ -89,7 +90,7 @@ defineExpose({
       @click="toggleDrawer"
     >
       <span>{{ drawerTitle }}</span>
-      <AtomsIcon
+      <Icon
         :name="isOpen ? 'chevron-down' : 'chevron-up'"
         size="md"
       />

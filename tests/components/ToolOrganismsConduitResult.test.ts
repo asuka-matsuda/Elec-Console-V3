@@ -21,7 +21,7 @@ describe('ToolOrganismsConduitResult (app/components/tool/OrganismsConduitResult
     AtomsPanel: {
       template: '<div class="panel-stub"><slot /></div>',
     },
-    AtomsIcon: {
+    Icon: {
       template: '<i class="icon-stub" />',
     },
   }

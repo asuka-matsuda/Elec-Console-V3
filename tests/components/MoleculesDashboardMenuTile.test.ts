@@ -5,7 +5,7 @@ import MoleculesDashboardMenuTile from '../../app/components/MoleculesDashboardM
 
 describe('MoleculesDashboardMenuTile.vue', () => {
   const commonStubs = {
-    AtomsIcon: {
+    Icon: {
       props: ['name', 'size'],
       template: '<span class="icon-stub">{{ name }}</span>',
     },

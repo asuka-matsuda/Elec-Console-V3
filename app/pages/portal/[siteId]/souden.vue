@@ -55,7 +55,7 @@ onMounted(() => {
     </MoleculesSectionHeader>
 
     <div v-if="error" class="error-message flex items-center gap-2 p-3">
-      <AtomsIcon name="alert-triangle" />
+      <Icon name="alert-triangle" />
       <span>{{ error }}</span>
     </div>
 

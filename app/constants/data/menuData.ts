@@ -1,7 +1,9 @@
+import type { IconName } from '~/constants/icons'
+
 export type MenuItem = {
   text: string
   href: string
-  icon: string
+  icon: IconName
   customClass?: string
   activePrefixes?: string[]
   desc?: string
@@ -13,7 +15,7 @@ export type MenuSection = {
   id: string
   heading?: string
   globalNavHeading?: string
-  icon?: string
+  icon?: IconName
   accent?: 'tool' | 'database' | 'reference' | 'management' | 'main'
   items: MenuItem[]
   showInDashboard: boolean

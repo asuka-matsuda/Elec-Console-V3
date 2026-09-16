@@ -26,7 +26,7 @@ describe('OrganismsHeader.vue', () => {
           Button: {
             template: '<button @click="$emit(\'click\')"><slot /></button>',
           },
-          AtomsIcon: true,
+          Icon: true,
         },
       },
     })
@@ -45,7 +45,7 @@ describe('OrganismsHeader.vue', () => {
           Button: {
             template: '<button @click="$emit(\'click\')"><slot /></button>',
           },
-          AtomsIcon: true,
+          Icon: true,
         },
       },
     })
@@ -64,7 +64,7 @@ describe('OrganismsHeader.vue', () => {
           Button: {
             template: '<button @click="$emit(\'click\')"><slot /></button>',
           },
-          AtomsIcon: true,
+          Icon: true,
         },
       },
     })

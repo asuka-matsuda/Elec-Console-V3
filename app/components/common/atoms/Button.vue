@@ -60,14 +60,14 @@ const computedType = computed(() => {
     ]"
   >
     <!-- 左側アイコン（loading時は自動でスピナーに切り替え） -->
-    <AtomsIcon v-if="loading" name="loader" class="u-spin btn__spinner" />
-    <AtomsIcon v-else-if="icon" :name="icon" class="btn__icon-left" />
+    <Icon v-if="loading" name="loader" spin />
+    <Icon v-else-if="icon" :name="icon" />
 
     <!-- ラベル（スロット） -->
     <slot />
 
     <!-- 右側アイコン（未ローディング時のみ表示） -->
-    <AtomsIcon v-if="iconRight && !loading" :name="iconRight" class="btn__icon-right" />
+    <Icon v-if="iconRight && !loading" :name="iconRight" />
   </component>
 </template>
 

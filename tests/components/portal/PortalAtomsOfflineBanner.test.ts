@@ -17,7 +17,7 @@ describe('PortalAtomsOfflineBanner', () => {
     const wrapper = mount(PortalAtomsOfflineBanner, {
       global: {
         stubs: {
-          AtomsIcon: true,
+          Icon: true,
         },
       },
     })
@@ -30,7 +30,7 @@ describe('PortalAtomsOfflineBanner', () => {
     const wrapper = mount(PortalAtomsOfflineBanner, {
       global: {
         stubs: {
-          AtomsIcon: true,
+          Icon: true,
         },
       },
     })

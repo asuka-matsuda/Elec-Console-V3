@@ -40,7 +40,7 @@ describe('ToolOrganismsRackInput (app/components/tool/OrganismsRackInput.vue)', 
       props: ['modelValue', 'placeholder', 'type'],
       template: '<input :value="modelValue" class="atoms-input-stub" />',
     },
-    AtomsIcon: {
+    Icon: {
       props: ['name'],
       template: '<span class="icon-stub">{{ name }}</span>',
     },

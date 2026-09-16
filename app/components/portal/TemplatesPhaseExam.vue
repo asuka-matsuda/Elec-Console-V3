@@ -4,6 +4,7 @@
  * 送電試験（フェーズ1〜3）共通のテンプレート（Layout）コンポーネント。
  * ヘッダー、同期状態、絞り込み＆進捗コントロールパネル、およびメインコンテンツ（テーブル）の骨組みを提供します。
  */
+import type { IconName } from '~/constants/icons'
 import type { CircuitItem } from '~/types/souden'
 
 const selectedShubetsu = defineModel<string>('shubetsu', { default: 'ALL' })
@@ -11,7 +12,7 @@ const selectedBanMeisho = defineModel<string>('banMeisho', { default: 'ALL' })
 
 defineProps<{
   title: string
-  icon: string
+  icon: IconName
   phase: 1 | 2 | 3
   shubetsuOptions: { label: string, value: string }[]
   banMeishoOptions: { label: string, value: string }[]

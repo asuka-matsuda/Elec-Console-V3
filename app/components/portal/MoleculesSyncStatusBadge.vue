@@ -40,13 +40,13 @@ const openModal = () => {
         :disabled="isSyncing"
         @click="openModal"
       >
-        <AtomsIcon
+        <Icon
           v-if="isSyncing"
           name="refresh-cw"
           size="sm"
           class="animate-spin"
         />
-        <AtomsIcon
+        <Icon
           v-else
           name="zap"
           size="sm"
@@ -54,7 +54,7 @@ const openModal = () => {
         <span>未同期 {{ pendingCount }}件</span>
         <span class="inline-flex items-center gap-1 pl-1.5 action-divider">
           <span>同期実行</span>
-          <AtomsIcon name="upload" size="sm" />
+          <Icon name="upload" size="sm" />
         </span>
       </button>
     </template>

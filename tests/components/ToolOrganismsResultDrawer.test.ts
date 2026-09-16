@@ -21,7 +21,7 @@ describe('ToolOrganismsResultDrawer.vue', () => {
       props: ['variant', 'disabled', 'loading'],
       template: '<button class="button-stub"><slot /></button>',
     },
-    AtomsIcon: {
+    Icon: {
       props: ['name', 'size'],
       template: '<i class="icon-stub" />',
     },

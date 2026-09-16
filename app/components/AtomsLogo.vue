@@ -14,7 +14,7 @@ const emit = defineEmits<{
     class="relative z-[1] flex shrink-0 items-center gap-2 logo"
     @click="emit('click')"
   >
-    <AtomsIcon name="zap" size="md" class="relative z-[1]" />
+    <Icon name="zap" size="md" class="relative z-[1]" />
     <span>Elec-Console</span>
   </NuxtLink>
 </template>

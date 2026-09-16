@@ -20,7 +20,7 @@ describe('OrganismsGlobalNav.vue', () => {
       props: ['title'],
     },
     AtomsDivider: true,
-    AtomsIcon: true,
+    Icon: true,
     NuxtLink: {
       template: '<a class="link-stub" :href="to" @click="$emit(\'click\')"><slot /></a>',
       props: ['to'],

@@ -1,6 +1,7 @@
-﻿import type { ComputedRef, Ref } from 'vue'
+import type { ComputedRef, Ref } from 'vue'
 import { computed, getCurrentInstance, onUnmounted, ref, toValue } from 'vue'
 
+import type { IconName } from '~/constants/icons'
 import type { ButtonVariant } from '~/types/components'
 
 export type AsyncActionState = 'idle' | 'saving' | 'success' | 'error'
@@ -21,7 +22,7 @@ export interface UseAsyncActionFeedbackOptions {
 }
 
 export interface ActionFeedbackContent {
-  icon: string
+  icon: IconName
   text: string
 }
 

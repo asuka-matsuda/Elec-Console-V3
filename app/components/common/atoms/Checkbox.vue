@@ -62,8 +62,8 @@ const inputAttrs = computed(() => {
         .indeterminate="indeterminate"
       >
       <span class="checkbox-box">
-        <AtomsIcon name="check" class="icon is-check" />
-        <AtomsIcon name="minus" class="icon is-dash" />
+        <Icon name="check" class="icon is-check" />
+        <Icon name="minus" class="icon is-dash" />
       </span>
     </span>
 
