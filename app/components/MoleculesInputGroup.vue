@@ -13,7 +13,9 @@ defineProps<Props>()
 <template>
   <div class="flex input-group">
     <!-- メイン入力欄 (Input 等) -->
-    <slot />
+    <div class="flex-1 min-w-0 input-group-main">
+      <slot />
+    </div>
 
     <!-- 単位テキストアドオン -->
     <span v-if="addon" class="inline-flex shrink-0 items-center justify-center addon">
@@ -29,16 +31,6 @@ defineProps<Props>()
 
 <style scoped lang="scss">
 .input-group {
-  :deep(> *:not(.addon, .append)) {
-    flex: 1;
-    min-width: 0;
-  }
-
-  :deep(.form-control) {
-    flex: 1;
-    min-width: 0;
-  }
-
   .addon {
     user-select: none;
 
@@ -56,21 +48,12 @@ defineProps<Props>()
   }
 
   .append {
-    :deep(.custom-select__value) {
-      padding-inline: 0.8em;
-      border-left: none;
-
-      &:focus,
-      &:focus-visible,
-      &.is-active {
-        margin-left: calc(var(--border-width-base) * -1);
-        border-left: var(--border-width-base) solid var(--theme-accent);
-      }
-    }
-
-    :deep(.custom-select) {
-      width: 6em;
-    }
+    --select-width: auto;
+    --select-min-width: 6.5em;
+    --select-padding-inline: 0.8em;
+    --select-border-left: none;
+    --select-margin-left-active: calc(var(--border-width-base) * -1);
+    --select-border-left-active: var(--border-width-base) solid var(--glow-color, var(--theme-accent));
   }
 }
 </style>

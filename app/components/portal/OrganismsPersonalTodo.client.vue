@@ -62,10 +62,15 @@ const sortedTodos = computed(() => {
       >
         <Checkbox
           :model-value="todo.completed"
-          :class="{ 'is-completed': todo.completed }"
-          :label="todo.text"
           @update:model-value="toggleTodo(todo.id)"
-        />
+        >
+          <span
+            class="todo-label"
+            :class="{ 'is-completed': todo.completed }"
+          >
+            {{ todo.text }}
+          </span>
+        </Checkbox>
         <Button
           variant="danger"
           icon="trash-2"
@@ -88,11 +93,12 @@ const sortedTodos = computed(() => {
   background-color: var(--color-bg-hover);
 }
 
-:deep(.is-completed) {
-  opacity: 0.5;
+.todo-label {
+  transition: var(--transition-base);
 
-  .label {
+  &.is-completed {
     text-decoration: line-through;
+    opacity: 0.5;
   }
 }
 </style>

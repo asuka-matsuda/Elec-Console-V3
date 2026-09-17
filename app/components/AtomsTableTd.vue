@@ -69,8 +69,10 @@ const formatDisplayText = (val: unknown): unknown => {
 <style scoped lang="scss">
 td {
   border-right: var(--border-width-base) solid var(--color-border);
-  border-bottom: var(--border-width-base) solid
-    color-mix(in srgb, var(--color-border) 70%, var(--color-text-muted) 30%);
+  border-bottom: var(
+    --table-cell-border-bottom,
+    var(--border-width-base) solid color-mix(in srgb, var(--color-border) 70%, var(--color-text-muted) 30%)
+  );
 
   font-family: var(--font-mono);
   font-size: var(--font-size-xs);
@@ -112,11 +114,6 @@ td {
     color: var(--color-text-muted);
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-
-  :deep(strong),
-  :deep(b) {
-    font-weight: var(--font-weight-normal, 400);
   }
 }
 </style>

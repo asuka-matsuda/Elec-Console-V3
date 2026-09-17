@@ -222,6 +222,42 @@ export interface InputProps {
 }
 export type AtomsInputProps = InputProps
 
+// --- Select ---
+export interface SelectProps<T = string | number | boolean> {
+  /** 選択肢リスト */
+  options: SelectOption<T>[]
+  /** プレースホルダー */
+  placeholder?: string
+  /** 無効化状態 (デフォルト: false) */
+  disabled?: boolean
+  /** エラー状態フラグ (デフォルト: false) */
+  error?: boolean
+  /** HTML id属性 */
+  id?: string
+  /** ドロップダウンの展開方向優先設定 */
+  placement?: 'top' | 'bottom'
+  /** 選択解除（クリア）ボタンを表示する (デフォルト: true) */
+  clearable?: boolean
+}
+export type AtomsSelectProps<T = string | number | boolean> = SelectProps<T>
+
+// --- FormControlAction ---
+export interface FormControlActionProps {
+  /** 表示するアイコン名 */
+  icon: IconName
+  /** ツールチップ用タイトル */
+  title?: string
+  /** 180度回転状態（セレクトボックス展開矢印等） */
+  rotate?: boolean
+  /** 操作可能か（false の場合は単なるインジケーターとして表示） */
+  interactive?: boolean
+  /** 無効化状態 */
+  disabled?: boolean
+  /** フォーカス用 tabindex (デフォルト: -1) */
+  tabindex?: number
+}
+export type AtomsFormControlActionProps = FormControlActionProps
+
 // ============================================================================
 // 3. Molecules（複合コンポーネント）
 // ============================================================================

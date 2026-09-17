@@ -1,43 +1,51 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends string | number | boolean = string | number | boolean">
 /**
  * AtomsSelect
  * [Atoms] キーボード操作や画面外へのはみ出し防止機能に対応した、カスタムのセレクトボックスコンポーネント。
  */
-import { computed, inject, onMounted, ref, toRef, watch } from 'vue'
+import { type ComponentPublicInstance, computed, inject, nextTick, ref, toRef, watch } from 'vue'
 
 import { useClickOutside } from '~/composables/useClickOutside'
 import { useFloatingPlacement } from '~/composables/useFloatingPlacement'
 import { useListKeyboardNav } from '~/composables/useListKeyboardNav'
-import { FORM_GROUP_KEY, type SelectOption } from '~/types/components'
+import type { SelectOption, SelectProps } from '~/types/components'
+import { FORM_GROUP_KEY } from '~/types/components'
 
-const model = defineModel<string | number | boolean | null>()
+const model = defineModel<T | null>()
 
 const props = withDefaults(
-  defineProps<{
-    options: SelectOption[]
-    placeholder?: string
-    disabled?: boolean
-    error?: boolean
-    id?: string
-    placement?: 'top' | 'bottom'
-  }>(),
+  defineProps<SelectProps<T>>(),
   {
     disabled: false,
     error: false,
+    clearable: true,
   },
 )
+
+const emit = defineEmits<{
+  (e: 'change', value: T | null): void
+  (e: 'clear'): void
+}>()
+
+defineSlots<{
+  selected?: (props: { option?: SelectOption<T>, label: string }) => unknown
+  option?: (props: { option: SelectOption<T>, isSelected: boolean }) => unknown
+}>()
 
 const formGroup = inject(FORM_GROUP_KEY, null)
 const selectId = computed(() => props.id || formGroup?.id.value)
 const isError = computed(() => props.error || (formGroup?.hasError.value ?? false))
 
+const triggerRef = ref<HTMLButtonElement | null>(null)
 const selectRef = ref<HTMLElement | null>(null)
 const dropdownRef = ref<HTMLElement | null>(null)
+const optionRefs = ref<HTMLElement[]>([])
 const isOpen = ref(false)
-const isMounted = ref(false)
 
 useClickOutside(selectRef, () => {
   isOpen.value = false
+}, {
+  ignore: [dropdownRef],
 })
 
 const {
@@ -60,23 +68,31 @@ const syncedDropdownStyle = computed(() => {
   }
 })
 
-const selectOption = (option: SelectOption) => {
+const selectOption = (option: SelectOption<T>) => {
   if (option.disabled) return
   model.value = option.value
+  emit('change', option.value)
   isOpen.value = false
+  triggerRef.value?.focus()
+}
+
+const handleClear = () => {
+  model.value = null
+  emit('change', null)
+  emit('clear')
+  isOpen.value = false
+  triggerRef.value?.focus()
 }
 
 const {
   focusedIndex,
   resetFocus,
   handleKeydown,
-} = useListKeyboardNav<SelectOption>({
+} = useListKeyboardNav<SelectOption<T>>({
   options: computed(() => props.options),
   isOpen,
   onSelect: selectOption,
-  onClear: () => {
-    model.value = undefined
-  },
+  onClear: handleClear,
   disabled: toRef(props, 'disabled'),
 })
 
@@ -85,22 +101,39 @@ const selectedOption = computed(() => {
 })
 
 const displayLabel = computed(() => {
-  if (!isMounted.value) return props.placeholder || ''
   if (selectedOption.value) return selectedOption.value.label
 
   return props.placeholder || ''
 })
 
 const isPlaceholder = computed(() => {
-  if (!isMounted.value) return !!props.placeholder
-
   return !selectedOption.value && !!props.placeholder
+})
+
+const canClear = computed(() => {
+  return (
+    props.clearable
+    && !props.disabled
+    && model.value !== null
+    && model.value !== undefined
+    && model.value !== ''
+  )
 })
 
 const toggleDropdown = () => {
   if (props.disabled) return
   isOpen.value = !isOpen.value
 }
+
+// ドロップダウン内のキーボードスクロール追従
+watch(focusedIndex, async (newIndex) => {
+  if (newIndex >= 0 && isOpen.value) {
+    await nextTick()
+    const targetEl = optionRefs.value[newIndex]
+
+    targetEl?.scrollIntoView({ block: 'nearest' })
+  }
+})
 
 watch(isOpen, (newVal) => {
   if (newVal) {
@@ -111,37 +144,62 @@ watch(isOpen, (newVal) => {
   }
   else {
     resetFocus(-1)
+    optionRefs.value = []
   }
 })
 
-onMounted(() => {
-  isMounted.value = true
-})
+const setOptionRef = (el: Element | ComponentPublicInstance | null, index: number) => {
+  if (el) {
+    optionRefs.value[index] = (el instanceof HTMLElement ? el : (el as ComponentPublicInstance).$el) as HTMLElement
+  }
+}
 
-const getOptionClasses = (option: SelectOption, index: number) => [
-  'relative z-[1] overflow-hidden truncate custom-select__option',
+const getOptionClasses = (option: SelectOption<T>, index: number) => [
+  'relative z-[1] overflow-hidden py-[0.4em] px-[0.8em] custom-select__option',
   {
     'is-selected': model.value === option.value,
     'is-focused': index === focusedIndex.value,
     'is-disabled': option.disabled,
   },
 ]
+
+defineExpose({
+  /** トリガーボタンへのフォーカス */
+  focus: (options?: FocusOptions) => triggerRef.value?.focus(options),
+  /** フォーカス解除 */
+  blur: () => triggerRef.value?.blur(),
+  /** ドロップダウンを開く */
+  open: () => {
+    if (!props.disabled) isOpen.value = true
+  },
+  /** ドロップダウンを閉じる */
+  close: () => {
+    isOpen.value = false
+  },
+  /** 開閉トグル */
+  toggle: toggleDropdown,
+  /** DOM 参照 */
+  selectRef,
+  triggerRef,
+})
 </script>
 
 <template>
   <div
     ref="selectRef"
-    class="relative w-full custom-select"
+    class="relative w-full min-w-0 custom-select"
     :class="{ 'is-error': isError }"
     :data-disabled="disabled"
   >
     <button
       :id="selectId"
+      ref="triggerRef"
       type="button"
-      class="relative z-[1] focus:z-[2] flex w-full items-center justify-between gap-2 custom-select__value"
+      class="relative z-[1] focus:z-[2] flex w-full items-center justify-between gap-2 py-[0.3em] custom-select__value"
       :class="{
         'is-placeholder': isPlaceholder,
         'is-active': isOpen,
+        'is-error': isError,
       }"
       :disabled="disabled"
       @click="toggleDropdown"
@@ -150,7 +208,23 @@ const getOptionClasses = (option: SelectOption, index: number) => [
       <slot name="selected" :option="selectedOption" :label="displayLabel">
         <span class="flex-1 text-left custom-select__label">{{ displayLabel }}</span>
       </slot>
-      <span class="relative z-[1] shrink-0 custom-select__arrow" />
+
+      <div class="flex items-center gap-1 shrink-0">
+        <!-- クリアボタン (値があるときに表示) -->
+        <FormControlAction
+          v-if="canClear"
+          icon="x"
+          title="選択解除"
+          @click="handleClear"
+        />
+
+        <!-- 展開矢印 -->
+        <FormControlAction
+          icon="chevron-down"
+          :rotate="isOpen"
+          :interactive="false"
+        />
+      </div>
     </button>
 
     <Teleport :to="teleportTarget">
@@ -158,19 +232,14 @@ const getOptionClasses = (option: SelectOption, index: number) => [
         <ul
           v-if="isOpen"
           ref="dropdownRef"
-          class="absolute z-select w-max max-w-[90vw] overflow-x-hidden overflow-y-auto p-1 custom-select__dropdown"
+          class="absolute z-select w-max max-w-[90vw] max-h-[min(250px,40vh)] overflow-x-hidden overflow-y-auto p-1 custom-select__dropdown"
           :class="`is-${dynamicPlacement}`"
           :style="syncedDropdownStyle"
         >
           <li
-            v-if="isPlaceholder"
-            class="relative z-[1] overflow-hidden custom-select__option is-placeholder"
-          >
-            {{ placeholder }}
-          </li>
-          <li
             v-for="(option, index) in options"
             :key="String(option.value)"
+            :ref="(el) => setOptionRef(el, index)"
             :class="getOptionClasses(option, index)"
             @click="selectOption(option)"
           >
@@ -187,13 +256,17 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 <style scoped lang="scss">
 .custom-select {
   user-select: none;
+
+  width: var(--select-width, 100%);
+  min-width: var(--select-min-width, 0);
+
   font-size: inherit;
   color: var(--color-text-main);
 
   &[data-disabled="true"] {
     pointer-events: none;
     cursor: not-allowed;
-    opacity: 0.5;
+    opacity: 0.55;
   }
 }
 
@@ -204,9 +277,9 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   user-select: none;
 
   min-height: calc(var(--control-height-ratio) * 1em);
-  padding-block: 0.3em;
-  padding-inline: 1.2em;
+  padding-inline: var(--select-padding-inline, 1.2em);
   border: var(--border-width-base) solid var(--color-border);
+  border-left: var(--select-border-left, var(--border-width-base) solid var(--color-border));
 
   font-size: inherit;
   color: inherit;
@@ -215,11 +288,6 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   box-shadow: var(--shadow-sink);
 
   transition: var(--transition-interactive);
-
-  &:is(:disabled, .is-disabled) {
-    cursor: not-allowed;
-    opacity: 0.5;
-  }
 
   &:not(:disabled, .is-disabled) {
     &:hover {
@@ -235,12 +303,18 @@ const getOptionClasses = (option: SelectOption, index: number) => [
     &.is-active,
     &:focus,
     &:focus-visible {
+      margin-left: var(--select-margin-left-active, 0);
       border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
+      border-left: var(
+        --select-border-left-active,
+        var(--border-width-base) solid color-mix(in srgb, var(--glow-color) 60%, transparent)
+      );
+
       outline: none;
       box-shadow: var(--shadow-glow-focus);
     }
 
-    .custom-select.is-error & {
+    &.is-error {
       --glow-color: var(--color-status-danger);
 
       border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
@@ -249,6 +323,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
       &:focus,
       &:focus-visible {
         border-color: var(--glow-color);
+        border-left: var(--select-border-left-active, var(--border-width-base) solid var(--glow-color));
       }
     }
   }
@@ -257,21 +332,7 @@ const getOptionClasses = (option: SelectOption, index: number) => [
     color: color-mix(in srgb, var(--color-text-muted) 50%, transparent);
   }
 
-  &.is-active .custom-select__arrow {
-    transform: rotate(180deg);
-  }
-}
-
-.custom-select__arrow {
-  width: 1.2em;
-  height: 1.2em;
-
-  background-image: var(--icon-select-arrow);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-
-  transition: var(--transition-transform);
+  @include state-disabled;
 }
 
 .custom-select__dropdown {
@@ -280,7 +341,6 @@ const getOptionClasses = (option: SelectOption, index: number) => [
 
   transform: translateZ(0);
 
-  max-height: min(250px, 40vh);
   border: var(--border-width-base) solid var(--dropdown-border-color);
 
   background-color: var(--surface-bg-solid);
@@ -308,22 +368,12 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   cursor: pointer;
   user-select: none;
 
-  overflow: hidden;
-
-  padding: 0.4em 0.8em;
-
   font-size: inherit;
   color: var(--color-text-main);
   text-overflow: ellipsis;
   white-space: nowrap;
 
   transition: var(--transition-colors);
-
-  &.is-placeholder {
-    cursor: default;
-    font-style: italic;
-    color: var(--color-text-muted);
-  }
 
   &:not(:is(.is-disabled, .is-placeholder)) {
     &:is(:hover, .is-focused, .is-selected) {

@@ -176,8 +176,8 @@ table {
     background-color: var(--color-bg-hover);
   }
 
-  &:last-child :deep(td) {
-    border-bottom: none;
+  &:last-child {
+    --table-cell-border-bottom: none;
   }
 }
 </style>

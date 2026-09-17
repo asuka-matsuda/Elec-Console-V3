@@ -72,6 +72,7 @@ defineProps<{
                   <AtomsSelect
                     v-model="form[field.secondaryId!]"
                     :options="field.secondaryOptions || []"
+                    :clearable="false"
                     :error="secMeta.touched && !!secError"
                     @update:model-value="secChange"
                     @blur="secBlur"

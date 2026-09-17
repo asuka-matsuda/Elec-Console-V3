@@ -67,7 +67,7 @@ describe('Input.vue', () => {
       },
     })
 
-    const clearButton = wrapper.find('button[title="クリア"]')
+    const clearButton = wrapper.find('[title="クリア"]')
 
     expect(clearButton.exists()).toBe(true)
 
@@ -85,7 +85,7 @@ describe('Input.vue', () => {
       },
     })
 
-    const clearButton = wrapper.find('button[title="クリア"]')
+    const clearButton = wrapper.find('[title="クリア"]')
 
     expect(clearButton.exists()).toBe(false)
   })
@@ -100,7 +100,7 @@ describe('Input.vue', () => {
     })
 
     const input = wrapper.find('input')
-    const toggleButton = wrapper.find('button[title="パスワードを表示"]')
+    const toggleButton = wrapper.find('[title="パスワードを表示"]')
 
     expect(input.attributes('type')).toBe('password')
     expect(toggleButton.exists()).toBe(true)

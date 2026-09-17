@@ -145,30 +145,20 @@ defineExpose({
       class="absolute right-2 z-[3] flex items-center gap-1 action-group"
     >
       <!-- クリアボタン -->
-      <button
+      <FormControlAction
         v-if="canClear"
-        type="button"
-        tabindex="-1"
-        class="action-btn flex items-center justify-center"
+        icon="x"
         title="クリア"
-        @mousedown.prevent
-        @click.stop="handleClear"
-      >
-        <Icon name="x" class="w-3.5 h-3.5" />
-      </button>
+        @click="handleClear"
+      />
 
       <!-- パスワード表示トグルボタン -->
-      <button
+      <FormControlAction
         v-if="canTogglePassword"
-        type="button"
-        tabindex="-1"
-        class="action-btn flex items-center justify-center"
+        :icon="showPassword ? 'eye-off' : 'eye'"
         :title="showPassword ? 'パスワードを隠す' : 'パスワードを表示'"
-        @mousedown.prevent
-        @click.stop="showPassword = !showPassword"
-      >
-        <Icon :name="showPassword ? 'eye-off' : 'eye'" class="w-4 h-4" />
-      </button>
+        @click="showPassword = !showPassword"
+      />
     </div>
   </div>
 </template>
@@ -182,31 +172,6 @@ defineExpose({
 
   &::-webkit-search-cancel-button {
     appearance: none;
-  }
-}
-
-.action-group {
-  color: var(--color-text-muted);
-}
-
-.action-btn {
-  cursor: pointer;
-
-  padding: 0.2em;
-  border: none;
-
-  color: inherit;
-
-  background: transparent;
-
-  transition: var(--transition-fast);
-
-  &:hover {
-    color: var(--color-text-main);
-  }
-
-  &:active {
-    transform: scale(0.92);
   }
 }
 </style>

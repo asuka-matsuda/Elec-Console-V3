@@ -201,8 +201,8 @@ table {
     outline: 2px solid var(--color-selection-outline);
   }
 
-  &:last-child :deep(td) {
-    border-bottom: none;
+  &:last-child {
+    --table-cell-border-bottom: none;
   }
 }
 
