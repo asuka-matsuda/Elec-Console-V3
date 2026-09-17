@@ -1,14 +1,14 @@
 <script setup lang="ts">
 /**
  * Phase 1 View
- * フェーズ1：回路確認・増し締め
+ * フェーズ1：回路確認・増締
  */
 import { computed, onMounted, watch } from 'vue'
 
 import { usePhase1Exam } from '~/composables/portal/phase/usePhase1Exam'
 import type { CircuitItem } from '~/types/souden'
 
-useHead({ title: 'フェーズ1：回路確認・増し締め - Elec-Console' })
+useHead({ title: 'フェーズ1：回路確認・増締 - Elec-Console' })
 
 const route = useRoute()
 const siteId = computed(() => route.params.siteId as string)
@@ -68,7 +68,7 @@ const shubetsuTabOptions = computed(() => {
   <PortalTemplatesPhaseExam
     v-model:shubetsu="selectedBanShubetsu"
     v-model:ban-meisho="selectedBanMeisho"
-    title="フェーズ1：回路確認・増し締め"
+    title="フェーズ1：回路確認・増締"
     icon="check-square"
     :phase="1"
     :shubetsu-options="shubetsuTabOptions"

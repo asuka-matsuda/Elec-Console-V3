@@ -2,14 +2,14 @@ import type { SelectOption, TableColumn } from '~/types/components'
 import type { CircuitItem, OperationLogItem } from '~/types/souden'
 
 /**
- * フェーズ1：回路確認・増し締め テーブルカラム定義
+ * フェーズ1：回路確認・増締 テーブルカラム定義
  */
 export const PHASE1_TABLE_COLUMNS: TableColumn<CircuitItem>[] = [
   { key: 'banMeisho', subKey: 'banShubetsu', label: '盤情報' },
   { key: 'kairoBangou', label: '回路番号', align: 'center' },
   { key: 'kairoMeisho', label: '回路名称' },
   { key: 'cableList', label: '配線 / 接地' },
-  { key: 'p1Kakunin', label: '確認 / 増締め', align: 'center' },
+  { key: 'p1Kakunin', label: '確認 / 増締', align: 'center' },
   { key: 'p1Remarks', label: '備考' },
   { key: 'actions', label: '操作', sortable: false, align: 'center' },
   { key: 'p1ConfirmedAt', label: '測定者 / 日時', align: 'center' },

@@ -53,7 +53,7 @@ const emit = defineEmits<{
       />
     </MoleculesFormGroup>
 
-    <MoleculesFormGroup label="アサイン済ワーカー">
+    <MoleculesFormGroup label="アサイン済作業者">
       <div class="flex flex-wrap items-center gap-2">
         <template v-if="workerNames.length > 0">
           <Badge
@@ -67,8 +67,8 @@ const emit = defineEmits<{
         <MoleculesEmptyState
           v-else
           icon="users"
-          title="アサインされているワーカーはいません"
-          description="ユーザー管理画面からワーカーをアサインしてください。"
+          title="アサインされている作業者はいません"
+          description="ユーザー管理画面から作業者をアサインしてください。"
         />
       </div>
     </MoleculesFormGroup>

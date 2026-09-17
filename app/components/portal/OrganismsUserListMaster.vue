@@ -25,7 +25,7 @@ const roleFilter = ref<string>('all')
 const filterOptions: RadioOption<string>[] = [
   { label: 'すべて', value: 'all' },
   { label: '管理者', value: 'admin' },
-  { label: '作業員', value: 'worker' },
+  { label: '作業者', value: 'worker' },
 ]
 
 const filteredUsers = computed(() => {

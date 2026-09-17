@@ -39,7 +39,7 @@ export const ADMIN_SITE_COLUMNS: TableColumn<Site>[] = [
  */
 export const USER_ROLE_OPTIONS: SelectOption<UserRole>[] = [
   { value: 'admin', label: '管理者 (admin)' },
-  { value: 'worker', label: '作業員 (worker)' },
+  { value: 'worker', label: '作業者 (worker)' },
   { value: 'viewer', label: '閲覧者 (viewer)' },
 ]
 

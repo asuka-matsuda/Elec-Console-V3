@@ -3,12 +3,10 @@ import {
   WEAK_CURRENT_CATEGORIES,
 } from '~/constants/cableConstants'
 import { cableData } from '~/constants/data/cableData'
+import type { SelectOption } from '~/types/components'
 import type { CableData } from '~/types/database'
 
-export interface DropdownOption {
-  label: string
-  value: string
-}
+export type DropdownOption = SelectOption<string>
 
 export { STRONG_CURRENT_CATEGORIES, WEAK_CURRENT_CATEGORIES }
 
@@ -18,7 +16,7 @@ export { STRONG_CURRENT_CATEGORIES, WEAK_CURRENT_CATEGORIES }
  */
 export function getCableCategories(
   filter?: 'strong' | 'weak' | readonly string[] | string[],
-): DropdownOption[] {
+): SelectOption<string>[] {
   let cats = [...new Set(cableData.map(c => c.category))]
 
   if (filter === 'strong') {
@@ -41,7 +39,7 @@ export function getCableCategories(
 /**
  * 指定されたカテゴリ（cableType）に存在するケーブルのリストを取得する
  */
-export function getAvailableSizes(category: string): DropdownOption[] {
+export function getAvailableSizes(category: string): SelectOption<string>[] {
   if (!category) return []
 
   // 元の配列におけるインデックスを保持したままフィルタリングする
@@ -63,7 +61,7 @@ export function getAvailableSizes(category: string): DropdownOption[] {
 /**
  * 指定されたケーブル種別（category）で利用可能な心数（cores）の一覧を取得する
  */
-export function getAvailableCores(category: string): DropdownOption[] {
+export function getAvailableCores(category: string): SelectOption<string>[] {
   if (!category) return []
 
   const coresList = [...new Set(
@@ -92,7 +90,7 @@ export function getAvailableCores(category: string): DropdownOption[] {
  */
 export function getDefaultCoreForPhase(
   phase: string,
-  availableCores: DropdownOption[],
+  availableCores: SelectOption<string>[],
 ): string {
   if (!availableCores.length) return ''
 

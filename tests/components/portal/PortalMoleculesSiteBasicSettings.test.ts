@@ -36,6 +36,6 @@ describe('MoleculesSiteBasicSettings.vue', () => {
       },
     })
 
-    expect(wrapper.text()).toContain('アサインされているワーカーはいません')
+    expect(wrapper.text()).toContain('アサインされている作業者はいません')
   })
 })

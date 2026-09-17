@@ -224,7 +224,7 @@ export function usePhaseExamBase(
 
       alert(
         fetchErr.data?.message
-        || '他の作業員によってこの回路が更新されました。最新状態を反映しました。',
+        || '他の作業者によってこの回路が更新されました。最新状態を反映しました。',
       )
 
       return true
@@ -239,7 +239,7 @@ export function usePhaseExamBase(
       return `${currentUser.value.lastName} ${currentUser.value.firstName}`.trim() || currentUser.value.loginId
     }
 
-    return '現場作業員'
+    return '現場作業者'
   }
 
   return {

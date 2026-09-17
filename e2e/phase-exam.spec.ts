@@ -17,7 +17,7 @@ test.describe('Power Transmission Examination Workflow', () => {
   test('should render Phase 1 examination page with phase header and navigation', async ({ page }) => {
     await page.goto('/portal/test/phase1')
     await expect(page).toHaveTitle(/フェーズ1/)
-    await expect(page.locator('text=フェーズ1：回路確認・増し締め').first()).toBeVisible()
+    await expect(page.locator('text=フェーズ1：回路確認・増締').first()).toBeVisible()
     await expect(page.locator('text=ダッシュボードへ戻る').first()).toBeVisible()
   })
 

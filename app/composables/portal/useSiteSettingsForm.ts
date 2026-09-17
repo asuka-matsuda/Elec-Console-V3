@@ -289,12 +289,12 @@ export function useSiteSettingsForm(params: UseSiteSettingsFormParams) {
         },
       )
 
-      syncMsg.value = `初期化取込完了: 全${res.count}件の回路情報を登録しました`
+      syncMsg.value = `初期化取り込み完了: 全${res.count}件の回路情報を登録しました`
       syncMsgType.value = 'success'
 
       syncResultData.value = {
         type: 'reset',
-        title: '全件初期化取込が完了しました',
+        title: '全件初期化取り込みが完了しました',
         count: res.count,
         createdCount: res.count,
         updatedCount: 0,

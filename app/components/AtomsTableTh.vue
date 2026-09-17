@@ -23,9 +23,9 @@ const isSortable = computed(() => props.column.sortable !== false)
 
 const sortTitle = computed(() => {
   if (!isSortable.value) return undefined
-  if (!isSorted.value) return 'クリックで昇順に並べ替え'
+  if (!isSorted.value) return 'クリックで昇順に並び替え'
 
-  return props.sortOrder === 'asc' ? 'クリックで降順に並べ替え' : 'クリックで元の並び順に戻す'
+  return props.sortOrder === 'asc' ? 'クリックで降順に並び替え' : 'クリックで元の並び順に戻す'
 })
 
 const sortIconName = computed(() => {

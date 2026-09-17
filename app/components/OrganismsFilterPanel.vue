@@ -5,17 +5,13 @@
  * AtomsPanel, MoleculesSectionHeader, MoleculesFormGroup, AtomsInput, Checkbox を組み合わせた独立セクション。
  */
 import type { IconName } from '~/constants/icons'
-
-interface CategoryOption {
-  label: string
-  value: string
-}
+import type { SelectOption } from '~/types/components'
 
 interface Props {
   title?: string
   icon?: IconName
   placeholder?: string
-  categoryOptions?: CategoryOption[]
+  categoryOptions?: SelectOption<string>[]
 }
 
 const searchQuery = defineModel<string>('searchQuery', { default: '' })

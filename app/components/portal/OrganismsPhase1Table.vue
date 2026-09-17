@@ -1,8 +1,8 @@
 <script setup lang="ts">
 /**
  * PortalOrganismsPhase1Table
- * フェーズ1（回路確認・増し締め）の回路一覧テーブルOrganismコンポーネント。
- * 回路確認・増締めチェック、インライン編集（回路番号・名称・配線・備考）、確定および解除操作を管理します。
+ * フェーズ1（回路確認・増締）の回路一覧テーブルOrganismコンポーネント。
+ * 回路確認・増締チェック、インライン編集（回路番号・名称・配線・備考）、確定および解除操作を管理します。
  */
 import { computed, reactive, ref } from 'vue'
 
@@ -127,7 +127,7 @@ const {
       </div>
     </template>
 
-    <!-- 確認 / 増締め (チェックボックス) -->
+    <!-- 確認 / 増締 (チェックボックス) -->
     <template #cell-p1Kakunin="{ row: circuit }">
       <div class="flex items-center justify-center gap-3">
         <label class="check-item inline-flex flex-col items-center gap-0.5" title="回路確認">
@@ -137,7 +137,7 @@ const {
           />
           <span class="check-item-label">確認</span>
         </label>
-        <label class="check-item inline-flex flex-col items-center gap-0.5" title="増締め確認">
+        <label class="check-item inline-flex flex-col items-center gap-0.5" title="増締確認">
           <Checkbox
             v-model="circuit.p1Mashishime"
             :disabled="isComplete(circuit) || editingRowId === circuit.id || circuit.isExcluded || isCircuitLocked(circuit)"
@@ -166,7 +166,7 @@ const {
       <div class="flex items-center justify-center gap-1">
         <!-- 幹線未完了による操作不可 -->
         <template v-if="isCircuitLocked(circuit)">
-          <span class="text-note inline-flex items-center gap-1">⏸ 幹線未了</span>
+          <span class="text-note inline-flex items-center gap-1">⏸ 幹線未完了</span>
         </template>
 
         <!-- 編集モード中 -->

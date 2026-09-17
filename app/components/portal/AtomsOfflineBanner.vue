@@ -2,7 +2,7 @@
 /**
  * AtomsOfflineBanner
  * 現場の電波状況（圏外 / オンライン復帰）を監視し、
- * 作業員にデータのローカル保護状況を通知するHUDスタイルバナー。
+ * 作業者にデータのローカル保護状況を通知するHUDスタイルバナー。
  */
 import { useOnline } from '@vueuse/core'
 import { ref, watch } from 'vue'

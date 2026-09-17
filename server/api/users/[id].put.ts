@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // master アカウントの保護（ログインIDの変更、無効化、一般作業員への降格を禁止）
+  // master アカウントの保護（ログインIDの変更、無効化、一般作業者への降格を禁止）
   if (targetUser.loginId === 'master') {
     if (body.loginId && body.loginId !== 'master') {
       throw createError({

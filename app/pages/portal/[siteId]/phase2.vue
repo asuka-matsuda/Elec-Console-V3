@@ -72,7 +72,7 @@ const shubetsuTabOptions = computed(() => {
   <PortalTemplatesPhaseExam
     v-model:shubetsu="selectedBanShubetsu"
     v-model:ban-meisho="selectedBanMeisho"
-    title="フェーズ2：絶縁抵抗測定（メガ測定）"
+    title="フェーズ2：絶縁抵抗測定"
     icon="activity"
     :phase="2"
     :shubetsu-options="shubetsuTabOptions"

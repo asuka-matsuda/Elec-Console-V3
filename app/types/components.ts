@@ -83,6 +83,9 @@ export interface AnnouncementItem {
   desc: string
 }
 
+/**
+ * システム更新履歴・リリースノート用アイテム定義（ダッシュボード等で表示）
+ */
 export interface HistoryItem {
   id?: number | string
   version: string
@@ -130,8 +133,6 @@ export interface CheckboxProps {
   falseValue?: unknown
 }
 
-export type AtomsCheckboxProps = CheckboxProps
-
 export type IconSize = 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
 
 export interface IconProps {
@@ -140,5 +141,3 @@ export interface IconProps {
   strokeWidth?: number | string
   spin?: boolean
 }
-
-export type AtomsIconProps = IconProps

@@ -12,7 +12,7 @@ export interface BadgePresetItem {
 export const BADGE_PRESETS = {
   // 1. ユーザーロール (User Roles) & アカウントフラグ
   'role:admin': { color: 'var(--color-role-admin)', label: '管理者' },
-  'role:worker': { color: 'var(--color-role-worker)', label: '作業員' },
+  'role:worker': { color: 'var(--color-role-worker)', label: '作業者' },
   'role:viewer': { color: 'var(--color-role-viewer)', label: '閲覧者' },
   'user:pwd-reset': { color: 'var(--color-status-danger)', label: 'PWリセット要求' },
 

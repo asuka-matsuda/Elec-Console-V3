@@ -247,7 +247,7 @@ const {
       <div class="flex items-center justify-center gap-1">
         <!-- 幹線未完了による操作不可 -->
         <template v-if="isCircuitLocked(circuit)">
-          <span class="text-note inline-flex items-center gap-1">⏸ 幹線未了</span>
+          <span class="text-note inline-flex items-center gap-1">⏸ 幹線未完了</span>
         </template>
 
         <!-- 前フェーズ（P2）未完了による操作不可 -->

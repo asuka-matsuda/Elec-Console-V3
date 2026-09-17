@@ -242,7 +242,7 @@ const confirmResetPassword = async (row: User) => {
     >
       <div class="flex flex-col gap-4">
         <p class="credential-desc">
-          以下のログイン情報を作業員へお伝えください。<br />
+          以下のログイン情報を作業者へお伝えください。<br />
           （初期パスワードはこの画面を閉じると二度と表示されません）
         </p>
 

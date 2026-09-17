@@ -25,7 +25,7 @@ describe('MoleculesUserListItem.vue', () => {
 
     expect(wrapper.text()).toContain('山田 太郎')
     expect(wrapper.text()).toContain('yamada01')
-    expect(wrapper.text()).toContain('作業員')
+    expect(wrapper.text()).toContain('作業者')
     expect(wrapper.classes()).not.toContain('is-selected')
   })
 

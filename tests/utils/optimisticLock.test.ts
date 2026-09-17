@@ -65,10 +65,10 @@ describe('checkOptimisticLock', () => {
   })
 
   it('expectedUpdatedAt と DB の updatedAt に2秒以上の乖離がある場合は 409 Conflict をスローする', () => {
-    // クライアント側が古いタイムスタンプを保持しているケース (別作業員が既に更新済み)
+    // クライアント側が古いタイムスタンプを保持しているケース (別作業者が既に更新済み)
     expect(() => {
       checkOptimisticLock(baseCircuit, '2026-09-01T09:00:00.000Z')
-    }).toThrowError(/他の作業員/)
+    }).toThrowError(/他の作業者/)
 
     try {
       checkOptimisticLock(baseCircuit, '2026-09-01T09:00:00.000Z')
@@ -90,7 +90,7 @@ describe('checkOptimisticLock', () => {
   it('expectedVersion が不一致の場合は 409 Conflict をスローする', () => {
     expect(() => {
       checkOptimisticLock(baseCircuit, undefined, 0)
-    }).toThrowError(/他の作業員/)
+    }).toThrowError(/他の作業者/)
 
     try {
       checkOptimisticLock(baseCircuit, undefined, 0)

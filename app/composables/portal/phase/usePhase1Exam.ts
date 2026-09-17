@@ -5,7 +5,7 @@ import { usePhaseExamBase } from '~/composables/portal/phase/usePhaseExamBase'
 import type { CircuitItem } from '~/types/souden'
 
 /**
- * フェーズ1：回路確認・増し締め試験専用 Composable
+ * フェーズ1：回路確認・増締試験専用 Composable
  */
 export function usePhase1Exam(
   siteIdRef: Ref<string> | string,

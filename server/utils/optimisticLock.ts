@@ -18,7 +18,7 @@ export function checkOptimisticLock(
       throw createError({
         statusCode: 409,
         statusMessage: 'Conflict',
-        message: `他の作業員（または別端末）によってこの回路のデータが更新されています。最新のデータを反映しました。確認の上、再度実行してください。`,
+        message: `他の作業者（または別端末）によってこの回路のデータが更新されています。最新のデータを反映しました。確認の上、再度実行してください。`,
         data: {
           currentCircuit: circuit,
         },
@@ -40,7 +40,7 @@ export function checkOptimisticLock(
     throw createError({
       statusCode: 409,
       statusMessage: 'Conflict',
-      message: `他の作業員（または別端末）によってこの回路のデータが更新されています。最新のデータを反映しました。確認の上、再度実行してください。`,
+      message: `他の作業者（または別端末）によってこの回路のデータが更新されています。最新のデータを反映しました。確認の上、再度実行してください。`,
       data: {
         currentCircuit: circuit,
       },
@@ -96,7 +96,7 @@ export async function atomicUpdateCircuit(
       throw createError({
         statusCode: 409,
         statusMessage: 'Conflict',
-        message: '他の作業員（または別端末）によってこの回路のデータが更新されています。最新のデータを反映しました。確認の上、再度実行してください。',
+        message: '他の作業者（または別端末）によってこの回路のデータが更新されています。最新のデータを反映しました。確認の上、再度実行してください。',
         data: {
           currentCircuit,
         },

@@ -30,7 +30,7 @@ export default <Config>{
     './app/layouts/**/*.vue',
     './app/pages/**/*.vue',
     './app/app.{vue,js,ts}',
-    './app/error.{vue,js,ts}',
+    './error.vue',
   ],
   theme: {
     extend: {

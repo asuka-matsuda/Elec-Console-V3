@@ -1,3 +1,6 @@
+/**
+ * 各種計算ツール（電圧降下・電線管・ラック・重量）の実行・保存履歴エントリ定義
+ */
 export interface HistoryEntry<
   TInputs = Record<string, unknown>,
   TResults = Record<string, unknown>,

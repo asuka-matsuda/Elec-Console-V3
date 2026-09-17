@@ -174,7 +174,7 @@ const confirmToggleDisable = async (row: Site) => {
     <!-- 新規登録モーダル (中央ダイアログ) -->
     <OrganismsModal
       v-model="isCreateModalOpen"
-      title="新規現場プロジェクト登録"
+      title="新規現場登録"
       icon="plus-circle"
       size="md"
       :submit-fn="handleCreateSite"

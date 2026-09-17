@@ -11,8 +11,10 @@ export interface CableInputItem {
   count: number | null
 }
 
-export interface ConduitInputData {
+export interface ConduitCalcInputs {
   conduitCategory: string
   customFillRate: number | null
   inputCables: CableInputItem[]
 }
+
+export type ConduitInputData = ConduitCalcInputs

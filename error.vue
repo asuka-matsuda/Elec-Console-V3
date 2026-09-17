@@ -24,11 +24,11 @@ const handleReset = () => {
   <div class="error-page">
     <div class="error-page__card">
       <div class="error-page__header">
-        <AppLogo />
+        <AtomsLogo />
       </div>
 
       <div class="error-page__badge">
-        <AtomsIcon
+        <Icon
           :name="isNotFound ? 'compass' : 'alert-triangle'"
           size="lg"
           :class="isNotFound ? 'u-text-primary' : 'u-text-danger'"
@@ -62,7 +62,7 @@ const handleReset = () => {
         class="error-page__details"
       >
         <summary class="error-page__summary">
-          <AtomsIcon name="chevron-right" size="sm" />
+          <Icon name="chevron-right" size="sm" />
           <span>詳細なエラー情報</span>
         </summary>
         <pre class="error-page__stack">{{ error.message }}</pre>

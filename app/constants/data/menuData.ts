@@ -144,7 +144,7 @@ export const menuData: MenuSection[] = [
       {
         text: '締付トルク一覧表',
         href: '/database/torque-db',
-        icon: 'tool',
+        icon: 'wrench',
         customClass: 'global-nav__link--database',
         desc: '各種ボルトや端子の締付トルク値を参照できます。',
       },

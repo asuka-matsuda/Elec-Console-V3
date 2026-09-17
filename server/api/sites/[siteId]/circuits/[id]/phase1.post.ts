@@ -79,7 +79,7 @@ export default defineEventHandler(async (event) => {
       action: body.isOfflineSync ? 'フェーズ1 確定 (オフライン同期)' : 'フェーズ1 確定',
       targetBan: updated.banMeisho,
       targetKairo: updated.kairoBangou || updated.kairoMeisho || '',
-      details: detailsParts.join(' | ') || '接続確認・増し締め完了',
+      details: detailsParts.join(' | ') || '接続確認・増締完了',
     },
   })
 
