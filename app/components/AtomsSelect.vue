@@ -58,13 +58,26 @@ const {
 })
 
 const syncedDropdownStyle = computed(() => {
-  const triggerFs = (import.meta.client && selectRef.value)
-    ? getComputedStyle(selectRef.value).fontSize
-    : undefined
+  let triggerFs: string | undefined
+  let themeAccent: string | undefined
+  let glowColor: string | undefined
+
+  if (import.meta.client && selectRef.value) {
+    const cs = getComputedStyle(selectRef.value)
+
+    triggerFs = cs.fontSize
+    const rawAccent = cs.getPropertyValue('--theme-accent').trim()
+    const rawGlow = cs.getPropertyValue('--glow-color').trim()
+
+    if (rawAccent) themeAccent = rawAccent
+    if (rawGlow) glowColor = rawGlow
+  }
 
   return {
     ...dropdownStyle.value,
     fontSize: triggerFs,
+    ...(themeAccent ? { '--theme-accent': themeAccent } : {}),
+    ...(glowColor ? { '--glow-color': glowColor } : {}),
   }
 })
 
@@ -336,7 +349,11 @@ defineExpose({
 }
 
 .custom-select__dropdown {
-  --dropdown-border-color: var(--theme-accent);
+  --dropdown-border-color: color-mix(
+    in srgb,
+    var(--glow-color, var(--theme-accent)) 60%,
+    transparent
+  );
   --scrollbar-size: var(--space-2);
 
   transform: translateZ(0);
@@ -352,7 +369,7 @@ defineExpose({
   .custom-select.is-error & {
     --dropdown-border-color: color-mix(
       in srgb,
-      var(--color-status-danger) 50%,
+      var(--color-status-danger) 60%,
       transparent
     );
   }
@@ -378,7 +395,7 @@ defineExpose({
   &:not(:is(.is-disabled, .is-placeholder)) {
     &:is(:hover, .is-focused, .is-selected) {
       color: var(--theme-accent);
-      background-color: var(--color-selection-bg);
+      background-color: color-mix(in srgb, var(--theme-accent) 15%, transparent);
     }
   }
 
