@@ -1,20 +1,22 @@
 <script setup lang="ts">
 /**
  * Logo
- * [Atom] アプリケーションのロゴを表示し、クリック時にホームへ遷移またはイベントを発火するコンポーネント。
+ * [Atom] アプリケーションのブランドロゴを表示し、クリック時にホームへ遷移するコンポーネント。
+ * - 現場DX総合試験コンソールを象徴する gauge（計器・測定盤）アイコンを採用
+ * - ヘッダー用途に特化した固定サイズ・リンク専用設計（アイコンサイズは文字に自動追従）
  */
 const emit = defineEmits<{
-  (e: 'click'): void
+  (e: 'click', event: MouseEvent): void
 }>()
 </script>
 
 <template>
   <NuxtLink
     to="/"
-    class="relative z-[1] flex shrink-0 items-center gap-2 logo"
-    @click="emit('click')"
+    class="flex shrink-0 items-center gap-2 logo"
+    @click="emit('click', $event)"
   >
-    <Icon name="zap" size="md" class="relative z-[1]" />
+    <Icon name="gauge" class="logo-icon" />
     <span>Elec-Console</span>
   </NuxtLink>
 </template>
@@ -30,17 +32,19 @@ const emit = defineEmits<{
   color: var(--color-text-main);
   white-space: nowrap;
 
-  transition: var(--transition-base);
+  transition: var(--transition-fast);
+}
 
-  :deep(.icon) {
-    color: var(--theme-accent);
-    transition: var(--transition-base);
-  }
+.logo:active {
+  transform: scale(0.98);
+}
 
-  &:is(:hover, :focus-visible) {
-    :deep(.icon) {
-      transform: scale(1.08);
-    }
-  }
+.logo-icon {
+  color: var(--theme-accent);
+  transition: var(--transition-fast);
+}
+
+.logo:hover .logo-icon {
+  filter: brightness(1.25);
 }
 </style>
