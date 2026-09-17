@@ -220,7 +220,7 @@ const confirmResetPassword = async (row: User) => {
         </template>
 
         <MoleculesFormGroup label="権限">
-          <AtomsSelect v-model="newUser.role" :options="USER_ROLE_OPTIONS" />
+          <Select v-model="newUser.role" :options="USER_ROLE_OPTIONS" />
         </MoleculesFormGroup>
         <MoleculesFormGroup>
           <Checkbox

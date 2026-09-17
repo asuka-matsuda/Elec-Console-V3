@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { computed } from 'vue'
 
-import AtomsSelect from '../../app/components/AtomsSelect.vue'
+import Select from '../../app/components/common/atoms/Select.vue'
 import { FORM_GROUP_KEY, type SelectOption } from '../../app/types/components'
 
 interface SelectVm {
@@ -16,9 +16,9 @@ const mockOptions = [
   { label: '無効オプション', value: 'opt3', disabled: true },
 ]
 
-describe('AtomsSelect.vue', () => {
+describe('Select.vue', () => {
   it('renders placeholder when no value is selected', () => {
-    const wrapper = mount(AtomsSelect, {
+    const wrapper = mount(Select, {
       props: {
         options: mockOptions,
         placeholder: '選択してください',
@@ -30,7 +30,7 @@ describe('AtomsSelect.vue', () => {
   })
 
   it('renders selected option label when value is present', () => {
-    const wrapper = mount(AtomsSelect, {
+    const wrapper = mount(Select, {
       props: {
         options: mockOptions,
         modelValue: 'opt2',
@@ -41,7 +41,7 @@ describe('AtomsSelect.vue', () => {
   })
 
   it('shows clear button when value is selected and clears on click', async () => {
-    const wrapper = mount(AtomsSelect, {
+    const wrapper = mount(Select, {
       props: {
         'options': mockOptions,
         'modelValue': 'opt1',
@@ -60,7 +60,7 @@ describe('AtomsSelect.vue', () => {
   })
 
   it('does not show clear button when clearable is false', () => {
-    const wrapper = mount(AtomsSelect, {
+    const wrapper = mount(Select, {
       props: {
         options: mockOptions,
         modelValue: 'opt1',
@@ -74,7 +74,7 @@ describe('AtomsSelect.vue', () => {
   })
 
   it('opens dropdown on button click and selects option', async () => {
-    const wrapper = mount(AtomsSelect, {
+    const wrapper = mount(Select, {
       props: {
         'options': mockOptions,
         'modelValue': null,
@@ -97,7 +97,7 @@ describe('AtomsSelect.vue', () => {
   })
 
   it('does not open dropdown when disabled', async () => {
-    const wrapper = mount(AtomsSelect, {
+    const wrapper = mount(Select, {
       props: {
         options: mockOptions,
         disabled: true,
@@ -114,7 +114,7 @@ describe('AtomsSelect.vue', () => {
   })
 
   it('inherits id and error from FORM_GROUP_KEY injection', () => {
-    const wrapper = mount(AtomsSelect, {
+    const wrapper = mount(Select, {
       props: {
         options: mockOptions,
       },

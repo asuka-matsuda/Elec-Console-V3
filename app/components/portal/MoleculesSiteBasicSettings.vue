@@ -30,7 +30,7 @@ const emit = defineEmits<{
     />
 
     <MoleculesFormGroup label="ステータス">
-      <AtomsSelect
+      <Select
         :model-value="editStatus"
         :options="statusOptions"
         @update:model-value="emit('update:editStatus', String($event ?? ''))"

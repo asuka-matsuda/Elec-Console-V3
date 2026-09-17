@@ -27,7 +27,7 @@ describe('ToolOrganismsWeightInput (app/components/tool/OrganismsWeightInput.vue
       emits: ['update:modelValue'],
       template: '<input :value="modelValue" class="atoms-input-stub" @input="$emit(\'update:modelValue\', $event.target.value)" />',
     },
-    AtomsSelect: {
+    Select: {
       props: ['modelValue', 'options', 'placeholder', 'disabled'],
       emits: ['update:modelValue'],
       template: '<select :disabled="disabled" class="atoms-select-stub"><slot /></select>',
@@ -86,7 +86,7 @@ describe('ToolOrganismsWeightInput (app/components/tool/OrganismsWeightInput.vue
       },
     })
 
-    const selects = wrapper.findAllComponents(commonStubs.AtomsSelect)
+    const selects = wrapper.findAllComponents(commonStubs.Select)
 
     // 2番目のSelectがケーブルサイズ
     expect(selects[1].props('disabled')).toBe(true)
@@ -103,7 +103,7 @@ describe('ToolOrganismsWeightInput (app/components/tool/OrganismsWeightInput.vue
       },
     })
 
-    const selects = wrapper.findAllComponents(commonStubs.AtomsSelect)
+    const selects = wrapper.findAllComponents(commonStubs.Select)
 
     expect(selects[1].props('disabled')).toBe(false)
   })

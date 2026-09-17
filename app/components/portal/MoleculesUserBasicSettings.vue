@@ -88,7 +88,7 @@ const formatLastLogin = (user: User) => {
     </MoleculesFormGroup>
 
     <MoleculesFormGroup label="権限">
-      <AtomsSelect
+      <Select
         :model-value="userRole"
         :options="USER_ROLE_OPTIONS"
         :disabled="user.id === 'master'"

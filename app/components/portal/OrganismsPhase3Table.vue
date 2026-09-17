@@ -212,7 +212,7 @@ const {
     <!-- 検相 / 点灯確認 -->
     <template #cell-kensou="{ row: circuit }">
       <template v-if="editingRowId === circuit.id">
-        <AtomsSelect
+        <Select
           v-model="inputForm.kensou"
           :options="getKensouOptions(circuit)"
           class="min-w-24"

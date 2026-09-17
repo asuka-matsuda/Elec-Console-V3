@@ -48,7 +48,7 @@ describe('ToolOrganismsRackInput (app/components/tool/OrganismsRackInput.vue)', 
       props: ['disabled'],
       template: '<button :disabled="disabled"><slot /></button>',
     },
-    AtomsSelect: {
+    Select: {
       props: ['modelValue', 'options', 'disabled'],
       template: '<select class="atoms-select-stub"><slot /></select>',
     },

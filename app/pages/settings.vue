@@ -40,7 +40,7 @@ const { themeMode, animationEnabled } = useSettings()
           label="外観モード"
           help="全体の明るさを変更します（ダークモード推奨）"
         >
-          <AtomsSelect v-model="themeMode" :options="THEME_OPTIONS" />
+          <Select v-model="themeMode" :options="THEME_OPTIONS" />
         </MoleculesFormGroup>
       </Panel>
 

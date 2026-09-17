@@ -102,7 +102,7 @@ const closeModal = () => {
       </MoleculesFormGroup>
 
       <MoleculesFormGroup label="予定種別">
-        <AtomsSelect
+        <Select
           v-model="form.type"
           :options="eventTypes.map((t) => ({ label: t.name, value: t.id }))"
         />

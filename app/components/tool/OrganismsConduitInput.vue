@@ -83,7 +83,7 @@ const currentCablesUI = computed(() => {
   <div class="flex flex-col gap-[var(--space-form-row-gap)]">
     <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1.8fr)_minmax(130px,1fr)] gap-[var(--space-form-row-gap)]">
       <MoleculesFormGroup label="対象の配管種類">
-        <AtomsSelect
+        <Select
           v-model="inputs.conduitCategory"
           :options="categoryOptions"
           placeholder="選択してください"
@@ -120,7 +120,7 @@ const currentCablesUI = computed(() => {
         class="w-full"
       >
         <template #cell-category="{ row }">
-          <AtomsSelect
+          <Select
             v-model="row.category"
             :options="categories"
             placeholder="選択"
@@ -129,7 +129,7 @@ const currentCablesUI = computed(() => {
         </template>
 
         <template #cell-cableIdx="{ row }">
-          <AtomsSelect
+          <Select
             v-model="row.cableIdx"
             :options="getAvailableSizes(row.category)"
             placeholder="選択"

@@ -46,7 +46,7 @@ const emit = defineEmits<{
         <div class="flex flex-wrap items-center gap-3">
           <div class="flex items-center gap-2">
             <span class="controls-label min-w-[50px]">盤名称:</span>
-            <AtomsSelect
+            <Select
               v-model="selectedBanMeisho"
               :options="banMeishoOptions"
               class="min-w-[160px]"

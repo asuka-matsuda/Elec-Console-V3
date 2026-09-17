@@ -70,7 +70,7 @@ onMounted(() => {
       size="lg"
     >
       <template #actions>
-        <AtomsSelect
+        <Select
           :model-value="siteId"
           :options="siteOptions"
           class="min-w-[200px]"

@@ -206,7 +206,7 @@ const handleRemoveCable = (id: string) => {
         class="w-full"
       >
         <template #cell-category="{ row }">
-          <AtomsSelect
+          <Select
             v-model="row.category"
             :options="currentCategories"
             placeholder="選択"
@@ -215,7 +215,7 @@ const handleRemoveCable = (id: string) => {
         </template>
 
         <template #cell-cableIdx="{ row }">
-          <AtomsSelect
+          <Select
             v-model="row.cableIdx"
             :options="getAvailableSizes(row.category)"
             placeholder="選択"

@@ -28,7 +28,7 @@ describe('pages/settings.vue', () => {
           MoleculesFormGroup: {
             template: '<div class="stub-form-group"><slot /></div>',
           },
-          AtomsSelect: {
+          Select: {
             template: '<select class="stub-select" />',
             props: ['modelValue', 'options'],
           },
@@ -58,7 +58,7 @@ describe('pages/settings.vue', () => {
           MoleculesFormGroup: {
             template: '<div><slot /></div>',
           },
-          AtomsSelect: true,
+          Select: true,
           Checkbox: {
             template: '<input type="checkbox" class="stub-checkbox-input" :checked="modelValue" @change="$emit(\'update:modelValue\', $event.target.checked)" />',
             props: ['modelValue'],

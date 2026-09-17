@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T extends string | number | boolean = string | number | boolean">
 /**
- * AtomsSelect
+ * Select
  * [Atoms] キーボード操作や画面外へのはみ出し防止機能に対応した、カスタムのセレクトボックスコンポーネント。
  */
 import { type ComponentPublicInstance, computed, inject, nextTick, ref, toRef, watch } from 'vue'

@@ -26,7 +26,7 @@ watch(
 <template>
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-[var(--space-form-col-gap)] gap-y-[var(--space-form-row-gap)]">
     <MoleculesFormGroup label="ケーブル種別">
-      <AtomsSelect
+      <Select
         v-model="inputs.category"
         :options="categories"
         placeholder="選択してください"
@@ -34,7 +34,7 @@ watch(
     </MoleculesFormGroup>
 
     <MoleculesFormGroup label="ケーブルサイズ">
-      <AtomsSelect
+      <Select
         v-model="inputs.cableIdx"
         :options="availableSizes"
         placeholder="選択してください"

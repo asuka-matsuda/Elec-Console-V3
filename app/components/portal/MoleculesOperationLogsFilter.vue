@@ -24,7 +24,7 @@ defineProps<{
   <Panel class="flex flex-wrap items-center gap-4 px-4 py-3">
     <div class="flex items-center gap-2">
       <label class="logs-filters__label">作業者:</label>
-      <AtomsSelect
+      <Select
         v-model="selectedWorker"
         :options="workerOptions"
         class="min-w-[140px]"
@@ -33,7 +33,7 @@ defineProps<{
 
     <div class="flex items-center gap-2">
       <label class="logs-filters__label">アクション:</label>
-      <AtomsSelect
+      <Select
         v-model="selectedAction"
         :options="actionOptions"
         class="min-w-[140px]"
@@ -42,7 +42,7 @@ defineProps<{
 
     <div class="flex items-center gap-2">
       <label class="logs-filters__label">盤:</label>
-      <AtomsSelect
+      <Select
         v-model="selectedTargetBan"
         :options="targetBanOptions"
         class="min-w-[140px]"
@@ -51,7 +51,7 @@ defineProps<{
 
     <div class="flex items-center gap-2">
       <label class="logs-filters__label">表示件数:</label>
-      <AtomsSelect
+      <Select
         v-model="limit"
         :options="OPERATION_LOG_LIMIT_OPTIONS"
         class="min-w-[90px]"
