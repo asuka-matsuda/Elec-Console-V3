@@ -3,12 +3,12 @@
  * AtomsSelect
  * [Atoms] キーボード操作や画面外へのはみ出し防止機能に対応した、カスタムのセレクトボックスコンポーネント。
  */
-import { computed, onMounted, ref, toRef, watch } from 'vue'
+import { computed, inject, onMounted, ref, toRef, watch } from 'vue'
 
 import { useClickOutside } from '~/composables/useClickOutside'
 import { useFloatingPlacement } from '~/composables/useFloatingPlacement'
 import { useListKeyboardNav } from '~/composables/useListKeyboardNav'
-import type { SelectOption } from '~/types/components'
+import { FORM_GROUP_KEY, type SelectOption } from '~/types/components'
 
 const model = defineModel<string | number | boolean | null>()
 
@@ -18,6 +18,7 @@ const props = withDefaults(
     placeholder?: string
     disabled?: boolean
     error?: boolean
+    id?: string
     placement?: 'top' | 'bottom'
   }>(),
   {
@@ -25,6 +26,10 @@ const props = withDefaults(
     error: false,
   },
 )
+
+const formGroup = inject(FORM_GROUP_KEY, null)
+const selectId = computed(() => props.id || formGroup?.id.value)
+const isError = computed(() => props.error || (formGroup?.hasError.value ?? false))
 
 const selectRef = ref<HTMLElement | null>(null)
 const dropdownRef = ref<HTMLElement | null>(null)
@@ -127,10 +132,11 @@ const getOptionClasses = (option: SelectOption, index: number) => [
   <div
     ref="selectRef"
     class="relative w-full custom-select"
-    :class="{ 'is-error': error }"
+    :class="{ 'is-error': isError }"
     :data-disabled="disabled"
   >
     <button
+      :id="selectId"
       type="button"
       class="relative z-[1] focus:z-[2] flex w-full items-center justify-between gap-2 custom-select__value"
       :class="{
@@ -238,7 +244,6 @@ const getOptionClasses = (option: SelectOption, index: number) => [
       --glow-color: var(--color-status-danger);
 
       border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
-      color: var(--glow-color);
 
       &.is-active,
       &:focus,

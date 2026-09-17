@@ -7,21 +7,18 @@
  */
 import { computed, provide, ref, useSlots } from 'vue'
 
+import type { ToolTemplatesLayoutProps } from '~/types/components'
+
 withDefaults(
-  defineProps<{
-    inputsTitle?: string
-    inputsIcon?: string
-    resultsTitle?: string
-    resultsIcon?: string
-    saveDisabled?: boolean
-    saveFunction?: () => Promise<void>
-  }>(),
+  defineProps<ToolTemplatesLayoutProps>(),
   {
     inputsTitle: '条件入力',
     inputsIcon: 'edit',
     resultsTitle: '計算結果・選定結果',
     resultsIcon: 'check-square',
     saveDisabled: false,
+    disclaimerText: undefined,
+    hideDisclaimer: false,
   },
 )
 
@@ -54,8 +51,8 @@ provide('toolBasisModal', {
 <template>
   <div class="tool-layout flex flex-1 flex-col gap-panel-gap min-h-0 w-full max-w-[1600px] mx-auto">
     <!-- 免責事項 -->
-    <slot name="disclaimer">
-      <AtomsDisclaimer />
+    <slot v-if="!hideDisclaimer" name="disclaimer">
+      <Disclaimer :text="disclaimerText" />
     </slot>
 
     <!-- メイングリッド（左: 条件入力 / 右: 計算結果） -->

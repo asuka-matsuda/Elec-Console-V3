@@ -69,7 +69,7 @@ const filteredSites = computed(() => {
     </MoleculesSectionHeader>
 
     <!-- 検索バー -->
-    <AtomsInput
+    <Input
       v-model="searchQuery"
       placeholder="現場名・IDで検索..."
     />

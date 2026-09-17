@@ -26,6 +26,9 @@ const { sortBy, sortOrder, sortedData, handleSort }
 
 <template>
   <div class="flex flex-1 flex-col gap-panel-gap w-full max-w-[1400px] min-h-0 mx-auto">
+    <!-- 注記・免責事項スロット（オプショナル） -->
+    <slot name="disclaimer" />
+
     <aside class="shrink-0">
       <slot
         name="filter"

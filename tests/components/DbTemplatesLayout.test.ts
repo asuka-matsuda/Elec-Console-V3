@@ -87,4 +87,23 @@ describe('DbTemplatesLayout.vue', () => {
     expect(wrapper.text()).toContain('カスタムフィルター')
     expect(wrapper.find('.filter-panel-stub').exists()).toBe(false)
   })
+
+  it('renders disclaimer slot if provided', () => {
+    const wrapper = mount(DbTemplatesLayout, {
+      props: {
+        data: sampleData,
+        columns: sampleColumns,
+        searchMapper: (item: { name: string }) => item.name,
+      },
+      slots: {
+        disclaimer: '<div class="custom-disclaimer">データベース注記</div>',
+      },
+      global: {
+        stubs: commonStubs,
+      },
+    })
+
+    expect(wrapper.find('.custom-disclaimer').exists()).toBe(true)
+    expect(wrapper.text()).toContain('データベース注記')
+  })
 })

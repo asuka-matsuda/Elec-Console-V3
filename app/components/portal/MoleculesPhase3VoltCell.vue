@@ -36,7 +36,7 @@ const isActive = () => props.val !== null && props.val !== undefined
   <div v-if="isEditing" class="flex flex-col items-center gap-0.5 text-2xs">
     <span class="input-label">{{ label }}</span>
     <MoleculesInputGroup addon="V" class="w-20">
-      <AtomsInput
+      <Input
         v-model="modelValue"
         type="number"
         step="any"

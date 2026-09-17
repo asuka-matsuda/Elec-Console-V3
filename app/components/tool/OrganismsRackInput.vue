@@ -127,7 +127,7 @@ const handleRemoveCable = (id: string) => {
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-[var(--space-form-col-gap)]">
       <MoleculesFormGroup label="余裕係数" help-id="marginRate">
         <MoleculesInputGroup addon="倍">
-          <AtomsInput
+          <Input
             v-model.number="inputs.marginRate"
             type="number"
             step="0.05"
@@ -139,7 +139,7 @@ const handleRemoveCable = (id: string) => {
 
       <MoleculesFormGroup label="ケーブル間隔" help-id="cableSpacing">
         <MoleculesInputGroup addon="mm">
-          <AtomsInput
+          <Input
             v-model.number="inputs.cableSpacing"
             type="number"
             min="0"
@@ -150,7 +150,7 @@ const handleRemoveCable = (id: string) => {
 
       <MoleculesFormGroup label="親桁クリアランス" help-id="sideMargin">
         <MoleculesInputGroup addon="mm">
-          <AtomsInput
+          <Input
             v-model.number="inputs.sideMargin"
             type="number"
             min="0"
@@ -164,7 +164,7 @@ const handleRemoveCable = (id: string) => {
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-[var(--space-form-col-gap)]">
       <MoleculesFormGroup label="ラック高さ (H)" help-id="rackHeight">
         <MoleculesInputGroup addon="mm">
-          <AtomsInput
+          <Input
             v-model="inputs.rackHeight"
             type="number"
             min="50"
@@ -178,7 +178,7 @@ const handleRemoveCable = (id: string) => {
         help-id="otherWidth"
       >
         <MoleculesInputGroup addon="mm">
-          <AtomsInput
+          <Input
             v-model="inputs.otherWidth"
             type="number"
             min="0"
@@ -225,7 +225,7 @@ const handleRemoveCable = (id: string) => {
 
         <template #cell-count="{ row }">
           <MoleculesInputGroup addon="条">
-            <AtomsInput
+            <Input
               v-model.number="row.count"
               type="number"
               min="1"

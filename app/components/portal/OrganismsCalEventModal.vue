@@ -94,7 +94,7 @@ const closeModal = () => {
         required
         :error="hasTitleError ? 'タイトルを入力してください' : undefined"
       >
-        <AtomsInput
+        <Input
           v-model="form.title"
           placeholder="会議、送電試験など"
           :error="hasTitleError"
@@ -110,7 +110,7 @@ const closeModal = () => {
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <MoleculesFormGroup label="開始日時" required>
-          <AtomsInput
+          <Input
             :key="'start-' + form.allDay"
             v-model="form.start"
             :type="form.allDay ? 'date' : 'datetime-local'"
@@ -118,7 +118,7 @@ const closeModal = () => {
           />
         </MoleculesFormGroup>
         <MoleculesFormGroup label="終了日時">
-          <AtomsInput
+          <Input
             :key="'end-' + form.allDay"
             v-model="form.end"
             :type="form.allDay ? 'date' : 'datetime-local'"

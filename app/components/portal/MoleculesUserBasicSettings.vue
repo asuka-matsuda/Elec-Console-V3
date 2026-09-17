@@ -48,14 +48,14 @@ const formatLastLogin = (user: User) => {
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <MoleculesFormGroup label="姓">
-        <AtomsInput
+        <Input
           :model-value="lastName"
           placeholder="例: 松田"
           @update:model-value="emit('update:lastName', String($event ?? ''))"
         />
       </MoleculesFormGroup>
       <MoleculesFormGroup label="名">
-        <AtomsInput
+        <Input
           :model-value="firstName"
           placeholder="例: 飛鳥"
           @update:model-value="emit('update:firstName', String($event ?? ''))"
@@ -65,14 +65,14 @@ const formatLastLogin = (user: User) => {
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <MoleculesFormGroup label="姓（ふりがな）">
-        <AtomsInput
+        <Input
           :model-value="lastNameKana"
           placeholder="例: まつだ"
           @update:model-value="emit('update:lastNameKana', String($event ?? ''))"
         />
       </MoleculesFormGroup>
       <MoleculesFormGroup label="名（ふりがな）">
-        <AtomsInput
+        <Input
           :model-value="firstNameKana"
           placeholder="例: あすか"
           @update:model-value="emit('update:firstNameKana', String($event ?? ''))"
@@ -81,7 +81,7 @@ const formatLastLogin = (user: User) => {
     </div>
 
     <MoleculesFormGroup label="ログインID">
-      <AtomsInput
+      <Input
         :model-value="user.loginId || user.id"
         disabled
       />

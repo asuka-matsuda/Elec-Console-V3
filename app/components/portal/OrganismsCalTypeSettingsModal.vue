@@ -47,7 +47,7 @@ const {
             />
 
             <div class="flex-1">
-              <AtomsInput
+              <Input
                 v-model="t.name"
                 placeholder="種別名（例: 現場作業）"
                 required

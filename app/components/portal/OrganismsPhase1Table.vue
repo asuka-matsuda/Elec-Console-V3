@@ -81,7 +81,7 @@ const {
     <!-- 回路番号 -->
     <template #cell-kairoBangou="{ row: circuit }">
       <template v-if="editingRowId === circuit.id">
-        <AtomsInput v-model="editForm.kairoBangou" placeholder="番号" />
+        <Input v-model="editForm.kairoBangou" placeholder="番号" />
       </template>
       <div v-else class="flex items-center justify-center">
         <PortalAtomsKairoSymbol
@@ -110,10 +110,10 @@ const {
       <template v-if="editingRowId === circuit.id">
         <div class="flex flex-col gap-1">
           <div class="flex items-center gap-1">
-            <AtomsInput v-model="editForm.cableList" placeholder="ケーブル" />
-            <AtomsInput v-model="editForm.haisenJousuu" placeholder="条数" class="w-14" />
+            <Input v-model="editForm.cableList" placeholder="ケーブル" />
+            <Input v-model="editForm.haisenJousuu" placeholder="条数" class="w-14" />
           </div>
-          <AtomsInput v-model="editForm.setsuchiList" placeholder="接地リスト" />
+          <Input v-model="editForm.setsuchiList" placeholder="接地リスト" />
         </div>
       </template>
       <div v-else class="flex flex-col gap-0.5">

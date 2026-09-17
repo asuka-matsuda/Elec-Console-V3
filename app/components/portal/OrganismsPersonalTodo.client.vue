@@ -46,7 +46,7 @@ const sortedTodos = computed(() => {
     />
 
     <form class="flex items-center gap-1 m-0" @submit.prevent="handleAdd">
-      <AtomsInput
+      <Input
         v-model="newTask"
         placeholder="新しいタスクを入力..."
         class="flex-1"

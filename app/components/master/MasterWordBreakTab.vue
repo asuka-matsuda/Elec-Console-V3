@@ -143,7 +143,7 @@ const formattedPreview = computed(() => {
       </h3>
       <form class="flex flex-wrap items-center gap-3" @submit.prevent="handleAddWord">
         <div class="flex-1 min-w-[200px]">
-          <AtomsInput
+          <Input
             v-model="newWordInput"
             placeholder="例: 自動倉庫, 受変電設備"
             :error="!!inputError"
@@ -239,7 +239,7 @@ const formattedPreview = computed(() => {
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label class="block mb-1">テスト入力文</label>
-          <AtomsInput v-model="previewInput" placeholder="テスト文字列を入力" />
+          <Input v-model="previewInput" placeholder="テスト文字列を入力" />
         </div>
         <div>
           <label class="block mb-1">表示シミュレーション（幅100px・文節折り返し）</label>

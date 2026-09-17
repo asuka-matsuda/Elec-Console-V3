@@ -1,19 +1,84 @@
+import type { ComputedRef, InjectionKey } from 'vue'
+
 import type { BadgePresetId } from '~/constants/badgeConfig'
 import type { IconName } from '~/constants/icons'
 
 export type { BadgePresetId }
 
-export type ButtonVariant = 'default' | 'success' | 'danger'
+// ============================================================================
+// 1. 共通UIデータ型 & 選択肢オプション型 (Common Options & Table / Nav)
+// ============================================================================
 
-export type ResultBoxStatus = 'success' | 'warning' | 'danger' | 'error' | 'default' | 'neutral' | 'empty'
-
-export interface ResultDetailItem {
+/** 汎用セレクトボックス用選択肢 */
+export interface SelectOption<T = string | number | boolean> {
   label: string
-  value: string | number
-  unit?: string
-  note?: string
-  topBorder?: boolean
+  value: T
+  disabled?: boolean
 }
+
+/** 汎用ラジオボタングループ用選択肢 */
+export interface RadioOption<T = string | number | boolean> {
+  label: string
+  value: T
+  disabled?: boolean
+  color?: string
+}
+
+/** 汎用タブ選択肢 */
+export type TabOption<V = string | number> = {
+  label: string
+  value: V
+  disabled?: boolean
+}
+
+/** 汎用テーブルカラム定義 */
+export interface TableColumn<T = Record<string, unknown>> {
+  key: (keyof T & string) | string
+  subKey?: (keyof T & string) | string
+  label: string
+  sortable?: boolean
+  width?: string
+  minWidth?: string
+  maxWidth?: string
+  fixedWidth?: boolean
+  align?: 'left' | 'center' | 'right'
+}
+
+/** パンくずリスト項目 */
+export interface BreadcrumbItem {
+  text: string
+}
+
+/** システムお知らせ用アイテム定義 */
+export interface AnnouncementItem {
+  id?: number | string
+  title: string
+  date: string
+  desc: string
+}
+
+/** システム更新履歴・リリースノート用アイテム定義 */
+export interface HistoryItem {
+  id?: number | string
+  version: string
+  title: string
+  date: string
+  desc: string
+  status?: string
+}
+
+/** ダッシュボード用集約データ */
+export interface DashboardData {
+  announcements: AnnouncementItem[]
+  history: HistoryItem[]
+}
+
+// ============================================================================
+// 2. Atoms（最小構成要素）
+// ============================================================================
+
+// --- Button ---
+export type ButtonVariant = 'default' | 'success' | 'danger'
 
 export interface BaseButtonProps {
   to?: string
@@ -31,42 +96,31 @@ export interface ButtonProps extends BaseButtonProps {
   iconOnly?: boolean
   loading?: boolean
 }
+export type AtomsButtonProps = ButtonProps
 
-export interface SelectOption<T = string | number | boolean> {
-  label: string
-  value: T
+// --- Checkbox ---
+export interface CheckboxProps {
+  value?: unknown
+  label?: string
   disabled?: boolean
+  indeterminate?: boolean
+  trueValue?: unknown
+  falseValue?: unknown
 }
+export type AtomsCheckboxProps = CheckboxProps
 
-export interface RadioOption<T = string | number | boolean> {
-  label: string
-  value: T
-  disabled?: boolean
-  color?: string
+// --- Icon ---
+export type IconSize = 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
+
+export interface IconProps {
+  name: IconName
+  size?: IconSize
+  strokeWidth?: number | string
+  spin?: boolean
 }
+export type AtomsIconProps = IconProps
 
-export type TabOption<V = string | number> = {
-  label: string
-  value: V
-  disabled?: boolean
-}
-
-export interface TableColumn<T = Record<string, unknown>> {
-  key: (keyof T & string) | string
-  subKey?: (keyof T & string) | string
-  label: string
-  sortable?: boolean
-  width?: string
-  minWidth?: string
-  maxWidth?: string
-  fixedWidth?: boolean
-  align?: 'left' | 'center' | 'right'
-}
-
-export interface BreadcrumbItem {
-  text: string
-}
-
+// --- Badge ---
 export type BadgeColor = string
 
 export interface BadgeProps {
@@ -75,36 +129,115 @@ export interface BadgeProps {
   /** バッジの基調色（直接指定する場合） */
   color?: BadgeColor
 }
+export type AtomsBadgeProps = BadgeProps
 
-export interface AnnouncementItem {
-  id?: number | string
-  title: string
-  date: string
-  desc: string
+// --- Divider ---
+export type DividerType = 'solid' | 'fade-center' | 'fade-side'
+export type DividerOrientation = 'horizontal' | 'vertical'
+
+export interface DividerProps {
+  /** 線の基調色（CSSカラー値またはCSS変数。デフォルト: var(--theme-accent)） */
+  color?: string
+  /** 線のスタイル種別（デフォルト: 'solid'） */
+  type?: DividerType
+  /** 線の向き（デフォルト: 'horizontal'） */
+  orientation?: DividerOrientation
+  /** アニメーション（スケール演出・パルス光）を有効にするか（デフォルト: true） */
+  animated?: boolean
 }
+export type AtomsDividerProps = DividerProps
 
-/**
- * システム更新履歴・リリースノート用アイテム定義（ダッシュボード等で表示）
- */
-export interface HistoryItem {
-  id?: number | string
-  version: string
-  title: string
-  date: string
-  desc: string
-  status?: string
+// --- Panel ---
+export type PanelOverflow = 'hidden' | 'visible' | 'auto'
+
+export interface PanelProps {
+  /** 描画するHTML要素またはコンポーネント（デフォルト: 'div'） */
+  as?: string | object
+  /** 操作可能状態（ホバー・アクティブ演出） */
+  interactive?: boolean
+  /** 選択状態（アクセントグラデーション・グロー） */
+  selected?: boolean
+  /** 無効状態（半透明・操作不可） */
+  disabled?: boolean
+  /** オーバーフロー制御（デフォルト: 'hidden'） */
+  overflow?: PanelOverflow
 }
+export type AtomsPanelProps = PanelProps
 
-export interface DashboardData {
-  announcements: AnnouncementItem[]
-  history: HistoryItem[]
-}
-
-export interface OrganismsFooterProps {
-  year?: number | string
+// --- Disclaimer ---
+export interface DisclaimerProps {
+  /** 免責・注記本文（スロットで差し替えも可能） */
   text?: string
 }
+export type AtomsDisclaimerProps = DisclaimerProps
 
+// --- Input ---
+export type InputType
+  = 'text'
+    | 'password'
+    | 'email'
+    | 'number'
+    | 'search'
+    | 'tel'
+    | 'url'
+    | 'date'
+    | 'datetime-local'
+    | 'time'
+
+export type InputMode = 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'
+
+export interface InputProps {
+  /** 入力タイプ (デフォルト: 'text') */
+  type?: InputType
+  /** プレースホルダー */
+  placeholder?: string
+  /** 無効化状態 (デフォルト: false) */
+  disabled?: boolean
+  /** 読み取り専用 (デフォルト: false) */
+  readonly?: boolean
+  /** エラー状態フラグ (デフォルト: false) */
+  error?: boolean
+  /** 必須入力 (デフォルト: false) */
+  required?: boolean
+  /** 最小値 (type="number" / "date" 等) */
+  min?: number | string
+  /** 最大値 (type="number" / "date" 等) */
+  max?: number | string
+  /** 増減ステップ (type="number" 等) */
+  step?: number | string
+  /** 最大文字数 */
+  maxlength?: number
+  /** HTML id属性 */
+  id?: string
+  /** HTML name属性 */
+  name?: string
+  /** 自動補完 */
+  autocomplete?: string
+  /** 入力モード (モバイルキーボード最適化) */
+  inputmode?: InputMode
+  /** 入力クリアボタンを表示する (デフォルト: true) */
+  clearable?: boolean
+  /** type="password" 時に表示/非表示トグルボタンを有効化する (デフォルト: true) */
+  passwordToggle?: boolean
+}
+export type AtomsInputProps = InputProps
+
+// ============================================================================
+// 3. Molecules（複合コンポーネント）
+// ============================================================================
+
+// --- ResultBox & ResultDetails ---
+export type ResultBoxStatus = 'success' | 'warning' | 'danger' | 'error' | 'default' | 'neutral' | 'empty'
+
+export interface ResultDetailItem {
+  label: string
+  value: string | number
+  unit?: string
+  note?: string
+  topBorder?: boolean
+}
+
+// --- InfoCard ---
 export interface InfoCardItem {
   id?: string | number
   date: string
@@ -120,60 +253,41 @@ export interface MoleculesInfoCardProps<T extends InfoCardItem = InfoCardItem> {
   maxCount?: number
 }
 
+// ============================================================================
+// 4. Organisms（構造化コンポーネント）
+// ============================================================================
+
+export interface OrganismsFooterProps {
+  year?: number | string
+  text?: string
+}
+
 export interface OrganismsGlobalNavProps {
   menuData: import('~/constants/data/menuData').MenuSection[]
 }
 
-export interface CheckboxProps {
-  value?: unknown
-  label?: string
-  disabled?: boolean
-  indeterminate?: boolean
-  trueValue?: unknown
-  falseValue?: unknown
+// ============================================================================
+// 5. Templates（画面レイアウトテンプレート）
+// ============================================================================
+
+export interface ToolTemplatesLayoutProps {
+  inputsTitle?: string
+  inputsIcon?: string
+  resultsTitle?: string
+  resultsIcon?: string
+  saveDisabled?: boolean
+  saveFunction?: () => Promise<void>
+  disclaimerText?: string
+  hideDisclaimer?: boolean
 }
 
-export type IconSize = 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
+// ============================================================================
+// 6. フォーム共通コンテキスト（Form Context Injection）
+// ============================================================================
 
-export interface IconProps {
-  name: IconName
-  size?: IconSize
-  strokeWidth?: number | string
-  spin?: boolean
+export interface FormGroupContext {
+  id: ComputedRef<string>
+  hasError: ComputedRef<boolean>
 }
 
-export type DividerType = 'solid' | 'fade-center' | 'fade-side'
-
-export type DividerOrientation = 'horizontal' | 'vertical'
-
-export interface DividerProps {
-  /** 線の基調色（CSSカラー値またはCSS変数。デフォルト: var(--theme-accent)） */
-  color?: string
-  /** 線のスタイル種別（デフォルト: 'solid'） */
-  type?: DividerType
-  /** 線の向き（デフォルト: 'horizontal'） */
-  orientation?: DividerOrientation
-  /** アニメーション（スケール演出・パルス光）を有効にするか（デフォルト: true） */
-  animated?: boolean
-}
-
-/** 後方互換性エイリアス */
-export type AtomsDividerProps = DividerProps
-
-export type PanelOverflow = 'hidden' | 'visible' | 'auto'
-
-export interface PanelProps {
-  /** 描画するHTML要素またはコンポーネント（デフォルト: 'div'） */
-  as?: string | object
-  /** 操作可能状態（ホバー・アクティブ演出） */
-  interactive?: boolean
-  /** 選択状態（アクセントグラデーション・グロー） */
-  selected?: boolean
-  /** 無効状態（半透明・操作不可） */
-  disabled?: boolean
-  /** オーバーフロー制御（デフォルト: 'hidden'） */
-  overflow?: PanelOverflow
-}
-
-/** 後方互換性エイリアス */
-export type AtomsPanelProps = PanelProps
+export const FORM_GROUP_KEY: InjectionKey<FormGroupContext> = Symbol('FormGroupContext')

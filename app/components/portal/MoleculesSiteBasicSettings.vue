@@ -38,7 +38,7 @@ const emit = defineEmits<{
     </MoleculesFormGroup>
 
     <MoleculesFormGroup label="現場ID (半角英数)">
-      <AtomsInput
+      <Input
         :model-value="editId"
         placeholder="例: site-tokyo-01"
         @update:model-value="emit('update:editId', String($event ?? ''))"
@@ -46,7 +46,7 @@ const emit = defineEmits<{
     </MoleculesFormGroup>
 
     <MoleculesFormGroup label="現場名">
-      <AtomsInput
+      <Input
         :model-value="editData.name"
         placeholder="例: 新宿プロジェクト"
         @update:model-value="emit('update:name', String($event ?? ''))"

@@ -44,7 +44,7 @@ watch(
 
     <MoleculesFormGroup label="ケーブル長 (L)">
       <MoleculesInputGroup addon="m">
-        <AtomsInput v-model="inputs.L_input" type="number" min="1" />
+        <Input v-model="inputs.L_input" type="number" min="1" />
       </MoleculesInputGroup>
     </MoleculesFormGroup>
   </div>

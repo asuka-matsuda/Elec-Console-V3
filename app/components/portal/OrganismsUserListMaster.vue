@@ -73,7 +73,7 @@ const filteredUsers = computed(() => {
     </MoleculesSectionHeader>
 
     <!-- 検索バー -->
-    <AtomsInput
+    <Input
       v-model="searchQuery"
       placeholder="氏名・カナ・IDで検索..."
     />

@@ -53,7 +53,7 @@ const handleLogin = async () => {
 
       <template v-for="field in LOGIN_FORM_FIELDS" :key="field.id">
         <MoleculesFormGroup :label="field.label">
-          <AtomsInput
+          <Input
             v-model="formData[field.id]"
             :type="field.type"
             :placeholder="field.placeholder"

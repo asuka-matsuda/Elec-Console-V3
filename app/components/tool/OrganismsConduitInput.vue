@@ -92,7 +92,7 @@ const currentCablesUI = computed(() => {
 
       <MoleculesFormGroup label="占積率">
         <MoleculesInputGroup addon="%">
-          <AtomsInput
+          <Input
             v-model.number="inputs.customFillRate"
             type="number"
             min="1"
@@ -139,7 +139,7 @@ const currentCablesUI = computed(() => {
 
         <template #cell-count="{ row }">
           <MoleculesInputGroup addon="条">
-            <AtomsInput
+            <Input
               v-model.number="row.count"
               type="number"
               min="1"

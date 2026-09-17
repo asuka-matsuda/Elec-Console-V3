@@ -13,7 +13,7 @@ describe('MoleculesSiteExcludedRules.vue', () => {
 
     expect(wrapper.text()).toContain('除外回路の設定')
 
-    const inputs = wrapper.findAllComponents({ name: 'AtomsInput' })
+    const inputs = wrapper.findAllComponents({ name: 'Input' })
 
     expect(inputs).toHaveLength(2)
 

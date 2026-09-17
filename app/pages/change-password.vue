@@ -66,7 +66,7 @@ const handleChangePassword = async () => {
     </p>
 
     <MoleculesFormGroup label="新しいパスワード (8文字以上)">
-      <AtomsInput
+      <Input
         v-model="password"
         type="password"
         placeholder="新しいパスワード"
@@ -74,7 +74,7 @@ const handleChangePassword = async () => {
       />
     </MoleculesFormGroup>
     <MoleculesFormGroup label="新しいパスワード (確認用)">
-      <AtomsInput
+      <Input
         v-model="passwordConfirm"
         type="password"
         placeholder="もう一度入力"

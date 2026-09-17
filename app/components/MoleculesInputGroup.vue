@@ -12,7 +12,7 @@ defineProps<Props>()
 
 <template>
   <div class="flex input-group">
-    <!-- メイン入力欄 (AtomsInput 等) -->
+    <!-- メイン入力欄 (Input 等) -->
     <slot />
 
     <!-- 単位テキストアドオン -->

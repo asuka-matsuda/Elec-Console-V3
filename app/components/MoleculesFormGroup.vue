@@ -3,7 +3,10 @@
  * MoleculesFormGroup
  * [Molecules] フォームのラベル、入力項目、エラーメッセージ、ヘルプテキストをグループ化して表示するコンポーネント。
  */
+import { computed, provide, useId } from 'vue'
+
 import type { HelpId } from '~/constants/helpConstants'
+import { FORM_GROUP_KEY } from '~/types/components'
 
 interface Props {
   label?: string
@@ -16,11 +19,20 @@ interface Props {
   forId?: string
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   required: false,
   requiredLabel: 'REQUIRED',
   helpId: undefined,
   helpTip: undefined,
+})
+
+const defaultId = useId()
+const fieldId = computed(() => props.forId || defaultId)
+const hasError = computed(() => Boolean(props.error))
+
+provide(FORM_GROUP_KEY, {
+  id: fieldId,
+  hasError,
 })
 </script>
 
@@ -29,7 +41,7 @@ withDefaults(defineProps<Props>(), {
     <!-- ラベル領域 -->
     <label
       v-if="label || $slots.label"
-      :for="forId"
+      :for="fieldId"
       class="flex items-center gap-2 form-group__label"
     >
       <span class="inline-flex items-center gap-1 label-text">

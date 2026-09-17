@@ -48,7 +48,7 @@ defineProps<{
 
             <!-- 2. 数値入力 + セレクト -->
             <MoleculesInputGroup v-else-if="field.type === 'input-select'">
-              <AtomsInput
+              <Input
                 v-model.number="form[field.id]"
                 type="number"
                 :placeholder="field.placeholder"
@@ -85,7 +85,7 @@ defineProps<{
               v-else-if="field.type === 'input-addon'"
               :addon="field.addonText"
             >
-              <AtomsInput
+              <Input
                 v-model.number="form[field.id]"
                 type="number"
                 :placeholder="field.placeholder"

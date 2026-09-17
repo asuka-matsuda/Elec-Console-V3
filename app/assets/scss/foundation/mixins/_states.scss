@@ -84,6 +84,60 @@
   }
 }
 
+// 2-3. フォームコントロール基本装飾（Input, Textarea, Select共通）
+@mixin form-control-base {
+  min-height: calc(var(--control-height-ratio) * 1em);
+  border: var(--border-width-base) solid var(--color-border);
+
+  font-size: inherit;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-main);
+
+  background-color: var(--surface-bg-elevated);
+  box-shadow: var(--shadow-sink);
+
+  transition: var(--transition-interactive);
+
+  &:not(:disabled, :read-only) {
+    --glow-color: var(--theme-accent);
+
+    &.is-error {
+      --glow-color: var(--color-status-danger);
+
+      border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
+    }
+
+    &:hover {
+      border-color: var(--glow-color);
+      box-shadow: var(--shadow-glow-hover);
+    }
+
+    &:active {
+      border-color: var(--glow-color);
+      box-shadow: var(--shadow-glow-active);
+    }
+
+    &:is(:focus, :focus-visible) {
+      border-color: color-mix(in srgb, var(--glow-color) 70%, transparent);
+      outline: none;
+      box-shadow: var(--shadow-glow-focus);
+    }
+  }
+
+  &:read-only:not(:disabled) {
+    cursor: default;
+    border-style: dashed;
+    opacity: 0.85;
+  }
+
+  &::placeholder {
+    color: color-mix(in srgb, var(--color-text-muted) 50%, transparent);
+    opacity: 1;
+  }
+
+  @include state-disabled;
+}
+
 // --------------------------------------------------------------------------
 // 3. 全コンポーネント共通の終端状態（Loading / Disabled）
 // --------------------------------------------------------------------------

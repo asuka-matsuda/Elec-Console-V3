@@ -30,7 +30,7 @@ describe('ToolOrganismsConduitInput (app/components/tool/OrganismsConduitInput.v
       props: ['addon'],
       template: '<div class="input-group-stub"><slot /><span>{{ addon }}</span></div>',
     },
-    AtomsInput: {
+    Input: {
       props: ['modelValue', 'placeholder', 'type'],
       template: '<input :value="modelValue" class="atoms-input-stub" />',
     },

@@ -5,7 +5,7 @@ import ToolTemplatesLayout from '../../app/components/tool/TemplatesLayout.vue'
 
 describe('ToolTemplatesLayout.vue', () => {
   const commonStubs = {
-    AtomsDisclaimer: {
+    Disclaimer: {
       template: '<div class="disclaimer-stub">免責事項</div>',
     },
     Panel: {
@@ -115,5 +115,64 @@ describe('ToolTemplatesLayout.vue', () => {
 
     await drawerHandle.trigger('click')
     expect(drawer.classes()).not.toContain('is-open')
+  })
+
+  it('passes disclaimerText prop to Disclaimer', () => {
+    const wrapper = mount(ToolTemplatesLayout, {
+      props: {
+        disclaimerText: 'カスタム免責テキスト',
+      },
+      global: {
+        stubs: {
+          ...commonStubs,
+          Disclaimer: {
+            props: ['text'],
+            template: '<div class="disclaimer-stub" :data-text="text">免責事項</div>',
+          },
+        },
+      },
+    })
+
+    const disclaimer = wrapper.find('.disclaimer-stub')
+
+    expect(disclaimer.exists()).toBe(true)
+    expect(disclaimer.attributes('data-text')).toBe('カスタム免責テキスト')
+  })
+
+  it('hides disclaimer when hideDisclaimer prop is true', () => {
+    const wrapper = mount(ToolTemplatesLayout, {
+      props: {
+        hideDisclaimer: true,
+      },
+      global: {
+        stubs: commonStubs,
+      },
+    })
+
+    expect(wrapper.find('.disclaimer-stub').exists()).toBe(false)
+  })
+
+  it('renders default Disclaimer when no props or slots are given', () => {
+    const wrapper = mount(ToolTemplatesLayout, {
+      global: {
+        stubs: commonStubs,
+      },
+    })
+
+    expect(wrapper.find('.disclaimer-stub').exists()).toBe(true)
+  })
+
+  it('renders custom disclaimer slot content when provided', () => {
+    const wrapper = mount(ToolTemplatesLayout, {
+      slots: {
+        disclaimer: '<div class="custom-slot-disclaimer">カスタム免責スロット</div>',
+      },
+      global: {
+        stubs: commonStubs,
+      },
+    })
+
+    expect(wrapper.find('.custom-slot-disclaimer').exists()).toBe(true)
+    expect(wrapper.find('.disclaimer-stub').exists()).toBe(false)
   })
 })

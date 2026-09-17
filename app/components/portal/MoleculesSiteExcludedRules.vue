@@ -33,7 +33,7 @@ const emit = defineEmits<{
           :key="idx"
           class="flex items-center gap-2"
         >
-          <AtomsInput
+          <Input
             :model-value="circuit"
             placeholder="例: 盤A-回路1"
             @update:model-value="emit('update:circuit', { index: idx, value: String($event ?? '') })"

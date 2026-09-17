@@ -212,7 +212,7 @@ const confirmResetPassword = async (row: User) => {
       <div class="flex flex-col gap-4">
         <template v-for="field in USER_CREATE_FORM_FIELDS" :key="field.id">
           <MoleculesFormGroup :label="field.label">
-            <AtomsInput
+            <Input
               v-model="newUser[field.id]"
               :placeholder="field.placeholder"
             />

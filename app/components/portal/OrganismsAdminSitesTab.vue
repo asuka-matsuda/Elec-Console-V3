@@ -183,10 +183,10 @@ const confirmToggleDisable = async (row: Site) => {
     >
       <div class="flex flex-col gap-4">
         <MoleculesFormGroup label="現場ID (半角英数)">
-          <AtomsInput v-model="newSite.id" placeholder="例: site-tokyo-01" />
+          <Input v-model="newSite.id" placeholder="例: site-tokyo-01" />
         </MoleculesFormGroup>
         <MoleculesFormGroup label="現場名">
-          <AtomsInput v-model="newSite.name" placeholder="例: 新宿プロジェクト" />
+          <Input v-model="newSite.name" placeholder="例: 新宿プロジェクト" />
         </MoleculesFormGroup>
       </div>
     </OrganismsModal>

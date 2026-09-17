@@ -22,7 +22,7 @@ describe('ToolOrganismsWeightInput (app/components/tool/OrganismsWeightInput.vue
       props: ['addon'],
       template: '<div class="input-group-stub"><slot /><span class="addon">{{ addon }}</span></div>',
     },
-    AtomsInput: {
+    Input: {
       props: ['modelValue', 'type', 'min', 'max', 'step'],
       emits: ['update:modelValue'],
       template: '<input :value="modelValue" class="atoms-input-stub" @input="$emit(\'update:modelValue\', $event.target.value)" />',
