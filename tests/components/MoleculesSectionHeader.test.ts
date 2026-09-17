@@ -60,4 +60,33 @@ describe('MoleculesSectionHeader.vue', () => {
 
     expect(wrapperXl.find('.title').classes()).toContain('is-xl')
   })
+
+  it('passes animated=true and theme accent color to divider by default', () => {
+    const wrapper = mount(MoleculesSectionHeader, {
+      props: {
+        title: '見出し',
+      },
+    })
+
+    const divider = wrapper.find('hr')
+
+    expect(divider.exists()).toBe(true)
+    expect(divider.classes()).toContain('is-animated')
+    expect(divider.attributes('style')).toContain('--divider-color: var(--theme-accent)')
+  })
+
+  it('passes animated=false and border color to divider when variant="border"', () => {
+    const wrapper = mount(MoleculesSectionHeader, {
+      props: {
+        title: '境界見出し',
+        variant: 'border',
+      },
+    })
+
+    const divider = wrapper.find('hr')
+
+    expect(divider.exists()).toBe(true)
+    expect(divider.classes()).not.toContain('is-animated')
+    expect(divider.attributes('style')).toContain('--divider-color: var(--color-border)')
+  })
 })

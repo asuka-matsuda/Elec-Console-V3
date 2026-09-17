@@ -99,7 +99,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       @open-type-settings="isTypeSettingsOpen = true"
     />
 
-    <AtomsPanel class="calendar">
+    <Panel class="calendar">
       <FullCalendar ref="fullCalendarRef" :options="calendarOptions">
         <template #eventContent="{ event }">
           <AtomsCalEventBadge
@@ -111,7 +111,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
           />
         </template>
       </FullCalendar>
-    </AtomsPanel>
+    </Panel>
 
     <OrganismsCalEventModal
       v-model="isModalOpen"

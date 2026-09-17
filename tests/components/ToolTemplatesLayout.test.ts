@@ -8,7 +8,7 @@ describe('ToolTemplatesLayout.vue', () => {
     AtomsDisclaimer: {
       template: '<div class="disclaimer-stub">免責事項</div>',
     },
-    AtomsPanel: {
+    Panel: {
       template: '<div class="panel-stub"><slot /></div>',
     },
     MoleculesSectionHeader: {

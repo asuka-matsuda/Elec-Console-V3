@@ -29,7 +29,7 @@ describe('MoleculesInfoCard.vue', () => {
       },
       global: {
         stubs: {
-          AtomsPanel: {
+          Panel: {
             template: '<div class="panel-stub"><slot /></div>',
           },
           Icon: true,
@@ -54,7 +54,7 @@ describe('MoleculesInfoCard.vue', () => {
       },
       global: {
         stubs: {
-          AtomsPanel: {
+          Panel: {
             template: '<div class="panel-stub"><slot /></div>',
           },
           Icon: true,
@@ -75,7 +75,7 @@ describe('MoleculesInfoCard.vue', () => {
       },
       global: {
         stubs: {
-          AtomsPanel: {
+          Panel: {
             template: '<div class="panel-stub"><slot /></div>',
           },
           Icon: true,
@@ -94,7 +94,7 @@ describe('MoleculesInfoCard.vue', () => {
       },
       global: {
         stubs: {
-          AtomsPanel: {
+          Panel: {
             template: '<div class="panel-stub"><slot /></div>',
           },
           Icon: true,
@@ -120,7 +120,7 @@ describe('MoleculesInfoCard.vue', () => {
       },
       global: {
         stubs: {
-          AtomsPanel: {
+          Panel: {
             template: '<div class="panel-stub"><slot /></div>',
           },
           Icon: true,

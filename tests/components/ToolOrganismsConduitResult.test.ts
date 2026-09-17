@@ -18,7 +18,7 @@ describe('ToolOrganismsConduitResult (app/components/tool/OrganismsConduitResult
     Badge: {
       template: '<span class="badge-stub"><slot /></span>',
     },
-    AtomsPanel: {
+    Panel: {
       template: '<div class="panel-stub"><slot /></div>',
     },
     Icon: {

@@ -9,7 +9,7 @@ describe('OrganismsFooter.vue', () => {
     const wrapper = mount(OrganismsFooter, {
       global: {
         stubs: {
-          AtomsDivider: true,
+          Divider: true,
         },
       },
     })
@@ -24,7 +24,7 @@ describe('OrganismsFooter.vue', () => {
       },
       global: {
         stubs: {
-          AtomsDivider: true,
+          Divider: true,
         },
       },
     })
@@ -39,7 +39,7 @@ describe('OrganismsFooter.vue', () => {
       },
       global: {
         stubs: {
-          AtomsDivider: true,
+          Divider: true,
         },
       },
     })

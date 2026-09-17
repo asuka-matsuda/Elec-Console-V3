@@ -7,6 +7,8 @@
     };
     const t = getVal("elec_theme_mode", "dark");
     document.documentElement.setAttribute("data-theme", t);
+    const anim = getVal("elec_animation_enabled", true);
+    document.documentElement.setAttribute("data-animation", anim === false ? "off" : "on");
   } catch(_e) {}
 })();
 

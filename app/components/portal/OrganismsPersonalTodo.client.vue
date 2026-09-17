@@ -38,7 +38,7 @@ const sortedTodos = computed(() => {
 </script>
 
 <template>
-  <AtomsPanel class="flex flex-col gap-3">
+  <Panel class="flex flex-col gap-3">
     <MoleculesSectionHeader
       title="パーソナルToDo"
       icon="check"
@@ -80,7 +80,7 @@ const sortedTodos = computed(() => {
         description="上の入力欄から新しいタスクを追加してください。"
       />
     </ul>
-  </AtomsPanel>
+  </Panel>
 </template>
 
 <style scoped lang="scss">

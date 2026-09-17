@@ -77,7 +77,7 @@ const weightResult = computed(() => {
 </script>
 
 <template>
-  <AtomsPanel
+  <Panel
     as="article"
     class="history-card flex flex-col gap-3"
     :class="[`is-${entry.status}`]"
@@ -191,7 +191,7 @@ const weightResult = computed(() => {
         @click.prevent="handleDelete"
       />
     </footer>
-  </AtomsPanel>
+  </Panel>
 </template>
 
 <style scoped lang="scss">

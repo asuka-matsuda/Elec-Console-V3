@@ -29,7 +29,7 @@ const { currentUser, logout } = useAuth()
         title="メニューを開閉"
         @click="emit('toggle-sidebar')"
       />
-      <AtomsLogo />
+      <Logo />
 
       <Breadcrumb
         v-if="breadcrumbs?.length"

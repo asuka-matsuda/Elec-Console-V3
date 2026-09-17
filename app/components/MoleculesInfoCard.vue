@@ -22,7 +22,7 @@ const displayItems = computed(() => {
 </script>
 
 <template>
-  <AtomsPanel class="!p-0 overflow-hidden">
+  <Panel class="p-0">
     <!-- ローディング・空状態 -->
     <div
       v-if="pending || displayItems.length === 0"
@@ -49,7 +49,7 @@ const displayItems = computed(() => {
         <p v-if="item.desc" class="m-0">{{ item.desc }}</p>
       </li>
     </ul>
-  </AtomsPanel>
+  </Panel>
 </template>
 
 <style scoped lang="scss">

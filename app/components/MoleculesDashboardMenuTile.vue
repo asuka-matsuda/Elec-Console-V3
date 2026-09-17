@@ -22,7 +22,7 @@ const {
 </script>
 
 <template>
-  <AtomsPanel
+  <Panel
     :as="disabled ? 'div' : NuxtLink"
     :to="!disabled ? to : undefined"
     interactive
@@ -37,7 +37,7 @@ const {
     <p v-if="description" class="tile-desc">
       {{ description }}
     </p>
-  </AtomsPanel>
+  </Panel>
 </template>
 
 <style scoped lang="scss">

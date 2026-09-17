@@ -50,7 +50,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <AtomsPanel class="flex flex-col gap-4">
+  <Panel as="section" class="flex flex-col gap-4">
     <MoleculesSectionHeader title="現場ポータル" variant="hud">
       <template v-if="isAdmin" #actions>
         <Button @click="router.push('/portal/admin')">
@@ -64,5 +64,5 @@ onMounted(async () => {
       title="アサインされている現場がありません"
       description="管理者に現場へのアサインを依頼してください。"
     />
-  </AtomsPanel>
+  </Panel>
 </template>

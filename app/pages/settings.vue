@@ -10,7 +10,7 @@ useHead({
   title: 'UI・個人設定',
 })
 
-const { themeMode } = useSettings()
+const { themeMode, animationEnabled } = useSettings()
 </script>
 
 <template>
@@ -18,7 +18,6 @@ const { themeMode } = useSettings()
     <MoleculesSectionHeader
       title="UI・個人設定"
       icon="settings"
-      variant="tool"
       size="lg"
     />
     <p class="description m-0">
@@ -26,11 +25,10 @@ const { themeMode } = useSettings()
     </p>
 
     <div class="flex flex-col gap-section-gap max-w-[640px]">
-      <AtomsPanel class="flex flex-col gap-4">
+      <Panel as="section" class="flex flex-col gap-4">
         <MoleculesSectionHeader
           title="テーマ・カラー設定"
           icon="moon"
-          variant="tool"
           size="md"
         />
 
@@ -44,7 +42,29 @@ const { themeMode } = useSettings()
         >
           <AtomsSelect v-model="themeMode" :options="THEME_OPTIONS" />
         </MoleculesFormGroup>
-      </AtomsPanel>
+      </Panel>
+
+      <Panel as="section" class="flex flex-col gap-4">
+        <MoleculesSectionHeader
+          title="演出・アニメーション設定"
+          icon="zap"
+          size="md"
+        />
+
+        <p class="description m-0">
+          区切り線のサイバーパルス光やスケール演出などのアニメーション効果を設定します。
+        </p>
+
+        <MoleculesFormGroup
+          label="アニメーション演出"
+          help="OFFにすると、パルス光やスケール演出を停止し、落ち着いた静止表示にします"
+        >
+          <Checkbox
+            v-model="animationEnabled"
+            label="サイバーパルス・モーション演出を有効にする"
+          />
+        </MoleculesFormGroup>
+      </Panel>
     </div>
   </div>
 </template>

@@ -4,7 +4,7 @@ import { watchEffect } from 'vue'
 import { useModal } from '~/composables/useModal'
 import { useSettings } from '~/composables/useSettings'
 
-const { themeMode } = useSettings()
+const { themeMode, animationEnabled } = useSettings()
 const {
   isOpen: isConfirmOpen,
   title: confirmTitle,
@@ -19,6 +19,7 @@ const {
 if (import.meta.client) {
   watchEffect(() => {
     document.documentElement.setAttribute('data-theme', themeMode.value)
+    document.documentElement.setAttribute('data-animation', animationEnabled.value ? 'on' : 'off')
   })
 }
 </script>

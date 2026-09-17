@@ -2,7 +2,7 @@
 /**
  * OrganismsModal
  * [Organisms] ネイティブの dialog 要素を使用したモーダルダイアログ。
- * AtomsPanel, MoleculesSectionHeader, Button を組み合わせた独立機能セクション。
+ * Panel, MoleculesSectionHeader, Button を組み合わせた独立機能セクション。
  * 標準的なイベント駆動（@submit, @cancel, :loading）および非同期関数（:submit-fn）の両方に対応します。
  */
 import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue'
@@ -16,14 +16,7 @@ const props = withDefaults(
   defineProps<{
     title?: string
     icon?: IconName
-    variant?:
-      | 'main'
-      | 'tool'
-      | 'database'
-      | 'reference'
-      | 'management'
-      | 'danger'
-      | 'success'
+    variant?: 'main' | 'danger' | 'success'
     align?: 'left' | 'center'
     size?: 'sm' | 'md' | 'lg'
     submitFn?: () => Promise<void>
@@ -140,12 +133,11 @@ onMounted(() => {
     @click.self="close"
     @cancel.prevent="close"
   >
-    <AtomsPanel class="flex flex-1 flex-col gap-4 min-h-0 modal-panel">
+    <Panel class="flex flex-1 flex-col gap-4 min-h-0 modal-panel">
       <MoleculesSectionHeader
         v-if="title"
         :title="title"
         :icon="icon"
-        :variant="variant"
       />
       <div
         class="overflow-y-auto flex flex-1 flex-col gap-3 min-h-0 modal-body"
@@ -177,7 +169,7 @@ onMounted(() => {
           {{ isBusy ? "処理中..." : submitText }}
         </Button>
       </footer>
-    </AtomsPanel>
+    </Panel>
   </dialog>
 </template>
 

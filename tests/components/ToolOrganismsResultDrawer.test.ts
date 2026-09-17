@@ -5,7 +5,7 @@ import ToolOrganismsResultDrawer from '../../app/components/tool/OrganismsResult
 
 describe('ToolOrganismsResultDrawer.vue', () => {
   const commonStubs = {
-    AtomsPanel: {
+    Panel: {
       template: '<div class="panel-stub"><slot /></div>',
     },
     MoleculesSectionHeader: {

@@ -172,7 +172,7 @@ const confirmResetPassword = async (row: User) => {
 </script>
 
 <template>
-  <AtomsPanel>
+  <Panel>
     <div class="flex flex-col lg:flex-row gap-6 items-start">
       <!-- 左ペイン: Master (幅約340px) -->
       <div class="w-full lg:w-[340px] shrink-0">
@@ -246,7 +246,7 @@ const confirmResetPassword = async (row: User) => {
           （初期パスワードはこの画面を閉じると二度と表示されません）
         </p>
 
-        <AtomsPanel v-if="createdUserResult" class="flex flex-col gap-3">
+        <Panel v-if="createdUserResult" class="flex flex-col gap-3">
           <MoleculesFormGroup label="氏名">
             <div class="user-value">
               {{ createdUserResult.lastName }} {{ createdUserResult.firstName }}
@@ -262,7 +262,7 @@ const confirmResetPassword = async (row: User) => {
               {{ createdUserResult.initialPassword || "（既に設定済みです）" }}
             </div>
           </MoleculesFormGroup>
-        </AtomsPanel>
+        </Panel>
       </div>
 
       <template #footer>
@@ -283,7 +283,7 @@ const confirmResetPassword = async (row: User) => {
         </Button>
       </template>
     </OrganismsModal>
-  </AtomsPanel>
+  </Panel>
 </template>
 
 <style scoped lang="scss">

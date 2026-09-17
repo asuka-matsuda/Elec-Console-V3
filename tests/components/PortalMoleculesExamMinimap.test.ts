@@ -103,7 +103,7 @@ describe('PortalMoleculesExamMinimap.vue', () => {
     expect(buttons[2].attributes('title')).toContain('(未着手)')
   })
 
-  it('renders inside an AtomsPanel container', () => {
+  it('renders inside an Panel container', () => {
     const wrapper = mount(PortalMoleculesExamMinimap, {
       props: {
         circuits: mockCircuits,
@@ -111,7 +111,7 @@ describe('PortalMoleculesExamMinimap.vue', () => {
       },
     })
 
-    const panel = wrapper.findComponent({ name: 'AtomsPanel' })
+    const panel = wrapper.findComponent({ name: 'Panel' })
 
     expect(panel.exists()).toBe(true)
   })

@@ -5,6 +5,7 @@
 
 export const STORAGE_KEYS = {
   THEME_MODE: 'elec_theme_mode',
+  ANIMATION_ENABLED: 'elec_animation_enabled',
   LAST_SITE_ID: 'last-accessed-site',
   CACHED_USER: 'elec_cached_user',
   SERVER_TIME_OFFSET: 'elec_server_time_offset',

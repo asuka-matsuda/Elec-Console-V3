@@ -141,3 +141,39 @@ export interface IconProps {
   strokeWidth?: number | string
   spin?: boolean
 }
+
+export type DividerType = 'solid' | 'fade-center' | 'fade-side'
+
+export type DividerOrientation = 'horizontal' | 'vertical'
+
+export interface DividerProps {
+  /** 線の基調色（CSSカラー値またはCSS変数。デフォルト: var(--theme-accent)） */
+  color?: string
+  /** 線のスタイル種別（デフォルト: 'solid'） */
+  type?: DividerType
+  /** 線の向き（デフォルト: 'horizontal'） */
+  orientation?: DividerOrientation
+  /** アニメーション（スケール演出・パルス光）を有効にするか（デフォルト: true） */
+  animated?: boolean
+}
+
+/** 後方互換性エイリアス */
+export type AtomsDividerProps = DividerProps
+
+export type PanelOverflow = 'hidden' | 'visible' | 'auto'
+
+export interface PanelProps {
+  /** 描画するHTML要素またはコンポーネント（デフォルト: 'div'） */
+  as?: string | object
+  /** 操作可能状態（ホバー・アクティブ演出） */
+  interactive?: boolean
+  /** 選択状態（アクセントグラデーション・グロー） */
+  selected?: boolean
+  /** 無効状態（半透明・操作不可） */
+  disabled?: boolean
+  /** オーバーフロー制御（デフォルト: 'hidden'） */
+  overflow?: PanelOverflow
+}
+
+/** 後方互換性エイリアス */
+export type AtomsPanelProps = PanelProps

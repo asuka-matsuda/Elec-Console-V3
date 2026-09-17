@@ -5,7 +5,6 @@
  */
 import { computed } from 'vue'
 
-import type { MenuSection } from '~/constants/data/menuData'
 import type { IconName } from '~/constants/icons'
 
 const props = withDefaults(
@@ -13,13 +12,7 @@ const props = withDefaults(
     title?: string
     tag?: string
     icon?: IconName
-    variant?:
-      | MenuSection['accent']
-      | 'danger'
-      | 'success'
-      | 'border'
-      | 'hud'
-      | 'simple'
+    variant?: 'main' | 'border' | 'hud'
     size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   }>(),
   {
@@ -29,29 +22,20 @@ const props = withDefaults(
   },
 )
 
-const dividerColorMap: Record<string, string> = {
-  main: 'var(--theme-accent)',
-  tool: 'var(--color-category-tool)',
-  database: 'var(--color-category-database)',
-  reference: 'var(--color-category-reference)',
-  management: 'var(--color-category-management)',
-  border: 'var(--color-border)',
-  danger: 'var(--color-status-danger)',
-  success: 'var(--color-status-success)',
-}
-
 const resolvedDividerColor = computed(() => {
-  if (props.variant === 'hud' || props.variant === 'simple') return 'var(--color-border)'
+  if (props.variant === 'border' || props.variant === 'hud') {
+    return 'var(--color-border)'
+  }
 
-  return (props.variant && dividerColorMap[props.variant]) || 'var(--theme-accent)'
+  return 'var(--theme-accent)'
+})
+
+const isDividerAnimated = computed(() => {
+  return props.variant !== 'border' && props.variant !== 'hud'
 })
 
 const resolvedIconColor = computed(() => {
-  if (props.variant === 'hud' || props.variant === 'simple' || props.variant === 'border') {
-    return 'var(--theme-accent)'
-  }
-
-  return (props.variant && dividerColorMap[props.variant]) || 'var(--theme-accent)'
+  return 'var(--theme-accent)'
 })
 </script>
 
@@ -73,7 +57,10 @@ const resolvedIconColor = computed(() => {
       <slot name="actions" />
     </div>
 
-    <AtomsDivider :color="resolvedDividerColor" />
+    <Divider
+      :color="resolvedDividerColor"
+      :animated="isDividerAnimated"
+    />
   </header>
 </template>
 

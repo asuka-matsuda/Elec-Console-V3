@@ -30,7 +30,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <AtomsPanel>
+  <Panel>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-panel-gap items-start">
       <div class="flex flex-col gap-3">
         <!-- 盤種別タブ -->
@@ -88,7 +88,7 @@ const emit = defineEmits<{
         />
       </div>
     </div>
-  </AtomsPanel>
+  </Panel>
 </template>
 
 <style scoped lang="scss">

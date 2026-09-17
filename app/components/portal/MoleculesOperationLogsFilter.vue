@@ -21,7 +21,7 @@ defineProps<{
 </script>
 
 <template>
-  <AtomsPanel class="flex flex-wrap items-center gap-4 px-4 py-3">
+  <Panel class="flex flex-wrap items-center gap-4 px-4 py-3">
     <div class="flex items-center gap-2">
       <label class="logs-filters__label">作業者:</label>
       <AtomsSelect
@@ -63,7 +63,7 @@ defineProps<{
         取得件数: <strong class="logs-count__num">{{ logCount }}</strong> 件
       </span>
     </div>
-  </AtomsPanel>
+  </Panel>
 </template>
 
 <style scoped lang="scss">

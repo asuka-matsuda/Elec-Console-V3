@@ -20,11 +20,10 @@ const {
 
 <template>
   <div class="flex flex-col gap-section-gap">
-    <AtomsPanel class="flex flex-col gap-4">
+    <Panel as="section" class="flex flex-col gap-4">
       <MoleculesSectionHeader
         title="計算履歴"
         icon="clock"
-        variant="tool"
         size="lg"
       >
         <template #actions>
@@ -65,6 +64,6 @@ const {
           <MoleculesEmptyState icon="loader" title="履歴を読み込み中..." />
         </template>
       </ClientOnly>
-    </AtomsPanel>
+    </Panel>
   </div>
 </template>

@@ -19,7 +19,7 @@ describe('OrganismsGlobalNav.vue', () => {
       template: '<div class="section-header-stub">{{ title }}</div>',
       props: ['title'],
     },
-    AtomsDivider: true,
+    Divider: true,
     Icon: true,
     NuxtLink: {
       template: '<a class="link-stub" :href="to" @click="$emit(\'click\')"><slot /></a>',

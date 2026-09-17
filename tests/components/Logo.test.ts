@@ -1,11 +1,11 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import AtomsLogo from '../../app/components/AtomsLogo.vue'
+import Logo from '../../app/components/common/atoms/Logo.vue'
 
-describe('AtomsLogo.vue', () => {
+describe('Logo.vue', () => {
   it('renders brand logo link with target "/"', () => {
-    const wrapper = mount(AtomsLogo, {
+    const wrapper = mount(Logo, {
       global: {
         stubs: {
           NuxtLink: {
@@ -25,7 +25,7 @@ describe('AtomsLogo.vue', () => {
   })
 
   it('renders gauge Icon component without explicit size prop', () => {
-    const wrapper = mount(AtomsLogo, {
+    const wrapper = mount(Logo, {
       global: {
         stubs: {
           NuxtLink: {
@@ -48,7 +48,7 @@ describe('AtomsLogo.vue', () => {
   })
 
   it('emits click event on click', async () => {
-    const wrapper = mount(AtomsLogo, {
+    const wrapper = mount(Logo, {
       global: {
         stubs: {
           NuxtLink: {

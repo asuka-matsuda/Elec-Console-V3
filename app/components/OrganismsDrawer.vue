@@ -15,14 +15,7 @@ const props = withDefaults(
   defineProps<{
     title?: string
     icon?: IconName
-    variant?:
-      | 'main'
-      | 'tool'
-      | 'database'
-      | 'reference'
-      | 'management'
-      | 'danger'
-      | 'success'
+    variant?: 'main' | 'danger' | 'success'
     size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
     submitFn?: () => Promise<void>
     submitText?: string
@@ -30,7 +23,7 @@ const props = withDefaults(
     submitVariant?: ButtonVariant
   }>(),
   {
-    variant: 'management',
+    variant: 'main',
     size: 'md',
     submitText: '保存する',
     cancelText: '閉じる',
@@ -117,7 +110,6 @@ onMounted(() => {
             v-if="title"
             :title="title"
             :icon="icon"
-            :variant="variant"
             size="md"
             class="flex-1 min-w-0"
           />

@@ -13,7 +13,7 @@ defineProps<{
 </script>
 
 <template>
-  <AtomsPanel>
+  <Panel>
     <MoleculesSectionHeader title="総合進捗" icon="activity" variant="hud" />
     <div class="flex flex-col lg:flex-row items-center gap-6 lg:gap-8 py-2">
       <!-- 全試験完了率ゲージ（Atom） -->
@@ -52,7 +52,7 @@ defineProps<{
           />
         </div>
 
-        <AtomsDivider type="fade-center" />
+        <Divider type="fade-center" />
 
         <!-- 二次側 詳細 -->
         <div class="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-6">
@@ -79,5 +79,5 @@ defineProps<{
         </div>
       </div>
     </div>
-  </AtomsPanel>
+  </Panel>
 </template>

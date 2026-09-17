@@ -2,7 +2,7 @@
 /**
  * MoleculesResultBox
  * [Molecules] 計算ツールやサマリー画面で、主要な結果数値・ステータス（判定）を表示するための特化ボックス。
- * AtomsPanel を土台とし、計器風の凹みシャドウ（--shadow-sink）、等幅数値フォント、判定ステータスに応じた発光演出を提供します。
+ * Panel を土台とし、計器風の凹みシャドウ（--shadow-sink）、等幅数値フォント、判定ステータスに応じた発光演出を提供します。
  */
 import { computed } from 'vue'
 
@@ -43,8 +43,7 @@ const badgeId = computed<BadgePresetId>(() => {
 </script>
 
 <template>
-  <AtomsPanel
-    as="div"
+  <Panel
     class="result-box flex flex-1 flex-col items-center justify-center gap-1 w-full min-w-0"
     :class="[`is-${resolvedStatus}`, `is-${size}`]"
   >
@@ -74,7 +73,7 @@ const badgeId = computed<BadgePresetId>(() => {
     <div v-if="$slots.actions">
       <slot name="actions" />
     </div>
-  </AtomsPanel>
+  </Panel>
 </template>
 
 <style scoped lang="scss">

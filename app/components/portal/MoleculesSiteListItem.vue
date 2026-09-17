@@ -17,8 +17,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <AtomsPanel
-    as="div"
+  <Panel
     interactive
     :selected="isSelected"
     :disabled="!!site.disabledAt"
@@ -46,7 +45,7 @@ const emit = defineEmits<{
         {{ site.disabledAt ? '有効化' : '無効化' }}
       </Button>
     </div>
-  </AtomsPanel>
+  </Panel>
 </template>
 
 <style scoped lang="scss">

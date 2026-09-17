@@ -2,7 +2,7 @@
 /**
  * OrganismsFooter
  * [Organisms] アプリケーション最下部のフッターコンポーネント。
- * 区切り線（AtomsDivider）とコピーライトテキスト、サイバーテキスト発光ホバー演出を表示します。
+ * 区切り線（Divider）とコピーライトテキスト、サイバーテキスト発光ホバー演出を表示します。
  */
 import type { OrganismsFooterProps } from '~/types/components'
 
@@ -14,7 +14,7 @@ const {
 
 <template>
   <footer class="mt-auto flex flex-col items-center gap-[var(--space-3)] pt-[var(--space-layout-pad)] text-center footer">
-    <AtomsDivider type="fade-center" />
+    <Divider type="fade-center" />
     <p class="copyright">
       {{ text || `© ${year} Mat.Operate & Gemini 3.1 Pro. / Elec-Console All rights reserved.` }}
     </p>

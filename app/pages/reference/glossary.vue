@@ -77,7 +77,7 @@ const categoryColorMap: Record<string, string> = {
 
     <div class="flex flex-1 flex-col min-w-0 min-h-0">
       <div v-if="filteredGlossary.length > 0" class="flex flex-col gap-panel-gap">
-        <AtomsPanel
+        <Panel
           v-for="item in filteredGlossary"
           :key="item.term"
           as="article"
@@ -118,7 +118,7 @@ const categoryColorMap: Record<string, string> = {
               </p>
             </div>
           </div>
-        </AtomsPanel>
+        </Panel>
       </div>
 
       <MoleculesEmptyState

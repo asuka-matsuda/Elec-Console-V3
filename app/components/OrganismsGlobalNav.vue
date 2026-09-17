@@ -73,6 +73,7 @@ onMounted(() => {
         :key="section.id || section.heading || section.globalNavHeading"
         class="flex flex-col gap-[var(--space-1)]"
         :style="{
+          '--theme-accent': `var(--color-category-${section.accent || 'main'})`,
           '--section-accent': `var(--color-category-${section.accent || 'main'})`,
         }"
       >
@@ -80,7 +81,6 @@ onMounted(() => {
           v-if="section.globalNavHeading || section.heading"
           :title="section.globalNavHeading || section.heading"
           :icon="section.icon"
-          :variant="section.accent || 'main'"
           size="xs"
           tag="h3"
           class="px-[var(--space-2)]"

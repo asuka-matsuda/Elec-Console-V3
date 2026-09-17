@@ -65,13 +65,12 @@ const handleClose = () => {
     v-model="activeOpen"
     :title="title || '計算根拠'"
     icon="book"
-    variant="tool"
     size="lg"
   >
     <div class="flex flex-col gap-panel-gap">
       <ClientOnly>
         <div v-if="steps && steps.length > 0" class="flex flex-col gap-panel-gap">
-          <AtomsPanel
+          <Panel
             v-for="(step, index) in steps"
             :key="index"
             class="flex flex-col gap-3"
@@ -87,7 +86,7 @@ const handleClose = () => {
               <!-- 右側: 凡例 -->
               <ToolMoleculesMathLegend :items="step.legend" />
             </div>
-          </AtomsPanel>
+          </Panel>
         </div>
       </ClientOnly>
 

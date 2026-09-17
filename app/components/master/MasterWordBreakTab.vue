@@ -111,7 +111,7 @@ const formattedPreview = computed(() => {
 <template>
   <div class="flex flex-col gap-6 master-word-break">
     <!-- 説明・ルールカード -->
-    <AtomsPanel class="rule-panel">
+    <Panel class="rule-panel">
       <div class="flex items-center gap-2 mb-2 rule-panel__title">
         <Icon name="info" size="sm" />
         <span>改行禁止ルールの概要</span>
@@ -134,10 +134,10 @@ const formattedPreview = computed(() => {
           </span>
         </div>
       </div>
-    </AtomsPanel>
+    </Panel>
 
     <!-- 単語入力・追加フォーム -->
-    <AtomsPanel>
+    <Panel>
       <h3 class="mb-3">
         新規ワードの追加
       </h3>
@@ -160,10 +160,10 @@ const formattedPreview = computed(() => {
       <p v-if="inputError" class="mt-2 error-text">
         {{ inputError }}
       </p>
-    </AtomsPanel>
+    </Panel>
 
     <!-- 登録済みワード一覧 -->
-    <AtomsPanel>
+    <Panel>
       <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
         <div class="flex items-center gap-2">
           <h3>
@@ -226,10 +226,10 @@ const formattedPreview = computed(() => {
         description="「新規ワードの追加」から追加してください。"
         class="py-6"
       />
-    </AtomsPanel>
+    </Panel>
 
     <!-- リアルタイムプレビュー枠 -->
-    <AtomsPanel>
+    <Panel>
       <h3 class="mb-2">
         改行動作プレビュー
       </h3>
@@ -250,7 +250,7 @@ const formattedPreview = computed(() => {
           </div>
         </div>
       </div>
-    </AtomsPanel>
+    </Panel>
   </div>
 </template>
 

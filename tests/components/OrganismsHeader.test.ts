@@ -21,7 +21,7 @@ describe('OrganismsHeader.vue', () => {
       global: {
         stubs: {
           NuxtLink: true,
-          AtomsLogo: true,
+          Logo: true,
           Breadcrumb: true,
           Button: {
             template: '<button @click="$emit(\'click\')"><slot /></button>',
@@ -40,7 +40,7 @@ describe('OrganismsHeader.vue', () => {
       global: {
         stubs: {
           NuxtLink: true,
-          AtomsLogo: true,
+          Logo: true,
           Breadcrumb: true,
           Button: {
             template: '<button @click="$emit(\'click\')"><slot /></button>',
@@ -59,7 +59,7 @@ describe('OrganismsHeader.vue', () => {
       global: {
         stubs: {
           NuxtLink: true,
-          AtomsLogo: true,
+          Logo: true,
           Breadcrumb: true,
           Button: {
             template: '<button @click="$emit(\'click\')"><slot /></button>',

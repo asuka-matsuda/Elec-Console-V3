@@ -24,7 +24,7 @@ const handleReset = () => {
   <div class="error-page">
     <div class="error-page__card">
       <div class="error-page__header">
-        <AtomsLogo @click="handleReset" />
+        <Logo @click="handleReset" />
       </div>
 
       <div class="error-page__badge">

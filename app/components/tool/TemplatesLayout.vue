@@ -62,11 +62,10 @@ provide('toolBasisModal', {
     <div class="grid flex-1 grid-cols-1 md:grid-cols-[minmax(0,4fr)_minmax(0,3fr)] gap-panel-gap min-h-0">
       <!-- 1. 条件入力（PC: 左側 4fr / モバイル: 全面表示） -->
       <section class="flex flex-col min-h-0">
-        <AtomsPanel class="flex flex-1 flex-col gap-panel-gap min-h-0">
+        <Panel class="flex flex-1 flex-col gap-panel-gap min-h-0">
           <MoleculesSectionHeader
             :title="inputsTitle"
             :icon="inputsIcon"
-            variant="tool"
             size="md"
           >
             <template #actions>
@@ -83,7 +82,7 @@ provide('toolBasisModal', {
           <div class="body flex flex-1 flex-col min-h-0 overflow-y-auto px-2 py-1">
             <slot name="inputs" :open-basis="openBasisModal" />
           </div>
-        </AtomsPanel>
+        </Panel>
       </section>
 
       <!-- 2. 計算結果（PC: 右側 3fr / モバイル: 下部Stickyドロワー） -->

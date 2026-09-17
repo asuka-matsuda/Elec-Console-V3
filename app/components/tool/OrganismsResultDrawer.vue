@@ -2,7 +2,7 @@
 /**
  * OrganismsResultDrawer
  * [Tool Organism] 計算ツールの結果表示エリア全体を包括する独立機能セクション。
- * AtomsPanel, MoleculesSectionHeader, Button, Icon を内包し、
+ * Panel, MoleculesSectionHeader, Button, Icon を内包し、
  * PC時は通常パネル、モバイル時は下部Stickyドロワーとして開閉・結果表示・履歴保存・計算根拠呼び出しを提供します。
  */
 import { computed, inject, type Ref, ref, toRef } from 'vue'
@@ -98,11 +98,10 @@ defineExpose({
 
     <!-- ドロワー内コンテンツ（結果パネル） -->
     <div class="content flex flex-1 flex-col min-h-0 max-md:overflow-y-auto max-md:p-3">
-      <AtomsPanel class="flex flex-1 flex-col gap-panel-gap min-h-0">
+      <Panel class="flex flex-1 flex-col gap-panel-gap min-h-0">
         <MoleculesSectionHeader
           :title="title"
           :icon="icon"
-          variant="tool"
           size="md"
         >
           <template #actions>
@@ -129,7 +128,7 @@ defineExpose({
         <div class="body flex flex-1 flex-col min-h-0 overflow-y-auto px-2 py-1">
           <slot />
         </div>
-      </AtomsPanel>
+      </Panel>
     </div>
   </section>
 

@@ -8,7 +8,13 @@ export const useSettings = () => {
     'dark',
   )
 
+  const animationEnabled = useLocalStorage<boolean>(
+    STORAGE_KEYS.ANIMATION_ENABLED,
+    true,
+  )
+
   return {
     themeMode,
+    animationEnabled,
   }
 }

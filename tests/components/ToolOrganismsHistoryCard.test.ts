@@ -6,7 +6,7 @@ import type { HistoryEntry } from '../../app/types/history'
 
 describe('ToolOrganismsHistoryCard.vue', () => {
   const commonStubs = {
-    AtomsPanel: {
+    Panel: {
       template: '<article class="panel-stub"><slot /></article>',
     },
     Badge: {

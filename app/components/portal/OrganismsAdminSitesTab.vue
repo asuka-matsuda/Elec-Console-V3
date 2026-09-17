@@ -124,7 +124,7 @@ const confirmToggleDisable = async (row: Site) => {
 </script>
 
 <template>
-  <AtomsPanel>
+  <Panel>
     <div class="flex flex-col lg:flex-row gap-6 items-start">
       <!-- 左ペイン: Master (幅約340px) -->
       <div class="w-full lg:w-[340px] shrink-0">
@@ -190,7 +190,7 @@ const confirmToggleDisable = async (row: Site) => {
         </MoleculesFormGroup>
       </div>
     </OrganismsModal>
-  </AtomsPanel>
+  </Panel>
 </template>
 
 <style scoped lang="scss">

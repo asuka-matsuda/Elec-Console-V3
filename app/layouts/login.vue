@@ -9,10 +9,10 @@ const pageTitle = computed(() => route.meta.title as string | undefined)
 
 <template>
   <main class="flex flex-1 items-center justify-center gap-0 login-layout">
-    <AtomsPanel class="login-layout__panel">
+    <Panel class="login-layout__panel">
       <MoleculesSectionHeader v-if="pageTitle" :title="pageTitle" />
       <slot />
-    </AtomsPanel>
+    </Panel>
   </main>
 </template>
 

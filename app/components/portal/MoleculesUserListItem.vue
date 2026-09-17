@@ -17,8 +17,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <AtomsPanel
-    as="div"
+  <Panel
     interactive
     :selected="isSelected"
     class="user-item flex items-center justify-between gap-3"
@@ -36,7 +35,7 @@ const emit = defineEmits<{
         ID: {{ user.loginId || user.id }}
       </div>
     </div>
-  </AtomsPanel>
+  </Panel>
 </template>
 
 <style scoped lang="scss">
