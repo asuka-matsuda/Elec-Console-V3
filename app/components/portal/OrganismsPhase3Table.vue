@@ -231,7 +231,7 @@ const {
     <!-- 備考 -->
     <template #cell-p3Remarks="{ row: circuit }">
       <template v-if="editingRowId === circuit.id">
-        <AtomsTextarea
+        <Textarea
           v-model="inputForm.remarks"
           :rows="2"
           placeholder="備考"

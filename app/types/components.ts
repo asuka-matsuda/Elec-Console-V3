@@ -241,6 +241,35 @@ export interface SelectProps<T = string | number | boolean> {
 }
 export type AtomsSelectProps<T = string | number | boolean> = SelectProps<T>
 
+// --- Textarea ---
+export type TextareaResize = 'none' | 'vertical' | 'horizontal' | 'both'
+
+export interface TextareaProps {
+  /** プレースホルダー */
+  placeholder?: string
+  /** 無効化状態 (デフォルト: false) */
+  disabled?: boolean
+  /** 読み取り専用 (デフォルト: false) */
+  readonly?: boolean
+  /** エラー状態フラグ (デフォルト: false) */
+  error?: boolean
+  /** 必須入力 (デフォルト: false) */
+  required?: boolean
+  /** 表示行数 (デフォルト: 4) */
+  rows?: number
+  /** 最大文字数 */
+  maxlength?: number
+  /** リサイズ方向の制御 (デフォルト: 'vertical') */
+  resize?: TextareaResize
+  /** HTML id属性 */
+  id?: string
+  /** HTML name属性 */
+  name?: string
+  /** 自動補完 */
+  autocomplete?: string
+}
+export type AtomsTextareaProps = TextareaProps
+
 // --- FormControlAction ---
 export interface FormControlActionProps {
   /** 表示するアイコン名 */

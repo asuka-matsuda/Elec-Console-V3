@@ -94,7 +94,7 @@ const {
     <!-- 回路名称 -->
     <template #cell-kairoMeisho="{ row: circuit }">
       <template v-if="editingRowId === circuit.id">
-        <AtomsTextarea
+        <Textarea
           v-model="editForm.kairoMeisho"
           :rows="2"
           placeholder="回路名称"
@@ -150,7 +150,7 @@ const {
     <!-- 備考 -->
     <template #cell-p1Remarks="{ row: circuit }">
       <template v-if="editingRowId === circuit.id">
-        <AtomsTextarea
+        <Textarea
           v-model="editForm.remarks"
           :rows="2"
           placeholder="備考"

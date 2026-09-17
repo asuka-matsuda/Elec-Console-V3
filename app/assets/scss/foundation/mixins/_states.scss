@@ -85,8 +85,8 @@
 }
 
 // 2-3. フォームコントロール基本装飾（Input, Textarea, Select共通）
-@mixin form-control-base {
-  min-height: calc(var(--control-height-ratio) * 1em);
+@mixin form-control-base($min-height: calc(var(--control-height-ratio) * 1em)) {
+  min-height: $min-height;
   border: var(--border-width-base) solid var(--color-border);
 
   font-size: inherit;
