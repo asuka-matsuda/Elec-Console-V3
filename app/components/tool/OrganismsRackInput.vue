@@ -118,7 +118,7 @@ const handleRemoveCable = (id: string) => {
 <template>
   <div class="flex flex-col gap-[var(--space-form-row-gap)]">
     <!-- 強電／弱電 タブ切り替え -->
-    <AtomsRadioGroup
+    <RadioGroup
       v-model="inputs.mode"
       :options="rackModeOptions"
     />

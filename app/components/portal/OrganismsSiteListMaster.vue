@@ -74,9 +74,9 @@ const filteredSites = computed(() => {
       placeholder="現場名・IDで検索..."
     />
 
-    <!-- ステータスフィルター (AtomsRadioGroup) -->
+    <!-- ステータスフィルター (RadioGroup) -->
     <div class="overflow-x-auto pb-1">
-      <AtomsRadioGroup
+      <RadioGroup
         v-model="statusFilter"
         :options="filterOptions"
       />

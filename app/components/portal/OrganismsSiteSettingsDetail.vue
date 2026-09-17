@@ -96,11 +96,10 @@ const isResultDialogOpen = ref(false)
         </template>
       </MoleculesSectionHeader>
 
-      <!-- 設定カテゴリタブ (MoleculesTabs: ピル型セグメント表示) -->
-      <MoleculesTabs
+      <!-- 設定カテゴリタブ (Tabs) -->
+      <Tabs
         v-model="activeCategory"
         :options="categoryOptions"
-        variant="pill"
       >
         <!-- 1. 基本情報設定 -->
         <template #basic>
@@ -143,7 +142,7 @@ const isResultDialogOpen = ref(false)
             @update:circuit="emit('update:circuit', $event)"
           />
         </template>
-      </MoleculesTabs>
+      </Tabs>
 
       <!-- 処理完了詳細モーダル -->
       <OrganismsModal

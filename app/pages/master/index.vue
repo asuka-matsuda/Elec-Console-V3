@@ -33,20 +33,23 @@ const MASTER_TABS: TabOption<'word-break' | 'announcements'>[] = [
 
 <template>
   <div class="flex flex-col gap-section-gap">
-    <AtomsTabs
+    <Tabs
       v-model="activeTab"
       :options="MASTER_TABS"
-    />
+      panel-class="flex flex-col gap-panel-gap"
+    >
+      <template #word-break>
+        <MasterWordBreakTab />
+      </template>
 
-    <div class="flex-1 min-h-0 flex flex-col gap-panel-gap">
-      <MasterWordBreakTab v-if="activeTab === 'word-break'" />
-      <MoleculesEmptyState
-        v-else-if="activeTab === 'announcements'"
-        icon="bell"
-        title="お知らせ設定"
-        description="お知らせ設定機能は順次公開予定です。"
-        class="py-12"
-      />
-    </div>
+      <template #announcements>
+        <MoleculesEmptyState
+          icon="bell"
+          title="お知らせ設定"
+          description="お知らせ設定機能は順次公開予定です。"
+          class="py-12"
+        />
+      </template>
+    </Tabs>
   </div>
 </template>

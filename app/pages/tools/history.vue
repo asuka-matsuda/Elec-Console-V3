@@ -38,7 +38,7 @@ const {
         </template>
       </MoleculesSectionHeader>
 
-      <AtomsTabs v-model="currentTab" :options="tabs" />
+      <RadioGroup v-model="currentTab" :options="tabs" />
 
       <ClientOnly>
         <div

@@ -78,9 +78,9 @@ const filteredUsers = computed(() => {
       placeholder="氏名・カナ・IDで検索..."
     />
 
-    <!-- 権限フィルター (AtomsRadioGroup) -->
+    <!-- 権限フィルター (RadioGroup) -->
     <div class="overflow-x-auto pb-1">
-      <AtomsRadioGroup
+      <RadioGroup
         v-model="roleFilter"
         :options="filterOptions"
       />

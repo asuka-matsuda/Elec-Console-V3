@@ -24,7 +24,7 @@ describe('ToolOrganismsRackInput (app/components/tool/OrganismsRackInput.vue)', 
   })
 
   const commonStubs = {
-    AtomsRadioGroup: {
+    RadioGroup: {
       props: ['modelValue', 'options'],
       template: '<div class="radio-group-stub">{{ modelValue }}</div>',
     },

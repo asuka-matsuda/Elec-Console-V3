@@ -127,38 +127,38 @@ const handleSave = () => {
         </template>
       </MoleculesSectionHeader>
 
-      <!-- カテゴリ選択 (AtomsRadioGroup) -->
-      <div class="overflow-x-auto pb-1">
-        <AtomsRadioGroup
-          v-model="activeCategory"
-          :options="categoryOptions"
-        />
-      </div>
+      <!-- カテゴリ選択 (Tabs) -->
+      <Tabs
+        v-model="activeCategory"
+        :options="categoryOptions"
+      >
+        <!-- 1. 基本情報設定 -->
+        <template #basic>
+          <PortalMoleculesUserBasicSettings
+            :user="user"
+            :last-name="editLastName"
+            :first-name="editFirstName"
+            :last-name-kana="editLastNameKana"
+            :first-name-kana="editFirstNameKana"
+            :user-role="editRole"
+            :require-password-reset="editRequirePasswordReset"
+            @update:last-name="editLastName = $event"
+            @update:first-name="editFirstName = $event"
+            @update:last-name-kana="editLastNameKana = $event"
+            @update:first-name-kana="editFirstNameKana = $event"
+            @update:user-role="editRole = $event"
+            @update:require-password-reset="editRequirePasswordReset = $event"
+          />
+        </template>
 
-      <!-- 1. 基本情報設定 -->
-      <PortalMoleculesUserBasicSettings
-        v-if="activeCategory === 'basic'"
-        :user="user"
-        :last-name="editLastName"
-        :first-name="editFirstName"
-        :last-name-kana="editLastNameKana"
-        :first-name-kana="editFirstNameKana"
-        :user-role="editRole"
-        :require-password-reset="editRequirePasswordReset"
-        @update:last-name="editLastName = $event"
-        @update:first-name="editFirstName = $event"
-        @update:last-name-kana="editLastNameKana = $event"
-        @update:first-name-kana="editFirstNameKana = $event"
-        @update:user-role="editRole = $event"
-        @update:require-password-reset="editRequirePasswordReset = $event"
-      />
-
-      <!-- 2. 現場アサイン設定 -->
-      <PortalMoleculesUserSiteAssignment
-        v-else-if="activeCategory === 'assign'"
-        v-model="editAssignedSiteIds"
-        :site-list="siteList"
-      />
+        <!-- 2. 現場アサイン設定 -->
+        <template #assign>
+          <PortalMoleculesUserSiteAssignment
+            v-model="editAssignedSiteIds"
+            :site-list="siteList"
+          />
+        </template>
+      </Tabs>
     </template>
   </div>
 </template>

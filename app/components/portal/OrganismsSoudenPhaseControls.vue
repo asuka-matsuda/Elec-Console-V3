@@ -33,10 +33,10 @@ const emit = defineEmits<{
   <Panel>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-panel-gap items-start">
       <div class="flex flex-col gap-3">
-        <!-- 盤種別タブ -->
+        <!-- 盤種別セグメント -->
         <div class="flex items-center gap-3">
           <span class="controls-label min-w-[50px]">盤種別:</span>
-          <AtomsTabs
+          <RadioGroup
             v-model="selectedShubetsu"
             :options="shubetsuOptions"
           />

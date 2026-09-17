@@ -25,10 +25,16 @@ export interface RadioOption<T = string | number | boolean> {
 }
 
 /** 汎用タブ選択肢 */
-export type TabOption<V = string | number> = {
+export interface TabOption<V = string | number> {
   label: string
   value: V
   disabled?: boolean
+  /** タブ左側に表示するアイコン（任意） */
+  icon?: IconName
+  /** タブ右側に表示するバッジ（任意） */
+  badge?: string | number
+  /** バッジのバリアント */
+  badgeVariant?: BadgePresetId
 }
 
 /** 汎用テーブルカラム定義 */
@@ -287,9 +293,31 @@ export interface FormControlActionProps {
 }
 export type AtomsFormControlActionProps = FormControlActionProps
 
+// --- RadioGroup ---
+export interface RadioGroupProps<T = string | number | boolean> {
+  /** 選択肢一覧 */
+  options: RadioOption<T>[]
+  /** フォーム識別用 name 属性 */
+  name?: string
+  /** グループ全体の無効化 (デフォルト: false) */
+  disabled?: boolean
+  /** 幅いっぱいに均等配置（全幅モード、デフォルト: false） */
+  block?: boolean
+}
+
 // ============================================================================
 // 3. Molecules（複合コンポーネント）
 // ============================================================================
+
+// --- Tabs ---
+export interface TabsProps<T = string | number> {
+  /** タブ選択肢一覧 */
+  options: TabOption<T>[]
+  /** パネル領域のカスタムクラス */
+  panelClass?: string
+  /** タブ切り替え時にパネル状態をメモリ上に保持するかどうか */
+  keepAlive?: boolean
+}
 
 // --- ResultBox & ResultDetails ---
 export type ResultBoxStatus = 'success' | 'warning' | 'danger' | 'error' | 'default' | 'neutral' | 'empty'

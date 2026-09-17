@@ -2,7 +2,7 @@
 /**
  * PortalMoleculesCalToolbar
  * カレンダー操作ツールバーコンポーネント。
- * 月送り/今日移動、年月タイトル、月表示/リスト切り替え（AtomsRadioGroupセグメントコントロール）、
+ * 月送り/今日移動、年月タイトル、月表示/リスト切り替え（RadioGroupセグメントコントロール）、
  * および種別設定モーダルオープンボタンを提供します。
  */
 import type { IconName } from '~/constants/icons'
@@ -70,7 +70,7 @@ const getOptionIcon = (option: RadioOption<CalendarView>): IconName => {
 
     <div class="flex items-center justify-center md:justify-end w-full md:w-auto gap-2">
       <!-- 表示ビュー切り替え（セグメントコントロール） -->
-      <AtomsRadioGroup
+      <RadioGroup
         :model-value="currentView"
         :options="VIEW_OPTIONS"
         @update:model-value="handleViewChange"
@@ -81,7 +81,7 @@ const getOptionIcon = (option: RadioOption<CalendarView>): IconName => {
             <span>{{ option.label }}</span>
           </div>
         </template>
-      </AtomsRadioGroup>
+      </RadioGroup>
 
       <Button
         icon="settings"

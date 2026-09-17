@@ -39,7 +39,7 @@ describe('MoleculesCalToolbar.vue', () => {
     expect(wrapper.emitted('openTypeSettings')).toBeTruthy()
   })
 
-  it('renders AtomsRadioGroup for view switching and emits changeView', async () => {
+  it('renders RadioGroup for view switching and emits changeView', async () => {
     const wrapper = mount(MoleculesCalToolbar, {
       props: {
         title: '2026年9月',
@@ -47,7 +47,7 @@ describe('MoleculesCalToolbar.vue', () => {
       },
     })
 
-    const radioGroup = wrapper.findComponent({ name: 'AtomsRadioGroup' })
+    const radioGroup = wrapper.findComponent({ name: 'RadioGroup' })
 
     expect(radioGroup.exists()).toBe(true)
 

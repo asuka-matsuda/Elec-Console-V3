@@ -19,7 +19,7 @@ defineProps<{
 
 <template>
   <div class="flex flex-col gap-[var(--space-form-row-gap)]">
-    <AtomsRadioGroup v-model="form.mode" :options="modeOptions" />
+    <RadioGroup v-model="form.mode" :options="modeOptions" />
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-[var(--space-form-col-gap)] gap-y-[var(--space-form-row-gap)]">
       <template v-for="field in formFields" :key="field.id">
