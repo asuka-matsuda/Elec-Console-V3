@@ -85,22 +85,38 @@ const initialUserState = {
 }
 const newUser = ref({ ...initialUserState })
 
+const createErrorMsg = ref('')
+const isCreatingUser = ref(false)
+
 const openCreateModal = () => {
+  createErrorMsg.value = ''
   newUser.value = { ...initialUserState }
   isCreateModalOpen.value = true
 }
 
 const handleCreateUser = async () => {
+  createErrorMsg.value = ''
   if (!newUser.value.id || !newUser.value.lastName || !newUser.value.firstName) {
-    throw new Error('ID、姓、名を入力してください。')
+    createErrorMsg.value = 'ID、姓、名を入力してください。'
+
+    return
   }
 
-  const result = await createUser(newUser.value)
+  try {
+    isCreatingUser.value = true
+    const result = await createUser(newUser.value)
 
-  createdUserResult.value = result
-  selectedUserId.value = result.id
-  isCreateModalOpen.value = false
-  isCredentialModalOpen.value = true
+    createdUserResult.value = result
+    selectedUserId.value = result.id
+    isCreateModalOpen.value = false
+    isCredentialModalOpen.value = true
+  }
+  catch (e: unknown) {
+    createErrorMsg.value = (e as Error).message || 'ユーザーの登録に失敗しました。'
+  }
+  finally {
+    isCreatingUser.value = false
+  }
 }
 
 // --- 認証情報モーダル（新規作成後 & PW初期化後） ---
@@ -200,46 +216,69 @@ const confirmResetPassword = async (row: User) => {
     </div>
 
     <!-- 新規登録モーダル (中央ダイアログ) -->
-    <OrganismsModal
+    <Modal
       v-model="isCreateModalOpen"
       title="新規ユーザー登録"
       icon="plus-circle"
-      size="md"
-      :submit-fn="handleCreateUser"
-      submit-text="登録する"
-      @cancel="isCreateModalOpen = false"
     >
+      <template #actions>
+        <Button @click="isCreateModalOpen = false">
+          キャンセル
+        </Button>
+        <Button
+          variant="success"
+          :loading="isCreatingUser"
+          @click="handleCreateUser"
+        >
+          登録する
+        </Button>
+      </template>
+
       <div class="flex flex-col gap-4">
+        <div
+          v-if="createErrorMsg"
+          class="p-2.5 form-error"
+        >
+          {{ createErrorMsg }}
+        </div>
+
         <template v-for="field in USER_CREATE_FORM_FIELDS" :key="field.id">
-          <MoleculesFormGroup :label="field.label">
+          <FormGroup :label="field.label">
             <Input
               v-model="newUser[field.id]"
               :placeholder="field.placeholder"
             />
-          </MoleculesFormGroup>
+          </FormGroup>
         </template>
 
-        <MoleculesFormGroup label="権限">
+        <FormGroup label="権限">
           <Select v-model="newUser.role" :options="USER_ROLE_OPTIONS" />
-        </MoleculesFormGroup>
-        <MoleculesFormGroup>
+        </FormGroup>
+        <FormGroup>
           <Checkbox
             v-model="newUser.requirePasswordReset"
             label="初回ログイン時にパスワード変更を要求する"
           />
-        </MoleculesFormGroup>
+        </FormGroup>
       </div>
-    </OrganismsModal>
+    </Modal>
 
     <!-- 認証情報発行完了モーダル (中央ダイアログ) -->
-    <OrganismsModal
+    <Modal
       v-model="isCredentialModalOpen"
       title="認証情報の発行完了"
       icon="check-circle"
-      variant="success"
-      size="md"
       @cancel="isCredentialModalOpen = false"
     >
+      <template #actions>
+        <Button
+          variant="success"
+          @click="isCredentialModalOpen = false"
+        >
+          完了
+        </Button>
+      </template>
+
       <div class="flex flex-col gap-4">
         <p class="credential-desc">
           以下のログイン情報を作業者へお伝えください。<br />
@@ -247,42 +286,43 @@ const confirmResetPassword = async (row: User) => {
         </p>
 
         <Panel v-if="createdUserResult" class="flex flex-col gap-3">
-          <MoleculesFormGroup label="氏名">
+          <FormGroup label="氏名">
             <div class="user-value">
               {{ createdUserResult.lastName }} {{ createdUserResult.firstName }}
             </div>
-          </MoleculesFormGroup>
-          <MoleculesFormGroup label="ログインID">
+          </FormGroup>
+          <FormGroup label="ログインID">
             <div class="user-value is-mono">
               {{ createdUserResult.loginId || createdUserResult.id }}
             </div>
-          </MoleculesFormGroup>
-          <MoleculesFormGroup label="初期パスワード">
-            <div class="user-value is-mono is-success">
-              {{ createdUserResult.initialPassword || "（既に設定済みです）" }}
+          </FormGroup>
+          <FormGroup label="初期パスワード">
+            <div class="flex items-center gap-2">
+              <div class="user-value is-mono is-success flex-1">
+                {{ createdUserResult.initialPassword || "（既に設定済みです）" }}
+              </div>
+              <Button
+                v-if="createdUserResult.initialPassword"
+                icon="copy"
+                size="sm"
+                @click="handleCopyPassword"
+              >
+                コピー
+              </Button>
             </div>
-          </MoleculesFormGroup>
+          </FormGroup>
         </Panel>
-      </div>
 
-      <template #footer>
-        <Button
-          @click="handleCopyPassword"
-        >
-          PWをコピー
-        </Button>
-        <Button
-          @click="handlePrint"
-        >
-          印刷する
-        </Button>
-        <Button
-          @click="isCredentialModalOpen = false"
-        >
-          完了
-        </Button>
-      </template>
-    </OrganismsModal>
+        <div class="flex justify-end pt-1">
+          <Button
+            icon="printer"
+            @click="handlePrint"
+          >
+            認証情報を印刷する
+          </Button>
+        </div>
+      </div>
+    </Modal>
   </Panel>
 </template>
 
@@ -308,5 +348,12 @@ const confirmResetPassword = async (row: User) => {
   &.is-success {
     color: var(--color-status-success);
   }
+}
+
+.form-error {
+  border: var(--border-width-base) solid var(--color-status-danger);
+  font-size: var(--font-size-xs);
+  color: var(--color-status-danger);
+  background-color: color-mix(in srgb, var(--color-status-danger) 10%, transparent);
 }
 </style>

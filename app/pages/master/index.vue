@@ -7,6 +7,8 @@
 import { ref } from 'vue'
 
 import { useHead } from '#app'
+import MasterAnnouncementsTab from '~/components/master/MasterAnnouncementsTab.vue'
+import MasterHistoryTab from '~/components/master/MasterHistoryTab.vue'
 import MasterWordBreakTab from '~/components/master/MasterWordBreakTab.vue'
 import type { TabOption } from '~/types/components'
 
@@ -16,17 +18,23 @@ definePageMeta({
   middleware: ['master'],
 })
 
-const activeTab = ref<'word-break' | 'announcements'>('word-break')
+const activeTab = ref<'word-break' | 'announcements' | 'history'>('word-break')
 
-const MASTER_TABS: TabOption<'word-break' | 'announcements'>[] = [
+const MASTER_TABS: TabOption<'word-break' | 'announcements' | 'history'>[] = [
   {
     label: '改行禁止ワード設定',
     value: 'word-break',
+    icon: 'type',
   },
   {
-    label: 'お知らせ設定（準備中）',
+    label: 'お知らせ設定',
     value: 'announcements',
-    disabled: true,
+    icon: 'bell',
+  },
+  {
+    label: '更新履歴設定',
+    value: 'history',
+    icon: 'clock',
   },
 ]
 </script>
@@ -43,12 +51,11 @@ const MASTER_TABS: TabOption<'word-break' | 'announcements'>[] = [
       </template>
 
       <template #announcements>
-        <EmptyState
-          icon="bell"
-          title="お知らせ設定"
-          description="お知らせ設定機能は順次公開予定です。"
-          class="py-12"
-        />
+        <MasterAnnouncementsTab />
+      </template>
+
+      <template #history>
+        <MasterHistoryTab />
       </template>
     </Tabs>
   </div>

@@ -35,12 +35,12 @@ const { themeMode, animationEnabled } = useSettings()
           画面のテーマ（ライト/ダーク）を変更します。
         </p>
 
-        <MoleculesFormGroup
+        <FormGroup
           label="外観モード"
           help="全体の明るさを変更します（ダークモード推奨）"
         >
           <Select v-model="themeMode" :options="THEME_OPTIONS" />
-        </MoleculesFormGroup>
+        </FormGroup>
       </Panel>
 
       <Panel as="section" class="flex flex-col gap-4">
@@ -54,7 +54,7 @@ const { themeMode, animationEnabled } = useSettings()
           区切り線のサイバーパルス光やスケール演出などのアニメーション効果を設定します。
         </p>
 
-        <MoleculesFormGroup
+        <FormGroup
           label="アニメーション演出"
           help="OFFにすると、パルス光やスケール演出を停止し、落ち着いた静止表示にします"
         >
@@ -62,7 +62,7 @@ const { themeMode, animationEnabled } = useSettings()
             v-model="animationEnabled"
             label="サイバーパルス・モーション演出を有効にする"
           />
-        </MoleculesFormGroup>
+        </FormGroup>
       </Panel>
     </div>
   </div>

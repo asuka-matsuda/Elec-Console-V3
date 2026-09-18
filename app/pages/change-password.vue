@@ -65,22 +65,22 @@ const handleChangePassword = async () => {
       {{ errorMsg }}
     </p>
 
-    <MoleculesFormGroup label="新しいパスワード (8文字以上)">
+    <FormGroup label="新しいパスワード (8文字以上)">
       <Input
         v-model="password"
         type="password"
         placeholder="新しいパスワード"
         :disabled="isLoading"
       />
-    </MoleculesFormGroup>
-    <MoleculesFormGroup label="新しいパスワード (確認用)">
+    </FormGroup>
+    <FormGroup label="新しいパスワード (確認用)">
       <Input
         v-model="passwordConfirm"
         type="password"
         placeholder="もう一度入力"
         :disabled="isLoading"
       />
-    </MoleculesFormGroup>
+    </FormGroup>
 
     <div class="flex items-center justify-center">
       <Button

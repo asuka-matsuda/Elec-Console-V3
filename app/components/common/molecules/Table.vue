@@ -273,7 +273,13 @@ const getCellValue = (row: unknown, key?: string | number): unknown => {
   @include state-interactive;
 
   &:hover {
-    background-color: var(--color-bg-hover);
+    background:
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--theme-accent) 7%, transparent) 0%,
+        color-mix(in srgb, var(--theme-accent) 1%, transparent) 40%,
+        transparent 70%
+      );
   }
 
   &:last-child {

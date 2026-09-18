@@ -29,31 +29,31 @@ const emit = defineEmits<{
       tag="h4"
     />
 
-    <MoleculesFormGroup label="ステータス">
+    <FormGroup label="ステータス">
       <Select
         :model-value="editStatus"
         :options="statusOptions"
         @update:model-value="emit('update:editStatus', String($event ?? ''))"
       />
-    </MoleculesFormGroup>
+    </FormGroup>
 
-    <MoleculesFormGroup label="現場ID (半角英数)">
+    <FormGroup label="現場ID (半角英数)">
       <Input
         :model-value="editId"
         placeholder="例: site-tokyo-01"
         @update:model-value="emit('update:editId', String($event ?? ''))"
       />
-    </MoleculesFormGroup>
+    </FormGroup>
 
-    <MoleculesFormGroup label="現場名">
+    <FormGroup label="現場名">
       <Input
         :model-value="editData.name"
         placeholder="例: 新宿プロジェクト"
         @update:model-value="emit('update:name', String($event ?? ''))"
       />
-    </MoleculesFormGroup>
+    </FormGroup>
 
-    <MoleculesFormGroup label="アサイン済作業者">
+    <FormGroup label="アサイン済作業者">
       <div class="flex flex-wrap items-center gap-2">
         <template v-if="workerNames.length > 0">
           <Badge
@@ -71,6 +71,6 @@ const emit = defineEmits<{
           description="ユーザー管理画面から作業者をアサインしてください。"
         />
       </div>
-    </MoleculesFormGroup>
+    </FormGroup>
   </div>
 </template>

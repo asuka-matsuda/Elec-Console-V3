@@ -38,7 +38,7 @@ const getSafeState = <T>(key: string, fallbackRef: Ref<T>, init: () => T): Ref<T
 }
 
 /**
- * モーダル（OrganismsModal）の開閉と状態管理を共通化するComposable（SSR安全）
+ * モーダル（Modal）の開閉と状態管理を共通化するComposable（SSR安全）
  */
 export const useModal = (
   defaultOptions: Partial<ConfirmOptions> = {},

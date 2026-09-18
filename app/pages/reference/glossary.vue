@@ -66,12 +66,12 @@ const categoryColorMap: Record<string, string> = {
         :category-options="categoryOptions"
         placeholder="用語名や説明を検索..."
       >
-        <MoleculesFormGroup label="INDEX (読み・五十音)">
+        <FormGroup label="INDEX (読み・五十音)">
           <MoleculesKanaFilter
             v-model="activeKanas"
             :available-rows="availableRows"
           />
-        </MoleculesFormGroup>
+        </FormGroup>
       </OrganismsFilterPanel>
     </aside>
 

@@ -71,11 +71,28 @@ const formatDateTime = (isoStr: string) => {
 </script>
 
 <template>
-  <OrganismsModal
+  <Modal
     v-model="isOpen"
     title="現場データのサーバー同期"
     @close="closeModal"
   >
+    <template #actions>
+      <Button
+        @click="closeModal"
+      >
+        閉じる
+      </Button>
+      <Button
+        variant="success"
+        icon="upload"
+        :loading="isSyncing"
+        :disabled="pendingCount === 0"
+        @click="handleStartSync"
+      >
+        送信実行
+      </Button>
+    </template>
+
     <div class="flex flex-col gap-4">
       <!-- 競合解決ビュー -->
       <template v-if="conflictItems.length > 0">
@@ -211,26 +228,9 @@ const formatDateTime = (isoStr: string) => {
             </template>
           </MoleculesResultBox>
         </div>
-
-        <div class="flex items-center justify-end gap-3 pt-3 modal-actions">
-          <Button
-            @click="closeModal"
-          >
-            閉じる
-          </Button>
-          <Button
-            variant="success"
-            icon="upload"
-            :loading="isSyncing"
-            :disabled="pendingCount === 0"
-            @click="handleStartSync"
-          >
-            サーバーへ送信実行
-          </Button>
-        </div>
       </template>
     </div>
-  </OrganismsModal>
+  </Modal>
 </template>
 
 <style scoped lang="scss">

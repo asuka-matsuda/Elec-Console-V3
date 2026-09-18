@@ -99,7 +99,7 @@ const computedType = computed(() => {
   letter-spacing: var(--tracking-wide);
 
   background-color: var(--btn-bg);
-  box-shadow: var(--shadow-elevation-sm);
+  box-shadow: var(--surface-rim-highlight), var(--shadow-elevation-sm);
 
   transition: var(--transition-interactive);
 
@@ -107,8 +107,16 @@ const computedType = computed(() => {
     &:hover {
       border-color: var(--btn-border-hover);
       color: var(--btn-text-hover);
-      background-color: var(--btn-bg-hover);
-      box-shadow: var(--shadow-glow-hover);
+      background:
+        linear-gradient(
+          to bottom,
+          color-mix(in srgb, var(--color-overlay) 6%, transparent) 0%,
+          transparent 100%
+        ),
+        var(--btn-bg-hover);
+      box-shadow:
+        var(--surface-rim-highlight-hover),
+        var(--shadow-glow-hover);
     }
 
     &:focus-visible {
@@ -121,7 +129,9 @@ const computedType = computed(() => {
       transform: scale(0.98);
       border-color: var(--btn-border-hover);
       background-color: var(--btn-bg-active);
-      box-shadow: var(--shadow-glow-active);
+      box-shadow:
+        inset 0 1px 2px color-mix(in srgb, black 30%, transparent),
+        var(--shadow-glow-active);
     }
   }
 

@@ -5,7 +5,7 @@
  * 条件入力パネルと計算結果パネルの大枠、および計算根拠モーダルのスロットを提供します。
  * 結果パネル・ドロワー機能は ToolOrganismsResultDrawer に包括されています。
  */
-import { computed, provide, ref, useSlots } from 'vue'
+import { computed, useSlots } from 'vue'
 
 import type { ToolTemplatesLayoutProps } from '~/types/components'
 
@@ -27,25 +27,7 @@ const emit = defineEmits<{
 }>()
 
 const slots = useSlots()
-const isBasisModalOpen = ref(false)
-
-const openBasisModal = () => {
-  isBasisModalOpen.value = true
-}
-
-const closeBasisModal = () => {
-  isBasisModalOpen.value = false
-}
-
-const hasBasis = computed(() => !!slots.basis)
-
-provide('openToolBasis', openBasisModal)
-provide('hasToolBasis', hasBasis)
-provide('toolBasisModal', {
-  isOpen: isBasisModalOpen,
-  open: openBasisModal,
-  close: closeBasisModal,
-})
+const hasBasis = computed(() => Boolean(slots.basis))
 </script>
 
 <template>
@@ -77,7 +59,7 @@ provide('toolBasisModal', {
           </SectionHeader>
 
           <div class="body flex flex-1 flex-col min-h-0 overflow-y-auto px-2 py-1">
-            <slot name="inputs" :open-basis="openBasisModal" />
+            <slot name="inputs" />
           </div>
         </Panel>
       </section>
@@ -89,14 +71,15 @@ provide('toolBasisModal', {
         :save-disabled="saveDisabled"
         :save-function="saveFunction"
         :has-basis="hasBasis"
-        @open-basis="openBasisModal"
       >
-        <slot name="results" :open-basis="openBasisModal" />
+        <template #default>
+          <slot name="results" />
+        </template>
+        <template v-if="hasBasis" #basis>
+          <slot name="basis" />
+        </template>
       </ToolOrganismsResultDrawer>
     </div>
-
-    <!-- 計算根拠モーダルスロット -->
-    <slot name="basis" />
   </div>
 </template>
 

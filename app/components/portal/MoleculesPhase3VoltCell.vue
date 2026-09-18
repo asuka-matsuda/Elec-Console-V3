@@ -35,16 +35,16 @@ const isActive = () => props.val !== null && props.val !== undefined
 <template>
   <div v-if="isEditing" class="flex flex-col items-center gap-0.5 text-2xs">
     <span class="input-label">{{ label }}</span>
-    <MoleculesInputGroup addon="V" class="w-20">
-      <Input
-        v-model="modelValue"
-        type="number"
-        step="any"
-        inputmode="decimal"
-        @focus="emit('focus', $event)"
-        @keydown.enter.prevent="emit('enter')"
-      />
-    </MoleculesInputGroup>
+    <Input
+      v-model="modelValue"
+      type="number"
+      step="any"
+      inputmode="decimal"
+      addon="V"
+      class="w-20"
+      @focus="emit('focus', $event)"
+      @keydown.enter.prevent="emit('enter')"
+    />
   </div>
   <div v-else class="flex flex-col items-center gap-1">
     <span class="volt-label">{{ label }}</span>

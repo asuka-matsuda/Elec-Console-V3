@@ -62,7 +62,6 @@ export const BADGE_PRESETS = {
   'trade:trivia': { color: 'var(--color-trade-trivia)', label: '雑学' },
 
   // 9. フォーム・システム警告・更新履歴
-  'form:required': { color: 'var(--color-status-danger)', label: '必須' },
   'system:unsaved': { color: 'var(--color-status-warning)', label: '未保存の変更あり' },
   'version:release': { color: 'var(--color-status-success)' },
   'version:muted': { color: 'var(--color-text-muted)' },

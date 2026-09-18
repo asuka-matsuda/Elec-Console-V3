@@ -52,14 +52,14 @@ const handleLogin = async () => {
       </p>
 
       <template v-for="field in LOGIN_FORM_FIELDS" :key="field.id">
-        <MoleculesFormGroup :label="field.label">
+        <FormGroup :label="field.label">
           <Input
             v-model="formData[field.id]"
             :type="field.type"
             :placeholder="field.placeholder"
             :disabled="isLoading"
           />
-        </MoleculesFormGroup>
+        </FormGroup>
       </template>
 
       <div class="flex items-center justify-center">

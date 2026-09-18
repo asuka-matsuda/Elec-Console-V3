@@ -41,10 +41,15 @@ const resolvedColor = computed(() => color || 'var(--theme-accent)')
 
   border: none;
 
-  // 1. ソリッド型
+  // 1. ソリッド型（左端アクセントから右へ緩やかに馴染む微細グラデーション）
   &.is-solid {
-    background: color-mix(in srgb, var(--divider-color) 20%, var(--color-border));
-    box-shadow: var(--shadow-sink);
+    background:
+      linear-gradient(
+        to right,
+        color-mix(in srgb, var(--divider-color) 45%, var(--color-border)) 0%,
+        color-mix(in srgb, var(--divider-color) 15%, var(--color-border)) 40%,
+        var(--color-border) 100%
+      );
   }
 
   // 2. センターフェード型
@@ -99,20 +104,19 @@ const resolvedColor = computed(() => color || 'var(--theme-accent)')
 
       position: absolute;
       top: 0;
-      left: -30%;
+      left: -50%;
 
-      width: 30%;
+      width: 50%;
       height: 100%;
 
       background: linear-gradient(
         90deg,
-        transparent,
-        color-mix(in srgb, var(--divider-color) 80%, transparent),
-        transparent
+        transparent 0%,
+        color-mix(in srgb, var(--divider-color) 55%, transparent) 50%,
+        transparent 100%
       );
-      box-shadow: var(--shadow-glow-sm);
 
-      animation: data-pulse-x 3s ease-in-out infinite;
+      animation: data-sheen 4.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     }
   }
 }
@@ -130,20 +134,20 @@ const resolvedColor = computed(() => color || 'var(--theme-accent)')
   }
 }
 
-@keyframes data-pulse-x {
-  0% {
+@keyframes data-sheen {
+  0%,
+  20% {
     transform: translateX(0);
     opacity: 0;
   }
 
-  10%,
-  50% {
-    opacity: 1;
+  35% {
+    opacity: 0.85;
   }
 
-  60%,
+  65%,
   100% {
-    transform: translateX(450%);
+    transform: translateX(350%);
     opacity: 0;
   }
 }

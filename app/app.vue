@@ -29,13 +29,12 @@ if (import.meta.client) {
     <NuxtPage />
   </NuxtLayout>
 
-  <OrganismsModal
+  <Modal
     v-model="isConfirmOpen"
     :title="confirmTitle"
     align="center"
   >
-    {{ confirmMessage }}
-    <template #footer>
+    <template #actions>
       <Button
         @click="onConfirmCancel"
       >
@@ -48,5 +47,9 @@ if (import.meta.client) {
         {{ confirmBtnText }}
       </Button>
     </template>
-  </OrganismsModal>
+
+    <div class="py-2">
+      {{ confirmMessage }}
+    </div>
+  </Modal>
 </template>

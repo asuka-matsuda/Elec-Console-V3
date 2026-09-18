@@ -25,27 +25,30 @@ watch(
 
 <template>
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-[var(--space-form-col-gap)] gap-y-[var(--space-form-row-gap)]">
-    <MoleculesFormGroup label="ケーブル種別">
+    <FormGroup label="ケーブル種別">
       <Select
         v-model="inputs.category"
         :options="categories"
         placeholder="選択してください"
       />
-    </MoleculesFormGroup>
+    </FormGroup>
 
-    <MoleculesFormGroup label="ケーブルサイズ">
+    <FormGroup label="ケーブルサイズ">
       <Select
         v-model="inputs.cableIdx"
         :options="availableSizes"
         placeholder="選択してください"
         :disabled="!inputs.category"
       />
-    </MoleculesFormGroup>
+    </FormGroup>
 
-    <MoleculesFormGroup label="ケーブル長 (L)">
-      <MoleculesInputGroup addon="m">
-        <Input v-model="inputs.L_input" type="number" min="1" />
-      </MoleculesInputGroup>
-    </MoleculesFormGroup>
+    <FormGroup label="ケーブル長 (L)">
+      <Input
+        v-model="inputs.L_input"
+        type="number"
+        min="1"
+        addon="m"
+      />
+    </FormGroup>
   </div>
 </template>

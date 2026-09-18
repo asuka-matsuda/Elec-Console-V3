@@ -74,7 +74,7 @@ const formFields = computed(() =>
     </template>
 
     <template #basis>
-      <ToolOrganismsMathBasisModal :steps="mathSteps" />
+      <ToolOrganismsMathBasis :steps="mathSteps" />
     </template>
   </ToolTemplatesLayout>
 </template>

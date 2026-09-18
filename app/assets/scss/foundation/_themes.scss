@@ -90,17 +90,25 @@
   --drop-shadow-glow: none;
   --drop-shadow-glow-lg: none;
 
+  // ライトテーマ用天面エッジハイライト
+  --surface-rim-highlight: inset 0 1px 0 hsl(0deg 0% 100% / 80%);
+  --surface-rim-highlight-hover: inset 0 1px 0 hsl(0deg 0% 100%);
+  --surface-rim-accent: inset 0 1px 0 color-mix(in srgb, var(--theme-accent) 40%, transparent);
+
   --shadow-glow-hover:
-    0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 25%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 35%, transparent),
+    0 3px 12px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 14%, transparent),
     var(--shadow-elevation-md);
   --shadow-glow-focus:
-    0 0 0 3px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 35%, transparent),
-    var(--shadow-elevation-sm);
+    0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 70%, transparent),
+    0 0 0 3px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 25%, transparent),
+    0 2px 8px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 15%, transparent);
   --shadow-glow-active:
     inset 0 1px 2px hsl(213deg 13% 14% / 15%),
     var(--shadow-elevation-sm);
   --shadow-glow-sm:
-    0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 40%, transparent);
+    0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 30%, transparent),
+    0 1px 4px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 10%, transparent);
 
   color-scheme: light;
 }

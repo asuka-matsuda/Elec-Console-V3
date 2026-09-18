@@ -1,11 +1,16 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import MoleculesInfoCard from '../../app/components/MoleculesInfoCard.vue'
-import type { InfoCardItem } from '../../app/types/components'
+import InfoList from '../../app/components/common/molecules/InfoList.vue'
+import type { InfoListItem } from '../../app/types/components'
 
-describe('MoleculesInfoCard.vue', () => {
-  const mockItems: InfoCardItem[] = [
+interface MockFeedItem extends InfoListItem {
+  desc?: string
+  version?: string
+}
+
+describe('InfoList.vue', () => {
+  const mockItems: MockFeedItem[] = [
     {
       id: 1,
       title: '第1回 システムメンテナンスのお知らせ',
@@ -22,8 +27,8 @@ describe('MoleculesInfoCard.vue', () => {
     },
   ]
 
-  it('renders items with date, title, and description correctly', () => {
-    const wrapper = mount(MoleculesInfoCard, {
+  it('renders items with date and title correctly', () => {
+    const wrapper = mount(InfoList, {
       props: {
         items: mockItems,
       },
@@ -32,20 +37,19 @@ describe('MoleculesInfoCard.vue', () => {
           Panel: {
             template: '<div class="panel-stub"><slot /></div>',
           },
-          Icon: true,
+          EmptyState: true,
         },
       },
     })
 
     expect(wrapper.text()).toContain('2026-09-01')
     expect(wrapper.text()).toContain('第1回 システムメンテナンスのお知らせ')
-    expect(wrapper.text()).toContain('定期メンテナンスを実施します。')
     expect(wrapper.text()).toContain('2026-09-05')
     expect(wrapper.text()).toContain('新機能リリース')
   })
 
   it('renders injected badge via slot correctly', () => {
-    const wrapper = mount(MoleculesInfoCard, {
+    const wrapper = mount(InfoList, {
       props: {
         items: mockItems,
       },
@@ -57,7 +61,7 @@ describe('MoleculesInfoCard.vue', () => {
           Panel: {
             template: '<div class="panel-stub"><slot /></div>',
           },
-          Icon: true,
+          EmptyState: true,
         },
       },
     })
@@ -67,8 +71,8 @@ describe('MoleculesInfoCard.vue', () => {
     expect(wrapper.findAll('.badge-stub')).toHaveLength(2)
   })
 
-  it('renders loading status when pending is true', () => {
-    const wrapper = mount(MoleculesInfoCard, {
+  it('renders loading status (EmptyState) when pending is true', () => {
+    const wrapper = mount(InfoList, {
       props: {
         pending: true,
         loadingText: 'データ読み込み中...',
@@ -78,7 +82,10 @@ describe('MoleculesInfoCard.vue', () => {
           Panel: {
             template: '<div class="panel-stub"><slot /></div>',
           },
-          Icon: true,
+          EmptyState: {
+            props: ['title', 'icon', 'spin'],
+            template: '<div class="empty-stub">{{ title }}</div>',
+          },
         },
       },
     })
@@ -86,8 +93,8 @@ describe('MoleculesInfoCard.vue', () => {
     expect(wrapper.text()).toContain('データ読み込み中...')
   })
 
-  it('renders empty status when no items are provided', () => {
-    const wrapper = mount(MoleculesInfoCard, {
+  it('renders empty status (EmptyState) when no items are provided', () => {
+    const wrapper = mount(InfoList, {
       props: {
         items: [],
         emptyText: '現在データはありません',
@@ -97,7 +104,10 @@ describe('MoleculesInfoCard.vue', () => {
           Panel: {
             template: '<div class="panel-stub"><slot /></div>',
           },
-          Icon: true,
+          EmptyState: {
+            props: ['title', 'icon', 'spin'],
+            template: '<div class="empty-stub">{{ title }}</div>',
+          },
         },
       },
     })
@@ -105,32 +115,30 @@ describe('MoleculesInfoCard.vue', () => {
     expect(wrapper.text()).toContain('現在データはありません')
   })
 
-  it('respects maxCount prop by limiting item count', () => {
-    const manyItems: InfoCardItem[] = Array.from({ length: 10 }, (_, i) => ({
-      id: i + 1,
-      title: `Item ${i + 1}`,
-      date: '2026-09-01',
-      desc: `Description ${i + 1}`,
-    }))
-
-    const wrapper = mount(MoleculesInfoCard, {
+  it('emits select event with item payload when clicked', async () => {
+    const wrapper = mount(InfoList, {
       props: {
-        items: manyItems,
-        maxCount: 3,
+        items: mockItems,
       },
       global: {
         stubs: {
           Panel: {
             template: '<div class="panel-stub"><slot /></div>',
           },
-          Icon: true,
+          EmptyState: true,
         },
       },
     })
 
-    expect(wrapper.text()).toContain('Item 1')
-    expect(wrapper.text()).toContain('Item 2')
-    expect(wrapper.text()).toContain('Item 3')
-    expect(wrapper.text()).not.toContain('Item 4')
+    const items = wrapper.findAll('li')
+
+    expect(items).toHaveLength(2)
+
+    await items[0].trigger('click')
+    expect(wrapper.emitted('select')).toBeTruthy()
+    expect(wrapper.emitted('select')![0]).toEqual([mockItems[0]])
+
+    await items[1].trigger('click')
+    expect(wrapper.emitted('select')![1]).toEqual([mockItems[1]])
   })
 })

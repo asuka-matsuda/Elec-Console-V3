@@ -41,7 +41,7 @@ const {
 
   background: var(--surface-bg);
   backdrop-filter: blur(var(--blur-sm));
-  box-shadow: var(--shadow-elevation-sm);
+  box-shadow: var(--surface-rim-highlight), var(--shadow-elevation-sm);
 
   transition: var(--transition-panel);
 

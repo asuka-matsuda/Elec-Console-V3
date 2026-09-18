@@ -84,12 +84,12 @@ const closeModal = () => {
 </script>
 
 <template>
-  <OrganismsModal
+  <Modal
     v-model="isOpen"
     :title="isEditing ? '予定の編集' : '新しい予定'"
   >
     <div class="flex flex-col gap-3">
-      <MoleculesFormGroup
+      <FormGroup
         label="タイトル"
         required
         :error="hasTitleError ? 'タイトルを入力してください' : undefined"
@@ -97,48 +97,45 @@ const closeModal = () => {
         <Input
           v-model="form.title"
           placeholder="会議、送電試験など"
-          :error="hasTitleError"
         />
-      </MoleculesFormGroup>
+      </FormGroup>
 
-      <MoleculesFormGroup label="予定種別">
+      <FormGroup label="予定種別">
         <Select
           v-model="form.type"
           :options="eventTypes.map((t) => ({ label: t.name, value: t.id }))"
         />
-      </MoleculesFormGroup>
+      </FormGroup>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        <MoleculesFormGroup label="開始日時" required>
+        <FormGroup label="開始日時" required>
           <Input
             :key="'start-' + form.allDay"
             v-model="form.start"
             :type="form.allDay ? 'date' : 'datetime-local'"
             required
           />
-        </MoleculesFormGroup>
-        <MoleculesFormGroup label="終了日時">
+        </FormGroup>
+        <FormGroup label="終了日時">
           <Input
             :key="'end-' + form.allDay"
             v-model="form.end"
             :type="form.allDay ? 'date' : 'datetime-local'"
           />
-        </MoleculesFormGroup>
+        </FormGroup>
       </div>
 
       <Checkbox v-model="form.allDay" label="終日イベント" />
     </div>
 
-    <template #footer>
+    <template #actions>
       <Button
         v-if="isEditing"
         variant="danger"
         icon="trash-2"
-        class="mr-auto"
+        title="予定を削除"
         @click="handleDelete"
-      >
-        削除
-      </Button>
+      />
       <Button @click="closeModal">
         キャンセル
       </Button>
@@ -150,5 +147,5 @@ const closeModal = () => {
         保存
       </Button>
     </template>
-  </OrganismsModal>
+  </Modal>
 </template>

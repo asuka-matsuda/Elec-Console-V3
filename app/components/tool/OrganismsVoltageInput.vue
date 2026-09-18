@@ -29,7 +29,7 @@ defineProps<{
           v-model="form[field.id]"
           :name="field.id"
         >
-          <MoleculesFormGroup
+          <FormGroup
             :label="field.label"
             :error="meta.touched ? errorMessage : undefined"
             :class="`js-field-${field.id}`"
@@ -41,23 +41,21 @@ defineProps<{
               :options="field.options || []"
               :placeholder="field.placeholder"
               :disabled="field.disabled"
-              :error="meta.touched && !!errorMessage"
               @update:model-value="handleChange"
               @blur="handleBlur"
             />
 
             <!-- 2. 数値入力 + セレクト -->
-            <MoleculesInputGroup v-else-if="field.type === 'input-select'">
-              <Input
-                v-model.number="form[field.id]"
-                type="number"
-                :placeholder="field.placeholder"
-                :min="field.min"
-                :step="field.step"
-                :error="meta.touched && !!errorMessage"
-                @blur="handleBlur"
-              />
-              <template #append>
+            <Input
+              v-else-if="field.type === 'input-select'"
+              v-model.number="form[field.id]"
+              type="number"
+              :placeholder="field.placeholder"
+              :min="field.min"
+              :step="field.step"
+              @blur="handleBlur"
+            >
+              <template #addon>
                 <Field
                   v-if="field.secondaryId"
                   v-slot="{
@@ -79,23 +77,19 @@ defineProps<{
                   />
                 </Field>
               </template>
-            </MoleculesInputGroup>
+            </Input>
 
             <!-- 3. 数値入力 + 単位アドオン -->
-            <MoleculesInputGroup
+            <Input
               v-else-if="field.type === 'input-addon'"
+              v-model.number="form[field.id]"
+              type="number"
+              :placeholder="field.placeholder"
+              :min="field.min"
               :addon="field.addonText"
-            >
-              <Input
-                v-model.number="form[field.id]"
-                type="number"
-                :placeholder="field.placeholder"
-                :min="field.min"
-                :error="meta.touched && !!errorMessage"
-                @blur="handleBlur"
-              />
-            </MoleculesInputGroup>
-          </MoleculesFormGroup>
+              @blur="handleBlur"
+            />
+          </FormGroup>
         </Field>
       </template>
     </div>

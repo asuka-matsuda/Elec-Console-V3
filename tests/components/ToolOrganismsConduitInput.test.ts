@@ -22,16 +22,12 @@ describe('ToolOrganismsConduitInput (app/components/tool/OrganismsConduitInput.v
   ]
 
   const commonStubs = {
-    MoleculesFormGroup: {
+    FormGroup: {
       props: ['label'],
       template: '<div class="form-group-stub"><label>{{ label }}</label><slot /></div>',
     },
-    MoleculesInputGroup: {
-      props: ['addon'],
-      template: '<div class="input-group-stub"><slot /><span>{{ addon }}</span></div>',
-    },
     Input: {
-      props: ['modelValue', 'placeholder', 'type'],
+      props: ['modelValue', 'placeholder', 'type', 'addon'],
       template: '<input :value="modelValue" class="atoms-input-stub" />',
     },
     Icon: {

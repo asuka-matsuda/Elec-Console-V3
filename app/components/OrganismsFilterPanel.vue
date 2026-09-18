@@ -2,7 +2,7 @@
 /**
  * OrganismsFilterPanel
  * [Organisms] データベース画面や一覧画面用の検索・カテゴリ絞り込みパネル。
- * Panel, SectionHeader, MoleculesFormGroup, Input, Checkbox を組み合わせた独立セクション。
+ * Panel, SectionHeader, FormGroup, Input, Checkbox を組み合わせた独立セクション。
  */
 import type { IconName } from '~/constants/icons'
 import type { HeadingTag, SelectOption } from '~/types/components'
@@ -32,11 +32,11 @@ const {
     <SectionHeader :title="title" :tag="tag" :icon="icon" />
 
     <div class="flex flex-col gap-4">
-      <MoleculesFormGroup label="Keyword">
+      <FormGroup label="Keyword">
         <Input v-model="searchQuery" :placeholder="placeholder" />
-      </MoleculesFormGroup>
+      </FormGroup>
 
-      <MoleculesFormGroup v-if="categoryOptions.length > 0" label="Category">
+      <FormGroup v-if="categoryOptions.length > 0" label="Category">
         <div class="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-2">
           <Checkbox
             v-for="cat in categoryOptions"
@@ -47,7 +47,7 @@ const {
             {{ cat.label }}
           </Checkbox>
         </div>
-      </MoleculesFormGroup>
+      </FormGroup>
 
       <slot />
     </div>

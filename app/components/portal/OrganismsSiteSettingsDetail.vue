@@ -144,12 +144,10 @@ const isResultDialogOpen = ref(false)
       </Tabs>
 
       <!-- 処理完了詳細モーダル -->
-      <OrganismsModal
+      <Modal
         v-model="isResultDialogOpen"
         :title="syncResultData?.title || '処理結果'"
         icon="check-circle"
-        variant="success"
-        size="sm"
         @cancel="isResultDialogOpen = false"
       >
         <div v-if="syncResultData" class="flex flex-col gap-3">
@@ -169,7 +167,7 @@ const isResultDialogOpen = ref(false)
             </span>
           </div>
         </div>
-      </OrganismsModal>
+      </Modal>
     </template>
   </div>
 </template>

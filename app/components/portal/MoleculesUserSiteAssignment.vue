@@ -27,13 +27,13 @@ defineProps<{
 
     <div v-if="siteList.length > 0" class="flex flex-col gap-2">
       <template v-for="site in siteList" :key="site.id">
-        <MoleculesFormGroup>
+        <FormGroup>
           <Checkbox
             v-model="model"
             :value="site.id"
             :label="`${site.name} (${site.id})`"
           />
-        </MoleculesFormGroup>
+        </FormGroup>
       </template>
     </div>
 

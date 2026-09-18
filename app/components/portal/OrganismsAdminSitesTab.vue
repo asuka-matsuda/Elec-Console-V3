@@ -42,6 +42,9 @@ const handleSelectSite = (site: Site) => {
 
 // 新規登録モーダル
 const isCreateModalOpen = ref(false)
+const createErrorMsg = ref('')
+const isCreatingSite = ref(false)
+
 const newSite = ref({
   id: '',
   name: '',
@@ -49,18 +52,32 @@ const newSite = ref({
 })
 
 const openCreateModal = () => {
+  createErrorMsg.value = ''
   newSite.value = { id: '', name: '', status: 'planning' }
   isCreateModalOpen.value = true
 }
 
 const handleCreateSite = async () => {
+  createErrorMsg.value = ''
   if (!newSite.value.id || !newSite.value.name) {
-    throw new Error('現場IDと現場名を入力してください。')
+    createErrorMsg.value = '現場IDと現場名を入力してください。'
+
+    return
   }
-  await createSite({ ...newSite.value })
-  selectedSiteId.value = newSite.value.id
-  isCreateModalOpen.value = false
-  newSite.value = { id: '', name: '', status: 'planning' }
+
+  try {
+    isCreatingSite.value = true
+    await createSite({ ...newSite.value })
+    selectedSiteId.value = newSite.value.id
+    isCreateModalOpen.value = false
+    newSite.value = { id: '', name: '', status: 'planning' }
+  }
+  catch (e: unknown) {
+    createErrorMsg.value = (e as Error).message || '現場の登録に失敗しました。'
+  }
+  finally {
+    isCreatingSite.value = false
+  }
 }
 
 // 現場設定フォーム・コンポーザブル
@@ -172,29 +189,52 @@ const confirmToggleDisable = async (row: Site) => {
     </div>
 
     <!-- 新規登録モーダル (中央ダイアログ) -->
-    <OrganismsModal
+    <Modal
       v-model="isCreateModalOpen"
       title="新規現場登録"
       icon="plus-circle"
-      size="md"
-      :submit-fn="handleCreateSite"
-      submit-text="登録する"
-      @cancel="isCreateModalOpen = false"
     >
+      <template #actions>
+        <Button @click="isCreateModalOpen = false">
+          キャンセル
+        </Button>
+        <Button
+          variant="success"
+          :loading="isCreatingSite"
+          @click="handleCreateSite"
+        >
+          登録する
+        </Button>
+      </template>
+
       <div class="flex flex-col gap-4">
-        <MoleculesFormGroup label="現場ID (半角英数)">
+        <div
+          v-if="createErrorMsg"
+          class="p-2.5 form-error"
+        >
+          {{ createErrorMsg }}
+        </div>
+
+        <FormGroup label="現場ID (半角英数)">
           <Input v-model="newSite.id" placeholder="例: site-tokyo-01" />
-        </MoleculesFormGroup>
-        <MoleculesFormGroup label="現場名">
+        </FormGroup>
+        <FormGroup label="現場名">
           <Input v-model="newSite.name" placeholder="例: 新宿プロジェクト" />
-        </MoleculesFormGroup>
+        </FormGroup>
       </div>
-    </OrganismsModal>
+    </Modal>
   </Panel>
 </template>
 
 <style scoped lang="scss">
 .pane-divider {
   background: var(--color-border);
+}
+
+.form-error {
+  border: var(--border-width-base) solid var(--color-status-danger);
+  font-size: var(--font-size-xs);
+  color: var(--color-status-danger);
+  background-color: color-mix(in srgb, var(--color-status-danger) 10%, transparent);
 }
 </style>

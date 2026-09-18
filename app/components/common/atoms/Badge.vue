@@ -42,7 +42,13 @@ const resolvedColor = computed(() => props.color || preset.value?.color || 'var(
   white-space: nowrap;
   vertical-align: middle;
 
-  background-color: color-mix(in srgb, var(--glow-color) 14%, transparent);
+  background:
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--glow-color) 20%, transparent) 0%,
+      color-mix(in srgb, var(--glow-color) 8%, transparent) 100%
+    );
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--glow-color) 35%, transparent);
 
   transition: var(--transition-base);
 }

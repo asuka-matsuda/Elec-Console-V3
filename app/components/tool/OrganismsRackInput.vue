@@ -113,67 +113,62 @@ const handleRemoveCable = (id: string) => {
 
     <!-- パラメータ設定（余裕係数、ケーブル間隔、親桁クリアランス） -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-[var(--space-form-col-gap)]">
-      <MoleculesFormGroup label="余裕係数" help-id="marginRate">
-        <MoleculesInputGroup addon="倍">
-          <Input
-            v-model.number="inputs.marginRate"
-            type="number"
-            step="0.05"
-            min="0.1"
-            :placeholder="inputs.mode === 'strong' ? '1.2' : '0.6'"
-          />
-        </MoleculesInputGroup>
-      </MoleculesFormGroup>
+      <FormGroup label="余裕係数" help-id="marginRate">
+        <Input
+          v-model.number="inputs.marginRate"
+          type="number"
+          step="0.05"
+          min="0.1"
+          addon="倍"
+          :placeholder="inputs.mode === 'strong' ? '1.2' : '0.6'"
+        />
+      </FormGroup>
 
-      <MoleculesFormGroup label="ケーブル間隔" help-id="cableSpacing">
-        <MoleculesInputGroup addon="mm">
-          <Input
-            v-model.number="inputs.cableSpacing"
-            type="number"
-            min="0"
-            placeholder="10"
-          />
-        </MoleculesInputGroup>
-      </MoleculesFormGroup>
+      <FormGroup label="ケーブル間隔" help-id="cableSpacing">
+        <Input
+          v-model.number="inputs.cableSpacing"
+          type="number"
+          min="0"
+          addon="mm"
+          placeholder="10"
+        />
+      </FormGroup>
 
-      <MoleculesFormGroup label="親桁クリアランス" help-id="sideMargin">
-        <MoleculesInputGroup addon="mm">
-          <Input
-            v-model.number="inputs.sideMargin"
-            type="number"
-            min="0"
-            :placeholder="inputs.mode === 'strong' ? '60' : '120'"
-          />
-        </MoleculesInputGroup>
-      </MoleculesFormGroup>
+      <FormGroup label="親桁クリアランス" help-id="sideMargin">
+        <Input
+          v-model.number="inputs.sideMargin"
+          type="number"
+          min="0"
+          addon="mm"
+          :placeholder="inputs.mode === 'strong' ? '60' : '120'"
+        />
+      </FormGroup>
     </div>
 
     <!-- 基本条件（ラック高さ、相乗り必要幅） -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-[var(--space-form-col-gap)]">
-      <MoleculesFormGroup label="ラック高さ (H)" help-id="rackHeight">
-        <MoleculesInputGroup addon="mm">
-          <Input
-            v-model="inputs.rackHeight"
-            type="number"
-            min="50"
-            step="10"
-          />
-        </MoleculesInputGroup>
-      </MoleculesFormGroup>
+      <FormGroup label="ラック高さ (H)" help-id="rackHeight">
+        <Input
+          v-model="inputs.rackHeight"
+          type="number"
+          min="50"
+          step="10"
+          addon="mm"
+        />
+      </FormGroup>
 
-      <MoleculesFormGroup
+      <FormGroup
         :label="inputs.mode === 'strong' ? '弱電必要幅' : '強電必要幅'"
         help-id="otherWidth"
       >
-        <MoleculesInputGroup addon="mm">
-          <Input
-            v-model="inputs.otherWidth"
-            type="number"
-            min="0"
-            placeholder="相乗り時に指定"
-          />
-        </MoleculesInputGroup>
-      </MoleculesFormGroup>
+        <Input
+          v-model="inputs.otherWidth"
+          type="number"
+          min="0"
+          addon="mm"
+          placeholder="相乗り時に指定"
+        />
+      </FormGroup>
     </div>
 
     <!-- ケーブル条件セクション -->
@@ -212,14 +207,13 @@ const handleRemoveCable = (id: string) => {
         </template>
 
         <template #cell-count="{ row }">
-          <MoleculesInputGroup addon="条">
-            <Input
-              v-model.number="row.count"
-              type="number"
-              min="1"
-              :clearable="false"
-            />
-          </MoleculesInputGroup>
+          <Input
+            v-model.number="row.count"
+            type="number"
+            min="1"
+            addon="条"
+            :clearable="false"
+          />
         </template>
 
         <template #cell-spec="{ row }">

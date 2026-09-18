@@ -46,17 +46,17 @@ const isNg = () => {
 <template>
   <div v-if="isEditing" class="flex flex-col items-center gap-0.5 text-2xs">
     <span class="input-label">{{ label }}</span>
-    <MoleculesInputGroup addon="MΩ" class="w-[85px]">
-      <Input
-        v-model="modelValue"
-        type="number"
-        step="0.1"
-        inputmode="decimal"
-        placeholder="100"
-        @focus="emit('focus', $event)"
-        @keydown.enter.prevent="emit('enter')"
-      />
-    </MoleculesInputGroup>
+    <Input
+      v-model="modelValue"
+      type="number"
+      step="0.1"
+      inputmode="decimal"
+      placeholder="100"
+      addon="MΩ"
+      class="w-[85px]"
+      @focus="emit('focus', $event)"
+      @keydown.enter.prevent="emit('enter')"
+    />
   </div>
   <div v-else class="flex flex-col items-center gap-1">
     <span class="meas-label">{{ label }}</span>

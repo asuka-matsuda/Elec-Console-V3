@@ -314,9 +314,11 @@
     border-color var(--duration-fast) var(--ease-base),
     color var(--duration-fast) var(--ease-base);
   --transition-transform: transform var(--duration-base) var(--ease-base);
-  --transition-glow:
-    box-shadow var(--duration-fast) var(--ease-base),
-    border-color var(--duration-fast) var(--ease-base);
+
+  // 天面エッジハイライト (Top Rim Highlights: サファイアガラス・アルミ削り出しのような微細光沢)
+  --surface-rim-highlight: inset 0 1px 0 color-mix(in srgb, var(--color-overlay) 7%, transparent);
+  --surface-rim-highlight-hover: inset 0 1px 0 color-mix(in srgb, var(--color-overlay) 14%, transparent);
+  --surface-rim-accent: inset 0 1px 0 color-mix(in srgb, var(--theme-accent) 35%, transparent);
 }
 
 // ==========================================================================
@@ -326,23 +328,22 @@
 *::before,
 *::after {
   --shadow-glow-base: none;
+
+  // 多層アンビエントグロー（微細なリム輪郭 ＋ 柔らかく拡散するアンビエント光 ＋ 深度シャドウ）
   --shadow-glow-hover:
-    0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 40%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 45%, transparent),
+    0 2px 10px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 16%, transparent),
     var(--shadow-elevation-sm);
   --shadow-glow-focus:
-    0 0 0 3px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 35%, transparent),
-    var(--shadow-elevation-sm);
+    0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 70%, transparent),
+    0 0 0 3px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 25%, transparent),
+    0 2px 12px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 20%, transparent);
   --shadow-glow-active:
     0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 60%, transparent),
+    inset 0 1px 2px color-mix(in srgb, black 30%, transparent),
     var(--shadow-elevation-sm);
-  --shadow-glow-sm: 0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 40%, transparent);
-
-  // 文字発光 (text-shadow) およびアイコン発光 (drop-shadow) の完全廃止（Primer標準のクリスプな可読性を維持）
-  --text-glow-sm: none;
-  --text-glow-md: none;
-  --drop-shadow-glow-xs: none;
-  --drop-shadow-glow-sm: none;
-  --drop-shadow-glow-md: none;
-  --drop-shadow-glow-lg: none;
+  --shadow-glow-sm:
+    0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 35%, transparent),
+    0 1px 4px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 12%, transparent);
 }
 

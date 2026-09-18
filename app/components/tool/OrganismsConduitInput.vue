@@ -68,25 +68,24 @@ const getCableSpecDetailText = (cableIdx: string, count?: number | null): string
 <template>
   <div class="flex flex-col gap-[var(--space-form-row-gap)]">
     <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1.8fr)_minmax(130px,1fr)] gap-[var(--space-form-row-gap)]">
-      <MoleculesFormGroup label="対象の配管種類">
+      <FormGroup label="対象の配管種類">
         <Select
           v-model="inputs.conduitCategory"
           :options="categoryOptions"
           placeholder="選択してください"
         />
-      </MoleculesFormGroup>
+      </FormGroup>
 
-      <MoleculesFormGroup label="占積率">
-        <MoleculesInputGroup addon="%">
-          <Input
-            v-model.number="inputs.customFillRate"
-            type="number"
-            min="1"
-            max="100"
-            placeholder="80"
-          />
-        </MoleculesInputGroup>
-      </MoleculesFormGroup>
+      <FormGroup label="占積率">
+        <Input
+          v-model.number="inputs.customFillRate"
+          type="number"
+          min="1"
+          max="100"
+          addon="%"
+          placeholder="80"
+        />
+      </FormGroup>
     </div>
 
     <!-- ケーブル条件セクション -->
@@ -124,14 +123,13 @@ const getCableSpecDetailText = (cableIdx: string, count?: number | null): string
         </template>
 
         <template #cell-count="{ row }">
-          <MoleculesInputGroup addon="条">
-            <Input
-              v-model.number="row.count"
-              type="number"
-              min="1"
-              :clearable="false"
-            />
-          </MoleculesInputGroup>
+          <Input
+            v-model.number="row.count"
+            type="number"
+            min="1"
+            addon="条"
+            :clearable="false"
+          />
         </template>
 
         <template #cell-spec="{ row }">

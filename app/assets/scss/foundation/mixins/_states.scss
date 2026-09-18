@@ -6,7 +6,7 @@
 // 1. サーフェス系（パネル、タイル、カード、リスト行、ドロップゾーン）
 // --------------------------------------------------------------------------
 
-// 1-1. 操作可能時の挙動（ホバー 8%・フォーカス・アクティブ 12% + scale 0.992）
+// 1-1. 操作可能時の挙動（天面光沢＋135degアンビエントグラデーション＋多層ソフトグロー）
 @mixin state-interactive {
   &.is-interactive:not(:disabled, .is-disabled) {
     cursor: pointer;
@@ -14,51 +14,83 @@
 
     &:hover,
     &:focus-visible {
-      border-color: var(--theme-accent);
-      background: color-mix(in srgb, var(--theme-accent) 8%, var(--surface-bg));
-      box-shadow: var(--shadow-glow-hover);
+      border-color: color-mix(in srgb, var(--theme-accent) 70%, var(--color-border));
+      background:
+        linear-gradient(
+          135deg,
+          color-mix(in srgb, var(--theme-accent) 9%, transparent) 0%,
+          color-mix(in srgb, var(--theme-accent) 3%, transparent) 45%,
+          transparent 80%
+        ),
+        var(--surface-bg);
+      box-shadow:
+        var(--surface-rim-accent),
+        var(--shadow-glow-hover);
     }
 
     &:active {
       transform: scale(0.992);
-      background: color-mix(in srgb, var(--theme-accent) 12%, var(--surface-bg));
-      box-shadow: var(--shadow-glow-active);
+      border-color: var(--theme-accent);
+      background:
+        linear-gradient(
+          135deg,
+          color-mix(in srgb, var(--theme-accent) 14%, transparent) 0%,
+          color-mix(in srgb, var(--theme-accent) 5%, transparent) 55%,
+          transparent 85%
+        ),
+        var(--surface-bg);
+      box-shadow:
+        var(--surface-rim-accent),
+        var(--shadow-glow-active);
     }
   }
 }
 
-// 1-2. 選択状態（135deg 対角グラデーション 14%〜22% + ソフトグロー）
+// 1-2. 選択状態（135deg マルチストップ・アンビエントグラデーション + 天面エッジハイライト + ソフトグロー）
 @mixin state-selected {
   &.is-selected {
     border-color: var(--theme-accent);
     background:
       linear-gradient(
         135deg,
-        color-mix(in srgb, var(--theme-accent) 14%, var(--surface-bg)),
-        var(--surface-bg)
-      );
-    box-shadow: var(--shadow-glow-sm);
+        color-mix(in srgb, var(--theme-accent) 14%, transparent) 0%,
+        color-mix(in srgb, var(--theme-accent) 6%, transparent) 50%,
+        transparent 95%
+      ),
+      var(--surface-bg);
+    box-shadow:
+      var(--surface-rim-accent),
+      var(--shadow-glow-sm);
 
     &.is-interactive:not(:disabled, .is-disabled) {
       &:hover,
       &:focus-visible {
+        border-color: var(--theme-accent);
         background:
           linear-gradient(
             135deg,
-            color-mix(in srgb, var(--theme-accent) 18%, var(--surface-bg)),
-            var(--surface-bg)
-          );
-        box-shadow: var(--shadow-glow-hover);
+            color-mix(in srgb, var(--theme-accent) 19%, transparent) 0%,
+            color-mix(in srgb, var(--theme-accent) 8%, transparent) 50%,
+            transparent 95%
+          ),
+          var(--surface-bg);
+        box-shadow:
+          var(--surface-rim-accent),
+          var(--shadow-glow-hover);
       }
 
       &:active {
         background:
           linear-gradient(
             135deg,
-            color-mix(in srgb, var(--theme-accent) 22%, var(--surface-bg)),
-            var(--surface-bg)
-          );
-        box-shadow: var(--shadow-glow-active);
+            color-mix(in srgb, var(--theme-accent) 24%, transparent) 0%,
+            color-mix(in srgb, var(--theme-accent) 11%, transparent) 55%,
+            transparent 95%
+          ),
+          var(--surface-bg);
+        box-shadow:
+          var(--surface-rim-accent),
+          var(--shadow-glow-active);
       }
     }
   }

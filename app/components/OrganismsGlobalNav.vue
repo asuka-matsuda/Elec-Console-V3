@@ -178,30 +178,32 @@ aside {
     &:hover,
     &:focus-visible {
       color: var(--color-text-main);
-      background-color: var(--color-bg-hover);
+      background:
+        linear-gradient(
+          to right,
+          color-mix(in srgb, var(--section-accent) 8%, transparent) 0%,
+          color-mix(in srgb, var(--section-accent) 2%, transparent) 50%,
+          transparent 85%
+        );
     }
 
     &:active,
     &.router-link-active {
-      border-color: color-mix(in srgb, var(--section-accent) 30%, transparent);
+      border-color: color-mix(in srgb, var(--section-accent) 55%, transparent);
+
       font-weight: var(--font-weight-semibold);
-      color: var(--section-accent);
-      background-color: color-mix(in srgb, var(--section-accent) 12%, transparent);
+      color: var(--color-text-main);
 
-      &::after {
-        content: "";
-
-        display: inline-block;
-
-        width: var(--space-1);
-        height: var(--font-size-base);
-
-        vertical-align: middle;
-
-        background-color: currentcolor;
-
-        animation: ui-cursor-blink 1s step-end infinite;
-      }
+      background:
+        linear-gradient(
+          135deg,
+          color-mix(in srgb, var(--section-accent) 16%, transparent) 0%,
+          color-mix(in srgb, var(--section-accent) 6%, transparent) 55%,
+          transparent 100%
+        );
+      box-shadow:
+        var(--surface-rim-accent),
+        var(--shadow-glow-sm);
     }
 
     @include state-disabled;

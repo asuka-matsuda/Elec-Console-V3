@@ -25,7 +25,7 @@ describe('pages/settings.vue', () => {
           Panel: {
             template: '<div class="stub-panel"><slot /></div>',
           },
-          MoleculesFormGroup: {
+          FormGroup: {
             template: '<div class="stub-form-group"><slot /></div>',
           },
           Select: {
@@ -55,7 +55,7 @@ describe('pages/settings.vue', () => {
           Panel: {
             template: '<div><slot /></div>',
           },
-          MoleculesFormGroup: {
+          FormGroup: {
             template: '<div><slot /></div>',
           },
           Select: true,

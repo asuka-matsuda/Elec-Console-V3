@@ -185,7 +185,12 @@ const handleKeydown = (event: KeyboardEvent, currentIndex: number) => {
 
   &:hover:not(:disabled, .is-active) {
     color: var(--color-text-main);
-    background-color: var(--color-bg-hover);
+    background:
+      linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--color-overlay) 6%, transparent) 0%,
+        transparent 100%
+      );
   }
 
   &:focus-visible {
@@ -194,9 +199,36 @@ const handleKeydown = (event: KeyboardEvent, currentIndex: number) => {
   }
 
   &.is-active {
-    border-bottom-color: var(--theme-accent);
+    border-bottom-color: transparent;
     font-weight: var(--font-weight-semibold);
     color: var(--color-text-main);
+    background:
+      linear-gradient(
+        to top,
+        color-mix(in srgb, var(--theme-accent) 8%, transparent) 0%,
+        transparent 70%
+      );
+
+    &::after {
+      content: "";
+
+      position: absolute;
+      right: 0;
+      bottom: -1px;
+      left: 0;
+
+      height: var(--border-width-thick, 2px);
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent 0%,
+          var(--theme-accent) 20%,
+          var(--theme-accent) 80%,
+          transparent 100%
+        );
+      box-shadow: var(--shadow-glow-sm);
+    }
   }
 
   @include state-disabled;

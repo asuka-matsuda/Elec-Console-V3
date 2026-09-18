@@ -113,4 +113,36 @@ describe('Input.vue', () => {
     await toggleButton.trigger('click')
     expect(input.attributes('type')).toBe('password')
   })
+
+  it('renders addon unit text when addon prop is provided', () => {
+    const wrapper = mount(Input, {
+      props: {
+        modelValue: 120,
+        addon: 'mm',
+      },
+    })
+
+    const addon = wrapper.find('.input-addon')
+
+    expect(addon.exists()).toBe(true)
+    expect(addon.text()).toBe('mm')
+    expect(wrapper.find('.input-container').classes()).toContain('has-addon')
+  })
+
+  it('renders addon slot when slot is provided', () => {
+    const wrapper = mount(Input, {
+      props: {
+        modelValue: 50,
+      },
+      slots: {
+        addon: '<span class="custom-unit-select">A</span>',
+      },
+    })
+
+    const slotEl = wrapper.find('.custom-unit-select')
+
+    expect(slotEl.exists()).toBe(true)
+    expect(slotEl.text()).toBe('A')
+    expect(wrapper.find('.input-container').classes()).toContain('has-addon')
+  })
 })

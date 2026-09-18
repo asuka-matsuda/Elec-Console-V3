@@ -4,15 +4,29 @@
  * ダッシュボード画面のコンポーネントです。各機能へのリンクやメニューをカード形式で一覧表示します。
  */
 import { useLocalStorage } from '@vueuse/core'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 import { useAuth } from '~/composables/useAuth'
 import { menuData } from '~/constants/data/menuData'
-import type { DashboardData } from '~/types/components'
+import type { IconName } from '~/constants/icons'
+import type { AnnouncementItem, DashboardData, HistoryItem } from '~/types/components'
 
 const { currentUser, isAuthenticated, isMaster } = useAuth()
 
 const lastSiteId = useLocalStorage('last-accessed-site', '')
+
+type DetailModalItem = AnnouncementItem | HistoryItem
+const selectedItem = ref<DetailModalItem | null>(null)
+const isDetailModalOpen = ref(false)
+const modalTitle = ref('')
+const modalIcon = ref<IconName>('info')
+
+const openDetailModal = (item: DetailModalItem, title: string, icon: IconName) => {
+  selectedItem.value = item
+  modalTitle.value = title
+  modalIcon.value = icon
+  isDetailModalOpen.value = true
+}
 
 const dashboardSections = computed(() => {
   const siteIds = currentUser.value?.assignedSiteIds || []
@@ -84,34 +98,88 @@ const { data: dashboardData, pending: isDashboardPending } = await useFetch<Dash
       <div class="flex flex-col gap-section-gap">
         <section class="flex flex-col gap-panel-gap">
           <SectionHeader title="お知らせ" icon="bell" tag="h3" />
-          <MoleculesInfoCard
+          <InfoList
             :items="dashboardData?.announcements"
             :pending="isDashboardPending"
             loading-text="お知らせを読み込み中..."
             empty-text="現在新しいお知らせはありません"
+            @select="openDetailModal($event, 'お知らせ詳細', 'bell')"
           />
         </section>
 
         <section class="flex flex-col gap-panel-gap">
           <SectionHeader title="更新履歴" icon="clock" tag="h3" />
-          <MoleculesInfoCard
+          <InfoList
             :items="dashboardData?.history"
             :pending="isDashboardPending"
             loading-text="更新履歴を読み込み中..."
             empty-text="現在更新履歴はありません"
+            @select="openDetailModal($event, '更新履歴詳細', 'clock')"
           >
             <template #badge="{ item }">
               <Badge
                 v-if="item.version"
-                :id="item.status === 'success' ? 'version:release' : 'version:muted'"
+                id="version:muted"
                 class="shrink-0"
               >
                 {{ item.version }}
               </Badge>
             </template>
-          </MoleculesInfoCard>
+          </InfoList>
         </section>
       </div>
     </aside>
+
+    <!-- 詳細表示モーダル -->
+    <Modal
+      v-model="isDetailModalOpen"
+      :title="modalTitle"
+      :icon="modalIcon"
+      close-text="閉じる"
+    >
+      <div v-if="selectedItem" class="flex flex-col gap-3 detail-content">
+        <header class="flex items-center justify-between gap-2 pb-2 detail-header">
+          <time class="detail-date">{{ selectedItem.date }}</time>
+          <Badge
+            v-if="'version' in selectedItem && selectedItem.version"
+            id="version:muted"
+          >
+            {{ selectedItem.version }}
+          </Badge>
+        </header>
+
+        <h4 class="m-0 detail-title">
+          {{ selectedItem.title }}
+        </h4>
+
+        <div class="whitespace-pre-wrap detail-desc">
+          {{ selectedItem.desc || '詳細情報はありません。' }}
+        </div>
+      </div>
+    </Modal>
   </div>
 </template>
+
+<style scoped lang="scss">
+.detail-header {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.detail-date {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.detail-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-main);
+}
+
+.detail-desc {
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-secondary);
+}
+</style>

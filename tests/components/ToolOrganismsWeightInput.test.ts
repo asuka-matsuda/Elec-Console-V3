@@ -14,16 +14,12 @@ describe('ToolOrganismsWeightInput (app/components/tool/OrganismsWeightInput.vue
   })
 
   const commonStubs = {
-    MoleculesFormGroup: {
+    FormGroup: {
       props: ['label', 'required'],
       template: '<div class="form-group-stub"><label>{{ label }}</label><slot /></div>',
     },
-    MoleculesInputGroup: {
-      props: ['addon'],
-      template: '<div class="input-group-stub"><slot /><span class="addon">{{ addon }}</span></div>',
-    },
     Input: {
-      props: ['modelValue', 'type', 'min', 'max', 'step'],
+      props: ['modelValue', 'type', 'min', 'max', 'step', 'addon'],
       emits: ['update:modelValue'],
       template: '<input :value="modelValue" class="atoms-input-stub" @input="$emit(\'update:modelValue\', $event.target.value)" />',
     },

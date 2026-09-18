@@ -47,68 +47,68 @@ const formatLastLogin = (user: User) => {
     />
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <MoleculesFormGroup label="姓">
+      <FormGroup label="姓">
         <Input
           :model-value="lastName"
           placeholder="例: 松田"
           @update:model-value="emit('update:lastName', String($event ?? ''))"
         />
-      </MoleculesFormGroup>
-      <MoleculesFormGroup label="名">
+      </FormGroup>
+      <FormGroup label="名">
         <Input
           :model-value="firstName"
           placeholder="例: 飛鳥"
           @update:model-value="emit('update:firstName', String($event ?? ''))"
         />
-      </MoleculesFormGroup>
+      </FormGroup>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <MoleculesFormGroup label="姓（ふりがな）">
+      <FormGroup label="姓（ふりがな）">
         <Input
           :model-value="lastNameKana"
           placeholder="例: まつだ"
           @update:model-value="emit('update:lastNameKana', String($event ?? ''))"
         />
-      </MoleculesFormGroup>
-      <MoleculesFormGroup label="名（ふりがな）">
+      </FormGroup>
+      <FormGroup label="名（ふりがな）">
         <Input
           :model-value="firstNameKana"
           placeholder="例: あすか"
           @update:model-value="emit('update:firstNameKana', String($event ?? ''))"
         />
-      </MoleculesFormGroup>
+      </FormGroup>
     </div>
 
-    <MoleculesFormGroup label="ログインID">
+    <FormGroup label="ログインID">
       <Input
         :model-value="user.loginId || user.id"
         disabled
       />
-    </MoleculesFormGroup>
+    </FormGroup>
 
-    <MoleculesFormGroup label="権限">
+    <FormGroup label="権限">
       <Select
         :model-value="userRole"
         :options="USER_ROLE_OPTIONS"
         :disabled="user.id === 'master'"
         @update:model-value="handleRoleChange"
       />
-    </MoleculesFormGroup>
+    </FormGroup>
 
-    <MoleculesFormGroup>
+    <FormGroup>
       <Checkbox
         :model-value="requirePasswordReset"
         label="次回ログイン時にパスワード変更を要求する"
         @update:model-value="emit('update:requirePasswordReset', !!$event)"
       />
-    </MoleculesFormGroup>
+    </FormGroup>
 
-    <MoleculesFormGroup label="最終ログイン日時">
+    <FormGroup label="最終ログイン日時">
       <div class="last-login-text pt-1">
         {{ formatLastLogin(user) }}
       </div>
-    </MoleculesFormGroup>
+    </FormGroup>
   </div>
 </template>
 

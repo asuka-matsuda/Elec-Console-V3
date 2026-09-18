@@ -242,6 +242,8 @@ export interface InputProps {
   clearable?: boolean
   /** type="password" 時に表示/非表示トグルボタンを有効化する (デフォルト: true) */
   passwordToggle?: boolean
+  /** 末尾に付与する単位テキスト（または #addon スロット） */
+  addon?: string
 }
 
 // --- Select ---
@@ -373,20 +375,18 @@ export interface ResultDetailItem {
   topBorder?: boolean
 }
 
-// --- InfoCard ---
-export interface InfoCardItem {
+// --- InfoList ---
+export interface InfoListItem {
   id?: string | number
   date: string
   title: string
-  desc?: string
 }
 
-export interface MoleculesInfoCardProps<T extends InfoCardItem = InfoCardItem> {
+export interface InfoListProps<T extends InfoListItem = InfoListItem> {
   items?: T[]
   pending?: boolean
   loadingText?: string
   emptyText?: string
-  maxCount?: number
 }
 
 // --- DashboardMenuTile ---
@@ -402,7 +402,6 @@ export interface EmptyStateProps {
   description?: string
   spin?: boolean
 }
-export type MoleculesEmptyStateProps = EmptyStateProps
 
 // --- HelpTip ---
 export interface HelpTipProps {
@@ -472,8 +471,17 @@ export interface ToolTemplatesLayoutProps {
 }
 
 // ============================================================================
-// 6. フォーム共通コンテキスト（Form Context Injection）
+// 6. フォーム共通コンテキスト（Form Context Injection & Props）
 // ============================================================================
+
+export interface FormGroupProps {
+  id?: string
+  label?: string
+  required?: boolean
+  error?: string
+  help?: string
+  helpId?: HelpId
+}
 
 export interface FormGroupContext {
   id: ComputedRef<string>
