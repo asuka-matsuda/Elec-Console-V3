@@ -5,8 +5,8 @@
  * テキスト文字数からの自動推測に加え、レンダリングされたDOM（ボタンUI等のスロット）の
  * 実測最小幅（Intrinsic Content Width）を自動サンプリングして完全自律配分します。
  */
-import { useElementSize, useMutationObserver } from '@vueuse/core'
-import { computed, type MaybeRefOrGetter, nextTick, onMounted, ref, toValue, watch, watchEffect } from 'vue'
+import { useElementSize } from '@vueuse/core'
+import { computed, type MaybeRefOrGetter, nextTick, onMounted, ref, toValue, watch } from 'vue'
 
 import type { TableColumn } from '~/types/components'
 import {
@@ -22,6 +22,24 @@ export interface UseTableAutoWidthOptions<T> {
   autoWidth?: MaybeRefOrGetter<boolean | undefined>
 }
 
+// データの「件数」および「含まれる行の識別子」からシグネチャを生成
+// 行内部のプロパティ（チェックボックスのON/OFF等）の変化ではシグネチャは変化しない
+const getDataSignature = (data: unknown[] | undefined): string => {
+  if (!data || data.length === 0) return '0:empty'
+
+  const idStr = data.map((row: unknown, i) => {
+    if (row && typeof row === 'object') {
+      const record = row as Record<string, unknown>
+
+      return String(record.id ?? record.key ?? i)
+    }
+
+    return String(i)
+  }).join(',')
+
+  return `${data.length}:${idStr}`
+}
+
 export function useTableAutoWidth<T = unknown>(
   containerRef: MaybeRefOrGetter<HTMLElement | null>,
   options: UseTableAutoWidthOptions<T>,
@@ -34,8 +52,8 @@ export function useTableAutoWidth<T = unknown>(
   // レンダリングされたDOMから実測されたコンテンツ最小幅
   const domMeasuredWidths = ref<Record<string, number>>({})
 
-  // fullData があればそれを優先、なければ data からキャッシュを更新
-  watchEffect(() => {
+  // 文字数ベースの基準必要幅を計算
+  const updateBaseWidths = () => {
     const rawFull = toValue(options.fullData)
     const rawData = toValue(options.data)
     const rawCols = toValue(options.columns)
@@ -49,9 +67,9 @@ export function useTableAutoWidth<T = unknown>(
         baseWidthsCache.value,
       )
     }
-  })
+  }
 
-  // DOM の描画後に各セルの実寸（ボタンUIなどの実測幅）をサンプリング計測してキャッシュ・最小下限を補正
+  // DOM の描画後に各セルの実寸（ボタンUIなどの実測幅）をサンプリング計測して最小下限（minWidth）を補正
   const measureAndUpdateFromDom = () => {
     if (typeof window === 'undefined') return
     const wrapper = toValue(containerRef)
@@ -67,17 +85,16 @@ export function useTableAutoWidth<T = unknown>(
 
     const measured = measureTableContentWidths(table, rawCols)
     let hasChanges = false
-    const currentBase = { ...baseWidthsCache.value }
     const currentDom = { ...domMeasuredWidths.value }
 
     for (const [key, w] of Object.entries(measured)) {
+      if (w <= 0) continue
+
       // 異常な巨大幅（コンテナ幅の半分を超えるなど）を防ぐガード
       const safeMeasured = Math.min(w, Math.max(300, (containerWidth.value || 1000) * 0.45))
 
-      if (safeMeasured > (currentBase[key] ?? 0)) {
-        currentBase[key] = safeMeasured
-        hasChanges = true
-      }
+      // DOM実測値は domMeasuredWidths（最小下限値）にのみ反映し、
+      // 文字数基準幅 baseWidthsCache には混入させない（肥大化ループの防止）
       if (safeMeasured !== (currentDom[key] ?? 0)) {
         currentDom[key] = safeMeasured
         hasChanges = true
@@ -85,31 +102,28 @@ export function useTableAutoWidth<T = unknown>(
     }
 
     if (hasChanges) {
-      baseWidthsCache.value = currentBase
       domMeasuredWidths.value = currentDom
     }
   }
 
-  // クライアント側でのマウント時・データ更新時に自動計測を実行
+  // クライアント側での初回マウント時：基準幅の計算とDOM計測を実行
   onMounted(() => {
+    updateBaseWidths()
     nextTick(measureAndUpdateFromDom)
   })
 
+  // 「データ件数・行構成の変化（初回ロードやフィルター時）」および「カラム定義の変化」のみを監視
+  // ※ 行内部のプロパティ（チェックボックスのON/OFF等）の変更では再計算は発火しない
   watch(
-    [() => toValue(options.data), () => toValue(options.columns)],
+    [
+      () => getDataSignature(toValue(options.data)),
+      () => getDataSignature(toValue(options.fullData)),
+      () => toValue(options.columns),
+    ],
     () => {
+      updateBaseWidths()
       nextTick(measureAndUpdateFromDom)
     },
-    { deep: true },
-  )
-
-  // DOM構造の変更（ボタンの動的追加・編集UI切替等）を自動検知して再計測
-  useMutationObserver(
-    containerRef,
-    () => {
-      measureAndUpdateFromDom()
-    },
-    { childList: true, subtree: false },
   )
 
   // コンテナ幅およびキャッシュ幅をもとに、各列の最終幅スタイルを算出

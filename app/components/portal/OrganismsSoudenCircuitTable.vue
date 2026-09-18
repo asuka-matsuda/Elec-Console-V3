@@ -5,8 +5,9 @@
  * 回路記号SVG（PortalAtomsKairoSymbol）専用列の完全保護、行ステータス装飾、
  * 測定者/日時セルの標準内包、および各フェーズ固有の測定・操作スロットを提供します。
  */
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
+import { useNoBreakWords } from '~/composables/useNoBreakWords'
 import { useTableAutoWidth } from '~/composables/useTableAutoWidth'
 import type { TableColumn } from '~/types/components'
 import type { CircuitItem } from '~/types/souden'
@@ -41,6 +42,12 @@ const emit = defineEmits<{
 defineSlots<{
   [K in `cell-${string}`]?: (props: { value: unknown, subValue?: unknown, row: CircuitItem, index: number }) => unknown
 }>()
+
+const { fetchWords } = useNoBreakWords()
+
+onMounted(() => {
+  fetchWords()
+})
 
 const tableWrapperRef = ref<HTMLElement | null>(null)
 
@@ -87,7 +94,7 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
     <table class="w-full table-fixed text-left">
       <thead>
         <tr>
-          <AtomsTableTh
+          <TableTh
             v-for="col in columns"
             :key="col.key"
             :column="col"
@@ -112,7 +119,7 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
             'is-highlighted': editingRowId === circuit.id,
           }"
         >
-          <AtomsTableTd
+          <TableTd
             v-for="col in columns"
             :key="col.key"
             :column="col"
@@ -158,7 +165,7 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
                 :confirmed-at="circuit.p3ConfirmedAt || circuit.p2ConfirmedAt || circuit.p1ConfirmedAt"
               />
             </template>
-          </AtomsTableTd>
+          </TableTd>
         </tr>
       </tbody>
     </table>

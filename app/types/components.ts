@@ -48,6 +48,10 @@ export interface TableColumn<T = Record<string, unknown>> {
   maxWidth?: string
   fixedWidth?: boolean
   align?: 'left' | 'center' | 'right'
+  /** この列でテキスト省略（...）を行うかどうか */
+  truncate?: boolean
+  /** 値が空（null, undefined, 空文字）の時のフォールバック表示 */
+  emptyFallback?: string
 }
 
 /** パンくずリスト項目 */
@@ -304,6 +308,60 @@ export interface RadioGroupProps<T = string | number | boolean> {
   /** 幅いっぱいに均等配置（全幅モード、デフォルト: false） */
   block?: boolean
 }
+
+// --- TableTh ---
+export type TableSortOrder = 'asc' | 'desc' | null
+
+export interface TableThProps<RowType = Record<string, unknown>> {
+  /** カラム定義（省略時は各プロパティを個別指定可能） */
+  column?: TableColumn<RowType>
+  /** ソートキー（column 未指定時用） */
+  sortKey?: string
+  /** ラベルテキスト */
+  label?: string
+  /** セル幅 */
+  width?: string
+  /** 最小セル幅 */
+  minWidth?: string
+  /** 最大セル幅 */
+  maxWidth?: string
+  /** 水平配置 */
+  align?: 'left' | 'center' | 'right'
+  /** ソート可能フラグ */
+  sortable?: boolean
+  /** 現在アクティブなソートキー */
+  sortBy?: string
+  /** 現在のソート順序 */
+  sortOrder?: TableSortOrder
+  /** ツールチップテキスト */
+  title?: string
+}
+export type AtomsTableThProps<RowType = Record<string, unknown>> = TableThProps<RowType>
+
+// --- TableTd ---
+export interface TableTdProps<RowType = Record<string, unknown>> {
+  /** カラム定義（省略時は各プロパティを個別指定可能） */
+  column?: TableColumn<RowType>
+  /** セル幅 */
+  width?: string
+  /** 最小セル幅 */
+  minWidth?: string
+  /** 最大セル幅 */
+  maxWidth?: string
+  /** 水平配置 */
+  align?: 'left' | 'center' | 'right'
+  /** メイン表示値 */
+  value?: unknown
+  /** サブ表示値（指定時は2段組表示） */
+  subValue?: unknown
+  /** 省略記号（...）表示を有効にするか（未指定時は通常セルで自動有効） */
+  truncate?: boolean
+  /** 値が空（null, undefined, 空文字）の場合のフォールバック表示 */
+  emptyFallback?: string
+  /** ツールチップ（未指定時は省略表示時にメインテキストを自動付与） */
+  title?: string
+}
+export type AtomsTableTdProps<RowType = Record<string, unknown>> = TableTdProps<RowType>
 
 // ============================================================================
 // 3. Molecules（複合コンポーネント）

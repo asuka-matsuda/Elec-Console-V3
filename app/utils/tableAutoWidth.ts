@@ -428,6 +428,18 @@ export function measureCellIntrinsicWidth(td: HTMLElement): number {
     return 0
   }
 
+  // 2段組セル（stacked-cell）や単なるテキスト表示ラッパーは文字数ベース計算に任せる
+  const hasOnlyTextContainers = children.every(c =>
+    c.classList.contains('stacked-cell')
+    || c.classList.contains('cell-text')
+    || c.classList.contains('circuit-meisho')
+    || c.classList.contains('main-text'),
+  )
+
+  if (hasOnlyTextContainers) {
+    return 0
+  }
+
   for (const child of children) {
     let width = 0
     const subChildren = Array.from(child.children) as HTMLElement[]

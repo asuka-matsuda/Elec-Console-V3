@@ -71,7 +71,7 @@ describe('MoleculesTable.vue', () => {
       },
     })
 
-    const thComponent = wrapper.findComponent({ name: 'AtomsTableTh' })
+    const thComponent = wrapper.findComponent({ name: 'TableTh' })
 
     if (thComponent.exists()) {
       await thComponent.vm.$emit('sort', sampleColumns[0])
@@ -90,7 +90,7 @@ describe('MoleculesTable.vue', () => {
       },
     })
 
-    const thComponent = wrapper.findComponent({ name: 'AtomsTableTh' })
+    const thComponent = wrapper.findComponent({ name: 'TableTh' })
 
     if (thComponent.exists()) {
       await thComponent.vm.$emit('sort', sampleColumns[0])
@@ -110,7 +110,7 @@ describe('MoleculesTable.vue', () => {
       },
     })
 
-    const thComponent = wrapper.findComponent({ name: 'AtomsTableTh' })
+    const thComponent = wrapper.findComponent({ name: 'TableTh' })
 
     if (thComponent.exists()) {
       await thComponent.vm.$emit('sort', nonSortableColumns[0])
@@ -146,5 +146,21 @@ describe('MoleculesTable.vue', () => {
     // 2行目: サブが空文字の場合はサブ表示要素が存在しない
     expect(stackedWrappers[1].find('.main-text').text()).toBe('主任')
     expect(stackedWrappers[1].find('.sub-text').exists()).toBe(false)
+  })
+
+  it('データが空（0件）の場合に空状態（EmptyState）が全列colspanで描画されること', () => {
+    const wrapper = mount(MoleculesTable, {
+      props: {
+        columns: sampleColumns,
+        data: [],
+        emptyText: '該当するデータはありません',
+      },
+    })
+
+    const emptyTd = wrapper.find('.empty-cell')
+
+    expect(emptyTd.exists()).toBe(true)
+    expect(emptyTd.attributes('colspan')).toBe(String(sampleColumns.length))
+    expect(wrapper.text()).toContain('該当するデータはありません')
   })
 })

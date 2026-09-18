@@ -4,8 +4,9 @@
  * [Molecules] カラム定義とデータ配列を受け取り表示する純粋なデータテーブルコンポーネント。
  * データの最大文字長に応じた動的列幅の自動最適化と、コンテナ幅100%均等配分を提供します。
  */
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
+import { useNoBreakWords } from '~/composables/useNoBreakWords'
 import { useTableAutoWidth } from '~/composables/useTableAutoWidth'
 import type { TableColumn } from '~/types/components'
 
@@ -20,6 +21,7 @@ const props = withDefaults(
     rowClass?: (row: T, index: number) => string | Record<string, boolean | undefined> | (string | Record<string, boolean | undefined>)[] | undefined
     rowId?: (row: T, index: number) => string
     autoWidth?: boolean
+    emptyText?: string
   }>(),
   {
     data: () => [],
@@ -30,6 +32,7 @@ const props = withDefaults(
     rowClass: undefined,
     rowId: undefined,
     autoWidth: true,
+    emptyText: 'データがありません',
   },
 )
 
@@ -39,7 +42,15 @@ const emit = defineEmits<{
 
 defineSlots<{
   [K in `cell-${string}`]?: (props: { value: unknown, subValue?: unknown, row: T, index: number }) => unknown
+} & {
+  empty?: () => unknown
 }>()
+
+const { fetchWords } = useNoBreakWords()
+
+onMounted(() => {
+  fetchWords()
+})
 
 // テーブルコンテナ要素
 const tableWrapperRef = ref<HTMLElement | null>(null)
@@ -113,7 +124,7 @@ const getCellValue = (row: T, key: string): unknown => {
     <table class="w-full table-fixed text-left">
       <thead>
         <tr>
-          <AtomsTableTh
+          <TableTh
             v-for="col in columns"
             :key="col.key"
             :column="col"
@@ -125,7 +136,7 @@ const getCellValue = (row: T, key: string): unknown => {
         </tr>
       </thead>
 
-      <tbody>
+      <tbody v-if="data && data.length > 0">
         <tr
           v-for="(row, index) in data"
           :id="rowId?.(row, index)"
@@ -133,7 +144,7 @@ const getCellValue = (row: T, key: string): unknown => {
           class="table-row relative z-[1]"
           :class="rowClass?.(row, index)"
         >
-          <AtomsTableTd
+          <TableTd
             v-for="col in columns"
             :key="col.key"
             :column="col"
@@ -150,7 +161,23 @@ const getCellValue = (row: T, key: string): unknown => {
                 :index="index"
               />
             </template>
-          </AtomsTableTd>
+          </TableTd>
+        </tr>
+      </tbody>
+      <tbody v-else>
+        <tr>
+          <td
+            :colspan="columns.length"
+            class="empty-cell py-12 text-center"
+          >
+            <slot name="empty">
+              <MoleculesEmptyState
+                icon="database"
+                :title="emptyText"
+                class="py-4"
+              />
+            </slot>
+          </td>
         </tr>
       </tbody>
     </table>
