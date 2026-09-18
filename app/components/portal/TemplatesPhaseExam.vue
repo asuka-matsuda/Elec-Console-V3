@@ -34,15 +34,14 @@ defineEmits<{
 <template>
   <div class="flex flex-1 flex-col gap-4 min-h-0">
     <!-- ページヘッダー -->
-    <MoleculesSectionHeader
+    <SectionHeader
       :title="title"
       :icon="icon"
-      size="lg"
     >
       <template #actions>
         <slot name="header-actions" />
       </template>
-    </MoleculesSectionHeader>
+    </SectionHeader>
 
     <!-- 検索・絞り込み ＆ 進捗コントロールパネル -->
     <PortalOrganismsSoudenPhaseControls

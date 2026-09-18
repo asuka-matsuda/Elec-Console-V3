@@ -71,10 +71,9 @@ const isResultDialogOpen = ref(false)
     <!-- 現場選択時の設定コンソール -->
     <template v-else>
       <!-- 上部ヘッダー: 現場名 + ステータス + 一括保存ボタン -->
-      <MoleculesSectionHeader
+      <SectionHeader
         :title="site.name"
         icon="settings"
-        size="lg"
       >
         <template #default>
           <div class="flex items-baseline gap-2">
@@ -94,7 +93,7 @@ const isResultDialogOpen = ref(false)
             変更を保存
           </Button>
         </template>
-      </MoleculesSectionHeader>
+      </SectionHeader>
 
       <!-- 設定カテゴリタブ (Tabs) -->
       <Tabs

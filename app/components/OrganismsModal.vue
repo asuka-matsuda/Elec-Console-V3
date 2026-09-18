@@ -2,7 +2,7 @@
 /**
  * OrganismsModal
  * [Organisms] ネイティブの dialog 要素を使用したモーダルダイアログ。
- * Panel, MoleculesSectionHeader, Button を組み合わせた独立機能セクション。
+ * Panel, SectionHeader, Button を組み合わせた独立機能セクション。
  * 標準的なイベント駆動（@submit, @cancel, :loading）および非同期関数（:submit-fn）の両方に対応します。
  */
 import { computed, getCurrentInstance, onMounted, ref, watch } from 'vue'
@@ -134,7 +134,7 @@ onMounted(() => {
     @cancel.prevent="close"
   >
     <Panel class="flex flex-1 flex-col gap-4 min-h-0 modal-panel">
-      <MoleculesSectionHeader
+      <SectionHeader
         v-if="title"
         :title="title"
         :icon="icon"

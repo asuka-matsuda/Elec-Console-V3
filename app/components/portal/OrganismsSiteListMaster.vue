@@ -52,11 +52,11 @@ const filteredSites = computed(() => {
 
 <template>
   <div class="flex flex-col gap-3 w-full">
-    <!-- ヘッダー: タイトル & 新規登録ボタン (MoleculesSectionHeader) -->
-    <MoleculesSectionHeader
+    <!-- ヘッダー: タイトル & 新規登録ボタン (SectionHeader) -->
+    <SectionHeader
       title="現場プロジェクト"
       icon="building"
-      size="sm"
+      tag="h3"
     >
       <template #actions>
         <Button
@@ -66,7 +66,7 @@ const filteredSites = computed(() => {
           新規登録
         </Button>
       </template>
-    </MoleculesSectionHeader>
+    </SectionHeader>
 
     <!-- 検索バー -->
     <Input

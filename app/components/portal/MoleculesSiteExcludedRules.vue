@@ -17,10 +17,10 @@ const emit = defineEmits<{
 
 <template>
   <div class="flex flex-col gap-4 max-w-xl">
-    <MoleculesSectionHeader
+    <SectionHeader
       title="除外回路の設定"
       icon="slash"
-      size="sm"
+      tag="h4"
     />
     <p class="desc-text m-0">
       計算や試験連携の対象外とする盤・回路を指定します。

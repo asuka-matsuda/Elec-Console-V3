@@ -15,10 +15,9 @@ const { themeMode, animationEnabled } = useSettings()
 
 <template>
   <div class="flex flex-col gap-section-gap pb-layout-pad">
-    <MoleculesSectionHeader
+    <SectionHeader
       title="UI・個人設定"
       icon="settings"
-      size="lg"
     />
     <p class="description m-0">
       このブラウザ固有のUI設定をカスタマイズします。
@@ -26,10 +25,10 @@ const { themeMode, animationEnabled } = useSettings()
 
     <div class="flex flex-col gap-section-gap max-w-[640px]">
       <Panel as="section" class="flex flex-col gap-4">
-        <MoleculesSectionHeader
+        <SectionHeader
           title="テーマ・カラー設定"
           icon="moon"
-          size="md"
+          tag="h3"
         />
 
         <p class="description m-0">
@@ -45,10 +44,10 @@ const { themeMode, animationEnabled } = useSettings()
       </Panel>
 
       <Panel as="section" class="flex flex-col gap-4">
-        <MoleculesSectionHeader
+        <SectionHeader
           title="演出・アニメーション設定"
           icon="zap"
-          size="md"
+          tag="h3"
         />
 
         <p class="description m-0">

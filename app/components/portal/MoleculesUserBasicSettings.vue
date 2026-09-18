@@ -40,10 +40,10 @@ const formatLastLogin = (user: User) => {
 
 <template>
   <div class="flex flex-col gap-5 max-w-xl">
-    <MoleculesSectionHeader
+    <SectionHeader
       title="ユーザー基本情報"
       icon="info"
-      size="sm"
+      tag="h4"
     />
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">

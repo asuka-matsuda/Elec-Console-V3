@@ -27,10 +27,9 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-col gap-section-gap h-full">
-    <MoleculesSectionHeader
+    <SectionHeader
       title="送電試験ダッシュボード"
       icon="zap"
-      size="lg"
     >
       <template #actions>
         <PortalMoleculesSyncStatusBadge
@@ -52,7 +51,7 @@ onMounted(() => {
           操作ログ
         </Button>
       </template>
-    </MoleculesSectionHeader>
+    </SectionHeader>
 
     <div v-if="error" class="error-message flex items-center gap-2 p-3">
       <Icon name="alert-triangle" />

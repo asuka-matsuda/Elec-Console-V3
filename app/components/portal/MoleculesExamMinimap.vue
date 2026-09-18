@@ -41,7 +41,7 @@ const tiles = computed(() => {
 </script>
 
 <template>
-  <Panel class="p-2.5">
+  <Panel padding="sm">
     <div class="flex flex-wrap gap-1 max-h-20 overflow-y-auto">
       <button
         v-for="item in tiles"

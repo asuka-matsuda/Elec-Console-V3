@@ -64,10 +64,9 @@ onMounted(() => {
 
 <template>
   <div :key="siteId" class="flex flex-col gap-section-gap h-full">
-    <MoleculesSectionHeader
+    <SectionHeader
       :title="currentSite?.name || '現場ダッシュボード'"
       icon="map-pin"
-      size="lg"
     >
       <template #actions>
         <Select
@@ -77,7 +76,7 @@ onMounted(() => {
           @update:model-value="handleSiteChange"
         />
       </template>
-    </MoleculesSectionHeader>
+    </SectionHeader>
 
     <div class="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-section-gap items-start">
       <section class="min-h-[500px]">

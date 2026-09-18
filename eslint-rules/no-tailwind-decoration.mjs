@@ -55,6 +55,7 @@ export default {
     messages: {
       forbidden: 'Tailwindの装飾・挙動クラス「{{ token }}」（{{ category }}）は規約により禁止されています。レイアウト（flex, gap, padding等）のみTailwindを使用し、装飾や挙動はScoped CSSに定義してください。',
       redundantSizing: '「{{ insetToken }}」が指定されているため、「{{ token }}」の指定は冗長です。削除してください。',
+      forbiddenPanelP0: '<Panel> に対する「{{ token }}」の打ち消し指定は禁止されています。余白をゼロにする場合は padding="none" プロパティを使用してください。',
     },
     schema: [],
   },
@@ -118,6 +119,32 @@ export default {
             token: hFullToken.raw,
           },
         })
+      }
+
+      // <Panel> に対する p-0 の打ち消し指定を検知
+      let curr = reportNode
+      let vElement = null
+
+      while (curr) {
+        if (curr.type === 'VElement') {
+          vElement = curr
+          break
+        }
+        curr = curr.parent
+      }
+
+      if (vElement && (vElement.rawName === 'Panel' || vElement.name === 'Panel' || vElement.rawName === 'AtomsPanel' || vElement.name === 'AtomsPanel')) {
+        const p0Token = cleanTokens.find(t => t.clean === 'p-0')
+
+        if (p0Token) {
+          context.report({
+            node: reportNode,
+            messageId: 'forbiddenPanelP0',
+            data: {
+              token: p0Token.raw,
+            },
+          })
+        }
       }
     }
 

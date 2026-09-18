@@ -2,6 +2,7 @@ import type { ComputedRef, InjectionKey } from 'vue'
 
 import type { BadgePresetId } from '~/constants/badgeConfig'
 import type { MenuItem } from '~/constants/data/menuData'
+import type { HelpId } from '~/constants/helpConstants'
 import type { IconName } from '~/constants/icons'
 
 export type { BadgePresetId }
@@ -153,8 +154,24 @@ export interface DividerProps {
   animated?: boolean
 }
 
+// --- SectionHeader ---
+export type HeadingTag = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+export type SectionHeaderVariant = 'main' | 'border' | 'hud'
+
+export interface SectionHeaderProps {
+  /** セクションのタイトル文字列（スロットでの指定も可能） */
+  title?: string
+  /** レンダリングする見出しタグ（h1〜h6。デフォルト: 'h2'） */
+  tag?: HeadingTag
+  /** 見出し左側に表示するアイコン名 */
+  icon?: IconName
+  /** 区切り線のスタイルバリアント（デフォルト: 'main'） */
+  variant?: SectionHeaderVariant
+}
+
 // --- Panel ---
 export type PanelOverflow = 'hidden' | 'visible' | 'auto'
+export type PanelPadding = 'normal' | 'none' | 'sm'
 
 export interface PanelProps {
   /** 描画するHTML要素またはコンポーネント（デフォルト: 'div'） */
@@ -167,6 +184,8 @@ export interface PanelProps {
   disabled?: boolean
   /** オーバーフロー制御（デフォルト: 'hidden'） */
   overflow?: PanelOverflow
+  /** 内側パディング（デフォルト: 'normal' = p-panel-pad, 'none' = パディングなし, 'sm' = p-2） */
+  padding?: PanelPadding
 }
 
 // --- Disclaimer ---
@@ -384,6 +403,15 @@ export interface EmptyStateProps {
   spin?: boolean
 }
 export type MoleculesEmptyStateProps = EmptyStateProps
+
+// --- HelpTip ---
+export interface HelpTipProps {
+  /** 規格ヘルプID（省略時は text のみ表示） */
+  helpId?: HelpId
+  /** 表示テキスト（省略時は helpId のデフォルト解説文） */
+  text?: string
+}
+export type MoleculesHelpTipProps = HelpTipProps
 
 // --- Table ---
 export interface TableProps<T = unknown> {

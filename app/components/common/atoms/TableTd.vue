@@ -59,7 +59,7 @@ const formattedSubValue = computed(() => {
 
 <template>
   <td
-    class="py-1.5 px-2 align-middle"
+    class="p-2 align-middle"
     :class="[
       align === 'center' ? 'text-center' : align === 'right' ? 'text-right' : 'text-left',
       {

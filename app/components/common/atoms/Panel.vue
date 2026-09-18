@@ -12,6 +12,7 @@ const {
   selected = false,
   disabled = false,
   overflow = 'hidden',
+  padding = 'normal',
 } = defineProps<PanelProps>()
 </script>
 
@@ -22,6 +23,8 @@ const {
     :class="[
       `overflow-${overflow}`,
       {
+        'p-panel-pad': padding === 'normal',
+        'p-2': padding === 'sm',
         'is-interactive': interactive,
         'is-selected': selected,
         'is-disabled': disabled,
@@ -34,7 +37,6 @@ const {
 
 <style scoped lang="scss">
 .panel {
-  padding: var(--panel-padding, var(--space-panel-pad));
   border: var(--border-width-base) solid var(--color-border);
 
   background: var(--surface-bg);

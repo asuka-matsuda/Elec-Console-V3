@@ -68,7 +68,7 @@ const { data: dashboardData, pending: isDashboardPending } = await useFetch<Dash
         class="flex flex-col gap-panel-gap"
         :style="`--theme-accent: var(--color-category-${section.accent || 'main'})`"
       >
-        <MoleculesSectionHeader :title="section.heading" :icon="section.icon" />
+        <SectionHeader :title="section.heading" :icon="section.icon" />
 
         <div class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-panel-gap">
           <DashboardMenuTile
@@ -83,7 +83,7 @@ const { data: dashboardData, pending: isDashboardPending } = await useFetch<Dash
     <aside class="w-full md:w-sidebar-w md:sticky md:top-layout-pad md:overflow-y-auto shrink-0 md:max-h-[calc(100dvh-var(--space-layout-pad)*2)]">
       <div class="flex flex-col gap-section-gap">
         <section class="flex flex-col gap-panel-gap">
-          <MoleculesSectionHeader title="お知らせ" icon="bell" size="md" />
+          <SectionHeader title="お知らせ" icon="bell" tag="h3" />
           <MoleculesInfoCard
             :items="dashboardData?.announcements"
             :pending="isDashboardPending"
@@ -93,7 +93,7 @@ const { data: dashboardData, pending: isDashboardPending } = await useFetch<Dash
         </section>
 
         <section class="flex flex-col gap-panel-gap">
-          <MoleculesSectionHeader title="更新履歴" icon="clock" size="md" />
+          <SectionHeader title="更新履歴" icon="clock" tag="h3" />
           <MoleculesInfoCard
             :items="dashboardData?.history"
             :pending="isDashboardPending"

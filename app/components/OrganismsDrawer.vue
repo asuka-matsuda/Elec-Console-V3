@@ -106,11 +106,11 @@ onMounted(() => {
       <!-- ヘッダー -->
       <header class="drawer-header flex items-center justify-between p-panel-pad shrink-0">
         <slot name="header">
-          <MoleculesSectionHeader
+          <SectionHeader
             v-if="title"
             :title="title"
             :icon="icon"
-            size="md"
+            tag="h3"
             class="flex-1 min-w-0"
           />
         </slot>

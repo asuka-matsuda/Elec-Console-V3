@@ -18,7 +18,7 @@ describe('pages/settings.vue', () => {
     const wrapper = mount(SettingsPage, {
       global: {
         stubs: {
-          MoleculesSectionHeader: {
+          SectionHeader: {
             template: '<div class="stub-header">{{ title }}</div>',
             props: ['title'],
           },
@@ -51,7 +51,7 @@ describe('pages/settings.vue', () => {
     const wrapper = mount(SettingsPage, {
       global: {
         stubs: {
-          MoleculesSectionHeader: true,
+          SectionHeader: true,
           Panel: {
             template: '<div><slot /></div>',
           },

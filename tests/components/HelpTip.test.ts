@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import MoleculesHelpTip from '../../app/components/MoleculesHelpTip.vue'
+import HelpTip from '../../app/components/common/molecules/HelpTip.vue'
 
-describe('MoleculesHelpTip.vue', () => {
+describe('HelpTip.vue', () => {
   const commonStubs = {
     Icon: {
       props: ['name'],
@@ -12,7 +12,7 @@ describe('MoleculesHelpTip.vue', () => {
   }
 
   it('初期状態ではヘルプチップパネルが非表示であること', () => {
-    const wrapper = mount(MoleculesHelpTip, {
+    const wrapper = mount(HelpTip, {
       props: {
         text: 'テスト解説文',
       },
@@ -26,7 +26,7 @@ describe('MoleculesHelpTip.vue', () => {
   })
 
   it('クリックで開閉トグルすること', async () => {
-    const wrapper = mount(MoleculesHelpTip, {
+    const wrapper = mount(HelpTip, {
       props: {
         text: 'テスト解説文',
       },
@@ -50,7 +50,7 @@ describe('MoleculesHelpTip.vue', () => {
   })
 
   it('helpId を指定するとマスタから解説文・参考規格が自動解決されること', async () => {
-    const wrapper = mount(MoleculesHelpTip, {
+    const wrapper = mount(HelpTip, {
       props: {
         helpId: 'conduitFillRate',
       },
@@ -71,7 +71,7 @@ describe('MoleculesHelpTip.vue', () => {
   })
 
   it('カスタムスロットが正しく描画されること', async () => {
-    const wrapper = mount(MoleculesHelpTip, {
+    const wrapper = mount(HelpTip, {
       slots: {
         default: '<div class="custom-content">カスタムスロットの中身</div>',
       },

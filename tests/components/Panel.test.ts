@@ -15,10 +15,39 @@ describe('Panel.vue', () => {
     expect(wrapper.element.tagName.toLowerCase()).toBe('div')
     expect(wrapper.classes()).toContain('panel')
     expect(wrapper.classes()).toContain('overflow-hidden')
+    expect(wrapper.classes()).toContain('p-panel-pad')
     expect(wrapper.classes()).not.toContain('is-interactive')
     expect(wrapper.classes()).not.toContain('is-selected')
     expect(wrapper.classes()).not.toContain('is-disabled')
     expect(wrapper.text()).toContain('Panel content')
+  })
+
+  it('applies padding classes according to padding prop', () => {
+    const wrapperNone = mount(Panel, {
+      props: {
+        padding: 'none',
+      },
+    })
+
+    expect(wrapperNone.classes()).not.toContain('p-panel-pad')
+    expect(wrapperNone.classes()).not.toContain('p-2')
+
+    const wrapperSm = mount(Panel, {
+      props: {
+        padding: 'sm',
+      },
+    })
+
+    expect(wrapperSm.classes()).toContain('p-2')
+    expect(wrapperSm.classes()).not.toContain('p-panel-pad')
+
+    const wrapperNormal = mount(Panel, {
+      props: {
+        padding: 'normal',
+      },
+    })
+
+    expect(wrapperNormal.classes()).toContain('p-panel-pad')
   })
 
   it('renders custom element via as prop', () => {
@@ -98,7 +127,7 @@ describe('Panel.vue', () => {
     const wrapper = mount(Panel, {
       attrs: {
         'id': 'custom-panel-id',
-        'class': 'custom-panel-class p-0',
+        'class': 'custom-panel-class test-layout-class',
         'data-testid': 'custom-panel',
       },
     })
@@ -107,7 +136,7 @@ describe('Panel.vue', () => {
     expect(wrapper.attributes('data-testid')).toBe('custom-panel')
     expect(wrapper.classes()).toContain('panel')
     expect(wrapper.classes()).toContain('custom-panel-class')
-    expect(wrapper.classes()).toContain('p-0')
+    expect(wrapper.classes()).toContain('test-layout-class')
   })
 
   it('renders component object via as prop', () => {

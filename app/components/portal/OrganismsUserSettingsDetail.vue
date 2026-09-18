@@ -85,10 +85,9 @@ const handleSave = () => {
     <!-- ユーザー選択時 -->
     <template v-else>
       <!-- 上部ヘッダー: ユーザー名 + 権限 + アクションボタン -->
-      <MoleculesSectionHeader
+      <SectionHeader
         :title="`${user.lastName || ''} ${user.firstName || ''}`"
         icon="user"
-        size="lg"
       >
         <template #default>
           <div class="flex flex-wrap items-center gap-2">
@@ -125,7 +124,7 @@ const handleSave = () => {
             </Button>
           </div>
         </template>
-      </MoleculesSectionHeader>
+      </SectionHeader>
 
       <!-- カテゴリ選択 (Tabs) -->
       <Tabs

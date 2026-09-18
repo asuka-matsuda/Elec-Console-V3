@@ -2,13 +2,14 @@
 /**
  * OrganismsFilterPanel
  * [Organisms] データベース画面や一覧画面用の検索・カテゴリ絞り込みパネル。
- * Panel, MoleculesSectionHeader, MoleculesFormGroup, Input, Checkbox を組み合わせた独立セクション。
+ * Panel, SectionHeader, MoleculesFormGroup, Input, Checkbox を組み合わせた独立セクション。
  */
 import type { IconName } from '~/constants/icons'
-import type { SelectOption } from '~/types/components'
+import type { HeadingTag, SelectOption } from '~/types/components'
 
 interface Props {
   title?: string
+  tag?: HeadingTag
   icon?: IconName
   placeholder?: string
   categoryOptions?: SelectOption<string>[]
@@ -19,6 +20,7 @@ const activeCats = defineModel<string[]>('activeCats', { default: () => [] })
 
 const {
   title = '絞り込み・検索',
+  tag = 'h3',
   icon = 'search',
   placeholder,
   categoryOptions = [],
@@ -27,7 +29,7 @@ const {
 
 <template>
   <Panel as="section" class="flex flex-col gap-4">
-    <MoleculesSectionHeader :title="title" :icon="icon" />
+    <SectionHeader :title="title" :tag="tag" :icon="icon" />
 
     <div class="flex flex-col gap-4">
       <MoleculesFormGroup label="Keyword">

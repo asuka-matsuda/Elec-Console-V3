@@ -14,7 +14,12 @@ defineProps<{
 
 <template>
   <Panel>
-    <MoleculesSectionHeader title="総合進捗" icon="activity" variant="hud" />
+    <SectionHeader
+      title="総合進捗"
+      icon="activity"
+      variant="hud"
+      tag="h3"
+    />
     <div class="flex flex-col lg:flex-row items-center gap-6 lg:gap-8 py-2">
       <!-- 全試験完了率ゲージ（Atom） -->
       <div class="flex shrink-0 items-center justify-center min-w-[220px]">

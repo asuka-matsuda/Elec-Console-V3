@@ -52,10 +52,9 @@ const targetBanOptions = computed(() => [
 
 <template>
   <div class="flex flex-1 flex-col gap-section-gap h-full min-h-0">
-    <MoleculesSectionHeader
+    <SectionHeader
       title="送電試験 操作ログ"
       icon="history"
-      size="lg"
     >
       <template #actions>
         <Button
@@ -73,7 +72,7 @@ const targetBanOptions = computed(() => [
           ダッシュボードへ戻る
         </Button>
       </template>
-    </MoleculesSectionHeader>
+    </SectionHeader>
 
     <!-- 検索・フィルタリングコントロール (Molecules) -->
     <PortalMoleculesOperationLogsFilter

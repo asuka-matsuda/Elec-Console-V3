@@ -15,10 +15,10 @@ defineProps<{
 
 <template>
   <div class="flex flex-col gap-4 max-w-xl">
-    <MoleculesSectionHeader
+    <SectionHeader
       title="参加現場アサイン"
       icon="building"
-      size="sm"
+      tag="h4"
     />
 
     <p class="desc-text m-0">

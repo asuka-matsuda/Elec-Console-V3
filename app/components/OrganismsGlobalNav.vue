@@ -77,12 +77,11 @@ onMounted(() => {
           '--section-accent': `var(--color-category-${section.accent || 'main'})`,
         }"
       >
-        <MoleculesSectionHeader
+        <SectionHeader
           v-if="section.globalNavHeading || section.heading"
           :title="section.globalNavHeading || section.heading"
           :icon="section.icon"
-          size="xs"
-          tag="h3"
+          tag="h5"
           class="px-[var(--space-2)]"
         />
 

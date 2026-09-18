@@ -104,6 +104,10 @@ module.exports = {
             '/^rgba?\\(/',
             '/^hsla?\\(/',
           ],
+          // SCSS内での固定余白（px/rem）の直接記述を禁止（文字連動emおよびCSS変数は許可）
+          '/^padding(-inline|-block)?$/': [
+            '/^[0-9.]+(px|rem)/',
+          ],
         },
         // 状態セレクタの手書きを禁止し、純粋な支援アクセシビリティセレクタ（aria-*, role）を禁止
         'selector-disallowed-list': [

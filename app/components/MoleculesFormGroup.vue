@@ -54,7 +54,7 @@ provide(FORM_GROUP_KEY, {
       >
         {{ requiredLabel }}
       </Badge>
-      <MoleculesHelpTip
+      <HelpTip
         v-if="helpId || helpTip"
         :help-id="helpId"
         :text="helpTip"

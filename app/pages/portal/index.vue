@@ -51,13 +51,13 @@ onMounted(async () => {
 
 <template>
   <Panel as="section" class="flex flex-col gap-4">
-    <MoleculesSectionHeader title="現場ポータル" variant="hud">
+    <SectionHeader title="現場ポータル" variant="hud">
       <template v-if="isAdmin" #actions>
         <Button @click="router.push('/portal/admin')">
           ポータル管理画面へ
         </Button>
       </template>
-    </MoleculesSectionHeader>
+    </SectionHeader>
 
     <EmptyState
       icon="folder"

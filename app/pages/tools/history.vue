@@ -21,10 +21,9 @@ const {
 <template>
   <div class="flex flex-col gap-section-gap">
     <Panel as="section" class="flex flex-col gap-4">
-      <MoleculesSectionHeader
+      <SectionHeader
         title="計算履歴"
         icon="clock"
-        size="lg"
       >
         <template #actions>
           <Button
@@ -36,7 +35,7 @@ const {
             全て削除
           </Button>
         </template>
-      </MoleculesSectionHeader>
+      </SectionHeader>
 
       <RadioGroup v-model="currentTab" :options="tabs" />
 

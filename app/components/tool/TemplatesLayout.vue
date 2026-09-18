@@ -60,10 +60,10 @@ provide('toolBasisModal', {
       <!-- 1. 条件入力（PC: 左側 4fr / モバイル: 全面表示） -->
       <section class="flex flex-col min-h-0">
         <Panel class="flex flex-1 flex-col gap-panel-gap min-h-0">
-          <MoleculesSectionHeader
+          <SectionHeader
             :title="inputsTitle"
             :icon="inputsIcon"
-            size="md"
+            tag="h3"
           >
             <template #actions>
               <Button
@@ -74,7 +74,7 @@ provide('toolBasisModal', {
                 リセット
               </Button>
             </template>
-          </MoleculesSectionHeader>
+          </SectionHeader>
 
           <div class="body flex flex-1 flex-col min-h-0 overflow-y-auto px-2 py-1">
             <slot name="inputs" :open-basis="openBasisModal" />

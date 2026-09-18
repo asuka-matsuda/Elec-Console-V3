@@ -23,10 +23,10 @@ const emit = defineEmits<{
 
 <template>
   <div class="flex flex-col gap-5 max-w-xl">
-    <MoleculesSectionHeader
+    <SectionHeader
       title="現場基本情報"
       icon="info"
-      size="sm"
+      tag="h4"
     />
 
     <MoleculesFormGroup label="ステータス">

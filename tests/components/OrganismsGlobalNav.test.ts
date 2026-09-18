@@ -15,7 +15,7 @@ describe('OrganismsGlobalNav.vue', () => {
     Button: {
       template: '<button class="close-btn" @click="$emit(\'click\')"><slot /></button>',
     },
-    MoleculesSectionHeader: {
+    SectionHeader: {
       template: '<div class="section-header-stub">{{ title }}</div>',
       props: ['title'],
     },

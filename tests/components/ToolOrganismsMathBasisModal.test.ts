@@ -28,7 +28,7 @@ describe('ToolOrganismsMathBasisModal.vue', () => {
     Panel: {
       template: '<div class="panel-stub"><slot /></div>',
     },
-    MoleculesSectionHeader: {
+    SectionHeader: {
       props: ['title', 'size'],
       template: '<div class="section-header-stub">{{ title }}</div>',
     },

@@ -14,7 +14,7 @@ describe('OrganismsDrawer.vue', () => {
   })
 
   const commonStubs = {
-    MoleculesSectionHeader: {
+    SectionHeader: {
       props: ['title', 'icon', 'variant'],
       template: '<div class="section-header-stub">{{ title }}</div>',
     },

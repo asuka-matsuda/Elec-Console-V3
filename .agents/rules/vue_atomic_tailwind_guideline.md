@@ -12,22 +12,31 @@ Tailwind CSSは**レイアウト・配置・余白・寸法に関するものだ
 
 ### 役割分担
 - **Tailwind CSS（レイアウト専用・グローバルユーティリティ）**
-  - **対象:** レイアウト、配置、余白、寸法、整列など「UIの骨格」に関するもの**のみ**。
+  - **対象:** レイアウト、配置、画面グリッド余白、寸法、整列など「UIの骨格」に関するもの**のみ**。
   - **目的:** HTMLを見るだけでUIの骨格・レイアウト（配置・余白）を直感的に把握できるようにする。
-  - **使用例:** `display (flex/grid)`, `margin`, `padding`, `width`, `height`, `gap`, `position`, `text-align`
+  - **使用例:** `display (flex/grid)`, `margin`, `padding`（グリッド・コンテナ余白）, `width`, `height`, `gap`, `position`, `text-align`
   - **※ 装飾（カラー、シャドウ、グラデーション等）はTailwindで行わず、Scoped CSSに委ねる。**
-- **Vue Scoped CSS（装飾・状態カプセル化）**
+- **Vue Scoped CSS（装飾・タイポグラフィカプセル化）**
   - **対象:** 複雑な装飾、境界線、カラー、特殊な状態、長いCSSプロパティが必要なもの。
-  - **目的:** スタイルをコンポーネント内にカプセル化し、Tailwindクラスが肥大化するのを防ぐ。
-  - **使用例:** `color`, `border` (color-mix等), `background` (グラデーション等), `box-shadow`, `transition`, `animation`, 擬似要素 (`::before`/`::after`)
-  - **※ レイアウト・配置・z-index・flex関連（`z-index`, `flex-direction`, `align-items`, `justify-content`, `gap`, `flex-shrink` 等）をScoped CSSに直接書くのは禁止。**
+  - **文字・文字連動余白（タイポグラフィ・ユニット）:**
+    - 文字（`font-size`, `color`, `font-weight`, `line-height`）は不可分の一体物として、Atoms / Molecules の Scoped CSS に定義します。
+    - ボタンや入力欄など、文字サイズに追従すべきコントロールの内側余白（`em` パディング）は、文字サイズとセットで Scoped CSS にカプセル化します（無駄なラッパーを作らず、タイポグラフィ計算を1箇所で完結させるため）。
+  - **※ 画面グリッドに従う余白（px/rem）やレイアウト（`z-index`, `justify-content`, `align-items`, `flex-direction`, `flex-shrink`, `row-gap`, `column-gap` 等）をScoped CSSに直接書くのは禁止。**
+
+### 余白管理の原則（サーフェスと余白の分離）
+- **サーフェス部品（`Panel`）の余白原則:**
+  - `Panel` は背景・枠線・影のみを提供する純粋なサーフェス枠です。
+  - リストやテーブルを端まで敷き詰める（Full-bleed）用途のため、余白は `padding?: 'normal' | 'none' | 'sm'` プロパティで制御します。
+  - **親が外から `<Panel class="p-0">` のように無理やり打ち消すアンチパターンは ESLint で禁止されています。** 余白をゼロにしたい場合は `<Panel padding="none">` を指定してください。
 
 ### 双方向リント監視（完全機械的ガード）
 本方針を人手任せにせず確実に徹底するため、リントツールによる「双方向の機械的チェック」を敷いています：
 1. **ESLint (`eslint-rules/no-tailwind-decoration.mjs`):**
    - テンプレート内での装飾系Tailwindクラス（`bg-*`, `text-*`, `rounded-*`, `border-*`, `shadow-*` 等）の使用を完全禁止し、Scoped CSSへの分離を強制。
-2. **Stylelint (`.stylelintrc.cjs` - `property-disallowed-list`):**
-   - Scoped CSS内でのレイアウト関連プロパティ（`z-index`, `justify-content`, `align-items`, `flex-direction`, `flex-shrink`, `row-gap`, `column-gap` 等）の記述を完全禁止し、Tailwindクラス記述を強制。
+   - `<Panel>` に対する `p-0` などの打ち消し指定を禁止し、`padding="none"` の使用を強制。
+2. **Stylelint (`.stylelintrc.cjs`):**
+   - Scoped CSS内でのレイアウト関連プロパティ（`z-index`, `justify-content`, `align-items`, `flex-direction`, `flex-shrink`, `row-gap`, `column-gap` 等）の記述を完全禁止。
+   - Scoped CSS内での固定余白（`px` / `rem`）の直接記述を禁止し、文字連動余白（`em`）および CSS 変数のみ許可。
 
 ---
 

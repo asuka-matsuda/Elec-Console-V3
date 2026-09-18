@@ -75,7 +75,7 @@ const handleClose = () => {
             :key="index"
             class="flex flex-col gap-3"
           >
-            <MoleculesSectionHeader v-if="step.title" :title="step.title" size="sm" />
+            <SectionHeader v-if="step.title" :title="step.title" tag="h4" />
             <div class="grid grid-cols-1 items-stretch sm:grid-cols-[1fr_auto] sm:items-center gap-panel-gap">
               <!-- 左側: 計算式 -->
               <div

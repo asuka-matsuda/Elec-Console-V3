@@ -11,7 +11,7 @@ describe('ToolTemplatesLayout.vue', () => {
     Panel: {
       template: '<div class="panel-stub"><slot /></div>',
     },
-    MoleculesSectionHeader: {
+    SectionHeader: {
       props: ['title', 'icon', 'variant', 'size'],
       template: `
         <div class="header-stub">

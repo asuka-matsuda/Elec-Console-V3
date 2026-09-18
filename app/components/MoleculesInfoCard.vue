@@ -22,7 +22,7 @@ const displayItems = computed(() => {
 </script>
 
 <template>
-  <Panel class="p-0">
+  <Panel padding="none">
     <!-- ローディング・空状態 -->
     <div
       v-if="pending || displayItems.length === 0"

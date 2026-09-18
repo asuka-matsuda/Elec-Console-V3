@@ -39,10 +39,10 @@ const sortedTodos = computed(() => {
 
 <template>
   <Panel class="flex flex-col gap-3">
-    <MoleculesSectionHeader
+    <SectionHeader
       title="パーソナルToDo"
       icon="check"
-      size="sm"
+      tag="h3"
     />
 
     <form class="flex items-center gap-1 m-0" @submit.prevent="handleAdd">

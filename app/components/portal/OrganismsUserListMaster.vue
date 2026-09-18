@@ -56,11 +56,11 @@ const filteredUsers = computed(() => {
 
 <template>
   <div class="flex flex-col gap-3 w-full">
-    <!-- ヘッダー: タイトル & 新規登録ボタン (MoleculesSectionHeader) -->
-    <MoleculesSectionHeader
+    <!-- ヘッダー: タイトル & 新規登録ボタン (SectionHeader) -->
+    <SectionHeader
       title="ユーザー一覧"
       icon="users"
-      size="sm"
+      tag="h3"
     >
       <template #actions>
         <Button
@@ -70,7 +70,7 @@ const filteredUsers = computed(() => {
           新規登録
         </Button>
       </template>
-    </MoleculesSectionHeader>
+    </SectionHeader>
 
     <!-- 検索バー -->
     <Input

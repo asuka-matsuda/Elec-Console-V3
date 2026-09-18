@@ -46,10 +46,10 @@ const confirmResetImport = async () => {
   <div class="flex flex-col gap-6">
     <!-- 取込セクション -->
     <div class="flex flex-col gap-3">
-      <MoleculesSectionHeader
+      <SectionHeader
         title="Excelデータ取込 (差分同期 / 初期設定)"
         icon="upload-cloud"
-        size="sm"
+        tag="h4"
       />
       <p class="desc-text m-0">
         回路情報・現場基本情報の更新は「差分同期」、新規立ち上げ時は「全件初期化取込」を行います。
@@ -85,10 +85,10 @@ const confirmResetImport = async () => {
 
     <!-- 出力セクション -->
     <div class="flex flex-col gap-3">
-      <MoleculesSectionHeader
+      <SectionHeader
         title="最新結果の帳票出力"
         icon="file-spreadsheet"
-        size="sm"
+        tag="h4"
       />
       <p class="desc-text m-0">
         Web上で完了した最新の試験結果（Phase 1〜3）を含むExcel帳票ファイルをダウンロードします。
