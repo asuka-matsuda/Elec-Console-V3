@@ -2,20 +2,13 @@
 /**
  * TableTh
  * [Atoms] テーブルのヘッダーセル（ソート・整列・カスタムスロット・キーボード操作対応）。
+ * 列幅はテーブルの <colgroup> が一元管理するため、インライン幅指定を排除し高効率に描画します。
  */
 import { computed } from 'vue'
 
 import type { TableColumn, TableThProps } from '~/types/components'
 
 const props = withDefaults(defineProps<TableThProps<T>>(), {
-  column: undefined,
-  sortKey: undefined,
-  label: undefined,
-  width: undefined,
-  minWidth: undefined,
-  maxWidth: undefined,
-  align: undefined,
-  sortable: undefined,
   sortBy: undefined,
   sortOrder: 'asc',
   title: undefined,
@@ -26,27 +19,15 @@ const emit = defineEmits<{
 }>()
 
 defineSlots<{
-  default?(props: { column?: TableColumn<T> }): unknown
+  default?(props: { column: TableColumn<T> }): unknown
 }>()
 
-const effectiveKey = computed(() => props.sortKey ?? props.column?.key ?? '')
-const effectiveLabel = computed(() => props.label ?? props.column?.label ?? '')
-const effectiveAlign = computed(() => props.align ?? props.column?.align ?? 'left')
-const effectiveWidth = computed(() => props.width ?? props.column?.width)
-const effectiveMinWidth = computed(() => props.minWidth ?? props.column?.minWidth)
-const effectiveMaxWidth = computed(() => props.maxWidth ?? props.column?.maxWidth ?? effectiveWidth.value)
-
-const isSortable = computed(() => {
-  if (props.sortable !== undefined) return props.sortable
-
-  return props.column?.sortable !== false && Boolean(effectiveKey.value)
-})
-
-const isSorted = computed(() => Boolean(props.sortBy && props.sortBy === effectiveKey.value && props.sortOrder !== null))
+const isSortable = computed(() => props.column.sortable !== false && Boolean(props.column.key))
+const isSorted = computed(() => Boolean(props.sortBy && props.sortBy === props.column.key && props.sortOrder !== null))
 
 const sortTitle = computed(() => {
   if (props.title) return props.title
-  if (!isSortable.value) return effectiveLabel.value || undefined
+  if (!isSortable.value) return undefined
   if (!isSorted.value) return 'クリックで昇順に並び替え'
 
   return props.sortOrder === 'asc' ? 'クリックで降順に並び替え' : 'クリックで元の並び順に戻す'
@@ -58,24 +39,9 @@ const sortIconName = computed(() => {
   return props.sortOrder === 'asc' ? 'chevron-up' : 'chevron-down'
 })
 
-// column 未指定時（Props個別指定時）のフォールバック用 Column 定義
-const effectiveColumn = computed<TableColumn<T>>(() => {
-  if (props.column) return props.column
-
-  return {
-    key: String(effectiveKey.value),
-    label: effectiveLabel.value,
-    align: effectiveAlign.value,
-    width: effectiveWidth.value,
-    minWidth: effectiveMinWidth.value,
-    maxWidth: effectiveMaxWidth.value,
-    sortable: isSortable.value,
-  }
-})
-
 const handleClick = () => {
   if (isSortable.value) {
-    emit('sort', effectiveColumn.value)
+    emit('sort', props.column)
   }
 }
 </script>
@@ -87,12 +53,6 @@ const handleClick = () => {
       'is-sortable': isSortable,
       'is-sorted': isSorted,
     }"
-    :style="{
-      width: effectiveWidth,
-      minWidth: effectiveMinWidth,
-      maxWidth: effectiveMaxWidth,
-      textAlign: effectiveAlign,
-    }"
     :title="sortTitle"
     :tabindex="isSortable ? 0 : undefined"
     @click="handleClick"
@@ -100,15 +60,16 @@ const handleClick = () => {
     @keydown.space.prevent="handleClick"
   >
     <div
-      class="header-content inline-flex items-center gap-1 w-full min-w-0"
+      class="flex items-center gap-1 w-full min-w-0 header-content"
       :class="{
-        'justify-center': effectiveAlign === 'center',
-        'justify-end': effectiveAlign === 'right',
+        'justify-center': column.align === 'center',
+        'justify-end': column.align === 'right',
+        'justify-start': !column.align || column.align === 'left',
       }"
     >
       <span class="header-label">
         <slot :column="column">
-          {{ effectiveLabel }}
+          {{ column.label }}
         </slot>
       </span>
       <Icon

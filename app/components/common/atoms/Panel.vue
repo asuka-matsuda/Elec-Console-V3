@@ -20,7 +20,7 @@ const {
     :is="as"
     class="relative z-[1] panel"
     :class="[
-      `is-overflow-${overflow}`,
+      `overflow-${overflow}`,
       {
         'is-interactive': interactive,
         'is-selected': selected,
@@ -45,19 +45,6 @@ const {
 
   @include state-interactive;
   @include state-selected;
-
-  &.is-overflow-hidden {
-    overflow: hidden;
-  }
-
-  &.is-overflow-visible {
-    overflow: visible;
-  }
-
-  &.is-overflow-auto {
-    overflow: auto;
-  }
-
   @include state-disabled;
 }
 </style>

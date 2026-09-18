@@ -62,42 +62,15 @@ describe('TableTd.vue', () => {
     expect(wrapper.find('.sub-text').text()).toBe('100V / 20A')
   })
 
-  it('column経由でアラインメントがstyleに反映されること', () => {
+  it('align プロパティがクラスに反映されること', () => {
     const wrapper = mount(TableTd, {
       props: {
-        column: {
-          key: 'test',
-          label: 'テスト',
-          align: 'center',
-        },
+        align: 'center',
         value: '123',
       },
     })
 
-    const td = wrapper.element as HTMLElement
-
-    expect(td.style.textAlign).toBe('center')
-  })
-
-  it('row と column が渡された場合に自動で値（ネストキー含む）が解決されること', () => {
-    const wrapper = mount(TableTd, {
-      props: {
-        column: {
-          key: 'user.name',
-          subKey: 'user.role',
-          label: 'ユーザー',
-        },
-        row: {
-          user: {
-            name: '山田太郎',
-            role: '管理者',
-          },
-        },
-      },
-    })
-
-    expect(wrapper.find('.main-text').text()).toBe('山田太郎')
-    expect(wrapper.find('.sub-text').text()).toBe('管理者')
+    expect(wrapper.classes()).toContain('text-center')
   })
 
   it('デフォルトスロットが指定された場合、スロット内容が優先描画されること', () => {
@@ -140,14 +113,10 @@ describe('TableTd.vue', () => {
     expect(wrapperVal.classes()).not.toContain('is-empty')
   })
 
-  it('column.truncate: false が指定された場合、通常セルでも is-truncate が外れること', () => {
+  it('truncate: false が指定された場合、通常セルでも is-truncate が外れること', () => {
     const wrapper = mount(TableTd, {
       props: {
-        column: {
-          key: 'memo',
-          label: '備考',
-          truncate: false,
-        },
+        truncate: false,
         value: '複数行テキスト',
       },
     })

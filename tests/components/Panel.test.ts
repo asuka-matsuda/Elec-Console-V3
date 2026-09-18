@@ -14,7 +14,7 @@ describe('Panel.vue', () => {
 
     expect(wrapper.element.tagName.toLowerCase()).toBe('div')
     expect(wrapper.classes()).toContain('panel')
-    expect(wrapper.classes()).toContain('is-overflow-hidden')
+    expect(wrapper.classes()).toContain('overflow-hidden')
     expect(wrapper.classes()).not.toContain('is-interactive')
     expect(wrapper.classes()).not.toContain('is-selected')
     expect(wrapper.classes()).not.toContain('is-disabled')
@@ -39,7 +39,7 @@ describe('Panel.vue', () => {
       },
     })
 
-    expect(wrapperVisible.classes()).toContain('is-overflow-visible')
+    expect(wrapperVisible.classes()).toContain('overflow-visible')
 
     const wrapperAuto = mount(Panel, {
       props: {
@@ -47,7 +47,7 @@ describe('Panel.vue', () => {
       },
     })
 
-    expect(wrapperAuto.classes()).toContain('is-overflow-auto')
+    expect(wrapperAuto.classes()).toContain('overflow-auto')
   })
 
   it('applies is-interactive class when interactive is true', () => {

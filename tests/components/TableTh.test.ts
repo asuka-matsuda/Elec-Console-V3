@@ -15,21 +15,16 @@ describe('TableTh.vue', () => {
     align: 'center',
   }
 
-  it('ヘッダーラベルとスタイル（width, minWidth, maxWidth, textAlign）が正しく描画されること', () => {
+  it('ヘッダーラベルと整列クラスが正しく描画されること', () => {
     const wrapper = mount(TableTh, {
       props: {
         column: sampleColumn,
       },
     })
 
-    const th = wrapper.element as HTMLElement
-
-    expect(th.tagName).toBe('TH')
+    expect(wrapper.element.tagName).toBe('TH')
     expect(wrapper.text()).toContain('名前')
-    expect(th.style.width).toBe('150px')
-    expect(th.style.minWidth).toBe('100px')
-    expect(th.style.maxWidth).toBe('200px')
-    expect(th.style.textAlign).toBe('center')
+    expect(wrapper.find('.header-content').classes()).toContain('justify-center')
   })
 
   it('ソート可能な列をクリックした際に sort イベントが emit されること', async () => {
@@ -129,22 +124,6 @@ describe('TableTh.vue', () => {
     expect(wrapper.find('.custom-header').text()).toBe('全選択')
   })
 
-  it('column を渡さずに直接 label や align などの Props を指定しても正しく描画されること', () => {
-    const wrapper = mount(TableTh, {
-      props: {
-        label: '直接ラベル',
-        align: 'right',
-        width: '180px',
-      },
-    })
-
-    const th = wrapper.element as HTMLElement
-
-    expect(wrapper.text()).toContain('直接ラベル')
-    expect(th.style.textAlign).toBe('right')
-    expect(th.style.width).toBe('180px')
-  })
-
   it('ソート可能かつ未ソート状態のときに chevrons-up-down アイコンが表示されること', () => {
     const wrapper = mount(TableTh, {
       props: {
@@ -158,27 +137,5 @@ describe('TableTh.vue', () => {
       expect(icon.props('name')).toBe('chevrons-up-down')
       expect(icon.classes()).not.toContain('is-active')
     }
-  })
-
-  it('column を渡さずに sortKey と sortable を直接指定した場合でも、クリック時に sort イベントが emit されること', async () => {
-    const wrapper = mount(TableTh, {
-      props: {
-        sortKey: 'standaloneKey',
-        label: '単体ヘッダー',
-        sortable: true,
-        align: 'center',
-      },
-    })
-
-    await wrapper.trigger('click')
-
-    expect(wrapper.emitted('sort')).toBeTruthy()
-    const emittedCol = wrapper.emitted('sort')?.[0]?.[0] as Record<string, unknown>
-
-    expect(emittedCol).toBeDefined()
-    expect(emittedCol.key).toBe('standaloneKey')
-    expect(emittedCol.label).toBe('単体ヘッダー')
-    expect(emittedCol.align).toBe('center')
-    expect(emittedCol.sortable).toBe(true)
   })
 })

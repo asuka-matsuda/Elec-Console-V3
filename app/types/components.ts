@@ -1,6 +1,7 @@
 import type { ComputedRef, InjectionKey } from 'vue'
 
 import type { BadgePresetId } from '~/constants/badgeConfig'
+import type { MenuItem } from '~/constants/data/menuData'
 import type { IconName } from '~/constants/icons'
 
 export type { BadgePresetId }
@@ -106,7 +107,6 @@ export interface ButtonProps extends BaseButtonProps {
   iconOnly?: boolean
   loading?: boolean
 }
-export type AtomsButtonProps = ButtonProps
 
 // --- Checkbox ---
 export interface CheckboxProps {
@@ -117,7 +117,6 @@ export interface CheckboxProps {
   trueValue?: unknown
   falseValue?: unknown
 }
-export type AtomsCheckboxProps = CheckboxProps
 
 // --- Icon ---
 export type IconSize = 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
@@ -128,7 +127,6 @@ export interface IconProps {
   strokeWidth?: number | string
   spin?: boolean
 }
-export type AtomsIconProps = IconProps
 
 // --- Badge ---
 export type BadgeColor = string
@@ -139,7 +137,6 @@ export interface BadgeProps {
   /** バッジの基調色（直接指定する場合） */
   color?: BadgeColor
 }
-export type AtomsBadgeProps = BadgeProps
 
 // --- Divider ---
 export type DividerType = 'solid' | 'fade-center' | 'fade-side'
@@ -155,7 +152,6 @@ export interface DividerProps {
   /** アニメーション（スケール演出・パルス光）を有効にするか（デフォルト: true） */
   animated?: boolean
 }
-export type AtomsDividerProps = DividerProps
 
 // --- Panel ---
 export type PanelOverflow = 'hidden' | 'visible' | 'auto'
@@ -172,14 +168,12 @@ export interface PanelProps {
   /** オーバーフロー制御（デフォルト: 'hidden'） */
   overflow?: PanelOverflow
 }
-export type AtomsPanelProps = PanelProps
 
 // --- Disclaimer ---
 export interface DisclaimerProps {
   /** 免責・注記本文（スロットで差し替えも可能） */
   text?: string
 }
-export type AtomsDisclaimerProps = DisclaimerProps
 
 // --- Input ---
 export type InputType
@@ -230,7 +224,6 @@ export interface InputProps {
   /** type="password" 時に表示/非表示トグルボタンを有効化する (デフォルト: true) */
   passwordToggle?: boolean
 }
-export type AtomsInputProps = InputProps
 
 // --- Select ---
 export interface SelectProps<T = string | number | boolean> {
@@ -249,7 +242,6 @@ export interface SelectProps<T = string | number | boolean> {
   /** 選択解除（クリア）ボタンを表示する (デフォルト: true) */
   clearable?: boolean
 }
-export type AtomsSelectProps<T = string | number | boolean> = SelectProps<T>
 
 // --- Textarea ---
 export type TextareaResize = 'none' | 'vertical' | 'horizontal' | 'both'
@@ -278,7 +270,6 @@ export interface TextareaProps {
   /** 自動補完 */
   autocomplete?: string
 }
-export type AtomsTextareaProps = TextareaProps
 
 // --- FormControlAction ---
 export interface FormControlActionProps {
@@ -295,7 +286,6 @@ export interface FormControlActionProps {
   /** フォーカス用 tabindex (デフォルト: -1) */
   tabindex?: number
 }
-export type AtomsFormControlActionProps = FormControlActionProps
 
 // --- RadioGroup ---
 export interface RadioGroupProps<T = string | number | boolean> {
@@ -313,42 +303,23 @@ export interface RadioGroupProps<T = string | number | boolean> {
 export type TableSortOrder = 'asc' | 'desc' | null
 
 export interface TableThProps<RowType = unknown> {
-  /** カラム定義（省略時は各プロパティを個別指定可能） */
-  column?: TableColumn<RowType>
-  /** ソートキー（column 未指定時用） */
-  sortKey?: string
-  /** ラベルテキスト */
-  label?: string
-  /** セル幅 */
-  width?: string
-  /** 最小セル幅 */
-  minWidth?: string
-  /** 最大セル幅 */
-  maxWidth?: string
-  /** 水平配置 */
-  align?: 'left' | 'center' | 'right'
-  /** ソート可能フラグ */
-  sortable?: boolean
+  /** カラム定義 */
+  column: TableColumn<RowType>
   /** 現在アクティブなソートキー */
   sortBy?: string
   /** 現在のソート順序 */
   sortOrder?: TableSortOrder
-  /** ツールチップテキスト */
+  /** ツールチップテキスト（任意） */
   title?: string
 }
-export type AtomsTableThProps<RowType = unknown> = TableThProps<RowType>
 
 // --- TableTd ---
-export interface TableTdProps<RowType = unknown> {
-  /** カラム定義 */
-  column?: TableColumn<RowType>
-  /** 行データオブジェクト（指定時は column.key / subKey から値を自動解決） */
-  row?: RowType
-  /** メイン表示値（直接指定する場合） */
+export interface TableTdProps {
+  /** メイン表示値 */
   value?: unknown
-  /** サブ表示値（直接指定する場合） */
+  /** サブ表示値（2段組時） */
   subValue?: unknown
-  /** 水平配置（省略時は column.align ➔ 'left'） */
+  /** 水平配置（デフォルト: 'left'） */
   align?: 'left' | 'center' | 'right'
   /** 省略記号（...）表示を有効にするか（未指定時は通常セルで自動有効） */
   truncate?: boolean
@@ -357,7 +328,6 @@ export interface TableTdProps<RowType = unknown> {
   /** ツールチップ（未指定時は省略表示時にメインテキストを自動付与） */
   title?: string
 }
-export type AtomsTableTdProps<RowType = Record<string, unknown>> = TableTdProps<RowType>
 
 // ============================================================================
 // 3. Molecules（複合コンポーネント）
@@ -400,6 +370,12 @@ export interface MoleculesInfoCardProps<T extends InfoCardItem = InfoCardItem> {
   maxCount?: number
 }
 
+// --- DashboardMenuTile ---
+export interface DashboardMenuTileProps {
+  /** メニューアイテムオブジェクト（タイトル・アイコン・リンク・無効状態・説明文） */
+  item: MenuItem
+}
+
 // --- Table ---
 export interface TableProps<T = unknown> {
   /** カラム定義配列 */
@@ -429,7 +405,6 @@ export interface TableProps<T = unknown> {
   /** 行クリックのインタラクション（ホバー・アクティブ演出）を有効にするか */
   interactiveRow?: boolean
 }
-export type MoleculesTableProps<T = unknown> = TableProps<T>
 
 // ============================================================================
 // 4. Organisms（構造化コンポーネント）

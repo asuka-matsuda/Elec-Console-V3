@@ -129,7 +129,7 @@ const handleKeydown = (event: KeyboardEvent, currentIndex: number) => {
             <span>{{ option.label }}</span>
             <Badge
               v-if="option.badge !== undefined"
-              :preset="option.badgeVariant || 'neutral'"
+              :id="option.badgeVariant"
               class="ml-1"
             >
               {{ option.badge }}
@@ -148,12 +148,12 @@ const handleKeydown = (event: KeyboardEvent, currentIndex: number) => {
       :class="panelClass"
     >
       <KeepAlive v-if="keepAlive">
-        <component :is="'div'" :key="String(model)" class="h-full">
+        <div :key="String(model)" class="h-full">
           <slot :name="String(model)" :active-tab="model">
             <!-- 名前付きスロットが指定されていない場合はデフォルトスロットにフォールバック -->
             <slot :active-tab="model" />
           </slot>
-        </component>
+        </div>
       </KeepAlive>
       <template v-else>
         <slot :name="String(model)" :active-tab="model">

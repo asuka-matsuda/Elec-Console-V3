@@ -92,13 +92,19 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
     class="souden-circuit-table flex-1 min-h-[400px] overflow-y-auto"
   >
     <table class="w-full table-fixed text-left">
+      <colgroup>
+        <col
+          v-for="col in columns"
+          :key="col.key"
+          :style="{ width: columnWidthStyles[String(col.key)] }"
+        />
+      </colgroup>
       <thead>
         <tr>
           <TableTh
             v-for="col in columns"
             :key="col.key"
             :column="col"
-            :width="columnWidthStyles[String(col.key)]"
             :sort-by="sortBy"
             :sort-order="sortOrder"
             @sort="handleSort"
@@ -122,10 +128,11 @@ const getCellValue = (row: CircuitItem, key: string): unknown => {
           <TableTd
             v-for="col in columns"
             :key="col.key"
-            :column="col"
-            :width="columnWidthStyles[String(col.key)]"
             :value="getCellValue(circuit, col.key)"
             :sub-value="col.subKey ? getCellValue(circuit, col.subKey) : undefined"
+            :align="col.align"
+            :truncate="col.truncate"
+            :empty-fallback="col.emptyFallback"
           >
             <template #default="{ value, subValue }">
               <!-- カスタムスロットがあれば最優先で描画 -->

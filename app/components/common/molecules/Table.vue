@@ -121,6 +121,31 @@ const getRowKey = (row: T, index: number): string | number => {
 
   return index
 }
+
+// ネストプロパティ対応の安全なセル値取得関数
+const getCellValue = (row: unknown, key?: string | number): unknown => {
+  if (!row || !key || typeof row !== 'object') return undefined
+  const record = row as Record<string, unknown>
+  const keyStr = String(key)
+
+  if (keyStr in record) return record[keyStr]
+
+  if (keyStr.includes('.')) {
+    const parts = keyStr.split('.')
+    let current: unknown = record
+
+    for (const part of parts) {
+      if (current === null || current === undefined || typeof current !== 'object') {
+        return undefined
+      }
+      current = (current as Record<string, unknown>)[part]
+    }
+
+    return current
+  }
+
+  return undefined
+}
 </script>
 
 <template>
@@ -186,12 +211,14 @@ const getRowKey = (row: T, index: number): string | number => {
           ]"
           @click="handleRowClick(row, index, $event)"
         >
-          <!-- TableTd に :column と :row を渡すだけで完結（親での二重値取得コードを全廃） -->
           <TableTd
             v-for="col in columns"
             :key="col.key"
-            :column="col"
-            :row="row"
+            :value="getCellValue(row, col.key)"
+            :sub-value="col.subKey ? getCellValue(row, col.subKey) : undefined"
+            :align="col.align"
+            :truncate="col.truncate"
+            :empty-fallback="col.emptyFallback"
           >
             <template v-if="$slots[`cell-${col.key}`]" #default="{ value, subValue }">
               <slot

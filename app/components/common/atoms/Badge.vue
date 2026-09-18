@@ -5,36 +5,17 @@
  * プリセットID（badgeConfig）による定義参照、または動的なカラー指定を受け付けます。
  * 親要素のフォントサイズ（em）に自動追従し、color から文字・ボーダー・背景色を自動導出します。
  */
-import { computed, useSlots } from 'vue'
+import { computed } from 'vue'
 
-import { BADGE_PRESETS } from '~/constants/badgeConfig'
+import { BADGE_PRESETS, type BadgePresetItem } from '~/constants/badgeConfig'
 import type { BadgeProps } from '~/types/components'
 
 const props = defineProps<BadgeProps>()
 
-const slots = useSlots()
-
-const preset = computed(() => {
-  if (props.id) {
-    return BADGE_PRESETS[props.id]
-  }
-
-  return undefined
-})
+const preset = computed<BadgePresetItem | undefined>(() => (props.id ? BADGE_PRESETS[props.id] : undefined))
 
 // 優先順位: 直接指定の color > プリセットの色 > デフォルト
 const resolvedColor = computed(() => props.color || preset.value?.color || 'var(--color-text-muted)')
-
-// スロットが渡されていない場合、プリセットに label が定義されていればデフォルトテキストとして採用
-const defaultLabel = computed(() => {
-  if (slots.default) return ''
-
-  if (preset.value && 'label' in preset.value) {
-    return preset.value.label
-  }
-
-  return ''
-})
 </script>
 
 <template>
@@ -42,7 +23,7 @@ const defaultLabel = computed(() => {
     class="inline-block badge"
     :style="{ '--glow-color': resolvedColor }"
   >
-    <slot>{{ defaultLabel }}</slot>
+    <slot>{{ preset?.label }}</slot>
   </span>
 </template>
 

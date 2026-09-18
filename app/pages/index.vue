@@ -12,12 +12,44 @@ import type { DashboardData } from '~/types/components'
 
 const { currentUser, isAuthenticated, isMaster } = useAuth()
 
+const lastSiteId = useLocalStorage('last-accessed-site', '')
+
 const dashboardSections = computed(() => {
+  const siteIds = currentUser.value?.assignedSiteIds || []
+  const hasAssignedSites = siteIds.length > 0
+  const targetSiteId = siteIds.includes(lastSiteId.value) ? lastSiteId.value : siteIds[0]
+
   return menuData
     .filter(section => section.showInDashboard)
     .map(section => ({
       ...section,
-      items: section.items.filter(item => !item.masterOnly || isMaster.value),
+      items: section.items
+        .filter(item => !item.masterOnly || isMaster.value)
+        .map((item) => {
+          if (
+            (item.href === '/portal' || item.href === '/login')
+            && isAuthenticated.value
+          ) {
+            if (!hasAssignedSites) {
+              return {
+                ...item,
+                disabled: true,
+                desc: 'アサインされている現場がありません',
+              }
+            }
+
+            return {
+              ...item,
+              href: `/portal/${targetSiteId}`,
+              desc: `アサイン済みの現場ポータルへアクセスします（現在${siteIds.length}件）`,
+            }
+          }
+
+          return {
+            ...item,
+            desc: item.desc || '※準備中…',
+          }
+        }),
     }))
 })
 
@@ -25,60 +57,6 @@ const { data: dashboardData, pending: isDashboardPending } = await useFetch<Dash
   lazy: true,
   default: () => ({ announcements: [], history: [] }),
 })
-
-const lastSiteId = useLocalStorage('last-accessed-site', '')
-
-const getDynamicTo = (item: Record<string, unknown>) => {
-  if (getDynamicDisabled(item)) return undefined
-
-  if (
-    (item.href === '/portal' || item.href === '/login')
-    && isAuthenticated.value
-  ) {
-    const siteIds = currentUser.value?.assignedSiteIds || []
-
-    if (siteIds.length > 0) {
-      const targetSiteId = siteIds.includes(lastSiteId.value)
-        ? lastSiteId.value
-        : siteIds[0]
-
-      return `/portal/${targetSiteId}`
-    }
-  }
-
-  return item.href as string
-}
-
-const getDynamicDisabled = (item: Record<string, unknown>) => {
-  if (item.disabled) return true
-  if (item.href === '/portal' || item.href === '/login') {
-    // ログイン済みかつアサイン現場が0件の場合はグレーアウト
-    if (
-      isAuthenticated.value
-      && (!currentUser.value?.assignedSiteIds
-        || currentUser.value.assignedSiteIds.length === 0)
-    ) {
-      return true
-    }
-  }
-
-  return false
-}
-
-const getDynamicDesc = (item: Record<string, unknown>): string => {
-  if (
-    (item.href === '/portal' || item.href === '/login')
-    && isAuthenticated.value
-  ) {
-    const siteIds = currentUser.value?.assignedSiteIds || []
-
-    if (siteIds.length === 0) return 'アサインされている現場がありません'
-
-    return `アサイン済みの現場ポータルへアクセスします（現在${siteIds.length}件）`
-  }
-
-  return (typeof item.desc === 'string' ? item.desc : '') || '※準備中…'
-}
 </script>
 
 <template>
@@ -93,14 +71,10 @@ const getDynamicDesc = (item: Record<string, unknown>): string => {
         <MoleculesSectionHeader :title="section.heading" :icon="section.icon" />
 
         <div class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-panel-gap">
-          <MoleculesDashboardMenuTile
+          <DashboardMenuTile
             v-for="item in section.items"
             :key="item.text"
-            :to="getDynamicTo(item)"
-            :disabled="getDynamicDisabled(item)"
-            :title="item.text"
-            :icon="item.icon"
-            :description="getDynamicDesc(item)"
+            :item="item"
           />
         </div>
       </section>
