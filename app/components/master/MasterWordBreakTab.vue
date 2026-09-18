@@ -218,8 +218,8 @@ const formattedPreview = computed(() => {
         </span>
       </div>
 
-      <!-- 0件時（MoleculesEmptyState で統一） -->
-      <MoleculesEmptyState
+      <!-- 0件時（EmptyState で統一） -->
+      <EmptyState
         v-else
         icon="type"
         title="登録されている手動ワードはありません"

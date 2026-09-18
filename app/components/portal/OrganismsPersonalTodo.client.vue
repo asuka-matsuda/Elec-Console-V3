@@ -78,7 +78,7 @@ const sortedTodos = computed(() => {
           @click="deleteTodo(todo.id)"
         />
       </li>
-      <MoleculesEmptyState
+      <EmptyState
         v-if="todos.length === 0"
         icon="check-circle"
         title="タスクはありません"

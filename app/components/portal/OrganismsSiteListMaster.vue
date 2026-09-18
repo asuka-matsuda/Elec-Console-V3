@@ -95,7 +95,7 @@ const filteredSites = computed(() => {
         />
       </template>
 
-      <MoleculesEmptyState
+      <EmptyState
         v-else
         icon="search"
         title="該当する現場がありません"

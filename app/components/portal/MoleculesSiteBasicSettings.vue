@@ -64,7 +64,7 @@ const emit = defineEmits<{
             {{ name }}
           </Badge>
         </template>
-        <MoleculesEmptyState
+        <EmptyState
           v-else
           icon="users"
           title="アサインされている作業者はいません"

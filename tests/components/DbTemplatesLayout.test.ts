@@ -37,6 +37,10 @@ describe('DbTemplatesLayout.vue', () => {
         </div>
       `,
     },
+    EmptyState: {
+      props: ['icon', 'title', 'description'],
+      template: '<div class="empty-state-stub">{{ title }}</div>',
+    },
     MoleculesEmptyState: {
       props: ['icon', 'title', 'description'],
       template: '<div class="empty-state-stub">{{ title }}</div>',

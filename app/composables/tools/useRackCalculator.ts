@@ -19,10 +19,10 @@ const defaultInputs: RackInputs = {
   cableSpacing: 10,
   sideMargin: 60,
   strongCablesUI: [
-    { id: crypto.randomUUID(), category: '', cableIdx: '', count: null },
+    { id: crypto.randomUUID(), category: '', cableIdx: '', count: 1 },
   ],
   weakCablesUI: [
-    { id: crypto.randomUUID(), category: '', cableIdx: '', count: null },
+    { id: crypto.randomUUID(), category: '', cableIdx: '', count: 1 },
   ],
 }
 

@@ -53,7 +53,7 @@ const getActionBadgeId = (action: unknown): BadgePresetId => {
       empty-text="操作ログが存在しません"
     >
       <template #empty>
-        <MoleculesEmptyState
+        <EmptyState
           icon="history"
           title="操作ログが存在しません"
           description="条件に一致するログがないか、操作履歴がまだ記録されていません。"

@@ -47,7 +47,7 @@ const emit = defineEmits<{
         </li>
       </ul>
 
-      <MoleculesEmptyState
+      <EmptyState
         v-else
         icon="slash"
         title="除外回路は設定されていません"

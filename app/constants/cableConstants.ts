@@ -7,6 +7,7 @@ export const STRONG_CURRENT_CATEGORIES = [
   'VVF',
   'IV',
   'CV',
+  'CVD',
   'CVT',
   '6.6kV CVT',
   'VCTF',
@@ -27,10 +28,10 @@ export const WEAK_CURRENT_CATEGORIES = [
  * 配管計算 ケーブルテーブルカラム定義
  */
 export const CONDUIT_CABLE_COLUMNS: TableColumn[] = [
-  { key: 'category', label: 'ケーブル種別', width: '27%' },
-  { key: 'cableIdx', label: 'サイズ', width: '31%' },
-  { key: 'count', label: '条数', width: '74px', align: 'center' },
-  { key: 'spec', subKey: 'specDetail', label: '断面積', width: '90px', align: 'right' },
+  { key: 'category', label: 'ケーブル種別' },
+  { key: 'cableIdx', label: 'サイズ' },
+  { key: 'count', label: '条数', width: '88px', align: 'center' },
+  { key: 'spec', subKey: 'specDetail', label: '断面積', width: '96px', align: 'right' },
   { key: 'actions', label: '', width: '52px', align: 'center' },
 ]
 
@@ -38,9 +39,9 @@ export const CONDUIT_CABLE_COLUMNS: TableColumn[] = [
  * ケーブルラック計算 ケーブルテーブルカラム定義
  */
 export const RACK_CABLE_COLUMNS: TableColumn[] = [
-  { key: 'category', label: 'ケーブル種別', width: '27%' },
-  { key: 'cableIdx', label: 'サイズ', width: '31%' },
-  { key: 'count', label: '条数', width: '74px', align: 'center' },
-  { key: 'spec', subKey: 'specDetail', label: '外径計', width: '88px', align: 'right' },
+  { key: 'category', label: 'ケーブル種別' },
+  { key: 'cableIdx', label: 'サイズ' },
+  { key: 'count', label: '条数', width: '88px', align: 'center' },
+  { key: 'spec', subKey: 'specDetail', label: '外径計', width: '96px', align: 'right' },
   { key: 'actions', label: '', width: '52px', align: 'center' },
 ]

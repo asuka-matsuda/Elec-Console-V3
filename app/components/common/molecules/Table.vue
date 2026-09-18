@@ -128,8 +128,7 @@ const getCellValue = (row: unknown, key?: string | number): unknown => {
   const record = row as Record<string, unknown>
   const keyStr = String(key)
 
-  if (keyStr in record) return record[keyStr]
-
+  // 1. ドット記法によるネストパスアクセス
   if (keyStr.includes('.')) {
     const parts = keyStr.split('.')
     let current: unknown = record
@@ -144,7 +143,8 @@ const getCellValue = (row: unknown, key?: string | number): unknown => {
     return current
   }
 
-  return undefined
+  // 2. 単一プロパティアクセス（未定義時は undefined）
+  return record[keyStr]
 }
 </script>
 
@@ -242,7 +242,7 @@ const getCellValue = (row: unknown, key?: string | number): unknown => {
             class="empty-cell py-12 text-center"
           >
             <slot name="empty">
-              <MoleculesEmptyState
+              <EmptyState
                 icon="database"
                 :title="emptyText"
                 class="py-4"

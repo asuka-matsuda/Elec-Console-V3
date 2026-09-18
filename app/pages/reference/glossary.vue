@@ -121,7 +121,7 @@ const categoryColorMap: Record<string, string> = {
         </Panel>
       </div>
 
-      <MoleculesEmptyState
+      <EmptyState
         v-else
         icon="search"
         title="該当する用語が見つかりません"

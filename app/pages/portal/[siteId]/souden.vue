@@ -60,7 +60,7 @@ onMounted(() => {
     </div>
 
     <!-- データ未取込時のエンプティステート -->
-    <MoleculesEmptyState
+    <EmptyState
       v-if="!isLoading && stats && stats.totalCircuits === 0"
       icon="database"
       title="回路データが登録されていません"
@@ -74,7 +74,7 @@ onMounted(() => {
           現場設定へ移動
         </Button>
       </template>
-    </MoleculesEmptyState>
+    </EmptyState>
 
     <template v-else-if="stats">
       <!-- 総合進捗カード (Organism) -->

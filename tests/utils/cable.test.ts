@@ -27,6 +27,30 @@ describe('cable utilities', () => {
       expect(sizes[0]?.value).toMatch(/^idx_\d+$/)
     })
 
+    it('should include CVD in strong current categories and return CVD sizes', () => {
+      const strongCategories = getCableCategories('strong')
+      const cvdCategory = strongCategories.find(c => c.value === 'CVD')
+
+      expect(cvdCategory).toBeDefined()
+      expect(cvdCategory?.label).toBe('CVD')
+
+      const cvdSizes = getAvailableSizes('CVD')
+
+      expect(cvdSizes.length).toBe(10)
+      expect(cvdSizes.map(s => s.label)).toEqual([
+        'CVD 8sq',
+        'CVD 14sq',
+        'CVD 22sq',
+        'CVD 38sq',
+        'CVD 60sq',
+        'CVD 100sq',
+        'CVD 150sq',
+        'CVD 200sq',
+        'CVD 250sq',
+        'CVD 325sq',
+      ])
+    })
+
     it('should return empty array for empty category', () => {
       expect(getAvailableSizes('')).toEqual([])
     })

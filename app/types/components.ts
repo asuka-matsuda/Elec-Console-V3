@@ -376,6 +376,15 @@ export interface DashboardMenuTileProps {
   item: MenuItem
 }
 
+// --- EmptyState ---
+export interface EmptyStateProps {
+  icon?: IconName
+  title?: string
+  description?: string
+  spin?: boolean
+}
+export type MoleculesEmptyStateProps = EmptyStateProps
+
 // --- Table ---
 export interface TableProps<T = unknown> {
   /** カラム定義配列 */

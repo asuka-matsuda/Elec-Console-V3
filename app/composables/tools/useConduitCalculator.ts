@@ -23,7 +23,7 @@ const defaultInputs: ConduitInputs = {
       id: uuidv4(),
       category: '',
       cableIdx: '',
-      count: null as unknown as number,
+      count: 1,
     },
   ],
 }
@@ -70,7 +70,7 @@ export function useConduitCalculator() {
   // VueUseのuseLocalStorageで初期化される際にidが重複しないようにする等の対処は必要に応じて行う
   if (!inputs.value.inputCables || inputs.value.inputCables.length === 0) {
     inputs.value.inputCables = [
-      { id: uuidv4(), category: '', cableIdx: '', count: null },
+      { id: uuidv4(), category: '', cableIdx: '', count: 1 },
     ]
   }
 

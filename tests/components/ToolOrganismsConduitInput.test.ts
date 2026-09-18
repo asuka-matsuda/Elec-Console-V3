@@ -54,8 +54,10 @@ describe('ToolOrganismsConduitInput (app/components/tool/OrganismsConduitInput.v
             <slot name="cell-category" :row="row" />
             <slot name="cell-cableIdx" :row="row" />
             <slot name="cell-count" :row="row" />
-            <div class="cell-spec-val">{{ row.spec }}</div>
-            <div class="cell-spec-detail">{{ row.specDetail }}</div>
+            <slot name="cell-spec" :row="row">
+              <div class="cell-spec-val">{{ row.spec }}</div>
+              <div class="cell-spec-detail">{{ row.specDetail }}</div>
+            </slot>
             <slot name="cell-actions" :row="row" />
           </div>
         </div>
@@ -69,8 +71,10 @@ describe('ToolOrganismsConduitInput (app/components/tool/OrganismsConduitInput.v
             <slot name="cell-category" :row="row" />
             <slot name="cell-cableIdx" :row="row" />
             <slot name="cell-count" :row="row" />
-            <div class="cell-spec-val">{{ row.spec }}</div>
-            <div class="cell-spec-detail">{{ row.specDetail }}</div>
+            <slot name="cell-spec" :row="row">
+              <div class="cell-spec-val">{{ row.spec }}</div>
+              <div class="cell-spec-detail">{{ row.specDetail }}</div>
+            </slot>
             <slot name="cell-actions" :row="row" />
           </div>
         </div>
@@ -172,18 +176,17 @@ describe('ToolOrganismsConduitInput (app/components/tool/OrganismsConduitInput.v
 
     expect(rows.length).toBe(2)
 
-    // 1行目 (count=1): 合計断面積のみ表示され、内訳は空
-    const row1Spec = rows[0].find('.cell-spec-val').text()
-    const row1Detail = rows[0].find('.cell-spec-detail').text()
+    // 1行目 (count=1): 合計断面積のみ表示され、内訳は表示されないこと
+    const row1 = rows[0]
 
-    expect(row1Spec).toContain('mm²')
-    expect(row1Detail).toBe('')
+    expect(row1.find('.main-text').text()).toContain('mm²')
+    expect(row1.find('.sub-text').exists()).toBe(false)
 
     // 2行目 (count=3): 3条分の合計断面積と (単体断面積×3) の内訳が表示されること
-    const row2Spec = rows[1].find('.cell-spec-val').text()
-    const row2Detail = rows[1].find('.cell-spec-detail').text()
+    const row2 = rows[1]
 
-    expect(row2Spec).toContain('mm²')
-    expect(row2Detail).toContain('×3')
+    expect(row2.find('.main-text').text()).toContain('mm²')
+    expect(row2.find('.sub-text').exists()).toBe(true)
+    expect(row2.find('.sub-text').text()).toContain('×3')
   })
 })

@@ -63,20 +63,6 @@ const getCableSpecDetailText = (cableIdx: string, count?: number | null): string
 
   return ''
 }
-
-const currentCablesUI = computed(() => {
-  return inputs.value.inputCables.map(cable => new Proxy(cable, {
-    get(target, prop, receiver) {
-      if (prop === 'spec') return getCableSpecText(target.cableIdx, target.count)
-      if (prop === 'specDetail') return getCableSpecDetailText(target.cableIdx, target.count)
-
-      return Reflect.get(target, prop, receiver)
-    },
-    set(target, prop, value, receiver) {
-      return Reflect.set(target, prop, value, receiver)
-    },
-  }))
-})
 </script>
 
 <template>
@@ -116,7 +102,7 @@ const currentCablesUI = computed(() => {
 
       <Table
         :columns="CONDUIT_CABLE_COLUMNS"
-        :data="currentCablesUI"
+        :data="inputs.inputCables"
         class="w-full"
       >
         <template #cell-category="{ row }">
@@ -143,8 +129,23 @@ const currentCablesUI = computed(() => {
               v-model.number="row.count"
               type="number"
               min="1"
+              :clearable="false"
             />
           </MoleculesInputGroup>
+        </template>
+
+        <template #cell-spec="{ row }">
+          <div class="stacked-cell flex flex-col gap-0.5 items-end">
+            <span class="main-text">
+              {{ getCableSpecText(row.cableIdx, row.count) }}
+            </span>
+            <span
+              v-if="getCableSpecDetailText(row.cableIdx, row.count)"
+              class="sub-text"
+            >
+              {{ getCableSpecDetailText(row.cableIdx, row.count) }}
+            </span>
+          </div>
         </template>
 
         <template #cell-actions="{ row }">

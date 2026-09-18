@@ -37,7 +37,7 @@ defineProps<{
       </template>
     </div>
 
-    <MoleculesEmptyState
+    <EmptyState
       v-else
       icon="inbox"
       title="登録された現場がありません"

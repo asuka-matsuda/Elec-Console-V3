@@ -43,7 +43,7 @@ const MASTER_TABS: TabOption<'word-break' | 'announcements'>[] = [
       </template>
 
       <template #announcements>
-        <MoleculesEmptyState
+        <EmptyState
           icon="bell"
           title="お知らせ設定"
           description="お知らせ設定機能は順次公開予定です。"

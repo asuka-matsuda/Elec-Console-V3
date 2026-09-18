@@ -186,7 +186,7 @@ const formatDateTime = (isoStr: string) => {
             </li>
           </ul>
 
-          <MoleculesEmptyState
+          <EmptyState
             v-else
             icon="check-circle"
             title="未送信データはありません"

@@ -74,7 +74,7 @@ const handleSave = () => {
   <div class="flex flex-col gap-5 w-full">
     <!-- 未選択時 -->
     <template v-if="!user">
-      <MoleculesEmptyState
+      <EmptyState
         icon="users"
         title="ユーザーが選択されていません"
         description="左側のユーザー一覧から、設定を行うユーザーを選択してください。"

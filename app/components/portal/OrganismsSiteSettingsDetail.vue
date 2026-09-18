@@ -60,7 +60,7 @@ const isResultDialogOpen = ref(false)
   <div class="flex flex-col gap-6 w-full">
     <!-- 現場未選択時の空状態表示 -->
     <template v-if="!site">
-      <MoleculesEmptyState
+      <EmptyState
         icon="layout"
         title="現場が選択されていません"
         description="左側の現場一覧から、設定やデータ連携を行う現場を選択してください。"

@@ -33,6 +33,7 @@ export const powerFactorOptions = [
 
 export const cableTypeOptions = [
   { label: 'CVT / CET', value: 'CVT' },
+  { label: 'CVD / CED', value: 'CVD' },
   { label: 'CV / CE', value: 'CV' },
   { label: 'IV / EM-IE', value: 'IV' },
   { label: 'VVF (平型)', value: 'VVF' },

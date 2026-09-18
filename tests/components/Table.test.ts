@@ -106,6 +106,34 @@ describe('Table.vue', () => {
     expect(wrapper.text()).toContain('営業部')
   })
 
+  it('Proxy オブジェクトやゲッターによる動的プロパティが正しく描画されること', () => {
+    const proxyColumns = [
+      { key: 'title', label: 'タイトル' },
+      { key: 'spec', subKey: 'specDetail', label: 'スペック' },
+    ]
+
+    const rawItem = { title: 'アイテムA' }
+    const proxyItem = new Proxy(rawItem, {
+      get(target, prop) {
+        if (prop === 'spec') return '125.0 mm²'
+        if (prop === 'specDetail') return '(25.0×5)'
+
+        return Reflect.get(target, prop)
+      },
+    })
+
+    const wrapper = mount(Table, {
+      props: {
+        columns: proxyColumns,
+        data: [proxyItem],
+      },
+    })
+
+    expect(wrapper.text()).toContain('アイテムA')
+    expect(wrapper.text()).toContain('125.0 mm²')
+    expect(wrapper.text()).toContain('(25.0×5)')
+  })
+
   it('rowClass と rowId が正しく適用されること', () => {
     const wrapper = mount(Table, {
       props: {

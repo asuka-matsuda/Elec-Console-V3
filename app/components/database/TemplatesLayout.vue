@@ -65,7 +65,7 @@ const { sortBy, sortOrder, sortedData, handleSort }
           </template>
         </Table>
 
-        <MoleculesEmptyState
+        <EmptyState
           v-else
           icon="search"
           title="条件に一致するデータが見つかりません"

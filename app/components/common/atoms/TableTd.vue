@@ -132,7 +132,8 @@ td {
     white-space: nowrap;
   }
 
-  // 2段組セルのレイアウト制御
+  // 2段組セルのレイアウト制御（スロット経由の描画にも統一適用）
+  :deep(.stacked-cell),
   .stacked-cell {
     line-height: var(--line-height-tight);
 
