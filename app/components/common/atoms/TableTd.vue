@@ -1,8 +1,8 @@
-<script setup lang="ts" generic="T extends Record<string, unknown> = Record<string, unknown>">
+<script setup lang="ts" generic="T = unknown">
 /**
  * TableTd
- * [Atoms] テーブルのデータセル（整列・幅指定・2段組サブテキスト対応）。
- * 単体でも、TableColumn 定義と連携させても動作するセマンティックな td コンポーネントです。
+ * [Atoms] テーブルのデータセル（整列・2段組サブテキスト・空値フォールバック対応）。
+ * 列幅はテーブルの <colgroup> が一元管理するため、インライン幅指定を排除し高効率に描画します。
  */
 import { computed } from 'vue'
 
@@ -11,12 +11,10 @@ import type { TableTdProps } from '~/types/components'
 
 const props = withDefaults(defineProps<TableTdProps<T>>(), {
   column: undefined,
-  width: undefined,
-  minWidth: undefined,
-  maxWidth: undefined,
-  align: undefined,
+  row: undefined,
   value: undefined,
   subValue: undefined,
+  align: undefined,
   truncate: undefined,
   emptyFallback: undefined,
   title: undefined,
@@ -26,41 +24,72 @@ defineSlots<{
   default?(props: { value: unknown, subValue?: unknown }): unknown
 }>()
 
-// 改行禁止処理（フェッチはセルごとには行わず、適用関数のみ利用）
+// 改行禁止処理
 const { applyNoBreak } = useNoBreakWords()
 
-// スタイル・プロパティのフォールバック解決
+// ネストパス対応のセーフアクセサー
+const getValueByPath = (obj: unknown, path: string): unknown => {
+  if (!obj || typeof obj !== 'object') return undefined
+  const record = obj as Record<string, unknown>
+
+  if (path in record) return record[path]
+
+  if (path.includes('.')) {
+    const parts = path.split('.')
+    let current: unknown = record
+
+    for (const part of parts) {
+      if (current === null || current === undefined || typeof current !== 'object') {
+        return undefined
+      }
+      current = (current as Record<string, unknown>)[part]
+    }
+
+    return current
+  }
+
+  return undefined
+}
+
+// セル値の解決（直接渡された value を優先、なければ row と column.key から自動解決）
+const resolvedValue = computed(() => {
+  if (props.value !== undefined) return props.value
+  if (!props.row || !props.column?.key) return undefined
+
+  return getValueByPath(props.row, String(props.column.key))
+})
+
+// サブ値の解決（直接渡された subValue を優先、なければ row と column.subKey から自動解決）
+const resolvedSubValue = computed(() => {
+  if (props.subValue !== undefined) return props.subValue
+  if (!props.row || !props.column?.subKey) return undefined
+
+  return getValueByPath(props.row, String(props.column.subKey))
+})
+
 const effectiveAlign = computed(() => props.align ?? props.column?.align ?? 'left')
-const effectiveWidth = computed(() => props.width ?? props.column?.width)
-const effectiveMinWidth = computed(() => props.minWidth ?? props.column?.minWidth)
-const effectiveMaxWidth = computed(() => props.maxWidth ?? props.column?.maxWidth ?? effectiveWidth.value)
 const effectiveEmptyFallback = computed(() => props.emptyFallback ?? props.column?.emptyFallback ?? '-')
 
-const isStacked = computed(() => Boolean(props.column?.subKey || (props.subValue !== undefined && props.subValue !== null && props.subValue !== '')))
+const isStacked = computed(() => Boolean(props.column?.subKey || (resolvedSubValue.value !== undefined && resolvedSubValue.value !== null && resolvedSubValue.value !== '')))
 const shouldTruncate = computed(() => {
   if (props.truncate !== undefined) return props.truncate
   if (props.column?.truncate !== undefined) return props.column.truncate
 
-  // デフォルト: 2段組でなく、デフォルトスロットが渡されていない場合に省略表示を有効化
   return !isStacked.value
 })
 
-const isEmpty = computed(() => props.value === null || props.value === undefined || props.value === '')
+const isEmpty = computed(() => resolvedValue.value === null || resolvedValue.value === undefined || resolvedValue.value === '')
 
 const cellTitle = computed(() => {
   if (props.title !== undefined) return props.title
 
-  // 省略表示が有効かつ値が存在する場合にツールチップとして全文を自動設定
   if (shouldTruncate.value && !isEmpty.value) {
-    return String(props.value ?? '')
+    return String(resolvedValue.value ?? '')
   }
 
   return undefined
 })
 
-/**
- * 表示用テキストのフォーマット（空値判定と改行禁止文字の適用）
- */
 const formatValue = (val: unknown): string => {
   if (val === null || val === undefined || val === '') {
     return effectiveEmptyFallback.value
@@ -69,13 +98,13 @@ const formatValue = (val: unknown): string => {
   return String(applyNoBreak(val))
 }
 
-const formattedMainValue = computed(() => formatValue(props.value))
+const formattedMainValue = computed(() => formatValue(resolvedValue.value))
 const formattedSubValue = computed(() => {
-  if (props.subValue === null || props.subValue === undefined || props.subValue === '') {
+  if (resolvedSubValue.value === null || resolvedSubValue.value === undefined || resolvedSubValue.value === '') {
     return ''
   }
 
-  return String(applyNoBreak(props.subValue))
+  return String(applyNoBreak(resolvedSubValue.value))
 })
 </script>
 
@@ -87,14 +116,11 @@ const formattedSubValue = computed(() => {
       'is-empty': isEmpty,
     }"
     :style="{
-      width: effectiveWidth,
-      minWidth: effectiveMinWidth,
-      maxWidth: effectiveMaxWidth,
       textAlign: effectiveAlign,
     }"
     :title="cellTitle"
   >
-    <slot :value="value" :sub-value="subValue">
+    <slot :value="resolvedValue" :sub-value="resolvedSubValue">
       <!-- 2段組表示モード -->
       <div
         v-if="isStacked"

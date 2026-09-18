@@ -19,6 +19,15 @@ describe('DbTemplatesLayout.vue', () => {
       props: ['searchQuery', 'activeCats', 'categoryOptions', 'placeholder'],
       template: '<div class="filter-panel-stub">フィルターパネル</div>',
     },
+    Table: {
+      props: ['columns', 'data', 'sortBy', 'sortOrder'],
+      template: `
+        <div class="table-stub">
+          <span class="row-count">{{ data.length }}件</span>
+          <slot />
+        </div>
+      `,
+    },
     MoleculesTable: {
       props: ['columns', 'data', 'sortBy', 'sortOrder'],
       template: `

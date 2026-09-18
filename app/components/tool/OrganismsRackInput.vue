@@ -200,7 +200,7 @@ const handleRemoveCable = (id: string) => {
       </div>
 
       <!-- ケーブルテーブル（強電/弱電 共通テンプレート） -->
-      <MoleculesTable
+      <Table
         :columns="RACK_CABLE_COLUMNS"
         :data="currentCablesUI"
         class="w-full"
@@ -244,7 +244,7 @@ const handleRemoveCable = (id: string) => {
             />
           </div>
         </template>
-      </MoleculesTable>
+      </Table>
     </section>
   </div>
 </template>

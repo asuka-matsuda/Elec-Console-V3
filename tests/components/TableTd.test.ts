@@ -62,15 +62,12 @@ describe('TableTd.vue', () => {
     expect(wrapper.find('.sub-text').text()).toBe('100V / 20A')
   })
 
-  it('column経由で幅・最小幅・最大幅・アラインメントがstyleに反映されること', () => {
+  it('column経由でアラインメントがstyleに反映されること', () => {
     const wrapper = mount(TableTd, {
       props: {
         column: {
           key: 'test',
           label: 'テスト',
-          width: '120px',
-          minWidth: '80px',
-          maxWidth: '150px',
           align: 'center',
         },
         value: '123',
@@ -79,10 +76,28 @@ describe('TableTd.vue', () => {
 
     const td = wrapper.element as HTMLElement
 
-    expect(td.style.width).toBe('120px')
-    expect(td.style.minWidth).toBe('80px')
-    expect(td.style.maxWidth).toBe('150px')
     expect(td.style.textAlign).toBe('center')
+  })
+
+  it('row と column が渡された場合に自動で値（ネストキー含む）が解決されること', () => {
+    const wrapper = mount(TableTd, {
+      props: {
+        column: {
+          key: 'user.name',
+          subKey: 'user.role',
+          label: 'ユーザー',
+        },
+        row: {
+          user: {
+            name: '山田太郎',
+            role: '管理者',
+          },
+        },
+      },
+    })
+
+    expect(wrapper.find('.main-text').text()).toBe('山田太郎')
+    expect(wrapper.find('.sub-text').text()).toBe('管理者')
   })
 
   it('デフォルトスロットが指定された場合、スロット内容が優先描画されること', () => {

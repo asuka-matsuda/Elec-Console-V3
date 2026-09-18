@@ -52,19 +52,18 @@ const { sortBy, sortOrder, sortedData, handleSort }
         :sort-order="sortOrder"
         :handle-sort="handleSort"
       >
-        <MoleculesTable
+        <Table
           v-if="sortedData.length > 0"
+          v-model:sort-by="sortBy"
+          v-model:sort-order="sortOrder"
           :columns="columns"
           :data="sortedData"
-          :sort-by="sortBy"
-          :sort-order="sortOrder"
-          @sort="handleSort"
         >
           <!-- Pass through all slots for custom cells -->
           <template v-for="(_, name) in $slots" #[name]="slotProps">
             <slot :name="name" v-bind="slotProps ?? {}" />
           </template>
-        </MoleculesTable>
+        </Table>
 
         <MoleculesEmptyState
           v-else

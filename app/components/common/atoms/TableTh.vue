@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends Record<string, unknown> = Record<string, unknown>">
+<script setup lang="ts" generic="T = unknown">
 /**
  * TableTh
  * [Atoms] テーブルのヘッダーセル（ソート・整列・カスタムスロット・キーボード操作対応）。

@@ -44,12 +44,22 @@ const getActionBadgeId = (action: unknown): BadgePresetId => {
 
 <template>
   <div class="flex flex-1 flex-col min-h-0">
-    <MoleculesTable
-      v-if="logs.length > 0"
+    <Table
       class="flex-1 min-h-[400px]"
       :columns="OPERATION_LOG_COLUMNS"
       :data="logs"
+      :loading="isLoading"
+      loading-text="操作ログを読み込み中..."
+      empty-text="操作ログが存在しません"
     >
+      <template #empty>
+        <MoleculesEmptyState
+          icon="history"
+          title="操作ログが存在しません"
+          description="条件に一致するログがないか、操作履歴がまだ記録されていません。"
+        />
+      </template>
+
       <template #cell-timestamp="{ value }">
         <span class="logs-cell__time">
           {{ formatTimestamp(value) }}
@@ -85,15 +95,7 @@ const getActionBadgeId = (action: unknown): BadgePresetId => {
           {{ value || '-' }}
         </span>
       </template>
-    </MoleculesTable>
-
-    <!-- ログが存在しない場合のエンプティステート -->
-    <MoleculesEmptyState
-      v-else-if="!isLoading"
-      icon="history"
-      title="操作ログが存在しません"
-      description="条件に一致するログがないか、操作履歴がまだ記録されていません。"
-    />
+    </Table>
   </div>
 </template>
 

@@ -312,7 +312,7 @@ export interface RadioGroupProps<T = string | number | boolean> {
 // --- TableTh ---
 export type TableSortOrder = 'asc' | 'desc' | null
 
-export interface TableThProps<RowType = Record<string, unknown>> {
+export interface TableThProps<RowType = unknown> {
   /** カラム定義（省略時は各プロパティを個別指定可能） */
   column?: TableColumn<RowType>
   /** ソートキー（column 未指定時用） */
@@ -336,24 +336,20 @@ export interface TableThProps<RowType = Record<string, unknown>> {
   /** ツールチップテキスト */
   title?: string
 }
-export type AtomsTableThProps<RowType = Record<string, unknown>> = TableThProps<RowType>
+export type AtomsTableThProps<RowType = unknown> = TableThProps<RowType>
 
 // --- TableTd ---
-export interface TableTdProps<RowType = Record<string, unknown>> {
-  /** カラム定義（省略時は各プロパティを個別指定可能） */
+export interface TableTdProps<RowType = unknown> {
+  /** カラム定義 */
   column?: TableColumn<RowType>
-  /** セル幅 */
-  width?: string
-  /** 最小セル幅 */
-  minWidth?: string
-  /** 最大セル幅 */
-  maxWidth?: string
-  /** 水平配置 */
-  align?: 'left' | 'center' | 'right'
-  /** メイン表示値 */
+  /** 行データオブジェクト（指定時は column.key / subKey から値を自動解決） */
+  row?: RowType
+  /** メイン表示値（直接指定する場合） */
   value?: unknown
-  /** サブ表示値（指定時は2段組表示） */
+  /** サブ表示値（直接指定する場合） */
   subValue?: unknown
+  /** 水平配置（省略時は column.align ➔ 'left'） */
+  align?: 'left' | 'center' | 'right'
   /** 省略記号（...）表示を有効にするか（未指定時は通常セルで自動有効） */
   truncate?: boolean
   /** 値が空（null, undefined, 空文字）の場合のフォールバック表示 */
@@ -403,6 +399,37 @@ export interface MoleculesInfoCardProps<T extends InfoCardItem = InfoCardItem> {
   emptyText?: string
   maxCount?: number
 }
+
+// --- Table ---
+export interface TableProps<T = unknown> {
+  /** カラム定義配列 */
+  columns: TableColumn<unknown>[]
+  /** 描画するデータ配列 */
+  data?: T[]
+  /** 列幅自動計算のサンプリング用全件データ（ページング時等） */
+  fullData?: T[]
+  /** ソート対象キー（v-model:sortBy 対応） */
+  sortBy?: string
+  /** ソート方向（v-model:sortOrder 対応） */
+  sortOrder?: TableSortOrder
+  /** 行識別子（キー）の解決プロパティ名または関数 */
+  rowKey?: string | ((row: T) => string | number)
+  /** 各行（tr）のカスタムクラス解決関数 */
+  rowClass?: (row: T, index: number) => string | Record<string, boolean | undefined> | (string | Record<string, boolean | undefined>)[] | undefined
+  /** 各行（tr）の HTML id 解決関数 */
+  rowId?: (row: T, index: number) => string
+  /** 列幅の自動最適化を有効にするか（デフォルト: true） */
+  autoWidth?: boolean
+  /** データが0件の時の表示文言 */
+  emptyText?: string
+  /** ローディング状態フラグ */
+  loading?: boolean
+  /** ローディング時の表示文言 */
+  loadingText?: string
+  /** 行クリックのインタラクション（ホバー・アクティブ演出）を有効にするか */
+  interactiveRow?: boolean
+}
+export type MoleculesTableProps<T = unknown> = TableProps<T>
 
 // ============================================================================
 // 4. Organisms（構造化コンポーネント）

@@ -114,7 +114,7 @@ const currentCablesUI = computed(() => {
         </Button>
       </div>
 
-      <MoleculesTable
+      <Table
         :columns="CONDUIT_CABLE_COLUMNS"
         :data="currentCablesUI"
         class="w-full"
@@ -158,7 +158,7 @@ const currentCablesUI = computed(() => {
             />
           </div>
         </template>
-      </MoleculesTable>
+      </Table>
     </section>
   </div>
 </template>

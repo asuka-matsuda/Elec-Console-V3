@@ -52,6 +52,20 @@ describe('ToolOrganismsRackInput (app/components/tool/OrganismsRackInput.vue)', 
       props: ['modelValue', 'options', 'disabled'],
       template: '<select class="atoms-select-stub"><slot /></select>',
     },
+    Table: {
+      props: ['columns', 'data'],
+      template: `
+        <div class="molecules-table-stub">
+          <div v-for="row in data" :key="row.id" class="table-row">
+            <slot name="cell-category" :row="row" />
+            <slot name="cell-cableIdx" :row="row" />
+            <slot name="cell-count" :row="row" />
+            <slot name="cell-spec" :row="row">{{ row.spec }} {{ row.specDetail }}</slot>
+            <slot name="cell-actions" :row="row" />
+          </div>
+        </div>
+      `,
+    },
     MoleculesTable: {
       props: ['columns', 'data'],
       template: `

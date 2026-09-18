@@ -46,6 +46,21 @@ describe('ToolOrganismsConduitInput (app/components/tool/OrganismsConduitInput.v
       props: ['modelValue', 'options', 'disabled'],
       template: '<select class="atoms-select-stub"><slot /></select>',
     },
+    Table: {
+      props: ['columns', 'data'],
+      template: `
+        <div class="molecules-table-stub">
+          <div v-for="row in data" :key="row.id" class="table-row">
+            <slot name="cell-category" :row="row" />
+            <slot name="cell-cableIdx" :row="row" />
+            <slot name="cell-count" :row="row" />
+            <div class="cell-spec-val">{{ row.spec }}</div>
+            <div class="cell-spec-detail">{{ row.specDetail }}</div>
+            <slot name="cell-actions" :row="row" />
+          </div>
+        </div>
+      `,
+    },
     MoleculesTable: {
       props: ['columns', 'data'],
       template: `
