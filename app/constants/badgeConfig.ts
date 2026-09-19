@@ -63,7 +63,6 @@ export const BADGE_PRESETS = {
 
   // 9. フォーム・システム警告・更新履歴
   'system:unsaved': { color: 'var(--color-status-warning)', label: '未保存の変更あり' },
-  'version:release': { color: 'var(--color-status-success)' },
   'version:muted': { color: 'var(--color-text-muted)' },
 
   // 10. 汎用判定・ステータス

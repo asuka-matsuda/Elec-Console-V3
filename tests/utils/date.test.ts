@@ -5,6 +5,8 @@ import {
   formatDateTime,
   formatShortDateTime,
   formatTime,
+  formatToDateInputString,
+  getTodayDateInput,
 } from '../../app/utils/date'
 
 describe('date utils', () => {
@@ -40,6 +42,16 @@ describe('date utils', () => {
     const d = new Date(2026, 7, 31, 14, 30)
 
     expect(formatTime(d)).toBe('14:30')
+  })
+
+  it('formatToDateInputString should format Date as YYYY-MM-DD', () => {
+    const d = new Date(2026, 8, 19) // 2026-09-19
+
+    expect(formatToDateInputString(d)).toBe('2026-09-19')
+  })
+
+  it('getTodayDateInput should return valid YYYY-MM-DD pattern', () => {
+    expect(getTodayDateInput()).toMatch(/^\d{4}-\d{2}-\d{2}$/)
   })
 
   describe('calculateAutoEndDate', () => {

@@ -18,65 +18,41 @@ const INITIAL_FORM = {
   desc: '',
 }
 
-// 今日の日付文字列（YYYY-MM-DD形式: type="date" 用）
-const getTodayDateInput = () => {
-  const now = new Date()
-  const y = now.getFullYear()
-  const m = String(now.getMonth() + 1).padStart(2, '0')
-  const d = String(now.getDate()).padStart(2, '0')
-
-  return `${y}-${m}-${d}`
-}
+const { askConfirm } = useModal()
 
 // モーダル管理状態
 const isEditModalOpen = ref(false)
 const isSaving = ref(false)
 const editingId = ref<string | null>(null)
 const formError = ref('')
-const fieldErrors = ref({ title: '', date: '' })
 const form = ref({ ...INITIAL_FORM })
 
+// フォームのバリデーション管理（ルールを指定するだけで完結）
+const { fieldErrors, validate, resetErrors } = useFormValidation(form, {
+  date: '日付',
+  title: 'タイトル',
+})
+
 const columns: TableColumn<AnnouncementItem>[] = [
-  { key: 'date', label: '日付', width: '130px', sortable: true },
-  { key: 'title', label: 'タイトル', sortable: true },
+  { key: 'date', label: '日付', width: '130px' },
+  { key: 'title', label: 'タイトル' },
   { key: 'desc', label: '内容詳細', truncate: true },
   { key: 'actions', label: '操作', width: '120px', align: 'right' },
 ]
 
-const openCreateModal = () => {
-  editingId.value = null
+const openModal = (item?: AnnouncementItem) => {
+  editingId.value = item ? String(item.id) : null
   formError.value = ''
-  fieldErrors.value = { title: '', date: '' }
-  form.value = { ...INITIAL_FORM, date: getTodayDateInput() }
-  isEditModalOpen.value = true
-}
-
-const openEditModal = (item: AnnouncementItem) => {
-  editingId.value = String(item.id)
-  formError.value = ''
-  fieldErrors.value = { title: '', date: '' }
-  form.value = {
-    title: item.title,
-    date: item.date.replace(/\./g, '-'),
-    desc: item.desc || '',
-  }
+  resetErrors()
+  form.value = item
+    ? { title: item.title, date: item.date.replace(/\./g, '-'), desc: item.desc || '' }
+    : { ...INITIAL_FORM, date: getTodayDateInput() }
   isEditModalOpen.value = true
 }
 
 const handleSave = async () => {
-  fieldErrors.value = { title: '', date: '' }
   formError.value = ''
-
-  if (!form.value.date.trim()) {
-    fieldErrors.value.date = '日付は必須です。'
-  }
-  if (!form.value.title.trim()) {
-    fieldErrors.value.title = 'タイトルは必須です。'
-  }
-
-  if (fieldErrors.value.date || fieldErrors.value.title) {
-    return
-  }
+  if (!validate()) return
 
   isSaving.value = true
 
@@ -103,7 +79,16 @@ const handleSave = async () => {
 }
 
 const handleDelete = async (id?: string | number) => {
-  if (!id || !confirm('このお知らせを削除してもよろしいですか？')) return
+  if (!id) return
+
+  const isConfirmed = await askConfirm({
+    title: 'お知らせの削除',
+    message: 'このお知らせを削除してもよろしいですか？',
+    intent: 'danger',
+    confirmText: '削除する',
+  })
+
+  if (!isConfirmed) return
 
   try {
     await $fetch(`/api/master/announcements/${id}`, {
@@ -128,7 +113,7 @@ const handleDelete = async (id?: string | number) => {
       <Button
         variant="success"
         icon="plus"
-        @click="openCreateModal"
+        @click="openModal()"
       >
         新規お知らせ作成
       </Button>
@@ -138,7 +123,7 @@ const handleDelete = async (id?: string | number) => {
     <Panel padding="none">
       <Table
         :columns="columns"
-        :data="announcements || []"
+        :data="announcements"
         :loading="pending"
         empty-text="登録されているお知らせはありません。"
       >
@@ -147,7 +132,7 @@ const handleDelete = async (id?: string | number) => {
             <Button
               icon="edit"
               title="編集"
-              @click="openEditModal(row)"
+              @click="openModal(row)"
             />
             <Button
               variant="danger"
@@ -163,7 +148,7 @@ const handleDelete = async (id?: string | number) => {
     <!-- 作成・編集モーダル -->
     <Modal
       v-model="isEditModalOpen"
-      :title="editingId ? 'お知らせを編集' : '新規お知らせ作成'"
+      :title="editingId ? '編集' : '新規作成'"
       icon="bell"
     >
       <template #actions>
@@ -176,6 +161,8 @@ const handleDelete = async (id?: string | number) => {
         <Button
           variant="success"
           icon="check"
+          type="submit"
+          form="announcement-form"
           :loading="isSaving"
           @click="handleSave"
         >
@@ -183,7 +170,11 @@ const handleDelete = async (id?: string | number) => {
         </Button>
       </template>
 
-      <div class="flex flex-col gap-4">
+      <form
+        id="announcement-form"
+        class="flex flex-col gap-4"
+        @submit.prevent="handleSave"
+      >
         <FormGroup v-if="formError" :error="formError" />
 
         <FormGroup
@@ -215,7 +206,7 @@ const handleDelete = async (id?: string | number) => {
             placeholder="詳細な説明や補足を入力してください（モーダルで表示されます）"
           />
         </FormGroup>
-      </div>
+      </form>
     </Modal>
   </div>
 </template>

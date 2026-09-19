@@ -57,6 +57,22 @@ export const formatTime = (date: unknown, fallback = '-'): string => {
 }
 
 /**
+ * Date オブジェクトを YYYY-MM-DD 形式の文字列（<input type="date"> 用）に変換する
+ */
+export const formatToDateInputString = (date: Date = new Date()): string => {
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+
+  return `${y}-${m}-${day}`
+}
+
+/**
+ * 今日の日付文字列を YYYY-MM-DD 形式（<input type="date"> 用）で取得する
+ */
+export const getTodayDateInput = (): string => formatToDateInputString()
+
+/**
  * Date オブジェクトを YYYY-MM-DDTHH:mm 形式の文字列に変換する
  */
 export const formatToDateTimeInputString = (date: Date): string => {
