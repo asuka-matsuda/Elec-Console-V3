@@ -242,6 +242,122 @@ export function usePhaseExamBase(
     return '現場作業者'
   }
 
+  // ローカル回路配列の更新ヘルパー
+  const updateLocalCircuit = (circuitId: string, patch: Partial<CircuitItem>) => {
+    const idx = circuits.value.findIndex(c => c.id === circuitId)
+
+    if (idx !== -1 && circuits.value[idx]) {
+      circuits.value[idx] = {
+        ...circuits.value[idx]!,
+        ...patch,
+      }
+    }
+  }
+
+  // 回路アクション（Phase 1〜3 確定・解除）の共通実行パイプライン
+  const executeCircuitAction = async (
+    circuit: CircuitItem,
+    actionType: 'confirm' | 'clear',
+    payload: Record<string, unknown>,
+    optimisticPatch: Partial<CircuitItem>,
+  ) => {
+    const siteId = unref(siteIdRef)
+
+    if (!siteId) return
+
+    isActionLoading.value[circuit.id] = true
+    const clientConfirmedAt = getAccurateNow().toISOString()
+    const workerName = getWorkerName()
+
+    const endpoint = `/api/sites/${siteId}/circuits/${circuit.id}/phase${phaseNumber}${actionType === 'clear' ? '/clear' : ''}`
+    const body = {
+      ...payload,
+      clientConfirmedAt,
+      expectedUpdatedAt: circuit.updatedAt,
+      expectedVersion: circuit.version,
+    }
+
+    try {
+      const res = await $fetch<{ success: boolean, circuit: CircuitItem }>(endpoint, {
+        method: 'POST',
+        body,
+      })
+
+      if (res?.circuit) {
+        updateLocalCircuit(circuit.id, res.circuit)
+      }
+
+      return res
+    }
+    catch (err: unknown) {
+      if (handleConflictError(circuit.id, err)) {
+        return
+      }
+
+      if (isNetworkError(err)) {
+        enqueue({
+          siteId,
+          circuitId: circuit.id,
+          banMeisho: circuit.banMeisho,
+          kairoBangou: circuit.kairoBangou || '',
+          kairoMeisho: circuit.kairoMeisho || '',
+          phase: phaseNumber as 1 | 2 | 3,
+          actionType,
+          payload,
+          clientConfirmedAt,
+          expectedUpdatedAt: circuit.updatedAt,
+          expectedVersion: circuit.version,
+          workerName,
+        })
+
+        updateLocalCircuit(circuit.id, {
+          ...optimisticPatch,
+          ...(actionType === 'confirm' ? { clientConfirmedAt, workerName } : {}),
+        })
+
+        return { success: true, isOffline: true }
+      }
+
+      const e = err as Error
+      const actionName = actionType === 'confirm' ? `確定` : `確定解除`
+
+      alert(`${actionName}に失敗しました: ${e.message}`)
+      throw err
+    }
+    finally {
+      isActionLoading.value[circuit.id] = false
+    }
+  }
+
+  const isBatchLoading = ref(false)
+
+  // 一括確定共通パイプライン
+  const executeBatchConfirm = async (
+    targets: CircuitItem[],
+    confirmMessage: string,
+    actionRunner: (c: CircuitItem) => Promise<unknown>,
+  ) => {
+    if (targets.length === 0) {
+      alert('一括確定の対象となる未完了回路がありません')
+
+      return
+    }
+
+    if (!confirm(confirmMessage)) {
+      return
+    }
+
+    isBatchLoading.value = true
+    try {
+      for (const circuit of targets) {
+        await actionRunner(circuit)
+      }
+    }
+    finally {
+      isBatchLoading.value = false
+    }
+  }
+
   return {
     siteIdRef,
     phaseNumber,
@@ -251,6 +367,7 @@ export function usePhaseExamBase(
     phase2ThresholdMegOhm,
     isLoading,
     isActionLoading,
+    isBatchLoading,
     error,
     selectedKeiTo,
     selectedBanShubetsu,
@@ -267,5 +384,8 @@ export function usePhaseExamBase(
     getWorkerName,
     getAccurateNow,
     enqueue,
+    updateLocalCircuit,
+    executeCircuitAction,
+    executeBatchConfirm,
   }
 }

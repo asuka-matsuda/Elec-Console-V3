@@ -32,9 +32,7 @@ export function useRackCalculator() {
     result,
     saveToHistory: handleSaveHistory,
     resetInputs,
-    isResetModalOpen,
     openResetModal,
-    confirmReset,
   } = useToolPage<RackInputs, RackCalcResult>(
     'rack',
     'ケーブルラック選定',
@@ -120,9 +118,8 @@ export function useRackCalculator() {
     addWeakCable,
     removeWeakCable,
     reset: resetInputs,
-    isResetModalOpen,
+    resetInputs,
     openResetModal,
-    confirmReset,
     handleSaveHistory,
     mathSteps,
   }

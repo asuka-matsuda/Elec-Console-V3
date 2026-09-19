@@ -34,9 +34,7 @@ export function useConduitCalculator() {
     result,
     saveToHistory: saveHistory,
     resetInputs,
-    isResetModalOpen,
     openResetModal,
-    confirmReset,
   } = useToolPage<ConduitInputs, ConduitCalcResult>(
     'conduit',
     '配管サイズ自動選定',
@@ -107,11 +105,10 @@ export function useConduitCalculator() {
     addCable,
     removeCable,
     reset: resetInputs,
+    resetInputs,
     saveHistory,
     handleSaveHistory: saveHistory,
-    isResetModalOpen,
     openResetModal,
-    confirmReset,
     mathSteps,
   }
 }

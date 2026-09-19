@@ -1,41 +1,14 @@
-import { ref, watch } from 'vue'
+import { useLocalStorage } from '@vueuse/core'
 
 import type { HistoryEntry } from '~/types/history'
+import { formatDateTime } from '~/utils/date'
 
 /**
  * 汎用的な計算履歴管理コンポーザブル
  * @param storageKey ローカルストレージの保存先キー (例: 'elec_calc_voltage_hist')
  */
 export function useCalcHistory(storageKey: string) {
-  // setup時に即座にlocalStorageから読み込む (クライアントナビゲーション時のラグを防ぐため)
-  const getInitialState = (): HistoryEntry[] => {
-    if (import.meta.client) {
-      const stored = localStorage.getItem(storageKey)
-
-      if (stored) {
-        try {
-          return JSON.parse(stored)
-        }
-        catch (e) {
-          console.error('Failed to parse history:', e)
-        }
-      }
-    }
-
-    return []
-  }
-
-  const historyList = ref<HistoryEntry[]>(getInitialState())
-
-  if (import.meta.client) {
-    watch(
-      historyList,
-      (newVal) => {
-        localStorage.setItem(storageKey, JSON.stringify(newVal))
-      },
-      { deep: true },
-    )
-  }
+  const historyList = useLocalStorage<HistoryEntry[]>(storageKey, [])
 
   const saveHistory = async (entry: Omit<HistoryEntry, 'id' | 'timestamp'>) => {
     // 処理中アニメーションを見せるため、意図的に少し待機する（UX向上）

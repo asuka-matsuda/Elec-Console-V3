@@ -1,5 +1,5 @@
 import type { Ref } from 'vue'
-import { ref, unref } from 'vue'
+import { ref } from 'vue'
 
 import { usePhaseExamBase } from '~/composables/portal/phase/usePhaseExamBase'
 import type { CircuitItem } from '~/types/souden'
@@ -12,15 +12,7 @@ export function usePhase1Exam(
   initialKeiTo: string = '幹線',
 ) {
   const base = usePhaseExamBase(siteIdRef, initialKeiTo, 1)
-  const {
-    circuits,
-    isActionLoading,
-    handleConflictError,
-    isNetworkError,
-    enqueue,
-    getAccurateNow,
-    getWorkerName,
-  } = base
+  const { executeCircuitAction } = base
 
   const editingRowId = ref<string | null>(null)
   const editForm = ref<Record<string, string>>({})
@@ -55,186 +47,41 @@ export function usePhase1Exam(
       [key: string]: unknown
     },
   ) => {
-    const siteId = unref(siteIdRef)
-
-    if (!siteId) return
-
-    isActionLoading.value[circuit.id] = true
-
-    const clientConfirmedAt = getAccurateNow().toISOString()
-    const workerName = getWorkerName()
-
     const payload = {
       kakunin: overrideData?.kakunin ?? circuit.p1Kakunin ?? true,
       mashishime: overrideData?.mashishime ?? circuit.p1Mashishime ?? true,
       remarks: overrideData?.remarks ?? circuit.p1Remarks ?? '',
       modifiedFields: overrideData?.modifiedFields ?? [],
-      expectedUpdatedAt: circuit.updatedAt,
-      expectedVersion: circuit.version,
       ...overrideData,
     }
 
-    try {
-      const res = await $fetch<{ success: boolean, circuit: CircuitItem }>(
-        `/api/sites/${siteId}/circuits/${circuit.id}/phase1`,
-        {
-          method: 'POST',
-          body: {
-            ...payload,
-            clientConfirmedAt,
-          },
-        },
-      )
-
-      if (res.circuit) {
-        const idx = circuits.value.findIndex(c => c.id === circuit.id)
-
-        if (idx !== -1) {
-          circuits.value[idx] = {
-            ...circuits.value[idx],
-            ...res.circuit,
-          }
-        }
-      }
-
-      cancelEdit()
-
-      return res
+    const optimisticPatch: Partial<CircuitItem> = {
+      p1Kakunin: Boolean(payload.kakunin),
+      p1Mashishime: Boolean(payload.mashishime),
+      p1Remarks: String(payload.remarks || ''),
     }
-    catch (err: unknown) {
-      if (handleConflictError(circuit.id, err)) {
-        return
-      }
 
-      if (isNetworkError(err)) {
-        enqueue({
-          siteId,
-          circuitId: circuit.id,
-          banMeisho: circuit.banMeisho,
-          kairoBangou: circuit.kairoBangou || '',
-          kairoMeisho: circuit.kairoMeisho || '',
-          phase: 1,
-          actionType: 'confirm',
-          payload,
-          clientConfirmedAt,
-          expectedUpdatedAt: circuit.updatedAt,
-          expectedVersion: circuit.version,
-          workerName,
-        })
+    const res = await executeCircuitAction(circuit, 'confirm', payload, optimisticPatch)
 
-        const idx = circuits.value.findIndex(c => c.id === circuit.id)
-        const target = circuits.value[idx]
+    cancelEdit()
 
-        if (idx !== -1 && target) {
-          circuits.value[idx] = {
-            ...target,
-            p1Kakunin: Boolean(payload.kakunin),
-            p1Mashishime: Boolean(payload.mashishime),
-            p1Remarks: String(payload.remarks || ''),
-            p1Worker: workerName,
-            p1ConfirmedAt: clientConfirmedAt,
-          }
-        }
-
-        cancelEdit()
-
-        return { success: true, isOffline: true }
-      }
-
-      const e = err as Error
-
-      alert(`確定に失敗しました: ${e.message}`)
-      throw err
-    }
-    finally {
-      isActionLoading.value[circuit.id] = false
-    }
+    return res
   }
 
   // Phase 1 確定解除
   const clearPhase1 = async (circuit: CircuitItem) => {
-    const siteId = unref(siteIdRef)
-
-    if (!siteId) return
-
     if (!confirm(`盤「${circuit.banMeisho}」回路「${circuit.kairoBangou || circuit.kairoMeisho}」のフェーズ1確定を解除しますか？`)) {
       return
     }
 
-    isActionLoading.value[circuit.id] = true
-
-    const clientConfirmedAt = getAccurateNow().toISOString()
-
-    try {
-      const res = await $fetch<{ success: boolean, circuit: CircuitItem }>(
-        `/api/sites/${siteId}/circuits/${circuit.id}/phase1/clear`,
-        {
-          method: 'POST',
-          body: {
-            expectedUpdatedAt: circuit.updatedAt,
-            expectedVersion: circuit.version,
-            clientConfirmedAt,
-          },
-        },
-      )
-
-      if (res.circuit) {
-        const idx = circuits.value.findIndex(c => c.id === circuit.id)
-
-        if (idx !== -1) {
-          circuits.value[idx] = {
-            ...circuits.value[idx],
-            ...res.circuit,
-          }
-        }
-      }
-
-      return res
+    const optimisticPatch: Partial<CircuitItem> = {
+      p1Kakunin: false,
+      p1Mashishime: false,
+      p1Worker: null,
+      p1ConfirmedAt: null,
     }
-    catch (err: unknown) {
-      if (handleConflictError(circuit.id, err)) {
-        return
-      }
 
-      if (isNetworkError(err)) {
-        enqueue({
-          siteId,
-          circuitId: circuit.id,
-          banMeisho: circuit.banMeisho,
-          kairoBangou: circuit.kairoBangou || '',
-          kairoMeisho: circuit.kairoMeisho || '',
-          phase: 1,
-          actionType: 'clear',
-          payload: {},
-          clientConfirmedAt,
-          expectedUpdatedAt: circuit.updatedAt,
-          expectedVersion: circuit.version,
-        })
-
-        const idx = circuits.value.findIndex(c => c.id === circuit.id)
-        const target = circuits.value[idx]
-
-        if (idx !== -1 && target) {
-          circuits.value[idx] = {
-            ...target,
-            p1Kakunin: false,
-            p1Mashishime: false,
-            p1Worker: null,
-            p1ConfirmedAt: null,
-          }
-        }
-
-        return { success: true, isOffline: true }
-      }
-
-      const e = err as Error
-
-      alert(`確定解除に失敗しました: ${e.message}`)
-      throw err
-    }
-    finally {
-      isActionLoading.value[circuit.id] = false
-    }
+    return executeCircuitAction(circuit, 'clear', {}, optimisticPatch)
   }
 
   // インライン編集の保存

@@ -1,5 +1,4 @@
-import type { Ref } from 'vue'
-import { computed, ref, watch } from 'vue'
+import { computed, watch } from 'vue'
 
 import { useState } from '#app'
 import { STATE_KEYS } from '~/constants/storageKeys'
@@ -17,37 +16,16 @@ export interface ConfirmOptions {
 // クライアント専用の Promise リゾルバー
 let resolvePromise: ((value: boolean) => void) | null = null
 
-// テスト環境（Nuxtコンテキスト外）用フォールバック
-const fallbackOpen = ref(false)
-const fallbackPending = ref(false)
-const fallbackOptions = ref<ConfirmOptions>({
-  title: '確認',
-  message: 'この操作を実行しますか？',
-  confirmText: '確定する',
-  cancelText: 'キャンセル',
-  intent: 'success',
-})
-
-const getSafeState = <T>(key: string, fallbackRef: Ref<T>, init: () => T): Ref<T> => {
-  try {
-    return useState<T>(key, init)
-  }
-  catch {
-    return fallbackRef
-  }
-}
-
 /**
  * モーダル（Modal）の開閉と状態管理を共通化するComposable（SSR安全）
  */
 export const useModal = (
   defaultOptions: Partial<ConfirmOptions> = {},
 ) => {
-  const isOpen = getSafeState<boolean>(STATE_KEYS.GLOBAL_MODAL_OPEN, fallbackOpen, () => false)
-  const isPending = getSafeState<boolean>(STATE_KEYS.GLOBAL_MODAL_PENDING, fallbackPending, () => false)
-  const currentOptions = getSafeState<ConfirmOptions>(
+  const isOpen = useState<boolean>(STATE_KEYS.GLOBAL_MODAL_OPEN, () => false)
+  const isPending = useState<boolean>(STATE_KEYS.GLOBAL_MODAL_PENDING, () => false)
+  const currentOptions = useState<ConfirmOptions>(
     STATE_KEYS.GLOBAL_MODAL_OPTIONS,
-    fallbackOptions,
     () => ({
       title: '確認',
       message: 'この操作を実行しますか？',

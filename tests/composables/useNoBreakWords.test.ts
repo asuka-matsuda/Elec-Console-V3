@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 
-import { joinWithWordJoiner, NO_BREAK_HYPHEN, useNoBreakWords, WORD_JOINER } from '~/composables/useNoBreakWords'
+import { useNoBreakWords } from '~/composables/useNoBreakWords'
+import { joinWithWordJoiner, NO_BREAK_HYPHEN, WORD_JOINER } from '~/utils/noBreak'
 
 describe('useNoBreakWords / joinWithWordJoiner', () => {
   it('文字数が1文字以下の場合はそのまま返す', () => {

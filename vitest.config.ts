@@ -14,5 +14,6 @@ export default defineVitestConfig({
     globals: true,
     include: ['tests/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     exclude: ['**/node_modules/**', '**/dist/**', '**/e2e/**'],
+    setupFiles: ['./tests/setup.ts'],
   },
 })

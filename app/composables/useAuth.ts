@@ -1,48 +1,17 @@
-import type { Ref } from 'vue'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 
 import { useCookie, useRouter, useState } from '#app'
 import { useApi } from '~/composables/useApi'
 import { STATE_KEYS, STORAGE_KEYS } from '~/constants/storageKeys'
 import type { User } from '~/types/auth'
 
-// テスト環境（NuxtAppコンテキスト外）用フォールバック
-const fallbackCurrentUser = ref<User | null>(null)
-const fallbackToken = ref<string | null>(null)
-
-const getSafeState = <T>(key: string, fallbackRef: Ref<T>, init: () => T): Ref<T> => {
-  try {
-    return useState<T>(key, init)
-  }
-  catch {
-    return fallbackRef
-  }
-}
-
-const getSafeCookie = (fallbackRef: Ref<string | null>): Ref<string | null> => {
-  try {
-    return useCookie<string | null>('auth_token', {
-      default: () => null,
-      maxAge: 60 * 60 * 24,
-    })
-  }
-  catch {
-    return fallbackRef
-  }
-}
-
 export const useAuth = () => {
-  const token = getSafeCookie(fallbackToken)
-  const currentUser = getSafeState<User | null>(STATE_KEYS.CURRENT_USER, fallbackCurrentUser, () => null)
-
-  const getRouterSafe = () => {
-    try {
-      return useRouter()
-    }
-    catch {
-      return null
-    }
-  }
+  const token = useCookie<string | null>('auth_token', {
+    default: () => null,
+    maxAge: 60 * 60 * 24,
+  })
+  const currentUser = useState<User | null>(STATE_KEYS.CURRENT_USER, () => null)
+  const router = useRouter()
 
   const getApiSafe = () => {
     try {
@@ -186,9 +155,7 @@ export const useAuth = () => {
       localStorage.removeItem(STORAGE_KEYS.CACHED_USER)
     }
 
-    const router = getRouterSafe()
-
-    router?.push('/login')
+    router.push('/login')
   }
 
   const isAuthenticated = computed(() => !!token.value)

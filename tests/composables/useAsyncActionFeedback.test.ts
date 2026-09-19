@@ -58,6 +58,7 @@ describe('useAsyncActionFeedback', () => {
   })
 
   it('should transition to error on failure and reset to idle', async () => {
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
     const action = vi.fn().mockRejectedValue(new Error('Network error'))
     const { state, currentContent, buttonVariant, execute }
       = useAsyncActionFeedback({
@@ -66,6 +67,7 @@ describe('useAsyncActionFeedback', () => {
       })
 
     await execute()
+    consoleSpy.mockRestore()
 
     expect(state.value).toBe('error')
     expect(buttonVariant.value).toBe('danger')

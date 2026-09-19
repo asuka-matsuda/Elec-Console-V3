@@ -1,5 +1,5 @@
 import { useLocalStorage } from '@vueuse/core'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 
 import { useCalcHistory } from '~/composables/tools/useCalcHistory'
 import { useModal } from '~/composables/useModal'
@@ -8,7 +8,7 @@ import type { HistoryEntry } from '~/types/history'
 
 export function useToolPage<InputType, ResultType>(
   toolId: string,
-  toolTitle: string,
+  _toolTitle: string,
   defaultInputs: InputType,
   calculateFn: (inputs: InputType) => ResultType,
   historyMapper: {
@@ -65,8 +65,7 @@ export function useToolPage<InputType, ResultType>(
     inputs.value = JSON.parse(JSON.stringify(defaultInputs))
   }
 
-  const isResetModalOpen = ref(false)
-  const openResetModal = async () => {
+  const openResetModal = async (): Promise<boolean> => {
     const isConfirmed = await askConfirm({
       title: 'リセットの確認',
       message: '入力した条件をすべてリセットしますか？',
@@ -80,10 +79,6 @@ export function useToolPage<InputType, ResultType>(
 
     return isConfirmed
   }
-  const confirmReset = () => {
-    resetInputs()
-    isResetModalOpen.value = false
-  }
 
   return {
     inputs,
@@ -92,8 +87,6 @@ export function useToolPage<InputType, ResultType>(
     saveToHistory,
     loadFromHistory,
     resetInputs,
-    isResetModalOpen,
     openResetModal,
-    confirmReset,
   }
 }

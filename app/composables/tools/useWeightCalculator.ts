@@ -25,9 +25,7 @@ export function useWeightCalculator() {
     result,
     saveToHistory: handleSaveHistory,
     resetInputs,
-    isResetModalOpen,
     openResetModal,
-    confirmReset,
   } = useToolPage<WeightCalcInputs, WeightCalcResult>(
     'weight',
     'ドラムサイズ・重量計算',
@@ -61,9 +59,8 @@ export function useWeightCalculator() {
     result,
     isSaveDisabled,
     reset: resetInputs,
-    isResetModalOpen,
+    resetInputs,
     openResetModal,
-    confirmReset,
     handleSaveHistory,
     mathSteps,
   }

@@ -53,9 +53,8 @@ onMounted(() => {
   fetchCircuits()
 })
 
-const { scrollToRow } = useTableScrollTo()
 const scrollToCircuit = (circuit: CircuitItem) => {
-  scrollToRow(circuit.id)
+  scrollToTableRow(circuit.id)
 }
 
 const shubetsuTabOptions = computed(() => {
