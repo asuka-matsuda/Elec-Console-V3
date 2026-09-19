@@ -7,9 +7,6 @@
 import { ref } from 'vue'
 
 import { useHead } from '#app'
-import MasterAnnouncementsTab from '~/components/master/MasterAnnouncementsTab.vue'
-import MasterHistoryTab from '~/components/master/MasterHistoryTab.vue'
-import MasterWordBreakTab from '~/components/master/MasterWordBreakTab.vue'
 import type { TabOption } from '~/types/components'
 
 useHead({ title: 'マスター管理 - Elec-Console' })

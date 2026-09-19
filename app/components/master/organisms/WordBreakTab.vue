@@ -1,9 +1,8 @@
 <script setup lang="ts">
 /**
  * MasterWordBreakTab
- * マスター管理者専用: 改行禁止ワード管理タブ。
+ * [Master Organisms] 改行禁止ワード管理タブ。
  * システム全体の改行禁止ワードの追加・一覧・編集・削除を行います。
- * 更新履歴やお知らせ管理と同一のテーブル・モーダルCRUD方式を採用。
  */
 import { ref } from 'vue'
 
