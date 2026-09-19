@@ -4,9 +4,8 @@
  * [Tool Organism] 配管サイズ自動選定ツールの条件入力コンポーネント。
  * 対象の配管種類と収容するケーブルリストの入力を管理します。
  */
-import { computed } from 'vue'
-
 import { CONDUIT_CABLE_COLUMNS } from '~/constants/cableConstants'
+import { conduitData } from '~/constants/data/conduitData'
 import type { SelectOption } from '~/types/components'
 import type { ConduitInputData } from '~/types/tools'
 import {
@@ -19,55 +18,44 @@ import { calculateCableArea } from '~/utils/tools/conduit/conduitCalcLogic'
 
 const inputs = defineModel<ConduitInputData>({ required: true })
 
-defineProps<{
-  categoryOptions: SelectOption[]
-}>()
+withDefaults(
+  defineProps<{
+    categoryOptions?: SelectOption[]
+  }>(),
+  {
+    categoryOptions: () => [...new Set(conduitData.map(c => c.category))].map(c => ({ value: c, label: c })),
+  },
+)
 
 const emit = defineEmits<{
   'add-cable': []
   'remove-cable': [id: string]
 }>()
 
-const categories = computed(() => getCableCategories())
+const categories = getCableCategories()
 
-const getSingleArea = (cableIdx: string): number => {
+const getCableSpec = (cableIdx: string, count?: number | null) => {
   const def = findCableByIndexString(cableIdx)
 
-  if (!def) return 0
+  if (!def) return { text: '---', detail: '' }
+
   const diameter = getEffectiveCableDiameter(def.diameter)
 
-  if (diameter <= 0) return 0
+  if (diameter <= 0) return { text: '---', detail: '' }
 
-  return calculateCableArea(diameter)
-}
-
-const getCableSpecText = (cableIdx: string, count?: number | null): string => {
-  const area = getSingleArea(cableIdx)
-
-  if (area <= 0) return '---'
-  const n = count && count > 0 ? count : 1
-  const totalArea = area * n
-
-  return `${totalArea.toFixed(1)} mm²`
-}
-
-const getCableSpecDetailText = (cableIdx: string, count?: number | null): string => {
-  const area = getSingleArea(cableIdx)
-
-  if (area <= 0) return ''
+  const area = calculateCableArea(diameter)
   const n = count && count > 0 ? count : 1
 
-  if (n > 1) {
-    return `(${area.toFixed(1)}×${n})`
+  return {
+    text: `${(area * n).toFixed(1)} mm²`,
+    detail: n > 1 ? `(${area.toFixed(1)}×${n})` : '',
   }
-
-  return ''
 }
 </script>
 
 <template>
   <div class="flex flex-col gap-[var(--space-form-row-gap)]">
-    <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1.8fr)_minmax(130px,1fr)] gap-[var(--space-form-row-gap)]">
+    <div class="grid grid-cols-1 sm:grid-cols-[2fr_1fr] gap-x-[var(--space-form-col-gap)] gap-y-[var(--space-form-row-gap)]">
       <FormGroup label="対象の配管種類">
         <Select
           v-model="inputs.conduitCategory"
@@ -90,14 +78,13 @@ const getCableSpecDetailText = (cableIdx: string, count?: number | null): string
 
     <!-- ケーブル条件セクション -->
     <section class="flex flex-col gap-[var(--space-item-gap)]">
-      <div class="flex items-center justify-end py-[var(--space-1)]">
-        <Button
-          icon="plus"
-          @click="emit('add-cable')"
-        >
-          ケーブルを追加
-        </Button>
-      </div>
+      <Button
+        class="self-end"
+        icon="plus"
+        @click="emit('add-cable')"
+      >
+        ケーブルを追加
+      </Button>
 
       <Table
         :columns="CONDUIT_CABLE_COLUMNS"
@@ -135,27 +122,25 @@ const getCableSpecDetailText = (cableIdx: string, count?: number | null): string
         <template #cell-spec="{ row }">
           <div class="stacked-cell flex flex-col gap-0.5 items-end">
             <span class="main-text">
-              {{ getCableSpecText(row.cableIdx, row.count) }}
+              {{ getCableSpec(row.cableIdx, row.count).text }}
             </span>
             <span
-              v-if="getCableSpecDetailText(row.cableIdx, row.count)"
+              v-if="getCableSpec(row.cableIdx, row.count).detail"
               class="sub-text"
             >
-              {{ getCableSpecDetailText(row.cableIdx, row.count) }}
+              {{ getCableSpec(row.cableIdx, row.count).detail }}
             </span>
           </div>
         </template>
 
         <template #cell-actions="{ row }">
-          <div class="flex justify-center items-center">
-            <Button
-              variant="danger"
-              icon="trash-2"
-              :disabled="inputs.inputCables.length <= 1"
-              title="削除"
-              @click="emit('remove-cable', row.id)"
-            />
-          </div>
+          <Button
+            variant="danger"
+            icon="trash-2"
+            :disabled="inputs.inputCables.length <= 1"
+            title="削除"
+            @click="emit('remove-cable', row.id)"
+          />
         </template>
       </Table>
     </section>

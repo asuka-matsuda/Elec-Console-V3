@@ -9,16 +9,20 @@ describe('voltageResultPresenter', () => {
 
     expect(vm.isReady).toBe(false)
     expect(vm.mainValue).toBe('ーー')
-    expect(vm.mainStatusClass).toBe('is-neutral')
+    expect(vm.mainStatus).toBe('neutral')
     expect(vm.currentI).toBe('ーー')
     expect(vm.maxI).toBe('ーー')
+    expect(vm.ampStatus).toBe('neutral')
     expect(vm.dropV).toBe('ーー')
     expect(vm.dropPercent).toBe('ーー')
-    expect(vm.dropRateText).toBe('ーー')
-    expect(vm.dropCableName).toBe('ーー')
+    expect(vm.dropStatus).toBe('neutral')
+    expect(vm.details).toEqual([
+      { label: '選択ケーブル', value: 'ーー' },
+      { label: '電圧降下率', value: 'ーー' },
+    ])
   })
 
-  it('should show dropCableName immediately when selectedCableName is present even if inputs are not ready', () => {
+  it('should show dropCableName in details immediately when selectedCableName is present even if inputs are not ready', () => {
     const mockInputs: Partial<VoltageCalcInputs> = {
       isReady: false,
       mode: 'drop',
@@ -27,9 +31,8 @@ describe('voltageResultPresenter', () => {
     const vm = formatVoltageResult(mockInputs as VoltageCalcInputs, null)
 
     expect(vm.isReady).toBe(false)
-    expect(vm.dropCableName).toBe('CV 5.5sq -3C')
+    expect(vm.details?.[0]).toEqual({ label: '選択ケーブル', value: 'CV 5.5sq -3C' })
     expect(vm.dropPercent).toBe('ーー')
-    expect(vm.dropRateText).toBe('ーー')
     expect(vm.mainValue).toBe('ーー')
   })
 
@@ -60,14 +63,20 @@ describe('voltageResultPresenter', () => {
     expect(vm.mainLabel).toBe('電圧降下')
     expect(vm.mainValue).toBe('2.45')
     expect(vm.mainUnit).toBe('V')
-    expect(vm.mainStatusClass).toBe('is-success')
+    expect(vm.mainStatus).toBe('success')
     expect(vm.currentI).toBe('20')
     expect(vm.maxI).toBe('30')
-    expect(vm.ampStatusClass).toBe('is-success')
+    expect(vm.isAmpError).toBe(false)
+    expect(vm.ampStatus).toBe('success')
     expect(vm.dropV).toBe('2.45')
     expect(vm.dropPercent).toBe('2.45')
-    expect(vm.dropRateText).toBe('2.45%')
-    expect(vm.dropCableName).toBe('CV 8sq')
+    expect(vm.dropPercentText).toBe('(2.45%)')
+    expect(vm.isDropError).toBe(false)
+    expect(vm.dropStatus).toBe('success')
+    expect(vm.details).toEqual([
+      { label: '選択ケーブル', value: 'CV 8sq' },
+      { label: '電圧降下率', value: '2.45%' },
+    ])
   })
 
   it('should format dropRateText with both 100V and 200V for 1P3W system', () => {
@@ -95,8 +104,9 @@ describe('voltageResultPresenter', () => {
     expect(vm.isReady).toBe(true)
     expect(vm.dropV).toBe('2.03')
     expect(vm.dropPercent).toBe('2.03')
+    expect(vm.dropPercentText).toBe('(2.03%)')
     // 100V基準: 2.03%, 200V基準: 1.01% (2.03 / 2 = 1.015 -> 1.01%)
-    expect(vm.dropRateText).toBe('2.03% (1.01%)')
+    expect(vm.details?.[1]).toEqual({ label: '電圧降下率', value: '2.03% (1.01%)' })
   })
 
   it('should format size selection mode correctly', () => {
@@ -127,8 +137,10 @@ describe('voltageResultPresenter', () => {
     expect(vm.mainLabel).toBe('選定ケーブルサイズ')
     expect(vm.mainValue).toBe('14')
     expect(vm.mainUnit).toBe('sq')
-    expect(vm.mainStatusClass).toBe('is-success')
-    expect(vm.dropStatusClass).toBe('is-success')
+    expect(vm.mainStatus).toBe('success')
+    expect(vm.dropPercentText).toBe('(2.10%)')
+    expect(vm.dropStatus).toBe('success')
+    expect(vm.details).toBeUndefined()
   })
 
   it('should flag is-danger when design current exceeds allowable ampacity', () => {
@@ -148,8 +160,8 @@ describe('voltageResultPresenter', () => {
       mockResult as VoltageCalcResult,
     )
 
-    expect(vm.ampStatusClass).toBe('is-danger')
-    expect(vm.mainStatusClass).toBe('is-danger')
+    expect(vm.ampStatus).toBe('danger')
+    expect(vm.mainStatus).toBe('danger')
   })
 
   it('should handle VOLTAGE_TARGET_DROP_OVER with is-warning and 降下率超過 on all 3 cards', () => {
@@ -180,19 +192,20 @@ describe('voltageResultPresenter', () => {
     // 1. 選定サイズ
     expect(vm.mainValue).toBe('2.0')
     expect(vm.mainUnit).toBe('mm')
-    expect(vm.mainStatusClass).toBe('is-warning')
+    expect(vm.mainStatus).toBe('warning')
     expect(vm.mainBadgeText).toBe('降下率超過')
 
     // 2. 電流チェック
     expect(vm.currentI).toBe('8')
     expect(vm.maxI).toBe('17')
-    expect(vm.ampStatusClass).toBe('is-warning')
+    expect(vm.ampStatus).toBe('warning')
     expect(vm.ampBadgeText).toBe('降下率超過')
 
     // 3. 電圧降下
     expect(vm.dropV).toBe('2.03')
     expect(vm.dropPercent).toBe('2.03')
-    expect(vm.dropStatusClass).toBe('is-warning')
+    expect(vm.dropPercentText).toBe('(2.03%)')
+    expect(vm.dropStatus).toBe('warning')
     expect(vm.dropBadgeText).toBe('降下率超過')
   })
 
@@ -220,19 +233,20 @@ describe('voltageResultPresenter', () => {
     // 1. 選定サイズ
     expect(vm.mainValue).toBe('ERROR')
     expect(vm.mainUnit).toBe('')
-    expect(vm.mainStatusClass).toBe('is-danger')
+    expect(vm.mainStatus).toBe('danger')
     expect(vm.mainBadgeText).toBe('許容電流不足')
 
     // 2. 電流チェック
     expect(vm.currentI).toBe('30')
     expect(vm.maxI).toBe('17')
-    expect(vm.ampStatusClass).toBe('is-danger')
+    expect(vm.ampStatus).toBe('danger')
     expect(vm.ampBadgeText).toBe('許容電流不足')
 
     // 3. 電圧降下
     expect(vm.dropV).toBe('ERROR')
     expect(vm.dropPercent).toBe('')
-    expect(vm.dropStatusClass).toBe('is-danger')
+    expect(vm.dropPercentText).toBeUndefined()
+    expect(vm.dropStatus).toBe('danger')
     expect(vm.dropBadgeText).toBe('許容電流不足')
   })
 
@@ -261,18 +275,21 @@ describe('voltageResultPresenter', () => {
     expect(vm.mainValue).toBe('ERROR')
     expect(vm.mainBadgeText).toBe('規格外')
     expect(vm.mainUnit).toBe('')
-    expect(vm.mainStatusClass).toBe('is-danger')
+    expect(vm.mainStatus).toBe('danger')
 
     // 2. 電流チェック
     expect(vm.currentI).toBe('ERROR')
     expect(vm.maxI).toBe('ERROR')
-    expect(vm.ampStatusClass).toBe('is-danger')
+    expect(vm.isAmpError).toBe(true)
+    expect(vm.ampStatus).toBe('danger')
     expect(vm.ampBadgeText).toBe('規格外')
 
     // 3. 電圧降下
     expect(vm.dropV).toBe('ERROR')
     expect(vm.dropPercent).toBe('')
-    expect(vm.dropStatusClass).toBe('is-danger')
+    expect(vm.dropPercentText).toBeUndefined()
+    expect(vm.isDropError).toBe(true)
+    expect(vm.dropStatus).toBe('danger')
     expect(vm.dropBadgeText).toBe('規格外')
 
     expect(vm.errorInfo).toBeDefined()

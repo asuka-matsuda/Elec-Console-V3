@@ -1,6 +1,7 @@
 import { computed, watch } from 'vue'
 
 import { useToolPage } from '~/composables/tools/useToolPage'
+import { getVoltageFormFields } from '~/constants/config/voltageFormConfig'
 import type { VoltageCalcResult } from '~/types/voltage'
 import {
   getAvailableCores,
@@ -134,8 +135,23 @@ export function useVoltageCalculator() {
     return generateMathData(calcInputs.value, calcResult.value) || []
   })
 
+  const isSaveDisabled = computed(() => !calcInputs.value.isReady)
+
+  const formFields = computed(() =>
+    getVoltageFormFields(
+      () => isDropCalcMode.value,
+      () => isSizeCalcMode.value,
+      () => computedAvailableSizes.value,
+      () => !!form.value.category,
+      () => isSinglePhase.value,
+      () => computedAvailableCores.value,
+    ),
+  )
+
   return {
     form,
+    formFields,
+    isSaveDisabled,
     isResetModalOpen,
     openResetModal,
     resetForm,

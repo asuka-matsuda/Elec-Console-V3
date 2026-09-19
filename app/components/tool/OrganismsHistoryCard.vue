@@ -6,12 +6,10 @@
  */
 import { computed } from 'vue'
 
-import type { ConduitInputs } from '~/composables/tools/useConduitCalculator'
 import type { HistoryEntry } from '~/types/history'
 import type { VoltageCalcResult } from '~/types/voltage'
 import type { ConduitCalcResult } from '~/utils/tools/conduit/conduitCalcLogic'
 import type { RackCalcResult } from '~/utils/tools/rack/rackCalcLogic'
-import type { RackInputs } from '~/utils/tools/rack/rackMapper'
 import type { VoltageFormState } from '~/utils/tools/voltage/voltageMapper'
 import { mapFormToVoltageCalcInputs } from '~/utils/tools/voltage/voltageMapper'
 import type { WeightCalcResult } from '~/utils/tools/weight/weightCalcLogic'
@@ -42,33 +40,11 @@ const voltageResult = computed(() => {
   return (props.entry.rawResult ?? null) as unknown as VoltageCalcResult | null
 })
 
-const conduitInputs = computed(() => {
-  return (props.entry.rawInputs ?? undefined) as unknown as ConduitInputs | undefined
-})
-
 const conduitResult = computed(() => {
   return (props.entry.rawResult ?? null) as unknown as ConduitCalcResult | null
 })
-
-const rackInputs = computed(() => {
-  return (props.entry.rawInputs ?? null) as unknown as RackInputs | null
-})
-
 const rackResult = computed(() => {
   return (props.entry.rawResult ?? null) as unknown as RackCalcResult | null
-})
-
-const rackMaxDepth = computed(() => {
-  if (props.entry.toolId !== 'rack' || !rackInputs.value) return 80
-  const rH = rackInputs.value.rackHeight ?? 100
-
-  return Math.max(1, rH - 20)
-})
-
-const rackMode = computed<'strong' | 'weak'>(() => {
-  if (props.entry.toolId !== 'rack' || !rackInputs.value) return 'strong'
-
-  return rackInputs.value.mode === 'weak' ? 'weak' : 'strong'
 })
 
 const weightResult = computed(() => {
@@ -113,18 +89,15 @@ const weightResult = computed(() => {
 
           <!-- 配管サイズ選定 -->
           <ToolOrganismsConduitResult
-            v-else-if="entry.toolId === 'conduit' && conduitInputs && conduitResult"
-            :inputs="conduitInputs"
+            v-else-if="entry.toolId === 'conduit' && conduitResult"
             :result="conduitResult"
             size="sm"
           />
 
           <!-- ケーブルラック選定 -->
           <ToolOrganismsRackResult
-            v-else-if="entry.toolId === 'rack' && rackInputs && rackResult"
+            v-else-if="entry.toolId === 'rack' && rackResult"
             :result="rackResult"
-            :max-depth="rackMaxDepth"
-            :mode="rackMode"
           />
 
           <!-- ドラムサイズ・重量計算 -->

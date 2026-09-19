@@ -1,3 +1,4 @@
+import type { ResultBoxStatus, ResultDetailItem } from '~/types/components'
 import type { RackCalcResult, RackTierResult } from '~/utils/tools/rack/rackCalcLogic'
 
 export interface RackTierCardViewModel {
@@ -6,7 +7,7 @@ export interface RackTierCardViewModel {
   badgeText?: string
   badgeColor?: string
   displaySize: string
-  boxStatus: 'neutral' | 'success' | 'warning' | 'danger'
+  boxStatus: ResultBoxStatus
   totalWidth: string
   maxHeight: string
   isOverflow: boolean
@@ -22,11 +23,12 @@ export interface RackResultViewModel {
   wStrong: string
   wWeak: string
   maxDepth: string
+  details: ResultDetailItem[]
 }
 
 export interface RackResultPresenterParams {
   result: RackCalcResult | null | undefined
-  maxDepth: number
+  maxDepth?: number
   mode?: 'strong' | 'weak'
 }
 
@@ -110,7 +112,9 @@ function formatTierCard(
 export function formatRackResult(
   params: RackResultPresenterParams,
 ): RackResultViewModel {
-  const { result, maxDepth, mode } = params
+  const { result } = params
+  const resolvedMaxDepth = result?.maxDepth ?? params.maxDepth ?? 80
+  const resolvedMode = result?.mode ?? params.mode ?? 'strong'
 
   const isSizeOver = Boolean(
     result?.tier1?.isSizeOver
@@ -120,11 +124,20 @@ export function formatRackResult(
   const isError = Boolean(result?.error) && !isSizeOver
   const isEmpty = isZeroOrNoInput || isError
 
-  const tier1 = formatTierCard(result?.tier1, isEmpty, mode)
-  const tier2 = formatTierCard(result?.tier2, isEmpty, mode)
+  const tier1 = formatTierCard(result?.tier1, isEmpty, resolvedMode)
+  const tier2 = formatTierCard(result?.tier2, isEmpty, resolvedMode)
 
-  const wStrong = (result?.mode === 'strong' ? result?.tier1?.wMain : result?.tier1?.wOther)?.toFixed(1) ?? '0.0'
-  const wWeak = (result?.mode === 'strong' ? result?.tier1?.wOther : result?.tier1?.wMain)?.toFixed(1) ?? '0.0'
+  const wStrong = (resolvedMode === 'strong' ? result?.tier1?.wMain : result?.tier1?.wOther)?.toFixed(1) ?? '0.0'
+  const wWeak = (resolvedMode === 'strong' ? result?.tier1?.wOther : result?.tier1?.wMain)?.toFixed(1) ?? '0.0'
+
+  const details: ResultDetailItem[] = [
+    {
+      label: 'ラック有効高さ',
+      value: resolvedMaxDepth,
+      unit: 'mm',
+      note: '(親桁 H - 20mm)',
+    },
+  ]
 
   return {
     isEmpty,
@@ -132,6 +145,7 @@ export function formatRackResult(
     tier2,
     wStrong,
     wWeak,
-    maxDepth: String(maxDepth),
+    maxDepth: String(resolvedMaxDepth),
+    details,
   }
 }

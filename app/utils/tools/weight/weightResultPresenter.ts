@@ -1,9 +1,10 @@
+import type { ResultBoxStatus, ResultDetailItem } from '~/types/components'
 import type { WeightCalcResult } from '~/utils/tools/weight/weightCalcLogic'
 
 export interface WeightResultViewModel {
   isError: boolean
   hasBestDrum: boolean
-  boxStatus: 'empty' | 'success' | 'danger'
+  boxStatus: ResultBoxStatus
   badgeText?: string
   displayDrum: string
   displayTotalWeight: string
@@ -12,6 +13,7 @@ export interface WeightResultViewModel {
   drumWeight: string
   totalWeight: string
   maxCapacityMeters: string
+  details: ResultDetailItem[]
 }
 
 /**
@@ -24,7 +26,7 @@ export function formatWeightResult(
   const hasBestDrum = Boolean(result?.bestDrum)
   const isDrumNotFound = Boolean(result && !isNoInput && (!result.bestDrum || result.reason === 'drum_not_found'))
 
-  const boxStatus: WeightResultViewModel['boxStatus'] = isNoInput
+  const boxStatus: ResultBoxStatus = isNoInput
     ? 'empty'
     : hasBestDrum
       ? 'success'
@@ -59,6 +61,24 @@ export function formatWeightResult(
   const totalWeight = result && hasBestDrum ? totalWeightVal(result).toFixed(1) : 'ーー'
   const maxCapacityMeters = result?.maxCapacityMeters != null ? result.maxCapacityMeters.toFixed(1) : 'ーー'
 
+  const details: ResultDetailItem[] = [
+    {
+      label: 'ケーブル重量',
+      value: cableWeight,
+      unit: cableWeight !== 'ーー' ? 'kg' : undefined,
+    },
+    {
+      label: 'ドラム重量',
+      value: drumWeight,
+      unit: drumWeight !== 'ーー' ? 'kg' : undefined,
+    },
+    {
+      label: '最大巻取可能長',
+      value: maxCapacityMeters,
+      unit: maxCapacityMeters !== 'ーー' ? 'm' : undefined,
+    },
+  ]
+
   return {
     isError: isNoInput,
     hasBestDrum,
@@ -71,5 +91,6 @@ export function formatWeightResult(
     drumWeight,
     totalWeight,
     maxCapacityMeters,
+    details,
   }
 }

@@ -11,7 +11,7 @@ import type { WeightCalcInputs } from '~/utils/tools/weight/weightCalcLogic'
 
 const inputs = defineModel<WeightCalcInputs>({ required: true })
 
-const categories = computed(() => getCableCategories())
+const categories = getCableCategories()
 const availableSizes = computed(() => getAvailableSizes(inputs.value.category))
 
 watch(

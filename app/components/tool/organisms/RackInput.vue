@@ -25,42 +25,27 @@ const emit = defineEmits<{
   'remove-weak-cable': [id: string]
 }>()
 
-const strongCategories = computed(() => getCableCategories('strong'))
-const weakCategories = computed(() => getCableCategories('weak'))
+const strongCategories = getCableCategories('strong')
+const weakCategories = getCableCategories('weak')
 const currentCategories = computed(() =>
-  inputs.value.mode === 'strong' ? strongCategories.value : weakCategories.value,
+  inputs.value.mode === 'strong' ? strongCategories : weakCategories,
 )
-const getSingleDiameter = (cableIdx: string): number => {
+
+const getCableSpec = (cableIdx: string, count?: number | null) => {
   const def = findCableByIndexString(cableIdx)
 
-  if (!def) return 0
+  if (!def) return { text: '---', detail: '' }
 
-  return getEffectiveCableDiameter(def.diameter)
-}
+  const diameter = getEffectiveCableDiameter(def.diameter)
 
-const getCableSpecText = (cableIdx: string, count?: number | null): string => {
-  const diameter = getSingleDiameter(cableIdx)
-
-  if (diameter <= 0) return '---'
-
-  const n = count && count > 0 ? count : 1
-  const totalDiameter = diameter * n
-
-  return `φ${totalDiameter.toFixed(1)}`
-}
-
-const getCableSpecDetailText = (cableIdx: string, count?: number | null): string => {
-  const diameter = getSingleDiameter(cableIdx)
-
-  if (diameter <= 0) return ''
+  if (diameter <= 0) return { text: '---', detail: '' }
 
   const n = count && count > 0 ? count : 1
 
-  if (n > 1) {
-    return `(φ${diameter.toFixed(1)}×${n})`
+  return {
+    text: `φ${(diameter * n).toFixed(1)}`,
+    detail: n > 1 ? `(φ${diameter.toFixed(1)}×${n})` : '',
   }
-
-  return ''
 }
 
 const currentCables = computed(() =>
@@ -173,14 +158,13 @@ const handleRemoveCable = (id: string) => {
 
     <!-- ケーブル条件セクション -->
     <section class="flex flex-col gap-[var(--space-item-gap)]">
-      <div class="flex items-center justify-end py-[var(--space-1)]">
-        <Button
-          icon="plus"
-          @click="handleAddCable"
-        >
-          {{ inputs.mode === 'strong' ? '強電ケーブルを追加' : '弱電ケーブルを追加' }}
-        </Button>
-      </div>
+      <Button
+        class="self-end"
+        icon="plus"
+        @click="handleAddCable"
+      >
+        {{ inputs.mode === 'strong' ? '強電ケーブルを追加' : '弱電ケーブルを追加' }}
+      </Button>
 
       <!-- ケーブルテーブル（強電/弱電 共通テンプレート） -->
       <Table
@@ -219,27 +203,25 @@ const handleRemoveCable = (id: string) => {
         <template #cell-spec="{ row }">
           <div class="stacked-cell flex flex-col gap-0.5 items-end">
             <span class="main-text">
-              {{ getCableSpecText(row.cableIdx, row.count) }}
+              {{ getCableSpec(row.cableIdx, row.count).text }}
             </span>
             <span
-              v-if="getCableSpecDetailText(row.cableIdx, row.count)"
+              v-if="getCableSpec(row.cableIdx, row.count).detail"
               class="sub-text"
             >
-              {{ getCableSpecDetailText(row.cableIdx, row.count) }}
+              {{ getCableSpec(row.cableIdx, row.count).detail }}
             </span>
           </div>
         </template>
 
         <template #cell-actions="{ row }">
-          <div class="flex justify-center items-center">
-            <Button
-              variant="danger"
-              icon="trash-2"
-              :disabled="currentCables.length <= 1"
-              title="削除"
-              @click="handleRemoveCable(row.id)"
-            />
-          </div>
+          <Button
+            variant="danger"
+            icon="trash-2"
+            :disabled="currentCables.length <= 1"
+            title="削除"
+            @click="handleRemoveCable(row.id)"
+          />
         </template>
       </Table>
     </section>

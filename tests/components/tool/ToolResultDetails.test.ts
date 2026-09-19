@@ -1,10 +1,10 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import ToolResultDetails from '../../../app/components/tool/ResultDetails.vue'
+import ToolResultDetails from '../../../app/components/tool/molecules/ResultDetails.vue'
 import type { ResultDetailItem } from '../../../app/types/components'
 
-describe('ToolResultDetails (app/components/tool/ResultDetails.vue)', () => {
+describe('ToolResultDetails (app/components/tool/molecules/ResultDetails.vue)', () => {
   it('renders detail items with label, value, unit, and note', () => {
     const items: ResultDetailItem[] = [
       { label: 'ケーブル重量', value: '120.5', unit: 'kg', note: '(概算)' },

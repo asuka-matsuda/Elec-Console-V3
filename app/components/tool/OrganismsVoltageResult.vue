@@ -5,7 +5,6 @@
  */
 import { computed } from 'vue'
 
-import type { ResultBoxStatus } from '~/types/components'
 import type { VoltageCalcInputs, VoltageCalcResult } from '~/types/voltage'
 import { formatVoltageResult } from '~/utils/tools/voltage/voltageResultPresenter'
 
@@ -15,19 +14,7 @@ const props = defineProps<{
   size?: 'sm' | 'md'
 }>()
 
-const view = computed(() => formatVoltageResult(props.inputs, props.result))
-
-const mainBoxStatus = computed(() =>
-  (view.value.mainStatusClass?.replace('is-', '') || 'neutral') as ResultBoxStatus,
-)
-
-const ampStatus = computed(() =>
-  (view.value.ampStatusClass?.replace('is-', '') || 'neutral') as ResultBoxStatus,
-)
-
-const dropStatus = computed(() =>
-  (view.value.dropStatusClass?.replace('is-', '') || 'neutral') as ResultBoxStatus,
-)
+const vm = computed(() => formatVoltageResult(props.inputs, props.result))
 </script>
 
 <template>
@@ -37,57 +24,51 @@ const dropStatus = computed(() =>
   >
     <!-- 主結果 (電圧降下 or 電線サイズ) -->
     <ResultBox
-      :title="view.mainLabel"
-      :status="mainBoxStatus"
-      :badge="view.mainBadgeText"
+      :title="vm.mainLabel"
+      :status="vm.mainStatus"
+      :badge="vm.mainBadgeText"
       :size="size"
     >
-      <span>{{ view.mainValue }}</span>
-      <small v-if="view.mainUnit" class="unit">{{ view.mainUnit }}</small>
+      <span>{{ vm.mainValue }}</span>
+      <small v-if="vm.mainUnit">{{ vm.mainUnit }}</small>
     </ResultBox>
 
     <!-- サブ結果 1: 電流チェック (設計 / 許容) -->
     <ResultBox
       title="電流チェック (設計 / 許容)"
-      :status="ampStatus"
-      :badge="view.ampBadgeText"
+      :status="vm.ampStatus"
+      :badge="vm.ampBadgeText"
       size="sm"
     >
-      <span v-if="view.currentI === 'ERROR'">ERROR</span>
+      <span v-if="vm.isAmpError">ERROR</span>
       <template v-else>
-        <span>{{ view.currentI }}</span>
-        <small class="sep">/</small>
-        <span>{{ view.maxI }}</span>
-        <small class="unit">A</small>
+        <span>{{ vm.currentI }}</span>
+        <small>/</small>
+        <span>{{ vm.maxI }}</span>
+        <small>A</small>
       </template>
     </ResultBox>
 
     <!-- サブ結果 2: 電圧降下（導体断面積モード時のみ表示） -->
     <ResultBox
-      v-if="view.mode === 'size'"
+      v-if="vm.mode === 'size'"
       title="電圧降下"
-      :status="dropStatus"
-      :badge="view.dropBadgeText"
+      :status="vm.dropStatus"
+      :badge="vm.dropBadgeText"
       size="sm"
     >
-      <span v-if="view.dropV === 'ERROR'">ERROR</span>
+      <span v-if="vm.isDropError">ERROR</span>
       <template v-else>
-        <span>{{ view.dropV }}</span>
-        <small class="unit">V</small>
-        <small class="sep">(</small>
-        <span>{{ view.dropPercent }}</span>
-        <small class="unit">%</small>
-        <small class="sep">)</small>
+        <span>{{ vm.dropV }}</span>
+        <small>V</small>
+        <small v-if="vm.dropPercentText">{{ vm.dropPercentText }}</small>
       </template>
     </ResultBox>
 
     <!-- サブ情報（電圧降下モード時のみ表示） -->
     <ToolResultDetails
-      v-if="view.mode === 'drop'"
-      :items="[
-        { label: '選択ケーブル', value: view.dropCableName },
-        { label: '電圧降下率', value: view.dropRateText },
-      ]"
+      v-if="vm.details"
+      :items="vm.details"
     />
   </div>
 </template>

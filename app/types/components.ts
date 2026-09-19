@@ -200,12 +200,12 @@ export interface PanelProps {
   padding?: PanelPadding
 }
 
-// --- Disclaimer (Tool) ---
-export interface ToolDisclaimerProps {
-  /** 免責・注記本文（スロットで差し替えも可能） */
+// --- Disclaimer ---
+export interface DisclaimerProps {
+  /** 免責・注記本文 */
   text?: string
 }
-export type DisclaimerProps = ToolDisclaimerProps
+export type ToolDisclaimerProps = DisclaimerProps
 
 // --- Input ---
 export type InputType

@@ -1,11 +1,11 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import ToolMoleculesMathLegend from '../../app/components/tool/MoleculesMathLegend.vue'
+import ToolMathLegend from '../../app/components/tool/molecules/MathLegend.vue'
 
-describe('ToolMoleculesMathLegend.vue', () => {
+describe('ToolMathLegend.vue', () => {
   it('does not render when items array is empty or undefined', () => {
-    const wrapper = mount(ToolMoleculesMathLegend, {
+    const wrapper = mount(ToolMathLegend, {
       props: {
         items: [],
       },
@@ -20,7 +20,7 @@ describe('ToolMoleculesMathLegend.vue', () => {
       'L: 電線長 [m]',
     ]
 
-    const wrapper = mount(ToolMoleculesMathLegend, {
+    const wrapper = mount(ToolMathLegend, {
       props: {
         items,
       },
@@ -42,7 +42,7 @@ describe('ToolMoleculesMathLegend.vue', () => {
   it('renders custom title when provided', () => {
     const items = ['I: 電流 [A]']
 
-    const wrapper = mount(ToolMoleculesMathLegend, {
+    const wrapper = mount(ToolMathLegend, {
       props: {
         items,
         title: '【記号の説明】',
@@ -56,7 +56,7 @@ describe('ToolMoleculesMathLegend.vue', () => {
   it('handles item without colon gracefully', () => {
     const items = ['※ 許容電流基準']
 
-    const wrapper = mount(ToolMoleculesMathLegend, {
+    const wrapper = mount(ToolMathLegend, {
       props: {
         items,
       },

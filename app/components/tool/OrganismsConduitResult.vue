@@ -7,86 +7,59 @@
  */
 import { computed } from 'vue'
 
-import type { ConduitInputs } from '~/composables/tools/useConduitCalculator'
 import { CONDUIT_UI_LABELS } from '~/constants/conduitConstants'
 import type { ConduitCalcResult } from '~/utils/tools/conduit/conduitCalcLogic'
 import { formatConduitResult } from '~/utils/tools/conduit/conduitResultPresenter'
 
 const props = defineProps<{
   result: ConduitCalcResult | null
-  inputs?: ConduitInputs
   size?: 'sm' | 'md'
 }>()
 
 const vm = computed(() => formatConduitResult(props.result))
-
-const status32 = computed(() =>
-  vm.value.status32Class.replace('is-', '') as 'neutral' | 'success' | 'danger',
-)
-const status48 = computed(() =>
-  vm.value.status48Class.replace('is-', '') as 'neutral' | 'success' | 'warning' | 'danger',
-)
-const statusCustom = computed(() =>
-  vm.value.statusCustomClass.replace('is-', '') as 'neutral' | 'success' | 'danger',
-)
 </script>
 
 <template>
   <div
     class="flex flex-1 flex-col min-h-0 items-stretch"
-    :class="[size === 'sm' ? 'gap-3 is-sm' : 'gap-[var(--space-panel-gap)]']"
+    :class="[size === 'sm' ? 'gap-3 is-sm' : 'gap-panel-gap']"
   >
     <!-- Row 1: 32% (異種) -->
     <ResultBox
       :title="CONDUIT_UI_LABELS.TITLE_32"
-      :status="status32"
+      :status="vm.status32"
       :badge="vm.badge32"
       :size="size"
     >
       <template #value>
         <span>{{ vm.size32 }}</span>
-        <template v-if="vm.isReady && !vm.isOversize32">
-          <small class="sep">(</small>
-          <span>{{ vm.fill32 }}</span>
-          <small class="unit">{{ CONDUIT_UI_LABELS.UNIT_PERCENT }}</small>
-          <small class="sep">)</small>
-        </template>
+        <small v-if="vm.fillText32">{{ vm.fillText32 }}</small>
       </template>
     </ResultBox>
 
     <!-- Row 2: 48% (同種) -->
     <ResultBox
       :title="CONDUIT_UI_LABELS.TITLE_48"
-      :status="status48"
+      :status="vm.status48"
       :badge="vm.badge48"
       :size="size"
     >
       <template #value>
         <span>{{ vm.size48 }}</span>
-        <template v-if="vm.isReady && !vm.isOversize48">
-          <small class="sep">(</small>
-          <span>{{ vm.fill48 }}</span>
-          <small class="unit">{{ CONDUIT_UI_LABELS.UNIT_PERCENT }}</small>
-          <small class="sep">)</small>
-        </template>
+        <small v-if="vm.fillText48">{{ vm.fillText48 }}</small>
       </template>
     </ResultBox>
 
     <!-- Row 3: ユーザー指定 (customFillRate%) -->
     <ResultBox
       :title="vm.titleCustom"
-      :status="statusCustom"
+      :status="vm.statusCustom"
       :badge="vm.badgeCustom"
       :size="size"
     >
       <template #value>
         <span>{{ vm.sizeCustom }}</span>
-        <template v-if="vm.isReady && !vm.isOversizeCustom">
-          <small class="sep">(</small>
-          <span>{{ vm.fillCustom }}</span>
-          <small class="unit">{{ CONDUIT_UI_LABELS.UNIT_PERCENT }}</small>
-          <small class="sep">)</small>
-        </template>
+        <small v-if="vm.fillTextCustom">{{ vm.fillTextCustom }}</small>
       </template>
     </ResultBox>
 

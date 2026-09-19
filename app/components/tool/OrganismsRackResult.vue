@@ -11,7 +11,7 @@ import { formatRackResult } from '~/utils/tools/rack/rackResultPresenter'
 
 const props = defineProps<{
   result: RackCalcResult | null
-  maxDepth: number
+  maxDepth?: number
   mode?: 'strong' | 'weak'
 }>()
 
@@ -22,14 +22,6 @@ const vm = computed(() =>
     mode: props.mode,
   }),
 )
-const detailItems = computed(() => [
-  {
-    label: 'ラック有効高さ',
-    value: props.maxDepth,
-    unit: 'mm',
-    note: '(親桁 H - 20mm)',
-  },
-])
 </script>
 
 <template>
@@ -64,7 +56,7 @@ const detailItems = computed(() => [
     </ResultBox>
 
     <!-- 詳細内訳 -->
-    <ToolResultDetails :items="detailItems" />
+    <ToolResultDetails :items="vm.details" />
   </div>
 </template>
 

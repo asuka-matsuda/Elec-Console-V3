@@ -9,11 +9,13 @@ describe('conduitResultPresenter', () => {
 
     expect(vmNull.isReady).toBe(false)
     expect(vmNull.size32).toBe('ーー')
-    expect(vmNull.status32Class).toBe('is-neutral')
+    expect(vmNull.status32).toBe('neutral')
     expect(vmNull.fill32).toBe('ーー')
+    expect(vmNull.fillText32).toBeUndefined()
     expect(vmNull.size48).toBe('ーー')
-    expect(vmNull.status48Class).toBe('is-neutral')
+    expect(vmNull.status48).toBe('neutral')
     expect(vmNull.fill48).toBe('ーー')
+    expect(vmNull.fillText48).toBeUndefined()
 
     const vmPartial = formatConduitResult({
       success: true,
@@ -61,12 +63,14 @@ describe('conduitResultPresenter', () => {
     expect(vm.isOversize32).toBe(false)
     expect(vm.isOversize48).toBe(false)
     expect(vm.size32).toBe('E25')
-    expect(vm.status32Class).toBe('is-success')
+    expect(vm.status32).toBe('success')
     expect(vm.fill32).toBe('28.5')
+    expect(vm.fillText32).toBe('(28.5%)')
     expect(vm.allowable32).toBe('135.3')
     expect(vm.size48).toBe('E19')
-    expect(vm.status48Class).toBe('is-success')
+    expect(vm.status48).toBe('success')
     expect(vm.fill48).toBe('42.1')
+    expect(vm.fillText48).toBe('(42.1%)')
     expect(vm.allowable48).toBe('108.9')
   })
 
@@ -97,10 +101,12 @@ describe('conduitResultPresenter', () => {
     expect(vm.isOversize32).toBe(true)
     expect(vm.size32).toBe('ERROR')
     expect(vm.badge32).toBe('規格上限超過')
-    expect(vm.status32Class).toBe('is-danger')
+    expect(vm.status32).toBe('danger')
+    expect(vm.fillText32).toBeUndefined()
 
     expect(vm.isOversize48).toBe(false)
     expect(vm.size48).toBe('G104')
-    expect(vm.status48Class).toBe('is-success')
+    expect(vm.status48).toBe('success')
+    expect(vm.fillText48).toBe('(40%)')
   })
 })

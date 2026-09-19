@@ -2,10 +2,10 @@ import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { ref } from 'vue'
 
-import OrganismsRackInput from '../../app/components/tool/OrganismsRackInput.vue'
+import OrganismsRackInput from '../../app/components/tool/organisms/RackInput.vue'
 import type { RackInputs } from '../../app/utils/tools/rack/rackMapper'
 
-describe('ToolOrganismsRackInput (app/components/tool/OrganismsRackInput.vue)', () => {
+describe('ToolOrganismsRackInput (app/components/tool/organisms/RackInput.vue)', () => {
   const createMockInputs = (overrides: Partial<RackInputs> = {}): RackInputs => ({
     mode: 'strong',
     rackHeight: 100,

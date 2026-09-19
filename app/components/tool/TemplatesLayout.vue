@@ -5,8 +5,6 @@
  * 条件入力パネルと計算結果パネルの大枠、および計算根拠モーダルのスロットを提供します。
  * 結果パネル・ドロワー機能は ToolOrganismsResultDrawer に包括されています。
  */
-import { computed, useSlots } from 'vue'
-
 import type { ToolTemplatesLayoutProps } from '~/types/components'
 
 withDefaults(
@@ -17,7 +15,7 @@ withDefaults(
     resultsTitle: '計算結果・選定結果',
     resultsIcon: 'check-square',
     saveDisabled: false,
-    disclaimerText: undefined,
+    disclaimerText: '免責事項: 本ツールによる計算結果は、規程に基づいた理論値（目安）です。選定や安全性については、必ず設計者自身の責任において各種関連法規・規程をご確認の上ご判断ください。',
     hideDisclaimer: false,
   },
 )
@@ -25,16 +23,13 @@ withDefaults(
 const emit = defineEmits<{
   reset: []
 }>()
-
-const slots = useSlots()
-const hasBasis = computed(() => Boolean(slots.basis))
 </script>
 
 <template>
   <div class="tool-layout flex flex-1 flex-col gap-panel-gap min-h-0 w-full max-w-[1600px] mx-auto">
     <!-- 免責事項 -->
     <slot v-if="!hideDisclaimer" name="disclaimer">
-      <ToolDisclaimer :text="disclaimerText" />
+      <Disclaimer :text="disclaimerText" />
     </slot>
 
     <!-- メイングリッド（左: 条件入力 / 右: 計算結果） -->
@@ -65,20 +60,19 @@ const hasBasis = computed(() => Boolean(slots.basis))
       </section>
 
       <!-- 2. 計算結果（PC: 右側 3fr / モバイル: 下部Stickyドロワー） -->
-      <ToolOrganismsResultDrawer
+      <ToolResultDrawer
         :title="resultsTitle"
         :icon="resultsIcon"
         :save-disabled="saveDisabled"
         :save-function="saveFunction"
-        :has-basis="hasBasis"
       >
         <template #default>
           <slot name="results" />
         </template>
-        <template v-if="hasBasis" #basis>
+        <template v-if="$slots.basis" #basis>
           <slot name="basis" />
         </template>
-      </ToolOrganismsResultDrawer>
+      </ToolResultDrawer>
     </div>
   </div>
 </template>

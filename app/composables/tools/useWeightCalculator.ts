@@ -54,9 +54,12 @@ export function useWeightCalculator() {
     return generateMathData(inputs.value, result.value, cableData)
   })
 
+  const isSaveDisabled = computed(() => Boolean(result.value?.error))
+
   return {
     inputs,
     result,
+    isSaveDisabled,
     reset: resetInputs,
     isResetModalOpen,
     openResetModal,

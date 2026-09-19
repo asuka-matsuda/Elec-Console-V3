@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import ToolOrganismsMathBasis from '../../app/components/tool/OrganismsMathBasis.vue'
+import ToolMathBasis from '../../app/components/tool/organisms/MathBasis.vue'
 
-describe('ToolOrganismsMathBasis.vue', () => {
+describe('ToolMathBasis.vue', () => {
   const commonStubs = {
     Panel: {
       template: '<div class="panel-stub"><slot /></div>',
@@ -11,9 +11,6 @@ describe('ToolOrganismsMathBasis.vue', () => {
     SectionHeader: {
       props: ['title', 'size'],
       template: '<div class="section-header-stub">{{ title }}</div>',
-    },
-    ClientOnly: {
-      template: '<div><slot /></div>',
     },
   }
 
@@ -31,7 +28,7 @@ describe('ToolOrganismsMathBasis.vue', () => {
       },
     ]
 
-    const wrapper = mount(ToolOrganismsMathBasis, {
+    const wrapper = mount(ToolMathBasis, {
       props: {
         steps,
       },
@@ -46,16 +43,16 @@ describe('ToolOrganismsMathBasis.vue', () => {
     expect(wrapper.text()).toContain('電線長 [m]')
   })
 
-  it('renders default slot content when provided', () => {
-    const wrapper = mount(ToolOrganismsMathBasis, {
-      slots: {
-        default: '<div class="extra-content">補足情報テキスト</div>',
+  it('does not render when steps is empty or undefined', () => {
+    const wrapper = mount(ToolMathBasis, {
+      props: {
+        steps: [],
       },
       global: {
         stubs: commonStubs,
       },
     })
 
-    expect(wrapper.text()).toContain('補足情報テキスト')
+    expect(wrapper.find('div').exists()).toBe(false)
   })
 })

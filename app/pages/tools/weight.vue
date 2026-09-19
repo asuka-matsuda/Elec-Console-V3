@@ -12,6 +12,7 @@ useHead({
 const {
   inputs,
   result,
+  isSaveDisabled,
   handleSaveHistory,
   openResetModal,
   mathSteps,
@@ -20,12 +21,12 @@ const {
 
 <template>
   <ToolTemplatesLayout
-    :save-disabled="result?.error"
+    :save-disabled="isSaveDisabled"
     :save-function="handleSaveHistory"
     @reset="openResetModal"
   >
     <template #inputs>
-      <ToolOrganismsWeightInput v-model="inputs" />
+      <ToolWeightInput v-model="inputs" />
     </template>
 
     <template #results>
@@ -33,7 +34,7 @@ const {
     </template>
 
     <template #basis>
-      <ToolOrganismsMathBasis :steps="mathSteps" />
+      <ToolMathBasis :steps="mathSteps" />
     </template>
   </ToolTemplatesLayout>
 </template>

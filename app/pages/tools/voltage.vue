@@ -5,10 +5,8 @@
  */
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
-import { computed } from 'vue'
 
 import { defaultForm, useVoltageCalculator } from '~/composables/tools/useVoltageCalculator'
-import { getVoltageFormFields } from '~/constants/config/voltageFormConfig'
 import { voltageSchema } from '~/utils/tools/voltage/voltageSchema'
 
 useHead({
@@ -17,16 +15,13 @@ useHead({
 
 const {
   form,
-  isSizeCalcMode,
-  isDropCalcMode,
-  computedAvailableSizes,
-  computedAvailableCores,
+  formFields,
+  isSaveDisabled,
   calcInputs,
   calcResult,
   mathSteps,
   openResetModal,
   handleSaveHistory,
-  isSinglePhase,
 } = useVoltageCalculator()
 
 const { resetForm: resetVeeValidate } = useForm({
@@ -43,38 +38,25 @@ const handleReset = async () => {
     })
   }
 }
-
-const formFields = computed(() =>
-  getVoltageFormFields(
-    () => isDropCalcMode.value,
-    () => isSizeCalcMode.value,
-    () => computedAvailableSizes.value,
-    () => !!form.value.category,
-    () => isSinglePhase.value,
-    () => computedAvailableCores.value,
-  ),
-)
 </script>
 
 <template>
   <ToolTemplatesLayout
     results-title="計算結果"
-    :save-disabled="!calcInputs.isReady"
+    :save-disabled="isSaveDisabled"
     :save-function="handleSaveHistory"
     @reset="handleReset"
   >
     <template #inputs>
-      <ToolOrganismsVoltageInput v-model="form" :form-fields="formFields" />
+      <ToolVoltageInput v-model="form" :form-fields="formFields" />
     </template>
 
     <template #results>
-      <ClientOnly>
-        <ToolOrganismsVoltageResult :inputs="calcInputs" :result="calcResult" />
-      </ClientOnly>
+      <ToolOrganismsVoltageResult :inputs="calcInputs" :result="calcResult" />
     </template>
 
     <template #basis>
-      <ToolOrganismsMathBasis :steps="mathSteps" />
+      <ToolMathBasis :steps="mathSteps" />
     </template>
   </ToolTemplatesLayout>
 </template>

@@ -11,8 +11,8 @@ useHead({
 
 const {
   inputs,
-  maxDepth,
   result,
+  isSaveDisabled,
   addStrongCable,
   removeStrongCable,
   addWeakCable,
@@ -26,12 +26,12 @@ const {
 <template>
   <ToolTemplatesLayout
     results-title="選定結果"
-    :save-disabled="Boolean(result?.error) || !result || (result.tier1.totalWidth === 0 && result.tier2.totalWidth === 0)"
+    :save-disabled="isSaveDisabled"
     :save-function="handleSaveHistory"
     @reset="openResetModal"
   >
     <template #inputs>
-      <ToolOrganismsRackInput
+      <ToolRackInput
         v-model="inputs"
         @add-strong-cable="addStrongCable"
         @remove-strong-cable="removeStrongCable"
@@ -41,15 +41,11 @@ const {
     </template>
 
     <template #results>
-      <ToolOrganismsRackResult
-        :result="result"
-        :max-depth="maxDepth"
-        :mode="inputs.mode"
-      />
+      <ToolOrganismsRackResult :result="result" />
     </template>
 
     <template #basis>
-      <ToolOrganismsMathBasis :steps="mathSteps" />
+      <ToolMathBasis :steps="mathSteps" />
     </template>
   </ToolTemplatesLayout>
 </template>

@@ -2,10 +2,10 @@ import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { ref } from 'vue'
 
-import OrganismsWeightInput from '../../app/components/tool/OrganismsWeightInput.vue'
+import OrganismsWeightInput from '../../app/components/tool/organisms/WeightInput.vue'
 import type { WeightCalcInputs } from '../../app/utils/tools/weight/weightCalcLogic'
 
-describe('ToolOrganismsWeightInput (app/components/tool/OrganismsWeightInput.vue)', () => {
+describe('ToolOrganismsWeightInput (app/components/tool/organisms/WeightInput.vue)', () => {
   const createMockInputs = (overrides: Partial<WeightCalcInputs> = {}): WeightCalcInputs => ({
     category: 'CV',
     cableIdx: '0',

@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 
-import ToolOrganismsResultDrawer from '../../app/components/tool/OrganismsResultDrawer.vue'
+import ToolResultDrawer from '../../app/components/tool/organisms/ResultDrawer.vue'
 
-describe('ToolOrganismsResultDrawer.vue', () => {
+describe('ToolResultDrawer.vue', () => {
   const commonStubs = {
     Panel: {
       template: '<div class="panel-stub"><slot /></div>',
@@ -28,7 +28,7 @@ describe('ToolOrganismsResultDrawer.vue', () => {
   }
 
   it('renders slot content and title correctly', () => {
-    const wrapper = mount(ToolOrganismsResultDrawer, {
+    const wrapper = mount(ToolResultDrawer, {
       props: {
         title: '計算結果・選定結果',
       },
@@ -46,7 +46,7 @@ describe('ToolOrganismsResultDrawer.vue', () => {
   })
 
   it('toggles drawer state when handle button is clicked', async () => {
-    const wrapper = mount(ToolOrganismsResultDrawer, {
+    const wrapper = mount(ToolResultDrawer, {
       global: {
         stubs: commonStubs,
       },
@@ -71,11 +71,8 @@ describe('ToolOrganismsResultDrawer.vue', () => {
     expect(wrapper.find('.overlay').exists()).toBe(false)
   })
 
-  it('emits openBasis event when basis button is clicked', async () => {
-    const wrapper = mount(ToolOrganismsResultDrawer, {
-      props: {
-        hasBasis: true,
-      },
+  it('does not render basis button when basis slot is not provided', () => {
+    const wrapper = mount(ToolResultDrawer, {
       global: {
         stubs: commonStubs,
       },
@@ -84,16 +81,13 @@ describe('ToolOrganismsResultDrawer.vue', () => {
     const buttons = wrapper.findAll('button')
     const basisButton = buttons.find(b => b.text().includes('計算根拠'))
 
-    expect(basisButton).toBeDefined()
-    await basisButton?.trigger('click')
-
-    expect(wrapper.emitted('openBasis')).toHaveLength(1)
+    expect(basisButton).toBeUndefined()
   })
 
   it('executes saveFunction when save button is clicked', async () => {
     const saveMock = vi.fn().mockResolvedValue(undefined)
 
-    const wrapper = mount(ToolOrganismsResultDrawer, {
+    const wrapper = mount(ToolResultDrawer, {
       props: {
         saveFunction: saveMock,
       },
@@ -112,7 +106,7 @@ describe('ToolOrganismsResultDrawer.vue', () => {
   })
 
   it('closes drawer when overlay is clicked', async () => {
-    const wrapper = mount(ToolOrganismsResultDrawer, {
+    const wrapper = mount(ToolResultDrawer, {
       global: {
         stubs: commonStubs,
       },
@@ -132,7 +126,7 @@ describe('ToolOrganismsResultDrawer.vue', () => {
   })
 
   it('toggles basis view when basis button is clicked and returns on next click', async () => {
-    const wrapper = mount(ToolOrganismsResultDrawer, {
+    const wrapper = mount(ToolResultDrawer, {
       slots: {
         default: '<div class="results-content">計算結果</div>',
         basis: '<div class="basis-content">計算根拠ステップ</div>',

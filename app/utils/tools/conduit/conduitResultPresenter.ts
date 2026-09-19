@@ -1,4 +1,5 @@
 import { CONDUIT_UI_LABELS } from '~/constants/conduitConstants'
+import type { ResultBoxStatus } from '~/types/components'
 import { formatVal } from '~/utils/math'
 import type { ConduitCalcResult } from '~/utils/tools/conduit/conduitCalcLogic'
 
@@ -9,22 +10,31 @@ export interface ConduitResultViewModel {
   isOversizeCustom: boolean
   isSameSize: boolean
   isDiffSize: boolean
+
+  // Row 1: 32% (異種)
   size32: string
-  status32Class: 'is-neutral' | 'is-success' | 'is-danger'
+  status32: ResultBoxStatus
   badge32?: string
   fill32: string
+  fillText32?: string
   allowable32: string
+
+  // Row 2: 48% (同種)
   size48: string
-  status48Class: 'is-neutral' | 'is-success' | 'is-warning' | 'is-danger'
+  status48: ResultBoxStatus
   badge48?: string
   fill48: string
+  fillText48?: string
   allowable48: string
+
+  // Row 3: ユーザー指定
   customFillRate: number
   titleCustom: string
   sizeCustom: string
-  statusCustomClass: 'is-neutral' | 'is-success' | 'is-danger'
+  statusCustom: ResultBoxStatus
   badgeCustom?: string
   fillCustom: string
+  fillTextCustom?: string
   allowableCustom: string
 }
 
@@ -45,17 +55,17 @@ export function formatConduitResult(
       isSameSize: false,
       isDiffSize: false,
       size32: CONDUIT_UI_LABELS.EMPTY_TEXT,
-      status32Class: 'is-neutral',
+      status32: 'neutral',
       fill32: CONDUIT_UI_LABELS.EMPTY_TEXT,
       allowable32: CONDUIT_UI_LABELS.EMPTY_TEXT,
       size48: CONDUIT_UI_LABELS.EMPTY_TEXT,
-      status48Class: 'is-neutral',
+      status48: 'neutral',
       fill48: CONDUIT_UI_LABELS.EMPTY_TEXT,
       allowable48: CONDUIT_UI_LABELS.EMPTY_TEXT,
       customFillRate: 80,
       titleCustom: 'ユーザー指定 (80%)',
       sizeCustom: CONDUIT_UI_LABELS.EMPTY_TEXT,
-      statusCustomClass: 'is-neutral',
+      statusCustom: 'neutral',
       fillCustom: CONDUIT_UI_LABELS.EMPTY_TEXT,
       allowableCustom: CONDUIT_UI_LABELS.EMPTY_TEXT,
     }
@@ -64,13 +74,12 @@ export function formatConduitResult(
   const isSameSize = Boolean(result.isSameSize)
   const isDiffSize = isReady && !isSameSize
 
+  // 1. 32% (異種)
   const isOversize32 = Boolean(result.isOversize32)
   const size32 = isOversize32
     ? 'ERROR'
     : (result.conduit32?.size || CONDUIT_UI_LABELS.EMPTY_TEXT)
-  const status32Class: ConduitResultViewModel['status32Class'] = isOversize32
-    ? 'is-danger'
-    : 'is-success'
+  const status32: ResultBoxStatus = isOversize32 ? 'danger' : 'success'
   const badge32 = isOversize32 ? '規格上限超過' : undefined
   const allowable32 = formatVal(
     result.allowable32,
@@ -78,16 +87,20 @@ export function formatConduitResult(
     1,
   )
   const fill32 = formatVal(result.fill32, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
+  const fillText32 = !isOversize32 && fill32 !== CONDUIT_UI_LABELS.EMPTY_TEXT
+    ? `(${fill32}%)`
+    : undefined
 
+  // 2. 48% (同種)
   const isOversize48 = Boolean(result.isOversize48)
   const size48 = isOversize48
     ? 'ERROR'
     : (result.conduit48?.size || CONDUIT_UI_LABELS.EMPTY_TEXT)
-  const status48Class: ConduitResultViewModel['status48Class'] = isOversize48
-    ? 'is-danger'
+  const status48: ResultBoxStatus = isOversize48
+    ? 'danger'
     : isDiffSize
-      ? 'is-warning'
-      : 'is-success'
+      ? 'warning'
+      : 'success'
   const badge48 = isOversize48
     ? '規格上限超過'
     : isDiffSize
@@ -99,15 +112,17 @@ export function formatConduitResult(
     1,
   )
   const fill48 = formatVal(result.fill48, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
+  const fillText48 = !isOversize48 && fill48 !== CONDUIT_UI_LABELS.EMPTY_TEXT
+    ? `(${fill48}%)`
+    : undefined
 
+  // 3. ユーザー指定
   const customFillRate = result.customFillRate || 80
   const isOversizeCustom = Boolean(result.isOversizeCustom)
   const sizeCustom = isOversizeCustom
     ? 'ERROR'
     : (result.conduitCustom?.size || CONDUIT_UI_LABELS.EMPTY_TEXT)
-  const statusCustomClass: ConduitResultViewModel['statusCustomClass'] = isOversizeCustom
-    ? 'is-danger'
-    : 'is-success'
+  const statusCustom: ResultBoxStatus = isOversizeCustom ? 'danger' : 'success'
   const badgeCustom = isOversizeCustom ? '規格上限超過' : undefined
   const allowableCustom = formatVal(
     result.allowableCustom,
@@ -115,6 +130,9 @@ export function formatConduitResult(
     1,
   )
   const fillCustom = formatVal(result.fillCustom, CONDUIT_UI_LABELS.EMPTY_TEXT, 1)
+  const fillTextCustom = !isOversizeCustom && fillCustom !== CONDUIT_UI_LABELS.EMPTY_TEXT
+    ? `(${fillCustom}%)`
+    : undefined
   const titleCustom = `ユーザー指定 (${customFillRate}%)`
 
   return {
@@ -125,21 +143,24 @@ export function formatConduitResult(
     isSameSize,
     isDiffSize,
     size32,
-    status32Class,
+    status32,
     badge32,
     fill32,
+    fillText32,
     allowable32,
     size48,
-    status48Class,
+    status48,
     badge48,
     fill48,
+    fillText48,
     allowable48,
     customFillRate,
     titleCustom,
     sizeCustom,
-    statusCustomClass,
+    statusCustom,
     badgeCustom,
     fillCustom,
+    fillTextCustom,
     allowableCustom,
   }
 }

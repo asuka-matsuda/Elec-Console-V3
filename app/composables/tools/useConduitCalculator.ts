@@ -98,9 +98,12 @@ export function useConduitCalculator() {
     )
   })
 
+  const isSaveDisabled = computed(() => !result.value?.success || Boolean(result.value?.partial))
+
   return {
     inputs,
     result,
+    isSaveDisabled,
     addCable,
     removeCable,
     reset: resetInputs,

@@ -2,10 +2,10 @@ import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { ref } from 'vue'
 
-import OrganismsConduitInput from '../../app/components/tool/OrganismsConduitInput.vue'
+import OrganismsConduitInput from '../../app/components/tool/organisms/ConduitInput.vue'
 import type { ConduitInputData } from '../../app/types/tools'
 
-describe('ToolOrganismsConduitInput (app/components/tool/OrganismsConduitInput.vue)', () => {
+describe('ToolOrganismsConduitInput (app/components/tool/organisms/ConduitInput.vue)', () => {
   const createMockInputs = (overrides: Partial<ConduitInputData> = {}): ConduitInputData => ({
     conduitCategory: 'e',
     customFillRate: 80,
@@ -15,11 +15,6 @@ describe('ToolOrganismsConduitInput (app/components/tool/OrganismsConduitInput.v
     ],
     ...overrides,
   })
-
-  const mockCategoryOptions = [
-    { label: 'ねじなし電線管 (E)', value: 'e' },
-    { label: '厚鋼電線管 (G)', value: 'g' },
-  ]
 
   const commonStubs = {
     FormGroup: {
@@ -83,7 +78,6 @@ describe('ToolOrganismsConduitInput (app/components/tool/OrganismsConduitInput.v
     const wrapper = mount(OrganismsConduitInput, {
       props: {
         'modelValue': inputs.value,
-        'categoryOptions': mockCategoryOptions,
         'onUpdate:modelValue': (val: ConduitInputData) => {
           inputs.value = val
         },
@@ -103,7 +97,6 @@ describe('ToolOrganismsConduitInput (app/components/tool/OrganismsConduitInput.v
     const wrapper = mount(OrganismsConduitInput, {
       props: {
         'modelValue': inputs.value,
-        'categoryOptions': mockCategoryOptions,
         'onUpdate:modelValue': (val: ConduitInputData) => {
           inputs.value = val
         },
@@ -127,7 +120,6 @@ describe('ToolOrganismsConduitInput (app/components/tool/OrganismsConduitInput.v
     const wrapper = mount(OrganismsConduitInput, {
       props: {
         'modelValue': inputs.value,
-        'categoryOptions': mockCategoryOptions,
         'onUpdate:modelValue': (val: ConduitInputData) => {
           inputs.value = val
         },
@@ -158,7 +150,6 @@ describe('ToolOrganismsConduitInput (app/components/tool/OrganismsConduitInput.v
     const wrapper = mount(OrganismsConduitInput, {
       props: {
         'modelValue': inputs.value,
-        'categoryOptions': mockCategoryOptions,
         'onUpdate:modelValue': (val: ConduitInputData) => {
           inputs.value = val
         },

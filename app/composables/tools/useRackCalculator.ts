@@ -106,10 +106,15 @@ export function useRackCalculator() {
     return generateMathData(logicInputs, result.value)
   })
 
+  const isSaveDisabled = computed(() =>
+    Boolean(result.value?.error) || !result.value || (result.value.tier1.totalWidth === 0 && result.value.tier2.totalWidth === 0),
+  )
+
   return {
     inputs,
     maxDepth,
     result,
+    isSaveDisabled,
     addStrongCable,
     removeStrongCable,
     addWeakCable,
