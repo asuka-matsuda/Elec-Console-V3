@@ -7,8 +7,6 @@ import { computed } from 'vue'
 
 import type { SectionHeaderProps } from '~/types/components'
 
-export type { SectionHeaderProps }
-
 const props = withDefaults(
   defineProps<SectionHeaderProps>(),
   {

@@ -85,7 +85,7 @@ const { data: dashboardData, pending: isDashboardPending } = await useFetch<Dash
         <SectionHeader :title="section.heading" :icon="section.icon" />
 
         <div class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-panel-gap">
-          <DashboardMenuTile
+          <MenuTile
             v-for="item in section.items"
             :key="item.text"
             :item="item"

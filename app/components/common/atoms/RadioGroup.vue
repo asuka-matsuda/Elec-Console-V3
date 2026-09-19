@@ -33,8 +33,7 @@ const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
 const isSelected = (value: T) => model.value === value
 const isOptionDisabled = (option: RadioOption<T>) => props.disabled || Boolean(option.disabled)
 
-const updateValue = (value: T, disabled?: boolean) => {
-  if (disabled) return
+const updateValue = (value: T) => {
   model.value = value
   emit('change', value)
 }
@@ -66,7 +65,7 @@ const updateValue = (value: T, disabled?: boolean) => {
         :checked="isSelected(option.value)"
         :disabled="isOptionDisabled(option)"
         class="radio-native-input"
-        @change="updateValue(option.value, isOptionDisabled(option))"
+        @change="updateValue(option.value)"
       />
       <slot name="option" :option="option" :is-selected="isSelected(option.value)">
         {{ option.label }}

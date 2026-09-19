@@ -3,7 +3,7 @@ import type { WeightCalcResult } from '~/utils/tools/weight/weightCalcLogic'
 export interface WeightResultViewModel {
   isError: boolean
   hasBestDrum: boolean
-  boxStatus: 'empty' | 'success' | 'error'
+  boxStatus: 'empty' | 'success' | 'danger'
   badgeText?: string
   displayDrum: string
   displayTotalWeight: string
@@ -28,7 +28,7 @@ export function formatWeightResult(
     ? 'empty'
     : hasBestDrum
       ? 'success'
-      : 'error'
+      : 'danger'
 
   let displayDrum = '---'
   let displayTotalWeight = '---'

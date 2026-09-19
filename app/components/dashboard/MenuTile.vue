@@ -1,15 +1,15 @@
 <script setup lang="ts">
 /**
- * DashboardMenuTile
- * [Molecules] ダッシュボードで各機能を選択するための専用ナビゲーションタイル。
+ * MenuTile
+ * [Dashboard] ダッシュボードで各機能を選択するための専用ナビゲーションタイル。
  * MenuItem を直接受け取り、Panel アトムのサーフェス装飾・状態管理へ完全委任します。
  */
 import { computed } from 'vue'
 
 import { NuxtLink } from '#components'
-import type { DashboardMenuTileProps } from '~/types/components'
+import type { MenuTileProps } from '~/types/components'
 
-const { item } = defineProps<DashboardMenuTileProps>()
+const { item } = defineProps<MenuTileProps>()
 
 const isClickable = computed(() => !item.disabled && Boolean(item.href))
 const componentTag = computed(() => (isClickable.value ? NuxtLink : 'div'))

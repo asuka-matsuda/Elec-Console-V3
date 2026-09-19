@@ -5,6 +5,9 @@ import ToolTemplatesLayout from '../../app/components/tool/TemplatesLayout.vue'
 
 describe('ToolTemplatesLayout.vue', () => {
   const commonStubs = {
+    ToolDisclaimer: {
+      template: '<div class="disclaimer-stub">免責事項</div>',
+    },
     Disclaimer: {
       template: '<div class="disclaimer-stub">免責事項</div>',
     },
@@ -125,6 +128,10 @@ describe('ToolTemplatesLayout.vue', () => {
       global: {
         stubs: {
           ...commonStubs,
+          ToolDisclaimer: {
+            props: ['text'],
+            template: '<div class="disclaimer-stub" :data-text="text">免責事項</div>',
+          },
           Disclaimer: {
             props: ['text'],
             template: '<div class="disclaimer-stub" :data-text="text">免責事項</div>',

@@ -1,85 +1,71 @@
 <script setup lang="ts">
 /**
- * MoleculesResultBox
- * [Molecules] 計算ツールやサマリー画面で、主要な結果数値・ステータス（判定）を表示するための特化ボックス。
- * Panel を土台とし、計器風の凹みシャドウ（--shadow-sink）、等幅数値フォント、判定ステータスに応じた発光演出を提供します。
+ * ResultBox
+ * [Molecules] 計算ツールやサマリー画面で、主要な結果数値・ステータス（判定）を表示する特化ディスプレイ。
+ * 計器風の凹みシャドウ（--shadow-sink）、等幅数値フォント、判定ステータスに応じたボーダー・テキストカラーを提供します。
  */
 import { computed } from 'vue'
 
-import type { BadgePresetId, ResultBoxStatus } from '~/types/components'
+import type { BadgePresetId, ResultBoxProps, ResultBoxStatus } from '~/types/components'
 
-interface Props {
-  title?: string
-  status?: ResultBoxStatus
-  variant?: ResultBoxStatus
-  badge?: string
-  isEmpty?: boolean
-  size?: 'sm' | 'md'
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<ResultBoxProps>(), {
   status: 'neutral',
   isEmpty: false,
   size: 'md',
 })
 
-const resolvedStatus = computed(() => {
+// isEmpty prop が指定されている場合は優先して 'empty' に解決
+const resolvedStatus = computed<ResultBoxStatus>(() => {
   if (props.isEmpty) return 'empty'
 
-  const raw = props.variant || props.status
-
-  if (raw === 'error') return 'danger'
-  if (raw === 'default') return 'neutral'
-
-  return raw || 'neutral'
+  return props.status || 'neutral'
 })
 
-const badgeId = computed<BadgePresetId>(() => {
-  if (resolvedStatus.value === 'danger') return 'status:danger'
-  if (resolvedStatus.value === 'warning') return 'status:warning'
-
-  return 'status:neutral'
-})
+// バッジプリセットIDの導出（純粋に status に連動）
+const BADGE_STATUS_MAP: Record<ResultBoxStatus, BadgePresetId> = {
+  danger: 'status:danger',
+  warning: 'status:warning',
+  success: 'status:success',
+  neutral: 'status:neutral',
+  empty: 'status:neutral',
+}
+const badgeId = computed<BadgePresetId>(() => BADGE_STATUS_MAP[resolvedStatus.value] ?? 'status:neutral')
 </script>
 
 <template>
-  <Panel
+  <div
     class="result-box flex flex-1 flex-col items-center justify-center gap-1 w-full min-w-0"
     :class="[`is-${resolvedStatus}`, `is-${size}`]"
   >
-    <!-- ラベル領域 ＋ バッジ -->
+    <!-- ヘッダー（タイトル ＋ バッジ） -->
     <header v-if="title || badge || $slots.title || $slots.badge" class="flex items-center justify-center gap-1.5">
       <slot name="title">
         <span>{{ title }}</span>
       </slot>
       <slot name="badge">
-        <Badge
-          v-if="badge && (resolvedStatus === 'warning' || resolvedStatus === 'danger')"
-          :id="badgeId"
-        >
+        <Badge v-if="badge" :id="badgeId">
           {{ badge }}
         </Badge>
       </slot>
     </header>
 
-    <!-- 数値・メイン表示領域 -->
+    <!-- メイン数値・結果表示領域 -->
     <div class="value flex items-center justify-center gap-2">
       <slot name="value">
         <slot />
       </slot>
     </div>
-
-    <!-- アクション領域（必要時のみ） -->
-    <div v-if="$slots.actions">
-      <slot name="actions" />
-    </div>
-  </Panel>
+  </div>
 </template>
 
 <style scoped lang="scss">
 .result-box {
   padding: var(--space-2) var(--space-3);
+  border: var(--border-width-base) solid var(--color-border);
+
+  background: var(--surface-bg);
   box-shadow: var(--shadow-sink);
+
   transition: var(--transition-panel);
 
   &.is-sm {
@@ -94,7 +80,6 @@ const badgeId = computed<BadgePresetId>(() => {
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
     color: var(--color-text-main);
-    text-shadow: none;
     letter-spacing: var(--tracking-wide);
   }
 
@@ -104,29 +89,18 @@ const badgeId = computed<BadgePresetId>(() => {
     font-weight: var(--font-weight-bold);
     font-variant-numeric: tabular-nums;
     line-height: var(--line-height-tight);
+    color: var(--color-text-main);
 
+    :deep(small),
     :deep(.unit),
-    :deep(small) {
+    :deep(.sep) {
       font-size: var(--font-size-sm);
       font-weight: var(--font-weight-normal);
       color: var(--color-text-secondary);
-      text-shadow: none;
-    }
-
-    :deep(.sep) {
-      font-size: var(--font-size-sm);
-      color: var(--color-text-muted);
-      text-shadow: none;
-    }
-
-    :deep(.not-applicable) {
-      font-size: var(--font-size-xs);
-      color: var(--color-text-muted);
-      text-shadow: none;
     }
   }
 
-  // ステータス共通管理（CSS変数で一括設定）
+  // ステータスカラーの一元定義
   &.is-success { --status-color: var(--color-status-success); }
   &.is-warning { --status-color: var(--color-status-warning); }
   &.is-danger  { --status-color: var(--color-status-danger); }
@@ -141,12 +115,8 @@ const badgeId = computed<BadgePresetId>(() => {
     }
   }
 
-  &.is-neutral .value {
-    color: var(--color-text-main);
-  }
-
   &.is-empty {
-    opacity: 0.7;
+    opacity: 0.6;
 
     .value {
       color: var(--color-text-muted);

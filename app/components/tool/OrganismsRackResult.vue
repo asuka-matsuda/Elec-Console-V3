@@ -35,7 +35,7 @@ const detailItems = computed(() => [
 <template>
   <div class="flex flex-col gap-panel-gap">
     <!-- 1段敷設（平置き・標準） -->
-    <MoleculesResultBox
+    <ResultBox
       :title="vm.tier1.title"
       :status="vm.tier1.boxStatus"
       :badge="vm.tier1.badgeText"
@@ -44,10 +44,10 @@ const detailItems = computed(() => [
       <template #value>
         {{ vm.tier1.displaySize }}
       </template>
-    </MoleculesResultBox>
+    </ResultBox>
 
     <!-- 2段敷設（省スペース） -->
-    <MoleculesResultBox
+    <ResultBox
       :title="vm.tier2.title"
       :status="vm.tier2.boxStatus"
       :badge="vm.tier2.badgeText"
@@ -61,9 +61,16 @@ const detailItems = computed(() => [
           {{ vm.tier2.notApplicableText }}
         </span>
       </template>
-    </MoleculesResultBox>
+    </ResultBox>
 
     <!-- 詳細内訳 -->
-    <MoleculesResultDetails :items="detailItems" />
+    <ToolResultDetails :items="detailItems" />
   </div>
 </template>
+
+<style scoped lang="scss">
+.not-applicable {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+</style>

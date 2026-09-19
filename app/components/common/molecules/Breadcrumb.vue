@@ -3,29 +3,41 @@
  * Breadcrumb
  * [Molecules] パンくずリストを表示するためのUIコンポーネント
  */
-import type { BreadcrumbItem } from '~/types/components'
+import { computed } from 'vue'
 
-withDefaults(
-  defineProps<{
-    items?: BreadcrumbItem[]
-  }>(),
+import { useBreadcrumbs } from '~/composables/useBreadcrumbs'
+import type { BreadcrumbItem, BreadcrumbProps } from '~/types/components'
+
+const props = withDefaults(
+  defineProps<BreadcrumbProps>(),
   {
-    items: () => [],
+    items: undefined,
   },
 )
+
+const resolvedItems = computed<BreadcrumbItem[]>(() => {
+  if (props.items !== undefined) return props.items
+
+  try {
+    return useBreadcrumbs().items.value
+  }
+  catch {
+    return []
+  }
+})
 </script>
 
 <template>
   <nav
-    v-if="items && items.length > 0"
+    v-if="resolvedItems && resolvedItems.length > 0"
     class="flex shrink-0 items-center py-1 px-2 whitespace-nowrap breadcrumb"
   >
     <ol class="flex items-center gap-2">
       <li
-        v-for="(item, index) in items"
+        v-for="(item, index) in resolvedItems"
         :key="`${item.text}-${index}`"
         class="flex items-center gap-2"
-        :class="{ 'is-current': index === items.length - 1 }"
+        :class="{ 'is-current': index === resolvedItems.length - 1 }"
       >
         {{ item.text }}
       </li>

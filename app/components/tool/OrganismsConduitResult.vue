@@ -37,7 +37,7 @@ const statusCustom = computed(() =>
     :class="[size === 'sm' ? 'gap-3 is-sm' : 'gap-[var(--space-panel-gap)]']"
   >
     <!-- Row 1: 32% (異種) -->
-    <MoleculesResultBox
+    <ResultBox
       :title="CONDUIT_UI_LABELS.TITLE_32"
       :status="status32"
       :badge="vm.badge32"
@@ -52,10 +52,10 @@ const statusCustom = computed(() =>
           <small class="sep">)</small>
         </template>
       </template>
-    </MoleculesResultBox>
+    </ResultBox>
 
     <!-- Row 2: 48% (同種) -->
-    <MoleculesResultBox
+    <ResultBox
       :title="CONDUIT_UI_LABELS.TITLE_48"
       :status="status48"
       :badge="vm.badge48"
@@ -70,10 +70,10 @@ const statusCustom = computed(() =>
           <small class="sep">)</small>
         </template>
       </template>
-    </MoleculesResultBox>
+    </ResultBox>
 
     <!-- Row 3: ユーザー指定 (customFillRate%) -->
-    <MoleculesResultBox
+    <ResultBox
       :title="vm.titleCustom"
       :status="statusCustom"
       :badge="vm.badgeCustom"
@@ -88,14 +88,14 @@ const statusCustom = computed(() =>
           <small class="sep">)</small>
         </template>
       </template>
-    </MoleculesResultBox>
+    </ResultBox>
 
     <!-- サブ情報: 内線規程（勧告）根拠 -->
-    <MoleculesResultDetails>
+    <ToolResultDetails>
       <ul class="m-0 p-0 flex flex-col gap-1 list-none">
         <li>3110-6 (32%以下): 異なる太さの絶縁電線を同一管内に収める場合（原則）</li>
         <li>3110-5 (48%以下): 同一太さで、かつ管の屈曲が少なく引き替えが容易な場合</li>
       </ul>
-    </MoleculesResultDetails>
+    </ToolResultDetails>
   </div>
 </template>

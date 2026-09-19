@@ -8,8 +8,6 @@ import { computed } from 'vue'
 
 import type { DividerProps } from '~/types/components'
 
-export type { DividerProps }
-
 const {
   color,
   type = 'solid',

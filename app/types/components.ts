@@ -54,6 +54,11 @@ export interface TableColumn<T = Record<string, unknown>> {
   truncate?: boolean
   /** 値が空（null, undefined, 空文字）の時のフォールバック表示 */
   emptyFallback?: string
+  /** セルに適用する追加クラス */
+  class?: string
+  /** 表示値のカスタムフォーマッタ関数 */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  format?: (value: any, row: any) => unknown
 }
 
 /** パンくずリスト項目 */
@@ -77,6 +82,13 @@ export interface HistoryItem {
   date: string
   desc: string
   status?: string
+}
+
+/** 改行禁止ワード設定用アイテム定義 */
+export interface WordBreakItem {
+  id?: string | number
+  word: string
+  date: string
 }
 
 /** ダッシュボード用集約データ */
@@ -188,11 +200,12 @@ export interface PanelProps {
   padding?: PanelPadding
 }
 
-// --- Disclaimer ---
-export interface DisclaimerProps {
+// --- Disclaimer (Tool) ---
+export interface ToolDisclaimerProps {
   /** 免責・注記本文（スロットで差し替えも可能） */
   text?: string
 }
+export type DisclaimerProps = ToolDisclaimerProps
 
 // --- Input ---
 export type InputType
@@ -365,14 +378,21 @@ export interface TabsProps<T = string | number> {
 }
 
 // --- ResultBox & ResultDetails ---
-export type ResultBoxStatus = 'success' | 'warning' | 'danger' | 'error' | 'default' | 'neutral' | 'empty'
+export type ResultBoxStatus = 'neutral' | 'success' | 'warning' | 'danger' | 'empty'
+
+export interface ResultBoxProps {
+  title?: string
+  status?: ResultBoxStatus
+  badge?: string
+  isEmpty?: boolean
+  size?: 'sm' | 'md'
+}
 
 export interface ResultDetailItem {
   label: string
   value: string | number
   unit?: string
   note?: string
-  topBorder?: boolean
 }
 
 // --- InfoList ---
@@ -389,10 +409,16 @@ export interface InfoListProps<T extends InfoListItem = InfoListItem> {
   emptyText?: string
 }
 
-// --- DashboardMenuTile ---
-export interface DashboardMenuTileProps {
+// --- MenuTile (Dashboard) ---
+export interface MenuTileProps {
   /** メニューアイテムオブジェクト（タイトル・アイコン・リンク・無効状態・説明文） */
   item: MenuItem
+}
+export type DashboardMenuTileProps = MenuTileProps
+
+// --- KanaFilter (Reference) ---
+export interface KanaFilterProps {
+  availableRows?: Set<string>
 }
 
 // --- EmptyState ---
@@ -442,17 +468,47 @@ export interface TableProps<T = unknown> {
   interactiveRow?: boolean
 }
 
+// --- Breadcrumb ---
+export interface BreadcrumbProps {
+  items?: BreadcrumbItem[]
+}
+
 // ============================================================================
 // 4. Organisms（構造化コンポーネント）
 // ============================================================================
 
-export interface OrganismsFooterProps {
+export interface HeaderProps {
+  breadcrumbs?: BreadcrumbItem[]
+}
+
+export type OrganismsHeaderProps = HeaderProps
+
+export interface FooterProps {
   year?: number | string
   text?: string
 }
 
-export interface OrganismsGlobalNavProps {
-  menuData: import('~/constants/data/menuData').MenuSection[]
+export type OrganismsFooterProps = FooterProps
+
+export interface GlobalNavProps {
+  menuData?: import('~/constants/data/menuData').MenuSection[]
+}
+
+export type OrganismsGlobalNavProps = GlobalNavProps
+
+export interface FilterPanelProps {
+  title?: string
+  tag?: HeadingTag
+  icon?: IconName
+  placeholder?: string
+  categoryOptions?: SelectOption<string>[]
+}
+
+export interface ModalProps {
+  title?: string
+  icon?: IconName
+  align?: 'left' | 'center'
+  closeText?: string
 }
 
 // ============================================================================

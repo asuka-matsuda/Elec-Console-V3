@@ -5,19 +5,48 @@ import OrganismsRackResult from '../../app/components/tool/OrganismsRackResult.v
 import type { RackCalcResult } from '../../app/utils/tools/rack/rackCalcLogic'
 
 describe('ToolOrganismsRackResult (app/components/tool/OrganismsRackResult.vue)', () => {
+  const resultBoxStub = {
+    props: ['title', 'status', 'badge', 'isEmpty'],
+    template: `
+      <div class="result-box-stub" :class="[status, { 'is-empty': isEmpty }]">
+        <div class="title"><slot name="title">{{ title }}</slot><span v-if="badge">{{ badge }}</span></div>
+        <div class="value"><slot name="value"><slot /></slot></div>
+      </div>
+    `,
+  }
+
   const commonStubs = {
-    MoleculesResultBox: {
-      props: ['title', 'status', 'badge', 'isEmpty'],
-      template: `
-        <div class="result-box-stub" :class="[status, { 'is-empty': isEmpty }]">
-          <div class="title"><slot name="title">{{ title }}</slot><span v-if="badge">{{ badge }}</span></div>
-          <div class="value"><slot name="value"><slot /></slot></div>
-        </div>
-      `,
-    },
+    ResultBox: resultBoxStub,
+    MoleculesResultBox: resultBoxStub,
     Badge: {
       props: ['color'],
       template: '<span class="badge-stub"><slot /></span>',
+    },
+    ToolResultDetails: {
+      props: ['items'],
+      template: `
+        <div class="result-details-stub">
+          <div v-for="item in items" :key="item.label" class="detail-row">
+            <span>{{ item.label }}</span>
+            <span>{{ item.value }}</span>
+            <span v-if="item.unit">{{ item.unit }}</span>
+            <span v-if="item.note">{{ item.note }}</span>
+          </div>
+        </div>
+      `,
+    },
+    ResultDetails: {
+      props: ['items'],
+      template: `
+        <div class="result-details-stub">
+          <div v-for="item in items" :key="item.label" class="detail-row">
+            <span>{{ item.label }}</span>
+            <span>{{ item.value }}</span>
+            <span v-if="item.unit">{{ item.unit }}</span>
+            <span v-if="item.note">{{ item.note }}</span>
+          </div>
+        </div>
+      `,
     },
     MoleculesResultDetails: {
       props: ['items'],
@@ -142,7 +171,7 @@ describe('ToolOrganismsRackResult (app/components/tool/OrganismsRackResult.vue)'
       },
     })
 
-    const resultBoxes = wrapper.findAllComponents(commonStubs.MoleculesResultBox)
+    const resultBoxes = wrapper.findAllComponents(commonStubs.ResultBox)
 
     expect(resultBoxes.length).toBe(2)
     expect(resultBoxes[0].props('isEmpty')).toBe(true)

@@ -169,7 +169,7 @@ module.exports = {
     // -------------------------------------------------------------------------
     {
       files: [
-        'app/components/OrganismsHeader.vue',
+        'app/components/common/organisms/Header.vue',
         'app/components/portal/MoleculesSyncStatusBadge.vue',
         'app/components/portal/AtomsCircularGauge.vue',
         'app/components/portal/OrganismsCalTypeSettingsModal.vue',

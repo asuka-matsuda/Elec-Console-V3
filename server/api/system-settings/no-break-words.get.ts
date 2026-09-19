@@ -19,7 +19,16 @@ export default defineEventHandler(async () => {
 
     const parsed = JSON.parse(setting.value)
     const words = Array.isArray(parsed)
-      ? parsed.filter((w): w is string => typeof w === 'string' && w.trim().length > 0)
+      ? parsed
+          .map((item: unknown) => {
+            if (typeof item === 'string') return item.trim()
+            if (item && typeof item === 'object' && 'word' in item && typeof (item as { word: unknown }).word === 'string') {
+              return (item as { word: string }).word.trim()
+            }
+
+            return ''
+          })
+          .filter((w): w is string => w.length > 0)
       : []
 
     return {

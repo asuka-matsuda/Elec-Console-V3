@@ -34,7 +34,7 @@ const hasBasis = computed(() => Boolean(slots.basis))
   <div class="tool-layout flex flex-1 flex-col gap-panel-gap min-h-0 w-full max-w-[1600px] mx-auto">
     <!-- 免責事項 -->
     <slot v-if="!hideDisclaimer" name="disclaimer">
-      <Disclaimer :text="disclaimerText" />
+      <ToolDisclaimer :text="disclaimerText" />
     </slot>
 
     <!-- メイングリッド（左: 条件入力 / 右: 計算結果） -->

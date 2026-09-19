@@ -4,7 +4,7 @@
  * [Molecules] タブナビゲーション＆コンテンツ表示コンポーネント。
  * 直角統一規約に準拠した下線スタイル（underline）を標準とし、同一画面内でのパネル切り替えを担います。
  */
-import { computed, nextTick, ref, useId, useSlots } from 'vue'
+import { computed, KeepAlive, nextTick, ref, useId, useSlots } from 'vue'
 
 import type { TabOption, TabsProps } from '~/types/components'
 
@@ -54,41 +54,23 @@ const handleKeydown = (event: KeyboardEvent, currentIndex: number) => {
 
   let targetOption: TabOption<T> | undefined
 
-  switch (event.key) {
-    case 'ArrowRight':
-    case 'ArrowDown': {
-      event.preventDefault()
-      // 次の有効なタブを探す
-      let nextIdx = (currentIndex + 1) % props.options.length
+  if (event.key === 'ArrowRight' || event.key === 'ArrowDown' || event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+    event.preventDefault()
+    const step = (event.key === 'ArrowRight' || event.key === 'ArrowDown') ? 1 : -1
+    let nextIdx = (currentIndex + step + props.options.length) % props.options.length
 
-      while (props.options[nextIdx]?.disabled) {
-        nextIdx = (nextIdx + 1) % props.options.length
-      }
-      targetOption = props.options[nextIdx]
-      break
+    while (props.options[nextIdx]?.disabled) {
+      nextIdx = (nextIdx + step + props.options.length) % props.options.length
     }
-    case 'ArrowLeft':
-    case 'ArrowUp': {
-      event.preventDefault()
-      // 前の有効なタブを探す
-      let prevIdx = (currentIndex - 1 + props.options.length) % props.options.length
-
-      while (props.options[prevIdx]?.disabled) {
-        prevIdx = (prevIdx - 1 + props.options.length) % props.options.length
-      }
-      targetOption = props.options[prevIdx]
-      break
-    }
-    case 'Home': {
-      event.preventDefault()
-      targetOption = props.options.find(opt => !opt.disabled)
-      break
-    }
-    case 'End': {
-      event.preventDefault()
-      targetOption = [...props.options].reverse().find(opt => !opt.disabled)
-      break
-    }
+    targetOption = props.options[nextIdx]
+  }
+  else if (event.key === 'Home') {
+    event.preventDefault()
+    targetOption = props.options.find(opt => !opt.disabled)
+  }
+  else if (event.key === 'End') {
+    event.preventDefault()
+    targetOption = [...props.options].reverse().find(opt => !opt.disabled)
   }
 
   if (targetOption) {
@@ -147,20 +129,17 @@ const handleKeydown = (event: KeyboardEvent, currentIndex: number) => {
       class="tabs__panel flex-1 min-h-0 focus:outline-none"
       :class="panelClass"
     >
-      <KeepAlive v-if="keepAlive">
+      <component
+        :is="keepAlive ? KeepAlive : 'div'"
+        class="h-full"
+      >
         <div :key="String(model)" class="h-full">
           <slot :name="String(model)" :active-tab="model">
             <!-- 名前付きスロットが指定されていない場合はデフォルトスロットにフォールバック -->
             <slot :active-tab="model" />
           </slot>
         </div>
-      </KeepAlive>
-      <template v-else>
-        <slot :name="String(model)" :active-tab="model">
-          <!-- 名前付きスロットが指定されていない場合はデフォルトスロットにフォールバック -->
-          <slot :active-tab="model" />
-        </slot>
-      </template>
+      </component>
     </div>
   </div>
 </template>

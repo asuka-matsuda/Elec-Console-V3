@@ -5,16 +5,12 @@
  * - 現場DX総合試験コンソールを象徴する gauge（計器・測定盤）アイコンを採用
  * - ヘッダー用途に特化した固定サイズ・リンク専用設計（アイコンサイズは文字に自動追従）
  */
-const emit = defineEmits<{
-  (e: 'click', event: MouseEvent): void
-}>()
 </script>
 
 <template>
   <NuxtLink
     to="/"
     class="flex shrink-0 items-center gap-2 logo"
-    @click="emit('click', $event)"
   >
     <Icon name="gauge" class="logo-icon" />
     <span>Elec-Console</span>

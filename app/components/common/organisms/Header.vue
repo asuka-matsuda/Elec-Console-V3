@@ -1,26 +1,30 @@
 <script setup lang="ts">
 /**
- * OrganismsHeader
+ * Header
  * [Organisms] アプリケーション全体のトップヘッダー。
- * サイドバー開閉トグル、ロゴ、パンくずリスト、ログインユーザー情報、ログアウト操作を一元管理する独立セクション。
+ * ナビゲーション、ロゴ、パンくず、マイページ導線、ログアウトを配置。
  */
-import type { BreadcrumbItem } from '~/types/components'
+import { computed } from 'vue'
 
-interface Props {
-  breadcrumbs?: BreadcrumbItem[]
-}
+import type { HeaderProps } from '~/types/components'
 
-defineProps<Props>()
+defineProps<HeaderProps>()
 
 const emit = defineEmits<{
   'toggle-sidebar': []
 }>()
 
 const { currentUser, logout } = useAuth()
+
+const userName = computed(() => {
+  if (!currentUser.value) return ''
+
+  return `${currentUser.value.lastName} ${currentUser.value.firstName}`
+})
 </script>
 
 <template>
-  <header class="relative z-10 flex h-16 items-center justify-between px-[var(--space-layout-pad)] header">
+  <header class="flex h-16 items-center justify-between px-layout-pad header">
     <!-- 左側: メインナビゲーション部 -->
     <div class="flex items-center gap-3">
       <Button
@@ -32,7 +36,6 @@ const { currentUser, logout } = useAuth()
       <Logo />
 
       <Breadcrumb
-        v-if="breadcrumbs?.length"
         :items="breadcrumbs"
         class="max-md:hidden"
       />
@@ -40,9 +43,10 @@ const { currentUser, logout } = useAuth()
 
     <!-- 右側: アクション & ユーザー情報部 -->
     <div class="flex items-center gap-3">
-      <slot name="actions" />
-
-      <div class="flex items-center gap-2">
+      <NuxtLink
+        to="/mypage"
+        class="flex items-center gap-2 user-link"
+      >
         <div class="flex shrink-0 items-center justify-center w-8 h-8 avatar">
           <Icon
             name="user"
@@ -51,14 +55,15 @@ const { currentUser, logout } = useAuth()
           />
         </div>
         <span class="max-md:hidden user-name">
-          {{ currentUser ? `${currentUser.lastName} ${currentUser.firstName}` : 'ゲスト' }}
+          {{ userName }}
         </span>
-        <Button
-          @click="logout"
-        >
-          ログアウト
-        </Button>
-      </div>
+      </NuxtLink>
+
+      <Button
+        @click="logout"
+      >
+        ログアウト
+      </Button>
     </div>
   </header>
 </template>
@@ -67,29 +72,38 @@ const { currentUser, logout } = useAuth()
 .header {
   border-bottom: var(--border-width-base) solid var(--color-border);
   background-color: var(--surface-bg);
-  backdrop-filter: blur(var(--blur-md));
+}
+
+.user-link {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    .avatar {
+      border-color: var(--theme-accent);
+    }
+
+    .user-name {
+      color: var(--theme-accent);
+    }
+  }
 }
 
 .avatar {
-  border: var(--border-width-base) solid color-mix(in srgb, var(--theme-accent) 40%, var(--color-border));
+  border: var(--border-width-base) solid var(--color-border);
   border-radius: var(--radius-circle);
-  box-shadow: var(--shadow-elevation-sm);
-  transition: var(--transition-interactive);
+  transition: var(--transition-base);
 
   &__icon {
     color: var(--theme-accent);
-  }
-
-  &:hover {
-    border-color: var(--theme-accent);
-    box-shadow: var(--shadow-glow-sm);
   }
 }
 
 .user-name {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
   color: var(--color-text-main);
+  transition: var(--transition-base);
 }
 </style>

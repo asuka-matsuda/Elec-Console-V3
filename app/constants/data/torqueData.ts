@@ -89,3 +89,14 @@ export const torqueData = [
     ],
   },
 ]
+
+/**
+ * データベース表示・検索用にフラット化したトルクデータ
+ */
+export const torqueDbData = torqueData.flatMap(cat =>
+  cat.items.map(item => ({
+    category: cat.category,
+    reference: cat.reference,
+    ...item,
+  })),
+)

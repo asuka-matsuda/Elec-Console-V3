@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import Disclaimer from '../../app/components/common/atoms/Disclaimer.vue'
+import ToolDisclaimer from '../../../app/components/tool/Disclaimer.vue'
 
-describe('Disclaimer.vue', () => {
+describe('ToolDisclaimer (app/components/tool/Disclaimer.vue)', () => {
   const commonGlobal = {
     stubs: {
       Icon: {
@@ -14,7 +14,7 @@ describe('Disclaimer.vue', () => {
   }
 
   it('renders default disclaimer with items-start, default text, and alert-triangle icon', () => {
-    const wrapper = mount(Disclaimer, {
+    const wrapper = mount(ToolDisclaimer, {
       global: commonGlobal,
     })
 
@@ -40,7 +40,7 @@ describe('Disclaimer.vue', () => {
   })
 
   it('renders custom text via text prop', () => {
-    const wrapper = mount(Disclaimer, {
+    const wrapper = mount(ToolDisclaimer, {
       props: {
         text: '注意: これはテスト用のカスタム注記文言です。',
       },
@@ -51,7 +51,7 @@ describe('Disclaimer.vue', () => {
   })
 
   it('renders custom body via default slot', () => {
-    const wrapper = mount(Disclaimer, {
+    const wrapper = mount(ToolDisclaimer, {
       slots: {
         default: '<span class="custom-body">スロットによる注記本文</span>',
       },
@@ -63,7 +63,7 @@ describe('Disclaimer.vue', () => {
   })
 
   it('renders custom icon via icon slot', () => {
-    const wrapper = mount(Disclaimer, {
+    const wrapper = mount(ToolDisclaimer, {
       slots: {
         icon: '<span class="my-custom-icon">CUSTOM_ICON</span>',
       },

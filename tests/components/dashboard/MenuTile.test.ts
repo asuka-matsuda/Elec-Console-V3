@@ -1,10 +1,10 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import Panel from '../../app/components/common/atoms/Panel.vue'
-import DashboardMenuTile from '../../app/components/common/molecules/DashboardMenuTile.vue'
+import Panel from '../../../app/components/common/atoms/Panel.vue'
+import MenuTile from '../../../app/components/dashboard/MenuTile.vue'
 
-describe('DashboardMenuTile.vue', () => {
+describe('MenuTile.vue (app/components/dashboard/MenuTile.vue)', () => {
   const commonStubs = {
     Icon: {
       props: ['name', 'size'],
@@ -18,7 +18,7 @@ describe('DashboardMenuTile.vue', () => {
   }
 
   it('renders title, icon, and description correctly as NuxtLink', () => {
-    const wrapper = mount(DashboardMenuTile, {
+    const wrapper = mount(MenuTile, {
       props: {
         item: {
           text: 'ケーブル規格DB',
@@ -41,7 +41,7 @@ describe('DashboardMenuTile.vue', () => {
   })
 
   it('renders as disabled div when item.disabled is true', () => {
-    const wrapper = mount(DashboardMenuTile, {
+    const wrapper = mount(MenuTile, {
       props: {
         item: {
           text: '準備中機能',
@@ -61,7 +61,7 @@ describe('DashboardMenuTile.vue', () => {
   })
 
   it('renders as div without link when item.href is empty', () => {
-    const wrapper = mount(DashboardMenuTile, {
+    const wrapper = mount(MenuTile, {
       props: {
         item: {
           text: 'リンクなし機能',
@@ -79,7 +79,7 @@ describe('DashboardMenuTile.vue', () => {
   })
 
   it('renders correctly without icon and description', () => {
-    const wrapper = mount(DashboardMenuTile, {
+    const wrapper = mount(MenuTile, {
       props: {
         item: {
           text: 'タイトルのみ',

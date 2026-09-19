@@ -1,24 +1,24 @@
 <script setup lang="ts">
 /**
- * Disclaimer
- * 免責事項（注意事項）を表示するAtomコンポーネントです。
+ * ToolDisclaimer
+ * 免責事項（注意事項）を表示するツール専用コンポーネントです。
  *
  * @example
  * <!-- デフォルト表示 -->
- * <Disclaimer />
+ * <ToolDisclaimer />
  *
  * <!-- 文言のカスタマイズ -->
- * <Disclaimer text="注意: ツール固有の注記..." />
+ * <ToolDisclaimer text="注意: ツール固有の注記..." />
  *
  * <!-- スロットによるカスタムアイコン・本文 -->
- * <Disclaimer>
+ * <ToolDisclaimer>
  *   <template #icon><Icon name="info" size="sm" /></template>
  *   最新のカタログ値をご確認ください。
- * </Disclaimer>
+ * </ToolDisclaimer>
  */
-import type { DisclaimerProps } from '~/types/components'
+import type { ToolDisclaimerProps } from '~/types/components'
 
-const props = withDefaults(defineProps<DisclaimerProps>(), {
+const props = withDefaults(defineProps<ToolDisclaimerProps>(), {
   text: '免責事項: 本ツールによる計算結果は、規程に基づいた理論値（目安）です。選定や安全性については、必ず設計者自身の責任において各種関連法規・規程をご確認の上ご判断ください。',
 })
 </script>

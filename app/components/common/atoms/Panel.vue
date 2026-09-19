@@ -4,7 +4,7 @@
  * [Atoms] 背景・枠線・影などの装飾のみを提供する純粋なサーフェス枠コンポーネント。
  * interactive, selected, disabled による状態管理を一元提供します。
  */
-import type { PanelProps } from '~/types/components'
+import type { PanelOverflow, PanelProps } from '~/types/components'
 
 const {
   as = 'div',
@@ -14,6 +14,12 @@ const {
   overflow = 'hidden',
   padding = 'normal',
 } = defineProps<PanelProps>()
+
+const OVERFLOW_CLASSES: Record<PanelOverflow, string> = {
+  hidden: 'overflow-hidden',
+  visible: 'overflow-visible',
+  auto: 'overflow-auto',
+}
 </script>
 
 <template>
@@ -21,7 +27,7 @@ const {
     :is="as"
     class="relative z-[1] panel"
     :class="[
-      `overflow-${overflow}`,
+      OVERFLOW_CLASSES[overflow],
       {
         'p-panel-pad': padding === 'normal',
         'p-2': padding === 'sm',

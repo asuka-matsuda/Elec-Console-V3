@@ -4,19 +4,14 @@
  * [Organisms] ネイティブの dialog 要素を使用した軽量モーダルダイアログ。
  * 表示・開閉・アクセシビリティ・レイアウトの提供に特化した純粋なコンテナです。
  */
-import { onMounted, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 
-import type { IconName } from '~/constants/icons'
+import type { ModalProps } from '~/types/components'
 
 const isOpen = defineModel<boolean>({ default: false })
 
 withDefaults(
-  defineProps<{
-    title?: string
-    icon?: IconName
-    align?: 'left' | 'center'
-    closeText?: string
-  }>(),
+  defineProps<ModalProps>(),
   {
     align: 'left',
     closeText: '閉じる',
@@ -52,14 +47,8 @@ watch(
       dialogRef.value.close()
     }
   },
-  { flush: 'post' },
+  { immediate: true, flush: 'post' },
 )
-
-onMounted(() => {
-  if (isOpen.value && dialogRef.value && !dialogRef.value.open) {
-    dialogRef.value.showModal()
-  }
-})
 </script>
 
 <template>
@@ -113,7 +102,6 @@ onMounted(() => {
     overlay var(--duration-fast) allow-discrete;
 
   &:not([open]) {
-    pointer-events: none;
     display: none;
   }
 

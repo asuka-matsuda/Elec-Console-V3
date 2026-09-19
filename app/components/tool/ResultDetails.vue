@@ -1,11 +1,9 @@
 <script setup lang="ts">
 /**
- * MoleculesResultDetails
- * [Molecules] 計算結果やスペックの詳細内訳をラベルと値の対照形式で表示するコンポーネント。
+ * ToolResultDetails
+ * [Tool] 計算結果やスペックの詳細内訳・注記をラベルと値の対照形式で表示するツール専用コンポーネント。
  */
 import type { ResultDetailItem } from '~/types/components'
-
-export type { ResultDetailItem }
 
 defineProps<{
   items?: ResultDetailItem[]
@@ -13,9 +11,9 @@ defineProps<{
 </script>
 
 <template>
-  <div class="result-details flex flex-col gap-1 w-full mt-1">
+  <div v-if="items?.length || $slots.default" class="result-details flex flex-col gap-1 w-full">
     <!-- リスト形式の内訳（アイテムがある場合） -->
-    <dl v-if="items && items.length > 0" class="m-0 p-0 flex flex-col gap-1">
+    <dl v-if="items?.length" class="m-0 p-0 flex flex-col gap-1">
       <div
         v-for="item in items"
         :key="item.label"
@@ -40,12 +38,6 @@ defineProps<{
   font-size: var(--font-size-xs);
   line-height: var(--line-height-ui);
   color: var(--color-text-muted);
-
-  .label,
-  .unit,
-  .note {
-    color: var(--color-text-muted);
-  }
 
   .value {
     font-variant-numeric: tabular-nums;

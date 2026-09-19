@@ -70,19 +70,9 @@ const { columnWidthStyles } = useTableAutoWidth(tableWrapperRef, {
 const handleSort = (col: TableColumn<unknown>) => {
   if (col.sortable === false) return
 
-  let nextOrder: TableSortOrder = 'asc'
-
-  if (sortBy.value === col.key) {
-    if (sortOrder.value === 'asc') {
-      nextOrder = 'desc'
-    }
-    else if (sortOrder.value === 'desc') {
-      nextOrder = null
-    }
-    else {
-      nextOrder = 'asc'
-    }
-  }
+  const nextOrder: TableSortOrder = sortBy.value === col.key
+    ? (sortOrder.value === 'asc' ? 'desc' : sortOrder.value === 'desc' ? null : 'asc')
+    : 'asc'
 
   sortBy.value = nextOrder ? String(col.key) : undefined
   sortOrder.value = nextOrder
@@ -190,7 +180,7 @@ const getCellValue = (row: unknown, key?: string | number): unknown => {
           >
             <slot name="loading">
               <div class="flex flex-col items-center justify-center gap-3">
-                <Icon name="loader" size="lg" class="animate-spin text-accent" />
+                <Icon name="loader" size="lg" spin class="text-accent" />
                 <span class="loading-text">{{ loadingText }}</span>
               </div>
             </slot>
@@ -214,11 +204,12 @@ const getCellValue = (row: unknown, key?: string | number): unknown => {
           <TableTd
             v-for="col in columns"
             :key="col.key"
-            :value="getCellValue(row, col.key)"
+            :value="col.format ? col.format(getCellValue(row, col.key), row) : getCellValue(row, col.key)"
             :sub-value="col.subKey ? getCellValue(row, col.subKey) : undefined"
             :align="col.align"
             :truncate="col.truncate"
             :empty-fallback="col.emptyFallback"
+            :class="col.class"
           >
             <template v-if="$slots[`cell-${col.key}`]" #default="{ value, subValue }">
               <slot

@@ -11,29 +11,47 @@ export const CABLE_DB_COLUMNS: TableColumn<(typeof cableData)[number]>[] = [
   { key: 'name', label: 'ケーブル名称', sortable: true },
   { key: 'ampacity', label: '許容電流 (A)', sortable: true, align: 'right' },
   { key: 'diameter', label: '仕上外径 (mm)', sortable: true, align: 'right' },
-  { key: 'weight', label: '概算質量 (kg/m)', sortable: true, align: 'right' },
-  { key: 'voltage', label: '耐電圧', sortable: true, align: 'center' },
-  { key: 'temp', label: '基底/最高温度', sortable: true, align: 'center' },
-  { key: 'standard', label: '参考規格/メーカー', sortable: true },
+  {
+    key: 'weight',
+    label: '概算質量 (kg/m)',
+    sortable: true,
+    align: 'right',
+    format: (v: unknown) => (isNaN(Number(v)) ? (v as string) : Number(v) / 1000),
+  },
+  {
+    key: 'voltage',
+    label: '耐電圧',
+    sortable: true,
+    align: 'center',
+    format: (v: unknown) => (v != null ? `${v} V` : '-'),
+  },
+  {
+    key: 'baseTemp',
+    label: '基底/最高温度',
+    sortable: true,
+    align: 'center',
+    format: (_: unknown, row: (typeof cableData)[number]) => `${row.baseTemp}℃ / ${row.maxTemp}℃`,
+  },
+  { key: 'standard', label: '参考規格/メーカー', sortable: true, class: 'text-text-muted text-xs' },
 ]
 
 /**
  * 電線管DBのテーブルカラム定義
  */
 export const CONDUIT_DB_COLUMNS: TableColumn<(typeof conduitData)[number]>[] = [
-  { key: 'category', label: '配管種類', sortable: true },
+  { key: 'category', label: '配管種類', sortable: true, class: 'font-bold' },
   { key: 'size', label: '呼び径', sortable: true, align: 'center' },
   { key: 'innerDiameter', label: '内径 (mm)', sortable: true, align: 'right' },
   { key: 'outerDiameter', label: '外径 (mm)', sortable: true, align: 'right' },
   { key: 'area', label: '断面積 (mm²)', sortable: true, align: 'right' },
-  { key: 'standard', label: '規格', sortable: true },
+  { key: 'standard', label: '規格', sortable: true, class: 'text-text-muted text-xs' },
 ]
 
 /**
  * ケーブルドラムDBのテーブルカラム定義
  */
 export const DRUM_DB_COLUMNS: TableColumn<(typeof drumData)[number]>[] = [
-  { key: 'category', label: 'カテゴリ', sortable: true },
+  { key: 'category', label: 'カテゴリ', sortable: true, class: 'font-bold' },
   { key: 'id', label: 'ドラム記号 (ID)', sortable: true, align: 'center' },
   { key: 'flange_diameter', label: 'ツバ径 (mm)', sortable: true, align: 'right' },
   { key: 'barrel_diameter', label: '胴径 (mm)', sortable: true, align: 'right' },
@@ -47,7 +65,7 @@ export const DRUM_DB_COLUMNS: TableColumn<(typeof drumData)[number]>[] = [
  * ケーブルラックDBのテーブルカラム定義
  */
 export const RACK_DB_COLUMNS: TableColumn<(typeof rackData)[number]>[] = [
-  { key: 'category', label: 'カテゴリ', sortable: true },
+  { key: 'category', label: 'カテゴリ', sortable: true, class: 'font-bold' },
   { key: 'size', label: 'サイズ (呼び幅 mm)', sortable: true, align: 'right' },
   { key: 'height', label: '親桁高さ (mm)', sortable: true, align: 'right' },
   { key: 'weightPiece', label: '1本あたり質量 (kg/3m)', sortable: true, align: 'right' },
@@ -61,7 +79,7 @@ export interface TorqueDbItem {
   category: string
   reference: string
   size: string
-  torque_nm: string
+  torque_nm: number | string
   range_nm: string
   note: string
 }
@@ -70,10 +88,10 @@ export interface TorqueDbItem {
  * 締付トルクDBのテーブルカラム定義
  */
 export const TORQUE_DB_COLUMNS: TableColumn<TorqueDbItem>[] = [
-  { key: 'category', label: 'カテゴリ', sortable: true },
+  { key: 'category', label: 'カテゴリ', sortable: true, class: 'font-bold' },
   { key: 'size', label: 'サイズ', sortable: true, align: 'center' },
   { key: 'torque_nm', label: '標準トルク (N・m)', sortable: true, align: 'right' },
   { key: 'range_nm', label: '許容範囲 (N・m)', sortable: true, align: 'right' },
   { key: 'note', label: '備考', sortable: true },
-  { key: 'reference', label: '参考規格', sortable: true },
+  { key: 'reference', label: '参考規格', sortable: true, class: 'text-text-muted text-xs' },
 ]

@@ -11,6 +11,7 @@ import type { BadgePresetId } from '~/types/components'
 import {
   collectAvailableKanaRows,
   filterByKana,
+  type KanaRowKey,
   sortByKana,
 } from '~/utils/kana'
 
@@ -28,7 +29,7 @@ const {
   searchMapper: item => `${item.term} ${item.kana || ''}`,
 })
 
-const activeKanas = ref<string[]>([])
+const activeKanas = ref<KanaRowKey[]>([])
 
 const filteredGlossary = computed(() => {
   const sorted = sortByKana(baseFilteredGlossary.value, item => item.kana)
@@ -60,19 +61,19 @@ const categoryColorMap: Record<string, string> = {
 <template>
   <div class="glossary-view flex flex-1 flex-col gap-panel-gap max-w-[1400px] min-h-0">
     <aside class="shrink-0">
-      <OrganismsFilterPanel
+      <FilterPanel
         v-model:search-query="searchQuery"
         v-model:active-cats="activeCats"
         :category-options="categoryOptions"
         placeholder="用語名や説明を検索..."
       >
         <FormGroup label="INDEX (読み・五十音)">
-          <MoleculesKanaFilter
+          <KanaFilter
             v-model="activeKanas"
             :available-rows="availableRows"
           />
         </FormGroup>
-      </OrganismsFilterPanel>
+      </FilterPanel>
     </aside>
 
     <div class="flex flex-1 flex-col min-w-0 min-h-0">

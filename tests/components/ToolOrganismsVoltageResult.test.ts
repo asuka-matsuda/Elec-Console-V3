@@ -5,17 +5,20 @@ import OrganismsVoltageResult from '../../app/components/tool/OrganismsVoltageRe
 import type { VoltageCalcInputs, VoltageCalcResult } from '../../app/types/voltage'
 
 describe('ToolOrganismsVoltageResult (app/components/tool/OrganismsVoltageResult.vue)', () => {
+  const resultBoxStub = {
+    props: ['title', 'status', 'size'],
+    template: `
+      <div class="result-box-stub" :class="[status, size ? 'is-' + size : '']">
+        <div class="title">{{ title }}</div>
+        <div class="value"><slot /></div>
+        <div class="footer"><slot name="footer" /></div>
+      </div>
+    `,
+  }
+
   const commonStubs = {
-    MoleculesResultBox: {
-      props: ['title', 'status', 'size'],
-      template: `
-        <div class="result-box-stub" :class="[status, size ? 'is-' + size : '']">
-          <div class="title">{{ title }}</div>
-          <div class="value"><slot /></div>
-          <div class="footer"><slot name="footer" /></div>
-        </div>
-      `,
-    },
+    ResultBox: resultBoxStub,
+    MoleculesResultBox: resultBoxStub,
   }
 
   it('renders voltage drop calculation mode correctly', () => {

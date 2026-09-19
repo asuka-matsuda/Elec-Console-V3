@@ -60,7 +60,7 @@ describe('weightResultPresenter', () => {
 
     expect(vm.isError).toBe(false)
     expect(vm.hasBestDrum).toBe(false)
-    expect(vm.boxStatus).toBe('error')
+    expect(vm.boxStatus).toBe('danger')
     expect(vm.displayDrum).toBe('ERROR')
     expect(vm.displayTotalWeight).toBe('ERROR')
     expect(vm.badgeText).toBe('適合ドラムなし')

@@ -124,21 +124,15 @@ const confirmResetImport = async () => {
       <span>{{ syncMsg }}</span>
     </div>
 
-    <!-- 完了時のインライン件数サマリー表示 (MoleculesResultBox) -->
-    <MoleculesResultBox
+    <!-- 完了時のインライン件数サマリー表示 (ResultBox) -->
+    <div
       v-else-if="syncResultData"
-      status="success"
-      :title="syncResultData.title"
+      class="flex flex-col items-center gap-2 w-full"
     >
-      <template #actions>
-        <Button
-          @click="emit('show-result-detail')"
-        >
-          詳細を表示
-        </Button>
-      </template>
-
-      <template #value>
+      <ResultBox
+        status="success"
+        :title="syncResultData.title"
+      >
         <div class="flex flex-wrap items-center gap-2 mt-2">
           <template v-if="syncResultData.type === 'merge'">
             <Badge id="sync:added">
@@ -157,8 +151,14 @@ const confirmResetImport = async () => {
             </Badge>
           </template>
         </div>
-      </template>
-    </MoleculesResultBox>
+      </ResultBox>
+
+      <Button
+        @click="emit('show-result-detail')"
+      >
+        詳細を表示
+      </Button>
+    </div>
   </div>
 </template>
 

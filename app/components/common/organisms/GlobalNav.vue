@@ -1,47 +1,49 @@
 <script setup lang="ts">
 /**
- * OrganismsGlobalNav
+ * GlobalNav
  * [Organisms] アプリケーションのグローバルナビゲーション（ドロワーサイドバー）。
- * オーバーレイ、閉じるボタンヘッダー、セクション別メニューリンク（ホバー・アクティブ発光演出）を表示します。
+ * オーバーレイ、閉じるボタン、セクション別メニューリンクを表示します。
  */
-import { onMounted, onUnmounted, watch } from 'vue'
+import { watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { NuxtLink } from '#components'
 import { useAuth } from '~/composables/useAuth'
-import type { MenuItem } from '~/constants/data/menuData'
-import type { OrganismsGlobalNavProps } from '~/types/components'
+import { menuData as defaultMenuData, type MenuItem } from '~/constants/data/menuData'
+import type { GlobalNavProps } from '~/types/components'
 
 const isOpen = defineModel<boolean>('isOpen', { default: false })
 
-defineProps<OrganismsGlobalNavProps>()
+withDefaults(defineProps<GlobalNavProps>(), {
+  menuData: () => defaultMenuData,
+})
 
 const { isMaster } = useAuth()
+const route = useRoute()
 
 const getVisibleItems = (items: MenuItem[]) => {
   return items.filter(item => !item.masterOnly || isMaster.value)
+}
+
+const isItemActive = (item: MenuItem) => {
+  if (route.path === item.href) return true
+  if (item.href === '/') return false
+
+  if (item.href === '/portal' && route.path.startsWith('/portal/admin')) {
+    return false
+  }
+
+  if (item.activePrefixes?.some(prefix => route.path.startsWith(prefix))) {
+    return true
+  }
+
+  return route.path.startsWith(`${item.href}/`)
 }
 
 const closeSidebar = () => {
   isOpen.value = false
 }
 
-const route = useRoute()
-
-watch(() => route.fullPath, () => {
-  isOpen.value = false
-})
-
-onMounted(() => {
-  const onKeydown = (e: KeyboardEvent) => {
-    if (e.key === 'Escape' && isOpen.value) {
-      isOpen.value = false
-    }
-  }
-
-  window.addEventListener('keydown', onKeydown)
-  onUnmounted(() => window.removeEventListener('keydown', onKeydown))
-})
+watch(() => route.fullPath, closeSidebar)
 </script>
 
 <template>
@@ -55,7 +57,7 @@ onMounted(() => {
     class="fixed top-0 left-0 z-[var(--z-index-sidebar)] flex flex-col w-[var(--sidebar-width)] h-[100dvh]"
     :class="{ 'is-open': isOpen }"
   >
-    <header class="flex items-center justify-between h-16 px-[var(--space-4)]">
+    <header class="flex items-center justify-between h-16 px-4">
       <span class="header-title">
         メニュー
       </span>
@@ -67,13 +69,15 @@ onMounted(() => {
       />
     </header>
 
-    <nav class="flex-1 overflow-y-auto flex flex-col gap-[var(--space-4)] p-[var(--space-3)]">
+    <nav
+      class="flex-1 overflow-y-auto flex flex-col gap-4 p-3"
+      @click="closeSidebar"
+    >
       <section
         v-for="section in menuData"
-        :key="section.id || section.heading || section.globalNavHeading"
-        class="flex flex-col gap-[var(--space-1)]"
+        :key="section.id"
+        class="flex flex-col gap-1"
         :style="{
-          '--theme-accent': `var(--color-category-${section.accent || 'main'})`,
           '--section-accent': `var(--color-category-${section.accent || 'main'})`,
         }"
       >
@@ -82,23 +86,20 @@ onMounted(() => {
           :title="section.globalNavHeading || section.heading"
           :icon="section.icon"
           tag="h5"
-          class="px-[var(--space-2)]"
+          class="px-2"
         />
 
-        <div class="flex flex-col gap-[var(--space-1)]">
-          <component
-            :is="item.disabled ? 'button' : NuxtLink"
+        <div class="flex flex-col gap-1">
+          <NuxtLink
             v-for="item in getVisibleItems(section.items)"
             :key="item.href"
-            :to="item.disabled ? undefined : item.href"
-            :type="item.disabled ? 'button' : undefined"
-            :disabled="item.disabled || undefined"
-            class="w-full flex items-center gap-[var(--space-2)] py-[var(--space-1)] px-[var(--space-3)]"
-            @click="item.disabled ? undefined : closeSidebar()"
+            :to="item.href"
+            class="w-full flex items-center gap-2 py-1 px-3"
+            :class="{ 'is-active': isItemActive(item) }"
           >
             <Icon :name="item.icon" size="md" />
             <span>{{ item.text }}</span>
-          </component>
+          </NuxtLink>
         </div>
       </section>
     </nav>
@@ -154,12 +155,7 @@ aside {
     --scrollbar-size: var(--space-2);
   }
 
-  section {
-    --glow-color: var(--section-accent);
-  }
-
-  a,
-  button {
+  a {
     border: var(--border-width-base) solid transparent;
 
     font-size: var(--font-size-sm);
@@ -170,43 +166,19 @@ aside {
 
     transition: var(--transition-interactive);
 
-    span {
-      word-break: keep-all;
-      overflow-wrap: anywhere;
-    }
-
     &:hover,
     &:focus-visible {
       color: var(--color-text-main);
-      background:
-        linear-gradient(
-          to right,
-          color-mix(in srgb, var(--section-accent) 8%, transparent) 0%,
-          color-mix(in srgb, var(--section-accent) 2%, transparent) 50%,
-          transparent 85%
-        );
+      background-color: color-mix(in srgb, var(--section-accent) 8%, transparent);
     }
 
     &:active,
-    &.router-link-active {
+    &.is-active {
       border-color: color-mix(in srgb, var(--section-accent) 55%, transparent);
-
       font-weight: var(--font-weight-semibold);
       color: var(--color-text-main);
-
-      background:
-        linear-gradient(
-          135deg,
-          color-mix(in srgb, var(--section-accent) 16%, transparent) 0%,
-          color-mix(in srgb, var(--section-accent) 6%, transparent) 55%,
-          transparent 100%
-        );
-      box-shadow:
-        var(--surface-rim-accent),
-        var(--shadow-glow-sm);
+      background-color: color-mix(in srgb, var(--section-accent) 12%, transparent);
     }
-
-    @include state-disabled;
   }
 }
 </style>

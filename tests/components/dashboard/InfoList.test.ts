@@ -1,15 +1,15 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import InfoList from '../../app/components/common/molecules/InfoList.vue'
-import type { InfoListItem } from '../../app/types/components'
+import InfoList from '../../../app/components/dashboard/InfoList.vue'
+import type { InfoListItem } from '../../../app/types/components'
 
 interface MockFeedItem extends InfoListItem {
   desc?: string
   version?: string
 }
 
-describe('InfoList.vue', () => {
+describe('InfoList.vue (app/components/dashboard/InfoList.vue)', () => {
   const mockItems: MockFeedItem[] = [
     {
       id: 1,

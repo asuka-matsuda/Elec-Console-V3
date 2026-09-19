@@ -5,14 +5,41 @@ import OrganismsWeightResult from '../../app/components/tool/OrganismsWeightResu
 import type { WeightCalcResult } from '../../app/utils/tools/weight/weightCalcLogic'
 
 describe('ToolOrganismsWeightResult (app/components/tool/OrganismsWeightResult.vue)', () => {
+  const resultBoxStub = {
+    props: ['title', 'status', 'isEmpty'],
+    template: `
+      <div class="result-box-stub" :class="[status, { 'is-empty': isEmpty }]">
+        <div class="title">{{ title }}</div>
+        <div class="value"><slot /></div>
+        <div class="footer"><slot name="footer" /></div>
+      </div>
+    `,
+  }
+
   const commonStubs = {
-    MoleculesResultBox: {
-      props: ['title', 'status', 'isEmpty'],
+    ResultBox: resultBoxStub,
+    MoleculesResultBox: resultBoxStub,
+    ToolResultDetails: {
+      props: ['items'],
       template: `
-        <div class="result-box-stub" :class="[status, { 'is-empty': isEmpty }]">
-          <div class="title">{{ title }}</div>
-          <div class="value"><slot /></div>
-          <div class="footer"><slot name="footer" /></div>
+        <div class="result-details-stub">
+          <div v-for="item in items" :key="item.label" class="detail-row">
+            <span>{{ item.label }}</span>
+            <span>{{ item.value }}</span>
+            <span v-if="item.unit">{{ item.unit }}</span>
+          </div>
+        </div>
+      `,
+    },
+    ResultDetails: {
+      props: ['items'],
+      template: `
+        <div class="result-details-stub">
+          <div v-for="item in items" :key="item.label" class="detail-row">
+            <span>{{ item.label }}</span>
+            <span>{{ item.value }}</span>
+            <span v-if="item.unit">{{ item.unit }}</span>
+          </div>
         </div>
       `,
     },
@@ -101,11 +128,11 @@ describe('ToolOrganismsWeightResult (app/components/tool/OrganismsWeightResult.v
       },
     })
 
-    const resultBox = wrapper.findComponent(commonStubs.MoleculesResultBox)
+    const resultBox = wrapper.findComponent(commonStubs.ResultBox)
 
-    expect(resultBox.props('isEmpty')).toBe(true)
+    expect(resultBox.props('status')).toBe('empty')
 
-    const details = wrapper.findComponent(commonStubs.MoleculesResultDetails)
+    const details = wrapper.findComponent(commonStubs.ToolResultDetails)
 
     expect(details.exists()).toBe(true)
     const items = details.props('items') as Array<{ label: string, value: string }>

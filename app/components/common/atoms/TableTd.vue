@@ -39,22 +39,16 @@ const cellTitle = computed(() => {
   return undefined
 })
 
-const formatValue = (val: unknown): string => {
+const formatValue = (val: unknown, fallback = props.emptyFallback): string => {
   if (val === null || val === undefined || val === '') {
-    return props.emptyFallback
+    return fallback
   }
 
   return String(applyNoBreak(val))
 }
 
 const formattedMainValue = computed(() => formatValue(props.value))
-const formattedSubValue = computed(() => {
-  if (props.subValue === null || props.subValue === undefined || props.subValue === '') {
-    return ''
-  }
-
-  return String(applyNoBreak(props.subValue))
-})
+const formattedSubValue = computed(() => formatValue(props.subValue, ''))
 </script>
 
 <template>

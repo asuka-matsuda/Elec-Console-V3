@@ -7,8 +7,6 @@ import { computed, provide, useId } from 'vue'
 
 import { FORM_GROUP_KEY, type FormGroupProps } from '~/types/components'
 
-export type { FormGroupProps }
-
 const props = withDefaults(defineProps<FormGroupProps>(), {
   id: undefined,
   label: undefined,

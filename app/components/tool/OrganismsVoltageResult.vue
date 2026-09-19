@@ -36,7 +36,7 @@ const dropStatus = computed(() =>
     :class="[size === 'sm' ? 'gap-3 is-sm' : 'gap-panel-gap']"
   >
     <!-- 主結果 (電圧降下 or 電線サイズ) -->
-    <MoleculesResultBox
+    <ResultBox
       :title="view.mainLabel"
       :status="mainBoxStatus"
       :badge="view.mainBadgeText"
@@ -44,10 +44,10 @@ const dropStatus = computed(() =>
     >
       <span>{{ view.mainValue }}</span>
       <small v-if="view.mainUnit" class="unit">{{ view.mainUnit }}</small>
-    </MoleculesResultBox>
+    </ResultBox>
 
     <!-- サブ結果 1: 電流チェック (設計 / 許容) -->
-    <MoleculesResultBox
+    <ResultBox
       title="電流チェック (設計 / 許容)"
       :status="ampStatus"
       :badge="view.ampBadgeText"
@@ -60,10 +60,10 @@ const dropStatus = computed(() =>
         <span>{{ view.maxI }}</span>
         <small class="unit">A</small>
       </template>
-    </MoleculesResultBox>
+    </ResultBox>
 
     <!-- サブ結果 2: 電圧降下（導体断面積モード時のみ表示） -->
-    <MoleculesResultBox
+    <ResultBox
       v-if="view.mode === 'size'"
       title="電圧降下"
       :status="dropStatus"
@@ -79,10 +79,10 @@ const dropStatus = computed(() =>
         <small class="unit">%</small>
         <small class="sep">)</small>
       </template>
-    </MoleculesResultBox>
+    </ResultBox>
 
     <!-- サブ情報（電圧降下モード時のみ表示） -->
-    <MoleculesResultDetails
+    <ToolResultDetails
       v-if="view.mode === 'drop'"
       :items="[
         { label: '選択ケーブル', value: view.dropCableName },

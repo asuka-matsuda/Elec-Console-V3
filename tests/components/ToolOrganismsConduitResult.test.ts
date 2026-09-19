@@ -5,16 +5,19 @@ import OrganismsConduitResult from '../../app/components/tool/OrganismsConduitRe
 import type { ConduitCalcResult } from '../../app/utils/tools/conduit/conduitCalcLogic'
 
 describe('ToolOrganismsConduitResult (app/components/tool/OrganismsConduitResult.vue)', () => {
+  const resultBoxStub = {
+    props: ['title', 'status', 'badge', 'size'],
+    template: `
+      <div class="result-box-stub" :class="[status, size ? 'is-' + size : '']">
+        <div class="title"><slot name="title">{{ title }}</slot><span v-if="badge" class="badge-stub">{{ badge }}</span></div>
+        <div class="value"><slot name="value"><slot /></slot></div>
+      </div>
+    `,
+  }
+
   const commonStubs = {
-    MoleculesResultBox: {
-      props: ['title', 'status', 'badge', 'size'],
-      template: `
-        <div class="result-box-stub" :class="[status, size ? 'is-' + size : '']">
-          <div class="title"><slot name="title">{{ title }}</slot><span v-if="badge" class="badge-stub">{{ badge }}</span></div>
-          <div class="value"><slot name="value"><slot /></slot></div>
-        </div>
-      `,
-    },
+    ResultBox: resultBoxStub,
+    MoleculesResultBox: resultBoxStub,
     Badge: {
       template: '<span class="badge-stub"><slot /></span>',
     },
