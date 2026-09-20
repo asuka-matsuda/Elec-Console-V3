@@ -3,6 +3,10 @@ export default defineNuxtConfig({
 
   modules: ['@nuxtjs/tailwindcss', '@nuxt/eslint', '@vueuse/nuxt', '@vite-pwa/nuxt'],
 
+  tailwindcss: {
+    viewer: false,
+  },
+
   components: [
     {
       path: '~/components/common',

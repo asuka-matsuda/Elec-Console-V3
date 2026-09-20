@@ -4,14 +4,20 @@
  * ポータル管理 - 現場管理（PC管理コンソール型 2ペインレイアウト）
  * 左ペイン（現場一覧・検索・新規登録）と右ペイン（現場詳細設定・Excel連携・除外ルール）を常時展開します。
  */
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 import { useAdminSites } from '~/composables/admin/useAdminSites'
 import { useSiteSettingsForm } from '~/composables/portal/useSiteSettingsForm'
 import { useModal } from '~/composables/useModal'
 import type { Site, SiteStatus } from '~/types/admin'
 
-const { sites, createSite, toggleDisableSite, updateSite } = useAdminSites()
+const { sites, fetchSites, createSite, toggleDisableSite, updateSite } = useAdminSites()
+
+onMounted(async () => {
+  if (sites.value.length === 0) {
+    await fetchSites()
+  }
+})
 
 // 選択中の現場ID（初期値は先頭現場または未選択）
 const selectedSiteId = ref<string | null>(null)

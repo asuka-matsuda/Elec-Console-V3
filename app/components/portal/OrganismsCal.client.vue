@@ -101,12 +101,10 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
     <Panel class="calendar">
       <FullCalendar ref="fullCalendarRef" :options="calendarOptions">
-        <template #eventContent="{ event }">
+        <template #eventContent="{ event, timeText }">
           <AtomsCalEventBadge
             :title="event.title"
-            :all-day="event.allDay"
-            :start="event.start"
-            :end="event.end"
+            :time-text="timeText"
             :color="event.extendedProps?.themeColor"
           />
         </template>
@@ -242,14 +240,6 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       z-index: 100; // カレンダー上で最前面に持ってくる
       border: none;
       background: transparent;
-
-      // 子要素のバッジのホバースタイルを親から強制的に発火させる
-      :deep(.cal-badge) {
-        --glow-color: var(--badge-color, var(--theme-accent));
-
-        border-color: var(--glow-color);
-        box-shadow: var(--shadow-glow-hover);
-      }
     }
   }
 

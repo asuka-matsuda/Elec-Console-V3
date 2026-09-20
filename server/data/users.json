@@ -7,7 +7,8 @@
     "password": "d1a7af74fccd08d47d80ac45a4397a97:732057050b5a7ef32b229ba34f074ae80fdf7f9a624b9f65b8859385e09364b2c0491d3a2bf5d0bfd091e7fdd3170067c21a263294dd15eae9d44da1cc9bf8b3",
     "role": "admin",
     "assignedSiteIds": [
-      "test"
+      "test",
+      "site-2"
     ],
     "requirePasswordReset": false,
     "lastLoginAt": "2026-08-27T01:36:12.430Z",

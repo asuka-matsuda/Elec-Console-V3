@@ -74,6 +74,13 @@ export function useCalendarOptions({
     initialView: 'dayGridMonth',
     locale: jaLocale,
     events: formattedEvents.value,
+    displayEventEnd: true,
+    eventTimeFormat: {
+      hour: '2-digit',
+      minute: '2-digit',
+      meridiem: false,
+      hour12: false,
+    },
     editable: true,
     selectable: true,
     headerToolbar: false,
