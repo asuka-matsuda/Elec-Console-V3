@@ -68,10 +68,19 @@ pm2 startup systemd -u root --hp /root 2>/dev/null || true
 # 5. Nginx リバースプロキシ設定 (app.mat-ope.com -> localhost:3000)
 # ------------------------------------------------------------------------------
 echo -e "\n${YELLOW}[5/7] Nginx リバースプロキシを設定中...${NC}"
+
+# ポート 80 競合の解消 (Apache2 が動いている場合は停止・無効化)
+systemctl stop apache2 2>/dev/null || true
+systemctl disable apache2 2>/dev/null || true
+if command -v fuser &> /dev/null; then
+  fuser -k 80/tcp 2>/dev/null || true
+fi
+pkill -f nginx 2>/dev/null || true
+sleep 1
+
 cat << 'EOF' > /etc/nginx/sites-available/app.mat-ope.com
 server {
     listen 80;
-    listen [::]:80;
     server_name app.mat-ope.com;
 
     client_max_body_size 50M;
@@ -92,8 +101,10 @@ EOF
 
 # default サイトを無効化し、app.mat-ope.com を有効化
 rm -f /etc/nginx/sites-enabled/default
+rm -f /etc/nginx/sites-available/default
 ln -sf /etc/nginx/sites-available/app.mat-ope.com /etc/nginx/sites-enabled/app.mat-ope.com
-nginx -t && (systemctl restart nginx || systemctl start nginx)
+nginx -t
+systemctl restart nginx || systemctl start nginx
 
 # ------------------------------------------------------------------------------
 # 6. Let's Encrypt による無料 SSL (HTTPS) の自動取得＆適用
