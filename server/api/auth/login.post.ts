@@ -18,18 +18,33 @@ export default defineEventHandler(async (event) => {
   }
 
   const clientIp = getRequestIP(event, { xForwardedFor: true }) || '127.0.0.1'
-  const rateLimitKey = `login:${clientIp}:${loginId.trim()}`
+  const ipKey = `login:ip:${clientIp}`
+  const accountKey = `login:account:${loginId.trim()}`
 
-  // レートリミット（ブルートフォース保護）のチェック
-  const rateLimitStatus = checkRateLimit(rateLimitKey)
+  // レートリミット（ブルートフォース保護）の二重チェック
+  // 1. IP単位の過剰失敗チェック (15分に15回)
+  const ipLimitStatus = checkRateLimit(ipKey, 15)
 
-  if (rateLimitStatus.isBlocked) {
-    const remainingMinutes = Math.ceil(rateLimitStatus.remainingMs / 60000)
+  if (ipLimitStatus.isBlocked) {
+    const remainingMinutes = Math.ceil(ipLimitStatus.remainingMs / 60000)
 
     throw createError({
       statusCode: 429,
       statusMessage: 'Too Many Requests',
-      message: `ログイン試行回数が上限を超えました。安全のため約${remainingMinutes}分後に再度お試しください。`,
+      message: `この接続元からのログイン試行が制限されています。安全のため約${remainingMinutes}分後に再度お試しください。`,
+    })
+  }
+
+  // 2. アカウント単位の連続失敗チェック (5回)
+  const accountLimitStatus = checkRateLimit(accountKey, 5)
+
+  if (accountLimitStatus.isBlocked) {
+    const remainingMinutes = Math.ceil(accountLimitStatus.remainingMs / 60000)
+
+    throw createError({
+      statusCode: 429,
+      statusMessage: 'Too Many Requests',
+      message: `該当アカウントのログイン試行回数が上限を超えました。安全のため約${remainingMinutes}分後に再度お試しください。`,
     })
   }
 
@@ -40,7 +55,8 @@ export default defineEventHandler(async (event) => {
 
   // ユーザーが存在しない場合
   if (!user) {
-    recordFailedAttempt(rateLimitKey)
+    recordFailedAttempt(ipKey, 15)
+    recordFailedAttempt(accountKey, 5)
     throw createError({
       statusCode: 401,
       statusMessage: 'Unauthorized',
@@ -61,7 +77,8 @@ export default defineEventHandler(async (event) => {
   const isValid = verifyPassword(password, user.password)
 
   if (!isValid) {
-    recordFailedAttempt(rateLimitKey)
+    recordFailedAttempt(ipKey, 15)
+    recordFailedAttempt(accountKey, 5)
     throw createError({
       statusCode: 401,
       statusMessage: 'Unauthorized',
@@ -70,7 +87,8 @@ export default defineEventHandler(async (event) => {
   }
 
   // 認証成功: レートリミットカウントをクリア
-  clearRateLimit(rateLimitKey)
+  clearRateLimit(accountKey)
+  clearRateLimit(ipKey)
 
   // 旧ハッシュ（10000回）の場合は新形式（100000回）へ自動アップグレード移行
   const updateData: { lastLoginAt: Date, password?: string } = {

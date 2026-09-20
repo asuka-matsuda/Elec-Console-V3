@@ -97,7 +97,7 @@ else
 fi
 
 # ------------------------------------------------------------------------------
-# 3. 環境変数 (.env) の確認と自動セットアップ (Node 20互換)
+# 3. 環境変数 (.env) の確認と自動セットアップ (Node 20互換 & セキュリティキー)
 # ------------------------------------------------------------------------------
 echo -e "\n${YELLOW}[Step 2/6] 環境変数 (.env) をチェック中...${NC}"
 if [ ! -f .env ]; then
@@ -106,15 +106,25 @@ if [ ! -f .env ]; then
   cat << EOF > .env
 DATABASE_URL="file:./prisma/dev.db"
 AUTH_SECRET="${AUTH_SECRET_GEN}"
+ACCESS_GATE_TOKEN="elec-mat-2026-secure"
 PORT=3000
 NITRO_PORT=3000
 NODE_ENV=production
 EOF
   echo ">>> 本番用 .env を生成しました。"
 else
-  # 既存の .env から不要な NODE_OPTIONS を除去 (Node 20互換)
+  # 既存の .env から不要な NODE_OPTIONS を除去
   sed -i '/NODE_OPTIONS/d' .env 2>/dev/null || true
+
+  # ACCESS_GATE_TOKEN が未定義の場合は自動追加
+  if ! grep -q 'ACCESS_GATE_TOKEN' .env; then
+    echo 'ACCESS_GATE_TOKEN="elec-mat-2026-secure"' >> .env
+    echo ">>> ACCESS_GATE_TOKEN を .env に追加しました。"
+  fi
 fi
+
+# 機密ファイル .env のパーミッションを厳格化 (所有者のみ読み書き: 600)
+chmod 600 .env 2>/dev/null || true
 
 # ------------------------------------------------------------------------------
 # 4. 依存パッケージのインストール (Linux / Node 20 互換)
@@ -123,7 +133,7 @@ echo -e "\n${YELLOW}[Step 3/6] 依存パッケージをインストール中...$
 npm install --no-audit --ignore-engines
 
 # ------------------------------------------------------------------------------
-# 5. データベースの更新・反映 (Prisma)
+# 5. データベースの更新・反映 (Prisma) & ファイルパーミッション厳格化
 # ------------------------------------------------------------------------------
 echo -e "\n${YELLOW}[Step 4/6] データベースを更新中...${NC}"
 npx prisma generate
@@ -134,13 +144,15 @@ echo ">>> 現場データ（テスト現場、第二現場など）および管�
 if [ -f prisma/seed.cjs ]; then
   node prisma/seed.cjs
 fi
-chmod 666 prisma/dev.db* 2>/dev/null || true
+
+# SQLite DB ファイルの権限を安全に制限 (600: 所有者のみ読み書き)
+chmod 600 prisma/dev.db* 2>/dev/null || true
 
 # ------------------------------------------------------------------------------
 # 6. アプリケーションのビルド (Nuxt 4 / Nitro)
 # ------------------------------------------------------------------------------
 echo -e "\n${YELLOW}[Step 5/6] 本番アプリケーションをビルド中 (Nuxt 4)...${NC}"
-NODE_OPTIONS="--max-old-space-size=2560" npm run build
+NODE_OPTIONS="--experimental-require-module --max-old-space-size=2560" npm run build
 
 # ------------------------------------------------------------------------------
 # 7. PM2 プロセスの起動 / ゼロダウンタイム再起動
@@ -161,8 +173,16 @@ fi
 
 pm2 save
 
-# Nginx の設定構文チェックと再読み込み
+# Nginx セキュリティ設定の確認と再読み込み
 if command -v nginx &> /dev/null; then
+  # security.conf が無ければ配置
+  if [ ! -f /etc/nginx/conf.d/security.conf ]; then
+    cat << 'EOF' > /etc/nginx/conf.d/security.conf
+server_tokens off;
+limit_req_zone $binary_remote_addr zone=req_limit_general:10m rate=30r/s;
+limit_req_zone $binary_remote_addr zone=req_limit_login:10m rate=5r/m;
+EOF
+  fi
   sudo nginx -t 2>/dev/null && sudo systemctl reload nginx 2>/dev/null || true
 fi
 
@@ -170,15 +190,19 @@ fi
 echo -e "\n${YELLOW}>>> ローカルサーバーの疎通確認中...${NC}"
 sleep 3
 if curl -s -I http://localhost:3000 | grep -q "200\|302\|304"; then
-  echo -e "${GREEN}>>> 正常に応答（200 OK）を受信しました！${NC}"
+  echo -e "${GREEN}>>> 正常に応答を受信しました！${NC}"
 fi
+
+CURRENT_GATE_TOKEN=$(grep '^ACCESS_GATE_TOKEN=' .env 2>/dev/null | cut -d'=' -f2 | tr -d '"' || echo "elec-mat-2026-secure")
 
 echo -e "\n${GREEN}======================================================${NC}"
 if [ "$IS_CLEAN_MODE" = true ]; then
-  echo -e "${GREEN}   【初回セットアップ完了】旧環境の整理とV3の公開が完了しました！${NC}"
+  echo -e "${GREEN}   【初回セットアップ完了】セキュリティ強化V3の公開が完了しました！${NC}"
 else
-  echo -e "${GREEN}   【自動アップデート完了】最新コードの反映が完了しました！${NC}"
+  echo -e "${GREEN}   【自動アップデート完了】最新セキュリティ対策の反映が完了しました！${NC}"
 fi
-echo -e "${GREEN}   公開URL: https://app.mat-ope.com${NC}"
+echo -e "${GREEN}   公開URL:     https://app.mat-ope.com${NC}"
+echo -e "${CYAN}   現場初回URL: https://app.mat-ope.com/?gate=${CURRENT_GATE_TOKEN}${NC}"
+echo -e "${YELLOW}   ※URLキー未所持の第三者・Botには 404 Not Found となり存在が秘匿されます。${NC}"
 echo -e "${GREEN}======================================================${NC}"
 pm2 status elec-console

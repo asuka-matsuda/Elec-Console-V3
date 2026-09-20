@@ -3,10 +3,6 @@ export default defineNuxtConfig({
 
   modules: ['@nuxtjs/tailwindcss', '@nuxt/eslint', '@vueuse/nuxt', '@vite-pwa/nuxt'],
 
-  tailwindcss: {
-    viewer: false,
-  },
-
   components: [
     {
       path: '~/components/common',
@@ -33,11 +29,8 @@ export default defineNuxtConfig({
       ignore: ['common/**', 'tool/**', 'portal/**', 'master/**'],
     },
   ],
+
   devtools: { enabled: false },
-  sourcemap: {
-    server: false,
-    client: false,
-  },
 
   app: {
     head: {
@@ -56,6 +49,10 @@ export default defineNuxtConfig({
     },
   },
   css: ['~/assets/scss/style.scss'],
+  sourcemap: {
+    server: false,
+    client: false,
+  },
   compatibilityDate: '2025-07-15',
 
   nitro: {
@@ -65,9 +62,12 @@ export default defineNuxtConfig({
           'X-Robots-Tag': 'noindex, nofollow, noarchive, nosnippet',
           'X-Content-Type-Options': 'nosniff',
           'X-Frame-Options': 'SAMEORIGIN',
+          'X-XSS-Protection': '1; mode=block',
           'Referrer-Policy': 'strict-origin-when-cross-origin',
           'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
           'Cross-Origin-Opener-Policy': 'same-origin',
+          'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
+          'Content-Security-Policy': 'default-src \'self\'; script-src \'self\' \'unsafe-inline\' \'unsafe-eval\'; style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com; font-src \'self\' https://fonts.gstatic.com data:; img-src \'self\' data: blob: https:; connect-src \'self\'; worker-src \'self\' blob:; frame-ancestors \'self\';',
         },
       },
     },
@@ -170,5 +170,9 @@ export default defineNuxtConfig({
       enabled: false,
       type: 'module',
     },
+  },
+
+  tailwindcss: {
+    viewer: false,
   },
 })

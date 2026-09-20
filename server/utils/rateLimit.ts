@@ -18,12 +18,15 @@ const BLOCK_DURATION_MS = 15 * 60 * 1000 // 15分ブロック
 /**
  * キー（IPまたはIP+ログインID）の試行制限状況をチェック
  */
-export function checkRateLimit(key: string): { isBlocked: boolean, remainingMs: number, attemptsLeft: number } {
+export function checkRateLimit(
+  key: string,
+  maxAttempts = MAX_ATTEMPTS,
+): { isBlocked: boolean, remainingMs: number, attemptsLeft: number } {
   const now = Date.now()
   const record = loginAttempts.get(key)
 
   if (!record) {
-    return { isBlocked: false, remainingMs: 0, attemptsLeft: MAX_ATTEMPTS }
+    return { isBlocked: false, remainingMs: 0, attemptsLeft: maxAttempts }
   }
 
   // ブロック中の場合
@@ -39,20 +42,24 @@ export function checkRateLimit(key: string): { isBlocked: boolean, remainingMs: 
   if (now - record.firstAttemptAt > WINDOW_MS) {
     loginAttempts.delete(key)
 
-    return { isBlocked: false, remainingMs: 0, attemptsLeft: MAX_ATTEMPTS }
+    return { isBlocked: false, remainingMs: 0, attemptsLeft: maxAttempts }
   }
 
   return {
     isBlocked: false,
     remainingMs: 0,
-    attemptsLeft: Math.max(0, MAX_ATTEMPTS - record.count),
+    attemptsLeft: Math.max(0, maxAttempts - record.count),
   }
 }
 
 /**
  * 失敗試行を記録し、制限超過時はブロック
  */
-export function recordFailedAttempt(key: string): { isBlocked: boolean, remainingMs: number } {
+export function recordFailedAttempt(
+  key: string,
+  maxAttempts = MAX_ATTEMPTS,
+  blockDurationMs = BLOCK_DURATION_MS,
+): { isBlocked: boolean, remainingMs: number } {
   const now = Date.now()
   const record = loginAttempts.get(key)
 
@@ -68,10 +75,10 @@ export function recordFailedAttempt(key: string): { isBlocked: boolean, remainin
 
   record.count += 1
 
-  if (record.count >= MAX_ATTEMPTS) {
-    record.blockedUntil = now + BLOCK_DURATION_MS
+  if (record.count >= maxAttempts) {
+    record.blockedUntil = now + blockDurationMs
 
-    return { isBlocked: true, remainingMs: BLOCK_DURATION_MS }
+    return { isBlocked: true, remainingMs: blockDurationMs }
   }
 
   return { isBlocked: false, remainingMs: 0 }

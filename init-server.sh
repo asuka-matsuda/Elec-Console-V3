@@ -65,9 +65,9 @@ npm install -g pm2
 pm2 startup systemd -u root --hp /root 2>/dev/null || true
 
 # ------------------------------------------------------------------------------
-# 5. Nginx リバースプロキシ設定 (app.mat-ope.com -> localhost:3000)
+# 5. Nginx リバースプロキシ＆セキュリティ防壁設定 (app.mat-ope.com -> localhost:3000)
 # ------------------------------------------------------------------------------
-echo -e "\n${YELLOW}[5/7] Nginx リバースプロキシを設定中...${NC}"
+echo -e "\n${YELLOW}[5/7] Nginx リバースプロキシ＆セキュリティ設定を構築中...${NC}"
 
 # ポート 80 競合の解消 (Apache2 が動いている場合は停止・無効化)
 systemctl stop apache2 2>/dev/null || true
@@ -78,14 +78,78 @@ fi
 pkill -f nginx 2>/dev/null || true
 sleep 1
 
+# 5.1 Nginx セキュリティ基本設定（レート制限・バージョン隠蔽）
+cat << 'EOF' > /etc/nginx/conf.d/security.conf
+server_tokens off;
+limit_req_zone $binary_remote_addr zone=req_limit_general:10m rate=30r/s;
+limit_req_zone $binary_remote_addr zone=req_limit_login:10m rate=5r/m;
+EOF
+
+# 5.2 Nginx サイト設定 (IP直打ち・Bot・脆弱性プローブの完全遮断 + SSL準備)
 cat << 'EOF' > /etc/nginx/sites-available/app.mat-ope.com
+# HTTP (ポート 80) 未承認ホスト・IP直打ち遮断 (444: 応答なし切断)
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name _;
+    return 444;
+}
+
+# HTTPS (ポート 443) 未承認ホスト・IP直打ち遮断 (TLSハンドシェイク拒否)
+server {
+    listen 443 ssl default_server;
+    listen [::]:443 ssl default_server;
+    server_name _;
+    ssl_ciphers aNULL;
+    ssl_reject_handshake on;
+    return 444;
+}
+
+# 正規ホスト (app.mat-ope.com)
 server {
     listen 80;
     server_name app.mat-ope.com;
 
     client_max_body_size 50M;
 
+    # 悪質Bot・クローラー・スクレイパーの即時遮断
+    if ($http_user_agent ~* (ahrefs|semrush|petalbot|bytespider|mj12bot|dotbot|megaindex|sqlmap|nikto|masscan|nmap|zgrab|python-requests)) {
+        return 444;
+    }
+
+    # ドットファイル (.env, .git等) の直接アクセスを即時切断
+    location ~ /\.(?!well-known) {
+        deny all;
+        return 444;
+    }
+
+    # DBファイル、バックアップ、スクリプトの直接ダウンロード完全遮断
+    location ~* \.(sqlite|db|sql|bak|backup|tar|gz|zip|sh|log|conf)$ {
+        deny all;
+        return 444;
+    }
+
+    # 既知のCMS・脆弱性探索パスを即時切断
+    location ~* (wp-|phpmyadmin|actuator|setup\.php|install\.php) {
+        return 444;
+    }
+
+    # ログインAPIのレートリミット保護 (ブルートフォース防止)
+    location /api/auth/login {
+        limit_req zone=req_limit_login burst=5 nodelay;
+
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # 一般リクエスト (Nuxt 4 アプリケーション)
     location / {
+        limit_req zone=req_limit_general burst=50 nodelay;
+
         proxy_pass http://127.0.0.1:3000;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -95,6 +159,12 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
+
+        # セキュリティヘッダー
+        add_header X-Robots-Tag "noindex, nofollow, noarchive, nosnippet" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header X-Frame-Options "SAMEORIGIN" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
     }
 }
 EOF

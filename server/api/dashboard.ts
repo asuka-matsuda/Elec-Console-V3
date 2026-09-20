@@ -2,9 +2,13 @@ import { defineEventHandler } from 'h3'
 
 import announcementsSeed from '../data/announcements.json'
 import historySeed from '../data/history.json'
+import { requireAuthUser } from '../utils/auth'
 import { prisma } from '../utils/prisma'
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
+  // 認証済みユーザーのみアクセス可能（未認証の外部・Botからの漏洩を防止）
+  await requireAuthUser(event)
+
   // 1. お知らせの取得（未登録時はシードから初期化）
   let announcements = await prisma.announcement.findMany({
     orderBy: { createdAt: 'desc' },

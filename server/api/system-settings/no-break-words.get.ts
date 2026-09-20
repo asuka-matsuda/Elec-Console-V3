@@ -1,10 +1,12 @@
 import { defineEventHandler } from 'h3'
 
+import { requireAuthUser } from '../../utils/auth'
 import { prisma } from '../../utils/prisma'
 
 const SETTING_KEY = 'no_break_words'
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
+  await requireAuthUser(event)
   try {
     const setting = await prisma.systemSetting.findUnique({
       where: { key: SETTING_KEY },
