@@ -9,7 +9,7 @@ import { useHead, useRouter } from '#app'
 import { useAuth } from '~/composables/useAuth'
 import { LOGIN_FORM_FIELDS } from '~/constants/constants'
 
-definePageMeta({ layout: 'login', title: 'Elec-Console v2' })
+definePageMeta({ layout: 'login', title: 'Elec-Console V3' })
 useHead({ title: 'ログイン - Elec-Console' })
 
 const router = useRouter()
