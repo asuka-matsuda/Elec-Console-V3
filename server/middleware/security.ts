@@ -20,21 +20,10 @@ import { verifyAuthToken } from '../utils/auth'
 function getGateToken(): string | null {
   const token = process.env.ACCESS_GATE_TOKEN
 
-  if (token === 'none' || token === 'disabled' || token === 'off' || token === '') {
-    return null
-  }
-
-  // 明示的に指定されている場合はその値を使用
-  if (token) {
+  if (token && token !== 'none' && token !== 'disabled' && token !== 'off' && token !== '') {
     return token
   }
 
-  // 本番環境（NODE_ENV=production）ではデフォルトで強固に保護
-  if (process.env.NODE_ENV === 'production') {
-    return 'elec-mat-2026-secure'
-  }
-
-  // 開発環境（ローカル開発）では利便性のため未設定時はバイパス
   return null
 }
 
@@ -45,8 +34,10 @@ function generateGateSignature(secretToken: string): string {
   return crypto.createHmac('sha256', secretToken).update('elec_console_gate_granted').digest('hex')
 }
 
-// 静的アセット・システムエンドポイントなど、ゲートキー不要で配信すべきパス
+// 静的アセット・ログインエンドポイントなど、ゲートキー不要でアクセスを許可すべきパス
 const WHITELIST_PATHS = [
+  '/login',
+  '/api/auth/login',
   '/_nuxt',
   '/__nuxt',
   '/manifest.webmanifest',
