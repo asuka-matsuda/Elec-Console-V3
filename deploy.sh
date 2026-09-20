@@ -40,6 +40,20 @@ git fetch origin main
 git reset --hard origin/main
 
 # ------------------------------------------------------------------------------
+# 1.5 Node.js バージョンの確認と自動アップデート (Nuxt 4 は Node 22+ 必須)
+# ------------------------------------------------------------------------------
+NODE_MAJOR=$(node -v 2>/dev/null | cut -d'.' -f1 | tr -d 'v')
+if [ -z "$NODE_MAJOR" ] || [ "$NODE_MAJOR" -lt 22 ]; then
+  echo -e "\n${YELLOW}>>> Nuxt 4 の本番ビルドには Node.js 22 以上が必要です (現在: $(node -v))${NC}"
+  echo ">>> Node.js 22 LTS へのアップグレードを自動実行します..."
+  if command -v curl &> /dev/null; then
+    curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+    apt-get install -y nodejs 2>/dev/null || sudo apt-get install -y nodejs
+  fi
+  echo -e "${GREEN}>>> Node.js を更新しました: $(node -v)${NC}"
+fi
+
+# ------------------------------------------------------------------------------
 # 2. 旧環境のクリーンアップ (初回クリーンモード時のみ実行)
 # ------------------------------------------------------------------------------
 if [ "$IS_CLEAN_MODE" = true ]; then
