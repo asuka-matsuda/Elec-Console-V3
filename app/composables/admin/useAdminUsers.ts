@@ -32,13 +32,10 @@ export const useAdminUsers = () => {
       return data
     }
     catch (_e: unknown) {
-      const e = _e as Error
+      const err = _e as { data?: { message?: string, statusMessage?: string }, message?: string }
+      const errMsg = err.data?.message || err.data?.statusMessage || err.message || 'ユーザー登録に失敗しました'
 
-      throw new Error(
-        (e as Error & { data?: { statusMessage?: string } }).data
-          ?.statusMessage || 'ユーザー登録に失敗しました',
-        { cause: _e },
-      )
+      throw new Error(errMsg, { cause: _e })
     }
   }
 
@@ -75,13 +72,10 @@ export const useAdminUsers = () => {
       return data.initialPassword
     }
     catch (_e: unknown) {
-      const e = _e as Error
+      const err = _e as { data?: { message?: string, statusMessage?: string }, message?: string }
+      const errMsg = err.data?.message || err.data?.statusMessage || err.message || 'パスワード初期化に失敗しました'
 
-      throw new Error(
-        (e as Error & { data?: { statusMessage?: string } }).data
-          ?.statusMessage || 'パスワード初期化に失敗しました',
-        { cause: _e },
-      )
+      throw new Error(errMsg, { cause: _e })
     }
   }
 

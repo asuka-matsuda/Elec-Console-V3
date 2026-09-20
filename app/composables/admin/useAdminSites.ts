@@ -40,10 +40,11 @@ export const useAdminSites = () => {
       siteSettings.value.push(res.settings)
     }
     catch (err: unknown) {
-      const fetchErr = err as { data?: { statusMessage?: string } }
+      const fetchErr = err as { data?: { message?: string, statusMessage?: string }, message?: string }
+      const errMsg = fetchErr.data?.message || fetchErr.data?.statusMessage || fetchErr.message
 
-      if (fetchErr.data?.statusMessage) {
-        throw new Error(fetchErr.data.statusMessage, { cause: err })
+      if (errMsg) {
+        throw new Error(errMsg, { cause: err })
       }
       throw err
     }

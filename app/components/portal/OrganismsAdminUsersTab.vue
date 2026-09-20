@@ -74,6 +74,7 @@ const handleSaveUser = async (updates: Partial<User>) => {
 // --- 新規登録モーダル ---
 const isCreateModalOpen = ref(false)
 const initialUserState = {
+  loginId: '',
   id: '',
   lastName: '',
   firstName: '',
@@ -83,7 +84,7 @@ const initialUserState = {
   requirePasswordReset: true,
   assignedSiteIds: [] as string[],
 }
-const newUser = ref({ ...initialUserState })
+const newUser = ref<Record<string, any>>({ ...initialUserState })
 
 const createErrorMsg = ref('')
 const isCreatingUser = ref(false)
@@ -96,15 +97,26 @@ const openCreateModal = () => {
 
 const handleCreateUser = async () => {
   createErrorMsg.value = ''
-  if (!newUser.value.id || !newUser.value.lastName || !newUser.value.firstName) {
-    createErrorMsg.value = 'ID、姓、名を入力してください。'
+  const loginId = (newUser.value.loginId || newUser.value.id || '').trim()
+  const lastName = (newUser.value.lastName || '').trim()
+  const firstName = (newUser.value.firstName || '').trim()
+
+  if (!loginId || !lastName || !firstName) {
+    createErrorMsg.value = 'ログインID、姓、名を入力してください。'
 
     return
   }
 
   try {
     isCreatingUser.value = true
-    const result = await createUser(newUser.value)
+    const payload = {
+      ...newUser.value,
+      loginId,
+      id: loginId,
+      lastName,
+      firstName,
+    }
+    const result = await createUser(payload)
 
     createdUserResult.value = result
     selectedUserId.value = result.id

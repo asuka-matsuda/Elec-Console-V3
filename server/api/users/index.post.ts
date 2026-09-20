@@ -8,7 +8,11 @@ export default defineEventHandler(async (event) => {
   await requireAdminUser(event)
   const body = await readBody(event)
 
-  if (!body.loginId || !body.firstName || !body.lastName) {
+  const loginId = (body.loginId || body.id)?.trim()
+  const firstName = body.firstName?.trim()
+  const lastName = body.lastName?.trim()
+
+  if (!loginId || !firstName || !lastName) {
     throw createError({
       statusCode: 400,
       statusMessage: 'Bad Request',
@@ -18,7 +22,7 @@ export default defineEventHandler(async (event) => {
 
   // ログインID重複チェック
   const existingUser = await prisma.user.findUnique({
-    where: { loginId: body.loginId.trim() },
+    where: { loginId },
   })
 
   if (existingUser) {
@@ -38,10 +42,10 @@ export default defineEventHandler(async (event) => {
 
   const newUser = await prisma.user.create({
     data: {
-      loginId: body.loginId.trim(),
+      loginId,
       password: hashPassword(rawPassword),
-      firstName: body.firstName.trim(),
-      lastName: body.lastName.trim(),
+      firstName,
+      lastName,
       firstNameKana: body.firstNameKana?.trim() || null,
       lastNameKana: body.lastNameKana?.trim() || null,
       role: body.role || 'worker',

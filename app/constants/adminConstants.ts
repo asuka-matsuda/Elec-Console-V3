@@ -47,7 +47,7 @@ export const USER_ROLE_OPTIONS: SelectOption<UserRole>[] = [
  * ユーザー新規登録 入力フィールド定義
  */
 export const USER_CREATE_FORM_FIELDS = [
-  { id: 'id', label: '管理ID', placeholder: '例: EMP001' },
+  { id: 'loginId', label: 'ログインID', placeholder: '例: EMP001' },
   { id: 'lastName', label: '姓', placeholder: '例: 松田' },
   { id: 'lastNameKana', label: '姓（ふりがな）', placeholder: '例: まつだ' },
   { id: 'firstName', label: '名', placeholder: '例: 飛鳥' },
