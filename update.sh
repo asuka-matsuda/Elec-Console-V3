@@ -31,14 +31,22 @@ fi
 # 3. データベースの更新 (スキーマに変更があった場合のみ適用)
 echo -e "\n${YELLOW}[2/4] データベースの同期確認...${NC}"
 npx prisma db push --skip-generate > /dev/null 2>&1 || true
+if [ -f prisma/seed.cjs ]; then
+  node prisma/seed.cjs 2>/dev/null || true
+fi
+chmod 666 prisma/dev.db* 2>/dev/null || true
 
 # 4. 高速本番ビルド
 echo -e "\n${YELLOW}[3/4] アプリケーションをビルド中...${NC}"
 NODE_OPTIONS="--max-old-space-size=2560" npm run build
 
-# 5. ゼロダウンタイム再起動 (サービスを止めずに一瞬で最新化)
-echo -e "\n${YELLOW}[4/4] サーバープロセスをゼロダウンタイムで更新中...${NC}"
-pm2 reload ecosystem.config.cjs --update-env
+# 5. サーバープロセスの更新
+echo -e "\n${YELLOW}[4/4] サーバープロセスを更新中...${NC}"
+pm2 reload ecosystem.config.cjs --update-env 2>/dev/null || pm2 restart ecosystem.config.cjs 2>/dev/null || pm2 start ecosystem.config.cjs
+pm2 save
+
+sleep 2
+pm2 status elec-console
 
 echo -e "\n${GREEN}======================================================${NC}"
 echo -e "${GREEN}   ✨ アップデート完了！最新バージョンが公開されました！ ${NC}"
