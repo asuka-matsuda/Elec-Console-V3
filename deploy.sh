@@ -32,48 +32,46 @@ elif ! command -v pm2 &> /dev/null || ! pm2 list | grep -q "elec-console"; then
   IS_CLEAN_MODE=true
 fi
 
-if [ "$IS_CLEAN_MODE" = true ]; then
-  echo -e "${CYAN}>>> 【初回クリーンアップ＆初期構築モード】で実行します${NC}"
-else
-  echo -e "${CYAN}>>> 【自動アップデート (ゼロダウンタイム) モード】で実行します${NC}"
-fi
+# ------------------------------------------------------------------------------
+# 1. ソースコードを常に最新に同期
+# ------------------------------------------------------------------------------
+echo -e "\n${YELLOW}[Step 1/6] 最新ソースコードを取得中 (Git Fetch & Reset)...${NC}"
+git fetch origin main
+git reset --hard origin/main
 
 # ------------------------------------------------------------------------------
-# 1. 旧環境のクリーンアップ (初回クリーンモード時のみ実行)
+# 2. 旧環境のクリーンアップ (初回クリーンモード時のみ実行)
 # ------------------------------------------------------------------------------
 if [ "$IS_CLEAN_MODE" = true ]; then
-  echo -e "\n${YELLOW}[Step 1/6] 旧環境・残留プロセスのクリーンアップ中...${NC}"
+  echo -e "\n${CYAN}>>> 【初回クリーンアップ＆初期構築モード】で実行します${NC}"
+  echo -e "${YELLOW}>>> 旧環境・残留プロセスのクリーンアップ中...${NC}"
 
-  # PM2の確認と古いプロセスの停止・削除
+  # PM2の確認と古いプロセスの完全停止・削除
   if command -v pm2 &> /dev/null; then
     echo ">>> PM2 で稼働中の旧プロセスを停止・整理します..."
-    # 既存の elec-console 以外の古いプロセスがあれば停止
     pm2 stop all 2>/dev/null || true
     pm2 delete all 2>/dev/null || true
     pm2 save --force 2>/dev/null || true
   fi
 
-  # ポート 3000 を占有している残留プロセスの解放 (fuser / lsof)
+  # ポート 3000 を占有している残留プロセスの解放 (fuser)
   if command -v fuser &> /dev/null; then
     echo ">>> ポート 3000 の解放確認..."
     fuser -k 3000/tcp 2>/dev/null || true
   fi
   echo ">>> クリーンアップ完了。"
 else
-  echo -e "\n${YELLOW}[Step 1/6] 最新ソースコードを取得中 (Git Fetch & Reset)...${NC}"
-  git fetch origin main
-  git reset --hard origin/main
+  echo -e "\n${CYAN}>>> 【自動アップデート (ゼロダウンタイム) モード】で実行します${NC}"
 fi
 
 # ------------------------------------------------------------------------------
-# 2. 環境変数 (.env) の確認と自動セットアップ
+# 3. 環境変数 (.env) の確認と自動セットアップ (Node 20互換)
 # ------------------------------------------------------------------------------
 echo -e "\n${YELLOW}[Step 2/6] 環境変数 (.env) をチェック中...${NC}"
 if [ ! -f .env ]; then
   echo ">>> .env が存在しないため、本番用設定を新規生成します..."
   AUTH_SECRET_GEN=$(openssl rand -hex 32 2>/dev/null || date +%s%N | sha256sum | head -c 64)
   cat << EOF > .env
-NODE_OPTIONS="--experimental-require-module"
 DATABASE_URL="file:./prisma/dev.db"
 AUTH_SECRET="${AUTH_SECRET_GEN}"
 PORT=3000
@@ -81,23 +79,25 @@ NITRO_PORT=3000
 NODE_ENV=production
 EOF
   echo ">>> 本番用 .env を生成しました。"
+else
+  # 既存の .env から不要な NODE_OPTIONS を除去 (Node 20互換)
+  sed -i '/NODE_OPTIONS/d' .env 2>/dev/null || true
 fi
 
 # ------------------------------------------------------------------------------
-# 3. 依存パッケージのインストール
+# 4. 依存パッケージのインストール (Linux / Node 20 互換)
 # ------------------------------------------------------------------------------
 echo -e "\n${YELLOW}[Step 3/6] 依存パッケージをインストール中...${NC}"
-export NODE_OPTIONS="--experimental-require-module"
-npm install --no-audit
+npm install --no-audit --ignore-engines
 
 # ------------------------------------------------------------------------------
-# 4. データベースの更新・反映 (Prisma)
+# 5. データベースの更新・反映 (Prisma)
 # ------------------------------------------------------------------------------
 echo -e "\n${YELLOW}[Step 4/6] データベースを更新中...${NC}"
 npx prisma generate
 npx prisma db push --skip-generate
 
-# 初回クリーンアップモード時はシードデータ（現場・マスターユーザー等）を確実に同期
+# 初回時または空の時はシードデータ（現場・マスターユーザー等）を同期
 if [ "$IS_CLEAN_MODE" = true ]; then
   echo ">>> 初期現場データ（テスト現場、第二現場など）および管理者をシード同期中..."
   if [ -f prisma/seed.cjs ]; then
@@ -106,13 +106,13 @@ if [ "$IS_CLEAN_MODE" = true ]; then
 fi
 
 # ------------------------------------------------------------------------------
-# 5. アプリケーションのビルド (Nuxt 4 / Nitro)
+# 6. アプリケーションのビルド (Nuxt 4 / Nitro)
 # ------------------------------------------------------------------------------
 echo -e "\n${YELLOW}[Step 5/6] 本番アプリケーションをビルド中 (Nuxt 4)...${NC}"
 npm run build
 
 # ------------------------------------------------------------------------------
-# 6. PM2 プロセスの起動 / ゼロダウンタイム再起動
+# 7. PM2 プロセスの起動 / ゼロダウンタイム再起動
 # ------------------------------------------------------------------------------
 echo -e "\n${YELLOW}[Step 6/6] サーバープロセスを管理・反映中 (PM2)...${NC}"
 if ! command -v pm2 &> /dev/null; then
@@ -130,9 +130,16 @@ fi
 
 pm2 save
 
-# Nginx の設定構文チェック（エラーがあれば警告）
+# Nginx の設定構文チェックと再読み込み
 if command -v nginx &> /dev/null; then
   sudo nginx -t 2>/dev/null && sudo systemctl reload nginx 2>/dev/null || true
+fi
+
+# 疎通確認
+echo -e "\n${YELLOW}>>> ローカルサーバーの疎通確認中...${NC}"
+sleep 3
+if curl -s -I http://localhost:3000 | grep -q "200\|302\|304"; then
+  echo -e "${GREEN}>>> 正常に応答（200 OK）を受信しました！${NC}"
 fi
 
 echo -e "\n${GREEN}======================================================${NC}"

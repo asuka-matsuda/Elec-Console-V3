@@ -11,7 +11,6 @@ module.exports = {
         NODE_ENV: 'production',
         PORT: 3000,
         NITRO_PORT: 3000,
-        NODE_OPTIONS: '--experimental-require-module',
       },
     },
   ],
