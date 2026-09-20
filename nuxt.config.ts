@@ -33,7 +33,11 @@ export default defineNuxtConfig({
       ignore: ['common/**', 'tool/**', 'portal/**', 'master/**'],
     },
   ],
-  devtools: { enabled: true },
+  devtools: { enabled: false },
+  sourcemap: {
+    server: false,
+    client: false,
+  },
 
   app: {
     head: {

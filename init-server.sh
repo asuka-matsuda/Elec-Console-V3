@@ -22,21 +22,21 @@ echo -e "${BLUE}======================================================${NC}"
 export DEBIAN_FRONTEND=noninteractive
 
 # ------------------------------------------------------------------------------
-# 1. スワップメモリ (2GB) の作成 (1GB VPS のメモリ不足 OOM 防止)
+# 1. スワップメモリ (4GB) の作成 (1GB VPS のメモリ不足 OOM 防止)
 # ------------------------------------------------------------------------------
-echo -e "\n${YELLOW}[1/7] スワップメモリ (2GB) を確認・作成中...${NC}"
+echo -e "\n${YELLOW}[1/7] スワップメモリ (4GB) を確認・作成中...${NC}"
 SWAP_TOTAL=$(free -m 2>/dev/null | awk '/^Swap:/ {print $2}')
-if [ -z "$SWAP_TOTAL" ] || [ "$SWAP_TOTAL" -lt 1024 ]; then
-  if [ ! -f /swapfile ]; then
-    fallocate -l 2G /swapfile 2>/dev/null || dd if=/dev/zero of=/swapfile bs=1M count=2048 2>/dev/null
-    chmod 600 /swapfile
-    mkswap /swapfile 2>/dev/null
-  fi
+if [ -z "$SWAP_TOTAL" ] || [ "$SWAP_TOTAL" -lt 3500 ]; then
+  swapoff /swapfile 2>/dev/null || true
+  rm -f /swapfile
+  fallocate -l 4G /swapfile 2>/dev/null || dd if=/dev/zero of=/swapfile bs=1M count=4096 2>/dev/null
+  chmod 600 /swapfile
+  mkswap /swapfile 2>/dev/null
   swapon /swapfile 2>/dev/null || true
   if ! grep -q '/swapfile' /etc/fstab 2>/dev/null; then
     echo '/swapfile none swap sw 0 0' >> /etc/fstab 2>/dev/null || true
   fi
-  echo -e "${GREEN}>>> スワップメモリ (2GB) を有効化しました。${NC}"
+  echo -e "${GREEN}>>> スワップメモリ (4GB) を有効化しました。${NC}"
 else
   echo -e "${GREEN}>>> スワップメモリは既に確保されています。${NC}"
 fi
