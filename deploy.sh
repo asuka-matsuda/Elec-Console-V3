@@ -129,13 +129,12 @@ echo -e "\n${YELLOW}[Step 4/6] データベースを更新中...${NC}"
 npx prisma generate
 npx prisma db push --skip-generate
 
-# 初回時または空の時はシードデータ（現場・マスターユーザー等）を同期
-if [ "$IS_CLEAN_MODE" = true ]; then
-  echo ">>> 初期現場データ（テスト現場、第二現場など）および管理者をシード同期中..."
-  if [ -f prisma/seed.cjs ]; then
-    node prisma/seed.cjs || true
-  fi
+# 常にシードデータ（現場・マスターユーザー等）を確実に同期
+echo ">>> 現場データ（テスト現場、第二現場など）および管理者を同期中..."
+if [ -f prisma/seed.cjs ]; then
+  node prisma/seed.cjs
 fi
+chmod 666 prisma/dev.db* 2>/dev/null || true
 
 # ------------------------------------------------------------------------------
 # 6. アプリケーションのビルド (Nuxt 4 / Nitro)

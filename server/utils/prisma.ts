@@ -1,3 +1,4 @@
+import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
 
@@ -6,7 +7,14 @@ import { PrismaClient } from '@prisma/client'
 const globalForPrisma = global as unknown as { prisma: PrismaClient }
 
 function createPrismaClient() {
-  const dbPath = path.resolve(process.cwd(), 'prisma/dev.db').replace(/\\/g, '/')
+  const candidates = [
+    path.resolve(process.cwd(), 'prisma/dev.db'),
+    path.resolve(process.cwd(), '../prisma/dev.db'),
+    path.resolve('/root/elec-console/Elec-Console-V3/prisma/dev.db'),
+    path.resolve(__dirname, '../../prisma/dev.db'),
+  ]
+  const existingPath = candidates.find(p => fs.existsSync(p)) || candidates[0]
+  const dbPath = existingPath.replace(/\\/g, '/')
 
   return new PrismaClient({
     datasources: {
