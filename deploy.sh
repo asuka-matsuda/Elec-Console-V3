@@ -40,7 +40,25 @@ git fetch origin main
 git reset --hard origin/main
 
 # ------------------------------------------------------------------------------
-# 1.5 Node.js バージョンの確認と自動アップデート (Nuxt 4 は Node 22+ 必須)
+# 1.5 スワップメモリ (Swap) の確保 (1GB VPS 等のメモリ不足・OOM 対策)
+# ------------------------------------------------------------------------------
+SWAP_TOTAL=$(free -m 2>/dev/null | awk '/^Swap:/ {print $2}')
+if [ -z "$SWAP_TOTAL" ] || [ "$SWAP_TOTAL" -lt 1024 ]; then
+  echo -e "\n${YELLOW}>>> メモリ不足防止のため、スワップメモリ (2GB) を確認・作成中...${NC}"
+  if [ ! -f /swapfile ]; then
+    fallocate -l 2G /swapfile 2>/dev/null || dd if=/dev/zero of=/swapfile bs=1M count=2048 2>/dev/null
+    chmod 600 /swapfile
+    mkswap /swapfile 2>/dev/null
+  fi
+  swapon /swapfile 2>/dev/null || true
+  if ! grep -q '/swapfile' /etc/fstab 2>/dev/null; then
+    echo '/swapfile none swap sw 0 0' >> /etc/fstab 2>/dev/null || true
+  fi
+  echo -e "${GREEN}>>> スワップメモリ (2GB) を有効化しました。${NC}"
+fi
+
+# ------------------------------------------------------------------------------
+# 1.6 Node.js バージョンの確認と自動アップデート (Nuxt 4 は Node 22+ 必須)
 # ------------------------------------------------------------------------------
 NODE_MAJOR=$(node -v 2>/dev/null | cut -d'.' -f1 | tr -d 'v')
 if [ -z "$NODE_MAJOR" ] || [ "$NODE_MAJOR" -lt 22 ]; then
