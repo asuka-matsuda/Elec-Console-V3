@@ -93,7 +93,7 @@ EOF
 # default サイトを無効化し、app.mat-ope.com を有効化
 rm -f /etc/nginx/sites-enabled/default
 ln -sf /etc/nginx/sites-available/app.mat-ope.com /etc/nginx/sites-enabled/app.mat-ope.com
-nginx -t && systemctl reload nginx
+nginx -t && (systemctl restart nginx || systemctl start nginx)
 
 # ------------------------------------------------------------------------------
 # 6. Let's Encrypt による無料 SSL (HTTPS) の自動取得＆適用
