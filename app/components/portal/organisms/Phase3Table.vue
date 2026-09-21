@@ -49,6 +49,7 @@ const inputForm = reactive({
 
 const isComplete = (circuit: CircuitItem) => Boolean(circuit.p3ConfirmedAt)
 const isP2Complete = (circuit: CircuitItem) => Boolean(circuit.p2ConfirmedAt && circuit.p2IsComplete)
+const isLocked = (circuit: CircuitItem) => props.isCircuitLocked(circuit) || !isP2Complete(circuit)
 
 // 相ラベルの取得（三相: R-S / S-T / R-T, 単相: R-N / T-N / R-T）
 const getPhaseLabels = (circuit: CircuitItem) => {
@@ -149,7 +150,7 @@ const {
     :full-circuits="fullCircuits || circuits"
     :sort-by="sortBy"
     :sort-order="sortOrder"
-    :is-circuit-locked="(circuit) => isCircuitLocked(circuit) || !isP2Complete(circuit)"
+    :is-circuit-locked="isLocked"
     :is-complete="isComplete"
     :editing-row-id="editingRowId"
     @sort="handleSort"
