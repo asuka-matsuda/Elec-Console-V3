@@ -65,10 +65,10 @@ export const SITE_STATUS_OPTIONS: SelectOption<SiteStatus>[] = [
 ]
 
 /**
- * 現場設定モーダル タブ定義
+ * 現場詳細設定 タブ定義
  */
 export const SITE_SETTINGS_TABS = [
-  { value: 'basic', label: '基本設定', icon: 'info' },
-  { value: 'integration', label: '連携設定', icon: 'link' },
-  { value: 'rules', label: 'ルール設定', icon: 'filter' },
+  { value: 'basic', label: '基本情報', icon: 'info' },
+  { value: 'integration', label: 'Excelデータ連携', icon: 'link' },
+  { value: 'rules', label: '除外回路ルール', icon: 'filter' },
 ]

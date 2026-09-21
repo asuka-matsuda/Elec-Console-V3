@@ -4,8 +4,8 @@
  * [Portal Organisms] ユーザー管理の右ペイン（Detail）。
  * 選択されたユーザーの基本設定（氏名、権限、PWリセット要求）、現場アサイン、PW初期化・削除を一括提供します。
  * 内部コンポーネントとして以下の Molecules をオーケストレートします:
- * - PortalMoleculesUserBasicSettings
- * - PortalMoleculesUserSiteAssignment
+ * - PortalUserBasicSettings
+ * - PortalUserSiteAssignment
  */
 import { ref, watch } from 'vue'
 
@@ -133,26 +133,20 @@ const handleSave = () => {
       >
         <!-- 1. 基本情報設定 -->
         <template #basic>
-          <PortalMoleculesUserBasicSettings
+          <PortalUserBasicSettings
+            v-model:last-name="editLastName"
+            v-model:first-name="editFirstName"
+            v-model:last-name-kana="editLastNameKana"
+            v-model:first-name-kana="editFirstNameKana"
+            v-model:user-role="editRole"
+            v-model:require-password-reset="editRequirePasswordReset"
             :user="user"
-            :last-name="editLastName"
-            :first-name="editFirstName"
-            :last-name-kana="editLastNameKana"
-            :first-name-kana="editFirstNameKana"
-            :user-role="editRole"
-            :require-password-reset="editRequirePasswordReset"
-            @update:last-name="editLastName = $event"
-            @update:first-name="editFirstName = $event"
-            @update:last-name-kana="editLastNameKana = $event"
-            @update:first-name-kana="editFirstNameKana = $event"
-            @update:user-role="editRole = $event"
-            @update:require-password-reset="editRequirePasswordReset = $event"
           />
         </template>
 
         <!-- 2. 現場アサイン設定 -->
         <template #assign>
-          <PortalMoleculesUserSiteAssignment
+          <PortalUserSiteAssignment
             v-model="editAssignedSiteIds"
             :site-list="siteList"
           />

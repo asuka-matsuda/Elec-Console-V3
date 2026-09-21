@@ -1,6 +1,9 @@
-import { createError, defineEventHandler, getRequestIP, readBody, setCookie } from 'h3'
+import { defineEventHandler, getRequestIP, readBody, setCookie } from 'h3'
+
+import { ErrorCode } from '#shared/types/errors'
 
 import { generateAuthToken } from '../../utils/auth'
+import { createAppError } from '../../utils/error'
 import { hashPassword, needsRehash, verifyPassword } from '../../utils/password'
 import { prisma } from '../../utils/prisma'
 import { checkRateLimit, clearRateLimit, recordFailedAttempt } from '../../utils/rateLimit'
@@ -10,9 +13,8 @@ export default defineEventHandler(async (event) => {
   const { loginId, password } = body
 
   if (!loginId || !password || typeof loginId !== 'string' || typeof password !== 'string') {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request',
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: 'ログインIDとパスワードを入力してください。',
     })
   }
@@ -28,10 +30,10 @@ export default defineEventHandler(async (event) => {
   if (ipLimitStatus.isBlocked) {
     const remainingMinutes = Math.ceil(ipLimitStatus.remainingMs / 60000)
 
-    throw createError({
-      statusCode: 429,
-      statusMessage: 'Too Many Requests',
+    throw createAppError({
+      code: ErrorCode.SYS_RATE_LIMITED,
       message: `この接続元からのログイン試行が制限されています。安全のため約${remainingMinutes}分後に再度お試しください。`,
+      details: { remainingMinutes },
     })
   }
 
@@ -41,10 +43,10 @@ export default defineEventHandler(async (event) => {
   if (accountLimitStatus.isBlocked) {
     const remainingMinutes = Math.ceil(accountLimitStatus.remainingMs / 60000)
 
-    throw createError({
-      statusCode: 429,
-      statusMessage: 'Too Many Requests',
+    throw createAppError({
+      code: ErrorCode.SYS_RATE_LIMITED,
       message: `該当アカウントのログイン試行回数が上限を超えました。安全のため約${remainingMinutes}分後に再度お試しください。`,
+      details: { remainingMinutes },
     })
   }
 
@@ -57,18 +59,16 @@ export default defineEventHandler(async (event) => {
   if (!user) {
     recordFailedAttempt(ipKey, 15)
     recordFailedAttempt(accountKey, 5)
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized',
+    throw createAppError({
+      code: ErrorCode.AUTH_INVALID_CREDENTIALS,
       message: 'ログインIDまたはパスワードが違います。',
     })
   }
 
   // アカウント無効化チェック
   if (!user.isActive) {
-    throw createError({
-      statusCode: 403,
-      statusMessage: 'Forbidden: Account is inactive',
+    throw createAppError({
+      code: ErrorCode.AUTH_ACCOUNT_INACTIVE,
       message: 'このアカウントは無効化されています。管理者にお問い合わせください。',
     })
   }
@@ -79,9 +79,8 @@ export default defineEventHandler(async (event) => {
   if (!isValid) {
     recordFailedAttempt(ipKey, 15)
     recordFailedAttempt(accountKey, 5)
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized',
+    throw createAppError({
+      code: ErrorCode.AUTH_INVALID_CREDENTIALS,
       message: 'ログインIDまたはパスワードが違います。',
     })
   }

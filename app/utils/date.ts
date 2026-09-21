@@ -15,7 +15,11 @@ export const formatDate = (date: unknown, fallback = '-'): string => {
   return `${y}/${m}/${day}`
 }
 
-export const formatDateTime = (date: unknown, fallback = '-'): string => {
+export const formatDateTime = (
+  date: unknown,
+  fallback = '-',
+  options: { withSeconds?: boolean } = {},
+): string => {
   if (!date) return fallback
   const d = date instanceof Date ? date : new Date(String(date))
 
@@ -26,6 +30,12 @@ export const formatDateTime = (date: unknown, fallback = '-'): string => {
   const day = String(d.getDate()).padStart(2, '0')
   const h = String(d.getHours()).padStart(2, '0')
   const min = String(d.getMinutes()).padStart(2, '0')
+
+  if (options.withSeconds) {
+    const s = String(d.getSeconds()).padStart(2, '0')
+
+    return `${y}/${m}/${day} ${h}:${min}:${s}`
+  }
 
   return `${y}/${m}/${day} ${h}:${min}`
 }

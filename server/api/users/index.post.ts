@@ -1,6 +1,9 @@
-import { createError, defineEventHandler, readBody } from 'h3'
+import { defineEventHandler, readBody } from 'h3'
+
+import { ErrorCode } from '#shared/types/errors'
 
 import { requireAdminUser } from '../../utils/auth'
+import { createAppError } from '../../utils/error'
 import { generateRandomPassword, hashPassword } from '../../utils/password'
 import { prisma } from '../../utils/prisma'
 
@@ -13,10 +16,16 @@ export default defineEventHandler(async (event) => {
   const lastName = body.lastName?.trim()
 
   if (!loginId || !firstName || !lastName) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request',
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: 'ログインID、姓、名は必須項目です。',
+      details: {
+        missingFields: [
+          !loginId && 'loginId',
+          !lastName && 'lastName',
+          !firstName && 'firstName',
+        ].filter(Boolean),
+      },
     })
   }
 
@@ -26,10 +35,10 @@ export default defineEventHandler(async (event) => {
   })
 
   if (existingUser) {
-    throw createError({
-      statusCode: 409,
-      statusMessage: 'Conflict',
+    throw createAppError({
+      code: ErrorCode.USER_LOGIN_ID_DUPLICATE,
       message: 'このログインIDは既に使用されています。別のIDを指定してください。',
+      details: { field: 'loginId', value: loginId },
     })
   }
 

@@ -32,7 +32,7 @@ onMounted(() => {
       icon="zap"
     >
       <template #actions>
-        <PortalMoleculesSyncStatusBadge
+        <PortalSyncStatusBadge
           :site-id="siteId"
           @synced="fetchStats"
         />

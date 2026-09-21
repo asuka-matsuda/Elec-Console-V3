@@ -25,9 +25,10 @@ describe('date utils', () => {
   })
 
   it('formatDateTime should format valid dates as YYYY/MM/DD HH:mm', () => {
-    const d = new Date(2026, 7, 31, 9, 5) // 2026-08-31 09:05
+    const d = new Date(2026, 7, 31, 9, 5, 23) // 2026-08-31 09:05:23
 
     expect(formatDateTime(d)).toBe('2026/08/31 09:05')
+    expect(formatDateTime(d, '-', { withSeconds: true })).toBe('2026/08/31 09:05:23')
   })
 
   it('formatShortDateTime should format valid dates as MM/DD HH:mm', () => {

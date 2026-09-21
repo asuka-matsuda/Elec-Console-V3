@@ -1,4 +1,4 @@
-import { useLocalStorage } from '@vueuse/core'
+import { computed, type MaybeRefOrGetter, ref, toValue, watch } from 'vue'
 
 import { STORAGE_KEYS } from '~/constants/storageKeys'
 
@@ -9,37 +9,92 @@ export interface TodoItem {
   createdAt: string
 }
 
-export const useTodo = (siteId: string, loginId: string) => {
-  // localStorage のキーに loginId と siteId を含めて「パーソナル」にする
-  const storageKey = STORAGE_KEYS.PORTAL_TODOS(siteId, loginId)
-  const todos = useLocalStorage<TodoItem[]>(storageKey, [])
+export const useTodo = (
+  siteIdSource: MaybeRefOrGetter<string>,
+  loginId = 'guest',
+) => {
+  const storageKey = computed(() =>
+    STORAGE_KEYS.PORTAL_TODOS(toValue(siteIdSource), loginId),
+  )
+
+  const rawTodos = ref<TodoItem[]>([])
+  let isSyncing = false
+
+  const load = (key: string) => {
+    if (typeof localStorage === 'undefined') {
+      rawTodos.value = []
+
+      return
+    }
+
+    try {
+      const item = localStorage.getItem(key)
+
+      isSyncing = true
+      rawTodos.value = item ? JSON.parse(item) : []
+    }
+    catch {
+      rawTodos.value = []
+    }
+    finally {
+      isSyncing = false
+    }
+  }
+
+  // キーの変更に同期して即時再ロード
+  watch(
+    storageKey,
+    (key) => {
+      load(key)
+    },
+    { immediate: true, flush: 'sync' },
+  )
+
+  // データ変更時に同期して即時保存
+  watch(
+    rawTodos,
+    (newVal) => {
+      if (isSyncing || typeof localStorage === 'undefined') return
+      localStorage.setItem(storageKey.value, JSON.stringify(newVal))
+    },
+    { deep: true, flush: 'sync' },
+  )
+
+  // 未完了優先、作成日時降順のソート済みリスト（Dateインスタンス化不要の高速比較）
+  const todos = computed(() => {
+    return [...rawTodos.value].sort((a, b) => {
+      return (
+        Number(a.completed) - Number(b.completed)
+        || b.createdAt.localeCompare(a.createdAt)
+      )
+    })
+  })
 
   const addTodo = (text: string) => {
-    if (!text.trim()) return
-    todos.value.push({
-      id: Date.now().toString(),
-      text: text.trim(),
+    const trimmed = text.trim()
+
+    if (!trimmed) return
+    const id
+      = typeof crypto !== 'undefined' && crypto.randomUUID
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
+
+    rawTodos.value.push({
+      id,
+      text: trimmed,
       completed: false,
       createdAt: new Date().toISOString(),
     })
   }
 
-  const toggleTodo = (id: string) => {
-    const todo = todos.value.find(t => t.id === id)
-
-    if (todo) {
-      todo.completed = !todo.completed
-    }
-  }
-
   const deleteTodo = (id: string) => {
-    todos.value = todos.value.filter(t => t.id !== id)
+    rawTodos.value = rawTodos.value.filter(t => t.id !== id)
   }
 
   return {
     todos,
+    rawTodos,
     addTodo,
-    toggleTodo,
     deleteTodo,
   }
 }

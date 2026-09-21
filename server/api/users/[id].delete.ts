@@ -1,6 +1,9 @@
-import { createError, defineEventHandler, getRouterParam } from 'h3'
+import { defineEventHandler, getRouterParam } from 'h3'
+
+import { ErrorCode } from '#shared/types/errors'
 
 import { requireAdminUser } from '../../utils/auth'
+import { createAppError } from '../../utils/error'
 import { prisma } from '../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
@@ -8,9 +11,8 @@ export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
 
   if (!id) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request',
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: 'ユーザーIDが指定されていません。',
     })
   }
@@ -18,27 +20,24 @@ export default defineEventHandler(async (event) => {
   const targetUser = await prisma.user.findUnique({ where: { id } })
 
   if (!targetUser) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Not Found',
+    throw createAppError({
+      code: ErrorCode.USER_NOT_FOUND,
       message: 'ユーザーが見つかりません。',
     })
   }
 
   // master アカウントの削除禁止
   if (targetUser.loginId === 'master') {
-    throw createError({
-      statusCode: 403,
-      statusMessage: 'Forbidden',
+    throw createAppError({
+      code: ErrorCode.USER_MASTER_PROTECTED,
       message: 'マスター管理者を削除することはできません。',
     })
   }
 
   // 自身のアカウント削除禁止
   if (targetUser.id === authUser.id) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request',
+    throw createAppError({
+      code: ErrorCode.USER_SELF_DEMOTION_DENIED,
       message: '自分自身のアカウントを削除することはできません。',
     })
   }
@@ -50,9 +49,8 @@ export default defineEventHandler(async (event) => {
     })
 
     if (adminCount <= 1) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: 'Bad Request',
+      throw createAppError({
+        code: ErrorCode.USER_LAST_ADMIN_DENIED,
         message: 'システム内に有効な管理者が1人のみのため、削除できません。',
       })
     }

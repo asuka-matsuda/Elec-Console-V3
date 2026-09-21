@@ -14,8 +14,8 @@ import { getAssignedWorkerNames } from '~/utils/portal'
 export type { SyncResultInfo }
 
 export interface UseSiteSettingsFormParams {
-  site: Ref<Site | null> | ComputedRef<Site | null>
-  isOpen: Ref<boolean>
+  site: Ref<Site | null> | ComputedRef<Site | null> | (() => Site | null)
+  isOpen?: Ref<boolean>
   onSave: (site: Site) => void
 }
 
@@ -27,6 +27,7 @@ export { SITE_SETTINGS_TABS }
  */
 export function useSiteSettingsForm(params: UseSiteSettingsFormParams) {
   const { site, isOpen, onSave } = params
+  const siteRef = typeof site === 'function' ? computed(site) : site
   const { users, fetchUsers } = useAdminUsers()
   const { updateSite } = useAdminSites()
 
@@ -43,11 +44,14 @@ export function useSiteSettingsForm(params: UseSiteSettingsFormParams) {
   }
 
   watch(
-    site,
-    (newSite) => {
+    siteRef,
+    async (newSite) => {
       if (newSite) {
         editData.value = { ...newSite }
         excludedCircuitsList.value = [...(newSite.excludedCircuits || [])]
+        if (users.value.length === 0) {
+          await fetchUsers()
+        }
       }
       else {
         editData.value = {}
@@ -57,11 +61,13 @@ export function useSiteSettingsForm(params: UseSiteSettingsFormParams) {
     { immediate: true },
   )
 
-  watch(isOpen, async (val) => {
-    if (val && users.value.length === 0) {
-      await fetchUsers()
-    }
-  })
+  if (isOpen) {
+    watch(isOpen, async (val) => {
+      if (val && users.value.length === 0) {
+        await fetchUsers()
+      }
+    })
+  }
 
   const editStatus = computed({
     get: () => (editData.value.status || '') as string,
@@ -76,7 +82,7 @@ export function useSiteSettingsForm(params: UseSiteSettingsFormParams) {
 
   // ワーカー名解決
   const workerNames = computed(() =>
-    getAssignedWorkerNames(site.value?.id, users.value),
+    getAssignedWorkerNames(siteRef.value?.id, users.value),
   )
 
   // 自動クォート除去（Windowsのエクスプローラー「パスのコピー」対策）
@@ -98,7 +104,7 @@ export function useSiteSettingsForm(params: UseSiteSettingsFormParams) {
   )
 
   const handleSave = () => {
-    if (!site.value) return
+    if (!siteRef.value) return
 
     if (editData.value.excelPath) {
       editData.value.excelPath = editData.value.excelPath.trim().replace(/^["']+|["']+$/g, '').trim()
@@ -112,18 +118,20 @@ export function useSiteSettingsForm(params: UseSiteSettingsFormParams) {
       .filter(c => c.length > 0)
 
     const payload: Site = {
-      ...site.value,
+      ...siteRef.value,
       ...editData.value,
       excludedCircuits: parsedCircuits,
     }
 
     onSave(payload)
-    isOpen.value = false
+    if (isOpen) {
+      isOpen.value = false
+    }
   }
 
   // Excel同期処理は useSiteExcelSync に委譲（関心事の分離）
   const excelSync = useSiteExcelSync({
-    site,
+    site: siteRef,
     getFilePath: () => {
       const rawPath = editData.value.excelPath?.trim()
       const filePath = rawPath ? rawPath.replace(/^["']+|["']+$/g, '').trim() : ''
@@ -133,13 +141,13 @@ export function useSiteSettingsForm(params: UseSiteSettingsFormParams) {
       return filePath
     },
     onPersistPath: async (filePath: string) => {
-      if (!site.value?.id) return
+      if (!siteRef.value?.id) return
       const parsedCircuits = excludedCircuitsList.value
         .map(c => c.trim())
         .filter(c => c.length > 0)
 
-      await updateSite(site.value.id, {
-        ...site.value,
+      await updateSite(siteRef.value.id, {
+        ...siteRef.value,
         ...editData.value,
         excelPath: filePath,
         excludedCircuits: parsedCircuits,

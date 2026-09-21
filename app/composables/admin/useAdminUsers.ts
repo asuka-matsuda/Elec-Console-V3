@@ -1,19 +1,25 @@
 import { useState } from '#app'
 import { useApi } from '~/composables/useApi'
 import type { User } from '~/types/auth'
+import { type AppException, parseToAppException } from '~/utils/errors'
 
 export const useAdminUsers = () => {
   const users = useState<User[]>('admin-users', () => [])
+  const fetchError = useState<AppException | null>('admin-users-error', () => null)
   const { $api } = useApi()
 
   const fetchUsers = async () => {
     try {
+      fetchError.value = null
       const data = await $api<User[]>('/api/users')
 
       users.value = data
     }
-    catch (e) {
-      console.error('Failed to fetch users:', e)
+    catch (e: unknown) {
+      const appErr = parseToAppException(e)
+
+      fetchError.value = appErr
+      console.error('Failed to fetch users:', appErr.getUserFacingMessage())
     }
   }
 
@@ -31,27 +37,34 @@ export const useAdminUsers = () => {
 
       return data
     }
-    catch (_e: unknown) {
-      const err = _e as { data?: { message?: string, statusMessage?: string }, message?: string }
-      const errMsg = err.data?.message || err.data?.statusMessage || err.message || 'ユーザー登録に失敗しました'
-
-      throw new Error(errMsg, { cause: _e })
+    catch (e: unknown) {
+      throw parseToAppException(e)
     }
   }
 
   const updateUser = async (id: string, updates: Partial<User>) => {
-    await $api(`/api/users/${id}`, {
-      method: 'PUT',
-      body: updates,
-    })
-    await fetchUsers()
+    try {
+      await $api(`/api/users/${id}`, {
+        method: 'PUT',
+        body: updates,
+      })
+      await fetchUsers()
+    }
+    catch (e: unknown) {
+      throw parseToAppException(e)
+    }
   }
 
   const deleteUser = async (id: string) => {
-    await $api(`/api/users/${id}`, {
-      method: 'DELETE',
-    })
-    await fetchUsers()
+    try {
+      await $api(`/api/users/${id}`, {
+        method: 'DELETE',
+      })
+      await fetchUsers()
+    }
+    catch (e: unknown) {
+      throw parseToAppException(e)
+    }
   }
 
   const assignSites = async (userId: string, siteIds: string[]) => {
@@ -71,16 +84,14 @@ export const useAdminUsers = () => {
 
       return data.initialPassword
     }
-    catch (_e: unknown) {
-      const err = _e as { data?: { message?: string, statusMessage?: string }, message?: string }
-      const errMsg = err.data?.message || err.data?.statusMessage || err.message || 'パスワード初期化に失敗しました'
-
-      throw new Error(errMsg, { cause: _e })
+    catch (e: unknown) {
+      throw parseToAppException(e)
     }
   }
 
   return {
     users,
+    fetchError,
     fetchUsers,
     createUser,
     updateUser,

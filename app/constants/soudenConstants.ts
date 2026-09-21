@@ -1,5 +1,6 @@
-import type { SelectOption, TableColumn } from '~/types/components'
+import type { BadgePresetId, SelectOption, TableColumn } from '~/types/components'
 import type { CircuitItem, OperationLogItem } from '~/types/souden'
+import { formatDateTime } from '~/utils/date'
 
 /**
  * フェーズ1：回路確認・増締 テーブルカラム定義
@@ -63,15 +64,39 @@ export const KENSOU_OPTIONS_1P: SelectOption[] = [
 ]
 
 /**
+ * 送電試験 操作ログのアクション文字列から BadgePresetId を判定する
+ */
+export const getActionBadgeId = (action: unknown): BadgePresetId => {
+  if (typeof action !== 'string') return 'log:neutral'
+  if (action.includes('確定') || action.includes('完了')) {
+    return 'log:success'
+  }
+  if (action.includes('解除') || action.includes('削除')) {
+    return 'log:danger'
+  }
+  if (action.includes('更新') || action.includes('変更') || action.includes('インポート')) {
+    return 'log:accent'
+  }
+
+  return 'log:neutral'
+}
+
+/**
  * 送電試験 操作ログ テーブルカラム定義
  */
 export const OPERATION_LOG_COLUMNS: TableColumn<OperationLogItem>[] = [
-  { key: 'timestamp', label: '日時', width: '170px', align: 'center' },
+  {
+    key: 'timestamp',
+    label: '日時',
+    width: '170px',
+    align: 'center',
+    format: val => formatDateTime(val, '-', { withSeconds: true }),
+  },
   { key: 'worker', label: '作業者', width: '120px' },
   { key: 'action', label: 'アクション', width: '140px', align: 'center' },
   { key: 'targetBan', label: '対象盤', width: '130px' },
   { key: 'targetKairo', label: '対象回路', width: '140px', align: 'center' },
-  { key: 'details', label: '詳細内容' },
+  { key: 'details', label: '詳細内容', truncate: true },
 ]
 
 /**

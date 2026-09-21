@@ -25,11 +25,11 @@ const activeTab = ref('users')
       panel-class="flex flex-1 flex-col gap-panel-gap min-h-0"
     >
       <template #users>
-        <PortalOrganismsAdminUsersTab />
+        <PortalAdminUsersTab />
       </template>
 
       <template #site>
-        <PortalOrganismsAdminSitesTab />
+        <PortalAdminSitesTab />
       </template>
     </Tabs>
   </div>

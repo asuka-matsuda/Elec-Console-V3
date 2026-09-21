@@ -77,11 +77,11 @@ const emit = defineEmits<{
               </Badge>
             </div>
           </div>
-          <PortalAtomsProgressBar :value="stats.completed" :max="stats.total" color="var(--color-status-success)" />
+          <PortalProgressBar :value="stats.pct" />
         </div>
 
         <!-- ミニマップ -->
-        <PortalMoleculesExamMinimap
+        <PortalExamMinimap
           :circuits="circuits"
           :phase="phase"
           @select-circuit="emit('select-circuit', $event)"

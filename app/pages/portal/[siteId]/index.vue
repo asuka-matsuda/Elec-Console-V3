@@ -87,7 +87,7 @@ onMounted(() => {
 
       <aside class="flex flex-col gap-panel-gap">
         <ClientOnly>
-          <PortalOrganismsPersonalTodo :site-id="siteId" />
+          <PortalPersonalTodo :site-id="siteId" />
         </ClientOnly>
 
         <Button

@@ -170,9 +170,8 @@ module.exports = {
     {
       files: [
         'app/components/common/organisms/Header.vue',
-        'app/components/portal/MoleculesSyncStatusBadge.vue',
-        'app/components/portal/AtomsCircularGauge.vue',
-        'app/components/portal/OrganismsCalTypeSettingsModal.vue',
+        'app/components/portal/molecules/SyncStatusBadge.vue',
+        'app/components/portal/organisms/CalTypeSettingsModal.vue',
       ],
       rules: {
         'property-disallowed-list': [
@@ -203,7 +202,7 @@ module.exports = {
     // -------------------------------------------------------------------------
     {
       files: [
-        'app/components/portal/OrganismsCal.client.vue',
+        'app/components/portal/organisms/Cal.client.vue',
         'app/assets/scss/foundation/_reset.scss',
       ],
       rules: {

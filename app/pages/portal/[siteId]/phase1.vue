@@ -77,7 +77,7 @@ const shubetsuTabOptions = computed(() => {
     @select-circuit="scrollToCircuit"
   >
     <template #header-actions>
-      <PortalMoleculesSyncStatusBadge
+      <PortalSyncStatusBadge
         :site-id="siteId"
         @synced="fetchCircuits"
       />
@@ -90,7 +90,7 @@ const shubetsuTabOptions = computed(() => {
       </Button>
     </template>
 
-    <PortalOrganismsPhase1Table
+    <PortalPhase1Table
       :circuits="filteredCircuits"
       :full-circuits="circuits"
       :is-circuit-locked="isCircuitLocked"

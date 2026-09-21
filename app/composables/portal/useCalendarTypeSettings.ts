@@ -15,28 +15,22 @@ export function useCalendarTypeSettings(params: UseCalendarTypeSettingsParams) {
   const { eventTypes, isOpen, onSave } = params
   const types = ref<EventType[]>([])
 
-  const syncTypesFromProps = () => {
-    if (eventTypes.value && eventTypes.value.length > 0) {
-      types.value = JSON.parse(JSON.stringify(eventTypes.value))
-    }
-    else {
-      types.value = JSON.parse(JSON.stringify(DEFAULT_EVENT_TYPES))
-    }
+  const syncTypes = () => {
+    const source = eventTypes.value.length > 0 ? eventTypes.value : DEFAULT_EVENT_TYPES
+
+    types.value = source.map(t => ({ ...t }))
   }
 
+  // モーダルオープン時のみ同期（編集中に親の更新で入力値が巻き戻る事故を防止）
   watch(
-    eventTypes,
-    () => {
-      syncTypesFromProps()
+    isOpen,
+    (open) => {
+      if (open) {
+        syncTypes()
+      }
     },
-    { immediate: true, deep: true },
+    { immediate: true },
   )
-
-  watch(isOpen, (open) => {
-    if (open) {
-      syncTypesFromProps()
-    }
-  })
 
   const handleAddType = () => {
     const newId = `type_${Date.now()}`

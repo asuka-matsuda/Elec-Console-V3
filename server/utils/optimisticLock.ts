@@ -1,6 +1,8 @@
 import type { Circuit, Prisma } from '@prisma/client'
-import { createError } from 'h3'
 
+import { ErrorCode } from '#shared/types/errors'
+
+import { createAppError } from './error'
 import { prisma } from './prisma'
 
 /**
@@ -15,11 +17,10 @@ export function checkOptimisticLock(
   // バージョン番号が渡されている場合は厳密な完全一致判定（最優先）
   if (typeof expectedVersion === 'number' && typeof circuit.version === 'number') {
     if (circuit.version !== expectedVersion) {
-      throw createError({
-        statusCode: 409,
-        statusMessage: 'Conflict',
-        message: `他の作業者（または別端末）によってこの回路のデータが更新されています。最新のデータを反映しました。確認の上、再度実行してください。`,
-        data: {
+      throw createAppError({
+        code: ErrorCode.CIRCUIT_VERSION_CONFLICT,
+        message: '他の作業者（または別端末）によってこの回路のデータが更新されています。最新のデータを反映しました。確認の上、再度実行してください。',
+        details: {
           currentCircuit: circuit,
         },
       })
@@ -37,11 +38,10 @@ export function checkOptimisticLock(
 
   // タイムスタンプに2秒以上の差分がある場合、別端末による更新とみなす
   if (Math.abs(serverTime - clientTime) > 2000) {
-    throw createError({
-      statusCode: 409,
-      statusMessage: 'Conflict',
-      message: `他の作業者（または別端末）によってこの回路のデータが更新されています。最新のデータを反映しました。確認の上、再度実行してください。`,
-      data: {
+    throw createAppError({
+      code: ErrorCode.CIRCUIT_VERSION_CONFLICT,
+      message: '他の作業者（または別端末）によってこの回路のデータが更新されています。最新のデータを反映しました。確認の上、再度実行してください。',
+      details: {
         currentCircuit: circuit,
       },
     })
@@ -86,18 +86,16 @@ export async function atomicUpdateCircuit(
       })
 
       if (!currentCircuit) {
-        throw createError({
-          statusCode: 404,
-          statusMessage: 'Not Found',
-          message: '指定された回路が見つかりません',
+        throw createAppError({
+          code: ErrorCode.CIRCUIT_NOT_FOUND,
+          message: '指定された回路が見つかりません。',
         })
       }
 
-      throw createError({
-        statusCode: 409,
-        statusMessage: 'Conflict',
+      throw createAppError({
+        code: ErrorCode.CIRCUIT_VERSION_CONFLICT,
         message: '他の作業者（または別端末）によってこの回路のデータが更新されています。最新のデータを反映しました。確認の上、再度実行してください。',
-        data: {
+        details: {
           currentCircuit,
         },
       })
@@ -114,10 +112,9 @@ export async function atomicUpdateCircuit(
   })
 
   if (!circuit) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Not Found',
-      message: '指定された回路が見つかりません',
+    throw createAppError({
+      code: ErrorCode.CIRCUIT_NOT_FOUND,
+      message: '指定された回路が見つかりません。',
     })
   }
 

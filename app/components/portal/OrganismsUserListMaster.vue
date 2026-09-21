@@ -89,7 +89,7 @@ const filteredUsers = computed(() => {
     <!-- ユーザー一覧リスト -->
     <div class="flex flex-col gap-2 overflow-y-auto max-h-[calc(100vh-280px)] min-h-[300px]">
       <template v-if="filteredUsers.length > 0">
-        <PortalMoleculesUserListItem
+        <PortalUserListItem
           v-for="user in filteredUsers"
           :key="user.id"
           :user="user"

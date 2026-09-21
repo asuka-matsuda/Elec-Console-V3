@@ -1,6 +1,9 @@
-import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
+import { defineEventHandler, getRouterParam, readBody } from 'h3'
+
+import { ErrorCode } from '#shared/types/errors'
 
 import { requireAdminUser } from '../../utils/auth'
+import { createAppError } from '../../utils/error'
 import { prisma } from '../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
@@ -9,9 +12,8 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
   if (!id) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request',
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: 'ユーザーIDが指定されていません。',
     })
   }
@@ -19,9 +21,8 @@ export default defineEventHandler(async (event) => {
   const targetUser = await prisma.user.findUnique({ where: { id } })
 
   if (!targetUser) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Not Found',
+    throw createAppError({
+      code: ErrorCode.USER_NOT_FOUND,
       message: 'ユーザーが見つかりません。',
     })
   }
@@ -29,23 +30,20 @@ export default defineEventHandler(async (event) => {
   // master アカウントの保護（ログインIDの変更、無効化、一般作業者への降格を禁止）
   if (targetUser.loginId === 'master') {
     if (body.loginId && body.loginId !== 'master') {
-      throw createError({
-        statusCode: 403,
-        statusMessage: 'Forbidden',
+      throw createAppError({
+        code: ErrorCode.USER_MASTER_PROTECTED,
         message: 'マスター管理者のログインIDを変更することはできません。',
       })
     }
     if (body.isActive === false) {
-      throw createError({
-        statusCode: 403,
-        statusMessage: 'Forbidden',
+      throw createAppError({
+        code: ErrorCode.USER_MASTER_PROTECTED,
         message: 'マスター管理者を無効化することはできません。',
       })
     }
     if (body.role && body.role !== 'admin') {
-      throw createError({
-        statusCode: 403,
-        statusMessage: 'Forbidden',
+      throw createAppError({
+        code: ErrorCode.USER_MASTER_PROTECTED,
         message: 'マスター管理者の権限を降格することはできません。',
       })
     }
@@ -54,16 +52,14 @@ export default defineEventHandler(async (event) => {
   // 自身のアカウントの無効化・降格の禁止
   if (targetUser.id === authUser.id) {
     if (body.isActive === false) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: 'Bad Request',
+      throw createAppError({
+        code: ErrorCode.USER_SELF_DEMOTION_DENIED,
         message: '自分自身のアカウントを無効化することはできません。',
       })
     }
     if (body.role && body.role !== 'admin') {
-      throw createError({
-        statusCode: 400,
-        statusMessage: 'Bad Request',
+      throw createAppError({
+        code: ErrorCode.USER_SELF_DEMOTION_DENIED,
         message: '自分自身の管理者権限を剥奪することはできません。',
       })
     }
@@ -76,9 +72,8 @@ export default defineEventHandler(async (event) => {
     })
 
     if (adminCount <= 1) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: 'Bad Request',
+      throw createAppError({
+        code: ErrorCode.USER_LAST_ADMIN_DENIED,
         message: 'システム内に有効な管理者が1人のみのため、無効化または降格できません。',
       })
     }
@@ -91,10 +86,10 @@ export default defineEventHandler(async (event) => {
     })
 
     if (existing) {
-      throw createError({
-        statusCode: 409,
-        statusMessage: 'Conflict',
+      throw createAppError({
+        code: ErrorCode.USER_LOGIN_ID_DUPLICATE,
         message: '指定されたログインIDは既に使用されています。',
+        details: { field: 'loginId', value: body.loginId },
       })
     }
   }

@@ -86,8 +86,8 @@ const targetBanOptions = computed(() => [
       :log-count="logs.length"
     />
 
-    <!-- ログ一覧テーブル (Organism) -->
-    <PortalOrganismsOperationLogsTable
+    <!-- ログ一覧テーブル (Organisms) -->
+    <PortalOperationLogsTable
       :logs="logs"
       :is-loading="isLoading"
     />
