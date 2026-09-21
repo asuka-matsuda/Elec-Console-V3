@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * SiteExcelIntegration
- * [Portal Molecules] 現場管理のExcelデータ連携セクション。
+ * [Portal Organisms] 現場管理のExcelデータ連携セクション。
  * Excelファイルのアップロードによる差分同期・全件初期化取込、最新帳票のダウンロード、
  * および処理結果・ステータス表示を提供します。
  */

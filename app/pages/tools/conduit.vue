@@ -36,7 +36,7 @@ const {
     </template>
 
     <template #results>
-      <ToolOrganismsConduitResult :result="result" />
+      <ToolConduitResult :result="result" />
     </template>
 
     <template #basis>

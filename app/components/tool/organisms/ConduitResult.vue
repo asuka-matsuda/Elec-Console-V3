@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * OrganismsConduitResult
+ * ConduitResult
  * [Tool Organism] 配管サイズ計算の結果を視覚的に表示する3段縦積みコンポーネント。
  * 内線規程勧告（32%, 48%）およびユーザー指定占積率の結果を表示し、
  * フッターに内線規程の勧告根拠を表示します。

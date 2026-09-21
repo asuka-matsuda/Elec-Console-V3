@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * OrganismsRackResult
+ * RackResult
  * [Tool Organism] ケーブルラック選定ツールの計算・選定結果表示コンポーネント。
  * 1段敷設（平置き・標準）と2段敷設（省スペース）の2段構えで比較表示します。
  */

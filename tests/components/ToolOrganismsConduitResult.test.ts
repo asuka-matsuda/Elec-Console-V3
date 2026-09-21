@@ -1,10 +1,10 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import OrganismsConduitResult from '../../app/components/tool/OrganismsConduitResult.vue'
+import ConduitResult from '../../app/components/tool/organisms/ConduitResult.vue'
 import type { ConduitCalcResult } from '../../app/utils/tools/conduit/conduitCalcLogic'
 
-describe('ToolOrganismsConduitResult (app/components/tool/OrganismsConduitResult.vue)', () => {
+describe('ToolConduitResult (app/components/tool/organisms/ConduitResult.vue)', () => {
   const resultBoxStub = {
     props: ['title', 'status', 'badge', 'size'],
     template: `
@@ -43,7 +43,7 @@ describe('ToolOrganismsConduitResult (app/components/tool/OrganismsConduitResult
       fillCustom: 28.5,
     } as unknown as ConduitCalcResult
 
-    const wrapper = mount(OrganismsConduitResult, {
+    const wrapper = mount(ConduitResult, {
       props: {
         result: mockResult,
       },
@@ -77,7 +77,7 @@ describe('ToolOrganismsConduitResult (app/components/tool/OrganismsConduitResult
       fillCustom: 25.0,
     } as unknown as ConduitCalcResult
 
-    const wrapper = mount(OrganismsConduitResult, {
+    const wrapper = mount(ConduitResult, {
       props: {
         result: mockResult,
       },
@@ -93,7 +93,7 @@ describe('ToolOrganismsConduitResult (app/components/tool/OrganismsConduitResult
   })
 
   it('applies is-sm class when size="sm"', () => {
-    const wrapper = mount(OrganismsConduitResult, {
+    const wrapper = mount(ConduitResult, {
       props: {
         result: null,
         size: 'sm',

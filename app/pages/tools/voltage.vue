@@ -52,7 +52,7 @@ const handleReset = async () => {
     </template>
 
     <template #results>
-      <ToolOrganismsVoltageResult :inputs="calcInputs" :result="calcResult" />
+      <ToolVoltageResult :inputs="calcInputs" :result="calcResult" />
     </template>
 
     <template #basis>

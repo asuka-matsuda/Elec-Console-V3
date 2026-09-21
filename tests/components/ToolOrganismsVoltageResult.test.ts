@@ -1,10 +1,10 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import OrganismsVoltageResult from '../../app/components/tool/OrganismsVoltageResult.vue'
+import VoltageResult from '../../app/components/tool/organisms/VoltageResult.vue'
 import type { VoltageCalcInputs, VoltageCalcResult } from '../../app/types/voltage'
 
-describe('ToolOrganismsVoltageResult (app/components/tool/OrganismsVoltageResult.vue)', () => {
+describe('ToolVoltageResult (app/components/tool/organisms/VoltageResult.vue)', () => {
   const resultBoxStub = {
     props: ['title', 'status', 'size'],
     template: `
@@ -40,7 +40,7 @@ describe('ToolOrganismsVoltageResult (app/components/tool/OrganismsVoltageResult
       },
     } as unknown as VoltageCalcResult
 
-    const wrapper = mount(OrganismsVoltageResult, {
+    const wrapper = mount(VoltageResult, {
       props: {
         inputs: mockInputs,
         result: mockResult,
@@ -83,7 +83,7 @@ describe('ToolOrganismsVoltageResult (app/components/tool/OrganismsVoltageResult
       },
     } as unknown as VoltageCalcResult
 
-    const wrapper = mount(OrganismsVoltageResult, {
+    const wrapper = mount(VoltageResult, {
       props: {
         inputs: mockInputs,
         result: mockResult,
@@ -115,7 +115,7 @@ describe('ToolOrganismsVoltageResult (app/components/tool/OrganismsVoltageResult
       errorId: 'VOLTAGE_SIZE_OVER',
     } as unknown as VoltageCalcResult
 
-    const wrapper = mount(OrganismsVoltageResult, {
+    const wrapper = mount(VoltageResult, {
       props: {
         inputs: mockInputs,
         result: mockResult,
@@ -148,7 +148,7 @@ describe('ToolOrganismsVoltageResult (app/components/tool/OrganismsVoltageResult
       wiresPerPhase: 1,
     }
 
-    const wrapper = mount(OrganismsVoltageResult, {
+    const wrapper = mount(VoltageResult, {
       props: {
         inputs: mockInputs,
         result: null,

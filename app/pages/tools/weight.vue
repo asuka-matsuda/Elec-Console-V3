@@ -30,7 +30,7 @@ const {
     </template>
 
     <template #results>
-      <ToolOrganismsWeightResult :result="result" />
+      <ToolWeightResult :result="result" />
     </template>
 
     <template #basis>

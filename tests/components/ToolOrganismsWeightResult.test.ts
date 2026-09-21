@@ -1,10 +1,10 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import OrganismsWeightResult from '../../app/components/tool/OrganismsWeightResult.vue'
+import WeightResult from '../../app/components/tool/organisms/WeightResult.vue'
 import type { WeightCalcResult } from '../../app/utils/tools/weight/weightCalcLogic'
 
-describe('ToolOrganismsWeightResult (app/components/tool/OrganismsWeightResult.vue)', () => {
+describe('ToolWeightResult (app/components/tool/organisms/WeightResult.vue)', () => {
   const resultBoxStub = {
     props: ['title', 'status', 'isEmpty'],
     template: `
@@ -75,7 +75,7 @@ describe('ToolOrganismsWeightResult (app/components/tool/OrganismsWeightResult.v
       maxCapacityMeters: 350.0,
     }
 
-    const wrapper = mount(OrganismsWeightResult, {
+    const wrapper = mount(WeightResult, {
       props: {
         result: mockResult,
       },
@@ -104,7 +104,7 @@ describe('ToolOrganismsWeightResult (app/components/tool/OrganismsWeightResult.v
       bestDrum: undefined,
     }
 
-    const wrapper = mount(OrganismsWeightResult, {
+    const wrapper = mount(WeightResult, {
       props: {
         result: mockResult,
       },
@@ -119,7 +119,7 @@ describe('ToolOrganismsWeightResult (app/components/tool/OrganismsWeightResult.v
   })
 
   it('renders empty state when result is null', () => {
-    const wrapper = mount(OrganismsWeightResult, {
+    const wrapper = mount(WeightResult, {
       props: {
         result: null,
       },

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * OrganismsWeightResult
+ * WeightResult
  * [Tool Organism] ケーブル重量・ドラム選定ツールの計算結果表示コンポーネント。
  */
 import { computed } from 'vue'

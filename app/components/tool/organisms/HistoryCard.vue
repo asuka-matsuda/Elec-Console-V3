@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * OrganismsHistoryCard
+ * HistoryCard
  * [Tool Organism] 計算履歴を1件表示するカードコンポーネント。
  * 入力条件と計算結果のプレビューを提供し、個別ツールのリッチな結果表示に対応します。
  */
@@ -80,7 +80,7 @@ const weightResult = computed(() => {
       <section class="flex flex-col gap-1 min-h-0">
         <div>
           <!-- 電圧降下・ケーブルサイズ選定 -->
-          <ToolOrganismsVoltageResult
+          <ToolVoltageResult
             v-if="entry.toolId === 'voltage' && voltageInputs && voltageResult"
             :inputs="voltageInputs"
             :result="voltageResult"
@@ -88,20 +88,20 @@ const weightResult = computed(() => {
           />
 
           <!-- 配管サイズ選定 -->
-          <ToolOrganismsConduitResult
+          <ToolConduitResult
             v-else-if="entry.toolId === 'conduit' && conduitResult"
             :result="conduitResult"
             size="sm"
           />
 
           <!-- ケーブルラック選定 -->
-          <ToolOrganismsRackResult
+          <ToolRackResult
             v-else-if="entry.toolId === 'rack' && rackResult"
             :result="rackResult"
           />
 
           <!-- ドラムサイズ・重量計算 -->
-          <ToolOrganismsWeightResult
+          <ToolWeightResult
             v-else-if="entry.toolId === 'weight' && weightResult"
             :result="weightResult"
           />

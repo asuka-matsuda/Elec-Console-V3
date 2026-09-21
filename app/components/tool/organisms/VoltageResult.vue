@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * OrganismsVoltageResult
+ * VoltageResult
  * [Tool Organism] 電圧降下やケーブルサイズの計算結果を視覚的に表示するコンポーネント。
  */
 import { computed } from 'vue'

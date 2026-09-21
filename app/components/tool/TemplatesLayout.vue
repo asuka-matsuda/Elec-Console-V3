@@ -3,7 +3,7 @@
  * TemplatesLayout
  * [Tool Template] 計算ツールページの全体テンプレートコンポーネント。
  * 条件入力パネルと計算結果パネルの大枠、および計算根拠モーダルのスロットを提供します。
- * 結果パネル・ドロワー機能は ToolOrganismsResultDrawer に包括されています。
+ * 結果パネル・ドロワー機能は ToolResultDrawer に包括されています。
  */
 import type { ToolTemplatesLayoutProps } from '~/types/components'
 

@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 
-import UserCredentialModal from '../../../app/components/portal/molecules/UserCredentialModal.vue'
+import UserCredentialModal from '../../../app/components/portal/organisms/UserCredentialModal.vue'
 
 describe('UserCredentialModal.vue', () => {
   const dummyUser = {

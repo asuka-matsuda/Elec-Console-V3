@@ -41,7 +41,7 @@ const {
     </template>
 
     <template #results>
-      <ToolOrganismsRackResult :result="result" />
+      <ToolRackResult :result="result" />
     </template>
 
     <template #basis>

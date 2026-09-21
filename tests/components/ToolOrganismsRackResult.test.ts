@@ -1,10 +1,10 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import OrganismsRackResult from '../../app/components/tool/OrganismsRackResult.vue'
+import RackResult from '../../app/components/tool/organisms/RackResult.vue'
 import type { RackCalcResult } from '../../app/utils/tools/rack/rackCalcLogic'
 
-describe('ToolOrganismsRackResult (app/components/tool/OrganismsRackResult.vue)', () => {
+describe('ToolRackResult (app/components/tool/organisms/RackResult.vue)', () => {
   const resultBoxStub = {
     props: ['title', 'status', 'badge', 'isEmpty'],
     template: `
@@ -100,7 +100,7 @@ describe('ToolOrganismsRackResult (app/components/tool/OrganismsRackResult.vue)'
   })
 
   it('Tailwindのレイアウトクラスで正しく描画されること', () => {
-    const wrapper = mount(OrganismsRackResult, {
+    const wrapper = mount(RackResult, {
       props: {
         result: createMockResult(),
         maxDepth: 80,
@@ -118,7 +118,7 @@ describe('ToolOrganismsRackResult (app/components/tool/OrganismsRackResult.vue)'
   })
 
   it('1段・2段敷設の結果と内訳が正しく描画されること', () => {
-    const wrapper = mount(OrganismsRackResult, {
+    const wrapper = mount(RackResult, {
       props: {
         result: createMockResult(),
         maxDepth: 80,
@@ -144,7 +144,7 @@ describe('ToolOrganismsRackResult (app/components/tool/OrganismsRackResult.vue)'
 
     mock.tier2.isApplicable = false
 
-    const wrapper = mount(OrganismsRackResult, {
+    const wrapper = mount(RackResult, {
       props: {
         result: mock,
         maxDepth: 80,
@@ -161,7 +161,7 @@ describe('ToolOrganismsRackResult (app/components/tool/OrganismsRackResult.vue)'
   })
 
   it('結果がnullの場合に空状態として描画されること', () => {
-    const wrapper = mount(OrganismsRackResult, {
+    const wrapper = mount(RackResult, {
       props: {
         result: null,
         maxDepth: 80,

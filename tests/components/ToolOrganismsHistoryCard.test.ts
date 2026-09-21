@@ -1,10 +1,10 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import ToolOrganismsHistoryCard from '../../app/components/tool/OrganismsHistoryCard.vue'
+import ToolHistoryCard from '../../app/components/tool/organisms/HistoryCard.vue'
 import type { HistoryEntry } from '../../app/types/history'
 
-describe('ToolOrganismsHistoryCard.vue', () => {
+describe('ToolHistoryCard.vue', () => {
   const commonStubs = {
     Panel: {
       template: '<article class="panel-stub"><slot /></article>',
@@ -20,19 +20,19 @@ describe('ToolOrganismsHistoryCard.vue', () => {
       props: ['name', 'size'],
       template: '<i class="icon-stub" />',
     },
-    ToolOrganismsVoltageResult: {
+    ToolVoltageResult: {
       props: ['inputs', 'result', 'size'],
       template: '<div class="voltage-result-stub">電圧降下結果: {{ result?.optimal?.size || result?.dropV }}</div>',
     },
-    ToolOrganismsConduitResult: {
+    ToolConduitResult: {
       props: ['inputs', 'result', 'size'],
       template: '<div class="conduit-result-stub">配管結果</div>',
     },
-    ToolOrganismsRackResult: {
+    ToolRackResult: {
       props: ['result', 'maxDepth', 'mode'],
       template: '<div class="rack-result-stub">ラック結果</div>',
     },
-    ToolOrganismsWeightResult: {
+    ToolWeightResult: {
       props: ['result'],
       template: '<div class="weight-result-stub">重量結果</div>',
     },
@@ -56,7 +56,7 @@ describe('ToolOrganismsHistoryCard.vue', () => {
   }
 
   it('renders header, inputs and fallback results when raw data is not provided', () => {
-    const wrapper = mount(ToolOrganismsHistoryCard, {
+    const wrapper = mount(ToolHistoryCard, {
       props: {
         entry: baseEntry,
       },
@@ -75,7 +75,7 @@ describe('ToolOrganismsHistoryCard.vue', () => {
   })
 
   it('emits delete event with entry id when delete button is clicked', async () => {
-    const wrapper = mount(ToolOrganismsHistoryCard, {
+    const wrapper = mount(ToolHistoryCard, {
       props: {
         entry: baseEntry,
       },
@@ -92,7 +92,7 @@ describe('ToolOrganismsHistoryCard.vue', () => {
     expect(wrapper.emitted('delete')).toEqual([['test-1']])
   })
 
-  it('renders ToolOrganismsVoltageResult and correctly maps VoltageFormState to inputs', () => {
+  it('renders ToolVoltageResult and correctly maps VoltageFormState to inputs', () => {
     const voltageEntry: HistoryEntry = {
       ...baseEntry,
       toolId: 'voltage',
@@ -119,7 +119,7 @@ describe('ToolOrganismsHistoryCard.vue', () => {
       },
     }
 
-    const wrapper = mount(ToolOrganismsHistoryCard, {
+    const wrapper = mount(ToolHistoryCard, {
       props: {
         entry: voltageEntry,
       },
@@ -134,7 +134,7 @@ describe('ToolOrganismsHistoryCard.vue', () => {
     expect(voltageResultStub.text()).toContain('38')
   })
 
-  it('renders ToolOrganismsConduitResult for conduit tool', () => {
+  it('renders ToolConduitResult for conduit tool', () => {
     const conduitEntry: HistoryEntry = {
       ...baseEntry,
       toolId: 'conduit',
@@ -143,7 +143,7 @@ describe('ToolOrganismsHistoryCard.vue', () => {
       rawResult: { success: true },
     }
 
-    const wrapper = mount(ToolOrganismsHistoryCard, {
+    const wrapper = mount(ToolHistoryCard, {
       props: {
         entry: conduitEntry,
       },
@@ -155,7 +155,7 @@ describe('ToolOrganismsHistoryCard.vue', () => {
     expect(wrapper.find('.conduit-result-stub').exists()).toBe(true)
   })
 
-  it('renders ToolOrganismsRackResult for rack tool', () => {
+  it('renders ToolRackResult for rack tool', () => {
     const rackEntry: HistoryEntry = {
       ...baseEntry,
       toolId: 'rack',
@@ -164,7 +164,7 @@ describe('ToolOrganismsHistoryCard.vue', () => {
       rawResult: { tier1: {} },
     }
 
-    const wrapper = mount(ToolOrganismsHistoryCard, {
+    const wrapper = mount(ToolHistoryCard, {
       props: {
         entry: rackEntry,
       },
@@ -176,7 +176,7 @@ describe('ToolOrganismsHistoryCard.vue', () => {
     expect(wrapper.find('.rack-result-stub').exists()).toBe(true)
   })
 
-  it('renders ToolOrganismsWeightResult for weight tool', () => {
+  it('renders ToolWeightResult for weight tool', () => {
     const weightEntry: HistoryEntry = {
       ...baseEntry,
       toolId: 'weight',
@@ -185,7 +185,7 @@ describe('ToolOrganismsHistoryCard.vue', () => {
       rawResult: { totalWeight: 500 },
     }
 
-    const wrapper = mount(ToolOrganismsHistoryCard, {
+    const wrapper = mount(ToolHistoryCard, {
       props: {
         entry: weightEntry,
       },
