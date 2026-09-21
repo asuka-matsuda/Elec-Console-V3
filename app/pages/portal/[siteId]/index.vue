@@ -81,7 +81,7 @@ onMounted(() => {
     <div class="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-section-gap items-start">
       <section class="min-h-[500px]">
         <ClientOnly>
-          <PortalOrganismsCal :site-id="siteId" />
+          <PortalCal :site-id="siteId" />
         </ClientOnly>
       </section>
 
