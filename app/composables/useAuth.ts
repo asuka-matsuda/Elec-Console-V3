@@ -1,3 +1,9 @@
+/**
+ * 認証・セッション管理 Composable
+ *
+ * @description ユーザーログイン・ログアウト、トークン永続化、権限ロール判定、およびサーバー時刻差分補正を管理します。
+ */
+
 import { computed } from 'vue'
 
 import { useCookie, useRouter, useState } from '#app'

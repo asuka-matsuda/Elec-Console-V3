@@ -23,14 +23,13 @@ withDefaults(defineProps<FilterPanelProps>(), {
     <SectionHeader :title="title" :tag="tag" :icon="icon" />
 
     <div class="flex flex-col gap-3">
-      <!-- 検索窓（自明なKeywordラベルを排してプレースホルダーで省スペース化） -->
+
       <Input
         v-model="searchQuery"
         :placeholder="placeholder"
         clearable
       />
 
-      <!-- カテゴリ選択（gridでどんな長さでも縦横均等に綺麗に整列） -->
       <div
         v-if="categoryOptions.length > 0"
         class="grid grid-cols-[repeat(auto-fill,minmax(115px,1fr))] gap-2"

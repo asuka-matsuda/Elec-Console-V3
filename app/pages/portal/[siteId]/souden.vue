@@ -58,7 +58,6 @@ onMounted(() => {
       <span>{{ error }}</span>
     </div>
 
-    <!-- データ未取込時のエンプティステート -->
     <EmptyState
       v-if="!isLoading && stats && stats.totalCircuits === 0"
       icon="database"
@@ -76,7 +75,7 @@ onMounted(() => {
     </EmptyState>
 
     <template v-else-if="stats">
-      <!-- 総合進捗カード (Organism) -->
+
       <PortalSoudenOverallCard :stats="stats" :site-id="siteId" />
     </template>
   </div>

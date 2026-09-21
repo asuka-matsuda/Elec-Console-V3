@@ -1,3 +1,11 @@
+/**
+ * 単語分割設定一覧取得 API
+ * GET /api/master/word-break
+ *
+ * @description 登録済みの単語改行ルール一覧を取得します。
+ * @permission システム管理者限定
+ */
+
 import { defineEventHandler } from 'h3'
 
 import type { WordBreakItem } from '~/types/components'

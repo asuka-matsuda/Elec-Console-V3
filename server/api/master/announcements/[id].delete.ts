@@ -1,3 +1,11 @@
+/**
+ * マスターお知らせ削除 API
+ * DELETE /api/master/announcements/:id
+ *
+ * @description 指定されたシステムお知らせを削除します。
+ * @permission システム管理者限定
+ */
+
 import { createError, defineEventHandler, getRouterParam } from 'h3'
 
 import { requireMasterUser } from '../../../utils/auth'

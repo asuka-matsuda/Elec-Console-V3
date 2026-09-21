@@ -1,3 +1,11 @@
+/**
+ * 現場カレンダー予定作成 API
+ * POST /api/sites/:siteId/events
+ *
+ * @description 指定現場に新しいカレンダー予定を作成・登録します。
+ * @permission 現場アクセス権限
+ */
+
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { requireSiteAccess } from '../../../utils/auth'

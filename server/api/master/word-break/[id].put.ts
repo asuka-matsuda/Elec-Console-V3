@@ -1,3 +1,11 @@
+/**
+ * 単語分割設定更新 API
+ * PUT /api/master/word-break/:id
+ *
+ * @description 指定された改行禁止単語の設定を更新します。
+ * @permission システム管理者限定
+ */
+
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { requireMasterUser } from '../../../utils/auth'

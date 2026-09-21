@@ -120,7 +120,7 @@ defineExpose({
     ]"
     :style="rootAttrs.style"
   >
-    <!-- 入力本体（クリアボタンやパスワードトグルを含む領域） -->
+
     <div class="relative flex-1 min-w-0 flex items-center input-wrapper">
       <input
         :id="inputId"
@@ -150,12 +150,11 @@ defineExpose({
         @keydown.enter="emit('enter', $event)"
       />
 
-      <!-- 右端のアクションボタングループ -->
       <div
         v-if="hasActions"
         class="absolute right-2 z-[3] flex items-center gap-1 action-group"
       >
-        <!-- クリアボタン -->
+
         <FormControlAction
           v-if="canClear"
           icon="x"
@@ -163,7 +162,6 @@ defineExpose({
           @click="handleClear"
         />
 
-        <!-- パスワード表示トグルボタン -->
         <FormControlAction
           v-if="canTogglePassword"
           :icon="showPassword ? 'eye-off' : 'eye'"
@@ -173,12 +171,10 @@ defineExpose({
       </div>
     </div>
 
-    <!-- 単位テキストアドオン -->
     <span v-if="addon" class="inline-flex shrink-0 items-center justify-center input-addon">
       {{ addon }}
     </span>
 
-    <!-- セレクトボックス等のカスタムアドオンスロット -->
     <div v-else-if="$slots.addon" class="flex shrink-0 items-stretch input-addon-slot">
       <slot name="addon" />
     </div>

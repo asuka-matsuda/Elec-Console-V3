@@ -27,7 +27,7 @@ const emit = defineEmits<{
 
 <template>
   <div class="flex flex-col gap-6">
-    <!-- 取込セクション -->
+
     <div class="flex flex-col gap-3">
       <SectionHeader
         title="Excelデータ取込 (差分同期 / 初期設定)"
@@ -66,7 +66,6 @@ const emit = defineEmits<{
       </div>
     </div>
 
-    <!-- 出力セクション -->
     <div class="flex flex-col gap-3">
       <SectionHeader
         title="最新結果の帳票出力"
@@ -88,7 +87,6 @@ const emit = defineEmits<{
       </Button>
     </div>
 
-    <!-- 実行中ステータス表示 -->
     <div
       v-if="isSyncing"
       class="status-msg is-info flex items-center gap-2 p-3"
@@ -97,7 +95,6 @@ const emit = defineEmits<{
       <span>{{ syncMsg }}</span>
     </div>
 
-    <!-- エラー発生時の表示 -->
     <div
       v-else-if="showSyncMsg && syncMsgType === 'error'"
       class="status-msg is-error flex items-center gap-2 p-3"
@@ -106,7 +103,6 @@ const emit = defineEmits<{
       <span>{{ syncMsg }}</span>
     </div>
 
-    <!-- 完了時のインライン件数サマリー表示 (ResultBox) -->
     <ResultBox
       v-else-if="syncResultData"
       status="success"

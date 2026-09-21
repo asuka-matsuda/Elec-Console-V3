@@ -76,7 +76,6 @@ const getCableSpec = (cableIdx: string, count?: number | null) => {
       </FormGroup>
     </div>
 
-    <!-- ケーブル条件セクション -->
     <section class="flex flex-col gap-[var(--space-item-gap)]">
       <Button
         class="self-end"

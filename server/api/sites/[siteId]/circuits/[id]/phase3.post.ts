@@ -1,3 +1,11 @@
+/**
+ * フェーズ3（送電・電圧測定・検相）測定値確定 API
+ * POST /api/sites/:siteId/circuits/:id/phase3
+ *
+ * @description 指定回路のフェーズ3試験結果（各相線間電圧・検相・送電日時）を確定登録します。
+ * @permission 現場アクセス権限
+ */
+
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { requireSiteAccess } from '../../../../../utils/auth'

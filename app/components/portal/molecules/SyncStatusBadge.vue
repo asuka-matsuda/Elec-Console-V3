@@ -26,7 +26,7 @@ const isModalOpen = ref(false)
 
 <template>
   <div class="inline-flex items-center">
-    <!-- 未同期時：同期実行キューモーダルを開くボタン -->
+
     <button
       v-if="hasPending"
       type="button"
@@ -46,13 +46,11 @@ const isModalOpen = ref(false)
       </span>
     </button>
 
-    <!-- 通常時：同期済ステータス表示 -->
     <div v-else class="inline-flex items-center gap-1.5 px-2 py-1 sync-status">
       <span class="sync-dot" />
       <span>同期済</span>
     </div>
 
-    <!-- 同期モーダル：開いた時のみ遅延マウント -->
     <PortalSyncQueueModal
       v-if="isModalOpen"
       v-model="isModalOpen"

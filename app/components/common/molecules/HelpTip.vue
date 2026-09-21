@@ -64,7 +64,6 @@ if (import.meta.client) {
 </script>
 
 <template>
-  <!-- トリガーアイコン -->
   <button
     ref="triggerRef"
     type="button"
@@ -74,7 +73,6 @@ if (import.meta.client) {
     <Icon name="help-circle" />
   </button>
 
-  <!-- 最前面にTeleport（Panelのpadding/overflowを確実に回避） -->
   <Teleport to="body">
     <div
       v-if="isOpen && (displayText || $slots.default)"
@@ -85,12 +83,11 @@ if (import.meta.client) {
         left: `${position.left}px`,
       }"
     >
-      <!-- 本文 -->
+
       <slot :help="resolvedHelp">
         {{ displayText }}
       </slot>
 
-      <!-- 規格バッジ（共通Badgeアトムを再利用） -->
       <div
         v-if="displayReference"
         class="helptip-reference mt-1.5 pt-1 flex items-center justify-between"

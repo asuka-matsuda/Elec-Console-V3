@@ -1,3 +1,11 @@
+/**
+ * 現場削除 API
+ * DELETE /api/sites/:siteId
+ *
+ * @description 指定された現場および関連データを削除します。
+ * @permission システム管理者限定
+ */
+
 import { defineEventHandler, getRouterParam } from 'h3'
 
 import { requireAdminUser } from '../../../utils/auth'

@@ -1,3 +1,9 @@
+/**
+ * ケーブルラック計算入力 ➔ 算出ロジック用パラメータ変換マッパー
+ *
+ * @description UIフォームの入力ステートを、計算エンジンが受領可能な統一フォーマットへ変換します。
+ */
+
 import type { CableInputItem } from '~/types/tools'
 import { findCableByIndexString, getEffectiveCableDiameter } from '~/utils/cable'
 import type {

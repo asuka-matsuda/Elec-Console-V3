@@ -17,7 +17,7 @@ const vm = computed(() => formatWeightResult(props.result))
 
 <template>
   <div class="flex flex-col gap-panel-gap">
-    <!-- メイン結果 1: 使用ドラム（想定） -->
+
     <ResultBox
       title="使用ドラム（想定）"
       :status="vm.boxStatus"
@@ -26,7 +26,6 @@ const vm = computed(() => formatWeightResult(props.result))
       <span class="value-text">{{ vm.displayDrum }}</span>
     </ResultBox>
 
-    <!-- メイン結果 2: 総重量 (ケーブル+ドラム) -->
     <ResultBox
       title="総重量 (ケーブル+ドラム)"
       :status="vm.boxStatus"
@@ -35,7 +34,6 @@ const vm = computed(() => formatWeightResult(props.result))
       <small v-if="!vm.isError && vm.hasBestDrum">kg</small>
     </ResultBox>
 
-    <!-- サブ情報（ケーブル重量、ドラム重量、最大巻取可能長） -->
     <ToolResultDetails :items="vm.details" />
   </div>
 </template>

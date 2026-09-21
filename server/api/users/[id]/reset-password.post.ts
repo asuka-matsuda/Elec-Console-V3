@@ -1,3 +1,11 @@
+/**
+ * ユーザーパスワード初期化 API
+ * POST /api/users/:id/reset-password
+ *
+ * @description 管理者操作により対象ユーザーの一時パスワードを再発行し、次回ログイン時の変更を義務付けます。
+ * @permission システム管理者限定
+ */
+
 import { createError, defineEventHandler, getRouterParam } from 'h3'
 
 import { requireAdminUser } from '../../../utils/auth'

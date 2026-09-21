@@ -1,3 +1,11 @@
+/**
+ * 現場カレンダー表示設定更新 API
+ * PUT /api/sites/:siteId/calendar/settings
+ *
+ * @description 現場カレンダーのイベント種別定義やカスタム設定を保存・更新します。
+ * @permission 現場アクセス権限
+ */
+
 import { defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { requireSiteAccess } from '../../../../utils/auth'

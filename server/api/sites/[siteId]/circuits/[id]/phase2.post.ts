@@ -1,3 +1,11 @@
+/**
+ * フェーズ2（耐電圧試験・高圧受電）測定値確定 API
+ * POST /api/sites/:siteId/circuits/:id/phase2
+ *
+ * @description 指定回路のフェーズ2試験結果（耐圧測定・合否判定・試験員）を確定登録します。
+ * @permission 現場アクセス権限
+ */
+
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { requireSiteAccess } from '../../../../../utils/auth'

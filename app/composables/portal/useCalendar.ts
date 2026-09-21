@@ -1,3 +1,10 @@
+/**
+ * 現場カレンダー管理 Composable
+ *
+ * @description 現場に紐づく予定イベントの取得・日付移動・月間/週間ビューの切り替えを管理します。
+ * @param {Ref<string>} siteId 対象現場IDのRef
+ */
+
 import { useAsyncData, useState } from '#app'
 import { useApi } from '~/composables/useApi'
 

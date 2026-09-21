@@ -104,7 +104,7 @@ const handleDelete = async (item: WordBreakItem) => {
 
 <template>
   <div class="flex flex-col gap-panel-gap">
-    <!-- ヘッダー・アクション -->
+
     <div class="flex flex-wrap items-center justify-between gap-4">
       <small>
         テーブルの盤名称等で途中で改行させない単語を管理します（※「1-1」「分電盤」等はシステムで自動処理されます）。
@@ -119,7 +119,6 @@ const handleDelete = async (item: WordBreakItem) => {
       </Button>
     </div>
 
-    <!-- 単語一覧テーブル -->
     <Panel padding="none">
       <Table
         :columns="columns"
@@ -145,7 +144,6 @@ const handleDelete = async (item: WordBreakItem) => {
       </Table>
     </Panel>
 
-    <!-- 作成・編集モーダル -->
     <Modal
       v-model="isEditModalOpen"
       :title="editingId ? '単語の編集' : '新規ワード登録'"

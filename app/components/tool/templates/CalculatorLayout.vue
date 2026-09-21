@@ -1,14 +1,14 @@
 <script setup lang="ts">
 /**
- * TemplatesLayout
+ * CalculatorLayout
  * [Tool Template] 計算ツールページの全体テンプレートコンポーネント。
  * 条件入力パネルと計算結果パネルの大枠、および計算根拠モーダルのスロットを提供します。
  * 結果パネル・ドロワー機能は ToolResultDrawer に包括されています。
  */
-import type { ToolTemplatesLayoutProps } from '~/types/components'
+import type { ToolCalculatorLayoutProps } from '~/types/components'
 
 withDefaults(
-  defineProps<ToolTemplatesLayoutProps>(),
+  defineProps<ToolCalculatorLayoutProps>(),
   {
     inputsTitle: '条件入力',
     inputsIcon: 'edit',
@@ -27,14 +27,13 @@ const emit = defineEmits<{
 
 <template>
   <div class="tool-layout flex flex-1 flex-col gap-panel-gap min-h-0 w-full max-w-[1600px] mx-auto">
-    <!-- 免責事項 -->
+
     <slot v-if="!hideDisclaimer" name="disclaimer">
       <Disclaimer :text="disclaimerText" />
     </slot>
 
-    <!-- メイングリッド（左: 条件入力 / 右: 計算結果） -->
     <div class="grid flex-1 grid-cols-1 md:grid-cols-[minmax(0,4fr)_minmax(0,3fr)] gap-panel-gap min-h-0">
-      <!-- 1. 条件入力（PC: 左側 4fr / モバイル: 全面表示） -->
+
       <section class="flex flex-col min-h-0">
         <Panel class="flex flex-1 flex-col gap-panel-gap min-h-0">
           <SectionHeader
@@ -59,7 +58,6 @@ const emit = defineEmits<{
         </Panel>
       </section>
 
-      <!-- 2. 計算結果（PC: 右側 3fr / モバイル: 下部Stickyドロワー） -->
       <ToolResultDrawer
         :title="resultsTitle"
         :icon="resultsIcon"

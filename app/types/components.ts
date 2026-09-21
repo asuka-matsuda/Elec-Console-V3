@@ -57,8 +57,7 @@ export interface TableColumn<T = Record<string, unknown>> {
   /** セルに適用する追加クラス */
   class?: string
   /** 表示値のカスタムフォーマッタ関数 */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  format?: (value: any, row: any) => unknown
+  format?: (value: unknown, row: T) => unknown
 }
 
 /** パンくずリスト項目 */
@@ -515,7 +514,7 @@ export interface ModalProps {
 // 5. Templates（画面レイアウトテンプレート）
 // ============================================================================
 
-export interface ToolTemplatesLayoutProps {
+export interface ToolCalculatorLayoutProps {
   inputsTitle?: string
   inputsIcon?: string
   resultsTitle?: string
@@ -525,6 +524,8 @@ export interface ToolTemplatesLayoutProps {
   disclaimerText?: string
   hideDisclaimer?: boolean
 }
+
+export type ToolTemplatesLayoutProps = ToolCalculatorLayoutProps
 
 // ============================================================================
 // 6. フォーム共通コンテキスト（Form Context Injection & Props）

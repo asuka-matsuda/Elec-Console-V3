@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
 
-import CalClient from '../../../app/components/portal/organisms/Cal.client.vue'
+import CalendarClient from '../../../app/components/portal/organisms/Calendar.client.vue'
 
 const mockEvents = ref([
   { id: 'evt-1', siteId: 'site-1', title: '現場確認', start: '2026-09-21' },
@@ -30,10 +30,6 @@ vi.mock('~/composables/portal/useCalendar', () => ({
   }),
 }))
 
-const mockOpenCreateModal = vi.fn()
-const mockOpenEditModal = vi.fn()
-const mockSaveEvent = vi.fn()
-const mockRemoveEvent = vi.fn()
 const mockIsModalOpen = ref(false)
 const mockIsEditing = ref(false)
 const mockForm = ref({
@@ -43,6 +39,10 @@ const mockForm = ref({
   end: '',
   allDay: false,
 })
+const mockOpenCreateModal = vi.fn()
+const mockOpenEditModal = vi.fn()
+const mockSaveEvent = vi.fn()
+const mockRemoveEvent = vi.fn()
 
 vi.mock('~/composables/portal/useCalendarEventForm', () => ({
   useCalendarEventForm: () => ({
@@ -56,10 +56,13 @@ vi.mock('~/composables/portal/useCalendarEventForm', () => ({
   }),
 }))
 
-let capturedOptionsConfig: any = null
+let capturedOptionsConfig: {
+  onEventDrop: (info: { event: { id: string, startStr: string, endStr?: string, allDay: boolean }, revert: () => void }) => Promise<void>
+  onEventResize: (info: { event: { id: string, startStr: string, endStr?: string }, revert: () => void }) => Promise<void>
+} | null = null
 
 vi.mock('~/composables/portal/useCalendarOptions', () => ({
-  useCalendarOptions: (config: any) => {
+  useCalendarOptions: (config: typeof capturedOptionsConfig) => {
     capturedOptionsConfig = config
 
     return {
@@ -75,7 +78,6 @@ vi.mock('~/composables/portal/useCalendarOptions', () => ({
   },
 }))
 
-// FullCalendar スタブ
 vi.mock('@fullcalendar/vue3', () => ({
   default: {
     name: 'FullCalendar',
@@ -84,9 +86,9 @@ vi.mock('@fullcalendar/vue3', () => ({
   },
 }))
 
-describe('Cal.client.vue', () => {
+describe('Calendar.client.vue', () => {
   it('renders toolbar, panel with padding none, fullcalendar stub and modals', () => {
-    const wrapper = mount(CalClient, {
+    const wrapper = mount(CalendarClient, {
       props: { siteId: 'site-1' },
       global: {
         stubs: {
@@ -114,7 +116,7 @@ describe('Cal.client.vue', () => {
   })
 
   it('opens type settings modal when toolbar emits open-type-settings', async () => {
-    const wrapper = mount(CalClient, {
+    const wrapper = mount(CalendarClient, {
       props: { siteId: 'site-1' },
       global: {
         stubs: {
@@ -141,7 +143,7 @@ describe('Cal.client.vue', () => {
   })
 
   it('calls updateSettings without manual array spread hack when saving types', async () => {
-    const wrapper = mount(CalClient, {
+    const wrapper = mount(CalendarClient, {
       props: { siteId: 'site-1' },
       global: {
         stubs: {
@@ -161,7 +163,7 @@ describe('Cal.client.vue', () => {
   })
 
   it('handles revert on event drop or resize when updateEvent fails', async () => {
-    mount(CalClient, {
+    mount(CalendarClient, {
       props: { siteId: 'site-1' },
       global: {
         stubs: {
@@ -179,7 +181,7 @@ describe('Cal.client.vue', () => {
     mockUpdateEvent.mockResolvedValueOnce(undefined)
     const dropRevert = vi.fn()
 
-    await capturedOptionsConfig.onEventDrop({
+    await capturedOptionsConfig?.onEventDrop({
       event: { id: 'evt-1', startStr: '2026-09-22', endStr: '', allDay: false },
       revert: dropRevert,
     })
@@ -192,7 +194,7 @@ describe('Cal.client.vue', () => {
 
     // 異常系: updateEvent が失敗したら revert() が呼ばれること
     mockUpdateEvent.mockRejectedValueOnce(new Error('Network error'))
-    await capturedOptionsConfig.onEventDrop({
+    await capturedOptionsConfig?.onEventDrop({
       event: { id: 'evt-1', startStr: '2026-09-23', endStr: '', allDay: false },
       revert: dropRevert,
     })
@@ -202,7 +204,7 @@ describe('Cal.client.vue', () => {
     const resizeRevert = vi.fn()
 
     mockUpdateEvent.mockRejectedValueOnce(new Error('Resize error'))
-    await capturedOptionsConfig.onEventResize({
+    await capturedOptionsConfig?.onEventResize({
       event: { id: 'evt-1', startStr: '2026-09-21', endStr: '2026-09-24' },
       revert: resizeRevert,
     })

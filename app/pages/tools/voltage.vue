@@ -41,7 +41,7 @@ const handleReset = async () => {
 </script>
 
 <template>
-  <ToolTemplatesLayout
+  <ToolCalculatorLayout
     results-title="計算結果"
     :save-disabled="isSaveDisabled"
     :save-function="handleSaveHistory"
@@ -58,5 +58,5 @@ const handleReset = async () => {
     <template #basis>
       <ToolMathBasis :steps="mathSteps" />
     </template>
-  </ToolTemplatesLayout>
+  </ToolCalculatorLayout>
 </template>

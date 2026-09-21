@@ -1,3 +1,11 @@
+/**
+ * 単語分割設定新規作成 API
+ * POST /api/master/word-break
+ *
+ * @description 新しい改行禁止単語を登録します。
+ * @permission システム管理者限定
+ */
+
 import { randomUUID } from 'node:crypto'
 
 import { createError, defineEventHandler, readBody } from 'h3'

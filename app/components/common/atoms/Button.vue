@@ -59,14 +59,12 @@ const computedType = computed(() => {
       },
     ]"
   >
-    <!-- 左側アイコン（loading時は自動でスピナーに切り替え） -->
+
     <Icon v-if="loading" name="loader" spin />
     <Icon v-else-if="icon" :name="icon" />
 
-    <!-- ラベル（スロット） -->
     <slot />
 
-    <!-- 右側アイコン（未ローディング時のみ表示） -->
     <Icon v-if="iconRight && !loading" :name="iconRight" />
   </component>
 </template>

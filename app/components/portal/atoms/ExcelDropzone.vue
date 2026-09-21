@@ -96,7 +96,7 @@ const formatFileSize = (bytes: number): string => {
       'is-disabled': disabled,
     }"
   >
-    <!-- ネイティブファイル入力 -->
+
     <input
       ref="fileInputRef"
       type="file"
@@ -106,7 +106,6 @@ const formatFileSize = (bytes: number): string => {
       @change="onFileInputChange"
     >
 
-    <!-- ① ファイル未選択時：クリックまたはD&Dで選択 -->
     <div
       v-if="!modelValue"
       class="flex flex-col items-center justify-center p-6 w-full"
@@ -121,7 +120,6 @@ const formatFileSize = (bytes: number): string => {
       </small>
     </div>
 
-    <!-- ② ファイル選択時：プレビューカード -->
     <div v-else class="flex items-center gap-3 w-full p-4">
       <Icon name="file-check" size="md" class="file-icon shrink-0" />
       <div class="flex-1 min-w-0">

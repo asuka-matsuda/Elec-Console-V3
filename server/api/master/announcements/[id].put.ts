@@ -1,3 +1,11 @@
+/**
+ * マスターお知らせ更新 API
+ * PUT /api/master/announcements/:id
+ *
+ * @description 既存のシステムお知らせのタイトル、日付、本文を更新します。
+ * @permission システム管理者限定
+ */
+
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { requireMasterUser } from '../../../utils/auth'

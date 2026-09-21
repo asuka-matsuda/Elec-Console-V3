@@ -208,7 +208,7 @@ const confirmResetPassword = async (row: User) => {
 <template>
   <Panel>
     <div class="flex flex-col lg:flex-row gap-6 items-start">
-      <!-- 左ペイン: Master (幅約340px) -->
+
       <div class="w-full lg:w-[340px] shrink-0">
         <PortalUserListMaster
           :users="users"
@@ -223,7 +223,6 @@ const confirmResetPassword = async (row: User) => {
         class="hidden lg:block self-stretch"
       />
 
-      <!-- 右ペイン: Detail (残りワイド領域) -->
       <div class="flex-1 min-w-0 w-full">
         <PortalUserSettingsDetail
           :user="selectedUser"
@@ -236,7 +235,6 @@ const confirmResetPassword = async (row: User) => {
       </div>
     </div>
 
-    <!-- 新規登録モーダル (中央ダイアログ) -->
     <Modal
       v-model="isCreateModalOpen"
       title="新規ユーザー登録"
@@ -286,7 +284,6 @@ const confirmResetPassword = async (row: User) => {
       </div>
     </Modal>
 
-    <!-- 認証情報発行完了モーダル（切り出し後） -->
     <PortalUserCredentialModal
       v-model="isCredentialModalOpen"
       :user="credentialTarget"

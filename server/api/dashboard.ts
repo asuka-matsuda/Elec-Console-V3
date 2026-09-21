@@ -1,3 +1,11 @@
+/**
+ * ダッシュボード概要情報取得 API
+ * GET /api/dashboard
+ *
+ * @description お知らせ一覧およびシステム更新履歴を取得します。未初期化時はシードデータから自動構築します。
+ * @permission 認証済みユーザー
+ */
+
 import { defineEventHandler } from 'h3'
 
 import announcementsSeed from '../data/announcements.json'

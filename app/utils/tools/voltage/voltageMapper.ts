@@ -1,3 +1,9 @@
+/**
+ * 電圧降下計算入力 ➔ エンジン用パラメータ変換マッパー
+ *
+ * @description 負荷単位（A/kW）の換算や力率適用を行い、電圧降下計算エンジンへ渡す入力データを生成します。
+ */
+
 import { systemData } from '~/constants/data/systemData'
 import type { SystemData, VoltageCalcInputs } from '~/types/voltage'
 import { findCableByIndexString } from '~/utils/cable'

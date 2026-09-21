@@ -1,3 +1,11 @@
+/**
+ * マスター更新履歴削除 API
+ * DELETE /api/master/history/:id
+ *
+ * @description 指定された更新履歴項目を削除します。
+ * @permission システム管理者限定
+ */
+
 import { createError, defineEventHandler, getRouterParam } from 'h3'
 
 import { requireMasterUser } from '../../../utils/auth'

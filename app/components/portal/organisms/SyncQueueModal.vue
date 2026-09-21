@@ -95,7 +95,7 @@ const formatPhaseValues = (phase: number, data?: Record<string, unknown>, isServ
       >
         閉じる
       </Button>
-      <!-- 競合解決中または結果確認中は送信実行ボタンを非表示（引き算） -->
+
       <Button
         v-if="conflictItems.length === 0 && !syncResult"
         variant="success"
@@ -109,7 +109,7 @@ const formatPhaseValues = (phase: number, data?: Record<string, unknown>, isServ
     </template>
 
     <div class="flex flex-col gap-4">
-      <!-- 1. 競合解決ビュー -->
+
       <template v-if="conflictItems.length > 0">
         <div class="flex items-start gap-2 p-3 conflict-alert">
           <Icon name="alert-triangle" size="sm" class="shrink-0 mt-0.5" />
@@ -133,7 +133,7 @@ const formatPhaseValues = (phase: number, data?: Record<string, unknown>, isServ
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <!-- サーバー側の値 -->
+
             <div class="flex flex-col gap-2 p-3 conflict-col server-col">
               <div class="flex items-center gap-1.5 col-title">
                 <Icon name="database" size="sm" />
@@ -153,7 +153,6 @@ const formatPhaseValues = (phase: number, data?: Record<string, unknown>, isServ
               </Button>
             </div>
 
-            <!-- 端末側（オフライン入力）の値 -->
             <div class="flex flex-col gap-2 p-3 conflict-col client-col">
               <div class="flex items-center gap-1.5 col-title">
                 <Icon name="user" size="sm" />
@@ -176,7 +175,6 @@ const formatPhaseValues = (phase: number, data?: Record<string, unknown>, isServ
         </div>
       </template>
 
-      <!-- 2. 同期結果ビュー（送信実行後のサマリー） -->
       <template v-else-if="syncResult">
         <div
           class="flex flex-col gap-2 p-3 sync-result-box"
@@ -193,14 +191,12 @@ const formatPhaseValues = (phase: number, data?: Record<string, unknown>, isServ
         </div>
       </template>
 
-      <!-- 3. 通常のキュー一覧ビュー（送信前） -->
       <template v-else-if="queue.length > 0">
         <p class="m-0 summary-desc">
           地下受変電室等で記録された <strong>{{ pendingCount }}件</strong> の未送信データがあります。<br>
           現場で実際に測定された正確な時刻（実打鍵タイムスタンプ）とともにサーバーへ反映します。
         </p>
 
-        <!-- 全件スクロール可能なリスト（余計な5件打ち切り制限を引き算） -->
         <ul class="overflow-y-auto flex flex-col gap-1 max-h-[220px] m-0 p-2 list-none queue-list">
           <li
             v-for="item in queue"
@@ -217,7 +213,6 @@ const formatPhaseValues = (phase: number, data?: Record<string, unknown>, isServ
         </ul>
       </template>
 
-      <!-- 4. 最初からキューが空の場合 -->
       <EmptyState
         v-else
         icon="check-circle"

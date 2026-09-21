@@ -1,11 +1,11 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import PortalKairoSymbol from '../../../app/components/portal/atoms/KairoSymbol.vue'
+import PortalCircuitSymbol from '../../../app/components/portal/atoms/CircuitSymbol.vue'
 
-describe('PortalKairoSymbol.vue', () => {
+describe('PortalCircuitSymbol.vue', () => {
   it('renders bangou text correctly', () => {
-    const wrapper = mount(PortalKairoSymbol, {
+    const wrapper = mount(PortalCircuitSymbol, {
       props: {
         bangou: '12',
       },
@@ -16,7 +16,7 @@ describe('PortalKairoSymbol.vue', () => {
   })
 
   it('renders hyphen when bangou is empty or null', () => {
-    const wrapper = mount(PortalKairoSymbol, {
+    const wrapper = mount(PortalCircuitSymbol, {
       props: {
         bangou: null,
       },
@@ -26,7 +26,7 @@ describe('PortalKairoSymbol.vue', () => {
   })
 
   it('renders single circle SVG when kigou is "丸"', () => {
-    const wrapper = mount(PortalKairoSymbol, {
+    const wrapper = mount(PortalCircuitSymbol, {
       props: {
         kigou: '丸',
         bangou: '1',
@@ -43,7 +43,7 @@ describe('PortalKairoSymbol.vue', () => {
   })
 
   it('renders double circle SVG when kigou is "◎"', () => {
-    const wrapper = mount(PortalKairoSymbol, {
+    const wrapper = mount(PortalCircuitSymbol, {
       props: {
         kigou: '◎',
         bangou: '2',
@@ -59,7 +59,7 @@ describe('PortalKairoSymbol.vue', () => {
   })
 
   it('renders rect SVG when kigou is "四角"', () => {
-    const wrapper = mount(PortalKairoSymbol, {
+    const wrapper = mount(PortalCircuitSymbol, {
       props: {
         kigou: '四角',
         bangou: '3',
@@ -75,7 +75,7 @@ describe('PortalKairoSymbol.vue', () => {
   })
 
   it('renders double rect SVG when kigou is "二重四角"', () => {
-    const wrapper = mount(PortalKairoSymbol, {
+    const wrapper = mount(PortalCircuitSymbol, {
       props: {
         kigou: '二重四角',
         bangou: '4',
@@ -91,7 +91,7 @@ describe('PortalKairoSymbol.vue', () => {
   })
 
   it('renders ellipse SVG when kigou is "楕円"', () => {
-    const wrapper = mount(PortalKairoSymbol, {
+    const wrapper = mount(PortalCircuitSymbol, {
       props: {
         kigou: '楕円',
         bangou: '5',
@@ -107,7 +107,7 @@ describe('PortalKairoSymbol.vue', () => {
   })
 
   it('renders polygon SVG when kigou is "三角"', () => {
-    const wrapper = mount(PortalKairoSymbol, {
+    const wrapper = mount(PortalCircuitSymbol, {
       props: {
         kigou: '三角',
         bangou: '6',
@@ -123,7 +123,7 @@ describe('PortalKairoSymbol.vue', () => {
   })
 
   it('renders only text when kigou is unknown', () => {
-    const wrapper = mount(PortalKairoSymbol, {
+    const wrapper = mount(PortalCircuitSymbol, {
       props: {
         kigou: '未知の記号',
         bangou: '99',

@@ -31,7 +31,7 @@ const VIEW_ICONS: Record<CalendarView, IconName> = {
 
 <template>
   <header class="calendar-toolbar flex flex-col md:flex-row items-center justify-between gap-2 px-panel-pad py-2">
-    <!-- 月送り / 今日 -->
+
     <div class="flex items-center gap-1">
       <Button icon="chevron-left" @click="emit('prev')" />
       <Button icon="chevron-right" @click="emit('next')" />
@@ -40,12 +40,10 @@ const VIEW_ICONS: Record<CalendarView, IconName> = {
       </Button>
     </div>
 
-    <!-- 年月表示（モバイル時は最上部） -->
     <h3 class="toolbar-title order-first md:order-none">
       {{ title }}
     </h3>
 
-    <!-- 表示切替 / 種別設定 -->
     <div class="flex items-center gap-2">
       <RadioGroup
         :model-value="currentView"

@@ -1,10 +1,13 @@
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 
 import withNuxt from './.nuxt/eslint.config.mjs'
+import noCommentedCode from './eslint-rules/no-commented-code.mjs'
 import noHoverTransitionOverride from './eslint-rules/no-hover-transition-override.mjs'
 import noLegacyCssVars from './eslint-rules/no-legacy-css-vars.mjs'
 import noPureAccessibility from './eslint-rules/no-pure-accessibility.mjs'
 import noTailwindDecoration from './eslint-rules/no-tailwind-decoration.mjs'
+import noTemplateComments from './eslint-rules/no-template-comments.mjs'
+import requireFileJsdoc from './eslint-rules/require-file-jsdoc.mjs'
 
 export default withNuxt(
   {
@@ -16,6 +19,9 @@ export default withNuxt(
           'no-hover-transition-override': noHoverTransitionOverride,
           'no-legacy-css-vars': noLegacyCssVars,
           'no-pure-accessibility': noPureAccessibility,
+          'no-template-comments': noTemplateComments,
+          'require-file-jsdoc': requireFileJsdoc,
+          'no-commented-code': noCommentedCode,
         },
       },
     },
@@ -24,6 +30,9 @@ export default withNuxt(
       'local/no-hover-transition-override': 'error',
       'local/no-legacy-css-vars': 'error',
       'local/no-pure-accessibility': 'error',
+      'local/no-template-comments': 'error',
+      'local/require-file-jsdoc': 'error',
+      'local/no-commented-code': 'error',
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
       'vue/block-order': ['error', {

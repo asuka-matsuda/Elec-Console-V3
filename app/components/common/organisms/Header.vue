@@ -25,7 +25,7 @@ const userName = computed(() => {
 
 <template>
   <header class="flex h-16 items-center justify-between px-layout-pad header">
-    <!-- 左側: メインナビゲーション部 -->
+
     <div class="flex items-center gap-3">
       <Button
         icon="menu"
@@ -41,7 +41,6 @@ const userName = computed(() => {
       />
     </div>
 
-    <!-- 右側: アクション & ユーザー情報部 -->
     <div class="flex items-center gap-3">
       <NuxtLink
         to="/mypage"

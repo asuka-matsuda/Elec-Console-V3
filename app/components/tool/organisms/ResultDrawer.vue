@@ -44,12 +44,11 @@ const {
 </script>
 
 <template>
-  <!-- ドロワー本体（PC: グリッド右側、モバイル: 下部Sticky） -->
   <section
     class="result-drawer flex flex-col min-h-0 max-md:fixed max-md:inset-x-0 max-md:bottom-0 max-md:max-h-[80vh]"
     :class="{ 'is-open': isOpen }"
   >
-    <!-- モバイル開閉ハンドル -->
+
     <button
       type="button"
       class="handle hidden max-md:flex items-center justify-between w-full h-12 px-3"
@@ -62,7 +61,6 @@ const {
       />
     </button>
 
-    <!-- 結果・根拠パネル -->
     <div class="flex flex-1 flex-col min-h-0 max-md:p-3">
       <Panel class="flex flex-1 flex-col gap-panel-gap min-h-0">
         <SectionHeader
@@ -99,7 +97,6 @@ const {
     </div>
   </section>
 
-  <!-- モバイル展開時オーバーレイ -->
   <div
     v-if="isOpen"
     class="overlay fixed inset-0 hidden max-md:block z-[calc(var(--z-index-modal)-1)]"

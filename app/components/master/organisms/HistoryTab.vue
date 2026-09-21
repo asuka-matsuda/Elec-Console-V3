@@ -112,7 +112,7 @@ const handleDelete = async (id?: string | number) => {
 
 <template>
   <div class="flex flex-col gap-panel-gap">
-    <!-- ヘッダー・アクション（Panelを撤廃し、説明文とアクションボタンを直接配置） -->
+
     <div class="flex flex-wrap items-center justify-between gap-4">
       <small>
         ダッシュボードの「更新履歴」ウィジェットに掲載されるバージョン情報を管理します。
@@ -127,7 +127,6 @@ const handleDelete = async (id?: string | number) => {
       </Button>
     </div>
 
-    <!-- 更新履歴一覧テーブル -->
     <Panel padding="none">
       <Table
         :columns="columns"
@@ -161,7 +160,6 @@ const handleDelete = async (id?: string | number) => {
       </Table>
     </Panel>
 
-    <!-- 作成・編集モーダル -->
     <Modal
       v-model="isEditModalOpen"
       :title="editingId ? '編集' : '新規作成'"

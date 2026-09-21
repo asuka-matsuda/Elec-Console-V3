@@ -90,13 +90,12 @@ const handleRemoveCable = (id: string) => {
 
 <template>
   <div class="flex flex-col gap-[var(--space-form-row-gap)]">
-    <!-- 強電／弱電 タブ切り替え -->
+
     <RadioGroup
       v-model="inputs.mode"
       :options="rackModeOptions"
     />
 
-    <!-- パラメータ設定（余裕係数、ケーブル間隔、親桁クリアランス） -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-[var(--space-form-col-gap)]">
       <FormGroup label="余裕係数" help-id="marginRate">
         <Input
@@ -130,7 +129,6 @@ const handleRemoveCable = (id: string) => {
       </FormGroup>
     </div>
 
-    <!-- 基本条件（ラック高さ、相乗り必要幅） -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-[var(--space-form-col-gap)]">
       <FormGroup label="ラック高さ (H)" help-id="rackHeight">
         <Input
@@ -156,7 +154,6 @@ const handleRemoveCable = (id: string) => {
       </FormGroup>
     </div>
 
-    <!-- ケーブル条件セクション -->
     <section class="flex flex-col gap-[var(--space-item-gap)]">
       <Button
         class="self-end"
@@ -166,7 +163,6 @@ const handleRemoveCable = (id: string) => {
         {{ inputs.mode === 'strong' ? '強電ケーブルを追加' : '弱電ケーブルを追加' }}
       </Button>
 
-      <!-- ケーブルテーブル（強電/弱電 共通テンプレート） -->
       <Table
         :columns="RACK_CABLE_COLUMNS"
         :data="currentCables"

@@ -1,3 +1,11 @@
+/**
+ * カレンダーイベント更新 API
+ * PUT /api/events/:id
+ *
+ * @description 指定された予定イベントのタイトル、日時、種別、備考等を更新します。
+ * @permission 現場アクセス権限
+ */
+
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { canAccessSite, requireAuthUser } from '../../utils/auth'

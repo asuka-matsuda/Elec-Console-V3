@@ -223,7 +223,7 @@ defineExpose({
       </slot>
 
       <div class="flex items-center gap-1 shrink-0">
-        <!-- クリアボタン (値があるときに表示) -->
+
         <FormControlAction
           v-if="canClear"
           icon="x"
@@ -231,7 +231,6 @@ defineExpose({
           @click="handleClear"
         />
 
-        <!-- 展開矢印 -->
         <FormControlAction
           icon="chevron-down"
           :rotate="isOpen"

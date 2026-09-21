@@ -1,3 +1,11 @@
+/**
+ * ユーザー情報更新 API
+ * PUT /api/users/:id
+ *
+ * @description ユーザーの表示名、権限ロール、有効/無効フラグ、担当現場割り当てを更新します。
+ * @permission システム管理者限定
+ */
+
 import { defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { ErrorCode } from '#shared/types/errors'

@@ -1,3 +1,9 @@
+/**
+ * 電線管サイズ計算結果 ➔ 計算履歴（HistoryEntry）マッパー
+ *
+ * @description 電線管サイズ計算の入力情報と算出結果を、LocalStorage履歴表示用オブジェクトに整形します。
+ */
+
 import type { HistoryEntry } from '~/types/history'
 import { findCableByIndexString, getCableDisplayName } from '~/utils/cable'
 

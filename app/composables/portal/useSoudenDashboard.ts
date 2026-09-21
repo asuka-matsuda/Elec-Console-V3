@@ -1,3 +1,10 @@
+/**
+ * 送電試験全体ダッシュボード Composable
+ *
+ * @description 送電試験全体の完了状況、フェーズ1〜3の進捗統計、および現場回路の最新状態をリアルタイムで監視・集計します。
+ * @param {Ref<string>} siteId 対象現場IDのRef
+ */
+
 import type { Ref } from 'vue'
 import { ref, unref } from 'vue'
 

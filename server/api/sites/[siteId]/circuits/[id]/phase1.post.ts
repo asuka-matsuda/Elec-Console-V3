@@ -1,3 +1,11 @@
+/**
+ * フェーズ1（受電前自主検査）測定値確定 API
+ * POST /api/sites/:siteId/circuits/:id/phase1
+ *
+ * @description 指定回路のフェーズ1試験結果（絶縁抵抗・接地抵抗・外観検査・施工者）を楽観ロック検証の上で確定登録します。
+ * @permission 現場アクセス権限
+ */
+
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { requireSiteAccess } from '../../../../../utils/auth'

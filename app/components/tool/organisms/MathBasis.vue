@@ -22,13 +22,12 @@ defineProps<{
     >
       <SectionHeader v-if="step.title" :title="step.title" tag="h4" />
       <div class="grid grid-cols-[1fr_auto] items-center gap-panel-gap">
-        <!-- 左側: 計算式（文字サイズ適正化により通常時はスクロールバー不要） -->
+
         <div
           class="math-expr min-w-0 overflow-x-auto py-1"
           v-html="renderMath(step.tex, true)"
         />
 
-        <!-- 右側: 凡例 -->
         <ToolMathLegend :items="step.legend" />
       </div>
     </Panel>

@@ -1,3 +1,11 @@
+/**
+ * 現場カレンダー表示設定取得 API
+ * GET /api/sites/:siteId/calendar/settings
+ *
+ * @description 現場カレンダーのイベント種別定義や表示色設定を取得します。
+ * @permission 現場アクセス権限
+ */
+
 import { defineEventHandler, getRouterParam } from 'h3'
 
 import { requireSiteAccess } from '../../../../utils/auth'

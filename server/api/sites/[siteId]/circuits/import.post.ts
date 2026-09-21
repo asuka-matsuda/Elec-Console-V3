@@ -1,3 +1,11 @@
+/**
+ * 回路一覧Excelインポート API
+ * POST /api/sites/:siteId/circuits/import
+ *
+ * @description アップロードされた回路表Excelファイルを解析し、現場の回路一覧として登録・同期します。
+ * @permission 現場アクセス権限
+ */
+
 import { createError, defineEventHandler, getHeader, getRouterParam, readBody, readMultipartFormData } from 'h3'
 
 import { requireSiteAccess } from '../../../../utils/auth'

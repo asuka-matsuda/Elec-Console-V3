@@ -130,7 +130,6 @@ const { data: dashboardData, pending: isDashboardPending } = await useFetch<Dash
       </div>
     </aside>
 
-    <!-- 詳細表示モーダル -->
     <Modal
       v-model="isDetailModalOpen"
       :title="modalTitle"

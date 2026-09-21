@@ -1,3 +1,9 @@
+/**
+ * ケーブルラックサイズ選定計算 Composable
+ *
+ * @description 敷設ケーブルの幅・外径から必要ラック幅・親桁高さ・段数を自動算出し、積載率を検証します。
+ */
+
 import { computed } from 'vue'
 
 import { useToolPage } from '~/composables/tools/useToolPage'

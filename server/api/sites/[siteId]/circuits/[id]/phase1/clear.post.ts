@@ -1,3 +1,11 @@
+/**
+ * フェーズ1測定値解除 API
+ * POST /api/sites/:siteId/circuits/:id/phase1/clear
+ *
+ * @description 指定回路のフェーズ1確定結果を安全にリセット・解除します。
+ * @permission 現場アクセス権限
+ */
+
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { requireSiteAccess } from '../../../../../../utils/auth'

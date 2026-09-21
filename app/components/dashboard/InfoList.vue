@@ -20,7 +20,7 @@ defineEmits<{
 
 <template>
   <Panel padding="none">
-    <!-- ローディング・空状態（共通 EmptyState に委任） -->
+
     <EmptyState
       v-if="pending || items.length === 0"
       :icon="pending ? 'loader' : 'inbox'"
@@ -28,7 +28,6 @@ defineEmits<{
       :title="pending ? loadingText : emptyText"
     />
 
-    <!-- 一覧表示 -->
     <ul v-else class="m-0 p-0 flex flex-col list-none">
       <li
         v-for="(item, index) in items"

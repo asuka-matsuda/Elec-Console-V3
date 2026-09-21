@@ -1,3 +1,11 @@
+/**
+ * 回路試験結果Excelエクスポート取得 API
+ * GET /api/sites/:siteId/circuits/export
+ *
+ * @description 現場の全回路試験結果を反映したExcelファイルを生成しダウンロード提供します。
+ * @permission 現場アクセス権限
+ */
+
 import { createError, defineEventHandler, getRouterParam, setHeader } from 'h3'
 
 import { requireSiteAccess } from '../../../../utils/auth'

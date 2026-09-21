@@ -63,7 +63,7 @@ const handleSave = () => {
 
 <template>
   <div class="flex flex-col gap-5 w-full">
-    <!-- 未選択時（不要な template ラッパーを排除） -->
+
     <EmptyState
       v-if="!user"
       icon="users"
@@ -72,9 +72,8 @@ const handleSave = () => {
       class="placeholder-empty min-h-[400px] flex items-center justify-center"
     />
 
-    <!-- ユーザー選択時 -->
     <div v-else class="flex flex-col gap-5 w-full">
-      <!-- 上部ヘッダー（不要な :title を削除、スロットに一本化） -->
+
       <SectionHeader icon="user">
         <template #default>
           <div class="flex flex-wrap items-center gap-2">
@@ -111,12 +110,11 @@ const handleSave = () => {
         </template>
       </SectionHeader>
 
-      <!-- カテゴリ選択タブ -->
       <Tabs
         v-model="activeCategory"
         :options="USER_SETTINGS_TABS"
       >
-        <!-- 1. 基本情報設定（インライン統合） -->
+
         <template #basic>
           <div class="flex flex-col gap-5 max-w-xl">
             <SectionHeader
@@ -183,7 +181,6 @@ const handleSave = () => {
           </div>
         </template>
 
-        <!-- 2. 現場アサイン設定（インライン統合） -->
         <template #assign>
           <div class="flex flex-col gap-4 max-w-xl">
             <SectionHeader

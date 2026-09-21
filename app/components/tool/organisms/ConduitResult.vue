@@ -24,7 +24,7 @@ const vm = computed(() => formatConduitResult(props.result))
     class="flex flex-1 flex-col min-h-0 items-stretch"
     :class="[size === 'sm' ? 'gap-3 is-sm' : 'gap-panel-gap']"
   >
-    <!-- Row 1: 32% (異種) -->
+
     <ResultBox
       :title="CONDUIT_UI_LABELS.TITLE_32"
       :status="vm.status32"
@@ -37,7 +37,6 @@ const vm = computed(() => formatConduitResult(props.result))
       </template>
     </ResultBox>
 
-    <!-- Row 2: 48% (同種) -->
     <ResultBox
       :title="CONDUIT_UI_LABELS.TITLE_48"
       :status="vm.status48"
@@ -50,7 +49,6 @@ const vm = computed(() => formatConduitResult(props.result))
       </template>
     </ResultBox>
 
-    <!-- Row 3: ユーザー指定 (customFillRate%) -->
     <ResultBox
       :title="vm.titleCustom"
       :status="vm.statusCustom"
@@ -63,7 +61,6 @@ const vm = computed(() => formatConduitResult(props.result))
       </template>
     </ResultBox>
 
-    <!-- サブ情報: 内線規程（勧告）根拠 -->
     <ToolResultDetails>
       <ul class="m-0 p-0 flex flex-col gap-1 list-none">
         <li>3110-6 (32%以下): 異なる太さの絶縁電線を同一管内に収める場合（原則）</li>

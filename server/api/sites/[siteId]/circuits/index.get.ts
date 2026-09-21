@@ -1,3 +1,11 @@
+/**
+ * 現場回路一覧取得 API
+ * GET /api/sites/:siteId/circuits
+ *
+ * @description 指定現場の全試験回路データおよび各フェーズの測定・確定状態を取得します。
+ * @permission 現場アクセス権限
+ */
+
 import { createError, defineEventHandler, getQuery, getRouterParam } from 'h3'
 
 import { requireSiteAccess } from '../../../../utils/auth'

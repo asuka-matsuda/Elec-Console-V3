@@ -1,3 +1,11 @@
+/**
+ * マスターお知らせ新規作成 API
+ * POST /api/master/announcements
+ *
+ * @description 新しいシステムお知らせを作成・登録します。
+ * @permission システム管理者限定
+ */
+
 import { createError, defineEventHandler, readBody } from 'h3'
 
 import { requireMasterUser } from '../../../utils/auth'

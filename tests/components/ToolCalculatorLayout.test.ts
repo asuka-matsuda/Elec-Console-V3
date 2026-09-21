@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 
-import ToolTemplatesLayout from '../../app/components/tool/TemplatesLayout.vue'
+import ToolCalculatorLayout from '../../app/components/tool/templates/CalculatorLayout.vue'
 
-describe('ToolTemplatesLayout.vue', () => {
+describe('ToolCalculatorLayout.vue', () => {
   const commonStubs = {
     ToolDisclaimer: {
       template: '<div class="disclaimer-stub">免責事項</div>',
@@ -34,7 +34,7 @@ describe('ToolTemplatesLayout.vue', () => {
   }
 
   it('renders inputs and results slot contents', () => {
-    const wrapper = mount(ToolTemplatesLayout, {
+    const wrapper = mount(ToolCalculatorLayout, {
       slots: {
         inputs: '<div class="test-inputs">入力エリア</div>',
         results: '<div class="test-results">結果エリア</div>',
@@ -51,7 +51,7 @@ describe('ToolTemplatesLayout.vue', () => {
   })
 
   it('emits reset event when reset button is clicked', async () => {
-    const wrapper = mount(ToolTemplatesLayout, {
+    const wrapper = mount(ToolCalculatorLayout, {
       global: {
         stubs: commonStubs,
       },
@@ -67,7 +67,7 @@ describe('ToolTemplatesLayout.vue', () => {
   })
 
   it('renders basis button when basis slot is provided', async () => {
-    const wrapper = mount(ToolTemplatesLayout, {
+    const wrapper = mount(ToolCalculatorLayout, {
       slots: {
         basis: '<div class="test-basis">計算根拠モーダル</div>',
       },
@@ -82,7 +82,7 @@ describe('ToolTemplatesLayout.vue', () => {
   it('executes saveFunction when save button is clicked', async () => {
     const saveMock = vi.fn().mockResolvedValue(undefined)
 
-    const wrapper = mount(ToolTemplatesLayout, {
+    const wrapper = mount(ToolCalculatorLayout, {
       props: {
         saveFunction: saveMock,
       },
@@ -101,7 +101,7 @@ describe('ToolTemplatesLayout.vue', () => {
   })
 
   it('toggles mobile drawer when drawer handle button is clicked', async () => {
-    const wrapper = mount(ToolTemplatesLayout, {
+    const wrapper = mount(ToolCalculatorLayout, {
       global: {
         stubs: commonStubs,
       },
@@ -121,7 +121,7 @@ describe('ToolTemplatesLayout.vue', () => {
   })
 
   it('passes disclaimerText prop to Disclaimer', () => {
-    const wrapper = mount(ToolTemplatesLayout, {
+    const wrapper = mount(ToolCalculatorLayout, {
       props: {
         disclaimerText: 'カスタム免責テキスト',
       },
@@ -147,7 +147,7 @@ describe('ToolTemplatesLayout.vue', () => {
   })
 
   it('hides disclaimer when hideDisclaimer prop is true', () => {
-    const wrapper = mount(ToolTemplatesLayout, {
+    const wrapper = mount(ToolCalculatorLayout, {
       props: {
         hideDisclaimer: true,
       },
@@ -160,7 +160,7 @@ describe('ToolTemplatesLayout.vue', () => {
   })
 
   it('renders default Disclaimer when no props or slots are given', () => {
-    const wrapper = mount(ToolTemplatesLayout, {
+    const wrapper = mount(ToolCalculatorLayout, {
       global: {
         stubs: commonStubs,
       },
@@ -170,7 +170,7 @@ describe('ToolTemplatesLayout.vue', () => {
   })
 
   it('renders custom disclaimer slot content when provided', () => {
-    const wrapper = mount(ToolTemplatesLayout, {
+    const wrapper = mount(ToolCalculatorLayout, {
       slots: {
         disclaimer: '<div class="custom-slot-disclaimer">カスタム免責スロット</div>',
       },

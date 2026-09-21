@@ -50,7 +50,7 @@ const activeTab = ref('basic')
 
 <template>
   <div class="flex flex-col gap-6 w-full">
-    <!-- 現場未選択時の空状態表示 -->
+
     <EmptyState
       v-if="!site"
       icon="layout"
@@ -59,9 +59,8 @@ const activeTab = ref('basic')
       class="placeholder-empty min-h-[400px] flex items-center justify-center"
     />
 
-    <!-- 現場選択時の設定コンソール -->
     <template v-else>
-      <!-- 上部ヘッダー: 現場名 + ステータス + 保存ボタン -->
+
       <SectionHeader icon="settings">
         <template #default>
           <div class="flex items-baseline gap-2">
@@ -84,12 +83,11 @@ const activeTab = ref('basic')
         </template>
       </SectionHeader>
 
-      <!-- 設定カテゴリタブ -->
       <Tabs
         v-model="activeTab"
         :options="SITE_SETTINGS_TABS"
       >
-        <!-- 1. 基本情報設定（インライン統合） -->
+
         <template #basic>
           <div class="flex flex-col gap-5 max-w-xl">
             <SectionHeader
@@ -141,7 +139,6 @@ const activeTab = ref('basic')
           </div>
         </template>
 
-        <!-- 2. Excelデータ連携 (取込 & 帳票DL) -->
         <template #integration>
           <PortalSiteExcelIntegration
             :selected-file="selectedFile"
@@ -158,7 +155,6 @@ const activeTab = ref('basic')
           />
         </template>
 
-        <!-- 3. 除外回路ルール設定 -->
         <template #rules>
           <PortalSiteExcludedRules
             :model-value="excludedCircuitsList"

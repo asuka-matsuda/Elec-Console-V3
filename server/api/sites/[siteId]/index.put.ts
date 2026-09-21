@@ -1,3 +1,11 @@
+/**
+ * 現場情報更新 API
+ * PUT /api/sites/:siteId
+ *
+ * @description 指定された現場の基本情報や設定を更新します。
+ * @permission システム管理者限定
+ */
+
 import { defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { requireAdminUser } from '../../../utils/auth'

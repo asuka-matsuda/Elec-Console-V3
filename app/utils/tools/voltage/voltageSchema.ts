@@ -1,3 +1,9 @@
+/**
+ * 電圧降下計算フォーム用 Zod バリデーションスキーマ
+ *
+ * @description 電流値、配線長、力率、許容電圧降下率などの入力値境界値および必須チェックを定義します。
+ */
+
 import { z } from 'zod'
 
 export const voltageSchema = z

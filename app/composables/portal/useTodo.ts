@@ -1,3 +1,10 @@
+/**
+ * 現場パーソナルToDo Composable
+ *
+ * @description ユーザー個人の現場作業ToDoの登録・完了切り替え・削除およびLocalStorage永続化を管理します。
+ * @param {Ref<string>} siteId 対象現場IDのRef
+ */
+
 import { computed, type MaybeRefOrGetter, ref, toValue, watch } from 'vue'
 
 import { STORAGE_KEYS } from '~/constants/storageKeys'

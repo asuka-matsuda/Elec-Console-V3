@@ -1,3 +1,11 @@
+/**
+ * 現場新規登録 API
+ * POST /api/sites
+ *
+ * @description 新規現場を作成・登録します。
+ * @permission システム管理者限定
+ */
+
 import { defineEventHandler, readBody } from 'h3'
 
 import { requireAdminUser } from '../../utils/auth'

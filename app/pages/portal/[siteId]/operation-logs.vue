@@ -79,7 +79,6 @@ const targetBanOptions = computed(() => [
       </template>
     </SectionHeader>
 
-    <!-- 検索・フィルタリングコントロール（インライン直結） -->
     <Panel class="flex flex-wrap items-center gap-4 px-4 py-3">
       <div class="flex items-center gap-2">
         <span class="shrink-0">作業者:</span>
@@ -106,7 +105,6 @@ const targetBanOptions = computed(() => [
       </span>
     </Panel>
 
-    <!-- ログ一覧テーブル（インライン直結） -->
     <div class="flex flex-1 flex-col min-h-0">
       <Table
         class="flex-1 min-h-[400px]"

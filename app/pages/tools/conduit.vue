@@ -22,7 +22,7 @@ const {
 </script>
 
 <template>
-  <ToolTemplatesLayout
+  <ToolCalculatorLayout
     :save-disabled="isSaveDisabled"
     :save-function="handleSaveHistory"
     @reset="openResetModal"
@@ -42,5 +42,5 @@ const {
     <template #basis>
       <ToolMathBasis :steps="mathSteps" />
     </template>
-  </ToolTemplatesLayout>
+  </ToolCalculatorLayout>
 </template>

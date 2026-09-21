@@ -34,7 +34,7 @@ defineProps<{
             :error="meta.touched ? errorMessage : undefined"
             :class="`js-field-${field.id}`"
           >
-            <!-- 1. Select 単体 -->
+
             <Select
               v-if="field.type === 'select'"
               v-model="form[field.id]"
@@ -45,7 +45,6 @@ defineProps<{
               @blur="handleBlur"
             />
 
-            <!-- 2. 数値入力 + セレクト -->
             <Input
               v-else-if="field.type === 'input-select'"
               v-model.number="form[field.id]"
@@ -79,7 +78,6 @@ defineProps<{
               </template>
             </Input>
 
-            <!-- 3. 数値入力 + 単位アドオン -->
             <Input
               v-else-if="field.type === 'input-addon'"
               v-model.number="form[field.id]"

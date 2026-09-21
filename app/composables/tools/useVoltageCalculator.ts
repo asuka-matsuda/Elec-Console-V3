@@ -1,3 +1,9 @@
+/**
+ * 電圧降下・許容電流計算 Composable
+ *
+ * @description 配電方式・線種・長距離配線における電圧降下率・許容電流・適合ブレーカー容量の計算および数式生成を管理します。
+ */
+
 import { computed, watch } from 'vue'
 
 import { useToolPage } from '~/composables/tools/useToolPage'

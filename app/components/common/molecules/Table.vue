@@ -144,7 +144,7 @@ const getCellValue = (row: unknown, key?: string | number): unknown => {
     class="table-wrapper flex-1 min-h-0 overflow-auto"
   >
     <table class="w-full min-w-full table-fixed text-left">
-      <!-- 列幅一元管理（各tdへの重複スタイルを全廃し描画パフォーマンス最大化） -->
+
       <colgroup>
         <col
           v-for="col in columns"
@@ -163,7 +163,7 @@ const getCellValue = (row: unknown, key?: string | number): unknown => {
             :sort-order="sortOrder"
             @sort="handleSort"
           >
-            <!-- ヘッダーカスタムスロット中継 -->
+
             <template v-if="$slots[`header-${col.key}`]" #default>
               <slot :name="`header-${col.key}`" :column="col" />
             </template>
@@ -171,7 +171,6 @@ const getCellValue = (row: unknown, key?: string | number): unknown => {
         </tr>
       </thead>
 
-      <!-- 1. ローディング表示（テーブル骨格とヘッダーを維持） -->
       <tbody v-if="loading">
         <tr>
           <td
@@ -188,7 +187,6 @@ const getCellValue = (row: unknown, key?: string | number): unknown => {
         </tr>
       </tbody>
 
-      <!-- 2. データ表示 -->
       <tbody v-else-if="data && data.length > 0">
         <tr
           v-for="(row, index) in data"
@@ -225,7 +223,6 @@ const getCellValue = (row: unknown, key?: string | number): unknown => {
         </tr>
       </tbody>
 
-      <!-- 3. 空データ表示 -->
       <tbody v-else>
         <tr>
           <td

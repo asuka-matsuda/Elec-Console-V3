@@ -37,7 +37,7 @@ const badgeId = computed<BadgePresetId>(() => BADGE_STATUS_MAP[resolvedStatus.va
     class="result-box flex flex-1 flex-col items-center justify-center gap-1 w-full min-w-0"
     :class="[`is-${resolvedStatus}`, `is-${size}`]"
   >
-    <!-- ヘッダー（タイトル ＋ バッジ） -->
+
     <header v-if="title || badge || $slots.title || $slots.badge" class="flex items-center justify-center gap-1.5">
       <slot name="title">
         <span>{{ title }}</span>
@@ -49,7 +49,6 @@ const badgeId = computed<BadgePresetId>(() => BADGE_STATUS_MAP[resolvedStatus.va
       </slot>
     </header>
 
-    <!-- メイン数値・結果表示領域 -->
     <div class="value flex items-center justify-center gap-2">
       <slot name="value">
         <slot />

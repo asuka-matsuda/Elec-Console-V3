@@ -1,3 +1,9 @@
+/**
+ * 電圧降下・許容電流 KaTeX数式ジェネレーター
+ *
+ * @description 内線規程および電気計算公式に基づき、計算過程の展開式（LaTeX/KaTeX文字列）を動的に生成します。
+ */
+
 import { cableData as defaultCableData } from '~/constants/data/cableData'
 import type { CableData } from '~/types/database'
 import type {

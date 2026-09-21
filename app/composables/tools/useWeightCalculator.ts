@@ -1,3 +1,9 @@
+/**
+ * ケーブル重量・許容張力計算 Composable
+ *
+ * @description ケーブル品種・サイズ・条長から総重量および延線時の許容張力を算出します。
+ */
+
 import { computed } from 'vue'
 
 import { useToolPage } from '~/composables/tools/useToolPage'

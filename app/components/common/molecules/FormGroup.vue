@@ -28,7 +28,7 @@ provide(FORM_GROUP_KEY, {
 
 <template>
   <div class="flex flex-col gap-1.5 form-group" :class="{ 'is-error': hasError }">
-    <!-- ラベル領域 -->
+
     <label
       v-if="label || $slots.label"
       :for="fieldId"
@@ -39,15 +39,12 @@ provide(FORM_GROUP_KEY, {
       <HelpTip v-if="helpId" :help-id="helpId" />
     </label>
 
-    <!-- コントロール本体 -->
     <slot />
 
-    <!-- エラーメッセージ -->
     <p v-if="error" class="error m-0">
       {{ error }}
     </p>
 
-    <!-- ヘルプテキスト -->
     <p v-if="help" class="help m-0">
       {{ help }}
     </p>

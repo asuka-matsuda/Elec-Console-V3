@@ -79,6 +79,10 @@ describe('Phase1Table.vue', () => {
       props: ['kigou', 'bangou'],
       template: '<span class="stub-kairo-symbol">{{ kigou }}{{ bangou }}</span>',
     },
+    PortalCircuitSymbol: {
+      props: ['kigou', 'bangou'],
+      template: '<span class="stub-kairo-symbol">{{ kigou }}{{ bangou }}</span>',
+    },
     Badge: {
       props: ['id'],
       template: '<span class="stub-badge" :data-badge-id="id"><slot /></span>',

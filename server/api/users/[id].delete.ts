@@ -1,3 +1,11 @@
+/**
+ * ユーザー削除 API
+ * DELETE /api/users/:id
+ *
+ * @description 指定されたユーザーアカウントを削除します。
+ * @permission システム管理者限定
+ */
+
 import { defineEventHandler, getRouterParam } from 'h3'
 
 import { ErrorCode } from '#shared/types/errors'

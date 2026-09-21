@@ -1,3 +1,11 @@
+/**
+ * 現場操作ログ一覧取得 API
+ * GET /api/sites/:siteId/operation-logs
+ *
+ * @description 指定現場における送電試験の測定値確定や解除などの監査ログを取得します。
+ * @permission 現場アクセス権限
+ */
+
 import { createError, defineEventHandler, getQuery, getRouterParam } from 'h3'
 
 import { requireSiteAccess } from '../../../utils/auth'

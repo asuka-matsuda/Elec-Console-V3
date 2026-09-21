@@ -155,7 +155,7 @@ const {
     :editing-row-id="editingRowId"
     @sort="handleSort"
   >
-    <!-- 電圧 1 (RS / RN) -->
+
     <template #cell-denatsuRs="{ row: circuit }">
       <PortalPhaseMeasCell
         v-model="inputForm.rs"
@@ -167,7 +167,6 @@ const {
       />
     </template>
 
-    <!-- 電圧 2 (ST / TN) -->
     <template #cell-denatsuSt="{ row: circuit }">
       <PortalPhaseMeasCell
         v-model="inputForm.st"
@@ -179,7 +178,6 @@ const {
       />
     </template>
 
-    <!-- 電圧 3 (RT / RT) -->
     <template #cell-denatsuRt="{ row: circuit }">
       <PortalPhaseMeasCell
         v-model="inputForm.rt"
@@ -191,7 +189,6 @@ const {
       />
     </template>
 
-    <!-- 検相 / 点灯確認 -->
     <template #cell-kensou="{ row: circuit }">
       <Select
         v-if="editingRowId === circuit.id"
@@ -208,7 +205,6 @@ const {
       <span v-else class="cell-dash">-</span>
     </template>
 
-    <!-- 備考 -->
     <template #cell-p3Remarks="{ row: circuit }">
       <Textarea
         v-if="editingRowId === circuit.id"
@@ -221,20 +217,17 @@ const {
       </span>
     </template>
 
-    <!-- 操作 -->
     <template #cell-actions="{ row: circuit }">
       <div class="flex items-center justify-center gap-1">
-        <!-- 幹線未完了による操作不可 -->
+
         <template v-if="isCircuitLocked(circuit)">
           <span class="text-note inline-flex items-center gap-1">⏸ 幹線未完了</span>
         </template>
 
-        <!-- 前フェーズ（P2）未完了による操作不可 -->
         <template v-else-if="!isP2Complete(circuit)">
           <span class="text-note inline-flex items-center gap-1">⏸ P2未了</span>
         </template>
 
-        <!-- 手入力編集モード中 -->
         <template v-else-if="editingRowId === circuit.id">
           <Button
             variant="success"
@@ -248,7 +241,6 @@ const {
           </Button>
         </template>
 
-        <!-- 通常モード：確定済み -->
         <template v-else-if="isComplete(circuit)">
           <Button
             variant="danger"
@@ -262,7 +254,6 @@ const {
           </Button>
         </template>
 
-        <!-- 通常モード：未確定 -->
         <template v-else>
           <Button
             variant="success"

@@ -1,3 +1,10 @@
+/**
+ * カレンダーイベント種別設定 Composable
+ *
+ * @description カレンダーのイベント分類（工程・点検・送電等）の表示色やラベルカスタマイズ設定を管理します。
+ * @param {Ref<string>} siteId 対象現場IDのRef
+ */
+
 import type { ComputedRef, Ref } from 'vue'
 import { ref, watch } from 'vue'
 

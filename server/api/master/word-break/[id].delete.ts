@@ -1,3 +1,11 @@
+/**
+ * 単語分割設定削除 API
+ * DELETE /api/master/word-break/:id
+ *
+ * @description 指定された改行禁止単語を削除します。
+ * @permission システム管理者限定
+ */
+
 import { createError, defineEventHandler, getRouterParam } from 'h3'
 
 import { requireMasterUser } from '../../../utils/auth'

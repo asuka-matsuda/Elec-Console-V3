@@ -1,3 +1,11 @@
+/**
+ * 現場一覧取得 API
+ * GET /api/sites
+ *
+ * @description 登録されている現場一覧を取得します。一般ユーザーは担当現場のみにフィルタされます。
+ * @permission 認証済みユーザー
+ */
+
 import { defineEventHandler } from 'h3'
 
 import { isSuperUser, requireAuthUser } from '../../utils/auth'

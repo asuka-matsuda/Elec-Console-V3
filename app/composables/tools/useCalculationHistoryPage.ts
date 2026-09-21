@@ -1,3 +1,9 @@
+/**
+ * 計算ツール履歴一覧画面 Composable
+ *
+ * @description 電圧降下・管径・ラック・重量の各計算履歴の一括表示、種別フィルタ、検索、ページネーションを管理します。
+ */
+
 import { useLocalStorage } from '@vueuse/core'
 import { computed, ref } from 'vue'
 

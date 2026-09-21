@@ -22,7 +22,7 @@ const vm = computed(() => formatVoltageResult(props.inputs, props.result))
     class="flex flex-1 flex-col min-h-0"
     :class="[size === 'sm' ? 'gap-3 is-sm' : 'gap-panel-gap']"
   >
-    <!-- 主結果 (電圧降下 or 電線サイズ) -->
+
     <ResultBox
       :title="vm.mainLabel"
       :status="vm.mainStatus"
@@ -33,7 +33,6 @@ const vm = computed(() => formatVoltageResult(props.inputs, props.result))
       <small v-if="vm.mainUnit">{{ vm.mainUnit }}</small>
     </ResultBox>
 
-    <!-- サブ結果 1: 電流チェック (設計 / 許容) -->
     <ResultBox
       title="電流チェック (設計 / 許容)"
       :status="vm.ampStatus"
@@ -49,7 +48,6 @@ const vm = computed(() => formatVoltageResult(props.inputs, props.result))
       </template>
     </ResultBox>
 
-    <!-- サブ結果 2: 電圧降下（導体断面積モード時のみ表示） -->
     <ResultBox
       v-if="vm.mode === 'size'"
       title="電圧降下"
@@ -65,7 +63,6 @@ const vm = computed(() => formatVoltageResult(props.inputs, props.result))
       </template>
     </ResultBox>
 
-    <!-- サブ情報（電圧降下モード時のみ表示） -->
     <ToolResultDetails
       v-if="vm.details"
       :items="vm.details"

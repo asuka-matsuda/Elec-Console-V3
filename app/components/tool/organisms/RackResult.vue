@@ -26,7 +26,7 @@ const vm = computed(() =>
 
 <template>
   <div class="flex flex-col gap-panel-gap">
-    <!-- 1段敷設（平置き・標準） -->
+
     <ResultBox
       :title="vm.tier1.title"
       :status="vm.tier1.boxStatus"
@@ -38,7 +38,6 @@ const vm = computed(() =>
       </template>
     </ResultBox>
 
-    <!-- 2段敷設（省スペース） -->
     <ResultBox
       :title="vm.tier2.title"
       :status="vm.tier2.boxStatus"
@@ -55,7 +54,6 @@ const vm = computed(() =>
       </template>
     </ResultBox>
 
-    <!-- 詳細内訳 -->
     <ToolResultDetails :items="vm.details" />
   </div>
 </template>

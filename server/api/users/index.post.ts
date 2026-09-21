@@ -1,3 +1,11 @@
+/**
+ * ユーザー新規登録 API
+ * POST /api/users
+ *
+ * @description 新規ユーザーアカウントを作成し、初期パスワードおよび担当現場を割り当てます。
+ * @permission システム管理者限定
+ */
+
 import { defineEventHandler, readBody } from 'h3'
 
 import { ErrorCode } from '#shared/types/errors'

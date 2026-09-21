@@ -77,7 +77,7 @@ const {
     :editing-row-id="editingRowId"
     @sort="handleSort"
   >
-    <!-- 回路番号 -->
+
     <template #cell-kairoBangou="{ row: circuit }">
       <Input
         v-if="editingRowId === circuit.id"
@@ -85,14 +85,13 @@ const {
         placeholder="番号"
       />
       <div v-else class="flex items-center justify-center">
-        <PortalKairoSymbol
+        <PortalCircuitSymbol
           :kigou="circuit.kairoKigou"
           :bangou="circuit.kairoBangou"
         />
       </div>
     </template>
 
-    <!-- 回路名称 -->
     <template #cell-kairoMeisho="{ row: circuit }">
       <Textarea
         v-if="editingRowId === circuit.id"
@@ -109,7 +108,6 @@ const {
       </span>
     </template>
 
-    <!-- 配線 / 接地 -->
     <template #cell-cableList="{ row: circuit }">
       <div v-if="editingRowId === circuit.id" class="flex flex-col gap-1">
         <div class="flex items-center gap-1">
@@ -129,7 +127,6 @@ const {
       </div>
     </template>
 
-    <!-- 確認 / 増締 -->
     <template #cell-p1Kakunin="{ row: circuit }">
       <div class="flex items-center justify-center">
         <Badge :id="isComplete(circuit) ? 'exam:pass' : undefined">
@@ -138,7 +135,6 @@ const {
       </div>
     </template>
 
-    <!-- 備考 -->
     <template #cell-p1Remarks="{ row: circuit }">
       <Textarea
         v-if="editingRowId === circuit.id"
@@ -151,15 +147,13 @@ const {
       </span>
     </template>
 
-    <!-- 操作 -->
     <template #cell-actions="{ row: circuit }">
       <div class="flex items-center justify-center gap-1">
-        <!-- 幹線未完了による操作不可 -->
+
         <template v-if="isCircuitLocked(circuit)">
           <span class="text-note inline-flex items-center gap-1">⏸ 幹線未完了</span>
         </template>
 
-        <!-- 編集モード中 -->
         <template v-else-if="editingRowId === circuit.id">
           <Button
             variant="success"
@@ -175,7 +169,6 @@ const {
           </Button>
         </template>
 
-        <!-- 通常モード：確定済み -->
         <template v-else-if="isComplete(circuit)">
           <Button
             variant="danger"
@@ -186,7 +179,6 @@ const {
           </Button>
         </template>
 
-        <!-- 通常モード：未確定 -->
         <template v-else>
           <Button
             variant="success"

@@ -1,3 +1,10 @@
+/**
+ * オフライン同期キュー管理 Composable
+ *
+ * @description ネットワーク圏外時に実行された試験確定・解除操作をローカルストレージにキューイングし、復帰時に自動再送・同期します。
+ * @param {Ref<string>} siteId 対象現場IDのRef
+ */
+
 import type { Ref } from 'vue'
 import { computed, getCurrentInstance, onMounted, onUnmounted, ref } from 'vue'
 

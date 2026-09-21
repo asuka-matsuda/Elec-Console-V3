@@ -24,7 +24,7 @@ const {
 </script>
 
 <template>
-  <ToolTemplatesLayout
+  <ToolCalculatorLayout
     results-title="選定結果"
     :save-disabled="isSaveDisabled"
     :save-function="handleSaveHistory"
@@ -47,5 +47,5 @@ const {
     <template #basis>
       <ToolMathBasis :steps="mathSteps" />
     </template>
-  </ToolTemplatesLayout>
+  </ToolCalculatorLayout>
 </template>

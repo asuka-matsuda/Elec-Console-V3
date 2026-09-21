@@ -88,7 +88,7 @@ const handleKeydown = (event: KeyboardEvent, currentIndex: number) => {
 
 <template>
   <div class="tabs-container flex flex-col gap-4 w-full">
-    <!-- タブヘッダーリスト -->
+
     <div class="overflow-x-auto pb-0.5">
       <nav class="tabs inline-flex items-center gap-1 min-w-full">
         <button
@@ -121,7 +121,6 @@ const handleKeydown = (event: KeyboardEvent, currentIndex: number) => {
       </nav>
     </div>
 
-    <!-- コンテンツパネル -->
     <div
       v-if="hasPanelSlots"
       :id="`panel-${baseId}-${model}`"
@@ -135,7 +134,7 @@ const handleKeydown = (event: KeyboardEvent, currentIndex: number) => {
       >
         <div :key="String(model)" class="h-full">
           <slot :name="String(model)" :active-tab="model">
-            <!-- 名前付きスロットが指定されていない場合はデフォルトスロットにフォールバック -->
+
             <slot :active-tab="model" />
           </slot>
         </div>

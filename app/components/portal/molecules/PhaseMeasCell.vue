@@ -63,7 +63,6 @@ const statusClass = computed(() => {
   <div class="flex flex-col items-center gap-1 text-2xs">
     <span class="cell-label">{{ label }}</span>
 
-    <!-- 手入力編集モード -->
     <Input
       v-if="isEditing"
       v-model="modelValue"
@@ -77,7 +76,6 @@ const statusClass = computed(() => {
       @keydown.enter.prevent="emit('enter')"
     />
 
-    <!-- 通常表示モード -->
     <template v-else>
       <div class="flex items-baseline gap-0.5">
         <span class="cell-val" :class="statusClass">

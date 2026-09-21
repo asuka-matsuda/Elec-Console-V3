@@ -64,7 +64,7 @@ const formattedSubValue = computed(() => formatValue(props.subValue, ''))
     :title="cellTitle"
   >
     <slot :value="value" :sub-value="subValue">
-      <!-- 2段組表示モード -->
+
       <div
         v-if="isStacked"
         class="stacked-cell flex flex-col gap-0.5 min-w-0"
@@ -81,7 +81,6 @@ const formattedSubValue = computed(() => formatValue(props.subValue, ''))
         </span>
       </div>
 
-      <!-- 通常1行表示モード -->
       <template v-else>
         {{ formattedMainValue }}
       </template>

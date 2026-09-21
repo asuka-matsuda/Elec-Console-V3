@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
- * PortalOrganismsCal
- * [Organisms] 現場専用スケジュールカレンダー。
+ * PortalCalendar
+ * [Portal Organisms] 現場専用スケジュールカレンダー。
  * FullCalendar とツールバー、各種モーダルを統合します。
  */
 import FullCalendar from '@fullcalendar/vue3'

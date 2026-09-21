@@ -1,3 +1,11 @@
+/**
+ * マスター更新履歴新規作成 API
+ * POST /api/master/history
+ *
+ * @description 新しい更新履歴項目（バージョン、タイトル、概要）を作成・登録します。
+ * @permission システム管理者限定
+ */
+
 import { createError, defineEventHandler, readBody } from 'h3'
 
 import { requireMasterUser } from '../../../utils/auth'

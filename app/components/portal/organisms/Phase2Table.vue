@@ -148,7 +148,7 @@ const {
     :editing-row-id="editingRowId"
     @sort="handleSort"
   >
-    <!-- 測定相 1 (R-S / R-N) -->
+
     <template #cell-zetsuenR="{ row: circuit }">
       <PortalPhaseMeasCell
         v-model="inputForm.rVal"
@@ -161,7 +161,6 @@ const {
       />
     </template>
 
-    <!-- 測定相 2 (S-T / T-N) -->
     <template #cell-zetsuenS="{ row: circuit }">
       <PortalPhaseMeasCell
         v-model="inputForm.sVal"
@@ -174,7 +173,6 @@ const {
       />
     </template>
 
-    <!-- 測定相 3 (R-T / R-T) -->
     <template #cell-zetsuenT="{ row: circuit }">
       <PortalPhaseMeasCell
         v-model="inputForm.tVal"
@@ -187,7 +185,6 @@ const {
       />
     </template>
 
-    <!-- 備考 -->
     <template #cell-p2Remarks="{ row: circuit }">
       <Textarea
         v-if="editingRowId === circuit.id"
@@ -200,20 +197,17 @@ const {
       </span>
     </template>
 
-    <!-- 操作 -->
     <template #cell-actions="{ row: circuit }">
       <div class="flex items-center justify-center gap-1">
-        <!-- 幹線未完了による操作不可 -->
+
         <template v-if="isCircuitLocked(circuit)">
           <span class="text-note inline-flex items-center gap-1">⏸ 幹線未完了</span>
         </template>
 
-        <!-- 前フェーズ（P1）未完了による操作不可 -->
         <template v-else-if="!isP1Complete(circuit)">
           <span class="text-note inline-flex items-center gap-1">⏸ P1未了</span>
         </template>
 
-        <!-- 手入力編集モード中 -->
         <template v-else-if="editingRowId === circuit.id">
           <Button
             variant="success"
@@ -229,7 +223,6 @@ const {
           </Button>
         </template>
 
-        <!-- 通常モード：確定済み -->
         <template v-else-if="isComplete(circuit)">
           <Button
             variant="danger"
@@ -245,7 +238,6 @@ const {
           </Button>
         </template>
 
-        <!-- 通常モード：未確定 -->
         <template v-else>
           <Button
             variant="success"

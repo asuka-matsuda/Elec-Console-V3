@@ -1,3 +1,9 @@
+/**
+ * 非同期アクション実行・フィードバック Composable
+ *
+ * @description 非同期処理のローディング制御、エラー捕捉時のトースト通知、成功メッセージ表示を一元管理します。
+ */
+
 import type { ComputedRef, Ref } from 'vue'
 import { computed, getCurrentInstance, onUnmounted, ref, toValue } from 'vue'
 

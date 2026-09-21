@@ -1,3 +1,11 @@
+/**
+ * パスワード更新 API
+ * PUT /api/auth/password
+ *
+ * @description ログイン中ユーザー自身のパスワードを更新し、初回ログインフラグ等を解除します。
+ * @permission 認証済みユーザー
+ */
+
 import { createError, defineEventHandler, readBody } from 'h3'
 
 import { requireAuthUser } from '../../utils/auth'

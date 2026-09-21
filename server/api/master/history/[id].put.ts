@@ -1,3 +1,11 @@
+/**
+ * マスター更新履歴更新 API
+ * PUT /api/master/history/:id
+ *
+ * @description 既存の更新履歴項目の内容を更新します。
+ * @permission システム管理者限定
+ */
+
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { requireMasterUser } from '../../../utils/auth'

@@ -149,7 +149,7 @@ const confirmToggleDisable = async (row: Site) => {
 <template>
   <Panel>
     <div class="flex flex-col lg:flex-row gap-6 items-start">
-      <!-- 左ペイン: Master (幅約340px) -->
+
       <div class="w-full lg:w-[340px] shrink-0">
         <PortalSiteListMaster
           :sites="sites"
@@ -165,7 +165,6 @@ const confirmToggleDisable = async (row: Site) => {
         class="hidden lg:block self-stretch"
       />
 
-      <!-- 右ペイン: Detail (残りワイド領域) -->
       <div class="flex-1 min-w-0 w-full">
         <PortalSiteSettingsDetail
           :site="selectedSite"
@@ -175,7 +174,6 @@ const confirmToggleDisable = async (row: Site) => {
       </div>
     </div>
 
-    <!-- 新規登録モーダル (中央ダイアログ) -->
     <Modal
       v-model="isCreateModalOpen"
       title="新規現場登録"

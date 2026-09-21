@@ -1,4 +1,10 @@
 <script setup lang="ts">
+/**
+ * 初回パスワード変更画面
+ * /change-password
+ *
+ * @description システム管理者から発行された初期パスワードまたはリセット後パスワードを安全な新パスワードへ変更する画面。
+ */
 import { ref } from 'vue'
 
 import { useRouter } from '#app'

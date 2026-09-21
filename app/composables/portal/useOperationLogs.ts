@@ -1,3 +1,10 @@
+/**
+ * 現場操作ログ管理 Composable
+ *
+ * @description 送電試験の測定値確定や解除などの監査ログを取得し、検索・フィルタリング機能を提供します。
+ * @param {Ref<string>} siteId 対象現場IDのRef
+ */
+
 import type { Ref } from 'vue'
 import { ref, unref } from 'vue'
 

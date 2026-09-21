@@ -37,7 +37,7 @@ const handleSelectCircuit = (circuit: CircuitItem) => {
 
 <template>
   <div class="flex flex-1 flex-col gap-section-gap min-h-0">
-    <!-- ページヘッダー: 共通の同期状態と戻る導線を標準装備 -->
+
     <SectionHeader
       :title="title"
       :icon="icon"
@@ -48,7 +48,6 @@ const handleSelectCircuit = (circuit: CircuitItem) => {
           @synced="emit('synced')"
         />
 
-        <!-- 各フェーズ固有のアクション（一括確定ボタン等） -->
         <slot name="actions" />
 
         <Button
@@ -60,12 +59,11 @@ const handleSelectCircuit = (circuit: CircuitItem) => {
       </template>
     </SectionHeader>
 
-    <!-- 検索・絞り込み ＆ 進捗コントロールパネル（旧SoudenPhaseControlsを統合・レイアウト専用化） -->
     <Panel>
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-panel-gap items-start">
-        <!-- 絞り込みフィルター群 -->
+
         <div class="flex flex-col gap-3">
-          <!-- 盤種別セグメント -->
+
           <div class="flex items-center gap-3">
             <span class="shrink-0">盤種別:</span>
             <RadioGroup
@@ -74,7 +72,6 @@ const handleSelectCircuit = (circuit: CircuitItem) => {
             />
           </div>
 
-          <!-- 盤名称セレクト & 拡張スロット / 対象件数 -->
           <div class="flex flex-wrap items-center gap-3">
             <div class="flex items-center gap-2">
               <span class="shrink-0">盤名称:</span>
@@ -85,7 +82,6 @@ const handleSelectCircuit = (circuit: CircuitItem) => {
               />
             </div>
 
-            <!-- 追加フィルター（Phase 2 基準値表示等のスロット） -->
             <slot name="filters-extra" />
 
             <span class="whitespace-nowrap">
@@ -94,7 +90,6 @@ const handleSelectCircuit = (circuit: CircuitItem) => {
           </div>
         </div>
 
-        <!-- 進捗バー & ミニマップ -->
         <div class="flex flex-col gap-3">
           <div class="flex flex-col gap-1">
             <div class="flex items-center justify-between">
@@ -110,7 +105,6 @@ const handleSelectCircuit = (circuit: CircuitItem) => {
             <PortalProgressBar :value="stats.pct" />
           </div>
 
-          <!-- ミニマップ -->
           <PortalExamMinimap
             :circuits="circuits"
             :phase="phase"
@@ -120,7 +114,6 @@ const handleSelectCircuit = (circuit: CircuitItem) => {
       </div>
     </Panel>
 
-    <!-- メインコンテンツ（テーブル等） -->
     <div class="flex flex-1 flex-col min-h-0">
       <slot />
     </div>

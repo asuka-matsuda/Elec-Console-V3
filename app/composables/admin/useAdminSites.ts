@@ -1,3 +1,10 @@
+/**
+ * 現場マスター管理 Composable
+ *
+ * @description 現場一覧の取得・新規作成・更新・削除および選択状態を管理します。
+ * @returns {Object} sites 現場一覧Ref, fetchSites 取得関数, createSite 登録関数, updateSite 更新関数, deleteSite 削除関数
+ */
+
 import { useAsyncData, useState } from '#app'
 import { useApi } from '~/composables/useApi'
 import { STATE_KEYS } from '~/constants/storageKeys'

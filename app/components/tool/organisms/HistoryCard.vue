@@ -58,7 +58,7 @@ const weightResult = computed(() => {
     class="history-card flex flex-col gap-3"
     :class="[`is-${entry.status}`]"
   >
-    <!-- ヘッダー部: 日時、ツール名、モードバッジ -->
+
     <header class="flex items-end justify-between pb-2">
       <div class="flex flex-col gap-1 min-w-0">
         <span class="text-date">{{ entry.timestamp }}</span>
@@ -74,12 +74,11 @@ const weightResult = computed(() => {
       </div>
     </header>
 
-    <!-- ボディ部: 計算結果プレビュー & 入力条件 -->
     <div class="flex flex-col gap-3 min-h-0">
-      <!-- 1. 計算結果セクション -->
+
       <section class="flex flex-col gap-1 min-h-0">
         <div>
-          <!-- 電圧降下・ケーブルサイズ選定 -->
+
           <ToolVoltageResult
             v-if="entry.toolId === 'voltage' && voltageInputs && voltageResult"
             :inputs="voltageInputs"
@@ -87,26 +86,22 @@ const weightResult = computed(() => {
             size="sm"
           />
 
-          <!-- 配管サイズ選定 -->
           <ToolConduitResult
             v-else-if="entry.toolId === 'conduit' && conduitResult"
             :result="conduitResult"
             size="sm"
           />
 
-          <!-- ケーブルラック選定 -->
           <ToolRackResult
             v-else-if="entry.toolId === 'rack' && rackResult"
             :result="rackResult"
           />
 
-          <!-- ドラムサイズ・重量計算 -->
           <ToolWeightResult
             v-else-if="entry.toolId === 'weight' && weightResult"
             :result="weightResult"
           />
 
-          <!-- フォールバック: 汎用結果リスト -->
           <template v-else>
             <h4 class="section-title pl-1 m-0">
               計算結果
@@ -137,7 +132,6 @@ const weightResult = computed(() => {
         </div>
       </section>
 
-      <!-- 2. 入力条件セクション -->
       <section class="flex flex-col gap-1 min-h-0">
         <h4 class="section-title pl-1 m-0">
           入力条件
@@ -155,7 +149,6 @@ const weightResult = computed(() => {
       </section>
     </div>
 
-    <!-- フッター部: 削除ボタン -->
     <footer class="flex items-center justify-end mt-auto pt-2">
       <Button
         variant="danger"

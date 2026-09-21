@@ -57,7 +57,7 @@ const filteredSites = computed(() => {
 
 <template>
   <div class="flex flex-col gap-3 w-full">
-    <!-- ヘッダー: タイトル & 新規登録ボタン -->
+
     <SectionHeader
       title="現場プロジェクト"
       icon="building"
@@ -73,20 +73,17 @@ const filteredSites = computed(() => {
       </template>
     </SectionHeader>
 
-    <!-- 検索バー -->
     <Input
       v-model="searchQuery"
       placeholder="現場名・IDで検索..."
     />
 
-    <!-- ステータスフィルター (block指定で均等配置、不要なラッパーdivを排除) -->
     <RadioGroup
       v-model="statusFilter"
       :options="filterOptions"
       block
     />
 
-    <!-- 現場一覧リスト (不要な template v-if ラッパーを排除) -->
     <div class="flex flex-col gap-2 overflow-y-auto max-h-[calc(100vh-280px)] min-h-[300px]">
       <Panel
         v-for="site in filteredSites"

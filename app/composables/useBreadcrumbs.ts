@@ -1,3 +1,9 @@
+/**
+ * パンくずリスト自動生成 Composable
+ *
+ * @description 現在のルートパスおよび現場名・メニュー構造から階層化されたパンくずリストデータを動的に生成します。
+ */
+
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 

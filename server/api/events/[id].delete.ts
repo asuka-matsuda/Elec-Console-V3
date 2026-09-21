@@ -1,3 +1,11 @@
+/**
+ * カレンダーイベント削除 API
+ * DELETE /api/events/:id
+ *
+ * @description 指定された予定イベントを削除します。
+ * @permission 現場アクセス権限
+ */
+
 import { createError, defineEventHandler, getRouterParam } from 'h3'
 
 import { canAccessSite, requireAuthUser } from '../../utils/auth'

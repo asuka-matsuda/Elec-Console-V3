@@ -1,4 +1,10 @@
 <script setup lang="ts">
+/**
+ * 現場トップダッシュボード画面
+ * /portal/:siteId
+ *
+ * @description 指定現場の送電試験進捗サマリー、工程カレンダー、パーソナルToDo、操作ログへアクセスするハブ画面。
+ */
 import { useLocalStorage } from '@vueuse/core'
 import { computed, onMounted, watch } from 'vue'
 
@@ -81,7 +87,7 @@ onMounted(() => {
     <div class="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-section-gap items-start">
       <section class="min-h-[500px]">
         <ClientOnly>
-          <PortalCal :site-id="siteId" />
+          <PortalCalendar :site-id="siteId" />
         </ClientOnly>
       </section>
 

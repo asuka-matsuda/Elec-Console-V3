@@ -84,31 +84,29 @@ const getWorkerCellData = (circuit: CircuitItem, key: string) => {
     :row-class="getRowClass"
     class="souden-circuit-table flex-1 min-h-[400px]"
   >
-    <!-- 全カラムのうちスロット提供対象のカラムのみ template を展開（banMeisho 等の標準スタック表示を保護） -->
+
     <template
       v-for="col in columns.filter(c => shouldProvideSlot(String(c.key)))"
       :key="col.key"
       #[`cell-${col.key}`]="slotProps"
     >
-      <!-- 1. 親コンポーネント（Phase1〜3）側でスロットが指定されていれば最優先中継 -->
+
       <slot
         v-if="$slots[`cell-${col.key}`]"
         :name="`cell-${col.key}`"
         v-bind="slotProps"
       />
 
-      <!-- 2. 回路番号の送電試験標準描画 -->
       <div
         v-else-if="col.key === 'kairoBangou'"
         class="flex items-center justify-center"
       >
-        <PortalKairoSymbol
+        <PortalCircuitSymbol
           :kigou="slotProps.row.kairoKigou"
           :bangou="slotProps.row.kairoBangou"
         />
       </div>
 
-      <!-- 3. 回路名称の送電試験標準描画（Excel改行保持） -->
       <span
         v-else-if="col.key === 'kairoMeisho'"
         class="circuit-meisho block"
@@ -117,7 +115,6 @@ const getWorkerCellData = (circuit: CircuitItem, key: string) => {
         {{ slotProps.row.kairoMeisho || '-' }}
       </span>
 
-      <!-- 4. 測定者/日時の送電試験標準描画（対象フェーズを厳密に照合） -->
       <PortalSoudenWorkerCell
         v-else-if="col.key.endsWith('ConfirmedAt')"
         :worker="getWorkerCellData(slotProps.row, col.key).worker"

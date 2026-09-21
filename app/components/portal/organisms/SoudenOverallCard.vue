@@ -27,7 +27,7 @@ const GROUPS = [
     />
 
     <div class="flex flex-col lg:flex-row items-center gap-6 lg:gap-8">
-      <!-- 全試験完了率ゲージ -->
+
       <PortalCircularGauge
         class="shrink-0"
         :value="stats.totalPct"
@@ -35,7 +35,6 @@ const GROUPS = [
         label="全試験完了率"
       />
 
-      <!-- 系統別進捗ブロック（幹線・二次側を宣言的にループ描画） -->
       <div class="flex flex-1 flex-col gap-5 w-full">
         <template v-for="(group, index) in GROUPS" :key="group.keiTo">
           <div class="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-6">

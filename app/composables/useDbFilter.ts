@@ -1,3 +1,9 @@
+/**
+ * データベース検索・フィルタリング Composable
+ *
+ * @description 機器・ケーブル規格データベースにおけるフリーワード検索、カナ行絞り込み、カテゴリ選択状態を管理します。
+ */
+
 import { computed, ref } from 'vue'
 
 export interface FilterOptions<T> {

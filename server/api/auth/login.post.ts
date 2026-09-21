@@ -1,3 +1,11 @@
+/**
+ * ログイン認証 API
+ * POST /api/auth/login
+ *
+ * @description ユーザーID・パスワードによる認証を行い、セッショントークンを発行します。二重レートリミット保護を備えます。
+ * @permission パブリック（未認証可）
+ */
+
 import { defineEventHandler, getRequestIP, readBody, setCookie } from 'h3'
 
 import { ErrorCode } from '#shared/types/errors'

@@ -59,7 +59,7 @@ const filteredUsers = computed(() => {
 
 <template>
   <div class="flex flex-col gap-3 w-full">
-    <!-- ヘッダー: タイトル & 新規登録ボタン -->
+
     <SectionHeader
       title="ユーザー一覧"
       icon="users"
@@ -75,20 +75,17 @@ const filteredUsers = computed(() => {
       </template>
     </SectionHeader>
 
-    <!-- 検索バー -->
     <Input
       v-model="searchQuery"
       placeholder="氏名・カナ・IDで検索..."
     />
 
-    <!-- 権限フィルター (block指定で均等配置、不要なラッパーdivを排除) -->
     <RadioGroup
       v-model="roleFilter"
       :options="filterOptions"
       block
     />
 
-    <!-- ユーザー一覧リスト (不要な template v-if ラッパーを排除) -->
     <div class="flex flex-col gap-2 overflow-y-auto max-h-[calc(100vh-280px)] min-h-[300px]">
       <Panel
         v-for="user in filteredUsers"

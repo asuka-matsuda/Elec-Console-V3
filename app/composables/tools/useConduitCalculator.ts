@@ -1,3 +1,9 @@
+/**
+ * 電線管サイズ選定計算 Composable
+ *
+ * @description 入線ケーブル情報から管内断面積・占有率を算出し、内線規程に適合する最小電線管サイズを自動選定します。
+ */
+
 import { computed } from 'vue'
 
 import { useToolPage } from '~/composables/tools/useToolPage'

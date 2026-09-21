@@ -1,3 +1,9 @@
+/**
+ * ケーブル重量計算結果 ➔ 計算履歴（HistoryEntry）マッパー
+ *
+ * @description ケーブル重量・許容張力計算の入力と算出結果を、LocalStorage履歴表示用オブジェクトに整形します。
+ */
+
 import type { HistoryEntry } from '~/types/history'
 import { findCableByIndexString, getCableDisplayName } from '~/utils/cable'
 
