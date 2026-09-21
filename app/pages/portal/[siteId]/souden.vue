@@ -77,7 +77,7 @@ onMounted(() => {
 
     <template v-else-if="stats">
       <!-- 総合進捗カード (Organism) -->
-      <PortalOrganismsSoudenOverallCard :stats="stats" :site-id="siteId" />
+      <PortalSoudenOverallCard :stats="stats" :site-id="siteId" />
     </template>
   </div>
 </template>
