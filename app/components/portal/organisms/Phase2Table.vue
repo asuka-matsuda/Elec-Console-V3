@@ -150,7 +150,7 @@ const {
   >
     <!-- 測定相 1 (R-S / R-N) -->
     <template #cell-zetsuenR="{ row: circuit }">
-      <PortalPhase2MeasCell
+      <PortalPhaseMeasCell
         v-model="inputForm.rVal"
         :label="getPhaseLabels(circuit).phase1"
         :val="circuit.zetsuenR"
@@ -163,7 +163,7 @@ const {
 
     <!-- 測定相 2 (S-T / T-N) -->
     <template #cell-zetsuenS="{ row: circuit }">
-      <PortalPhase2MeasCell
+      <PortalPhaseMeasCell
         v-model="inputForm.sVal"
         :label="getPhaseLabels(circuit).phase2"
         :val="circuit.zetsuenS"
@@ -176,7 +176,7 @@ const {
 
     <!-- 測定相 3 (R-T / R-T) -->
     <template #cell-zetsuenT="{ row: circuit }">
-      <PortalPhase2MeasCell
+      <PortalPhaseMeasCell
         v-model="inputForm.tVal"
         :label="getPhaseLabels(circuit).phase3"
         :val="circuit.zetsuenT"

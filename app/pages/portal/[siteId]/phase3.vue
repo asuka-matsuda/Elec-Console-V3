@@ -6,7 +6,6 @@
 import { computed, onMounted, watch } from 'vue'
 
 import { usePhase3Exam } from '~/composables/portal/phase/usePhase3Exam'
-import type { CircuitItem } from '~/types/souden'
 
 useHead({ title: 'フェーズ3：送電・電圧測定・検相 - Elec-Console' })
 
@@ -53,10 +52,6 @@ onMounted(() => {
   fetchCircuits()
 })
 
-const scrollToCircuit = (circuit: CircuitItem) => {
-  scrollToTableRow(circuit.id)
-}
-
 const shubetsuTabOptions = computed(() => {
   return availableShubetsuList.value.map(s => ({
     label: s === 'ALL' ? 'すべて' : s,
@@ -66,7 +61,7 @@ const shubetsuTabOptions = computed(() => {
 </script>
 
 <template>
-  <PortalTemplatesPhaseExam
+  <PortalPhaseExam
     v-model:shubetsu="selectedBanShubetsu"
     v-model:ban-meisho="selectedBanMeisho"
     title="フェーズ3：送電・電圧測定・検相"
@@ -76,14 +71,9 @@ const shubetsuTabOptions = computed(() => {
     :ban-meisho-options="availableBanMeishoList"
     :stats="phaseStats"
     :circuits="filteredCircuits"
-    @select-circuit="scrollToCircuit"
+    @synced="fetchCircuits"
   >
-    <template #header-actions>
-      <PortalSyncStatusBadge
-        :site-id="siteId"
-        @synced="fetchCircuits"
-      />
-
+    <template #actions>
       <Button
         variant="success"
         icon="check-check"
@@ -91,13 +81,6 @@ const shubetsuTabOptions = computed(() => {
         @click="batchConfirmPhase3"
       >
         一括標準値確定
-      </Button>
-
-      <Button
-        icon="arrow-left"
-        :to="`/portal/${siteId}/souden`"
-      >
-        ダッシュボードへ戻る
       </Button>
     </template>
 
@@ -110,5 +93,5 @@ const shubetsuTabOptions = computed(() => {
       @confirm="confirmPhase3"
       @clear="clearPhase3"
     />
-  </PortalTemplatesPhaseExam>
+  </PortalPhaseExam>
 </template>

@@ -130,8 +130,8 @@ describe('Phase3Table.vue', () => {
         </div>
       `,
     },
-    PortalPhase3VoltCell: {
-      name: 'PortalPhase3VoltCell',
+    PortalPhaseMeasCell: {
+      name: 'PortalPhaseMeasCell',
       props: ['modelValue', 'label', 'val', 'isEditing'],
       emits: ['update:modelValue', 'enter'],
       template: `

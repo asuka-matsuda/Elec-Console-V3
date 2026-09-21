@@ -3,6 +3,8 @@
  * ProgressBar
  * [Portal Atoms] プログレスバーコンポーネント（最小パーツ）
  */
+import { clampProgress } from '~/utils/progress'
+
 const {
   value = 0,
   color = 'var(--color-status-success)',
@@ -18,7 +20,7 @@ const {
     <div
       class="progress-fill h-full"
       :style="{
-        width: `${Math.min(100, Math.max(0, value))}%`,
+        width: `${clampProgress(value)}%`,
         backgroundColor: color,
       }"
     />

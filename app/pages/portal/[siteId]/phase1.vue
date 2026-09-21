@@ -6,7 +6,6 @@
 import { computed, onMounted, watch } from 'vue'
 
 import { usePhase1Exam } from '~/composables/portal/phase/usePhase1Exam'
-import type { CircuitItem } from '~/types/souden'
 
 useHead({ title: 'フェーズ1：回路確認・増締 - Elec-Console' })
 
@@ -51,10 +50,6 @@ onMounted(() => {
   fetchCircuits()
 })
 
-const scrollToCircuit = (circuit: CircuitItem) => {
-  scrollToTableRow(circuit.id)
-}
-
 const shubetsuTabOptions = computed(() => {
   return availableShubetsuList.value.map(s => ({
     label: s === 'ALL' ? 'すべて' : s,
@@ -64,7 +59,7 @@ const shubetsuTabOptions = computed(() => {
 </script>
 
 <template>
-  <PortalTemplatesPhaseExam
+  <PortalPhaseExam
     v-model:shubetsu="selectedBanShubetsu"
     v-model:ban-meisho="selectedBanMeisho"
     title="フェーズ1：回路確認・増締"
@@ -74,22 +69,8 @@ const shubetsuTabOptions = computed(() => {
     :ban-meisho-options="availableBanMeishoList"
     :stats="phaseStats"
     :circuits="filteredCircuits"
-    @select-circuit="scrollToCircuit"
+    @synced="fetchCircuits"
   >
-    <template #header-actions>
-      <PortalSyncStatusBadge
-        :site-id="siteId"
-        @synced="fetchCircuits"
-      />
-
-      <Button
-        icon="arrow-left"
-        :to="`/portal/${siteId}/souden`"
-      >
-        ダッシュボードへ戻る
-      </Button>
-    </template>
-
     <PortalPhase1Table
       :circuits="filteredCircuits"
       :full-circuits="circuits"
@@ -99,5 +80,5 @@ const shubetsuTabOptions = computed(() => {
       @clear="clearPhase1"
       @save-edit="saveEdit"
     />
-  </PortalTemplatesPhaseExam>
+  </PortalPhaseExam>
 </template>

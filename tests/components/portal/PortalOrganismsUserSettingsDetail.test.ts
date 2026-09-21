@@ -1,11 +1,11 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import OrganismsUserSettingsDetail from '../../../app/components/portal/OrganismsUserSettingsDetail.vue'
+import UserSettingsDetail from '../../../app/components/portal/organisms/UserSettingsDetail.vue'
 import type { Site } from '../../../app/types/admin'
 import type { User } from '../../../app/types/auth'
 
-describe('OrganismsUserSettingsDetail.vue', () => {
+describe('UserSettingsDetail.vue', () => {
   const dummyUser: User = {
     id: 'user-01',
     loginId: 'yamada01',
@@ -19,7 +19,7 @@ describe('OrganismsUserSettingsDetail.vue', () => {
   ]
 
   it('renders empty state when user is null', () => {
-    const wrapper = mount(OrganismsUserSettingsDetail, {
+    const wrapper = mount(UserSettingsDetail, {
       props: {
         user: null,
         siteList: dummySites,
@@ -30,7 +30,7 @@ describe('OrganismsUserSettingsDetail.vue', () => {
   })
 
   it('renders user details when user is provided', () => {
-    const wrapper = mount(OrganismsUserSettingsDetail, {
+    const wrapper = mount(UserSettingsDetail, {
       props: {
         user: dummyUser,
         siteList: dummySites,
@@ -44,7 +44,7 @@ describe('OrganismsUserSettingsDetail.vue', () => {
   })
 
   it('emits save event with form updates', async () => {
-    const wrapper = mount(OrganismsUserSettingsDetail, {
+    const wrapper = mount(UserSettingsDetail, {
       props: {
         user: dummyUser,
         siteList: dummySites,

@@ -6,7 +6,6 @@
 import { computed, onMounted, watch } from 'vue'
 
 import { usePhase2Exam } from '~/composables/portal/phase/usePhase2Exam'
-import type { CircuitItem } from '~/types/souden'
 
 useHead({ title: 'フェーズ2：絶縁抵抗測定 - Elec-Console' })
 
@@ -55,10 +54,6 @@ onMounted(() => {
   fetchCircuits()
 })
 
-const scrollToCircuit = (circuit: CircuitItem) => {
-  scrollToTableRow(circuit.id)
-}
-
 const shubetsuTabOptions = computed(() => {
   return availableShubetsuList.value.map(s => ({
     label: s === 'ALL' ? 'すべて' : s,
@@ -68,7 +63,7 @@ const shubetsuTabOptions = computed(() => {
 </script>
 
 <template>
-  <PortalTemplatesPhaseExam
+  <PortalPhaseExam
     v-model:shubetsu="selectedBanShubetsu"
     v-model:ban-meisho="selectedBanMeisho"
     title="フェーズ2：絶縁抵抗測定"
@@ -78,14 +73,9 @@ const shubetsuTabOptions = computed(() => {
     :ban-meisho-options="availableBanMeishoList"
     :stats="phaseStats"
     :circuits="filteredCircuits"
-    @select-circuit="scrollToCircuit"
+    @synced="fetchCircuits"
   >
-    <template #header-actions>
-      <PortalSyncStatusBadge
-        :site-id="siteId"
-        @synced="fetchCircuits"
-      />
-
+    <template #actions>
       <Button
         variant="success"
         icon="check-check"
@@ -94,21 +84,12 @@ const shubetsuTabOptions = computed(() => {
       >
         一括 100MΩ(OK) 確定
       </Button>
-
-      <Button
-        icon="arrow-left"
-        :to="`/portal/${siteId}/souden`"
-      >
-        ダッシュボードへ戻る
-      </Button>
     </template>
 
     <template #filters-extra>
-      <div class="threshold-badge flex items-center gap-1 py-0.5 px-2.5">
-        <span class="threshold-label">基準値: ≧</span>
-        <span class="threshold-val">{{ phase2ThresholdMegOhm.toFixed(1) }}</span>
-        <span class="threshold-unit">MΩ</span>
-      </div>
+      <Badge color="var(--color-category-tool)">
+        基準値: ≧ {{ phase2ThresholdMegOhm.toFixed(1) }} MΩ
+      </Badge>
     </template>
 
     <PortalPhase2Table
@@ -122,27 +103,5 @@ const shubetsuTabOptions = computed(() => {
       @confirm="confirmPhase2"
       @clear="clearPhase2"
     />
-  </PortalTemplatesPhaseExam>
+  </PortalPhaseExam>
 </template>
-
-<style scoped lang="scss">
-.threshold-badge {
-  border: 1px solid var(--color-border);
-  font-size: var(--font-size-xs);
-  background-color: var(--color-bg-hover);
-}
-
-.threshold-label {
-  color: var(--color-text-muted);
-}
-
-.threshold-val {
-  font-family: var(--font-mono);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-category-tool);
-}
-
-.threshold-unit {
-  color: var(--color-text-muted);
-}
-</style>

@@ -18,7 +18,7 @@ const { items: breadcrumbs, accent: breadcrumbAccent } = useBreadcrumbs()
         @toggle-sidebar="isSidebarOpen = !isSidebarOpen"
       />
 
-      <PortalOfflineBanner />
+      <OfflineBanner />
 
       <main class="flex flex-1 flex-col gap-0 min-h-0 overflow-y-auto p-layout-pad content-container">
         <slot />

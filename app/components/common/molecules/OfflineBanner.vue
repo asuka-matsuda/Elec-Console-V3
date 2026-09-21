@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * OfflineBanner
- * 現場の電波状況（オフライン / 復帰）を伝える最小限のHUDバナー
+ * [Common Molecules] 電波状況（オフライン / 復帰）を伝える最小限のHUDバナー
  */
 import { useOnline, useTimeoutFn } from '@vueuse/core'
 import { computed, ref, watch } from 'vue'

@@ -47,10 +47,12 @@ describe('UserCredentialModal.vue', () => {
   it('copies password to clipboard when copy button is clicked', async () => {
     const writeTextMock = vi.fn().mockResolvedValue(undefined)
 
-    Object.assign(navigator, {
-      clipboard: {
+    Object.defineProperty(navigator, 'clipboard', {
+      value: {
         writeText: writeTextMock,
       },
+      writable: true,
+      configurable: true,
     })
 
     const wrapper = mount(UserCredentialModal, {

@@ -210,7 +210,7 @@ const confirmResetPassword = async (row: User) => {
     <div class="flex flex-col lg:flex-row gap-6 items-start">
       <!-- 左ペイン: Master (幅約340px) -->
       <div class="w-full lg:w-[340px] shrink-0">
-        <PortalOrganismsUserListMaster
+        <PortalUserListMaster
           :users="users"
           :selected-user-id="selectedUserId"
           @select="selectedUserId = $event.id"
@@ -225,7 +225,7 @@ const confirmResetPassword = async (row: User) => {
 
       <!-- 右ペイン: Detail (残りワイド領域) -->
       <div class="flex-1 min-w-0 w-full">
-        <PortalOrganismsUserSettingsDetail
+        <PortalUserSettingsDetail
           :user="selectedUser"
           :site-list="sites"
           :is-saving="isSaving"

@@ -52,6 +52,14 @@ export interface CircuitItem {
   [key: string]: unknown
 }
 
+export interface PhaseStats {
+  allCount: number
+  completed: number
+  total: number
+  excluded: number
+  pct: number
+}
+
 export interface PanelOption {
   banShubetsu: string
   banMeisho: string

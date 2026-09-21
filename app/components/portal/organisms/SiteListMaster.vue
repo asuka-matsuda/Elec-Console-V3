@@ -88,14 +88,35 @@ const filteredSites = computed(() => {
 
     <!-- 現場一覧リスト (不要な template v-if ラッパーを排除) -->
     <div class="flex flex-col gap-2 overflow-y-auto max-h-[calc(100vh-280px)] min-h-[300px]">
-      <PortalSiteListItem
+      <Panel
         v-for="site in filteredSites"
         :key="site.id"
-        :site="site"
-        :is-selected="site.id === selectedSiteId"
-        @select="emit('select', $event)"
-        @toggle-disable="emit('toggle-disable', $event)"
-      />
+        interactive
+        :selected="site.id === selectedSiteId"
+        class="flex items-center justify-between gap-3 p-3 w-full"
+        @click="emit('select', site)"
+      >
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="site-name">
+              {{ site.name }}
+            </span>
+            <Badge :id="`site:${site.status}`" />
+            <Badge v-if="site.disabledAt" id="site:disabled" />
+          </div>
+          <div>
+            ID: {{ site.id }}
+          </div>
+        </div>
+
+        <Button
+          class="shrink-0"
+          :variant="site.disabledAt ? 'success' : 'danger'"
+          @click.stop="emit('toggle-disable', site)"
+        >
+          {{ site.disabledAt ? '有効化' : '無効化' }}
+        </Button>
+      </Panel>
 
       <EmptyState
         v-if="filteredSites.length === 0"
@@ -106,3 +127,15 @@ const filteredSites = computed(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.site-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.site-item--disabled {
+  opacity: 0.6;
+}
+</style>

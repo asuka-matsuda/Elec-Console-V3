@@ -5,6 +5,8 @@
  */
 import { computed } from 'vue'
 
+import { calcCircleProgress } from '~/utils/progress'
+
 const {
   value = 0,
   label,
@@ -18,17 +20,7 @@ const {
 }>()
 
 const RADIUS = 42
-const CIRCUMFERENCE = 2 * Math.PI * RADIUS
-
-const normalizedValue = computed(() => {
-  if (!Number.isFinite(value)) return 0
-
-  return Math.min(100, Math.max(0, Math.round(value)))
-})
-
-const strokeDashoffset = computed(() => {
-  return CIRCUMFERENCE * (1 - normalizedValue.value / 100)
-})
+const gauge = computed(() => calcCircleProgress(value, RADIUS))
 </script>
 
 <template>
@@ -53,15 +45,15 @@ const strokeDashoffset = computed(() => {
         cy="50"
         :r="RADIUS"
         :style="{
-          strokeDasharray: CIRCUMFERENCE,
-          strokeDashoffset,
-          opacity: normalizedValue === 0 ? 0 : 1,
+          strokeDasharray: gauge.circumference,
+          strokeDashoffset: gauge.strokeDashoffset,
+          opacity: gauge.value === 0 ? 0 : 1,
         }"
       />
     </svg>
 
     <div class="inline-flex items-baseline gap-1 value">
-      {{ normalizedValue }}<span class="unit">%</span>
+      {{ gauge.value }}<span class="unit">%</span>
     </div>
     <span v-if="label" class="label">
       {{ label }}

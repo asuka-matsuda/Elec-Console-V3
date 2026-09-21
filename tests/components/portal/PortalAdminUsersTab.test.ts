@@ -32,8 +32,8 @@ describe('PortalAdminUsersTab.vue', () => {
   it('renders 2-pane master detail components and Divider', () => {
     const wrapper = mount(AdminUsersTab)
 
-    expect(wrapper.findComponent({ name: 'PortalOrganismsUserListMaster' }).exists()).toBe(true)
-    expect(wrapper.findComponent({ name: 'PortalOrganismsUserSettingsDetail' }).exists()).toBe(true)
+    expect(wrapper.findComponent({ name: 'PortalUserListMaster' }).exists()).toBe(true)
+    expect(wrapper.findComponent({ name: 'PortalUserSettingsDetail' }).exists()).toBe(true)
     expect(wrapper.findComponent({ name: 'Divider' }).exists()).toBe(true)
   })
 

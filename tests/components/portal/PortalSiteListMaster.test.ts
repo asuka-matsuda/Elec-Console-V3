@@ -23,7 +23,7 @@ describe('SiteListMaster.vue', () => {
     expect(wrapper.text()).toContain('渋谷現場')
     expect(wrapper.text()).toContain('品川現場')
 
-    const items = wrapper.findAllComponents({ name: 'PortalSiteListItem' })
+    const items = wrapper.findAllComponents({ name: 'Panel' })
 
     expect(items.length).toBe(3)
 
@@ -43,7 +43,7 @@ describe('SiteListMaster.vue', () => {
 
     await input.setValue('渋谷')
 
-    const items = wrapper.findAllComponents({ name: 'PortalSiteListItem' })
+    const items = wrapper.findAllComponents({ name: 'Panel' })
 
     expect(items.length).toBe(1)
     expect(items[0]?.text()).toContain('渋谷現場')
@@ -61,7 +61,7 @@ describe('SiteListMaster.vue', () => {
 
     await radioGroup.vm.$emit('update:modelValue', 'completed')
 
-    const items = wrapper.findAllComponents({ name: 'PortalSiteListItem' })
+    const items = wrapper.findAllComponents({ name: 'Panel' })
 
     expect(items.length).toBe(1)
     expect(items[0]?.text()).toContain('品川現場')
@@ -80,7 +80,7 @@ describe('SiteListMaster.vue', () => {
     await input.setValue('存在しない現場')
 
     expect(wrapper.findComponent({ name: 'EmptyState' }).exists()).toBe(true)
-    expect(wrapper.findAllComponents({ name: 'PortalSiteListItem' }).length).toBe(0)
+    expect(wrapper.findAllComponents({ name: 'Panel' }).length).toBe(0)
   })
 
   it('emits create event when new button is clicked', async () => {

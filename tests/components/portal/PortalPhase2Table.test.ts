@@ -99,8 +99,8 @@ describe('Phase2Table.vue', () => {
         </div>
       `,
     },
-    PortalPhase2MeasCell: {
-      name: 'PortalPhase2MeasCell',
+    PortalPhaseMeasCell: {
+      name: 'PortalPhaseMeasCell',
       props: ['modelValue', 'label', 'val', 'status', 'isEditing', 'threshold'],
       emits: ['update:modelValue', 'enter'],
       template: `

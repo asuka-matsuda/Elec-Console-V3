@@ -72,3 +72,11 @@ export const SITE_SETTINGS_TABS = [
   { value: 'integration', label: 'Excelデータ連携', icon: 'link' },
   { value: 'rules', label: '除外回路ルール', icon: 'filter' },
 ]
+
+/**
+ * ユーザー詳細設定 タブ定義
+ */
+export const USER_SETTINGS_TABS = [
+  { value: 'basic', label: '基本情報', icon: 'user' },
+  { value: 'assign', label: '現場アサイン', icon: 'building' },
+]

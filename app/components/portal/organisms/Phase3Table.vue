@@ -157,10 +157,11 @@ const {
   >
     <!-- 電圧 1 (RS / RN) -->
     <template #cell-denatsuRs="{ row: circuit }">
-      <PortalPhase3VoltCell
+      <PortalPhaseMeasCell
         v-model="inputForm.rs"
         :label="getPhaseLabels(circuit).phase1"
         :val="circuit.denatsuRs"
+        unit="V"
         :is-editing="editingRowId === circuit.id"
         @enter="saveInput(circuit)"
       />
@@ -168,10 +169,11 @@ const {
 
     <!-- 電圧 2 (ST / TN) -->
     <template #cell-denatsuSt="{ row: circuit }">
-      <PortalPhase3VoltCell
+      <PortalPhaseMeasCell
         v-model="inputForm.st"
         :label="getPhaseLabels(circuit).phase2"
         :val="circuit.denatsuSt"
+        unit="V"
         :is-editing="editingRowId === circuit.id"
         @enter="saveInput(circuit)"
       />
@@ -179,10 +181,11 @@ const {
 
     <!-- 電圧 3 (RT / RT) -->
     <template #cell-denatsuRt="{ row: circuit }">
-      <PortalPhase3VoltCell
+      <PortalPhaseMeasCell
         v-model="inputForm.rt"
         :label="getPhaseLabels(circuit).phase3"
         :val="circuit.denatsuRt"
+        unit="V"
         :is-editing="editingRowId === circuit.id"
         @enter="saveInput(circuit)"
       />

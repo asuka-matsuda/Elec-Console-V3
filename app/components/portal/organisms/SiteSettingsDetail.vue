@@ -89,18 +89,56 @@ const activeTab = ref('basic')
         v-model="activeTab"
         :options="SITE_SETTINGS_TABS"
       >
-        <!-- 1. 基本情報設定 -->
+        <!-- 1. 基本情報設定（インライン統合） -->
         <template #basic>
-          <PortalSiteBasicSettings
-            :edit-status="editStatus"
-            :edit-id="editId"
-            :name="editData.name || ''"
-            :status-options="statusOptions"
-            :worker-names="workerNames"
-            @update:edit-status="editStatus = $event"
-            @update:edit-id="editId = $event"
-            @update:name="editData.name = $event"
-          />
+          <div class="flex flex-col gap-5 max-w-xl">
+            <SectionHeader
+              title="現場基本情報"
+              icon="info"
+              tag="h4"
+            />
+
+            <FormGroup label="ステータス">
+              <Select
+                v-model="editStatus"
+                :options="statusOptions"
+              />
+            </FormGroup>
+
+            <FormGroup label="現場ID (半角英数)">
+              <Input
+                v-model="editId"
+                placeholder="例: site-tokyo-01"
+              />
+            </FormGroup>
+
+            <FormGroup label="現場名">
+              <Input
+                v-model="editData.name"
+                placeholder="例: 新宿プロジェクト"
+              />
+            </FormGroup>
+
+            <FormGroup label="アサイン済作業者">
+              <div
+                v-if="workerNames.length > 0"
+                class="flex flex-wrap items-center gap-2"
+              >
+                <Badge
+                  v-for="worker in workerNames"
+                  :key="worker"
+                >
+                  {{ worker }}
+                </Badge>
+              </div>
+              <EmptyState
+                v-else
+                icon="users"
+                title="アサインされている作業者はいません"
+                description="ユーザー管理画面から作業者をアサインしてください。"
+              />
+            </FormGroup>
+          </div>
         </template>
 
         <!-- 2. Excelデータ連携 (取込 & 帳票DL) -->
