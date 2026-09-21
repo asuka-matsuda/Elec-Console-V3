@@ -53,7 +53,7 @@ const isModalOpen = ref(false)
     </div>
 
     <!-- 同期モーダル：開いた時のみ遅延マウント -->
-    <PortalOrganismsSyncQueueModal
+    <PortalSyncQueueModal
       v-if="isModalOpen"
       v-model="isModalOpen"
       :site-id="siteId"

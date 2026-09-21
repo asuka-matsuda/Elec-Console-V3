@@ -1,12 +1,13 @@
 <script setup lang="ts">
 /**
- * PortalOrganismsSyncQueueModal
+ * PortalSyncQueueModal
  * [Organisms] オフライン同期待ちキューの確認・手動同期実行・競合解決を行うモーダルコンポーネント。
  */
 import { computed, ref, toRef } from 'vue'
 
 import type { PendingSyncItem, SyncResult } from '~/composables/portal/useOfflineSync'
 import { useOfflineSync } from '~/composables/portal/useOfflineSync'
+import { formatDateTime } from '~/utils/date'
 
 const isOpen = defineModel<boolean>({ default: false })
 
@@ -28,15 +29,12 @@ const {
 } = useOfflineSync(siteIdRef)
 
 const syncResult = ref<SyncResult | null>(null)
-const selectedConflictItem = ref<PendingSyncItem | null>(null)
-
 const conflictItems = computed(() => queue.value.filter(item => item.status === 'conflict'))
 
 const closeModal = () => {
   if (isSyncing.value) return
   isOpen.value = false
   syncResult.value = null
-  selectedConflictItem.value = null
 }
 
 const handleStartSync = async () => {
@@ -45,28 +43,43 @@ const handleStartSync = async () => {
   if (syncResult.value.successCount > 0) {
     emit('synced')
   }
-
-  if (conflictItems.value.length > 0) {
-    selectedConflictItem.value = conflictItems.value[0] || null
-  }
 }
 
 const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'discard') => {
   await resolveConflict(item.id, resolution)
   emit('synced')
 
-  selectedConflictItem.value = conflictItems.value[0] || null
-
   if (queue.value.length === 0) {
     closeModal()
   }
 }
 
-const formatDateTime = (isoStr: string) => {
-  if (!isoStr) return '-'
-  const d = new Date(isoStr)
+// 測定値表示の共通フォーマッタ（テンプレート内のフェーズ別分岐コピペを引き算）
+const formatPhaseValues = (phase: number, data?: Record<string, unknown>, isServer = false) => {
+  if (!data) return '-'
 
-  return `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`
+  if (phase === 1) {
+    const k = isServer ? data.p1Kakunin : data.kakunin
+    const m = isServer ? data.p1Mashishime : data.mashishime
+
+    return `確認: ${k ? '済' : '未'} / 増締: ${m ? '済' : '未'}`
+  }
+  if (phase === 2) {
+    const r = isServer ? data.zetsuenR : data.rVal
+    const s = isServer ? data.zetsuenS : data.sVal
+    const t = isServer ? data.zetsuenT : data.tVal
+
+    return `R: ${r ?? '-'}MΩ / S: ${s ?? '-'}MΩ / T: ${t ?? '-'}MΩ`
+  }
+  if (phase === 3) {
+    const rs = isServer ? data.denatsuRs : data.rs
+    const st = isServer ? data.denatsuSt : data.st
+    const rt = isServer ? data.denatsuRt : data.rt
+
+    return `RS: ${rs ?? '-'}V / ST: ${st ?? '-'}V / TR: ${rt ?? '-'}V`
+  }
+
+  return '-'
 }
 </script>
 
@@ -82,7 +95,9 @@ const formatDateTime = (isoStr: string) => {
       >
         閉じる
       </Button>
+      <!-- 競合解決中または結果確認中は送信実行ボタンを非表示（引き算） -->
       <Button
+        v-if="conflictItems.length === 0 && !syncResult"
         variant="success"
         icon="upload"
         :loading="isSyncing"
@@ -94,7 +109,7 @@ const formatDateTime = (isoStr: string) => {
     </template>
 
     <div class="flex flex-col gap-4">
-      <!-- 競合解決ビュー -->
+      <!-- 1. 競合解決ビュー -->
       <template v-if="conflictItems.length > 0">
         <div class="flex items-start gap-2 p-3 conflict-alert">
           <Icon name="alert-triangle" size="sm" class="shrink-0 mt-0.5" />
@@ -125,18 +140,10 @@ const formatDateTime = (isoStr: string) => {
                 <span>サーバー側の最新データ</span>
               </div>
               <div class="col-meta">
-                更新日時: {{ formatDateTime(String(item.serverCircuitData?.updatedAt || '')) }}
+                更新日時: {{ formatDateTime(item.serverCircuitData?.updatedAt) }}
               </div>
               <div class="p-2 col-details">
-                <template v-if="item.phase === 1">
-                  確認: {{ item.serverCircuitData?.p1Kakunin ? '済' : '未' }} / 増締: {{ item.serverCircuitData?.p1Mashishime ? '済' : '未' }}
-                </template>
-                <template v-else-if="item.phase === 2">
-                  R: {{ item.serverCircuitData?.zetsuenR ?? '-' }}MΩ / S: {{ item.serverCircuitData?.zetsuenS ?? '-' }}MΩ / T: {{ item.serverCircuitData?.zetsuenT ?? '-' }}MΩ
-                </template>
-                <template v-else-if="item.phase === 3">
-                  RS: {{ item.serverCircuitData?.denatsuRs ?? '-' }}V / ST: {{ item.serverCircuitData?.denatsuSt ?? '-' }}V / TR: {{ item.serverCircuitData?.denatsuRt ?? '-' }}V
-                </template>
+                {{ formatPhaseValues(item.phase, item.serverCircuitData, true) }}
               </div>
               <Button
                 class="mt-2"
@@ -156,15 +163,7 @@ const formatDateTime = (isoStr: string) => {
                 実測定時刻: {{ formatDateTime(item.clientConfirmedAt) }}
               </div>
               <div class="p-2 col-details">
-                <template v-if="item.phase === 1">
-                  確認: {{ item.payload.kakunin ? '済' : '未' }} / 増締: {{ item.payload.mashishime ? '済' : '未' }}
-                </template>
-                <template v-else-if="item.phase === 2">
-                  R: {{ item.payload.rVal ?? '-' }}MΩ / S: {{ item.payload.sVal ?? '-' }}MΩ / T: {{ item.payload.tVal ?? '-' }}MΩ
-                </template>
-                <template v-else-if="item.phase === 3">
-                  RS: {{ item.payload.rs ?? '-' }}V / ST: {{ item.payload.st ?? '-' }}V / TR: {{ item.payload.rt ?? '-' }}V
-                </template>
+                {{ formatPhaseValues(item.phase, item.payload, false) }}
               </div>
               <Button
                 class="mt-2"
@@ -177,67 +176,59 @@ const formatDateTime = (isoStr: string) => {
         </div>
       </template>
 
-      <!-- 同期実行・結果ビュー -->
-      <template v-else>
-        <div class="flex flex-col gap-3">
-          <p class="m-0 summary-desc">
-            地下受変電室等で記録された <strong>{{ pendingCount }}件</strong> の未送信データがあります。<br>
-            現場で実際に測定された正確な時刻（実打鍵タイムスタンプ）とともにサーバーへ反映します。
-          </p>
-
-          <ul v-if="queue.length > 0" class="overflow-y-auto flex flex-col gap-1 max-h-[180px] m-0 p-2 list-none queue-list">
-            <li
-              v-for="item in queue.slice(0, 5)"
-              :key="item.id"
-              class="flex items-center gap-2 px-2 py-1 queue-item"
-            >
-              <Badge id="souden:phase-tool">
-                P{{ item.phase }}
-              </Badge>
-              <span class="item-ban">{{ item.banMeisho }}</span>
-              <span class="flex-1 item-kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
-              <span class="item-time">{{ formatDateTime(item.clientConfirmedAt) }}</span>
-            </li>
-            <li v-if="queue.length > 5" class="p-1 text-center queue-more">
-              ... 他 {{ queue.length - 5 }} 件
-            </li>
-          </ul>
-
-          <EmptyState
-            v-else
-            icon="check-circle"
-            title="未送信データはありません"
-            description="すべてのデータがサーバーと正常に同期されています。"
-          />
-
-          <!-- 同期結果ボックス (ResultBox) -->
-          <ResultBox
-            v-if="syncResult"
-            :status="syncResult.errorCount > 0 ? 'danger' : 'success'"
-            :title="syncResult.errorCount > 0 ? '同期エラー' : '同期完了'"
-          >
-            <template #value>
-              <div v-if="syncResult.successCount > 0" class="flex items-center gap-1.5 result-success">
-                <Icon name="check-circle" size="sm" />
-                <span>{{ syncResult.successCount }} 件のデータを正常に同期しました。</span>
-              </div>
-              <div v-if="syncResult.errorCount > 0" class="flex items-center gap-1.5 result-danger">
-                <Icon name="alert-circle" size="sm" />
-                <span>{{ syncResult.errorCount }} 件の送信に失敗しました（電波状況を確認してください）。</span>
-              </div>
-            </template>
-          </ResultBox>
+      <!-- 2. 同期結果ビュー（送信実行後のサマリー） -->
+      <template v-else-if="syncResult">
+        <div
+          class="flex flex-col gap-2 p-3 sync-result-box"
+          :class="syncResult.errorCount > 0 ? 'is-danger' : 'is-success'"
+        >
+          <div v-if="syncResult.successCount > 0" class="flex items-center gap-2">
+            <Icon name="check-circle" size="sm" />
+            <span>{{ syncResult.successCount }} 件のデータを正常に同期しました。</span>
+          </div>
+          <div v-if="syncResult.errorCount > 0" class="flex items-center gap-2">
+            <Icon name="alert-circle" size="sm" />
+            <span>{{ syncResult.errorCount }} 件の送信に失敗しました（電波状況を確認してください）。</span>
+          </div>
         </div>
       </template>
+
+      <!-- 3. 通常のキュー一覧ビュー（送信前） -->
+      <template v-else-if="queue.length > 0">
+        <p class="m-0 summary-desc">
+          地下受変電室等で記録された <strong>{{ pendingCount }}件</strong> の未送信データがあります。<br>
+          現場で実際に測定された正確な時刻（実打鍵タイムスタンプ）とともにサーバーへ反映します。
+        </p>
+
+        <!-- 全件スクロール可能なリスト（余計な5件打ち切り制限を引き算） -->
+        <ul class="overflow-y-auto flex flex-col gap-1 max-h-[220px] m-0 p-2 list-none queue-list">
+          <li
+            v-for="item in queue"
+            :key="item.id"
+            class="flex items-center gap-2 px-2 py-1 queue-item"
+          >
+            <Badge id="souden:phase-tool">
+              P{{ item.phase }}
+            </Badge>
+            <span class="item-ban">{{ item.banMeisho }}</span>
+            <span class="flex-1 item-kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
+            <span class="item-time">{{ formatDateTime(item.clientConfirmedAt) }}</span>
+          </li>
+        </ul>
+      </template>
+
+      <!-- 4. 最初からキューが空の場合 -->
+      <EmptyState
+        v-else
+        icon="check-circle"
+        title="未送信データはありません"
+        description="すべてのデータがサーバーと正常に同期されています。"
+      />
     </div>
   </Modal>
 </template>
 
 <style scoped lang="scss">
-.modal-actions {
-  border-top: 1px solid var(--color-border);
-}
-
 .summary-desc {
   font-size: var(--font-size-sm);
   line-height: var(--line-height-base);
@@ -265,11 +256,6 @@ const formatDateTime = (isoStr: string) => {
     font-family: var(--font-mono);
     color: var(--color-text-muted);
   }
-}
-
-.queue-more {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
 }
 
 .conflict-alert {
@@ -335,11 +321,21 @@ const formatDateTime = (isoStr: string) => {
   }
 }
 
-.result-success {
-  color: var(--color-status-success);
-}
+.sync-result-box {
+  border: 1px solid var(--color-border);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
 
-.result-danger {
-  color: var(--color-status-danger);
+  &.is-success {
+    border-color: color-mix(in srgb, var(--color-status-success) 40%, transparent);
+    color: var(--color-status-success);
+    background: color-mix(in srgb, var(--color-status-success) 10%, transparent);
+  }
+
+  &.is-danger {
+    border-color: color-mix(in srgb, var(--color-status-danger) 40%, transparent);
+    color: var(--color-status-danger);
+    background: color-mix(in srgb, var(--color-status-danger) 10%, transparent);
+  }
 }
 </style>

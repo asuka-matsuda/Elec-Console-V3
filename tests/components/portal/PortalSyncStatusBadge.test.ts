@@ -29,7 +29,7 @@ describe('PortalSyncStatusBadge.vue', () => {
       global: {
         stubs: {
           Icon: true,
-          PortalOrganismsSyncQueueModal: true,
+          PortalSyncQueueModal: true,
         },
       },
     })
@@ -37,7 +37,7 @@ describe('PortalSyncStatusBadge.vue', () => {
     expect(wrapper.text()).toContain('同期済')
     expect(wrapper.find('.sync-dot').exists()).toBe(true)
     expect(wrapper.find('button.sync-btn').exists()).toBe(false)
-    expect(wrapper.findComponent({ name: 'PortalOrganismsSyncQueueModal' }).exists()).toBe(false)
+    expect(wrapper.findComponent({ name: 'PortalSyncQueueModal' }).exists()).toBe(false)
   })
 
   it('renders sync button when there are pending items and lazily mounts modal on click', async () => {
@@ -49,8 +49,8 @@ describe('PortalSyncStatusBadge.vue', () => {
       global: {
         stubs: {
           Icon: true,
-          PortalOrganismsSyncQueueModal: {
-            name: 'PortalOrganismsSyncQueueModal',
+          PortalSyncQueueModal: {
+            name: 'PortalSyncQueueModal',
             template: '<div class="sync-modal-stub" />',
             emits: ['synced', 'update:modelValue'],
           },
@@ -69,7 +69,7 @@ describe('PortalSyncStatusBadge.vue', () => {
     expect(wrapper.find('.sync-modal-stub').exists()).toBe(true)
 
     // モーダルからの synced イベントをリレーする
-    const modalComponent = wrapper.findComponent({ name: 'PortalOrganismsSyncQueueModal' })
+    const modalComponent = wrapper.findComponent({ name: 'PortalSyncQueueModal' })
 
     modalComponent.vm.$emit('synced')
     expect(wrapper.emitted('synced')).toHaveLength(1)
@@ -89,7 +89,7 @@ describe('PortalSyncStatusBadge.vue', () => {
             template: '<i :class="$attrs.class" :data-name="name" />',
             props: ['name'],
           },
-          PortalOrganismsSyncQueueModal: true,
+          PortalSyncQueueModal: true,
         },
       },
     })
