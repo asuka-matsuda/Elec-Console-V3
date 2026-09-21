@@ -44,7 +44,7 @@ defineEmits<{
     </SectionHeader>
 
     <!-- 検索・絞り込み ＆ 進捗コントロールパネル -->
-    <PortalOrganismsSoudenPhaseControls
+    <PortalSoudenPhaseControls
       v-model:shubetsu="selectedShubetsu"
       v-model:ban-meisho="selectedBanMeisho"
       :shubetsu-options="shubetsuOptions"
@@ -57,7 +57,7 @@ defineEmits<{
       <template #filters-extra>
         <slot name="filters-extra" />
       </template>
-    </PortalOrganismsSoudenPhaseControls>
+    </PortalSoudenPhaseControls>
 
     <!-- メインコンテンツ（各フェーズのテーブル等） -->
     <main class="flex flex-1 flex-col min-h-0">

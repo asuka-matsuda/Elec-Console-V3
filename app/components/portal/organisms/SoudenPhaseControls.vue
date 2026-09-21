@@ -1,8 +1,8 @@
 <script setup lang="ts">
 /**
- * PortalOrganismsSoudenPhaseControls
- * 送電試験（フェーズ1〜3）共通のコントロールパネルコンポーネント。
- * 盤種別タブ、盤名称セレクト、件数表示バッジ、全体進捗バー、ミニマップを一元管理します。
+ * SoudenPhaseControls
+ * [Portal Organisms] 送電試験（フェーズ1〜3）共通のコントロールパネル。
+ * 盤種別・盤名称の絞り込み、進捗バー、および回路ミニマップを一元管理します。
  */
 import type { CircuitItem } from '~/types/souden'
 
@@ -21,7 +21,6 @@ defineProps<{
   }
   circuits: CircuitItem[]
   phase: 1 | 2 | 3
-  progressLabel?: string
 }>()
 
 const emit = defineEmits<{
@@ -32,28 +31,29 @@ const emit = defineEmits<{
 <template>
   <Panel>
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-panel-gap items-start">
+      <!-- 絞り込みフィルター群 -->
       <div class="flex flex-col gap-3">
         <!-- 盤種別セグメント -->
         <div class="flex items-center gap-3">
-          <span class="controls-label min-w-[50px]">盤種別:</span>
+          <span class="controls-label">盤種別:</span>
           <RadioGroup
             v-model="selectedShubetsu"
             :options="shubetsuOptions"
           />
         </div>
 
-        <!-- 盤名称セレクト & フィルター拡張/件数表示 -->
+        <!-- 盤名称セレクト & 拡張スロット / 対象件数 -->
         <div class="flex flex-wrap items-center gap-3">
           <div class="flex items-center gap-2">
-            <span class="controls-label min-w-[50px]">盤名称:</span>
+            <span class="controls-label">盤名称:</span>
             <Select
               v-model="selectedBanMeisho"
               :options="banMeishoOptions"
-              class="min-w-[160px]"
+              class="w-40"
             />
           </div>
 
-          <!-- 追加フィルター（Phase 2 基準値表示などのスロット） -->
+          <!-- 追加フィルター（Phase 2 基準値表示等のスロット） -->
           <slot name="filters-extra" />
 
           <span class="phase-target-count">
@@ -62,17 +62,15 @@ const emit = defineEmits<{
         </div>
       </div>
 
-      <!-- 全体進捗バー & ミニマップ -->
+      <!-- 進捗バー & ミニマップ -->
       <div class="flex flex-col gap-3">
-        <div class="flex flex-col w-full gap-1">
+        <div class="flex flex-col gap-1">
           <div class="stats-header flex items-center justify-between">
-            <span class="stats-title">
-              {{ progressLabel || `フェーズ${phase} 進捗状況` }}
-            </span>
+            <span class="stats-title">フェーズ{{ phase }} 進捗状況</span>
             <div class="stats-numbers flex items-center gap-2">
               <span><strong>{{ stats.completed }}</strong> / {{ stats.total }}</span>
               <span>({{ stats.pct }}%)</span>
-              <Badge v-if="stats.excluded && stats.excluded > 0" id="exam:excluded">
+              <Badge v-if="stats.excluded > 0">
                 除外: {{ stats.excluded }}
               </Badge>
             </div>
@@ -92,6 +90,24 @@ const emit = defineEmits<{
 </template>
 
 <style scoped lang="scss">
+.controls-label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-secondary);
+}
+
+.phase-target-count {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+
+  &__num {
+    font-family: var(--font-mono);
+    font-weight: var(--font-weight-bold);
+    color: var(--theme-accent);
+  }
+}
+
 .stats-header {
   font-size: var(--font-size-xs);
 }
@@ -108,28 +124,6 @@ const emit = defineEmits<{
   strong {
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
-  }
-
-  span {
-    color: var(--color-text-main);
-  }
-}
-
-.controls-label {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-secondary);
-}
-
-.phase-target-count {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-  white-space: nowrap;
-
-  &__num {
-    font-family: var(--font-mono);
-    font-weight: var(--font-weight-bold);
-    color: var(--theme-accent);
   }
 }
 </style>
