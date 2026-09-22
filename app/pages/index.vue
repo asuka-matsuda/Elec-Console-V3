@@ -3,74 +3,32 @@
  * Dashboard
  * ダッシュボード画面のコンポーネントです。各機能へのリンクやメニューをカード形式で一覧表示します。
  */
-import { useLocalStorage } from '@vueuse/core'
 import { computed, ref } from 'vue'
 
 import { useAuth } from '~/composables/useAuth'
 import { menuData } from '~/constants/data/menuData'
-import type { IconName } from '~/constants/icons'
 import type { AnnouncementItem, DashboardData, HistoryItem } from '~/types/components'
 
-const { currentUser, isAuthenticated, isMaster } = useAuth()
+const { isMaster } = useAuth()
 
-const lastSiteId = useLocalStorage('last-accessed-site', '')
-
-type DetailModalItem = AnnouncementItem | HistoryItem
-const selectedItem = ref<DetailModalItem | null>(null)
-const isDetailModalOpen = ref(false)
-const modalTitle = ref('')
-const modalIcon = ref<IconName>('info')
-
-const openDetailModal = (item: DetailModalItem, title: string, icon: IconName) => {
-  selectedItem.value = item
-  modalTitle.value = title
-  modalIcon.value = icon
-  isDetailModalOpen.value = true
-}
-
-const dashboardSections = computed(() => {
-  const siteIds = currentUser.value?.assignedSiteIds || []
-  const hasAssignedSites = siteIds.length > 0
-  const targetSiteId = siteIds.includes(lastSiteId.value) ? lastSiteId.value : siteIds[0]
-
-  return menuData
+// 1. ダッシュボード表示対象メニューの抽出（現場解決・リダイレクト等は /portal へ委譲）
+const dashboardSections = computed(() =>
+  menuData
     .filter(section => section.showInDashboard)
     .map(section => ({
       ...section,
-      items: section.items
-        .filter(item => !item.masterOnly || isMaster.value)
-        .map((item) => {
-          if (
-            (item.href === '/portal' || item.href === '/login')
-            && isAuthenticated.value
-          ) {
-            if (!hasAssignedSites) {
-              return {
-                ...item,
-                disabled: true,
-                desc: 'アサインされている現場がありません',
-              }
-            }
+      items: section.items.filter(item => !item.masterOnly || isMaster.value),
+    })),
+)
 
-            return {
-              ...item,
-              href: `/portal/${targetSiteId}`,
-              desc: `アサイン済みの現場ポータルへアクセスします（現在${siteIds.length}件）`,
-            }
-          }
-
-          return {
-            ...item,
-            desc: item.desc || '※準備中…',
-          }
-        }),
-    }))
-})
-
-const { data: dashboardData, pending: isDashboardPending } = await useFetch<DashboardData>('/api/dashboard', {
-  lazy: true,
+// 2. お知らせ・更新履歴データ（await を外して初期描画ブロックを排除）
+const { data: dashboardData, pending: isDashboardPending } = useFetch<DashboardData>('/api/dashboard', {
   default: () => ({ announcements: [], history: [] }),
 })
+
+// 3. 詳細モーダル（単一の参照オブジェクトに集約）
+type DetailType = 'announcement' | 'history'
+const activeDetail = ref<{ item: AnnouncementItem | HistoryItem, type: DetailType } | null>(null)
 </script>
 
 <template>
@@ -103,7 +61,7 @@ const { data: dashboardData, pending: isDashboardPending } = await useFetch<Dash
             :pending="isDashboardPending"
             loading-text="お知らせを読み込み中..."
             empty-text="現在新しいお知らせはありません"
-            @select="openDetailModal($event, 'お知らせ詳細', 'bell')"
+            @select="activeDetail = { item: $event, type: 'announcement' }"
           />
         </section>
 
@@ -114,7 +72,7 @@ const { data: dashboardData, pending: isDashboardPending } = await useFetch<Dash
             :pending="isDashboardPending"
             loading-text="更新履歴を読み込み中..."
             empty-text="現在更新履歴はありません"
-            @select="openDetailModal($event, '更新履歴詳細', 'clock')"
+            @select="activeDetail = { item: $event, type: 'history' }"
           >
             <template #badge="{ item }">
               <Badge
@@ -131,54 +89,36 @@ const { data: dashboardData, pending: isDashboardPending } = await useFetch<Dash
     </aside>
 
     <Modal
-      v-model="isDetailModalOpen"
-      :title="modalTitle"
-      :icon="modalIcon"
+      :model-value="Boolean(activeDetail)"
+      :title="activeDetail?.type === 'announcement' ? 'お知らせ詳細' : '更新履歴詳細'"
+      :icon="activeDetail?.type === 'announcement' ? 'bell' : 'clock'"
       close-text="閉じる"
+      @update:model-value="!$event && (activeDetail = null)"
     >
-      <div v-if="selectedItem" class="flex flex-col gap-3 detail-content">
-        <header class="flex items-center justify-between gap-2 pb-2 detail-header">
-          <time class="detail-date">{{ selectedItem.date }}</time>
+      <div v-if="activeDetail" class="flex flex-col gap-3">
+        <header
+          class="flex items-center justify-between gap-2 pb-2"
+          style="border-bottom: 1px solid var(--color-border)"
+        >
+          <small style="font-family: var(--font-mono)">
+            {{ activeDetail.item.date }}
+          </small>
           <Badge
-            v-if="'version' in selectedItem && selectedItem.version"
+            v-if="'version' in activeDetail.item && activeDetail.item.version"
             id="version:muted"
           >
-            {{ selectedItem.version }}
+            {{ activeDetail.item.version }}
           </Badge>
         </header>
 
-        <h4 class="m-0 detail-title">
-          {{ selectedItem.title }}
+        <h4 class="m-0">
+          {{ activeDetail.item.title }}
         </h4>
 
-        <div class="whitespace-pre-wrap detail-desc">
-          {{ selectedItem.desc || '詳細情報はありません。' }}
-        </div>
+        <p class="m-0 whitespace-pre-wrap">
+          {{ activeDetail.item.desc || '詳細情報はありません。' }}
+        </p>
       </div>
     </Modal>
   </div>
 </template>
-
-<style scoped lang="scss">
-.detail-header {
-  border-bottom: 1px solid var(--color-border);
-}
-
-.detail-date {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-}
-
-.detail-title {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-main);
-}
-
-.detail-desc {
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-relaxed);
-  color: var(--color-text-secondary);
-}
-</style>

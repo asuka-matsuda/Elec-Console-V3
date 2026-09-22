@@ -6,6 +6,7 @@ import type {
 } from '~/composables/portal/useCalendar'
 import { useModal } from '~/composables/useModal'
 import type { EventFormData } from '~/types/portal'
+import { parseToAppException } from '~/utils/errors'
 
 export interface UseCalendarEventFormOptions {
   settings: Ref<CalendarSettings | null>
@@ -135,9 +136,12 @@ export function useCalendarEventForm({
           allDay: savedData.allDay,
         })
       }
-    }
-    finally {
       isModalOpen.value = false
+    }
+    catch (e: unknown) {
+      const appErr = parseToAppException(e)
+
+      alert(appErr.getUserFacingMessage())
     }
   }
 
@@ -155,8 +159,15 @@ export function useCalendarEventForm({
     })
 
     if (isConfirmed) {
-      await deleteEvent(targetId)
-      closeModal()
+      try {
+        await deleteEvent(targetId)
+        closeModal()
+      }
+      catch (e: unknown) {
+        const appErr = parseToAppException(e)
+
+        alert(appErr.getUserFacingMessage())
+      }
     }
   }
 

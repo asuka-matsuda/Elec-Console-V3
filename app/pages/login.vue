@@ -9,7 +9,7 @@ import { useHead, useRouter } from '#app'
 import { useAuth } from '~/composables/useAuth'
 import { LOGIN_FORM_FIELDS } from '~/constants/constants'
 
-definePageMeta({ layout: 'login', title: 'Elec-Console V3' })
+definePageMeta({ layout: 'login' })
 useHead({ title: 'ログイン - Elec-Console' })
 
 const router = useRouter()
@@ -45,7 +45,9 @@ const handleLogin = async () => {
 </script>
 
 <template>
-  <div class="p-panel-pad">
+  <Panel class="w-full max-w-[480px] flex flex-col gap-form-row-gap">
+    <SectionHeader title="Elec-Console V3" />
+
     <form class="flex flex-col gap-form-row-gap" @submit.prevent="handleLogin">
       <p v-if="errorMessage" class="login-page__error m-0 px-3 py-2">
         {{ errorMessage }}
@@ -73,7 +75,7 @@ const handleLogin = async () => {
         </Button>
       </div>
     </form>
-  </div>
+  </Panel>
 </template>
 
 <style scoped lang="scss">

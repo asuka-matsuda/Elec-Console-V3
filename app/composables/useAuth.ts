@@ -153,6 +153,38 @@ export const useAuth = () => {
     }
   }
 
+  const changePassword = async (newPassword: string) => {
+    const $api = getApiSafe()
+
+    if (!$api) return { success: false, message: 'APIクライアントが初期化されていません。' }
+
+    try {
+      await $api('/api/auth/password', {
+        method: 'PUT',
+        body: { newPassword },
+      })
+
+      if (currentUser.value) {
+        currentUser.value.requirePasswordReset = false
+
+        if (import.meta.client) {
+          localStorage.setItem(STORAGE_KEYS.CACHED_USER, JSON.stringify(currentUser.value))
+        }
+      }
+
+      return { success: true }
+    }
+    catch (err: unknown) {
+      const fetchErr = err as { data?: { statusMessage?: string, message?: string } }
+      const msg
+        = fetchErr?.data?.statusMessage
+          || fetchErr?.data?.message
+          || 'パスワードの変更に失敗しました。'
+
+      return { success: false, message: msg }
+    }
+  }
+
   const logout = () => {
     token.value = null
     currentUser.value = null
@@ -174,6 +206,7 @@ export const useAuth = () => {
     isAdmin,
     isMaster,
     login,
+    changePassword,
     logout,
     initAuth,
     getAccurateNow,

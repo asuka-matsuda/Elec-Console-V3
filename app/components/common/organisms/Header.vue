@@ -14,6 +14,7 @@ const emit = defineEmits<{
   'toggle-sidebar': []
 }>()
 
+const isSidebarOpen = useState('sidebar-open', () => false)
 const { currentUser, logout } = useAuth()
 
 const userName = computed(() => {
@@ -21,6 +22,11 @@ const userName = computed(() => {
 
   return `${currentUser.value.lastName} ${currentUser.value.firstName}`
 })
+
+const handleToggleSidebar = () => {
+  isSidebarOpen.value = !isSidebarOpen.value
+  emit('toggle-sidebar')
+}
 </script>
 
 <template>
@@ -31,7 +37,7 @@ const userName = computed(() => {
         icon="menu"
         icon-only
         title="メニューを開閉"
-        @click="emit('toggle-sidebar')"
+        @click="handleToggleSidebar"
       />
       <Logo />
 

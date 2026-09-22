@@ -4,17 +4,29 @@
  * [Organisms] アプリケーションのグローバルナビゲーション（ドロワーサイドバー）。
  * オーバーレイ、閉じるボタン、セクション別メニューリンクを表示します。
  */
-import { watch } from 'vue'
+import { computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { useAuth } from '~/composables/useAuth'
 import { menuData as defaultMenuData, type MenuItem } from '~/constants/data/menuData'
 import type { GlobalNavProps } from '~/types/components'
 
-const isOpen = defineModel<boolean>('isOpen', { default: false })
+const isOpenModel = defineModel<boolean>('isOpen')
 
 withDefaults(defineProps<GlobalNavProps>(), {
   menuData: () => defaultMenuData,
+})
+
+const sidebarOpenState = useState('sidebar-open', () => false)
+
+const isOpen = computed({
+  get: () => (isOpenModel.value !== undefined ? isOpenModel.value : sidebarOpenState.value),
+  set: (val: boolean) => {
+    if (isOpenModel.value !== undefined) {
+      isOpenModel.value = val
+    }
+    sidebarOpenState.value = val
+  },
 })
 
 const { isMaster } = useAuth()
