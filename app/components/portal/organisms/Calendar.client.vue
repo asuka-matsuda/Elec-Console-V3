@@ -12,9 +12,9 @@ import { useCalendar } from '~/composables/portal/useCalendar'
 import { useCalendarEventForm } from '~/composables/portal/useCalendarEventForm'
 import { useCalendarOptions } from '~/composables/portal/useCalendarOptions'
 
-import CalToolbar from '../molecules/CalToolbar.vue'
-import CalEventModal from './CalEventModal.vue'
-import CalTypeSettingsModal from './CalTypeSettingsModal.vue'
+import CalendarToolbar from '../molecules/CalendarToolbar.vue'
+import CalendarEventModal from './CalendarEventModal.vue'
+import CalendarTypeSettingsModal from './CalendarTypeSettingsModal.vue'
 
 const props = defineProps<{
   siteId: string
@@ -97,7 +97,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
 <template>
   <div class="flex flex-col gap-3">
-    <CalToolbar
+    <CalendarToolbar
       :title="currentTitle"
       :current-view="currentView"
       @prev="handlePrev"
@@ -111,7 +111,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       <FullCalendar ref="fullCalendarRef" :options="calendarOptions" />
     </Panel>
 
-    <CalEventModal
+    <CalendarEventModal
       v-model="isModalOpen"
       :is-editing="isEditing"
       :event-types="settings?.eventTypes || []"
@@ -120,7 +120,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       @delete="removeEvent"
     />
 
-    <CalTypeSettingsModal
+    <CalendarTypeSettingsModal
       v-model="isTypeSettingsOpen"
       :event-types="settings?.eventTypes || []"
       @save="handleSaveEventTypes"

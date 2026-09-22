@@ -9,6 +9,7 @@ import { reactive, ref, toRef } from 'vue'
 import { useTableSort } from '~/composables/useTableSort'
 import { PHASE2_TABLE_COLUMNS } from '~/constants/soudenConstants'
 import type { CircuitItem } from '~/types/souden'
+import { getCircuitPhaseLabels, parseNullableNumber } from '~/utils/souden'
 
 const props = defineProps<{
   circuits: CircuitItem[]
@@ -51,21 +52,7 @@ const isP1Complete = (circuit: CircuitItem) => Boolean(circuit.p1ConfirmedAt)
 const isLocked = (circuit: CircuitItem) => props.isCircuitLocked(circuit) || !isP1Complete(circuit)
 
 // 相ラベルの取得（三相: R-S / S-T / R-T, 単相: R-N / T-N / R-T）
-const getPhaseLabels = (circuit: CircuitItem) => {
-  if (props.isThreePhase(circuit)) {
-    return {
-      phase1: 'R - S',
-      phase2: 'S - T',
-      phase3: 'R - T',
-    }
-  }
-
-  return {
-    phase1: 'R - N',
-    phase2: 'T - N',
-    phase3: 'R - T',
-  }
-}
+const getPhaseLabels = (circuit: CircuitItem) => getCircuitPhaseLabels(props.isThreePhase(circuit))
 
 // クイック全相OK確定（100MΩ）
 const handleQuickOk = (circuit: CircuitItem) => {
@@ -93,12 +80,7 @@ const cancelInput = () => {
   editingRowId.value = null
 }
 
-const parseVal = (val: string | number): number | null => {
-  if (val === '' || val == null) return null
-  const num = typeof val === 'number' ? val : Number(val)
-
-  return Number.isNaN(num) ? null : num
-}
+const parseVal = parseNullableNumber
 
 // 手入力内容の確定
 const saveInput = (circuit: CircuitItem) => {

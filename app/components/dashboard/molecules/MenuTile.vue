@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * MenuTile
- * [Dashboard] ダッシュボードで各機能を選択するための専用ナビゲーションタイル。
+ * [Dashboard Molecules] ダッシュボードで各機能を選択するための専用ナビゲーションタイル。
  * MenuItem を直接受け取り、Panel アトムのサーフェス装飾・状態管理へ完全委任します。
  */
 import { computed } from 'vue'

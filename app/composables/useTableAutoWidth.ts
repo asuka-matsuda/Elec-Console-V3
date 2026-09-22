@@ -15,8 +15,8 @@ import {
   measureTableContentWidths,
 } from '~/utils/tableAutoWidth'
 
-export interface UseTableAutoWidthOptions<T> {
-  columns: MaybeRefOrGetter<TableColumn<unknown>[]>
+export interface UseTableAutoWidthOptions<T = Record<string, unknown>> {
+  columns: MaybeRefOrGetter<TableColumn<T>[]>
   data: MaybeRefOrGetter<T[] | undefined>
   fullData?: MaybeRefOrGetter<T[] | undefined>
   autoWidth?: MaybeRefOrGetter<boolean | undefined>
@@ -40,7 +40,7 @@ const getDataSignature = (data: unknown[] | undefined): string => {
   return `${data.length}:${idStr}`
 }
 
-export function useTableAutoWidth<T = unknown>(
+export function useTableAutoWidth<T = Record<string, unknown>>(
   containerRef: MaybeRefOrGetter<HTMLElement | null>,
   options: UseTableAutoWidthOptions<T>,
 ) {

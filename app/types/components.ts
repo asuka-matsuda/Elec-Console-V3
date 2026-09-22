@@ -335,7 +335,7 @@ export interface RadioGroupProps<T = string | number | boolean> {
 // --- TableTh ---
 export type TableSortOrder = 'asc' | 'desc' | null
 
-export interface TableThProps<RowType = unknown> {
+export interface TableThProps<RowType = Record<string, unknown>> {
   /** カラム定義 */
   column: TableColumn<RowType>
   /** 現在アクティブなソートキー */
@@ -438,9 +438,9 @@ export interface HelpTipProps {
 export type MoleculesHelpTipProps = HelpTipProps
 
 // --- Table ---
-export interface TableProps<T = unknown> {
+export interface TableProps<T = Record<string, unknown>> {
   /** カラム定義配列 */
-  columns: TableColumn<unknown>[]
+  columns: TableColumn<T>[]
   /** 描画するデータ配列 */
   data?: T[]
   /** 列幅自動計算のサンプリング用全件データ（ページング時等） */

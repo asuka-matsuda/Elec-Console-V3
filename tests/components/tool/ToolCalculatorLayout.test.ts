@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 
-import ToolCalculatorLayout from '../../app/components/tool/templates/CalculatorLayout.vue'
+import ToolCalculatorLayout from '../../../app/components/tool/templates/CalculatorLayout.vue'
 
 describe('ToolCalculatorLayout.vue', () => {
   const commonStubs = {

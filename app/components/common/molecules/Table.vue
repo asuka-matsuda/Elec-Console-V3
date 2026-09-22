@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T = unknown">
+<script setup lang="ts" generic="T = Record<string, unknown>">
 /**
  * Table
  * [Molecules] カラム定義とデータ配列を受け取り表示する汎用データテーブルコンポーネント。
@@ -14,6 +14,7 @@ import { onMounted, ref } from 'vue'
 import { useNoBreakWords } from '~/composables/useNoBreakWords'
 import { useTableAutoWidth } from '~/composables/useTableAutoWidth'
 import type { TableColumn, TableProps, TableSortOrder } from '~/types/components'
+import { getTableCellValue, getTableRowKey } from '~/utils/table'
 
 // v-model による双方向ソートバインディング (Vue 3.4+)
 const sortBy = defineModel<string>('sortBy')
@@ -40,9 +41,9 @@ const emit = defineEmits<{
 }>()
 
 defineSlots<{
-  [K in `cell-${string}`]?: (props: { value: unknown, subValue?: unknown, row: T, index: number, column: TableColumn<unknown> }) => unknown
+  [K in `cell-${string}`]?: (props: { value: unknown, subValue?: unknown, row: T, index: number, column: TableColumn<T> }) => unknown
 } & {
-  [K in `header-${string}`]?: (props: { column: TableColumn<unknown> }) => unknown
+  [K in `header-${string}`]?: (props: { column: TableColumn<T> }) => unknown
 } & {
   empty?: () => unknown
   loading?: () => unknown
@@ -67,7 +68,7 @@ const { columnWidthStyles } = useTableAutoWidth(tableWrapperRef, {
 })
 
 // ソート切り替えハンドラー（asc -> desc -> null サイクル）
-const handleSort = (col: TableColumn<unknown>) => {
+const handleSort = (col: TableColumn<T>) => {
   if (col.sortable === false) return
 
   const nextOrder: TableSortOrder = sortBy.value === col.key
@@ -85,57 +86,8 @@ const handleRowClick = (row: T, index: number, event: MouseEvent) => {
   }
 }
 
-// 一意な行キーの取得
-const getRowKey = (row: T, index: number): string | number => {
-  if (typeof props.rowKey === 'function') {
-    return props.rowKey(row)
-  }
-
-  const record = row as Record<string, unknown> | null | undefined
-
-  if (props.rowKey && record && props.rowKey in record) {
-    const value = record[props.rowKey]
-
-    if (typeof value === 'string' || typeof value === 'number') {
-      return value
-    }
-  }
-
-  if (record && 'id' in record) {
-    const idValue = record.id
-
-    if (typeof idValue === 'string' || typeof idValue === 'number') {
-      return idValue
-    }
-  }
-
-  return index
-}
-
-// ネストプロパティ対応の安全なセル値取得関数
-const getCellValue = (row: unknown, key?: string | number): unknown => {
-  if (!row || !key || typeof row !== 'object') return undefined
-  const record = row as Record<string, unknown>
-  const keyStr = String(key)
-
-  // 1. ドット記法によるネストパスアクセス
-  if (keyStr.includes('.')) {
-    const parts = keyStr.split('.')
-    let current: unknown = record
-
-    for (const part of parts) {
-      if (current === null || current === undefined || typeof current !== 'object') {
-        return undefined
-      }
-      current = (current as Record<string, unknown>)[part]
-    }
-
-    return current
-  }
-
-  // 2. 単一プロパティアクセス（未定義時は undefined）
-  return record[keyStr]
-}
+const getRowKey = (row: T, index: number) => getTableRowKey(row, index, props.rowKey)
+const getCellValue = (row: unknown, key?: string | number) => getTableCellValue(row, key)
 </script>
 
 <template>

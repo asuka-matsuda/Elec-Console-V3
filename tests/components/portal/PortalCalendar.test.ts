@@ -97,9 +97,9 @@ describe('Calendar.client.vue', () => {
             props: ['padding', 'overflow'],
             template: '<div class="panel-stub" :data-padding="padding" :data-overflow="overflow"><slot /></div>',
           },
-          CalToolbar: true,
-          CalEventModal: true,
-          CalTypeSettingsModal: true,
+          CalendarToolbar: true,
+          CalendarEventModal: true,
+          CalendarTypeSettingsModal: true,
         },
       },
     })
@@ -121,10 +121,10 @@ describe('Calendar.client.vue', () => {
       global: {
         stubs: {
           Panel: true,
-          CalToolbar: true,
-          CalEventModal: true,
-          CalTypeSettingsModal: {
-            name: 'CalTypeSettingsModal',
+          CalendarToolbar: true,
+          CalendarEventModal: true,
+          CalendarTypeSettingsModal: {
+            name: 'CalendarTypeSettingsModal',
             props: ['modelValue'],
             template: '<div class="settings-modal" :data-open="modelValue" />',
           },
@@ -132,8 +132,8 @@ describe('Calendar.client.vue', () => {
       },
     })
 
-    const toolbar = wrapper.findComponent({ name: 'CalToolbar' })
-    const typeModal = wrapper.findComponent({ name: 'CalTypeSettingsModal' })
+    const toolbar = wrapper.findComponent({ name: 'CalendarToolbar' })
+    const typeModal = wrapper.findComponent({ name: 'CalendarTypeSettingsModal' })
 
     expect(typeModal.props('modelValue')).toBe(false)
 
@@ -148,14 +148,14 @@ describe('Calendar.client.vue', () => {
       global: {
         stubs: {
           Panel: true,
-          CalToolbar: true,
-          CalEventModal: true,
-          CalTypeSettingsModal: true,
+          CalendarToolbar: true,
+          CalendarEventModal: true,
+          CalendarTypeSettingsModal: true,
         },
       },
     })
 
-    const typeModal = wrapper.findComponent({ name: 'CalTypeSettingsModal' })
+    const typeModal = wrapper.findComponent({ name: 'CalendarTypeSettingsModal' })
     const newTypes = [{ id: 'new', name: '新規種別', color: '#ff0000' }]
 
     await typeModal.vm.$emit('save', newTypes)
@@ -168,9 +168,9 @@ describe('Calendar.client.vue', () => {
       global: {
         stubs: {
           Panel: true,
-          CalToolbar: true,
-          CalEventModal: true,
-          CalTypeSettingsModal: true,
+          CalendarToolbar: true,
+          CalendarEventModal: true,
+          CalendarTypeSettingsModal: true,
         },
       },
     })

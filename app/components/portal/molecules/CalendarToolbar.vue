@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PortalCalToolbar
+ * PortalCalendarToolbar
  * カレンダー操作ツールバーコンポーネント。
  */
 import type { IconName } from '~/constants/icons'

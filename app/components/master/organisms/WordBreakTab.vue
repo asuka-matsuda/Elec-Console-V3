@@ -4,34 +4,43 @@
  * [Master Organisms] 改行禁止ワード管理タブ。
  * システム全体の改行禁止ワードの追加・一覧・編集・削除を行います。
  */
-import { ref } from 'vue'
-
+import { useMasterCrud } from '~/composables/master/useMasterCrud'
 import { useNoBreakWords } from '~/composables/useNoBreakWords'
 import type { TableColumn, WordBreakItem } from '~/types/components'
+import { getTodayDateInput } from '~/utils/date'
 
-const { data: wordBreakList, pending, refresh } = await useFetch<WordBreakItem[]>('/api/master/word-break', {
-  default: () => [],
-})
-
-const { fetchWords } = useNoBreakWords()
-const { askConfirm } = useModal()
-
-const INITIAL_FORM = {
-  word: '',
-  date: '',
+interface WordBreakForm {
+  word: string
+  date: string
 }
 
-// モーダル管理状態
-const isEditModalOpen = ref(false)
-const isSaving = ref(false)
-const editingId = ref<string | null>(null)
-const formError = ref('')
-const form = ref({ ...INITIAL_FORM })
+const { fetchWords } = useNoBreakWords()
 
-// フォームのバリデーション管理
-const { fieldErrors, validate, resetErrors } = useFormValidation(form, {
-  date: '追加日',
-  word: '単語',
+const {
+  items: wordBreakList,
+  pending,
+  isEditModalOpen,
+  isSaving,
+  editingId,
+  formError,
+  form,
+  fieldErrors,
+  openModal,
+  handleSave,
+  handleDelete,
+} = await useMasterCrud<WordBreakItem, WordBreakForm>({
+  endpoint: '/api/master/word-break',
+  initialForm: { word: '', date: '' },
+  validationRules: { date: '追加日', word: '単語' },
+  mapItemToForm: item => ({ word: item.word, date: item.date.replace(/\./g, '-') }),
+  mapFormToPayload: form => ({ ...form, date: form.date.replace(/-/g, '.') }),
+  getNewFormDefaults: () => ({ date: getTodayDateInput() }),
+  deleteConfirm: {
+    title: '改行禁止ワードの削除',
+    message: item => `「${item.word}」を改行禁止ワードから削除してもよろしいですか？`,
+  },
+  onAfterSave: () => fetchWords(true),
+  onAfterDelete: () => fetchWords(true),
 })
 
 const columns: TableColumn<WordBreakItem>[] = [
@@ -39,67 +48,6 @@ const columns: TableColumn<WordBreakItem>[] = [
   { key: 'word', label: '単語' },
   { key: 'actions', label: '操作', width: '120px', align: 'right' },
 ]
-
-const openModal = (item?: WordBreakItem) => {
-  editingId.value = item ? String(item.id) : null
-  formError.value = ''
-  resetErrors()
-  form.value = item
-    ? { word: item.word, date: item.date.replace(/\./g, '-') }
-    : { ...INITIAL_FORM, date: getTodayDateInput() }
-  isEditModalOpen.value = true
-}
-
-const handleSave = async () => {
-  formError.value = ''
-  if (!validate()) return
-
-  isSaving.value = true
-
-  try {
-    const url = editingId.value ? `/api/master/word-break/${editingId.value}` : '/api/master/word-break'
-    const method = editingId.value ? 'PUT' : 'POST'
-
-    await $fetch(url, {
-      method,
-      body: {
-        ...form.value,
-        date: form.value.date.replace(/-/g, '.'),
-      },
-    })
-    isEditModalOpen.value = false
-    await refresh()
-    await fetchWords(true)
-  }
-  catch (e: unknown) {
-    formError.value = (e as Error).message || '保存に失敗しました。'
-  }
-  finally {
-    isSaving.value = false
-  }
-}
-
-const handleDelete = async (item: WordBreakItem) => {
-  const isConfirmed = await askConfirm({
-    title: '改行禁止ワードの削除',
-    message: `「${item.word}」を改行禁止ワードから削除してもよろしいですか？`,
-    intent: 'danger',
-    confirmText: '削除する',
-  })
-
-  if (!isConfirmed) return
-
-  try {
-    await $fetch(`/api/master/word-break/${item.id}`, {
-      method: 'DELETE',
-    })
-    await refresh()
-    await fetchWords(true)
-  }
-  catch (e: unknown) {
-    alert((e as Error).message || '削除に失敗しました。')
-  }
-}
 </script>
 
 <template>

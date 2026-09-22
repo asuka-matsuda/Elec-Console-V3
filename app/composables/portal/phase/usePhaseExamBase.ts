@@ -1,5 +1,5 @@
 import type { Ref } from 'vue'
-import { computed, ref, unref } from 'vue'
+import { computed, ref, unref, watch } from 'vue'
 
 import { useOfflineSync } from '~/composables/portal/useOfflineSync'
 import { useAuth } from '~/composables/useAuth'
@@ -95,6 +95,21 @@ export function usePhaseExamBase(
     panelOptions.value.forEach(p => set.add(p.banShubetsu))
 
     return ['ALL', ...Array.from(set)]
+  })
+
+  // 盤種別タブ用選択肢リスト（UI標準フォーマット）
+  const shubetsuTabOptions = computed(() => {
+    return availableShubetsuList.value.map(s => ({
+      label: s === 'ALL' ? 'すべて' : s,
+      value: s,
+    }))
+  })
+
+  // 系統切替時に盤種別・盤名称をALLへリセットし、データを再取得
+  watch(selectedKeiTo, () => {
+    selectedBanShubetsu.value = 'ALL'
+    selectedBanMeisho.value = 'ALL'
+    fetchCircuits()
   })
 
   // 選択された種別に属する盤名称の選択肢リスト
@@ -373,6 +388,7 @@ export function usePhaseExamBase(
     selectedBanShubetsu,
     selectedBanMeisho,
     availableShubetsuList,
+    shubetsuTabOptions,
     availableBanMeishoList,
     filteredCircuits,
     phaseStats,

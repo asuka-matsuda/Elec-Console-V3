@@ -9,12 +9,9 @@ import { conduitData } from '~/constants/data/conduitData'
 import type { SelectOption } from '~/types/components'
 import type { ConduitInputData } from '~/types/tools'
 import {
-  findCableByIndexString,
-  getAvailableSizes,
+  formatConduitCableSpec,
   getCableCategories,
-  getEffectiveCableDiameter,
 } from '~/utils/cable'
-import { calculateCableArea } from '~/utils/tools/conduit/conduitCalcLogic'
 
 const inputs = defineModel<ConduitInputData>({ required: true })
 
@@ -33,24 +30,7 @@ const emit = defineEmits<{
 }>()
 
 const categories = getCableCategories()
-
-const getCableSpec = (cableIdx: string, count?: number | null) => {
-  const def = findCableByIndexString(cableIdx)
-
-  if (!def) return { text: '---', detail: '' }
-
-  const diameter = getEffectiveCableDiameter(def.diameter)
-
-  if (diameter <= 0) return { text: '---', detail: '' }
-
-  const area = calculateCableArea(diameter)
-  const n = count && count > 0 ? count : 1
-
-  return {
-    text: `${(area * n).toFixed(1)} mm²`,
-    detail: n > 1 ? `(${area.toFixed(1)}×${n})` : '',
-  }
-}
+const getCableSpec = formatConduitCableSpec
 </script>
 
 <template>

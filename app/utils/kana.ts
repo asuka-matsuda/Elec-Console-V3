@@ -15,6 +15,19 @@ export type KanaRowKey
     | 'w'
     | 'other'
 
+export const KANA_ROWS: { label: string, value: KanaRowKey }[] = [
+  { label: 'あ', value: 'a' },
+  { label: 'か', value: 'k' },
+  { label: 'さ', value: 's' },
+  { label: 'た', value: 't' },
+  { label: 'な', value: 'n' },
+  { label: 'は', value: 'h' },
+  { label: 'ま', value: 'm' },
+  { label: 'や', value: 'y' },
+  { label: 'ら', value: 'r' },
+  { label: 'わ他', value: 'w' },
+]
+
 /**
  * カナ文字列の先頭文字から五十音の行（あ行〜わ行、その他）を判定する
  */

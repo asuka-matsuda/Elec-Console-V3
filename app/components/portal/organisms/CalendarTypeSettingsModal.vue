@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PortalCalTypeSettingsModal
+ * PortalCalendarTypeSettingsModal
  * [Organisms] カレンダーの予定種別とテーマカラーを設定するモーダルコンポーネント。
  */
 import { toRef } from 'vue'
@@ -71,7 +71,7 @@ const {
               v-for="preset in DEFAULT_COLOR_PRESETS"
               :key="preset.value"
               type="button"
-              class="w-5 h-5 color-dot"
+              class="w-5 h-5 rounded-full color-dot"
               :class="{ 'is-active': t.color === preset.value }"
               :style="{ backgroundColor: preset.value }"
               :title="preset.name"
@@ -117,7 +117,6 @@ const {
 .color-dot {
   cursor: pointer;
   border: 1px solid color-mix(in srgb, black 15%, transparent);
-  border-radius: var(--radius-circle);
   transition: var(--transition-interactive);
 
   &:hover {

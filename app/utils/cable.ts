@@ -219,3 +219,44 @@ export function getCableDisplayName(
 
   return ''
 }
+
+/**
+ * ケーブルラック選定ツール用のケーブル仕様テキスト（仕上がり外径 φ）を生成します。
+ */
+export function formatRackCableSpec(cableIdx: string, count?: number | null): { text: string, detail: string } {
+  const def = findCableByIndexString(cableIdx)
+
+  if (!def) return { text: '---', detail: '' }
+
+  const diameter = getEffectiveCableDiameter(def.diameter)
+
+  if (diameter <= 0) return { text: '---', detail: '' }
+
+  const n = count && count > 0 ? count : 1
+
+  return {
+    text: `φ${(diameter * n).toFixed(1)}`,
+    detail: n > 1 ? `(φ${diameter.toFixed(1)}×${n})` : '',
+  }
+}
+
+/**
+ * 配管選定ツール用のケーブル仕様テキスト（断面積 mm²）を生成します。
+ */
+export function formatConduitCableSpec(cableIdx: string, count?: number | null): { text: string, detail: string } {
+  const def = findCableByIndexString(cableIdx)
+
+  if (!def) return { text: '---', detail: '' }
+
+  const diameter = getEffectiveCableDiameter(def.diameter)
+
+  if (diameter <= 0) return { text: '---', detail: '' }
+
+  const area = Math.PI * Math.pow(diameter / 2, 2)
+  const n = count && count > 0 ? count : 1
+
+  return {
+    text: `${(area * n).toFixed(1)} mm²`,
+    detail: n > 1 ? `(${area.toFixed(1)}×${n})` : '',
+  }
+}

@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T = unknown">
+<script setup lang="ts" generic="T = Record<string, unknown>">
 /**
  * TableTh
  * [Atoms] テーブルのヘッダーセル（ソート・整列・カスタムスロット・キーボード操作対応）。

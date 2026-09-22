@@ -37,7 +37,7 @@ const emit = defineEmits<{
 }>()
 
 defineSlots<{
-  [K in `cell-${string}`]?: (props: { value: unknown, subValue?: unknown, row: CircuitItem, index: number, column: TableColumn<unknown> }) => unknown
+  [K in `cell-${string}`]?: (props: { value: unknown, subValue?: unknown, row: CircuitItem, index: number, column: TableColumn<CircuitItem> }) => unknown
 }>()
 
 // 既存の @sort リスナーに対する後方互換性

@@ -14,6 +14,11 @@ import {
 } from '~/constants/soudenConstants'
 import type { SelectOption } from '~/types/components'
 import type { CircuitItem } from '~/types/souden'
+import {
+  getCircuitPhaseLabels,
+  getPhase3StandardValues,
+  parseNullableNumber,
+} from '~/utils/souden'
 
 const props = defineProps<{
   circuits: CircuitItem[]
@@ -52,40 +57,10 @@ const isP2Complete = (circuit: CircuitItem) => Boolean(circuit.p2ConfirmedAt && 
 const isLocked = (circuit: CircuitItem) => props.isCircuitLocked(circuit) || !isP2Complete(circuit)
 
 // 相ラベルの取得（三相: R-S / S-T / R-T, 単相: R-N / T-N / R-T）
-const getPhaseLabels = (circuit: CircuitItem) => {
-  if (props.isThreePhase(circuit)) {
-    return {
-      phase1: 'R - S',
-      phase2: 'S - T',
-      phase3: 'R - T',
-    }
-  }
-
-  return {
-    phase1: 'R - N',
-    phase2: 'T - N',
-    phase3: 'R - T',
-  }
-}
+const getPhaseLabels = (circuit: CircuitItem) => getCircuitPhaseLabels(props.isThreePhase(circuit))
 
 // 標準値の取得
-const getStandardValues = (circuit: CircuitItem) => {
-  if (props.isThreePhase(circuit)) {
-    return {
-      rs: 200,
-      st: 200,
-      rt: 200,
-      kensou: '正相',
-    }
-  }
-
-  return {
-    rs: 100,
-    st: 100,
-    rt: 200,
-    kensou: '点灯確認(良)',
-  }
-}
+const getStandardValues = (circuit: CircuitItem) => getPhase3StandardValues(props.isThreePhase(circuit))
 
 // 検相セレクトの選択肢
 const getKensouOptions = (circuit: CircuitItem): SelectOption[] => {
@@ -113,12 +88,7 @@ const cancelInput = () => {
   editingRowId.value = null
 }
 
-const parseVal = (val: string | number): number | null => {
-  if (val === '' || val == null) return null
-  const num = typeof val === 'number' ? val : Number(val)
-
-  return Number.isNaN(num) ? null : num
-}
+const parseVal = parseNullableNumber
 
 // 手入力内容の確定
 const saveInput = (circuit: CircuitItem) => {

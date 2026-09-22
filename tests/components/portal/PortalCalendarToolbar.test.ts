@@ -1,11 +1,11 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import PortalCalToolbar from '../../../app/components/portal/molecules/CalToolbar.vue'
+import PortalCalendarToolbar from '../../../app/components/portal/molecules/CalendarToolbar.vue'
 
-describe('PortalCalToolbar.vue', () => {
+describe('PortalCalendarToolbar.vue', () => {
   it('renders title correctly', () => {
-    const wrapper = mount(PortalCalToolbar, {
+    const wrapper = mount(PortalCalendarToolbar, {
       props: {
         title: '2026年9月',
         currentView: 'dayGridMonth',
@@ -16,7 +16,7 @@ describe('PortalCalToolbar.vue', () => {
   })
 
   it('emits navigation events (prev, next, today)', async () => {
-    const wrapper = mount(PortalCalToolbar, {
+    const wrapper = mount(PortalCalendarToolbar, {
       props: {
         title: '2026年9月',
         currentView: 'dayGridMonth',
@@ -40,7 +40,7 @@ describe('PortalCalToolbar.vue', () => {
   })
 
   it('renders RadioGroup for view switching and emits changeView', async () => {
-    const wrapper = mount(PortalCalToolbar, {
+    const wrapper = mount(PortalCalendarToolbar, {
       props: {
         title: '2026年9月',
         currentView: 'dayGridMonth',

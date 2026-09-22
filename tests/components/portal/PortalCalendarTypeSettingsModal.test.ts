@@ -1,16 +1,16 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import CalTypeSettingsModal from '../../../app/components/portal/organisms/CalTypeSettingsModal.vue'
+import CalendarTypeSettingsModal from '../../../app/components/portal/organisms/CalendarTypeSettingsModal.vue'
 
-describe('CalTypeSettingsModal.vue', () => {
+describe('CalendarTypeSettingsModal.vue', () => {
   const dummyEventTypes = [
     { id: 't1', name: '現場作業', color: '#10b981' },
     { id: 't2', name: '会議', color: '#3b82f6' },
   ]
 
   it('renders correctly with given event types', () => {
-    const wrapper = mount(CalTypeSettingsModal, {
+    const wrapper = mount(CalendarTypeSettingsModal, {
       props: {
         modelValue: true,
         eventTypes: dummyEventTypes,
@@ -24,7 +24,7 @@ describe('CalTypeSettingsModal.vue', () => {
   })
 
   it('adds a new type when add button is clicked', async () => {
-    const wrapper = mount(CalTypeSettingsModal, {
+    const wrapper = mount(CalendarTypeSettingsModal, {
       props: {
         modelValue: true,
         eventTypes: dummyEventTypes,
@@ -44,7 +44,7 @@ describe('CalTypeSettingsModal.vue', () => {
   })
 
   it('removes a type when trash button is clicked', async () => {
-    const wrapper = mount(CalTypeSettingsModal, {
+    const wrapper = mount(CalendarTypeSettingsModal, {
       props: {
         modelValue: true,
         eventTypes: dummyEventTypes,
@@ -64,7 +64,7 @@ describe('CalTypeSettingsModal.vue', () => {
   })
 
   it('emits save event with cleaned types and closes modal', async () => {
-    const wrapper = mount(CalTypeSettingsModal, {
+    const wrapper = mount(CalendarTypeSettingsModal, {
       props: {
         modelValue: true,
         eventTypes: [
@@ -91,7 +91,7 @@ describe('CalTypeSettingsModal.vue', () => {
   })
 
   it('closes modal when cancel button is clicked', async () => {
-    const wrapper = mount(CalTypeSettingsModal, {
+    const wrapper = mount(CalendarTypeSettingsModal, {
       props: {
         modelValue: true,
         eventTypes: dummyEventTypes,

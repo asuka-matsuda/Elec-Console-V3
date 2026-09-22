@@ -6,7 +6,7 @@
  */
 
 import type { Ref } from 'vue'
-import { ref, unref } from 'vue'
+import { computed, ref, unref, watch } from 'vue'
 
 import type { OperationLogItem, OperationLogsResponse } from '~/types/souden'
 
@@ -70,11 +70,33 @@ export function useOperationLogs(siteIdRef: Ref<string> | string) {
     }
   }
 
+  const workerOptions = computed(() => [
+    { label: 'すべての作業者', value: 'ALL' },
+    ...availableWorkers.value.map(w => ({ label: w, value: w })),
+  ])
+
+  const actionOptions = computed(() => [
+    { label: 'すべてのアクション', value: 'ALL' },
+    ...availableActions.value.map(a => ({ label: a, value: a })),
+  ])
+
+  const targetBanOptions = computed(() => [
+    { label: 'すべての対象盤', value: 'ALL' },
+    ...availableTargetBans.value.map(b => ({ label: b, value: b })),
+  ])
+
+  watch([selectedWorker, selectedAction, selectedTargetBan, limit], () => {
+    fetchLogs()
+  })
+
   return {
     logs,
     availableWorkers,
     availableActions,
     availableTargetBans,
+    workerOptions,
+    actionOptions,
+    targetBanOptions,
     selectedWorker,
     selectedAction,
     selectedTargetBan,

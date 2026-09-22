@@ -1,29 +1,16 @@
 <script setup lang="ts">
 /**
  * KanaFilter
- * [Reference] 五十音（あ行〜わ行他）による絞り込み機能を提供する用語集専用フィルターコンポーネント。
+ * [Reference Molecules] 五十音（あ行〜わ行他）による絞り込み機能を提供する用語集専用フィルターコンポーネント。
  */
 import { computed } from 'vue'
 
 import type { KanaFilterProps } from '~/types/components'
-import type { KanaRowKey } from '~/utils/kana'
+import { KANA_ROWS, type KanaRowKey } from '~/utils/kana'
 
 const selectedKanas = defineModel<KanaRowKey[]>({ default: () => [] })
 
 const props = defineProps<KanaFilterProps>()
-
-const KANA_ROWS: { label: string, value: KanaRowKey }[] = [
-  { label: 'あ', value: 'a' },
-  { label: 'か', value: 'k' },
-  { label: 'さ', value: 's' },
-  { label: 'た', value: 't' },
-  { label: 'な', value: 'n' },
-  { label: 'は', value: 'h' },
-  { label: 'ま', value: 'm' },
-  { label: 'や', value: 'y' },
-  { label: 'ら', value: 'r' },
-  { label: 'わ他', value: 'w' },
-]
 
 const toggleRow = (val: KanaRowKey) => {
   const current = selectedKanas.value

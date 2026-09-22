@@ -8,6 +8,7 @@ import { computed, ref, toRef } from 'vue'
 import type { PendingSyncItem, SyncResult } from '~/composables/portal/useOfflineSync'
 import { useOfflineSync } from '~/composables/portal/useOfflineSync'
 import { formatDateTime } from '~/utils/date'
+import { formatPhaseValues } from '~/utils/souden'
 
 const isOpen = defineModel<boolean>({ default: false })
 
@@ -52,34 +53,6 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
   if (queue.value.length === 0) {
     closeModal()
   }
-}
-
-// 測定値表示の共通フォーマッタ（テンプレート内のフェーズ別分岐コピペを引き算）
-const formatPhaseValues = (phase: number, data?: Record<string, unknown>, isServer = false) => {
-  if (!data) return '-'
-
-  if (phase === 1) {
-    const k = isServer ? data.p1Kakunin : data.kakunin
-    const m = isServer ? data.p1Mashishime : data.mashishime
-
-    return `確認: ${k ? '済' : '未'} / 増締: ${m ? '済' : '未'}`
-  }
-  if (phase === 2) {
-    const r = isServer ? data.zetsuenR : data.rVal
-    const s = isServer ? data.zetsuenS : data.sVal
-    const t = isServer ? data.zetsuenT : data.tVal
-
-    return `R: ${r ?? '-'}MΩ / S: ${s ?? '-'}MΩ / T: ${t ?? '-'}MΩ`
-  }
-  if (phase === 3) {
-    const rs = isServer ? data.denatsuRs : data.rs
-    const st = isServer ? data.denatsuSt : data.st
-    const rt = isServer ? data.denatsuRt : data.rt
-
-    return `RS: ${rs ?? '-'}V / ST: ${st ?? '-'}V / TR: ${rt ?? '-'}V`
-  }
-
-  return '-'
 }
 </script>
 

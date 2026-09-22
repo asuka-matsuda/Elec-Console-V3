@@ -3,7 +3,7 @@
  * Operation Logs View
  * 送電試験 操作ログ画面
  */
-import { computed, onMounted, watch } from 'vue'
+import { computed, onMounted } from 'vue'
 
 import { useHead, useRoute } from '#app'
 import { useOperationLogs } from '~/composables/portal/useOperationLogs'
@@ -20,9 +20,9 @@ const siteId = computed(() => route.params.siteId as string)
 
 const {
   logs,
-  availableWorkers,
-  availableActions,
-  availableTargetBans,
+  workerOptions,
+  actionOptions,
+  targetBanOptions,
   selectedWorker,
   selectedAction,
   selectedTargetBan,
@@ -34,25 +34,6 @@ const {
 onMounted(() => {
   fetchLogs()
 })
-
-watch([selectedWorker, selectedAction, selectedTargetBan, limit], () => {
-  fetchLogs()
-})
-
-const workerOptions = computed(() => [
-  { label: 'すべての作業者', value: 'ALL' },
-  ...availableWorkers.value.map(w => ({ label: w, value: w })),
-])
-
-const actionOptions = computed(() => [
-  { label: 'すべてのアクション', value: 'ALL' },
-  ...availableActions.value.map(a => ({ label: a, value: a })),
-])
-
-const targetBanOptions = computed(() => [
-  { label: 'すべての対象盤', value: 'ALL' },
-  ...availableTargetBans.value.map(b => ({ label: b, value: b })),
-])
 </script>
 
 <template>

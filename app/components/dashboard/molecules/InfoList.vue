@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T extends InfoListItem = InfoListItem">
 /**
  * InfoList
- * [Dashboard] お知らせや更新履歴等のタイムライン情報を一覧表示するダッシュボード専用フィード。
+ * [Dashboard Molecules] お知らせや更新履歴等のタイムライン情報を一覧表示するダッシュボード専用フィード。
  * タイトルと日付のみをコンパクトに表示し、クリックで詳細展開（モーダル等）への導線を提供します。
  */
 import type { InfoListItem, InfoListProps } from '~/types/components'

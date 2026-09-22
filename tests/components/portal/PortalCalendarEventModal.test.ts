@@ -1,9 +1,9 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import CalEventModal from '../../../app/components/portal/organisms/CalEventModal.vue'
+import CalendarEventModal from '../../../app/components/portal/organisms/CalendarEventModal.vue'
 
-describe('CalEventModal.vue', () => {
+describe('CalendarEventModal.vue', () => {
   const dummyEventTypes = [
     { id: 'work', name: '現場作業', color: '#10b981' },
     { id: 'meeting', name: '会議', color: '#3b82f6' },
@@ -18,7 +18,7 @@ describe('CalEventModal.vue', () => {
   }
 
   it('renders correctly with initial data in create mode', () => {
-    const wrapper = mount(CalEventModal, {
+    const wrapper = mount(CalendarEventModal, {
       props: {
         modelValue: true,
         isEditing: false,
@@ -40,7 +40,7 @@ describe('CalEventModal.vue', () => {
   })
 
   it('renders correctly in edit mode and emits delete event when delete button clicked', async () => {
-    const wrapper = mount(CalEventModal, {
+    const wrapper = mount(CalendarEventModal, {
       props: {
         modelValue: true,
         isEditing: true,
@@ -60,7 +60,7 @@ describe('CalEventModal.vue', () => {
   })
 
   it('shows error on save when title is empty, and clears error on input', async () => {
-    const wrapper = mount(CalEventModal, {
+    const wrapper = mount(CalendarEventModal, {
       props: {
         modelValue: true,
         isEditing: false,
@@ -89,7 +89,7 @@ describe('CalEventModal.vue', () => {
   })
 
   it('emits save with current form data when title is valid', async () => {
-    const wrapper = mount(CalEventModal, {
+    const wrapper = mount(CalendarEventModal, {
       props: {
         modelValue: true,
         isEditing: false,
@@ -115,7 +115,7 @@ describe('CalEventModal.vue', () => {
   })
 
   it('closes modal when cancel button is clicked', async () => {
-    const wrapper = mount(CalEventModal, {
+    const wrapper = mount(CalendarEventModal, {
       props: {
         modelValue: true,
         isEditing: false,
@@ -132,7 +132,7 @@ describe('CalEventModal.vue', () => {
   })
 
   it('adjusts start and end format when allDay checkbox is toggled', async () => {
-    const wrapper = mount(CalEventModal, {
+    const wrapper = mount(CalendarEventModal, {
       props: {
         modelValue: true,
         isEditing: false,

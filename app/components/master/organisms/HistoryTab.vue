@@ -4,35 +4,48 @@
  * [Master Organisms] 更新履歴管理タブ。
  * システム全体の更新履歴の追加・一覧・編集・削除を行います。
  */
-import { ref } from 'vue'
-
+import { useMasterCrud } from '~/composables/master/useMasterCrud'
 import type { HistoryItem, TableColumn } from '~/types/components'
+import { getTodayDateInput } from '~/utils/date'
 
-const { data: historyList, pending, refresh } = await useFetch<HistoryItem[]>('/api/master/history', {
-  default: () => [],
-})
-
-const INITIAL_FORM = {
-  version: 'v',
-  title: '',
-  date: '',
-  desc: '',
+interface HistoryForm {
+  version: string
+  title: string
+  date: string
+  desc: string
 }
 
-const { askConfirm } = useModal()
-
-// モーダル管理状態
-const isEditModalOpen = ref(false)
-const isSaving = ref(false)
-const editingId = ref<string | null>(null)
-const formError = ref('')
-const form = ref({ ...INITIAL_FORM })
-
-// フォームのバリデーション管理（ルールを指定するだけで完結）
-const { fieldErrors, validate, resetErrors } = useFormValidation(form, {
-  version: 'バージョン',
-  date: '日付',
-  title: 'タイトル',
+const {
+  items: historyList,
+  pending,
+  isEditModalOpen,
+  isSaving,
+  editingId,
+  formError,
+  form,
+  fieldErrors,
+  openModal,
+  handleSave,
+  handleDelete,
+} = await useMasterCrud<HistoryItem, HistoryForm>({
+  endpoint: '/api/master/history',
+  initialForm: { version: 'v', title: '', date: '', desc: '' },
+  validationRules: { version: 'バージョン', date: '日付', title: 'タイトル' },
+  mapItemToForm: item => ({
+    version: item.version,
+    title: item.title,
+    date: item.date.replace(/\./g, '-'),
+    desc: item.desc || '',
+  }),
+  mapFormToPayload: form => ({
+    ...form,
+    date: form.date.replace(/-/g, '.'),
+  }),
+  getNewFormDefaults: () => ({ date: getTodayDateInput() }),
+  deleteConfirm: {
+    title: '更新履歴の削除',
+    message: () => 'この更新履歴を削除してもよろしいですか？',
+  },
 })
 
 const columns: TableColumn<HistoryItem>[] = [
@@ -42,72 +55,6 @@ const columns: TableColumn<HistoryItem>[] = [
   { key: 'desc', label: '内容詳細', truncate: true },
   { key: 'actions', label: '操作', width: '120px', align: 'right' },
 ]
-
-const openModal = (item?: HistoryItem) => {
-  editingId.value = item ? String(item.id) : null
-  formError.value = ''
-  resetErrors()
-  form.value = item
-    ? {
-        version: item.version,
-        title: item.title,
-        date: item.date.replace(/\./g, '-'),
-        desc: item.desc || '',
-      }
-    : { ...INITIAL_FORM, date: getTodayDateInput() }
-  isEditModalOpen.value = true
-}
-
-const handleSave = async () => {
-  formError.value = ''
-  if (!validate()) return
-
-  isSaving.value = true
-
-  try {
-    const url = editingId.value ? `/api/master/history/${editingId.value}` : '/api/master/history'
-    const method = editingId.value ? 'PUT' : 'POST'
-
-    await $fetch(url, {
-      method,
-      body: {
-        ...form.value,
-        date: form.value.date.replace(/-/g, '.'),
-      },
-    })
-    isEditModalOpen.value = false
-    await refresh()
-  }
-  catch (e: unknown) {
-    formError.value = (e as Error).message || '保存に失敗しました。'
-  }
-  finally {
-    isSaving.value = false
-  }
-}
-
-const handleDelete = async (id?: string | number) => {
-  if (!id) return
-
-  const isConfirmed = await askConfirm({
-    title: '更新履歴の削除',
-    message: 'この更新履歴を削除してもよろしいですか？',
-    intent: 'danger',
-    confirmText: '削除する',
-  })
-
-  if (!isConfirmed) return
-
-  try {
-    await $fetch(`/api/master/history/${id}`, {
-      method: 'DELETE',
-    })
-    await refresh()
-  }
-  catch (e: unknown) {
-    alert((e as Error).message || '削除に失敗しました。')
-  }
-}
 </script>
 
 <template>
@@ -153,7 +100,7 @@ const handleDelete = async (id?: string | number) => {
               variant="danger"
               icon="trash-2"
               title="削除"
-              @click="handleDelete(row.id)"
+              @click="handleDelete(row)"
             />
           </div>
         </template>

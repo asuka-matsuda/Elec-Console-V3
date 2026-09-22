@@ -1,4 +1,5 @@
 import type { TableColumn } from '~/types/components'
+import type { CableInputItem } from '~/types/tools'
 
 /**
  * 強電ケーブルカテゴリ一覧
@@ -27,7 +28,7 @@ export const WEAK_CURRENT_CATEGORIES = [
 /**
  * 配管計算 ケーブルテーブルカラム定義
  */
-export const CONDUIT_CABLE_COLUMNS: TableColumn[] = [
+export const CONDUIT_CABLE_COLUMNS: TableColumn<CableInputItem>[] = [
   { key: 'category', label: 'ケーブル種別' },
   { key: 'cableIdx', label: 'サイズ' },
   { key: 'count', label: '条数', width: '88px', align: 'center' },
@@ -38,7 +39,7 @@ export const CONDUIT_CABLE_COLUMNS: TableColumn[] = [
 /**
  * ケーブルラック計算 ケーブルテーブルカラム定義
  */
-export const RACK_CABLE_COLUMNS: TableColumn[] = [
+export const RACK_CABLE_COLUMNS: TableColumn<CableInputItem>[] = [
   { key: 'category', label: 'ケーブル種別' },
   { key: 'cableIdx', label: 'サイズ' },
   { key: 'count', label: '条数', width: '88px', align: 'center' },

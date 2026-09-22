@@ -1,10 +1,10 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import KanaFilter from '../../../app/components/reference/KanaFilter.vue'
+import KanaFilter from '../../../app/components/reference/molecules/KanaFilter.vue'
 import type { KanaRowKey } from '../../../app/utils/kana'
 
-describe('KanaFilter.vue (app/components/reference/KanaFilter.vue)', () => {
+describe('KanaFilter.vue (app/components/reference/molecules/KanaFilter.vue)', () => {
   it('renders all 10 kana row buttons', () => {
     const wrapper = mount(KanaFilter)
     const buttons = wrapper.findAll('button.kana-btn')

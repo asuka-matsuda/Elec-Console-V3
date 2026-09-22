@@ -16,7 +16,7 @@ const initialKeiTo = computed(() => (route.query.kei_to as string) || '幹線')
 const {
   circuits,
   filteredCircuits,
-  availableShubetsuList,
+  shubetsuTabOptions,
   availableBanMeishoList,
   selectedKeiTo,
   selectedBanShubetsu,
@@ -40,21 +40,8 @@ watch(
   },
 )
 
-watch(selectedKeiTo, () => {
-  selectedBanShubetsu.value = 'ALL'
-  selectedBanMeisho.value = 'ALL'
-  fetchCircuits()
-})
-
 onMounted(() => {
   fetchCircuits()
-})
-
-const shubetsuTabOptions = computed(() => {
-  return availableShubetsuList.value.map(s => ({
-    label: s === 'ALL' ? 'すべて' : s,
-    value: s,
-  }))
 })
 </script>
 

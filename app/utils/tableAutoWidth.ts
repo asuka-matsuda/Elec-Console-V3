@@ -75,8 +75,8 @@ const DEFAULT_OPTIONS: Required<Omit<ColumnWidthCalculationOptions, 'measuredMin
 /**
  * カラムの見出しラベル・ソートアイコン・余白から「見出しの最小必要幅（Natural Min Width）」を算出
  */
-export function calculateHeaderMinWidth(
-  col: TableColumn<unknown>,
+export function calculateHeaderMinWidth<T = Record<string, unknown>>(
+  col: TableColumn<T>,
   options: ColumnWidthCalculationOptions = {},
 ): number {
   const opt = { ...DEFAULT_OPTIONS, ...options }
@@ -114,7 +114,7 @@ export function calculateHeaderMinWidth(
  * ※ フィルター等でデータが減っても縮小しないよう、既存キャッシュ値との Math.max を採用
  */
 export function calculateColumnBaseWidths<T>(
-  columns: TableColumn<unknown>[],
+  columns: TableColumn<T>[],
   data: T[],
   existingCache: Record<string, number> = {},
   options: ColumnWidthCalculationOptions = {},
@@ -190,8 +190,8 @@ export function calculateColumnBaseWidths<T>(
 /**
  * 画面幅（コンテナ幅）に合わせて各列の幅を最適分配（100%幅フィット＆横スクロール完全防止）
  */
-export function distributeColumnWidths(
-  columns: TableColumn<unknown>[],
+export function distributeColumnWidths<T = Record<string, unknown>>(
+  columns: TableColumn<T>[],
   baseWidths: Record<string, number>,
   containerWidth: number,
   options: ColumnWidthCalculationOptions = {},
@@ -242,7 +242,7 @@ export function distributeColumnWidths(
 
     if (flexCols.length > 0) {
       const currentWidths: Record<string, number> = {}
-      const colMap = new Map<string, TableColumn<unknown>>()
+      const colMap = new Map<string, TableColumn<T>>()
 
       for (const col of columns) {
         colMap.set(String(col.key), col)
@@ -356,7 +356,7 @@ export function distributeColumnWidths(
   // ケース2: 画面幅が不足している場合（containerWidth < totalBaseWidth）
   // 可変列（flexCols）をそれぞれの minWidth を下限として比例縮小し、画面幅（containerWidth）にフィット
   const neededShrink = totalBaseWidth - containerWidth
-  const colMap = new Map<string, TableColumn<unknown>>()
+  const colMap = new Map<string, TableColumn<T>>()
 
   for (const col of columns) {
     colMap.set(String(col.key), col)
@@ -523,9 +523,9 @@ export function measureCellIntrinsicWidth(td: HTMLElement): number {
 /**
  * テーブル要素から、各列のセルコンテンツの実測最小必要幅をサンプリング計測する
  */
-export function measureTableContentWidths(
+export function measureTableContentWidths<T = Record<string, unknown>>(
   tableEl: HTMLElement,
-  columns: TableColumn<unknown>[],
+  columns: TableColumn<T>[],
   maxSampleRows = 5,
 ): Record<string, number> {
   const result: Record<string, number> = {}

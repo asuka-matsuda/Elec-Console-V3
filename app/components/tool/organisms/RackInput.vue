@@ -9,10 +9,8 @@ import { computed, watch } from 'vue'
 import { RACK_CABLE_COLUMNS } from '~/constants/cableConstants'
 import { RACK_DEFAULT_PARAMS, rackModeOptions } from '~/constants/rackConstants'
 import {
-  findCableByIndexString,
-  getAvailableSizes,
+  formatRackCableSpec,
   getCableCategories,
-  getEffectiveCableDiameter,
 } from '~/utils/cable'
 import type { RackInputs } from '~/utils/tools/rack/rackMapper'
 
@@ -31,22 +29,7 @@ const currentCategories = computed(() =>
   inputs.value.mode === 'strong' ? strongCategories : weakCategories,
 )
 
-const getCableSpec = (cableIdx: string, count?: number | null) => {
-  const def = findCableByIndexString(cableIdx)
-
-  if (!def) return { text: '---', detail: '' }
-
-  const diameter = getEffectiveCableDiameter(def.diameter)
-
-  if (diameter <= 0) return { text: '---', detail: '' }
-
-  const n = count && count > 0 ? count : 1
-
-  return {
-    text: `φ${(diameter * n).toFixed(1)}`,
-    detail: n > 1 ? `(φ${diameter.toFixed(1)}×${n})` : '',
-  }
-}
+const getCableSpec = formatRackCableSpec
 
 const currentCables = computed(() =>
   inputs.value.mode === 'strong' ? inputs.value.strongCablesUI : inputs.value.weakCablesUI,
