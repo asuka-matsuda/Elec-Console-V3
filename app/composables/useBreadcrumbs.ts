@@ -43,6 +43,11 @@ export function useBreadcrumbs() {
       return { items: [], accent: 'main' }
     }
 
+    // マイページ
+    if (route.path === '/mypage') {
+      return { items: [{ text: 'マイページ' }], accent: 'main' }
+    }
+
     // 1. 現場ポータル配下の動的ルーティング (/portal/:siteId/...) の判定
     const portalMatch = route.path.match(/^\/portal\/([^/]+)(?:\/(.*))?$/)
 

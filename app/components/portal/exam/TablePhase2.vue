@@ -180,81 +180,22 @@ const {
     </template>
 
     <template #cell-actions="{ row: circuit }">
-      <div class="flex items-center justify-center gap-1">
-
-        <template v-if="isCircuitLocked(circuit)">
-          <span class="text-note inline-flex items-center gap-1">⏸ 幹線未完了</span>
-        </template>
-
-        <template v-else-if="!isP1Complete(circuit)">
-          <span class="text-note inline-flex items-center gap-1">⏸ P1未了</span>
-        </template>
-
-        <template v-else-if="editingRowId === circuit.id">
-          <Button
-            variant="success"
-            :loading="isActionLoading[circuit.id]"
-            @click="saveInput(circuit)"
-          >
-            確定
-          </Button>
-          <Button
-            @click="cancelInput"
-          >
-            取消
-          </Button>
-        </template>
-
-        <template v-else-if="isComplete(circuit)">
-          <Button
-            variant="danger"
-            :loading="isActionLoading[circuit.id]"
-            @click="$emit('clear', circuit)"
-          >
-            解除
-          </Button>
-          <Button
-            @click="startInput(circuit)"
-          >
-            変更
-          </Button>
-        </template>
-
-        <template v-else>
-          <Button
-            variant="success"
-            :disabled="circuit.isExcluded"
-            :loading="isActionLoading[circuit.id]"
-            @click="handleQuickOk(circuit)"
-          >
-            全相OK
-          </Button>
-          <Button
-            :disabled="circuit.isExcluded"
-            @click="startInput(circuit)"
-          >
-            測定入力
-          </Button>
-        </template>
-      </div>
+      <PortalCellSoudenActions
+        :circuit="circuit"
+        :is-locked="isLocked(circuit)"
+        :locked-reason="isCircuitLocked(circuit) ? '幹線未完了' : 'P1未了'"
+        :is-editing="editingRowId === circuit.id"
+        :is-completed="isComplete(circuit)"
+        :is-loading="isActionLoading[circuit.id]"
+        confirm-label="全相OK"
+        edit-label="測定入力"
+        save-label="確定"
+        @confirm="handleQuickOk(circuit)"
+        @clear="$emit('clear', circuit)"
+        @edit="startInput(circuit)"
+        @save="saveInput(circuit)"
+        @cancel="cancelInput"
+      />
     </template>
   </PortalTableSoudenCircuit>
 </template>
-
-<style scoped lang="scss">
-.cell-remarks {
-  overflow: hidden;
-  display: block;
-
-  max-width: 100%;
-
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.text-note {
-  font-size: inherit;
-  font-weight: var(--font-weight-normal);
-  color: var(--color-status-warning);
-}
-</style>

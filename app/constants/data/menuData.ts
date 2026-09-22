@@ -168,22 +168,4 @@ export const menuData: MenuSection[] = [
     ],
     showInDashboard: true,
   },
-  {
-    id: 'settings',
-    heading: '設定',
-    globalNavHeading: '設定',
-    icon: 'settings',
-    accent: 'management',
-    items: [
-      {
-        text: 'UI・個人設定',
-        href: '/settings',
-        icon: 'settings',
-        customClass: 'global-nav__link--management',
-        activePrefixes: ['/settings'],
-        desc: '背景やマウス軌跡などのUI設定をカスタマイズします。',
-      },
-    ],
-    showInDashboard: true,
-  },
 ]

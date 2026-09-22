@@ -27,6 +27,16 @@ describe('useBreadcrumbs', () => {
     expect(accent.value).toBe('main')
   })
 
+  it('マイページ（/mypage）ではマイページの単一パンくずで accent は main になる', () => {
+    mockRoute.value = { path: '/mypage' }
+    const { items, accent } = useBreadcrumbs()
+
+    expect(items.value).toEqual([
+      { text: 'マイページ' },
+    ])
+    expect(accent.value).toBe('main')
+  })
+
   it('現場トップ（/portal/:siteId）で現場管理と現場名が構築される', () => {
     mockRoute.value = { path: '/portal/site-1' }
     const { items, accent } = useBreadcrumbs()

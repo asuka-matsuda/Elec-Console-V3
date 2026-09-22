@@ -148,69 +148,28 @@ const {
     </template>
 
     <template #cell-actions="{ row: circuit }">
-      <div class="flex items-center justify-center gap-1">
-
-        <template v-if="isCircuitLocked(circuit)">
-          <span class="text-note inline-flex items-center gap-1">⏸ 幹線未完了</span>
-        </template>
-
-        <template v-else-if="editingRowId === circuit.id">
-          <Button
-            variant="success"
-            :loading="isActionLoading[circuit.id]"
-            @click="saveEdit(circuit)"
-          >
-            保存
-          </Button>
-          <Button
-            @click="cancelEdit"
-          >
-            取消
-          </Button>
-        </template>
-
-        <template v-else-if="isComplete(circuit)">
-          <Button
-            variant="danger"
-            :loading="isActionLoading[circuit.id]"
-            @click="$emit('clear', circuit)"
-          >
-            解除
-          </Button>
-        </template>
-
-        <template v-else>
-          <Button
-            variant="success"
-            :disabled="circuit.isExcluded"
-            :loading="isActionLoading[circuit.id]"
-            @click="$emit('confirm', circuit)"
-          >
-            確定
-          </Button>
-          <Button
-            :disabled="circuit.isExcluded"
-            @click="startEdit(circuit)"
-          >
-            編集
-          </Button>
-        </template>
-      </div>
+      <PortalCellSoudenActions
+        :circuit="circuit"
+        :is-locked="isCircuitLocked(circuit)"
+        locked-reason="幹線未完了"
+        :is-editing="editingRowId === circuit.id"
+        :is-completed="isComplete(circuit)"
+        :is-loading="isActionLoading[circuit.id]"
+        :has-modify-button="false"
+        confirm-label="確定"
+        edit-label="編集"
+        save-label="保存"
+        @confirm="$emit('confirm', circuit)"
+        @clear="$emit('clear', circuit)"
+        @edit="startEdit(circuit)"
+        @save="saveEdit(circuit)"
+        @cancel="cancelEdit"
+      />
     </template>
   </PortalTableSoudenCircuit>
 </template>
 
 <style scoped lang="scss">
-.circuit-meisho {
-  display: block;
-
-  font-size: inherit;
-  font-weight: var(--font-weight-normal);
-  line-height: 1.3;
-  color: var(--color-text-main);
-  white-space: pre-line;
-}
-
 .cell-cable {
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
@@ -231,21 +190,5 @@ const {
   color: var(--color-text-secondary);
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.cell-remarks {
-  overflow: hidden;
-  display: block;
-
-  max-width: 100%;
-
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.text-note {
-  font-size: inherit;
-  font-weight: var(--font-weight-normal);
-  color: var(--color-status-warning);
 }
 </style>

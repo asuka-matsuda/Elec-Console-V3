@@ -151,4 +151,14 @@ const getWorkerCellData = (circuit: CircuitItem, key: string) => {
   color: var(--color-text-main);
   white-space: pre-line;
 }
+
+:deep(.cell-remarks) {
+  overflow: hidden;
+  display: block;
+
+  max-width: 100%;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 </style>

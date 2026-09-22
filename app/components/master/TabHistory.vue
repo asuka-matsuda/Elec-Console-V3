@@ -58,129 +58,70 @@ const columns: TableColumn<HistoryItem>[] = [
 </script>
 
 <template>
-  <div class="flex flex-col gap-panel-gap">
+  <MasterCrudLayout
+    v-model:is-modal-open="isEditModalOpen"
+    description="ダッシュボードの「更新履歴」ウィジェットに掲載されるバージョン情報を管理します。"
+    create-button-text="新規更新履歴作成"
+    :columns="columns"
+    :data="historyList"
+    :loading="pending"
+    empty-text="登録されている更新履歴はありません。"
+    :modal-title="editingId ? '編集' : '新規作成'"
+    modal-icon="clock"
+    :is-saving="isSaving"
+    :form-error="formError"
+    @create="openModal()"
+    @edit="openModal($event)"
+    @delete="handleDelete($event)"
+    @save="handleSave"
+  >
+    <template #cell-version="{ row }">
+      <Badge id="version:muted">
+        {{ row.version }}
+      </Badge>
+    </template>
 
-    <div class="flex flex-wrap items-center justify-between gap-4">
-      <small>
-        ダッシュボードの「更新履歴」ウィジェットに掲載されるバージョン情報を管理します。
-      </small>
-
-      <Button
-        variant="success"
-        icon="plus"
-        @click="openModal()"
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <FormGroup
+        label="バージョン"
+        required
+        :error="fieldErrors.version"
       >
-        新規更新履歴作成
-      </Button>
+        <Input
+          v-model="form.version"
+          placeholder="例: v2.1.0"
+        />
+      </FormGroup>
+
+      <FormGroup
+        label="日付"
+        required
+        :error="fieldErrors.date"
+      >
+        <Input
+          v-model="form.date"
+          type="date"
+        />
+      </FormGroup>
     </div>
 
-    <Panel padding="none">
-      <Table
-        :columns="columns"
-        :data="historyList"
-        :loading="pending"
-        empty-text="登録されている更新履歴はありません。"
-      >
-        <template #cell-version="{ row }">
-          <Badge
-            id="version:muted"
-          >
-            {{ row.version }}
-          </Badge>
-        </template>
-
-        <template #cell-actions="{ row }">
-          <div class="flex items-center justify-end gap-1.5">
-            <Button
-              icon="edit"
-              title="編集"
-              @click="openModal(row)"
-            />
-            <Button
-              variant="danger"
-              icon="trash-2"
-              title="削除"
-              @click="handleDelete(row)"
-            />
-          </div>
-        </template>
-      </Table>
-    </Panel>
-
-    <Modal
-      v-model="isEditModalOpen"
-      :title="editingId ? '編集' : '新規作成'"
-      icon="clock"
+    <FormGroup
+      label="タイトル"
+      required
+      :error="fieldErrors.title"
     >
-      <template #actions>
-        <Button
-          :disabled="isSaving"
-          @click="isEditModalOpen = false"
-        >
-          キャンセル
-        </Button>
-        <Button
-          variant="success"
-          icon="check"
-          type="submit"
-          form="history-form"
-          :loading="isSaving"
-          @click="handleSave"
-        >
-          {{ isSaving ? '保存中...' : '保存する' }}
-        </Button>
-      </template>
+      <Input
+        v-model="form.title"
+        placeholder="例: 新機能追加"
+      />
+    </FormGroup>
 
-      <form
-        id="history-form"
-        class="flex flex-col gap-4"
-        @submit.prevent="handleSave"
-      >
-        <FormGroup v-if="formError" :error="formError" />
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <FormGroup
-            label="バージョン"
-            required
-            :error="fieldErrors.version"
-          >
-            <Input
-              v-model="form.version"
-              placeholder="例: v2.1.0"
-            />
-          </FormGroup>
-
-          <FormGroup
-            label="日付"
-            required
-            :error="fieldErrors.date"
-          >
-            <Input
-              v-model="form.date"
-              type="date"
-            />
-          </FormGroup>
-        </div>
-
-        <FormGroup
-          label="タイトル"
-          required
-          :error="fieldErrors.title"
-        >
-          <Input
-            v-model="form.title"
-            placeholder="例: 新機能追加"
-          />
-        </FormGroup>
-
-        <FormGroup label="詳細本文">
-          <Textarea
-            v-model="form.desc"
-            :rows="5"
-            placeholder="詳細な更新内容や変更点を入力してください（モーダルで表示されます）"
-          />
-        </FormGroup>
-      </form>
-    </Modal>
-  </div>
+    <FormGroup label="詳細本文">
+      <Textarea
+        v-model="form.desc"
+        :rows="5"
+        placeholder="詳細な更新内容や変更点を入力してください（モーダルで表示されます）"
+      />
+    </FormGroup>
+  </MasterCrudLayout>
 </template>

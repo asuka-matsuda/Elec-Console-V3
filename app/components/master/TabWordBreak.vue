@@ -51,100 +51,43 @@ const columns: TableColumn<WordBreakItem>[] = [
 </script>
 
 <template>
-  <div class="flex flex-col gap-panel-gap">
-
-    <div class="flex flex-wrap items-center justify-between gap-4">
-      <small>
-        テーブルの盤名称等で途中で改行させない単語を管理します（※「1-1」「分電盤」等はシステムで自動処理されます）。
-      </small>
-
-      <Button
-        variant="success"
-        icon="plus"
-        @click="openModal()"
-      >
-        新規ワード追加
-      </Button>
-    </div>
-
-    <Panel padding="none">
-      <Table
-        :columns="columns"
-        :data="wordBreakList"
-        :loading="pending"
-        empty-text="登録されている改行禁止ワードはありません。"
-      >
-        <template #cell-actions="{ row }">
-          <div class="flex items-center justify-end gap-1.5">
-            <Button
-              icon="edit"
-              title="編集"
-              @click="openModal(row)"
-            />
-            <Button
-              variant="danger"
-              icon="trash-2"
-              title="削除"
-              @click="handleDelete(row)"
-            />
-          </div>
-        </template>
-      </Table>
-    </Panel>
-
-    <Modal
-      v-model="isEditModalOpen"
-      :title="editingId ? '単語の編集' : '新規ワード登録'"
-      icon="type"
+  <MasterCrudLayout
+    v-model:is-modal-open="isEditModalOpen"
+    description="テーブルの盤名称等で途中で改行させない単語を管理します（※「1-1」「分電盤」等はシステムで自動処理されます）。"
+    create-button-text="新規ワード追加"
+    :columns="columns"
+    :data="wordBreakList"
+    :loading="pending"
+    empty-text="登録されている改行禁止ワードはありません。"
+    :modal-title="editingId ? '単語の編集' : '新規ワード登録'"
+    modal-icon="type"
+    :is-saving="isSaving"
+    :form-error="formError"
+    @create="openModal()"
+    @edit="openModal($event)"
+    @delete="handleDelete($event)"
+    @save="handleSave"
+  >
+    <FormGroup
+      label="追加日"
+      required
+      :error="fieldErrors.date"
     >
-      <template #actions>
-        <Button
-          :disabled="isSaving"
-          @click="isEditModalOpen = false"
-        >
-          キャンセル
-        </Button>
-        <Button
-          variant="success"
-          icon="check"
-          type="submit"
-          form="word-break-form"
-          :loading="isSaving"
-          @click="handleSave"
-        >
-          {{ isSaving ? '保存中...' : '保存する' }}
-        </Button>
-      </template>
+      <Input
+        v-model="form.date"
+        type="date"
+      />
+    </FormGroup>
 
-      <form
-        id="word-break-form"
-        class="flex flex-col gap-4"
-        @submit.prevent="handleSave"
-      >
-        <FormGroup v-if="formError" :error="formError" />
-
-        <FormGroup
-          label="追加日"
-          required
-          :error="fieldErrors.date"
-        >
-          <Input
-            v-model="form.date"
-            type="date"
-          />
-        </FormGroup>
-
-        <FormGroup
-          label="単語"
-          required
-          :error="fieldErrors.word"
-        >
-          <Input
-            v-model="form.word"
-            placeholder="例: 自動倉庫, 受変電設備"
-          />
-        </FormGroup>
-      </form>
-    </Modal>
-  </div>
+    <FormGroup
+      label="単語"
+      required
+      :error="fieldErrors.word"
+    >
+      <Input
+        v-model="form.word"
+        placeholder="例: 自動倉庫, 受変電設備"
+      />
+    </FormGroup>
+  </MasterCrudLayout>
 </template>
