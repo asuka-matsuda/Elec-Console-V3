@@ -1,8 +1,8 @@
-import { mount } from '@vue/test-utils'
+﻿import { mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
 
-import PortalSyncStatusBadge from '../../../app/components/portal/molecules/SyncStatusBadge.vue'
+import PortalSyncStatusBadge from '../../../app/components/portal/souden/SyncStatusBadge.vue'
 
 const mockPendingCount = ref(0)
 const mockHasPending = ref(false)
@@ -29,7 +29,7 @@ describe('PortalSyncStatusBadge.vue', () => {
       global: {
         stubs: {
           Icon: true,
-          PortalSyncQueueModal: true,
+          PortalModalSyncQueue: true,
         },
       },
     })
@@ -37,7 +37,7 @@ describe('PortalSyncStatusBadge.vue', () => {
     expect(wrapper.text()).toContain('同期済')
     expect(wrapper.find('.sync-dot').exists()).toBe(true)
     expect(wrapper.find('button.sync-btn').exists()).toBe(false)
-    expect(wrapper.findComponent({ name: 'PortalSyncQueueModal' }).exists()).toBe(false)
+    expect(wrapper.findComponent({ name: 'PortalModalSyncQueue' }).exists()).toBe(false)
   })
 
   it('renders sync button when there are pending items and lazily mounts modal on click', async () => {
@@ -49,8 +49,8 @@ describe('PortalSyncStatusBadge.vue', () => {
       global: {
         stubs: {
           Icon: true,
-          PortalSyncQueueModal: {
-            name: 'PortalSyncQueueModal',
+          PortalModalSyncQueue: {
+            name: 'PortalModalSyncQueue',
             template: '<div class="sync-modal-stub" />',
             emits: ['synced', 'update:modelValue'],
           },
@@ -69,7 +69,7 @@ describe('PortalSyncStatusBadge.vue', () => {
     expect(wrapper.find('.sync-modal-stub').exists()).toBe(true)
 
     // モーダルからの synced イベントをリレーする
-    const modalComponent = wrapper.findComponent({ name: 'PortalSyncQueueModal' })
+    const modalComponent = wrapper.findComponent({ name: 'PortalModalSyncQueue' })
 
     modalComponent.vm.$emit('synced')
     expect(wrapper.emitted('synced')).toHaveLength(1)
@@ -89,7 +89,7 @@ describe('PortalSyncStatusBadge.vue', () => {
             template: '<i :class="$attrs.class" :data-name="name" />',
             props: ['name'],
           },
-          PortalSyncQueueModal: true,
+          PortalModalSyncQueue: true,
         },
       },
     })

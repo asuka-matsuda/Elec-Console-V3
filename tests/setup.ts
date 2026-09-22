@@ -1,4 +1,5 @@
 import { config } from '@vue/test-utils'
+import { getContext } from 'unctx'
 import { vi } from 'vitest'
 import { ref } from 'vue'
 
@@ -55,23 +56,37 @@ const mockRouter = {
   currentRoute: ref({ path: '/', query: {}, params: {} }),
 }
 
+const mockNuxtApp = {
+  _id: 'nuxt-app',
+  payload: { state: {} },
+  _state: {},
+  $api: vi.fn(),
+  runWithContext: <T>(fn: () => T): T => fn(),
+}
+
+try {
+  getContext('nuxt-app').set(mockNuxtApp as any, true)
+}
+catch {
+  // ignore
+}
+
 // グローバルスコープへの登録
 vi.stubGlobal('useState', mockUseState)
 vi.stubGlobal('useCookie', mockUseCookie)
 vi.stubGlobal('useRouter', () => mockRouter)
 vi.stubGlobal('useRoute', () => mockRouter.currentRoute.value)
 vi.stubGlobal('navigateTo', vi.fn())
+vi.stubGlobal('useNuxtApp', () => mockNuxtApp)
 
-// #app からの静的 import 対策
+// #app / #imports からの静的 import 対策
 vi.mock('#app', () => ({
   useState: mockUseState,
   useCookie: mockUseCookie,
   useRouter: () => mockRouter,
   useRoute: () => mockRouter.currentRoute.value,
   navigateTo: vi.fn(),
-  useNuxtApp: () => ({
-    $api: vi.fn(),
-  }),
+  useNuxtApp: () => mockNuxtApp,
 }))
 
 // 3. Vue Test Utils の共通スタブ登録

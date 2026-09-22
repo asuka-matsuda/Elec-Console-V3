@@ -1,7 +1,7 @@
-import { mount } from '@vue/test-utils'
+﻿import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 
-import ToolResultDrawer from '../../../app/components/tool/organisms/ResultDrawer.vue'
+import ToolResultDrawer from '../../../app/components/tool/ResultDrawer.vue'
 
 describe('ToolResultDrawer.vue', () => {
   const commonStubs = {

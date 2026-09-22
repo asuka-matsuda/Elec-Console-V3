@@ -1,7 +1,7 @@
-import { mount } from '@vue/test-utils'
+﻿import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import PortalExamMinimap from '../../../app/components/portal/molecules/ExamMinimap.vue'
+import PortalExamMinimap from '../../../app/components/portal/exam/ExamMinimap.vue'
 import type { CircuitItem } from '../../../app/types/souden'
 
 describe('PortalExamMinimap.vue', () => {

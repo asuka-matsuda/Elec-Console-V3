@@ -44,7 +44,7 @@ const {
           v-if="historyList.length > 0"
           class="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-panel-gap"
         >
-          <ToolHistoryCard
+          <ToolCardHistory
             v-for="entry in historyList"
             :key="entry.id"
             :entry="entry"

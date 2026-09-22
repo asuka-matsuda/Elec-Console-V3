@@ -26,11 +26,11 @@ const {
     @reset="openResetModal"
   >
     <template #inputs>
-      <ToolWeightInput v-model="inputs" />
+      <ToolInputWeight v-model="inputs" />
     </template>
 
     <template #results>
-      <ToolWeightResult :result="result" />
+      <ToolResultWeight :result="result" />
     </template>
 
     <template #basis>

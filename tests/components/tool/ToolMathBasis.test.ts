@@ -1,7 +1,7 @@
-import { mount } from '@vue/test-utils'
+﻿import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import ToolMathBasis from '../../../app/components/tool/organisms/MathBasis.vue'
+import ToolMathBasis from '../../../app/components/tool/MathBasis.vue'
 
 describe('ToolMathBasis.vue', () => {
   const commonStubs = {

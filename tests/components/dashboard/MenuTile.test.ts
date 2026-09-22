@@ -1,10 +1,10 @@
-import { mount } from '@vue/test-utils'
+﻿import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
 import Panel from '../../../app/components/common/atoms/Panel.vue'
-import MenuTile from '../../../app/components/dashboard/molecules/MenuTile.vue'
+import MenuTile from '../../../app/components/dashboard/MenuTile.vue'
 
-describe('MenuTile.vue (app/components/dashboard/molecules/MenuTile.vue)', () => {
+describe('MenuTile.vue (app/components/dashboard/MenuTile.vue)', () => {
   const commonStubs = {
     Icon: {
       props: ['name', 'size'],

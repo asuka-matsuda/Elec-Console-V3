@@ -31,7 +31,7 @@ const {
     @reset="openResetModal"
   >
     <template #inputs>
-      <ToolRackInput
+      <ToolInputRack
         v-model="inputs"
         @add-strong-cable="addStrongCable"
         @remove-strong-cable="removeStrongCable"
@@ -41,7 +41,7 @@ const {
     </template>
 
     <template #results>
-      <ToolRackResult :result="result" />
+      <ToolResultRack :result="result" />
     </template>
 
     <template #basis>

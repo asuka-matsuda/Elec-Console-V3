@@ -71,7 +71,7 @@ onMounted(() => {
       </Button>
     </template>
 
-    <PortalPhase3Table
+    <PortalTablePhase3
       :circuits="filteredCircuits"
       :full-circuits="circuits"
       :is-circuit-locked="isCircuitLocked"

@@ -58,7 +58,7 @@ onMounted(() => {
     :circuits="filteredCircuits"
     @synced="fetchCircuits"
   >
-    <PortalPhase1Table
+    <PortalTablePhase1
       :circuits="filteredCircuits"
       :full-circuits="circuits"
       :is-circuit-locked="isCircuitLocked"

@@ -1,7 +1,7 @@
-import { mount } from '@vue/test-utils'
+﻿import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import ToolMathLegend from '../../../app/components/tool/molecules/MathLegend.vue'
+import ToolMathLegend from '../../../app/components/tool/MathLegend.vue'
 
 describe('ToolMathLegend.vue', () => {
   it('does not render when items array is empty or undefined', () => {

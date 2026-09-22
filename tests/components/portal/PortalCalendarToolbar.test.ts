@@ -1,7 +1,7 @@
-import { mount } from '@vue/test-utils'
+﻿import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import PortalCalendarToolbar from '../../../app/components/portal/molecules/CalendarToolbar.vue'
+import PortalCalendarToolbar from '../../../app/components/portal/calendar/CalendarToolbar.vue'
 
 describe('PortalCalendarToolbar.vue', () => {
   it('renders title correctly', () => {

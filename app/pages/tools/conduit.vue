@@ -28,7 +28,7 @@ const {
     @reset="openResetModal"
   >
     <template #inputs>
-      <ToolConduitInput
+      <ToolInputConduit
         v-model="inputs"
         @add-cable="addCable"
         @remove-cable="removeCable"
@@ -36,7 +36,7 @@ const {
     </template>
 
     <template #results>
-      <ToolConduitResult :result="result" />
+      <ToolResultConduit :result="result" />
     </template>
 
     <template #basis>

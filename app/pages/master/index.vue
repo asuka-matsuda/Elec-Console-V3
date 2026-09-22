@@ -44,15 +44,15 @@ const MASTER_TABS: TabOption<'word-break' | 'announcements' | 'history'>[] = [
       panel-class="flex flex-col gap-panel-gap"
     >
       <template #word-break>
-        <MasterWordBreakTab />
+        <MasterTabWordBreak />
       </template>
 
       <template #announcements>
-        <MasterAnnouncementsTab />
+        <MasterTabAnnouncements />
       </template>
 
       <template #history>
-        <MasterHistoryTab />
+        <MasterTabHistory />
       </template>
     </Tabs>
   </div>

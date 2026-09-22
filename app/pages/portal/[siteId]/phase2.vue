@@ -79,7 +79,7 @@ onMounted(() => {
       </Badge>
     </template>
 
-    <PortalPhase2Table
+    <PortalTablePhase2
       :circuits="filteredCircuits"
       :full-circuits="circuits"
       :is-circuit-locked="isCircuitLocked"

@@ -1,8 +1,8 @@
-import { mount } from '@vue/test-utils'
+﻿import { mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { computed, ref } from 'vue'
 
-import PersonalTodo from '../../../app/components/portal/organisms/PersonalTodo.client.vue'
+import PersonalTodo from '../../../app/components/portal/souden/PersonalTodo.client.vue'
 import type { TodoItem } from '../../../app/composables/portal/useTodo'
 
 const mockTodos = ref<TodoItem[]>([])

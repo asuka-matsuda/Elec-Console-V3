@@ -76,7 +76,7 @@ onMounted(() => {
 
     <template v-else-if="stats">
 
-      <PortalSoudenOverallCard :stats="stats" :site-id="siteId" />
+      <PortalCardSoudenOverall :stats="stats" :site-id="siteId" />
     </template>
   </div>
 </template>

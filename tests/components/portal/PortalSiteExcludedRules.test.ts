@@ -1,7 +1,7 @@
-import { mount } from '@vue/test-utils'
+﻿import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import SiteExcludedRules from '../../../app/components/portal/organisms/SiteExcludedRules.vue'
+import SiteExcludedRules from '../../../app/components/portal/admin/SiteExcludedRules.vue'
 
 describe('SiteExcludedRules.vue', () => {
   it('renders excluded circuits and emits update:modelValue on add, remove, and update', async () => {

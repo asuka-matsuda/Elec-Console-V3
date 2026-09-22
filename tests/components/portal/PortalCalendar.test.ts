@@ -1,8 +1,8 @@
-import { mount } from '@vue/test-utils'
+﻿import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
 
-import CalendarClient from '../../../app/components/portal/organisms/Calendar.client.vue'
+import CalendarClient from '../../../app/components/portal/calendar/Calendar.client.vue'
 
 const mockEvents = ref([
   { id: 'evt-1', siteId: 'site-1', title: '現場確認', start: '2026-09-21' },
@@ -98,8 +98,8 @@ describe('Calendar.client.vue', () => {
             template: '<div class="panel-stub" :data-padding="padding" :data-overflow="overflow"><slot /></div>',
           },
           CalendarToolbar: true,
-          CalendarEventModal: true,
-          CalendarTypeSettingsModal: true,
+          ModalCalendarEvent: true,
+          ModalCalendarTypeSettings: true,
         },
       },
     })
@@ -122,9 +122,9 @@ describe('Calendar.client.vue', () => {
         stubs: {
           Panel: true,
           CalendarToolbar: true,
-          CalendarEventModal: true,
-          CalendarTypeSettingsModal: {
-            name: 'CalendarTypeSettingsModal',
+          ModalCalendarEvent: true,
+          ModalCalendarTypeSettings: {
+            name: 'ModalCalendarTypeSettings',
             props: ['modelValue'],
             template: '<div class="settings-modal" :data-open="modelValue" />',
           },
@@ -133,7 +133,7 @@ describe('Calendar.client.vue', () => {
     })
 
     const toolbar = wrapper.findComponent({ name: 'CalendarToolbar' })
-    const typeModal = wrapper.findComponent({ name: 'CalendarTypeSettingsModal' })
+    const typeModal = wrapper.findComponent({ name: 'ModalCalendarTypeSettings' })
 
     expect(typeModal.props('modelValue')).toBe(false)
 
@@ -149,13 +149,13 @@ describe('Calendar.client.vue', () => {
         stubs: {
           Panel: true,
           CalendarToolbar: true,
-          CalendarEventModal: true,
-          CalendarTypeSettingsModal: true,
+          ModalCalendarEvent: true,
+          ModalCalendarTypeSettings: true,
         },
       },
     })
 
-    const typeModal = wrapper.findComponent({ name: 'CalendarTypeSettingsModal' })
+    const typeModal = wrapper.findComponent({ name: 'ModalCalendarTypeSettings' })
     const newTypes = [{ id: 'new', name: '新規種別', color: '#ff0000' }]
 
     await typeModal.vm.$emit('save', newTypes)
@@ -169,8 +169,8 @@ describe('Calendar.client.vue', () => {
         stubs: {
           Panel: true,
           CalendarToolbar: true,
-          CalendarEventModal: true,
-          CalendarTypeSettingsModal: true,
+          ModalCalendarEvent: true,
+          ModalCalendarTypeSettings: true,
         },
       },
     })

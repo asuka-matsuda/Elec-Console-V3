@@ -1,7 +1,7 @@
-import { mount } from '@vue/test-utils'
+﻿import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import SiteExcelIntegration from '../../../app/components/portal/organisms/SiteExcelIntegration.vue'
+import SiteExcelIntegration from '../../../app/components/portal/admin/SiteExcelIntegration.vue'
 
 describe('PortalSiteExcelIntegration', () => {
   const baseProps = {

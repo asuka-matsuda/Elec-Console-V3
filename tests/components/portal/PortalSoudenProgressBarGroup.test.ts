@@ -1,7 +1,7 @@
-import { mount } from '@vue/test-utils'
+﻿import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import SoudenProgressBarGroup from '../../../app/components/portal/molecules/SoudenProgressBarGroup.vue'
+import SoudenProgressBarGroup from '../../../app/components/portal/souden/SoudenProgressBarGroup.vue'
 import type { SoudenStats } from '../../../app/types/portal'
 
 describe('SoudenProgressBarGroup.vue', () => {

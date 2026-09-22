@@ -48,11 +48,11 @@ const handleReset = async () => {
     @reset="handleReset"
   >
     <template #inputs>
-      <ToolVoltageInput v-model="form" :form-fields="formFields" />
+      <ToolInputVoltage v-model="form" :form-fields="formFields" />
     </template>
 
     <template #results>
-      <ToolVoltageResult :inputs="calcInputs" :result="calcResult" />
+      <ToolResultVoltage :inputs="calcInputs" :result="calcResult" />
     </template>
 
     <template #basis>

@@ -1,7 +1,7 @@
-import { mount } from '@vue/test-utils'
+﻿import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import PortalCircuitSymbol from '../../../app/components/portal/atoms/CircuitSymbol.vue'
+import PortalCircuitSymbol from '../../../app/components/portal/exam/CircuitSymbol.vue'
 
 describe('PortalCircuitSymbol.vue', () => {
   it('renders bangou text correctly', () => {

@@ -171,7 +171,7 @@ module.exports = {
       files: [
         'app/components/common/organisms/Header.vue',
         'app/components/portal/molecules/SyncStatusBadge.vue',
-        'app/components/portal/organisms/CalTypeSettingsModal.vue',
+        'app/components/portal/organisms/ModalCalendarTypeSettings.vue',
       ],
       rules: {
         'property-disallowed-list': [
@@ -202,7 +202,7 @@ module.exports = {
     // -------------------------------------------------------------------------
     {
       files: [
-        'app/components/portal/organisms/Cal.client.vue',
+        'app/components/portal/organisms/Calendar.client.vue',
         'app/assets/scss/foundation/_reset.scss',
       ],
       rules: {

@@ -1,7 +1,7 @@
-import { mount } from '@vue/test-utils'
+﻿import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import PortalExcelDropzone from '../../../app/components/portal/atoms/ExcelDropzone.vue'
+import PortalExcelDropzone from '../../../app/components/portal/admin/ExcelDropzone.vue'
 
 describe('PortalExcelDropzone.vue', () => {
   it('renders placeholder text and upload icon when no file is selected', () => {
