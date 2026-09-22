@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
 
 import AdminUsersTab from '../../../app/components/portal/organisms/AdminUsersTab.vue'
-import type { User } from '../../app/types/auth'
+import type { User } from '../../../app/types/auth'
 
 const mockUsers = ref<User[]>([
   { id: 'user-01', loginId: 'yamada', firstName: '太郎', lastName: '山田', role: 'admin', requirePasswordReset: false },
