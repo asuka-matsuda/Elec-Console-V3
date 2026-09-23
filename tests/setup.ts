@@ -65,6 +65,7 @@ const mockNuxtApp = {
 }
 
 try {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getContext('nuxt-app').set(mockNuxtApp as any, true)
 }
 catch {
