@@ -1,28 +1,28 @@
 <script setup lang="ts">
 /**
- * ResultBox
- * [Molecules] 計算ツールやサマリー画面で、主要な結果数値・ステータス（判定）を表示する特化ディスプレイ。
+ * ResultPanel
+ * [Molecules] 計算ツールやサマリー画面で、主要な結果数値・ステータス（判定）を表示する特化パネル。
  * 計器風の凹みシャドウ（--shadow-sink）、等幅数値フォント、判定ステータスに応じたボーダー・テキストカラーを提供します。
  */
 import { computed } from 'vue'
 
-import type { BadgePresetId, ResultBoxProps, ResultBoxStatus } from '~/types/components'
+import type { BadgePresetId, ResultPanelProps, ResultPanelStatus } from '~/types/components'
 
-const props = withDefaults(defineProps<ResultBoxProps>(), {
+const props = withDefaults(defineProps<ResultPanelProps>(), {
   status: 'neutral',
   isEmpty: false,
   size: 'md',
 })
 
 // isEmpty prop が指定されている場合は優先して 'empty' に解決
-const resolvedStatus = computed<ResultBoxStatus>(() => {
+const resolvedStatus = computed<ResultPanelStatus>(() => {
   if (props.isEmpty) return 'empty'
 
   return props.status || 'neutral'
 })
 
 // バッジプリセットIDの導出（純粋に status に連動）
-const BADGE_STATUS_MAP: Record<ResultBoxStatus, BadgePresetId> = {
+const BADGE_STATUS_MAP: Record<ResultPanelStatus, BadgePresetId> = {
   danger: 'status:danger',
   warning: 'status:warning',
   success: 'status:success',
@@ -34,7 +34,7 @@ const badgeId = computed<BadgePresetId>(() => BADGE_STATUS_MAP[resolvedStatus.va
 
 <template>
   <div
-    class="result-box flex flex-1 flex-col items-center justify-center gap-1 w-full min-w-0"
+    class="result-panel flex flex-1 flex-col items-center justify-center gap-1 w-full min-w-0"
     :class="[`is-${resolvedStatus}`, `is-${size}`]"
   >
 
@@ -58,7 +58,7 @@ const badgeId = computed<BadgePresetId>(() => BADGE_STATUS_MAP[resolvedStatus.va
 </template>
 
 <style scoped lang="scss">
-.result-box {
+.result-panel {
   padding: var(--space-2) var(--space-3);
   border: var(--border-width-base) solid var(--color-border);
 

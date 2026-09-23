@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * ToolMathBasis
+ * MathBasis
  * [Tool Organism] 計算ツールの計算根拠（数式ステップと凡例）を表示する純粋なプレゼンテーションコンポーネント。
  */
 import 'katex/dist/katex.min.css'

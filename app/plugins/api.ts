@@ -1,3 +1,10 @@
+/**
+ * API クライアント（$api）Nuxt プラグイン
+ *
+ * 認証トークン（Bearer / Cookie）の自動付与、401認証エラー時のセッション破棄・リダイレクト、
+ * およびレスポンスエラーの AppException への正規化ハンドリングを提供します。
+ */
+
 import { defineNuxtPlugin, navigateTo, useCookie, useRoute, useState } from '#app'
 import type { User } from '~/types/auth'
 import { parseToAppException } from '~/utils/errors'

@@ -1,3 +1,9 @@
+/**
+ * フェーズ1（回路確認・増締試験）Composable
+ *
+ * @description 回路情報の編集・保存、フェーズ1の確定および解除アクションを提供します。
+ */
+
 import type { Ref } from 'vue'
 import { ref } from 'vue'
 

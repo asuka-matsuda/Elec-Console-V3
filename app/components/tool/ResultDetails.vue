@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * ToolResultDetails
+ * ResultDetails
  * [Tool Molecule] 計算結果に付随する内訳・補足情報を表示する最小コンポーネント。
  */
 import type { ResultDetailItem } from '~/types/components'

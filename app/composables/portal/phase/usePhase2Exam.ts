@@ -1,3 +1,9 @@
+/**
+ * フェーズ2（絶縁抵抗測定試験）Composable
+ *
+ * @description 絶縁抵抗値・判定の編集・保存、一括OK確定、フェーズ2の確定および解除を提供します。
+ */
+
 import type { Ref } from 'vue'
 
 import { usePhaseExamBase } from '~/composables/portal/phase/usePhaseExamBase'

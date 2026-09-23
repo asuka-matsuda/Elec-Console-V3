@@ -1,3 +1,9 @@
+/**
+ * UI コンポーネント共通型定義
+ *
+ * ボタン、フォーム入力、モーダル、テーブルカラム等の共通 Props / Emits インターフェースを定義します。
+ */
+
 import type { ComputedRef, InjectionKey } from 'vue'
 
 import type { BadgePresetId } from '~/constants/badgeConfig'
@@ -376,12 +382,12 @@ export interface TabsProps<T = string | number> {
   keepAlive?: boolean
 }
 
-// --- ResultBox & ResultDetails ---
-export type ResultBoxStatus = 'neutral' | 'success' | 'warning' | 'danger' | 'empty'
+// --- ResultPanel & ResultDetails ---
+export type ResultPanelStatus = 'neutral' | 'success' | 'warning' | 'danger' | 'empty'
 
-export interface ResultBoxProps {
+export interface ResultPanelProps {
   title?: string
-  status?: ResultBoxStatus
+  status?: ResultPanelStatus
   badge?: string
   isEmpty?: boolean
   size?: 'sm' | 'md'

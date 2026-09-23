@@ -1,9 +1,9 @@
-﻿import { mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import PortalCardSoudenOverall from '../../../app/components/portal/souden/CardSoudenOverall.vue'
+import PortalPanelSoudenOverall from '../../../app/components/portal/souden/PanelSoudenOverall.vue'
 
-describe('CardSoudenOverall.vue', () => {
+describe('PanelSoudenOverall.vue', () => {
   const dummyStats = {
     totalPct: 80,
     trunkOverallPct: 85,
@@ -36,7 +36,7 @@ describe('CardSoudenOverall.vue', () => {
   }
 
   it('renders overall circular gauge and section header', () => {
-    const wrapper = mount(PortalCardSoudenOverall, {
+    const wrapper = mount(PortalPanelSoudenOverall, {
       props: {
         stats: dummyStats,
         siteId: 'site-abc',
@@ -49,7 +49,7 @@ describe('CardSoudenOverall.vue', () => {
   })
 
   it('renders both trunk and secondary progress groups', () => {
-    const wrapper = mount(PortalCardSoudenOverall, {
+    const wrapper = mount(PortalPanelSoudenOverall, {
       props: {
         stats: dummyStats,
         siteId: 'site-abc',

@@ -1,3 +1,9 @@
+/**
+ * アプリケーション共通定数定義
+ *
+ * テーマモード選択肢、現場ステータス一覧、ロール定義等の共通定数を提供します。
+ */
+
 import type { SelectOption } from '~/types/components'
 
 /**

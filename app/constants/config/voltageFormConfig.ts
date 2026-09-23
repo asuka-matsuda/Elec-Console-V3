@@ -1,3 +1,10 @@
+/**
+ * 電圧降下計算フォーム構成スキーマ
+ *
+ * 入力フォームの各フィールド（配線方式、負荷、電線仕様、周囲温度補正等）の
+ * 型定義およびUIレンダリング設定を提供します。
+ */
+
 import type { defaultForm } from '~/composables/tools/useVoltageCalculator'
 import {
   ambientTempOptions,

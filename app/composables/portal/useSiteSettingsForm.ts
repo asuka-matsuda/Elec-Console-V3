@@ -1,3 +1,9 @@
+/**
+ * 現場基本情報・除外回路設定 Composable
+ *
+ * @description 現場名、工期、除外回路ルール等の入力フォーム状態および更新API呼出を管理します。
+ */
+
 import type { ComputedRef, Ref } from 'vue'
 import { computed, ref, watch } from 'vue'
 

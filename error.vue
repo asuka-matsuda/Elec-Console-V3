@@ -1,4 +1,10 @@
 <script setup lang="ts">
+/**
+ * グローバルエラーページ
+ *
+ * 404（Not Found）、500（Server Error）等の未捕捉エラー発生時に
+ * ユーザー向けエラーパネルの表示およびトップページへの安全な復帰アクションを提供します。
+ */
 import { computed } from 'vue'
 
 import type { NuxtError } from '#app'

@@ -1,3 +1,10 @@
+/**
+ * カラープリセット定数定義
+ *
+ * カレンダーイベント種別や現場タグ等で利用可能な
+ * テーマ統一カラーパレットおよびデフォルトカラーを定義します。
+ */
+
 export interface ColorPreset {
   name: string
   value: string // HEX color code e.g. '#2f81f7'

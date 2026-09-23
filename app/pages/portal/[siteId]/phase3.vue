@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * Phase 3 View
+ * フェーズ3（送電・電圧測定・検相試験）画面
  * フェーズ3：送電・電圧測定・検相
  */
 import { computed, onMounted, watch } from 'vue'

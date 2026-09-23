@@ -1,3 +1,9 @@
+/**
+ * モーダル（Modal）状態管理 Composable
+ *
+ * @description ダイアログの開閉状態、タイトル、メッセージ、確定/キャンセルコールバックを管理します。
+ */
+
 import { computed, watch } from 'vue'
 
 import { useState } from '#app'

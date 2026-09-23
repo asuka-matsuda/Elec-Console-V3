@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PortalCellSoudenActions
+ * CellSoudenActions
  * [Portal Exam] 送電試験（Phase 1〜3）共通の行アクションボタングループコンポーネント。
  * ロック状態表示、編集中操作（保存/取消）、完了後操作（解除/変更）、未完了時操作（クイック確定/手入力）のステートマシンを一元管理します。
  */

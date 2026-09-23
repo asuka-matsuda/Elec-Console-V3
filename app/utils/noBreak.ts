@@ -1,3 +1,9 @@
+/**
+ * 不可分文字列結合（改行防止）ユーティリティ
+ *
+ * 指定単語の途中で不自然な改行が発生しないよう Word Joiner (\u2060) を挿入して保護します。
+ */
+
 // 文字間に挿入する Word Joiner（不可視の改行禁止制御文字）
 export const WORD_JOINER = '\u2060'
 // 改行禁止ハイフン（Non-breaking hyphen）

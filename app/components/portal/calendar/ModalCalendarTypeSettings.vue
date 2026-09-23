@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PortalModalCalendarTypeSettings
+ * ModalCalendarTypeSettings
  * [Organisms] カレンダーの予定種別とテーマカラーを設定するモーダルコンポーネント。
  */
 import { toRef } from 'vue'

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 /**
- * PortalCalendarToolbar
- * カレンダー操作ツールバーコンポーネント。
+ * CalendarToolbar
+ * [Portal Molecules] カレンダー操作ツールバーコンポーネント。
+ * 月送り・今日へ戻るナビゲーションおよび表示形式（月グリッド/リスト）の切替を提供します。
  */
 import type { IconName } from '~/constants/icons'
 import type { RadioOption } from '~/types/components'

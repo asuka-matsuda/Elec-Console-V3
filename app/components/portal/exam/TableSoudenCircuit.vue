@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PortalTableSoudenCircuit
+ * TableSoudenCircuit
  * [Portal Organisms] 送電試験（Phase 1〜3）専用の回路一覧テーブルコンポーネント。
  * 汎用 Table コンポーネントを基盤とし、回路記号・名称・測定者セルの既定描画と
  * 送電試験固有の行ステータス（完了・除外・ロック・編集行ハイライト）を提供します。

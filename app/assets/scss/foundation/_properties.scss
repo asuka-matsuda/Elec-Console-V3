@@ -301,7 +301,7 @@
     transform var(--duration-fast) var(--ease-base),
     opacity var(--duration-fast) var(--ease-base);
 
-  // パネル・カード専用トランジション
+  // パネル専用トランジション
   --transition-panel:
     color var(--duration-base) var(--ease-base),
     background-color var(--duration-base) var(--ease-base),

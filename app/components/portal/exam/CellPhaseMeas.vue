@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PhaseMeasCell
+ * CellPhaseMeas
  * [Portal Molecules] 送電試験（Phase 2/3）用の相別測定値・電圧値セル。
  * 通常表示モード（相ラベル、数値+単位、判定バッジ）と手入力編集モードを提供します。
  */

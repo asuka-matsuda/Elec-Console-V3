@@ -1,3 +1,9 @@
+/**
+ * サーバー側認証・JWTセッショントークンユーティリティ
+ *
+ * HMAC-SHA256 署名付き JWT トークンの生成・検証およびユーザーコンテキスト復元を提供します。
+ */
+
 import crypto from 'crypto'
 import fs from 'fs'
 import type { H3Event } from 'h3'

@@ -10,7 +10,7 @@ describe('weightResultPresenter', () => {
     expect(vmNull.isError).toBe(true)
     expect(vmNull.displayDrum).toBe('---')
     expect(vmNull.displayTotalWeight).toBe('---')
-    expect(vmNull.boxStatus).toBe('empty')
+    expect(vmNull.panelStatus).toBe('empty')
 
     const vmErr = formatWeightResult({
       cableWeight: 0,
@@ -18,7 +18,7 @@ describe('weightResultPresenter', () => {
     })
 
     expect(vmErr.isError).toBe(true)
-    expect(vmErr.boxStatus).toBe('empty')
+    expect(vmErr.panelStatus).toBe('empty')
   })
 
   it('should format successful calculation with best drum', () => {
@@ -40,7 +40,7 @@ describe('weightResultPresenter', () => {
 
     expect(vm.isError).toBe(false)
     expect(vm.hasBestDrum).toBe(true)
-    expect(vm.boxStatus).toBe('success')
+    expect(vm.panelStatus).toBe('success')
     expect(vm.displayDrum).toBe('D-12')
     expect(vm.displayTotalWeight).toBe('199.2')
     expect(vm.warningText).toBe('')
@@ -60,7 +60,7 @@ describe('weightResultPresenter', () => {
 
     expect(vm.isError).toBe(false)
     expect(vm.hasBestDrum).toBe(false)
-    expect(vm.boxStatus).toBe('danger')
+    expect(vm.panelStatus).toBe('danger')
     expect(vm.displayDrum).toBe('ERROR')
     expect(vm.displayTotalWeight).toBe('ERROR')
     expect(vm.badgeText).toBe('適合ドラムなし')

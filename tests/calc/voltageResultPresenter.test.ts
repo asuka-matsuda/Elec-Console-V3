@@ -164,7 +164,7 @@ describe('voltageResultPresenter', () => {
     expect(vm.mainStatus).toBe('danger')
   })
 
-  it('should handle VOLTAGE_TARGET_DROP_OVER with is-warning and 降下率超過 on all 3 cards', () => {
+  it('should handle VOLTAGE_TARGET_DROP_OVER with is-warning and 降下率超過 on all 3 panels', () => {
     const mockInputs: Partial<VoltageCalcInputs> = {
       isReady: true,
       mode: 'size',
@@ -209,7 +209,7 @@ describe('voltageResultPresenter', () => {
     expect(vm.dropBadgeText).toBe('降下率超過')
   })
 
-  it('should handle VOLTAGE_AMP_OVER with is-danger and 許容電流不足 on all 3 cards', () => {
+  it('should handle VOLTAGE_AMP_OVER with is-danger and 許容電流不足 on all 3 panels', () => {
     const mockInputs: Partial<VoltageCalcInputs> = {
       isReady: true,
       mode: 'size',

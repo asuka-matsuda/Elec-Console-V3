@@ -1,3 +1,9 @@
+/**
+ * フローティング UI 動的配置 Composable
+ *
+ * @description 画面端のオーバーフローを検知し、ドロップダウン等の上下表示を自動切り替えします。
+ */
+
 import { onMounted, onUnmounted, type Ref, ref, watch } from 'vue'
 
 export interface UseFloatingPlacementOptions {

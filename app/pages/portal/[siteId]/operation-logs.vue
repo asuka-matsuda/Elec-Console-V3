@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * Operation Logs View
+ * 送電試験 操作ログ確認画面
  * 送電試験 操作ログ画面
  */
 import { computed, onMounted } from 'vue'

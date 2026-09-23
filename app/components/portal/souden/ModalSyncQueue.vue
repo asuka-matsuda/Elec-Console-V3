@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PortalModalSyncQueue
+ * ModalSyncQueue
  * [Organisms] オフライン同期待ちキューの確認・手動同期実行・競合解決を行うモーダルコンポーネント。
  */
 import { computed, ref, toRef } from 'vue'
@@ -95,11 +95,11 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
         <div
           v-for="item in conflictItems"
           :key="item.id"
-          class="flex flex-col gap-2 p-3 conflict-card"
+          class="flex flex-col gap-2 p-3 conflict-panel"
         >
-          <div class="flex items-center gap-2 pb-2 card-header">
-            <span class="card-ban">{{ item.banMeisho }}</span>
-            <span class="flex-1 card-kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
+          <div class="flex items-center gap-2 pb-2 panel-header">
+            <span class="panel-ban">{{ item.banMeisho }}</span>
+            <span class="flex-1 panel-kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
             <Badge id="souden:phase-warning">
               フェーズ{{ item.phase }}
             </Badge>
@@ -236,20 +236,20 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
   background: color-mix(in srgb, var(--color-status-warning) 10%, transparent);
 }
 
-.conflict-card {
+.conflict-panel {
   border: 1px solid var(--color-border);
   background: var(--surface-bg-elevated);
 
-  .card-header {
+  .panel-header {
     border-bottom: 1px solid var(--color-border);
   }
 
-  .card-ban {
+  .panel-ban {
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
   }
 
-  .card-kairo {
+  .panel-kairo {
     font-size: var(--font-size-sm);
     color: var(--color-text-muted);
   }

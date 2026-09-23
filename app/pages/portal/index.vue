@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * Portal Index
+ * 送電ポータルトップ画面
  * 現場ポータルのトップ（未アサイン時の案内・自動リダイレクト）
  */
 import { useLocalStorage } from '@vueuse/core'

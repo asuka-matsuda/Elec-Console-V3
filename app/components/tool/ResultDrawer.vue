@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * OrganismsResultDrawer
+ * ResultDrawer
  * [Tool Organism] 計算結果パネルおよびモバイル用ボトムドロワー。
  */
 import { computed, ref, toRef, useSlots } from 'vue'

@@ -1,3 +1,9 @@
+/**
+ * リスト・セレクト用キーボードナビゲーション Composable
+ *
+ * @description 矢印キー（上下）による選択移動および Enter キー確定の操作性を提供します。
+ */
+
 import { type ComputedRef, type Ref, ref } from 'vue'
 
 export type NavigableOption = {

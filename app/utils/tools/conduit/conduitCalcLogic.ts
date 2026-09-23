@@ -1,3 +1,9 @@
+/**
+ * 電線管サイズ選定計算ロジック
+ *
+ * 内線規程に基づく電線管占有率（異種32% / 同種48%）計算および最適サイズ選定を提供します。
+ */
+
 import type { CableData, ConduitData } from '~/types/database'
 import type { CableInputItem, MathStep } from '~/types/tools'
 import { findCableByIndexString, getEffectiveCableDiameter } from '~/utils/cable'

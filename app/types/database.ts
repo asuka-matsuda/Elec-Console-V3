@@ -1,3 +1,9 @@
+/**
+ * 規格データベース型定義
+ *
+ * ケーブル、電線管、ドラム、ラック、トルク規格データのデータ構造を定義します。
+ */
+
 import type { cableData } from '~/constants/data/cableData'
 import type { conduitData } from '~/constants/data/conduitData'
 import type { drumData } from '~/constants/data/drumData'

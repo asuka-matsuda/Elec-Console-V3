@@ -115,14 +115,14 @@ describe('rackResultPresenter', () => {
 
     expect(vm.isEmpty).toBe(false)
     expect(vm.tier1.displaySize).toBe('W300')
-    expect(vm.tier1.boxStatus).toBe('success')
+    expect(vm.tier1.panelStatus).toBe('success')
     expect(vm.tier2.displaySize).toBe('W200')
-    expect(vm.tier2.boxStatus).toBe('success')
+    expect(vm.tier2.panelStatus).toBe('success')
     expect(vm.wStrong).toBe('120.4')
     expect(vm.wWeak).toBe('80.2')
   })
 
-  it('should handle height overflow (boxStatus: warning) when within standard size', () => {
+  it('should handle height overflow (panelStatus: warning) when within standard size', () => {
     const mockResult: RackCalcResult = {
       mode: 'strong',
       error: false,
@@ -174,10 +174,10 @@ describe('rackResultPresenter', () => {
     expect(vm.tier1.displaySize).toBe('W400')
     expect(vm.tier1.isOverflow).toBe(true)
     expect(vm.tier1.isSizeOver).toBe(false)
-    expect(vm.tier1.boxStatus).toBe('warning')
+    expect(vm.tier1.panelStatus).toBe('warning')
   })
 
-  it('should handle out of standard size (boxStatus: danger)', () => {
+  it('should handle out of standard size (panelStatus: danger)', () => {
     const mockResult: RackCalcResult = {
       mode: 'strong',
       error: true,
@@ -228,6 +228,6 @@ describe('rackResultPresenter', () => {
     expect(vm.isEmpty).toBe(false)
     expect(vm.tier1.displaySize).toBe('ERROR')
     expect(vm.tier1.isSizeOver).toBe(true)
-    expect(vm.tier1.boxStatus).toBe('danger')
+    expect(vm.tier1.panelStatus).toBe('danger')
   })
 })

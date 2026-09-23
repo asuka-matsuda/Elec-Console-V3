@@ -1,3 +1,10 @@
+/**
+ * グローバル認証ガードミドルウェア
+ *
+ * 全ルートの遷移時にセッション復元を行い、未認証ユーザーのログイン画面誘導や
+ * パスワードリセット要求ユーザーの強制リダイレクトを制御します。
+ */
+
 import { defineNuxtRouteMiddleware, navigateTo } from '#app'
 import { useAuth } from '~/composables/useAuth'
 

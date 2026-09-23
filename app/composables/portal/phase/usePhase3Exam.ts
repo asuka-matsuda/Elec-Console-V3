@@ -1,3 +1,9 @@
+/**
+ * フェーズ3（送電・電圧測定・検相試験）Composable
+ *
+ * @description 電圧測定値・検相結果の入力、一括確定、フェーズ3の確定および解除を提供します。
+ */
+
 import type { Ref } from 'vue'
 
 import { usePhaseExamBase } from '~/composables/portal/phase/usePhaseExamBase'

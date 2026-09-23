@@ -1,9 +1,7 @@
 /**
- * useTableAutoWidth.ts
- * テーブルコンテナ要素の幅を監視し、カラム定義とデータセットに基づいて
- * 動的な列幅の自動配分スタイル（columnWidthStyles）を提供するComposable。
- * テキスト文字数からの自動推測に加え、レンダリングされたDOM（ボタンUI等のスロット）の
- * 実測最小幅（Intrinsic Content Width）を自動サンプリングして完全自律配分します。
+ * テーブル列幅自動配分 Composable
+ *
+ * @description テーブルコンテナ要素の幅を監視し、カラム定義とデータセットに基づいて動的な列幅の自動配分スタイルを提供します。
  */
 import { useElementSize } from '@vueuse/core'
 import { computed, type MaybeRefOrGetter, nextTick, onMounted, ref, toValue, watch } from 'vue'

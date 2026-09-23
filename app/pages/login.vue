@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * login
+ * ログイン画面
  * ポータルログインページ
  */
 import { ref } from 'vue'

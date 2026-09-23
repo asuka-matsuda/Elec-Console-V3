@@ -1,13 +1,19 @@
-import type { ResultBoxStatus, ResultDetailItem } from '~/types/components'
+/**
+ * ケーブルラック計算結果プレゼンター
+ *
+ * ラック幅計算結果、敷設段数比較、および数式ステップをUI表示用ViewModelへ整形します。
+ */
+
+import type { ResultDetailItem, ResultPanelStatus } from '~/types/components'
 import type { RackCalcResult, RackTierResult } from '~/utils/tools/rack/rackCalcLogic'
 
-export interface RackTierCardViewModel {
+export interface RackTierPanelViewModel {
   layers: 1 | 2
   title: string
   badgeText?: string
   badgeColor?: string
   displaySize: string
-  boxStatus: ResultBoxStatus
+  panelStatus: ResultPanelStatus
   totalWidth: string
   maxHeight: string
   isOverflow: boolean
@@ -18,8 +24,8 @@ export interface RackTierCardViewModel {
 
 export interface RackResultViewModel {
   isEmpty: boolean
-  tier1: RackTierCardViewModel
-  tier2: RackTierCardViewModel
+  tier1: RackTierPanelViewModel
+  tier2: RackTierPanelViewModel
   wStrong: string
   wWeak: string
   maxDepth: string
@@ -32,11 +38,11 @@ export interface RackResultPresenterParams {
   mode?: 'strong' | 'weak'
 }
 
-function formatTierCard(
+function formatTierPanel(
   tier: RackTierResult | undefined,
   isEmpty: boolean,
   _mode?: 'strong' | 'weak',
-): RackTierCardViewModel {
+): RackTierPanelViewModel {
   const isTier2 = tier?.layers === 2
   const layers = isTier2 ? 2 : 1
   const title = isTier2 ? '2段敷設（省スペース）' : '1段敷設（平置き・標準）'
@@ -46,7 +52,7 @@ function formatTierCard(
       layers,
       title,
       displaySize: '---',
-      boxStatus: 'neutral',
+      panelStatus: 'neutral',
       totalWidth: '0',
       maxHeight: '0.0',
       isOverflow: false,
@@ -62,7 +68,7 @@ function formatTierCard(
       title,
       badgeText: '段積み不可',
       displaySize: '---',
-      boxStatus: 'warning',
+      panelStatus: 'warning',
       totalWidth: String(Math.ceil(tier.totalWidth)),
       maxHeight: tier.maxCableStackHeight.toFixed(1),
       isOverflow: false,
@@ -72,17 +78,17 @@ function formatTierCard(
     }
   }
 
-  let boxStatus: 'neutral' | 'success' | 'warning' | 'danger' = 'success'
+  let panelStatus: 'neutral' | 'success' | 'warning' | 'danger' = 'success'
   let badgeText: string | undefined
   let badgeColor: string | undefined
 
   if (tier.isSizeOver) {
-    boxStatus = 'danger'
+    panelStatus = 'danger'
     badgeText = '規格外'
     badgeColor = 'var(--color-status-danger)'
   }
   else if (tier.isOverflow) {
-    boxStatus = 'warning'
+    panelStatus = 'warning'
     badgeText = '高さ不足'
     badgeColor = 'var(--color-status-warning)'
   }
@@ -97,7 +103,7 @@ function formatTierCard(
     badgeText,
     badgeColor,
     displaySize,
-    boxStatus,
+    panelStatus,
     totalWidth: String(Math.ceil(tier.totalWidth)),
     maxHeight: tier.maxCableStackHeight.toFixed(1),
     isOverflow: tier.isOverflow,
@@ -124,8 +130,8 @@ export function formatRackResult(
   const isError = Boolean(result?.error) && !isSizeOver
   const isEmpty = isZeroOrNoInput || isError
 
-  const tier1 = formatTierCard(result?.tier1, isEmpty, resolvedMode)
-  const tier2 = formatTierCard(result?.tier2, isEmpty, resolvedMode)
+  const tier1 = formatTierPanel(result?.tier1, isEmpty, resolvedMode)
+  const tier2 = formatTierPanel(result?.tier2, isEmpty, resolvedMode)
 
   const wStrong = (resolvedMode === 'strong' ? result?.tier1?.wMain : result?.tier1?.wOther)?.toFixed(1) ?? '0.0'
   const wWeak = (resolvedMode === 'strong' ? result?.tier1?.wOther : result?.tier1?.wMain)?.toFixed(1) ?? '0.0'

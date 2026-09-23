@@ -1,3 +1,9 @@
+/**
+ * Vue グローバルエラーハンドラープラグイン
+ *
+ * コンポーネント描画中やライフサイクル内で発生した未捕捉エラーを統一ログ出力します。
+ */
+
 import { defineNuxtPlugin } from '#app'
 import { ErrorCode } from '#shared/types/errors'
 import { AppException } from '~/utils/errors'

@@ -1,3 +1,10 @@
+/**
+ * ナビゲーションメニュー構造データ
+ *
+ * グローバルナビゲーションおよびダッシュボードで使用される
+ * カテゴリ別メニュー（現場管理、電卓ツール、データベース、規約解説等）の定義です。
+ */
+
 import type { IconName } from '~/constants/icons'
 
 export type MenuItem = {

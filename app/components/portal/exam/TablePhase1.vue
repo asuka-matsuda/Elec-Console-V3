@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PortalTablePhase1
+ * TablePhase1
  * [Portal Organisms] フェーズ1（回路確認・増締）の回路一覧テーブルコンポーネント。
  * 回路情報のインライン編集（番号・名称・配線・備考）、ワンタップ確定および解除操作を管理します。
  */

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * MasterTabHistory
+ * TabHistory
  * [Master Organisms] 更新履歴管理タブ。
  * システム全体の更新履歴の追加・一覧・編集・削除を行います。
  */

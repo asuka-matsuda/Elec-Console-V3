@@ -1,3 +1,10 @@
+/**
+ * 規格データベースレジストリ
+ *
+ * ケーブル・電線管・ドラム・ケーブルラック・締付トルクの各規格マスターデータを
+ * テーブル表示および検索機能と紐付けるレジストリ設定を定義します。
+ */
+
 import { cableData } from '~/constants/data/cableData'
 import { conduitData } from '~/constants/data/conduitData'
 import { drumData } from '~/constants/data/drumData'

@@ -1,3 +1,9 @@
+/**
+ * ゲートキー（GateKey）セキュリティミドルウェア
+ *
+ * 設定されたゲートキーによるアクセス制限を行い、不正なリクエストを遮断します。
+ */
+
 import crypto from 'node:crypto'
 
 import {

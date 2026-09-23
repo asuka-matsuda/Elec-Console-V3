@@ -1,3 +1,9 @@
+/**
+ * 規格データベーステーブル定義定数
+ *
+ * ケーブル、電線管、ドラム、ラック、トルク等のマスターテーブル表示用カラム定義を提供します。
+ */
+
 import type { cableData } from '~/constants/data/cableData'
 import type { conduitData } from '~/constants/data/conduitData'
 import type { drumData } from '~/constants/data/drumData'

@@ -1,3 +1,9 @@
+/**
+ * 楽観的ロック（排他制御）ユーティリティ
+ *
+ * 他の作業者とのデータ上書き競合を防ぐため、バージョン番号および更新日時の整合性を検証します。
+ */
+
 import type { Circuit, Prisma } from '@prisma/client'
 
 import { ErrorCode } from '#shared/types/errors'

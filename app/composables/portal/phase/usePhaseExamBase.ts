@@ -1,3 +1,9 @@
+/**
+ * 送電試験（Phase 1〜3）基底共通 Composable
+ *
+ * @description 回路一覧の取得、楽観ロック制御、更新アクション実行の共通基盤を提供します。
+ */
+
 import type { Ref } from 'vue'
 import { computed, ref, unref, watch } from 'vue'
 

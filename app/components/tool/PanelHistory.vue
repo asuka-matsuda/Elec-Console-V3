@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
- * HistoryCard
- * [Tool Organism] 計算履歴を1件表示するカードコンポーネント。
+ * PanelHistory
+ * [Tool Organism] 計算履歴を1件表示するパネルコンポーネント。
  * 入力条件と計算結果のプレビューを提供し、個別ツールのリッチな結果表示に対応します。
  */
 import { computed } from 'vue'
@@ -55,7 +55,7 @@ const weightResult = computed(() => {
 <template>
   <Panel
     as="article"
-    class="history-card flex flex-col gap-3"
+    class="history-panel flex flex-col gap-3"
     :class="[`is-${entry.status}`]"
   >
 
@@ -161,7 +161,7 @@ const weightResult = computed(() => {
 </template>
 
 <style scoped lang="scss">
-.history-card {
+.history-panel {
   header {
     border-bottom: 1px solid var(--color-border);
   }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PortalTablePhase2
+ * TablePhase2
  * [Portal Organisms] フェーズ2（絶縁抵抗測定・メガ測定）の回路一覧テーブルコンポーネント。
  * 回路情報の表示、手入力モード（R/S/T相の測定値入力）、全相OK確定（100MΩ）、および解除操作を管理します。
  */

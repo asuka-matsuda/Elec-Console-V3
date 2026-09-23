@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * WeightCalculator
+ * ケーブル重量・ドラム選定計算画面
  * ケーブル重量・ドラム選定ツールのページコンポーネントです。
  */
 import { useWeightCalculator } from '~/composables/tools/useWeightCalculator'

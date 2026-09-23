@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * Input
+ * [Atoms] テキスト入力や数値入力を提供する最小フォームコントロールコンポーネントです。
+ * 単位テキスト（addon）やカスタム要素（#addon スロット）のインライン結合をサポートします。
+ */
 import { computed, inject, ref, useAttrs } from 'vue'
 
 import type { InputProps } from '~/types/components'
@@ -10,11 +15,6 @@ defineOptions({
 
 const model = defineModel<string | number | null>()
 
-/**
- * Input
- * テキスト入力や数値入力を提供する最小フォームコントロールコンポーネントです。
- * 単位テキスト（addon）やカスタム要素（#addon スロット）のインライン結合をサポートします。
- */
 const props = withDefaults(defineProps<InputProps>(), {
   type: 'text',
   disabled: false,

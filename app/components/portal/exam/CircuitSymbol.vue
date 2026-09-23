@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PortalCircuitSymbol
+ * CircuitSymbol
  * [Portal Atoms] 回路記号のSVG枠線と回路番号を描画する最小レンダラーコンポーネント。
  */
 import { computed } from 'vue'

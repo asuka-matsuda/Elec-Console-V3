@@ -103,7 +103,7 @@ const emit = defineEmits<{
       <span>{{ syncMsg }}</span>
     </div>
 
-    <ResultBox
+    <ResultPanel
       v-else-if="syncResultData"
       status="success"
       :title="syncResultData.title"
@@ -126,7 +126,7 @@ const emit = defineEmits<{
           </Badge>
         </template>
       </div>
-    </ResultBox>
+    </ResultPanel>
   </div>
 </template>
 

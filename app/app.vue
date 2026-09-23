@@ -1,4 +1,10 @@
 <script setup lang="ts">
+/**
+ * アプリケーションルートコンポーネント
+ *
+ * テーマ（外観モード・アニメーション）の DOM 反映、および
+ * アプリ全体で共有されるグローバル確認モーダルを描画・管理します。
+ */
 import { watchEffect } from 'vue'
 
 import { useModal } from '~/composables/useModal'

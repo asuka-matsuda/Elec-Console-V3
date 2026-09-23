@@ -1,3 +1,10 @@
+/**
+ * Prisma Client シングルトン初期化ユーティリティ
+ *
+ * 開発・本番および各種ランタイム環境において SQLite データベースパスを安全に解決し、
+ * PrismaClient の単一インスタンスを管理・提供します。
+ */
+
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
@@ -14,7 +21,7 @@ function createPrismaClient() {
     currentDir = path.dirname(fileURLToPath(import.meta.url))
   }
   catch {
-    // fallback to process.cwd()
+    // import.meta.url が解決できない環境では process.cwd() をフォールバックとして使用
   }
 
   const defaultPath = path.resolve(process.cwd(), 'prisma/dev.db')

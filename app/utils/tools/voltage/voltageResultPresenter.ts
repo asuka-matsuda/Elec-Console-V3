@@ -1,5 +1,11 @@
+/**
+ * 電圧降下計算結果プレゼンター
+ *
+ * 電圧降下・許容電流判定結果をステータスバッジ、比較パネル、および数式表示用ViewModelへ整形します。
+ */
+
 import { getToolError, type ToolErrorInfo } from '~/constants/toolErrorConstants'
-import type { ResultBoxStatus, ResultDetailItem } from '~/types/components'
+import type { ResultDetailItem, ResultPanelStatus } from '~/types/components'
 import type { VoltageCalcInputs, VoltageCalcResult } from '~/types/voltage'
 import { formatVal } from '~/utils/math'
 
@@ -9,18 +15,18 @@ export interface VoltageResultViewModel {
   mainLabel: string
   mainValue: string
   mainUnit: string
-  mainStatus: ResultBoxStatus
+  mainStatus: ResultPanelStatus
   mainBadgeText?: string
   currentI: string
   maxI: string
   isAmpError: boolean
-  ampStatus: ResultBoxStatus
+  ampStatus: ResultPanelStatus
   ampBadgeText?: string
   dropV: string
   dropPercent: string
   dropPercentText?: string
   isDropError: boolean
-  dropStatus: ResultBoxStatus
+  dropStatus: ResultPanelStatus
   dropBadgeText?: string
   details?: ResultDetailItem[]
   errorInfo?: ToolErrorInfo
@@ -52,13 +58,13 @@ export function formatVoltageResult(
   const mainLabel = mode === 'size' ? '選定ケーブルサイズ' : '電圧降下'
   let mainValue = 'ーー'
   let mainUnit = mode === 'size' ? 'sq' : 'V'
-  let mainStatus: ResultBoxStatus = 'neutral'
+  let mainStatus: ResultPanelStatus = 'neutral'
   let mainBadgeText: string | undefined
 
   // 2. 電流チェック (設計 / 許容)
   let currentI = isReady && inputs ? formatVal(inputs.I, 'ーー', 1) : 'ーー'
   let maxI = isReady && result ? formatVal(result.finalEffAmp, 'ーー', 1) : 'ーー'
-  let ampStatus: ResultBoxStatus = 'neutral'
+  let ampStatus: ResultPanelStatus = 'neutral'
   let ampBadgeText: string | undefined
 
   // 3. 電圧降下 (V / %)
@@ -66,7 +72,7 @@ export function formatVoltageResult(
   let dropPercent = 'ーー'
   let dropPercentText: string | undefined
   let dropRateText = 'ーー'
-  let dropStatus: ResultBoxStatus = 'neutral'
+  let dropStatus: ResultPanelStatus = 'neutral'
   let dropBadgeText: string | undefined
 
   if (isReady && result) {
@@ -94,7 +100,7 @@ export function formatVoltageResult(
 
     if (mode === 'size') {
       if (isTargetDropOver) {
-        // 電圧降下のみ超過: 最大サイズ表示 + 全カード警告
+        // 電圧降下のみ超過: 最大サイズ表示 + 全パネル警告
         mainValue = result.optimal?.size ? String(result.optimal.size) : 'ERROR'
         mainUnit = result.optimal?.unit || 'sq'
         mainStatus = 'warning'
@@ -107,7 +113,7 @@ export function formatVoltageResult(
         dropBadgeText = '降下率超過'
       }
       else if (isAmpOverError) {
-        // 許容電流不足: 全カード danger + 許容電流不足
+        // 許容電流不足: 全パネル danger + 許容電流不足
         mainValue = 'ERROR'
         mainUnit = ''
         mainStatus = 'danger'
@@ -123,7 +129,7 @@ export function formatVoltageResult(
         dropBadgeText = '許容電流不足'
       }
       else if (isNoMatchingError) {
-        // 規格外（該当規格なし等）: 全カード danger + 規格外
+        // 規格外（該当規格なし等）: 全パネル danger + 規格外
         mainValue = 'ERROR'
         mainUnit = ''
         mainStatus = 'danger'

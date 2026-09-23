@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * SiteSettingsDetail
+ * DetailSiteSettings
  * [Portal Organisms] 現場管理の右ペイン（詳細設定コンソール）
  * 選択された現場の基本情報、Excelデータ連携、除外回路ルールを統合提供します。
  */

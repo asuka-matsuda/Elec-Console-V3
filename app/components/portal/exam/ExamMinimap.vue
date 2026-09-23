@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * ExamMinimap
- * 試験画面用の回路進捗ミニマップ。完了・除外・未着手状態をタイル表示。
+ * [Portal Molecules] 試験画面用の回路進捗ミニマップ。完了・除外・未着手状態をタイル表示。
  */
 import type { CircuitItem } from '~/types/souden'
 

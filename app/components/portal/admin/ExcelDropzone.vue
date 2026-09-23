@@ -173,7 +173,7 @@ const formatFileSize = (bytes: number): string => {
     }
   }
 
-  // --- 選択時（プレビューカード） ---
+  // --- 選択時（プレビューパネル） ---
   &.has-file {
     border-color: var(--color-status-success);
     border-style: solid;

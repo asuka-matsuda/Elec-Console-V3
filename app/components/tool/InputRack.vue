@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * OrganismsRackInput
+ * InputRack
  * [Tool Organism] ケーブルラック選定ツールの条件入力フォームコンポーネント。
  * 強電／弱電タブ切替、ラック高さ、相乗り必要幅、計算パラメータ、およびケーブル条件を管理します。
  */

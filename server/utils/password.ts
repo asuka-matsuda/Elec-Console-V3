@@ -1,3 +1,9 @@
+/**
+ * パスワードハッシュ・検証ユーティリティ
+ *
+ * PBKDF2-HMAC-SHA512 による強固なパスワード暗号化およびレガシーハッシュとの後方互換検証を提供します。
+ */
+
 import crypto from 'crypto'
 
 const DEFAULT_ITERATIONS = 100000

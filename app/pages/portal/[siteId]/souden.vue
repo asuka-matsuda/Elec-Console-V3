@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * Souden Dashboard View
+ * 送電試験進捗ダッシュボード画面
  * 送電試験ダッシュボード（総合進捗・幹線/二次側の進捗および各フェーズへの導線）
  */
 import { computed, onMounted } from 'vue'
@@ -76,7 +76,7 @@ onMounted(() => {
 
     <template v-else-if="stats">
 
-      <PortalCardSoudenOverall :stats="stats" :site-id="siteId" />
+      <PortalPanelSoudenOverall :stats="stats" :site-id="siteId" />
     </template>
   </div>
 </template>

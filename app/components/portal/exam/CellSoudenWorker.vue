@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * SoudenWorkerCell
+ * CellSoudenWorker
  * [Portal Molecules] 送電試験テーブル用の測定者・確定日時表示セルコンポーネント。
  * 測定完了時は作業者名と日時を縦並びで表示し、未完了時はハイフンを表示します。
  */

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * MasterTabWordBreak
+ * TabWordBreak
  * [Master Organisms] 改行禁止ワード管理タブ。
  * システム全体の改行禁止ワードの追加・一覧・編集・削除を行います。
  */

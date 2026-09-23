@@ -1,3 +1,9 @@
+/**
+ * サーバー側エラー生成・追跡ユーティリティ
+ *
+ * 一意な Trace ID の生成、HTTP エラーコード付き AppException の生成を提供します。
+ */
+
 import crypto from 'node:crypto'
 
 import { createError } from 'h3'

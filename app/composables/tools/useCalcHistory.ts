@@ -1,3 +1,9 @@
+/**
+ * 計算履歴管理 Composable
+ *
+ * @description 電卓ツール群（電圧降下・電線管・ラック等）の計算結果履歴の保存・読出を管理します。
+ */
+
 import { useLocalStorage } from '@vueuse/core'
 
 import type { HistoryEntry } from '~/types/history'

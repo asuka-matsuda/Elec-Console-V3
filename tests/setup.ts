@@ -1,3 +1,10 @@
+/**
+ * Vitest テスト環境共通セットアップ
+ *
+ * Happy-DOM 環境における KaTeX 警告の抑制、Nuxt コア Composable のモック、
+ * および Vue Test Utils の共通スタブ登録を行います。
+ */
+
 import { config } from '@vue/test-utils'
 import { getContext } from 'unctx'
 import { vi } from 'vitest'
@@ -12,7 +19,7 @@ if (typeof document !== 'undefined') {
     })
   }
   catch {
-    // ignore
+    // Happy-DOM のプロパティ定義不可環境でのエラーを無視
   }
 }
 
@@ -69,7 +76,7 @@ try {
   getContext('nuxt-app').set(mockNuxtApp as any, true)
 }
 catch {
-  // ignore
+  // unctx コンテキスト設定エラーを無視（単体実行環境用フォールバック）
 }
 
 // グローバルスコープへの登録

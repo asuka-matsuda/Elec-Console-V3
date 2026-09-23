@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * OrganismsConduitInput
+ * InputConduit
  * [Tool Organism] 配管サイズ自動選定ツールの条件入力コンポーネント。
  * 対象の配管種類と収容するケーブルリストの入力を管理します。
  */

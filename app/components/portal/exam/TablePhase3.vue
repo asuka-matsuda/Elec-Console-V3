@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PortalTablePhase3
+ * TablePhase3
  * [Portal Organisms] フェーズ3（送電・電圧測定・検相）の回路一覧テーブルコンポーネント。
  * 回路情報の表示、手入力モード（各相電圧・検相・備考の入力）、標準値確定、および解除操作を管理します。
  */

@@ -1,3 +1,9 @@
+/**
+ * 電圧降下・許容電流計算コアロジック
+ *
+ * 単相・三相各線式における電圧降下式、許容電流低減率、および最適ケーブルサイズ逆算を提供します。
+ */
+
 import { cableData as defaultCableData } from '~/constants/data/cableData'
 import type { CableData } from '~/types/database'
 import type {

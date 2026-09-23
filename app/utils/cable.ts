@@ -1,3 +1,9 @@
+/**
+ * ケーブルデータ操作・導出ユーティリティ
+ *
+ * ケーブル外径・断面積の正規化取得、規格データの検索およびカテゴリ抽出を提供します。
+ */
+
 import {
   STRONG_CURRENT_CATEGORIES,
   WEAK_CURRENT_CATEGORIES,

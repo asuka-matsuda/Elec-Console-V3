@@ -1,3 +1,9 @@
+/**
+ * 改行禁止ワード管理 Composable
+ *
+ * @description システム設定で指定された単語の途中で改行されないよう Word Joiner 結合を適用します。
+ */
+
 import { useState } from '#app'
 import { useApi } from '~/composables/useApi'
 import { applyNoBreakToText } from '~/utils/noBreak'

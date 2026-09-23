@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PortalSyncStatusBadge
+ * SyncStatusBadge
  * [Portal Molecules] オフライン同期状態（未同期件数／同期済）を表示し、クリックで同期モーダルを開く。
  */
 import { ref, toRef } from 'vue'

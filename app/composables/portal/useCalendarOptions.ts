@@ -1,3 +1,9 @@
+/**
+ * FullCalendar オプション構成 Composable
+ *
+ * @description カレンダーのビュー設定、イベント描画、日付選択ハンドラーを構築します。
+ */
+
 import type {
   CalendarOptions,
   DateSelectArg,

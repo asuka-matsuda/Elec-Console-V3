@@ -1,3 +1,9 @@
+/**
+ * テーブル並び替え（ソート）Composable
+ *
+ * @description テーブル列のソートキー、昇順・降順状態の切り替えおよびデータ並び替えを制御します。
+ */
+
 import { computed, type ComputedRef, isRef, type Ref, ref } from 'vue'
 
 export type SortOrder = 'asc' | 'desc' | null

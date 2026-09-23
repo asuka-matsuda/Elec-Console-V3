@@ -1,3 +1,9 @@
+/**
+ * 現場ポータル Excel 同期 Composable
+ *
+ * @description 回路リストの Excel 取込・差分反映・ダウンロード処理のフローを管理します。
+ */
+
 import type { ComputedRef, Ref } from 'vue'
 import { computed, ref } from 'vue'
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * ConduitResult
+ * ResultConduit
  * [Tool Organism] 配管サイズ計算の結果を視覚的に表示する3段縦積みコンポーネント。
  * 内線規程勧告（32%, 48%）およびユーザー指定占積率の結果を表示し、
  * フッターに内線規程の勧告根拠を表示します。
@@ -25,7 +25,7 @@ const vm = computed(() => formatConduitResult(props.result))
     :class="[size === 'sm' ? 'gap-3 is-sm' : 'gap-panel-gap']"
   >
 
-    <ResultBox
+    <ResultPanel
       :title="CONDUIT_UI_LABELS.TITLE_32"
       :status="vm.status32"
       :badge="vm.badge32"
@@ -35,9 +35,9 @@ const vm = computed(() => formatConduitResult(props.result))
         <span>{{ vm.size32 }}</span>
         <small v-if="vm.fillText32">{{ vm.fillText32 }}</small>
       </template>
-    </ResultBox>
+    </ResultPanel>
 
-    <ResultBox
+    <ResultPanel
       :title="CONDUIT_UI_LABELS.TITLE_48"
       :status="vm.status48"
       :badge="vm.badge48"
@@ -47,9 +47,9 @@ const vm = computed(() => formatConduitResult(props.result))
         <span>{{ vm.size48 }}</span>
         <small v-if="vm.fillText48">{{ vm.fillText48 }}</small>
       </template>
-    </ResultBox>
+    </ResultPanel>
 
-    <ResultBox
+    <ResultPanel
       :title="vm.titleCustom"
       :status="vm.statusCustom"
       :badge="vm.badgeCustom"
@@ -59,7 +59,7 @@ const vm = computed(() => formatConduitResult(props.result))
         <span>{{ vm.sizeCustom }}</span>
         <small v-if="vm.fillTextCustom">{{ vm.fillTextCustom }}</small>
       </template>
-    </ResultBox>
+    </ResultPanel>
 
     <ToolResultDetails>
       <ul class="m-0 p-0 flex flex-col gap-1 list-none">

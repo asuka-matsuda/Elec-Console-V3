@@ -1,4 +1,10 @@
-// toolOptions.ts
+/**
+ * 計算ツール共通選択肢定数定義
+ *
+ * 電圧降下・許容電流・電線管・ラック計算等のツール群で使用される
+ * モード・相線式・負荷単位・力率などの選択肢オプションを定義します。
+ */
+
 export const modeOptions = [
   { label: '電圧降下', value: 'drop', color: 'var(--color-category-tool)' },
   { label: '導体断面積', value: 'size', color: 'var(--color-category-tool)' },

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
- * SoudenOverallCard
- * [Portal Organisms] 送電試験ダッシュボードの総合進捗カード。
+ * PanelSoudenOverall
+ * [Portal Organisms] 送電試験ダッシュボードの総合進捗パネル。
  * 全試験完了率の円形ゲージと、幹線・二次側それぞれの詳細進捗群を一元表示します。
  */
 import type { SoudenStats } from '~/types/portal'
@@ -27,7 +27,6 @@ const GROUPS = [
     />
 
     <div class="flex flex-col lg:flex-row items-center gap-6 lg:gap-8">
-
       <PortalCircularGauge
         class="shrink-0"
         :value="stats.totalPct"

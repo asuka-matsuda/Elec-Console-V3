@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * MasterTabAnnouncements
+ * TabAnnouncements
  * [Master Organisms] お知らせ管理タブ。
  * システム全体のお知らせの追加・一覧・編集・削除を行います。
  */

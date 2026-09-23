@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * RackResult
+ * ResultRack
  * [Tool Organism] ケーブルラック選定ツールの計算・選定結果表示コンポーネント。
  * 1段敷設（平置き・標準）と2段敷設（省スペース）の2段構えで比較表示します。
  */
@@ -27,20 +27,20 @@ const vm = computed(() =>
 <template>
   <div class="flex flex-col gap-panel-gap">
 
-    <ResultBox
+    <ResultPanel
       :title="vm.tier1.title"
-      :status="vm.tier1.boxStatus"
+      :status="vm.tier1.panelStatus"
       :badge="vm.tier1.badgeText"
       :is-empty="vm.isEmpty"
     >
       <template #value>
         {{ vm.tier1.displaySize }}
       </template>
-    </ResultBox>
+    </ResultPanel>
 
-    <ResultBox
+    <ResultPanel
       :title="vm.tier2.title"
-      :status="vm.tier2.boxStatus"
+      :status="vm.tier2.panelStatus"
       :badge="vm.tier2.badgeText"
       :is-empty="vm.isEmpty"
     >
@@ -52,7 +52,7 @@ const vm = computed(() =>
           {{ vm.tier2.notApplicableText }}
         </span>
       </template>
-    </ResultBox>
+    </ResultPanel>
 
     <ToolResultDetails :items="vm.details" />
   </div>

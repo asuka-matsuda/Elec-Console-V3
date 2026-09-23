@@ -5,19 +5,28 @@
  *
  * アカウント情報、パスワード変更、および表示設定（テーマ・アニメーション）を集約・管理します。
  */
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 
 import { useHead } from '#app'
 import { useAdminSites } from '~/composables/admin/useAdminSites'
 import { useAuth } from '~/composables/useAuth'
+import { usePasswordChange } from '~/composables/usePasswordChange'
 import { useSettings } from '~/composables/useSettings'
 import { THEME_OPTIONS } from '~/constants/constants'
 
 useHead({ title: 'マイページ - Elec-Console' })
 
-const { currentUser, changePassword } = useAuth()
+const { currentUser } = useAuth()
 const { sites, fetchSites } = useAdminSites()
 const { themeMode, animationEnabled } = useSettings()
+const {
+  newPassword,
+  confirmPassword,
+  passwordError,
+  isSuccess,
+  isLoading,
+  handleChangePassword,
+} = usePasswordChange()
 
 if (import.meta.client && sites.value.length === 0) {
   fetchSites()
@@ -34,44 +43,6 @@ const assignedSites = computed(() => {
 
   return sites.value.filter(site => currentUser.value?.assignedSiteIds.includes(site.id))
 })
-
-// パスワード変更ステート
-const newPassword = ref('')
-const confirmPassword = ref('')
-const passwordError = ref('')
-const isSuccess = ref(false)
-const isLoading = ref(false)
-
-const handleChangePassword = async () => {
-  passwordError.value = ''
-  isSuccess.value = false
-
-  if (!newPassword.value || newPassword.value.length < 8) {
-    passwordError.value = 'パスワードは8文字以上で入力してください。'
-
-    return
-  }
-
-  if (newPassword.value !== confirmPassword.value) {
-    passwordError.value = '確認用パスワードが一致しません。'
-
-    return
-  }
-
-  isLoading.value = true
-  const res = await changePassword(newPassword.value)
-
-  isLoading.value = false
-
-  if (res.success) {
-    isSuccess.value = true
-    newPassword.value = ''
-    confirmPassword.value = ''
-  }
-  else {
-    passwordError.value = res.message || 'パスワードの変更に失敗しました。'
-  }
-}
 </script>
 
 <template>
@@ -131,7 +102,7 @@ const handleChangePassword = async () => {
                 class="site-link"
               >
                 現場を開く
-                <Icon name="arrow-right" size="xs" />
+                <Icon name="arrow-right" size="sm" />
               </NuxtLink>
             </li>
           </ul>
@@ -176,13 +147,13 @@ const handleChangePassword = async () => {
 
         <div class="flex items-center justify-between pt-1">
           <span v-if="isSuccess" class="flex items-center gap-1 success-msg">
-            <Icon name="check" size="xs" /> パスワードを変更しました
+            <Icon name="check" size="sm" /> パスワードを変更しました
           </span>
           <span v-else />
 
           <Button
             type="submit"
-            variant="primary"
+            variant="default"
             icon="check"
             :loading="isLoading"
           >

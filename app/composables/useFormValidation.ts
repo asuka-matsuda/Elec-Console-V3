@@ -1,3 +1,9 @@
+/**
+ * 簡易フォーム必須バリデーション Composable
+ *
+ * @description 入力値の未入力検証およびエラーメッセージの即時反映を制御します。
+ */
+
 import type { Ref } from 'vue'
 import { ref } from 'vue'
 

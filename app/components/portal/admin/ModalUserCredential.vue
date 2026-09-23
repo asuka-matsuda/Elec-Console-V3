@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PortalModalUserCredential
+ * ModalUserCredential
  * [Portal Organisms] ユーザー新規作成時およびパスワード初期化時に表示する認証情報モーダル。
  * パスワードのコピー・印刷責務を集約します。
  */

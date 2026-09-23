@@ -1,3 +1,9 @@
+/**
+ * 認証・認可関連型定義
+ *
+ * ユーザーモデル、ロール権限、ログイン・パスワード変更ペイロード等のインターフェースを定義します。
+ */
+
 export type UserRole = 'admin' | 'worker' | 'viewer'
 
 export type User = {

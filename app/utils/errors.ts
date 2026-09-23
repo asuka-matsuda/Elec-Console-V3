@@ -1,3 +1,9 @@
+/**
+ * アプリケーション統一エラーハンドリングユーティリティ
+ *
+ * API エラーレスポンスの AppException への正規化、エラーコード変換およびメッセージ解決を提供します。
+ */
+
 import {
   type ApiErrorPayload,
   DEFAULT_ERROR_MESSAGES,

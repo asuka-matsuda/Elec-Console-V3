@@ -1,3 +1,10 @@
+/**
+ * Nitro エラーハンドラープラグイン
+ *
+ * サーバー側で発生したエラー（H3Error、Prisma 例外、予期せぬ例外）を捕捉し、
+ * ユニークな traceId を付与して統一された ApiErrorPayload フォーマットへ正規化します。
+ */
+
 import type { NitroApp } from 'nitropack/types'
 
 import {

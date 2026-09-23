@@ -1,5 +1,11 @@
+/**
+ * 電線管計算結果プレゼンター
+ *
+ * 電線管選定結果をUI表示用ViewModelおよび占有率プログレスデータへ整形します。
+ */
+
 import { CONDUIT_UI_LABELS } from '~/constants/conduitConstants'
-import type { ResultBoxStatus } from '~/types/components'
+import type { ResultPanelStatus } from '~/types/components'
 import { formatVal } from '~/utils/math'
 import type { ConduitCalcResult } from '~/utils/tools/conduit/conduitCalcLogic'
 
@@ -11,27 +17,27 @@ export interface ConduitResultViewModel {
   isSameSize: boolean
   isDiffSize: boolean
 
-  // Row 1: 32% (異種)
+  // 1行目: 32% (異種)
   size32: string
-  status32: ResultBoxStatus
+  status32: ResultPanelStatus
   badge32?: string
   fill32: string
   fillText32?: string
   allowable32: string
 
-  // Row 2: 48% (同種)
+  // 2行目: 48% (同種)
   size48: string
-  status48: ResultBoxStatus
+  status48: ResultPanelStatus
   badge48?: string
   fill48: string
   fillText48?: string
   allowable48: string
 
-  // Row 3: ユーザー指定
+  // 3行目: ユーザー指定
   customFillRate: number
   titleCustom: string
   sizeCustom: string
-  statusCustom: ResultBoxStatus
+  statusCustom: ResultPanelStatus
   badgeCustom?: string
   fillCustom: string
   fillTextCustom?: string
@@ -79,7 +85,7 @@ export function formatConduitResult(
   const size32 = isOversize32
     ? 'ERROR'
     : (result.conduit32?.size || CONDUIT_UI_LABELS.EMPTY_TEXT)
-  const status32: ResultBoxStatus = isOversize32 ? 'danger' : 'success'
+  const status32: ResultPanelStatus = isOversize32 ? 'danger' : 'success'
   const badge32 = isOversize32 ? '規格上限超過' : undefined
   const allowable32 = formatVal(
     result.allowable32,
@@ -96,7 +102,7 @@ export function formatConduitResult(
   const size48 = isOversize48
     ? 'ERROR'
     : (result.conduit48?.size || CONDUIT_UI_LABELS.EMPTY_TEXT)
-  const status48: ResultBoxStatus = isOversize48
+  const status48: ResultPanelStatus = isOversize48
     ? 'danger'
     : isDiffSize
       ? 'warning'
@@ -122,7 +128,7 @@ export function formatConduitResult(
   const sizeCustom = isOversizeCustom
     ? 'ERROR'
     : (result.conduitCustom?.size || CONDUIT_UI_LABELS.EMPTY_TEXT)
-  const statusCustom: ResultBoxStatus = isOversizeCustom ? 'danger' : 'success'
+  const statusCustom: ResultPanelStatus = isOversizeCustom ? 'danger' : 'success'
   const badgeCustom = isOversizeCustom ? '規格上限超過' : undefined
   const allowableCustom = formatVal(
     result.allowableCustom,

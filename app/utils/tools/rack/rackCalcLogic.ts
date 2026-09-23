@@ -1,3 +1,9 @@
+/**
+ * ケーブルラック幅選定計算ロジック
+ *
+ * 内線規程・JIS規格に基づく1段平置き・2段敷設時の必要ラック幅計算および推奨サイズ選定を提供します。
+ */
+
 import type { MathStep } from '~/types/tools'
 import { buildFormula, formatVal, hlAccent, hlOk } from '~/utils/math'
 

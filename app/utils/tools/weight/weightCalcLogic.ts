@@ -1,3 +1,10 @@
+/**
+ * ケーブル重量計算およびドラム選定ロジック
+ *
+ * ケーブル条長に応じた重量算出、許容巻取重量の判定、
+ * および最小曲げ半径に基づく最適ドラムサイズを導出します。
+ */
+
 import type { CableData, DrumData } from '~/types/database'
 import type { MathStep } from '~/types/tools'
 import { findCableByIndexString, getEffectiveCableDiameter } from '~/utils/cable'
@@ -57,9 +64,7 @@ export function calculateWeightAndDrum(
   let maxCapacityMeters = 0
   let bestMathParams: WeightCalcResult['bestMathParams'] = undefined
 
-  // Assuming voltage is stored in standard or we just use 12 by default for this simple tool.
-  // The old code did `cable.voltage === '6.6kV' ? 15 : 12;`.
-  // Since 'voltage' is not in our simplified CableData interface, we'll check category.
+  // 曲げ半径倍率の判定（6.6kV高圧ケーブルは安全基準として15倍、低圧・制御ケーブルは12倍）
   const bendFactor = category.includes('6.6kV') ? 15 : 12
   const minD2 = bendFactor * diameter
 

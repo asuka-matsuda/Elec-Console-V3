@@ -1,3 +1,9 @@
+/**
+ * カレンダー予定作成・編集モーダル Composable
+ *
+ * @description 現場カレンダーにおける予定の登録・変更・削除フォーム状態を管理します。
+ */
+
 import { type Ref, ref } from 'vue'
 
 import type {

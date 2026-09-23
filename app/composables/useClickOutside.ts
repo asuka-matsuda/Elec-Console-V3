@@ -19,7 +19,7 @@ export function useClickOutside(
       return
     }
 
-    // ignore指定された要素の中のクリックなら無視
+    // 除外指定（ignore）された要素の中のクリックなら無視
     if (options?.ignore) {
       for (const ignoreRef of options.ignore) {
         if (ignoreRef.value && ignoreRef.value.contains(event.target as Node)) {

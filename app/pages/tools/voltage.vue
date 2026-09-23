@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * VoltageCalculator
+ * 電圧降下・許容電流計算画面
  * 電圧降下・ケーブルサイズ選定ツールのコンポーネントです。電圧降下の計算や、条件を満たすケーブルサイズの選定を行います。
  */
 import { toTypedSchema } from '@vee-validate/zod'

@@ -1,3 +1,9 @@
+/**
+ * 送電試験フェーズ完了判定ロジック
+ *
+ * Phase 1〜3 の試験完了判定条件および Prisma Where 句の共通ロジックを定義します。
+ */
+
 import type { Circuit } from '@prisma/client'
 
 /**

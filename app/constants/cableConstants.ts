@@ -1,3 +1,9 @@
+/**
+ * ケーブル分類定数定義
+ *
+ * 強電ケーブルカテゴリ一覧および種別判定用の定数を定義します。
+ */
+
 import type { TableColumn } from '~/types/components'
 import type { CableInputItem } from '~/types/tools'
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * admin
+ * ポータル管理者設定画面
  * ポータル管理画面 (開発者向け)
  */
 import { ref } from 'vue'

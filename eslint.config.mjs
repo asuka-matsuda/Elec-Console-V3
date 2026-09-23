@@ -1,6 +1,7 @@
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 
 import withNuxt from './.nuxt/eslint.config.mjs'
+import noCardOrBoxNaming from './eslint-rules/no-card-or-box-naming.mjs'
 import noCommentedCode from './eslint-rules/no-commented-code.mjs'
 import noHoverTransitionOverride from './eslint-rules/no-hover-transition-override.mjs'
 import noLegacyCssVars from './eslint-rules/no-legacy-css-vars.mjs'
@@ -22,6 +23,7 @@ export default withNuxt(
           'no-template-comments': noTemplateComments,
           'require-file-jsdoc': requireFileJsdoc,
           'no-commented-code': noCommentedCode,
+          'no-card-or-box-naming': noCardOrBoxNaming,
         },
       },
     },
@@ -33,6 +35,7 @@ export default withNuxt(
       'local/no-template-comments': 'error',
       'local/require-file-jsdoc': 'error',
       'local/no-commented-code': 'error',
+      'local/no-card-or-box-naming': 'error',
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
       'vue/block-order': ['error', {

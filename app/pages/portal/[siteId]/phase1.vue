@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * Phase 1 View
+ * フェーズ1（回路確認・増締試験）画面
  * フェーズ1：回路確認・増締
  */
 import { computed, onMounted, watch } from 'vue'

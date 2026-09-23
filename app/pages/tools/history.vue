@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * CalculationHistory
+ * 計算履歴一覧画面
  * 計算履歴ツールのコンポーネントです。過去に実行した各種計算ツールの履歴を一覧表示し、管理します。
  */
 import { useCalculationHistoryPage } from '~/composables/tools/useCalculationHistoryPage'
@@ -44,7 +44,7 @@ const {
           v-if="historyList.length > 0"
           class="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-panel-gap"
         >
-          <ToolCardHistory
+          <ToolPanelHistory
             v-for="entry in historyList"
             :key="entry.id"
             :entry="entry"

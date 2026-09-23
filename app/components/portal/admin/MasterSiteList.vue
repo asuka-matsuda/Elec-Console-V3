@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * SiteListMaster
+ * MasterSiteList
  * [Portal Organisms] 現場管理の左ペイン（Master）。
  * 現場一覧、検索、ステータス絞り込み、新規現場作成トリガーを提供します。
  */

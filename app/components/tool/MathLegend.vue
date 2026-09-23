@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * ToolMathLegend
+ * MathLegend
  * [Tool Molecule] 数式ステップの凡例（記号と説明の一覧）を表示するコンポーネント。
  */
 import { computed } from 'vue'

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * Phase 2 View
+ * フェーズ2（絶縁抵抗測定試験）画面
  * フェーズ2：絶縁抵抗測定（メガ測定）
  */
 import { computed, onMounted, watch } from 'vue'

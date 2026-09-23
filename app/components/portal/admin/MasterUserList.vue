@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * UserListMaster
+ * MasterUserList
  * [Portal Organisms] ユーザー管理の左ペイン（Master）。
  * ユーザー一覧、検索フィルター、権限絞り込み、新規ユーザー作成トリガーを一元提供します。
  */

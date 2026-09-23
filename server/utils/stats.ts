@@ -1,3 +1,10 @@
+/**
+ * 送電進捗統計集計ユーティリティ
+ *
+ * 現場ごとの除外回路判定、系統別（幹線・動力・電灯等）の回路数、
+ * および各フェーズ（Phase 1〜3）の完了率・進捗率（パーセンテージ）を集計します。
+ */
+
 import type { SoudenStats } from '~/types/portal'
 
 import { EXAM_LOGIC } from './examLogic'

@@ -1,10 +1,16 @@
-import type { ResultBoxStatus, ResultDetailItem } from '~/types/components'
+/**
+ * ケーブル重量・ドラム選定結果プレゼンター
+ *
+ * ドラム選定結果、最大巻取条長、および導出根拠をUI表示用ViewModelへ整形します。
+ */
+
+import type { ResultDetailItem, ResultPanelStatus } from '~/types/components'
 import type { WeightCalcResult } from '~/utils/tools/weight/weightCalcLogic'
 
 export interface WeightResultViewModel {
   isError: boolean
   hasBestDrum: boolean
-  boxStatus: ResultBoxStatus
+  panelStatus: ResultPanelStatus
   badgeText?: string
   displayDrum: string
   displayTotalWeight: string
@@ -26,7 +32,7 @@ export function formatWeightResult(
   const hasBestDrum = Boolean(result?.bestDrum)
   const isDrumNotFound = Boolean(result && !isNoInput && (!result.bestDrum || result.reason === 'drum_not_found'))
 
-  const boxStatus: ResultBoxStatus = isNoInput
+  const panelStatus: ResultPanelStatus = isNoInput
     ? 'empty'
     : hasBestDrum
       ? 'success'
@@ -82,7 +88,7 @@ export function formatWeightResult(
   return {
     isError: isNoInput,
     hasBestDrum,
-    boxStatus,
+    panelStatus,
     badgeText,
     displayDrum,
     displayTotalWeight,

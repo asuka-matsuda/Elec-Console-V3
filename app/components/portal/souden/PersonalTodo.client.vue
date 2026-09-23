@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PortalPersonalTodo
+ * PersonalTodo
  * [Portal Organisms] 現場ダッシュボードのパーソナルToDo管理コンポーネント。
  */
 import { ref } from 'vue'

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * UserSettingsDetail
+ * DetailUserSettings
  * [Portal Organisms] ユーザー管理の右ペイン（詳細設定コンソール）。
  * 選択されたユーザーの基本設定、現場アサイン、PW初期化・削除を一括提供します。
  */

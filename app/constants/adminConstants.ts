@@ -1,3 +1,9 @@
+/**
+ * 管理画面共通定数定義
+ *
+ * ユーザー管理、現場管理等の管理画面タブ定義および初期表示設定を提供します。
+ */
+
 import type { Site, SiteStatus } from '~/types/admin'
 import type { User, UserRole } from '~/types/auth'
 import type { SelectOption, TableColumn, TabOption } from '~/types/components'

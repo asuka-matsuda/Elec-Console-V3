@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * Glossary
+ * 電気工事用語集画面
  * 用語集画面のコンポーネントです。専門用語の検索や、五十音・カテゴリ別での絞り込み機能を提供します。
  */
 import { computed, ref } from 'vue'

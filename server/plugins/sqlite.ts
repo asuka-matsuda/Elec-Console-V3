@@ -1,3 +1,10 @@
+/**
+ * SQLite 最適化 Nitro プラグイン
+ *
+ * データベースの並行性能向上のため、WAL（Write-Ahead Logging）モード、
+ * busy_timeout（5秒）、および synchronous（NORMAL）設定を初期化時に適用します。
+ */
+
 import { defineNitroPlugin } from 'nitropack/runtime'
 
 import { prisma } from '../utils/prisma'

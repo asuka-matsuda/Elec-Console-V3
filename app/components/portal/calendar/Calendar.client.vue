@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PortalCalendar
+ * Calendar
  * [Portal Organisms] 現場専用スケジュールカレンダー。
  * FullCalendar とツールバー、各種モーダルを統合します。
  */

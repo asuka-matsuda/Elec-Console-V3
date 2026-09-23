@@ -62,7 +62,7 @@ app/components/
 │   ├── OrganismsConduitInput.vue    # ➔ <ToolOrganismsConduitInput>
 │   ├── OrganismsRackInput.vue       # ➔ <ToolOrganismsRackInput>
 │   ├── OrganismsRackResult.vue      # ➔ <ToolOrganismsRackResult>
-│   └── OrganismsHistoryCard.vue     # ➔ <ToolOrganismsHistoryCard>
+│   └── OrganismsHistoryPanel.vue     # ➔ <ToolOrganismsHistoryPanel>
 │
 ├── portal/                          # 送電ポータル・現場管理専用
 │   ├── OrganismsPhase1Table.vue     # ➔ <PortalOrganismsPhase1Table>

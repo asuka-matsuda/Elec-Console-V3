@@ -1,3 +1,9 @@
+/**
+ * 送電回路 Excel インポート・エクスポートコアユーティリティ
+ *
+ * 現場回路リスト（Exceljs）のスマートマージ読込、セル書式設定および安全なファイルパス検証を提供します。
+ */
+
 import fs from 'node:fs'
 import path from 'node:path'
 

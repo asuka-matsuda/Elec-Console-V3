@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * WeightResult
+ * ResultWeight
  * [Tool Organism] ケーブル重量・ドラム選定ツールの計算結果表示コンポーネント。
  */
 import { computed } from 'vue'
@@ -18,21 +18,21 @@ const vm = computed(() => formatWeightResult(props.result))
 <template>
   <div class="flex flex-col gap-panel-gap">
 
-    <ResultBox
+    <ResultPanel
       title="使用ドラム（想定）"
-      :status="vm.boxStatus"
+      :status="vm.panelStatus"
       :badge="vm.badgeText"
     >
       <span class="value-text">{{ vm.displayDrum }}</span>
-    </ResultBox>
+    </ResultPanel>
 
-    <ResultBox
+    <ResultPanel
       title="総重量 (ケーブル+ドラム)"
-      :status="vm.boxStatus"
+      :status="vm.panelStatus"
     >
       <span class="value-text">{{ vm.displayTotalWeight }}</span>
       <small v-if="!vm.isError && vm.hasBestDrum">kg</small>
-    </ResultBox>
+    </ResultPanel>
 
     <ToolResultDetails :items="vm.details" />
   </div>

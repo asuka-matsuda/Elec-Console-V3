@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PortalModalCalendarEvent
+ * ModalCalendarEvent
  * [Organisms] カレンダー予定の新規作成および編集・削除を行うモーダルコンポーネント。
  */
 import { computed, ref, watch } from 'vue'
