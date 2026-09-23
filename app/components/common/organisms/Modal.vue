@@ -86,6 +86,8 @@ watch(
 
 <style scoped lang="scss">
 .modal {
+  --theme-accent: var(--color-category-main);
+
   pointer-events: none;
 
   transform: translateY(var(--space-2));

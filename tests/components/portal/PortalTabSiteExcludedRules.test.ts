@@ -1,11 +1,11 @@
-﻿import { mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
-import SiteExcludedRules from '../../../app/components/portal/admin/SiteExcludedRules.vue'
+import TabSiteExcludedRules from '../../../app/components/portal/admin/TabSiteExcludedRules.vue'
 
-describe('SiteExcludedRules.vue', () => {
+describe('PortalTabSiteExcludedRules.vue', () => {
   it('renders excluded circuits and emits update:modelValue on add, remove, and update', async () => {
-    const wrapper = mount(SiteExcludedRules, {
+    const wrapper = mount(TabSiteExcludedRules, {
       props: {
         modelValue: ['盤A-1', '盤B-2'],
       },
@@ -41,7 +41,7 @@ describe('SiteExcludedRules.vue', () => {
   })
 
   it('renders empty state when list is empty', () => {
-    const wrapper = mount(SiteExcludedRules, {
+    const wrapper = mount(TabSiteExcludedRules, {
       props: {
         modelValue: [],
       },

@@ -1,16 +1,1 @@
-[
-  {
-    "id": "test",
-    "name": "テスト現場",
-    "status": "planning",
-    "createdAt": "2026-08-27T01:22:54.104Z",
-    "disabledAt": null
-  },
-  {
-    "id": "site-2",
-    "name": "第二現場",
-    "status": "planning",
-    "createdAt": "2026-09-20T00:40:00.000Z",
-    "disabledAt": null
-  }
-]
+[]

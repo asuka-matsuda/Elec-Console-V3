@@ -2,11 +2,11 @@
  * 現場情報更新 API
  * PUT /api/sites/:siteId
  *
- * @description 指定された現場の基本情報や設定を更新します。
+ * @description 指定された現場の基本情報や設定を更新します。現場IDの変更にも対応します。
  * @permission システム管理者限定
  */
 
-import { defineEventHandler, getRouterParam, readBody } from 'h3'
+import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { requireAdminUser } from '../../../utils/auth'
 import { parseExcludedCircuits, serializeExcludedCircuits } from '../../../utils/jsonFields'
@@ -21,17 +21,55 @@ export default defineEventHandler(async (event) => {
 
   const siteData = body.site || body
 
+  // 1. 現場IDの変更チェックとバリデーション
+  const newId = typeof siteData.id === 'string' ? siteData.id.trim() : siteId
+
+  if (newId && newId !== siteId) {
+    if (!/^[a-zA-Z0-9_-]+$/.test(newId)) {
+      throw createError({
+        statusCode: 400,
+        message: '現場IDは半角英数字、ハイフン（-）、アンダースコア（_）のみ使用できます。',
+      })
+    }
+
+    const existing = await prisma.site.findUnique({
+      where: { id: newId },
+    })
+
+    if (existing) {
+      throw createError({
+        statusCode: 409,
+        message: `現場ID「${newId}」は既に使用されています。別のIDを指定してください。`,
+      })
+    }
+  }
+
+  // 2. 現場基本情報の更新 (ID変更がある場合はIDも同時更新)
+  const updateData: {
+    id?: string
+    name?: string
+    status?: string
+    disabledAt?: Date | null
+  } = {
+    name: siteData.name,
+    status: siteData.status,
+    disabledAt: siteData.disabledAt !== undefined
+      ? (siteData.disabledAt ? new Date(siteData.disabledAt) : null)
+      : undefined,
+  }
+
+  if (newId && newId !== siteId) {
+    updateData.id = newId
+  }
+
   const updatedSite = await prisma.site.update({
     where: { id: siteId },
-    data: {
-      name: siteData.name,
-      status: siteData.status,
-      disabledAt: siteData.disabledAt !== undefined
-        ? (siteData.disabledAt ? new Date(siteData.disabledAt) : null)
-        : undefined,
-    },
+    data: updateData,
   })
 
+  const currentSiteId = updatedSite.id
+
+  // 3. 現場設定（Excelパス、除外回路ルール等）の更新
   const rawExcelPath = siteData.excelPath !== undefined
     ? siteData.excelPath
     : body.settings?.excelPath
@@ -57,15 +95,15 @@ export default defineEventHandler(async (event) => {
 
   const settings = Object.keys(settingsUpdates).length > 0
     ? await prisma.siteSettings.upsert({
-        where: { siteId },
+        where: { siteId: currentSiteId },
         create: {
-          siteId,
+          siteId: currentSiteId,
           ...settingsUpdates,
         },
         update: settingsUpdates,
       })
     : await prisma.siteSettings.findUnique({
-        where: { siteId },
+        where: { siteId: currentSiteId },
       })
 
   const returnedSite = {

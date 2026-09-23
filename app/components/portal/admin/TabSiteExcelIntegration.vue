@@ -1,28 +1,34 @@
 <script setup lang="ts">
 /**
- * SiteExcelIntegration
+ * TabSiteExcelIntegration
  * [Portal Organisms] 現場管理のExcelデータ連携セクション。
  * Excelファイルのアップロードによる差分同期・全件初期化取込、最新帳票のダウンロード、
  * および処理結果・ステータス表示を提供します。
  */
-import type { SyncResultInfo } from '~/composables/portal/useSiteSettingsForm'
+import { toRef } from 'vue'
 
-defineProps<{
-  selectedFile: File | null
-  isSyncing: boolean
-  syncAction: string | null
-  showSyncMsg: boolean
-  syncMsg: string
-  syncMsgType: 'info' | 'success' | 'error'
-  syncResultData: SyncResultInfo | null
+import { useSiteExcelSync } from '~/composables/portal/useSiteExcelSync'
+import type { Site } from '~/types/admin'
+
+const props = defineProps<{
+  site: Site
 }>()
 
-const emit = defineEmits<{
-  'file-select': [file: File | null]
-  'merge-sync': []
-  'reset-import': []
-  'download-excel': []
-}>()
+const {
+  selectedFile,
+  isSyncing,
+  syncAction,
+  showSyncMsg,
+  syncMsg,
+  syncMsgType,
+  syncResultData,
+  handleFileSelect,
+  handleMergeSync,
+  handleResetImport,
+  handleDownloadExcel,
+} = useSiteExcelSync({
+  site: toRef(props, 'site'),
+})
 </script>
 
 <template>
@@ -41,7 +47,7 @@ const emit = defineEmits<{
       <PortalExcelDropzone
         :model-value="selectedFile"
         :disabled="isSyncing"
-        @update:model-value="emit('file-select', $event)"
+        @update:model-value="handleFileSelect"
       />
 
       <div class="flex flex-wrap items-center gap-3 mt-1">
@@ -49,7 +55,7 @@ const emit = defineEmits<{
           icon="refresh-cw"
           :loading="syncAction === 'merge'"
           :disabled="!selectedFile || isSyncing"
-          @click="emit('merge-sync')"
+          @click="handleMergeSync"
         >
           {{ selectedFile ? '選択ファイルから差分同期' : 'ファイルを選択して差分同期' }}
         </Button>
@@ -59,7 +65,7 @@ const emit = defineEmits<{
           icon="trash-2"
           :loading="syncAction === 'reset'"
           :disabled="!selectedFile || isSyncing"
-          @click="emit('reset-import')"
+          @click="handleResetImport"
         >
           全件初期化取込
         </Button>
@@ -81,7 +87,7 @@ const emit = defineEmits<{
         :loading="syncAction === 'download'"
         :disabled="isSyncing"
         class="w-fit"
-        @click="emit('download-excel')"
+        @click="handleDownloadExcel"
       >
         Excel帳票ダウンロード (ブラウザDL)
       </Button>

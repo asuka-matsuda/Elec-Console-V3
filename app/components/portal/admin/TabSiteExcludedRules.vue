@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * SiteExcludedRules
+ * TabSiteExcludedRules
  * [Portal Organisms] 現場管理の除外回路ルール設定セクション。
  * 計算や試験連携の対象外とする盤・回路の追加・編集・削除を提供します。
  */

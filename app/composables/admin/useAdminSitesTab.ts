@@ -2,7 +2,7 @@
  * ポータル管理 - 現場管理タブ（2ペインレイアウト）オーケストレーション Composable
  *
  * @description 現場一覧の選択状態同期、新規現場登録モーダル、
- * 現場保存、有効化/無効化確認ダイアログフローを一元管理します。
+ * 現場保存、有効化/無効化確認ダイアログフロー、および現場削除フローを一元管理します。
  */
 
 import { computed, onMounted, ref, watch } from 'vue'
@@ -25,7 +25,7 @@ export const INITIAL_CREATE_SITE: CreateSiteFormState = {
 }
 
 export function useAdminSitesTab() {
-  const { sites, fetchSites, createSite, toggleDisableSite, updateSite } = useAdminSites()
+  const { sites, fetchSites, createSite, toggleDisableSite, updateSite, deleteSite } = useAdminSites()
   const { askConfirm } = useModal()
 
   onMounted(async () => {
@@ -152,6 +152,38 @@ export function useAdminSitesTab() {
     }
   }
 
+  // --- 現場削除確認モーダル ---
+  const isDeletingSite = ref(false)
+
+  const confirmDeleteSite = async (site: Site) => {
+    const isConfirmed = await askConfirm({
+      title: '現場の完全削除',
+      message: `現場「${site.name}」(ID: ${site.id}) を完全に削除しますか？\n\n現場に紐づくすべての回路データ、試験記録、スケジュールが完全に消去されます。この操作は取り消せません。`,
+      confirmText: '完全に削除する',
+      intent: 'danger',
+    })
+
+    if (isConfirmed) {
+      isDeletingSite.value = true
+      try {
+        await deleteSite(site.id)
+        if (selectedSiteId.value === site.id) {
+          const remaining = sites.value.filter(s => s.id !== site.id)
+
+          selectedSiteId.value = remaining[0]?.id || null
+        }
+      }
+      catch (e: unknown) {
+        const appErr = parseToAppException(e)
+
+        alert(appErr.getUserFacingMessage())
+      }
+      finally {
+        isDeletingSite.value = false
+      }
+    }
+  }
+
   return {
     sites,
     selectedSiteId,
@@ -166,5 +198,7 @@ export function useAdminSitesTab() {
     openCreateModal,
     handleCreateSite,
     confirmToggleDisable,
+    isDeletingSite,
+    confirmDeleteSite,
   }
 }

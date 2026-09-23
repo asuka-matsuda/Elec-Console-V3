@@ -4,48 +4,68 @@
  * [Portal Organisms] 現場管理の右ペイン（詳細設定コンソール）
  * 選択された現場の基本情報、Excelデータ連携、除外回路ルールを統合提供します。
  */
-import { ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 
-import { useSiteSettingsForm } from '~/composables/portal/useSiteSettingsForm'
-import { SITE_SETTINGS_TABS } from '~/constants/adminConstants'
+import { useAdminUsers } from '~/composables/admin/useAdminUsers'
+import { SITE_SETTINGS_TABS, SITE_STATUS_OPTIONS } from '~/constants/adminConstants'
 import type { Site } from '~/types/admin'
+import { getAssignedWorkerNames } from '~/utils/portal'
 
 const props = defineProps<{
   site: Site | null
   isSaving?: boolean
+  isDeleting?: boolean
 }>()
 
 const emit = defineEmits<{
   save: [payload: Site]
+  delete: [site: Site]
 }>()
 
-const {
-  editData,
-  editStatus,
-  editId,
-  excludedCircuitsList,
-  statusOptions,
-  workerNames,
-  handleSave,
-  selectedFile,
-  handleFileSelect,
-  showSyncMsg,
-  syncMsg,
-  syncMsgType,
-  syncAction,
-  isSyncing,
-  syncResultData,
-  handleMergeSync,
-  handleResetImport,
-  handleDownloadExcel,
-} = useSiteSettingsForm({
-  site: () => props.site,
-  onSave: (payload) => {
-    emit('save', payload)
-  },
+const activeTab = ref('basic')
+const { users, fetchUsers } = useAdminUsers()
+
+// 単一のリアクティブオブジェクトに集約（断片化と余計なcomputedラッパーを全廃）
+const form = reactive({
+  name: '',
+  status: 'planning' as Site['status'],
+  excludedCircuits: [] as string[],
 })
 
-const activeTab = ref('basic')
+watch(
+  () => props.site,
+  async (newSite) => {
+    if (newSite) {
+      form.name = newSite.name || ''
+      form.status = newSite.status || 'planning'
+      form.excludedCircuits = [...(newSite.excludedCircuits || [])]
+
+      if (users.value.length === 0) {
+        await fetchUsers()
+      }
+    }
+  },
+  { immediate: true },
+)
+
+const workerNames = computed(() =>
+  getAssignedWorkerNames(props.site?.id, users.value),
+)
+
+const handleSave = () => {
+  if (!props.site) return
+
+  const parsedCircuits = form.excludedCircuits
+    .map(c => c.trim())
+    .filter(c => c.length > 0)
+
+  emit('save', {
+    ...props.site,
+    name: form.name.trim(),
+    status: form.status,
+    excludedCircuits: parsedCircuits,
+  })
+}
 </script>
 
 <template>
@@ -72,14 +92,24 @@ const activeTab = ref('basic')
         </template>
 
         <template #actions>
-          <Button
-            variant="success"
-            icon="save"
-            :loading="isSaving"
-            @click="handleSave"
-          >
-            変更を保存
-          </Button>
+          <div class="flex items-center gap-2">
+            <Button
+              variant="danger"
+              icon="trash-2"
+              :loading="isDeleting"
+              @click="emit('delete', site)"
+            >
+              削除
+            </Button>
+            <Button
+              variant="success"
+              icon="save"
+              :loading="isSaving"
+              @click="handleSave"
+            >
+              変更を保存
+            </Button>
+          </div>
         </template>
       </SectionHeader>
 
@@ -96,24 +126,24 @@ const activeTab = ref('basic')
               tag="h4"
             />
 
-            <FormGroup label="ステータス">
-              <Select
-                v-model="editStatus"
-                :options="statusOptions"
-              />
-            </FormGroup>
-
-            <FormGroup label="現場ID (半角英数)">
+            <FormGroup label="現場ID (変更不可)">
               <Input
-                v-model="editId"
-                placeholder="例: site-tokyo-01"
+                :model-value="site.id"
+                disabled
               />
             </FormGroup>
 
             <FormGroup label="現場名">
               <Input
-                v-model="editData.name"
+                v-model="form.name"
                 placeholder="例: 新宿プロジェクト"
+              />
+            </FormGroup>
+
+            <FormGroup label="ステータス">
+              <Select
+                v-model="form.status"
+                :options="SITE_STATUS_OPTIONS"
               />
             </FormGroup>
 
@@ -140,26 +170,11 @@ const activeTab = ref('basic')
         </template>
 
         <template #integration>
-          <PortalSiteExcelIntegration
-            :selected-file="selectedFile"
-            :is-syncing="isSyncing"
-            :sync-action="syncAction"
-            :show-sync-msg="showSyncMsg"
-            :sync-msg="syncMsg"
-            :sync-msg-type="syncMsgType"
-            :sync-result-data="syncResultData"
-            @file-select="handleFileSelect"
-            @merge-sync="handleMergeSync"
-            @reset-import="handleResetImport"
-            @download-excel="handleDownloadExcel"
-          />
+          <PortalTabSiteExcelIntegration :site="site" />
         </template>
 
         <template #rules>
-          <PortalSiteExcludedRules
-            :model-value="excludedCircuitsList"
-            @update:model-value="excludedCircuitsList = $event"
-          />
+          <PortalTabSiteExcludedRules v-model="form.excludedCircuits" />
         </template>
       </Tabs>
     </template>

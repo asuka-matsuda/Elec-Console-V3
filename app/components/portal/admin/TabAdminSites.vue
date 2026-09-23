@@ -20,6 +20,8 @@ const {
   openCreateModal,
   handleCreateSite,
   confirmToggleDisable,
+  isDeletingSite,
+  confirmDeleteSite,
 } = useAdminSitesTab()
 </script>
 
@@ -46,7 +48,9 @@ const {
         <PortalDetailSiteSettings
           :site="selectedSite"
           :is-saving="isSaving"
+          :is-deleting="isDeletingSite"
           @save="handleSaveSite"
+          @delete="confirmDeleteSite"
         />
       </div>
     </div>

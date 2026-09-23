@@ -54,7 +54,7 @@ model Event {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  site Site @relation(fields: [siteId], references: [id])
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model SiteSettings {
@@ -65,7 +65,7 @@ model SiteSettings {
   excludedCircuits      String? // Stored as JSON string "['予備', 'スペース']"
   excelPath             String?
 
-  site Site @relation(fields: [siteId], references: [id])
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model CalendarSettings {
@@ -75,7 +75,7 @@ model CalendarSettings {
   holidayDays    String // Stored as JSON string "[0, 6]"
   customHolidays String // Stored as JSON string "['YYYY-MM-DD']"
 
-  site Site @relation(fields: [siteId], references: [id])
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Circuit {
@@ -132,7 +132,7 @@ model Circuit {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@index([siteId, banMeisho])
   @@index([siteId, keiTo])
@@ -148,7 +148,7 @@ model OperationLog {
   targetKairo String?
   details     String?
 
-  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@index([siteId, timestamp])
 }

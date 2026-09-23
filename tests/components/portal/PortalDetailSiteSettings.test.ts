@@ -1,4 +1,4 @@
-﻿import { mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
 
@@ -57,14 +57,33 @@ describe('DetailSiteSettings.vue', () => {
       },
     })
 
-    const saveBtn = wrapper.findComponent({ name: 'Button' })
+    const buttons = wrapper.findAllComponents({ name: 'Button' })
+    const saveBtn = buttons.find(b => b.text().includes('変更を保存'))
 
-    await saveBtn.trigger('click')
+    expect(saveBtn?.exists()).toBe(true)
+    await saveBtn!.trigger('click')
 
     expect(wrapper.emitted('save')).toBeTruthy()
     expect(wrapper.emitted('save')?.[0]?.[0]).toMatchObject({
       id: 'site-a',
       name: '新宿現場',
     })
+  })
+
+  it('emits delete event when delete button is clicked', async () => {
+    const wrapper = mount(DetailSiteSettings, {
+      props: {
+        site: dummySite,
+      },
+    })
+
+    const buttons = wrapper.findAllComponents({ name: 'Button' })
+    const deleteBtn = buttons.find(b => b.text().includes('削除'))
+
+    expect(deleteBtn?.exists()).toBe(true)
+    await deleteBtn?.trigger('click')
+
+    expect(wrapper.emitted('delete')).toBeTruthy()
+    expect(wrapper.emitted('delete')?.[0]?.[0]).toEqual(dummySite)
   })
 })

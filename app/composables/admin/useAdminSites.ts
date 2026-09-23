@@ -61,28 +61,52 @@ export const useAdminSites = () => {
     id: string,
     updates: Partial<Omit<Site, 'createdAt'>>,
   ) => {
-    const res = await $api<{ site: Site, settings: SiteSettings }>(
-      `/api/sites/${id}`,
-      {
-        method: 'PUT',
-        body: { site: updates },
-      },
-    )
-
-    if (res.site) {
-      sites.value = sites.value.map(s => (s.id === id ? res.site : s))
-    }
-    if (res.settings) {
-      siteSettings.value = siteSettings.value.map(set =>
-        set.siteId === id ? res.settings : set,
+    try {
+      const res = await $api<{ site: Site, settings: SiteSettings }>(
+        `/api/sites/${id}`,
+        {
+          method: 'PUT',
+          body: { site: updates },
+        },
       )
+
+      if (res.site) {
+        sites.value = sites.value.map(s => (s.id === id ? res.site : s))
+      }
+      if (res.settings) {
+        siteSettings.value = siteSettings.value.map(set =>
+          set.siteId === id ? res.settings : set,
+        )
+      }
+
+      return res
+    }
+    catch (err: unknown) {
+      const fetchErr = err as { data?: { message?: string, statusMessage?: string }, message?: string }
+      const errMsg = fetchErr.data?.message || fetchErr.data?.statusMessage || fetchErr.message
+
+      if (errMsg) {
+        throw new Error(errMsg, { cause: err })
+      }
+      throw err
     }
   }
 
   const deleteSite = async (id: string) => {
-    await $api(`/api/sites/${id}`, { method: 'DELETE' })
-    sites.value = sites.value.filter(s => s.id !== id)
-    siteSettings.value = siteSettings.value.filter(s => s.siteId !== id)
+    try {
+      await $api(`/api/sites/${id}`, { method: 'DELETE' })
+      sites.value = sites.value.filter(s => s.id !== id)
+      siteSettings.value = siteSettings.value.filter(s => s.siteId !== id)
+    }
+    catch (err: unknown) {
+      const fetchErr = err as { data?: { message?: string, statusMessage?: string }, message?: string }
+      const errMsg = fetchErr.data?.message || fetchErr.data?.statusMessage || fetchErr.message
+
+      if (errMsg) {
+        throw new Error(errMsg, { cause: err })
+      }
+      throw err
+    }
   }
 
   const toggleDisableSite = async (id: string) => {
