@@ -42,7 +42,9 @@ export default defineEventHandler(async (event) => {
       p2TStatus: body.tStatus !== undefined ? body.tStatus : undefined,
       p2Remarks: body.remarks !== undefined ? body.remarks : undefined,
       p2Worker: workerName,
-      p2IsComplete: body.isComplete !== undefined ? Boolean(body.isComplete) : true,
+      p2IsComplete: body.isComplete !== undefined
+        ? Boolean(body.isComplete)
+        : (body.rStatus === 'OK' && body.sStatus === 'OK' && body.tStatus === 'OK'),
       p2ConfirmedAt: confirmedAt,
     },
   })

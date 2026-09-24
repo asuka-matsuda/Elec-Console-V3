@@ -14,6 +14,7 @@ describe('TablePhase2.vue', () => {
       banMeisho: '1L-1',
       kairoBangou: '1',
       kairoMeisho: '電灯回路1',
+      haidenHoushiki: '1φ3W 100/200V',
       p1Kakunin: true,
       p1Mashishime: true,
       p1ConfirmedAt: '2026-09-21T10:00:00Z',
@@ -36,6 +37,7 @@ describe('TablePhase2.vue', () => {
       banMeisho: '1L-1',
       kairoBangou: '2',
       kairoMeisho: '電灯回路2',
+      haidenHoushiki: '1φ3W 100/200V',
       p1Kakunin: true,
       p1Mashishime: true,
       p1ConfirmedAt: '2026-09-21T10:00:00Z',
@@ -58,6 +60,7 @@ describe('TablePhase2.vue', () => {
       banMeisho: '1P-1',
       kairoBangou: '1',
       kairoMeisho: '動力回路1',
+      haidenHoushiki: '3φ3W 200V',
       p1Kakunin: true,
       p1Mashishime: true,
       p1ConfirmedAt: '2026-09-21T10:00:00Z',
@@ -97,7 +100,7 @@ describe('TablePhase2.vue', () => {
   const globalStubs = {
     PortalTableSoudenCircuit: {
       name: 'PortalTableSoudenCircuit',
-      props: ['circuits', 'columns', 'editingRowId', 'isCircuitLocked', 'isComplete'],
+      props: ['circuits', 'columns', 'isCircuitLocked', 'isComplete'],
       template: `
         <div class="souden-circuit-table-stub">
           <div v-for="(row, index) in circuits" :key="row.id" class="circuit-row" :data-row-id="row.id">
@@ -115,19 +118,21 @@ describe('TablePhase2.vue', () => {
     },
     PortalCellPhaseMeas: {
       name: 'PortalCellPhaseMeas',
-      props: ['modelValue', 'label', 'val', 'status', 'isEditing', 'threshold'],
+      props: ['modelValue', 'label', 'val', 'status', 'isEditing', 'disabled', 'threshold'],
       emits: ['update:modelValue', 'enter'],
       template: `
-        <div class="stub-meas-cell" :data-label="label" :data-editing="isEditing">
+        <div class="stub-meas-cell" :data-label="label" :data-editing="isEditing" :data-disabled="disabled">
           <span class="label">{{ label }}</span>
           <input
             v-if="isEditing"
             class="meas-input"
             :value="modelValue"
+            :disabled="disabled"
             @input="$emit('update:modelValue', $event.target.value)"
             @keydown.enter="$emit('enter')"
           />
           <span v-else class="meas-val">{{ val }}</span>
+          <span v-if="status" class="status-badge">{{ status }}</span>
         </div>
       `,
     },
@@ -136,9 +141,9 @@ describe('TablePhase2.vue', () => {
       template: '<button class="stub-button" :disabled="disabled" :data-variant="variant"><slot /></button>',
     },
     Textarea: {
-      props: ['modelValue', 'placeholder', 'rows'],
+      props: ['modelValue', 'placeholder', 'rows', 'disabled'],
       emits: ['update:modelValue'],
-      template: '<textarea class="stub-textarea" :value="modelValue" :placeholder="placeholder" @input="$emit(\'update:modelValue\', $event.target.value)"></textarea>',
+      template: '<textarea class="stub-textarea" :value="modelValue" :placeholder="placeholder" :disabled="disabled" @input="$emit(\'update:modelValue\', $event.target.value)"></textarea>',
     },
   }
 
@@ -163,17 +168,46 @@ describe('TablePhase2.vue', () => {
     })
   }
 
-  it('未完了回路では「全相OK」と「測定入力」ボタンが表示され、全相OKをクリックすると 100MΩ で confirm が発火すること', async () => {
+  it('未完了回路では最初からInput・Textareaが表示され、「全相OK」と「確定」ボタンが配置されること', () => {
     const wrapper = createWrapper()
     const row1 = wrapper.find('.circuit-row[data-row-id="c1"]')
+
+    // 測定欄にInputが存在すること
+    expect(row1.findAll('.meas-input').length).toBe(3)
+    // 備考欄にTextareaが存在すること
+    expect(row1.find('.stub-textarea').exists()).toBe(true)
 
     const buttons = row1.findAll('.col-actions .stub-button')
 
     expect(buttons.length).toBe(2)
     expect(buttons[0]?.text()).toBe('全相OK')
-    expect(buttons[1]?.text()).toBe('測定入力')
+    expect(buttons[1]?.text()).toBe('確定')
+  })
 
-    await buttons[0]?.trigger('click')
+  it('「全相OK」をクリックすると各相Inputに100が記入され、確定ボタンを押すまではconfirmが発火しないこと', async () => {
+    const wrapper = createWrapper()
+    const row1 = wrapper.find('.circuit-row[data-row-id="c1"]')
+
+    const allOkBtn = row1.findAll('.col-actions .stub-button')[0]
+
+    await allOkBtn?.trigger('click')
+
+    // 確定を押す前はconfirmが発火しないこと
+    expect(wrapper.emitted('confirm')).toBeFalsy()
+
+    // 各Inputの値が100になっていること
+    const rInput = row1.find('.col-zetsuenR .meas-input')
+    const sInput = row1.find('.col-zetsuenS .meas-input')
+    const tInput = row1.find('.col-zetsuenT .meas-input')
+
+    expect((rInput.element as HTMLInputElement).value).toBe('100')
+    expect((sInput.element as HTMLInputElement).value).toBe('100')
+    expect((tInput.element as HTMLInputElement).value).toBe('100')
+
+    // 確定をクリック
+    const confirmBtn = row1.findAll('.col-actions .stub-button')[1]
+
+    await confirmBtn?.trigger('click')
 
     expect(wrapper.emitted('confirm')).toBeTruthy()
     const emitted = wrapper.emitted('confirm')?.[0]
@@ -186,25 +220,83 @@ describe('TablePhase2.vue', () => {
       rStatus: 'OK',
       sStatus: 'OK',
       tStatus: 'OK',
-      isComplete: true,
+      remarks: '特記事項なし',
+      isComplete: true, // 3相すべてOKなので true
     })
   })
 
-  it('完了済み回路では「解除」と「変更」ボタンが表示され、解除をクリックすると clear が発火すること', async () => {
+  it('各相の一部のみ入力して確定した場合、confirmは発火するが isComplete: false となること', async () => {
+    const wrapper = createWrapper()
+    const row1 = wrapper.find('.circuit-row[data-row-id="c1"]')
+
+    // R相のみ入力
+    const rInput = row1.find('.col-zetsuenR .meas-input')
+
+    await rInput.setValue('50.0')
+
+    // 確定をクリック
+    const confirmBtn = row1.findAll('.col-actions .stub-button')[1]
+
+    await confirmBtn?.trigger('click')
+
+    expect(wrapper.emitted('confirm')).toBeTruthy()
+    const emitted = wrapper.emitted('confirm')?.[0]
+
+    expect(emitted?.[1]).toEqual({
+      rVal: 50.0,
+      sVal: null,
+      tVal: null,
+      rStatus: 'OK',
+      sStatus: '',
+      tStatus: '',
+      remarks: '特記事項なし',
+      isComplete: false, // 3相すべて揃っていないため false
+    })
+  })
+
+  it('完了済み回路では入力欄がすべてdisabledになり、「解除」ボタンのみが表示されること', () => {
     const wrapper = createWrapper()
     const row2 = wrapper.find('.circuit-row[data-row-id="c2"]')
 
+    // 操作列は解除ボタンのみ
+    const buttons = row2.findAll('.col-actions .stub-button')
+
+    expect(buttons.length).toBe(1)
+    expect(buttons[0]?.text()).toBe('解除')
+    expect(buttons[0]?.attributes('data-variant')).toBe('danger')
+
+    // Input・Textarea が disabled であること
+    const measCells = row2.findAll('.stub-meas-cell')
+
+    for (const cell of measCells) {
+      expect(cell.attributes('data-disabled')).toBe('true')
+    }
+    expect(row2.find('.stub-textarea').attributes('disabled')).toBeDefined()
+  })
+
+  it('「解除」をクリックしてもサーバー送信（clear）は発火せず、ローカルでdisabledが解除され確定ボタンに戻ること', async () => {
+    const wrapper = createWrapper()
+    const row2 = wrapper.find('.circuit-row[data-row-id="c2"]')
+
+    const clearBtn = row2.find('.col-actions .stub-button')
+
+    await clearBtn.trigger('click')
+
+    // サーバーへの clear イベントは発火しないこと
+    expect(wrapper.emitted('clear')).toBeFalsy()
+
+    // ローカルで disabled が解除され、値（100）を保持したまま編集可能になること
+    const rCell = row2.find('.col-zetsuenR .stub-meas-cell')
+
+    expect(rCell.attributes('data-disabled')).toBe('false')
+    expect((row2.find('.col-zetsuenR .meas-input').element as HTMLInputElement).value).toBe('100')
+
+    // ボタンが「全相OK」と「確定」に戻ること
     const buttons = row2.findAll('.col-actions .stub-button')
 
     expect(buttons.length).toBe(2)
-    expect(buttons[0]?.text()).toBe('解除')
-    expect(buttons[0]?.attributes('data-variant')).toBe('danger')
-    expect(buttons[1]?.text()).toBe('変更')
-
-    await buttons[0]?.trigger('click')
-
-    expect(wrapper.emitted('clear')).toBeTruthy()
-    expect(wrapper.emitted('clear')?.[0]?.[0]).toEqual(mockCircuits[1])
+    expect(buttons[0]?.text()).toBe('全相OK')
+    expect(buttons[1]?.text()).toBe('確定')
   })
 
   it('幹線未完了でロックされている回路では「⏸ 幹線未完了」が表示され操作ボタンが表示されないこと', () => {
@@ -231,75 +323,6 @@ describe('TablePhase2.vue', () => {
     expect(row5.findAll('.stub-button').length).toBe(0)
   })
 
-  it('「測定入力」をクリックすると手入力モードになり、入力値を保存すると判定結果とともに confirm が発火すること', async () => {
-    const wrapper = createWrapper()
-    const row1 = wrapper.find('.circuit-row[data-row-id="c1"]')
-
-    // 測定入力ボタンをクリック
-    const inputBtn = row1.findAll('.col-actions .stub-button')[1]
-
-    await inputBtn?.trigger('click')
-
-    // 手入力モード中のボタン表示検証
-    const actionBtns = row1.findAll('.col-actions .stub-button')
-
-    expect(actionBtns[0]?.text()).toBe('確定')
-    expect(actionBtns[1]?.text()).toBe('取消')
-
-    // 備考欄が Textarea になっていること
-    const remarksArea = row1.find('.col-p2Remarks .stub-textarea')
-
-    expect(remarksArea.exists()).toBe(true)
-    await remarksArea.setValue('測定メモ入力')
-
-    // R相・S相・T相のセルに入力
-    const rInput = row1.find('.col-zetsuenR .meas-input')
-    const sInput = row1.find('.col-zetsuenS .meas-input')
-    const tInput = row1.find('.col-zetsuenT .meas-input')
-
-    await rInput.setValue('50.5')
-    await sInput.setValue('20.0')
-    await tInput.setValue('0.05') // 閾値（100V系: 0.1MΩ）未満のため NG
-
-    // 確定をクリック
-    await actionBtns[0]?.trigger('click')
-
-    expect(wrapper.emitted('confirm')).toBeTruthy()
-    const payload = wrapper.emitted('confirm')?.[0]
-
-    expect(payload?.[0]).toEqual(mockCircuits[0])
-    expect(payload?.[1]).toEqual({
-      rVal: 50.5,
-      sVal: 20.0,
-      tVal: 0.05,
-      rStatus: 'OK',
-      sStatus: 'OK',
-      tStatus: 'NG',
-      remarks: '測定メモ入力',
-      isComplete: false, // 1相でも NG があれば false
-    })
-
-    // 保存後は編集モードが解除されること
-    expect(row1.find('.col-p2Remarks .stub-textarea').exists()).toBe(false)
-  })
-
-  it('手入力モードで「取消」をクリックすると手入力モードがキャンセルされること', async () => {
-    const wrapper = createWrapper()
-    const row1 = wrapper.find('.circuit-row[data-row-id="c1"]')
-
-    const inputBtn = row1.findAll('.col-actions .stub-button')[1]
-
-    await inputBtn?.trigger('click')
-
-    const cancelBtn = row1.findAll('.col-actions .stub-button')[1]
-
-    expect(cancelBtn?.text()).toBe('取消')
-    await cancelBtn?.trigger('click')
-
-    expect(row1.find('.col-p2Remarks .stub-textarea').exists()).toBe(false)
-    expect(wrapper.emitted('confirm')).toBeFalsy()
-  })
-
   it('三相と単相で各相セルのラベルが正しく切り替わること', () => {
     const wrapper = createWrapper()
 
@@ -318,7 +341,7 @@ describe('TablePhase2.vue', () => {
     expect(row3.find('.col-zetsuenT .stub-meas-cell').attributes('data-label')).toBe('R - T')
   })
 
-  it('除外回路（isExcluded: true）では全相OKと測定入力ボタンが無効化されること', () => {
+  it('除外回路（isExcluded: true）では全相OKと確定ボタンが無効化されること', () => {
     const excludedCircuits = [
       {
         ...mockCircuits[0],

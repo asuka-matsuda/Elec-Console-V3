@@ -17,6 +17,7 @@ const props = withDefaults(
     unit?: string
     status?: string | null
     isEditing?: boolean
+    disabled?: boolean
     threshold?: number
     haidenHoushiki?: string | null
     step?: string
@@ -26,6 +27,7 @@ const props = withDefaults(
     unit: 'MΩ',
     status: null,
     isEditing: false,
+    disabled: false,
     threshold: 1.0,
     haidenHoushiki: null,
     step: undefined,
@@ -94,16 +96,23 @@ const statusClass = computed(() => {
         :placeholder="unit === 'MΩ' ? '100' : undefined"
         :clearable="false"
         :error="isBelowThreshold"
+        :disabled="disabled"
         class="w-[85px]"
         @focus="emit('focus', $event)"
         @keydown.enter.prevent="emit('enter')"
       />
       <span
-        v-if="isBelowThreshold"
+        v-if="!disabled && isBelowThreshold"
         class="cell-warning-sub"
       >
         基準値未満です
       </span>
+      <Badge
+        v-if="status"
+        :id="status === 'OK' ? 'exam:pass' : 'exam:fail'"
+      >
+        {{ status }}
+      </Badge>
     </template>
 
     <template v-else>
