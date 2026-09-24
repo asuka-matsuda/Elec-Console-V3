@@ -31,9 +31,9 @@ function createMenuBreadcrumbs(section: MenuSection, item: MenuItem): Breadcrumb
 
 export function useBreadcrumbs() {
   const route = useRoute()
-  const { sites, fetchSites } = useAdminSites()
+  const { sites, fetchSites, isLoaded } = useAdminSites()
 
-  if (import.meta.client && sites.value.length === 0) {
+  if (import.meta.client && !isLoaded?.value) {
     fetchSites()
   }
 

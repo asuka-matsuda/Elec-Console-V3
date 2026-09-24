@@ -38,14 +38,14 @@ export const INITIAL_CREATE_USER: CreateUserFormState = {
 
 export function useAdminUsersTab() {
   const { users, fetchUsers, deleteUser, resetUserPassword, createUser, updateUser } = useAdminUsers()
-  const { sites, fetchSites } = useAdminSites()
+  const { sites, fetchSites, isLoaded: isSitesLoaded } = useAdminSites()
   const { askConfirm } = useModal()
 
   onMounted(async () => {
     if (users.value.length === 0) {
       await fetchUsers()
     }
-    if (sites.value.length === 0) {
+    if (!isSitesLoaded?.value) {
       await fetchSites()
     }
   })

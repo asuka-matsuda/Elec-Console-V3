@@ -19,6 +19,7 @@ export const STORAGE_KEYS = {
 export const STATE_KEYS = {
   CURRENT_USER: 'currentUser',
   ADMIN_SITES: 'admin-sites',
+  ADMIN_SITES_LOADED: 'admin-sites-loaded',
   ADMIN_SITE_SETTINGS: 'admin-site-settings',
   GLOBAL_MODAL_OPEN: 'global-modal-is-open',
   GLOBAL_MODAL_PENDING: 'global-modal-is-pending',

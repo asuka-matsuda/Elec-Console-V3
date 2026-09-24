@@ -5,7 +5,7 @@
  * @returns {Object} sites 現場一覧Ref, fetchSites 取得関数, createSite 登録関数, updateSite 更新関数, deleteSite 削除関数
  */
 
-import { useAsyncData, useState } from '#app'
+import { useState } from '#app'
 import { useApi } from '~/composables/useApi'
 import { STATE_KEYS } from '~/constants/storageKeys'
 import type { Site, SiteSettings } from '~/types/admin'
@@ -16,22 +16,35 @@ export const useAdminSites = () => {
     STATE_KEYS.ADMIN_SITE_SETTINGS,
     () => [],
   )
+  const isLoaded = useState<boolean>(STATE_KEYS.ADMIN_SITES_LOADED, () => false)
+  const isLoading = useState<boolean>('admin-sites-loading', () => false)
   const { $api } = useApi()
 
-  // 初期データの取得
-  const { refresh: fetchSites } = useAsyncData(
-    'admin-sites-fetch',
-    async () => {
+  // 初期データの取得（多重リクエスト抑止・ロード済みキャッシュ管理）
+  const fetchSites = async (force = false) => {
+    if (isLoaded.value && !force) {
+      return { sites: sites.value, siteSettings: siteSettings.value }
+    }
+    if (isLoading.value) {
+      return { sites: sites.value, siteSettings: siteSettings.value }
+    }
+
+    try {
+      isLoading.value = true
       const data = await $api<{ sites: Site[], siteSettings: SiteSettings[] }>(
         '/api/sites',
       )
 
       sites.value = data.sites || []
       siteSettings.value = data.siteSettings || []
+      isLoaded.value = true
 
       return data
-    },
-  )
+    }
+    finally {
+      isLoading.value = false
+    }
+  }
 
   const createSite = async (site: Omit<Site, 'createdAt' | 'disabledAt'>) => {
     try {
@@ -145,6 +158,7 @@ export const useAdminSites = () => {
   return {
     sites,
     siteSettings,
+    isLoaded,
     fetchSites,
     createSite,
     updateSite,

@@ -17,7 +17,7 @@ import { THEME_OPTIONS } from '~/constants/constants'
 useHead({ title: 'マイページ - Elec-Console' })
 
 const { currentUser } = useAuth()
-const { sites, fetchSites } = useAdminSites()
+const { sites, fetchSites, isLoaded: isSitesLoaded } = useAdminSites()
 const { themeMode, animationEnabled } = useSettings()
 const {
   newPassword,
@@ -28,7 +28,7 @@ const {
   handleChangePassword,
 } = usePasswordChange()
 
-if (import.meta.client && sites.value.length === 0) {
+if (import.meta.client && !isSitesLoaded?.value) {
   fetchSites()
 }
 

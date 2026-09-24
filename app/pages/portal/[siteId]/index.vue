@@ -17,7 +17,7 @@ const route = useRoute()
 const router = useRouter()
 const siteId = computed(() => route.params.siteId as string)
 
-const { sites, fetchSites } = useAdminSites()
+const { sites, fetchSites, isLoaded: isSitesLoaded } = useAdminSites()
 const { currentUser } = useAuth()
 
 const lastSiteId = useLocalStorage(STORAGE_KEYS.LAST_SITE_ID, '')
@@ -62,7 +62,7 @@ const handleSiteChange = (newSiteId: unknown) => {
 }
 
 onMounted(() => {
-  if (sites.value.length === 0) {
+  if (!isSitesLoaded.value) {
     fetchSites()
   }
 })

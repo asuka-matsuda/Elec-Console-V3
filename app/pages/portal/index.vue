@@ -14,7 +14,7 @@ import { STORAGE_KEYS } from '~/constants/storageKeys'
 useHead({ title: '現場ポータル - Elec-Console' })
 const router = useRouter()
 const { isAdmin, currentUser } = useAuth()
-const { sites, fetchSites } = useAdminSites()
+const { sites, fetchSites, isLoaded } = useAdminSites()
 const lastSiteId = useLocalStorage(STORAGE_KEYS.LAST_SITE_ID, '')
 
 const autoRedirect = () => {
@@ -42,7 +42,7 @@ const autoRedirect = () => {
 }
 
 onMounted(async () => {
-  if (sites.value.length === 0) {
+  if (!isLoaded?.value) {
     await fetchSites()
   }
   autoRedirect()

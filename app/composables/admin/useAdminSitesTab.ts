@@ -25,11 +25,11 @@ export const INITIAL_CREATE_SITE: CreateSiteFormState = {
 }
 
 export function useAdminSitesTab() {
-  const { sites, fetchSites, createSite, toggleDisableSite, updateSite, deleteSite } = useAdminSites()
+  const { sites, isLoaded, fetchSites, createSite, toggleDisableSite, updateSite, deleteSite } = useAdminSites()
   const { askConfirm } = useModal()
 
   onMounted(async () => {
-    if (sites.value.length === 0) {
+    if (!isLoaded?.value) {
       await fetchSites()
     }
   })
@@ -157,9 +157,9 @@ export function useAdminSitesTab() {
 
   const confirmDeleteSite = async (site: Site) => {
     const isConfirmed = await askConfirm({
-      title: '現場の完全削除',
-      message: `現場「${site.name}」(ID: ${site.id}) を完全に削除しますか？\n\n現場に紐づくすべての回路データ、試験記録、スケジュールが完全に消去されます。この操作は取り消せません。`,
-      confirmText: '完全に削除する',
+      title: '現場の完全削除（全データ消去）',
+      message: `【警告】現場「${site.name}」(ID: ${site.id}) を完全に削除しますか？\n\n現場に紐づくすべての回路データ・試験測定記録・工程カレンダーなどの全データが完全に消去されます。元に戻すことはできませんが、本当によろしいですか？`,
+      confirmText: 'すべて消去して削除する',
       intent: 'danger',
     })
 

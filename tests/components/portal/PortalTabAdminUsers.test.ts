@@ -1,4 +1,4 @@
-﻿import { mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
 
@@ -24,6 +24,7 @@ vi.mock('~/composables/admin/useAdminUsers', () => ({
 vi.mock('~/composables/admin/useAdminSites', () => ({
   useAdminSites: () => ({
     sites: ref([]),
+    isLoaded: ref(true),
     fetchSites: vi.fn(),
   }),
 }))

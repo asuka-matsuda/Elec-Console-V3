@@ -14,6 +14,7 @@ vi.mock('vue-router', () => ({
 vi.mock('~/composables/admin/useAdminSites', () => ({
   useAdminSites: () => ({
     sites: mockSites,
+    isLoaded: ref(true),
     fetchSites: mockFetchSites,
   }),
 }))
