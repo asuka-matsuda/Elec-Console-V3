@@ -89,3 +89,26 @@ export function formatPhaseValues(
 
   return '-'
 }
+
+/**
+ * 配電方式文字列から電気設備技術基準（内線規程）に準拠した絶縁抵抗基準値（MΩ）を取得します。
+ * - 400V を含む場合: 0.4 MΩ 以上
+ * - 100V または 100/200V を含む場合: 0.1 MΩ 以上 (単相3線100/200Vは対地電圧150V以下のため0.1MΩ)
+ * - 200V を含む場合: 0.2 MΩ 以上
+ * - その他（デフォルト）: 0.1 MΩ
+ */
+export function getPhase2Threshold(haidenHoushiki: string | null | undefined): number {
+  const h = String(haidenHoushiki || '').toUpperCase()
+
+  if (h.includes('400V') || h.includes('415V') || h.includes('440V')) {
+    return 0.4
+  }
+  if (h.includes('100V') || h.includes('100/200V') || h.includes('100')) {
+    return 0.1
+  }
+  if (h.includes('200V')) {
+    return 0.2
+  }
+
+  return 0.1
+}

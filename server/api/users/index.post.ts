@@ -55,31 +55,60 @@ export default defineEventHandler(async (event) => {
   const isGenerated = !body.password
   const initialPassword = isGenerated ? rawPassword : undefined
 
-  const siteConnections = (body.assignedSiteIds || []).map((id: string) => ({ id }))
+  const siteAssignmentsInput: { siteId: string, role: string }[] = body.siteAssignments
+    || (body.assignedSiteIds || []).map((id: string) => ({ siteId: id, role: 'worker' }))
 
-  const newUser = await prisma.user.create({
-    data: {
-      loginId,
-      password: hashPassword(rawPassword),
-      firstName,
-      lastName,
-      firstNameKana: body.firstNameKana?.trim() || null,
-      lastNameKana: body.lastNameKana?.trim() || null,
-      role: body.role || 'worker',
-      requirePasswordReset: body.requirePasswordReset ?? true,
-      email: body.email?.trim() || null,
-      isActive: body.isActive ?? true,
-      assignedSites: { connect: siteConnections },
-    },
-    include: { assignedSites: true },
+  const siteConnections = siteAssignmentsInput.map(sa => ({ id: sa.siteId }))
+
+  const newUser = await prisma.$transaction(async (tx) => {
+    const user = await tx.user.create({
+      data: {
+        loginId,
+        password: hashPassword(rawPassword),
+        firstName,
+        lastName,
+        firstNameKana: body.firstNameKana?.trim() || null,
+        lastNameKana: body.lastNameKana?.trim() || null,
+        role: body.role || 'worker',
+        requirePasswordReset: body.requirePasswordReset ?? true,
+        email: body.email?.trim() || null,
+        isActive: body.isActive ?? true,
+        assignedSites: { connect: siteConnections },
+      },
+      include: { assignedSites: true },
+    })
+
+    if (siteAssignmentsInput.length > 0) {
+      await tx.userOnSite.createMany({
+        data: siteAssignmentsInput.map(sa => ({
+          userId: user.id,
+          siteId: sa.siteId,
+          role: sa.role || 'worker',
+        })),
+      })
+    }
+
+    return tx.user.findUniqueOrThrow({
+      where: { id: user.id },
+      include: { assignedSites: true, siteAssignments: true },
+    })
   })
 
   const assignedSiteIds = newUser.assignedSites.map(s => s.id)
-  const { password: _dbPassword, assignedSites: _assignedSites, ...restUser } = newUser
+  const siteAssignments = newUser.assignedSites.map((s) => {
+    const match = newUser.siteAssignments.find(sa => sa.siteId === s.id)
+
+    return {
+      siteId: s.id,
+      role: match?.role || newUser.role || 'worker',
+    }
+  })
+  const { password: _dbPassword, assignedSites: _assignedSites, siteAssignments: _sa, ...restUser } = newUser
 
   return {
     ...restUser,
     assignedSiteIds,
+    siteAssignments,
     initialPassword,
   }
 })

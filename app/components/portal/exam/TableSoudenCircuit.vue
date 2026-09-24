@@ -161,4 +161,10 @@ const getWorkerCellData = (circuit: CircuitItem, key: string) => {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+:deep(td.col-actions),
+:deep(th.col-actions) {
+  width: 1%;
+  white-space: nowrap;
+}
 </style>

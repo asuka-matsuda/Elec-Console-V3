@@ -24,12 +24,10 @@ const {
   phaseStats,
   isCircuitLocked,
   isActionLoading,
-  isBatchLoading,
   isThreePhase,
   fetchCircuits,
   confirmPhase3,
   clearPhase3,
-  batchConfirmPhase3,
 } = usePhase3Exam(siteId, initialKeiTo.value)
 
 watch(
@@ -60,17 +58,6 @@ onMounted(() => {
     :circuits="filteredCircuits"
     @synced="fetchCircuits"
   >
-    <template #actions>
-      <Button
-        variant="success"
-        icon="check-check"
-        :loading="isBatchLoading"
-        @click="batchConfirmPhase3"
-      >
-        一括標準値確定
-      </Button>
-    </template>
-
     <PortalTablePhase3
       :circuits="filteredCircuits"
       :full-circuits="circuits"

@@ -6,6 +6,7 @@ import {
   getSiteStatusColor,
   getSiteStatusLabel,
 } from '../../app/utils/portal'
+import { getPhase2Threshold } from '../../app/utils/souden'
 
 describe('portal utils', () => {
   describe('getSiteStatusLabel', () => {
@@ -68,6 +69,30 @@ describe('portal utils', () => {
     it('should handle null/undefined safely', () => {
       expect(getAssignedWorkerNames(null, mockUsers)).toEqual([])
       expect(getAssignedWorkerNames('site-1', null)).toEqual([])
+    })
+  })
+  describe('getPhase2Threshold', () => {
+    it('400Vを含む配電方式は0.4MΩ以上と判定すること', () => {
+      expect(getPhase2Threshold('3φ3W 400V')).toBe(0.4)
+      expect(getPhase2Threshold('3φ4W 415V')).toBe(0.4)
+      expect(getPhase2Threshold('400V動力')).toBe(0.4)
+    })
+
+    it('200Vを含む配電方式（100Vを含まない）は0.2MΩ以上と判定すること', () => {
+      expect(getPhase2Threshold('3φ3W 200V')).toBe(0.2)
+      expect(getPhase2Threshold('3相3線 200V')).toBe(0.2)
+    })
+
+    it('100Vまたは100/200V単相3線を含む配電方式は0.1MΩ以上と判定すること', () => {
+      expect(getPhase2Threshold('1φ3W 100/200V')).toBe(0.1)
+      expect(getPhase2Threshold('単相2線 100V')).toBe(0.1)
+      expect(getPhase2Threshold('100V')).toBe(0.1)
+    })
+
+    it('未指定または該当なしの場合はデフォルト0.1MΩを返すこと', () => {
+      expect(getPhase2Threshold(null)).toBe(0.1)
+      expect(getPhase2Threshold('')).toBe(0.1)
+      expect(getPhase2Threshold('その他')).toBe(0.1)
     })
   })
 })

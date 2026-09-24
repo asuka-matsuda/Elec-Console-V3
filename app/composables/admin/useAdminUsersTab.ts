@@ -10,7 +10,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { useAdminSites } from '~/composables/admin/useAdminSites'
 import { useAdminUsers } from '~/composables/admin/useAdminUsers'
 import { useModal } from '~/composables/useModal'
-import type { User, UserRole } from '~/types/auth'
+import type { SiteAssignment, User, UserRole } from '~/types/auth'
 import { parseToAppException } from '~/utils/errors'
 
 export interface CreateUserFormState {
@@ -22,7 +22,8 @@ export interface CreateUserFormState {
   role: UserRole
   requirePasswordReset: boolean
   assignedSiteIds: string[]
-  [key: string]: string | boolean | string[] | UserRole
+  siteAssignments?: SiteAssignment[]
+  [key: string]: string | boolean | string[] | SiteAssignment[] | UserRole | undefined
 }
 
 export const INITIAL_CREATE_USER: CreateUserFormState = {
@@ -34,6 +35,7 @@ export const INITIAL_CREATE_USER: CreateUserFormState = {
   role: 'worker',
   requirePasswordReset: true,
   assignedSiteIds: [],
+  siteAssignments: [],
 }
 
 export function useAdminUsersTab() {

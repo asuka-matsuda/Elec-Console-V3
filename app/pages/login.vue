@@ -36,7 +36,12 @@ const handleLogin = async () => {
   isLoading.value = false
 
   if (result.success) {
-    router.push('/')
+    if (result.mustChangePassword) {
+      router.push('/change-password')
+    }
+    else {
+      router.push('/')
+    }
   }
   else {
     errorMessage.value = result.message || 'ログインに失敗しました'

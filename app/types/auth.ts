@@ -6,6 +6,11 @@
 
 export type UserRole = 'admin' | 'worker' | 'viewer'
 
+export type SiteAssignment = {
+  siteId: string
+  role: UserRole
+}
+
 export type User = {
   id: string
   firstName: string
@@ -15,6 +20,7 @@ export type User = {
   loginId: string
   role: UserRole
   assignedSiteIds: string[]
+  siteAssignments?: SiteAssignment[]
   requirePasswordReset: boolean
   lastLoginAt: string | null
   createdAt: string

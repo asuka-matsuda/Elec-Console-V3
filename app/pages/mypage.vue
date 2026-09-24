@@ -20,6 +20,7 @@ const { currentUser } = useAuth()
 const { sites, fetchSites, isLoaded: isSitesLoaded } = useAdminSites()
 const { themeMode, animationEnabled } = useSettings()
 const {
+  currentPassword,
   newPassword,
   confirmPassword,
   passwordError,
@@ -41,7 +42,16 @@ const fullName = computed(() => {
 const assignedSites = computed(() => {
   if (!currentUser.value?.assignedSiteIds) return []
 
-  return sites.value.filter(site => currentUser.value?.assignedSiteIds.includes(site.id))
+  return sites.value
+    .filter(site => currentUser.value?.assignedSiteIds.includes(site.id))
+    .map((site) => {
+      const assignment = currentUser.value?.siteAssignments?.find(sa => sa.siteId === site.id)
+
+      return {
+        ...site,
+        role: assignment?.role || currentUser.value?.role || 'worker',
+      }
+    })
 })
 </script>
 
@@ -70,21 +80,14 @@ const assignedSites = computed(() => {
               {{ currentUser.loginId }}
             </dd>
           </div>
-
-          <div class="flex flex-col gap-1">
-            <dt>システム権限</dt>
-            <dd class="m-0">
-              <Badge :id="`role:${currentUser.role}`" />
-            </dd>
-          </div>
         </dl>
 
         <Divider />
 
         <div class="flex flex-col gap-2">
-          <span class="field-label">担当現場</span>
+          <span class="field-label">登録済現場</span>
           <p v-if="assignedSites.length === 0" class="empty-text m-0">
-            割り当てられている現場はありません。
+            登録されている現場はありません。
           </p>
           <ul v-else class="flex flex-col gap-2 p-0 m-0 list-none">
             <li
@@ -92,9 +95,11 @@ const assignedSites = computed(() => {
               :key="site.id"
               class="flex items-center justify-between p-3 site-item"
             >
-              <div class="flex items-center gap-2">
+              <div class="flex items-center gap-2 flex-wrap">
                 <Icon name="map-pin" size="sm" class="site-icon" />
                 <span class="site-name">{{ site.name }}</span>
+                <span class="site-id-label">({{ site.id }})</span>
+                <Badge :id="`role:${site.role}`" />
               </div>
 
               <NuxtLink
@@ -119,9 +124,22 @@ const assignedSites = computed(() => {
 
       <form class="flex flex-col gap-3" @submit.prevent="handleChangePassword">
         <FormGroup
-          label="新しいパスワード (8文字以上)"
+          label="現在のパスワード"
           required
           :error="passwordError"
+        >
+          <Input
+            v-model="currentPassword"
+            type="password"
+            placeholder="現在のパスワードを入力"
+            autocomplete="current-password"
+            :disabled="isLoading"
+          />
+        </FormGroup>
+
+        <FormGroup
+          label="新しいパスワード (8文字以上)"
+          required
         >
           <Input
             v-model="newPassword"
@@ -242,6 +260,12 @@ const assignedSites = computed(() => {
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-main);
+  }
+
+  .site-id-label {
+    font-family: var(--font-family-mono, monospace);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
   }
 
   .site-link {

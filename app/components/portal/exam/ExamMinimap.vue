@@ -16,7 +16,7 @@ const emit = defineEmits<{
 
 const isDone = (c: CircuitItem): boolean =>
   props.phase === 1
-    ? Boolean(c.p1ConfirmedAt && c.p1Kakunin && c.p1Mashishime)
+    ? Boolean(c.p1Kakunin && c.p1Mashishime)
     : props.phase === 2
       ? Boolean(c.p2ConfirmedAt && c.p2IsComplete)
       : Boolean(props.phase === 3 && c.p3ConfirmedAt)

@@ -21,6 +21,7 @@ const emit = defineEmits<{
   'confirm': [circuit: CircuitItem]
   'clear': [circuit: CircuitItem]
   'save-edit': [circuit: CircuitItem, form: Record<string, string>]
+  'update-check': [circuit: CircuitItem, changes: { kakunin?: boolean, mashishime?: boolean }]
 }>()
 
 // 各行の編集状態（テーブル内UI状態）
@@ -53,7 +54,15 @@ const saveEdit = (circuit: CircuitItem) => {
   editingRowId.value = null
 }
 
-const isComplete = (c: CircuitItem) => Boolean(c.p1ConfirmedAt)
+const handleToggleKakunin = (circuit: CircuitItem, val: boolean) => {
+  emit('update-check', circuit, { kakunin: val })
+}
+
+const handleToggleMashishime = (circuit: CircuitItem, val: boolean) => {
+  emit('update-check', circuit, { mashishime: val })
+}
+
+const isComplete = (c: CircuitItem) => Boolean(c.p1Kakunin && c.p1Mashishime)
 
 // ソート管理
 const {
@@ -128,10 +137,19 @@ const {
     </template>
 
     <template #cell-p1Kakunin="{ row: circuit }">
-      <div class="flex items-center justify-center">
-        <Badge :id="isComplete(circuit) ? 'exam:pass' : undefined">
-          {{ isComplete(circuit) ? '確認・増締済' : '未実施' }}
-        </Badge>
+      <div class="flex items-center justify-center gap-3">
+        <Checkbox
+          :model-value="Boolean(circuit.p1Kakunin)"
+          label="確認"
+          :disabled="isCircuitLocked(circuit) || Boolean(isActionLoading[circuit.id])"
+          @update:model-value="handleToggleKakunin(circuit, Boolean($event))"
+        />
+        <Checkbox
+          :model-value="Boolean(circuit.p1Mashishime)"
+          label="増締"
+          :disabled="isCircuitLocked(circuit) || Boolean(isActionLoading[circuit.id])"
+          @update:model-value="handleToggleMashishime(circuit, Boolean($event))"
+        />
       </div>
     </template>
 

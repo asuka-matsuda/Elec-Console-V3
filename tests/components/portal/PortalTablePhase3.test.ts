@@ -1,4 +1,4 @@
-﻿import { mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
 import TablePhase3 from '../../../app/components/portal/exam/TablePhase3.vue'
@@ -163,14 +163,14 @@ describe('TablePhase3.vue', () => {
         </select>
       `,
     },
+    Input: {
+      props: ['modelValue', 'placeholder'],
+      emits: ['update:modelValue', 'keydown'],
+      template: '<input class="stub-input" :value="modelValue" :placeholder="placeholder" @input="$emit(\'update:modelValue\', $event.target.value)" @keydown="$emit(\'keydown\', $event)" />',
+    },
     Button: {
       props: ['variant', 'disabled', 'loading'],
       template: '<button class="stub-button" :disabled="disabled" :data-variant="variant"><slot /></button>',
-    },
-    Textarea: {
-      props: ['modelValue', 'placeholder', 'rows'],
-      emits: ['update:modelValue'],
-      template: '<textarea class="stub-textarea" :value="modelValue" :placeholder="placeholder" @input="$emit(\'update:modelValue\', $event.target.value)"></textarea>',
     },
     Badge: {
       props: ['id'],
@@ -193,16 +193,34 @@ describe('TablePhase3.vue', () => {
     })
   }
 
-  it('三相の未完了回路では「標準値確定」「手入力」ボタンが表示され、標準値確定で 200V / 正相 の confirm が発火すること', async () => {
+  it('三相の未完了回路では最初からInput表示かつ「確定」ボタンが表示され、手入力して確定すると confirm が発火すること', async () => {
     const wrapper = createWrapper()
     const row1 = wrapper.find('.circuit-row[data-row-id="c1"]')
 
+    // ボタンは「確定」1つのみ
     const buttons = row1.findAll('.col-actions .stub-button')
 
-    expect(buttons.length).toBe(2)
-    expect(buttons[0]?.text()).toBe('標準値確定')
-    expect(buttons[1]?.text()).toBe('手入力')
+    expect(buttons.length).toBe(1)
+    expect(buttons[0]?.text()).toBe('確定')
 
+    // セルは最初から入力モード
+    const voltCells = row1.findAll('.stub-volt-cell')
+
+    expect(voltCells.length).toBe(3)
+    expect(voltCells[0]?.attributes('data-editing')).toBe('true')
+
+    // RS, ST, RT を手入力
+    await voltCells[0]?.find('.volt-input').setValue('208')
+    await voltCells[1]?.find('.volt-input').setValue('207')
+    await voltCells[2]?.find('.volt-input').setValue('209')
+
+    // 備考を入力
+    const remarksInput = row1.find('.col-p3Remarks .stub-input')
+
+    expect(remarksInput.exists()).toBe(true)
+    await remarksInput.setValue('実測完了')
+
+    // 確定をクリック
     await buttons[0]?.trigger('click')
 
     const emitted = wrapper.emitted('confirm')
@@ -210,36 +228,52 @@ describe('TablePhase3.vue', () => {
     expect(emitted).toBeTruthy()
     expect(emitted?.[0]?.[0]).toEqual(mockCircuits[0])
     expect(emitted?.[0]?.[1]).toEqual({
-      rs: 200,
-      st: 200,
-      rt: 200,
+      rs: 208,
+      st: 207,
+      rt: 209,
       kensou: '正相',
+      remarks: '実測完了',
     })
   })
 
-  it('単相の未完了回路で標準値確定をクリックすると 100V / 100V / 200V / 点灯確認(良) で confirm が発火すること', async () => {
+  it('単相の未完了回路で電圧を手入力して確定をクリックすると手入力値で confirm が発火すること', async () => {
     const wrapper = createWrapper()
     const row5 = wrapper.find('.circuit-row[data-row-id="c5"]')
 
-    const buttons = row5.findAll('.col-actions .stub-button')
+    const voltCells = row5.findAll('.stub-volt-cell')
 
-    await buttons[0]?.trigger('click')
+    expect(voltCells[0]?.attributes('data-editing')).toBe('true')
+
+    await voltCells[0]?.find('.volt-input').setValue('104')
+    await voltCells[1]?.find('.volt-input').setValue('103')
+    await voltCells[2]?.find('.volt-input').setValue('207')
+
+    const confirmBtn = row5.find('.col-actions .stub-button')
+
+    expect(confirmBtn.text()).toBe('確定')
+    await confirmBtn.trigger('click')
 
     const emitted = wrapper.emitted('confirm')
 
     expect(emitted).toBeTruthy()
     expect(emitted?.[0]?.[0]).toEqual(mockCircuits[4])
     expect(emitted?.[0]?.[1]).toEqual({
-      rs: 100,
-      st: 100,
-      rt: 200,
+      rs: 104,
+      st: 103,
+      rt: 207,
       kensou: '点灯確認(良)',
+      remarks: '',
     })
   })
 
-  it('完了済み回路では「解除」「変更」ボタンが表示され、解除クリックで clear が発火すること', async () => {
+  it('完了済み回路では通常表示となり「解除」「変更」ボタンが表示され、解除クリックで clear が発火すること', async () => {
     const wrapper = createWrapper()
     const row2 = wrapper.find('.circuit-row[data-row-id="c2"]')
+
+    // 完了回路はInput表示ではなく通常表示
+    const voltCells = row2.findAll('.stub-volt-cell')
+
+    expect(voltCells[0]?.attributes('data-editing')).toBe('false')
 
     const buttons = row2.findAll('.col-actions .stub-button')
 
@@ -255,12 +289,13 @@ describe('TablePhase3.vue', () => {
     expect(emitted?.[0]?.[0]).toEqual(mockCircuits[1])
   })
 
-  it('幹線未完了の回路では「⏸ 幹線未完了」が表示され、操作ボタンが表示されないこと', () => {
+  it('幹線未完了の回路では「⏸ 幹線未完了」が表示され、操作ボタンおよび入力欄が表示されないこと', () => {
     const wrapper = createWrapper()
     const row3 = wrapper.find('.circuit-row[data-row-id="c3"]')
 
     expect(row3.find('.col-actions .text-note').text()).toContain('⏸ 幹線未完了')
     expect(row3.findAll('.col-actions .stub-button').length).toBe(0)
+    expect(row3.findAll('.stub-volt-cell')[0]?.attributes('data-editing')).toBe('false')
   })
 
   it('前フェーズ（P2）未了の回路では「⏸ P2未了」が表示され、操作ボタンが表示されないこと', () => {
@@ -271,75 +306,62 @@ describe('TablePhase3.vue', () => {
     expect(row4.findAll('.col-actions .stub-button').length).toBe(0)
   })
 
-  it('「手入力」クリックで編集モードに突入し、各相電圧・検相・備考を入力して「確定」で confirm が発火すること', async () => {
+  it('完了済み回路で「変更」クリックで編集モードに突入し、各相電圧を入力して「保存」で confirm が発火すること', async () => {
     const wrapper = createWrapper()
-    const row1 = wrapper.find('.circuit-row[data-row-id="c1"]')
+    const row2 = wrapper.find('.circuit-row[data-row-id="c2"]')
 
-    // 手入力開始
-    const buttons = row1.findAll('.col-actions .stub-button')
+    // 「変更」をクリック
+    const changeBtn = row2.findAll('.col-actions .stub-button')[1]
 
-    await buttons[1]?.trigger('click')
+    expect(changeBtn?.text()).toBe('変更')
+    await changeBtn?.trigger('click')
 
-    // 編集用ボタン「確定」「取消」が表示される
-    const editButtons = row1.findAll('.col-actions .stub-button')
+    // 編集用ボタン「保存」「取消」が表示される
+    const editButtons = row2.findAll('.col-actions .stub-button')
 
     expect(editButtons.length).toBe(2)
-    expect(editButtons[0]?.text()).toBe('確定')
+    expect(editButtons[0]?.text()).toBe('保存')
     expect(editButtons[1]?.text()).toBe('取消')
 
-    // セルに入力フィールドが表示されていること
-    const voltCells = row1.findAll('.stub-volt-cell')
+    // セルが入力モードになること
+    const voltCells = row2.findAll('.stub-volt-cell')
 
-    expect(voltCells.length).toBe(3)
     expect(voltCells[0]?.attributes('data-editing')).toBe('true')
 
-    // RS相を 205 に変更
-    const rsInput = voltCells[0]?.find('.volt-input')
+    // RS相を 105 に変更
+    await voltCells[0]?.find('.volt-input').setValue('105')
 
-    await rsInput?.setValue('205')
-
-    // ST相を 204 に変更
-    const stInput = voltCells[1]?.find('.volt-input')
-
-    await stInput?.setValue('204')
-
-    // 備考を入力
-    const textarea = row1.find('.stub-textarea')
-
-    await textarea.setValue('測定値正常')
-
-    // 確定クリック
+    // 保存クリック
     await editButtons[0]?.trigger('click')
 
     const emitted = wrapper.emitted('confirm')
 
     expect(emitted).toBeTruthy()
     expect(emitted?.[0]?.[1]).toEqual({
-      rs: 205,
-      st: 204,
+      rs: 105,
+      st: 100,
       rt: 200,
-      kensou: '正相',
-      remarks: '測定値正常',
+      kensou: '点灯確認(良)',
+      remarks: '特記事項なし',
     })
-
-    // 編集モードが終了していること
-    expect(row1.find('.col-actions .stub-button')?.text()).toBe('標準値確定')
   })
 
-  it('手入力モード中に「取消」をクリックすると編集モードが終了すること', async () => {
+  it('完了済み回路の変更中に「取消」をクリックすると編集モードが終了すること', async () => {
     const wrapper = createWrapper()
-    const row1 = wrapper.find('.circuit-row[data-row-id="c1"]')
+    const row2 = wrapper.find('.circuit-row[data-row-id="c2"]')
 
-    await row1.findAll('.col-actions .stub-button')[1]?.trigger('click')
+    await row2.findAll('.col-actions .stub-button')[1]?.trigger('click')
 
-    const editButtons = row1.findAll('.col-actions .stub-button')
+    const editButtons = row2.findAll('.col-actions .stub-button')
 
     expect(editButtons[1]?.text()).toBe('取消')
 
     await editButtons[1]?.trigger('click')
 
     // 通常モードに戻っていること
-    expect(row1.findAll('.col-actions .stub-button')[0]?.text()).toBe('標準値確定')
+    expect(row2.findAll('.col-actions .stub-button')[0]?.text()).toBe('解除')
+    expect(row2.findAll('.col-actions .stub-button')[1]?.text()).toBe('変更')
+    expect(row2.findAll('.stub-volt-cell')[0]?.attributes('data-editing')).toBe('false')
   })
 
   it('三相と単相で相ラベル（RS/ST/RT vs RN/TN/RT）が適切に切り替わること', () => {
@@ -354,14 +376,14 @@ describe('TablePhase3.vue', () => {
     expect(labels1p).toEqual(['R - N', 'T - N', 'R - T'])
   })
 
-  it('除外回路（isExcluded: true）ではボタンが disabled になること', () => {
+  it('除外回路（isExcluded: true）ではボタンが disabled になり、セルも非編集モードになること', () => {
     const wrapper = createWrapper()
     const row6 = wrapper.find('.circuit-row[data-row-id="c6"]')
 
     const buttons = row6.findAll('.col-actions .stub-button')
 
-    expect(buttons.length).toBe(2)
+    expect(buttons.length).toBe(1)
     expect(buttons[0]?.attributes('disabled')).toBeDefined()
-    expect(buttons[1]?.attributes('disabled')).toBeDefined()
+    expect(row6.findAll('.stub-volt-cell')[0]?.attributes('data-editing')).toBe('false')
   })
 })

@@ -16,7 +16,7 @@ export const PHASE1_TABLE_COLUMNS: TableColumn<CircuitItem>[] = [
   { key: 'kairoBangou', label: '回路番号', align: 'center' },
   { key: 'kairoMeisho', label: '回路名称' },
   { key: 'cableList', label: '配線 / 接地' },
-  { key: 'p1Kakunin', label: '確認 / 増締', align: 'center' },
+  { key: 'p1Kakunin', label: 'サイズ確認 / 増締', align: 'center' },
   { key: 'p1Remarks', label: '備考' },
   { key: 'actions', label: '操作', sortable: false, align: 'center' },
   { key: 'p1ConfirmedAt', label: '測定者 / 日時', align: 'center' },

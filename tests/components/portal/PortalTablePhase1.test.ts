@@ -117,23 +117,30 @@ describe('TablePhase1.vue', () => {
     })
   }
 
-  it('未完了の回路と完了済みの回路のステータスバッジが正しく描画されること', () => {
+  it('未完了の回路と完了済みの回路の確認・増締チェックボックスが正しく描画され、操作でupdate-checkが発火すること', async () => {
     const wrapper = createWrapper()
     const rows = wrapper.findAll('.circuit-row')
 
     expect(rows.length).toBe(3)
 
-    // c1 (未完了)
-    const badge1 = rows[0]?.find('.col-p1Kakunin .stub-badge')
+    // c1 (未完了: kakunin: false, mashishime: false)
+    const checkboxes1 = rows[0]?.findAll('.col-p1Kakunin input[type="checkbox"]')
 
-    expect(badge1?.text()).toBe('未実施')
-    expect(badge1?.attributes('data-badge-id')).toBeUndefined()
+    expect(checkboxes1.length).toBe(2)
+    expect((checkboxes1[0].element as HTMLInputElement).checked).toBe(false)
+    expect((checkboxes1[1].element as HTMLInputElement).checked).toBe(false)
 
-    // c2 (完了済み)
-    const badge2 = rows[1]?.find('.col-p1Kakunin .stub-badge')
+    // c2 (完了済み: kakunin: true, mashishime: true)
+    const checkboxes2 = rows[1]?.findAll('.col-p1Kakunin input[type="checkbox"]')
 
-    expect(badge2?.text()).toBe('確認・増締済')
-    expect(badge2?.attributes('data-badge-id')).toBe('exam:pass')
+    expect(checkboxes2.length).toBe(2)
+    expect((checkboxes2[0].element as HTMLInputElement).checked).toBe(true)
+    expect((checkboxes2[1].element as HTMLInputElement).checked).toBe(true)
+
+    // c1の「確認」チェックボックスをクリック
+    await checkboxes1[0].setValue(true)
+    expect(wrapper.emitted('update-check')).toBeTruthy()
+    expect(wrapper.emitted('update-check')![0]).toEqual([mockCircuits[0], { kakunin: true }])
   })
 
   it('未完了回路では「確定」ボタンと「編集」ボタンが表示され、確定をクリックすると confirm が発火すること', async () => {

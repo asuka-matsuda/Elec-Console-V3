@@ -78,6 +78,7 @@ const handleSelectCircuit = (circuit: CircuitItem) => {
               <Select
                 v-model="selectedBanMeisho"
                 :options="banMeishoOptions"
+                :clearable="false"
                 class="w-40"
               />
             </div>

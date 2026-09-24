@@ -153,7 +153,7 @@ export const useAuth = () => {
     }
   }
 
-  const changePassword = async (newPassword: string) => {
+  const changePassword = async (newPassword: string, currentPassword?: string) => {
     const $api = getApiSafe()
 
     if (!$api) return { success: false, message: 'APIクライアントが初期化されていません。' }
@@ -161,7 +161,7 @@ export const useAuth = () => {
     try {
       await $api('/api/auth/password', {
         method: 'PUT',
-        body: { newPassword },
+        body: { newPassword, currentPassword },
       })
 
       if (currentUser.value) {

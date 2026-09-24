@@ -12,6 +12,11 @@ import path from 'path'
 
 import { prisma } from './prisma'
 
+export interface SiteAssignment {
+  siteId: string
+  role: string
+}
+
 export interface SafeUser {
   id: string
   loginId: string
@@ -27,6 +32,7 @@ export interface SafeUser {
   createdAt: Date
   updatedAt: Date
   assignedSiteIds: string[]
+  siteAssignments?: SiteAssignment[]
 }
 
 export interface TokenPayload {
@@ -176,7 +182,7 @@ export async function getAuthUser(event: H3Event): Promise<SafeUser | null> {
 
   const user = await prisma.user.findUnique({
     where: { id: verified.uid },
-    include: { assignedSites: true },
+    include: { assignedSites: true, siteAssignments: true },
   })
 
   if (!user || !user.isActive || user.loginId !== verified.loginId) {
@@ -184,9 +190,17 @@ export async function getAuthUser(event: H3Event): Promise<SafeUser | null> {
   }
 
   const assignedSiteIds = user.assignedSites.map(s => s.id)
-  const { password: _dbPassword, assignedSites: _assignedSites, ...restUser } = user
+  const siteAssignments = user.assignedSites.map((s) => {
+    const match = user.siteAssignments.find(sa => sa.siteId === s.id)
 
-  return { ...restUser, assignedSiteIds }
+    return {
+      siteId: s.id,
+      role: match?.role || user.role || 'worker',
+    }
+  })
+  const { password: _dbPassword, assignedSites: _assignedSites, siteAssignments: _sa, ...restUser } = user
+
+  return { ...restUser, assignedSiteIds, siteAssignments }
 }
 
 /**

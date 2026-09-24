@@ -1,4 +1,4 @@
-﻿import { mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
 import TablePhase2 from '../../../app/components/portal/exam/TablePhase2.vue'
@@ -237,7 +237,7 @@ describe('TablePhase2.vue', () => {
 
     await rInput.setValue('50.5')
     await sInput.setValue('20.0')
-    await tInput.setValue('0.5') // 閾値 1.0 未満のため NG
+    await tInput.setValue('0.05') // 閾値（100V系: 0.1MΩ）未満のため NG
 
     // 確定をクリック
     await actionBtns[0]?.trigger('click')
@@ -249,7 +249,7 @@ describe('TablePhase2.vue', () => {
     expect(payload?.[1]).toEqual({
       rVal: 50.5,
       sVal: 20.0,
-      tVal: 0.5,
+      tVal: 0.05,
       rStatus: 'OK',
       sStatus: 'OK',
       tStatus: 'NG',

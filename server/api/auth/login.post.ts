@@ -60,7 +60,7 @@ export default defineEventHandler(async (event) => {
 
   const user = await prisma.user.findUnique({
     where: { loginId: loginId.trim() },
-    include: { assignedSites: true },
+    include: { assignedSites: true, siteAssignments: true },
   })
 
   // ユーザーが存在しない場合
@@ -123,8 +123,16 @@ export default defineEventHandler(async (event) => {
   })
 
   const assignedSiteIds = user.assignedSites.map(s => s.id)
-  const { password: _dbPassword, assignedSites: _assignedSites, ...restUser } = user
-  const safeUser = { ...restUser, assignedSiteIds }
+  const siteAssignments = user.assignedSites.map((s) => {
+    const match = user.siteAssignments.find(sa => sa.siteId === s.id)
+
+    return {
+      siteId: s.id,
+      role: match?.role || user.role || 'worker',
+    }
+  })
+  const { password: _dbPassword, assignedSites: _assignedSites, siteAssignments: _sa, ...restUser } = user
+  const safeUser = { ...restUser, assignedSiteIds, siteAssignments }
 
   return {
     success: true,

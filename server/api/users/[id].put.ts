@@ -102,26 +102,51 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  const siteConnections = (body.assignedSiteIds || []).map((sid: string) => ({ id: sid }))
+  const siteAssignmentsInput: { siteId: string, role: string }[] = body.siteAssignments
+    || (body.assignedSiteIds || []).map((sid: string) => ({ siteId: sid, role: 'worker' }))
 
-  const updatedUser = await prisma.user.update({
-    where: { id },
-    data: {
-      loginId: body.loginId,
-      firstName: body.firstName,
-      lastName: body.lastName,
-      firstNameKana: body.firstNameKana,
-      lastNameKana: body.lastNameKana,
-      role: body.role,
-      email: body.email,
-      isActive: body.isActive,
-      assignedSites: { set: siteConnections }, // Override relations
-    },
-    include: { assignedSites: true },
+  const siteConnections = siteAssignmentsInput.map(sa => ({ id: sa.siteId }))
+
+  const updatedUser = await prisma.$transaction(async (tx) => {
+    await tx.userOnSite.deleteMany({ where: { userId: id } })
+
+    if (siteAssignmentsInput.length > 0) {
+      await tx.userOnSite.createMany({
+        data: siteAssignmentsInput.map(sa => ({
+          userId: id,
+          siteId: sa.siteId,
+          role: sa.role || 'worker',
+        })),
+      })
+    }
+
+    return tx.user.update({
+      where: { id },
+      data: {
+        loginId: body.loginId,
+        firstName: body.firstName,
+        lastName: body.lastName,
+        firstNameKana: body.firstNameKana,
+        lastNameKana: body.lastNameKana,
+        role: body.role,
+        email: body.email,
+        isActive: body.isActive,
+        assignedSites: { set: siteConnections },
+      },
+      include: { assignedSites: true, siteAssignments: true },
+    })
   })
 
   const assignedSiteIds = updatedUser.assignedSites.map(s => s.id)
-  const { password: _dbPassword, assignedSites: _assignedSites, ...restUser } = updatedUser
+  const siteAssignments = updatedUser.assignedSites.map((s) => {
+    const match = updatedUser.siteAssignments.find(sa => sa.siteId === s.id)
 
-  return { ...restUser, assignedSiteIds }
+    return {
+      siteId: s.id,
+      role: match?.role || updatedUser.role || 'worker',
+    }
+  })
+  const { password: _dbPassword, assignedSites: _assignedSites, siteAssignments: _sa, ...restUser } = updatedUser
+
+  return { ...restUser, assignedSiteIds, siteAssignments }
 })

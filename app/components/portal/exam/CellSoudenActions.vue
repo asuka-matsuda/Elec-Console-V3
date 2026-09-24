@@ -18,6 +18,7 @@ withDefaults(
     editLabel?: string
     saveLabel?: string
     hasModifyButton?: boolean
+    hasEditButton?: boolean
   }>(),
   {
     isLocked: false,
@@ -29,6 +30,7 @@ withDefaults(
     editLabel: '編集',
     saveLabel: '保存',
     hasModifyButton: true,
+    hasEditButton: true,
   },
 )
 
@@ -42,7 +44,7 @@ defineEmits<{
 </script>
 
 <template>
-  <div class="flex items-center justify-center gap-1">
+  <div class="cell-actions flex items-center justify-center gap-1.5 whitespace-nowrap">
     <template v-if="isLocked">
       <span class="text-note inline-flex items-center gap-1">
         ⏸ {{ lockedReason }}
@@ -88,6 +90,7 @@ defineEmits<{
         {{ confirmLabel }}
       </Button>
       <Button
+        v-if="hasEditButton"
         :disabled="circuit.isExcluded"
         @click="$emit('edit')"
       >
@@ -98,6 +101,18 @@ defineEmits<{
 </template>
 
 <style scoped lang="scss">
+.cell-actions {
+  white-space: nowrap;
+
+  :deep(.btn) {
+    min-height: 2em;
+    padding-block: 0.25em;
+    padding-inline: 0.65em;
+    font-size: var(--font-size-xs);
+    white-space: nowrap;
+  }
+}
+
 .text-note {
   font-size: inherit;
   font-weight: var(--font-weight-normal);

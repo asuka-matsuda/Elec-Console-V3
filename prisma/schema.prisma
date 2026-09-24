@@ -24,7 +24,8 @@ model User {
   updatedAt            DateTime  @updatedAt
 
   // Many-to-Many relation with Site
-  assignedSites Site[] @relation("UserSites")
+  assignedSites   Site[]       @relation("UserSites")
+  siteAssignments UserOnSite[]
 }
 
 model Site {
@@ -36,11 +37,24 @@ model Site {
   updatedAt  DateTime  @updatedAt
 
   users            User[]            @relation("UserSites")
+  userAssignments  UserOnSite[]
   events           Event[]
   settings         SiteSettings?
   calendarSettings CalendarSettings?
   circuits         Circuit[]
   operationLogs    OperationLog[]
+}
+
+model UserOnSite {
+  userId    String
+  siteId    String
+  role      String   @default("worker") // 'admin' | 'worker' | 'viewer'
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@id([userId, siteId])
 }
 
 model Event {

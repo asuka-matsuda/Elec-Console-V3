@@ -188,7 +188,7 @@ export function usePhaseExamBase(
       }
       else {
         total++
-        if (phaseNumber === 1 && c.p1ConfirmedAt && c.p1Kakunin && c.p1Mashishime) {
+        if (phaseNumber === 1 && c.p1Kakunin && c.p1Mashishime) {
           completed++
         }
         else if (phaseNumber === 2 && c.p2ConfirmedAt && c.p2IsComplete) {

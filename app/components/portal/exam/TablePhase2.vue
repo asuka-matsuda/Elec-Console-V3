@@ -9,7 +9,7 @@ import { reactive, ref, toRef } from 'vue'
 import { useTableSort } from '~/composables/useTableSort'
 import { PHASE2_TABLE_COLUMNS } from '~/constants/soudenConstants'
 import type { CircuitItem } from '~/types/souden'
-import { getCircuitPhaseLabels, parseNullableNumber } from '~/utils/souden'
+import { getCircuitPhaseLabels, getPhase2Threshold, parseNullableNumber } from '~/utils/souden'
 
 const props = defineProps<{
   circuits: CircuitItem[]
@@ -88,9 +88,11 @@ const saveInput = (circuit: CircuitItem) => {
   const sNum = parseVal(inputForm.sVal)
   const tNum = parseVal(inputForm.tVal)
 
-  const rStatus = props.evalMegStatus(rNum)
-  const sStatus = props.evalMegStatus(sNum)
-  const tStatus = props.evalMegStatus(tNum)
+  const threshold = getPhase2Threshold(circuit.haidenHoushiki)
+  const evalStatus = (val: number | null) => (val == null ? null : (val >= threshold ? 'OK' : 'NG'))
+  const rStatus = evalStatus(rNum)
+  const sStatus = evalStatus(sNum)
+  const tStatus = evalStatus(tNum)
 
   const isAllOk = rStatus === 'OK' && sStatus === 'OK' && tStatus === 'OK'
 

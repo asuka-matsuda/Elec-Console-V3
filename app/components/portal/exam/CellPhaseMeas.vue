@@ -6,6 +6,8 @@
  */
 import { computed } from 'vue'
 
+import { getPhase2Threshold } from '~/utils/souden'
+
 const modelValue = defineModel<string | number>({ default: '' })
 
 const props = withDefaults(
@@ -16,6 +18,7 @@ const props = withDefaults(
     status?: string | null
     isEditing?: boolean
     threshold?: number
+    haidenHoushiki?: string | null
     step?: string
   }>(),
   {
@@ -24,6 +27,7 @@ const props = withDefaults(
     status: null,
     isEditing: false,
     threshold: 1.0,
+    haidenHoushiki: null,
     step: undefined,
   },
 )
@@ -35,6 +39,10 @@ const emit = defineEmits<{
 
 const resolvedStep = computed(() => props.step || (props.unit === 'MΩ' ? '0.1' : 'any'))
 
+const effectiveThreshold = computed(() => {
+  return props.haidenHoushiki ? getPhase2Threshold(props.haidenHoushiki) : (props.threshold ?? 0.1)
+})
+
 const formattedValue = computed(() => {
   if (props.val == null) return '-'
   if (props.unit === 'MΩ') {
@@ -44,11 +52,25 @@ const formattedValue = computed(() => {
   return String(props.val)
 })
 
+const isBelowThreshold = computed<boolean>(() => {
+  if (!props.isEditing) return false
+  if (props.unit !== 'MΩ') return false
+  const raw = modelValue.value
+
+  if (raw === '' || raw === null || raw === undefined) return false
+
+  const num = typeof raw === 'number' ? raw : parseFloat(String(raw).trim())
+
+  if (isNaN(num) || !isFinite(num)) return false
+
+  return num < effectiveThreshold.value
+})
+
 const statusClass = computed(() => {
-  if (props.status === 'OK' || (props.val != null && props.status == null && props.threshold != null && props.unit === 'MΩ' && props.val >= props.threshold)) {
+  if (props.status === 'OK' || (props.val != null && props.status == null && props.unit === 'MΩ' && props.val >= effectiveThreshold.value)) {
     return 'is-ok'
   }
-  if (props.status === 'NG' || (props.val != null && props.status == null && props.threshold != null && props.unit === 'MΩ' && props.val < props.threshold)) {
+  if (props.status === 'NG' || (props.val != null && props.status == null && props.unit === 'MΩ' && props.val < effectiveThreshold.value)) {
     return 'is-ng'
   }
   if (props.val != null && props.unit !== 'MΩ') {
@@ -63,18 +85,26 @@ const statusClass = computed(() => {
   <div class="flex flex-col items-center gap-1 text-2xs">
     <span class="cell-label">{{ label }}</span>
 
-    <Input
-      v-if="isEditing"
-      v-model="modelValue"
-      type="number"
-      :step="resolvedStep"
-      inputmode="decimal"
-      :placeholder="unit === 'MΩ' ? '100' : undefined"
-      :addon="unit"
-      class="w-[85px]"
-      @focus="emit('focus', $event)"
-      @keydown.enter.prevent="emit('enter')"
-    />
+    <template v-if="isEditing">
+      <Input
+        v-model="modelValue"
+        type="number"
+        :step="resolvedStep"
+        inputmode="decimal"
+        :placeholder="unit === 'MΩ' ? '100' : undefined"
+        :clearable="false"
+        :error="isBelowThreshold"
+        class="w-[85px]"
+        @focus="emit('focus', $event)"
+        @keydown.enter.prevent="emit('enter')"
+      />
+      <span
+        v-if="isBelowThreshold"
+        class="cell-warning-sub"
+      >
+        基準値未満です
+      </span>
+    </template>
 
     <template v-else>
       <div class="flex items-baseline gap-0.5">
@@ -116,5 +146,13 @@ const statusClass = computed(() => {
 
 .cell-val.is-active {
   color: var(--color-category-tool);
+}
+
+.cell-warning-sub {
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.1;
+  color: var(--color-status-danger);
+  white-space: nowrap;
 }
 </style>

@@ -8,7 +8,7 @@ import { computed, reactive, ref, watch } from 'vue'
 
 import { USER_ROLE_OPTIONS, USER_SETTINGS_TABS } from '~/constants/adminConstants'
 import type { Site } from '~/types/admin'
-import type { User, UserRole } from '~/types/auth'
+import type { SiteAssignment, User, UserRole } from '~/types/auth'
 import { formatDateTime } from '~/utils/date'
 
 const props = defineProps<{
@@ -34,6 +34,7 @@ const form = reactive({
   role: 'worker' as UserRole,
   requirePasswordReset: false,
   assignedSiteIds: [] as string[],
+  siteAssignments: [] as SiteAssignment[],
 })
 
 const lastLoginText = computed(() => {
@@ -51,10 +52,52 @@ watch(
       form.role = newUser.role || 'worker'
       form.requirePasswordReset = !!newUser.requirePasswordReset
       form.assignedSiteIds = [...(newUser.assignedSiteIds || [])]
+      form.siteAssignments = newUser.siteAssignments
+        ? newUser.siteAssignments.map(sa => ({ ...sa }))
+        : (newUser.assignedSiteIds || []).map(id => ({ siteId: id, role: newUser.role || 'worker' }))
     }
   },
   { immediate: true },
 )
+
+const isSiteAssigned = (siteId: string) => {
+  return form.assignedSiteIds.includes(siteId)
+}
+
+const getSiteRole = (siteId: string): UserRole => {
+  const found = form.siteAssignments.find(sa => sa.siteId === siteId)
+
+  return found?.role || form.role || 'worker'
+}
+
+const handleToggleSite = (siteId: string, assigned: unknown) => {
+  const isChecked = !!assigned
+
+  if (isChecked) {
+    if (!form.assignedSiteIds.includes(siteId)) {
+      form.assignedSiteIds.push(siteId)
+    }
+    if (!form.siteAssignments.some(sa => sa.siteId === siteId)) {
+      form.siteAssignments.push({ siteId, role: form.role || 'worker' })
+    }
+  }
+  else {
+    form.assignedSiteIds = form.assignedSiteIds.filter(id => id !== siteId)
+    form.siteAssignments = form.siteAssignments.filter(sa => sa.siteId !== siteId)
+  }
+}
+
+const handleSiteRoleChange = (siteId: string, newRole: unknown) => {
+  const role = newRole as UserRole
+  const found = form.siteAssignments.find(sa => sa.siteId === siteId)
+
+  if (found) {
+    found.role = role
+  }
+  else {
+    form.siteAssignments.push({ siteId, role })
+  }
+}
 
 const handleSave = () => {
   emit('save', { ...form })
@@ -194,13 +237,26 @@ const handleSave = () => {
             </p>
 
             <div v-if="siteList.length > 0" class="flex flex-col gap-2">
-              <Checkbox
+              <div
                 v-for="site in siteList"
                 :key="site.id"
-                v-model="form.assignedSiteIds"
-                :value="site.id"
-                :label="`${site.name} (${site.id})`"
-              />
+                class="flex items-center justify-between p-2.5 site-assign-row gap-3"
+              >
+                <Checkbox
+                  :model-value="isSiteAssigned(site.id)"
+                  :label="`${site.name} (${site.id})`"
+                  @update:model-value="handleToggleSite(site.id, $event)"
+                />
+
+                <div v-if="isSiteAssigned(site.id)" class="w-36 flex-shrink-0">
+                  <Select
+                    :model-value="getSiteRole(site.id)"
+                    :options="USER_ROLE_OPTIONS"
+                    size="sm"
+                    @update:model-value="handleSiteRoleChange(site.id, $event)"
+                  />
+                </div>
+              </div>
             </div>
 
             <EmptyState
@@ -232,5 +288,11 @@ const handleSave = () => {
   font-size: var(--font-size-xs);
   line-height: var(--line-height-base);
   color: var(--color-text-muted);
+}
+
+.site-assign-row {
+  border: var(--border-width-base) solid var(--color-border);
+  background-color: color-mix(in srgb, var(--surface-bg-elevated) 30%, transparent);
+  border-radius: var(--radius-sm, 4px);
 }
 </style>

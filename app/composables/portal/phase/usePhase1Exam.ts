@@ -8,6 +8,7 @@ import type { Ref } from 'vue'
 import { ref } from 'vue'
 
 import { usePhaseExamBase } from '~/composables/portal/phase/usePhaseExamBase'
+import { useAuth } from '~/composables/useAuth'
 import type { CircuitItem } from '~/types/souden'
 
 /**
@@ -17,6 +18,7 @@ export function usePhase1Exam(
   siteIdRef: Ref<string> | string,
   initialKeiTo: string = '幹線',
 ) {
+  const { currentUser } = useAuth()
   const base = usePhaseExamBase(siteIdRef, initialKeiTo, 1)
   const { executeCircuitAction } = base
 
@@ -42,6 +44,12 @@ export function usePhase1Exam(
     editForm.value = {}
   }
 
+  const getWorkerDisplayName = () => {
+    if (!currentUser.value) return '作業者'
+
+    return `${currentUser.value.lastName || ''} ${currentUser.value.firstName || ''}`.trim() || currentUser.value.loginId || '作業者'
+  }
+
   // Phase 1 確定実行
   const confirmPhase1 = async (
     circuit: CircuitItem,
@@ -61,10 +69,15 @@ export function usePhase1Exam(
       ...overrideData,
     }
 
+    const nowIso = new Date().toISOString()
+    const workerName = getWorkerDisplayName()
+
     const optimisticPatch: Partial<CircuitItem> = {
       p1Kakunin: Boolean(payload.kakunin),
       p1Mashishime: Boolean(payload.mashishime),
       p1Remarks: String(payload.remarks || ''),
+      p1ConfirmedAt: (payload.kakunin || payload.mashishime) ? (circuit.p1ConfirmedAt || nowIso) : null,
+      p1Worker: (payload.kakunin || payload.mashishime) ? (circuit.p1Worker || workerName) : null,
     }
 
     const res = await executeCircuitAction(circuit, 'confirm', payload, optimisticPatch)
@@ -72,6 +85,36 @@ export function usePhase1Exam(
     cancelEdit()
 
     return res
+  }
+
+  // チェックボックス単体トグル（サイズ確認 / 増締）
+  const updateCheck = async (
+    circuit: CircuitItem,
+    changes: { kakunin?: boolean, mashishime?: boolean },
+  ) => {
+    const newKakunin = changes.kakunin !== undefined ? changes.kakunin : Boolean(circuit.p1Kakunin)
+    const newMashishime = changes.mashishime !== undefined ? changes.mashishime : Boolean(circuit.p1Mashishime)
+    const hasAnyCheck = newKakunin || newMashishime
+    const nowIso = new Date().toISOString()
+    const workerName = getWorkerDisplayName()
+
+    const optimisticPatch: Partial<CircuitItem> = {
+      p1Kakunin: newKakunin,
+      p1Mashishime: newMashishime,
+      p1ConfirmedAt: hasAnyCheck ? (circuit.p1ConfirmedAt || nowIso) : null,
+      p1Worker: hasAnyCheck ? (circuit.p1Worker || workerName) : null,
+    }
+
+    return executeCircuitAction(
+      circuit,
+      hasAnyCheck ? 'confirm' : 'clear',
+      {
+        kakunin: newKakunin,
+        mashishime: newMashishime,
+        remarks: circuit.p1Remarks || '',
+      },
+      optimisticPatch,
+    )
   }
 
   // Phase 1 確定解除
@@ -129,5 +172,6 @@ export function usePhase1Exam(
     saveEdit,
     confirmPhase1,
     clearPhase1,
+    updateCheck,
   }
 }

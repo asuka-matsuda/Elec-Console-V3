@@ -17,8 +17,9 @@ describe('usePasswordChange', () => {
   })
 
   it('初期状態が正しく設定されていること', () => {
-    const { newPassword, confirmPassword, passwordError, isSuccess, isLoading } = usePasswordChange()
+    const { currentPassword, newPassword, confirmPassword, passwordError, isSuccess, isLoading } = usePasswordChange()
 
+    expect(currentPassword.value).toBe('')
     expect(newPassword.value).toBe('')
     expect(confirmPassword.value).toBe('')
     expect(passwordError.value).toBe('')
@@ -26,9 +27,24 @@ describe('usePasswordChange', () => {
     expect(isLoading.value).toBe(false)
   })
 
-  it('8文字未満のパスワードの場合はバリデーションエラーになりAPIは呼ばれないこと', async () => {
-    const { newPassword, confirmPassword, passwordError, handleChangePassword } = usePasswordChange()
+  it('現在のパスワードが未入力の場合はバリデーションエラーになりAPIは呼ばれないこと', async () => {
+    const { currentPassword, newPassword, confirmPassword, passwordError, handleChangePassword } = usePasswordChange()
 
+    currentPassword.value = ''
+    newPassword.value = 'validPassword123'
+    confirmPassword.value = 'validPassword123'
+
+    const success = await handleChangePassword()
+
+    expect(success).toBe(false)
+    expect(passwordError.value).toBe('現在のパスワードを入力してください。')
+    expect(mockChangePassword).not.toHaveBeenCalled()
+  })
+
+  it('8文字未満のパスワードの場合はバリデーションエラーになりAPIは呼ばれないこと', async () => {
+    const { currentPassword, newPassword, confirmPassword, passwordError, handleChangePassword } = usePasswordChange()
+
+    currentPassword.value = 'oldPassword123'
     newPassword.value = 'short'
     confirmPassword.value = 'short'
 
@@ -39,9 +55,24 @@ describe('usePasswordChange', () => {
     expect(mockChangePassword).not.toHaveBeenCalled()
   })
 
-  it('確認用パスワードと一致しない場合はバリデーションエラーになりAPIは呼ばれないこと', async () => {
-    const { newPassword, confirmPassword, passwordError, handleChangePassword } = usePasswordChange()
+  it('現在のパスワードと同じパスワードの場合はバリデーションエラーになりAPIは呼ばれないこと', async () => {
+    const { currentPassword, newPassword, confirmPassword, passwordError, handleChangePassword } = usePasswordChange()
 
+    currentPassword.value = 'samePassword123'
+    newPassword.value = 'samePassword123'
+    confirmPassword.value = 'samePassword123'
+
+    const success = await handleChangePassword()
+
+    expect(success).toBe(false)
+    expect(passwordError.value).toBe('現在のパスワードとは異なるパスワードを設定してください。')
+    expect(mockChangePassword).not.toHaveBeenCalled()
+  })
+
+  it('確認用パスワードと一致しない場合はバリデーションエラーになりAPIは呼ばれないこと', async () => {
+    const { currentPassword, newPassword, confirmPassword, passwordError, handleChangePassword } = usePasswordChange()
+
+    currentPassword.value = 'oldPassword123'
     newPassword.value = 'validPassword123'
     confirmPassword.value = 'differentPassword456'
 
@@ -56,6 +87,7 @@ describe('usePasswordChange', () => {
     mockChangePassword.mockResolvedValueOnce({ success: true })
 
     const {
+      currentPassword,
       newPassword,
       confirmPassword,
       passwordError,
@@ -64,6 +96,7 @@ describe('usePasswordChange', () => {
       handleChangePassword,
     } = usePasswordChange()
 
+    currentPassword.value = 'oldValidPassword777'
     newPassword.value = 'newValidPassword888'
     confirmPassword.value = 'newValidPassword888'
 
@@ -77,18 +110,20 @@ describe('usePasswordChange', () => {
     expect(isLoading.value).toBe(false)
     expect(isSuccess.value).toBe(true)
     expect(passwordError.value).toBe('')
+    expect(currentPassword.value).toBe('')
     expect(newPassword.value).toBe('')
     expect(confirmPassword.value).toBe('')
-    expect(mockChangePassword).toHaveBeenCalledWith('newValidPassword888')
+    expect(mockChangePassword).toHaveBeenCalledWith('newValidPassword888', 'oldValidPassword777')
   })
 
   it('API失敗時に passwordError にエラーメッセージが設定されること', async () => {
     mockChangePassword.mockResolvedValueOnce({
       success: false,
-      message: '以前と同じパスワードは使用できません。',
+      message: '現在のパスワードが間違っています。',
     })
 
     const {
+      currentPassword,
       newPassword,
       confirmPassword,
       passwordError,
@@ -97,6 +132,7 @@ describe('usePasswordChange', () => {
       handleChangePassword,
     } = usePasswordChange()
 
+    currentPassword.value = 'wrongPassword123'
     newPassword.value = 'newValidPassword888'
     confirmPassword.value = 'newValidPassword888'
 
@@ -105,11 +141,12 @@ describe('usePasswordChange', () => {
     expect(success).toBe(false)
     expect(isLoading.value).toBe(false)
     expect(isSuccess.value).toBe(false)
-    expect(passwordError.value).toBe('以前と同じパスワードは使用できません。')
+    expect(passwordError.value).toBe('現在のパスワードが間違っています。')
   })
 
   it('resetForm でステートが初期化されること', () => {
     const {
+      currentPassword,
       newPassword,
       confirmPassword,
       passwordError,
@@ -117,6 +154,7 @@ describe('usePasswordChange', () => {
       resetForm,
     } = usePasswordChange()
 
+    currentPassword.value = 'oldPassword'
     newPassword.value = 'somePassword'
     confirmPassword.value = 'somePassword'
     passwordError.value = 'Some error'
@@ -124,6 +162,7 @@ describe('usePasswordChange', () => {
 
     resetForm()
 
+    expect(currentPassword.value).toBe('')
     expect(newPassword.value).toBe('')
     expect(confirmPassword.value).toBe('')
     expect(passwordError.value).toBe('')

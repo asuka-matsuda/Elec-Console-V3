@@ -15,13 +15,21 @@ export default defineEventHandler(async (event) => {
   await requireAdminUser(event)
 
   const users = await prisma.user.findMany({
-    include: { assignedSites: true },
+    include: { assignedSites: true, siteAssignments: true },
   })
 
   return users.map((user) => {
     const assignedSiteIds = user.assignedSites.map(s => s.id)
-    const { password: _dbPassword, assignedSites: _assignedSites, ...restUser } = user
+    const siteAssignments = user.assignedSites.map((s) => {
+      const match = user.siteAssignments.find(sa => sa.siteId === s.id)
 
-    return { ...restUser, assignedSiteIds }
+      return {
+        siteId: s.id,
+        role: match?.role || user.role || 'worker',
+      }
+    })
+    const { password: _dbPassword, assignedSites: _assignedSites, siteAssignments: _sa, ...restUser } = user
+
+    return { ...restUser, assignedSiteIds, siteAssignments }
   })
 })

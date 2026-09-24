@@ -25,13 +25,11 @@ const {
   phase2ThresholdMegOhm,
   isCircuitLocked,
   isActionLoading,
-  isBatchLoading,
   isThreePhase,
   evalMegStatus,
   fetchCircuits,
   confirmPhase2,
   clearPhase2,
-  batchConfirmPhase2,
 } = usePhase2Exam(siteId, initialKeiTo.value)
 
 watch(
@@ -62,22 +60,6 @@ onMounted(() => {
     :circuits="filteredCircuits"
     @synced="fetchCircuits"
   >
-    <template #actions>
-      <Button
-        variant="success"
-        icon="check-check"
-        :loading="isBatchLoading"
-        @click="batchConfirmPhase2(100)"
-      >
-        一括 100MΩ(OK) 確定
-      </Button>
-    </template>
-
-    <template #filters-extra>
-      <Badge color="var(--color-category-tool)">
-        基準値: ≧ {{ phase2ThresholdMegOhm.toFixed(1) }} MΩ
-      </Badge>
-    </template>
 
     <PortalTablePhase2
       :circuits="filteredCircuits"

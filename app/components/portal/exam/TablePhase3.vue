@@ -2,9 +2,9 @@
 /**
  * TablePhase3
  * [Portal Organisms] フェーズ3（送電・電圧測定・検相）の回路一覧テーブルコンポーネント。
- * 回路情報の表示、手入力モード（各相電圧・検相・備考の入力）、標準値確定、および解除操作を管理します。
+ * 回路情報の表示、手入力モード（最初からInput表示・Enter確定）、および解除/変更操作を管理します。
  */
-import { reactive, ref, toRef } from 'vue'
+import { reactive, ref, toRef, watch } from 'vue'
 
 import { useTableSort } from '~/composables/useTableSort'
 import {
@@ -16,7 +16,6 @@ import type { SelectOption } from '~/types/components'
 import type { CircuitItem } from '~/types/souden'
 import {
   getCircuitPhaseLabels,
-  getPhase3StandardValues,
   parseNullableNumber,
 } from '~/utils/souden'
 
@@ -44,60 +43,94 @@ const emit = defineEmits<{
 
 // 各行の手入力・編集状態
 const editingRowId = ref<string | null>(null)
-const inputForm = reactive({
-  rs: '' as string | number,
-  st: '' as string | number,
-  rt: '' as string | number,
-  kensou: '正相',
-  remarks: '',
-})
+
+interface Phase3RowForm {
+  rs: string | number
+  st: string | number
+  rt: string | number
+  kensou: string
+  remarks: string
+}
+
+const rowForms = reactive<Record<string, Phase3RowForm>>({})
+
+const initRowForm = (circuit: CircuitItem): Phase3RowForm => {
+  const isThree = props.isThreePhase(circuit)
+
+  return {
+    rs: circuit.denatsuRs != null ? circuit.denatsuRs : '',
+    st: circuit.denatsuSt != null ? circuit.denatsuSt : '',
+    rt: circuit.denatsuRt != null ? circuit.denatsuRt : '',
+    kensou: circuit.kensou || (isThree ? '正相' : '点灯確認(良)'),
+    remarks: circuit.p3Remarks ?? '',
+  }
+}
+
+const getRowForm = (circuit: CircuitItem): Phase3RowForm => {
+  if (!rowForms[circuit.id]) {
+    rowForms[circuit.id] = initRowForm(circuit)
+  }
+
+  return rowForms[circuit.id]
+}
+
+// 回路データの変更時に未編集行のフォーム値を同期
+watch(
+  () => props.circuits,
+  (newCircuits) => {
+    for (const c of newCircuits) {
+      if (editingRowId.value !== c.id) {
+        rowForms[c.id] = initRowForm(c)
+      }
+    }
+  },
+  { immediate: true, deep: true },
+)
 
 const isComplete = (circuit: CircuitItem) => Boolean(circuit.p3ConfirmedAt)
 const isP2Complete = (circuit: CircuitItem) => Boolean(circuit.p2ConfirmedAt && circuit.p2IsComplete)
 const isLocked = (circuit: CircuitItem) => props.isCircuitLocked(circuit) || !isP2Complete(circuit)
 
+// 最初からInput表示: 未完了かつ非ロック・非除外、または明示的に編集中（変更クリック）の行
+const isRowEditing = (circuit: CircuitItem) => {
+  if (isLocked(circuit) || circuit.isExcluded) return false
+  if (editingRowId.value === circuit.id) return true
+
+  return !isComplete(circuit)
+}
+
 // 相ラベルの取得（三相: R-S / S-T / R-T, 単相: R-N / T-N / R-T）
 const getPhaseLabels = (circuit: CircuitItem) => getCircuitPhaseLabels(props.isThreePhase(circuit))
-
-// 標準値の取得
-const getStandardValues = (circuit: CircuitItem) => getPhase3StandardValues(props.isThreePhase(circuit))
 
 // 検相セレクトの選択肢
 const getKensouOptions = (circuit: CircuitItem): SelectOption[] => {
   return props.isThreePhase(circuit) ? KENSOU_OPTIONS_3P : KENSOU_OPTIONS_1P
 }
 
-// クイック標準値確定
-const handleQuickStandard = (circuit: CircuitItem) => {
-  emit('confirm', circuit, getStandardValues(circuit))
-}
-
-// 手入力モードの開始
-const startInput = (circuit: CircuitItem) => {
-  const std = getStandardValues(circuit)
-
+// 完了済み行の編集開始
+const startEdit = (circuit: CircuitItem) => {
   editingRowId.value = circuit.id
-  inputForm.rs = circuit.denatsuRs ?? std.rs
-  inputForm.st = circuit.denatsuSt ?? std.st
-  inputForm.rt = circuit.denatsuRt ?? std.rt
-  inputForm.kensou = circuit.kensou || std.kensou
-  inputForm.remarks = circuit.p3Remarks ?? ''
+  rowForms[circuit.id] = initRowForm(circuit)
 }
 
-const cancelInput = () => {
+// 編集取消
+const cancelEdit = (circuit: CircuitItem) => {
   editingRowId.value = null
+  rowForms[circuit.id] = initRowForm(circuit)
 }
 
 const parseVal = parseNullableNumber
 
-// 手入力内容の確定
+// 入力内容の確定
 const saveInput = (circuit: CircuitItem) => {
+  const form = getRowForm(circuit)
+
   emit('confirm', circuit, {
-    rs: parseVal(inputForm.rs),
-    st: parseVal(inputForm.st),
-    rt: parseVal(inputForm.rt),
-    kensou: inputForm.kensou,
-    remarks: inputForm.remarks,
+    rs: parseVal(form.rs),
+    st: parseVal(form.st),
+    rt: parseVal(form.rt),
+    kensou: form.kensou,
+    remarks: form.remarks,
   })
 
   editingRowId.value = null
@@ -128,42 +161,43 @@ const {
 
     <template #cell-denatsuRs="{ row: circuit }">
       <PortalCellPhaseMeas
-        v-model="inputForm.rs"
+        v-model="getRowForm(circuit).rs"
         :label="getPhaseLabels(circuit).phase1"
         :val="circuit.denatsuRs"
         unit="V"
-        :is-editing="editingRowId === circuit.id"
+        :is-editing="isRowEditing(circuit)"
         @enter="saveInput(circuit)"
       />
     </template>
 
     <template #cell-denatsuSt="{ row: circuit }">
       <PortalCellPhaseMeas
-        v-model="inputForm.st"
+        v-model="getRowForm(circuit).st"
         :label="getPhaseLabels(circuit).phase2"
         :val="circuit.denatsuSt"
         unit="V"
-        :is-editing="editingRowId === circuit.id"
+        :is-editing="isRowEditing(circuit)"
         @enter="saveInput(circuit)"
       />
     </template>
 
     <template #cell-denatsuRt="{ row: circuit }">
       <PortalCellPhaseMeas
-        v-model="inputForm.rt"
+        v-model="getRowForm(circuit).rt"
         :label="getPhaseLabels(circuit).phase3"
         :val="circuit.denatsuRt"
         unit="V"
-        :is-editing="editingRowId === circuit.id"
+        :is-editing="isRowEditing(circuit)"
         @enter="saveInput(circuit)"
       />
     </template>
 
     <template #cell-kensou="{ row: circuit }">
       <Select
-        v-if="editingRowId === circuit.id"
-        v-model="inputForm.kensou"
+        v-if="isRowEditing(circuit)"
+        v-model="getRowForm(circuit).kensou"
         :options="getKensouOptions(circuit)"
+        :clearable="false"
         class="min-w-24"
       />
       <Badge
@@ -176,11 +210,13 @@ const {
     </template>
 
     <template #cell-p3Remarks="{ row: circuit }">
-      <Textarea
-        v-if="editingRowId === circuit.id"
-        v-model="inputForm.remarks"
-        :rows="2"
+      <Input
+        v-if="isRowEditing(circuit)"
+        v-model="getRowForm(circuit).remarks"
         placeholder="備考"
+        :clearable="false"
+        class="min-w-28"
+        @keydown.enter="saveInput(circuit)"
       />
       <span v-else class="cell-remarks" :title="circuit.p3Remarks || ''">
         {{ circuit.p3Remarks || '-' }}
@@ -195,14 +231,14 @@ const {
         :is-editing="editingRowId === circuit.id"
         :is-completed="isComplete(circuit)"
         :is-loading="isActionLoading[circuit.id]"
-        confirm-label="標準値確定"
-        edit-label="手入力"
-        save-label="確定"
-        @confirm="handleQuickStandard(circuit)"
+        confirm-label="確定"
+        save-label="保存"
+        :has-edit-button="false"
+        @confirm="saveInput(circuit)"
         @clear="$emit('clear', circuit)"
-        @edit="startInput(circuit)"
+        @edit="startEdit(circuit)"
         @save="saveInput(circuit)"
-        @cancel="cancelInput"
+        @cancel="cancelEdit(circuit)"
       />
     </template>
   </PortalTableSoudenCircuit>
