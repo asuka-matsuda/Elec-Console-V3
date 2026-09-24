@@ -25,12 +25,12 @@ git pull origin main
 if git diff --name-only HEAD@{1} HEAD 2>/dev/null | grep -q "package.json"; then
   echo -e "\n${YELLOW}>>> package.json の更新を検知したためパッケージを更新中...${NC}"
   npm install --no-audit --ignore-engines
-  npx prisma generate
 fi
 
-# 3. データベースの更新 (スキーマに変更があった場合のみ適用)
-echo -e "\n${YELLOW}[2/4] データベースの同期確認...${NC}"
-npx prisma db push --skip-generate > /dev/null 2>&1 || true
+# 3. データベースの更新とクライアント生成
+echo -e "\n${YELLOW}[2/4] データベースの同期およびクライアント生成...${NC}"
+npx prisma db push > /dev/null 2>&1 || true
+npx prisma generate
 if [ -f prisma/seed.cjs ]; then
   node prisma/seed.cjs 2>/dev/null || true
 fi
