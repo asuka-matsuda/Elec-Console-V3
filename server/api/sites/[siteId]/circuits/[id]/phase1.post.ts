@@ -29,11 +29,22 @@ export default defineEventHandler(async (event) => {
 
   const confirmedAt = body.clientConfirmedAt ? new Date(body.clientConfirmedAt) : new Date()
 
+  // 既存回路のチェック状態を取得（未指定時の保持）
+  const existingCircuit = await prisma.circuit.findUnique({
+    where: { id: circuitId },
+    select: { p1Kakunin: true, p1Mashishime: true, p1ConfirmedAt: true },
+  })
+
+  const finalKakunin = body.kakunin !== undefined ? Boolean(body.kakunin) : (existingCircuit?.p1Kakunin ?? false)
+  const finalMashishime = body.mashishime !== undefined ? Boolean(body.mashishime) : (existingCircuit?.p1Mashishime ?? false)
+  const isP1Complete = finalKakunin && finalMashishime
+  const hasAnyCheck = finalKakunin || finalMashishime
+
   const updateData: Record<string, unknown> = {
-    p1Kakunin: body.kakunin ?? true,
-    p1Mashishime: body.mashishime ?? true,
-    p1Worker: workerName,
-    p1ConfirmedAt: confirmedAt,
+    p1Kakunin: finalKakunin,
+    p1Mashishime: finalMashishime,
+    p1Worker: hasAnyCheck ? workerName : null,
+    p1ConfirmedAt: isP1Complete ? (existingCircuit?.p1ConfirmedAt || confirmedAt) : null,
   }
 
   if (body.remarks !== undefined) updateData.p1Remarks = body.remarks

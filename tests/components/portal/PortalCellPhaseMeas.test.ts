@@ -20,8 +20,8 @@ describe('CellPhaseMeas.vue', () => {
     expect(wrapper.text()).toContain('OK')
   })
 
-  it('formats MΩ values properly', () => {
-    const wrapper = mount(CellPhaseMeas, {
+  it('formats MΩ values properly with 2 decimal places', () => {
+    const wrapper100 = mount(CellPhaseMeas, {
       props: {
         label: 'R - N',
         val: 100,
@@ -29,7 +29,17 @@ describe('CellPhaseMeas.vue', () => {
       },
     })
 
-    expect(wrapper.text()).toContain('100')
+    expect(wrapper100.text()).toContain('100')
+
+    const wrapper005 = mount(CellPhaseMeas, {
+      props: {
+        label: 'R - N',
+        val: 0.05,
+        unit: 'MΩ',
+      },
+    })
+
+    expect(wrapper005.text()).toContain('0.05')
   })
 
   it('renders input in editing mode and emits updates', async () => {

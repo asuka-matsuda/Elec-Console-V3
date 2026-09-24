@@ -67,11 +67,15 @@ const initRowForm = (circuit: CircuitItem): Phase3RowForm => {
 }
 
 const getRowForm = (circuit: CircuitItem): Phase3RowForm => {
-  if (!rowForms[circuit.id]) {
-    rowForms[circuit.id] = initRowForm(circuit)
-  }
+  const existing = rowForms[circuit.id]
 
-  return rowForms[circuit.id]
+  if (existing) return existing
+
+  const newForm = initRowForm(circuit)
+
+  rowForms[circuit.id] = newForm
+
+  return newForm
 }
 
 // 回路データの変更時に未編集行のフォーム値を同期
@@ -84,7 +88,7 @@ watch(
       }
     }
   },
-  { immediate: true, deep: true },
+  { immediate: true },
 )
 
 const isComplete = (circuit: CircuitItem) => Boolean(circuit.p3ConfirmedAt)
@@ -210,13 +214,12 @@ const {
     </template>
 
     <template #cell-p3Remarks="{ row: circuit }">
-      <Input
+      <Textarea
         v-if="isRowEditing(circuit)"
         v-model="getRowForm(circuit).remarks"
+        :rows="2"
         placeholder="備考"
-        :clearable="false"
-        class="min-w-28"
-        @keydown.enter="saveInput(circuit)"
+        class="w-full min-w-[100px] max-w-[180px] textarea-remarks"
       />
       <span v-else class="cell-remarks" :title="circuit.p3Remarks || ''">
         {{ circuit.p3Remarks || '-' }}
@@ -247,5 +250,24 @@ const {
 <style scoped lang="scss">
 .cell-dash {
   color: var(--color-text-muted);
+}
+
+.textarea-remarks {
+  resize: vertical;
+  font-size: var(--font-size-xs);
+}
+
+.cell-remarks {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+
+  max-width: 160px;
+
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  text-overflow: ellipsis;
+  word-break: break-all;
 }
 </style>

@@ -48,7 +48,7 @@ const inputForm = reactive({
 })
 
 const isComplete = (circuit: CircuitItem) => Boolean(circuit.p2ConfirmedAt && circuit.p2IsComplete)
-const isP1Complete = (circuit: CircuitItem) => Boolean(circuit.p1ConfirmedAt)
+const isP1Complete = (circuit: CircuitItem) => Boolean(circuit.p1Kakunin && circuit.p1Mashishime)
 const isLocked = (circuit: CircuitItem) => props.isCircuitLocked(circuit) || !isP1Complete(circuit)
 
 // 相ラベルの取得（三相: R-S / S-T / R-T, 単相: R-N / T-N / R-T）
@@ -141,6 +141,7 @@ const {
         :status="circuit.p2RStatus"
         :is-editing="editingRowId === circuit.id"
         :threshold="phase2ThresholdMegOhm"
+        :haiden-houshiki="circuit.haidenHoushiki"
         @enter="saveInput(circuit)"
       />
     </template>
@@ -153,6 +154,7 @@ const {
         :status="circuit.p2SStatus"
         :is-editing="editingRowId === circuit.id"
         :threshold="phase2ThresholdMegOhm"
+        :haiden-houshiki="circuit.haidenHoushiki"
         @enter="saveInput(circuit)"
       />
     </template>
@@ -165,6 +167,7 @@ const {
         :status="circuit.p2TStatus"
         :is-editing="editingRowId === circuit.id"
         :threshold="phase2ThresholdMegOhm"
+        :haiden-houshiki="circuit.haidenHoushiki"
         @enter="saveInput(circuit)"
       />
     </template>

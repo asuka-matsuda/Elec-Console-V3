@@ -18,7 +18,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  'confirm': [circuit: CircuitItem]
+  'confirm': [circuit: CircuitItem, overrideData?: { kakunin?: boolean, mashishime?: boolean }]
   'clear': [circuit: CircuitItem]
   'save-edit': [circuit: CircuitItem, form: Record<string, string>]
   'update-check': [circuit: CircuitItem, changes: { kakunin?: boolean, mashishime?: boolean }]
@@ -54,15 +54,15 @@ const saveEdit = (circuit: CircuitItem) => {
   editingRowId.value = null
 }
 
-const handleToggleKakunin = (circuit: CircuitItem, val: boolean) => {
-  emit('update-check', circuit, { kakunin: val })
+// 行確認・増締の一括/現在状態確定
+const handleConfirm = (circuit: CircuitItem) => {
+  const kakunin = (!circuit.p1Kakunin && !circuit.p1Mashishime) ? true : Boolean(circuit.p1Kakunin)
+  const mashishime = (!circuit.p1Kakunin && !circuit.p1Mashishime) ? true : Boolean(circuit.p1Mashishime)
+
+  emit('confirm', circuit, { kakunin, mashishime })
 }
 
-const handleToggleMashishime = (circuit: CircuitItem, val: boolean) => {
-  emit('update-check', circuit, { mashishime: val })
-}
-
-const isComplete = (c: CircuitItem) => Boolean(c.p1Kakunin && c.p1Mashishime)
+const isComplete = (c: CircuitItem) => Boolean(c.p1ConfirmedAt && c.p1Kakunin && c.p1Mashishime)
 
 // ソート管理
 const {
@@ -142,13 +142,13 @@ const {
           :model-value="Boolean(circuit.p1Kakunin)"
           label="確認"
           :disabled="isCircuitLocked(circuit) || Boolean(isActionLoading[circuit.id])"
-          @update:model-value="handleToggleKakunin(circuit, Boolean($event))"
+          @update:model-value="emit('update-check', circuit, { kakunin: Boolean($event), mashishime: Boolean(circuit.p1Mashishime) })"
         />
         <Checkbox
           :model-value="Boolean(circuit.p1Mashishime)"
           label="増締"
           :disabled="isCircuitLocked(circuit) || Boolean(isActionLoading[circuit.id])"
-          @update:model-value="handleToggleMashishime(circuit, Boolean($event))"
+          @update:model-value="emit('update-check', circuit, { kakunin: Boolean(circuit.p1Kakunin), mashishime: Boolean($event) })"
         />
       </div>
     </template>
@@ -177,7 +177,7 @@ const {
         confirm-label="確定"
         edit-label="編集"
         save-label="保存"
-        @confirm="$emit('confirm', circuit)"
+        @confirm="handleConfirm(circuit)"
         @clear="$emit('clear', circuit)"
         @edit="startEdit(circuit)"
         @save="saveEdit(circuit)"

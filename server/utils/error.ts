@@ -102,3 +102,56 @@ export function createAppError(params: CreateAppErrorParams) {
     cause,
   })
 }
+
+/**
+ * Prisma の既知エラー（P2021: テーブル不存在, P2003: 外部キー制約違反, P2002: 一意制約違反）を
+ * アプリケーションの既知エラーコード（ErrorCode）へ昇格・マッピングするヘルパー
+ */
+export function parsePrismaError(err: unknown): { code: ErrorCode, message: string } | null {
+  if (!err || typeof err !== 'object') return null
+
+  const errRecord = err as Record<string, unknown>
+  const causeRecord = (typeof errRecord.cause === 'object' && errRecord.cause !== null)
+    ? (errRecord.cause as Record<string, unknown>)
+    : null
+
+  const target = ('code' in errRecord ? errRecord : causeRecord) as { code?: string, meta?: Record<string, unknown> } | null
+
+  if (!target || typeof target.code !== 'string') return null
+
+  switch (target.code) {
+    case 'P2021': {
+      const table = target.meta?.table as string | undefined
+
+      return {
+        code: ErrorCode.DB_TABLE_NOT_FOUND,
+        message: table
+          ? `データベーステーブル「${table}」が存在しません。スキーマ同期を実行してください。`
+          : 'データベーステーブルが存在しません。スキーマ同期を実行してください。',
+      }
+    }
+    case 'P2003': {
+      const field = target.meta?.field_name as string | undefined
+
+      return {
+        code: ErrorCode.DB_FOREIGN_KEY_VIOLATION,
+        message: field
+          ? `関連付けられたデータ（${field}）が存在するため、この操作は実行できません。`
+          : '関連付けられたデータが存在するため、この操作は実行できません。',
+      }
+    }
+    case 'P2002': {
+      const targetFields = target.meta?.target
+      const fieldStr = Array.isArray(targetFields) ? targetFields.join(', ') : ''
+
+      return {
+        code: ErrorCode.DB_UNIQUE_VIOLATION,
+        message: fieldStr
+          ? `重複してはならない項目（${fieldStr}）が既に登録されています。`
+          : '一意制約に違反するデータが既に登録されています。',
+      }
+    }
+    default:
+      return null
+  }
+}

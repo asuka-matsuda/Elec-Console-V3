@@ -11,14 +11,27 @@ import type { EventType } from '~/composables/portal/useCalendar'
 import { useCalendar } from '~/composables/portal/useCalendar'
 import { useCalendarEventForm } from '~/composables/portal/useCalendarEventForm'
 import { useCalendarOptions } from '~/composables/portal/useCalendarOptions'
+import type { IconName } from '~/constants/icons'
+import type { RadioOption } from '~/types/components'
 
-import CalendarToolbar from './CalendarToolbar.vue'
 import ModalCalendarEvent from './ModalCalendarEvent.vue'
 import ModalCalendarTypeSettings from './ModalCalendarTypeSettings.vue'
+
+type CalendarView = 'dayGridMonth' | 'listMonth'
 
 const props = defineProps<{
   siteId: string
 }>()
+
+const VIEW_OPTIONS: RadioOption<CalendarView>[] = [
+  { value: 'dayGridMonth', label: '月表示' },
+  { value: 'listMonth', label: 'リスト' },
+]
+
+const VIEW_ICONS: Record<CalendarView, IconName> = {
+  dayGridMonth: 'calendar',
+  listMonth: 'list',
+}
 
 const {
   events,
@@ -97,15 +110,38 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
 <template>
   <div class="flex flex-col gap-3">
-    <CalendarToolbar
-      :title="currentTitle"
-      :current-view="currentView"
-      @prev="handlePrev"
-      @next="handleNext"
-      @today="handleToday"
-      @change-view="handleViewChange"
-      @open-type-settings="isTypeSettingsOpen = true"
-    />
+    <header class="calendar-toolbar flex flex-col md:flex-row items-center justify-between gap-2 px-panel-pad py-2">
+      <div class="flex items-center gap-1">
+        <Button icon="chevron-left" @click="handlePrev" />
+        <Button icon="chevron-right" @click="handleNext" />
+        <Button @click="handleToday">
+          今日
+        </Button>
+      </div>
+
+      <h3 class="toolbar-title order-first md:order-none">
+        {{ currentTitle }}
+      </h3>
+
+      <div class="flex items-center gap-2">
+        <RadioGroup
+          :model-value="currentView"
+          :options="VIEW_OPTIONS"
+          @update:model-value="val => val && handleViewChange(val)"
+        >
+          <template #option="{ option }">
+            <div class="flex items-center gap-1.5">
+              <Icon :name="VIEW_ICONS[option.value]" />
+              <span>{{ option.label }}</span>
+            </div>
+          </template>
+        </RadioGroup>
+
+        <Button icon="settings" @click="isTypeSettingsOpen = true">
+          種別設定
+        </Button>
+      </div>
+    </header>
 
     <Panel padding="none" overflow="visible" class="calendar-panel">
       <FullCalendar ref="fullCalendarRef" :options="calendarOptions" />
@@ -271,5 +307,16 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       background: var(--color-bg-hover);
     }
   }
+}
+
+.calendar-toolbar {
+  border: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 30%, transparent);
+  background-color: var(--surface-bg);
+}
+
+.toolbar-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--theme-accent);
 }
 </style>

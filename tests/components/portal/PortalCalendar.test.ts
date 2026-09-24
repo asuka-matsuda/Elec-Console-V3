@@ -1,4 +1,4 @@
-﻿import { mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
 
@@ -97,12 +97,14 @@ describe('Calendar.client.vue', () => {
             props: ['padding', 'overflow'],
             template: '<div class="panel-stub" :data-padding="padding" :data-overflow="overflow"><slot /></div>',
           },
-          CalendarToolbar: true,
           ModalCalendarEvent: true,
           ModalCalendarTypeSettings: true,
         },
       },
     })
+
+    // Toolbar タイトルが描画されていること
+    expect(wrapper.find('.toolbar-title').text()).toBe('2026年9月')
 
     // Panel の余白引き算プロパティが渡されていること
     const panel = wrapper.findComponent({ name: 'Panel' })
@@ -115,13 +117,12 @@ describe('Calendar.client.vue', () => {
     expect(wrapper.find('.fc-stub').exists()).toBe(true)
   })
 
-  it('opens type settings modal when toolbar emits open-type-settings', async () => {
+  it('opens type settings modal when toolbar button is clicked', async () => {
     const wrapper = mount(CalendarClient, {
       props: { siteId: 'site-1' },
       global: {
         stubs: {
           Panel: true,
-          CalendarToolbar: true,
           ModalCalendarEvent: true,
           ModalCalendarTypeSettings: {
             name: 'ModalCalendarTypeSettings',
@@ -132,13 +133,15 @@ describe('Calendar.client.vue', () => {
       },
     })
 
-    const toolbar = wrapper.findComponent({ name: 'CalendarToolbar' })
     const typeModal = wrapper.findComponent({ name: 'ModalCalendarTypeSettings' })
 
     expect(typeModal.props('modelValue')).toBe(false)
 
-    // ツールバーから開くイベント
-    await toolbar.vm.$emit('open-type-settings')
+    // 「種別設定」ボタンをクリックして開く
+    const settingsBtn = wrapper.findAllComponents({ name: 'Button' }).find(b => b.text().includes('種別設定'))
+    expect(settingsBtn).toBeDefined()
+    await settingsBtn!.trigger('click')
+
     expect(typeModal.props('modelValue')).toBe(true)
   })
 
@@ -148,7 +151,6 @@ describe('Calendar.client.vue', () => {
       global: {
         stubs: {
           Panel: true,
-          CalendarToolbar: true,
           ModalCalendarEvent: true,
           ModalCalendarTypeSettings: true,
         },

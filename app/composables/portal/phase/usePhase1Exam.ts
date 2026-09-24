@@ -61,9 +61,18 @@ export function usePhase1Exam(
       [key: string]: unknown
     },
   ) => {
+    const finalKakunin = overrideData?.kakunin !== undefined
+      ? Boolean(overrideData.kakunin)
+      : (circuit.p1Kakunin ?? true)
+    const finalMashishime = overrideData?.mashishime !== undefined
+      ? Boolean(overrideData.mashishime)
+      : (circuit.p1Mashishime ?? true)
+    const isP1Complete = finalKakunin && finalMashishime
+    const hasAnyCheck = finalKakunin || finalMashishime
+
     const payload = {
-      kakunin: overrideData?.kakunin ?? circuit.p1Kakunin ?? true,
-      mashishime: overrideData?.mashishime ?? circuit.p1Mashishime ?? true,
+      kakunin: finalKakunin,
+      mashishime: finalMashishime,
       remarks: overrideData?.remarks ?? circuit.p1Remarks ?? '',
       modifiedFields: overrideData?.modifiedFields ?? [],
       ...overrideData,
@@ -73,11 +82,11 @@ export function usePhase1Exam(
     const workerName = getWorkerDisplayName()
 
     const optimisticPatch: Partial<CircuitItem> = {
-      p1Kakunin: Boolean(payload.kakunin),
-      p1Mashishime: Boolean(payload.mashishime),
+      p1Kakunin: finalKakunin,
+      p1Mashishime: finalMashishime,
       p1Remarks: String(payload.remarks || ''),
-      p1ConfirmedAt: (payload.kakunin || payload.mashishime) ? (circuit.p1ConfirmedAt || nowIso) : null,
-      p1Worker: (payload.kakunin || payload.mashishime) ? (circuit.p1Worker || workerName) : null,
+      p1ConfirmedAt: isP1Complete ? (circuit.p1ConfirmedAt || nowIso) : null,
+      p1Worker: hasAnyCheck ? (circuit.p1Worker || workerName) : null,
     }
 
     const res = await executeCircuitAction(circuit, 'confirm', payload, optimisticPatch)
@@ -92,8 +101,9 @@ export function usePhase1Exam(
     circuit: CircuitItem,
     changes: { kakunin?: boolean, mashishime?: boolean },
   ) => {
-    const newKakunin = changes.kakunin !== undefined ? changes.kakunin : Boolean(circuit.p1Kakunin)
-    const newMashishime = changes.mashishime !== undefined ? changes.mashishime : Boolean(circuit.p1Mashishime)
+    const newKakunin = changes.kakunin !== undefined ? Boolean(changes.kakunin) : Boolean(circuit.p1Kakunin)
+    const newMashishime = changes.mashishime !== undefined ? Boolean(changes.mashishime) : Boolean(circuit.p1Mashishime)
+    const isP1Complete = newKakunin && newMashishime
     const hasAnyCheck = newKakunin || newMashishime
     const nowIso = new Date().toISOString()
     const workerName = getWorkerDisplayName()
@@ -101,13 +111,13 @@ export function usePhase1Exam(
     const optimisticPatch: Partial<CircuitItem> = {
       p1Kakunin: newKakunin,
       p1Mashishime: newMashishime,
-      p1ConfirmedAt: hasAnyCheck ? (circuit.p1ConfirmedAt || nowIso) : null,
+      p1ConfirmedAt: isP1Complete ? (circuit.p1ConfirmedAt || nowIso) : null,
       p1Worker: hasAnyCheck ? (circuit.p1Worker || workerName) : null,
     }
 
     return executeCircuitAction(
       circuit,
-      hasAnyCheck ? 'confirm' : 'clear',
+      'confirm',
       {
         kakunin: newKakunin,
         mashishime: newMashishime,

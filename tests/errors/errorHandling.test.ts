@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { AppException, parseToAppException } from '../../app/utils/errors'
-import { createAppError, generateTraceId, getDefaultStatusCode } from '../../server/utils/error'
+import { createAppError, generateTraceId, getDefaultStatusCode, parsePrismaError } from '../../server/utils/error'
 import {
   DEFAULT_ERROR_MESSAGES,
   ERROR_SHORT_CODES,
@@ -62,6 +62,34 @@ describe('Server Error Utilities (createAppError & generateTraceId)', () => {
       field: 'loginId',
       value: 'admin',
     })
+  })
+
+  it('should promote Prisma known errors (P2021, P2003, P2002) to structured DB error codes', () => {
+    // P2021: テーブル未存在
+    const errP2021 = { code: 'P2021', meta: { table: 'main.UserOnSite' } }
+    const resP2021 = parsePrismaError(errP2021)
+
+    expect(resP2021).toBeDefined()
+    expect(resP2021?.code).toBe(ErrorCode.DB_TABLE_NOT_FOUND)
+    expect(resP2021?.message).toContain('UserOnSite')
+
+    // P2003: 外部キー制約
+    const errP2003 = { code: 'P2003', meta: { field_name: 'siteId' } }
+    const resP2003 = parsePrismaError(errP2003)
+
+    expect(resP2003).toBeDefined()
+    expect(resP2003?.code).toBe(ErrorCode.DB_FOREIGN_KEY_VIOLATION)
+
+    // P2002: 一意制約違反
+    const errP2002 = { code: 'P2002', meta: { target: ['loginId'] } }
+    const resP2002 = parsePrismaError(errP2002)
+
+    expect(resP2002).toBeDefined()
+    expect(resP2002?.code).toBe(ErrorCode.DB_UNIQUE_VIOLATION)
+
+    // 未知のエラーコード
+    expect(parsePrismaError({ code: 'P9999' })).toBeNull()
+    expect(parsePrismaError(new Error('general error'))).toBeNull()
   })
 })
 

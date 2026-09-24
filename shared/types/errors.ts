@@ -28,6 +28,11 @@ export const ErrorCode = {
   USER_SELF_DEMOTION_DENIED: 'USER_SELF_DEMOTION_DENIED',
   USER_LAST_ADMIN_DENIED: 'USER_LAST_ADMIN_DENIED',
 
+  // --- データベース・インフラ系 (DB) ---
+  DB_TABLE_NOT_FOUND: 'DB_TABLE_NOT_FOUND',
+  DB_FOREIGN_KEY_VIOLATION: 'DB_FOREIGN_KEY_VIOLATION',
+  DB_UNIQUE_VIOLATION: 'DB_UNIQUE_VIOLATION',
+
   // --- 現場・回路・排他制御系 (CIRCUIT / SITE) ---
   SITE_NOT_FOUND: 'SITE_NOT_FOUND',
   CIRCUIT_NOT_FOUND: 'CIRCUIT_NOT_FOUND',
@@ -68,6 +73,11 @@ export const ERROR_SHORT_CODES: Record<ErrorCode, string> = {
   [ErrorCode.USER_SELF_DEMOTION_DENIED]: 'E-USR-004',
   [ErrorCode.USER_LAST_ADMIN_DENIED]: 'E-USR-005',
 
+  // データベース・インフラ系
+  [ErrorCode.DB_TABLE_NOT_FOUND]: 'E-DB-001',
+  [ErrorCode.DB_FOREIGN_KEY_VIOLATION]: 'E-DB-002',
+  [ErrorCode.DB_UNIQUE_VIOLATION]: 'E-DB-003',
+
   // 現場・回路系
   [ErrorCode.SITE_NOT_FOUND]: 'E-SIT-001',
   [ErrorCode.CIRCUIT_NOT_FOUND]: 'E-CIR-001',
@@ -102,6 +112,10 @@ export const DEFAULT_ERROR_MESSAGES: Record<ErrorCode, string> = {
   [ErrorCode.USER_MASTER_PROTECTED]: 'マスター管理者のアカウントは変更・削除・降格できません。',
   [ErrorCode.USER_SELF_DEMOTION_DENIED]: '自分自身のアカウントの無効化または管理者権限の剥奪はできません。',
   [ErrorCode.USER_LAST_ADMIN_DENIED]: 'システム内に有効な管理者が1人のみのため、無効化または降格できません。',
+
+  [ErrorCode.DB_TABLE_NOT_FOUND]: 'データベーステーブルが見つかりません。スキーマ同期を実行してください。',
+  [ErrorCode.DB_FOREIGN_KEY_VIOLATION]: '関連データが存在するため操作を完了できませんでした。',
+  [ErrorCode.DB_UNIQUE_VIOLATION]: '一意制約に違反するデータが既に存在します。',
 
   [ErrorCode.SITE_NOT_FOUND]: '指定された現場が見つかりません。',
   [ErrorCode.CIRCUIT_NOT_FOUND]: '指定された回路が見つかりません。',

@@ -60,4 +60,34 @@ describe('PanelSoudenOverall.vue', () => {
     expect(wrapper.text()).toContain('幹線 全体')
     expect(wrapper.text()).toContain('二次側 全体')
   })
+
+  it('renders progress bar items, badges, and action buttons for both trunk and secondary', () => {
+    const wrapper = mount(PortalPanelSoudenOverall, {
+      props: {
+        stats: dummyStats,
+        siteId: 'site-abc',
+      },
+      global: globalOptions,
+    })
+
+    // フェーズタイトル
+    expect(wrapper.text()).toContain('回路確認 (Phase 1)')
+    expect(wrapper.text()).toContain('絶縁抵抗 (Phase 2)')
+    expect(wrapper.text()).toContain('送電・電圧 (Phase 3)')
+
+    // 幹線 Phase 1: 20 / 20 (100%)
+    expect(wrapper.text()).toContain('20 / 20')
+    expect(wrapper.text()).toContain('(100%)')
+
+    // 除外バッジ
+    expect(wrapper.text()).toContain('除外: 1')
+    expect(wrapper.text()).toContain('除外: 2')
+
+    // 試験入力リンク
+    const links = wrapper.findAll('a')
+    expect(links.length).toBeGreaterThanOrEqual(6)
+    const hrefs = links.map(l => l.attributes('href'))
+    expect(hrefs).toContain('/portal/site-abc/phase1?kei_to=幹線')
+    expect(hrefs).toContain('/portal/site-abc/phase2?kei_to=二次側')
+  })
 })

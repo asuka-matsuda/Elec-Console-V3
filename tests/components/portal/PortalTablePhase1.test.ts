@@ -1,4 +1,4 @@
-﻿import { mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
 import TablePhase1 from '../../../app/components/portal/exam/TablePhase1.vue'
@@ -140,7 +140,7 @@ describe('TablePhase1.vue', () => {
     // c1の「確認」チェックボックスをクリック
     await checkboxes1[0].setValue(true)
     expect(wrapper.emitted('update-check')).toBeTruthy()
-    expect(wrapper.emitted('update-check')![0]).toEqual([mockCircuits[0], { kakunin: true }])
+    expect(wrapper.emitted('update-check')![0]).toEqual([mockCircuits[0], { kakunin: true, mashishime: false }])
   })
 
   it('未完了回路では「確定」ボタンと「編集」ボタンが表示され、確定をクリックすると confirm が発火すること', async () => {
@@ -156,6 +156,7 @@ describe('TablePhase1.vue', () => {
     await buttons[0]?.trigger('click')
     expect(wrapper.emitted('confirm')).toBeTruthy()
     expect(wrapper.emitted('confirm')?.[0]?.[0]).toEqual(mockCircuits[0])
+    expect(wrapper.emitted('confirm')?.[0]?.[1]).toEqual({ kakunin: true, mashishime: true })
   })
 
   it('完了済み回路では「解除」ボタンが表示され、クリックすると clear が発火すること', async () => {

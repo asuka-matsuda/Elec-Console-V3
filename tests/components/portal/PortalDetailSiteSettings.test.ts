@@ -86,4 +86,50 @@ describe('DetailSiteSettings.vue', () => {
     expect(wrapper.emitted('delete')).toBeTruthy()
     expect(wrapper.emitted('delete')?.[0]?.[0]).toEqual(dummySite)
   })
+
+  it('allows adding, editing, and removing excluded circuits', async () => {
+    const wrapper = mount(DetailSiteSettings, {
+      props: {
+        site: {
+          ...dummySite,
+          excludedCircuits: ['盤A-1', '盤B-2'],
+        },
+      },
+    })
+
+    // rules タブに切り替える
+    const tabs = wrapper.findComponent({ name: 'Tabs' })
+    await tabs.vm.$emit('update:modelValue', 'rules')
+
+    expect(wrapper.text()).toContain('除外回路の設定')
+
+    // 1. 追加ボタン
+    const addBtn = wrapper.findAllComponents({ name: 'Button' }).find(b => b.text().includes('除外回路を追加する'))
+    expect(addBtn).toBeDefined()
+    await addBtn!.trigger('click')
+
+    const inputsAfterAdd = wrapper.findAllComponents({ name: 'Input' }).filter(i => i.props('placeholder')?.includes('盤A-回路1'))
+    expect(inputsAfterAdd).toHaveLength(3)
+
+    // 2. 削除ボタン
+    const deleteBtns = wrapper.findAllComponents({ name: 'Button' }).filter(b => b.props('icon') === 'trash-2')
+    // site header delete btn + excluded circuits trash buttons
+    const ruleTrashBtns = deleteBtns.filter(b => !b.text().includes('削除'))
+    expect(ruleTrashBtns.length).toBeGreaterThanOrEqual(2)
+    await ruleTrashBtns[0]!.trigger('click')
+
+    const inputsAfterDelete = wrapper.findAllComponents({ name: 'Input' }).filter(i => i.props('placeholder')?.includes('盤A-回路1'))
+    expect(inputsAfterDelete).toHaveLength(2)
+
+    // 3. 入力変更
+    await inputsAfterDelete[0]!.vm.$emit('update:modelValue', '盤A-1-改')
+
+    // 保存実行して excludedCircuits が反映されていること
+    const saveBtn = wrapper.findAllComponents({ name: 'Button' }).find(b => b.text().includes('変更を保存'))
+    await saveBtn!.trigger('click')
+
+    expect(wrapper.emitted('save')).toBeTruthy()
+    const savedPayload = wrapper.emitted('save')?.[0]?.[0] as Site
+    expect(savedPayload.excludedCircuits).toContain('盤A-1-改')
+  })
 })

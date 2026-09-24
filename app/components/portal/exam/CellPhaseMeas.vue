@@ -37,7 +37,7 @@ const emit = defineEmits<{
   (e: 'focus', event: FocusEvent): void
 }>()
 
-const resolvedStep = computed(() => props.step || (props.unit === 'MΩ' ? '0.1' : 'any'))
+const resolvedStep = computed(() => props.step || (props.unit === 'MΩ' ? '0.01' : 'any'))
 
 const effectiveThreshold = computed(() => {
   return props.haidenHoushiki ? getPhase2Threshold(props.haidenHoushiki) : (props.threshold ?? 0.1)
@@ -46,7 +46,7 @@ const effectiveThreshold = computed(() => {
 const formattedValue = computed(() => {
   if (props.val == null) return '-'
   if (props.unit === 'MΩ') {
-    return props.val >= 100 ? '100' : props.val.toFixed(1)
+    return props.val >= 100 ? '100' : props.val.toFixed(2)
   }
 
   return String(props.val)

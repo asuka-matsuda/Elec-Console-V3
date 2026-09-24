@@ -168,6 +168,11 @@ describe('TablePhase3.vue', () => {
       emits: ['update:modelValue', 'keydown'],
       template: '<input class="stub-input" :value="modelValue" :placeholder="placeholder" @input="$emit(\'update:modelValue\', $event.target.value)" @keydown="$emit(\'keydown\', $event)" />',
     },
+    Textarea: {
+      props: ['modelValue', 'placeholder', 'rows'],
+      emits: ['update:modelValue', 'keydown'],
+      template: '<textarea class="stub-textarea" :value="modelValue" :placeholder="placeholder" :rows="rows" @input="$emit(\'update:modelValue\', $event.target.value)" @keydown="$emit(\'keydown\', $event)" />',
+    },
     Button: {
       props: ['variant', 'disabled', 'loading'],
       template: '<button class="stub-button" :disabled="disabled" :data-variant="variant"><slot /></button>',
@@ -215,7 +220,7 @@ describe('TablePhase3.vue', () => {
     await voltCells[2]?.find('.volt-input').setValue('209')
 
     // 備考を入力
-    const remarksInput = row1.find('.col-p3Remarks .stub-input')
+    const remarksInput = row1.find('.col-p3Remarks .stub-textarea')
 
     expect(remarksInput.exists()).toBe(true)
     await remarksInput.setValue('実測完了')

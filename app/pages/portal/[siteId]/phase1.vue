@@ -28,6 +28,7 @@ const {
   saveEdit,
   confirmPhase1,
   clearPhase1,
+  updateCheck,
 } = usePhase1Exam(siteId, initialKeiTo.value)
 
 watch(
@@ -66,6 +67,7 @@ onMounted(() => {
       @confirm="confirmPhase1"
       @clear="clearPhase1"
       @save-edit="saveEdit"
+      @update-check="updateCheck"
     />
   </PortalPhaseExam>
 </template>

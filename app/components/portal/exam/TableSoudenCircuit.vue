@@ -9,6 +9,7 @@ import { useSlots, watch } from 'vue'
 
 import type { TableColumn, TableSortOrder } from '~/types/components'
 import type { CircuitItem } from '~/types/souden'
+import { formatShortDateTime } from '~/utils/date'
 
 const sortBy = defineModel<string>('sortBy')
 const sortOrder = defineModel<TableSortOrder>('sortOrder', { default: 'asc' })
@@ -115,11 +116,16 @@ const getWorkerCellData = (circuit: CircuitItem, key: string) => {
         {{ slotProps.row.kairoMeisho || '-' }}
       </span>
 
-      <PortalCellSoudenWorker
+      <div
         v-else-if="col.key.endsWith('ConfirmedAt')"
-        :worker="getWorkerCellData(slotProps.row, col.key).worker"
-        :confirmed-at="getWorkerCellData(slotProps.row, col.key).confirmedAt"
-      />
+        class="flex flex-col items-center gap-0.5"
+      >
+        <template v-if="getWorkerCellData(slotProps.row, col.key).worker">
+          <span class="cell-worker">{{ getWorkerCellData(slotProps.row, col.key).worker }}</span>
+          <span class="cell-date">{{ formatShortDateTime(getWorkerCellData(slotProps.row, col.key).confirmedAt) }}</span>
+        </template>
+        <span v-else class="cell-dash">-</span>
+      </div>
     </template>
   </Table>
 </template>
@@ -166,5 +172,19 @@ const getWorkerCellData = (circuit: CircuitItem, key: string) => {
 :deep(th.col-actions) {
   width: 1%;
   white-space: nowrap;
+}
+
+.cell-worker {
+  color: var(--color-status-success);
+}
+
+.cell-date {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-2xs);
+}
+
+.cell-date,
+.cell-dash {
+  color: var(--color-text-muted);
 }
 </style>

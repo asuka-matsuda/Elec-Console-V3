@@ -14,7 +14,7 @@ import {
   ErrorCode,
 } from '#shared/types/errors'
 
-import { generateTraceId } from '../utils/error'
+import { generateTraceId, getDefaultStatusCode, parsePrismaError } from '../utils/error'
 
 interface ExtendedH3Error {
   name?: string
@@ -59,7 +59,26 @@ export default (nitroApp: NitroApp) => {
       cause: err.cause,
     })
 
-    // 2. クライアントに返却する情報を安全にマスク（内部SQLやコード構造の漏洩を防止）
+    // 2. Prisma の既知エラー（P2021: テーブル未存在, P2003: 外部キー制約, P2002: 一意制約等）を昇格
+    const prismaKnown = parsePrismaError(err)
+
+    if (prismaKnown) {
+      const resolvedStatus = getDefaultStatusCode(prismaKnown.code)
+
+      err.statusCode = resolvedStatus
+      err.statusMessage = prismaKnown.code
+      err.message = prismaKnown.message
+      err.data = {
+        code: prismaKnown.code,
+        shortCode: ERROR_SHORT_CODES[prismaKnown.code] || 'E-DB-999',
+        message: prismaKnown.message,
+        traceId,
+      }
+
+      return
+    }
+
+    // 3. クライアントに返却する情報を安全にマスク
     err.statusCode = statusCode
     err.statusMessage = ErrorCode.SYS_UNKNOWN_ERROR
 

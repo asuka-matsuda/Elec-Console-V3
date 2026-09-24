@@ -79,12 +79,13 @@ const {
       </template>
 
       <div class="flex flex-col gap-4">
-        <Alert
+        <div
           v-if="createErrorMsg"
-          variant="danger"
+          class="error-banner flex items-center gap-2 p-3"
         >
-          {{ createErrorMsg }}
-        </Alert>
+          <Icon name="alert-circle" size="sm" />
+          <span>{{ createErrorMsg }}</span>
+        </div>
 
         <FormGroup
           v-for="field in USER_CREATE_FORM_FIELDS"
@@ -115,3 +116,12 @@ const {
     />
   </Panel>
 </template>
+
+<style scoped>
+.error-banner {
+  border: 1px solid color-mix(in srgb, var(--color-status-danger) 25%, transparent);
+  font-size: var(--font-size-xs);
+  color: var(--color-status-danger);
+  background-color: color-mix(in srgb, var(--color-status-danger) 10%, transparent);
+}
+</style>
