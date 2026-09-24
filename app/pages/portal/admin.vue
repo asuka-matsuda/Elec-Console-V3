@@ -5,7 +5,7 @@
  */
 import { useHead } from '#app'
 
-useHead({ title: '現場管理 - Elec-Console' })
+useHead({ title: '現場ポータル管理 - Elec-Console' })
 
 definePageMeta({
   middleware: ['admin'],

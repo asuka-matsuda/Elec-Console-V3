@@ -64,7 +64,7 @@ onMounted(async () => {
     <SectionHeader title="現場ポータル" variant="hud">
       <template v-if="isAdmin" #actions>
         <Button @click="router.push('/portal/admin')">
-          ポータル管理画面へ
+          現場ポータル管理画面へ
         </Button>
       </template>
     </SectionHeader>
