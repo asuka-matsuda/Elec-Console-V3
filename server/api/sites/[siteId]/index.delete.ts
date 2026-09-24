@@ -33,9 +33,17 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // 関連データを含めてカスケード削除
-  await prisma.site.delete({
-    where: { id: siteId },
+  // 関連データをトランザクション内で明示的・確実にカスケード削除（SQLiteの外部キー制約違反を防止）
+  await prisma.$transaction(async (tx) => {
+    await tx.circuit.deleteMany({ where: { siteId } })
+    await tx.operationLog.deleteMany({ where: { siteId } })
+    await tx.event.deleteMany({ where: { siteId } })
+    await tx.siteSettings.deleteMany({ where: { siteId } })
+    await tx.calendarSettings.deleteMany({ where: { siteId } })
+
+    await tx.site.delete({
+      where: { id: siteId },
+    })
   })
 
   return { success: true }
