@@ -30,6 +30,7 @@ const form = reactive({
   name: '',
   status: 'planning' as Site['status'],
   excludedCircuits: [] as string[],
+  noBreakWords: [] as string[],
 })
 
 watch(
@@ -39,6 +40,7 @@ watch(
       form.name = newSite.name || ''
       form.status = newSite.status || 'planning'
       form.excludedCircuits = [...(newSite.excludedCircuits || [])]
+      form.noBreakWords = [...(newSite.noBreakWords || [])]
 
       if (users.value.length === 0) {
         await fetchUsers()
@@ -64,6 +66,18 @@ const handleUpdateExcludedCircuit = (index: number, val: string | number | null 
   form.excludedCircuits[index] = String(val ?? '')
 }
 
+const handleAddNoBreakWord = () => {
+  form.noBreakWords.push('')
+}
+
+const handleRemoveNoBreakWord = (index: number) => {
+  form.noBreakWords.splice(index, 1)
+}
+
+const handleUpdateNoBreakWord = (index: number, val: string | number | null | undefined) => {
+  form.noBreakWords[index] = String(val ?? '')
+}
+
 const handleSave = () => {
   if (!props.site) return
 
@@ -71,11 +85,16 @@ const handleSave = () => {
     .map(c => c.trim())
     .filter(c => c.length > 0)
 
+  const parsedWords = form.noBreakWords
+    .map(w => w.trim())
+    .filter(w => w.length > 0)
+
   emit('save', {
     ...props.site,
     name: form.name.trim(),
     status: form.status,
     excludedCircuits: parsedCircuits,
+    noBreakWords: parsedWords,
   })
 }
 </script>
@@ -156,6 +175,7 @@ const handleSave = () => {
               <Select
                 v-model="form.status"
                 :options="SITE_STATUS_OPTIONS"
+                :clearable="false"
               />
             </FormGroup>
 
@@ -231,6 +251,56 @@ const handleSave = () => {
               @click="handleAddExcludedCircuit"
             >
               除外回路を追加する
+            </Button>
+          </div>
+        </template>
+
+        <template #wordBreak>
+          <div class="flex flex-col gap-4 max-w-xl">
+            <SectionHeader
+              title="改行禁止ワードの設定"
+              icon="type"
+              tag="h4"
+            />
+            <p class="desc-text m-0">
+              テーブルの盤名称等で途中で改行させない単語を指定します（※「1-1」等の英数字ハイフンや「分電盤」等はシステムで自動処理されます）。
+            </p>
+
+            <ul
+              v-if="form.noBreakWords.length > 0"
+              class="m-0 flex flex-col gap-2 p-0 list-none"
+            >
+              <li
+                v-for="(word, idx) in form.noBreakWords"
+                :key="idx"
+                class="flex items-center gap-2"
+              >
+                <Input
+                  :model-value="word"
+                  placeholder="例: 自動倉庫, 受変電設備"
+                  @update:model-value="handleUpdateNoBreakWord(idx, $event)"
+                />
+                <Button
+                  icon="trash-2"
+                  variant="danger"
+                  @click="handleRemoveNoBreakWord(idx)"
+                />
+              </li>
+            </ul>
+
+            <EmptyState
+              v-else
+              icon="type"
+              title="改行禁止ワードは設定されていません"
+              description="現場固有の単語を追加すると、テーブル内で途中で改行されなくなります。"
+            />
+
+            <Button
+              icon="plus"
+              class="w-fit"
+              @click="handleAddNoBreakWord"
+            >
+              改行禁止ワードを追加する
             </Button>
           </div>
         </template>

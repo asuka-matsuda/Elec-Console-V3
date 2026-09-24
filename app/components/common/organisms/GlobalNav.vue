@@ -4,10 +4,11 @@
  * [Organisms] アプリケーションのグローバルナビゲーション（ドロワーサイドバー）。
  * オーバーレイ、閉じるボタン、セクション別メニューリンクを表示します。
  */
-import { computed, watch } from 'vue'
+import { computed, getCurrentInstance, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { useAuth } from '~/composables/useAuth'
+import { useSidebar } from '~/composables/useSidebar'
 import { menuData as defaultMenuData, type MenuItem } from '~/constants/data/menuData'
 import type { GlobalNavProps } from '~/types/components'
 
@@ -17,12 +18,22 @@ withDefaults(defineProps<GlobalNavProps>(), {
   menuData: () => defaultMenuData,
 })
 
-const sidebarOpenState = useState('sidebar-open', () => false)
+const { isOpen: sidebarOpenState, closeSidebar: closeGlobalSidebar } = useSidebar()
+
+// 親コンポーネントが明示的に v-model:is-open または :is-open をバインドしているかどうか判定
+const instance = getCurrentInstance()
+const hasExplicitBinding = computed(() => {
+  const vnodeProps = instance?.vnode.props
+
+  if (!vnodeProps) return false
+
+  return 'isOpen' in vnodeProps || 'onUpdate:isOpen' in vnodeProps
+})
 
 const isOpen = computed({
-  get: () => (isOpenModel.value !== undefined ? isOpenModel.value : sidebarOpenState.value),
+  get: () => (hasExplicitBinding.value ? !!isOpenModel.value : sidebarOpenState.value),
   set: (val: boolean) => {
-    if (isOpenModel.value !== undefined) {
+    if (hasExplicitBinding.value) {
       isOpenModel.value = val
     }
     sidebarOpenState.value = val
@@ -53,9 +64,21 @@ const isItemActive = (item: MenuItem) => {
 
 const closeSidebar = () => {
   isOpen.value = false
+  closeGlobalSidebar()
 }
 
 watch(() => route.fullPath, closeSidebar)
+
+onMounted(() => {
+  const onKeydown = (e: KeyboardEvent) => {
+    if (e.key === 'Escape' && isOpen.value) {
+      closeSidebar()
+    }
+  }
+
+  window.addEventListener('keydown', onKeydown)
+  onUnmounted(() => window.removeEventListener('keydown', onKeydown))
+})
 </script>
 
 <template>

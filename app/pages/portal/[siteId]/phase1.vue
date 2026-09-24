@@ -25,10 +25,7 @@ const {
   isCircuitLocked,
   isActionLoading,
   fetchCircuits,
-  saveEdit,
   confirmPhase1,
-  clearPhase1,
-  updateCheck,
 } = usePhase1Exam(siteId, initialKeiTo.value)
 
 watch(
@@ -65,9 +62,6 @@ onMounted(() => {
       :is-circuit-locked="isCircuitLocked"
       :is-action-loading="isActionLoading"
       @confirm="confirmPhase1"
-      @clear="clearPhase1"
-      @save-edit="saveEdit"
-      @update-check="updateCheck"
     />
   </PortalPhaseExam>
 </template>

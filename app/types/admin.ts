@@ -27,6 +27,8 @@ export type Site = {
   reportTemplatePath?: string
   /** 試験除外対象の回路IDリスト */
   excludedCircuits?: string[]
+  /** 現場固有の改行禁止ワードリスト */
+  noBreakWords?: string[]
   /** 現場にアサインされた作業員・試験員名リスト */
   workers?: string[]
 }
@@ -41,4 +43,6 @@ export type SiteSettings = {
   phase2ThresholdMegOhm: number
   /** フェーズ3（送電試験）を有効化するかどうか */
   enablePhase3: boolean
+  /** 現場固有の改行禁止ワードリスト */
+  noBreakWords?: string[]
 }

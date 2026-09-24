@@ -183,3 +183,75 @@ export function serializeCustomHolidays(val: unknown): string {
 
   return '[]'
 }
+
+/**
+ * 改行禁止ワードリスト（SiteSettings.noBreakWords）の安全なパース
+ */
+export function parseNoBreakWords(raw?: string | null): string[] {
+  if (!raw || typeof raw !== 'string') {
+    return []
+  }
+
+  try {
+    const parsed = JSON.parse(raw)
+
+    if (Array.isArray(parsed)) {
+      return parsed
+        .filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+        .map(item => item.trim())
+    }
+
+    return []
+  }
+  catch {
+    if (raw.includes(',')) {
+      return raw.split(',').map(s => s.trim()).filter(Boolean)
+    }
+
+    return raw.trim() ? [raw.trim()] : []
+  }
+}
+
+/**
+ * 改行禁止ワードリストの安全なシリアライズ
+ */
+export function serializeNoBreakWords(val: unknown): string | null {
+  if (val === null || val === undefined) {
+    return null
+  }
+
+  if (Array.isArray(val)) {
+    const cleaned = val
+      .filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+      .map(item => item.trim())
+
+    return cleaned.length > 0 ? JSON.stringify(cleaned) : null
+  }
+
+  if (typeof val === 'string') {
+    const trimmed = val.trim()
+
+    if (!trimmed) return null
+
+    if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+      try {
+        const parsed = JSON.parse(trimmed)
+
+        if (Array.isArray(parsed)) {
+          return serializeNoBreakWords(parsed)
+        }
+      }
+      catch {
+        // fall through
+      }
+    }
+
+    if (trimmed.includes(',')) {
+      return serializeNoBreakWords(trimmed.split(',').map(s => s.trim()))
+    }
+
+    return JSON.stringify([trimmed])
+  }
+
+  return null
+}

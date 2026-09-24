@@ -88,6 +88,7 @@ const handleRemoveCable = (id: string) => {
           min="0.1"
           addon="倍"
           :placeholder="inputs.mode === 'strong' ? '1.2' : '0.6'"
+          :clearable="false"
         />
       </FormGroup>
 
@@ -98,6 +99,7 @@ const handleRemoveCable = (id: string) => {
           min="0"
           addon="mm"
           placeholder="10"
+          :clearable="false"
         />
       </FormGroup>
 
@@ -108,6 +110,7 @@ const handleRemoveCable = (id: string) => {
           min="0"
           addon="mm"
           :placeholder="inputs.mode === 'strong' ? '60' : '120'"
+          :clearable="false"
         />
       </FormGroup>
     </div>
@@ -133,6 +136,7 @@ const handleRemoveCable = (id: string) => {
           min="0"
           addon="mm"
           placeholder="相乗り時に指定"
+          :clearable="false"
         />
       </FormGroup>
     </div>

@@ -103,6 +103,19 @@ describe('Textarea.vue', () => {
     expect(textarea.classes()).toContain('is-error')
   })
 
+  it('applies is-auto-resize class and resize-none when autoResize is true', () => {
+    const wrapper = mount(Textarea, {
+      props: {
+        autoResize: true,
+      },
+    })
+
+    const textarea = wrapper.find('textarea')
+
+    expect(textarea.classes()).toContain('is-auto-resize')
+    expect(textarea.classes()).toContain('resize-none')
+  })
+
   it('exposes DOM focus, blur, and select methods', () => {
     const wrapper = mount(Textarea)
 

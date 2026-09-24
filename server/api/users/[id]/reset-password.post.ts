@@ -3,17 +3,17 @@
  * POST /api/users/:id/reset-password
  *
  * @description 管理者操作により対象ユーザーの一時パスワードを再発行し、次回ログイン時の変更を義務付けます。
- * @permission システム管理者限定
+ * @permission マスター管理者限定
  */
 
 import { createError, defineEventHandler, getRouterParam } from 'h3'
 
-import { requireAdminUser } from '../../../utils/auth'
+import { requireMasterUser } from '../../../utils/auth'
 import { generateRandomPassword, hashPassword } from '../../../utils/password'
 import { prisma } from '../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  await requireAdminUser(event)
+  await requireMasterUser(event)
   const id = getRouterParam(event, 'id')
 
   if (!id) {

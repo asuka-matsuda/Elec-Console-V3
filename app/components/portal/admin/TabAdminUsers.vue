@@ -99,7 +99,11 @@ const {
         </FormGroup>
 
         <FormGroup label="権限">
-          <Select v-model="newUser.role" :options="USER_ROLE_OPTIONS" />
+          <Select
+            v-model="newUser.role"
+            :options="USER_ROLE_OPTIONS"
+            :clearable="false"
+          />
         </FormGroup>
         <FormGroup>
           <Checkbox

@@ -76,6 +76,25 @@ const DEFAULT_OPTIONS: Required<Omit<ColumnWidthCalculationOptions, 'measuredMin
 /**
  * カラムの見出しラベル・ソートアイコン・余白から「見出しの最小必要幅（Natural Min Width）」を算出
  */
+/**
+ * カラムの自動幅配分ウェイト（重み）を取得
+ * 備考欄（keyにremarkを含む、またはlabelが「備考」）はデフォルトで2スロット分（weight=2）を割り当て
+ */
+export function getColumnFlexWeight<T = Record<string, unknown>>(col?: TableColumn<T>): number {
+  if (!col) return 1
+  if (typeof col.flexWeight === 'number' && col.flexWeight > 0) {
+    return col.flexWeight
+  }
+  const key = String(col.key).toLowerCase()
+  const label = String(col.label || '')
+
+  if (key.includes('remark') || label === '備考' || label.includes('備考')) {
+    return 2
+  }
+
+  return 1
+}
+
 export function calculateHeaderMinWidth<T = Record<string, unknown>>(
   col: TableColumn<T>,
   options: ColumnWidthCalculationOptions = {},
@@ -175,6 +194,15 @@ export function calculateColumnBaseWidths<T>(
     const maxPx = parsePixelWidth(col.maxWidth)
 
     calculatedPx = Math.max(calculatedPx, naturalMinPx)
+
+    // 備考欄や flexWeight > 1 が指定されたカラムの場合、
+    // 空欄初期状態でも入力エリアとしての十分な基準必要幅（最低 200px、または見出し * weight）を確保
+    const flexWeight = getColumnFlexWeight(col)
+
+    if (flexWeight > 1) {
+      calculatedPx = Math.max(calculatedPx, naturalMinPx * flexWeight, 200)
+    }
+
     if (maxPx !== undefined) {
       calculatedPx = Math.min(calculatedPx, maxPx)
     }
@@ -253,16 +281,34 @@ export function distributeColumnWidths<T = Record<string, unknown>>(
         currentWidths[key] = baseWidths[key] ?? 80
       }
 
-      // 上限（maxWidth）に達していない列を特定しながら、余剰幅を段階配分
+      // 上限（maxWidth）に達していない列を特定しながら、余剰幅を段階配分（ウェイト比例）
       let activeCols = [...flexCols]
 
       while (remainingExtra > 0 && activeCols.length > 0) {
-        const share = Math.floor(remainingExtra / activeCols.length)
+        const totalWeight = activeCols.reduce(
+          (sum, key) => sum + getColumnFlexWeight(colMap.get(key)),
+          0,
+        )
+        const unitShare = Math.floor(remainingExtra / totalWeight)
 
-        if (share === 0) {
-          // 残りが activeCols.length より小さい端数の場合、先頭から1pxずつ配分
+        if (unitShare === 0) {
+          // 残りが totalWeight より小さい端数の場合
+          // ウェイトの大きい列（備考欄等）を優先してスロットを展開し1pxずつ配分
+          const slots: string[] = []
+          const sortedCols = [...activeCols].sort((a, b) => {
+            return getColumnFlexWeight(colMap.get(b)) - getColumnFlexWeight(colMap.get(a))
+          })
+
+          for (const key of sortedCols) {
+            const w = getColumnFlexWeight(colMap.get(key))
+
+            for (let s = 0; s < w; s++) {
+              slots.push(key)
+            }
+          }
+
           for (let i = 0; i < remainingExtra; i++) {
-            const key = activeCols[i % activeCols.length]!
+            const key = slots[i % slots.length]!
 
             currentWidths[key] = (currentWidths[key] ?? 80) + 1
           }
@@ -274,6 +320,8 @@ export function distributeColumnWidths<T = Record<string, unknown>>(
 
         for (const key of activeCols) {
           const col = colMap.get(key)
+          const weight = getColumnFlexWeight(col)
+          const share = unitShare * weight
           const maxPx = parsePixelWidth(col?.maxWidth)
           const cur = currentWidths[key] ?? 80
 
@@ -306,15 +354,17 @@ export function distributeColumnWidths<T = Record<string, unknown>>(
             currentWidths[uncappedCol] = (currentWidths[uncappedCol] ?? 80) + remainingExtra
           }
           else {
-            // 全可変列が上限に達した場合、特定列に押し付けず全列に均等分配
-            const perCol = Math.floor(remainingExtra / columns.length)
+            // 全可変列が上限に達した場合、全列にウェイト比率で均等分配
+            const totalColWeight = columns.reduce((sum, c) => sum + getColumnFlexWeight(c), 0)
+            const perUnit = Math.floor(remainingExtra / totalColWeight)
             let allocated = 0
 
             for (let i = 0; i < columns.length; i++) {
               const col = columns[i]!
               const key = String(col.key)
+              const weight = getColumnFlexWeight(col)
               const isLast = i === columns.length - 1
-              const add = isLast ? (remainingExtra - allocated) : perCol
+              const add = isLast ? (remainingExtra - allocated) : (perUnit * weight)
 
               allocated += add
               if (flexCols.includes(key)) {

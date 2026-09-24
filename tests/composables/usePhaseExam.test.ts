@@ -147,31 +147,11 @@ describe('usePhaseExamBase', () => {
 })
 
 describe('usePhase1Exam', () => {
-  it('行編集の開始とキャンセルが正しく動作すること', () => {
+  it('フェーズ1用のアクションが正しく提供されること', () => {
     const exam1 = usePhase1Exam('site-1')
 
-    const circuit: CircuitItem = {
-      id: 'c1',
-      siteId: 'site-1',
-      keiTo: '幹線',
-      banShubetsu: '電灯',
-      banMeisho: '1L-1',
-      kairoBangou: '1',
-      kairoMeisho: '電灯1',
-      p1Kakunin: false,
-      p1Mashishime: false,
-      p2IsComplete: false,
-    }
-
-    expect(exam1.editingRowId.value).toBeNull()
-
-    exam1.startEdit(circuit)
-    expect(exam1.editingRowId.value).toBe('c1')
-    expect(exam1.editForm.value.kairoMeisho).toBe('電灯1')
-
-    exam1.cancelEdit()
-    expect(exam1.editingRowId.value).toBeNull()
-    expect(exam1.editForm.value).toEqual({})
+    expect(typeof exam1.confirmPhase1).toBe('function')
+    expect(exam1.phaseNumber).toBe(1)
   })
 })
 

@@ -52,6 +52,7 @@ const getCableSpec = formatConduitCableSpec
           max="100"
           addon="%"
           placeholder="80"
+          :clearable="false"
         />
       </FormGroup>
     </div>

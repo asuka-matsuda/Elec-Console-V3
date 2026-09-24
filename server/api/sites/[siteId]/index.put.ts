@@ -9,7 +9,12 @@
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { requireAdminUser } from '../../../utils/auth'
-import { parseExcludedCircuits, serializeExcludedCircuits } from '../../../utils/jsonFields'
+import {
+  parseExcludedCircuits,
+  parseNoBreakWords,
+  serializeExcludedCircuits,
+  serializeNoBreakWords,
+} from '../../../utils/jsonFields'
 import { prisma } from '../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
@@ -82,10 +87,15 @@ export default defineEventHandler(async (event) => {
     ? siteData.excludedCircuits
     : body.settings?.excludedCircuits
 
+  const rawNoBreak = siteData.noBreakWords !== undefined
+    ? siteData.noBreakWords
+    : body.settings?.noBreakWords
+
   const settingsUpdates: Record<string, unknown> = {}
 
   if (newExcelPath !== undefined) settingsUpdates.excelPath = newExcelPath
   if (rawExcluded !== undefined) settingsUpdates.excludedCircuits = serializeExcludedCircuits(rawExcluded)
+  if (rawNoBreak !== undefined) settingsUpdates.noBreakWords = serializeNoBreakWords(rawNoBreak)
   if (body.settings?.phase2ThresholdMegOhm !== undefined) {
     settingsUpdates.phase2ThresholdMegOhm = body.settings.phase2ThresholdMegOhm
   }
@@ -110,6 +120,7 @@ export default defineEventHandler(async (event) => {
     ...updatedSite,
     excelPath: settings?.excelPath || undefined,
     excludedCircuits: parseExcludedCircuits(settings?.excludedCircuits),
+    noBreakWords: parseNoBreakWords(settings?.noBreakWords),
   }
 
   return { site: returnedSite, settings }

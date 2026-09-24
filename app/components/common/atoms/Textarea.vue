@@ -2,8 +2,9 @@
 /**
  * Textarea
  * [Atoms] 複数行のテキスト入力エリアを提供する最小フォームコントロールコンポーネント。
+ * autoResize オプションにより、入力内容に応じた高さの自動拡張（1行〜可変）をサポートします。
  */
-import { computed, inject, ref } from 'vue'
+import { computed, inject, nextTick, onMounted, ref, watch } from 'vue'
 
 import type { TextareaProps } from '~/types/components'
 import { FORM_GROUP_KEY } from '~/types/components'
@@ -19,6 +20,7 @@ const props = withDefaults(
     required: false,
     rows: 4,
     resize: 'vertical',
+    autoResize: false,
   },
 )
 
@@ -33,6 +35,34 @@ const isError = computed(() => props.error || (formGroup?.hasError.value ?? fals
 
 const textareaRef = ref<HTMLTextAreaElement | null>(null)
 
+// オートリサイズ処理（入力文字数・改行数に応じて高さを自動調整）
+const adjustHeight = () => {
+  if (!props.autoResize || !textareaRef.value) return
+  textareaRef.value.style.height = 'auto'
+  textareaRef.value.style.height = `${textareaRef.value.scrollHeight}px`
+}
+
+onMounted(() => {
+  if (props.autoResize) {
+    nextTick(adjustHeight)
+  }
+})
+
+watch(
+  () => model.value,
+  () => {
+    if (props.autoResize) {
+      nextTick(adjustHeight)
+    }
+  },
+)
+
+const handleInput = () => {
+  if (props.autoResize) {
+    adjustHeight()
+  }
+}
+
 // Ctrl+Enter / Cmd+Enter ショートカット
 const handleKeydown = (event: KeyboardEvent) => {
   if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
@@ -42,6 +72,10 @@ const handleKeydown = (event: KeyboardEvent) => {
 
 // リサイズクラス
 const resizeClass = computed(() => {
+  if (props.autoResize) {
+    return 'resize-none'
+  }
+
   if (props.disabled || props.readonly) {
     return 'resize-none'
   }
@@ -86,11 +120,12 @@ defineExpose({
     :autocomplete="autocomplete"
     class="form-control relative z-[1] focus:z-[2] w-full"
     :class="[
-      { 'is-error': isError },
+      { 'is-error': isError, 'is-auto-resize': autoResize },
       resizeClass,
     ]"
     @focus="emit('focus', $event)"
     @blur="emit('blur', $event)"
+    @input="handleInput"
     @keydown="handleKeydown"
   />
 </template>
@@ -102,6 +137,13 @@ defineExpose({
   line-height: var(--line-height-base);
 
   @include form-control-base(calc(var(--control-height-ratio) * 2em));
+
+  &.is-auto-resize {
+    min-height: calc(var(--control-height-ratio) * 1.3em);
+    padding-block: 0.35em;
+    overflow-y: hidden;
+    resize: none;
+  }
 
   &:read-only:not(:disabled),
   &:disabled,

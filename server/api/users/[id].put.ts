@@ -3,19 +3,19 @@
  * PUT /api/users/:id
  *
  * @description ユーザーの表示名、権限ロール、有効/無効フラグ、担当現場割り当てを更新します。
- * @permission システム管理者限定
+ * @permission マスター管理者限定
  */
 
 import { defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { ErrorCode } from '#shared/types/errors'
 
-import { requireAdminUser } from '../../utils/auth'
+import { requireMasterUser } from '../../utils/auth'
 import { createAppError } from '../../utils/error'
 import { prisma } from '../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  const authUser = await requireAdminUser(event)
+  const authUser = await requireMasterUser(event)
   const id = getRouterParam(event, 'id')
   const body = await readBody(event)
 

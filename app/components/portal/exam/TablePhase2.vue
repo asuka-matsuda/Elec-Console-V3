@@ -48,7 +48,7 @@ const inputForm = reactive({
 })
 
 const isComplete = (circuit: CircuitItem) => Boolean(circuit.p2ConfirmedAt && circuit.p2IsComplete)
-const isP1Complete = (circuit: CircuitItem) => Boolean(circuit.p1Kakunin && circuit.p1Mashishime)
+const isP1Complete = (circuit: CircuitItem) => Boolean(circuit.p1ConfirmedAt && circuit.p1Kakunin && circuit.p1Mashishime)
 const isLocked = (circuit: CircuitItem) => props.isCircuitLocked(circuit) || !isP1Complete(circuit)
 
 // 相ラベルの取得（三相: R-S / S-T / R-T, 単相: R-N / T-N / R-T）
@@ -176,7 +176,8 @@ const {
       <Textarea
         v-if="editingRowId === circuit.id"
         v-model="inputForm.remarks"
-        :rows="2"
+        :rows="1"
+        auto-resize
         placeholder="備考"
       />
       <span v-else class="cell-remarks" :title="circuit.p2Remarks || ''">

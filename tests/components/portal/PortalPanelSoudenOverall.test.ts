@@ -85,8 +85,10 @@ describe('PanelSoudenOverall.vue', () => {
 
     // 試験入力リンク
     const links = wrapper.findAll('a')
+
     expect(links.length).toBeGreaterThanOrEqual(6)
     const hrefs = links.map(l => l.attributes('href'))
+
     expect(hrefs).toContain('/portal/site-abc/phase1?kei_to=幹線')
     expect(hrefs).toContain('/portal/site-abc/phase2?kei_to=二次側')
   })

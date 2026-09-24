@@ -48,6 +48,7 @@ watch(
         type="number"
         min="1"
         addon="m"
+        :clearable="false"
       />
     </FormGroup>
   </div>

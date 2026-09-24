@@ -3,19 +3,19 @@
  * DELETE /api/users/:id
  *
  * @description 指定されたユーザーアカウントを削除します。
- * @permission システム管理者限定
+ * @permission マスター管理者限定
  */
 
 import { defineEventHandler, getRouterParam } from 'h3'
 
 import { ErrorCode } from '#shared/types/errors'
 
-import { requireAdminUser } from '../../utils/auth'
+import { requireMasterUser } from '../../utils/auth'
 import { createAppError } from '../../utils/error'
 import { prisma } from '../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  const authUser = await requireAdminUser(event)
+  const authUser = await requireMasterUser(event)
   const id = getRouterParam(event, 'id')
 
   if (!id) {

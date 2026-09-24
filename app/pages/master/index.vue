@@ -2,7 +2,7 @@
 /**
  * マスターシステム管理画面
  * ID:master ユーザー専用のシステム管理画面。
- * システム全体設定（改行禁止ワード設定・将来のお知らせ設定等）を集約します。
+ * 全社メンバー統括・全社お知らせ設定・全社更新履歴設定を集約します。
  */
 import { ref } from 'vue'
 
@@ -15,13 +15,13 @@ definePageMeta({
   middleware: ['master'],
 })
 
-const activeTab = ref<'word-break' | 'announcements' | 'history'>('word-break')
+const activeTab = ref<'users' | 'announcements' | 'history'>('users')
 
-const MASTER_TABS: TabOption<'word-break' | 'announcements' | 'history'>[] = [
+const MASTER_TABS: TabOption<'users' | 'announcements' | 'history'>[] = [
   {
-    label: '改行禁止ワード設定',
-    value: 'word-break',
-    icon: 'type',
+    label: 'メンバー管理',
+    value: 'users',
+    icon: 'user',
   },
   {
     label: 'お知らせ設定',
@@ -43,8 +43,8 @@ const MASTER_TABS: TabOption<'word-break' | 'announcements' | 'history'>[] = [
       :options="MASTER_TABS"
       panel-class="flex flex-col gap-panel-gap"
     >
-      <template #word-break>
-        <MasterTabWordBreak />
+      <template #users>
+        <PortalTabAdminUsers />
       </template>
 
       <template #announcements>

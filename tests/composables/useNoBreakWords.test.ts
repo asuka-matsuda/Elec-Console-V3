@@ -74,4 +74,27 @@ describe('useNoBreakWords / applyNoBreak', () => {
 
     expect(result).toBe('事務所照明')
   })
+
+  it('現場IDごとに個別の改行禁止辞書を保持できる', () => {
+    const siteA = useNoBreakWords('site-alpha')
+    const siteB = useNoBreakWords('site-beta')
+
+    siteA.words.value = ['自動倉庫']
+    siteB.words.value = ['受変電設備']
+
+    expect(siteA.words.value).toEqual(['自動倉庫'])
+    expect(siteB.words.value).toEqual(['受変電設備'])
+
+    const textAlpha = siteA.applyNoBreak('自動倉庫と受変電設備') as string
+
+    expect(textAlpha).toContain(`自${WORD_JOINER}動${WORD_JOINER}倉${WORD_JOINER}庫`)
+    // siteA では「受変電設備」は結合されない
+    expect(textAlpha).not.toContain(`受${WORD_JOINER}変${WORD_JOINER}電`)
+
+    const textBeta = siteB.applyNoBreak('自動倉庫と受変電設備') as string
+
+    expect(textBeta).toContain(`受${WORD_JOINER}変${WORD_JOINER}電${WORD_JOINER}設${WORD_JOINER}備`)
+    // siteB では「自動倉庫」は結合されない
+    expect(textBeta).not.toContain(`自${WORD_JOINER}動${WORD_JOINER}倉`)
+  })
 })

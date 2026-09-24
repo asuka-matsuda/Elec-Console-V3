@@ -12,45 +12,45 @@ import { formatDateTime } from '~/utils/date'
  * フェーズ1：回路確認・増締 テーブルカラム定義
  */
 export const PHASE1_TABLE_COLUMNS: TableColumn<CircuitItem>[] = [
-  { key: 'banMeisho', subKey: 'banShubetsu', label: '盤情報' },
-  { key: 'kairoBangou', label: '回路番号', align: 'center' },
+  { key: 'banMeisho', subKey: 'banShubetsu', label: '盤情報', maxWidth: '170px' },
+  { key: 'kairoBangou', label: '回路番号', align: 'center', width: '90px' },
   { key: 'kairoMeisho', label: '回路名称' },
-  { key: 'cableList', label: '配線 / 接地' },
-  { key: 'p1Kakunin', label: 'サイズ確認 / 増締', align: 'center' },
-  { key: 'p1Remarks', label: '備考' },
-  { key: 'actions', label: '操作', sortable: false, align: 'center' },
-  { key: 'p1ConfirmedAt', label: '測定者 / 日時', align: 'center' },
+  { key: 'cableList', label: '配線 / 接地', maxWidth: '170px' },
+  { key: 'p1Kakunin', label: 'サイズ確認 / 増締', align: 'center', maxWidth: '170px' },
+  { key: 'p1Remarks', label: '備考', flexWeight: 2 },
+  { key: 'actions', label: '操作', sortable: false, align: 'center', width: '120px' },
+  { key: 'p1ConfirmedAt', label: '測定者 / 日時', align: 'center', maxWidth: '160px' },
 ]
 
 /**
  * フェーズ2：絶縁抵抗測定 テーブルカラム定義
  */
 export const PHASE2_TABLE_COLUMNS: TableColumn<CircuitItem>[] = [
-  { key: 'banMeisho', subKey: 'banShubetsu', label: '盤情報' },
-  { key: 'kairoBangou', label: '回路番号', align: 'center' },
+  { key: 'banMeisho', subKey: 'banShubetsu', label: '盤情報', maxWidth: '170px' },
+  { key: 'kairoBangou', label: '回路番号', align: 'center', width: '90px' },
   { key: 'kairoMeisho', label: '回路名称' },
-  { key: 'zetsuenR', label: '測定1', align: 'center' },
-  { key: 'zetsuenS', label: '測定2', align: 'center' },
-  { key: 'zetsuenT', label: '測定3', align: 'center' },
-  { key: 'p2Remarks', label: '備考' },
-  { key: 'actions', label: '操作', sortable: false, align: 'center' },
-  { key: 'p2ConfirmedAt', label: '測定者 / 日時', align: 'center' },
+  { key: 'zetsuenR', label: '測定1', align: 'center', width: '90px' },
+  { key: 'zetsuenS', label: '測定2', align: 'center', width: '90px' },
+  { key: 'zetsuenT', label: '測定3', align: 'center', width: '90px' },
+  { key: 'p2Remarks', label: '備考', flexWeight: 2 },
+  { key: 'actions', label: '操作', sortable: false, align: 'center', width: '120px' },
+  { key: 'p2ConfirmedAt', label: '測定者 / 日時', align: 'center', maxWidth: '160px' },
 ]
 
 /**
  * フェーズ3：送電・電圧測定 テーブルカラム定義
  */
 export const PHASE3_TABLE_COLUMNS: TableColumn<CircuitItem>[] = [
-  { key: 'banMeisho', subKey: 'banShubetsu', label: '盤情報' },
-  { key: 'kairoBangou', label: '回路番号', align: 'center' },
+  { key: 'banMeisho', subKey: 'banShubetsu', label: '盤情報', maxWidth: '170px' },
+  { key: 'kairoBangou', label: '回路番号', align: 'center', width: '90px' },
   { key: 'kairoMeisho', label: '回路名称' },
-  { key: 'denatsuRs', label: '電圧1', align: 'center' },
-  { key: 'denatsuSt', label: '電圧2', align: 'center' },
-  { key: 'denatsuRt', label: '電圧3', align: 'center' },
-  { key: 'kensou', label: '検相 / 点灯', align: 'center' },
-  { key: 'p3Remarks', label: '備考' },
-  { key: 'actions', label: '操作', sortable: false, align: 'center' },
-  { key: 'p3ConfirmedAt', label: '測定者 / 日時', align: 'center' },
+  { key: 'denatsuRs', label: '電圧1', align: 'center', width: '90px' },
+  { key: 'denatsuSt', label: '電圧2', align: 'center', width: '90px' },
+  { key: 'denatsuRt', label: '電圧3', align: 'center', width: '90px' },
+  { key: 'kensou', label: '検相 / 点灯', align: 'center', width: '110px' },
+  { key: 'p3Remarks', label: '備考', flexWeight: 2 },
+  { key: 'actions', label: '操作', sortable: false, align: 'center', width: '120px' },
+  { key: 'p3ConfirmedAt', label: '測定者 / 日時', align: 'center', maxWidth: '160px' },
 ]
 
 /**

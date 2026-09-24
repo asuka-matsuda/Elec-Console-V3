@@ -217,9 +217,10 @@ const {
       <Textarea
         v-if="isRowEditing(circuit)"
         v-model="getRowForm(circuit).remarks"
-        :rows="2"
+        :rows="1"
+        auto-resize
         placeholder="備考"
-        class="w-full min-w-[100px] max-w-[180px] textarea-remarks"
+        class="w-full min-w-[100px] textarea-remarks"
       />
       <span v-else class="cell-remarks" :title="circuit.p3Remarks || ''">
         {{ circuit.p3Remarks || '-' }}
@@ -263,7 +264,7 @@ const {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 
-  max-width: 160px;
+  max-width: 100%;
 
   font-size: var(--font-size-xs);
   color: var(--color-text-secondary);

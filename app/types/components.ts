@@ -55,6 +55,8 @@ export interface TableColumn<T = Record<string, unknown>> {
   minWidth?: string
   maxWidth?: string
   fixedWidth?: boolean
+  /** 自動幅配分における重み（flex-grow相当。未指定時は通常1、備考列等は2） */
+  flexWeight?: number
   align?: 'left' | 'center' | 'right'
   /** この列でテキスト省略（...）を行うかどうか */
   truncate?: boolean
@@ -278,7 +280,7 @@ export interface SelectProps<T = string | number | boolean> {
   id?: string
   /** ドロップダウンの展開方向優先設定 */
   placement?: 'top' | 'bottom'
-  /** 選択解除（クリア）ボタンを表示する (デフォルト: true) */
+  /** 選択解除（クリア）ボタンを表示する (デフォルト: false) */
   clearable?: boolean
 }
 
@@ -308,6 +310,8 @@ export interface TextareaProps {
   name?: string
   /** 自動補完 */
   autocomplete?: string
+  /** 入力内容に応じた高さ自動伸縮（オートリサイズ） (デフォルト: false) */
+  autoResize?: boolean
 }
 
 // --- FormControlAction ---

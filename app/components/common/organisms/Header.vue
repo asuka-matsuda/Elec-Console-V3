@@ -6,6 +6,7 @@
  */
 import { computed } from 'vue'
 
+import { useSidebar } from '~/composables/useSidebar'
 import type { HeaderProps } from '~/types/components'
 
 defineProps<HeaderProps>()
@@ -14,7 +15,7 @@ const emit = defineEmits<{
   'toggle-sidebar': []
 }>()
 
-const isSidebarOpen = useState('sidebar-open', () => false)
+const { toggleSidebar } = useSidebar()
 const { currentUser, logout } = useAuth()
 
 const userName = computed(() => {
@@ -24,7 +25,7 @@ const userName = computed(() => {
 })
 
 const handleToggleSidebar = () => {
-  isSidebarOpen.value = !isSidebarOpen.value
+  toggleSidebar()
   emit('toggle-sidebar')
 }
 </script>

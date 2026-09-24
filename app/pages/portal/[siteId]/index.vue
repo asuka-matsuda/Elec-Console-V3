@@ -41,7 +41,7 @@ useHead({
 })
 
 const assignedSites = computed(() => {
-  if (currentUser.value?.role === 'admin') {
+  if (currentUser.value?.loginId === 'master') {
     return sites.value
   }
 

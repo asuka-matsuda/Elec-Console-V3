@@ -27,21 +27,18 @@ const getGroupData = (keiTo: '幹線' | '二次側', stats: SoudenStats) => {
       title: '回路確認 (Phase 1)',
       completed: isTrunk ? stats.trunkP1 : stats.secP1,
       pct: isTrunk ? stats.trunkP1Pct : stats.secP1Pct,
-      color: 'var(--color-category-main)',
     },
     {
       phase: 2,
       title: '絶縁抵抗 (Phase 2)',
       completed: isTrunk ? stats.trunkP2 : stats.secP2,
       pct: isTrunk ? stats.trunkP2Pct : stats.secP2Pct,
-      color: 'var(--color-category-tool)',
     },
     {
       phase: 3,
       title: '送電・電圧 (Phase 3)',
       completed: isTrunk ? stats.trunkP3 : stats.secP3,
       pct: isTrunk ? stats.trunkP3Pct : stats.secP3Pct,
-      color: 'var(--color-status-success)',
     },
   ]
 
@@ -99,7 +96,7 @@ const getGroupData = (keiTo: '幹線' | '二次側', stats: SoudenStats) => {
                     </Badge>
                   </div>
                 </div>
-                <PortalProgressBar :value="item.pct" :color="item.color" />
+                <PortalProgressBar :value="item.pct" />
               </div>
             </div>
           </div>

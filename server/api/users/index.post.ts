@@ -3,20 +3,20 @@
  * POST /api/users
  *
  * @description 新規ユーザーアカウントを作成し、初期パスワードおよび担当現場を割り当てます。
- * @permission システム管理者限定
+ * @permission マスター管理者限定
  */
 
 import { defineEventHandler, readBody } from 'h3'
 
 import { ErrorCode } from '#shared/types/errors'
 
-import { requireAdminUser } from '../../utils/auth'
+import { requireMasterUser } from '../../utils/auth'
 import { createAppError } from '../../utils/error'
 import { generateRandomPassword, hashPassword } from '../../utils/password'
 import { prisma } from '../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  await requireAdminUser(event)
+  await requireMasterUser(event)
   const body = await readBody(event)
 
   const loginId = (body.loginId || body.id)?.trim()

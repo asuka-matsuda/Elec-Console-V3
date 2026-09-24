@@ -1,8 +1,8 @@
 /**
- * フェーズ1（受電前自主検査）測定値確定 API
+ * フェーズ1（回路確認・増締）確定 API
  * POST /api/sites/:siteId/circuits/:id/phase1
  *
- * @description 指定回路のフェーズ1試験結果（絶縁抵抗・接地抵抗・外観検査・施工者）を楽観ロック検証の上で確定登録します。
+ * @description 指定回路のフェーズ1試験結果（回路サイズ確認・増締・備考）を楽観ロック検証の上で確定登録します。
  * @permission 現場アクセス権限
  */
 
@@ -37,14 +37,13 @@ export default defineEventHandler(async (event) => {
 
   const finalKakunin = body.kakunin !== undefined ? Boolean(body.kakunin) : (existingCircuit?.p1Kakunin ?? false)
   const finalMashishime = body.mashishime !== undefined ? Boolean(body.mashishime) : (existingCircuit?.p1Mashishime ?? false)
-  const isP1Complete = finalKakunin && finalMashishime
   const hasAnyCheck = finalKakunin || finalMashishime
 
   const updateData: Record<string, unknown> = {
     p1Kakunin: finalKakunin,
     p1Mashishime: finalMashishime,
     p1Worker: hasAnyCheck ? workerName : null,
-    p1ConfirmedAt: isP1Complete ? (existingCircuit?.p1ConfirmedAt || confirmedAt) : null,
+    p1ConfirmedAt: hasAnyCheck ? confirmedAt : null,
   }
 
   if (body.remarks !== undefined) updateData.p1Remarks = body.remarks
@@ -54,16 +53,22 @@ export default defineEventHandler(async (event) => {
       : JSON.stringify(body.modifiedFields)
   }
 
-  // インライン編集されたフィールドの更新
-  if (body.haidenHoushiki !== undefined) updateData.haidenHoushiki = body.haidenHoushiki
-  if (body.souShubetsu !== undefined) updateData.souShubetsu = body.souShubetsu
-  if (body.shadankiShubetsu !== undefined) updateData.shadankiShubetsu = body.shadankiShubetsu
-  if (body.shadankiYouryou !== undefined) updateData.shadankiYouryou = body.shadankiYouryou
-  if (body.kairoBangou !== undefined) updateData.kairoBangou = body.kairoBangou
-  if (body.kairoMeisho !== undefined) updateData.kairoMeisho = body.kairoMeisho
-  if (body.cableList !== undefined) updateData.cableList = body.cableList
-  if (body.haisenJousuu !== undefined) updateData.haisenJousuu = body.haisenJousuu
-  if (body.setsuchiList !== undefined) updateData.setsuchiList = body.setsuchiList
+  // 回路仕様の修正フィールド（互換性担保）
+  const CIRCUIT_SPEC_FIELDS = [
+    'haidenHoushiki',
+    'souShubetsu',
+    'shadankiShubetsu',
+    'shadankiYouryou',
+    'kairoBangou',
+    'kairoMeisho',
+    'cableList',
+    'haisenJousuu',
+    'setsuchiList',
+  ] as const
+
+  for (const field of CIRCUIT_SPEC_FIELDS) {
+    if (body[field] !== undefined) updateData[field] = body[field]
+  }
 
   const updated = await atomicUpdateCircuit({
     circuitId,

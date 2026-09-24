@@ -52,6 +52,7 @@ defineProps<{
               :placeholder="field.placeholder"
               :min="field.min"
               :step="field.step"
+              :clearable="false"
               @blur="handleBlur"
             >
               <template #addon>
@@ -85,6 +86,7 @@ defineProps<{
               :placeholder="field.placeholder"
               :min="field.min"
               :addon="field.addonText"
+              :clearable="false"
               @blur="handleBlur"
             />
           </FormGroup>

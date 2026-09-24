@@ -78,6 +78,20 @@ describe('TablePhase2.vue', () => {
       p2ConfirmedAt: null,
       p2IsComplete: false,
     },
+    {
+      id: 'c5',
+      siteId: 'site-1',
+      keiTo: '幹線',
+      banShubetsu: '電灯',
+      banMeisho: '1L-2',
+      kairoBangou: '2',
+      kairoMeisho: 'P1片方のみ回路',
+      p1Kakunin: true,
+      p1Mashishime: false,
+      p1ConfirmedAt: '2026-09-21T10:00:00Z',
+      p2ConfirmedAt: null,
+      p2IsComplete: false,
+    },
   ]
 
   const globalStubs = {
@@ -207,6 +221,14 @@ describe('TablePhase2.vue', () => {
 
     expect(row4.find('.text-note').text()).toContain('⏸ P1未了')
     expect(row4.findAll('.stub-button').length).toBe(0)
+  })
+
+  it('P1で片方のみチェック済みの回路でも「⏸ P1未了」が表示され操作ボタンが表示されないこと', () => {
+    const wrapper = createWrapper()
+    const row5 = wrapper.find('.circuit-row[data-row-id="c5"]')
+
+    expect(row5.find('.text-note').text()).toContain('⏸ P1未了')
+    expect(row5.findAll('.stub-button').length).toBe(0)
   })
 
   it('「測定入力」をクリックすると手入力モードになり、入力値を保存すると判定結果とともに confirm が発火すること', async () => {

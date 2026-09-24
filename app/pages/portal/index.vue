@@ -18,8 +18,26 @@ const { sites, fetchSites, isLoaded } = useAdminSites()
 const lastSiteId = useLocalStorage(STORAGE_KEYS.LAST_SITE_ID, '')
 
 const autoRedirect = () => {
+  const isMaster = currentUser.value?.loginId === 'master'
   const siteIds = currentUser.value?.assignedSiteIds || []
 
+  // 1. master アカウントは全現場へのアクセス権限を持つため、前回現場または最初の現場へ
+  if (isMaster) {
+    if (lastSiteId.value && sites.value.some(s => s.id === lastSiteId.value)) {
+      router.replace(`/portal/${lastSiteId.value}`)
+
+      return
+    }
+    const firstSite = sites.value[0]
+
+    if (firstSite) {
+      router.replace(`/portal/${firstSite.id}`)
+
+      return
+    }
+  }
+
+  // 2. 一般ユーザー（非master）はアサイン現場がある場合のみ転送
   if (siteIds.length > 0) {
     const targetSiteId = siteIds.includes(lastSiteId.value)
       ? lastSiteId.value
@@ -29,16 +47,8 @@ const autoRedirect = () => {
 
     return
   }
-  if (lastSiteId.value && sites.value.some(s => s.id === lastSiteId.value)) {
-    router.replace(`/portal/${lastSiteId.value}`)
 
-    return
-  }
-  const firstSite = sites.value[0]
-
-  if (firstSite) {
-    router.replace(`/portal/${firstSite.id}`)
-  }
+  // 3. アサイン現場がない一般ユーザーはリダイレクトせず、「アサインされている現場がありません」を表示
 }
 
 onMounted(async () => {

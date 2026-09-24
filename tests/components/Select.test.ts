@@ -40,11 +40,25 @@ describe('Select.vue', () => {
     expect(wrapper.text()).toContain('オプション2')
   })
 
-  it('shows clear button when value is selected and clears on click', async () => {
+  it('does not show clear button by default', () => {
+    const wrapper = mount(Select, {
+      props: {
+        options: mockOptions,
+        modelValue: 'opt1',
+      },
+    })
+
+    const clearButton = wrapper.find('[title="選択解除"]')
+
+    expect(clearButton.exists()).toBe(false)
+  })
+
+  it('shows clear button when clearable is true and clears on click', async () => {
     const wrapper = mount(Select, {
       props: {
         'options': mockOptions,
         'modelValue': 'opt1',
+        'clearable': true,
         'onUpdate:modelValue': (val: string | null) => wrapper.setProps({ modelValue: val }),
       },
     })

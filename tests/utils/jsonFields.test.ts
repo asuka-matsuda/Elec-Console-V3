@@ -5,10 +5,12 @@ import {
   parseEventTypes,
   parseExcludedCircuits,
   parseHolidayDays,
+  parseNoBreakWords,
   serializeCustomHolidays,
   serializeEventTypes,
   serializeExcludedCircuits,
   serializeHolidayDays,
+  serializeNoBreakWords,
 } from '../../server/utils/jsonFields'
 
 describe('jsonFields - excludedCircuits', () => {
@@ -97,5 +99,41 @@ describe('jsonFields - customHolidays', () => {
   it('シリアライズが正しく動作すること', () => {
     expect(serializeCustomHolidays(['2026-01-01'])).toBe(JSON.stringify(['2026-01-01']))
     expect(serializeCustomHolidays(null)).toBe('[]')
+  })
+})
+
+describe('jsonFields - noBreakWords', () => {
+  it('正常な JSON 配列文字列を正しくパースできること', () => {
+    const raw = JSON.stringify(['自動倉庫', '受変電設備', '分電盤'])
+
+    expect(parseNoBreakWords(raw)).toEqual(['自動倉庫', '受変電設備', '分電盤'])
+  })
+
+  it('前後の不要な空白をトリムし、空文字要素を除外すること', () => {
+    const raw = JSON.stringify([' 自動倉庫 ', '', '  ', '受変電設備'])
+
+    expect(parseNoBreakWords(raw)).toEqual(['自動倉庫', '受変電設備'])
+  })
+
+  it('カンマ区切り文字列でも安全にフォールバックパースできること', () => {
+    expect(parseNoBreakWords('自動倉庫, 受変電設備')).toEqual(['自動倉庫', '受変電設備'])
+  })
+
+  it('破損データや null/undefined の場合は空配列を返すこと', () => {
+    expect(parseNoBreakWords(null)).toEqual([])
+    expect(parseNoBreakWords(undefined)).toEqual([])
+    expect(parseNoBreakWords('')).toEqual([])
+  })
+
+  it('配列または文字列を正しく JSON 文字列にシリアライズできること', () => {
+    expect(serializeNoBreakWords(['自動倉庫', '受変電設備'])).toBe(
+      JSON.stringify(['自動倉庫', '受変電設備']),
+    )
+    expect(serializeNoBreakWords('自動倉庫, 受変電設備')).toBe(
+      JSON.stringify(['自動倉庫', '受変電設備']),
+    )
+    expect(serializeNoBreakWords([])).toBeNull()
+    expect(serializeNoBreakWords(null)).toBeNull()
+    expect(serializeNoBreakWords(undefined)).toBeNull()
   })
 })

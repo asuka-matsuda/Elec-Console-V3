@@ -43,4 +43,19 @@ export default defineNuxtRouteMiddleware(async (to) => {
     // 変更不要なユーザーがアクセスした場合はホームへ
     return navigateTo('/')
   }
+
+  // 現場アクセス認可制御（/portal/:siteId 配下の現場ポータルルートへのアクセス検証）
+  if (isAuthenticated.value && to.path.startsWith('/portal/') && to.path !== '/portal/admin') {
+    const siteId = (to.params.siteId as string) || to.path.split('/')[2]
+
+    if (siteId && siteId !== 'admin') {
+      const isMaster = currentUser.value?.loginId === 'master'
+      const assignedIds = currentUser.value?.assignedSiteIds || []
+
+      if (!isMaster && !assignedIds.includes(siteId)) {
+        // 未アサインの現場への不正アクセスを遮断し、ポータルトップへ誘導
+        return navigateTo('/portal')
+      }
+    }
+  }
 })

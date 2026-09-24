@@ -97,6 +97,43 @@ describe('tableAutoWidth utility', () => {
     }
     // 合計BaseWidth: 400px
 
+    it('allocates double width (weight 2) to remarks columns during extra width distribution', () => {
+      // 通常列(c1: 100px, weight 1) と 備考列(remarks: 100px, weight 2), 固定列(fixed: 100px)
+      // totalBaseWidth = 300px
+      // containerWidth = 600px -> 余剰 300px
+      // 重み合計 = 1 + 2 = 3（可変列数 2 + 1 で割る）
+      // 1枠あたり 300 / 3 = 100px
+      // c1: 100 + 100*1 = 200px
+      // remarks: 100 + 100*2 = 300px（2つ分の幅！）
+      const cols: TableColumn<unknown>[] = [
+        { key: 'c1', label: '回路名称' },
+        { key: 'remarks', label: '備考' },
+        { key: 'fixed', label: 'Fixed', width: '100px' },
+      ]
+      const bases = { c1: 100, remarks: 100, fixed: 100 }
+
+      const distributed = distributeColumnWidths(cols, bases, 600)
+
+      expect(distributed.fixed).toBe(100)
+      expect(distributed.c1).toBe(200)
+      expect(distributed.remarks).toBe(300)
+      expect(distributed.fixed + distributed.c1 + distributed.remarks).toBe(600)
+    })
+
+    it('allocates double width when flexWeight: 2 is explicitly specified on column', () => {
+      const cols: TableColumn<unknown>[] = [
+        { key: 'c1', label: '通常' },
+        { key: 'customWeight', label: 'カスタム', flexWeight: 2 },
+      ]
+      const bases = { c1: 100, customWeight: 100 }
+      // 余剰 300px -> c1: +100, customWeight: +200
+      const distributed = distributeColumnWidths(cols, bases, 500)
+
+      expect(distributed.c1).toBe(200)
+      expect(distributed.customWeight).toBe(300)
+      expect(distributed.c1 + distributed.customWeight).toBe(500)
+    })
+
     it('distributes extra width equally to flex columns when container is wider', () => {
       // コンテナ幅 600px ➔ 余剰 200px ➔ c1, c2 に各 100px 追加
       const distributed = distributeColumnWidths(columns, baseWidths, 600)

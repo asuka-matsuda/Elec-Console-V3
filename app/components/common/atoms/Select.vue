@@ -18,7 +18,7 @@ const props = withDefaults(
   {
     disabled: false,
     error: false,
-    clearable: true,
+    clearable: false,
   },
 )
 

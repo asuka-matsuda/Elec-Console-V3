@@ -139,6 +139,7 @@ describe('Calendar.client.vue', () => {
 
     // 「種別設定」ボタンをクリックして開く
     const settingsBtn = wrapper.findAllComponents({ name: 'Button' }).find(b => b.text().includes('種別設定'))
+
     expect(settingsBtn).toBeDefined()
     await settingsBtn!.trigger('click')
 

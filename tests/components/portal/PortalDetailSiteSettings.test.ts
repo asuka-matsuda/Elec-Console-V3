@@ -48,6 +48,7 @@ describe('DetailSiteSettings.vue', () => {
     expect(wrapper.text()).toContain('基本情報')
     expect(wrapper.text()).toContain('Excelデータ連携')
     expect(wrapper.text()).toContain('除外回路ルール')
+    expect(wrapper.text()).toContain('改行禁止ワード')
   })
 
   it('emits save event when save button is clicked without readonly warnings', async () => {
@@ -99,26 +100,31 @@ describe('DetailSiteSettings.vue', () => {
 
     // rules タブに切り替える
     const tabs = wrapper.findComponent({ name: 'Tabs' })
+
     await tabs.vm.$emit('update:modelValue', 'rules')
 
     expect(wrapper.text()).toContain('除外回路の設定')
 
     // 1. 追加ボタン
     const addBtn = wrapper.findAllComponents({ name: 'Button' }).find(b => b.text().includes('除外回路を追加する'))
+
     expect(addBtn).toBeDefined()
     await addBtn!.trigger('click')
 
     const inputsAfterAdd = wrapper.findAllComponents({ name: 'Input' }).filter(i => i.props('placeholder')?.includes('盤A-回路1'))
+
     expect(inputsAfterAdd).toHaveLength(3)
 
     // 2. 削除ボタン
     const deleteBtns = wrapper.findAllComponents({ name: 'Button' }).filter(b => b.props('icon') === 'trash-2')
     // site header delete btn + excluded circuits trash buttons
     const ruleTrashBtns = deleteBtns.filter(b => !b.text().includes('削除'))
+
     expect(ruleTrashBtns.length).toBeGreaterThanOrEqual(2)
     await ruleTrashBtns[0]!.trigger('click')
 
     const inputsAfterDelete = wrapper.findAllComponents({ name: 'Input' }).filter(i => i.props('placeholder')?.includes('盤A-回路1'))
+
     expect(inputsAfterDelete).toHaveLength(2)
 
     // 3. 入力変更
@@ -126,10 +132,64 @@ describe('DetailSiteSettings.vue', () => {
 
     // 保存実行して excludedCircuits が反映されていること
     const saveBtn = wrapper.findAllComponents({ name: 'Button' }).find(b => b.text().includes('変更を保存'))
+
     await saveBtn!.trigger('click')
 
     expect(wrapper.emitted('save')).toBeTruthy()
     const savedPayload = wrapper.emitted('save')?.[0]?.[0] as Site
+
     expect(savedPayload.excludedCircuits).toContain('盤A-1-改')
+  })
+
+  it('allows adding, editing, and removing no-break words', async () => {
+    const wrapper = mount(DetailSiteSettings, {
+      props: {
+        site: {
+          ...dummySite,
+          noBreakWords: ['自動倉庫', '受変電設備'],
+        },
+      },
+    })
+
+    // wordBreak タブに切り替える
+    const tabs = wrapper.findComponent({ name: 'Tabs' })
+
+    await tabs.vm.$emit('update:modelValue', 'wordBreak')
+
+    expect(wrapper.text()).toContain('改行禁止ワードの設定')
+
+    // 1. 追加ボタン
+    const addBtn = wrapper.findAllComponents({ name: 'Button' }).find(b => b.text().includes('改行禁止ワードを追加する'))
+
+    expect(addBtn).toBeDefined()
+    await addBtn!.trigger('click')
+
+    const wordInputs = wrapper.findAllComponents({ name: 'Input' }).filter(i => i.props('placeholder')?.includes('自動倉庫'))
+
+    expect(wordInputs).toHaveLength(3)
+
+    // 2. 削除ボタン
+    const deleteBtns = wrapper.findAllComponents({ name: 'Button' }).filter(b => b.props('icon') === 'trash-2')
+    const wordTrashBtns = deleteBtns.filter(b => !b.text().includes('削除'))
+
+    expect(wordTrashBtns.length).toBeGreaterThanOrEqual(2)
+    await wordTrashBtns[0]!.trigger('click')
+
+    const wordInputsAfterDelete = wrapper.findAllComponents({ name: 'Input' }).filter(i => i.props('placeholder')?.includes('自動倉庫'))
+
+    expect(wordInputsAfterDelete).toHaveLength(2)
+
+    // 3. 入力変更
+    await wordInputsAfterDelete[0]!.vm.$emit('update:modelValue', '自家発電設備')
+
+    // 保存実行して noBreakWords が反映されていること
+    const saveBtn = wrapper.findAllComponents({ name: 'Button' }).find(b => b.text().includes('変更を保存'))
+
+    await saveBtn!.trigger('click')
+
+    expect(wrapper.emitted('save')).toBeTruthy()
+    const savedPayload = wrapper.emitted('save')?.[0]?.[0] as Site
+
+    expect(savedPayload.noBreakWords).toContain('自家発電設備')
   })
 })

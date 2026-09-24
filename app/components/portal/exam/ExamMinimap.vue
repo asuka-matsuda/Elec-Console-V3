@@ -26,7 +26,7 @@ const getTileClass = (c: CircuitItem): string =>
 </script>
 
 <template>
-  <div class="flex flex-wrap gap-1 max-h-20 overflow-y-auto">
+  <div class="minimap-container flex flex-wrap gap-1 py-2 px-1.5 max-h-24 overflow-y-auto overflow-x-hidden">
     <button
       v-for="c in circuits"
       :key="c.id"
@@ -43,6 +43,7 @@ const getTileClass = (c: CircuitItem): string =>
   cursor: pointer;
   border: 1px solid var(--color-tile-empty-border);
   background-color: var(--color-tile-empty-bg);
+  transition: transform var(--transition-fast, 0.15s ease), border-color var(--transition-fast, 0.15s ease);
 }
 
 .minimap-tile:hover {

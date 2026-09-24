@@ -64,6 +64,7 @@ const handleChangePassword = async () => {
           type="password"
           placeholder="新しいパスワード"
           :disabled="isLoading"
+          :clearable="false"
         />
       </FormGroup>
 
@@ -73,6 +74,7 @@ const handleChangePassword = async () => {
           type="password"
           placeholder="もう一度入力"
           :disabled="isLoading"
+          :clearable="false"
         />
       </FormGroup>
 

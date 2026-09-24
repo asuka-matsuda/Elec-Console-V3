@@ -134,6 +134,7 @@ const assignedSites = computed(() => {
             placeholder="現在のパスワードを入力"
             autocomplete="current-password"
             :disabled="isLoading"
+            :clearable="false"
           />
         </FormGroup>
 
@@ -147,6 +148,7 @@ const assignedSites = computed(() => {
             placeholder="新しいパスワードを入力"
             autocomplete="new-password"
             :disabled="isLoading"
+            :clearable="false"
           />
         </FormGroup>
 
@@ -160,6 +162,7 @@ const assignedSites = computed(() => {
             placeholder="もう一度入力"
             autocomplete="new-password"
             :disabled="isLoading"
+            :clearable="false"
           />
         </FormGroup>
 
