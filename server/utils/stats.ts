@@ -40,6 +40,7 @@ export async function getSoudenStats(siteId: string): Promise<SoudenStats> {
       p2IsComplete: true,
       p2ConfirmedAt: true,
       p3ConfirmedAt: true,
+      p3IsComplete: true,
     },
   })
 

@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 
 import {
   applyCircuitToRow,
+  detectCircuitColumns,
   getCellString,
   makeCircuitKey,
   normalizeNewlines,
@@ -150,6 +151,77 @@ describe('circuitExcel newline preservation', () => {
 
       expect(getCellString(rowIn, 14)).toBe('回路名称\n2行目\n3行目')
       expect(getCellString(rowIn, 25)).toBe('P1備考\n改行あり')
+    })
+  })
+
+  describe('Dynamic header-based column mapping (Protection of custom/inserted columns)', () => {
+    it('detects shifted columns when extra custom columns are inserted', () => {
+      const wb = new ExcelJS.Workbook()
+      const sheet = wb.addWorksheet('回路ﾘｽﾄ')
+
+      // 行3に見出し（途中に「バッテリー」と「受口数」が挿入されたケース）
+      const headerRow = sheet.getRow(3)
+
+      headerRow.getCell(2).value = '盤名称'
+      headerRow.getCell(3).value = '回路番号'
+      headerRow.getCell(4).value = 'バッテリーチェック' // 独自列1
+      headerRow.getCell(5).value = '受口数' // 独自列2
+      headerRow.getCell(6).value = '回路名称'
+      headerRow.getCell(7).value = 'P2(R)'
+      headerRow.getCell(8).value = 'P3(RS)'
+
+      const { colMap, headerRowNumber, dataStartRowNumber } = detectCircuitColumns(sheet)
+
+      expect(headerRowNumber).toBe(3)
+      expect(dataStartRowNumber).toBe(4)
+      expect(colMap.banMeisho).toBe(2)
+      expect(colMap.kairoBangou).toBe(3)
+      expect(colMap.kairoMeisho).toBe(6)
+      expect(colMap.zetsuenR).toBe(7)
+      expect(colMap.denatsuRs).toBe(8)
+    })
+
+    it('protects inserted custom columns from being overwritten during applyCircuitToRow', () => {
+      const wb = new ExcelJS.Workbook()
+      const sheet = wb.addWorksheet('回路ﾘｽﾄ')
+
+      const headerRow = sheet.getRow(1)
+
+      headerRow.getCell(1).value = '盤名称'
+      headerRow.getCell(2).value = '回路番号'
+      headerRow.getCell(3).value = 'バッテリーチェック'
+      headerRow.getCell(4).value = '受口数'
+      headerRow.getCell(5).value = 'P2(R)'
+
+      const { colMap } = detectCircuitColumns(sheet)
+      const dataRow = sheet.getRow(2)
+
+      // 元の設計データ
+      dataRow.getCell(1).value = '1L-1'
+      dataRow.getCell(2).value = '1'
+      dataRow.getCell(3).value = '合格(内蔵電池OK)'
+      dataRow.getCell(4).value = '3口'
+      dataRow.getCell(5).value = ''
+
+      const mockCircuit: Partial<Circuit> = {
+        id: 'test-2',
+        siteId: 'site-1',
+        keiTo: '二次側',
+        banMeisho: '1L-1',
+        kairoBangou: '1',
+        p2ConfirmedAt: new Date(),
+        p2RStatus: '良好',
+        p2IsComplete: true,
+      }
+
+      applyCircuitToRow(dataRow, mockCircuit as Circuit, colMap)
+
+      // 独自列（バッテリー・受口数）が100%保護されていること
+      expect(dataRow.getCell(3).value).toBe('合格(内蔵電池OK)')
+      expect(dataRow.getCell(4).value).toBe('3口')
+
+      // 試験結果（P2 R相）が正しく Col 5 に書き込まれていること
+      expect(dataRow.getCell(5).value).toBe(100)
     })
   })
 })

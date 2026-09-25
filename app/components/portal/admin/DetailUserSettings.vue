@@ -293,6 +293,5 @@ const handleSave = () => {
 .site-assign-row {
   border: var(--border-width-base) solid var(--color-border);
   background-color: color-mix(in srgb, var(--surface-bg-elevated) 30%, transparent);
-  border-radius: var(--radius-sm, 4px);
 }
 </style>

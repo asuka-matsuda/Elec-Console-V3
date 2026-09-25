@@ -47,6 +47,7 @@ export default defineEventHandler(async (event) => {
       keiTo: true,
       kairoMeisho: true,
       p3ConfirmedAt: true,
+      p3IsComplete: true,
     },
     orderBy: [
       { banShubetsu: 'asc' },

@@ -53,7 +53,17 @@ const getGroupData = (keiTo: '幹線' | '二次側', stats: SoudenStats) => {
       icon="activity"
       variant="hud"
       tag="h3"
-    />
+    >
+      <template #actions>
+        <Button
+          v-if="siteId"
+          icon="printer"
+          :to="`/portal/${siteId}/print`"
+        >
+          試験結果の印刷
+        </Button>
+      </template>
+    </SectionHeader>
 
     <div class="flex flex-col lg:flex-row items-center gap-6 lg:gap-8">
       <PortalCircularGauge

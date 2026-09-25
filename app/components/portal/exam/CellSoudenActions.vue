@@ -2,7 +2,9 @@
 /**
  * CellSoudenActions
  * [Portal Exam] 送電試験（Phase 1〜3）共通の行アクションボタングループコンポーネント。
- * ロック状態表示、編集中操作（保存/取消）、完了後操作（解除/変更）、未完了時操作（クイック確定/手入力）のステートマシンを一元管理します。
+ * - ロック状態（幹線未完了 / 前フェーズ未了）の理由表示
+ * - 確定済み状態での「解除」ボタン（ローカルで再編集可能に戻す）
+ * - 未確定状態での「確定」ボタンおよび追加アクションスロット（全相OK等）
  */
 import type { CircuitItem } from '~/types/souden'
 
@@ -11,35 +13,24 @@ withDefaults(
     circuit: CircuitItem
     isLocked?: boolean
     lockedReason?: string
-    isEditing?: boolean
     isCompleted?: boolean
     isLoading?: boolean
+    disabled?: boolean
     confirmLabel?: string
-    editLabel?: string
-    saveLabel?: string
-    hasModifyButton?: boolean
-    hasEditButton?: boolean
   }>(),
   {
     isLocked: false,
     lockedReason: '幹線未完了',
-    isEditing: false,
     isCompleted: false,
     isLoading: false,
+    disabled: false,
     confirmLabel: '確定',
-    editLabel: '編集',
-    saveLabel: '保存',
-    hasModifyButton: true,
-    hasEditButton: true,
   },
 )
 
 defineEmits<{
   confirm: []
   clear: []
-  edit: []
-  save: []
-  cancel: []
 }>()
 </script>
 
@@ -51,50 +42,25 @@ defineEmits<{
       </span>
     </template>
 
-    <template v-else-if="isEditing">
-      <Button
-        variant="success"
-        :loading="isLoading"
-        @click="$emit('save')"
-      >
-        {{ saveLabel }}
-      </Button>
-      <Button @click="$emit('cancel')">
-        取消
-      </Button>
-    </template>
-
     <template v-else-if="isCompleted">
       <Button
         variant="danger"
-        :loading="isLoading"
+        :disabled="circuit.isExcluded || isLoading"
         @click="$emit('clear')"
       >
         解除
       </Button>
-      <Button
-        v-if="hasModifyButton"
-        @click="$emit('edit')"
-      >
-        変更
-      </Button>
     </template>
 
     <template v-else>
+      <slot />
       <Button
         variant="success"
-        :disabled="circuit.isExcluded"
+        :disabled="circuit.isExcluded || disabled"
         :loading="isLoading"
         @click="$emit('confirm')"
       >
         {{ confirmLabel }}
-      </Button>
-      <Button
-        v-if="hasEditButton"
-        :disabled="circuit.isExcluded"
-        @click="$emit('edit')"
-      >
-        {{ editLabel }}
       </Button>
     </template>
   </div>
@@ -108,6 +74,7 @@ defineEmits<{
     min-height: 2em;
     padding-block: 0.25em;
     padding-inline: 0.65em;
+
     font-size: var(--font-size-xs);
     white-space: nowrap;
   }

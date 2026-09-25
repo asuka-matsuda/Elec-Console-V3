@@ -10,6 +10,7 @@ import { computed, ref, unref, watch } from 'vue'
 import { useOfflineSync } from '~/composables/portal/useOfflineSync'
 import { useAuth } from '~/composables/useAuth'
 import type { CircuitItem, CircuitsResponse, PanelOption } from '~/types/souden'
+import { isPhaseComplete } from '~/utils/souden'
 
 /**
  * 送電試験（Phase 1〜3）の基底共通Composable
@@ -188,13 +189,7 @@ export function usePhaseExamBase(
       }
       else {
         total++
-        if (phaseNumber === 1 && c.p1Kakunin && c.p1Mashishime) {
-          completed++
-        }
-        else if (phaseNumber === 2 && c.p2ConfirmedAt && c.p2IsComplete) {
-          completed++
-        }
-        else if (phaseNumber === 3 && c.p3ConfirmedAt) {
+        if (isPhaseComplete(c, phaseNumber)) {
           completed++
         }
       }
@@ -350,35 +345,6 @@ export function usePhaseExamBase(
     }
   }
 
-  const isBatchLoading = ref(false)
-
-  // 一括確定共通パイプライン
-  const executeBatchConfirm = async (
-    targets: CircuitItem[],
-    confirmMessage: string,
-    actionRunner: (c: CircuitItem) => Promise<unknown>,
-  ) => {
-    if (targets.length === 0) {
-      alert('一括確定の対象となる未完了回路がありません')
-
-      return
-    }
-
-    if (!confirm(confirmMessage)) {
-      return
-    }
-
-    isBatchLoading.value = true
-    try {
-      for (const circuit of targets) {
-        await actionRunner(circuit)
-      }
-    }
-    finally {
-      isBatchLoading.value = false
-    }
-  }
-
   return {
     siteIdRef,
     phaseNumber,
@@ -388,7 +354,6 @@ export function usePhaseExamBase(
     phase2ThresholdMegOhm,
     isLoading,
     isActionLoading,
-    isBatchLoading,
     error,
     selectedKeiTo,
     selectedBanShubetsu,
@@ -398,16 +363,11 @@ export function usePhaseExamBase(
     availableBanMeishoList,
     filteredCircuits,
     phaseStats,
-    isNetworkError,
     fetchCircuits,
     isThreePhase,
     isCircuitLocked,
-    handleConflictError,
     getWorkerName,
     getAccurateNow,
-    enqueue,
-    updateLocalCircuit,
     executeCircuitAction,
-    executeBatchConfirm,
   }
 }

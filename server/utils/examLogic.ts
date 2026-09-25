@@ -7,11 +7,25 @@
 import type { Circuit } from '@prisma/client'
 
 /**
+ * 送電試験回路判定用インターフェース
+ * Prismaクライアントのキャッシュ状態に依存せず安全に型判定できるよう補強
+ */
+export type ExamCircuitRow = Partial<Circuit> & {
+  p1Kakunin?: boolean | null
+  p1Mashishime?: boolean | null
+  p1ConfirmedAt?: Date | string | null
+  p2IsComplete?: boolean | null
+  p2ConfirmedAt?: Date | string | null
+  p3IsComplete?: boolean | null
+  p3ConfirmedAt?: Date | string | null
+}
+
+/**
  * 送電試験（Phase 1〜3）の完了判定ロジック
  */
 export const EXAM_LOGIC = {
   PHASE1: {
-    isComplete: (row: Partial<Circuit>): boolean => {
+    isComplete: (row: ExamCircuitRow): boolean => {
       return Boolean(row.p1ConfirmedAt && row.p1Kakunin && row.p1Mashishime)
     },
     prismaWhere: {
@@ -21,7 +35,7 @@ export const EXAM_LOGIC = {
     },
   },
   PHASE2: {
-    isComplete: (row: Partial<Circuit>): boolean => {
+    isComplete: (row: ExamCircuitRow): boolean => {
       return Boolean(row.p2ConfirmedAt && row.p2IsComplete)
     },
     prismaWhere: {
@@ -30,11 +44,12 @@ export const EXAM_LOGIC = {
     },
   },
   PHASE3: {
-    isComplete: (row: Partial<Circuit>): boolean => {
-      return Boolean(row.p3ConfirmedAt)
+    isComplete: (row: ExamCircuitRow): boolean => {
+      return Boolean(row.p3ConfirmedAt && row.p3IsComplete)
     },
     prismaWhere: {
       p3ConfirmedAt: { not: null },
+      p3IsComplete: true,
     },
   },
 } as const

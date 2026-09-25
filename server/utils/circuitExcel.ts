@@ -182,6 +182,155 @@ function parseP2Value(valRaw: unknown, keiTo: string) {
   return { status: '入力', value: val }
 }
 
+export interface CircuitColumnMap {
+  banMeisho: number
+  banShubetsu: number
+  haidenHoushiki: number
+  souShubetsu: number
+  shadankiShubetsu: number
+  shadankiYouryou: number
+  kairoKigou: number
+  kairoBangou: number
+  kairoMeisho: number
+  cableList: number
+  haisenJousuu: number
+  setsuchiUmu: number
+  setsuchiList: number
+  keiTo: number
+  p1Worker: number
+  p1Remarks: number
+  zetsuenR: number
+  zetsuenS: number
+  zetsuenT: number
+  p2Worker: number
+  p2Remarks: number
+  denatsuRs: number
+  denatsuSt: number
+  denatsuRt: number
+  kensou: number
+  p3Worker: number
+  p3Remarks: number
+}
+
+export const DEFAULT_CIRCUIT_COLUMN_MAP: CircuitColumnMap = {
+  banMeisho: 5,
+  banShubetsu: 6,
+  haidenHoushiki: 7,
+  souShubetsu: 9,
+  shadankiShubetsu: 10,
+  shadankiYouryou: 11,
+  kairoKigou: 12,
+  kairoBangou: 13,
+  kairoMeisho: 14,
+  cableList: 15,
+  haisenJousuu: 16,
+  setsuchiUmu: 17,
+  setsuchiList: 18,
+  keiTo: 22,
+  p1Worker: 24,
+  p1Remarks: 25,
+  zetsuenR: 26,
+  zetsuenS: 27,
+  zetsuenT: 28,
+  p2Worker: 29,
+  p2Remarks: 30,
+  denatsuRs: 31,
+  denatsuSt: 32,
+  denatsuRt: 33,
+  kensou: 34,
+  p3Worker: 35,
+  p3Remarks: 36,
+}
+
+export const STANDARD_HEADER_NAMES: Record<keyof CircuitColumnMap, string> = {
+  banMeisho: '盤名称',
+  banShubetsu: '盤種別',
+  haidenHoushiki: '配電方式',
+  souShubetsu: '相種別',
+  shadankiShubetsu: '遮断器種別',
+  shadankiYouryou: '遮断器容量',
+  kairoKigou: '回路記号',
+  kairoBangou: '回路番号',
+  kairoMeisho: '回路名称',
+  cableList: 'ケーブル',
+  haisenJousuu: '配線条数',
+  setsuchiUmu: '接地有無',
+  setsuchiList: '接地種別',
+  keiTo: '幹線/二次側',
+  p1Worker: 'P1確認者',
+  p1Remarks: 'P1備考',
+  zetsuenR: 'P2(R)',
+  zetsuenS: 'P2(S)',
+  zetsuenT: 'P2(T)',
+  p2Worker: 'P2測定者',
+  p2Remarks: 'P2備考',
+  denatsuRs: 'P3(RS)',
+  denatsuSt: 'P3(ST)',
+  denatsuRt: 'P3(RT)',
+  kensou: '検相',
+  p3Worker: 'P3測定者',
+  p3Remarks: 'P3備考',
+}
+
+/**
+ * ワークシートのヘッダー行から見出し文字を直接取得し、列番号マップを構築する
+ */
+export function detectCircuitColumns(sheet: ExcelJS.Worksheet): {
+  colMap: CircuitColumnMap
+  headerMap: Map<string, number>
+  headerRowNumber: number
+  dataStartRowNumber: number
+} {
+  let bestHeaderRow = 4
+  let maxMatches = 0
+  let bestHeaderMap = new Map<string, number>()
+
+  const scanLimit = Math.min(sheet.rowCount || 10, 10)
+  const standardNames = new Set(Object.values(STANDARD_HEADER_NAMES))
+
+  for (let r = 1; r <= scanLimit; r++) {
+    const row = sheet.getRow(r)
+    const currentMap = new Map<string, number>()
+    let matchCount = 0
+
+    row.eachCell({ includeEmpty: false }, (cell, colNumber) => {
+      const name = cell.value != null ? String(cell.value).trim() : ''
+
+      if (!name) return
+
+      currentMap.set(name, colNumber)
+
+      if (standardNames.has(name)) {
+        matchCount++
+      }
+    })
+
+    if (matchCount > maxMatches) {
+      maxMatches = matchCount
+      bestHeaderRow = r
+      bestHeaderMap = currentMap
+    }
+  }
+
+  // 見出し名から直接列番号を決定（未検知項目はデフォルト列番号でフォールバック）
+  const colMap: CircuitColumnMap = { ...DEFAULT_CIRCUIT_COLUMN_MAP }
+
+  for (const [key, headerName] of Object.entries(STANDARD_HEADER_NAMES) as [keyof CircuitColumnMap, string][]) {
+    const colNumber = bestHeaderMap.get(headerName)
+
+    if (colNumber !== undefined) {
+      colMap[key] = colNumber
+    }
+  }
+
+  return {
+    colMap,
+    headerMap: bestHeaderMap,
+    headerRowNumber: bestHeaderRow,
+    dataStartRowNumber: bestHeaderRow + 1,
+  }
+}
+
 export function makeCircuitKey(
   keiTo: string,
   banMeisho: string,
@@ -229,43 +378,44 @@ export async function importCircuitsFromExcel(
     throw new Error('ワークブックにシートが見つかりません')
   }
 
+  // ヘッダー行を動的走査して列マップを構築
+  const { colMap, dataStartRowNumber } = detectCircuitColumns(sheet)
   const parsedCircuits: Prisma.CircuitCreateManyInput[] = []
 
-  // Excelの5行目からデータ開始
   sheet.eachRow((row, rowNumber) => {
-    if (rowNumber < 5) return
+    if (rowNumber < dataStartRowNumber) return
 
-    const banMeisho = getCellString(row, 5) // Col E
-    const kairoMeisho = getCellString(row, 14) // Col N
-    const kairoBangou = getCellString(row, 13) // Col M
+    const banMeisho = getCellString(row, colMap.banMeisho)
+    const kairoMeisho = getCellString(row, colMap.kairoMeisho)
+    const kairoBangou = getCellString(row, colMap.kairoBangou)
 
     // 盤名称も回路名称も回路番号も無い空行はスキップ
     if (!banMeisho && !kairoMeisho && !kairoBangou) {
       return
     }
 
-    const kansenRaw = row.getCell(22).value // Col V
+    const kansenRaw = row.getCell(colMap.keiTo).value
     const keiTo = isKansen(kansenRaw)
 
-    const rawShubetsu = getCellString(row, 6) // Col F
+    const rawShubetsu = getCellString(row, colMap.banShubetsu)
     const banShubetsu = rawShubetsu || (keiTo === '幹線' ? '幹線' : 'その他')
 
-    const rRaw = row.getCell(26).value // Col Z
-    const sRaw = row.getCell(27).value // Col AA
-    const tRaw = row.getCell(28).value // Col AB
+    const rRaw = row.getCell(colMap.zetsuenR).value
+    const sRaw = row.getCell(colMap.zetsuenS).value
+    const tRaw = row.getCell(colMap.zetsuenT).value
 
     const rData = parseP2Value(rRaw, keiTo)
     const sData = parseP2Value(sRaw, keiTo)
     const tData = parseP2Value(tRaw, keiTo)
 
-    const p1Worker = getCellString(row, 24) || null // Col X
-    const p2Worker = getCellString(row, 29) || null // Col AC
-    const p3Worker = getCellString(row, 35) || null // Col AI
+    const p1Worker = getCellString(row, colMap.p1Worker) || null
+    const p2Worker = getCellString(row, colMap.p2Worker) || null
+    const p3Worker = getCellString(row, colMap.p3Worker) || null
 
-    const vRs = parseFloat(getCellString(row, 31)) || null // Col AE
-    const vSt = parseFloat(getCellString(row, 32)) || null // Col AF
-    const vRt = parseFloat(getCellString(row, 33)) || null // Col AG
-    const kensou = getCellString(row, 34) || null // Col AH
+    const vRs = parseFloat(getCellString(row, colMap.denatsuRs)) || null
+    const vSt = parseFloat(getCellString(row, colMap.denatsuSt)) || null
+    const vRt = parseFloat(getCellString(row, colMap.denatsuRt)) || null
+    const kensou = getCellString(row, colMap.kensou) || null
 
     parsedCircuits.push({
       siteId,
@@ -273,23 +423,23 @@ export async function importCircuitsFromExcel(
       keiTo,
       banShubetsu,
       banMeisho: banMeisho || '未分類',
-      haidenHoushiki: getCellString(row, 7) || null, // Col G
-      souShubetsu: getCellString(row, 9) || null, // Col I
-      shadankiShubetsu: getCellString(row, 10) || null, // Col J
-      shadankiYouryou: getCellString(row, 11) || null, // Col K
-      kairoKigou: getCellString(row, 12) || null, // Col L
+      haidenHoushiki: getCellString(row, colMap.haidenHoushiki) || null,
+      souShubetsu: getCellString(row, colMap.souShubetsu) || null,
+      shadankiShubetsu: getCellString(row, colMap.shadankiShubetsu) || null,
+      shadankiYouryou: getCellString(row, colMap.shadankiYouryou) || null,
+      kairoKigou: getCellString(row, colMap.kairoKigou) || null,
       kairoBangou: kairoBangou || null,
       kairoMeisho: kairoMeisho || null,
-      cableList: getCellString(row, 15) || null, // Col O
-      haisenJousuu: getCellString(row, 16) || null, // Col P
-      setsuchiUmu: getCellString(row, 17) || null, // Col Q
-      setsuchiList: getCellString(row, 18) || null, // Col R
+      cableList: getCellString(row, colMap.cableList) || null,
+      haisenJousuu: getCellString(row, colMap.haisenJousuu) || null,
+      setsuchiUmu: getCellString(row, colMap.setsuchiUmu) || null,
+      setsuchiList: getCellString(row, colMap.setsuchiList) || null,
 
       p1Kakunin: Boolean(p1Worker),
       p1Mashishime: Boolean(p1Worker),
       p1Worker,
       p1ConfirmedAt: p1Worker ? new Date() : null,
-      p1Remarks: getCellString(row, 25) || null, // Col Y
+      p1Remarks: getCellString(row, colMap.p1Remarks) || null,
       p1ModifiedFields: '[]',
 
       zetsuenR: rData.value,
@@ -300,7 +450,7 @@ export async function importCircuitsFromExcel(
       p2TStatus: tData.status,
       p2Worker,
       p2ConfirmedAt: p2Worker ? new Date() : null,
-      p2Remarks: getCellString(row, 30) || null, // Col AD
+      p2Remarks: getCellString(row, colMap.p2Remarks) || null,
       p2IsComplete: Boolean(p2Worker),
 
       denatsuRs: vRs,
@@ -309,7 +459,8 @@ export async function importCircuitsFromExcel(
       kensou,
       p3Worker,
       p3ConfirmedAt: p3Worker ? new Date() : null,
-      p3Remarks: getCellString(row, 36) || null, // Col AJ
+      p3Remarks: getCellString(row, colMap.p3Remarks) || null,
+      p3IsComplete: Boolean(p3Worker),
     })
   })
 
@@ -418,6 +569,7 @@ export async function importCircuitsFromExcel(
           p3Worker: existing.p3Worker || item.p3Worker,
           p3ConfirmedAt: existing.p3ConfirmedAt || item.p3ConfirmedAt,
           p3Remarks: existing.p3Remarks || item.p3Remarks,
+          p3IsComplete: existing.p3IsComplete || item.p3IsComplete,
         },
       })
     }
@@ -504,78 +656,82 @@ export async function importCircuitsFromExcel(
   }
 }
 
-export function applyCircuitToRow(row: ExcelJS.Row, c: Circuit) {
+export function applyCircuitToRow(
+  row: ExcelJS.Row,
+  c: Circuit,
+  colMap: CircuitColumnMap = DEFAULT_CIRCUIT_COLUMN_MAP,
+) {
   // Phase 1 書戻し
   if (c.p1ConfirmedAt && c.p1Kakunin && c.p1Mashishime) {
-    setCellStringWithNewlines(row.getCell(24), c.p1Worker || '確認済') // Col X
+    setCellStringWithNewlines(row.getCell(colMap.p1Worker), c.p1Worker || '確認済')
   }
   if (c.p1Remarks) {
-    setCellStringWithNewlines(row.getCell(25), c.p1Remarks) // Col Y
+    setCellStringWithNewlines(row.getCell(colMap.p1Remarks), c.p1Remarks)
   }
 
   // Phase 2 書戻し
   if (c.p2ConfirmedAt || c.p2IsComplete) {
-    // Col Z (R相)
+    // R相
     if (c.p2RStatus === '良好') {
-      row.getCell(26).value = c.keiTo === '幹線' ? 500 : 100
+      row.getCell(colMap.zetsuenR).value = c.keiTo === '幹線' ? 500 : 100
     }
     else if (c.zetsuenR !== null && c.zetsuenR !== undefined) {
-      row.getCell(26).value = c.zetsuenR
+      row.getCell(colMap.zetsuenR).value = c.zetsuenR
     }
 
-    // Col AA (S相)
+    // S相
     if (c.p2SStatus === '良好') {
-      row.getCell(27).value = c.keiTo === '幹線' ? 500 : 100
+      row.getCell(colMap.zetsuenS).value = c.keiTo === '幹線' ? 500 : 100
     }
     else if (c.zetsuenS !== null && c.zetsuenS !== undefined) {
-      row.getCell(27).value = c.zetsuenS
+      row.getCell(colMap.zetsuenS).value = c.zetsuenS
     }
 
-    // Col AB (T相)
+    // T相
     if (c.p2TStatus === '良好') {
-      row.getCell(28).value = c.keiTo === '幹線' ? 500 : 100
+      row.getCell(colMap.zetsuenT).value = c.keiTo === '幹線' ? 500 : 100
     }
     else if (c.zetsuenT !== null && c.zetsuenT !== undefined) {
-      row.getCell(28).value = c.zetsuenT
+      row.getCell(colMap.zetsuenT).value = c.zetsuenT
     }
 
     if (c.p2Worker) {
-      setCellStringWithNewlines(row.getCell(29), c.p2Worker) // Col AC
+      setCellStringWithNewlines(row.getCell(colMap.p2Worker), c.p2Worker)
     }
     if (c.p2Remarks) {
-      setCellStringWithNewlines(row.getCell(30), c.p2Remarks) // Col AD
+      setCellStringWithNewlines(row.getCell(colMap.p2Remarks), c.p2Remarks)
     }
   }
 
   // Phase 3 書戻し
   if (c.p3ConfirmedAt) {
     if (c.denatsuRs !== null && c.denatsuRs !== undefined) {
-      row.getCell(31).value = c.denatsuRs // Col AE
+      row.getCell(colMap.denatsuRs).value = c.denatsuRs
     }
     if (c.denatsuSt !== null && c.denatsuSt !== undefined) {
-      row.getCell(32).value = c.denatsuSt // Col AF
+      row.getCell(colMap.denatsuSt).value = c.denatsuSt
     }
     if (c.denatsuRt !== null && c.denatsuRt !== undefined) {
-      row.getCell(33).value = c.denatsuRt // Col AG
+      row.getCell(colMap.denatsuRt).value = c.denatsuRt
     }
     if (c.kensou) {
-      setCellStringWithNewlines(row.getCell(34), c.kensou) // Col AH
+      setCellStringWithNewlines(row.getCell(colMap.kensou), c.kensou)
     }
     if (c.p3Worker) {
-      setCellStringWithNewlines(row.getCell(35), c.p3Worker) // Col AI
+      setCellStringWithNewlines(row.getCell(colMap.p3Worker), c.p3Worker)
     }
     if (c.p3Remarks) {
-      setCellStringWithNewlines(row.getCell(36), c.p3Remarks) // Col AJ
+      setCellStringWithNewlines(row.getCell(colMap.p3Remarks), c.p3Remarks)
     }
   }
 
   // Web側で編集された基本情報（回路番号・回路名称・ケーブル等）がある場合の書戻し
   if (c.p1ModifiedFields && c.p1ModifiedFields !== '[]') {
-    if (c.kairoBangou) setCellStringWithNewlines(row.getCell(13), c.kairoBangou)
-    if (c.kairoMeisho) setCellStringWithNewlines(row.getCell(14), c.kairoMeisho)
-    if (c.cableList) setCellStringWithNewlines(row.getCell(15), c.cableList)
-    if (c.haisenJousuu) setCellStringWithNewlines(row.getCell(16), c.haisenJousuu)
-    if (c.setsuchiList) setCellStringWithNewlines(row.getCell(18), c.setsuchiList)
+    if (c.kairoBangou) setCellStringWithNewlines(row.getCell(colMap.kairoBangou), c.kairoBangou)
+    if (c.kairoMeisho) setCellStringWithNewlines(row.getCell(colMap.kairoMeisho), c.kairoMeisho)
+    if (c.cableList) setCellStringWithNewlines(row.getCell(colMap.cableList), c.cableList)
+    if (c.haisenJousuu) setCellStringWithNewlines(row.getCell(colMap.haisenJousuu), c.haisenJousuu)
+    if (c.setsuchiList) setCellStringWithNewlines(row.getCell(colMap.setsuchiList), c.setsuchiList)
   }
 }
 
@@ -600,107 +756,51 @@ export async function generateCircuitsExcelBuffer(
     : ''
   const hasBaseFile = cleanPath && fs.existsSync(cleanPath)
 
+  if (!hasBaseFile) {
+    throw new Error('現場設定にExcelファイルが登録されていないか、ファイルが見つかりません')
+  }
+
+  await workbook.xlsx.readFile(cleanPath)
+  const sheet = workbook.getWorksheet('回路ﾘｽﾄ') || workbook.worksheets[0]
+
+  if (!sheet) {
+    throw new Error('ワークブックにシートが見つかりません')
+  }
+
+  const { colMap, dataStartRowNumber } = detectCircuitColumns(sheet)
+
+  const circuitByKey = new Map<string, Circuit[]>()
+
+  for (const c of circuits) {
+    const key = makeCircuitKey(c.keiTo, c.banMeisho, c.kairoBangou, c.kairoMeisho)
+    const list = circuitByKey.get(key) || []
+
+    list.push(c)
+    circuitByKey.set(key, list)
+  }
+
   let updatedCount = 0
 
-  if (hasBaseFile) {
-    await workbook.xlsx.readFile(cleanPath)
-    const sheet = workbook.getWorksheet('回路ﾘｽﾄ') || workbook.worksheets[0]
+  sheet.eachRow((row, rowNumber) => {
+    if (rowNumber < dataStartRowNumber) return
 
-    if (!sheet) {
-      throw new Error('ワークブックにシートが見つかりません')
-    }
+    const banMeisho = getCellString(row, colMap.banMeisho)
+    const kairoMeisho = getCellString(row, colMap.kairoMeisho)
+    const kairoBangou = getCellString(row, colMap.kairoBangou)
+    const kansenRaw = row.getCell(colMap.keiTo).value
+    const keiTo = isKansen(kansenRaw)
 
-    const circuitByKey = new Map<string, Circuit[]>()
+    if (!banMeisho && !kairoMeisho && !kairoBangou) return
 
-    for (const c of circuits) {
-      const key = makeCircuitKey(c.keiTo, c.banMeisho, c.kairoBangou, c.kairoMeisho)
-      const list = circuitByKey.get(key) || []
+    const key = makeCircuitKey(keiTo, banMeisho, kairoBangou, kairoMeisho)
+    const candidates = circuitByKey.get(key)
+    const c = candidates && candidates.length > 0 ? candidates.shift()! : null
 
-      list.push(c)
-      circuitByKey.set(key, list)
-    }
-
-    sheet.eachRow((row, rowNumber) => {
-      if (rowNumber < 5) return
-
-      const banMeisho = getCellString(row, 5) // Col E
-      const kairoMeisho = getCellString(row, 14) // Col N
-      const kairoBangou = getCellString(row, 13) // Col M
-      const kansenRaw = row.getCell(22).value // Col V
-      const keiTo = isKansen(kansenRaw)
-
-      if (!banMeisho && !kairoMeisho && !kairoBangou) return
-
-      const key = makeCircuitKey(keiTo, banMeisho, kairoBangou, kairoMeisho)
-      const candidates = circuitByKey.get(key)
-      const c = candidates && candidates.length > 0 ? candidates.shift()! : null
-
-      if (c) {
-        applyCircuitToRow(row, c)
-        updatedCount++
-      }
-    })
-  }
-  else {
-    // テンプレートファイルがない場合、新規ワークシート「回路ﾘｽﾄ」を生成
-    const sheet = workbook.addWorksheet('回路ﾘｽﾄ')
-
-    // ヘッダー行の構築 (行4に見出し)
-    const headerRow = sheet.getRow(4)
-
-    headerRow.getCell(5).value = '盤名称'
-    headerRow.getCell(6).value = '盤種別'
-    headerRow.getCell(7).value = '配電方式'
-    headerRow.getCell(9).value = '相種別'
-    headerRow.getCell(10).value = '遮断器種別'
-    headerRow.getCell(11).value = '遮断器容量'
-    headerRow.getCell(12).value = '回路記号'
-    headerRow.getCell(13).value = '回路番号'
-    headerRow.getCell(14).value = '回路名称'
-    headerRow.getCell(15).value = 'ケーブル'
-    headerRow.getCell(16).value = '配線条数'
-    headerRow.getCell(17).value = '接地有無'
-    headerRow.getCell(18).value = '接地種別'
-    headerRow.getCell(22).value = '幹線/二次側'
-    headerRow.getCell(24).value = 'P1確認者'
-    headerRow.getCell(25).value = 'P1備考'
-    headerRow.getCell(26).value = 'P2(R)'
-    headerRow.getCell(27).value = 'P2(S)'
-    headerRow.getCell(28).value = 'P2(T)'
-    headerRow.getCell(29).value = 'P2測定者'
-    headerRow.getCell(30).value = 'P2備考'
-    headerRow.getCell(31).value = 'P3(RS)'
-    headerRow.getCell(32).value = 'P3(ST)'
-    headerRow.getCell(33).value = 'P3(RT)'
-    headerRow.getCell(34).value = '検相'
-    headerRow.getCell(35).value = 'P3測定者'
-    headerRow.getCell(36).value = 'P3備考'
-
-    let currentRowNum = 5
-
-    for (const c of circuits) {
-      const row = sheet.getRow(currentRowNum)
-
-      setCellStringWithNewlines(row.getCell(5), c.banMeisho)
-      setCellStringWithNewlines(row.getCell(6), c.banShubetsu)
-      setCellStringWithNewlines(row.getCell(7), c.haidenHoushiki)
-      setCellStringWithNewlines(row.getCell(9), c.souShubetsu)
-      setCellStringWithNewlines(row.getCell(10), c.shadankiShubetsu)
-      setCellStringWithNewlines(row.getCell(11), c.shadankiYouryou)
-      setCellStringWithNewlines(row.getCell(12), c.kairoKigou)
-      setCellStringWithNewlines(row.getCell(13), c.kairoBangou)
-      setCellStringWithNewlines(row.getCell(14), c.kairoMeisho)
-      setCellStringWithNewlines(row.getCell(15), c.cableList)
-      setCellStringWithNewlines(row.getCell(16), c.haisenJousuu)
-      setCellStringWithNewlines(row.getCell(17), c.setsuchiUmu)
-      setCellStringWithNewlines(row.getCell(18), c.setsuchiList)
-      setCellStringWithNewlines(row.getCell(22), c.keiTo)
-
-      applyCircuitToRow(row, c)
-      currentRowNum++
+    if (c) {
+      applyCircuitToRow(row, c, colMap)
       updatedCount++
     }
-  }
+  })
 
   const uint8 = await workbook.xlsx.writeBuffer()
 

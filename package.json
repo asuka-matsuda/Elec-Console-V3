@@ -11,8 +11,9 @@
     "typecheck": "nuxi typecheck",
     "test": "vitest",
     "test:e2e": "playwright test",
-    "lint": "eslint .",
-    "lint:style": "stylelint \"**/*.{vue,css,scss}\""
+    "lint": "eslint . && npm run lint:style",
+    "lint:style": "stylelint \"**/*.{vue,css,scss}\"",
+    "format": "eslint . --fix && stylelint \"**/*.{vue,css,scss}\" --fix"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.15",
@@ -27,6 +28,7 @@
     "@vueuse/nuxt": "^14.4.0",
     "exceljs": "^4.4.0",
     "glob": "^13.0.6",
+    "jszip": "^3.10.1",
     "katex": "^0.18.1",
     "nuxt": "^4.5.1",
     "prisma": "^5.22.0",

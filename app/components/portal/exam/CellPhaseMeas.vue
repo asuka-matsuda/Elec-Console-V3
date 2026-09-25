@@ -1,36 +1,35 @@
 <script setup lang="ts">
 /**
  * CellPhaseMeas
- * [Portal Molecules] 送電試験（Phase 2/3）用の相別測定値・電圧値セル。
- * 通常表示モード（相ラベル、数値+単位、判定バッジ）と手入力編集モードを提供します。
+ * [Portal Molecules] 送電試験（Phase 2/3）用の相別測定値・電圧値入力セル。
+ * 常時Inputを表示し、確定時はdisabled化。基準値・±10%許容範囲外の警告および判定バッジを表示します。
  */
 import { computed } from 'vue'
 
-import { getPhase2Threshold } from '~/utils/souden'
+import type { VoltageToleranceRange } from '~/utils/souden'
+import { getPhase2Threshold, isVoltageOutOfRange } from '~/utils/souden'
 
 const modelValue = defineModel<string | number>({ default: '' })
 
 const props = withDefaults(
   defineProps<{
     label: string
-    val?: number | null
     unit?: string
     status?: string | null
-    isEditing?: boolean
     disabled?: boolean
     threshold?: number
     haidenHoushiki?: string | null
     step?: string
+    voltageRange?: VoltageToleranceRange
   }>(),
   {
-    val: null,
     unit: 'MΩ',
     status: null,
-    isEditing: false,
     disabled: false,
     threshold: 1.0,
     haidenHoushiki: null,
     step: undefined,
+    voltageRange: undefined,
   },
 )
 
@@ -45,17 +44,7 @@ const effectiveThreshold = computed(() => {
   return props.haidenHoushiki ? getPhase2Threshold(props.haidenHoushiki) : (props.threshold ?? 0.1)
 })
 
-const formattedValue = computed(() => {
-  if (props.val == null) return '-'
-  if (props.unit === 'MΩ') {
-    return props.val >= 100 ? '100' : props.val.toFixed(2)
-  }
-
-  return String(props.val)
-})
-
 const isBelowThreshold = computed<boolean>(() => {
-  if (!props.isEditing) return false
   if (props.unit !== 'MΩ') return false
   const raw = modelValue.value
 
@@ -68,18 +57,19 @@ const isBelowThreshold = computed<boolean>(() => {
   return num < effectiveThreshold.value
 })
 
-const statusClass = computed(() => {
-  if (props.status === 'OK' || (props.val != null && props.status == null && props.unit === 'MΩ' && props.val >= effectiveThreshold.value)) {
-    return 'is-ok'
-  }
-  if (props.status === 'NG' || (props.val != null && props.status == null && props.unit === 'MΩ' && props.val < effectiveThreshold.value)) {
-    return 'is-ng'
-  }
-  if (props.val != null && props.unit !== 'MΩ') {
-    return 'is-active'
-  }
+const isOutOfVoltageRange = computed<boolean>(() => {
+  if (props.unit !== 'V' || !props.voltageRange) return false
 
-  return ''
+  return isVoltageOutOfRange(modelValue.value, props.voltageRange)
+})
+
+const hasError = computed(() => isBelowThreshold.value || isOutOfVoltageRange.value)
+
+const placeholderText = computed(() => {
+  if (props.unit === 'MΩ') return '100'
+  if (props.unit === 'V' && props.voltageRange) return String(props.voltageRange.target)
+
+  return undefined
 })
 </script>
 
@@ -87,74 +77,44 @@ const statusClass = computed(() => {
   <div class="flex flex-col items-center gap-1 text-2xs">
     <span class="cell-label">{{ label }}</span>
 
-    <template v-if="isEditing">
-      <Input
-        v-model="modelValue"
-        type="number"
-        :step="resolvedStep"
-        inputmode="decimal"
-        :placeholder="unit === 'MΩ' ? '100' : undefined"
-        :clearable="false"
-        :error="isBelowThreshold"
-        :disabled="disabled"
-        class="w-[85px]"
-        @focus="emit('focus', $event)"
-        @keydown.enter.prevent="emit('enter')"
-      />
-      <span
-        v-if="!disabled && isBelowThreshold"
-        class="cell-warning-sub"
-      >
-        基準値未満です
-      </span>
-      <Badge
-        v-if="status"
-        :id="status === 'OK' ? 'exam:pass' : 'exam:fail'"
-      >
-        {{ status }}
-      </Badge>
-    </template>
-
-    <template v-else>
-      <div class="flex items-baseline gap-0.5">
-        <span class="cell-val" :class="statusClass">
-          {{ formattedValue }}
-        </span>
-        <span v-if="val != null" class="cell-unit">{{ unit }}</span>
-      </div>
-
-      <Badge
-        v-if="status"
-        :id="status === 'OK' ? 'exam:pass' : 'exam:fail'"
-      >
-        {{ status }}
-      </Badge>
-    </template>
+    <Input
+      v-model="modelValue"
+      type="number"
+      :step="resolvedStep"
+      inputmode="decimal"
+      :placeholder="placeholderText"
+      :clearable="false"
+      :error="hasError"
+      :disabled="disabled"
+      class="w-[85px]"
+      @focus="emit('focus', $event)"
+      @keydown.enter.prevent="emit('enter')"
+    />
+    <span
+      v-if="!disabled && isBelowThreshold"
+      class="cell-warning-sub"
+    >
+      基準値未満です
+    </span>
+    <span
+      v-if="!disabled && isOutOfVoltageRange"
+      class="cell-warning-sub"
+    >
+      ±10%範囲外です
+    </span>
+    <Badge
+      v-if="status"
+      :id="status === 'OK' ? 'exam:pass' : 'exam:fail'"
+    >
+      {{ status }}
+    </Badge>
   </div>
 </template>
 
 <style scoped>
-.cell-label,
-.cell-unit {
+.cell-label {
   font-size: var(--font-size-2xs);
   color: var(--color-text-secondary);
-}
-
-.cell-val {
-  font-family: var(--font-mono);
-  color: var(--color-text-main);
-}
-
-.cell-val.is-ok {
-  color: var(--color-status-success);
-}
-
-.cell-val.is-ng {
-  color: var(--color-status-danger);
-}
-
-.cell-val.is-active {
-  color: var(--color-category-tool);
 }
 
 .cell-warning-sub {

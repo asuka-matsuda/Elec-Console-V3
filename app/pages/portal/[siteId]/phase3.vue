@@ -27,7 +27,6 @@ const {
   isThreePhase,
   fetchCircuits,
   confirmPhase3,
-  clearPhase3,
 } = usePhase3Exam(siteId, initialKeiTo.value)
 
 watch(
@@ -65,7 +64,6 @@ onMounted(() => {
       :is-action-loading="isActionLoading"
       :is-three-phase="isThreePhase"
       @confirm="confirmPhase3"
-      @clear="clearPhase3"
     />
   </PortalPhaseExam>
 </template>

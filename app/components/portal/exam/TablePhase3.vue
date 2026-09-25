@@ -2,7 +2,12 @@
 /**
  * TablePhase3
  * [Portal Organisms] フェーズ3（送電・電圧測定・検相）の回路一覧テーブルコンポーネント。
- * 回路情報の表示、手入力モード（最初からInput表示・Enter確定）、および解除/変更操作を管理します。
+ * - 各電圧欄・備考欄・検相欄は最初から常時Input/Select/Textareaを表示
+ * - 操作列は確定ボタンのみを配置（確定時のみサーバー送信＆測定者記録、確定前は保持・送信しない）
+ * - 確定後はすべてdisabled化、解除するまで編集不可
+ * - 解除ボタンはサーバー送信せずローカルで編集可能状態に戻す（入力値は保持）
+ * - 配電方式を参照し、各相の測定値が±10%の範囲外の場合はエラーを表示し確定不可
+ * - 検相が「否」（単相）または「逆」（三相）の場合は確定しても進捗させない（isComplete: false）
  */
 import { reactive, ref, toRef, watch } from 'vue'
 
@@ -16,8 +21,20 @@ import type { SelectOption } from '~/types/components'
 import type { CircuitItem } from '~/types/souden'
 import {
   getCircuitPhaseLabels,
+  getPhase3VoltageRanges,
+  isPhase2Complete,
+  isPhase3KensouPass,
+  isVoltageOutOfRange,
   parseNullableNumber,
 } from '~/utils/souden'
+
+export interface Phase3RowForm {
+  rs: string | number
+  st: string | number
+  rt: string | number
+  kensou: string
+  remarks: string
+}
 
 const props = defineProps<{
   circuits: CircuitItem[]
@@ -34,110 +51,154 @@ const emit = defineEmits<{
       rs: number | null
       st: number | null
       rt: number | null
-      kensou?: string
+      kensou: string
       remarks?: string
+      isComplete: boolean
     },
   ]
-  clear: [circuit: CircuitItem]
 }>()
 
-// 各行の手入力・編集状態
-const editingRowId = ref<string | null>(null)
-
-interface Phase3RowForm {
-  rs: string | number
-  st: string | number
-  rt: string | number
-  kensou: string
-  remarks: string
-}
-
+// 各行の入力フォーム状態
 const rowForms = reactive<Record<string, Phase3RowForm>>({})
+// ローカルで解除された行IDのセット（確定ボタンを押すまでサーバーへは送信しない）
+const unconfirmedRowIds = ref<Set<string>>(new Set())
 
 const initRowForm = (circuit: CircuitItem): Phase3RowForm => {
   const isThree = props.isThreePhase(circuit)
+
+  let initialKensou = circuit.kensou
+
+  if (!initialKensou) {
+    initialKensou = isThree ? '正' : '良'
+  }
+  else if (initialKensou === '正相') {
+    initialKensou = '正'
+  }
+  else if (initialKensou === '逆相') {
+    initialKensou = '逆'
+  }
+  else if (initialKensou === '点灯確認(良)') {
+    initialKensou = '良'
+  }
+  else if (initialKensou === '点灯確認(否)') {
+    initialKensou = '否'
+  }
 
   return {
     rs: circuit.denatsuRs != null ? circuit.denatsuRs : '',
     st: circuit.denatsuSt != null ? circuit.denatsuSt : '',
     rt: circuit.denatsuRt != null ? circuit.denatsuRt : '',
-    kensou: circuit.kensou || (isThree ? '正相' : '点灯確認(良)'),
+    kensou: initialKensou,
     remarks: circuit.p3Remarks ?? '',
   }
 }
 
 const getRowForm = (circuit: CircuitItem): Phase3RowForm => {
-  const existing = rowForms[circuit.id]
+  if (!rowForms[circuit.id]) {
+    rowForms[circuit.id] = initRowForm(circuit)
+  }
 
-  if (existing) return existing
-
-  const newForm = initRowForm(circuit)
-
-  rowForms[circuit.id] = newForm
-
-  return newForm
+  return rowForms[circuit.id]!
 }
 
-// 回路データの変更時に未編集行のフォーム値を同期
+// サーバーからデータフェッチされた際（確定後・再取得時）にローカル状態を同期
 watch(
   () => props.circuits,
   (newCircuits) => {
+    unconfirmedRowIds.value.clear()
     for (const c of newCircuits) {
-      if (editingRowId.value !== c.id) {
-        rowForms[c.id] = initRowForm(c)
-      }
+      rowForms[c.id] = initRowForm(c)
     }
   },
   { immediate: true },
 )
 
-const isComplete = (circuit: CircuitItem) => Boolean(circuit.p3ConfirmedAt)
-const isP2Complete = (circuit: CircuitItem) => Boolean(circuit.p2ConfirmedAt && circuit.p2IsComplete)
+// 確定済み判定（ローカル解除されておらず、確定日時があること）
+const isConfirmed = (circuit: CircuitItem) => {
+  if (unconfirmedRowIds.value.has(circuit.id)) return false
+
+  return Boolean(circuit.p3ConfirmedAt)
+}
+
+// 完了判定（確定済みであり、かつ p3IsComplete が true）
+const isComplete = (circuit: CircuitItem) => {
+  if (!isConfirmed(circuit)) return false
+
+  return Boolean(circuit.p3IsComplete)
+}
+
+const isP2Complete = (circuit: CircuitItem) => isPhase2Complete(circuit)
 const isLocked = (circuit: CircuitItem) => props.isCircuitLocked(circuit) || !isP2Complete(circuit)
 
-// 最初からInput表示: 未完了かつ非ロック・非除外、または明示的に編集中（変更クリック）の行
-const isRowEditing = (circuit: CircuitItem) => {
-  if (isLocked(circuit) || circuit.isExcluded) return false
-  if (editingRowId.value === circuit.id) return true
-
-  return !isComplete(circuit)
+// 入力無効判定（確定済み、幹線ロック中、除外回路、またはアクション実行中）
+const isRowDisabled = (circuit: CircuitItem) => {
+  return isConfirmed(circuit)
+    || isLocked(circuit)
+    || Boolean(props.isActionLoading[circuit.id])
+    || Boolean(circuit.isExcluded)
 }
 
 // 相ラベルの取得（三相: R-S / S-T / R-T, 単相: R-N / T-N / R-T）
 const getPhaseLabels = (circuit: CircuitItem) => getCircuitPhaseLabels(props.isThreePhase(circuit))
+
+// 電圧許容範囲の取得（配電方式・三相判定から±10%範囲を取得）
+const getVoltageRanges = (circuit: CircuitItem) => {
+  return getPhase3VoltageRanges(circuit.haidenHoushiki, props.isThreePhase(circuit))
+}
 
 // 検相セレクトの選択肢
 const getKensouOptions = (circuit: CircuitItem): SelectOption[] => {
   return props.isThreePhase(circuit) ? KENSOU_OPTIONS_3P : KENSOU_OPTIONS_1P
 }
 
-// 完了済み行の編集開始
-const startEdit = (circuit: CircuitItem) => {
-  editingRowId.value = circuit.id
-  rowForms[circuit.id] = initRowForm(circuit)
-}
-
-// 編集取消
-const cancelEdit = (circuit: CircuitItem) => {
-  editingRowId.value = null
-  rowForms[circuit.id] = initRowForm(circuit)
-}
-
-const parseVal = parseNullableNumber
-
-// 入力内容の確定
-const saveInput = (circuit: CircuitItem) => {
+// 電圧±10%範囲外エラーがあるかの判定（入力されている値のうち1つでも範囲外があればtrue）
+const hasVoltageOutOfRangeError = (circuit: CircuitItem): boolean => {
   const form = getRowForm(circuit)
+  const ranges = getVoltageRanges(circuit)
+
+  return isVoltageOutOfRange(form.rs, ranges.phase1)
+    || isVoltageOutOfRange(form.st, ranges.phase2)
+    || isVoltageOutOfRange(form.rt, ranges.phase3)
+}
+
+// 「解除」クリック時：サーバー送信は行わず、UI上で解除状態にして確定ボタンに戻す（値は保持）
+const handleClearLocally = (circuit: CircuitItem) => {
+  unconfirmedRowIds.value.add(circuit.id)
+}
+
+// 「確定」クリック時：サーバーへの送信と測定者の記録を実行
+const handleConfirm = (circuit: CircuitItem) => {
+  if (hasVoltageOutOfRangeError(circuit)) return
+
+  const form = getRowForm(circuit)
+  const rsNum = parseNullableNumber(form.rs)
+  const stNum = parseNullableNumber(form.st)
+  const rtNum = parseNullableNumber(form.rt)
+  const isThree = props.isThreePhase(circuit)
+
+  // 検相合格判定（単相なら「良」、三相なら「正」）
+  const isKensouOk = isPhase3KensouPass(form.kensou, isThree)
+
+  // 電圧範囲チェック
+  const ranges = getVoltageRanges(circuit)
+  const isVoltageOk = rsNum !== null && !isVoltageOutOfRange(rsNum, ranges.phase1)
+    && stNum !== null && !isVoltageOutOfRange(stNum, ranges.phase2)
+    && rtNum !== null && !isVoltageOutOfRange(rtNum, ranges.phase3)
+
+  // 電圧がすべて正常範囲内 かつ 検相が「良/正」の場合のみ進捗（完了）とする
+  // 「否」や「逆」の場合は進捗させない（isComplete: false）
+  const isAllComplete = isKensouOk && isVoltageOk
+
+  unconfirmedRowIds.value.delete(circuit.id)
 
   emit('confirm', circuit, {
-    rs: parseVal(form.rs),
-    st: parseVal(form.st),
-    rt: parseVal(form.rt),
+    rs: rsNum,
+    st: stNum,
+    rt: rtNum,
     kensou: form.kensou,
     remarks: form.remarks,
+    isComplete: isAllComplete,
   })
-
-  editingRowId.value = null
 }
 
 // ソート管理
@@ -159,18 +220,16 @@ const {
     :sort-order="sortOrder"
     :is-circuit-locked="isLocked"
     :is-complete="isComplete"
-    :editing-row-id="editingRowId"
     @sort="handleSort"
   >
-
     <template #cell-denatsuRs="{ row: circuit }">
       <PortalCellPhaseMeas
         v-model="getRowForm(circuit).rs"
         :label="getPhaseLabels(circuit).phase1"
-        :val="circuit.denatsuRs"
         unit="V"
-        :is-editing="isRowEditing(circuit)"
-        @enter="saveInput(circuit)"
+        :disabled="isRowDisabled(circuit)"
+        :voltage-range="getVoltageRanges(circuit).phase1"
+        @enter="handleConfirm(circuit)"
       />
     </template>
 
@@ -178,10 +237,10 @@ const {
       <PortalCellPhaseMeas
         v-model="getRowForm(circuit).st"
         :label="getPhaseLabels(circuit).phase2"
-        :val="circuit.denatsuSt"
         unit="V"
-        :is-editing="isRowEditing(circuit)"
-        @enter="saveInput(circuit)"
+        :disabled="isRowDisabled(circuit)"
+        :voltage-range="getVoltageRanges(circuit).phase2"
+        @enter="handleConfirm(circuit)"
       />
     </template>
 
@@ -189,42 +248,32 @@ const {
       <PortalCellPhaseMeas
         v-model="getRowForm(circuit).rt"
         :label="getPhaseLabels(circuit).phase3"
-        :val="circuit.denatsuRt"
         unit="V"
-        :is-editing="isRowEditing(circuit)"
-        @enter="saveInput(circuit)"
+        :disabled="isRowDisabled(circuit)"
+        :voltage-range="getVoltageRanges(circuit).phase3"
+        @enter="handleConfirm(circuit)"
       />
     </template>
 
     <template #cell-kensou="{ row: circuit }">
       <Select
-        v-if="isRowEditing(circuit)"
         v-model="getRowForm(circuit).kensou"
         :options="getKensouOptions(circuit)"
         :clearable="false"
-        class="min-w-24"
+        :disabled="isRowDisabled(circuit)"
+        class="w-20 min-w-[70px]"
       />
-      <Badge
-        v-else-if="circuit.kensou"
-        :id="circuit.kensou === '正相' || circuit.kensou === '点灯確認(良)' ? 'exam:pass' : 'exam:fail'"
-      >
-        {{ circuit.kensou }}
-      </Badge>
-      <span v-else class="cell-dash">-</span>
     </template>
 
     <template #cell-p3Remarks="{ row: circuit }">
       <Textarea
-        v-if="isRowEditing(circuit)"
         v-model="getRowForm(circuit).remarks"
         :rows="1"
         auto-resize
         placeholder="備考"
-        class="w-full min-w-[100px] textarea-remarks"
+        class="w-full textarea-remarks"
+        :disabled="isRowDisabled(circuit)"
       />
-      <span v-else class="cell-remarks" :title="circuit.p3Remarks || ''">
-        {{ circuit.p3Remarks || '-' }}
-      </span>
     </template>
 
     <template #cell-actions="{ row: circuit }">
@@ -232,43 +281,19 @@ const {
         :circuit="circuit"
         :is-locked="isLocked(circuit)"
         :locked-reason="isCircuitLocked(circuit) ? '幹線未完了' : 'P2未了'"
-        :is-editing="editingRowId === circuit.id"
-        :is-completed="isComplete(circuit)"
-        :is-loading="isActionLoading[circuit.id]"
-        confirm-label="確定"
-        save-label="保存"
-        :has-edit-button="false"
-        @confirm="saveInput(circuit)"
-        @clear="$emit('clear', circuit)"
-        @edit="startEdit(circuit)"
-        @save="saveInput(circuit)"
-        @cancel="cancelEdit(circuit)"
+        :is-completed="isConfirmed(circuit)"
+        :is-loading="Boolean(isActionLoading[circuit.id])"
+        :disabled="hasVoltageOutOfRangeError(circuit)"
+        @confirm="handleConfirm(circuit)"
+        @clear="handleClearLocally(circuit)"
       />
     </template>
   </PortalTableSoudenCircuit>
 </template>
 
 <style scoped lang="scss">
-.cell-dash {
-  color: var(--color-text-muted);
-}
-
 .textarea-remarks {
   resize: vertical;
   font-size: var(--font-size-xs);
-}
-
-.cell-remarks {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-
-  max-width: 100%;
-
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-  text-overflow: ellipsis;
-  word-break: break-all;
 }
 </style>

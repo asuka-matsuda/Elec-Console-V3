@@ -101,7 +101,7 @@ onMounted(() => {
           :to="`/portal/${siteId}/souden`"
           block
         >
-          送電試験ダッシュボードへ
+          送電試験
         </Button>
       </aside>
     </div>

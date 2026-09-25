@@ -79,6 +79,8 @@ model SiteSettings {
   excludedCircuits      String? // Stored as JSON string "['予備', 'スペース']"
   noBreakWords          String? // Stored as JSON string "['自動倉庫', '受変電']"
   excelPath             String?
+  measurementDevices    String? // Stored as JSON string MeasurementDevice[]
+  selectedDeviceIds     String? // Stored as JSON string SelectedMeasurementDevices
 
   site Site @relation(fields: [siteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
@@ -142,6 +144,7 @@ model Circuit {
   p3Worker      String?
   p3ConfirmedAt DateTime?
   p3Remarks     String?
+  p3IsComplete  Boolean   @default(false)
 
   version   Int      @default(1)
   createdAt DateTime @default(now())

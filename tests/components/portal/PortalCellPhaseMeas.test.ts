@@ -1,52 +1,39 @@
-﻿import { mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
 import CellPhaseMeas from '../../../app/components/portal/exam/CellPhaseMeas.vue'
 
 describe('CellPhaseMeas.vue', () => {
-  it('renders label and formatted value in display mode', () => {
+  it('renders label and input with default properties', () => {
     const wrapper = mount(CellPhaseMeas, {
       props: {
         label: 'R - S',
-        val: 200.5,
+        modelValue: '200',
         unit: 'V',
         status: 'OK',
+      },
+      global: {
+        stubs: {
+          Input: {
+            props: ['modelValue', 'disabled'],
+            template: '<input class="input-stub" :value="modelValue" :disabled="disabled" />',
+          },
+        },
       },
     })
 
     expect(wrapper.text()).toContain('R - S')
-    expect(wrapper.text()).toContain('200.5')
-    expect(wrapper.text()).toContain('V')
     expect(wrapper.text()).toContain('OK')
+    const input = wrapper.find('.input-stub')
+
+    expect(input.exists()).toBe(true)
+    expect((input.element as HTMLInputElement).value).toBe('200')
   })
 
-  it('formats MΩ values properly with 2 decimal places', () => {
-    const wrapper100 = mount(CellPhaseMeas, {
-      props: {
-        label: 'R - N',
-        val: 100,
-        unit: 'MΩ',
-      },
-    })
-
-    expect(wrapper100.text()).toContain('100')
-
-    const wrapper005 = mount(CellPhaseMeas, {
-      props: {
-        label: 'R - N',
-        val: 0.05,
-        unit: 'MΩ',
-      },
-    })
-
-    expect(wrapper005.text()).toContain('0.05')
-  })
-
-  it('renders input in editing mode and emits updates', async () => {
+  it('renders input and emits updates on user input', async () => {
     const wrapper = mount(CellPhaseMeas, {
       props: {
         'label': 'R - S',
-        'isEditing': true,
         'modelValue': '200',
         'onUpdate:modelValue': (e: string | number) => wrapper.setProps({ modelValue: e }),
       },
@@ -67,12 +54,12 @@ describe('CellPhaseMeas.vue', () => {
     await input.setValue('210')
     expect(wrapper.emitted('update:modelValue')).toBeTruthy()
   })
+
   it('配電方式に応じた基準値未満の入力で「基準値未満です」の警告が表示されること', async () => {
     // 400V回路 (基準値: 0.4MΩ)
     const wrapper400 = mount(CellPhaseMeas, {
       props: {
         label: 'R - S',
-        isEditing: true,
         modelValue: '0.3',
         unit: 'MΩ',
         haidenHoushiki: '3φ3W 400V',
@@ -100,7 +87,6 @@ describe('CellPhaseMeas.vue', () => {
     const wrapper200 = mount(CellPhaseMeas, {
       props: {
         label: 'R - S',
-        isEditing: true,
         modelValue: '0.15',
         unit: 'MΩ',
         haidenHoushiki: '3φ3W 200V',
@@ -123,7 +109,6 @@ describe('CellPhaseMeas.vue', () => {
     const wrapper100 = mount(CellPhaseMeas, {
       props: {
         label: 'R - N',
-        isEditing: true,
         modelValue: '0.05',
         unit: 'MΩ',
         haidenHoushiki: '1φ3W 100/200V',
@@ -141,5 +126,31 @@ describe('CellPhaseMeas.vue', () => {
     expect(wrapper100.find('.cell-warning-sub').exists()).toBe(true)
     await wrapper100.setProps({ modelValue: '0.1' })
     expect(wrapper100.find('.cell-warning-sub').exists()).toBe(false)
+  })
+
+  it('電圧±10%範囲外の入力で「±10%範囲外です」の警告が表示されること', async () => {
+    const wrapper = mount(CellPhaseMeas, {
+      props: {
+        label: 'R - S',
+        modelValue: '230',
+        unit: 'V',
+        voltageRange: { target: 200, min: 180, max: 220 },
+      },
+      global: {
+        stubs: {
+          Input: {
+            props: ['modelValue', 'error'],
+            template: '<input class="input-stub" :value="modelValue" :data-error="error" />',
+          },
+        },
+      },
+    })
+
+    expect(wrapper.find('.cell-warning-sub').exists()).toBe(true)
+    expect(wrapper.find('.cell-warning-sub').text()).toBe('±10%範囲外です')
+
+    // 範囲内の200V入力時 -> 警告が消えること
+    await wrapper.setProps({ modelValue: '200' })
+    expect(wrapper.find('.cell-warning-sub').exists()).toBe(false)
   })
 })

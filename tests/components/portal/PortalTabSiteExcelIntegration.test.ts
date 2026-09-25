@@ -10,7 +10,7 @@ const mockHandleMergeSync = vi.fn()
 const mockHandleResetImport = vi.fn()
 const mockHandleDownloadExcel = vi.fn()
 const mockSelectedFile = ref<File | null>(null)
-const mockSyncResultData = ref<any>(null)
+const mockSyncResultData = ref<Record<string, unknown> | null>(null)
 const mockIsSyncing = ref(false)
 const mockSyncAction = ref<string | null>(null)
 const mockShowSyncMsg = ref(false)
@@ -39,7 +39,14 @@ describe('PortalTabSiteExcelIntegration', () => {
     name: '新宿現場',
     status: 'in_progress',
     createdAt: '2026-09-01',
-  }
+    disabledAt: null,
+    excelPath: 'C:\\test\\circuits.xlsx',
+    settings: {
+      id: 'setting-1',
+      siteId: 'site-a',
+      excelPath: 'C:\\test\\circuits.xlsx',
+    },
+  } as Site
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -131,5 +138,26 @@ describe('PortalTabSiteExcelIntegration', () => {
 
     await downloadBtn!.trigger('click')
     expect(mockHandleDownloadExcel).toHaveBeenCalled()
+  })
+
+  it('disables download button when site has no excelPath configured', () => {
+    const siteWithoutExcel: Site = {
+      id: 'site-b',
+      name: '渋谷現場',
+      status: 'in_progress',
+      createdAt: '2026-09-01',
+    }
+
+    const wrapper = mount(TabSiteExcelIntegration, {
+      props: {
+        site: siteWithoutExcel,
+      },
+    })
+
+    const buttons = wrapper.findAllComponents({ name: 'Button' })
+    const downloadBtn = buttons.find(b => b.text().includes('Excel帳票ダウンロード'))
+
+    expect(downloadBtn?.attributes('disabled')).toBeDefined()
+    expect(wrapper.text()).toContain('現場設定にExcel台帳ファイルが登録されていないため、ダウンロードできません')
   })
 })

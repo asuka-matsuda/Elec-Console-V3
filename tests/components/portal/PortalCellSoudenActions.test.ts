@@ -38,7 +38,7 @@ describe('CellSoudenActions.vue', () => {
     },
   }
 
-  it('ロック状態の時に指定された理由が表示されること', () => {
+  it('ロック状態の時に指定された理由が表示されボタンは表示されないこと', () => {
     const wrapper = mount(CellSoudenActions, {
       props: {
         circuit: dummyCircuit,
@@ -52,58 +52,11 @@ describe('CellSoudenActions.vue', () => {
     expect(wrapper.findAll('.stub-button').length).toBe(0)
   })
 
-  it('編集中モードの時に保存・取消ボタンが表示されイベントが発火すること', async () => {
-    const wrapper = mount(CellSoudenActions, {
-      props: {
-        circuit: dummyCircuit,
-        isEditing: true,
-        saveLabel: '確定',
-      },
-      global: { stubs: globalStubs },
-    })
-
-    const buttons = wrapper.findAll('.stub-button')
-
-    expect(buttons.length).toBe(2)
-    expect(buttons[0]?.text()).toBe('確定')
-    expect(buttons[1]?.text()).toBe('取消')
-
-    await buttons[0]?.trigger('click')
-    expect(wrapper.emitted('save')).toBeTruthy()
-
-    await buttons[1]?.trigger('click')
-    expect(wrapper.emitted('cancel')).toBeTruthy()
-  })
-
-  it('完了済み状態の時に解除ボタンが表示されイベントが発火すること', async () => {
+  it('完了済み（確定済み）状態の時に解除ボタンが表示され、クリックで clear が発火すること', async () => {
     const wrapper = mount(CellSoudenActions, {
       props: {
         circuit: dummyCircuit,
         isCompleted: true,
-        hasModifyButton: true,
-      },
-      global: { stubs: globalStubs },
-    })
-
-    const buttons = wrapper.findAll('.stub-button')
-
-    expect(buttons.length).toBe(2)
-    expect(buttons[0]?.text()).toBe('解除')
-    expect(buttons[1]?.text()).toBe('変更')
-
-    await buttons[0]?.trigger('click')
-    expect(wrapper.emitted('clear')).toBeTruthy()
-
-    await buttons[1]?.trigger('click')
-    expect(wrapper.emitted('edit')).toBeTruthy()
-  })
-
-  it('hasModifyButton が false の時は変更ボタンが表示されないこと', () => {
-    const wrapper = mount(CellSoudenActions, {
-      props: {
-        circuit: dummyCircuit,
-        isCompleted: true,
-        hasModifyButton: false,
       },
       global: { stubs: globalStubs },
     })
@@ -112,25 +65,70 @@ describe('CellSoudenActions.vue', () => {
 
     expect(buttons.length).toBe(1)
     expect(buttons[0]?.text()).toBe('解除')
+    expect(buttons[0]?.attributes('data-variant')).toBe('danger')
+
+    await buttons[0]?.trigger('click')
+    expect(wrapper.emitted('clear')).toBeTruthy()
   })
 
-  it('未完了の時に確定ボタンと編集ボタンが表示され、除外時は非活性になること', async () => {
-    const excludedCircuit = { ...dummyCircuit, isExcluded: true }
+  it('未完了の時に確定ボタンが表示され、クリックで confirm が発火すること', async () => {
     const wrapper = mount(CellSoudenActions, {
       props: {
-        circuit: excludedCircuit,
-        confirmLabel: '標準値確定',
-        editLabel: '手入力',
+        circuit: dummyCircuit,
+        isCompleted: false,
+        confirmLabel: '確定',
       },
       global: { stubs: globalStubs },
     })
 
     const buttons = wrapper.findAll('.stub-button')
 
-    expect(buttons.length).toBe(2)
-    expect(buttons[0]?.text()).toBe('標準値確定')
-    expect(buttons[1]?.text()).toBe('手入力')
-    expect(buttons[0]?.attributes('disabled')).toBeDefined()
-    expect(buttons[1]?.attributes('disabled')).toBeDefined()
+    expect(buttons.length).toBe(1)
+    expect(buttons[0]?.text()).toBe('確定')
+    expect(buttons[0]?.attributes('data-variant')).toBe('success')
+
+    await buttons[0]?.trigger('click')
+    expect(wrapper.emitted('confirm')).toBeTruthy()
+  })
+
+  it('除外回路または disabled 時は確定ボタンが無効化されること', () => {
+    const excludedCircuit = { ...dummyCircuit, isExcluded: true }
+    const wrapperExcluded = mount(CellSoudenActions, {
+      props: {
+        circuit: excludedCircuit,
+      },
+      global: { stubs: globalStubs },
+    })
+
+    const btn1 = wrapperExcluded.find('.stub-button')
+
+    expect(btn1.attributes('disabled')).toBeDefined()
+
+    const wrapperDisabled = mount(CellSoudenActions, {
+      props: {
+        circuit: dummyCircuit,
+        disabled: true,
+      },
+      global: { stubs: globalStubs },
+    })
+
+    const btn2 = wrapperDisabled.find('.stub-button')
+
+    expect(btn2.attributes('disabled')).toBeDefined()
+  })
+
+  it('スロットに渡された追加アクション（全相OKボタン等）が表示されること', () => {
+    const wrapper = mount(CellSoudenActions, {
+      props: {
+        circuit: dummyCircuit,
+      },
+      slots: {
+        default: '<button class="extra-btn">全相OK</button>',
+      },
+      global: { stubs: globalStubs },
+    })
+
+    expect(wrapper.find('.extra-btn').exists()).toBe(true)
+    expect(wrapper.find('.stub-button').text()).toBe('確定')
   })
 })

@@ -39,6 +39,7 @@ export default defineEventHandler(async (event) => {
       kensou: null,
       p3Worker: null,
       p3ConfirmedAt: null,
+      p3IsComplete: false,
     },
   })
 

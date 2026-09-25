@@ -6,7 +6,13 @@ import {
   getSiteStatusColor,
   getSiteStatusLabel,
 } from '../../app/utils/portal'
-import { getPhase2Threshold } from '../../app/utils/souden'
+import {
+  getPhase2Threshold,
+  isPhase1Complete,
+  isPhase2Complete,
+  isPhase3Complete,
+  isPhaseComplete,
+} from '../../app/utils/souden'
 
 describe('portal utils', () => {
   describe('getSiteStatusLabel', () => {
@@ -93,6 +99,41 @@ describe('portal utils', () => {
       expect(getPhase2Threshold(null)).toBe(0.1)
       expect(getPhase2Threshold('')).toBe(0.1)
       expect(getPhase2Threshold('その他')).toBe(0.1)
+    })
+  })
+
+  describe('isPhaseComplete helpers', () => {
+    it('isPhase1Complete: p1ConfirmedAt, p1Kakunin, p1Mashishime がすべて揃っている場合のみ true', () => {
+      expect(isPhase1Complete({ p1ConfirmedAt: '2026-09-25T00:00:00Z', p1Kakunin: true, p1Mashishime: true })).toBe(true)
+      expect(isPhase1Complete({ p1ConfirmedAt: null, p1Kakunin: true, p1Mashishime: true })).toBe(false)
+      expect(isPhase1Complete({ p1ConfirmedAt: '2026-09-25T00:00:00Z', p1Kakunin: false, p1Mashishime: true })).toBe(false)
+      expect(isPhase1Complete({ p1ConfirmedAt: '2026-09-25T00:00:00Z', p1Kakunin: true, p1Mashishime: false })).toBe(false)
+    })
+
+    it('isPhase2Complete: p2ConfirmedAt と p2IsComplete が true の場合のみ true', () => {
+      expect(isPhase2Complete({ p2ConfirmedAt: '2026-09-25T00:00:00Z', p2IsComplete: true })).toBe(true)
+      expect(isPhase2Complete({ p2ConfirmedAt: null, p2IsComplete: true })).toBe(false)
+      expect(isPhase2Complete({ p2ConfirmedAt: '2026-09-25T00:00:00Z', p2IsComplete: false })).toBe(false)
+    })
+
+    it('isPhase3Complete: p3ConfirmedAt と p3IsComplete が true の場合のみ true', () => {
+      expect(isPhase3Complete({ p3ConfirmedAt: '2026-09-25T00:00:00Z', p3IsComplete: true })).toBe(true)
+      expect(isPhase3Complete({ p3ConfirmedAt: null, p3IsComplete: true })).toBe(false)
+      expect(isPhase3Complete({ p3ConfirmedAt: '2026-09-25T00:00:00Z', p3IsComplete: false })).toBe(false)
+    })
+
+    it('isPhaseComplete: フェーズ番号に応じた判定をディスパッチすること', () => {
+      const c = {
+        p1ConfirmedAt: '2026-09-25T00:00:00Z',
+        p1Kakunin: true,
+        p1Mashishime: true,
+        p2ConfirmedAt: null,
+        p2IsComplete: false,
+      }
+
+      expect(isPhaseComplete(c, 1)).toBe(true)
+      expect(isPhaseComplete(c, 2)).toBe(false)
+      expect(isPhaseComplete(c, 99)).toBe(false)
     })
   })
 })

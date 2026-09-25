@@ -91,6 +91,8 @@ export interface CircuitItem {
   p3ConfirmedAt?: string | null
   /** フェーズ3: 備考 */
   p3Remarks?: string | null
+  /** フェーズ3: 電圧および検相合格・試験完了フラグ */
+  p3IsComplete?: boolean
 
   /** 試験除外フラグ */
   isExcluded?: boolean

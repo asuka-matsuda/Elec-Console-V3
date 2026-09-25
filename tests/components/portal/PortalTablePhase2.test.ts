@@ -118,20 +118,18 @@ describe('TablePhase2.vue', () => {
     },
     PortalCellPhaseMeas: {
       name: 'PortalCellPhaseMeas',
-      props: ['modelValue', 'label', 'val', 'status', 'isEditing', 'disabled', 'threshold'],
+      props: ['modelValue', 'label', 'status', 'disabled', 'threshold'],
       emits: ['update:modelValue', 'enter'],
       template: `
-        <div class="stub-meas-cell" :data-label="label" :data-editing="isEditing" :data-disabled="disabled">
+        <div class="stub-meas-cell" :data-label="label" :data-disabled="disabled">
           <span class="label">{{ label }}</span>
           <input
-            v-if="isEditing"
             class="meas-input"
             :value="modelValue"
             :disabled="disabled"
             @input="$emit('update:modelValue', $event.target.value)"
             @keydown.enter="$emit('enter')"
           />
-          <span v-else class="meas-val">{{ val }}</span>
           <span v-if="status" class="status-badge">{{ status }}</span>
         </div>
       `,

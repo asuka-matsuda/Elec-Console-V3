@@ -6,12 +6,18 @@
 import { computed, onMounted } from 'vue'
 
 import { useHead, useRoute } from '#app'
+import { useCurrentSite } from '~/composables/portal/useCurrentSite'
 import { useSoudenDashboard } from '~/composables/portal/useSoudenDashboard'
-
-useHead({ title: '送電試験ダッシュボード - Elec-Console' })
 
 const route = useRoute()
 const siteId = computed(() => route.params.siteId as string)
+const { siteName } = useCurrentSite(siteId)
+
+const pageTitle = computed(() => (siteName.value ? `${siteName.value}_送電試験` : '送電試験ダッシュボード'))
+
+useHead({
+  title: computed(() => `${pageTitle.value} - Elec-Console`),
+})
 
 const {
   stats,
@@ -28,7 +34,7 @@ onMounted(() => {
 <template>
   <div class="flex flex-col gap-section-gap h-full">
     <SectionHeader
-      title="送電試験ダッシュボード"
+      :title="pageTitle"
       icon="zap"
     >
       <template #actions>

@@ -29,7 +29,6 @@ const {
   evalMegStatus,
   fetchCircuits,
   confirmPhase2,
-  clearPhase2,
 } = usePhase2Exam(siteId, initialKeiTo.value)
 
 watch(
@@ -70,7 +69,6 @@ onMounted(() => {
       :phase2-threshold-meg-ohm="phase2ThresholdMegOhm"
       :eval-meg-status="evalMegStatus"
       @confirm="confirmPhase2"
-      @clear="clearPhase2"
     />
   </PortalPhaseExam>
 </template>

@@ -175,7 +175,6 @@ describe('usePhase3Exam', () => {
 
     expect(typeof exam3.confirmPhase3).toBe('function')
     expect(typeof exam3.clearPhase3).toBe('function')
-    expect(typeof exam3.batchConfirmPhase3).toBe('function')
     expect(exam3.phaseNumber).toBe(3)
   })
 })

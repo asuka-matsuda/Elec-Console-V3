@@ -5,7 +5,7 @@
  * Excelファイルのアップロードによる差分同期・全件初期化取込、最新帳票のダウンロード、
  * および処理結果・ステータス表示を提供します。
  */
-import { toRef } from 'vue'
+import { computed, toRef } from 'vue'
 
 import { useSiteExcelSync } from '~/composables/portal/useSiteExcelSync'
 import type { Site } from '~/types/admin'
@@ -13,6 +13,10 @@ import type { Site } from '~/types/admin'
 const props = defineProps<{
   site: Site
 }>()
+
+const hasExcelPath = computed(() =>
+  Boolean((props.site.excelPath || (props.site as unknown as { settings?: { excelPath?: string } }).settings?.excelPath)?.trim()),
+)
 
 const {
   selectedFile,
@@ -82,15 +86,20 @@ const {
         Web上で完了した最新の試験結果（Phase 1〜3）を含むExcel帳票ファイルをダウンロードします。
       </p>
 
-      <Button
-        icon="download"
-        :loading="syncAction === 'download'"
-        :disabled="isSyncing"
-        class="w-fit"
-        @click="handleDownloadExcel"
-      >
-        Excel帳票ダウンロード (ブラウザDL)
-      </Button>
+      <div class="flex flex-col gap-1.5">
+        <Button
+          icon="download"
+          :loading="syncAction === 'download'"
+          :disabled="isSyncing || !hasExcelPath"
+          class="w-fit"
+          @click="handleDownloadExcel"
+        >
+          Excel帳票ダウンロード (ブラウザDL)
+        </Button>
+        <p v-if="!hasExcelPath" class="desc-text m-0">
+          ※ 現場設定にExcel台帳ファイルが登録されていないため、ダウンロードできません
+        </p>
+      </div>
     </div>
 
     <div

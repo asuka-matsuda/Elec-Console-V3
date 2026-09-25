@@ -139,10 +139,10 @@ defineExpose({
   @include form-control-base(calc(var(--control-height-ratio) * 2em));
 
   &.is-auto-resize {
+    resize: none;
+    overflow-y: hidden;
     min-height: calc(var(--control-height-ratio) * 1.3em);
     padding-block: 0.35em;
-    overflow-y: hidden;
-    resize: none;
   }
 
   &:read-only:not(:disabled),

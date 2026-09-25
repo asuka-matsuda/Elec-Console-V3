@@ -41,6 +41,9 @@ export default defineEventHandler(async (event) => {
       p3Remarks: body.remarks !== undefined ? body.remarks : undefined,
       p3Worker: workerName,
       p3ConfirmedAt: confirmedAt,
+      p3IsComplete: body.isComplete !== undefined
+        ? Boolean(body.isComplete)
+        : (body.kensou === '正' || body.kensou === '良'),
     },
   })
 

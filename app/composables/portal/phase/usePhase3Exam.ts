@@ -18,11 +18,7 @@ export function usePhase3Exam(
 ) {
   const base = usePhaseExamBase(siteIdRef, initialKeiTo, 3)
   const {
-    filteredCircuits,
-    isCircuitLocked,
-    isThreePhase,
     executeCircuitAction,
-    executeBatchConfirm,
   } = base
 
   // Phase 3 確定実行
@@ -34,6 +30,7 @@ export function usePhase3Exam(
       rt?: number | null
       kensou?: string | null
       remarks?: string
+      isComplete?: boolean
     },
   ) => {
     const optimisticPatch: Partial<CircuitItem> = {
@@ -42,6 +39,7 @@ export function usePhase3Exam(
       denatsuRt: payload.rt !== undefined ? payload.rt : circuit.denatsuRt,
       kensou: payload.kensou !== undefined ? payload.kensou : circuit.kensou,
       p3Remarks: payload.remarks !== undefined ? payload.remarks : circuit.p3Remarks,
+      p3IsComplete: payload.isComplete !== undefined ? payload.isComplete : true,
     }
 
     return executeCircuitAction(circuit, 'confirm', payload, optimisticPatch)
@@ -60,47 +58,15 @@ export function usePhase3Exam(
       kensou: null,
       p3Worker: null,
       p3ConfirmedAt: null,
+      p3IsComplete: false,
     }
 
     return executeCircuitAction(circuit, 'clear', {}, optimisticPatch)
-  }
-
-  // Phase 3 一括確定（現在絞り込み中の未完了・非除外・非ロック回路）
-  const batchConfirmPhase3 = async () => {
-    const targets = filteredCircuits.value.filter(
-      c => !c.isExcluded && !isCircuitLocked(c) && !c.p3ConfirmedAt,
-    )
-
-    await executeBatchConfirm(
-      targets,
-      `表示中の未完了回路（${targets.length}件）を一括で標準電圧・正常検相として確定しますか？`,
-      (circuit) => {
-        const three = isThreePhase(circuit)
-
-        if (three) {
-          return confirmPhase3(circuit, {
-            rs: 210,
-            st: 210,
-            rt: 210,
-            kensou: '正相',
-          })
-        }
-        else {
-          return confirmPhase3(circuit, {
-            rs: 105,
-            st: 105,
-            rt: 210,
-            kensou: '点灯確認(良)',
-          })
-        }
-      },
-    )
   }
 
   return {
     ...base,
     confirmPhase3,
     clearPhase3,
-    batchConfirmPhase3,
   }
 }

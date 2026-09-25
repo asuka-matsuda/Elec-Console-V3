@@ -5,17 +5,20 @@
  * チェックボックス（確認・増締）および常時入力可能な備考Textareaを備え、
  * 操作ボタンは「確定 / 解除」のみに特化。不備や特記事項は備考欄に記録します。
  */
-import { reactive, toRef, watch } from 'vue'
+import { reactive, ref, toRef, watch } from 'vue'
 
 import type { ConfirmPhase1Payload } from '~/composables/portal/phase/usePhase1Exam'
 import { useTableSort } from '~/composables/useTableSort'
 import { PHASE1_TABLE_COLUMNS } from '~/constants/soudenConstants'
 import type { CircuitItem } from '~/types/souden'
 
-export interface RowCheckState {
+export interface Phase1RowForm {
   kakunin: boolean
   mashishime: boolean
+  remarks: string
 }
+
+export type RowCheckState = Pick<Phase1RowForm, 'kakunin' | 'mashishime'>
 
 const props = defineProps<{
   circuits: CircuitItem[]
@@ -28,84 +31,57 @@ const emit = defineEmits<{
   confirm: [circuit: CircuitItem, overrideData?: ConfirmPhase1Payload]
 }>()
 
-// 各行のチェックボックス状態（確定ボタンを押すまでUI上のみで保持）
-const rowChecks = reactive<Record<string, RowCheckState>>({})
-// 各行の備考テキスト（常時表示Textareaで入力、確定ボタン押下時に送信）
-const rowRemarks = reactive<Record<string, string>>({})
-// ローカルで解除された行IDのマップ（確定ボタンを押すまでサーバーへは送信しない）
-const locallyUnconfirmedMap = reactive<Record<string, boolean>>({})
+// 各行の入力フォーム状態（確認・増締・備考）
+const rowForms = reactive<Record<string, Phase1RowForm>>({})
+// ローカルで解除された行IDのセット（確定ボタンを押すまでサーバーへは送信しない）
+const unconfirmedRowIds = ref<Set<string>>(new Set())
 
-const initRowCheck = (c: CircuitItem): RowCheckState => ({
+const initRowForm = (c: CircuitItem): Phase1RowForm => ({
   kakunin: Boolean(c.p1Kakunin),
   mashishime: Boolean(c.p1Mashishime),
+  remarks: c.p1Remarks ?? '',
 })
 
-const getRowCheck = (circuit: CircuitItem): RowCheckState => {
-  let state = rowChecks[circuit.id]
-
-  if (!state) {
-    state = initRowCheck(circuit)
-    rowChecks[circuit.id] = state
+const getRowForm = (circuit: CircuitItem): Phase1RowForm => {
+  if (!rowForms[circuit.id]) {
+    rowForms[circuit.id] = initRowForm(circuit)
   }
 
-  return state
-}
-
-const getRowRemarks = (circuit: CircuitItem): string => {
-  return rowRemarks[circuit.id] ?? circuit.p1Remarks ?? ''
-}
-
-const handleUpdateRemarks = (circuit: CircuitItem, val: string) => {
-  rowRemarks[circuit.id] = val
+  return rowForms[circuit.id]!
 }
 
 // サーバーから回路一覧がフェッチされた際（確定後・リロード時）にローカル状態を最新値に同期
 watch(
   () => props.circuits,
   (newCircuits) => {
+    unconfirmedRowIds.value.clear()
     for (const c of newCircuits) {
-      locallyUnconfirmedMap[c.id] = false
-      rowChecks[c.id] = initRowCheck(c)
-      rowRemarks[c.id] = c.p1Remarks || ''
+      rowForms[c.id] = initRowForm(c)
     }
   },
   { immediate: true },
 )
 
-// チェックボックスはUI上のオン/オフのみ（API通信は行わず測定者・日時は上書きしない）
-const handleToggleKakunin = (circuit: CircuitItem, val: boolean) => {
-  const current = getRowCheck(circuit)
-
-  current.kakunin = val
-}
-
-const handleToggleMashishime = (circuit: CircuitItem, val: boolean) => {
-  const current = getRowCheck(circuit)
-
-  current.mashishime = val
-}
-
 // 解除ボタンクリック時：サーバー送信は行わず、UI上で解除状態にして確定ボタンに戻す（値は保持）
 const handleClearLocally = (circuit: CircuitItem) => {
-  locallyUnconfirmedMap[circuit.id] = true
+  unconfirmedRowIds.value.add(circuit.id)
 }
 
 // 確定ボタン押下時のみサーバーへの送信・確定処理を実行
 const handleConfirm = (circuit: CircuitItem) => {
-  const current = getRowCheck(circuit)
-  const remarks = getRowRemarks(circuit)
+  const form = getRowForm(circuit)
 
-  locallyUnconfirmedMap[circuit.id] = false
+  unconfirmedRowIds.value.delete(circuit.id)
   emit('confirm', circuit, {
-    kakunin: current.kakunin,
-    mashishime: current.mashishime,
-    remarks,
+    kakunin: form.kakunin,
+    mashishime: form.mashishime,
+    remarks: form.remarks,
   })
 }
 
 // 確定済み表示判定（ローカル解除されておらず、確定日時があること）
 const isConfirmed = (c: CircuitItem) => {
-  if (locallyUnconfirmedMap[c.id]) return false
+  if (unconfirmedRowIds.value.has(c.id)) return false
 
   return Boolean(c.p1ConfirmedAt)
 }
@@ -161,29 +137,26 @@ const {
     <template #cell-p1Kakunin="{ row: circuit }">
       <div class="flex items-center justify-center gap-3">
         <Checkbox
-          :model-value="getRowCheck(circuit).kakunin"
+          v-model="getRowForm(circuit).kakunin"
           label="確認"
           :disabled="isRowDisabled(circuit)"
-          @update:model-value="handleToggleKakunin(circuit, Boolean($event))"
         />
         <Checkbox
-          :model-value="getRowCheck(circuit).mashishime"
+          v-model="getRowForm(circuit).mashishime"
           label="増締"
           :disabled="isRowDisabled(circuit)"
-          @update:model-value="handleToggleMashishime(circuit, Boolean($event))"
         />
       </div>
     </template>
 
     <template #cell-p1Remarks="{ row: circuit }">
       <Textarea
-        :model-value="getRowRemarks(circuit)"
+        v-model="getRowForm(circuit).remarks"
         :rows="1"
         auto-resize
         placeholder="備考"
         class="w-full textarea-remarks"
         :disabled="isRowDisabled(circuit)"
-        @update:model-value="handleUpdateRemarks(circuit, String($event ?? ''))"
       />
     </template>
 
@@ -194,9 +167,6 @@ const {
         locked-reason="幹線未完了"
         :is-completed="isConfirmed(circuit)"
         :is-loading="isActionLoading[circuit.id]"
-        :has-edit-button="false"
-        :has-modify-button="false"
-        confirm-label="確定"
         @confirm="handleConfirm(circuit)"
         @clear="handleClearLocally(circuit)"
       />

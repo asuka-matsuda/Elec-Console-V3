@@ -7,13 +7,14 @@
  */
 import { computed } from 'vue'
 
+import { useCurrentSite } from '~/composables/portal/useCurrentSite'
 import type { IconName } from '~/constants/icons'
 import type { CircuitItem, PhaseStats } from '~/types/souden'
 
 const selectedShubetsu = defineModel<string>('shubetsu', { default: 'ALL' })
 const selectedBanMeisho = defineModel<string>('banMeisho', { default: 'ALL' })
 
-defineProps<{
+const props = defineProps<{
   title: string
   icon: IconName
   phase: 1 | 2 | 3
@@ -29,6 +30,9 @@ const emit = defineEmits<{
 
 const route = useRoute()
 const siteId = computed(() => route.params.siteId as string)
+const { siteName } = useCurrentSite(siteId)
+
+const headerTitle = computed(() => (siteName.value ? `${siteName.value}_${props.title}` : props.title))
 
 const handleSelectCircuit = (circuit: CircuitItem) => {
   scrollToTableRow(circuit.id)
@@ -39,7 +43,7 @@ const handleSelectCircuit = (circuit: CircuitItem) => {
   <div class="flex flex-1 flex-col gap-section-gap min-h-0">
 
     <SectionHeader
-      :title="title"
+      :title="headerTitle"
       :icon="icon"
     >
       <template #actions>

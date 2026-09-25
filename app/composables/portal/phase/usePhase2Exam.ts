@@ -18,11 +18,8 @@ export function usePhase2Exam(
 ) {
   const base = usePhaseExamBase(siteIdRef, initialKeiTo, 2)
   const {
-    filteredCircuits,
     phase2ThresholdMegOhm,
-    isCircuitLocked,
     executeCircuitAction,
-    executeBatchConfirm,
   } = base
 
   // 測定値に基づくOK/NG判定
@@ -84,32 +81,10 @@ export function usePhase2Exam(
     return executeCircuitAction(circuit, 'clear', {}, optimisticPatch)
   }
 
-  // Phase 2 一括OK確定（現在絞り込み中の未完了・非除外・非ロック回路）
-  const batchConfirmPhase2 = async (defaultMegValue: number = 100) => {
-    const targets = filteredCircuits.value.filter(
-      c => !c.isExcluded && !isCircuitLocked(c) && (!c.p2ConfirmedAt || !c.p2IsComplete),
-    )
-
-    await executeBatchConfirm(
-      targets,
-      `表示中の未完了回路（${targets.length}件）を一括で ${defaultMegValue}MΩ (OK) として確定しますか？`,
-      circuit => confirmPhase2(circuit, {
-        rVal: defaultMegValue,
-        sVal: defaultMegValue,
-        tVal: defaultMegValue,
-        rStatus: 'OK',
-        sStatus: 'OK',
-        tStatus: 'OK',
-        isComplete: true,
-      }),
-    )
-  }
-
   return {
     ...base,
     evalMegStatus,
     confirmPhase2,
     clearPhase2,
-    batchConfirmPhase2,
   }
 }

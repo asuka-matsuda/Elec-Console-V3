@@ -158,16 +158,6 @@ const getWorkerCellData = (circuit: CircuitItem, key: string) => {
   white-space: pre-line;
 }
 
-:deep(.cell-remarks) {
-  overflow: hidden;
-  display: block;
-
-  max-width: 100%;
-
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 :deep(td.col-actions),
 :deep(th.col-actions) {
   width: 1%;

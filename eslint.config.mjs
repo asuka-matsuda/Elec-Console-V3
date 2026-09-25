@@ -6,6 +6,7 @@ import noCommentedCode from './eslint-rules/no-commented-code.mjs'
 import noHoverTransitionOverride from './eslint-rules/no-hover-transition-override.mjs'
 import noLegacyCssVars from './eslint-rules/no-legacy-css-vars.mjs'
 import noPureAccessibility from './eslint-rules/no-pure-accessibility.mjs'
+import noRawHtmlElements from './eslint-rules/no-raw-html-elements.mjs'
 import noTailwindDecoration from './eslint-rules/no-tailwind-decoration.mjs'
 import noTemplateComments from './eslint-rules/no-template-comments.mjs'
 import requireFileJsdoc from './eslint-rules/require-file-jsdoc.mjs'
@@ -24,6 +25,7 @@ export default withNuxt(
           'require-file-jsdoc': requireFileJsdoc,
           'no-commented-code': noCommentedCode,
           'no-card-or-box-naming': noCardOrBoxNaming,
+          'no-raw-html-elements': noRawHtmlElements,
         },
       },
     },
@@ -36,6 +38,7 @@ export default withNuxt(
       'local/require-file-jsdoc': 'error',
       'local/no-commented-code': 'error',
       'local/no-card-or-box-naming': 'error',
+      'local/no-raw-html-elements': 'error',
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
       'vue/block-order': ['error', {

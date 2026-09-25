@@ -4,6 +4,7 @@
  * [Portal Molecules] 試験画面用の回路進捗ミニマップ。完了・除外・未着手状態をタイル表示。
  */
 import type { CircuitItem } from '~/types/souden'
+import { isPhaseComplete } from '~/utils/souden'
 
 const props = defineProps<{
   circuits: CircuitItem[]
@@ -14,15 +15,8 @@ const emit = defineEmits<{
   (e: 'selectCircuit', circuit: CircuitItem): void
 }>()
 
-const isDone = (c: CircuitItem): boolean =>
-  props.phase === 1
-    ? Boolean(c.p1Kakunin && c.p1Mashishime)
-    : props.phase === 2
-      ? Boolean(c.p2ConfirmedAt && c.p2IsComplete)
-      : Boolean(props.phase === 3 && c.p3ConfirmedAt)
-
 const getTileClass = (c: CircuitItem): string =>
-  c.isExcluded ? 'is-excluded' : isDone(c) ? 'is-completed' : ''
+  c.isExcluded ? 'is-excluded' : isPhaseComplete(c, props.phase) ? 'is-completed' : ''
 </script>
 
 <template>

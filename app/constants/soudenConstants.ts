@@ -54,19 +54,19 @@ export const PHASE3_TABLE_COLUMNS: TableColumn<CircuitItem>[] = [
 ]
 
 /**
- * 三相（動力）検相オプション
+ * 三相（動力）検相オプション（正 / 逆）
  */
 export const KENSOU_OPTIONS_3P: SelectOption[] = [
-  { label: '正相', value: '正相' },
-  { label: '逆相', value: '逆相' },
+  { label: '正', value: '正' },
+  { label: '逆', value: '逆' },
 ]
 
 /**
- * 単相（電灯）点灯確認オプション
+ * 単相（電灯）点灯確認オプション（良 / 否）
  */
 export const KENSOU_OPTIONS_1P: SelectOption[] = [
-  { label: '点灯確認(良)', value: '点灯確認(良)' },
-  { label: '点灯確認(否)', value: '点灯確認(否)' },
+  { label: '良', value: '良' },
+  { label: '否', value: '否' },
 ]
 
 /**
