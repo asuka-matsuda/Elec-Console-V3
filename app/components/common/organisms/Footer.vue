@@ -12,18 +12,10 @@ const {
 </script>
 
 <template>
-  <footer class="mt-auto flex flex-col items-center gap-3 pt-layout-pad text-center">
+  <footer class="mt-auto flex flex-col items-center gap-item-gap pt-layout-pad text-center">
     <Divider type="fade-center" />
-    <p class="copyright">
+    <small>
       <slot>{{ text || `© ${year} Mat.Operate & Gemini 3.8 Flash. / Elec-Console All rights reserved.` }}</slot>
-    </p>
+    </small>
   </footer>
 </template>
-
-<style scoped lang="scss">
-.copyright {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-muted);
-}
-</style>

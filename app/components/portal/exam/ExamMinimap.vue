@@ -20,7 +20,7 @@ const getTileClass = (c: CircuitItem): string =>
 </script>
 
 <template>
-  <div class="minimap-container flex flex-wrap gap-1 py-2 px-1.5 max-h-24 overflow-y-auto overflow-x-hidden">
+  <div class="minimap-container flex flex-wrap gap-inline-gap py-item-gap px-inline-gap max-h-24 overflow-y-auto overflow-x-hidden">
     <button
       v-for="c in circuits"
       :key="c.id"

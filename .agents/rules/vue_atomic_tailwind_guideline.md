@@ -23,17 +23,34 @@ Tailwind CSSは**レイアウト・配置・余白・寸法に関するものだ
     - ボタンや入力欄など、文字サイズに追従すべきコントロールの内側余白（`em` パディング）は、文字サイズとセットで Scoped CSS にカプセル化します（無駄なラッパーを作らず、タイポグラフィ計算を1箇所で完結させるため）。
   - **※ 画面グリッドに従う余白（px/rem）やレイアウト（`z-index`, `justify-content`, `align-items`, `flex-direction`, `flex-shrink`, `row-gap`, `column-gap` 等）をScoped CSSに直接書くのは禁止。**
 
-### 余白管理の原則（サーフェスと余白の分離）
-- **サーフェス部品（`Panel`）の余白原則:**
+### 余白管理の原則（セマンティック余白体系と完全機械的ガード）
+- **セマンティック余白への完全統一:**
+  - 画面内のすべての余白（`padding`, `margin`, `gap`）は、**プロジェクト定義済みのセマンティック変数（5階層・9トークン）のみ** を使用します。
+  - 生の数値（`gap-3`, `gap-5`, `gap-1.5`, `p-2.5` 等）や任意値構文（`gap-[var(...)]`）の記述は、**ESLint (`local/strict-spacing-tokens`) により完全禁止（ビルドエラー）** されます。
+
+| 階層 | 用途 | CSS変数 | 許可されるTailwindクラス |
+| :--- | :--- | :--- | :--- |
+| **L1: Layout** | 画面最外周パディング | `--space-layout-pad` (12〜24px Fluid) | `p-layout-pad` |
+| **L2: Section** | 大セクション間、2ペイン分割間 | `--space-section-gap` (20〜32px Fluid) | `gap-section-gap` |
+| **L3: Panel** | パネル内余白（標準）<br>パネル内余白（リスト行・カード用）<br>パネル・カード同士の間隔 | `--space-panel-pad` (12〜20px Fluid)<br>`--space-panel-pad-compact` (12px 固定)<br>`--space-panel-gap` (8〜16px Fluid) | `p-panel-pad`<br>`p-panel-pad-compact`<br>`gap-panel-gap` |
+| **L4: Form** | フォーム行間（上下）<br>フォーム列間（左右） | `--space-form-row-gap` (16px)<br>`--space-form-col-gap` (16px) | `gap-form-row-gap`<br>`gap-form-col-gap` |
+| **L5: Item** | リスト項目間、ボタン列、バッジ間 | `--space-item-gap` (8px) | `gap-item-gap`, `p-item-gap` |
+| **L5: Inline** | アイコンとテキスト、ラベルと入力欄 | `--space-inline-gap` (4px) | `gap-inline-gap` |
+| **Reset** | デフォルト余白の打ち消し、端寄せ | `0px`, `auto` | `m-0`, `p-0`, `ml-auto` 等 |
+
+- **サーフェス部品（`Panel`）の余白カプセル化:**
   - `Panel` は背景・枠線・影のみを提供する純粋なサーフェス枠です。
-  - リストやテーブルを端まで敷き詰める（Full-bleed）用途のため、余白は `padding?: 'normal' | 'none' | 'sm'` プロパティで制御します。
-  - **親が外から `<Panel class="p-0">` のように無理やり打ち消すアンチパターンは ESLint で禁止されています。** 余白をゼロにしたい場合は `<Panel padding="none">` を指定してください。
+  - 余白は `padding?: 'normal' | 'compact' | 'none'` プロパティで制御します。
+  - **親が外から `<Panel class="p-3">` や `<Panel class="p-0">` などの余白クラスを渡すアンチパターンは ESLint で全面禁止されています。**
+- **Margin is harmful 原則（子要素マージンの撲滅）:**
+  - 要素自身に外側余白（`mb-1` 等）を持たせることを禁止します。配置する親コンテナが `flex flex-col gap-inline-gap` や `gap-item-gap` で子要素間の間隔を一元管理してください。
 
 ### 双方向リント監視（完全機械的ガード）
 本方針を人手任せにせず確実に徹底するため、リントツールによる「双方向の機械的チェック」を敷いています：
-1. **ESLint (`eslint-rules/no-tailwind-decoration.mjs`):**
+1. **ESLint (`local/no-tailwind-decoration`, `local/strict-spacing-tokens`):**
    - テンプレート内での装飾系Tailwindクラス（`bg-*`, `text-*`, `rounded-*`, `border-*`, `shadow-*` 等）の使用を完全禁止し、Scoped CSSへの分離を強制。
-   - `<Panel>` に対する `p-0` などの打ち消し指定を禁止し、`padding="none"` の使用を強制。
+   - 定義済みセマンティック余白トークン以外の未定義クラス（`gap-3`, `gap-1.5`, `p-2.5`, `gap-[...]` 等）の使用を完全禁止。
+   - `<Panel>` に対する余白クラス（`p-*`）の直接指定を完全禁止し、`padding` プロパティの使用を強制。
 2. **Stylelint (`.stylelintrc.cjs`):**
    - Scoped CSS内でのレイアウト関連プロパティ（`z-index`, `justify-content`, `align-items`, `flex-direction`, `flex-shrink`, `row-gap`, `column-gap` 等）の記述を完全禁止。
    - Scoped CSS内での固定余白（`px` / `rem`）の直接記述を禁止し、文字連動余白（`em`）および CSS 変数のみ許可。

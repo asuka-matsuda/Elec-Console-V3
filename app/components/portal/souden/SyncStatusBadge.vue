@@ -30,7 +30,7 @@ const isModalOpen = ref(false)
     <button
       v-if="hasPending"
       type="button"
-      class="inline-flex items-center gap-1.5 px-2.5 py-1 sync-btn"
+      class="inline-flex items-center gap-inline-gap px-item-gap py-inline-gap sync-btn"
       :disabled="isSyncing"
       @click="isModalOpen = true"
     >
@@ -40,13 +40,13 @@ const isModalOpen = ref(false)
         :class="{ 'animate-spin': isSyncing }"
       />
       <span>未同期 {{ pendingCount }}件</span>
-      <span class="inline-flex items-center gap-1 pl-1.5 sync-action">
+      <span class="inline-flex items-center gap-inline-gap pl-inline-gap sync-action">
         同期実行
         <Icon name="upload" size="sm" />
       </span>
     </button>
 
-    <div v-else class="inline-flex items-center gap-1.5 px-2 py-1 sync-status">
+    <div v-else class="inline-flex items-center gap-inline-gap px-item-gap py-inline-gap sync-status">
       <span class="sync-dot" />
       <span>同期済</span>
     </div>

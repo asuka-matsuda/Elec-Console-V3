@@ -100,7 +100,7 @@ const handleSave = () => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-6 w-full">
+  <section class="flex flex-col gap-section-gap">
 
     <EmptyState
       v-if="!site"
@@ -114,7 +114,7 @@ const handleSave = () => {
 
       <SectionHeader icon="settings">
         <template #default>
-          <div class="flex items-baseline gap-2">
+          <div class="flex items-baseline gap-item-gap">
             <span>{{ site.name }}</span>
             <span class="site-id">
               (ID: {{ site.id }})
@@ -123,7 +123,7 @@ const handleSave = () => {
         </template>
 
         <template #actions>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-item-gap">
             <Button
               variant="danger"
               icon="trash-2"
@@ -150,7 +150,7 @@ const handleSave = () => {
       >
 
         <template #basic>
-          <div class="flex flex-col gap-5 max-w-xl">
+          <div class="flex flex-col gap-form-row-gap max-w-xl">
             <SectionHeader
               title="現場基本情報"
               icon="info"
@@ -180,17 +180,19 @@ const handleSave = () => {
             </FormGroup>
 
             <FormGroup label="アサイン済作業者">
-              <div
+              <ul
                 v-if="workerNames.length > 0"
-                class="flex flex-wrap items-center gap-2"
+                class="flex flex-wrap items-center gap-item-gap list-none m-0 p-0"
               >
-                <Badge
+                <li
                   v-for="worker in workerNames"
                   :key="worker"
                 >
-                  {{ worker }}
-                </Badge>
-              </div>
+                  <Badge>
+                    {{ worker }}
+                  </Badge>
+                </li>
+              </ul>
               <EmptyState
                 v-else
                 icon="users"
@@ -206,7 +208,7 @@ const handleSave = () => {
         </template>
 
         <template #rules>
-          <div class="flex flex-col gap-4 max-w-xl">
+          <div class="flex flex-col gap-form-row-gap max-w-xl">
             <SectionHeader
               title="除外回路の設定"
               icon="slash"
@@ -218,12 +220,12 @@ const handleSave = () => {
 
             <ul
               v-if="form.excludedCircuits.length > 0"
-              class="m-0 flex flex-col gap-2 p-0 list-none"
+              class="m-0 flex flex-col gap-item-gap p-0 list-none"
             >
               <li
                 v-for="(circuit, idx) in form.excludedCircuits"
                 :key="idx"
-                class="flex items-center gap-2"
+                class="flex items-center gap-item-gap"
               >
                 <Input
                   :model-value="circuit"
@@ -256,7 +258,7 @@ const handleSave = () => {
         </template>
 
         <template #wordBreak>
-          <div class="flex flex-col gap-4 max-w-xl">
+          <div class="flex flex-col gap-form-row-gap max-w-xl">
             <SectionHeader
               title="改行禁止ワードの設定"
               icon="type"
@@ -268,12 +270,12 @@ const handleSave = () => {
 
             <ul
               v-if="form.noBreakWords.length > 0"
-              class="m-0 flex flex-col gap-2 p-0 list-none"
+              class="m-0 flex flex-col gap-item-gap p-0 list-none"
             >
               <li
                 v-for="(word, idx) in form.noBreakWords"
                 :key="idx"
-                class="flex items-center gap-2"
+                class="flex items-center gap-item-gap"
               >
                 <Input
                   :model-value="word"
@@ -306,19 +308,5 @@ const handleSave = () => {
         </template>
       </Tabs>
     </template>
-  </div>
+  </section>
 </template>
-
-<style scoped>
-.site-id {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-}
-
-.desc-text {
-  font-size: var(--font-size-xs);
-  line-height: var(--line-height-base);
-  color: var(--color-text-muted);
-}
-</style>

@@ -18,13 +18,13 @@ defineProps<{
     <Panel
       v-for="(step, index) in steps"
       :key="index"
-      class="flex flex-col gap-3"
+      class="flex flex-col gap-panel-gap"
     >
       <SectionHeader v-if="step.title" :title="step.title" tag="h4" />
       <div class="grid grid-cols-[1fr_auto] items-center gap-panel-gap">
 
         <div
-          class="math-expr min-w-0 overflow-x-auto py-1"
+          class="math-expr min-w-0 overflow-x-auto"
           v-html="renderMath(step.tex, true)"
         />
 

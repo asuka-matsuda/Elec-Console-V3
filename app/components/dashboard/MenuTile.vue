@@ -21,9 +21,9 @@ const componentTag = computed(() => (isClickable.value ? NuxtLink : 'div'))
     :to="isClickable ? item.href : undefined"
     :interactive="isClickable"
     :disabled="Boolean(item.disabled)"
-    class="flex flex-col gap-panel-gap"
+    class="flex flex-col gap-panel-gap h-full"
   >
-    <header v-if="item.icon || item.text" class="flex items-center gap-2 min-w-0 tile-title">
+    <header v-if="item.icon || item.text" class="flex items-center gap-item-gap min-w-0 tile-title">
       <Icon v-if="item.icon" :name="item.icon" class="shrink-0" />
       <span v-if="item.text">{{ item.text }}</span>
     </header>

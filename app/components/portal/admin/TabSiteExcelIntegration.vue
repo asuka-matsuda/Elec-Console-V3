@@ -36,9 +36,9 @@ const {
 </script>
 
 <template>
-  <div class="flex flex-col gap-6">
+  <div class="flex flex-col gap-section-gap">
 
-    <div class="flex flex-col gap-3">
+    <div class="flex flex-col gap-panel-gap">
       <SectionHeader
         title="Excelデータ取込 (差分同期 / 初期設定)"
         icon="upload-cloud"
@@ -54,7 +54,7 @@ const {
         @update:model-value="handleFileSelect"
       />
 
-      <div class="flex flex-wrap items-center gap-3 mt-1">
+      <div class="flex flex-wrap items-center gap-item-gap">
         <Button
           icon="refresh-cw"
           :loading="syncAction === 'merge'"
@@ -76,17 +76,17 @@ const {
       </div>
     </div>
 
-    <div class="flex flex-col gap-3">
+    <div class="flex flex-col gap-panel-gap">
       <SectionHeader
         title="最新結果の帳票出力"
         icon="file-spreadsheet"
         tag="h4"
       />
-      <p class="desc-text m-0">
+      <small class="m-0">
         Web上で完了した最新の試験結果（Phase 1〜3）を含むExcel帳票ファイルをダウンロードします。
-      </p>
+      </small>
 
-      <div class="flex flex-col gap-1.5">
+      <div class="flex flex-col gap-inline-gap">
         <Button
           icon="download"
           :loading="syncAction === 'download'"
@@ -96,34 +96,33 @@ const {
         >
           Excel帳票ダウンロード (ブラウザDL)
         </Button>
-        <p v-if="!hasExcelPath" class="desc-text m-0">
+        <small v-if="!hasExcelPath" class="m-0">
           ※ 現場設定にExcel台帳ファイルが登録されていないため、ダウンロードできません
-        </p>
+        </small>
       </div>
     </div>
 
-    <div
+    <Alert
       v-if="isSyncing"
-      class="status-msg is-info flex items-center gap-2 p-3"
+      variant="info"
+      icon="loader"
     >
-      <Icon name="loader" size="sm" spin />
-      <span>{{ syncMsg }}</span>
-    </div>
+      {{ syncMsg }}
+    </Alert>
 
-    <div
+    <Alert
       v-else-if="showSyncMsg && syncMsgType === 'error'"
-      class="status-msg is-error flex items-center gap-2 p-3"
+      variant="danger"
     >
-      <Icon name="alert-circle" size="sm" />
-      <span>{{ syncMsg }}</span>
-    </div>
+      {{ syncMsg }}
+    </Alert>
 
     <ResultPanel
       v-else-if="syncResultData"
       status="success"
       :title="syncResultData.title"
     >
-      <div class="flex flex-wrap items-center gap-2 mt-2">
+      <div class="flex flex-wrap items-center gap-item-gap">
         <template v-if="syncResultData.type === 'merge'">
           <Badge>
             追加: +{{ syncResultData.createdCount ?? 0 }} 件
@@ -131,9 +130,9 @@ const {
           <Badge>
             変更: {{ syncResultData.updatedCount ?? 0 }} 件
           </Badge>
-          <span class="sync-total-count">
+          <small>
             全回路数: {{ syncResultData.count }} 件
-          </span>
+          </small>
         </template>
         <template v-else-if="syncResultData.type === 'reset'">
           <Badge>
@@ -144,30 +143,3 @@ const {
     </ResultPanel>
   </div>
 </template>
-
-<style scoped>
-.desc-text {
-  font-size: var(--font-size-xs);
-  line-height: var(--line-height-base);
-  color: var(--color-text-muted);
-}
-
-.status-msg {
-  font-size: var(--font-size-sm);
-}
-
-.status-msg.is-info {
-  color: var(--color-category-main);
-  background: color-mix(in srgb, var(--color-category-main) 10%, transparent);
-}
-
-.status-msg.is-error {
-  color: var(--color-status-danger);
-  background: color-mix(in srgb, var(--color-status-danger) 10%, transparent);
-}
-
-.sync-total-count {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-}
-</style>

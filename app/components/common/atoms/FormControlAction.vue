@@ -29,7 +29,7 @@ const handleClick = (event: MouseEvent) => {
   <span
     :tabindex="disabled ? undefined : tabindex"
     :title="title"
-    class="inline-flex shrink-0 items-center justify-center p-[0.2em] form-control-action"
+    class="inline-flex shrink-0 items-center justify-center form-control-action"
     :class="{
       'is-rotated': rotate,
       'is-non-interactive': !interactive,
@@ -47,6 +47,7 @@ const handleClick = (event: MouseEvent) => {
   cursor: pointer;
   user-select: none;
 
+  padding: 0.2em;
   border: none;
 
   font-size: inherit;

@@ -79,7 +79,7 @@ const handleSave = () => {
     v-model="isOpen"
     :title="isEditing ? '予定の編集' : '新しい予定'"
   >
-    <div class="flex flex-col gap-3">
+    <div class="flex flex-col gap-form-row-gap">
       <FormGroup
         label="タイトル"
         required
@@ -99,7 +99,7 @@ const handleSave = () => {
         />
       </FormGroup>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-form-col-gap">
         <FormGroup label="開始日時" required>
           <Input
             :key="'start-' + form.allDay"

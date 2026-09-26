@@ -69,13 +69,13 @@ const handlePrint = () => {
       </Button>
     </template>
 
-    <div v-if="user" class="flex flex-col gap-4">
+    <div v-if="user" class="flex flex-col gap-form-row-gap">
       <p class="credential-desc">
         以下のログイン情報を作業者へお伝えください。<br />
         （初期パスワードはこの画面を閉じると二度と表示されません）
       </p>
 
-      <Panel class="flex flex-col gap-3">
+      <Panel class="flex flex-col gap-panel-gap">
         <FormGroup label="氏名">
           <div class="user-value">
             {{ user.lastName }} {{ user.firstName }}
@@ -89,7 +89,7 @@ const handlePrint = () => {
         </FormGroup>
 
         <FormGroup label="初期パスワード">
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-item-gap">
             <div class="user-value user-value-mono user-value-success flex-1">
               {{ user.initialPassword || "（既に設定済みです）" }}
             </div>
@@ -106,7 +106,7 @@ const handlePrint = () => {
         </FormGroup>
       </Panel>
 
-      <div class="flex justify-end pt-1">
+      <div class="flex justify-end">
         <Button
           icon="printer"
           @click="handlePrint"

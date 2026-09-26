@@ -82,7 +82,7 @@ const columns: TableColumn<HistoryItem>[] = [
       </Badge>
     </template>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-form-row-gap">
       <FormGroup
         label="バージョン"
         required

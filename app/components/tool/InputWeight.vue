@@ -24,7 +24,7 @@ watch(
 </script>
 
 <template>
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-[var(--space-form-col-gap)] gap-y-[var(--space-form-row-gap)]">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-form-col-gap gap-y-form-row-gap">
     <FormGroup label="ケーブル種別">
       <Select
         v-model="inputs.category"

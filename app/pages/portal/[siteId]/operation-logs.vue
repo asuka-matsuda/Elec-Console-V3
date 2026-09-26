@@ -60,23 +60,23 @@ onMounted(() => {
       </template>
     </SectionHeader>
 
-    <Panel class="flex flex-wrap items-center gap-4 px-4 py-3">
-      <div class="flex items-center gap-2">
+    <Panel padding="compact" class="flex flex-wrap items-center gap-panel-gap">
+      <div class="flex items-center gap-item-gap">
         <span class="shrink-0">作業者:</span>
         <Select v-model="selectedWorker" :options="workerOptions" class="min-w-[140px]" />
       </div>
 
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-item-gap">
         <span class="shrink-0">アクション:</span>
         <Select v-model="selectedAction" :options="actionOptions" class="min-w-[140px]" />
       </div>
 
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-item-gap">
         <span class="shrink-0">盤:</span>
         <Select v-model="selectedTargetBan" :options="targetBanOptions" class="min-w-[140px]" />
       </div>
 
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-item-gap">
         <span class="shrink-0">表示件数:</span>
         <Select v-model="limit" :options="OPERATION_LOG_LIMIT_OPTIONS" class="min-w-[90px]" />
       </div>

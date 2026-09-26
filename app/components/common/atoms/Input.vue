@@ -152,7 +152,7 @@ defineExpose({
 
       <div
         v-if="hasActions"
-        class="absolute right-2 z-[3] flex items-center gap-1 action-group"
+        class="absolute right-2 z-[3] flex items-center gap-inline-gap action-group"
       >
 
         <FormControlAction

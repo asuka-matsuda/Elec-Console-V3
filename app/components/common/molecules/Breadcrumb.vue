@@ -30,13 +30,13 @@ const resolvedItems = computed<BreadcrumbItem[]>(() => {
 <template>
   <nav
     v-if="resolvedItems && resolvedItems.length > 0"
-    class="flex shrink-0 items-center py-1 px-2 whitespace-nowrap breadcrumb"
+    class="flex shrink-0 items-center py-inline-gap px-item-gap whitespace-nowrap breadcrumb"
   >
-    <ol class="flex items-center gap-2">
+    <ol class="flex items-center gap-item-gap">
       <li
         v-for="(item, index) in resolvedItems"
         :key="`${item.text}-${index}`"
-        class="flex items-center gap-2"
+        class="flex items-center gap-item-gap"
         :class="{ 'is-current': index === resolvedItems.length - 1 }"
       >
         {{ item.text }}

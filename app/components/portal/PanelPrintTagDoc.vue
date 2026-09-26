@@ -17,7 +17,7 @@ const TAG_COLUMNS: TableColumn<TagMetadataItem>[] = [
 </script>
 
 <template>
-  <Panel class="flex flex-col gap-4">
+  <Panel class="flex flex-col gap-panel-gap">
     <SectionHeader
       title="Excelテンプレート タグ記述仕様"
       icon="file-text"

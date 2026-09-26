@@ -34,8 +34,8 @@ const getCableSpec = formatConduitCableSpec
 </script>
 
 <template>
-  <div class="flex flex-col gap-[var(--space-form-row-gap)]">
-    <div class="grid grid-cols-1 sm:grid-cols-[2fr_1fr] gap-x-[var(--space-form-col-gap)] gap-y-[var(--space-form-row-gap)]">
+  <div class="flex flex-col gap-form-row-gap">
+    <div class="grid grid-cols-1 sm:grid-cols-[2fr_1fr] gap-x-form-col-gap gap-y-form-row-gap">
       <FormGroup label="対象の配管種類">
         <Select
           v-model="inputs.conduitCategory"
@@ -57,7 +57,7 @@ const getCableSpec = formatConduitCableSpec
       </FormGroup>
     </div>
 
-    <section class="flex flex-col gap-[var(--space-item-gap)]">
+    <section class="flex flex-col gap-item-gap">
       <Button
         class="self-end"
         icon="plus"

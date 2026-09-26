@@ -28,12 +28,12 @@ provide(FORM_GROUP_KEY, {
 </script>
 
 <template>
-  <div class="flex flex-col gap-1.5 form-group" :class="{ 'is-error': hasError }">
+  <div class="flex flex-col gap-inline-gap form-group" :class="{ 'is-error': hasError }">
 
     <label
       v-if="label || $slots.label"
       :for="fieldId"
-      class="inline-flex items-center gap-1.5 label"
+      class="inline-flex items-center gap-inline-gap label"
     >
       <slot name="label">{{ label }}</slot>
       <span v-if="required" class="req-mark">＊</span>

@@ -54,7 +54,7 @@ if (import.meta.client) {
       </Button>
     </template>
 
-    <div class="py-2">
+    <div class="py-item-gap">
       {{ confirmMessage }}
     </div>
   </Modal>

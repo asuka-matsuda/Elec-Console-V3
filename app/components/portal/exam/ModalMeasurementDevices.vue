@@ -210,7 +210,7 @@ const isFormValid = computed(() => {
     title="測定機器台帳の管理"
     icon="tool"
   >
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-panel-gap">
       <Disclaimer
         text="現場で使用する測定機器（絶縁計・電圧計・検相器等）を登録します。登録した機器は帳票印刷時にドロップダウンで選択できます。"
       />
@@ -220,7 +220,7 @@ const isFormValid = computed(() => {
         :text="errorMessage"
       />
 
-      <Panel class="flex flex-col gap-3">
+      <Panel as="section" class="flex flex-col gap-form-row-gap">
         <SectionHeader
           :title="editingId ? '機器情報の編集' : '新しい測定機器の追加'"
           icon="plus-circle"
@@ -228,7 +228,7 @@ const isFormValid = computed(() => {
           variant="hud"
         />
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-form-row-gap">
           <FormGroup label="機器種別" required>
             <Select
               v-model="formCategory"
@@ -272,7 +272,7 @@ const isFormValid = computed(() => {
           </FormGroup>
         </div>
 
-        <div class="flex justify-end gap-2 pt-2">
+        <div class="flex justify-end gap-item-gap pt-item-gap">
           <Button
             v-if="editingId"
             variant="default"
@@ -295,7 +295,7 @@ const isFormValid = computed(() => {
 
       <Divider />
 
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-item-gap">
         <SectionHeader
           title="登録済みの測定機器"
           icon="list"
@@ -312,38 +312,37 @@ const isFormValid = computed(() => {
           message="登録されている測定機器はありません。上のフォームから追加してください。"
         />
 
-        <div
+        <ul
           v-else
-          class="flex flex-col gap-2 max-h-[320px] overflow-y-auto pr-1"
+          class="flex flex-col gap-item-gap max-h-[320px] overflow-y-auto pr-inline-gap list-none m-0 p-0"
         >
-          <div
+          <Panel
             v-for="dev in localDevices"
             :key="dev.id"
-            class="device-card flex items-center justify-between gap-3 p-3"
+            as="li"
+            padding="compact"
+            class="flex items-center justify-between gap-item-gap"
           >
-            <div class="flex flex-col gap-1 min-w-0 flex-1">
-              <div class="flex items-center gap-2 flex-wrap">
+            <div class="flex flex-col gap-inline-gap min-w-0 flex-1">
+              <div class="flex items-center gap-item-gap flex-wrap">
                 <Badge :color="getCategoryBadgeColor(dev.category)">
                   {{ getCategoryLabel(dev.category) }}
                 </Badge>
-                <span class="device-name">
+                <strong>
                   {{ dev.maker }} {{ dev.model }}
-                </span>
-                <span
-                  v-if="dev.note"
-                  class="device-note"
-                >
-                  {{ dev.note }}
-                </span>
+                </strong>
+                <small v-if="dev.note">
+                  ({{ dev.note }})
+                </small>
               </div>
 
-              <div class="device-meta flex items-center gap-4 flex-wrap">
+              <small class="flex items-center gap-form-row-gap flex-wrap">
                 <span>校正日: {{ dev.calibrationDate || '未設定' }}</span>
                 <span>製番: {{ dev.serialNumber || '未設定' }}</span>
-              </div>
+              </small>
             </div>
 
-            <div class="flex items-center gap-1 shrink-0">
+            <div class="flex items-center gap-inline-gap shrink-0">
               <Button
                 variant="default"
                 icon="edit"
@@ -359,43 +358,9 @@ const isFormValid = computed(() => {
                 @click="handleDeleteItem(dev.id)"
               />
             </div>
-          </div>
-        </div>
+          </Panel>
+        </ul>
       </div>
     </div>
   </Modal>
 </template>
-
-<style scoped lang="scss">
-.count-badge {
-  font-size: var(--font-size-xs);
-  opacity: 0.75;
-}
-
-.device-card {
-  border: var(--border-width-base) solid var(--color-border-subtle);
-  background: var(--color-bg-surface-raised);
-}
-
-.device-name {
-  overflow: hidden;
-
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-main);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.device-note {
-  padding: var(--space-0-5) var(--space-1-5);
-  border: var(--border-width-base) solid var(--color-border-subtle);
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-}
-
-.device-meta {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-}
-</style>

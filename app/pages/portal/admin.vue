@@ -13,7 +13,5 @@ definePageMeta({
 </script>
 
 <template>
-  <div class="flex flex-col gap-section-gap">
-    <PortalTabAdminSites />
-  </div>
+  <PortalTabAdminSites />
 </template>

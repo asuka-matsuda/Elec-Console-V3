@@ -51,7 +51,7 @@ const {
 
     <button
       type="button"
-      class="handle hidden max-md:flex items-center justify-between w-full h-12 px-3"
+      class="handle hidden max-md:flex items-center justify-between w-full h-12 px-panel-pad-compact"
       @click="isOpen = !isOpen"
     >
       <span>計算結果を見る</span>
@@ -61,7 +61,7 @@ const {
       />
     </button>
 
-    <div class="flex flex-1 flex-col min-h-0 max-md:p-3">
+    <div class="flex flex-1 flex-col min-h-0 max-md:p-panel-pad-compact">
       <Panel class="flex flex-1 flex-col gap-panel-gap min-h-0">
         <SectionHeader
           :title="currentTitle"
@@ -89,7 +89,7 @@ const {
           </template>
         </SectionHeader>
 
-        <div class="body flex flex-1 flex-col min-h-0 px-2 py-1 overflow-y-auto">
+        <div class="body flex flex-1 flex-col min-h-0 px-item-gap py-inline-gap overflow-y-auto">
           <slot v-if="!isShowingBasis" />
           <slot v-else name="basis" />
         </div>

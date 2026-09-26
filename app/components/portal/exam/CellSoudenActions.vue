@@ -35,9 +35,9 @@ defineEmits<{
 </script>
 
 <template>
-  <div class="cell-actions flex items-center justify-center gap-1.5 whitespace-nowrap">
+  <div class="cell-actions flex items-center justify-center gap-inline-gap whitespace-nowrap">
     <template v-if="isLocked">
-      <span class="text-note inline-flex items-center gap-1">
+      <span class="text-note inline-flex items-center gap-inline-gap">
         ⏸ {{ lockedReason }}
       </span>
     </template>

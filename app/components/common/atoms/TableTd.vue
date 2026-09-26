@@ -53,7 +53,7 @@ const formattedSubValue = computed(() => formatValue(props.subValue, ''))
 
 <template>
   <td
-    class="p-2 align-middle"
+    class="p-item-gap align-middle"
     :class="[
       align === 'center' ? 'text-center' : align === 'right' ? 'text-right' : 'text-left',
       {

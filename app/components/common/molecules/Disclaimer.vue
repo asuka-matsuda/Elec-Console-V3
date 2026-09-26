@@ -10,12 +10,12 @@ defineProps<DisclaimerProps>()
 </script>
 
 <template>
-  <div v-if="text" class="disclaimer flex shrink-0 items-start gap-2 py-2 px-3">
+  <aside v-if="text" class="disclaimer flex shrink-0 items-start gap-item-gap p-panel-pad-compact">
     <Icon name="alert-triangle" class="mt-0.5 shrink-0" />
     <span class="flex-1 min-w-0 break-words">
       {{ text }}
     </span>
-  </div>
+  </aside>
 </template>
 
 <style scoped lang="scss">

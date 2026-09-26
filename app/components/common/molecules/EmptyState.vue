@@ -9,9 +9,9 @@ defineProps<EmptyStateProps>()
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center gap-2 py-4 px-4 text-center">
-    <div v-if="title || icon || description" class="flex flex-col items-center justify-center gap-1">
-      <p v-if="title || icon" class="flex items-center justify-center gap-1.5 title">
+  <div class="flex flex-col items-center justify-center gap-item-gap p-panel-pad text-center">
+    <div v-if="title || icon || description" class="flex flex-col items-center justify-center gap-inline-gap">
+      <p v-if="title || icon" class="flex items-center justify-center gap-inline-gap title">
         <Icon v-if="icon" :name="icon" :spin="spin" />
         <span v-if="title">{{ title }}</span>
       </p>
@@ -21,7 +21,7 @@ defineProps<EmptyStateProps>()
       </p>
     </div>
 
-    <div v-if="$slots.actions" class="flex items-center justify-center gap-2">
+    <div v-if="$slots.actions" class="flex items-center justify-center gap-item-gap">
       <slot name="actions" />
     </div>
   </div>

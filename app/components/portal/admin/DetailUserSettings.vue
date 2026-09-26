@@ -105,7 +105,7 @@ const handleSave = () => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-5 w-full">
+  <section class="flex flex-col gap-section-gap">
 
     <EmptyState
       v-if="!user"
@@ -115,22 +115,22 @@ const handleSave = () => {
       class="placeholder-empty min-h-[400px] flex items-center justify-center"
     />
 
-    <div v-else class="flex flex-col gap-5 w-full">
+    <template v-else>
 
       <SectionHeader icon="user">
         <template #default>
-          <div class="flex flex-wrap items-center gap-2">
+          <div class="flex flex-wrap items-center gap-item-gap">
             <span>{{ user.lastName }} {{ user.firstName }}</span>
             <Badge :id="`role:${user.role}`" />
             <Badge v-if="user.requirePasswordReset" id="user:pwd-reset" />
-            <span class="user-id">
+            <small>
               (ID: {{ user.loginId || user.id }})
-            </span>
+            </small>
           </div>
         </template>
 
         <template #actions>
-          <div class="flex flex-wrap items-center gap-2">
+          <div class="flex flex-wrap items-center gap-item-gap">
             <Button @click="emit('reset-password', user)">
               PW初期化
             </Button>
@@ -159,14 +159,14 @@ const handleSave = () => {
       >
 
         <template #basic>
-          <div class="flex flex-col gap-5 max-w-xl">
+          <div class="flex flex-col gap-form-row-gap max-w-xl">
             <SectionHeader
               title="ユーザー基本情報"
               icon="info"
               tag="h4"
             />
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-form-col-gap gap-y-form-row-gap">
               <FormGroup label="姓">
                 <Input
                   v-model="form.lastName"
@@ -181,7 +181,7 @@ const handleSave = () => {
               </FormGroup>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-form-col-gap gap-y-form-row-gap">
               <FormGroup label="姓（ふりがな）">
                 <Input
                   v-model="form.lastNameKana"
@@ -217,47 +217,51 @@ const handleSave = () => {
             />
 
             <FormGroup label="最終ログイン日時">
-              <div class="last-login-text pt-1">
+              <small>
                 {{ lastLoginText }}
-              </div>
+              </small>
             </FormGroup>
           </div>
         </template>
 
         <template #assign>
-          <div class="flex flex-col gap-4 max-w-xl">
+          <div class="flex flex-col gap-form-row-gap max-w-xl">
             <SectionHeader
               title="参加現場アサイン"
               icon="building"
               tag="h4"
             />
 
-            <p class="desc-text m-0">
+            <small class="m-0">
               このユーザーが参加・閲覧できる現場を選択してください。
-            </p>
+            </small>
 
-            <div v-if="siteList.length > 0" class="flex flex-col gap-2">
-              <div
+            <ul v-if="siteList.length > 0" class="flex flex-col gap-item-gap list-none m-0 p-0">
+              <li
                 v-for="site in siteList"
                 :key="site.id"
-                class="flex items-center justify-between p-2.5 site-assign-row gap-3"
               >
-                <Checkbox
-                  :model-value="isSiteAssigned(site.id)"
-                  :label="`${site.name} (${site.id})`"
-                  @update:model-value="handleToggleSite(site.id, $event)"
-                />
-
-                <div v-if="isSiteAssigned(site.id)" class="w-36 flex-shrink-0">
-                  <Select
-                    :model-value="getSiteRole(site.id)"
-                    :options="USER_ROLE_OPTIONS"
-                    size="sm"
-                    @update:model-value="handleSiteRoleChange(site.id, $event)"
+                <Panel
+                  padding="compact"
+                  class="flex items-center justify-between gap-panel-gap"
+                >
+                  <Checkbox
+                    :model-value="isSiteAssigned(site.id)"
+                    :label="`${site.name} (${site.id})`"
+                    @update:model-value="handleToggleSite(site.id, $event)"
                   />
-                </div>
-              </div>
-            </div>
+
+                  <div v-if="isSiteAssigned(site.id)" class="w-36 flex-shrink-0">
+                    <Select
+                      :model-value="getSiteRole(site.id)"
+                      :options="USER_ROLE_OPTIONS"
+                      size="sm"
+                      @update:model-value="handleSiteRoleChange(site.id, $event)"
+                    />
+                  </div>
+                </Panel>
+              </li>
+            </ul>
 
             <EmptyState
               v-else
@@ -268,30 +272,6 @@ const handleSave = () => {
           </div>
         </template>
       </Tabs>
-    </div>
-  </div>
+    </template>
+  </section>
 </template>
-
-<style scoped>
-.user-id {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-}
-
-.last-login-text {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-}
-
-.desc-text {
-  font-size: var(--font-size-xs);
-  line-height: var(--line-height-base);
-  color: var(--color-text-muted);
-}
-
-.site-assign-row {
-  border: var(--border-width-base) solid var(--color-border);
-  background-color: color-mix(in srgb, var(--surface-bg-elevated) 30%, transparent);
-}
-</style>

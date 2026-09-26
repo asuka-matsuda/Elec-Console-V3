@@ -19,13 +19,13 @@ const isBorder = computed(() => props.variant === 'border' || props.variant === 
 </script>
 
 <template>
-  <header class="flex flex-wrap items-center justify-between gap-y-1 gap-x-2 section-header">
-    <component :is="tag" class="flex items-center gap-2 title">
+  <header class="flex flex-wrap items-center justify-between gap-y-inline-gap gap-x-item-gap section-header">
+    <component :is="tag" class="flex items-center gap-item-gap title">
       <Icon v-if="icon" :name="icon" class="icon" />
       <slot>{{ title }}</slot>
     </component>
 
-    <div v-if="$slots.actions" class="flex items-center gap-2">
+    <div v-if="$slots.actions" class="flex items-center gap-item-gap">
       <slot name="actions" />
     </div>
 

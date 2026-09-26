@@ -12,6 +12,7 @@ import noTailwindDecoration from './eslint-rules/no-tailwind-decoration.mjs'
 import noTemplateComments from './eslint-rules/no-template-comments.mjs'
 import noTrivialFacade from './eslint-rules/no-trivial-facade.mjs'
 import requireFileJsdoc from './eslint-rules/require-file-jsdoc.mjs'
+import strictSpacingTokens from './eslint-rules/strict-spacing-tokens.mjs'
 
 export default withNuxt(
   {
@@ -20,6 +21,7 @@ export default withNuxt(
       'local': {
         rules: {
           'no-tailwind-decoration': noTailwindDecoration,
+          'strict-spacing-tokens': strictSpacingTokens,
           'no-hover-transition-override': noHoverTransitionOverride,
           'no-legacy-css-vars': noLegacyCssVars,
           'no-pure-accessibility': noPureAccessibility,
@@ -35,6 +37,7 @@ export default withNuxt(
     },
     rules: {
       'local/no-tailwind-decoration': 'error',
+      'local/strict-spacing-tokens': 'error',
       'local/no-hover-transition-override': 'error',
       'local/no-legacy-css-vars': 'error',
       'local/no-pure-accessibility': 'error',

@@ -87,10 +87,10 @@ const handleKeydown = (event: KeyboardEvent, currentIndex: number) => {
 </script>
 
 <template>
-  <div class="tabs-container flex flex-col gap-4 w-full">
+  <div class="tabs-container flex flex-col gap-panel-gap w-full">
 
     <div class="overflow-x-auto pb-0.5">
-      <nav class="tabs inline-flex items-center gap-1 min-w-full">
+      <nav class="tabs inline-flex items-center gap-inline-gap min-w-full">
         <button
           v-for="(option, index) in options"
           :id="`tab-${baseId}-${option.value}`"
@@ -99,7 +99,7 @@ const handleKeydown = (event: KeyboardEvent, currentIndex: number) => {
           type="button"
           :tabindex="model === option.value ? 0 : -1"
           :disabled="option.disabled"
-          class="relative z-[1] flex items-center justify-center gap-2 tabs__item"
+          class="relative z-[1] flex items-center justify-center gap-item-gap tabs__item"
           :class="{
             'is-active': model === option.value,
           }"
@@ -112,7 +112,6 @@ const handleKeydown = (event: KeyboardEvent, currentIndex: number) => {
             <Badge
               v-if="option.badge !== undefined"
               :id="option.badgeVariant"
-              class="ml-1"
             >
               {{ option.badge }}
             </Badge>

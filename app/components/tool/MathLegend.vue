@@ -23,10 +23,10 @@ const parsedItems = computed(() => parseLegend(props.items ?? undefined))
 <template>
   <div
     v-if="parsedItems.length > 0"
-    class="math-legend flex flex-col gap-1 w-64 pl-3"
+    class="math-legend flex flex-col gap-inline-gap w-64 pl-panel-gap"
   >
     <span v-if="title" class="title">{{ title }}</span>
-    <dl class="grid grid-cols-[max-content_1fr] gap-x-2 gap-y-0.5 items-baseline">
+    <dl class="grid grid-cols-[max-content_1fr] gap-x-item-gap gap-y-inline-gap items-baseline">
       <template v-for="(v, i) in parsedItems" :key="i">
         <dt class="whitespace-nowrap" v-html="v.renderedSymbol" />
         <dd class="min-w-0 break-words">{{ v.name }}</dd>

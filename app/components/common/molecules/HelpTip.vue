@@ -77,7 +77,7 @@ if (import.meta.client) {
     <div
       v-if="isOpen && (displayText || $slots.default)"
       ref="panelRef"
-      class="helptip-panel fixed z-[9999] w-[200px] px-2.5 py-2 whitespace-normal"
+      class="helptip-panel fixed z-[9999] w-[200px] flex flex-col gap-inline-gap p-item-gap whitespace-normal"
       :style="{
         top: `${position.top}px`,
         left: `${position.left}px`,
@@ -90,7 +90,7 @@ if (import.meta.client) {
 
       <div
         v-if="displayReference"
-        class="helptip-reference mt-1.5 pt-1 flex items-center justify-between"
+        class="helptip-reference pt-inline-gap flex items-center justify-between"
       >
         <span>規格:</span>
         <Badge color="var(--theme-accent)">

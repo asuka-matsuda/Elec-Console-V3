@@ -127,10 +127,10 @@ const getCellValue = (row: unknown, key?: string | number) => getTableCellValue(
         <tr>
           <td
             :colspan="columns.length"
-            class="loading-cell py-12 text-center"
+            class="loading-cell py-section-gap text-center"
           >
             <slot name="loading">
-              <div class="flex flex-col items-center justify-center gap-3">
+              <div class="flex flex-col items-center justify-center gap-item-gap">
                 <Icon name="loader" size="lg" spin class="text-accent" />
                 <span class="loading-text">{{ loadingText }}</span>
               </div>
@@ -179,13 +179,13 @@ const getCellValue = (row: unknown, key?: string | number) => getTableCellValue(
         <tr>
           <td
             :colspan="columns.length"
-            class="empty-cell py-12 text-center"
+            class="empty-cell py-section-gap text-center"
           >
             <slot name="empty">
               <EmptyState
                 icon="database"
                 :title="emptyText"
-                class="py-4"
+                class="py-panel-pad"
               />
             </slot>
           </td>

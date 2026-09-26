@@ -30,7 +30,9 @@ const OVERFLOW_CLASSES: Record<PanelOverflow, string> = {
       OVERFLOW_CLASSES[overflow],
       {
         'p-panel-pad': padding === 'normal',
-        'p-2': padding === 'sm',
+        'p-panel-pad-compact': padding === 'compact',
+        'p-item-gap': padding === 'sm',
+        'p-0': padding === 'none',
         'is-interactive': interactive,
         'is-selected': selected,
         'is-disabled': disabled,

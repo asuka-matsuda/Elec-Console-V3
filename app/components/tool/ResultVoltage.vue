@@ -18,9 +18,9 @@ const vm = computed(() => formatVoltageResult(props.inputs, props.result))
 </script>
 
 <template>
-  <div
+  <output
     class="flex flex-1 flex-col min-h-0"
-    :class="[size === 'sm' ? 'gap-3 is-sm' : 'gap-panel-gap']"
+    :class="[size === 'sm' ? 'gap-item-gap is-sm' : 'gap-panel-gap']"
   >
 
     <ResultPanel
@@ -67,5 +67,5 @@ const vm = computed(() => formatVoltageResult(props.inputs, props.result))
       v-if="vm.details"
       :items="vm.details"
     />
-  </div>
+  </output>
 </template>

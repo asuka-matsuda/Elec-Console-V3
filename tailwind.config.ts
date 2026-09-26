@@ -52,6 +52,7 @@ export default <Config>{
         'layout-pad': 'var(--space-layout-pad)',
         'section-gap': 'var(--space-section-gap)',
         'panel-pad': 'var(--space-panel-pad)',
+        'panel-pad-compact': 'var(--space-panel-pad-compact)',
         'panel-gap': 'var(--space-panel-gap)',
         'form-row-gap': 'var(--space-form-row-gap)',
         'form-col-gap': 'var(--space-form-col-gap)',

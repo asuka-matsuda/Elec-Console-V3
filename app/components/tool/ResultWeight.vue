@@ -16,7 +16,7 @@ const vm = computed(() => formatWeightResult(props.result))
 </script>
 
 <template>
-  <div class="flex flex-col gap-panel-gap">
+  <output class="flex flex-col gap-panel-gap">
 
     <ResultPanel
       title="使用ドラム（想定）"
@@ -35,5 +35,5 @@ const vm = computed(() => formatWeightResult(props.result))
     </ResultPanel>
 
     <ToolResultDetails :items="vm.details" />
-  </div>
+  </output>
 </template>

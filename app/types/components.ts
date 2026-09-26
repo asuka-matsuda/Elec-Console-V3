@@ -159,7 +159,7 @@ export interface SectionHeaderProps {
 
 // --- Panel ---
 export type PanelOverflow = 'hidden' | 'visible' | 'auto'
-type PanelPadding = 'normal' | 'none' | 'sm'
+type PanelPadding = 'normal' | 'compact' | 'none' | 'sm'
 
 export interface PanelProps {
   /** 描画するHTML要素またはコンポーネント（デフォルト: 'div'） */
@@ -446,6 +446,15 @@ export interface TableProps<T = Record<string, unknown>> {
 // --- Breadcrumb ---
 export interface BreadcrumbProps {
   items?: BreadcrumbItem[]
+}
+
+// --- Alert ---
+export type AlertVariant = 'info' | 'success' | 'warning' | 'danger'
+
+export interface AlertProps {
+  variant?: AlertVariant
+  icon?: IconName
+  title?: string
 }
 
 // ============================================================================

@@ -48,7 +48,7 @@ const handleClick = () => {
 
 <template>
   <th
-    class="sticky top-0 z-table-header p-2 align-middle"
+    class="sticky top-0 z-table-header p-item-gap align-middle"
     :class="{
       'is-sortable': isSortable,
       'is-sorted': isSorted,
@@ -60,7 +60,7 @@ const handleClick = () => {
     @keydown.space.prevent="handleClick"
   >
     <div
-      class="flex items-center gap-1 w-full min-w-0 header-content"
+      class="flex items-center gap-inline-gap w-full min-w-0 header-content"
       :class="{
         'justify-center': column.align === 'center',
         'justify-end': column.align === 'right',

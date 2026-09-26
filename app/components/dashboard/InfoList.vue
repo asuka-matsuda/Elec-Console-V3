@@ -32,10 +32,10 @@ defineEmits<{
       <li
         v-for="(item, index) in items"
         :key="item.id ?? `${item.date}-${index}`"
-        class="feed-item flex flex-col gap-1 p-panel-pad"
+        class="feed-item flex flex-col gap-inline-gap p-panel-pad"
         @click="$emit('select', item)"
       >
-        <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center justify-between gap-item-gap">
           <time>{{ item.date }}</time>
           <slot name="badge" :item="item" />
         </div>

@@ -34,29 +34,27 @@ const emit = defineEmits<{
 
     <div class="grid flex-1 grid-cols-1 md:grid-cols-[minmax(0,4fr)_minmax(0,3fr)] gap-panel-gap min-h-0">
 
-      <section class="flex flex-col min-h-0">
-        <Panel class="flex flex-1 flex-col gap-panel-gap min-h-0">
-          <SectionHeader
-            :title="inputsTitle"
-            :icon="inputsIcon"
-            tag="h3"
-          >
-            <template #actions>
-              <Button
-                variant="danger"
-                icon="refresh-cw"
-                @click="emit('reset')"
-              >
-                リセット
-              </Button>
-            </template>
-          </SectionHeader>
+      <Panel as="section" class="flex flex-1 flex-col gap-panel-gap min-h-0">
+        <SectionHeader
+          :title="inputsTitle"
+          :icon="inputsIcon"
+          tag="h3"
+        >
+          <template #actions>
+            <Button
+              variant="danger"
+              icon="refresh-cw"
+              @click="emit('reset')"
+            >
+              リセット
+            </Button>
+          </template>
+        </SectionHeader>
 
-          <div class="body flex flex-1 flex-col min-h-0 overflow-y-auto px-2 py-1">
-            <slot name="inputs" />
-          </div>
-        </Panel>
-      </section>
+        <div class="body flex flex-1 flex-col min-h-0 overflow-y-auto px-item-gap py-inline-gap">
+          <slot name="inputs" />
+        </div>
+      </Panel>
 
       <ToolResultDrawer
         :title="resultsTitle"

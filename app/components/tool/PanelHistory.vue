@@ -55,14 +55,14 @@ const weightResult = computed(() => {
 <template>
   <Panel
     as="article"
-    class="history-panel flex flex-col gap-3"
+    class="history-panel flex flex-col gap-panel-gap"
     :class="[`is-${entry.status}`]"
   >
 
-    <header class="flex items-end justify-between pb-2">
-      <div class="flex flex-col gap-1 min-w-0">
+    <header class="flex items-end justify-between">
+      <div class="flex flex-col gap-inline-gap min-w-0">
         <span class="text-date">{{ entry.timestamp }}</span>
-        <h3 class="flex items-center gap-2 text-title m-0">
+        <h3 class="flex items-center gap-item-gap text-title m-0">
           <span>{{ entry.toolName }}</span>
           <Badge v-if="entry.mode === 'サイズ選定'" id="tool:size-select">
             {{ entry.mode }}
@@ -74,69 +74,66 @@ const weightResult = computed(() => {
       </div>
     </header>
 
-    <div class="flex flex-col gap-3 min-h-0">
+    <div class="flex flex-col gap-panel-gap min-h-0">
 
-      <section class="flex flex-col gap-1 min-h-0">
-        <div>
+      <section class="flex flex-col gap-inline-gap min-h-0">
+        <ToolResultVoltage
+          v-if="entry.toolId === 'voltage' && voltageInputs && voltageResult"
+          :inputs="voltageInputs"
+          :result="voltageResult"
+          size="sm"
+        />
 
-          <ToolResultVoltage
-            v-if="entry.toolId === 'voltage' && voltageInputs && voltageResult"
-            :inputs="voltageInputs"
-            :result="voltageResult"
-            size="sm"
-          />
+        <ToolResultConduit
+          v-else-if="entry.toolId === 'conduit' && conduitResult"
+          :result="conduitResult"
+          size="sm"
+        />
 
-          <ToolResultConduit
-            v-else-if="entry.toolId === 'conduit' && conduitResult"
-            :result="conduitResult"
-            size="sm"
-          />
+        <ToolResultRack
+          v-else-if="entry.toolId === 'rack' && rackResult"
+          :result="rackResult"
+        />
 
-          <ToolResultRack
-            v-else-if="entry.toolId === 'rack' && rackResult"
-            :result="rackResult"
-          />
+        <ToolResultWeight
+          v-else-if="entry.toolId === 'weight' && weightResult"
+          :result="weightResult"
+        />
 
-          <ToolResultWeight
-            v-else-if="entry.toolId === 'weight' && weightResult"
-            :result="weightResult"
-          />
-
-          <template v-else>
-            <h4 class="section-title pl-1 m-0">
-              計算結果
-            </h4>
-            <dl class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 list-desc m-0">
-              <template v-for="(res, idx) in entry.results" :key="idx">
-                <dt
-                  class="whitespace-nowrap"
-                  :style="{
-                    color: res.color,
-                    fontWeight: res.color ? 'bold' : 'normal',
-                  }"
-                >
-                  {{ res.label }}
-                </dt>
-                <dd
-                  class="text-right m-0"
-                  :style="{
-                    color: res.color,
-                    fontWeight: res.isMain || res.color ? 'bold' : 'normal',
-                  }"
-                >
-                  {{ res.value }}
-                </dd>
-              </template>
-            </dl>
-          </template>
-        </div>
+        <template v-else>
+          <h4 class="section-title m-0">
+            計算結果
+          </h4>
+          <dl class="grid grid-cols-[auto_1fr] gap-x-panel-gap gap-y-inline-gap list-desc m-0">
+            <template v-for="(res, idx) in entry.results" :key="idx">
+              <dt
+                class="whitespace-nowrap"
+                :style="{
+                  color: res.color,
+                  fontWeight: res.color ? 'bold' : 'normal',
+                }"
+              >
+                {{ res.label }}
+              </dt>
+              <dd
+                class="text-right m-0"
+                :style="{
+                  color: res.color,
+                  fontWeight: res.isMain || res.color ? 'bold' : 'normal',
+                }"
+              >
+                {{ res.value }}
+              </dd>
+            </template>
+          </dl>
+        </template>
       </section>
 
-      <section class="flex flex-col gap-1 min-h-0">
-        <h4 class="section-title pl-1 m-0">
+      <section class="flex flex-col gap-inline-gap min-h-0">
+        <h4 class="section-title m-0">
           入力条件
         </h4>
-        <dl class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 list-desc m-0">
+        <dl class="grid grid-cols-[auto_1fr] gap-x-panel-gap gap-y-inline-gap list-desc m-0">
           <template v-for="(input, idx) in entry.inputs" :key="idx">
             <dt class="whitespace-nowrap">
               {{ input.label }}
@@ -149,7 +146,7 @@ const weightResult = computed(() => {
       </section>
     </div>
 
-    <footer class="flex items-center justify-end mt-auto pt-2">
+    <footer class="flex items-center justify-end mt-auto">
       <Button
         variant="danger"
         icon="trash-2"

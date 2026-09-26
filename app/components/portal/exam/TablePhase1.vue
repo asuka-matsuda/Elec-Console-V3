@@ -91,8 +91,8 @@ const isComplete = (c: CircuitItem) => {
     @sort="handleSort"
   >
     <template #cell-cableList="{ row: circuit }">
-      <div class="flex flex-col gap-0.5">
-        <div class="flex items-center gap-1">
+      <div class="flex flex-col gap-inline-gap">
+        <div class="flex items-center gap-inline-gap">
           <span class="cell-cable">{{ circuit.cableList || '-' }}</span>
           <span v-if="circuit.haisenJousuu" class="cell-jousuu">({{ circuit.haisenJousuu }})</span>
         </div>
@@ -103,7 +103,7 @@ const isComplete = (c: CircuitItem) => {
     </template>
 
     <template #cell-p1Kakunin="{ row: circuit }">
-      <div class="flex items-center justify-center gap-3">
+      <div class="flex items-center justify-center gap-item-gap">
         <Checkbox
           v-model="getRowForm(circuit).kakunin"
           label="確認"

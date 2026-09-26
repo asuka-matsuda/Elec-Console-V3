@@ -47,7 +47,7 @@ const getGroupData = (keiTo: '幹線' | '二次側', stats: SoudenStats) => {
 </script>
 
 <template>
-  <Panel>
+  <Panel as="section">
     <SectionHeader
       title="総合進捗"
       icon="activity"
@@ -65,7 +65,7 @@ const getGroupData = (keiTo: '幹線' | '二次側', stats: SoudenStats) => {
       </template>
     </SectionHeader>
 
-    <div class="flex flex-col lg:flex-row items-center gap-6 lg:gap-8">
+    <div class="flex flex-col lg:flex-row items-center gap-section-gap">
       <PortalCircularGauge
         class="shrink-0"
         :value="stats.totalPct"
@@ -73,23 +73,23 @@ const getGroupData = (keiTo: '幹線' | '二次側', stats: SoudenStats) => {
         label="全試験完了率"
       />
 
-      <div class="flex flex-1 flex-col gap-5 w-full">
+      <div class="flex flex-1 flex-col gap-section-gap w-full">
         <template v-for="(group, index) in GROUPS" :key="group.keiTo">
-          <div class="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-6">
+          <div class="flex flex-col md:flex-row items-start md:items-center gap-panel-gap md:gap-section-gap">
             <PortalCircularGauge
               class="shrink-0"
               :value="stats[group.pctKey]"
               size="sm"
               :label="group.label"
             />
-            <div class="flex flex-1 flex-col gap-3 w-full">
-              <div
+            <ul class="flex flex-1 flex-col gap-form-row-gap w-full list-none m-0 p-0">
+              <li
                 v-for="item in getGroupData(group.keiTo, stats).phases"
                 :key="item.phase"
-                class="flex flex-col gap-1"
+                class="flex flex-col gap-inline-gap"
               >
                 <div class="phase-row-header flex items-center justify-between">
-                  <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-item-gap">
                     <span class="phase-title">{{ item.title }}</span>
                     <Button
                       v-if="siteId"
@@ -98,7 +98,7 @@ const getGroupData = (keiTo: '幹線' | '二次側', stats: SoudenStats) => {
                       試験入力
                     </Button>
                   </div>
-                  <div class="phase-stat flex items-center gap-2">
+                  <div class="phase-stat flex items-center gap-item-gap">
                     <span><strong>{{ item.completed }}</strong> / {{ getGroupData(group.keiTo, stats).total }}</span>
                     <span class="stat-pct">({{ item.pct }}%)</span>
                     <Badge v-if="getGroupData(group.keiTo, stats).excluded > 0" id="exam:excluded">
@@ -107,8 +107,8 @@ const getGroupData = (keiTo: '幹線' | '二次側', stats: SoudenStats) => {
                   </div>
                 </div>
                 <PortalProgressBar :value="item.pct" />
-              </div>
-            </div>
+              </li>
+            </ul>
           </div>
 
           <Divider v-if="index < GROUPS.length - 1" type="fade-center" />

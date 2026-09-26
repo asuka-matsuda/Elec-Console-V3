@@ -74,7 +74,7 @@ const placeholderText = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col items-center gap-1 text-2xs">
+  <div class="flex flex-col items-center gap-inline-gap text-2xs">
     <span class="cell-label">{{ label }}</span>
 
     <Input

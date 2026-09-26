@@ -36,7 +36,7 @@ const filteredUsers = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-3 w-full">
+  <div class="flex flex-col gap-panel-gap w-full flex-1 min-h-0">
 
     <SectionHeader
       title="ユーザー一覧"
@@ -58,17 +58,19 @@ const filteredUsers = computed(() => {
       placeholder="氏名・カナ・IDで検索..."
     />
 
-    <div class="flex flex-col gap-2 overflow-y-auto max-h-[calc(100vh-280px)] min-h-[300px]">
+    <ul class="flex flex-col gap-item-gap overflow-y-auto flex-1 min-h-[300px] list-none m-0 p-0">
       <Panel
         v-for="user in filteredUsers"
         :key="user.id"
+        as="li"
         interactive
+        padding="compact"
         :selected="user.id === selectedUserId"
-        class="p-3 w-full"
+        class="w-full flex flex-col gap-inline-gap"
         @click="emit('select', user)"
       >
-        <div class="flex items-center gap-2 min-w-0 mb-1">
-          <span class="user-name">
+        <div class="flex items-center gap-item-gap min-w-0">
+          <span>
             {{ user.lastName }} {{ user.firstName }}
           </span>
           <Badge v-if="user.requirePasswordReset" id="user:pwd-reset" class="shrink-0" />
@@ -85,14 +87,6 @@ const filteredUsers = computed(() => {
         title="該当するユーザーがいません"
         description="検索条件を変更するか、新規ユーザーを登録してください。"
       />
-    </div>
+    </ul>
   </div>
 </template>
-
-<style scoped>
-.user-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-</style>

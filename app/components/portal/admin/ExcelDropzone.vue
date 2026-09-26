@@ -108,19 +108,19 @@ const formatFileSize = (bytes: number): string => {
 
     <div
       v-if="!modelValue"
-      class="flex flex-col items-center justify-center p-6 w-full"
+      class="flex flex-col items-center justify-center gap-item-gap p-panel-pad w-full"
       @click="openFileDialog"
     >
-      <Icon name="upload-cloud" size="lg" class="mb-2" />
+      <Icon name="upload-cloud" size="lg" />
       <div>
         <strong>クリックしてファイルを選択</strong> またはここにドラッグ＆ドロップ
       </div>
-      <small v-if="acceptHint" class="mt-1">
+      <small v-if="acceptHint">
         対応形式: {{ acceptHint }}
       </small>
     </div>
 
-    <div v-else class="flex items-center gap-3 w-full p-4">
+    <div v-else class="flex items-center gap-panel-gap w-full p-panel-pad-compact">
       <Icon name="file-check" size="md" class="file-icon shrink-0" />
       <div class="flex-1 min-w-0">
         <strong :title="modelValue.name">

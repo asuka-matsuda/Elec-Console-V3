@@ -48,7 +48,7 @@ const computedType = computed(() => {
     :type="computedType"
     :disabled="!isClickable ? true : undefined"
     :title="title"
-    class="inline-flex shrink-0 items-center justify-center gap-[0.5em] btn"
+    class="inline-flex shrink-0 items-center justify-center gap-inline-gap btn"
     :class="[
       `btn--${variant}`,
       {

@@ -31,7 +31,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <Panel class="flex flex-col gap-4">
+  <Panel class="flex flex-col gap-panel-gap">
     <SectionHeader
       title="帳票出力設定"
       icon="sliders"

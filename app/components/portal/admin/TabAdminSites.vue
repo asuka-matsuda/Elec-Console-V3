@@ -27,9 +27,9 @@ const {
 
 <template>
   <Panel>
-    <div class="flex flex-col lg:flex-row gap-6 items-start">
+    <div class="flex flex-col lg:flex-row gap-section-gap items-start">
 
-      <div class="w-full lg:w-[340px] shrink-0">
+      <aside class="w-full lg:w-[340px] shrink-0">
         <PortalMasterSiteList
           :sites="sites"
           :selected-site-id="selectedSiteId"
@@ -37,14 +37,14 @@ const {
           @create="openCreateModal"
           @toggle-disable="confirmToggleDisable"
         />
-      </div>
+      </aside>
 
       <Divider
         orientation="vertical"
         class="hidden lg:block self-stretch"
       />
 
-      <div class="flex-1 min-w-0 w-full">
+      <section class="flex-1 min-w-0">
         <PortalDetailSiteSettings
           :site="selectedSite"
           :is-saving="isSaving"
@@ -52,7 +52,7 @@ const {
           @save="handleSaveSite"
           @delete="confirmDeleteSite"
         />
-      </div>
+      </section>
     </div>
 
     <Modal
@@ -73,14 +73,14 @@ const {
         </Button>
       </template>
 
-      <div class="flex flex-col gap-4">
+      <form class="flex flex-col gap-form-row-gap" @submit.prevent="handleCreateSite">
         <FormGroup label="現場ID (半角英数)" :error="fieldErrors.id">
           <Input v-model="newSite.id" placeholder="例: site-tokyo-01" />
         </FormGroup>
         <FormGroup label="現場名" :error="fieldErrors.name">
           <Input v-model="newSite.name" placeholder="例: 新宿プロジェクト" />
         </FormGroup>
-      </div>
+      </form>
     </Modal>
   </Panel>
 </template>

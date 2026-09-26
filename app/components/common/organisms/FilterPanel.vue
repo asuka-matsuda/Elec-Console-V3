@@ -19,32 +19,32 @@ withDefaults(defineProps<FilterPanelProps>(), {
 </script>
 
 <template>
-  <Panel as="section" class="flex flex-col gap-3">
+  <Panel as="section" class="flex flex-col gap-form-row-gap">
     <SectionHeader :title="title" :tag="tag" :icon="icon" />
 
-    <div class="flex flex-col gap-3">
+    <Input
+      v-model="searchQuery"
+      :placeholder="placeholder"
+      clearable
+    />
 
-      <Input
-        v-model="searchQuery"
-        :placeholder="placeholder"
-        clearable
-      />
-
-      <div
-        v-if="categoryOptions.length > 0"
-        class="grid grid-cols-[repeat(auto-fill,minmax(115px,1fr))] gap-2"
+    <ul
+      v-if="categoryOptions.length > 0"
+      class="grid grid-cols-[repeat(auto-fill,minmax(115px,1fr))] gap-item-gap list-none m-0 p-0"
+    >
+      <li
+        v-for="cat in categoryOptions"
+        :key="cat.value"
       >
         <Checkbox
-          v-for="cat in categoryOptions"
-          :key="cat.value"
           v-model="activeCats"
           :value="cat.value"
         >
           {{ cat.label }}
         </Checkbox>
-      </div>
+      </li>
+    </ul>
 
-      <slot />
-    </div>
+    <slot />
   </Panel>
 </template>

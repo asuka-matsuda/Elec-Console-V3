@@ -34,7 +34,7 @@ const disabledRows = computed(() => {
 </script>
 
 <template>
-  <div class="grid grid-cols-5 gap-1">
+  <div class="grid grid-cols-5 gap-inline-gap">
     <button
       v-for="kana in KANA_ROWS"
       :key="kana.value"

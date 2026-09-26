@@ -24,14 +24,14 @@ const handleAdd = () => {
 </script>
 
 <template>
-  <Panel class="flex flex-col gap-3">
+  <Panel as="section" class="flex flex-col gap-form-row-gap">
     <SectionHeader
       title="パーソナルToDo"
       icon="check"
       tag="h3"
     />
 
-    <form class="flex items-center gap-1 m-0" @submit.prevent="handleAdd">
+    <form class="flex items-center gap-item-gap m-0" @submit.prevent="handleAdd">
       <Input
         v-model="newTask"
         placeholder="新しいタスクを入力..."
@@ -42,12 +42,12 @@ const handleAdd = () => {
 
     <ul
       v-if="todos.length > 0"
-      class="overflow-y-auto flex flex-col gap-1 max-h-[400px] m-0 p-0 list-none"
+      class="overflow-y-auto flex flex-col gap-inline-gap max-h-[400px] m-0 p-0 list-none"
     >
       <li
         v-for="todo in todos"
         :key="todo.id"
-        class="todo-item flex items-center justify-between gap-1 p-2"
+        class="todo-item flex items-center justify-between gap-item-gap p-item-gap"
       >
         <Checkbox v-model="todo.completed">
           <span

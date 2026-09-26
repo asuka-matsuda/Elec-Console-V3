@@ -56,7 +56,7 @@ const filteredSites = computed(() => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-3 w-full">
+  <div class="flex flex-col gap-panel-gap w-full flex-1 min-h-0">
 
     <SectionHeader
       title="現場プロジェクト"
@@ -84,18 +84,21 @@ const filteredSites = computed(() => {
       block
     />
 
-    <div class="flex flex-col gap-2 overflow-y-auto max-h-[calc(100vh-280px)] min-h-[300px]">
+    <ul class="flex flex-col gap-item-gap overflow-y-auto flex-1 min-h-[300px] list-none m-0 p-0">
       <Panel
         v-for="site in filteredSites"
         :key="site.id"
+        as="li"
         interactive
+        padding="compact"
+        :disabled="Boolean(site.disabledAt)"
         :selected="site.id === selectedSiteId"
-        class="flex items-center justify-between gap-3 p-3 w-full"
+        class="flex items-center justify-between gap-panel-gap w-full"
         @click="emit('select', site)"
       >
-        <div class="flex-1 min-w-0">
-          <div class="flex items-center gap-2 mb-1">
-            <span class="site-name">
+        <div class="flex-1 min-w-0 flex flex-col gap-inline-gap">
+          <div class="flex items-center gap-item-gap">
+            <span>
               {{ site.name }}
             </span>
             <Badge :id="`site:${site.status}`" />
@@ -121,18 +124,6 @@ const filteredSites = computed(() => {
         title="該当する現場がありません"
         description="検索条件を変更するか、新規現場を登録してください。"
       />
-    </div>
+    </ul>
   </div>
 </template>
-
-<style scoped>
-.site-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.site-item--disabled {
-  opacity: 0.6;
-}
-</style>

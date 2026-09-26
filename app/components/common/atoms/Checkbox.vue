@@ -39,7 +39,7 @@ const inputAttrs = computed(() => {
 
 <template>
   <label
-    class="relative inline-flex items-center gap-2 checkbox"
+    class="relative inline-flex items-center gap-item-gap checkbox"
     :class="[
       {
         'is-disabled': disabled,

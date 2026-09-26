@@ -25,7 +25,7 @@ const gauge = computed(() => calcCircleProgress(value, RADIUS))
 
 <template>
   <div
-    class="relative flex flex-col items-center justify-center gap-1 circular-gauge"
+    class="relative flex flex-col items-center justify-center gap-inline-gap circular-gauge"
     :class="`is-${size}`"
     :style="{ '--gauge-color': color }"
   >
@@ -52,7 +52,7 @@ const gauge = computed(() => calcCircleProgress(value, RADIUS))
       />
     </svg>
 
-    <div class="inline-flex items-baseline gap-1 value">
+    <div class="inline-flex items-baseline gap-inline-gap value">
       {{ gauge.value }}<span class="unit">%</span>
     </div>
     <span v-if="label" class="label">

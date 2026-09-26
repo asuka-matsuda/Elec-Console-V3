@@ -44,7 +44,7 @@ const banner = computed(() => {
   <Transition name="banner-fade">
     <div
       v-if="banner"
-      :class="['offline-banner flex items-center justify-center gap-2 py-1 px-4', banner.statusClass]"
+      :class="['offline-banner flex items-center justify-center gap-item-gap py-inline-gap px-panel-pad', banner.statusClass]"
     >
       <Icon :name="banner.icon" />
       <span><strong>{{ banner.text }}</strong></span>

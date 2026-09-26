@@ -32,23 +32,23 @@ const {
 
 <template>
   <Panel>
-    <div class="flex flex-col lg:flex-row gap-6 items-start">
+    <div class="flex flex-col lg:flex-row gap-section-gap items-start">
 
-      <div class="w-full lg:w-[340px] shrink-0">
+      <aside class="w-full lg:w-[340px] shrink-0">
         <PortalMasterUserList
           :users="users"
           :selected-user-id="selectedUserId"
           @select="selectedUserId = $event.id"
           @create="openCreateModal"
         />
-      </div>
+      </aside>
 
       <Divider
         orientation="vertical"
         class="hidden lg:block self-stretch"
       />
 
-      <div class="flex-1 min-w-0 w-full">
+      <section class="flex-1 min-w-0">
         <PortalDetailUserSettings
           :user="selectedUser"
           :site-list="sites"
@@ -57,7 +57,7 @@ const {
           @reset-password="confirmResetPassword"
           @delete="confirmDelete"
         />
-      </div>
+      </section>
     </div>
 
     <Modal
@@ -78,14 +78,13 @@ const {
         </Button>
       </template>
 
-      <div class="flex flex-col gap-4">
-        <div
+      <form class="flex flex-col gap-form-row-gap" @submit.prevent="handleCreateUser">
+        <Alert
           v-if="createErrorMsg"
-          class="error-banner flex items-center gap-2 p-3"
+          variant="danger"
         >
-          <Icon name="alert-circle" size="sm" />
-          <span>{{ createErrorMsg }}</span>
-        </div>
+          {{ createErrorMsg }}
+        </Alert>
 
         <FormGroup
           v-for="field in USER_CREATE_FORM_FIELDS"
@@ -111,7 +110,7 @@ const {
             label="初回ログイン時にパスワード変更を要求する"
           />
         </FormGroup>
-      </div>
+      </form>
     </Modal>
 
     <PortalModalUserCredential
@@ -120,12 +119,3 @@ const {
     />
   </Panel>
 </template>
-
-<style scoped>
-.error-banner {
-  border: 1px solid color-mix(in srgb, var(--color-status-danger) 25%, transparent);
-  font-size: var(--font-size-xs);
-  color: var(--color-status-danger);
-  background-color: color-mix(in srgb, var(--color-status-danger) 10%, transparent);
-}
-</style>

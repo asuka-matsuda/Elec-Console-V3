@@ -10,7 +10,7 @@
 <template>
   <NuxtLink
     to="/"
-    class="flex shrink-0 items-center gap-2 logo"
+    class="flex shrink-0 items-center gap-item-gap logo"
   >
     <Icon name="gauge" class="logo-icon" />
     <span>Elec-Console</span>

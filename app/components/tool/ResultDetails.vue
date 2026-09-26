@@ -11,21 +11,23 @@ defineProps<{
 </script>
 
 <template>
-  <div v-if="items?.length || $slots.default" class="result-details flex flex-col gap-1 w-full">
+  <dl v-if="items?.length || $slots.default" class="result-details flex flex-col gap-inline-gap w-full m-0 p-0">
     <div
       v-for="(item, i) in items"
       :key="i"
       class="flex items-center justify-between"
     >
-      <span>{{ item.label }}</span>
-      <div class="flex items-center gap-1">
+      <dt class="m-0">
+        {{ item.label }}
+      </dt>
+      <dd class="m-0 flex items-center gap-inline-gap">
         <span class="value">{{ item.value }}</span>
         <span v-if="item.unit">{{ item.unit }}</span>
         <span v-if="item.note">{{ item.note }}</span>
-      </div>
+      </dd>
     </div>
     <slot />
-  </div>
+  </dl>
 </template>
 
 <style scoped lang="scss">
@@ -33,6 +35,10 @@ defineProps<{
   font-size: var(--font-size-xs);
   line-height: var(--line-height-ui);
   color: var(--color-text-muted);
+
+  dt {
+    font-weight: var(--font-weight-normal);
+  }
 
   .value {
     font-variant-numeric: tabular-nums;

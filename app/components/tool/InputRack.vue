@@ -72,14 +72,14 @@ const handleRemoveCable = (id: string) => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-[var(--space-form-row-gap)]">
+  <div class="flex flex-col gap-form-row-gap">
 
     <RadioGroup
       v-model="inputs.mode"
       :options="rackModeOptions"
     />
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-[var(--space-form-col-gap)]">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-form-col-gap">
       <FormGroup label="余裕係数" help-id="marginRate">
         <Input
           v-model.number="inputs.marginRate"
@@ -115,7 +115,7 @@ const handleRemoveCable = (id: string) => {
       </FormGroup>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-[var(--space-form-col-gap)]">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-form-col-gap">
       <FormGroup label="ラック高さ (H)" help-id="rackHeight">
         <Input
           v-model="inputs.rackHeight"
@@ -141,7 +141,7 @@ const handleRemoveCable = (id: string) => {
       </FormGroup>
     </div>
 
-    <section class="flex flex-col gap-[var(--space-item-gap)]">
+    <section class="flex flex-col gap-item-gap">
       <Button
         class="self-end"
         icon="plus"

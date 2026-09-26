@@ -109,9 +109,9 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-3">
-    <header class="calendar-toolbar flex flex-col md:flex-row items-center justify-between gap-2 px-panel-pad py-2">
-      <div class="flex items-center gap-1">
+  <div class="flex flex-col gap-panel-gap">
+    <header class="calendar-toolbar flex flex-col md:flex-row items-center justify-between gap-item-gap px-panel-pad py-item-gap">
+      <div class="flex items-center gap-inline-gap">
         <Button icon="chevron-left" @click="handlePrev" />
         <Button icon="chevron-right" @click="handleNext" />
         <Button @click="handleToday">
@@ -123,14 +123,14 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
         {{ currentTitle }}
       </h3>
 
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-item-gap">
         <RadioGroup
           :model-value="currentView"
           :options="VIEW_OPTIONS"
           @update:model-value="val => val && handleViewChange(val)"
         >
           <template #option="{ option }">
-            <div class="flex items-center gap-1.5">
+            <div class="flex items-center gap-inline-gap">
               <Icon :name="VIEW_ICONS[option.value]" />
               <span>{{ option.label }}</span>
             </div>

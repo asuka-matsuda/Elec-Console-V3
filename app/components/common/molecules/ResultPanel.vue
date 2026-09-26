@@ -33,12 +33,12 @@ const badgeId = computed<BadgePresetId>(() => BADGE_STATUS_MAP[resolvedStatus.va
 </script>
 
 <template>
-  <div
-    class="result-panel flex flex-1 flex-col items-center justify-center gap-1 w-full min-w-0"
+  <output
+    class="result-panel flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0"
     :class="[`is-${resolvedStatus}`, `is-${size}`]"
   >
 
-    <header v-if="title || badge || $slots.title || $slots.badge" class="flex items-center justify-center gap-1.5">
+    <header v-if="title || badge || $slots.title || $slots.badge" class="flex items-center justify-center gap-inline-gap">
       <slot name="title">
         <span>{{ title }}</span>
       </slot>
@@ -49,12 +49,12 @@ const badgeId = computed<BadgePresetId>(() => BADGE_STATUS_MAP[resolvedStatus.va
       </slot>
     </header>
 
-    <div class="value flex items-center justify-center gap-2">
+    <div class="value flex items-center justify-center gap-item-gap">
       <slot name="value">
         <slot />
       </slot>
     </div>
-  </div>
+  </output>
 </template>
 
 <style scoped lang="scss">

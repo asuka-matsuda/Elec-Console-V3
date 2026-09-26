@@ -92,7 +92,7 @@ onMounted(() => {
     class="fixed top-0 left-0 z-[var(--z-index-sidebar)] flex flex-col w-[var(--sidebar-width)] h-[100dvh]"
     :class="{ 'is-open': isOpen }"
   >
-    <header class="flex items-center justify-between h-16 px-4">
+    <header class="flex items-center justify-between h-16 px-layout-pad">
       <span class="header-title">
         メニュー
       </span>
@@ -105,13 +105,13 @@ onMounted(() => {
     </header>
 
     <nav
-      class="flex-1 overflow-y-auto flex flex-col gap-4 p-3"
+      class="flex-1 overflow-y-auto flex flex-col gap-panel-gap p-panel-pad-compact"
       @click="closeSidebar"
     >
       <section
         v-for="section in menuData"
         :key="section.id"
-        class="flex flex-col gap-1"
+        class="flex flex-col gap-inline-gap"
         :style="{
           '--section-accent': `var(--color-category-${section.accent || 'main'})`,
         }"
@@ -121,21 +121,24 @@ onMounted(() => {
           :title="section.globalNavHeading || section.heading"
           :icon="section.icon"
           tag="h5"
-          class="px-2"
+          class="px-item-gap"
         />
 
-        <div class="flex flex-col gap-1">
-          <NuxtLink
+        <ul class="m-0 p-0 flex flex-col gap-inline-gap list-none">
+          <li
             v-for="item in getVisibleItems(section.items)"
             :key="item.href"
-            :to="item.href"
-            class="w-full flex items-center gap-2 py-1 px-3"
-            :class="{ 'is-active': isItemActive(item) }"
           >
-            <Icon :name="item.icon" size="md" />
-            <span>{{ item.text }}</span>
-          </NuxtLink>
-        </div>
+            <NuxtLink
+              :to="item.href"
+              class="w-full flex items-center gap-item-gap py-inline-gap px-panel-pad-compact"
+              :class="{ 'is-active': isItemActive(item) }"
+            >
+              <Icon :name="item.icon" size="md" />
+              <span>{{ item.text }}</span>
+            </NuxtLink>
+          </li>
+        </ul>
       </section>
     </nav>
   </aside>

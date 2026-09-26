@@ -49,9 +49,9 @@ const customColumns = computed(() =>
 </script>
 
 <template>
-  <div class="flex flex-col gap-panel-gap">
+  <section class="flex flex-col gap-panel-gap">
 
-    <div class="flex flex-wrap items-center justify-between gap-4">
+    <header class="flex flex-wrap items-center justify-between gap-panel-gap">
       <small>
         {{ description }}
       </small>
@@ -63,7 +63,7 @@ const customColumns = computed(() =>
       >
         {{ createButtonText }}
       </Button>
-    </div>
+    </header>
 
     <Panel padding="none">
       <Table
@@ -85,7 +85,7 @@ const customColumns = computed(() =>
 
         <template #cell-actions="{ row }">
           <slot name="cell-actions" :row="row">
-            <div class="flex items-center justify-end gap-1.5">
+            <div class="flex items-center justify-end gap-inline-gap">
               <Button
                 icon="edit"
                 title="編集"
@@ -124,7 +124,7 @@ const customColumns = computed(() =>
         </Button>
       </template>
 
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-form-row-gap">
         <Alert
           v-if="formError"
           variant="danger"
@@ -135,5 +135,5 @@ const customColumns = computed(() =>
         <slot />
       </div>
     </Modal>
-  </div>
+  </section>
 </template>

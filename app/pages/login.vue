@@ -63,9 +63,9 @@ const handleLogin = async () => {
     <SectionHeader title="Elec-Console V3" />
 
     <form class="flex flex-col gap-form-row-gap" @submit.prevent="handleLogin">
-      <p v-if="errorMessage" class="login-page__error m-0 px-3 py-2">
+      <Alert v-if="errorMessage" variant="danger">
         {{ errorMessage }}
-      </p>
+      </Alert>
 
       <template v-for="field in LOGIN_FORM_FIELDS" :key="field.id">
         <FormGroup :label="field.label">
@@ -92,11 +92,3 @@ const handleLogin = async () => {
     </form>
   </Panel>
 </template>
-
-<style scoped lang="scss">
-.login-page__error {
-  border: var(--border-width-base) solid var(--color-status-danger);
-  font-size: var(--font-size-sm);
-  color: var(--color-status-danger);
-}
-</style>

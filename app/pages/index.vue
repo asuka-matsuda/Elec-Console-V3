@@ -33,7 +33,7 @@ const activeDetail = ref<{ item: AnnouncementItem | HistoryItem, type: DetailTyp
 
 <template>
   <div class="flex flex-col md:flex-row gap-section-gap items-start">
-    <div class="flex flex-1 flex-col gap-section-gap w-full min-w-0">
+    <section class="flex flex-1 flex-col gap-section-gap w-full min-w-0">
       <section
         v-for="section in dashboardSections"
         :key="section.heading"
@@ -42,50 +42,50 @@ const activeDetail = ref<{ item: AnnouncementItem | HistoryItem, type: DetailTyp
       >
         <SectionHeader :title="section.heading" :icon="section.icon" />
 
-        <div class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-panel-gap">
-          <MenuTile
+        <ul class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-panel-gap list-none m-0 p-0">
+          <li
             v-for="item in section.items"
             :key="item.text"
-            :item="item"
-          />
-        </div>
-      </section>
-    </div>
-
-    <aside class="w-full md:w-sidebar-w md:sticky md:top-layout-pad md:overflow-y-auto shrink-0 md:max-h-[calc(100dvh-var(--space-layout-pad)*2)]">
-      <div class="flex flex-col gap-section-gap">
-        <section class="flex flex-col gap-panel-gap">
-          <SectionHeader title="お知らせ" icon="bell" tag="h3" />
-          <InfoList
-            :items="dashboardData?.announcements"
-            :pending="isDashboardPending"
-            loading-text="お知らせを読み込み中..."
-            empty-text="現在新しいお知らせはありません"
-            @select="activeDetail = { item: $event, type: 'announcement' }"
-          />
-        </section>
-
-        <section class="flex flex-col gap-panel-gap">
-          <SectionHeader title="更新履歴" icon="clock" tag="h3" />
-          <InfoList
-            :items="dashboardData?.history"
-            :pending="isDashboardPending"
-            loading-text="更新履歴を読み込み中..."
-            empty-text="現在更新履歴はありません"
-            @select="activeDetail = { item: $event, type: 'history' }"
+            class="flex"
           >
-            <template #badge="{ item }">
-              <Badge
-                v-if="item.version"
-                id="version:muted"
-                class="shrink-0"
-              >
-                {{ item.version }}
-              </Badge>
-            </template>
-          </InfoList>
-        </section>
-      </div>
+            <MenuTile :item="item" class="w-full" />
+          </li>
+        </ul>
+      </section>
+    </section>
+
+    <aside class="flex flex-col gap-section-gap w-full md:w-sidebar-w md:sticky md:top-layout-pad md:overflow-y-auto shrink-0 md:max-h-[calc(100dvh-var(--space-layout-pad)*2)]">
+      <section class="flex flex-col gap-panel-gap">
+        <SectionHeader title="お知らせ" icon="bell" tag="h3" />
+        <InfoList
+          :items="dashboardData?.announcements"
+          :pending="isDashboardPending"
+          loading-text="お知らせを読み込み中..."
+          empty-text="現在新しいお知らせはありません"
+          @select="activeDetail = { item: $event, type: 'announcement' }"
+        />
+      </section>
+
+      <section class="flex flex-col gap-panel-gap">
+        <SectionHeader title="更新履歴" icon="clock" tag="h3" />
+        <InfoList
+          :items="dashboardData?.history"
+          :pending="isDashboardPending"
+          loading-text="更新履歴を読み込み中..."
+          empty-text="現在更新履歴はありません"
+          @select="activeDetail = { item: $event, type: 'history' }"
+        >
+          <template #badge="{ item }">
+            <Badge
+              v-if="item.version"
+              id="version:muted"
+              class="shrink-0"
+            >
+              {{ item.version }}
+            </Badge>
+          </template>
+        </InfoList>
+      </section>
     </aside>
 
     <Modal
@@ -95,9 +95,9 @@ const activeDetail = ref<{ item: AnnouncementItem | HistoryItem, type: DetailTyp
       close-text="閉じる"
       @update:model-value="!$event && (activeDetail = null)"
     >
-      <div v-if="activeDetail" class="flex flex-col gap-3">
+      <div v-if="activeDetail" class="flex flex-col gap-form-row-gap">
         <header
-          class="flex items-center justify-between gap-2 pb-2"
+          class="flex items-center justify-between gap-item-gap pb-item-gap"
           style="border-bottom: 1px solid var(--color-border)"
         >
           <small style="font-family: var(--font-mono)">

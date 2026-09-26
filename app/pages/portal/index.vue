@@ -60,7 +60,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <Panel as="section" class="flex flex-col gap-4">
+  <Panel as="section" class="flex flex-col gap-panel-gap">
     <SectionHeader title="現場ポータル" variant="hud">
       <template v-if="isAdmin" #actions>
         <Button @click="router.push('/portal/admin')">

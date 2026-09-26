@@ -208,7 +208,7 @@ defineExpose({
       :id="selectId"
       ref="triggerRef"
       type="button"
-      class="relative z-[1] focus:z-[2] flex w-full items-center justify-between gap-2 py-[0.3em] custom-select__value"
+      class="relative z-[1] focus:z-[2] flex w-full items-center justify-between gap-item-gap custom-select__value"
       :class="{
         'is-placeholder': isPlaceholder,
         'is-active': isOpen,
@@ -222,7 +222,7 @@ defineExpose({
         <span class="flex-1 text-left custom-select__label">{{ displayLabel }}</span>
       </slot>
 
-      <div class="flex items-center gap-1 shrink-0">
+      <div class="flex items-center gap-inline-gap shrink-0">
 
         <FormControlAction
           v-if="canClear"
@@ -244,7 +244,7 @@ defineExpose({
         <ul
           v-if="isOpen"
           ref="dropdownRef"
-          class="absolute z-select w-max max-w-[90vw] max-h-[min(250px,40vh)] overflow-x-hidden overflow-y-auto p-1 custom-select__dropdown"
+          class="absolute z-select w-max max-w-[90vw] max-h-[min(250px,40vh)] overflow-x-hidden overflow-y-auto p-inline-gap custom-select__dropdown"
           :class="`is-${dynamicPlacement}`"
           :style="syncedDropdownStyle"
         >
@@ -289,6 +289,7 @@ defineExpose({
   user-select: none;
 
   min-height: calc(var(--control-height-ratio) * 1em);
+  padding-block: 0.3em;
   padding-inline: var(--select-padding-inline, 1.2em);
   border: var(--border-width-base) solid var(--color-border);
   border-left: var(--select-border-left, var(--border-width-base) solid var(--color-border));

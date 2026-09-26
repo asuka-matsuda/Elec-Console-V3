@@ -18,10 +18,10 @@ defineProps<{
 </script>
 
 <template>
-  <div class="flex flex-col gap-[var(--space-form-row-gap)]">
+  <div class="flex flex-col gap-form-row-gap">
     <RadioGroup v-model="form.mode" :options="modeOptions" />
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-[var(--space-form-col-gap)] gap-y-[var(--space-form-row-gap)]">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-form-col-gap gap-y-form-row-gap">
       <template v-for="field in formFields" :key="field.id">
         <Field
           v-if="!field.showIf || field.showIf()"

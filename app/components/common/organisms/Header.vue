@@ -33,7 +33,7 @@ const handleToggleSidebar = () => {
 <template>
   <header class="flex h-16 items-center justify-between px-layout-pad header">
 
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-item-gap">
       <Button
         icon="menu"
         icon-only
@@ -48,19 +48,16 @@ const handleToggleSidebar = () => {
       />
     </div>
 
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-item-gap">
       <NuxtLink
         to="/mypage"
-        class="flex items-center gap-2 user-link"
+        class="flex items-center gap-inline-gap"
       >
-        <div class="flex shrink-0 items-center justify-center w-8 h-8 avatar">
-          <Icon
-            name="user"
-            size="sm"
-            class="avatar__icon"
-          />
-        </div>
-        <span class="max-md:hidden user-name">
+        <Icon
+          name="user"
+          size="sm"
+        />
+        <span class="max-md:hidden">
           {{ userName }}
         </span>
       </NuxtLink>
@@ -78,38 +75,5 @@ const handleToggleSidebar = () => {
 .header {
   border-bottom: var(--border-width-base) solid var(--color-border);
   background-color: var(--surface-bg);
-}
-
-.user-link {
-  cursor: pointer;
-  color: inherit;
-  text-decoration: none;
-
-  &:hover {
-    .avatar {
-      border-color: var(--theme-accent);
-    }
-
-    .user-name {
-      color: var(--theme-accent);
-    }
-  }
-}
-
-.avatar {
-  border: var(--border-width-base) solid var(--color-border);
-  border-radius: var(--radius-circle);
-  transition: var(--transition-base);
-
-  &__icon {
-    color: var(--theme-accent);
-  }
-}
-
-.user-name {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-main);
-  transition: var(--transition-base);
 }
 </style>

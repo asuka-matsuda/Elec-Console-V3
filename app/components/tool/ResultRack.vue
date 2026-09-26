@@ -25,7 +25,7 @@ const vm = computed(() =>
 </script>
 
 <template>
-  <div class="flex flex-col gap-panel-gap">
+  <output class="flex flex-col gap-panel-gap">
 
     <ResultPanel
       :title="vm.tier1.title"
@@ -48,14 +48,14 @@ const vm = computed(() =>
         <span v-if="vm.tier2.isApplicable">
           {{ vm.tier2.displaySize }}
         </span>
-        <span v-else class="not-applicable py-[var(--space-1)]">
+        <span v-else class="not-applicable py-inline-gap">
           {{ vm.tier2.notApplicableText }}
         </span>
       </template>
     </ResultPanel>
 
     <ToolResultDetails :items="vm.details" />
-  </div>
+  </output>
 </template>
 
 <style scoped lang="scss">

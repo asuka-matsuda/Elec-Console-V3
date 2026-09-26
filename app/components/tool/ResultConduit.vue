@@ -20,9 +20,9 @@ const vm = computed(() => formatConduitResult(props.result))
 </script>
 
 <template>
-  <div
+  <output
     class="flex flex-1 flex-col min-h-0 items-stretch"
-    :class="[size === 'sm' ? 'gap-3 is-sm' : 'gap-panel-gap']"
+    :class="[size === 'sm' ? 'gap-item-gap is-sm' : 'gap-panel-gap']"
   >
 
     <ResultPanel
@@ -62,10 +62,10 @@ const vm = computed(() => formatConduitResult(props.result))
     </ResultPanel>
 
     <ToolResultDetails>
-      <ul class="m-0 p-0 flex flex-col gap-1 list-none">
+      <ul class="m-0 p-0 flex flex-col gap-inline-gap list-none">
         <li>3110-6 (32%以下): 異なる太さの絶縁電線を同一管内に収める場合（原則）</li>
         <li>3110-5 (48%以下): 同一太さで、かつ管の屈曲が少なく引き替えが容易な場合</li>
       </ul>
     </ToolResultDetails>
-  </div>
+  </output>
 </template>

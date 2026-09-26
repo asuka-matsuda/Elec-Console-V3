@@ -102,6 +102,7 @@
     1.5vw,
     var(--space-5)
   ); // 12px 〜 20px (標準)
+  --space-panel-pad-compact: var(--space-3); // 12px (コンパクト・リスト選択行・カード用)
   --space-panel-gap: clamp(
     var(--space-2),
     1.2vw,

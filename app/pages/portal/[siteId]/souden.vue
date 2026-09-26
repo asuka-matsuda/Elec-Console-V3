@@ -59,10 +59,9 @@ onMounted(() => {
       </template>
     </SectionHeader>
 
-    <div v-if="error" class="error-message flex items-center gap-2 p-3">
-      <Icon name="alert-triangle" />
-      <span>{{ error }}</span>
-    </div>
+    <Alert v-if="error" variant="danger">
+      {{ error }}
+    </Alert>
 
     <EmptyState
       v-if="!isLoading && stats && stats.totalCircuits === 0"
@@ -86,11 +85,3 @@ onMounted(() => {
     </template>
   </div>
 </template>
-
-<style scoped lang="scss">
-.error-message {
-  border: 1px solid color-mix(in srgb, var(--color-status-danger) 25%, transparent);
-  color: var(--color-status-danger);
-  background-color: color-mix(in srgb, var(--color-status-danger) 10%, transparent);
-}
-</style>

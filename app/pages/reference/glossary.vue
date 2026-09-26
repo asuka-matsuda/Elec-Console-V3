@@ -48,14 +48,6 @@ const categoryPresetMap: Record<string, BadgePresetId> = {
   衛生: 'trade:plumbing',
   雑学: 'trade:trivia',
 }
-
-const categoryColorMap: Record<string, string> = {
-  電気: 'var(--color-trade-electric)',
-  建築: 'var(--color-trade-architecture)',
-  空調・換気: 'var(--color-trade-hvac)',
-  衛生: 'var(--color-trade-plumbing)',
-  雑学: 'var(--color-trade-trivia)',
-}
 </script>
 
 <template>
@@ -76,101 +68,27 @@ const categoryColorMap: Record<string, string> = {
       </FilterPanel>
     </aside>
 
-    <div class="flex flex-1 flex-col min-w-0 min-h-0">
-      <div v-if="filteredGlossary.length > 0" class="flex flex-col gap-panel-gap">
-        <Panel
-          v-for="item in filteredGlossary"
-          :key="item.term"
-          as="article"
-          class="relative z-[1] flex flex-col glossary-item"
-          :style="{ '--item-accent': categoryColorMap[item.category] }"
-        >
-          <header class="flex items-center justify-between gap-2 pb-1 item-header">
-            <div class="flex flex-col gap-1">
-              <span class="item-kana">{{ item.kana }}</span>
-              <h2 class="item-term">
-                {{ item.term }}
-              </h2>
-            </div>
-            <Badge
-              v-if="categoryPresetMap[item.category]"
-              :id="categoryPresetMap[item.category]"
-            >
-              {{ item.category }}
-            </Badge>
-          </header>
+    <ul
+      v-if="filteredGlossary.length > 0"
+      class="flex flex-1 flex-col gap-panel-gap min-w-0 min-h-0 list-none m-0 p-0"
+    >
+      <li
+        v-for="item in filteredGlossary"
+        :key="item.term"
+      >
+        <PanelGlossary
+          :item="item"
+          :badge-id="categoryPresetMap[item.category]"
+        />
+      </li>
+    </ul>
 
-          <div class="flex flex-col gap-1">
-            <p class="item-desc">
-              {{ item.desc }}
-            </p>
-
-            <div v-if="item.related" class="flex flex-col gap-1 p-3 item-meta">
-              <span class="meta-label">関連用語</span>
-              <p class="meta-text">
-                {{ item.related }}
-              </p>
-            </div>
-
-            <div v-if="item.example" class="flex flex-col gap-1 p-3 item-meta">
-              <span class="meta-label">用例・備考</span>
-              <p class="meta-text">
-                {{ item.example }}
-              </p>
-            </div>
-          </div>
-        </Panel>
-      </div>
-
-      <EmptyState
-        v-else
-        icon="search"
-        title="該当する用語が見つかりません"
-        description="検索キーワードまたは五十音・工種フィルターの条件を変更してください。"
-      />
-    </div>
+    <EmptyState
+      v-else
+      icon="search"
+      title="該当する用語が見つかりません"
+      description="検索キーワードまたは五十音・工種フィルターの条件を変更してください。"
+      class="flex-1"
+    />
   </div>
 </template>
-
-<style scoped lang="scss">
-.glossary-item {
-  transition: var(--transition-base);
-}
-
-.item-header {
-  border-bottom: var(--border-width-base) solid transparent;
-  border-image: linear-gradient(
-      to right,
-      transparent,
-      var(--color-border) 50%,
-      transparent
-    )
-    1;
-}
-
-.item-kana {
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-muted);
-}
-
-.item-desc {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  color: var(--color-text-secondary);
-}
-
-.item-meta {
-  border: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 30%, transparent);
-}
-
-.meta-label {
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-muted);
-}
-
-.meta-text {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-}
-</style>

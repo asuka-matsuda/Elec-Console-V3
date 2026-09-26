@@ -38,13 +38,13 @@ const {
         カレンダーに表示する予定種別とテーマカラーを設定します。
       </p>
 
-      <ul class="flex flex-col gap-2 max-h-[400px] overflow-y-auto m-0 pl-0 pr-1 list-none">
+      <ul class="flex flex-col gap-item-gap max-h-[400px] overflow-y-auto m-0 pl-0 pr-inline-gap list-none">
         <li
           v-for="(t, index) in types"
           :key="t.id"
-          class="flex flex-col gap-2 p-2.5 type-item"
+          class="flex flex-col gap-item-gap p-panel-pad-compact type-item"
         >
-          <div class="flex items-center gap-2 w-full">
+          <div class="flex items-center gap-item-gap w-full">
             <div
               class="w-6 h-6 shrink-0 color-preview"
               :style="{ backgroundColor: t.color }"
@@ -66,7 +66,7 @@ const {
             />
           </div>
 
-          <div class="flex flex-wrap items-center gap-1.5 pl-8">
+          <div class="flex flex-wrap items-center gap-inline-gap color-dot-group">
             <button
               v-for="preset in DEFAULT_COLOR_PRESETS"
               :key="preset.value"
@@ -108,6 +108,10 @@ const {
 .type-item {
   border: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 40%, transparent);
   background: var(--surface-bg-elevated);
+}
+
+.color-dot-group {
+  padding-left: calc(1.5rem + var(--space-item-gap));
 }
 
 .color-preview {

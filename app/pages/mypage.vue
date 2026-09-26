@@ -33,12 +33,6 @@ if (import.meta.client && !isSitesLoaded?.value) {
   fetchSites()
 }
 
-const fullName = computed(() => {
-  if (!currentUser.value) return ''
-
-  return `${currentUser.value.lastName} ${currentUser.value.firstName}`
-})
-
 const assignedSites = computed(() => {
   if (!currentUser.value?.assignedSiteIds) return []
 
@@ -59,70 +53,61 @@ const assignedSites = computed(() => {
   <div class="flex flex-col gap-section-gap pb-layout-pad max-w-2xl">
     <SectionHeader title="マイページ" icon="user" />
 
-    <Panel as="section" class="flex flex-col gap-4">
+    <Panel as="section" class="flex flex-col gap-panel-gap">
       <SectionHeader title="アカウント情報" icon="user" tag="h3" />
 
-      <div v-if="currentUser" class="flex flex-col gap-4">
-        <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4 m-0 user-profile">
-          <div class="flex flex-col gap-1">
-            <dt>氏名</dt>
-            <dd class="m-0 flex flex-col">
-              <span class="user-name">{{ fullName }}</span>
-              <span v-if="currentUser.lastNameKana || currentUser.firstNameKana" class="user-kana">
-                {{ `${currentUser.lastNameKana || ''} ${currentUser.firstNameKana || ''}`.trim() }}
-              </span>
-            </dd>
-          </div>
-
-          <div class="flex flex-col gap-1">
-            <dt>ログインID</dt>
-            <dd class="m-0 font-login-id">
-              {{ currentUser.loginId }}
-            </dd>
-          </div>
-        </dl>
+      <div v-if="currentUser" class="flex flex-col gap-panel-gap">
+        <PortalPanelUserProfile :user="currentUser" />
 
         <Divider />
 
-        <div class="flex flex-col gap-2">
-          <span class="field-label">登録済現場</span>
-          <p v-if="assignedSites.length === 0" class="empty-text m-0">
+        <div class="flex flex-col gap-item-gap">
+          <small>登録済現場</small>
+          <p v-if="assignedSites.length === 0" class="m-0">
             登録されている現場はありません。
           </p>
-          <ul v-else class="flex flex-col gap-2 p-0 m-0 list-none">
+          <ul v-else class="flex flex-col gap-item-gap p-0 m-0 list-none">
             <li
               v-for="site in assignedSites"
               :key="site.id"
-              class="flex items-center justify-between p-3 site-item"
             >
-              <div class="flex items-center gap-2 flex-wrap">
-                <Icon name="map-pin" size="sm" class="site-icon" />
-                <span class="site-name">{{ site.name }}</span>
-                <span class="site-id-label">({{ site.id }})</span>
-                <Badge :id="`role:${site.role}`" />
-              </div>
-
-              <NuxtLink
-                :to="`/portal/${site.id}`"
-                class="site-link"
+              <Panel
+                as="div"
+                padding="compact"
+                class="flex items-center justify-between gap-item-gap flex-wrap"
               >
-                現場を開く
-                <Icon name="arrow-right" size="sm" />
-              </NuxtLink>
+                <div class="flex items-center gap-item-gap flex-wrap">
+                  <Icon name="map-pin" size="sm" />
+                  <span>{{ site.name }}</span>
+                  <small>({{ site.id }})</small>
+                  <Badge :id="`role:${site.role}`" />
+                </div>
+
+                <Button
+                  :to="`/portal/${site.id}`"
+                  icon-right="arrow-right"
+                >
+                  現場を開く
+                </Button>
+              </Panel>
             </li>
           </ul>
         </div>
       </div>
 
-      <div v-else class="empty-text">
+      <div v-else>
         アカウント情報を読み込み中...
       </div>
     </Panel>
 
-    <Panel as="section" class="flex flex-col gap-4">
+    <Panel as="section" class="flex flex-col gap-panel-gap">
       <SectionHeader title="パスワード変更" icon="lock" tag="h3" />
 
-      <form class="flex flex-col gap-3" @submit.prevent="handleChangePassword">
+      <form class="flex flex-col gap-form-row-gap" @submit.prevent="handleChangePassword">
+        <Alert v-if="isSuccess" variant="success">
+          パスワードを変更しました
+        </Alert>
+
         <FormGroup
           label="現在のパスワード"
           required
@@ -166,12 +151,7 @@ const assignedSites = computed(() => {
           />
         </FormGroup>
 
-        <div class="flex items-center justify-between pt-1">
-          <span v-if="isSuccess" class="flex items-center gap-1 success-msg">
-            <Icon name="check" size="sm" /> パスワードを変更しました
-          </span>
-          <span v-else />
-
+        <div class="flex items-center justify-end pt-inline-gap">
           <Button
             type="submit"
             variant="default"
@@ -184,7 +164,7 @@ const assignedSites = computed(() => {
       </form>
     </Panel>
 
-    <Panel as="section" class="flex flex-col gap-4">
+    <Panel as="section" class="flex flex-col gap-panel-gap">
       <SectionHeader title="表示設定" icon="sliders" tag="h3" />
 
       <FormGroup
@@ -206,86 +186,3 @@ const assignedSites = computed(() => {
     </Panel>
   </div>
 </template>
-
-<style scoped lang="scss">
-.user-profile {
-  dt {
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-muted);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-wider);
-  }
-
-  .user-name {
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-main);
-  }
-
-  .user-kana {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-secondary);
-  }
-
-  .font-login-id {
-    font-family: var(--font-mono);
-    color: var(--color-text-main);
-  }
-}
-
-.field-label {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-wider);
-}
-
-.empty-text {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-}
-
-.site-item {
-  border: var(--border-width-base) solid var(--color-border);
-  background-color: color-mix(in srgb, var(--surface-bg-elevated) 40%, transparent);
-  transition: var(--transition-base);
-
-  &:hover {
-    border-color: var(--theme-accent);
-  }
-
-  .site-icon {
-    color: var(--theme-accent);
-  }
-
-  .site-name {
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-main);
-  }
-
-  .site-id-label {
-    font-family: var(--font-family-mono, monospace);
-    font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
-  }
-
-  .site-link {
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
-    color: var(--theme-accent);
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-}
-
-.success-msg {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-status-success);
-}
-</style>

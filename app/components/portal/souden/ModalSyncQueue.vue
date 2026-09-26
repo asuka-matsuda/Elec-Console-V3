@@ -81,10 +81,10 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
       </Button>
     </template>
 
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-panel-gap">
 
       <template v-if="conflictItems.length > 0">
-        <div class="flex items-start gap-2 p-3 conflict-alert">
+        <div class="flex items-start gap-item-gap p-panel-pad-compact conflict-alert">
           <Icon name="alert-triangle" size="sm" class="shrink-0 mt-0.5" />
           <div>
             <strong>{{ conflictItems.length }}件</strong> の回路で別の作業者との更新競合が発生しました。<br>
@@ -95,9 +95,9 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
         <div
           v-for="item in conflictItems"
           :key="item.id"
-          class="flex flex-col gap-2 p-3 conflict-panel"
+          class="flex flex-col gap-item-gap p-panel-pad-compact conflict-panel"
         >
-          <div class="flex items-center gap-2 pb-2 panel-header">
+          <div class="flex items-center gap-item-gap pb-item-gap panel-header">
             <span class="panel-ban">{{ item.banMeisho }}</span>
             <span class="flex-1 panel-kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
             <Badge id="souden:phase-warning">
@@ -105,40 +105,40 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
             </Badge>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-form-col-gap">
 
-            <div class="flex flex-col gap-2 p-3 conflict-col server-col">
-              <div class="flex items-center gap-1.5 col-title">
+            <div class="flex flex-col gap-item-gap p-panel-pad-compact conflict-col server-col">
+              <div class="flex items-center gap-inline-gap col-title">
                 <Icon name="database" size="sm" />
                 <span>サーバー側の最新データ</span>
               </div>
               <div class="col-meta">
                 更新日時: {{ formatDateTime(item.serverCircuitData?.updatedAt) }}
               </div>
-              <div class="p-2 col-details">
+              <div class="p-item-gap col-details">
                 {{ formatPhaseValues(item.phase, item.serverCircuitData, true) }}
               </div>
               <Button
-                class="mt-2"
+                class="mt-auto"
                 @click="handleResolve(item, 'discard')"
               >
                 サーバーの値を残す
               </Button>
             </div>
 
-            <div class="flex flex-col gap-2 p-3 conflict-col client-col">
-              <div class="flex items-center gap-1.5 col-title">
+            <div class="flex flex-col gap-item-gap p-panel-pad-compact conflict-col client-col">
+              <div class="flex items-center gap-inline-gap col-title">
                 <Icon name="user" size="sm" />
                 <span>あなたのオフライン入力</span>
               </div>
               <div class="col-meta">
                 実測定時刻: {{ formatDateTime(item.clientConfirmedAt) }}
               </div>
-              <div class="p-2 col-details">
+              <div class="p-item-gap col-details">
                 {{ formatPhaseValues(item.phase, item.payload, false) }}
               </div>
               <Button
-                class="mt-2"
+                class="mt-auto"
                 @click="handleResolve(item, 'overwrite')"
               >
                 自分の値で上書きする
@@ -150,14 +150,14 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
 
       <template v-else-if="syncResult">
         <div
-          class="flex flex-col gap-2 p-3 sync-result-box"
+          class="flex flex-col gap-item-gap p-panel-pad-compact sync-result-box"
           :class="syncResult.errorCount > 0 ? 'is-danger' : 'is-success'"
         >
-          <div v-if="syncResult.successCount > 0" class="flex items-center gap-2">
+          <div v-if="syncResult.successCount > 0" class="flex items-center gap-item-gap">
             <Icon name="check-circle" size="sm" />
             <span>{{ syncResult.successCount }} 件のデータを正常に同期しました。</span>
           </div>
-          <div v-if="syncResult.errorCount > 0" class="flex items-center gap-2">
+          <div v-if="syncResult.errorCount > 0" class="flex items-center gap-item-gap">
             <Icon name="alert-circle" size="sm" />
             <span>{{ syncResult.errorCount }} 件の送信に失敗しました（電波状況を確認してください）。</span>
           </div>
@@ -170,11 +170,11 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
           現場で実際に測定された正確な時刻（実打鍵タイムスタンプ）とともにサーバーへ反映します。
         </p>
 
-        <ul class="overflow-y-auto flex flex-col gap-1 max-h-[220px] m-0 p-2 list-none queue-list">
+        <ul class="overflow-y-auto flex flex-col gap-inline-gap max-h-[220px] m-0 p-item-gap list-none queue-list">
           <li
             v-for="item in queue"
             :key="item.id"
-            class="flex items-center gap-2 px-2 py-1 queue-item"
+            class="flex items-center gap-item-gap px-item-gap py-inline-gap queue-item"
           >
             <Badge id="souden:phase-tool">
               P{{ item.phase }}

@@ -57,7 +57,7 @@ watch(
     class="modal m-auto p-0 w-fit min-w-[min(92vw,380px)] max-w-[min(92vw,640px)] max-h-[90vh] overflow-visible open:flex open:flex-col"
     @cancel="onNativeCancel"
   >
-    <Panel class="modal-panel flex flex-1 flex-col gap-4 min-h-0">
+    <Panel class="modal-panel flex flex-1 flex-col gap-panel-gap min-h-0">
       <SectionHeader
         v-if="title"
         :title="title"
@@ -75,7 +75,7 @@ watch(
       </SectionHeader>
 
       <div
-        class="modal-body overflow-y-auto flex flex-1 flex-col gap-3 min-h-0"
+        class="modal-body overflow-y-auto flex flex-1 flex-col gap-form-row-gap min-h-0"
         :class="{ 'text-center': align === 'center' }"
       >
         <slot />

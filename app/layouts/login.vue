@@ -7,7 +7,7 @@
 </script>
 
 <template>
-  <main class="flex flex-1 items-center justify-center p-4">
+  <main class="flex flex-1 items-center justify-center p-layout-pad">
     <slot />
   </main>
 </template>

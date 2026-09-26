@@ -63,64 +63,60 @@ const handleSelectCircuit = (circuit: CircuitItem) => {
       </template>
     </SectionHeader>
 
-    <Panel>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-panel-gap items-start">
+    <Panel as="section" class="grid grid-cols-1 lg:grid-cols-2 gap-panel-gap items-start">
+      <div class="flex flex-col gap-form-row-gap">
+        <div class="flex items-center gap-form-col-gap">
+          <span class="shrink-0">盤種別:</span>
+          <RadioGroup
+            v-model="selectedShubetsu"
+            :options="shubetsuOptions"
+          />
+        </div>
 
-        <div class="flex flex-col gap-3">
-
-          <div class="flex items-center gap-3">
-            <span class="shrink-0">盤種別:</span>
-            <RadioGroup
-              v-model="selectedShubetsu"
-              :options="shubetsuOptions"
+        <div class="flex flex-wrap items-center gap-form-col-gap">
+          <div class="flex items-center gap-item-gap">
+            <span class="shrink-0">盤名称:</span>
+            <Select
+              v-model="selectedBanMeisho"
+              :options="banMeishoOptions"
+              :clearable="false"
+              class="w-40"
             />
           </div>
 
-          <div class="flex flex-wrap items-center gap-3">
-            <div class="flex items-center gap-2">
-              <span class="shrink-0">盤名称:</span>
-              <Select
-                v-model="selectedBanMeisho"
-                :options="banMeishoOptions"
-                :clearable="false"
-                class="w-40"
-              />
+          <slot name="filters-extra" />
+
+          <span class="whitespace-nowrap">
+            対象回路: <strong>{{ stats.allCount }}</strong> 件
+          </span>
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-form-row-gap">
+        <div class="flex flex-col gap-inline-gap">
+          <div class="flex items-center justify-between">
+            <span>フェーズ{{ phase }} 進捗状況</span>
+            <div class="flex items-center gap-item-gap">
+              <span><strong>{{ stats.completed }}</strong> / {{ stats.total }}</span>
+              <span>({{ stats.pct }}%)</span>
+              <Badge v-if="stats.excluded > 0">
+                除外: {{ stats.excluded }}
+              </Badge>
             </div>
-
-            <slot name="filters-extra" />
-
-            <span class="whitespace-nowrap">
-              対象回路: <strong>{{ stats.allCount }}</strong> 件
-            </span>
           </div>
+          <PortalProgressBar :value="stats.pct" />
         </div>
 
-        <div class="flex flex-col gap-3">
-          <div class="flex flex-col gap-1">
-            <div class="flex items-center justify-between">
-              <span>フェーズ{{ phase }} 進捗状況</span>
-              <div class="flex items-center gap-2">
-                <span><strong>{{ stats.completed }}</strong> / {{ stats.total }}</span>
-                <span>({{ stats.pct }}%)</span>
-                <Badge v-if="stats.excluded > 0">
-                  除外: {{ stats.excluded }}
-                </Badge>
-              </div>
-            </div>
-            <PortalProgressBar :value="stats.pct" />
-          </div>
-
-          <PortalExamMinimap
-            :circuits="circuits"
-            :phase="phase"
-            @select-circuit="handleSelectCircuit"
-          />
-        </div>
+        <PortalExamMinimap
+          :circuits="circuits"
+          :phase="phase"
+          @select-circuit="handleSelectCircuit"
+        />
       </div>
     </Panel>
 
-    <div class="flex flex-1 flex-col min-h-0">
+    <section class="flex flex-1 flex-col min-h-0">
       <slot />
-    </div>
+    </section>
   </div>
 </template>
