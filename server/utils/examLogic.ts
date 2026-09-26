@@ -4,30 +4,18 @@
  * Phase 1〜3 の試験完了判定条件および Prisma Where 句の共通ロジックを定義します。
  */
 
-import type { Circuit } from '@prisma/client'
-
-/**
- * 送電試験回路判定用インターフェース
- * Prismaクライアントのキャッシュ状態に依存せず安全に型判定できるよう補強
- */
-export type ExamCircuitRow = Partial<Circuit> & {
-  p1Kakunin?: boolean | null
-  p1Mashishime?: boolean | null
-  p1ConfirmedAt?: Date | string | null
-  p2IsComplete?: boolean | null
-  p2ConfirmedAt?: Date | string | null
-  p3IsComplete?: boolean | null
-  p3ConfirmedAt?: Date | string | null
-}
+import {
+  isPhase1Complete,
+  isPhase2Complete,
+  isPhase3Complete,
+} from '#shared/utils/soudenExam'
 
 /**
  * 送電試験（Phase 1〜3）の完了判定ロジック
  */
 export const EXAM_LOGIC = {
   PHASE1: {
-    isComplete: (row: ExamCircuitRow): boolean => {
-      return Boolean(row.p1ConfirmedAt && row.p1Kakunin && row.p1Mashishime)
-    },
+    isComplete: isPhase1Complete,
     prismaWhere: {
       p1ConfirmedAt: { not: null },
       p1Kakunin: true,
@@ -35,18 +23,14 @@ export const EXAM_LOGIC = {
     },
   },
   PHASE2: {
-    isComplete: (row: ExamCircuitRow): boolean => {
-      return Boolean(row.p2ConfirmedAt && row.p2IsComplete)
-    },
+    isComplete: isPhase2Complete,
     prismaWhere: {
       p2ConfirmedAt: { not: null },
       p2IsComplete: true,
     },
   },
   PHASE3: {
-    isComplete: (row: ExamCircuitRow): boolean => {
-      return Boolean(row.p3ConfirmedAt && row.p3IsComplete)
-    },
+    isComplete: isPhase3Complete,
     prismaWhere: {
       p3ConfirmedAt: { not: null },
       p3IsComplete: true,

@@ -6,7 +6,7 @@
 
 import { useLocalStorage } from '@vueuse/core'
 
-import type { HistoryEntry } from '~/types/history'
+import type { HistoryEntry } from '~/types/tools'
 import { formatDateTime } from '~/utils/date'
 
 /**

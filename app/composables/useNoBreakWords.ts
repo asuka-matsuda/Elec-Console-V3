@@ -11,7 +11,7 @@ import { useRoute, useState } from '#app'
 import { useApi } from '~/composables/useApi'
 import { applyNoBreakToText } from '~/utils/noBreak'
 
-export const useNoBreakWords = (explicitSiteId?: MaybeRef<string | null | undefined>) => {
+export function useNoBreakWords(explicitSiteId?: MaybeRef<string | null | undefined>) {
   let route: ReturnType<typeof useRoute> | null = null
 
   try {

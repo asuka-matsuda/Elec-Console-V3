@@ -2,14 +2,11 @@
 /**
  * MasterUserList
  * [Portal Organisms] ユーザー管理の左ペイン（Master）。
- * ユーザー一覧、検索フィルター、権限絞り込み、新規ユーザー作成トリガーを一元提供します。
+ * ユーザー一覧、検索フィルター、新規ユーザー作成トリガーを一元提供します。
  */
 import { computed, ref } from 'vue'
 
-import type { User, UserRole } from '~/types/auth'
-import type { RadioOption } from '~/types/components'
-
-type RoleFilterType = 'all' | UserRole
+import type { User } from '#shared/types/auth'
 
 const props = defineProps<{
   users: User[]
@@ -22,37 +19,18 @@ const emit = defineEmits<{
 }>()
 
 const searchQuery = ref('')
-const roleFilter = ref<RoleFilterType>('all')
-
-const filterOptions: RadioOption<RoleFilterType>[] = [
-  { label: 'すべて', value: 'all' },
-  { label: '管理者', value: 'admin' },
-  { label: '作業者', value: 'worker' },
-  { label: '閲覧者', value: 'viewer' },
-]
 
 const filteredUsers = computed(() => {
   const query = searchQuery.value.trim().toLowerCase()
-  const role = roleFilter.value
 
-  if (role === 'all' && !query) {
+  if (!query) {
     return props.users
   }
 
   return props.users.filter((u) => {
-    // 1. 権限絞り込み
-    if (role !== 'all' && u.role !== role) {
-      return false
-    }
+    const searchTarget = `${u.lastName || ''}${u.firstName || ''} ${u.lastNameKana || ''}${u.firstNameKana || ''} ${u.loginId || u.id || ''}`.toLowerCase()
 
-    // 2. 検索語句絞り込み（氏名・カナ・ログインID）
-    if (query) {
-      const searchTarget = `${u.lastName || ''}${u.firstName || ''} ${u.lastNameKana || ''}${u.firstNameKana || ''} ${u.loginId || u.id || ''}`.toLowerCase()
-
-      if (!searchTarget.includes(query)) return false
-    }
-
-    return true
+    return searchTarget.includes(query)
   })
 })
 </script>
@@ -80,12 +58,6 @@ const filteredUsers = computed(() => {
       placeholder="氏名・カナ・IDで検索..."
     />
 
-    <RadioGroup
-      v-model="roleFilter"
-      :options="filterOptions"
-      block
-    />
-
     <div class="flex flex-col gap-2 overflow-y-auto max-h-[calc(100vh-280px)] min-h-[300px]">
       <Panel
         v-for="user in filteredUsers"
@@ -99,7 +71,6 @@ const filteredUsers = computed(() => {
           <span class="user-name">
             {{ user.lastName }} {{ user.firstName }}
           </span>
-          <Badge :id="`role:${user.role}`" class="shrink-0" />
           <Badge v-if="user.requirePasswordReset" id="user:pwd-reset" class="shrink-0" />
         </div>
 

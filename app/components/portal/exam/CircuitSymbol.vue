@@ -5,14 +5,12 @@
  */
 import { computed } from 'vue'
 
-import { resolveKairoSymbol } from '../../../constants/kairoConfig'
+import { resolveKairoSymbol } from '~/constants/kairoConfig'
 
-export interface PortalCircuitSymbolProps {
+interface PortalCircuitSymbolProps {
   kigou?: string | null
   bangou?: string | number | null
 }
-
-export type PortalKairoSymbolProps = PortalCircuitSymbolProps
 
 const props = withDefaults(defineProps<PortalCircuitSymbolProps>(), {
   kigou: null,

@@ -6,7 +6,7 @@
 
 import { computed, ref } from 'vue'
 
-export interface FilterOptions<T> {
+interface FilterOptions<T> {
   data: T[]
   searchMapper: (item: T) => string
   categoryMapper?: (item: T) => string

@@ -12,10 +12,6 @@ import { cableData } from '~/constants/data/cableData'
 import type { SelectOption } from '~/types/components'
 import type { CableData } from '~/types/database'
 
-export type DropdownOption = SelectOption<string>
-
-export { STRONG_CURRENT_CATEGORIES, WEAK_CURRENT_CATEGORIES }
-
 /**
  * 重複のないケーブルカテゴリ（種類）のリストを取得する
  * filter を指定することで強電・弱電などのカテゴリに絞り込めます

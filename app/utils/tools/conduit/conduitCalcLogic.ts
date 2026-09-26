@@ -9,10 +9,20 @@ import type { CableInputItem, MathStep } from '~/types/tools'
 import { findCableByIndexString, getEffectiveCableDiameter } from '~/utils/cable'
 import { buildFormula, formatVal, hlAccent, hlOk } from '~/utils/math'
 
-export type CableInput = CableInputItem
+/**
+ * 電線管サイズ計算入力パラメータ
+ */
+export interface ConduitInputs {
+  /** 電線管種別（薄鋼、厚鋼、VE管等） */
+  conduitCategory: string
+  /** カスタム許容占有率 (%, null時は内線規程基準を適用) */
+  customFillRate: number | null
+  /** 入線対象ケーブルリスト */
+  inputCables: CableInputItem[]
+}
 
-export interface CableDetail {
-  input: CableInput
+interface CableDetail {
+  input: CableInputItem
   def: CableData
   effectiveDiameter: number
   singleArea: number
@@ -66,7 +76,7 @@ export function calculateCableArea(diameterStr: string | number): number {
  */
 export function calculateConduitSize(
   conduitCategory: string,
-  inputCables: CableInput[],
+  inputCables: CableInputItem[],
   conduitData: ConduitData[],
   cableData: CableData[],
   customFillRateInput?: number | null,
@@ -241,7 +251,7 @@ export function calculateConduitSize(
  */
 export function generateMathData(
   conduitCategory: string,
-  inputCables: CableInput[],
+  inputCables: CableInputItem[],
   res: ConduitCalcResult | null,
 ): MathStep[] {
   const rowCount = inputCables.length || 1

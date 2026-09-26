@@ -9,8 +9,10 @@ import { computed } from 'vue'
 import { useToolPage } from '~/composables/tools/useToolPage'
 import { cableData } from '~/constants/data/cableData'
 import { conduitData } from '~/constants/data/conduitData'
-import type { ConduitInputData } from '~/types/tools'
-import type { ConduitCalcResult } from '~/utils/tools/conduit/conduitCalcLogic'
+import type {
+  ConduitCalcResult,
+  ConduitInputs,
+} from '~/utils/tools/conduit/conduitCalcLogic'
 import {
   calculateConduitSize,
   generateMathData,
@@ -19,7 +21,7 @@ import { mapConduitToHistory } from '~/utils/tools/conduit/historyMapper'
 
 const uuidv4 = () => crypto.randomUUID()
 
-export type ConduitInputs = ConduitInputData
+export type { ConduitInputs }
 
 const defaultInputs: ConduitInputs = {
   conduitCategory: '',

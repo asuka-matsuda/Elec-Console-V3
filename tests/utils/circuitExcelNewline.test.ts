@@ -3,13 +3,17 @@ import ExcelJS from 'exceljs'
 import { describe, expect, it } from 'vitest'
 
 import {
-  applyCircuitToRow,
-  detectCircuitColumns,
   getCellString,
-  makeCircuitKey,
   normalizeNewlines,
   setCellStringWithNewlines,
-} from '../../server/utils/circuitExcel'
+} from '../../server/utils/excel/cellFormat'
+import {
+  applyCircuitToRow,
+} from '../../server/utils/excel/circuitExport'
+import {
+  detectCircuitColumns,
+  makeCircuitKey,
+} from '../../server/utils/excel/circuitMapping'
 
 describe('circuitExcel newline preservation', () => {
   describe('normalizeNewlines', () => {

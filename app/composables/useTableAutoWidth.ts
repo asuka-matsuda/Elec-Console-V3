@@ -13,7 +13,7 @@ import {
   measureTableContentWidths,
 } from '~/utils/tableAutoWidth'
 
-export interface UseTableAutoWidthOptions<T = Record<string, unknown>> {
+interface UseTableAutoWidthOptions<T = Record<string, unknown>> {
   columns: MaybeRefOrGetter<TableColumn<T>[]>
   data: MaybeRefOrGetter<T[] | undefined>
   fullData?: MaybeRefOrGetter<T[] | undefined>

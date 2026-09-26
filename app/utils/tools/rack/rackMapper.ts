@@ -11,7 +11,7 @@ import type {
   RackCalcInputs,
 } from '~/utils/tools/rack/rackCalcLogic'
 
-export type RackMode = 'strong' | 'weak'
+type RackMode = 'strong' | 'weak'
 
 export type RackCableUIInput = CableInputItem
 
@@ -26,7 +26,7 @@ export interface RackInputs {
   sideMargin?: number | null
 }
 
-export function convertUIToRackCable(
+function convertUIToRackCable(
   uiInput: RackCableUIInput,
 ): RackCableInput {
   const def = findCableByIndexString(uiInput.cableIdx)

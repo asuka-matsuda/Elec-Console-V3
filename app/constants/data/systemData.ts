@@ -56,20 +56,3 @@ export const systemData = [
     simpleK: 30.8,
   },
 ]
-
-/**
- * 指定されたタグに一致する方式のオプションデータ配列を生成します。
- * @param {string} filterTag - 抽出するタグ ('lighting', 'power', 'all' 等)
- * @returns {Array<Object>} セレクトボックス用のオプション配列
- */
-export function getPhaseOptions(filterTag = 'all') {
-  const filtered
-    = filterTag === 'all'
-      ? systemData
-      : systemData.filter(sys => sys.tags.includes(filterTag))
-
-  return [
-    { value: '', text: '選択してください', disabled: true, selected: true },
-    ...filtered.map(sys => ({ value: sys.id, text: sys.label })),
-  ]
-}

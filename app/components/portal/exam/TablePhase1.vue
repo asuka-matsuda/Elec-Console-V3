@@ -5,20 +5,19 @@
  * チェックボックス（確認・増締）および常時入力可能な備考Textareaを備え、
  * 操作ボタンは「確定 / 解除」のみに特化。不備や特記事項は備考欄に記録します。
  */
-import { reactive, ref, toRef, watch } from 'vue'
+import { toRef } from 'vue'
 
+import type { CircuitItem } from '#shared/types/circuit'
 import type { ConfirmPhase1Payload } from '~/composables/portal/phase/usePhase1Exam'
+import { usePhaseTableForm } from '~/composables/portal/phase/usePhaseTableForm'
 import { useTableSort } from '~/composables/useTableSort'
 import { PHASE1_TABLE_COLUMNS } from '~/constants/soudenConstants'
-import type { CircuitItem } from '~/types/souden'
 
-export interface Phase1RowForm {
+interface Phase1RowForm {
   kakunin: boolean
   mashishime: boolean
   remarks: string
 }
-
-export type RowCheckState = Pick<Phase1RowForm, 'kakunin' | 'mashishime'>
 
 const props = defineProps<{
   circuits: CircuitItem[]
@@ -31,75 +30,25 @@ const emit = defineEmits<{
   confirm: [circuit: CircuitItem, overrideData?: ConfirmPhase1Payload]
 }>()
 
-// 各行の入力フォーム状態（確認・増締・備考）
-const rowForms = reactive<Record<string, Phase1RowForm>>({})
-// ローカルで解除された行IDのセット（確定ボタンを押すまでサーバーへは送信しない）
-const unconfirmedRowIds = ref<Set<string>>(new Set())
-
 const initRowForm = (c: CircuitItem): Phase1RowForm => ({
   kakunin: Boolean(c.p1Kakunin),
   mashishime: Boolean(c.p1Mashishime),
   remarks: c.p1Remarks ?? '',
 })
 
-const getRowForm = (circuit: CircuitItem): Phase1RowForm => {
-  if (!rowForms[circuit.id]) {
-    rowForms[circuit.id] = initRowForm(circuit)
-  }
-
-  return rowForms[circuit.id]!
-}
-
-// サーバーから回路一覧がフェッチされた際（確定後・リロード時）にローカル状態を最新値に同期
-watch(
-  () => props.circuits,
-  (newCircuits) => {
-    unconfirmedRowIds.value.clear()
-    for (const c of newCircuits) {
-      rowForms[c.id] = initRowForm(c)
-    }
-  },
-  { immediate: true },
-)
-
-// 解除ボタンクリック時：サーバー送信は行わず、UI上で解除状態にして確定ボタンに戻す（値は保持）
-const handleClearLocally = (circuit: CircuitItem) => {
-  unconfirmedRowIds.value.add(circuit.id)
-}
-
-// 確定ボタン押下時のみサーバーへの送信・確定処理を実行
-const handleConfirm = (circuit: CircuitItem) => {
-  const form = getRowForm(circuit)
-
-  unconfirmedRowIds.value.delete(circuit.id)
-  emit('confirm', circuit, {
-    kakunin: form.kakunin,
-    mashishime: form.mashishime,
-    remarks: form.remarks,
-  })
-}
-
-// 確定済み表示判定（ローカル解除されておらず、確定日時があること）
-const isConfirmed = (c: CircuitItem) => {
-  if (unconfirmedRowIds.value.has(c.id)) return false
-
-  return Boolean(c.p1ConfirmedAt)
-}
-
-// 全相完了判定（確定済みであり、確認・増締の両方がチェックされていること）
-const isComplete = (c: CircuitItem) => {
-  if (!isConfirmed(c)) return false
-
-  return Boolean(c.p1Kakunin && c.p1Mashishime)
-}
-
-// 行の入力無効判定（確定済み、幹線ロック中、除外回路、またはアクション実行中）
-const isRowDisabled = (c: CircuitItem) => {
-  return isConfirmed(c)
-    || props.isCircuitLocked(c)
-    || Boolean(props.isActionLoading[c.id])
-    || Boolean(c.isExcluded)
-}
+const {
+  getRowForm,
+  handleClearLocally,
+  markConfirmedLocally,
+  isConfirmed,
+  isRowDisabled,
+} = usePhaseTableForm<Phase1RowForm>({
+  circuits: () => props.circuits,
+  initForm: initRowForm,
+  isConfirmedServer: c => Boolean(c.p1ConfirmedAt),
+  isCircuitLocked: props.isCircuitLocked,
+  isActionLoading: () => props.isActionLoading,
+})
 
 // ソート管理
 const {
@@ -108,6 +57,25 @@ const {
   sortedData: sortedCircuits,
   handleSort,
 } = useTableSort(toRef(props, 'circuits'))
+
+// 確定ボタン押下時のみサーバーへの送信・確定処理を実行
+const handleConfirm = (circuit: CircuitItem) => {
+  const form = getRowForm(circuit)
+
+  markConfirmedLocally(circuit)
+  emit('confirm', circuit, {
+    kakunin: form.kakunin,
+    mashishime: form.mashishime,
+    remarks: form.remarks,
+  })
+}
+
+// 全相完了判定（確定済みであり、確認・増締の両方がチェックされていること）
+const isComplete = (c: CircuitItem) => {
+  if (!isConfirmed(c)) return false
+
+  return Boolean(c.p1Kakunin && c.p1Mashishime)
+}
 </script>
 
 <template>

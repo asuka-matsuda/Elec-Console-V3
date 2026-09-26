@@ -2,15 +2,15 @@
  * ユーザーマスター管理 Composable
  *
  * @description 全ユーザーアカウントの一覧取得・新規登録・ロール変更・パスワード初期化を管理します。
- * @returns {Object} users ユーザー一覧Ref, fetchUsers 取得関数, createUser 登録関数, updateUser 更新関数, deleteUser 削除関数, resetUserPassword 初期化関数
+ * @returns users ユーザー一覧Ref, fetchUsers 取得関数, createUser 登録関数, updateUser 更新関数, deleteUser 削除関数, resetUserPassword 初期化関数
  */
 
 import { useState } from '#app'
+import type { User } from '#shared/types/auth'
 import { useApi } from '~/composables/useApi'
-import type { User } from '~/types/auth'
 import { type AppException, parseToAppException } from '~/utils/errors'
 
-export const useAdminUsers = () => {
+export function useAdminUsers() {
   const users = useState<User[]>('admin-users', () => [])
   const fetchError = useState<AppException | null>('admin-users-error', () => null)
   const { $api } = useApi()

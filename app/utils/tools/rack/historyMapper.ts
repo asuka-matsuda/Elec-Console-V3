@@ -4,7 +4,7 @@
  * @description ケーブルラック選定計算の入力情報と算出結果を、LocalStorage履歴表示用オブジェクトに整形します。
  */
 
-import type { HistoryEntry } from '~/types/history'
+import type { HistoryEntry } from '~/types/tools'
 import { findCableByIndexString, getCableDisplayName } from '~/utils/cable'
 import type { RackCableUIInput } from '~/utils/tools/rack/rackMapper'
 

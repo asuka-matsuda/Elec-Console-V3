@@ -6,7 +6,7 @@
  */
 import { computed } from 'vue'
 
-import type { HistoryEntry } from '~/types/history'
+import type { HistoryEntry } from '~/types/tools'
 import type { VoltageCalcResult } from '~/types/voltage'
 import type { ConduitCalcResult } from '~/utils/tools/conduit/conduitCalcLogic'
 import type { RackCalcResult } from '~/utils/tools/rack/rackCalcLogic'

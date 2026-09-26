@@ -9,7 +9,8 @@
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { requireSiteAccess } from '../../../../utils/auth'
-import { exportCircuitsToExcel, validateSafeExcelPath } from '../../../../utils/circuitExcel'
+import { exportCircuitsToExcel } from '../../../../utils/excel/circuitExport'
+import { validateSafeExcelPath } from '../../../../utils/excel/safePath'
 import { prisma } from '../../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {

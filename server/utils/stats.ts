@@ -5,13 +5,11 @@
  * および各フェーズ（Phase 1〜3）の完了率・進捗率（パーセンテージ）を集計します。
  */
 
-import type { SoudenStats } from '~/types/portal'
+import type { SoudenStats } from '#shared/types/circuit'
 
 import { EXAM_LOGIC } from './examLogic'
 import { parseExcludedCircuits } from './jsonFields'
 import { prisma } from './prisma'
-
-export type { SoudenStats }
 
 function calcPct(completed: number, total: number): number {
   if (total <= 0) return 0

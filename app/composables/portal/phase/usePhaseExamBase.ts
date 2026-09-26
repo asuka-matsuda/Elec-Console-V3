@@ -7,10 +7,16 @@
 import type { Ref } from 'vue'
 import { computed, ref, unref, watch } from 'vue'
 
+import type { CircuitItem, CircuitsResponse, PanelOption } from '#shared/types/circuit'
+import { isPhaseComplete } from '#shared/utils/soudenExam'
 import { useOfflineSync } from '~/composables/portal/useOfflineSync'
 import { useAuth } from '~/composables/useAuth'
-import type { CircuitItem, CircuitsResponse, PanelOption } from '~/types/souden'
-import { isPhaseComplete } from '~/utils/souden'
+
+export interface PhaseExamFeedbackOptions {
+  onConflict?: (message: string) => void
+  onError?: (message: string) => void
+  onConfirmClear?: (message: string) => boolean | Promise<boolean>
+}
 
 /**
  * 送電試験（Phase 1〜3）の基底共通Composable
@@ -21,6 +27,7 @@ export function usePhaseExamBase(
   siteIdRef: Ref<string> | string,
   initialKeiTo: string = '幹線',
   phaseNumber: number = 1,
+  feedbackOptions?: PhaseExamFeedbackOptions,
 ) {
   const { getAccurateNow, currentUser } = useAuth()
   const { enqueue } = useOfflineSync(siteIdRef)
@@ -211,6 +218,26 @@ export function usePhaseExamBase(
     return circuit.keiTo === '二次側' && panelsWithIncompleteKansen.value.includes(circuit.banMeisho)
   }
 
+  const notifyConflict = feedbackOptions?.onConflict || ((msg: string) => {
+    if (typeof window !== 'undefined' && typeof window.alert === 'function') {
+      window.alert(msg)
+    }
+  })
+
+  const notifyError = feedbackOptions?.onError || ((msg: string) => {
+    if (typeof window !== 'undefined' && typeof window.alert === 'function') {
+      window.alert(msg)
+    }
+  })
+
+  const askConfirmClear = feedbackOptions?.onConfirmClear || ((msg: string) => {
+    if (typeof window !== 'undefined' && typeof window.confirm === 'function') {
+      return window.confirm(msg)
+    }
+
+    return true
+  })
+
   // 排他制御 (409 Conflict) エラーの共通ハンドリング
   const handleConflictError = (circuitId: string, err: unknown): boolean => {
     const fetchErr = err as {
@@ -238,7 +265,7 @@ export function usePhaseExamBase(
         }
       }
 
-      alert(
+      notifyConflict(
         fetchErr.data?.message
         || '他の作業者によってこの回路が更新されました。最新状態を反映しました。',
       )
@@ -337,7 +364,7 @@ export function usePhaseExamBase(
       const e = err as Error
       const actionName = actionType === 'confirm' ? `確定` : `確定解除`
 
-      alert(`${actionName}に失敗しました: ${e.message}`)
+      notifyError(`${actionName}に失敗しました: ${e.message}`)
       throw err
     }
     finally {
@@ -369,5 +396,6 @@ export function usePhaseExamBase(
     getWorkerName,
     getAccurateNow,
     executeCircuitAction,
+    askConfirmClear,
   }
 }

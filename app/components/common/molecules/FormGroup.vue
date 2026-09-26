@@ -5,7 +5,8 @@
  */
 import { computed, provide, useId } from 'vue'
 
-import { FORM_GROUP_KEY, type FormGroupProps } from '~/types/components'
+import { FORM_GROUP_KEY } from '~/constants/injectionKeys'
+import type { FormGroupProps } from '~/types/components'
 
 const props = withDefaults(defineProps<FormGroupProps>(), {
   id: undefined,

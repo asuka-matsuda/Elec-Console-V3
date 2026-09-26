@@ -10,7 +10,7 @@ import { ref } from 'vue'
 import { useFormValidation } from '~/composables/useFormValidation'
 import { useModal } from '~/composables/useModal'
 
-export interface UseMasterCrudOptions<T extends { id?: string | number }, F extends object> {
+interface UseMasterCrudOptions<T extends { id?: string | number }, F extends object> {
   /** APIエンドポイント（ベースパス）例: '/api/master/word-break' */
   endpoint: string
   /** フォームの初期値 */

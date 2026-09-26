@@ -4,7 +4,7 @@
  * 現場ステータスラベル変換、担当現場フィルタリング等のUI表示ヘルパーを提供します。
  */
 
-import type { User } from '~/types/auth'
+import type { User } from '#shared/types/auth'
 
 /**
  * 現場ステータスに対応する表示ラベルを取得する

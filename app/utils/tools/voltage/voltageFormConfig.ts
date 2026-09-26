@@ -5,7 +5,6 @@
  * 型定義およびUIレンダリング設定を提供します。
  */
 
-import type { defaultForm } from '~/composables/tools/useVoltageCalculator'
 import {
   ambientTempOptions,
   deratingOptions,
@@ -16,9 +15,10 @@ import {
   targetDropOptions,
 } from '~/constants/toolOptions'
 import { getCableCategories } from '~/utils/cable'
+import type { VoltageFormState } from '~/utils/tools/voltage/voltageMapper'
 
 export type FormField = {
-  id: keyof typeof defaultForm
+  id: keyof VoltageFormState
   label: string
   type: 'select' | 'input-select' | 'input-addon'
   options?: { label: string, value: string }[]
@@ -26,7 +26,7 @@ export type FormField = {
   min?: string
   step?: string
   addonText?: string
-  secondaryId?: keyof typeof defaultForm
+  secondaryId?: keyof VoltageFormState
   secondaryOptions?: { label: string, value: string }[]
   showIf?: () => boolean
   disabled?: boolean

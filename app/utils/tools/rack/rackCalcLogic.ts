@@ -55,7 +55,7 @@ export interface RackCalcResult {
 /**
  * ケーブル外径と条数から、外径降順のケーブル直径リストを生成する
  */
-export function getCableDiameters(cables: RackCableInput[]): number[] {
+function getCableDiameters(cables: RackCableInput[]): number[] {
   const diams: number[] = []
 
   for (const cable of cables) {
@@ -75,7 +75,7 @@ export function getCableDiameters(cables: RackCableInput[]): number[] {
 /**
  * 1段積み（平置き）におけるケーブル占有幅を計算する
  */
-export function calculateTier1CablesWidth(
+function calculateTier1CablesWidth(
   diams: number[],
   cableSpacing: number,
 ): number {
@@ -88,7 +88,7 @@ export function calculateTier1CablesWidth(
  * 2段積み（ビンパッキング式）におけるケーブル占有幅を計算する
  * 太い順に下段（太い方 ceil(N/2)本）と上段（細い方 floor(N/2)本）に割り当て、最大幅を採用する
  */
-export function calculateTier2CablesWidth(
+function calculateTier2CablesWidth(
   diams: number[],
   cableSpacing: number,
 ): { width: number, lowerWidth: number, upperWidth: number } {
@@ -125,7 +125,7 @@ export function calculateTier2CablesWidth(
 /**
  * 指定された段数で積み重ねた場合のケーブル最大高さを計算する
  */
-export function getStackHeightFromDiams(
+function getStackHeightFromDiams(
   diams: number[],
   layers: number,
 ): { height: number, detailStr: string } {

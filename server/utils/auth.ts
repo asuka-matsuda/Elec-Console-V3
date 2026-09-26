@@ -10,12 +10,9 @@ import type { H3Event } from 'h3'
 import { createError, getCookie, getHeader, getRouterParam } from 'h3'
 import path from 'path'
 
-import { prisma } from './prisma'
+import type { SiteAssignment, UserRole } from '#shared/types/auth'
 
-export interface SiteAssignment {
-  siteId: string
-  role: string
-}
+import { prisma } from './prisma'
 
 export interface SafeUser {
   id: string
@@ -35,7 +32,7 @@ export interface SafeUser {
   siteAssignments?: SiteAssignment[]
 }
 
-export interface TokenPayload {
+interface TokenPayload {
   uid: string
   loginId: string
   role: string
@@ -46,7 +43,7 @@ export interface TokenPayload {
 // サーバー秘密鍵の取得または生成（永続化ファイル or メモリ）
 let cachedSecret: string | null = null
 
-export function getAuthSecret(): string {
+function getAuthSecret(): string {
   if (process.env.AUTH_SECRET) {
     return process.env.AUTH_SECRET
   }
@@ -157,7 +154,7 @@ export function verifyAuthToken(token: string): TokenPayload | null {
  * リクエストの Authorization ヘッダーまたは Cookie から認証トークンを抽出し、
  * 該当するユーザー情報を返します（未認証時・改ざん検知時は null を返す）。
  */
-export async function getAuthUser(event: H3Event): Promise<SafeUser | null> {
+async function getAuthUser(event: H3Event): Promise<SafeUser | null> {
   const authHeader = getHeader(event, 'Authorization')
   const cookieToken = getCookie(event, 'auth_token')
 
@@ -195,7 +192,7 @@ export async function getAuthUser(event: H3Event): Promise<SafeUser | null> {
 
     return {
       siteId: s.id,
-      role: match?.role || user.role || 'worker',
+      role: (match?.role || user.role || 'worker') as UserRole,
     }
   })
   const { password: _dbPassword, assignedSites: _assignedSites, siteAssignments: _sa, ...restUser } = user

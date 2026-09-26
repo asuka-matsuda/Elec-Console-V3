@@ -6,11 +6,11 @@
  */
 import { Field } from 'vee-validate'
 
-import type { defaultForm } from '~/composables/tools/useVoltageCalculator'
-import type { FormField } from '~/constants/config/voltageFormConfig'
 import { modeOptions } from '~/constants/toolOptions'
+import type { FormField } from '~/utils/tools/voltage/voltageFormConfig'
+import type { VoltageFormState } from '~/utils/tools/voltage/voltageMapper'
 
-const form = defineModel<typeof defaultForm>({ required: true })
+const form = defineModel<VoltageFormState>({ required: true })
 
 defineProps<{
   formFields: FormField[]

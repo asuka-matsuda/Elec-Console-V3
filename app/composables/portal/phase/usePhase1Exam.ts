@@ -6,8 +6,8 @@
 
 import type { Ref } from 'vue'
 
+import type { CircuitItem } from '#shared/types/circuit'
 import { usePhaseExamBase } from '~/composables/portal/phase/usePhaseExamBase'
-import type { CircuitItem } from '~/types/souden'
 
 export interface ConfirmPhase1Payload {
   kakunin?: boolean

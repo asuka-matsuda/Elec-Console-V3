@@ -6,13 +6,13 @@ import {
   getSiteStatusColor,
   getSiteStatusLabel,
 } from '../../app/utils/portal'
+import { getPhase2Threshold } from '../../app/utils/souden'
 import {
-  getPhase2Threshold,
   isPhase1Complete,
   isPhase2Complete,
   isPhase3Complete,
   isPhaseComplete,
-} from '../../app/utils/souden'
+} from '../../shared/utils/soudenExam'
 
 describe('portal utils', () => {
   describe('getSiteStatusLabel', () => {

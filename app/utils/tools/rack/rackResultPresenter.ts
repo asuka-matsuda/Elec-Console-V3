@@ -7,7 +7,7 @@
 import type { ResultDetailItem, ResultPanelStatus } from '~/types/components'
 import type { RackCalcResult, RackTierResult } from '~/utils/tools/rack/rackCalcLogic'
 
-export interface RackTierPanelViewModel {
+interface RackTierPanelViewModel {
   layers: 1 | 2
   title: string
   badgeText?: string
@@ -22,7 +22,7 @@ export interface RackTierPanelViewModel {
   notApplicableText?: string
 }
 
-export interface RackResultViewModel {
+interface RackResultViewModel {
   isEmpty: boolean
   tier1: RackTierPanelViewModel
   tier2: RackTierPanelViewModel
@@ -32,7 +32,7 @@ export interface RackResultViewModel {
   details: ResultDetailItem[]
 }
 
-export interface RackResultPresenterParams {
+interface RackResultPresenterParams {
   result: RackCalcResult | null | undefined
   maxDepth?: number
   mode?: 'strong' | 'weak'

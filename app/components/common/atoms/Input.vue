@@ -6,8 +6,8 @@
  */
 import { computed, inject, ref, useAttrs } from 'vue'
 
+import { FORM_GROUP_KEY } from '~/constants/injectionKeys'
 import type { InputProps } from '~/types/components'
-import { FORM_GROUP_KEY } from '~/types/components'
 
 defineOptions({
   inheritAttrs: false,

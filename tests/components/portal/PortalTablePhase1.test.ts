@@ -1,8 +1,9 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
+import type { CircuitItem } from '#shared/types/circuit'
+
 import TablePhase1 from '../../../app/components/portal/exam/TablePhase1.vue'
-import type { CircuitItem } from '../../../app/types/souden'
 
 describe('TablePhase1.vue', () => {
   const mockCircuits: CircuitItem[] = [

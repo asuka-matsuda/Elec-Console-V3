@@ -2,8 +2,8 @@
  * 外側クリック検知 Composable
  *
  * @description 指定したDOM要素の外側がクリックされたことを検知し、コールバック関数を実行します（ドロップダウン・モーダル制御用）。
- * @param {Ref<HTMLElement | null>} targetRef 監視対象要素のRef
- * @param {() => void} callback 外側クリック時に実行するコールバック
+ * @param targetRef 監視対象要素のRef
+ * @param callback 外側クリック時に実行するコールバック
  */
 
 import { onMounted, onUnmounted, type Ref } from 'vue'

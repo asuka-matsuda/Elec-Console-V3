@@ -7,9 +7,9 @@
 import type { ComputedRef, Ref } from 'vue'
 import { computed, ref } from 'vue'
 
-import type { Site } from '~/types/admin'
+import type { Site } from '#shared/types/site'
 
-export interface SyncResultInfo {
+interface SyncResultInfo {
   type: 'merge' | 'reset' | 'export'
   title: string
   count: number
@@ -20,7 +20,7 @@ export interface SyncResultInfo {
   message: string
 }
 
-export interface UseSiteExcelSyncOptions {
+interface UseSiteExcelSyncOptions {
   site: Ref<Site | null> | ComputedRef<Site | null>
   getFilePath?: () => string
   onPersistPath?: (filePath: string) => Promise<void>

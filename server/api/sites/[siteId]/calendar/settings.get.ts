@@ -8,6 +8,8 @@
 
 import { defineEventHandler, getRouterParam } from 'h3'
 
+import { DEFAULT_CALENDAR_EVENT_TYPES } from '#shared/types/calendar'
+
 import { requireSiteAccess } from '../../../../utils/auth'
 import { parseCustomHolidays, parseEventTypes, parseHolidayDays } from '../../../../utils/jsonFields'
 import { prisma } from '../../../../utils/prisma'
@@ -50,12 +52,7 @@ export default defineEventHandler(async (event) => {
 
   return {
     siteId,
-    eventTypes: [
-      { id: 'meeting', name: '会議', color: '#2f81f7' },
-      { id: 'test', name: '送電試験', color: '#d29922' },
-      { id: 'construction', name: '工事', color: '#39c5cf' },
-      { id: 'other', name: 'その他', color: '#8b949e' },
-    ],
+    eventTypes: DEFAULT_CALENDAR_EVENT_TYPES,
     holidayDays: [0, 6],
     customHolidays: [],
   }

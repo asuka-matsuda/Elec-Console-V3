@@ -8,8 +8,8 @@ import { type ComponentPublicInstance, computed, inject, nextTick, ref, toRef, w
 import { useClickOutside } from '~/composables/useClickOutside'
 import { useFloatingPlacement } from '~/composables/useFloatingPlacement'
 import { useListKeyboardNav } from '~/composables/useListKeyboardNav'
+import { FORM_GROUP_KEY } from '~/constants/injectionKeys'
 import type { SelectOption, SelectProps } from '~/types/components'
-import { FORM_GROUP_KEY } from '~/types/components'
 
 const model = defineModel<T | null>()
 

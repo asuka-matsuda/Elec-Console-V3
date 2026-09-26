@@ -4,7 +4,7 @@
  * [Portal Organisms] 送電試験ダッシュボードの総合進捗パネル。
  * 全試験完了率の円形ゲージと、幹線・二次側それぞれの詳細進捗群を一元表示します。
  */
-import type { SoudenStats } from '~/types/portal'
+import type { SoudenStats } from '#shared/types/circuit'
 
 defineProps<{
   stats: SoudenStats

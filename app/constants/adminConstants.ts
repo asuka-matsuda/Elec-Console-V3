@@ -1,44 +1,12 @@
 /**
  * 管理画面共通定数定義
  *
- * ユーザー管理、現場管理等の管理画面タブ定義および初期表示設定を提供します。
+ * ユーザー管理、現場管理等の管理画面入力フィールドおよび選択肢設定を提供します。
  */
 
-import type { Site, SiteStatus } from '~/types/admin'
-import type { User, UserRole } from '~/types/auth'
-import type { SelectOption, TableColumn, TabOption } from '~/types/components'
-
-/**
- * ポータル管理画面 タブ定義
- */
-export const ADMIN_TABS: TabOption[] = [
-  { value: 'users', label: 'ユーザー管理' },
-  { value: 'site', label: '現場管理' },
-]
-
-/**
- * ユーザー管理 テーブルカラム定義
- */
-export const ADMIN_USER_COLUMNS: TableColumn<User>[] = [
-  { key: 'id', label: 'ID', sortable: true, align: 'center' },
-  { key: 'lastName', label: '名前', sortable: true },
-  { key: 'loginId', label: 'ログインID', sortable: true },
-  { key: 'role', label: '権限', sortable: true, align: 'center' },
-  { key: 'lastLoginAt', label: '最終ログイン', sortable: true, align: 'center' },
-  { key: 'actions', label: '操作', align: 'center' },
-]
-
-/**
- * 現場管理 テーブルカラム定義
- */
-export const ADMIN_SITE_COLUMNS: TableColumn<Site>[] = [
-  { key: 'id', label: '現場ID', sortable: true, align: 'center' },
-  { key: 'name', label: '現場名', sortable: true },
-  { key: 'status', label: 'ステータス', sortable: true, align: 'center' },
-  { key: 'createdAt', label: '作成日時', sortable: true, align: 'center' },
-  { key: 'disabledAt', label: '無効化日時', sortable: true, align: 'center' },
-  { key: 'actions', label: '操作', align: 'center' },
-]
+import type { UserRole } from '#shared/types/auth'
+import type { SiteStatus } from '#shared/types/site'
+import type { SelectOption } from '~/types/components'
 
 /**
  * ユーザー権限（ロール）選択肢

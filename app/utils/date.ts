@@ -85,7 +85,7 @@ export const getTodayDateInput = (): string => formatToDateInputString()
 /**
  * Date オブジェクトを YYYY-MM-DDTHH:mm 形式の文字列に変換する
  */
-export const formatToDateTimeInputString = (date: Date): string => {
+const formatToDateTimeInputString = (date: Date): string => {
   const y = date.getFullYear()
   const m = String(date.getMonth() + 1).padStart(2, '0')
   const day = String(date.getDate()).padStart(2, '0')

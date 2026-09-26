@@ -8,7 +8,7 @@ export interface ToolErrorInfo {
   suggestion?: string
 }
 
-export const TOOL_ERRORS: Record<string, ToolErrorInfo> = {
+const TOOL_ERRORS: Record<string, ToolErrorInfo> = {
   // 電圧降下・ケーブルサイズ選定ツール
   VOLTAGE_SIZE_OVER: {
     id: 'VOLTAGE_SIZE_OVER',
@@ -64,7 +64,7 @@ export const TOOL_ERRORS: Record<string, ToolErrorInfo> = {
   },
 } as const
 
-export type ToolErrorId = keyof typeof TOOL_ERRORS | (string & {})
+type ToolErrorId = keyof typeof TOOL_ERRORS | (string & {})
 
 /**
  * エラーIDからエラー情報を取得する関数

@@ -6,8 +6,8 @@
  */
 import { computed, inject, nextTick, onMounted, ref, watch } from 'vue'
 
+import { FORM_GROUP_KEY } from '~/constants/injectionKeys'
 import type { TextareaProps } from '~/types/components'
-import { FORM_GROUP_KEY } from '~/types/components'
 
 const model = defineModel<string | null>()
 

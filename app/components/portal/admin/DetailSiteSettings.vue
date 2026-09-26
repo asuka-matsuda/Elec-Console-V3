@@ -6,9 +6,9 @@
  */
 import { computed, reactive, ref, watch } from 'vue'
 
+import type { Site } from '#shared/types/site'
 import { useAdminUsers } from '~/composables/admin/useAdminUsers'
 import { SITE_SETTINGS_TABS, SITE_STATUS_OPTIONS } from '~/constants/adminConstants'
-import type { Site } from '~/types/admin'
 import { getAssignedWorkerNames } from '~/utils/portal'
 
 const props = defineProps<{

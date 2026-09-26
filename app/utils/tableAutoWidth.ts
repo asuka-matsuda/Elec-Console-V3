@@ -10,6 +10,26 @@
  */
 import type { TableColumn } from '~/types/components'
 
+interface ColumnWidthCalculationOptions {
+  charWidthPx?: number
+  paddingPx?: number
+  marginPx?: number
+  sortIconPx?: number
+  defaultMinWidthPx?: number
+  actionsMinWidthPx?: number
+  measuredMinWidths?: Record<string, number>
+}
+
+const DEFAULT_OPTIONS: Required<Omit<ColumnWidthCalculationOptions, 'measuredMinWidths'>> & { measuredMinWidths?: Record<string, number> } = {
+  charWidthPx: 8.5,
+  paddingPx: 16,
+  marginPx: 12,
+  sortIconPx: 24,
+  defaultMinWidthPx: 60,
+  actionsMinWidthPx: 120,
+  measuredMinWidths: undefined,
+}
+
 /**
  * 値の表示幅（半角=1, 全角=2）を計算
  */
@@ -53,34 +73,11 @@ export function parsePixelWidth(width?: string | number): number | undefined {
   return match && match[1] ? Number.parseFloat(match[1]) : undefined
 }
 
-export interface ColumnWidthCalculationOptions {
-  charWidthPx?: number
-  paddingPx?: number
-  marginPx?: number
-  sortIconPx?: number
-  defaultMinWidthPx?: number
-  actionsMinWidthPx?: number
-  measuredMinWidths?: Record<string, number>
-}
-
-const DEFAULT_OPTIONS: Required<Omit<ColumnWidthCalculationOptions, 'measuredMinWidths'>> & { measuredMinWidths?: Record<string, number> } = {
-  charWidthPx: 8.5,
-  paddingPx: 16,
-  marginPx: 12,
-  sortIconPx: 24,
-  defaultMinWidthPx: 60,
-  actionsMinWidthPx: 120,
-  measuredMinWidths: undefined,
-}
-
-/**
- * カラムの見出しラベル・ソートアイコン・余白から「見出しの最小必要幅（Natural Min Width）」を算出
- */
 /**
  * カラムの自動幅配分ウェイト（重み）を取得
  * 備考欄（keyにremarkを含む、またはlabelが「備考」）はデフォルトで2スロット分（weight=2）を割り当て
  */
-export function getColumnFlexWeight<T = Record<string, unknown>>(col?: TableColumn<T>): number {
+function getColumnFlexWeight<T = Record<string, unknown>>(col?: TableColumn<T>): number {
   if (!col) return 1
   if (typeof col.flexWeight === 'number' && col.flexWeight > 0) {
     return col.flexWeight
@@ -95,7 +92,10 @@ export function getColumnFlexWeight<T = Record<string, unknown>>(col?: TableColu
   return 1
 }
 
-export function calculateHeaderMinWidth<T = Record<string, unknown>>(
+/**
+ * カラムの見出しラベル・ソートアイコン・余白から「見出しの最小必要幅（Natural Min Width）」を算出
+ */
+function calculateHeaderMinWidth<T = Record<string, unknown>>(
   col: TableColumn<T>,
   options: ColumnWidthCalculationOptions = {},
 ): number {

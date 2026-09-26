@@ -4,11 +4,13 @@ import withNuxt from './.nuxt/eslint.config.mjs'
 import noCardOrBoxNaming from './eslint-rules/no-card-or-box-naming.mjs'
 import noCommentedCode from './eslint-rules/no-commented-code.mjs'
 import noHoverTransitionOverride from './eslint-rules/no-hover-transition-override.mjs'
+import noJsdocTypeAnnotations from './eslint-rules/no-jsdoc-type-annotations.mjs'
 import noLegacyCssVars from './eslint-rules/no-legacy-css-vars.mjs'
 import noPureAccessibility from './eslint-rules/no-pure-accessibility.mjs'
 import noRawHtmlElements from './eslint-rules/no-raw-html-elements.mjs'
 import noTailwindDecoration from './eslint-rules/no-tailwind-decoration.mjs'
 import noTemplateComments from './eslint-rules/no-template-comments.mjs'
+import noTrivialFacade from './eslint-rules/no-trivial-facade.mjs'
 import requireFileJsdoc from './eslint-rules/require-file-jsdoc.mjs'
 
 export default withNuxt(
@@ -26,6 +28,8 @@ export default withNuxt(
           'no-commented-code': noCommentedCode,
           'no-card-or-box-naming': noCardOrBoxNaming,
           'no-raw-html-elements': noRawHtmlElements,
+          'no-jsdoc-type-annotations': noJsdocTypeAnnotations,
+          'no-trivial-facade': noTrivialFacade,
         },
       },
     },
@@ -39,6 +43,8 @@ export default withNuxt(
       'local/no-commented-code': 'error',
       'local/no-card-or-box-naming': 'error',
       'local/no-raw-html-elements': 'error',
+      'local/no-jsdoc-type-annotations': 'error',
+      'local/no-trivial-facade': 'error',
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
       'vue/block-order': ['error', {
@@ -81,7 +87,7 @@ export default withNuxt(
       'vue/multiline-html-element-content-newline': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': [
-        'warn',
+        'error',
         {
           argsIgnorePattern: '^_',
           varsIgnorePattern: '^_',

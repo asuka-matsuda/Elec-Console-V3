@@ -6,31 +6,10 @@
 
 import katex from 'katex'
 
-/**
- * @fileoverview 数式生成用の汎用ユーティリティ
- * 計算根拠などをTeXで表示する際に使用する、フォーマットやハイライト機能を提供します。
- */
-
 // アプリケーション全体で統一されたハイライト用クラス
 export const TEX_HL_CLASS = 'tex-color-accent'
 export const TEX_SUCCESS_CLASS = 'tex-status-success'
 export const TEX_DANGER_CLASS = 'tex-status-danger'
-
-/**
- * ユーザーの入力や選択によって変動する値をオレンジ色でハイライトする
- */
-export function hl(value: string | number | undefined | null): string {
-  if (
-    value === undefined
-    || value === null
-    || value === ''
-    || Number.isNaN(value)
-  ) {
-    return `\\htmlClass{${TEX_HL_CLASS}}{\\text{---}}`
-  }
-
-  return `\\htmlClass{${TEX_HL_CLASS}}{${value}}`
-}
 
 /**
  * 数値をフォーマットし、指定されたCSSクラスでKaTeX用のhtmlClassコマンドでラップします。

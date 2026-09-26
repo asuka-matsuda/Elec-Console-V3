@@ -37,14 +37,6 @@ export const powerFactorOptions = [
   { label: '0.6', value: '0.6' },
 ]
 
-export const cableTypeOptions = [
-  { label: 'CVT / CET', value: 'CVT' },
-  { label: 'CVD / CED', value: 'CVD' },
-  { label: 'CV / CE', value: 'CV' },
-  { label: 'IV / EM-IE', value: 'IV' },
-  { label: 'VVF (平型)', value: 'VVF' },
-]
-
 export const parallelOptions = [
   { label: '1条', value: '1' },
   { label: '2条', value: '2' },

@@ -8,9 +8,9 @@ import { useLocalStorage } from '@vueuse/core'
 import { computed, ref } from 'vue'
 
 import { useModal } from '~/composables/useModal'
-import type { HistoryEntry } from '~/types/history'
+import type { HistoryEntry } from '~/types/tools'
 
-export const CALC_HISTORY_TABS = [
+const CALC_HISTORY_TABS = [
   { value: 'voltage', label: '電圧降下計算' },
   { value: 'conduit', label: '配管サイズ' },
   { value: 'rack', label: 'ケーブルラック' },

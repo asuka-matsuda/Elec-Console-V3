@@ -6,9 +6,9 @@
 
 import { computed, type ComputedRef, isRef, type Ref, ref } from 'vue'
 
-export type SortOrder = 'asc' | 'desc' | null
+type SortOrder = 'asc' | 'desc' | null
 
-export interface UseTableSortOptions<T> {
+interface UseTableSortOptions<T> {
   defaultKey?: (keyof T & string) | string
   defaultOrder?: SortOrder
 }
@@ -18,10 +18,10 @@ export interface UseTableSortOptions<T> {
  * 文字列、数値、日付、null/undefined を自動判別してソートします。
  * ソート順序は 昇順(asc) ➔ 降順(desc) ➔ 元に戻す(null) の3段階で循環します。
  */
-export const useTableSort = <T extends object = Record<string, unknown>>(
+export function useTableSort<T extends object = Record<string, unknown>>(
   sourceData: Ref<T[]> | ComputedRef<T[]> | T[],
   options: UseTableSortOptions<T> = {},
-) => {
+) {
   const sortBy = ref<string>(options.defaultKey || '')
   const sortOrder = ref<SortOrder>(options.defaultOrder || 'asc')
 

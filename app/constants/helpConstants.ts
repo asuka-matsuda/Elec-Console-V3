@@ -1,14 +1,14 @@
 /**
  * ヘルプ項目・解説コンテンツの共通定義
  */
-export interface HelpContent {
+interface HelpContent {
   id: string
   title?: string
   content: string
   reference?: string
 }
 
-export const HELP_ITEMS: Record<string, HelpContent> = {
+const HELP_ITEMS: Record<string, HelpContent> = {
   // ケーブルラック計算
   marginRate: {
     id: 'marginRate',

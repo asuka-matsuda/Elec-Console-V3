@@ -6,8 +6,8 @@
 
 import { cableData as defaultCableData } from '~/constants/data/cableData'
 import type { CableData } from '~/types/database'
+import type { MathStep } from '~/types/tools'
 import type {
-  MathStep,
   VoltageCalcInputs,
   VoltageCalcResult,
 } from '~/types/voltage'

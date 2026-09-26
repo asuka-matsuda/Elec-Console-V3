@@ -67,7 +67,7 @@ export function getDefaultStatusCode(code: ErrorCode): number {
   }
 }
 
-export interface CreateAppErrorParams {
+interface CreateAppErrorParams {
   code: ErrorCode
   message?: string
   statusCode?: number

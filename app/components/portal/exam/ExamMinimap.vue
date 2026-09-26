@@ -3,8 +3,8 @@
  * ExamMinimap
  * [Portal Molecules] 試験画面用の回路進捗ミニマップ。完了・除外・未着手状態をタイル表示。
  */
-import type { CircuitItem } from '~/types/souden'
-import { isPhaseComplete } from '~/utils/souden'
+import type { CircuitItem } from '#shared/types/circuit'
+import { isPhaseComplete } from '#shared/utils/soudenExam'
 
 const props = defineProps<{
   circuits: CircuitItem[]

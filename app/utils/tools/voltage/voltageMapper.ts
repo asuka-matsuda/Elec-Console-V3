@@ -7,7 +7,7 @@
 import { systemData } from '~/constants/data/systemData'
 import type { SystemData, VoltageCalcInputs } from '~/types/voltage'
 import { findCableByIndexString } from '~/utils/cable'
-import { calculateDesignCurrent } from '~/utils/tools/voltage/calcVoltageEngine'
+import { calculateDesignCurrent } from '~/utils/tools/voltage/voltageCalcLogic'
 import { voltageSchema } from '~/utils/tools/voltage/voltageSchema'
 
 export interface VoltageFormState {

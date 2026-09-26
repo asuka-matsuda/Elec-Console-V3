@@ -91,5 +91,3 @@ export interface VoltageCalcResult {
   /** エラー識別子 (容量超過時等) */
   errorId?: string
 }
-
-export type { MathStep } from '~/types/tools'

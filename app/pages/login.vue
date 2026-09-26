@@ -7,10 +7,19 @@ import { ref } from 'vue'
 
 import { useHead, useRouter } from '#app'
 import { useAuth } from '~/composables/useAuth'
-import { LOGIN_FORM_FIELDS } from '~/constants/constants'
 
 definePageMeta({ layout: 'login' })
 useHead({ title: 'ログイン - Elec-Console' })
+
+const LOGIN_FORM_FIELDS = [
+  { id: 'userId', label: 'ユーザーID', type: 'text', placeholder: 'master' },
+  {
+    id: 'password',
+    label: 'パスワード',
+    type: 'password',
+    placeholder: '••••••••',
+  },
+] as const
 
 const router = useRouter()
 const { login } = useAuth()

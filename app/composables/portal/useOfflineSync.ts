@@ -2,12 +2,13 @@
  * オフライン同期キュー管理 Composable
  *
  * @description ネットワーク圏外時に実行された試験確定・解除操作をローカルストレージにキューイングし、復帰時に自動再送・同期します。
- * @param {Ref<string>} siteId 対象現場IDのRef
+ * @param siteId 対象現場IDのRef
  */
 
 import type { Ref } from 'vue'
-import { computed, getCurrentInstance, onMounted, onUnmounted, ref } from 'vue'
+import { computed, getCurrentInstance, onMounted, onUnmounted } from 'vue'
 
+import { useState } from '#app'
 import { STORAGE_KEYS } from '~/constants/storageKeys'
 
 export interface PendingSyncItem {
@@ -38,7 +39,7 @@ export interface SyncResult {
   conflicts: PendingSyncItem[]
 }
 
-export interface UseOfflineSyncOptions {
+interface UseOfflineSyncOptions {
   fetcher?: typeof $fetch
 }
 
@@ -47,8 +48,14 @@ export function useOfflineSync(
   options?: UseOfflineSyncOptions,
 ) {
   const currentSiteId = computed(() => typeof siteIdRef === 'string' ? siteIdRef : siteIdRef.value)
-  const queue = ref<PendingSyncItem[]>([])
-  const isSyncing = ref(false)
+  const queue = useState<PendingSyncItem[]>(
+    `offline-sync-queue-${currentSiteId.value}`,
+    () => [],
+  )
+  const isSyncing = useState<boolean>(
+    `offline-sync-syncing-${currentSiteId.value}`,
+    () => false,
+  )
   const fetchFn = options?.fetcher || $fetch
 
   // ローカルストレージからキューを読み込み

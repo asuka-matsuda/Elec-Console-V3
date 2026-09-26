@@ -7,7 +7,7 @@
 import FullCalendar from '@fullcalendar/vue3'
 import { ref } from 'vue'
 
-import type { EventType } from '~/composables/portal/useCalendar'
+import type { EventType } from '#shared/types/calendar'
 import { useCalendar } from '~/composables/portal/useCalendar'
 import { useCalendarEventForm } from '~/composables/portal/useCalendarEventForm'
 import { useCalendarOptions } from '~/composables/portal/useCalendarOptions'

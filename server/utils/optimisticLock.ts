@@ -54,7 +54,7 @@ export function checkOptimisticLock(
   }
 }
 
-export interface AtomicUpdateCircuitParams {
+interface AtomicUpdateCircuitParams {
   circuitId: string
   siteId: string
   expectedVersion?: number | null

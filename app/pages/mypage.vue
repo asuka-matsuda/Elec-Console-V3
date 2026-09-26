@@ -12,7 +12,7 @@ import { useAdminSites } from '~/composables/admin/useAdminSites'
 import { useAuth } from '~/composables/useAuth'
 import { usePasswordChange } from '~/composables/usePasswordChange'
 import { useSettings } from '~/composables/useSettings'
-import { THEME_OPTIONS } from '~/constants/constants'
+import { THEME_OPTIONS } from '~/constants/colors'
 
 useHead({ title: 'マイページ - Elec-Console' })
 

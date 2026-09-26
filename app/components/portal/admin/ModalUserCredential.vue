@@ -6,7 +6,7 @@
  */
 import { ref, watch } from 'vue'
 
-import type { User } from '~/types/auth'
+import type { User } from '#shared/types/auth'
 import { printUserCredential } from '~/utils/printUserCredential'
 
 const props = defineProps<{

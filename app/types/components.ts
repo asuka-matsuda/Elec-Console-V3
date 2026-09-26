@@ -4,7 +4,7 @@
  * ボタン、フォーム入力、モーダル、テーブルカラム等の共通 Props / Emits インターフェースを定義します。
  */
 
-import type { ComputedRef, InjectionKey } from 'vue'
+import type { ComputedRef } from 'vue'
 
 import type { BadgePresetId } from '~/constants/badgeConfig'
 import type { MenuItem } from '~/constants/data/menuData'
@@ -73,37 +73,6 @@ export interface BreadcrumbItem {
   text: string
 }
 
-/** システムお知らせ用アイテム定義 */
-export interface AnnouncementItem {
-  id?: number | string
-  title: string
-  date: string
-  desc: string
-}
-
-/** システム更新履歴・リリースノート用アイテム定義 */
-export interface HistoryItem {
-  id?: number | string
-  version: string
-  title: string
-  date: string
-  desc: string
-  status?: string
-}
-
-/** 改行禁止ワード設定用アイテム定義 */
-export interface WordBreakItem {
-  id?: string | number
-  word: string
-  date: string
-}
-
-/** ダッシュボード用集約データ */
-export interface DashboardData {
-  announcements: AnnouncementItem[]
-  history: HistoryItem[]
-}
-
 // ============================================================================
 // 2. Atoms（最小構成要素）
 // ============================================================================
@@ -111,7 +80,7 @@ export interface DashboardData {
 // --- Button ---
 export type ButtonVariant = 'default' | 'success' | 'danger'
 
-export interface BaseButtonProps {
+interface BaseButtonProps {
   to?: string
   href?: string
   type?: 'button' | 'submit' | 'reset'
@@ -139,7 +108,7 @@ export interface CheckboxProps {
 }
 
 // --- Icon ---
-export type IconSize = 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
+type IconSize = 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
 
 export interface IconProps {
   name: IconName
@@ -159,8 +128,8 @@ export interface BadgeProps {
 }
 
 // --- Divider ---
-export type DividerType = 'solid' | 'fade-center' | 'fade-side'
-export type DividerOrientation = 'horizontal' | 'vertical'
+type DividerType = 'solid' | 'fade-center' | 'fade-side'
+type DividerOrientation = 'horizontal' | 'vertical'
 
 export interface DividerProps {
   /** 線の基調色（CSSカラー値またはCSS変数。デフォルト: var(--theme-accent)） */
@@ -174,8 +143,8 @@ export interface DividerProps {
 }
 
 // --- SectionHeader ---
-export type HeadingTag = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
-export type SectionHeaderVariant = 'main' | 'border' | 'hud'
+type HeadingTag = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+type SectionHeaderVariant = 'main' | 'border' | 'hud'
 
 export interface SectionHeaderProps {
   /** セクションのタイトル文字列（スロットでの指定も可能） */
@@ -190,7 +159,7 @@ export interface SectionHeaderProps {
 
 // --- Panel ---
 export type PanelOverflow = 'hidden' | 'visible' | 'auto'
-export type PanelPadding = 'normal' | 'none' | 'sm'
+type PanelPadding = 'normal' | 'none' | 'sm'
 
 export interface PanelProps {
   /** 描画するHTML要素またはコンポーネント（デフォルト: 'div'） */
@@ -212,7 +181,6 @@ export interface DisclaimerProps {
   /** 免責・注記本文 */
   text?: string
 }
-export type ToolDisclaimerProps = DisclaimerProps
 
 // --- Input ---
 export type InputType
@@ -227,7 +195,7 @@ export type InputType
     | 'datetime-local'
     | 'time'
 
-export type InputMode = 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'
+type InputMode = 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'
 
 export interface InputProps {
   /** 入力タイプ (デフォルト: 'text') */
@@ -285,7 +253,7 @@ export interface SelectProps<T = string | number | boolean> {
 }
 
 // --- Textarea ---
-export type TextareaResize = 'none' | 'vertical' | 'horizontal' | 'both'
+type TextareaResize = 'none' | 'vertical' | 'horizontal' | 'both'
 
 export interface TextareaProps {
   /** プレースホルダー */
@@ -423,7 +391,6 @@ export interface MenuTileProps {
   /** メニューアイテムオブジェクト（タイトル・アイコン・リンク・無効状態・説明文） */
   item: MenuItem
 }
-export type DashboardMenuTileProps = MenuTileProps
 
 // --- KanaFilter (Reference) ---
 export interface KanaFilterProps {
@@ -445,7 +412,6 @@ export interface HelpTipProps {
   /** 表示テキスト（省略時は helpId のデフォルト解説文） */
   text?: string
 }
-export type MoleculesHelpTipProps = HelpTipProps
 
 // --- Table ---
 export interface TableProps<T = Record<string, unknown>> {
@@ -490,20 +456,14 @@ export interface HeaderProps {
   breadcrumbs?: BreadcrumbItem[]
 }
 
-export type OrganismsHeaderProps = HeaderProps
-
 export interface FooterProps {
   year?: number | string
   text?: string
 }
 
-export type OrganismsFooterProps = FooterProps
-
 export interface GlobalNavProps {
   menuData?: import('~/constants/data/menuData').MenuSection[]
 }
-
-export type OrganismsGlobalNavProps = GlobalNavProps
 
 export interface FilterPanelProps {
   title?: string
@@ -535,8 +495,6 @@ export interface ToolCalculatorLayoutProps {
   hideDisclaimer?: boolean
 }
 
-export type ToolTemplatesLayoutProps = ToolCalculatorLayoutProps
-
 // ============================================================================
 // 6. フォーム共通コンテキスト（Form Context Injection & Props）
 // ============================================================================
@@ -554,5 +512,3 @@ export interface FormGroupContext {
   id: ComputedRef<string>
   hasError: ComputedRef<boolean>
 }
-
-export const FORM_GROUP_KEY: InjectionKey<FormGroupContext> = Symbol('FormGroupContext')

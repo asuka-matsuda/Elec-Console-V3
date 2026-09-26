@@ -2,18 +2,18 @@
  * ポータル管理 - ユーザー管理タブ（2ペインレイアウト）オーケストレーション Composable
  *
  * @description ユーザー一覧の選択状態同期、新規ユーザー登録モーダル、
- * ユーザー更新、削除確認ダイアログ、パスワード初期化フローを一元管理します。
+ * ユーザー保存、パスワード初期化フロー、およびユーザー削除フローを一元管理します。
  */
 
 import { computed, onMounted, ref, watch } from 'vue'
 
+import type { SiteAssignment, User, UserRole } from '#shared/types/auth'
 import { useAdminSites } from '~/composables/admin/useAdminSites'
 import { useAdminUsers } from '~/composables/admin/useAdminUsers'
 import { useModal } from '~/composables/useModal'
-import type { SiteAssignment, User, UserRole } from '~/types/auth'
 import { parseToAppException } from '~/utils/errors'
 
-export interface CreateUserFormState {
+interface CreateUserFormState {
   loginId: string
   lastName: string
   firstName: string
@@ -26,7 +26,7 @@ export interface CreateUserFormState {
   [key: string]: string | boolean | string[] | SiteAssignment[] | UserRole | undefined
 }
 
-export const INITIAL_CREATE_USER: CreateUserFormState = {
+const INITIAL_CREATE_USER: CreateUserFormState = {
   loginId: '',
   lastName: '',
   firstName: '',
@@ -43,18 +43,24 @@ export function useAdminUsersTab() {
   const { sites, fetchSites, isLoaded: isSitesLoaded } = useAdminSites()
   const { askConfirm } = useModal()
 
-  onMounted(async () => {
-    if (users.value.length === 0) {
-      await fetchUsers()
-    }
-    if (!isSitesLoaded?.value) {
-      await fetchSites()
-    }
+  // --- 状態宣言（State） ---
+  const selectedUserId = ref<string | null>(null)
+  const isSaving = ref(false)
+  const isCredentialModalOpen = ref(false)
+  const credentialTarget = ref<(User & { initialPassword?: string, loginId?: string }) | null>(null)
+  const isCreateModalOpen = ref(false)
+  const isCreatingUser = ref(false)
+  const createErrorMsg = ref('')
+  const newUser = ref<CreateUserFormState>({ ...INITIAL_CREATE_USER })
+
+  // --- 派生状態（Computed） ---
+  const selectedUser = computed<User | null>(() => {
+    if (!selectedUserId.value) return null
+
+    return users.value.find(u => u.id === selectedUserId.value) || null
   })
 
-  // --- 選択中のユーザー管理 ---
-  const selectedUserId = ref<string | null>(null)
-
+  // --- 監視（Watch） ---
   watch(
     users,
     (loadedUsers) => {
@@ -70,15 +76,17 @@ export function useAdminUsersTab() {
     { immediate: true },
   )
 
-  const selectedUser = computed<User | null>(() => {
-    if (!selectedUserId.value) return null
-
-    return users.value.find(u => u.id === selectedUserId.value) || null
+  // --- ライフサイクル（Lifecycle） ---
+  onMounted(async () => {
+    if (users.value.length === 0) {
+      await fetchUsers()
+    }
+    if (!isSitesLoaded?.value) {
+      await fetchSites()
+    }
   })
 
-  // --- ユーザー情報の保存 ---
-  const isSaving = ref(false)
-
+  // --- アクションハンドラ（Actions / Methods） ---
   const handleSaveUser = async (updates: Partial<User>) => {
     if (!selectedUser.value) return
 
@@ -95,16 +103,6 @@ export function useAdminUsersTab() {
       isSaving.value = false
     }
   }
-
-  // --- 認証情報モーダル表示状態（新規登録後 / PWリセット後 共通） ---
-  const isCredentialModalOpen = ref(false)
-  const credentialTarget = ref<(User & { initialPassword?: string, loginId?: string }) | null>(null)
-
-  // --- 新規登録モーダル ---
-  const isCreateModalOpen = ref(false)
-  const isCreatingUser = ref(false)
-  const createErrorMsg = ref('')
-  const newUser = ref<CreateUserFormState>({ ...INITIAL_CREATE_USER })
 
   const openCreateModal = () => {
     createErrorMsg.value = ''
@@ -149,7 +147,6 @@ export function useAdminUsersTab() {
     }
   }
 
-  // --- 削除 & パスワード初期化 確認モーダル ---
   const confirmDelete = async (row: User) => {
     if (row.id === 'master') {
       alert('マスターユーザーは削除できません。')

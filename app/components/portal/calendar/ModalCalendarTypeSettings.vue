@@ -5,7 +5,7 @@
  */
 import { toRef } from 'vue'
 
-import type { EventType } from '~/composables/portal/useCalendar'
+import type { EventType } from '#shared/types/calendar'
 import { useCalendarTypeSettings } from '~/composables/portal/useCalendarTypeSettings'
 import { DEFAULT_COLOR_PRESETS } from '~/constants/colors'
 

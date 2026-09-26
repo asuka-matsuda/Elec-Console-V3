@@ -11,7 +11,7 @@ import path from 'node:path'
 import { createError, defineEventHandler, getRouterParam, setHeader } from 'h3'
 
 import { requireSiteAccess } from '../../../../utils/auth'
-import { validateSafeExcelPath } from '../../../../utils/circuitExcel'
+import { validateSafeExcelPath } from '../../../../utils/excel/safePath'
 import { prisma } from '../../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {

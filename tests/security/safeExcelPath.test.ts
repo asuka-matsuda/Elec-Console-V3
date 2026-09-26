@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { validateSafeExcelPath } from '../../server/utils/circuitExcel'
+import { validateSafeExcelPath } from '../../server/utils/excel/safePath'
 
 describe('Safe Excel File Path Validation (Path Traversal & Overwrite Protection)', () => {
   it('should accept valid Excel file paths', () => {

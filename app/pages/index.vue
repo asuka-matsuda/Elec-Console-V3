@@ -5,9 +5,9 @@
  */
 import { computed, ref } from 'vue'
 
+import type { AnnouncementItem, DashboardData, HistoryItem } from '#shared/types/master'
 import { useAuth } from '~/composables/useAuth'
 import { menuData } from '~/constants/data/menuData'
-import type { AnnouncementItem, DashboardData, HistoryItem } from '~/types/components'
 
 const { isMaster } = useAuth()
 

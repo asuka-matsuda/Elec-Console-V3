@@ -1,9 +1,10 @@
 ﻿import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
+import type { CircuitItem } from '#shared/types/circuit'
+
 import TableSoudenCircuit from '../../../app/components/portal/exam/TableSoudenCircuit.vue'
 import type { TableColumn } from '../../../app/types/components'
-import type { CircuitItem } from '../../../app/types/souden'
 
 describe('TableSoudenCircuit.vue', () => {
   const sampleColumns: TableColumn<CircuitItem>[] = [

@@ -212,4 +212,31 @@ describe('useOfflineSync', () => {
     expect(queue.value[0].status).toBe('conflict')
     expect(queue.value[0].serverCircuitData).toEqual(error409.data.current)
   })
+
+  it('shares reactive queue state across multiple useOfflineSync instances for the same siteId', () => {
+    const instanceA = useOfflineSync(siteId)
+    const instanceB = useOfflineSync(siteId)
+
+    instanceA.enqueue({
+      siteId,
+      circuitId: 'circuit-shared-01',
+      banMeisho: '1F電灯盤',
+      kairoBangou: '1',
+      kairoMeisho: '事務室電灯',
+      phase: 1,
+      actionType: 'confirm',
+      payload: { kakunin: true },
+      clientConfirmedAt: '2026-09-07T14:30:00.000Z',
+    })
+
+    // instanceB でもリアクティブに即時反映される
+    expect(instanceB.pendingCount.value).toBe(1)
+    expect(instanceB.hasPending.value).toBe(true)
+    expect(instanceB.queue.value[0].circuitId).toBe('circuit-shared-01')
+
+    // instanceB から削除すると instanceA にも反映される
+    instanceB.removeQueueItem(instanceB.queue.value[0].id)
+    expect(instanceA.pendingCount.value).toBe(0)
+    expect(instanceA.hasPending.value).toBe(false)
+  })
 })

@@ -7,8 +7,8 @@
  */
 import { useSlots, watch } from 'vue'
 
+import type { CircuitItem } from '#shared/types/circuit'
 import type { TableColumn, TableSortOrder } from '~/types/components'
-import type { CircuitItem } from '~/types/souden'
 import { formatShortDateTime } from '~/utils/date'
 
 const sortBy = defineModel<string>('sortBy')

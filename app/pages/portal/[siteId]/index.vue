@@ -5,66 +5,22 @@
  *
  * @description 指定現場の送電試験進捗サマリー、工程カレンダー、パーソナルToDo、操作ログへアクセスするハブ画面。
  */
-import { useLocalStorage } from '@vueuse/core'
-import { computed, onMounted, watch } from 'vue'
+import { computed } from 'vue'
 
-import { useHead, useRoute, useRouter } from '#app'
-import { useAdminSites } from '~/composables/admin/useAdminSites'
-import { useAuth } from '~/composables/useAuth'
-import { STORAGE_KEYS } from '~/constants/storageKeys'
+import { useHead, useRoute } from '#app'
+import { useCurrentSite } from '~/composables/portal/useCurrentSite'
 
 const route = useRoute()
-const router = useRouter()
 const siteId = computed(() => route.params.siteId as string)
 
-const { sites, fetchSites, isLoaded: isSitesLoaded } = useAdminSites()
-const { currentUser } = useAuth()
-
-const lastSiteId = useLocalStorage(STORAGE_KEYS.LAST_SITE_ID, '')
-
-watch(
-  siteId,
-  (newId) => {
-    if (newId) {
-      lastSiteId.value = newId
-    }
-  },
-  { immediate: true },
-)
-
-const currentSite = computed(() =>
-  sites.value.find(s => s.id === siteId.value),
-)
+const {
+  site: currentSite,
+  siteOptions,
+  switchSite,
+} = useCurrentSite(siteId)
 
 useHead({
   title: computed(() => `${currentSite.value?.name || '現場ダッシュボード'} - Elec-Console`),
-})
-
-const assignedSites = computed(() => {
-  if (currentUser.value?.loginId === 'master') {
-    return sites.value
-  }
-
-  const ids = currentUser.value?.assignedSiteIds || []
-
-  return sites.value.filter(s => ids.includes(s.id))
-})
-
-const siteOptions = computed(() =>
-  assignedSites.value.map(s => ({ value: s.id, label: s.name })),
-)
-
-const handleSiteChange = (newSiteId: unknown) => {
-  const targetId = String(newSiteId)
-
-  if (!targetId || targetId === siteId.value) return
-  router.push(`/portal/${targetId}`)
-}
-
-onMounted(() => {
-  if (!isSitesLoaded.value) {
-    fetchSites()
-  }
 })
 </script>
 
@@ -79,7 +35,7 @@ onMounted(() => {
           :model-value="siteId"
           :options="siteOptions"
           class="min-w-[200px]"
-          @update:model-value="handleSiteChange"
+          @update:model-value="switchSite"
         />
       </template>
     </SectionHeader>

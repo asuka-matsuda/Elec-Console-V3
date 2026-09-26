@@ -9,12 +9,12 @@ import { type Ref, ref } from 'vue'
 import type {
   CalendarEvent,
   CalendarSettings,
-} from '~/composables/portal/useCalendar'
+  EventFormData,
+} from '#shared/types/calendar'
 import { useModal } from '~/composables/useModal'
-import type { EventFormData } from '~/types/portal'
 import { parseToAppException } from '~/utils/errors'
 
-export interface UseCalendarEventFormOptions {
+interface UseCalendarEventFormOptions {
   settings: Ref<CalendarSettings | null>
   createEvent: (data: Omit<CalendarEvent, 'id' | 'siteId'>) => Promise<unknown>
   updateEvent: (

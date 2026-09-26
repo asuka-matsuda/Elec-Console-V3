@@ -6,7 +6,7 @@
 
 import { onMounted, onUnmounted, type Ref, ref, watch } from 'vue'
 
-export interface UseFloatingPlacementOptions {
+interface UseFloatingPlacementOptions {
   preferredPlacement?: 'top' | 'bottom'
   maxHeight?: number
   offset?: number

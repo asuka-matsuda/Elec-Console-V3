@@ -4,14 +4,14 @@
  * @description 電線管サイズ計算の入力情報と算出結果を、LocalStorage履歴表示用オブジェクトに整形します。
  */
 
-import type { HistoryEntry } from '~/types/history'
+import type { CableInputItem, HistoryEntry } from '~/types/tools'
 import { findCableByIndexString, getCableDisplayName } from '~/utils/cable'
 
-import type { CableInput, ConduitCalcResult } from './conduitCalcLogic'
+import type { ConduitCalcResult } from './conduitCalcLogic'
 
 export function mapConduitToHistory(
   conduitCategory: string,
-  inputCables: CableInput[],
+  inputCables: CableInputItem[],
   result: ConduitCalcResult,
   customFillRate?: number | null,
 ): Omit<HistoryEntry, 'id' | 'timestamp'> | null {

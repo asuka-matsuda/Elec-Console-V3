@@ -1,8 +1,9 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
+import type { CircuitItem } from '#shared/types/circuit'
+
 import CellSoudenActions from '../../../app/components/portal/exam/CellSoudenActions.vue'
-import type { CircuitItem } from '../../../app/types/souden'
 
 describe('CellSoudenActions.vue', () => {
   const dummyCircuit: CircuitItem = {

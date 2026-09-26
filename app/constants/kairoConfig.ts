@@ -5,9 +5,9 @@
  * この設定ファイルに定義を追加するだけでコンポーネントを変更せずに拡張可能です。
  */
 
-export type KairoShapeType = 'circle' | 'ellipse' | 'rect' | 'polygon'
+type KairoShapeType = 'circle' | 'ellipse' | 'rect' | 'polygon'
 
-export interface KairoSymbolDefinition {
+interface KairoSymbolDefinition {
   type: KairoShapeType
   isDouble?: boolean
   /** 多角形（polygon）の場合の頂点座標（40x40 viewBox 基準） */

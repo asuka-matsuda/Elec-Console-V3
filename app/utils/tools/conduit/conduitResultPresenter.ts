@@ -9,7 +9,7 @@ import type { ResultPanelStatus } from '~/types/components'
 import { formatVal } from '~/utils/math'
 import type { ConduitCalcResult } from '~/utils/tools/conduit/conduitCalcLogic'
 
-export interface ConduitResultViewModel {
+interface ConduitResultViewModel {
   isReady: boolean
   isOversize32: boolean
   isOversize48: boolean

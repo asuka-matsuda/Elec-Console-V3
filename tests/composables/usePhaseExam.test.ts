@@ -1,11 +1,12 @@
 import { describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
 
+import type { CircuitItem } from '#shared/types/circuit'
+
 import { usePhase1Exam } from '../../app/composables/portal/phase/usePhase1Exam'
 import { usePhase2Exam } from '../../app/composables/portal/phase/usePhase2Exam'
 import { usePhase3Exam } from '../../app/composables/portal/phase/usePhase3Exam'
 import { usePhaseExamBase } from '../../app/composables/portal/phase/usePhaseExamBase'
-import type { CircuitItem } from '../../app/types/souden'
 
 // モック
 vi.mock('../../app/composables/useAuth', () => ({

@@ -4,9 +4,10 @@
  * [Master Organisms] 改行禁止ワード管理タブ。
  * システム全体の改行禁止ワードの追加・一覧・編集・削除を行います。
  */
+import type { WordBreakItem } from '#shared/types/master'
 import { useMasterCrud } from '~/composables/master/useMasterCrud'
 import { useNoBreakWords } from '~/composables/useNoBreakWords'
-import type { TableColumn, WordBreakItem } from '~/types/components'
+import type { TableColumn } from '~/types/components'
 import { getTodayDateInput } from '~/utils/date'
 
 interface WordBreakForm {

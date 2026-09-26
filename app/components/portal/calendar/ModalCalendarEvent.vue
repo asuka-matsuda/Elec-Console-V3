@@ -5,7 +5,7 @@
  */
 import { computed, ref, watch } from 'vue'
 
-import type { EventFormData } from '~/types/portal'
+import type { EventFormData } from '#shared/types/calendar'
 import { adjustDateRangeForAllDay, calculateAutoEndDate } from '~/utils/date'
 
 const isOpen = defineModel<boolean>({ default: false })

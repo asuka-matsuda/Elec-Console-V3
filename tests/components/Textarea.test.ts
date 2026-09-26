@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { computed } from 'vue'
 
 import Textarea from '../../app/components/common/atoms/Textarea.vue'
-import { FORM_GROUP_KEY } from '../../app/types/components'
+import { FORM_GROUP_KEY } from '../../app/constants/injectionKeys'
 
 describe('Textarea.vue', () => {
   it('renders textarea with default props', () => {

@@ -10,7 +10,7 @@ import { randomUUID } from 'node:crypto'
 
 import { createError, defineEventHandler, readBody } from 'h3'
 
-import type { WordBreakItem } from '~/types/components'
+import type { WordBreakItem } from '#shared/types/master'
 
 import { requireMasterUser } from '../../../utils/auth'
 import { getWordBreakItems, saveWordBreakItems } from './index.get'

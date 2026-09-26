@@ -7,8 +7,8 @@
  */
 import { computed, toRef } from 'vue'
 
+import type { Site } from '#shared/types/site'
 import { useSiteExcelSync } from '~/composables/portal/useSiteExcelSync'
-import type { Site } from '~/types/admin'
 
 const props = defineProps<{
   site: Site

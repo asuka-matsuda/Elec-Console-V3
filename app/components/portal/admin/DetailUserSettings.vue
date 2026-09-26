@@ -6,9 +6,9 @@
  */
 import { computed, reactive, ref, watch } from 'vue'
 
+import type { SiteAssignment, User, UserRole } from '#shared/types/auth'
+import type { Site } from '#shared/types/site'
 import { USER_ROLE_OPTIONS, USER_SETTINGS_TABS } from '~/constants/adminConstants'
-import type { Site } from '~/types/admin'
-import type { SiteAssignment, User, UserRole } from '~/types/auth'
 import { formatDateTime } from '~/utils/date'
 
 const props = defineProps<{

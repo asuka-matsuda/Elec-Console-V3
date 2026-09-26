@@ -8,7 +8,7 @@ import { ref } from 'vue'
 
 import { useAuth } from '~/composables/useAuth'
 
-export const usePasswordChange = () => {
+export function usePasswordChange() {
   const { changePassword } = useAuth()
 
   const currentPassword = ref('')

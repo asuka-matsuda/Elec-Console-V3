@@ -10,7 +10,7 @@ import { useState } from '#app'
 import { STATE_KEYS } from '~/constants/storageKeys'
 import type { ButtonVariant } from '~/types/components'
 
-export interface ConfirmOptions {
+interface ConfirmOptions {
   title?: string
   message?: string
   confirmText?: string
@@ -25,9 +25,9 @@ let resolvePromise: ((value: boolean) => void) | null = null
 /**
  * モーダル（Modal）の開閉と状態管理を共通化するComposable（SSR安全）
  */
-export const useModal = (
+export function useModal(
   defaultOptions: Partial<ConfirmOptions> = {},
-) => {
+) {
   const isOpen = useState<boolean>(STATE_KEYS.GLOBAL_MODAL_OPEN, () => false)
   const isPending = useState<boolean>(STATE_KEYS.GLOBAL_MODAL_PENDING, () => false)
   const currentOptions = useState<ConfirmOptions>(

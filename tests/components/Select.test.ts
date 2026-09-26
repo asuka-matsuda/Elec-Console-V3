@@ -3,7 +3,8 @@ import { describe, expect, it } from 'vitest'
 import { computed } from 'vue'
 
 import Select from '../../app/components/common/atoms/Select.vue'
-import { FORM_GROUP_KEY, type SelectOption } from '../../app/types/components'
+import { FORM_GROUP_KEY } from '../../app/constants/injectionKeys'
+import type { SelectOption } from '../../app/types/components'
 
 interface SelectVm {
   isOpen: boolean

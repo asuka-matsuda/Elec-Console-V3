@@ -1,8 +1,9 @@
 ﻿import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
+import type { CircuitItem } from '#shared/types/circuit'
+
 import PortalExamMinimap from '../../../app/components/portal/exam/ExamMinimap.vue'
-import type { CircuitItem } from '../../../app/types/souden'
 
 describe('PortalExamMinimap.vue', () => {
   const mockCircuits: CircuitItem[] = [

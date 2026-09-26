@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 
-import type { CableInput } from '~/utils/tools/conduit/conduitCalcLogic'
 import { calculateCableArea, calculateConduitSize } from '~/utils/tools/conduit/conduitCalcLogic'
 
 describe('conduitCalcLogic', () => {

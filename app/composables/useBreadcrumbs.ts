@@ -11,9 +11,9 @@ import { useAdminSites } from '~/composables/admin/useAdminSites'
 import { menuData, type MenuItem, type MenuSection } from '~/constants/data/menuData'
 import type { BreadcrumbItem } from '~/types/components'
 
-export type BreadcrumbAccent = NonNullable<MenuSection['accent']>
+type BreadcrumbAccent = NonNullable<MenuSection['accent']>
 
-export interface BreadcrumbsData {
+interface BreadcrumbsData {
   items: BreadcrumbItem[]
   accent: BreadcrumbAccent
 }

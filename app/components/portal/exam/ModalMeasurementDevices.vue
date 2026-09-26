@@ -5,12 +5,12 @@
  */
 import { computed, ref, watch } from 'vue'
 
-import { useApi } from '~/composables/useApi'
 import type {
   MeasurementDevice,
   MeasurementDeviceCategory,
   SelectedMeasurementDevices,
-} from '~/types/measurementDevice'
+} from '#shared/types/measurementDevice'
+import { useApi } from '~/composables/useApi'
 
 const isOpen = defineModel<boolean>({ default: false })
 

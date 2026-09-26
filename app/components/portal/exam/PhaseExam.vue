@@ -7,9 +7,9 @@
  */
 import { computed } from 'vue'
 
+import type { CircuitItem, PhaseStats } from '#shared/types/circuit'
 import { useCurrentSite } from '~/composables/portal/useCurrentSite'
 import type { IconName } from '~/constants/icons'
-import type { CircuitItem, PhaseStats } from '~/types/souden'
 
 const selectedShubetsu = defineModel<string>('shubetsu', { default: 'ALL' })
 const selectedBanMeisho = defineModel<string>('banMeisho', { default: 'ALL' })

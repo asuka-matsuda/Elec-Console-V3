@@ -8,19 +8,20 @@
  * - 確定後はすべてdisabled化、解除するまで編集不可
  * - 解除ボタンはサーバー送信せずローカルで編集可能状態に戻す（入力値は保持）
  */
-import { reactive, ref, toRef, watch } from 'vue'
+import { toRef } from 'vue'
 
+import type { CircuitItem } from '#shared/types/circuit'
+import { isPhase1Complete } from '#shared/utils/soudenExam'
+import { usePhaseTableForm } from '~/composables/portal/phase/usePhaseTableForm'
 import { useTableSort } from '~/composables/useTableSort'
 import { PHASE2_TABLE_COLUMNS } from '~/constants/soudenConstants'
-import type { CircuitItem } from '~/types/souden'
 import {
   getCircuitPhaseLabels,
   getPhase2Threshold,
-  isPhase1Complete,
   parseNullableNumber,
 } from '~/utils/souden'
 
-export interface Phase2RowForm {
+interface Phase2RowForm {
   rVal: string | number
   sVal: string | number
   tVal: string | number
@@ -53,10 +54,8 @@ const emit = defineEmits<{
   ]
 }>()
 
-// 各行の入力フォーム状態
-const rowForms = reactive<Record<string, Phase2RowForm>>({})
-// ローカルで解除された行IDのセット（確定ボタンを押すまでサーバーへは送信しない）
-const unconfirmedRowIds = ref<Set<string>>(new Set())
+const isP1Complete = (circuit: CircuitItem) => isPhase1Complete(circuit)
+const isLocked = (circuit: CircuitItem) => props.isCircuitLocked(circuit) || !isP1Complete(circuit)
 
 const initRowForm = (circuit: CircuitItem): Phase2RowForm => ({
   rVal: circuit.zetsuenR != null ? circuit.zetsuenR : '',
@@ -65,49 +64,33 @@ const initRowForm = (circuit: CircuitItem): Phase2RowForm => ({
   remarks: circuit.p2Remarks ?? '',
 })
 
-const getRowForm = (circuit: CircuitItem): Phase2RowForm => {
-  if (!rowForms[circuit.id]) {
-    rowForms[circuit.id] = initRowForm(circuit)
-  }
+const {
+  getRowForm,
+  handleClearLocally,
+  markConfirmedLocally,
+  isConfirmed,
+  isRowDisabled,
+} = usePhaseTableForm<Phase2RowForm>({
+  circuits: () => props.circuits,
+  initForm: initRowForm,
+  isConfirmedServer: c => Boolean(c.p2ConfirmedAt),
+  isCircuitLocked: isLocked,
+  isActionLoading: () => props.isActionLoading,
+})
 
-  return rowForms[circuit.id]!
-}
-
-// サーバーからデータフェッチされた際（確定後・再取得時）にローカル状態を同期
-watch(
-  () => props.circuits,
-  (newCircuits) => {
-    unconfirmedRowIds.value.clear()
-    for (const c of newCircuits) {
-      rowForms[c.id] = initRowForm(c)
-    }
-  },
-  { immediate: true },
-)
-
-// 確定済み判定（ローカル解除されておらず、確定日時があること）
-const isConfirmed = (circuit: CircuitItem) => {
-  if (unconfirmedRowIds.value.has(circuit.id)) return false
-
-  return Boolean(circuit.p2ConfirmedAt)
-}
+// ソート管理
+const {
+  sortBy,
+  sortOrder,
+  sortedData: sortedCircuits,
+  handleSort,
+} = useTableSort(toRef(props, 'circuits'))
 
 // 完了判定（確定済みであり、かつ3相すべてOKで完了していること）
 const isComplete = (circuit: CircuitItem) => {
   if (!isConfirmed(circuit)) return false
 
   return Boolean(circuit.p2IsComplete)
-}
-
-const isP1Complete = (circuit: CircuitItem) => isPhase1Complete(circuit)
-const isLocked = (circuit: CircuitItem) => props.isCircuitLocked(circuit) || !isP1Complete(circuit)
-
-// 入力無効判定（確定済み、幹線ロック中、除外回路、またはアクション実行中）
-const isRowDisabled = (circuit: CircuitItem) => {
-  return isConfirmed(circuit)
-    || isLocked(circuit)
-    || Boolean(props.isActionLoading[circuit.id])
-    || Boolean(circuit.isExcluded)
 }
 
 // 相ラベルの取得（三相: R-S / S-T / R-T, 単相: R-N / T-N / R-T）
@@ -120,11 +103,6 @@ const handleFillAllOk = (circuit: CircuitItem) => {
   form.rVal = 100
   form.sVal = 100
   form.tVal = 100
-}
-
-// 「解除」クリック時：サーバー送信は行わず、UI上で解除状態にして確定ボタンに戻す（値は保持）
-const handleClearLocally = (circuit: CircuitItem) => {
-  unconfirmedRowIds.value.add(circuit.id)
 }
 
 // 「確定」クリック時：サーバーへの送信と測定者の記録を実行
@@ -143,7 +121,7 @@ const handleConfirm = (circuit: CircuitItem) => {
   // 3列すべてに値があり、かつ3相すべてがOKの場合のみフェーズ3解禁 (isComplete: true)
   const isAllOk = rStatus === 'OK' && sStatus === 'OK' && tStatus === 'OK'
 
-  unconfirmedRowIds.value.delete(circuit.id)
+  markConfirmedLocally(circuit)
 
   emit('confirm', circuit, {
     rVal: rNum,
@@ -156,14 +134,6 @@ const handleConfirm = (circuit: CircuitItem) => {
     isComplete: isAllOk,
   })
 }
-
-// ソート管理
-const {
-  sortBy,
-  sortOrder,
-  sortedData: sortedCircuits,
-  handleSort,
-} = useTableSort(toRef(props, 'circuits'))
 </script>
 
 <template>

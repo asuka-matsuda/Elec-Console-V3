@@ -4,44 +4,10 @@
  * @description 単相/三相の相名称計算、数値パース、測定値フォーマッタ、標準値定義を提供します。
  */
 
-import type { CircuitItem } from '~/types/souden'
-
 export interface VoltageToleranceRange {
   target: number
   min: number
   max: number
-}
-
-/**
- * フェーズ1（回路確認・増締）が完了しているかを判定します。
- */
-export function isPhase1Complete(c: Partial<CircuitItem>): boolean {
-  return Boolean(c.p1ConfirmedAt && c.p1Kakunin && c.p1Mashishime)
-}
-
-/**
- * フェーズ2（絶縁抵抗測定）が完了しているかを判定します。
- */
-export function isPhase2Complete(c: Partial<CircuitItem>): boolean {
-  return Boolean(c.p2ConfirmedAt && c.p2IsComplete)
-}
-
-/**
- * フェーズ3（送電・電圧測定・検相）が完了しているかを判定します。
- */
-export function isPhase3Complete(c: Partial<CircuitItem>): boolean {
-  return Boolean(c.p3ConfirmedAt && c.p3IsComplete)
-}
-
-/**
- * 指定フェーズ（1〜3）が完了しているかを判定します。
- */
-export function isPhaseComplete(c: Partial<CircuitItem>, phase: number): boolean {
-  if (phase === 1) return isPhase1Complete(c)
-  if (phase === 2) return isPhase2Complete(c)
-  if (phase === 3) return isPhase3Complete(c)
-
-  return false
 }
 
 /**
@@ -73,27 +39,6 @@ export function parseNullableNumber(val: string | number | null | undefined): nu
   const num = typeof val === 'number' ? val : Number(val)
 
   return Number.isNaN(num) ? null : num
-}
-
-/**
- * フェーズ3（電圧測定・検相）の標準規定値を取得します。
- */
-export function getPhase3StandardValues(isThreePhase: boolean) {
-  if (isThreePhase) {
-    return {
-      rs: 200,
-      st: 200,
-      rt: 200,
-      kensou: '正',
-    }
-  }
-
-  return {
-    rs: 100,
-    st: 100,
-    rt: 200,
-    kensou: '良',
-  }
 }
 
 /**

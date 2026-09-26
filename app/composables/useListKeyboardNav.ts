@@ -6,11 +6,11 @@
 
 import { type ComputedRef, type Ref, ref } from 'vue'
 
-export type NavigableOption = {
+type NavigableOption = {
   disabled?: boolean
 }
 
-export interface UseListKeyboardNavOptions<T extends NavigableOption> {
+interface UseListKeyboardNavOptions<T extends NavigableOption> {
   options: Ref<T[]> | ComputedRef<T[]>
   isOpen: Ref<boolean>
   onSelect: (option: T) => void

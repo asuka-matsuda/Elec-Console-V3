@@ -7,14 +7,14 @@
 import ExcelJS from 'exceljs'
 import JSZip from 'jszip'
 
-import type { MeasurementDevice } from '~/types/measurementDevice'
-import type { CircuitItem } from '~/types/souden'
-import { generateCircuitSymbolPng } from '~/utils/circuitSymbolImage'
+import type { CircuitItem } from '#shared/types/circuit'
+import type { MeasurementDevice } from '#shared/types/measurementDevice'
 import {
   isPhase1Complete,
   isPhase2Complete,
   isPhase3Complete,
-} from '~/utils/souden'
+} from '#shared/utils/soudenExam'
+import { generateCircuitSymbolPng } from '~/utils/circuitSymbolImage'
 
 export interface SelectedDevicesMap {
   megger?: MeasurementDevice | null
@@ -22,7 +22,7 @@ export interface SelectedDevicesMap {
   phaseDetector?: MeasurementDevice | null
 }
 
-export interface ExamReportOptions {
+interface ExamReportOptions {
   templateBuffer: ArrayBuffer | Uint8Array
   banMeisho: string
   circuits: CircuitItem[]
@@ -31,13 +31,13 @@ export interface ExamReportOptions {
   devices?: SelectedDevicesMap
 }
 
-export interface ExamReportResult {
+interface ExamReportResult {
   buffer: Uint8Array
   filename: string
   circuitsCount: number
 }
 
-export interface ExamReportZipOptions {
+interface ExamReportZipOptions {
   templateBuffer: ArrayBuffer | Uint8Array
   banMeishoList: string[]
   circuits: CircuitItem[]
@@ -212,7 +212,7 @@ export function evaluateOverallResult(c: CircuitItem): string {
 /**
  * 宣言的タグリゾルバマップ（オブジェクト生成を行わずキーから直接値を取得）
  */
-export const DETAIL_RESOLVERS: Record<string, (c: CircuitItem) => string | number> = {
+const DETAIL_RESOLVERS: Record<string, (c: CircuitItem) => string | number> = {
   回路番号: c => c.kairoBangou || '-',
   配電方式: c => c.haidenHoushiki || '-',
   ケーブルサイズ: c => c.cableList || '-',

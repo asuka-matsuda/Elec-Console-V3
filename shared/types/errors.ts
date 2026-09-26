@@ -135,12 +135,3 @@ export interface ApiErrorPayload {
   details?: Record<string, unknown>
   traceId?: string
 }
-
-/**
- * 統一エラーレスポンス構造
- */
-export interface ApiErrorResponse {
-  statusCode: number
-  statusMessage?: string
-  data: ApiErrorPayload
-}

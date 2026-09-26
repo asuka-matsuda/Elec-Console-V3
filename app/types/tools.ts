@@ -25,15 +25,21 @@ export interface CableInputItem {
 }
 
 /**
- * 電線管サイズ計算入力パラメータ
+ * 各種計算ツール（電圧降下・電線管・ラック・重量）の実行・保存履歴エントリ定義
  */
-export interface ConduitCalcInputs {
-  /** 電線管種別（薄鋼、厚鋼、VE管等） */
-  conduitCategory: string
-  /** カスタム許容占有率 (%, null時は内線規程基準を適用) */
-  customFillRate: number | null
-  /** 入線対象ケーブルリスト */
-  inputCables: CableInputItem[]
+export interface HistoryEntry<
+  TInputs = Record<string, unknown>,
+  TResults = Record<string, unknown>,
+> {
+  id: string
+  toolId?: string
+  toolName: string
+  mode?: string
+  timestamp: string
+  status: 'success' | 'error' | 'warning'
+  mainResultText: string
+  inputs: { label: string, value: string }[]
+  results: { label: string, value: string, isMain?: boolean, color?: string }[]
+  rawInputs?: TInputs
+  rawResult?: TResults
 }
-
-export type ConduitInputData = ConduitCalcInputs

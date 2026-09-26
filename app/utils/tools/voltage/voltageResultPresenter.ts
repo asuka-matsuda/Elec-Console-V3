@@ -9,7 +9,7 @@ import type { ResultDetailItem, ResultPanelStatus } from '~/types/components'
 import type { VoltageCalcInputs, VoltageCalcResult } from '~/types/voltage'
 import { formatVal } from '~/utils/math'
 
-export interface VoltageResultViewModel {
+interface VoltageResultViewModel {
   isReady: boolean
   mode: 'drop' | 'size'
   mainLabel: string

@@ -7,18 +7,16 @@
 import { computed, watch } from 'vue'
 
 import { useToolPage } from '~/composables/tools/useToolPage'
-import { getVoltageFormFields } from '~/constants/config/voltageFormConfig'
 import type { VoltageCalcResult } from '~/types/voltage'
 import {
   getAvailableCores,
   getAvailableSizes,
   getDefaultCoreForPhase,
 } from '~/utils/cable'
-import {
-  calculateLogic,
-  generateMathData,
-} from '~/utils/tools/voltage/calcVoltageEngine'
 import { mapVoltageToHistory } from '~/utils/tools/voltage/historyMapper'
+import { calculateLogic } from '~/utils/tools/voltage/voltageCalcLogic'
+import { getVoltageFormFields } from '~/utils/tools/voltage/voltageFormConfig'
+import { generateMathData } from '~/utils/tools/voltage/voltageFormulaGenerator'
 import type { VoltageFormState } from '~/utils/tools/voltage/voltageMapper'
 import { mapFormToVoltageCalcInputs } from '~/utils/tools/voltage/voltageMapper'
 

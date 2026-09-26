@@ -21,7 +21,7 @@ import {
 import type { TableColumn } from '~/types/components'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface DatabaseConfig<T = any> {
+interface DatabaseConfig<T = any> {
   title: string
   data: T[]
   columns: TableColumn<T>[]

@@ -6,10 +6,10 @@ export type MeasurementDeviceCategory = 'megger' | 'voltmeter' | 'phaseDetector'
 
 export interface MeasurementDevice {
   id: string
-  category: MeasurementDeviceCategory // 'megger' | 'voltmeter' | 'phaseDetector'
+  category: MeasurementDeviceCategory
   maker: string
   model: string
-  calibrationDate: string // YYYY/MM/DD 等
+  calibrationDate: string
   serialNumber: string
   note?: string
 }

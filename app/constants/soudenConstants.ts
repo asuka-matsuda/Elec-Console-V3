@@ -4,8 +4,9 @@
  * Phase 1〜3 の試験テーブル表示用カラム定義および系統（幹線・動力・電灯等）区分を提供します。
  */
 
+import type { CircuitItem } from '#shared/types/circuit'
+import type { OperationLogItem } from '#shared/types/operationLog'
 import type { BadgePresetId, SelectOption, TableColumn } from '~/types/components'
-import type { CircuitItem, OperationLogItem } from '~/types/souden'
 import { formatDateTime } from '~/utils/date'
 
 /**

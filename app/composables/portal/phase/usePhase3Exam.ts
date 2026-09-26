@@ -6,8 +6,9 @@
 
 import type { Ref } from 'vue'
 
+import type { CircuitItem } from '#shared/types/circuit'
+import type { PhaseExamFeedbackOptions } from '~/composables/portal/phase/usePhaseExamBase'
 import { usePhaseExamBase } from '~/composables/portal/phase/usePhaseExamBase'
-import type { CircuitItem } from '~/types/souden'
 
 /**
  * フェーズ3：送電・電圧測定・検相試験専用 Composable
@@ -15,10 +16,12 @@ import type { CircuitItem } from '~/types/souden'
 export function usePhase3Exam(
   siteIdRef: Ref<string> | string,
   initialKeiTo: string = '幹線',
+  feedbackOptions?: PhaseExamFeedbackOptions,
 ) {
-  const base = usePhaseExamBase(siteIdRef, initialKeiTo, 3)
+  const base = usePhaseExamBase(siteIdRef, initialKeiTo, 3, feedbackOptions)
   const {
     executeCircuitAction,
+    askConfirmClear,
   } = base
 
   // Phase 3 確定実行
@@ -47,7 +50,9 @@ export function usePhase3Exam(
 
   // Phase 3 確定解除
   const clearPhase3 = async (circuit: CircuitItem) => {
-    if (!confirm(`盤「${circuit.banMeisho}」回路「${circuit.kairoBangou || circuit.kairoMeisho}」のフェーズ3確定を解除しますか？`)) {
+    const isOk = await askConfirmClear(`盤「${circuit.banMeisho}」回路「${circuit.kairoBangou || circuit.kairoMeisho}」のフェーズ3確定を解除しますか？`)
+
+    if (!isOk) {
       return
     }
 

@@ -2,44 +2,18 @@
  * 現場カレンダー管理 Composable
  *
  * @description 現場に紐づく予定イベントの取得・日付移動・月間/週間ビューの切り替えを管理します。
- * @param {Ref<string>} siteId 対象現場IDのRef
+ * @param siteId 対象現場ID
  */
 
 import { useAsyncData, useState } from '#app'
+import {
+  type CalendarEvent,
+  type CalendarSettings,
+  DEFAULT_CALENDAR_EVENT_TYPES,
+} from '#shared/types/calendar'
 import { useApi } from '~/composables/useApi'
 
-export interface CalendarEvent {
-  id: string
-  siteId: string
-  title: string
-  start: string
-  end?: string
-  allDay?: boolean
-  type?: string
-}
-
-export interface EventType {
-  id: string
-  name: string
-  color: string // CSS変数またはHEXカラー（例: 'var(--theme-accent)', '#00f0ff'）
-  colorVar?: string
-}
-
-export const DEFAULT_EVENT_TYPES: EventType[] = [
-  { id: 'work', name: '現場作業', color: '#39c5cf' },
-  { id: 'meeting', name: '打合せ', color: '#2f81f7' },
-  { id: 'inspection', name: '立会検査', color: '#d29922' },
-  { id: 'delivery', name: '納品・搬入', color: '#3fb950' },
-]
-
-export interface CalendarSettings {
-  siteId: string
-  eventTypes: EventType[]
-  holidayDays: number[] // 0=Sun, 6=Sat
-  customHolidays: string[] // YYYY-MM-DD
-}
-
-export const useCalendar = (siteId: string) => {
+export function useCalendar(siteId: string) {
   const events = useState<CalendarEvent[]>(
     `calendar-events-${siteId}`,
     () => [],
@@ -69,7 +43,7 @@ export const useCalendar = (siteId: string) => {
       )
 
       if (data && (!data.eventTypes || data.eventTypes.length === 0)) {
-        data.eventTypes = DEFAULT_EVENT_TYPES
+        data.eventTypes = DEFAULT_CALENDAR_EVENT_TYPES
       }
       settings.value = data
 

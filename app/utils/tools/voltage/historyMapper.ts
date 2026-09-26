@@ -4,12 +4,12 @@
  * 電圧降下計算の入出力データを計算履歴ストア保存用フォーマットへ相互変換します。
  */
 
-import { getVoltageFormFields } from '~/constants/config/voltageFormConfig'
 import { cableData } from '~/constants/data/cableData'
 import { getToolError } from '~/constants/toolErrorConstants'
 import type { CableData } from '~/types/database'
-import type { HistoryEntry } from '~/types/history'
+import type { HistoryEntry } from '~/types/tools'
 import type { VoltageCalcInputs, VoltageCalcResult } from '~/types/voltage'
+import { getVoltageFormFields } from '~/utils/tools/voltage/voltageFormConfig'
 
 /**
  * 電圧降下の計算入出力を HistoryEntry 形式に変換する

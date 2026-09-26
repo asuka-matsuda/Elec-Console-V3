@@ -22,10 +22,10 @@ import { computed, type Ref, ref } from 'vue'
 import type {
   CalendarEvent,
   CalendarSettings,
-} from '~/composables/portal/useCalendar'
+} from '#shared/types/calendar'
 import { DEFAULT_COLOR } from '~/constants/colors'
 
-export interface UseCalendarOptionsConfig {
+interface UseCalendarOptionsConfig {
   events: Ref<CalendarEvent[]>
   settings: Ref<CalendarSettings | null>
   onSelectDate: (selectInfo: DateSelectArg) => void

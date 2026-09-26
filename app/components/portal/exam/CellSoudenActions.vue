@@ -6,7 +6,7 @@
  * - 確定済み状態での「解除」ボタン（ローカルで再編集可能に戻す）
  * - 未確定状態での「確定」ボタンおよび追加アクションスロット（全相OK等）
  */
-import type { CircuitItem } from '~/types/souden'
+import type { CircuitItem } from '#shared/types/circuit'
 
 withDefaults(
   defineProps<{

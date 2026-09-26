@@ -7,7 +7,7 @@
 import type { ResultDetailItem, ResultPanelStatus } from '~/types/components'
 import type { WeightCalcResult } from '~/utils/tools/weight/weightCalcLogic'
 
-export interface WeightResultViewModel {
+interface WeightResultViewModel {
   isError: boolean
   hasBestDrum: boolean
   panelStatus: ResultPanelStatus

@@ -7,13 +7,13 @@
 import { CONDUIT_CABLE_COLUMNS } from '~/constants/cableConstants'
 import { conduitData } from '~/constants/data/conduitData'
 import type { SelectOption } from '~/types/components'
-import type { ConduitInputData } from '~/types/tools'
 import {
   formatConduitCableSpec,
   getCableCategories,
 } from '~/utils/cable'
+import type { ConduitInputs } from '~/utils/tools/conduit/conduitCalcLogic'
 
-const inputs = defineModel<ConduitInputData>({ required: true })
+const inputs = defineModel<ConduitInputs>({ required: true })
 
 withDefaults(
   defineProps<{

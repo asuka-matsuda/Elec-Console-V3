@@ -6,7 +6,7 @@
  */
 import { computed, ref } from 'vue'
 
-import type { Site, SiteStatus } from '~/types/admin'
+import type { Site, SiteStatus } from '#shared/types/site'
 import type { RadioOption } from '~/types/components'
 
 type StatusFilterType = 'all' | SiteStatus

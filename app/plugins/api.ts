@@ -6,7 +6,7 @@
  */
 
 import { defineNuxtPlugin, navigateTo, useCookie, useRoute, useState } from '#app'
-import type { User } from '~/types/auth'
+import type { User } from '#shared/types/auth'
 import { parseToAppException } from '~/utils/errors'
 
 export default defineNuxtPlugin(() => {

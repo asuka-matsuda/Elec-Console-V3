@@ -10,9 +10,9 @@ import { computed, getCurrentInstance, onUnmounted, ref, toValue } from 'vue'
 import type { IconName } from '~/constants/icons'
 import type { ButtonVariant } from '~/types/components'
 
-export type AsyncActionState = 'idle' | 'saving' | 'success' | 'error'
+type AsyncActionState = 'idle' | 'saving' | 'success' | 'error'
 
-export interface UseAsyncActionFeedbackOptions {
+interface UseAsyncActionFeedbackOptions {
   action: () => Promise<void>
   disabled?:
     | Ref<boolean | undefined>
@@ -27,7 +27,7 @@ export interface UseAsyncActionFeedbackOptions {
   errorDuration?: number
 }
 
-export interface ActionFeedbackContent {
+interface ActionFeedbackContent {
   icon: IconName
   text: string
 }

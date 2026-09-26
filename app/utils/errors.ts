@@ -11,7 +11,7 @@ import {
   ErrorCode,
 } from '#shared/types/errors'
 
-export interface AppExceptionOptions {
+interface AppExceptionOptions {
   code: ErrorCode
   message?: string
   statusCode?: number

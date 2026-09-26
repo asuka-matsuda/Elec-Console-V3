@@ -5,7 +5,7 @@
  */
 import { useState } from '#app'
 
-export const useSidebar = () => {
+export function useSidebar() {
   const isOpen = useState<boolean>('sidebar-open', () => false)
 
   const openSidebar = () => {

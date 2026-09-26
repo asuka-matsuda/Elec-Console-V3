@@ -3,7 +3,7 @@
  * 不正な JSON 文字列や破損データ、型違いが存在しても 500 エラーを起こさず安全にフォールバックします。
  */
 
-export interface CalendarEventType {
+interface CalendarEventType {
   id: string
   label: string
   color: string

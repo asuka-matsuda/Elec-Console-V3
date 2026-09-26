@@ -7,11 +7,11 @@
 import { computed } from 'vue'
 
 import { useCookie, useRouter, useState } from '#app'
+import type { User } from '#shared/types/auth'
 import { useApi } from '~/composables/useApi'
 import { STATE_KEYS, STORAGE_KEYS } from '~/constants/storageKeys'
-import type { User } from '~/types/auth'
 
-export const useAuth = () => {
+export function useAuth() {
   const token = useCookie<string | null>('auth_token', {
     default: () => null,
     maxAge: 60 * 60 * 24,

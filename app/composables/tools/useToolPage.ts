@@ -2,7 +2,7 @@
  * 技術計算ツール共通ページ Composable
  *
  * @description 各計算ツールの入力・結果パネルのレイアウト制御、履歴ドロワー連携、LocalStorage保存を共通化します。
- * @param {string} toolType ツール識別子 ('voltage' | 'conduit' | 'rack' | 'weight')
+ * @param toolType ツール識別子 ('voltage' | 'conduit' | 'rack' | 'weight')
  */
 
 import { useLocalStorage } from '@vueuse/core'
@@ -11,7 +11,7 @@ import { computed } from 'vue'
 import { useCalcHistory } from '~/composables/tools/useCalcHistory'
 import { useModal } from '~/composables/useModal'
 import { STORAGE_KEYS } from '~/constants/storageKeys'
-import type { HistoryEntry } from '~/types/history'
+import type { HistoryEntry } from '~/types/tools'
 
 export function useToolPage<InputType, ResultType>(
   toolId: string,

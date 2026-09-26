@@ -6,8 +6,9 @@
 
 import type { Ref } from 'vue'
 
+import type { CircuitItem } from '#shared/types/circuit'
+import type { PhaseExamFeedbackOptions } from '~/composables/portal/phase/usePhaseExamBase'
 import { usePhaseExamBase } from '~/composables/portal/phase/usePhaseExamBase'
-import type { CircuitItem } from '~/types/souden'
 
 /**
  * フェーズ2：絶縁抵抗測定（メガ測定）試験専用 Composable
@@ -15,11 +16,13 @@ import type { CircuitItem } from '~/types/souden'
 export function usePhase2Exam(
   siteIdRef: Ref<string> | string,
   initialKeiTo: string = '幹線',
+  feedbackOptions?: PhaseExamFeedbackOptions,
 ) {
-  const base = usePhaseExamBase(siteIdRef, initialKeiTo, 2)
+  const base = usePhaseExamBase(siteIdRef, initialKeiTo, 2, feedbackOptions)
   const {
     phase2ThresholdMegOhm,
     executeCircuitAction,
+    askConfirmClear,
   } = base
 
   // 測定値に基づくOK/NG判定
@@ -62,7 +65,9 @@ export function usePhase2Exam(
 
   // Phase 2 確定解除
   const clearPhase2 = async (circuit: CircuitItem) => {
-    if (!confirm(`盤「${circuit.banMeisho}」回路「${circuit.kairoBangou || circuit.kairoMeisho}」のフェーズ2確定を解除しますか？`)) {
+    const isOk = await askConfirmClear(`盤「${circuit.banMeisho}」回路「${circuit.kairoBangou || circuit.kairoMeisho}」のフェーズ2確定を解除しますか？`)
+
+    if (!isOk) {
       return
     }
 

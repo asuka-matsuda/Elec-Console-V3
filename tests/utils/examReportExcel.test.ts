@@ -2,7 +2,8 @@ import ExcelJS from 'exceljs'
 import JSZip from 'jszip'
 import { describe, expect, it } from 'vitest'
 
-import type { CircuitItem } from '../../app/types/souden'
+import type { CircuitItem } from '#shared/types/circuit'
+
 import {
   calculateExamDateRange,
   calculateExamWorkers,

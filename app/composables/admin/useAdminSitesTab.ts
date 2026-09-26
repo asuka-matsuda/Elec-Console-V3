@@ -7,18 +7,18 @@
 
 import { computed, onMounted, ref, watch } from 'vue'
 
+import type { Site, SiteStatus } from '#shared/types/site'
 import { useAdminSites } from '~/composables/admin/useAdminSites'
 import { useModal } from '~/composables/useModal'
-import type { Site, SiteStatus } from '~/types/admin'
 import { parseToAppException } from '~/utils/errors'
 
-export interface CreateSiteFormState {
+interface CreateSiteFormState {
   id: string
   name: string
   status: SiteStatus
 }
 
-export const INITIAL_CREATE_SITE: CreateSiteFormState = {
+const INITIAL_CREATE_SITE: CreateSiteFormState = {
   id: '',
   name: '',
   status: 'planning',
@@ -28,15 +28,23 @@ export function useAdminSitesTab() {
   const { sites, isLoaded, fetchSites, createSite, toggleDisableSite, updateSite, deleteSite } = useAdminSites()
   const { askConfirm } = useModal()
 
-  onMounted(async () => {
-    if (!isLoaded?.value) {
-      await fetchSites()
-    }
+  // --- 状態宣言（State） ---
+  const selectedSiteId = ref<string | null>(null)
+  const isSaving = ref(false)
+  const isCreateModalOpen = ref(false)
+  const isCreatingSite = ref(false)
+  const newSite = ref<CreateSiteFormState>({ ...INITIAL_CREATE_SITE })
+  const fieldErrors = ref({ id: '', name: '' })
+  const isDeletingSite = ref(false)
+
+  // --- 派生状態（Computed） ---
+  const selectedSite = computed<Site | null>(() => {
+    if (!selectedSiteId.value) return null
+
+    return sites.value.find(s => s.id === selectedSiteId.value) || null
   })
 
-  // --- 選択中の現場管理 ---
-  const selectedSiteId = ref<string | null>(null)
-
+  // --- 監視（Watch） ---
   // sitesが更新されたら先頭を選択、または存在しないIDをクリア
   watch(
     sites,
@@ -53,18 +61,17 @@ export function useAdminSitesTab() {
     { immediate: true },
   )
 
-  const selectedSite = computed<Site | null>(() => {
-    if (!selectedSiteId.value) return null
-
-    return sites.value.find(s => s.id === selectedSiteId.value) || null
+  // --- ライフサイクル（Lifecycle） ---
+  onMounted(async () => {
+    if (!isLoaded?.value) {
+      await fetchSites()
+    }
   })
 
+  // --- アクションハンドラ（Actions / Methods） ---
   const handleSelectSite = (site: Site) => {
     selectedSiteId.value = site.id
   }
-
-  // --- 現場情報の保存 ---
-  const isSaving = ref(false)
 
   const handleSaveSite = async (payload: Site) => {
     if (!selectedSite.value) return
@@ -87,12 +94,6 @@ export function useAdminSitesTab() {
       isSaving.value = false
     }
   }
-
-  // --- 新規登録モーダル ---
-  const isCreateModalOpen = ref(false)
-  const isCreatingSite = ref(false)
-  const newSite = ref<CreateSiteFormState>({ ...INITIAL_CREATE_SITE })
-  const fieldErrors = ref({ id: '', name: '' })
 
   const openCreateModal = () => {
     fieldErrors.value = { id: '', name: '' }
@@ -134,7 +135,6 @@ export function useAdminSitesTab() {
     }
   }
 
-  // --- 有効化・無効化確認モーダル ---
   const confirmToggleDisable = async (row: Site) => {
     const isCurrentlyDisabled = !!row.disabledAt
 
@@ -151,9 +151,6 @@ export function useAdminSitesTab() {
       await toggleDisableSite(row.id)
     }
   }
-
-  // --- 現場削除確認モーダル ---
-  const isDeletingSite = ref(false)
 
   const confirmDeleteSite = async (site: Site) => {
     const isConfirmed = await askConfirm({
