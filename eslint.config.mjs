@@ -13,6 +13,7 @@ import noTemplateComments from './eslint-rules/no-template-comments.mjs'
 import noTrivialFacade from './eslint-rules/no-trivial-facade.mjs'
 import requireFileJsdoc from './eslint-rules/require-file-jsdoc.mjs'
 import strictSpacingTokens from './eslint-rules/strict-spacing-tokens.mjs'
+import strictStateManagement from './eslint-rules/strict-state-management.mjs'
 
 export default withNuxt(
   {
@@ -32,6 +33,7 @@ export default withNuxt(
           'no-raw-html-elements': noRawHtmlElements,
           'no-jsdoc-type-annotations': noJsdocTypeAnnotations,
           'no-trivial-facade': noTrivialFacade,
+          'strict-state-management': strictStateManagement,
         },
       },
     },
@@ -48,6 +50,7 @@ export default withNuxt(
       'local/no-raw-html-elements': 'error',
       'local/no-jsdoc-type-annotations': 'error',
       'local/no-trivial-facade': 'error',
+      'local/strict-state-management': 'error',
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
       'vue/block-order': ['error', {
