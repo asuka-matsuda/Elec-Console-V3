@@ -12,14 +12,15 @@ import {
   DEFAULT_CALENDAR_EVENT_TYPES,
 } from '#shared/types/calendar'
 import { useApi } from '~/composables/useApi'
+import { STATE_KEYS } from '~/constants/storageKeys'
 
 export function useCalendar(siteId: string) {
   const events = useState<CalendarEvent[]>(
-    `calendar-events-${siteId}`,
+    STATE_KEYS.CALENDAR_EVENTS(siteId),
     () => [],
   )
   const settings = useState<CalendarSettings | null>(
-    `calendar-settings-${siteId}`,
+    STATE_KEYS.CALENDAR_SETTINGS(siteId),
     () => null,
   )
   const { $api } = useApi()

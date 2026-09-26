@@ -9,6 +9,7 @@ import { computed, toValue } from 'vue'
 
 import { useRoute, useState } from '#app'
 import { useApi } from '~/composables/useApi'
+import { STATE_KEYS } from '~/constants/storageKeys'
 import { applyNoBreakToText } from '~/utils/noBreak'
 
 export function useNoBreakWords(explicitSiteId?: MaybeRef<string | null | undefined>) {
@@ -34,9 +35,18 @@ export function useNoBreakWords(explicitSiteId?: MaybeRef<string | null | undefi
   })
 
   // 現場別キャッシュマップ: { [siteId: string]: string[] }
-  const siteWordsMap = useState<Record<string, string[]>>('site_no_break_words_map', () => ({}))
-  const isLoadedMap = useState<Record<string, boolean>>('site_no_break_words_loaded_map', () => ({}))
-  const isLoading = useState<boolean>('no_break_words_loading', () => false)
+  const siteWordsMap = useState<Record<string, string[]>>(
+    STATE_KEYS.SITE_NO_BREAK_WORDS_MAP,
+    () => ({}),
+  )
+  const isLoadedMap = useState<Record<string, boolean>>(
+    STATE_KEYS.SITE_NO_BREAK_WORDS_LOADED_MAP,
+    () => ({}),
+  )
+  const isLoading = useState<boolean>(
+    STATE_KEYS.NO_BREAK_WORDS_LOADING,
+    () => false,
+  )
 
   const words = computed<string[]>({
     get: () => {

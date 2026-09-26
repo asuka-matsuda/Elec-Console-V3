@@ -10,7 +10,7 @@ import { computed, getCurrentInstance, onMounted, onUnmounted } from 'vue'
 
 import { useState } from '#app'
 import { useApi } from '~/composables/useApi'
-import { STORAGE_KEYS } from '~/constants/storageKeys'
+import { STATE_KEYS, STORAGE_KEYS } from '~/constants/storageKeys'
 import { AppException } from '~/utils/errors'
 
 export interface PendingSyncItem {
@@ -52,11 +52,11 @@ export function useOfflineSync(
   const { $api } = useApi()
   const currentSiteId = computed(() => typeof siteIdRef === 'string' ? siteIdRef : siteIdRef.value)
   const queue = useState<PendingSyncItem[]>(
-    `offline-sync-queue-${currentSiteId.value}`,
+    STATE_KEYS.OFFLINE_SYNC_QUEUE(currentSiteId.value),
     () => [],
   )
   const isSyncing = useState<boolean>(
-    `offline-sync-syncing-${currentSiteId.value}`,
+    STATE_KEYS.OFFLINE_SYNC_SYNCING(currentSiteId.value),
     () => false,
   )
   const fetchFn = options?.fetcher || $api

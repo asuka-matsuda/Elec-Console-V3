@@ -7,6 +7,7 @@
 
 import { defineNuxtPlugin, navigateTo, useCookie, useRoute, useState } from '#app'
 import type { User } from '#shared/types/auth'
+import { STATE_KEYS } from '~/constants/storageKeys'
 import { parseToAppException } from '~/utils/errors'
 
 export default defineNuxtPlugin(() => {
@@ -14,7 +15,7 @@ export default defineNuxtPlugin(() => {
     default: () => null,
     maxAge: 60 * 60 * 24,
   })
-  const currentUser = useState<User | null>('currentUser', () => null)
+  const currentUser = useState<User | null>(STATE_KEYS.CURRENT_USER, () => null)
 
   const rawFetch = $fetch.create({
     onRequest({ options }) {

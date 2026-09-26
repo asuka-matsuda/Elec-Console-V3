@@ -8,11 +8,12 @@
 import { useState } from '#app'
 import type { User } from '#shared/types/auth'
 import { useApi } from '~/composables/useApi'
+import { STATE_KEYS } from '~/constants/storageKeys'
 import { type AppException, parseToAppException } from '~/utils/errors'
 
 export function useAdminUsers() {
-  const users = useState<User[]>('admin-users', () => [])
-  const fetchError = useState<AppException | null>('admin-users-error', () => null)
+  const users = useState<User[]>(STATE_KEYS.ADMIN_USERS, () => [])
+  const fetchError = useState<AppException | null>(STATE_KEYS.ADMIN_USERS_ERROR, () => null)
   const { $api } = useApi()
 
   const fetchUsers = async () => {

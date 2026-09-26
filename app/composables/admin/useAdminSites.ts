@@ -17,7 +17,10 @@ export function useAdminSites() {
     () => [],
   )
   const isLoaded = useState<boolean>(STATE_KEYS.ADMIN_SITES_LOADED, () => false)
-  const isLoading = useState<boolean>('admin-sites-loading', () => false)
+  const isLoading = useState<boolean>(
+    STATE_KEYS.ADMIN_SITES_LOADING,
+    () => false,
+  )
   const { $api } = useApi()
 
   // 初期データの取得（多重リクエスト抑止・ロード済みキャッシュ管理）
