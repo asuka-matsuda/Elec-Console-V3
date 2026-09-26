@@ -10,7 +10,9 @@ import { computed, ref, unref, watch } from 'vue'
 import type { CircuitItem, CircuitsResponse, PanelOption } from '#shared/types/circuit'
 import { isPhaseComplete } from '#shared/utils/soudenExam'
 import { useOfflineSync } from '~/composables/portal/useOfflineSync'
+import { useApi } from '~/composables/useApi'
 import { useAuth } from '~/composables/useAuth'
+import { AppException } from '~/utils/errors'
 
 export interface PhaseExamFeedbackOptions {
   onConflict?: (message: string) => void
@@ -31,6 +33,7 @@ export function usePhaseExamBase(
 ) {
   const { getAccurateNow, currentUser } = useAuth()
   const { enqueue } = useOfflineSync(siteIdRef)
+  const { $api } = useApi()
 
   const circuits = ref<CircuitItem[]>([])
   const panelOptions = ref<PanelOption[]>([])
@@ -79,7 +82,7 @@ export function usePhaseExamBase(
         params.append('keiTo', selectedKeiTo.value)
       }
 
-      const res = await $fetch<CircuitsResponse>(
+      const res = await $api<CircuitsResponse>(
         `/api/sites/${siteId}/circuits?${params.toString()}`,
       )
 
@@ -240,19 +243,28 @@ export function usePhaseExamBase(
 
   // 排他制御 (409 Conflict) エラーの共通ハンドリング
   const handleConflictError = (circuitId: string, err: unknown): boolean => {
-    const fetchErr = err as {
-      statusCode?: number
-      status?: number
-      data?: {
-        message?: string
-        data?: { currentCircuit?: CircuitItem }
-      }
-    }
-
-    const isConflict = fetchErr?.statusCode === 409 || fetchErr?.status === 409
+    const isConflict = (err instanceof AppException && err.isConflict())
+      || (err as { statusCode?: number, status?: number })?.statusCode === 409
+      || (err as { statusCode?: number, status?: number })?.status === 409
 
     if (isConflict) {
-      const current = fetchErr.data?.data?.currentCircuit
+      const appErr = err instanceof AppException ? err : null
+      const fetchErr = err as {
+        data?: {
+          message?: string
+          data?: { currentCircuit?: CircuitItem }
+        }
+        details?: Record<string, unknown>
+        originalError?: {
+          data?: { data?: { currentCircuit?: CircuitItem }, current?: CircuitItem }
+          current?: CircuitItem
+        }
+      }
+
+      const current = (appErr?.details as { currentCircuit?: CircuitItem })?.currentCircuit
+        || fetchErr.data?.data?.currentCircuit
+        || fetchErr.originalError?.data?.data?.currentCircuit
+        || fetchErr.originalError?.current
 
       if (current) {
         const idx = circuits.value.findIndex(c => c.id === circuitId)
@@ -265,10 +277,11 @@ export function usePhaseExamBase(
         }
       }
 
-      notifyConflict(
-        fetchErr.data?.message
-        || '他の作業者によってこの回路が更新されました。最新状態を反映しました。',
-      )
+      const conflictMsg = appErr?.message
+        || fetchErr.data?.message
+        || '他の作業者によってこの回路が更新されました。最新状態を反映しました。'
+
+      notifyConflict(conflictMsg)
 
       return true
     }
@@ -321,7 +334,7 @@ export function usePhaseExamBase(
     }
 
     try {
-      const res = await $fetch<{ success: boolean, circuit: CircuitItem }>(endpoint, {
+      const res = await $api<{ success: boolean, circuit: CircuitItem }>(endpoint, {
         method: 'POST',
         body,
       })

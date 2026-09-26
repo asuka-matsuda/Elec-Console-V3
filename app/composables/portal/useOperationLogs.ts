@@ -9,8 +9,11 @@ import type { Ref } from 'vue'
 import { computed, ref, unref, watch } from 'vue'
 
 import type { OperationLogItem, OperationLogsResponse } from '#shared/types/operationLog'
+import { useApi } from '~/composables/useApi'
+import { parseToAppException } from '~/utils/errors'
 
 export function useOperationLogs(siteIdRef: Ref<string> | string) {
+  const { $api } = useApi()
   const logs = ref<OperationLogItem[]>([])
   const availableWorkers = ref<string[]>([])
   const availableActions = ref<string[]>([])
@@ -49,7 +52,7 @@ export function useOperationLogs(siteIdRef: Ref<string> | string) {
         params.append('targetBan', selectedTargetBan.value)
       }
 
-      const res = await $fetch<OperationLogsResponse>(
+      const res = await $api<OperationLogsResponse>(
         `/api/sites/${siteId}/operation-logs?${params.toString()}`,
       )
 
@@ -61,9 +64,9 @@ export function useOperationLogs(siteIdRef: Ref<string> | string) {
       }
     }
     catch (err: unknown) {
-      const e = err as Error
+      const appErr = parseToAppException(err)
 
-      error.value = e.message || 'ログデータの取得に失敗しました'
+      error.value = appErr.getUserFacingMessage()
     }
     finally {
       isLoading.value = false

@@ -8,6 +8,8 @@ import type { ComputedRef, Ref } from 'vue'
 import { computed, ref } from 'vue'
 
 import type { Site } from '#shared/types/site'
+import { useApi } from '~/composables/useApi'
+import { parseToAppException } from '~/utils/errors'
 
 interface SyncResultInfo {
   type: 'merge' | 'reset' | 'export'
@@ -30,6 +32,7 @@ interface UseSiteExcelSyncOptions {
  * 現場ポータルの Excel インポート・エクスポート・直接ダウンロードを管理する Composable
  */
 export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
+  const { $api } = useApi()
   const { site, getFilePath, onPersistPath } = options
 
   const selectedFile = ref<File | null>(null)
@@ -89,7 +92,7 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
         body = { filePath, mode: 'merge' }
       }
 
-      const res = await $fetch<{
+      const res = await $api<{
         success: boolean
         count: number
         createdCount: number
@@ -121,9 +124,9 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
       }
     }
     catch (err: unknown) {
-      const e = err as { data?: { message?: string }, message?: string }
+      const appErr = parseToAppException(err)
 
-      syncMsg.value = e.data?.message || e.message || '差分同期に失敗しました'
+      syncMsg.value = appErr.getUserFacingMessage()
       syncMsgType.value = 'error'
     }
     finally {
@@ -170,7 +173,7 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
         body = { filePath, mode: 'reset' }
       }
 
-      const res = await $fetch<{ success: boolean, count: number }>(
+      const res = await $api<{ success: boolean, count: number }>(
         `/api/sites/${site.value.id}/circuits/import`,
         {
           method: 'POST',
@@ -196,9 +199,9 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
       }
     }
     catch (err: unknown) {
-      const e = err as { data?: { message?: string }, message?: string }
+      const appErr = parseToAppException(err)
 
-      syncMsg.value = e.data?.message || e.message || '初期化取り込みに失敗しました'
+      syncMsg.value = appErr.getUserFacingMessage()
       syncMsgType.value = 'error'
     }
     finally {
@@ -231,7 +234,7 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
     showSyncMsg.value = true
 
     try {
-      const res = await $fetch<{ success: boolean, count: number }>(
+      const res = await $api<{ success: boolean, count: number }>(
         `/api/sites/${site.value.id}/circuits/export`,
         {
           method: 'POST',
@@ -255,9 +258,9 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
       }
     }
     catch (err: unknown) {
-      const e = err as { data?: { message?: string }, message?: string }
+      const appErr = parseToAppException(err)
 
-      syncMsg.value = e.data?.message || e.message || 'Excelへの書戻しに失敗しました'
+      syncMsg.value = appErr.getUserFacingMessage()
       syncMsgType.value = 'error'
     }
     finally {

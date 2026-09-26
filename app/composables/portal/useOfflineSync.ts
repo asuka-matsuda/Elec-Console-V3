@@ -9,7 +9,9 @@ import type { Ref } from 'vue'
 import { computed, getCurrentInstance, onMounted, onUnmounted } from 'vue'
 
 import { useState } from '#app'
+import { useApi } from '~/composables/useApi'
 import { STORAGE_KEYS } from '~/constants/storageKeys'
+import { AppException } from '~/utils/errors'
 
 export interface PendingSyncItem {
   id: string
@@ -47,6 +49,7 @@ export function useOfflineSync(
   siteIdRef: Ref<string> | string,
   options?: UseOfflineSyncOptions,
 ) {
+  const { $api } = useApi()
   const currentSiteId = computed(() => typeof siteIdRef === 'string' ? siteIdRef : siteIdRef.value)
   const queue = useState<PendingSyncItem[]>(
     `offline-sync-queue-${currentSiteId.value}`,
@@ -56,7 +59,7 @@ export function useOfflineSync(
     `offline-sync-syncing-${currentSiteId.value}`,
     () => false,
   )
-  const fetchFn = options?.fetcher || $fetch
+  const fetchFn = options?.fetcher || $api
 
   // ローカルストレージからキューを読み込み
   const loadQueue = () => {
@@ -190,21 +193,34 @@ export function useOfflineSync(
             current?: Record<string, unknown>
             data?: { currentCircuit?: Record<string, unknown> }
           }
+          details?: Record<string, unknown>
+          originalError?: {
+            data?: {
+              current?: Record<string, unknown>
+              data?: { currentCircuit?: Record<string, unknown> }
+            }
+            current?: Record<string, unknown>
+          }
         }
-        const status = fetchErr.statusCode || fetchErr.status
+        const appErr = err instanceof AppException ? err : null
+        const status = appErr ? appErr.statusCode : (fetchErr.statusCode || fetchErr.status)
 
         if (status === 409) {
           // 競合発生
           item.status = 'conflict'
           item.errorMessage = '別の作業者によって更新されています'
-          item.serverCircuitData = fetchErr.data?.data?.currentCircuit || fetchErr.data?.current
+          item.serverCircuitData = (appErr?.details?.currentCircuit as Record<string, unknown> | undefined)
+            || fetchErr.data?.data?.currentCircuit
+            || fetchErr.data?.current
+            || fetchErr.originalError?.data?.data?.currentCircuit
+            || fetchErr.originalError?.data?.current
 
           result.conflictCount++
           result.conflicts.push(item)
         }
         else {
           item.status = 'error'
-          item.errorMessage = fetchErr.data?.message || '送信エラーが発生しました'
+          item.errorMessage = appErr ? appErr.getUserFacingMessage() : (fetchErr.data?.message || '送信エラーが発生しました')
           result.errorCount++
         }
       }

@@ -7,8 +7,10 @@
 
 import { ref } from 'vue'
 
+import { useApi } from '~/composables/useApi'
 import { useFormValidation } from '~/composables/useFormValidation'
 import { useModal } from '~/composables/useModal'
+import { parseToAppException } from '~/utils/errors'
 
 interface UseMasterCrudOptions<T extends { id?: string | number }, F extends object> {
   /** APIエンドポイント（ベースパス）例: '/api/master/word-break' */
@@ -49,11 +51,13 @@ export async function useMasterCrud<T extends { id?: string | number }, F extend
     onAfterDelete,
   } = options
 
+  const { $api } = useApi()
   const { askConfirm } = useModal()
 
-  // 一覧取得
+  // 一覧取得（$api による認証・共通エラーハンドリングを適用）
   const { data: items, pending, refresh } = await useFetch<T[]>(endpoint, {
     default: () => [],
+    $fetch: $api,
   })
 
   // モーダル・フォーム状態
@@ -106,7 +110,7 @@ export async function useMasterCrud<T extends { id?: string | number }, F extend
       const method = editingId.value ? 'PUT' : 'POST'
       const payload = mapFormToPayload ? mapFormToPayload(form.value) : form.value
 
-      await $fetch(url, {
+      await $api(url, {
         method,
         body: payload,
       })
@@ -118,7 +122,9 @@ export async function useMasterCrud<T extends { id?: string | number }, F extend
       }
     }
     catch (e: unknown) {
-      formError.value = (e as Error).message || '保存に失敗しました。'
+      const appErr = parseToAppException(e)
+
+      formError.value = appErr.getUserFacingMessage()
     }
     finally {
       isSaving.value = false
@@ -151,7 +157,7 @@ export async function useMasterCrud<T extends { id?: string | number }, F extend
     if (!isConfirmed) return
 
     try {
-      await $fetch(`${endpoint}/${id}`, {
+      await $api(`${endpoint}/${id}`, {
         method: 'DELETE',
       })
       await refresh()
@@ -160,7 +166,9 @@ export async function useMasterCrud<T extends { id?: string | number }, F extend
       }
     }
     catch (e: unknown) {
-      alert((e as Error).message || '削除に失敗しました。')
+      const appErr = parseToAppException(e)
+
+      alert(appErr.getUserFacingMessage())
     }
   }
 

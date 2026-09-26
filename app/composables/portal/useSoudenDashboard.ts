@@ -9,8 +9,11 @@ import type { Ref } from 'vue'
 import { ref, unref } from 'vue'
 
 import type { SoudenStats } from '#shared/types/circuit'
+import { useApi } from '~/composables/useApi'
+import { parseToAppException } from '~/utils/errors'
 
 export function useSoudenDashboard(siteIdRef: Ref<string> | string) {
+  const { $api } = useApi()
   const stats = ref<SoudenStats | null>(null)
   const isLoading = ref(false)
   const isImporting = ref(false)
@@ -25,7 +28,7 @@ export function useSoudenDashboard(siteIdRef: Ref<string> | string) {
     error.value = null
 
     try {
-      const data = await $fetch<SoudenStats>(
+      const data = await $api<SoudenStats>(
         `/api/sites/${siteId}/souden/stats`,
       )
 
@@ -34,9 +37,9 @@ export function useSoudenDashboard(siteIdRef: Ref<string> | string) {
       }
     }
     catch (err: unknown) {
-      const e = err as Error
+      const appErr = parseToAppException(err)
 
-      error.value = e.message || '進捗データの取得中にエラーが発生しました'
+      error.value = appErr.getUserFacingMessage()
     }
     finally {
       isLoading.value = false
@@ -52,7 +55,7 @@ export function useSoudenDashboard(siteIdRef: Ref<string> | string) {
     error.value = null
 
     try {
-      const res = await $fetch<{ success: boolean, count: number }>(
+      const res = await $api<{ success: boolean, count: number }>(
         `/api/sites/${siteId}/circuits/import`,
         {
           method: 'POST',
@@ -65,10 +68,10 @@ export function useSoudenDashboard(siteIdRef: Ref<string> | string) {
       return res
     }
     catch (err: unknown) {
-      const e = err as { data?: { message?: string }, message?: string }
+      const appErr = parseToAppException(err)
 
-      error.value = e.data?.message || e.message || 'Excelの取り込み中にエラーが発生しました'
-      throw err
+      error.value = appErr.getUserFacingMessage()
+      throw appErr
     }
     finally {
       isImporting.value = false
