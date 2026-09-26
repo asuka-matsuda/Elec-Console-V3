@@ -3,14 +3,12 @@
  * ModalMeasurementDevices
  * [Organisms] 現場の測定機器（絶縁抵抗計・電圧計・検相器等）を登録・管理するモーダル。
  */
-import { computed, ref, watch } from 'vue'
-
 import type {
   MeasurementDevice,
   MeasurementDeviceCategory,
   SelectedMeasurementDevices,
 } from '#shared/types/measurementDevice'
-import { useApi } from '~/composables/useApi'
+import { useMeasurementDeviceForm } from '~/composables/portal/useMeasurementDeviceForm'
 
 const isOpen = defineModel<boolean>({ default: false })
 
@@ -24,66 +22,35 @@ const emit = defineEmits<{
   (e: 'updated', devices: MeasurementDevice[]): void
 }>()
 
-const { $api } = useApi()
-
 const CATEGORY_OPTIONS = [
   { value: 'megger', label: '絶縁抵抗計' },
   { value: 'voltmeter', label: '電圧計' },
   { value: 'phaseDetector', label: '検相器' },
 ]
 
-const localDevices = ref<MeasurementDevice[]>([])
-const isSaving = ref(false)
-const errorMessage = ref<string | null>(null)
-const editingId = ref<string | null>(null)
-
-// フォームの入力状態
-const formCategory = ref<MeasurementDeviceCategory>('megger')
-const formMaker = ref('')
-const formModel = ref('')
-const formCalibrationDate = ref('')
-const formSerialNumber = ref('')
-const formNote = ref('')
-
-// Props の devices が変わったら同期
-watch(
-  () => props.devices,
-  (val) => {
-    localDevices.value = JSON.parse(JSON.stringify(val || []))
-  },
-  { immediate: true, deep: true },
-)
-
-// モーダルが開いたときにフォームリセット
-watch(
-  isOpen,
-  (open) => {
-    if (open) {
-      resetForm()
-      errorMessage.value = null
-    }
-  },
-)
-
-const resetForm = () => {
-  editingId.value = null
-  formCategory.value = 'megger'
-  formMaker.value = ''
-  formModel.value = ''
-  formCalibrationDate.value = ''
-  formSerialNumber.value = ''
-  formNote.value = ''
-}
-
-const startEdit = (dev: MeasurementDevice) => {
-  editingId.value = dev.id
-  formCategory.value = dev.category
-  formMaker.value = dev.maker
-  formModel.value = dev.model
-  formCalibrationDate.value = dev.calibrationDate
-  formSerialNumber.value = dev.serialNumber
-  formNote.value = dev.note || ''
-}
+const {
+  localDevices,
+  isSaving,
+  errorMessage,
+  editingId,
+  formCategory,
+  formMaker,
+  formModel,
+  formCalibrationDate,
+  formSerialNumber,
+  formNote,
+  isFormValid,
+  handleSaveItem,
+  handleEditItem: startEdit,
+  handleDeleteItem,
+  resetForm,
+} = useMeasurementDeviceForm({
+  siteId: props.siteId,
+  devices: () => props.devices,
+  selectedDeviceIds: () => props.selectedDeviceIds,
+  isOpen: () => isOpen.value,
+  onUpdated: devices => emit('updated', devices),
+})
 
 const getCategoryLabel = (category: MeasurementDeviceCategory): string => {
   switch (category) {
@@ -110,98 +77,6 @@ const getCategoryBadgeColor = (category: MeasurementDeviceCategory): string => {
       return 'var(--color-text-muted)'
   }
 }
-
-// フォーム送信（追加または編集保存）
-const handleSaveItem = async () => {
-  errorMessage.value = null
-
-  if (!formMaker.value.trim() || !formModel.value.trim()) {
-    errorMessage.value = '製造者（メーカー）と型式を入力してください'
-
-    return
-  }
-
-  const updatedList = [...localDevices.value]
-
-  if (editingId.value) {
-    // 既存更新
-    const idx = updatedList.findIndex(d => d.id === editingId.value)
-
-    if (idx !== -1) {
-      updatedList[idx] = {
-        id: editingId.value,
-        category: formCategory.value,
-        maker: formMaker.value.trim(),
-        model: formModel.value.trim(),
-        calibrationDate: formCalibrationDate.value.trim(),
-        serialNumber: formSerialNumber.value.trim(),
-        note: formNote.value.trim() || undefined,
-      }
-    }
-  }
-  else {
-    // 新規追加
-    const newId = `dev_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`
-
-    updatedList.push({
-      id: newId,
-      category: formCategory.value,
-      maker: formMaker.value.trim(),
-      model: formModel.value.trim(),
-      calibrationDate: formCalibrationDate.value.trim(),
-      serialNumber: formSerialNumber.value.trim(),
-      note: formNote.value.trim() || undefined,
-    })
-  }
-
-  await persistDevices(updatedList)
-  resetForm()
-}
-
-// 削除
-const handleDeleteItem = async (id: string) => {
-  if (editingId.value === id) {
-    resetForm()
-  }
-
-  const updatedList = localDevices.value.filter(d => d.id !== id)
-
-  await persistDevices(updatedList)
-}
-
-// API保存
-const persistDevices = async (list: MeasurementDevice[]) => {
-  isSaving.value = true
-  errorMessage.value = null
-
-  try {
-    const res = await $api<{ devices: MeasurementDevice[] }>(
-      `/api/sites/${props.siteId}/measurement-devices`,
-      {
-        method: 'PUT',
-        body: {
-          devices: list,
-          selectedDeviceIds: props.selectedDeviceIds,
-        },
-      },
-    )
-
-    localDevices.value = res.devices || list
-    emit('updated', localDevices.value)
-  }
-  catch (err: unknown) {
-    const errorObj = err as Error
-
-    errorMessage.value = errorObj.message || '機器台帳の保存に失敗しました'
-  }
-  finally {
-    isSaving.value = false
-  }
-}
-
-const isFormValid = computed(() => {
-  return formMaker.value.trim().length > 0 && formModel.value.trim().length > 0
-})
 </script>
 
 <template>

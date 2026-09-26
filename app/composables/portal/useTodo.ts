@@ -84,7 +84,8 @@ export function useTodo(
   }
 
   // 4. Watchers
-  // キーの変更に同期して即時再ロード
+  // ※ VueUseのuseLocalStorageは動的キー変更時の追従をサポートしないため、
+  // flush: 'sync' による厳密な双方向LocalStorage同期を保持します。
   watch(
     storageKey,
     (key) => {
