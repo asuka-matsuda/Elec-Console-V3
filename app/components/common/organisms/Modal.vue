@@ -144,7 +144,7 @@ watch(
 }
 
 .modal-body {
-  line-height: var(--line-height-relaxed);
+  line-height: var(--line-height-base);
   color: var(--color-text-secondary);
 }
 </style>

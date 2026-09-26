@@ -28,10 +28,11 @@ const LEGACY_VARS = {
   '--font-family-mono': '--font-mono',
   '--leading-relaxed': '--line-height-base',
   '--line-height-relaxed': '--line-height-base',
+  '--line-height-normal': '--line-height-base',
 }
 
 const REGEX_PATTERN = new RegExp(
-  `\\b(${Object.keys(LEGACY_VARS).map(k => k.replace(/[-\\/\\\\^$*+?.()|[\\]{}]/g, '\\$&')).join('|')})\\b`,
+  `(?<![a-zA-Z0-9_-])(${Object.keys(LEGACY_VARS).map(k => k.replace(/[-\\/\\\\^$*+?.()|[\\]{}]/g, '\\$&')).join('|')})(?![a-zA-Z0-9_-])`,
   'g',
 )
 

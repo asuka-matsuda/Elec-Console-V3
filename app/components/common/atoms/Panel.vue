@@ -9,7 +9,7 @@ import type { PanelOverflow, PanelProps } from '~/types/components'
 const {
   as = 'div',
   interactive = false,
-  selected = false,
+  active = false,
   disabled = false,
   overflow = 'hidden',
   padding = 'normal',
@@ -34,7 +34,7 @@ const OVERFLOW_CLASSES: Record<PanelOverflow, string> = {
         'p-item-gap': padding === 'sm',
         'p-0': padding === 'none',
         'is-interactive': interactive,
-        'is-selected': selected,
+        'is-active': active,
         'is-disabled': disabled,
       },
     ]"
@@ -54,7 +54,7 @@ const OVERFLOW_CLASSES: Record<PanelOverflow, string> = {
   transition: var(--transition-panel);
 
   @include state-interactive;
-  @include state-selected;
+  @include state-active;
   @include state-disabled;
 }
 </style>

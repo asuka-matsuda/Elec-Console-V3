@@ -144,11 +144,5 @@ defineExpose({
     min-height: calc(var(--control-height-ratio) * 1.3em);
     padding-block: 0.35em;
   }
-
-  &:read-only:not(:disabled),
-  &:disabled,
-  &.is-disabled {
-    resize: none;
-  }
 }
 </style>

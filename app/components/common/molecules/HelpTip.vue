@@ -93,7 +93,7 @@ if (import.meta.client) {
         class="helptip-reference pt-inline-gap flex items-center justify-between"
       >
         <span>規格:</span>
-        <Badge color="var(--theme-accent)">
+        <Badge>
           {{ displayReference }}
         </Badge>
       </div>

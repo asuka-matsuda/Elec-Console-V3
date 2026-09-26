@@ -42,11 +42,11 @@ provide(FORM_GROUP_KEY, {
 
     <slot />
 
-    <p v-if="error" class="error m-0">
+    <p v-if="error" class="error-text m-0">
       {{ error }}
     </p>
 
-    <p v-if="help" class="help m-0">
+    <p v-if="help" class="help-text m-0">
       {{ help }}
     </p>
   </div>
@@ -74,7 +74,7 @@ provide(FORM_GROUP_KEY, {
       width: var(--space-0-5);
       height: 0.85em;
 
-      background-color: var(--theme-accent);
+      background-color: var(--glow-color);
 
       transition: var(--transition-fast);
     }
@@ -91,7 +91,6 @@ provide(FORM_GROUP_KEY, {
     &::before {
       --glow-color: var(--color-status-danger);
 
-      background-color: var(--color-status-danger);
       box-shadow: var(--shadow-glow-sm);
     }
   }
@@ -102,13 +101,13 @@ provide(FORM_GROUP_KEY, {
     color: var(--color-status-danger);
   }
 
-  .error {
+  .error-text {
     font-size: 0.85em;
     color: var(--color-status-danger);
     letter-spacing: var(--tracking-wide);
   }
 
-  .help {
+  .help-text {
     font-size: 0.85em;
     color: var(--color-text-muted);
     letter-spacing: var(--tracking-wide);

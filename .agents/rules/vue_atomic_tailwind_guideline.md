@@ -199,19 +199,35 @@ URL（ルーティング）と1対1で紐づく画面そのもの。
 
 ## 5. UIインタラクション状態（Interaction State）の書き方・書き順規約
 
-UIコンポーネントにおけるすべてのインタラクション状態（操作可能、選択中、処理中、無効化など）は、**手書きコードの乱立を防ぎデザインの一貫性を保証するため、プロジェクト共通の状態 Mixin（`_states.scss`）を使用** します。
+UIコンポーネントにおけるすべてのインタラクション状態（操作可能、アクティブ/選択中、開閉、処理中、無効化など）は、**手書きコードの乱立・語彙の揺らぎを防ぎデザインの一貫性を保証するため、プロジェクト統一の状態トークン（ホワイトリスト）および状態 Mixin（`_states.scss`）を使用** します。
+本規約は ESLint（`local/strict-ui-states`）および Stylelint（`.stylelintrc.cjs`）によりリアルタイムに自動監視・強制されます。
 
-### 5.1. 状態 Mixin 体系（`_states.scss`）
+### 5.1. 状態トークン・ホワイトリスト体系（完全機械判定）
+
+| 状態トークン | 用途 | 判定ルール・禁止事項 |
+| :--- | :--- | :--- |
+| **`is-active`** | **選択中・カレント・ハイライト** | タブ、ラジオ、行選択、セレクト選択肢、ナビ現在地。<br>※ `active`, `is-selected`, `is-current` の使用は Lint エラーで全面禁止（`is-active` に一本化）。 |
+| **`is-open`** | **開閉状態（展開中）** | ドロップダウン、モーダル、ドロワー。<br>※ 開閉フラグ（isOpen 等）に対して `is-active` を流用することは Lint エラー。 |
+| **`is-interactive`** | **操作可能サーフェス** | ホバー・クリック可能な Panel やカードの目印。 |
+| **`is-disabled`** | **操作無効化** | 非活性状態（※ 素の `disabled` クラスは禁止）。 |
+| **`is-loading`** | **処理中・読み込み中** | スピナー表示・半透明（※ 素の `loading` クラスは禁止）。 |
+| **`is-error`** | **エラー状態** | バリデーション警告・赤枠（※ 素の `error` クラスは禁止、メッセージ表示には `error-text` 等を使用）。 |
+
+#### 【鉄則】ホバー状態の JS 管理（`is-hover`）の全面禁止
+* ホバー（マウスオーバー）は 100% CSS 疑似クラス（`&:hover`）に任せ、`is-hover` クラスを JS でトグルすることは Lint エラーで禁止します（描画遅延やタッチ端末での誤動作を完全防止）。
+* パネルやリスト行をホバーで光らせたい場合は、`<Panel interactive>` のように `interactive` プロパティを渡すだけで、プロジェクト共通のホバー光彩（`state-interactive`）が自動適用されます。
+
+### 5.2. 状態 Mixin 体系（`_states.scss`）
 
 | カテゴリ | Mixin 名 | 適用対象 | 役割・内包スタイル概要 |
 | :--- | :--- | :--- | :--- |
 | **サーフェス系** | `@include state-interactive;` | パネル、カード、タイル等 | `is-interactive` 時の hover（8%ティント）、focus-visible、active（12%ティント + 縮小） |
-| **サーフェス系** | `@include state-selected;` | パネル、選択行、カード等 | `is-selected` 時の 135deg 対角グラデーション（14%）および操作連動（18% / 22%） |
+| **サーフェス系** | `@include state-active;` | パネル、選択行、カード等 | `is-active` 時の 135deg 対角グラデーション（14%）および操作連動（18% / 22%） |
 | **コントロール系** | `@include state-control-interactive { ... }` | ボタン、タブ、入力欄等 | 操作可能時（`&:not(:disabled, .is-disabled)`）のホバー・フォーカス・アクティブのガード |
 | **共通終端** | `@include state-loading;` | ボタン、パネル、モーダル等 | `is-loading` / `--loading` 時のポインター無効化・カーソル wait・透過度 0.75 |
 | **共通終端** | `@include state-disabled;` | **全コンポーネント共通** | `&:disabled` / `is-disabled` 時のポインター無効化・透過度 0.55・grayscale 100%（最優先打ち消し） |
 
-### 5.2. 書き順（Order）の原則
+### 5.3. 書き順（Order）の原則
 
 CSS カスケードの論理（後から書いたスタイルが優先）に従い、以下の書き順を厳守します。
 
@@ -224,8 +240,8 @@ CSS カスケードの論理（後から書いたスタイルが優先）に従�
   transition: var(--transition-panel);
 
   // ② 状態管理 (State Management)
-  @include state-interactive; // 1. 通常操作
-  @include state-selected;    // 2. 選択状態
+  @include state-interactive; // 1. 通常操作 (hover / focus / active)
+  @include state-active;      // 2. アクティブ・選択状態
   @include state-disabled;    // 3. 無効化（最末尾）
 }
 ```
@@ -255,18 +271,22 @@ CSS カスケードの論理（後から書いたスタイルが優先）に従�
 }
 ```
 
-### 5.3. Stylelint による自動監視・強制
+### 5.4. 双方向リント自動監視（ESLint & Stylelint）
 
-本規約は、`.stylelintrc.cjs` によりエディタ上および CI でリアルタイムに自動強制されます。
+本規約は、開発者の手作業や記憶に頼らず、リントツールによりビルド時に完全自動監視されます：
 
-1. **手書き（ハードコード）の禁止 (`selector-disallowed-list`)**:
-   - 生の `&:disabled`、`&.is-disabled`、`&.is-interactive`、`&.is-loading` を手書きした瞬間にビルド・Lint エラーとなります。
-2. **書き順（Order）違反の検知 (`order/order`)**:
-   - `state-interactive` ➔ `state-control-interactive` ➔ `state-selected` ➔ `rules` ➔ `state-loading` ➔ `state-disabled` の順序が崩れていると Lint エラーになります（`--fix` で自動修復可能）。
+1. **ESLint (`local/strict-ui-states`):**
+   * テンプレート内で `is-hover` が記述された瞬間にビルドエラー。
+   * 素の単語（`active`, `selected`, `open`, `disabled`, `loading`, `error`）の使用を検知し、`is-*` プレフィックスを強制。
+   * 廃止された `is-selected` や `is-current` の使用を検知し、`is-active` への統一を強制。
+   * `isOpen` などの開閉フラグに対して `is-active` が指定された場合、`is-open` への修正を強制。
+2. **Stylelint (`.stylelintrc.cjs`):**
+   * `selector-disallowed-list`: 手書き `is-hover`、素の `active` / `selected` / `open`、廃止された `&.is-selected` / `&.is-current` を禁止。
+   * `order/order`: `state-interactive` ➔ `state-control-interactive` ➔ `state-active` ➔ `rules` ➔ `state-loading` ➔ `state-disabled` の順序を強制。
 
-### 5.4. コンポーネント構造の原則（YAGNI / DRY）
+### 5.5. コンポーネント構造の原則（YAGNI / DRY）
 
-- リストアイテム（`MoleculesSiteListItem` など）やタイル（`MoleculesDashboardMenuTile` など）は、自身で状態 CSS を書かず、`<AtomsPanel interactive :selected="selected" :disabled="disabled">` にサーフェス状態の責務を一任することを最優先とします。
+- リストアイテム（`ModalMeasurementDevices` の機器行など）やタイルは、自身で状態 CSS を書かず、`<AtomsPanel interactive :active="active" :disabled="disabled">` にサーフェス状態の責務を一任することを最優先とします。
 
 ---
 

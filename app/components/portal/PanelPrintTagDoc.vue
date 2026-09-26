@@ -36,7 +36,7 @@ const TAG_COLUMNS: TableColumn<TagMetadataItem>[] = [
       class="max-h-[520px]"
     >
       <template #cell-tag="{ value }">
-        <Badge color="var(--color-primary)">{{ value }}</Badge>
+        <Badge>{{ value }}</Badge>
       </template>
     </Table>
   </Panel>

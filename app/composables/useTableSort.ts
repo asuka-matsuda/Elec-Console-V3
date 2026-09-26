@@ -6,11 +6,11 @@
 
 import { computed, type ComputedRef, isRef, type Ref, ref } from 'vue'
 
-type SortOrder = 'asc' | 'desc' | null
+import type { TableSortOrder } from '~/types/components'
 
 interface UseTableSortOptions<T> {
   defaultKey?: (keyof T & string) | string
-  defaultOrder?: SortOrder
+  defaultOrder?: TableSortOrder
 }
 
 /**
@@ -23,9 +23,9 @@ export function useTableSort<T extends object = Record<string, unknown>>(
   options: UseTableSortOptions<T> = {},
 ) {
   const sortBy = ref<string>(options.defaultKey || '')
-  const sortOrder = ref<SortOrder>(options.defaultOrder || 'asc')
+  const sortOrder = ref<TableSortOrder>(options.defaultOrder || 'asc')
 
-  const handleSort = (payload: { key: string, order?: SortOrder }) => {
+  const handleSort = (payload: { key: string, order?: TableSortOrder }) => {
     if (payload.order !== undefined) {
       if (payload.order === null) {
         sortBy.value = ''

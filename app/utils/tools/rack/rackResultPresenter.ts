@@ -4,6 +4,8 @@
  * ラック幅計算結果、敷設段数比較、および数式ステップをUI表示用ViewModelへ整形します。
  */
 
+import { BADGE_PRESETS } from '~/constants/badgeConfig'
+import { getToolError } from '~/constants/toolErrorConstants'
 import type { ResultDetailItem, ResultPanelStatus } from '~/types/components'
 import type { RackCalcResult, RackTierResult } from '~/utils/tools/rack/rackCalcLogic'
 
@@ -11,7 +13,6 @@ interface RackTierPanelViewModel {
   layers: 1 | 2
   title: string
   badgeText?: string
-  badgeColor?: string
   displaySize: string
   panelStatus: ResultPanelStatus
   totalWidth: string
@@ -63,10 +64,12 @@ function formatTierPanel(
 
   // 2段で本数1本のみの場合
   if (isTier2 && !tier.isApplicable) {
+    const errorInfo = getToolError('RACK_TIER2_NOT_APPLICABLE')
+
     return {
       layers,
       title,
-      badgeText: '段積み不可',
+      badgeText: errorInfo?.title ?? '段積み不可',
       displaySize: '---',
       panelStatus: 'warning',
       totalWidth: String(Math.ceil(tier.totalWidth)),
@@ -80,17 +83,14 @@ function formatTierPanel(
 
   let panelStatus: 'neutral' | 'success' | 'warning' | 'danger' = 'success'
   let badgeText: string | undefined
-  let badgeColor: string | undefined
 
   if (tier.isSizeOver) {
     panelStatus = 'danger'
-    badgeText = '規格外'
-    badgeColor = 'var(--color-status-danger)'
+    badgeText = BADGE_PRESETS['tool:size-over'].label
   }
   else if (tier.isOverflow) {
     panelStatus = 'warning'
-    badgeText = '高さ不足'
-    badgeColor = 'var(--color-status-warning)'
+    badgeText = BADGE_PRESETS['tool:overflow'].label
   }
 
   const displaySize = tier.selectedSize
@@ -101,7 +101,6 @@ function formatTierPanel(
     layers,
     title,
     badgeText,
-    badgeColor,
     displaySize,
     panelStatus,
     totalWidth: String(Math.ceil(tier.totalWidth)),

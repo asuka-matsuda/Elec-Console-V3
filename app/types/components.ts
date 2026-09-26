@@ -118,13 +118,11 @@ export interface IconProps {
 }
 
 // --- Badge ---
-export type BadgeColor = string
-
 export interface BadgeProps {
   /** プリセット定義ID（例: 'role:admin', 'site:completed' 等） */
   id?: BadgePresetId
   /** バッジの基調色（直接指定する場合） */
-  color?: BadgeColor
+  color?: string
 }
 
 // --- Divider ---
@@ -166,8 +164,8 @@ export interface PanelProps {
   as?: string | object
   /** 操作可能状態（ホバー・アクティブ演出） */
   interactive?: boolean
-  /** 選択状態（アクセントグラデーション・グロー） */
-  selected?: boolean
+  /** アクティブ・選択状態（アクセントグラデーション・グロー） */
+  active?: boolean
   /** 無効状態（半透明・操作不可） */
   disabled?: boolean
   /** オーバーフロー制御（デフォルト: 'hidden'） */
@@ -495,9 +493,9 @@ export interface ModalProps {
 
 export interface ToolCalculatorLayoutProps {
   inputsTitle?: string
-  inputsIcon?: string
+  inputsIcon?: IconName
   resultsTitle?: string
-  resultsIcon?: string
+  resultsIcon?: IconName
   saveDisabled?: boolean
   saveFunction?: () => Promise<void>
   disclaimerText?: string

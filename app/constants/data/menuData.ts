@@ -11,7 +11,6 @@ export type MenuItem = {
   text: string
   href: string
   icon: IconName
-  customClass?: string
   activePrefixes?: string[]
   desc?: string
   disabled?: boolean
@@ -45,7 +44,6 @@ export const menuData: MenuSection[] = [
         text: '現場ポータル',
         href: '/portal',
         icon: 'users',
-        customClass: 'global-nav__link--management',
         activePrefixes: ['/login', '/select-site', '/no-site', '/portal'],
         desc: '現場情報の共有と試験進捗の管理。',
       },
@@ -53,14 +51,12 @@ export const menuData: MenuSection[] = [
         text: '現場ポータル管理（管理者のみ）',
         href: '/portal/admin',
         icon: 'terminal',
-        customClass: 'global-nav__link--management',
         desc: '基本情報・Excel連携・除外回路の管理。',
       },
       {
         text: 'マスター管理（masterのみ）',
         href: '/master',
         icon: 'sliders',
-        customClass: 'global-nav__link--management',
         desc: 'メンバー・お知らせ・システム全体設定。',
         masterOnly: true,
       },
@@ -79,35 +75,30 @@ export const menuData: MenuSection[] = [
         text: '電圧降下計算・ケーブルサイズ選定',
         href: '/tools/voltage',
         icon: 'zap',
-        customClass: 'global-nav__link--tool',
         desc: '許容電流と電圧降下からの自動選定。',
       },
       {
         text: '配管サイズ自動選定',
         href: '/tools/conduit',
         icon: 'target',
-        customClass: 'global-nav__link--tool',
         desc: '内線規程に基づく配管サイズの自動選定。',
       },
       {
         text: 'ケーブルラック選定',
         href: '/tools/rack',
         icon: 'align-justify',
-        customClass: 'global-nav__link--tool',
         desc: '占積率に基づくラック幅の自動選定。',
       },
       {
         text: 'ケーブル重量概算・ドラム選定',
         href: '/tools/weight',
         icon: 'package',
-        customClass: 'global-nav__link--tool',
         desc: '総重量の概算と木製ドラムの自動提案。',
       },
       {
         text: '計算履歴',
         href: '/tools/history',
         icon: 'clipboard',
-        customClass: 'global-nav__link--tool',
         desc: '各種計算結果の履歴一覧と確認・管理。',
       },
     ],
@@ -124,35 +115,30 @@ export const menuData: MenuSection[] = [
         text: 'ケーブル規格',
         href: '/database/cable-db',
         icon: 'book',
-        customClass: 'global-nav__link--database',
         desc: '外径・許容電流等の標準規格値の参照。',
       },
       {
         text: '配管規格',
         href: '/database/conduit-db',
         icon: 'target',
-        customClass: 'global-nav__link--database',
         desc: '配管寸法と付属品適合サイズの確認。',
       },
       {
         text: 'ケーブルラック規格',
         href: '/database/rack-db',
         icon: 'align-justify',
-        customClass: 'global-nav__link--database',
         desc: 'ラック標準寸法と仕様データの参照。',
       },
       {
         text: 'ケーブルドラム規格',
         href: '/database/drum-db',
         icon: 'disc',
-        customClass: 'global-nav__link--database',
         desc: '木製ドラムの寸法・仕様データの参照。',
       },
       {
         text: '締付トルク一覧表',
         href: '/database/torque-db',
         icon: 'wrench',
-        customClass: 'global-nav__link--database',
         desc: '端子・ボルトの標準締付トルク参照。',
       },
     ],
@@ -169,7 +155,6 @@ export const menuData: MenuSection[] = [
         text: '用語解説',
         href: '/reference/glossary',
         icon: 'book-open',
-        customClass: 'global-nav__link--reference',
         desc: '電気・建築設備の用語クイック辞書。',
       },
     ],

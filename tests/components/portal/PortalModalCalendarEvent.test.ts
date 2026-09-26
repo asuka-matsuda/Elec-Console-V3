@@ -1,4 +1,4 @@
-﻿import { mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
 import ModalCalendarEvent from '../../../app/components/portal/calendar/ModalCalendarEvent.vue'
@@ -84,7 +84,7 @@ describe('ModalCalendarEvent.vue', () => {
     // タイトルを入力するとエラーが消える
     const titleInput = wrapper.findAllComponents({ name: 'Input' })[0]
 
-    await titleInput?.vm.$emit('input', '新規作業')
+    await titleInput?.vm.$emit('update:modelValue', '新規作業')
     expect(wrapper.text()).not.toContain('タイトルを入力してください')
   })
 

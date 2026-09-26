@@ -14,14 +14,14 @@ const props = defineProps<BadgeProps>()
 
 const preset = computed<BadgePresetItem | undefined>(() => (props.id ? BADGE_PRESETS[props.id] : undefined))
 
-// 優先順位: 直接指定の color > プリセットの色 > デフォルト
-const resolvedColor = computed(() => props.color || preset.value?.color || 'var(--color-text-muted)')
+// 優先順位: 直接指定の color > プリセットの色 (未指定時は CSS 側の初期値に委譲)
+const resolvedColor = computed(() => props.color || preset.value?.color)
 </script>
 
 <template>
   <span
     class="inline-block badge"
-    :style="{ '--glow-color': resolvedColor }"
+    :style="resolvedColor ? { '--glow-color': resolvedColor } : undefined"
   >
     <slot>{{ preset?.label }}</slot>
   </span>

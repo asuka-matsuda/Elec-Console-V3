@@ -9,6 +9,7 @@ import type {
   SelectedMeasurementDevices,
 } from '#shared/types/measurementDevice'
 import { useMeasurementDeviceForm } from '~/composables/portal/useMeasurementDeviceForm'
+import type { SelectOption } from '~/types/components'
 
 const isOpen = defineModel<boolean>({ default: false })
 
@@ -22,11 +23,24 @@ const emit = defineEmits<{
   (e: 'updated', devices: MeasurementDevice[]): void
 }>()
 
-const CATEGORY_OPTIONS = [
-  { value: 'megger', label: '絶縁抵抗計' },
-  { value: 'voltmeter', label: '電圧計' },
-  { value: 'phaseDetector', label: '検相器' },
-]
+const CATEGORY_LABEL_MAP: Record<MeasurementDeviceCategory, string> = {
+  megger: '絶縁抵抗計',
+  voltmeter: '電圧計',
+  phaseDetector: '検相器',
+}
+
+const CATEGORY_COLOR_MAP: Record<MeasurementDeviceCategory, string> = {
+  megger: 'var(--theme-accent)',
+  voltmeter: 'var(--color-status-warning)',
+  phaseDetector: 'var(--color-category-main)',
+}
+
+const CATEGORY_OPTIONS: SelectOption<string>[] = (
+  Object.entries(CATEGORY_LABEL_MAP) as [MeasurementDeviceCategory, string][]
+).map(([value, label]) => ({
+  value,
+  label,
+}))
 
 const {
   localDevices,
@@ -53,29 +67,11 @@ const {
 })
 
 const getCategoryLabel = (category: MeasurementDeviceCategory): string => {
-  switch (category) {
-    case 'megger':
-      return '絶縁抵抗計'
-    case 'voltmeter':
-      return '電圧計'
-    case 'phaseDetector':
-      return '検相器'
-    default:
-      return '測定器'
-  }
+  return CATEGORY_LABEL_MAP[category] ?? '測定器'
 }
 
 const getCategoryBadgeColor = (category: MeasurementDeviceCategory): string => {
-  switch (category) {
-    case 'megger':
-      return 'var(--color-primary)'
-    case 'voltmeter':
-      return 'var(--color-warning)'
-    case 'phaseDetector':
-      return 'var(--color-category-main)'
-    default:
-      return 'var(--color-text-muted)'
-  }
+  return CATEGORY_COLOR_MAP[category] ?? 'var(--color-text-muted)'
 }
 </script>
 
@@ -184,7 +180,9 @@ const getCategoryBadgeColor = (category: MeasurementDeviceCategory): string => {
 
         <EmptyState
           v-if="localDevices.length === 0"
-          message="登録されている測定機器はありません。上のフォームから追加してください。"
+          icon="tool"
+          title="測定機器が登録されていません"
+          description="上のフォームから測定機器を追加してください。"
         />
 
         <ul
@@ -196,6 +194,8 @@ const getCategoryBadgeColor = (category: MeasurementDeviceCategory): string => {
             :key="dev.id"
             as="li"
             padding="compact"
+            interactive
+            :active="editingId === dev.id"
             class="flex items-center justify-between gap-item-gap"
           >
             <div class="flex flex-col gap-inline-gap min-w-0 flex-1">

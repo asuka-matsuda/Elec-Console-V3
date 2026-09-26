@@ -99,7 +99,7 @@ const handleSelectCircuit = (circuit: CircuitItem) => {
             <div class="flex items-center gap-item-gap">
               <span><strong>{{ stats.completed }}</strong> / {{ stats.total }}</span>
               <span>({{ stats.pct }}%)</span>
-              <Badge v-if="stats.excluded > 0">
+              <Badge v-if="stats.excluded > 0" id="exam:excluded">
                 除外: {{ stats.excluded }}
               </Badge>
             </div>

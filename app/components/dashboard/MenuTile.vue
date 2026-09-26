@@ -48,7 +48,7 @@ const componentTag = computed(() => (isClickable.value ? NuxtLink : 'div'))
 
 .tile-desc {
   font-size: var(--font-size-xs);
-  line-height: var(--line-height-normal);
+  line-height: var(--line-height-base);
   color: var(--color-text-secondary);
   letter-spacing: var(--tracking-normal);
 }

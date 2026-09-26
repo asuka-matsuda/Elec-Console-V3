@@ -26,35 +26,19 @@ export function useMeasurementDevices(siteIdSource: MaybeRefOrGetter<string>) {
   const isDevicesModalOpen = ref(false)
   const isLoadingDevices = ref(false)
 
-  const meggerOptions = computed(() => [
+  const buildDeviceOptions = (category: string) => [
     { value: '', label: '（指定なし / 未使用）' },
     ...devices.value
-      .filter(d => d.category === 'megger')
+      .filter(d => d.category === category)
       .map(d => ({
         value: d.id,
         label: `${d.maker} ${d.model}${d.serialNumber ? ` (製番: ${d.serialNumber})` : ''}${d.note ? ` - ${d.note}` : ''}`,
       })),
-  ])
+  ]
 
-  const voltmeterOptions = computed(() => [
-    { value: '', label: '（指定なし / 未使用）' },
-    ...devices.value
-      .filter(d => d.category === 'voltmeter')
-      .map(d => ({
-        value: d.id,
-        label: `${d.maker} ${d.model}${d.serialNumber ? ` (製番: ${d.serialNumber})` : ''}${d.note ? ` - ${d.note}` : ''}`,
-      })),
-  ])
-
-  const phaseDetectorOptions = computed(() => [
-    { value: '', label: '（指定なし / 未使用）' },
-    ...devices.value
-      .filter(d => d.category === 'phaseDetector')
-      .map(d => ({
-        value: d.id,
-        label: `${d.maker} ${d.model}${d.serialNumber ? ` (製番: ${d.serialNumber})` : ''}${d.note ? ` - ${d.note}` : ''}`,
-      })),
-  ])
+  const meggerOptions = computed(() => buildDeviceOptions('megger'))
+  const voltmeterOptions = computed(() => buildDeviceOptions('voltmeter'))
+  const phaseDetectorOptions = computed(() => buildDeviceOptions('phaseDetector'))
 
   const currentSelectedDevices = computed<SelectedMeasurementDevices>(() => ({
     meggerId: selectedMeggerId.value || undefined,

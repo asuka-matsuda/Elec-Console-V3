@@ -88,7 +88,7 @@ const handleSave = () => {
         <Input
           v-model="form.title"
           placeholder="会議、送電試験など"
-          @input="hasTitleError = false"
+          @update:model-value="hasTitleError = false"
         />
       </FormGroup>
 

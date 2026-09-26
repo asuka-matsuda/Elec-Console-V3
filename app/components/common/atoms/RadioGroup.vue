@@ -24,13 +24,13 @@ const emit = defineEmits<{
 }>()
 
 defineSlots<{
-  option?: (props: { option: RadioOption<T>, isSelected: boolean }) => unknown
+  option?: (props: { option: RadioOption<T>, isActive: boolean }) => unknown
 }>()
 
 const uniqueName = useId()
 const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
 
-const isSelected = (value: T) => model.value === value
+const isActive = (value: T) => model.value === value
 const isOptionDisabled = (option: RadioOption<T>) => props.disabled || Boolean(option.disabled)
 
 const updateValue = (value: T) => {
@@ -52,7 +52,7 @@ const updateValue = (value: T) => {
       :key="String(option.value)"
       class="inline-flex items-center justify-center item"
       :class="{
-        'is-active': isSelected(option.value),
+        'is-active': isActive(option.value),
         'is-disabled': isOptionDisabled(option),
         'flex-1 text-center': block,
       }"
@@ -62,12 +62,12 @@ const updateValue = (value: T) => {
         type="radio"
         :name="groupName"
         :value="option.value"
-        :checked="isSelected(option.value)"
+        :checked="isActive(option.value)"
         :disabled="isOptionDisabled(option)"
         class="radio-native-input"
         @change="updateValue(option.value)"
       />
-      <slot name="option" :option="option" :is-selected="isSelected(option.value)">
+      <slot name="option" :option="option" :is-active="isActive(option.value)">
         {{ option.label }}
       </slot>
     </label>

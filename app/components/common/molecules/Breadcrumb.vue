@@ -37,7 +37,7 @@ const resolvedItems = computed<BreadcrumbItem[]>(() => {
         v-for="(item, index) in resolvedItems"
         :key="`${item.text}-${index}`"
         class="flex items-center gap-item-gap"
-        :class="{ 'is-current': index === resolvedItems.length - 1 }"
+        :class="{ 'is-active': index === resolvedItems.length - 1 }"
       >
         {{ item.text }}
       </li>
@@ -63,8 +63,7 @@ const resolvedItems = computed<BreadcrumbItem[]>(() => {
       letter-spacing: var(--tracking-wider);
     }
 
-    &.is-current {
-      gap: var(--space-1);
+    &.is-active {
       color: var(--theme-accent);
 
       &::after {
@@ -72,6 +71,7 @@ const resolvedItems = computed<BreadcrumbItem[]>(() => {
 
         width: var(--space-1);
         height: var(--space-3);
+        margin-inline-start: var(--space-1);
 
         background-color: var(--theme-accent);
 

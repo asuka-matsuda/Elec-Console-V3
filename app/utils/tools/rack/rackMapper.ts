@@ -13,21 +13,19 @@ import type {
 
 type RackMode = 'strong' | 'weak'
 
-export type RackCableUIInput = CableInputItem
-
 export interface RackInputs {
   mode: RackMode
   rackHeight: number | null
   otherWidth: number | null
-  strongCablesUI: RackCableUIInput[]
-  weakCablesUI: RackCableUIInput[]
+  strongCablesUI: CableInputItem[]
+  weakCablesUI: CableInputItem[]
   marginRate?: number | null
   cableSpacing?: number | null
   sideMargin?: number | null
 }
 
 function convertUIToRackCable(
-  uiInput: RackCableUIInput,
+  uiInput: CableInputItem,
 ): RackCableInput {
   const def = findCableByIndexString(uiInput.cableIdx)
   const d = def ? getEffectiveCableDiameter(def.diameter) : 0

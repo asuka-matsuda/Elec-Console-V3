@@ -188,7 +188,7 @@ const handleSave = () => {
                   v-for="worker in workerNames"
                   :key="worker"
                 >
-                  <Badge>
+                  <Badge id="site:worker-tag">
                     {{ worker }}
                   </Badge>
                 </li>

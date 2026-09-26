@@ -23,14 +23,14 @@ watch(isOnline, (online, wasOnline) => {
 const banner = computed(() => {
   if (!isOnline.value) {
     return {
-      statusClass: 'offline',
+      statusClass: 'is-offline',
       icon: 'wifi-off',
       text: '圏外（オフライン）で動作中',
     }
   }
   if (showBackOnline.value) {
     return {
-      statusClass: 'online',
+      statusClass: 'is-online',
       icon: 'wifi',
       text: 'オンラインに復帰しました',
     }
@@ -59,16 +59,16 @@ const banner = computed(() => {
   line-height: var(--line-height-tight);
 }
 
-.offline-banner.offline {
+.offline-banner.is-offline {
   border-bottom-color: color-mix(in srgb, var(--color-status-warning) 40%, transparent);
   color: var(--color-status-warning);
-  background-color: color-mix(in srgb, var(--color-status-warning) 15%, var(--color-bg-base));
+  background-color: color-mix(in srgb, var(--color-status-warning) 15%, var(--surface-bg));
 }
 
-.offline-banner.online {
+.offline-banner.is-online {
   border-bottom-color: color-mix(in srgb, var(--color-status-success) 40%, transparent);
   color: var(--color-status-success);
-  background-color: color-mix(in srgb, var(--color-status-success) 15%, var(--color-bg-base));
+  background-color: color-mix(in srgb, var(--color-status-success) 15%, var(--surface-bg));
 }
 
 .banner-fade-enter-active,

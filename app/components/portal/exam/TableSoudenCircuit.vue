@@ -5,7 +5,7 @@
  * 汎用 Table コンポーネントを基盤とし、回路記号・名称・測定者セルの既定描画と
  * 送電試験固有の行ステータス（完了・除外・ロック・編集行ハイライト）を提供します。
  */
-import { useSlots, watch } from 'vue'
+import { useSlots } from 'vue'
 
 import type { CircuitItem } from '#shared/types/circuit'
 import type { TableColumn, TableSortOrder } from '~/types/components'
@@ -33,18 +33,9 @@ const props = withDefaults(
   },
 )
 
-const emit = defineEmits<{
-  (e: 'sort', payload: { key: string, order: 'asc' | 'desc' | null }): void
-}>()
-
 defineSlots<{
   [K in `cell-${string}`]?: (props: { value: unknown, subValue?: unknown, row: CircuitItem, index: number, column: TableColumn<CircuitItem> }) => unknown
 }>()
-
-// 既存の @sort リスナーに対する後方互換性
-watch([sortBy, sortOrder], ([newKey, newOrder]) => {
-  emit('sort', { key: newKey || '', order: newOrder ?? null })
-})
 
 const slots = useSlots()
 

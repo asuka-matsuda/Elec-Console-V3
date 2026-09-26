@@ -124,10 +124,10 @@ const {
     >
       <div class="flex flex-wrap items-center gap-item-gap">
         <template v-if="syncResultData.type === 'merge'">
-          <Badge>
+          <Badge id="sync:added">
             追加: +{{ syncResultData.createdCount ?? 0 }} 件
           </Badge>
-          <Badge>
+          <Badge id="sync:updated">
             変更: {{ syncResultData.updatedCount ?? 0 }} 件
           </Badge>
           <small>
@@ -135,7 +135,7 @@ const {
           </small>
         </template>
         <template v-else-if="syncResultData.type === 'reset'">
-          <Badge>
+          <Badge id="sync:imported">
             取込総数: {{ syncResultData.count }} 件
           </Badge>
         </template>

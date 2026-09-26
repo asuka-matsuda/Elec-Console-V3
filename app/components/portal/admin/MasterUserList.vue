@@ -65,7 +65,7 @@ const filteredUsers = computed(() => {
         as="li"
         interactive
         padding="compact"
-        :selected="user.id === selectedUserId"
+        :active="user.id === selectedUserId"
         class="w-full flex flex-col gap-inline-gap"
         @click="emit('select', user)"
       >

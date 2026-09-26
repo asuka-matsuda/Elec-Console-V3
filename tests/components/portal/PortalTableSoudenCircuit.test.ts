@@ -1,4 +1,4 @@
-﻿import { mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
 import type { CircuitItem } from '#shared/types/circuit'
@@ -65,12 +65,12 @@ describe('TableSoudenCircuit.vue', () => {
       },
     })
 
-    // 回路番号（PortalKairoSymbol）
-    const symbols = wrapper.findAll('.kairo-symbol')
+    // 回路番号（PortalCircuitSymbol）
+    const symbols = wrapper.findAll('.circuit-symbol')
 
     expect(symbols.length).toBe(2)
-    expect(symbols[0]?.find('.kairo-text').text()).toBe('1')
-    expect(symbols[1]?.find('.kairo-text').text()).toBe('2')
+    expect(symbols[0]?.find('.circuit-text').text()).toBe('1')
+    expect(symbols[1]?.find('.circuit-text').text()).toBe('2')
 
     // 回路名称（改行保持および空値ハイフン）
     const meishoList = wrapper.findAll('.circuit-meisho')

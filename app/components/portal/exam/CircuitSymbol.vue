@@ -22,7 +22,7 @@ const displayText = computed(() => (props.bangou != null && props.bangou !== '' 
 </script>
 
 <template>
-  <div class="relative inline-flex items-center justify-center circuit-symbol kairo-symbol">
+  <div class="relative inline-flex items-center justify-center circuit-symbol">
 
     <svg
       v-if="symbolDef"
@@ -53,7 +53,7 @@ const displayText = computed(() => (props.bangou != null && props.bangou !== '' 
       </template>
     </svg>
 
-    <span class="circuit-text kairo-text">
+    <span class="circuit-text">
       {{ displayText }}
     </span>
   </div>

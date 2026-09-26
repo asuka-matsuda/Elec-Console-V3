@@ -67,7 +67,7 @@ module.exports = {
       {
         type: 'at-rule',
         name: 'include',
-        parameter: '^state-selected',
+        parameter: '^state-active',
       },
       {
         type: 'at-rule',
@@ -112,12 +112,15 @@ module.exports = {
         // 状態セレクタの手書きを禁止し、純粋な支援アクセシビリティセレクタ（aria-*, role）を禁止
         'selector-disallowed-list': [
           [
-            '/^&(:disabled|\\.is-(interactive|selected|disabled))/',
+            '/^&(:disabled|\\.is-(interactive|disabled))/',
+            '/is-hover/',
+            '/&\\.(active|selected|open)\\b/',
+            '/&\\.is-(selected|current)\\b/',
             '/aria-/',
             '/role=/',
           ],
           {
-            message: '純粋な支援アクセシビリティセレクタ（aria-*, role）および未許可の状態セレクタの手書きは禁止されています。',
+            message: '純粋な支援アクセシビリティセレクタ（aria-*, role）および未許可の状態セレクタ（is-hover, is-selected, is-current, 素の active 等）は禁止されています。',
           },
         ],
         // レイアウト・配置・z-index関連プロパティのScoped CSS記述を禁止（Tailwind記述を強制）

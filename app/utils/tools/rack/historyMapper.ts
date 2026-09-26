@@ -4,9 +4,8 @@
  * @description ケーブルラック選定計算の入力情報と算出結果を、LocalStorage履歴表示用オブジェクトに整形します。
  */
 
-import type { HistoryEntry } from '~/types/tools'
+import type { CableInputItem, HistoryEntry } from '~/types/tools'
 import { findCableByIndexString, getCableDisplayName } from '~/utils/cable'
-import type { RackCableUIInput } from '~/utils/tools/rack/rackMapper'
 
 import type { RackCalcResult } from './rackCalcLogic'
 
@@ -17,7 +16,7 @@ export function mapRackToHistory(
     maxDepth: number
     otherWidth: number
   },
-  cables: RackCableUIInput[],
+  cables: CableInputItem[],
   result: RackCalcResult,
 ): Omit<HistoryEntry, 'id' | 'timestamp'> | null {
   if (result.error || (result.tier1.totalWidth === 0 && result.tier2.totalWidth === 0)) return null

@@ -29,7 +29,7 @@ const emit = defineEmits<{
 
 defineSlots<{
   selected?: (props: { option?: SelectOption<T>, label: string }) => unknown
-  option?: (props: { option: SelectOption<T>, isSelected: boolean }) => unknown
+  option?: (props: { option: SelectOption<T>, isActive: boolean }) => unknown
 }>()
 
 const formGroup = inject(FORM_GROUP_KEY, null)
@@ -170,7 +170,7 @@ const setOptionRef = (el: Element | ComponentPublicInstance | null, index: numbe
 const getOptionClasses = (option: SelectOption<T>, index: number) => [
   'relative z-[1] overflow-hidden py-[0.4em] px-[0.8em] custom-select__option',
   {
-    'is-selected': model.value === option.value,
+    'is-active': model.value === option.value,
     'is-focused': index === focusedIndex.value,
     'is-disabled': option.disabled,
   },
@@ -211,7 +211,7 @@ defineExpose({
       class="relative z-[1] focus:z-[2] flex w-full items-center justify-between gap-item-gap custom-select__value"
       :class="{
         'is-placeholder': isPlaceholder,
-        'is-active': isOpen,
+        'is-open': isOpen,
         'is-error': isError,
       }"
       :disabled="disabled"
@@ -255,7 +255,7 @@ defineExpose({
             :class="getOptionClasses(option, index)"
             @click="selectOption(option)"
           >
-            <slot name="option" :option="option" :is-selected="model === option.value">
+            <slot name="option" :option="option" :is-active="model === option.value">
               {{ option.label }}
             </slot>
           </li>
@@ -313,7 +313,7 @@ defineExpose({
       box-shadow: var(--shadow-glow-active);
     }
 
-    &.is-active,
+    &.is-open,
     &:focus,
     &:focus-visible {
       margin-left: var(--select-margin-left-active, 0);
@@ -332,7 +332,7 @@ defineExpose({
 
       border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
 
-      &.is-active,
+      &.is-open,
       &:focus,
       &:focus-visible {
         border-color: var(--glow-color);
@@ -393,7 +393,7 @@ defineExpose({
   transition: var(--transition-colors);
 
   &:not(:is(.is-disabled, .is-placeholder)) {
-    &:is(:hover, .is-focused, .is-selected) {
+    &:is(:hover, .is-focused, .is-active) {
       color: var(--theme-accent);
       background-color: color-mix(in srgb, var(--theme-accent) 15%, transparent);
     }

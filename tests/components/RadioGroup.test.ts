@@ -112,7 +112,7 @@ describe('RadioGroup.vue', () => {
         options: sampleOptions,
       },
       slots: {
-        option: '<template #option="{ option, isSelected }"><span class="custom-opt">{{ option.label }} - {{ isSelected }}</span></template>',
+        option: '<template #option="{ option, isActive }"><span class="custom-opt">{{ option.label }} - {{ isActive }}</span></template>',
       },
     })
 

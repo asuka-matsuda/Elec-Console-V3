@@ -83,7 +83,6 @@ const {
   sortBy,
   sortOrder,
   sortedData: sortedCircuits,
-  handleSort,
 } = useTableSort(toRef(props, 'circuits'))
 
 // 完了判定（確定済みであり、かつ3相すべてOKで完了していること）
@@ -138,15 +137,14 @@ const handleConfirm = (circuit: CircuitItem) => {
 
 <template>
   <PortalTableSoudenCircuit
+    v-model:sort-by="sortBy"
+    v-model:sort-order="sortOrder"
     class="flex-1 min-h-[400px]"
     :columns="PHASE2_TABLE_COLUMNS"
     :circuits="sortedCircuits"
-    :full-circuits="fullCircuits || circuits"
-    :sort-by="sortBy"
-    :sort-order="sortOrder"
+    :full-circuits="fullCircuits"
     :is-circuit-locked="isLocked"
     :is-complete="isComplete"
-    @sort="handleSort"
   >
     <template #cell-zetsuenR="{ row: circuit }">
       <PortalCellPhaseMeas
@@ -216,7 +214,6 @@ const handleConfirm = (circuit: CircuitItem) => {
 
 <style scoped lang="scss">
 .textarea-remarks {
-  resize: vertical;
   font-size: var(--font-size-xs);
 }
 </style>

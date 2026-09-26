@@ -4,6 +4,7 @@
  * @description 電線管サイズ計算の入力情報と算出結果を、LocalStorage履歴表示用オブジェクトに整形します。
  */
 
+import { CONDUIT_UI_LABELS } from '~/constants/conduitConstants'
 import type { CableInputItem, HistoryEntry } from '~/types/tools'
 import { findCableByIndexString, getCableDisplayName } from '~/utils/cable'
 
@@ -42,24 +43,24 @@ export function mapConduitToHistory(
   }
 
   const size32Str = result.isOversize32
-    ? 'サイズ超過'
-    : result.conduit32?.size || '---'
+    ? CONDUIT_UI_LABELS.OVERSIZE_TEXT
+    : result.conduit32?.size || CONDUIT_UI_LABELS.EMPTY_TEXT
   const size48Str = result.isOversize48
-    ? 'サイズ超過'
-    : result.conduit48?.size || '---'
+    ? CONDUIT_UI_LABELS.OVERSIZE_TEXT
+    : result.conduit48?.size || CONDUIT_UI_LABELS.EMPTY_TEXT
   const sizeCustomStr = result.isOversizeCustom
-    ? 'サイズ超過'
-    : result.conduitCustom?.size || '---'
+    ? CONDUIT_UI_LABELS.OVERSIZE_TEXT
+    : result.conduitCustom?.size || CONDUIT_UI_LABELS.EMPTY_TEXT
 
   const rateStr = customFillRate || 80
 
   const results = [
-    { label: '32%以下 (異種)', value: size32Str, isMain: true as boolean },
+    { label: CONDUIT_UI_LABELS.TITLE_32, value: size32Str, isMain: true as boolean },
     {
       label: '占積率 (32%)',
       value: `${result.fill32?.toFixed(1) || 0}%`,
     },
-    { label: '48%以下 (同種)', value: size48Str, isMain: true as boolean },
+    { label: CONDUIT_UI_LABELS.TITLE_48, value: size48Str, isMain: true as boolean },
     {
       label: '占積率 (48%)',
       value: `${result.fill48?.toFixed(1) || 0}%`,

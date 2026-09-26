@@ -92,7 +92,7 @@ const filteredSites = computed(() => {
         interactive
         padding="compact"
         :disabled="Boolean(site.disabledAt)"
-        :selected="site.id === selectedSiteId"
+        :active="site.id === selectedSiteId"
         class="flex items-center justify-between gap-panel-gap w-full"
         @click="emit('select', site)"
       >
