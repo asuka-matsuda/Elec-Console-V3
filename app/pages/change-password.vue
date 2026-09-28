@@ -81,7 +81,7 @@ const handleChangePassword = async () => {
       <Button
         type="submit"
         variant="success"
-        block
+        class="w-full"
         :loading="isLoading"
       >
         設定してはじめる

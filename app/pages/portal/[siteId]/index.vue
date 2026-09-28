@@ -81,7 +81,7 @@ useHead({
         <Button
           icon="zap"
           :to="`/portal/${siteId}/souden`"
-          block
+          class="w-full"
         >
           送電試験
         </Button>

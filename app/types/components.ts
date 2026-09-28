@@ -77,21 +77,13 @@ export interface BreadcrumbItem {
 // --- Button ---
 export type ButtonVariant = 'default' | 'success' | 'danger'
 
-interface BaseButtonProps {
+export interface ButtonProps {
   to?: string
-  href?: string
   type?: 'button' | 'submit' | 'reset'
   variant?: ButtonVariant
-  block?: boolean
   disabled?: boolean
-  title?: string
-}
-
-export interface ButtonProps extends BaseButtonProps {
-  icon?: IconName
-  iconRight?: IconName
-  iconOnly?: boolean
   loading?: boolean
+  icon?: IconName
 }
 
 // --- Checkbox ---

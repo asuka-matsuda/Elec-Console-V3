@@ -83,7 +83,7 @@ const handleLogin = async () => {
         <Button
           type="submit"
           variant="success"
-          block
+          class="w-full"
           :loading="isLoading"
         >
           ログイン

@@ -99,9 +99,8 @@ const emit = defineEmits<{
     <Divider />
 
     <Button
-      variant="default"
       :icon="selectedBan === 'ALL' ? 'archive' : 'download'"
-      block
+      class="w-full"
       :loading="isGenerating"
       :disabled="!hasSiteSettingExcel || banCount === 0 || !selectedBan"
       @click="emit('generate')"
