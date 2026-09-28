@@ -3,10 +3,10 @@
  * ResultDrawer
  * [Tool Organism] 計算結果パネルおよびモバイル用ボトムドロワー。
  */
-import { computed, ref, toRef, useSlots } from 'vue'
+import { computed, onUnmounted, ref, useSlots } from 'vue'
 
-import { useAsyncActionFeedback } from '~/composables/useAsyncActionFeedback'
 import type { IconName } from '~/constants/icons'
+import type { ButtonVariant } from '~/types/components'
 
 const props = withDefaults(
   defineProps<{
@@ -30,17 +30,60 @@ const isBasisAvailable = computed(() => Boolean(slots.basis))
 const currentTitle = computed(() => (isShowingBasis.value ? '計算根拠' : props.title))
 const currentIcon = computed<IconName>(() => (isShowingBasis.value ? 'book' : props.icon))
 
-const {
-  state: saveState,
-  buttonVariant: saveButtonVariant,
-  currentContent: saveButtonContent,
-  execute: handleSave,
-} = useAsyncActionFeedback({
-  action: () => props.saveFunction ? props.saveFunction() : Promise.resolve(),
-  disabled: toRef(props, 'saveDisabled'),
-  label: '履歴に保存',
-  defaultVariant: 'success',
+// 保存ボタンの状態フィードバック（インライン化）
+const saveState = ref<'idle' | 'saving' | 'success' | 'error'>('idle')
+let resetTimer: ReturnType<typeof setTimeout> | null = null
+
+const clearTimer = () => {
+  if (resetTimer) {
+    clearTimeout(resetTimer)
+    resetTimer = null
+  }
+}
+
+onUnmounted(clearTimer)
+
+const saveButtonVariant = computed<ButtonVariant>(() => {
+  if (saveState.value === 'error') return 'danger'
+
+  return 'success'
 })
+
+const saveButtonContent = computed<{ icon: IconName, text: string }>(() => {
+  switch (saveState.value) {
+    case 'saving':
+      return { icon: 'loader', text: '保存中...' }
+    case 'success':
+      return { icon: 'check', text: '保存しました' }
+    case 'error':
+      return { icon: 'alert-circle', text: '保存に失敗しました' }
+    default:
+      return { icon: 'save', text: '履歴に保存' }
+  }
+})
+
+const handleSave = async () => {
+  if (props.saveDisabled || saveState.value !== 'idle' || !props.saveFunction) return
+
+  clearTimer()
+  saveState.value = 'saving'
+  try {
+    await props.saveFunction()
+    saveState.value = 'success'
+    resetTimer = setTimeout(() => {
+      saveState.value = 'idle'
+      resetTimer = null
+    }, 2000)
+  }
+  catch (e) {
+    console.error('Save failed:', e)
+    saveState.value = 'error'
+    resetTimer = setTimeout(() => {
+      saveState.value = 'idle'
+      resetTimer = null
+    }, 3000)
+  }
+}
 </script>
 
 <template>

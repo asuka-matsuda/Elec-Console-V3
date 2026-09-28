@@ -181,7 +181,7 @@ export interface DisclaimerProps {
 }
 
 // --- Input ---
-export type InputType
+type InputType
   = 'text'
     | 'password'
     | 'email'

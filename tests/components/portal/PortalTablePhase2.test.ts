@@ -136,8 +136,8 @@ describe('TablePhase2.vue', () => {
       `,
     },
     Button: {
-      props: ['variant', 'disabled', 'loading'],
-      template: '<button class="stub-button" :disabled="disabled" :data-variant="variant"><slot /></button>',
+      props: ['variant', 'disabled', 'loading', 'to'],
+      template: '<button class="stub-button" :disabled="disabled" :data-variant="variant" :data-to="to"><slot /></button>',
     },
     Textarea: {
       props: ['modelValue', 'placeholder', 'rows', 'disabled'],
@@ -253,16 +253,20 @@ describe('TablePhase2.vue', () => {
     })
   })
 
-  it('完了済み回路では入力欄がすべてdisabledになり、「解除」ボタンのみが表示されること', () => {
+  it('完了済み回路では入力欄がすべてdisabledになり、「P3へ」遷移ボタンと「解除」ボタンが表示されること', () => {
     const wrapper = createWrapper()
     const row2 = wrapper.find('.circuit-row[data-row-id="c2"]')
 
-    // 操作列は解除ボタンのみ
+    // 操作列はP3へ遷移ボタンと解除ボタン
     const buttons = row2.findAll('.col-actions .stub-button')
 
-    expect(buttons.length).toBe(1)
-    expect(buttons[0]?.text()).toBe('解除')
-    expect(buttons[0]?.attributes('data-variant')).toBe('danger')
+    expect(buttons.length).toBe(2)
+    expect(buttons[0]?.text()).toBe('P3へ')
+    expect(buttons[0]?.attributes('data-variant')).toBe('default')
+    expect(buttons[0]?.attributes('data-to')).toContain('/portal/site-1/phase3')
+    expect(buttons[0]?.attributes('data-to')).not.toContain('ban=')
+    expect(buttons[1]?.text()).toBe('解除')
+    expect(buttons[1]?.attributes('data-variant')).toBe('danger')
 
     // Input・Textarea が disabled であること
     const measCells = row2.findAll('.stub-meas-cell')
@@ -277,9 +281,10 @@ describe('TablePhase2.vue', () => {
     const wrapper = createWrapper()
     const row2 = wrapper.find('.circuit-row[data-row-id="c2"]')
 
-    const clearBtn = row2.find('.col-actions .stub-button')
+    const buttonsBefore = row2.findAll('.col-actions .stub-button')
+    const clearBtn = buttonsBefore[1]
 
-    await clearBtn.trigger('click')
+    await clearBtn?.trigger('click')
 
     // サーバーへの clear イベントは発火しないこと
     expect(wrapper.emitted('clear')).toBeFalsy()

@@ -17,6 +17,8 @@ withDefaults(
     isLoading?: boolean
     disabled?: boolean
     confirmLabel?: string
+    nextPhasePath?: string
+    nextPhaseLabel?: string
   }>(),
   {
     isLocked: false,
@@ -25,6 +27,8 @@ withDefaults(
     isLoading: false,
     disabled: false,
     confirmLabel: '確定',
+    nextPhasePath: undefined,
+    nextPhaseLabel: '次へ',
   },
 )
 
@@ -44,6 +48,16 @@ defineEmits<{
 
     <template v-else-if="isCompleted">
       <Button
+        v-if="nextPhasePath"
+        class="btn-next-phase"
+        variant="default"
+        icon-right="arrow-right"
+        :to="nextPhasePath"
+      >
+        {{ nextPhaseLabel }}
+      </Button>
+      <Button
+        class="btn-clear"
         variant="danger"
         :disabled="circuit.isExcluded || isLoading"
         @click="$emit('clear')"

@@ -3,10 +3,9 @@
  * 送電ポータルトップ画面
  * 現場ポータルのトップ（未アサイン時の案内・自動リダイレクト）
  */
-import { useLocalStorage } from '@vueuse/core'
 import { onMounted } from 'vue'
 
-import { useHead, useRouter } from '#app'
+import { useCookie, useHead, useRouter } from '#app'
 import { useAdminSites } from '~/composables/admin/useAdminSites'
 import { useAuth } from '~/composables/useAuth'
 import { STORAGE_KEYS } from '~/constants/storageKeys'
@@ -15,7 +14,10 @@ useHead({ title: '現場ポータル - Elec-Console' })
 const router = useRouter()
 const { isAdmin, currentUser } = useAuth()
 const { sites, fetchSites, isLoaded } = useAdminSites()
-const lastSiteId = useLocalStorage(STORAGE_KEYS.LAST_SITE_ID, '')
+const lastSiteId = useCookie<string>(STORAGE_KEYS.LAST_SITE_ID, {
+  default: () => '',
+  sameSite: 'lax',
+})
 
 const autoRedirect = () => {
   const isMaster = currentUser.value?.loginId === 'master'

@@ -9,10 +9,11 @@
  * - 双方向ソートモデル（v-model:sortBy, v-model:sortOrder）
  * - ヘッダー（header-${col.key}）およびセル（cell-${col.key}）のスロット透過
  */
-import { onMounted, ref } from 'vue'
+import { onMounted, provide, ref } from 'vue'
 
 import { useNoBreakWords } from '~/composables/useNoBreakWords'
 import { useTableAutoWidth } from '~/composables/useTableAutoWidth'
+import { TABLE_NO_BREAK_KEY } from '~/constants/injectionKeys'
 import type { TableColumn, TableProps, TableSortOrder } from '~/types/components'
 import { getTableCellValue, getTableRowKey } from '~/utils/table'
 
@@ -50,7 +51,9 @@ defineSlots<{
 }>()
 
 // 改行禁止辞書の自動ロード（テーブル描画時に一度だけ確実に実行）
-const { fetchWords } = useNoBreakWords()
+const { fetchWords, applyNoBreak } = useNoBreakWords()
+
+provide(TABLE_NO_BREAK_KEY, applyNoBreak)
 
 onMounted(() => {
   fetchWords()

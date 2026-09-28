@@ -8,7 +8,7 @@
 import { toRef } from 'vue'
 
 import type { CircuitItem } from '#shared/types/circuit'
-import type { ConfirmPhase1Payload } from '~/composables/portal/phase/usePhase1Exam'
+import type { ConfirmPhase1Payload } from '~/composables/portal/phase/usePhaseExam'
 import { usePhaseTableForm } from '~/composables/portal/phase/usePhaseTableForm'
 import { useTableSort } from '~/composables/useTableSort'
 import { PHASE1_TABLE_COLUMNS } from '~/constants/soudenConstants'
@@ -133,6 +133,8 @@ const isComplete = (c: CircuitItem) => {
         locked-reason="幹線未完了"
         :is-completed="isConfirmed(circuit)"
         :is-loading="isActionLoading[circuit.id]"
+        :next-phase-path="`/portal/${circuit.siteId}/phase2?kei_to=${encodeURIComponent(circuit.keiTo || '幹線')}&targetCircuit=${encodeURIComponent(circuit.id)}`"
+        next-phase-label="P2へ"
         @confirm="handleConfirm(circuit)"
         @clear="handleClearLocally(circuit)"
       />

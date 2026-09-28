@@ -54,7 +54,7 @@ export default defineEventHandler(async (event) => {
       targetBan: updated.banMeisho,
       targetKairo: updated.kairoBangou || updated.kairoMeisho || '',
       details: body?.isOfflineSync
-        ? `フェーズ3の確定状態を解除しました [同期: ${new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}]`
+        ? `フェーズ3の確定状態を解除しました [同期: ${formatSyncTimeString()}]`
         : 'フェーズ3の確定状態を解除しました',
     },
   })

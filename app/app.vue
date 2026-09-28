@@ -27,6 +27,11 @@ if (import.meta.client) {
     document.documentElement.setAttribute('data-theme', themeMode.value)
     document.documentElement.setAttribute('data-animation', animationEnabled.value ? 'on' : 'off')
   })
+
+  // 現場端末でのIndexedDB自動消去を防止（永続ストレージリクエスト）
+  if (navigator.storage && navigator.storage.persist) {
+    navigator.storage.persist().catch(() => {})
+  }
 }
 </script>
 

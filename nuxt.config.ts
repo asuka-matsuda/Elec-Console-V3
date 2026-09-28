@@ -1,7 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-
   modules: ['@nuxtjs/tailwindcss', '@nuxt/eslint', '@vueuse/nuxt', '@vite-pwa/nuxt'],
+
+  ssr: false,
 
   components: [
     {
@@ -38,17 +39,21 @@ export default defineNuxtConfig({
         { name: 'robots', content: 'noindex, nofollow, noarchive, nosnippet' },
         { name: 'googlebot', content: 'noindex, nofollow, noarchive, nosnippet' },
       ],
-      link: [
-        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;700&display=swap' },
-      ],
       script: [
         { src: '/theme-init.js' },
       ],
     },
   },
-  css: ['~/assets/scss/style.scss'],
+  css: [
+    '@fontsource/noto-sans-jp/400.css',
+    '@fontsource/noto-sans-jp/500.css',
+    '@fontsource/noto-sans-jp/600.css',
+    '@fontsource/noto-sans-jp/700.css',
+    '@fontsource/roboto-mono/400.css',
+    '@fontsource/roboto-mono/500.css',
+    '@fontsource/roboto-mono/700.css',
+    '~/assets/scss/style.scss',
+  ],
   sourcemap: {
     server: false,
     client: false,
@@ -56,6 +61,9 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
 
   nitro: {
+    prerender: {
+      routes: ['/'],
+    },
     routeRules: {
       '/**': {
         headers: {
@@ -67,7 +75,7 @@ export default defineNuxtConfig({
           'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
           'Cross-Origin-Opener-Policy': 'same-origin',
           'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
-          'Content-Security-Policy': 'default-src \'self\'; script-src \'self\' \'unsafe-inline\' \'unsafe-eval\'; style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com; font-src \'self\' https://fonts.gstatic.com data:; img-src \'self\' data: blob: https:; connect-src \'self\'; worker-src \'self\' blob:; frame-ancestors \'self\';',
+          'Content-Security-Policy': 'default-src \'self\'; script-src \'self\' \'unsafe-inline\' \'unsafe-eval\'; style-src \'self\' \'unsafe-inline\'; font-src \'self\' data:; img-src \'self\' data: blob: https:; connect-src \'self\'; worker-src \'self\' blob:; frame-ancestors \'self\';',
         },
       },
     },
@@ -126,37 +134,11 @@ export default defineNuxtConfig({
       ],
     },
     workbox: {
-      navigateFallback: null,
-      globPatterns: ['**/*.{js,css,html,png,svg,ico,woff2}'],
+      navigateFallback: '/index.html',
+      navigateFallbackDenylist: [/^\/api\/.*/],
+      globPatterns: ['**/*.{js,css,html,png,svg,ico,woff,woff2}'],
+      cleanupOutdatedCaches: true,
       runtimeCaching: [
-        {
-          urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-          handler: 'CacheFirst',
-          options: {
-            cacheName: 'google-fonts-cache',
-            expiration: {
-              maxEntries: 10,
-              maxAgeSeconds: 60 * 60 * 24 * 365,
-            },
-            cacheableResponse: {
-              statuses: [0, 200],
-            },
-          },
-        },
-        {
-          urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
-          handler: 'CacheFirst',
-          options: {
-            cacheName: 'gstatic-fonts-cache',
-            expiration: {
-              maxEntries: 10,
-              maxAgeSeconds: 60 * 60 * 24 * 365,
-            },
-            cacheableResponse: {
-              statuses: [0, 200],
-            },
-          },
-        },
         {
           urlPattern: /\/api\/.*/i,
           handler: 'NetworkOnly',

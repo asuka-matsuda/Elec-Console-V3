@@ -153,7 +153,7 @@ export function calculateWeightAndDrum(
 /**
  * MathJax用の数式データを生成する
  */
-export function generateMathData(
+export function generateWeightMathData(
   inputs: WeightCalcInputs,
   result: WeightCalcResult | null,
   cableData: CableData[],

@@ -5,6 +5,8 @@
  * および Vue Test Utils の共通スタブ登録を行います。
  */
 
+import 'fake-indexeddb/auto'
+
 import { config } from '@vue/test-utils'
 import { getContext } from 'unctx'
 import { vi } from 'vitest'

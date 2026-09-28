@@ -7,13 +7,12 @@
 
 import { ref } from 'vue'
 
-import { useApi } from '~/composables/useApi'
-import { useFormValidation } from '~/composables/useFormValidation'
+import { useNuxtApp } from '#app'
 import { useModal } from '~/composables/useModal'
 import { parseToAppException } from '~/utils/errors'
 
 interface UseMasterCrudOptions<T extends { id?: string | number }, F extends object> {
-  /** APIエンドポイント（ベースパス）例: '/api/master/word-break' */
+  /** APIエンドポイント（ベースパス）例: '/api/master/announcements' */
   endpoint: string
   /** フォームの初期値 */
   initialForm: F
@@ -51,7 +50,7 @@ export async function useMasterCrud<T extends { id?: string | number }, F extend
     onAfterDelete,
   } = options
 
-  const { $api } = useApi()
+  const { $api } = useNuxtApp()
   const { askConfirm } = useModal()
 
   // 一覧取得（$api による認証・共通エラーハンドリングを適用）
@@ -68,10 +67,24 @@ export async function useMasterCrud<T extends { id?: string | number }, F extend
   const form = ref<F>({ ...initialForm } as F)
 
   // フォームバリデーション
-  const { fieldErrors, validate, resetErrors } = useFormValidation(
-    form,
-    validationRules as Record<string, string>,
-  )
+  const fieldErrors = ref<Record<string, string>>({})
+  const resetErrors = () => {
+    fieldErrors.value = {}
+  }
+  const validate = (): boolean => {
+    const errors: Record<string, string> = {}
+
+    for (const [key, label] of Object.entries(validationRules as Record<string, string>)) {
+      const val = (form.value as Record<string, unknown>)[key]
+
+      if (val === undefined || val === null || (typeof val === 'string' && !val.trim())) {
+        errors[key] = `${label}は必須です。`
+      }
+    }
+    fieldErrors.value = errors
+
+    return Object.keys(errors).length === 0
+  }
 
   const openModal = (item?: T) => {
     editingId.value = item ? String(item.id) : null

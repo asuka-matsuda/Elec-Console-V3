@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import type { CableData, DrumData } from '~/types/database'
 import type { WeightCalcInputs } from '~/utils/tools/weight/weightCalcLogic'
-import { calculateWeightAndDrum, generateMathData } from '~/utils/tools/weight/weightCalcLogic'
+import { calculateWeightAndDrum, generateWeightMathData } from '~/utils/tools/weight/weightCalcLogic'
 
 describe('weightCalcLogic', () => {
   const mockCableData: CableData[] = [
@@ -59,7 +59,7 @@ describe('weightCalcLogic', () => {
     })
   })
 
-  describe('generateMathData', () => {
+  describe('generateWeightMathData', () => {
     it('should generate 4 math steps with m = (W2/d) - 1 formula without drum fill factor K', () => {
       const inputs: WeightCalcInputs = {
         category: 'CV',
@@ -68,7 +68,7 @@ describe('weightCalcLogic', () => {
       }
 
       const res = calculateWeightAndDrum(inputs, mockCableData, mockDrumData)
-      const steps = generateMathData(inputs, res, mockCableData)
+      const steps = generateWeightMathData(inputs, res, mockCableData)
 
       expect(steps).toHaveLength(4)
 
@@ -97,7 +97,7 @@ describe('weightCalcLogic', () => {
         L_input: null,
       }
 
-      const steps = generateMathData(inputs, null, mockCableData)
+      const steps = generateWeightMathData(inputs, null, mockCableData)
 
       expect(steps).toHaveLength(4)
 

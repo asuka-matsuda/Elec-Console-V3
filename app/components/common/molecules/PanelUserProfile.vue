@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * PanelUserProfile
- * [Portal Molecules] ユーザーのアカウント基本情報（氏名・カナ・ログインID）を表示するパネルコンポーネント。
+ * [Common Molecules] ユーザーのアカウント基本情報（氏名・カナ・ログインID）を表示するパネルコンポーネント。
  */
 import { computed } from 'vue'
 

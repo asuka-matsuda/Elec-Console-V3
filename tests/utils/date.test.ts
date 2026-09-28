@@ -49,6 +49,9 @@ describe('date utils', () => {
     const d = new Date(2026, 8, 19) // 2026-09-19
 
     expect(formatToDateInputString(d)).toBe('2026-09-19')
+    expect(formatToDateInputString('2026-09-19T10:00:00Z')).toBe('2026-09-19')
+    expect(formatToDateInputString(null)).toBe('')
+    expect(formatToDateInputString(undefined, '2026-01-01')).toBe('2026-01-01')
   })
 
   it('getTodayDateInput should return valid YYYY-MM-DD pattern', () => {

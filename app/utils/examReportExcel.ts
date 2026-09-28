@@ -15,6 +15,7 @@ import {
   isPhase3Complete,
 } from '#shared/utils/soudenExam'
 import { generateCircuitSymbolPng } from '~/utils/circuitSymbolImage'
+import { formatDate } from '~/utils/date'
 
 export interface SelectedDevicesMap {
   megger?: MeasurementDevice | null
@@ -96,35 +97,15 @@ export const TAG_METADATA: TagMetadataItem[] = [
 ]
 
 /**
- * 日付文字列から YYYY/MM/DD の日付キーを抽出
- */
-function extractDateStr(dateVal: string | null | undefined): string | null {
-  if (!dateVal) return null
-  try {
-    const d = new Date(dateVal)
-
-    if (isNaN(d.getTime())) return null
-    const year = d.getFullYear()
-    const month = String(d.getMonth() + 1).padStart(2, '0')
-    const day = String(d.getDate()).padStart(2, '0')
-
-    return `${year}/${month}/${day}`
-  }
-  catch {
-    return null
-  }
-}
-
-/**
  * 対象盤の試験日（最早日〜最遅日）を算出
  */
 export function calculateExamDateRange(circuits: CircuitItem[]): string {
   const dates: string[] = []
 
   for (const c of circuits) {
-    const d1 = extractDateStr(c.p1ConfirmedAt)
-    const d2 = extractDateStr(c.p2ConfirmedAt)
-    const d3 = extractDateStr(c.p3ConfirmedAt)
+    const d1 = formatDate(c.p1ConfirmedAt, '')
+    const d2 = formatDate(c.p2ConfirmedAt, '')
+    const d3 = formatDate(c.p3ConfirmedAt, '')
 
     if (d1) dates.push(d1)
     if (d2) dates.push(d2)

@@ -5,16 +5,15 @@
  * @returns users ユーザー一覧Ref, fetchUsers 取得関数, createUser 登録関数, updateUser 更新関数, deleteUser 削除関数, resetUserPassword 初期化関数
  */
 
-import { useState } from '#app'
+import { useNuxtApp, useState } from '#app'
 import type { User } from '#shared/types/auth'
-import { useApi } from '~/composables/useApi'
 import { STATE_KEYS } from '~/constants/storageKeys'
 import { type AppException, parseToAppException } from '~/utils/errors'
 
 export function useAdminUsers() {
   const users = useState<User[]>(STATE_KEYS.ADMIN_USERS, () => [])
   const fetchError = useState<AppException | null>(STATE_KEYS.ADMIN_USERS_ERROR, () => null)
-  const { $api } = useApi()
+  const { $api } = useNuxtApp()
 
   const fetchUsers = async () => {
     try {

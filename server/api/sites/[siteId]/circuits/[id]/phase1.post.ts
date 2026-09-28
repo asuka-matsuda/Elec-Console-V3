@@ -90,7 +90,7 @@ export default defineEventHandler(async (event) => {
   }
 
   if (body.isOfflineSync) {
-    const syncTimeStr = new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })
+    const syncTimeStr = formatSyncTimeString()
 
     detailsParts.push(`[同期: ${syncTimeStr}]`)
   }

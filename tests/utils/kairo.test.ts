@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
-import { KAIRO_SYMBOL_MAP, resolveKairoSymbol } from '../../app/constants/kairoConfig'
+import { KAIRO_SYMBOL_MAP } from '../../app/constants/kairoConfig'
+import { resolveKairoSymbol } from '../../app/utils/kairo'
 
 describe('kairoConfig.ts', () => {
   it('resolves circle symbols correctly', () => {

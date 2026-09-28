@@ -1,4 +1,4 @@
-﻿import { mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
 import InfoList from '../../../app/components/dashboard/InfoList.vue'
@@ -42,9 +42,9 @@ describe('InfoList.vue (app/components/dashboard/InfoList.vue)', () => {
       },
     })
 
-    expect(wrapper.text()).toContain('2026-09-01')
+    expect(wrapper.text()).toContain('2026/09/01')
     expect(wrapper.text()).toContain('第1回 システムメンテナンスのお知らせ')
-    expect(wrapper.text()).toContain('2026-09-05')
+    expect(wrapper.text()).toContain('2026/09/05')
     expect(wrapper.text()).toContain('新機能リリース')
   })
 

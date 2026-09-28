@@ -1,6 +1,6 @@
 /**
  * 改行禁止ワード一括保存 API
- * PUT /api/master/settings/no-break-words
+ * PUT /api/system-settings/no-break-words
  *
  * @description テキスト改行禁止用の単語リストを一括保存・更新します。
  * @permission システム管理者限定
@@ -8,8 +8,8 @@
 
 import { createError, defineEventHandler, readBody } from 'h3'
 
-import { requireMasterUser } from '../../../utils/auth'
-import { prisma } from '../../../utils/prisma'
+import { requireMasterUser } from '../../utils/auth'
+import { prisma } from '../../utils/prisma'
 
 const SETTING_KEY = 'no_break_words'
 

@@ -1,8 +1,9 @@
-﻿import { mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
+import type { Site } from '#shared/types/site'
+
 import MasterSiteList from '../../../app/components/portal/admin/MasterSiteList.vue'
-import type { Site } from '../../../app/types/admin'
 
 describe('MasterSiteList.vue', () => {
   const dummySites: Site[] = [

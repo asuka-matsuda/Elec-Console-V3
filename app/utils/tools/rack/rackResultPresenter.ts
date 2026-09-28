@@ -5,9 +5,9 @@
  */
 
 import { BADGE_PRESETS } from '~/constants/badgeConfig'
-import { getToolError } from '~/constants/toolErrorConstants'
 import type { ResultDetailItem, ResultPanelStatus } from '~/types/components'
 import type { RackCalcResult, RackTierResult } from '~/utils/tools/rack/rackCalcLogic'
+import { getToolError } from '~/utils/tools/toolError'
 
 interface RackTierPanelViewModel {
   layers: 1 | 2

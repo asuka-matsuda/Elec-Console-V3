@@ -7,8 +7,7 @@
 import type { MaybeRef } from 'vue'
 import { computed, toValue } from 'vue'
 
-import { useRoute, useState } from '#app'
-import { useApi } from '~/composables/useApi'
+import { useNuxtApp, useRoute, useState } from '#app'
 import { STATE_KEYS } from '~/constants/storageKeys'
 import { applyNoBreakToText } from '~/utils/noBreak'
 
@@ -76,7 +75,7 @@ export function useNoBreakWords(explicitSiteId?: MaybeRef<string | null | undefi
 
   const getApiSafe = () => {
     try {
-      return useApi().$api
+      return useNuxtApp().$api
     }
     catch {
       return null
@@ -169,7 +168,7 @@ export function useNoBreakWords(explicitSiteId?: MaybeRef<string | null | undefi
         }
       }
       else {
-        const res = await $api<{ success: boolean, words: string[] }>('/api/master/settings/no-break-words', {
+        const res = await $api<{ success: boolean, words: string[] }>('/api/system-settings/no-break-words', {
           method: 'PUT',
           body: { words: newWords },
         })

@@ -2,8 +2,9 @@ import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
 
+import type { User } from '#shared/types/auth'
+
 import TabAdminUsers from '../../../app/components/portal/admin/TabAdminUsers.vue'
-import type { User } from '../../../app/types/auth'
 
 const mockUsers = ref<User[]>([
   { id: 'user-01', loginId: 'yamada', firstName: '太郎', lastName: '山田', role: 'admin', requirePasswordReset: false },

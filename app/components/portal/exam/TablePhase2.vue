@@ -197,6 +197,8 @@ const handleConfirm = (circuit: CircuitItem) => {
         :locked-reason="isCircuitLocked(circuit) ? '幹線未完了' : 'P1未了'"
         :is-completed="isConfirmed(circuit)"
         :is-loading="Boolean(isActionLoading[circuit.id])"
+        :next-phase-path="`/portal/${circuit.siteId}/phase3?kei_to=${encodeURIComponent(circuit.keiTo || '幹線')}&targetCircuit=${encodeURIComponent(circuit.id)}`"
+        next-phase-label="P3へ"
         @confirm="handleConfirm(circuit)"
         @clear="handleClearLocally(circuit)"
       >

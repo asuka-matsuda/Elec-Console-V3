@@ -3,10 +3,13 @@ import { ref } from 'vue'
 
 import type { CircuitItem } from '#shared/types/circuit'
 
-import { usePhase1Exam } from '../../app/composables/portal/phase/usePhase1Exam'
-import { usePhase2Exam } from '../../app/composables/portal/phase/usePhase2Exam'
-import { usePhase3Exam } from '../../app/composables/portal/phase/usePhase3Exam'
-import { usePhaseExamBase } from '../../app/composables/portal/phase/usePhaseExamBase'
+import {
+  usePhase1Exam,
+  usePhase2Exam,
+  usePhase3Exam,
+  usePhaseExam,
+  usePhaseExamBase,
+} from '../../app/composables/portal/phase/usePhaseExam'
 
 // モック
 vi.mock('../../app/composables/useAuth', () => ({
@@ -177,5 +180,14 @@ describe('usePhase3Exam', () => {
     expect(typeof exam3.confirmPhase3).toBe('function')
     expect(typeof exam3.clearPhase3).toBe('function')
     expect(exam3.phaseNumber).toBe(3)
+  })
+})
+
+describe('usePhaseExam', () => {
+  it('usePhaseExamBase のエイリアスとして正しく機能すること', () => {
+    const exam = usePhaseExam('site-1', '幹線', 1)
+
+    expect(typeof exam.confirmPhase1).toBe('function')
+    expect(exam.phaseNumber).toBe(1)
   })
 })

@@ -3,11 +3,10 @@
  * Select
  * [Atoms] キーボード操作や画面外へのはみ出し防止機能に対応した、カスタムのセレクトボックスコンポーネント。
  */
-import { type ComponentPublicInstance, computed, inject, nextTick, ref, toRef, watch } from 'vue'
+import { onClickOutside } from '@vueuse/core'
+import { computed, inject, ref, watch } from 'vue'
 
-import { useClickOutside } from '~/composables/useClickOutside'
 import { useFloatingPlacement } from '~/composables/useFloatingPlacement'
-import { useListKeyboardNav } from '~/composables/useListKeyboardNav'
 import { FORM_GROUP_KEY } from '~/constants/injectionKeys'
 import type { SelectOption, SelectProps } from '~/types/components'
 
@@ -39,10 +38,9 @@ const isError = computed(() => props.error || (formGroup?.hasError.value ?? fals
 const triggerRef = ref<HTMLButtonElement | null>(null)
 const selectRef = ref<HTMLElement | null>(null)
 const dropdownRef = ref<HTMLElement | null>(null)
-const optionRefs = ref<HTMLElement[]>([])
 const isOpen = ref(false)
 
-useClickOutside(selectRef, () => {
+onClickOutside(selectRef, () => {
   isOpen.value = false
 }, {
   ignore: [dropdownRef],
@@ -97,18 +95,6 @@ const handleClear = () => {
   triggerRef.value?.focus()
 }
 
-const {
-  focusedIndex,
-  resetFocus,
-  handleKeydown,
-} = useListKeyboardNav<SelectOption<T>>({
-  options: computed(() => props.options),
-  isOpen,
-  onSelect: selectOption,
-  onClear: handleClear,
-  disabled: toRef(props, 'disabled'),
-})
-
 const selectedOption = computed(() => {
   return props.options.find(opt => opt.value === model.value)
 })
@@ -138,40 +124,16 @@ const toggleDropdown = () => {
   isOpen.value = !isOpen.value
 }
 
-// ドロップダウン内のキーボードスクロール追従
-watch(focusedIndex, async (newIndex) => {
-  if (newIndex >= 0 && isOpen.value) {
-    await nextTick()
-    const targetEl = optionRefs.value[newIndex]
-
-    targetEl?.scrollIntoView({ block: 'nearest' })
-  }
-})
-
 watch(isOpen, (newVal) => {
   if (newVal) {
     calculatePlacement()
-    const index = props.options.findIndex(opt => opt.value === model.value)
-
-    resetFocus(index)
-  }
-  else {
-    resetFocus(-1)
-    optionRefs.value = []
   }
 })
 
-const setOptionRef = (el: Element | ComponentPublicInstance | null, index: number) => {
-  if (el) {
-    optionRefs.value[index] = (el instanceof HTMLElement ? el : (el as ComponentPublicInstance).$el) as HTMLElement
-  }
-}
-
-const getOptionClasses = (option: SelectOption<T>, index: number) => [
+const getOptionClasses = (option: SelectOption<T>) => [
   'relative z-[1] overflow-hidden py-[0.4em] px-[0.8em] custom-select__option',
   {
     'is-active': model.value === option.value,
-    'is-focused': index === focusedIndex.value,
     'is-disabled': option.disabled,
   },
 ]
@@ -216,7 +178,6 @@ defineExpose({
       }"
       :disabled="disabled"
       @click="toggleDropdown"
-      @keydown="handleKeydown"
     >
       <slot name="selected" :option="selectedOption" :label="displayLabel">
         <span class="flex-1 text-left custom-select__label">{{ displayLabel }}</span>
@@ -249,10 +210,9 @@ defineExpose({
           :style="syncedDropdownStyle"
         >
           <li
-            v-for="(option, index) in options"
+            v-for="option in options"
             :key="String(option.value)"
-            :ref="(el) => setOptionRef(el, index)"
-            :class="getOptionClasses(option, index)"
+            :class="getOptionClasses(option)"
             @click="selectOption(option)"
           >
             <slot name="option" :option="option" :is-active="model === option.value">

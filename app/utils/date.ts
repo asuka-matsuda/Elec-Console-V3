@@ -2,11 +2,33 @@
  * 日付・日時フォーマット関連の共通ユーティリティ
  */
 
-export const formatDate = (date: unknown, fallback = '-'): string => {
-  if (!date) return fallback
-  const d = date instanceof Date ? date : new Date(String(date))
+/**
+ * 様々な入力（Date、ISO文字列、YYYY-MM-DD、YYYY/MM/DD、YYYY.MM.DD）を安全に Date に変換する
+ */
+export const parseDateSafe = (date: unknown): Date | null => {
+  if (!date) return null
+  if (date instanceof Date) {
+    return isNaN(date.getTime()) ? null : date
+  }
 
-  if (isNaN(d.getTime())) return fallback
+  const str = String(date).trim()
+
+  if (!str) return null
+
+  // YYYY.MM.DD 形式を正規化
+  const normalized = str.includes('.') && /^\d{4}\.\d{1,2}\.\d{1,2}/.test(str)
+    ? str.replace(/\./g, '-')
+    : str
+
+  const d = new Date(normalized)
+
+  return isNaN(d.getTime()) ? null : d
+}
+
+export const formatDate = (date: unknown, fallback = '-'): string => {
+  const d = parseDateSafe(date)
+
+  if (!d) return fallback
 
   const y = d.getFullYear()
   const m = String(d.getMonth() + 1).padStart(2, '0')
@@ -20,10 +42,9 @@ export const formatDateTime = (
   fallback = '-',
   options: { withSeconds?: boolean } = {},
 ): string => {
-  if (!date) return fallback
-  const d = date instanceof Date ? date : new Date(String(date))
+  const d = parseDateSafe(date)
 
-  if (isNaN(d.getTime())) return fallback
+  if (!d) return fallback
 
   const y = d.getFullYear()
   const m = String(d.getMonth() + 1).padStart(2, '0')
@@ -41,10 +62,9 @@ export const formatDateTime = (
 }
 
 export const formatShortDateTime = (date: unknown, fallback = '-'): string => {
-  if (!date) return fallback
-  const d = date instanceof Date ? date : new Date(String(date))
+  const d = parseDateSafe(date)
 
-  if (isNaN(d.getTime())) return fallback
+  if (!d) return fallback
 
   const m = String(d.getMonth() + 1).padStart(2, '0')
   const day = String(d.getDate()).padStart(2, '0')
@@ -55,10 +75,9 @@ export const formatShortDateTime = (date: unknown, fallback = '-'): string => {
 }
 
 export const formatTime = (date: unknown, fallback = '-'): string => {
-  if (!date) return fallback
-  const d = date instanceof Date ? date : new Date(String(date))
+  const d = parseDateSafe(date)
 
-  if (isNaN(d.getTime())) return fallback
+  if (!d) return fallback
 
   const h = String(d.getHours()).padStart(2, '0')
   const min = String(d.getMinutes()).padStart(2, '0')
@@ -67,12 +86,27 @@ export const formatTime = (date: unknown, fallback = '-'): string => {
 }
 
 /**
- * Date オブジェクトを YYYY-MM-DD 形式の文字列（<input type="date"> 用）に変換する
+ * Date オブジェクトまたは日付文字列を YYYY-MM-DD 形式の文字列（<input type="date"> 用）に変換する
  */
-export const formatToDateInputString = (date: Date = new Date()): string => {
-  const y = date.getFullYear()
-  const m = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
+export const formatToDateInputString = (...args: [date?: unknown, fallback?: string]): string => {
+  const [date, fallback = ''] = args
+
+  if (args.length === 0) {
+    const now = new Date()
+    const y = now.getFullYear()
+    const m = String(now.getMonth() + 1).padStart(2, '0')
+    const day = String(now.getDate()).padStart(2, '0')
+
+    return `${y}-${m}-${day}`
+  }
+
+  const d = parseDateSafe(date)
+
+  if (!d) return fallback
+
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
 
   return `${y}-${m}-${day}`
 }
@@ -80,7 +114,7 @@ export const formatToDateInputString = (date: Date = new Date()): string => {
 /**
  * 今日の日付文字列を YYYY-MM-DD 形式（<input type="date"> 用）で取得する
  */
-export const getTodayDateInput = (): string => formatToDateInputString()
+export const getTodayDateInput = (): string => formatToDateInputString(new Date())
 
 /**
  * Date オブジェクトを YYYY-MM-DDTHH:mm 形式の文字列に変換する

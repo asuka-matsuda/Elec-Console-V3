@@ -1,11 +1,8 @@
 import { describe, expect, it } from 'vitest'
 
-import type { User } from '../../app/types/auth'
-import {
-  getAssignedWorkerNames,
-  getSiteStatusColor,
-  getSiteStatusLabel,
-} from '../../app/utils/portal'
+import type { User } from '#shared/types/auth'
+
+import { getAssignedWorkerNames } from '../../app/utils/portal'
 import { getPhase2Threshold } from '../../app/utils/souden'
 import {
   isPhase1Complete,
@@ -15,26 +12,6 @@ import {
 } from '../../shared/utils/soudenExam'
 
 describe('portal utils', () => {
-  describe('getSiteStatusLabel', () => {
-    it('should return Japanese label for each status', () => {
-      expect(getSiteStatusLabel('planning')).toBe('計画中')
-      expect(getSiteStatusLabel('in_progress')).toBe('進行中')
-      expect(getSiteStatusLabel('completed')).toBe('完了')
-      expect(getSiteStatusLabel('on_hold')).toBe('保留')
-      expect(getSiteStatusLabel('unknown')).toBe('不明')
-    })
-  })
-
-  describe('getSiteStatusColor', () => {
-    it('should return corresponding BadgeColor for each status', () => {
-      expect(getSiteStatusColor('planning')).toBe('var(--color-text-muted)')
-      expect(getSiteStatusColor('in_progress')).toBe('var(--color-status-warning)')
-      expect(getSiteStatusColor('completed')).toBe('var(--color-status-success)')
-      expect(getSiteStatusColor('on_hold')).toBe('var(--color-status-danger)')
-      expect(getSiteStatusColor('unknown')).toBe('var(--color-text-muted)')
-    })
-  })
-
   describe('getAssignedWorkerNames', () => {
     const mockUsers: User[] = [
       {

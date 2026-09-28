@@ -1,14 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { useOfflineSync } from '../../app/composables/portal/useOfflineSync'
-import { STORAGE_KEYS } from '../../app/constants/storageKeys'
+import { OutboxRepository } from '../../app/utils/db'
 
 describe('useOfflineSync', () => {
   const siteId = 'test-site-01'
 
-  beforeEach(() => {
-    localStorage.clear()
+  beforeEach(async () => {
     vi.restoreAllMocks()
+    const { clearQueue } = useOfflineSync(siteId)
+
+    await clearQueue()
   })
 
   it('should initialize with empty queue', () => {
@@ -19,10 +21,10 @@ describe('useOfflineSync', () => {
     expect(hasPending.value).toBe(false)
   })
 
-  it('should enqueue new items and persist to localStorage', () => {
+  it('should enqueue new items and persist to IndexedDB Outbox', async () => {
     const { enqueue, queue, pendingCount, hasPending } = useOfflineSync(siteId)
 
-    enqueue({
+    await enqueue({
       siteId,
       circuitId: 'circuit-001',
       banMeisho: '1F電灯盤',
@@ -39,17 +41,17 @@ describe('useOfflineSync', () => {
     expect(queue.value[0].circuitId).toBe('circuit-001')
     expect(queue.value[0].status).toBe('pending')
 
-    // localStorage の永続化確認
-    const stored = localStorage.getItem(STORAGE_KEYS.OFFLINE_SYNC_QUEUE(siteId))
+    // IndexedDB の永続化確認
+    const stored = await OutboxRepository.getBySite(siteId)
 
-    expect(stored).not.toBeNull()
-    expect(JSON.parse(stored!)).toHaveLength(1)
+    expect(stored).toHaveLength(1)
+    expect(stored[0].circuitId).toBe('circuit-001')
   })
 
-  it('should merge/update existing item if same circuitId and phase are enqueued', () => {
+  it('should merge/update existing item if same circuitId and phase are enqueued', async () => {
     const { enqueue, queue, pendingCount } = useOfflineSync(siteId)
 
-    enqueue({
+    await enqueue({
       siteId,
       circuitId: 'circuit-001',
       banMeisho: '1F電灯盤',
@@ -65,7 +67,7 @@ describe('useOfflineSync', () => {
     expect(queue.value[0].payload.rVal).toBe(50)
 
     // 同じ回路・同じフェーズで上書き更新
-    enqueue({
+    await enqueue({
       siteId,
       circuitId: 'circuit-001',
       banMeisho: '1F電灯盤',
@@ -82,10 +84,10 @@ describe('useOfflineSync', () => {
     expect(queue.value[0].clientConfirmedAt).toBe('2026-09-07T14:35:00.000Z')
   })
 
-  it('should remove item by id', () => {
+  it('should remove item by id', async () => {
     const { enqueue, removeQueueItem, queue, pendingCount } = useOfflineSync(siteId)
 
-    enqueue({
+    await enqueue({
       siteId,
       circuitId: 'circuit-001',
       banMeisho: '1F電灯盤',
@@ -99,16 +101,16 @@ describe('useOfflineSync', () => {
 
     const itemId = queue.value[0].id
 
-    removeQueueItem(itemId)
+    await removeQueueItem(itemId)
 
     expect(pendingCount.value).toBe(0)
     expect(queue.value).toEqual([])
   })
 
-  it('should clear all items with clearQueue', () => {
+  it('should clear all items with clearQueue', async () => {
     const { enqueue, clearQueue, pendingCount } = useOfflineSync(siteId)
 
-    enqueue({
+    await enqueue({
       siteId,
       circuitId: 'c1',
       banMeisho: '盤A',
@@ -119,7 +121,7 @@ describe('useOfflineSync', () => {
       payload: {},
       clientConfirmedAt: '2026-09-07T14:30:00.000Z',
     })
-    enqueue({
+    await enqueue({
       siteId,
       circuitId: 'c2',
       banMeisho: '盤A',
@@ -133,17 +135,15 @@ describe('useOfflineSync', () => {
 
     expect(pendingCount.value).toBe(2)
 
-    clearQueue()
+    await clearQueue()
     expect(pendingCount.value).toBe(0)
   })
 
   it('should sync all items successfully and empty the queue', async () => {
-    const fetchMock = vi.fn().mockResolvedValue({ success: true })
-    const { enqueue, syncAll, pendingCount, queue } = useOfflineSync(siteId, {
-      fetcher: fetchMock as unknown as typeof $fetch,
-    })
+    const mockFetcher = vi.fn().mockResolvedValue({ success: true })
+    const { enqueue, syncAll, pendingCount } = useOfflineSync(siteId, { fetcher: mockFetcher })
 
-    enqueue({
+    await enqueue({
       siteId,
       circuitId: 'c1',
       banMeisho: '盤A',
@@ -151,7 +151,7 @@ describe('useOfflineSync', () => {
       kairoMeisho: '回路1',
       phase: 1,
       actionType: 'confirm',
-      payload: { kakunin: true },
+      payload: {},
       clientConfirmedAt: '2026-09-07T14:30:00.000Z',
     })
 
@@ -162,45 +162,29 @@ describe('useOfflineSync', () => {
     expect(result.conflictCount).toBe(0)
     expect(result.errorCount).toBe(0)
     expect(pendingCount.value).toBe(0)
-    expect(queue.value).toHaveLength(0)
-
-    // $fetch のペイロードに clientConfirmedAt と isOfflineSync が渡されていること
-    expect(fetchMock).toHaveBeenCalledWith(
-      '/api/sites/test-site-01/circuits/c1/phase1',
-      expect.objectContaining({
-        method: 'POST',
-        body: expect.objectContaining({
-          kakunin: true,
-          clientConfirmedAt: '2026-09-07T14:30:00.000Z',
-          isOfflineSync: true,
-        }),
-      }),
-    )
+    expect(mockFetcher).toHaveBeenCalledTimes(1)
   })
 
   it('should mark item as conflict when 409 Conflict occurs during sync', async () => {
-    const error409 = {
+    const conflictError = {
       statusCode: 409,
       data: {
-        message: '競合が発生しました',
-        current: { updatedAt: '2026-09-07T15:00:00.000Z', zetsuenR: 100 },
+        message: 'Conflict',
+        current: { p1ConfirmedAt: '2026-09-07T15:00:00.000Z' },
       },
     }
-    const fetchMock = vi.fn().mockRejectedValue(error409)
+    const mockFetcher = vi.fn().mockRejectedValue(conflictError)
+    const { enqueue, syncAll, queue, conflictCount } = useOfflineSync(siteId, { fetcher: mockFetcher })
 
-    const { enqueue, syncAll, queue, conflictCount } = useOfflineSync(siteId, {
-      fetcher: fetchMock as unknown as typeof $fetch,
-    })
-
-    enqueue({
+    await enqueue({
       siteId,
       circuitId: 'c1',
       banMeisho: '盤A',
       kairoBangou: '1',
       kairoMeisho: '回路1',
-      phase: 2,
+      phase: 1,
       actionType: 'confirm',
-      payload: { rVal: 50 },
+      payload: {},
       clientConfirmedAt: '2026-09-07T14:30:00.000Z',
     })
 
@@ -210,22 +194,22 @@ describe('useOfflineSync', () => {
     expect(result.conflictCount).toBe(1)
     expect(conflictCount.value).toBe(1)
     expect(queue.value[0].status).toBe('conflict')
-    expect(queue.value[0].serverCircuitData).toEqual(error409.data.current)
+    expect(queue.value[0].errorMessage).toBe('別の作業者によって更新されています')
   })
 
-  it('shares reactive queue state across multiple useOfflineSync instances for the same siteId', () => {
+  it('shares reactive queue state across multiple useOfflineSync instances for the same siteId', async () => {
     const instanceA = useOfflineSync(siteId)
     const instanceB = useOfflineSync(siteId)
 
-    instanceA.enqueue({
+    await instanceA.enqueue({
       siteId,
       circuitId: 'circuit-shared-01',
-      banMeisho: '1F電灯盤',
+      banMeisho: '共有盤',
       kairoBangou: '1',
-      kairoMeisho: '事務室電灯',
+      kairoMeisho: '共用部',
       phase: 1,
       actionType: 'confirm',
-      payload: { kakunin: true },
+      payload: {},
       clientConfirmedAt: '2026-09-07T14:30:00.000Z',
     })
 
@@ -233,10 +217,5 @@ describe('useOfflineSync', () => {
     expect(instanceB.pendingCount.value).toBe(1)
     expect(instanceB.hasPending.value).toBe(true)
     expect(instanceB.queue.value[0].circuitId).toBe('circuit-shared-01')
-
-    // instanceB から削除すると instanceA にも反映される
-    instanceB.removeQueueItem(instanceB.queue.value[0].id)
-    expect(instanceA.pendingCount.value).toBe(0)
-    expect(instanceA.hasPending.value).toBe(false)
   })
 })

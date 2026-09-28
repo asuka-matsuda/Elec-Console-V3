@@ -8,12 +8,12 @@
 import type { Ref } from 'vue'
 import { computed, ref, unref, watch } from 'vue'
 
+import { useNuxtApp } from '#app'
 import type { OperationLogItem, OperationLogsResponse } from '#shared/types/operationLog'
-import { useApi } from '~/composables/useApi'
 import { parseToAppException } from '~/utils/errors'
 
 export function useOperationLogs(siteIdRef: Ref<string> | string) {
-  const { $api } = useApi()
+  const { $api } = useNuxtApp()
   const logs = ref<OperationLogItem[]>([])
   const availableWorkers = ref<string[]>([])
   const availableActions = ref<string[]>([])

@@ -249,7 +249,7 @@ export function calculateConduitSize(
 /**
  * MathJax用の数式データを生成する
  */
-export function generateMathData(
+export function generateConduitMathData(
   conduitCategory: string,
   inputCables: CableInputItem[],
   res: ConduitCalcResult | null,

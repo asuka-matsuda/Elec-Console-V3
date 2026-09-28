@@ -4,7 +4,7 @@
  * 各ボルトサイズ、機器端子、銅帯等の推奨締付トルクを定義。
  */
 
-export const torqueData = [
+const torqueData = [
   {
     category: '一般ボルト',
     reference: 'JIS B 1180 強度区分4.8相当',

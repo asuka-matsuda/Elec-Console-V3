@@ -2,8 +2,9 @@ import { mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
 
+import type { Site } from '#shared/types/site'
+
 import TabSiteExcelIntegration from '../../../app/components/portal/admin/TabSiteExcelIntegration.vue'
-import type { Site } from '../../../app/types/admin'
 
 const mockHandleFileSelect = vi.fn()
 const mockHandleMergeSync = vi.fn()

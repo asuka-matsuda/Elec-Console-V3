@@ -12,3 +12,8 @@ import type { FormGroupContext } from '~/types/components'
  * FormGroup コンポーネントのラベル・エラー・ID状態共有キー
  */
 export const FORM_GROUP_KEY: InjectionKey<FormGroupContext> = Symbol('FormGroupContext')
+
+/**
+ * Table コンポーネントからの改行禁止フォーマッター共有キー
+ */
+export const TABLE_NO_BREAK_KEY: InjectionKey<(val: unknown) => unknown> = Symbol('TableNoBreakContext')

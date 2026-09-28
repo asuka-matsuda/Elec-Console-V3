@@ -4,8 +4,8 @@ import type { CircuitItem } from '#shared/types/circuit'
 
 import { useExamReportPrint } from '../../app/composables/portal/useExamReportPrint'
 
-vi.mock('../../app/composables/useApi', () => ({
-  useApi: () => ({
+vi.mock('#app', () => ({
+  useNuxtApp: () => ({
     $api: vi.fn(),
   }),
 }))

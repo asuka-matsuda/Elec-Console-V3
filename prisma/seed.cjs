@@ -5,7 +5,7 @@ const path = require('path')
 const prisma = new PrismaClient()
 
 async function main() {
-  const dataDir = path.resolve(__dirname, '../server/data')
+  const dataDir = path.resolve(__dirname, './data')
 
   // 1. マスター管理者の初期ブートストラップ（未存在時のみ作成し、既存データは一切上書きしない）
   const usersPath = path.join(dataDir, 'users.json')

@@ -5,10 +5,10 @@
  */
 
 import { cableData } from '~/constants/data/cableData'
-import { getToolError } from '~/constants/toolErrorConstants'
 import type { CableData } from '~/types/database'
 import type { HistoryEntry } from '~/types/tools'
 import type { VoltageCalcInputs, VoltageCalcResult } from '~/types/voltage'
+import { getToolError } from '~/utils/tools/toolError'
 import { getVoltageFormFields } from '~/utils/tools/voltage/voltageFormConfig'
 
 /**

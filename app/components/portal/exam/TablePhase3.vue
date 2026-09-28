@@ -177,6 +177,40 @@ const handleConfirm = (circuit: CircuitItem) => {
     isComplete: isAllComplete,
   })
 }
+
+/**
+ * Phase 1 へ戻る（または次の回路へ進む）遷移パスを生成
+ * 現在の回路以降で最初に見つかる未完了回路（P1未確定またはP3未了）、
+ * なければ直後の回路行、または先頭の未完了回路を対象とする
+ */
+const getNextPhase1Path = (circuit: CircuitItem): string => {
+  const list = props.fullCircuits && props.fullCircuits.length > 0
+    ? props.fullCircuits
+    : sortedCircuits.value
+
+  const currentIndex = list.findIndex(c => c.id === circuit.id)
+
+  let nextCircuit: CircuitItem | undefined
+
+  if (currentIndex !== -1) {
+    // 1. 現在行より後ろにある未完了回路を検索
+    nextCircuit = list.slice(currentIndex + 1).find(c => !c.p1ConfirmedAt || !c.p3IsComplete)
+
+    // 2. なければ現在行の直後の回路
+    if (!nextCircuit && currentIndex + 1 < list.length) {
+      nextCircuit = list[currentIndex + 1]
+    }
+
+    // 3. 末尾なら全体から未完了回路を検索
+    if (!nextCircuit) {
+      nextCircuit = list.find(c => !c.p1ConfirmedAt || !c.p3IsComplete)
+    }
+  }
+
+  const targetId = nextCircuit ? nextCircuit.id : circuit.id
+
+  return `/portal/${circuit.siteId}/phase1?kei_to=${encodeURIComponent(circuit.keiTo || '幹線')}&targetCircuit=${encodeURIComponent(targetId)}`
+}
 </script>
 
 <template>
@@ -252,6 +286,8 @@ const handleConfirm = (circuit: CircuitItem) => {
         :is-completed="isConfirmed(circuit)"
         :is-loading="Boolean(isActionLoading[circuit.id])"
         :disabled="hasVoltageOutOfRangeError(circuit)"
+        :next-phase-path="getNextPhase1Path(circuit)"
+        next-phase-label="P1へ"
         @confirm="handleConfirm(circuit)"
         @clear="handleClearLocally(circuit)"
       />

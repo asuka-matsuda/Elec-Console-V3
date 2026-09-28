@@ -12,7 +12,7 @@ import { mapRackToHistory } from '~/utils/tools/rack/historyMapper'
 import type { RackCalcResult } from '~/utils/tools/rack/rackCalcLogic'
 import {
   calculateRackSize,
-  generateMathData,
+  generateRackMathData,
 } from '~/utils/tools/rack/rackCalcLogic'
 import type { RackInputs } from '~/utils/tools/rack/rackMapper'
 import { mapFormToRackCalcInputs } from '~/utils/tools/rack/rackMapper'
@@ -107,7 +107,7 @@ export function useRackCalculator() {
   const mathSteps = computed(() => {
     const logicInputs = mapFormToRackCalcInputs(inputs.value)
 
-    return generateMathData(logicInputs, result.value)
+    return generateRackMathData(logicInputs, result.value)
   })
 
   const isSaveDisabled = computed(() =>

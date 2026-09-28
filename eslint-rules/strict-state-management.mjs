@@ -15,7 +15,7 @@ export default {
       description: 'Enforce strict state management and API client conventions in Nuxt/Vue app',
     },
     messages: {
-      noRawFetch: '素の $fetch 呼び出しは禁止されています。認証トークン自動付与・401エラーハンドリング・AppException正規化を保証するため、useApi().$api を使用してください。',
+      noRawFetch: '素の $fetch 呼び出しは禁止されています。認証トークン自動付与・401エラーハンドリング・AppException正規化を保証するため、useNuxtApp().$api を使用してください。',
       noRawStateKey: 'useState に文字列リテラルを直接指定することは禁止されています。キーの重複やタイポを防ぐため、app/constants/storageKeys.ts の STATE_KEYS を使用してください。',
       noApiInComponent: 'Vue コンポーネント内での直接の API 通信は禁止されています。表示層の責務を保つため、Composable 経由でデータを取得・操作してください。',
     },

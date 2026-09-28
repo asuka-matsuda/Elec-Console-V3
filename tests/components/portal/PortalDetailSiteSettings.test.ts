@@ -2,8 +2,9 @@ import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
 
+import type { Site } from '#shared/types/site'
+
 import DetailSiteSettings from '../../../app/components/portal/admin/DetailSiteSettings.vue'
-import type { Site } from '../../../app/types/admin'
 
 vi.mock('~/composables/admin/useAdminUsers', () => ({
   useAdminUsers: () => ({

@@ -5,9 +5,9 @@
  * この設定ファイルに定義を追加するだけでコンポーネントを変更せずに拡張可能です。
  */
 
-type KairoShapeType = 'circle' | 'ellipse' | 'rect' | 'polygon'
+export type KairoShapeType = 'circle' | 'ellipse' | 'rect' | 'polygon'
 
-interface KairoSymbolDefinition {
+export interface KairoSymbolDefinition {
   type: KairoShapeType
   isDouble?: boolean
   /** 多角形（polygon）の場合の頂点座標（40x40 viewBox 基準） */
@@ -60,13 +60,4 @@ export const KAIRO_SYMBOL_MAP: Record<string, KairoSymbolDefinition> = {
     type: 'polygon',
     points: '20,2 36,11 36,29 20,38 4,29 4,11',
   },
-}
-
-/**
- * 回路記号文字列から対応する形状定義を解決する純粋関数
- */
-export function resolveKairoSymbol(kigou?: string | null): KairoSymbolDefinition | null {
-  if (!kigou) return null
-
-  return KAIRO_SYMBOL_MAP[kigou.trim()] ?? null
 }

@@ -5,8 +5,9 @@
  * @param toolType ツール識別子 ('voltage' | 'conduit' | 'rack' | 'weight')
  */
 
-import { useLocalStorage } from '@vueuse/core'
-import { computed } from 'vue'
+import { useSessionStorage } from '@vueuse/core'
+import { computed, getCurrentInstance } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
 
 import { useCalcHistory } from '~/composables/tools/useCalcHistory'
 import { useModal } from '~/composables/useModal'
@@ -27,11 +28,25 @@ export function useToolPage<InputType, ResultType>(
   },
 ) {
   const { saveHistory } = useCalcHistory(STORAGE_KEYS.TOOL_HISTORY(toolId))
-  const inputs = useLocalStorage<InputType>(
-    STORAGE_KEYS.TOOL_INPUTS(toolId),
+  const sessionKey = `tool-inputs-${toolId}`
+  const inputs = useSessionStorage<InputType>(
+    sessionKey,
     defaultInputs,
     { mergeDefaults: true },
   )
+
+  if (getCurrentInstance()) {
+    try {
+      onBeforeRouteLeave(() => {
+        if (typeof window !== 'undefined') {
+          sessionStorage.removeItem(sessionKey)
+        }
+      })
+    }
+    catch {
+      // Non-router / test context fallback
+    }
+  }
   const result = computed<ResultType | null>(() => {
     try {
       return calculateFn(inputs.value)
@@ -70,6 +85,9 @@ export function useToolPage<InputType, ResultType>(
 
   const resetInputs = () => {
     inputs.value = JSON.parse(JSON.stringify(defaultInputs))
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem(sessionKey)
+    }
   }
 
   const openResetModal = async (): Promise<boolean> => {

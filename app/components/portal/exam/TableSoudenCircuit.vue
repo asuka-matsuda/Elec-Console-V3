@@ -138,6 +138,24 @@ const getWorkerCellData = (circuit: CircuitItem, key: string) => {
   &.is-highlighted {
     background-color: var(--color-selection-bg);
     outline: 2px solid var(--color-selection-outline);
+    animation: row-pulse-highlight 2.5s ease-out;
+  }
+}
+
+@keyframes row-pulse-highlight {
+  0% {
+    outline-color: var(--color-status-success, #22c55e);
+    box-shadow: inset 0 0 0 2px var(--color-status-success, #22c55e), 0 0 14px rgb(34 197 94 / 45%);
+  }
+
+  50% {
+    outline-color: var(--color-selection-outline);
+    box-shadow: inset 0 0 0 1px var(--color-selection-outline);
+  }
+
+  100% {
+    outline-color: var(--color-selection-outline);
+    box-shadow: none;
   }
 }
 

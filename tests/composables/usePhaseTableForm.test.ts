@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 import type { CircuitItem } from '#shared/types/circuit'
 
-import { usePhaseTableForm } from '../../../app/composables/portal/phase/usePhaseTableForm'
+import { usePhaseTableForm } from '../../app/composables/portal/phase/usePhaseTableForm'
 
 describe('usePhaseTableForm', () => {
   const sampleCircuits: Partial<CircuitItem>[] = [

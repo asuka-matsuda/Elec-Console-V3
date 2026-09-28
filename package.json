@@ -16,6 +16,8 @@
     "format": "eslint . --fix && stylelint \"**/*.{vue,css,scss}\" --fix"
   },
   "dependencies": {
+    "@fontsource/noto-sans-jp": "^5.3.0",
+    "@fontsource/roboto-mono": "^5.3.0",
     "@fullcalendar/core": "^6.1.15",
     "@fullcalendar/daygrid": "^6.1.15",
     "@fullcalendar/interaction": "^6.1.15",
@@ -28,6 +30,7 @@
     "@vueuse/nuxt": "^14.4.0",
     "exceljs": "^4.4.0",
     "glob": "^13.0.6",
+    "idb": "^8.0.3",
     "jszip": "^3.10.1",
     "katex": "^0.18.1",
     "nuxt": "^4.5.1",
@@ -51,6 +54,7 @@
     "eslint": "^10.8.0",
     "eslint-plugin-simple-import-sort": "^14.0.0",
     "eslint-plugin-vue": "^10.10.0",
+    "fake-indexeddb": "^6.2.5",
     "happy-dom": "^20.11.2",
     "jsdoc-type-pratt-parser": "^8.0.0",
     "oxc-parser": "^0.147.0",

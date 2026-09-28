@@ -7,16 +7,16 @@
 import type { MaybeRefOrGetter } from 'vue'
 import { computed, ref, toValue } from 'vue'
 
+import { useNuxtApp } from '#app'
 import type {
   MeasurementDevice,
   MeasurementDevicesApiResponse,
   SelectedMeasurementDevices,
 } from '#shared/types/measurementDevice'
-import { useApi } from '~/composables/useApi'
 import type { SelectedDevicesMap } from '~/utils/examReportExcel'
 
 export function useMeasurementDevices(siteIdSource: MaybeRefOrGetter<string>) {
-  const { $api } = useApi()
+  const { $api } = useNuxtApp()
 
   const siteId = computed(() => toValue(siteIdSource))
   const devices = ref<MeasurementDevice[]>([])

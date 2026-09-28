@@ -5,7 +5,7 @@
  */
 import { computed } from 'vue'
 
-import { resolveKairoSymbol } from '~/constants/kairoConfig'
+import { resolveKairoSymbol } from '~/utils/kairo'
 
 interface PortalCircuitSymbolProps {
   kigou?: string | null

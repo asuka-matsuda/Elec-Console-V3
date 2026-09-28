@@ -5,13 +5,12 @@
  * @param siteId 対象現場ID
  */
 
-import { useAsyncData, useState } from '#app'
+import { useAsyncData, useNuxtApp, useState } from '#app'
 import {
   type CalendarEvent,
   type CalendarSettings,
   DEFAULT_CALENDAR_EVENT_TYPES,
 } from '#shared/types/calendar'
-import { useApi } from '~/composables/useApi'
 import { STATE_KEYS } from '~/constants/storageKeys'
 
 export function useCalendar(siteId: string) {
@@ -23,7 +22,7 @@ export function useCalendar(siteId: string) {
     STATE_KEYS.CALENDAR_SETTINGS(siteId),
     () => null,
   )
-  const { $api } = useApi()
+  const { $api } = useNuxtApp()
 
   const { refresh: fetchEvents } = useAsyncData(
     `fetch-events-${siteId}`,

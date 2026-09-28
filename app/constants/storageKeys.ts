@@ -1,19 +1,13 @@
 /**
- * LocalStorage および useState のキー名定義
- * マジックストリングを防止し、キーの重複やタイポを防ぐために一元管理します。
+ * Cookie および useState のキー名定義
+ * LocalStorage は全廃され、永続化には Cookie / IndexedDB / サーバーDB を使用します。
  */
 
 export const STORAGE_KEYS = {
   THEME_MODE: 'elec_theme_mode',
   ANIMATION_ENABLED: 'elec_animation_enabled',
   LAST_SITE_ID: 'last-accessed-site',
-  CACHED_USER: 'elec_cached_user',
-  SERVER_TIME_OFFSET: 'elec_server_time_offset',
-  OFFLINE_SYNC_QUEUE: (siteId: string) => `elec_offline_sync_queue_${siteId}`,
-  TOOL_INPUTS: (toolId: string) => `tool-inputs-${toolId}`,
   TOOL_HISTORY: (toolId: string) => `elec_calc_${toolId}_hist`,
-  PORTAL_TODOS: (siteId: string, loginId: string) =>
-    `elec-todos-${siteId}-${loginId}`,
 } as const
 
 export const STATE_KEYS = {
@@ -35,4 +29,6 @@ export const STATE_KEYS = {
   CALENDAR_SETTINGS: (siteId: string) => `calendar-settings-${siteId}`,
   OFFLINE_SYNC_QUEUE: (siteId: string) => `offline-sync-queue-${siteId}`,
   OFFLINE_SYNC_SYNCING: (siteId: string) => `offline-sync-syncing-${siteId}`,
+  IS_OFFLINE_SESSION: 'is-offline-session',
+  SERVER_TIME_OFFSET: 'server_time_offset',
 } as const

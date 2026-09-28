@@ -15,13 +15,11 @@ import type {
 } from '~/utils/tools/conduit/conduitCalcLogic'
 import {
   calculateConduitSize,
-  generateMathData,
+  generateConduitMathData,
 } from '~/utils/tools/conduit/conduitCalcLogic'
 import { mapConduitToHistory } from '~/utils/tools/conduit/historyMapper'
 
 const uuidv4 = () => crypto.randomUUID()
-
-export type { ConduitInputs }
 
 const defaultInputs: ConduitInputs = {
   conduitCategory: '',
@@ -73,7 +71,7 @@ export function useConduitCalculator() {
     inputs.value.customFillRate = 80
   }
 
-  // VueUseのuseLocalStorageで初期化される際にidが重複しないようにする等の対処は必要に応じて行う
+  // useSessionStorageで初期化される際にidが重複しないようにする等の対処は必要に応じて行う
   if (!inputs.value.inputCables || inputs.value.inputCables.length === 0) {
     inputs.value.inputCables = [
       { id: uuidv4(), category: '', cableIdx: '', count: 1 },
@@ -97,7 +95,7 @@ export function useConduitCalculator() {
   }
 
   const mathSteps = computed(() => {
-    return generateMathData(
+    return generateConduitMathData(
       inputs.value.conduitCategory,
       inputs.value.inputCables,
       result.value,

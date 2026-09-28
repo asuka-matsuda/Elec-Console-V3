@@ -12,6 +12,7 @@ import type {
   EventFormData,
 } from '#shared/types/calendar'
 import { useModal } from '~/composables/useModal'
+import { formatToDateInputString } from '~/utils/date'
 import { parseToAppException } from '~/utils/errors'
 
 interface UseCalendarEventFormOptions {
@@ -60,7 +61,7 @@ export function useCalendarEventForm({
       const d = new Date(endStr)
 
       d.setDate(d.getDate() - 1)
-      finalEnd = d.toISOString().split('T')[0] || ''
+      finalEnd = formatToDateInputString(d)
     }
 
     form.value = {
@@ -91,7 +92,7 @@ export function useCalendarEventForm({
       const d = new Date(calEvent.endStr)
 
       d.setDate(d.getDate() - 1)
-      finalEnd = d.toISOString().split('T')[0] || ''
+      finalEnd = formatToDateInputString(d)
     }
 
     form.value = {
@@ -119,7 +120,7 @@ export function useCalendarEventForm({
         const endDate = new Date(savedData.end)
 
         endDate.setDate(endDate.getDate() + 1)
-        finalEnd = endDate.toISOString().split('T')[0]
+        finalEnd = formatToDateInputString(endDate)
       }
     }
 

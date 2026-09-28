@@ -154,7 +154,7 @@ export function verifyAuthToken(token: string): TokenPayload | null {
  * リクエストの Authorization ヘッダーまたは Cookie から認証トークンを抽出し、
  * 該当するユーザー情報を返します（未認証時・改ざん検知時は null を返す）。
  */
-async function getAuthUser(event: H3Event): Promise<SafeUser | null> {
+export async function getAuthUser(event: H3Event): Promise<SafeUser | null> {
   const authHeader = getHeader(event, 'Authorization')
   const cookieToken = getCookie(event, 'auth_token')
 

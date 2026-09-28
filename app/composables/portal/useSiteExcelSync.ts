@@ -7,8 +7,8 @@
 import type { ComputedRef, Ref } from 'vue'
 import { computed, ref } from 'vue'
 
+import { useNuxtApp } from '#app'
 import type { Site } from '#shared/types/site'
-import { useApi } from '~/composables/useApi'
 import { parseToAppException } from '~/utils/errors'
 
 interface SyncResultInfo {
@@ -32,7 +32,7 @@ interface UseSiteExcelSyncOptions {
  * 現場ポータルの Excel インポート・エクスポート・直接ダウンロードを管理する Composable
  */
 export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
-  const { $api } = useApi()
+  const { $api } = useNuxtApp()
   const { site, getFilePath, onPersistPath } = options
 
   const selectedFile = ref<File | null>(null)

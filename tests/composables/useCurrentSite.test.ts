@@ -1,8 +1,9 @@
 import { describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
 
+import type { Site } from '#shared/types/site'
+
 import { useCurrentSite } from '../../app/composables/portal/useCurrentSite'
-import type { Site } from '../../app/types/admin'
 
 const mockSites = ref<Site[]>([
   {

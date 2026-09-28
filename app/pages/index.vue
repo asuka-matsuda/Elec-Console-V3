@@ -8,6 +8,7 @@ import { computed, ref } from 'vue'
 import type { AnnouncementItem, DashboardData, HistoryItem } from '#shared/types/master'
 import { useAuth } from '~/composables/useAuth'
 import { menuData } from '~/constants/data/menuData'
+import { formatDate } from '~/utils/date'
 
 const { isMaster } = useAuth()
 
@@ -101,7 +102,7 @@ const activeDetail = ref<{ item: AnnouncementItem | HistoryItem, type: DetailTyp
           style="border-bottom: 1px solid var(--color-border)"
         >
           <small style="font-family: var(--font-mono)">
-            {{ activeDetail.item.date }}
+            {{ formatDate(activeDetail.item.date) }}
           </small>
           <Badge
             v-if="'version' in activeDetail.item && activeDetail.item.version"

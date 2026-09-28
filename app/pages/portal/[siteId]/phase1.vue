@@ -5,7 +5,7 @@
  */
 import { computed, onMounted, watch } from 'vue'
 
-import { usePhase1Exam } from '~/composables/portal/phase/usePhase1Exam'
+import { usePhase1Exam } from '~/composables/portal/phase/usePhaseExam'
 
 useHead({ title: 'フェーズ1：回路確認・増締 - Elec-Console' })
 
@@ -36,6 +36,19 @@ watch(
       fetchCircuits()
     }
   },
+)
+
+watch(
+  () => route.query.ban,
+  (newBan) => {
+    if (newBan && typeof newBan === 'string') {
+      selectedBanMeisho.value = newBan
+    }
+    else {
+      selectedBanMeisho.value = 'ALL'
+    }
+  },
+  { immediate: true },
 )
 
 onMounted(() => {

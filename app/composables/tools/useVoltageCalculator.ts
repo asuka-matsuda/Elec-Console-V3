@@ -16,7 +16,7 @@ import {
 import { mapVoltageToHistory } from '~/utils/tools/voltage/historyMapper'
 import { calculateLogic } from '~/utils/tools/voltage/voltageCalcLogic'
 import { getVoltageFormFields } from '~/utils/tools/voltage/voltageFormConfig'
-import { generateMathData } from '~/utils/tools/voltage/voltageFormulaGenerator'
+import { generateVoltageMathData } from '~/utils/tools/voltage/voltageFormulaGenerator'
 import type { VoltageFormState } from '~/utils/tools/voltage/voltageMapper'
 import { mapFormToVoltageCalcInputs } from '~/utils/tools/voltage/voltageMapper'
 
@@ -133,7 +133,7 @@ export function useVoltageCalculator() {
   const calcInputs = computed(() => mapFormToVoltageCalcInputs(form.value))
 
   const mathSteps = computed(() => {
-    return generateMathData(calcInputs.value, calcResult.value) || []
+    return generateVoltageMathData(calcInputs.value, calcResult.value) || []
   })
 
   const isSaveDisabled = computed(() => !calcInputs.value.isReady)

@@ -243,7 +243,7 @@ export function calculateRackSize(
 /**
  * MathJax用の数式ステップデータを生成する
  */
-export function generateMathData(
+export function generateRackMathData(
   inputs: RackCalcInputs,
   result: RackCalcResult | null,
 ): MathStep[] {

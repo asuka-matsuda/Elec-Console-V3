@@ -1,14 +1,15 @@
 /**
- * 現場マスター管理 Composable
+ * 現場マスター管理 Composable (Local-First Architecture)
  *
- * @description 現場一覧の取得・新規作成・更新・削除および選択状態を管理します。
- * @returns sites 現場一覧Ref, fetchSites 取得関数, createSite 登録関数, updateSite 更新関数, deleteSite 削除関数
+ * @description 現場一覧の取得・新規作成・更新・削除および IndexedDB 永続化を管理します。
+ * オフライン環境でも現場一覧や現場設定が瞬時に復元されます。
  */
 
-import { useState } from '#app'
+import { useNuxtApp, useState } from '#app'
 import type { Site, SiteSettings } from '#shared/types/site'
-import { useApi } from '~/composables/useApi'
+import { useAuth } from '~/composables/useAuth'
 import { STATE_KEYS } from '~/constants/storageKeys'
+import { SiteSettingsRepository, SitesRepository } from '~/utils/db'
 
 export function useAdminSites() {
   const sites = useState<Site[]>(STATE_KEYS.ADMIN_SITES, () => [])
@@ -21,9 +22,10 @@ export function useAdminSites() {
     STATE_KEYS.ADMIN_SITES_LOADING,
     () => false,
   )
-  const { $api } = useApi()
+  const { $api } = useNuxtApp()
+  const { getAccurateNowIso } = useAuth()
 
-  // 初期データの取得（多重リクエスト抑止・ロード済みキャッシュ管理）
+  // 初期データの取得 (Local-First: IndexedDB即座読込 -> バックグラウンド同期)
   const fetchSites = async (force = false) => {
     if (isLoaded.value && !force) {
       return { sites: sites.value, siteSettings: siteSettings.value }
@@ -32,17 +34,53 @@ export function useAdminSites() {
       return { sites: sites.value, siteSettings: siteSettings.value }
     }
 
+    isLoading.value = true
+
+    // 1. IndexedDB から即座に読み込み
     try {
-      isLoading.value = true
+      const [localSites, localSettings] = await Promise.all([
+        SitesRepository.getAll(),
+        SiteSettingsRepository.getAll(),
+      ])
+
+      if (localSites && localSites.length > 0) {
+        sites.value = localSites
+        siteSettings.value = localSettings || []
+        isLoaded.value = true
+      }
+    }
+    catch (err) {
+      console.warn('[useAdminSites] Failed to load sites from IndexedDB', err)
+    }
+
+    // 2. ネットワーク経由で最新データを同期
+    try {
       const data = await $api<{ sites: Site[], siteSettings: SiteSettings[] }>(
         '/api/sites',
       )
 
-      sites.value = data.sites || []
-      siteSettings.value = data.siteSettings || []
-      isLoaded.value = true
+      if (data) {
+        sites.value = data.sites || []
+        siteSettings.value = data.siteSettings || []
+        isLoaded.value = true
+
+        // IndexedDB に保存
+        if (data.sites) {
+          await SitesRepository.putAll(data.sites)
+        }
+        if (data.siteSettings) {
+          await SiteSettingsRepository.putAll(data.siteSettings)
+        }
+      }
 
       return data
+    }
+    catch (err: unknown) {
+      // オフライン時はローカルデータがあれば正常扱い
+      if (sites.value.length > 0) {
+        return { sites: sites.value, siteSettings: siteSettings.value }
+      }
+      throw err
     }
     finally {
       isLoading.value = false
@@ -61,6 +99,10 @@ export function useAdminSites() {
 
       sites.value.push(res.site)
       siteSettings.value.push(res.settings)
+      await Promise.all([
+        SitesRepository.put(res.site),
+        SiteSettingsRepository.put(res.settings),
+      ])
     }
     catch (err: unknown) {
       const fetchErr = err as { data?: { message?: string, statusMessage?: string }, message?: string }
@@ -88,11 +130,13 @@ export function useAdminSites() {
 
       if (res.site) {
         sites.value = sites.value.map(s => (s.id === id ? res.site : s))
+        await SitesRepository.put(res.site)
       }
       if (res.settings) {
         siteSettings.value = siteSettings.value.map(set =>
           set.siteId === id ? res.settings : set,
         )
+        await SiteSettingsRepository.put(res.settings)
       }
 
       return res
@@ -113,6 +157,10 @@ export function useAdminSites() {
       await $api(`/api/sites/${id}`, { method: 'DELETE' })
       sites.value = sites.value.filter(s => s.id !== id)
       siteSettings.value = siteSettings.value.filter(s => s.siteId !== id)
+      await Promise.all([
+        SitesRepository.delete(id),
+        SiteSettingsRepository.delete(id),
+      ])
     }
     catch (err: unknown) {
       const fetchErr = err as { data?: { message?: string, statusMessage?: string }, message?: string }
@@ -130,7 +178,7 @@ export function useAdminSites() {
 
     if (!site) return
 
-    const disabledAt = site.disabledAt ? null : new Date().toISOString()
+    const disabledAt = site.disabledAt ? null : getAccurateNowIso()
 
     await updateSite(id, { disabledAt })
   }
@@ -151,6 +199,7 @@ export function useAdminSites() {
       siteSettings.value = siteSettings.value.map(set =>
         set.siteId === siteId ? res.settings : set,
       )
+      await SiteSettingsRepository.put(res.settings)
     }
   }
 

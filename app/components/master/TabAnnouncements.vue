@@ -7,7 +7,7 @@
 import type { AnnouncementItem } from '#shared/types/master'
 import { useMasterCrud } from '~/composables/master/useMasterCrud'
 import type { TableColumn } from '~/types/components'
-import { getTodayDateInput } from '~/utils/date'
+import { formatDate, formatToDateInputString, getTodayDateInput } from '~/utils/date'
 
 interface AnnouncementForm {
   title: string
@@ -33,12 +33,11 @@ const {
   validationRules: { date: '日付', title: 'タイトル' },
   mapItemToForm: item => ({
     title: item.title,
-    date: item.date.replace(/\./g, '-'),
+    date: formatToDateInputString(item.date),
     desc: item.desc || '',
   }),
   mapFormToPayload: form => ({
     ...form,
-    date: form.date.replace(/-/g, '.'),
   }),
   getNewFormDefaults: () => ({ date: getTodayDateInput() }),
   deleteConfirm: {
@@ -48,7 +47,7 @@ const {
 })
 
 const columns: TableColumn<AnnouncementItem>[] = [
-  { key: 'date', label: '日付', width: '130px' },
+  { key: 'date', label: '日付', width: '130px', format: val => formatDate(val) },
   { key: 'title', label: 'タイトル' },
   { key: 'desc', label: '内容詳細', truncate: true },
   { key: 'actions', label: '操作', width: '120px', align: 'right' },

@@ -1,11 +1,10 @@
 /**
  * 現在選択中の現場情報を取得・解決・操作する現場コンテキスト Composable
  */
-import { useLocalStorage } from '@vueuse/core'
 import type { MaybeRefOrGetter } from 'vue'
 import { computed, getCurrentInstance, onMounted, toValue, watch } from 'vue'
 
-import { useRouter } from '#app'
+import { useCookie, useRouter } from '#app'
 import { useAdminSites } from '~/composables/admin/useAdminSites'
 import { useAuth } from '~/composables/useAuth'
 import { STORAGE_KEYS } from '~/constants/storageKeys'
@@ -14,7 +13,10 @@ export function useCurrentSite(siteIdSource: MaybeRefOrGetter<string>) {
   const router = useRouter()
   const { sites, fetchSites, isLoaded } = useAdminSites()
   const { currentUser } = useAuth()
-  const lastSiteId = useLocalStorage(STORAGE_KEYS.LAST_SITE_ID, '')
+  const lastSiteId = useCookie<string>(STORAGE_KEYS.LAST_SITE_ID, {
+    default: () => '',
+    sameSite: 'lax',
+  })
 
   if (getCurrentInstance()) {
     onMounted(() => {
@@ -27,7 +29,7 @@ export function useCurrentSite(siteIdSource: MaybeRefOrGetter<string>) {
     fetchSites()
   }
 
-  // 現場IDが有効な場合、前回現場IDとしてlocalStorageに同期
+  // 現場IDが有効な場合、前回現場IDとしてCookieに同期
   watch(
     () => toValue(siteIdSource),
     (newId) => {

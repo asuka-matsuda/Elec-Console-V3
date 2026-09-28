@@ -6,12 +6,13 @@
 
 import { computed, ref, watch } from 'vue'
 
+import { useNuxtApp } from '#app'
 import type {
   MeasurementDevice,
   MeasurementDeviceCategory,
   SelectedMeasurementDevices,
 } from '#shared/types/measurementDevice'
-import { useApi } from '~/composables/useApi'
+import { useAuth } from '~/composables/useAuth'
 import { parseToAppException } from '~/utils/errors'
 
 export interface UseMeasurementDeviceFormOptions {
@@ -24,7 +25,8 @@ export interface UseMeasurementDeviceFormOptions {
 
 export function useMeasurementDeviceForm(options: UseMeasurementDeviceFormOptions) {
   const { siteId, devices, selectedDeviceIds, isOpen, onUpdated } = options
-  const { $api } = useApi()
+  const { $api } = useNuxtApp()
+  const { getAccurateNowIso } = useAuth()
 
   const localDevices = ref<MeasurementDevice[]>([])
   const isSaving = ref(false)
@@ -117,7 +119,7 @@ export function useMeasurementDeviceForm(options: UseMeasurementDeviceFormOption
   const handleSaveItem = async () => {
     if (!formMaker.value.trim() || !formModel.value.trim()) return
 
-    const now = new Date().toISOString()
+    const now = getAccurateNowIso()
     let updatedList: MeasurementDevice[]
 
     if (editingId.value) {

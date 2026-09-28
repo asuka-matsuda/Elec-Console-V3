@@ -5,7 +5,7 @@
  */
 import type { BadgePresetId } from '~/types/components'
 
-export interface GlossaryItem {
+interface GlossaryItem {
   term: string
   kana?: string
   category: string

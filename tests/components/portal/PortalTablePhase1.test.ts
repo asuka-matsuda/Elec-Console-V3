@@ -104,8 +104,8 @@ describe('TablePhase1.vue', () => {
       template: '<span class="stub-badge" :data-badge-id="id"><slot /></span>',
     },
     Button: {
-      props: ['variant', 'disabled', 'loading'],
-      template: '<button class="stub-button" :disabled="disabled" :data-variant="variant"><slot /></button>',
+      props: ['variant', 'disabled', 'loading', 'to'],
+      template: '<button class="stub-button" :disabled="disabled" :data-variant="variant" :data-to="to"><slot /></button>',
     },
     Input: {
       props: ['modelValue', 'placeholder'],
@@ -192,12 +192,16 @@ describe('TablePhase1.vue', () => {
 
     const buttons = row2.findAll('.stub-button')
 
-    expect(buttons.length).toBe(1)
-    expect(buttons[0]?.text()).toBe('解除')
-    expect(buttons[0]?.attributes('data-variant')).toBe('danger')
+    expect(buttons.length).toBe(2)
+    expect(buttons[0]?.text()).toBe('P2へ')
+    expect(buttons[0]?.attributes('data-variant')).toBe('default')
+    expect(buttons[0]?.attributes('data-to')).toContain('/portal/site-1/phase2')
+    expect(buttons[0]?.attributes('data-to')).not.toContain('ban=')
+    expect(buttons[1]?.text()).toBe('解除')
+    expect(buttons[1]?.attributes('data-variant')).toBe('danger')
 
     // 解除をクリック
-    await buttons[0]?.trigger('click')
+    await buttons[1]?.trigger('click')
 
     // サーバーへ clear イベントは送らない
     expect(wrapper.emitted('clear')).toBeFalsy()
@@ -225,12 +229,13 @@ describe('TablePhase1.vue', () => {
 
     const buttons = row4.findAll('.stub-button')
 
-    expect(buttons.length).toBe(1)
-    expect(buttons[0]?.text()).toBe('解除')
-    expect(buttons[0]?.attributes('data-variant')).toBe('danger')
+    expect(buttons.length).toBe(2)
+    expect(buttons[0]?.text()).toBe('P2へ')
+    expect(buttons[1]?.text()).toBe('解除')
+    expect(buttons[1]?.attributes('data-variant')).toBe('danger')
 
     // 解除をクリック
-    await buttons[0]?.trigger('click')
+    await buttons[1]?.trigger('click')
     expect(wrapper.emitted('clear')).toBeFalsy()
 
     // 確定ボタンに切り替わる

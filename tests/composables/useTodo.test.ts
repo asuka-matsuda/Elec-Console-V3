@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { nextTick, ref } from 'vue'
 
-import { useTodo } from '../../app/composables/portal/useTodo'
+import { resetMemoryTodos, useTodo } from '../../app/composables/portal/useTodo'
 
 describe('useTodo', () => {
   beforeEach(() => {
-    localStorage.clear()
+    resetMemoryTodos()
   })
 
   it('initializes with empty todos list', () => {

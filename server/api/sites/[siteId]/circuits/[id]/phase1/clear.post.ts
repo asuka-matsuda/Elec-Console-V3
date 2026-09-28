@@ -51,7 +51,7 @@ export default defineEventHandler(async (event) => {
       targetBan: updated.banMeisho,
       targetKairo: updated.kairoBangou || updated.kairoMeisho || '',
       details: body?.isOfflineSync
-        ? `確定状態を解除しました [同期: ${new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}]`
+        ? `確定状態を解除しました [同期: ${formatSyncTimeString()}]`
         : '確定状態を解除しました',
     },
   })

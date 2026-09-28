@@ -1,10 +1,11 @@
 import { describe, expect, it, vi } from 'vitest'
 
-import { useMeasurementDevices } from '../../app/composables/portal/useMeasurementDevices'
-import type { MeasurementDevice } from '../../app/types/measurementDevice'
+import type { MeasurementDevice } from '#shared/types/measurementDevice'
 
-vi.mock('../../app/composables/useApi', () => ({
-  useApi: () => ({
+import { useMeasurementDevices } from '../../app/composables/portal/useMeasurementDevices'
+
+vi.mock('#app', () => ({
+  useNuxtApp: () => ({
     $api: vi.fn(),
   }),
 }))

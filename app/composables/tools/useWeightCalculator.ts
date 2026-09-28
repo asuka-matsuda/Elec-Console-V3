@@ -16,7 +16,7 @@ import type {
 } from '~/utils/tools/weight/weightCalcLogic'
 import {
   calculateWeightAndDrum,
-  generateMathData,
+  generateWeightMathData,
 } from '~/utils/tools/weight/weightCalcLogic'
 
 const defaultInputs: WeightCalcInputs = {
@@ -55,7 +55,7 @@ export function useWeightCalculator() {
   )
 
   const mathSteps = computed(() => {
-    return generateMathData(inputs.value, result.value, cableData)
+    return generateWeightMathData(inputs.value, result.value, cableData)
   })
 
   const isSaveDisabled = computed(() => Boolean(result.value?.error))

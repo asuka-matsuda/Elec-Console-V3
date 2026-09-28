@@ -2,8 +2,9 @@ import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
 
+import type { Site } from '#shared/types/site'
+
 import TabAdminSites from '../../../app/components/portal/admin/TabAdminSites.vue'
-import type { Site } from '../../../app/types/admin'
 
 const mockSites = ref<Site[]>([
   { id: 'site-a', name: '現場A', status: 'in_progress', createdAt: '2026-09-01' },

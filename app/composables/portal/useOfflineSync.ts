@@ -1,37 +1,21 @@
 /**
- * オフライン同期キュー管理 Composable
+ * オフライン同期キュー (Outbox) 管理 Composable
  *
- * @description ネットワーク圏外時に実行された試験確定・解除操作をローカルストレージにキューイングし、復帰時に自動再送・同期します。
- * @param siteId 対象現場IDのRef
+ * @description 現場作業時に発生した試験確定・解除操作をローカル IndexedDB に安全にキューイングし、
+ * ネットワーク復帰時に自動/手動で再送・同期・競合解決を行います。
+ * UIへはゼロレイテンシで即時反映（楽観的更新）されます。
  */
 
 import type { Ref } from 'vue'
 import { computed, getCurrentInstance, onMounted, onUnmounted } from 'vue'
 
-import { useState } from '#app'
-import { useApi } from '~/composables/useApi'
-import { STATE_KEYS, STORAGE_KEYS } from '~/constants/storageKeys'
+import { useNuxtApp, useState } from '#app'
+import { STATE_KEYS } from '~/constants/storageKeys'
+import { OutboxRepository } from '~/utils/db'
+import type { SyncOutboxRecord } from '~/utils/db/schema'
 import { AppException } from '~/utils/errors'
 
-export interface PendingSyncItem {
-  id: string
-  siteId: string
-  circuitId: string
-  banMeisho: string
-  kairoBangou: string
-  kairoMeisho: string
-  phase: 1 | 2 | 3
-  actionType: 'confirm' | 'clear'
-  payload: Record<string, unknown>
-  clientConfirmedAt: string
-  expectedUpdatedAt?: string
-  expectedVersion?: number
-  workerName?: string
-  createdAt: string
-  status: 'pending' | 'syncing' | 'conflict' | 'error'
-  errorMessage?: string
-  serverCircuitData?: Record<string, unknown>
-}
+export type PendingSyncItem = SyncOutboxRecord
 
 export interface SyncResult {
   total: number
@@ -49,7 +33,7 @@ export function useOfflineSync(
   siteIdRef: Ref<string> | string,
   options?: UseOfflineSyncOptions,
 ) {
-  const { $api } = useApi()
+  const { $api } = useNuxtApp()
   const currentSiteId = computed(() => typeof siteIdRef === 'string' ? siteIdRef : siteIdRef.value)
   const queue = useState<PendingSyncItem[]>(
     STATE_KEYS.OFFLINE_SYNC_QUEUE(currentSiteId.value),
@@ -61,73 +45,73 @@ export function useOfflineSync(
   )
   const fetchFn = options?.fetcher || $api
 
-  // ローカルストレージからキューを読み込み
-  const loadQueue = () => {
+  // IndexedDBからキューを読み込み
+  const loadQueue = async () => {
     if (!import.meta.client || !currentSiteId.value) return
 
     try {
-      const raw = localStorage.getItem(STORAGE_KEYS.OFFLINE_SYNC_QUEUE(currentSiteId.value))
+      const items = await OutboxRepository.getBySite(currentSiteId.value)
 
-      if (raw) {
-        queue.value = JSON.parse(raw) as PendingSyncItem[]
+      if (items) {
+        queue.value = items
       }
-      else {
-        queue.value = []
-      }
-    }
-    catch {
-      queue.value = []
-    }
-  }
-
-  // ローカルストレージにキューを保存
-  const saveQueue = () => {
-    if (!import.meta.client || !currentSiteId.value) return
-
-    try {
-      localStorage.setItem(
-        STORAGE_KEYS.OFFLINE_SYNC_QUEUE(currentSiteId.value),
-        JSON.stringify(queue.value),
-      )
     }
     catch (err) {
-      console.error('[OfflineSync] Failed to save queue to localStorage', err)
+      console.error('[OfflineSync] Failed to load queue from IndexedDB', err)
     }
   }
 
-  // キューにアイテムを追加（同回路・同フェーズの未同期があれば最新値で更新）
-  const enqueue = (item: Omit<PendingSyncItem, 'id' | 'createdAt' | 'status'>) => {
-    const existingIndex = queue.value.findIndex(
-      q => q.circuitId === item.circuitId && q.phase === item.phase && q.status !== 'conflict',
-    )
+  // キューにアイテムを追加（IndexedDBへ永続化し、メモリキューへ反映）
+  const enqueue = async (item: Omit<PendingSyncItem, 'id' | 'createdAt' | 'status'>): Promise<PendingSyncItem | undefined> => {
+    if (!currentSiteId.value) return undefined
 
-    const newItem: PendingSyncItem = {
-      ...item,
-      id: `${item.circuitId}_${item.phase}_${Date.now()}`,
-      createdAt: new Date().toISOString(),
-      status: 'pending',
+    try {
+      const record = await OutboxRepository.enqueue(item)
+
+      if (record) {
+        const existingIndex = queue.value.findIndex(
+          q => q.circuitId === item.circuitId && q.phase === item.phase && q.status !== 'conflict',
+        )
+
+        if (existingIndex >= 0) {
+          queue.value[existingIndex] = record
+        }
+        else {
+          queue.value.push(record)
+        }
+
+        return record
+      }
+    }
+    catch (err) {
+      console.error('[OfflineSync] Failed to enqueue to IndexedDB', err)
     }
 
-    if (existingIndex >= 0) {
-      queue.value[existingIndex] = newItem
-    }
-    else {
-      queue.value.push(newItem)
-    }
-
-    saveQueue()
+    return undefined
   }
 
   // キューからアイテムを削除
-  const removeQueueItem = (id: string) => {
+  const removeQueueItem = async (id: string) => {
     queue.value = queue.value.filter(item => item.id !== id)
-    saveQueue()
+    try {
+      await OutboxRepository.remove(id)
+    }
+    catch (err) {
+      console.error('[OfflineSync] Failed to remove item from IndexedDB', err)
+    }
   }
 
   // キューを全クリア
-  const clearQueue = () => {
+  const clearQueue = async () => {
     queue.value = []
-    saveQueue()
+    if (currentSiteId.value) {
+      try {
+        await OutboxRepository.clearSite(currentSiteId.value)
+      }
+      catch (err) {
+        console.error('[OfflineSync] Failed to clear queue in IndexedDB', err)
+      }
+    }
   }
 
   // 全アイテムの手動同期を実行
@@ -162,6 +146,7 @@ export function useOfflineSync(
         continue
       }
 
+      OutboxRepository.updateStatus(item.id, 'syncing').catch(() => {})
       item.status = 'syncing'
 
       try {
@@ -181,7 +166,7 @@ export function useOfflineSync(
         })
 
         // 送信成功したアイテムはキューから除去
-        removeQueueItem(item.id)
+        await removeQueueItem(item.id)
         result.successCount++
       }
       catch (err: unknown) {
@@ -206,27 +191,34 @@ export function useOfflineSync(
         const status = appErr ? appErr.statusCode : (fetchErr.statusCode || fetchErr.status)
 
         if (status === 409) {
-          // 競合発生
-          item.status = 'conflict'
-          item.errorMessage = '別の作業者によって更新されています'
-          item.serverCircuitData = (appErr?.details?.currentCircuit as Record<string, unknown> | undefined)
+          // 競合発生 (409 Conflict)
+          const serverData = (appErr?.details?.currentCircuit as Record<string, unknown> | undefined)
             || fetchErr.data?.data?.currentCircuit
             || fetchErr.data?.current
             || fetchErr.originalError?.data?.data?.currentCircuit
-            || fetchErr.originalError?.data?.current
+            || fetchErr.originalError?.current
+
+          const errorMsg = '別の作業者によって更新されています'
+
+          OutboxRepository.updateStatus(item.id, 'conflict', errorMsg, serverData).catch(() => {})
+          item.status = 'conflict'
+          item.errorMessage = errorMsg
+          item.serverCircuitData = serverData
 
           result.conflictCount++
           result.conflicts.push(item)
         }
         else {
+          const errorMsg = appErr ? appErr.getUserFacingMessage() : (fetchErr.data?.message || '送信エラーが発生しました')
+
+          OutboxRepository.updateStatus(item.id, 'error', errorMsg).catch(() => {})
           item.status = 'error'
-          item.errorMessage = appErr ? appErr.getUserFacingMessage() : (fetchErr.data?.message || '送信エラーが発生しました')
+          item.errorMessage = errorMsg
           result.errorCount++
         }
       }
     }
 
-    saveQueue()
     isSyncing.value = false
 
     return result
@@ -239,7 +231,7 @@ export function useOfflineSync(
     if (!item) return
 
     if (resolution === 'discard') {
-      removeQueueItem(itemId)
+      await removeQueueItem(itemId)
 
       return
     }
@@ -267,7 +259,7 @@ export function useOfflineSync(
           },
         })
 
-        removeQueueItem(itemId)
+        await removeQueueItem(itemId)
       }
       catch (err) {
         console.error('[OfflineSync] Overwrite failed', err)
@@ -283,23 +275,31 @@ export function useOfflineSync(
     }
   }
 
+  // オンライン復帰時の自動バックグラウンド同期ハンドラ
+  const handleOnlineSync = () => {
+    if (queue.value.length > 0 && !isSyncing.value) {
+      syncAll().catch((err) => {
+        console.warn('[OfflineSync] Auto background sync failed', err)
+      })
+    }
+  }
+
   if (getCurrentInstance()) {
     onMounted(() => {
       loadQueue()
 
       if (import.meta.client) {
         window.addEventListener('beforeunload', handleBeforeUnload)
+        window.addEventListener('online', handleOnlineSync)
       }
     })
 
     onUnmounted(() => {
       if (import.meta.client) {
         window.removeEventListener('beforeunload', handleBeforeUnload)
+        window.removeEventListener('online', handleOnlineSync)
       }
     })
-  }
-  else {
-    loadQueue()
   }
 
   const pendingCount = computed(() => queue.value.length)

@@ -1,46 +1,10 @@
 /**
- * 現場ポータル表示ユーティリティ
+ * 現場ポータル担当者抽出ユーティリティ
  *
- * 現場ステータスラベル変換、担当現場フィルタリング等のUI表示ヘルパーを提供します。
+ * 現場IDにアサインされている担当作業員・管理者の氏名抽出ヘルパーを提供します。
  */
 
 import type { User } from '#shared/types/auth'
-
-/**
- * 現場ステータスに対応する表示ラベルを取得する
- */
-export const getSiteStatusLabel = (status: unknown): string => {
-  switch (status) {
-    case 'planning':
-      return '計画中'
-    case 'in_progress':
-      return '進行中'
-    case 'completed':
-      return '完了'
-    case 'on_hold':
-      return '保留'
-    default:
-      return '不明'
-  }
-}
-
-/**
- * 現場ステータスに対応するバッジカラーを取得する
- */
-export const getSiteStatusColor = (status: unknown): string => {
-  switch (status) {
-    case 'planning':
-      return 'var(--color-text-muted)'
-    case 'in_progress':
-      return 'var(--color-status-warning)'
-    case 'completed':
-      return 'var(--color-status-success)'
-    case 'on_hold':
-      return 'var(--color-status-danger)'
-    default:
-      return 'var(--color-text-muted)'
-  }
-}
 
 /**
  * 現場IDにアサインされているワーカーのフルネーム一覧を取得する

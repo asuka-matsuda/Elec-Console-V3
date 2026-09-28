@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
   if (body.remarks) logDetails.push(`備考:${body.remarks}`)
 
   if (body.isOfflineSync) {
-    const syncTimeStr = new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })
+    const syncTimeStr = formatSyncTimeString()
 
     logDetails.push(`[同期: ${syncTimeStr}]`)
   }

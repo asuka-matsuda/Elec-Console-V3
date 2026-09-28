@@ -4,7 +4,7 @@
  * @description 回路記号（丸・二重丸・四角・多角形など）を HTML5 Canvas 上に
  * 背景透過の黒枠線ベクターとして描画し、Base64 PNG 画像を生成します。
  */
-import { resolveKairoSymbol } from '~/constants/kairoConfig'
+import { resolveKairoSymbol } from '~/utils/kairo'
 
 /**
  * 記号名から背景透過 PNG の Base64 文字列（data:image/png;base64,...）を生成

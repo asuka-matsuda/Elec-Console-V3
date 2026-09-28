@@ -57,7 +57,7 @@ const assignedSites = computed(() => {
       <SectionHeader title="アカウント情報" icon="user" tag="h3" />
 
       <div v-if="currentUser" class="flex flex-col gap-panel-gap">
-        <PortalPanelUserProfile :user="currentUser" />
+        <PanelUserProfile :user="currentUser" />
 
         <Divider />
 

@@ -4,10 +4,11 @@
  * [Atoms] テーブルのデータセル（整列・2段組サブテキスト・空値フォールバック対応）。
  * 列幅はテーブルの <colgroup> が一元管理するため、インライン幅指定を排除し高効率に描画します。
  */
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 
-import { useNoBreakWords } from '~/composables/useNoBreakWords'
+import { TABLE_NO_BREAK_KEY } from '~/constants/injectionKeys'
 import type { TableTdProps } from '~/types/components'
+import { applyNoBreakToText } from '~/utils/noBreak'
 
 const props = withDefaults(defineProps<TableTdProps>(), {
   value: undefined,
@@ -22,8 +23,8 @@ defineSlots<{
   default?(props: { value: unknown, subValue?: unknown }): unknown
 }>()
 
-// 改行禁止処理
-const { applyNoBreak } = useNoBreakWords()
+// 改行禁止処理（親 Table から注入、非Table配下の場合は純粋関数フォールバック）
+const applyNoBreak = inject(TABLE_NO_BREAK_KEY, (val: unknown) => applyNoBreakToText(val))
 
 const isStacked = computed(() => props.subValue !== undefined && props.subValue !== null && props.subValue !== '')
 const shouldTruncate = computed(() => props.truncate ?? !isStacked.value)

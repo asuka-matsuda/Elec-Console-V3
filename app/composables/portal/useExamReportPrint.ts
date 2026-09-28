@@ -6,8 +6,9 @@
 import type { MaybeRefOrGetter } from 'vue'
 import { computed, ref, toValue } from 'vue'
 
+import { useNuxtApp } from '#app'
 import type { CircuitItem } from '#shared/types/circuit'
-import { useApi } from '~/composables/useApi'
+import { CircuitsRepository } from '~/utils/db'
 import {
   generateExamReportExcel,
   generateExamReportsZip,
@@ -23,7 +24,7 @@ export function useExamReportPrint(
   siteIdSource: MaybeRefOrGetter<string>,
   options: UseExamReportPrintOptions = {},
 ) {
-  const { $api } = useApi()
+  const { $api } = useNuxtApp()
 
   const siteId = computed(() => toValue(siteIdSource))
   const siteName = computed(() => toValue(options.siteName) || '現場')
@@ -77,22 +78,41 @@ export function useExamReportPrint(
     })),
   ])
 
-  // 回路データの取得
+  // 回路データの取得 (Local-First: IndexedDB即座読込 -> バックグラウンド同期)
   const fetchCircuits = async () => {
     if (!siteId.value) return
     isLoadingCircuits.value = true
     circuitsError.value = null
 
+    // 1. IndexedDB から即座に読み込み
+    try {
+      const localCircuits = await CircuitsRepository.getBySite(siteId.value)
+
+      if (localCircuits && localCircuits.length > 0) {
+        circuits.value = localCircuits
+        selectedBan.value = 'ALL'
+      }
+    }
+    catch (err) {
+      console.warn('[useExamReportPrint] Failed to load circuits from IndexedDB', err)
+    }
+
+    // 2. ネットワーク経由で最新データを同期
     try {
       const res = await $api<{ circuits: CircuitItem[] }>(`/api/sites/${siteId.value}/circuits`)
 
-      circuits.value = res.circuits || []
-      selectedBan.value = 'ALL'
+      if (res && res.circuits) {
+        circuits.value = res.circuits || []
+        selectedBan.value = 'ALL'
+        await CircuitsRepository.putAll(res.circuits)
+      }
     }
     catch (err: unknown) {
-      const errorObj = err as Error
+      if (circuits.value.length === 0) {
+        const errorObj = err as Error
 
-      circuitsError.value = errorObj.message || '回路データの取得に失敗しました'
+        circuitsError.value = errorObj.message || '回路データの取得に失敗しました'
+      }
     }
     finally {
       isLoadingCircuits.value = false

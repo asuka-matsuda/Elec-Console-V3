@@ -5,11 +5,12 @@
  * ページヘッダー（同期バッジ・戻る導線・フェーズ固有アクション）、
  * 絞り込み＆進捗コントロールパネル、およびメインコンテンツ領域を一元管理します。
  */
-import { computed } from 'vue'
+import { computed, nextTick, watch } from 'vue'
 
 import type { CircuitItem, PhaseStats } from '#shared/types/circuit'
 import { useCurrentSite } from '~/composables/portal/useCurrentSite'
 import type { IconName } from '~/constants/icons'
+import { scrollToTableRow } from '~/utils/table'
 
 const selectedShubetsu = defineModel<string>('shubetsu', { default: 'ALL' })
 const selectedBanMeisho = defineModel<string>('banMeisho', { default: 'ALL' })
@@ -29,10 +30,45 @@ const emit = defineEmits<{
 }>()
 
 const route = useRoute()
+const router = useRouter()
 const siteId = computed(() => route.params.siteId as string)
 const { siteName } = useCurrentSite(siteId)
 
 const headerTitle = computed(() => (siteName.value ? `${siteName.value}_${props.title}` : props.title))
+
+const phaseTabOptions = [
+  { label: 'フェーズ1：回路確認・増締', value: '1' },
+  { label: 'フェーズ2：絶縁抵抗測定', value: '2' },
+  { label: 'フェーズ3：送電・電圧測定・検相', value: '3' },
+]
+
+const currentPhaseTab = computed({
+  get: () => String(props.phase),
+  set: (val: string) => {
+    if (val === String(props.phase)) return
+    router.push({
+      path: `/portal/${siteId.value}/phase${val}`,
+      query: route.query,
+    })
+  },
+})
+
+// 遷移時にクエリで指定された回路への自動スクロール＆ハイライト
+const targetCircuitId = computed(() => route.query.targetCircuit as string | undefined)
+
+watch(
+  [() => props.circuits, targetCircuitId],
+  ([newCircuits, targetId]) => {
+    if (targetId && newCircuits && newCircuits.some(c => c.id === targetId)) {
+      nextTick(() => {
+        setTimeout(() => {
+          scrollToTableRow(targetId, 2500)
+        }, 150)
+      })
+    }
+  },
+  { immediate: true },
+)
 
 const handleSelectCircuit = (circuit: CircuitItem) => {
   scrollToTableRow(circuit.id)
@@ -62,6 +98,14 @@ const handleSelectCircuit = (circuit: CircuitItem) => {
         </Button>
       </template>
     </SectionHeader>
+
+    <div class="phase-tabs-wrapper">
+      <Tabs
+        v-model="currentPhaseTab"
+        :options="phaseTabOptions"
+        variant="underline"
+      />
+    </div>
 
     <Panel as="section" class="grid grid-cols-1 lg:grid-cols-2 gap-panel-gap items-start">
       <div class="flex flex-col gap-form-row-gap">
@@ -120,3 +164,9 @@ const handleSelectCircuit = (circuit: CircuitItem) => {
     </section>
   </div>
 </template>
+
+<style scoped lang="scss">
+.phase-tabs-wrapper {
+  border-bottom: 1px solid var(--color-border-default);
+}
+</style>

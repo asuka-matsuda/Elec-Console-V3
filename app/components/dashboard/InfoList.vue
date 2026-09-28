@@ -5,6 +5,7 @@
  * タイトルと日付のみをコンパクトに表示し、クリックで詳細展開（モーダル等）への導線を提供します。
  */
 import type { InfoListItem, InfoListProps } from '~/types/components'
+import { formatDate } from '~/utils/date'
 
 withDefaults(defineProps<InfoListProps<T>>(), {
   items: () => [],
@@ -36,7 +37,7 @@ defineEmits<{
         @click="$emit('select', item)"
       >
         <div class="flex items-center justify-between gap-item-gap">
-          <time>{{ item.date }}</time>
+          <time>{{ formatDate(item.date) }}</time>
           <slot name="badge" :item="item" />
         </div>
 

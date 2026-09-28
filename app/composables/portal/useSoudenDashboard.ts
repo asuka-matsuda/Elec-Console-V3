@@ -8,12 +8,14 @@
 import type { Ref } from 'vue'
 import { ref, unref } from 'vue'
 
-import type { SoudenStats } from '#shared/types/circuit'
-import { useApi } from '~/composables/useApi'
+import { useNuxtApp } from '#app'
+import type { CircuitItem, SoudenStats } from '#shared/types/circuit'
+import { calculateSoudenStats } from '#shared/utils/soudenExam'
+import { CircuitsRepository } from '~/utils/db'
 import { parseToAppException } from '~/utils/errors'
 
 export function useSoudenDashboard(siteIdRef: Ref<string> | string) {
-  const { $api } = useApi()
+  const { $api } = useNuxtApp()
   const stats = ref<SoudenStats | null>(null)
   const isLoading = ref(false)
   const isImporting = ref(false)
@@ -24,22 +26,40 @@ export function useSoudenDashboard(siteIdRef: Ref<string> | string) {
 
     if (!siteId) return
 
-    isLoading.value = true
     error.value = null
 
+    // 1. 【Local-First】 IndexedDB のローカル回路から即座に集計 (0ms / オフライン完全保証)
     try {
-      const data = await $api<SoudenStats>(
-        `/api/sites/${siteId}/souden/stats`,
-      )
+      const localCircuits = await CircuitsRepository.getBySite(siteId)
 
-      if (data) {
-        stats.value = data
+      if (localCircuits && localCircuits.length > 0) {
+        stats.value = calculateSoudenStats(localCircuits)
+      }
+      else {
+        isLoading.value = true
+      }
+    }
+    catch (dbErr) {
+      console.warn('[useSoudenDashboard] Failed to read from IndexedDB', dbErr)
+      isLoading.value = true
+    }
+
+    // 2. ネットワーク接続があれば、全回路を取得して IndexedDB を自動最新化
+    try {
+      const res = await $api<{ circuits: CircuitItem[] }>(`/api/sites/${siteId}/circuits`)
+
+      if (res && res.circuits) {
+        await CircuitsRepository.putAll(res.circuits)
+        stats.value = calculateSoudenStats(res.circuits)
       }
     }
     catch (err: unknown) {
-      const appErr = parseToAppException(err)
+      // オフライン時、ローカルにデータがあればエラーにしない
+      if (!stats.value) {
+        const appErr = parseToAppException(err)
 
-      error.value = appErr.getUserFacingMessage()
+        error.value = appErr.getUserFacingMessage()
+      }
     }
     finally {
       isLoading.value = false

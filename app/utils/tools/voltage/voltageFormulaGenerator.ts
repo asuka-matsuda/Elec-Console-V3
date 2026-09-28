@@ -333,7 +333,7 @@ function _getVoltageDropFormula(
   return { tex, legend: leg }
 }
 
-export function generateMathData(
+export function generateVoltageMathData(
   inputs: VoltageCalcInputs,
   result: VoltageCalcResult | null,
   cableDataList: CableData[] | null = null,

@@ -8,8 +8,8 @@
 import { onClickOutside, useEventListener } from '@vueuse/core'
 import { computed, ref } from 'vue'
 
-import { getHelpContent } from '~/constants/helpConstants'
 import type { HelpTipProps } from '~/types/components'
+import { getHelpContent } from '~/utils/help'
 
 const props = withDefaults(defineProps<HelpTipProps>(), {
   helpId: undefined,

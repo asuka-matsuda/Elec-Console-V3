@@ -4,10 +4,11 @@
  * 電圧降下・許容電流判定結果をステータスバッジ、比較パネル、および数式表示用ViewModelへ整形します。
  */
 
-import { getToolError, type ToolErrorInfo } from '~/constants/toolErrorConstants'
+import type { ToolErrorInfo } from '~/constants/toolErrorConstants'
 import type { ResultDetailItem, ResultPanelStatus } from '~/types/components'
 import type { VoltageCalcInputs, VoltageCalcResult } from '~/types/voltage'
 import { formatVal } from '~/utils/math'
+import { getToolError } from '~/utils/tools/toolError'
 
 interface VoltageResultViewModel {
   isReady: boolean

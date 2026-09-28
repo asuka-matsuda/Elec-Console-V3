@@ -7,7 +7,7 @@
 import type { HistoryItem } from '#shared/types/master'
 import { useMasterCrud } from '~/composables/master/useMasterCrud'
 import type { TableColumn } from '~/types/components'
-import { getTodayDateInput } from '~/utils/date'
+import { formatDate, formatToDateInputString, getTodayDateInput } from '~/utils/date'
 
 interface HistoryForm {
   version: string
@@ -35,12 +35,11 @@ const {
   mapItemToForm: item => ({
     version: item.version,
     title: item.title,
-    date: item.date.replace(/\./g, '-'),
+    date: formatToDateInputString(item.date),
     desc: item.desc || '',
   }),
   mapFormToPayload: form => ({
     ...form,
-    date: form.date.replace(/-/g, '.'),
   }),
   getNewFormDefaults: () => ({ date: getTodayDateInput() }),
   deleteConfirm: {
@@ -51,7 +50,7 @@ const {
 
 const columns: TableColumn<HistoryItem>[] = [
   { key: 'version', label: 'バージョン', width: '110px' },
-  { key: 'date', label: '日付', width: '130px' },
+  { key: 'date', label: '日付', width: '130px', format: val => formatDate(val) },
   { key: 'title', label: 'タイトル' },
   { key: 'desc', label: '内容詳細', truncate: true },
   { key: 'actions', label: '操作', width: '120px', align: 'right' },
