@@ -105,11 +105,13 @@ const isComplete = (c: CircuitItem) => {
         <Checkbox
           v-model="getRowForm(circuit).kakunin"
           label="確認"
+          variant="success"
           :disabled="isRowDisabled(circuit)"
         />
         <Checkbox
           v-model="getRowForm(circuit).mashishime"
           label="増締"
+          variant="success"
           :disabled="isRowDisabled(circuit)"
         />
       </div>

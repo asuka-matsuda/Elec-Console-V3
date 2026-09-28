@@ -31,7 +31,6 @@ defineProps<BadgeProps>()
   color: var(--glow-color);
   letter-spacing: var(--tracking-wide);
   white-space: nowrap;
-  vertical-align: middle;
 
   background: color-mix(in srgb, var(--glow-color) 12%, transparent);
 }

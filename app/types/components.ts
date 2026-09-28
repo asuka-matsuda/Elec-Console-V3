@@ -19,6 +19,7 @@ export interface SelectOption<T = string | number | boolean> {
   label: string
   value: T
   disabled?: boolean
+  color?: string
 }
 
 /** 汎用ラジオボタングループ用選択肢 */
@@ -88,12 +89,20 @@ export interface ButtonProps {
 
 // --- Checkbox ---
 export interface CheckboxProps {
+  /** チェックボックスの値（配列 v-model 時に使用） */
   value?: unknown
+  /** ラベルテキスト */
   label?: string
+  /** 無効化フラグ */
   disabled?: boolean
-  indeterminate?: boolean
-  trueValue?: unknown
-  falseValue?: unknown
+  /**
+   * バリアント（未指定時は default = 選択用）
+   * - default: 通常の選択・トグル（テーマアクセント色）
+   * - success: タスク完了・検査確認（グリーン）
+   */
+  variant?: 'default' | 'success'
+  /** カテゴリカラー等のカスタム色指定 */
+  color?: string
 }
 
 // --- Icon ---

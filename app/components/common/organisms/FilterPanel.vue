@@ -39,6 +39,7 @@ withDefaults(defineProps<FilterPanelProps>(), {
         <Checkbox
           v-model="activeCats"
           :value="cat.value"
+          :color="cat.color"
         >
           {{ cat.label }}
         </Checkbox>

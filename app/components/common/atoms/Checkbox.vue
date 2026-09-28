@@ -1,15 +1,11 @@
 <script setup lang="ts">
 /**
  * Checkbox
- * [Atoms] 真偽値の選択や複数項目の選択を提供するチェックボックスコンポーネント
+ * [Atoms] 真偽値の選択および複数選択（配列）を提供する最小チェックボックスコンポーネント
  */
-import { computed, useAttrs } from 'vue'
+import { computed } from 'vue'
 
 import type { CheckboxProps } from '~/types/components'
-
-defineOptions({
-  inheritAttrs: false,
-})
 
 const model = defineModel<unknown>()
 
@@ -17,23 +13,19 @@ const {
   value,
   label,
   disabled = false,
-  indeterminate = false,
-  trueValue = true,
-  falseValue = false,
+  variant = 'default',
+  color,
 } = defineProps<CheckboxProps>()
 
-const attrs = useAttrs()
+const customStyle = computed(() => {
+  if (color) {
+    return { '--control-checked-bg': color }
+  }
+  if (variant === 'success') {
+    return { '--control-checked-bg': 'var(--color-status-success)' }
+  }
 
-const rootAttrs = computed(() => {
-  const { class: className, style } = attrs
-
-  return { class: className, style }
-})
-
-const inputAttrs = computed(() => {
-  const { class: _c, style: _s, ...rest } = attrs
-
-  return rest
+  return undefined
 })
 </script>
 
@@ -41,30 +33,19 @@ const inputAttrs = computed(() => {
   <label
     class="relative inline-flex items-center gap-item-gap checkbox"
     :class="[
-      {
-        'is-disabled': disabled,
-        'is-indeterminate': indeterminate,
-      },
-      rootAttrs.class,
+      `checkbox--${variant}`,
+      { 'is-disabled': disabled },
     ]"
-    :style="rootAttrs.style"
+    :style="customStyle"
   >
-    <span class="relative flex shrink-0 items-center justify-center w-[1.4em] h-[1.4em]">
-      <input
-        v-model="model"
-        v-bind="inputAttrs"
-        type="checkbox"
-        class="absolute inset-0 m-0 opacity-0 checkbox-input"
-        :value="value"
-        :disabled="disabled"
-        :true-value="trueValue"
-        :false-value="falseValue"
-        .indeterminate="indeterminate"
-      >
-      <span class="checkbox-box">
-        <Icon name="check" class="icon is-check" />
-        <Icon name="minus" class="icon is-dash" />
-      </span>
+    <input
+      v-model="model"
+      type="checkbox"
+      :value="value"
+      :disabled="disabled"
+    >
+    <span class="grid shrink-0 place-items-center box">
+      <Icon name="check" class="icon" />
     </span>
 
     <span v-if="label || $slots.default" class="label">
@@ -75,104 +56,85 @@ const inputAttrs = computed(() => {
 
 <style scoped lang="scss">
 .checkbox {
-  --control-color: var(--theme-accent);
-  --control-icon: var(--color-text-on-emphasis);
+  --control-checked-bg: var(--theme-accent);
 
   cursor: pointer;
   user-select: none;
+
+  font-size: inherit;
   color: var(--color-text-main);
   letter-spacing: var(--tracking-normal);
 
-  &-input {
-    cursor: inherit;
+  input {
+    pointer-events: none;
+
+    position: absolute;
+
+    width: 0;
+    height: 0;
+
+    opacity: 0;
 
     &:not(:disabled) {
-      &:is(:hover, :active, :focus-visible, :checked, :indeterminate) ~ .checkbox-box {
-        border-color: var(--control-color);
-      }
-
-      &:hover ~ .checkbox-box {
+      &:hover ~ .box {
+        border-color: var(--control-checked-bg);
         box-shadow: var(--shadow-glow-hover);
       }
 
-      &:active ~ .checkbox-box {
-        box-shadow: var(--shadow-glow-active);
-      }
-
-      &:focus-visible ~ .checkbox-box {
-        outline: none;
+      &:focus-visible ~ .box {
+        border-color: var(--control-checked-bg);
         box-shadow: var(--shadow-glow-focus);
       }
 
-      &:is(:checked, :indeterminate) ~ .checkbox-box,
-      .checkbox.is-indeterminate & ~ .checkbox-box {
-        border-color: var(--control-color);
-        background-color: var(--control-color);
+      &:active ~ .box {
         box-shadow: var(--shadow-glow-active);
+      }
 
-        .icon {
-          color: var(--control-icon);
-        }
+      &:checked ~ .box {
+        box-shadow: var(--shadow-glow-active);
       }
     }
 
-    &:checked ~ .checkbox-box .is-check,
-    &:indeterminate ~ .checkbox-box .is-dash,
-    .checkbox.is-indeterminate & ~ .checkbox-box .is-dash {
-      transform: scale(1);
-      opacity: 1;
+    &:checked ~ .box {
+      border-color: var(--control-checked-bg);
+      background-color: var(--control-checked-bg);
 
-      :deep(:is(path, polyline, line)) {
-        stroke-dashoffset: 0;
+      .icon {
+        transform: scale(1);
+        opacity: 1;
       }
     }
   }
 
-  &-box {
-    pointer-events: none;
-
-    position: relative;
-
-    display: grid;
-    place-items: center;
-
-    width: 100%;
-    height: 100%;
+  .box {
+    width: 1.25em;
+    height: 1.25em;
     border: var(--border-width-base) solid var(--color-border);
 
     background-color: var(--surface-bg-elevated);
 
     transition: var(--transition-interactive);
+  }
 
-    .icon {
-      transform: scale(0.6);
+  .icon {
+    transform: scale(0.4);
 
-      grid-area: 1 / 1;
+    grid-area: 1 / 1;
 
-      width: 75%;
-      height: 75%;
+    width: 1em;
+    height: 1em;
 
-      opacity: 0;
+    color: var(--control-checked-icon);
 
-      transition: var(--transition-base);
+    opacity: 0;
 
-      :deep(svg) {
-        stroke-linecap: square;
-        stroke-linejoin: miter;
-        stroke-width: 3;
-      }
-
-      :deep(:is(path, polyline, line)) {
-        stroke-dasharray: 24;
-        stroke-dashoffset: 24;
-        transition: stroke-dashoffset var(--duration-base) var(--ease-base);
-      }
-    }
+    transition:
+      transform var(--duration-fast) var(--ease-spring),
+      opacity var(--duration-fast) var(--ease-base);
   }
 
   .label {
     user-select: text;
-    transition: var(--transition-interactive);
   }
 
   @include state-disabled;

@@ -49,7 +49,7 @@ const handleAdd = () => {
         :key="todo.id"
         class="todo-item flex items-center justify-between gap-item-gap p-item-gap"
       >
-        <Checkbox v-model="todo.completed">
+        <Checkbox v-model="todo.completed" variant="success">
           <span
             class="todo-label"
             :class="{ 'is-completed': todo.completed }"
