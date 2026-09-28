@@ -8,7 +8,7 @@ import { computed, reactive, ref, watch } from 'vue'
 
 import type { SiteAssignment, User, UserRole } from '#shared/types/auth'
 import type { Site } from '#shared/types/site'
-import { USER_ROLE_OPTIONS, USER_SETTINGS_TABS } from '~/constants/adminConstants'
+import { USER_ROLE_CONFIG, USER_ROLE_OPTIONS, USER_SETTINGS_TABS } from '~/constants/adminConstants'
 import { formatDateTime } from '~/utils/date'
 
 const props = defineProps<{
@@ -120,9 +120,12 @@ const handleSave = () => {
       <SectionHeader icon="user">
         <template #default>
           <div class="flex flex-wrap items-center gap-item-gap">
-            <span>{{ user.lastName }} {{ user.firstName }}</span>
-            <Badge :id="`role:${user.role}`" />
-            <Badge v-if="user.requirePasswordReset" id="user:pwd-reset" />
+            <Badge :color="USER_ROLE_CONFIG[user.role]?.color">
+              {{ USER_ROLE_CONFIG[user.role]?.label }}
+            </Badge>
+            <Badge v-if="user.requirePasswordReset" color="var(--color-status-danger)">
+              PWリセット要
+            </Badge>
             <small>
               (ID: {{ user.loginId || user.id }})
             </small>

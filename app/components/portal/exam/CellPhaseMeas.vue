@@ -104,7 +104,7 @@ const placeholderText = computed(() => {
     </span>
     <Badge
       v-if="status"
-      :id="status === 'OK' ? 'exam:pass' : 'exam:fail'"
+      :color="status === 'OK' ? 'var(--color-status-success)' : 'var(--color-status-danger)'"
     >
       {{ status }}
     </Badge>

@@ -1,4 +1,4 @@
-﻿import { mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
 import Panel from '../../../app/components/common/atoms/Panel.vue'
@@ -13,6 +13,10 @@ describe('MenuTile.vue (app/components/dashboard/MenuTile.vue)', () => {
     NuxtLink: {
       props: ['to'],
       template: '<a :href="to" class="nuxt-link-stub"><slot /></a>',
+    },
+    Badge: {
+      props: ['color'],
+      template: '<span class="badge-stub"><slot /></span>',
     },
     Panel,
   }
@@ -94,5 +98,46 @@ describe('MenuTile.vue (app/components/dashboard/MenuTile.vue)', () => {
     expect(wrapper.text()).toContain('タイトルのみ')
     expect(wrapper.find('.icon-stub').exists()).toBe(false)
     expect(wrapper.find('.tile-desc').exists()).toBe(false)
+  })
+
+  it('renders version badge when item.version is provided', () => {
+    const wrapper = mount(MenuTile, {
+      props: {
+        item: {
+          text: '電圧降下計算',
+          href: '/tools/voltage',
+          version: 'v1.2.0',
+        },
+      },
+      global: {
+        stubs: commonStubs,
+      },
+    })
+
+    const badge = wrapper.find('.badge-stub')
+
+    expect(badge.exists()).toBe(true)
+    expect(badge.text()).toBe('v1.2.0')
+  })
+
+  it('renders custom badge slot when provided', () => {
+    const wrapper = mount(MenuTile, {
+      props: {
+        item: {
+          text: '新機能ツール',
+          href: '/tools/new',
+          version: 'v1.0.0',
+        },
+      },
+      slots: {
+        badge: '<span class="custom-badge">CUSTOM</span>',
+      },
+      global: {
+        stubs: commonStubs,
+      },
+    })
+
+    expect(wrapper.find('.custom-badge').exists()).toBe(true)
+    expect(wrapper.text()).toContain('CUSTOM')
   })
 })

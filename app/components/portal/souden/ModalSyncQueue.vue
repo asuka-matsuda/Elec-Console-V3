@@ -100,7 +100,7 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
           <div class="flex items-center gap-item-gap pb-item-gap panel-header">
             <span class="panel-ban">{{ item.banMeisho }}</span>
             <span class="flex-1 panel-kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
-            <Badge id="souden:phase-warning">
+            <Badge color="var(--color-status-warning)">
               フェーズ{{ item.phase }}
             </Badge>
           </div>
@@ -176,7 +176,7 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
             :key="item.id"
             class="flex items-center gap-item-gap px-item-gap py-inline-gap queue-item"
           >
-            <Badge id="souden:phase-tool">
+            <Badge color="var(--color-category-tool)">
               P{{ item.phase }}
             </Badge>
             <span class="item-ban">{{ item.banMeisho }}</span>

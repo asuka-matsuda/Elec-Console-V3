@@ -7,6 +7,7 @@
 import { computed, ref } from 'vue'
 
 import type { Site, SiteStatus } from '#shared/types/site'
+import { SITE_STATUS_CONFIG } from '~/constants/adminConstants'
 import type { RadioOption } from '~/types/components'
 
 type StatusFilterType = 'all' | SiteStatus
@@ -101,8 +102,12 @@ const filteredSites = computed(() => {
             <span>
               {{ site.name }}
             </span>
-            <Badge :id="`site:${site.status}`" />
-            <Badge v-if="site.disabledAt" id="site:disabled" />
+            <Badge :color="SITE_STATUS_CONFIG[site.status]?.color">
+              {{ SITE_STATUS_CONFIG[site.status]?.label }}
+            </Badge>
+            <Badge v-if="site.disabledAt" color="var(--color-status-danger)">
+              無効
+            </Badge>
           </div>
           <div>
             ID: {{ site.id }}

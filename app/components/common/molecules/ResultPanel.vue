@@ -6,7 +6,7 @@
  */
 import { computed } from 'vue'
 
-import type { BadgePresetId, ResultPanelProps, ResultPanelStatus } from '~/types/components'
+import type { ResultPanelProps, ResultPanelStatus } from '~/types/components'
 
 const props = withDefaults(defineProps<ResultPanelProps>(), {
   status: 'neutral',
@@ -21,15 +21,15 @@ const resolvedStatus = computed<ResultPanelStatus>(() => {
   return props.status || 'neutral'
 })
 
-// バッジプリセットIDの導出（純粋に status に連動）
-const BADGE_STATUS_MAP: Record<ResultPanelStatus, BadgePresetId> = {
-  danger: 'status:danger',
-  warning: 'status:warning',
-  success: 'status:success',
-  neutral: 'status:neutral',
-  empty: 'status:neutral',
+// バッジ発光色の導出（status に連動）
+const BADGE_STATUS_COLOR_MAP: Record<ResultPanelStatus, string> = {
+  danger: 'var(--color-status-danger)',
+  warning: 'var(--color-status-warning)',
+  success: 'var(--color-status-success)',
+  neutral: 'var(--color-status-neutral)',
+  empty: 'var(--color-status-neutral)',
 }
-const badgeId = computed<BadgePresetId>(() => BADGE_STATUS_MAP[resolvedStatus.value] ?? 'status:neutral')
+const badgeColor = computed(() => BADGE_STATUS_COLOR_MAP[resolvedStatus.value] ?? 'var(--color-status-neutral)')
 </script>
 
 <template>
@@ -43,7 +43,7 @@ const badgeId = computed<BadgePresetId>(() => BADGE_STATUS_MAP[resolvedStatus.va
         <span>{{ title }}</span>
       </slot>
       <slot name="badge">
-        <Badge v-if="badge" :id="badgeId">
+        <Badge v-if="badge" :color="badgeColor">
           {{ badge }}
         </Badge>
       </slot>

@@ -4,7 +4,6 @@
  * ラック幅計算結果、敷設段数比較、および数式ステップをUI表示用ViewModelへ整形します。
  */
 
-import { BADGE_PRESETS } from '~/constants/badgeConfig'
 import type { ResultDetailItem, ResultPanelStatus } from '~/types/components'
 import type { RackCalcResult, RackTierResult } from '~/utils/tools/rack/rackCalcLogic'
 import { getToolError } from '~/utils/tools/toolError'
@@ -86,11 +85,11 @@ function formatTierPanel(
 
   if (tier.isSizeOver) {
     panelStatus = 'danger'
-    badgeText = BADGE_PRESETS['tool:size-over'].label
+    badgeText = '規格外'
   }
   else if (tier.isOverflow) {
     panelStatus = 'warning'
-    badgeText = BADGE_PRESETS['tool:overflow'].label
+    badgeText = '高さ不足'
   }
 
   const displaySize = tier.selectedSize

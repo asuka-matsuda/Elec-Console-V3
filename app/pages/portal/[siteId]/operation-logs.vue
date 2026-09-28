@@ -8,7 +8,7 @@ import { computed, onMounted } from 'vue'
 import { useHead, useRoute } from '#app'
 import { useOperationLogs } from '~/composables/portal/useOperationLogs'
 import {
-  getActionBadgeId,
+  getActionBadgeColor,
   OPERATION_LOG_COLUMNS,
   OPERATION_LOG_LIMIT_OPTIONS,
 } from '~/constants/soudenConstants'
@@ -104,7 +104,7 @@ onMounted(() => {
         </template>
 
         <template #cell-action="{ value }">
-          <Badge :id="getActionBadgeId(String(value))">
+          <Badge :color="getActionBadgeColor(String(value))">
             {{ value }}
           </Badge>
         </template>

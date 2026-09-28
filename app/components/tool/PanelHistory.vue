@@ -64,12 +64,9 @@ const weightResult = computed(() => {
         <span class="text-date">{{ entry.timestamp }}</span>
         <h3 class="flex items-center gap-item-gap text-title m-0">
           <span>{{ entry.toolName }}</span>
-          <Badge v-if="entry.mode === 'サイズ選定'" id="tool:size-select">
-            {{ entry.mode }}
-          </Badge>
-          <Badge v-else-if="entry.mode === '電圧降下'" id="tool:voltage-drop">
-            {{ entry.mode }}
-          </Badge>
+          <small v-if="entry.mode" class="tool-mode">
+            ({{ entry.mode }})
+          </small>
         </h3>
       </div>
     </header>
@@ -190,5 +187,11 @@ const weightResult = computed(() => {
   .text-input-val {
     color: var(--color-text-main);
   }
+}
+
+.tool-mode {
+  font-size: var(--font-size-sm);
+  font-weight: normal;
+  color: var(--color-text-secondary);
 }
 </style>

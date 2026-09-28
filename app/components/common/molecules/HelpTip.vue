@@ -93,9 +93,7 @@ if (import.meta.client) {
         class="helptip-reference pt-inline-gap flex items-center justify-between"
       >
         <span>規格:</span>
-        <Badge>
-          {{ displayReference }}
-        </Badge>
+        <cite class="helptip-cite">{{ displayReference }}</cite>
       </div>
     </div>
   </Teleport>
@@ -132,5 +130,11 @@ if (import.meta.client) {
 .helptip-reference {
   border-top: var(--border-width-base) solid var(--color-border-subtle);
   color: var(--color-text-muted);
+}
+
+.helptip-cite {
+  font-family: var(--font-mono);
+  font-style: normal;
+  color: var(--color-text-secondary);
 }
 </style>

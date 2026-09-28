@@ -20,6 +20,7 @@ export interface HistoryItem {
   date: string
   desc: string
   status?: string
+  toolId?: string
 }
 
 /** ダッシュボード用集約データ */

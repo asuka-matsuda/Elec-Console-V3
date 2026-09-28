@@ -12,6 +12,7 @@ import { useAdminSites } from '~/composables/admin/useAdminSites'
 import { useAuth } from '~/composables/useAuth'
 import { usePasswordChange } from '~/composables/usePasswordChange'
 import { useSettings } from '~/composables/useSettings'
+import { USER_ROLE_CONFIG } from '~/constants/adminConstants'
 import { THEME_OPTIONS } from '~/constants/colors'
 
 useHead({ title: 'マイページ - Elec-Console' })
@@ -80,7 +81,9 @@ const assignedSites = computed(() => {
                   <Icon name="map-pin" size="sm" />
                   <span>{{ site.name }}</span>
                   <small>({{ site.id }})</small>
-                  <Badge :id="`role:${site.role}`" />
+                  <Badge :color="USER_ROLE_CONFIG[site.role]?.color">
+                    {{ USER_ROLE_CONFIG[site.role]?.label }}
+                  </Badge>
                 </div>
 
                 <Button

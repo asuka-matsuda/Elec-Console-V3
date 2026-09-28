@@ -12,6 +12,7 @@ import noTailwindDecoration from './eslint-rules/no-tailwind-decoration.mjs'
 import noTemplateComments from './eslint-rules/no-template-comments.mjs'
 import noTrivialFacade from './eslint-rules/no-trivial-facade.mjs'
 import requireFileJsdoc from './eslint-rules/require-file-jsdoc.mjs'
+import strictBadgeUsage from './eslint-rules/strict-badge-usage.mjs'
 import strictSpacingTokens from './eslint-rules/strict-spacing-tokens.mjs'
 import strictStateManagement from './eslint-rules/strict-state-management.mjs'
 import strictTimeManagement from './eslint-rules/strict-time-management.mjs'
@@ -38,6 +39,7 @@ export default withNuxt(
           'strict-state-management': strictStateManagement,
           'strict-time-management': strictTimeManagement,
           'strict-ui-states': strictUiStates,
+          'strict-badge-usage': strictBadgeUsage,
         },
       },
     },
@@ -57,6 +59,7 @@ export default withNuxt(
       'local/strict-state-management': 'error',
       'local/strict-time-management': 'error',
       'local/strict-ui-states': 'error',
+      'local/strict-badge-usage': 'error',
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
       'vue/block-order': ['error', {

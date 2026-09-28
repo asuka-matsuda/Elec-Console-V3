@@ -68,7 +68,17 @@ const activeDetail = ref<{ item: AnnouncementItem | HistoryItem, type: DetailTyp
       </section>
 
       <section class="flex flex-col gap-panel-gap">
-        <SectionHeader title="更新履歴" icon="clock" tag="h3" />
+        <SectionHeader title="更新履歴" icon="clock" tag="h3">
+          <template #actions>
+            <NuxtLink
+              to="/changelog"
+              class="flex items-center gap-inline-gap all-history-link"
+            >
+              <span>全履歴</span>
+              <Icon name="arrow-right" size="sm" />
+            </NuxtLink>
+          </template>
+        </SectionHeader>
         <InfoList
           :items="dashboardData?.history"
           :pending="isDashboardPending"
@@ -77,13 +87,12 @@ const activeDetail = ref<{ item: AnnouncementItem | HistoryItem, type: DetailTyp
           @select="activeDetail = { item: $event, type: 'history' }"
         >
           <template #badge="{ item }">
-            <Badge
+            <small
               v-if="item.version"
-              id="version:muted"
-              class="shrink-0"
+              class="shrink-0 version-tag"
             >
               {{ item.version }}
-            </Badge>
+            </small>
           </template>
         </InfoList>
       </section>
@@ -104,12 +113,12 @@ const activeDetail = ref<{ item: AnnouncementItem | HistoryItem, type: DetailTyp
           <small style="font-family: var(--font-mono)">
             {{ formatDate(activeDetail.item.date) }}
           </small>
-          <Badge
+          <small
             v-if="'version' in activeDetail.item && activeDetail.item.version"
-            id="version:muted"
+            class="version-tag"
           >
             {{ activeDetail.item.version }}
-          </Badge>
+          </small>
         </header>
 
         <h4 class="m-0">
@@ -123,3 +132,20 @@ const activeDetail = ref<{ item: AnnouncementItem | HistoryItem, type: DetailTyp
     </Modal>
   </div>
 </template>
+
+<style scoped lang="scss">
+.all-history-link {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  transition: var(--transition-base);
+
+  &:hover {
+    color: var(--theme-accent);
+  }
+}
+
+.version-tag {
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+}
+</style>

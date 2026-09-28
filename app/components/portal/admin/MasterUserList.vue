@@ -73,7 +73,9 @@ const filteredUsers = computed(() => {
           <span>
             {{ user.lastName }} {{ user.firstName }}
           </span>
-          <Badge v-if="user.requirePasswordReset" id="user:pwd-reset" class="shrink-0" />
+          <Badge v-if="user.requirePasswordReset" color="var(--color-status-danger)" class="shrink-0">
+            PWリセット要
+          </Badge>
         </div>
 
         <div>

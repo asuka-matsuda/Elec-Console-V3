@@ -6,7 +6,7 @@
 
 import type { CircuitItem } from '#shared/types/circuit'
 import type { OperationLogItem } from '#shared/types/operationLog'
-import type { BadgePresetId, SelectOption, TableColumn } from '~/types/components'
+import type { SelectOption, TableColumn } from '~/types/components'
 import { formatDateTime } from '~/utils/date'
 
 /**
@@ -71,21 +71,21 @@ export const KENSOU_OPTIONS_1P: SelectOption[] = [
 ]
 
 /**
- * 送電試験 操作ログのアクション文字列から BadgePresetId を判定する
+ * 送電試験 操作ログのアクション文字列からバッジ色を判定する
  */
-export const getActionBadgeId = (action: unknown): BadgePresetId => {
-  if (typeof action !== 'string') return 'log:neutral'
+export const getActionBadgeColor = (action: unknown): string => {
+  if (typeof action !== 'string') return 'var(--color-status-neutral)'
   if (action.includes('確定') || action.includes('完了')) {
-    return 'log:success'
+    return 'var(--color-status-success)'
   }
   if (action.includes('解除') || action.includes('削除')) {
-    return 'log:danger'
+    return 'var(--color-status-danger)'
   }
   if (action.includes('更新') || action.includes('変更') || action.includes('インポート')) {
-    return 'log:accent'
+    return 'var(--theme-accent)'
   }
 
-  return 'log:neutral'
+  return 'var(--color-status-neutral)'
 }
 
 /**

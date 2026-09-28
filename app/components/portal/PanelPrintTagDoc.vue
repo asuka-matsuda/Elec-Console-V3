@@ -36,8 +36,15 @@ const TAG_COLUMNS: TableColumn<TagMetadataItem>[] = [
       class="max-h-[520px]"
     >
       <template #cell-tag="{ value }">
-        <Badge>{{ value }}</Badge>
+        <code class="tag-code">{{ value }}</code>
       </template>
     </Table>
   </Panel>
 </template>
+
+<style scoped lang="scss">
+.tag-code {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+}
+</style>

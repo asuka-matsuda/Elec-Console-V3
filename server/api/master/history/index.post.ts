@@ -13,7 +13,7 @@ import { prisma } from '../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
   await requireMasterUser(event)
-  const body = await readBody<{ version?: string, title?: string, date?: string, desc?: string, status?: string }>(event)
+  const body = await readBody<{ version?: string, title?: string, date?: string, desc?: string, status?: string, toolId?: string }>(event)
 
   if (!body?.version?.trim() || !body?.title?.trim() || !body?.date?.trim()) {
     throw createError({
@@ -30,6 +30,7 @@ export default defineEventHandler(async (event) => {
       date: body.date.trim(),
       desc: body.desc?.trim() || '',
       status: body.status?.trim() || 'neutral',
+      toolId: body.toolId?.trim() || null,
     },
   })
 })

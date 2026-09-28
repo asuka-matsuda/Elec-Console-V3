@@ -20,6 +20,7 @@ body {
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
   color: var(--color-text-main);
+  letter-spacing: var(--tracking-normal);
 
   background-color: var(--color-main-bg);
 
@@ -28,47 +29,58 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+// ==========================================================================
+// Headings (見出しのジャンプ率と視覚重心を最適化)
+// 大見出しほど行高を詰め文字間をわずかにタイトにし、小見出しほど可読性のために文字間を確保
+// ==========================================================================
 h1 {
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-tight);
 }
 
 h2 {
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-tight);
 }
 
 h3 {
-  font-size: var(--font-size-lg);
+  font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
+  letter-spacing: var(--tracking-normal);
 }
 
 h4 {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
+  line-height: var(--line-height-ui);
+  letter-spacing: var(--tracking-wide);
 }
 
 h5,
 h6 {
-  font-size: var(--font-size-sm);
+  font-size: var(--font-size-base);
   font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
+  line-height: var(--line-height-ui);
+  letter-spacing: var(--tracking-wide);
 }
 
-p {
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-base);
-  color: var(--color-text-main);
+b,
+strong {
+  font-weight: var(--font-weight-bold);
 }
+
+// p は body から自然に継承 (Inherit) させるため個別指定は不要
 
 small {
-  font-size: var(--font-size-xs);
-  line-height: var(--line-height-base);
+  font-size: 0.85em; // 親文字サイズに連動する相対サイズ
+  line-height: inherit;
   color: var(--color-text-muted);
+  letter-spacing: var(--tracking-wide);
 }
 
 input::-webkit-outer-spin-button,

@@ -13,6 +13,24 @@ const { item } = defineProps<MenuTileProps>()
 
 const isClickable = computed(() => !item.disabled && Boolean(item.href))
 const componentTag = computed(() => (isClickable.value ? NuxtLink : 'div'))
+
+const resolvedBadge = computed(() => {
+  if (item.badge) {
+    if (typeof item.badge === 'string') {
+      return { text: item.badge, color: undefined }
+    }
+
+    return {
+      text: item.badge.text,
+      color: item.badge.color,
+    }
+  }
+  if (item.version) {
+    return { text: item.version, color: undefined }
+  }
+
+  return null
+})
 </script>
 
 <template>
@@ -23,9 +41,19 @@ const componentTag = computed(() => (isClickable.value ? NuxtLink : 'div'))
     :disabled="Boolean(item.disabled)"
     class="flex flex-col gap-panel-gap h-full"
   >
-    <header v-if="item.icon || item.text" class="flex items-center gap-item-gap min-w-0 tile-title">
+    <header v-if="item.icon || item.text || $slots.badge || resolvedBadge" class="flex items-center gap-item-gap min-w-0">
       <Icon v-if="item.icon" :name="item.icon" class="shrink-0" />
-      <span v-if="item.text">{{ item.text }}</span>
+      <span v-if="item.text" class="flex-1 min-w-0 tile-title">{{ item.text }}</span>
+
+      <slot v-if="$slots.badge || resolvedBadge" name="badge" :item="item">
+        <Badge
+          v-if="resolvedBadge"
+          :color="resolvedBadge.color"
+          class="shrink-0 ml-auto"
+        >
+          {{ resolvedBadge.text }}
+        </Badge>
+      </slot>
     </header>
 
     <p v-if="item.desc" class="m-0 tile-desc">

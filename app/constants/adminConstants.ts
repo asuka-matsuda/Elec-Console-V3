@@ -18,6 +18,15 @@ export const USER_ROLE_OPTIONS: SelectOption<UserRole>[] = [
 ]
 
 /**
+ * ユーザー権限（ロール）表示設定（バッジ表示用）
+ */
+export const USER_ROLE_CONFIG: Record<UserRole, { label: string, color: string }> = {
+  admin: { label: '管理者', color: 'var(--color-role-admin)' },
+  worker: { label: '作業者', color: 'var(--color-role-worker)' },
+  viewer: { label: '閲覧者', color: 'var(--color-role-viewer)' },
+}
+
+/**
  * ユーザー新規登録 入力フィールド定義
  */
 export const USER_CREATE_FORM_FIELDS = [
@@ -37,6 +46,16 @@ export const SITE_STATUS_OPTIONS: SelectOption<SiteStatus>[] = [
   { label: '完了', value: 'completed' },
   { label: '保留', value: 'on_hold' },
 ]
+
+/**
+ * 現場ステータス表示設定（バッジ表示用）
+ */
+export const SITE_STATUS_CONFIG: Record<SiteStatus, { label: string, color: string }> = {
+  planning: { label: '計画中', color: 'var(--color-text-muted)' },
+  in_progress: { label: '進行中', color: 'var(--theme-accent)' },
+  completed: { label: '完了', color: 'var(--color-status-success)' },
+  on_hold: { label: '保留', color: 'var(--color-status-warning)' },
+}
 
 /**
  * 現場詳細設定 タブ定義

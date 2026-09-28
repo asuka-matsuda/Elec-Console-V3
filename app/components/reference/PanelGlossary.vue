@@ -3,7 +3,7 @@
  * PanelGlossary
  * [Reference Molecules] 用語集の単一用語を表示するパネルコンポーネント。
  */
-import type { BadgePresetId } from '~/types/components'
+import { TRADE_COLOR_MAP } from '~/constants/data/glossaryData'
 
 interface GlossaryItem {
   term: string
@@ -16,7 +16,6 @@ interface GlossaryItem {
 
 defineProps<{
   item: GlossaryItem
-  badgeId?: BadgePresetId
 }>()
 </script>
 
@@ -29,10 +28,7 @@ defineProps<{
           {{ item.term }}
         </h2>
       </div>
-      <Badge
-        v-if="badgeId"
-        :id="badgeId"
-      >
+      <Badge :color="TRADE_COLOR_MAP[item.category]">
         {{ item.category }}
       </Badge>
     </header>

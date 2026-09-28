@@ -188,9 +188,9 @@ const handleSave = () => {
                   v-for="worker in workerNames"
                   :key="worker"
                 >
-                  <Badge id="site:worker-tag">
+                  <span class="inline-flex items-center worker-name">
                     {{ worker }}
-                  </Badge>
+                  </span>
                 </li>
               </ul>
               <EmptyState
@@ -310,3 +310,11 @@ const handleSave = () => {
     </template>
   </section>
 </template>
+
+<style scoped lang="scss">
+.worker-name {
+  padding: 0.1em var(--spacing-inline-gap);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+</style>

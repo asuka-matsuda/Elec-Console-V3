@@ -111,7 +111,7 @@ const handleKeydown = (event: KeyboardEvent, currentIndex: number) => {
             <span>{{ option.label }}</span>
             <Badge
               v-if="option.badge !== undefined"
-              :id="option.badgeVariant"
+              :color="option.badgeColor"
             >
               {{ option.badge }}
             </Badge>

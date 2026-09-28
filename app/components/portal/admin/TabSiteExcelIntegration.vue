@@ -124,20 +124,14 @@ const {
     >
       <div class="flex flex-wrap items-center gap-item-gap">
         <template v-if="syncResultData.type === 'merge'">
-          <Badge id="sync:added">
-            追加: +{{ syncResultData.createdCount ?? 0 }} 件
-          </Badge>
-          <Badge id="sync:updated">
-            変更: {{ syncResultData.updatedCount ?? 0 }} 件
-          </Badge>
-          <small>
+          <span>追加: <strong class="text-success">+{{ syncResultData.createdCount ?? 0 }}</strong> 件</span>
+          <span>変更: <strong class="text-warning">{{ syncResultData.updatedCount ?? 0 }}</strong> 件</span>
+          <small class="text-muted">
             全回路数: {{ syncResultData.count }} 件
           </small>
         </template>
         <template v-else-if="syncResultData.type === 'reset'">
-          <Badge id="sync:imported">
-            取込総数: {{ syncResultData.count }} 件
-          </Badge>
+          <span>取込総数: <strong>{{ syncResultData.count }}</strong> 件</span>
         </template>
       </div>
     </ResultPanel>

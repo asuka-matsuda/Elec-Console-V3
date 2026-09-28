@@ -101,9 +101,9 @@ const getGroupData = (keiTo: '幹線' | '二次側', stats: SoudenStats) => {
                   <div class="phase-stat flex items-center gap-item-gap">
                     <span><strong>{{ item.completed }}</strong> / {{ getGroupData(group.keiTo, stats).total }}</span>
                     <span class="stat-pct">({{ item.pct }}%)</span>
-                    <Badge v-if="getGroupData(group.keiTo, stats).excluded > 0" id="exam:excluded">
-                      除外: {{ getGroupData(group.keiTo, stats).excluded }}
-                    </Badge>
+                    <small v-if="getGroupData(group.keiTo, stats).excluded > 0" class="text-muted">
+                      (除外: {{ getGroupData(group.keiTo, stats).excluded }})
+                    </small>
                   </div>
                 </div>
                 <PortalProgressBar :value="item.pct" />

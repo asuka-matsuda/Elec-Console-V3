@@ -6,12 +6,9 @@
 
 import type { ComputedRef } from 'vue'
 
-import type { BadgePresetId } from '~/constants/badgeConfig'
 import type { MenuItem } from '~/constants/data/menuData'
 import type { HelpId } from '~/constants/helpConstants'
 import type { IconName } from '~/constants/icons'
-
-export type { BadgePresetId }
 
 // ============================================================================
 // 1. 共通UIデータ型 & 選択肢オプション型 (Common Options & Table / Nav)
@@ -41,8 +38,8 @@ export interface TabOption<V = string | number> {
   icon?: IconName
   /** タブ右側に表示するバッジ（任意） */
   badge?: string | number
-  /** バッジのバリアント */
-  badgeVariant?: BadgePresetId
+  /** バッジの発光色（任意。CSS変数またはカラー値） */
+  badgeColor?: string
 }
 
 /** 汎用テーブルカラム定義 */
@@ -119,9 +116,7 @@ export interface IconProps {
 
 // --- Badge ---
 export interface BadgeProps {
-  /** プリセット定義ID（例: 'role:admin', 'site:completed' 等） */
-  id?: BadgePresetId
-  /** バッジの基調色（直接指定する場合） */
+  /** バッジの発光色（CSS変数またはカラー値。未指定時は muted） */
   color?: string
 }
 

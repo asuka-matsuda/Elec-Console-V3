@@ -186,6 +186,7 @@ model History {
   date      String
   desc      String
   status    String   @default("neutral")
+  toolId    String?
   createdAt DateTime @default(now())
 }
 

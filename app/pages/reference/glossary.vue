@@ -7,7 +7,6 @@ import { computed, ref } from 'vue'
 
 import { useDbFilter } from '~/composables/useDbFilter'
 import { glossaryData } from '~/constants/data/glossaryData'
-import type { BadgePresetId } from '~/types/components'
 import {
   collectAvailableKanaRows,
   filterByKana,
@@ -40,14 +39,6 @@ const filteredGlossary = computed(() => {
 const availableRows = computed(() =>
   collectAvailableKanaRows(baseFilteredGlossary.value, item => item.kana),
 )
-
-const categoryPresetMap: Record<string, BadgePresetId> = {
-  電気: 'trade:electric',
-  建築: 'trade:architecture',
-  空調・換気: 'trade:hvac',
-  衛生: 'trade:plumbing',
-  雑学: 'trade:trivia',
-}
 </script>
 
 <template>
@@ -78,7 +69,6 @@ const categoryPresetMap: Record<string, BadgePresetId> = {
       >
         <PanelGlossary
           :item="item"
-          :badge-id="categoryPresetMap[item.category]"
         />
       </li>
     </ul>
