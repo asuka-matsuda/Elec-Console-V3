@@ -7,6 +7,8 @@ module.exports = {
   rules: {
     // クラス名のパターン（BEMなどを許容するため）
     'selector-class-pattern': null,
+    // コンテナクエリは Tailwind の @container に一本化するため SCSS での直接使用を禁止
+    'at-rule-disallowed-list': ['container'],
     // !important の使用を禁止
     'declaration-no-important': true,
     // Vueの:deep()など疑似クラスのパースエラー回避
@@ -112,7 +114,6 @@ module.exports = {
         // 状態セレクタの手書きを禁止し、純粋な支援アクセシビリティセレクタ（aria-*, role）を禁止
         'selector-disallowed-list': [
           [
-            '/^&(:disabled|\\.is-(interactive|disabled))/',
             '/is-hover/',
             '/&\\.(active|selected|open)\\b/',
             '/&\\.is-(selected|current)\\b/',

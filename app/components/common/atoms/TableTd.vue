@@ -11,12 +11,8 @@ import type { TableTdProps } from '~/types/components'
 import { applyNoBreakToText } from '~/utils/noBreak'
 
 const props = withDefaults(defineProps<TableTdProps>(), {
-  value: undefined,
-  subValue: undefined,
   align: 'left',
-  truncate: undefined,
   emptyFallback: '-',
-  title: undefined,
 })
 
 defineSlots<{

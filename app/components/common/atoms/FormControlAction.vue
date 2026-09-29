@@ -1,17 +1,14 @@
 <script setup lang="ts">
 /**
  * FormControlAction
- * [Atoms] フォームコントロール（Input / Select 等）の末尾に配置されるアイコン・アクションボタン。
- * クリア（×）、パスワード表示切替（目玉）、展開矢印（∨）などの末尾アクションを一元管理します。
+ * [Atoms] フォームコントロール（Input / Select 等）の末尾に配置されるインラインアクションボタン。
+ * クリア（×）、パスワード表示切替（目玉）などの末尾アクションを提供します。
  * アイコンサイズは親要素の文字サイズ（em）に自動連動します。
  */
 import type { FormControlActionProps } from '~/types/components'
 
 const props = withDefaults(defineProps<FormControlActionProps>(), {
-  interactive: true,
   disabled: false,
-  rotate: false,
-  tabindex: -1,
 })
 
 const emit = defineEmits<{
@@ -19,7 +16,7 @@ const emit = defineEmits<{
 }>()
 
 const handleClick = (event: MouseEvent) => {
-  if (!props.interactive || props.disabled) return
+  if (props.disabled) return
   event.stopPropagation()
   emit('click', event)
 }
@@ -27,14 +24,8 @@ const handleClick = (event: MouseEvent) => {
 
 <template>
   <span
-    :tabindex="disabled ? undefined : tabindex"
-    :title="title"
-    class="inline-flex shrink-0 items-center justify-center form-control-action"
-    :class="{
-      'is-rotated': rotate,
-      'is-non-interactive': !interactive,
-      'is-disabled': disabled,
-    }"
+    class="form-control-action"
+    :class="{ 'is-disabled': disabled }"
     @mousedown.prevent
     @click="handleClick"
   >
@@ -44,16 +35,17 @@ const handleClick = (event: MouseEvent) => {
 
 <style scoped lang="scss">
 .form-control-action {
-  cursor: pointer;
-  user-select: none;
+  display: inline-flex;
 
   padding: 0.2em;
-  border: none;
 
   font-size: inherit;
+  line-height: 1;
   color: var(--color-text-muted);
 
   transition: var(--transition-fast);
+
+  @include state-interactive;
 
   &:hover {
     color: var(--color-text-main);
@@ -61,19 +53,6 @@ const handleClick = (event: MouseEvent) => {
 
   &:active {
     transform: scale(0.92);
-  }
-
-  &.is-rotated {
-    transform: rotate(180deg);
-  }
-
-  &.is-non-interactive {
-    pointer-events: none;
-    cursor: default;
-
-    &:active {
-      transform: none;
-    }
   }
 
   @include state-disabled;

@@ -64,10 +64,10 @@ const assignedSites = computed(() => {
 
         <div class="flex flex-col gap-item-gap">
           <small>登録済現場</small>
-          <p v-if="assignedSites.length === 0" class="m-0">
+          <p v-if="assignedSites.length === 0">
             登録されている現場はありません。
           </p>
-          <ul v-else class="flex flex-col gap-item-gap p-0 m-0 list-none">
+          <ul v-else class="flex flex-col gap-item-gap">
             <li
               v-for="site in assignedSites"
               :key="site.id"
@@ -122,7 +122,6 @@ const assignedSites = computed(() => {
             placeholder="現在のパスワードを入力"
             autocomplete="current-password"
             :disabled="isLoading"
-            :clearable="false"
           />
         </FormGroup>
 
@@ -136,7 +135,6 @@ const assignedSites = computed(() => {
             placeholder="新しいパスワードを入力"
             autocomplete="new-password"
             :disabled="isLoading"
-            :clearable="false"
           />
         </FormGroup>
 
@@ -150,7 +148,6 @@ const assignedSites = computed(() => {
             placeholder="もう一度入力"
             autocomplete="new-password"
             :disabled="isLoading"
-            :clearable="false"
           />
         </FormGroup>
 

@@ -30,7 +30,7 @@ withDefaults(defineProps<FilterPanelProps>(), {
 
     <ul
       v-if="categoryOptions.length > 0"
-      class="grid grid-cols-[repeat(auto-fill,minmax(115px,1fr))] gap-item-gap list-none m-0 p-0"
+      class="grid grid-cols-[repeat(auto-fill,minmax(115px,1fr))] gap-item-gap"
     >
       <li
         v-for="cat in categoryOptions"

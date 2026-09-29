@@ -9,12 +9,7 @@ import { FORM_GROUP_KEY } from '~/constants/injectionKeys'
 import type { FormGroupProps } from '~/types/components'
 
 const props = withDefaults(defineProps<FormGroupProps>(), {
-  id: undefined,
-  label: undefined,
   required: false,
-  error: undefined,
-  help: undefined,
-  helpId: undefined,
 })
 
 const defaultId = useId()
@@ -42,11 +37,11 @@ provide(FORM_GROUP_KEY, {
 
     <slot />
 
-    <p v-if="error" class="error-text m-0">
+    <p v-if="error" class="error-text">
       {{ error }}
     </p>
 
-    <p v-if="help" class="help-text m-0">
+    <p v-if="help" class="help-text">
       {{ help }}
     </p>
   </div>
@@ -57,8 +52,6 @@ provide(FORM_GROUP_KEY, {
   font-size: var(--font-size-sm);
 
   .label {
-    user-select: none;
-
     font-weight: var(--font-weight-bold);
     line-height: var(--line-height-tight);
     color: var(--color-text-main);

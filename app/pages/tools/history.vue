@@ -41,7 +41,7 @@ const {
     <ClientOnly>
       <ul
         v-if="historyList.length > 0"
-        class="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-panel-gap list-none m-0 p-0"
+        class="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-panel-gap"
       >
         <li
           v-for="entry in historyList"

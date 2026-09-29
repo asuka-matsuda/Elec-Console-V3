@@ -20,19 +20,16 @@ const isBorder = computed(() => props.variant === 'border' || props.variant === 
 
 <template>
   <header class="flex flex-wrap items-center justify-between gap-y-inline-gap gap-x-item-gap section-header">
-    <component :is="tag" class="flex items-center gap-item-gap title">
+    <Heading :tag="tag" class="flex items-center gap-item-gap title">
       <Icon v-if="icon" :name="icon" class="icon" />
       <slot>{{ title }}</slot>
-    </component>
+    </Heading>
 
     <div v-if="$slots.actions" class="flex items-center gap-item-gap">
       <slot name="actions" />
     </div>
 
-    <Divider
-      :color="isBorder ? 'var(--color-border)' : 'var(--theme-accent)'"
-      :animated="!isBorder"
-    />
+    <Divider :type="isBorder ? 'solid' : 'fade-side'" />
   </header>
 </template>
 

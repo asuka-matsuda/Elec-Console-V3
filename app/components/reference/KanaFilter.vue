@@ -51,9 +51,6 @@ const disabledRows = computed(() => {
 
 <style scoped lang="scss">
 .kana-btn {
-  cursor: pointer;
-  user-select: none;
-
   border: var(--border-width-base) solid var(--color-border);
 
   font-size: var(--font-size-xs);
@@ -63,6 +60,8 @@ const disabledRows = computed(() => {
   background-color: var(--surface-bg-elevated);
 
   transition: var(--transition-interactive);
+
+  @include state-interactive;
 
   &:hover:not(:disabled) {
     color: var(--color-text-main);

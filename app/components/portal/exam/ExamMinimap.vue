@@ -32,12 +32,13 @@ const getTileClass = (c: CircuitItem): string =>
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .minimap-tile {
-  cursor: pointer;
   border: 1px solid var(--color-tile-empty-border);
   background-color: var(--color-tile-empty-bg);
   transition: transform var(--transition-fast, 0.15s ease), border-color var(--transition-fast, 0.15s ease);
+
+  @include state-interactive;
 }
 
 .minimap-tile:hover {

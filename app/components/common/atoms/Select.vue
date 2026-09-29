@@ -192,10 +192,10 @@ defineExpose({
           @click="handleClear"
         />
 
-        <FormControlAction
-          icon="chevron-down"
-          :rotate="isOpen"
-          :interactive="false"
+        <Icon
+          name="chevron-down"
+          class="custom-select__arrow"
+          :class="{ 'is-open': isOpen }"
         />
       </div>
     </button>
@@ -227,26 +227,18 @@ defineExpose({
 
 <style scoped lang="scss">
 .custom-select {
-  user-select: none;
-
   width: var(--select-width, 100%);
   min-width: var(--select-min-width, 0);
-
   font-size: inherit;
   color: var(--color-text-main);
 
   &[data-disabled="true"] {
-    pointer-events: none;
-    cursor: not-allowed;
-    opacity: 0.55;
+    @include state-disabled;
   }
 }
 
 .custom-select__value {
   --glow-color: var(--theme-accent);
-
-  cursor: pointer;
-  user-select: none;
 
   min-height: calc(var(--control-height-ratio) * 1em);
   padding-block: 0.3em;
@@ -261,6 +253,8 @@ defineExpose({
   box-shadow: var(--shadow-sink);
 
   transition: var(--transition-interactive);
+
+  @include state-interactive;
 
   &:not(:disabled, .is-disabled) {
     &:hover {
@@ -341,16 +335,24 @@ defineExpose({
   white-space: nowrap;
 }
 
-.custom-select__option {
-  cursor: pointer;
-  user-select: none;
+.custom-select__arrow {
+  color: var(--color-text-muted);
+  transition: transform var(--transition-fast);
 
+  &.is-open {
+    transform: rotate(180deg);
+  }
+}
+
+.custom-select__option {
   font-size: inherit;
   color: var(--color-text-main);
   text-overflow: ellipsis;
   white-space: nowrap;
 
   transition: var(--transition-colors);
+
+  @include state-interactive;
 
   &:not(:is(.is-disabled, .is-placeholder)) {
     &:is(:hover, .is-focused, .is-active) {

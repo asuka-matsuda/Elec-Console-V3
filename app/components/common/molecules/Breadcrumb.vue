@@ -8,12 +8,7 @@ import { computed } from 'vue'
 import { useBreadcrumbs } from '~/composables/useBreadcrumbs'
 import type { BreadcrumbItem, BreadcrumbProps } from '~/types/components'
 
-const props = withDefaults(
-  defineProps<BreadcrumbProps>(),
-  {
-    items: undefined,
-  },
-)
+const props = defineProps<BreadcrumbProps>()
 
 const resolvedItems = computed<BreadcrumbItem[]>(() => {
   if (props.items !== undefined) return props.items
@@ -78,6 +73,17 @@ const resolvedItems = computed<BreadcrumbItem[]>(() => {
         animation: ui-cursor-blink 1s step-end infinite;
       }
     }
+  }
+}
+
+@keyframes ui-cursor-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
   }
 }
 </style>

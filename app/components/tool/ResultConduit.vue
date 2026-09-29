@@ -21,11 +21,11 @@ const vm = computed(() => formatConduitResult(props.result))
 
 <template>
   <output
-    class="flex flex-1 flex-col min-h-0 items-stretch"
+    class="flex flex-1 flex-col min-h-0"
     :class="[size === 'sm' ? 'gap-item-gap is-sm' : 'gap-panel-gap']"
   >
 
-    <ResultPanel
+    <ResultTile
       :title="CONDUIT_UI_LABELS.TITLE_32"
       :status="vm.status32"
       :badge="vm.badge32"
@@ -35,9 +35,9 @@ const vm = computed(() => formatConduitResult(props.result))
         <span>{{ vm.size32 }}</span>
         <small v-if="vm.fillText32">{{ vm.fillText32 }}</small>
       </template>
-    </ResultPanel>
+    </ResultTile>
 
-    <ResultPanel
+    <ResultTile
       :title="CONDUIT_UI_LABELS.TITLE_48"
       :status="vm.status48"
       :badge="vm.badge48"
@@ -47,9 +47,9 @@ const vm = computed(() => formatConduitResult(props.result))
         <span>{{ vm.size48 }}</span>
         <small v-if="vm.fillText48">{{ vm.fillText48 }}</small>
       </template>
-    </ResultPanel>
+    </ResultTile>
 
-    <ResultPanel
+    <ResultTile
       :title="vm.titleCustom"
       :status="vm.statusCustom"
       :badge="vm.badgeCustom"
@@ -59,10 +59,10 @@ const vm = computed(() => formatConduitResult(props.result))
         <span>{{ vm.sizeCustom }}</span>
         <small v-if="vm.fillTextCustom">{{ vm.fillTextCustom }}</small>
       </template>
-    </ResultPanel>
+    </ResultTile>
 
     <ToolResultDetails>
-      <ul class="m-0 p-0 flex flex-col gap-inline-gap list-none">
+      <ul class="flex flex-col gap-inline-gap">
         <li>3110-6 (32%以下): 異なる太さの絶縁電線を同一管内に収める場合（原則）</li>
         <li>3110-5 (48%以下): 同一太さで、かつ管の屈曲が少なく引き替えが容易な場合</li>
       </ul>

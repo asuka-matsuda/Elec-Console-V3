@@ -82,7 +82,7 @@ const getGroupData = (keiTo: '幹線' | '二次側', stats: SoudenStats) => {
               size="sm"
               :label="group.label"
             />
-            <ul class="flex flex-1 flex-col gap-form-row-gap w-full list-none m-0 p-0">
+            <ul class="flex flex-1 flex-col gap-form-row-gap w-full">
               <li
                 v-for="item in getGroupData(group.keiTo, stats).phases"
                 :key="item.phase"

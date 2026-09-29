@@ -187,7 +187,7 @@ const getCategoryBadgeColor = (category: MeasurementDeviceCategory): string => {
 
         <ul
           v-else
-          class="flex flex-col gap-item-gap max-h-[320px] overflow-y-auto pr-inline-gap list-none m-0 p-0"
+          class="flex flex-col gap-item-gap max-h-[320px] overflow-y-auto pr-inline-gap"
         >
           <Panel
             v-for="dev in localDevices"

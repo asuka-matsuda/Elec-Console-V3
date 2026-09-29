@@ -44,7 +44,7 @@ const {
         icon="upload-cloud"
         tag="h4"
       />
-      <p class="desc-text m-0">
+      <p class="desc-text">
         回路情報・現場基本情報の更新は「差分同期」、新規立ち上げ時は「全件初期化取込」を行います。
       </p>
 
@@ -82,7 +82,7 @@ const {
         icon="file-spreadsheet"
         tag="h4"
       />
-      <small class="m-0">
+      <small>
         Web上で完了した最新の試験結果（Phase 1〜3）を含むExcel帳票ファイルをダウンロードします。
       </small>
 
@@ -96,7 +96,7 @@ const {
         >
           Excel帳票ダウンロード (ブラウザDL)
         </Button>
-        <small v-if="!hasExcelPath" class="m-0">
+        <small v-if="!hasExcelPath">
           ※ 現場設定にExcel台帳ファイルが登録されていないため、ダウンロードできません
         </small>
       </div>
@@ -117,7 +117,7 @@ const {
       {{ syncMsg }}
     </Alert>
 
-    <ResultPanel
+    <ResultTile
       v-else-if="syncResultData"
       status="success"
       :title="syncResultData.title"
@@ -134,6 +134,6 @@ const {
           <span>取込総数: <strong>{{ syncResultData.count }}</strong> 件</span>
         </template>
       </div>
-    </ResultPanel>
+    </ResultTile>
   </div>
 </template>

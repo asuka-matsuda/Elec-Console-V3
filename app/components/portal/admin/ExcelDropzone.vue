@@ -91,9 +91,6 @@ const formatSize = (bytes: number) =>
 
 <style scoped lang="scss">
 .excel-dropzone {
-  cursor: pointer;
-  user-select: none;
-
   border: 2px dashed var(--color-border);
 
   font-size: var(--font-size-sm);
@@ -102,6 +99,8 @@ const formatSize = (bytes: number) =>
   background-color: var(--surface-bg-elevated);
 
   transition: var(--transition-panel);
+
+  @include state-interactive;
 
   strong {
     color: var(--color-text-main);

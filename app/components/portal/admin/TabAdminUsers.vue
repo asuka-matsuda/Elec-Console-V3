@@ -217,7 +217,8 @@ const confirmResetPassword = async (row: User) => {
 
       <Divider
         orientation="vertical"
-        class="hidden lg:block self-stretch"
+        type="solid"
+        class="hidden lg:block"
       />
 
       <section class="flex-1 min-w-0">

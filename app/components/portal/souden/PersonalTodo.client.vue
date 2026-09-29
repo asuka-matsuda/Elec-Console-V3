@@ -31,7 +31,7 @@ const handleAdd = () => {
       tag="h3"
     />
 
-    <form class="flex items-center gap-item-gap m-0" @submit.prevent="handleAdd">
+    <form class="flex items-center gap-item-gap" @submit.prevent="handleAdd">
       <Input
         v-model="newTask"
         placeholder="新しいタスクを入力..."
@@ -42,7 +42,7 @@ const handleAdd = () => {
 
     <ul
       v-if="todos.length > 0"
-      class="overflow-y-auto flex flex-col gap-inline-gap max-h-[400px] m-0 p-0 list-none"
+      class="overflow-y-auto flex flex-col gap-inline-gap max-h-[400px]"
     >
       <li
         v-for="todo in todos"

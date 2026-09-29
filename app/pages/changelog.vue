@@ -102,7 +102,7 @@ const resolveToolInfo = (toolId?: string) => {
       </template>
     </SectionHeader>
 
-    <Panel class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-panel-gap">
+    <Panel class="flex flex-col sm:flex-row sm:items-center justify-between gap-panel-gap">
       <div class="flex items-center gap-item-gap filter-label">
         <Icon name="filter" class="shrink-0" />
         <span>対象ツール・機能:</span>
@@ -147,11 +147,11 @@ const resolveToolInfo = (toolId?: string) => {
           </time>
         </div>
 
-        <h3 class="m-0 history-title">
+        <h3 class="history-title">
           {{ item.title }}
         </h3>
 
-        <div v-if="item.desc" class="m-0 history-desc">
+        <div v-if="item.desc" class="history-desc">
           {{ item.desc }}
         </div>
       </Panel>

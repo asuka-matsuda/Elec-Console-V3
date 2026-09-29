@@ -53,8 +53,49 @@ const OVERFLOW_CLASSES: Record<PanelOverflow, string> = {
 
   transition: var(--transition-panel);
 
-  @include state-interactive;
-  @include state-active;
+  @include state-interactive {
+    &:hover {
+      border-color: color-mix(in srgb, var(--theme-accent) 70%, var(--color-border));
+      background:
+        linear-gradient(
+          135deg,
+          color-mix(in srgb, var(--theme-accent) 9%, transparent) 0%,
+          color-mix(in srgb, var(--theme-accent) 3%, transparent) 45%,
+          transparent 80%
+        ),
+        var(--surface-bg);
+      box-shadow:
+        var(--surface-rim-accent),
+        var(--shadow-glow-hover);
+    }
+
+    &:active {
+      transform: scale(0.992);
+      border-color: var(--theme-accent);
+      box-shadow:
+        var(--surface-rim-accent),
+        var(--shadow-glow-active);
+    }
+  }
+
+  &.is-active {
+    border-color: var(--theme-accent);
+    box-shadow:
+      var(--surface-rim-accent),
+      var(--shadow-glow-sm);
+
+    @include state-interactive {
+      background:
+        linear-gradient(
+          135deg,
+          color-mix(in srgb, var(--theme-accent) 14%, transparent) 0%,
+          color-mix(in srgb, var(--theme-accent) 6%, transparent) 50%,
+          transparent 95%
+        ),
+        var(--surface-bg);
+    }
+  }
+
   @include state-disabled;
 }
 </style>

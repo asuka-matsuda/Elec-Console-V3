@@ -122,18 +122,29 @@ export interface BadgeProps {
 }
 
 // --- Divider ---
-type DividerType = 'solid' | 'fade-center' | 'fade-side'
-type DividerOrientation = 'horizontal' | 'vertical'
+export type DividerType = 'fade-side' | 'fade-center' | 'solid'
+export type DividerOrientation = 'horizontal' | 'vertical'
 
 export interface DividerProps {
-  /** 線の基調色（CSSカラー値またはCSS変数。デフォルト: var(--theme-accent)） */
-  color?: string
-  /** 線のスタイル種別（デフォルト: 'solid'） */
+  /** 線のスタイル種別（デフォルト: 'fade-side'。垂直時は常に solid 境界線として振る舞います） */
   type?: DividerType
   /** 線の向き（デフォルト: 'horizontal'） */
   orientation?: DividerOrientation
-  /** アニメーション（スケール演出・パルス光）を有効にするか（デフォルト: true） */
-  animated?: boolean
+  /** 線の基調色（CSSカラー値またはCSS変数。未指定時は現在のカテゴリカラーが自動適用） */
+  color?: string
+}
+
+// --- Heading ---
+export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6 | '1' | '2' | '3' | '4' | '5' | '6' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+export type HeadingSize = '3xl' | '2xl' | 'xl' | 'lg' | 'base'
+
+export interface HeadingProps {
+  /** 出力する見出しタグ（1〜6 または h1〜h6。デフォルト: 2） */
+  level?: HeadingLevel
+  /** 出力する見出しタグ（level のエイリアス） */
+  tag?: HeadingLevel
+  /** 視覚サイズ（未指定時は level に応じて自動決定） */
+  size?: HeadingSize
 }
 
 // --- SectionHeader ---
@@ -280,16 +291,8 @@ export interface TextareaProps {
 export interface FormControlActionProps {
   /** 表示するアイコン名 */
   icon: IconName
-  /** ツールチップ用タイトル */
-  title?: string
-  /** 180度回転状態（セレクトボックス展開矢印等） */
-  rotate?: boolean
-  /** 操作可能か（false の場合は単なるインジケーターとして表示） */
-  interactive?: boolean
   /** 無効化状態 */
   disabled?: boolean
-  /** フォーカス用 tabindex (デフォルト: -1) */
-  tabindex?: number
 }
 
 // --- RadioGroup ---
@@ -348,16 +351,18 @@ export interface TabsProps<T = string | number> {
   keepAlive?: boolean
 }
 
-// --- ResultPanel & ResultDetails ---
-export type ResultPanelStatus = 'neutral' | 'success' | 'warning' | 'danger' | 'empty'
+// --- ResultTile & ResultDetails ---
+export type ResultTileStatus = 'neutral' | 'success' | 'warning' | 'danger' | 'empty'
+export type ResultPanelStatus = ResultTileStatus
 
-export interface ResultPanelProps {
+export interface ResultTileProps {
   title?: string
-  status?: ResultPanelStatus
+  status?: ResultTileStatus
   badge?: string
   isEmpty?: boolean
   size?: 'sm' | 'md'
 }
+export type ResultPanelProps = ResultTileProps
 
 export interface ResultDetailItem {
   label: string

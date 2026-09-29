@@ -25,10 +25,7 @@ const props = withDefaults(
   defineProps<Omit<TableProps<T>, 'sortBy' | 'sortOrder'>>(),
   {
     data: () => [],
-    fullData: undefined,
     rowKey: 'id',
-    rowClass: undefined,
-    rowId: undefined,
     autoWidth: true,
     emptyText: 'データがありません',
     loading: false,
@@ -98,7 +95,7 @@ const getCellValue = (row: unknown, key?: string | number) => getTableCellValue(
     ref="tableWrapperRef"
     class="table-wrapper flex-1 min-h-0 overflow-auto"
   >
-    <table class="w-full min-w-full table-fixed text-left">
+    <table class="min-w-full table-fixed text-left">
 
       <colgroup>
         <col
@@ -213,16 +210,20 @@ const getCellValue = (row: unknown, key?: string | number) => getTableCellValue(
 .table-row {
   transition: var(--transition-colors);
 
-  @include state-interactive;
+  @include state-interactive {
+    &:hover {
+      background:
+        linear-gradient(
+          to right,
+          color-mix(in srgb, var(--theme-accent) 7%, transparent) 0%,
+          color-mix(in srgb, var(--theme-accent) 1%, transparent) 40%,
+          transparent 70%
+        );
+    }
 
-  &:hover {
-    background:
-      linear-gradient(
-        to right,
-        color-mix(in srgb, var(--theme-accent) 7%, transparent) 0%,
-        color-mix(in srgb, var(--theme-accent) 1%, transparent) 40%,
-        transparent 70%
-      );
+    &:active {
+      background-color: color-mix(in srgb, var(--theme-accent) 10%, transparent);
+    }
   }
 
   &:last-child {

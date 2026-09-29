@@ -8,13 +8,17 @@ import noJsdocTypeAnnotations from './eslint-rules/no-jsdoc-type-annotations.mjs
 import noLegacyCssVars from './eslint-rules/no-legacy-css-vars.mjs'
 import noPureAccessibility from './eslint-rules/no-pure-accessibility.mjs'
 import noRawHtmlElements from './eslint-rules/no-raw-html-elements.mjs'
+import noRedundantTailwindClasses from './eslint-rules/no-redundant-tailwind-classes.mjs'
+import noRedundantVueDefaults from './eslint-rules/no-redundant-vue-defaults.mjs'
 import noTailwindDecoration from './eslint-rules/no-tailwind-decoration.mjs'
 import noTemplateComments from './eslint-rules/no-template-comments.mjs'
 import noTrivialFacade from './eslint-rules/no-trivial-facade.mjs'
 import requireFileJsdoc from './eslint-rules/require-file-jsdoc.mjs'
 import strictBadgeUsage from './eslint-rules/strict-badge-usage.mjs'
+import strictResponsiveTokens from './eslint-rules/strict-responsive-tokens.mjs'
 import strictSpacingTokens from './eslint-rules/strict-spacing-tokens.mjs'
 import strictStateManagement from './eslint-rules/strict-state-management.mjs'
+import strictStateMixins from './eslint-rules/strict-state-mixins.mjs'
 import strictTimeManagement from './eslint-rules/strict-time-management.mjs'
 import strictUiStates from './eslint-rules/strict-ui-states.mjs'
 
@@ -25,6 +29,8 @@ export default withNuxt(
       'local': {
         rules: {
           'no-tailwind-decoration': noTailwindDecoration,
+          'no-redundant-tailwind-classes': noRedundantTailwindClasses,
+          'no-redundant-vue-defaults': noRedundantVueDefaults,
           'strict-spacing-tokens': strictSpacingTokens,
           'no-hover-transition-override': noHoverTransitionOverride,
           'no-legacy-css-vars': noLegacyCssVars,
@@ -37,14 +43,19 @@ export default withNuxt(
           'no-jsdoc-type-annotations': noJsdocTypeAnnotations,
           'no-trivial-facade': noTrivialFacade,
           'strict-state-management': strictStateManagement,
+          'strict-state-mixins': strictStateMixins,
           'strict-time-management': strictTimeManagement,
           'strict-ui-states': strictUiStates,
           'strict-badge-usage': strictBadgeUsage,
+          'strict-responsive-tokens': strictResponsiveTokens,
         },
       },
     },
     rules: {
+      'local/strict-responsive-tokens': ['error', { allowMobileFirst: true }],
       'local/no-tailwind-decoration': 'error',
+      'local/no-redundant-tailwind-classes': 'error',
+      'local/no-redundant-vue-defaults': 'error',
       'local/strict-spacing-tokens': 'error',
       'local/no-hover-transition-override': 'error',
       'local/no-legacy-css-vars': 'error',
@@ -57,6 +68,7 @@ export default withNuxt(
       'local/no-jsdoc-type-annotations': 'error',
       'local/no-trivial-facade': 'error',
       'local/strict-state-management': 'error',
+      'local/strict-state-mixins': 'error',
       'local/strict-time-management': 'error',
       'local/strict-ui-states': 'error',
       'local/strict-badge-usage': 'error',

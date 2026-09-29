@@ -1,28 +1,28 @@
 <script setup lang="ts">
 /**
- * ResultPanel
- * [Molecules] 計算ツールやサマリー画面で、主要な結果数値・ステータス（判定）を表示する特化パネル。
+ * ResultTile
+ * [Molecules] 計算ツールやサマリー画面で、主要な結果数値・ステータス（判定）を表示する特化タイル。
  * 計器風の凹みシャドウ（--shadow-sink）、等幅数値フォント、判定ステータスに応じたボーダー・テキストカラーを提供します。
  */
 import { computed } from 'vue'
 
-import type { ResultPanelProps, ResultPanelStatus } from '~/types/components'
+import type { ResultTileProps, ResultTileStatus } from '~/types/components'
 
-const props = withDefaults(defineProps<ResultPanelProps>(), {
+const props = withDefaults(defineProps<ResultTileProps>(), {
   status: 'neutral',
   isEmpty: false,
   size: 'md',
 })
 
 // isEmpty prop が指定されている場合は優先して 'empty' に解決
-const resolvedStatus = computed<ResultPanelStatus>(() => {
+const resolvedStatus = computed<ResultTileStatus>(() => {
   if (props.isEmpty) return 'empty'
 
   return props.status || 'neutral'
 })
 
 // バッジ発光色の導出（status に連動）
-const BADGE_STATUS_COLOR_MAP: Record<ResultPanelStatus, string> = {
+const BADGE_STATUS_COLOR_MAP: Record<ResultTileStatus, string> = {
   danger: 'var(--color-status-danger)',
   warning: 'var(--color-status-warning)',
   success: 'var(--color-status-success)',
@@ -34,10 +34,9 @@ const badgeColor = computed(() => BADGE_STATUS_COLOR_MAP[resolvedStatus.value] ?
 
 <template>
   <output
-    class="result-panel flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0"
+    class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0"
     :class="[`is-${resolvedStatus}`, `is-${size}`]"
   >
-
     <header v-if="title || badge || $slots.title || $slots.badge" class="flex items-center justify-center gap-inline-gap">
       <slot name="title">
         <span>{{ title }}</span>
@@ -58,7 +57,7 @@ const badgeColor = computed(() => BADGE_STATUS_COLOR_MAP[resolvedStatus.value] ?
 </template>
 
 <style scoped lang="scss">
-.result-panel {
+.result-tile {
   padding: var(--space-2) var(--space-3);
   border: var(--border-width-base) solid var(--color-border);
 

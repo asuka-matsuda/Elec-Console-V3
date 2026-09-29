@@ -11,10 +11,7 @@ import { computed, ref } from 'vue'
 import type { HelpTipProps } from '~/types/components'
 import { getHelpContent } from '~/utils/help'
 
-const props = withDefaults(defineProps<HelpTipProps>(), {
-  helpId: undefined,
-  text: undefined,
-})
+const props = defineProps<HelpTipProps>()
 
 const isOpen = ref(false)
 const triggerRef = ref<HTMLElement | null>(null)
@@ -101,14 +98,12 @@ if (import.meta.client) {
 
 <style scoped lang="scss">
 .helptip-trigger {
-  cursor: pointer;
-
   width: 1.1em;
   height: 1.1em;
-
   color: var(--color-text-muted);
-
   transition: var(--transition-colors);
+
+  @include state-interactive;
 
   &:hover {
     color: var(--theme-accent);

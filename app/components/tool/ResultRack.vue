@@ -27,7 +27,7 @@ const vm = computed(() =>
 <template>
   <output class="flex flex-col gap-panel-gap">
 
-    <ResultPanel
+    <ResultTile
       :title="vm.tier1.title"
       :status="vm.tier1.panelStatus"
       :badge="vm.tier1.badgeText"
@@ -36,9 +36,9 @@ const vm = computed(() =>
       <template #value>
         {{ vm.tier1.displaySize }}
       </template>
-    </ResultPanel>
+    </ResultTile>
 
-    <ResultPanel
+    <ResultTile
       :title="vm.tier2.title"
       :status="vm.tier2.panelStatus"
       :badge="vm.tier2.badgeText"
@@ -52,7 +52,7 @@ const vm = computed(() =>
           {{ vm.tier2.notApplicableText }}
         </span>
       </template>
-    </ResultPanel>
+    </ResultTile>
 
     <ToolResultDetails :items="vm.details" />
   </output>

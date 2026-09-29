@@ -2,151 +2,66 @@
 /**
  * Divider
  * [Atoms] 画面やコンテンツの区切り線を表示する最小コンポーネント。
- * 水平方向のサイバーパルス光アニメーション、垂直方向の静的区切り、グラデーションフェードに対応します。
+ * カテゴリカラー（--theme-accent）による水平フェード（fade-side / fade-center）および構造的ソリッド（solid / 垂直方向）に対応します。
  */
 import { computed } from 'vue'
 
 import type { DividerProps } from '~/types/components'
 
-const {
-  color,
-  type = 'solid',
-  orientation = 'horizontal',
-  animated = true,
-} = defineProps<DividerProps>()
+const props = withDefaults(defineProps<DividerProps>(), {
+  type: 'fade-side',
+  orientation: 'horizontal',
+})
 
-const resolvedColor = computed(() => color || 'var(--theme-accent)')
+// 垂直方向は構造的にフェードが存在しないため、常に solid として解決する
+const effectiveType = computed(() =>
+  props.orientation === 'vertical' ? 'solid' : props.type,
+)
 </script>
 
 <template>
   <hr
-    class="divider relative shrink-0 overflow-hidden"
+    class="divider shrink-0"
     :class="[
       orientation === 'horizontal'
         ? 'w-full h-px'
         : 'w-px h-full min-h-[1em] self-stretch',
-      `is-${type}`,
+      `is-${effectiveType}`,
       `is-${orientation}`,
-      { 'is-animated': animated && orientation === 'horizontal' },
     ]"
-    :style="{ '--divider-color': resolvedColor }"
+    :style="color ? { '--divider-custom-color': color } : undefined"
   >
 </template>
 
 <style scoped lang="scss">
 .divider {
-  --glow-color: var(--divider-color);
+  --divider-accent: var(--divider-custom-color, var(--theme-accent));
 
   border: none;
 
-  // 1. ソリッド型（左端アクセントから右へ緩やかに馴染む微細グラデーション）
-  &.is-solid {
-    background:
-      linear-gradient(
-        to right,
-        color-mix(in srgb, var(--divider-color) 45%, var(--color-border)) 0%,
-        color-mix(in srgb, var(--divider-color) 15%, var(--color-border)) 40%,
-        var(--color-border) 100%
-      );
-  }
-
-  // 2. センターフェード型
-  &.is-fade-center {
-    &.is-horizontal {
-      background: linear-gradient(
-        to right,
-        transparent 0%,
-        var(--divider-color) 50%,
-        transparent 100%
-      );
-    }
-
-    &.is-vertical {
-      background: linear-gradient(
-        to bottom,
-        transparent 0%,
-        var(--divider-color) 50%,
-        transparent 100%
-      );
-    }
-  }
-
-  // 3. サイドフェード型
+  // 1. 起点アクセントから右へ抜けるグラデーション
   &.is-fade-side {
-    &.is-horizontal {
-      background: linear-gradient(
-        to right,
-        var(--divider-color) 0%,
-        transparent 100%
-      );
-    }
-
-    &.is-vertical {
-      background: linear-gradient(
-        to bottom,
-        var(--divider-color) 0%,
-        transparent 100%
-      );
-    }
-  }
-}
-
-// アニメーション有効時（設定ON かつ OS視覚効果抑制なし）のみアニメーションを付与
-@media (prefers-reduced-motion: no-preference) {
-  :root:not([data-animation="off"]) .divider.is-horizontal.is-animated {
-    transform-origin: center;
-    animation: divider-scale-x 0.6s var(--ease-smooth) forwards;
-
-    &.is-solid::before {
-      content: "";
-
-      position: absolute;
-      top: 0;
-      left: -50%;
-
-      width: 50%;
-      height: 100%;
-
-      background: linear-gradient(
-        90deg,
-        transparent 0%,
-        color-mix(in srgb, var(--divider-color) 55%, transparent) 50%,
-        transparent 100%
-      );
-
-      animation: data-sheen 4.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-    }
-  }
-}
-
-// アニメーション定義
-@keyframes divider-scale-x {
-  from {
-    transform: scaleX(0);
-    opacity: 0;
+    background: linear-gradient(
+      to right,
+      var(--divider-accent) 0%,
+      color-mix(in srgb, var(--divider-accent) 35%, transparent) 40%,
+      transparent 100%
+    );
   }
 
-  to {
-    transform: scaleX(1);
-    opacity: 1;
-  }
-}
-
-@keyframes data-sheen {
-  0%,
-  20% {
-    transform: translateX(0);
-    opacity: 0;
+  // 2. 中央が光り両端がフェードするグラデーション
+  &.is-fade-center {
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      var(--divider-accent) 50%,
+      transparent 100%
+    );
   }
 
-  35% {
-    opacity: 0.85;
-  }
-
-  65%,
-  100% {
-    transform: translateX(350%);
-    opacity: 0;
+  // 3. 均一な境界線（背景・枠線に馴染む控えめなボーダー）
+  &.is-solid {
+    background-color: var(--divider-custom-color, var(--color-border));
   }
 }
 </style>

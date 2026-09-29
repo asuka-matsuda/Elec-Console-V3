@@ -43,7 +43,7 @@ const activeDetail = ref<{ item: AnnouncementItem | HistoryItem, type: DetailTyp
       >
         <SectionHeader :title="section.heading" :icon="section.icon" />
 
-        <ul class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-panel-gap list-none m-0 p-0">
+        <ul class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-panel-gap">
           <li
             v-for="item in section.items"
             :key="item.text"
@@ -121,11 +121,11 @@ const activeDetail = ref<{ item: AnnouncementItem | HistoryItem, type: DetailTyp
           </small>
         </header>
 
-        <h4 class="m-0">
+        <Heading :level="4">
           {{ activeDetail.item.title }}
-        </h4>
+        </Heading>
 
-        <p class="m-0 whitespace-pre-wrap">
+        <p class="whitespace-pre-wrap">
           {{ activeDetail.item.desc || '詳細情報はありません。' }}
         </p>
       </div>

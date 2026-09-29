@@ -85,7 +85,7 @@ const filteredSites = computed(() => {
       block
     />
 
-    <ul class="flex flex-col gap-item-gap overflow-y-auto flex-1 min-h-[300px] list-none m-0 p-0">
+    <ul class="flex flex-col gap-item-gap overflow-y-auto flex-1 min-h-[300px]">
       <Panel
         v-for="site in filteredSites"
         :key="site.id"

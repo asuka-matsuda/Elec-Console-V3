@@ -124,7 +124,7 @@ onMounted(() => {
           class="px-item-gap"
         />
 
-        <ul class="m-0 p-0 flex flex-col gap-inline-gap list-none">
+        <ul class="flex flex-col gap-inline-gap">
           <li
             v-for="item in getVisibleItems(section.items)"
             :key="item.href"

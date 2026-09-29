@@ -74,7 +74,6 @@ const handleLogin = async () => {
             :type="field.type"
             :placeholder="field.placeholder"
             :disabled="isLoading"
-            :clearable="field.type !== 'password'"
           />
         </FormGroup>
       </template>

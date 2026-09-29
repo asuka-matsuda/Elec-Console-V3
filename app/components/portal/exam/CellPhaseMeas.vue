@@ -28,8 +28,6 @@ const props = withDefaults(
     disabled: false,
     threshold: 1.0,
     haidenHoushiki: null,
-    step: undefined,
-    voltageRange: undefined,
   },
 )
 

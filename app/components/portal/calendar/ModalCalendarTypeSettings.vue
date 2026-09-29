@@ -34,11 +34,11 @@ const {
 <template>
   <Modal v-model="isOpen" title="予定種別の設定">
     <div class="flex flex-col gap-panel-gap">
-      <p class="m-0 lead-text">
+      <p class="lead-text">
         カレンダーに表示する予定種別とテーマカラーを設定します。
       </p>
 
-      <ul class="flex flex-col gap-item-gap max-h-[400px] overflow-y-auto m-0 pl-0 pr-inline-gap list-none">
+      <ul class="flex flex-col gap-item-gap max-h-[400px] overflow-y-auto pr-inline-gap">
         <li
           v-for="(t, index) in types"
           :key="t.id"
@@ -119,10 +119,11 @@ const {
 }
 
 .color-dot {
-  cursor: pointer;
   border: 1px solid color-mix(in srgb, black 15%, transparent);
   border-radius: 50%;
   transition: var(--transition-interactive);
+
+  @include state-interactive;
 
   &:hover {
     transform: scale(1.18);

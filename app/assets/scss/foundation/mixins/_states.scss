@@ -1,199 +1,36 @@
 // ==========================================================================
 // 状態管理（State Management）共通 Mixins
+// 普遍的な状態の振る舞い（ポインタ制御・待機・非活性）のみを定義する
 // ==========================================================================
 
-// --------------------------------------------------------------------------
-// 1. サーフェス系（パネル、タイル、リスト行、ドロップゾーン）
-// --------------------------------------------------------------------------
-
-// 1-1. 操作可能時の挙動（天面光沢＋135degアンビエントグラデーション＋多層ソフトグロー）
+// 操作可能状態（ポインタカーソルと選択の制御）
 @mixin state-interactive {
-  &.is-interactive:not(:disabled, .is-disabled) {
-    cursor: pointer;
-    user-select: none;
+  cursor: pointer;
+  user-select: none;
 
-    &:hover,
-    &:focus-visible {
-      border-color: color-mix(in srgb, var(--theme-accent) 70%, var(--color-border));
-      background:
-        linear-gradient(
-          135deg,
-          color-mix(in srgb, var(--theme-accent) 9%, transparent) 0%,
-          color-mix(in srgb, var(--theme-accent) 3%, transparent) 45%,
-          transparent 80%
-        ),
-        var(--surface-bg);
-      box-shadow:
-        var(--surface-rim-accent),
-        var(--shadow-glow-hover);
-    }
-
-    &:active {
-      transform: scale(0.992);
-      border-color: var(--theme-accent);
-      background:
-        linear-gradient(
-          135deg,
-          color-mix(in srgb, var(--theme-accent) 14%, transparent) 0%,
-          color-mix(in srgb, var(--theme-accent) 5%, transparent) 55%,
-          transparent 85%
-        ),
-        var(--surface-bg);
-      box-shadow:
-        var(--surface-rim-accent),
-        var(--shadow-glow-active);
-    }
-  }
+  @content;
 }
 
-// 1-2. アクティブ・選択状態（135deg マルチストップ・アンビエントグラデーション + 天面エッジハイライト + ソフトグロー）
-@mixin state-active {
-  &.is-active {
-    border-color: var(--theme-accent);
-    background:
-      linear-gradient(
-        135deg,
-        color-mix(in srgb, var(--theme-accent) 14%, transparent) 0%,
-        color-mix(in srgb, var(--theme-accent) 6%, transparent) 50%,
-        transparent 95%
-      ),
-      var(--surface-bg);
-    box-shadow:
-      var(--surface-rim-accent),
-      var(--shadow-glow-sm);
+// ローディング待機状態
+@mixin state-loading {
+  &.is-loading {
+    pointer-events: none;
+    cursor: wait;
+    opacity: 0.7;
 
-    &.is-interactive:not(:disabled, .is-disabled) {
-      &:hover,
-      &:focus-visible {
-        border-color: var(--theme-accent);
-        background:
-          linear-gradient(
-            135deg,
-            color-mix(in srgb, var(--theme-accent) 19%, transparent) 0%,
-            color-mix(in srgb, var(--theme-accent) 8%, transparent) 50%,
-            transparent 95%
-          ),
-          var(--surface-bg);
-        box-shadow:
-          var(--surface-rim-accent),
-          var(--shadow-glow-hover);
-      }
-
-      &:active {
-        background:
-          linear-gradient(
-            135deg,
-            color-mix(in srgb, var(--theme-accent) 24%, transparent) 0%,
-            color-mix(in srgb, var(--theme-accent) 11%, transparent) 55%,
-            transparent 95%
-          ),
-          var(--surface-bg);
-        box-shadow:
-          var(--surface-rim-accent),
-          var(--shadow-glow-active);
-      }
-    }
-  }
-}
-
-// --------------------------------------------------------------------------
-// 2. コントロール系（ボタン、タブ、入力、セレクト等）
-// --------------------------------------------------------------------------
-
-// 2-1. コントロール操作可能時ガード
-@mixin state-control-interactive {
-  &:not(:disabled, .is-disabled) {
     @content;
   }
 }
 
-// 2-2. フォーカスリング（アクセシビリティ標準）
-@mixin state-focus-ring($color: var(--theme-accent)) {
-  &:focus-visible {
-    border-color: color-mix(in srgb, $color 60%, transparent);
-    outline: none;
-    box-shadow: var(--shadow-glow-focus);
-  }
-}
-
-// 2-3. フォームコントロール基本装飾（Input, Textarea, Select共通）
-@mixin form-control-base($min-height: calc(var(--control-height-ratio) * 1em)) {
-  min-height: $min-height;
-  border: var(--border-width-base) solid var(--color-border);
-
-  font-size: inherit;
-  font-variant-numeric: tabular-nums;
-  color: var(--color-text-main);
-
-  background-color: var(--surface-bg-elevated);
-  box-shadow: var(--shadow-sink);
-
-  transition: var(--transition-interactive);
-
-  &:not(:disabled, :read-only) {
-    --glow-color: var(--theme-accent);
-
-    &.is-error {
-      --glow-color: var(--color-status-danger);
-
-      border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
-    }
-
-    &:hover {
-      border-color: var(--glow-color);
-      box-shadow: var(--shadow-glow-hover);
-    }
-
-    &:active {
-      border-color: var(--glow-color);
-      box-shadow: var(--shadow-glow-active);
-    }
-
-    &:is(:focus, :focus-visible) {
-      border-color: color-mix(in srgb, var(--glow-color) 70%, transparent);
-      outline: none;
-      box-shadow: var(--shadow-glow-focus);
-    }
-  }
-
-  &:read-only:not(:disabled) {
-    cursor: default;
-    resize: none;
-    border-style: dashed;
-    opacity: 0.85;
-  }
-
-  &::placeholder {
-    color: color-mix(in srgb, var(--color-text-muted) 50%, transparent);
-    opacity: 1;
-  }
-
-  @include state-disabled;
-}
-
-// --------------------------------------------------------------------------
-// 3. 全コンポーネント共通の終端状態（Loading / Disabled）
-// --------------------------------------------------------------------------
-
-// 3-1. ローディング待機状態（Disabled の 1 つ手前に配置）
-@mixin state-loading {
-  &.is-loading,
-  &--loading {
-    pointer-events: none;
-    cursor: wait;
-    opacity: 0.75;
-  }
-}
-
-// 3-2. 無効状態（最優先上書き・カスケード最末尾）
+// 無効状態（最優先上書き・カスケード最末尾）
+// ※ resize: none や filter: grayscale などのプロパティ汚染を排除
 @mixin state-disabled {
   &:disabled,
   &.is-disabled {
     pointer-events: none;
     cursor: not-allowed;
-    resize: none;
+    opacity: 0.5;
 
-    opacity: 0.55;
-    filter: grayscale(100%);
+    @content;
   }
 }

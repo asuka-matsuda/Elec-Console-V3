@@ -56,18 +56,36 @@ const emit = defineEmits<{
         </div>
       </Panel>
 
-      <ToolResultDrawer
-        :title="resultsTitle"
-        :icon="resultsIcon"
-        :save-disabled="saveDisabled"
-        :save-function="saveFunction"
-      >
-        <template #default>
-          <slot name="results" />
-        </template>
-        <template v-if="$slots.basis" #basis>
-          <slot name="basis" />
-        </template>
+      <div class="flex flex-1 flex-col min-h-0 max-md:hidden">
+        <ToolResultPanel
+          :title="resultsTitle"
+          :icon="resultsIcon"
+          :save-disabled="saveDisabled"
+          :save-function="saveFunction"
+        >
+          <template #default>
+            <slot name="results" />
+          </template>
+          <template v-if="$slots.basis" #basis>
+            <slot name="basis" />
+          </template>
+        </ToolResultPanel>
+      </div>
+
+      <ToolResultDrawer class="hidden max-md:flex">
+        <ToolResultPanel
+          :title="resultsTitle"
+          :icon="resultsIcon"
+          :save-disabled="saveDisabled"
+          :save-function="saveFunction"
+        >
+          <template #default>
+            <slot name="results" />
+          </template>
+          <template v-if="$slots.basis" #basis>
+            <slot name="basis" />
+          </template>
+        </ToolResultPanel>
       </ToolResultDrawer>
     </div>
   </div>

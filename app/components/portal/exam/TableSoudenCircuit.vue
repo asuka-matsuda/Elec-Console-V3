@@ -25,7 +25,6 @@ const props = withDefaults(
     rowIdPrefix?: string
   }>(),
   {
-    fullCircuits: undefined,
     isCircuitLocked: () => false,
     isComplete: () => false,
     editingRowId: null,

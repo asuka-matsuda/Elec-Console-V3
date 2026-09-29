@@ -219,14 +219,14 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
   /* イベントバッジ（シンプル化） */
   :deep(.fc-daygrid-event) {
-    cursor: pointer;
-
     margin-bottom: var(--space-0-5);
     padding: var(--space-0-5) var(--space-1);
     border: var(--border-width-base) solid var(--fc-event-border-color, var(--theme-accent));
     border-radius: 0;
 
     background: color-mix(in srgb, var(--fc-event-border-color, var(--theme-accent)) 12%, var(--surface-bg-elevated));
+
+    @include state-interactive;
 
     .fc-event-main {
       overflow: hidden;

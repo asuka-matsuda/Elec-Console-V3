@@ -132,11 +132,57 @@ defineExpose({
 
 <style scoped lang="scss">
 .form-control {
+  --glow-color: var(--theme-accent);
+
+  min-height: calc(var(--control-height-ratio) * 2em);
   padding-block: 0.5em;
   padding-inline: 1.2em;
-  line-height: var(--line-height-base);
+  border: var(--border-width-base) solid var(--color-border);
 
-  @include form-control-base(calc(var(--control-height-ratio) * 2em));
+  font-size: inherit;
+  font-variant-numeric: tabular-nums;
+  line-height: var(--line-height-base);
+  color: var(--color-text-main);
+
+  background-color: var(--surface-bg-elevated);
+  box-shadow: var(--shadow-sink);
+
+  transition: var(--transition-interactive);
+
+  &.is-error {
+    --glow-color: var(--color-status-danger);
+
+    border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
+  }
+
+  &:hover {
+    border-color: var(--glow-color);
+    box-shadow: var(--shadow-glow-hover);
+  }
+
+  &:active {
+    border-color: var(--glow-color);
+    box-shadow: var(--shadow-glow-active);
+  }
+
+  &:focus,
+  &:focus-visible {
+    border-color: color-mix(in srgb, var(--glow-color) 70%, transparent);
+    outline: none;
+    box-shadow: var(--shadow-glow-focus);
+  }
+
+  &:is(:read-only, .is-readonly) {
+    cursor: default;
+    resize: none;
+    border-style: dashed;
+    opacity: 0.85;
+  }
+
+  &::placeholder {
+    color: color-mix(in srgb, var(--color-text-muted) 50%, transparent);
+    opacity: 1;
+  }
 
   &.is-auto-resize {
     resize: none;
@@ -144,5 +190,7 @@ defineExpose({
     min-height: calc(var(--control-height-ratio) * 1.3em);
     padding-block: 0.35em;
   }
+
+  @include state-disabled;
 }
 </style>

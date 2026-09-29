@@ -62,7 +62,7 @@ const weightResult = computed(() => {
     <header class="flex items-end justify-between">
       <div class="flex flex-col gap-inline-gap min-w-0">
         <span class="text-date">{{ entry.timestamp }}</span>
-        <h3 class="flex items-center gap-item-gap text-title m-0">
+        <h3 class="flex items-center gap-item-gap text-title">
           <span>{{ entry.toolName }}</span>
           <small v-if="entry.mode" class="tool-mode">
             ({{ entry.mode }})
@@ -98,10 +98,10 @@ const weightResult = computed(() => {
         />
 
         <template v-else>
-          <h4 class="section-title m-0">
+          <h4 class="section-title">
             計算結果
           </h4>
-          <dl class="grid grid-cols-[auto_1fr] gap-x-panel-gap gap-y-inline-gap list-desc m-0">
+          <dl class="grid grid-cols-[auto_1fr] gap-x-panel-gap gap-y-inline-gap list-desc">
             <template v-for="(res, idx) in entry.results" :key="idx">
               <dt
                 class="whitespace-nowrap"
@@ -113,7 +113,7 @@ const weightResult = computed(() => {
                 {{ res.label }}
               </dt>
               <dd
-                class="text-right m-0"
+                class="text-right"
                 :style="{
                   color: res.color,
                   fontWeight: res.isMain || res.color ? 'bold' : 'normal',
@@ -127,15 +127,15 @@ const weightResult = computed(() => {
       </section>
 
       <section class="flex flex-col gap-inline-gap min-h-0">
-        <h4 class="section-title m-0">
+        <h4 class="section-title">
           入力条件
         </h4>
-        <dl class="grid grid-cols-[auto_1fr] gap-x-panel-gap gap-y-inline-gap list-desc m-0">
+        <dl class="grid grid-cols-[auto_1fr] gap-x-panel-gap gap-y-inline-gap list-desc">
           <template v-for="(input, idx) in entry.inputs" :key="idx">
             <dt class="whitespace-nowrap">
               {{ input.label }}
             </dt>
-            <dd class="text-right text-input-val m-0">
+            <dd class="text-right text-input-val">
               {{ input.value }}
             </dd>
           </template>

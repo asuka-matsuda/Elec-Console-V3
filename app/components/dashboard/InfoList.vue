@@ -29,7 +29,7 @@ defineEmits<{
       :title="pending ? loadingText : emptyText"
     />
 
-    <ul v-else class="m-0 p-0 flex flex-col list-none">
+    <ul v-else class="flex flex-col">
       <li
         v-for="(item, index) in items"
         :key="item.id ?? `${item.date}-${index}`"
@@ -49,9 +49,9 @@ defineEmits<{
 
 <style scoped lang="scss">
 .feed-item {
-  cursor: pointer;
-  user-select: none;
   transition: var(--transition-interactive);
+
+  @include state-interactive;
 
   &:not(:first-child) {
     border-top: var(--border-width-base) solid var(--color-border-subtle);

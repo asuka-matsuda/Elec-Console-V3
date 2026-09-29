@@ -165,12 +165,12 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
       </template>
 
       <template v-else-if="queue.length > 0">
-        <p class="m-0 summary-desc">
+        <p class="summary-desc">
           地下受変電室等で記録された <strong>{{ pendingCount }}件</strong> の未送信データがあります。<br>
           現場で実際に測定された正確な時刻（実打鍵タイムスタンプ）とともにサーバーへ反映します。
         </p>
 
-        <ul class="overflow-y-auto flex flex-col gap-inline-gap max-h-[220px] m-0 p-item-gap list-none queue-list">
+        <ul class="overflow-y-auto flex flex-col gap-inline-gap max-h-[220px] p-item-gap queue-list">
           <li
             v-for="item in queue"
             :key="item.id"

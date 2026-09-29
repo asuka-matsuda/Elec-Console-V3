@@ -1,20 +1,15 @@
-
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  font-family: inherit;
-  background-color: transparent;
+// ==========================================================================
+// 1. Root & Viewport Chain (アプリケーション全体の骨格)
+// ==========================================================================
+html,
+body {
+  overflow: hidden;
+  height: 100dvh;
 }
 
 body {
-  overflow: hidden;
   display: flex;
   flex-direction: column;
-
-  height: 100dvh;
-  min-height: 100dvh;
 
   font-family: var(--font-base);
   font-size: var(--font-size-base);
@@ -24,98 +19,8 @@ body {
 
   background-color: var(--color-main-bg);
 
-  transition: background-color var(--duration-modal) var(--ease-smooth);
-
   -webkit-font-smoothing: antialiased;
-}
-
-// ==========================================================================
-// Headings (見出しのジャンプ率と視覚重心を最適化)
-// 大見出しほど行高を詰め文字間をわずかにタイトにし、小見出しほど可読性のために文字間を確保
-// ==========================================================================
-h1 {
-  font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--tracking-tight);
-}
-
-h2 {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--tracking-tight);
-}
-
-h3 {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--tracking-normal);
-}
-
-h4 {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-ui);
-  letter-spacing: var(--tracking-wide);
-}
-
-h5,
-h6 {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-ui);
-  letter-spacing: var(--tracking-wide);
-}
-
-b,
-strong {
-  font-weight: var(--font-weight-bold);
-}
-
-// p は body から自然に継承 (Inherit) させるため個別指定は不要
-
-small {
-  font-size: 0.85em; // 親文字サイズに連動する相対サイズ
-  line-height: inherit;
-  color: var(--color-text-muted);
-  letter-spacing: var(--tracking-wide);
-}
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  margin: 0;
-  appearance: none;
-}
-
-.is-hidden {
-  display: none;
-}
-
-@keyframes ui-cursor-blink {
-  0%,
-  100% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0;
-  }
-}
-
-@keyframes ui-spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.u-spin {
-  animation: ui-spin 1s linear infinite;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #__nuxt {
@@ -123,4 +28,61 @@ input::-webkit-inner-spin-button {
   flex: 1;
   flex-direction: column;
   min-height: 0;
+}
+
+// ==========================================================================
+// 2. Element Resets (ブラウザ標準余白を持つ要素のリセット)
+// ==========================================================================
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+// ==========================================================================
+// 3. Elements Base (HTML要素の基本スタイル)
+// ==========================================================================
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+b,
+strong {
+  font-weight: var(--font-weight-bold);
+}
+
+small {
+  font-size: 0.85em;
+  line-height: inherit;
+  color: var(--color-text-muted);
+  letter-spacing: var(--tracking-wide);
+}
+
+// 数値入力フィールドのスピンボタン非表示（WebKit & Firefox）
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    margin: 0;
+    appearance: none;
+  }
 }

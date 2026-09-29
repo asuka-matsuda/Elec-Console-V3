@@ -21,6 +21,11 @@ Tailwind CSSは**レイアウト・配置・余白・寸法に関するものだ
   - **文字・文字連動余白（タイポグラフィ・ユニット）:**
     - 文字（`font-size`, `color`, `font-weight`, `line-height`）は不可分の一体物として、Atoms / Molecules の Scoped CSS に定義します。
     - ボタンや入力欄など、文字サイズに追従すべきコントロールの内側余白（`em` パディング）は、文字サイズとセットで Scoped CSS にカプセル化します（無駄なラッパーを作らず、タイポグラフィ計算を1箇所で完結させるため）。
+  - **見出し（Heading）とタイポグラフィ規約:**
+    - 見出しタグ（`h1`〜`h6`）は文書構造（セマンティクス）のためのみに使用し、`_base.scss`（グローバル）ではサイズを持ちません（`font-size: inherit`）。
+    - 画面上の見出しには、原則として `<Heading :level="2">`（またはヘッダー複合部品の `<SectionHeader>`）を使用します。
+    - 見出しの視覚サイズは `level` に応じて自動決定されますが、カード内などで小さくしたい場合のみ `size` プロパティ（例: `<Heading :level="2" size="lg">`）で制御します。
+    - **`_base.scss` に見出しのフォントサイズを追記することは完全禁止**です。
   - **※ 画面グリッドに従う余白（px/rem）やレイアウト（`z-index`, `justify-content`, `align-items`, `flex-direction`, `flex-shrink`, `row-gap`, `column-gap` 等）をScoped CSSに直接書くのは禁止。**
 
 ### 余白管理の原則（セマンティック余白体系と完全機械的ガード）

@@ -61,7 +61,7 @@ const availableRows = computed(() =>
 
     <ul
       v-if="filteredGlossary.length > 0"
-      class="flex flex-1 flex-col gap-panel-gap min-w-0 min-h-0 list-none m-0 p-0"
+      class="flex flex-1 flex-col gap-panel-gap min-w-0 min-h-0"
     >
       <li
         v-for="item in filteredGlossary"

@@ -23,7 +23,7 @@ const vm = computed(() => formatVoltageResult(props.inputs, props.result))
     :class="[size === 'sm' ? 'gap-item-gap is-sm' : 'gap-panel-gap']"
   >
 
-    <ResultPanel
+    <ResultTile
       :title="vm.mainLabel"
       :status="vm.mainStatus"
       :badge="vm.mainBadgeText"
@@ -31,9 +31,9 @@ const vm = computed(() => formatVoltageResult(props.inputs, props.result))
     >
       <span>{{ vm.mainValue }}</span>
       <small v-if="vm.mainUnit">{{ vm.mainUnit }}</small>
-    </ResultPanel>
+    </ResultTile>
 
-    <ResultPanel
+    <ResultTile
       title="電流チェック (設計 / 許容)"
       :status="vm.ampStatus"
       :badge="vm.ampBadgeText"
@@ -46,9 +46,9 @@ const vm = computed(() => formatVoltageResult(props.inputs, props.result))
         <span>{{ vm.maxI }}</span>
         <small>A</small>
       </template>
-    </ResultPanel>
+    </ResultTile>
 
-    <ResultPanel
+    <ResultTile
       v-if="vm.mode === 'size'"
       title="電圧降下"
       :status="vm.dropStatus"
@@ -61,7 +61,7 @@ const vm = computed(() => formatVoltageResult(props.inputs, props.result))
         <small>V</small>
         <small v-if="vm.dropPercentText">{{ vm.dropPercentText }}</small>
       </template>
-    </ResultPanel>
+    </ResultTile>
 
     <ToolResultDetails
       v-if="vm.details"

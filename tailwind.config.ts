@@ -1,6 +1,8 @@
+import containerQueries from '@tailwindcss/container-queries'
 import type { Config } from 'tailwindcss'
 
 export default <Config>{
+  plugins: [containerQueries],
   // 規約に基づき「レイアウト・配置・余白・寸法」以外の装飾ユーティリティ生成を完全無効化
   corePlugins: {
     preflight: false,
@@ -35,6 +37,12 @@ export default <Config>{
   theme: {
     extend: {
       // 規約に基づき「レイアウト・配置・余白・寸法」に関するトークンのみを定義
+      containers: {
+        xs: '480px',
+        sm: '600px',
+        md: '800px',
+        lg: '1000px',
+      },
       spacing: {
         '0.5': 'var(--space-0-5, 2px)',
         '1': 'var(--space-1, 4px)',

@@ -60,10 +60,8 @@ const isModalOpen = ref(false)
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .sync-btn {
-  cursor: pointer;
-
   border: 1px solid var(--color-status-warning);
 
   font-size: var(--font-size-xs);
@@ -73,17 +71,14 @@ const isModalOpen = ref(false)
   background: color-mix(in srgb, var(--color-status-warning) 12%, var(--surface-bg-elevated));
 
   transition: var(--transition-interactive);
+
+  @include state-interactive;
+  @include state-disabled;
 }
 
 .sync-btn:hover:not(:disabled) {
   border-color: color-mix(in srgb, var(--color-status-warning) 80%, white);
   background: color-mix(in srgb, var(--color-status-warning) 20%, var(--surface-bg-elevated));
-}
-
-.sync-btn:disabled {
-  pointer-events: none;
-  cursor: not-allowed;
-  opacity: 0.6;
 }
 
 .sync-action {

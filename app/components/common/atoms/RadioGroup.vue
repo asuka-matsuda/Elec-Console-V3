@@ -13,7 +13,6 @@ const model = defineModel<T>()
 const props = withDefaults(
   defineProps<RadioGroupProps<T>>(),
   {
-    name: undefined,
     disabled: false,
     block: false,
   },
@@ -99,9 +98,6 @@ const updateValue = (value: T) => {
   }
 
   .item {
-    cursor: pointer;
-    user-select: none;
-
     padding: 0.3em 0.8em;
     border: var(--border-width-base) solid transparent;
 
@@ -110,6 +106,8 @@ const updateValue = (value: T) => {
     color: var(--color-text-secondary);
 
     transition: var(--transition-interactive);
+
+    @include state-interactive;
 
     &:hover:not(.is-disabled, .is-active) {
       color: var(--color-text-main);

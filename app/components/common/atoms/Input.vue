@@ -23,7 +23,6 @@ const props = withDefaults(defineProps<InputProps>(), {
   required: false,
   clearable: true,
   passwordToggle: true,
-  addon: undefined,
 })
 
 const emit = defineEmits<{
@@ -72,6 +71,7 @@ const isDateTime = computed(() => ['date', 'datetime-local', 'time'].includes(pr
 const canClear = computed(() => {
   return (
     props.clearable
+    && props.type !== 'password'
     && !props.disabled
     && !props.readonly
     && !isDateTime.value
@@ -113,15 +113,22 @@ defineExpose({
 
 <template>
   <div
-    class="flex items-stretch w-full min-w-0 input-container"
+    class="flex w-full min-w-0 input-container"
     :class="[
       rootAttrs.class,
       { 'has-addon': addon || $slots.addon },
     ]"
     :style="rootAttrs.style"
   >
-
-    <div class="relative flex-1 min-w-0 flex items-center input-wrapper">
+    <div
+      class="flex-1 min-w-0 flex items-center gap-inline-gap form-control"
+      :class="{
+        'is-error': isError,
+        'is-disabled': disabled,
+        'is-readonly': readonly,
+      }"
+      @click="inputRef?.focus()"
+    >
       <input
         :id="inputId"
         ref="inputRef"
@@ -139,11 +146,7 @@ defineExpose({
         :maxlength="maxlength"
         :inputmode="inputmode"
         :autocomplete="autocomplete"
-        class="form-control relative z-[1] focus:z-[2] w-full"
-        :class="[
-          { 'is-error': isError },
-          canClear && canTogglePassword ? 'pr-16' : (hasActions ? 'pr-9' : ''),
-        ]"
+        class="form-control__input"
         @wheel="handleWheel"
         @focus="emit('focus', $event)"
         @blur="emit('blur', $event)"
@@ -152,9 +155,8 @@ defineExpose({
 
       <div
         v-if="hasActions"
-        class="absolute right-2 z-[3] flex items-center gap-inline-gap action-group"
+        class="flex items-center gap-inline-gap shrink-0 action-group"
       >
-
         <FormControlAction
           v-if="canClear"
           icon="x"
@@ -175,7 +177,7 @@ defineExpose({
       {{ addon }}
     </span>
 
-    <div v-else-if="$slots.addon" class="flex shrink-0 items-stretch input-addon-slot">
+    <div v-else-if="$slots.addon" class="flex shrink-0 input-addon-slot">
       <slot name="addon" />
     </div>
   </div>
@@ -183,10 +185,76 @@ defineExpose({
 
 <style scoped lang="scss">
 .form-control {
+  --glow-color: var(--theme-accent);
+
+  cursor: text;
+
+  min-height: calc(var(--control-height-ratio) * 1em);
   padding-block: 0.3em;
   padding-inline: 1.2em;
+  border: var(--border-width-base) solid var(--color-border);
 
-  @include form-control-base;
+  font-size: inherit;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-main);
+
+  background-color: var(--surface-bg-elevated);
+  box-shadow: var(--shadow-sink);
+
+  transition: var(--transition-interactive);
+
+  &.is-error {
+    --glow-color: var(--color-status-danger);
+
+    border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
+  }
+
+  &:hover {
+    border-color: var(--glow-color);
+    box-shadow: var(--shadow-glow-hover);
+  }
+
+  &:active {
+    border-color: var(--glow-color);
+    box-shadow: var(--shadow-glow-active);
+  }
+
+  &:is(:focus, :focus-visible, :focus-within) {
+    border-color: color-mix(in srgb, var(--glow-color) 70%, transparent);
+    outline: none;
+    box-shadow: var(--shadow-glow-focus);
+  }
+
+  &:is(:read-only, .is-readonly) {
+    cursor: default;
+    border-style: dashed;
+    opacity: 0.85;
+  }
+
+  &::placeholder {
+    color: color-mix(in srgb, var(--color-text-muted) 50%, transparent);
+    opacity: 1;
+  }
+
+  @include state-disabled;
+}
+
+.form-control__input {
+  cursor: inherit;
+
+  flex: 1;
+
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: none;
+
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+
+  background: transparent;
+  outline: none;
 
   &::-webkit-search-cancel-button {
     appearance: none;
@@ -195,8 +263,6 @@ defineExpose({
 
 // 単位テキストアドオン
 .input-addon {
-  user-select: none;
-
   padding-block: 0.3em;
   padding-inline: 0.8em;
   border: var(--border-width-base) solid var(--color-border);

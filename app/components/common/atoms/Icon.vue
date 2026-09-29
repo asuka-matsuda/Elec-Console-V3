@@ -10,7 +10,6 @@ import { ICONS } from '~/constants/icons'
 import type { IconProps } from '~/types/components'
 
 const props = withDefaults(defineProps<IconProps>(), {
-  size: undefined,
   strokeWidth: 2,
   spin: false,
 })
@@ -61,6 +60,20 @@ const iconComponent = computed(() => {
   &.is-xxl {
     width: var(--icon-size-xxl);
     height: var(--icon-size-xxl);
+  }
+
+  &.u-spin {
+    animation: icon-spin 1s linear infinite;
+  }
+}
+
+@keyframes icon-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
   }
 }
 </style>

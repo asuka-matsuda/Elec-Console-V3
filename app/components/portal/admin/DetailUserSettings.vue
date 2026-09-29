@@ -235,11 +235,11 @@ const handleSave = () => {
               tag="h4"
             />
 
-            <small class="m-0">
+            <small>
               このユーザーが参加・閲覧できる現場を選択してください。
             </small>
 
-            <ul v-if="siteList.length > 0" class="flex flex-col gap-item-gap list-none m-0 p-0">
+            <ul v-if="siteList.length > 0" class="flex flex-col gap-item-gap">
               <li
                 v-for="site in siteList"
                 :key="site.id"
@@ -254,7 +254,7 @@ const handleSave = () => {
                     @update:model-value="handleToggleSite(site.id, $event)"
                   />
 
-                  <div v-if="isSiteAssigned(site.id)" class="w-36 flex-shrink-0">
+                  <div v-if="isSiteAssigned(site.id)" class="w-36 shrink-0">
                     <Select
                       :model-value="getSiteRole(site.id)"
                       :options="USER_ROLE_OPTIONS"

@@ -9,9 +9,7 @@ import { computed } from 'vue'
 import type { TableColumn, TableThProps } from '~/types/components'
 
 const props = withDefaults(defineProps<TableThProps<T>>(), {
-  sortBy: undefined,
   sortOrder: 'asc',
-  title: undefined,
 })
 
 const emit = defineEmits<{
@@ -105,9 +103,9 @@ th {
 
   // ソート可能セルのインタラクション
   &.is-sortable {
-    cursor: pointer;
-    user-select: none;
     transition: var(--transition-colors);
+
+    @include state-interactive;
 
     &:hover {
       color: var(--color-text-main);

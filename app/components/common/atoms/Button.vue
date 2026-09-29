@@ -27,7 +27,7 @@ const isLink = computed(() => Boolean(to) && !disabled && !loading)
     :is="isLink ? NuxtLink : 'button'"
     :to="isLink ? to : undefined"
     :type="isLink ? undefined : type"
-    :disabled="(!isLink && (disabled || loading)) ? true : undefined"
+    :disabled="!isLink && (disabled || loading)"
     class="relative inline-flex shrink-0 items-center justify-center gap-inline-gap btn"
     :class="[
       `btn--${variant}`,
@@ -65,9 +65,6 @@ const isLink = computed(() => Boolean(to) && !disabled && !loading)
   --btn-text: var(--btn-default-text);
   --glow-color: var(--color-border);
 
-  cursor: pointer;
-  user-select: none;
-
   min-height: calc(var(--control-height-ratio) * 1em);
   padding: 0.3em 1.1em;
   border: var(--border-width-base) solid var(--btn-border);
@@ -84,25 +81,25 @@ const isLink = computed(() => Boolean(to) && !disabled && !loading)
 
   transition: var(--transition-interactive);
 
-  @include state-control-interactive {
-    &:hover {
-      border-color: var(--btn-border-hover);
-      background-color: var(--btn-bg-hover);
-      box-shadow: var(--surface-rim-highlight-hover), var(--shadow-glow-hover);
-    }
+  @include state-interactive;
 
-    &:focus-visible {
-      border-color: var(--btn-border-hover);
-      outline: none;
-      box-shadow: var(--shadow-glow-focus);
-    }
+  &:hover {
+    border-color: var(--btn-border-hover);
+    background-color: var(--btn-bg-hover);
+    box-shadow: var(--surface-rim-highlight-hover), var(--shadow-glow-hover);
+  }
 
-    &:active {
-      transform: scale(0.98);
-      border-color: var(--btn-border-hover);
-      background-color: var(--btn-bg-active);
-      box-shadow: var(--shadow-glow-active);
-    }
+  &:focus-visible {
+    border-color: var(--btn-border-hover);
+    outline: none;
+    box-shadow: var(--shadow-glow-focus);
+  }
+
+  &:active {
+    transform: scale(0.98);
+    border-color: var(--btn-border-hover);
+    background-color: var(--btn-bg-active);
+    box-shadow: var(--shadow-glow-active);
   }
 
   &--danger {

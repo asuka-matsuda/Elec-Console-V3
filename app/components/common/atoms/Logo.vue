@@ -19,9 +19,6 @@
 
 <style scoped lang="scss">
 .logo {
-  cursor: pointer;
-  user-select: none;
-
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
@@ -29,6 +26,8 @@
   white-space: nowrap;
 
   transition: var(--transition-fast);
+
+  @include state-interactive;
 }
 
 .logo:active {

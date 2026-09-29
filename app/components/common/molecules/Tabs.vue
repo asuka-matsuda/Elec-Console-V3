@@ -148,9 +148,6 @@ const handleKeydown = (event: KeyboardEvent, currentIndex: number) => {
 }
 
 .tabs__item {
-  cursor: pointer;
-  user-select: none;
-
   margin-bottom: -1px;
   padding: 0.5em 0.9em;
   border-bottom: var(--border-width-thick, 2px) solid transparent;
@@ -159,6 +156,8 @@ const handleKeydown = (event: KeyboardEvent, currentIndex: number) => {
   color: var(--color-text-secondary);
 
   transition: var(--transition-interactive);
+
+  @include state-interactive;
 
   &:hover:not(:disabled, .is-active) {
     color: var(--color-text-main);

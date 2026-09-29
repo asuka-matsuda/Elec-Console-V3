@@ -58,12 +58,11 @@ const customStyle = computed(() => {
 .checkbox {
   --control-checked-bg: var(--theme-accent);
 
-  cursor: pointer;
-  user-select: none;
-
   font-size: inherit;
   color: var(--color-text-main);
   letter-spacing: var(--tracking-normal);
+
+  @include state-interactive;
 
   input {
     pointer-events: none;

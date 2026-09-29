@@ -51,7 +51,7 @@ const handleChangePassword = async () => {
     <SectionHeader title="初回パスワード設定" />
 
     <form class="flex flex-col gap-form-row-gap" @submit.prevent="handleChangePassword">
-      <small class="m-0">
+      <small>
         セキュリティのため、システムから配布された初期パスワードを変更してください。
       </small>
 
@@ -64,7 +64,6 @@ const handleChangePassword = async () => {
           type="password"
           placeholder="新しいパスワード"
           :disabled="isLoading"
-          :clearable="false"
         />
       </FormGroup>
 
@@ -74,7 +73,6 @@ const handleChangePassword = async () => {
           type="password"
           placeholder="もう一度入力"
           :disabled="isLoading"
-          :clearable="false"
         />
       </FormGroup>
 

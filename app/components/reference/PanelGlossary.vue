@@ -24,7 +24,7 @@ defineProps<{
     <header class="flex items-center justify-between gap-item-gap">
       <div class="flex flex-col gap-inline-gap">
         <span v-if="item.kana" class="kana">{{ item.kana }}</span>
-        <h2 class="term m-0">
+        <h2 class="term">
           {{ item.term }}
         </h2>
       </div>
@@ -36,20 +36,20 @@ defineProps<{
     <Divider type="fade-center" />
 
     <div class="flex flex-col gap-inline-gap">
-      <p class="desc m-0">
+      <p class="desc">
         {{ item.desc }}
       </p>
 
       <aside v-if="item.related" class="meta flex flex-col gap-inline-gap p-panel-pad-compact">
         <span class="meta-label">関連用語</span>
-        <p class="meta-text m-0">
+        <p class="meta-text">
           {{ item.related }}
         </p>
       </aside>
 
       <aside v-if="item.example" class="meta flex flex-col gap-inline-gap p-panel-pad-compact">
         <span class="meta-label">用例・備考</span>
-        <p class="meta-text m-0">
+        <p class="meta-text">
           {{ item.example }}
         </p>
       </aside>

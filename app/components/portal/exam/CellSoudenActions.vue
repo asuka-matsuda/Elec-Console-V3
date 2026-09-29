@@ -27,7 +27,6 @@ withDefaults(
     isLoading: false,
     disabled: false,
     confirmLabel: '確定',
-    nextPhasePath: undefined,
     nextPhaseLabel: '次へ',
   },
 )

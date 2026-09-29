@@ -164,9 +164,6 @@ const handleReset = () => {
   }
 
   &__summary {
-    cursor: pointer;
-    user-select: none;
-
     display: flex;
     gap: var(--space-2);
     align-items: center;
@@ -176,6 +173,8 @@ const handleReset = () => {
     font-size: var(--font-size-xs);
     font-weight: 500;
     color: var(--color-text-muted);
+
+    @include state-interactive;
 
     &:hover {
       color: var(--color-text-main);

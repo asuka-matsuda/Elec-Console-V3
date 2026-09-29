@@ -56,7 +56,7 @@ const resolvedBadge = computed(() => {
       </slot>
     </header>
 
-    <p v-if="item.desc" class="m-0 tile-desc">
+    <p v-if="item.desc" class="tile-desc">
       {{ item.desc }}
     </p>
   </Panel>

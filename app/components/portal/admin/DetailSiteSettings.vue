@@ -182,7 +182,7 @@ const handleSave = () => {
             <FormGroup label="アサイン済作業者">
               <ul
                 v-if="workerNames.length > 0"
-                class="flex flex-wrap items-center gap-item-gap list-none m-0 p-0"
+                class="flex flex-wrap items-center gap-item-gap"
               >
                 <li
                   v-for="worker in workerNames"
@@ -214,13 +214,13 @@ const handleSave = () => {
               icon="slash"
               tag="h4"
             />
-            <p class="desc-text m-0">
+            <p class="desc-text">
               計算や試験連携の対象外とする盤・回路を指定します。
             </p>
 
             <ul
               v-if="form.excludedCircuits.length > 0"
-              class="m-0 flex flex-col gap-item-gap p-0 list-none"
+              class="flex flex-col gap-item-gap"
             >
               <li
                 v-for="(circuit, idx) in form.excludedCircuits"
@@ -264,13 +264,13 @@ const handleSave = () => {
               icon="type"
               tag="h4"
             />
-            <p class="desc-text m-0">
+            <p class="desc-text">
               テーブルの盤名称等で途中で改行させない単語を指定します（※「1-1」等の英数字ハイフンや「分電盤」等はシステムで自動処理されます）。
             </p>
 
             <ul
               v-if="form.noBreakWords.length > 0"
-              class="m-0 flex flex-col gap-item-gap p-0 list-none"
+              class="flex flex-col gap-item-gap"
             >
               <li
                 v-for="(word, idx) in form.noBreakWords"

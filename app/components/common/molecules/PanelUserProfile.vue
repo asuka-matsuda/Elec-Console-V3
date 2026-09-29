@@ -16,10 +16,10 @@ const kana = computed(() => `${user.lastNameKana || ''} ${user.firstNameKana || 
 </script>
 
 <template>
-  <dl class="grid grid-cols-1 sm:grid-cols-2 gap-panel-gap m-0">
+  <dl class="grid grid-cols-1 sm:grid-cols-2 gap-panel-gap">
     <div class="flex flex-col gap-inline-gap">
       <dt class="label">氏名</dt>
-      <dd class="m-0 flex flex-col">
+      <dd class="flex flex-col">
         <span class="name">{{ fullName }}</span>
         <span v-if="kana" class="kana">
           {{ kana }}
@@ -29,7 +29,7 @@ const kana = computed(() => `${user.lastNameKana || ''} ${user.firstNameKana || 
 
     <div class="flex flex-col gap-inline-gap">
       <dt class="label">ログインID</dt>
-      <dd class="m-0 login-id">
+      <dd class="login-id">
         {{ user.loginId || user.id }}
       </dd>
     </div>

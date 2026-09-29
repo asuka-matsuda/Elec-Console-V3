@@ -61,11 +61,8 @@ const displayText = computed(() => (props.bangou != null && props.bangou !== '' 
 
 <style scoped lang="scss">
 .circuit-symbol {
-  user-select: none;
-
   width: 2.5em;
   height: 2.5em;
-
   font-size: 0.95em;
   line-height: 1;
 
