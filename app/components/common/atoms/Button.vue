@@ -1,9 +1,8 @@
 <script setup lang="ts">
 /**
  * Button
- * [Atoms] 汎用ボタンコンポーネント（最小パーツ）
- * - to 指定時は NuxtLink、未指定または無効化時は button 要素を描画
- * - loading 時はレイアウトシフトを起こさずスピナーを中央オーバーレイ
+ * 汎用ボタンコンポーネント。
+ * - to 指定時は NuxtLink、未指定時は button 要素を描画
  */
 import { computed } from 'vue'
 
@@ -28,7 +27,7 @@ const isLink = computed(() => Boolean(to) && !disabled && !loading)
     :to="isLink ? to : undefined"
     :type="isLink ? undefined : type"
     :disabled="!isLink && (disabled || loading)"
-    class="relative inline-flex shrink-0 items-center justify-center gap-inline-gap btn"
+    class="relative inline-flex shrink-0 items-center justify-center btn"
     :class="[
       `btn--${variant}`,
       {
@@ -63,7 +62,20 @@ const isLink = computed(() => Boolean(to) && !disabled && !loading)
   --btn-bg-hover: var(--btn-default-bg-hover);
   --btn-bg-active: var(--btn-default-bg-active);
   --btn-text: var(--btn-default-text);
-  --glow-color: var(--color-border);
+  --glow-color: var(--btn-default-border-hover);
+
+  --shadow-glow-hover:
+    0 0 0 1px color-mix(in srgb, var(--glow-color) 45%, transparent),
+    0 2px 10px color-mix(in srgb, var(--glow-color) 16%, transparent),
+    var(--shadow-elevation-sm);
+  --shadow-glow-focus:
+    0 0 0 1px color-mix(in srgb, var(--glow-color) 70%, transparent),
+    0 0 0 3px color-mix(in srgb, var(--glow-color) 25%, transparent),
+    0 2px 12px color-mix(in srgb, var(--glow-color) 20%, transparent);
+  --shadow-glow-active:
+    0 0 0 1px color-mix(in srgb, var(--glow-color) 60%, transparent),
+    inset 0 1px 2px color-mix(in srgb, black 30%, transparent),
+    var(--shadow-elevation-sm);
 
   min-height: calc(var(--control-height-ratio) * 1em);
   padding: 0.3em 1.1em;
@@ -122,7 +134,7 @@ const isLink = computed(() => Boolean(to) && !disabled && !loading)
     --glow-color: var(--color-status-success);
   }
 
-  // 正方形アイコンボタン（Iconが1.2emで中央配置。親のmin-heightとaspect-ratioで完全な正方形）
+  // アイコンボタン（正方形）
   &--icon {
     aspect-ratio: 1;
     padding: 0;

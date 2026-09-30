@@ -33,7 +33,7 @@ const props = withDefaults(
 )
 
 defineSlots<{
-  [K in `cell-${string}`]?: (props: { value: unknown, subValue?: unknown, row: CircuitItem, index: number, column: TableColumn<CircuitItem> }) => unknown
+  [K in `cell-${string}`]?: (props: { value: unknown, row: CircuitItem, index: number, column: TableColumn<CircuitItem> }) => unknown
 }>()
 
 const slots = useSlots()
@@ -49,6 +49,7 @@ const getRowClass = (circuit: CircuitItem) => ({
 // スロットを提供する対象のカラム判定（親指定スロット または 送電試験標準セル）
 const shouldProvideSlot = (colKey: string) => {
   return !!slots[`cell-${colKey}`]
+    || colKey === 'banMeisho'
     || colKey === 'kairoBangou'
     || colKey === 'kairoMeisho'
     || colKey.endsWith('ConfirmedAt')
@@ -70,7 +71,6 @@ const getWorkerCellData = (circuit: CircuitItem, key: string) => {
     v-model:sort-order="sortOrder"
     :columns="columns"
     :data="circuits"
-    :full-data="fullCircuits"
     :row-id="(row) => `${rowIdPrefix}${row.id}`"
     :row-class="getRowClass"
     class="souden-circuit-table flex-1 min-h-[400px]"
@@ -87,6 +87,19 @@ const getWorkerCellData = (circuit: CircuitItem, key: string) => {
         :name="`cell-${col.key}`"
         v-bind="slotProps"
       />
+
+      <div
+        v-else-if="col.key === 'banMeisho'"
+        class="flex flex-col gap-0.5 min-w-0"
+      >
+        <span class="ban-name">{{ slotProps.row.banMeisho || '-' }}</span>
+        <span
+          v-if="slotProps.row.banShubetsu"
+          class="ban-type"
+        >
+          {{ slotProps.row.banShubetsu }}
+        </span>
+      </div>
 
       <div
         v-else-if="col.key === 'kairoBangou'"
@@ -179,6 +192,22 @@ const getWorkerCellData = (circuit: CircuitItem, key: string) => {
 .cell-date {
   font-family: var(--font-mono);
   font-size: var(--font-size-2xs);
+}
+
+.ban-name {
+  overflow: hidden;
+  font-weight: var(--font-weight-bold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ban-type {
+  overflow: hidden;
+
+  font-size: var(--font-size-2xs);
+  color: var(--color-text-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .cell-date,

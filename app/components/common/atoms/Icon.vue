@@ -1,8 +1,7 @@
 <script setup lang="ts">
 /**
  * Icon
- * [Atoms] @lucide/vue をベースにしたモダンなアイコンコンポーネントです。
- * v-html を使用せず、Vue のコンポーネントとして最適化された SVG を描画します。
+ * アイコン表示コンポーネント。
  */
 import { computed } from 'vue'
 
@@ -10,12 +9,17 @@ import { ICONS } from '~/constants/icons'
 import type { IconProps } from '~/types/components'
 
 const props = withDefaults(defineProps<IconProps>(), {
-  strokeWidth: 2,
   spin: false,
 })
 
 const iconComponent = computed(() => {
-  return ICONS[props.name] || null
+  const component = ICONS[props.name]
+
+  if (!component && import.meta.dev) {
+    console.warn(`[Icon] Icon "${props.name}" is not registered in ~/constants/icons.ts`)
+  }
+
+  return component || null
 })
 </script>
 
@@ -23,12 +27,11 @@ const iconComponent = computed(() => {
   <component
     :is="iconComponent"
     v-if="iconComponent"
-    class="inline-block shrink-0 align-middle app-icon icon"
+    class="inline-block shrink-0 align-middle app-icon"
     :class="[
       props.size && `is-${props.size}`,
       { 'u-spin': props.spin },
     ]"
-    :stroke-width="props.strokeWidth"
   />
 </template>
 
@@ -50,16 +53,6 @@ const iconComponent = computed(() => {
   &.is-lg {
     width: var(--icon-size-lg);
     height: var(--icon-size-lg);
-  }
-
-  &.is-xl {
-    width: var(--icon-size-xl);
-    height: var(--icon-size-xl);
-  }
-
-  &.is-xxl {
-    width: var(--icon-size-xxl);
-    height: var(--icon-size-xxl);
   }
 
   &.u-spin {

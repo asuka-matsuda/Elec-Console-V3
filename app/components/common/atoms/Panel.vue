@@ -1,37 +1,27 @@
 <script setup lang="ts">
 /**
  * Panel
- * [Atoms] 背景・枠線・影などの装飾のみを提供する純粋なサーフェス枠コンポーネント。
- * interactive, selected, disabled による状態管理を一元提供します。
+ * コンテンツ領域を囲むパネル枠コンポーネント。
  */
-import type { PanelOverflow, PanelProps } from '~/types/components'
+import type { PanelProps } from '~/types/components'
 
 const {
   as = 'div',
+  padding = 'normal',
   interactive = false,
   active = false,
   disabled = false,
-  overflow = 'hidden',
-  padding = 'normal',
 } = defineProps<PanelProps>()
-
-const OVERFLOW_CLASSES: Record<PanelOverflow, string> = {
-  hidden: 'overflow-hidden',
-  visible: 'overflow-visible',
-  auto: 'overflow-auto',
-}
 </script>
 
 <template>
   <component
     :is="as"
-    class="relative z-[1] panel"
+    class="panel"
     :class="[
-      OVERFLOW_CLASSES[overflow],
       {
         'p-panel-pad': padding === 'normal',
         'p-panel-pad-compact': padding === 'compact',
-        'p-item-gap': padding === 'sm',
         'p-0': padding === 'none',
         'is-interactive': interactive,
         'is-active': active,
@@ -45,28 +35,49 @@ const OVERFLOW_CLASSES: Record<PanelOverflow, string> = {
 
 <style scoped lang="scss">
 .panel {
+  isolation: isolate;
+
   border: var(--border-width-base) solid var(--color-border);
 
-  background: var(--surface-bg);
+  background-color: var(--surface-bg);
   backdrop-filter: blur(var(--blur-sm));
   box-shadow: var(--surface-rim-highlight), var(--shadow-elevation-sm);
 
   transition: var(--transition-panel);
 
-  @include state-interactive {
-    &:hover {
-      border-color: color-mix(in srgb, var(--theme-accent) 70%, var(--color-border));
+  &.is-interactive {
+    position: relative;
+
+    @include state-interactive;
+
+    &::before {
+      pointer-events: none;
+      content: "";
+
+      position: absolute;
+      inset: 0;
+
+      opacity: 0;
       background:
         linear-gradient(
           135deg,
-          color-mix(in srgb, var(--theme-accent) 9%, transparent) 0%,
+          color-mix(in srgb, var(--theme-accent) 10%, transparent) 0%,
           color-mix(in srgb, var(--theme-accent) 3%, transparent) 45%,
           transparent 80%
-        ),
-        var(--surface-bg);
+        );
+
+      transition: opacity var(--duration-base) var(--ease-base);
+    }
+
+    &:hover {
+      border-color: color-mix(in srgb, var(--theme-accent) 70%, var(--color-border));
       box-shadow:
         var(--surface-rim-accent),
         var(--shadow-glow-hover);
+
+      &::before {
+        opacity: 1;
+      }
     }
 
     &:active {
@@ -75,6 +86,10 @@ const OVERFLOW_CLASSES: Record<PanelOverflow, string> = {
       box-shadow:
         var(--surface-rim-accent),
         var(--shadow-glow-active);
+
+      &::before {
+        opacity: 1;
+      }
     }
   }
 
@@ -84,15 +99,15 @@ const OVERFLOW_CLASSES: Record<PanelOverflow, string> = {
       var(--surface-rim-accent),
       var(--shadow-glow-sm);
 
-    @include state-interactive {
+    &.is-interactive::before {
+      opacity: 1;
       background:
         linear-gradient(
           135deg,
           color-mix(in srgb, var(--theme-accent) 14%, transparent) 0%,
           color-mix(in srgb, var(--theme-accent) 6%, transparent) 50%,
           transparent 95%
-        ),
-        var(--surface-bg);
+        );
     }
   }
 

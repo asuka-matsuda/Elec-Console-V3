@@ -35,7 +35,15 @@ provide(FORM_GROUP_KEY, {
       <HelpTip v-if="helpId" :help-id="helpId" />
     </label>
 
-    <slot />
+    <div v-if="addon" class="flex items-center gap-inline-gap w-full min-w-0">
+      <div class="flex-1 min-w-0">
+        <slot />
+      </div>
+      <span class="shrink-0 form-group__addon">
+        {{ addon }}
+      </span>
+    </div>
+    <slot v-else />
 
     <p v-if="error" class="error-text">
       {{ error }}
@@ -104,6 +112,13 @@ provide(FORM_GROUP_KEY, {
     font-size: 0.85em;
     color: var(--color-text-muted);
     letter-spacing: var(--tracking-wide);
+  }
+
+  &__addon {
+    font-size: 0.9em;
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    white-space: nowrap;
   }
 }
 </style>

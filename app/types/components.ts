@@ -22,13 +22,8 @@ export interface SelectOption<T = string | number | boolean> {
   color?: string
 }
 
-/** 汎用ラジオボタングループ用選択肢 */
-export interface RadioOption<T = string | number | boolean> {
-  label: string
-  value: T
-  disabled?: boolean
-  color?: string
-}
+/** 汎用ラジオボタングループ用選択肢 (SelectOption と同等) */
+export type RadioOption<T = string | number | boolean> = SelectOption<T>
 
 /** 汎用タブ選択肢 */
 export interface TabOption<V = string | number> {
@@ -46,15 +41,13 @@ export interface TabOption<V = string | number> {
 /** 汎用テーブルカラム定義 */
 export interface TableColumn<T = Record<string, unknown>> {
   key: (keyof T & string) | string
-  subKey?: (keyof T & string) | string
   label: string
+  /** ソート可能フラグ（明示的に true の場合のみソート有効） */
   sortable?: boolean
+  /** 列幅（例: '120px', '20%'） */
   width?: string
   minWidth?: string
   maxWidth?: string
-  fixedWidth?: boolean
-  /** 自動幅配分における重み（flex-grow相当。未指定時は通常1、備考列等は2） */
-  flexWeight?: number
   align?: 'left' | 'center' | 'right'
   /** この列でテキスト省略（...）を行うかどうか */
   truncate?: boolean
@@ -62,6 +55,12 @@ export interface TableColumn<T = Record<string, unknown>> {
   emptyFallback?: string
   /** セルに適用する追加クラス */
   class?: string
+  /** 列幅自動計算用ウェイト（重み） */
+  flexWeight?: number
+  /** 固定幅フラグ（false の場合は自動伸縮対象） */
+  fixedWidth?: boolean
+  /** 2段組セル等のサブキー */
+  subKey?: string
   /** 表示値のカスタムフォーマッタ関数 */
   format?: (value: unknown, row: T) => unknown
 }
@@ -106,12 +105,11 @@ export interface CheckboxProps {
 }
 
 // --- Icon ---
-type IconSize = 'sm' | 'md' | 'lg' | 'xl' | 'xxl'
+type IconSize = 'sm' | 'md' | 'lg'
 
 export interface IconProps {
   name: IconName
   size?: IconSize
-  strokeWidth?: number | string
   spin?: boolean
 }
 
@@ -126,7 +124,7 @@ export type DividerType = 'fade-side' | 'fade-center' | 'solid'
 export type DividerOrientation = 'horizontal' | 'vertical'
 
 export interface DividerProps {
-  /** 線のスタイル種別（デフォルト: 'fade-side'。垂直時は常に solid 境界線として振る舞います） */
+  /** 線のスタイル種別（デフォルト: 'fade-side'） */
   type?: DividerType
   /** 線の向き（デフォルト: 'horizontal'） */
   orientation?: DividerOrientation
@@ -139,10 +137,10 @@ export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6 | '1' | '2' | '3' | '4' | '5' |
 export type HeadingSize = '3xl' | '2xl' | 'xl' | 'lg' | 'base'
 
 export interface HeadingProps {
-  /** 出力する見出しタグ（1〜6 または h1〜h6。デフォルト: 2） */
+  /** 出力する見出しタグまたはレベル（1〜6 または h1〜h6。デフォルト: 2） */
   level?: HeadingLevel
-  /** 出力する見出しタグ（level のエイリアス） */
-  tag?: HeadingLevel
+  /** 出力する見出しタグ（level のエイリアス。h1〜h6 以外の div, p, span 等も可） */
+  tag?: HeadingLevel | string
   /** 視覚サイズ（未指定時は level に応じて自動決定） */
   size?: HeadingSize
 }
@@ -163,32 +161,23 @@ export interface SectionHeaderProps {
 }
 
 // --- Panel ---
-export type PanelOverflow = 'hidden' | 'visible' | 'auto'
-type PanelPadding = 'normal' | 'compact' | 'none' | 'sm'
+export type PanelPadding = 'normal' | 'compact' | 'none'
 
 export interface PanelProps {
   /** 描画するHTML要素またはコンポーネント（デフォルト: 'div'） */
   as?: string | object
+  /** 内側パディング（デフォルト: 'normal' = p-panel-pad, 'compact' = p-panel-pad-compact, 'none' = パディングなし） */
+  padding?: PanelPadding
   /** 操作可能状態（ホバー・アクティブ演出） */
   interactive?: boolean
-  /** アクティブ・選択状態（アクセントグラデーション・グロー） */
+  /** アクティブ・選択状態（アクセントハイライト） */
   active?: boolean
   /** 無効状態（半透明・操作不可） */
   disabled?: boolean
-  /** オーバーフロー制御（デフォルト: 'hidden'） */
-  overflow?: PanelOverflow
-  /** 内側パディング（デフォルト: 'normal' = p-panel-pad, 'none' = パディングなし, 'sm' = p-2） */
-  padding?: PanelPadding
-}
-
-// --- Disclaimer ---
-export interface DisclaimerProps {
-  /** 免責・注記本文 */
-  text?: string
 }
 
 // --- Input ---
-type InputType
+export type InputType
   = 'text'
     | 'password'
     | 'email'
@@ -200,49 +189,25 @@ type InputType
     | 'datetime-local'
     | 'time'
 
-type InputMode = 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'
-
 export interface InputProps {
+  /** HTML id属性 */
+  id?: string
   /** 入力タイプ (デフォルト: 'text') */
   type?: InputType
   /** プレースホルダー */
   placeholder?: string
   /** 無効化状態 (デフォルト: false) */
   disabled?: boolean
-  /** 読み取り専用 (デフォルト: false) */
+  /** 読み取り専用状態 (デフォルト: false) */
   readonly?: boolean
   /** エラー状態フラグ (デフォルト: false) */
   error?: boolean
-  /** 必須入力 (デフォルト: false) */
-  required?: boolean
-  /** 最小値 (type="number" / "date" 等) */
-  min?: number | string
-  /** 最大値 (type="number" / "date" 等) */
-  max?: number | string
-  /** 増減ステップ (type="number" 等) */
-  step?: number | string
-  /** 最大文字数 */
-  maxlength?: number
-  /** HTML id属性 */
-  id?: string
-  /** HTML name属性 */
-  name?: string
-  /** 自動補完 */
-  autocomplete?: string
-  /** 入力モード (モバイルキーボード最適化) */
-  inputmode?: InputMode
-  /** 入力クリアボタンを表示する (デフォルト: true) */
-  clearable?: boolean
-  /** type="password" 時に表示/非表示トグルボタンを有効化する (デフォルト: true) */
-  passwordToggle?: boolean
-  /** 末尾に付与する単位テキスト（または #addon スロット） */
-  addon?: string
 }
 
 // --- Select ---
 export interface SelectProps<T = string | number | boolean> {
   /** 選択肢リスト */
-  options: SelectOption<T>[]
+  options?: SelectOption<T>[]
   /** プレースホルダー */
   placeholder?: string
   /** 無効化状態 (デフォルト: false) */
@@ -251,91 +216,42 @@ export interface SelectProps<T = string | number | boolean> {
   error?: boolean
   /** HTML id属性 */
   id?: string
-  /** ドロップダウンの展開方向優先設定 */
-  placement?: 'top' | 'bottom'
-  /** 選択解除（クリア）ボタンを表示する (デフォルト: false) */
-  clearable?: boolean
 }
 
 // --- Textarea ---
-type TextareaResize = 'none' | 'vertical' | 'horizontal' | 'both'
+export type TextareaResize = 'none' | 'vertical' | 'horizontal' | 'both'
 
 export interface TextareaProps {
+  /** HTML id属性 */
+  id?: string
+  /** 行数 (デフォルト: 4) */
+  rows?: number
+  /** リサイズ方向 (デフォルト: 'vertical') */
+  resize?: TextareaResize
   /** プレースホルダー */
   placeholder?: string
   /** 無効化状態 (デフォルト: false) */
   disabled?: boolean
-  /** 読み取り専用 (デフォルト: false) */
+  /** 読み取り専用状態 (デフォルト: false) */
   readonly?: boolean
   /** エラー状態フラグ (デフォルト: false) */
   error?: boolean
-  /** 必須入力 (デフォルト: false) */
-  required?: boolean
-  /** 表示行数 (デフォルト: 4) */
-  rows?: number
-  /** 最大文字数 */
-  maxlength?: number
-  /** リサイズ方向の制御 (デフォルト: 'vertical') */
-  resize?: TextareaResize
-  /** HTML id属性 */
-  id?: string
-  /** HTML name属性 */
-  name?: string
-  /** 自動補完 */
-  autocomplete?: string
   /** 入力内容に応じた高さ自動伸縮（オートリサイズ） (デフォルト: false) */
   autoResize?: boolean
-}
-
-// --- FormControlAction ---
-export interface FormControlActionProps {
-  /** 表示するアイコン名 */
-  icon: IconName
-  /** 無効化状態 */
-  disabled?: boolean
 }
 
 // --- RadioGroup ---
 export interface RadioGroupProps<T = string | number | boolean> {
   /** 選択肢一覧 */
   options: RadioOption<T>[]
-  /** フォーム識別用 name 属性 */
-  name?: string
   /** グループ全体の無効化 (デフォルト: false) */
   disabled?: boolean
   /** 幅いっぱいに均等配置（全幅モード、デフォルト: false） */
   block?: boolean
 }
 
-// --- TableTh ---
+// --- Table ---
 export type TableSortOrder = 'asc' | 'desc' | null
-
-export interface TableThProps<RowType = Record<string, unknown>> {
-  /** カラム定義 */
-  column: TableColumn<RowType>
-  /** 現在アクティブなソートキー */
-  sortBy?: string
-  /** 現在のソート順序 */
-  sortOrder?: TableSortOrder
-  /** ツールチップテキスト（任意） */
-  title?: string
-}
-
-// --- TableTd ---
-export interface TableTdProps {
-  /** メイン表示値 */
-  value?: unknown
-  /** サブ表示値（2段組時） */
-  subValue?: unknown
-  /** 水平配置（デフォルト: 'left'） */
-  align?: 'left' | 'center' | 'right'
-  /** 省略記号（...）表示を有効にするか（未指定時は通常セルで自動有効） */
-  truncate?: boolean
-  /** 値が空（null, undefined, 空文字）の場合のフォールバック表示 */
-  emptyFallback?: string
-  /** ツールチップ（未指定時は省略表示時にメインテキストを自動付与） */
-  title?: string
-}
 
 // ============================================================================
 // 3. Molecules（複合コンポーネント）
@@ -418,8 +334,6 @@ export interface TableProps<T = Record<string, unknown>> {
   columns: TableColumn<T>[]
   /** 描画するデータ配列 */
   data?: T[]
-  /** 列幅自動計算のサンプリング用全件データ（ページング時等） */
-  fullData?: T[]
   /** ソート対象キー（v-model:sortBy 対応） */
   sortBy?: string
   /** ソート方向（v-model:sortOrder 対応） */
@@ -430,8 +344,6 @@ export interface TableProps<T = Record<string, unknown>> {
   rowClass?: (row: T, index: number) => string | Record<string, boolean | undefined> | (string | Record<string, boolean | undefined>)[] | undefined
   /** 各行（tr）の HTML id 解決関数 */
   rowId?: (row: T, index: number) => string
-  /** 列幅の自動最適化を有効にするか（デフォルト: true） */
-  autoWidth?: boolean
   /** データが0件の時の表示文言 */
   emptyText?: string
   /** ローディング状態フラグ */
@@ -445,6 +357,8 @@ export interface TableProps<T = Record<string, unknown>> {
 // --- Breadcrumb ---
 export interface BreadcrumbProps {
   items?: BreadcrumbItem[]
+  separator?: string
+  showCursor?: boolean
 }
 
 // --- Alert ---
@@ -454,6 +368,8 @@ export interface AlertProps {
   variant?: AlertVariant
   icon?: IconName
   title?: string
+  /** 本文テキスト（スロット未指定時に表示） */
+  text?: string
 }
 
 // ============================================================================
@@ -514,6 +430,8 @@ export interface FormGroupProps {
   error?: string
   help?: string
   helpId?: HelpId
+  /** 末尾に付与する単位テキスト */
+  addon?: string
 }
 
 export interface FormGroupContext {

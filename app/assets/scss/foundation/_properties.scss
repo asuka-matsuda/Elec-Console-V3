@@ -1,75 +1,40 @@
-@use "icons" as *;
-
 :root {
   // ==========================================================================
-  // 1. アイコン (Icons)
+  // 1. タイポグラフィ (Typography)
   // ==========================================================================
-  --icon-sb-up: #{$icon-chevron-up-dark};
-  --icon-sb-up-hover: #{$icon-chevron-up-dark-hover};
-  --icon-sb-down: #{$icon-chevron-down-dark};
-  --icon-sb-down-hover: #{$icon-chevron-down-dark-hover};
-  --icon-sb-left: #{$icon-chevron-left-dark};
-  --icon-sb-left-hover: #{$icon-chevron-left-dark-hover};
-  --icon-sb-right: #{$icon-chevron-right-dark};
-  --icon-sb-right-hover: #{$icon-chevron-right-dark-hover};
-  --icon-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A1A1AA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  --font-base: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+  --font-mono: "Roboto Mono", ui-monospace, monospace;
 
-  // ==========================================================================
-  // 2. トラッキング (Letter Spacings) & Z-Index
-  // ==========================================================================
-  --tracking-tighter: -0.04em;
-  --tracking-tight: -0.02em;
-  --tracking-normal: 0em;
-  --tracking-wide: 0.02em;
-  --tracking-wider: 0.05em;
-  --tracking-widest: 0.1em;
-  --z-index-bg-canvas: -3;
-  --z-index-footer: 10;
-  --z-index-table-header: 10;
-  --z-index-nav: 90;
-  --z-index-header: 99;
-  --z-index-dropdown: 100;
-  --z-index-fab: 100;
-  --z-index-sidebar-container: 100;
-  --z-index-sidebar-overlay: 101;
-  --z-index-sidebar: 102;
-  --z-index-theme-switcher: 1000;
-  --z-index-modal: 9999;
-  --z-index-click-effect: 9999;
-  --z-index-select: 10000;
-  --z-index-debug: 999999;
+  --font-size-2xs: 10px;
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 14px;
+  --font-size-lg: 16px;
+  --font-size-xl: 18px;
+  --font-size-2xl: 20px;
+  --font-size-3xl: 24px;
+  --font-size-4xl: 30px;
 
-  // ==========================================================================
-  // 3. Fluid Typography (画面幅に応じて滑らかにスケーリング: 9px〜32px 単調増加)
-  // ==========================================================================
-  --font-size-2xs: clamp(9px, 0.5625rem + 0.05vw, 10px);
-  --font-size-xs: clamp(10px, 0.625rem + 0.1vw, 11px);
-  --font-size-sm: clamp(11px, 0.6875rem + 0.15vw, 12px);
-  --font-size-base: clamp(12px, 0.75rem + 0.2vw, 14px);
-  --font-size-lg: clamp(14px, 0.875rem + 0.25vw, 16px);
-  --font-size-xl: clamp(16px, 1rem + 0.35vw, 18px);
-  --font-size-2xl: clamp(18px, 1.125rem + 0.5vw, 22px);
-  --font-size-3xl: clamp(22px, 1.375rem + 0.75vw, 26px);
-  --font-size-4xl: clamp(26px, 1.625rem + 1vw, 32px);
-
-  --font-base:
-    "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
-  --font-mono: "Roboto Mono", var(--font-base);
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
-  --line-height-base: 1.6;
-  --line-height-ui: 1.4;
+
   --line-height-tight: 1.2;
+  --line-height-ui: 1.4;
+  --line-height-base: 1.6;
+
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0em;
+  --tracking-wide: 0.02em;
+  --tracking-wider: 0.05em;
 
   // ==========================================================================
-  // 4. Spacing System & Dimensions (余白システム & 寸法)
+  // 2. レイアウト & 余白 (Layout & Spacing)
   // ==========================================================================
   --sidebar-width: 280px;
 
-  // --- 4-1. Primitive Spacing Scale (4px / 8px Grid) ---
-  --space-0: 0px;
+  // Primitive Spacings
   --space-0-5: 2px;
   --space-1: 4px;
   --space-2: 8px;
@@ -78,218 +43,64 @@
   --space-5: 20px;
   --space-6: 24px;
   --space-8: 32px;
-  --space-10: 40px;
-  --space-12: 48px;
-  --space-16: 64px;
 
-  // --- 4-2. Semantic Spacing Tokens (用途別セマンティック余白) ---
-  // [1] ページ・大枠レイアウト (Layout & Container)
-  --space-layout-pad: clamp(
-    var(--space-3),
-    2vw,
-    var(--space-6)
-  ); // 12px 〜 24px
-  --space-section-gap: clamp(
-    var(--space-5),
-    2.5vw,
-    var(--space-8)
-  ); // 20px 〜 32px
+  // Semantic Spacings
+  --space-layout-pad: clamp(var(--space-3), 2vw, var(--space-6));
+  --space-section-gap: clamp(var(--space-5), 2.5vw, var(--space-8));
+  --space-panel-pad: clamp(var(--space-3), 1.5vw, var(--space-5));
+  --space-panel-pad-compact: var(--space-3);
+  --space-panel-gap: clamp(var(--space-2), 1.2vw, var(--space-4));
+  --space-form-row-gap: var(--space-4);
+  --space-form-col-gap: var(--space-4);
+  --space-item-gap: var(--space-2);
+  --space-inline-gap: var(--space-1);
 
-  // [2] パネル・サーフェス余白 (Panel & Surface)
-  --space-panel-pad: clamp(
-    var(--space-3),
-    1.5vw,
-    var(--space-5)
-  ); // 12px 〜 20px (標準)
-  --space-panel-pad-compact: var(--space-3); // 12px (コンパクト・リスト選択行・カード用)
-  --space-panel-gap: clamp(
-    var(--space-2),
-    1.2vw,
-    var(--space-4)
-  ); // 8px 〜 16px (標準)
-
-  // [3] コンポーネント・フォーム間隔 (Components & Forms)
-  --space-form-row-gap: var(--space-4); // 16px (フォーム行間をゆったり確保)
-  --space-form-col-gap: var(--space-4); // 16px (フォーム列間)
-  --space-item-gap: var(--space-2); // 8px (アイテム間)
-  --space-inline-gap: var(--space-1); // 4px (インライン要素間)
-
-  // コントロール寸法 (Dimensions)
+  // ==========================================================================
+  // 3. コントロール寸法 & アイコン寸法 (Control & Icon Dimensions)
+  // ==========================================================================
   --control-height-ratio: 2.6;
-  --size-control-sm: 32px;
-  --size-control-md: 40px;
-  --size-control-lg: 48px;
-  --width-sm: 150px;
-  --width-md: 250px;
   --table-cell-min-height: 36px;
+
   --icon-size-sm: 14px;
   --icon-size-md: 20px;
   --icon-size-lg: 24px;
-  --icon-size-xl: 32px;
-  --icon-size-xxl: 40px;
 
   // ==========================================================================
-  // 5. カラーベース (HSL Raw Values) & セマンティックカラー (GitHub Primer)
+  // 4. レイヤー構造 (Z-Index)
   // ==========================================================================
-  --color-category-main-base: 215 93% 58%; // GitHub Blue (#2f81f7)
-  --color-category-tool-base: 184 60% 52%; // GitHub Cyan (#39c5cf)
-  --color-category-database-base: 265 90% 71%; // GitHub Purple (#a371f7)
-  --color-category-reference-base: 327 73% 69%; // GitHub Magenta / Orchid (#ea60a7)
-  --color-category-management-base: 148 42% 48%; // Muted Forest Green (#3ea26c)
-  --color-accent-main-base: 25 87% 59%; // GitHub Orange (#f0883e)
-  --color-status-success-base: 138 95% 55%; // Electric Neon Green (#2bf068)
-  --color-status-warning-base: 41 73% 48%; // GitHub Attention / Yellow (#d29922)
-  --color-status-danger-base: 3 93% 63%; // GitHub Severe / Red (#f85149)
-  --color-status-stopped-base: 214 10% 31%; // GitHub Inactive (#484f58)
-  --color-status-neutral-base: 215 8% 59%; // GitHub Muted Gray (#8b949e)
-  --color-main-bg-base: 216 28% 7%; // GitHub Dark Canvas (#0d1117)
-  --color-overlay-base: 210 34% 96%;
-  --color-text-main-base: 210 34% 96%; // GitHub Dark Text (#f0f6fc)
-  --color-text-secondary-base: 215 8% 59%; // GitHub Dark Secondary (#8b949e)
-  --color-text-muted-base: 215 8% 47%; // GitHub Dark Muted (#6e7681)
-  --color-text-disabled-base: 214 10% 31%; // GitHub Dark Disabled (#484f58)
-  --color-border-main-base: 213 12% 21%; // GitHub Dark Border (#30363d)
+  --z-index-table-header: 10;
+  --z-index-sidebar-overlay: 100;
+  --z-index-sidebar: 101;
+  --z-index-modal: 500;
+  --z-index-select: 1000;
 
-  // セマンティックカラー定義
-  --color-category-main: hsl(var(--color-category-main-base));
-  --theme-accent: var(--color-category-main);
-  --color-category-tool: hsl(var(--color-category-tool-base));
-  --color-category-database: hsl(var(--color-category-database-base));
-  --color-category-reference: hsl(var(--color-category-reference-base));
-  --color-category-management: hsl(var(--color-category-management-base));
-  --color-accent-main: hsl(var(--color-accent-main-base));
-  --color-status-success: hsl(var(--color-status-success-base));
-  --color-status-warning: hsl(var(--color-status-warning-base));
-  --color-status-danger: hsl(var(--color-status-danger-base));
-  --color-status-stopped: hsl(var(--color-status-stopped-base));
-  --color-status-neutral: hsl(var(--color-status-neutral-base));
-  --color-main-bg: hsl(var(--color-main-bg-base));
-  --surface-bg: hsl(216deg 21% 11% / 80%);
-  --surface-bg-elevated: hsl(216deg 21% 13%);
-  --surface-bg-solid: hsl(216deg 21% 11%);
-  --color-overlay: hsl(var(--color-overlay-base));
-  --color-text-main: hsl(var(--color-text-main-base));
-  --color-text-secondary: hsl(var(--color-text-secondary-base));
-  --color-text-muted: hsl(var(--color-text-muted-base));
-  --color-text-disabled: hsl(var(--color-text-disabled-base));
-  --color-text-on-emphasis: hsl(0deg 0% 100%); // アクセント/Danger背景用の高コントラスト白
-  --color-border: hsl(var(--color-border-main-base));
-  --color-border-subtle: hsl(215deg 14% 15%);
-
-  // 専用セマンティックトークン (ハードコード撲滅用)
-  --color-track-bg: hsl(215deg 14% 19%);
-  --color-tile-empty-bg: hsl(216deg 21% 15%);
-  --color-tile-empty-border: hsl(213deg 12% 21%);
-  --color-tile-hover-border: hsl(210deg 34% 96%);
-  --color-tile-excluded-bg: hsl(215deg 14% 20% / 50%);
-  --color-tile-excluded-border: hsl(215deg 14% 30% / 50%);
-  --color-selection-bg: hsl(215deg 93% 58% / 18%);
-  --color-selection-outline: hsl(215deg 93% 58%);
-  --color-completed-row-bg: hsl(128deg 57% 62% / 8%);
-
-  // カレンダー専用セマンティックトークン（休日セマンティクス）
-  --color-calendar-saturday: hsl(212deg 92% 66%);
-  --color-calendar-sunday: hsl(358deg 85% 68%);
-
-  // 工種・専門領域セマンティックトークン (Trade Domains: 設備・施工・図面セマンティクス)
-  --color-trade-electric: hsl(42deg 90% 50%); // 電気: アンバー / イエロー (電気設備)
-  --color-trade-architecture: hsl(22deg 88% 54%); // 建築: テラコッタ / オレンジ (躯体・建築工事)
-  --color-trade-hvac: hsl(145deg 65% 44%); // 空調・換気: エアーグリーン (空調換気設備・風)
-  --color-trade-plumbing: hsl(198deg 85% 48%); // 衛生: 水道ブルー / シアン (給排水衛生設備・水)
-  --color-trade-trivia: hsl(265deg 70% 65%); // 雑学: パープル / ナレッジ (知見コラム)
-
-  // ユーザーロール・権限セマンティックトークン (User Roles & Authority)
-  --color-role-admin: hsl(263deg 85% 68%); // 管理者: パープル（特権・セキュリティ権限）
-  --color-role-worker: hsl(152deg 68% 45%); // 作業員: エメラルド（現場・作業担当）
-  --color-role-viewer: hsl(var(--color-text-muted-base)); // 閲覧者: ミュートグレー（読み取り専用）
-
-  // ボタン専用セマンティックトークン (Default / Danger / Success 3体系)
-  --btn-default-bg: var(--surface-bg-elevated);
-  --btn-default-bg-hover: var(--color-bg-hover);
-  --btn-default-bg-active: color-mix(in srgb, var(--color-overlay) 10%, transparent);
-  --btn-default-border: var(--color-border);
-  --btn-default-border-hover: var(--color-text-muted);
-  --btn-default-text: var(--color-text-main);
-
-  --btn-danger-bg: var(--surface-bg-elevated);
-  --btn-danger-bg-hover: color-mix(in srgb, var(--color-status-danger) 50%, var(--surface-bg-elevated));
-  --btn-danger-bg-active: color-mix(in srgb, var(--color-status-danger) 65%, var(--surface-bg-elevated));
-  --btn-danger-border: var(--color-border);
-  --btn-danger-border-hover: var(--color-status-danger);
-  --btn-danger-text: var(--color-status-danger);
-  --btn-danger-text-hover: var(--color-status-danger);
-
-  --btn-success-bg: var(--surface-bg-elevated);
-  --btn-success-bg-hover: color-mix(in srgb, var(--color-status-success) 50%, var(--surface-bg-elevated));
-  --btn-success-bg-active: color-mix(in srgb, var(--color-status-success) 65%, var(--surface-bg-elevated));
-  --btn-success-border: var(--color-border);
-  --btn-success-border-hover: var(--color-status-success);
-  --btn-success-text: var(--color-status-success);
-  --btn-success-text-hover: var(--color-status-success);
-
-  // コントロール・選択ピル用トークン (Tabs, Radio, Checkbox)
-  --control-pill-bg: color-mix(in srgb, var(--theme-accent) 15%, var(--surface-bg-elevated));
-  --control-pill-border: color-mix(in srgb, var(--theme-accent) 60%, transparent);
-  --control-pill-text: var(--theme-accent);
-  --control-checked-bg: var(--theme-accent);
-  --control-checked-icon: var(--color-text-on-emphasis);
-
-  // ボーダー & Radius（真円以外は完全撲滅・直角統一規約）
+  // ==========================================================================
+  // 5. ボーダー & シェイプ (Borders, Shapes & Blur)
+  // ==========================================================================
   --border-width-base: 1px;
   --border-width-thick: 2px;
-  --radius-circle: 50%; // 正方形要素（アバター・ステータスインジケーター）専用
-
-  // エフェクト & インタラクション背景
-  --color-bg-hover: color-mix(in srgb, var(--color-overlay) 6%, transparent);
-  --color-overlay-dark: hsl(216deg 28% 7% / 70%);
-  --color-overlay-light: hsl(0deg 0% 100% / 15%);
-  --blur-xs: 2px;
+  --radius-circle: 50%;
   --blur-sm: 4px;
   --blur-md: 8px;
-  --blur-lg: 12px;
-  --blur-xl: 16px;
 
   // ==========================================================================
-  // 6. シャドウ & グロー演出 (GitHub Primer Enhanced & HUD Elevation)
-  // ==========================================================================
-  --shadow-color: color-mix(in srgb, black 85%, transparent);
-  --shadow-elevation-sm:
-    0 1px 2px color-mix(in srgb, var(--shadow-color) 40%, transparent),
-    0 3px 6px color-mix(in srgb, var(--shadow-color) 20%, transparent),
-    inset 0 1px 0 color-mix(in srgb, var(--color-overlay) 5%, transparent);
-  --shadow-elevation-md:
-    0 4px 8px color-mix(in srgb, var(--shadow-color) 35%, transparent),
-    0 10px 20px color-mix(in srgb, var(--shadow-color) 25%, transparent),
-    inset 0 1px 0 color-mix(in srgb, var(--color-overlay) 7%, transparent);
-  --shadow-elevation-lg:
-    0 8px 16px color-mix(in srgb, var(--shadow-color) 30%, transparent),
-    0 20px 40px color-mix(in srgb, var(--shadow-color) 30%, transparent),
-    inset 0 1px 0 color-mix(in srgb, var(--color-overlay) 8%, transparent);
-  --shadow-sink: inset 0 2px 4px 0
-    color-mix(in srgb, var(--shadow-color) 60%, transparent);
-  --shadow-modal: var(--shadow-elevation-lg);
-  --shadow-2xl: -8px 0 24px color-mix(in srgb, black 50%, transparent);
-
-  // ナビゲーション / サイドバー用 投影シャドウ
-  --shadow-nav: 4px 0 24px color-mix(in srgb, black 50%, transparent);
-
-  // ==========================================================================
-  // 7. アニメーション & トランジション
+  // 6. アニメーション & トランジション (Animation & Transitions)
   // ==========================================================================
   --duration-fast: 0.15s;
   --duration-base: 0.2s;
   --duration-slow: 0.35s;
-  --duration-modal: 0.4s;
+
   --ease-base: cubic-bezier(0.25, 1, 0.5, 1);
-  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-out: ease-out;
 
-  // 基本トランジション
   --transition-fast: all var(--duration-fast) var(--ease-base);
   --transition-base: all var(--duration-base) var(--ease-base);
-  --transition-slow: all var(--duration-slow) var(--ease-smooth);
+  --transition-transform: transform var(--duration-base) var(--ease-base);
+  --transition-colors:
+    background-color var(--duration-fast) var(--ease-base),
+    border-color var(--duration-fast) var(--ease-base),
+    color var(--duration-fast) var(--ease-base);
 
-  // 対話コンポーネント専用（全プロパティ同期型・ホバー時上書き不要）
   --transition-interactive:
     color var(--duration-fast) var(--ease-base),
     background-color var(--duration-fast) var(--ease-base),
@@ -298,49 +109,10 @@
     transform var(--duration-fast) var(--ease-base),
     opacity var(--duration-fast) var(--ease-base);
 
-  // パネル専用トランジション
   --transition-panel:
     color var(--duration-base) var(--ease-base),
     background-color var(--duration-base) var(--ease-base),
     border-color var(--duration-base) var(--ease-base),
     box-shadow var(--duration-base) var(--ease-base),
     transform var(--duration-base) var(--ease-base);
-
-  --transition-colors:
-    background-color var(--duration-fast) var(--ease-base),
-    border-color var(--duration-fast) var(--ease-base),
-    color var(--duration-fast) var(--ease-base);
-  --transition-transform: transform var(--duration-base) var(--ease-base);
-
-  // 天面エッジハイライト (Top Rim Highlights: サファイアガラス・アルミ削り出しのような微細光沢)
-  --surface-rim-highlight: inset 0 1px 0 color-mix(in srgb, var(--color-overlay) 7%, transparent);
-  --surface-rim-highlight-hover: inset 0 1px 0 color-mix(in srgb, var(--color-overlay) 14%, transparent);
-  --surface-rim-accent: inset 0 1px 0 color-mix(in srgb, var(--theme-accent) 35%, transparent);
 }
-
-// ==========================================================================
-// 8. 動的グロー演出トークン (要素ごとの --glow-color や --theme-accent に追従)
-// ==========================================================================
-*,
-*::before,
-*::after {
-  --shadow-glow-base: none;
-
-  // 多層アンビエントグロー（微細なリム輪郭 ＋ 柔らかく拡散するアンビエント光 ＋ 深度シャドウ）
-  --shadow-glow-hover:
-    0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 45%, transparent),
-    0 2px 10px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 16%, transparent),
-    var(--shadow-elevation-sm);
-  --shadow-glow-focus:
-    0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 70%, transparent),
-    0 0 0 3px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 25%, transparent),
-    0 2px 12px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 20%, transparent);
-  --shadow-glow-active:
-    0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 60%, transparent),
-    inset 0 1px 2px color-mix(in srgb, black 30%, transparent),
-    var(--shadow-elevation-sm);
-  --shadow-glow-sm:
-    0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 35%, transparent),
-    0 1px 4px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 12%, transparent);
-}
-

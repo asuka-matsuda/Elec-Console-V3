@@ -57,7 +57,7 @@ const handlePrint = () => {
   <Modal
     :model-value="modelValue"
     title="認証情報の発行完了"
-    icon="check-circle"
+    icon="circle-check"
     @update:model-value="emit('update:modelValue', $event)"
   >
     <template #actions>

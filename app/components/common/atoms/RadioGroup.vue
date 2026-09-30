@@ -1,75 +1,42 @@
 <script setup lang="ts" generic="T extends string | number | boolean = string | number | boolean">
 /**
  * RadioGroup
- * [Atoms] 複数の選択肢から1つを選択するための、セグメントコントロール風の押しボタン型ラジオボタングループ。
- * フォーム入力パラメータ、ステータス選択、一覧フィルター専用。
+ * 選択肢から1つを選択するボタングループ。
  */
-import { computed, useId } from 'vue'
-
 import type { RadioGroupProps, RadioOption } from '~/types/components'
 
 const model = defineModel<T>()
 
-const props = withDefaults(
-  defineProps<RadioGroupProps<T>>(),
-  {
-    disabled: false,
-    block: false,
-  },
-)
-
-const emit = defineEmits<{
-  (e: 'change', value: T): void
-}>()
+defineProps<RadioGroupProps<T>>()
 
 defineSlots<{
   option?: (props: { option: RadioOption<T>, isActive: boolean }) => unknown
 }>()
-
-const uniqueName = useId()
-const groupName = computed(() => props.name || `radio-group-${uniqueName}`)
-
-const isActive = (value: T) => model.value === value
-const isOptionDisabled = (option: RadioOption<T>) => props.disabled || Boolean(option.disabled)
-
-const updateValue = (value: T) => {
-  model.value = value
-  emit('change', value)
-}
 </script>
 
 <template>
   <div
-    class="radio-group inline-flex shrink-0 gap-0.5 p-0.5"
-    :class="{
-      'w-fit': !block,
-      'radio-group--block w-full flex': block,
-    }"
+    class="radio-group shrink-0 gap-0.5 p-0.5"
+    :class="block ? 'flex w-full' : 'inline-flex w-fit'"
   >
-    <label
+    <button
       v-for="option in options"
       :key="String(option.value)"
-      class="inline-flex items-center justify-center item"
+      type="button"
+      class="item inline-flex items-center justify-center"
       :class="{
-        'is-active': isActive(option.value),
-        'is-disabled': isOptionDisabled(option),
-        'flex-1 text-center': block,
+        'is-active': model === option.value,
+        'is-disabled': disabled || option.disabled,
+        'flex-1': block,
       }"
+      :disabled="disabled || option.disabled"
       :style="option.color ? { '--radio-color': option.color } : undefined"
+      @click="model = option.value"
     >
-      <input
-        type="radio"
-        :name="groupName"
-        :value="option.value"
-        :checked="isActive(option.value)"
-        :disabled="isOptionDisabled(option)"
-        class="radio-native-input"
-        @change="updateValue(option.value)"
-      />
-      <slot name="option" :option="option" :is-active="isActive(option.value)">
+      <slot name="option" :option="option" :is-active="model === option.value">
         {{ option.label }}
       </slot>
-    </label>
+    </button>
   </div>
 </template>
 
@@ -78,24 +45,8 @@ const updateValue = (value: T) => {
   --radio-color: var(--theme-accent);
 
   border: var(--border-width-base) solid var(--color-border);
-
-  font-size: inherit;
-
   background-color: var(--surface-bg-elevated);
   box-shadow: var(--shadow-sink);
-
-  transition: var(--transition-interactive);
-
-  .radio-native-input {
-    pointer-events: none;
-
-    position: absolute;
-
-    width: 0;
-    height: 0;
-
-    opacity: 0;
-  }
 
   .item {
     padding: 0.3em 0.8em;
@@ -105,16 +56,18 @@ const updateValue = (value: T) => {
     font-weight: var(--font-weight-medium);
     color: var(--color-text-secondary);
 
+    background-color: transparent;
+
     transition: var(--transition-interactive);
 
     @include state-interactive;
 
-    &:hover:not(.is-disabled, .is-active) {
+    &:hover:not(.is-active) {
       color: var(--color-text-main);
       background-color: var(--color-bg-hover);
     }
 
-    &:has(.radio-native-input:focus-visible) {
+    &:focus-visible {
       outline: none;
       box-shadow: var(--shadow-glow-focus);
     }

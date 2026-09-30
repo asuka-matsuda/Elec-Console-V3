@@ -25,14 +25,12 @@ describe('RadioGroup.vue', () => {
     expect(items[1].classes()).not.toContain('is-active')
     expect(items[2].classes()).toContain('is-disabled')
 
-    const inputs = wrapper.findAll('input[type="radio"]')
-
-    expect((inputs[0].element as HTMLInputElement).checked).toBe(true)
-    expect((inputs[1].element as HTMLInputElement).checked).toBe(false)
-    expect((inputs[2].element as HTMLInputElement).disabled).toBe(true)
+    expect((items[0].element as HTMLButtonElement).disabled).toBe(false)
+    expect((items[1].element as HTMLButtonElement).disabled).toBe(false)
+    expect((items[2].element as HTMLButtonElement).disabled).toBe(true)
   })
 
-  it('updates modelValue and emits change on option selection', async () => {
+  it('updates modelValue on option selection', async () => {
     const wrapper = mount(RadioGroup, {
       props: {
         'modelValue': 'a',
@@ -41,16 +39,15 @@ describe('RadioGroup.vue', () => {
       },
     })
 
-    const inputs = wrapper.findAll('input[type="radio"]')
+    const items = wrapper.findAll('.item')
 
-    await inputs[1].trigger('change')
+    await items[1].trigger('click')
 
     expect(wrapper.emitted('update:modelValue')).toBeTruthy()
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['b'])
-    expect(wrapper.emitted('change')?.[0]).toEqual(['b'])
   })
 
-  it('does not select disabled option on change', async () => {
+  it('does not select disabled option on click', async () => {
     const wrapper = mount(RadioGroup, {
       props: {
         modelValue: 'a',
@@ -58,9 +55,9 @@ describe('RadioGroup.vue', () => {
       },
     })
 
-    const inputs = wrapper.findAll('input[type="radio"]')
+    const items = wrapper.findAll('.item')
 
-    await inputs[2].trigger('change')
+    await items[2].trigger('click')
 
     expect(wrapper.emitted('update:modelValue')).toBeFalsy()
   })
@@ -78,12 +75,7 @@ describe('RadioGroup.vue', () => {
 
     items.forEach((item) => {
       expect(item.classes()).toContain('is-disabled')
-    })
-
-    const inputs = wrapper.findAll('input[type="radio"]')
-
-    inputs.forEach((input) => {
-      expect((input.element as HTMLInputElement).disabled).toBe(true)
+      expect((item.element as HTMLButtonElement).disabled).toBe(true)
     })
   })
 
@@ -96,7 +88,7 @@ describe('RadioGroup.vue', () => {
       },
     })
 
-    expect(wrapper.classes()).toContain('radio-group--block')
+    expect(wrapper.classes()).toContain('w-full')
 
     const items = wrapper.findAll('.item')
 

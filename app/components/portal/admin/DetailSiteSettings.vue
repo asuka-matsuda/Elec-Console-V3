@@ -175,7 +175,6 @@ const handleSave = () => {
               <Select
                 v-model="form.status"
                 :options="SITE_STATUS_OPTIONS"
-                :clearable="false"
               />
             </FormGroup>
 

@@ -25,7 +25,6 @@ withDefaults(defineProps<FilterPanelProps>(), {
     <Input
       v-model="searchQuery"
       :placeholder="placeholder"
-      clearable
     />
 
     <ul

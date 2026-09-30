@@ -67,7 +67,7 @@ const handleAdd = () => {
 
     <EmptyState
       v-else
-      icon="check-circle"
+      icon="circle-check"
       title="タスクはありません"
       description="上の入力欄から新しいタスクを追加してください。"
     />

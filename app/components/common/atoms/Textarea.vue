@@ -1,10 +1,9 @@
 <script setup lang="ts">
 /**
  * Textarea
- * [Atoms] 複数行のテキスト入力エリアを提供する最小フォームコントロールコンポーネント。
- * autoResize オプションにより、入力内容に応じた高さの自動拡張（1行〜可変）をサポートします。
+ * 複数行テキスト入力コンポーネント。
  */
-import { computed, inject, nextTick, onMounted, ref, watch } from 'vue'
+import { computed, inject, ref } from 'vue'
 
 import { FORM_GROUP_KEY } from '~/constants/injectionKeys'
 import type { TextareaProps } from '~/types/components'
@@ -14,20 +13,14 @@ const model = defineModel<string | null>()
 const props = withDefaults(
   defineProps<TextareaProps>(),
   {
-    disabled: false,
-    readonly: false,
-    error: false,
-    required: false,
     rows: 4,
     resize: 'vertical',
     autoResize: false,
+    disabled: false,
+    readonly: false,
+    error: false,
   },
 )
-
-const emit = defineEmits<{
-  (e: 'focus' | 'blur', event: FocusEvent): void
-  (e: 'submit-shortcut', event: KeyboardEvent): void
-}>()
 
 const formGroup = inject(FORM_GROUP_KEY, null)
 const textareaId = computed(() => props.id || formGroup?.id.value)
@@ -35,48 +28,8 @@ const isError = computed(() => props.error || (formGroup?.hasError.value ?? fals
 
 const textareaRef = ref<HTMLTextAreaElement | null>(null)
 
-// オートリサイズ処理（入力文字数・改行数に応じて高さを自動調整）
-const adjustHeight = () => {
-  if (!props.autoResize || !textareaRef.value) return
-  textareaRef.value.style.height = 'auto'
-  textareaRef.value.style.height = `${textareaRef.value.scrollHeight}px`
-}
-
-onMounted(() => {
-  if (props.autoResize) {
-    nextTick(adjustHeight)
-  }
-})
-
-watch(
-  () => model.value,
-  () => {
-    if (props.autoResize) {
-      nextTick(adjustHeight)
-    }
-  },
-)
-
-const handleInput = () => {
-  if (props.autoResize) {
-    adjustHeight()
-  }
-}
-
-// Ctrl+Enter / Cmd+Enter ショートカット
-const handleKeydown = (event: KeyboardEvent) => {
-  if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
-    emit('submit-shortcut', event)
-  }
-}
-
-// リサイズクラス
 const resizeClass = computed(() => {
   if (props.autoResize) {
-    return 'resize-none'
-  }
-
-  if (props.disabled || props.readonly) {
     return 'resize-none'
   }
 
@@ -110,29 +63,23 @@ defineExpose({
     :id="textareaId"
     ref="textareaRef"
     v-model="model"
-    :name="name"
+    :rows="rows"
     :placeholder="placeholder"
     :disabled="disabled"
     :readonly="readonly"
-    :required="required"
-    :rows="rows"
-    :maxlength="maxlength"
-    :autocomplete="autocomplete"
     class="form-control relative z-[1] focus:z-[2] w-full"
     :class="[
       { 'is-error': isError, 'is-auto-resize': autoResize },
       resizeClass,
     ]"
-    @focus="emit('focus', $event)"
-    @blur="emit('blur', $event)"
-    @input="handleInput"
-    @keydown="handleKeydown"
   />
 </template>
 
 <style scoped lang="scss">
 .form-control {
   --glow-color: var(--theme-accent);
+
+  resize: vertical;
 
   min-height: calc(var(--control-height-ratio) * 2em);
   padding-block: 0.5em;
@@ -186,7 +133,7 @@ defineExpose({
 
   &.is-auto-resize {
     resize: none;
-    overflow-y: hidden;
+    field-sizing: content;
     min-height: calc(var(--control-height-ratio) * 1.3em);
     padding-block: 0.35em;
   }

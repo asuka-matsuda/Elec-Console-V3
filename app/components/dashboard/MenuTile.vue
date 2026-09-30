@@ -42,7 +42,7 @@ const resolvedBadge = computed(() => {
     class="flex flex-col gap-panel-gap h-full"
   >
     <header v-if="item.icon || item.text || $slots.badge || resolvedBadge" class="flex items-center gap-item-gap min-w-0">
-      <Icon v-if="item.icon" :name="item.icon" class="shrink-0" />
+      <Icon v-if="item.icon" :name="item.icon" />
       <span v-if="item.text" class="flex-1 min-w-0 tile-title">{{ item.text }}</span>
 
       <slot v-if="$slots.badge || resolvedBadge" name="badge" :item="item">

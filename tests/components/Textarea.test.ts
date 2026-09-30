@@ -66,25 +66,6 @@ describe('Textarea.vue', () => {
     expect(wrapper.find('textarea').classes()).toContain('resize-none')
   })
 
-  it('emits focus and blur events', async () => {
-    const wrapper = mount(Textarea)
-    const textarea = wrapper.find('textarea')
-
-    await textarea.trigger('focus')
-    expect(wrapper.emitted('focus')).toBeTruthy()
-
-    await textarea.trigger('blur')
-    expect(wrapper.emitted('blur')).toBeTruthy()
-  })
-
-  it('emits submit-shortcut on Ctrl+Enter', async () => {
-    const wrapper = mount(Textarea)
-    const textarea = wrapper.find('textarea')
-
-    await textarea.trigger('keydown', { key: 'Enter', ctrlKey: true })
-    expect(wrapper.emitted('submit-shortcut')).toBeTruthy()
-  })
-
   it('syncs id and error state with injected formGroup', () => {
     const wrapper = mount(Textarea, {
       global: {

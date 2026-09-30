@@ -261,7 +261,6 @@ const getNextPhase1Path = (circuit: CircuitItem): string => {
       <Select
         v-model="getRowForm(circuit).kensou"
         :options="getKensouOptions(circuit)"
-        :clearable="false"
         :disabled="isRowDisabled(circuit)"
         class="w-20 min-w-[70px]"
       />

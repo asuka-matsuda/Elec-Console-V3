@@ -25,7 +25,8 @@ const TAG_COLUMNS: TableColumn<TagMetadataItem>[] = [
       variant="hud"
     />
 
-    <Disclaimer
+    <Alert
+      variant="info"
       text="テンプレートとなる Excel シート内のセルに以下の %タグ名% を記述してください。出力時に対象盤の全回路が下方向へ自動展開されます。"
     />
 

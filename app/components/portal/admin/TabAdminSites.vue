@@ -213,7 +213,7 @@ const confirmDeleteSite = async (site: Site) => {
     <Modal
       v-model="isCreateModalOpen"
       title="新規現場登録"
-      icon="plus-circle"
+      icon="circle-plus"
     >
       <template #actions>
         <Button @click="isCreateModalOpen = false">

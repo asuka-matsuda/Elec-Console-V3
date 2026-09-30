@@ -61,7 +61,7 @@ const formatSize = (bytes: number) =>
       :disabled="disabled"
       @change="onFileInput"
     >
-    <Icon name="upload-cloud" size="lg" />
+    <Icon name="cloud-upload" size="lg" />
     <div>
       <strong>クリックしてファイルを選択</strong> またはここにドラッグ＆ドロップ
     </div>
@@ -73,7 +73,7 @@ const formatSize = (bytes: number) =>
     class="excel-dropzone has-file flex items-center gap-panel-gap w-full p-panel-pad-compact"
     :class="{ 'is-disabled': disabled }"
   >
-    <Icon name="file-check" size="md" class="file-icon shrink-0" />
+    <Icon name="file-check" size="md" class="file-icon" />
     <div class="flex-1 min-w-0">
       <strong :title="modelValue.name">
         {{ modelValue.name }}

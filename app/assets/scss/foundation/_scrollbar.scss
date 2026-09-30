@@ -1,11 +1,10 @@
-@use "icons" as *;
-
-/* stylelint-disable no-descending-specificity */
-$default-size: 12px;
+// =============================================================================
+// スクロールバー基本定義 (Scrollbar Styles - WebKit/Blink Only)
+// =============================================================================
 
 ::-webkit-scrollbar {
-  width: var(--scrollbar-size, #{$default-size});
-  height: var(--scrollbar-size, #{$default-size});
+  width: var(--scrollbar-size, var(--space-2, 8px));
+  height: var(--scrollbar-size, var(--space-2, 8px));
 }
 
 ::-webkit-scrollbar-track {
@@ -17,66 +16,23 @@ $default-size: 12px;
   background-clip: padding-box;
 
   &:hover {
-    background-color: color-mix(in srgb, var(--color-text-muted) 55%, transparent);
+    background-color: color-mix(
+      in srgb,
+      var(--theme-accent, var(--color-text-muted)) 60%,
+      transparent
+    );
   }
 
   &:active {
-    background-color: color-mix(in srgb, var(--color-text-muted) 75%, transparent);
+    background-color: color-mix(
+      in srgb,
+      var(--theme-accent, var(--color-text-muted)) 85%,
+      transparent
+    );
   }
-}
-
-::-webkit-scrollbar-button {
-  width: var(--scrollbar-size, #{$default-size});
-  height: var(--scrollbar-size, #{$default-size});
-
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: calc(var(--scrollbar-size, #{$default-size}) * 0.8);
-}
-
-::-webkit-scrollbar-button:vertical:start:increment,
-::-webkit-scrollbar-button:vertical:end:decrement,
-::-webkit-scrollbar-button:horizontal:start:increment,
-::-webkit-scrollbar-button:horizontal:end:decrement {
-  display: none;
-}
-
-::-webkit-scrollbar-button:vertical:decrement {
-  background-image: var(--icon-sb-up);
-}
-
-::-webkit-scrollbar-button:vertical:increment {
-  background-image: var(--icon-sb-down);
-}
-
-::-webkit-scrollbar-button:horizontal:decrement {
-  background-image: var(--icon-sb-left);
-}
-
-::-webkit-scrollbar-button:horizontal:increment {
-  background-image: var(--icon-sb-right);
-}
-
-::-webkit-scrollbar-button:vertical:decrement:hover,
-::-webkit-scrollbar-button:vertical:decrement:active {
-  background-image: var(--icon-sb-up-hover);
-}
-
-::-webkit-scrollbar-button:vertical:increment:hover,
-::-webkit-scrollbar-button:vertical:increment:active {
-  background-image: var(--icon-sb-down-hover);
-}
-
-::-webkit-scrollbar-button:horizontal:decrement:hover,
-::-webkit-scrollbar-button:horizontal:decrement:active {
-  background-image: var(--icon-sb-left-hover);
-}
-
-::-webkit-scrollbar-button:horizontal:increment:hover,
-::-webkit-scrollbar-button:horizontal:increment:active {
-  background-image: var(--icon-sb-right-hover);
 }
 
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
+

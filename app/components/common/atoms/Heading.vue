@@ -1,43 +1,46 @@
 <script setup lang="ts">
 /**
  * Heading
- * [Atoms] セマンティクス（タグ）とビジュアル（サイズ）を制御する見出しコンポーネント。
+ * 見出しコンポーネント。
  */
 import { computed } from 'vue'
 
 import type { HeadingProps, HeadingSize } from '~/types/components'
 
-const props = withDefaults(defineProps<HeadingProps>(), {
-  level: 2,
-})
-
-const effectiveLevel = computed(() => props.tag ?? props.level)
-
-const normalizedLevel = computed(() => {
-  const str = String(effectiveLevel.value)
-
-  return str.startsWith('h') ? str.slice(1) : str
-})
-
-const tag = computed(() => `h${normalizedLevel.value}`)
+const {
+  level = 2,
+  tag: tagProp,
+  size,
+} = defineProps<HeadingProps>()
 
 const DEFAULT_SIZES: Record<string, HeadingSize> = {
-  1: '3xl',
-  2: '2xl',
-  3: 'xl',
-  4: 'lg',
-  5: 'base',
-  6: 'base',
+  h1: '3xl',
+  h2: '2xl',
+  h3: 'xl',
+  h4: 'lg',
+  h5: 'base',
+  h6: 'base',
 }
 
-const computedSize = computed(() => props.size || DEFAULT_SIZES[normalizedLevel.value] || 'base')
+const resolvedTag = computed(() => {
+  const target = tagProp ?? level
+  const raw = String(target).toLowerCase()
+
+  if (/^[1-6]$/.test(raw)) {
+    return `h${raw}`
+  }
+
+  return raw
+})
+
+const resolvedSize = computed(() => size || DEFAULT_SIZES[resolvedTag.value] || 'base')
 </script>
 
 <template>
   <component
-    :is="tag"
+    :is="resolvedTag"
     class="app-heading"
-    :class="`is-${computedSize}`"
+    :class="`is-${resolvedSize}`"
   >
     <slot />
   </component>

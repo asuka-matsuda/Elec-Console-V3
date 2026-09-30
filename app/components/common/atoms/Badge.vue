@@ -1,17 +1,17 @@
 <script setup lang="ts">
 /**
  * Badge
- * [Atoms] 状態（ステータス）を視覚的に強調するための最小限のインジケーター。
- * 渡された color（未指定時は muted）で発光します。
+ * 状態（ステータス）を表示するインジケーター。
  */
-import type { BadgeProps } from '~/types/components'
-
-defineProps<BadgeProps>()
+defineProps<{
+  /** 表示色（CSS変数またはカラー値） */
+  color?: string
+}>()
 </script>
 
 <template>
   <span
-    class="inline-flex items-center justify-center badge"
+    class="inline-flex shrink-0 items-center justify-center badge"
     :style="color ? { '--glow-color': color } : undefined"
   >
     <slot />

@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { reactive } from 'vue'
 
 import GlobalNav from '../../app/components/common/organisms/GlobalNav.vue'
+import { useSidebar } from '../../app/composables/useSidebar'
 import { menuData } from '../../app/constants/data/menuData'
 
 const mockRoute = reactive({
@@ -130,5 +131,29 @@ describe('GlobalNav.vue', () => {
 
     expect(portalLink?.classes()).not.toContain('is-active')
     expect(adminLink?.classes()).toContain('is-active')
+  })
+
+  it('props.isOpen が渡されない場合は useSidebar() のグローバルステートにフォールバックする', async () => {
+    const { openSidebar, closeSidebar: closeGlobal } = useSidebar()
+
+    openSidebar()
+
+    const wrapper = mount(GlobalNav, {
+      props: {
+        menuData,
+      },
+      global: {
+        stubs: defaultStubs,
+      },
+    })
+
+    expect(wrapper.find('aside').classes()).toContain('is-open')
+    expect(wrapper.find('.overlay').classes()).toContain('is-open')
+
+    closeGlobal()
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.find('aside').classes()).not.toContain('is-open')
+    expect(wrapper.find('.overlay').classes()).not.toContain('is-open')
   })
 })

@@ -36,16 +36,12 @@ const handleToggleSidebar = () => {
     <div class="flex items-center gap-item-gap">
       <Button
         icon="menu"
-        icon-only
         title="メニューを開閉"
         @click="handleToggleSidebar"
       />
-      <Logo />
-
-      <Breadcrumb
-        :items="breadcrumbs"
-        class="max-md:hidden"
-      />
+      <NuxtLink to="/" class="flex items-center">
+        <Logo />
+      </NuxtLink>
     </div>
 
     <div class="flex items-center gap-item-gap">

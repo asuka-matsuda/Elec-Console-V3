@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * Checkbox
- * [Atoms] 真偽値の選択および複数選択（配列）を提供する最小チェックボックスコンポーネント
+ * チェックボックスコンポーネント。
  */
 import { computed } from 'vue'
 
@@ -64,6 +64,11 @@ const customStyle = computed(() => {
 
   @include state-interactive;
 
+  &:hover:not(.is-disabled) .box {
+    border-color: var(--control-checked-bg);
+    box-shadow: var(--shadow-glow-hover);
+  }
+
   input {
     pointer-events: none;
 
@@ -74,29 +79,19 @@ const customStyle = computed(() => {
 
     opacity: 0;
 
-    &:not(:disabled) {
-      &:hover ~ .box {
-        border-color: var(--control-checked-bg);
-        box-shadow: var(--shadow-glow-hover);
-      }
+    &:focus-visible ~ .box {
+      border-color: var(--control-checked-bg);
+      box-shadow: var(--shadow-glow-focus);
+    }
 
-      &:focus-visible ~ .box {
-        border-color: var(--control-checked-bg);
-        box-shadow: var(--shadow-glow-focus);
-      }
-
-      &:active ~ .box {
-        box-shadow: var(--shadow-glow-active);
-      }
-
-      &:checked ~ .box {
-        box-shadow: var(--shadow-glow-active);
-      }
+    &:active ~ .box {
+      box-shadow: var(--shadow-glow-active);
     }
 
     &:checked ~ .box {
       border-color: var(--control-checked-bg);
       background-color: var(--control-checked-bg);
+      box-shadow: var(--shadow-glow-active);
 
       .icon {
         transform: scale(1);

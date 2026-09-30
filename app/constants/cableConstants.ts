@@ -38,7 +38,7 @@ export const CONDUIT_CABLE_COLUMNS: TableColumn<CableInputItem>[] = [
   { key: 'category', label: 'ケーブル種別' },
   { key: 'cableIdx', label: 'サイズ' },
   { key: 'count', label: '条数', width: '88px', align: 'center' },
-  { key: 'spec', subKey: 'specDetail', label: '断面積', width: '96px', align: 'right' },
+  { key: 'spec', label: '断面積', width: '96px', align: 'right' },
   { key: 'actions', label: '', width: '52px', align: 'center' },
 ]
 
@@ -49,6 +49,6 @@ export const RACK_CABLE_COLUMNS: TableColumn<CableInputItem>[] = [
   { key: 'category', label: 'ケーブル種別' },
   { key: 'cableIdx', label: 'サイズ' },
   { key: 'count', label: '条数', width: '88px', align: 'center' },
-  { key: 'spec', subKey: 'specDetail', label: '外径計', width: '96px', align: 'right' },
+  { key: 'spec', label: '外径計', width: '96px', align: 'right' },
   { key: 'actions', label: '', width: '52px', align: 'center' },
 ]

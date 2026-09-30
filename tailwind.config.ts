@@ -52,9 +52,6 @@ export default <Config>{
         '5': 'var(--space-5, 20px)',
         '6': 'var(--space-6, 24px)',
         '8': 'var(--space-8, 32px)',
-        '10': 'var(--space-10, 40px)',
-        '12': 'var(--space-12, 48px)',
-        '16': 'var(--space-16, 64px)',
 
         // セマンティック余白
         'layout-pad': 'var(--space-layout-pad)',
@@ -72,18 +69,11 @@ export default <Config>{
       },
       width: {
         'sidebar-w': 'var(--sidebar-width)',
-        'sm': 'var(--width-sm)',
-        'md': 'var(--width-md)',
       },
       zIndex: {
-        'footer': 'var(--z-index-footer)',
         'table-header': 'var(--z-index-table-header)',
-        'nav': 'var(--z-index-nav)',
-        'header': 'var(--z-index-header)',
-        'dropdown': 'var(--z-index-dropdown)',
-        'fab': 'var(--z-index-fab)',
-        'sidebar': 'var(--z-index-sidebar)',
         'sidebar-overlay': 'var(--z-index-sidebar-overlay)',
+        'sidebar': 'var(--z-index-sidebar)',
         'modal': 'var(--z-index-modal)',
         'select': 'var(--z-index-select)',
       },

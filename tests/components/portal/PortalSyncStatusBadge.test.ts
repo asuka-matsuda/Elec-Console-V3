@@ -1,4 +1,4 @@
-﻿import { mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ref } from 'vue'
 
@@ -86,8 +86,8 @@ describe('PortalSyncStatusBadge.vue', () => {
         stubs: {
           Icon: {
             name: 'Icon',
-            template: '<i :class="$attrs.class" :data-name="name" />',
-            props: ['name'],
+            template: '<i :class="[$attrs.class, spin ? \'u-spin\' : \'\']" :data-name="name" />',
+            props: ['name', 'spin'],
           },
           PortalModalSyncQueue: true,
         },
@@ -101,6 +101,6 @@ describe('PortalSyncStatusBadge.vue', () => {
     const icon = wrapper.find('i')
 
     expect(icon.attributes('data-name')).toBe('refresh-cw')
-    expect(icon.classes()).toContain('animate-spin')
+    expect(icon.classes()).toContain('u-spin')
   })
 })

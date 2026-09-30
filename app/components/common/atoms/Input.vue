@@ -1,17 +1,12 @@
 <script setup lang="ts">
 /**
  * Input
- * [Atoms] テキスト入力や数値入力を提供する最小フォームコントロールコンポーネントです。
- * 単位テキスト（addon）やカスタム要素（#addon スロット）のインライン結合をサポートします。
+ * 1行テキスト／数値入力コンポーネント。
  */
-import { computed, inject, ref, useAttrs } from 'vue'
+import { computed, inject, ref } from 'vue'
 
 import { FORM_GROUP_KEY } from '~/constants/injectionKeys'
 import type { InputProps } from '~/types/components'
-
-defineOptions({
-  inheritAttrs: false,
-})
 
 const model = defineModel<string | number | null>()
 
@@ -20,84 +15,13 @@ const props = withDefaults(defineProps<InputProps>(), {
   disabled: false,
   readonly: false,
   error: false,
-  required: false,
-  clearable: true,
-  passwordToggle: true,
-})
-
-const emit = defineEmits<{
-  (e: 'enter', event: KeyboardEvent): void
-  (e: 'clear'): void
-  (e: 'focus' | 'blur', event: FocusEvent): void
-}>()
-
-defineSlots<{
-  addon?: () => unknown
-}>()
-
-const attrs = useAttrs()
-
-const rootAttrs = computed(() => {
-  const { class: className, style } = attrs
-
-  return { class: className, style }
-})
-
-const inputAttrs = computed(() => {
-  const { class: _c, style: _s, ...rest } = attrs
-
-  return rest
 })
 
 const formGroup = inject(FORM_GROUP_KEY, null)
 const inputId = computed(() => props.id || formGroup?.id.value)
 const isError = computed(() => props.error || (formGroup?.hasError.value ?? false))
 
-// 親コンポーネントからのフォーカス操作用 Ref
 const inputRef = ref<HTMLInputElement | null>(null)
-
-// パスワード表示トグル状態
-const showPassword = ref(false)
-const computedType = computed(() => {
-  if (props.type === 'password' && showPassword.value) {
-    return 'text'
-  }
-
-  return props.type
-})
-
-// クリアボタン & パスワードトグル表示判定
-const isDateTime = computed(() => ['date', 'datetime-local', 'time'].includes(props.type || ''))
-const canClear = computed(() => {
-  return (
-    props.clearable
-    && props.type !== 'password'
-    && !props.disabled
-    && !props.readonly
-    && !isDateTime.value
-    && model.value !== ''
-    && model.value !== null
-    && model.value !== undefined
-  )
-})
-const canTogglePassword = computed(() => {
-  return props.type === 'password' && props.passwordToggle && !props.disabled
-})
-const hasActions = computed(() => canClear.value || canTogglePassword.value)
-
-// マウスホイール誤爆防止 (type="number" 時のスクロール値変化を遮断)
-const handleWheel = (e: WheelEvent) => {
-  if (props.type === 'number') {
-    (e.target as HTMLElement)?.blur()
-  }
-}
-
-// クリア実行
-const handleClear = () => {
-  model.value = props.type === 'number' ? null : ''
-  emit('clear')
-  inputRef.value?.focus()
-}
 
 defineExpose({
   /** input 要素へのフォーカス */
@@ -112,96 +36,53 @@ defineExpose({
 </script>
 
 <template>
-  <div
-    class="flex w-full min-w-0 input-container"
-    :class="[
-      rootAttrs.class,
-      { 'has-addon': addon || $slots.addon },
-    ]"
-    :style="rootAttrs.style"
-  >
-    <div
-      class="flex-1 min-w-0 flex items-center gap-inline-gap form-control"
-      :class="{
-        'is-error': isError,
-        'is-disabled': disabled,
-        'is-readonly': readonly,
-      }"
-      @click="inputRef?.focus()"
-    >
-      <input
-        :id="inputId"
-        ref="inputRef"
-        v-model="model"
-        v-bind="inputAttrs"
-        :type="computedType"
-        :name="name"
-        :placeholder="placeholder"
-        :disabled="disabled"
-        :readonly="readonly"
-        :required="required"
-        :min="min"
-        :max="max"
-        :step="step"
-        :maxlength="maxlength"
-        :inputmode="inputmode"
-        :autocomplete="autocomplete"
-        class="form-control__input"
-        @wheel="handleWheel"
-        @focus="emit('focus', $event)"
-        @blur="emit('blur', $event)"
-        @keydown.enter="emit('enter', $event)"
-      />
-
-      <div
-        v-if="hasActions"
-        class="flex items-center gap-inline-gap shrink-0 action-group"
-      >
-        <FormControlAction
-          v-if="canClear"
-          icon="x"
-          title="クリア"
-          @click="handleClear"
-        />
-
-        <FormControlAction
-          v-if="canTogglePassword"
-          :icon="showPassword ? 'eye-off' : 'eye'"
-          :title="showPassword ? 'パスワードを隠す' : 'パスワードを表示'"
-          @click="showPassword = !showPassword"
-        />
-      </div>
-    </div>
-
-    <span v-if="addon" class="inline-flex shrink-0 items-center justify-center input-addon">
-      {{ addon }}
-    </span>
-
-    <div v-else-if="$slots.addon" class="flex shrink-0 input-addon-slot">
-      <slot name="addon" />
-    </div>
-  </div>
+  <input
+    :id="inputId"
+    ref="inputRef"
+    v-model="model"
+    :type="type"
+    :placeholder="placeholder"
+    :disabled="disabled"
+    :readonly="readonly"
+    class="form-control"
+    :class="{
+      'is-error': isError,
+      'is-disabled': disabled,
+      'is-readonly': readonly,
+    }"
+  />
 </template>
 
 <style scoped lang="scss">
 .form-control {
   --glow-color: var(--theme-accent);
 
-  cursor: text;
-
+  width: 100%;
+  min-width: 0;
   min-height: calc(var(--control-height-ratio) * 1em);
   padding-block: 0.3em;
   padding-inline: 1.2em;
   border: var(--border-width-base) solid var(--color-border);
 
+  font-family: inherit;
   font-size: inherit;
   font-variant-numeric: tabular-nums;
   color: var(--color-text-main);
 
   background-color: var(--surface-bg-elevated);
+  outline: none;
   box-shadow: var(--shadow-sink);
 
   transition: var(--transition-interactive);
+
+  &::placeholder {
+    color: color-mix(in srgb, var(--color-text-muted) 50%, transparent);
+    opacity: 1;
+  }
+
+  &::-webkit-search-cancel-button {
+    appearance: none;
+  }
 
   &.is-error {
     --glow-color: var(--color-status-danger);
@@ -219,7 +100,8 @@ defineExpose({
     box-shadow: var(--shadow-glow-active);
   }
 
-  &:is(:focus, :focus-visible, :focus-within) {
+  &:focus,
+  &:focus-visible {
     border-color: color-mix(in srgb, var(--glow-color) 70%, transparent);
     outline: none;
     box-shadow: var(--shadow-glow-focus);
@@ -231,58 +113,6 @@ defineExpose({
     opacity: 0.85;
   }
 
-  &::placeholder {
-    color: color-mix(in srgb, var(--color-text-muted) 50%, transparent);
-    opacity: 1;
-  }
-
   @include state-disabled;
-}
-
-.form-control__input {
-  cursor: inherit;
-
-  flex: 1;
-
-  width: 100%;
-  min-width: 0;
-  padding: 0;
-  border: none;
-
-  font-family: inherit;
-  font-size: inherit;
-  color: inherit;
-
-  background: transparent;
-  outline: none;
-
-  &::-webkit-search-cancel-button {
-    appearance: none;
-  }
-}
-
-// 単位テキストアドオン
-.input-addon {
-  padding-block: 0.3em;
-  padding-inline: 0.8em;
-  border: var(--border-width-base) solid var(--color-border);
-  border-left: none;
-
-  font-size: inherit;
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
-  white-space: nowrap;
-
-  background-color: color-mix(in srgb, var(--surface-bg-elevated) 70%, var(--color-border) 30%);
-}
-
-// セレクトボックス連結スロット
-.input-addon-slot {
-  --select-width: auto;
-  --select-min-width: 6.5em;
-  --select-padding-inline: 0.8em;
-  --select-border-left: none;
-  --select-margin-left-active: calc(var(--border-width-base) * -1);
-  --select-border-left-active: var(--border-width-base) solid var(--glow-color, var(--theme-accent));
 }
 </style>

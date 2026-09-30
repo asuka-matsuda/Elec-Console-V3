@@ -15,6 +15,7 @@ import noTemplateComments from './eslint-rules/no-template-comments.mjs'
 import noTrivialFacade from './eslint-rules/no-trivial-facade.mjs'
 import requireFileJsdoc from './eslint-rules/require-file-jsdoc.mjs'
 import strictBadgeUsage from './eslint-rules/strict-badge-usage.mjs'
+import strictIconUsage from './eslint-rules/strict-icon-usage.mjs'
 import strictResponsiveTokens from './eslint-rules/strict-responsive-tokens.mjs'
 import strictSpacingTokens from './eslint-rules/strict-spacing-tokens.mjs'
 import strictStateManagement from './eslint-rules/strict-state-management.mjs'
@@ -47,12 +48,14 @@ export default withNuxt(
           'strict-time-management': strictTimeManagement,
           'strict-ui-states': strictUiStates,
           'strict-badge-usage': strictBadgeUsage,
+          'strict-icon-usage': strictIconUsage,
           'strict-responsive-tokens': strictResponsiveTokens,
         },
       },
     },
     rules: {
       'local/strict-responsive-tokens': ['error', { allowMobileFirst: true }],
+      'local/strict-icon-usage': 'error',
       'local/no-tailwind-decoration': 'error',
       'local/no-redundant-tailwind-classes': 'error',
       'local/no-redundant-vue-defaults': 'error',

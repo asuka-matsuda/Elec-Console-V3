@@ -42,13 +42,11 @@ watch(
       />
     </FormGroup>
 
-    <FormGroup label="ケーブル長 (L)">
+    <FormGroup label="ケーブル長 (L)" addon="m">
       <Input
         v-model="inputs.L_input"
         type="number"
         min="1"
-        addon="m"
-        :clearable="false"
       />
     </FormGroup>
   </div>

@@ -236,7 +236,7 @@ const confirmResetPassword = async (row: User) => {
     <Modal
       v-model="isCreateModalOpen"
       title="新規ユーザー登録"
-      icon="plus-circle"
+      icon="circle-plus"
     >
       <template #actions>
         <Button @click="isCreateModalOpen = false">
@@ -274,7 +274,6 @@ const confirmResetPassword = async (row: User) => {
           <Select
             v-model="newUser.role"
             :options="USER_ROLE_OPTIONS"
-            :clearable="false"
           />
         </FormGroup>
         <FormGroup>

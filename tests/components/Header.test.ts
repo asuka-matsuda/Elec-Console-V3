@@ -25,7 +25,6 @@ describe('Header.vue', () => {
             template: '<a :href="to"><slot /></a>',
           },
           Logo: true,
-          Breadcrumb: true,
           Button: {
             template: '<button @click="$emit(\'click\')"><slot /></button>',
           },
@@ -50,7 +49,6 @@ describe('Header.vue', () => {
             template: '<a :href="to"><slot /></a>',
           },
           Logo: true,
-          Breadcrumb: true,
           Button: {
             template: '<button @click="$emit(\'click\')"><slot /></button>',
           },
@@ -72,7 +70,6 @@ describe('Header.vue', () => {
         stubs: {
           NuxtLink: true,
           Logo: true,
-          Breadcrumb: true,
           Button: {
             template: '<button @click="$emit(\'click\')"><slot /></button>',
           },

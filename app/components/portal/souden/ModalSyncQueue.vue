@@ -85,7 +85,7 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
 
       <template v-if="conflictItems.length > 0">
         <div class="flex items-start gap-item-gap p-panel-pad-compact conflict-alert">
-          <Icon name="alert-triangle" size="sm" class="shrink-0 mt-0.5" />
+          <Icon name="triangle-alert" size="sm" class="mt-0.5" />
           <div>
             <strong>{{ conflictItems.length }}件</strong> の回路で別の作業者との更新競合が発生しました。<br>
             内容を確認し、どちらの値を採用するか選択してください。
@@ -154,11 +154,11 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
           :class="syncResult.errorCount > 0 ? 'is-danger' : 'is-success'"
         >
           <div v-if="syncResult.successCount > 0" class="flex items-center gap-item-gap">
-            <Icon name="check-circle" size="sm" />
+            <Icon name="circle-check" size="sm" />
             <span>{{ syncResult.successCount }} 件のデータを正常に同期しました。</span>
           </div>
           <div v-if="syncResult.errorCount > 0" class="flex items-center gap-item-gap">
-            <Icon name="alert-circle" size="sm" />
+            <Icon name="circle-alert" size="sm" />
             <span>{{ syncResult.errorCount }} 件の送信に失敗しました（電波状況を確認してください）。</span>
           </div>
         </div>
@@ -188,7 +188,7 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
 
       <EmptyState
         v-else
-        icon="check-circle"
+        icon="circle-check"
         title="未送信データはありません"
         description="すべてのデータがサーバーと正常に同期されています。"
       />

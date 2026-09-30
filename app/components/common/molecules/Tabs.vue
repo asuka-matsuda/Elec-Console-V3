@@ -107,7 +107,7 @@ const handleKeydown = (event: KeyboardEvent, currentIndex: number) => {
           @keydown="handleKeydown($event, index)"
         >
           <slot name="tab" :option="option" :is-active="model === option.value">
-            <Icon v-if="option.icon" :name="option.icon" class="w-4 h-4 shrink-0" />
+            <Icon v-if="option.icon" :name="option.icon" size="sm" />
             <span>{{ option.label }}</span>
             <Badge
               v-if="option.badge !== undefined"

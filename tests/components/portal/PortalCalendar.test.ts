@@ -94,8 +94,8 @@ describe('Calendar.client.vue', () => {
         stubs: {
           Panel: {
             name: 'Panel',
-            props: ['padding', 'overflow'],
-            template: '<div class="panel-stub" :data-padding="padding" :data-overflow="overflow"><slot /></div>',
+            props: ['padding'],
+            template: '<div class="panel-stub" :data-padding="padding"><slot /></div>',
           },
           ModalCalendarEvent: true,
           ModalCalendarTypeSettings: true,
@@ -111,7 +111,6 @@ describe('Calendar.client.vue', () => {
 
     expect(panel.exists()).toBe(true)
     expect(panel.props('padding')).toBe('none')
-    expect(panel.props('overflow')).toBe('visible')
 
     // FullCalendar スタブが存在すること
     expect(wrapper.find('.fc-stub').exists()).toBe(true)

@@ -17,9 +17,9 @@ const FORBIDDEN_ELEMENTS = {
 // 例外的に生タグの使用が許可されるファイル
 const WHITELIST = [
   // 共通コンポーネント自身
-  { pattern: /app\/components\/common\/atoms\/Input\.vue$/, elements: ['input'] },
+  { pattern: /app\/components\/common\/atoms\/Input\.vue$/, elements: ['input', 'button'] },
   { pattern: /app\/components\/common\/atoms\/Checkbox\.vue$/, elements: ['input'] },
-  { pattern: /app\/components\/common\/atoms\/RadioGroup\.vue$/, elements: ['input'] },
+  { pattern: /app\/components\/common\/atoms\/RadioGroup\.vue$/, elements: ['input', 'button'] },
   { pattern: /app\/components\/common\/atoms\/Textarea\.vue$/, elements: ['textarea'] },
   { pattern: /app\/components\/common\/atoms\/Button\.vue$/, elements: ['button'] },
   { pattern: /app\/components\/common\/atoms\/Select\.vue$/, elements: ['button'] },

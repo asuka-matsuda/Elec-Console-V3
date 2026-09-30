@@ -39,8 +39,9 @@ const emit = defineEmits<{
       variant="hud"
     />
 
-    <Disclaimer
+    <Alert
       v-if="!hasSiteSettingExcel"
+      variant="warning"
       text="現場設定にExcelテンプレートが登録されていません。管理画面からExcelファイルを登録してください。"
     />
 
@@ -57,7 +58,7 @@ const emit = defineEmits<{
 
     <SectionHeader
       title="使用測定機器の指定"
-      icon="tool"
+      icon="wrench"
       tag="h4"
       variant="hud"
     >

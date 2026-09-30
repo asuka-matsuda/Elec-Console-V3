@@ -143,7 +143,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       </div>
     </header>
 
-    <Panel padding="none" overflow="visible" class="calendar-panel">
+    <Panel padding="none" class="calendar-panel">
       <FullCalendar ref="fullCalendarRef" :options="calendarOptions" />
     </Panel>
 

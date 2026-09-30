@@ -37,7 +37,7 @@ const isModalOpen = ref(false)
       <Icon
         :name="isSyncing ? 'refresh-cw' : 'zap'"
         size="sm"
-        :class="{ 'animate-spin': isSyncing }"
+        :spin="isSyncing"
       />
       <span>未同期 {{ pendingCount }}件</span>
       <span class="inline-flex items-center gap-inline-gap pl-inline-gap sync-action">

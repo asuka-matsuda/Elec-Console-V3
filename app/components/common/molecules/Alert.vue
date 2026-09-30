@@ -18,8 +18,8 @@ const props = withDefaults(
 const defaultIcons: Record<AlertVariant, IconName> = {
   info: 'info',
   success: 'check',
-  warning: 'alert-triangle',
-  danger: 'alert-circle',
+  warning: 'triangle-alert',
+  danger: 'circle-alert',
 }
 
 const resolvedIcon = computed<IconName>(() => props.icon || defaultIcons[props.variant])
@@ -32,12 +32,13 @@ const resolvedIcon = computed<IconName>(() => props.icon || defaultIcons[props.v
   >
     <Icon
       :name="resolvedIcon"
-      class="alert-icon mt-0.5 shrink-0"
+      :spin="resolvedIcon === 'loader'"
+      class="alert-icon mt-0.5"
     />
     <div class="alert-content flex-1 min-w-0 flex flex-col gap-inline-gap">
       <strong v-if="title" class="alert-title">{{ title }}</strong>
-      <div class="alert-message break-words">
-        <slot />
+      <div v-if="text || $slots.default" class="alert-message break-words">
+        <slot>{{ text }}</slot>
       </div>
     </div>
   </aside>
@@ -45,57 +46,36 @@ const resolvedIcon = computed<IconName>(() => props.icon || defaultIcons[props.v
 
 <style scoped lang="scss">
 .alert {
-  border: var(--border-width-base) solid transparent;
+  --alert-color: var(--color-category-main);
+  --alert-text-color: var(--alert-color);
+
+  border: var(--border-width-base) solid color-mix(in srgb, var(--alert-color) 35%, transparent);
+
   font-size: var(--font-size-sm);
   line-height: var(--line-height-base);
+  color: var(--alert-text-color);
+
+  background-color: color-mix(in srgb, var(--alert-color) 10%, var(--surface-bg));
+
+  .alert-icon {
+    color: var(--alert-color);
+  }
 
   &.is-info {
-    border-color: color-mix(in srgb, var(--color-category-main) 35%, transparent);
-    color: var(--color-text-main);
-    background-color: color-mix(in srgb, var(--color-category-main) 10%, var(--surface-bg));
-
-    .alert-icon {
-      color: var(--color-category-main);
-    }
+    --alert-color: var(--color-category-main);
+    --alert-text-color: var(--color-text-main);
   }
 
   &.is-success {
-    border-color: color-mix(in srgb, var(--color-status-success) 35%, transparent);
-    color: var(--color-status-success);
-    background-color: color-mix(in srgb, var(--color-status-success) 10%, var(--surface-bg));
-
-    .alert-icon {
-      color: var(--color-status-success);
-    }
+    --alert-color: var(--color-status-success);
   }
 
   &.is-warning {
-    border-color: color-mix(in srgb, var(--color-status-warning) 35%, transparent);
-    color: var(--color-status-warning);
-    background-color: color-mix(in srgb, var(--color-status-warning) 10%, var(--surface-bg));
-
-    .alert-icon {
-      color: var(--color-status-warning);
-    }
+    --alert-color: var(--color-status-warning);
   }
 
   &.is-danger {
-    border-color: color-mix(in srgb, var(--color-status-danger) 35%, transparent);
-    color: var(--color-status-danger);
-    background-color: color-mix(in srgb, var(--color-status-danger) 10%, var(--surface-bg));
-
-    .alert-icon {
-      color: var(--color-status-danger);
-    }
+    --alert-color: var(--color-status-danger);
   }
-}
-
-.alert-title {
-  font-weight: var(--font-weight-bold);
-  color: inherit;
-}
-
-.alert-message {
-  color: inherit;
 }
 </style>

@@ -41,7 +41,7 @@ const {
     <div class="flex flex-col gap-panel-gap">
       <SectionHeader
         title="Excelデータ取込 (差分同期 / 初期設定)"
-        icon="upload-cloud"
+        icon="cloud-upload"
         tag="h4"
       />
       <p class="desc-text">

@@ -109,7 +109,8 @@ describe('Table.vue', () => {
   it('Proxy オブジェクトやゲッターによる動的プロパティが正しく描画されること', () => {
     const proxyColumns = [
       { key: 'title', label: 'タイトル' },
-      { key: 'spec', subKey: 'specDetail', label: 'スペック' },
+      { key: 'spec', label: 'スペック' },
+      { key: 'specDetail', label: '詳細' },
     ]
 
     const rawItem = { title: 'アイテムA' }
@@ -181,13 +182,12 @@ describe('Table.vue', () => {
       },
     })
 
-    const thComponent = wrapper.findComponent({ name: 'TableTh' })
+    const ths = wrapper.findAll('th')
 
-    if (thComponent.exists()) {
-      await thComponent.vm.$emit('sort', sampleColumns[0])
-      expect(wrapper.emitted('update:sortBy')).toBeTruthy()
-      expect(wrapper.emitted('update:sortBy')?.[0]).toEqual(['name'])
-    }
+    await ths[0].trigger('click')
+
+    expect(wrapper.emitted('update:sortBy')).toBeTruthy()
+    expect(wrapper.emitted('update:sortBy')?.[0]).toEqual(['name'])
   })
 
   it('昇順(asc)状態の列を再度クリックすると update:sortOrder に desc が emit されること', async () => {
@@ -200,13 +200,12 @@ describe('Table.vue', () => {
       },
     })
 
-    const thComponent = wrapper.findComponent({ name: 'TableTh' })
+    const ths = wrapper.findAll('th')
 
-    if (thComponent.exists()) {
-      await thComponent.vm.$emit('sort', sampleColumns[0])
-      expect(wrapper.emitted('update:sortOrder')).toBeTruthy()
-      expect(wrapper.emitted('update:sortOrder')?.[0]).toEqual(['desc'])
-    }
+    await ths[0].trigger('click')
+
+    expect(wrapper.emitted('update:sortOrder')).toBeTruthy()
+    expect(wrapper.emitted('update:sortOrder')?.[0]).toEqual(['desc'])
   })
 
   it('降順(desc)状態の列を再度クリックすると sortOrder: null（ソート解除）が emit されること', async () => {
@@ -219,15 +218,14 @@ describe('Table.vue', () => {
       },
     })
 
-    const thComponent = wrapper.findComponent({ name: 'TableTh' })
+    const ths = wrapper.findAll('th')
 
-    if (thComponent.exists()) {
-      await thComponent.vm.$emit('sort', sampleColumns[0])
-      expect(wrapper.emitted('update:sortBy')).toBeTruthy()
-      expect(wrapper.emitted('update:sortOrder')).toBeTruthy()
-      expect(wrapper.emitted('update:sortBy')?.[0]).toEqual([undefined])
-      expect(wrapper.emitted('update:sortOrder')?.[0]).toEqual([null])
-    }
+    await ths[0].trigger('click')
+
+    expect(wrapper.emitted('update:sortBy')).toBeTruthy()
+    expect(wrapper.emitted('update:sortOrder')).toBeTruthy()
+    expect(wrapper.emitted('update:sortBy')?.[0]).toEqual([undefined])
+    expect(wrapper.emitted('update:sortOrder')?.[0]).toEqual([null])
   })
 
   it('sortable: false が指定された列ではソートイベントが emit されないこと', async () => {
@@ -241,33 +239,42 @@ describe('Table.vue', () => {
       },
     })
 
-    const thComponent = wrapper.findComponent({ name: 'TableTh' })
+    const ths = wrapper.findAll('th')
 
-    if (thComponent.exists()) {
-      await thComponent.vm.$emit('sort', nonSortableColumns[0])
-      expect(wrapper.emitted('update:sortBy')).toBeFalsy()
-      expect(wrapper.emitted('update:sortOrder')).toBeFalsy()
-    }
+    await ths[0].trigger('click')
+
+    expect(wrapper.emitted('update:sortBy')).toBeFalsy()
+    expect(wrapper.emitted('update:sortOrder')).toBeFalsy()
   })
 
-  it('subKey が指定された列で二段表示（メインとサブ情報）が正しく描画されること', () => {
-    const columnsWithSubKey: TableColumn<SampleUser>[] = [
+  it('呼び出し側のスロットにより二段表示等のセル装飾が正しく描画されること', () => {
+    const columnsWithCustom: TableColumn<SampleUser>[] = [
       { key: 'name', label: '名前' },
-      { key: 'role', subKey: 'id', label: '役職/ID', align: 'right' as const },
+      { key: 'role', label: '役職/ID', align: 'right' as const },
     ]
 
     const wrapper = mount(Table, {
       props: {
-        columns: columnsWithSubKey,
+        columns: columnsWithCustom,
         data: sampleData,
+      },
+      slots: {
+        'cell-role': `
+          <template #cell-role="{ row }">
+            <div class="custom-stack">
+              <span class="main">{{ row.role }}</span>
+              <span class="sub">{{ row.id }}</span>
+            </div>
+          </template>
+        `,
       },
     })
 
-    const stackedWrappers = wrapper.findAll('.stacked-cell')
+    const stackedWrappers = wrapper.findAll('.custom-stack')
 
     expect(stackedWrappers.length).toBe(2)
-    expect(stackedWrappers[0].find('.main-text').text()).toBe('管理者')
-    expect(stackedWrappers[0].find('.sub-text').text()).toBe('1')
+    expect(stackedWrappers[0].find('.main').text()).toBe('管理者')
+    expect(stackedWrappers[0].find('.sub').text()).toBe('1')
   })
 
   it('データが空（0件）の場合に空状態（EmptyState）が全列 colspan で描画されること', () => {

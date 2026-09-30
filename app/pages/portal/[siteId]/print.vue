@@ -87,8 +87,16 @@ onMounted(() => {
       </template>
     </SectionHeader>
 
-    <Disclaimer v-if="circuitsError" :text="circuitsError" />
-    <Disclaimer v-if="message" :text="message.text" />
+    <Alert
+      v-if="circuitsError"
+      variant="danger"
+      :text="circuitsError"
+    />
+    <Alert
+      v-if="message"
+      :variant="message.type === 'error' ? 'danger' : 'success'"
+      :text="message.text"
+    />
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-panel-gap items-start">
       <PanelPrintConfig

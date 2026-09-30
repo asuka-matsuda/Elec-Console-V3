@@ -67,7 +67,7 @@ if (import.meta.client) {
     class="helptip-trigger inline-flex items-center justify-center p-0"
     @click="toggle"
   >
-    <Icon name="help-circle" />
+    <Icon name="circle-help" />
   </button>
 
   <Teleport to="body">

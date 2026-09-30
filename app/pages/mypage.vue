@@ -73,7 +73,6 @@ const assignedSites = computed(() => {
               :key="site.id"
             >
               <Panel
-                as="div"
                 padding="compact"
                 class="flex items-center justify-between gap-item-gap flex-wrap"
               >

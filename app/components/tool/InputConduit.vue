@@ -44,15 +44,13 @@ const getCableSpec = formatConduitCableSpec
         />
       </FormGroup>
 
-      <FormGroup label="占積率">
+      <FormGroup label="占積率" addon="%">
         <Input
           v-model.number="inputs.customFillRate"
           type="number"
           min="1"
           max="100"
-          addon="%"
           placeholder="80"
-          :clearable="false"
         />
       </FormGroup>
     </div>
@@ -90,13 +88,14 @@ const getCableSpec = formatConduitCableSpec
         </template>
 
         <template #cell-count="{ row }">
-          <Input
-            v-model.number="row.count"
-            type="number"
-            min="1"
-            addon="条"
-            :clearable="false"
-          />
+          <div class="flex items-center gap-inline-gap">
+            <Input
+              v-model.number="row.count"
+              type="number"
+              min="1"
+            />
+            <span class="shrink-0 table-addon">条</span>
+          </div>
         </template>
 
         <template #cell-spec="{ row }">
@@ -126,3 +125,12 @@ const getCableSpec = formatConduitCableSpec
     </section>
   </div>
 </template>
+
+<style scoped lang="scss">
+.table-addon {
+  font-size: 0.9em;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+</style>

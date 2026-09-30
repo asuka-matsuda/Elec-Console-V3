@@ -41,53 +41,6 @@ describe('Select.vue', () => {
     expect(wrapper.text()).toContain('オプション2')
   })
 
-  it('does not show clear button by default', () => {
-    const wrapper = mount(Select, {
-      props: {
-        options: mockOptions,
-        modelValue: 'opt1',
-      },
-    })
-
-    const clearButton = wrapper.find('[title="選択解除"]')
-
-    expect(clearButton.exists()).toBe(false)
-  })
-
-  it('shows clear button when clearable is true and clears on click', async () => {
-    const wrapper = mount(Select, {
-      props: {
-        'options': mockOptions,
-        'modelValue': 'opt1',
-        'clearable': true,
-        'onUpdate:modelValue': (val: string | null) => wrapper.setProps({ modelValue: val }),
-      },
-    })
-
-    const clearButton = wrapper.find('[title="選択解除"]')
-
-    expect(clearButton.exists()).toBe(true)
-
-    await clearButton.trigger('click')
-
-    expect(wrapper.emitted('clear')).toBeTruthy()
-    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([null])
-  })
-
-  it('does not show clear button when clearable is false', () => {
-    const wrapper = mount(Select, {
-      props: {
-        options: mockOptions,
-        modelValue: 'opt1',
-        clearable: false,
-      },
-    })
-
-    const clearButton = wrapper.find('[title="選択解除"]')
-
-    expect(clearButton.exists()).toBe(false)
-  })
-
   it('opens dropdown on button click and selects option', async () => {
     const wrapper = mount(Select, {
       props: {
@@ -107,8 +60,22 @@ describe('Select.vue', () => {
 
     vm.selectOption(mockOptions[1]!)
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['opt2'])
-    expect(wrapper.emitted('change')?.[0]).toEqual(['opt2'])
     expect(vm.isOpen).toBe(false)
+  })
+
+  it('does not select disabled option', async () => {
+    const wrapper = mount(Select, {
+      props: {
+        options: mockOptions,
+        modelValue: null,
+      },
+    })
+
+    const vm = wrapper.vm as unknown as SelectVm
+
+    vm.selectOption(mockOptions[2]!) // disabled option
+
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
   })
 
   it('does not open dropdown when disabled', async () => {

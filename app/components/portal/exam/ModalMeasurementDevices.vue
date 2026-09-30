@@ -79,22 +79,23 @@ const getCategoryBadgeColor = (category: MeasurementDeviceCategory): string => {
   <Modal
     v-model="isOpen"
     title="測定機器台帳の管理"
-    icon="tool"
+    icon="wrench"
   >
     <div class="flex flex-col gap-panel-gap">
-      <Disclaimer
-        text="現場で使用する測定機器（絶縁計・電圧計・検相器等）を登録します。登録した機器は帳票印刷時にドロップダウンで選択できます。"
-      />
+      <p class="lead-text">
+        現場で使用する測定機器（絶縁計・電圧計・検相器等）を登録します。登録した機器は帳票印刷時にドロップダウンで選択できます。
+      </p>
 
-      <Disclaimer
+      <Alert
         v-if="errorMessage"
+        variant="danger"
         :text="errorMessage"
       />
 
       <Panel as="section" class="flex flex-col gap-form-row-gap">
         <SectionHeader
           :title="editingId ? '機器情報の編集' : '新しい測定機器の追加'"
-          icon="plus-circle"
+          icon="circle-plus"
           tag="h4"
           variant="hud"
         />
@@ -180,7 +181,7 @@ const getCategoryBadgeColor = (category: MeasurementDeviceCategory): string => {
 
         <EmptyState
           v-if="localDevices.length === 0"
-          icon="tool"
+          icon="wrench"
           title="測定機器が登録されていません"
           description="上のフォームから測定機器を追加してください。"
         />
@@ -221,14 +222,12 @@ const getCategoryBadgeColor = (category: MeasurementDeviceCategory): string => {
               <Button
                 variant="default"
                 icon="edit"
-                icon-only
                 title="編集"
                 @click="startEdit(dev)"
               />
               <Button
                 variant="default"
                 icon="trash-2"
-                icon-only
                 title="削除"
                 @click="handleDeleteItem(dev.id)"
               />
@@ -239,3 +238,11 @@ const getCategoryBadgeColor = (category: MeasurementDeviceCategory): string => {
     </div>
   </Modal>
 </template>
+
+<style scoped lang="scss">
+.lead-text {
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-base);
+  color: var(--color-text-sub);
+}
+</style>

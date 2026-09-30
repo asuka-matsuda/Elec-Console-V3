@@ -4,7 +4,7 @@
  * [Organisms] アプリケーションのグローバルナビゲーション（ドロワーサイドバー）。
  * オーバーレイ、閉じるボタン、セクション別メニューリンクを表示します。
  */
-import { computed, getCurrentInstance, onMounted, onUnmounted, watch } from 'vue'
+import { computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import { useAuth } from '~/composables/useAuth'
@@ -12,7 +12,7 @@ import { useSidebar } from '~/composables/useSidebar'
 import { menuData as defaultMenuData, type MenuItem } from '~/constants/data/menuData'
 import type { GlobalNavProps } from '~/types/components'
 
-const isOpenModel = defineModel<boolean>('isOpen')
+const isOpenModel = defineModel<boolean | undefined>('isOpen', { default: undefined })
 
 withDefaults(defineProps<GlobalNavProps>(), {
   menuData: () => defaultMenuData,
@@ -21,14 +21,7 @@ withDefaults(defineProps<GlobalNavProps>(), {
 const { isOpen: sidebarOpenState, closeSidebar: closeGlobalSidebar } = useSidebar()
 
 // 親コンポーネントが明示的に v-model:is-open または :is-open をバインドしているかどうか判定
-const instance = getCurrentInstance()
-const hasExplicitBinding = computed(() => {
-  const vnodeProps = instance?.vnode.props
-
-  if (!vnodeProps) return false
-
-  return 'isOpen' in vnodeProps || 'onUpdate:isOpen' in vnodeProps
-})
+const hasExplicitBinding = computed(() => isOpenModel.value !== undefined)
 
 const isOpen = computed({
   get: () => (hasExplicitBinding.value ? !!isOpenModel.value : sidebarOpenState.value),
@@ -83,29 +76,28 @@ onMounted(() => {
 
 <template>
   <div
-    class="fixed inset-0 z-[var(--z-index-sidebar-overlay)] overlay"
+    class="fixed inset-0 z-sidebar-overlay overlay"
     :class="{ 'is-open': isOpen }"
     @click="closeSidebar"
   />
 
   <aside
-    class="fixed top-0 left-0 z-[var(--z-index-sidebar)] flex flex-col w-[var(--sidebar-width)] h-[100dvh]"
+    class="fixed top-0 left-0 z-sidebar flex flex-col w-sidebar-w h-[100dvh] overflow-hidden"
     :class="{ 'is-open': isOpen }"
   >
-    <header class="flex items-center justify-between h-16 px-layout-pad">
+    <header class="flex items-center justify-between h-16 px-layout-pad shrink-0">
       <span class="header-title">
         メニュー
       </span>
       <Button
         icon="x"
-        icon-only
         title="メニューを閉じる"
         @click="closeSidebar"
       />
     </header>
 
     <nav
-      class="flex-1 overflow-y-auto flex flex-col gap-panel-gap p-panel-pad-compact"
+      class="flex-1 min-h-0 overflow-y-auto flex flex-col gap-panel-gap p-panel-pad-compact"
       @click="closeSidebar"
     >
       <section
@@ -187,10 +179,6 @@ aside {
       color: var(--color-text-muted);
       letter-spacing: var(--tracking-wider);
     }
-  }
-
-  nav {
-    --scrollbar-size: var(--space-2);
   }
 
   a {

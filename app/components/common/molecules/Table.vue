@@ -2,18 +2,13 @@
 /**
  * Table
  * [Molecules] カラム定義とデータ配列を受け取り表示する汎用データテーブルコンポーネント。
- * - 動的列幅の自動最適化（useTableAutoWidth）
- * - 電気設備用語・英数字ハイフンの自動改行禁止制御（useNoBreakWords）
- * - <colgroup> による高効率な列幅一元管理（各tdへの重複スタイルを全廃）
- * - 骨格維持ローディング状態（スピナー/スケルトン）の標準内包
+ * - ブラウザネイティブの table-layout による高速描画
+ * - <colgroup> による高効率な列幅一元管理
+ * - 生 <th> / <td> による直接描画（Atoms層のオーバーヘッドを全廃）
+ * - ソートのオプトイン方式（sortable: true のみ有効）
  * - 双方向ソートモデル（v-model:sortBy, v-model:sortOrder）
  * - ヘッダー（header-${col.key}）およびセル（cell-${col.key}）のスロット透過
  */
-import { onMounted, provide, ref } from 'vue'
-
-import { useNoBreakWords } from '~/composables/useNoBreakWords'
-import { useTableAutoWidth } from '~/composables/useTableAutoWidth'
-import { TABLE_NO_BREAK_KEY } from '~/constants/injectionKeys'
 import type { TableColumn, TableProps, TableSortOrder } from '~/types/components'
 import { getTableCellValue, getTableRowKey } from '~/utils/table'
 
@@ -26,7 +21,6 @@ const props = withDefaults(
   {
     data: () => [],
     rowKey: 'id',
-    autoWidth: true,
     emptyText: 'データがありません',
     loading: false,
     loadingText: 'データを読み込み中...',
@@ -39,7 +33,7 @@ const emit = defineEmits<{
 }>()
 
 defineSlots<{
-  [K in `cell-${string}`]?: (props: { value: unknown, subValue?: unknown, row: T, index: number, column: TableColumn<T> }) => unknown
+  [K in `cell-${string}`]?: (props: { value: unknown, row: T, index: number, column: TableColumn<T> }) => unknown
 } & {
   [K in `header-${string}`]?: (props: { column: TableColumn<T> }) => unknown
 } & {
@@ -47,29 +41,12 @@ defineSlots<{
   loading?: () => unknown
 }>()
 
-// 改行禁止辞書の自動ロード（テーブル描画時に一度だけ確実に実行）
-const { fetchWords, applyNoBreak } = useNoBreakWords()
-
-provide(TABLE_NO_BREAK_KEY, applyNoBreak)
-
-onMounted(() => {
-  fetchWords()
-})
-
-// テーブルコンテナ要素
-const tableWrapperRef = ref<HTMLElement | null>(null)
-
-// 列幅自動計算 Composable
-const { columnWidthStyles } = useTableAutoWidth(tableWrapperRef, {
-  columns: () => props.columns,
-  data: () => props.data,
-  fullData: () => props.fullData,
-  autoWidth: () => props.autoWidth,
-})
+// ソート可否：カラムで明示的に sortable: true が指定されている場合のみ有効（オプトイン）
+const isSortable = (col: TableColumn<T>) => Boolean(col.key && col.sortable === true)
 
 // ソート切り替えハンドラー（asc -> desc -> null サイクル）
 const handleSort = (col: TableColumn<T>) => {
-  if (col.sortable === false) return
+  if (!isSortable(col)) return
 
   const nextOrder: TableSortOrder = sortBy.value === col.key
     ? (sortOrder.value === 'asc' ? 'desc' : sortOrder.value === 'desc' ? null : 'asc')
@@ -88,38 +65,62 @@ const handleRowClick = (row: T, index: number, event: MouseEvent) => {
 
 const getRowKey = (row: T, index: number) => getTableRowKey(row, index, props.rowKey)
 const getCellValue = (row: unknown, key?: string | number) => getTableCellValue(row, key)
+
+const getCellDisplayValue = (row: T, col: TableColumn<T>): unknown => {
+  const val = getCellValue(row, col.key)
+
+  if (val === null || val === undefined || val === '') {
+    return col.emptyFallback ?? '-'
+  }
+
+  return col.format ? col.format(val, row) : val
+}
 </script>
 
 <template>
-  <div
-    ref="tableWrapperRef"
-    class="table-wrapper flex-1 min-h-0 overflow-auto"
-  >
-    <table class="min-w-full table-fixed text-left">
-
+  <div class="table-wrapper overflow-auto">
+    <table
+      class="min-w-full text-left"
+      :class="{ 'table-fixed': columns.some(c => c.width) }"
+    >
       <colgroup>
         <col
           v-for="col in columns"
           :key="col.key"
-          :style="{ width: columnWidthStyles[String(col.key)] }"
+          :style="{ width: col.width }"
         />
       </colgroup>
 
       <thead>
         <tr>
-          <TableTh
+          <th
             v-for="col in columns"
             :key="col.key"
-            :column="col"
-            :sort-by="sortBy"
-            :sort-order="sortOrder"
-            @sort="handleSort"
+            class="sticky top-0 z-table-header p-item-gap align-middle"
+            :class="{
+              'is-sortable': isSortable(col),
+              'is-sorted': sortBy === col.key && sortOrder,
+            }"
+            @click="handleSort(col)"
           >
-
-            <template v-if="$slots[`header-${col.key}`]" #default>
-              <slot :name="`header-${col.key}`" :column="col" />
-            </template>
-          </TableTh>
+            <div
+              class="flex items-center gap-inline-gap w-full min-w-0"
+              :class="col.align === 'center' ? 'justify-center' : col.align === 'right' ? 'justify-end' : 'justify-start'"
+            >
+              <span class="header-label">
+                <slot :name="`header-${col.key}`" :column="col">
+                  {{ col.label }}
+                </slot>
+              </span>
+              <Icon
+                v-if="isSortable(col)"
+                :name="sortBy === col.key && sortOrder ? (sortOrder === 'asc' ? 'chevron-up' : 'chevron-down') : 'chevrons-up-down'"
+                size="sm"
+                class="sort-icon"
+                :class="{ 'is-active': sortBy === col.key && sortOrder }"
+              />
+            </div>
+          </th>
         </tr>
       </thead>
 
@@ -151,27 +152,31 @@ const getCellValue = (row: unknown, key?: string | number) => getTableCellValue(
           ]"
           @click="handleRowClick(row, index, $event)"
         >
-          <TableTd
+          <td
             v-for="col in columns"
             :key="col.key"
-            :value="col.format ? col.format(getCellValue(row, col.key), row) : getCellValue(row, col.key)"
-            :sub-value="col.subKey ? getCellValue(row, col.subKey) : undefined"
-            :align="col.align"
-            :truncate="col.truncate"
-            :empty-fallback="col.emptyFallback"
-            :class="col.class"
+            class="p-item-gap align-middle"
+            :class="[
+              col.class,
+              col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left',
+              {
+                'is-truncate': col.truncate,
+                'is-empty': getCellValue(row, col.key) === null || getCellValue(row, col.key) === undefined || getCellValue(row, col.key) === '',
+              },
+            ]"
           >
-            <template v-if="$slots[`cell-${col.key}`]" #default="{ value, subValue }">
-              <slot
-                :name="`cell-${col.key}`"
-                :value="value"
-                :sub-value="subValue"
-                :row="row"
-                :index="index"
-                :column="col"
-              />
+            <slot
+              v-if="$slots[`cell-${col.key}`]"
+              :name="`cell-${col.key}`"
+              :value="getCellValue(row, col.key)"
+              :row="row"
+              :index="index"
+              :column="col"
+            />
+            <template v-else>
+              {{ getCellDisplayValue(row, col) }}
             </template>
-          </TableTd>
+          </td>
         </tr>
       </tbody>
 
@@ -207,26 +212,117 @@ const getCellValue = (row: unknown, key?: string | number) => getTableCellValue(
   }
 }
 
-.table-row {
-  transition: var(--transition-colors);
+// ヘッダーセル
+th {
+  height: var(--table-cell-min-height, 36px);
+  border-right: var(--border-width-base) solid var(--color-border);
+  border-bottom: var(--border-width-thick) solid var(--color-border);
 
-  @include state-interactive {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+
+  background-color: var(--color-bg-hover);
+  backdrop-filter: blur(var(--blur-md));
+
+  &:last-child {
+    border-right: none;
+  }
+
+  &.is-sortable {
+    transition: var(--transition-colors);
+
+    @include state-interactive;
+
     &:hover {
-      background:
-        linear-gradient(
-          to right,
-          color-mix(in srgb, var(--theme-accent) 7%, transparent) 0%,
-          color-mix(in srgb, var(--theme-accent) 1%, transparent) 40%,
-          transparent 70%
-        );
-    }
+      color: var(--color-text-main);
 
-    &:active {
-      background-color: color-mix(in srgb, var(--theme-accent) 10%, transparent);
+      .sort-icon:not(.is-active) {
+        opacity: 0.85;
+      }
     }
   }
 
+  &.is-sorted {
+    border-bottom-color: var(--theme-accent);
+    color: var(--color-text-main);
+  }
+
+  .header-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sort-icon {
+    color: var(--color-text-muted);
+    opacity: 0.45;
+    transition: var(--transition-fast);
+
+    &.is-active {
+      color: var(--theme-accent);
+      opacity: 1;
+    }
+  }
+}
+
+// データセル
+td {
+  height: var(--table-cell-min-height, 36px);
+  border-right: var(--border-width-base) solid var(--color-border);
+  border-bottom: var(
+    --table-cell-border-bottom,
+    var(--border-width-base) solid color-mix(in srgb, var(--color-border) 70%, var(--color-text-muted) 30%)
+  );
+
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-normal, 400);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--table-cell-line-height, 1.3);
+  color: var(--color-text-main);
+  word-break: auto-phrase;
+  line-break: strict;
+  overflow-wrap: anywhere;
+
   &:last-child {
+    border-right: none;
+  }
+
+  &.is-empty {
+    color: var(--color-text-muted);
+  }
+
+  &.is-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.table-row {
+  transition: var(--transition-colors);
+
+  &.is-interactive {
+    @include state-interactive {
+      &:hover {
+        background:
+          linear-gradient(
+            to right,
+            color-mix(in srgb, var(--theme-accent) 7%, transparent) 0%,
+            color-mix(in srgb, var(--theme-accent) 1%, transparent) 40%,
+            transparent 70%
+          );
+      }
+
+      &:active {
+        background-color: color-mix(in srgb, var(--theme-accent) 10%, transparent);
+      }
+    }
+  }
+
+  &:last-child td {
     --table-cell-border-bottom: none;
   }
 }

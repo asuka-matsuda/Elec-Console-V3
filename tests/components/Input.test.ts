@@ -1,7 +1,9 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
+import { computed } from 'vue'
 
 import Input from '../../app/components/common/atoms/Input.vue'
+import { FORM_GROUP_KEY } from '../../app/constants/injectionKeys'
 
 describe('Input.vue', () => {
   it('renders input with default props', () => {
@@ -16,6 +18,7 @@ describe('Input.vue', () => {
     expect(input.exists()).toBe(true)
     expect((input.element as HTMLInputElement).value).toBe('テスト')
     expect(input.attributes('type')).toBe('text')
+    expect(input.classes()).toContain('form-control')
   })
 
   it('updates modelValue on input event', async () => {
@@ -34,115 +37,47 @@ describe('Input.vue', () => {
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['入力文字'])
   })
 
-  it('emits enter event on enter keydown', async () => {
+  it('correctly applies native attributes like placeholder, disabled, and maxlength', () => {
     const wrapper = mount(Input, {
-      props: { modelValue: '検索語' },
-    })
-
-    const input = wrapper.find('input')
-
-    await input.trigger('keydown.enter')
-
-    expect(wrapper.emitted('enter')).toBeTruthy()
-  })
-
-  it('blurs on wheel event when type is number', async () => {
-    const wrapper = mount(Input, {
-      props: { type: 'number', modelValue: 42 },
-    })
-
-    const input = wrapper.find('input')
-    const blurSpy = vi.spyOn(input.element as HTMLInputElement, 'blur')
-
-    await input.trigger('wheel')
-
-    expect(blurSpy).toHaveBeenCalled()
-  })
-
-  it('shows clear button by default when input has value and clears it on click', async () => {
-    const wrapper = mount(Input, {
-      props: {
-        'modelValue': '消去対象テキスト',
-        'onUpdate:modelValue': (val: string | number | null) => wrapper.setProps({ modelValue: val }),
-      },
-    })
-
-    const clearButton = wrapper.find('[title="クリア"]')
-
-    expect(clearButton.exists()).toBe(true)
-
-    await clearButton.trigger('click')
-
-    expect(wrapper.emitted('clear')).toBeTruthy()
-    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([''])
-  })
-
-  it('hides clear button when clearable is explicitly false', () => {
-    const wrapper = mount(Input, {
-      props: {
-        clearable: false,
-        modelValue: 'テストテキスト',
-      },
-    })
-
-    const clearButton = wrapper.find('[title="クリア"]')
-
-    expect(clearButton.exists()).toBe(false)
-  })
-
-  it('toggles password visibility with passwordToggle button', async () => {
-    const wrapper = mount(Input, {
-      props: {
-        type: 'password',
-        modelValue: 'secret123',
-        passwordToggle: true,
+      attrs: {
+        placeholder: '検索キーワード',
+        disabled: true,
+        maxlength: 50,
       },
     })
 
     const input = wrapper.find('input')
-    const toggleButton = wrapper.find('[title="パスワードを表示"]')
 
-    expect(input.attributes('type')).toBe('password')
-    expect(toggleButton.exists()).toBe(true)
-
-    // クリックで表示（text）に切り替え
-    await toggleButton.trigger('click')
-    expect(input.attributes('type')).toBe('text')
-
-    // もう一度クリックで非表示（password）に戻る
-    await toggleButton.trigger('click')
-    expect(input.attributes('type')).toBe('password')
+    expect(input.attributes('placeholder')).toBe('検索キーワード')
+    expect(input.attributes('disabled')).toBeDefined()
+    expect(input.attributes('maxlength')).toBe('50')
+    expect(input.classes()).toContain('is-disabled')
   })
 
-  it('renders addon unit text when addon prop is provided', () => {
+  it('syncs id and error state with injected formGroup', () => {
     const wrapper = mount(Input, {
-      props: {
-        modelValue: 120,
-        addon: 'mm',
+      global: {
+        provide: {
+          [FORM_GROUP_KEY as symbol]: {
+            id: computed(() => 'form-input-id'),
+            hasError: computed(() => true),
+          },
+        },
       },
     })
 
-    const addon = wrapper.find('.input-addon')
+    const input = wrapper.find('input')
 
-    expect(addon.exists()).toBe(true)
-    expect(addon.text()).toBe('mm')
-    expect(wrapper.find('.input-container').classes()).toContain('has-addon')
+    expect(input.attributes('id')).toBe('form-input-id')
+    expect(input.classes()).toContain('is-error')
   })
 
-  it('renders addon slot when slot is provided', () => {
-    const wrapper = mount(Input, {
-      props: {
-        modelValue: 50,
-      },
-      slots: {
-        addon: '<span class="custom-unit-select">A</span>',
-      },
-    })
+  it('exposes DOM focus, blur, and select methods', () => {
+    const wrapper = mount(Input)
 
-    const slotEl = wrapper.find('.custom-unit-select')
-
-    expect(slotEl.exists()).toBe(true)
-    expect(slotEl.text()).toBe('A')
-    expect(wrapper.find('.input-container').classes()).toContain('has-addon')
+    expect(typeof wrapper.vm.focus).toBe('function')
+    expect(typeof wrapper.vm.blur).toBe('function')
+    expect(typeof wrapper.vm.select).toBe('function')
+    expect(wrapper.vm.inputRef).toBeDefined()
   })
 })

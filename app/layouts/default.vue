@@ -5,7 +5,7 @@
  * グローバルナビゲーション、ヘッダー、オフライン警告バナー、フッター、
  * およびパンくず連動のカテゴリアクセントカラーを提供します。
  */
-const { accent } = useBreadcrumbs()
+const { accent, items: breadcrumbItems } = useBreadcrumbs()
 const { isOpen: isSidebarOpen } = useSidebar()
 </script>
 
@@ -18,7 +18,11 @@ const { isOpen: isSidebarOpen } = useSidebar()
     <Header />
     <OfflineBanner />
 
-    <main class="flex flex-1 flex-col min-h-0 overflow-y-auto p-layout-pad [--scrollbar-size:var(--space-2)]">
+    <main class="flex flex-1 flex-col min-h-0 overflow-y-auto p-layout-pad gap-item-gap">
+      <Breadcrumb
+        v-if="breadcrumbItems && breadcrumbItems.length > 0"
+        :items="breadcrumbItems"
+      />
       <slot />
       <Footer />
     </main>

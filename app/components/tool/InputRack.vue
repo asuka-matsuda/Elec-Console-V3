@@ -80,63 +80,55 @@ const handleRemoveCable = (id: string) => {
     />
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-form-col-gap">
-      <FormGroup label="余裕係数" help-id="marginRate">
+      <FormGroup label="余裕係数" help-id="marginRate" addon="倍">
         <Input
           v-model.number="inputs.marginRate"
           type="number"
           step="0.05"
           min="0.1"
-          addon="倍"
           :placeholder="inputs.mode === 'strong' ? '1.2' : '0.6'"
-          :clearable="false"
         />
       </FormGroup>
 
-      <FormGroup label="ケーブル間隔" help-id="cableSpacing">
+      <FormGroup label="ケーブル間隔" help-id="cableSpacing" addon="mm">
         <Input
           v-model.number="inputs.cableSpacing"
           type="number"
           min="0"
-          addon="mm"
           placeholder="10"
-          :clearable="false"
         />
       </FormGroup>
 
-      <FormGroup label="親桁クリアランス" help-id="sideMargin">
+      <FormGroup label="親桁クリアランス" help-id="sideMargin" addon="mm">
         <Input
           v-model.number="inputs.sideMargin"
           type="number"
           min="0"
-          addon="mm"
           :placeholder="inputs.mode === 'strong' ? '60' : '120'"
-          :clearable="false"
         />
       </FormGroup>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-form-col-gap">
-      <FormGroup label="ラック高さ (H)" help-id="rackHeight">
+      <FormGroup label="ラック高さ (H)" help-id="rackHeight" addon="mm">
         <Input
           v-model="inputs.rackHeight"
           type="number"
           min="50"
           step="10"
-          addon="mm"
         />
       </FormGroup>
 
       <FormGroup
         :label="inputs.mode === 'strong' ? '弱電必要幅' : '強電必要幅'"
         help-id="otherWidth"
+        addon="mm"
       >
         <Input
           v-model="inputs.otherWidth"
           type="number"
           min="0"
-          addon="mm"
           placeholder="相乗り時に指定"
-          :clearable="false"
         />
       </FormGroup>
     </div>
@@ -174,13 +166,14 @@ const handleRemoveCable = (id: string) => {
         </template>
 
         <template #cell-count="{ row }">
-          <Input
-            v-model.number="row.count"
-            type="number"
-            min="1"
-            addon="条"
-            :clearable="false"
-          />
+          <div class="flex items-center gap-inline-gap">
+            <Input
+              v-model.number="row.count"
+              type="number"
+              min="1"
+            />
+            <span class="shrink-0 table-addon">条</span>
+          </div>
         </template>
 
         <template #cell-spec="{ row }">
@@ -210,3 +203,12 @@ const handleRemoveCable = (id: string) => {
     </section>
   </div>
 </template>
+
+<style scoped lang="scss">
+.table-addon {
+  font-size: 0.9em;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+</style>

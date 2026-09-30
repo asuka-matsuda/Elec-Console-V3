@@ -1,8 +1,7 @@
 <script setup lang="ts">
 /**
  * Divider
- * [Atoms] 画面やコンテンツの区切り線を表示する最小コンポーネント。
- * カテゴリカラー（--theme-accent）による水平フェード（fade-side / fade-center）および構造的ソリッド（solid / 垂直方向）に対応します。
+ * コンテンツの区切り線（水平・垂直）。
  */
 import { computed } from 'vue'
 
@@ -13,7 +12,6 @@ const props = withDefaults(defineProps<DividerProps>(), {
   orientation: 'horizontal',
 })
 
-// 垂直方向は構造的にフェードが存在しないため、常に solid として解決する
 const effectiveType = computed(() =>
   props.orientation === 'vertical' ? 'solid' : props.type,
 )
@@ -39,7 +37,6 @@ const effectiveType = computed(() =>
 
   border: none;
 
-  // 1. 起点アクセントから右へ抜けるグラデーション
   &.is-fade-side {
     background: linear-gradient(
       to right,
@@ -49,7 +46,6 @@ const effectiveType = computed(() =>
     );
   }
 
-  // 2. 中央が光り両端がフェードするグラデーション
   &.is-fade-center {
     background: linear-gradient(
       to right,
@@ -59,7 +55,6 @@ const effectiveType = computed(() =>
     );
   }
 
-  // 3. 均一な境界線（背景・枠線に馴染む控えめなボーダー）
   &.is-solid {
     background-color: var(--divider-custom-color, var(--color-border));
   }

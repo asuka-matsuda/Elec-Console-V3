@@ -32,6 +32,7 @@ defineProps<{
           <FormGroup
             :label="field.label"
             :error="meta.touched ? errorMessage : undefined"
+            :addon="field.type === 'input-addon' ? field.addonText : undefined"
             :class="`js-field-${field.id}`"
           >
 
@@ -45,19 +46,25 @@ defineProps<{
               @blur="handleBlur"
             />
 
-            <Input
+            <div
               v-else-if="field.type === 'input-select'"
-              v-model.number="form[field.id]"
-              type="number"
-              :placeholder="field.placeholder"
-              :min="field.min"
-              :step="field.step"
-              :clearable="false"
-              @blur="handleBlur"
+              class="flex items-center gap-inline-gap w-full min-w-0"
             >
-              <template #addon>
+              <Input
+                v-model.number="form[field.id]"
+                type="number"
+                :placeholder="field.placeholder"
+                :min="field.min"
+                :step="field.step"
+                class="flex-1 min-w-0"
+                @blur="handleBlur"
+              />
+
+              <div
+                v-if="field.secondaryId"
+                class="w-24 shrink-0"
+              >
                 <Field
-                  v-if="field.secondaryId"
                   v-slot="{
                     errorMessage: secError,
                     meta: secMeta,
@@ -70,14 +77,13 @@ defineProps<{
                   <Select
                     v-model="form[field.secondaryId!]"
                     :options="field.secondaryOptions || []"
-                    :clearable="false"
                     :error="secMeta.touched && !!secError"
                     @update:model-value="secChange"
                     @blur="secBlur"
                   />
                 </Field>
-              </template>
-            </Input>
+              </div>
+            </div>
 
             <Input
               v-else-if="field.type === 'input-addon'"
@@ -85,8 +91,6 @@ defineProps<{
               type="number"
               :placeholder="field.placeholder"
               :min="field.min"
-              :addon="field.addonText"
-              :clearable="false"
               @blur="handleBlur"
             />
           </FormGroup>

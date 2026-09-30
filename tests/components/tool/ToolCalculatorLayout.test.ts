@@ -1,15 +1,13 @@
-﻿import { mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 
 import ToolCalculatorLayout from '../../../app/components/tool/CalculatorLayout.vue'
 
 describe('ToolCalculatorLayout.vue', () => {
   const commonStubs = {
-    ToolDisclaimer: {
-      template: '<div class="disclaimer-stub">免責事項</div>',
-    },
-    Disclaimer: {
-      template: '<div class="disclaimer-stub">免責事項</div>',
+    Alert: {
+      props: ['text', 'variant'],
+      template: '<div class="disclaimer-stub alert-stub" :data-text="text" :data-variant="variant"><slot>{{ text }}</slot></div>',
     },
     Panel: {
       template: '<div class="panel-stub"><slot /></div>',
@@ -128,13 +126,9 @@ describe('ToolCalculatorLayout.vue', () => {
       global: {
         stubs: {
           ...commonStubs,
-          ToolDisclaimer: {
-            props: ['text'],
-            template: '<div class="disclaimer-stub" :data-text="text">免責事項</div>',
-          },
-          Disclaimer: {
-            props: ['text'],
-            template: '<div class="disclaimer-stub" :data-text="text">免責事項</div>',
+          Alert: {
+            props: ['text', 'variant'],
+            template: '<div class="disclaimer-stub alert-stub" :data-text="text" :data-variant="variant"><slot>{{ text }}</slot></div>',
           },
         },
       },

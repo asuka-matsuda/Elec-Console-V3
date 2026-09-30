@@ -29,7 +29,7 @@ const emit = defineEmits<{
   <div class="tool-layout flex flex-1 flex-col gap-panel-gap min-h-0 w-full max-w-[1600px] mx-auto">
 
     <slot v-if="!hideDisclaimer" name="disclaimer">
-      <Disclaimer :text="disclaimerText" />
+      <Alert variant="warning" :text="disclaimerText" />
     </slot>
 
     <div class="grid flex-1 grid-cols-1 md:grid-cols-[minmax(0,4fr)_minmax(0,3fr)] gap-panel-gap min-h-0">
@@ -90,11 +90,3 @@ const emit = defineEmits<{
     </div>
   </div>
 </template>
-
-<style scoped lang="scss">
-.tool-layout {
-  .body {
-    --scrollbar-size: var(--space-2);
-  }
-}
-</style>

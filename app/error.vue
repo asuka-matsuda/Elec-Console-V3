@@ -30,12 +30,12 @@ const handleReset = () => {
   <div class="error-page">
     <div class="error-page__card">
       <div class="error-page__header">
-        <Logo @click="handleReset" />
+        <Logo />
       </div>
 
       <div class="error-page__badge">
         <Icon
-          :name="isNotFound ? 'compass' : 'alert-triangle'"
+          :name="isNotFound ? 'compass' : 'triangle-alert'"
           size="lg"
           :class="isNotFound ? 'u-text-primary' : 'u-text-danger'"
         />

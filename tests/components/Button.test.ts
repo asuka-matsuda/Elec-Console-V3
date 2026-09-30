@@ -39,11 +39,10 @@ describe('Button.vue', () => {
     expect(wrapperDanger.classes()).toContain('btn--danger')
   })
 
-  it('renders left and right icons correctly', () => {
+  it('renders icon correctly', () => {
     const wrapper = mount(Button, {
       props: {
         icon: 'plus',
-        iconRight: 'arrow-right',
       },
       slots: {
         default: '追加',
@@ -59,11 +58,10 @@ describe('Button.vue', () => {
       },
     })
 
-    const icons = wrapper.findAll('.stub-icon')
+    const icon = wrapper.find('.stub-icon')
 
-    expect(icons).toHaveLength(2)
-    expect(icons[0].attributes('data-name')).toBe('plus')
-    expect(icons[1].attributes('data-name')).toBe('arrow-right')
+    expect(icon.exists()).toBe(true)
+    expect(icon.attributes('data-name')).toBe('plus')
   })
 
   it('handles loading state with spinner and disabled behavior', () => {
@@ -87,10 +85,9 @@ describe('Button.vue', () => {
     })
 
     expect(wrapper.classes()).toContain('is-loading')
-    expect(wrapper.classes()).toContain('is-disabled')
     expect(wrapper.attributes('disabled')).toBeDefined()
 
-    const spinner = wrapper.find('.stub-icon')
+    const spinner = wrapper.find('.absolute .stub-icon')
 
     expect(spinner.exists()).toBe(true)
     expect(spinner.attributes('data-name')).toBe('loader')
@@ -134,7 +131,7 @@ describe('Button.vue', () => {
     expect(wrapperDisabledLink.attributes('type')).toBe('button')
   })
 
-  it('sets isIconOnly automatically when icon is provided without default slot', () => {
+  it('sets btn--icon automatically when icon is provided without default slot', () => {
     const wrapper = mount(Button, {
       props: {
         icon: 'menu',
@@ -147,7 +144,7 @@ describe('Button.vue', () => {
       },
     })
 
-    expect(wrapper.classes()).toContain('btn--icon-only')
+    expect(wrapper.classes()).toContain('btn--icon')
   })
 
   it('renders title attribute correctly', () => {
@@ -167,7 +164,7 @@ describe('Button.vue', () => {
     expect(wrapper.attributes('title')).toBe('タスクを追加')
   })
 
-  it('switches icon to loader spinner when loading is true', () => {
+  it('overlays loader spinner when loading is true', () => {
     const wrapper = mount(Button, {
       props: {
         icon: 'save',
@@ -187,9 +184,9 @@ describe('Button.vue', () => {
       },
     })
 
-    const icons = wrapper.findAll('.stub-icon')
+    const spinner = wrapper.find('.absolute .stub-icon')
 
-    expect(icons).toHaveLength(1)
-    expect(icons[0].attributes('data-name')).toBe('loader')
+    expect(spinner.exists()).toBe(true)
+    expect(spinner.attributes('data-name')).toBe('loader')
   })
 })

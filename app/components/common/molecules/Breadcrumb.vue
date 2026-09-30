@@ -1,40 +1,40 @@
 <script setup lang="ts">
 /**
  * Breadcrumb
- * [Molecules] パンくずリストを表示するためのUIコンポーネント
+ * [Molecules] 現在地（コンテキスト階層）を視覚的に表示するロケーションインジケーター
  */
-import { computed } from 'vue'
+import type { BreadcrumbProps } from '~/types/components'
 
-import { useBreadcrumbs } from '~/composables/useBreadcrumbs'
-import type { BreadcrumbItem, BreadcrumbProps } from '~/types/components'
-
-const props = defineProps<BreadcrumbProps>()
-
-const resolvedItems = computed<BreadcrumbItem[]>(() => {
-  if (props.items !== undefined) return props.items
-
-  try {
-    return useBreadcrumbs().items.value
-  }
-  catch {
-    return []
-  }
+withDefaults(defineProps<BreadcrumbProps>(), {
+  items: () => [],
+  separator: '»',
+  showCursor: true,
 })
 </script>
 
 <template>
   <nav
-    v-if="resolvedItems && resolvedItems.length > 0"
-    class="flex shrink-0 items-center py-inline-gap px-item-gap whitespace-nowrap breadcrumb"
+    v-if="items && items.length > 0"
+    class="flex shrink-0 items-center whitespace-nowrap breadcrumb"
   >
     <ol class="flex items-center gap-item-gap">
       <li
-        v-for="(item, index) in resolvedItems"
+        v-for="(item, index) in items"
         :key="`${item.text}-${index}`"
         class="flex items-center gap-item-gap"
-        :class="{ 'is-active': index === resolvedItems.length - 1 }"
+        :class="{
+          'is-active': index === items.length - 1,
+          'has-cursor': showCursor && index === items.length - 1,
+        }"
       >
-        {{ item.text }}
+        <span>{{ item.text }}</span>
+
+        <span
+          v-if="index < items.length - 1"
+          class="separator"
+        >
+          <slot name="separator">{{ separator }}</slot>
+        </span>
       </li>
     </ol>
   </nav>
@@ -42,26 +42,18 @@ const resolvedItems = computed<BreadcrumbItem[]>(() => {
 
 <style scoped lang="scss">
 .breadcrumb {
-  border: var(--border-width-base) solid var(--color-border);
-  font-size: inherit;
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-base);
+  letter-spacing: var(--tracking-wide);
 
   li {
     color: var(--color-text-muted);
 
-    &:not(:last-child)::after {
-      content: "»";
-
-      font-size: 0.85em;
-      font-weight: var(--font-weight-bold);
-      line-height: var(--line-height-tight);
-      color: color-mix(in srgb, var(--theme-accent) 60%, transparent);
-      letter-spacing: var(--tracking-wider);
-    }
-
     &.is-active {
+      font-weight: var(--font-weight-medium);
       color: var(--theme-accent);
 
-      &::after {
+      &.has-cursor::after {
         content: "";
 
         width: var(--space-1);
@@ -73,6 +65,14 @@ const resolvedItems = computed<BreadcrumbItem[]>(() => {
         animation: ui-cursor-blink 1s step-end infinite;
       }
     }
+  }
+
+  .separator {
+    font-size: 0.85em;
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    color: color-mix(in srgb, var(--theme-accent) 60%, transparent);
+    letter-spacing: var(--tracking-wider);
   }
 }
 

@@ -55,7 +55,7 @@ const saveButtonContent = computed<{ icon: IconName, text: string }>(() => {
     case 'success':
       return { icon: 'check', text: '保存しました' }
     case 'error':
-      return { icon: 'alert-circle', text: '保存に失敗しました' }
+      return { icon: 'circle-alert', text: '保存に失敗しました' }
     default:
       return { icon: 'save', text: '履歴に保存' }
   }
@@ -95,7 +95,7 @@ const handleSave = async () => {
       <template #actions>
         <Button
           v-if="isBasisAvailable"
-          :icon="isShowingBasis ? 'arrow-left' : 'help-circle'"
+          :icon="isShowingBasis ? 'arrow-left' : 'circle-help'"
           @click="isShowingBasis = !isShowingBasis"
         >
           {{ isShowingBasis ? '結果に戻る' : '計算根拠' }}
@@ -119,11 +119,3 @@ const handleSave = async () => {
     </div>
   </Panel>
 </template>
-
-<style scoped lang="scss">
-.result-panel {
-  .body {
-    --scrollbar-size: var(--space-2);
-  }
-}
-</style>

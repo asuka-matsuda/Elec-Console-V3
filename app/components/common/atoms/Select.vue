@@ -1,167 +1,134 @@
 <script setup lang="ts" generic="T extends string | number | boolean = string | number | boolean">
 /**
  * Select
- * [Atoms] キーボード操作や画面外へのはみ出し防止機能に対応した、カスタムのセレクトボックスコンポーネント。
+ * ドロップダウンセレクトボックスコンポーネント。
  */
-import { onClickOutside } from '@vueuse/core'
-import { computed, inject, ref, watch } from 'vue'
+import { computed, inject, onMounted, onUnmounted, ref } from 'vue'
 
-import { useFloatingPlacement } from '~/composables/useFloatingPlacement'
 import { FORM_GROUP_KEY } from '~/constants/injectionKeys'
 import type { SelectOption, SelectProps } from '~/types/components'
 
 const model = defineModel<T | null>()
 
-const props = withDefaults(
-  defineProps<SelectProps<T>>(),
-  {
-    disabled: false,
-    error: false,
-    clearable: false,
-  },
-)
-
-const emit = defineEmits<{
-  (e: 'change', value: T | null): void
-  (e: 'clear'): void
-}>()
-
-defineSlots<{
-  selected?: (props: { option?: SelectOption<T>, label: string }) => unknown
-  option?: (props: { option: SelectOption<T>, isActive: boolean }) => unknown
-}>()
+const props = withDefaults(defineProps<SelectProps<T>>(), {
+  options: () => [],
+  placeholder: '',
+  disabled: false,
+  error: false,
+})
 
 const formGroup = inject(FORM_GROUP_KEY, null)
 const selectId = computed(() => props.id || formGroup?.id.value)
 const isError = computed(() => props.error || (formGroup?.hasError.value ?? false))
 
 const triggerRef = ref<HTMLButtonElement | null>(null)
-const selectRef = ref<HTMLElement | null>(null)
 const dropdownRef = ref<HTMLElement | null>(null)
 const isOpen = ref(false)
 
-onClickOutside(selectRef, () => {
+// フローティング配置座標（上下自動反転 Flip）
+const dropdownPlacement = ref<'bottom' | 'top'>('bottom')
+const dropdownPos = ref({ top: '', bottom: '', left: '', minWidth: '' })
+
+const updatePosition = () => {
+  if (!triggerRef.value || typeof window === 'undefined') return
+
+  const rect = triggerRef.value.getBoundingClientRect()
+  const spaceBelow = window.innerHeight - rect.bottom
+  const spaceAbove = rect.top
+  const maxDropdownHeight = 220
+
+  // 下スペースが不足し、上スペースの方が広い場合は上向きに反転（見切れ防止）
+  const isTop = spaceBelow < maxDropdownHeight && spaceAbove > spaceBelow
+
+  dropdownPlacement.value = isTop ? 'top' : 'bottom'
+
+  dropdownPos.value = {
+    top: isTop ? '' : `${rect.bottom + 4}px`,
+    bottom: isTop ? `${window.innerHeight - rect.top + 4}px` : '',
+    left: `${rect.left}px`,
+    minWidth: `${rect.width}px`,
+  }
+}
+
+const toggleDropdown = () => {
+  if (props.disabled) return
+
+  if (isOpen.value) {
+    closeDropdown()
+  }
+  else {
+    openDropdown()
+  }
+}
+
+const openDropdown = () => {
+  isOpen.value = true
+  updatePosition()
+  if (dropdownRef.value?.showPopover) {
+    try {
+      dropdownRef.value.showPopover()
+    }
+    catch {
+      // 既に開いている場合の安全ガード
+    }
+  }
+}
+
+const closeDropdown = () => {
   isOpen.value = false
-}, {
-  ignore: [dropdownRef],
-})
-
-const {
-  dynamicPlacement,
-  dropdownStyle,
-  teleportTarget,
-  calculatePlacement,
-} = useFloatingPlacement(selectRef, dropdownRef, isOpen, {
-  preferredPlacement: props.placement,
-})
-
-const syncedDropdownStyle = computed(() => {
-  let triggerFs: string | undefined
-  let themeAccent: string | undefined
-  let glowColor: string | undefined
-
-  if (import.meta.client && selectRef.value) {
-    const cs = getComputedStyle(selectRef.value)
-
-    triggerFs = cs.fontSize
-    const rawAccent = cs.getPropertyValue('--theme-accent').trim()
-    const rawGlow = cs.getPropertyValue('--glow-color').trim()
-
-    if (rawAccent) themeAccent = rawAccent
-    if (rawGlow) glowColor = rawGlow
+  if (dropdownRef.value?.hidePopover) {
+    try {
+      dropdownRef.value.hidePopover()
+    }
+    catch {
+      // 既に閉じている場合の安全ガード
+    }
   }
+}
 
-  return {
-    ...dropdownStyle.value,
-    fontSize: triggerFs,
-    ...(themeAccent ? { '--theme-accent': themeAccent } : {}),
-    ...(glowColor ? { '--glow-color': glowColor } : {}),
+// Popover API の標準開閉イベント（Light Dismiss や Esc キーによるクローズ）と同期
+const onPopoverToggle = (e: Event) => {
+  const toggleEvent = e as ToggleEvent
+
+  isOpen.value = toggleEvent.newState === 'open'
+  if (isOpen.value) {
+    updatePosition()
   }
-})
+}
 
 const selectOption = (option: SelectOption<T>) => {
   if (option.disabled) return
   model.value = option.value
-  emit('change', option.value)
-  isOpen.value = false
+  closeDropdown()
   triggerRef.value?.focus()
 }
 
-const handleClear = () => {
-  model.value = null
-  emit('change', null)
-  emit('clear')
-  isOpen.value = false
-  triggerRef.value?.focus()
+const handleResize = () => {
+  if (isOpen.value) updatePosition()
 }
 
-const selectedOption = computed(() => {
-  return props.options.find(opt => opt.value === model.value)
+onMounted(() => {
+  window.addEventListener('resize', handleResize, { passive: true })
 })
 
-const displayLabel = computed(() => {
-  if (selectedOption.value) return selectedOption.value.label
-
-  return props.placeholder || ''
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
 })
 
-const isPlaceholder = computed(() => {
-  return !selectedOption.value && !!props.placeholder
-})
-
-const canClear = computed(() => {
-  return (
-    props.clearable
-    && !props.disabled
-    && model.value !== null
-    && model.value !== undefined
-    && model.value !== ''
-  )
-})
-
-const toggleDropdown = () => {
-  if (props.disabled) return
-  isOpen.value = !isOpen.value
-}
-
-watch(isOpen, (newVal) => {
-  if (newVal) {
-    calculatePlacement()
-  }
-})
-
-const getOptionClasses = (option: SelectOption<T>) => [
-  'relative z-[1] overflow-hidden py-[0.4em] px-[0.8em] custom-select__option',
-  {
-    'is-active': model.value === option.value,
-    'is-disabled': option.disabled,
-  },
-]
+const selectedOption = computed(() => props.options.find(opt => opt.value === model.value))
+const displayLabel = computed(() => selectedOption.value?.label || props.placeholder || '')
+const isPlaceholder = computed(() => !selectedOption.value && Boolean(props.placeholder))
 
 defineExpose({
-  /** トリガーボタンへのフォーカス */
-  focus: (options?: FocusOptions) => triggerRef.value?.focus(options),
-  /** フォーカス解除 */
-  blur: () => triggerRef.value?.blur(),
-  /** ドロップダウンを開く */
-  open: () => {
-    if (!props.disabled) isOpen.value = true
-  },
-  /** ドロップダウンを閉じる */
-  close: () => {
-    isOpen.value = false
-  },
-  /** 開閉トグル */
-  toggle: toggleDropdown,
-  /** DOM 参照 */
-  selectRef,
-  triggerRef,
+  isOpen,
+  selectOption,
+  openDropdown,
+  closeDropdown,
 })
 </script>
 
 <template>
   <div
-    ref="selectRef"
     class="relative w-full min-w-0 custom-select"
     :class="{ 'is-error': isError }"
     :data-disabled="disabled"
@@ -179,56 +146,47 @@ defineExpose({
       :disabled="disabled"
       @click="toggleDropdown"
     >
-      <slot name="selected" :option="selectedOption" :label="displayLabel">
-        <span class="flex-1 text-left custom-select__label">{{ displayLabel }}</span>
-      </slot>
+      <span class="flex-1 text-left custom-select__label">{{ displayLabel }}</span>
 
-      <div class="flex items-center gap-inline-gap shrink-0">
-
-        <FormControlAction
-          v-if="canClear"
-          icon="x"
-          title="選択解除"
-          @click="handleClear"
-        />
-
-        <Icon
-          name="chevron-down"
-          class="custom-select__arrow"
-          :class="{ 'is-open': isOpen }"
-        />
-      </div>
+      <Icon
+        name="chevron-down"
+        class="custom-select__arrow"
+        :class="{ 'is-open': isOpen }"
+      />
     </button>
 
-    <Teleport :to="teleportTarget">
-      <transition name="dropdown-fade">
-        <ul
-          v-if="isOpen"
-          ref="dropdownRef"
-          class="absolute z-select w-max max-w-[90vw] max-h-[min(250px,40vh)] overflow-x-hidden overflow-y-auto p-inline-gap custom-select__dropdown"
-          :class="`is-${dynamicPlacement}`"
-          :style="syncedDropdownStyle"
-        >
-          <li
-            v-for="option in options"
-            :key="String(option.value)"
-            :class="getOptionClasses(option)"
-            @click="selectOption(option)"
-          >
-            <slot name="option" :option="option" :is-active="model === option.value">
-              {{ option.label }}
-            </slot>
-          </li>
-        </ul>
-      </transition>
-    </Teleport>
+    <ul
+      ref="dropdownRef"
+      popover="auto"
+      class="z-select max-w-[min(90vw,400px)] max-h-[min(250px,40vh)] overflow-x-hidden overflow-y-auto p-inline-gap custom-select__dropdown"
+      :class="`is-${dropdownPlacement}`"
+      :style="{
+        position: 'fixed',
+        top: dropdownPos.top || undefined,
+        bottom: dropdownPos.bottom || undefined,
+        left: dropdownPos.left,
+        minWidth: dropdownPos.minWidth,
+      }"
+      @toggle="onPopoverToggle"
+    >
+      <li
+        v-for="option in options"
+        :key="String(option.value)"
+        class="custom-select__option"
+        :class="{
+          'is-active': model === option.value,
+          'is-disabled': option.disabled,
+        }"
+        @click="selectOption(option)"
+      >
+        {{ option.label }}
+      </li>
+    </ul>
   </div>
 </template>
 
 <style scoped lang="scss">
 .custom-select {
-  width: var(--select-width, 100%);
-  min-width: var(--select-min-width, 0);
   font-size: inherit;
   color: var(--color-text-main);
 
@@ -242,9 +200,8 @@ defineExpose({
 
   min-height: calc(var(--control-height-ratio) * 1em);
   padding-block: 0.3em;
-  padding-inline: var(--select-padding-inline, 1.2em);
+  padding-inline: 0.8em;
   border: var(--border-width-base) solid var(--color-border);
-  border-left: var(--select-border-left, var(--border-width-base) solid var(--color-border));
 
   font-size: inherit;
   color: inherit;
@@ -256,43 +213,28 @@ defineExpose({
 
   @include state-interactive;
 
-  &:not(:disabled, .is-disabled) {
-    &:hover {
-      border-color: var(--glow-color);
-      box-shadow: var(--shadow-glow-hover);
-    }
+  &.is-error {
+    --glow-color: var(--color-status-danger);
 
-    &:active {
-      border-color: var(--glow-color);
-      box-shadow: var(--shadow-glow-active);
-    }
+    border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
+  }
 
-    &.is-open,
-    &:focus,
-    &:focus-visible {
-      margin-left: var(--select-margin-left-active, 0);
-      border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
-      border-left: var(
-        --select-border-left-active,
-        var(--border-width-base) solid color-mix(in srgb, var(--glow-color) 60%, transparent)
-      );
+  &:hover {
+    border-color: var(--glow-color);
+    box-shadow: var(--shadow-glow-hover);
+  }
 
-      outline: none;
-      box-shadow: var(--shadow-glow-focus);
-    }
+  &:active {
+    border-color: var(--glow-color);
+    box-shadow: var(--shadow-glow-active);
+  }
 
-    &.is-error {
-      --glow-color: var(--color-status-danger);
-
-      border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
-
-      &.is-open,
-      &:focus,
-      &:focus-visible {
-        border-color: var(--glow-color);
-        border-left: var(--select-border-left-active, var(--border-width-base) solid var(--glow-color));
-      }
-    }
+  &.is-open,
+  &:focus,
+  &:focus-visible {
+    border-color: color-mix(in srgb, var(--glow-color) 70%, transparent);
+    outline: none;
+    box-shadow: var(--shadow-glow-focus);
   }
 
   &.is-placeholder {
@@ -308,25 +250,20 @@ defineExpose({
     var(--glow-color, var(--theme-accent)) 60%,
     transparent
   );
-  --scrollbar-size: var(--space-2);
 
-  transform: translateZ(0);
+  inset: unset;
 
+  margin: 0;
   border: var(--border-width-base) solid var(--dropdown-border-color);
+
+  font-size: var(--font-size-base);
+  color: var(--color-text-main);
 
   background-color: var(--surface-bg-solid);
   backdrop-filter: blur(var(--blur-md));
   box-shadow: var(--shadow-elevation-md);
 
   transition: var(--transition-base);
-
-  .custom-select.is-error & {
-    --dropdown-border-color: color-mix(
-      in srgb,
-      var(--color-status-danger) 60%,
-      transparent
-    );
-  }
 }
 
 .custom-select__label {
@@ -345,6 +282,10 @@ defineExpose({
 }
 
 .custom-select__option {
+  overflow: hidden;
+
+  padding: 0.4em 0.8em;
+
   font-size: inherit;
   color: var(--color-text-main);
   text-overflow: ellipsis;
@@ -354,30 +295,15 @@ defineExpose({
 
   @include state-interactive;
 
-  &:not(:is(.is-disabled, .is-placeholder)) {
-    &:is(:hover, .is-focused, .is-active) {
-      color: var(--theme-accent);
-      background-color: color-mix(in srgb, var(--theme-accent) 15%, transparent);
-    }
+  &:is(:hover, .is-active) {
+    color: var(--glow-color, var(--theme-accent));
+    background-color: color-mix(
+      in srgb,
+      var(--glow-color, var(--theme-accent)) 15%,
+      transparent
+    );
   }
 
   @include state-disabled;
-}
-</style>
-
-<style lang="scss">
-.dropdown-fade-enter-active,
-.dropdown-fade-leave-active {
-  transition: var(--transition-base);
-}
-
-.dropdown-fade-enter-from,
-.dropdown-fade-leave-to {
-  transform: translateY(-5px);
-  opacity: 0;
-
-  &.is-top {
-    transform: translateY(5px);
-  }
 }
 </style>

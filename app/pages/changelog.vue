@@ -104,7 +104,7 @@ const resolveToolInfo = (toolId?: string) => {
 
     <Panel class="flex flex-col sm:flex-row sm:items-center justify-between gap-panel-gap">
       <div class="flex items-center gap-item-gap filter-label">
-        <Icon name="filter" class="shrink-0" />
+        <Icon name="filter" />
         <span>対象ツール・機能:</span>
       </div>
 

@@ -33,7 +33,6 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   (e: 'enter'): void
-  (e: 'focus', event: FocusEvent): void
 }>()
 
 const resolvedStep = computed(() => props.step || (props.unit === 'MΩ' ? '0.01' : 'any'))
@@ -81,11 +80,9 @@ const placeholderText = computed(() => {
       :step="resolvedStep"
       inputmode="decimal"
       :placeholder="placeholderText"
-      :clearable="false"
       :error="hasError"
       :disabled="disabled"
       class="w-[85px]"
-      @focus="emit('focus', $event)"
       @keydown.enter.prevent="emit('enter')"
     />
     <span

@@ -61,4 +61,14 @@ describe('Heading.vue', () => {
     expect(wrapper.element.tagName).toBe('H2')
     expect(wrapper.classes()).toContain('is-base')
   })
+
+  it('supports non-heading tags such as div or p without prefixing with h', () => {
+    const wrapper = mount(Heading, {
+      props: { tag: 'div', size: 'xl' },
+      slots: { default: 'Div 見出し' },
+    })
+
+    expect(wrapper.element.tagName).toBe('DIV')
+    expect(wrapper.classes()).toContain('is-xl')
+  })
 })

@@ -38,7 +38,10 @@ const { sortBy, sortOrder, sortedData } = useTableSort(filteredData)
 <template>
   <div class="flex flex-1 flex-col gap-panel-gap w-full max-w-[1400px] min-h-0 mx-auto">
 
-    <Disclaimer text="注記: 掲載データはJISおよび内線規程等に基づく標準規格値です。選定にあたってはメーカー仕様書も併せてご確認ください。" />
+    <Alert
+      variant="info"
+      text="注記: 掲載データはJISおよび内線規程等に基づく標準規格値です。選定にあたってはメーカー仕様書も併せてご確認ください。"
+    />
 
     <FilterPanel
       v-model:search-query="searchQuery"
