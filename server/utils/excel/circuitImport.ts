@@ -12,7 +12,7 @@ import ExcelJS from 'exceljs'
 
 import { prisma } from '../prisma'
 import { getCellString, isKansen, parseP2Value } from './cellFormat'
-import { detectCircuitColumns, makeCircuitKey } from './circuitMapping'
+import { detectCircuitColumns, findCircuitSheet, makeCircuitKey } from './circuitMapping'
 import { validateSafeExcelPath } from './safePath'
 
 interface ImportCircuitResult {
@@ -55,7 +55,7 @@ export async function importCircuitsFromExcel(
     await workbook.xlsx.readFile(filePath)
   }
 
-  const sheet = workbook.getWorksheet('回路ﾘｽﾄ') || workbook.worksheets[0]
+  const sheet = findCircuitSheet(workbook)
 
   if (!sheet) {
     throw new Error('ワークブックにシートが見つかりません')
@@ -65,40 +65,66 @@ export async function importCircuitsFromExcel(
   const { colMap, dataStartRowNumber } = detectCircuitColumns(sheet)
   const parsedCircuits: Prisma.CircuitCreateManyInput[] = []
 
+  const getColStr = (row: ExcelJS.Row, col?: number): string => (col !== undefined ? getCellString(row, col) : '')
+  const getColVal = (row: ExcelJS.Row, col?: number): unknown => (col !== undefined ? row.getCell(col).value : null)
+
+  const parseExcelDate = (val: unknown): Date | null => {
+    if (!val) return null
+    if (val instanceof Date && !isNaN(val.getTime())) return val
+    if (typeof val === 'number') {
+      const ms = (val - 25569) * 86400 * 1000
+      const d = new Date(ms)
+      if (!isNaN(d.getTime())) return d
+    }
+    if (typeof val === 'string' && val.trim()) {
+      const d = new Date(val.trim())
+      if (!isNaN(d.getTime())) return d
+    }
+    return null
+  }
+
   sheet.eachRow((row, rowNumber) => {
     if (rowNumber < dataStartRowNumber) return
 
-    const banMeisho = getCellString(row, colMap.banMeisho)
-    const kairoMeisho = getCellString(row, colMap.kairoMeisho)
-    const kairoBangou = getCellString(row, colMap.kairoBangou)
+    const banMeisho = getColStr(row, colMap.banMeisho)
+    const kairoMeisho = getColStr(row, colMap.kairoMeisho)
+    const kairoBangou = getColStr(row, colMap.kairoBangou)
 
     // 盤名称も回路名称も回路番号も無い空行はスキップ
     if (!banMeisho && !kairoMeisho && !kairoBangou) {
       return
     }
 
-    const kansenRaw = row.getCell(colMap.keiTo).value
+    const kansenRaw = getColVal(row, colMap.keiTo)
     const keiTo = isKansen(kansenRaw)
 
-    const rawShubetsu = getCellString(row, colMap.banShubetsu)
+    const rawShubetsu = getColStr(row, colMap.banShubetsu)
     const banShubetsu = rawShubetsu || (keiTo === '幹線' ? '幹線' : 'その他')
 
-    const rRaw = row.getCell(colMap.zetsuenR).value
-    const sRaw = row.getCell(colMap.zetsuenS).value
-    const tRaw = row.getCell(colMap.zetsuenT).value
+    const rRaw = getColVal(row, colMap.zetsuenR)
+    const sRaw = getColVal(row, colMap.zetsuenS)
+    const tRaw = getColVal(row, colMap.zetsuenT)
 
     const rData = parseP2Value(rRaw, keiTo)
     const sData = parseP2Value(sRaw, keiTo)
     const tData = parseP2Value(tRaw, keiTo)
 
-    const p1Worker = getCellString(row, colMap.p1Worker) || null
-    const p2Worker = getCellString(row, colMap.p2Worker) || null
-    const p3Worker = getCellString(row, colMap.p3Worker) || null
+    const p1Worker = getColStr(row, colMap.p1Worker) || null
+    const p1DateRaw = getColVal(row, colMap.p1ConfirmedAt)
+    const p1ConfirmedAt = parseExcelDate(p1DateRaw) || (p1Worker ? new Date() : null)
 
-    const vRs = parseFloat(getCellString(row, colMap.denatsuRs)) || null
-    const vSt = parseFloat(getCellString(row, colMap.denatsuSt)) || null
-    const vRt = parseFloat(getCellString(row, colMap.denatsuRt)) || null
-    const kensou = getCellString(row, colMap.kensou) || null
+    const p2Worker = getColStr(row, colMap.p2Worker) || null
+    const p2DateRaw = getColVal(row, colMap.p2ConfirmedAt)
+    const p2ConfirmedAt = parseExcelDate(p2DateRaw) || (p2Worker ? new Date() : null)
+
+    const p3Worker = getColStr(row, colMap.p3Worker) || null
+    const p3DateRaw = getColVal(row, colMap.p3ConfirmedAt)
+    const p3ConfirmedAt = parseExcelDate(p3DateRaw) || (p3Worker ? new Date() : null)
+
+    const vRs = parseFloat(getColStr(row, colMap.denatsuRs)) || null
+    const vSt = parseFloat(getColStr(row, colMap.denatsuSt)) || null
+    const vRt = parseFloat(getColStr(row, colMap.denatsuRt)) || null
+    const kensou = getColStr(row, colMap.kensou) || null
 
     parsedCircuits.push({
       siteId,
@@ -106,23 +132,23 @@ export async function importCircuitsFromExcel(
       keiTo,
       banShubetsu,
       banMeisho: banMeisho || '未分類',
-      haidenHoushiki: getCellString(row, colMap.haidenHoushiki) || null,
-      souShubetsu: getCellString(row, colMap.souShubetsu) || null,
-      shadankiShubetsu: getCellString(row, colMap.shadankiShubetsu) || null,
-      shadankiYouryou: getCellString(row, colMap.shadankiYouryou) || null,
-      kairoKigou: getCellString(row, colMap.kairoKigou) || null,
+      haidenHoushiki: getColStr(row, colMap.haidenHoushiki) || null,
+      souShubetsu: getColStr(row, colMap.souShubetsu) || null,
+      shadankiShubetsu: getColStr(row, colMap.shadankiShubetsu) || null,
+      shadankiYouryou: getColStr(row, colMap.shadankiYouryou) || null,
+      kairoKigou: getColStr(row, colMap.kairoKigou) || null,
       kairoBangou: kairoBangou || null,
       kairoMeisho: kairoMeisho || null,
-      cableList: getCellString(row, colMap.cableList) || null,
-      haisenJousuu: getCellString(row, colMap.haisenJousuu) || null,
-      setsuchiUmu: getCellString(row, colMap.setsuchiUmu) || null,
-      setsuchiList: getCellString(row, colMap.setsuchiList) || null,
+      cableList: getColStr(row, colMap.cableList) || null,
+      haisenJousuu: getColStr(row, colMap.haisenJousuu) || null,
+      setsuchiUmu: getColStr(row, colMap.setsuchiUmu) || null,
+      setsuchiList: getColStr(row, colMap.setsuchiList) || null,
 
       p1Kakunin: Boolean(p1Worker),
       p1Mashishime: Boolean(p1Worker),
       p1Worker,
-      p1ConfirmedAt: p1Worker ? new Date() : null,
-      p1Remarks: getCellString(row, colMap.p1Remarks) || null,
+      p1ConfirmedAt,
+      p1Remarks: getColStr(row, colMap.p1Remarks) || null,
       p1ModifiedFields: '[]',
 
       zetsuenR: rData.value,
@@ -132,8 +158,8 @@ export async function importCircuitsFromExcel(
       p2SStatus: sData.status,
       p2TStatus: tData.status,
       p2Worker,
-      p2ConfirmedAt: p2Worker ? new Date() : null,
-      p2Remarks: getCellString(row, colMap.p2Remarks) || null,
+      p2ConfirmedAt,
+      p2Remarks: getColStr(row, colMap.p2Remarks) || null,
       p2IsComplete: Boolean(p2Worker),
 
       denatsuRs: vRs,
@@ -141,8 +167,8 @@ export async function importCircuitsFromExcel(
       denatsuRt: vRt,
       kensou,
       p3Worker,
-      p3ConfirmedAt: p3Worker ? new Date() : null,
-      p3Remarks: getCellString(row, colMap.p3Remarks) || null,
+      p3ConfirmedAt,
+      p3Remarks: getColStr(row, colMap.p3Remarks) || null,
       p3IsComplete: Boolean(p3Worker),
     })
   })

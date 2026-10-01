@@ -16,6 +16,7 @@ import {
   type CircuitColumnMap,
   DEFAULT_CIRCUIT_COLUMN_MAP,
   detectCircuitColumns,
+  findCircuitSheet,
   makeCircuitKey,
 } from './circuitMapping'
 import { validateSafeExcelPath } from './safePath'
@@ -28,7 +29,20 @@ interface ExportCircuitResult {
 }
 
 /**
+ * セルに日時を設定し、yyyy/m/d h:mm 書式を適用する
+ */
+function setCellDateTime(cell: ExcelJS.Cell, date: Date | string | null | undefined): void {
+  if (!date) return
+  const d = date instanceof Date ? date : new Date(date)
+  if (isNaN(d.getTime())) return
+  cell.value = d
+  cell.numFmt = 'yyyy/m/d h:mm'
+}
+
+/**
  * 回路データの各フェーズ試験結果を行セルへ書き戻す
+ * ※ユーザー指示により、設計基本情報（A列〜AH列等）への直接改変は一切行わず、
+ *   試験結果・作業者・日時・備考欄のみを書き戻します。
  */
 export function applyCircuitToRow(
   row: ExcelJS.Row,
@@ -37,75 +51,83 @@ export function applyCircuitToRow(
 ) {
   // Phase 1 書戻し
   if (c.p1ConfirmedAt && c.p1Kakunin && c.p1Mashishime) {
-    setCellStringWithNewlines(row.getCell(colMap.p1Worker), c.p1Worker || '確認済')
+    if (colMap.p1Worker !== undefined) {
+      setCellStringWithNewlines(row.getCell(colMap.p1Worker), c.p1Worker || '確認済')
+    }
+    if (colMap.p1ConfirmedAt !== undefined) {
+      setCellDateTime(row.getCell(colMap.p1ConfirmedAt), c.p1ConfirmedAt)
+    }
   }
-  if (c.p1Remarks) {
+  if (c.p1Remarks && colMap.p1Remarks !== undefined) {
     setCellStringWithNewlines(row.getCell(colMap.p1Remarks), c.p1Remarks)
   }
 
   // Phase 2 書戻し
   if (c.p2ConfirmedAt || c.p2IsComplete) {
     // R相
-    if (c.p2RStatus === '良好') {
-      row.getCell(colMap.zetsuenR).value = c.keiTo === '幹線' ? 500 : 100
-    }
-    else if (c.zetsuenR !== null && c.zetsuenR !== undefined) {
-      row.getCell(colMap.zetsuenR).value = c.zetsuenR
+    if (colMap.zetsuenR !== undefined) {
+      if (c.p2RStatus === '良好') {
+        row.getCell(colMap.zetsuenR).value = c.keiTo === '幹線' ? 500 : 100
+      }
+      else if (c.zetsuenR !== null && c.zetsuenR !== undefined) {
+        row.getCell(colMap.zetsuenR).value = c.zetsuenR
+      }
     }
 
     // S相
-    if (c.p2SStatus === '良好') {
-      row.getCell(colMap.zetsuenS).value = c.keiTo === '幹線' ? 500 : 100
-    }
-    else if (c.zetsuenS !== null && c.zetsuenS !== undefined) {
-      row.getCell(colMap.zetsuenS).value = c.zetsuenS
+    if (colMap.zetsuenS !== undefined) {
+      if (c.p2SStatus === '良好') {
+        row.getCell(colMap.zetsuenS).value = c.keiTo === '幹線' ? 500 : 100
+      }
+      else if (c.zetsuenS !== null && c.zetsuenS !== undefined) {
+        row.getCell(colMap.zetsuenS).value = c.zetsuenS
+      }
     }
 
     // T相
-    if (c.p2TStatus === '良好') {
-      row.getCell(colMap.zetsuenT).value = c.keiTo === '幹線' ? 500 : 100
-    }
-    else if (c.zetsuenT !== null && c.zetsuenT !== undefined) {
-      row.getCell(colMap.zetsuenT).value = c.zetsuenT
+    if (colMap.zetsuenT !== undefined) {
+      if (c.p2TStatus === '良好') {
+        row.getCell(colMap.zetsuenT).value = c.keiTo === '幹線' ? 500 : 100
+      }
+      else if (c.zetsuenT !== null && c.zetsuenT !== undefined) {
+        row.getCell(colMap.zetsuenT).value = c.zetsuenT
+      }
     }
 
-    if (c.p2Worker) {
+    if (c.p2Worker && colMap.p2Worker !== undefined) {
       setCellStringWithNewlines(row.getCell(colMap.p2Worker), c.p2Worker)
     }
-    if (c.p2Remarks) {
+    if (c.p2ConfirmedAt && colMap.p2ConfirmedAt !== undefined) {
+      setCellDateTime(row.getCell(colMap.p2ConfirmedAt), c.p2ConfirmedAt)
+    }
+    if (c.p2Remarks && colMap.p2Remarks !== undefined) {
       setCellStringWithNewlines(row.getCell(colMap.p2Remarks), c.p2Remarks)
     }
   }
 
   // Phase 3 書戻し
   if (c.p3ConfirmedAt) {
-    if (c.denatsuRs !== null && c.denatsuRs !== undefined) {
+    if (colMap.denatsuRs !== undefined && c.denatsuRs !== null && c.denatsuRs !== undefined) {
       row.getCell(colMap.denatsuRs).value = c.denatsuRs
     }
-    if (c.denatsuSt !== null && c.denatsuSt !== undefined) {
+    if (colMap.denatsuSt !== undefined && c.denatsuSt !== null && c.denatsuSt !== undefined) {
       row.getCell(colMap.denatsuSt).value = c.denatsuSt
     }
-    if (c.denatsuRt !== null && c.denatsuRt !== undefined) {
+    if (colMap.denatsuRt !== undefined && c.denatsuRt !== null && c.denatsuRt !== undefined) {
       row.getCell(colMap.denatsuRt).value = c.denatsuRt
     }
-    if (c.kensou) {
+    if (colMap.kensou !== undefined && c.kensou) {
       setCellStringWithNewlines(row.getCell(colMap.kensou), c.kensou)
     }
-    if (c.p3Worker) {
+    if (colMap.p3Worker !== undefined && c.p3Worker) {
       setCellStringWithNewlines(row.getCell(colMap.p3Worker), c.p3Worker)
     }
-    if (c.p3Remarks) {
+    if (colMap.p3ConfirmedAt !== undefined) {
+      setCellDateTime(row.getCell(colMap.p3ConfirmedAt), c.p3ConfirmedAt)
+    }
+    if (colMap.p3Remarks !== undefined && c.p3Remarks) {
       setCellStringWithNewlines(row.getCell(colMap.p3Remarks), c.p3Remarks)
     }
-  }
-
-  // Web側で編集された基本情報（回路番号・回路名称・ケーブル等）がある場合の書戻し
-  if (c.p1ModifiedFields && c.p1ModifiedFields !== '[]') {
-    if (c.kairoBangou) setCellStringWithNewlines(row.getCell(colMap.kairoBangou), c.kairoBangou)
-    if (c.kairoMeisho) setCellStringWithNewlines(row.getCell(colMap.kairoMeisho), c.kairoMeisho)
-    if (c.cableList) setCellStringWithNewlines(row.getCell(colMap.cableList), c.cableList)
-    if (c.haisenJousuu) setCellStringWithNewlines(row.getCell(colMap.haisenJousuu), c.haisenJousuu)
-    if (c.setsuchiList) setCellStringWithNewlines(row.getCell(colMap.setsuchiList), c.setsuchiList)
   }
 }
 
@@ -135,7 +157,7 @@ export async function generateCircuitsExcelBuffer(
   }
 
   await workbook.xlsx.readFile(cleanPath)
-  const sheet = workbook.getWorksheet('回路ﾘｽﾄ') || workbook.worksheets[0]
+  const sheet = findCircuitSheet(workbook)
 
   if (!sheet) {
     throw new Error('ワークブックにシートが見つかりません')

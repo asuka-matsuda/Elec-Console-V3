@@ -12,6 +12,7 @@ import {
 } from '../../server/utils/excel/circuitExport'
 import {
   detectCircuitColumns,
+  findCircuitSheet,
   makeCircuitKey,
 } from '../../server/utils/excel/circuitMapping'
 
@@ -227,5 +228,81 @@ describe('circuitExcel newline preservation', () => {
       // 試験結果（P2 R相）が正しく Col 5 に書き込まれていること
       expect(dataRow.getCell(5).value).toBe(100)
     })
+
+    it('detects confirmation date columns and writes timestamps with yyyy/m/d h:mm', () => {
+      const wb = new ExcelJS.Workbook()
+      const sheet = wb.addWorksheet('List')
+
+      const headerRow = sheet.getRow(1)
+      headerRow.getCell(1).value = '盤名称'
+      headerRow.getCell(2).value = '回路番号'
+      headerRow.getCell(3).value = '接続確認者'
+      headerRow.getCell(4).value = '確認日時'
+      headerRow.getCell(5).value = '絶縁抵抗測定者'
+      headerRow.getCell(6).value = '絶縁測定日時'
+      headerRow.getCell(7).value = '電圧測定者'
+      headerRow.getCell(8).value = '電圧測定日時'
+
+      const { colMap } = detectCircuitColumns(sheet)
+      expect(colMap.p1Worker).toBe(3)
+      expect(colMap.p1ConfirmedAt).toBe(4)
+      expect(colMap.p2Worker).toBe(5)
+      expect(colMap.p2ConfirmedAt).toBe(6)
+      expect(colMap.p3Worker).toBe(7)
+      expect(colMap.p3ConfirmedAt).toBe(8)
+
+      const testDate = new Date('2026-10-01T14:30:00')
+      const mockCircuit: Partial<Circuit> = {
+        id: 'test-3',
+        siteId: 'site-1',
+        keiTo: '二次側',
+        banMeisho: '1L-1',
+        kairoBangou: '1',
+        p1ConfirmedAt: testDate,
+        p1Kakunin: true,
+        p1Mashishime: true,
+        p1Worker: '松田',
+        p2ConfirmedAt: testDate,
+        p2Worker: '佐藤',
+        p2IsComplete: true,
+        p3ConfirmedAt: testDate,
+        p3Worker: '鈴木',
+      }
+
+      const dataRow = sheet.getRow(2)
+      applyCircuitToRow(dataRow, mockCircuit as Circuit, colMap)
+
+      // P1
+      expect(dataRow.getCell(3).value).toBe('松田')
+      expect(dataRow.getCell(4).value).toEqual(testDate)
+      expect(dataRow.getCell(4).numFmt).toBe('yyyy/m/d h:mm')
+
+      // P2
+      expect(dataRow.getCell(5).value).toBe('佐藤')
+      expect(dataRow.getCell(6).value).toEqual(testDate)
+      expect(dataRow.getCell(6).numFmt).toBe('yyyy/m/d h:mm')
+
+      // P3
+      expect(dataRow.getCell(7).value).toBe('鈴木')
+      expect(dataRow.getCell(8).value).toEqual(testDate)
+      expect(dataRow.getCell(8).numFmt).toBe('yyyy/m/d h:mm')
+    })
+
+    it('findCircuitSheet prioritizes List sheet over small Setting sheet', () => {
+      const wb = new ExcelJS.Workbook()
+      const settingSheet = wb.addWorksheet('Setting')
+      for (let i = 1; i <= 38; i++) {
+        settingSheet.addRow(['設定値', i])
+      }
+
+      const listSheet = wb.addWorksheet('List')
+      for (let i = 1; i <= 800; i++) {
+        listSheet.addRow(['回路', i])
+      }
+
+      const detected = findCircuitSheet(wb)
+      expect(detected.name).toBe('List')
+    })
   })
 })
+

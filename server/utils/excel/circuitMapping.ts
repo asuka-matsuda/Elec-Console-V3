@@ -23,19 +23,22 @@ export interface CircuitColumnMap {
   setsuchiUmu: number
   setsuchiList: number
   keiTo: number
-  p1Worker: number
-  p1Remarks: number
-  zetsuenR: number
-  zetsuenS: number
-  zetsuenT: number
-  p2Worker: number
-  p2Remarks: number
-  denatsuRs: number
-  denatsuSt: number
-  denatsuRt: number
-  kensou: number
-  p3Worker: number
-  p3Remarks: number
+  p1Worker?: number
+  p1ConfirmedAt?: number
+  p1Remarks?: number
+  zetsuenR?: number
+  zetsuenS?: number
+  zetsuenT?: number
+  p2Worker?: number
+  p2ConfirmedAt?: number
+  p2Remarks?: number
+  denatsuRs?: number
+  denatsuSt?: number
+  denatsuRt?: number
+  kensou?: number
+  p3Worker?: number
+  p3ConfirmedAt?: number
+  p3Remarks?: number
 }
 
 export const DEFAULT_CIRCUIT_COLUMN_MAP: CircuitColumnMap = {
@@ -54,52 +57,79 @@ export const DEFAULT_CIRCUIT_COLUMN_MAP: CircuitColumnMap = {
   setsuchiList: 18,
   keiTo: 22,
   p1Worker: 24,
+  p1ConfirmedAt: undefined,
   p1Remarks: 25,
   zetsuenR: 26,
   zetsuenS: 27,
   zetsuenT: 28,
   p2Worker: 29,
+  p2ConfirmedAt: undefined,
   p2Remarks: 30,
   denatsuRs: 31,
   denatsuSt: 32,
   denatsuRt: 33,
   kensou: 34,
   p3Worker: 35,
+  p3ConfirmedAt: undefined,
   p3Remarks: 36,
 }
 
-const STANDARD_HEADER_NAMES: Record<keyof CircuitColumnMap, string> = {
-  banMeisho: '盤名称',
-  banShubetsu: '盤種別',
-  haidenHoushiki: '配電方式',
-  souShubetsu: '相種別',
-  shadankiShubetsu: '遮断器種別',
-  shadankiYouryou: '遮断器容量',
-  kairoKigou: '回路記号',
-  kairoBangou: '回路番号',
-  kairoMeisho: '回路名称',
-  cableList: 'ケーブル',
-  haisenJousuu: '配線条数',
-  setsuchiUmu: '接地有無',
-  setsuchiList: '接地種別',
-  keiTo: '幹線/二次側',
-  p1Worker: 'P1確認者',
-  p1Remarks: 'P1備考',
-  zetsuenR: 'P2(R)',
-  zetsuenS: 'P2(S)',
-  zetsuenT: 'P2(T)',
-  p2Worker: 'P2測定者',
-  p2Remarks: 'P2備考',
-  denatsuRs: 'P3(RS)',
-  denatsuSt: 'P3(ST)',
-  denatsuRt: 'P3(RT)',
-  kensou: '検相',
-  p3Worker: 'P3測定者',
-  p3Remarks: 'P3備考',
+/**
+ * 見出し文字列の正規化（全角半角統一・空白改行除去・小文字化）
+ */
+export function normalizeHeaderName(name: unknown): string {
+  if (name === null || name === undefined) return ''
+  return String(name)
+    .normalize('NFKC')
+    .replace(/[\s\r\n\t_]/g, '')
+    .toLowerCase()
 }
 
 /**
- * ワークシートのヘッダー行から見出し文字を直接取得し、列番号マップを構築する
+ * 各項目に対する認識見出し候補（エイリアス）リスト
+ */
+export const HEADER_ALIASES: Record<keyof CircuitColumnMap, string[]> = {
+  // 基本設計情報（読取用）
+  banMeisho: ['盤名称', '分電盤名称', '盤名'],
+  banShubetsu: ['盤種別', '種別'],
+  haidenHoushiki: ['配電方式'],
+  souShubetsu: ['相種別'],
+  shadankiShubetsu: ['遮断器種別'],
+  shadankiYouryou: ['遮断器容量', '遮断器サイズ', '配電盤遮断器容量'],
+  kairoKigou: ['回路記号'],
+  kairoBangou: ['回路番号', '回路No', '回路No.'],
+  kairoMeisho: ['回路名称', '回路名', '負荷名称'],
+  cableList: ['ケーブル', 'ケーブルリスト', '電線'],
+  haisenJousuu: ['配線条数'],
+  setsuchiUmu: ['接地有無'],
+  setsuchiList: ['接地リスト', '接地種別', '接地'],
+  keiTo: ['幹線判定', '幹線/二次側', '系統', '区分'],
+
+  // Phase 1 (書き戻し対象)
+  p1Worker: ['接続確認者', 'P1確認者', '確認者', 'P1作業者'],
+  p1ConfirmedAt: ['確認日時', '接続確認日時', 'P1確認日時', 'P1日時', 'P1測定日時'],
+  p1Remarks: ['備考1', 'P1備考', '接続備考'],
+
+  // Phase 2 (書き戻し対象)
+  zetsuenR: ['絶縁抵抗R', 'P2(R)', 'P2R', 'R相絶縁'],
+  zetsuenS: ['絶縁抵抗S', 'P2(S)', 'P2S', 'S相絶縁'],
+  zetsuenT: ['絶縁抵抗T', 'P2(T)', 'P2T', 'T相絶縁'],
+  p2Worker: ['絶縁抵抗測定者', 'P2測定者', '絶縁測定者', 'P2作業者'],
+  p2ConfirmedAt: ['絶縁測定日時', '絶縁抵抗測定日時', 'P2測定日時', 'P2日時'],
+  p2Remarks: ['備考2', 'P2備考', '絶縁備考'],
+
+  // Phase 3 (書き戻し対象)
+  denatsuRs: ['電圧RS', 'P3(RS)', 'P3RS', 'RS電圧'],
+  denatsuSt: ['電圧ST', 'P3(ST)', 'P3ST', 'ST電圧'],
+  denatsuRt: ['電圧RT', 'P3(RT)', 'P3RT', 'RT電圧'],
+  kensou: ['確認', '検相', 'P3確認', '検相確認'],
+  p3Worker: ['電圧測定者', 'P3測定者', 'P3作業者'],
+  p3ConfirmedAt: ['電圧測定日時', 'P3測定日時', 'P3日時'],
+  p3Remarks: ['備考3', 'P3備考', '電圧備考'],
+}
+
+/**
+ * ワークシートのヘッダー行から見出し文字を動的走査し、列番号マップを構築する
  */
 export function detectCircuitColumns(sheet: ExcelJS.Worksheet): {
   colMap: CircuitColumnMap
@@ -112,7 +142,14 @@ export function detectCircuitColumns(sheet: ExcelJS.Worksheet): {
   let bestHeaderMap = new Map<string, number>()
 
   const scanLimit = Math.min(sheet.rowCount || 10, 10)
-  const standardNames = new Set(Object.values(STANDARD_HEADER_NAMES))
+
+  // 全エイリアスの正規化セットを構築
+  const allAliases = new Set<string>()
+  for (const list of Object.values(HEADER_ALIASES)) {
+    for (const a of list) {
+      allAliases.add(normalizeHeaderName(a))
+    }
+  }
 
   for (let r = 1; r <= scanLimit; r++) {
     const row = sheet.getRow(r)
@@ -120,13 +157,12 @@ export function detectCircuitColumns(sheet: ExcelJS.Worksheet): {
     let matchCount = 0
 
     row.eachCell({ includeEmpty: false }, (cell, colNumber) => {
-      const name = cell.value != null ? String(cell.value).trim() : ''
+      const norm = normalizeHeaderName(cell.value)
+      if (!norm) return
 
-      if (!name) return
+      currentMap.set(norm, colNumber)
 
-      currentMap.set(name, colNumber)
-
-      if (standardNames.has(name)) {
+      if (allAliases.has(norm)) {
         matchCount++
       }
     })
@@ -138,14 +174,42 @@ export function detectCircuitColumns(sheet: ExcelJS.Worksheet): {
     }
   }
 
-  // 見出し名から直接列番号を決定（未検知項目はデフォルト列番号でフォールバック）
+  // 見出し名エイリアスから直接列番号を決定
   const colMap: CircuitColumnMap = { ...DEFAULT_CIRCUIT_COLUMN_MAP }
 
-  for (const [key, headerName] of Object.entries(STANDARD_HEADER_NAMES) as [keyof CircuitColumnMap, string][]) {
-    const colNumber = bestHeaderMap.get(headerName)
+  for (const [key, aliases] of Object.entries(HEADER_ALIASES) as [keyof CircuitColumnMap, string[]][]) {
+    let foundCol: number | undefined
+    for (const alias of aliases) {
+      const col = bestHeaderMap.get(normalizeHeaderName(alias))
+      if (col !== undefined) {
+        foundCol = col
+        break
+      }
+    }
 
-    if (colNumber !== undefined) {
-      colMap[key] = colNumber
+    if (foundCol !== undefined) {
+      colMap[key] = foundCol
+    }
+    else if (
+      key === 'p1Worker'
+      || key === 'p1ConfirmedAt'
+      || key === 'p1Remarks'
+      || key === 'zetsuenR'
+      || key === 'zetsuenS'
+      || key === 'zetsuenT'
+      || key === 'p2Worker'
+      || key === 'p2ConfirmedAt'
+      || key === 'p2Remarks'
+      || key === 'denatsuRs'
+      || key === 'denatsuSt'
+      || key === 'denatsuRt'
+      || key === 'kensou'
+      || key === 'p3Worker'
+      || key === 'p3ConfirmedAt'
+      || key === 'p3Remarks'
+    ) {
+      // 書き戻し対象項目は見出しが見つからない場合、意図しない列への書き込み防止のため undefined とする
+      colMap[key] = undefined
     }
   }
 
@@ -155,6 +219,56 @@ export function detectCircuitColumns(sheet: ExcelJS.Worksheet): {
     headerRowNumber: bestHeaderRow,
     dataStartRowNumber: bestHeaderRow + 1,
   }
+}
+
+/**
+ * ワークブックから回路リストが記載されたシートを特定する
+ */
+export function findCircuitSheet(workbook: ExcelJS.Workbook): ExcelJS.Worksheet {
+  const PREFERRED_NAMES = ['list', '回路リスト', '回路一覧', '台帳', 'circuits']
+
+  // 1. シート名による優先マッチング
+  for (const preferred of PREFERRED_NAMES) {
+    const found = workbook.worksheets.find((ws) => {
+      const norm = normalizeHeaderName(ws.name)
+      return norm === preferred || norm.includes(preferred)
+    })
+    if (found) return found
+  }
+
+  // 2. 最もヘッダー項目が合致するシートを探索
+  let bestSheet: ExcelJS.Worksheet | null = null
+  let maxHeaderCount = 0
+
+  for (const ws of workbook.worksheets) {
+    const { headerMap } = detectCircuitColumns(ws)
+    if (headerMap.size > maxHeaderCount) {
+      maxHeaderCount = headerMap.size
+      bestSheet = ws
+    }
+  }
+
+  if (bestSheet && maxHeaderCount >= 3) {
+    return bestSheet
+  }
+
+  // 3. データ行数が最も多いシート（Setting等の小型設定シートを避ける）
+  let longestSheet: ExcelJS.Worksheet | null = null
+  let maxRows = 0
+
+  for (const ws of workbook.worksheets) {
+    if (ws.rowCount > maxRows) {
+      maxRows = ws.rowCount
+      longestSheet = ws
+    }
+  }
+
+  const target = longestSheet || workbook.worksheets[0]
+  if (!target) {
+    throw new Error('ワークブックにシートが見つかりません')
+  }
+
+  return target
 }
 
 /**
@@ -170,3 +284,4 @@ export function makeCircuitKey(
 
   return `${norm(keiTo)}::${norm(banMeisho)}::${norm(kairoBangou)}::${norm(kairoMeisho)}`
 }
+
