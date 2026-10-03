@@ -3,19 +3,29 @@
  * Checkbox
  * チェックボックスコンポーネント。
  */
-import { computed } from 'vue'
+import { computed, useId } from 'vue'
 
 import type { CheckboxProps } from '~/types/components'
 
-const model = defineModel<unknown>()
+const model = defineModel<boolean | (string | number | boolean)[]>()
 
 const {
+  id,
   value,
   label,
   disabled = false,
+  error = false,
   variant = 'default',
   color,
+  title,
 } = defineProps<CheckboxProps>()
+
+const emit = defineEmits<{
+  change: [value: boolean | (string | number | boolean)[] | undefined]
+}>()
+
+const defaultId = useId()
+const checkboxId = computed(() => id || defaultId)
 
 const customStyle = computed(() => {
   if (color) {
@@ -34,15 +44,21 @@ const customStyle = computed(() => {
     class="relative inline-flex items-center gap-item-gap checkbox"
     :class="[
       `checkbox--${variant}`,
-      { 'is-disabled': disabled },
+      {
+        'is-disabled': disabled,
+        'is-error': error,
+      },
     ]"
     :style="customStyle"
+    :title="title"
   >
     <input
+      :id="checkboxId"
       v-model="model"
       type="checkbox"
       :value="value"
       :disabled="disabled"
+      @change="emit('change', model)"
     >
     <span class="grid shrink-0 place-items-center box">
       <Icon name="check" class="icon" />
@@ -57,12 +73,23 @@ const customStyle = computed(() => {
 <style scoped lang="scss">
 .checkbox {
   --control-checked-bg: var(--theme-accent);
+  --glow-color: var(--theme-accent, var(--color-category-main));
 
   font-size: inherit;
   color: var(--color-text-main);
   letter-spacing: var(--tracking-normal);
 
   @include state-interactive;
+  @include control-glow-tokens;
+
+  &.is-error {
+    --glow-color: var(--color-status-danger);
+    --control-checked-bg: var(--color-status-danger);
+
+    .box {
+      border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
+    }
+  }
 
   &:hover:not(.is-disabled) .box {
     border-color: var(--control-checked-bg);

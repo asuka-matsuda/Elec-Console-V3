@@ -30,14 +30,17 @@ const handleReset = () => {
   <div class="error-page">
     <div class="error-page__card">
       <div class="error-page__header">
-        <Logo />
+        <div class="error-page__logo flex shrink-0 items-center gap-item-gap">
+          <Icon name="gauge" class="error-page__logo-icon" />
+          <span>Elec-Console</span>
+        </div>
       </div>
 
       <div class="error-page__badge">
         <Icon
           :name="isNotFound ? 'compass' : 'triangle-alert'"
           size="lg"
-          :class="isNotFound ? 'u-text-primary' : 'u-text-danger'"
+          :class="isNotFound ? 'text-primary' : 'text-danger'"
         />
         <span class="error-page__code">{{ statusCode }}</span>
       </div>
@@ -112,6 +115,18 @@ const handleReset = () => {
 
   &__header {
     margin-bottom: var(--space-5);
+  }
+
+  &__logo {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    color: var(--color-text-main);
+    white-space: nowrap;
+  }
+
+  &__logo-icon {
+    color: var(--theme-accent);
   }
 
   &__badge {

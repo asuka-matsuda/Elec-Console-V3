@@ -28,6 +28,7 @@ const formData = ref<Record<string, string>>({
   userId: '',
   password: '',
 })
+const showPassword = ref(false)
 const errorMessage = ref('')
 const isLoading = ref(false)
 
@@ -59,8 +60,13 @@ const handleLogin = async () => {
 </script>
 
 <template>
-  <Panel class="w-full max-w-[480px] flex flex-col gap-form-row-gap">
-    <SectionHeader title="Elec-Console V3" />
+  <div class="panel w-full max-w-[480px] flex flex-col gap-form-row-gap">
+    <header>
+      <h2 class="text-center">
+        Elec-Console V3
+      </h2>
+    </header>
+    <hr class="divider">
 
     <form class="flex flex-col gap-form-row-gap" @submit.prevent="handleLogin">
       <Alert v-if="errorMessage" variant="danger">
@@ -68,14 +74,38 @@ const handleLogin = async () => {
       </Alert>
 
       <template v-for="field in LOGIN_FORM_FIELDS" :key="field.id">
-        <FormGroup :label="field.label">
+        <div class="flex flex-col gap-inline-gap">
+          <label :for="`login-${field.id}`" class="label">{{ field.label }}</label>
+          <div v-if="field.id === 'password'" class="relative flex items-center">
+            <Input
+              :id="`login-${field.id}`"
+              v-model="formData[field.id]"
+              :type="showPassword ? 'text' : 'password'"
+              :placeholder="field.placeholder"
+              :disabled="isLoading"
+              autocomplete="current-password"
+              class="password-input"
+            />
+            <button
+              type="button"
+              tabindex="-1"
+              class="password-toggle-btn"
+              :title="showPassword ? 'パスワードを非表示' : 'パスワードを表示'"
+              @click="showPassword = !showPassword"
+            >
+              <Icon :name="showPassword ? 'eye-off' : 'eye'" />
+            </button>
+          </div>
           <Input
+            v-else
+            :id="`login-${field.id}`"
             v-model="formData[field.id]"
             :type="field.type"
             :placeholder="field.placeholder"
             :disabled="isLoading"
+            autocomplete="username"
           />
-        </FormGroup>
+        </div>
       </template>
 
       <div class="flex items-center justify-center">
@@ -89,5 +119,39 @@ const handleLogin = async () => {
         </Button>
       </div>
     </form>
-  </Panel>
+  </div>
 </template>
+
+<style scoped lang="scss">
+.password-input {
+  padding-inline-end: 2.4em;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 0.75em;
+
+  display: grid;
+  place-items: center;
+
+  padding: 0.25em;
+  border: none;
+
+  color: var(--color-text-muted);
+
+  background: transparent;
+
+  transition: color var(--transition-fast);
+
+  @include state-interactive;
+
+  &:hover {
+    color: var(--color-text-main);
+  }
+
+  &:focus-visible {
+    outline: none;
+    color: var(--theme-accent);
+  }
+}
+</style>

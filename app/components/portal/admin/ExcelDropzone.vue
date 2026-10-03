@@ -62,9 +62,9 @@ const formatSize = (bytes: number) =>
       @change="onFileInput"
     >
     <Icon name="cloud-upload" size="lg" />
-    <div>
+    <span>
       <strong>クリックしてファイルを選択</strong> またはここにドラッグ＆ドロップ
-    </div>
+    </span>
     <small>対応形式: {{ accept }}</small>
   </label>
 

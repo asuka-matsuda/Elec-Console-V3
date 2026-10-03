@@ -74,6 +74,18 @@ describe('useBreadcrumbs', () => {
     expect(accent.value).toBe('management')
   })
 
+  it('タグ出力画面（/portal/:siteId/tag-print）で正しいパンくずが構築される', () => {
+    mockRoute.value = { path: '/portal/site-1/tag-print' }
+    const { items, accent } = useBreadcrumbs()
+
+    expect(items.value).toEqual([
+      { text: '現場管理' },
+      { text: '東京現場' },
+      { text: 'タグ出力' },
+    ])
+    expect(accent.value).toBe('management')
+  })
+
   it('未登録の現場IDの場合はIDがそのままフォールバック表示される', () => {
     mockRoute.value = { path: '/portal/unknown-site-99' }
     const { items, accent } = useBreadcrumbs()
@@ -103,6 +115,30 @@ describe('useBreadcrumbs', () => {
     expect(items.value).toEqual([
       { text: '現場管理' },
       { text: '現場ポータル' },
+    ])
+    expect(accent.value).toBe('management')
+  })
+
+  it('リモコン設定画面（/portal/:siteId/remote-control）で正しいパンくずが構築される', () => {
+    mockRoute.value = { path: '/portal/site-1/remote-control' }
+    const { items, accent } = useBreadcrumbs()
+
+    expect(items.value).toEqual([
+      { text: '現場管理' },
+      { text: '東京現場' },
+      { text: 'リモコン設定' },
+    ])
+    expect(accent.value).toBe('management')
+  })
+
+  it('テンプレートキー一覧画面（/portal/:siteId/template-keys）で正しいパンくずが構築される', () => {
+    mockRoute.value = { path: '/portal/site-1/template-keys' }
+    const { items, accent } = useBreadcrumbs()
+
+    expect(items.value).toEqual([
+      { text: '現場管理' },
+      { text: '東京現場' },
+      { text: 'テンプレートキー一覧' },
     ])
     expect(accent.value).toBe('management')
   })

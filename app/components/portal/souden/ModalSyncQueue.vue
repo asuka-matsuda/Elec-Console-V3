@@ -92,17 +92,13 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
           </div>
         </div>
 
-        <div
-          v-for="item in conflictItems"
-          :key="item.id"
-          class="flex flex-col gap-item-gap p-panel-pad-compact conflict-panel"
-        >
-          <div class="flex items-center gap-item-gap pb-item-gap panel-header">
+        <div v-for="item in conflictItems" :key="item.id" class="panel p-panel-pad-compact flex flex-col gap-item-gap conflict-panel">
+          <div class="flex items-center gap-item-gap panel-header">
             <span class="panel-ban">{{ item.banMeisho }}</span>
             <span class="flex-1 panel-kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
-            <Badge color="var(--color-status-warning)">
+            <span class="badge" :style="{ '--glow-color': 'var(--color-status-warning)' }">
               フェーズ{{ item.phase }}
-            </Badge>
+            </span>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-form-col-gap">
@@ -170,15 +166,15 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
           現場で実際に測定された正確な時刻（実打鍵タイムスタンプ）とともにサーバーへ反映します。
         </p>
 
-        <ul class="overflow-y-auto flex flex-col gap-inline-gap max-h-[220px] p-item-gap queue-list">
+        <ul class="overflow-y-auto flex flex-col gap-inline-gap max-h-[220px]">
           <li
             v-for="item in queue"
             :key="item.id"
             class="flex items-center gap-item-gap px-item-gap py-inline-gap queue-item"
           >
-            <Badge color="var(--color-category-tool)">
+            <span class="badge" :style="{ '--glow-color': 'var(--color-category-tool)' }">
               P{{ item.phase }}
-            </Badge>
+            </span>
             <span class="item-ban">{{ item.banMeisho }}</span>
             <span class="flex-1 item-kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
             <span class="item-time">{{ formatDateTime(item.clientConfirmedAt) }}</span>
@@ -201,11 +197,6 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
   font-size: var(--font-size-sm);
   line-height: var(--line-height-base);
   color: var(--color-text-muted);
-}
-
-.queue-list {
-  border: 1px solid var(--color-border);
-  background: var(--surface-bg-solid);
 }
 
 .queue-item {
@@ -237,9 +228,6 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
 }
 
 .conflict-panel {
-  border: 1px solid var(--color-border);
-  background: var(--surface-bg-elevated);
-
   .panel-header {
     border-bottom: 1px solid var(--color-border);
   }

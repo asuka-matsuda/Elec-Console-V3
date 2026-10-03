@@ -38,11 +38,12 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-1 flex-col gap-section-gap h-full min-h-0">
-    <SectionHeader
-      title="送電試験 操作ログ"
-      icon="history"
-    >
-      <template #actions>
+    <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
+      <h2 class="flex items-center gap-item-gap">
+        <Icon name="history" class="text-primary" />
+        <span>送電試験 操作ログ</span>
+      </h2>
+      <div class="flex items-center gap-item-gap">
         <Button
           icon="refresh-cw"
           :loading="isLoading"
@@ -57,10 +58,11 @@ onMounted(() => {
         >
           ダッシュボードへ戻る
         </Button>
-      </template>
-    </SectionHeader>
+      </div>
+    </header>
+    <hr class="divider">
 
-    <Panel padding="compact" class="flex flex-wrap items-center gap-panel-gap">
+    <div class="panel p-panel-pad-compact flex flex-wrap items-center gap-panel-gap">
       <div class="flex items-center gap-item-gap">
         <span class="shrink-0">作業者:</span>
         <Select v-model="selectedWorker" :options="workerOptions" class="min-w-[140px]" />
@@ -84,7 +86,7 @@ onMounted(() => {
       <span class="w-full md:w-auto md:ml-auto whitespace-nowrap">
         取得件数: <strong>{{ logs.length }}</strong> 件
       </span>
-    </Panel>
+    </div>
 
     <div class="flex flex-1 flex-col min-h-0">
       <Table
@@ -104,9 +106,9 @@ onMounted(() => {
         </template>
 
         <template #cell-action="{ value }">
-          <Badge :color="getActionBadgeColor(String(value))">
+          <span class="badge" :style="{ '--glow-color': getActionBadgeColor(String(value)) }">
             {{ value }}
-          </Badge>
+          </span>
         </template>
       </Table>
     </div>

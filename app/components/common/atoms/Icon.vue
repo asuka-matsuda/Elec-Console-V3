@@ -8,15 +8,17 @@ import { computed } from 'vue'
 import { ICONS } from '~/constants/icons'
 import type { IconProps } from '~/types/components'
 
-const props = withDefaults(defineProps<IconProps>(), {
-  spin: false,
-})
+const {
+  name,
+  size,
+  spin = false,
+} = defineProps<IconProps>()
 
 const iconComponent = computed(() => {
-  const component = ICONS[props.name]
+  const component = ICONS[name]
 
   if (!component && import.meta.dev) {
-    console.warn(`[Icon] Icon "${props.name}" is not registered in ~/constants/icons.ts`)
+    console.warn(`[Icon] Icon "${name}" is not registered in ~/constants/icons.ts`)
   }
 
   return component || null
@@ -29,8 +31,8 @@ const iconComponent = computed(() => {
     v-if="iconComponent"
     class="inline-block shrink-0 align-middle app-icon"
     :class="[
-      props.size && `is-${props.size}`,
-      { 'u-spin': props.spin },
+      size && `is-${size}`,
+      { 'u-spin': spin },
     ]"
   />
 </template>

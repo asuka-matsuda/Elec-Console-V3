@@ -6,7 +6,7 @@
 import 'katex/dist/katex.min.css'
 
 import type { MathStep } from '~/types/tools'
-import { renderMath } from '~/utils/math'
+import { parseLegend, renderMath } from '~/utils/math'
 
 defineProps<{
   steps?: MathStep[] | null
@@ -15,46 +15,57 @@ defineProps<{
 
 <template>
   <div v-if="steps?.length" class="flex flex-col gap-panel-gap">
-    <Panel
-      v-for="(step, index) in steps"
-      :key="index"
-      class="flex flex-col gap-panel-gap"
-    >
-      <SectionHeader v-if="step.title" :title="step.title" tag="h4" />
-      <div class="grid grid-cols-[1fr_auto] items-center gap-panel-gap">
+    <div v-for="(step, index) in steps" :key="index" class="panel flex flex-col gap-inline-gap">
+      <h4 v-if="step.title">
+        {{ step.title }}
+      </h4>
 
-        <div
-          class="math-expr min-w-0 overflow-x-auto"
-          v-html="renderMath(step.tex, true)"
-        />
+      <div
+        class="math-expr min-w-0 overflow-x-auto py-inline-gap"
+        v-html="renderMath(step.tex, true)"
+      />
 
-        <ToolMathLegend :items="step.legend" />
+      <div
+        v-if="step.legend && parseLegend(step.legend).length > 0"
+        class="math-legend flex flex-col gap-inline-gap pt-inline-gap"
+      >
+        <span class="legend-title">【凡例】</span>
+        <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-panel-gap gap-y-inline-gap">
+          <div
+            v-for="(v, i) in parseLegend(step.legend)"
+            :key="i"
+            class="flex items-baseline gap-item-gap min-w-0"
+          >
+            <dt class="whitespace-nowrap shrink-0" v-html="v.renderedSymbol" />
+            <dd class="min-w-0 break-words">{{ v.name }}</dd>
+          </div>
+        </dl>
       </div>
-    </Panel>
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 .math-expr {
-  :deep(.katex-display) {
-    margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-main);
+}
+
+.math-legend {
+  border-top: 1px dashed var(--color-border);
+  font-size: var(--font-size-2xs);
+
+  .legend-title {
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-secondary);
   }
 
-  :deep(.katex) {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-main);
+  dt {
+    color: var(--color-text-secondary);
+  }
 
-    .tex-status-success {
-      color: var(--color-status-success);
-    }
-
-    .tex-status-danger {
-      color: var(--color-status-danger);
-    }
-
-    .tex-color-accent {
-      color: var(--color-accent-main);
-    }
+  dd {
+    color: var(--color-text-muted);
   }
 }
 </style>

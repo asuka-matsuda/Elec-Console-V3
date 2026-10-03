@@ -3,37 +3,43 @@
  * Textarea
  * 複数行テキスト入力コンポーネント。
  */
-import { computed, inject, ref } from 'vue'
+import { computed, ref, useId } from 'vue'
 
-import { FORM_GROUP_KEY } from '~/constants/injectionKeys'
 import type { TextareaProps } from '~/types/components'
 
 const model = defineModel<string | null>()
 
-const props = withDefaults(
-  defineProps<TextareaProps>(),
-  {
-    rows: 4,
-    resize: 'vertical',
-    autoResize: false,
-    disabled: false,
-    readonly: false,
-    error: false,
-  },
-)
+const {
+  id,
+  name,
+  rows = 4,
+  resize = 'vertical',
+  autoResize = false,
+  placeholder,
+  disabled = false,
+  readonly = false,
+  error = false,
+  maxlength,
+  title,
+} = defineProps<TextareaProps>()
 
-const formGroup = inject(FORM_GROUP_KEY, null)
-const textareaId = computed(() => props.id || formGroup?.id.value)
-const isError = computed(() => props.error || (formGroup?.hasError.value ?? false))
+const emit = defineEmits<{
+  blur: [event: FocusEvent]
+  focus: [event: FocusEvent]
+  change: [event: Event]
+}>()
+
+const defaultId = useId()
+const textareaId = computed(() => id || defaultId)
 
 const textareaRef = ref<HTMLTextAreaElement | null>(null)
 
 const resizeClass = computed(() => {
-  if (props.autoResize) {
+  if (autoResize) {
     return 'resize-none'
   }
 
-  switch (props.resize) {
+  switch (resize) {
     case 'none':
       return 'resize-none'
     case 'horizontal':
@@ -63,21 +69,29 @@ defineExpose({
     :id="textareaId"
     ref="textareaRef"
     v-model="model"
+    :name="name"
     :rows="rows"
     :placeholder="placeholder"
     :disabled="disabled"
     :readonly="readonly"
+    :maxlength="maxlength"
+    :title="title"
     class="form-control relative z-[1] focus:z-[2] w-full"
     :class="[
-      { 'is-error': isError, 'is-auto-resize': autoResize },
+      { 'is-error': error, 'is-auto-resize': autoResize },
       resizeClass,
     ]"
+    @blur="emit('blur', $event)"
+    @focus="emit('focus', $event)"
+    @change="emit('change', $event)"
   />
 </template>
 
 <style scoped lang="scss">
 .form-control {
-  --glow-color: var(--theme-accent);
+  --glow-color: var(--theme-accent, var(--color-category-main));
+
+  @include control-glow-tokens;
 
   resize: vertical;
 

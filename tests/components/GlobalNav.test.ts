@@ -20,9 +20,8 @@ describe('GlobalNav.vue', () => {
     Button: {
       template: '<button class="close-btn" @click="$emit(\'click\')"><slot /></button>',
     },
-    SectionHeader: {
-      template: '<div class="section-header-stub">{{ title }}</div>',
-      props: ['title'],
+    Heading: {
+      template: '<h5><slot /></h5>',
     },
     Divider: true,
     Icon: true,

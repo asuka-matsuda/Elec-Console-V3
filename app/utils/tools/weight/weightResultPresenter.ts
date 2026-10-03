@@ -4,13 +4,13 @@
  * ドラム選定結果、最大巻取条長、および導出根拠をUI表示用ViewModelへ整形します。
  */
 
-import type { ResultDetailItem, ResultPanelStatus } from '~/types/components'
+import type { ResultDetailItem, ResultTileStatus } from '~/types/components'
 import type { WeightCalcResult } from '~/utils/tools/weight/weightCalcLogic'
 
 interface WeightResultViewModel {
   isError: boolean
   hasBestDrum: boolean
-  panelStatus: ResultPanelStatus
+  panelStatus: ResultTileStatus
   badgeText?: string
   displayDrum: string
   displayTotalWeight: string
@@ -32,7 +32,7 @@ export function formatWeightResult(
   const hasBestDrum = Boolean(result?.bestDrum)
   const isDrumNotFound = Boolean(result && !isNoInput && (!result.bestDrum || result.reason === 'drum_not_found'))
 
-  const panelStatus: ResultPanelStatus = isNoInput
+  const panelStatus: ResultTileStatus = isNoInput
     ? 'empty'
     : hasBestDrum
       ? 'success'

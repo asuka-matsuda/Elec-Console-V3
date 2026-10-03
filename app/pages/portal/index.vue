@@ -62,19 +62,25 @@ onMounted(async () => {
 </script>
 
 <template>
-  <Panel as="section" class="flex flex-col gap-panel-gap">
-    <SectionHeader title="現場ポータル" variant="hud">
-      <template v-if="isAdmin" #actions>
+  <div class="flex flex-col gap-section-gap">
+    <header class="flex items-center justify-between gap-item-gap">
+      <h2 class="flex items-center gap-item-gap">
+        <Icon name="folder" class="text-primary" />
+        <span>現場ポータル</span>
+      </h2>
+      <div v-if="isAdmin" class="flex items-center gap-item-gap">
         <Button to="/portal/admin">
           現場ポータル管理画面へ
         </Button>
-      </template>
-    </SectionHeader>
+      </div>
+    </header>
+
+    <hr class="divider">
 
     <EmptyState
       icon="folder"
       title="アサインされている現場がありません"
       description="管理者に現場へのアサインを依頼してください。"
     />
-  </Panel>
+  </div>
 </template>

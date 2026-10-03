@@ -3,23 +3,30 @@
  * Select
  * ドロップダウンセレクトボックスコンポーネント。
  */
-import { computed, inject, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref, useId } from 'vue'
 
-import { FORM_GROUP_KEY } from '~/constants/injectionKeys'
 import type { SelectOption, SelectProps } from '~/types/components'
 
 const model = defineModel<T | null>()
 
-const props = withDefaults(defineProps<SelectProps<T>>(), {
-  options: () => [],
-  placeholder: '',
-  disabled: false,
-  error: false,
-})
+const {
+  id,
+  name,
+  options = [],
+  placeholder = '',
+  disabled = false,
+  error = false,
+  title,
+} = defineProps<SelectProps<T>>()
 
-const formGroup = inject(FORM_GROUP_KEY, null)
-const selectId = computed(() => props.id || formGroup?.id.value)
-const isError = computed(() => props.error || (formGroup?.hasError.value ?? false))
+const emit = defineEmits<{
+  change: [value: T | null]
+  blur: [event: FocusEvent]
+  focus: [event: FocusEvent]
+}>()
+
+const defaultId = useId()
+const selectId = computed(() => id || defaultId)
 
 const triggerRef = ref<HTMLButtonElement | null>(null)
 const dropdownRef = ref<HTMLElement | null>(null)
@@ -33,6 +40,14 @@ const updatePosition = () => {
   if (!triggerRef.value || typeof window === 'undefined') return
 
   const rect = triggerRef.value.getBoundingClientRect()
+
+  // トリガーが画面外にスクロールアウトした場合は自動的に閉じる
+  if (isOpen.value && (rect.bottom < 0 || rect.top > window.innerHeight)) {
+    closeDropdown()
+
+    return
+  }
+
   const spaceBelow = window.innerHeight - rect.bottom
   const spaceAbove = rect.top
   const maxDropdownHeight = 220
@@ -51,7 +66,7 @@ const updatePosition = () => {
 }
 
 const toggleDropdown = () => {
-  if (props.disabled) return
+  if (disabled) return
 
   if (isOpen.value) {
     closeDropdown()
@@ -99,25 +114,28 @@ const onPopoverToggle = (e: Event) => {
 const selectOption = (option: SelectOption<T>) => {
   if (option.disabled) return
   model.value = option.value
+  emit('change', option.value)
   closeDropdown()
   triggerRef.value?.focus()
 }
 
-const handleResize = () => {
+const handleScrollOrResize = () => {
   if (isOpen.value) updatePosition()
 }
 
 onMounted(() => {
-  window.addEventListener('resize', handleResize, { passive: true })
+  window.addEventListener('resize', handleScrollOrResize, { passive: true })
+  window.addEventListener('scroll', handleScrollOrResize, { passive: true, capture: true })
 })
 
 onUnmounted(() => {
-  window.removeEventListener('resize', handleResize)
+  window.removeEventListener('resize', handleScrollOrResize)
+  window.removeEventListener('scroll', handleScrollOrResize, { capture: true })
 })
 
-const selectedOption = computed(() => props.options.find(opt => opt.value === model.value))
-const displayLabel = computed(() => selectedOption.value?.label || props.placeholder || '')
-const isPlaceholder = computed(() => !selectedOption.value && Boolean(props.placeholder))
+const selectedOption = computed(() => options.find(opt => opt.value === model.value))
+const displayLabel = computed(() => selectedOption.value?.label || placeholder || '')
+const isPlaceholder = computed(() => !selectedOption.value && Boolean(placeholder))
 
 defineExpose({
   isOpen,
@@ -130,21 +148,25 @@ defineExpose({
 <template>
   <div
     class="relative w-full min-w-0 custom-select"
-    :class="{ 'is-error': isError }"
+    :class="{ 'is-error': error }"
     :data-disabled="disabled"
   >
     <button
       :id="selectId"
       ref="triggerRef"
       type="button"
+      :name="name"
+      :title="title"
       class="relative z-[1] focus:z-[2] flex w-full items-center justify-between gap-item-gap custom-select__value"
       :class="{
         'is-placeholder': isPlaceholder,
         'is-open': isOpen,
-        'is-error': isError,
+        'is-error': error,
       }"
       :disabled="disabled"
       @click="toggleDropdown"
+      @blur="emit('blur', $event)"
+      @focus="emit('focus', $event)"
     >
       <span class="flex-1 text-left custom-select__label">{{ displayLabel }}</span>
 
@@ -196,7 +218,9 @@ defineExpose({
 }
 
 .custom-select__value {
-  --glow-color: var(--theme-accent);
+  --glow-color: var(--theme-accent, var(--color-category-main));
+
+  @include control-glow-tokens;
 
   min-height: calc(var(--control-height-ratio) * 1em);
   padding-block: 0.3em;

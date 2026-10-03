@@ -234,6 +234,7 @@ describe('circuitExcel newline preservation', () => {
       const sheet = wb.addWorksheet('List')
 
       const headerRow = sheet.getRow(1)
+
       headerRow.getCell(1).value = '盤名称'
       headerRow.getCell(2).value = '回路番号'
       headerRow.getCell(3).value = '接続確認者'
@@ -244,6 +245,7 @@ describe('circuitExcel newline preservation', () => {
       headerRow.getCell(8).value = '電圧測定日時'
 
       const { colMap } = detectCircuitColumns(sheet)
+
       expect(colMap.p1Worker).toBe(3)
       expect(colMap.p1ConfirmedAt).toBe(4)
       expect(colMap.p2Worker).toBe(5)
@@ -270,6 +272,7 @@ describe('circuitExcel newline preservation', () => {
       }
 
       const dataRow = sheet.getRow(2)
+
       applyCircuitToRow(dataRow, mockCircuit as Circuit, colMap)
 
       // P1
@@ -291,18 +294,20 @@ describe('circuitExcel newline preservation', () => {
     it('findCircuitSheet prioritizes List sheet over small Setting sheet', () => {
       const wb = new ExcelJS.Workbook()
       const settingSheet = wb.addWorksheet('Setting')
+
       for (let i = 1; i <= 38; i++) {
         settingSheet.addRow(['設定値', i])
       }
 
       const listSheet = wb.addWorksheet('List')
+
       for (let i = 1; i <= 800; i++) {
         listSheet.addRow(['回路', i])
       }
 
       const detected = findCircuitSheet(wb)
+
       expect(detected.name).toBe('List')
     })
   })
 })
-

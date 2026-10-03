@@ -124,18 +124,21 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       </h3>
 
       <div class="flex items-center gap-item-gap">
-        <RadioGroup
-          :model-value="currentView"
-          :options="VIEW_OPTIONS"
-          @update:model-value="val => val && handleViewChange(val)"
-        >
-          <template #option="{ option }">
-            <div class="flex items-center gap-inline-gap">
+        <div class="radio-group">
+          <button
+            v-for="option in VIEW_OPTIONS"
+            :key="option.value"
+            type="button"
+            class="radio-group-item"
+            :class="{ 'is-active': currentView === option.value }"
+            @click="handleViewChange(option.value)"
+          >
+            <span class="flex items-center gap-inline-gap">
               <Icon :name="VIEW_ICONS[option.value]" />
               <span>{{ option.label }}</span>
-            </div>
-          </template>
-        </RadioGroup>
+            </span>
+          </button>
+        </div>
 
         <Button icon="settings" @click="isTypeSettingsOpen = true">
           種別設定
@@ -143,9 +146,9 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       </div>
     </header>
 
-    <Panel padding="none" class="calendar-panel">
+    <div class="panel p-panel-pad-compact calendar-panel">
       <FullCalendar ref="fullCalendarRef" :options="calendarOptions" />
-    </Panel>
+    </div>
 
     <ModalCalendarEvent
       v-model="isModalOpen"
@@ -171,8 +174,6 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
   --fc-page-bg-color: transparent;
   --fc-neutral-bg-color: transparent;
   --fc-today-bg-color: color-mix(in srgb, var(--theme-accent) 10%, transparent);
-
-  padding: var(--space-2);
 
   :deep(.fc-theme-standard td),
   :deep(.fc-theme-standard th) {

@@ -15,7 +15,7 @@ module.exports = {
     'selector-pseudo-class-no-unknown': [
       true,
       {
-        ignorePseudoClasses: ['deep', 'global'],
+        ignorePseudoClasses: ['deep', 'global', 'slotted'],
       },
     ],
     // CSS変数の空行などの制限を緩める
@@ -53,7 +53,7 @@ module.exports = {
       {
         type: 'at-rule',
         name: 'include',
-        parameter: '^(flex|grid|inline-flex|text|font|click-enabled|reset)',
+        parameter: '^(control-glow|flex|grid|inline-flex|text|font|click-enabled|reset)',
       },
       'declarations',
       {
@@ -111,7 +111,7 @@ module.exports = {
             '/^[0-9.]+(px|rem)/',
           ],
         },
-        // 状態セレクタの手書きを禁止し、純粋な支援アクセシビリティセレクタ（aria-*, role）を禁止
+        // 状態セレクタの手書きを禁止し、純粋な支援アクセシビリティセレクタ（aria-*, role）および :deep を禁止
         'selector-disallowed-list': [
           [
             '/is-hover/',
@@ -119,9 +119,11 @@ module.exports = {
             '/&\\.is-(selected|current)\\b/',
             '/aria-/',
             '/role=/',
+            '/:deep\\(/',
+            '/::v-deep/',
           ],
           {
-            message: '純粋な支援アクセシビリティセレクタ（aria-*, role）および未許可の状態セレクタ（is-hover, is-selected, is-current, 素の active 等）は禁止されています。',
+            message: ':deep によるコンポーネントスタイルの打ち消し・上書き、純粋な支援アクセシビリティセレクタ（aria-*, role）、未許可の状態セレクタ（is-hover 等）は禁止されています。',
           },
         ],
         // レイアウト・配置・z-index関連プロパティのScoped CSS記述を禁止（Tailwind記述を強制）
@@ -230,6 +232,30 @@ module.exports = {
         'declaration-property-value-allowed-list': {
           'border-radius': ['0'],
         },
+      },
+    },
+    // -------------------------------------------------------------------------
+    // 【厳格規約】外部ライブラリ等の :deep 例外許可リスト
+    // ※ 外部パッケージ（FullCalendar, KaTeX）の描画要素や、スロット要素の装飾のみ登録。
+    // -------------------------------------------------------------------------
+    {
+      files: [
+        'app/components/portal/calendar/Calendar.client.vue',
+        'app/components/tool/MathBasis.vue',
+        'app/components/tool/MathLegend.vue',
+        'app/components/tool/ResultTile.vue',
+        'app/components/portal/exam/TableSoudenCircuit.vue',
+      ],
+      rules: {
+        'selector-disallowed-list': [
+          [
+            '/is-hover/',
+            '/&\\.(active|selected|open)\\b/',
+            '/&\\.is-(selected|current)\\b/',
+            '/aria-/',
+            '/role=/',
+          ],
+        ],
       },
     },
   ],

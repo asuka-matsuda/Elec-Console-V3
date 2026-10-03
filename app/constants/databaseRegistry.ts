@@ -9,12 +9,14 @@ import { cableData } from '~/constants/data/cableData'
 import { conduitData } from '~/constants/data/conduitData'
 import { drumData } from '~/constants/data/drumData'
 import { rackData } from '~/constants/data/rackData'
+import { terminalData, type TerminalItem } from '~/constants/data/terminalData'
 import { torqueDbData } from '~/constants/data/torqueData'
 import {
   CABLE_DB_COLUMNS,
   CONDUIT_DB_COLUMNS,
   DRUM_DB_COLUMNS,
   RACK_DB_COLUMNS,
+  TERMINAL_DB_COLUMNS,
   TORQUE_DB_COLUMNS,
   type TorqueDbItem,
 } from '~/constants/databaseConstants'
@@ -64,5 +66,13 @@ export const DATABASE_REGISTRY: Record<string, DatabaseConfig> = {
     columns: TORQUE_DB_COLUMNS,
     searchMapper: (item: TorqueDbItem) => `${item.category} ${item.size} ${item.note || ''} ${item.reference || ''}`,
     placeholder: '種類、サイズなどを検索... (例: M8)',
+  },
+  'terminal-db': {
+    title: '端子規格 (R形)',
+    data: terminalData,
+    columns: TERMINAL_DB_COLUMNS,
+    searchMapper: (item: TerminalItem) =>
+      `${item.name} ${item.category} ${item.stud} ${item.standard} ${item.wireRangeStranded}`,
+    placeholder: '品番、サイズ、ねじ径などを検索... (例: R5.5-5, M4, S4)',
   },
 }

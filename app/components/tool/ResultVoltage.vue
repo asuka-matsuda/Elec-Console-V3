@@ -15,57 +15,173 @@ const props = defineProps<{
 }>()
 
 const vm = computed(() => formatVoltageResult(props.inputs, props.result))
+
+const BADGE_COLOR_MAP: Record<string, string> = {
+  danger: 'var(--color-status-danger)',
+  warning: 'var(--color-status-warning)',
+  success: 'var(--color-status-success)',
+  neutral: 'var(--color-status-neutral)',
+  empty: 'var(--color-status-neutral)',
+}
 </script>
 
 <template>
-  <output
+  <div
     class="flex flex-1 flex-col min-h-0"
     :class="[size === 'sm' ? 'gap-item-gap is-sm' : 'gap-panel-gap']"
   >
-
-    <ResultTile
-      :title="vm.mainLabel"
-      :status="vm.mainStatus"
-      :badge="vm.mainBadgeText"
-      :size="size"
+    <div
+      class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0"
+      :class="[`is-${vm.mainStatus}`, size === 'sm' && 'is-sm']"
     >
-      <span>{{ vm.mainValue }}</span>
-      <small v-if="vm.mainUnit">{{ vm.mainUnit }}</small>
-    </ResultTile>
+      <header class="tile-header flex items-center justify-center gap-inline-gap">
+        <span>{{ vm.mainLabel }}</span>
+        <span v-if="vm.mainBadgeText" class="badge" :style="{ '--glow-color': BADGE_COLOR_MAP[vm.mainStatus] }">
+          {{ vm.mainBadgeText }}
+        </span>
+      </header>
+      <output class="tile-value flex items-center justify-center gap-item-gap">
+        <span>{{ vm.mainValue }}</span>
+        <span v-if="vm.mainUnit" class="value-unit">{{ vm.mainUnit }}</span>
+      </output>
+    </div>
 
-    <ResultTile
-      title="電流チェック (設計 / 許容)"
-      :status="vm.ampStatus"
-      :badge="vm.ampBadgeText"
-      size="sm"
+    <div
+      class="result-tile is-sm flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0"
+      :class="`is-${vm.ampStatus}`"
     >
-      <span v-if="vm.isAmpError">ERROR</span>
-      <template v-else>
-        <span>{{ vm.currentI }}</span>
-        <small>/</small>
-        <span>{{ vm.maxI }}</span>
-        <small>A</small>
-      </template>
-    </ResultTile>
+      <header class="tile-header flex items-center justify-center gap-inline-gap">
+        <span>電流チェック (設計 / 許容)</span>
+        <span v-if="vm.ampBadgeText" class="badge" :style="{ '--glow-color': BADGE_COLOR_MAP[vm.ampStatus] }">
+          {{ vm.ampBadgeText }}
+        </span>
+      </header>
+      <output class="tile-value flex items-center justify-center gap-item-gap">
+        <span v-if="vm.isAmpError">ERROR</span>
+        <template v-else>
+          <span>{{ vm.currentI }}</span>
+          <span class="value-sep">/</span>
+          <span>{{ vm.maxI }}</span>
+          <span class="value-unit">A</span>
+        </template>
+      </output>
+    </div>
 
-    <ResultTile
+    <div
       v-if="vm.mode === 'size'"
-      title="電圧降下"
-      :status="vm.dropStatus"
-      :badge="vm.dropBadgeText"
-      size="sm"
+      class="result-tile is-sm flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0"
+      :class="`is-${vm.dropStatus}`"
     >
-      <span v-if="vm.isDropError">ERROR</span>
-      <template v-else>
-        <span>{{ vm.dropV }}</span>
-        <small>V</small>
-        <small v-if="vm.dropPercentText">{{ vm.dropPercentText }}</small>
-      </template>
-    </ResultTile>
+      <header class="tile-header flex items-center justify-center gap-inline-gap">
+        <span>電圧降下</span>
+        <span v-if="vm.dropBadgeText" class="badge" :style="{ '--glow-color': BADGE_COLOR_MAP[vm.dropStatus] }">
+          {{ vm.dropBadgeText }}
+        </span>
+      </header>
+      <output class="tile-value flex items-center justify-center gap-item-gap">
+        <span v-if="vm.isDropError">ERROR</span>
+        <template v-else>
+          <span>{{ vm.dropV }}</span>
+          <span class="value-unit">V</span>
+          <span v-if="vm.dropPercentText" class="value-unit">{{ vm.dropPercentText }}</span>
+        </template>
+      </output>
+    </div>
 
-    <ToolResultDetails
-      v-if="vm.details"
-      :items="vm.details"
-    />
-  </output>
+    <dl v-if="vm.details?.length" class="flex flex-col gap-inline-gap w-full details-list">
+      <div
+        v-for="(item, i) in vm.details"
+        :key="i"
+        class="flex items-center justify-between"
+      >
+        <dt>{{ item.label }}</dt>
+        <dd class="flex items-center gap-inline-gap">
+          <span class="value">{{ item.value }}</span>
+          <span v-if="item.unit">{{ item.unit }}</span>
+          <span v-if="item.note">{{ item.note }}</span>
+        </dd>
+      </div>
+    </dl>
+  </div>
 </template>
+
+<style scoped lang="scss">
+.result-tile {
+  padding: var(--space-2) var(--space-3);
+  border: var(--border-width-base) solid var(--color-border);
+
+  background: var(--surface-bg);
+  box-shadow: var(--shadow-sink);
+
+  transition: var(--transition-panel);
+
+  &.is-sm {
+    padding: var(--space-1) var(--space-2);
+
+    .tile-value {
+      font-size: var(--font-size-2xl);
+    }
+  }
+
+  .tile-header {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-main);
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .tile-value {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--line-height-tight);
+    color: var(--color-text-main);
+
+    .value-unit,
+    .value-sep {
+      font-family: var(--font-base);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-normal);
+      color: var(--color-text-secondary);
+    }
+  }
+
+  &.is-success { --status-color: var(--color-status-success); }
+  &.is-warning { --status-color: var(--color-status-warning); }
+  &.is-danger  { --status-color: var(--color-status-danger); }
+
+  &.is-success,
+  &.is-warning,
+  &.is-danger {
+    border-color: color-mix(in srgb, var(--status-color) 40%, transparent);
+
+    .tile-value {
+      color: var(--status-color);
+    }
+  }
+
+  &.is-empty {
+    opacity: 0.6;
+
+    .tile-value {
+      color: var(--color-text-muted);
+    }
+  }
+}
+
+.details-list {
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-ui);
+  color: var(--color-text-muted);
+
+  dt {
+    font-weight: var(--font-weight-normal);
+  }
+
+  .value {
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-main);
+  }
+}
+</style>

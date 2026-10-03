@@ -4,6 +4,7 @@
  * パストラバーサル防止、制御文字・システムディレクトリへのアクセス制限および拡張子検証を提供します。
  */
 
+import fs from 'node:fs'
 import path from 'node:path'
 
 /**
@@ -69,4 +70,27 @@ export function validateSafeExcelPath(rawPath: string): string {
   }
 
   return normalized
+}
+
+/**
+ * 安全性を検証した上で、実在するExcelファイルパスを解決する。
+ * （.xlsx で登録されているが実体が .xlsm の場合、またはその逆の拡張子ブレを自動フォールバック）
+ */
+export function resolveExistingExcelPath(rawPath: string): string {
+  const safePath = validateSafeExcelPath(rawPath)
+
+  // そのまま実在すればそれを採用
+  if (fs.existsSync(safePath)) {
+    return safePath
+  }
+
+  const ext = path.extname(safePath).toLowerCase()
+  const altExt = ext === '.xlsx' ? '.xlsm' : '.xlsx'
+  const altPath = safePath.slice(0, -ext.length) + altExt
+
+  if (fs.existsSync(altPath)) {
+    return altPath
+  }
+
+  return safePath
 }

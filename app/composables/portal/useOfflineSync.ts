@@ -34,6 +34,7 @@ export function useOfflineSync(
   options?: UseOfflineSyncOptions,
 ) {
   const { $api } = useNuxtApp()
+  const { getAccurateNowIso } = useAuth()
   const currentSiteId = computed(() => typeof siteIdRef === 'string' ? siteIdRef : siteIdRef.value)
   const queue = useState<PendingSyncItem[]>(
     STATE_KEYS.OFFLINE_SYNC_QUEUE(currentSiteId.value),
@@ -42,6 +43,10 @@ export function useOfflineSync(
   const isSyncing = useState<boolean>(
     STATE_KEYS.OFFLINE_SYNC_SYNCING(currentSiteId.value),
     () => false,
+  )
+  const lastSyncedAt = useState<string | null>(
+    STATE_KEYS.OFFLINE_SYNC_LAST_SYNCED_AT(currentSiteId.value),
+    () => null,
   )
   const fetchFn = options?.fetcher || $api
 
@@ -221,6 +226,10 @@ export function useOfflineSync(
 
     isSyncing.value = false
 
+    if (result.successCount > 0) {
+      lastSyncedAt.value = getAccurateNowIso()
+    }
+
     return result
   }
 
@@ -232,6 +241,7 @@ export function useOfflineSync(
 
     if (resolution === 'discard') {
       await removeQueueItem(itemId)
+      lastSyncedAt.value = getAccurateNowIso()
 
       return
     }
@@ -260,6 +270,7 @@ export function useOfflineSync(
         })
 
         await removeQueueItem(itemId)
+        lastSyncedAt.value = getAccurateNowIso()
       }
       catch (err) {
         console.error('[OfflineSync] Overwrite failed', err)
@@ -309,6 +320,7 @@ export function useOfflineSync(
   return {
     queue,
     isSyncing,
+    lastSyncedAt,
     pendingCount,
     hasPending,
     conflictCount,

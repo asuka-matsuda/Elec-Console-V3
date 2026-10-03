@@ -4,10 +4,6 @@
  * ボタン、フォーム入力、モーダル、テーブルカラム等の共通 Props / Emits インターフェースを定義します。
  */
 
-import type { ComputedRef } from 'vue'
-
-import type { MenuItem } from '~/constants/data/menuData'
-import type { HelpId } from '~/constants/helpConstants'
 import type { IconName } from '~/constants/icons'
 
 // ============================================================================
@@ -55,10 +51,6 @@ export interface TableColumn<T = Record<string, unknown>> {
   emptyFallback?: string
   /** セルに適用する追加クラス */
   class?: string
-  /** 列幅自動計算用ウェイト（重み） */
-  flexWeight?: number
-  /** 固定幅フラグ（false の場合は自動伸縮対象） */
-  fixedWidth?: boolean
   /** 2段組セル等のサブキー */
   subKey?: string
   /** 表示値のカスタムフォーマッタ関数 */
@@ -84,16 +76,22 @@ export interface ButtonProps {
   disabled?: boolean
   loading?: boolean
   icon?: IconName
+  /** ホバーツールチップテキスト・アクセシビリティ用ラベル */
+  title?: string
 }
 
 // --- Checkbox ---
 export interface CheckboxProps {
+  /** HTML id属性 */
+  id?: string
   /** チェックボックスの値（配列 v-model 時に使用） */
   value?: unknown
   /** ラベルテキスト */
   label?: string
   /** 無効化フラグ */
   disabled?: boolean
+  /** エラー状態フラグ (デフォルト: false) */
+  error?: boolean
   /**
    * バリアント（未指定時は default = 選択用）
    * - default: 通常の選択・トグル（テーマアクセント色）
@@ -102,6 +100,8 @@ export interface CheckboxProps {
   variant?: 'default' | 'success'
   /** カテゴリカラー等のカスタム色指定 */
   color?: string
+  /** ホバーツールチップテキスト */
+  title?: string
 }
 
 // --- Icon ---
@@ -111,69 +111,6 @@ export interface IconProps {
   name: IconName
   size?: IconSize
   spin?: boolean
-}
-
-// --- Badge ---
-export interface BadgeProps {
-  /** バッジの発光色（CSS変数またはカラー値。未指定時は muted） */
-  color?: string
-}
-
-// --- Divider ---
-export type DividerType = 'fade-side' | 'fade-center' | 'solid'
-export type DividerOrientation = 'horizontal' | 'vertical'
-
-export interface DividerProps {
-  /** 線のスタイル種別（デフォルト: 'fade-side'） */
-  type?: DividerType
-  /** 線の向き（デフォルト: 'horizontal'） */
-  orientation?: DividerOrientation
-  /** 線の基調色（CSSカラー値またはCSS変数。未指定時は現在のカテゴリカラーが自動適用） */
-  color?: string
-}
-
-// --- Heading ---
-export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6 | '1' | '2' | '3' | '4' | '5' | '6' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
-export type HeadingSize = '3xl' | '2xl' | 'xl' | 'lg' | 'base'
-
-export interface HeadingProps {
-  /** 出力する見出しタグまたはレベル（1〜6 または h1〜h6。デフォルト: 2） */
-  level?: HeadingLevel
-  /** 出力する見出しタグ（level のエイリアス。h1〜h6 以外の div, p, span 等も可） */
-  tag?: HeadingLevel | string
-  /** 視覚サイズ（未指定時は level に応じて自動決定） */
-  size?: HeadingSize
-}
-
-// --- SectionHeader ---
-type HeadingTag = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
-type SectionHeaderVariant = 'main' | 'border' | 'hud'
-
-export interface SectionHeaderProps {
-  /** セクションのタイトル文字列（スロットでの指定も可能） */
-  title?: string
-  /** レンダリングする見出しタグ（h1〜h6。デフォルト: 'h2'） */
-  tag?: HeadingTag
-  /** 見出し左側に表示するアイコン名 */
-  icon?: IconName
-  /** 区切り線のスタイルバリアント（デフォルト: 'main'） */
-  variant?: SectionHeaderVariant
-}
-
-// --- Panel ---
-export type PanelPadding = 'normal' | 'compact' | 'none'
-
-export interface PanelProps {
-  /** 描画するHTML要素またはコンポーネント（デフォルト: 'div'） */
-  as?: string | object
-  /** 内側パディング（デフォルト: 'normal' = p-panel-pad, 'compact' = p-panel-pad-compact, 'none' = パディングなし） */
-  padding?: PanelPadding
-  /** 操作可能状態（ホバー・アクティブ演出） */
-  interactive?: boolean
-  /** アクティブ・選択状態（アクセントハイライト） */
-  active?: boolean
-  /** 無効状態（半透明・操作不可） */
-  disabled?: boolean
 }
 
 // --- Input ---
@@ -189,9 +126,21 @@ export type InputType
     | 'datetime-local'
     | 'time'
 
+export type InputMode
+  = 'none'
+    | 'text'
+    | 'decimal'
+    | 'numeric'
+    | 'tel'
+    | 'search'
+    | 'email'
+    | 'url'
+
 export interface InputProps {
   /** HTML id属性 */
   id?: string
+  /** フォーム名属性 */
+  name?: string
   /** 入力タイプ (デフォルト: 'text') */
   type?: InputType
   /** プレースホルダー */
@@ -202,6 +151,20 @@ export interface InputProps {
   readonly?: boolean
   /** エラー状態フラグ (デフォルト: false) */
   error?: boolean
+  /** 最小値（number / date / time 等） */
+  min?: number | string
+  /** 最大値（number / date / time 等） */
+  max?: number | string
+  /** ステップ刻み値（number / date / time 等） */
+  step?: number | string
+  /** 入力モード (仮想キーボード制御) */
+  inputmode?: InputMode
+  /** ブラウザ自動補完 */
+  autocomplete?: string
+  /** 最大文字数 */
+  maxlength?: number
+  /** ホバーツールチップテキスト・アクセシビリティ用ラベル */
+  title?: string
 }
 
 // --- Select ---
@@ -216,6 +179,10 @@ export interface SelectProps<T = string | number | boolean> {
   error?: boolean
   /** HTML id属性 */
   id?: string
+  /** フォーム名属性 */
+  name?: string
+  /** ホバーツールチップテキスト */
+  title?: string
 }
 
 // --- Textarea ---
@@ -224,6 +191,8 @@ export type TextareaResize = 'none' | 'vertical' | 'horizontal' | 'both'
 export interface TextareaProps {
   /** HTML id属性 */
   id?: string
+  /** フォーム名属性 */
+  name?: string
   /** 行数 (デフォルト: 4) */
   rows?: number
   /** リサイズ方向 (デフォルト: 'vertical') */
@@ -238,16 +207,10 @@ export interface TextareaProps {
   error?: boolean
   /** 入力内容に応じた高さ自動伸縮（オートリサイズ） (デフォルト: false) */
   autoResize?: boolean
-}
-
-// --- RadioGroup ---
-export interface RadioGroupProps<T = string | number | boolean> {
-  /** 選択肢一覧 */
-  options: RadioOption<T>[]
-  /** グループ全体の無効化 (デフォルト: false) */
-  disabled?: boolean
-  /** 幅いっぱいに均等配置（全幅モード、デフォルト: false） */
-  block?: boolean
+  /** 最大文字数 */
+  maxlength?: number
+  /** ホバーツールチップテキスト・アクセシビリティ用ラベル */
+  title?: string
 }
 
 // --- Table ---
@@ -257,28 +220,9 @@ export type TableSortOrder = 'asc' | 'desc' | null
 // 3. Molecules（複合コンポーネント）
 // ============================================================================
 
-// --- Tabs ---
-export interface TabsProps<T = string | number> {
-  /** タブ選択肢一覧 */
-  options: TabOption<T>[]
-  /** パネル領域のカスタムクラス */
-  panelClass?: string
-  /** タブ切り替え時にパネル状態をメモリ上に保持するかどうか */
-  keepAlive?: boolean
-}
-
-// --- ResultTile & ResultDetails ---
-export type ResultTileStatus = 'neutral' | 'success' | 'warning' | 'danger' | 'empty'
-export type ResultPanelStatus = ResultTileStatus
-
-export interface ResultTileProps {
-  title?: string
-  status?: ResultTileStatus
-  badge?: string
-  isEmpty?: boolean
-  size?: 'sm' | 'md'
-}
-export type ResultPanelProps = ResultTileProps
+// --- Calculation Status & Details ---
+export type ResultStatus = 'neutral' | 'success' | 'warning' | 'danger' | 'empty'
+export type ResultTileStatus = ResultStatus
 
 export interface ResultDetailItem {
   label: string
@@ -287,45 +231,12 @@ export interface ResultDetailItem {
   note?: string
 }
 
-// --- InfoList ---
-export interface InfoListItem {
-  id?: string | number
-  date: string
-  title: string
-}
-
-export interface InfoListProps<T extends InfoListItem = InfoListItem> {
-  items?: T[]
-  pending?: boolean
-  loadingText?: string
-  emptyText?: string
-}
-
-// --- MenuTile (Dashboard) ---
-export interface MenuTileProps {
-  /** メニューアイテムオブジェクト（タイトル・アイコン・リンク・無効状態・説明文） */
-  item: MenuItem
-}
-
-// --- KanaFilter (Reference) ---
-export interface KanaFilterProps {
-  availableRows?: Set<string>
-}
-
 // --- EmptyState ---
 export interface EmptyStateProps {
   icon?: IconName
   title?: string
   description?: string
   spin?: boolean
-}
-
-// --- HelpTip ---
-export interface HelpTipProps {
-  /** 規格ヘルプID（省略時は text のみ表示） */
-  helpId?: HelpId
-  /** 表示テキスト（省略時は helpId のデフォルト解説文） */
-  text?: string
 }
 
 // --- Table ---
@@ -354,13 +265,6 @@ export interface TableProps<T = Record<string, unknown>> {
   interactiveRow?: boolean
 }
 
-// --- Breadcrumb ---
-export interface BreadcrumbProps {
-  items?: BreadcrumbItem[]
-  separator?: string
-  showCursor?: boolean
-}
-
 // --- Alert ---
 export type AlertVariant = 'info' | 'success' | 'warning' | 'danger'
 
@@ -376,25 +280,8 @@ export interface AlertProps {
 // 4. Organisms（構造化コンポーネント）
 // ============================================================================
 
-export interface HeaderProps {
-  breadcrumbs?: BreadcrumbItem[]
-}
-
-export interface FooterProps {
-  year?: number | string
-  text?: string
-}
-
 export interface GlobalNavProps {
   menuData?: import('~/constants/data/menuData').MenuSection[]
-}
-
-export interface FilterPanelProps {
-  title?: string
-  tag?: HeadingTag
-  icon?: IconName
-  placeholder?: string
-  categoryOptions?: SelectOption<string>[]
 }
 
 export interface ModalProps {
@@ -402,39 +289,4 @@ export interface ModalProps {
   icon?: IconName
   align?: 'left' | 'center'
   closeText?: string
-}
-
-// ============================================================================
-// 5. Templates（画面レイアウトテンプレート）
-// ============================================================================
-
-export interface ToolCalculatorLayoutProps {
-  inputsTitle?: string
-  inputsIcon?: IconName
-  resultsTitle?: string
-  resultsIcon?: IconName
-  saveDisabled?: boolean
-  saveFunction?: () => Promise<void>
-  disclaimerText?: string
-  hideDisclaimer?: boolean
-}
-
-// ============================================================================
-// 6. フォーム共通コンテキスト（Form Context Injection & Props）
-// ============================================================================
-
-export interface FormGroupProps {
-  id?: string
-  label?: string
-  required?: boolean
-  error?: string
-  help?: string
-  helpId?: HelpId
-  /** 末尾に付与する単位テキスト */
-  addon?: string
-}
-
-export interface FormGroupContext {
-  id: ComputedRef<string>
-  hasError: ComputedRef<boolean>
 }

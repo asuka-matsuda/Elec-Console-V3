@@ -1,9 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import { computed } from 'vue'
 
 import Input from '../../app/components/common/atoms/Input.vue'
-import { FORM_GROUP_KEY } from '../../app/constants/injectionKeys'
 
 describe('Input.vue', () => {
   it('renders input with default props', () => {
@@ -54,21 +52,17 @@ describe('Input.vue', () => {
     expect(input.classes()).toContain('is-disabled')
   })
 
-  it('syncs id and error state with injected formGroup', () => {
+  it('correctly applies id and error props', () => {
     const wrapper = mount(Input, {
-      global: {
-        provide: {
-          [FORM_GROUP_KEY as symbol]: {
-            id: computed(() => 'form-input-id'),
-            hasError: computed(() => true),
-          },
-        },
+      props: {
+        id: 'custom-input-id',
+        error: true,
       },
     })
 
     const input = wrapper.find('input')
 
-    expect(input.attributes('id')).toBe('form-input-id')
+    expect(input.attributes('id')).toBe('custom-input-id')
     expect(input.classes()).toContain('is-error')
   })
 

@@ -34,6 +34,7 @@ interface ExportCircuitResult {
 function setCellDateTime(cell: ExcelJS.Cell, date: Date | string | null | undefined): void {
   if (!date) return
   const d = date instanceof Date ? date : new Date(date)
+
   if (isNaN(d.getTime())) return
   cell.value = d
   cell.numFmt = 'yyyy/m/d h:mm'

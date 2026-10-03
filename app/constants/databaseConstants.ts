@@ -8,6 +8,7 @@ import type { cableData } from '~/constants/data/cableData'
 import type { conduitData } from '~/constants/data/conduitData'
 import type { drumData } from '~/constants/data/drumData'
 import type { rackData } from '~/constants/data/rackData'
+import type { TerminalItem } from '~/constants/data/terminalData'
 import type { TableColumn } from '~/types/components'
 
 /**
@@ -100,4 +101,52 @@ export const TORQUE_DB_COLUMNS: TableColumn<TorqueDbItem>[] = [
   { key: 'range_nm', label: '許容範囲 (N・m)', sortable: true, align: 'right' },
   { key: 'note', label: '備考', sortable: true },
   { key: 'reference', label: '参考規格', sortable: true },
+]
+
+/**
+ * 裸圧着端子（R形）DBのテーブルカラム定義
+ */
+export const TERMINAL_DB_COLUMNS: TableColumn<TerminalItem>[] = [
+  { key: 'name', label: '品番・呼称', sortable: true },
+  { key: 'category', label: '公称断面積', sortable: true, align: 'center' },
+  { key: 'stud', label: 'ねじ径', sortable: true, align: 'center' },
+  {
+    key: 'holeDia',
+    label: '穴径 d2 (mm)',
+    sortable: true,
+    align: 'right',
+    format: (v: unknown) => `${Number(v).toFixed(1)} mm`,
+  },
+  {
+    key: 'widthB',
+    label: '舌部幅 B (mm)',
+    sortable: true,
+    align: 'right',
+    format: (v: unknown) => `${Number(v).toFixed(1)} mm`,
+  },
+  {
+    key: 'lengthL',
+    label: '全長 L (mm)',
+    sortable: true,
+    align: 'right',
+    format: (v: unknown) => `${Number(v).toFixed(1)} mm`,
+  },
+  {
+    key: 'innerDiaD1',
+    label: '内径 d1 (mm)',
+    sortable: true,
+    align: 'right',
+    format: (v: unknown) => `${Number(v).toFixed(1)} mm`,
+  },
+  {
+    key: 'wireRangeStranded',
+    label: '電線抱合範囲',
+    sortable: true,
+    align: 'center',
+    format: (_: unknown, row: TerminalItem) =>
+      row.wireRangeSolid
+        ? `${row.wireRangeStranded} mm² (単線 Φ${row.wireRangeSolid})`
+        : `${row.wireRangeStranded} mm²`,
+  },
+  { key: 'standard', label: '規格区分', sortable: true, align: 'center' },
 ]

@@ -17,14 +17,12 @@ describe('Modal.vue', () => {
     Panel: {
       template: '<div class="panel-stub"><slot /></div>',
     },
-    SectionHeader: {
-      props: ['title', 'icon', 'variant'],
-      template: `
-        <div class="section-header-stub">
-          <span>{{ title }}</span>
-          <div class="actions-stub"><slot name="actions" /></div>
-        </div>
-      `,
+    Heading: {
+      props: ['level'],
+      template: '<h3><slot /></h3>',
+    },
+    Divider: {
+      template: '<hr />',
     },
     Button: {
       props: ['variant', 'disabled', 'loading'],

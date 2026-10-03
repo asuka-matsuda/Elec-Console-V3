@@ -55,51 +55,114 @@ const columns: TableColumn<AnnouncementItem>[] = [
 </script>
 
 <template>
-  <MasterCrudLayout
-    v-model:is-modal-open="isEditModalOpen"
-    description="ダッシュボードの「お知らせ」ウィジェットに掲載される情報を管理します。"
-    create-button-text="新規お知らせ作成"
-    :columns="columns"
-    :data="announcements"
-    :loading="pending"
-    empty-text="登録されているお知らせはありません。"
-    :modal-title="editingId ? '編集' : '新規作成'"
-    modal-icon="bell"
-    :is-saving="isSaving"
-    :form-error="formError"
-    @create="openModal()"
-    @edit="openModal($event)"
-    @delete="handleDelete($event)"
-    @save="handleSave"
-  >
-    <FormGroup
-      label="日付"
-      required
-      :error="fieldErrors.date"
-    >
-      <Input
-        v-model="form.date"
-        type="date"
-      />
-    </FormGroup>
+  <section class="flex flex-col gap-panel-gap">
+    <header class="flex flex-wrap items-center justify-between gap-panel-gap">
+      <small>
+        ダッシュボードの「お知らせ」ウィジェットに掲載される情報を管理します。
+      </small>
 
-    <FormGroup
-      label="タイトル"
-      required
-      :error="fieldErrors.title"
-    >
-      <Input
-        v-model="form.title"
-        placeholder="例: システムメンテナンスのお知らせ"
-      />
-    </FormGroup>
+      <Button
+        variant="success"
+        icon="plus"
+        @click="openModal()"
+      >
+        新規お知らせ作成
+      </Button>
+    </header>
 
-    <FormGroup label="詳細本文">
-      <Textarea
-        v-model="form.desc"
-        :rows="5"
-        placeholder="詳細な説明や補足を入力してください（モーダルで表示されます）"
-      />
-    </FormGroup>
-  </MasterCrudLayout>
+    <Table
+      :columns="columns"
+      :data="announcements"
+      :loading="pending"
+      empty-text="登録されているお知らせはありません。"
+    >
+      <template #cell-actions="{ row }">
+        <div class="flex items-center justify-end gap-inline-gap">
+          <Button
+            icon="edit"
+            title="編集"
+            @click="openModal(row)"
+          />
+          <Button
+            variant="danger"
+            icon="trash-2"
+            title="削除"
+            @click="handleDelete(row)"
+          />
+        </div>
+      </template>
+    </Table>
+
+    <Modal
+      v-model="isEditModalOpen"
+      :title="editingId ? '編集' : '新規作成'"
+      icon="bell"
+    >
+      <template #actions>
+        <Button
+          :disabled="isSaving"
+          @click="isEditModalOpen = false"
+        >
+          キャンセル
+        </Button>
+        <Button
+          variant="success"
+          :loading="isSaving"
+          @click="handleSave"
+        >
+          保存する
+        </Button>
+      </template>
+
+      <form class="flex flex-col gap-form-row-gap" @submit.prevent="handleSave">
+        <Alert
+          v-if="formError"
+          variant="danger"
+        >
+          {{ formError }}
+        </Alert>
+
+        <div class="flex flex-col gap-inline-gap">
+          <label for="announcement-date" class="label">日付 <span class="req-mark">＊</span></label>
+          <Input
+            id="announcement-date"
+            v-model="form.date"
+            type="date"
+          />
+          <p v-if="fieldErrors.date" class="error-text">
+            {{ fieldErrors.date }}
+          </p>
+        </div>
+
+        <div class="flex flex-col gap-inline-gap">
+          <label for="announcement-title" class="label">タイトル <span class="req-mark">＊</span></label>
+          <Input
+            id="announcement-title"
+            v-model="form.title"
+            placeholder="例: システムメンテナンスのお知らせ"
+          />
+          <p v-if="fieldErrors.title" class="error-text">
+            {{ fieldErrors.title }}
+          </p>
+        </div>
+
+        <div class="flex flex-col gap-inline-gap">
+          <label for="announcement-desc" class="label">詳細本文</label>
+          <Textarea
+            id="announcement-desc"
+            v-model="form.desc"
+            :rows="5"
+            placeholder="詳細な説明や補足を入力してください（モーダルで表示されます）"
+          />
+        </div>
+      </form>
+    </Modal>
+  </section>
 </template>
+
+<style scoped lang="scss">
+.error-text {
+  font-size: var(--font-size-xs);
+  color: var(--color-status-danger);
+}
+</style>

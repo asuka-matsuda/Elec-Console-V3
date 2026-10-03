@@ -26,7 +26,7 @@ const resolvedIcon = computed<IconName>(() => props.icon || defaultIcons[props.v
 </script>
 
 <template>
-  <aside
+  <div
     class="alert flex items-start gap-item-gap p-panel-pad-compact"
     :class="`is-${variant}`"
   >
@@ -35,13 +35,13 @@ const resolvedIcon = computed<IconName>(() => props.icon || defaultIcons[props.v
       :spin="resolvedIcon === 'loader'"
       class="alert-icon mt-0.5"
     />
-    <div class="alert-content flex-1 min-w-0 flex flex-col gap-inline-gap">
+    <div class="flex-1 min-w-0 flex flex-col gap-inline-gap">
       <strong v-if="title" class="alert-title">{{ title }}</strong>
       <div v-if="text || $slots.default" class="alert-message break-words">
         <slot>{{ text }}</slot>
       </div>
     </div>
-  </aside>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -59,6 +59,19 @@ const resolvedIcon = computed<IconName>(() => props.icon || defaultIcons[props.v
 
   .alert-icon {
     color: var(--alert-color);
+  }
+
+  .alert-title {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    color: inherit;
+  }
+
+  .alert-message {
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-ui);
+    color: inherit;
   }
 
   &.is-info {

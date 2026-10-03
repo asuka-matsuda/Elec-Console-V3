@@ -57,22 +57,20 @@ watch(
     class="modal m-auto p-0 w-fit min-w-[min(92vw,380px)] max-w-[min(92vw,640px)] max-h-[90vh] overflow-visible open:flex open:flex-col"
     @cancel="onNativeCancel"
   >
-    <Panel class="modal-panel flex flex-1 flex-col gap-panel-gap min-h-0">
-      <SectionHeader
-        v-if="title"
-        :title="title"
-        :icon="icon"
-      >
-        <template #actions>
-          <slot name="actions">
-            <Button
-              @click="handleClose"
-            >
-              {{ closeText }}
-            </Button>
-          </slot>
-        </template>
-      </SectionHeader>
+    <div class="modal-window flex flex-1 flex-col gap-panel-gap min-h-0 p-panel-pad">
+      <header v-if="title" class="flex items-center justify-between gap-item-gap">
+        <h3 class="flex items-center gap-item-gap">
+          <Icon v-if="icon" :name="icon" class="text-accent" />
+          <span>{{ title }}</span>
+        </h3>
+
+        <slot name="actions">
+          <Button @click="handleClose">
+            {{ closeText }}
+          </Button>
+        </slot>
+      </header>
+      <hr v-if="title" class="divider">
 
       <div
         class="modal-body overflow-y-auto flex flex-1 flex-col gap-form-row-gap min-h-0"
@@ -80,7 +78,7 @@ watch(
       >
         <slot />
       </div>
-    </Panel>
+    </div>
   </dialog>
 </template>
 
@@ -139,7 +137,13 @@ watch(
   }
 }
 
-.modal-panel {
+.modal-window {
+  isolation: isolate;
+
+  border: var(--border-width-base) solid var(--color-border);
+
+  background-color: var(--surface-bg-elevated);
+  backdrop-filter: blur(var(--blur-sm));
   box-shadow: var(--shadow-modal);
 }
 

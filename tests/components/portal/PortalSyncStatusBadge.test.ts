@@ -67,12 +67,6 @@ describe('PortalSyncStatusBadge.vue', () => {
     // クリックでモーダルがマウントされる
     await wrapper.find('button.sync-btn').trigger('click')
     expect(wrapper.find('.sync-modal-stub').exists()).toBe(true)
-
-    // モーダルからの synced イベントをリレーする
-    const modalComponent = wrapper.findComponent({ name: 'PortalModalSyncQueue' })
-
-    modalComponent.vm.$emit('synced')
-    expect(wrapper.emitted('synced')).toHaveLength(1)
   })
 
   it('disables button and applies spinning icon when syncing', () => {

@@ -74,12 +74,15 @@ export async function importCircuitsFromExcel(
     if (typeof val === 'number') {
       const ms = (val - 25569) * 86400 * 1000
       const d = new Date(ms)
+
       if (!isNaN(d.getTime())) return d
     }
     if (typeof val === 'string' && val.trim()) {
       const d = new Date(val.trim())
+
       if (!isNaN(d.getTime())) return d
     }
+
     return null
   }
 

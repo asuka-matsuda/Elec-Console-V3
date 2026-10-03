@@ -108,13 +108,10 @@ onMounted(() => {
           '--section-accent': `var(--color-category-${section.accent || 'main'})`,
         }"
       >
-        <SectionHeader
-          v-if="section.globalNavHeading || section.heading"
-          :title="section.globalNavHeading || section.heading"
-          :icon="section.icon"
-          tag="h5"
-          class="px-item-gap"
-        />
+        <h5 v-if="section.globalNavHeading || section.heading" class="flex items-center gap-item-gap px-item-gap py-0.5 text-secondary">
+          <Icon v-if="section.icon" :name="section.icon" size="sm" class="text-accent" />
+          <span>{{ section.globalNavHeading || section.heading }}</span>
+        </h5>
 
         <ul class="flex flex-col gap-inline-gap">
           <li

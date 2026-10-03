@@ -184,13 +184,12 @@ const getCellDisplayValue = (row: T, col: TableColumn<T>): unknown => {
         <tr>
           <td
             :colspan="columns.length"
-            class="empty-cell py-section-gap text-center"
+            class="empty-cell text-center"
           >
             <slot name="empty">
               <EmptyState
                 icon="database"
                 :title="emptyText"
-                class="py-panel-pad"
               />
             </slot>
           </td>
@@ -322,8 +321,49 @@ td {
     }
   }
 
+  &.is-completed {
+    background-color: var(--color-completed-row-bg);
+  }
+
+  &.is-excluded {
+    opacity: 0.5;
+  }
+
+  &.is-locked {
+    opacity: 0.6;
+  }
+
+  &.is-highlighted {
+    background-color: var(--color-selection-bg);
+    outline: 2px solid var(--color-selection-outline);
+    animation: row-pulse-highlight 2.5s ease-out;
+  }
+
   &:last-child td {
     --table-cell-border-bottom: none;
+  }
+}
+
+th.col-actions,
+td.col-actions {
+  width: 1%;
+  white-space: nowrap;
+}
+
+@keyframes row-pulse-highlight {
+  0% {
+    outline-color: var(--color-status-success, #22c55e);
+    box-shadow: inset 0 0 0 2px var(--color-status-success, #22c55e), 0 0 14px rgb(34 197 94 / 45%);
+  }
+
+  50% {
+    outline-color: var(--color-selection-outline);
+    box-shadow: inset 0 0 0 1px var(--color-selection-outline);
+  }
+
+  100% {
+    outline-color: var(--color-selection-outline);
+    box-shadow: none;
   }
 }
 
@@ -333,6 +373,11 @@ td {
 
 .loading-text {
   font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.loading-cell,
+.empty-cell {
   color: var(--color-text-muted);
 }
 </style>

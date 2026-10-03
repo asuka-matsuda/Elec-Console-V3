@@ -17,55 +17,142 @@ const props = defineProps<{
 }>()
 
 const vm = computed(() => formatConduitResult(props.result))
+
+const BADGE_COLOR_MAP: Record<string, string> = {
+  danger: 'var(--color-status-danger)',
+  warning: 'var(--color-status-warning)',
+  success: 'var(--color-status-success)',
+  neutral: 'var(--color-status-neutral)',
+  empty: 'var(--color-status-neutral)',
+}
 </script>
 
 <template>
-  <output
+  <div
     class="flex flex-1 flex-col min-h-0"
     :class="[size === 'sm' ? 'gap-item-gap is-sm' : 'gap-panel-gap']"
   >
-
-    <ResultTile
-      :title="CONDUIT_UI_LABELS.TITLE_32"
-      :status="vm.status32"
-      :badge="vm.badge32"
-      :size="size"
+    <div
+      class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0"
+      :class="[`is-${vm.status32}`, size === 'sm' && 'is-sm']"
     >
-      <template #value>
+      <header class="tile-header flex items-center justify-center gap-inline-gap">
+        <span>{{ CONDUIT_UI_LABELS.TITLE_32 }}</span>
+        <span v-if="vm.badge32" class="badge" :style="{ '--glow-color': BADGE_COLOR_MAP[vm.status32] }">
+          {{ vm.badge32 }}
+        </span>
+      </header>
+      <output class="tile-value flex items-center justify-center gap-item-gap">
         <span>{{ vm.size32 }}</span>
-        <small v-if="vm.fillText32">{{ vm.fillText32 }}</small>
-      </template>
-    </ResultTile>
+        <span v-if="vm.fillText32" class="value-sub">{{ vm.fillText32 }}</span>
+      </output>
+    </div>
 
-    <ResultTile
-      :title="CONDUIT_UI_LABELS.TITLE_48"
-      :status="vm.status48"
-      :badge="vm.badge48"
-      :size="size"
+    <div
+      class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0"
+      :class="[`is-${vm.status48}`, size === 'sm' && 'is-sm']"
     >
-      <template #value>
+      <header class="tile-header flex items-center justify-center gap-inline-gap">
+        <span>{{ CONDUIT_UI_LABELS.TITLE_48 }}</span>
+        <span v-if="vm.badge48" class="badge" :style="{ '--glow-color': BADGE_COLOR_MAP[vm.status48] }">
+          {{ vm.badge48 }}
+        </span>
+      </header>
+      <output class="tile-value flex items-center justify-center gap-item-gap">
         <span>{{ vm.size48 }}</span>
-        <small v-if="vm.fillText48">{{ vm.fillText48 }}</small>
-      </template>
-    </ResultTile>
+        <span v-if="vm.fillText48" class="value-sub">{{ vm.fillText48 }}</span>
+      </output>
+    </div>
 
-    <ResultTile
-      :title="vm.titleCustom"
-      :status="vm.statusCustom"
-      :badge="vm.badgeCustom"
-      :size="size"
+    <div
+      class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0"
+      :class="[`is-${vm.statusCustom}`, size === 'sm' && 'is-sm']"
     >
-      <template #value>
+      <header class="tile-header flex items-center justify-center gap-inline-gap">
+        <span>{{ vm.titleCustom }}</span>
+        <span v-if="vm.badgeCustom" class="badge" :style="{ '--glow-color': BADGE_COLOR_MAP[vm.statusCustom] }">
+          {{ vm.badgeCustom }}
+        </span>
+      </header>
+      <output class="tile-value flex items-center justify-center gap-item-gap">
         <span>{{ vm.sizeCustom }}</span>
-        <small v-if="vm.fillTextCustom">{{ vm.fillTextCustom }}</small>
-      </template>
-    </ResultTile>
+        <span v-if="vm.fillTextCustom" class="value-sub">{{ vm.fillTextCustom }}</span>
+      </output>
+    </div>
 
-    <ToolResultDetails>
-      <ul class="flex flex-col gap-inline-gap">
-        <li>3110-6 (32%以下): 異なる太さの絶縁電線を同一管内に収める場合（原則）</li>
-        <li>3110-5 (48%以下): 同一太さで、かつ管の屈曲が少なく引き替えが容易な場合</li>
-      </ul>
-    </ToolResultDetails>
-  </output>
+    <ul class="flex flex-col gap-inline-gap conduit-notes">
+      <li>3110-6 (32%以下): 異なる太さの絶縁電線を同一管内に収める場合（原則）</li>
+      <li>3110-5 (48%以下): 同一太さで、かつ管の屈曲が少なく引き替えが容易な場合</li>
+    </ul>
+  </div>
 </template>
+
+<style scoped lang="scss">
+.result-tile {
+  padding: var(--space-2) var(--space-3);
+  border: var(--border-width-base) solid var(--color-border);
+
+  background: var(--surface-bg);
+  box-shadow: var(--shadow-sink);
+
+  transition: var(--transition-panel);
+
+  &.is-sm {
+    padding: var(--space-1) var(--space-2);
+
+    .tile-value {
+      font-size: var(--font-size-2xl);
+    }
+  }
+
+  .tile-header {
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-main);
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .tile-value {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--line-height-tight);
+    color: var(--color-text-main);
+
+    .value-sub {
+      font-family: var(--font-base);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-normal);
+      color: var(--color-text-secondary);
+    }
+  }
+
+  &.is-success { --status-color: var(--color-status-success); }
+  &.is-warning { --status-color: var(--color-status-warning); }
+  &.is-danger  { --status-color: var(--color-status-danger); }
+
+  &.is-success,
+  &.is-warning,
+  &.is-danger {
+    border-color: color-mix(in srgb, var(--status-color) 40%, transparent);
+
+    .tile-value {
+      color: var(--status-color);
+    }
+  }
+
+  &.is-empty {
+    opacity: 0.6;
+
+    .tile-value {
+      color: var(--color-text-muted);
+    }
+  }
+}
+
+.conduit-notes {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+</style>

@@ -80,42 +80,54 @@ const handleSave = () => {
     :title="isEditing ? '予定の編集' : '新しい予定'"
   >
     <div class="flex flex-col gap-form-row-gap">
-      <FormGroup
-        label="タイトル"
-        required
-        :error="hasTitleError ? 'タイトルを入力してください' : undefined"
-      >
+      <div class="flex flex-col gap-inline-gap">
+        <label for="calendar-event-title" class="label">
+          タイトル <span class="required-mark">*</span>
+        </label>
         <Input
+          id="calendar-event-title"
           v-model="form.title"
           placeholder="会議、送電試験など"
+          :error="hasTitleError"
           @update:model-value="hasTitleError = false"
         />
-      </FormGroup>
+        <p v-if="hasTitleError" class="error-text">
+          タイトルを入力してください
+        </p>
+      </div>
 
-      <FormGroup label="予定種別">
+      <div class="flex flex-col gap-inline-gap">
+        <label for="calendar-event-type" class="label">予定種別</label>
         <Select
+          id="calendar-event-type"
           v-model="form.type"
           :options="typeOptions"
         />
-      </FormGroup>
+      </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-form-col-gap">
-        <FormGroup label="開始日時" required>
+        <div class="flex flex-col gap-inline-gap">
+          <label for="calendar-event-start" class="label">
+            開始日時 <span class="required-mark">*</span>
+          </label>
           <Input
+            id="calendar-event-start"
             :key="'start-' + form.allDay"
             v-model="form.start"
             :type="form.allDay ? 'date' : 'datetime-local'"
             required
             @change="handleStartChange"
           />
-        </FormGroup>
-        <FormGroup label="終了日時">
+        </div>
+        <div class="flex flex-col gap-inline-gap">
+          <label for="calendar-event-end" class="label">終了日時</label>
           <Input
+            id="calendar-event-end"
             :key="'end-' + form.allDay"
             v-model="form.end"
             :type="form.allDay ? 'date' : 'datetime-local'"
           />
-        </FormGroup>
+        </div>
       </div>
 
       <Checkbox
@@ -145,3 +157,11 @@ const handleSave = () => {
     </template>
   </Modal>
 </template>
+
+<style scoped lang="scss">
+.error-text {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-status-danger);
+}
+</style>

@@ -11,10 +11,6 @@ const props = defineProps<{
   siteId: string
 }>()
 
-const emit = defineEmits<{
-  (e: 'synced'): void
-}>()
-
 const {
   pendingCount,
   hasPending,
@@ -55,7 +51,6 @@ const isModalOpen = ref(false)
       v-if="isModalOpen"
       v-model="isModalOpen"
       :site-id="siteId"
-      @synced="emit('synced')"
     />
   </div>
 </template>

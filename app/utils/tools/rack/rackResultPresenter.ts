@@ -4,7 +4,7 @@
  * ラック幅計算結果、敷設段数比較、および数式ステップをUI表示用ViewModelへ整形します。
  */
 
-import type { ResultDetailItem, ResultPanelStatus } from '~/types/components'
+import type { ResultDetailItem, ResultTileStatus } from '~/types/components'
 import type { RackCalcResult, RackTierResult } from '~/utils/tools/rack/rackCalcLogic'
 import { getToolError } from '~/utils/tools/toolError'
 
@@ -13,7 +13,7 @@ interface RackTierPanelViewModel {
   title: string
   badgeText?: string
   displaySize: string
-  panelStatus: ResultPanelStatus
+  panelStatus: ResultTileStatus
   totalWidth: string
   maxHeight: string
   isOverflow: boolean

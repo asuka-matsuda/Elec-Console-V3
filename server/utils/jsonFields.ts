@@ -255,3 +255,50 @@ export function serializeNoBreakWords(val: unknown): string | null {
 
   return null
 }
+
+/**
+ * リモコン設定（SiteSettings.remoteControlConfig）の安全なパース
+ */
+export function parseRemoteControlConfig(raw?: string | null): {
+  assignments: Record<string, { groups: number[], patterns: string[], relayNumber?: string }>
+  groupRemarks?: Record<string, string>
+  patternRemarks?: Record<string, string>
+} {
+  const defaultVal = { assignments: {}, groupRemarks: {}, patternRemarks: {} }
+
+  if (!raw || typeof raw !== 'string') {
+    return defaultVal
+  }
+
+  try {
+    const parsed = JSON.parse(raw)
+
+    if (parsed && typeof parsed === 'object') {
+      return {
+        assignments: parsed.assignments && typeof parsed.assignments === 'object' ? parsed.assignments : {},
+        groupRemarks: parsed.groupRemarks && typeof parsed.groupRemarks === 'object' ? parsed.groupRemarks : {},
+        patternRemarks: parsed.patternRemarks && typeof parsed.patternRemarks === 'object' ? parsed.patternRemarks : {},
+      }
+    }
+
+    return defaultVal
+  }
+  catch {
+    return defaultVal
+  }
+}
+
+/**
+ * リモコン設定の安全なシリアライズ
+ */
+export function serializeRemoteControlConfig(val: unknown): string | null {
+  if (!val || typeof val !== 'object') {
+    return null
+  }
+  try {
+    return JSON.stringify(val)
+  }
+  catch {
+    return null
+  }
+}

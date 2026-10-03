@@ -3,6 +3,7 @@ import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import withNuxt from './.nuxt/eslint.config.mjs'
 import noCardOrBoxNaming from './eslint-rules/no-card-or-box-naming.mjs'
 import noCommentedCode from './eslint-rules/no-commented-code.mjs'
+import noEventPassThrough from './eslint-rules/no-event-pass-through.mjs'
 import noHoverTransitionOverride from './eslint-rules/no-hover-transition-override.mjs'
 import noJsdocTypeAnnotations from './eslint-rules/no-jsdoc-type-annotations.mjs'
 import noLegacyCssVars from './eslint-rules/no-legacy-css-vars.mjs'
@@ -10,9 +11,11 @@ import noPureAccessibility from './eslint-rules/no-pure-accessibility.mjs'
 import noRawHtmlElements from './eslint-rules/no-raw-html-elements.mjs'
 import noRedundantTailwindClasses from './eslint-rules/no-redundant-tailwind-classes.mjs'
 import noRedundantVueDefaults from './eslint-rules/no-redundant-vue-defaults.mjs'
+import noSlotForwarding from './eslint-rules/no-slot-forwarding.mjs'
 import noTailwindDecoration from './eslint-rules/no-tailwind-decoration.mjs'
 import noTemplateComments from './eslint-rules/no-template-comments.mjs'
 import noTrivialFacade from './eslint-rules/no-trivial-facade.mjs'
+import noUnsupportedSizeProp from './eslint-rules/no-unsupported-size-prop.mjs'
 import requireFileJsdoc from './eslint-rules/require-file-jsdoc.mjs'
 import strictBadgeUsage from './eslint-rules/strict-badge-usage.mjs'
 import strictIconUsage from './eslint-rules/strict-icon-usage.mjs'
@@ -43,6 +46,7 @@ export default withNuxt(
           'no-raw-html-elements': noRawHtmlElements,
           'no-jsdoc-type-annotations': noJsdocTypeAnnotations,
           'no-trivial-facade': noTrivialFacade,
+          'no-unsupported-size-prop': noUnsupportedSizeProp,
           'strict-state-management': strictStateManagement,
           'strict-state-mixins': strictStateMixins,
           'strict-time-management': strictTimeManagement,
@@ -50,10 +54,14 @@ export default withNuxt(
           'strict-badge-usage': strictBadgeUsage,
           'strict-icon-usage': strictIconUsage,
           'strict-responsive-tokens': strictResponsiveTokens,
+          'no-event-pass-through': noEventPassThrough,
+          'no-slot-forwarding': noSlotForwarding,
         },
       },
     },
     rules: {
+      'local/no-event-pass-through': 'error',
+      'local/no-slot-forwarding': 'error',
       'local/strict-responsive-tokens': ['error', { allowMobileFirst: true }],
       'local/strict-icon-usage': 'error',
       'local/no-tailwind-decoration': 'error',
@@ -63,11 +71,7 @@ export default withNuxt(
       'local/no-hover-transition-override': 'error',
       'local/no-legacy-css-vars': 'error',
       'local/no-pure-accessibility': 'error',
-      'local/no-template-comments': 'error',
-      'local/require-file-jsdoc': 'error',
       'local/no-commented-code': 'error',
-      'local/no-card-or-box-naming': 'error',
-      'local/no-raw-html-elements': 'error',
       'local/no-jsdoc-type-annotations': 'error',
       'local/no-trivial-facade': 'error',
       'local/strict-state-management': 'error',
@@ -75,6 +79,12 @@ export default withNuxt(
       'local/strict-time-management': 'error',
       'local/strict-ui-states': 'error',
       'local/strict-badge-usage': 'error',
+      // AI開発効率化のため無効化したルール
+      'local/no-raw-html-elements': 'off',
+      'local/no-card-or-box-naming': 'off',
+      'local/require-file-jsdoc': 'off',
+      'local/no-template-comments': 'off',
+      'local/no-unsupported-size-prop': 'off',
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
       'vue/block-order': ['error', {

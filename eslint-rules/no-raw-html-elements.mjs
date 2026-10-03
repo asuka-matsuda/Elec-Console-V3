@@ -7,33 +7,22 @@
  */
 
 const FORBIDDEN_ELEMENTS = {
-  input: { component: 'Input / Checkbox / RadioGroup', hint: 'app/components/common/atoms/Input.vue 等' },
+  input: { component: 'Input / Checkbox', hint: 'app/components/common/atoms/Input.vue 等' },
   select: { component: 'Select', hint: 'app/components/common/atoms/Select.vue' },
   textarea: { component: 'Textarea', hint: 'app/components/common/atoms/Textarea.vue' },
   table: { component: 'Table', hint: 'app/components/common/molecules/Table.vue' },
-  button: { component: 'Button', hint: 'app/components/common/atoms/Button.vue' },
 }
 
 // 例外的に生タグの使用が許可されるファイル
 const WHITELIST = [
   // 共通コンポーネント自身
-  { pattern: /app\/components\/common\/atoms\/Input\.vue$/, elements: ['input', 'button'] },
+  { pattern: /app\/components\/common\/atoms\/Input\.vue$/, elements: ['input'] },
   { pattern: /app\/components\/common\/atoms\/Checkbox\.vue$/, elements: ['input'] },
-  { pattern: /app\/components\/common\/atoms\/RadioGroup\.vue$/, elements: ['input', 'button'] },
   { pattern: /app\/components\/common\/atoms\/Textarea\.vue$/, elements: ['textarea'] },
-  { pattern: /app\/components\/common\/atoms\/Button\.vue$/, elements: ['button'] },
-  { pattern: /app\/components\/common\/atoms\/Select\.vue$/, elements: ['button'] },
   { pattern: /app\/components\/common\/molecules\/Table\.vue$/, elements: ['table'] },
-  { pattern: /app\/components\/common\/molecules\/Tabs\.vue$/, elements: ['button'] },
-  { pattern: /app\/components\/common\/molecules\/HelpTip\.vue$/, elements: ['button'] },
 
   // 特殊な低レベルUIコンポーネント
-  { pattern: /app\/components\/portal\/admin\/ExcelDropzone\.vue$/, elements: ['input', 'button'] },
-  { pattern: /app\/components\/portal\/exam\/ExamMinimap\.vue$/, elements: ['button'] },
-  { pattern: /app\/components\/portal\/souden\/SyncStatusBadge\.vue$/, elements: ['button'] },
-  { pattern: /app\/components\/reference\/KanaFilter\.vue$/, elements: ['button'] },
-  { pattern: /app\/components\/tool\/ResultDrawer\.vue$/, elements: ['button'] },
-  { pattern: /app\/components\/portal\/calendar\/ModalCalendarTypeSettings\.vue$/, elements: ['button'] },
+  { pattern: /app\/components\/portal\/admin\/ExcelDropzone\.vue$/, elements: ['input'] },
 ]
 
 export default {

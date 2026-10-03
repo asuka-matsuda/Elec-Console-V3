@@ -16,6 +16,7 @@ const {
   disabled = false,
   loading = false,
   icon,
+  title,
 } = defineProps<ButtonProps>()
 
 const isLink = computed(() => Boolean(to) && !disabled && !loading)
@@ -27,6 +28,7 @@ const isLink = computed(() => Boolean(to) && !disabled && !loading)
     :to="isLink ? to : undefined"
     :type="isLink ? undefined : type"
     :disabled="!isLink && (disabled || loading)"
+    :title="title"
     class="relative inline-flex shrink-0 items-center justify-center btn"
     :class="[
       `btn--${variant}`,
@@ -36,10 +38,7 @@ const isLink = computed(() => Boolean(to) && !disabled && !loading)
       },
     ]"
   >
-    <span
-      class="inline-flex items-center justify-center gap-inline-gap"
-      :class="{ 'opacity-0': loading }"
-    >
+    <span class="inline-flex items-center justify-center gap-inline-gap btn-content">
       <Icon v-if="icon" :name="icon" />
       <slot />
     </span>
@@ -64,18 +63,7 @@ const isLink = computed(() => Boolean(to) && !disabled && !loading)
   --btn-text: var(--btn-default-text);
   --glow-color: var(--btn-default-border-hover);
 
-  --shadow-glow-hover:
-    0 0 0 1px color-mix(in srgb, var(--glow-color) 45%, transparent),
-    0 2px 10px color-mix(in srgb, var(--glow-color) 16%, transparent),
-    var(--shadow-elevation-sm);
-  --shadow-glow-focus:
-    0 0 0 1px color-mix(in srgb, var(--glow-color) 70%, transparent),
-    0 0 0 3px color-mix(in srgb, var(--glow-color) 25%, transparent),
-    0 2px 12px color-mix(in srgb, var(--glow-color) 20%, transparent);
-  --shadow-glow-active:
-    0 0 0 1px color-mix(in srgb, var(--glow-color) 60%, transparent),
-    inset 0 1px 2px color-mix(in srgb, black 30%, transparent),
-    var(--shadow-elevation-sm);
+  @include control-glow-tokens;
 
   min-height: calc(var(--control-height-ratio) * 1em);
   padding: 0.3em 1.1em;
@@ -138,6 +126,14 @@ const isLink = computed(() => Boolean(to) && !disabled && !loading)
   &--icon {
     aspect-ratio: 1;
     padding: 0;
+  }
+
+  .btn-content {
+    transition: opacity var(--duration-fast) var(--ease-base);
+  }
+
+  &.is-loading .btn-content {
+    opacity: 0;
   }
 
   @include state-loading;

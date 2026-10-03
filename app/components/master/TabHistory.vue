@@ -76,87 +76,144 @@ const columns: TableColumn<HistoryItem>[] = [
 </script>
 
 <template>
-  <MasterCrudLayout
-    v-model:is-modal-open="isEditModalOpen"
-    description="ダッシュボードの「更新履歴」ウィジェットに掲載されるバージョン情報を管理します。"
-    create-button-text="新規更新履歴作成"
-    :columns="columns"
-    :data="historyList"
-    :loading="pending"
-    empty-text="登録されている更新履歴はありません。"
-    :modal-title="editingId ? '編集' : '新規作成'"
-    modal-icon="clock"
-    :is-saving="isSaving"
-    :form-error="formError"
-    @create="openModal()"
-    @edit="openModal($event)"
-    @delete="handleDelete($event)"
-    @save="handleSave"
-  >
-    <template #cell-version="{ row }">
-      <small class="version-text">
-        {{ row.version }}
+  <section class="flex flex-col gap-panel-gap">
+    <header class="flex flex-wrap items-center justify-between gap-panel-gap">
+      <small>
+        ダッシュボードの「更新履歴」ウィジェットに掲載されるバージョン情報を管理します。
       </small>
-    </template>
 
-    <template #cell-toolId="{ row }">
-      <span class="tool-name">
-        {{ (row.toolId && toolMap.get(row.toolId)?.text) || 'システム全体' }}
-      </span>
-    </template>
-
-    <FormGroup
-      label="対象機能・ツール"
-    >
-      <Select
-        v-model="form.toolId"
-        :options="toolOptions"
-      />
-    </FormGroup>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-form-row-gap">
-      <FormGroup
-        label="バージョン"
-        required
-        :error="fieldErrors.version"
+      <Button
+        variant="success"
+        icon="plus"
+        @click="openModal()"
       >
-        <Input
-          v-model="form.version"
-          placeholder="例: v2.1.0"
-        />
-      </FormGroup>
+        新規更新履歴作成
+      </Button>
+    </header>
 
-      <FormGroup
-        label="日付"
-        required
-        :error="fieldErrors.date"
-      >
-        <Input
-          v-model="form.date"
-          type="date"
-        />
-      </FormGroup>
-    </div>
-
-    <FormGroup
-      label="タイトル"
-      required
-      :error="fieldErrors.title"
+    <Table
+      :columns="columns"
+      :data="historyList"
+      :loading="pending"
+      empty-text="登録されている更新履歴はありません。"
     >
-      <Input
-        v-model="form.title"
-        placeholder="例: 新機能追加"
-      />
-    </FormGroup>
+      <template #cell-version="{ row }">
+        <small class="version-text">
+          {{ row.version }}
+        </small>
+      </template>
 
-    <FormGroup label="詳細本文">
-      <Textarea
-        v-model="form.desc"
-        :rows="5"
-        placeholder="詳細な更新内容や変更点を入力してください（モーダルで表示されます）"
-      />
-    </FormGroup>
-  </MasterCrudLayout>
+      <template #cell-toolId="{ row }">
+        <span class="tool-name">
+          {{ (row.toolId && toolMap.get(row.toolId)?.text) || 'システム全体' }}
+        </span>
+      </template>
+
+      <template #cell-actions="{ row }">
+        <div class="flex items-center justify-end gap-inline-gap">
+          <Button
+            icon="edit"
+            title="編集"
+            @click="openModal(row)"
+          />
+          <Button
+            variant="danger"
+            icon="trash-2"
+            title="削除"
+            @click="handleDelete(row)"
+          />
+        </div>
+      </template>
+    </Table>
+
+    <Modal
+      v-model="isEditModalOpen"
+      :title="editingId ? '編集' : '新規作成'"
+      icon="clock"
+    >
+      <template #actions>
+        <Button
+          :disabled="isSaving"
+          @click="isEditModalOpen = false"
+        >
+          キャンセル
+        </Button>
+        <Button
+          variant="success"
+          :loading="isSaving"
+          @click="handleSave"
+        >
+          保存する
+        </Button>
+      </template>
+
+      <form class="flex flex-col gap-form-row-gap" @submit.prevent="handleSave">
+        <Alert
+          v-if="formError"
+          variant="danger"
+        >
+          {{ formError }}
+        </Alert>
+
+        <div class="flex flex-col gap-inline-gap">
+          <label for="history-tool" class="label">対象機能・ツール</label>
+          <Select
+            id="history-tool"
+            v-model="form.toolId"
+            :options="toolOptions"
+          />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-form-row-gap">
+          <div class="flex flex-col gap-inline-gap">
+            <label for="history-version" class="label">バージョン <span class="req-mark">＊</span></label>
+            <Input
+              id="history-version"
+              v-model="form.version"
+              placeholder="例: v2.1.0"
+            />
+            <p v-if="fieldErrors.version" class="error-text">
+              {{ fieldErrors.version }}
+            </p>
+          </div>
+
+          <div class="flex flex-col gap-inline-gap">
+            <label for="history-date" class="label">日付 <span class="req-mark">＊</span></label>
+            <Input
+              id="history-date"
+              v-model="form.date"
+              type="date"
+            />
+            <p v-if="fieldErrors.date" class="error-text">
+              {{ fieldErrors.date }}
+            </p>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-inline-gap">
+          <label for="history-title" class="label">タイトル <span class="req-mark">＊</span></label>
+          <Input
+            id="history-title"
+            v-model="form.title"
+            placeholder="例: 新機能追加"
+          />
+          <p v-if="fieldErrors.title" class="error-text">
+            {{ fieldErrors.title }}
+          </p>
+        </div>
+
+        <div class="flex flex-col gap-inline-gap">
+          <label for="history-desc" class="label">詳細本文</label>
+          <Textarea
+            id="history-desc"
+            v-model="form.desc"
+            :rows="5"
+            placeholder="詳細な更新内容や変更点を入力してください（モーダルで表示されます）"
+          />
+        </div>
+      </form>
+    </Modal>
+  </section>
 </template>
 
 <style scoped lang="scss">
@@ -169,5 +226,10 @@ const columns: TableColumn<HistoryItem>[] = [
 .version-text {
   font-family: var(--font-mono);
   color: var(--color-text-muted);
+}
+
+.error-text {
+  font-size: var(--font-size-xs);
+  color: var(--color-status-danger);
 }
 </style>

@@ -5,7 +5,7 @@
  */
 
 import { CONDUIT_UI_LABELS } from '~/constants/conduitConstants'
-import type { ResultPanelStatus } from '~/types/components'
+import type { ResultTileStatus } from '~/types/components'
 import { formatVal } from '~/utils/math'
 import type { ConduitCalcResult } from '~/utils/tools/conduit/conduitCalcLogic'
 
@@ -19,7 +19,7 @@ interface ConduitResultViewModel {
 
   // 1行目: 32% (異種)
   size32: string
-  status32: ResultPanelStatus
+  status32: ResultTileStatus
   badge32?: string
   fill32: string
   fillText32?: string
@@ -27,7 +27,7 @@ interface ConduitResultViewModel {
 
   // 2行目: 48% (同種)
   size48: string
-  status48: ResultPanelStatus
+  status48: ResultTileStatus
   badge48?: string
   fill48: string
   fillText48?: string
@@ -37,7 +37,7 @@ interface ConduitResultViewModel {
   customFillRate: number
   titleCustom: string
   sizeCustom: string
-  statusCustom: ResultPanelStatus
+  statusCustom: ResultTileStatus
   badgeCustom?: string
   fillCustom: string
   fillTextCustom?: string
@@ -85,7 +85,7 @@ export function formatConduitResult(
   const size32 = isOversize32
     ? 'ERROR'
     : (result.conduit32?.size || CONDUIT_UI_LABELS.EMPTY_TEXT)
-  const status32: ResultPanelStatus = isOversize32 ? 'danger' : 'success'
+  const status32: ResultTileStatus = isOversize32 ? 'danger' : 'success'
   const badge32 = isOversize32 ? '規格上限超過' : undefined
   const allowable32 = formatVal(
     result.allowable32,
@@ -102,7 +102,7 @@ export function formatConduitResult(
   const size48 = isOversize48
     ? 'ERROR'
     : (result.conduit48?.size || CONDUIT_UI_LABELS.EMPTY_TEXT)
-  const status48: ResultPanelStatus = isOversize48
+  const status48: ResultTileStatus = isOversize48
     ? 'danger'
     : isDiffSize
       ? 'warning'
@@ -128,7 +128,7 @@ export function formatConduitResult(
   const sizeCustom = isOversizeCustom
     ? 'ERROR'
     : (result.conduitCustom?.size || CONDUIT_UI_LABELS.EMPTY_TEXT)
-  const statusCustom: ResultPanelStatus = isOversizeCustom ? 'danger' : 'success'
+  const statusCustom: ResultTileStatus = isOversizeCustom ? 'danger' : 'success'
   const badgeCustom = isOversizeCustom ? '規格上限超過' : undefined
   const allowableCustom = formatVal(
     result.allowableCustom,

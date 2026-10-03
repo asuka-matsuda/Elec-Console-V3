@@ -29,6 +29,7 @@ export const STATE_KEYS = {
   CALENDAR_SETTINGS: (siteId: string) => `calendar-settings-${siteId}`,
   OFFLINE_SYNC_QUEUE: (siteId: string) => `offline-sync-queue-${siteId}`,
   OFFLINE_SYNC_SYNCING: (siteId: string) => `offline-sync-syncing-${siteId}`,
+  OFFLINE_SYNC_LAST_SYNCED_AT: (siteId: string) => `offline-sync-last-synced-at-${siteId}`,
   IS_OFFLINE_SESSION: 'is-offline-session',
   SERVER_TIME_OFFSET: 'server_time_offset',
 } as const

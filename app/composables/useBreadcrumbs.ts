@@ -91,6 +91,42 @@ export function useBreadcrumbs() {
           }
         }
 
+        // タグ出力
+        if (subPath === 'tag-print') {
+          return {
+            items: [
+              categoryItem,
+              { text: siteName },
+              { text: 'タグ出力' },
+            ],
+            accent: 'management',
+          }
+        }
+
+        // リモコン設定
+        if (subPath === 'remote-control') {
+          return {
+            items: [
+              categoryItem,
+              { text: siteName },
+              { text: 'リモコン設定' },
+            ],
+            accent: 'management',
+          }
+        }
+
+        // テンプレートキー一覧
+        if (subPath === 'template-keys') {
+          return {
+            items: [
+              categoryItem,
+              { text: siteName },
+              { text: 'テンプレートキー一覧' },
+            ],
+            accent: 'management',
+          }
+        }
+
         // 現場トップ (/portal/:siteId)
         // 表示: 現場管理 » 現場名
         if (!subPath) {

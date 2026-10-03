@@ -1,9 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import { computed } from 'vue'
 
 import Textarea from '../../app/components/common/atoms/Textarea.vue'
-import { FORM_GROUP_KEY } from '../../app/constants/injectionKeys'
 
 describe('Textarea.vue', () => {
   it('renders textarea with default props', () => {
@@ -66,21 +64,17 @@ describe('Textarea.vue', () => {
     expect(wrapper.find('textarea').classes()).toContain('resize-none')
   })
 
-  it('syncs id and error state with injected formGroup', () => {
+  it('correctly applies id and error props', () => {
     const wrapper = mount(Textarea, {
-      global: {
-        provide: {
-          [FORM_GROUP_KEY as symbol]: {
-            id: computed(() => 'form-textarea-id'),
-            hasError: computed(() => true),
-          },
-        },
+      props: {
+        id: 'custom-textarea-id',
+        error: true,
       },
     })
 
     const textarea = wrapper.find('textarea')
 
-    expect(textarea.attributes('id')).toBe('form-textarea-id')
+    expect(textarea.attributes('id')).toBe('custom-textarea-id')
     expect(textarea.classes()).toContain('is-error')
   })
 

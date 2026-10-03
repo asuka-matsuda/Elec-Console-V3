@@ -5,7 +5,7 @@
  */
 
 import type { ToolErrorInfo } from '~/constants/toolErrorConstants'
-import type { ResultDetailItem, ResultPanelStatus } from '~/types/components'
+import type { ResultDetailItem, ResultTileStatus } from '~/types/components'
 import type { VoltageCalcInputs, VoltageCalcResult } from '~/types/voltage'
 import { formatVal } from '~/utils/math'
 import { getToolError } from '~/utils/tools/toolError'
@@ -16,18 +16,18 @@ interface VoltageResultViewModel {
   mainLabel: string
   mainValue: string
   mainUnit: string
-  mainStatus: ResultPanelStatus
+  mainStatus: ResultTileStatus
   mainBadgeText?: string
   currentI: string
   maxI: string
   isAmpError: boolean
-  ampStatus: ResultPanelStatus
+  ampStatus: ResultTileStatus
   ampBadgeText?: string
   dropV: string
   dropPercent: string
   dropPercentText?: string
   isDropError: boolean
-  dropStatus: ResultPanelStatus
+  dropStatus: ResultTileStatus
   dropBadgeText?: string
   details?: ResultDetailItem[]
   errorInfo?: ToolErrorInfo
@@ -59,13 +59,13 @@ export function formatVoltageResult(
   const mainLabel = mode === 'size' ? '選定ケーブルサイズ' : '電圧降下'
   let mainValue = 'ーー'
   let mainUnit = mode === 'size' ? 'sq' : 'V'
-  let mainStatus: ResultPanelStatus = 'neutral'
+  let mainStatus: ResultTileStatus = 'neutral'
   let mainBadgeText: string | undefined
 
   // 2. 電流チェック (設計 / 許容)
   let currentI = isReady && inputs ? formatVal(inputs.I, 'ーー', 1) : 'ーー'
   let maxI = isReady && result ? formatVal(result.finalEffAmp, 'ーー', 1) : 'ーー'
-  let ampStatus: ResultPanelStatus = 'neutral'
+  let ampStatus: ResultTileStatus = 'neutral'
   let ampBadgeText: string | undefined
 
   // 3. 電圧降下 (V / %)
@@ -73,7 +73,7 @@ export function formatVoltageResult(
   let dropPercent = 'ーー'
   let dropPercentText: string | undefined
   let dropRateText = 'ーー'
-  let dropStatus: ResultPanelStatus = 'neutral'
+  let dropStatus: ResultTileStatus = 'neutral'
   let dropBadgeText: string | undefined
 
   if (isReady && result) {

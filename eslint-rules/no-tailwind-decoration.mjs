@@ -16,7 +16,7 @@ const LAYOUT_EXACT = new Set([
 ])
 
 const DECORATION_PATTERNS = [
-  { category: 'フォントサイズ', regex: /^text-(xs|sm|base|lg|xl|[2-9]xl)$/ },
+  { category: 'フォントサイズ', regex: /^text-(2xs|xs|sm|base|lg|xl|[2-9]xl)$/ },
   { category: 'フォントウェイト', regex: /^font-(thin|extralight|light|normal|medium|semibold|bold|extrabold|black)$/ },
   { category: 'フォントファミリー', regex: /^font-(sans|serif|mono)$/ },
   { category: '字間/行間', regex: /^(leading-|tracking-)/ },

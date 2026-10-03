@@ -34,3 +34,22 @@
     @content;
   }
 }
+
+// コントロール用動的グロー演出トークン生成
+// 各Atomローカルの --glow-color を即座にシャドウへ反映させる
+@mixin control-glow-tokens($color: var(--glow-color, var(--theme-accent))) {
+  --shadow-glow-hover:
+    0 0 0 1px color-mix(in srgb, #{$color} 45%, transparent),
+    0 2px 10px color-mix(in srgb, #{$color} 16%, transparent),
+    var(--shadow-elevation-sm);
+  --shadow-glow-focus:
+    0 0 0 1px color-mix(in srgb, #{$color} 70%, transparent),
+    0 0 0 3px color-mix(in srgb, #{$color} 25%, transparent),
+    0 2px 12px color-mix(in srgb, #{$color} 20%, transparent);
+  --shadow-glow-active:
+    0 0 0 1px color-mix(in srgb, #{$color} 60%, transparent),
+    inset 0 1px 2px color-mix(in srgb, black 30%, transparent),
+    var(--shadow-elevation-sm);
+
+  @content;
+}

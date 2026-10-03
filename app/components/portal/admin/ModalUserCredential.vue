@@ -9,19 +9,16 @@ import { ref, watch } from 'vue'
 import type { User } from '#shared/types/auth'
 import { printUserCredential } from '~/utils/printUserCredential'
 
-const props = defineProps<{
-  modelValue: boolean
-  user: (User & { initialPassword?: string, loginId?: string }) | null
-}>()
+const isOpen = defineModel<boolean>({ default: false })
 
-const emit = defineEmits<{
-  'update:modelValue': [val: boolean]
+const props = defineProps<{
+  user: (User & { initialPassword?: string, loginId?: string }) | null
 }>()
 
 const isCopied = ref(false)
 
-watch(() => props.modelValue, (isOpen) => {
-  if (!isOpen) {
+watch(isOpen, (open) => {
+  if (!open) {
     isCopied.value = false
   }
 })
@@ -55,15 +52,14 @@ const handlePrint = () => {
 
 <template>
   <Modal
-    :model-value="modelValue"
+    v-model="isOpen"
     title="認証情報の発行完了"
     icon="circle-check"
-    @update:model-value="emit('update:modelValue', $event)"
   >
     <template #actions>
       <Button
         variant="success"
-        @click="emit('update:modelValue', false)"
+        @click="isOpen = false"
       >
         完了
       </Button>
@@ -75,20 +71,23 @@ const handlePrint = () => {
         （初期パスワードはこの画面を閉じると二度と表示されません）
       </p>
 
-      <Panel class="flex flex-col gap-panel-gap">
-        <FormGroup label="氏名">
+      <div class="flex flex-col gap-panel-gap">
+        <div class="flex flex-col gap-inline-gap">
+          <span class="field-label">氏名</span>
           <div class="user-value">
             {{ user.lastName }} {{ user.firstName }}
           </div>
-        </FormGroup>
+        </div>
 
-        <FormGroup label="ログインID">
+        <div class="flex flex-col gap-inline-gap">
+          <span class="field-label">ログインID</span>
           <div class="user-value user-value-mono">
             {{ user.loginId || user.id }}
           </div>
-        </FormGroup>
+        </div>
 
-        <FormGroup label="初期パスワード">
+        <div class="flex flex-col gap-inline-gap">
+          <span class="field-label">初期パスワード</span>
           <div class="flex items-center gap-item-gap">
             <div class="user-value user-value-mono user-value-success flex-1">
               {{ user.initialPassword || "（既に設定済みです）" }}
@@ -97,14 +96,13 @@ const handlePrint = () => {
               v-if="user.initialPassword"
               :icon="isCopied ? 'check' : 'copy'"
               :variant="isCopied ? 'success' : 'default'"
-              size="sm"
               @click="handleCopyPassword"
             >
               {{ isCopied ? 'コピー済' : 'コピー' }}
             </Button>
           </div>
-        </FormGroup>
-      </Panel>
+        </div>
+      </div>
 
       <div class="flex justify-end">
         <Button
@@ -121,6 +119,12 @@ const handlePrint = () => {
 <style scoped>
 .credential-desc {
   font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.field-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
   color: var(--color-text-muted);
 }
 

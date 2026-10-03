@@ -9,7 +9,7 @@ defineProps<EmptyStateProps>()
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center gap-item-gap p-panel-pad text-center">
+  <div class="flex flex-col items-center justify-center gap-item-gap text-center">
     <div v-if="title || icon || description" class="flex flex-col items-center justify-center gap-inline-gap">
       <p v-if="title || icon" class="flex items-center justify-center gap-inline-gap title">
         <Icon v-if="icon" :name="icon" :spin="spin" />

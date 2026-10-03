@@ -6,6 +6,8 @@
 
 import type ExcelJS from 'exceljs'
 
+import { normalizeHeaderName } from '#shared/utils/excelNormalize'
+
 import { normalizeNewlines } from './cellFormat'
 
 export interface CircuitColumnMap {
@@ -75,20 +77,9 @@ export const DEFAULT_CIRCUIT_COLUMN_MAP: CircuitColumnMap = {
 }
 
 /**
- * 見出し文字列の正規化（全角半角統一・空白改行除去・小文字化）
- */
-export function normalizeHeaderName(name: unknown): string {
-  if (name === null || name === undefined) return ''
-  return String(name)
-    .normalize('NFKC')
-    .replace(/[\s\r\n\t_]/g, '')
-    .toLowerCase()
-}
-
-/**
  * 各項目に対する認識見出し候補（エイリアス）リスト
  */
-export const HEADER_ALIASES: Record<keyof CircuitColumnMap, string[]> = {
+const HEADER_ALIASES: Record<keyof CircuitColumnMap, string[]> = {
   // 基本設計情報（読取用）
   banMeisho: ['盤名称', '分電盤名称', '盤名'],
   banShubetsu: ['盤種別', '種別'],
@@ -145,6 +136,7 @@ export function detectCircuitColumns(sheet: ExcelJS.Worksheet): {
 
   // 全エイリアスの正規化セットを構築
   const allAliases = new Set<string>()
+
   for (const list of Object.values(HEADER_ALIASES)) {
     for (const a of list) {
       allAliases.add(normalizeHeaderName(a))
@@ -158,6 +150,7 @@ export function detectCircuitColumns(sheet: ExcelJS.Worksheet): {
 
     row.eachCell({ includeEmpty: false }, (cell, colNumber) => {
       const norm = normalizeHeaderName(cell.value)
+
       if (!norm) return
 
       currentMap.set(norm, colNumber)
@@ -179,8 +172,10 @@ export function detectCircuitColumns(sheet: ExcelJS.Worksheet): {
 
   for (const [key, aliases] of Object.entries(HEADER_ALIASES) as [keyof CircuitColumnMap, string[]][]) {
     let foundCol: number | undefined
+
     for (const alias of aliases) {
       const col = bestHeaderMap.get(normalizeHeaderName(alias))
+
       if (col !== undefined) {
         foundCol = col
         break
@@ -231,8 +226,10 @@ export function findCircuitSheet(workbook: ExcelJS.Workbook): ExcelJS.Worksheet 
   for (const preferred of PREFERRED_NAMES) {
     const found = workbook.worksheets.find((ws) => {
       const norm = normalizeHeaderName(ws.name)
+
       return norm === preferred || norm.includes(preferred)
     })
+
     if (found) return found
   }
 
@@ -242,6 +239,7 @@ export function findCircuitSheet(workbook: ExcelJS.Workbook): ExcelJS.Worksheet 
 
   for (const ws of workbook.worksheets) {
     const { headerMap } = detectCircuitColumns(ws)
+
     if (headerMap.size > maxHeaderCount) {
       maxHeaderCount = headerMap.size
       bestSheet = ws
@@ -264,6 +262,7 @@ export function findCircuitSheet(workbook: ExcelJS.Workbook): ExcelJS.Worksheet 
   }
 
   const target = longestSheet || workbook.worksheets[0]
+
   if (!target) {
     throw new Error('ワークブックにシートが見つかりません')
   }
@@ -284,4 +283,3 @@ export function makeCircuitKey(
 
   return `${norm(keiTo)}::${norm(banMeisho)}::${norm(kairoBangou)}::${norm(kairoMeisho)}`
 }
-

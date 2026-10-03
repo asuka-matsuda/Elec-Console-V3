@@ -5,11 +5,12 @@
  *
  * @description 指定現場の送電試験進捗サマリー、工程カレンダー、パーソナルToDo、操作ログへアクセスするハブ画面。
  */
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import { useHead, useNuxtApp, useRoute } from '#app'
 import type { CircuitItem } from '#shared/types/circuit'
 import { useCurrentSite } from '~/composables/portal/useCurrentSite'
+import { useTodo } from '~/composables/portal/useTodo'
 import { CircuitsRepository } from '~/utils/db'
 
 const route = useRoute()
@@ -20,6 +21,17 @@ const {
   siteOptions,
   switchSite,
 } = useCurrentSite(siteId)
+
+const { todos, addTodo, deleteTodo } = useTodo(() => siteId.value)
+const newTask = ref('')
+
+const handleAddTodo = () => {
+  const text = newTask.value.trim()
+
+  if (!text) return
+  addTodo(text)
+  newTask.value = ''
+}
 
 const { $api } = useNuxtApp()
 
@@ -50,11 +62,12 @@ useHead({
 
 <template>
   <div :key="siteId" class="flex flex-col gap-section-gap h-full">
-    <SectionHeader
-      :title="currentSite?.name || '現場ダッシュボード'"
-      icon="map-pin"
-    >
-      <template #actions>
+    <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
+      <h2 class="flex items-center gap-item-gap">
+        <Icon name="map-pin" class="text-primary" />
+        <span>{{ currentSite?.name || '現場ダッシュボード' }}</span>
+      </h2>
+      <div class="flex items-center gap-item-gap">
         <PortalSyncStatusBadge :site-id="siteId" />
 
         <Select
@@ -63,8 +76,9 @@ useHead({
           class="min-w-[200px]"
           @update:model-value="switchSite"
         />
-      </template>
-    </SectionHeader>
+      </div>
+    </header>
+    <hr class="divider">
 
     <div class="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-section-gap items-start">
       <section class="min-h-[500px]">
@@ -75,17 +89,107 @@ useHead({
 
       <aside class="flex flex-col gap-panel-gap">
         <ClientOnly>
-          <PortalPersonalTodo :site-id="siteId" />
+          <section class="panel flex flex-col gap-form-row-gap">
+            <header class="flex items-center gap-item-gap">
+              <h3 class="flex items-center gap-item-gap">
+                <Icon name="check" class="text-primary" />
+                <span>パーソナルToDo</span>
+              </h3>
+            </header>
+            <hr class="divider">
+
+            <form class="flex items-center gap-item-gap" @submit.prevent="handleAddTodo">
+              <Input
+                v-model="newTask"
+                placeholder="新しいタスクを入力..."
+                class="flex-1"
+              />
+              <Button type="submit" icon="plus" />
+            </form>
+
+            <ul
+              v-if="todos.length > 0"
+              class="overflow-y-auto flex flex-col gap-inline-gap max-h-[400px]"
+            >
+              <li
+                v-for="todo in todos"
+                :key="todo.id"
+                class="todo-item flex items-center justify-between gap-item-gap p-item-gap"
+              >
+                <Checkbox v-model="todo.completed" variant="success">
+                  <span
+                    class="todo-label"
+                    :class="{ 'is-completed': todo.completed }"
+                  >
+                    {{ todo.text }}
+                  </span>
+                </Checkbox>
+                <Button
+                  variant="danger"
+                  icon="trash-2"
+                  @click="deleteTodo(todo.id)"
+                />
+              </li>
+            </ul>
+
+            <EmptyState
+              v-else
+              icon="circle-check"
+              title="タスクはありません"
+              description="上の入力欄から新しいタスクを追加してください。"
+            />
+          </section>
         </ClientOnly>
 
-        <Button
-          icon="zap"
-          :to="`/portal/${siteId}/souden`"
-          class="w-full"
-        >
-          送電試験
-        </Button>
+        <nav class="flex flex-col gap-inline-gap">
+          <Button
+            icon="zap"
+            :to="`/portal/${siteId}/souden`"
+            class="w-full"
+          >
+            送電試験
+          </Button>
+
+          <Button
+            icon="tag"
+            :to="`/portal/${siteId}/tag-print`"
+            class="w-full"
+          >
+            タグ出力
+          </Button>
+
+          <Button
+            icon="sliders"
+            :to="`/portal/${siteId}/remote-control`"
+            class="w-full"
+          >
+            リモコン設定表
+          </Button>
+
+          <Button
+            icon="key"
+            :to="`/portal/${siteId}/template-keys`"
+            class="w-full"
+          >
+            テンプレートキー一覧
+          </Button>
+        </nav>
       </aside>
     </div>
   </div>
 </template>
+
+<style scoped lang="scss">
+.todo-item {
+  background-color: var(--color-bg-hover);
+}
+
+.todo-label {
+  transition: var(--transition-base);
+
+  &.is-completed {
+    text-decoration: line-through;
+    opacity: 0.5;
+  }
+}
+</style>

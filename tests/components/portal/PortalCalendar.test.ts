@@ -106,11 +106,10 @@ describe('Calendar.client.vue', () => {
     // Toolbar タイトルが描画されていること
     expect(wrapper.find('.toolbar-title').text()).toBe('2026年9月')
 
-    // Panel の余白引き算プロパティが渡されていること
-    const panel = wrapper.findComponent({ name: 'Panel' })
+    const panel = wrapper.find('.calendar-panel')
 
     expect(panel.exists()).toBe(true)
-    expect(panel.props('padding')).toBe('none')
+    expect(panel.classes()).toContain('p-panel-pad-compact')
 
     // FullCalendar スタブが存在すること
     expect(wrapper.find('.fc-stub').exists()).toBe(true)

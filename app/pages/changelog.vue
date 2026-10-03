@@ -87,22 +87,22 @@ const resolveToolInfo = (toolId?: string) => {
 
 <template>
   <div class="flex flex-1 flex-col gap-section-gap w-full max-w-[1200px] mx-auto min-h-0">
-    <SectionHeader
-      title="バージョン更新履歴"
-      icon="clock"
-      variant="hud"
-    >
-      <template #actions>
-        <Button
-          icon="arrow-left"
-          to="/"
-        >
-          ダッシュボードへ戻る
-        </Button>
-      </template>
-    </SectionHeader>
+    <header class="flex items-center justify-between gap-item-gap flex-wrap">
+      <h2 class="flex items-center gap-item-gap">
+        <Icon name="clock" />
+        <span>バージョン更新履歴</span>
+      </h2>
+      <Button
+        icon="arrow-left"
+        to="/"
+      >
+        ダッシュボードへ戻る
+      </Button>
+    </header>
 
-    <Panel class="flex flex-col sm:flex-row sm:items-center justify-between gap-panel-gap">
+    <hr class="divider">
+
+    <div class="panel flex flex-col sm:flex-row sm:items-center justify-between gap-panel-gap">
       <div class="flex items-center gap-item-gap filter-label">
         <Icon name="filter" />
         <span>対象ツール・機能:</span>
@@ -114,7 +114,7 @@ const resolveToolInfo = (toolId?: string) => {
           :options="toolOptions"
         />
       </div>
-    </Panel>
+    </div>
 
     <div v-if="pending" class="flex justify-center empty-wrapper">
       <EmptyState
@@ -125,11 +125,7 @@ const resolveToolInfo = (toolId?: string) => {
     </div>
 
     <div v-else-if="filteredHistory.length > 0" class="flex flex-col gap-panel-gap">
-      <Panel
-        v-for="item in filteredHistory"
-        :key="item.id || `${item.version}-${item.date}`"
-        class="flex flex-col gap-item-gap"
-      >
+      <div v-for="item in filteredHistory" :key="item.id || `${item.version}-${item.date}`" class="panel flex flex-col gap-item-gap">
         <div class="flex flex-wrap items-center justify-between gap-item-gap history-header">
           <div class="flex items-center gap-item-gap">
             <small class="version-tag">
@@ -154,16 +150,15 @@ const resolveToolInfo = (toolId?: string) => {
         <div v-if="item.desc" class="history-desc">
           {{ item.desc }}
         </div>
-      </Panel>
+      </div>
     </div>
 
-    <Panel v-else>
-      <EmptyState
-        icon="clock"
-        title="該当する更新履歴はありません"
-        description="選択されたツールの履歴はまだ登録されていません。"
-      />
-    </Panel>
+    <EmptyState
+      v-else
+      icon="clock"
+      title="該当する更新履歴はありません"
+      description="選択されたツールの履歴はまだ登録されていません。"
+    />
   </div>
 </template>
 

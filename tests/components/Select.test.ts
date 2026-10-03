@@ -1,9 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import { computed } from 'vue'
 
 import Select from '../../app/components/common/atoms/Select.vue'
-import { FORM_GROUP_KEY } from '../../app/constants/injectionKeys'
 import type { SelectOption } from '../../app/types/components'
 
 interface SelectVm {
@@ -95,24 +93,18 @@ describe('Select.vue', () => {
     expect(vm.isOpen).toBe(false)
   })
 
-  it('inherits id and error from FORM_GROUP_KEY injection', () => {
+  it('correctly applies id and error props', () => {
     const wrapper = mount(Select, {
       props: {
         options: mockOptions,
-      },
-      global: {
-        provide: {
-          [FORM_GROUP_KEY as symbol]: {
-            id: computed(() => 'form-group-field-id'),
-            hasError: computed(() => true),
-          },
-        },
+        id: 'custom-select-id',
+        error: true,
       },
     })
 
     const button = wrapper.find('button')
 
-    expect(button.attributes('id')).toBe('form-group-field-id')
+    expect(button.attributes('id')).toBe('custom-select-id')
     expect(wrapper.classes()).toContain('is-error')
   })
 })

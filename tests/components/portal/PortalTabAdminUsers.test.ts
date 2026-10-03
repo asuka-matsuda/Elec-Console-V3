@@ -31,12 +31,11 @@ vi.mock('~/composables/admin/useAdminSites', () => ({
 }))
 
 describe('PortalTabAdminUsers.vue', () => {
-  it('renders 2-pane master detail components and Divider', () => {
+  it('renders 2-pane master detail and Divider', () => {
     const wrapper = mount(TabAdminUsers)
 
-    expect(wrapper.findComponent({ name: 'PortalMasterUserList' }).exists()).toBe(true)
-    expect(wrapper.findComponent({ name: 'PortalDetailUserSettings' }).exists()).toBe(true)
-    expect(wrapper.findComponent({ name: 'Divider' }).exists()).toBe(true)
+    expect(wrapper.text()).toContain('ユーザー一覧')
+    expect(wrapper.find('hr.divider').exists()).toBe(true)
   })
 
   it('selects first user by default and shows its name in detail', () => {

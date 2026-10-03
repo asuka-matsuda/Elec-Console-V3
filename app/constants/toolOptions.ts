@@ -8,7 +8,7 @@
 export const modeOptions = [
   { label: '電圧降下', value: 'drop', color: 'var(--color-category-tool)' },
   { label: '導体断面積', value: 'size', color: 'var(--color-category-tool)' },
-]
+] as const
 
 export const phaseOptions = [
   { label: '単相2線式 100V', value: '1P2W100' },

@@ -12,7 +12,7 @@ export const STANDARD_RACK_SIZES = [
 export const rackModeOptions = [
   { label: '強電', value: 'strong', color: 'var(--color-category-tool)' },
   { label: '弱電', value: 'weak', color: 'var(--color-category-tool)' },
-]
+] as const
 
 export const RACK_DEFAULT_PARAMS = {
   strong: {

@@ -1,4 +1,4 @@
-﻿import { mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
 import ToolMathBasis from '../../../app/components/tool/MathBasis.vue'
@@ -8,9 +8,9 @@ describe('ToolMathBasis.vue', () => {
     Panel: {
       template: '<div class="panel-stub"><slot /></div>',
     },
-    SectionHeader: {
-      props: ['title', 'size'],
-      template: '<div class="section-header-stub">{{ title }}</div>',
+    Heading: {
+      props: ['level'],
+      template: '<div class="heading-stub"><slot /></div>',
     },
   }
 

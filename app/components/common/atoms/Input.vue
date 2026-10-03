@@ -3,23 +3,49 @@
  * Input
  * 1行テキスト／数値入力コンポーネント。
  */
-import { computed, inject, ref } from 'vue'
+import { computed, ref, useId } from 'vue'
 
-import { FORM_GROUP_KEY } from '~/constants/injectionKeys'
 import type { InputProps } from '~/types/components'
 
-const model = defineModel<string | number | null>()
+const [model, modifiers] = defineModel<string | number | null>({
+  set(value) {
+    if (modifiers.number || type === 'number') {
+      if (value === '' || value === null || value === undefined) return null
 
-const props = withDefaults(defineProps<InputProps>(), {
-  type: 'text',
-  disabled: false,
-  readonly: false,
-  error: false,
+      const n = Number(value)
+
+      return isNaN(n) ? value : n
+    }
+
+    return value
+  },
 })
 
-const formGroup = inject(FORM_GROUP_KEY, null)
-const inputId = computed(() => props.id || formGroup?.id.value)
-const isError = computed(() => props.error || (formGroup?.hasError.value ?? false))
+const {
+  id,
+  name,
+  type = 'text',
+  placeholder,
+  disabled = false,
+  readonly = false,
+  error = false,
+  min,
+  max,
+  step,
+  inputmode,
+  autocomplete,
+  maxlength,
+  title,
+} = defineProps<InputProps>()
+
+const emit = defineEmits<{
+  blur: [event: FocusEvent]
+  focus: [event: FocusEvent]
+  change: [event: Event]
+}>()
+
+const defaultId = useId()
+const inputId = computed(() => id || defaultId)
 
 const inputRef = ref<HTMLInputElement | null>(null)
 
@@ -41,21 +67,34 @@ defineExpose({
     ref="inputRef"
     v-model="model"
     :type="type"
+    :name="name"
     :placeholder="placeholder"
     :disabled="disabled"
     :readonly="readonly"
+    :min="min"
+    :max="max"
+    :step="step"
+    :inputmode="inputmode"
+    :autocomplete="autocomplete"
+    :maxlength="maxlength"
+    :title="title"
     class="form-control"
     :class="{
-      'is-error': isError,
+      'is-error': error,
       'is-disabled': disabled,
       'is-readonly': readonly,
     }"
+    @blur="emit('blur', $event)"
+    @focus="emit('focus', $event)"
+    @change="emit('change', $event)"
   />
 </template>
 
 <style scoped lang="scss">
 .form-control {
-  --glow-color: var(--theme-accent);
+  --glow-color: var(--theme-accent, var(--color-category-main));
+
+  @include control-glow-tokens;
 
   width: 100%;
   min-width: 0;

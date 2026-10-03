@@ -92,56 +92,69 @@ const getCategoryBadgeColor = (category: MeasurementDeviceCategory): string => {
         :text="errorMessage"
       />
 
-      <Panel as="section" class="flex flex-col gap-form-row-gap">
-        <SectionHeader
-          :title="editingId ? '機器情報の編集' : '新しい測定機器の追加'"
-          icon="circle-plus"
-          tag="h4"
-          variant="hud"
-        />
+      <section class="flex flex-col gap-form-row-gap">
+        <header class="flex items-center gap-item-gap">
+          <h4 class="flex items-center gap-item-gap">
+            <Icon name="circle-plus" class="text-primary" />
+            <span>{{ editingId ? '機器情報の編集' : '新しい測定機器の追加' }}</span>
+          </h4>
+        </header>
+        <hr class="divider">
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-form-row-gap">
-          <FormGroup label="機器種別" required>
+          <div class="flex flex-col gap-inline-gap">
+            <label for="device-category" class="label">機器種別 <span class="req-mark">＊</span></label>
             <Select
+              id="device-category"
               v-model="formCategory"
               :options="CATEGORY_OPTIONS"
             />
-          </FormGroup>
+          </div>
 
-          <FormGroup label="製造者 (メーカー)" required>
+          <div class="flex flex-col gap-inline-gap">
+            <label for="device-maker" class="label">製造者 (メーカー) <span class="req-mark">＊</span></label>
             <Input
+              id="device-maker"
               v-model="formMaker"
               placeholder="例: 日置電機、共立電気計器"
             />
-          </FormGroup>
+          </div>
 
-          <FormGroup label="型式" required>
+          <div class="flex flex-col gap-inline-gap">
+            <label for="device-model" class="label">型式 <span class="req-mark">＊</span></label>
             <Input
+              id="device-model"
               v-model="formModel"
               placeholder="例: IR4052-11, 2002PA"
             />
-          </FormGroup>
+          </div>
 
-          <FormGroup label="校正年月日">
+          <div class="flex flex-col gap-inline-gap">
+            <label for="device-cal-date" class="label">校正年月日</label>
             <Input
+              id="device-cal-date"
               v-model="formCalibrationDate"
               placeholder="例: 2026/04/01"
             />
-          </FormGroup>
+          </div>
 
-          <FormGroup label="製造番号 (シリアル)">
+          <div class="flex flex-col gap-inline-gap">
+            <label for="device-serial" class="label">製造番号 (シリアル)</label>
             <Input
+              id="device-serial"
               v-model="formSerialNumber"
               placeholder="例: 230512345"
             />
-          </FormGroup>
+          </div>
 
-          <FormGroup label="備考 (所有者/メモ)">
+          <div class="flex flex-col gap-inline-gap">
+            <label for="device-note" class="label">備考 (所有者/メモ)</label>
             <Input
+              id="device-note"
               v-model="formNote"
               placeholder="例: A班共用、松田所有"
             />
-          </FormGroup>
+          </div>
         </div>
 
         <div class="flex justify-end gap-item-gap pt-item-gap">
@@ -163,21 +176,21 @@ const getCategoryBadgeColor = (category: MeasurementDeviceCategory): string => {
             {{ editingId ? '変更を反映' : '機器を追加' }}
           </Button>
         </div>
-      </Panel>
+      </section>
 
-      <Divider />
+      <hr class="divider">
 
       <div class="flex flex-col gap-item-gap">
-        <SectionHeader
-          title="登録済みの測定機器"
-          icon="list"
-          tag="h4"
-          variant="hud"
-        >
-          <template #actions>
-            <span class="count-badge">全 {{ localDevices.length }} 台</span>
-          </template>
-        </SectionHeader>
+        <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
+          <h4 class="flex items-center gap-item-gap">
+            <Icon name="list" class="text-primary" />
+            <span>登録済みの測定機器</span>
+          </h4>
+          <div class="flex items-center gap-item-gap">
+            <span class="badge">全 {{ localDevices.length }} 台</span>
+          </div>
+        </header>
+        <hr class="divider">
 
         <EmptyState
           v-if="localDevices.length === 0"
@@ -190,49 +203,49 @@ const getCategoryBadgeColor = (category: MeasurementDeviceCategory): string => {
           v-else
           class="flex flex-col gap-item-gap max-h-[320px] overflow-y-auto pr-inline-gap"
         >
-          <Panel
+          <li
             v-for="dev in localDevices"
             :key="dev.id"
-            as="li"
-            padding="compact"
-            interactive
-            :active="editingId === dev.id"
-            class="flex items-center justify-between gap-item-gap"
           >
-            <div class="flex flex-col gap-inline-gap min-w-0 flex-1">
-              <div class="flex items-center gap-item-gap flex-wrap">
-                <Badge :color="getCategoryBadgeColor(dev.category)">
-                  {{ getCategoryLabel(dev.category) }}
-                </Badge>
-                <strong>
-                  {{ dev.maker }} {{ dev.model }}
-                </strong>
-                <small v-if="dev.note">
-                  ({{ dev.note }})
+            <div
+              class="panel p-panel-pad-compact flex items-center justify-between gap-item-gap"
+              :class="{ 'is-active': editingId === dev.id }"
+            >
+              <div class="flex flex-col gap-inline-gap min-w-0 flex-1">
+                <div class="flex items-center gap-item-gap flex-wrap">
+                  <span class="badge" :style="{ '--glow-color': getCategoryBadgeColor(dev.category) }">
+                    {{ getCategoryLabel(dev.category) }}
+                  </span>
+                  <strong>
+                    {{ dev.maker }} {{ dev.model }}
+                  </strong>
+                  <small v-if="dev.note">
+                    ({{ dev.note }})
+                  </small>
+                </div>
+
+                <small class="flex items-center gap-form-row-gap flex-wrap">
+                  <span>校正日: {{ dev.calibrationDate || '未設定' }}</span>
+                  <span>製番: {{ dev.serialNumber || '未設定' }}</span>
                 </small>
               </div>
 
-              <small class="flex items-center gap-form-row-gap flex-wrap">
-                <span>校正日: {{ dev.calibrationDate || '未設定' }}</span>
-                <span>製番: {{ dev.serialNumber || '未設定' }}</span>
-              </small>
+              <div class="flex items-center gap-inline-gap shrink-0">
+                <Button
+                  variant="default"
+                  icon="edit"
+                  title="編集"
+                  @click="startEdit(dev)"
+                />
+                <Button
+                  variant="default"
+                  icon="trash-2"
+                  title="削除"
+                  @click="handleDeleteItem(dev.id)"
+                />
+              </div>
             </div>
-
-            <div class="flex items-center gap-inline-gap shrink-0">
-              <Button
-                variant="default"
-                icon="edit"
-                title="編集"
-                @click="startEdit(dev)"
-              />
-              <Button
-                variant="default"
-                icon="trash-2"
-                title="削除"
-                @click="handleDeleteItem(dev.id)"
-              />
-            </div>
-          </Panel>
+          </li>
         </ul>
       </div>
     </div>
