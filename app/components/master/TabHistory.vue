@@ -116,7 +116,7 @@ const columns: TableColumn<HistoryItem>[] = [
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-form-row-gap">
           <div class="flex flex-col gap-inline-gap">
             <label for="history-version" class="label">バージョン <span class="req-mark">＊</span></label>
-            <Input id="history-version" v-model="form.version" placeholder="例: v2.1.0" />
+            <Input id="history-version" v-model="form.version" placeholder="例: v1.0.0" />
             <p v-if="fieldErrors.version" class="error-text">
               {{ fieldErrors.version }}
             </p>
