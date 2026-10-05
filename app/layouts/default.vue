@@ -84,10 +84,11 @@ const offlineBanner = computed(() => {
       </div>
 
       <div class="flex items-center gap-item-gap">
-        <NuxtLink to="/mypage" class="flex items-center gap-item-gap">
-          <Avatar :text="userName" size="sm" />
-          <span class="max-md:hidden">{{ userName }}</span>
-        </NuxtLink>
+        <Tooltip :text="userName" placement="bottom">
+          <NuxtLink to="/mypage" class="flex items-center">
+            <Avatar :text="userName" size="sm" />
+          </NuxtLink>
+        </Tooltip>
 
         <Button variant="secondary" size="sm" @click="logout">ログアウトする</Button>
       </div>

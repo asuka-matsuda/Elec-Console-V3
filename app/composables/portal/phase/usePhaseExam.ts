@@ -306,15 +306,13 @@ export function usePhaseExamBase(
     }
   })
 
-  // 【Local-Firstリアクティブ計算】幹線未完了の盤リスト
-  // サーバーレスポンス値に加え、現在のローカル回路状態から動的に算出（オフラインでも確定時に即座に解除される）
+  // 【Local-Firstリアクティブ計算】幹線未完了の盤リスト（進捗参照用）
   const panelsWithIncompleteKansen = computed<string[]>({
     get: () => {
       const set = new Set<string>(serverPanelsWithIncompleteKansen.value)
       const kansenCircuits = circuits.value.filter(c => c.keiTo === '幹線' && !c.isExcluded)
 
       for (const c of kansenCircuits) {
-        // 幹線でフェーズ1〜3のいずれかが未完了の盤をリストアップ
         if (!isPhaseComplete(c, 1) || !isPhaseComplete(c, 2) || !isPhaseComplete(c, 3)) {
           set.add(c.banMeisho)
         }
@@ -327,10 +325,8 @@ export function usePhaseExamBase(
     },
   })
 
-  // 該当する二次側回路が操作不可（幹線未完了）かどうか
-  const isCircuitLocked = (circuit: CircuitItem): boolean => {
-    return circuit.keiTo === '二次側' && panelsWithIncompleteKansen.value.includes(circuit.banMeisho)
-  }
+  // 幹線を試験する前に二次側のチェックを行えるようにするため、幹線→二次側のロックは撤廃（常にfalse）
+  const isCircuitLocked = (_circuit: CircuitItem): boolean => false
 
   const notifyConflict = feedbackOptions?.onConflict || ((msg: string) => {
     if (typeof window !== 'undefined' && typeof window.alert === 'function') {

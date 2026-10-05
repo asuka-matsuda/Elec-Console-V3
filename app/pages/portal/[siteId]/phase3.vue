@@ -50,7 +50,6 @@ const {
   selectedBanShubetsu,
   selectedBanMeisho,
   phaseStats,
-  isCircuitLocked,
   isActionLoading,
   isThreePhase,
   fetchCircuits,
@@ -118,7 +117,7 @@ interface Phase3RowForm {
 }
 
 const isP2Complete = (circuit: CircuitItem) => isPhase2Complete(circuit)
-const isLocked = (circuit: CircuitItem) => isCircuitLocked(circuit) || !isP2Complete(circuit)
+const isLocked = (circuit: CircuitItem) => !isP2Complete(circuit)
 
 const initRowForm = (circuit: CircuitItem): Phase3RowForm => {
   const isThree = isThreePhase(circuit)
@@ -376,7 +375,7 @@ onMounted(() => {
 
       <template #cell-actions="{ row: circuit }">
         <div class="cell-actions flex items-center justify-center gap-inline-gap whitespace-nowrap">
-          <span v-if="isLocked(circuit)" class="text-note inline-flex items-center gap-inline-gap">⏸ {{ isCircuitLocked(circuit) ? '幹線未完了' : 'P2未了' }}</span>
+          <span v-if="isLocked(circuit)" class="text-note inline-flex items-center gap-inline-gap">⏸ P2未了</span>
           <template v-else-if="isConfirmed(circuit)">
             <Button variant="secondary" size="sm" suffix-icon="arrow-right" :to="getNextPhase1Path(circuit)">フェーズ1へ進む</Button>
             <Button variant="danger" size="sm" :disabled="circuit.isExcluded || Boolean(isActionLoading[circuit.id])" @click="handleClearLocally(circuit)">解除する</Button>

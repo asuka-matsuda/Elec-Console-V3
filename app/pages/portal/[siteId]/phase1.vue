@@ -35,7 +35,6 @@ const {
   selectedBanShubetsu,
   selectedBanMeisho,
   phaseStats,
-  isCircuitLocked,
   isActionLoading,
   fetchCircuits,
   confirmPhase1,
@@ -115,14 +114,12 @@ const {
   circuits: () => filteredCircuits.value,
   initForm: initRowForm,
   isConfirmedServer: c => Boolean(c.p1ConfirmedAt),
-  isCircuitLocked,
   isActionLoading: () => isActionLoading.value,
 })
 
 const getRowDisabledReason = (circuit: CircuitItem): string | undefined => {
   if (isConfirmed(circuit)) return '確定済みのため入力はロックされています'
   if (circuit.isExcluded) return '除外回路のため入力できません'
-  if (isCircuitLocked(circuit)) return '幹線未完了のため入力できません'
   if (isActionLoading.value[circuit.id]) return '通信処理中です'
 
   return undefined
@@ -215,7 +212,7 @@ onMounted(() => {
       </div>
     </section>
 
-    <Table v-model:sort-by="sortBy" v-model:sort-order="sortOrder" :columns="PHASE1_TABLE_COLUMNS" :data="sortedCircuits" :row-id="(row) => `row-${row.id}`" :row-class="(row) => getSoudenRowClass(row, { isComplete, isCircuitLocked, editingRowId: null })" class="flex-1 min-h-[400px]">
+    <Table v-model:sort-by="sortBy" v-model:sort-order="sortOrder" :columns="PHASE1_TABLE_COLUMNS" :data="sortedCircuits" :row-id="(row) => `row-${row.id}`" :row-class="(row) => getSoudenRowClass(row, { isComplete, editingRowId: null })" class="flex-1 min-h-[400px]">
       <template #cell-banMeisho="{ row: circuit }">
         <div class="flex flex-col gap-0.5 min-w-0">
           <span class="ban-name">{{ circuit.banMeisho || '-' }}</span>
@@ -266,8 +263,7 @@ onMounted(() => {
 
       <template #cell-actions="{ row: circuit }">
         <div class="cell-actions flex items-center justify-center gap-inline-gap whitespace-nowrap">
-          <span v-if="isCircuitLocked(circuit)" class="text-note inline-flex items-center gap-inline-gap">⏸ 幹線未完了</span>
-          <template v-else-if="isConfirmed(circuit)">
+          <template v-if="isConfirmed(circuit)">
             <Button variant="secondary" size="sm" suffix-icon="arrow-right" :to="`/portal/${circuit.siteId}/phase2?kei_to=${encodeURIComponent(circuit.keiTo || '幹線')}&targetCircuit=${encodeURIComponent(circuit.id)}`">フェーズ2へ進む</Button>
             <Button variant="danger" size="sm" :disabled="circuit.isExcluded || isActionLoading[circuit.id]" @click="handleClearLocally(circuit)">解除する</Button>
           </template>

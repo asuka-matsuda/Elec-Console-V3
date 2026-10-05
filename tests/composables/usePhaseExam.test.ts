@@ -71,12 +71,12 @@ describe('usePhaseExamBase', () => {
     expect(base.isThreePhase(singlePhaseCircuit)).toBe(false)
   })
 
-  it('isCircuitLocked が二次側回路の幹線未完了時に true を返すこと', () => {
+  it('幹線ロック不要化に伴い isCircuitLocked が二次側回路でも常に false を返すこと', () => {
     const base = usePhaseExamBase('site-1', '二次側', 1)
 
     base.panelsWithIncompleteKansen.value = ['1L-1']
 
-    const lockedCircuit: CircuitItem = {
+    const secondaryCircuit: CircuitItem = {
       id: 'c1',
       siteId: 'site-1',
       keiTo: '二次側',
@@ -87,19 +87,7 @@ describe('usePhaseExamBase', () => {
       p2IsComplete: false,
     }
 
-    const unlockedCircuit: CircuitItem = {
-      id: 'c2',
-      siteId: 'site-1',
-      keiTo: '二次側',
-      banShubetsu: '電灯',
-      banMeisho: '1L-2',
-      p1Kakunin: false,
-      p1Mashishime: false,
-      p2IsComplete: false,
-    }
-
-    expect(base.isCircuitLocked(lockedCircuit)).toBe(true)
-    expect(base.isCircuitLocked(unlockedCircuit)).toBe(false)
+    expect(base.isCircuitLocked(secondaryCircuit)).toBe(false)
   })
 
   it('phaseStats が完了数と除外数を正しく集計すること', () => {
