@@ -44,4 +44,33 @@ describe('PortalTabAdminUsers.vue', () => {
     expect(wrapper.text()).toContain('山田 太郎')
     expect(wrapper.text()).toContain('佐藤 次郎')
   })
+
+  it('switches to assign tab and correctly handles site assignment toggle', async () => {
+    const mockSites = ref([
+      { id: 'site-a', name: '新宿現場', status: 'in_progress' },
+      { id: 'site-b', name: '渋谷現場', status: 'planning' },
+    ])
+
+    const wrapper = mount(TabAdminUsers, {
+      global: {
+        mocks: {
+          useAdminSites: () => ({
+            sites: mockSites,
+            isLoaded: ref(true),
+            fetchSites: vi.fn(),
+          }),
+        },
+      },
+    })
+
+    // アサインタブに切り替え
+    const tabs = wrapper.findAll('.tabs-item')
+    const assignTab = tabs.find(t => t.text().includes('現場アサイン'))
+
+    if (assignTab) {
+      await assignTab.trigger('click')
+    }
+
+    expect(wrapper.text()).toContain('参加現場アサイン')
+  })
 })

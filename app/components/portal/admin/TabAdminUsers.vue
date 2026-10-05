@@ -157,7 +157,7 @@ const getSiteRole = (siteId: string): UserRole => {
 }
 
 const handleToggleSite = (siteId: string, assigned: unknown) => {
-  const isChecked = !assigned
+  const isChecked = Boolean(assigned)
 
   if (isChecked) {
     if (!form.assignedSiteIds.includes(siteId)) {
@@ -442,12 +442,15 @@ const confirmResetPassword = async (row: User) => {
                 <Checkbox :model-value="isSiteAssigned(site.id)" :label="`${site.name} (${site.id})`" @update:model-value="handleToggleSite(site.id, $event)" />
 
                 <div v-if="isSiteAssigned(site.id)" class="w-36 shrink-0 flex flex-col">
-                  <label :for="`site-role-${site.id}`" class="sr-only">現場権限</label>
                   <Select :id="`site-role-${site.id}`" :model-value="getSiteRole(site.id)" :options="USER_ROLE_OPTIONS" @update:model-value="handleSiteRoleChange(site.id, $event)" />
                 </div>
               </div>
             </li>
           </ul>
+
+          <div v-if="sites.length > 0" class="flex items-center justify-end pt-inline-gap">
+            <Button variant="primary" size="sm" icon="save" :loading="isSaving" @click="handleSaveUser">現場アサインを保存する</Button>
+          </div>
 
           <EmptyState v-else icon="inbox" title="登録された現場がありません" description="現場管理タブから現場を作成してください。" />
         </div>
