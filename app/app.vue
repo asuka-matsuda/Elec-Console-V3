@@ -40,27 +40,16 @@ if (import.meta.client) {
     <NuxtPage />
   </NuxtLayout>
 
-  <Modal
-    v-model="isConfirmOpen"
-    :title="confirmTitle"
-    align="center"
-  >
+  <Modal v-model="isConfirmOpen" :title="confirmTitle" align="center">
     <template #actions>
-      <Button
-        @click="onConfirmCancel"
-      >
-        {{ confirmCancelText }}
-      </Button>
-      <Button
-        :variant="confirmIntent"
-        @click="onConfirmExecute"
-      >
-        {{ confirmBtnText }}
-      </Button>
+      <Button @click="onConfirmCancel">{{ confirmCancelText }}</Button>
+      <Button :variant="confirmIntent" @click="onConfirmExecute">{{ confirmBtnText }}</Button>
     </template>
 
     <div class="py-item-gap">
       {{ confirmMessage }}
     </div>
   </Modal>
+
+  <ToastContainer />
 </template>

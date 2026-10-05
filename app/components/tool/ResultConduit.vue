@@ -8,6 +8,7 @@
 import { computed } from 'vue'
 
 import { CONDUIT_UI_LABELS } from '~/constants/conduitConstants'
+import type { BadgeVariant } from '~/types/components'
 import type { ConduitCalcResult } from '~/utils/tools/conduit/conduitCalcLogic'
 import { formatConduitResult } from '~/utils/tools/conduit/conduitResultPresenter'
 
@@ -18,29 +19,21 @@ const props = defineProps<{
 
 const vm = computed(() => formatConduitResult(props.result))
 
-const BADGE_COLOR_MAP: Record<string, string> = {
-  danger: 'var(--color-status-danger)',
-  warning: 'var(--color-status-warning)',
-  success: 'var(--color-status-success)',
-  neutral: 'var(--color-status-neutral)',
-  empty: 'var(--color-status-neutral)',
+const BADGE_VARIANT_MAP: Record<string, BadgeVariant> = {
+  danger: 'red',
+  warning: 'amber',
+  success: 'green',
+  neutral: 'gray',
+  empty: 'gray',
 }
 </script>
 
 <template>
-  <div
-    class="flex flex-1 flex-col min-h-0"
-    :class="[size === 'sm' ? 'gap-item-gap is-sm' : 'gap-panel-gap']"
-  >
-    <div
-      class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0"
-      :class="[`is-${vm.status32}`, size === 'sm' && 'is-sm']"
-    >
+  <div class="flex flex-1 flex-col min-h-0" :class="[size === 'sm' ? 'gap-item-gap is-sm' : 'gap-panel-gap']">
+    <div class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="[`is-${vm.status32}`, size === 'sm' && 'is-sm']">
       <header class="tile-header flex items-center justify-center gap-inline-gap">
         <span>{{ CONDUIT_UI_LABELS.TITLE_32 }}</span>
-        <span v-if="vm.badge32" class="badge" :style="{ '--glow-color': BADGE_COLOR_MAP[vm.status32] }">
-          {{ vm.badge32 }}
-        </span>
+        <Badge v-if="vm.badge32" :variant="BADGE_VARIANT_MAP[vm.status32]">{{ vm.badge32 }}</Badge>
       </header>
       <output class="tile-value flex items-center justify-center gap-item-gap">
         <span>{{ vm.size32 }}</span>
@@ -48,15 +41,10 @@ const BADGE_COLOR_MAP: Record<string, string> = {
       </output>
     </div>
 
-    <div
-      class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0"
-      :class="[`is-${vm.status48}`, size === 'sm' && 'is-sm']"
-    >
+    <div class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="[`is-${vm.status48}`, size === 'sm' && 'is-sm']">
       <header class="tile-header flex items-center justify-center gap-inline-gap">
         <span>{{ CONDUIT_UI_LABELS.TITLE_48 }}</span>
-        <span v-if="vm.badge48" class="badge" :style="{ '--glow-color': BADGE_COLOR_MAP[vm.status48] }">
-          {{ vm.badge48 }}
-        </span>
+        <Badge v-if="vm.badge48" :variant="BADGE_VARIANT_MAP[vm.status48]">{{ vm.badge48 }}</Badge>
       </header>
       <output class="tile-value flex items-center justify-center gap-item-gap">
         <span>{{ vm.size48 }}</span>
@@ -64,15 +52,10 @@ const BADGE_COLOR_MAP: Record<string, string> = {
       </output>
     </div>
 
-    <div
-      class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0"
-      :class="[`is-${vm.statusCustom}`, size === 'sm' && 'is-sm']"
-    >
+    <div class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="[`is-${vm.statusCustom}`, size === 'sm' && 'is-sm']">
       <header class="tile-header flex items-center justify-center gap-inline-gap">
         <span>{{ vm.titleCustom }}</span>
-        <span v-if="vm.badgeCustom" class="badge" :style="{ '--glow-color': BADGE_COLOR_MAP[vm.statusCustom] }">
-          {{ vm.badgeCustom }}
-        </span>
+        <Badge v-if="vm.badgeCustom" :variant="BADGE_VARIANT_MAP[vm.statusCustom]">{{ vm.badgeCustom }}</Badge>
       </header>
       <output class="tile-value flex items-center justify-center gap-item-gap">
         <span>{{ vm.sizeCustom }}</span>

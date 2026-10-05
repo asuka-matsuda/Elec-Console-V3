@@ -107,4 +107,69 @@ describe('Select.vue', () => {
     expect(button.attributes('id')).toBe('custom-select-id')
     expect(wrapper.classes()).toContain('is-error')
   })
+
+  it('renders Geist sizes properly (sm, md, lg)', () => {
+    const sizes = ['sm', 'md', 'lg'] as const
+
+    for (const size of sizes) {
+      const wrapper = mount(Select, {
+        props: {
+          options: mockOptions,
+          size,
+        },
+      })
+
+      expect(wrapper.classes()).toContain(`select--${size}`)
+    }
+  })
+
+  it('renders prefix text and icon properly', () => {
+    const wrapper = mount(Select, {
+      props: {
+        options: mockOptions,
+        icon: 'filter',
+        prefix: '絞り込み:',
+      },
+      global: {
+        stubs: {
+          Icon: {
+            props: ['name'],
+            template: '<span class="icon" :data-icon="name" />',
+          },
+        },
+      },
+    })
+
+    expect(wrapper.find('.select-prefix').text()).toContain('絞り込み:')
+
+    const icons = wrapper.findAll('.icon')
+
+    expect(icons.some(i => i.attributes('data-icon') === 'filter')).toBe(true)
+  })
+
+  it('renders check icon on active option', () => {
+    const wrapper = mount(Select, {
+      props: {
+        options: mockOptions,
+        modelValue: 'opt1',
+      },
+      global: {
+        stubs: {
+          Icon: {
+            props: ['name'],
+            template: '<span class="icon" :data-icon="name" />',
+          },
+        },
+      },
+    })
+
+    const activeOption = wrapper.find('.custom-select__option.is-active')
+
+    expect(activeOption.exists()).toBe(true)
+
+    const checkIcon = activeOption.find('.option-check')
+
+    expect(checkIcon.exists()).toBe(true)
+    expect(checkIcon.attributes('data-icon')).toBe('check')
+  })
 })

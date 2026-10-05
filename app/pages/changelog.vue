@@ -92,12 +92,7 @@ const resolveToolInfo = (toolId?: string) => {
         <Icon name="clock" />
         <span>バージョン更新履歴</span>
       </h2>
-      <Button
-        icon="arrow-left"
-        to="/"
-      >
-        ダッシュボードへ戻る
-      </Button>
+      <Button variant="tertiary" size="sm" icon="arrow-left" to="/">ダッシュボードへ戻る</Button>
     </header>
 
     <hr class="divider">
@@ -109,33 +104,21 @@ const resolveToolInfo = (toolId?: string) => {
       </div>
 
       <div class="w-full sm:w-80">
-        <Select
-          v-model="selectedTool"
-          :options="toolOptions"
-        />
+        <Select v-model="selectedTool" :options="toolOptions" />
       </div>
     </div>
 
     <div v-if="pending" class="flex justify-center empty-wrapper">
-      <EmptyState
-        icon="clock"
-        spin
-        title="更新履歴を読み込み中..."
-      />
+      <EmptyState icon="clock" spin title="更新履歴を読み込み中..." />
     </div>
 
     <div v-else-if="filteredHistory.length > 0" class="flex flex-col gap-panel-gap">
       <div v-for="item in filteredHistory" :key="item.id || `${item.version}-${item.date}`" class="panel flex flex-col gap-item-gap">
         <div class="flex flex-wrap items-center justify-between gap-item-gap history-header">
           <div class="flex items-center gap-item-gap">
-            <small class="version-tag">
-              {{ item.version }}
-            </small>
+            <Badge size="sm" variant="gray">{{ item.version }}</Badge>
 
-            <span class="flex items-center gap-inline-gap tool-tag">
-              <Icon :name="resolveToolInfo(item.toolId).icon" size="sm" />
-              <span>{{ resolveToolInfo(item.toolId).name }}</span>
-            </span>
+            <Badge size="sm" variant="blue" :icon="resolveToolInfo(item.toolId).icon">{{ resolveToolInfo(item.toolId).name }}</Badge>
           </div>
 
           <time class="history-date">
@@ -153,12 +136,7 @@ const resolveToolInfo = (toolId?: string) => {
       </div>
     </div>
 
-    <EmptyState
-      v-else
-      icon="clock"
-      title="該当する更新履歴はありません"
-      description="選択されたツールの履歴はまだ登録されていません。"
-    />
+    <EmptyState v-else icon="clock" title="該当する更新履歴はありません" description="選択されたツールの履歴はまだ登録されていません。" />
   </div>
 </template>
 
@@ -178,16 +156,6 @@ const resolveToolInfo = (toolId?: string) => {
   border-bottom: var(--border-width-base) solid var(--color-border);
 }
 
-.tool-tag {
-  padding: var(--space-inline-gap) var(--space-item-gap);
-
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-secondary);
-
-  background-color: var(--surface-bg);
-}
-
 .history-date {
   font-family: var(--font-mono);
   font-size: var(--font-size-xs);
@@ -205,10 +173,5 @@ const resolveToolInfo = (toolId?: string) => {
   line-height: var(--line-height-base);
   color: var(--color-text-secondary);
   white-space: pre-line;
-}
-
-.version-tag {
-  font-family: var(--font-mono);
-  color: var(--color-text-muted);
 }
 </style>

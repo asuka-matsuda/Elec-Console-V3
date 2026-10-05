@@ -57,28 +57,11 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
 </script>
 
 <template>
-  <Modal
-    v-model="isOpen"
-    title="現場データのサーバー同期"
-    @close="closeModal"
-  >
+  <Modal v-model="isOpen" title="現場データのサーバー同期" @close="closeModal">
     <template #actions>
-      <Button
-        @click="closeModal"
-      >
-        閉じる
-      </Button>
+      <Button @click="closeModal">閉じる</Button>
 
-      <Button
-        v-if="conflictItems.length === 0 && !syncResult"
-        variant="success"
-        icon="upload"
-        :loading="isSyncing"
-        :disabled="pendingCount === 0"
-        @click="handleStartSync"
-      >
-        送信実行
-      </Button>
+      <Button v-if="conflictItems.length === 0 && !syncResult" variant="primary" icon="upload" :loading="isSyncing" :disabled="pendingCount === 0" @click="handleStartSync">変更を送信する</Button>
     </template>
 
     <div class="flex flex-col gap-panel-gap">
@@ -96,9 +79,7 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
           <div class="flex items-center gap-item-gap panel-header">
             <span class="panel-ban">{{ item.banMeisho }}</span>
             <span class="flex-1 panel-kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
-            <span class="badge" :style="{ '--glow-color': 'var(--color-status-warning)' }">
-              フェーズ{{ item.phase }}
-            </span>
+            <Badge variant="amber">フェーズ{{ item.phase }}</Badge>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-form-col-gap">
@@ -114,12 +95,7 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
               <div class="p-item-gap col-details">
                 {{ formatPhaseValues(item.phase, item.serverCircuitData, true) }}
               </div>
-              <Button
-                class="mt-auto"
-                @click="handleResolve(item, 'discard')"
-              >
-                サーバーの値を残す
-              </Button>
+              <Button size="sm" class="mt-auto" @click="handleResolve(item, 'discard')">サーバーの値を残す</Button>
             </div>
 
             <div class="flex flex-col gap-item-gap p-panel-pad-compact conflict-col client-col">
@@ -133,22 +109,14 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
               <div class="p-item-gap col-details">
                 {{ formatPhaseValues(item.phase, item.payload, false) }}
               </div>
-              <Button
-                class="mt-auto"
-                @click="handleResolve(item, 'overwrite')"
-              >
-                自分の値で上書きする
-              </Button>
+              <Button size="sm" class="mt-auto" @click="handleResolve(item, 'overwrite')">自分の値で上書きする</Button>
             </div>
           </div>
         </div>
       </template>
 
       <template v-else-if="syncResult">
-        <div
-          class="flex flex-col gap-item-gap p-panel-pad-compact sync-result-box"
-          :class="syncResult.errorCount > 0 ? 'is-danger' : 'is-success'"
-        >
+        <div class="flex flex-col gap-item-gap p-panel-pad-compact sync-result-box" :class="syncResult.errorCount > 0 ? 'is-danger' : 'is-success'">
           <div v-if="syncResult.successCount > 0" class="flex items-center gap-item-gap">
             <Icon name="circle-check" size="sm" />
             <span>{{ syncResult.successCount }} 件のデータを正常に同期しました。</span>
@@ -167,14 +135,8 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
         </p>
 
         <ul class="overflow-y-auto flex flex-col gap-inline-gap max-h-[220px]">
-          <li
-            v-for="item in queue"
-            :key="item.id"
-            class="flex items-center gap-item-gap px-item-gap py-inline-gap queue-item"
-          >
-            <span class="badge" :style="{ '--glow-color': 'var(--color-category-tool)' }">
-              P{{ item.phase }}
-            </span>
+          <li v-for="item in queue" :key="item.id" class="flex items-center gap-item-gap px-item-gap py-inline-gap queue-item">
+            <Badge variant="teal">P{{ item.phase }}</Badge>
             <span class="item-ban">{{ item.banMeisho }}</span>
             <span class="flex-1 item-kairo">{{ item.kairoBangou }} {{ item.kairoMeisho }}</span>
             <span class="item-time">{{ formatDateTime(item.clientConfirmedAt) }}</span>
@@ -182,12 +144,7 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
         </ul>
       </template>
 
-      <EmptyState
-        v-else
-        icon="circle-check"
-        title="未送信データはありません"
-        description="すべてのデータがサーバーと正常に同期されています。"
-      />
+      <EmptyState v-else icon="circle-check" title="未送信データはありません" description="すべてのデータがサーバーと正常に同期されています。" />
     </div>
   </Modal>
 </template>

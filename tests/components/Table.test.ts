@@ -39,21 +39,37 @@ describe('Table.vue', () => {
     expect(wrapper.text()).toContain('佐藤花子')
   })
 
-  it('loading: true の場合にローディング表示となり、データ行が描画されないこと', () => {
+  it('loading: true の場合に Skeleton 行が描画され、データ行が描画されないこと', () => {
     const wrapper = mount(Table, {
       props: {
         columns: sampleColumns,
         data: sampleData,
         loading: true,
-        loadingText: 'データ読み込み中...',
       },
     })
 
-    expect(wrapper.find('.loading-cell').exists()).toBe(true)
-    expect(wrapper.find('.loading-text').text()).toBe('データ読み込み中...')
-    // ローディング中はデータ行が存在しないこと
-    expect(wrapper.findAll('tbody tr').length).toBe(1)
+    const skeletons = wrapper.findAllComponents({ name: 'Skeleton' })
+
+    // 5行 × 2カラム = 10個の Skeleton
+    expect(skeletons.length).toBe(10)
+    // ローディング中はデータ行の値が表示されないこと
     expect(wrapper.text()).not.toContain('山田太郎')
+  })
+
+  it('loading スロットが指定された場合にカスタムローディング表示が描画されること', () => {
+    const wrapper = mount(Table, {
+      props: {
+        columns: sampleColumns,
+        data: sampleData,
+        loading: true,
+      },
+      slots: {
+        loading: '<tr><td colspan="2" class="custom-loader">カスタム読み込み中...</td></tr>',
+      },
+    })
+
+    expect(wrapper.find('.custom-loader').exists()).toBe(true)
+    expect(wrapper.find('.custom-loader').text()).toBe('カスタム読み込み中...')
   })
 
   it('header-${key} スロットが指定された場合にカスタムヘッダーが描画されること', () => {
@@ -291,5 +307,20 @@ describe('Table.vue', () => {
     expect(emptyTd.exists()).toBe(true)
     expect(emptyTd.attributes('colspan')).toBe(String(sampleColumns.length))
     expect(wrapper.text()).toContain('該当するデータはありません')
+  })
+
+  it('skeletonRows で指定した行数の Skeleton 行が描画されること', () => {
+    const wrapper = mount(Table, {
+      props: {
+        columns: sampleColumns,
+        loading: true,
+        skeletonRows: 3,
+      },
+    })
+
+    const skeletons = wrapper.findAllComponents({ name: 'Skeleton' })
+
+    // 3行 × 2カラム = 6個の Skeleton
+    expect(skeletons.length).toBe(6)
   })
 })

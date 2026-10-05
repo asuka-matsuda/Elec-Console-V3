@@ -24,6 +24,7 @@ const props = withDefaults(
     emptyText: 'データがありません',
     loading: false,
     loadingText: 'データを読み込み中...',
+    skeletonRows: 5,
     interactiveRow: false,
   },
 )
@@ -79,100 +80,40 @@ const getCellDisplayValue = (row: T, col: TableColumn<T>): unknown => {
 
 <template>
   <div class="table-wrapper overflow-auto">
-    <table
-      class="min-w-full text-left"
-      :class="{ 'table-fixed': columns.some(c => c.width) }"
-    >
+    <table class="min-w-full text-left" :class="{ 'table-fixed': columns.some(c => c.width) }">
       <colgroup>
-        <col
-          v-for="col in columns"
-          :key="col.key"
-          :style="{ width: col.width }"
-        />
+        <col v-for="col in columns" :key="col.key" :style="{ width: col.width }" />
       </colgroup>
 
       <thead>
         <tr>
-          <th
-            v-for="col in columns"
-            :key="col.key"
-            class="sticky top-0 z-table-header p-item-gap align-middle"
-            :class="{
-              'is-sortable': isSortable(col),
-              'is-sorted': sortBy === col.key && sortOrder,
-            }"
-            @click="handleSort(col)"
-          >
-            <div
-              class="flex items-center gap-inline-gap w-full min-w-0"
-              :class="col.align === 'center' ? 'justify-center' : col.align === 'right' ? 'justify-end' : 'justify-start'"
-            >
+          <th v-for="col in columns" :key="col.key" class="sticky top-0 z-table-header p-item-gap align-middle" :class="{ 'is-sortable': isSortable(col), 'is-sorted': sortBy === col.key && sortOrder }" @click="handleSort(col)">
+            <div class="flex items-center gap-inline-gap w-full min-w-0" :class="col.align === 'center' ? 'justify-center' : col.align === 'right' ? 'justify-end' : 'justify-start'">
               <span class="header-label">
                 <slot :name="`header-${col.key}`" :column="col">
                   {{ col.label }}
                 </slot>
               </span>
-              <Icon
-                v-if="isSortable(col)"
-                :name="sortBy === col.key && sortOrder ? (sortOrder === 'asc' ? 'chevron-up' : 'chevron-down') : 'chevrons-up-down'"
-                size="sm"
-                class="sort-icon"
-                :class="{ 'is-active': sortBy === col.key && sortOrder }"
-              />
+              <Icon v-if="isSortable(col)" :name="sortBy === col.key && sortOrder ? (sortOrder === 'asc' ? 'chevron-up' : 'chevron-down') : 'chevrons-up-down'" size="sm" class="sort-icon" :class="{ 'is-active': sortBy === col.key && sortOrder }" />
             </div>
           </th>
         </tr>
       </thead>
 
       <tbody v-if="loading">
-        <tr>
-          <td
-            :colspan="columns.length"
-            class="loading-cell py-section-gap text-center"
-          >
-            <slot name="loading">
-              <div class="flex flex-col items-center justify-center gap-item-gap">
-                <Icon name="loader" size="lg" spin class="text-accent" />
-                <span class="loading-text">{{ loadingText }}</span>
-              </div>
-            </slot>
-          </td>
-        </tr>
+        <slot name="loading">
+          <tr v-for="skeletonIndex in skeletonRows" :key="`skeleton-row-${skeletonIndex}`" class="table-row">
+            <td v-for="col in columns" :key="`skeleton-col-${String(col.key)}`" class="p-item-gap align-middle" :class="[col.class, col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left']">
+              <Skeleton :width="col.align === 'center' ? '40%' : '75%'" height="1.1rem" />
+            </td>
+          </tr>
+        </slot>
       </tbody>
 
       <tbody v-else-if="data && data.length > 0">
-        <tr
-          v-for="(row, index) in data"
-          :id="rowId?.(row, index)"
-          :key="getRowKey(row, index)"
-          class="table-row relative z-[1]"
-          :class="[
-            rowClass?.(row, index),
-            { 'is-interactive': interactiveRow },
-          ]"
-          @click="handleRowClick(row, index, $event)"
-        >
-          <td
-            v-for="col in columns"
-            :key="col.key"
-            class="p-item-gap align-middle"
-            :class="[
-              col.class,
-              col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left',
-              {
-                'is-truncate': col.truncate,
-                'is-empty': getCellValue(row, col.key) === null || getCellValue(row, col.key) === undefined || getCellValue(row, col.key) === '',
-              },
-            ]"
-          >
-            <slot
-              v-if="$slots[`cell-${col.key}`]"
-              :name="`cell-${col.key}`"
-              :value="getCellValue(row, col.key)"
-              :row="row"
-              :index="index"
-              :column="col"
-            />
+        <tr v-for="(row, index) in data" :id="rowId?.(row, index)" :key="getRowKey(row, index)" class="table-row relative z-[1]" :class="[rowClass?.(row, index), { 'is-interactive': interactiveRow }]" @click="handleRowClick(row, index, $event)">
+          <td v-for="col in columns" :key="col.key" class="p-item-gap align-middle" :class="[col.class, col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left', { 'is-truncate': col.truncate, 'is-empty': getCellValue(row, col.key) === null || getCellValue(row, col.key) === undefined || getCellValue(row, col.key) === '' }]">
+            <slot v-if="$slots[`cell-${col.key}`]" :name="`cell-${col.key}`" :value="getCellValue(row, col.key)" :row="row" :index="index" :column="col" />
             <template v-else>
               {{ getCellDisplayValue(row, col) }}
             </template>
@@ -182,15 +123,9 @@ const getCellDisplayValue = (row: T, col: TableColumn<T>): unknown => {
 
       <tbody v-else>
         <tr>
-          <td
-            :colspan="columns.length"
-            class="empty-cell text-center"
-          >
+          <td :colspan="columns.length" class="empty-cell text-center">
             <slot name="empty">
-              <EmptyState
-                icon="database"
-                :title="emptyText"
-              />
+              <EmptyState icon="database" :title="emptyText" />
             </slot>
           </td>
         </tr>
@@ -365,10 +300,6 @@ td.col-actions {
     outline-color: var(--color-selection-outline);
     box-shadow: none;
   }
-}
-
-.text-accent {
-  color: var(--theme-accent);
 }
 
 .loading-text {

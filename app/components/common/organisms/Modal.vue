@@ -52,30 +52,21 @@ watch(
 </script>
 
 <template>
-  <dialog
-    ref="dialogRef"
-    class="modal m-auto p-0 w-fit min-w-[min(92vw,380px)] max-w-[min(92vw,640px)] max-h-[90vh] overflow-visible open:flex open:flex-col"
-    @cancel="onNativeCancel"
-  >
+  <dialog ref="dialogRef" class="modal m-auto p-0 w-fit min-w-[min(92vw,380px)] max-w-[min(92vw,640px)] max-h-[90vh] overflow-visible open:flex open:flex-col" @cancel="onNativeCancel">
     <div class="modal-window flex flex-1 flex-col gap-panel-gap min-h-0 p-panel-pad">
       <header v-if="title" class="flex items-center justify-between gap-item-gap">
         <h3 class="flex items-center gap-item-gap">
-          <Icon v-if="icon" :name="icon" class="text-accent" />
+          <Icon v-if="icon" :name="icon" variant="accent" />
           <span>{{ title }}</span>
         </h3>
 
         <slot name="actions">
-          <Button @click="handleClose">
-            {{ closeText }}
-          </Button>
+          <Button @click="handleClose">{{ closeText }}</Button>
         </slot>
       </header>
       <hr v-if="title" class="divider">
 
-      <div
-        class="modal-body overflow-y-auto flex flex-1 flex-col gap-form-row-gap min-h-0"
-        :class="{ 'text-center': align === 'center' }"
-      >
+      <div class="modal-body overflow-y-auto flex flex-1 flex-col gap-form-row-gap min-h-0" :class="{ 'text-center': align === 'center' }">
         <slot />
       </div>
     </div>

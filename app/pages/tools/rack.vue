@@ -120,10 +120,7 @@ const handleRemoveCable = (id: string) => {
 
 <template>
   <div class="flex flex-1 flex-col gap-panel-gap min-h-0 w-full max-w-[1600px] mx-auto">
-    <Alert
-      variant="warning"
-      text="免責事項: 本ツールによる計算結果は、規程に基づいた理論値（目安）です。選定や安全性については、必ず設計者自身の責任において各種関連法規・規程をご確認の上ご判断ください。"
-    />
+    <Alert variant="warning" text="免責事項: 本ツールによる計算結果は、規程に基づいた理論値（目安）です。選定や安全性については、必ず設計者自身の責任において各種関連法規・規程をご確認の上ご判断ください。" />
 
     <div class="grid flex-1 grid-cols-1 md:grid-cols-[minmax(0,4fr)_minmax(0,3fr)] gap-panel-gap min-h-0">
       <section class="panel flex flex-1 flex-col gap-panel-gap min-h-0">
@@ -133,53 +130,26 @@ const handleRemoveCable = (id: string) => {
             <span>条件入力</span>
           </h3>
           <div class="flex items-center gap-item-gap">
-            <Button
-              variant="danger"
-              icon="refresh-cw"
-              @click="openResetModal"
-            >
-              リセット
-            </Button>
+            <Button variant="secondary" size="sm" icon="refresh-cw" @click="openResetModal">入力をリセットする</Button>
           </div>
         </header>
         <hr class="divider">
 
         <form class="flex flex-1 flex-col gap-form-row-gap min-h-0 overflow-y-auto" @submit.prevent>
           <nav class="radio-group">
-            <button
-              v-for="opt in rackModeOptions"
-              :key="String(opt.value)"
-              type="button"
-              class="radio-group-item"
-              :class="{ 'is-active': inputs.mode === opt.value }"
-              @click="inputs.mode = opt.value"
-            >
-              {{ opt.label }}
-            </button>
+            <button v-for="opt in rackModeOptions" :key="String(opt.value)" type="button" class="radio-group-item" :class="{ 'is-active': inputs.mode === opt.value }" @click="inputs.mode = opt.value">{{ opt.label }}</button>
           </nav>
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-form-col-gap">
             <div class="flex flex-col gap-inline-gap">
               <div class="flex items-center gap-inline-gap">
                 <label for="rack-margin-rate" class="label">余裕係数</label>
-                <button
-                  type="button"
-                  class="help-trigger"
-                  :title="getHelpContent('marginRate')?.content"
-                >
+                <button type="button" class="help-trigger" :title="getHelpContent('marginRate')?.content">
                   <Icon name="circle-help" size="sm" />
                 </button>
               </div>
               <div class="flex items-center gap-inline-gap w-full min-w-0">
-                <Input
-                  id="rack-margin-rate"
-                  v-model.number="inputs.marginRate"
-                  type="number"
-                  step="0.05"
-                  min="0.1"
-                  :placeholder="inputs.mode === 'strong' ? '1.2' : '0.6'"
-                  class="flex-1 min-w-0"
-                />
+                <Input id="rack-margin-rate" v-model.number="inputs.marginRate" type="number" step="0.05" min="0.1" :placeholder="inputs.mode === 'strong' ? '1.2' : '0.6'" class="flex-1 min-w-0" />
                 <span class="shrink-0 form-addon">倍</span>
               </div>
             </div>
@@ -187,23 +157,12 @@ const handleRemoveCable = (id: string) => {
             <div class="flex flex-col gap-inline-gap">
               <div class="flex items-center gap-inline-gap">
                 <label for="rack-cable-spacing" class="label">ケーブル間隔</label>
-                <button
-                  type="button"
-                  class="help-trigger"
-                  :title="getHelpContent('cableSpacing')?.content"
-                >
+                <button type="button" class="help-trigger" :title="getHelpContent('cableSpacing')?.content">
                   <Icon name="circle-help" size="sm" />
                 </button>
               </div>
               <div class="flex items-center gap-inline-gap w-full min-w-0">
-                <Input
-                  id="rack-cable-spacing"
-                  v-model.number="inputs.cableSpacing"
-                  type="number"
-                  min="0"
-                  placeholder="10"
-                  class="flex-1 min-w-0"
-                />
+                <Input id="rack-cable-spacing" v-model.number="inputs.cableSpacing" type="number" min="0" placeholder="10" class="flex-1 min-w-0" />
                 <span class="shrink-0 form-addon">mm</span>
               </div>
             </div>
@@ -211,23 +170,12 @@ const handleRemoveCable = (id: string) => {
             <div class="flex flex-col gap-inline-gap">
               <div class="flex items-center gap-inline-gap">
                 <label for="rack-side-margin" class="label">親桁クリアランス</label>
-                <button
-                  type="button"
-                  class="help-trigger"
-                  :title="getHelpContent('sideMargin')?.content"
-                >
+                <button type="button" class="help-trigger" :title="getHelpContent('sideMargin')?.content">
                   <Icon name="circle-help" size="sm" />
                 </button>
               </div>
               <div class="flex items-center gap-inline-gap w-full min-w-0">
-                <Input
-                  id="rack-side-margin"
-                  v-model.number="inputs.sideMargin"
-                  type="number"
-                  min="0"
-                  :placeholder="inputs.mode === 'strong' ? '60' : '120'"
-                  class="flex-1 min-w-0"
-                />
+                <Input id="rack-side-margin" v-model.number="inputs.sideMargin" type="number" min="0" :placeholder="inputs.mode === 'strong' ? '60' : '120'" class="flex-1 min-w-0" />
                 <span class="shrink-0 form-addon">mm</span>
               </div>
             </div>
@@ -237,119 +185,60 @@ const handleRemoveCable = (id: string) => {
             <div class="flex flex-col gap-inline-gap">
               <div class="flex items-center gap-inline-gap">
                 <label for="rack-height" class="label">ラック高さ (H)</label>
-                <button
-                  type="button"
-                  class="help-trigger"
-                  :title="getHelpContent('rackHeight')?.content"
-                >
+                <button type="button" class="help-trigger" :title="getHelpContent('rackHeight')?.content">
                   <Icon name="circle-help" size="sm" />
                 </button>
               </div>
               <div class="flex items-center gap-inline-gap w-full min-w-0">
-                <Input
-                  id="rack-height"
-                  v-model="inputs.rackHeight"
-                  type="number"
-                  min="50"
-                  step="10"
-                  class="flex-1 min-w-0"
-                />
+                <Input id="rack-height" v-model="inputs.rackHeight" type="number" min="50" step="10" class="flex-1 min-w-0" />
                 <span class="shrink-0 form-addon">mm</span>
               </div>
             </div>
 
             <div class="flex flex-col gap-inline-gap">
               <div class="flex items-center gap-inline-gap">
-                <label for="rack-other-width" class="label">
-                  {{ inputs.mode === 'strong' ? '弱電必要幅' : '強電必要幅' }}
-                </label>
-                <button
-                  type="button"
-                  class="help-trigger"
-                  :title="getHelpContent('otherWidth')?.content"
-                >
+                <label for="rack-other-width" class="label">{{ inputs.mode === 'strong' ? '弱電必要幅' : '強電必要幅' }}</label>
+                <button type="button" class="help-trigger" :title="getHelpContent('otherWidth')?.content">
                   <Icon name="circle-help" size="sm" />
                 </button>
               </div>
               <div class="flex items-center gap-inline-gap w-full min-w-0">
-                <Input
-                  id="rack-other-width"
-                  v-model="inputs.otherWidth"
-                  type="number"
-                  min="0"
-                  placeholder="相乗り時に指定"
-                  class="flex-1 min-w-0"
-                />
+                <Input id="rack-other-width" v-model="inputs.otherWidth" type="number" min="0" placeholder="相乗り時に指定" class="flex-1 min-w-0" />
                 <span class="shrink-0 form-addon">mm</span>
               </div>
             </div>
           </div>
 
           <section class="flex flex-col gap-item-gap">
-            <Button
-              class="self-end"
-              icon="plus"
-              @click="handleAddCable"
-            >
-              {{ inputs.mode === 'strong' ? '強電ケーブルを追加' : '弱電ケーブルを追加' }}
-            </Button>
+            <Button class="self-end" size="sm" icon="plus" @click="handleAddCable">{{ inputs.mode === 'strong' ? '強電ケーブルを追加' : '弱電ケーブルを追加' }}</Button>
 
-            <Table
-              :columns="RACK_CABLE_COLUMNS"
-              :data="currentCables"
-              class="w-full"
-            >
+            <Table :columns="RACK_CABLE_COLUMNS" :data="currentCables" class="w-full">
               <template #cell-category="{ row }">
-                <Select
-                  v-model="row.category"
-                  :options="currentCategories"
-                  placeholder="選択"
-                  @update:model-value="row.cableIdx = ''"
-                />
+                <Select v-model="row.category" :options="currentCategories" placeholder="選択" @update:model-value="row.cableIdx = ''" />
               </template>
 
               <template #cell-cableIdx="{ row }">
-                <Select
-                  v-model="row.cableIdx"
-                  :options="getAvailableSizes(row.category)"
-                  placeholder="選択"
-                  :disabled="!row.category"
-                />
+                <Select v-model="row.cableIdx" :options="getAvailableSizes(row.category)" placeholder="選択" :disabled="!row.category" />
               </template>
 
               <template #cell-count="{ row }">
                 <div class="flex items-center gap-inline-gap">
-                  <Input
-                    v-model.number="row.count"
-                    type="number"
-                    min="1"
-                  />
+                  <Input v-model.number="row.count" type="number" min="1" />
                   <span class="shrink-0 table-addon">条</span>
                 </div>
               </template>
 
               <template #cell-spec="{ row }">
                 <div class="stacked-cell flex flex-col gap-0.5 items-end">
-                  <span class="main-text">
-                    {{ getCableSpec(row.cableIdx, row.count).text }}
-                  </span>
-                  <span
-                    v-if="getCableSpec(row.cableIdx, row.count).detail"
-                    class="sub-text"
-                  >
-                    {{ getCableSpec(row.cableIdx, row.count).detail }}
-                  </span>
+                  <span class="main-text">{{ getCableSpec(row.cableIdx, row.count).text }}</span>
+                  <span v-if="getCableSpec(row.cableIdx, row.count).detail" class="sub-text">{{ getCableSpec(row.cableIdx, row.count).detail }}</span>
                 </div>
               </template>
 
               <template #cell-actions="{ row }">
-                <Button
-                  variant="danger"
-                  icon="trash-2"
-                  :disabled="currentCables.length <= 1"
-                  title="削除"
-                  @click="handleRemoveCable(row.id)"
-                />
+                <Tooltip text="削除">
+                  <Button variant="danger" size="sm" icon="trash-2" :disabled="currentCables.length <= 1" @click="handleRemoveCable(row.id)" />
+                </Tooltip>
               </template>
             </Table>
           </section>
@@ -363,23 +252,8 @@ const handleRemoveCable = (id: string) => {
             <span>{{ isShowingBasis ? '計算根拠' : '選定結果' }}</span>
           </h3>
           <div class="flex items-center gap-item-gap">
-            <Button
-              v-if="mathSteps?.length"
-              :icon="isShowingBasis ? 'arrow-left' : 'circle-help'"
-              @click="isShowingBasis = !isShowingBasis"
-            >
-              {{ isShowingBasis ? '結果に戻る' : '計算根拠' }}
-            </Button>
-            <Button
-              v-if="!isShowingBasis"
-              :variant="saveState === 'error' ? 'danger' : 'success'"
-              :icon="saveState === 'saving' ? 'loader' : saveState === 'success' ? 'check' : saveState === 'error' ? 'circle-alert' : 'save'"
-              :disabled="isSaveDisabled || saveState !== 'idle'"
-              :loading="saveState === 'saving'"
-              @click="handleSave"
-            >
-              {{ saveState === 'saving' ? '保存中...' : saveState === 'success' ? '保存しました' : saveState === 'error' ? '保存に失敗しました' : '履歴に保存' }}
-            </Button>
+            <Button v-if="mathSteps?.length" variant="tertiary" size="sm" :icon="isShowingBasis ? 'arrow-left' : 'circle-help'" @click="isShowingBasis = !isShowingBasis">{{ isShowingBasis ? '計算結果に戻る' : '計算根拠を表示' }}</Button>
+            <Button v-if="!isShowingBasis" variant="primary" size="sm" icon="save" :disabled="isSaveDisabled || saveState !== 'idle'" :loading="saveState === 'saving'" @click="handleSave">履歴に保存する</Button>
           </div>
         </header>
         <hr class="divider">

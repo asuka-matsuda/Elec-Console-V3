@@ -37,11 +37,7 @@ const handleReset = () => {
       </div>
 
       <div class="error-page__badge">
-        <Icon
-          :name="isNotFound ? 'compass' : 'triangle-alert'"
-          size="lg"
-          :class="isNotFound ? 'text-primary' : 'text-danger'"
-        />
+        <Icon :name="isNotFound ? 'compass' : 'triangle-alert'" size="lg" :variant="isNotFound ? 'primary' : 'danger'" />
         <span class="error-page__code">{{ statusCode }}</span>
       </div>
 
@@ -58,18 +54,10 @@ const handleReset = () => {
       </p>
 
       <div class="error-page__actions">
-        <Button
-          icon="home"
-          @click="handleReset"
-        >
-          ホームへ戻る
-        </Button>
+        <Button variant="primary" icon="home" @click="handleReset">ホームへ戻る</Button>
       </div>
 
-      <details
-        v-if="error?.message && !isNotFound"
-        class="error-page__details"
-      >
+      <details v-if="error?.message && !isNotFound" class="error-page__details">
         <summary class="error-page__summary">
           <Icon name="chevron-right" size="sm" />
           <span>詳細なエラー情報</span>

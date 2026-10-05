@@ -64,18 +64,13 @@ useHead({
   <div :key="siteId" class="flex flex-col gap-section-gap h-full">
     <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
       <h2 class="flex items-center gap-item-gap">
-        <Icon name="map-pin" class="text-primary" />
+        <Icon name="map-pin" />
         <span>{{ currentSite?.name || '現場ダッシュボード' }}</span>
       </h2>
       <div class="flex items-center gap-item-gap">
         <PortalSyncStatusBadge :site-id="siteId" />
 
-        <Select
-          :model-value="siteId"
-          :options="siteOptions"
-          class="min-w-[200px]"
-          @update:model-value="switchSite"
-        />
+        <Select :model-value="siteId" :options="siteOptions" class="min-w-[200px]" @update:model-value="switchSite" />
       </div>
     </header>
     <hr class="divider">
@@ -92,87 +87,36 @@ useHead({
           <section class="panel flex flex-col gap-form-row-gap">
             <header class="flex items-center gap-item-gap">
               <h3 class="flex items-center gap-item-gap">
-                <Icon name="check" class="text-primary" />
+                <Icon name="check" />
                 <span>パーソナルToDo</span>
               </h3>
             </header>
             <hr class="divider">
 
             <form class="flex items-center gap-item-gap" @submit.prevent="handleAddTodo">
-              <Input
-                v-model="newTask"
-                placeholder="新しいタスクを入力..."
-                class="flex-1"
-              />
-              <Button type="submit" icon="plus" />
+              <Input v-model="newTask" placeholder="新しいタスクを入力..." class="flex-1" />
+              <Button type="submit" variant="primary" icon="plus" />
             </form>
 
-            <ul
-              v-if="todos.length > 0"
-              class="overflow-y-auto flex flex-col gap-inline-gap max-h-[400px]"
-            >
-              <li
-                v-for="todo in todos"
-                :key="todo.id"
-                class="todo-item flex items-center justify-between gap-item-gap p-item-gap"
-              >
-                <Checkbox v-model="todo.completed" variant="success">
-                  <span
-                    class="todo-label"
-                    :class="{ 'is-completed': todo.completed }"
-                  >
-                    {{ todo.text }}
-                  </span>
+            <ul v-if="todos.length > 0" class="overflow-y-auto flex flex-col gap-inline-gap max-h-[400px]">
+              <li v-for="todo in todos" :key="todo.id" class="todo-item flex items-center justify-between gap-item-gap p-item-gap">
+                <Checkbox v-model="todo.completed">
+                  <span class="todo-label" :class="{ 'is-completed': todo.completed }">{{ todo.text }}</span>
                 </Checkbox>
-                <Button
-                  variant="danger"
-                  icon="trash-2"
-                  @click="deleteTodo(todo.id)"
-                />
+                <Button variant="danger" size="sm" icon="trash-2" @click="deleteTodo(todo.id)" />
               </li>
             </ul>
 
-            <EmptyState
-              v-else
-              icon="circle-check"
-              title="タスクはありません"
-              description="上の入力欄から新しいタスクを追加してください。"
-            />
+            <EmptyState v-else icon="circle-check" title="タスクはありません" description="上の入力欄から新しいタスクを追加してください。" />
           </section>
         </ClientOnly>
 
         <nav class="flex flex-col gap-inline-gap">
-          <Button
-            icon="zap"
-            :to="`/portal/${siteId}/souden`"
-            class="w-full"
-          >
-            送電試験
-          </Button>
+          <Button icon="zap" block :to="`/portal/${siteId}/souden`">送電試験を開始する</Button>
 
-          <Button
-            icon="tag"
-            :to="`/portal/${siteId}/tag-print`"
-            class="w-full"
-          >
-            タグ出力
-          </Button>
+          <Button icon="sliders" block :to="`/portal/${siteId}/remote-control`">リモコン設定を開く</Button>
 
-          <Button
-            icon="sliders"
-            :to="`/portal/${siteId}/remote-control`"
-            class="w-full"
-          >
-            リモコン設定表
-          </Button>
-
-          <Button
-            icon="key"
-            :to="`/portal/${siteId}/template-keys`"
-            class="w-full"
-          >
-            テンプレートキー一覧
-          </Button>
+          <Button icon="printer" block :to="`/portal/${siteId}/reports`">帳票出力へ移動する</Button>
         </nav>
       </aside>
     </div>

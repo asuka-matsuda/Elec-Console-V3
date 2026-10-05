@@ -6,7 +6,7 @@
 import { computed, ref } from 'vue'
 
 import { useDbFilter } from '~/composables/useDbFilter'
-import { glossaryData, TRADE_COLOR_MAP } from '~/constants/data/glossaryData'
+import { glossaryData, TRADE_VARIANT_MAP } from '~/constants/data/glossaryData'
 import {
   collectAvailableKanaRows,
   filterByKana,
@@ -70,55 +70,25 @@ const disabledKanaRows = computed(() => {
           </h3>
         </header>
 
-        <Input
-          v-model="searchQuery"
-          placeholder="用語名や説明を検索..."
-        />
+        <ClearableInput v-model="searchQuery" placeholder="用語名や説明を検索..." icon="search" />
 
-        <ul
-          v-if="categoryOptions.length > 0"
-          class="grid grid-cols-[repeat(auto-fill,minmax(115px,1fr))] gap-item-gap"
-        >
-          <li
-            v-for="cat in categoryOptions"
-            :key="cat.value"
-          >
-            <Checkbox
-              v-model="activeCats"
-              :value="cat.value"
-            >
-              {{ cat.label }}
-            </Checkbox>
+        <ul v-if="categoryOptions.length > 0" class="grid grid-cols-[repeat(auto-fill,minmax(115px,1fr))] gap-item-gap">
+          <li v-for="cat in categoryOptions" :key="cat.value">
+            <Checkbox v-model="activeCats" :value="cat.value">{{ cat.label }}</Checkbox>
           </li>
         </ul>
 
         <div class="flex flex-col gap-inline-gap">
           <span class="index-label">INDEX (読み・五十音)</span>
           <nav class="grid grid-cols-5 gap-inline-gap">
-            <button
-              v-for="kana in KANA_ROWS"
-              :key="kana.value"
-              type="button"
-              class="flex items-center justify-center kana-btn"
-              :class="{ 'is-active': activeKanas.includes(kana.value) }"
-              :disabled="disabledKanaRows.has(kana.value)"
-              @click="toggleKanaRow(kana.value)"
-            >
-              {{ kana.label }}
-            </button>
+            <button v-for="kana in KANA_ROWS" :key="kana.value" type="button" class="flex items-center justify-center kana-btn" :class="{ 'is-active': activeKanas.includes(kana.value) }" :disabled="disabledKanaRows.has(kana.value)" @click="toggleKanaRow(kana.value)">{{ kana.label }}</button>
           </nav>
         </div>
       </section>
     </aside>
 
-    <ul
-      v-if="filteredGlossary.length > 0"
-      class="flex flex-1 flex-col gap-panel-gap min-w-0 min-h-0"
-    >
-      <li
-        v-for="item in filteredGlossary"
-        :key="item.term"
-      >
+    <ul v-if="filteredGlossary.length > 0" class="flex flex-1 flex-col gap-panel-gap min-w-0 min-h-0">
+      <li v-for="item in filteredGlossary" :key="item.term">
         <article class="panel flex flex-col gap-panel-gap">
           <header class="flex items-center justify-between gap-item-gap">
             <div class="flex flex-col gap-inline-gap">
@@ -127,9 +97,7 @@ const disabledKanaRows = computed(() => {
                 {{ item.term }}
               </h2>
             </div>
-            <span class="badge" :style="{ '--glow-color': TRADE_COLOR_MAP[item.category] }">
-              {{ item.category }}
-            </span>
+            <Badge :variant="TRADE_VARIANT_MAP[item.category] || 'gray'">{{ item.category }}</Badge>
           </header>
 
           <hr class="divider is-fade-center">
@@ -157,13 +125,7 @@ const disabledKanaRows = computed(() => {
       </li>
     </ul>
 
-    <EmptyState
-      v-else
-      icon="search"
-      title="該当する用語が見つかりません"
-      description="検索キーワードまたは五十音・工種フィルターの条件を変更してください。"
-      class="flex-1"
-    />
+    <EmptyState v-else icon="search" title="該当する用語が見つかりません" description="検索キーワードまたは五十音・工種フィルターの条件を変更してください。" class="flex-1" />
   </div>
 </template>
 

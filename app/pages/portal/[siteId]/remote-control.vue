@@ -176,6 +176,10 @@ const isAllSelected = computed({
   },
 })
 
+const isPartiallySelected = computed(() => {
+  return selectedAddresses.value.length > 0 && selectedAddresses.value.length < displayedCircuits.value.length
+})
+
 const circuitColumns = computed<TableColumn<RemoteCircuitItem>[]>(() => {
   const cols: TableColumn<RemoteCircuitItem>[] = [
     { key: 'select', label: '', width: '44px', align: 'center' },
@@ -313,21 +317,12 @@ onMounted(() => {
         <span>{{ pageTitle }}</span>
       </h2>
       <div class="flex items-center gap-item-gap">
-        <Button
-          icon="arrow-left"
-          :to="`/portal/${siteId}`"
-        >
-          現場ポータルへ戻る
-        </Button>
+        <Button variant="tertiary" size="sm" icon="arrow-left" :to="`/portal/${siteId}`">現場ポータルへ戻る</Button>
       </div>
     </header>
     <hr class="divider">
 
-    <Alert
-      v-if="dataError"
-      variant="danger"
-      :text="dataError"
-    />
+    <Alert v-if="dataError" variant="danger" :text="dataError" />
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-panel-gap items-start">
       <!-- 左ペイン: リモコン設定・編成 -->
@@ -338,37 +333,18 @@ onMounted(() => {
             <span>リモコン設定・グループ編成</span>
           </h3>
           <div class="flex items-center gap-item-gap">
-            <Button
-              icon="save"
-              :loading="isSaving"
-              @click="saveRemoteConfig"
-            >
-              設定を保存
-            </Button>
+            <Button variant="primary" size="sm" icon="save" :loading="isSaving" @click="saveRemoteConfig">設定を保存する</Button>
           </div>
         </header>
         <hr class="divider">
 
-        <Alert
-          v-if="saveMessage"
-          :variant="saveMessage.type === 'success' ? 'success' : 'danger'"
-          :text="saveMessage.text"
-        />
+        <Alert v-if="saveMessage" :variant="saveMessage.type === 'success' ? 'success' : 'danger'" :text="saveMessage.text" />
 
         <nav class="tabs flex items-center gap-inline-gap overflow-x-auto">
-          <button
-            v-for="tab in tabOptions"
-            :key="tab.value"
-            type="button"
-            class="tabs-item"
-            :class="{ 'is-active': currentTab === tab.value }"
-            @click="currentTab = tab.value"
-          >
+          <button v-for="tab in tabOptions" :key="tab.value" type="button" class="tabs-item" :class="{ 'is-active': currentTab === tab.value }" @click="currentTab = tab.value">
             <Icon v-if="tab.icon" :name="tab.icon" size="sm" />
             <span>{{ tab.label }}</span>
-            <span v-if="tab.badge !== undefined" class="badge">
-              {{ tab.badge }}
-            </span>
+            <span v-if="tab.badge !== undefined" class="badge">{{ tab.badge }}</span>
           </button>
         </nav>
 
@@ -376,92 +352,47 @@ onMounted(() => {
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-item-gap">
             <div v-if="densoKeiToList.length > 1" class="flex flex-col gap-inline-gap">
               <label for="filter-denso" class="label">伝送系統</label>
-              <Select
-                id="filter-denso"
-                v-model="filterDenso"
-                :options="densoOptions"
-              />
+              <Select id="filter-denso" v-model="filterDenso" :options="densoOptions" />
             </div>
 
             <div class="flex flex-col gap-inline-gap">
               <label for="filter-ban" class="label">盤で絞り込み</label>
-              <Select
-                id="filter-ban"
-                v-model="filterBan"
-                :options="banOptions"
-              />
+              <Select id="filter-ban" v-model="filterBan" :options="banOptions" />
             </div>
 
             <div class="flex flex-col gap-inline-gap">
               <label for="filter-search-query" class="label">キーワード検索 (アドレス・負荷名等)</label>
-              <Input
-                id="filter-search-query"
-                v-model="searchQuery"
-                placeholder="0-1, 照明, 1L-1..."
-              />
+              <ClearableInput id="filter-search-query" v-model="searchQuery" placeholder="0-1, 照明, 1L-1..." icon="search" />
             </div>
           </div>
 
           <div class="bulk-toolbar flex flex-wrap items-center justify-between gap-item-gap p-item-gap">
             <div class="flex items-center gap-item-gap">
-              <Checkbox v-model="isAllSelected" label="全選択" />
+              <Checkbox v-model="isAllSelected" :indeterminate="isPartiallySelected" label="全選択" />
               <Checkbox v-model="hideVacant" label="空きを除外" />
-              <span class="selection-count">選択: {{ selectedAddresses.length }}件</span>
+              <span class="selection-count">選択: {{ selectedAddresses.length }} / {{ displayedCircuits.length }}件</span>
             </div>
 
             <div class="flex flex-wrap items-center gap-inline-gap">
               <div class="flex items-center gap-inline-gap">
                 <span class="toolbar-label">G:</span>
-                <Input
-                  v-model="bulkGroupInput"
-                  type="number"
-                  placeholder="1〜127"
-                  class="w-20"
-                />
-                <Button
-                  :disabled="selectedAddresses.length === 0 || !bulkGroupInput"
-                  @click="handleBulkAssignGroup"
-                >
-                  G追加
-                </Button>
+                <Input v-model="bulkGroupInput" type="number" placeholder="1〜127" class="w-20" />
+                <Button size="sm" :disabled="selectedAddresses.length === 0 || !bulkGroupInput" @click="handleBulkAssignGroup">グループを追加</Button>
               </div>
 
               <div class="flex items-center gap-inline-gap">
                 <span class="toolbar-label">P:</span>
-                <Select
-                  v-model="bulkPatternInput"
-                  :options="patternOptions"
-                  class="w-28"
-                />
-                <Button
-                  :disabled="selectedAddresses.length === 0"
-                  @click="handleBulkAssignPattern"
-                >
-                  P追加
-                </Button>
+                <Select v-model="bulkPatternInput" :options="patternOptions" class="w-28" />
+                <Button size="sm" :disabled="selectedAddresses.length === 0" @click="handleBulkAssignPattern">パターンを追加</Button>
               </div>
 
-              <Button
-                variant="danger"
-                :disabled="selectedAddresses.length === 0"
-                @click="handleBulkClear"
-              >
-                解除
-              </Button>
+              <Button variant="danger" size="sm" :disabled="selectedAddresses.length === 0" @click="handleBulkClear">一括解除する</Button>
             </div>
           </div>
 
-          <Table
-            v-model:sort-by="sortBy"
-            v-model:sort-order="sortOrder"
-            :columns="circuitColumns"
-            :data="displayedCircuits"
-            :loading="isLoadingData"
-            row-key="uniqueKey"
-            empty-text="該当する負荷アドレスが見つかりません"
-          >
+          <Table v-model:sort-by="sortBy" v-model:sort-order="sortOrder" :columns="circuitColumns" :data="displayedCircuits" :loading="isLoadingData" row-key="uniqueKey" empty-text="該当する負荷アドレスが見つかりません">
             <template #header-select>
-              <Checkbox v-model="isAllSelected" />
+              <Checkbox v-model="isAllSelected" :indeterminate="isPartiallySelected" :title="isPartiallySelected ? `${selectedAddresses.length} / ${displayedCircuits.length}件 選択中` : undefined" />
             </template>
 
             <template #cell-select="{ row }">
@@ -469,9 +400,7 @@ onMounted(() => {
             </template>
 
             <template #cell-fukaAddress="{ row }">
-              <strong class="address-text" :class="{ 'is-vacant': row.isVacant }">
-                {{ row.fukaAddress }}
-              </strong>
+              <strong class="address-text" :class="{ 'is-vacant': row.isVacant }">{{ row.fukaAddress }}</strong>
             </template>
 
             <template #cell-densoKeiTo="{ row }">
@@ -484,10 +413,7 @@ onMounted(() => {
 
             <template #cell-kairoBangou="{ row }">
               <div v-if="!row.isVacant && (row.kairoBangou !== '-' || row.kairoKigou)" class="symbol-wrapper flex items-center justify-center">
-                <CircuitSymbol
-                  :kigou="row.kairoKigou"
-                  :bangou="row.kairoBangou"
-                />
+                <CircuitSymbol :kigou="row.kairoKigou" :bangou="row.kairoBangou" />
               </div>
               <span v-else class="empty-mark">-</span>
             </template>
@@ -499,17 +425,9 @@ onMounted(() => {
 
             <template #cell-groups="{ row }">
               <div class="flex flex-wrap items-center gap-inline-gap">
-                <span
-                  v-for="g in getAssignedGroups(row.uniqueKey, row.fukaAddress)"
-                  :key="g"
-                  class="inline-flex items-center gap-inline-gap"
-                >
-                  <span class="badge" :style="{ '--glow-color': 'var(--theme-accent)' }">G{{ g }}</span>
-                  <Button
-                    icon="x"
-                    class="chip-remove-btn"
-                    @click.stop="removeGroup(row.uniqueKey, g)"
-                  />
+                <span v-for="g in getAssignedGroups(row.uniqueKey, row.fukaAddress)" :key="g" class="inline-flex items-center gap-inline-gap">
+                  <Badge variant="purple">G{{ g }}</Badge>
+                  <Button variant="tertiary" size="sm" icon="x" class="chip-remove-btn" @click.stop="removeGroup(row.uniqueKey, g)" />
                 </span>
                 <span v-if="getAssignedGroups(row.uniqueKey, row.fukaAddress).length === 0" class="empty-mark">-</span>
               </div>
@@ -517,17 +435,9 @@ onMounted(() => {
 
             <template #cell-patterns="{ row }">
               <div class="flex flex-wrap items-center gap-inline-gap">
-                <span
-                  v-for="p in getAssignedPatterns(row.uniqueKey, row.fukaAddress)"
-                  :key="p"
-                  class="inline-flex items-center gap-inline-gap"
-                >
-                  <span class="badge" :style="{ '--glow-color': 'var(--color-status-warning)' }">{{ p }}</span>
-                  <Button
-                    icon="x"
-                    class="chip-remove-btn"
-                    @click.stop="removePattern(row.uniqueKey, p)"
-                  />
+                <span v-for="p in getAssignedPatterns(row.uniqueKey, row.fukaAddress)" :key="p" class="inline-flex items-center gap-inline-gap">
+                  <Badge variant="amber">{{ p }}</Badge>
+                  <Button variant="tertiary" size="sm" icon="x" class="chip-remove-btn" @click.stop="removePattern(row.uniqueKey, p)" />
                 </span>
                 <span v-if="getAssignedPatterns(row.uniqueKey, row.fukaAddress).length === 0" class="empty-mark">-</span>
               </div>
@@ -540,36 +450,19 @@ onMounted(() => {
             {{ currentBoardConfig.description }}
           </p>
 
-          <EmptyState
-            v-if="currentBoardConfig.items.length === 0"
-            :icon="currentBoardConfig.emptyIcon"
-            :title="currentBoardConfig.emptyTitle"
-            :description="currentBoardConfig.emptyDesc"
-          />
+          <EmptyState v-if="currentBoardConfig.items.length === 0" :icon="currentBoardConfig.emptyIcon" :title="currentBoardConfig.emptyTitle" :description="currentBoardConfig.emptyDesc" />
 
           <ul v-else class="board-grid grid grid-cols-1 md:grid-cols-2 gap-item-gap">
-            <li
-              v-for="card in currentBoardConfig.items"
-              :key="card.key"
-              class="board-card p-item-gap flex flex-col gap-inline-gap"
-            >
+            <li v-for="card in currentBoardConfig.items" :key="card.key" class="board-card p-item-gap flex flex-col gap-inline-gap">
               <div class="flex justify-between items-center">
-                <strong class="card-title" :class="card.isAccent ? 'text-accent' : 'text-warning'">{{ card.key }}</strong>
+                <strong class="card-title" :class="card.isAccent ? 'is-accent' : 'is-warning'">{{ card.key }}</strong>
                 <span class="card-count">{{ card.count }}回路</span>
               </div>
 
               <div class="flex flex-wrap items-center gap-inline-gap">
-                <span
-                  v-for="addr in card.addresses"
-                  :key="addr"
-                  class="inline-flex items-center gap-inline-gap"
-                >
-                  <span class="badge" :style="{ '--glow-color': card.color }">{{ addr }}</span>
-                  <Button
-                    icon="x"
-                    class="chip-remove-btn"
-                    @click="card.remove(addr)"
-                  />
+                <span v-for="addr in card.addresses" :key="addr" class="inline-flex items-center gap-inline-gap">
+                  <Badge :variant="card.isAccent ? 'purple' : 'amber'">{{ addr }}</Badge>
+                  <Button variant="tertiary" size="sm" icon="x" class="chip-remove-btn" @click="card.remove(addr)" />
                 </span>
               </div>
             </li>
@@ -585,23 +478,13 @@ onMounted(() => {
             <span>リモコン設定表 Excel出力</span>
           </h3>
           <div v-if="siteId" class="flex items-center gap-item-gap">
-            <Button
-              icon="key"
-              :to="`/portal/${siteId}/template-keys`"
-              target="_blank"
-            >
-              出力キー一覧
-            </Button>
+            <Button icon="key" :to="`/portal/${siteId}/template-keys`" target="_blank">出力キー一覧</Button>
           </div>
         </header>
 
         <hr class="divider">
 
-        <Alert
-          v-if="generateMessage"
-          :variant="generateMessage.type === 'success' ? 'success' : 'danger'"
-          :text="generateMessage.text"
-        />
+        <Alert v-if="generateMessage" :variant="generateMessage.type === 'success' ? 'success' : 'danger'" :text="generateMessage.text" />
 
         <div class="flex flex-col gap-item-gap">
           <header class="flex items-center gap-item-gap">
@@ -640,45 +523,21 @@ onMounted(() => {
 
         <div class="flex flex-col gap-inline-gap">
           <span class="label">2. 出力対象 (3パターン)</span>
-          <RadioGroup
-            v-model="exportTarget"
-            :options="exportTargetOptions"
-            :disabled="isGenerating"
-            block
-          />
-          <small class="text-note">
-            ※データベースから取得したアドレス表、および設定したグループ・パターンの3パターンから選んで出力できます。
-          </small>
+          <RadioGroup v-model="exportTarget" :options="exportTargetOptions" :disabled="isGenerating" block />
+          <small class="text-note">※データベースから取得したアドレス表、および設定したグループ・パターンの3パターンから選んで出力できます。</small>
         </div>
 
         <hr class="divider">
 
         <div class="flex flex-col gap-inline-gap">
           <span class="label">3. {{ targetFormatLabel }} (.xlsx)</span>
-          <ExcelDropzone
-            :model-value="currentFile"
-            :disabled="isGenerating"
-            accept=".xlsx, .xlsm"
-            @update:model-value="handleFileUpdate"
-          />
-          <small class="text-note">
-            ※ご用意いただいた{{ targetFormatLabel }}のExcelファイルを指定してください。フォーマットがセットされると出力可能になります。
-          </small>
+          <ExcelDropzone :model-value="currentFile" :disabled="isGenerating" accept=".xlsx, .xlsm" @update:model-value="handleFileUpdate" />
+          <small class="text-note">※ご用意いただいた{{ targetFormatLabel }}のExcelファイルを指定してください。フォーマットがセットされると出力可能になります。</small>
         </div>
 
         <div class="flex flex-col gap-item-gap mt-auto">
-          <Button
-            icon="printer"
-            class="w-full"
-            :disabled="!currentFile || remoteCircuits.length === 0 || isGenerating"
-            :loading="isGenerating"
-            @click="generateAndDownloadReport(exportTarget)"
-          >
-            {{ downloadButtonLabel }}
-          </Button>
-          <small v-if="!currentFile" class="text-center text-warning-note">
-            ※{{ targetFormatLabel }}がセットされていないため出力できません
-          </small>
+          <Button variant="primary" icon="printer" block :disabled="!currentFile || remoteCircuits.length === 0 || isGenerating" :loading="isGenerating" @click="generateAndDownloadReport(exportTarget)">{{ downloadButtonLabel }}</Button>
+          <small v-if="!currentFile" class="text-center text-warning-note">※{{ targetFormatLabel }}がセットされていないため出力できません</small>
         </div>
       </section>
     </div>
@@ -764,11 +623,11 @@ onMounted(() => {
   font-family: var(--font-mono);
   font-size: var(--font-size-base);
 
-  &.text-accent {
+  &.is-accent {
     color: var(--theme-accent);
   }
 
-  &.text-warning {
+  &.is-warning {
     color: var(--color-status-warning);
   }
 }
@@ -810,22 +669,5 @@ onMounted(() => {
 .text-note {
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
-}
-
-.text-warning-note {
-  font-size: var(--font-size-xs);
-  color: var(--color-status-warning);
-}
-
-.text-accent {
-  color: var(--theme-accent);
-}
-
-.text-primary {
-  color: var(--color-category-main);
-}
-
-.text-warning {
-  color: var(--color-status-warning);
 }
 </style>

@@ -1,7 +1,14 @@
 // =============================================================================
-// スクロールバー基本定義 (Scrollbar Styles - WebKit/Blink Only)
+// スクロールバー基本定義 (Scrollbar Styles)
 // =============================================================================
 
+// W3C 標準プロパティ (Firefox, Chrome 121+, Safari 17.4+)
+* {
+  scrollbar-color: color-mix(in srgb, var(--color-text-muted) 35%, transparent) transparent;
+  scrollbar-width: thin;
+}
+
+// WebKit / Blink 詳細カスタマイズ
 ::-webkit-scrollbar {
   width: var(--scrollbar-size, var(--space-2, 8px));
   height: var(--scrollbar-size, var(--space-2, 8px));

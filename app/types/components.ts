@@ -60,6 +60,17 @@ export interface TableColumn<T = Record<string, unknown>> {
 /** パンくずリスト項目 */
 export interface BreadcrumbItem {
   text: string
+  to?: string
+  disabled?: boolean
+}
+
+export interface BreadcrumbsProps {
+  /** パンくずリスト項目配列 */
+  items?: BreadcrumbItem[]
+  /** セパレーター（文字列指定時。未指定時は chevron-right アイコン） */
+  separator?: string
+  /** 末尾アイテムのコンソールカーソル点滅演出 (デフォルト: true) */
+  cursor?: boolean
 }
 
 // ============================================================================
@@ -67,20 +78,84 @@ export interface BreadcrumbItem {
 // ============================================================================
 
 // --- Button ---
-export type ButtonVariant = 'default' | 'success' | 'danger'
+export type ButtonVariant
+  = 'primary'
+    | 'secondary'
+    | 'tertiary'
+    | 'danger'
+    | 'warning'
+
+export type ButtonSize = 'sm' | 'md' | 'lg'
 
 export interface ButtonProps {
+  /** リンク先パス (指定時は NuxtLink として描画) */
   to?: string
+  /** HTML type 属性 */
   type?: 'button' | 'submit' | 'reset'
+  /** カラーバリアント (Geist準拠: primary / secondary / tertiary / danger / warning) */
   variant?: ButtonVariant
+  /** ボタンサイズ (Geist準拠: sm / md / lg) */
+  size?: ButtonSize
+  /** 無効化フラグ */
   disabled?: boolean
+  /** ローディング状態フラグ */
   loading?: boolean
+  /** 前置アイコン名 */
   icon?: IconName
-  /** ホバーツールチップテキスト・アクセシビリティ用ラベル */
-  title?: string
+  /** 後置アイコン名 (Geist準拠) */
+  suffixIcon?: IconName
+  /** 横幅100%（全幅）表示フラグ */
+  block?: boolean
 }
 
-// --- Checkbox ---
+// --- Avatar ---
+export type AvatarSize = 'sm' | 'md' | 'lg'
+
+export interface AvatarProps {
+  /** アバター画像 URL */
+  src?: string
+  /** 画像代替テキスト */
+  alt?: string
+  /** 表示テキストまたはイニシャル（1〜2文字、画像が無い場合のフォールバック） */
+  text?: string
+  /** サイズ ('sm' = 24px, 'md' = 32px [デフォルト], 'lg' = 40px) */
+  size?: AvatarSize
+}
+
+// --- Badge ---
+export type BadgeVariant
+  = | 'gray'
+    | 'blue'
+    | 'purple'
+    | 'amber'
+    | 'red'
+    | 'pink'
+    | 'green'
+    | 'teal'
+    | 'inverted'
+    | 'default'
+    | 'primary'
+    | 'success'
+    | 'warning'
+    | 'danger'
+    | 'accent'
+    | 'neutral'
+
+export type BadgeContrast = 'high' | 'low'
+export type BadgeSize = 'sm' | 'md' | 'lg'
+
+export interface BadgeProps {
+  /** カラーバリアント (Geist準拠) */
+  variant?: BadgeVariant
+  /** コントラスト ('high' = 通常, 'low' = サブトル/淡い背景) */
+  contrast?: BadgeContrast
+  /** サイズ */
+  size?: BadgeSize
+  /** 前置アイコン名 */
+  icon?: IconName
+}
+
+// --- Checkbox (Geist準拠) ---
 export interface CheckboxProps {
   /** HTML id属性 */
   id?: string
@@ -92,12 +167,8 @@ export interface CheckboxProps {
   disabled?: boolean
   /** エラー状態フラグ (デフォルト: false) */
   error?: boolean
-  /**
-   * バリアント（未指定時は default = 選択用）
-   * - default: 通常の選択・トグル（テーマアクセント色）
-   * - success: タスク完了・検査確認（グリーン）
-   */
-  variant?: 'default' | 'success'
+  /** 不確定（中間・部分選択）状態。true の場合、チェックマークではなく水平バー（minusアイコン）を表示 */
+  indeterminate?: boolean
   /** カテゴリカラー等のカスタム色指定 */
   color?: string
   /** ホバーツールチップテキスト */
@@ -105,11 +176,13 @@ export interface CheckboxProps {
 }
 
 // --- Icon ---
-type IconSize = 'sm' | 'md' | 'lg'
+export type IconSize = 'sm' | 'md' | 'lg'
+export type IconVariant = 'primary' | 'secondary' | 'accent' | 'success' | 'warning' | 'danger' | 'muted'
 
 export interface IconProps {
   name: IconName
   size?: IconSize
+  variant?: IconVariant
   spin?: boolean
 }
 
@@ -136,6 +209,9 @@ export type InputMode
     | 'email'
     | 'url'
 
+// --- Input (Geist準拠) ---
+export type InputSize = 'sm' | 'md' | 'lg'
+
 export interface InputProps {
   /** HTML id属性 */
   id?: string
@@ -145,12 +221,24 @@ export interface InputProps {
   type?: InputType
   /** プレースホルダー */
   placeholder?: string
+  /** サイズ ('sm' = 32px, 'md' = 40px [デフォルト], 'lg' = 48px) */
+  size?: InputSize
   /** 無効化状態 (デフォルト: false) */
   disabled?: boolean
   /** 読み取り専用状態 (デフォルト: false) */
   readonly?: boolean
   /** エラー状態フラグ (デフォルト: false) */
   error?: boolean
+  /** 前置アイコン名 */
+  icon?: IconName
+  /** 後置アイコン名 */
+  suffixIcon?: IconName
+  /** 前置テキストラベル (例: 'https://') */
+  prefix?: string
+  /** 後置テキストラベル (例: '.com') */
+  suffix?: string
+  /** 入力値の末尾空白自動トリム (デフォルト: true) */
+  trim?: boolean
   /** 最小値（number / date / time 等） */
   min?: number | string
   /** 最大値（number / date / time 等） */
@@ -163,16 +251,32 @@ export interface InputProps {
   autocomplete?: string
   /** 最大文字数 */
   maxlength?: number
-  /** ホバーツールチップテキスト・アクセシビリティ用ラベル */
+  /** ホバーツールチップテキスト */
   title?: string
 }
 
-// --- Select ---
+// --- Clearable Input (Geist準拠) ---
+export interface ClearableInputProps extends InputProps {
+  /** クリアボタンのツールチップテキスト */
+  clearTitle?: string
+}
+
+// --- Select (Geist準拠) ---
+export type SelectSize = 'sm' | 'md' | 'lg'
+
 export interface SelectProps<T = string | number | boolean> {
   /** 選択肢リスト */
   options?: SelectOption<T>[]
-  /** プレースホルダー */
+  /** プレースホルダー (例: 'フレームワークを選択') */
   placeholder?: string
+  /** サイズ ('sm' = 32px, 'md' = 40px [デフォルト], 'lg' = 48px) */
+  size?: SelectSize
+  /** 前置アイコン名 */
+  icon?: IconName
+  /** 前置テキストラベル */
+  prefix?: string
+  /** 横幅100%（全幅）表示フラグ */
+  block?: boolean
   /** 無効化状態 (デフォルト: false) */
   disabled?: boolean
   /** エラー状態フラグ (デフォルト: false) */
@@ -213,12 +317,87 @@ export interface TextareaProps {
   title?: string
 }
 
+// --- Skeleton ---
+export type SkeletonElement = 'span' | 'div'
+
+export interface SkeletonProps {
+  /** 幅（CSS値 例: '100%', '120px', '4rem'） */
+  width?: string
+  /** 高さ（CSS値 例: '1em', '40px'） */
+  height?: string
+  /** 真円フラグ（アバターや円形アイコン用） */
+  circle?: boolean
+  /** 描画するHTML要素タグ（デフォルト: 'span'） */
+  as?: SkeletonElement
+}
+
+// --- Switch ---
+export interface SwitchProps {
+  /** HTML id属性（未指定時は自動生成） */
+  id?: string
+  /** フォーム名属性 */
+  name?: string
+  /** ラベルテキスト */
+  label?: string
+  /** 無効化フラグ */
+  disabled?: boolean
+  /** ローディング中フラグ */
+  loading?: boolean
+  /** ホバーツールチップテキスト */
+  title?: string
+}
+
+// --- Tooltip ---
+export type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right'
+
+export interface TooltipProps {
+  /** ツールチップに表示するテキスト */
+  text: string
+  /** 表示位置 (デフォルト: 'top') */
+  placement?: TooltipPlacement
+  /** 無効化フラグ */
+  disabled?: boolean
+}
+
 // --- Table ---
 export type TableSortOrder = 'asc' | 'desc' | null
 
 // ============================================================================
 // 3. Molecules（複合コンポーネント）
 // ============================================================================
+
+// --- Toast ---
+export type ToastType = 'info' | 'success' | 'warning' | 'danger'
+
+export interface ToastItem {
+  id: string
+  message: string
+  type: ToastType
+  /** 表示時間（ミリ秒。デフォルト: 3500ms） */
+  duration?: number
+}
+
+// --- DropdownMenu ---
+export interface DropdownMenuItem {
+  label: string
+  icon?: IconName
+  variant?: 'secondary' | 'danger'
+  disabled?: boolean
+  action: () => void | Promise<void>
+}
+
+export interface DropdownMenuProps {
+  /** メニュー項目一覧 */
+  items?: DropdownMenuItem[]
+  /** トリガーアイコン（デフォルト: 'more-vertical'） */
+  icon?: IconName
+  /** トリガーボタンラベル（未指定時はアイコンのみ） */
+  label?: string
+  /** トリガーボタンバリアント（デフォルト: 'secondary'） */
+  variant?: ButtonVariant
+  /** 無効化フラグ */
+  disabled?: boolean
+}
 
 // --- Calculation Status & Details ---
 export type ResultStatus = 'neutral' | 'success' | 'warning' | 'danger' | 'empty'
@@ -259,8 +438,10 @@ export interface TableProps<T = Record<string, unknown>> {
   emptyText?: string
   /** ローディング状態フラグ */
   loading?: boolean
-  /** ローディング時の表示文言 */
+  /** ローディング時の表示文言 (スロット使用時等) */
   loadingText?: string
+  /** ローディング時に描画するスケルトン行数 (デフォルト: 5) */
+  skeletonRows?: number
   /** 行クリックのインタラクション（ホバー・アクティブ演出）を有効にするか */
   interactiveRow?: boolean
 }
@@ -274,6 +455,54 @@ export interface AlertProps {
   title?: string
   /** 本文テキスト（スロット未指定時に表示） */
   text?: string
+}
+
+// --- Banner ---
+export type BannerVariant = 'gray' | 'warning' | 'success' | 'danger'
+
+export interface BannerProps {
+  /** バリアント (Geist準拠: 'gray' | 'warning' | 'success' | 'danger') */
+  variant?: BannerVariant
+  /** アイコン名 (未指定時はバリアントに応じたデフォルトアイコン) */
+  icon?: IconName
+  /** タイトルテキスト */
+  title?: string
+  /** サブテキスト・補足説明 */
+  sub?: string
+  /** 閉じるボタンを表示するかどうか */
+  dismissible?: boolean
+}
+
+// --- Calendar (Geist準拠 日付・期間選択ピッカー) ---
+export type CalendarMode = 'single' | 'range'
+export type CalendarSize = 'sm' | 'md'
+
+export interface DateRange {
+  start: string | null
+  end: string | null
+}
+
+export interface CalendarPreset {
+  label: string
+  /** プリセット値（YYYY-MM-DD または DateRange オブジェクト） */
+  range: DateRange | string
+}
+
+export interface CalendarProps {
+  /** 選択モード (Geist準拠: 'single' | 'range'、デフォルト: 'single') */
+  mode?: CalendarMode
+  /** サイズ展開 (Geist準拠: 'sm' | 'md'、デフォルト: 'md') */
+  size?: CalendarSize
+  /** 選択可能な最小日付 (YYYY-MM-DD) */
+  min?: string
+  /** 選択可能な最大日付 (YYYY-MM-DD) */
+  max?: string
+  /** プリセット選択肢（主に range モードで使用） */
+  presets?: CalendarPreset[]
+  /** プリセットの配置レイアウト (Geist準拠: 'horizontal' | 'stacked'、デフォルト: 'horizontal') */
+  layout?: 'horizontal' | 'stacked'
+  /** コンポーネント全体の無効化フラグ */
+  disabled?: boolean
 }
 
 // ============================================================================

@@ -37,7 +37,7 @@ export function useModal(
       message: 'この操作を実行しますか？',
       confirmText: '確定する',
       cancelText: 'キャンセル',
-      intent: 'success',
+      intent: 'primary',
     }),
   )
 
@@ -59,7 +59,7 @@ export function useModal(
         customOptions.confirmText || defaultOptions.confirmText || '確定する',
       cancelText:
         customOptions.cancelText || defaultOptions.cancelText || 'キャンセル',
-      intent: customOptions.intent || defaultOptions.intent || 'success',
+      intent: customOptions.intent || defaultOptions.intent || 'primary',
       onConfirm: customOptions.onConfirm || defaultOptions.onConfirm,
     }
     isOpen.value = true
@@ -105,7 +105,7 @@ export function useModal(
     message: computed(() => currentOptions.value.message || 'この操作を実行しますか？'),
     confirmText: computed(() => currentOptions.value.confirmText || '確定する'),
     cancelText: computed(() => currentOptions.value.cancelText || 'キャンセル'),
-    intent: computed(() => currentOptions.value.intent || 'success'),
+    intent: computed(() => currentOptions.value.intent || 'primary'),
     askConfirm,
     handleConfirm,
     handleCancel,

@@ -6,7 +6,7 @@
 
 import type { UserRole } from '#shared/types/auth'
 import type { SiteStatus } from '#shared/types/site'
-import type { SelectOption } from '~/types/components'
+import type { BadgeVariant, SelectOption } from '~/types/components'
 
 /**
  * ユーザー権限（ロール）選択肢
@@ -20,10 +20,10 @@ export const USER_ROLE_OPTIONS: SelectOption<UserRole>[] = [
 /**
  * ユーザー権限（ロール）表示設定（バッジ表示用）
  */
-export const USER_ROLE_CONFIG: Record<UserRole, { label: string, color: string }> = {
-  admin: { label: '管理者', color: 'var(--color-role-admin)' },
-  worker: { label: '作業者', color: 'var(--color-role-worker)' },
-  viewer: { label: '閲覧者', color: 'var(--color-role-viewer)' },
+export const USER_ROLE_CONFIG: Record<UserRole, { label: string, color: string, variant: BadgeVariant }> = {
+  admin: { label: '管理者', color: 'var(--color-role-admin)', variant: 'purple' },
+  worker: { label: '作業者', color: 'var(--color-role-worker)', variant: 'blue' },
+  viewer: { label: '閲覧者', color: 'var(--color-role-viewer)', variant: 'gray' },
 }
 
 /**
@@ -50,11 +50,11 @@ export const SITE_STATUS_OPTIONS: SelectOption<SiteStatus>[] = [
 /**
  * 現場ステータス表示設定（バッジ表示用）
  */
-export const SITE_STATUS_CONFIG: Record<SiteStatus, { label: string, color: string }> = {
-  planning: { label: '計画中', color: 'var(--color-text-muted)' },
-  in_progress: { label: '進行中', color: 'var(--theme-accent)' },
-  completed: { label: '完了', color: 'var(--color-status-success)' },
-  on_hold: { label: '保留', color: 'var(--color-status-warning)' },
+export const SITE_STATUS_CONFIG: Record<SiteStatus, { label: string, color: string, variant: BadgeVariant }> = {
+  planning: { label: '計画中', color: 'var(--color-text-muted)', variant: 'gray' },
+  in_progress: { label: '進行中', color: 'var(--theme-accent)', variant: 'blue' },
+  completed: { label: '完了', color: 'var(--color-status-success)', variant: 'green' },
+  on_hold: { label: '保留', color: 'var(--color-status-warning)', variant: 'amber' },
 }
 
 /**

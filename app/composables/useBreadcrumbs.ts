@@ -2,6 +2,7 @@
  * パンくずリスト自動生成 Composable
  *
  * @description 現在のルートパスおよび現場名・メニュー構造から階層化されたパンくずリストデータを動的に生成します。
+ * 親階層へのナビゲーションリンク（to）を自動解決し、ベストプラクティスに準拠した階層構造を提供します。
  */
 
 import { computed } from 'vue'
@@ -16,6 +17,28 @@ type BreadcrumbAccent = NonNullable<MenuSection['accent']>
 interface BreadcrumbsData {
   items: BreadcrumbItem[]
   accent: BreadcrumbAccent
+}
+
+interface SubFeatureConfig {
+  title: string
+  parent?: {
+    title: string
+    subPath: string
+  }
+}
+
+/** 現場ポータル配下の機能定義マップ */
+const PORTAL_SUB_FEATURES: Record<string, SubFeatureConfig> = {
+  'souden': { title: '送電試験' },
+  'operation-logs': {
+    title: '操作ログ',
+    parent: { title: '送電試験', subPath: 'souden' },
+  },
+  'reports': { title: '帳票出力' },
+  'tag-print': { title: 'タグ出力' },
+  'remote-control': { title: 'リモコン設定' },
+  'template-keys': { title: 'テンプレートキー一覧' },
+  'template-tags': { title: 'テンプレートキー一覧' },
 }
 
 function createMenuBreadcrumbs(section: MenuSection, item: MenuItem): BreadcrumbsData {
@@ -59,95 +82,46 @@ export function useBreadcrumbs() {
         const site = sites.value.find(s => s.id === siteId)
         const siteName = site?.name || siteId
 
-        // カテゴリ: 現場管理
-        const categoryItem: BreadcrumbItem = { text: '現場管理' }
-
-        // 送電試験ダッシュボード および 各フェーズ (Phase 1〜3)
-        // 表示: 現場管理 » 現場名 » 送電試験
-        if (
-          subPath === 'souden'
-          || subPath.startsWith('phase')
-        ) {
-          return {
-            items: [
-              categoryItem,
-              { text: siteName },
-              { text: '送電試験' },
-            ],
-            accent: 'management',
-          }
-        }
-
-        // 操作ログ
-        if (subPath === 'operation-logs') {
-          return {
-            items: [
-              categoryItem,
-              { text: siteName },
-              { text: '送電試験' },
-              { text: '操作ログ' },
-            ],
-            accent: 'management',
-          }
-        }
-
-        // タグ出力
-        if (subPath === 'tag-print') {
-          return {
-            items: [
-              categoryItem,
-              { text: siteName },
-              { text: 'タグ出力' },
-            ],
-            accent: 'management',
-          }
-        }
-
-        // リモコン設定
-        if (subPath === 'remote-control') {
-          return {
-            items: [
-              categoryItem,
-              { text: siteName },
-              { text: 'リモコン設定' },
-            ],
-            accent: 'management',
-          }
-        }
-
-        // テンプレートキー一覧
-        if (subPath === 'template-keys') {
-          return {
-            items: [
-              categoryItem,
-              { text: siteName },
-              { text: 'テンプレートキー一覧' },
-            ],
-            accent: 'management',
-          }
-        }
-
         // 現場トップ (/portal/:siteId)
-        // 表示: 現場管理 » 現場名
         if (!subPath) {
           return {
             items: [
-              categoryItem,
+              { text: '現場管理', to: '/portal/admin' },
               { text: siteName },
             ],
             accent: 'management',
           }
         }
 
-        // その他の現場下層ページ
-        return {
-          items: [
-            categoryItem,
-            { text: siteName },
-            { text: subPath },
-          ],
-          accent: 'management',
+        // 現場配下の下層ページ (/portal/:siteId/...)
+        const crumbs: BreadcrumbItem[] = [
+          { text: '現場管理', to: '/portal/admin' },
+          { text: siteName, to: `/portal/${siteId}` },
+        ]
+
+        // 送電試験フェーズ (phase1〜phase3 等)
+        if (subPath === 'souden' || subPath.startsWith('phase')) {
+          crumbs.push({ text: '送電試験' })
+
+          return { items: crumbs, accent: 'management' }
         }
+
+        const feature = PORTAL_SUB_FEATURES[subPath]
+
+        if (feature) {
+          if (feature.parent) {
+            crumbs.push({
+              text: feature.parent.title,
+              to: `/portal/${siteId}/${feature.parent.subPath}`,
+            })
+          }
+          crumbs.push({ text: feature.title })
+        }
+        else {
+          crumbs.push({ text: subPath })
+        }
+
+        return { items: crumbs, accent: 'management' }
       }
     }
 

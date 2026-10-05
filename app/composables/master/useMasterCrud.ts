@@ -112,6 +112,8 @@ export async function useMasterCrud<T extends { id?: string | number }, F extend
     resetErrors()
   }
 
+  const toast = useToast()
+
   const handleSave = async () => {
     formError.value = ''
     if (!validate()) return
@@ -130,6 +132,7 @@ export async function useMasterCrud<T extends { id?: string | number }, F extend
 
       isEditModalOpen.value = false
       await refresh()
+      toast.success(editingId.value ? '更新しました' : '作成しました')
       if (onAfterSave) {
         await onAfterSave()
       }
@@ -174,6 +177,7 @@ export async function useMasterCrud<T extends { id?: string | number }, F extend
         method: 'DELETE',
       })
       await refresh()
+      toast.success('削除しました')
       if (onAfterDelete) {
         await onAfterDelete()
       }
@@ -181,7 +185,7 @@ export async function useMasterCrud<T extends { id?: string | number }, F extend
     catch (e: unknown) {
       const appErr = parseToAppException(e)
 
-      alert(appErr.getUserFacingMessage())
+      toast.danger(appErr.getUserFacingMessage())
     }
   }
 

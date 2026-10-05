@@ -26,15 +26,8 @@ const resolvedIcon = computed<IconName>(() => props.icon || defaultIcons[props.v
 </script>
 
 <template>
-  <div
-    class="alert flex items-start gap-item-gap p-panel-pad-compact"
-    :class="`is-${variant}`"
-  >
-    <Icon
-      :name="resolvedIcon"
-      :spin="resolvedIcon === 'loader'"
-      class="alert-icon mt-0.5"
-    />
+  <div class="alert flex items-start gap-item-gap p-panel-pad-compact" :class="`is-${variant}`">
+    <Icon :name="resolvedIcon" :spin="resolvedIcon === 'loader'" class="alert-icon mt-0.5" />
     <div class="flex-1 min-w-0 flex flex-col gap-inline-gap">
       <strong v-if="title" class="alert-title">{{ title }}</strong>
       <div v-if="text || $slots.default" class="alert-message break-words">

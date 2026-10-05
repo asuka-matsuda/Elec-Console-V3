@@ -83,10 +83,7 @@ const handleSave = async () => {
 
 <template>
   <div class="flex flex-1 flex-col gap-panel-gap min-h-0 w-full max-w-[1600px] mx-auto">
-    <Alert
-      variant="warning"
-      text="免責事項: 本ツールによる計算結果は、規程に基づいた理論値（目安）です。選定や安全性については、必ず設計者自身の責任において各種関連法規・規程をご確認の上ご判断ください。"
-    />
+    <Alert variant="warning" text="免責事項: 本ツールによる計算結果は、規程に基づいた理論値（目安）です。選定や安全性については、必ず設計者自身の責任において各種関連法規・規程をご確認の上ご判断ください。" />
 
     <div class="grid flex-1 grid-cols-1 md:grid-cols-[minmax(0,4fr)_minmax(0,3fr)] gap-panel-gap min-h-0">
       <section class="panel flex flex-1 flex-col gap-panel-gap min-h-0">
@@ -96,116 +93,37 @@ const handleSave = async () => {
             <span>条件入力</span>
           </h3>
           <div class="flex items-center gap-item-gap">
-            <Button
-              variant="danger"
-              icon="refresh-cw"
-              @click="handleReset"
-            >
-              リセット
-            </Button>
+            <Button variant="secondary" size="sm" icon="refresh-cw" @click="handleReset">入力をリセットする</Button>
           </div>
         </header>
         <hr class="divider">
 
         <form class="flex flex-1 flex-col gap-form-row-gap min-h-0 overflow-y-auto" @submit.prevent>
           <nav class="radio-group">
-            <button
-              v-for="opt in modeOptions"
-              :key="String(opt.value)"
-              type="button"
-              class="radio-group-item"
-              :class="{ 'is-active': form.mode === opt.value }"
-              @click="form.mode = opt.value"
-            >
-              {{ opt.label }}
-            </button>
+            <button v-for="opt in modeOptions" :key="String(opt.value)" type="button" class="radio-group-item" :class="{ 'is-active': form.mode === opt.value }" @click="form.mode = opt.value">{{ opt.label }}</button>
           </nav>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-form-col-gap gap-y-form-row-gap">
             <template v-for="field in formFields" :key="field.id">
-              <Field
-                v-if="!field.showIf || field.showIf()"
-                v-slot="{ errorMessage, meta, handleChange, handleBlur }"
-                v-model="form[field.id]"
-                :name="field.id"
-              >
-                <div
-                  :class="['flex flex-col gap-inline-gap', `js-field-${field.id}`]"
-                >
-                  <label :for="`voltage-field-${field.id}`" class="label">
-                    {{ field.label }}
-                  </label>
+              <Field v-if="!field.showIf || field.showIf()" v-slot="{ errorMessage, meta, handleChange, handleBlur }" v-model="form[field.id]" :name="field.id">
+                <div :class="['flex flex-col gap-inline-gap', `js-field-${field.id}`]">
+                  <label :for="`voltage-field-${field.id}`" class="label">{{ field.label }}</label>
 
-                  <Select
-                    v-if="field.type === 'select'"
-                    :id="`voltage-field-${field.id}`"
-                    v-model="form[field.id]"
-                    :options="field.options || []"
-                    :placeholder="field.placeholder"
-                    :disabled="field.disabled"
-                    :error="meta.touched && !!errorMessage"
-                    @update:model-value="handleChange"
-                    @blur="handleBlur"
-                  />
+                  <Select v-if="field.type === 'select'" :id="`voltage-field-${field.id}`" v-model="form[field.id]" :options="field.options || []" :placeholder="field.placeholder" :disabled="field.disabled" :error="meta.touched && !!errorMessage" @update:model-value="handleChange" @blur="handleBlur" />
 
-                  <div
-                    v-else-if="field.type === 'input-select'"
-                    class="flex items-center gap-inline-gap w-full min-w-0"
-                  >
-                    <Input
-                      :id="`voltage-field-${field.id}`"
-                      v-model.number="form[field.id]"
-                      type="number"
-                      :placeholder="field.placeholder"
-                      :min="field.min"
-                      :step="field.step"
-                      :error="meta.touched && !!errorMessage"
-                      class="flex-1 min-w-0"
-                      @blur="handleBlur"
-                    />
+                  <div v-else-if="field.type === 'input-select'" class="flex items-center gap-inline-gap w-full min-w-0">
+                    <Input :id="`voltage-field-${field.id}`" v-model.number="form[field.id]" type="number" :placeholder="field.placeholder" :min="field.min" :step="field.step" :error="meta.touched && !!errorMessage" class="flex-1 min-w-0" @blur="handleBlur" />
 
-                    <div
-                      v-if="field.secondaryId"
-                      class="w-24 shrink-0"
-                    >
-                      <Field
-                        v-slot="{
-                          errorMessage: secError,
-                          meta: secMeta,
-                          handleChange: secChange,
-                          handleBlur: secBlur,
-                        }"
-                        v-model="form[field.secondaryId!]"
-                        :name="field.secondaryId"
-                      >
-                        <Select
-                          v-model="form[field.secondaryId!]"
-                          :options="field.secondaryOptions || []"
-                          :error="secMeta.touched && !!secError"
-                          @update:model-value="secChange"
-                          @blur="secBlur"
-                        />
+                    <div v-if="field.secondaryId" class="w-24 shrink-0">
+                      <Field v-slot="{ errorMessage: secError, meta: secMeta, handleChange: secChange, handleBlur: secBlur }" v-model="form[field.secondaryId!]" :name="field.secondaryId">
+                        <Select v-model="form[field.secondaryId!]" :options="field.secondaryOptions || []" :error="secMeta.touched && !!secError" @update:model-value="secChange" @blur="secBlur" />
                       </Field>
                     </div>
                   </div>
 
-                  <div
-                    v-else-if="field.type === 'input-addon'"
-                    class="flex items-center gap-inline-gap w-full min-w-0"
-                  >
-                    <Input
-                      :id="`voltage-field-${field.id}`"
-                      v-model.number="form[field.id]"
-                      type="number"
-                      :placeholder="field.placeholder"
-                      :min="field.min"
-                      :error="meta.touched && !!errorMessage"
-                      class="flex-1 min-w-0"
-                      @blur="handleBlur"
-                    />
-                    <span v-if="field.addonText" class="shrink-0 form-addon">
-                      {{ field.addonText }}
-                    </span>
+                  <div v-else-if="field.type === 'input-addon'" class="flex items-center gap-inline-gap w-full min-w-0">
+                    <Input :id="`voltage-field-${field.id}`" v-model.number="form[field.id]" type="number" :placeholder="field.placeholder" :min="field.min" :error="meta.touched && !!errorMessage" class="flex-1 min-w-0" @blur="handleBlur" />
+                    <span v-if="field.addonText" class="shrink-0 form-addon">{{ field.addonText }}</span>
                   </div>
 
                   <p v-if="meta.touched && errorMessage" class="error-text">
@@ -225,23 +143,8 @@ const handleSave = async () => {
             <span>{{ isShowingBasis ? '計算根拠' : '計算結果' }}</span>
           </h3>
           <div class="flex items-center gap-item-gap">
-            <Button
-              v-if="mathSteps?.length"
-              :icon="isShowingBasis ? 'arrow-left' : 'circle-help'"
-              @click="isShowingBasis = !isShowingBasis"
-            >
-              {{ isShowingBasis ? '結果に戻る' : '計算根拠' }}
-            </Button>
-            <Button
-              v-if="!isShowingBasis"
-              :variant="saveState === 'error' ? 'danger' : 'success'"
-              :icon="saveState === 'saving' ? 'loader' : saveState === 'success' ? 'check' : saveState === 'error' ? 'circle-alert' : 'save'"
-              :disabled="isSaveDisabled || saveState !== 'idle'"
-              :loading="saveState === 'saving'"
-              @click="handleSave"
-            >
-              {{ saveState === 'saving' ? '保存中...' : saveState === 'success' ? '保存しました' : saveState === 'error' ? '保存に失敗しました' : '履歴に保存' }}
-            </Button>
+            <Button v-if="mathSteps?.length" variant="tertiary" size="sm" :icon="isShowingBasis ? 'arrow-left' : 'circle-help'" @click="isShowingBasis = !isShowingBasis">{{ isShowingBasis ? '計算結果に戻る' : '計算根拠を表示' }}</Button>
+            <Button v-if="!isShowingBasis" variant="primary" size="sm" icon="save" :disabled="isSaveDisabled || saveState !== 'idle'" :loading="saveState === 'saving'" @click="handleSave">履歴に保存する</Button>
           </div>
         </header>
         <hr class="divider">

@@ -111,7 +111,7 @@ module.exports = {
             '/^[0-9.]+(px|rem)/',
           ],
         },
-        // 状態セレクタの手書きを禁止し、純粋な支援アクセシビリティセレクタ（aria-*, role）および :deep を禁止
+        // 状態セレクタの手書きを禁止し、純粋な支援アクセシビリティセレクタ（aria-*, role）、:deep、および装飾ユーティリティクラスを禁止
         'selector-disallowed-list': [
           [
             '/is-hover/',
@@ -121,16 +121,16 @@ module.exports = {
             '/role=/',
             '/:deep\\(/',
             '/::v-deep/',
+            '/\\btext-(primary|secondary|accent|success|warning|danger|muted)\\b/',
           ],
           {
-            message: ':deep によるコンポーネントスタイルの打ち消し・上書き、純粋な支援アクセシビリティセレクタ（aria-*, role）、未許可の状態セレクタ（is-hover 等）は禁止されています。',
+            message: ':deep によるコンポーネントスタイルの打ち消し、支援アクセシビリティセレクタ（aria-*, role）、装飾用ユーティリティクラス（text-* 等）は禁止されています。装飾や色は Scoped CSS / CSS 変数で直接定義してください。',
           },
         ],
         // レイアウト・配置・z-index関連プロパティのScoped CSS記述を禁止（Tailwind記述を強制）
-        // および角丸（border-radius）の直接記述を原則全面禁止（真円以外撲滅・直角統一規約）
+        // および個別角丸プロパティの記述を禁止
         'property-disallowed-list': [
           [
-            'border-radius',
             '/^border-(top|bottom)-(left|right)-radius$/',
             'z-index',
             'justify-content',
@@ -147,90 +147,29 @@ module.exports = {
             'column-gap',
           ],
           {
-            message: 'プロパティ「%s」の記述は禁止されています。レイアウト系はTailwindを使用し、border-radiusは直角がデフォルトのため記述不要です（真円例外等は.stylelintrc.cjsのoverridesを参照）。',
+            message: 'プロパティ「%s」の記述は禁止されています。レイアウト系はTailwindを使用してください。',
           },
         ],
+        // 【厳格規約】border-radius は幾何学的真円（50% / var(--radius-circle)）またはリセット（0）のみ許可
+        // ※ 4px, 8px等のpx/remハードコードおよび50%以外の中途半端な角丸変数は一切不許可
+        'declaration-property-value-allowed-list': {
+          'border-radius': ['50%', 'var(--radius-circle)', '0'],
+        },
       },
     },
     {
       files: ['app/assets/scss/**/*.scss', 'error.vue'],
       rules: {
-        // SCSSおよびerror.vue内でも border-radius の直接記述を禁止（真円以外撲滅・直角統一規約）
         'property-disallowed-list': [
           [
-            'border-radius',
             '/^border-(top|bottom)-(left|right)-radius$/',
           ],
           {
-            message: '「%s」の直接記述は禁止されています。直角はデフォルトで適用されます。',
+            message: '「%s」の直接記述は禁止されています。',
           },
         ],
-      },
-    },
-    // -------------------------------------------------------------------------
-    // 【厳格規約】真円（50% / var(--radius-circle)）例外許可リスト
-    // ※ AIアシスタントおよび開発者は、Lintエラー回避を目的としてこのリストへ勝手に
-    //   ファイルを追加してはならない。必ず正方形（1:1）のアバターやインジケーター等の
-    //   幾何学的真円要素に限り、設計者の明示的な承認を得た上で追加すること。
-    // -------------------------------------------------------------------------
-    {
-      files: [
-        'app/components/common/organisms/Header.vue',
-        'app/components/portal/souden/SyncStatusBadge.vue',
-        'app/components/portal/calendar/ModalCalendarTypeSettings.vue',
-      ],
-      rules: {
-        'property-disallowed-list': [
-          [
-            'z-index',
-            'justify-content',
-            'align-items',
-            'align-content',
-            'align-self',
-            'flex-direction',
-            'flex-wrap',
-            'flex-grow',
-            'flex-shrink',
-            'grid-template-columns',
-            'grid-template-rows',
-            'row-gap',
-            'column-gap',
-          ],
-        ],
         'declaration-property-value-allowed-list': {
-          'border-radius': ['50%', 'var(--radius-circle)'],
-        },
-      },
-    },
-    // -------------------------------------------------------------------------
-    // 【厳格規約】外部ライブラリ等の角丸リセット（0）例外許可リスト
-    // ※ 外部パッケージ組み込みの角丸を強制リセットする場合のみ登録。
-    // -------------------------------------------------------------------------
-    {
-      files: [
-        'app/components/portal/calendar/Calendar.client.vue',
-        'app/assets/scss/foundation/_reset.scss',
-      ],
-      rules: {
-        'property-disallowed-list': [
-          [
-            'z-index',
-            'justify-content',
-            'align-items',
-            'align-content',
-            'align-self',
-            'flex-direction',
-            'flex-wrap',
-            'flex-grow',
-            'flex-shrink',
-            'grid-template-columns',
-            'grid-template-rows',
-            'row-gap',
-            'column-gap',
-          ],
-        ],
-        'declaration-property-value-allowed-list': {
-          'border-radius': ['0'],
+          'border-radius': ['50%', 'var(--radius-circle)', '0'],
         },
       },
     },

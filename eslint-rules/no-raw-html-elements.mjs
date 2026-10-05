@@ -18,6 +18,7 @@ const WHITELIST = [
   // 共通コンポーネント自身
   { pattern: /app\/components\/common\/atoms\/Input\.vue$/, elements: ['input'] },
   { pattern: /app\/components\/common\/atoms\/Checkbox\.vue$/, elements: ['input'] },
+  { pattern: /app\/components\/common\/atoms\/Switch\.vue$/, elements: ['input'] },
   { pattern: /app\/components\/common\/atoms\/Textarea\.vue$/, elements: ['textarea'] },
   { pattern: /app\/components\/common\/molecules\/Table\.vue$/, elements: ['table'] },
 

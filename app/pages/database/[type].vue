@@ -50,10 +50,7 @@ const { sortBy, sortOrder, sortedData } = useTableSort(filteredData)
 <template>
   <div class="flex flex-1 flex-col gap-panel-gap w-full max-w-[1400px] min-h-0 mx-auto">
 
-    <Alert
-      variant="info"
-      text="注記: 掲載データはJISおよび内線規程等に基づく標準規格値です。選定にあたってはメーカー仕様書も併せてご確認ください。"
-    />
+    <Alert variant="info" text="注記: 掲載データはJISおよび内線規程等に基づく標準規格値です。選定にあたってはメーカー仕様書も併せてご確認ください。" />
 
     <section class="panel flex flex-col gap-form-row-gap">
       <header class="flex items-center justify-between">
@@ -62,53 +59,22 @@ const { sortBy, sortOrder, sortedData } = useTableSort(filteredData)
           <span>絞り込み・検索</span>
         </h3>
         <div v-if="hasDiagram" class="inline-flex items-center">
-          <Button
-            icon="circle-dot"
-            @click="isDiagramOpen = true"
-          >
-            寸法図解を確認
-          </Button>
+          <Button size="sm" icon="circle-dot" @click="isDiagramOpen = true">寸法図解を確認する</Button>
         </div>
       </header>
 
-      <Input
-        v-model="searchQuery"
-        :placeholder="currentDb.placeholder"
-      />
+      <Input v-model="searchQuery" :placeholder="currentDb.placeholder" />
 
-      <ul
-        v-if="categoryOptions.length > 0"
-        class="grid grid-cols-[repeat(auto-fill,minmax(115px,1fr))] gap-item-gap"
-      >
-        <li
-          v-for="cat in categoryOptions"
-          :key="cat.value"
-        >
-          <Checkbox
-            v-model="activeCats"
-            :value="cat.value"
-          >
-            {{ cat.label }}
-          </Checkbox>
+      <ul v-if="categoryOptions.length > 0" class="grid grid-cols-[repeat(auto-fill,minmax(115px,1fr))] gap-item-gap">
+        <li v-for="cat in categoryOptions" :key="cat.value">
+          <Checkbox v-model="activeCats" :value="cat.value">{{ cat.label }}</Checkbox>
         </li>
       </ul>
     </section>
 
-    <Table
-      v-model:sort-by="sortBy"
-      v-model:sort-order="sortOrder"
-      :columns="currentDb.columns"
-      :data="sortedData"
-      empty-text="条件に一致するデータが見つかりません"
-      class="flex-1 min-h-0"
-    />
+    <Table v-model:sort-by="sortBy" v-model:sort-order="sortOrder" :columns="currentDb.columns" :data="sortedData" empty-text="条件に一致するデータが見つかりません" class="flex-1 min-h-0" />
 
-    <Modal
-      v-if="hasDiagram"
-      v-model="isDiagramOpen"
-      :title="diagramTitle"
-      icon="tag"
-    >
+    <Modal v-if="hasDiagram" v-model="isDiagramOpen" :title="diagramTitle" icon="tag">
       <DiagramTerminal v-if="dbKey === 'terminal-db'" />
       <DiagramDrum v-else-if="dbKey === 'drum-db'" />
     </Modal>

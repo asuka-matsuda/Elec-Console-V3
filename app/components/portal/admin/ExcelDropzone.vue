@@ -48,19 +48,8 @@ const formatSize = (bytes: number) =>
 </script>
 
 <template>
-  <label
-    v-if="!modelValue"
-    ref="dropZoneRef"
-    class="excel-dropzone flex flex-col items-center justify-center gap-item-gap p-panel-pad w-full"
-    :class="{ 'is-dragging': isOverDropZone, 'is-disabled': disabled }"
-  >
-    <input
-      type="file"
-      :accept="accept"
-      class="hidden"
-      :disabled="disabled"
-      @change="onFileInput"
-    >
+  <label v-if="!modelValue" ref="dropZoneRef" class="excel-dropzone flex flex-col items-center justify-center gap-item-gap p-panel-pad w-full" :class="{ 'is-dragging': isOverDropZone, 'is-disabled': disabled }">
+    <input type="file" :accept="accept" class="hidden" :disabled="disabled" @change="onFileInput">
     <Icon name="cloud-upload" size="lg" />
     <span>
       <strong>クリックしてファイルを選択</strong> またはここにドラッグ＆ドロップ
@@ -68,24 +57,15 @@ const formatSize = (bytes: number) =>
     <small>対応形式: {{ accept }}</small>
   </label>
 
-  <div
-    v-else
-    class="excel-dropzone has-file flex items-center gap-panel-gap w-full p-panel-pad-compact"
-    :class="{ 'is-disabled': disabled }"
-  >
+  <div v-else class="excel-dropzone has-file flex items-center gap-panel-gap w-full p-panel-pad-compact" :class="{ 'is-disabled': disabled }">
     <Icon name="file-check" size="md" class="file-icon" />
     <div class="flex-1 min-w-0">
-      <strong :title="modelValue.name">
-        {{ modelValue.name }}
-      </strong>
+      <strong :title="modelValue.name">{{ modelValue.name }}</strong>
       <small>{{ formatSize(modelValue.size) }}</small>
     </div>
-    <Button
-      icon="x"
-      title="選択を解除"
-      :disabled="disabled"
-      @click="emit('update:modelValue', null)"
-    />
+    <Tooltip text="選択を解除">
+      <Button variant="tertiary" size="sm" icon="x" :disabled="disabled" @click="emit('update:modelValue', null)" />
+    </Tooltip>
   </div>
 </template>
 

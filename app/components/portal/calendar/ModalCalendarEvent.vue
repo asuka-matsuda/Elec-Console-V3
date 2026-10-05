@@ -75,22 +75,13 @@ const handleSave = () => {
 </script>
 
 <template>
-  <Modal
-    v-model="isOpen"
-    :title="isEditing ? '予定の編集' : '新しい予定'"
-  >
+  <Modal v-model="isOpen" :title="isEditing ? '予定の編集' : '新しい予定'">
     <div class="flex flex-col gap-form-row-gap">
       <div class="flex flex-col gap-inline-gap">
         <label for="calendar-event-title" class="label">
           タイトル <span class="required-mark">*</span>
         </label>
-        <Input
-          id="calendar-event-title"
-          v-model="form.title"
-          placeholder="会議、送電試験など"
-          :error="hasTitleError"
-          @update:model-value="hasTitleError = false"
-        />
+        <Input id="calendar-event-title" v-model="form.title" placeholder="会議、送電試験など" :error="hasTitleError" @update:model-value="hasTitleError = false" />
         <p v-if="hasTitleError" class="error-text">
           タイトルを入力してください
         </p>
@@ -98,11 +89,7 @@ const handleSave = () => {
 
       <div class="flex flex-col gap-inline-gap">
         <label for="calendar-event-type" class="label">予定種別</label>
-        <Select
-          id="calendar-event-type"
-          v-model="form.type"
-          :options="typeOptions"
-        />
+        <Select id="calendar-event-type" v-model="form.type" :options="typeOptions" />
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-form-col-gap">
@@ -110,50 +97,23 @@ const handleSave = () => {
           <label for="calendar-event-start" class="label">
             開始日時 <span class="required-mark">*</span>
           </label>
-          <Input
-            id="calendar-event-start"
-            :key="'start-' + form.allDay"
-            v-model="form.start"
-            :type="form.allDay ? 'date' : 'datetime-local'"
-            required
-            @change="handleStartChange"
-          />
+          <Input id="calendar-event-start" :key="'start-' + form.allDay" v-model="form.start" :type="form.allDay ? 'date' : 'datetime-local'" required @change="handleStartChange" />
         </div>
         <div class="flex flex-col gap-inline-gap">
           <label for="calendar-event-end" class="label">終了日時</label>
-          <Input
-            id="calendar-event-end"
-            :key="'end-' + form.allDay"
-            v-model="form.end"
-            :type="form.allDay ? 'date' : 'datetime-local'"
-          />
+          <Input id="calendar-event-end" :key="'end-' + form.allDay" v-model="form.end" :type="form.allDay ? 'date' : 'datetime-local'" />
         </div>
       </div>
 
-      <Checkbox
-        v-model="form.allDay"
-        label="終日イベント"
-      />
+      <Checkbox v-model="form.allDay" label="終日イベント" />
     </div>
 
     <template #actions>
-      <Button
-        v-if="isEditing"
-        variant="danger"
-        icon="trash-2"
-        title="予定を削除"
-        @click="emit('delete')"
-      />
-      <Button @click="isOpen = false">
-        キャンセル
-      </Button>
-      <Button
-        variant="success"
-        icon="check"
-        @click="handleSave"
-      >
-        保存
-      </Button>
+      <Tooltip v-if="isEditing" text="予定を削除">
+        <Button variant="danger" size="sm" icon="trash-2" @click="emit('delete')" />
+      </Tooltip>
+      <Button @click="isOpen = false">キャンセル</Button>
+      <Button variant="primary" icon="check" @click="handleSave">保存する</Button>
     </template>
   </Modal>
 </template>

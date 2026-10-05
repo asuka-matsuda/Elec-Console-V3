@@ -24,40 +24,16 @@ const gauge = computed(() => calcCircleProgress(value, RADIUS))
 </script>
 
 <template>
-  <div
-    class="relative flex flex-col items-center justify-center gap-inline-gap circular-gauge"
-    :class="`is-${size}`"
-    :style="{ '--gauge-color': color }"
-  >
-    <svg
-      class="absolute inset-0 -rotate-90 gauge-svg"
-      viewBox="0 0 100 100"
-    >
-      <circle
-        class="gauge-track"
-        cx="50"
-        cy="50"
-        :r="RADIUS"
-      />
-      <circle
-        class="gauge-progress"
-        cx="50"
-        cy="50"
-        :r="RADIUS"
-        :style="{
-          strokeDasharray: gauge.circumference,
-          strokeDashoffset: gauge.strokeDashoffset,
-          opacity: gauge.value === 0 ? 0 : 1,
-        }"
-      />
+  <div class="relative flex flex-col items-center justify-center gap-inline-gap circular-gauge" :class="`is-${size}`" :style="{ '--gauge-color': color }">
+    <svg class="absolute inset-0 -rotate-90 gauge-svg" viewBox="0 0 100 100">
+      <circle class="gauge-track" cx="50" cy="50" :r="RADIUS" />
+      <circle class="gauge-progress" cx="50" cy="50" :r="RADIUS" :style="{ strokeDasharray: gauge.circumference, strokeDashoffset: gauge.strokeDashoffset, opacity: gauge.value === 0 ? 0 : 1 }" />
     </svg>
 
     <div class="inline-flex items-baseline gap-inline-gap value">
       {{ gauge.value }}<span class="unit">%</span>
     </div>
-    <span v-if="label" class="label">
-      {{ label }}
-    </span>
+    <span v-if="label" class="label">{{ label }}</span>
   </div>
 </template>
 

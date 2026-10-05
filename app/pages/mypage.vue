@@ -72,77 +72,70 @@ const assignedSites = computed(() => {
         </h3>
       </header>
 
-      <div v-if="!currentUser" class="text-muted">
-        アカウント情報を読み込み中...
+      <div v-if="!currentUser" class="flex items-center gap-panel-gap">
+        <Skeleton width="2.5rem" height="2.5rem" class="shrink-0" />
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-panel-gap flex-1">
+          <div v-for="skeletonIndex in 3" :key="`profile-skeleton-${skeletonIndex}`" class="flex flex-col gap-inline-gap">
+            <Skeleton width="3rem" height="0.85rem" />
+            <Skeleton width="8rem" height="1.4rem" />
+          </div>
+        </div>
       </div>
 
       <div v-else class="flex flex-col gap-panel-gap">
-        <dl class="grid grid-cols-1 sm:grid-cols-3 gap-panel-gap">
-          <div class="flex flex-col gap-inline-gap">
-            <dt class="profile-label">
-              氏名
-            </dt>
-            <dd class="flex flex-col">
-              <span class="profile-name">{{ fullName }}</span>
-              <span v-if="kana" class="profile-kana">
-                {{ kana }}
-              </span>
-            </dd>
-          </div>
+        <div class="flex items-center gap-panel-gap">
+          <Avatar :text="fullName" size="lg" />
+          <dl class="grid grid-cols-1 sm:grid-cols-3 gap-panel-gap flex-1">
+            <div class="flex flex-col gap-inline-gap">
+              <dt class="profile-label">
+                氏名
+              </dt>
+              <dd class="flex flex-col">
+                <span class="profile-name">{{ fullName }}</span>
+                <span v-if="kana" class="profile-kana">{{ kana }}</span>
+              </dd>
+            </div>
 
-          <div class="flex flex-col gap-inline-gap">
-            <dt class="profile-label">
-              ログインID
-            </dt>
-            <dd class="profile-id">
-              {{ currentUser.loginId || currentUser.id }}
-            </dd>
-          </div>
+            <div class="flex flex-col gap-inline-gap">
+              <dt class="profile-label">
+                ログインID
+              </dt>
+              <dd class="profile-id">
+                {{ currentUser.loginId || currentUser.id }}
+              </dd>
+            </div>
 
-          <div class="flex flex-col gap-inline-gap">
-            <dt class="profile-label">
-              基本権限
-            </dt>
-            <dd class="flex items-center">
-              <span class="badge" :style="{ '--glow-color': USER_ROLE_CONFIG[currentUser.role]?.color }">
-                {{ USER_ROLE_CONFIG[currentUser.role]?.label || currentUser.role }}
-              </span>
-            </dd>
-          </div>
-        </dl>
+            <div class="flex flex-col gap-inline-gap">
+              <dt class="profile-label">
+                基本権限
+              </dt>
+              <dd class="flex items-center">
+                <Badge :variant="USER_ROLE_CONFIG[currentUser.role]?.variant">{{ USER_ROLE_CONFIG[currentUser.role]?.label || currentUser.role }}</Badge>
+              </dd>
+            </div>
+          </dl>
+        </div>
 
         <hr class="divider">
 
         <div class="flex flex-col gap-item-gap">
           <small class="profile-label">登録済現場</small>
 
-          <p v-if="assignedSites.length === 0" class="text-secondary">
+          <p v-if="assignedSites.length === 0" class="empty-state-text">
             登録されている現場はありません。
           </p>
 
           <ul v-else class="flex flex-col gap-item-gap">
-            <li
-              v-for="site in assignedSites"
-              :key="site.id"
-            >
-              <div
-                class="site-row flex items-center justify-between gap-item-gap flex-wrap p-panel-pad-compact"
-              >
+            <li v-for="site in assignedSites" :key="site.id">
+              <div class="site-row flex items-center justify-between gap-item-gap flex-wrap p-panel-pad-compact">
                 <div class="flex items-center gap-item-gap flex-wrap">
                   <Icon name="map-pin" size="sm" />
                   <span class="site-name">{{ site.name }}</span>
                   <small class="site-id">({{ site.id }})</small>
-                  <span class="badge" :style="{ '--glow-color': USER_ROLE_CONFIG[site.role]?.color }">
-                    {{ USER_ROLE_CONFIG[site.role]?.label || site.role }}
-                  </span>
+                  <Badge :variant="USER_ROLE_CONFIG[site.role]?.variant">{{ USER_ROLE_CONFIG[site.role]?.label || site.role }}</Badge>
                 </div>
 
-                <Button
-                  :to="`/portal/${site.id}`"
-                  icon-right="arrow-right"
-                >
-                  現場を開く
-                </Button>
+                <Button size="sm" :to="`/portal/${site.id}`" suffix-icon="arrow-right">現場を開く</Button>
               </div>
             </li>
           </ul>
@@ -159,20 +152,11 @@ const assignedSites = computed(() => {
       </header>
 
       <form class="flex flex-col gap-form-row-gap" @submit.prevent="handleChangePassword">
-        <Alert v-if="isSuccess" variant="success">
-          パスワードを変更しました
-        </Alert>
+        <Alert v-if="isSuccess" variant="success">パスワードを変更しました</Alert>
 
         <div class="flex flex-col gap-inline-gap">
           <label for="my-current-password" class="label">現在のパスワード <span class="req-mark">＊</span></label>
-          <Input
-            id="my-current-password"
-            v-model="currentPassword"
-            type="password"
-            placeholder="現在のパスワードを入力"
-            autocomplete="current-password"
-            :disabled="isLoading"
-          />
+          <Input id="my-current-password" v-model="currentPassword" type="password" placeholder="現在のパスワードを入力" autocomplete="current-password" :disabled="isLoading" />
           <p v-if="passwordError" class="error-text">
             {{ passwordError }}
           </p>
@@ -180,37 +164,16 @@ const assignedSites = computed(() => {
 
         <div class="flex flex-col gap-inline-gap">
           <label for="my-new-password" class="label">新しいパスワード (8文字以上) <span class="req-mark">＊</span></label>
-          <Input
-            id="my-new-password"
-            v-model="newPassword"
-            type="password"
-            placeholder="新しいパスワードを入力"
-            autocomplete="new-password"
-            :disabled="isLoading"
-          />
+          <Input id="my-new-password" v-model="newPassword" type="password" placeholder="新しいパスワードを入力" autocomplete="new-password" :disabled="isLoading" />
         </div>
 
         <div class="flex flex-col gap-inline-gap">
           <label for="my-confirm-password" class="label">新しいパスワード（確認用） <span class="req-mark">＊</span></label>
-          <Input
-            id="my-confirm-password"
-            v-model="confirmPassword"
-            type="password"
-            placeholder="もう一度入力"
-            autocomplete="new-password"
-            :disabled="isLoading"
-          />
+          <Input id="my-confirm-password" v-model="confirmPassword" type="password" placeholder="もう一度入力" autocomplete="new-password" :disabled="isLoading" />
         </div>
 
         <div class="flex items-center justify-end pt-inline-gap">
-          <Button
-            type="submit"
-            variant="default"
-            icon="check"
-            :loading="isLoading"
-          >
-            パスワードを変更する
-          </Button>
+          <Button type="submit" variant="primary" icon="check" :loading="isLoading">パスワードを変更する</Button>
         </div>
       </form>
     </section>
@@ -231,10 +194,7 @@ const assignedSites = computed(() => {
 
       <div class="flex flex-col gap-inline-gap">
         <span class="label">演出・モーション効果</span>
-        <Checkbox
-          v-model="animationEnabled"
-          label="パルス・モーション演出を有効にする"
-        />
+        <Switch v-model="animationEnabled" label="パルス・モーション演出を有効にする" />
         <span class="help-text">OFFにすると、サイバーパルス光やスケール演出を停止し、静止表示にします</span>
       </div>
     </section>
@@ -278,14 +238,9 @@ const assignedSites = computed(() => {
   color: var(--color-text-muted);
 }
 
-.text-secondary {
+.empty-state-text {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
-}
-
-.text-muted {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
 }
 
 .error-text {

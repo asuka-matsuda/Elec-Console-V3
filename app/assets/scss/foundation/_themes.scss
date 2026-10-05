@@ -3,92 +3,104 @@
 // =============================================================================
 :root,
 [data-theme="dark"] {
-  // --- 1-2. サーフェス & 背景 ---
-  --color-main-bg: hsl(216deg 28% 7%);
-  --surface-bg: hsl(216deg 21% 11% / 80%);
-  --surface-bg-elevated: hsl(216deg 21% 13%);
-  --surface-bg-solid: hsl(216deg 21% 11%);
-  --color-overlay: hsl(210deg 34% 96%);
-  --color-overlay-dark: hsl(216deg 28% 7% / 70%);
+  // --- 1-1. サーフェス & 背景 ---
+  // 青かぶり（hsl 216 28% 7%）を解消し、ニュートラルスレート（hsl 220 14% 7%）へ昇華
+  --color-main-bg: hsl(220deg 14% 7%);
+  --surface-bg: hsl(220deg 13% 10% / 80%);
+  --surface-bg-elevated: hsl(220deg 13% 12%);
+  --surface-bg-solid: hsl(220deg 13% 10%);
+  --color-overlay: hsl(220deg 20% 96%);
+  --color-overlay-dark: hsl(220deg 14% 7% / 70%);
   --color-bg-hover: color-mix(in srgb, var(--color-overlay) 6%, transparent);
 
-  // --- 1-3. テキストカラー ---
-  --color-text-main: hsl(210deg 34% 96%);
-  --color-text-secondary: hsl(215deg 8% 59%);
-  --color-text-muted: hsl(215deg 8% 47%);
-  --color-text-disabled: hsl(214deg 10% 31%);
+  // --- 1-2. テキストカラー ---
+  --color-text-main: hsl(220deg 20% 96%);
+  --color-text-secondary: hsl(220deg 10% 64%);
+  --color-text-muted: hsl(220deg 8% 48%);
+  --color-text-disabled: hsl(220deg 8% 30%);
   --color-text-on-emphasis: #fff;
 
-  // --- 1-4. ボーダーカラー ---
-  --color-border: hsl(213deg 12% 21%);
-  --color-border-subtle: hsl(215deg 14% 15%);
+  // --- 1-3. ボーダーカラー ---
+  --color-border: hsl(220deg 10% 20%);
+  --color-border-subtle: hsl(220deg 10% 14%);
 
-  // --- 1-5. カテゴリー & ブランドカラー ---
-  --color-category-main: hsl(215deg 93% 58%);
+  // --- 1-4. カテゴリー & ブランドカラー (知覚的均一性に基づくパレット調和) ---
+  --color-category-main: hsl(212deg 92% 60%);
   --theme-accent: var(--color-category-main);
-  --color-category-tool: hsl(184deg 60% 52%);
-  --color-category-database: hsl(265deg 90% 71%);
-  --color-category-reference: hsl(327deg 73% 69%);
-  --color-category-management: hsl(148deg 42% 48%);
-  --color-accent-main: hsl(25deg 87% 59%);
+  --color-category-tool: hsl(178deg 78% 50%);
+  --color-category-database: hsl(265deg 78% 68%);
+  --color-category-reference: hsl(330deg 76% 65%);
+  --color-category-management: hsl(152deg 70% 50%);
+  --color-accent-main: hsl(28deg 92% 58%);
 
-  // --- 1-6. ステータスカラー ---
-  --color-status-success: hsl(138deg 95% 55%);
-  --color-status-warning: hsl(41deg 73% 48%);
-  --color-status-danger: hsl(3deg 93% 63%);
-  --color-status-stopped: hsl(214deg 10% 31%);
-  --color-status-neutral: hsl(215deg 8% 59%);
+  // --- 1-5. ステータスカラー (Geist準拠の洗練されたトーン) ---
+  --color-status-success: hsl(145deg 70% 52%);
+  --color-status-warning: hsl(38deg 92% 52%);
+  --color-status-danger: hsl(356deg 82% 62%);
+  --color-status-stopped: var(--color-text-disabled);
+  --color-status-neutral: var(--color-text-secondary);
 
-  // --- 1-7. 業務・ドメイントークン ---
-  --color-track-bg: hsl(215deg 14% 19%);
-  --color-tile-empty-bg: hsl(216deg 21% 15%);
-  --color-tile-empty-border: hsl(213deg 12% 21%);
-  --color-tile-hover-border: hsl(210deg 34% 96%);
-  --color-tile-excluded-bg: hsl(215deg 14% 20% / 50%);
-  --color-tile-excluded-border: hsl(215deg 14% 30% / 50%);
-  --color-selection-bg: hsl(215deg 93% 58% / 18%);
-  --color-selection-outline: hsl(215deg 93% 58%);
-  --color-completed-row-bg: hsl(128deg 57% 62% / 8%);
+  // --- 1-6. 業務・ドメイントークン ---
+  --color-track-bg: hsl(220deg 12% 16%);
+  --color-tile-empty-bg: hsl(220deg 13% 13%);
+  --color-tile-empty-border: hsl(220deg 10% 20%);
+  --color-tile-hover-border: var(--color-text-main);
+  --color-tile-excluded-bg: hsl(220deg 12% 18% / 50%);
+  --color-tile-excluded-border: hsl(220deg 10% 28% / 50%);
+  --color-selection-bg: color-mix(in srgb, var(--color-category-main) 18%, transparent);
+  --color-selection-outline: var(--color-category-main);
+  --color-completed-row-bg: color-mix(in srgb, var(--color-status-success) 8%, transparent);
 
-  --color-calendar-saturday: hsl(212deg 92% 66%);
-  --color-calendar-sunday: hsl(358deg 85% 68%);
+  --color-calendar-saturday: hsl(212deg 90% 64%);
+  --color-calendar-sunday: hsl(356deg 82% 64%);
 
-  --color-trade-electric: hsl(42deg 90% 50%);
-  --color-trade-architecture: hsl(22deg 88% 54%);
-  --color-trade-hvac: hsl(145deg 65% 44%);
-  --color-trade-plumbing: hsl(198deg 85% 48%);
-  --color-trade-trivia: hsl(265deg 70% 65%);
+  --color-trade-electric: hsl(40deg 92% 52%);
+  --color-trade-architecture: hsl(22deg 86% 54%);
+  --color-trade-hvac: hsl(150deg 68% 48%);
+  --color-trade-plumbing: hsl(198deg 82% 52%);
+  --color-trade-trivia: hsl(265deg 74% 66%);
 
-  --color-role-admin: hsl(263deg 85% 68%);
-  --color-role-worker: hsl(152deg 68% 45%);
-  --color-role-viewer: hsl(215deg 8% 47%);
+  --color-role-admin: hsl(265deg 78% 68%);
+  --color-role-worker: hsl(152deg 70% 50%);
+  --color-role-viewer: var(--color-text-secondary);
 
-  // --- 1-8. ボタン & コントロール ---
-  --btn-default-bg: var(--surface-bg-elevated);
-  --btn-default-bg-hover: var(--color-bg-hover);
-  --btn-default-bg-active: color-mix(in srgb, var(--color-overlay) 10%, transparent);
-  --btn-default-border: var(--color-border);
-  --btn-default-border-hover: var(--color-text-muted);
-  --btn-default-text: var(--color-text-main);
+  // --- 1-7. ボタン & コントロール (Geist準拠) ---
+  // Primary (ブランドサーフェス発光型)
+  --btn-primary-bg: color-mix(in srgb, var(--theme-accent) 8%, var(--surface-bg-elevated));
+  --btn-primary-bg-hover: color-mix(in srgb, var(--theme-accent) 18%, var(--surface-bg-elevated));
+  --btn-primary-bg-active: color-mix(in srgb, var(--theme-accent) 28%, var(--surface-bg-elevated));
+  --btn-primary-border: color-mix(in srgb, var(--theme-accent) 45%, transparent);
+  --btn-primary-border-hover: var(--theme-accent);
+  --btn-primary-text: var(--theme-accent);
 
+  // Secondary (標準枠線ボタン)
+  --btn-secondary-bg: var(--surface-bg-elevated);
+  --btn-secondary-bg-hover: var(--color-bg-hover);
+  --btn-secondary-bg-active: color-mix(in srgb, var(--color-overlay) 10%, transparent);
+  --btn-secondary-border: var(--color-border);
+  --btn-secondary-border-hover: var(--color-text-muted);
+  --btn-secondary-text: var(--color-text-main);
+
+  // Warning (警告アクション)
+  --btn-warning-bg: var(--surface-bg-elevated);
+  --btn-warning-bg-hover: color-mix(in srgb, var(--color-status-warning) 15%, var(--surface-bg-elevated));
+  --btn-warning-bg-active: color-mix(in srgb, var(--color-status-warning) 25%, var(--surface-bg-elevated));
+  --btn-warning-border: color-mix(in srgb, var(--color-status-warning) 35%, transparent);
+  --btn-warning-border-hover: var(--color-status-warning);
+  --btn-warning-text: var(--color-status-warning);
+
+  // Danger (破壊的アクション - 完全定義)
   --btn-danger-bg: var(--surface-bg-elevated);
-  --btn-danger-bg-hover: color-mix(in srgb, var(--color-status-danger) 50%, var(--surface-bg-elevated));
-  --btn-danger-bg-active: color-mix(in srgb, var(--color-status-danger) 65%, var(--surface-bg-elevated));
-  --btn-danger-border: var(--color-border);
+  --btn-danger-bg-hover: color-mix(in srgb, var(--color-status-danger) 15%, var(--surface-bg-elevated));
+  --btn-danger-bg-active: color-mix(in srgb, var(--color-status-danger) 25%, var(--surface-bg-elevated));
+  --btn-danger-border: color-mix(in srgb, var(--color-status-danger) 35%, transparent);
   --btn-danger-border-hover: var(--color-status-danger);
   --btn-danger-text: var(--color-status-danger);
-
-  --btn-success-bg: var(--surface-bg-elevated);
-  --btn-success-bg-hover: color-mix(in srgb, var(--color-status-success) 50%, var(--surface-bg-elevated));
-  --btn-success-bg-active: color-mix(in srgb, var(--color-status-success) 65%, var(--surface-bg-elevated));
-  --btn-success-border: var(--color-border);
-  --btn-success-border-hover: var(--color-status-success);
-  --btn-success-text: var(--color-status-success);
 
   --control-checked-bg: var(--theme-accent);
   --control-checked-icon: var(--color-text-on-emphasis);
 
-  // --- 1-9. シャドウ & リムハイライト ---
+  // --- 1-8. シャドウ & リムハイライト ---
   --shadow-color: color-mix(in srgb, black 85%, transparent);
   --shadow-elevation-sm:
     0 1px 2px color-mix(in srgb, var(--shadow-color) 40%, transparent),
@@ -110,7 +122,7 @@
   --surface-rim-highlight-hover: inset 0 1px 0 color-mix(in srgb, var(--color-overlay) 14%, transparent);
   --surface-rim-accent: inset 0 1px 0 color-mix(in srgb, var(--theme-accent) 35%, transparent);
 
-  // --- 1-10. 動的グロー演出トークン ---
+  // --- 1-9. 動的グロー演出トークン ---
   --shadow-glow-base: none;
   --shadow-glow-hover:
     0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 45%, transparent),
@@ -135,111 +147,122 @@
 // 2. ライトテーマ (Light Theme)
 // =============================================================================
 [data-theme="light"] {
-  // --- 2-2. サーフェス & 背景 ---
-  --color-main-bg: hsl(210deg 29% 97%);
+  // --- 2-1. サーフェス & 背景 ---
+  --color-main-bg: hsl(220deg 14% 97%);
   --surface-bg: hsl(0deg 0% 100%);
   --surface-bg-elevated: hsl(0deg 0% 100%);
   --surface-bg-solid: hsl(0deg 0% 100%);
-  --color-overlay: hsl(213deg 13% 14%);
-  --color-overlay-dark: hsl(213deg 13% 14% / 40%);
-  --color-bg-hover: hsl(210deg 29% 94%);
+  --color-overlay: hsl(220deg 14% 12%);
+  --color-overlay-dark: hsl(220deg 14% 12% / 40%);
+  --color-bg-hover: hsl(220deg 14% 94%);
 
-  // --- 2-3. テキストカラー ---
-  --color-text-main: hsl(213deg 13% 14%);
-  --color-text-secondary: hsl(212deg 8% 38%);
-  --color-text-muted: hsl(213deg 9% 46%);
-  --color-text-disabled: hsl(211deg 12% 70%);
+  // --- 2-2. テキストカラー ---
+  --color-text-main: hsl(220deg 16% 12%);
+  --color-text-secondary: hsl(220deg 10% 40%);
+  --color-text-muted: hsl(220deg 8% 52%);
+  --color-text-disabled: hsl(220deg 10% 74%);
   --color-text-on-emphasis: hsl(0deg 0% 100%);
 
-  // --- 2-4. ボーダーカラー ---
-  --color-border: hsl(210deg 18% 85%);
-  --color-border-subtle: hsl(210deg 18% 87%);
+  // --- 2-3. ボーダーカラー ---
+  --color-border: hsl(220deg 12% 86%);
+  --color-border-subtle: hsl(220deg 12% 91%);
 
-  // --- 2-5. カテゴリー & ブランドカラー ---
-  --color-category-main: hsl(214deg 92% 45%);
+  // --- 2-4. カテゴリー & ブランドカラー ---
+  --color-category-main: hsl(212deg 92% 46%);
   --theme-accent: var(--color-category-main);
-  --color-category-tool: hsl(185deg 99% 32%);
-  --color-category-database: hsl(260deg 67% 59%);
-  --color-category-reference: hsl(327deg 49% 52%);
-  --color-category-management: hsl(148deg 45% 28%);
-  --color-accent-main: hsl(24deg 100% 37%);
+  --color-category-tool: hsl(178deg 88% 34%);
+  --color-category-database: hsl(265deg 75% 52%);
+  --color-category-reference: hsl(330deg 75% 48%);
+  --color-category-management: hsl(152deg 78% 34%);
+  --color-accent-main: hsl(28deg 95% 44%);
 
-  // --- 2-6. ステータスカラー ---
-  --color-status-success: hsl(138deg 90% 32%);
-  --color-status-warning: hsl(40deg 100% 30%);
-  --color-status-danger: hsl(356deg 72% 47%);
-  --color-status-stopped: hsl(213deg 9% 46%);
-  --color-status-neutral: hsl(212deg 8% 38%);
+  // --- 2-5. ステータスカラー ---
+  --color-status-success: hsl(145deg 75% 36%);
+  --color-status-warning: hsl(36deg 95% 36%);
+  --color-status-danger: hsl(356deg 80% 46%);
+  --color-status-stopped: var(--color-text-disabled);
+  --color-status-neutral: var(--color-text-secondary);
 
-  // --- 2-7. 業務・ドメイントークン ---
-  --color-track-bg: hsl(210deg 18% 90%);
-  --color-tile-empty-bg: hsl(210deg 18% 93%);
-  --color-tile-empty-border: hsl(210deg 18% 85% / 80%);
-  --color-tile-hover-border: hsl(213deg 13% 14%);
-  --color-tile-excluded-bg: hsl(210deg 18% 88% / 50%);
-  --color-tile-excluded-border: hsl(210deg 18% 78% / 50%);
-  --color-selection-bg: hsl(214deg 92% 45% / 12%);
-  --color-selection-outline: hsl(214deg 92% 45%);
-  --color-completed-row-bg: hsl(137deg 66% 30% / 8%);
+  // --- 2-6. 業務・ドメイントークン ---
+  --color-track-bg: hsl(220deg 12% 92%);
+  --color-tile-empty-bg: hsl(220deg 12% 95%);
+  --color-tile-empty-border: hsl(220deg 12% 86% / 80%);
+  --color-tile-hover-border: var(--color-text-main);
+  --color-tile-excluded-bg: hsl(220deg 12% 90% / 50%);
+  --color-tile-excluded-border: hsl(220deg 12% 80% / 50%);
+  --color-selection-bg: color-mix(in srgb, var(--color-category-main) 12%, transparent);
+  --color-selection-outline: var(--color-category-main);
+  --color-completed-row-bg: color-mix(in srgb, var(--color-status-success) 8%, transparent);
 
-  --color-calendar-saturday: hsl(212deg 92% 45%);
-  --color-calendar-sunday: hsl(356deg 72% 47%);
+  --color-calendar-saturday: hsl(212deg 90% 46%);
+  --color-calendar-sunday: hsl(356deg 80% 46%);
 
-  --color-trade-electric: hsl(42deg 90% 45%);
-  --color-trade-architecture: hsl(22deg 88% 50%);
-  --color-trade-hvac: hsl(145deg 65% 38%);
-  --color-trade-plumbing: hsl(198deg 85% 42%);
-  --color-trade-trivia: hsl(265deg 70% 60%);
+  --color-trade-electric: hsl(40deg 95% 40%);
+  --color-trade-architecture: hsl(22deg 90% 46%);
+  --color-trade-hvac: hsl(150deg 72% 34%);
+  --color-trade-plumbing: hsl(198deg 86% 40%);
+  --color-trade-trivia: hsl(265deg 70% 54%);
 
-  --color-role-admin: hsl(263deg 85% 62%);
-  --color-role-worker: hsl(152deg 68% 40%);
-  --color-role-viewer: hsl(213deg 9% 46%);
+  --color-role-admin: hsl(265deg 75% 52%);
+  --color-role-worker: hsl(152deg 78% 34%);
+  --color-role-viewer: var(--color-text-secondary);
 
-  // --- 2-8. ボタン & コントロール ---
-  --btn-default-bg: hsl(210deg 29% 97%);
-  --btn-default-bg-hover: hsl(210deg 29% 92%);
-  --btn-default-bg-active: color-mix(in srgb, var(--color-overlay) 10%, transparent);
-  --btn-default-border: hsl(210deg 18% 85%);
-  --btn-default-border-hover: hsl(213deg 13% 14%);
-  --btn-default-text: var(--color-text-main);
+  // --- 2-7. ボタン & コントロール (Geist準拠) ---
+  // Primary (ブランドサーフェス発光型)
+  --btn-primary-bg: hsl(0deg 0% 100%);
+  --btn-primary-bg-hover: color-mix(in srgb, var(--theme-accent) 10%, hsl(0deg 0% 100%));
+  --btn-primary-bg-active: color-mix(in srgb, var(--theme-accent) 18%, hsl(0deg 0% 100%));
+  --btn-primary-border: color-mix(in srgb, var(--theme-accent) 40%, transparent);
+  --btn-primary-border-hover: var(--theme-accent);
+  --btn-primary-text: var(--theme-accent);
 
+  // Secondary (標準枠線ボタン)
+  --btn-secondary-bg: hsl(220deg 14% 97%);
+  --btn-secondary-bg-hover: hsl(220deg 14% 92%);
+  --btn-secondary-bg-active: color-mix(in srgb, var(--color-overlay) 10%, transparent);
+  --btn-secondary-border: hsl(220deg 12% 86%);
+  --btn-secondary-border-hover: var(--color-text-main);
+  --btn-secondary-text: var(--color-text-main);
+
+  // Warning (警告アクション)
+  --btn-warning-bg: hsl(0deg 0% 100%);
+  --btn-warning-bg-hover: color-mix(in srgb, var(--color-status-warning) 12%, hsl(0deg 0% 100%));
+  --btn-warning-bg-active: color-mix(in srgb, var(--color-status-warning) 20%, hsl(0deg 0% 100%));
+  --btn-warning-border: color-mix(in srgb, var(--color-status-warning) 35%, transparent);
+  --btn-warning-border-hover: var(--color-status-warning);
+  --btn-warning-text: var(--color-status-warning);
+
+  // Danger (破壊的アクション - 完全定義)
   --btn-danger-bg: hsl(0deg 0% 100%);
-  --btn-danger-bg-hover: color-mix(in srgb, var(--color-status-danger) 15%, hsl(0deg 0% 100%));
-  --btn-danger-bg-active: color-mix(in srgb, var(--color-status-danger) 25%, hsl(0deg 0% 100%));
-  --btn-danger-border: var(--color-border);
+  --btn-danger-bg-hover: color-mix(in srgb, var(--color-status-danger) 12%, hsl(0deg 0% 100%));
+  --btn-danger-bg-active: color-mix(in srgb, var(--color-status-danger) 20%, hsl(0deg 0% 100%));
+  --btn-danger-border: color-mix(in srgb, var(--color-status-danger) 35%, transparent);
   --btn-danger-border-hover: var(--color-status-danger);
   --btn-danger-text: var(--color-status-danger);
-
-  --btn-success-bg: hsl(0deg 0% 100%);
-  --btn-success-bg-hover: color-mix(in srgb, var(--color-status-success) 15%, hsl(0deg 0% 100%));
-  --btn-success-bg-active: color-mix(in srgb, var(--color-status-success) 25%, hsl(0deg 0% 100%));
-  --btn-success-border: var(--color-border);
-  --btn-success-border-hover: var(--color-status-success);
-  --btn-success-text: var(--color-status-success);
 
   --control-checked-bg: var(--theme-accent);
   --control-checked-icon: var(--color-text-on-emphasis);
 
-  // --- 2-9. シャドウ & リムハイライト ---
-  --shadow-color: hsl(213deg 13% 14% / 10%);
+  // --- 2-8. シャドウ & リムハイライト ---
+  --shadow-color: hsl(220deg 14% 12% / 10%);
   --shadow-elevation-sm:
-    0 1px 3px hsl(213deg 13% 14% / 12%),
-    0 1px 2px hsl(213deg 13% 14% / 6%);
+    0 1px 3px hsl(220deg 14% 12% / 12%),
+    0 1px 2px hsl(220deg 14% 12% / 6%);
   --shadow-elevation-md:
-    0 4px 8px hsl(213deg 13% 14% / 12%),
-    0 2px 4px hsl(213deg 13% 14% / 8%);
+    0 4px 8px hsl(220deg 14% 12% / 12%),
+    0 2px 4px hsl(220deg 14% 12% / 8%);
   --shadow-elevation-lg:
-    0 12px 28px hsl(213deg 13% 14% / 14%),
-    0 4px 8px hsl(213deg 13% 14% / 8%);
-  --shadow-sink: inset 0 1px 2px hsl(213deg 13% 14% / 10%);
+    0 12px 28px hsl(220deg 14% 12% / 14%),
+    0 4px 8px hsl(220deg 14% 12% / 8%);
+  --shadow-sink: inset 0 1px 2px hsl(220deg 14% 12% / 10%);
   --shadow-modal: var(--shadow-elevation-lg);
-  --shadow-nav: 4px 0 24px hsl(213deg 13% 14% / 12%);
+  --shadow-nav: 4px 0 24px hsl(220deg 14% 12% / 12%);
 
   --surface-rim-highlight: inset 0 1px 0 hsl(0deg 0% 100% / 80%);
   --surface-rim-highlight-hover: inset 0 1px 0 hsl(0deg 0% 100%);
   --surface-rim-accent: inset 0 1px 0 color-mix(in srgb, var(--theme-accent) 40%, transparent);
 
-  // --- 2-10. 動的グロー演出トークン ---
+  // --- 2-9. 動的グロー演出トークン ---
   --shadow-glow-base: none;
   --shadow-glow-hover:
     0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 35%, transparent),
@@ -250,7 +273,7 @@
     0 0 0 3px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 25%, transparent),
     0 2px 8px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 15%, transparent);
   --shadow-glow-active:
-    inset 0 1px 2px hsl(213deg 13% 14% / 15%),
+    inset 0 1px 2px hsl(220deg 14% 12% / 15%),
     var(--shadow-elevation-sm);
   --shadow-glow-sm:
     0 0 0 1px color-mix(in srgb, var(--glow-color, var(--theme-accent)) 30%, transparent),
@@ -258,3 +281,4 @@
 
   color-scheme: light;
 }
+

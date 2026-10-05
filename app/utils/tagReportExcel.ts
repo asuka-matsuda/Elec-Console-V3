@@ -3,7 +3,7 @@
  *
  * @description 取り込んだ回路台帳Excelからテーブル見出しを動的に取得し、
  * A4定型タグテンプレート（複数面配置）へデータを流し込みます。
- * 1ページの枠数を超えた場合は自動で改ページ・ブロック複製を行い、余剰枠のキーはクリアします。
+ * 1ページの枠数を超えた場合は自動で改ページ・ブロック複製を行い、余剰枠のタグはクリアします。
  */
 import ExcelJS from 'exceljs'
 
@@ -41,7 +41,7 @@ interface TagSlotCell {
   row: number
   col: number
   rawText: string
-  keys: string[]
+  tags: string[]
 }
 
 interface TagSlot {
@@ -56,8 +56,10 @@ export interface GenerateTagReportOptions {
   templateBuffer: ArrayBuffer | Uint8Array
   /** 出力対象の回路データ行 */
   rows: DynamicCircuitRow[]
-  /** 現場名（ファイル名・プレースホルダー用） */
+  /** 現場名（出力ファイル名用） */
   siteName?: string
+  /** 出力日時（%出力日時% タグ置換用） */
+  exportDate?: string
   /** 流し込み順（'z' = 行優先:左→右, 'n' = 列優先:上→下） */
   flowDirection?: 'z' | 'n'
 }
@@ -70,25 +72,22 @@ export interface TagReportResult {
 }
 
 /**
- * 主要な列エイリアスマップ（動的見出しと標準キーの相互補完用）
+ * ヘッダー行を検出するための判定キーワード（代表的な設備見出し語）
  */
-const STANDARD_ALIASES: Record<string, string[]> = {
-  盤名称: ['盤名', '分電盤名称', '盤名称', 'banmeisho'],
-  盤種別: ['盤種別', '種別', 'banshubetsu'],
-  系統: ['系統', 'keito'],
-  幹線判定: ['幹線判定', '幹線/二次側', '区分'],
-  回路番号: ['回路番号', '回路no', '回路no.', 'kairobangou'],
-  回路記号: ['回路記号', 'kairokigou'],
-  回路名称: ['回路名称', '回路名', '負荷名称', 'kairomeisho'],
-  配電方式: ['配電方式', 'haidenhoushiki'],
-  相種別: ['相種別', 'soushubetsu'],
-  遮断器種別: ['遮断器種別', 'shudankishubetsu'],
-  遮断器容量: ['遮断器容量', '遮断器サイズ', '定格容量', '配電盤遮断器容量', 'shadankiyouryou'],
-  ケーブル: ['ケーブル', 'ケーブルサイズ', 'ケーブルリスト', 'ｹｰﾌﾞﾙﾘｽﾄ', '電線', 'cablelist'],
-  配線条数: ['配線条数', 'haisenjousuu'],
-  接地有無: ['接地有無', 'setsujiumu'],
-  接地種別: ['接地種別', '接地リスト', '接地ﾘｽﾄ', '接地', 'setsujilist'],
-}
+const HEADER_KEYWORDS = [
+  '盤',
+  '回路',
+  '系統',
+  '幹線',
+  '電線',
+  'ケーブル',
+  '遮断器',
+  '容量',
+  '負荷',
+  '名称',
+  '番号',
+  '記号',
+]
 
 /**
  * セルから表示用文字列を安全に取得
@@ -126,15 +125,7 @@ export async function extractTableFromExcel(
     return { headers: [], rows: [] }
   }
 
-  // 2. ヘッダー行の検出（標準見出し語との一致スコアを優先し、同点ならセル数、最初の候補を採用）
-  const allAliases = new Set<string>()
-
-  for (const list of Object.values(STANDARD_ALIASES)) {
-    for (const a of list) {
-      allAliases.add(normalizeHeaderName(a))
-    }
-  }
-
+  // 2. ヘッダー行の検出（設備キーワードとの一致スコアを優先し、同点ならセル数、最初の候補を採用）
   let headerRowIndex = 1
   let maxScore = -1
   let maxColCount = 0
@@ -153,7 +144,7 @@ export async function extractTableFromExcel(
         count++
         const norm = normalizeHeaderName(val)
 
-        if (allAliases.has(norm)) {
+        if (HEADER_KEYWORDS.some(kw => norm.includes(normalizeHeaderName(kw)))) {
           score++
         }
       }
@@ -206,13 +197,13 @@ export async function extractTableFromExcel(
 
     if (!hasData) return
 
-    // 盤名称・系統・回路番号・回路名称の特定（標準エイリアス照合）
-    const findValue = (aliases: string[]): string => {
+    // 盤名称・系統・回路番号・回路名称の特定（UIの絞り込み用プロパティ）
+    const findValueByKeywords = (keywords: string[]): string => {
       for (const [colName, val] of Object.entries(values)) {
         const norm = normalizeHeaderName(colName)
 
-        for (const a of aliases) {
-          if (norm === normalizeHeaderName(a)) {
+        for (const kw of keywords) {
+          if (norm.includes(normalizeHeaderName(kw))) {
             return val
           }
         }
@@ -221,8 +212,8 @@ export async function extractTableFromExcel(
       return ''
     }
 
-    const banMeisho = findValue(STANDARD_ALIASES['盤名称'] || []) || '未分類'
-    const kansenHanteiRaw = findValue(STANDARD_ALIASES['幹線判定'] || [])
+    const banMeisho = findValueByKeywords(['盤名称', '盤名', '盤']) || '未分類'
+    const kansenHanteiRaw = findValueByKeywords(['幹線判定', '幹線/二次側', '幹線'])
     let keiTo: string
 
     if (kansenHanteiRaw) {
@@ -231,12 +222,12 @@ export async function extractTableFromExcel(
       keiTo = isKansen ? '幹線' : '二次'
     }
     else {
-      const rawKeiTo = findValue(STANDARD_ALIASES['系統'] || [])
+      const rawKeiTo = findValueByKeywords(['系統'])
 
       keiTo = rawKeiTo.includes('幹線') ? '幹線' : '二次'
     }
-    const kairoBangou = findValue(STANDARD_ALIASES['回路番号'] || [])
-    const kairoMeisho = findValue(STANDARD_ALIASES['回路名称'] || [])
+    const kairoBangou = findValueByKeywords(['回路番号', '回路no'])
+    const kairoMeisho = findValueByKeywords(['回路名称', '回路名', '負荷名称'])
 
     // サンプル値の更新（ヘッダープレビュー用）
     headers.forEach((h) => {
@@ -262,10 +253,11 @@ export async function extractTableFromExcel(
  */
 export function convertCircuitsToDynamicRows(
   circuits: CircuitItem[],
-  siteName: string = '',
+  optionsOrDate: { exportDate?: string } | string = {},
 ): { headers: DynamicTagField[], rows: DynamicCircuitRow[] } {
+  const exportDate = typeof optionsOrDate === 'string' ? optionsOrDate : (optionsOrDate?.exportDate || '')
+
   const standardKeys = [
-    '現場名',
     '盤名称',
     '盤種別',
     '系統',
@@ -281,6 +273,7 @@ export function convertCircuitsToDynamicRows(
     '配線条数',
     '接地有無',
     '接地種別',
+    '出力日時',
   ]
 
   const headers: DynamicTagField[] = standardKeys.map((key, idx) => ({
@@ -291,7 +284,6 @@ export function convertCircuitsToDynamicRows(
 
   const rows: DynamicCircuitRow[] = circuits.map((c) => {
     const values: Record<string, string> = {
-      現場名: siteName,
       盤名称: c.banMeisho || '',
       盤種別: c.banShubetsu || '',
       系統: c.banMeisho ? `${c.banMeisho}系統` : '',
@@ -304,10 +296,10 @@ export function convertCircuitsToDynamicRows(
       遮断器種別: c.shadankiShubetsu || '',
       遮断器容量: c.shadankiYouryou || '',
       ケーブル: c.cableList || '',
-      ケーブルサイズ: c.cableList || '',
       配線条数: c.haisenJousuu || '',
       接地有無: c.setsuchiUmu || '',
       接地種別: c.setsuchiList || '',
+      出力日時: exportDate,
     }
 
     return {
@@ -352,13 +344,13 @@ export function detectTagSlots(
       const matches = text.match(/%([^%]+)%/g)
 
       if (matches && matches.length > 0) {
-        const keys = matches.map(m => m.slice(1, -1).trim())
+        const tags = matches.map(m => m.slice(1, -1).trim())
 
         placeholderCells.push({
           row: rowNumber,
           col: colNumber,
           rawText: text,
-          keys,
+          tags,
         })
       }
     })
@@ -368,28 +360,28 @@ export function detectTagSlots(
     return { slots: [], pageHeight: maxRow }
   }
 
-  // 1. 各キーの出現回数を集計し、スロット数（枠数）を推定
-  const keyCountMap = new Map<string, number>()
+  // 1. 各タグの出現回数を集計し、スロット数（枠数）を推定
+  const tagCountMap = new Map<string, number>()
 
   placeholderCells.forEach((c) => {
-    c.keys.forEach((k) => {
-      keyCountMap.set(k, (keyCountMap.get(k) || 0) + 1)
+    c.tags.forEach((t) => {
+      tagCountMap.set(t, (tagCountMap.get(t) || 0) + 1)
     })
   })
 
-  // 最も出現回数の多いキーをアンカーとする
-  let anchorKey = ''
+  // 最も出現回数の多いタグをアンカーとする
+  let anchorTag = ''
   let estimatedSlotCount = 1
 
-  keyCountMap.forEach((count, key) => {
+  tagCountMap.forEach((count, tag) => {
     if (count > estimatedSlotCount) {
       estimatedSlotCount = count
-      anchorKey = key
+      anchorTag = tag
     }
   })
 
   // アンカーセル一覧
-  const anchorCells = placeholderCells.filter(c => c.keys.includes(anchorKey))
+  const anchorCells = placeholderCells.filter(c => c.tags.includes(anchorTag))
 
   // スロット並び順（Z順: 行優先、N順: 列優先）でアンカーセルをソート
   anchorCells.sort((a, b) => {
@@ -420,7 +412,7 @@ export function detectTagSlots(
   }))
 
   // アンカー以外のセルを最も近いアンカー（スロット）に割り当て
-  const nonAnchorCells = placeholderCells.filter(c => !c.keys.includes(anchorKey))
+  const nonAnchorCells = placeholderCells.filter(c => !c.tags.includes(anchorTag))
 
   nonAnchorCells.forEach((cell) => {
     let bestSlot = slots[0]
@@ -448,51 +440,41 @@ export function detectTagSlots(
 
 /**
  * 行データからキーに対する最適な値を解決する
+ * - 完全一致優先
+ * - 全角・半角の正規化一致に対応
+ * - 出力日時に対応
+ * - 互換性キー（エイリアス）や現場名は対応しない（動的生成準拠）
  */
-export function resolveValueOfKey(row: DynamicCircuitRow, key: string, siteName: string = ''): string {
+export function resolveValueOfKey(
+  row: DynamicCircuitRow,
+  key: string,
+  optionsOrDate: { exportDate?: string } | string = {},
+): string {
   // 1. 完全一致
   if (row.values[key] !== undefined) {
     return row.values[key]
   }
 
-  // 2. 現場名
-  if (key === '現場名' || key === 'siteName') {
-    return siteName
-  }
-
-  // 3. 正規化一致
+  const exportDate = typeof optionsOrDate === 'string' ? optionsOrDate : (optionsOrDate?.exportDate || '')
   const normKey = normalizeHeaderName(key)
 
+  // 2. 出力日時（全角・半角・別称対応）
+  if (normKey === '出力日時' || normKey === '出力日' || normKey === '日付') {
+    return exportDate
+  }
+
+  // 3. 正規化一致（全角半角、カタカナ、大文字小文字、スペース揺らぎの吸収）
   for (const [k, v] of Object.entries(row.values)) {
     if (normalizeHeaderName(k) === normKey) {
       return v
     }
   }
 
-  // 4. 標準エイリアスからのフォールバック
-  for (const [stdName, aliases] of Object.entries(STANDARD_ALIASES)) {
-    const isTarget = normalizeHeaderName(stdName) === normKey
-      || aliases.some(a => normalizeHeaderName(a) === normKey)
-
-    if (isTarget) {
-      // row.values 内のエイリアスを探索
-      for (const a of [stdName, ...aliases]) {
-        for (const [k, v] of Object.entries(row.values)) {
-          if (normalizeHeaderName(k) === normalizeHeaderName(a)) {
-            return v
-          }
-        }
-      }
-      // ショートカットプロパティ
-      if (stdName === '盤名称' && row.banMeisho) return row.banMeisho
-      if (stdName === '系統' && row.keiTo) return row.keiTo
-      if (stdName === '回路番号' && row.kairoBangou) return row.kairoBangou
-      if (stdName === '回路名称' && row.kairoMeisho) return row.kairoMeisho
-    }
-  }
-
   return ''
 }
+
+/** エイリアス */
+export const resolveValueOfTag = resolveValueOfKey
 
 /**
  * 行の書式と高さをコピー（ブロック複製用）
@@ -623,7 +605,7 @@ export async function generateTagReportExcel(
           // データがある場合：プレースホルダーを置換
           const prevNumFmt = cell.numFmt
           const replaced = cellText.replace(/%([^%]+)%/g, (_match, key) => {
-            return resolveValueOfKey(dataRow, key.trim(), siteName)
+            return resolveValueOfKey(dataRow, key.trim(), { exportDate: options.exportDate })
           })
 
           cell.value = replaced

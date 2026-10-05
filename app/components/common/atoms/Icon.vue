@@ -11,6 +11,7 @@ import type { IconProps } from '~/types/components'
 const {
   name,
   size,
+  variant,
   spin = false,
 } = defineProps<IconProps>()
 
@@ -26,15 +27,7 @@ const iconComponent = computed(() => {
 </script>
 
 <template>
-  <component
-    :is="iconComponent"
-    v-if="iconComponent"
-    class="inline-block shrink-0 align-middle app-icon"
-    :class="[
-      size && `is-${size}`,
-      { 'u-spin': spin },
-    ]"
-  />
+  <component :is="iconComponent" v-if="iconComponent" class="inline-block shrink-0 align-middle app-icon" :class="[size && `is-${size}`, variant && `is-${variant}`, { 'u-spin': spin }]" />
 </template>
 
 <style scoped lang="scss">
@@ -55,6 +48,34 @@ const iconComponent = computed(() => {
   &.is-lg {
     width: var(--icon-size-lg);
     height: var(--icon-size-lg);
+  }
+
+  &.is-primary {
+    color: var(--theme-accent, var(--color-category-main));
+  }
+
+  &.is-secondary {
+    color: var(--color-text-secondary);
+  }
+
+  &.is-accent {
+    color: var(--theme-accent, var(--color-accent-main));
+  }
+
+  &.is-success {
+    color: var(--color-status-success);
+  }
+
+  &.is-warning {
+    color: var(--color-status-warning);
+  }
+
+  &.is-danger {
+    color: var(--color-status-danger);
+  }
+
+  &.is-muted {
+    color: var(--color-text-muted);
   }
 
   &.u-spin {

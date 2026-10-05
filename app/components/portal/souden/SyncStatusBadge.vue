@@ -23,18 +23,8 @@ const isModalOpen = ref(false)
 <template>
   <div class="inline-flex items-center">
 
-    <button
-      v-if="hasPending"
-      type="button"
-      class="inline-flex items-center gap-inline-gap px-item-gap py-inline-gap sync-btn"
-      :disabled="isSyncing"
-      @click="isModalOpen = true"
-    >
-      <Icon
-        :name="isSyncing ? 'refresh-cw' : 'zap'"
-        size="sm"
-        :spin="isSyncing"
-      />
+    <button v-if="hasPending" type="button" class="inline-flex items-center gap-inline-gap px-item-gap py-inline-gap sync-btn" :disabled="isSyncing" @click="isModalOpen = true">
+      <Icon :name="isSyncing ? 'refresh-cw' : 'zap'" size="sm" :spin="isSyncing" />
       <span>未同期 {{ pendingCount }}件</span>
       <span class="inline-flex items-center gap-inline-gap pl-inline-gap sync-action">
         同期実行
@@ -47,11 +37,7 @@ const isModalOpen = ref(false)
       <span>同期済</span>
     </div>
 
-    <PortalModalSyncQueue
-      v-if="isModalOpen"
-      v-model="isModalOpen"
-      :site-id="siteId"
-    />
+    <PortalModalSyncQueue v-if="isModalOpen" v-model="isModalOpen" :site-id="siteId" />
   </div>
 </template>
 

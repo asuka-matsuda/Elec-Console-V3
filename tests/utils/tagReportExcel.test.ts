@@ -9,6 +9,7 @@ import {
   extractTableFromExcel,
   generateTagReportExcel,
   resolveValueOfKey,
+  resolveValueOfTag,
 } from '../../app/utils/tagReportExcel'
 
 describe('tagReportExcel', () => {
@@ -29,14 +30,16 @@ describe('tagReportExcel', () => {
       },
     ]
 
-    const result = convertCircuitsToDynamicRows(dummyCircuits, 'テスト現場')
+    const result = convertCircuitsToDynamicRows(dummyCircuits, '2026/10/05')
 
     expect(result.headers.length).toBeGreaterThan(5)
     expect(result.headers.some(h => h.key === '盤名称')).toBe(true)
+    expect(result.headers.some(h => h.key === '出力日時')).toBe(true)
     expect(result.rows).toHaveLength(1)
     expect(result.rows[0].banMeisho).toBe('1L-1')
     expect(result.rows[0].values['ケーブル']).toBe('CVT 100sq')
-    expect(result.rows[0].values['現場名']).toBe('テスト現場')
+    expect(result.rows[0].values['出力日時']).toBe('2026/10/05')
+    expect(result.rows[0].values['現場名']).toBeUndefined()
   })
 
   it('extractTableFromExcel: Excelワークブックからテーブル見出しと行データを動的抽出できること', async () => {
@@ -108,7 +111,7 @@ describe('tagReportExcel', () => {
     expect(result.rows[0].banMeisho).toBe('1L-1')
   })
 
-  it('resolveValueOfKey: 完全一致・動的列・標準エイリアスを正しく解決すること', () => {
+  it('resolveValueOfKey: 完全一致・動的列・全角半角正規化・出力日時を解決し、互換エイリアスや現場名は解決しないこと', () => {
     const row = {
       banMeisho: '1L-1',
       keiTo: '幹線',
@@ -123,14 +126,21 @@ describe('tagReportExcel', () => {
 
     // 1. 完全一致
     expect(resolveValueOfKey(row, '設置場所')).toBe('B1F電気室')
-    // 2. エイリアス解決（「ケーブル」と書かれていても「電線」を取得できる）
-    expect(resolveValueOfKey(row, 'ケーブル')).toBe('VVF 2.0-3C')
-    // 3. エイリアス解決（「回路名称」と書かれていても「回路名」を取得できる）
-    expect(resolveValueOfKey(row, '回路名称')).toBe('照明回路')
-    // 4. 現場名
-    expect(resolveValueOfKey(row, '現場名', '〇〇ビル')).toBe('〇〇ビル')
-    // 5. 文字列値の取得
+    // 2. 全角半角・スペースの正規化一致
+    expect(resolveValueOfKey(row, '回路名')).toBe('照明回路')
+    expect(resolveValueOfKey(row, '電線')).toBe('VVF 2.0-3C')
+    // 3. 出力日時の解決
+    expect(resolveValueOfKey(row, '出力日時', '2026/10/05')).toBe('2026/10/05')
+    expect(resolveValueOfKey(row, '日付', '2026/10/05')).toBe('2026/10/05')
+    // 4. 互換性キー（エイリアス）は解決しない（存在しない列名は空文字）
+    expect(resolveValueOfKey(row, 'ケーブル')).toBe('')
+    expect(resolveValueOfKey(row, '回路名称')).toBe('')
+    // 5. 現場名は不要（空文字）
+    expect(resolveValueOfKey(row, '現場名')).toBe('')
+    // 6. 任意の動的列値の取得
     expect(resolveValueOfKey(row, '測定時間')).toBe('10:00')
+    // 7. エイリアス関数resolveValueOfTagも同一であること
+    expect(resolveValueOfTag(row, '設置場所')).toBe('B1F電気室')
   })
 
   it('detectTagSlots: A4ラベルテンプレートからタグ枠（スロット）を正しく検出すること', async () => {

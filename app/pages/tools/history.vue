@@ -44,79 +44,41 @@ const getWeightResult = (entry: HistoryEntry) => (entry.rawResult ?? null) as un
   <div class="flex flex-col gap-panel-gap">
     <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
       <h2 class="flex items-center gap-item-gap">
-        <Icon name="clock" class="text-primary" />
+        <Icon name="clock" />
         <span>計算履歴</span>
       </h2>
       <div v-if="historyList.length > 0" class="flex items-center gap-item-gap">
-        <Button
-          variant="danger"
-          icon="trash-2"
-          @click="handleClearAll"
-        >
-          全て削除
-        </Button>
+        <Button variant="danger" size="sm" icon="trash-2" @click="handleClearAll">すべて削除する</Button>
       </div>
     </header>
     <hr class="divider">
 
     <nav class="radio-group">
-      <button
-        v-for="opt in tabs"
-        :key="String(opt.value)"
-        type="button"
-        class="radio-group-item"
-        :class="{ 'is-active': currentTab === opt.value }"
-        @click="currentTab = opt.value"
-      >
-        {{ opt.label }}
-      </button>
+      <button v-for="opt in tabs" :key="String(opt.value)" type="button" class="radio-group-item" :class="{ 'is-active': currentTab === opt.value }" @click="currentTab = opt.value">{{ opt.label }}</button>
     </nav>
 
     <ClientOnly>
-      <ul
-        v-if="historyList.length > 0"
-        class="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-panel-gap"
-      >
-        <li
-          v-for="entry in historyList"
-          :key="entry.id"
-        >
+      <ul v-if="historyList.length > 0" class="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-panel-gap">
+        <li v-for="entry in historyList" :key="entry.id">
           <article class="panel history-panel flex flex-col gap-panel-gap h-full" :class="[`is-${entry.status}`]">
             <header class="flex items-end justify-between">
               <div class="flex flex-col gap-inline-gap min-w-0">
                 <span class="text-date">{{ entry.timestamp }}</span>
                 <h3 class="flex items-center gap-item-gap text-title">
                   <span>{{ entry.toolName }}</span>
-                  <small v-if="entry.mode" class="tool-mode">
-                    ({{ entry.mode }})
-                  </small>
+                  <small v-if="entry.mode" class="tool-mode">({{ entry.mode }})</small>
                 </h3>
               </div>
             </header>
 
             <section class="flex flex-col gap-inline-gap min-h-0">
-              <ToolResultVoltage
-                v-if="entry.toolId === 'voltage' && getVoltageInputs(entry) && getVoltageResult(entry)"
-                :inputs="getVoltageInputs(entry)!"
-                :result="getVoltageResult(entry)"
-                size="sm"
-              />
+              <ToolResultVoltage v-if="entry.toolId === 'voltage' && getVoltageInputs(entry) && getVoltageResult(entry)" :inputs="getVoltageInputs(entry)!" :result="getVoltageResult(entry)" size="sm" />
 
-              <ToolResultConduit
-                v-else-if="entry.toolId === 'conduit' && getConduitResult(entry)"
-                :result="getConduitResult(entry)"
-                size="sm"
-              />
+              <ToolResultConduit v-else-if="entry.toolId === 'conduit' && getConduitResult(entry)" :result="getConduitResult(entry)" size="sm" />
 
-              <ToolResultRack
-                v-else-if="entry.toolId === 'rack' && getRackResult(entry)"
-                :result="getRackResult(entry)"
-              />
+              <ToolResultRack v-else-if="entry.toolId === 'rack' && getRackResult(entry)" :result="getRackResult(entry)" />
 
-              <ToolResultWeight
-                v-else-if="entry.toolId === 'weight' && getWeightResult(entry)"
-                :result="getWeightResult(entry)"
-              />
+              <ToolResultWeight v-else-if="entry.toolId === 'weight' && getWeightResult(entry)" :result="getWeightResult(entry)" />
 
               <template v-else>
                 <h4 class="section-title">
@@ -124,22 +86,10 @@ const getWeightResult = (entry: HistoryEntry) => (entry.rawResult ?? null) as un
                 </h4>
                 <dl class="grid grid-cols-[auto_1fr] gap-x-panel-gap gap-y-inline-gap list-desc">
                   <template v-for="(res, idx) in entry.results" :key="idx">
-                    <dt
-                      class="whitespace-nowrap"
-                      :style="{
-                        color: res.color,
-                        fontWeight: res.color ? 'bold' : 'normal',
-                      }"
-                    >
+                    <dt class="whitespace-nowrap" :style="{ color: res.color, fontWeight: res.color ? 'bold' : 'normal' }">
                       {{ res.label }}
                     </dt>
-                    <dd
-                      class="text-right"
-                      :style="{
-                        color: res.color,
-                        fontWeight: res.isMain || res.color ? 'bold' : 'normal',
-                      }"
-                    >
+                    <dd class="text-right" :style="{ color: res.color, fontWeight: res.isMain || res.color ? 'bold' : 'normal' }">
                       {{ res.value }}
                     </dd>
                   </template>
@@ -164,30 +114,18 @@ const getWeightResult = (entry: HistoryEntry) => (entry.rawResult ?? null) as un
             </section>
 
             <footer class="flex items-center justify-end mt-auto">
-              <Button
-                variant="danger"
-                icon="trash-2"
-                title="履歴を削除"
-                @click.prevent="openDeleteModal(entry.id)"
-              />
+              <Tooltip text="履歴を削除">
+                <Button variant="danger" size="sm" icon="trash-2" @click.prevent="openDeleteModal(entry.id)" />
+              </Tooltip>
             </footer>
           </article>
         </li>
       </ul>
 
-      <EmptyState
-        v-else
-        icon="inbox"
-        title="保存された履歴はありません"
-        description="計算ツールで計算を実行し、「履歴に保存」を行うとここに記録されます。"
-      />
+      <EmptyState v-else icon="inbox" title="保存された履歴はありません" description="計算ツールで計算を実行し、「履歴に保存」を行うとここに記録されます。" />
 
       <template #fallback>
-        <EmptyState
-          icon="loader"
-          spin
-          title="履歴を読み込み中..."
-        />
+        <EmptyState icon="loader" spin title="履歴を読み込み中..." />
       </template>
     </ClientOnly>
   </div>

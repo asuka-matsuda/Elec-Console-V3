@@ -211,33 +211,19 @@ onMounted(() => {
   <div class="flex flex-1 flex-col gap-section-gap min-h-0">
     <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
       <h2 class="flex items-center gap-item-gap">
-        <Icon name="activity" class="text-primary" />
+        <Icon name="activity" />
         <span>{{ headerTitle }}</span>
       </h2>
       <div class="flex items-center gap-item-gap">
         <PortalSyncStatusBadge :site-id="siteId" />
 
-        <Button
-          icon="arrow-left"
-          :to="`/portal/${siteId}/souden`"
-        >
-          ダッシュボードへ戻る
-        </Button>
+        <Button variant="tertiary" size="sm" icon="arrow-left" :to="`/portal/${siteId}/souden`">ダッシュボードへ戻る</Button>
       </div>
     </header>
     <hr class="divider">
 
     <nav class="phase-nav flex items-center gap-inline-gap overflow-x-auto">
-      <NuxtLink
-        v-for="item in PHASE_NAV_OPTIONS"
-        :key="item.value"
-        :to="{
-          path: `/portal/${siteId}/phase${item.value}`,
-          query: route.query,
-        }"
-        class="phase-nav-item inline-flex items-center gap-item-gap"
-        :class="{ 'is-active': item.value === '2' }"
-      >
+      <NuxtLink v-for="item in PHASE_NAV_OPTIONS" :key="item.value" :to="{ path: `/portal/${siteId}/phase${item.value}`, query: route.query }" class="phase-nav-item inline-flex items-center gap-item-gap" :class="{ 'is-active': item.value === '2' }">
         <span>{{ item.label }}</span>
       </NuxtLink>
     </nav>
@@ -247,28 +233,14 @@ onMounted(() => {
         <div class="flex items-center gap-form-col-gap">
           <span class="shrink-0 label">盤種別:</span>
           <nav class="radio-group shrink-0">
-            <button
-              v-for="opt in shubetsuTabOptions"
-              :key="String(opt.value)"
-              type="button"
-              class="radio-group-item"
-              :class="{ 'is-active': selectedBanShubetsu === opt.value }"
-              @click="selectedBanShubetsu = opt.value"
-            >
-              {{ opt.label }}
-            </button>
+            <button v-for="opt in shubetsuTabOptions" :key="String(opt.value)" type="button" class="radio-group-item" :class="{ 'is-active': selectedBanShubetsu === opt.value }" @click="selectedBanShubetsu = opt.value">{{ opt.label }}</button>
           </nav>
         </div>
 
         <div class="flex flex-wrap items-center gap-form-col-gap">
           <div class="flex items-center gap-item-gap">
             <label for="filter-ban-p2" class="shrink-0 label">盤名称:</label>
-            <Select
-              id="filter-ban-p2"
-              v-model="selectedBanMeisho"
-              :options="availableBanMeishoList"
-              class="w-40"
-            />
+            <Select id="filter-ban-p2" v-model="selectedBanMeisho" :options="availableBanMeishoList" class="w-40" />
           </div>
 
           <span class="whitespace-nowrap count-label">
@@ -284,31 +256,17 @@ onMounted(() => {
             <div class="flex items-center gap-item-gap">
               <span><strong>{{ phaseStats.completed }}</strong> / {{ phaseStats.total }}</span>
               <span>({{ phaseStats.pct }}%)</span>
-              <small v-if="phaseStats.excluded > 0" class="text-muted">
-                (除外: {{ phaseStats.excluded }})
-              </small>
+              <small v-if="phaseStats.excluded > 0" class="text-muted">(除外: {{ phaseStats.excluded }})</small>
             </div>
           </div>
           <PortalProgressBar :value="phaseStats.pct" />
         </div>
 
-        <PortalExamMinimap
-          :circuits="filteredCircuits"
-          :phase="2"
-          @select-circuit="handleSelectCircuit"
-        />
+        <PortalExamMinimap :circuits="filteredCircuits" :phase="2" @select-circuit="handleSelectCircuit" />
       </div>
     </section>
 
-    <Table
-      v-model:sort-by="sortBy"
-      v-model:sort-order="sortOrder"
-      :columns="PHASE2_TABLE_COLUMNS"
-      :data="sortedCircuits"
-      :row-id="(row) => `row-${row.id}`"
-      :row-class="(row) => getSoudenRowClass(row, { isComplete, isCircuitLocked: isLocked, editingRowId: null })"
-      class="flex-1 min-h-[400px]"
-    >
+    <Table v-model:sort-by="sortBy" v-model:sort-order="sortOrder" :columns="PHASE2_TABLE_COLUMNS" :data="sortedCircuits" :row-id="(row) => `row-${row.id}`" :row-class="(row) => getSoudenRowClass(row, { isComplete, isCircuitLocked: isLocked, editingRowId: null })" class="flex-1 min-h-[400px]">
       <template #cell-banMeisho="{ row: circuit }">
         <div class="flex flex-col gap-0.5 min-w-0">
           <span class="ban-name">{{ circuit.banMeisho || '-' }}</span>
@@ -318,17 +276,12 @@ onMounted(() => {
 
       <template #cell-kairoBangou="{ row: circuit }">
         <div class="flex items-center justify-center">
-          <PortalCircuitSymbol
-            :kigou="circuit.kairoKigou"
-            :bangou="circuit.kairoBangou"
-          />
+          <PortalCircuitSymbol :kigou="circuit.kairoKigou" :bangou="circuit.kairoBangou" />
         </div>
       </template>
 
       <template #cell-kairoMeisho="{ row: circuit }">
-        <span class="circuit-meisho block" :title="circuit.kairoMeisho || ''">
-          {{ circuit.kairoMeisho || '-' }}
-        </span>
+        <span class="circuit-meisho block" :title="circuit.kairoMeisho || ''">{{ circuit.kairoMeisho || '-' }}</span>
       </template>
 
       <template #cell-p2ConfirmedAt="{ row: circuit }">
@@ -342,129 +295,44 @@ onMounted(() => {
       <template #cell-zetsuenR="{ row: circuit }">
         <div class="flex flex-col items-center gap-inline-gap">
           <span class="cell-label">{{ getPhaseLabels(circuit).phase1 }}</span>
-          <Input
-            v-model="getRowForm(circuit).rVal"
-            type="number"
-            step="0.01"
-            inputmode="decimal"
-            placeholder="100"
-            :error="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).rVal, circuit.haidenHoushiki)"
-            :disabled="isRowDisabled(circuit)"
-            class="w-[85px]"
-            @keydown.enter.prevent="handleConfirmCircuit(circuit)"
-          />
-          <span
-            v-if="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).rVal, circuit.haidenHoushiki)"
-            class="cell-warning-sub"
-          >
-            基準値未満です
-          </span>
-          <span v-if="isConfirmed(circuit) && circuit.p2RStatus" class="badge" :style="{ '--glow-color': circuit.p2RStatus === 'OK' ? 'var(--color-status-success)' : 'var(--color-status-danger)' }">
-            {{ circuit.p2RStatus }}
-          </span>
+          <Input v-model="getRowForm(circuit).rVal" type="number" step="0.01" inputmode="decimal" placeholder="100" :error="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).rVal, circuit.haidenHoushiki)" :disabled="isRowDisabled(circuit)" class="w-[85px]" @keydown.enter.prevent="handleConfirmCircuit(circuit)" />
+          <span v-if="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).rVal, circuit.haidenHoushiki)" class="cell-warning-sub">基準値未満です</span>
+          <Badge v-if="isConfirmed(circuit) && circuit.p2RStatus" :variant="circuit.p2RStatus === 'OK' ? 'green' : 'red'">{{ circuit.p2RStatus }}</Badge>
         </div>
       </template>
 
       <template #cell-zetsuenS="{ row: circuit }">
         <div class="flex flex-col items-center gap-inline-gap">
           <span class="cell-label">{{ getPhaseLabels(circuit).phase2 }}</span>
-          <Input
-            v-model="getRowForm(circuit).sVal"
-            type="number"
-            step="0.01"
-            inputmode="decimal"
-            placeholder="100"
-            :error="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).sVal, circuit.haidenHoushiki)"
-            :disabled="isRowDisabled(circuit)"
-            class="w-[85px]"
-            @keydown.enter.prevent="handleConfirmCircuit(circuit)"
-          />
-          <span
-            v-if="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).sVal, circuit.haidenHoushiki)"
-            class="cell-warning-sub"
-          >
-            基準値未満です
-          </span>
-          <span v-if="isConfirmed(circuit) && circuit.p2SStatus" class="badge" :style="{ '--glow-color': circuit.p2SStatus === 'OK' ? 'var(--color-status-success)' : 'var(--color-status-danger)' }">
-            {{ circuit.p2SStatus }}
-          </span>
+          <Input v-model="getRowForm(circuit).sVal" type="number" step="0.01" inputmode="decimal" placeholder="100" :error="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).sVal, circuit.haidenHoushiki)" :disabled="isRowDisabled(circuit)" class="w-[85px]" @keydown.enter.prevent="handleConfirmCircuit(circuit)" />
+          <span v-if="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).sVal, circuit.haidenHoushiki)" class="cell-warning-sub">基準値未満です</span>
+          <Badge v-if="isConfirmed(circuit) && circuit.p2SStatus" :variant="circuit.p2SStatus === 'OK' ? 'green' : 'red'">{{ circuit.p2SStatus }}</Badge>
         </div>
       </template>
 
       <template #cell-zetsuenT="{ row: circuit }">
         <div class="flex flex-col items-center gap-inline-gap">
           <span class="cell-label">{{ getPhaseLabels(circuit).phase3 }}</span>
-          <Input
-            v-model="getRowForm(circuit).tVal"
-            type="number"
-            step="0.01"
-            inputmode="decimal"
-            placeholder="100"
-            :error="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).tVal, circuit.haidenHoushiki)"
-            :disabled="isRowDisabled(circuit)"
-            class="w-[85px]"
-            @keydown.enter.prevent="handleConfirmCircuit(circuit)"
-          />
-          <span
-            v-if="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).tVal, circuit.haidenHoushiki)"
-            class="cell-warning-sub"
-          >
-            基準値未満です
-          </span>
-          <span v-if="isConfirmed(circuit) && circuit.p2TStatus" class="badge" :style="{ '--glow-color': circuit.p2TStatus === 'OK' ? 'var(--color-status-success)' : 'var(--color-status-danger)' }">
-            {{ circuit.p2TStatus }}
-          </span>
+          <Input v-model="getRowForm(circuit).tVal" type="number" step="0.01" inputmode="decimal" placeholder="100" :error="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).tVal, circuit.haidenHoushiki)" :disabled="isRowDisabled(circuit)" class="w-[85px]" @keydown.enter.prevent="handleConfirmCircuit(circuit)" />
+          <span v-if="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).tVal, circuit.haidenHoushiki)" class="cell-warning-sub">基準値未満です</span>
+          <Badge v-if="isConfirmed(circuit) && circuit.p2TStatus" :variant="circuit.p2TStatus === 'OK' ? 'green' : 'red'">{{ circuit.p2TStatus }}</Badge>
         </div>
       </template>
 
       <template #cell-p2Remarks="{ row: circuit }">
-        <Textarea
-          v-model="getRowForm(circuit).remarks"
-          :rows="1"
-          auto-resize
-          placeholder="備考"
-          class="w-full textarea-remarks"
-          :disabled="isRowDisabled(circuit)"
-        />
+        <Textarea v-model="getRowForm(circuit).remarks" :rows="1" auto-resize placeholder="備考" class="w-full textarea-remarks" :disabled="isRowDisabled(circuit)" />
       </template>
 
       <template #cell-actions="{ row: circuit }">
         <div class="cell-actions flex items-center justify-center gap-inline-gap whitespace-nowrap">
-          <span v-if="isLocked(circuit)" class="text-note inline-flex items-center gap-inline-gap">
-            ⏸ {{ isCircuitLocked(circuit) ? '幹線未完了' : 'P1未了' }}
-          </span>
+          <span v-if="isLocked(circuit)" class="text-note inline-flex items-center gap-inline-gap">⏸ {{ isCircuitLocked(circuit) ? '幹線未完了' : 'P1未了' }}</span>
           <template v-else-if="isConfirmed(circuit)">
-            <Button
-              variant="default"
-              icon-right="arrow-right"
-              :to="`/portal/${circuit.siteId}/phase3?kei_to=${encodeURIComponent(circuit.keiTo || '幹線')}&targetCircuit=${encodeURIComponent(circuit.id)}`"
-            >
-              P3へ
-            </Button>
-            <Button
-              variant="danger"
-              :disabled="circuit.isExcluded || Boolean(isActionLoading[circuit.id])"
-              @click="handleClearLocally(circuit)"
-            >
-              解除
-            </Button>
+            <Button variant="secondary" size="sm" suffix-icon="arrow-right" :to="`/portal/${circuit.siteId}/phase3?kei_to=${encodeURIComponent(circuit.keiTo || '幹線')}&targetCircuit=${encodeURIComponent(circuit.id)}`">フェーズ3へ進む</Button>
+            <Button variant="danger" size="sm" :disabled="circuit.isExcluded || Boolean(isActionLoading[circuit.id])" @click="handleClearLocally(circuit)">解除する</Button>
           </template>
           <template v-else>
-            <Button
-              variant="default"
-              :disabled="circuit.isExcluded || Boolean(isActionLoading[circuit.id])"
-              @click="handleFillAllOk(circuit)"
-            >
-              全相OK
-            </Button>
-            <Button
-              variant="success"
-              :disabled="circuit.isExcluded"
-              :loading="Boolean(isActionLoading[circuit.id])"
-              @click="handleConfirmCircuit(circuit)"
-            >
-              確定
-            </Button>
+            <Button variant="secondary" size="sm" :disabled="circuit.isExcluded || Boolean(isActionLoading[circuit.id])" @click="handleFillAllOk(circuit)">全相をOKにする</Button>
+            <Button variant="primary" size="sm" :disabled="circuit.isExcluded" :loading="Boolean(isActionLoading[circuit.id])" @click="handleConfirmCircuit(circuit)">確定する</Button>
           </template>
         </div>
       </template>
@@ -504,11 +372,6 @@ onMounted(() => {
 .count-label {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
-}
-
-.text-muted {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
 }
 
 .ban-name {

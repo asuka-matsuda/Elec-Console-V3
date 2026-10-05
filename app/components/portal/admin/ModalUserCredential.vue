@@ -16,6 +16,7 @@ const props = defineProps<{
 }>()
 
 const isCopied = ref(false)
+const toast = useToast()
 
 watch(isOpen, (open) => {
   if (!open) {
@@ -28,12 +29,13 @@ const handleCopyPassword = async () => {
     try {
       await navigator.clipboard.writeText(props.user.initialPassword)
       isCopied.value = true
+      toast.success('初期パスワードをクリップボードにコピーしました')
       setTimeout(() => {
         isCopied.value = false
       }, 2000)
     }
     catch {
-      alert('初期パスワードをコピーできませんでした。')
+      toast.danger('初期パスワードをコピーできませんでした。')
     }
   }
 }
@@ -51,18 +53,9 @@ const handlePrint = () => {
 </script>
 
 <template>
-  <Modal
-    v-model="isOpen"
-    title="認証情報の発行完了"
-    icon="circle-check"
-  >
+  <Modal v-model="isOpen" title="認証情報の発行完了" icon="circle-check">
     <template #actions>
-      <Button
-        variant="success"
-        @click="isOpen = false"
-      >
-        完了
-      </Button>
+      <Button variant="primary" @click="isOpen = false">完了する</Button>
     </template>
 
     <div v-if="user" class="flex flex-col gap-form-row-gap">
@@ -92,25 +85,13 @@ const handlePrint = () => {
             <div class="user-value user-value-mono user-value-success flex-1">
               {{ user.initialPassword || "（既に設定済みです）" }}
             </div>
-            <Button
-              v-if="user.initialPassword"
-              :icon="isCopied ? 'check' : 'copy'"
-              :variant="isCopied ? 'success' : 'default'"
-              @click="handleCopyPassword"
-            >
-              {{ isCopied ? 'コピー済' : 'コピー' }}
-            </Button>
+            <Button v-if="user.initialPassword" variant="secondary" size="sm" :icon="isCopied ? 'check' : 'copy'" @click="handleCopyPassword">{{ isCopied ? 'コピー完了' : 'パスワードをコピー' }}</Button>
           </div>
         </div>
       </div>
 
       <div class="flex justify-end">
-        <Button
-          icon="printer"
-          @click="handlePrint"
-        >
-          認証情報を印刷する
-        </Button>
+        <Button variant="secondary" size="sm" icon="printer" @click="handlePrint">認証情報を印刷する</Button>
       </div>
     </div>
   </Modal>

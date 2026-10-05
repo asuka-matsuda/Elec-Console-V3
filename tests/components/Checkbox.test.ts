@@ -66,16 +66,31 @@ describe('Checkbox', () => {
     expect(wrapper.classes()).toContain('is-disabled')
   })
 
-  it('supports success variant and applies success CSS variable', () => {
+  it('supports indeterminate state and displays minus icon', () => {
     const wrapper = mount(Checkbox, {
       props: {
         modelValue: false,
-        variant: 'success',
+        indeterminate: true,
+      },
+      global: {
+        stubs: {
+          Icon: {
+            props: ['name'],
+            template: '<span class="icon" :data-icon="name" />',
+          },
+        },
       },
     })
 
-    expect(wrapper.classes()).toContain('checkbox--success')
-    expect(wrapper.attributes('style')).toContain('--control-checked-bg: var(--color-status-success)')
+    expect(wrapper.classes()).toContain('is-indeterminate')
+
+    const icon = wrapper.find('.icon')
+
+    expect(icon.attributes('data-icon')).toBe('minus')
+
+    const input = wrapper.find('input[type="checkbox"]')
+
+    expect((input.element as HTMLInputElement).indeterminate).toBe(true)
   })
 
   it('supports custom color prop and overrides checked background variable', () => {

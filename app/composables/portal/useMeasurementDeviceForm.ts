@@ -13,6 +13,7 @@ import type {
   SelectedMeasurementDevices,
 } from '#shared/types/measurementDevice'
 import { useAuth } from '~/composables/useAuth'
+import { useToast } from '~/composables/useToast'
 import { parseToAppException } from '~/utils/errors'
 
 export interface UseMeasurementDeviceFormOptions {
@@ -27,6 +28,7 @@ export function useMeasurementDeviceForm(options: UseMeasurementDeviceFormOption
   const { siteId, devices, selectedDeviceIds, isOpen, onUpdated } = options
   const { $api } = useNuxtApp()
   const { getAccurateNowIso } = useAuth()
+  const toast = useToast()
 
   const localDevices = ref<MeasurementDevice[]>([])
   const isSaving = ref(false)
@@ -154,9 +156,12 @@ export function useMeasurementDeviceForm(options: UseMeasurementDeviceFormOption
       updatedList = [...localDevices.value, newDevice]
     }
 
+    const wasEditing = Boolean(editingId.value)
+
     await persistDevices(updatedList)
     if (!errorMessage.value) {
       resetForm()
+      toast.success(wasEditing ? '測定機器を更新しました' : '測定機器を登録しました')
     }
   }
 
@@ -168,6 +173,9 @@ export function useMeasurementDeviceForm(options: UseMeasurementDeviceFormOption
     const updatedList = localDevices.value.filter(d => d.id !== id)
 
     await persistDevices(updatedList)
+    if (!errorMessage.value) {
+      toast.success('測定機器を削除しました')
+    }
   }
 
   const isFormValid = computed(() => {

@@ -21,15 +21,7 @@ const getTileClass = (c: CircuitItem): string =>
 
 <template>
   <div class="flex flex-wrap gap-inline-gap max-h-24 overflow-y-auto overflow-x-hidden">
-    <button
-      v-for="c in circuits"
-      :key="c.id"
-      type="button"
-      class="minimap-tile w-2.5 h-2.5 hover:z-[2]"
-      :class="getTileClass(c)"
-      :title="c.kairoMeisho || c.id"
-      @click="emit('selectCircuit', c)"
-    />
+    <button v-for="c in circuits" :key="c.id" type="button" class="minimap-tile w-2.5 h-2.5 hover:z-[2]" :class="getTileClass(c)" :title="c.kairoMeisho || c.id" @click="emit('selectCircuit', c)" />
   </div>
 </template>
 

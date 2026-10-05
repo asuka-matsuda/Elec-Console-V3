@@ -69,54 +69,23 @@ const handleLogin = async () => {
     <hr class="divider">
 
     <form class="flex flex-col gap-form-row-gap" @submit.prevent="handleLogin">
-      <Alert v-if="errorMessage" variant="danger">
-        {{ errorMessage }}
-      </Alert>
+      <Alert v-if="errorMessage" variant="danger">{{ errorMessage }}</Alert>
 
       <template v-for="field in LOGIN_FORM_FIELDS" :key="field.id">
         <div class="flex flex-col gap-inline-gap">
           <label :for="`login-${field.id}`" class="label">{{ field.label }}</label>
           <div v-if="field.id === 'password'" class="relative flex items-center">
-            <Input
-              :id="`login-${field.id}`"
-              v-model="formData[field.id]"
-              :type="showPassword ? 'text' : 'password'"
-              :placeholder="field.placeholder"
-              :disabled="isLoading"
-              autocomplete="current-password"
-              class="password-input"
-            />
-            <button
-              type="button"
-              tabindex="-1"
-              class="password-toggle-btn"
-              :title="showPassword ? 'パスワードを非表示' : 'パスワードを表示'"
-              @click="showPassword = !showPassword"
-            >
+            <Input :id="`login-${field.id}`" v-model="formData[field.id]" :type="showPassword ? 'text' : 'password'" :placeholder="field.placeholder" :disabled="isLoading" autocomplete="current-password" class="password-input" />
+            <button type="button" tabindex="-1" class="password-toggle-btn" @click="showPassword = !showPassword">
               <Icon :name="showPassword ? 'eye-off' : 'eye'" />
             </button>
           </div>
-          <Input
-            v-else
-            :id="`login-${field.id}`"
-            v-model="formData[field.id]"
-            :type="field.type"
-            :placeholder="field.placeholder"
-            :disabled="isLoading"
-            autocomplete="username"
-          />
+          <Input v-else :id="`login-${field.id}`" v-model="formData[field.id]" :type="field.type" :placeholder="field.placeholder" :disabled="isLoading" autocomplete="username" />
         </div>
       </template>
 
       <div class="flex items-center justify-center">
-        <Button
-          type="submit"
-          variant="success"
-          class="w-full"
-          :loading="isLoading"
-        >
-          ログイン
-        </Button>
+        <Button type="submit" variant="primary" size="lg" block :loading="isLoading">ログインする</Button>
       </div>
     </form>
   </div>
@@ -150,8 +119,8 @@ const handleLogin = async () => {
   }
 
   &:focus-visible {
-    outline: none;
     color: var(--theme-accent);
+    outline: none;
   }
 }
 </style>

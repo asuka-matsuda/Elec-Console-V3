@@ -112,11 +112,9 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
   <div class="flex flex-col gap-panel-gap">
     <header class="calendar-toolbar flex flex-col md:flex-row items-center justify-between gap-item-gap px-panel-pad py-item-gap">
       <div class="flex items-center gap-inline-gap">
-        <Button icon="chevron-left" @click="handlePrev" />
-        <Button icon="chevron-right" @click="handleNext" />
-        <Button @click="handleToday">
-          今日
-        </Button>
+        <Button size="sm" icon="chevron-left" @click="handlePrev" />
+        <Button size="sm" icon="chevron-right" @click="handleNext" />
+        <Button size="sm" @click="handleToday">今日へ移動</Button>
       </div>
 
       <h3 class="toolbar-title order-first md:order-none">
@@ -125,14 +123,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
 
       <div class="flex items-center gap-item-gap">
         <div class="radio-group">
-          <button
-            v-for="option in VIEW_OPTIONS"
-            :key="option.value"
-            type="button"
-            class="radio-group-item"
-            :class="{ 'is-active': currentView === option.value }"
-            @click="handleViewChange(option.value)"
-          >
+          <button v-for="option in VIEW_OPTIONS" :key="option.value" type="button" class="radio-group-item" :class="{ 'is-active': currentView === option.value }" @click="handleViewChange(option.value)">
             <span class="flex items-center gap-inline-gap">
               <Icon :name="VIEW_ICONS[option.value]" />
               <span>{{ option.label }}</span>
@@ -140,9 +131,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
           </button>
         </div>
 
-        <Button icon="settings" @click="isTypeSettingsOpen = true">
-          種別設定
-        </Button>
+        <Button size="sm" icon="settings" @click="isTypeSettingsOpen = true">種別設定を開く</Button>
       </div>
     </header>
 
@@ -150,20 +139,9 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       <FullCalendar ref="fullCalendarRef" :options="calendarOptions" />
     </div>
 
-    <ModalCalendarEvent
-      v-model="isModalOpen"
-      :is-editing="isEditing"
-      :event-types="settings?.eventTypes || []"
-      :initial-data="form"
-      @save="saveEvent"
-      @delete="removeEvent"
-    />
+    <ModalCalendarEvent v-model="isModalOpen" :is-editing="isEditing" :event-types="settings?.eventTypes || []" :initial-data="form" @save="saveEvent" @delete="removeEvent" />
 
-    <ModalCalendarTypeSettings
-      v-model="isTypeSettingsOpen"
-      :event-types="settings?.eventTypes || []"
-      @save="handleSaveEventTypes"
-    />
+    <ModalCalendarTypeSettings v-model="isTypeSettingsOpen" :event-types="settings?.eventTypes || []" @save="handleSaveEventTypes" />
   </div>
 </template>
 

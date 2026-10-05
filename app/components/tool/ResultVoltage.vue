@@ -5,6 +5,7 @@
  */
 import { computed } from 'vue'
 
+import type { BadgeVariant } from '~/types/components'
 import type { VoltageCalcInputs, VoltageCalcResult } from '~/types/voltage'
 import { formatVoltageResult } from '~/utils/tools/voltage/voltageResultPresenter'
 
@@ -16,29 +17,21 @@ const props = defineProps<{
 
 const vm = computed(() => formatVoltageResult(props.inputs, props.result))
 
-const BADGE_COLOR_MAP: Record<string, string> = {
-  danger: 'var(--color-status-danger)',
-  warning: 'var(--color-status-warning)',
-  success: 'var(--color-status-success)',
-  neutral: 'var(--color-status-neutral)',
-  empty: 'var(--color-status-neutral)',
+const BADGE_VARIANT_MAP: Record<string, BadgeVariant> = {
+  danger: 'red',
+  warning: 'amber',
+  success: 'green',
+  neutral: 'gray',
+  empty: 'gray',
 }
 </script>
 
 <template>
-  <div
-    class="flex flex-1 flex-col min-h-0"
-    :class="[size === 'sm' ? 'gap-item-gap is-sm' : 'gap-panel-gap']"
-  >
-    <div
-      class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0"
-      :class="[`is-${vm.mainStatus}`, size === 'sm' && 'is-sm']"
-    >
+  <div class="flex flex-1 flex-col min-h-0" :class="[size === 'sm' ? 'gap-item-gap is-sm' : 'gap-panel-gap']">
+    <div class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="[`is-${vm.mainStatus}`, size === 'sm' && 'is-sm']">
       <header class="tile-header flex items-center justify-center gap-inline-gap">
         <span>{{ vm.mainLabel }}</span>
-        <span v-if="vm.mainBadgeText" class="badge" :style="{ '--glow-color': BADGE_COLOR_MAP[vm.mainStatus] }">
-          {{ vm.mainBadgeText }}
-        </span>
+        <Badge v-if="vm.mainBadgeText" :variant="BADGE_VARIANT_MAP[vm.mainStatus]">{{ vm.mainBadgeText }}</Badge>
       </header>
       <output class="tile-value flex items-center justify-center gap-item-gap">
         <span>{{ vm.mainValue }}</span>
@@ -46,15 +39,10 @@ const BADGE_COLOR_MAP: Record<string, string> = {
       </output>
     </div>
 
-    <div
-      class="result-tile is-sm flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0"
-      :class="`is-${vm.ampStatus}`"
-    >
+    <div class="result-tile is-sm flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="`is-${vm.ampStatus}`">
       <header class="tile-header flex items-center justify-center gap-inline-gap">
         <span>電流チェック (設計 / 許容)</span>
-        <span v-if="vm.ampBadgeText" class="badge" :style="{ '--glow-color': BADGE_COLOR_MAP[vm.ampStatus] }">
-          {{ vm.ampBadgeText }}
-        </span>
+        <Badge v-if="vm.ampBadgeText" :variant="BADGE_VARIANT_MAP[vm.ampStatus]">{{ vm.ampBadgeText }}</Badge>
       </header>
       <output class="tile-value flex items-center justify-center gap-item-gap">
         <span v-if="vm.isAmpError">ERROR</span>
@@ -67,16 +55,10 @@ const BADGE_COLOR_MAP: Record<string, string> = {
       </output>
     </div>
 
-    <div
-      v-if="vm.mode === 'size'"
-      class="result-tile is-sm flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0"
-      :class="`is-${vm.dropStatus}`"
-    >
+    <div v-if="vm.mode === 'size'" class="result-tile is-sm flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="`is-${vm.dropStatus}`">
       <header class="tile-header flex items-center justify-center gap-inline-gap">
         <span>電圧降下</span>
-        <span v-if="vm.dropBadgeText" class="badge" :style="{ '--glow-color': BADGE_COLOR_MAP[vm.dropStatus] }">
-          {{ vm.dropBadgeText }}
-        </span>
+        <Badge v-if="vm.dropBadgeText" :variant="BADGE_VARIANT_MAP[vm.dropStatus]">{{ vm.dropBadgeText }}</Badge>
       </header>
       <output class="tile-value flex items-center justify-center gap-item-gap">
         <span v-if="vm.isDropError">ERROR</span>
@@ -89,11 +71,7 @@ const BADGE_COLOR_MAP: Record<string, string> = {
     </div>
 
     <dl v-if="vm.details?.length" class="flex flex-col gap-inline-gap w-full details-list">
-      <div
-        v-for="(item, i) in vm.details"
-        :key="i"
-        class="flex items-center justify-between"
-      >
+      <div v-for="(item, i) in vm.details" :key="i" class="flex items-center justify-between">
         <dt>{{ item.label }}</dt>
         <dd class="flex items-center gap-inline-gap">
           <span class="value">{{ item.value }}</span>

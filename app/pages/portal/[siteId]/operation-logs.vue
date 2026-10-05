@@ -8,7 +8,7 @@ import { computed, onMounted } from 'vue'
 import { useHead, useRoute } from '#app'
 import { useOperationLogs } from '~/composables/portal/useOperationLogs'
 import {
-  getActionBadgeColor,
+  getActionBadgeVariant,
   OPERATION_LOG_COLUMNS,
   OPERATION_LOG_LIMIT_OPTIONS,
 } from '~/constants/soudenConstants'
@@ -40,24 +40,13 @@ onMounted(() => {
   <div class="flex flex-1 flex-col gap-section-gap h-full min-h-0">
     <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
       <h2 class="flex items-center gap-item-gap">
-        <Icon name="history" class="text-primary" />
+        <Icon name="history" />
         <span>送電試験 操作ログ</span>
       </h2>
       <div class="flex items-center gap-item-gap">
-        <Button
-          icon="refresh-cw"
-          :loading="isLoading"
-          @click="fetchLogs"
-        >
-          最新に更新
-        </Button>
+        <Button variant="secondary" size="sm" icon="refresh-cw" :loading="isLoading" @click="fetchLogs">最新に更新する</Button>
 
-        <Button
-          icon="arrow-left"
-          :to="`/portal/${siteId}/souden`"
-        >
-          ダッシュボードへ戻る
-        </Button>
+        <Button variant="tertiary" size="sm" icon="arrow-left" :to="`/portal/${siteId}/souden`">ダッシュボードへ戻る</Button>
       </div>
     </header>
     <hr class="divider">
@@ -89,26 +78,13 @@ onMounted(() => {
     </div>
 
     <div class="flex flex-1 flex-col min-h-0">
-      <Table
-        class="flex-1 min-h-[400px]"
-        :columns="OPERATION_LOG_COLUMNS"
-        :data="logs"
-        :loading="isLoading"
-        loading-text="操作ログを読み込み中..."
-        empty-text="操作ログが存在しません"
-      >
+      <Table class="flex-1 min-h-[400px]" :columns="OPERATION_LOG_COLUMNS" :data="logs" :loading="isLoading" loading-text="操作ログを読み込み中..." empty-text="操作ログが存在しません">
         <template #empty>
-          <EmptyState
-            icon="history"
-            title="操作ログが存在しません"
-            description="条件に一致するログがないか、操作履歴がまだ記録されていません。"
-          />
+          <EmptyState icon="history" title="操作ログが存在しません" description="条件に一致するログがないか、操作履歴がまだ記録されていません。" />
         </template>
 
         <template #cell-action="{ value }">
-          <span class="badge" :style="{ '--glow-color': getActionBadgeColor(String(value)) }">
-            {{ value }}
-          </span>
+          <Badge :variant="getActionBadgeVariant(value)">{{ value }}</Badge>
         </template>
       </Table>
     </div>

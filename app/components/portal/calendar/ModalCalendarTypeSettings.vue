@@ -39,62 +39,29 @@ const {
       </p>
 
       <ul class="flex flex-col gap-item-gap max-h-[400px] overflow-y-auto pr-inline-gap">
-        <li
-          v-for="(t, index) in types"
-          :key="t.id"
-          class="flex flex-col gap-item-gap p-panel-pad-compact type-item"
-        >
+        <li v-for="(t, index) in types" :key="t.id" class="flex flex-col gap-item-gap p-panel-pad-compact type-item">
           <div class="flex items-center gap-item-gap w-full">
-            <div
-              class="w-6 h-6 shrink-0 color-preview"
-              :style="{ backgroundColor: t.color }"
-            />
+            <div class="w-6 h-6 shrink-0 color-preview" :style="{ backgroundColor: t.color }" />
 
-            <Input
-              v-model="t.name"
-              class="flex-1"
-              placeholder="種別名（例: 現場作業）"
-              required
-            />
+            <Input v-model="t.name" class="flex-1" placeholder="種別名（例: 現場作業）" required />
 
-            <Button
-              v-if="types.length > 1"
-              variant="danger"
-              icon="trash-2"
-              class="shrink-0"
-              @click="handleRemoveType(index)"
-            />
+            <Button v-if="types.length > 1" variant="danger" size="sm" icon="trash-2" class="shrink-0" @click="handleRemoveType(index)" />
           </div>
 
           <div class="flex flex-wrap items-center gap-inline-gap color-dot-group">
-            <button
-              v-for="preset in DEFAULT_COLOR_PRESETS"
-              :key="preset.value"
-              type="button"
-              class="w-5 h-5 color-dot"
-              :class="{ 'is-active': t.color === preset.value }"
-              :style="{ backgroundColor: preset.value }"
-              :title="preset.name"
-              @click="t.color = preset.value"
-            />
+            <button v-for="preset in DEFAULT_COLOR_PRESETS" :key="preset.value" type="button" class="w-5 h-5 color-dot" :class="{ 'is-active': t.color === preset.value }" :style="{ backgroundColor: preset.value }" :title="preset.name" @click="t.color = preset.value" />
           </div>
         </li>
       </ul>
 
       <div>
-        <Button icon="plus" @click="handleAddType">
-          種別を追加
-        </Button>
+        <Button size="sm" icon="plus" @click="handleAddType">種別を追加する</Button>
       </div>
     </div>
 
     <template #actions>
-      <Button @click="isOpen = false">
-        キャンセル
-      </Button>
-      <Button variant="success" icon="check" @click="handleSave">
-        設定を保存
-      </Button>
+      <Button @click="isOpen = false">キャンセル</Button>
+      <Button variant="primary" icon="check" @click="handleSave">設定を保存する</Button>
     </template>
   </Modal>
 </template>

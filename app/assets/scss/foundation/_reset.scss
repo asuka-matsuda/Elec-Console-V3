@@ -32,6 +32,8 @@ h6 {
 // --- リスト（列挙） ---
 ul,
 ol {
+  margin: 0;
+  padding: 0;
   list-style: none;
 }
 
@@ -41,7 +43,22 @@ dt {
 }
 
 dd {
-  margin-left: 0;
+  margin: 0;
+}
+
+// --- 余白リセット ---
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl {
+  margin: 0;
 }
 
 // --- コンテンツのグループ化 ---
@@ -171,9 +188,15 @@ textarea {
   overflow: auto;
 }
 
-[type="number"]::-webkit-inner-spin-button,
-[type="number"]::-webkit-outer-spin-button {
-  height: auto;
+[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    margin: 0;
+    appearance: none;
+  }
 }
 
 [type="search"] {

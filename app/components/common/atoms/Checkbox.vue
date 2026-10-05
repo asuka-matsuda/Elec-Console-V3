@@ -1,9 +1,10 @@
 <script setup lang="ts">
 /**
  * Checkbox
- * チェックボックスコンポーネント。
+ * Geist デザインシステム準拠のチェックボックスコンポーネント（Atoms）。
+ * 二値（checked / unchecked）および不確定（indeterminate）状態に対応します。
  */
-import { computed, useId } from 'vue'
+import { computed, onMounted, ref, useId, watch } from 'vue'
 
 import type { CheckboxProps } from '~/types/components'
 
@@ -15,7 +16,7 @@ const {
   label,
   disabled = false,
   error = false,
-  variant = 'default',
+  indeterminate = false,
   color,
   title,
 } = defineProps<CheckboxProps>()
@@ -26,13 +27,21 @@ const emit = defineEmits<{
 
 const defaultId = useId()
 const checkboxId = computed(() => id || defaultId)
+const inputRef = ref<HTMLInputElement | null>(null)
+
+// ネイティブ input 要素の indeterminate プロパティと同期
+const syncIndeterminate = () => {
+  if (inputRef.value) {
+    inputRef.value.indeterminate = Boolean(indeterminate)
+  }
+}
+
+onMounted(syncIndeterminate)
+watch(() => indeterminate, syncIndeterminate)
 
 const customStyle = computed(() => {
   if (color) {
     return { '--control-checked-bg': color }
-  }
-  if (variant === 'success') {
-    return { '--control-checked-bg': 'var(--color-status-success)' }
   }
 
   return undefined
@@ -40,30 +49,11 @@ const customStyle = computed(() => {
 </script>
 
 <template>
-  <label
-    class="relative inline-flex items-center gap-item-gap checkbox"
-    :class="[
-      `checkbox--${variant}`,
-      {
-        'is-disabled': disabled,
-        'is-error': error,
-      },
-    ]"
-    :style="customStyle"
-    :title="title"
-  >
-    <input
-      :id="checkboxId"
-      v-model="model"
-      type="checkbox"
-      :value="value"
-      :disabled="disabled"
-      @change="emit('change', model)"
-    >
+  <label class="relative inline-flex items-center gap-item-gap checkbox" :class="{ 'is-disabled': disabled, 'is-error': error, 'is-indeterminate': indeterminate }" :style="customStyle" :title="title">
+    <input :id="checkboxId" ref="inputRef" v-model="model" type="checkbox" :value="value" :disabled="disabled" @change="emit('change', model)">
     <span class="grid shrink-0 place-items-center box">
-      <Icon name="check" class="icon" />
+      <Icon :name="indeterminate ? 'minus' : 'check'" class="icon" />
     </span>
-
     <span v-if="label || $slots.default" class="label">
       <slot>{{ label }}</slot>
     </span>
@@ -75,12 +65,13 @@ const customStyle = computed(() => {
   --control-checked-bg: var(--theme-accent);
   --glow-color: var(--theme-accent, var(--color-category-main));
 
+  @include control-glow-tokens;
+
   font-size: inherit;
   color: var(--color-text-main);
   letter-spacing: var(--tracking-normal);
 
   @include state-interactive;
-  @include control-glow-tokens;
 
   &.is-error {
     --glow-color: var(--color-status-danger);
@@ -115,7 +106,8 @@ const customStyle = computed(() => {
       box-shadow: var(--shadow-glow-active);
     }
 
-    &:checked ~ .box {
+    &:checked ~ .box,
+    &:indeterminate ~ .box {
       border-color: var(--control-checked-bg);
       background-color: var(--control-checked-bg);
       box-shadow: var(--shadow-glow-active);
@@ -128,9 +120,10 @@ const customStyle = computed(() => {
   }
 
   .box {
-    width: 1.25em;
-    height: 1.25em;
+    width: 1.125rem;
+    height: 1.125rem;
     border: var(--border-width-base) solid var(--color-border);
+    border-radius: 0; // 直角規約
 
     background-color: var(--surface-bg-elevated);
 
@@ -142,8 +135,8 @@ const customStyle = computed(() => {
 
     grid-area: 1 / 1;
 
-    width: 1em;
-    height: 1em;
+    width: 0.875rem;
+    height: 0.875rem;
 
     color: var(--control-checked-icon);
 

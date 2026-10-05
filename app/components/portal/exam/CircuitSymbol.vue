@@ -24,13 +24,7 @@ const displayText = computed(() => (props.bangou != null && props.bangou !== '' 
 <template>
   <div class="relative inline-flex items-center justify-center circuit-symbol">
 
-    <svg
-      v-if="symbolDef"
-      class="absolute inset-0 circuit-svg"
-      viewBox="0 0 40 40"
-      fill="none"
-      stroke="currentColor"
-    >
+    <svg v-if="symbolDef" class="absolute inset-0 circuit-svg" viewBox="0 0 40 40" fill="none" stroke="currentColor">
 
       <template v-if="symbolDef.type === 'circle'">
         <circle cx="20" cy="20" r="18" stroke-width="1.5" />
@@ -53,9 +47,7 @@ const displayText = computed(() => (props.bangou != null && props.bangou !== '' 
       </template>
     </svg>
 
-    <span class="circuit-text">
-      {{ displayText }}
-    </span>
+    <span class="circuit-text">{{ displayText }}</span>
   </div>
 </template>
 

@@ -1,7 +1,11 @@
 <script setup lang="ts" generic="T extends string | number | boolean = string | number | boolean">
 /**
  * Select
- * ドロップダウンセレクトボックスコンポーネント。
+ * Geist デザインシステム準拠のドロップダウンセレクトコンポーネント（Atoms）。
+ * - 3段階のサイズ展開（sm: 32px, md: 40px [デフォルト], lg: 48px）
+ * - 前置アイコンおよび前置ラベル（icon / prefix）
+ * - 選択中オプションのチェックインジケータ（Geist仕様）
+ * - 完全直角規約（border-radius: 0）およびフォーカス発光トークン
  */
 import { computed, onMounted, onUnmounted, ref, useId } from 'vue'
 
@@ -14,6 +18,10 @@ const {
   name,
   options = [],
   placeholder = '',
+  size = 'md',
+  icon,
+  prefix,
+  block = false,
   disabled = false,
   error = false,
   title,
@@ -119,6 +127,21 @@ const selectOption = (option: SelectOption<T>) => {
   triggerRef.value?.focus()
 }
 
+const handleKeydown = (e: KeyboardEvent) => {
+  if (disabled) return
+
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    e.preventDefault()
+    if (!isOpen.value) {
+      openDropdown()
+    }
+  }
+  else if (e.key === 'Escape' && isOpen.value) {
+    e.preventDefault()
+    closeDropdown()
+  }
+}
+
 const handleScrollOrResize = () => {
   if (isOpen.value) updatePosition()
 }
@@ -146,62 +169,22 @@ defineExpose({
 </script>
 
 <template>
-  <div
-    class="relative w-full min-w-0 custom-select"
-    :class="{ 'is-error': error }"
-    :data-disabled="disabled"
-  >
-    <button
-      :id="selectId"
-      ref="triggerRef"
-      type="button"
-      :name="name"
-      :title="title"
-      class="relative z-[1] focus:z-[2] flex w-full items-center justify-between gap-item-gap custom-select__value"
-      :class="{
-        'is-placeholder': isPlaceholder,
-        'is-open': isOpen,
-        'is-error': error,
-      }"
-      :disabled="disabled"
-      @click="toggleDropdown"
-      @blur="emit('blur', $event)"
-      @focus="emit('focus', $event)"
-    >
+  <div class="relative custom-select" :class="[`select--${size}`, { 'is-error': error, 'w-full': block, 'inline-block': !block }]" :data-disabled="disabled">
+    <button :id="selectId" ref="triggerRef" type="button" :name="name" :title="title" class="relative z-[1] focus:z-[2] flex w-full items-center justify-between custom-select__value" :class="{ 'is-placeholder': isPlaceholder, 'is-open': isOpen, 'is-error': error }" :disabled="disabled" @click="toggleDropdown" @keydown="handleKeydown" @blur="emit('blur', $event)" @focus="emit('focus', $event)">
+      <span v-if="icon || prefix || $slots.prefix" class="select-affix select-prefix inline-flex items-center shrink-0">
+        <Icon v-if="icon" :name="icon" class="affix-icon" />
+        <slot name="prefix">{{ prefix }}</slot>
+      </span>
+
       <span class="flex-1 text-left custom-select__label">{{ displayLabel }}</span>
 
-      <Icon
-        name="chevron-down"
-        class="custom-select__arrow"
-        :class="{ 'is-open': isOpen }"
-      />
+      <Icon name="chevron-down" class="custom-select__arrow" :class="{ 'is-open': isOpen }" />
     </button>
 
-    <ul
-      ref="dropdownRef"
-      popover="auto"
-      class="z-select max-w-[min(90vw,400px)] max-h-[min(250px,40vh)] overflow-x-hidden overflow-y-auto p-inline-gap custom-select__dropdown"
-      :class="`is-${dropdownPlacement}`"
-      :style="{
-        position: 'fixed',
-        top: dropdownPos.top || undefined,
-        bottom: dropdownPos.bottom || undefined,
-        left: dropdownPos.left,
-        minWidth: dropdownPos.minWidth,
-      }"
-      @toggle="onPopoverToggle"
-    >
-      <li
-        v-for="option in options"
-        :key="String(option.value)"
-        class="custom-select__option"
-        :class="{
-          'is-active': model === option.value,
-          'is-disabled': option.disabled,
-        }"
-        @click="selectOption(option)"
-      >
-        {{ option.label }}
+    <ul ref="dropdownRef" popover="auto" class="z-select max-w-[min(90vw,400px)] max-h-[min(250px,40vh)] overflow-x-hidden overflow-y-auto custom-select__dropdown" :class="[`is-${dropdownPlacement}`, `select-dropdown--${size}`]" :style="{ position: 'fixed', top: dropdownPos.top || undefined, bottom: dropdownPos.bottom || undefined, left: dropdownPos.left, minWidth: dropdownPos.minWidth }" @toggle="onPopoverToggle">
+      <li v-for="option in options" :key="String(option.value)" class="flex items-center justify-between custom-select__option" :class="{ 'is-active': model === option.value, 'is-disabled': option.disabled }" @click="selectOption(option)">
+        <span class="custom-select__option-text">{{ option.label }}</span>
+        <Icon v-if="model === option.value" name="check" class="option-check" />
       </li>
     </ul>
   </div>
@@ -209,8 +192,39 @@ defineExpose({
 
 <style scoped lang="scss">
 .custom-select {
-  font-size: inherit;
+  --select-height: 2.5rem; // md: 40px
+  --select-font-size: var(--font-size-sm);
+  --select-padding-x: var(--space-3);
+  --select-gap: var(--space-2);
+  --glow-color: var(--theme-accent, var(--color-category-main));
+
+  @include control-glow-tokens;
+
+  min-width: 0;
+  font-size: var(--select-font-size);
   color: var(--color-text-main);
+
+  // --- サイズ展開 (Geist準拠: sm 32px / md 40px / lg 48px) ---
+  &.select--sm {
+    --select-height: 2rem; // 32px
+    --select-font-size: var(--font-size-xs);
+    --select-padding-x: var(--space-2);
+    --select-gap: var(--space-1);
+  }
+
+  &.select--md {
+    --select-height: 2.5rem; // 40px
+    --select-font-size: var(--font-size-sm);
+    --select-padding-x: var(--space-3);
+    --select-gap: var(--space-2);
+  }
+
+  &.select--lg {
+    --select-height: 3rem; // 48px
+    --select-font-size: var(--font-size-base);
+    --select-padding-x: var(--space-4);
+    --select-gap: var(--space-3);
+  }
 
   &[data-disabled="true"] {
     @include state-disabled;
@@ -218,14 +232,13 @@ defineExpose({
 }
 
 .custom-select__value {
-  --glow-color: var(--theme-accent, var(--color-category-main));
+  gap: var(--select-gap);
 
-  @include control-glow-tokens;
-
-  min-height: calc(var(--control-height-ratio) * 1em);
-  padding-block: 0.3em;
-  padding-inline: 0.8em;
+  height: var(--select-height);
+  padding-block: 0;
+  padding-inline: var(--select-padding-x);
   border: var(--border-width-base) solid var(--color-border);
+  border-radius: 0; // 直角規約
 
   font-size: inherit;
   color: inherit;
@@ -243,12 +256,12 @@ defineExpose({
     border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
   }
 
-  &:hover {
+  &:hover:not(:disabled) {
     border-color: var(--glow-color);
     box-shadow: var(--shadow-glow-hover);
   }
 
-  &:active {
+  &:active:not(:disabled) {
     border-color: var(--glow-color);
     box-shadow: var(--shadow-glow-active);
   }
@@ -278,9 +291,11 @@ defineExpose({
   inset: unset;
 
   margin: 0;
+  padding: var(--space-1);
   border: var(--border-width-base) solid var(--dropdown-border-color);
+  border-radius: 0; // 直角規約
 
-  font-size: var(--font-size-base);
+  font-size: var(--select-font-size, var(--font-size-sm));
   color: var(--color-text-main);
 
   background-color: var(--surface-bg-solid);
@@ -288,6 +303,14 @@ defineExpose({
   box-shadow: var(--shadow-elevation-md);
 
   transition: var(--transition-base);
+
+  &.select-dropdown--sm {
+    font-size: var(--font-size-xs);
+  }
+
+  &.select-dropdown--lg {
+    font-size: var(--font-size-base);
+  }
 }
 
 .custom-select__label {
@@ -296,7 +319,22 @@ defineExpose({
   white-space: nowrap;
 }
 
+.select-affix {
+  user-select: none;
+  gap: var(--space-1);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.affix-icon {
+  width: 1rem;
+  height: 1rem;
+  color: var(--color-text-muted);
+}
+
 .custom-select__arrow {
+  width: 1rem;
+  height: 1rem;
   color: var(--color-text-muted);
   transition: transform var(--transition-fast);
 
@@ -307,8 +345,11 @@ defineExpose({
 
 .custom-select__option {
   overflow: hidden;
+  gap: var(--space-2);
 
-  padding: 0.4em 0.8em;
+  padding-block: var(--space-2);
+  padding-inline: var(--space-3);
+  border-radius: 0; // 直角規約
 
   font-size: inherit;
   color: var(--color-text-main);
@@ -329,5 +370,17 @@ defineExpose({
   }
 
   @include state-disabled;
+}
+
+.option-check {
+  width: 0.875rem;
+  height: 0.875rem;
+  color: var(--glow-color, var(--theme-accent));
+}
+
+.custom-select__option-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

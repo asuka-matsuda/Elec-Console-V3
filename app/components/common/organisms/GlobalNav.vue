@@ -75,54 +75,24 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    class="fixed inset-0 z-sidebar-overlay overlay"
-    :class="{ 'is-open': isOpen }"
-    @click="closeSidebar"
-  />
+  <div class="fixed inset-0 z-sidebar-overlay overlay" :class="{ 'is-open': isOpen }" @click="closeSidebar" />
 
-  <aside
-    class="fixed top-0 left-0 z-sidebar flex flex-col w-sidebar-w h-[100dvh] overflow-hidden"
-    :class="{ 'is-open': isOpen }"
-  >
+  <aside class="fixed top-0 left-0 z-sidebar flex flex-col w-sidebar-w h-[100dvh] overflow-hidden" :class="{ 'is-open': isOpen }">
     <header class="flex items-center justify-between h-16 px-layout-pad shrink-0">
-      <span class="header-title">
-        メニュー
-      </span>
-      <Button
-        icon="x"
-        title="メニューを閉じる"
-        @click="closeSidebar"
-      />
+      <span class="header-title">メニュー</span>
+      <Button variant="tertiary" size="sm" icon="x" @click="closeSidebar" />
     </header>
 
-    <nav
-      class="flex-1 min-h-0 overflow-y-auto flex flex-col gap-panel-gap p-panel-pad-compact"
-      @click="closeSidebar"
-    >
-      <section
-        v-for="section in menuData"
-        :key="section.id"
-        class="flex flex-col gap-inline-gap"
-        :style="{
-          '--section-accent': `var(--color-category-${section.accent || 'main'})`,
-        }"
-      >
-        <h5 v-if="section.globalNavHeading || section.heading" class="flex items-center gap-item-gap px-item-gap py-0.5 text-secondary">
-          <Icon v-if="section.icon" :name="section.icon" size="sm" class="text-accent" />
+    <nav class="flex-1 min-h-0 overflow-y-auto flex flex-col gap-panel-gap p-panel-pad-compact" @click="closeSidebar">
+      <section v-for="section in menuData" :key="section.id" class="flex flex-col gap-inline-gap" :style="{ '--section-accent': `var(--color-category-${section.accent || 'main'})` }">
+        <h5 v-if="section.globalNavHeading || section.heading" class="flex items-center gap-item-gap px-item-gap py-0.5 nav-heading">
+          <Icon v-if="section.icon" :name="section.icon" size="sm" variant="accent" />
           <span>{{ section.globalNavHeading || section.heading }}</span>
         </h5>
 
         <ul class="flex flex-col gap-inline-gap">
-          <li
-            v-for="item in getVisibleItems(section.items)"
-            :key="item.href"
-          >
-            <NuxtLink
-              :to="item.href"
-              class="w-full flex items-center gap-item-gap py-inline-gap px-panel-pad-compact"
-              :class="{ 'is-active': isItemActive(item) }"
-            >
+          <li v-for="item in getVisibleItems(section.items)" :key="item.href">
+            <NuxtLink :to="item.href" class="w-full flex items-center gap-item-gap py-inline-gap px-panel-pad-compact" :class="{ 'is-active': isItemActive(item) }">
               <Icon :name="item.icon" size="md" />
               <span>{{ item.text }}</span>
             </NuxtLink>
@@ -176,6 +146,10 @@ aside {
       color: var(--color-text-muted);
       letter-spacing: var(--tracking-wider);
     }
+  }
+
+  .nav-heading {
+    color: var(--color-text-secondary);
   }
 
   a {

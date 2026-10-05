@@ -9,7 +9,9 @@ import { computed, ref, toValue } from 'vue'
 
 import { useNuxtApp } from '#app'
 import type { CircuitItem } from '#shared/types/circuit'
+import { useAuth } from '~/composables/useAuth'
 import type { SelectOption } from '~/types/components'
+import { formatToDateInputString } from '~/utils/date'
 import { CircuitsRepository } from '~/utils/db'
 import {
   convertCircuitsToDynamicRows,
@@ -28,9 +30,11 @@ export function useTagReportPrint(
   options: UseTagReportPrintOptions = {},
 ) {
   const { $api } = useNuxtApp()
+  const { getAccurateNow } = useAuth()
 
   const siteId = computed(() => toValue(siteIdSource))
   const siteName = computed(() => toValue(options.siteName) || '現場')
+  const exportDate = computed(() => formatToDateInputString(getAccurateNow()))
 
   // 回路データおよび動的テーブルデータ
   const rawCircuits = ref<CircuitItem[]>([])
@@ -161,7 +165,7 @@ export function useTagReportPrint(
 
       if (local && local.length > 0) {
         rawCircuits.value = local
-        const converted = convertCircuitsToDynamicRows(local, siteName.value)
+        const converted = convertCircuitsToDynamicRows(local, exportDate.value)
 
         dynamicHeaders.value = converted.headers
         dynamicRows.value = converted.rows
@@ -200,7 +204,7 @@ export function useTagReportPrint(
         if (res && res.circuits) {
           rawCircuits.value = res.circuits
           await CircuitsRepository.putAll(res.circuits)
-          const converted = convertCircuitsToDynamicRows(res.circuits, siteName.value)
+          const converted = convertCircuitsToDynamicRows(res.circuits, exportDate.value)
 
           dynamicHeaders.value = converted.headers
           dynamicRows.value = converted.rows
@@ -267,6 +271,7 @@ export function useTagReportPrint(
         templateBuffer: templateBuffer.value,
         rows: filteredRows.value,
         siteName: siteName.value,
+        exportDate: exportDate.value,
         flowDirection: flowDirection.value,
       })
 

@@ -6,7 +6,7 @@
 
 import type { CircuitItem } from '#shared/types/circuit'
 import type { OperationLogItem } from '#shared/types/operationLog'
-import type { SelectOption, TableColumn } from '~/types/components'
+import type { BadgeVariant, SelectOption, TableColumn } from '~/types/components'
 import { formatDateTime } from '~/utils/date'
 
 /**
@@ -86,6 +86,24 @@ export const getActionBadgeColor = (action: unknown): string => {
   }
 
   return 'var(--color-status-neutral)'
+}
+
+/**
+ * 送電試験 操作ログのアクション文字列からバッジバリアントを判定する（Geist準拠）
+ */
+export const getActionBadgeVariant = (action: unknown): BadgeVariant => {
+  if (typeof action !== 'string') return 'gray'
+  if (action.includes('確定') || action.includes('完了')) {
+    return 'green'
+  }
+  if (action.includes('解除') || action.includes('削除')) {
+    return 'red'
+  }
+  if (action.includes('更新') || action.includes('変更') || action.includes('インポート')) {
+    return 'blue'
+  }
+
+  return 'gray'
 }
 
 /**

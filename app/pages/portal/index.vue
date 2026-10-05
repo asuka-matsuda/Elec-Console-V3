@@ -65,22 +65,16 @@ onMounted(async () => {
   <div class="flex flex-col gap-section-gap">
     <header class="flex items-center justify-between gap-item-gap">
       <h2 class="flex items-center gap-item-gap">
-        <Icon name="folder" class="text-primary" />
+        <Icon name="folder" />
         <span>現場ポータル</span>
       </h2>
       <div v-if="isAdmin" class="flex items-center gap-item-gap">
-        <Button to="/portal/admin">
-          現場ポータル管理画面へ
-        </Button>
+        <Button size="sm" to="/portal/admin">現場ポータル管理画面を開く</Button>
       </div>
     </header>
 
     <hr class="divider">
 
-    <EmptyState
-      icon="folder"
-      title="アサインされている現場がありません"
-      description="管理者に現場へのアサインを依頼してください。"
-    />
+    <EmptyState icon="folder" title="アサインされている現場がありません" description="管理者に現場へのアサインを依頼してください。" />
   </div>
 </template>

@@ -119,6 +119,15 @@ const {
   isActionLoading: () => isActionLoading.value,
 })
 
+const getRowDisabledReason = (circuit: CircuitItem): string | undefined => {
+  if (isConfirmed(circuit)) return '確定済みのため入力はロックされています'
+  if (circuit.isExcluded) return '除外回路のため入力できません'
+  if (isCircuitLocked(circuit)) return '幹線未完了のため入力できません'
+  if (isActionLoading.value[circuit.id]) return '通信処理中です'
+
+  return undefined
+}
+
 const {
   sortBy,
   sortOrder,
@@ -151,33 +160,19 @@ onMounted(() => {
   <div class="flex flex-1 flex-col gap-section-gap min-h-0">
     <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
       <h2 class="flex items-center gap-item-gap">
-        <Icon name="check-square" class="text-primary" />
+        <Icon name="check-square" />
         <span>{{ headerTitle }}</span>
       </h2>
       <div class="flex items-center gap-item-gap">
         <PortalSyncStatusBadge :site-id="siteId" />
 
-        <Button
-          icon="arrow-left"
-          :to="`/portal/${siteId}/souden`"
-        >
-          ダッシュボードへ戻る
-        </Button>
+        <Button variant="tertiary" size="sm" icon="arrow-left" :to="`/portal/${siteId}/souden`">ダッシュボードへ戻る</Button>
       </div>
     </header>
     <hr class="divider">
 
     <nav class="phase-nav flex items-center gap-inline-gap overflow-x-auto">
-      <NuxtLink
-        v-for="item in PHASE_NAV_OPTIONS"
-        :key="item.value"
-        :to="{
-          path: `/portal/${siteId}/phase${item.value}`,
-          query: route.query,
-        }"
-        class="phase-nav-item inline-flex items-center gap-item-gap"
-        :class="{ 'is-active': item.value === '1' }"
-      >
+      <NuxtLink v-for="item in PHASE_NAV_OPTIONS" :key="item.value" :to="{ path: `/portal/${siteId}/phase${item.value}`, query: route.query }" class="phase-nav-item inline-flex items-center gap-item-gap" :class="{ 'is-active': item.value === '1' }">
         <span>{{ item.label }}</span>
       </NuxtLink>
     </nav>
@@ -187,28 +182,14 @@ onMounted(() => {
         <div class="flex items-center gap-form-col-gap">
           <span class="shrink-0 label">盤種別:</span>
           <nav class="radio-group shrink-0">
-            <button
-              v-for="opt in shubetsuTabOptions"
-              :key="String(opt.value)"
-              type="button"
-              class="radio-group-item"
-              :class="{ 'is-active': selectedBanShubetsu === opt.value }"
-              @click="selectedBanShubetsu = opt.value"
-            >
-              {{ opt.label }}
-            </button>
+            <button v-for="opt in shubetsuTabOptions" :key="String(opt.value)" type="button" class="radio-group-item" :class="{ 'is-active': selectedBanShubetsu === opt.value }" @click="selectedBanShubetsu = opt.value">{{ opt.label }}</button>
           </nav>
         </div>
 
         <div class="flex flex-wrap items-center gap-form-col-gap">
           <div class="flex items-center gap-item-gap">
             <label for="filter-ban-p1" class="shrink-0 label">盤名称:</label>
-            <Select
-              id="filter-ban-p1"
-              v-model="selectedBanMeisho"
-              :options="availableBanMeishoList"
-              class="w-40"
-            />
+            <Select id="filter-ban-p1" v-model="selectedBanMeisho" :options="availableBanMeishoList" class="w-40" />
           </div>
 
           <span class="whitespace-nowrap count-label">
@@ -224,31 +205,17 @@ onMounted(() => {
             <div class="flex items-center gap-item-gap">
               <span><strong>{{ phaseStats.completed }}</strong> / {{ phaseStats.total }}</span>
               <span>({{ phaseStats.pct }}%)</span>
-              <small v-if="phaseStats.excluded > 0" class="text-muted">
-                (除外: {{ phaseStats.excluded }})
-              </small>
+              <small v-if="phaseStats.excluded > 0" class="text-muted">(除外: {{ phaseStats.excluded }})</small>
             </div>
           </div>
           <PortalProgressBar :value="phaseStats.pct" />
         </div>
 
-        <PortalExamMinimap
-          :circuits="filteredCircuits"
-          :phase="1"
-          @select-circuit="handleSelectCircuit"
-        />
+        <PortalExamMinimap :circuits="filteredCircuits" :phase="1" @select-circuit="handleSelectCircuit" />
       </div>
     </section>
 
-    <Table
-      v-model:sort-by="sortBy"
-      v-model:sort-order="sortOrder"
-      :columns="PHASE1_TABLE_COLUMNS"
-      :data="sortedCircuits"
-      :row-id="(row) => `row-${row.id}`"
-      :row-class="(row) => getSoudenRowClass(row, { isComplete, isCircuitLocked, editingRowId: null })"
-      class="flex-1 min-h-[400px]"
-    >
+    <Table v-model:sort-by="sortBy" v-model:sort-order="sortOrder" :columns="PHASE1_TABLE_COLUMNS" :data="sortedCircuits" :row-id="(row) => `row-${row.id}`" :row-class="(row) => getSoudenRowClass(row, { isComplete, isCircuitLocked, editingRowId: null })" class="flex-1 min-h-[400px]">
       <template #cell-banMeisho="{ row: circuit }">
         <div class="flex flex-col gap-0.5 min-w-0">
           <span class="ban-name">{{ circuit.banMeisho || '-' }}</span>
@@ -258,17 +225,12 @@ onMounted(() => {
 
       <template #cell-kairoBangou="{ row: circuit }">
         <div class="flex items-center justify-center">
-          <PortalCircuitSymbol
-            :kigou="circuit.kairoKigou"
-            :bangou="circuit.kairoBangou"
-          />
+          <PortalCircuitSymbol :kigou="circuit.kairoKigou" :bangou="circuit.kairoBangou" />
         </div>
       </template>
 
       <template #cell-kairoMeisho="{ row: circuit }">
-        <span class="circuit-meisho block" :title="circuit.kairoMeisho || ''">
-          {{ circuit.kairoMeisho || '-' }}
-        </span>
+        <span class="circuit-meisho block" :title="circuit.kairoMeisho || ''">{{ circuit.kairoMeisho || '-' }}</span>
       </template>
 
       <template #cell-p1ConfirmedAt="{ row: circuit }">
@@ -285,70 +247,31 @@ onMounted(() => {
             <span class="cell-cable">{{ circuit.cableList || '-' }}</span>
             <span v-if="circuit.haisenJousuu" class="cell-jousuu">({{ circuit.haisenJousuu }})</span>
           </div>
-          <span class="cell-setsuchi" :title="circuit.setsuchiList || ''">
-            {{ circuit.setsuchiList ? `E: ${circuit.setsuchiList}` : '-' }}
-          </span>
+          <span class="cell-setsuchi" :title="circuit.setsuchiList || ''">{{ circuit.setsuchiList ? `E: ${circuit.setsuchiList}` : '-' }}</span>
         </div>
       </template>
 
       <template #cell-p1Kakunin="{ row: circuit }">
-        <div class="flex items-center justify-center gap-item-gap">
-          <Checkbox
-            v-model="getRowForm(circuit).kakunin"
-            label="確認"
-            variant="success"
-            :disabled="isRowDisabled(circuit)"
-          />
-          <Checkbox
-            v-model="getRowForm(circuit).mashishime"
-            label="増締"
-            variant="success"
-            :disabled="isRowDisabled(circuit)"
-          />
-        </div>
+        <Tooltip :text="getRowDisabledReason(circuit) || ''" :disabled="!isRowDisabled(circuit)">
+          <div class="flex items-center justify-center gap-item-gap">
+            <Checkbox v-model="getRowForm(circuit).kakunin" label="確認" color="var(--color-status-success)" :disabled="isRowDisabled(circuit)" />
+            <Checkbox v-model="getRowForm(circuit).mashishime" label="増締" color="var(--color-status-success)" :disabled="isRowDisabled(circuit)" />
+          </div>
+        </Tooltip>
       </template>
 
       <template #cell-p1Remarks="{ row: circuit }">
-        <Textarea
-          v-model="getRowForm(circuit).remarks"
-          :rows="1"
-          auto-resize
-          placeholder="備考"
-          class="w-full textarea-remarks"
-          :disabled="isRowDisabled(circuit)"
-        />
+        <Textarea v-model="getRowForm(circuit).remarks" :rows="1" auto-resize placeholder="備考" class="w-full textarea-remarks" :disabled="isRowDisabled(circuit)" />
       </template>
 
       <template #cell-actions="{ row: circuit }">
         <div class="cell-actions flex items-center justify-center gap-inline-gap whitespace-nowrap">
-          <span v-if="isCircuitLocked(circuit)" class="text-note inline-flex items-center gap-inline-gap">
-            ⏸ 幹線未完了
-          </span>
+          <span v-if="isCircuitLocked(circuit)" class="text-note inline-flex items-center gap-inline-gap">⏸ 幹線未完了</span>
           <template v-else-if="isConfirmed(circuit)">
-            <Button
-              variant="default"
-              icon-right="arrow-right"
-              :to="`/portal/${circuit.siteId}/phase2?kei_to=${encodeURIComponent(circuit.keiTo || '幹線')}&targetCircuit=${encodeURIComponent(circuit.id)}`"
-            >
-              P2へ
-            </Button>
-            <Button
-              variant="danger"
-              :disabled="circuit.isExcluded || isActionLoading[circuit.id]"
-              @click="handleClearLocally(circuit)"
-            >
-              解除
-            </Button>
+            <Button variant="secondary" size="sm" suffix-icon="arrow-right" :to="`/portal/${circuit.siteId}/phase2?kei_to=${encodeURIComponent(circuit.keiTo || '幹線')}&targetCircuit=${encodeURIComponent(circuit.id)}`">フェーズ2へ進む</Button>
+            <Button variant="danger" size="sm" :disabled="circuit.isExcluded || isActionLoading[circuit.id]" @click="handleClearLocally(circuit)">解除する</Button>
           </template>
-          <Button
-            v-else
-            variant="success"
-            :disabled="circuit.isExcluded"
-            :loading="isActionLoading[circuit.id]"
-            @click="handleConfirmCircuit(circuit)"
-          >
-            確定
-          </Button>
+          <Button v-else variant="primary" size="sm" :disabled="circuit.isExcluded" :loading="isActionLoading[circuit.id]" @click="handleConfirmCircuit(circuit)">確定する</Button>
         </div>
       </template>
     </Table>
@@ -387,11 +310,6 @@ onMounted(() => {
 .count-label {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
-}
-
-.text-muted {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
 }
 
 .ban-name {

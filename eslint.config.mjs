@@ -17,9 +17,16 @@ import noTemplateComments from './eslint-rules/no-template-comments.mjs'
 import noTrivialFacade from './eslint-rules/no-trivial-facade.mjs'
 import noUnsupportedSizeProp from './eslint-rules/no-unsupported-size-prop.mjs'
 import requireFileJsdoc from './eslint-rules/require-file-jsdoc.mjs'
+import strictAvatarUsage from './eslint-rules/strict-avatar-usage.mjs'
 import strictBadgeUsage from './eslint-rules/strict-badge-usage.mjs'
+import strictBannerUsage from './eslint-rules/strict-banner-usage.mjs'
+import strictBreadcrumbsUsage from './eslint-rules/strict-breadcrumbs-usage.mjs'
+import strictButtonUsage from './eslint-rules/strict-button-usage.mjs'
+import strictCheckboxUsage from './eslint-rules/strict-checkbox-usage.mjs'
 import strictIconUsage from './eslint-rules/strict-icon-usage.mjs'
+import strictInputUsage from './eslint-rules/strict-input-usage.mjs'
 import strictResponsiveTokens from './eslint-rules/strict-responsive-tokens.mjs'
+import strictSelectUsage from './eslint-rules/strict-select-usage.mjs'
 import strictSpacingTokens from './eslint-rules/strict-spacing-tokens.mjs'
 import strictStateManagement from './eslint-rules/strict-state-management.mjs'
 import strictStateMixins from './eslint-rules/strict-state-mixins.mjs'
@@ -52,8 +59,15 @@ export default withNuxt(
           'strict-time-management': strictTimeManagement,
           'strict-ui-states': strictUiStates,
           'strict-badge-usage': strictBadgeUsage,
+          'strict-avatar-usage': strictAvatarUsage,
+          'strict-banner-usage': strictBannerUsage,
+          'strict-breadcrumbs-usage': strictBreadcrumbsUsage,
+          'strict-button-usage': strictButtonUsage,
+          'strict-checkbox-usage': strictCheckboxUsage,
           'strict-icon-usage': strictIconUsage,
+          'strict-input-usage': strictInputUsage,
           'strict-responsive-tokens': strictResponsiveTokens,
+          'strict-select-usage': strictSelectUsage,
           'no-event-pass-through': noEventPassThrough,
           'no-slot-forwarding': noSlotForwarding,
         },
@@ -64,6 +78,7 @@ export default withNuxt(
       'local/no-slot-forwarding': 'error',
       'local/strict-responsive-tokens': ['error', { allowMobileFirst: true }],
       'local/strict-icon-usage': 'error',
+      'local/strict-button-usage': 'error',
       'local/no-tailwind-decoration': 'error',
       'local/no-redundant-tailwind-classes': 'error',
       'local/no-redundant-vue-defaults': 'error',
@@ -79,6 +94,12 @@ export default withNuxt(
       'local/strict-time-management': 'error',
       'local/strict-ui-states': 'error',
       'local/strict-badge-usage': 'error',
+      'local/strict-avatar-usage': 'error',
+      'local/strict-banner-usage': 'error',
+      'local/strict-breadcrumbs-usage': 'error',
+      'local/strict-checkbox-usage': 'error',
+      'local/strict-input-usage': 'error',
+      'local/strict-select-usage': 'error',
       // AI開発効率化のため無効化したルール
       'local/no-raw-html-elements': 'off',
       'local/no-card-or-box-naming': 'off',

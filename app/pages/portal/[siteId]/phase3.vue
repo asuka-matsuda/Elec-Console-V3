@@ -261,33 +261,19 @@ onMounted(() => {
   <div class="flex flex-1 flex-col gap-section-gap min-h-0">
     <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
       <h2 class="flex items-center gap-item-gap">
-        <Icon name="zap" class="text-primary" />
+        <Icon name="zap" />
         <span>{{ headerTitle }}</span>
       </h2>
       <div class="flex items-center gap-item-gap">
         <PortalSyncStatusBadge :site-id="siteId" />
 
-        <Button
-          icon="arrow-left"
-          :to="`/portal/${siteId}/souden`"
-        >
-          ダッシュボードへ戻る
-        </Button>
+        <Button variant="tertiary" size="sm" icon="arrow-left" :to="`/portal/${siteId}/souden`">ダッシュボードへ戻る</Button>
       </div>
     </header>
     <hr class="divider">
 
     <nav class="phase-nav flex items-center gap-inline-gap overflow-x-auto">
-      <NuxtLink
-        v-for="item in PHASE_NAV_OPTIONS"
-        :key="item.value"
-        :to="{
-          path: `/portal/${siteId}/phase${item.value}`,
-          query: route.query,
-        }"
-        class="phase-nav-item inline-flex items-center gap-item-gap"
-        :class="{ 'is-active': item.value === '3' }"
-      >
+      <NuxtLink v-for="item in PHASE_NAV_OPTIONS" :key="item.value" :to="{ path: `/portal/${siteId}/phase${item.value}`, query: route.query }" class="phase-nav-item inline-flex items-center gap-item-gap" :class="{ 'is-active': item.value === '3' }">
         <span>{{ item.label }}</span>
       </NuxtLink>
     </nav>
@@ -297,28 +283,14 @@ onMounted(() => {
         <div class="flex items-center gap-form-col-gap">
           <span class="shrink-0 label">盤種別:</span>
           <nav class="radio-group shrink-0">
-            <button
-              v-for="opt in shubetsuTabOptions"
-              :key="String(opt.value)"
-              type="button"
-              class="radio-group-item"
-              :class="{ 'is-active': selectedBanShubetsu === opt.value }"
-              @click="selectedBanShubetsu = opt.value"
-            >
-              {{ opt.label }}
-            </button>
+            <button v-for="opt in shubetsuTabOptions" :key="String(opt.value)" type="button" class="radio-group-item" :class="{ 'is-active': selectedBanShubetsu === opt.value }" @click="selectedBanShubetsu = opt.value">{{ opt.label }}</button>
           </nav>
         </div>
 
         <div class="flex flex-wrap items-center gap-form-col-gap">
           <div class="flex items-center gap-item-gap">
             <label for="filter-ban-p3" class="shrink-0 label">盤名称:</label>
-            <Select
-              id="filter-ban-p3"
-              v-model="selectedBanMeisho"
-              :options="availableBanMeishoList"
-              class="w-40"
-            />
+            <Select id="filter-ban-p3" v-model="selectedBanMeisho" :options="availableBanMeishoList" class="w-40" />
           </div>
 
           <span class="whitespace-nowrap count-label">
@@ -334,31 +306,17 @@ onMounted(() => {
             <div class="flex items-center gap-item-gap">
               <span><strong>{{ phaseStats.completed }}</strong> / {{ phaseStats.total }}</span>
               <span>({{ phaseStats.pct }}%)</span>
-              <small v-if="phaseStats.excluded > 0" class="text-muted">
-                (除外: {{ phaseStats.excluded }})
-              </small>
+              <small v-if="phaseStats.excluded > 0" class="excluded-count">(除外: {{ phaseStats.excluded }})</small>
             </div>
           </div>
           <PortalProgressBar :value="phaseStats.pct" />
         </div>
 
-        <PortalExamMinimap
-          :circuits="filteredCircuits"
-          :phase="3"
-          @select-circuit="handleSelectCircuit"
-        />
+        <PortalExamMinimap :circuits="filteredCircuits" :phase="3" @select-circuit="handleSelectCircuit" />
       </div>
     </section>
 
-    <Table
-      v-model:sort-by="sortBy"
-      v-model:sort-order="sortOrder"
-      :columns="PHASE3_TABLE_COLUMNS"
-      :data="sortedCircuits"
-      :row-id="(row) => `row-${row.id}`"
-      :row-class="(row) => getSoudenRowClass(row, { isComplete, isCircuitLocked: isLocked, editingRowId: null })"
-      class="flex-1 min-h-[400px]"
-    >
+    <Table v-model:sort-by="sortBy" v-model:sort-order="sortOrder" :columns="PHASE3_TABLE_COLUMNS" :data="sortedCircuits" :row-id="(row) => `row-${row.id}`" :row-class="(row) => getSoudenRowClass(row, { isComplete, isCircuitLocked: isLocked, editingRowId: null })" class="flex-1 min-h-[400px]">
       <template #cell-banMeisho="{ row: circuit }">
         <div class="flex flex-col gap-0.5 min-w-0">
           <span class="ban-name">{{ circuit.banMeisho || '-' }}</span>
@@ -368,17 +326,12 @@ onMounted(() => {
 
       <template #cell-kairoBangou="{ row: circuit }">
         <div class="flex items-center justify-center">
-          <PortalCircuitSymbol
-            :kigou="circuit.kairoKigou"
-            :bangou="circuit.kairoBangou"
-          />
+          <PortalCircuitSymbol :kigou="circuit.kairoKigou" :bangou="circuit.kairoBangou" />
         </div>
       </template>
 
       <template #cell-kairoMeisho="{ row: circuit }">
-        <span class="circuit-meisho block" :title="circuit.kairoMeisho || ''">
-          {{ circuit.kairoMeisho || '-' }}
-        </span>
+        <span class="circuit-meisho block" :title="circuit.kairoMeisho || ''">{{ circuit.kairoMeisho || '-' }}</span>
       </template>
 
       <template #cell-p3ConfirmedAt="{ row: circuit }">
@@ -392,122 +345,43 @@ onMounted(() => {
       <template #cell-denatsuRs="{ row: circuit }">
         <div class="flex flex-col items-center gap-inline-gap">
           <span class="cell-label">{{ getPhaseLabels(circuit).phase1 }}</span>
-          <Input
-            v-model="getRowForm(circuit).rs"
-            type="number"
-            step="any"
-            inputmode="decimal"
-            :placeholder="String(getVoltageRanges(circuit).phase1.target)"
-            :error="!isRowDisabled(circuit) && isVoltageOutOfRange(getRowForm(circuit).rs, getVoltageRanges(circuit).phase1)"
-            :disabled="isRowDisabled(circuit)"
-            class="w-[85px]"
-            @keydown.enter.prevent="handleConfirmCircuit(circuit)"
-          />
-          <span
-            v-if="!isRowDisabled(circuit) && isVoltageOutOfRange(getRowForm(circuit).rs, getVoltageRanges(circuit).phase1)"
-            class="cell-warning-sub"
-          >
-            ±10%範囲外です
-          </span>
+          <Input v-model="getRowForm(circuit).rs" type="number" step="any" inputmode="decimal" :placeholder="String(getVoltageRanges(circuit).phase1.target)" :error="!isRowDisabled(circuit) && isVoltageOutOfRange(getRowForm(circuit).rs, getVoltageRanges(circuit).phase1)" :disabled="isRowDisabled(circuit)" class="w-[85px]" @keydown.enter.prevent="handleConfirmCircuit(circuit)" />
+          <span v-if="!isRowDisabled(circuit) && isVoltageOutOfRange(getRowForm(circuit).rs, getVoltageRanges(circuit).phase1)" class="cell-warning-sub">±10%範囲外です</span>
         </div>
       </template>
 
       <template #cell-denatsuSt="{ row: circuit }">
         <div class="flex flex-col items-center gap-inline-gap">
           <span class="cell-label">{{ getPhaseLabels(circuit).phase2 }}</span>
-          <Input
-            v-model="getRowForm(circuit).st"
-            type="number"
-            step="any"
-            inputmode="decimal"
-            :placeholder="String(getVoltageRanges(circuit).phase2.target)"
-            :error="!isRowDisabled(circuit) && isVoltageOutOfRange(getRowForm(circuit).st, getVoltageRanges(circuit).phase2)"
-            :disabled="isRowDisabled(circuit)"
-            class="w-[85px]"
-            @keydown.enter.prevent="handleConfirmCircuit(circuit)"
-          />
-          <span
-            v-if="!isRowDisabled(circuit) && isVoltageOutOfRange(getRowForm(circuit).st, getVoltageRanges(circuit).phase2)"
-            class="cell-warning-sub"
-          >
-            ±10%範囲外です
-          </span>
+          <Input v-model="getRowForm(circuit).st" type="number" step="any" inputmode="decimal" :placeholder="String(getVoltageRanges(circuit).phase2.target)" :error="!isRowDisabled(circuit) && isVoltageOutOfRange(getRowForm(circuit).st, getVoltageRanges(circuit).phase2)" :disabled="isRowDisabled(circuit)" class="w-[85px]" @keydown.enter.prevent="handleConfirmCircuit(circuit)" />
+          <span v-if="!isRowDisabled(circuit) && isVoltageOutOfRange(getRowForm(circuit).st, getVoltageRanges(circuit).phase2)" class="cell-warning-sub">±10%範囲外です</span>
         </div>
       </template>
 
       <template #cell-denatsuRt="{ row: circuit }">
         <div class="flex flex-col items-center gap-inline-gap">
           <span class="cell-label">{{ getPhaseLabels(circuit).phase3 }}</span>
-          <Input
-            v-model="getRowForm(circuit).rt"
-            type="number"
-            step="any"
-            inputmode="decimal"
-            :placeholder="String(getVoltageRanges(circuit).phase3.target)"
-            :error="!isRowDisabled(circuit) && isVoltageOutOfRange(getRowForm(circuit).rt, getVoltageRanges(circuit).phase3)"
-            :disabled="isRowDisabled(circuit)"
-            class="w-[85px]"
-            @keydown.enter.prevent="handleConfirmCircuit(circuit)"
-          />
-          <span
-            v-if="!isRowDisabled(circuit) && isVoltageOutOfRange(getRowForm(circuit).rt, getVoltageRanges(circuit).phase3)"
-            class="cell-warning-sub"
-          >
-            ±10%範囲外です
-          </span>
+          <Input v-model="getRowForm(circuit).rt" type="number" step="any" inputmode="decimal" :placeholder="String(getVoltageRanges(circuit).phase3.target)" :error="!isRowDisabled(circuit) && isVoltageOutOfRange(getRowForm(circuit).rt, getVoltageRanges(circuit).phase3)" :disabled="isRowDisabled(circuit)" class="w-[85px]" @keydown.enter.prevent="handleConfirmCircuit(circuit)" />
+          <span v-if="!isRowDisabled(circuit) && isVoltageOutOfRange(getRowForm(circuit).rt, getVoltageRanges(circuit).phase3)" class="cell-warning-sub">±10%範囲外です</span>
         </div>
       </template>
 
       <template #cell-kensou="{ row: circuit }">
-        <Select
-          v-model="getRowForm(circuit).kensou"
-          :options="getKensouOptions(circuit)"
-          :disabled="isRowDisabled(circuit)"
-          class="w-20 min-w-[70px]"
-        />
+        <Select v-model="getRowForm(circuit).kensou" :options="getKensouOptions(circuit)" :disabled="isRowDisabled(circuit)" class="w-20 min-w-[70px]" />
       </template>
 
       <template #cell-p3Remarks="{ row: circuit }">
-        <Textarea
-          v-model="getRowForm(circuit).remarks"
-          :rows="1"
-          auto-resize
-          placeholder="備考"
-          class="w-full textarea-remarks"
-          :disabled="isRowDisabled(circuit)"
-        />
+        <Textarea v-model="getRowForm(circuit).remarks" :rows="1" auto-resize placeholder="備考" class="w-full textarea-remarks" :disabled="isRowDisabled(circuit)" />
       </template>
 
       <template #cell-actions="{ row: circuit }">
         <div class="cell-actions flex items-center justify-center gap-inline-gap whitespace-nowrap">
-          <span v-if="isLocked(circuit)" class="text-note inline-flex items-center gap-inline-gap">
-            ⏸ {{ isCircuitLocked(circuit) ? '幹線未完了' : 'P2未了' }}
-          </span>
+          <span v-if="isLocked(circuit)" class="text-note inline-flex items-center gap-inline-gap">⏸ {{ isCircuitLocked(circuit) ? '幹線未完了' : 'P2未了' }}</span>
           <template v-else-if="isConfirmed(circuit)">
-            <Button
-              variant="default"
-              icon-right="arrow-right"
-              :to="getNextPhase1Path(circuit)"
-            >
-              P1へ
-            </Button>
-            <Button
-              variant="danger"
-              :disabled="circuit.isExcluded || Boolean(isActionLoading[circuit.id])"
-              @click="handleClearLocally(circuit)"
-            >
-              解除
-            </Button>
+            <Button variant="secondary" size="sm" suffix-icon="arrow-right" :to="getNextPhase1Path(circuit)">フェーズ1へ進む</Button>
+            <Button variant="danger" size="sm" :disabled="circuit.isExcluded || Boolean(isActionLoading[circuit.id])" @click="handleClearLocally(circuit)">解除する</Button>
           </template>
-          <Button
-            v-else
-            variant="success"
-            :disabled="circuit.isExcluded || hasVoltageOutOfRangeError(circuit)"
-            :loading="Boolean(isActionLoading[circuit.id])"
-            @click="handleConfirmCircuit(circuit)"
-          >
-            確定
-          </Button>
+          <Button v-else variant="primary" size="sm" :disabled="circuit.isExcluded || hasVoltageOutOfRangeError(circuit)" :loading="Boolean(isActionLoading[circuit.id])" @click="handleConfirmCircuit(circuit)">確定する</Button>
         </div>
       </template>
     </Table>
@@ -548,7 +422,7 @@ onMounted(() => {
   color: var(--color-text-secondary);
 }
 
-.text-muted {
+.excluded-count {
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
 }

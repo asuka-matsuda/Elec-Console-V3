@@ -35,32 +35,12 @@ const SPECS = [
   <div class="drum-diagram flex flex-col gap-panel-gap">
     <div class="diagram-svg-container w-full overflow-x-auto">
       <div class="diagram-svg-inner mx-auto">
-        <svg
-          viewBox="0 0 720 250"
-          class="diagram-svg"
-          xmlns="http://www.w3.org/2000/svg"
-        >
+        <svg viewBox="0 0 720 250" class="diagram-svg" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <marker
-              id="arrow-cyan-drum"
-              viewBox="0 0 10 10"
-              refX="5"
-              refY="5"
-              markerWidth="6"
-              markerHeight="6"
-              orient="auto-start-reverse"
-            >
+            <marker id="arrow-cyan-drum" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
               <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#39c5cf" />
             </marker>
-            <marker
-              id="arrow-purple-drum"
-              viewBox="0 0 10 10"
-              refX="5"
-              refY="5"
-              markerWidth="6"
-              markerHeight="6"
-              orient="auto-start-reverse"
-            >
+            <marker id="arrow-purple-drum" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
               <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#a371f7" />
             </marker>
           </defs>
@@ -84,16 +64,7 @@ const SPECS = [
             <line x1="-90" y1="0" x2="-115" y2="0" stroke="#8b949e" stroke-width="0.8" />
             <line x1="0" y1="-90" x2="-115" y2="-90" stroke="#8b949e" stroke-width="0.8" />
             <line x1="0" y1="90" x2="-115" y2="90" stroke="#8b949e" stroke-width="0.8" />
-            <line
-              x1="-105"
-              y1="-86"
-              x2="-105"
-              y2="86"
-              stroke="#58a6ff"
-              stroke-width="1.5"
-              marker-start="url(#arrow-cyan-drum)"
-              marker-end="url(#arrow-cyan-drum)"
-            />
+            <line x1="-105" y1="-86" x2="-105" y2="86" stroke="#58a6ff" stroke-width="1.5" marker-start="url(#arrow-cyan-drum)" marker-end="url(#arrow-cyan-drum)" />
             <rect x="-135" y="-12" width="60" height="24" rx="4" fill="#161b22" stroke="#58a6ff" stroke-width="1" />
             <text x="-105" y="4" fill="#58a6ff" font-size="11" font-weight="bold" text-anchor="middle">ツバ径</text>
 
@@ -122,31 +93,13 @@ const SPECS = [
 
             <line x1="-69" y1="-48" x2="-69" y2="-75" stroke="#8b949e" stroke-width="0.8" />
             <line x1="69" y1="-48" x2="69" y2="-75" stroke="#8b949e" stroke-width="0.8" />
-            <line
-              x1="-65"
-              y1="-68"
-              x2="65"
-              y2="-68"
-              stroke="#a371f7"
-              stroke-width="1.5"
-              marker-start="url(#arrow-purple-drum)"
-              marker-end="url(#arrow-purple-drum)"
-            />
+            <line x1="-65" y1="-68" x2="65" y2="-68" stroke="#a371f7" stroke-width="1.5" marker-start="url(#arrow-purple-drum)" marker-end="url(#arrow-purple-drum)" />
             <rect x="-24" y="-80" width="48" height="24" rx="4" fill="#161b22" stroke="#a371f7" stroke-width="1" />
             <text x="0" y="-64" fill="#a371f7" font-size="11" font-weight="bold" text-anchor="middle">内幅</text>
 
             <line x1="-85" y1="90" x2="-85" y2="115" stroke="#8b949e" stroke-width="0.8" />
             <line x1="85" y1="90" x2="85" y2="115" stroke="#8b949e" stroke-width="0.8" />
-            <line
-              x1="-81"
-              y1="108"
-              x2="81"
-              y2="108"
-              stroke="#58a6ff"
-              stroke-width="1.5"
-              marker-start="url(#arrow-cyan-drum)"
-              marker-end="url(#arrow-cyan-drum)"
-            />
+            <line x1="-81" y1="108" x2="81" y2="108" stroke="#58a6ff" stroke-width="1.5" marker-start="url(#arrow-cyan-drum)" marker-end="url(#arrow-cyan-drum)" />
             <rect x="-24" y="96" width="48" height="24" rx="4" fill="#161b22" stroke="#58a6ff" stroke-width="1" />
             <text x="0" y="112" fill="#58a6ff" font-size="11" font-weight="bold" text-anchor="middle">外幅</text>
           </g>
@@ -155,22 +108,9 @@ const SPECS = [
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-item-gap">
-      <div
-        v-for="item in SPECS"
-        :key="item.symbol"
-        class="diagram-spec-panel flex flex-col gap-inline-gap"
-      >
+      <div v-for="item in SPECS" :key="item.symbol" class="diagram-spec-panel flex flex-col gap-inline-gap">
         <div class="flex items-center gap-inline-gap">
-          <span
-            class="spec-symbol inline-flex items-center justify-center"
-            :style="{
-              color: item.color,
-              borderColor: `color-mix(in srgb, ${item.color} 40%, transparent)`,
-              backgroundColor: `color-mix(in srgb, ${item.color} 15%, transparent)`,
-            }"
-          >
-            {{ item.symbol }}
-          </span>
+          <span class="spec-symbol inline-flex items-center justify-center" :style="{ color: item.color, borderColor: `color-mix(in srgb, ${item.color} 40%, transparent)`, backgroundColor: `color-mix(in srgb, ${item.color} 15%, transparent)` }">{{ item.symbol }}</span>
           <span class="spec-title">{{ item.title }}</span>
         </div>
         <p class="spec-desc">

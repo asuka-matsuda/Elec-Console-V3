@@ -17,13 +17,7 @@ const {
 
 <template>
   <div class="progress-track h-2 w-full overflow-hidden">
-    <div
-      class="progress-fill h-full"
-      :style="{
-        width: `${clampProgress(value)}%`,
-        backgroundColor: color,
-      }"
-    />
+    <div class="progress-fill h-full" :style="{ width: `${clampProgress(value)}%`, backgroundColor: color }" />
   </div>
 </template>
 

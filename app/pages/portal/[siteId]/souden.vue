@@ -70,49 +70,24 @@ onMounted(() => {
   <div class="flex flex-col gap-section-gap h-full">
     <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
       <h2 class="flex items-center gap-item-gap">
-        <Icon name="zap" class="text-primary" />
+        <Icon name="zap" />
         <span>{{ pageTitle }}</span>
       </h2>
       <div class="flex items-center gap-item-gap">
-        <PortalSyncStatusBadge
-          :site-id="siteId"
-          @synced="fetchStats"
-        />
+        <PortalSyncStatusBadge :site-id="siteId" @synced="fetchStats" />
 
-        <Button
-          icon="arrow-left"
-          :to="`/portal/${siteId}`"
-        >
-          ポータルへ戻る
-        </Button>
+        <Button variant="tertiary" size="sm" icon="arrow-left" :to="`/portal/${siteId}`">現場ポータルへ戻る</Button>
 
-        <Button
-          icon="book-open"
-          :to="`/portal/${siteId}/operation-logs`"
-        >
-          操作ログ
-        </Button>
+        <Button variant="secondary" size="sm" icon="book-open" :to="`/portal/${siteId}/operation-logs`">操作ログを確認する</Button>
       </div>
     </header>
     <hr class="divider">
 
-    <Alert v-if="error" variant="danger">
-      {{ error }}
-    </Alert>
+    <Alert v-if="error" variant="danger">{{ error }}</Alert>
 
-    <EmptyState
-      v-if="!isLoading && stats && stats.totalCircuits === 0"
-      icon="database"
-      title="回路データが登録されていません"
-      description="管理者の「現場設定」よりExcel連携ファイルの保存先設定および回路データの取り込みを行ってください。"
-    >
+    <EmptyState v-if="!isLoading && stats && stats.totalCircuits === 0" icon="database" title="回路データが登録されていません" description="管理者の「現場設定」よりExcel連携ファイルの保存先設定および回路データの取り込みを行ってください。">
       <template #actions>
-        <Button
-          icon="settings"
-          to="/portal/admin"
-        >
-          現場設定へ移動
-        </Button>
+        <Button variant="secondary" size="sm" icon="settings" to="/portal/admin">現場設定へ移動する</Button>
       </template>
     </EmptyState>
 
@@ -120,59 +95,33 @@ onMounted(() => {
       <section class="panel flex flex-col gap-panel-gap">
         <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
           <h3 class="flex items-center gap-item-gap">
-            <Icon name="activity" class="text-primary" />
+            <Icon name="activity" />
             <span>総合進捗</span>
           </h3>
           <div v-if="siteId" class="flex items-center gap-item-gap">
-            <Button
-              icon="printer"
-              :to="`/portal/${siteId}/print`"
-            >
-              試験結果の印刷
-            </Button>
+            <Button variant="secondary" size="sm" icon="printer" :to="`/portal/${siteId}/reports?tab=exam`">帳票を出力する</Button>
           </div>
         </header>
         <hr class="divider">
 
         <div class="flex flex-col lg:flex-row items-center gap-panel-gap">
-          <PortalCircularGauge
-            class="shrink-0"
-            :value="stats.totalPct"
-            size="lg"
-            label="全試験完了率"
-          />
+          <PortalCircularGauge class="shrink-0" :value="stats.totalPct" size="lg" label="全試験完了率" />
 
           <div class="flex flex-1 flex-col gap-panel-gap w-full">
             <template v-for="(group, index) in SOUDEN_GROUPS" :key="group.keiTo">
               <div class="flex flex-col md:flex-row items-start md:items-center gap-panel-gap">
-                <PortalCircularGauge
-                  class="shrink-0"
-                  :value="stats[group.pctKey]"
-                  size="sm"
-                  :label="group.label"
-                />
+                <PortalCircularGauge class="shrink-0" :value="stats[group.pctKey]" size="sm" :label="group.label" />
                 <ul class="flex flex-1 flex-col gap-form-row-gap w-full">
-                  <li
-                    v-for="item in getGroupData(group.keiTo, stats).phases"
-                    :key="item.phase"
-                    class="flex flex-col gap-inline-gap"
-                  >
+                  <li v-for="item in getGroupData(group.keiTo, stats).phases" :key="item.phase" class="flex flex-col gap-inline-gap">
                     <div class="phase-row-header flex items-center justify-between">
                       <div class="flex items-center gap-item-gap">
                         <span class="phase-title">{{ item.title }}</span>
-                        <Button
-                          v-if="siteId"
-                          :to="`/portal/${siteId}/phase${item.phase}?kei_to=${group.keiTo}`"
-                        >
-                          試験入力
-                        </Button>
+                        <Button v-if="siteId" variant="secondary" size="sm" :to="`/portal/${siteId}/phase${item.phase}?kei_to=${group.keiTo}`">試験を入力する</Button>
                       </div>
                       <div class="phase-stat flex items-center gap-item-gap">
                         <span><strong>{{ item.completed }}</strong> / {{ getGroupData(group.keiTo, stats).total }}</span>
                         <span class="stat-pct">({{ item.pct }}%)</span>
-                        <small v-if="getGroupData(group.keiTo, stats).excluded > 0" class="text-muted">
-                          (除外: {{ getGroupData(group.keiTo, stats).excluded }})
-                        </small>
+                        <small v-if="getGroupData(group.keiTo, stats).excluded > 0">(除外: {{ getGroupData(group.keiTo, stats).excluded }})</small>
                       </div>
                     </div>
                     <PortalProgressBar :value="item.pct" />

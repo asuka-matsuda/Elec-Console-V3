@@ -54,9 +54,7 @@ const handleChangePassword = async () => {
       <h2 class="text-center">
         初回パスワード設定
       </h2>
-      <small class="text-secondary text-center">
-        セキュリティのため、システムから配布された初期パスワードを変更してください。
-      </small>
+      <small class="subtitle-text text-center">セキュリティのため、システムから配布された初期パスワードを変更してください。</small>
     </header>
     <hr class="divider">
 
@@ -65,62 +63,25 @@ const handleChangePassword = async () => {
       <div class="flex flex-col gap-inline-gap">
         <label for="new-password" class="label">新しいパスワード (8文字以上)</label>
         <div class="relative flex items-center">
-          <Input
-            id="new-password"
-            v-model="password"
-            :type="showPassword ? 'text' : 'password'"
-            placeholder="新しいパスワード"
-            :disabled="isLoading"
-            autocomplete="new-password"
-            class="password-input"
-          />
-          <button
-            type="button"
-            tabindex="-1"
-            class="password-toggle-btn"
-            :title="showPassword ? 'パスワードを非表示' : 'パスワードを表示'"
-            @click="showPassword = !showPassword"
-          >
+          <Input id="new-password" v-model="password" :type="showPassword ? 'text' : 'password'" placeholder="新しいパスワード" :disabled="isLoading" autocomplete="new-password" class="password-input" />
+          <button type="button" tabindex="-1" class="password-toggle-btn" @click="showPassword = !showPassword">
             <Icon :name="showPassword ? 'eye-off' : 'eye'" />
           </button>
         </div>
-        <p v-if="errorMessage" class="error-text">
-          {{ errorMessage }}
-        </p>
+        <p v-if="errorMessage" class="error-text">{{ errorMessage }}</p>
       </div>
 
       <div class="flex flex-col gap-inline-gap">
         <label for="confirm-password" class="label">新しいパスワード (確認用)</label>
         <div class="relative flex items-center">
-          <Input
-            id="confirm-password"
-            v-model="passwordConfirm"
-            :type="showPasswordConfirm ? 'text' : 'password'"
-            placeholder="もう一度入力"
-            :disabled="isLoading"
-            autocomplete="new-password"
-            class="password-input"
-          />
-          <button
-            type="button"
-            tabindex="-1"
-            class="password-toggle-btn"
-            :title="showPasswordConfirm ? 'パスワードを非表示' : 'パスワードを表示'"
-            @click="showPasswordConfirm = !showPasswordConfirm"
-          >
+          <Input id="confirm-password" v-model="passwordConfirm" :type="showPasswordConfirm ? 'text' : 'password'" placeholder="もう一度入力" :disabled="isLoading" autocomplete="new-password" class="password-input" />
+          <button type="button" tabindex="-1" class="password-toggle-btn" @click="showPasswordConfirm = !showPasswordConfirm">
             <Icon :name="showPasswordConfirm ? 'eye-off' : 'eye'" />
           </button>
         </div>
       </div>
 
-      <Button
-        type="submit"
-        variant="success"
-        class="w-full"
-        :loading="isLoading"
-      >
-        設定してはじめる
-      </Button>
+      <Button type="submit" variant="primary" size="lg" block :loading="isLoading">パスワードを設定して開始する</Button>
     </form>
   </div>
 </template>
@@ -158,8 +119,12 @@ const handleChangePassword = async () => {
   }
 
   &:focus-visible {
-    outline: none;
     color: var(--theme-accent);
+    outline: none;
   }
+}
+
+.subtitle-text {
+  color: var(--color-text-secondary);
 }
 </style>

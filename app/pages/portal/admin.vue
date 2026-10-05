@@ -280,7 +280,7 @@ const confirmToggleDisable = async (row: Site) => {
       ? `現場「${row.name}」へのアクセスを再度有効にしますか？`
       : `現場「${row.name}」を無効化しますか？ 無効になると現場へのアクセスができなくなります。`,
     confirmText: isCurrentlyDisabled ? '有効化する' : '無効化する',
-    intent: isCurrentlyDisabled ? 'success' : 'danger',
+    intent: isCurrentlyDisabled ? 'primary' : 'danger',
   })
 
   if (isConfirmed) {
@@ -324,145 +324,68 @@ const confirmDeleteSite = async (site: Site) => {
     <aside class="w-full lg:w-[340px] shrink-0 flex flex-col gap-panel-gap min-h-0">
       <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
         <h3 class="flex items-center gap-item-gap">
-          <Icon name="building" class="text-primary" />
+          <Icon name="building" />
           <span>現場プロジェクト</span>
         </h3>
         <div class="flex items-center gap-item-gap">
-          <Button
-            icon="plus"
-            @click="openCreateModal"
-          >
-            新規登録
-          </Button>
+          <Button variant="secondary" size="sm" icon="plus" @click="openCreateModal">現場を新規作成する</Button>
         </div>
       </header>
       <hr class="divider">
 
-      <Input
-        v-model="searchQuery"
-        placeholder="現場名・IDで検索..."
-      />
+      <ClearableInput v-model="searchQuery" placeholder="現場名・IDで検索..." icon="search" />
 
       <div class="radio-group w-full">
-        <button
-          v-for="opt in filterOptions"
-          :key="String(opt.value)"
-          type="button"
-          class="radio-group-item"
-          :class="{ 'is-active': statusFilter === opt.value }"
-          @click="statusFilter = opt.value"
-        >
-          {{ opt.label }}
-        </button>
+        <button v-for="opt in filterOptions" :key="String(opt.value)" type="button" class="radio-group-item" :class="{ 'is-active': statusFilter === opt.value }" @click="statusFilter = opt.value">{{ opt.label }}</button>
       </div>
 
-      <ul
-        v-if="filteredSites.length > 0"
-        class="flex flex-col gap-item-gap overflow-y-auto flex-1 min-h-[300px]"
-      >
-        <li
-          v-for="site in filteredSites"
-          :key="site.id"
-        >
-          <div
-            class="panel p-panel-pad-compact site-item-panel flex items-center justify-between gap-panel-gap w-full"
-            :class="{ 'is-disabled': Boolean(site.disabledAt), 'is-active': site.id === selectedSiteId }"
-          >
-            <button
-              type="button"
-              class="site-select-btn flex-1 min-w-0 flex flex-col gap-inline-gap text-left"
-              :disabled="Boolean(site.disabledAt)"
-              @click="handleSelectSite(site)"
-            >
+      <ul v-if="filteredSites.length > 0" class="flex flex-col gap-item-gap overflow-y-auto flex-1 min-h-[300px]">
+        <li v-for="site in filteredSites" :key="site.id">
+          <div class="panel p-panel-pad-compact site-item-panel flex items-center justify-between gap-panel-gap w-full" :class="{ 'is-disabled': Boolean(site.disabledAt), 'is-active': site.id === selectedSiteId }">
+            <button type="button" class="site-select-btn flex-1 min-w-0 flex flex-col gap-inline-gap text-left" :disabled="Boolean(site.disabledAt)" @click="handleSelectSite(site)">
               <div class="flex items-center gap-item-gap">
-                <span class="site-name">
-                  {{ site.name }}
-                </span>
-                <span class="badge" :style="{ '--glow-color': SITE_STATUS_CONFIG[site.status]?.color }">
-                  {{ SITE_STATUS_CONFIG[site.status]?.label }}
-                </span>
-                <span v-if="site.disabledAt" class="badge" :style="{ '--glow-color': 'var(--color-status-danger)' }">
-                  無効
-                </span>
+                <span class="site-name">{{ site.name }}</span>
+                <Badge :variant="SITE_STATUS_CONFIG[site.status]?.variant">{{ SITE_STATUS_CONFIG[site.status]?.label }}</Badge>
+                <Badge v-if="site.disabledAt" variant="red">無効</Badge>
               </div>
               <div class="site-id">
                 ID: {{ site.id }}
               </div>
             </button>
 
-            <Button
-              class="shrink-0"
-              :variant="site.disabledAt ? 'success' : 'danger'"
-              @click="confirmToggleDisable(site)"
-            >
-              {{ site.disabledAt ? '有効化' : '無効化' }}
-            </Button>
+            <Button class="shrink-0" size="sm" :variant="site.disabledAt ? 'secondary' : 'danger'" @click="confirmToggleDisable(site)">{{ site.disabledAt ? '有効化する' : '無効化する' }}</Button>
           </div>
         </li>
       </ul>
 
-      <EmptyState
-        v-else
-        icon="search"
-        title="該当する現場がありません"
-        description="検索条件を変更するか、新規現場を登録してください。"
-      />
+      <EmptyState v-else icon="search" title="該当する現場がありません" description="検索条件を変更するか、新規現場を登録してください。" />
     </aside>
 
     <hr class="divider is-vertical is-solid hidden lg:block self-stretch">
 
     <!-- 右ペイン: 現場詳細設定 -->
     <section class="panel flex-1 min-w-0">
-      <EmptyState
-        v-if="!selectedSite"
-        icon="layout"
-        title="現場が選択されていません"
-        description="左側の現場一覧から、設定やデータ連携を行う現場を選択してください。"
-        class="min-h-[400px] flex items-center justify-center"
-      />
+      <EmptyState v-if="!selectedSite" icon="layout" title="現場が選択されていません" description="左側の現場一覧から、設定やデータ連携を行う現場を選択してください。" class="min-h-[400px] flex items-center justify-center" />
 
       <div v-else class="flex flex-col gap-panel-gap">
         <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
           <h3 class="flex items-center gap-item-gap">
-            <Icon name="settings" class="text-primary" />
+            <Icon name="settings" />
             <span class="flex items-baseline gap-item-gap">
               <span>{{ selectedSite.name }}</span>
-              <span class="site-id">
-                (ID: {{ selectedSite.id }})
-              </span>
+              <span class="site-id">(ID: {{ selectedSite.id }})</span>
             </span>
           </h3>
 
           <div class="flex items-center gap-item-gap">
-            <Button
-              variant="danger"
-              icon="trash-2"
-              :loading="isDeletingSite"
-              @click="confirmDeleteSite(selectedSite)"
-            >
-              削除
-            </Button>
-            <Button
-              variant="success"
-              icon="save"
-              :loading="isSaving"
-              @click="handleSaveSite"
-            >
-              変更を保存
-            </Button>
+            <Button variant="danger" size="sm" icon="trash-2" :loading="isDeletingSite" @click="confirmDeleteSite(selectedSite)">現場を削除する</Button>
+            <Button variant="primary" size="sm" icon="save" :loading="isSaving" @click="handleSaveSite">変更を保存する</Button>
           </div>
         </header>
         <hr class="divider">
 
         <nav class="tabs flex items-center gap-inline-gap overflow-x-auto">
-          <button
-            v-for="item in SITE_SETTINGS_TABS"
-            :key="item.value"
-            type="button"
-            class="tabs-item"
-            :class="{ 'is-active': activeTab === item.value }"
-            @click="activeTab = item.value"
-          >
+          <button v-for="item in SITE_SETTINGS_TABS" :key="item.value" type="button" class="tabs-item" :class="{ 'is-active': activeTab === item.value }" @click="activeTab = item.value">
             <Icon v-if="item.icon" :name="item.icon" size="sm" />
             <span>{{ item.label }}</span>
           </button>
@@ -472,7 +395,7 @@ const confirmDeleteSite = async (site: Site) => {
         <form v-if="activeTab === 'basic'" class="flex flex-col gap-form-row-gap max-w-xl" @submit.prevent="handleSaveSite">
           <header class="flex items-center gap-item-gap">
             <h4 class="flex items-center gap-item-gap">
-              <Icon name="info" class="text-primary" />
+              <Icon name="info" />
               <span>現場基本情報</span>
             </h4>
           </header>
@@ -480,52 +403,27 @@ const confirmDeleteSite = async (site: Site) => {
 
           <div class="flex flex-col gap-inline-gap">
             <label for="site-id-display" class="label">現場ID (変更不可)</label>
-            <Input
-              id="site-id-display"
-              :model-value="selectedSite.id"
-              disabled
-            />
+            <Input id="site-id-display" :model-value="selectedSite.id" disabled />
           </div>
 
           <div class="flex flex-col gap-inline-gap">
             <label for="site-name-input" class="label">現場名</label>
-            <Input
-              id="site-name-input"
-              v-model="form.name"
-              placeholder="例: 新宿プロジェクト"
-            />
+            <Input id="site-name-input" v-model="form.name" placeholder="例: 新宿プロジェクト" />
           </div>
 
           <div class="flex flex-col gap-inline-gap">
             <label for="site-status-select" class="label">ステータス</label>
-            <Select
-              id="site-status-select"
-              v-model="form.status"
-              :options="SITE_STATUS_OPTIONS"
-            />
+            <Select id="site-status-select" v-model="form.status" :options="SITE_STATUS_OPTIONS" />
           </div>
 
           <div class="flex flex-col gap-inline-gap">
             <span class="label">アサイン済作業者</span>
-            <ul
-              v-if="workerNames.length > 0"
-              class="flex flex-wrap items-center gap-item-gap"
-            >
-              <li
-                v-for="worker in workerNames"
-                :key="worker"
-              >
-                <span class="inline-flex items-center worker-name">
-                  {{ worker }}
-                </span>
+            <ul v-if="workerNames.length > 0" class="flex flex-wrap items-center gap-item-gap">
+              <li v-for="worker in workerNames" :key="worker">
+                <span class="inline-flex items-center worker-name">{{ worker }}</span>
               </li>
             </ul>
-            <EmptyState
-              v-else
-              icon="users"
-              title="アサインされている作業者はいません"
-              description="ユーザー管理画面から作業者をアサインしてください。"
-            />
+            <EmptyState v-else icon="users" title="アサインされている作業者はいません" description="ユーザー管理画面から作業者をアサインしてください。" />
           </div>
         </form>
 
@@ -534,7 +432,7 @@ const confirmDeleteSite = async (site: Site) => {
           <section class="flex flex-col gap-panel-gap">
             <header>
               <h4 class="flex items-center gap-item-gap">
-                <Icon name="cloud-upload" class="text-primary" />
+                <Icon name="cloud-upload" />
                 <span>Excelデータ取込 (差分同期 / 初期設定)</span>
               </h4>
             </header>
@@ -543,89 +441,41 @@ const confirmDeleteSite = async (site: Site) => {
               回路情報・現場基本情報の更新は「差分同期」、新規立ち上げ時は「全件初期化取込」を行います。
             </p>
 
-            <PortalExcelDropzone
-              :model-value="selectedFile"
-              :disabled="isSyncing"
-              @update:model-value="handleFileSelect"
-            />
+            <PortalExcelDropzone :model-value="selectedFile" :disabled="isSyncing" @update:model-value="handleFileSelect" />
 
             <div class="flex flex-wrap items-center gap-item-gap">
-              <Button
-                icon="refresh-cw"
-                :loading="syncAction === 'merge'"
-                :disabled="!selectedFile || isSyncing"
-                @click="handleMergeSync"
-              >
-                {{ selectedFile ? '選択ファイルから差分同期' : 'ファイルを選択して差分同期' }}
-              </Button>
+              <Button variant="secondary" icon="refresh-cw" :loading="syncAction === 'merge'" :disabled="!selectedFile || isSyncing" @click="handleMergeSync">{{ selectedFile ? '差分を同期する' : 'ファイルを選択して差分同期' }}</Button>
 
-              <Button
-                variant="danger"
-                icon="trash-2"
-                :loading="syncAction === 'reset'"
-                :disabled="!selectedFile || isSyncing"
-                @click="handleResetImport"
-              >
-                全件初期化取込
-              </Button>
+              <Button variant="danger" icon="trash-2" :loading="syncAction === 'reset'" :disabled="!selectedFile || isSyncing" @click="handleResetImport">全件を初期化して取り込む</Button>
             </div>
           </section>
 
           <section class="flex flex-col gap-panel-gap">
             <header>
               <h4 class="flex items-center gap-item-gap">
-                <Icon name="file-spreadsheet" class="text-primary" />
+                <Icon name="file-spreadsheet" />
                 <span>最新結果の帳票出力</span>
               </h4>
             </header>
             <hr class="divider">
-            <small>
-              Web上で完了した最新の試験結果（Phase 1〜3）を含むExcel帳票ファイルをダウンロードします。
-            </small>
+            <small>Web上で完了した最新の試験結果（Phase 1〜3）を含むExcel帳票ファイルをダウンロードします。</small>
 
             <div class="flex flex-col gap-inline-gap">
-              <Button
-                icon="download"
-                :loading="syncAction === 'download'"
-                :disabled="isSyncing || !hasExcelPath"
-                class="w-fit"
-                @click="handleDownloadExcel"
-              >
-                Excel帳票ダウンロード (ブラウザDL)
-              </Button>
-              <small v-if="!hasExcelPath">
-                ※ 現場設定にExcel台帳ファイルが登録されていないため、ダウンロードできません
-              </small>
+              <Button variant="secondary" icon="download" :loading="syncAction === 'download'" :disabled="isSyncing || !hasExcelPath" class="w-fit" @click="handleDownloadExcel">Excel帳票をダウンロードする</Button>
+              <small v-if="!hasExcelPath">※ 現場設定にExcel台帳ファイルが登録されていないため、ダウンロードできません</small>
             </div>
           </section>
 
-          <Alert
-            v-if="isSyncing"
-            variant="info"
-            icon="loader"
-          >
-            {{ syncMsg }}
-          </Alert>
+          <Alert v-if="isSyncing" variant="info" icon="loader">{{ syncMsg }}</Alert>
 
-          <Alert
-            v-else-if="showSyncMsg && syncMsgType === 'error'"
-            variant="danger"
-          >
-            {{ syncMsg }}
-          </Alert>
+          <Alert v-else-if="showSyncMsg && syncMsgType === 'error'" variant="danger">{{ syncMsg }}</Alert>
 
-          <Alert
-            v-else-if="syncResultData"
-            variant="success"
-            :title="syncResultData.title"
-          >
+          <Alert v-else-if="syncResultData" variant="success" :title="syncResultData.title">
             <div class="flex flex-wrap items-center gap-item-gap">
               <template v-if="syncResultData.type === 'merge'">
-                <span>追加: <strong class="text-success">+{{ syncResultData.createdCount ?? 0 }}</strong> 件</span>
-                <span>変更: <strong class="text-warning">{{ syncResultData.updatedCount ?? 0 }}</strong> 件</span>
-                <small class="text-muted">
-                  全回路数: {{ syncResultData.count }} 件
-                </small>
+                <span>追加: <strong class="stat-count-add">+{{ syncResultData.createdCount ?? 0 }}</strong> 件</span>
+                <span>変更: <strong class="stat-count-mod">{{ syncResultData.updatedCount ?? 0 }}</strong> 件</span>
+                <small class="stat-count-total">全回路数: {{ syncResultData.count }} 件</small>
               </template>
               <template v-else-if="syncResultData.type === 'reset'">
                 <span>取込総数: <strong>{{ syncResultData.count }}</strong> 件</span>
@@ -638,7 +488,7 @@ const confirmDeleteSite = async (site: Site) => {
         <div v-else-if="activeTab === 'rules'" class="flex flex-col gap-form-row-gap max-w-xl">
           <header class="flex items-center gap-item-gap">
             <h4 class="flex items-center gap-item-gap">
-              <Icon name="slash" class="text-primary" />
+              <Icon name="slash" />
               <span>除外回路の設定</span>
             </h4>
           </header>
@@ -647,49 +497,23 @@ const confirmDeleteSite = async (site: Site) => {
             計算や試験連携の対象外とする盤・回路を指定します。
           </p>
 
-          <ul
-            v-if="form.excludedCircuits.length > 0"
-            class="flex flex-col gap-item-gap"
-          >
-            <li
-              v-for="(circuit, idx) in form.excludedCircuits"
-              :key="idx"
-              class="flex items-center gap-item-gap"
-            >
-              <Input
-                :model-value="circuit"
-                placeholder="例: 盤A-回路1"
-                @update:model-value="handleUpdateExcludedCircuit(idx, $event)"
-              />
-              <Button
-                icon="trash-2"
-                variant="danger"
-                @click="handleRemoveExcludedCircuit(idx)"
-              />
+          <ul v-if="form.excludedCircuits.length > 0" class="flex flex-col gap-item-gap">
+            <li v-for="(circuit, idx) in form.excludedCircuits" :key="idx" class="flex items-center gap-item-gap">
+              <Input :model-value="circuit" placeholder="例: 盤A-回路1" @update:model-value="handleUpdateExcludedCircuit(idx, $event)" />
+              <Button icon="trash-2" variant="danger" size="sm" @click="handleRemoveExcludedCircuit(idx)" />
             </li>
           </ul>
 
-          <EmptyState
-            v-else
-            icon="slash"
-            title="除外回路は設定されていません"
-            description="すべての回路が計算・連携の対象となります。"
-          />
+          <EmptyState v-else icon="slash" title="除外回路は設定されていません" description="すべての回路が計算・連携の対象となります。" />
 
-          <Button
-            icon="plus"
-            class="w-fit"
-            @click="handleAddExcludedCircuit"
-          >
-            除外回路を追加する
-          </Button>
+          <Button icon="plus" size="sm" class="w-fit" @click="handleAddExcludedCircuit">除外回路を追加する</Button>
         </div>
 
         <!-- 改行禁止ワードタブ -->
         <div v-else-if="activeTab === 'wordBreak'" class="flex flex-col gap-form-row-gap max-w-xl">
           <header class="flex items-center gap-item-gap">
             <h4 class="flex items-center gap-item-gap">
-              <Icon name="type" class="text-primary" />
+              <Icon name="type" />
               <span>改行禁止ワードの設定</span>
             </h4>
           </header>
@@ -698,64 +522,26 @@ const confirmDeleteSite = async (site: Site) => {
             テーブルの盤名称等で途中で改行させない単語を指定します（※「1-1」等の英数字ハイフンや「分電盤」等はシステムで自動処理されます）。
           </p>
 
-          <ul
-            v-if="form.noBreakWords.length > 0"
-            class="flex flex-col gap-item-gap"
-          >
-            <li
-              v-for="(word, idx) in form.noBreakWords"
-              :key="idx"
-              class="flex items-center gap-item-gap"
-            >
-              <Input
-                :model-value="word"
-                placeholder="例: 自動倉庫, 受変電設備"
-                @update:model-value="handleUpdateNoBreakWord(idx, $event)"
-              />
-              <Button
-                icon="trash-2"
-                variant="danger"
-                @click="handleRemoveNoBreakWord(idx)"
-              />
+          <ul v-if="form.noBreakWords.length > 0" class="flex flex-col gap-item-gap">
+            <li v-for="(word, idx) in form.noBreakWords" :key="idx" class="flex items-center gap-item-gap">
+              <Input :model-value="word" placeholder="例: 自動倉庫, 受変電設備" @update:model-value="handleUpdateNoBreakWord(idx, $event)" />
+              <Button icon="trash-2" variant="danger" size="sm" @click="handleRemoveNoBreakWord(idx)" />
             </li>
           </ul>
 
-          <EmptyState
-            v-else
-            icon="type"
-            title="改行禁止ワードは設定されていません"
-            description="現場固有の単語を追加すると、テーブル内で途中で改行されなくなります。"
-          />
+          <EmptyState v-else icon="type" title="改行禁止ワードは設定されていません" description="現場固有の単語を追加すると、テーブル内で途中で改行されなくなります。" />
 
-          <Button
-            icon="plus"
-            class="w-fit"
-            @click="handleAddNoBreakWord"
-          >
-            改行禁止ワードを追加する
-          </Button>
+          <Button icon="plus" size="sm" class="w-fit" @click="handleAddNoBreakWord">改行禁止ワードを追加する</Button>
         </div>
       </div>
     </section>
   </div>
 
   <!-- 新規現場登録モーダル -->
-  <Modal
-    v-model="isCreateModalOpen"
-    title="新規現場登録"
-    icon="circle-plus"
-  >
+  <Modal v-model="isCreateModalOpen" title="新規現場登録" icon="circle-plus">
     <template #actions>
-      <Button @click="isCreateModalOpen = false">
-        キャンセル
-      </Button>
-      <Button
-        variant="success"
-        :loading="isCreatingSite"
-        @click="handleCreateSite"
-      >
-        登録する
-      </Button>
+      <Button @click="isCreateModalOpen = false">キャンセル</Button>
+      <Button variant="primary" :loading="isCreatingSite" @click="handleCreateSite">現場を作成する</Button>
     </template>
 
     <form class="flex flex-col gap-form-row-gap" @submit.prevent="handleCreateSite">
@@ -825,5 +611,17 @@ const confirmDeleteSite = async (site: Site) => {
 .desc-text {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
+}
+
+.stat-count-add {
+  color: var(--color-status-success);
+}
+
+.stat-count-mod {
+  color: var(--color-status-warning);
+}
+
+.stat-count-total {
+  color: var(--color-text-muted);
 }
 </style>

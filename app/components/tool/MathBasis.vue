@@ -20,22 +20,12 @@ defineProps<{
         {{ step.title }}
       </h4>
 
-      <div
-        class="math-expr min-w-0 overflow-x-auto py-inline-gap"
-        v-html="renderMath(step.tex, true)"
-      />
+      <div class="math-expr min-w-0 overflow-x-auto py-inline-gap" v-html="renderMath(step.tex, true)" />
 
-      <div
-        v-if="step.legend && parseLegend(step.legend).length > 0"
-        class="math-legend flex flex-col gap-inline-gap pt-inline-gap"
-      >
+      <div v-if="step.legend && parseLegend(step.legend).length > 0" class="math-legend flex flex-col gap-inline-gap pt-inline-gap">
         <span class="legend-title">【凡例】</span>
         <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-panel-gap gap-y-inline-gap">
-          <div
-            v-for="(v, i) in parseLegend(step.legend)"
-            :key="i"
-            class="flex items-baseline gap-item-gap min-w-0"
-          >
+          <div v-for="(v, i) in parseLegend(step.legend)" :key="i" class="flex items-baseline gap-item-gap min-w-0">
             <dt class="whitespace-nowrap shrink-0" v-html="v.renderedSymbol" />
             <dd class="min-w-0 break-words">{{ v.name }}</dd>
           </div>

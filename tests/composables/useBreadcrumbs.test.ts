@@ -43,7 +43,7 @@ describe('useBreadcrumbs', () => {
     const { items, accent } = useBreadcrumbs()
 
     expect(items.value).toEqual([
-      { text: '現場管理' },
+      { text: '現場管理', to: '/portal/admin' },
       { text: '東京現場' },
     ])
     expect(accent.value).toBe('management')
@@ -54,8 +54,8 @@ describe('useBreadcrumbs', () => {
     const { items, accent } = useBreadcrumbs()
 
     expect(items.value).toEqual([
-      { text: '現場管理' },
-      { text: '東京現場' },
+      { text: '現場管理', to: '/portal/admin' },
+      { text: '東京現場', to: '/portal/site-1' },
       { text: '送電試験' },
     ])
     expect(accent.value).toBe('management')
@@ -66,10 +66,22 @@ describe('useBreadcrumbs', () => {
     const { items, accent } = useBreadcrumbs()
 
     expect(items.value).toEqual([
-      { text: '現場管理' },
-      { text: '東京現場' },
-      { text: '送電試験' },
+      { text: '現場管理', to: '/portal/admin' },
+      { text: '東京現場', to: '/portal/site-1' },
+      { text: '送電試験', to: '/portal/site-1/souden' },
       { text: '操作ログ' },
+    ])
+    expect(accent.value).toBe('management')
+  })
+
+  it('帳票出力画面（/portal/:siteId/reports）で正しいパンくずが構築される', () => {
+    mockRoute.value = { path: '/portal/site-1/reports' }
+    const { items, accent } = useBreadcrumbs()
+
+    expect(items.value).toEqual([
+      { text: '現場管理', to: '/portal/admin' },
+      { text: '東京現場', to: '/portal/site-1' },
+      { text: '帳票出力' },
     ])
     expect(accent.value).toBe('management')
   })
@@ -79,8 +91,8 @@ describe('useBreadcrumbs', () => {
     const { items, accent } = useBreadcrumbs()
 
     expect(items.value).toEqual([
-      { text: '現場管理' },
-      { text: '東京現場' },
+      { text: '現場管理', to: '/portal/admin' },
+      { text: '東京現場', to: '/portal/site-1' },
       { text: 'タグ出力' },
     ])
     expect(accent.value).toBe('management')
@@ -91,7 +103,7 @@ describe('useBreadcrumbs', () => {
     const { items, accent } = useBreadcrumbs()
 
     expect(items.value).toEqual([
-      { text: '現場管理' },
+      { text: '現場管理', to: '/portal/admin' },
       { text: 'unknown-site-99' },
     ])
     expect(accent.value).toBe('management')
@@ -124,8 +136,8 @@ describe('useBreadcrumbs', () => {
     const { items, accent } = useBreadcrumbs()
 
     expect(items.value).toEqual([
-      { text: '現場管理' },
-      { text: '東京現場' },
+      { text: '現場管理', to: '/portal/admin' },
+      { text: '東京現場', to: '/portal/site-1' },
       { text: 'リモコン設定' },
     ])
     expect(accent.value).toBe('management')
@@ -136,8 +148,8 @@ describe('useBreadcrumbs', () => {
     const { items, accent } = useBreadcrumbs()
 
     expect(items.value).toEqual([
-      { text: '現場管理' },
-      { text: '東京現場' },
+      { text: '現場管理', to: '/portal/admin' },
+      { text: '東京現場', to: '/portal/site-1' },
       { text: 'テンプレートキー一覧' },
     ])
     expect(accent.value).toBe('management')

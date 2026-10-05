@@ -5,6 +5,7 @@
  */
 import { computed } from 'vue'
 
+import type { BadgeVariant } from '~/types/components'
 import type { WeightCalcResult } from '~/utils/tools/weight/weightCalcLogic'
 import { formatWeightResult } from '~/utils/tools/weight/weightResultPresenter'
 
@@ -14,36 +15,28 @@ const props = defineProps<{
 
 const vm = computed(() => formatWeightResult(props.result))
 
-const BADGE_COLOR_MAP: Record<string, string> = {
-  danger: 'var(--color-status-danger)',
-  warning: 'var(--color-status-warning)',
-  success: 'var(--color-status-success)',
-  neutral: 'var(--color-status-neutral)',
-  empty: 'var(--color-status-neutral)',
+const BADGE_VARIANT_MAP: Record<string, BadgeVariant> = {
+  danger: 'red',
+  warning: 'amber',
+  success: 'green',
+  neutral: 'gray',
+  empty: 'gray',
 }
 </script>
 
 <template>
   <div class="flex flex-col gap-panel-gap">
-    <div
-      class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0"
-      :class="`is-${vm.panelStatus}`"
-    >
+    <div class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="`is-${vm.panelStatus}`">
       <header class="tile-header flex items-center justify-center gap-inline-gap">
         <span>使用ドラム（想定）</span>
-        <span v-if="vm.badgeText" class="badge" :style="{ '--glow-color': BADGE_COLOR_MAP[vm.panelStatus] }">
-          {{ vm.badgeText }}
-        </span>
+        <Badge v-if="vm.badgeText" :variant="BADGE_VARIANT_MAP[vm.panelStatus]">{{ vm.badgeText }}</Badge>
       </header>
       <output class="tile-value flex items-center justify-center gap-item-gap">
         <span>{{ vm.displayDrum }}</span>
       </output>
     </div>
 
-    <div
-      class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0"
-      :class="`is-${vm.panelStatus}`"
-    >
+    <div class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="`is-${vm.panelStatus}`">
       <header class="tile-header flex items-center justify-center gap-inline-gap">
         <span>総重量 (ケーブル+ドラム)</span>
       </header>
@@ -54,11 +47,7 @@ const BADGE_COLOR_MAP: Record<string, string> = {
     </div>
 
     <dl v-if="vm.details?.length" class="flex flex-col gap-inline-gap w-full details-list">
-      <div
-        v-for="(item, i) in vm.details"
-        :key="i"
-        class="flex items-center justify-between"
-      >
+      <div v-for="(item, i) in vm.details" :key="i" class="flex items-center justify-between">
         <dt>{{ item.label }}</dt>
         <dd class="flex items-center gap-inline-gap">
           <span class="value">{{ item.value }}</span>

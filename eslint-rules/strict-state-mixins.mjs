@@ -45,8 +45,9 @@ export default {
           const styleStartIndex = styleMatch.index + styleMatch[0].indexOf(rawContent)
           const maskedContent = maskComments(rawContent)
 
-          // 1. state-interactive のハードコード検査 (cursor: pointer または user-select: none)
-          const interactiveRegex = /(?:(?<![\w-])cursor\s*:\s*pointer|(?<![\w-])user-select\s*:\s*none)\b/g
+          // 1. state-interactive のハードコード検査 (cursor: pointer)
+          // ※ user-select: none は静的コンポーネント（Avatar文字反転防止等）でも正当に使われるため除外
+          const interactiveRegex = /(?<![\w-])cursor\s*:\s*pointer\b/g
           let m
 
           while ((m = interactiveRegex.exec(maskedContent)) !== null) {

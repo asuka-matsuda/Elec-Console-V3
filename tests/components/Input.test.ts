@@ -74,4 +74,60 @@ describe('Input.vue', () => {
     expect(typeof wrapper.vm.select).toBe('function')
     expect(wrapper.vm.inputRef).toBeDefined()
   })
+
+  it('renders Geist sizes properly (sm, md, lg)', () => {
+    const sizes = ['sm', 'md', 'lg'] as const
+
+    for (const size of sizes) {
+      const wrapper = mount(Input, {
+        props: { size },
+      })
+
+      expect(wrapper.classes()).toContain(`input--${size}`)
+    }
+  })
+
+  it('renders prefix and suffix text and icons properly', () => {
+    const wrapper = mount(Input, {
+      props: {
+        icon: 'search',
+        prefix: 'https://',
+        suffix: '.com',
+        suffixIcon: 'check',
+      },
+      global: {
+        stubs: {
+          Icon: {
+            props: ['name'],
+            template: '<span class="icon" :data-icon="name" />',
+          },
+        },
+      },
+    })
+
+    expect(wrapper.find('.input-prefix').text()).toContain('https://')
+    expect(wrapper.find('.input-suffix').text()).toContain('.com')
+
+    const icons = wrapper.findAll('.icon')
+
+    expect(icons.length).toBe(2)
+    expect(icons[0].attributes('data-icon')).toBe('search')
+    expect(icons[1].attributes('data-icon')).toBe('check')
+  })
+
+  it('trims whitespace on blur when trim prop is true', async () => {
+    const wrapper = mount(Input, {
+      props: {
+        'modelValue': '  test-value   ',
+        'trim': true,
+        'onUpdate:modelValue': (val: string | number | null) => wrapper.setProps({ modelValue: val }),
+      },
+    })
+
+    const input = wrapper.find('input')
+
+    await input.trigger('blur')
+
+    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['  test-value'])
+  })
 })

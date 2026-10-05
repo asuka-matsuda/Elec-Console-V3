@@ -6,10 +6,12 @@
  */
 
 import type { IconName } from '~/constants/icons'
+import type { BadgeVariant } from '~/types/components'
 
 export interface MenuBadge {
   text: string
   color?: string
+  variant?: BadgeVariant
 }
 
 export type MenuItem = {

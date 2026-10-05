@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import Button from '../../app/components/common/atoms/Button.vue'
 
 describe('Button.vue', () => {
-  it('renders default button with type="button" and btn--default', () => {
+  it('renders default button with type="button", btn--secondary, and btn--md', () => {
     const wrapper = mount(Button, {
       slots: {
         default: 'テストボタン',
@@ -19,38 +19,86 @@ describe('Button.vue', () => {
 
     expect(wrapper.find('button').exists()).toBe(true)
     expect(wrapper.attributes('type')).toBe('button')
-    expect(wrapper.classes()).toContain('btn--default')
+    expect(wrapper.classes()).toContain('btn--secondary')
+    expect(wrapper.classes()).toContain('btn--md')
     expect(wrapper.text()).toBe('テストボタン')
   })
 
-  it('renders success and danger variants properly', () => {
-    const wrapperSuccess = mount(Button, {
-      props: { variant: 'success' },
-      global: { stubs: { Icon: true, NuxtLink: true } },
-    })
+  it('renders Geist variants properly (primary, secondary, tertiary, danger, warning)', () => {
+    const variants = ['primary', 'secondary', 'tertiary', 'danger', 'warning'] as const
 
-    expect(wrapperSuccess.classes()).toContain('btn--success')
+    for (const variant of variants) {
+      const wrapper = mount(Button, {
+        props: { variant },
+        global: { stubs: { Icon: true, NuxtLink: true } },
+      })
 
-    const wrapperDanger = mount(Button, {
-      props: { variant: 'danger' },
-      global: { stubs: { Icon: true, NuxtLink: true } },
-    })
-
-    expect(wrapperDanger.classes()).toContain('btn--danger')
+      expect(wrapper.classes()).toContain(`btn--${variant}`)
+    }
   })
 
-  it('renders icon correctly', () => {
+  it('renders Geist sizes properly (sm, md, lg)', () => {
+    const sizes = ['sm', 'md', 'lg'] as const
+
+    for (const size of sizes) {
+      const wrapper = mount(Button, {
+        props: { size },
+        global: { stubs: { Icon: true, NuxtLink: true } },
+      })
+
+      expect(wrapper.classes()).toContain(`btn--${size}`)
+    }
+  })
+
+  it('synchronizes icon size according to button size constraint', () => {
+    // sm -> icon size sm
+    const wrapperSm = mount(Button, {
+      props: { size: 'sm', icon: 'plus' },
+      slots: { default: '追加' },
+      global: {
+        stubs: {
+          Icon: {
+            props: ['name', 'size'],
+            template: '<i :data-name="name" :data-size="size" class="stub-icon" />',
+          },
+          NuxtLink: true,
+        },
+      },
+    })
+
+    expect(wrapperSm.find('.stub-icon').attributes('data-size')).toBe('sm')
+
+    // lg -> icon size lg
+    const wrapperLg = mount(Button, {
+      props: { size: 'lg', icon: 'plus' },
+      slots: { default: '追加' },
+      global: {
+        stubs: {
+          Icon: {
+            props: ['name', 'size'],
+            template: '<i :data-name="name" :data-size="size" class="stub-icon" />',
+          },
+          NuxtLink: true,
+        },
+      },
+    })
+
+    expect(wrapperLg.find('.stub-icon').attributes('data-size')).toBe('lg')
+  })
+
+  it('renders prefix icon and suffixIcon correctly', () => {
     const wrapper = mount(Button, {
       props: {
         icon: 'plus',
+        suffixIcon: 'arrow-right',
       },
       slots: {
-        default: '追加',
+        default: '次へ進む',
       },
       global: {
         stubs: {
           Icon: {
-            props: ['name'],
+            props: ['name', 'size'],
             template: '<i :data-name="name" class="stub-icon" />',
           },
           NuxtLink: true,
@@ -58,10 +106,36 @@ describe('Button.vue', () => {
       },
     })
 
-    const icon = wrapper.find('.stub-icon')
+    const icons = wrapper.findAll('.stub-icon')
 
-    expect(icon.exists()).toBe(true)
-    expect(icon.attributes('data-name')).toBe('plus')
+    expect(icons).toHaveLength(2)
+    expect(icons[0].attributes('data-name')).toBe('plus')
+    expect(icons[1].attributes('data-name')).toBe('arrow-right')
+  })
+
+  it('sets btn--block when block prop is true', () => {
+    const wrapper = mount(Button, {
+      props: { block: true },
+      global: { stubs: { Icon: true, NuxtLink: true } },
+    })
+
+    expect(wrapper.classes()).toContain('btn--block')
+  })
+
+  it('sets btn--icon automatically when icon is provided without default slot', () => {
+    const wrapper = mount(Button, {
+      props: {
+        icon: 'menu',
+      },
+      global: {
+        stubs: {
+          Icon: true,
+          NuxtLink: true,
+        },
+      },
+    })
+
+    expect(wrapper.classes()).toContain('btn--icon')
   })
 
   it('handles loading state with spinner and disabled behavior', () => {
@@ -93,7 +167,7 @@ describe('Button.vue', () => {
     expect(spinner.attributes('data-name')).toBe('loader')
   })
 
-  it('renders as NuxtLink when to or href is provided, and falls back to button when disabled', () => {
+  it('renders as NuxtLink when to is provided, and falls back to button when disabled', () => {
     const wrapperLink = mount(Button, {
       props: {
         to: '/portal/dashboard',
@@ -129,64 +203,5 @@ describe('Button.vue', () => {
     expect(wrapperDisabledLink.find('button').exists()).toBe(true)
     expect(wrapperDisabledLink.attributes('disabled')).toBeDefined()
     expect(wrapperDisabledLink.attributes('type')).toBe('button')
-  })
-
-  it('sets btn--icon automatically when icon is provided without default slot', () => {
-    const wrapper = mount(Button, {
-      props: {
-        icon: 'menu',
-      },
-      global: {
-        stubs: {
-          Icon: true,
-          NuxtLink: true,
-        },
-      },
-    })
-
-    expect(wrapper.classes()).toContain('btn--icon')
-  })
-
-  it('renders title attribute correctly', () => {
-    const wrapper = mount(Button, {
-      props: {
-        icon: 'plus',
-        title: 'タスクを追加',
-      },
-      global: {
-        stubs: {
-          Icon: true,
-          NuxtLink: true,
-        },
-      },
-    })
-
-    expect(wrapper.attributes('title')).toBe('タスクを追加')
-  })
-
-  it('overlays loader spinner when loading is true', () => {
-    const wrapper = mount(Button, {
-      props: {
-        icon: 'save',
-        loading: true,
-      },
-      slots: {
-        default: '保存',
-      },
-      global: {
-        stubs: {
-          Icon: {
-            props: ['name'],
-            template: '<i :data-name="name" class="stub-icon" />',
-          },
-          NuxtLink: true,
-        },
-      },
-    })
-
-    const spinner = wrapper.find('.absolute .stub-icon')
-
-    expect(spinner.exists()).toBe(true)
-    expect(spinner.attributes('data-name')).toBe('loader')
   })
 })

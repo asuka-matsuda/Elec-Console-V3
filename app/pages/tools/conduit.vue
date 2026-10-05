@@ -75,10 +75,7 @@ const getCableSpec = formatConduitCableSpec
 
 <template>
   <div class="flex flex-1 flex-col gap-panel-gap min-h-0 w-full max-w-[1600px] mx-auto">
-    <Alert
-      variant="warning"
-      text="免責事項: 本ツールによる計算結果は、規程に基づいた理論値（目安）です。選定や安全性については、必ず設計者自身の責任において各種関連法規・規程をご確認の上ご判断ください。"
-    />
+    <Alert variant="warning" text="免責事項: 本ツールによる計算結果は、規程に基づいた理論値（目安）です。選定や安全性については、必ず設計者自身の責任において各種関連法規・規程をご確認の上ご判断ください。" />
 
     <div class="grid flex-1 grid-cols-1 md:grid-cols-[minmax(0,4fr)_minmax(0,3fr)] gap-panel-gap min-h-0">
       <section class="panel flex flex-1 flex-col gap-panel-gap min-h-0">
@@ -88,13 +85,7 @@ const getCableSpec = formatConduitCableSpec
             <span>条件入力</span>
           </h3>
           <div class="flex items-center gap-item-gap">
-            <Button
-              variant="danger"
-              icon="refresh-cw"
-              @click="openResetModal"
-            >
-              リセット
-            </Button>
+            <Button variant="secondary" size="sm" icon="refresh-cw" @click="openResetModal">入力をリセットする</Button>
           </div>
         </header>
         <hr class="divider">
@@ -103,96 +94,48 @@ const getCableSpec = formatConduitCableSpec
           <div class="grid grid-cols-1 sm:grid-cols-[2fr_1fr] gap-x-form-col-gap gap-y-form-row-gap">
             <div class="flex flex-col gap-inline-gap">
               <label for="conduit-category" class="label">対象の配管種類</label>
-              <Select
-                id="conduit-category"
-                v-model="inputs.conduitCategory"
-                :options="categoryOptions"
-                placeholder="選択してください"
-              />
+              <Select id="conduit-category" v-model="inputs.conduitCategory" :options="categoryOptions" placeholder="選択してください" />
             </div>
 
             <div class="flex flex-col gap-inline-gap">
               <label for="conduit-fill-rate" class="label">占積率</label>
               <div class="flex items-center gap-inline-gap w-full min-w-0">
-                <Input
-                  id="conduit-fill-rate"
-                  v-model.number="inputs.customFillRate"
-                  type="number"
-                  min="1"
-                  max="100"
-                  placeholder="80"
-                  class="flex-1 min-w-0"
-                />
+                <Input id="conduit-fill-rate" v-model.number="inputs.customFillRate" type="number" min="1" max="100" placeholder="80" class="flex-1 min-w-0" />
                 <span class="shrink-0 form-addon">%</span>
               </div>
             </div>
           </div>
 
           <section class="flex flex-col gap-item-gap">
-            <Button
-              class="self-end"
-              icon="plus"
-              @click="addCable"
-            >
-              ケーブルを追加
-            </Button>
+            <Button class="self-end" size="sm" icon="plus" @click="addCable">ケーブルを追加する</Button>
 
-            <Table
-              :columns="CONDUIT_CABLE_COLUMNS"
-              :data="inputs.inputCables"
-              class="w-full"
-            >
+            <Table :columns="CONDUIT_CABLE_COLUMNS" :data="inputs.inputCables" class="w-full">
               <template #cell-category="{ row }">
-                <Select
-                  v-model="row.category"
-                  :options="categories"
-                  placeholder="選択"
-                  @update:model-value="row.cableIdx = ''"
-                />
+                <Select v-model="row.category" :options="categories" placeholder="選択" @update:model-value="row.cableIdx = ''" />
               </template>
 
               <template #cell-cableIdx="{ row }">
-                <Select
-                  v-model="row.cableIdx"
-                  :options="getAvailableSizes(row.category)"
-                  placeholder="選択"
-                  :disabled="!row.category"
-                />
+                <Select v-model="row.cableIdx" :options="getAvailableSizes(row.category)" placeholder="選択" :disabled="!row.category" />
               </template>
 
               <template #cell-count="{ row }">
                 <div class="flex items-center gap-inline-gap">
-                  <Input
-                    v-model.number="row.count"
-                    type="number"
-                    min="1"
-                  />
+                  <Input v-model.number="row.count" type="number" min="1" />
                   <span class="shrink-0 table-addon">条</span>
                 </div>
               </template>
 
               <template #cell-spec="{ row }">
                 <div class="stacked-cell flex flex-col gap-0.5 items-end">
-                  <span class="main-text">
-                    {{ getCableSpec(row.cableIdx, row.count).text }}
-                  </span>
-                  <span
-                    v-if="getCableSpec(row.cableIdx, row.count).detail"
-                    class="sub-text"
-                  >
-                    {{ getCableSpec(row.cableIdx, row.count).detail }}
-                  </span>
+                  <span class="main-text">{{ getCableSpec(row.cableIdx, row.count).text }}</span>
+                  <span v-if="getCableSpec(row.cableIdx, row.count).detail" class="sub-text">{{ getCableSpec(row.cableIdx, row.count).detail }}</span>
                 </div>
               </template>
 
               <template #cell-actions="{ row }">
-                <Button
-                  variant="danger"
-                  icon="trash-2"
-                  :disabled="inputs.inputCables.length <= 1"
-                  title="削除"
-                  @click="removeCable(row.id)"
-                />
+                <Tooltip text="削除">
+                  <Button variant="danger" size="sm" icon="trash-2" :disabled="inputs.inputCables.length <= 1" @click="removeCable(row.id)" />
+                </Tooltip>
               </template>
             </Table>
           </section>
@@ -206,23 +149,8 @@ const getCableSpec = formatConduitCableSpec
             <span>{{ isShowingBasis ? '計算根拠' : '計算結果・選定結果' }}</span>
           </h3>
           <div class="flex items-center gap-item-gap">
-            <Button
-              v-if="mathSteps?.length"
-              :icon="isShowingBasis ? 'arrow-left' : 'circle-help'"
-              @click="isShowingBasis = !isShowingBasis"
-            >
-              {{ isShowingBasis ? '結果に戻る' : '計算根拠' }}
-            </Button>
-            <Button
-              v-if="!isShowingBasis"
-              :variant="saveState === 'error' ? 'danger' : 'success'"
-              :icon="saveState === 'saving' ? 'loader' : saveState === 'success' ? 'check' : saveState === 'error' ? 'circle-alert' : 'save'"
-              :disabled="isSaveDisabled || saveState !== 'idle'"
-              :loading="saveState === 'saving'"
-              @click="handleSave"
-            >
-              {{ saveState === 'saving' ? '保存中...' : saveState === 'success' ? '保存しました' : saveState === 'error' ? '保存に失敗しました' : '履歴に保存' }}
-            </Button>
+            <Button v-if="mathSteps?.length" variant="tertiary" size="sm" :icon="isShowingBasis ? 'arrow-left' : 'circle-help'" @click="isShowingBasis = !isShowingBasis">{{ isShowingBasis ? '計算結果に戻る' : '計算根拠を表示' }}</Button>
+            <Button v-if="!isShowingBasis" variant="primary" size="sm" icon="save" :disabled="isSaveDisabled || saveState !== 'idle'" :loading="saveState === 'saving'" @click="handleSave">履歴に保存する</Button>
           </div>
         </header>
         <hr class="divider">

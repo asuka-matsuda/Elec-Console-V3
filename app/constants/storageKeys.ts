@@ -32,4 +32,5 @@ export const STATE_KEYS = {
   OFFLINE_SYNC_LAST_SYNCED_AT: (siteId: string) => `offline-sync-last-synced-at-${siteId}`,
   IS_OFFLINE_SESSION: 'is-offline-session',
   SERVER_TIME_OFFSET: 'server_time_offset',
+  TOAST_LIST: 'toast-list',
 } as const
