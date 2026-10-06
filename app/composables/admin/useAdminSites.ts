@@ -25,32 +25,31 @@ export function useAdminSites() {
   const { $api } = useNuxtApp()
   const { getAccurateNowIso } = useAuth()
 
-  // 初期データの取得 (Local-First: IndexedDB即座読込 -> バックグラウンド同期)
+  // 初期データの取得 (手動・画面読込時に必ずサーバーから最新状態を取得)
   const fetchSites = async (force = false) => {
-    if (isLoaded.value && !force) {
-      return { sites: sites.value, siteSettings: siteSettings.value }
-    }
     if (isLoading.value) {
       return { sites: sites.value, siteSettings: siteSettings.value }
     }
 
     isLoading.value = true
 
-    // 1. IndexedDB から即座に読み込み
-    try {
-      const [localSites, localSettings] = await Promise.all([
-        SitesRepository.getAll(),
-        SiteSettingsRepository.getAll(),
-      ])
+    // 1. 初回のみ IndexedDB から即座に読み込み（ゼロレイテンシ初期描画）
+    if (!isLoaded.value && !force) {
+      try {
+        const [localSites, localSettings] = await Promise.all([
+          SitesRepository.getAll(),
+          SiteSettingsRepository.getAll(),
+        ])
 
-      if (localSites && localSites.length > 0) {
-        sites.value = localSites
-        siteSettings.value = localSettings || []
-        isLoaded.value = true
+        if (localSites && localSites.length > 0) {
+          sites.value = localSites
+          siteSettings.value = localSettings || []
+          isLoaded.value = true
+        }
       }
-    }
-    catch (err) {
-      console.warn('[useAdminSites] Failed to load sites from IndexedDB', err)
+      catch (err) {
+        console.warn('[useAdminSites] Failed to load sites from IndexedDB', err)
+      }
     }
 
     // 2. ネットワーク経由で最新データを同期
@@ -211,6 +210,7 @@ export function useAdminSites() {
     sites,
     siteSettings,
     isLoaded,
+    isLoading,
     fetchSites,
     createSite,
     updateSite,

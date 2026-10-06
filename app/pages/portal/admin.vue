@@ -41,7 +41,7 @@ const INITIAL_CREATE_SITE: CreateSiteFormState = {
   status: 'planning',
 }
 
-const { sites, isLoaded, fetchSites, createSite, toggleDisableSite, updateSite, deleteSite } = useAdminSites()
+const { sites, isLoaded, isLoading, fetchSites, createSite, toggleDisableSite, updateSite, deleteSite } = useAdminSites()
 const { users, fetchUsers } = useAdminUsers()
 const { askConfirm } = useModal()
 
@@ -170,9 +170,8 @@ watch(
 
 // --- ライフサイクル（Lifecycle） ---
 onMounted(async () => {
-  if (!isLoaded?.value) {
-    await fetchSites()
-  }
+  // 画面を開いたときは常に最新のサーバー状態を取得
+  await fetchSites(true)
 })
 
 // --- アクションハンドラ（Actions） ---
@@ -339,6 +338,7 @@ const confirmDeleteSite = async (site: Site) => {
           <span>現場プロジェクト</span>
         </h3>
         <div class="flex items-center gap-item-gap">
+          <Button variant="secondary" size="sm" icon="refresh-cw" :loading="isLoading" @click="fetchSites(true)">最新状態に更新</Button>
           <Button variant="secondary" size="sm" icon="plus" @click="openCreateModal">現場を新規作成する</Button>
         </div>
       </header>
@@ -504,8 +504,8 @@ const confirmDeleteSite = async (site: Site) => {
             <small>Web上で完了した最新の試験結果（Phase 1〜3）を反映したExcel帳票ファイルをダウンロードします（マクロ・書式を完全維持）。</small>
 
             <div class="flex flex-col gap-inline-gap">
-              <Button variant="secondary" icon="download" :loading="syncAction === 'download'" :disabled="isSyncing || !hasExcelPath" class="w-fit" @click="handleDownloadExcel">Excel帳票をダウンロードする</Button>
-              <small v-if="!hasExcelPath">※ 現場設定にExcel台帳ファイルが登録されていないため、ダウンロードできません</small>
+              <Button variant="primary" icon="download" :loading="syncAction === 'download'" :disabled="isSyncing" class="w-fit" @click="handleDownloadExcel">最新試験結果入りのExcel帳票をダウンロード</Button>
+              <small class="desc-text">※ 登録済みの台帳（マクロ・書式完全温存）または最新回路データをもとに即座に出力されます。</small>
             </div>
           </section>
 
