@@ -31,6 +31,7 @@ import strictMenuUsage from './eslint-rules/strict-menu-usage.mjs'
 import strictModalUsage from './eslint-rules/strict-modal-usage.mjs'
 import strictNoteUsage from './eslint-rules/strict-note-usage.mjs'
 import strictProgressUsage from './eslint-rules/strict-progress-usage.mjs'
+import strictRadioUsage from './eslint-rules/strict-radio-usage.mjs'
 import strictResponsiveTokens from './eslint-rules/strict-responsive-tokens.mjs'
 import strictSelectUsage from './eslint-rules/strict-select-usage.mjs'
 import strictSkeletonUsage from './eslint-rules/strict-skeleton-usage.mjs'
@@ -87,6 +88,7 @@ export default withNuxt(
           'strict-modal-usage': strictModalUsage,
           'strict-note-usage': strictNoteUsage,
           'strict-progress-usage': strictProgressUsage,
+          'strict-radio-usage': strictRadioUsage,
           'strict-responsive-tokens': strictResponsiveTokens,
           'strict-select-usage': strictSelectUsage,
           'strict-skeleton-usage': strictSkeletonUsage,
@@ -135,6 +137,7 @@ export default withNuxt(
       'local/strict-modal-usage': 'error',
       'local/strict-note-usage': 'error',
       'local/strict-progress-usage': 'error',
+      'local/strict-radio-usage': 'error',
       'local/strict-select-usage': 'error',
       'local/strict-skeleton-usage': 'error',
       'local/strict-spinner-usage': 'error',

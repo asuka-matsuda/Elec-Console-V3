@@ -407,10 +407,14 @@ onMounted(() => {
         <div class="flex flex-col gap-inline-gap">
           <span class="label">2. 出力対象（3パターン）</span>
           <div class="flex flex-wrap gap-panel-gap">
-            <label v-for="opt in remoteExportTargetOptions" :key="opt.value" class="radio-label flex items-center gap-inline-gap">
-              <input v-model="remoteExportTarget" type="radio" :value="opt.value" class="radio-input">
-              <span>{{ opt.label }}</span>
-            </label>
+            <Radio
+              v-for="opt in remoteExportTargetOptions"
+              :key="opt.value"
+              v-model="remoteExportTarget"
+              :value="opt.value"
+              :label="opt.label"
+              name="remote-export-target"
+            />
           </div>
         </div>
 
@@ -588,15 +592,5 @@ onMounted(() => {
 
 .guide-title {
   color: var(--theme-accent);
-}
-
-.radio-label {
-  font-size: var(--font-size-sm);
-
-  @include state-interactive;
-}
-
-.radio-input {
-  accent-color: var(--theme-accent);
 }
 </style>

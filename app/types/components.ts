@@ -217,6 +217,26 @@ export interface CheckboxProps {
   title?: string
 }
 
+// --- Radio (Geist準拠: フォーム単一選択ラジオボタン) ---
+export interface RadioProps<T = unknown> {
+  /** HTML id属性 */
+  id?: string
+  /** フォーム名属性 */
+  name?: string
+  /** ラジオボタンの値 */
+  value?: T
+  /** ラベルテキスト */
+  label?: string
+  /** 無効化フラグ */
+  disabled?: boolean
+  /** エラー状態フラグ */
+  error?: boolean
+  /** カスタムカラー指定 */
+  color?: string
+  /** ホバーツールチップテキスト */
+  title?: string
+}
+
 // --- Icon ---
 export type IconSize = 'sm' | 'md' | 'lg'
 export type IconVariant = 'primary' | 'secondary' | 'accent' | 'success' | 'warning' | 'danger' | 'muted'
