@@ -155,6 +155,29 @@ export interface BadgeProps {
   icon?: IconName
 }
 
+// --- Gauge (Geist準拠: 円形メーター・クォータ・健全性表示) ---
+export type GaugeSize = 'tiny' | 'sm' | 'md' | 'lg'
+export type GaugeVariant = 'default' | 'success' | 'warning' | 'danger'
+
+export interface GaugeProps {
+  /** 0〜100 の数値（または割合） */
+  value?: number
+  /** 最小値 (デフォルト: 0) */
+  min?: number
+  /** 最大値 (デフォルト: 100) */
+  max?: number
+  /** サイズ展開 (Geist準拠: 'tiny' = 24px, 'sm' = 48px, 'md' = 80px [デフォルト], 'lg' = 140px) */
+  size?: GaugeSize
+  /** 数値・パーセントラベルを表示するか (デフォルト: true、tiny時は自動非表示) */
+  showValue?: boolean
+  /** カラーバリアント (未指定時はカラースケール自動適用) */
+  variant?: GaugeVariant
+  /** カスタムカラー (CSS変数またはカラーコード) */
+  color?: string
+  /** 補助ラベル（中央下部またはコンポーネント下部に表示） */
+  label?: string
+}
+
 // --- Checkbox (Geist準拠) ---
 export interface CheckboxProps {
   /** HTML id属性 */

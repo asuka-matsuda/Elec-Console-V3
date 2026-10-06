@@ -24,6 +24,7 @@ import strictBreadcrumbsUsage from './eslint-rules/strict-breadcrumbs-usage.mjs'
 import strictButtonUsage from './eslint-rules/strict-button-usage.mjs'
 import strictCheckboxUsage from './eslint-rules/strict-checkbox-usage.mjs'
 import strictEmptyStateUsage from './eslint-rules/strict-empty-state-usage.mjs'
+import strictGaugeUsage from './eslint-rules/strict-gauge-usage.mjs'
 import strictIconUsage from './eslint-rules/strict-icon-usage.mjs'
 import strictInputUsage from './eslint-rules/strict-input-usage.mjs'
 import strictMenuUsage from './eslint-rules/strict-menu-usage.mjs'
@@ -76,6 +77,7 @@ export default withNuxt(
           'strict-button-usage': strictButtonUsage,
           'strict-checkbox-usage': strictCheckboxUsage,
           'strict-empty-state-usage': strictEmptyStateUsage,
+          'strict-gauge-usage': strictGaugeUsage,
           'strict-icon-usage': strictIconUsage,
           'strict-input-usage': strictInputUsage,
           'strict-menu-usage': strictMenuUsage,
@@ -99,6 +101,7 @@ export default withNuxt(
       'local/no-event-pass-through': 'error',
       'local/no-slot-forwarding': 'error',
       'local/strict-responsive-tokens': ['error', { allowMobileFirst: true }],
+      'local/strict-gauge-usage': 'error',
       'local/strict-icon-usage': 'error',
       'local/strict-button-usage': 'error',
       'local/no-tailwind-decoration': 'error',

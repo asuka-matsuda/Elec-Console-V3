@@ -56,6 +56,20 @@
      - 直角（`border-radius: 0`）で描画し、サイズは `size="sm"`（セル28px）および `size="md"`（セル36px・デフォルト）を指定します。
      - 期間絞り込みにはプリセット（`presets`）を活用し、共通レイアウト（`horizontal` / `stacked`）を指定してください。
      - ※支援アクセシビリティ属性（`aria-*`, `title` 等）はプロジェクト規約（`local/no-pure-accessibility`）により付与しません。
+   - **Gauge のベストプラクティス（Geist準拠・Atoms）**:
+     - **用途（When to use）**:
+       - 0〜100%（または比率）を固定の最大値に対して円形メーターとして可視化します。クォータ使用量、キャッシュヒット率、稼働率（Uptime）、消費率、ヘルスステータス等の**健全性・比率の表現**に使用します。
+       - タスク進捗（アップロード、複数ステップ設定などの「進行過程」）には `<Gauge>` ではなく `<Progress>`（プログレスバー）を使用してください。
+       - 2値・列挙型の動的状態告知には `<StatusDot>` または `<Badge>` を選択してください。
+       - 旧 `CircularGauge` や `PortalCircularGauge` 等のオレオレコンポーネントは廃止され、共通 `<Gauge>`（ESLint `local/strict-gauge-usage` により監視）に統一されています。
+     - **サイズ規約**:
+       - `size="tiny"` (24px・テキストなし), `size="sm"` (48px・数値のみ), `size="md"` (80px・デフォルト), `size="lg"` (140px) を指定します。
+     - **カラースケールとバリアント**:
+       - デフォルトは Geist 標準のカラースケール（`0-59%`: ブランドブルー `var(--theme-accent)`, `60-89%`: アンバー `var(--color-status-warning)`, `90-100%`: グリーン `var(--color-status-success)`）が自動適用されます。
+       - 特定のシグナルが必要な場合は `variant="default" | "success" | "warning" | "danger"` または `color` プロップで明示指定してください。
+     - **スタイル規約**:
+       - 直角がプロジェクト標準です。ラベルや外枠への安易な角丸クラス（`rounded-*`）の上書きは禁止です（ESLint `local/strict-gauge-usage` により監視）。
+       - ※支援アクセシビリティ属性（`role`, `aria-*` 等）はプロジェクト規約（`local/no-pure-accessibility`）により付与しません。
    - **Checkbox のベストプラクティス（Geist準拠・Atoms）**:
      - **用途（When to use）**: テーブル行ピッカー、複数フィルター、設定グループ等のマルチセレクト、および規約同意（Acknowledgment）に使用します。単一の真偽値 ON/OFF 設定（ダークモード、演出有効化等）には Checkbox ではなく Switch（Toggle）を使用してください。
      - **振る舞い（Behavior）**:
