@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const { buffer, count } = await generateCircuitsExcelBuffer(siteId, site.settings?.excelPath)
+    const { buffer, count, isXlsm } = await generateCircuitsExcelBuffer(siteId, site.settings?.excelPath)
 
     const workerName = `${user.lastName} ${user.firstName}`.trim() || user.loginId
 
@@ -53,9 +53,13 @@ export default defineEventHandler(async (event) => {
     })
 
     const safeSiteName = (site.name || 'site').replace(/[\\/:*?"<>|]/g, '_')
-    const filename = encodeURIComponent(`${safeSiteName}_回路試験結果.xlsx`)
+    const ext = isXlsm ? 'xlsm' : 'xlsx'
+    const filename = encodeURIComponent(`${safeSiteName}_回路試験結果.${ext}`)
+    const contentType = isXlsm
+      ? 'application/vnd.ms-excel.sheet.macroEnabled.12'
+      : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
-    setHeader(event, 'Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    setHeader(event, 'Content-Type', contentType)
     setHeader(event, 'Content-Disposition', `attachment; filename*=UTF-8''${filename}`)
 
     return buffer

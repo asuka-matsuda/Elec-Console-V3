@@ -36,10 +36,11 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
   const { site, getFilePath, onPersistPath } = options
 
   const selectedFile = ref<File | null>(null)
+  const templateFile = ref<File | null>(null)
   const showSyncMsg = ref(false)
   const syncMsg = ref('')
   const syncMsgType = ref<'success' | 'error' | 'info'>('info')
-  const syncAction = ref<'merge' | 'reset' | 'export' | 'download' | null>(null)
+  const syncAction = ref<'merge' | 'reset' | 'export' | 'download' | 'template' | null>(null)
   const isSyncing = computed(() => syncAction.value !== null)
 
   const syncResultData = ref<SyncResultInfo | null>(null)
@@ -47,6 +48,10 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
 
   const handleFileSelect = (file: File | null) => {
     selectedFile.value = file
+  }
+
+  const handleTemplateFileSelect = (file: File | null) => {
+    templateFile.value = file
   }
 
   const resolvePath = (): string => {
@@ -99,10 +104,15 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
         updatedCount: number
         keptCount?: number
         deletedCount?: number
+        filePath?: string
       }>(`/api/sites/${site.value.id}/circuits/import`, {
         method: 'POST',
         body,
       })
+
+      if (res.filePath && site.value) {
+        site.value.excelPath = res.filePath
+      }
 
       syncMsg.value = `差分同期完了: ${res.createdCount}件追加、${res.updatedCount}件更新（Web入力値は保護されました）`
       syncMsgType.value = 'success'
@@ -173,13 +183,17 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
         body = { filePath, mode: 'reset' }
       }
 
-      const res = await $api<{ success: boolean, count: number }>(
+      const res = await $api<{ success: boolean, count: number, filePath?: string }>(
         `/api/sites/${site.value.id}/circuits/import`,
         {
           method: 'POST',
           body,
         },
       )
+
+      if (res.filePath && site.value) {
+        site.value.excelPath = res.filePath
+      }
 
       syncMsg.value = `初期化取り込み完了: 全${res.count}件の回路情報を登録しました`
       syncMsgType.value = 'success'
@@ -298,8 +312,20 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
       const a = document.createElement('a')
       const safeName = (site.value.name || '現場').replace(/[\\/:*?"<>|]/g, '_')
 
+      // Content-Disposition からファイル名（拡張子）を取得
+      const disposition = response.headers.get('content-disposition') || ''
+      const filenameMatch = disposition.match(/filename\*=UTF-8''([^;]+)|filename="?([^";]+)"?/i)
+      let downloadFilename = ''
+      if (filenameMatch) {
+        downloadFilename = decodeURIComponent(filenameMatch[1] || filenameMatch[2] || '')
+      }
+      if (!downloadFilename) {
+        const isXlsm = site.value?.excelPath?.toLowerCase().endsWith('.xlsm')
+        downloadFilename = `${safeName}_回路試験結果.${isXlsm ? 'xlsm' : 'xlsx'}`
+      }
+
       a.href = url
-      a.download = `${safeName}_回路試験結果.xlsx`
+      a.download = downloadFilename
       document.body.appendChild(a)
       a.click()
       window.URL.revokeObjectURL(url)
@@ -324,8 +350,58 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
     }
   }
 
+  // 5. 帳票用Excelファイル（テンプレート）のみをサーバーに登録・差し替え
+  const handleUploadTemplate = async () => {
+    if (!site.value?.id || !templateFile.value) return
+
+    syncAction.value = 'template'
+    syncMsg.value = '帳票用Excelファイルをサーバーへ登録中...'
+    syncMsgType.value = 'info'
+    showSyncMsg.value = true
+
+    try {
+      const fd = new FormData()
+      fd.append('file', templateFile.value)
+
+      const res = await $api<{ success: boolean, filePath: string, filename: string, message: string }>(
+        `/api/sites/${site.value.id}/circuits/template`,
+        {
+          method: 'POST',
+          body: fd,
+        },
+      )
+
+      if (site.value) {
+        site.value.excelPath = res.filePath
+      }
+
+      syncMsg.value = res.message || 'Excelファイルを登録しました'
+      syncMsgType.value = 'success'
+      templateFile.value = null
+
+      if (onPersistPath) {
+        await onPersistPath(res.filePath)
+      }
+    }
+    catch (err: unknown) {
+      const appErr = parseToAppException(err)
+
+      syncMsg.value = appErr.getUserFacingMessage()
+      syncMsgType.value = 'error'
+    }
+    finally {
+      syncAction.value = null
+      setTimeout(() => {
+        if (syncMsgType.value === 'success') {
+          showSyncMsg.value = false
+        }
+      }, 5000)
+    }
+  }
+
   return {
     selectedFile,
+    templateFile,
     showSyncMsg,
     syncMsg,
     syncMsgType,
@@ -334,9 +410,11 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
     syncResultData,
     isResultDialogOpen,
     handleFileSelect,
+    handleTemplateFileSelect,
     handleMergeSync,
     handleResetImport,
     handleExport,
     handleDownloadExcel,
+    handleUploadTemplate,
   }
 }

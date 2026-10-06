@@ -6,6 +6,9 @@
  * @permission 現場アクセス権限
  */
 
+import fs from 'node:fs'
+import path from 'node:path'
+
 import { createError, defineEventHandler, getHeader, getRouterParam, readBody, readMultipartFormData } from 'h3'
 
 import { requireSiteAccess } from '../../../../utils/auth'
@@ -96,6 +99,29 @@ export default defineEventHandler(async (event) => {
       uploadedFile?.filename,
     )
 
+    // アップロードされたExcelファイルをサーバーのデータ領域に安全に保存し現場設定に紐付け
+    let effectiveFilePath = targetPath
+
+    if (uploadedFile) {
+      const storageDir = path.resolve(process.cwd(), '.data', 'templates', siteId)
+
+      await fs.promises.mkdir(storageDir, { recursive: true })
+
+      const rawExt = path.extname(uploadedFile.filename || '').toLowerCase()
+      const ext = rawExt === '.xlsm' ? '.xlsm' : '.xlsx'
+      const baseName = path.basename(uploadedFile.filename || '回路台帳', rawExt).replace(/[\\/:*?"<>|]/g, '_')
+
+      effectiveFilePath = path.join(storageDir, `${baseName}${ext}`)
+
+      await fs.promises.writeFile(effectiveFilePath, uploadedFile.data)
+
+      await prisma.siteSettings.upsert({
+        where: { siteId },
+        create: { siteId, excelPath: effectiveFilePath },
+        update: { excelPath: effectiveFilePath },
+      })
+    }
+
     return {
       success: true,
       count: result.count,
@@ -104,7 +130,7 @@ export default defineEventHandler(async (event) => {
       keptCount: result.keptCount ?? 0,
       deletedCount: result.deletedCount ?? 0,
       mode,
-      filePath: targetPath || (uploadedFile?.filename ?? 'アップロードファイル'),
+      filePath: effectiveFilePath || (uploadedFile?.filename ?? 'アップロードファイル'),
     }
   }
   catch (error: unknown) {
