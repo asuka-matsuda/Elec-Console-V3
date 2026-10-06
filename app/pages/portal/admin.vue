@@ -373,12 +373,7 @@ const confirmDeleteSite = async (site: Site) => {
         </header>
         <hr class="divider">
 
-        <nav class="tabs flex items-center gap-inline-gap overflow-x-auto">
-          <button v-for="item in SITE_SETTINGS_TABS" :key="item.value" type="button" class="tabs-item" :class="{ 'is-active': activeTab === item.value }" @click="activeTab = item.value">
-            <Icon v-if="item.icon" :name="item.icon" size="sm" />
-            <span>{{ item.label }}</span>
-          </button>
-        </nav>
+        <Tabs v-model="activeTab" :items="SITE_SETTINGS_TABS" />
 
         <!-- 基本情報タブ -->
         <form v-if="activeTab === 'basic'" class="flex flex-col gap-form-row-gap max-w-xl" @submit.prevent="handleSaveSite">

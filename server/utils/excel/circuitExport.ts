@@ -152,6 +152,7 @@ function colNumberToLetters(col: number): string {
 
   while (temp > 0) {
     const mod = (temp - 1) % 26
+
     letter = String.fromCharCode(65 + mod) + letter
     temp = Math.floor((temp - mod) / 26)
   }
@@ -544,10 +545,12 @@ export async function generateCircuitsExcelBuffer(
   // 3.5. 列定義 (<cols>) および既存データ行から列ごとのスタイル属性を収集（フォント化け・スタイル脱落を防止）
   const colDefStyleMap = new Map<string, string>()
   const colMatches = [...sheetXml.matchAll(/<col\s+min="([0-9]+)"\s+max="([0-9]+)"[^>]*?style="([0-9]+)"/g)]
+
   for (const m of colMatches) {
     const min = parseInt(m[1] || '0', 10)
     const max = parseInt(m[2] || '0', 10)
     const style = m[3] || ''
+
     for (let c = min; c <= max; c++) {
       colDefStyleMap.set(colNumberToLetters(c), style)
     }
@@ -560,10 +563,12 @@ export async function generateCircuitsExcelBuffer(
   for (const rMatch of rows.slice(headerRowNumber, headerRowNumber + 50)) {
     const rContent = rMatch[2] || ''
     const cells = [...rContent.matchAll(/<c\s+r="([A-Z]+)[0-9]+"[^>]*?s="([0-9]+)"([^>]*?)(?:>(.*?)<\/c>|\/>)/g)]
+
     for (const c of cells) {
       const col = c[1] || ''
       const styleId = c[2] || ''
       const inner = c[4] || ''
+
       if (!colExistingStyles.has(col)) {
         colExistingStyles.set(col, styleId)
       }
@@ -677,9 +682,11 @@ export async function generateCircuitsExcelBuffer(
     let rowStringStyle = ''
 
     const existingRowCells = [...rowInner.matchAll(/<c\s+r="([A-Z]+)[0-9]+"[^>]*?s="([0-9]+)"/g)]
+
     for (const match of existingRowCells) {
       const col = match[1] || ''
       const styleId = match[2] || ''
+
       if ((col === 'AK' || col === 'AQ' || col === 'AY') && !rowDateStyle) {
         rowDateStyle = styleId
       }
@@ -697,6 +704,7 @@ export async function generateCircuitsExcelBuffer(
 
       // 1. その列の既存セルで使われているスタイル
       const colExisting = colExistingStyles.get(colLetters)
+
       if (colExisting) return colExisting
 
       // 2. 行内に同系統のスタイルがあれば優先（行ごとのゼブラ背景色・折り返し設定と完全一致）
@@ -706,11 +714,13 @@ export async function generateCircuitsExcelBuffer(
 
       // 3. その列の <col> 定義スタイル
       const colDef = colDefStyleMap.get(colLetters)
+
       if (colDef) return colDef
 
       // 4. データ型ごとの代表スタイル
       if (type === 'date') return representativeDateStyle
       if (type === 'number') return representativeNumberStyle
+
       return representativeStringStyle
     }
 
@@ -747,8 +757,10 @@ export async function generateCircuitsExcelBuffer(
       // R相
       if (colMap.zetsuenR) {
         const style = resolveStyle(colMap.zetsuenR, 'number')
+
         if (c.p2RStatus === '良好') {
           const defVal = c.keiTo === '幹線' ? 500 : 100
+
           rowXml = updateCellInRowXml(rowXml, `${colMap.zetsuenR}${rowNumber}`, { type: 'number', value: defVal }, style)
         }
         else if (c.zetsuenR !== null && c.zetsuenR !== undefined) {
@@ -758,8 +770,10 @@ export async function generateCircuitsExcelBuffer(
       // S相
       if (colMap.zetsuenS) {
         const style = resolveStyle(colMap.zetsuenS, 'number')
+
         if (c.p2SStatus === '良好') {
           const defVal = c.keiTo === '幹線' ? 500 : 100
+
           rowXml = updateCellInRowXml(rowXml, `${colMap.zetsuenS}${rowNumber}`, { type: 'number', value: defVal }, style)
         }
         else if (c.zetsuenS !== null && c.zetsuenS !== undefined) {
@@ -769,8 +783,10 @@ export async function generateCircuitsExcelBuffer(
       // T相
       if (colMap.zetsuenT) {
         const style = resolveStyle(colMap.zetsuenT, 'number')
+
         if (c.p2TStatus === '良好') {
           const defVal = c.keiTo === '幹線' ? 500 : 100
+
           rowXml = updateCellInRowXml(rowXml, `${colMap.zetsuenT}${rowNumber}`, { type: 'number', value: defVal }, style)
         }
         else if (c.zetsuenT !== null && c.zetsuenT !== undefined) {

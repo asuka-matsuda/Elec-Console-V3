@@ -222,6 +222,23 @@
        - モーダルタイトルは簡潔な名詞句（Title Case: `新規現場登録`, `予定の編集` 等）とします。
        - アクションボタンはヘッダー（`#actions`）またはフッター（`#footer`）に配置し、画面の主目的に対して最大 1 つの Primary ボタン（または Danger ボタン）と、キャンセル用の Secondary ボタンを配置してください。
      - **スタイル規約**: 直角（`border-radius: 0`）がプロジェクト標準です。ダイアログ外枠（`.modal`）やウィンドウ（`.modal-window`）への安易な角丸クラス（`rounded-*`）の上書きは禁止です（ESLint `local/strict-modal-usage` により監視）。※支援アクセシビリティ属性（`role`, `aria-*` 等）はプロジェクト規約（`local/no-pure-accessibility`）により付与しません。
+   - **Tabs のベストプラクティス（Geist準拠・Molecules）**:
+     - **用途（When to use）**:
+       - 同一ページ・同一コンテキスト内でのビュー切替、カテゴリ分け、設定タブ、編成切り替えに使用します。
+       - ページ間遷移を伴う大規模ナビゲーションには Tabs ではなく `<GlobalNav>` や `<Breadcrumbs>` を使用してください。
+       - インラインでの `<nav class="tabs"><button class="tabs-item">` 手動ループ実装は禁止です（ESLint `local/strict-tabs-usage` により自動検知・共通 `<Tabs :items="..." v-model="..." />` への統一を強制）。
+     - **振る舞い（Behavior）**:
+       - `v-model`（`modelValue` / `update:modelValue`）による双方向バインディングで制御します。
+       - 各タブは `TabItem`（`label`, `value`, `icon?`, `badge?`, `disabled?`）で定義します。
+       - アイコンおよびバッジを自然に内包し、右側への補足カウント表示（件数等）をサポートします。
+       - 個別アイテムの `disabled: true` およびコンポーネント全体の `disabled: true` に対応し、無効化時は視覚的フィードバックとクリック無効化を行います。
+       - 同一の選択中タブが再クリックされた場合は不要なイベント（`update:modelValue` / `change`）を発火しません。
+     - **サイズ規約**:
+       - `size="sm"`, `size="md"` (デフォルト), `size="lg"` を指定します。パディングやフォントサイズはコンポーネント内部で完全拘束されます。
+     - **スタイル規約**:
+       - 直角（`border-radius: 0`）がプロジェクト標準です。タブ外枠やタブアイテムへの安易な角丸クラス（`rounded-*`）の上書きは禁止です（ESLint `local/strict-tabs-usage` により監視）。
+       - アクティブ状態は下線の光彩インジケーター（`var(--theme-accent)`）およびグラデーション背景で明示します。
+       - ※支援アクセシビリティ属性（`role`, `aria-*` 等）はプロジェクト規約（`local/no-pure-accessibility`）により付与しません。
    - **テンプレートの1行・コンパクト記法（不要な属性改行の禁止）**:
      - 単一要素（`<Button>`, `<Input>`, `<Select>`, `<Checkbox>`, `<Badge>`, `<Avatar>`, `<Icon>`, `<Tooltip>`, 短い `<label>` 等）は、属性ごとに縦に分解・改行せず、原則1行（インライン）で記述してください。
      - コードの一覧性とファイル全体の俯瞰性を高めるため、不要な縦方向の行数膨張を厳禁とします（※ `eslint.config.mjs` でも `vue/max-attributes-per-line` 等は明示的に `off` に設定されています）。

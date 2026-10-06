@@ -37,6 +37,7 @@ import strictStateManagement from './eslint-rules/strict-state-management.mjs'
 import strictStateMixins from './eslint-rules/strict-state-mixins.mjs'
 import strictSwitchUsage from './eslint-rules/strict-switch-usage.mjs'
 import strictTableUsage from './eslint-rules/strict-table-usage.mjs'
+import strictTabsUsage from './eslint-rules/strict-tabs-usage.mjs'
 import strictTextareaUsage from './eslint-rules/strict-textarea-usage.mjs'
 import strictTimeManagement from './eslint-rules/strict-time-management.mjs'
 import strictToastUsage from './eslint-rules/strict-toast-usage.mjs'
@@ -85,6 +86,7 @@ export default withNuxt(
           'strict-skeleton-usage': strictSkeletonUsage,
           'strict-switch-usage': strictSwitchUsage,
           'strict-table-usage': strictTableUsage,
+          'strict-tabs-usage': strictTabsUsage,
           'strict-textarea-usage': strictTextareaUsage,
           'strict-toast-usage': strictToastUsage,
           'strict-tooltip-usage': strictTooltipUsage,
@@ -127,6 +129,7 @@ export default withNuxt(
       'local/strict-skeleton-usage': 'error',
       'local/strict-switch-usage': 'error',
       'local/strict-table-usage': 'error',
+      'local/strict-tabs-usage': 'error',
       'local/strict-textarea-usage': 'error',
       'local/strict-toast-usage': 'error',
       'local/strict-tooltip-usage': 'error',

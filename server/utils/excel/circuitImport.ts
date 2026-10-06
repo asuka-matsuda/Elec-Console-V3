@@ -267,6 +267,7 @@ export async function importCircuitsFromExcel(
   const extractedExcludedKeywords = extractExcludedKeywordsFromWorkbook(workbook)
 
   const settingsUpdateData: Prisma.SiteSettingsUpdateInput = {}
+
   if (filePath) settingsUpdateData.excelPath = filePath
   if (extractedExcludedKeywords.length > 0) {
     settingsUpdateData.excludedCircuits = JSON.stringify(extractedExcludedKeywords)

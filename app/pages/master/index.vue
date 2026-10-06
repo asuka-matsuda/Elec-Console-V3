@@ -38,12 +38,7 @@ const MASTER_TABS: TabOption<'users' | 'announcements' | 'history'>[] = [
 
 <template>
   <div class="flex flex-col gap-section-gap">
-    <nav class="tabs flex items-center gap-inline-gap overflow-x-auto">
-      <button v-for="item in MASTER_TABS" :key="item.value" type="button" class="tabs-item" :class="{ 'is-active': activeTab === item.value }" @click="activeTab = item.value">
-        <Icon v-if="item.icon" :name="item.icon" size="sm" />
-        <span>{{ item.label }}</span>
-      </button>
-    </nav>
+    <Tabs v-model="activeTab" :items="MASTER_TABS" />
 
     <div class="flex flex-col gap-panel-gap">
       <PortalTabAdminUsers v-if="activeTab === 'users'" />

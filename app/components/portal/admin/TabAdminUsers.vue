@@ -367,12 +367,7 @@ const confirmResetPassword = async (row: User) => {
         </header>
         <hr class="divider">
 
-        <nav class="tabs flex items-center gap-inline-gap overflow-x-auto">
-          <button v-for="item in USER_SETTINGS_TABS" :key="item.value" type="button" class="tabs-item" :class="{ 'is-active': activeCategory === item.value }" @click="activeCategory = item.value">
-            <Icon v-if="item.icon" :name="item.icon" size="sm" />
-            <span>{{ item.label }}</span>
-          </button>
-        </nav>
+        <Tabs v-model="activeCategory" :items="USER_SETTINGS_TABS" />
 
         <!-- 基本情報タブ -->
         <div v-if="activeCategory === 'basic'" class="flex flex-col gap-form-row-gap max-w-xl">

@@ -47,9 +47,11 @@ const tabOptions: TabOption<ReportTab>[] = [
   { value: 'keys', label: 'テンプレートキー一覧', icon: 'key' },
 ]
 
-const switchTab = (tab: ReportTab) => {
-  currentTab.value = tab
-  router.replace({ query: { ...route.query, tab } })
+const switchTab = (tab: string | number) => {
+  const target = tab as ReportTab
+
+  currentTab.value = target
+  router.replace({ query: { ...route.query, tab: target } })
 }
 
 watch(
@@ -238,13 +240,7 @@ onMounted(() => {
       <hr class="divider">
     </header>
 
-    <!-- タブ切り替えバー -->
-    <nav class="tabs flex items-center gap-inline-gap overflow-x-auto shrink-0">
-      <button v-for="tab in tabOptions" :key="tab.value" type="button" class="tabs-item" :class="{ 'is-active': currentTab === tab.value }" @click="switchTab(tab.value)">
-        <Icon v-if="tab.icon" :name="tab.icon" size="sm" />
-        <span>{{ tab.label }}</span>
-      </button>
-    </nav>
+    <Tabs :model-value="currentTab" :items="tabOptions" @update:model-value="switchTab" />
 
     <!-- タブ1: タグ・線名札出力 -->
     <section v-if="currentTab === 'tag'" class="flex flex-col gap-panel-gap">

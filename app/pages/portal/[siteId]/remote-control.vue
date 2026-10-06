@@ -340,13 +340,7 @@ onMounted(() => {
 
         <Note v-if="saveMessage" :variant="saveMessage.type === 'success' ? 'success' : 'error'" :text="saveMessage.text" />
 
-        <nav class="tabs flex items-center gap-inline-gap overflow-x-auto">
-          <button v-for="tab in tabOptions" :key="tab.value" type="button" class="tabs-item" :class="{ 'is-active': currentTab === tab.value }" @click="currentTab = tab.value">
-            <Icon v-if="tab.icon" :name="tab.icon" size="sm" />
-            <span>{{ tab.label }}</span>
-            <Badge v-if="tab.badge !== undefined" size="sm">{{ tab.badge }}</Badge>
-          </button>
-        </nav>
+        <Tabs v-model="currentTab" :items="tabOptions" />
 
         <div v-if="currentTab === 'addresses'" class="flex flex-col gap-item-gap">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-item-gap">

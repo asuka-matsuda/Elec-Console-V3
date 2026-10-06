@@ -646,6 +646,21 @@ export interface CalendarProps {
   disabled?: boolean
 }
 
+// --- Tabs (Geist準拠: ビュー切替・ナビゲーション) ---
+export type TabItem<V = string | number> = TabOption<V>
+export type TabsSize = 'sm' | 'md' | 'lg'
+
+export interface TabsProps<V = string | number> {
+  /** タブ選択肢リスト */
+  items: TabItem<V>[]
+  /** 選択中タブの値（v-model） */
+  modelValue?: V
+  /** サイズ ('sm' | 'md' [デフォルト] | 'lg') */
+  size?: TabsSize
+  /** 全体無効化フラグ */
+  disabled?: boolean
+}
+
 // ============================================================================
 // 4. Organisms（構造化コンポーネント）
 // ============================================================================
