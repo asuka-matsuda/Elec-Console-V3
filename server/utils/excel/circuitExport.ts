@@ -40,8 +40,8 @@ export function applyCircuitToRow(
 ) {
   // Phase 1 書戻し
   if (c.p1ConfirmedAt && c.p1Kakunin && c.p1Mashishime) {
-    if (colMap.p1Worker !== undefined) {
-      setCellStringWithNewlines(row.getCell(colMap.p1Worker), c.p1Worker || '確認済')
+    if (colMap.p1Worker !== undefined && c.p1Worker) {
+      setCellStringWithNewlines(row.getCell(colMap.p1Worker), c.p1Worker)
     }
     if (colMap.p1ConfirmedAt !== undefined) {
       setCellDateTime(row.getCell(colMap.p1ConfirmedAt), c.p1ConfirmedAt)
@@ -360,7 +360,7 @@ async function generateFallbackCircuitsExcel(siteId: string): Promise<GeneratedE
       kairoKigou: c.kairoKigou,
       kairoBangou: c.kairoBangou,
       kairoMeisho: c.kairoMeisho,
-      p1Worker: c.p1Worker || (c.p1Kakunin && c.p1Mashishime ? '確認済' : ''),
+      p1Worker: c.p1Worker || '',
       p1ConfirmedAt: c.p1ConfirmedAt ? new Date(c.p1ConfirmedAt).toLocaleString('ja-JP') : '',
       p1Remarks: c.p1Remarks || '',
       zetsuenR: c.p2RStatus === '良好' ? '良好' : c.zetsuenR,
@@ -681,13 +681,11 @@ export async function generateCircuitsExcelBuffer(
     const c = targetCircuit
 
     // Phase 1 書戻し
-    if (colMap.p1Worker) {
-      if (c.p1ConfirmedAt && c.p1Kakunin && c.p1Mashishime) {
-        rowXml = updateCellInRowXml(rowXml, `${colMap.p1Worker}${rowNumber}`, {
-          type: 'string',
-          value: c.p1Worker || '確認済',
-        })
-      }
+    if (colMap.p1Worker && c.p1Worker) {
+      rowXml = updateCellInRowXml(rowXml, `${colMap.p1Worker}${rowNumber}`, {
+        type: 'string',
+        value: c.p1Worker,
+      })
     }
     if (colMap.p1ConfirmedAt) {
       if (c.p1ConfirmedAt && c.p1Kakunin && c.p1Mashishime) {
