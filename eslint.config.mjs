@@ -43,6 +43,7 @@ import strictTabsUsage from './eslint-rules/strict-tabs-usage.mjs'
 import strictTextareaUsage from './eslint-rules/strict-textarea-usage.mjs'
 import strictTimeManagement from './eslint-rules/strict-time-management.mjs'
 import strictToastUsage from './eslint-rules/strict-toast-usage.mjs'
+import strictToggleUsage from './eslint-rules/strict-toggle-usage.mjs'
 import strictTooltipUsage from './eslint-rules/strict-tooltip-usage.mjs'
 import strictUiStates from './eslint-rules/strict-ui-states.mjs'
 
@@ -93,6 +94,7 @@ export default withNuxt(
           'strict-tabs-usage': strictTabsUsage,
           'strict-textarea-usage': strictTextareaUsage,
           'strict-toast-usage': strictToastUsage,
+          'strict-toggle-usage': strictToggleUsage,
           'strict-tooltip-usage': strictTooltipUsage,
           'no-event-pass-through': noEventPassThrough,
           'no-slot-forwarding': noSlotForwarding,
@@ -138,6 +140,7 @@ export default withNuxt(
       'local/strict-tabs-usage': 'error',
       'local/strict-textarea-usage': 'error',
       'local/strict-toast-usage': 'error',
+      'local/strict-toggle-usage': 'error',
       'local/strict-tooltip-usage': 'error',
       // AI開発効率化のため無効化したルール
       'local/no-raw-html-elements': 'off',

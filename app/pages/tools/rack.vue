@@ -136,9 +136,9 @@ const handleRemoveCable = (id: string) => {
         <hr class="divider">
 
         <form class="flex flex-1 flex-col gap-form-row-gap min-h-0 overflow-y-auto" @submit.prevent>
-          <nav class="radio-group">
-            <button v-for="opt in rackModeOptions" :key="String(opt.value)" type="button" class="radio-group-item" :class="{ 'is-active': inputs.mode === opt.value }" @click="inputs.mode = opt.value">{{ opt.label }}</button>
-          </nav>
+          <div>
+            <Switch v-model="inputs.mode" :options="rackModeOptions" />
+          </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-form-col-gap">
             <div class="flex flex-col gap-inline-gap">

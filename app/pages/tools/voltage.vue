@@ -99,9 +99,9 @@ const handleSave = async () => {
         <hr class="divider">
 
         <form class="flex flex-1 flex-col gap-form-row-gap min-h-0 overflow-y-auto" @submit.prevent>
-          <nav class="radio-group">
-            <button v-for="opt in modeOptions" :key="String(opt.value)" type="button" class="radio-group-item" :class="{ 'is-active': form.mode === opt.value }" @click="form.mode = opt.value">{{ opt.label }}</button>
-          </nav>
+          <div>
+            <Switch v-model="form.mode" :options="modeOptions" />
+          </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-form-col-gap gap-y-form-row-gap">
             <template v-for="field in formFields" :key="field.id">

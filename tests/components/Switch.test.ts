@@ -3,117 +3,111 @@ import { describe, expect, it } from 'vitest'
 
 import Switch from '../../app/components/common/atoms/Switch.vue'
 
-describe('Switch', () => {
+describe('Switch (Segmented Switch)', () => {
+  const options = [
+    { label: '電圧降下', value: 'drop' },
+    { label: '導体断面積', value: 'size' },
+  ]
+
   it('renders correctly with default props', () => {
     const wrapper = mount(Switch, {
       props: {
-        modelValue: false,
-        label: '自動保存',
+        modelValue: 'drop',
+        options,
       },
     })
 
-    const input = wrapper.find('input[type="checkbox"]')
+    const buttons = wrapper.findAll('.switch-item')
 
-    expect(input.exists()).toBe(true)
-    expect((input.element as HTMLInputElement).checked).toBe(false)
+    expect(buttons.length).toBe(2)
+    expect(buttons[0].classes()).toContain('is-active')
+    expect(buttons[1].classes()).not.toContain('is-active')
+    expect(buttons[0].text()).toContain('電圧降下')
+    expect(buttons[1].text()).toContain('導体断面積')
     expect(wrapper.classes()).toContain('switch--md')
-    expect(wrapper.classes()).toContain('switch--default')
-    expect(wrapper.classes()).not.toContain('is-active')
-    expect(wrapper.text()).toContain('自動保存')
   })
 
-  it('updates modelValue and emits change when toggled', async () => {
+  it('updates modelValue and emits change on click', async () => {
     const wrapper = mount(Switch, {
       props: {
-        'modelValue': false,
-        'onUpdate:modelValue': (val: boolean) => wrapper.setProps({ modelValue: val }),
+        'modelValue': 'drop',
+        options,
+        'onUpdate:modelValue': (val: string | number) => wrapper.setProps({ modelValue: val }),
       },
     })
 
-    const input = wrapper.find('input[type="checkbox"]')
+    const buttons = wrapper.findAll('.switch-item')
 
-    await input.setValue(true)
+    await buttons[1].trigger('click')
 
     expect(wrapper.emitted('update:modelValue')).toBeTruthy()
-    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual([true])
+    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['size'])
     expect(wrapper.emitted('change')).toBeTruthy()
-    expect(wrapper.classes()).toContain('is-active')
+    expect(wrapper.emitted('change')?.[0]).toEqual(['size'])
   })
 
-  it('disables input when disabled prop is true', () => {
+  it('does not emit when clicking already selected option', async () => {
     const wrapper = mount(Switch, {
       props: {
-        modelValue: false,
+        modelValue: 'drop',
+        options,
+      },
+    })
+
+    const buttons = wrapper.findAll('.switch-item')
+
+    await buttons[0].trigger('click')
+
+    expect(wrapper.emitted('update:modelValue')).toBeFalsy()
+  })
+
+  it('does not emit when clicking disabled option', async () => {
+    const optionsWithDisabled = [
+      { label: '電圧降下', value: 'drop' },
+      { label: '導体断面積', value: 'size', disabled: true },
+    ]
+
+    const wrapper = mount(Switch, {
+      props: {
+        modelValue: 'drop',
+        options: optionsWithDisabled,
+      },
+    })
+
+    const buttons = wrapper.findAll('.switch-item')
+
+    await buttons[1].trigger('click')
+
+    expect(wrapper.emitted('update:modelValue')).toBeFalsy()
+  })
+
+  it('handles global disabled prop correctly', async () => {
+    const wrapper = mount(Switch, {
+      props: {
+        modelValue: 'drop',
+        options,
         disabled: true,
       },
     })
 
-    const input = wrapper.find('input[type="checkbox"]')
-
-    expect(input.attributes('disabled')).toBeDefined()
     expect(wrapper.classes()).toContain('is-disabled')
+
+    const buttons = wrapper.findAll('.switch-item')
+
+    await buttons[1].trigger('click')
+
+    expect(wrapper.emitted('update:modelValue')).toBeFalsy()
   })
 
-  it('disables input and shows loading spinner when loading prop is true', () => {
+  it('applies custom size class', () => {
     const wrapper = mount(Switch, {
       props: {
-        modelValue: true,
-        loading: true,
-      },
-    })
-
-    const input = wrapper.find('input[type="checkbox"]')
-
-    expect(input.attributes('disabled')).toBeDefined()
-    expect(wrapper.classes()).toContain('is-loading')
-    expect(wrapper.find('.switch-loader').exists()).toBe(true)
-  })
-
-  it('applies sizes and colors correctly', () => {
-    const wrapper = mount(Switch, {
-      props: {
-        modelValue: false,
+        modelValue: 'drop',
+        options,
         size: 'sm',
-        color: 'amber',
       },
     })
 
     expect(wrapper.classes()).toContain('switch--sm')
-    expect(wrapper.classes()).toContain('switch--amber')
-  })
-
-  it('renders description when provided', () => {
-    const wrapper = mount(Switch, {
-      props: {
-        modelValue: false,
-        label: '二要素認証',
-        description: 'ログイン時に認証アプリのワンタイムコードを要求します。',
-      },
-    })
-
-    expect(wrapper.find('.switch-label').text()).toBe('二要素認証')
-    expect(wrapper.find('.switch-description').text()).toBe('ログイン時に認証アプリのワンタイムコードを要求します。')
-  })
-
-  it('renders custom icons for checked and unchecked states', () => {
-    const wrapperOff = mount(Switch, {
-      props: {
-        modelValue: false,
-        iconChecked: 'check',
-        iconUnchecked: 'x',
-      },
-    })
-
-    expect(wrapperOff.findComponent({ name: 'Icon' }).props('name')).toBe('x')
-
-    const wrapperOn = mount(Switch, {
-      props: {
-        modelValue: true,
-        iconChecked: 'check',
-        iconUnchecked: 'x',
-      },
-    })
-
-    expect(wrapperOn.findComponent({ name: 'Icon' }).props('name')).toBe('check')
   })
 })

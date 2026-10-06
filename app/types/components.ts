@@ -390,11 +390,11 @@ export interface SkeletonProps {
   as?: SkeletonElement
 }
 
-// --- Switch ---
-export type SwitchSize = 'sm' | 'md' | 'lg'
-export type SwitchColor = 'default' | 'blue' | 'amber' | 'green' | 'red' | 'purple'
+// --- Toggle (Geist準拠: 単一機能の即時ON/OFF切り替えスライドスイッチ) ---
+export type ToggleSize = 'sm' | 'md' | 'lg'
+export type ToggleColor = 'default' | 'blue' | 'amber' | 'green' | 'red' | 'purple'
 
-export interface SwitchProps {
+export interface ToggleProps {
   /** HTML id属性（未指定時は自動生成） */
   id?: string
   /** フォーム名属性 */
@@ -404,9 +404,9 @@ export interface SwitchProps {
   /** 補足説明テキスト（Geist準拠: ON状態の機能を説明する1文） */
   description?: string
   /** サイズ（sm / md・デフォルト / lg） */
-  size?: SwitchSize
+  size?: ToggleSize
   /** カラーバリアント（Geist準拠） */
-  color?: SwitchColor
+  color?: ToggleColor
   /** 無効化フラグ */
   disabled?: boolean
   /** ローディング中フラグ */
@@ -417,6 +417,27 @@ export interface SwitchProps {
   iconUnchecked?: string
   /** ホバーツールチップテキスト */
   title?: string
+}
+
+// --- Switch (Geist準拠: 2〜3個の排他的なモード・ビュー切り替えセグメント) ---
+export type SwitchSize = 'sm' | 'md' | 'lg'
+
+export interface SwitchOption<T extends string | number = string | number> {
+  label: string
+  value: T
+  disabled?: boolean
+  icon?: IconName
+}
+
+export interface SwitchProps<T extends string | number = string | number> {
+  /** 選択肢オプション（2〜3項目推奨） */
+  options?: readonly SwitchOption<T>[] | SwitchOption<T>[]
+  /** 選択中の値 */
+  modelValue?: T
+  /** サイズ（sm / md・デフォルト / lg） */
+  size?: SwitchSize
+  /** 全体無効化フラグ */
+  disabled?: boolean
 }
 
 // --- Tooltip ---
