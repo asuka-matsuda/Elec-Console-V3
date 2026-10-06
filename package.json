@@ -14,7 +14,8 @@
     "test:e2e": "playwright test",
     "lint": "eslint . && npm run lint:style",
     "lint:style": "stylelint \"**/*.{vue,css,scss}\"",
-    "format": "eslint . --fix && stylelint \"**/*.{vue,css,scss}\" --fix"
+    "format": "eslint . --fix && stylelint \"**/*.{vue,css,scss}\" --fix",
+    "deploy": "node scripts/deploy-fast.mjs"
   },
   "dependencies": {
     "@fontsource/noto-sans-jp": "^5.3.0",
