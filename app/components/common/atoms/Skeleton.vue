@@ -141,12 +141,6 @@ const styleObject = computed(() => {
   }
 }
 
-:root[data-animation="off"] .skeleton,
-:root[data-animation="off"] .skeleton-overlay {
-  background-image: none;
-  animation: none;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .skeleton,
   .skeleton-overlay {

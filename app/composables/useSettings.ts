@@ -16,16 +16,7 @@ export function useSettings() {
     },
   )
 
-  const animationEnabled = useCookie<boolean>(
-    STORAGE_KEYS.ANIMATION_ENABLED,
-    {
-      default: () => true,
-      sameSite: 'lax',
-    },
-  )
-
   return {
     themeMode,
-    animationEnabled,
   }
 }

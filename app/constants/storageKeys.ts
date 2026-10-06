@@ -5,7 +5,6 @@
 
 export const STORAGE_KEYS = {
   THEME_MODE: 'elec_theme_mode',
-  ANIMATION_ENABLED: 'elec_animation_enabled',
   LAST_SITE_ID: 'last-accessed-site',
   TOOL_HISTORY: (toolId: string) => `elec_calc_${toolId}_hist`,
 } as const

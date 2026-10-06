@@ -20,7 +20,7 @@ useHead({ title: 'マイページ - Elec-Console' })
 
 const { currentUser } = useAuth()
 const { sites, fetchSites, isLoaded: isSitesLoaded } = useAdminSites()
-const { themeMode, animationEnabled } = useSettings()
+const { themeMode } = useSettings()
 const {
   currentPassword,
   newPassword,
@@ -188,10 +188,6 @@ const assignedSites = computed(() => {
         <label for="theme-mode" class="label">外観モード</label>
         <Select id="theme-mode" v-model="themeMode" :options="THEME_OPTIONS" />
         <span class="help-text">全体の明るさを切り替えます（ダークモード推奨）</span>
-      </div>
-
-      <div class="flex flex-col gap-inline-gap">
-        <Switch v-model="animationEnabled" label="パルス・モーション演出" description="サイバーパルス光彩やスケール演出を適用します" />
       </div>
     </section>
   </div>

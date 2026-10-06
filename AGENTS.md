@@ -122,7 +122,7 @@
       - 最終的なコンテンツの寸法（幅・高さ）と完全に一致させ、データ解決時のレイアウトシフト（CLS）を防止してください（寸法の差異はガタつき＝glitchと認識されます）。
       - **子要素ラッピング（Wrapping children）**: `<Skeleton :show="isLoading"><Component /></Skeleton>` のように子要素をラップして使用します。`show="true"`（デフォルト）時は子要素の寸法を維持したまま不可視化してシマーオーバーレイを描画し、`show="false"` 時にスムーズに本来の要素へ切り替えることでレイアウトシフトをゼロ化します。
       - **単体利用（Standalone）**: 子要素を持たずに `<Skeleton :width="160" :height="24" />` としても利用可能です（高さ未指定時はテキスト行に合わせた `1.2em` が適用されます）。
-      - **アニメーション制御（Animation）**: パルス・シマー波打ち演出を標準とし、静止が必要な場面や省電力では `animated="false"` で停止できます。OSの `prefers-reduced-motion` およびプロジェクトの `:root[data-animation="off"]` にも自動連動します。
+      - **アニメーション制御（Animation）**: パルス・シマー波打ち演出を標準とし、静止が必要な場面や省電力では `animated="false"` で停止できます。OSの `prefers-reduced-motion` にも自動連動します。
      - **スタイル規約**: 直角（`border-radius: 0`）がプロジェクト標準です。アバター等の円形要素のスケルトンには `circle` または `pill` を指定し、幾何学的真円（`border-radius: var(--radius-circle)`）で描画します（安易な角丸は禁止）。※支援アクセシビリティ属性（`aria-*`, `title` 等）はプロジェクト規約（`local/no-pure-accessibility`）により付与しません。
    - **Switch (Toggle) のベストプラクティス（Geist準拠・Atoms）**:
      - **用途（When to use）**: 単一の真偽値設定（ON が即座に反映される機能: 自動保存、ダークモード、演出有効化等）に使用します。複数項目の選択には `<Checkbox>`、2〜3項目の排他的なビュー切替にはセグメント（Tabs / Switch）を選択してください。
