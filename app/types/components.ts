@@ -390,6 +390,18 @@ export interface SkeletonProps {
   as?: SkeletonElement
 }
 
+// --- Spinner (Geist準拠: 12本放射状バーの不定ローディングインジケーター) ---
+export type SpinnerSize = 'sm' | 'md' | 'lg'
+
+export interface SpinnerProps {
+  /** サイズ ('sm' = 16px, 'md' = 24px [デフォルト], 'lg' = 32px, または数値px) */
+  size?: SpinnerSize | number
+  /** カラー（CSSカラーまたは変数、未指定時は currentColor） */
+  color?: string
+  /** 同伴ラベルテキスト（例: '読み込み中...', '保存中...'） */
+  label?: string
+}
+
 // --- Toggle (Geist準拠: 単一機能の即時ON/OFF切り替えスライドスイッチ) ---
 export type ToggleSize = 'sm' | 'md' | 'lg'
 export type ToggleColor = 'default' | 'blue' | 'amber' | 'green' | 'red' | 'purple'

@@ -35,6 +35,7 @@ import strictResponsiveTokens from './eslint-rules/strict-responsive-tokens.mjs'
 import strictSelectUsage from './eslint-rules/strict-select-usage.mjs'
 import strictSkeletonUsage from './eslint-rules/strict-skeleton-usage.mjs'
 import strictSpacingTokens from './eslint-rules/strict-spacing-tokens.mjs'
+import strictSpinnerUsage from './eslint-rules/strict-spinner-usage.mjs'
 import strictStateManagement from './eslint-rules/strict-state-management.mjs'
 import strictStateMixins from './eslint-rules/strict-state-mixins.mjs'
 import strictSwitchUsage from './eslint-rules/strict-switch-usage.mjs'
@@ -89,6 +90,7 @@ export default withNuxt(
           'strict-responsive-tokens': strictResponsiveTokens,
           'strict-select-usage': strictSelectUsage,
           'strict-skeleton-usage': strictSkeletonUsage,
+          'strict-spinner-usage': strictSpinnerUsage,
           'strict-switch-usage': strictSwitchUsage,
           'strict-table-usage': strictTableUsage,
           'strict-tabs-usage': strictTabsUsage,
@@ -135,6 +137,7 @@ export default withNuxt(
       'local/strict-progress-usage': 'error',
       'local/strict-select-usage': 'error',
       'local/strict-skeleton-usage': 'error',
+      'local/strict-spinner-usage': 'error',
       'local/strict-switch-usage': 'error',
       'local/strict-table-usage': 'error',
       'local/strict-tabs-usage': 'error',

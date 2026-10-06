@@ -149,11 +149,12 @@ describe('Button.vue', () => {
       },
       global: {
         stubs: {
-          Icon: {
-            props: ['name'],
-            template: '<i :data-name="name" class="stub-icon" />',
-          },
+          Icon: true,
           NuxtLink: true,
+          Spinner: {
+            props: ['size'],
+            template: '<span class="stub-spinner" :data-size="size" />',
+          },
         },
       },
     })
@@ -161,10 +162,10 @@ describe('Button.vue', () => {
     expect(wrapper.classes()).toContain('is-loading')
     expect(wrapper.attributes('disabled')).toBeDefined()
 
-    const spinner = wrapper.find('.absolute .stub-icon')
+    const spinner = wrapper.find('.stub-spinner')
 
     expect(spinner.exists()).toBe(true)
-    expect(spinner.attributes('data-name')).toBe('loader')
+    expect(spinner.attributes('data-size')).toBe('16')
   })
 
   it('renders as NuxtLink when to is provided, and falls back to button when disabled', () => {

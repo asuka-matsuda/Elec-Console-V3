@@ -32,6 +32,13 @@ const computedIconSize = computed(() => {
 
   return 'md'
 })
+
+const computedSpinnerSize = computed(() => {
+  if (size === 'sm') return 14
+  if (size === 'lg') return 20
+
+  return 16
+})
 </script>
 
 <template>
@@ -43,7 +50,7 @@ const computedIconSize = computed(() => {
     </span>
 
     <span v-if="loading" class="absolute inset-0 flex items-center justify-center">
-      <Icon name="loader" :size="computedIconSize" spin />
+      <Spinner :size="computedSpinnerSize" />
     </span>
   </component>
 </template>
