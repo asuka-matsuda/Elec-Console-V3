@@ -320,8 +320,9 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
         downloadFilename = decodeURIComponent(filenameMatch[1] || filenameMatch[2] || '')
       }
       if (!downloadFilename) {
+        const originalName = site.value?.excelPath?.split(/[\\/]/).pop()?.trim()
         const isXlsm = site.value?.excelPath?.toLowerCase().endsWith('.xlsm')
-        downloadFilename = `${safeName}_回路試験結果.${isXlsm ? 'xlsm' : 'xlsx'}`
+        downloadFilename = originalName || `${safeName}.${isXlsm ? 'xlsm' : 'xlsx'}`
       }
 
       a.href = url

@@ -6,6 +6,8 @@
  * @permission 現場アクセス権限
  */
 
+import path from 'node:path'
+
 import { createError, defineEventHandler, getRouterParam, setHeader } from 'h3'
 
 import { requireSiteAccess } from '../../../../utils/auth'
@@ -37,7 +39,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const { buffer, count, isXlsm } = await generateCircuitsExcelBuffer(siteId, site.settings?.excelPath)
+    const { buffer, count, isXlsm, originalFileName } = await generateCircuitsExcelBuffer(siteId, site.settings?.excelPath)
 
     const workerName = `${user.lastName} ${user.firstName}`.trim() || user.loginId
 
@@ -52,15 +54,17 @@ export default defineEventHandler(async (event) => {
       },
     })
 
-    const safeSiteName = (site.name || 'site').replace(/[\\/:*?"<>|]/g, '_')
-    const ext = isXlsm ? 'xlsm' : 'xlsx'
-    const filename = encodeURIComponent(`${safeSiteName}_回路試験結果.${ext}`)
+    const fallbackName = site.settings?.excelPath
+      ? path.basename(site.settings.excelPath)
+      : `${(site.name || '現場').replace(/[\\/:*?"<>|]/g, '_')}.${isXlsm ? 'xlsm' : 'xlsx'}`
+    const rawFilename = originalFileName || fallbackName
+    const encodedFilename = encodeURIComponent(rawFilename)
     const contentType = isXlsm
       ? 'application/vnd.ms-excel.sheet.macroEnabled.12'
       : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
     setHeader(event, 'Content-Type', contentType)
-    setHeader(event, 'Content-Disposition', `attachment; filename*=UTF-8''${filename}`)
+    setHeader(event, 'Content-Disposition', `attachment; filename*=UTF-8''${encodedFilename}`)
 
     return buffer
   }
