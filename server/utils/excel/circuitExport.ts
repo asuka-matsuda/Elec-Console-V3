@@ -145,6 +145,20 @@ function lettersToColNumber(letters: string): number {
   return col
 }
 
+// 列インデックスから列文字 (1-based, 1 -> "A", 26 -> "Z", 27 -> "AA")
+function colNumberToLetters(col: number): string {
+  let temp = col
+  let letter = ''
+
+  while (temp > 0) {
+    const mod = (temp - 1) % 26
+    letter = String.fromCharCode(65 + mod) + letter
+    temp = Math.floor((temp - mod) / 26)
+  }
+
+  return letter
+}
+
 // セルアドレス ("AJ4") から列名と行番号
 function parseCellAddress(addr: string): { colLetters: string, colNumber: number, rowNumber: number } | null {
   const m = addr.match(/^([A-Z]+)([0-9]+)$/)
@@ -187,9 +201,14 @@ type CellValuePayload
     | { type: 'date', value: Date | string | null | undefined }
 
 /**
- * 行XML文字列内の特定セルを更新または列順序を守って挿入（スタイル属性 s="..." は完全温存）
+ * 行XML文字列内の特定セルを更新または列順序を守って挿入（スタイル属性 s="..." は完全温存、未定義セルは列・型フォールバックを適用）
  */
-function updateCellInRowXml(rowXml: string, cellAddr: string, payload: CellValuePayload): string {
+function updateCellInRowXml(
+  rowXml: string,
+  cellAddr: string,
+  payload: CellValuePayload,
+  fallbackStyleId?: string,
+): string {
   const cellRegex = new RegExp(`<c r="${cellAddr}"([^>]*?)(?:>(.*?)</c>|/>)`)
   const m = rowXml.match(cellRegex)
 
@@ -202,6 +221,11 @@ function updateCellInRowXml(rowXml: string, cellAddr: string, payload: CellValue
     if (styleMatch) {
       styleAttr = ` s="${styleMatch[1]}"`
     }
+  }
+
+  // 元のセルにスタイルがない、またはセルが新規挿入される場合、必ずフォールバックStyle IDを適用（デフォルトＭＳゴシックへの化けを防止）
+  if (!styleAttr && fallbackStyleId) {
+    styleAttr = ` s="${fallbackStyleId}"`
   }
 
   let cellXml = ''
@@ -517,6 +541,56 @@ export async function generateCircuitsExcelBuffer(
     }
   }
 
+  // 3.5. 列定義 (<cols>) および既存データ行から列ごとのスタイル属性を収集（フォント化け・スタイル脱落を防止）
+  const colDefStyleMap = new Map<string, string>()
+  const colMatches = [...sheetXml.matchAll(/<col\s+min="([0-9]+)"\s+max="([0-9]+)"[^>]*?style="([0-9]+)"/g)]
+  for (const m of colMatches) {
+    const min = parseInt(m[1] || '0', 10)
+    const max = parseInt(m[2] || '0', 10)
+    const style = m[3] || ''
+    for (let c = min; c <= max; c++) {
+      colDefStyleMap.set(colNumberToLetters(c), style)
+    }
+  }
+
+  // 既存データ行（ヘッダー直後〜50行程度）から、各列で実際に使用されているセルスタイルを収集
+  const colExistingStyles = new Map<string, string>()
+  let representativeStringStyle = ''
+
+  for (const rMatch of rows.slice(headerRowNumber, headerRowNumber + 50)) {
+    const rContent = rMatch[2] || ''
+    const cells = [...rContent.matchAll(/<c\s+r="([A-Z]+)[0-9]+"[^>]*?s="([0-9]+)"([^>]*?)(?:>(.*?)<\/c>|\/>)/g)]
+    for (const c of cells) {
+      const col = c[1] || ''
+      const styleId = c[2] || ''
+      const inner = c[4] || ''
+      if (!colExistingStyles.has(col)) {
+        colExistingStyles.set(col, styleId)
+      }
+      if (!representativeStringStyle && styleId && (inner.includes('<is>') || c[3]?.includes('t="s"'))) {
+        representativeStringStyle = styleId
+      }
+    }
+  }
+
+  // 日時列（AK, AQ, AY 等）の代表スタイル
+  const representativeDateStyle = colExistingStyles.get(colMap.p1ConfirmedAt || '')
+    || colExistingStyles.get(colMap.p2ConfirmedAt || '')
+    || colExistingStyles.get(colMap.p3ConfirmedAt || '')
+    || colExistingStyles.get('AK')
+    || '33'
+
+  // 数値測定列（AS, AT, AU 等）の代表スタイル
+  const representativeNumberStyle = colExistingStyles.get(colMap.denatsuRs || '')
+    || colExistingStyles.get(colMap.zetsuenR || '')
+    || colExistingStyles.get('AS')
+    || '5'
+
+  // 文字列列の代表スタイル
+  if (!representativeStringStyle) {
+    representativeStringStyle = colDefStyleMap.get('AJ') || colDefStyleMap.get('F') || colExistingStyles.get('F') || '1'
+  }
+
   // 4. DB から現場回路を取得
   const circuits = await prisma.circuit.findMany({
     where: { siteId },
@@ -597,106 +671,196 @@ export async function generateCircuitsExcelBuffer(
     let rowXml = fullRowXml
     const c = targetCircuit
 
+    // 行内にすでに存在するセルから、その行のスタイル傾向（ゼブラ等の行スタイル）を抽出
+    let rowDateStyle = ''
+    let rowNumberStyle = ''
+    let rowStringStyle = ''
+
+    const existingRowCells = [...rowInner.matchAll(/<c\s+r="([A-Z]+)[0-9]+"[^>]*?s="([0-9]+)"/g)]
+    for (const match of existingRowCells) {
+      const col = match[1] || ''
+      const styleId = match[2] || ''
+      if ((col === 'AK' || col === 'AQ' || col === 'AY') && !rowDateStyle) {
+        rowDateStyle = styleId
+      }
+      else if ((col === 'AS' || col === 'AT' || col === 'AU' || col === 'AV' || col === 'AX' || col === 'AZ') && !rowNumberStyle) {
+        rowNumberStyle = styleId
+      }
+      else if (!rowStringStyle && col !== 'AK' && col !== 'AQ' && col !== 'AY') {
+        rowStringStyle = styleId
+      }
+    }
+
+    // 列記号および型に応じた適切なフォールバックStyle IDを解決（フォント化けを完全防止）
+    const resolveStyle = (colLetters: string | undefined, type: 'string' | 'number' | 'date'): string => {
+      if (!colLetters) return rowStringStyle || representativeStringStyle
+
+      // 1. その列の既存セルで使われているスタイル
+      const colExisting = colExistingStyles.get(colLetters)
+      if (colExisting) return colExisting
+
+      // 2. 行内に同系統のスタイルがあれば優先（行ごとのゼブラ背景色・折り返し設定と完全一致）
+      if (type === 'date' && rowDateStyle) return rowDateStyle
+      if (type === 'number' && rowNumberStyle) return rowNumberStyle
+      if (type === 'string' && rowStringStyle) return rowStringStyle
+
+      // 3. その列の <col> 定義スタイル
+      const colDef = colDefStyleMap.get(colLetters)
+      if (colDef) return colDef
+
+      // 4. データ型ごとの代表スタイル
+      if (type === 'date') return representativeDateStyle
+      if (type === 'number') return representativeNumberStyle
+      return representativeStringStyle
+    }
+
     // Phase 1 書戻し
     if (colMap.p1Worker && c.p1Worker) {
-      rowXml = updateCellInRowXml(rowXml, `${colMap.p1Worker}${rowNumber}`, {
-        type: 'string',
-        value: c.p1Worker,
-      })
+      rowXml = updateCellInRowXml(
+        rowXml,
+        `${colMap.p1Worker}${rowNumber}`,
+        { type: 'string', value: c.p1Worker },
+        resolveStyle(colMap.p1Worker, 'string'),
+      )
     }
     if (colMap.p1ConfirmedAt) {
       if (c.p1ConfirmedAt && c.p1Kakunin && c.p1Mashishime) {
-        rowXml = updateCellInRowXml(rowXml, `${colMap.p1ConfirmedAt}${rowNumber}`, {
-          type: 'date',
-          value: c.p1ConfirmedAt,
-        })
+        rowXml = updateCellInRowXml(
+          rowXml,
+          `${colMap.p1ConfirmedAt}${rowNumber}`,
+          { type: 'date', value: c.p1ConfirmedAt },
+          resolveStyle(colMap.p1ConfirmedAt, 'date'),
+        )
       }
     }
     if (colMap.p1Remarks && c.p1Remarks) {
-      rowXml = updateCellInRowXml(rowXml, `${colMap.p1Remarks}${rowNumber}`, {
-        type: 'string',
-        value: c.p1Remarks,
-      })
+      rowXml = updateCellInRowXml(
+        rowXml,
+        `${colMap.p1Remarks}${rowNumber}`,
+        { type: 'string', value: c.p1Remarks },
+        resolveStyle(colMap.p1Remarks, 'string'),
+      )
     }
 
     // Phase 2 書戻し
     if (c.p2ConfirmedAt || c.p2IsComplete) {
       // R相
       if (colMap.zetsuenR) {
+        const style = resolveStyle(colMap.zetsuenR, 'number')
         if (c.p2RStatus === '良好') {
           const defVal = c.keiTo === '幹線' ? 500 : 100
-
-          rowXml = updateCellInRowXml(rowXml, `${colMap.zetsuenR}${rowNumber}`, { type: 'number', value: defVal })
+          rowXml = updateCellInRowXml(rowXml, `${colMap.zetsuenR}${rowNumber}`, { type: 'number', value: defVal }, style)
         }
         else if (c.zetsuenR !== null && c.zetsuenR !== undefined) {
-          rowXml = updateCellInRowXml(rowXml, `${colMap.zetsuenR}${rowNumber}`, { type: 'number', value: c.zetsuenR })
+          rowXml = updateCellInRowXml(rowXml, `${colMap.zetsuenR}${rowNumber}`, { type: 'number', value: c.zetsuenR }, style)
         }
       }
       // S相
       if (colMap.zetsuenS) {
+        const style = resolveStyle(colMap.zetsuenS, 'number')
         if (c.p2SStatus === '良好') {
           const defVal = c.keiTo === '幹線' ? 500 : 100
-
-          rowXml = updateCellInRowXml(rowXml, `${colMap.zetsuenS}${rowNumber}`, { type: 'number', value: defVal })
+          rowXml = updateCellInRowXml(rowXml, `${colMap.zetsuenS}${rowNumber}`, { type: 'number', value: defVal }, style)
         }
         else if (c.zetsuenS !== null && c.zetsuenS !== undefined) {
-          rowXml = updateCellInRowXml(rowXml, `${colMap.zetsuenS}${rowNumber}`, { type: 'number', value: c.zetsuenS })
+          rowXml = updateCellInRowXml(rowXml, `${colMap.zetsuenS}${rowNumber}`, { type: 'number', value: c.zetsuenS }, style)
         }
       }
       // T相
       if (colMap.zetsuenT) {
+        const style = resolveStyle(colMap.zetsuenT, 'number')
         if (c.p2TStatus === '良好') {
           const defVal = c.keiTo === '幹線' ? 500 : 100
-
-          rowXml = updateCellInRowXml(rowXml, `${colMap.zetsuenT}${rowNumber}`, { type: 'number', value: defVal })
+          rowXml = updateCellInRowXml(rowXml, `${colMap.zetsuenT}${rowNumber}`, { type: 'number', value: defVal }, style)
         }
         else if (c.zetsuenT !== null && c.zetsuenT !== undefined) {
-          rowXml = updateCellInRowXml(rowXml, `${colMap.zetsuenT}${rowNumber}`, { type: 'number', value: c.zetsuenT })
+          rowXml = updateCellInRowXml(rowXml, `${colMap.zetsuenT}${rowNumber}`, { type: 'number', value: c.zetsuenT }, style)
         }
       }
 
       if (colMap.p2Worker && c.p2Worker) {
-        rowXml = updateCellInRowXml(rowXml, `${colMap.p2Worker}${rowNumber}`, {
-          type: 'string',
-          value: c.p2Worker,
-        })
+        rowXml = updateCellInRowXml(
+          rowXml,
+          `${colMap.p2Worker}${rowNumber}`,
+          { type: 'string', value: c.p2Worker },
+          resolveStyle(colMap.p2Worker, 'string'),
+        )
       }
       if (colMap.p2ConfirmedAt && c.p2ConfirmedAt) {
-        rowXml = updateCellInRowXml(rowXml, `${colMap.p2ConfirmedAt}${rowNumber}`, {
-          type: 'date',
-          value: c.p2ConfirmedAt,
-        })
+        rowXml = updateCellInRowXml(
+          rowXml,
+          `${colMap.p2ConfirmedAt}${rowNumber}`,
+          { type: 'date', value: c.p2ConfirmedAt },
+          resolveStyle(colMap.p2ConfirmedAt, 'date'),
+        )
       }
       if (colMap.p2Remarks && c.p2Remarks) {
-        rowXml = updateCellInRowXml(rowXml, `${colMap.p2Remarks}${rowNumber}`, {
-          type: 'string',
-          value: c.p2Remarks,
-        })
+        rowXml = updateCellInRowXml(
+          rowXml,
+          `${colMap.p2Remarks}${rowNumber}`,
+          { type: 'string', value: c.p2Remarks },
+          resolveStyle(colMap.p2Remarks, 'string'),
+        )
       }
     }
 
     // Phase 3 書戻し
     if (c.p3ConfirmedAt) {
       if (colMap.denatsuRs && c.denatsuRs !== null && c.denatsuRs !== undefined) {
-        rowXml = updateCellInRowXml(rowXml, `${colMap.denatsuRs}${rowNumber}`, { type: 'number', value: c.denatsuRs })
+        rowXml = updateCellInRowXml(
+          rowXml,
+          `${colMap.denatsuRs}${rowNumber}`,
+          { type: 'number', value: c.denatsuRs },
+          resolveStyle(colMap.denatsuRs, 'number'),
+        )
       }
       if (colMap.denatsuSt && c.denatsuSt !== null && c.denatsuSt !== undefined) {
-        rowXml = updateCellInRowXml(rowXml, `${colMap.denatsuSt}${rowNumber}`, { type: 'number', value: c.denatsuSt })
+        rowXml = updateCellInRowXml(
+          rowXml,
+          `${colMap.denatsuSt}${rowNumber}`,
+          { type: 'number', value: c.denatsuSt },
+          resolveStyle(colMap.denatsuSt, 'number'),
+        )
       }
       if (colMap.denatsuRt && c.denatsuRt !== null && c.denatsuRt !== undefined) {
-        rowXml = updateCellInRowXml(rowXml, `${colMap.denatsuRt}${rowNumber}`, { type: 'number', value: c.denatsuRt })
+        rowXml = updateCellInRowXml(
+          rowXml,
+          `${colMap.denatsuRt}${rowNumber}`,
+          { type: 'number', value: c.denatsuRt },
+          resolveStyle(colMap.denatsuRt, 'number'),
+        )
       }
       if (colMap.kensou && c.kensou) {
-        rowXml = updateCellInRowXml(rowXml, `${colMap.kensou}${rowNumber}`, { type: 'string', value: c.kensou })
+        rowXml = updateCellInRowXml(
+          rowXml,
+          `${colMap.kensou}${rowNumber}`,
+          { type: 'string', value: c.kensou },
+          resolveStyle(colMap.kensou, 'string'),
+        )
       }
       if (colMap.p3Worker && c.p3Worker) {
-        rowXml = updateCellInRowXml(rowXml, `${colMap.p3Worker}${rowNumber}`, { type: 'string', value: c.p3Worker })
+        rowXml = updateCellInRowXml(
+          rowXml,
+          `${colMap.p3Worker}${rowNumber}`,
+          { type: 'string', value: c.p3Worker },
+          resolveStyle(colMap.p3Worker, 'string'),
+        )
       }
       if (colMap.p3ConfirmedAt) {
-        rowXml = updateCellInRowXml(rowXml, `${colMap.p3ConfirmedAt}${rowNumber}`, { type: 'date', value: c.p3ConfirmedAt })
+        rowXml = updateCellInRowXml(
+          rowXml,
+          `${colMap.p3ConfirmedAt}${rowNumber}`,
+          { type: 'date', value: c.p3ConfirmedAt },
+          resolveStyle(colMap.p3ConfirmedAt, 'date'),
+        )
       }
       if (colMap.p3Remarks && c.p3Remarks) {
-        rowXml = updateCellInRowXml(rowXml, `${colMap.p3Remarks}${rowNumber}`, { type: 'string', value: c.p3Remarks })
+        rowXml = updateCellInRowXml(
+          rowXml,
+          `${colMap.p3Remarks}${rowNumber}`,
+          { type: 'string', value: c.p3Remarks },
+          resolveStyle(colMap.p3Remarks, 'string'),
+        )
       }
     }
 
