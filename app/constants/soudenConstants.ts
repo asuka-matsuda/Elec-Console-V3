@@ -16,6 +16,7 @@ export const PHASE1_TABLE_COLUMNS: TableColumn<CircuitItem>[] = [
   { key: 'banMeisho', label: '盤情報', width: '150px' },
   { key: 'kairoBangou', label: '回路番号', align: 'center', width: '90px' },
   { key: 'kairoMeisho', label: '回路名称' },
+  { key: 'shadankiShubetsu', label: '遮断機種別', align: 'center', width: '110px' },
   { key: 'cableList', label: '配線 / 接地', width: '150px' },
   { key: 'p1Kakunin', label: 'サイズ確認 / 増締', align: 'center', width: '150px' },
   { key: 'p1Remarks', label: '備考' },

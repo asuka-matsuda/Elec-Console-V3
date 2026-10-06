@@ -230,6 +230,11 @@ onMounted(() => {
         <span class="circuit-meisho block" :title="circuit.kairoMeisho || ''">{{ circuit.kairoMeisho || '-' }}</span>
       </template>
 
+      <template #cell-shadankiShubetsu="{ row: circuit }">
+        <span v-if="circuit.shadankiShubetsu" class="cell-shadanki">{{ circuit.shadankiShubetsu }}</span>
+        <span v-else class="cell-dash">-</span>
+      </template>
+
       <template #cell-p1ConfirmedAt="{ row: circuit }">
         <div v-if="circuit.p1Worker" class="flex flex-col items-center gap-0.5">
           <span class="cell-worker">{{ circuit.p1Worker }}</span>
@@ -347,6 +352,13 @@ onMounted(() => {
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-main);
+}
+
+.cell-shadanki {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-main);
+  white-space: nowrap;
 }
 
 .cell-jousuu {
