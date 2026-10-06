@@ -108,8 +108,18 @@ const resolveToolInfo = (toolId?: string) => {
       </div>
     </div>
 
-    <div v-if="pending" class="flex justify-center empty-wrapper">
-      <EmptyState icon="clock" spin title="更新履歴を読み込み中..." />
+    <div v-if="pending" class="flex flex-col gap-panel-gap">
+      <div v-for="skeletonIndex in 3" :key="`changelog-skeleton-${skeletonIndex}`" class="panel flex flex-col gap-item-gap">
+        <div class="flex items-center justify-between gap-item-gap">
+          <div class="flex items-center gap-item-gap">
+            <Skeleton width="4rem" height="1.2rem" />
+            <Skeleton width="6rem" height="1.2rem" />
+          </div>
+          <Skeleton width="5rem" height="1rem" />
+        </div>
+        <Skeleton width="60%" height="1.4rem" />
+        <Skeleton width="90%" height="1rem" />
+      </div>
     </div>
 
     <div v-else-if="filteredHistory.length > 0" class="flex flex-col gap-panel-gap">
@@ -136,7 +146,7 @@ const resolveToolInfo = (toolId?: string) => {
       </div>
     </div>
 
-    <EmptyState v-else icon="clock" title="該当する更新履歴はありません" description="選択されたツールの履歴はまだ登録されていません。" />
+    <EmptyState v-else icon="clock" variant="no-results" title="該当する更新履歴はありません" description="選択されたツールの履歴はまだ登録されていません。" />
   </div>
 </template>
 
@@ -145,10 +155,6 @@ const resolveToolInfo = (toolId?: string) => {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-secondary);
-}
-
-.empty-wrapper {
-  padding: var(--space-layout-pad) 0;
 }
 
 .history-header {

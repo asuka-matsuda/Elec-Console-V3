@@ -65,7 +65,7 @@ const columns: TableColumn<AnnouncementItem>[] = [
     <Table :columns="columns" :data="announcements" :loading="pending" empty-text="登録されているお知らせはありません。">
       <template #cell-actions="{ row }">
         <div class="flex items-center justify-end">
-          <DropdownMenu :items="[{ label: '編集', icon: 'edit', action: () => openModal(row) }, { label: '削除', icon: 'trash-2', variant: 'danger', action: () => handleDelete(row) }]" />
+          <Menu :items="[{ label: 'お知らせを編集…', icon: 'edit', action: () => openModal(row) }, { label: 'お知らせを削除', icon: 'trash-2', variant: 'danger', divider: true, action: () => handleDelete(row) }]" />
         </div>
       </template>
     </Table>
@@ -77,7 +77,7 @@ const columns: TableColumn<AnnouncementItem>[] = [
       </template>
 
       <form class="flex flex-col gap-form-row-gap" @submit.prevent="handleSave">
-        <Alert v-if="formError" variant="danger">{{ formError }}</Alert>
+        <Note v-if="formError" variant="error">{{ formError }}</Note>
 
         <div class="flex flex-col gap-inline-gap">
           <label for="announcement-date" class="label">日付 <span class="req-mark">＊</span></label>
@@ -97,7 +97,7 @@ const columns: TableColumn<AnnouncementItem>[] = [
 
         <div class="flex flex-col gap-inline-gap">
           <label for="announcement-desc" class="label">詳細本文</label>
-          <Textarea id="announcement-desc" v-model="form.desc" :rows="5" placeholder="詳細な説明や補足を入力してください（モーダルで表示されます）" />
+          <Textarea id="announcement-desc" v-model="form.desc" :rows="5" trim placeholder="例: 来週月曜日に定期メンテナンスを実施します。" />
         </div>
       </form>
     </Modal>

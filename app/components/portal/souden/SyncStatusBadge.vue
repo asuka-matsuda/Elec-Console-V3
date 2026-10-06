@@ -22,59 +22,12 @@ const isModalOpen = ref(false)
 
 <template>
   <div class="inline-flex items-center">
+    <Button v-if="hasPending" variant="warning" size="sm" :icon="isSyncing ? 'refresh-cw' : 'zap'" suffix-icon="upload" :loading="isSyncing" @click="isModalOpen = true">
+      未同期 {{ pendingCount }}件 同期実行
+    </Button>
 
-    <button v-if="hasPending" type="button" class="inline-flex items-center gap-inline-gap px-item-gap py-inline-gap sync-btn" :disabled="isSyncing" @click="isModalOpen = true">
-      <Icon :name="isSyncing ? 'refresh-cw' : 'zap'" size="sm" :spin="isSyncing" />
-      <span>未同期 {{ pendingCount }}件</span>
-      <span class="inline-flex items-center gap-inline-gap pl-inline-gap sync-action">
-        同期実行
-        <Icon name="upload" size="sm" />
-      </span>
-    </button>
-
-    <div v-else class="inline-flex items-center gap-inline-gap px-item-gap py-inline-gap sync-status">
-      <span class="sync-dot" />
-      <span>同期済</span>
-    </div>
+    <Badge v-else variant="green" size="sm">同期済</Badge>
 
     <PortalModalSyncQueue v-if="isModalOpen" v-model="isModalOpen" :site-id="siteId" />
   </div>
 </template>
-
-<style scoped lang="scss">
-.sync-btn {
-  border: 1px solid var(--color-status-warning);
-
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-status-warning);
-
-  background: color-mix(in srgb, var(--color-status-warning) 12%, var(--surface-bg-elevated));
-
-  transition: var(--transition-interactive);
-
-  @include state-interactive;
-  @include state-disabled;
-}
-
-.sync-btn:hover:not(:disabled) {
-  border-color: color-mix(in srgb, var(--color-status-warning) 80%, white);
-  background: color-mix(in srgb, var(--color-status-warning) 20%, var(--surface-bg-elevated));
-}
-
-.sync-action {
-  border-left: 1px solid color-mix(in srgb, var(--color-status-warning) 30%, transparent);
-}
-
-.sync-status {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-}
-
-.sync-dot {
-  width: 0.375rem;
-  height: 0.375rem;
-  border-radius: var(--radius-circle);
-  background: var(--color-status-success);
-}
-</style>

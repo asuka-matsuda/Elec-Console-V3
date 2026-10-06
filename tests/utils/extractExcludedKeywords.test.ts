@@ -1,10 +1,12 @@
-import { describe, expect, it } from 'vitest'
 import ExcelJS from 'exceljs'
+import { describe, expect, it } from 'vitest'
+
 import { extractExcludedKeywordsFromWorkbook } from '../../server/utils/excel/circuitImport'
 
 describe('extractExcludedKeywordsFromWorkbook', () => {
   it('returns empty array when Setting sheet does not exist', () => {
     const wb = new ExcelJS.Workbook()
+
     wb.addWorksheet('Sheet1')
     expect(extractExcludedKeywordsFromWorkbook(wb)).toEqual([])
   })
@@ -21,6 +23,7 @@ describe('extractExcludedKeywordsFromWorkbook', () => {
 
     // テーブル模擬
     const wsAny = ws as unknown as { tables: Record<string, unknown> }
+
     wsAny.tables = {
       除外ﾘｽﾄ: {
         name: '除外ﾘｽﾄ',
@@ -29,6 +32,7 @@ describe('extractExcludedKeywordsFromWorkbook', () => {
     }
 
     const result = extractExcludedKeywordsFromWorkbook(wb)
+
     expect(result).toEqual(['予備', '制御電源', '別途'])
   })
 
@@ -42,6 +46,7 @@ describe('extractExcludedKeywordsFromWorkbook', () => {
     ws.getCell('B6').value = '' // 空白でストップ
 
     const result = extractExcludedKeywordsFromWorkbook(wb)
+
     expect(result).toEqual(['気化式加湿器', '空冷外気処理ｴｱｺﾝ'])
   })
 
@@ -54,6 +59,7 @@ describe('extractExcludedKeywordsFromWorkbook', () => {
     ws.getCell('A3').value = '自動倉庫1-2'
 
     const wsAny = ws as unknown as { tables: Record<string, unknown> }
+
     wsAny.tables = {
       除外リスト: {
         name: '除外リスト',
@@ -62,6 +68,7 @@ describe('extractExcludedKeywordsFromWorkbook', () => {
     }
 
     const result = extractExcludedKeywordsFromWorkbook(wb)
+
     expect(result).toEqual(['自動倉庫1-1', '自動倉庫1-2'])
   })
 })

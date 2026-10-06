@@ -53,4 +53,23 @@ describe('useToast', () => {
     expect(toasts.value[0].message).toBe('通知 3')
     expect(toasts.value[4].message).toBe('通知 7')
   })
+
+  it('supports default method and action/preserve options', () => {
+    const { toasts, default: defaultToast, success } = useToast()
+    const onAction = () => {}
+
+    defaultToast('デフォルトメッセージ')
+    success('アクション付き', {
+      preserve: true,
+      action: {
+        label: '元に戻す',
+        onClick: onAction,
+      },
+    })
+
+    expect(toasts.value).toHaveLength(2)
+    expect(toasts.value[0].type).toBe('default')
+    expect(toasts.value[1].preserve).toBe(true)
+    expect(toasts.value[1].action?.label).toBe('元に戻す')
+  })
 })

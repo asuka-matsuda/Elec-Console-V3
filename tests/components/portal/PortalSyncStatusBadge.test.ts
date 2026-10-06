@@ -35,8 +35,8 @@ describe('PortalSyncStatusBadge.vue', () => {
     })
 
     expect(wrapper.text()).toContain('同期済')
-    expect(wrapper.find('.sync-dot').exists()).toBe(true)
-    expect(wrapper.find('button.sync-btn').exists()).toBe(false)
+    expect(wrapper.findComponent({ name: 'Badge' }).exists()).toBe(true)
+    expect(wrapper.findComponent({ name: 'Button' }).exists()).toBe(false)
     expect(wrapper.findComponent({ name: 'PortalModalSyncQueue' }).exists()).toBe(false)
   })
 
@@ -60,12 +60,15 @@ describe('PortalSyncStatusBadge.vue', () => {
 
     expect(wrapper.text()).toContain('未同期 3件')
     expect(wrapper.text()).toContain('同期実行')
-    expect(wrapper.find('button.sync-btn').attributes('disabled')).toBeUndefined()
+    const button = wrapper.findComponent({ name: 'Button' })
+
+    expect(button.exists()).toBe(true)
+    expect(button.props('disabled')).toBe(false)
     // 平時はモーダルがマウントされていない（引き算・遅延マウントの検証）
     expect(wrapper.find('.sync-modal-stub').exists()).toBe(false)
 
     // クリックでモーダルがマウントされる
-    await wrapper.find('button.sync-btn').trigger('click')
+    await button.trigger('click')
     expect(wrapper.find('.sync-modal-stub').exists()).toBe(true)
   })
 
@@ -78,23 +81,15 @@ describe('PortalSyncStatusBadge.vue', () => {
       props: { siteId: 'site-001' },
       global: {
         stubs: {
-          Icon: {
-            name: 'Icon',
-            template: '<i :class="[$attrs.class, spin ? \'u-spin\' : \'\']" :data-name="name" />',
-            props: ['name', 'spin'],
-          },
           PortalModalSyncQueue: true,
         },
       },
     })
 
-    const button = wrapper.find('button.sync-btn')
+    const button = wrapper.findComponent({ name: 'Button' })
 
-    expect(button.attributes('disabled')).toBeDefined()
-
-    const icon = wrapper.find('i')
-
-    expect(icon.attributes('data-name')).toBe('refresh-cw')
-    expect(icon.classes()).toContain('u-spin')
+    expect(button.exists()).toBe(true)
+    expect(button.props('loading')).toBe(true)
+    expect(button.props('icon')).toBe('refresh-cw')
   })
 })

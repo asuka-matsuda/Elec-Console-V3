@@ -17,6 +17,7 @@ describe('Textarea.vue', () => {
     expect((textarea.element as HTMLTextAreaElement).value).toBe('テストテキスト')
     expect(textarea.attributes('rows')).toBe('4')
     expect(textarea.classes()).toContain('resize-y')
+    expect(textarea.classes()).toContain('textarea--md')
   })
 
   it('updates modelValue on input event', async () => {
@@ -52,6 +53,42 @@ describe('Textarea.vue', () => {
     expect(textarea.attributes('placeholder')).toBe('特記事項を入力...')
     expect(textarea.attributes('disabled')).toBeDefined()
     expect(textarea.classes()).toContain('is-error')
+  })
+
+  it('applies error class when string error message is passed', () => {
+    const wrapper = mount(Textarea, {
+      props: {
+        error: '入力値が不正です。',
+      },
+    })
+
+    expect(wrapper.find('textarea').classes()).toContain('is-error')
+  })
+
+  it('applies size classes correctly', () => {
+    const wrapperSm = mount(Textarea, { props: { size: 'sm' } })
+
+    expect(wrapperSm.find('textarea').classes()).toContain('textarea--sm')
+
+    const wrapperLg = mount(Textarea, { props: { size: 'lg' } })
+
+    expect(wrapperLg.find('textarea').classes()).toContain('textarea--lg')
+  })
+
+  it('trims whitespace on blur when trim prop is true', async () => {
+    const wrapper = mount(Textarea, {
+      props: {
+        'modelValue': '   余分な空白   ',
+        'trim': true,
+        'onUpdate:modelValue': (val: string | null) => wrapper.setProps({ modelValue: val }),
+      },
+    })
+
+    const textarea = wrapper.find('textarea')
+
+    await textarea.trigger('blur')
+
+    expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['余分な空白'])
   })
 
   it('applies resize class based on resize prop', () => {

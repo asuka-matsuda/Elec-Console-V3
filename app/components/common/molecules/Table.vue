@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T = Record<string, unknown>">
 /**
- * Table
+ * Table (Geist準拠)
  * [Molecules] カラム定義とデータ配列を受け取り表示する汎用データテーブルコンポーネント。
  * - ブラウザネイティブの table-layout による高速描画
  * - <colgroup> による高効率な列幅一元管理
@@ -8,6 +8,8 @@
  * - ソートのオプトイン方式（sortable: true のみ有効）
  * - 双方向ソートモデル（v-model:sortBy, v-model:sortOrder）
  * - ヘッダー（header-${col.key}）およびセル（cell-${col.key}）のスロット透過
+ * - 直角（border-radius: 0）サイバーサーフェス
+ * - 支援アクセシビリティ属性（aria-*, role）はプロジェクト規約により除外
  */
 import type { TableColumn, TableProps, TableSortOrder } from '~/types/components'
 import { getTableCellValue, getTableRowKey } from '~/utils/table'
@@ -125,7 +127,7 @@ const getCellDisplayValue = (row: T, col: TableColumn<T>): unknown => {
         <tr>
           <td :colspan="columns.length" class="empty-cell text-center">
             <slot name="empty">
-              <EmptyState icon="database" :title="emptyText" />
+              <EmptyState icon="database" size="sm" :title="emptyText" />
             </slot>
           </td>
         </tr>
@@ -137,6 +139,7 @@ const getCellDisplayValue = (row: T, col: TableColumn<T>): unknown => {
 <style scoped lang="scss">
 .table-wrapper {
   border: var(--border-width-base) solid var(--color-border);
+  border-radius: 0;
   background-color: var(--surface-bg);
   backdrop-filter: blur(var(--blur-sm));
 
@@ -158,7 +161,7 @@ th {
   color: var(--color-text-secondary);
   white-space: nowrap;
 
-  background-color: var(--color-bg-hover);
+  background-color: var(--surface-bg-elevated);
   backdrop-filter: blur(var(--blur-md));
 
   &:last-child {
@@ -287,8 +290,8 @@ td.col-actions {
 
 @keyframes row-pulse-highlight {
   0% {
-    outline-color: var(--color-status-success, #22c55e);
-    box-shadow: inset 0 0 0 2px var(--color-status-success, #22c55e), 0 0 14px rgb(34 197 94 / 45%);
+    outline-color: var(--color-status-success);
+    box-shadow: inset 0 0 0 2px var(--color-status-success), 0 0 14px color-mix(in srgb, var(--color-status-success) 45%, transparent);
   }
 
   50% {

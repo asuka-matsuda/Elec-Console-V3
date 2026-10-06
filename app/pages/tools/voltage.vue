@@ -83,7 +83,7 @@ const handleSave = async () => {
 
 <template>
   <div class="flex flex-1 flex-col gap-panel-gap min-h-0 w-full max-w-[1600px] mx-auto">
-    <Alert variant="warning" text="免責事項: 本ツールによる計算結果は、規程に基づいた理論値（目安）です。選定や安全性については、必ず設計者自身の責任において各種関連法規・規程をご確認の上ご判断ください。" />
+    <Note variant="warning" text="免責事項: 本ツールによる計算結果は、規程に基づいた理論値（目安）です。選定や安全性については、必ず設計者自身の責任において各種関連法規・規程をご確認の上ご判断ください。" />
 
     <div class="grid flex-1 grid-cols-1 md:grid-cols-[minmax(0,4fr)_minmax(0,3fr)] gap-panel-gap min-h-0">
       <section class="panel flex flex-1 flex-col gap-panel-gap min-h-0">
@@ -121,10 +121,7 @@ const handleSave = async () => {
                     </div>
                   </div>
 
-                  <div v-else-if="field.type === 'input-addon'" class="flex items-center gap-inline-gap w-full min-w-0">
-                    <Input :id="`voltage-field-${field.id}`" v-model.number="form[field.id]" type="number" :placeholder="field.placeholder" :min="field.min" :error="meta.touched && !!errorMessage" class="flex-1 min-w-0" @blur="handleBlur" />
-                    <span v-if="field.addonText" class="shrink-0 form-addon">{{ field.addonText }}</span>
-                  </div>
+                  <Input v-else-if="field.type === 'input-addon'" :id="`voltage-field-${field.id}`" v-model.number="form[field.id]" type="number" :placeholder="field.placeholder" :min="field.min" :suffix="field.addonText" :error="meta.touched && !!errorMessage" @blur="handleBlur" />
 
                   <p v-if="meta.touched && errorMessage" class="error-text">
                     {{ errorMessage }}
@@ -159,13 +156,6 @@ const handleSave = async () => {
 </template>
 
 <style scoped lang="scss">
-.form-addon {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
-  white-space: nowrap;
-}
-
 .error-text {
   margin: 0;
   font-size: var(--font-size-xs);

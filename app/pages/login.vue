@@ -69,7 +69,7 @@ const handleLogin = async () => {
     <hr class="divider">
 
     <form class="flex flex-col gap-form-row-gap" @submit.prevent="handleLogin">
-      <Alert v-if="errorMessage" variant="danger">{{ errorMessage }}</Alert>
+      <Note v-if="errorMessage" variant="error">{{ errorMessage }}</Note>
 
       <template v-for="field in LOGIN_FORM_FIELDS" :key="field.id">
         <div class="flex flex-col gap-inline-gap">

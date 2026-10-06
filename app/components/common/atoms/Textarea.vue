@@ -1,7 +1,8 @@
 <script setup lang="ts">
 /**
  * Textarea
- * 複数行テキスト入力コンポーネント。
+ * Geist デザインシステム準拠の複数行テキスト入力コンポーネント。
+ * コミットメッセージ、説明文、備考等の長文入力に使用します。
  */
 import { computed, ref, useId } from 'vue'
 
@@ -12,9 +13,11 @@ const model = defineModel<string | null>()
 const {
   id,
   name,
+  size = 'md',
   rows = 4,
   resize = 'vertical',
   autoResize = false,
+  trim = false,
   placeholder,
   disabled = false,
   readonly = false,
@@ -34,6 +37,8 @@ const textareaId = computed(() => id || defaultId)
 
 const textareaRef = ref<HTMLTextAreaElement | null>(null)
 
+const isError = computed(() => Boolean(error))
+
 const resizeClass = computed(() => {
   if (autoResize) {
     return 'resize-none'
@@ -52,6 +57,22 @@ const resizeClass = computed(() => {
   }
 })
 
+const handleBlur = (event: FocusEvent) => {
+  if (trim && typeof model.value === 'string') {
+    model.value = model.value.trim()
+  }
+
+  emit('blur', event)
+}
+
+const handleChange = (event: Event) => {
+  if (trim && typeof model.value === 'string') {
+    model.value = model.value.trim()
+  }
+
+  emit('change', event)
+}
+
 defineExpose({
   /** textarea 要素へのフォーカス */
   focus: (options?: FocusOptions) => textareaRef.value?.focus(options),
@@ -65,7 +86,7 @@ defineExpose({
 </script>
 
 <template>
-  <textarea :id="textareaId" ref="textareaRef" v-model="model" :name="name" :rows="rows" :placeholder="placeholder" :disabled="disabled" :readonly="readonly" :maxlength="maxlength" :title="title" class="form-control relative z-[1] focus:z-[2] w-full" :class="[{ 'is-error': error, 'is-auto-resize': autoResize }, resizeClass]" @blur="emit('blur', $event)" @focus="emit('focus', $event)" @change="emit('change', $event)" />
+  <textarea :id="textareaId" ref="textareaRef" v-model="model" :name="name" :rows="rows" :placeholder="placeholder" :disabled="disabled" :readonly="readonly" :maxlength="maxlength" :title="title" class="form-control relative z-[1] focus:z-[2] w-full" :class="[`textarea--${size}`, { 'is-error': isError, 'is-auto-resize': autoResize }, resizeClass]" @blur="handleBlur" @focus="emit('focus', $event)" @change="handleChange" />
 </template>
 
 <style scoped lang="scss">
@@ -76,12 +97,10 @@ defineExpose({
 
   resize: vertical;
 
-  min-height: calc(var(--control-height-ratio) * 2em);
-  padding-block: 0.5em;
-  padding-inline: 1.2em;
   border: var(--border-width-base) solid var(--color-border);
+  border-radius: 0;
 
-  font-size: inherit;
+  font-family: inherit;
   font-variant-numeric: tabular-nums;
   line-height: var(--line-height-base);
   color: var(--color-text-main);
@@ -90,6 +109,28 @@ defineExpose({
   box-shadow: var(--shadow-sink);
 
   transition: var(--transition-interactive);
+
+  // --- Sizes ---
+  &.textarea--sm {
+    min-height: calc(var(--control-height-ratio) * 2.8em);
+    padding-block: 0.35em;
+    padding-inline: 0.8em;
+    font-size: var(--font-size-xs);
+  }
+
+  &.textarea--md {
+    min-height: calc(var(--control-height-ratio) * 3.5em);
+    padding-block: 0.5em;
+    padding-inline: 1em;
+    font-size: var(--font-size-sm);
+  }
+
+  &.textarea--lg {
+    min-height: calc(var(--control-height-ratio) * 4.2em);
+    padding-block: 0.65em;
+    padding-inline: 1.2em;
+    font-size: var(--font-size-base);
+  }
 
   &.is-error {
     --glow-color: var(--color-status-danger);

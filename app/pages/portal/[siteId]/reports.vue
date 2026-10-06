@@ -166,7 +166,7 @@ const remoteDownloadButtonLabel = computed(() => {
 
 // --- 4. テンプレートキー一覧用状態 ---
 const searchQuery = ref('')
-const { success: toastSuccess } = useToast()
+const toast = useToast()
 
 const allAvailableKeys = computed<DynamicTagField[]>(() => {
   const list: DynamicTagField[] = [
@@ -208,7 +208,7 @@ const keyColumns: TableColumn<DynamicTagField>[] = [
 const copyKey = async (tag: string) => {
   try {
     await navigator.clipboard.writeText(tag)
-    toastSuccess(`「${tag}」をコピーしました`)
+    toast.success(`「${tag}」をコピーしました`)
   }
   catch (err) {
     console.warn('Clipboard copy failed', err)
@@ -248,8 +248,8 @@ onMounted(() => {
 
     <!-- タブ1: タグ・線名札出力 -->
     <section v-if="currentTab === 'tag'" class="flex flex-col gap-panel-gap">
-      <Alert v-if="tagDataError" variant="danger" :text="tagDataError" />
-      <Alert v-if="tagMessage" :variant="tagMessage.type === 'error' ? 'danger' : 'success'" :text="tagMessage.text" />
+      <Note v-if="tagDataError" variant="error" :text="tagDataError" />
+      <Note v-if="tagMessage" :variant="tagMessage.type === 'error' ? 'error' : 'success'" :text="tagMessage.text" />
 
       <form class="panel flex flex-col gap-panel-gap max-w-4xl" @submit.prevent="generateTagReport">
         <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
@@ -300,8 +300,8 @@ onMounted(() => {
 
     <!-- タブ2: 送電試験結果出力 -->
     <section v-if="currentTab === 'exam'" class="flex flex-col gap-panel-gap">
-      <Alert v-if="examCircuitsError" variant="danger" :text="examCircuitsError" />
-      <Alert v-if="examMessage" :variant="examMessage.type === 'error' ? 'danger' : 'success'" :text="examMessage.text" />
+      <Note v-if="examCircuitsError" variant="error" :text="examCircuitsError" />
+      <Note v-if="examMessage" :variant="examMessage.type === 'error' ? 'error' : 'success'" :text="examMessage.text" />
 
       <form class="panel flex flex-col gap-panel-gap max-w-4xl" @submit.prevent="handleExamGenerate">
         <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
@@ -316,7 +316,7 @@ onMounted(() => {
         </p>
         <hr class="divider">
 
-        <Alert v-if="!hasSiteSettingExcel" variant="warning" text="現場設定にExcelテンプレートが登録されていません。管理画面からExcelファイルを登録してください。" />
+        <Note v-if="!hasSiteSettingExcel" variant="warning" text="現場設定にExcelテンプレートが登録されていません。管理画面からExcelファイルを登録してください。" />
 
         <div class="flex flex-col gap-inline-gap">
           <label for="print-ban" class="label">1. 出力対象の盤</label>
@@ -370,7 +370,7 @@ onMounted(() => {
 
     <!-- タブ3: リモコン設定表出力 -->
     <section v-if="currentTab === 'remote'" class="flex flex-col gap-panel-gap">
-      <Alert v-if="remoteGenerateMessage" :variant="remoteGenerateMessage.type === 'success' ? 'success' : 'danger'" :text="remoteGenerateMessage.text" />
+      <Note v-if="remoteGenerateMessage" :variant="remoteGenerateMessage.type === 'success' ? 'success' : 'error'" :text="remoteGenerateMessage.text" />
 
       <div class="panel flex flex-col gap-panel-gap max-w-4xl">
         <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
@@ -473,13 +473,14 @@ onMounted(() => {
           <div class="flex items-center gap-item-gap">
             <h4 class="flex items-center gap-inline-gap">
               <span>利用可能なキー一覧</span>
-              <Skeleton v-if="isTagLoading" width="3rem" height="1.1rem" />
-              <span v-else>({{ allAvailableKeys.length }}項目)</span>
+              <Skeleton :show="isTagLoading">
+                <span>({{ allAvailableKeys.length }}項目)</span>
+              </Skeleton>
             </h4>
           </div>
 
           <div class="w-full sm:w-72">
-            <Input v-model="searchQuery" placeholder="キー名・列名で絞り込み..." />
+            <ClearableInput v-model="searchQuery" placeholder="キー名・列名で絞り込み..." icon="search" />
           </div>
         </div>
 

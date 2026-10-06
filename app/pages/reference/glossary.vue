@@ -125,7 +125,7 @@ const disabledKanaRows = computed(() => {
       </li>
     </ul>
 
-    <EmptyState v-else icon="search" title="該当する用語が見つかりません" description="検索キーワードまたは五十音・工種フィルターの条件を変更してください。" class="flex-1" />
+    <EmptyState v-else icon="search" variant="no-results" title="該当する用語が見つかりません" description="検索キーワードまたは五十音・工種フィルターの条件を変更してください。" class="flex-1" />
   </div>
 </template>
 

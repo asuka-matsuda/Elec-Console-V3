@@ -41,7 +41,7 @@ const INITIAL_CREATE_SITE: CreateSiteFormState = {
   status: 'planning',
 }
 
-const { sites, isLoaded, isLoading, fetchSites, createSite, toggleDisableSite, updateSite, deleteSite } = useAdminSites()
+const { sites, isLoading, fetchSites, createSite, toggleDisableSite, updateSite, deleteSite } = useAdminSites()
 const { users, fetchUsers } = useAdminUsers()
 const { askConfirm } = useModal()
 
@@ -347,14 +347,14 @@ const confirmDeleteSite = async (site: Site) => {
         </li>
       </ul>
 
-      <EmptyState v-else icon="search" title="該当する現場がありません" description="検索条件を変更するか、新規現場を登録してください。" />
+      <EmptyState v-else icon="search" variant="no-results" title="該当する現場がありません" description="検索条件を変更するか、新規現場を登録してください。" />
     </aside>
 
     <hr class="divider is-vertical is-solid hidden lg:block self-stretch">
 
     <!-- 右ペイン: 現場詳細設定 -->
     <section class="panel flex-1 min-w-0">
-      <EmptyState v-if="!selectedSite" icon="layout" title="現場が選択されていません" description="左側の現場一覧から、設定やデータ連携を行う現場を選択してください。" class="min-h-[400px] flex items-center justify-center" />
+      <EmptyState v-if="!selectedSite" icon="layout" variant="informational" title="現場が選択されていません" description="左側の現場一覧から、設定やデータ連携を行う現場を選択してください。" class="min-h-[400px] flex items-center justify-center" />
 
       <div v-else class="flex flex-col gap-panel-gap">
         <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
@@ -485,11 +485,11 @@ const confirmDeleteSite = async (site: Site) => {
             </p>
           </section>
 
-          <Alert v-if="isSyncing" variant="info" icon="loader">{{ syncMsg }}</Alert>
+          <Note v-if="isSyncing" variant="secondary" icon="loader">{{ syncMsg }}</Note>
 
-          <Alert v-else-if="showSyncMsg && syncMsgType === 'error'" variant="danger">{{ syncMsg }}</Alert>
+          <Note v-else-if="showSyncMsg && syncMsgType === 'error'" variant="error">{{ syncMsg }}</Note>
 
-          <Alert v-else-if="syncResultData" variant="success" :title="syncResultData.title">
+          <Note v-else-if="syncResultData" variant="success" :title="syncResultData.title">
             <div class="flex flex-wrap items-center gap-item-gap">
               <template v-if="syncResultData.type === 'merge'">
                 <span>追加: <strong class="stat-count-add">+{{ syncResultData.createdCount ?? 0 }}</strong> 件</span>
@@ -500,7 +500,7 @@ const confirmDeleteSite = async (site: Site) => {
                 <span>取込総数: <strong>{{ syncResultData.count }}</strong> 件</span>
               </template>
             </div>
-          </Alert>
+          </Note>
         </div>
 
         <!-- 改行禁止ワードタブ -->
@@ -652,18 +652,5 @@ const confirmDeleteSite = async (site: Site) => {
 .excluded-keywords-card {
   border: 1px solid var(--color-border-subtle);
   background-color: var(--color-bg-surface);
-}
-
-.excluded-keyword-badge {
-  user-select: none;
-
-  padding: 2px 8px;
-  border: 1px solid var(--color-border-subtle);
-
-  font-family: var(--font-mono);
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-
-  background-color: var(--color-bg-surface-subtle);
 }
 </style>

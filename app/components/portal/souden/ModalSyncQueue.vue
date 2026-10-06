@@ -67,13 +67,10 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
     <div class="flex flex-col gap-panel-gap">
 
       <template v-if="conflictItems.length > 0">
-        <div class="flex items-start gap-item-gap p-panel-pad-compact conflict-alert">
-          <Icon name="triangle-alert" size="sm" class="mt-0.5" />
-          <div>
-            <strong>{{ conflictItems.length }}件</strong> の回路で別の作業者との更新競合が発生しました。<br>
-            内容を確認し、どちらの値を採用するか選択してください。
-          </div>
-        </div>
+        <Note variant="warning">
+          <strong>{{ conflictItems.length }}件</strong> の回路で別の作業者との更新競合が発生しました。<br>
+          内容を確認し、どちらの値を採用するか選択してください。
+        </Note>
 
         <div v-for="item in conflictItems" :key="item.id" class="panel p-panel-pad-compact flex flex-col gap-item-gap conflict-panel">
           <div class="flex items-center gap-item-gap panel-header">
@@ -144,7 +141,7 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
         </ul>
       </template>
 
-      <EmptyState v-else icon="circle-check" title="未送信データはありません" description="すべてのデータがサーバーと正常に同期されています。" />
+      <EmptyState v-else icon="circle-check" variant="cleared" title="未送信データはありません" description="すべてのデータがサーバーと正常に同期されています。" />
     </div>
   </Modal>
 </template>
@@ -172,16 +169,6 @@ const handleResolve = async (item: PendingSyncItem, resolution: 'overwrite' | 'd
     font-family: var(--font-mono);
     color: var(--color-text-muted);
   }
-}
-
-.conflict-alert {
-  border: 1px solid color-mix(in srgb, var(--color-status-warning) 30%, transparent);
-
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-base);
-  color: var(--color-status-warning);
-
-  background: color-mix(in srgb, var(--color-status-warning) 10%, transparent);
 }
 
 .conflict-panel {

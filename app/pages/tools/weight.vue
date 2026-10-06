@@ -74,7 +74,7 @@ const handleSave = async () => {
 
 <template>
   <div class="flex flex-1 flex-col gap-panel-gap min-h-0 w-full max-w-[1600px] mx-auto">
-    <Alert variant="warning" text="免責事項: 本ツールによる計算結果は、規程に基づいた理論値（目安）です。選定や安全性については、必ず設計者自身の責任において各種関連法規・規程をご確認の上ご判断ください。" />
+    <Note variant="warning" text="免責事項: 本ツールによる計算結果は、規程に基づいた理論値（目安）です。選定や安全性については、必ず設計者自身の責任において各種関連法規・規程をご確認の上ご判断ください。" />
 
     <div class="grid flex-1 grid-cols-1 md:grid-cols-[minmax(0,4fr)_minmax(0,3fr)] gap-panel-gap min-h-0">
       <section class="panel flex flex-1 flex-col gap-panel-gap min-h-0">
@@ -103,10 +103,7 @@ const handleSave = async () => {
 
             <div class="flex flex-col gap-inline-gap">
               <label for="weight-cable-length" class="label">ケーブル長 (L)</label>
-              <div class="flex items-center gap-inline-gap w-full min-w-0">
-                <Input id="weight-cable-length" v-model="inputs.L_input" type="number" min="1" class="flex-1 min-w-0" />
-                <span class="shrink-0 form-addon">m</span>
-              </div>
+              <Input id="weight-cable-length" v-model="inputs.L_input" type="number" min="1" suffix="m" />
             </div>
           </div>
         </form>
@@ -133,12 +130,3 @@ const handleSave = async () => {
     </div>
   </div>
 </template>
-
-<style scoped lang="scss">
-.form-addon {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
-  white-space: nowrap;
-}
-</style>

@@ -1,8 +1,11 @@
 <script setup lang="ts">
 /**
- * Modal
+ * Modal (Geist準拠)
  * [Organisms] ネイティブの dialog 要素を使用した軽量モーダルダイアログ。
- * 表示・開閉・アクセシビリティ・レイアウトの提供に特化した純粋なコンテナです。
+ * 表示・開閉・レイアウトの提供に特化した純粋なコンテナです。
+ * - 直角（border-radius: 0）サイバーサーフェス
+ * - サイズバリアント (sm: 400px, md: 560px [デフォルト], lg: 760px, full: 92vw)
+ * - 支援アクセシビリティ属性（aria-*, role）はプロジェクト規約により除外
  */
 import { ref, watch } from 'vue'
 
@@ -15,6 +18,7 @@ withDefaults(
   {
     align: 'left',
     closeText: '閉じる',
+    size: 'md',
   },
 )
 
@@ -52,23 +56,29 @@ watch(
 </script>
 
 <template>
-  <dialog ref="dialogRef" class="modal m-auto p-0 w-fit min-w-[min(92vw,380px)] max-w-[min(92vw,640px)] max-h-[90vh] overflow-visible open:flex open:flex-col" @cancel="onNativeCancel">
+  <dialog ref="dialogRef" class="modal m-auto p-0 overflow-visible open:flex open:flex-col" :class="`is-${size}`" @cancel="onNativeCancel">
     <div class="modal-window flex flex-1 flex-col gap-panel-gap min-h-0 p-panel-pad">
-      <header v-if="title" class="flex items-center justify-between gap-item-gap">
-        <h3 class="flex items-center gap-item-gap">
-          <Icon v-if="icon" :name="icon" variant="accent" />
-          <span>{{ title }}</span>
-        </h3>
+      <header v-if="title || $slots.header" class="flex items-center justify-between gap-item-gap">
+        <slot name="header">
+          <h3 class="flex items-center gap-item-gap">
+            <Icon v-if="icon" :name="icon" variant="accent" />
+            <span>{{ title }}</span>
+          </h3>
 
-        <slot name="actions">
-          <Button @click="handleClose">{{ closeText }}</Button>
+          <slot name="actions">
+            <Button @click="handleClose">{{ closeText }}</Button>
+          </slot>
         </slot>
       </header>
-      <hr v-if="title" class="divider">
+      <hr v-if="title || $slots.header" class="divider">
 
       <div class="modal-body overflow-y-auto flex flex-1 flex-col gap-form-row-gap min-h-0" :class="{ 'text-center': align === 'center' }">
         <slot />
       </div>
+
+      <footer v-if="$slots.footer" class="modal-footer flex items-center justify-end gap-item-gap pt-panel-pad">
+        <slot name="footer" />
+      </footer>
     </div>
   </dialog>
 </template>
@@ -81,7 +91,11 @@ watch(
 
   transform: translateY(var(--space-2));
 
+  width: fit-content;
+  min-width: min(92vw, 360px);
+  max-height: 90vh;
   border: none;
+  border-radius: 0;
 
   opacity: 0;
   background: transparent;
@@ -91,6 +105,23 @@ watch(
     transform var(--duration-fast) var(--ease-out),
     display var(--duration-fast) allow-discrete,
     overlay var(--duration-fast) allow-discrete;
+
+  &.is-sm {
+    max-width: min(92vw, 400px);
+  }
+
+  &.is-md {
+    max-width: min(92vw, 560px);
+  }
+
+  &.is-lg {
+    max-width: min(92vw, 760px);
+  }
+
+  &.is-full {
+    width: 92vw;
+    max-width: 92vw;
+  }
 
   &:not([open]) {
     display: none;
@@ -132,6 +163,7 @@ watch(
   isolation: isolate;
 
   border: var(--border-width-base) solid var(--color-border);
+  border-radius: 0;
 
   background-color: var(--surface-bg-elevated);
   backdrop-filter: blur(var(--blur-sm));
@@ -141,5 +173,9 @@ watch(
 .modal-body {
   line-height: var(--line-height-base);
   color: var(--color-text-secondary);
+}
+
+.modal-footer {
+  border-top: var(--border-width-base) solid var(--color-border);
 }
 </style>

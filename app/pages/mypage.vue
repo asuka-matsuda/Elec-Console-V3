@@ -73,7 +73,7 @@ const assignedSites = computed(() => {
       </header>
 
       <div v-if="!currentUser" class="flex items-center gap-panel-gap">
-        <Skeleton width="2.5rem" height="2.5rem" class="shrink-0" />
+        <Skeleton circle width="2.5rem" class="shrink-0" />
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-panel-gap flex-1">
           <div v-for="skeletonIndex in 3" :key="`profile-skeleton-${skeletonIndex}`" class="flex flex-col gap-inline-gap">
             <Skeleton width="3rem" height="0.85rem" />
@@ -121,9 +121,7 @@ const assignedSites = computed(() => {
         <div class="flex flex-col gap-item-gap">
           <small class="profile-label">登録済現場</small>
 
-          <p v-if="assignedSites.length === 0" class="empty-state-text">
-            登録されている現場はありません。
-          </p>
+          <EmptyState v-if="assignedSites.length === 0" size="sm" icon="map-pin" title="登録されている現場はありません" description="管理者に現場へのアサインを依頼してください。" />
 
           <ul v-else class="flex flex-col gap-item-gap">
             <li v-for="site in assignedSites" :key="site.id">
@@ -152,7 +150,7 @@ const assignedSites = computed(() => {
       </header>
 
       <form class="flex flex-col gap-form-row-gap" @submit.prevent="handleChangePassword">
-        <Alert v-if="isSuccess" variant="success">パスワードを変更しました</Alert>
+        <Note v-if="isSuccess" variant="success">パスワードを変更しました</Note>
 
         <div class="flex flex-col gap-inline-gap">
           <label for="my-current-password" class="label">現在のパスワード <span class="req-mark">＊</span></label>
@@ -193,9 +191,7 @@ const assignedSites = computed(() => {
       </div>
 
       <div class="flex flex-col gap-inline-gap">
-        <span class="label">演出・モーション効果</span>
-        <Switch v-model="animationEnabled" label="パルス・モーション演出を有効にする" />
-        <span class="help-text">OFFにすると、サイバーパルス光やスケール演出を停止し、静止表示にします</span>
+        <Switch v-model="animationEnabled" label="パルス・モーション演出" description="サイバーパルス光彩やスケール演出を適用します" />
       </div>
     </section>
   </div>
@@ -236,11 +232,6 @@ const assignedSites = computed(() => {
 
 .site-id {
   color: var(--color-text-muted);
-}
-
-.empty-state-text {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
 }
 
 .error-text {

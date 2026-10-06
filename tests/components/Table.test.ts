@@ -323,4 +323,18 @@ describe('Table.vue', () => {
     // 3行 × 2カラム = 6個の Skeleton
     expect(skeletons.length).toBe(6)
   })
+
+  it('支援アクセシビリティ属性（aria-*, role 等）が付与されていないこと', () => {
+    const wrapper = mount(Table, {
+      props: {
+        columns: sampleColumns,
+        data: sampleData,
+      },
+    })
+
+    expect(wrapper.attributes('role')).toBeUndefined()
+    expect(wrapper.find('table').attributes('role')).toBeUndefined()
+    expect(wrapper.find('th').attributes('role')).toBeUndefined()
+    expect(wrapper.find('td').attributes('role')).toBeUndefined()
+  })
 })

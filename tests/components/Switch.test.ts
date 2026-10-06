@@ -8,7 +8,7 @@ describe('Switch', () => {
     const wrapper = mount(Switch, {
       props: {
         modelValue: false,
-        label: '自動保存を有効にする',
+        label: '自動保存',
       },
     })
 
@@ -16,8 +16,10 @@ describe('Switch', () => {
 
     expect(input.exists()).toBe(true)
     expect((input.element as HTMLInputElement).checked).toBe(false)
+    expect(wrapper.classes()).toContain('switch--md')
+    expect(wrapper.classes()).toContain('switch--default')
     expect(wrapper.classes()).not.toContain('is-active')
-    expect(wrapper.text()).toContain('自動保存を有効にする')
+    expect(wrapper.text()).toContain('自動保存')
   })
 
   it('updates modelValue and emits change when toggled', async () => {
@@ -65,5 +67,53 @@ describe('Switch', () => {
     expect(input.attributes('disabled')).toBeDefined()
     expect(wrapper.classes()).toContain('is-loading')
     expect(wrapper.find('.switch-loader').exists()).toBe(true)
+  })
+
+  it('applies sizes and colors correctly', () => {
+    const wrapper = mount(Switch, {
+      props: {
+        modelValue: false,
+        size: 'sm',
+        color: 'amber',
+      },
+    })
+
+    expect(wrapper.classes()).toContain('switch--sm')
+    expect(wrapper.classes()).toContain('switch--amber')
+  })
+
+  it('renders description when provided', () => {
+    const wrapper = mount(Switch, {
+      props: {
+        modelValue: false,
+        label: '二要素認証',
+        description: 'ログイン時に認証アプリのワンタイムコードを要求します。',
+      },
+    })
+
+    expect(wrapper.find('.switch-label').text()).toBe('二要素認証')
+    expect(wrapper.find('.switch-description').text()).toBe('ログイン時に認証アプリのワンタイムコードを要求します。')
+  })
+
+  it('renders custom icons for checked and unchecked states', () => {
+    const wrapperOff = mount(Switch, {
+      props: {
+        modelValue: false,
+        iconChecked: 'check',
+        iconUnchecked: 'x',
+      },
+    })
+
+    expect(wrapperOff.findComponent({ name: 'Icon' }).props('name')).toBe('x')
+
+    const wrapperOn = mount(Switch, {
+      props: {
+        modelValue: true,
+        iconChecked: 'check',
+        iconUnchecked: 'x',
+      },
+    })
+
+    expect(wrapperOn.findComponent({ name: 'Icon' }).props('name')).toBe('check')
   })
 })

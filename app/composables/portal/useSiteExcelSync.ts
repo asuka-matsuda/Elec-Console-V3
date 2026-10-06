@@ -316,12 +316,14 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
       const disposition = response.headers.get('content-disposition') || ''
       const filenameMatch = disposition.match(/filename\*=UTF-8''([^;]+)|filename="?([^";]+)"?/i)
       let downloadFilename = ''
+
       if (filenameMatch) {
         downloadFilename = decodeURIComponent(filenameMatch[1] || filenameMatch[2] || '')
       }
       if (!downloadFilename) {
         const originalName = site.value?.excelPath?.split(/[\\/]/).pop()?.trim()
         const isXlsm = site.value?.excelPath?.toLowerCase().endsWith('.xlsm')
+
         downloadFilename = originalName || `${safeName}.${isXlsm ? 'xlsm' : 'xlsx'}`
       }
 
@@ -362,6 +364,7 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
 
     try {
       const fd = new FormData()
+
       fd.append('file', templateFile.value)
 
       const res = await $api<{ success: boolean, filePath: string, filename: string, message: string }>(

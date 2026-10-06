@@ -80,7 +80,7 @@ onMounted(() => {
     <div class="flex flex-1 flex-col min-h-0">
       <Table class="flex-1 min-h-[400px]" :columns="OPERATION_LOG_COLUMNS" :data="logs" :loading="isLoading" loading-text="操作ログを読み込み中..." empty-text="操作ログが存在しません">
         <template #empty>
-          <EmptyState icon="history" title="操作ログが存在しません" description="条件に一致するログがないか、操作履歴がまだ記録されていません。" />
+          <EmptyState icon="history" variant="no-results" title="操作ログが存在しません" description="条件に一致するログがないか、操作履歴がまだ記録されていません。" />
         </template>
 
         <template #cell-action="{ value }">

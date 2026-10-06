@@ -107,7 +107,7 @@ useHead({
               </li>
             </ul>
 
-            <EmptyState v-else icon="circle-check" title="タスクはありません" description="上の入力欄から新しいタスクを追加してください。" />
+            <EmptyState v-else icon="circle-check" variant="cleared" title="タスクはありません" description="上の入力欄から新しいタスクを追加してください。" />
           </section>
         </ClientOnly>
 

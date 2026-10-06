@@ -318,7 +318,7 @@ const confirmResetPassword = async (row: User) => {
       </header>
       <hr class="divider">
 
-      <Input v-model="searchQuery" placeholder="氏名・カナ・IDで検索..." />
+      <ClearableInput v-model="searchQuery" placeholder="氏名・カナ・IDで検索..." icon="search" />
 
       <ul v-if="filteredUsers.length > 0" class="flex flex-col gap-item-gap overflow-y-auto flex-1 min-h-[300px]">
         <li v-for="user in filteredUsers" :key="user.id">
@@ -338,14 +338,14 @@ const confirmResetPassword = async (row: User) => {
         </li>
       </ul>
 
-      <EmptyState v-else icon="search" title="該当するユーザーがいません" description="検索条件を変更するか、新規ユーザーを登録してください。" class="flex-1 min-h-[300px] flex items-center justify-center" />
+      <EmptyState v-else icon="search" variant="no-results" title="該当するユーザーがいません" description="検索条件を変更するか、新規ユーザーを登録してください。" class="flex-1 min-h-[300px] flex items-center justify-center" />
     </aside>
 
     <hr class="divider is-vertical is-solid hidden lg:block self-stretch">
 
     <!-- 右ペイン: ユーザー詳細設定 -->
     <section class="panel flex-1 min-w-0">
-      <EmptyState v-if="!selectedUser" icon="users" title="ユーザーが選択されていません" description="左側のユーザー一覧から、設定を行うユーザーを選択してください。" class="min-h-[400px] flex items-center justify-center" />
+      <EmptyState v-if="!selectedUser" icon="users" variant="informational" title="ユーザーが選択されていません" description="左側のユーザー一覧から、設定を行うユーザーを選択してください。" class="min-h-[400px] flex items-center justify-center" />
 
       <div v-else class="flex flex-1 flex-col gap-panel-gap min-h-0">
         <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
@@ -466,7 +466,7 @@ const confirmResetPassword = async (row: User) => {
     </template>
 
     <form class="flex flex-col gap-form-row-gap" @submit.prevent="handleCreateUser">
-      <Alert v-if="createErrorMsg" variant="danger">{{ createErrorMsg }}</Alert>
+      <Note v-if="createErrorMsg" variant="error">{{ createErrorMsg }}</Note>
 
       <div v-for="field in USER_CREATE_FORM_FIELDS" :key="field.id" class="flex flex-col gap-inline-gap">
         <label :for="`create-user-${field.id}`" class="label">{{ field.label }}</label>

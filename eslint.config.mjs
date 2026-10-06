@@ -23,14 +23,24 @@ import strictBannerUsage from './eslint-rules/strict-banner-usage.mjs'
 import strictBreadcrumbsUsage from './eslint-rules/strict-breadcrumbs-usage.mjs'
 import strictButtonUsage from './eslint-rules/strict-button-usage.mjs'
 import strictCheckboxUsage from './eslint-rules/strict-checkbox-usage.mjs'
+import strictEmptyStateUsage from './eslint-rules/strict-empty-state-usage.mjs'
 import strictIconUsage from './eslint-rules/strict-icon-usage.mjs'
 import strictInputUsage from './eslint-rules/strict-input-usage.mjs'
+import strictMenuUsage from './eslint-rules/strict-menu-usage.mjs'
+import strictModalUsage from './eslint-rules/strict-modal-usage.mjs'
+import strictNoteUsage from './eslint-rules/strict-note-usage.mjs'
 import strictResponsiveTokens from './eslint-rules/strict-responsive-tokens.mjs'
 import strictSelectUsage from './eslint-rules/strict-select-usage.mjs'
+import strictSkeletonUsage from './eslint-rules/strict-skeleton-usage.mjs'
 import strictSpacingTokens from './eslint-rules/strict-spacing-tokens.mjs'
 import strictStateManagement from './eslint-rules/strict-state-management.mjs'
 import strictStateMixins from './eslint-rules/strict-state-mixins.mjs'
+import strictSwitchUsage from './eslint-rules/strict-switch-usage.mjs'
+import strictTableUsage from './eslint-rules/strict-table-usage.mjs'
+import strictTextareaUsage from './eslint-rules/strict-textarea-usage.mjs'
 import strictTimeManagement from './eslint-rules/strict-time-management.mjs'
+import strictToastUsage from './eslint-rules/strict-toast-usage.mjs'
+import strictTooltipUsage from './eslint-rules/strict-tooltip-usage.mjs'
 import strictUiStates from './eslint-rules/strict-ui-states.mjs'
 
 export default withNuxt(
@@ -64,10 +74,20 @@ export default withNuxt(
           'strict-breadcrumbs-usage': strictBreadcrumbsUsage,
           'strict-button-usage': strictButtonUsage,
           'strict-checkbox-usage': strictCheckboxUsage,
+          'strict-empty-state-usage': strictEmptyStateUsage,
           'strict-icon-usage': strictIconUsage,
           'strict-input-usage': strictInputUsage,
+          'strict-menu-usage': strictMenuUsage,
+          'strict-modal-usage': strictModalUsage,
+          'strict-note-usage': strictNoteUsage,
           'strict-responsive-tokens': strictResponsiveTokens,
           'strict-select-usage': strictSelectUsage,
+          'strict-skeleton-usage': strictSkeletonUsage,
+          'strict-switch-usage': strictSwitchUsage,
+          'strict-table-usage': strictTableUsage,
+          'strict-textarea-usage': strictTextareaUsage,
+          'strict-toast-usage': strictToastUsage,
+          'strict-tooltip-usage': strictTooltipUsage,
           'no-event-pass-through': noEventPassThrough,
           'no-slot-forwarding': noSlotForwarding,
         },
@@ -98,8 +118,18 @@ export default withNuxt(
       'local/strict-banner-usage': 'error',
       'local/strict-breadcrumbs-usage': 'error',
       'local/strict-checkbox-usage': 'error',
+      'local/strict-empty-state-usage': 'error',
       'local/strict-input-usage': 'error',
+      'local/strict-menu-usage': 'error',
+      'local/strict-modal-usage': 'error',
+      'local/strict-note-usage': 'error',
       'local/strict-select-usage': 'error',
+      'local/strict-skeleton-usage': 'error',
+      'local/strict-switch-usage': 'error',
+      'local/strict-table-usage': 'error',
+      'local/strict-textarea-usage': 'error',
+      'local/strict-toast-usage': 'error',
+      'local/strict-tooltip-usage': 'error',
       // AI開発効率化のため無効化したルール
       'local/no-raw-html-elements': 'off',
       'local/no-card-or-box-naming': 'off',

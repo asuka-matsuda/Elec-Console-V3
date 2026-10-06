@@ -75,7 +75,7 @@ const getCableSpec = formatConduitCableSpec
 
 <template>
   <div class="flex flex-1 flex-col gap-panel-gap min-h-0 w-full max-w-[1600px] mx-auto">
-    <Alert variant="warning" text="免責事項: 本ツールによる計算結果は、規程に基づいた理論値（目安）です。選定や安全性については、必ず設計者自身の責任において各種関連法規・規程をご確認の上ご判断ください。" />
+    <Note variant="warning" text="免責事項: 本ツールによる計算結果は、規程に基づいた理論値（目安）です。選定や安全性については、必ず設計者自身の責任において各種関連法規・規程をご確認の上ご判断ください。" />
 
     <div class="grid flex-1 grid-cols-1 md:grid-cols-[minmax(0,4fr)_minmax(0,3fr)] gap-panel-gap min-h-0">
       <section class="panel flex flex-1 flex-col gap-panel-gap min-h-0">
@@ -99,10 +99,7 @@ const getCableSpec = formatConduitCableSpec
 
             <div class="flex flex-col gap-inline-gap">
               <label for="conduit-fill-rate" class="label">占積率</label>
-              <div class="flex items-center gap-inline-gap w-full min-w-0">
-                <Input id="conduit-fill-rate" v-model.number="inputs.customFillRate" type="number" min="1" max="100" placeholder="80" class="flex-1 min-w-0" />
-                <span class="shrink-0 form-addon">%</span>
-              </div>
+              <Input id="conduit-fill-rate" v-model.number="inputs.customFillRate" type="number" min="1" max="100" placeholder="80" suffix="%" />
             </div>
           </div>
 
@@ -119,10 +116,7 @@ const getCableSpec = formatConduitCableSpec
               </template>
 
               <template #cell-count="{ row }">
-                <div class="flex items-center gap-inline-gap">
-                  <Input v-model.number="row.count" type="number" min="1" />
-                  <span class="shrink-0 table-addon">条</span>
-                </div>
+                <Input v-model.number="row.count" type="number" min="1" suffix="条" />
               </template>
 
               <template #cell-spec="{ row }">
@@ -133,7 +127,7 @@ const getCableSpec = formatConduitCableSpec
               </template>
 
               <template #cell-actions="{ row }">
-                <Tooltip text="削除">
+                <Tooltip :text="inputs.inputCables.length <= 1 ? '最低1本のケーブルが必要です' : 'ケーブルを削除'">
                   <Button variant="danger" size="sm" icon="trash-2" :disabled="inputs.inputCables.length <= 1" @click="removeCable(row.id)" />
                 </Tooltip>
               </template>
@@ -165,20 +159,6 @@ const getCableSpec = formatConduitCableSpec
 </template>
 
 <style scoped lang="scss">
-.form-addon {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
-  white-space: nowrap;
-}
-
-.table-addon {
-  font-size: 0.9em;
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
-  white-space: nowrap;
-}
-
 .stacked-cell {
   .main-text {
     font-weight: var(--font-weight-medium);

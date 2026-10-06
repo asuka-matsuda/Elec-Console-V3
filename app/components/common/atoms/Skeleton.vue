@@ -1,40 +1,59 @@
 <script setup lang="ts">
 /**
  * Skeleton
- * 読み込み待ちの波打ち（パルス）プレースホルダーコンポーネント。
- * - 呼び出し側の文脈（インライン／ブロック）に応じてタグを span / div で切り替え可能（デフォルト: span）
- * - レイアウトシフト（CLS）の防止とローディング体感速度の向上を実現
+ * Geist デザインシステム準拠のスケルトンローディングコンポーネント。
+ * 非同期データ読み込み中のレイアウト崩れ（CLS）を防ぐプレースホルダーを提供します。
+ * 単体表示（width/height指定）に加え、子要素をラップして自動寸法でシマー表示することも可能です。
  */
-import { computed } from 'vue'
+import { computed, useSlots } from 'vue'
 
 import type { SkeletonProps } from '~/types/components'
 
 const {
   width,
   height,
+  boxHeight,
   circle = false,
+  pill = false,
+  squared = false,
+  show = true,
+  animated = true,
+  button = false,
   as = 'span',
 } = defineProps<SkeletonProps>()
+
+const slots = useSlots()
+const hasChildren = computed(() => Boolean(slots.default))
+
+const isCircle = computed(() => !squared && (circle || pill))
+
+const toCssSize = (val?: number | string) => {
+  if (val === undefined || val === null || val === '') return undefined
+
+  return typeof val === 'number' ? `${val}px` : val
+}
 
 const styleObject = computed(() => {
   const styles: Record<string, string> = {}
 
-  if (width) {
-    styles.width = width
-  }
-  if (height) {
-    styles.height = height
-  }
-  else if (!circle) {
+  const w = toCssSize(width)
+  const h = toCssSize(height)
+  const bh = toCssSize(boxHeight)
+
+  if (w) styles.width = w
+  if (h) styles.height = h
+  if (bh) styles.minHeight = bh
+
+  if (!hasChildren.value && !h && !isCircle.value) {
     styles.height = '1.2em'
   }
 
-  if (circle) {
-    const size = width || height || '2.5rem'
+  if (isCircle.value) {
+    const size = w || h || '2.5rem'
 
     styles.width = size
     styles.height = size
-    styles.borderRadius = 'var(--radius-circle, 50%)'
+    styles.borderRadius = 'var(--radius-circle)'
   }
 
   return styles
@@ -42,33 +61,98 @@ const styleObject = computed(() => {
 </script>
 
 <template>
-  <component :is="as" class="skeleton" :class="{ 'is-circle': circle }" :style="styleObject" />
+  <component :is="as" v-if="hasChildren" class="skeleton skeleton--wrapper relative overflow-hidden" :class="[{ 'is-loading': show, 'is-circle': isCircle, 'is-animated': animated, 'is-button': button }]" :style="styleObject">
+    <div class="skeleton-content inline-flex" :class="{ 'is-hidden': show }">
+      <slot />
+    </div>
+    <span v-if="show" class="skeleton-overlay absolute inset-0" />
+  </component>
+  <component :is="as" v-else-if="show" class="skeleton skeleton--standalone" :class="[{ 'is-circle': isCircle, 'is-animated': animated, 'is-button': button }]" :style="styleObject" />
 </template>
 
 <style scoped lang="scss">
 .skeleton {
   display: inline-block;
-
-  border: var(--border-width-base) solid var(--color-border);
-
   vertical-align: middle;
 
-  background-color: var(--surface-bg-elevated);
-  background-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    color-mix(in srgb, var(--color-overlay) 12%, transparent) 50%,
-    transparent 100%
-  );
-  background-size: 200% 100%;
+  &--standalone {
+    border: var(--border-width-base) solid var(--color-border);
+    border-radius: 0;
 
-  animation: skeleton-pulse 1.8s ease-in-out infinite;
+    background-color: var(--surface-bg-elevated);
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      color-mix(in srgb, var(--color-overlay) 14%, transparent) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+
+    &.is-animated {
+      animation: skeleton-pulse 1.8s ease-in-out infinite;
+    }
+  }
+
+  &--wrapper {
+    display: inline-flex;
+
+    &.is-loading {
+      border: var(--border-width-base) solid var(--color-border);
+    }
+
+    .skeleton-content {
+      &.is-hidden {
+        pointer-events: none;
+        user-select: none;
+        visibility: hidden;
+      }
+    }
+
+    .skeleton-overlay {
+      pointer-events: none;
+
+      border-radius: 0;
+
+      background-color: var(--surface-bg-elevated);
+      background-image: linear-gradient(
+        90deg,
+        transparent 0%,
+        color-mix(in srgb, var(--color-overlay) 14%, transparent) 50%,
+        transparent 100%
+      );
+      background-size: 200% 100%;
+    }
+
+    &.is-animated .skeleton-overlay {
+      animation: skeleton-pulse 1.8s ease-in-out infinite;
+    }
+  }
+
+  &.is-circle {
+    border-radius: var(--radius-circle);
+
+    .skeleton-overlay {
+      border-radius: var(--radius-circle);
+    }
+  }
+
+  &.is-button {
+    margin: -1px;
+  }
 }
 
-// ユーザー設定でアニメーション無効時のフォールバック
-:root[data-animation="off"] .skeleton {
+:root[data-animation="off"] .skeleton,
+:root[data-animation="off"] .skeleton-overlay {
   background-image: none;
   animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton,
+  .skeleton-overlay {
+    background-image: none;
+    animation: none;
+  }
 }
 
 @keyframes skeleton-pulse {

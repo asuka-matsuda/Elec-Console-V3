@@ -263,7 +263,7 @@ onMounted(() => {
       </template>
 
       <template #cell-p1Remarks="{ row: circuit }">
-        <Textarea v-model="getRowForm(circuit).remarks" :rows="1" auto-resize placeholder="備考" class="w-full textarea-remarks" :disabled="isRowDisabled(circuit)" />
+        <Textarea v-model="getRowForm(circuit).remarks" size="sm" :rows="1" auto-resize trim placeholder="備考" class="w-full textarea-remarks" :disabled="isRowDisabled(circuit)" />
       </template>
 
       <template #cell-actions="{ row: circuit }">

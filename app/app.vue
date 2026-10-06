@@ -51,5 +51,5 @@ if (import.meta.client) {
     </div>
   </Modal>
 
-  <ToastContainer />
+  <Toast />
 </template>

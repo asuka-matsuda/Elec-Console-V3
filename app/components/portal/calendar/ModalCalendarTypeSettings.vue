@@ -49,7 +49,9 @@ const {
           </div>
 
           <div class="flex flex-wrap items-center gap-inline-gap color-dot-group">
-            <button v-for="preset in DEFAULT_COLOR_PRESETS" :key="preset.value" type="button" class="w-5 h-5 color-dot" :class="{ 'is-active': t.color === preset.value }" :style="{ backgroundColor: preset.value }" :title="preset.name" @click="t.color = preset.value" />
+            <Tooltip v-for="preset in DEFAULT_COLOR_PRESETS" :key="preset.value" :text="preset.name">
+              <button type="button" class="w-5 h-5 color-dot" :class="{ 'is-active': t.color === preset.value }" :style="{ backgroundColor: preset.value }" @click="t.color = preset.value" />
+            </Tooltip>
           </div>
         </li>
       </ul>

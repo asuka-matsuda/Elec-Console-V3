@@ -82,7 +82,7 @@ const getCategoryBadgeVariant = (category: MeasurementDeviceCategory): BadgeVari
         現場で使用する測定機器（絶縁計・電圧計・検相器等）を登録します。登録した機器は帳票印刷時にドロップダウンで選択できます。
       </p>
 
-      <Alert v-if="errorMessage" variant="danger" :text="errorMessage" />
+      <Note v-if="errorMessage" variant="error" :text="errorMessage" />
 
       <section class="flex flex-col gap-form-row-gap">
         <header class="flex items-center gap-item-gap">
@@ -165,7 +165,7 @@ const getCategoryBadgeVariant = (category: MeasurementDeviceCategory): BadgeVari
               </div>
 
               <div class="flex items-center shrink-0">
-                <DropdownMenu :items="[{ label: '編集', icon: 'edit', action: () => startEdit(dev) }, { label: '削除', icon: 'trash-2', variant: 'danger', action: () => handleDeleteItem(dev.id) }]" />
+                <Menu :items="[{ label: '機器を編集…', icon: 'edit', action: () => startEdit(dev) }, { label: '機器を削除', icon: 'trash-2', variant: 'danger', divider: true, action: () => handleDeleteItem(dev.id) }]" />
               </div>
             </div>
           </li>

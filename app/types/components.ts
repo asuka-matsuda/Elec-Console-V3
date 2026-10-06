@@ -291,29 +291,34 @@ export interface SelectProps<T = string | number | boolean> {
 
 // --- Textarea ---
 export type TextareaResize = 'none' | 'vertical' | 'horizontal' | 'both'
+export type TextareaSize = 'sm' | 'md' | 'lg'
 
 export interface TextareaProps {
   /** HTML id属性 */
   id?: string
   /** フォーム名属性 */
   name?: string
+  /** サイズ（sm / md・デフォルト / lg） */
+  size?: TextareaSize
   /** 行数 (デフォルト: 4) */
   rows?: number
   /** リサイズ方向 (デフォルト: 'vertical') */
   resize?: TextareaResize
-  /** プレースホルダー */
+  /** プレースホルダー（入力例を記述） */
   placeholder?: string
   /** 無効化状態 (デフォルト: false) */
   disabled?: boolean
   /** 読み取り専用状態 (デフォルト: false) */
   readonly?: boolean
-  /** エラー状態フラグ (デフォルト: false) */
-  error?: boolean
+  /** エラー状態フラグまたはエラーメッセージ (デフォルト: false) */
+  error?: boolean | string
   /** 入力内容に応じた高さ自動伸縮（オートリサイズ） (デフォルト: false) */
   autoResize?: boolean
+  /** blur/change時の前後の余分な空白自動除去 (デフォルト: false) */
+  trim?: boolean
   /** 最大文字数 */
   maxlength?: number
-  /** ホバーツールチップテキスト・アクセシビリティ用ラベル */
+  /** ホバーツールチップテキスト */
   title?: string
 }
 
@@ -321,40 +326,93 @@ export interface TextareaProps {
 export type SkeletonElement = 'span' | 'div'
 
 export interface SkeletonProps {
-  /** 幅（CSS値 例: '100%', '120px', '4rem'） */
-  width?: string
-  /** 高さ（CSS値 例: '1em', '40px'） */
-  height?: string
+  /** 幅（CSS値 例: '100%', '120px', '4rem', または数値 160） */
+  width?: string | number
+  /** 高さ（CSS値 例: '1em', '40px', または数値 40） */
+  height?: string | number
+  /** 外側コンテナの高さ / 最小高（Geist準拠） */
+  boxHeight?: string | number
   /** 真円フラグ（アバターや円形アイコン用） */
   circle?: boolean
+  /** ピル・真円形状（Geist準拠エイリアス） */
+  pill?: boolean
+  /** 直角形状（Geist準拠、プロジェクト標準） */
+  squared?: boolean
+  /** スケルトン表示フラグ（デフォルト: true。false時はスロットの子要素を表示） */
+  show?: boolean
+  /** アニメーション（シマー）の有効化（デフォルト: true） */
+  animated?: boolean
+  /** ボタン用スケルトン調整（Geist準拠） */
+  button?: boolean
   /** 描画するHTML要素タグ（デフォルト: 'span'） */
   as?: SkeletonElement
 }
 
 // --- Switch ---
+export type SwitchSize = 'sm' | 'md' | 'lg'
+export type SwitchColor = 'default' | 'blue' | 'amber' | 'green' | 'red' | 'purple'
+
 export interface SwitchProps {
   /** HTML id属性（未指定時は自動生成） */
   id?: string
   /** フォーム名属性 */
   name?: string
-  /** ラベルテキスト */
+  /** ラベルテキスト（Title Case名詞句） */
   label?: string
+  /** 補足説明テキスト（Geist準拠: ON状態の機能を説明する1文） */
+  description?: string
+  /** サイズ（sm / md・デフォルト / lg） */
+  size?: SwitchSize
+  /** カラーバリアント（Geist準拠） */
+  color?: SwitchColor
   /** 無効化フラグ */
   disabled?: boolean
   /** ローディング中フラグ */
   loading?: boolean
+  /** ON状態のサム内アイコン名 */
+  iconChecked?: string
+  /** OFF状態のサム内アイコン名 */
+  iconUnchecked?: string
   /** ホバーツールチップテキスト */
   title?: string
 }
 
 // --- Tooltip ---
-export type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right'
+export type TooltipPlacement
+  = 'top'
+    | 'bottom'
+    | 'left'
+    | 'right'
+    | 'top-start'
+    | 'top-end'
+    | 'bottom-start'
+    | 'bottom-end'
+    | 'left-start'
+    | 'left-end'
+    | 'right-start'
+    | 'right-end'
+
+export type TooltipType = 'default' | 'invert' | 'secondary' | 'warning' | 'error' | 'success'
 
 export interface TooltipProps {
-  /** ツールチップに表示するテキスト */
-  text: string
+  /** ツールチップに表示するテキスト（句または文） */
+  text?: string
+  /** text のエイリアス */
+  content?: string
   /** 表示位置 (デフォルト: 'top') */
   placement?: TooltipPlacement
+  /** カラータイプ (デフォルト: 'default') */
+  type?: TooltipType
+  /** 表示遅延ミリ秒 (デフォルト: 150) */
+  delay?: number
+  /** 表示遅延ミリ秒 (delay より優先) */
+  enterDelay?: number
+  /** 非表示遅延ミリ秒 (デフォルト: 0) */
+  leaveDelay?: number
+  /** 矢印（チップインジケーター）を非表示にするか */
+  hideArrow?: boolean
+  /** デスクトップ環境でのみ表示するか */
+  desktopOnly?: boolean
   /** 無効化フラグ */
   disabled?: boolean
 }
@@ -366,38 +424,83 @@ export type TableSortOrder = 'asc' | 'desc' | null
 // 3. Molecules（複合コンポーネント）
 // ============================================================================
 
-// --- Toast ---
-export type ToastType = 'info' | 'success' | 'warning' | 'danger'
+// --- Toast (Geist準拠) ---
+export type ToastType = 'info' | 'success' | 'warning' | 'danger' | 'default'
 
-export interface ToastItem {
+export interface ToastAction {
+  /** アクションボタンのラベルテキスト */
+  label: string
+  /** アクション実行時のコールバック */
+  onClick: () => void | Promise<void>
+}
+
+export interface ToastOptions {
+  /** カラーバリアント (Geist準拠: default / info / success / warning / danger) */
+  type?: ToastType
+  /** 表示時間（ミリ秒。デフォルト: 通常3500ms、警告4500ms、エラー5000ms） */
+  duration?: number
+  /** 自動消滅を無効化し、手動で閉じるまで保持するか (Geist準拠) */
+  preserve?: boolean
+  /** インラインアクションボタン（Geist準拠: Undo、確認、再試行等） */
+  action?: ToastAction
+  /** キャンセルボタン（任意） */
+  cancel?: ToastAction
+}
+
+export interface ToastItem extends ToastOptions {
   id: string
   message: string
   type: ToastType
-  /** 表示時間（ミリ秒。デフォルト: 3500ms） */
-  duration?: number
 }
 
-// --- DropdownMenu ---
-export interface DropdownMenuItem {
+// --- Menu (Geist準拠) ---
+export type MenuItemVariant = 'default' | 'secondary' | 'danger'
+
+export interface MenuItem {
+  /** 項目ラベル（Title Case: Verb + Noun） */
   label: string
+  /** 前置アイコン名 */
   icon?: IconName
-  variant?: 'secondary' | 'danger'
+  /** 後置アイコン名 */
+  suffixIcon?: IconName
+  /** カラーバリアント (Geist準拠: default / secondary / danger) */
+  variant?: MenuItemVariant
+  /** 無効化フラグ */
   disabled?: boolean
-  action: () => void | Promise<void>
+  /** 権限不足等によるロック状態（Geist準拠: disabled + ロックアイコン付与） */
+  locked?: boolean
+  /** 直前に区切り線を描画するか */
+  divider?: boolean
+  /** グループ・セクション見出し（Title Case: 1〜2語） */
+  section?: string
+  /** 画面内遷移先パス (指定時は NuxtLink として描画) */
+  to?: string
+  /** 外部リンク URL */
+  href?: string
+  /** クリック時のアクション関数 */
+  action?: () => void | Promise<void>
 }
 
-export interface DropdownMenuProps {
-  /** メニュー項目一覧 */
-  items?: DropdownMenuItem[]
+export interface MenuProps {
+  /** メニュー項目一覧（最大10項目目安） */
+  items?: MenuItem[]
   /** トリガーアイコン（デフォルト: 'more-vertical'） */
   icon?: IconName
   /** トリガーボタンラベル（未指定時はアイコンのみ） */
   label?: string
   /** トリガーボタンバリアント（デフォルト: 'secondary'） */
   variant?: ButtonVariant
+  /** トリガーボタンサイズ（デフォルト: 'sm'） */
+  size?: ButtonSize
+  /** シェブロン矢印アイコンを表示するか（Geist準拠） */
+  withChevron?: boolean
   /** 無効化フラグ */
   disabled?: boolean
 }
+
+/** 既存コード後方互換エイリアス */
+export type DropdownMenuItem = MenuItem
+export type DropdownMenuProps = MenuProps
 
 // --- Calculation Status & Details ---
 export type ResultStatus = 'neutral' | 'success' | 'warning' | 'danger' | 'empty'
@@ -411,10 +514,30 @@ export interface ResultDetailItem {
 }
 
 // --- EmptyState ---
+export type EmptyStateVariant
+  = 'default'
+    | 'no-results'
+    | 'informational'
+    | 'cleared'
+    | 'permission'
+    | 'error'
+
+export type EmptyStateSize = 'sm' | 'md' | 'lg'
+
 export interface EmptyStateProps {
+  /** アイコン名 */
   icon?: IconName
+  /** タイトル（Title Case） */
   title?: string
+  /** 補足説明文（Sentence case） */
   description?: string
+  /** 空状態のバリアント (デフォルト: 'default') */
+  variant?: EmptyStateVariant
+  /** 表示サイズ (デフォルト: 'md') */
+  size?: EmptyStateSize
+  /** 直角の外枠ボーダーを表示するか (デフォルト: false) */
+  bordered?: boolean
+  /** アイコン回転アニメーション */
   spin?: boolean
 }
 
@@ -446,16 +569,34 @@ export interface TableProps<T = Record<string, unknown>> {
   interactiveRow?: boolean
 }
 
-// --- Alert ---
-export type AlertVariant = 'info' | 'success' | 'warning' | 'danger'
+// --- Note (Geist準拠: インライン告知・コンテキスト通知) ---
+export type NoteVariant = 'secondary' | 'warning' | 'error' | 'success' | 'danger' | 'info' | 'default'
 
-export interface AlertProps {
-  variant?: AlertVariant
-  icon?: IconName
-  title?: string
-  /** 本文テキスト（スロット未指定時に表示） */
-  text?: string
+export interface NoteAction {
+  /** アクションボタンラベル */
+  label: string
+  /** クリック時のアクションコールバック */
+  onClick: () => void | Promise<void>
 }
+
+export interface NoteProps {
+  /** バリアント (Geist準拠: secondary / warning / error / success) */
+  variant?: NoteVariant
+  /** アイコン名 (未指定時はバリアント標準アイコン) */
+  icon?: IconName
+  /** タイトル (任意) */
+  title?: string
+  /** 本文テキスト (スロット未指定時に表示) */
+  text?: string
+  /** 塗りの背景スタイルを適用するか (Geist準拠: fill) */
+  fill?: boolean
+  /** インラインアクション (単一CTAボタン) */
+  action?: NoteAction
+}
+
+/** 既存コード後方互換エイリアス */
+export type AlertVariant = NoteVariant
+export type AlertProps = NoteProps
 
 // --- Banner ---
 export type BannerVariant = 'gray' | 'warning' | 'success' | 'danger'
@@ -513,9 +654,17 @@ export interface GlobalNavProps {
   menuData?: import('~/constants/data/menuData').MenuSection[]
 }
 
+export type ModalSize = 'sm' | 'md' | 'lg' | 'full'
+
 export interface ModalProps {
+  /** モーダルタイトル */
   title?: string
+  /** 前置アイコン名 */
   icon?: IconName
+  /** テキスト配置 */
   align?: 'left' | 'center'
+  /** デフォルト閉じるボタンの文言 (デフォルト: '閉じる') */
   closeText?: string
+  /** モーダルサイズ ('sm' = 400px, 'md' = 540px [デフォルト], 'lg' = 720px, 'full' = 92vw) */
+  size?: ModalSize
 }

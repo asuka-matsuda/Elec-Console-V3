@@ -50,7 +50,7 @@ const { sortBy, sortOrder, sortedData } = useTableSort(filteredData)
 <template>
   <div class="flex flex-1 flex-col gap-panel-gap w-full max-w-[1400px] min-h-0 mx-auto">
 
-    <Alert variant="info" text="注記: 掲載データはJISおよび内線規程等に基づく標準規格値です。選定にあたってはメーカー仕様書も併せてご確認ください。" />
+    <Note variant="secondary" text="注記: 掲載データはJISおよび内線規程等に基づく標準規格値です。選定にあたってはメーカー仕様書も併せてご確認ください。" />
 
     <section class="panel flex flex-col gap-form-row-gap">
       <header class="flex items-center justify-between">
@@ -63,7 +63,7 @@ const { sortBy, sortOrder, sortedData } = useTableSort(filteredData)
         </div>
       </header>
 
-      <Input v-model="searchQuery" :placeholder="currentDb.placeholder" />
+      <ClearableInput v-model="searchQuery" :placeholder="currentDb.placeholder" icon="search" />
 
       <ul v-if="categoryOptions.length > 0" class="grid grid-cols-[repeat(auto-fill,minmax(115px,1fr))] gap-item-gap">
         <li v-for="cat in categoryOptions" :key="cat.value">

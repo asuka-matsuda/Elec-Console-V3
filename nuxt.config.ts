@@ -41,6 +41,16 @@ export default defineNuxtConfig({
       ],
       script: [
         { src: '/theme-init.js' },
+        {
+          src: 'https://www.googletagmanager.com/gtag/js?id=G-PGXDEMZD7J',
+          async: true,
+        },
+        {
+          innerHTML: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-PGXDEMZD7J');`,
+        },
       ],
     },
   },
@@ -72,7 +82,7 @@ export default defineNuxtConfig({
           'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
           'Cross-Origin-Opener-Policy': 'same-origin',
           'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
-          'Content-Security-Policy': 'default-src \'self\'; script-src \'self\' \'unsafe-inline\' \'unsafe-eval\'; style-src \'self\' \'unsafe-inline\'; font-src \'self\' data:; img-src \'self\' data: blob: https:; connect-src \'self\'; worker-src \'self\' blob:; frame-ancestors \'self\';',
+          'Content-Security-Policy': 'default-src \'self\'; script-src \'self\' \'unsafe-inline\' \'unsafe-eval\' https://www.googletagmanager.com; style-src \'self\' \'unsafe-inline\'; font-src \'self\' data:; img-src \'self\' data: blob: https:; connect-src \'self\' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; worker-src \'self\' blob:; frame-ancestors \'self\';',
         },
       },
     },

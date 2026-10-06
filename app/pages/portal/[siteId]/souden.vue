@@ -83,9 +83,9 @@ onMounted(() => {
     </header>
     <hr class="divider">
 
-    <Alert v-if="error" variant="danger">{{ error }}</Alert>
+    <Note v-if="error" variant="error">{{ error }}</Note>
 
-    <EmptyState v-if="!isLoading && stats && stats.totalCircuits === 0" icon="database" title="回路データが登録されていません" description="管理者の「現場設定」よりExcel連携ファイルの保存先設定および回路データの取り込みを行ってください。">
+    <EmptyState v-if="!isLoading && stats && stats.totalCircuits === 0" icon="database" variant="informational" title="回路データが登録されていません" description="管理者の「現場設定」よりExcel連携ファイルの保存先設定および回路データの取り込みを行ってください。">
       <template #actions>
         <Button variant="secondary" size="sm" icon="settings" to="/portal/admin">現場設定へ移動する</Button>
       </template>

@@ -75,6 +75,6 @@ onMounted(async () => {
 
     <hr class="divider">
 
-    <EmptyState icon="folder" title="アサインされている現場がありません" description="管理者に現場へのアサインを依頼してください。" />
+    <EmptyState icon="folder" variant="permission" title="アサインされている現場がありません" description="管理者に現場へのアサインを依頼してください。" />
   </div>
 </template>

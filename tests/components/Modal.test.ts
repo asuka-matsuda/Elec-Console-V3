@@ -121,4 +121,52 @@ describe('Modal.vue', () => {
     await wrapper.setProps({ modelValue: false })
     expect(HTMLDialogElement.prototype.close).toHaveBeenCalled()
   })
+
+  it('applies size class correctly', () => {
+    const wrapper = mount(Modal, {
+      props: {
+        modelValue: true,
+        size: 'lg',
+      },
+      global: {
+        stubs: commonStubs,
+      },
+    })
+
+    expect(wrapper.find('dialog').classes()).toContain('is-lg')
+  })
+
+  it('renders custom footer slot when provided', () => {
+    const wrapper = mount(Modal, {
+      props: {
+        modelValue: true,
+        title: 'タイトル',
+      },
+      slots: {
+        default: 'Body',
+        footer: '<div class="custom-footer">フッターアクション</div>',
+      },
+      global: {
+        stubs: commonStubs,
+      },
+    })
+
+    expect(wrapper.find('.modal-footer').exists()).toBe(true)
+    expect(wrapper.find('.custom-footer').text()).toBe('フッターアクション')
+  })
+
+  it('does not have pure accessibility attributes (aria-*, role)', () => {
+    const wrapper = mount(Modal, {
+      props: {
+        modelValue: true,
+        title: 'アクセシビリティ検証',
+      },
+      global: {
+        stubs: commonStubs,
+      },
+    })
+
+    expect(wrapper.attributes('role')).toBeUndefined()
+    expect(wrapper.find('dialog').attributes('role')).toBeUndefined()
+  })
 })

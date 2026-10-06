@@ -125,7 +125,20 @@ const getWeightResult = (entry: HistoryEntry) => (entry.rawResult ?? null) as un
       <EmptyState v-else icon="inbox" title="保存された履歴はありません" description="計算ツールで計算を実行し、「履歴に保存」を行うとここに記録されます。" />
 
       <template #fallback>
-        <EmptyState icon="loader" spin title="履歴を読み込み中..." />
+        <div class="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-panel-gap">
+          <div v-for="skeletonIndex in 4" :key="`history-skeleton-${skeletonIndex}`" class="panel history-panel flex flex-col gap-panel-gap">
+            <div class="flex flex-col gap-inline-gap">
+              <Skeleton width="6rem" height="0.85rem" />
+              <Skeleton width="10rem" height="1.4rem" />
+            </div>
+            <div class="flex flex-col gap-inline-gap">
+              <Skeleton width="100%" height="4rem" />
+            </div>
+            <div class="flex flex-col gap-inline-gap">
+              <Skeleton width="100%" height="3rem" />
+            </div>
+          </div>
+        </div>
       </template>
     </ClientOnly>
   </div>

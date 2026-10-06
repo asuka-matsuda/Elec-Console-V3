@@ -94,7 +94,7 @@ const columns: TableColumn<HistoryItem>[] = [
 
       <template #cell-actions="{ row }">
         <div class="flex items-center justify-end">
-          <DropdownMenu :items="[{ label: '編集', icon: 'edit', action: () => openModal(row) }, { label: '削除', icon: 'trash-2', variant: 'danger', action: () => handleDelete(row) }]" />
+          <Menu :items="[{ label: '履歴を編集…', icon: 'edit', action: () => openModal(row) }, { label: '履歴を削除', icon: 'trash-2', variant: 'danger', divider: true, action: () => handleDelete(row) }]" />
         </div>
       </template>
     </Table>
@@ -106,7 +106,7 @@ const columns: TableColumn<HistoryItem>[] = [
       </template>
 
       <form class="flex flex-col gap-form-row-gap" @submit.prevent="handleSave">
-        <Alert v-if="formError" variant="danger">{{ formError }}</Alert>
+        <Note v-if="formError" variant="error">{{ formError }}</Note>
 
         <div class="flex flex-col gap-inline-gap">
           <label for="history-tool" class="label">対象機能・ツール</label>
@@ -141,7 +141,7 @@ const columns: TableColumn<HistoryItem>[] = [
 
         <div class="flex flex-col gap-inline-gap">
           <label for="history-desc" class="label">詳細本文</label>
-          <Textarea id="history-desc" v-model="form.desc" :rows="5" placeholder="詳細な更新内容や変更点を入力してください（モーダルで表示されます）" />
+          <Textarea id="history-desc" v-model="form.desc" :rows="5" trim placeholder="例: フェーズ1の判定ロジックを最適化しました。" />
         </div>
       </form>
     </Modal>

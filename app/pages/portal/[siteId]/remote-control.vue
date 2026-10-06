@@ -322,7 +322,7 @@ onMounted(() => {
     </header>
     <hr class="divider">
 
-    <Alert v-if="dataError" variant="danger" :text="dataError" />
+    <Note v-if="dataError" variant="error" :text="dataError" />
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-panel-gap items-start">
       <!-- 左ペイン: リモコン設定・編成 -->
@@ -338,13 +338,13 @@ onMounted(() => {
         </header>
         <hr class="divider">
 
-        <Alert v-if="saveMessage" :variant="saveMessage.type === 'success' ? 'success' : 'danger'" :text="saveMessage.text" />
+        <Note v-if="saveMessage" :variant="saveMessage.type === 'success' ? 'success' : 'error'" :text="saveMessage.text" />
 
         <nav class="tabs flex items-center gap-inline-gap overflow-x-auto">
           <button v-for="tab in tabOptions" :key="tab.value" type="button" class="tabs-item" :class="{ 'is-active': currentTab === tab.value }" @click="currentTab = tab.value">
             <Icon v-if="tab.icon" :name="tab.icon" size="sm" />
             <span>{{ tab.label }}</span>
-            <span v-if="tab.badge !== undefined" class="badge">{{ tab.badge }}</span>
+            <Badge v-if="tab.badge !== undefined" size="sm">{{ tab.badge }}</Badge>
           </button>
         </nav>
 
@@ -404,7 +404,7 @@ onMounted(() => {
             </template>
 
             <template #cell-densoKeiTo="{ row }">
-              <span class="system-tag">{{ row.densoKeiTo }}系</span>
+              <Badge variant="gray" size="sm">{{ row.densoKeiTo }}系</Badge>
             </template>
 
             <template #cell-banMeisho="{ row }">
@@ -419,7 +419,7 @@ onMounted(() => {
             </template>
 
             <template #cell-kairoMeisho="{ row }">
-              <span v-if="row.isVacant" class="vacant-badge">空き</span>
+              <Badge v-if="row.isVacant" variant="amber" size="sm">空き</Badge>
               <span v-else class="meisho-text">{{ row.kairoMeisho }}</span>
             </template>
 
@@ -484,7 +484,7 @@ onMounted(() => {
 
         <hr class="divider">
 
-        <Alert v-if="generateMessage" :variant="generateMessage.type === 'success' ? 'success' : 'danger'" :text="generateMessage.text" />
+        <Note v-if="generateMessage" :variant="generateMessage.type === 'success' ? 'success' : 'error'" :text="generateMessage.text" />
 
         <div class="flex flex-col gap-item-gap">
           <header class="flex items-center gap-item-gap">
