@@ -38,18 +38,20 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-1 flex-col gap-section-gap h-full min-h-0">
-    <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
-      <h2 class="flex items-center gap-item-gap">
-        <Icon name="history" />
-        <span>送電試験 操作ログ</span>
-      </h2>
-      <div class="flex items-center gap-item-gap">
-        <Button variant="secondary" size="sm" icon="refresh-cw" :loading="isLoading" @click="fetchLogs">最新に更新する</Button>
+    <header class="flex flex-col gap-item-gap shrink-0">
+      <div class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
+        <h2 class="flex items-center gap-item-gap">
+          <Icon name="history" />
+          <span>送電試験 操作ログ</span>
+        </h2>
+        <div class="flex items-center gap-item-gap">
+          <Button variant="secondary" size="sm" icon="refresh-cw" :loading="isLoading" @click="fetchLogs">最新に更新する</Button>
 
-        <Button variant="tertiary" size="sm" icon="arrow-left" :to="`/portal/${siteId}/souden`">ダッシュボードへ戻る</Button>
+          <Button variant="tertiary" size="sm" icon="arrow-left" :to="`/portal/${siteId}/souden`">ダッシュボードへ戻る</Button>
+        </div>
       </div>
+      <hr class="divider">
     </header>
-    <hr class="divider">
 
     <div class="panel p-panel-pad-compact flex flex-wrap items-center gap-panel-gap">
       <div class="flex items-center gap-item-gap">

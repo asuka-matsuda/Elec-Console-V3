@@ -33,11 +33,16 @@ const isOpen = computed({
   },
 })
 
-const { isMaster } = useAuth()
+const { isMaster, isAdmin } = useAuth()
 const route = useRoute()
 
 const getVisibleItems = (items: MenuItem[]) => {
-  return items.filter(item => !item.masterOnly || isMaster.value)
+  return items.filter((item) => {
+    if (item.masterOnly && !isMaster.value) return false
+    if (item.adminOnly && !isAdmin.value) return false
+
+    return true
+  })
 }
 
 const isItemActive = (item: MenuItem) => {
@@ -84,21 +89,23 @@ onMounted(() => {
     </header>
 
     <nav class="flex-1 min-h-0 overflow-y-auto flex flex-col gap-panel-gap p-panel-pad-compact" @click="closeSidebar">
-      <section v-for="section in menuData" :key="section.id" class="flex flex-col gap-inline-gap" :style="{ '--section-accent': `var(--color-category-${section.accent || 'main'})` }">
-        <h5 v-if="section.globalNavHeading || section.heading" class="flex items-center gap-item-gap px-item-gap py-0.5 nav-heading">
-          <Icon v-if="section.icon" :name="section.icon" size="sm" variant="accent" />
-          <span>{{ section.globalNavHeading || section.heading }}</span>
-        </h5>
+      <template v-for="section in menuData" :key="section.id">
+        <section v-if="getVisibleItems(section.items).length > 0" class="flex flex-col gap-inline-gap" :style="{ '--section-accent': `var(--color-category-${section.accent || 'main'})` }">
+          <h5 v-if="section.globalNavHeading || section.heading" class="flex items-center gap-item-gap px-item-gap py-0.5 nav-heading">
+            <Icon v-if="section.icon" :name="section.icon" size="sm" variant="accent" />
+            <span>{{ section.globalNavHeading || section.heading }}</span>
+          </h5>
 
-        <ul class="flex flex-col gap-inline-gap">
-          <li v-for="item in getVisibleItems(section.items)" :key="item.href">
-            <NuxtLink :to="item.href" class="w-full flex items-center gap-item-gap py-inline-gap px-panel-pad-compact" :class="{ 'is-active': isItemActive(item) }">
-              <Icon :name="item.icon" size="md" />
-              <span>{{ item.text }}</span>
-            </NuxtLink>
-          </li>
-        </ul>
-      </section>
+          <ul class="flex flex-col gap-inline-gap">
+            <li v-for="item in getVisibleItems(section.items)" :key="item.href">
+              <NuxtLink :to="item.href" class="w-full flex items-center gap-item-gap py-inline-gap px-panel-pad-compact" :class="{ 'is-active': isItemActive(item) }">
+                <Icon :name="item.icon" size="md" />
+                <span>{{ item.text }}</span>
+              </NuxtLink>
+            </li>
+          </ul>
+        </section>
+      </template>
     </nav>
   </aside>
 </template>

@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
-import { describe, expect, it, vi } from 'vitest'
-import { reactive } from 'vue'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { computed, reactive } from 'vue'
 
 import GlobalNav from '../../app/components/common/organisms/GlobalNav.vue'
 import { useSidebar } from '../../app/composables/useSidebar'
@@ -11,8 +11,20 @@ const mockRoute = reactive({
   fullPath: '/',
 })
 
+const mockAuth = reactive({
+  isMaster: false,
+  isAdmin: false,
+})
+
 vi.mock('vue-router', () => ({
   useRoute: () => mockRoute,
+}))
+
+vi.mock('../../app/composables/useAuth', () => ({
+  useAuth: () => ({
+    isMaster: computed(() => mockAuth.isMaster),
+    isAdmin: computed(() => mockAuth.isAdmin),
+  }),
 }))
 
 describe('GlobalNav.vue', () => {
@@ -104,6 +116,37 @@ describe('GlobalNav.vue', () => {
 
     expect(wrapper.emitted('update:isOpen')).toBeTruthy()
     expect(wrapper.emitted('update:isOpen')![0]).toEqual([false])
+  })
+
+  beforeEach(() => {
+    mockAuth.isAdmin = true
+    mockAuth.isMaster = true
+  })
+
+  it('hides adminOnly and masterOnly links for standard workers', () => {
+    mockAuth.isAdmin = false
+    mockAuth.isMaster = false
+    const wrapper = createWrapper({ isOpen: true })
+
+    const links = wrapper.findAll('.link-stub')
+    const adminLink = links.find(w => w.attributes('href') === '/portal/admin')
+    const masterLink = links.find(w => w.attributes('href') === '/master')
+
+    expect(adminLink).toBeUndefined()
+    expect(masterLink).toBeUndefined()
+  })
+
+  it('shows adminOnly link for site admins', () => {
+    mockAuth.isAdmin = true
+    mockAuth.isMaster = false
+    const wrapper = createWrapper({ isOpen: true })
+
+    const links = wrapper.findAll('.link-stub')
+    const adminLink = links.find(w => w.attributes('href') === '/portal/admin')
+    const masterLink = links.find(w => w.attributes('href') === '/master')
+
+    expect(adminLink).toBeDefined()
+    expect(masterLink).toBeUndefined()
   })
 
   it('activates 現場ポータル for portal subpaths like /portal/site-1', () => {

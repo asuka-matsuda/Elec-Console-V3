@@ -11,6 +11,7 @@ import type { Site, SiteStatus } from '#shared/types/site'
 import { useAdminSites } from '~/composables/admin/useAdminSites'
 import { useAdminUsers } from '~/composables/admin/useAdminUsers'
 import { useSiteExcelSync } from '~/composables/portal/useSiteExcelSync'
+import { useAuth } from '~/composables/useAuth'
 import { useModal } from '~/composables/useModal'
 import {
   SITE_SETTINGS_TABS,
@@ -41,6 +42,7 @@ const INITIAL_CREATE_SITE: CreateSiteFormState = {
   status: 'planning',
 }
 
+const { isMaster, isSiteAdmin } = useAuth()
 const { sites, isLoading, fetchSites, createSite, toggleDisableSite, updateSite, deleteSite } = useAdminSites()
 const { users, fetchUsers } = useAdminUsers()
 const { askConfirm } = useModal()
@@ -70,6 +72,11 @@ const filteredSites = computed(() => {
   const filter = statusFilter.value
 
   return sites.value.filter((site) => {
+    // master以外の現場管理者は、自身がadmin権限を持つ現場のみ管理可能
+    if (!isMaster.value && !isSiteAdmin(site.id)) {
+      return false
+    }
+
     if (filter !== 'all' && site.status !== filter) {
       return false
     }
@@ -87,6 +94,7 @@ const filteredSites = computed(() => {
 // --- 右ペイン（詳細設定） ---
 const selectedSite = computed<Site | null>(() => {
   if (!selectedSiteId.value) return null
+  if (!isMaster.value && !isSiteAdmin(selectedSiteId.value)) return null
 
   return sites.value.find(s => s.id === selectedSiteId.value) || null
 })
@@ -133,7 +141,7 @@ const workerNames = computed(() =>
 
 // --- 監視（Watch） ---
 watch(
-  sites,
+  filteredSites,
   (loadedSites) => {
     if (loadedSites.length > 0) {
       if (!selectedSiteId.value || !loadedSites.some(s => s.id === selectedSiteId.value)) {

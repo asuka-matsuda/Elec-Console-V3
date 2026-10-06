@@ -12,7 +12,7 @@ import { menuData, type MenuItem } from '~/constants/data/menuData'
 import type { BadgeVariant } from '~/types/components'
 import { formatDate } from '~/utils/date'
 
-const { isMaster } = useAuth()
+const { isMaster, isAdmin } = useAuth()
 
 // 1. ダッシュボード表示対象メニューの抽出（現場解決・リダイレクト等は /portal へ委譲）
 const dashboardSections = computed(() =>
@@ -20,8 +20,14 @@ const dashboardSections = computed(() =>
     .filter(section => section.showInDashboard)
     .map(section => ({
       ...section,
-      items: section.items.filter(item => !item.masterOnly || isMaster.value),
-    })),
+      items: section.items.filter((item) => {
+        if (item.masterOnly && !isMaster.value) return false
+        if (item.adminOnly && !isAdmin.value) return false
+
+        return true
+      }),
+    }))
+    .filter(section => section.items.length > 0),
 )
 
 // 2. お知らせ・更新履歴データ（await を外して初期描画ブロックを排除）

@@ -219,11 +219,17 @@ export async function requireAuthUser(event: H3Event): Promise<SafeUser> {
 
 /**
  * 管理者権限必須ガード。未認証時は 401、非管理者の場合は 403 Forbidden を throw します。
+ * master アカウント、または担当現場で管理者権限を持つユーザーを管理者と認定します。
  */
 export async function requireAdminUser(event: H3Event): Promise<SafeUser> {
   const user = await requireAuthUser(event)
 
-  if (user.role !== 'admin') {
+  const hasAdminPrivilege
+    = isSuperUser(user)
+      || user.role === 'admin'
+      || (user.siteAssignments?.some(sa => sa.role === 'admin') ?? false)
+
+  if (!hasAdminPrivilege) {
     throw createError({
       statusCode: 403,
       statusMessage: 'Forbidden',
@@ -239,6 +245,19 @@ export async function requireAdminUser(event: H3Event): Promise<SafeUser> {
  */
 export function isSuperUser(user: SafeUser): boolean {
   return user.loginId === 'master'
+}
+
+/**
+ * 特定現場の管理者権限を有しているか判定
+ */
+export function canAdminSite(user: SafeUser, siteId: string): boolean {
+  if (isSuperUser(user)) {
+    return true
+  }
+
+  const assignment = user.siteAssignments?.find(sa => sa.siteId === siteId)
+
+  return assignment?.role === 'admin'
 }
 
 /**

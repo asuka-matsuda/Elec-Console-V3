@@ -15,7 +15,6 @@ import { useTableSort } from '~/composables/useTableSort'
 import {
   KENSOU_OPTIONS_1P,
   KENSOU_OPTIONS_3P,
-  PHASE_NAV_OPTIONS,
   PHASE3_TABLE_COLUMNS,
 } from '~/constants/soudenConstants'
 import type { SelectOption } from '~/types/components'
@@ -258,24 +257,20 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-1 flex-col gap-section-gap min-h-0">
-    <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
-      <h2 class="flex items-center gap-item-gap">
-        <Icon name="zap" />
-        <span>{{ headerTitle }}</span>
-      </h2>
-      <div class="flex items-center gap-item-gap">
-        <PortalSyncStatusBadge :site-id="siteId" />
+    <header class="flex flex-col gap-item-gap shrink-0">
+      <div class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
+        <h2 class="flex items-center gap-item-gap">
+          <Icon name="zap" />
+          <span>{{ headerTitle }}</span>
+        </h2>
+        <div class="flex items-center gap-item-gap">
+          <PortalSyncStatusBadge :site-id="siteId" />
 
-        <Button variant="tertiary" size="sm" icon="arrow-left" :to="`/portal/${siteId}/souden`">ダッシュボードへ戻る</Button>
+          <Button variant="tertiary" size="sm" icon="arrow-left" :to="`/portal/${siteId}/souden`">ダッシュボードへ戻る</Button>
+        </div>
       </div>
+      <hr class="divider">
     </header>
-    <hr class="divider">
-
-    <nav class="phase-nav flex items-center gap-inline-gap overflow-x-auto">
-      <NuxtLink v-for="item in PHASE_NAV_OPTIONS" :key="item.value" :to="{ path: `/portal/${siteId}/phase${item.value}`, query: route.query }" class="phase-nav-item inline-flex items-center gap-item-gap" :class="{ 'is-active': item.value === '3' }">
-        <span>{{ item.label }}</span>
-      </NuxtLink>
-    </nav>
 
     <section class="panel grid grid-cols-1 lg:grid-cols-2 gap-panel-gap items-start">
       <div class="flex flex-col gap-form-row-gap">
@@ -386,34 +381,6 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-.phase-nav {
-  border-bottom: var(--border-width-base) solid var(--color-border);
-}
-
-.phase-nav-item {
-  margin-bottom: -1px;
-  padding: 0.5em 0.9em;
-  border-bottom: var(--border-width-thick, 2px) solid transparent;
-
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
-
-  transition: var(--transition-interactive);
-
-  @include state-interactive;
-
-  &:hover {
-    color: var(--color-text-main);
-  }
-
-  &.is-active {
-    border-bottom-color: var(--theme-accent);
-    font-weight: var(--font-weight-bold);
-    color: var(--theme-accent);
-  }
-}
-
 .count-label {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);

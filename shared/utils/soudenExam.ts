@@ -331,3 +331,149 @@ export function getPhase2Threshold(haidenHoushiki: string | null | undefined): n
 
   return 0.1
 }
+
+/**
+ * 使用電圧が300V超かどうかを判定
+ * 400V, 415V, 440V, 380V, 6600V 等の表記を検知
+ */
+export function isVoltageOver300V(haidenHoushiki?: string | null): boolean {
+  if (!haidenHoushiki) return false
+  const h = String(haidenHoushiki).toUpperCase()
+
+  if (h.includes('400V') || h.includes('415V') || h.includes('440V') || h.includes('380V') || h.includes('6600V')) {
+    return true
+  }
+
+  const match = h.match(/(\d+)V/)
+
+  if (match && match[1]) {
+    const v = Number.parseInt(match[1], 10)
+
+    if (v > 300) return true
+  }
+
+  return false
+}
+
+/**
+ * 遮断器が漏電遮断器（ELCB / ELB）かどうかを判定
+ */
+export function isElcbBreaker(shadankiShubetsu?: string | null): boolean {
+  if (!shadankiShubetsu) return false
+  const s = String(shadankiShubetsu).toUpperCase()
+
+  return s.includes('ELCB') || s.includes('ELB') || s.includes('漏電')
+}
+
+/**
+ * 接地種別判定パラメータ
+ */
+export interface DetermineSetsuchiParams {
+  setsuchiManual?: string | null
+  setsuchiC?: string | null
+  setsuchiD?: string | null
+  setsuchiDelb?: string | null
+  setsuchiUmu?: string | null
+  haidenHoushiki?: string | null
+  keiTo?: string | null
+  shadankiShubetsu?: string | null
+}
+
+/**
+ * 接地種別（setsuchiList）を自動判定・決定する
+ *
+ * 1. 手動（接地（手動））に記載があれば手動が最優先
+ * 2. 接地有無が「無」の場合は接地対象外（'-'）
+ * 3. Excel上の各接地列（C種, D種, D(ELB)種）に直接記載がある場合はそれを優先結合
+ * 4. 基本自動判定ロジック:
+ *    - 使用電圧が300V超: 'C種'
+ *    - 使用電圧が300V以下:
+ *      - 幹線がTRUE: 'D種 / D（ELB）種'
+ *      - 幹線がFALSE かつ MCCB: 'D種'
+ *      - 幹線がFALSE かつ ELCB: 'D（ELB）種'
+ */
+export function determineSetsuchiType(params: DetermineSetsuchiParams): string | null {
+  // 1. 手動が最優先
+  const manual = params.setsuchiManual?.trim()
+
+  if (manual) {
+    return manual
+  }
+
+  // 2. 接地有無が「無」の場合は接地対象外
+  const umu = params.setsuchiUmu?.trim()
+
+  if (umu === '無') {
+    return '-'
+  }
+
+  // 3. 電気設備技術基準に基づくロジック（最大2本）
+  const isOver300 = isVoltageOver300V(params.haidenHoushiki)
+
+  if (isOver300) {
+    // 使用電圧が300V超: C種（最大1本）
+    const valC = params.setsuchiC?.trim()
+
+    if (!valC || valC === '-' || valC === '無') {
+      return valC === '-' ? '-' : 'C種'
+    }
+
+    return valC === '○' || valC === '有' ? 'C種' : valC
+  }
+
+  // 使用電圧が300V以下
+  const isTrunk = params.keiTo === '幹線'
+
+  if (isTrunk) {
+    // 幹線がTRUE: D種 と D（ELB）種（最大2本）
+    const valD = params.setsuchiD?.trim()
+    const valDelb = params.setsuchiDelb?.trim()
+
+    const cleanD = (valD && valD !== '-' && valD !== '無')
+      ? (valD === '○' || valD === '有' ? 'D種' : valD)
+      : null
+
+    const cleanDelb = (valDelb && valDelb !== '-' && valDelb !== '無')
+      ? (valDelb === '○' || valDelb === '有' ? 'D（ELB）種' : valDelb)
+      : null
+
+    if (cleanD && cleanDelb) {
+      return `${cleanD} / ${cleanDelb}`
+    }
+    if (cleanD) {
+      return cleanD
+    }
+    if (cleanDelb) {
+      return cleanDelb
+    }
+
+    if (valD === '-' || valDelb === '-') {
+      return '-'
+    }
+
+    return 'D種 / D（ELB）種'
+  }
+
+  // 幹線がFALSE（二次側 / 分岐回路）
+  const isElcb = isElcbBreaker(params.shadankiShubetsu)
+
+  if (isElcb) {
+    // 幹線がFALSE かつ ELCB: D（ELB）種（最大1本）
+    const valDelb = params.setsuchiDelb?.trim()
+
+    if (!valDelb || valDelb === '-' || valDelb === '無') {
+      return valDelb === '-' ? '-' : 'D（ELB）種'
+    }
+
+    return valDelb === '○' || valDelb === '有' ? 'D（ELB）種' : valDelb
+  }
+
+  // 幹線がFALSE かつ MCCB（またはデフォルト）: D種（最大1本）
+  const valD = params.setsuchiD?.trim()
+
+  if (!valD || valD === '-' || valD === '無') {
+    return valD === '-' ? '-' : 'D種'
+  }
+
+  return valD === '○' || valD === '有' ? 'D種' : valD
+}

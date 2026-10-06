@@ -116,12 +116,3 @@ export const OPERATION_LOG_LIMIT_OPTIONS = [
   { label: '最新 200 件', value: 200 },
   { label: 'すべて表示', value: 0 },
 ]
-
-/**
- * 送電試験 フェーズ切替ナビゲーション項目定義
- */
-export const PHASE_NAV_OPTIONS = [
-  { label: 'フェーズ1：回路確認・増締', value: '1' },
-  { label: 'フェーズ2：絶縁抵抗測定', value: '2' },
-  { label: 'フェーズ3：送電・電圧測定・検相', value: '3' },
-] as const

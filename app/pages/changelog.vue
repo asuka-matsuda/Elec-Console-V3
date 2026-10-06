@@ -87,15 +87,16 @@ const resolveToolInfo = (toolId?: string) => {
 
 <template>
   <div class="flex flex-1 flex-col gap-section-gap w-full max-w-[1200px] mx-auto min-h-0">
-    <header class="flex items-center justify-between gap-item-gap flex-wrap">
-      <h2 class="flex items-center gap-item-gap">
-        <Icon name="clock" />
-        <span>バージョン更新履歴</span>
-      </h2>
-      <Button variant="tertiary" size="sm" icon="arrow-left" to="/">ダッシュボードへ戻る</Button>
+    <header class="flex flex-col gap-item-gap shrink-0">
+      <div class="flex items-center justify-between gap-item-gap flex-wrap">
+        <h2 class="flex items-center gap-item-gap">
+          <Icon name="clock" />
+          <span>バージョン更新履歴</span>
+        </h2>
+        <Button variant="tertiary" size="sm" icon="arrow-left" to="/">ダッシュボードへ戻る</Button>
+      </div>
+      <hr class="divider">
     </header>
-
-    <hr class="divider">
 
     <div class="panel flex flex-col sm:flex-row sm:items-center justify-between gap-panel-gap">
       <div class="flex items-center gap-item-gap filter-label">

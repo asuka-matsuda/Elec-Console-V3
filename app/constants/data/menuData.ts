@@ -23,6 +23,7 @@ export type MenuItem = {
   desc?: string
   disabled?: boolean
   masterOnly?: boolean
+  adminOnly?: boolean
   version?: string
   badge?: MenuBadge | string
 }
@@ -61,15 +62,16 @@ export const menuData: MenuSection[] = [
       },
       {
         id: 'portal-admin',
-        text: '現場ポータル管理（管理者のみ）',
+        text: '現場ポータル管理',
         href: '/portal/admin',
         icon: 'terminal',
         version: 'v1.0.0',
+        adminOnly: true,
         desc: '基本情報・Excel連携・除外回路の管理。',
       },
       {
         id: 'master',
-        text: 'マスター管理（masterのみ）',
+        text: 'マスター管理',
         href: '/master',
         icon: 'sliders',
         version: 'v1.0.0',

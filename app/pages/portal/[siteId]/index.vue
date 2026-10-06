@@ -62,18 +62,20 @@ useHead({
 
 <template>
   <div :key="siteId" class="flex flex-col gap-section-gap h-full">
-    <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
-      <h2 class="flex items-center gap-item-gap">
-        <Icon name="map-pin" />
-        <span>{{ currentSite?.name || '現場ダッシュボード' }}</span>
-      </h2>
-      <div class="flex items-center gap-item-gap">
-        <PortalSyncStatusBadge :site-id="siteId" />
+    <header class="flex flex-col gap-item-gap shrink-0">
+      <div class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
+        <h2 class="flex items-center gap-item-gap">
+          <Icon name="map-pin" />
+          <span>{{ currentSite?.name || '現場ダッシュボード' }}</span>
+        </h2>
+        <div class="flex items-center gap-item-gap">
+          <PortalSyncStatusBadge :site-id="siteId" />
 
-        <Select :model-value="siteId" :options="siteOptions" class="min-w-[200px]" @update:model-value="switchSite" />
+          <Select :model-value="siteId" :options="siteOptions" class="min-w-[200px]" @update:model-value="switchSite" />
+        </div>
       </div>
+      <hr class="divider">
     </header>
-    <hr class="divider">
 
     <div class="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-section-gap items-start">
       <section class="min-h-[500px]">

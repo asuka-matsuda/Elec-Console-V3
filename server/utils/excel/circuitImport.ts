@@ -10,6 +10,8 @@ import fs from 'node:fs'
 import type { Circuit, Prisma } from '@prisma/client'
 import ExcelJS from 'exceljs'
 
+import { determineSetsuchiType } from '#shared/utils/soudenExam'
+
 import { prisma } from '../prisma'
 import { getCellString, isKansen, parseP2Value } from './cellFormat'
 import { detectCircuitColumns, findCircuitSheet, makeCircuitKey } from './circuitMapping'
@@ -216,23 +218,45 @@ export async function importCircuitsFromExcel(
     const vRt = parseFloat(getColStr(row, colMap.denatsuRt)) || null
     const kensou = getColStr(row, colMap.kensou) || null
 
+    const haidenHoushiki = getColStr(row, colMap.haidenHoushiki) || null
+    const shadankiShubetsu = getColStr(row, colMap.shadankiShubetsu) || null
+    const rawSetsuchiUmu = getColStr(row, colMap.setsuchiUmu) || null
+    const rawSetsuchiList = getColStr(row, colMap.setsuchiList) || null
+    const rawSetsuchiManual = getColStr(row, colMap.setsuchiManual) || null
+    const rawSetsuchiC = getColStr(row, colMap.setsuchiC) || null
+    const rawSetsuchiD = getColStr(row, colMap.setsuchiD) || null
+    const rawSetsuchiDelb = getColStr(row, colMap.setsuchiDelb) || null
+
+    const calculatedSetsuchi = determineSetsuchiType({
+      setsuchiManual: rawSetsuchiManual,
+      setsuchiC: rawSetsuchiC,
+      setsuchiD: rawSetsuchiD,
+      setsuchiDelb: rawSetsuchiDelb,
+      setsuchiUmu: rawSetsuchiUmu,
+      haidenHoushiki,
+      keiTo,
+      shadankiShubetsu,
+    })
+
+    const finalSetsuchiList = calculatedSetsuchi || rawSetsuchiList
+
     parsedCircuits.push({
       siteId,
       excelRow: rowNumber,
       keiTo,
       banShubetsu,
       banMeisho: banMeisho || '未分類',
-      haidenHoushiki: getColStr(row, colMap.haidenHoushiki) || null,
+      haidenHoushiki,
       souShubetsu: getColStr(row, colMap.souShubetsu) || null,
-      shadankiShubetsu: getColStr(row, colMap.shadankiShubetsu) || null,
+      shadankiShubetsu,
       shadankiYouryou: getColStr(row, colMap.shadankiYouryou) || null,
       kairoKigou: getColStr(row, colMap.kairoKigou) || null,
       kairoBangou: kairoBangou || null,
       kairoMeisho: kairoMeisho || null,
       cableList: getColStr(row, colMap.cableList) || null,
       haisenJousuu: getColStr(row, colMap.haisenJousuu) || null,
-      setsuchiUmu: getColStr(row, colMap.setsuchiUmu) || null,
-      setsuchiList: getColStr(row, colMap.setsuchiList) || null,
+      setsuchiUmu: rawSetsuchiUmu,
+      setsuchiList: finalSetsuchiList,
 
       p1Kakunin: Boolean(p1Worker),
       p1Mashishime: Boolean(p1Worker),

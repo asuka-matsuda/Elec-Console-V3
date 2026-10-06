@@ -311,16 +311,18 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-col gap-section-gap h-full">
-    <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
-      <h2 class="flex items-center gap-item-gap">
-        <Icon name="sliders" class="text-primary" />
-        <span>{{ pageTitle }}</span>
-      </h2>
-      <div class="flex items-center gap-item-gap">
-        <Button variant="tertiary" size="sm" icon="arrow-left" :to="`/portal/${siteId}`">現場ポータルへ戻る</Button>
+    <header class="flex flex-col gap-item-gap shrink-0">
+      <div class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
+        <h2 class="flex items-center gap-item-gap">
+          <Icon name="sliders" class="text-primary" />
+          <span>{{ pageTitle }}</span>
+        </h2>
+        <div class="flex items-center gap-item-gap">
+          <Button variant="tertiary" size="sm" icon="arrow-left" :to="`/portal/${siteId}`">現場ポータルへ戻る</Button>
+        </div>
       </div>
+      <hr class="divider">
     </header>
-    <hr class="divider">
 
     <Note v-if="dataError" variant="error" :text="dataError" />
 

@@ -334,14 +334,28 @@ export function useAuth() {
   }
 
   const isAuthenticated = computed(() => !!token.value && !!currentUser.value)
-  const isAdmin = computed(() => currentUser.value?.role === 'admin')
   const isMaster = computed(() => currentUser.value?.loginId === 'master')
+  const isAdmin = computed(() => {
+    if (isMaster.value) return true
+    if (currentUser.value?.role === 'admin') return true
+
+    return currentUser.value?.siteAssignments?.some(sa => sa.role === 'admin') ?? false
+  })
+
+  const isSiteAdmin = (siteId?: string): boolean => {
+    if (!siteId) return false
+    if (isMaster.value) return true
+    const assignment = currentUser.value?.siteAssignments?.find(sa => sa.siteId === siteId)
+
+    return assignment?.role === 'admin'
+  }
 
   return {
     currentUser,
     isAuthenticated,
     isAdmin,
     isMaster,
+    isSiteAdmin,
     isOfflineSession,
     login,
     changePassword,

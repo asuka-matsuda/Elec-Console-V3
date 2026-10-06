@@ -42,16 +42,18 @@ const getWeightResult = (entry: HistoryEntry) => (entry.rawResult ?? null) as un
 
 <template>
   <div class="flex flex-col gap-panel-gap">
-    <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
-      <h2 class="flex items-center gap-item-gap">
-        <Icon name="clock" />
-        <span>計算履歴</span>
-      </h2>
-      <div v-if="historyList.length > 0" class="flex items-center gap-item-gap">
-        <Button variant="danger" size="sm" icon="trash-2" @click="handleClearAll">すべて削除する</Button>
+    <header class="flex flex-col gap-item-gap shrink-0">
+      <div class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
+        <h2 class="flex items-center gap-item-gap">
+          <Icon name="clock" />
+          <span>計算履歴</span>
+        </h2>
+        <div v-if="historyList.length > 0" class="flex items-center gap-item-gap">
+          <Button variant="danger" size="sm" icon="trash-2" @click="handleClearAll">すべて削除する</Button>
+        </div>
       </div>
+      <hr class="divider">
     </header>
-    <hr class="divider">
 
     <Tabs v-model="currentTab" :items="tabs" />
 

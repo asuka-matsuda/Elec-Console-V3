@@ -24,6 +24,10 @@ export interface CircuitColumnMap {
   haisenJousuu: number
   setsuchiUmu: number
   setsuchiList: number
+  setsuchiManual?: number
+  setsuchiC?: number
+  setsuchiD?: number
+  setsuchiDelb?: number
   keiTo: number
   p1Worker?: number
   p1ConfirmedAt?: number
@@ -57,6 +61,10 @@ export const DEFAULT_CIRCUIT_COLUMN_MAP: CircuitColumnMap = {
   haisenJousuu: 16,
   setsuchiUmu: 17,
   setsuchiList: 18,
+  setsuchiManual: undefined,
+  setsuchiC: undefined,
+  setsuchiD: undefined,
+  setsuchiDelb: undefined,
   keiTo: 22,
   p1Worker: 24,
   p1ConfirmedAt: undefined,
@@ -94,6 +102,10 @@ const HEADER_ALIASES: Record<keyof CircuitColumnMap, string[]> = {
   haisenJousuu: ['配線条数'],
   setsuchiUmu: ['接地有無'],
   setsuchiList: ['接地リスト', '接地種別', '接地'],
+  setsuchiManual: ['接地（手動）', '接地(手動)', '接地手動', '手動接地'],
+  setsuchiC: ['接地C種', '接地c種', 'C種接地'],
+  setsuchiD: ['接地D種', '接地d種', 'D種接地'],
+  setsuchiDelb: ['接地D（ELB）種', '接地D(ELB)種', '接地d(elb)種', '接地delb種', '接地D・ELB種', 'D(ELB)種接地'],
   keiTo: ['幹線判定', '幹線/二次側', '系統', '区分'],
 
   // Phase 1 (書き戻し対象)
@@ -186,7 +198,11 @@ export function detectCircuitColumns(sheet: ExcelJS.Worksheet): {
       colMap[key] = foundCol
     }
     else if (
-      key === 'p1Worker'
+      key === 'setsuchiManual'
+      || key === 'setsuchiC'
+      || key === 'setsuchiD'
+      || key === 'setsuchiDelb'
+      || key === 'p1Worker'
       || key === 'p1ConfirmedAt'
       || key === 'p1Remarks'
       || key === 'zetsuenR'
@@ -203,7 +219,7 @@ export function detectCircuitColumns(sheet: ExcelJS.Worksheet): {
       || key === 'p3ConfirmedAt'
       || key === 'p3Remarks'
     ) {
-      // 書き戻し対象項目は見出しが見つからない場合、意図しない列への書き込み防止のため undefined とする
+      // 任意項目・書き戻し対象項目は見出しが見つからない場合は undefined とする
       colMap[key] = undefined
     }
   }
