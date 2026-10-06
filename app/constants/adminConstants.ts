@@ -63,7 +63,6 @@ export const SITE_STATUS_CONFIG: Record<SiteStatus, { label: string, color: stri
 export const SITE_SETTINGS_TABS = [
   { value: 'basic', label: '基本情報', icon: 'info' },
   { value: 'integration', label: 'Excelデータ連携', icon: 'link' },
-  { value: 'rules', label: '除外回路ルール', icon: 'filter' },
   { value: 'wordBreak', label: '改行禁止ワード', icon: 'type' },
 ]
 

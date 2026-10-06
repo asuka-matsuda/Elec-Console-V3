@@ -22,7 +22,94 @@ interface ImportCircuitResult {
   updatedCount?: number
   keptCount?: number
   deletedCount?: number
+  excludedKeywords?: string[]
   error?: string
+}
+
+/**
+ * Settingシートの除外ﾘｽﾄ（テーブルまたは列）から除外キーワード配列を自動抽出
+ */
+export function extractExcludedKeywordsFromWorkbook(workbook: ExcelJS.Workbook): string[] {
+  const settingSheet = workbook.worksheets.find((ws) => {
+    const n = ws.name.trim().toLowerCase()
+
+    return n === 'setting' || n.includes('設定')
+  })
+
+  if (!settingSheet) {
+    return []
+  }
+
+  const keywords: string[] = []
+
+  // 1. テーブル「除外ﾘｽﾄ」または「除外リスト」から抽出
+  const sheetAny = settingSheet as unknown as {
+    tables?: Record<string, {
+      name?: string
+      tableRef?: string
+      table?: { name?: string, tableRef?: string }
+    }>
+  }
+  const tables = sheetAny.tables || {}
+  const targetTable = Object.values(tables).find((t) => {
+    const tName = (t?.name || t?.table?.name || '').trim()
+
+    return tName === '除外ﾘｽﾄ' || tName === '除外リスト'
+  })
+
+  if (targetTable) {
+    const ref = targetTable.tableRef || targetTable.table?.tableRef
+
+    if (ref) {
+      const match = ref.match(/^([A-Z]+)([0-9]+):([A-Z]+)([0-9]+)$/)
+
+      if (match && match[1] && match[2] && match[4]) {
+        const col = match[1]
+        const startRow = parseInt(match[2], 10)
+        const endRow = parseInt(match[4], 10)
+
+        // 1行目は見出し（除外キーワード）なので startRow + 1 から走査
+        for (let r = startRow + 1; r <= endRow; r++) {
+          const cell = settingSheet.getCell(`${col}${r}`)
+          const val = String(cell.value || '').trim()
+
+          if (val) {
+            keywords.push(val)
+          }
+        }
+      }
+    }
+  }
+
+  // 2. テーブル定義がない場合のフォールバック（セル走査）
+  if (keywords.length === 0) {
+    let headerRow = -1
+    let headerCol = -1
+
+    settingSheet.eachRow((row, rowNumber) => {
+      if (headerRow !== -1) return
+      row.eachCell((cell, colNumber) => {
+        const val = String(cell.value || '').trim()
+
+        if (val === '除外キーワード' || val === '除外ﾘｽﾄ' || val === '除外リスト') {
+          headerRow = rowNumber
+          headerCol = colNumber
+        }
+      })
+    })
+
+    if (headerRow !== -1 && headerCol !== -1) {
+      for (let r = headerRow + 1; r <= settingSheet.rowCount; r++) {
+        const cell = settingSheet.getRow(r).getCell(headerCol)
+        const val = String(cell.value || '').trim()
+
+        if (!val) break
+        keywords.push(val)
+      }
+    }
+  }
+
+  return Array.from(new Set(keywords))
 }
 
 /**
@@ -176,6 +263,21 @@ export async function importCircuitsFromExcel(
     })
   })
 
+  // Setting シートの「除外ﾘｽﾄ」テーブルから除外キーワードを自動抽出
+  const extractedExcludedKeywords = extractExcludedKeywordsFromWorkbook(workbook)
+
+  const settingsUpdateData: Prisma.SiteSettingsUpdateInput = {}
+  if (filePath) settingsUpdateData.excelPath = filePath
+  if (extractedExcludedKeywords.length > 0) {
+    settingsUpdateData.excludedCircuits = JSON.stringify(extractedExcludedKeywords)
+  }
+
+  const settingsCreateData: Prisma.SiteSettingsCreateInput = {
+    site: { connect: { id: siteId } },
+    excelPath: filePath || null,
+    excludedCircuits: extractedExcludedKeywords.length > 0 ? JSON.stringify(extractedExcludedKeywords) : null,
+  }
+
   if (mode === 'reset') {
     // 完全初期化（全件削除して新規作成）
     await prisma.$transaction([
@@ -188,18 +290,16 @@ export async function importCircuitsFromExcel(
           action: 'Excel初期化取込',
           targetBan: '全体',
           targetKairo: '一括取込',
-          details: `${sourceLabel}から${parsedCircuits.length}件の回路情報を初期化取り込みしました`,
+          details: `${sourceLabel}から${parsedCircuits.length}件の回路情報を初期化取り込みしました${
+            extractedExcludedKeywords.length > 0 ? `（除外キーワード${extractedExcludedKeywords.length}件を自動適用）` : ''
+          }`,
         },
       }),
-      ...(filePath
-        ? [
-            prisma.siteSettings.upsert({
-              where: { siteId },
-              create: { siteId, excelPath: filePath },
-              update: { excelPath: filePath },
-            }),
-          ]
-        : []),
+      prisma.siteSettings.upsert({
+        where: { siteId },
+        create: settingsCreateData,
+        update: settingsUpdateData,
+      }),
     ])
 
     return {
@@ -207,6 +307,7 @@ export async function importCircuitsFromExcel(
       count: parsedCircuits.length,
       createdCount: parsedCircuits.length,
       updatedCount: 0,
+      excludedKeywords: extractedExcludedKeywords,
     }
   }
 
@@ -344,18 +445,11 @@ export async function importCircuitsFromExcel(
       },
     })
 
-    if (filePath) {
-      await tx.siteSettings.upsert({
-        where: { siteId },
-        create: {
-          siteId,
-          excelPath: filePath,
-        },
-        update: {
-          excelPath: filePath,
-        },
-      })
-    }
+    await tx.siteSettings.upsert({
+      where: { siteId },
+      create: settingsCreateData,
+      update: settingsUpdateData,
+    })
   })
 
   return {
@@ -365,5 +459,6 @@ export async function importCircuitsFromExcel(
     updatedCount: updatedCircuits.length,
     keptCount: keptTestedCount,
     deletedCount: deleteIds.length,
+    excludedKeywords: extractedExcludedKeywords,
   }
 }

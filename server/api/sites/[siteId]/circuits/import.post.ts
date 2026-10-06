@@ -117,8 +117,17 @@ export default defineEventHandler(async (event) => {
 
       await prisma.siteSettings.upsert({
         where: { siteId },
-        create: { siteId, excelPath: effectiveFilePath },
-        update: { excelPath: effectiveFilePath },
+        create: {
+          siteId,
+          excelPath: effectiveFilePath,
+          excludedCircuits: result.excludedKeywords ? JSON.stringify(result.excludedKeywords) : null,
+        },
+        update: {
+          excelPath: effectiveFilePath,
+          ...(result.excludedKeywords && result.excludedKeywords.length > 0
+            ? { excludedCircuits: JSON.stringify(result.excludedKeywords) }
+            : {}),
+        },
       })
     }
 
@@ -131,6 +140,7 @@ export default defineEventHandler(async (event) => {
       deletedCount: result.deletedCount ?? 0,
       mode,
       filePath: effectiveFilePath || (uploadedFile?.filename ?? 'アップロードファイル'),
+      excludedKeywords: result.excludedKeywords || [],
     }
   }
   catch (error: unknown) {

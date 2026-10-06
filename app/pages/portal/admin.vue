@@ -124,7 +124,6 @@ const currentExcelFileName = computed(() => {
 const form = reactive({
   name: '',
   status: 'planning' as Site['status'],
-  excludedCircuits: [] as string[],
   noBreakWords: [] as string[],
 })
 
@@ -154,7 +153,6 @@ watch(
     if (newSite) {
       form.name = newSite.name || ''
       form.status = newSite.status || 'planning'
-      form.excludedCircuits = [...(newSite.excludedCircuits || [])]
       form.noBreakWords = [...(newSite.noBreakWords || [])]
 
       if (users.value.length === 0) {
@@ -176,18 +174,6 @@ const handleSelectSite = (site: Site) => {
   selectedSiteId.value = site.id
 }
 
-const handleAddExcludedCircuit = () => {
-  form.excludedCircuits.push('')
-}
-
-const handleRemoveExcludedCircuit = (index: number) => {
-  form.excludedCircuits.splice(index, 1)
-}
-
-const handleUpdateExcludedCircuit = (index: number, val: string | number | null | undefined) => {
-  form.excludedCircuits[index] = String(val ?? '')
-}
-
 const handleAddNoBreakWord = () => {
   form.noBreakWords.push('')
 }
@@ -203,10 +189,6 @@ const handleUpdateNoBreakWord = (index: number, val: string | number | null | un
 const handleSaveSite = async () => {
   if (!selectedSite.value) return
 
-  const parsedCircuits = form.excludedCircuits
-    .map(c => c.trim())
-    .filter(c => c.length > 0)
-
   const parsedWords = form.noBreakWords
     .map(w => w.trim())
     .filter(w => w.length > 0)
@@ -215,7 +197,6 @@ const handleSaveSite = async () => {
     ...selectedSite.value,
     name: form.name.trim(),
     status: form.status,
-    excludedCircuits: parsedCircuits,
     noBreakWords: parsedWords,
   }
 
@@ -479,6 +460,26 @@ const confirmDeleteSite = async (site: Site) => {
               </Button>
             </div>
 
+            <div class="excluded-keywords-card flex flex-col gap-inline-gap p-item-gap">
+              <div class="flex items-center justify-between">
+                <span class="label flex items-center gap-item-gap">
+                  <Icon name="filter" size="sm" />
+                  <span>適用中の除外キーワード（台帳のSettingシート「除外ﾘｽﾄ」より自動同期）</span>
+                </span>
+                <Badge :variant="(selectedSite.excludedCircuits?.length || 0) > 0 ? 'default' : 'default'">
+                  {{ selectedSite.excludedCircuits?.length || 0 }} 件
+                </Badge>
+              </div>
+              <ul v-if="selectedSite.excludedCircuits && selectedSite.excludedCircuits.length > 0" class="flex flex-wrap items-center gap-inline-gap">
+                <li v-for="(kw, idx) in selectedSite.excludedCircuits" :key="idx" class="excluded-keyword-badge">
+                  {{ kw }}
+                </li>
+              </ul>
+              <small v-else class="text-subtle">
+                ※ Excel台帳の「Setting」シート内にある「除外ﾘｽﾄ」テーブルを取り込むと、該当キーワードを含む回路名称が自動で計算・試験対象から除外されます。
+              </small>
+            </div>
+
             <p class="desc-text">
               ※ 取込時のExcelファイル（.xlsx / .xlsm）はサーバーへ現場台帳として自動保管されます。Web上で入力された最新試験結果はマクロ・書式・数式を100%温存したまま出力帳票へ書き戻されます。
             </p>
@@ -500,31 +501,6 @@ const confirmDeleteSite = async (site: Site) => {
               </template>
             </div>
           </Alert>
-        </div>
-
-        <!-- 除外回路ルールタブ -->
-        <div v-else-if="activeTab === 'rules'" class="flex flex-col gap-form-row-gap max-w-xl">
-          <header class="flex items-center gap-item-gap">
-            <h4 class="flex items-center gap-item-gap">
-              <Icon name="slash" />
-              <span>除外回路の設定</span>
-            </h4>
-          </header>
-          <hr class="divider">
-          <p class="desc-text">
-            計算や試験連携の対象外とする盤・回路を指定します。
-          </p>
-
-          <ul v-if="form.excludedCircuits.length > 0" class="flex flex-col gap-item-gap">
-            <li v-for="(circuit, idx) in form.excludedCircuits" :key="idx" class="flex items-center gap-item-gap">
-              <Input :model-value="circuit" placeholder="例: 盤A-回路1" @update:model-value="handleUpdateExcludedCircuit(idx, $event)" />
-              <Button icon="trash-2" variant="danger" size="sm" @click="handleRemoveExcludedCircuit(idx)" />
-            </li>
-          </ul>
-
-          <EmptyState v-else icon="slash" title="除外回路は設定されていません" description="すべての回路が計算・連携の対象となります。" />
-
-          <Button icon="plus" size="sm" class="w-fit" @click="handleAddExcludedCircuit">除外回路を追加する</Button>
         </div>
 
         <!-- 改行禁止ワードタブ -->
@@ -671,5 +647,23 @@ const confirmDeleteSite = async (site: Site) => {
   font-family: var(--font-mono);
   font-size: var(--font-size-sm);
   color: var(--color-text-main);
+}
+
+.excluded-keywords-card {
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-bg-surface);
+}
+
+.excluded-keyword-badge {
+  user-select: none;
+
+  padding: 2px 8px;
+  border: 1px solid var(--color-border-subtle);
+
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+
+  background-color: var(--color-bg-surface-subtle);
 }
 </style>
