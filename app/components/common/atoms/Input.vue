@@ -38,6 +38,8 @@ const {
   prefix,
   suffix,
   trim = false,
+  clearable = false,
+  clearTitle = '入力をクリア',
   min,
   max,
   step,
@@ -51,12 +53,19 @@ const emit = defineEmits<{
   blur: [event: FocusEvent]
   focus: [event: FocusEvent]
   change: [event: Event]
+  clear: []
 }>()
 
 const defaultId = useId()
 const inputId = computed(() => id || defaultId)
 const isFocused = ref(false)
 const inputRef = ref<HTMLInputElement | null>(null)
+
+const hasValue = computed(() => {
+  if (model.value === null || model.value === undefined) return false
+
+  return String(model.value).length > 0
+})
 
 const handleFocus = (event: FocusEvent) => {
   isFocused.value = true
@@ -71,6 +80,16 @@ const handleBlur = (event: FocusEvent) => {
   }
 
   emit('blur', event)
+}
+
+const handleClear = () => {
+  if (disabled || readonly) return
+
+  model.value = ''
+  emit('clear')
+
+  // Geist 仕様: クリア後も即座に入力を継続できるようフォーカスを維持
+  inputRef.value?.focus()
 }
 
 defineExpose({
@@ -93,6 +112,10 @@ defineExpose({
     </span>
 
     <input :id="inputId" ref="inputRef" v-model="model" :type="type" :name="name" :placeholder="placeholder" :disabled="disabled" :readonly="readonly" :min="min" :max="max" :step="step" :inputmode="inputmode" :autocomplete="autocomplete" :maxlength="maxlength" class="form-control input-native flex-1" :class="{ 'is-disabled': disabled, 'is-readonly': readonly, 'is-error': error }" @blur="handleBlur" @focus="handleFocus" @change="emit('change', $event)">
+
+    <button v-if="clearable && hasValue && !disabled && !readonly" type="button" class="clear-btn inline-flex items-center justify-center shrink-0" :title="clearTitle" tabindex="-1" @mousedown.prevent @click.stop="handleClear">
+      <Icon name="x" class="clear-icon" />
+    </button>
 
     <span v-if="suffixIcon || suffix || $slots.suffix" class="input-affix input-suffix inline-flex items-center shrink-0">
       <slot name="suffix">{{ suffix }}</slot>
@@ -232,5 +255,36 @@ defineExpose({
   width: 1rem;
   height: 1rem;
   color: var(--color-text-muted);
+}
+
+.clear-btn {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-right: var(--space-2);
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-circle);
+
+  color: var(--color-text-muted);
+
+  background: color-mix(in srgb, var(--color-text-muted) 15%, transparent);
+
+  transition: var(--transition-interactive);
+
+  @include state-interactive;
+
+  &:hover {
+    color: var(--color-text-main);
+    background: color-mix(in srgb, var(--color-text-muted) 30%, transparent);
+  }
+
+  &:active {
+    transform: scale(0.92);
+  }
+}
+
+.clear-icon {
+  width: 0.75rem;
+  height: 0.75rem;
 }
 </style>

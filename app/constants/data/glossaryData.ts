@@ -6,17 +6,6 @@
 import type { BadgeVariant } from '~/types/components'
 
 /**
- * 工種別テーマカラーマッピング（CSS変数）
- */
-export const TRADE_COLOR_MAP: Record<string, string> = {
-  電気: 'var(--color-trade-electric)',
-  建築: 'var(--color-trade-architecture)',
-  空調・換気: 'var(--color-trade-hvac)',
-  衛生: 'var(--color-trade-plumbing)',
-  雑学: 'var(--color-trade-trivia)',
-}
-
-/**
  * 工種別バッジバリアントマッピング（Geist準拠）
  */
 export const TRADE_VARIANT_MAP: Record<string, BadgeVariant> = {

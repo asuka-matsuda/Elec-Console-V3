@@ -318,7 +318,7 @@ const confirmResetPassword = async (row: User) => {
       </header>
       <hr class="divider">
 
-      <ClearableInput v-model="searchQuery" placeholder="氏名・カナ・IDで検索..." icon="search" />
+      <Input v-model="searchQuery" placeholder="氏名・カナ・IDで検索..." icon="search" clearable />
 
       <ul v-if="filteredUsers.length > 0" class="flex flex-col gap-item-gap overflow-y-auto flex-1 min-h-[300px]">
         <li v-for="user in filteredUsers" :key="user.id">

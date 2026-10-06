@@ -23,11 +23,3 @@ export function getSoudenRowClass(circuit: CircuitItem, options?: SoudenRowClass
     'is-highlighted': options?.editingRowId === circuit.id,
   }
 }
-
-export function getWorkerCellData(circuit: CircuitItem, key: string) {
-  const prefix = key.replace('ConfirmedAt', '') // 'p1' | 'p2' | 'p3'
-  const worker = circuit[`${prefix}Worker` as keyof CircuitItem] as string | null | undefined
-  const confirmedAt = circuit[key as keyof CircuitItem] as string | null | undefined
-
-  return { worker, confirmedAt }
-}

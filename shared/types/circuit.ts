@@ -170,22 +170,6 @@ export interface CircuitItem {
 }
 
 /**
- * 各試験フェーズの集計カウント
- */
-export interface PhaseStats {
-  /** 全登録数 */
-  allCount: number
-  /** 完了数 */
-  completed: number
-  /** 試験対象数（除外除く） */
-  total: number
-  /** 除外数 */
-  excluded: number
-  /** 進捗率 (0〜100%) */
-  pct: number
-}
-
-/**
  * 盤選択セレクトボックス用オプション
  */
 export interface PanelOption {

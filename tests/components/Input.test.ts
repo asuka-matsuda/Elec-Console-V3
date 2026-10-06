@@ -130,4 +130,70 @@ describe('Input.vue', () => {
 
     expect(wrapper.emitted('update:modelValue')?.[0]).toEqual(['  test-value'])
   })
+
+  it('handles clearable prop and clears input value on clear button click', async () => {
+    // 1. clearable が false の時は文字があってもクリアボタンを表示しない
+    const nonClearableWrapper = mount(Input, {
+      props: {
+        modelValue: 'テキスト',
+        clearable: false,
+      },
+      global: { stubs: { Icon: true } },
+    })
+
+    expect(nonClearableWrapper.find('.clear-btn').exists()).toBe(false)
+
+    // 2. clearable が true でも空文字ならクリアボタンを表示しない
+    const emptyWrapper = mount(Input, {
+      props: {
+        modelValue: '',
+        clearable: true,
+      },
+      global: { stubs: { Icon: true } },
+    })
+
+    expect(emptyWrapper.find('.clear-btn').exists()).toBe(false)
+
+    // 3. clearable が true で値がある時はクリアボタンを表示し、クリックでクリア
+    const clearableWrapper = mount(Input, {
+      props: {
+        'modelValue': '消去対象テキスト',
+        'clearable': true,
+        'onUpdate:modelValue': (val: string | number | null) => clearableWrapper.setProps({ modelValue: val }),
+      },
+      global: { stubs: { Icon: true } },
+    })
+
+    const clearBtn = clearableWrapper.find('.clear-btn')
+
+    expect(clearBtn.exists()).toBe(true)
+
+    await clearBtn.trigger('click')
+
+    expect(clearableWrapper.emitted('update:modelValue')?.[0]).toEqual([''])
+    expect(clearableWrapper.emitted('clear')).toBeTruthy()
+
+    // 4. disabled または readonly 時はクリアボタンを非表示
+    const disabledWrapper = mount(Input, {
+      props: {
+        modelValue: 'テキスト',
+        clearable: true,
+        disabled: true,
+      },
+      global: { stubs: { Icon: true } },
+    })
+
+    expect(disabledWrapper.find('.clear-btn').exists()).toBe(false)
+
+    const readonlyWrapper = mount(Input, {
+      props: {
+        modelValue: 'テキスト',
+        clearable: true,
+        readonly: true,
+      },
+      global: { stubs: { Icon: true } },
+    })
+
+    expect(readonlyWrapper.find('.clear-btn').exists()).toBe(false)
+  })
 })

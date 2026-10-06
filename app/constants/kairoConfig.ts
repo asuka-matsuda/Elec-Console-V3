@@ -5,7 +5,7 @@
  * この設定ファイルに定義を追加するだけでコンポーネントを変更せずに拡張可能です。
  */
 
-export type KairoShapeType = 'circle' | 'ellipse' | 'rect' | 'polygon'
+type KairoShapeType = 'circle' | 'ellipse' | 'rect' | 'polygon'
 
 export interface KairoSymbolDefinition {
   type: KairoShapeType

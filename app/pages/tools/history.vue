@@ -53,9 +53,7 @@ const getWeightResult = (entry: HistoryEntry) => (entry.rawResult ?? null) as un
     </header>
     <hr class="divider">
 
-    <nav class="radio-group">
-      <button v-for="opt in tabs" :key="String(opt.value)" type="button" class="radio-group-item" :class="{ 'is-active': currentTab === opt.value }" @click="currentTab = opt.value">{{ opt.label }}</button>
-    </nav>
+    <Tabs v-model="currentTab" :items="tabs" />
 
     <ClientOnly>
       <ul v-if="historyList.length > 0" class="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-panel-gap">

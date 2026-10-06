@@ -480,7 +480,7 @@ onMounted(() => {
           </div>
 
           <div class="w-full sm:w-72">
-            <ClearableInput v-model="searchQuery" placeholder="キー名・列名で絞り込み..." icon="search" />
+            <Input v-model="searchQuery" placeholder="キー名・列名で絞り込み..." icon="search" clearable />
           </div>
         </div>
 

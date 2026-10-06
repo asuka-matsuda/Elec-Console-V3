@@ -20,6 +20,7 @@ export default {
     messages: {
       invalidSize: '<{{ component }}> の size「{{ size }}」は無効です。使用可能なサイズは sm / md / lg のみです。',
       forbiddenRoundedClass: '<{{ component }}> に対する「{{ token }}」は直角規約（border-radius: 0）により禁止されています。',
+      deprecatedClearableInput: '<ClearableInput> は廃止されました。<Input clearable /> を使用してください。',
     },
     schema: [],
   },
@@ -35,9 +36,18 @@ export default {
         const isInput = node.rawName === 'Input' || node.name === 'Input' || node.name === 'input'
         const isClearableInput = node.rawName === 'ClearableInput' || node.name === 'ClearableInput' || node.name === 'clearable-input'
 
-        if (!isInput && !isClearableInput) return
+        if (isClearableInput) {
+          context.report({
+            node,
+            messageId: 'deprecatedClearableInput',
+          })
 
-        const componentName = isClearableInput ? 'ClearableInput' : 'Input'
+          return
+        }
+
+        if (!isInput) return
+
+        const componentName = 'Input'
         const attributes = node.startTag?.attributes || []
 
         for (const attr of attributes) {

@@ -105,7 +105,7 @@ const handleSave = () => {
         </div>
       </div>
 
-      <Checkbox v-model="form.allDay" label="終日イベント" />
+      <Toggle v-model="form.allDay" label="終日イベント" />
     </div>
 
     <template #actions>

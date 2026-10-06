@@ -141,12 +141,12 @@ describe('ModalCalendarEvent.vue', () => {
       },
     })
 
-    const checkbox = wrapper.findComponent({ name: 'Checkbox' })
+    const toggle = wrapper.findComponent({ name: 'Toggle' })
 
-    expect(checkbox.exists()).toBe(true)
+    expect(toggle.exists()).toBe(true)
 
     // 終日をtrueに切り替え
-    await checkbox.vm.$emit('update:modelValue', true)
+    await toggle.vm.$emit('update:modelValue', true)
 
     const saveBtn = wrapper.findAllComponents({ name: 'Button' }).find(b => b.text().includes('保存'))
 

@@ -7,7 +7,7 @@
 /**
  * Excel見出し・ヘッダー文字列の正規化（全角半角統一・空白改行アンダースコア除去・小文字化）
  */
-export function normalizeExcelHeader(name: unknown): string {
+export function normalizeHeaderName(name: unknown): string {
   if (name === null || name === undefined) return ''
 
   return String(name)
@@ -19,8 +19,7 @@ export function normalizeExcelHeader(name: unknown): string {
 /**
  * 互換用エイリアス（既存呼び出し元との互換性を維持）
  */
-export const normalizeHeaderName = normalizeExcelHeader
-export const normalizeText = normalizeExcelHeader
+export const normalizeText = normalizeHeaderName
 
 /**
  * セル値のセーフな文字列取得（Formula / RichText / Date / プリミティブ対応）

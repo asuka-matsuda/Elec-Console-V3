@@ -63,7 +63,7 @@ const { sortBy, sortOrder, sortedData } = useTableSort(filteredData)
         </div>
       </header>
 
-      <ClearableInput v-model="searchQuery" :placeholder="currentDb.placeholder" icon="search" />
+      <Input v-model="searchQuery" :placeholder="currentDb.placeholder" icon="search" clearable />
 
       <ul v-if="categoryOptions.length > 0" class="grid grid-cols-[repeat(auto-fill,minmax(115px,1fr))] gap-item-gap">
         <li v-for="cat in categoryOptions" :key="cat.value">

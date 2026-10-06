@@ -5,7 +5,7 @@
  * テーマ統一カラーパレットおよびデフォルトカラーを定義します。
  */
 
-import type { SelectOption } from '~/types/components'
+import type { SelectOption, SwitchOption } from '~/types/components'
 
 interface ColorPreset {
   name: string
@@ -34,4 +34,9 @@ export const DEFAULT_COLOR_PRESETS: ColorPreset[] = [
 export const THEME_OPTIONS: SelectOption<string>[] = [
   { label: 'ダークモード (標準)', value: 'dark' },
   { label: 'ライトモード', value: 'light' },
+]
+
+export const THEME_SWITCH_OPTIONS: SwitchOption[] = [
+  { label: 'ダーク', value: 'dark', icon: 'moon' },
+  { label: 'ライト', value: 'light', icon: 'sun' },
 ]

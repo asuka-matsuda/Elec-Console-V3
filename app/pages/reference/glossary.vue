@@ -70,7 +70,7 @@ const disabledKanaRows = computed(() => {
           </h3>
         </header>
 
-        <ClearableInput v-model="searchQuery" placeholder="用語名や説明を検索..." icon="search" />
+        <Input v-model="searchQuery" placeholder="用語名や説明を検索..." icon="search" clearable />
 
         <ul v-if="categoryOptions.length > 0" class="grid grid-cols-[repeat(auto-fill,minmax(115px,1fr))] gap-item-gap">
           <li v-for="cat in categoryOptions" :key="cat.value">

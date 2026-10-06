@@ -178,9 +178,7 @@ onMounted(() => {
       <div class="flex flex-col gap-form-row-gap">
         <div class="flex items-center gap-form-col-gap">
           <span class="shrink-0 label">盤種別:</span>
-          <nav class="radio-group shrink-0">
-            <button v-for="opt in shubetsuTabOptions" :key="String(opt.value)" type="button" class="radio-group-item" :class="{ 'is-active': selectedBanShubetsu === opt.value }" @click="selectedBanShubetsu = opt.value">{{ opt.label }}</button>
-          </nav>
+          <Switch v-model="selectedBanShubetsu" :options="shubetsuTabOptions" size="sm" class="shrink-0" />
         </div>
 
         <div class="flex flex-wrap items-center gap-form-col-gap">

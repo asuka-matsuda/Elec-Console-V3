@@ -18,7 +18,7 @@ export interface RemoteCircuitItem {
   isVacant: boolean // ヒットしないアドレスは true（「空き」）
 }
 
-export interface RemoteAddressAssignment {
+interface RemoteAddressAssignment {
   groups: number[]
   patterns: string[]
   relayNumber?: string

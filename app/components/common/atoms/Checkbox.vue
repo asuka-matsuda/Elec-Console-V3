@@ -29,6 +29,11 @@ const defaultId = useId()
 const checkboxId = computed(() => id || defaultId)
 const inputRef = ref<HTMLInputElement | null>(null)
 
+const handleChange = () => {
+  if (disabled) return
+  emit('change', model.value)
+}
+
 // ネイティブ input 要素の indeterminate プロパティと同期
 const syncIndeterminate = () => {
   if (inputRef.value) {
@@ -50,7 +55,7 @@ const customStyle = computed(() => {
 
 <template>
   <label class="relative inline-flex items-center gap-item-gap checkbox" :class="{ 'is-disabled': disabled, 'is-error': error, 'is-indeterminate': indeterminate }" :style="customStyle" :title="title">
-    <input :id="checkboxId" ref="inputRef" v-model="model" type="checkbox" :value="value" :disabled="disabled" @change="emit('change', model)">
+    <input :id="checkboxId" ref="inputRef" v-model="model" type="checkbox" :value="value" :disabled="disabled" @change="handleChange">
     <span class="grid shrink-0 place-items-center box">
       <Icon :name="indeterminate ? 'minus' : 'check'" class="icon" />
     </span>

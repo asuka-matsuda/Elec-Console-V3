@@ -11,8 +11,7 @@ import type { EventType } from '#shared/types/calendar'
 import { useCalendar } from '~/composables/portal/useCalendar'
 import { useCalendarEventForm } from '~/composables/portal/useCalendarEventForm'
 import { useCalendarOptions } from '~/composables/portal/useCalendarOptions'
-import type { IconName } from '~/constants/icons'
-import type { RadioOption } from '~/types/components'
+import type { SwitchOption } from '~/types/components'
 
 import ModalCalendarEvent from './ModalCalendarEvent.vue'
 import ModalCalendarTypeSettings from './ModalCalendarTypeSettings.vue'
@@ -23,15 +22,10 @@ const props = defineProps<{
   siteId: string
 }>()
 
-const VIEW_OPTIONS: RadioOption<CalendarView>[] = [
-  { value: 'dayGridMonth', label: '月表示' },
-  { value: 'listMonth', label: 'リスト' },
+const VIEW_SWITCH_OPTIONS: SwitchOption[] = [
+  { value: 'dayGridMonth', label: '月表示', icon: 'calendar' },
+  { value: 'listMonth', label: 'リスト', icon: 'list' },
 ]
-
-const VIEW_ICONS: Record<CalendarView, IconName> = {
-  dayGridMonth: 'calendar',
-  listMonth: 'list',
-}
 
 const {
   events,
@@ -101,6 +95,10 @@ const {
   },
 })
 
+const onViewChange = (val: string | number) => {
+  handleViewChange(val as CalendarView)
+}
+
 const isTypeSettingsOpen = ref(false)
 
 const handleSaveEventTypes = async (newTypes: EventType[]) => {
@@ -122,14 +120,7 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       </h3>
 
       <div class="flex items-center gap-item-gap">
-        <div class="radio-group">
-          <button v-for="option in VIEW_OPTIONS" :key="option.value" type="button" class="radio-group-item" :class="{ 'is-active': currentView === option.value }" @click="handleViewChange(option.value)">
-            <span class="flex items-center gap-inline-gap">
-              <Icon :name="VIEW_ICONS[option.value]" />
-              <span>{{ option.label }}</span>
-            </span>
-          </button>
-        </div>
+        <Switch :model-value="currentView" :options="VIEW_SWITCH_OPTIONS" size="sm" @change="onViewChange" />
 
         <Button size="sm" icon="settings" @click="isTypeSettingsOpen = true">種別設定を開く</Button>
       </div>

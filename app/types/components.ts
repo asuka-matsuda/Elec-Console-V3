@@ -315,11 +315,9 @@ export interface InputProps {
   maxlength?: number
   /** ホバーツールチップテキスト */
   title?: string
-}
-
-// --- Clearable Input (Geist準拠) ---
-export interface ClearableInputProps extends InputProps {
-  /** クリアボタンのツールチップテキスト */
+  /** クリアボタンの有効化（Geist準拠: 値が存在する場合にクリアボタンを表示） */
+  clearable?: boolean
+  /** クリアボタンのツールチップテキスト (デフォルト: '入力をクリア') */
   clearTitle?: string
 }
 
@@ -593,10 +591,6 @@ export interface MenuProps {
   disabled?: boolean
 }
 
-/** 既存コード後方互換エイリアス */
-export type DropdownMenuItem = MenuItem
-export type DropdownMenuProps = MenuProps
-
 // --- Calculation Status & Details ---
 export type ResultStatus = 'neutral' | 'success' | 'warning' | 'danger' | 'empty'
 export type ResultTileStatus = ResultStatus
@@ -689,10 +683,6 @@ export interface NoteProps {
   action?: NoteAction
 }
 
-/** 既存コード後方互換エイリアス */
-export type AlertVariant = NoteVariant
-export type AlertProps = NoteProps
-
 // --- Banner ---
 export type BannerVariant = 'gray' | 'warning' | 'success' | 'danger'
 
@@ -775,6 +765,6 @@ export interface ModalProps {
   align?: 'left' | 'center'
   /** デフォルト閉じるボタンの文言 (デフォルト: '閉じる') */
   closeText?: string
-  /** モーダルサイズ ('sm' = 400px, 'md' = 540px [デフォルト], 'lg' = 720px, 'full' = 92vw) */
+  /** モーダルサイズ ('sm' = 400px, 'md' = 560px [デフォルト], 'lg' = 760px, 'full' = 92vw) */
   size?: ModalSize
 }

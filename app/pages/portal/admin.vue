@@ -322,11 +322,8 @@ const confirmDeleteSite = async (site: Site) => {
       </header>
       <hr class="divider">
 
-      <ClearableInput v-model="searchQuery" placeholder="現場名・IDで検索..." icon="search" />
-
-      <div class="radio-group w-full">
-        <button v-for="opt in filterOptions" :key="String(opt.value)" type="button" class="radio-group-item" :class="{ 'is-active': statusFilter === opt.value }" @click="statusFilter = opt.value">{{ opt.label }}</button>
-      </div>
+      <Input v-model="searchQuery" placeholder="現場名・IDで検索..." icon="search" clearable />
+      <Tabs v-model="statusFilter" :items="filterOptions" size="sm" />
 
       <ul v-if="filteredSites.length > 0" class="flex flex-col gap-item-gap overflow-y-auto flex-1 min-h-[300px]">
         <li v-for="site in filteredSites" :key="site.id">

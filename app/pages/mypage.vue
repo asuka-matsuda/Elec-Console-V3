@@ -13,7 +13,7 @@ import { useAuth } from '~/composables/useAuth'
 import { usePasswordChange } from '~/composables/usePasswordChange'
 import { useSettings } from '~/composables/useSettings'
 import { USER_ROLE_CONFIG } from '~/constants/adminConstants'
-import { THEME_OPTIONS } from '~/constants/colors'
+import { THEME_SWITCH_OPTIONS } from '~/constants/colors'
 import { formatUserFullName, formatUserKana } from '~/utils/user'
 
 useHead({ title: 'マイページ - Elec-Console' })
@@ -185,8 +185,8 @@ const assignedSites = computed(() => {
       </header>
 
       <div class="flex flex-col gap-inline-gap">
-        <label for="theme-mode" class="label">外観モード</label>
-        <Select id="theme-mode" v-model="themeMode" :options="THEME_OPTIONS" />
+        <span class="label">外観モード</span>
+        <Switch v-model="themeMode" :options="THEME_SWITCH_OPTIONS" />
         <span class="help-text">全体の明るさを切り替えます（ダークモード推奨）</span>
       </div>
     </section>

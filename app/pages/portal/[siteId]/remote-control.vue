@@ -356,14 +356,14 @@ onMounted(() => {
 
             <div class="flex flex-col gap-inline-gap">
               <label for="filter-search-query" class="label">キーワード検索 (アドレス・負荷名等)</label>
-              <ClearableInput id="filter-search-query" v-model="searchQuery" placeholder="0-1, 照明, 1L-1..." icon="search" />
+              <Input id="filter-search-query" v-model="searchQuery" placeholder="0-1, 照明, 1L-1..." icon="search" clearable />
             </div>
           </div>
 
           <div class="bulk-toolbar flex flex-wrap items-center justify-between gap-item-gap p-item-gap">
             <div class="flex items-center gap-item-gap">
               <Checkbox v-model="isAllSelected" :indeterminate="isPartiallySelected" label="全選択" />
-              <Checkbox v-model="hideVacant" label="空きを除外" />
+              <Toggle v-model="hideVacant" label="空きを除外" size="sm" />
               <span class="selection-count">選択: {{ selectedAddresses.length }} / {{ displayedCircuits.length }}件</span>
             </div>
 
@@ -517,7 +517,17 @@ onMounted(() => {
 
         <div class="flex flex-col gap-inline-gap">
           <span class="label">2. 出力対象 (3パターン)</span>
-          <RadioGroup v-model="exportTarget" :options="exportTargetOptions" :disabled="isGenerating" block />
+          <div class="flex flex-wrap gap-panel-gap">
+            <Radio
+              v-for="opt in exportTargetOptions"
+              :key="opt.value"
+              v-model="exportTarget"
+              :value="opt.value"
+              :label="opt.label"
+              :disabled="isGenerating"
+              name="export-target"
+            />
+          </div>
           <small class="text-note">※データベースから取得したアドレス表、および設定したグループ・パターンの3パターンから選んで出力できます。</small>
         </div>
 

@@ -72,24 +72,6 @@ export const KENSOU_OPTIONS_1P: SelectOption[] = [
 ]
 
 /**
- * 送電試験 操作ログのアクション文字列からバッジ色を判定する
- */
-export const getActionBadgeColor = (action: unknown): string => {
-  if (typeof action !== 'string') return 'var(--color-status-neutral)'
-  if (action.includes('確定') || action.includes('完了')) {
-    return 'var(--color-status-success)'
-  }
-  if (action.includes('解除') || action.includes('削除')) {
-    return 'var(--color-status-danger)'
-  }
-  if (action.includes('更新') || action.includes('変更') || action.includes('インポート')) {
-    return 'var(--theme-accent)'
-  }
-
-  return 'var(--color-status-neutral)'
-}
-
-/**
  * 送電試験 操作ログのアクション文字列からバッジバリアントを判定する（Geist準拠）
  */
 export const getActionBadgeVariant = (action: unknown): BadgeVariant => {

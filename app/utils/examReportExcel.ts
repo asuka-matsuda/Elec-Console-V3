@@ -48,54 +48,6 @@ interface ExamReportZipOptions {
   devices?: SelectedDevicesMap
 }
 
-export interface TagMetadataItem {
-  tag: string
-  category: 'ヘッダー' | '基本情報' | 'フェーズ1' | 'フェーズ2' | 'フェーズ3' | '総合結果' | '測定機器'
-  description: string
-}
-
-/**
- * テンプレート作成用タグ定義メタデータ（UIガイドと共有）
- */
-export const TAG_METADATA: TagMetadataItem[] = [
-  { tag: '%盤名称%', category: 'ヘッダー', description: '選択した盤名称（例: 1L-1）' },
-  { tag: '%試験日%', category: 'ヘッダー', description: '確定日の最早日〜最遅日（例: 2026/09/20 ～ 2026/09/22）' },
-  { tag: '%測定者%', category: 'ヘッダー', description: '確定欄に記載された作業者全員のカンマ連結' },
-  { tag: '%回路記号%', category: '基本情報', description: '回路記号の背景透過画像（指定サイズで配置）' },
-  { tag: '%回路番号%', category: '基本情報', description: '回路番号' },
-  { tag: '%配電方式%', category: '基本情報', description: '配電方式（改行保持）' },
-  { tag: '%ケーブルサイズ%', category: '基本情報', description: 'ケーブル情報（改行保持）' },
-  { tag: '%負荷名称%', category: '基本情報', description: '回路名称・負荷名称（改行保持）' },
-  { tag: '%サイズ確認%', category: 'フェーズ1', description: 'サイズ確認済みなら「✔」' },
-  { tag: '%導通確認%', category: 'フェーズ1', description: 'フェーズ1完了（確認・増締）なら「✔」' },
-  { tag: '%締付_R%', category: 'フェーズ1', description: 'R相の締付確認（「✔」または「-」）' },
-  { tag: '%締付_S%', category: 'フェーズ1', description: 'S相/N相の締付確認（非対象は「-」）' },
-  { tag: '%締付_T%', category: 'フェーズ1', description: 'T相の締付確認（非対象は「-」）' },
-  { tag: '%締付_E%', category: 'フェーズ1', description: 'E相(接地)の締付確認（接地無は「-」）' },
-  { tag: '%締付確認%', category: 'フェーズ1', description: '増締確認済みなら「✔」' },
-  { tag: '%絶縁_R%', category: 'フェーズ2', description: 'R相の絶縁抵抗測定値（MΩ）' },
-  { tag: '%絶縁_S%', category: 'フェーズ2', description: 'S相の絶縁抵抗測定値（MΩ）' },
-  { tag: '%絶縁_T%', category: 'フェーズ2', description: 'T相の絶縁抵抗測定値（MΩ）' },
-  { tag: '%絶縁判定%', category: 'フェーズ2', description: '絶縁判定（OK / NG / -）' },
-  { tag: '%電圧_RS%', category: 'フェーズ3', description: 'RS間の電圧測定値（V）' },
-  { tag: '%電圧_ST%', category: 'フェーズ3', description: 'ST間の電圧測定値（V）' },
-  { tag: '%電圧_RT%', category: 'フェーズ3', description: 'RT間の電圧測定値（V）' },
-  { tag: '%検相%', category: 'フェーズ3', description: '検相・点灯確認結果（正 / 良 / 逆 / 否）' },
-  { tag: '%総合結果%', category: '総合結果', description: '全フェーズ完了なら「○」、未完了なら「×」' },
-  { tag: '%絶縁計_製造者%', category: '測定機器', description: '選択した絶縁抵抗計の製造者（例: 日置電機）' },
-  { tag: '%絶縁計_型式%', category: '測定機器', description: '選択した絶縁抵抗計の型式（例: IR4052-11）' },
-  { tag: '%絶縁計_校正日%', category: '測定機器', description: '選択した絶縁抵抗計の校正年月日（例: 2026/04/01）' },
-  { tag: '%絶縁計_製造番号%', category: '測定機器', description: '選択した絶縁抵抗計の製造番号（例: 230512345）' },
-  { tag: '%電圧計_製造者%', category: '測定機器', description: '選択した電圧計の製造者（例: 共立電気計器）' },
-  { tag: '%電圧計_型式%', category: '測定機器', description: '選択した電圧計の型式（例: 2002PA）' },
-  { tag: '%電圧計_校正日%', category: '測定機器', description: '選択した電圧計の校正年月日（例: 2026/03/10）' },
-  { tag: '%電圧計_製造番号%', category: '測定機器', description: '選択した電圧計の製造番号（例: 112233）' },
-  { tag: '%検相器_製造者%', category: '測定機器', description: '選択した検相器の製造者（例: 日置電機）' },
-  { tag: '%検相器_型式%', category: '測定機器', description: '選択した検相器の型式（例: 3129-10）' },
-  { tag: '%検相器_校正日%', category: '測定機器', description: '選択した検相器の校正年月日（例: 2026/05/20）' },
-  { tag: '%検相器_製造番号%', category: '測定機器', description: '選択した検相器の製造番号（例: 998877）' },
-]
-
 /**
  * 対象盤の試験日（最早日〜最遅日）を算出
  */
