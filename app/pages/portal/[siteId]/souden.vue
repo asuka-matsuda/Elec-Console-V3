@@ -110,7 +110,7 @@ onMounted(() => {
           <div class="flex flex-1 flex-col gap-panel-gap w-full">
             <template v-for="(group, index) in SOUDEN_GROUPS" :key="group.keiTo">
               <div class="flex flex-col md:flex-row items-start md:items-center gap-panel-gap">
-                <Gauge class="shrink-0" :value="stats[group.pctKey]" size="sm" :label="group.label" />
+                <Gauge class="shrink-0" :value="stats[group.pctKey]" size="md" :label="group.label" />
                 <ul class="flex flex-1 flex-col gap-form-row-gap w-full">
                   <li v-for="item in getGroupData(group.keiTo, stats).phases" :key="item.phase" class="flex flex-col gap-inline-gap">
                     <div class="phase-row-header flex items-center justify-between">
