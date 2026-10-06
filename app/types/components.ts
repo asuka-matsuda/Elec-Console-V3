@@ -178,6 +178,25 @@ export interface GaugeProps {
   label?: string
 }
 
+// --- Progress (Geist準拠: 水平プログレスバー・確定タスク進捗表示) ---
+export type ProgressSize = 'sm' | 'md' | 'lg'
+export type ProgressVariant = 'default' | 'success' | 'warning' | 'danger'
+
+export interface ProgressProps {
+  /** 進捗値 (0〜max) */
+  value?: number
+  /** 上限・最大値 (デフォルト: 100) */
+  max?: number
+  /** バーの高さ・サイズ ('sm' = 4px, 'md' = 8px [デフォルト], 'lg' = 12px) */
+  size?: ProgressSize
+  /** カラーバリアント (デフォルト: 'success') */
+  variant?: ProgressVariant
+  /** 値に応じた動的カラースケールを有効にするか */
+  dynamicColors?: boolean
+  /** カスタムカラー (CSS変数またはカラーコード) */
+  color?: string
+}
+
 // --- Checkbox (Geist準拠) ---
 export interface CheckboxProps {
   /** HTML id属性 */

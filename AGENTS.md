@@ -70,6 +70,20 @@
      - **スタイル規約**:
        - 直角がプロジェクト標準です。ラベルや外枠への安易な角丸クラス（`rounded-*`）の上書きは禁止です（ESLint `local/strict-gauge-usage` により監視）。
        - ※支援アクセシビリティ属性（`role`, `aria-*` 等）はプロジェクト規約（`local/no-pure-accessibility`）により付与しません。
+   - **Progress のベストプラクティス（Geist準拠・Atoms）**:
+     - **用途（When to use）**:
+       - 確定タスクの進捗（ファイルアップロード、ステップ処理、試験・送電フェーズの工程進捗など）を水平バーで可視化します。
+       - 健全性・比率・消費量（クォータ使用量、稼働率、ヘルスチェック等）には `<Progress>` ではなく `<Gauge>`（円形メーター）を使用してください。
+       - 旧 `ProgressBar` 等のオレオレコンポーネントは廃止され、共通 `<Progress>`（ESLint `local/strict-progress-usage` により監視）に統一されています。
+     - **サイズ規約**:
+       - `size="sm"` (4px), `size="md"` (8px・デフォルト), `size="lg"` (12px) を指定します。バーの高さは内部で完全拘束されるため、利用側から `h-*` クラス等の付与は禁止です。
+     - **プロップと振る舞い（Behavior）**:
+       - `value` と `max`（デフォルト: `100`）を受け取り、内部で自動クランプ（0〜100%）されます。
+       - `dynamicColors` を `true` にすると、進行度に応じたカラースケール（`0-59%`: ブランドブルー `var(--theme-accent)`, `60-89%`: アンバー `var(--color-status-warning)`, `90-100%`: グリーン `var(--color-status-success)`）が自動適用されます。
+       - 明示的なステータス表現には `variant="default" | "success" | "warning" | "danger"` または `color` プロップを使用してください。
+     - **スタイル規約**:
+       - 直角（`border-radius: 0`）がプロジェクト標準です。外枠・インジケーターへの安易な角丸クラス（`rounded-*`）の上書きは厳禁です。
+       - ※支援アクセシビリティ属性（`role`, `aria-*` 等）はプロジェクト規約（`local/no-pure-accessibility`）により付与しません。
    - **Checkbox のベストプラクティス（Geist準拠・Atoms）**:
      - **用途（When to use）**: テーブル行ピッカー、複数フィルター、設定グループ等のマルチセレクト、および規約同意（Acknowledgment）に使用します。単一の真偽値 ON/OFF 設定（ダークモード、演出有効化等）には Checkbox ではなく Switch（Toggle）を使用してください。
      - **振る舞い（Behavior）**:

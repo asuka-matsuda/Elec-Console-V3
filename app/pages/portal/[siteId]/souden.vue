@@ -124,7 +124,7 @@ onMounted(() => {
                         <small v-if="getGroupData(group.keiTo, stats).excluded > 0">(除外: {{ getGroupData(group.keiTo, stats).excluded }})</small>
                       </div>
                     </div>
-                    <PortalProgressBar :value="item.pct" />
+                    <Progress :value="item.pct" />
                   </li>
                 </ul>
               </div>

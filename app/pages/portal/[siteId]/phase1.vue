@@ -205,7 +205,7 @@ onMounted(() => {
               <small v-if="phaseStats.excluded > 0" class="text-muted">(除外: {{ phaseStats.excluded }})</small>
             </div>
           </div>
-          <PortalProgressBar :value="phaseStats.pct" />
+          <Progress :value="phaseStats.pct" />
         </div>
 
         <PortalExamMinimap :circuits="filteredCircuits" :phase="1" @select-circuit="handleSelectCircuit" />
