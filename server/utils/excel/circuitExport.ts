@@ -309,88 +309,6 @@ interface ExportColumnMap {
 }
 
 /**
- * テンプレート台帳が存在しない場合の標準Excel帳票生成フォールバック
- */
-async function generateFallbackCircuitsExcel(siteId: string): Promise<GeneratedExcelResult> {
-  const ExcelJSModule = await import('exceljs')
-  const WorkbookClass = ExcelJSModule.default?.Workbook || ExcelJSModule.Workbook
-  const wb = new WorkbookClass()
-  const ws = wb.addWorksheet('List')
-
-  // ヘッダー定義
-  ws.columns = [
-    { header: '系統', key: 'keiTo', width: 12 },
-    { header: '盤種別', key: 'banShubetsu', width: 12 },
-    { header: '盤名称', key: 'banMeisho', width: 18 },
-    { header: '配電方式', key: 'haidenHoushiki', width: 16 },
-    { header: '相種別', key: 'souShubetsu', width: 10 },
-    { header: '回路記号', key: 'kairoKigou', width: 10 },
-    { header: '回路番号', key: 'kairoBangou', width: 10 },
-    { header: '回路名称', key: 'kairoMeisho', width: 25 },
-    { header: 'P1確認者', key: 'p1Worker', width: 14 },
-    { header: 'P1確認日時', key: 'p1ConfirmedAt', width: 18 },
-    { header: 'P1備考', key: 'p1Remarks', width: 20 },
-    { header: '絶縁R(MΩ)', key: 'zetsuenR', width: 14 },
-    { header: '絶縁S(MΩ)', key: 'zetsuenS', width: 14 },
-    { header: '絶縁T(MΩ)', key: 'zetsuenT', width: 14 },
-    { header: 'P2測定者', key: 'p2Worker', width: 14 },
-    { header: 'P2測定日時', key: 'p2ConfirmedAt', width: 18 },
-    { header: 'P2備考', key: 'p2Remarks', width: 20 },
-    { header: '電圧RS(V)', key: 'denatsuRs', width: 12 },
-    { header: '電圧ST(V)', key: 'denatsuSt', width: 12 },
-    { header: '電圧RT(V)', key: 'denatsuRt', width: 12 },
-    { header: '検相', key: 'kensou', width: 10 },
-    { header: 'P3測定者', key: 'p3Worker', width: 14 },
-    { header: 'P3測定日時', key: 'p3ConfirmedAt', width: 18 },
-    { header: 'P3備考', key: 'p3Remarks', width: 20 },
-  ]
-
-  const circuits = await prisma.circuit.findMany({
-    where: { siteId },
-    orderBy: [{ excelRow: 'asc' }, { createdAt: 'asc' }],
-  })
-
-  for (const c of circuits) {
-    ws.addRow({
-      keiTo: c.keiTo,
-      banShubetsu: c.banShubetsu,
-      banMeisho: c.banMeisho,
-      haidenHoushiki: c.haidenHoushiki,
-      souShubetsu: c.souShubetsu,
-      kairoKigou: c.kairoKigou,
-      kairoBangou: c.kairoBangou,
-      kairoMeisho: c.kairoMeisho,
-      p1Worker: c.p1Worker || '',
-      p1ConfirmedAt: c.p1ConfirmedAt ? new Date(c.p1ConfirmedAt).toLocaleString('ja-JP') : '',
-      p1Remarks: c.p1Remarks || '',
-      zetsuenR: c.p2RStatus === '良好' ? '良好' : c.zetsuenR,
-      zetsuenS: c.p2SStatus === '良好' ? '良好' : c.zetsuenS,
-      zetsuenT: c.p2TStatus === '良好' ? '良好' : c.zetsuenT,
-      p2Worker: c.p2Worker || '',
-      p2ConfirmedAt: c.p2ConfirmedAt ? new Date(c.p2ConfirmedAt).toLocaleString('ja-JP') : '',
-      p2Remarks: c.p2Remarks || '',
-      denatsuRs: c.denatsuRs,
-      denatsuSt: c.denatsuSt,
-      denatsuRt: c.denatsuRt,
-      kensou: c.kensou,
-      p3Worker: c.p3Worker || '',
-      p3ConfirmedAt: c.p3ConfirmedAt ? new Date(c.p3ConfirmedAt).toLocaleString('ja-JP') : '',
-      p3Remarks: c.p3Remarks || '',
-    })
-  }
-
-  const uint8 = await wb.xlsx.writeBuffer()
-  const buffer = Buffer.from(uint8)
-
-  return {
-    buffer,
-    count: circuits.length,
-    isXlsm: false,
-    originalFileName: '回路台帳.xlsx',
-  }
-}
-
-/**
  * 回路データおよび最新試験結果を含むExcelファイルのバイナリバッファを生成する（OpenXML インプレースパッチ）
  */
 export async function generateCircuitsExcelBuffer(
@@ -401,7 +319,7 @@ export async function generateCircuitsExcelBuffer(
     ? validateSafeExcelPath(baseFilePath)
     : ''
 
-  // 1. 指定パスにファイルがない場合、.data/templates/${siteId}/ を自動検索
+  // 1. 指定パスにファイルが見つからない場合、サーバーの保管ディレクトリ (.data/templates/${siteId}/) を走査
   if (!cleanPath || !fs.existsSync(cleanPath)) {
     const templateDir = path.resolve(process.cwd(), `.data/templates/${siteId}`)
 
@@ -420,9 +338,8 @@ export async function generateCircuitsExcelBuffer(
     }
   }
 
-  // 2. テンプレートが一切見つからない場合は標準フォーマットで動的生成
   if (!cleanPath || !fs.existsSync(cleanPath)) {
-    return await generateFallbackCircuitsExcel(siteId)
+    throw new Error('現場のExcel台帳ファイルが登録されていないか、見つかりません。先にExcel台帳を取り込んでください。')
   }
 
   const fileExt = path.extname(cleanPath).toLowerCase()

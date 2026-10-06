@@ -99,7 +99,6 @@ const hasExcelPath = computed(() =>
 
 const {
   selectedFile,
-  templateFile,
   isSyncing,
   syncAction,
   showSyncMsg,
@@ -107,11 +106,9 @@ const {
   syncMsgType,
   syncResultData,
   handleFileSelect,
-  handleTemplateFileSelect,
   handleMergeSync,
   handleResetImport,
   handleDownloadExcel,
-  handleUploadTemplate,
 } = useSiteExcelSync({
   site: toRef(() => selectedSite.value),
 })
@@ -440,73 +437,51 @@ const confirmDeleteSite = async (site: Site) => {
 
         <!-- Excel連携タブ -->
         <div v-else-if="activeTab === 'integration'" class="flex flex-col gap-panel-gap">
-          <div class="template-status-card flex flex-col gap-item-gap p-item-gap">
-            <div class="flex items-center justify-between">
-              <span class="label">現在の連携台帳ファイル</span>
-              <Badge :variant="hasExcelPath ? 'success' : 'default'">{{ hasExcelPath ? '登録済' : '未登録' }}</Badge>
-            </div>
-            <div v-if="hasExcelPath" class="flex items-center gap-item-gap desc-text">
-              <Icon name="file-spreadsheet" />
-              <span class="template-filename">{{ currentExcelFileName }}</span>
-            </div>
-            <p v-else class="desc-text">
-              ※ 試験結果のエクスポートを行うには、下部からExcelファイル（.xlsx / .xlsm）を取り込むか、台帳テンプレートを登録してください。
-            </p>
-          </div>
-
-          <section class="flex flex-col gap-panel-gap">
-            <header>
+          <section class="excel-integration-panel flex flex-col gap-panel-gap p-panel-gap">
+            <header class="flex items-center justify-between">
               <h4 class="flex items-center gap-item-gap">
-                <Icon name="cloud-upload" />
-                <span>Excelデータ取込 (差分同期 / 初期設定)</span>
+                <Icon name="file-spreadsheet" />
+                <span>Excel台帳連携 &amp; 帳票出力</span>
               </h4>
+              <Badge :variant="hasExcelPath ? 'success' : 'default'">{{ hasExcelPath ? '台帳登録済' : '台帳未登録' }}</Badge>
             </header>
             <hr class="divider">
-            <p class="desc-text">
-              回路情報・現場基本情報の更新は「差分同期」、新規立ち上げ時は「全件初期化取込」を行います。取込時にファイルは現場連携用として自動保管されます。
-            </p>
+
+            <div class="integration-status-row flex flex-wrap items-center justify-between gap-item-gap">
+              <div class="flex items-center gap-item-gap desc-text">
+                <span class="label">登録台帳:</span>
+                <span v-if="hasExcelPath" class="template-filename">{{ currentExcelFileName }}</span>
+                <span v-else class="text-subtle">未登録（初回Excel取込時に自動保管・登録されます）</span>
+              </div>
+              <small v-if="!hasExcelPath" class="status-tip">※ 初回Excelを取り込むと帳票出力が解禁されます</small>
+            </div>
 
             <PortalExcelDropzone :model-value="selectedFile" :disabled="isSyncing" @update:model-value="handleFileSelect" />
 
-            <div class="flex flex-wrap items-center gap-item-gap">
-              <Button variant="secondary" icon="refresh-cw" :loading="syncAction === 'merge'" :disabled="!selectedFile || isSyncing" @click="handleMergeSync">{{ selectedFile ? '差分を同期する' : 'ファイルを選択して差分同期' }}</Button>
-              <Button variant="danger" icon="trash-2" :loading="syncAction === 'reset'" :disabled="!selectedFile || isSyncing" @click="handleResetImport">全件を初期化して取り込む</Button>
-            </div>
-          </section>
+            <div class="flex flex-wrap items-center justify-between gap-item-gap">
+              <div class="flex flex-wrap items-center gap-item-gap">
+                <Button variant="secondary" icon="refresh-cw" :loading="syncAction === 'merge'" :disabled="!selectedFile || isSyncing" @click="handleMergeSync">
+                  {{ selectedFile ? '差分を同期する' : 'ファイルを選択して差分同期' }}
+                </Button>
+                <Button variant="danger" icon="trash-2" :loading="syncAction === 'reset'" :disabled="!selectedFile || isSyncing" @click="handleResetImport">
+                  全件を初期化して取り込む
+                </Button>
+              </div>
 
-          <section class="flex flex-col gap-panel-gap">
-            <header>
-              <h4 class="flex items-center gap-item-gap">
-                <Icon name="file-spreadsheet" />
-                <span>帳票用Excel台帳の登録・差し替え</span>
-              </h4>
-            </header>
-            <hr class="divider">
+              <Button
+                variant="primary"
+                icon="download"
+                :loading="syncAction === 'download'"
+                :disabled="isSyncing || !hasExcelPath"
+                @click="handleDownloadExcel"
+              >
+                最新結果入りExcel帳票を出力
+              </Button>
+            </div>
+
             <p class="desc-text">
-              回路データはそのまま保持し、帳票出力・エクスポート元となるExcelファイル（.xlsx / .xlsm）のみをサーバーに登録・更新します。マクロや表示形式・数式は完全保護されます。
+              ※ 取込時のExcelファイル（.xlsx / .xlsm）はサーバーへ現場台帳として自動保管されます。Web上で入力された最新試験結果はマクロ・書式・数式を100%温存したまま出力帳票へ書き戻されます。
             </p>
-
-            <PortalExcelDropzone :model-value="templateFile" :disabled="isSyncing" @update:model-value="handleTemplateFileSelect" />
-
-            <div class="flex items-center gap-item-gap">
-              <Button variant="secondary" icon="upload" :loading="syncAction === 'template'" :disabled="!templateFile || isSyncing" @click="handleUploadTemplate">台帳ファイルを登録・更新する</Button>
-            </div>
-          </section>
-
-          <section class="flex flex-col gap-panel-gap">
-            <header>
-              <h4 class="flex items-center gap-item-gap">
-                <Icon name="file-spreadsheet" />
-                <span>最新結果の帳票出力</span>
-              </h4>
-            </header>
-            <hr class="divider">
-            <small>Web上で完了した最新の試験結果（Phase 1〜3）を反映したExcel帳票ファイルをダウンロードします（マクロ・書式を完全維持）。</small>
-
-            <div class="flex flex-col gap-inline-gap">
-              <Button variant="primary" icon="download" :loading="syncAction === 'download'" :disabled="isSyncing" class="w-fit" @click="handleDownloadExcel">最新試験結果入りのExcel帳票をダウンロード</Button>
-              <small class="desc-text">※ 登録済みの台帳（マクロ・書式完全温存）または最新回路データをもとに即座に出力されます。</small>
-            </div>
           </section>
 
           <Alert v-if="isSyncing" variant="info" icon="loader">{{ syncMsg }}</Alert>
@@ -666,6 +641,25 @@ const confirmDeleteSite = async (site: Site) => {
 
 .stat-count-total {
   color: var(--color-text-muted);
+}
+
+.excel-integration-panel {
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-bg-surface-subtle);
+}
+
+.integration-status-row {
+  padding: var(--space-inline-gap) 0;
+}
+
+.text-subtle {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.status-tip {
+  font-size: var(--font-size-xs);
+  color: var(--color-status-warning);
 }
 
 .template-status-card {
