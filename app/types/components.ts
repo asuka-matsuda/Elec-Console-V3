@@ -731,6 +731,24 @@ export interface CalendarProps {
   disabled?: boolean
 }
 
+// --- Dropzone (Geist準拠: ファイルドラッグ＆ドロップ・アップロード) ---
+export interface DropzoneProps {
+  /** 選択ファイル（v-model） */
+  modelValue?: File | null
+  /** 受け付けるファイル形式 (例: '.xlsx, .xlsm, .xls' または 'image/*') */
+  accept?: string
+  /** ドロップエリアのメイン案内文 (デフォルト: 'クリックしてファイルを選択') */
+  label?: string
+  /** ドロップエリアのサブ案内文 (デフォルト: 'またはここにドラッグ＆ドロップ') */
+  subLabel?: string
+  /** 対応形式等の補足テキスト (未指定時は accept から自動生成) */
+  hint?: string
+  /** 全体無効化フラグ */
+  disabled?: boolean
+  /** 選択解除ボタンを表示するかどうか (デフォルト: true) */
+  clearable?: boolean
+}
+
 // --- Tabs (Geist準拠: ビュー切替・ナビゲーション) ---
 export type TabItem<V = string | number> = TabOption<V>
 export type TabsSize = 'sm' | 'md' | 'lg'
@@ -745,6 +763,48 @@ export interface TabsProps<V = string | number> {
   /** 全体無効化フラグ */
   disabled?: boolean
 }
+
+// --- Collapse (Geist準拠: 折りたたみ・展開アコーディオン) ---
+export interface CollapseProps {
+  /** ヘッダータイトル文字列 */
+  title?: string
+  /** サブタイトル（補足テキスト） */
+  subtitle?: string
+  /** タイトル左側の前置アイコン */
+  icon?: IconName
+  /** 開閉状態（v-model） */
+  modelValue?: boolean
+  /** 非制御時の初期展開状態 (デフォルト: false) */
+  defaultOpen?: boolean
+  /** 操作無効化フラグ (デフォルト: false) */
+  disabled?: boolean
+  /** 境界線を描画するか (デフォルト: true) */
+  bordered?: boolean
+  /** カード（パネル）サーフェススタイルにするか (デフォルト: false) */
+  card?: boolean
+  /** CollapseGroup 内で使用する一意識別子 */
+  value?: string | number
+}
+
+export interface CollapseGroupProps {
+  /** 展開中アイテムのキー（v-model。単一キーまたはキー配列） */
+  modelValue?: string | number | (string | number)[]
+  /** アコーディオン排他モード（1つを開くと他を自動で閉じる、デフォルト: false） */
+  accordion?: boolean
+  /** 境界線を描画するか (デフォルト: true) */
+  bordered?: boolean
+  /** カード（パネル）サーフェススタイルにするか (デフォルト: false) */
+  card?: boolean
+}
+
+export interface CollapseGroupContext {
+  isItemOpen: (val: string | number) => boolean
+  toggleItem: (val: string | number) => void
+  bordered: boolean
+  card: boolean
+}
+
+export const COLLAPSE_GROUP_KEY = Symbol('CollapseGroup')
 
 // ============================================================================
 // 4. Organisms（構造化コンポーネント）

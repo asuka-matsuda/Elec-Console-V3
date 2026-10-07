@@ -3,7 +3,7 @@
 ## 共通コンポーネント完全凍結（ロック）規約とハック禁止原則
 
 1. **共通コンポーネント（app/components/common）の変更凍結（ロック）**
-   - `app/components/common` 配下の全 27 コンポーネント（Atoms / Molecules / Organisms）および関連型定義（`app/types/components.ts`）は、Geist デザインシステム仕様・直角規約・アクセシビリティ方針への準拠を完了し、**確定・凍結（ロック）** されています。
+   - `app/components/common` 配下の全 30 コンポーネント（Atoms / Molecules / Organisms）および関連型定義（`app/types/components.ts`）は、Geist デザインシステム仕様・直角規約・アクセシビリティ方針への準拠を完了し、**確定・凍結（ロック）** されています。
    - 新規機能追加や修正時であっても、共通コンポーネントを独断で改変・拡張・不要なラッパーで再ラップすることを厳禁とします。
 
 2. **呼び出し側（Consumer）でのハック・迂回工作の厳禁（指示仰ぎの徹底）**
@@ -18,7 +18,7 @@
 
 2. **HTML仕様・アクセシビリティの遵守（セマンティクスの優先）**
    - フォーム要素はネイティブな `<label :for="fieldId">` とコントロール（`<Input>`, `<Select>` 等）を直接関連付けます。
-   - 静的テキスト表示や複数の入力コントロール群（チェックボックス群、ラジオボタングループ等）、内部に `<label>` を持つコントロール（`ExcelDropzone` 等）を包括ラベルで囲む仕様違反（Orphan Label / 二重 Label）を厳禁とします。
+   - 静的テキスト表示や複数の入力コントロール群（チェックボックス群、ラジオボタングループ等）、内部に `<label>` を持つコントロール（`Dropzone` 等）を包括ラベルで囲む仕様違反（Orphan Label / 二重 Label）を厳禁とします。
    - `<ul>` 直下には必ず `<li>` のみを配置し、ブロック要素を直接挿入しないでください。
    - `aria-*` や `role` 等の純粋な支援アクセシビリティ属性は規約（`local/no-pure-accessibility`）により原則禁止です。コード量削減と属性の不整合バグ防止のため、セマンティックなHTML構造のみで記述してください。
 
@@ -226,6 +226,17 @@
       - `description` は単なるタイトルのオウム返しを禁止し、次のアクションや補足手順を記載してください。
       - CTA ラベルは明確な動詞句（`Verb + Noun`、例: `現場を登録する`, `フィルターを解除`）とし、`OK`, `次へ` などの曖昧なラベルを避けてください。
      - **スタイル規約**: 直角（`border-radius: 0`）がプロジェクト標準です。外枠やアイコン枠への安易な角丸は禁止です（ESLint `local/strict-empty-state-usage` により監視）。※支援アクセシビリティ属性（`aria-*`, `role` 等）はプロジェクト規約（`local/no-pure-accessibility`）により付与しません。
+    - **Dropzone のベストプラクティス（Geist準拠・Molecules）**:
+      - **用途（When to use）**:
+        - ファイルのドラッグ＆ドロップおよびクリック選択によるファイル受付領域として使用します（Excel台帳、テンプレート設定表等）。
+        - 旧 `ExcelDropzone` コンポーネントは廃止され、共通 `<Dropzone>` に昇格・統合されています。
+      - **振る舞い（Behavior）**:
+        - `v-model` で `File | null` を双方向制御し、`accept` prop で受付ファイル形式（拡張子やMIMEタイプ）を拘束します。
+        - 未選択時は直角破線ボーダー・クラウドアイコン・案内テキストを描画し、ドラッグ侵入時（`isOverDropZone`）はブランド色（`var(--theme-accent)`）の破線と背景グローが適用されます。
+        - ファイル選択時はファイル名（ellipsis省略付き）、ファイルサイズ（KB/MB自動換算）、チェックアイコン、およびワンクリック解除ボタン（`clearable`）をプレビュー表示します。
+        - 内部に `<label>` を内包しているため、呼び出し側で `<label>` で包括することを厳禁とします（二重label防止）。
+      - **スタイル規約**:
+        - 直角（`border-radius: 0`）がプロジェクト標準です。安易な角丸は禁止です。※支援アクセシビリティ属性（`aria-*`, `role` 等）はプロジェクト規約（`local/no-pure-accessibility`）により付与しません。
     - **Toast のベストプラクティス（Geist準拠・Molecules）**:
       - **用途（When to use）**:
         - 非同期処理の完了報告、クリップボードコピー成功、バックグラウンド処理の完了など、一時的かつユーザーの操作を妨げないフィードバックに使用します。
@@ -313,6 +324,21 @@
        - 直角（`border-radius: 0`）がプロジェクト標準です。タブ外枠やタブアイテムへの安易な角丸クラス（`rounded-*`）の上書きは禁止です（ESLint `local/strict-tabs-usage` により監視）。
        - アクティブ状態は下線の光彩インジケーター（`var(--theme-accent)`）およびグラデーション背景で明示します。
        - ※支援アクセシビリティ属性（`role`, `aria-*` 等）はプロジェクト規約（`local/no-pure-accessibility`）により付与しません。
+   - **Collapse / CollapseGroup のベストプラクティス（Geist準拠・Molecules）**:
+     - **用途（When to use）**:
+       - 垂直スペースを節約し、ユーザーがコンテンツの表示／非表示を能動的に切り替えるアコーディオン・折りたたみ表示（FAQ、リリースノート・更新履歴、詳細設定パネル、段階的開示）に使用します。
+       - 複数項目の包括・排他制御（1つを開いたら他を自動で閉じる）には `<CollapseGroup :accordion="true">` を使用してください。
+     - **振る舞い（Behavior）**:
+       - CSS Grid（`grid-template-rows: 0fr -> 1fr`）による純粋 CSS トランジションを採用し、JavaScript による高さ計測ハックやリサイズ時のレイアウトシフト（CLS・ガタつき）をゼロ化しています。
+       - 単体 `<Collapse>` は `v-model`（真偽値）または `defaultOpen` による非制御開閉に対応します。
+       - `<CollapseGroup>` 内では `provide` / `inject` により選択中キー（`v-model`）を完全同期し、排他アコーディオンモード（`accordion`）をサポートします。
+       - ヘッダー右端のシェブロンアイコン（`chevron-down`）は開閉に合わせて 180 度回転アニメーションします。
+     - **スロット設計**:
+       - `#title`（タイトル・バッジ等のカスタム構成）、`#subtitle`（補足テキスト）、`#extra`（ヘッダー右側の日付や追加アクション）、`#default`（折りたたみ本体）を活用してください。
+     - **スタイル規約**:
+       - 直角（`border-radius: 0`）がプロジェクト標準です。外枠やカードへの安易な角丸は禁止です。
+       - Tailwind の `.collapse` ユーティリティ（`visibility: collapse`）とのクラス名衝突を防ぐため、コンポーネントルートは `.collapse-item`（`visibility: visible`）で定義されています。
+       - ※支援アクセシビリティ属性（`role`, `aria-*` 等）はプロジェクト規約（`local/no-pure-accessibility`）により付与しません。セマンティックな `<button type="button">` を使用します。
    - **テンプレートの1行・コンパクト記法（不要な属性改行の禁止）**:
      - 単一要素（`<Button>`, `<Input>`, `<Select>`, `<Checkbox>`, `<Badge>`, `<Avatar>`, `<Icon>`, `<Tooltip>`, 短い `<label>` 等）は、属性ごとに縦に分解・改行せず、原則1行（インライン）で記述してください。
      - コードの一覧性とファイル全体の俯瞰性を高めるため、不要な縦方向の行数膨張を厳禁とします（※ `eslint.config.mjs` でも `vue/max-attributes-per-line` 等は明示的に `off` に設定されています）。

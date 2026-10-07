@@ -83,6 +83,23 @@ const resolveToolInfo = (toolId?: string) => {
 
   return { name: toolId, icon: 'info' as const }
 }
+
+// 5. アコーディオン展開状態（初期状態で先頭の最新リリースを展開）
+const activeCollapseKeys = ref<(string | number)[]>([])
+
+watch(
+  filteredHistory,
+  (list) => {
+    const firstItem = list[0]
+
+    if (firstItem && activeCollapseKeys.value.length === 0) {
+      const firstId = firstItem.id || `${firstItem.version}-${firstItem.date}`
+
+      activeCollapseKeys.value = [firstId]
+    }
+  },
+  { immediate: true },
+)
 </script>
 
 <template>
@@ -123,28 +140,32 @@ const resolveToolInfo = (toolId?: string) => {
       </div>
     </div>
 
-    <div v-else-if="filteredHistory.length > 0" class="flex flex-col gap-panel-gap">
-      <div v-for="item in filteredHistory" :key="item.id || `${item.version}-${item.date}`" class="panel flex flex-col gap-item-gap">
-        <div class="flex flex-wrap items-center justify-between gap-item-gap history-header">
-          <div class="flex items-center gap-item-gap">
-            <Badge size="sm" variant="gray">{{ item.version }}</Badge>
+    <div v-else-if="filteredHistory.length > 0">
+      <CollapseGroup v-model="activeCollapseKeys" card>
+        <Collapse
+          v-for="item in filteredHistory"
+          :key="item.id || `${item.version}-${item.date}`"
+          :value="item.id || `${item.version}-${item.date}`"
+        >
+          <template #title>
+            <div class="flex items-center gap-inline-gap flex-wrap min-w-0">
+              <Badge size="sm" variant="gray">{{ item.version }}</Badge>
+              <Badge size="sm" variant="blue" :icon="resolveToolInfo(item.toolId).icon">{{ resolveToolInfo(item.toolId).name }}</Badge>
+              <span class="history-title">{{ item.title }}</span>
+            </div>
+          </template>
 
-            <Badge size="sm" variant="blue" :icon="resolveToolInfo(item.toolId).icon">{{ resolveToolInfo(item.toolId).name }}</Badge>
+          <template #extra>
+            <time class="history-date">
+              {{ formatDate(item.date) }}
+            </time>
+          </template>
+
+          <div class="history-desc">
+            {{ item.desc || '詳細情報はありません。' }}
           </div>
-
-          <time class="history-date">
-            {{ formatDate(item.date) }}
-          </time>
-        </div>
-
-        <h3 class="history-title">
-          {{ item.title }}
-        </h3>
-
-        <div v-if="item.desc" class="history-desc">
-          {{ item.desc }}
-        </div>
-      </div>
+        </Collapse>
+      </CollapseGroup>
     </div>
 
     <EmptyState v-else icon="clock" variant="no-results" title="該当する更新履歴はありません" description="選択されたツールの履歴はまだ登録されていません。" />
@@ -156,11 +177,6 @@ const resolveToolInfo = (toolId?: string) => {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-secondary);
-}
-
-.history-header {
-  padding-bottom: var(--space-inline-gap);
-  border-bottom: var(--border-width-base) solid var(--color-border);
 }
 
 .history-date {
