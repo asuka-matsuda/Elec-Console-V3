@@ -30,6 +30,18 @@ interface SubFeatureConfig {
 /** 現場ポータル配下の機能定義マップ */
 const PORTAL_SUB_FEATURES: Record<string, SubFeatureConfig> = {
   'souden': { title: '送電試験' },
+  'phase1': {
+    title: 'フェーズ1：回路確認・増締',
+    parent: { title: '送電試験', subPath: 'souden' },
+  },
+  'phase2': {
+    title: 'フェーズ2：絶縁抵抗測定',
+    parent: { title: '送電試験', subPath: 'souden' },
+  },
+  'phase3': {
+    title: 'フェーズ3：送電・電圧測定・検相',
+    parent: { title: '送電試験', subPath: 'souden' },
+  },
   'operation-logs': {
     title: '操作ログ',
     parent: { title: '送電試験', subPath: 'souden' },
@@ -98,13 +110,6 @@ export function useBreadcrumbs() {
           { text: '現場管理', to: '/portal/admin' },
           { text: siteName, to: `/portal/${siteId}` },
         ]
-
-        // 送電試験フェーズ (phase1〜phase3 等)
-        if (subPath === 'souden' || subPath.startsWith('phase')) {
-          crumbs.push({ text: '送電試験' })
-
-          return { items: crumbs, accent: 'management' }
-        }
 
         const feature = PORTAL_SUB_FEATURES[subPath]
 

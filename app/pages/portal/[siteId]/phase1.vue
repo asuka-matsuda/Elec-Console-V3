@@ -8,7 +8,6 @@ import { computed, nextTick, onMounted, watch } from 'vue'
 import type { CircuitItem } from '#shared/types/circuit'
 import { usePhase1Exam } from '~/composables/portal/phase/usePhaseExam'
 import { usePhaseTableForm } from '~/composables/portal/phase/usePhaseTableForm'
-import { useCurrentSite } from '~/composables/portal/useCurrentSite'
 import { useOfflineSync } from '~/composables/portal/useOfflineSync'
 import { useTableSort } from '~/composables/useTableSort'
 import { PHASE1_TABLE_COLUMNS } from '~/constants/soudenConstants'
@@ -21,11 +20,6 @@ useHead({ title: 'フェーズ1：回路確認・増締 - Elec-Console' })
 const route = useRoute()
 const siteId = computed(() => route.params.siteId as string)
 const initialKeiTo = computed(() => (route.query.kei_to as string) || '幹線')
-const { siteName } = useCurrentSite(siteId)
-
-const headerTitle = computed(() =>
-  siteName.value ? `${siteName.value}_フェーズ1：回路確認・増締` : 'フェーズ1：回路確認・増締',
-)
 
 const {
   filteredCircuits,
@@ -155,21 +149,6 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-1 flex-col gap-section-gap min-h-0">
-    <header class="flex flex-col gap-item-gap shrink-0">
-      <div class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
-        <h2 class="flex items-center gap-item-gap">
-          <Icon name="check-square" />
-          <span>{{ headerTitle }}</span>
-        </h2>
-        <div class="flex items-center gap-item-gap">
-          <PortalSyncStatusBadge :site-id="siteId" />
-
-          <Button variant="tertiary" size="sm" icon="arrow-left" :to="`/portal/${siteId}/souden`">ダッシュボードへ戻る</Button>
-        </div>
-      </div>
-      <hr class="divider">
-    </header>
-
     <section class="panel grid grid-cols-1 lg:grid-cols-2 gap-panel-gap items-start">
       <div class="flex flex-col gap-form-row-gap">
         <div class="flex items-center gap-form-col-gap">
@@ -192,7 +171,10 @@ onMounted(() => {
       <div class="flex flex-col gap-form-row-gap">
         <div class="flex flex-col gap-inline-gap">
           <div class="flex items-center justify-between">
-            <span>フェーズ1 進捗状況</span>
+            <div class="flex items-center gap-item-gap">
+              <span>フェーズ1 進捗状況</span>
+              <PortalSyncStatusBadge :site-id="siteId" />
+            </div>
             <div class="flex items-center gap-item-gap">
               <span><strong>{{ phaseStats.completed }}</strong> / {{ phaseStats.total }}</span>
               <span>({{ phaseStats.pct }}%)</span>
@@ -241,7 +223,7 @@ onMounted(() => {
         <div class="flex flex-col gap-inline-gap">
           <div class="flex items-center gap-inline-gap">
             <span class="cell-cable">{{ circuit.cableList || '-' }}</span>
-            <span v-if="circuit.haisenJousuu" class="cell-jousuu">({{ circuit.haisenJousuu }})</span>
+            <span v-if="circuit.haisenJousuu" class="cell-jousuu">× {{ circuit.haisenJousuu }}</span>
           </div>
           <span class="cell-setsuchi" :title="circuit.setsuchiList || ''">{{ circuit.setsuchiList || '-' }}</span>
         </div>

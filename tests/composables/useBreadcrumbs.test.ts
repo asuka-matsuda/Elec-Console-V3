@@ -61,6 +61,45 @@ describe('useBreadcrumbs', () => {
     expect(accent.value).toBe('management')
   })
 
+  it('フェーズ1画面（/portal/:siteId/phase1）で4階層のURL連動パンくずが構築される', () => {
+    mockRoute.value = { path: '/portal/site-1/phase1' }
+    const { items, accent } = useBreadcrumbs()
+
+    expect(items.value).toEqual([
+      { text: '現場管理', to: '/portal/admin' },
+      { text: '東京現場', to: '/portal/site-1' },
+      { text: '送電試験', to: '/portal/site-1/souden' },
+      { text: 'フェーズ1：回路確認・増締' },
+    ])
+    expect(accent.value).toBe('management')
+  })
+
+  it('フェーズ2画面（/portal/:siteId/phase2）で4階層のURL連動パンくずが構築される', () => {
+    mockRoute.value = { path: '/portal/site-1/phase2' }
+    const { items, accent } = useBreadcrumbs()
+
+    expect(items.value).toEqual([
+      { text: '現場管理', to: '/portal/admin' },
+      { text: '東京現場', to: '/portal/site-1' },
+      { text: '送電試験', to: '/portal/site-1/souden' },
+      { text: 'フェーズ2：絶縁抵抗測定' },
+    ])
+    expect(accent.value).toBe('management')
+  })
+
+  it('フェーズ3画面（/portal/:siteId/phase3）で4階層のURL連動パンくずが構築される', () => {
+    mockRoute.value = { path: '/portal/site-1/phase3' }
+    const { items, accent } = useBreadcrumbs()
+
+    expect(items.value).toEqual([
+      { text: '現場管理', to: '/portal/admin' },
+      { text: '東京現場', to: '/portal/site-1' },
+      { text: '送電試験', to: '/portal/site-1/souden' },
+      { text: 'フェーズ3：送電・電圧測定・検相' },
+    ])
+    expect(accent.value).toBe('management')
+  })
+
   it('操作ログ画面（/portal/:siteId/operation-logs）で4階層のパンくずが構築される', () => {
     mockRoute.value = { path: '/portal/site-1/operation-logs' }
     const { items, accent } = useBreadcrumbs()
