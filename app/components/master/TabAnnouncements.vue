@@ -57,7 +57,7 @@ const columns: TableColumn<AnnouncementItem>[] = [
 <template>
   <section class="flex flex-col gap-panel-gap">
     <header class="flex flex-wrap items-center justify-between gap-panel-gap">
-      <small>ダッシュボードの「お知らせ」ウィジェットに掲載される情報を管理します。</small>
+      <small class="guide-text">ダッシュボードの「お知らせ」ウィジェットに掲載される情報を管理します。</small>
 
       <Button variant="primary" size="sm" icon="plus" @click="openModal()">お知らせを作成する</Button>
     </header>
@@ -82,17 +82,13 @@ const columns: TableColumn<AnnouncementItem>[] = [
         <div class="flex flex-col gap-inline-gap">
           <label for="announcement-date" class="label">日付 <span class="req-mark">＊</span></label>
           <Input id="announcement-date" v-model="form.date" type="date" />
-          <p v-if="fieldErrors.date" class="error-text">
-            {{ fieldErrors.date }}
-          </p>
+          <p v-if="fieldErrors.date" class="error-text">{{ fieldErrors.date }}</p>
         </div>
 
         <div class="flex flex-col gap-inline-gap">
           <label for="announcement-title" class="label">タイトル <span class="req-mark">＊</span></label>
           <Input id="announcement-title" v-model="form.title" placeholder="例: システムメンテナンスのお知らせ" />
-          <p v-if="fieldErrors.title" class="error-text">
-            {{ fieldErrors.title }}
-          </p>
+          <p v-if="fieldErrors.title" class="error-text">{{ fieldErrors.title }}</p>
         </div>
 
         <div class="flex flex-col gap-inline-gap">
@@ -105,6 +101,11 @@ const columns: TableColumn<AnnouncementItem>[] = [
 </template>
 
 <style scoped lang="scss">
+.guide-text {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
 .error-text {
   font-size: var(--font-size-xs);
   color: var(--color-status-danger);

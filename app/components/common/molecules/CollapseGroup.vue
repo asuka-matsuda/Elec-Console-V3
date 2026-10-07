@@ -16,15 +16,13 @@ import {
 } from '~/types/components'
 
 const props = withDefaults(defineProps<CollapseGroupProps>(), {
-  modelValue: undefined,
   accordion: false,
   bordered: true,
   card: false,
 })
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', val: string | number | (string | number)[]): void
-  (e: 'change', val: string | number | (string | number)[]): void
+  (e: 'update:modelValue' | 'change', val: string | number | (string | number)[]): void
 }>()
 
 // 内部状態（非制御または制御下）

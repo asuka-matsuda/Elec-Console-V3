@@ -330,9 +330,7 @@ const confirmResetPassword = async (row: User) => {
                 <Badge v-if="user.requirePasswordReset" variant="red" class="shrink-0">PWリセット要</Badge>
               </div>
 
-              <div class="user-item-id">
-                ID: {{ user.loginId || user.id }}
-              </div>
+              <div class="user-item-id">ID: {{ user.loginId || user.id }}</div>
             </div>
           </button>
         </li>
@@ -488,6 +486,7 @@ const confirmResetPassword = async (row: User) => {
 }
 
 .assign-item {
-  background-color: var(--color-bg-hover);
+  border: var(--border-width-base) solid var(--color-border);
+  background-color: var(--surface-bg-elevated);
 }
 </style>

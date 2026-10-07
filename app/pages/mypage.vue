@@ -56,14 +56,6 @@ const assignedSites = computed(() => {
 
 <template>
   <div class="flex flex-col gap-section-gap max-w-2xl">
-    <header class="flex flex-col gap-item-gap shrink-0">
-      <h2 class="flex items-center gap-item-gap">
-        <Icon name="user" />
-        <span>マイページ</span>
-      </h2>
-      <hr class="divider">
-    </header>
-
     <section class="panel flex flex-col gap-panel-gap">
       <header class="flex items-center justify-between">
         <h3 class="flex items-center gap-item-gap">

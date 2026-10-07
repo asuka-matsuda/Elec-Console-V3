@@ -78,14 +78,14 @@ const columns: TableColumn<HistoryItem>[] = [
 <template>
   <section class="flex flex-col gap-panel-gap">
     <header class="flex flex-wrap items-center justify-between gap-panel-gap">
-      <small>ダッシュボードの「更新履歴」ウィジェットに掲載されるバージョン情報を管理します。</small>
+      <small class="guide-text">ダッシュボードの「更新履歴」ウィジェットに掲載されるバージョン情報を管理します。</small>
 
       <Button variant="primary" size="sm" icon="plus" @click="openModal()">更新履歴を作成する</Button>
     </header>
 
     <Table :columns="columns" :data="historyList" :loading="pending" empty-text="登録されている更新履歴はありません。">
       <template #cell-version="{ row }">
-        <small class="version-text">{{ row.version }}</small>
+        <Badge size="sm" variant="gray">{{ row.version }}</Badge>
       </template>
 
       <template #cell-toolId="{ row }">
@@ -117,26 +117,20 @@ const columns: TableColumn<HistoryItem>[] = [
           <div class="flex flex-col gap-inline-gap">
             <label for="history-version" class="label">バージョン <span class="req-mark">＊</span></label>
             <Input id="history-version" v-model="form.version" placeholder="例: v1.0.0" />
-            <p v-if="fieldErrors.version" class="error-text">
-              {{ fieldErrors.version }}
-            </p>
+            <p v-if="fieldErrors.version" class="error-text">{{ fieldErrors.version }}</p>
           </div>
 
           <div class="flex flex-col gap-inline-gap">
             <label for="history-date" class="label">日付 <span class="req-mark">＊</span></label>
             <Input id="history-date" v-model="form.date" type="date" />
-            <p v-if="fieldErrors.date" class="error-text">
-              {{ fieldErrors.date }}
-            </p>
+            <p v-if="fieldErrors.date" class="error-text">{{ fieldErrors.date }}</p>
           </div>
         </div>
 
         <div class="flex flex-col gap-inline-gap">
           <label for="history-title" class="label">タイトル <span class="req-mark">＊</span></label>
           <Input id="history-title" v-model="form.title" placeholder="例: 新機能追加" />
-          <p v-if="fieldErrors.title" class="error-text">
-            {{ fieldErrors.title }}
-          </p>
+          <p v-if="fieldErrors.title" class="error-text">{{ fieldErrors.title }}</p>
         </div>
 
         <div class="flex flex-col gap-inline-gap">
@@ -149,15 +143,15 @@ const columns: TableColumn<HistoryItem>[] = [
 </template>
 
 <style scoped lang="scss">
+.guide-text {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
 .tool-name {
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
-}
-
-.version-text {
-  font-family: var(--font-mono);
-  color: var(--color-text-muted);
 }
 
 .error-text {

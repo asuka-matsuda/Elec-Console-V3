@@ -27,6 +27,7 @@ const menuRef = ref<HTMLElement | null>(null)
 const activeIndex = ref<number>(-1)
 
 const isUpward = ref(false)
+const isRightAligned = ref(false)
 const coords = ref({ top: 0, left: 0 })
 
 const updatePosition = () => {
@@ -35,11 +36,13 @@ const updatePosition = () => {
   const rect = triggerRef.value.getBoundingClientRect()
   const offset = 4
   const estimatedMenuHeight = Math.min(items.length * 36 + 16, 320)
+  const estimatedMenuWidth = 200
 
   const willOverflowBottom = rect.bottom + estimatedMenuHeight + offset > window.innerHeight
-  const willOverflowRight = rect.right > window.innerWidth
+  const willOverflowRight = rect.left + estimatedMenuWidth > window.innerWidth
 
   isUpward.value = willOverflowBottom
+  isRightAligned.value = willOverflowRight
   coords.value = {
     top: willOverflowBottom ? rect.top - offset : rect.bottom + offset,
     left: willOverflowRight ? rect.right : rect.left,
@@ -156,10 +159,19 @@ onBeforeUnmount(() => {
 })
 
 const menuStyle = computed(() => {
+  const transforms: string[] = []
+
+  if (isRightAligned.value) {
+    transforms.push('translateX(-100%)')
+  }
+  if (isUpward.value) {
+    transforms.push('translateY(-100%)')
+  }
+
   return {
     top: `${coords.value.top}px`,
     left: `${coords.value.left}px`,
-    transform: isUpward.value ? 'translateY(-100%)' : 'none',
+    transform: transforms.length > 0 ? transforms.join(' ') : 'none',
     zIndex: 'var(--z-index-dropdown, 1050)',
   }
 })

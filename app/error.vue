@@ -27,173 +27,32 @@ const handleReset = () => {
 </script>
 
 <template>
-  <div class="error-page">
-    <div class="error-page__card">
-      <div class="error-page__header">
-        <div class="error-page__logo flex shrink-0 items-center gap-item-gap">
-          <Icon name="gauge" class="error-page__logo-icon" />
-          <span>Elec-Console</span>
-        </div>
+  <main class="flex min-h-screen items-center justify-center p-layout-pad">
+    <div class="panel w-full max-w-[480px] flex flex-col items-center text-center gap-panel-gap">
+      <h2 class="text-center">Elec-Console V3</h2>
+
+      <hr class="divider is-fade-center">
+
+      <Badge :variant="isNotFound ? 'primary' : 'danger'" size="lg" :icon="isNotFound ? 'compass' : 'triangle-alert'">
+        {{ statusCode }}
+      </Badge>
+
+      <div class="flex flex-col gap-inline-gap">
+        <h3>{{ isNotFound ? "指定されたページが見つかりません" : "システムエラーが発生しました" }}</h3>
+        <small>
+          {{
+            isNotFound
+              ? "アクセスしようとしたページは削除されたか、URLが変更された可能性があります。"
+              : "予期せぬエラーが発生しました。しばらく待ってから再度お試しいただくか、ホームへお戻りください。"
+          }}
+        </small>
       </div>
 
-      <div class="error-page__badge">
-        <Icon :name="isNotFound ? 'compass' : 'triangle-alert'" size="lg" :variant="isNotFound ? 'primary' : 'danger'" />
-        <span class="error-page__code">{{ statusCode }}</span>
-      </div>
+      <Note v-if="error?.message && !isNotFound" variant="error" class="w-full text-left">
+        {{ error.message }}
+      </Note>
 
-      <h1 class="error-page__title">
-        {{ isNotFound ? "指定されたページが見つかりません" : "システムエラーが発生しました" }}
-      </h1>
-
-      <p class="error-page__desc">
-        {{
-          isNotFound
-            ? "アクセスしようとしたページは削除されたか、URLが変更された可能性があります。"
-            : "予期せぬエラーが発生しました。しばらく待ってから再度お試しいただくか、ホームへお戻りください。"
-        }}
-      </p>
-
-      <div class="error-page__actions">
-        <Button variant="primary" icon="home" @click="handleReset">ホームへ戻る</Button>
-      </div>
-
-      <details v-if="error?.message && !isNotFound" class="error-page__details">
-        <summary class="error-page__summary">
-          <Icon name="chevron-right" size="sm" />
-          <span>詳細なエラー情報</span>
-        </summary>
-        <pre class="error-page__stack">{{ error.message }}</pre>
-      </details>
+      <Button variant="primary" icon="home" size="lg" block @click="handleReset">ホームへ戻る</Button>
     </div>
-  </div>
+  </main>
 </template>
-
-<style lang="scss" scoped>
-.error-page {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  min-height: 100vh;
-  padding: var(--space-4);
-
-  background-color: var(--color-main-bg);
-  background-image:
-    radial-gradient(
-      circle at 50% 20%,
-      color-mix(in srgb, var(--color-category-main) 12%, transparent),
-      transparent 70%
-    );
-
-  &__card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    width: 100%;
-    max-width: 520px;
-    padding: var(--space-6) var(--space-5);
-    border: 1px solid var(--color-border);
-
-    text-align: center;
-
-    background-color: var(--surface-bg-elevated);
-    box-shadow: var(--shadow-elevation-lg);
-  }
-
-  &__header {
-    margin-bottom: var(--space-5);
-  }
-
-  &__logo {
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-bold);
-    line-height: var(--line-height-tight);
-    color: var(--color-text-main);
-    white-space: nowrap;
-  }
-
-  &__logo-icon {
-    color: var(--theme-accent);
-  }
-
-  &__badge {
-    display: inline-flex;
-    gap: var(--space-2);
-    align-items: center;
-
-    margin-bottom: var(--space-3);
-    padding: var(--space-1) var(--space-3);
-    border: 1px solid var(--color-border-subtle);
-
-    background-color: var(--surface-bg);
-  }
-
-  &__code {
-    font-family: var(--font-mono);
-    font-size: var(--font-size-xl);
-    font-weight: 700;
-    color: var(--color-text-main);
-  }
-
-  &__title {
-    margin: 0 0 var(--space-2);
-    font-size: var(--font-size-lg);
-    font-weight: 700;
-    color: var(--color-text-main);
-  }
-
-  &__desc {
-    margin: 0 0 var(--space-5);
-    font-size: var(--font-size-sm);
-    line-height: 1.6;
-    color: var(--color-text-muted);
-  }
-
-  &__actions {
-    display: flex;
-    gap: var(--space-3);
-    justify-content: center;
-  }
-
-  &__details {
-    width: 100%;
-    margin-top: var(--space-5);
-    border: 1px solid var(--color-border-subtle);
-
-    text-align: left;
-
-    background-color: var(--surface-bg);
-  }
-
-  &__summary {
-    display: flex;
-    gap: var(--space-2);
-    align-items: center;
-
-    padding: var(--space-2) var(--space-3);
-
-    font-size: var(--font-size-xs);
-    font-weight: 500;
-    color: var(--color-text-muted);
-
-    @include state-interactive;
-
-    &:hover {
-      color: var(--color-text-main);
-    }
-  }
-
-  &__stack {
-    overflow-x: auto;
-
-    margin: 0;
-    padding: var(--space-3);
-    border-top: 1px dashed var(--color-border-subtle);
-
-    font-family: var(--font-mono);
-    font-size: var(--font-size-xs);
-    color: var(--color-status-danger);
-  }
-}
-</style>

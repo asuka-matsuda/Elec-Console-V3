@@ -5,7 +5,7 @@
  * テーマ統一カラーパレットおよびデフォルトカラーを定義します。
  */
 
-import type { SelectOption, SwitchOption } from '~/types/components'
+import type { SwitchOption } from '~/types/components'
 
 interface ColorPreset {
   name: string
@@ -26,14 +26,6 @@ export const DEFAULT_COLOR_PRESETS: ColorPreset[] = [
   { name: 'GitHub Coral (コーラル)', value: '#f778ba' },
   { name: 'GitHub Sky (スカイ)', value: '#58a6ff' },
   { name: 'GitHub Muted (ニュートラル)', value: '#8b949e' },
-]
-
-/**
- * テーマ選択肢（ダークモード / ライトモード）
- */
-export const THEME_OPTIONS: SelectOption<string>[] = [
-  { label: 'ダークモード (標準)', value: 'dark' },
-  { label: 'ライトモード', value: 'light' },
 ]
 
 export const THEME_SWITCH_OPTIONS: SwitchOption[] = [

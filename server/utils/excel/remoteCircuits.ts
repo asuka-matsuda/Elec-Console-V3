@@ -9,7 +9,7 @@ import fs from 'node:fs'
 import ExcelJS from 'exceljs'
 
 import type { RawRemoteRow, RemoteCircuitItem } from '#shared/types/remoteControl'
-import { cellValueToString, normalizeText } from '#shared/utils/excelNormalize'
+import { cellValueToString, normalizeHeaderName } from '#shared/utils/excelNormalize'
 
 import { prisma } from '../prisma'
 import { resolveExistingExcelPath } from './safePath'
@@ -41,7 +41,7 @@ async function extractRemoteCircuitsFromExcelBuffer(
     '回路名称', '回路名', '負荷名称',
     'リレー番号', 'ﾘﾚｰ番号', '機器番号',
   ]
-  const targetNorms = new Set(HEADER_TARGETS.map(normalizeText))
+  const targetNorms = new Set(HEADER_TARGETS.map(normalizeHeaderName))
 
   let headerRowIndex = 1
   let maxScore = -1
@@ -58,7 +58,7 @@ async function extractRemoteCircuitsFromExcelBuffer(
 
       if (val) {
         count++
-        if (targetNorms.has(normalizeText(val))) {
+        if (targetNorms.has(normalizeHeaderName(val))) {
           score++
         }
       }
@@ -81,7 +81,7 @@ async function extractRemoteCircuitsFromExcelBuffer(
   let relayNumberCol = -1
 
   headerRow.eachCell({ includeEmpty: false }, (cell, colNumber) => {
-    const norm = normalizeText(cellValueToString(cell.value))
+    const norm = normalizeHeaderName(cellValueToString(cell.value))
 
     if (/伝送系統|伝送/.test(norm) && densoKeiToCol === -1) {
       densoKeiToCol = colNumber
@@ -118,7 +118,7 @@ async function extractRemoteCircuitsFromExcelBuffer(
     if (rowNumber < dataStartRow) return
 
     const addrRaw = cellValueToString(row.getCell(fukaAddressCol).value).trim()
-    const addr = normalizeText(addrRaw)
+    const addr = normalizeHeaderName(addrRaw)
 
     if (!addr || addr === '-' || addr === '0-0') return
 
@@ -151,7 +151,7 @@ async function extractRemoteCircuitsFromExcelBuffer(
     for (let ch = 0; ch <= 63; ch++) {
       for (let sub = 1; sub <= 4; sub++) {
         const addr = `${ch}-${sub}`
-        const key = `${denso}:${normalizeText(addr)}`
+        const key = `${denso}:${normalizeHeaderName(addr)}`
         const matched = circuitMap.get(key)
 
         circuits.push({

@@ -69,23 +69,6 @@ onMounted(() => {
 
 <template>
   <div class="flex flex-col gap-section-gap h-full">
-    <header class="flex flex-col gap-item-gap shrink-0">
-      <div class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
-        <h2 class="flex items-center gap-item-gap">
-          <Icon name="zap" />
-          <span>{{ pageTitle }}</span>
-        </h2>
-        <div class="flex items-center gap-item-gap">
-          <PortalSyncStatusBadge :site-id="siteId" @synced="fetchStats" />
-
-          <Button variant="tertiary" size="sm" icon="arrow-left" :to="`/portal/${siteId}`">現場ポータルへ戻る</Button>
-
-          <Button variant="secondary" size="sm" icon="book-open" :to="`/portal/${siteId}/operation-logs`">操作ログを確認する</Button>
-        </div>
-      </div>
-      <hr class="divider">
-    </header>
-
     <Note v-if="error" variant="error">{{ error }}</Note>
 
     <EmptyState v-if="!isLoading && stats && stats.totalCircuits === 0" icon="database" variant="informational" title="回路データが登録されていません" description="管理者の「現場設定」よりExcel連携ファイルの保存先設定および回路データの取り込みを行ってください。">
@@ -96,13 +79,15 @@ onMounted(() => {
 
     <template v-else-if="stats">
       <section class="panel flex flex-col gap-panel-gap">
-        <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
+        <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap flex-wrap">
           <h3 class="flex items-center gap-item-gap">
             <Icon name="activity" />
             <span>総合進捗</span>
           </h3>
-          <div v-if="siteId" class="flex items-center gap-item-gap">
+          <div v-if="siteId" class="flex items-center gap-item-gap flex-wrap">
+            <PortalSyncStatusBadge :site-id="siteId" @synced="fetchStats" />
             <Button variant="secondary" size="sm" icon="printer" :to="`/portal/${siteId}/reports?tab=exam`">帳票を出力する</Button>
+            <Button variant="secondary" size="sm" icon="book-open" :to="`/portal/${siteId}/operation-logs`">操作ログを確認する</Button>
           </div>
         </header>
         <hr class="divider">

@@ -17,7 +17,7 @@ import type {
 } from '#shared/types/remoteControl'
 import {
   cellValueToString,
-  normalizeText,
+  normalizeHeaderName,
 } from '#shared/utils/excelNormalize'
 
 import { formatDateTime } from './date'
@@ -50,7 +50,7 @@ export async function extractRemoteCircuitsFromExcel(
     '回路名称', '回路名', '負荷名称',
     'リレー番号', 'ﾘﾚｰ番号', '機器番号',
   ]
-  const targetNorms = new Set(HEADER_TARGETS.map(normalizeText))
+  const targetNorms = new Set(HEADER_TARGETS.map(normalizeHeaderName))
 
   let headerRowIndex = 1
   let maxScore = -1
@@ -67,7 +67,7 @@ export async function extractRemoteCircuitsFromExcel(
 
       if (val) {
         count++
-        if (targetNorms.has(normalizeText(val))) {
+        if (targetNorms.has(normalizeHeaderName(val))) {
           score++
         }
       }
@@ -90,7 +90,7 @@ export async function extractRemoteCircuitsFromExcel(
   let relayNumberCol = -1
 
   headerRow.eachCell({ includeEmpty: false }, (cell, colNumber) => {
-    const norm = normalizeText(cellValueToString(cell.value))
+    const norm = normalizeHeaderName(cellValueToString(cell.value))
 
     if (/伝送系統|伝送/.test(norm) && densoKeiToCol === -1) {
       densoKeiToCol = colNumber
@@ -127,7 +127,7 @@ export async function extractRemoteCircuitsFromExcel(
     if (rowNumber < dataStartRow) return
 
     const addrRaw = cellValueToString(row.getCell(fukaAddressCol).value).trim()
-    const addr = normalizeText(addrRaw)
+    const addr = normalizeHeaderName(addrRaw)
 
     if (!addr || addr === '-' || addr === '0-0') return
 
@@ -161,7 +161,7 @@ export async function extractRemoteCircuitsFromExcel(
     for (let ch = 0; ch <= 63; ch++) {
       for (let sub = 1; sub <= 4; sub++) {
         const addr = `${ch}-${sub}`
-        const key = `${denso}:${normalizeText(addr)}`
+        const key = `${denso}:${normalizeHeaderName(addr)}`
         const matched = circuitMap.get(key)
         const uniqueKey = densoList.length > 1 ? `${denso}:${addr}` : addr
 
@@ -348,13 +348,13 @@ export async function generateRemoteReportExcel(
     const patternMeishoMap = new Map<string, string>()
 
     patternSummaries.forEach((p) => {
-      patternTextMap.set(normalizeText(p.patternKey), p.addressText)
+      patternTextMap.set(normalizeHeaderName(p.patternKey), p.addressText)
 
       const meishos = p.addresses
         .map(addr => circuitMap.get(addr)?.kairoMeisho || '')
         .filter(m => m && m !== '空き' && m !== '-')
 
-      patternMeishoMap.set(normalizeText(p.patternKey), meishos.join('  '))
+      patternMeishoMap.set(normalizeHeaderName(p.patternKey), meishos.join('  '))
     })
 
     // 各シートの流し込み処理
@@ -864,7 +864,7 @@ function fillPatternSettingSheet(
       const text = cellValueToString(cell.value).trim()
 
       // P1 ON, P1 OFF などの記号判定
-      const norm = normalizeText(text)
+      const norm = normalizeHeaderName(text)
 
       if (/^p\d+(on|off)$/.test(norm)) {
         matchedPatternKey = norm
@@ -930,7 +930,7 @@ function fillAddressTableSheet(
 
     row.eachCell({ includeEmpty: false }, (cell, colNumber) => {
       const text = cellValueToString(cell.value)
-      const norm = normalizeText(text).replace(/[%％]/g, '')
+      const norm = normalizeHeaderName(text).replace(/[%％]/g, '')
 
       if (/負荷アドレス|負荷ｱﾄﾞﾚｽ/.test(norm)) {
         fukaAddrCol = colNumber

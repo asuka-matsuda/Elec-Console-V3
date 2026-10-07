@@ -437,7 +437,7 @@ const confirmDeleteSite = async (site: Site) => {
               <small v-if="!hasExcelPath" class="status-tip">※ 初回Excelを取り込むと帳票出力が解禁されます</small>
             </div>
 
-            <PortalExcelDropzone :model-value="selectedFile" :disabled="isSyncing" @update:model-value="handleFileSelect" />
+            <Dropzone v-model="selectedFile" accept=".xlsx, .xlsm, .xls" :disabled="isSyncing" @change="handleFileSelect" />
 
             <div class="flex flex-wrap items-center justify-between gap-item-gap">
               <div class="flex flex-wrap items-center gap-item-gap">

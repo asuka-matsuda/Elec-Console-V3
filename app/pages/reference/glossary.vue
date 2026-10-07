@@ -57,35 +57,48 @@ const disabledKanaRows = computed(() => {
       .filter(k => (k === 'w' ? !hasW : !rows.has(k))),
   )
 })
+
+const hasActiveFilters = computed(
+  () => !!searchQuery.value || activeCats.value.length > 0 || activeKanas.value.length > 0,
+)
+
+const resetFilters = () => {
+  searchQuery.value = ''
+  activeCats.value = []
+  activeKanas.value = []
+}
 </script>
 
 <template>
   <div class="flex flex-1 flex-col gap-panel-gap max-w-[1400px] min-h-0">
-    <aside class="shrink-0">
-      <section class="panel flex flex-col gap-form-row-gap">
-        <header class="flex items-center justify-between">
-          <h3 class="flex items-center gap-item-gap">
-            <Icon name="search" />
-            <span>絞り込み・検索</span>
-          </h3>
-        </header>
+    <section class="panel flex flex-col gap-form-row-gap">
+      <header class="flex items-center justify-between">
+        <h3 class="flex items-center gap-item-gap">
+          <Icon name="search" />
+          <span>絞り込み・検索</span>
+          <Badge size="sm" variant="gray">{{ filteredGlossary.length }}件</Badge>
+        </h3>
+        <Button v-if="hasActiveFilters" variant="tertiary" size="sm" icon="refresh-cw" @click="resetFilters">リセット</Button>
+      </header>
+      <hr class="divider">
 
-        <Input v-model="searchQuery" placeholder="用語名や説明を検索..." icon="search" clearable />
+      <Input v-model="searchQuery" placeholder="用語名や説明を検索..." icon="search" clearable />
 
-        <ul v-if="categoryOptions.length > 0" class="grid grid-cols-[repeat(auto-fill,minmax(115px,1fr))] gap-item-gap">
-          <li v-for="cat in categoryOptions" :key="cat.value">
-            <Checkbox v-model="activeCats" :value="cat.value">{{ cat.label }}</Checkbox>
+      <ul v-if="categoryOptions.length > 0" class="grid grid-cols-[repeat(auto-fill,minmax(115px,1fr))] gap-item-gap">
+        <li v-for="cat in categoryOptions" :key="cat.value">
+          <Checkbox v-model="activeCats" :value="cat.value">{{ cat.label }}</Checkbox>
+        </li>
+      </ul>
+
+      <div class="flex flex-col gap-inline-gap">
+        <span class="index-label">INDEX (読み・五十音)</span>
+        <ul class="grid grid-cols-5 gap-inline-gap">
+          <li v-for="kana in KANA_ROWS" :key="kana.value">
+            <button type="button" class="flex items-center justify-center w-full kana-btn" :class="{ 'is-active': activeKanas.includes(kana.value) }" :disabled="disabledKanaRows.has(kana.value)" @click="toggleKanaRow(kana.value)">{{ kana.label }}</button>
           </li>
         </ul>
-
-        <div class="flex flex-col gap-inline-gap">
-          <span class="index-label">INDEX (読み・五十音)</span>
-          <nav class="grid grid-cols-5 gap-inline-gap">
-            <button v-for="kana in KANA_ROWS" :key="kana.value" type="button" class="flex items-center justify-center kana-btn" :class="{ 'is-active': activeKanas.includes(kana.value) }" :disabled="disabledKanaRows.has(kana.value)" @click="toggleKanaRow(kana.value)">{{ kana.label }}</button>
-          </nav>
-        </div>
-      </section>
-    </aside>
+      </div>
+    </section>
 
     <ul v-if="filteredGlossary.length > 0" class="flex flex-1 flex-col gap-panel-gap min-w-0 min-h-0">
       <li v-for="item in filteredGlossary" :key="item.term">
@@ -93,9 +106,7 @@ const disabledKanaRows = computed(() => {
           <header class="flex items-center justify-between gap-item-gap">
             <div class="flex flex-col gap-inline-gap">
               <span v-if="item.kana" class="kana">{{ item.kana }}</span>
-              <h2 class="term">
-                {{ item.term }}
-              </h2>
+              <h2 class="term">{{ item.term }}</h2>
             </div>
             <Badge :variant="TRADE_VARIANT_MAP[item.category] || 'gray'">{{ item.category }}</Badge>
           </header>
@@ -103,22 +114,16 @@ const disabledKanaRows = computed(() => {
           <hr class="divider is-fade-center">
 
           <div class="flex flex-col gap-inline-gap">
-            <p class="desc">
-              {{ item.desc }}
-            </p>
+            <p class="desc">{{ item.desc }}</p>
 
             <dl v-if="item.related" class="meta flex flex-col gap-inline-gap p-panel-pad-compact">
               <dt class="meta-label">関連用語</dt>
-              <dd class="meta-text">
-                {{ item.related }}
-              </dd>
+              <dd class="meta-text">{{ item.related }}</dd>
             </dl>
 
             <dl v-if="item.example" class="meta flex flex-col gap-inline-gap p-panel-pad-compact">
               <dt class="meta-label">用例・備考</dt>
-              <dd class="meta-text">
-                {{ item.example }}
-              </dd>
+              <dd class="meta-text">{{ item.example }}</dd>
             </dl>
           </div>
         </article>
@@ -188,6 +193,7 @@ const disabledKanaRows = computed(() => {
 .meta {
   margin: 0;
   border: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 30%, transparent);
+  background-color: var(--surface-bg-elevated);
 }
 
 .meta-label {

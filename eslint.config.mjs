@@ -23,6 +23,7 @@ import strictBannerUsage from './eslint-rules/strict-banner-usage.mjs'
 import strictBreadcrumbsUsage from './eslint-rules/strict-breadcrumbs-usage.mjs'
 import strictButtonUsage from './eslint-rules/strict-button-usage.mjs'
 import strictCheckboxUsage from './eslint-rules/strict-checkbox-usage.mjs'
+import strictDropzoneUsage from './eslint-rules/strict-dropzone-usage.mjs'
 import strictEmptyStateUsage from './eslint-rules/strict-empty-state-usage.mjs'
 import strictGaugeUsage from './eslint-rules/strict-gauge-usage.mjs'
 import strictIconUsage from './eslint-rules/strict-icon-usage.mjs'
@@ -80,6 +81,7 @@ export default withNuxt(
           'strict-breadcrumbs-usage': strictBreadcrumbsUsage,
           'strict-button-usage': strictButtonUsage,
           'strict-checkbox-usage': strictCheckboxUsage,
+          'strict-dropzone-usage': strictDropzoneUsage,
           'strict-empty-state-usage': strictEmptyStateUsage,
           'strict-gauge-usage': strictGaugeUsage,
           'strict-icon-usage': strictIconUsage,
@@ -131,6 +133,7 @@ export default withNuxt(
       'local/strict-banner-usage': 'error',
       'local/strict-breadcrumbs-usage': 'error',
       'local/strict-checkbox-usage': 'error',
+      'local/strict-dropzone-usage': 'error',
       'local/strict-empty-state-usage': 'error',
       'local/strict-input-usage': 'error',
       'local/strict-menu-usage': 'error',

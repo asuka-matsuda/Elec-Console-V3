@@ -248,19 +248,6 @@ export function isSuperUser(user: SafeUser): boolean {
 }
 
 /**
- * 特定現場の管理者権限を有しているか判定
- */
-export function canAdminSite(user: SafeUser, siteId: string): boolean {
-  if (isSuperUser(user)) {
-    return true
-  }
-
-  const assignment = user.siteAssignments?.find(sa => sa.siteId === siteId)
-
-  return assignment?.role === 'admin'
-}
-
-/**
  * 特定の現場へのアクセス権限を有しているか判定
  * 全現場アクセスは master アカウントのみに限定され、一般 admin を含む他ユーザーは assignedSiteIds に従う
  */

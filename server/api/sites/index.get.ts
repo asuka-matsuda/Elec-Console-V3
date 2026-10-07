@@ -9,7 +9,7 @@
 import { defineEventHandler } from 'h3'
 
 import { isSuperUser, requireAuthUser } from '../../utils/auth'
-import { parseExcludedCircuits, parseNoBreakWords } from '../../utils/jsonFields'
+import { parseAssignedReports, parseExcludedCircuits, parseNoBreakWords } from '../../utils/jsonFields'
 import { prisma } from '../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
@@ -51,6 +51,7 @@ export default defineEventHandler(async (event) => {
       excelPath: site.settings?.excelPath || undefined,
       excludedCircuits: parseExcludedCircuits(site.settings?.excludedCircuits),
       noBreakWords: parseNoBreakWords(site.settings?.noBreakWords),
+      assignedReports: parseAssignedReports(site.settings?.assignedReports),
     }
   })
 

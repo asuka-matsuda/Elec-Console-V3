@@ -10,8 +10,10 @@ import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { requireAdminUser } from '../../../utils/auth'
 import {
+  parseAssignedReports,
   parseExcludedCircuits,
   parseNoBreakWords,
+  serializeAssignedReports,
   serializeExcludedCircuits,
   serializeNoBreakWords,
 } from '../../../utils/jsonFields'
@@ -74,7 +76,7 @@ export default defineEventHandler(async (event) => {
 
   const currentSiteId = updatedSite.id
 
-  // 3. 現場設定（Excelパス、除外回路ルール等）の更新
+  // 3. 現場設定（Excelパス、除外回路ルール、帳票割り当て等）の更新
   const rawExcelPath = siteData.excelPath !== undefined
     ? siteData.excelPath
     : body.settings?.excelPath
@@ -91,11 +93,16 @@ export default defineEventHandler(async (event) => {
     ? siteData.noBreakWords
     : body.settings?.noBreakWords
 
+  const rawAssignedReports = siteData.assignedReports !== undefined
+    ? siteData.assignedReports
+    : body.settings?.assignedReports
+
   const settingsUpdates: Record<string, unknown> = {}
 
   if (newExcelPath !== undefined) settingsUpdates.excelPath = newExcelPath
   if (rawExcluded !== undefined) settingsUpdates.excludedCircuits = serializeExcludedCircuits(rawExcluded)
   if (rawNoBreak !== undefined) settingsUpdates.noBreakWords = serializeNoBreakWords(rawNoBreak)
+  if (rawAssignedReports !== undefined) settingsUpdates.assignedReports = serializeAssignedReports(rawAssignedReports)
   if (body.settings?.phase2ThresholdMegOhm !== undefined) {
     settingsUpdates.phase2ThresholdMegOhm = body.settings.phase2ThresholdMegOhm
   }
@@ -121,6 +128,7 @@ export default defineEventHandler(async (event) => {
     excelPath: settings?.excelPath || undefined,
     excludedCircuits: parseExcludedCircuits(settings?.excludedCircuits),
     noBreakWords: parseNoBreakWords(settings?.noBreakWords),
+    assignedReports: parseAssignedReports(settings?.assignedReports),
   }
 
   return { site: returnedSite, settings }

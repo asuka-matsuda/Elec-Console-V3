@@ -26,7 +26,7 @@ const handleSelect = (item: TabItem) => {
 </script>
 
 <template>
-  <nav class="tabs flex items-center gap-inline-gap overflow-x-auto" :class="[`tabs-${size}`, { 'is-disabled': disabled }]">
+  <nav class="tabs flex gap-inline-gap overflow-x-auto" :class="[`tabs-${size}`, { 'is-disabled': disabled }]">
     <button v-for="item in items" :key="String(item.value)" type="button" class="tabs-item relative z-[1] inline-flex items-center justify-center gap-inline-gap" :class="{ 'is-active': modelValue === item.value, 'is-disabled': disabled || item.disabled }" :disabled="disabled || item.disabled" @click="handleSelect(item)">
       <Icon v-if="item.icon" :name="item.icon" :size="iconSize" />
       <span>{{ item.label }}</span>
@@ -37,8 +37,9 @@ const handleSelect = (item: TabItem) => {
 
 <style scoped lang="scss">
 .tabs {
-  border-bottom: var(--border-width-base) solid var(--color-border);
+  box-sizing: border-box;
   border-radius: 0;
+  box-shadow: inset 0 -1px 0 var(--color-border);
 
   &.is-disabled {
     @include state-disabled;
@@ -46,9 +47,10 @@ const handleSelect = (item: TabItem) => {
 }
 
 .tabs-item {
-  margin-bottom: -1px;
+  box-sizing: border-box;
+  height: 100%;
+  margin-bottom: 0;
   border: none;
-  border-bottom: var(--border-width-thick, 2px) solid transparent;
   border-radius: 0;
 
   font-weight: var(--font-weight-medium);
@@ -77,7 +79,6 @@ const handleSelect = (item: TabItem) => {
   }
 
   &.is-active {
-    border-bottom-color: transparent;
     font-weight: var(--font-weight-semibold);
     color: var(--color-text-main);
     background:
@@ -92,7 +93,7 @@ const handleSelect = (item: TabItem) => {
 
       position: absolute;
       right: 0;
-      bottom: -1px;
+      bottom: 0;
       left: 0;
 
       height: var(--border-width-thick, 2px);
@@ -115,22 +116,28 @@ const handleSelect = (item: TabItem) => {
 }
 
 .tabs-sm {
+  height: 32px;
+
   .tabs-item {
-    padding: 0.35em 0.7em;
+    padding: 0 var(--space-2);
     font-size: var(--font-size-xs);
   }
 }
 
 .tabs-md {
+  height: 40px;
+
   .tabs-item {
-    padding: 0.5em 0.9em;
+    padding: 0 var(--space-3);
     font-size: var(--font-size-sm);
   }
 }
 
 .tabs-lg {
+  height: 48px;
+
   .tabs-item {
-    padding: 0.65em 1.1em;
+    padding: 0 var(--space-4);
     font-size: var(--font-size-base);
   }
 }

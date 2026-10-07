@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import { h, ref } from 'vue'
+import { h } from 'vue'
 
 import Collapse from '~/components/common/molecules/Collapse.vue'
 import CollapseGroup from '~/components/common/molecules/CollapseGroup.vue'
@@ -35,6 +35,7 @@ describe('Collapse', () => {
     expect(wrapper.classes()).not.toContain('is-open')
 
     const button = wrapper.find('button.collapse-header')
+
     await button.trigger('click')
 
     expect(wrapper.classes()).toContain('is-open')
@@ -82,6 +83,7 @@ describe('Collapse', () => {
     expect(wrapper.classes()).toContain('is-disabled')
 
     const button = wrapper.find('button.collapse-header')
+
     await button.trigger('click')
 
     expect(wrapper.classes()).not.toContain('is-open')
@@ -128,6 +130,7 @@ describe('CollapseGroup', () => {
     })
 
     const buttons = wrapper.findAll('button.collapse-header')
+
     expect(buttons).toHaveLength(2)
 
     // 項目1をクリックして開く

@@ -35,6 +35,11 @@ const { data: dashboardData, pending: isDashboardPending } = useFetch<DashboardD
   default: () => ({ announcements: [], history: [] }),
 })
 
+const latestAnnouncements = computed(() => dashboardData.value?.announcements?.slice(0, 2) || [])
+const olderAnnouncements = computed(() => dashboardData.value?.announcements?.slice(2) || [])
+const latestHistory = computed(() => dashboardData.value?.history?.slice(0, 2) || [])
+const olderHistory = computed(() => dashboardData.value?.history?.slice(2) || [])
+
 // 3. 詳細モーダル（単一の参照オブジェクトに集約）
 type DetailType = 'announcement' | 'history'
 const activeDetail = ref<{ item: AnnouncementItem | HistoryItem, type: DetailType } | null>(null)
@@ -89,6 +94,7 @@ const resolveMenuBadge = (item: MenuItem): { text: string, variant: BadgeVariant
     </section>
 
     <aside class="flex flex-col gap-section-gap w-full md:w-sidebar-w md:sticky md:top-layout-pad md:overflow-y-auto shrink-0 md:max-h-[calc(100dvh-var(--space-layout-pad)*2)]">
+      <!-- お知らせセクション -->
       <section class="flex flex-col gap-panel-gap">
         <header>
           <h3 class="flex items-center gap-item-gap">
@@ -99,39 +105,51 @@ const resolveMenuBadge = (item: MenuItem): { text: string, variant: BadgeVariant
         <hr class="divider">
 
         <div v-if="isDashboardPending" class="flex flex-col gap-item-gap">
-          <div v-for="skeletonIndex in 3" :key="`announcement-skeleton-${skeletonIndex}`" class="panel feed-card flex flex-col gap-inline-gap">
+          <div v-for="skeletonIndex in 2" :key="`announcement-skeleton-${skeletonIndex}`" class="panel feed-card flex flex-col gap-inline-gap">
             <Skeleton width="5rem" height="0.85rem" />
             <Skeleton width="85%" height="1.1rem" />
           </div>
         </div>
         <EmptyState v-else-if="!dashboardData?.announcements?.length" icon="inbox" title="現在新しいお知らせはありません" />
-        <ul v-else class="flex flex-col gap-item-gap">
-          <li v-for="(item, index) in dashboardData.announcements" :key="item.id ?? index">
-            <button type="button" class="panel is-interactive feed-card w-full flex flex-col gap-inline-gap text-left" @click="activeDetail = { item, type: 'announcement' }">
-              <div class="flex items-center justify-between gap-item-gap w-full">
-                <time>{{ formatDate(item.date) }}</time>
-              </div>
-              <span class="feed-title">{{ item.title }}</span>
-            </button>
-          </li>
-        </ul>
+        <div v-else class="flex flex-col gap-item-gap">
+          <ul class="flex flex-col gap-item-gap">
+            <li v-for="(item, index) in latestAnnouncements" :key="item.id ?? index">
+              <button type="button" class="panel is-interactive feed-card w-full flex flex-col gap-inline-gap text-left" @click="activeDetail = { item, type: 'announcement' }">
+                <div class="flex items-center justify-between gap-item-gap w-full">
+                  <time>{{ formatDate(item.date) }}</time>
+                </div>
+                <span class="feed-title">{{ item.title }}</span>
+              </button>
+            </li>
+          </ul>
+
+          <Collapse v-if="olderAnnouncements.length > 0" :title="`過去のお知らせ (${olderAnnouncements.length}件)`" icon="history" card>
+            <ul class="flex flex-col gap-item-gap max-h-[220px] overflow-y-auto">
+              <li v-for="(item, index) in olderAnnouncements" :key="item.id ?? index">
+                <button type="button" class="panel is-interactive feed-card w-full flex flex-col gap-inline-gap text-left" @click="activeDetail = { item, type: 'announcement' }">
+                  <div class="flex items-center justify-between gap-item-gap w-full">
+                    <time>{{ formatDate(item.date) }}</time>
+                  </div>
+                  <span class="feed-title">{{ item.title }}</span>
+                </button>
+              </li>
+            </ul>
+          </Collapse>
+        </div>
       </section>
 
+      <!-- 更新履歴セクション -->
       <section class="flex flex-col gap-panel-gap">
-        <header class="flex items-center justify-between gap-item-gap">
+        <header>
           <h3 class="flex items-center gap-item-gap">
             <Icon name="clock" style="color: var(--theme-accent)" />
             <span>更新履歴</span>
           </h3>
-          <NuxtLink to="/changelog" class="flex items-center gap-inline-gap all-history-link">
-            <span>全履歴</span>
-            <Icon name="arrow-right" size="sm" />
-          </NuxtLink>
         </header>
         <hr class="divider">
 
         <div v-if="isDashboardPending" class="flex flex-col gap-item-gap">
-          <div v-for="skeletonIndex in 3" :key="`history-skeleton-${skeletonIndex}`" class="panel feed-card flex flex-col gap-inline-gap">
+          <div v-for="skeletonIndex in 2" :key="`history-skeleton-${skeletonIndex}`" class="panel feed-card flex flex-col gap-inline-gap">
             <div class="flex items-center justify-between gap-item-gap">
               <Skeleton width="5rem" height="0.85rem" />
               <Skeleton width="3rem" height="0.85rem" />
@@ -140,17 +158,33 @@ const resolveMenuBadge = (item: MenuItem): { text: string, variant: BadgeVariant
           </div>
         </div>
         <EmptyState v-else-if="!dashboardData?.history?.length" icon="inbox" title="現在更新履歴はありません" />
-        <ul v-else class="flex flex-col gap-item-gap">
-          <li v-for="(item, index) in dashboardData.history" :key="item.id ?? index">
-            <button type="button" class="panel is-interactive feed-card w-full flex flex-col gap-inline-gap text-left" @click="activeDetail = { item, type: 'history' }">
-              <div class="flex items-center justify-between gap-item-gap w-full">
-                <time>{{ formatDate(item.date) }}</time>
-                <Badge v-if="item.version" size="sm" variant="gray" class="shrink-0">{{ item.version }}</Badge>
-              </div>
-              <span class="feed-title">{{ item.title }}</span>
-            </button>
-          </li>
-        </ul>
+        <div v-else class="flex flex-col gap-item-gap">
+          <ul class="flex flex-col gap-item-gap">
+            <li v-for="(item, index) in latestHistory" :key="item.id ?? index">
+              <button type="button" class="panel is-interactive feed-card w-full flex flex-col gap-inline-gap text-left" @click="activeDetail = { item, type: 'history' }">
+                <div class="flex items-center justify-between gap-item-gap w-full">
+                  <time>{{ formatDate(item.date) }}</time>
+                  <Badge v-if="item.version" size="sm" variant="gray" class="shrink-0">{{ item.version }}</Badge>
+                </div>
+                <span class="feed-title">{{ item.title }}</span>
+              </button>
+            </li>
+          </ul>
+
+          <Collapse v-if="olderHistory.length > 0" :title="`過去の更新履歴 (${olderHistory.length}件)`" icon="history" card>
+            <ul class="flex flex-col gap-item-gap max-h-[220px] overflow-y-auto">
+              <li v-for="(item, index) in olderHistory" :key="item.id ?? index">
+                <button type="button" class="panel is-interactive feed-card w-full flex flex-col gap-inline-gap text-left" @click="activeDetail = { item, type: 'history' }">
+                  <div class="flex items-center justify-between gap-item-gap w-full">
+                    <time>{{ formatDate(item.date) }}</time>
+                    <Badge v-if="item.version" size="sm" variant="gray" class="shrink-0">{{ item.version }}</Badge>
+                  </div>
+                  <span class="feed-title">{{ item.title }}</span>
+                </button>
+              </li>
+            </ul>
+          </Collapse>
+        </div>
       </section>
     </aside>
 
@@ -203,16 +237,6 @@ const resolveMenuBadge = (item: MenuItem): { text: string, variant: BadgeVariant
     font-weight: var(--font-weight-bold);
     line-height: var(--line-height-tight);
     color: var(--color-text-main);
-  }
-}
-
-.all-history-link {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-  transition: var(--transition-base);
-
-  &:hover {
-    color: var(--theme-accent);
   }
 }
 </style>

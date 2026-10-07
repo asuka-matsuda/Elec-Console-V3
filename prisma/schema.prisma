@@ -82,6 +82,7 @@ model SiteSettings {
   measurementDevices    String? // Stored as JSON string MeasurementDevice[]
   selectedDeviceIds     String? // Stored as JSON string SelectedMeasurementDevices
   remoteControlConfig   String? // Stored as JSON string RemoteControlConfig
+  assignedReports       String? // Stored as JSON string string[]
 
   site Site @relation(fields: [siteId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }

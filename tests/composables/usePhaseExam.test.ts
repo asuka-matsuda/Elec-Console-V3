@@ -7,7 +7,6 @@ import {
   usePhase1Exam,
   usePhase2Exam,
   usePhase3Exam,
-  usePhaseExam,
   usePhaseExamBase,
 } from '../../app/composables/portal/phase/usePhaseExam'
 
@@ -168,14 +167,5 @@ describe('usePhase3Exam', () => {
     expect(typeof exam3.confirmPhase3).toBe('function')
     expect(typeof exam3.clearPhase3).toBe('function')
     expect(exam3.phaseNumber).toBe(3)
-  })
-})
-
-describe('usePhaseExam', () => {
-  it('usePhaseExamBase のエイリアスとして正しく機能すること', () => {
-    const exam = usePhaseExam('site-1', '幹線', 1)
-
-    expect(typeof exam.confirmPhase1).toBe('function')
-    expect(exam.phaseNumber).toBe(1)
   })
 })

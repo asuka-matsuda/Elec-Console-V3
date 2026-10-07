@@ -17,11 +17,6 @@ export function normalizeHeaderName(name: unknown): string {
 }
 
 /**
- * 互換用エイリアス（既存呼び出し元との互換性を維持）
- */
-export const normalizeText = normalizeHeaderName
-
-/**
  * セル値のセーフな文字列取得（Formula / RichText / Date / プリミティブ対応）
  */
 export function cellValueToString(value: unknown): string {

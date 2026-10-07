@@ -1,3 +1,5 @@
+import type { ReportLogicType } from './reportTemplate'
+
 /**
  * 現場基本情報・設定エンティティ型定義
  */
@@ -35,6 +37,8 @@ export type Site = {
   noBreakWords?: string[]
   /** 現場にアサインされた作業員・試験員名リスト */
   workers?: string[]
+  /** 現場で有効化・割り当てられた帳票リスト */
+  assignedReports?: ReportLogicType[]
 }
 
 /**

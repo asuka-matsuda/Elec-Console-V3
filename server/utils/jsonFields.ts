@@ -302,3 +302,50 @@ export function serializeRemoteControlConfig(val: unknown): string | null {
     return null
   }
 }
+
+const DEFAULT_ASSIGNED_REPORTS = ['tag', 'socket-tepra', 'exam', 'remote']
+
+/**
+ * 現場割り当て帳票（SiteSettings.assignedReports）の安全なパース
+ */
+export function parseAssignedReports(raw?: string | null): string[] {
+  if (!raw || typeof raw !== 'string') {
+    return [...DEFAULT_ASSIGNED_REPORTS]
+  }
+
+  try {
+    const parsed = JSON.parse(raw)
+
+    if (Array.isArray(parsed)) {
+      const filtered = parsed
+        .filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+        .map(item => item.trim())
+
+      return filtered.length > 0 ? filtered : [...DEFAULT_ASSIGNED_REPORTS]
+    }
+
+    return [...DEFAULT_ASSIGNED_REPORTS]
+  }
+  catch {
+    return [...DEFAULT_ASSIGNED_REPORTS]
+  }
+}
+
+/**
+ * 現場割り当て帳票の安全なシリアライズ
+ */
+export function serializeAssignedReports(val: unknown): string | null {
+  if (val === null || val === undefined) {
+    return null
+  }
+
+  if (Array.isArray(val)) {
+    const cleaned = val
+      .filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+      .map(item => item.trim())
+
+    return cleaned.length > 0 ? JSON.stringify(cleaned) : null
+  }
+
+  return null
+}

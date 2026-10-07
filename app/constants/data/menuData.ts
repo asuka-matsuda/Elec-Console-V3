@@ -75,7 +75,7 @@ export const menuData: MenuSection[] = [
         href: '/master',
         icon: 'sliders',
         version: 'v1.0.0',
-        desc: 'メンバー・お知らせ・システム全体設定。',
+        desc: 'メンバー・お知らせ・更新履歴・帳票ひな形設定。',
         masterOnly: true,
       },
     ],

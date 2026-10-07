@@ -473,9 +473,6 @@ export function resolveValueOfKey(
   return ''
 }
 
-/** エイリアス */
-export const resolveValueOfTag = resolveValueOfKey
-
 /**
  * 行の書式と高さをコピー（ブロック複製用）
  */

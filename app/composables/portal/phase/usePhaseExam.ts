@@ -653,9 +653,6 @@ export function usePhaseExamBase(
   }
 }
 
-// エイリアス
-export const usePhaseExam = usePhaseExamBase
-
 export function usePhase1Exam(
   siteIdRef: Ref<string> | string,
   initialKeiTo: string = '幹線',

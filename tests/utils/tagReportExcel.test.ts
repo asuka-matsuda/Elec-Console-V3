@@ -9,7 +9,6 @@ import {
   extractTableFromExcel,
   generateTagReportExcel,
   resolveValueOfKey,
-  resolveValueOfTag,
 } from '../../app/utils/tagReportExcel'
 
 describe('tagReportExcel', () => {
@@ -139,8 +138,6 @@ describe('tagReportExcel', () => {
     expect(resolveValueOfKey(row, '現場名')).toBe('')
     // 6. 任意の動的列値の取得
     expect(resolveValueOfKey(row, '測定時間')).toBe('10:00')
-    // 7. エイリアス関数resolveValueOfTagも同一であること
-    expect(resolveValueOfTag(row, '設置場所')).toBe('B1F電気室')
   })
 
   it('detectTagSlots: A4ラベルテンプレートからタグ枠（スロット）を正しく検出すること', async () => {

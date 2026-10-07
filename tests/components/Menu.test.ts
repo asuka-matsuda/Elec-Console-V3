@@ -198,4 +198,42 @@ describe('Menu (Geist準拠)', () => {
 
     wrapper.unmount()
   })
+
+  it('aligns menu to the right with translateX(-100%) when trigger is near right screen edge', async () => {
+    vi.stubGlobal('innerWidth', 1000)
+
+    const wrapper = mount(Menu, {
+      props: {
+        items: sampleItems,
+      },
+      global: {
+        stubs: commonStubs,
+      },
+      attachTo: document.body,
+    })
+
+    const rootEl = wrapper.find('.menu-root').element as HTMLElement
+
+    vi.spyOn(rootEl, 'getBoundingClientRect').mockReturnValue({
+      top: 100,
+      bottom: 132,
+      left: 900,
+      right: 932,
+      width: 32,
+      height: 32,
+      x: 900,
+      y: 100,
+      toJSON: () => {},
+    })
+
+    await wrapper.find('.btn-stub').trigger('click')
+    const panel = document.body.querySelector('.menu-panel') as HTMLElement
+
+    expect(panel).not.toBeNull()
+    expect(panel.style.transform).toContain('translateX(-100%)')
+    expect(panel.style.left).toBe('932px')
+
+    wrapper.unmount()
+    vi.unstubAllGlobals()
+  })
 })

@@ -7,7 +7,7 @@
  * - 直角（border-radius: 0）サイバーサーフェス
  * - 支援アクセシビリティ属性（aria-*, role）はプロジェクト規約により除外
  */
-import { computed, getCurrentInstance, inject, ref, watch } from 'vue'
+import { computed, getCurrentInstance, inject, ref } from 'vue'
 
 import {
   COLLAPSE_GROUP_KEY,
@@ -15,19 +15,19 @@ import {
   type CollapseProps,
 } from '~/types/components'
 
-const props = withDefaults(defineProps<CollapseProps>(), {
+// v-model バインディング (Vue 3.4+)
+const modelValue = defineModel<boolean | null>('modelValue')
+
+const props = withDefaults(defineProps<Omit<CollapseProps, 'modelValue'>>(), {
   title: '',
   subtitle: '',
-  modelValue: undefined,
   defaultOpen: false,
   disabled: false,
   bordered: true,
   card: false,
-  value: undefined,
 })
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', open: boolean): void
   (e: 'change', open: boolean): void
 }>()
 
@@ -38,17 +38,15 @@ const group = inject<CollapseGroupContext | null>(COLLAPSE_GROUP_KEY, null)
 const instance = getCurrentInstance()
 const itemKey = computed<string | number>(() => props.value ?? `collapse-${instance?.uid ?? Math.random()}`)
 
-// 単体時の内部状態
-const internalOpen = ref<boolean>(props.modelValue ?? props.defaultOpen)
+// 親からの v-model / modelValue バインディング有無の判定
+const hasModelValueBinding = computed(() => {
+  const vProps = instance?.vnode.props
 
-watch(
-  () => props.modelValue,
-  (newVal) => {
-    if (newVal !== undefined) {
-      internalOpen.value = newVal
-    }
-  },
-)
+  return Boolean(vProps && ('modelValue' in vProps || 'onUpdate:modelValue' in vProps))
+})
+
+// 非制御時のローカル状態（初期値: defaultOpen）
+const localOpen = ref<boolean>(props.defaultOpen)
 
 // 現在の開閉状態（グループが存在する場合はグループの状態を優先）
 const isOpen = computed<boolean>(() => {
@@ -56,7 +54,11 @@ const isOpen = computed<boolean>(() => {
     return group.isItemOpen(itemKey.value)
   }
 
-  return props.modelValue !== undefined ? props.modelValue : internalOpen.value
+  if (hasModelValueBinding.value) {
+    return Boolean(modelValue.value)
+  }
+
+  return localOpen.value
 })
 
 const toggle = () => {
@@ -68,8 +70,8 @@ const toggle = () => {
   else {
     const nextState = !isOpen.value
 
-    internalOpen.value = nextState
-    emit('update:modelValue', nextState)
+    localOpen.value = nextState
+    modelValue.value = nextState
     emit('change', nextState)
   }
 }
@@ -112,7 +114,7 @@ const effectiveCard = computed(() => {
       @click="toggle"
     >
       <div class="flex items-center gap-item-gap min-w-0 flex-1">
-        <Icon v-if="icon || $slots.icon" :name="icon || 'folder'" size="sm" class="collapse-icon shrink-0" />
+        <Icon v-if="icon || $slots.icon" :name="icon || 'folder'" size="sm" class="collapse-icon" />
         <div class="flex flex-col min-w-0 flex-1">
           <div class="collapse-title flex items-center gap-inline-gap min-w-0">
             <slot name="title">{{ title }}</slot>
@@ -129,8 +131,8 @@ const effectiveCard = computed(() => {
       </div>
     </button>
 
-    <div class="collapse-content" :class="{ 'is-open': isOpen }">
-      <div class="collapse-content-inner">
+    <div class="collapse-content grid transition-all duration-200" :class="isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'">
+      <div class="overflow-hidden">
         <div class="collapse-body">
           <slot />
         </div>
@@ -141,9 +143,9 @@ const effectiveCard = computed(() => {
 
 <style scoped lang="scss">
 .collapse-item {
-  visibility: visible;
   width: 100%;
   border-radius: 0;
+  visibility: visible;
   transition: var(--transition-base);
 
   &.is-bordered:not(.is-in-group) {
@@ -164,14 +166,11 @@ const effectiveCard = computed(() => {
   }
 
   &.is-disabled {
-    cursor: not-allowed;
-    opacity: var(--opacity-disabled);
+    @include state-disabled;
   }
 }
 
 .collapse-header {
-  cursor: pointer;
-
   padding: var(--space-item-gap) var(--space-panel-gap);
   border: none;
 
@@ -182,6 +181,8 @@ const effectiveCard = computed(() => {
 
   transition: var(--transition-interactive);
 
+  @include state-interactive;
+
   &:hover:not(:disabled) {
     background-color: var(--color-bg-hover);
 
@@ -191,7 +192,7 @@ const effectiveCard = computed(() => {
   }
 
   &:focus-visible {
-    box-shadow: 0 0 0 2px var(--theme-accent);
+    box-shadow: var(--shadow-glow-focus);
   }
 }
 
@@ -219,20 +220,6 @@ const effectiveCard = computed(() => {
   .collapse-item.is-open & {
     transform: rotate(180deg);
   }
-}
-
-.collapse-content {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-
-  &.is-open {
-    grid-template-rows: 1fr;
-  }
-}
-
-.collapse-content-inner {
-  overflow: hidden;
 }
 
 .collapse-body {
