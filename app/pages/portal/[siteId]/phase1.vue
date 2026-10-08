@@ -29,6 +29,7 @@ const {
   selectedBanShubetsu,
   selectedBanMeisho,
   phaseStats,
+  isLoading,
   isActionLoading,
   fetchCircuits,
   confirmPhase1,
@@ -175,7 +176,7 @@ onMounted(() => {
               <span>フェーズ1 進捗状況</span>
               <PortalSyncStatusBadge :site-id="siteId" />
             </div>
-            <div class="flex items-center gap-item-gap">
+            <div class="flex items-center gap-item-gap justify-end min-w-[160px] text-right">
               <span><strong>{{ phaseStats.completed }}</strong> / {{ phaseStats.total }}</span>
               <span>({{ phaseStats.pct }}%)</span>
               <small v-if="phaseStats.excluded > 0" class="text-muted">(除外: {{ phaseStats.excluded }})</small>
@@ -184,13 +185,13 @@ onMounted(() => {
           <Progress :value="phaseStats.pct" />
         </div>
 
-        <PortalExamMinimap :circuits="filteredCircuits" :phase="1" @select-circuit="handleSelectCircuit" />
+        <PortalExamMinimap :circuits="filteredCircuits" :phase="1" :loading="isLoading" @select-circuit="handleSelectCircuit" />
       </div>
     </section>
 
-    <Table v-model:sort-by="sortBy" v-model:sort-order="sortOrder" :columns="PHASE1_TABLE_COLUMNS" :data="sortedCircuits" :row-id="(row) => `row-${row.id}`" :row-class="(row) => getSoudenRowClass(row, { isComplete, editingRowId: null })" class="flex-1 min-h-[400px]">
+    <Table v-model:sort-by="sortBy" v-model:sort-order="sortOrder" :columns="PHASE1_TABLE_COLUMNS" :data="sortedCircuits" :loading="isLoading" :skeleton-rows="8" :row-id="(row) => `row-${row.id}`" :row-class="(row) => getSoudenRowClass(row, { isComplete, editingRowId: null })" class="flex-1 min-h-[400px]">
       <template #cell-banMeisho="{ row: circuit }">
-        <div class="flex flex-col gap-0.5 min-w-0">
+        <div class="flex flex-col gap-micro-gap min-w-0">
           <span class="ban-name">{{ circuit.banMeisho || '-' }}</span>
           <span v-if="circuit.banShubetsu" class="ban-type">{{ circuit.banShubetsu }}</span>
         </div>
@@ -212,7 +213,7 @@ onMounted(() => {
       </template>
 
       <template #cell-p1ConfirmedAt="{ row: circuit }">
-        <div v-if="circuit.p1Worker" class="flex flex-col items-center gap-0.5">
+        <div v-if="circuit.p1Worker" class="flex flex-col items-center gap-micro-gap">
           <span class="cell-worker">{{ circuit.p1Worker }}</span>
           <span class="cell-date">{{ formatShortDateTime(circuit.p1ConfirmedAt) }}</span>
         </div>

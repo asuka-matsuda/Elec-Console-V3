@@ -47,8 +47,10 @@ export interface MasterReportTemplateItem {
   name: string
   /** 流し込みロジック種別 */
   logicType: ReportLogicType
+  /** 適用するTypeScriptロジックファイル（例: 'kfc-3350', 'standard'） */
+  logicFile?: string
   /** 補足説明・備考 */
-  description: string
+  description?: string
   /** 登録ひな形Excelファイル情報 */
   file: ReportTemplateRegisteredFile
   /** 全現場共通で使用可能にするか */
@@ -67,7 +69,8 @@ export interface MasterReportTemplateItem {
 export interface MasterReportTemplateForm {
   name: string
   logicType: ReportLogicType
-  description: string
+  logicFile?: string
+  description?: string
   isAllSites: boolean
   assignedSiteIds: string[]
 }

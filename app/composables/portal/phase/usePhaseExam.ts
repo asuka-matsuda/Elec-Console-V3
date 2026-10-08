@@ -9,12 +9,12 @@ import type { Ref } from 'vue'
 import { computed, ref, unref, watch } from 'vue'
 
 import { useNuxtApp } from '#app'
-import type { CircuitItem, CircuitsResponse, PanelOption } from '#shared/types/circuit'
+import type { CircuitActionResponse, CircuitItem, CircuitsResponse, PanelOption } from '#shared/types/circuit'
 import { isPhaseComplete } from '#shared/utils/soudenExam'
 import { useOfflineSync } from '~/composables/portal/useOfflineSync'
 import { useAuth } from '~/composables/useAuth'
 import { CircuitsRepository, SiteSettingsRepository } from '~/utils/db'
-import { AppException } from '~/utils/errors'
+import { AppException, getErrorMessage } from '~/utils/errors'
 
 export interface PhaseExamFeedbackOptions {
   onConflict?: (message: string) => void
@@ -181,9 +181,7 @@ export function usePhaseExamBase(
     catch (err: unknown) {
       // オフラインまたは通信失敗時は、ローカルにデータがあればエラーにしない
       if (circuits.value.length === 0) {
-        const e = err as Error
-
-        error.value = e.message || '通信エラーが発生しました'
+        error.value = getErrorMessage(err, '通信エラーが発生しました')
       }
     }
     finally {
@@ -461,7 +459,7 @@ export function usePhaseExamBase(
     }
 
     try {
-      const res = await $api<{ success: boolean, circuit: CircuitItem }>(endpoint, {
+      const res = await $api<CircuitActionResponse>(endpoint, {
         method: 'POST',
         body,
       })
@@ -487,10 +485,9 @@ export function usePhaseExamBase(
         return { success: true, isOffline: true }
       }
 
-      const e = err as Error
       const actionName = actionType === 'confirm' ? `確定` : `確定解除`
 
-      notifyError(`${actionName}に失敗しました: ${e.message}`)
+      notifyError(`${actionName}に失敗しました: ${getErrorMessage(err)}`)
       throw err
     }
     finally {

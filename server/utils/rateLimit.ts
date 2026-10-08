@@ -14,6 +14,48 @@ const loginAttempts = new Map<string, RateLimitRecord>()
 const MAX_ATTEMPTS = 5 // 5回連続失敗でロック
 const WINDOW_MS = 15 * 60 * 1000 // 15分ウィンドウ
 const BLOCK_DURATION_MS = 15 * 60 * 1000 // 15分ブロック
+const MAX_CACHE_ENTRIES = 5000 // メモリ枯渇・DoS防止用の上限エントリ数
+const CLEANUP_INTERVAL_MS = 5 * 60 * 1000 // 5分ごとのクリーンアップ
+
+let lastCleanupAt = Date.now()
+
+/**
+ * 期限切れレコードのクリーンアップ（メモリ枯渇・DoS対策）
+ */
+export function cleanupExpiredRateLimits(now = Date.now()): number {
+  let cleanedCount = 0
+
+  for (const [key, record] of loginAttempts.entries()) {
+    const isWindowExpired = now - record.firstAttemptAt > WINDOW_MS
+    const isBlockExpired = !record.blockedUntil || record.blockedUntil <= now
+
+    if (isWindowExpired && isBlockExpired) {
+      loginAttempts.delete(key)
+      cleanedCount++
+    }
+  }
+
+  // 万一大量キーで Map 上限を超えている場合は古いものから強制破棄
+  if (loginAttempts.size > MAX_CACHE_ENTRIES) {
+    const excess = loginAttempts.size - MAX_CACHE_ENTRIES
+    let removed = 0
+
+    for (const key of loginAttempts.keys()) {
+      if (removed >= excess) break
+      loginAttempts.delete(key)
+      removed++
+    }
+  }
+
+  return cleanedCount
+}
+
+function maybeCleanup(now = Date.now()): void {
+  if (now - lastCleanupAt > CLEANUP_INTERVAL_MS || loginAttempts.size >= MAX_CACHE_ENTRIES) {
+    cleanupExpiredRateLimits(now)
+    lastCleanupAt = now
+  }
+}
 
 /**
  * キー（IPまたはIP+ログインID）の試行制限状況をチェック
@@ -23,6 +65,9 @@ export function checkRateLimit(
   maxAttempts = MAX_ATTEMPTS,
 ): { isBlocked: boolean, remainingMs: number, attemptsLeft: number } {
   const now = Date.now()
+
+  maybeCleanup(now)
+
   const record = loginAttempts.get(key)
 
   if (!record) {
@@ -61,6 +106,9 @@ export function recordFailedAttempt(
   blockDurationMs = BLOCK_DURATION_MS,
 ): { isBlocked: boolean, remainingMs: number } {
   const now = Date.now()
+
+  maybeCleanup(now)
+
   const record = loginAttempts.get(key)
 
   if (!record || (now - record.firstAttemptAt > WINDOW_MS && !record.blockedUntil)) {

@@ -192,3 +192,34 @@ export function parseToAppException(err: unknown): AppException {
     originalError: err,
   })
 }
+
+/**
+ * 任意の未知のエラー（AppException, Error, 文字列等）から安全にユーザー向けエラーメッセージを抽出します。
+ *
+ * @param err 捕捉した未知のエラーオブジェクト
+ * @param fallback エラーメッセージが解決できない場合の既定文言
+ * @returns 整形されたエラーメッセージ文字列
+ */
+export function getErrorMessage(err: unknown, fallback = '予期せぬエラーが発生しました。'): string {
+  if (!err) {
+    return fallback
+  }
+
+  if (err instanceof AppException) {
+    return err.getUserFacingMessage()
+  }
+
+  if (err instanceof Error) {
+    return err.message || fallback
+  }
+
+  if (typeof err === 'string') {
+    return err
+  }
+
+  if (typeof err === 'object' && err !== null && 'message' in err && typeof (err as { message: unknown }).message === 'string') {
+    return (err as { message: string }).message
+  }
+
+  return fallback
+}

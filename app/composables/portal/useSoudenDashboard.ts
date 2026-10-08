@@ -9,7 +9,7 @@ import type { Ref } from 'vue'
 import { ref, unref } from 'vue'
 
 import { useNuxtApp } from '#app'
-import type { CircuitItem, SoudenStats } from '#shared/types/circuit'
+import type { CircuitsResponse, SoudenStats } from '#shared/types/circuit'
 import { calculateSoudenStats } from '#shared/utils/soudenExam'
 import { CircuitsRepository } from '~/utils/db'
 import { parseToAppException } from '~/utils/errors'
@@ -46,7 +46,7 @@ export function useSoudenDashboard(siteIdRef: Ref<string> | string) {
 
     // 2. ネットワーク接続があれば、全回路を取得して IndexedDB を自動最新化
     try {
-      const res = await $api<{ circuits: CircuitItem[] }>(`/api/sites/${siteId}/circuits`)
+      const res = await $api<CircuitsResponse>(`/api/sites/${siteId}/circuits`)
 
       if (res && res.circuits) {
         await CircuitsRepository.putAll(res.circuits)

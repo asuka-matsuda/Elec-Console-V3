@@ -181,88 +181,31 @@ onMounted(() => {
     <Tabs v-model="currentCategory" :items="categoryTabOptions" class="shrink-0" />
 
     <!-- 2. コントロールツールバー: 使用ひな形 ＆ 出力実行ボタン（タブの下・フラット） -->
-    <div class="flex flex-wrap items-center justify-between gap-y-inline-gap gap-x-item-gap shrink-0">
+    <div class="flex flex-wrap items-center justify-between gap-y-inline-gap gap-x-item-gap shrink-0 min-h-10">
       <div class="flex flex-wrap items-center gap-item-gap">
         <div class="flex items-center gap-inline-gap">
           <label for="template-select" class="shrink-0 label bold-label">使用ひな形:</label>
-          <Select
-            id="template-select"
-            v-model="selectedTemplateId"
-            :options="templateSelectOptions"
-            placeholder="ひな形を選択..."
-            class="w-[320px]"
-          />
+          <Select id="template-select" v-model="selectedTemplateId" :options="templateSelectOptions" placeholder="ひな形を選択..." class="w-[320px]" />
         </div>
 
         <div v-if="selectedTemplate" class="flex items-center gap-inline-gap">
-          <Button
-            variant="secondary"
-            icon="download"
-            @click="downloadMasterTemplate(selectedTemplate.id, selectedTemplate.file.filename)"
-          >
-            ひな形DL
-          </Button>
-          <small class="field-help-text hidden sm:inline">
-            ({{ formatShortDateTime(selectedTemplate.file.updatedAt) }} 更新)
-          </small>
+          <Button variant="secondary" icon="download" @click="downloadMasterTemplate(selectedTemplate.id, selectedTemplate.file.filename)">ひな形DL</Button>
+          <small class="field-help-text hidden sm:inline">({{ formatShortDateTime(selectedTemplate.file.updatedAt) }} 更新)</small>
         </div>
       </div>
 
       <div class="flex items-center gap-item-gap shrink-0">
-        <Button
-          variant="primary"
-          icon="download"
-          :disabled="!canExport"
-          :loading="isExporting"
-          @click="handleExport"
-        >
-          {{ exportButtonLabel }}
-        </Button>
+        <Button variant="primary" icon="download" :disabled="!canExport" :loading="isExporting" class="min-w-[200px]" @click="handleExport">{{ exportButtonLabel }}</Button>
       </div>
     </div>
 
     <!-- ひな形が1件も割り当てられていない場合の注意表示 -->
-    <Note
-      v-if="!isMasterLoading && availableTemplatesForCategory.length === 0"
-      variant="warning"
-      class="shrink-0"
-      text="このカテゴリに割り当てられた公式ひな形がありません。マスター管理画面の「帳票ひな形管理」でひな形Excelを登録し、この現場に割り当ててください。"
-    />
+    <Note v-if="!isMasterLoading && availableTemplatesForCategory.length === 0" variant="warning" class="shrink-0" text="このカテゴリに割り当てられた公式ひな形がありません。マスター管理画面の「帳票ひな形管理」でひな形Excelを登録し、この現場に割り当ててください。" />
 
     <!-- 各タブ画面 -->
-    <PortalTabTag
-      v-if="currentCategory === 'tag'"
-      ref="tagTabRef"
-      :site-id="siteId"
-      :site-name="siteName"
-      :template="selectedTemplate"
-      @update:can-export="tagCanExport = $event"
-      @update:is-exporting="tagIsExporting = $event"
-      @update:export-label="tagExportLabel = $event"
-    />
-
-    <PortalTabExam
-      v-else-if="currentCategory === 'exam'"
-      ref="examTabRef"
-      :site-id="siteId"
-      :site-name="siteName"
-      :template="selectedTemplate"
-      :has-site-setting-excel="hasSiteSettingExcel"
-      @update:can-export="examCanExport = $event"
-      @update:is-exporting="examIsExporting = $event"
-      @update:export-label="examExportLabel = $event"
-    />
-
-    <PortalTabRemote
-      v-else-if="currentCategory === 'remote'"
-      ref="remoteTabRef"
-      :site-id="siteId"
-      :site-name="siteName"
-      :template="selectedTemplate"
-      @update:can-export="remoteCanExport = $event"
-      @update:is-exporting="remoteIsExporting = $event"
-      @update:export-label="remoteExportLabel = $event"
-    />
+    <PortalTabTag v-if="currentCategory === 'tag'" ref="tagTabRef" :site-id="siteId" :site-name="siteName" :template="selectedTemplate" @update:can-export="tagCanExport = $event" @update:is-exporting="tagIsExporting = $event" @update:export-label="tagExportLabel = $event" />
+    <PortalTabExam v-else-if="currentCategory === 'exam'" ref="examTabRef" :site-id="siteId" :site-name="siteName" :template="selectedTemplate" :has-site-setting-excel="hasSiteSettingExcel" @update:can-export="examCanExport = $event" @update:is-exporting="examIsExporting = $event" @update:export-label="examExportLabel = $event" />
+    <PortalTabRemote v-else-if="currentCategory === 'remote'" ref="remoteTabRef" :site-id="siteId" :site-name="siteName" :template="selectedTemplate" @update:can-export="remoteCanExport = $event" @update:is-exporting="remoteIsExporting = $event" @update:export-label="remoteExportLabel = $event" />
   </div>
 </template>
 

@@ -71,7 +71,48 @@ onMounted(() => {
   <div class="flex flex-col gap-section-gap h-full">
     <Note v-if="error" variant="error">{{ error }}</Note>
 
-    <EmptyState v-if="!isLoading && stats && stats.totalCircuits === 0" icon="database" variant="informational" title="回路データが登録されていません" description="管理者の「現場設定」よりExcel連携ファイルの保存先設定および回路データの取り込みを行ってください。">
+    <!-- ローディング時スケルトン（初期描画から高さを確定してCLSゼロ化） -->
+    <section v-if="isLoading" class="panel flex flex-col gap-panel-gap min-h-[460px]">
+      <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap flex-wrap">
+        <div class="flex items-center gap-item-gap">
+          <Skeleton width="18px" height="18px" />
+          <Skeleton width="120px" height="24px" />
+        </div>
+        <div class="flex items-center gap-item-gap">
+          <Skeleton width="80px" height="32px" />
+          <Skeleton width="120px" height="32px" />
+          <Skeleton width="140px" height="32px" />
+        </div>
+      </header>
+      <hr class="divider">
+
+      <div class="flex flex-col lg:flex-row items-center gap-panel-gap">
+        <div class="flex flex-col items-center gap-inline-gap shrink-0 p-panel-pad">
+          <Skeleton width="140px" height="140px" />
+          <Skeleton width="100px" height="18px" />
+        </div>
+
+        <div class="flex flex-1 flex-col gap-panel-gap w-full">
+          <div v-for="i in 2" :key="`souden-group-skel-${i}`" class="flex flex-col md:flex-row items-start md:items-center gap-panel-gap">
+            <div class="flex flex-col items-center gap-inline-gap shrink-0 p-panel-pad">
+              <Skeleton width="80px" height="80px" />
+              <Skeleton width="70px" height="16px" />
+            </div>
+            <div class="flex flex-1 flex-col gap-form-row-gap w-full">
+              <div v-for="j in 3" :key="`souden-phase-skel-${j}`" class="flex flex-col gap-inline-gap">
+                <div class="flex items-center justify-between">
+                  <Skeleton width="140px" height="18px" />
+                  <Skeleton width="90px" height="18px" />
+                </div>
+                <Skeleton width="100%" height="8px" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <EmptyState v-else-if="stats && stats.totalCircuits === 0" icon="database" variant="informational" title="回路データが登録されていません" description="管理者の「現場設定」よりExcel連携ファイルの保存先設定および回路データの取り込みを行ってください。">
       <template #actions>
         <Button v-if="isSiteAdmin(siteId)" variant="secondary" size="sm" icon="settings" to="/portal/admin">現場設定へ移動する</Button>
       </template>

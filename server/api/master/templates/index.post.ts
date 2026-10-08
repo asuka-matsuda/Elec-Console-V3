@@ -41,6 +41,7 @@ export default defineEventHandler(async (event) => {
   let id: string | undefined
   let name = ''
   let logicType: ReportLogicType | null = null
+  let logicFile = ''
   let description = ''
   let isAllSites = true
   let assignedSiteIds: string[] = []
@@ -56,6 +57,9 @@ export default defineEventHandler(async (event) => {
     }
     else if (part.name === 'logicType' || part.name === 'templateId') {
       logicType = part.data.toString('utf-8').trim() as ReportLogicType
+    }
+    else if (part.name === 'logicFile') {
+      logicFile = part.data.toString('utf-8').trim()
     }
     else if (part.name === 'description') {
       description = part.data.toString('utf-8').trim()
@@ -128,6 +132,7 @@ export default defineEventHandler(async (event) => {
     id,
     name,
     logicType,
+    logicFile,
     description,
     isAllSites,
     assignedSiteIds,

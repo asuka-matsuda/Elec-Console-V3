@@ -130,7 +130,7 @@ describe('TabTemplates Component', () => {
     expect(wrapper.text()).toContain('shinjuku_exam.xlsx')
   })
 
-  it('should filter available keys when search query is entered in key modal', async () => {
+  it('should open create modal with logicType and logicFile controls', async () => {
     const wrapper = mount(TabTemplates, {
       global: {
         stubs: {
@@ -160,7 +160,10 @@ describe('TabTemplates Component', () => {
           },
           Toggle: true,
           Checkbox: true,
-          Select: { template: '<div class="select-mock"><slot /></div>' },
+          Select: {
+            props: ['modelValue', 'options'],
+            template: '<div class="select-mock" :data-value="modelValue"><slot /></div>',
+          },
           Menu: {
             props: ['items'],
             template: `
@@ -173,26 +176,17 @@ describe('TabTemplates Component', () => {
       },
     })
 
-    // 「キー一覧」ボタンを押下してモーダルを開く
+    // 「帳票テンプレートを追加」ボタンを押下してモーダルを開く
     const buttons = wrapper.findAll('button')
-    const keyBtn = buttons.find(b => b.text().includes('キー一覧'))
+    const addBtn = buttons.find(b => b.text().includes('帳票テンプレートを追加'))
 
-    expect(keyBtn).toBeDefined()
-    await keyBtn!.trigger('click')
+    expect(addBtn).toBeDefined()
+    await addBtn!.trigger('click')
 
-    // 初期状態では全キーが表示される
-    expect(wrapper.text()).toContain('%盤名称%')
-
-    // キー検索用入力で絞り込み
-    const inputs = wrapper.findAll('input')
-    const searchInput = inputs.find(i => i.attributes('placeholder')?.includes('キー記法')) || inputs[inputs.length - 1]
-
-    expect(searchInput).toBeDefined()
-    await searchInput!.setValue('盤名称')
-    expect(wrapper.text()).toContain('%盤名称%')
-
-    // 一致しないキーワード
-    await searchInput!.setValue('存在しないキー')
-    expect(wrapper.text()).not.toContain('%盤名称%')
+    // モーダル内のラベルを確認
+    expect(wrapper.text()).toContain('帳票名（必須）')
+    expect(wrapper.text()).toContain('ロジック種別')
+    expect(wrapper.text()).toContain('適用ロジックファイル')
+    expect(wrapper.text()).toContain('現場割り当て設定')
   })
 })

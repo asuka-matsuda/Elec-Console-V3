@@ -76,6 +76,8 @@ export interface CircuitItem {
   joutai?: string | null
   /** 系統種別（幹線・二次等） */
   keiTo: string
+  /** 系統名（原本Excelの親系統名: 一般電灯盤No.1等） */
+  keiToName?: string | null
   /** 盤種別（高圧盤・動力盤・電灯盤等） */
   banShubetsu: string
   /** 盤名称 */
@@ -173,8 +175,6 @@ export interface CircuitItem {
   updatedAt?: string
   /** 楽観ロック用バージョン番号 */
   version?: number
-
-  [key: string]: unknown
 }
 
 /**
@@ -194,4 +194,12 @@ export interface CircuitsResponse {
   panelsWithIncompleteKansen: string[]
   phase2ThresholdMegOhm?: number
   total: number
+}
+
+/**
+ * 単一回路更新・確定APIレスポンス
+ */
+export interface CircuitActionResponse {
+  success: boolean
+  circuit: CircuitItem
 }

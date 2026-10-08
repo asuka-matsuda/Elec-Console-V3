@@ -11,6 +11,8 @@
  * - 直角（border-radius: 0）サイバーサーフェス
  * - 支援アクセシビリティ属性（aria-*, role）はプロジェクト規約により除外
  */
+import { computed, ref, watch } from 'vue'
+
 import type { TableColumn, TableProps, TableSortOrder } from '~/types/components'
 import { getTableCellValue, getTableRowKey } from '~/utils/table'
 
@@ -78,21 +80,110 @@ const getCellDisplayValue = (row: T, col: TableColumn<T>): unknown => {
 
   return col.format ? col.format(val, row) : val
 }
+
+// ============================================================================
+// Auto-sizing & Column Freeze（初回データ長フィット ＆ リロードまで列幅ロック）
+// ============================================================================
+const estimateTextWidth = (text: unknown): number => {
+  if (text === null || text === undefined) return 0
+  const str = String(text).trim()
+  let width = 0
+
+  for (let i = 0; i < str.length; i++) {
+    const code = str.charCodeAt(i)
+
+    if ((code >= 0x3000 && code <= 0x9fff) || (code >= 0xff00 && code <= 0xffef)) {
+      width += 13
+    }
+    else {
+      width += 7.5
+    }
+  }
+
+  return width
+}
+
+const parsePx = (val?: string | number): number | null => {
+  if (typeof val === 'number') return val
+  if (!val) return null
+  const num = parseFloat(val)
+
+  return isNaN(num) ? null : num
+}
+
+interface ResolvedColumn extends TableColumn<T> {
+  resolvedWidth: string
+}
+
+const lockedColumns = ref<ResolvedColumn[]>([])
+
+const computeResolvedColumns = (): ResolvedColumn[] => {
+  const dataSample = (props.data || []).slice(0, 50)
+
+  return props.columns.map((col) => {
+    if (col.width) {
+      return { ...col, resolvedWidth: col.width }
+    }
+
+    const headerTextWidth = estimateTextWidth(col.label)
+    const headerExtra = (isSortable(col) ? 20 : 0) + 24
+    const minHeaderWidth = headerTextWidth + headerExtra
+
+    let maxDataWidth = 0
+
+    for (const row of dataSample) {
+      const cellVal = getCellValue(row, col.key)
+
+      if (cellVal !== null && cellVal !== undefined && cellVal !== '') {
+        maxDataWidth = Math.max(maxDataWidth, estimateTextWidth(cellVal) + 24)
+      }
+    }
+
+    const minW = parsePx(col.minWidth) ?? 80
+    const maxW = parsePx(col.maxWidth) ?? 480
+    const estimated = Math.max(minW, minHeaderWidth, maxDataWidth)
+    const clamped = Math.min(maxW, estimated)
+
+    return {
+      ...col,
+      resolvedWidth: `${Math.ceil(clamped)}px`,
+    }
+  })
+}
+
+watch(
+  [() => props.columns, () => props.data],
+  ([newCols, newData], [oldCols, oldData]) => {
+    if (!lockedColumns.value.length || newData !== oldData || newCols !== oldCols) {
+      lockedColumns.value = computeResolvedColumns()
+    }
+  },
+  { immediate: true },
+)
+
+const effectiveColumns = computed<ResolvedColumn[]>(() => {
+  if (lockedColumns.value.length > 0) return lockedColumns.value
+
+  return props.columns.map(col => ({
+    ...col,
+    resolvedWidth: col.width || (col.minWidth ? (typeof col.minWidth === 'number' ? `${col.minWidth}px` : col.minWidth) : 'auto'),
+  }))
+})
 </script>
 
 <template>
   <div class="table-wrapper overflow-auto">
-    <table class="min-w-full text-left" :class="{ 'table-fixed': columns.some(c => c.width) }">
+    <table class="min-w-full text-left table-fixed">
       <colgroup>
-        <col v-for="col in columns" :key="col.key" :style="{ width: col.width }" />
+        <col v-for="col in effectiveColumns" :key="String(col.key)" :style="{ width: col.resolvedWidth }" />
       </colgroup>
 
       <thead>
         <tr>
-          <th v-for="col in columns" :key="col.key" class="sticky top-0 z-table-header p-item-gap align-middle" :class="{ 'is-sortable': isSortable(col), 'is-sorted': sortBy === col.key && sortOrder }" @click="handleSort(col)">
+          <th v-for="col in effectiveColumns" :key="String(col.key)" class="sticky top-0 z-table-header p-item-gap align-middle" :class="{ 'is-sortable': isSortable(col), 'is-sorted': sortBy === col.key && sortOrder }" @click="handleSort(col)">
             <div class="flex items-center gap-inline-gap w-full min-w-0" :class="col.align === 'center' ? 'justify-center' : col.align === 'right' ? 'justify-end' : 'justify-start'">
               <span class="header-label">
-                <slot :name="`header-${col.key}`" :column="col">
+                <slot :name="`header-${String(col.key)}`" :column="col">
                   {{ col.label }}
                 </slot>
               </span>
@@ -105,7 +196,7 @@ const getCellDisplayValue = (row: T, col: TableColumn<T>): unknown => {
       <tbody v-if="loading">
         <slot name="loading">
           <tr v-for="skeletonIndex in skeletonRows" :key="`skeleton-row-${skeletonIndex}`" class="table-row">
-            <td v-for="col in columns" :key="`skeleton-col-${String(col.key)}`" class="p-item-gap align-middle" :class="[col.class, col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left']">
+            <td v-for="col in effectiveColumns" :key="`skeleton-col-${String(col.key)}`" class="p-item-gap align-middle" :class="[col.class, col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left']">
               <Skeleton :width="col.align === 'center' ? '40%' : '75%'" height="1.1rem" />
             </td>
           </tr>
@@ -114,8 +205,8 @@ const getCellDisplayValue = (row: T, col: TableColumn<T>): unknown => {
 
       <tbody v-else-if="data && data.length > 0">
         <tr v-for="(row, index) in data" :id="rowId?.(row, index)" :key="getRowKey(row, index)" class="table-row relative z-[1]" :class="[rowClass?.(row, index), { 'is-interactive': interactiveRow }]" @click="handleRowClick(row, index, $event)">
-          <td v-for="col in columns" :key="col.key" class="p-item-gap align-middle" :class="[col.class, col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left', { 'is-truncate': col.truncate, 'is-empty': getCellValue(row, col.key) === null || getCellValue(row, col.key) === undefined || getCellValue(row, col.key) === '' }]">
-            <slot v-if="$slots[`cell-${col.key}`]" :name="`cell-${col.key}`" :value="getCellValue(row, col.key)" :row="row" :index="index" :column="col" />
+          <td v-for="col in effectiveColumns" :key="String(col.key)" class="p-item-gap align-middle" :class="[col.class, col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left', { 'is-truncate': col.truncate, 'is-empty': getCellValue(row, col.key) === null || getCellValue(row, col.key) === undefined || getCellValue(row, col.key) === '' }]">
+            <slot v-if="$slots[`cell-${String(col.key)}`]" :name="`cell-${String(col.key)}`" :value="getCellValue(row, col.key)" :row="row" :index="index" :column="col" />
             <template v-else>
               {{ getCellDisplayValue(row, col) }}
             </template>
@@ -125,7 +216,7 @@ const getCellDisplayValue = (row: T, col: TableColumn<T>): unknown => {
 
       <tbody v-else>
         <tr>
-          <td :colspan="columns.length" class="empty-cell text-center">
+          <td :colspan="effectiveColumns.length" class="empty-cell text-center">
             <slot name="empty">
               <EmptyState icon="database" size="sm" :title="emptyText" />
             </slot>

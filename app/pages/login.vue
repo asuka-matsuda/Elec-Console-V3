@@ -58,7 +58,7 @@ const handleLogin = async () => {
 </script>
 
 <template>
-  <div class="panel w-full max-w-[480px] flex flex-col gap-form-row-gap">
+  <div class="panel w-full max-w-[480px] min-h-[380px] flex flex-col gap-form-row-gap">
     <h2 class="text-center">Elec-Console V3</h2>
 
     <hr class="divider is-fade-center">

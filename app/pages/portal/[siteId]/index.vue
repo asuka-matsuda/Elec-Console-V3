@@ -8,7 +8,7 @@
 import { computed, onMounted, ref } from 'vue'
 
 import { useHead, useNuxtApp, useRoute } from '#app'
-import type { CircuitItem } from '#shared/types/circuit'
+import type { CircuitsResponse } from '#shared/types/circuit'
 import { useCurrentSite } from '~/composables/portal/useCurrentSite'
 import { useTodo } from '~/composables/portal/useTodo'
 import { CircuitsRepository } from '~/utils/db'
@@ -40,7 +40,7 @@ const syncCircuitsBackground = async () => {
   if (!siteId.value || !import.meta.client) return
 
   try {
-    const res = await $api<{ circuits: CircuitItem[] }>(`/api/sites/${siteId.value}/circuits`)
+    const res = await $api<CircuitsResponse>(`/api/sites/${siteId.value}/circuits`)
 
     if (res && res.circuits) {
       await CircuitsRepository.putAll(res.circuits)
@@ -81,6 +81,21 @@ useHead({
       <section class="min-h-[500px]">
         <ClientOnly>
           <PortalCalendar :site-id="siteId" />
+          <template #fallback>
+            <div class="panel flex flex-col gap-panel-gap min-h-[500px] p-panel-pad">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-item-gap">
+                  <Skeleton width="120px" height="32px" />
+                  <Skeleton width="160px" height="24px" />
+                </div>
+                <div class="flex items-center gap-item-gap">
+                  <Skeleton width="100px" height="32px" />
+                  <Skeleton width="120px" height="32px" />
+                </div>
+              </div>
+              <Skeleton width="100%" height="420px" />
+            </div>
+          </template>
         </ClientOnly>
       </section>
 
@@ -111,6 +126,23 @@ useHead({
 
             <EmptyState v-else icon="circle-check" variant="cleared" title="タスクはありません" description="上の入力欄から新しいタスクを追加してください。" />
           </section>
+          <template #fallback>
+            <section class="panel flex flex-col gap-form-row-gap min-h-[260px]">
+              <header class="flex items-center gap-item-gap">
+                <Skeleton width="18px" height="18px" />
+                <Skeleton width="120px" height="22px" />
+              </header>
+              <hr class="divider">
+              <div class="flex items-center gap-item-gap">
+                <Skeleton width="100%" height="40px" />
+                <Skeleton width="40px" height="40px" />
+              </div>
+              <div class="flex flex-col gap-inline-gap">
+                <Skeleton width="100%" height="40px" />
+                <Skeleton width="100%" height="40px" />
+              </div>
+            </section>
+          </template>
         </ClientOnly>
 
         <nav class="flex flex-col gap-inline-gap">

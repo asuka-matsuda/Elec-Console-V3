@@ -66,11 +66,11 @@ const {
 })
 
 const columns: TableColumn<HistoryItem>[] = [
-  { key: 'version', label: 'バージョン', width: '110px' },
-  { key: 'toolId', label: '対象', width: '160px' },
-  { key: 'date', label: '日付', width: '130px', format: val => formatDate(val) },
-  { key: 'title', label: 'タイトル' },
-  { key: 'desc', label: '内容詳細', truncate: true },
+  { key: 'version', label: 'バージョン', minWidth: '100px' },
+  { key: 'toolId', label: '対象', minWidth: '140px' },
+  { key: 'date', label: '日付', minWidth: '120px', format: val => formatDate(val) },
+  { key: 'title', label: 'タイトル', minWidth: '160px' },
+  { key: 'desc', label: '内容詳細', minWidth: '200px', truncate: true },
   { key: 'actions', label: '操作', width: '120px', align: 'right' },
 ]
 </script>

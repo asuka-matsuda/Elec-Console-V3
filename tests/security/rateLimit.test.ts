@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import {
   checkRateLimit,
+  cleanupExpiredRateLimits,
   clearRateLimit,
   recordFailedAttempt,
   resetAllRateLimits,
@@ -61,5 +62,15 @@ describe('Login Rate Limiter (Brute-force Protection)', () => {
     clearRateLimit(testKey)
     expect(checkRateLimit(testKey).attemptsLeft).toBe(5)
     expect(checkRateLimit(testKey).isBlocked).toBe(false)
+  })
+
+  it('should cleanup expired rate limit records to prevent memory exhaustion', () => {
+    recordFailedAttempt('login:expired:user1')
+
+    // 16分後の時刻（ウィンドウ15分を経過）
+    const futureTime = Date.now() + 16 * 60 * 1000
+    const cleaned = cleanupExpiredRateLimits(futureTime)
+
+    expect(cleaned).toBeGreaterThanOrEqual(1)
   })
 })

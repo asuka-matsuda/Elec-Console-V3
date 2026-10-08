@@ -8,12 +8,12 @@
 
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
-import { requireSiteAccess } from '../../../../../utils/auth'
+import { requireSiteRole } from '../../../../../utils/auth'
 import { atomicUpdateCircuit } from '../../../../../utils/optimisticLock'
 import { prisma } from '../../../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  const user = await requireSiteAccess(event)
+  const user = await requireSiteRole(event, ['admin', 'worker'])
   const siteId = getRouterParam(event, 'siteId')
   const circuitId = getRouterParam(event, 'id')
 

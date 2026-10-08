@@ -13,6 +13,7 @@ body {
 
   font-family: var(--font-base);
   font-size: var(--font-size-base);
+  font-variant-numeric: tabular-nums;
   line-height: var(--line-height-base);
   color: var(--color-text-main);
   letter-spacing: var(--tracking-normal);

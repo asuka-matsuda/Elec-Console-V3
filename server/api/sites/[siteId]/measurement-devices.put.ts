@@ -3,13 +3,20 @@
  * PUT /api/sites/:siteId/measurement-devices
  */
 
-import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
+import { createError, defineEventHandler, getRouterParam } from 'h3'
+import { z } from 'zod'
 
-import { requireSiteAccess } from '../../../utils/auth'
+import { requireSiteRole } from '../../../utils/auth'
 import { prisma } from '../../../utils/prisma'
+import { validateRequestBody } from '../../../utils/validation'
+
+const UpdateMeasurementDevicesSchema = z.object({
+  devices: z.array(z.record(z.string(), z.unknown())).optional(),
+  selectedDeviceIds: z.record(z.string(), z.unknown()).optional(),
+})
 
 export default defineEventHandler(async (event) => {
-  await requireSiteAccess(event)
+  await requireSiteRole(event, ['admin', 'worker'])
 
   const siteId = getRouterParam(event, 'siteId')
 
@@ -20,7 +27,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const body = await readBody(event)
+  const body = await validateRequestBody(event, UpdateMeasurementDevicesSchema)
 
   const updateData: {
     measurementDevices?: string

@@ -103,6 +103,7 @@ model Circuit {
   excelRow         Int?
   joutai           String?
   keiTo            String // 幹線 / 二次側
+  keiToName        String? // 原本Excelの系統名（一般電灯盤No.1等）
   banShubetsu      String // 電灯 / 動力
   banMeisho        String // 1L-1, 1P-1 など
   haidenHoushiki   String? // AC 1Φ3W 100/200V など

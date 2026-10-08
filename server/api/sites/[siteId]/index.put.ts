@@ -8,7 +8,8 @@
 
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
-import { requireAdminUser } from '../../../utils/auth'
+import { requireSiteAdmin } from '../../../utils/auth'
+import { validateSafeExcelPath } from '../../../utils/excel/safePath'
 import {
   parseAssignedReports,
   parseExcludedCircuits,
@@ -20,12 +21,13 @@ import {
 import { prisma } from '../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  await requireAdminUser(event)
   const siteId = getRouterParam(event, 'siteId')
-  const body = await readBody(event)
 
   if (!siteId) return null
 
+  await requireSiteAdmin(event, siteId)
+
+  const body = await readBody(event)
   const siteData = body.site || body
 
   // 1. 現場IDの変更チェックとバリデーション
@@ -81,9 +83,21 @@ export default defineEventHandler(async (event) => {
     ? siteData.excelPath
     : body.settings?.excelPath
 
-  const newExcelPath = typeof rawExcelPath === 'string'
+  let newExcelPath = typeof rawExcelPath === 'string'
     ? rawExcelPath.trim().replace(/^["']+|["']+$/g, '').trim()
     : rawExcelPath
+
+  if (typeof newExcelPath === 'string' && newExcelPath.length > 0) {
+    try {
+      newExcelPath = validateSafeExcelPath(newExcelPath)
+    }
+    catch (pathErr: unknown) {
+      throw createError({
+        statusCode: 400,
+        message: pathErr instanceof Error ? pathErr.message : '無効なExcelファイルパスです',
+      })
+    }
+  }
 
   const rawExcluded = siteData.excludedCircuits !== undefined
     ? siteData.excludedCircuits

@@ -211,7 +211,7 @@ const handleRemoveCable = (id: string) => {
               </template>
 
               <template #cell-spec="{ row }">
-                <div class="stacked-cell flex flex-col gap-0.5 items-end">
+                <div class="stacked-cell flex flex-col gap-micro-gap items-end">
                   <span class="main-text">{{ getCableSpec(row.cableIdx, row.count).text }}</span>
                   <span v-if="getCableSpec(row.cableIdx, row.count).detail" class="sub-text">{{ getCableSpec(row.cableIdx, row.count).detail }}</span>
                 </div>

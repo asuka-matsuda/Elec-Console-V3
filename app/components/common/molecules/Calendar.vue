@@ -287,9 +287,9 @@ const isPresetActive = (preset: CalendarPreset): boolean => {
 </script>
 
 <template>
-  <div class="calendar panel" :class="[`calendar--${size}`, `calendar--${layout}`, { 'is-disabled': disabled }]">
+  <div class="calendar panel" :class="[`calendar--${size}`, `calendar--${layout}`, layout === 'stacked' ? 'flex-col' : '', { 'is-disabled': disabled }]">
     <!-- プリセット一覧 (horizontal: 左カラム / stacked: 上部行) -->
-    <div v-if="presets.length > 0" class="calendar-presets flex" :class="layout === 'horizontal' ? 'flex-col gap-1 border-r border-border pr-3' : 'flex-wrap gap-1 border-b border-border pb-3 mb-3'">
+    <div v-if="presets.length > 0" class="calendar-presets flex gap-inline-gap" :class="layout === 'horizontal' ? 'flex-col pr-panel-gap border-r' : 'flex-wrap pb-panel-gap border-b'">
       <Button
         v-for="preset in presets"
         :key="preset.label"
@@ -330,7 +330,7 @@ const isPresetActive = (preset: CalendarPreset): boolean => {
       </div>
 
       <!-- 日付セルグリッド (7列) -->
-      <div class="calendar-grid grid grid-cols-7 gap-y-0.5">
+      <div class="calendar-grid grid grid-cols-7 gap-y-micro-gap">
         <button v-for="cell in calendarDays" :key="cell.dateStr" type="button" class="calendar-cell flex items-center justify-center" :class="{ 'is-other-month': !cell.isCurrentMonth, 'is-today': cell.isToday, 'is-picked': cell.isSelected, 'is-range-start': cell.isRangeStart, 'is-range-end': cell.isRangeEnd, 'is-in-range': cell.isInRange, 'is-disabled': cell.isDisabled, 'is-sunday': cell.dayOfWeek === 0, 'is-saturday': cell.dayOfWeek === 6 }" :disabled="cell.isDisabled" @click="handleDayClick(cell)" @mouseenter="handleDayMouseEnter(cell)">
           <span class="calendar-day-number">{{ cell.dayNumber }}</span>
         </button>
@@ -376,6 +376,10 @@ const isPresetActive = (preset: CalendarPreset): boolean => {
     pointer-events: none;
     opacity: 0.6;
   }
+}
+
+.calendar-presets {
+  border-color: var(--color-border);
 }
 
 .calendar-title {

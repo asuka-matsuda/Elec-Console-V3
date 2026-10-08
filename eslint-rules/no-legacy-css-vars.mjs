@@ -29,6 +29,11 @@ const LEGACY_VARS = {
   '--leading-relaxed': '--line-height-base',
   '--line-height-relaxed': '--line-height-base',
   '--line-height-normal': '--line-height-base',
+  '--spacing-xs': '--space-1 または --space-micro-gap',
+  '--spacing-sm': '--space-2 または --space-item-gap',
+  '--spacing-md': '--space-4 または --space-panel-pad',
+  '--spacing-lg': '--space-6 または --space-section-gap',
+  '--spacing-xl': '--space-8',
 }
 
 const REGEX_PATTERN = new RegExp(

@@ -91,7 +91,7 @@ onMounted(() => {
     <nav class="flex-1 min-h-0 overflow-y-auto flex flex-col gap-panel-gap p-panel-pad-compact" @click="closeSidebar">
       <template v-for="section in menuData" :key="section.id">
         <section v-if="getVisibleItems(section.items).length > 0" class="flex flex-col gap-inline-gap" :style="{ '--section-accent': `var(--color-category-${section.accent || 'main'})` }">
-          <h5 v-if="section.globalNavHeading || section.heading" class="flex items-center gap-item-gap px-item-gap py-0.5 nav-heading">
+          <h5 v-if="section.globalNavHeading || section.heading" class="flex items-center gap-item-gap px-item-gap py-micro-gap nav-heading">
             <Icon v-if="section.icon" :name="section.icon" size="sm" variant="accent" />
             <span>{{ section.globalNavHeading || section.heading }}</span>
           </h5>

@@ -58,7 +58,7 @@ const handleChangePassword = async () => {
 </script>
 
 <template>
-  <div class="panel w-full max-w-[480px] flex flex-col gap-form-row-gap">
+  <div class="panel w-full max-w-[480px] min-h-[460px] flex flex-col gap-form-row-gap">
     <div class="flex flex-col gap-inline-gap">
       <h2 class="text-center">初回パスワード設定</h2>
       <small class="subtitle-text text-center">セキュリティのため、システムから配布された初期パスワードを変更してください。</small>

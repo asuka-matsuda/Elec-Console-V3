@@ -8,6 +8,15 @@
   scrollbar-width: thin;
 }
 
+// スクロールバー出現に伴う水平レイアウトシフト（CLS）の根本防止
+html,
+body,
+main,
+.overflow-y-auto,
+.overflow-auto {
+  scrollbar-gutter: stable;
+}
+
 // WebKit / Blink 詳細カスタマイズ
 ::-webkit-scrollbar {
   width: var(--scrollbar-size, var(--space-2, 8px));

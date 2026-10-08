@@ -46,7 +46,10 @@ const {
   flowDirection: tagFlowDirection,
   flowDirectionOptions: tagFlowDirectionOptions,
   fetchSiteData: fetchTagSiteData,
-} = useTagReportPrint(computed(() => props.siteId), { siteName: computed(() => props.siteName) })
+} = useTagReportPrint(computed(() => props.siteId), {
+  siteName: computed(() => props.siteName),
+  templateName: computed(() => props.template?.logicFile || props.template?.name || props.template?.file?.filename),
+})
 
 interface TagRowItem extends DynamicCircuitRow {
   uniqueKey: string
@@ -60,7 +63,7 @@ const tagRowItems = computed<TagRowItem[]>(() => {
   return tagSourceRows.value.map((r, index) => {
     const kBangou = r.kairoBangou?.trim() || ''
     const kMeisho = r.kairoMeisho?.trim() || ''
-    const uniqueKey = `${r.banMeisho}_${kBangou}_${kMeisho}_${index}`
+    const uniqueKey = r.id || `${r.banMeisho}_${kBangou}_${kMeisho}_${index}`
     const cableText = r.values['ケーブル'] || r.values['電線'] || r.values['種別・サイズ'] || '-'
     const destinationText = r.values['行き先'] || r.values['行先'] || r.values['負荷名称'] || r.kairoMeisho || '-'
 
@@ -93,51 +96,74 @@ const displayedTagRows = computed(() => {
 
 const selectedTagKeys = ref<string[]>([])
 
-// 表示行が変わった時、初期状態では全選択
+// 現在表示されている行の中で選択されている件数（SSoT）
+const selectedCountInDisplay = computed(() => {
+  const set = new Set(selectedTagKeys.value)
+  let count = 0
+
+  for (const r of displayedTagRows.value) {
+    if (set.has(r.uniqueKey)) count++
+  }
+
+  return count
+})
+
+// 表示行のキー一覧Set
+const displayedKeySet = computed(() => new Set(displayedTagRows.value.map(r => r.uniqueKey)))
+
+// 表示行が変わった時、存在しなくなったキーを安全にパージ
 watch(
   displayedTagRows,
-  (rows) => {
-    if (rows.length > 0 && selectedTagKeys.value.length === 0) {
-      selectedTagKeys.value = rows.map(r => r.uniqueKey)
-    }
+  () => {
+    if (selectedTagKeys.value.length === 0) return
+
+    const allSourceKeys = new Set(tagRowItems.value.map(r => r.uniqueKey))
+
+    selectedTagKeys.value = selectedTagKeys.value.filter(k => allSourceKeys.has(k))
   },
-  { immediate: true },
 )
 
 const isAllTagsSelected = computed({
-  get: () => displayedTagRows.value.length > 0 && selectedTagKeys.value.length === displayedTagRows.value.length,
+  get: () => displayedTagRows.value.length > 0 && selectedCountInDisplay.value === displayedTagRows.value.length,
   set: (val: boolean) => {
     if (val) {
-      selectedTagKeys.value = displayedTagRows.value.map(r => r.uniqueKey)
+      const set = new Set(selectedTagKeys.value)
+
+      for (const r of displayedTagRows.value) {
+        set.add(r.uniqueKey)
+      }
+      selectedTagKeys.value = Array.from(set)
     }
     else {
-      selectedTagKeys.value = []
+      const currentDisplayed = displayedKeySet.value
+
+      selectedTagKeys.value = selectedTagKeys.value.filter(k => !currentDisplayed.has(k))
     }
   },
 })
 
 const isPartialTagsSelected = computed(() => {
-  return selectedTagKeys.value.length > 0 && selectedTagKeys.value.length < displayedTagRows.value.length
+  return selectedCountInDisplay.value > 0 && selectedCountInDisplay.value < displayedTagRows.value.length
 })
 
 const tagTableColumns: TableColumn<TagRowItem>[] = [
   { key: 'select', label: '', width: '44px', align: 'center' },
-  { key: 'keiToName', label: '系統', width: '100px', sortable: true },
+  { key: 'keiToName', label: '系統', width: '130px', sortable: true },
   { key: 'banShubetsu', label: '盤種別', width: '110px', sortable: true },
   { key: 'banMeisho', label: '盤名称', width: '130px', sortable: true },
   { key: 'keiTo', label: '幹線区分', width: '90px', align: 'center', sortable: true },
   { key: 'kairoBangou', label: '回路番号', width: '90px', align: 'center', sortable: true },
-  { key: 'kairoMeisho', label: '回路名称・負荷名称', truncate: true },
+  { key: 'kairoMeisho', label: '回路名称・負荷名称', minWidth: '180px', truncate: true },
   { key: 'cableText', label: 'ケーブル・電線', width: '140px' },
   { key: 'destinationText', label: '行き先', width: '140px' },
 ]
 
 const canExport = computed(() => {
-  return Boolean(props.template && selectedTagKeys.value.length > 0 && !isExporting.value)
+  return Boolean(props.template && selectedCountInDisplay.value > 0 && !isExporting.value)
 })
 
 const exportButtonLabel = computed(() => {
-  return `選択した ${selectedTagKeys.value.length} 回路を出力する`
+  return `選択した ${selectedCountInDisplay.value} 回路を出力する`
 })
 
 watch(canExport, val => emit('update:canExport', val), { immediate: true })
@@ -168,6 +194,7 @@ const exportReport = async () => {
       templateBuffer,
       rows: targetRows,
       siteName: props.siteName,
+      templateName: props.template?.logicFile || props.template?.name || props.template?.file?.filename,
       flowDirection: tagFlowDirection.value,
     })
 
@@ -238,28 +265,23 @@ onMounted(() => {
         <Input v-model="tagSearchQuery" placeholder="回路名・ケーブル検索..." icon="search" clearable :disabled="isLoadingTagData" class="w-48" />
       </div>
 
-      <!-- 全選択 / 選択件数カウンター -->
-      <div v-if="isLoadingTagData" class="flex items-center gap-inline-gap">
-        <Skeleton width="140px" height="1.5rem" />
-      </div>
-      <div v-else class="flex items-center gap-item-gap">
-        <Checkbox v-model="isAllTagsSelected" :indeterminate="isPartialTagsSelected" label="全選択" />
-        <span class="selection-count">
-          選択中: <strong>{{ selectedTagKeys.length }}</strong> / {{ displayedTagRows.length }} 回路
-        </span>
+      <!-- 全選択 / 選択件数カウンター（高さ固定でスケルトンと表示後のレイアウトシフトを100%防止） -->
+      <div class="flex items-center gap-item-gap min-h-control-sm shrink-0 min-w-[210px] justify-end">
+        <template v-if="isLoadingTagData">
+          <Skeleton width="64px" height="18px" />
+          <Skeleton width="120px" height="18px" />
+        </template>
+        <template v-else>
+          <Checkbox v-model="isAllTagsSelected" :indeterminate="isPartialTagsSelected" label="全選択" />
+          <span class="selection-count">
+            選択中: <strong>{{ selectedCountInDisplay }}</strong> / {{ displayedTagRows.length }} 回路
+          </span>
+        </template>
       </div>
     </div>
 
     <!-- 回路一覧テーブル (見出し固定・本体スクロール) -->
-    <Table
-      :columns="tagTableColumns"
-      :data="displayedTagRows"
-      :loading="isLoadingTagData"
-      :skeleton-rows="6"
-      row-key="uniqueKey"
-      empty-text="対象の回路データが見つかりません"
-      class="flex-1 min-h-0 h-full"
-    >
+    <Table :columns="tagTableColumns" :data="displayedTagRows" :loading="isLoadingTagData" :skeleton-rows="6" row-key="uniqueKey" empty-text="対象の回路データが見つかりません" class="flex-1 min-h-[400px] h-full">
       <template #header-select>
         <Checkbox v-model="isAllTagsSelected" :indeterminate="isPartialTagsSelected" />
       </template>

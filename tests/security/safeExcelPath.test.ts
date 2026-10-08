@@ -38,4 +38,18 @@ describe('Safe Excel File Path Validation (Path Traversal & Overwrite Protection
     expect(() => validateSafeExcelPath('C:\\data\\circuits<>.xlsx')).toThrow('無効な文字')
     expect(() => validateSafeExcelPath('C:\\data\\circuits|test.xlsx')).toThrow('無効な文字')
   })
+
+  it('should reject UNC network paths (SMB / NetNTLM hash theft protection)', () => {
+    expect(() => validateSafeExcelPath('\\\\attacker.com\\share\\exploit.xlsx')).toThrow('ネットワーク共有パス')
+    expect(() => validateSafeExcelPath('//192.168.1.100/shared/test.xlsx')).toThrow('ネットワーク共有パス')
+    expect(() => validateSafeExcelPath('\\\\?\\C:\\data\\test.xlsx')).toThrow('ネットワーク共有パス')
+    expect(() => validateSafeExcelPath('smb://attacker.com/share/test.xlsx')).toThrow('ネットワーク共有パス')
+    expect(() => validateSafeExcelPath('http://attacker.com/test.xlsx')).toThrow('ネットワーク共有パス')
+  })
+
+  it('should reject null bytes and encoded path traversal', () => {
+    expect(() => validateSafeExcelPath('C:\\data\\test.xlsx\0')).toThrow('不正な文字')
+    expect(() => validateSafeExcelPath('C:\\data\\test%00.xlsx')).toThrow('不正な文字')
+    expect(() => validateSafeExcelPath('C:\\data\\%2e%2e\\test.xlsx')).toThrow('不正な文字')
+  })
 })

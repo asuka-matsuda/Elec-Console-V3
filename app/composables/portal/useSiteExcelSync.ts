@@ -9,7 +9,7 @@ import { computed, ref } from 'vue'
 
 import { useNuxtApp } from '#app'
 import type { Site } from '#shared/types/site'
-import { parseToAppException } from '~/utils/errors'
+import { getErrorMessage, parseToAppException } from '~/utils/errors'
 
 interface SyncResultInfo {
   type: 'merge' | 'reset' | 'export'
@@ -338,9 +338,7 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
       syncMsgType.value = 'success'
     }
     catch (err: unknown) {
-      const e = err as Error
-
-      syncMsg.value = e.message || 'Excel帳票のダウンロードに失敗しました'
+      syncMsg.value = getErrorMessage(err, 'Excel帳票のダウンロードに失敗しました')
       syncMsgType.value = 'error'
     }
     finally {

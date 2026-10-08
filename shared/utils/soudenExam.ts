@@ -18,7 +18,6 @@ export type ExamJudgeableCircuit = {
   p2ConfirmedAt?: Date | string | null
   p3IsComplete?: boolean | null
   p3ConfirmedAt?: Date | string | null
-  [key: string]: unknown
 }
 
 /**

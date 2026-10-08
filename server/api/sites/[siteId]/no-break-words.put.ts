@@ -6,11 +6,17 @@
  * @permission 管理者・マスター限定
  */
 
-import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
+import { createError, defineEventHandler, getRouterParam } from 'h3'
+import { z } from 'zod'
 
-import { requireAdminUser } from '../../../utils/auth'
+import { requireSiteAdmin } from '../../../utils/auth'
 import { parseNoBreakWords, serializeNoBreakWords } from '../../../utils/jsonFields'
 import { prisma } from '../../../utils/prisma'
+import { validateRequestBody } from '../../../utils/validation'
+
+const UpdateNoBreakWordsSchema = z.object({
+  words: z.array(z.string()).default([]),
+})
 
 export default defineEventHandler(async (event) => {
   const siteId = getRouterParam(event, 'siteId')
@@ -23,9 +29,9 @@ export default defineEventHandler(async (event) => {
   }
 
   // 現場管理者またはマスター権限を検証
-  await requireAdminUser(event)
+  await requireSiteAdmin(event, siteId)
 
-  const body = await readBody(event)
+  const body = await validateRequestBody(event, UpdateNoBreakWordsSchema)
   const rawWords = body.words
 
   const serialized = serializeNoBreakWords(rawWords)

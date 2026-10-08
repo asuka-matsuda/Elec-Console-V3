@@ -6,12 +6,12 @@
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import type { RemoteControlConfig } from '../../../../shared/types/remoteControl'
-import { requireSiteAccess } from '../../../utils/auth'
+import { requireSiteRole } from '../../../utils/auth'
 import { serializeRemoteControlConfig } from '../../../utils/jsonFields'
 import { prisma } from '../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  await requireSiteAccess(event)
+  await requireSiteRole(event, ['admin', 'worker'])
 
   const siteId = getRouterParam(event, 'siteId')
 

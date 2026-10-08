@@ -43,8 +43,8 @@ const normalizedVariant = computed(() => {
 <template>
   <div class="note flex items-start justify-between gap-item-gap" :class="[`is-${normalizedVariant}`, { 'is-fill': fill }]">
     <div class="flex items-start gap-inline-gap min-w-0 flex-1">
-      <Icon :name="resolvedIcon" :spin="resolvedIcon === 'loader'" class="note-icon mt-0.5" />
-      <div class="note-body min-w-0 flex-1 flex flex-col gap-0.5">
+      <Icon :name="resolvedIcon" :spin="resolvedIcon === 'loader'" class="note-icon" />
+      <div class="note-body min-w-0 flex-1 flex flex-col gap-micro-gap">
         <strong v-if="title || $slots.title" class="note-title">
           <slot name="title">{{ title }}</slot>
         </strong>

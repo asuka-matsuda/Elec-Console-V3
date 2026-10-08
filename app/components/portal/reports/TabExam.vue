@@ -232,19 +232,19 @@ onMounted(() => {
         <hr class="divider">
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-item-gap">
-          <div class="device-card p-item-gap flex flex-col gap-0.5">
+          <div class="device-card p-item-gap flex flex-col gap-micro-gap">
             <span class="device-label">絶縁抵抗計</span>
             <strong class="device-model">{{ selectedDevicesMap.megger?.model || '未設定' }}</strong>
             <small class="device-meta">No. {{ selectedDevicesMap.megger?.serialNumber || '-' }}</small>
           </div>
 
-          <div class="device-card p-item-gap flex flex-col gap-0.5">
+          <div class="device-card p-item-gap flex flex-col gap-micro-gap">
             <span class="device-label">電圧計</span>
             <strong class="device-model">{{ selectedDevicesMap.voltmeter?.model || '未設定' }}</strong>
             <small class="device-meta">No. {{ selectedDevicesMap.voltmeter?.serialNumber || '-' }}</small>
           </div>
 
-          <div class="device-card p-item-gap flex flex-col gap-0.5">
+          <div class="device-card p-item-gap flex flex-col gap-micro-gap">
             <span class="device-label">検相器</span>
             <strong class="device-model">{{ selectedDevicesMap.phaseDetector?.model || '未設定' }}</strong>
             <small class="device-meta">No. {{ selectedDevicesMap.phaseDetector?.serialNumber || '-' }}</small>
@@ -321,6 +321,7 @@ onMounted(() => {
 }
 
 .device-card {
+  min-height: 72px;
   border: var(--border-width-base) solid var(--color-border);
   background-color: var(--surface-bg-elevated);
 }
@@ -351,6 +352,7 @@ onMounted(() => {
 }
 
 .stat-box {
+  min-height: 84px;
   border: var(--border-width-base) solid var(--color-border);
   background-color: var(--surface-bg-elevated);
 }

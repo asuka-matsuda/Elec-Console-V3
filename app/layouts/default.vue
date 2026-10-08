@@ -98,7 +98,7 @@ const offlineBanner = computed(() => {
       <Banner v-if="offlineBanner" :variant="offlineBanner.variant" :icon="offlineBanner.icon" :title="offlineBanner.title" :sub="offlineBanner.sub" dismissible @close="isBannerDismissed = true" />
     </Transition>
 
-    <main class="flex flex-1 flex-col min-h-0 overflow-y-auto p-layout-pad gap-item-gap">
+    <main class="flex flex-1 flex-col min-h-0 overflow-y-auto p-layout-pad gap-panel-gap">
       <Breadcrumbs :items="breadcrumbItems" />
       <slot />
       <footer class="mt-auto flex flex-col items-center gap-item-gap pt-layout-pad text-center">

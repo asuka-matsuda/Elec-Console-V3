@@ -8,11 +8,12 @@ import type { MaybeRefOrGetter } from 'vue'
 import { computed, ref, toValue, watch } from 'vue'
 
 import { useNuxtApp } from '#app'
-import type { CircuitItem } from '#shared/types/circuit'
+import type { CircuitItem, CircuitsResponse } from '#shared/types/circuit'
 import { useAuth } from '~/composables/useAuth'
 import type { SelectOption } from '~/types/components'
 import { formatToDateInputString } from '~/utils/date'
 import { CircuitsRepository } from '~/utils/db'
+import { getErrorMessage } from '~/utils/errors'
 import {
   convertCircuitsToDynamicRows,
   type DynamicCircuitRow,
@@ -22,6 +23,7 @@ import {
 
 interface UseTagReportPrintOptions {
   siteName?: MaybeRefOrGetter<string>
+  templateName?: MaybeRefOrGetter<string | undefined>
 }
 
 export function useTagReportPrint(
@@ -33,6 +35,7 @@ export function useTagReportPrint(
 
   const siteId = computed(() => toValue(siteIdSource))
   const siteName = computed(() => toValue(options.siteName) || '現場')
+  const templateName = computed(() => toValue(options.templateName))
   const exportDate = computed(() => formatToDateInputString(getAccurateNow()))
 
   // 回路データおよび動的テーブルデータ
@@ -261,11 +264,11 @@ export function useTagReportPrint(
 
       // 2. サーバーAPIから最新の回路データを高速JSON取得して同期
       try {
-        const res = await $api<{ circuits: CircuitItem[] }>(`/api/sites/${siteId.value}/circuits`)
+        const res = await $api<CircuitsResponse>(`/api/sites/${siteId.value}/circuits`)
 
         if (res && res.circuits && res.circuits.length > 0) {
           rawCircuits.value = res.circuits
-          await CircuitsRepository.putAll(res.circuits)
+          await CircuitsRepository.replaceForSite(siteId.value, res.circuits)
           const converted = convertCircuitsToDynamicRows(res.circuits, exportDate.value)
 
           dynamicHeaders.value = converted.headers
@@ -274,9 +277,7 @@ export function useTagReportPrint(
       }
       catch (err: unknown) {
         if (dynamicRows.value.length === 0) {
-          const e = err as Error
-
-          dataError.value = e.message || '回路データの取得に失敗しました'
+          dataError.value = getErrorMessage(err, '回路データの取得に失敗しました')
         }
       }
     }
@@ -334,6 +335,7 @@ export function useTagReportPrint(
         templateBuffer: templateBuffer.value,
         rows: filteredRows.value,
         siteName: siteName.value,
+        templateName: templateName.value,
         exportDate: exportDate.value,
         flowDirection: flowDirection.value,
       })
@@ -350,12 +352,10 @@ export function useTagReportPrint(
       }
     }
     catch (err: unknown) {
-      const e = err as Error
-
-      console.error('Tag report generation failed', e)
+      console.error('Tag report generation failed', err)
       message.value = {
         type: 'error',
-        text: e.message || 'タグ帳票の生成に失敗しました',
+        text: getErrorMessage(err, 'タグ帳票の生成に失敗しました'),
       }
     }
     finally {

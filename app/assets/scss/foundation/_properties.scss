@@ -9,6 +9,7 @@
   --font-size-xs: 11px;
   --font-size-sm: 12px;
   --font-size-base: 14px;
+  --font-size-md: 15px;
   --font-size-lg: 16px;
   --font-size-xl: 18px;
   --font-size-2xl: 20px;
@@ -44,6 +45,7 @@
   --space-6: 24px;
   --space-8: 32px;
   --space-10: 40px;
+  --space-12: 48px;
 
   // Semantic Spacings
   --space-layout-pad: clamp(var(--space-3), 2vw, var(--space-6));
@@ -55,6 +57,7 @@
   --space-form-col-gap: var(--space-4);
   --space-item-gap: var(--space-2);
   --space-inline-gap: var(--space-1);
+  --space-micro-gap: var(--space-0-5);
 
   // ==========================================================================
   // 3. コントロール寸法 & アイコン寸法 (Control & Icon Dimensions)

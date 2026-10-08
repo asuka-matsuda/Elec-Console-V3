@@ -21,7 +21,7 @@ const isModalOpen = ref(false)
 </script>
 
 <template>
-  <div class="inline-flex items-center">
+  <div class="inline-flex items-center min-h-control-sm">
     <Button v-if="hasPending" variant="warning" size="sm" :icon="isSyncing ? 'refresh-cw' : 'zap'" suffix-icon="upload" :loading="isSyncing" @click="isModalOpen = true">
       未同期 {{ pendingCount }}件 同期実行
     </Button>

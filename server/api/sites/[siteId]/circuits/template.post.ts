@@ -11,11 +11,11 @@ import path from 'node:path'
 
 import { createError, defineEventHandler, getHeader, getRouterParam, readMultipartFormData } from 'h3'
 
-import { requireSiteAccess } from '../../../../utils/auth'
+import { requireSiteRole } from '../../../../utils/auth'
 import { prisma } from '../../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  const user = await requireSiteAccess(event)
+  const user = await requireSiteRole(event, ['admin', 'worker'])
 
   const siteId = getRouterParam(event, 'siteId')
 

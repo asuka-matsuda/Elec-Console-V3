@@ -35,8 +35,8 @@ export const WEAK_CURRENT_CATEGORIES = [
  * 配管計算 ケーブルテーブルカラム定義
  */
 export const CONDUIT_CABLE_COLUMNS: TableColumn<CableInputItem>[] = [
-  { key: 'category', label: 'ケーブル種別' },
-  { key: 'cableIdx', label: 'サイズ' },
+  { key: 'category', label: 'ケーブル種別', minWidth: '130px' },
+  { key: 'cableIdx', label: 'サイズ', minWidth: '130px' },
   { key: 'count', label: '条数', width: '88px', align: 'center' },
   { key: 'spec', label: '断面積', width: '96px', align: 'right' },
   { key: 'actions', label: '', width: '52px', align: 'center' },
@@ -46,8 +46,8 @@ export const CONDUIT_CABLE_COLUMNS: TableColumn<CableInputItem>[] = [
  * ケーブルラック計算 ケーブルテーブルカラム定義
  */
 export const RACK_CABLE_COLUMNS: TableColumn<CableInputItem>[] = [
-  { key: 'category', label: 'ケーブル種別' },
-  { key: 'cableIdx', label: 'サイズ' },
+  { key: 'category', label: 'ケーブル種別', minWidth: '130px' },
+  { key: 'cableIdx', label: 'サイズ', minWidth: '130px' },
   { key: 'count', label: '条数', width: '88px', align: 'center' },
   { key: 'spec', label: '外径計', width: '96px', align: 'right' },
   { key: 'actions', label: '', width: '52px', align: 'center' },

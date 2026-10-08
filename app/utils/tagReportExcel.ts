@@ -7,7 +7,9 @@
  */
 import type ExcelJS from 'exceljs'
 
+import { findTagTemplateDefinition } from '#shared/templates/tag'
 import type { CircuitItem } from '#shared/types/circuit'
+import type { TagTemplateDefinition } from '#shared/types/tagTemplate'
 import {
   extractBanMeisho,
   extractBanShubetsu,
@@ -34,6 +36,8 @@ export interface DynamicTagField {
 }
 
 export interface DynamicCircuitRow {
+  /** 回路ID (存在する場合) */
+  id?: string
   /** 盤名称 (例: "1L-1") */
   banMeisho: string
   /** 盤種別 (例: "電灯", "動力") */
@@ -71,6 +75,10 @@ export interface GenerateTagReportOptions {
   rows: DynamicCircuitRow[]
   /** 現場名（出力ファイル名用） */
   siteName?: string
+  /** テンプレート名・ファイル名・ID（確定定義のマッチング用） */
+  templateName?: string
+  /** 直接指定する確定テンプレート定義（指定した場合は最優先で使用） */
+  templateDefinition?: TagTemplateDefinition
   /** 出力日時（%出力日時% タグ置換用） */
   exportDate?: string
   /** 流し込み順（'z' = 行優先:左→右, 'n' = 列優先:上→下） */
@@ -278,7 +286,7 @@ export function convertCircuitsToDynamicRows(
     const values: Record<string, string> = {
       盤名称: c.banMeisho || '',
       盤種別: c.banShubetsu || '',
-      系統: c.banMeisho ? `${c.banMeisho}系統` : '',
+      系統: c.keiToName || (c.banMeisho ? `${c.banMeisho}系統` : ''),
       幹線判定: c.keiTo || '二次',
       回路番号: c.kairoBangou || '',
       回路記号: c.kairoKigou || '',
@@ -295,10 +303,11 @@ export function convertCircuitsToDynamicRows(
     }
 
     const rawKeiTo = c.keiTo?.trim() || ''
-    const kansenHantei = extractKansenHantei({ 系統: rawKeiTo, 幹線判定: rawKeiTo })
-    const keiToName = rawKeiTo.replace(/幹線|二次側?|系統/g, '').trim() || rawKeiTo || (c.banMeisho ? `${c.banMeisho}系` : '一般系統')
+    const kansenHantei = rawKeiTo.includes('幹線') ? '幹線' : '二次'
+    const keiToName = c.keiToName?.trim() || (c.banMeisho ? `${c.banMeisho}系統` : '一般系統')
 
     return {
+      id: c.id,
       banMeisho: c.banMeisho || '未分類',
       banShubetsu: c.banShubetsu || '電灯盤',
       keiToName,
@@ -319,121 +328,6 @@ export function convertCircuitsToDynamicRows(
   })
 
   return { headers, rows }
-}
-
-/**
- * テンプレートシートからタグ枠（スロット）を検出しグループ化
- */
-export function detectTagSlots(
-  sheet: ExcelJS.Worksheet,
-  flowDirection: 'z' | 'n' = 'z',
-): { slots: TagSlot[], pageHeight: number } {
-  const placeholderCells: TagSlotCell[] = []
-  let maxRow = 1
-
-  sheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
-    if (rowNumber > maxRow) maxRow = rowNumber
-
-    row.eachCell({ includeEmpty: false }, (cell, colNumber) => {
-      const text = cellValueToString(cell.value)
-
-      if (!text) return
-
-      const matches = text.match(/%([^%]+)%/g)
-
-      if (matches && matches.length > 0) {
-        const tags = matches.map(m => m.slice(1, -1).trim())
-
-        placeholderCells.push({
-          row: rowNumber,
-          col: colNumber,
-          rawText: text,
-          tags,
-        })
-      }
-    })
-  })
-
-  if (placeholderCells.length === 0) {
-    return { slots: [], pageHeight: maxRow }
-  }
-
-  // 1. 各タグの出現回数を集計し、スロット数（枠数）を推定
-  const tagCountMap = new Map<string, number>()
-
-  placeholderCells.forEach((c) => {
-    c.tags.forEach((t) => {
-      tagCountMap.set(t, (tagCountMap.get(t) || 0) + 1)
-    })
-  })
-
-  // 最も出現回数の多いタグをアンカーとする
-  let anchorTag = ''
-  let estimatedSlotCount = 1
-
-  tagCountMap.forEach((count, tag) => {
-    if (count > estimatedSlotCount) {
-      estimatedSlotCount = count
-      anchorTag = tag
-    }
-  })
-
-  // アンカーセル一覧
-  const anchorCells = placeholderCells.filter(c => c.tags.includes(anchorTag))
-
-  // スロット並び順（Z順: 行優先、N順: 列優先）でアンカーセルをソート
-  anchorCells.sort((a, b) => {
-    if (flowDirection === 'z') {
-      // 行が近い場合（同一段とみなす閾値：行差が2以内など）
-      if (Math.abs(a.row - b.row) <= 2) {
-        return a.col - b.col
-      }
-
-      return a.row - b.row
-    }
-    else {
-      // 列が近い場合
-      if (Math.abs(a.col - b.col) <= 2) {
-        return a.row - b.row
-      }
-
-      return a.col - b.col
-    }
-  })
-
-  // アンカーセルを元に各スロットを作成
-  const slots: TagSlot[] = anchorCells.map((anchor, index) => ({
-    slotIndex: index,
-    cells: [anchor],
-    minRow: anchor.row,
-    minCol: anchor.col,
-  }))
-
-  // アンカー以外のセルを最も近いアンカー（スロット）に割り当て
-  const nonAnchorCells = placeholderCells.filter(c => !c.tags.includes(anchorTag))
-
-  nonAnchorCells.forEach((cell) => {
-    let bestSlot = slots[0]
-    let minDistance = Infinity
-
-    slots.forEach((slot) => {
-      // マンハッタン距離
-      const dist = Math.abs(cell.row - slot.minRow) * 2 + Math.abs(cell.col - slot.minCol)
-
-      if (dist < minDistance) {
-        minDistance = dist
-        bestSlot = slot
-      }
-    })
-
-    if (bestSlot) {
-      bestSlot.cells.push(cell)
-      if (cell.row < bestSlot.minRow) bestSlot.minRow = cell.row
-      if (cell.col < bestSlot.minCol) bestSlot.minCol = cell.col
-    }
-  })
-
-  return { slots, pageHeight: maxRow }
 }
 
 /**
@@ -472,28 +366,75 @@ export function resolveValueOfKey(
 }
 
 /**
- * 行の書式と高さをコピー（ブロック複製用）
+ * ワークシートを完全に複製（印刷設定・余白・列幅・行高・書式を完全維持）
  */
-function copyRowFormatting(sourceRow: ExcelJS.Row, targetRow: ExcelJS.Row) {
-  if (sourceRow.height) targetRow.height = sourceRow.height
-
-  sourceRow.eachCell({ includeEmpty: true }, (sourceCell, colNumber) => {
-    const targetCell = targetRow.getCell(colNumber)
-
-    // スタイルプロパティの安全な個別コピー（参照破壊防止）
-    if (sourceCell.font) targetCell.font = Object.assign({}, sourceCell.font)
-    if (sourceCell.border) targetCell.border = Object.assign({}, sourceCell.border)
-    if (sourceCell.fill) targetCell.fill = Object.assign({}, sourceCell.fill)
-    if (sourceCell.alignment) targetCell.alignment = Object.assign({}, sourceCell.alignment)
-
-    // 表示形式（numFmt）の引き継ぎ
-    if (sourceCell.numFmt) {
-      targetCell.numFmt = sourceCell.numFmt
-    }
-
-    // セル値（式やテキストなど）も初期コピー
-    targetCell.value = sourceCell.value
+function cloneWorksheet(
+  workbook: ExcelJS.Workbook,
+  sourceSheet: ExcelJS.Worksheet,
+  newName: string,
+): ExcelJS.Worksheet {
+  const newSheet = workbook.addWorksheet(newName, {
+    pageSetup: sourceSheet.pageSetup ? Object.assign({}, sourceSheet.pageSetup) : undefined,
+    properties: sourceSheet.properties ? Object.assign({}, sourceSheet.properties) : undefined,
+    views: sourceSheet.views ? JSON.parse(JSON.stringify(sourceSheet.views)) : undefined,
   })
+
+  // 列幅・スタイルの複製
+  if (sourceSheet.columns) {
+    newSheet.columns = sourceSheet.columns.map(col => ({
+      width: col.width,
+      hidden: col.hidden,
+      outlineLevel: col.outlineLevel,
+      style: col.style ? Object.assign({}, col.style) : undefined,
+    }))
+  }
+
+  // 行の高さ・セル値・書式の複製
+  sourceSheet.eachRow({ includeEmpty: true }, (sourceRow, rowNumber) => {
+    const targetRow = newSheet.getRow(rowNumber)
+
+    if (sourceRow.height) targetRow.height = sourceRow.height
+    targetRow.hidden = sourceRow.hidden
+
+    sourceRow.eachCell({ includeEmpty: true }, (sourceCell, colNumber) => {
+      const targetCell = targetRow.getCell(colNumber)
+
+      targetCell.value = sourceCell.value
+
+      if (sourceCell.font) targetCell.font = Object.assign({}, sourceCell.font)
+      if (sourceCell.border) targetCell.border = Object.assign({}, sourceCell.border)
+      if (sourceCell.fill) targetCell.fill = Object.assign({}, sourceCell.fill)
+      if (sourceCell.alignment) targetCell.alignment = Object.assign({}, sourceCell.alignment)
+      if (sourceCell.numFmt) targetCell.numFmt = sourceCell.numFmt
+    })
+  })
+
+  // 結合セルの複製
+  if (sourceSheet.model.merges) {
+    sourceSheet.model.merges.forEach((mergeRange) => {
+      try {
+        newSheet.mergeCells(mergeRange)
+      }
+      catch {
+        // 重複マージ防止
+      }
+    })
+  }
+
+  return newSheet
+}
+
+/**
+ * 複数ページ時のシート名を生成（Excelの31文字制限に対応）
+ */
+function formatSheetName(baseName: string, pageIndex: number, totalPages: number): string {
+  if (totalPages === 1) return baseName
+
+  const suffix = ` (${pageIndex + 1})`
+  const maxBaseLen = Math.max(1, 31 - suffix.length)
+  const safeBase = (baseName || 'Page').slice(0, maxBaseLen)
+
+  return `${safeBase}${suffix}`
 }
 
 /**
@@ -524,8 +465,33 @@ export async function generateTagReportExcel(
     throw new Error('テンプレートにワークシートが見つかりません')
   }
 
-  // 1. 1ページ内のタグ枠（スロット）とページ高さを検出
-  const { slots, pageHeight } = detectTagSlots(sheet, flowDirection)
+  // 1. 確定定義（TypeScript）があるか判定（直接指定、またはテンプレート名・シート名から）
+  const matchedDef
+    = options.templateDefinition
+      || findTagTemplateDefinition(options.templateName)
+      || findTagTemplateDefinition(sheet.name)
+
+  if (!matchedDef) {
+    throw new Error(
+      `指定された線名札テンプレート「${options.templateName || sheet.name}」に対応する確定ロジックファイル（TS）が登録されていません。マスター管理で適切なロジックファイルを指定してください。`,
+    )
+  }
+
+  // 確定定義（TS）から決定論的にスロットを生成（推測ゼロ・完全安全）
+  const defSlots = matchedDef.getSlots(flowDirection)
+
+  const slots: TagSlot[] = defSlots.map(s => ({
+    slotIndex: s.slotIndex,
+    cells: s.cells.map(c => ({
+      row: c.row,
+      col: c.col,
+      rawText: `%${c.key}%`,
+      tags: [c.key],
+    })),
+    minRow: Math.min(...s.cells.map(c => c.row)),
+    minCol: Math.min(...s.cells.map(c => c.col)),
+  }))
+
   const slotsPerPage = slots.length
 
   if (slotsPerPage === 0) {
@@ -535,66 +501,40 @@ export async function generateTagReportExcel(
   const totalTags = rows.length
   const totalPages = Math.ceil(totalTags / slotsPerPage)
 
-  // 3. 複数ページが必要な場合、1ページ目のブロックを下方向へ複製し改ページを挿入
-  const originalMerges = sheet.model.merges ? [...sheet.model.merges] : []
+  // 2. 複数ページがある場合、テンプレートが変更される前に全シートをクローン
+  const baseSheetName = sheet.name
+  const pageSheets: ExcelJS.Worksheet[] = [sheet]
 
-  for (let page = 1; page < totalPages; page++) {
-    const rowOffset = page * pageHeight
+  if (totalPages > 1) {
+    sheet.name = formatSheetName(baseSheetName, 0, totalPages)
 
-    // 行コピー
-    for (let r = 1; r <= pageHeight; r++) {
-      const sourceRow = sheet.getRow(r)
-      const targetRow = sheet.getRow(r + rowOffset)
+    for (let page = 1; page < totalPages; page++) {
+      const cloned = cloneWorksheet(workbook, sheet, formatSheetName(baseSheetName, page, totalPages))
 
-      copyRowFormatting(sourceRow, targetRow)
+      pageSheets.push(cloned)
     }
-
-    // 結合セルのオフセットコピー
-    originalMerges.forEach((mergeRange) => {
-      // mergeRange 例: "A1:C2"
-      const parts = mergeRange.split(':')
-      const p1 = parts[0]
-      const p2 = parts[1]
-
-      if (p1 && p2) {
-        const [c1, r1] = parseCellAddress(p1)
-        const [c2, r2] = parseCellAddress(p2)
-
-        if (r1 <= pageHeight && r2 <= pageHeight) {
-          try {
-            sheet.mergeCells(r1 + rowOffset, c1, r2 + rowOffset, c2)
-          }
-          catch {
-            // 重複マージ防止
-          }
-        }
-      }
-    })
-
-    // 前ページの末尾に改ページを挿入
-    sheet.getRow(rowOffset).addPageBreak()
   }
 
-  // 3. 各ページ・各スロットへデータを流し込み
+  // 3. 各ページ（独立シート）へデータを流し込み
   for (let page = 0; page < totalPages; page++) {
-    const rowOffset = page * pageHeight
+    const currentSheet = pageSheets[page]!
 
     for (let s = 0; s < slotsPerPage; s++) {
       const dataIndex = page * slotsPerPage + s
       const dataRow = dataIndex < totalTags ? rows[dataIndex] : null
-
       const slot = slots[s]
 
       if (!slot) continue
 
       for (const slotCell of slot.cells) {
-        const targetRow = slotCell.row + rowOffset
-        const cell = sheet.getRow(targetRow).getCell(slotCell.col)
+        // シート複製のため行オフセット不要（常にテンプレートそのままの row, col）
+        const cell = currentSheet.getRow(slotCell.row).getCell(slotCell.col)
 
         let cellText = cellValueToString(cell.value)
 
-        if (!cellText && slotCell.rawText) {
-          cellText = slotCell.rawText
+        // セル値が空、またはプレースホルダーが含まれない場合はスロットのキー定義で補完
+        if (!cellText || !cellText.includes('%')) {
+          cellText = slotCell.rawText || cellText
         }
 
         if (dataRow) {
@@ -623,7 +563,7 @@ export async function generateTagReportExcel(
     }
   }
 
-  // 4. バッファ書き出し
+  // 3. バッファ書き出し
   const outBuffer = await workbook.xlsx.writeBuffer()
   const safeSiteName = (siteName || '現場').replace(/[\\/:*?"<>|]/g, '_')
   const filename = `${safeSiteName}_タグ線名札_${totalTags}件.xlsx`
@@ -634,24 +574,4 @@ export async function generateTagReportExcel(
     totalTags,
     totalPages,
   }
-}
-
-/**
- * "B3" などのセルアドレスを [colIndex, rowIndex] に変換
- */
-function parseCellAddress(addr: string): [number, number] {
-  const match = addr.match(/^([A-Z]+)(\d+)$/i)
-
-  if (!match || !match[1] || !match[2]) return [1, 1]
-
-  const colLetters = match[1].toUpperCase()
-  const rowIndex = parseInt(match[2], 10)
-
-  let colIndex = 0
-
-  for (let i = 0; i < colLetters.length; i++) {
-    colIndex = colIndex * 26 + (colLetters.charCodeAt(i) - 64)
-  }
-
-  return [colIndex, rowIndex]
 }

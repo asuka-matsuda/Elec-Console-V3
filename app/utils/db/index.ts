@@ -220,6 +220,25 @@ export const CircuitsRepository = {
     await tx.done
   },
 
+  async replaceForSite(siteId: string, circuits: CircuitItem[]): Promise<void> {
+    const db = await getLocalDB()
+
+    if (!db) return
+    const tx = db.transaction('circuits', 'readwrite')
+    const index = tx.store.index('by_site')
+    let cursor = await index.openCursor(IDBKeyRange.only(siteId))
+
+    while (cursor) {
+      await cursor.delete()
+      cursor = await cursor.continue()
+    }
+
+    for (const c of circuits) {
+      tx.store.put(c)
+    }
+    await tx.done
+  },
+
   async patch(circuitId: string, patch: Partial<CircuitItem>): Promise<CircuitItem | undefined> {
     const db = await getLocalDB()
 

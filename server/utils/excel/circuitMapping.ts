@@ -28,6 +28,7 @@ export interface CircuitColumnMap {
   setsuchiC?: number
   setsuchiD?: number
   setsuchiDelb?: number
+  keiToName?: number
   keiTo: number
   p1Worker?: number
   p1ConfirmedAt?: number
@@ -65,7 +66,8 @@ export const DEFAULT_CIRCUIT_COLUMN_MAP: CircuitColumnMap = {
   setsuchiC: undefined,
   setsuchiD: undefined,
   setsuchiDelb: undefined,
-  keiTo: 22,
+  keiToName: 3,
+  keiTo: 8,
   p1Worker: 24,
   p1ConfirmedAt: undefined,
   p1Remarks: 25,
@@ -106,7 +108,8 @@ const HEADER_ALIASES: Record<keyof CircuitColumnMap, string[]> = {
   setsuchiC: ['接地C種', '接地c種', 'C種接地'],
   setsuchiD: ['接地D種', '接地d種', 'D種接地'],
   setsuchiDelb: ['接地D（ELB）種', '接地D(ELB)種', '接地d(elb)種', '接地delb種', '接地D・ELB種', 'D(ELB)種接地'],
-  keiTo: ['幹線判定', '幹線/二次側', '系統', '区分'],
+  keiToName: ['系統', '親系統', '系統名', '電源系統', '配電系統'],
+  keiTo: ['幹線判定', '幹線/二次側', '幹線/二次', '幹線フラグ', '区分'],
 
   // Phase 1 (書き戻し対象)
   p1Worker: ['接続確認者', 'P1確認者', '確認者', 'P1作業者'],
@@ -198,7 +201,8 @@ export function detectCircuitColumns(sheet: ExcelJS.Worksheet): {
       colMap[key] = foundCol
     }
     else if (
-      key === 'setsuchiManual'
+      key === 'keiToName'
+      || key === 'setsuchiManual'
       || key === 'setsuchiC'
       || key === 'setsuchiD'
       || key === 'setsuchiDelb'

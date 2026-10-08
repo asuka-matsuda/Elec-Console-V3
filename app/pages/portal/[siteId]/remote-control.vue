@@ -36,7 +36,6 @@ const {
   isLoadingData,
   dataError,
   isSaving,
-  saveMessage,
   activeGroups,
   activePatterns,
   fetchSiteRemoteData,
@@ -175,19 +174,19 @@ const isPartiallySelected = computed(() => {
 const circuitColumns = computed<TableColumn<RemoteCircuitItem>[]>(() => {
   const cols: TableColumn<RemoteCircuitItem>[] = [
     { key: 'select', label: '', width: '44px', align: 'center' },
-    { key: 'fukaAddress', label: '負荷アドレス', width: '110px', sortable: true },
+    { key: 'fukaAddress', label: '負荷アドレス', minWidth: '110px', sortable: true },
   ]
 
   if (densoKeiToList.value.length > 1) {
-    cols.push({ key: 'densoKeiTo', label: '系統', width: '70px', sortable: true })
+    cols.push({ key: 'densoKeiTo', label: '系統', minWidth: '80px', sortable: true })
   }
 
   cols.push(
-    { key: 'banMeisho', label: '盤名称', width: '100px', sortable: true },
-    { key: 'kairoBangou', label: '回路番号', width: '100px', sortable: true, align: 'center' },
-    { key: 'kairoMeisho', label: '負荷名称', truncate: true },
-    { key: 'groups', label: '所属グループ', width: '130px' },
-    { key: 'patterns', label: '所属パターン', width: '140px' },
+    { key: 'banMeisho', label: '盤名称', minWidth: '110px', sortable: true },
+    { key: 'kairoBangou', label: '回路番号', minWidth: '100px', sortable: true, align: 'center' },
+    { key: 'kairoMeisho', label: '負荷名称', minWidth: '160px', truncate: true },
+    { key: 'groups', label: '所属グループ', minWidth: '140px' },
+    { key: 'patterns', label: '所属パターン', minWidth: '150px' },
   )
 
   return cols
@@ -271,7 +270,6 @@ onMounted(() => {
 <template>
   <div class="flex flex-1 flex-col gap-item-gap h-full min-h-0">
     <Note v-if="dataError" variant="error" :text="dataError" class="shrink-0" />
-    <Note v-if="saveMessage" :variant="saveMessage.type === 'success' ? 'success' : 'error'" :text="saveMessage.text" class="shrink-0" />
 
     <!-- 最上部ツールバー: タブ ＆ 設定保存ボタン（固定） -->
     <div class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap flex-wrap shrink-0">
@@ -284,7 +282,7 @@ onMounted(() => {
     <!-- 負荷アドレス一覧タブ -->
     <div v-if="currentTab === 'addresses'" class="flex flex-1 flex-col gap-item-gap min-h-0">
       <!-- フィルターバー（固定） -->
-      <div class="panel p-panel-pad-compact grid grid-cols-1 sm:grid-cols-3 gap-item-gap shrink-0">
+      <div class="panel p-panel-pad-compact grid grid-cols-1 gap-item-gap shrink-0" :class="densoKeiToList.length > 1 ? 'sm:grid-cols-3' : 'sm:grid-cols-2'">
         <div v-if="densoKeiToList.length > 1" class="flex flex-col gap-inline-gap">
           <label for="filter-denso" class="label">伝送系統</label>
           <Select id="filter-denso" v-model="filterDenso" :options="densoOptions" />

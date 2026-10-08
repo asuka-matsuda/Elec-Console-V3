@@ -92,17 +92,26 @@ export function getMasterTemplateItem(id: string): MasterReportTemplateItem | nu
   return found
 }
 
+function isValidTemplateId(id: string): boolean {
+  return typeof id === 'string' && /^[a-zA-Z0-9_-]+$/.test(id)
+}
+
 /**
  * テンプレート実体ファイルパスを取得
  */
 export function getMasterTemplateItemFilePath(id: string): string | null {
+  if (!isValidTemplateId(id)) {
+    return null
+  }
+
   const dir = getMasterTemplatesDir()
   const exts = ['.xlsx', '.xlsm', '.xls']
 
   for (const ext of exts) {
     const p = path.resolve(dir, `${id}${ext}`)
 
-    if (fs.existsSync(p)) {
+    // 安全確認: 解決パスが必ず dir 直下に収まっていることを検証
+    if (path.dirname(p) === dir && fs.existsSync(p)) {
       return p
     }
   }
@@ -117,6 +126,7 @@ export async function saveMasterTemplateItem(params: {
   id?: string
   name: string
   logicType: ReportLogicType
+  logicFile?: string
   description?: string
   isAllSites?: boolean
   assignedSiteIds?: string[]
@@ -126,6 +136,10 @@ export async function saveMasterTemplateItem(params: {
   const dir = getMasterTemplatesDir()
   const meta = readItemsMetadata()
 
+  if (params.id && !isValidTemplateId(params.id)) {
+    throw new Error('無効なテンプレートIDです。半角英数字、ハイフン、アンダースコアのみ使用できます。')
+  }
+
   const id = params.id || `tpl-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`
   const now = new Date().toISOString()
 
@@ -133,7 +147,8 @@ export async function saveMasterTemplateItem(params: {
 
   // ファイルがアップロードされている場合
   if (params.fileBuffer && params.originalFilename) {
-    const rawExt = path.extname(params.originalFilename).toLowerCase() || '.xlsx'
+    const rawBaseFilename = path.basename(params.originalFilename).replace(/[\\/:*?"<>|]/g, '_')
+    const rawExt = path.extname(rawBaseFilename).toLowerCase() || '.xlsx'
 
     // 既存ファイルの削除
     const oldPath = getMasterTemplateItemFilePath(id)
@@ -144,12 +159,17 @@ export async function saveMasterTemplateItem(params: {
 
     const targetPath = path.resolve(dir, `${id}${rawExt}`)
 
+    // ディレクトリトラバーサル防止ガード
+    if (path.dirname(targetPath) !== dir) {
+      throw new Error('不正なファイル保存先パスが検出されました。')
+    }
+
     await fs.promises.writeFile(targetPath, params.fileBuffer)
 
     const stat = await fs.promises.stat(targetPath)
 
     fileInfo = {
-      filename: params.originalFilename,
+      filename: rawBaseFilename,
       size: stat.size,
       updatedAt: stat.mtime.toISOString(),
     }
@@ -172,6 +192,7 @@ export async function saveMasterTemplateItem(params: {
     id,
     name: params.name.trim(),
     logicType: params.logicType,
+    logicFile: params.logicFile ? params.logicFile.trim() : undefined,
     description: (params.description || '').trim(),
     file: fileInfo,
     isAllSites,
@@ -196,6 +217,10 @@ export async function saveMasterTemplateItem(params: {
  * 帳票テンプレートの削除
  */
 export async function deleteMasterTemplateItem(id: string): Promise<boolean> {
+  if (!isValidTemplateId(id)) {
+    return false
+  }
+
   const filePath = getMasterTemplateItemFilePath(id)
 
   if (filePath && fs.existsSync(filePath)) {

@@ -6,7 +6,8 @@
  * @permission パブリック（未認証可）
  */
 
-import { defineEventHandler, getRequestIP, readBody, setCookie } from 'h3'
+import { defineEventHandler, getRequestIP, setCookie } from 'h3'
+import { z } from 'zod'
 
 import { ErrorCode } from '#shared/types/errors'
 
@@ -15,17 +16,15 @@ import { createAppError } from '../../utils/error'
 import { hashPassword, needsRehash, verifyPassword } from '../../utils/password'
 import { prisma } from '../../utils/prisma'
 import { checkRateLimit, clearRateLimit, recordFailedAttempt } from '../../utils/rateLimit'
+import { validateRequestBody } from '../../utils/validation'
+
+const LoginBodySchema = z.object({
+  loginId: z.string().min(1, 'ログインIDとパスワードを入力してください。'),
+  password: z.string().min(1, 'ログインIDとパスワードを入力してください。'),
+})
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event)
-  const { loginId, password } = body
-
-  if (!loginId || !password || typeof loginId !== 'string' || typeof password !== 'string') {
-    throw createAppError({
-      code: ErrorCode.SYS_VALIDATION_FAILED,
-      message: 'ログインIDとパスワードを入力してください。',
-    })
-  }
+  const { loginId, password } = await validateRequestBody(event, LoginBodySchema)
 
   const clientIp = getRequestIP(event, { xForwardedFor: true }) || '127.0.0.1'
   const ipKey = `login:ip:${clientIp}`

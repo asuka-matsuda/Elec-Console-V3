@@ -8,7 +8,7 @@
 
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
-import { canAccessSite, requireAuthUser } from '../../utils/auth'
+import { canAccessSite, getSiteRole, requireAuthUser } from '../../utils/auth'
 import { prisma } from '../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
@@ -41,6 +41,16 @@ export default defineEventHandler(async (event) => {
       statusCode: 403,
       statusMessage: 'Forbidden',
       message: 'この現場のイベントを更新する権限がありません。',
+    })
+  }
+
+  const role = getSiteRole(user, existingEvent.siteId)
+
+  if (!role || role === 'viewer') {
+    throw createError({
+      statusCode: 403,
+      statusMessage: 'Forbidden',
+      message: 'この操作を実行する権限がありません。閲覧専用アカウントでは変更できません。',
     })
   }
 

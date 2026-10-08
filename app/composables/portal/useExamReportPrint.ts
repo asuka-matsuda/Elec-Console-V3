@@ -7,8 +7,9 @@ import type { MaybeRefOrGetter } from 'vue'
 import { computed, ref, toValue } from 'vue'
 
 import { useNuxtApp } from '#app'
-import type { CircuitItem } from '#shared/types/circuit'
+import type { CircuitItem, CircuitsResponse } from '#shared/types/circuit'
 import { CircuitsRepository } from '~/utils/db'
+import { getErrorMessage } from '~/utils/errors'
 import {
   generateExamReportExcel,
   generateExamReportsZip,
@@ -99,7 +100,7 @@ export function useExamReportPrint(
 
     // 2. ネットワーク経由で最新データを同期
     try {
-      const res = await $api<{ circuits: CircuitItem[] }>(`/api/sites/${siteId.value}/circuits`)
+      const res = await $api<CircuitsResponse>(`/api/sites/${siteId.value}/circuits`)
 
       if (res && res.circuits) {
         circuits.value = res.circuits || []
@@ -109,9 +110,7 @@ export function useExamReportPrint(
     }
     catch (err: unknown) {
       if (circuits.value.length === 0) {
-        const errorObj = err as Error
-
-        circuitsError.value = errorObj.message || '回路データの取得に失敗しました'
+        circuitsError.value = getErrorMessage(err, '回路データの取得に失敗しました')
       }
     }
     finally {
@@ -208,12 +207,10 @@ export function useExamReportPrint(
       }
     }
     catch (err: unknown) {
-      const errorObj = err as Error
-
-      console.error('Report generation error:', errorObj)
+      console.error('Report generation error:', err)
       message.value = {
         type: 'error',
-        text: errorObj.message || '帳票の生成に失敗しました',
+        text: getErrorMessage(err, '帳票の生成に失敗しました'),
       }
     }
     finally {

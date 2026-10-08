@@ -81,6 +81,7 @@ describe('Master Templates Definition & Storage', () => {
       id: 'tpl-test-all',
       name: '全現場共通 線名札',
       logicType: 'tag',
+      logicFile: 'kfc-3350',
       isAllSites: true,
       assignedSiteIds: [],
       fileBuffer: dummyBuffer,
@@ -88,6 +89,7 @@ describe('Master Templates Definition & Storage', () => {
     })
 
     expect(tpl1.id).toBe('tpl-test-all')
+    expect(tpl1.logicFile).toBe('kfc-3350')
     expect(tpl1.isAllSites).toBe(true)
 
     // 2. 特定現場専用テンプレートの登録
@@ -129,5 +131,27 @@ describe('Master Templates Definition & Storage', () => {
     // 後片付け
     await deleteMasterTemplateItem('tpl-test-all')
     await deleteMasterTemplateItem('tpl-test-siteA')
+  })
+
+  it('should reject invalid template IDs with path traversal attempts', async () => {
+    const dummyBuffer = Buffer.from('excel-binary')
+
+    await expect(saveMasterTemplateItem({
+      id: '../../malicious',
+      name: 'Traveral Template',
+      logicType: 'tag',
+      fileBuffer: dummyBuffer,
+      originalFilename: 'test.xlsx',
+    })).rejects.toThrow('無効なテンプレートIDです')
+
+    await expect(saveMasterTemplateItem({
+      id: 'template/nested',
+      name: 'Nested Template',
+      logicType: 'tag',
+      fileBuffer: dummyBuffer,
+      originalFilename: 'test.xlsx',
+    })).rejects.toThrow('無効なテンプレートIDです')
+
+    expect(await deleteMasterTemplateItem('../malicious')).toBe(false)
   })
 })

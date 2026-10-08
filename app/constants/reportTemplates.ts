@@ -4,6 +4,7 @@
  * @description システムでサポートする4つの帳票（線名札・テプラ・送電試験・リモコン）の基本定義および
  * テンプレート作成時にExcelセルへ記述できるキー一覧
  */
+import { TAG_TEMPLATE_DEFINITIONS } from '#shared/templates/tag'
 import type { ReportTemplateMeta } from '#shared/types/reportTemplate'
 
 export const REPORT_TEMPLATE_DEFINITIONS: ReportTemplateMeta[] = [
@@ -94,11 +95,42 @@ export const REPORT_TEMPLATE_DEFINITIONS: ReportTemplateMeta[] = [
 
 export const REPORT_LOGIC_OPTIONS = [
   { label: '線名札（タグ枠）', value: 'tag' as const },
-  { label: 'コンセント用テプラ元データ', value: 'socket-tepra' as const },
   { label: '送電試験結果成績書', value: 'exam' as const },
   { label: 'フル2線式リモコン設定表', value: 'remote' as const },
+  { label: 'コンセント用テプラ元データ', value: 'socket-tepra' as const },
 ]
 
 export const getReportLogicMeta = (type: string): ReportTemplateMeta => {
   return REPORT_TEMPLATE_DEFINITIONS.find(d => d.id === type) || REPORT_TEMPLATE_DEFINITIONS[0]!
+}
+
+export function getLogicFileOptions(logicType: string): { label: string, value: string }[] {
+  if (logicType === 'tag') {
+    return TAG_TEMPLATE_DEFINITIONS.map(def => ({
+      label: `${def.id}.ts`,
+      value: def.id,
+    }))
+  }
+
+  if (logicType === 'exam') {
+    return [
+      { label: 'examReportExcel.ts', value: 'standard' },
+    ]
+  }
+
+  if (logicType === 'remote') {
+    return [
+      { label: 'remoteReportExcel.ts', value: 'standard' },
+    ]
+  }
+
+  if (logicType === 'socket-tepra') {
+    return [
+      { label: 'socketTepraExcel.ts', value: 'standard' },
+    ]
+  }
+
+  return [
+    { label: 'standard.ts', value: 'standard' },
+  ]
 }

@@ -248,6 +248,7 @@ onMounted(() => {
 }
 
 .stat-box {
+  min-height: 84px;
   border: var(--border-width-base) solid var(--color-border);
   background-color: var(--surface-bg-elevated);
 }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { AppException, parseToAppException } from '../../app/utils/errors'
+import { AppException, getErrorMessage, parseToAppException } from '../../app/utils/errors'
 import { createAppError, generateTraceId, getDefaultStatusCode, parsePrismaError } from '../../server/utils/error'
 import {
   DEFAULT_ERROR_MESSAGES,
@@ -162,5 +162,36 @@ describe('Client Error Handling (AppException & parseToAppException)', () => {
     expect(appEx.code).toBe(ErrorCode.SYS_UNKNOWN_ERROR)
     expect(appEx.shortCode).toBe('E-SYS-999')
     expect(appEx.message).toBe('Something completely unexpected happened')
+  })
+})
+
+describe('getErrorMessage utility', () => {
+  it('should extract formatted message from AppException', () => {
+    const ex = new AppException({
+      code: ErrorCode.USER_NOT_FOUND,
+      message: 'ユーザーが見つかりません',
+    })
+
+    expect(getErrorMessage(ex)).toBe('[E-USR-001] ユーザーが見つかりません')
+  })
+
+  it('should extract message from standard Error', () => {
+    const err = new Error('通信エラー')
+
+    expect(getErrorMessage(err)).toBe('通信エラー')
+  })
+
+  it('should return string directly if error is a string', () => {
+    expect(getErrorMessage('直接エラー文字列')).toBe('直接エラー文字列')
+  })
+
+  it('should extract message from object containing message property', () => {
+    expect(getErrorMessage({ message: 'オブジェクト内メッセージ' })).toBe('オブジェクト内メッセージ')
+  })
+
+  it('should return fallback if error is null or undefined or unknown structure', () => {
+    expect(getErrorMessage(null)).toBe('予期せぬエラーが発生しました。')
+    expect(getErrorMessage(undefined)).toBe('予期せぬエラーが発生しました。')
+    expect(getErrorMessage({}, 'カスタムフォールバック')).toBe('カスタムフォールバック')
   })
 })

@@ -249,7 +249,7 @@ const handleResolveAll = async (resolution: 'overwrite' | 'discard') => {
   color: var(--color-text-muted);
 
   .meta-item {
-    padding: var(--spacing-xs) var(--spacing-sm);
+    padding: var(--space-1) var(--space-2);
     border: 1px solid var(--color-border);
     background: var(--surface-bg-elevated);
 
@@ -272,7 +272,7 @@ const handleResolveAll = async (resolution: 'overwrite' | 'discard') => {
   text-align: left;
 
   th {
-    padding: var(--spacing-xs) var(--spacing-sm);
+    padding: var(--space-1) var(--space-2);
     border-bottom: 1px solid var(--color-border);
 
     font-weight: var(--font-weight-bold);
@@ -283,7 +283,7 @@ const handleResolveAll = async (resolution: 'overwrite' | 'discard') => {
   }
 
   td {
-    padding: var(--spacing-xs) var(--spacing-sm);
+    padding: var(--space-1) var(--space-2);
     border-bottom: 1px solid color-mix(in srgb, var(--color-border) 40%, transparent);
     color: var(--color-text-main);
   }

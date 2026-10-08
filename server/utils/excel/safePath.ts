@@ -8,7 +8,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 /**
- * Excelファイルパスの安全性を検証する (パストラバーサル・任意ファイル上書き防止)
+ * Excelファイルパスの安全性を検証する (パストラバーサル・任意ファイル上書き・UNCパス攻撃防止)
  */
 export function validateSafeExcelPath(rawPath: string): string {
   if (!rawPath || typeof rawPath !== 'string') {
@@ -21,19 +21,38 @@ export function validateSafeExcelPath(rawPath: string): string {
     throw new Error('ファイルパスが空です')
   }
 
-  // 拡張子チェック (.xlsx または .xlsm のみ許可)
+  // 1. ヌルバイト・URLエンコードパストラバーサルの禁止
+  if (
+    cleaned.includes('\0')
+    || cleaned.includes('%00')
+    || cleaned.toLowerCase().includes('%2e%2e')
+  ) {
+    throw new Error('ファイルパスに不正な文字が含まれています')
+  }
+
+  // 2. ネットワーク共有パス（UNCパス: \\, //）およびリモートURIの禁止（NetNTLM漏洩防止）
+  if (
+    cleaned.startsWith('\\\\')
+    || cleaned.startsWith('//')
+    || /^[\\/]{2,}/.test(cleaned)
+    || /^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(cleaned)
+  ) {
+    throw new Error('ネットワーク共有パス（UNCパス）やリモートURIへのアクセスは禁止されています')
+  }
+
+  // 3. 拡張子チェック (.xlsx または .xlsm のみ許可)
   const ext = path.extname(cleaned).toLowerCase()
 
   if (ext !== '.xlsx' && ext !== '.xlsm') {
     throw new Error('Excelファイル形式（.xlsx または .xlsm）のみ指定可能です')
   }
 
-  // パストラバーサル (..) の禁止
+  // 4. パストラバーサル (..) の禁止
   if (cleaned.includes('..')) {
     throw new Error('パストラバーサル（..）を含むファイルパスは指定できません')
   }
 
-  // Windows / UNIX の禁止文字・制御文字チェック
+  // 5. Windows / UNIX の禁止文字・制御文字チェック
   const hasInvalidChars = /[*?"<>|]/.test(cleaned) || cleaned.split('').some(c => c.charCodeAt(0) < 32)
 
   if (hasInvalidChars) {
@@ -43,7 +62,7 @@ export function validateSafeExcelPath(rawPath: string): string {
   const normalized = path.normalize(cleaned)
   const normalizedLower = normalized.toLowerCase()
 
-  // 機密ディレクトリやシステムフォルダへのアクセス禁止
+  // 6. 機密ディレクトリやシステムフォルダへのアクセス禁止
   const forbiddenSegments = [
     '\\.git',
     '/\\.git',
@@ -56,7 +75,9 @@ export function validateSafeExcelPath(rawPath: string): string {
     '\\server',
     '/server',
     '\\windows',
+    '/windows',
     '\\system32',
+    '/system32',
     '/etc',
     '/usr',
     '/bin',

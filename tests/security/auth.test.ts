@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest'
 import {
   canAccessSite,
   generateAuthToken,
+  getSiteRole,
+  isSiteAdmin,
   isSuperUser,
   type SafeUser,
   verifyAuthToken,
@@ -152,5 +154,35 @@ describe('Site Access Authorization (User Requirement: Only master has global si
     expect(isSuperUser(masterUser)).toBe(true)
     expect(isSuperUser(subAdminUser)).toBe(false)
     expect(isSuperUser({ ...subAdminUser, role: 'master' })).toBe(false) // role 詐称でも loginId が master でなければ不可
+  })
+
+  it('should correctly determine getSiteRole and isSiteAdmin across different assignments', () => {
+    // master はどの現場でも常に admin
+    expect(getSiteRole(masterUser, 'site-a')).toBe('admin')
+    expect(getSiteRole(masterUser, 'site-unassigned')).toBe('admin')
+    expect(isSiteAdmin(masterUser, 'site-a')).toBe(true)
+    expect(isSiteAdmin(masterUser, 'site-unassigned')).toBe(true)
+
+    // siteAssignments に明示的なロールがある場合
+    const userWithAssignments: SafeUser = {
+      ...workerUser,
+      assignedSiteIds: ['site-a', 'site-b'],
+      siteAssignments: [
+        { siteId: 'site-a', role: 'admin' },
+        { siteId: 'site-b', role: 'viewer' },
+      ],
+    }
+
+    // site-a では admin
+    expect(getSiteRole(userWithAssignments, 'site-a')).toBe('admin')
+    expect(isSiteAdmin(userWithAssignments, 'site-a')).toBe(true)
+
+    // site-b では viewer (admin ではない)
+    expect(getSiteRole(userWithAssignments, 'site-b')).toBe('viewer')
+    expect(isSiteAdmin(userWithAssignments, 'site-b')).toBe(false)
+
+    // 未アサインの site-c ではアクセス権限なし (null)
+    expect(getSiteRole(userWithAssignments, 'site-c')).toBeNull()
+    expect(isSiteAdmin(userWithAssignments, 'site-c')).toBe(false)
   })
 })

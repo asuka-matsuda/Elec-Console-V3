@@ -333,7 +333,17 @@ const confirmDeleteSite = async (site: Site) => {
       <Input v-model="searchQuery" placeholder="現場名・IDで検索..." icon="search" clearable />
       <Tabs v-model="statusFilter" :items="filterOptions" size="sm" />
 
-      <ul v-if="filteredSites.length > 0" class="flex flex-col gap-item-gap overflow-y-auto flex-1 min-h-[300px]">
+      <div v-if="isLoading" class="flex flex-col gap-item-gap flex-1 min-h-[300px]">
+        <div v-for="i in 5" :key="`site-skel-${i}`" class="panel p-panel-pad-compact flex flex-col gap-inline-gap">
+          <Skeleton width="60%" height="18px" />
+          <div class="flex items-center justify-between">
+            <Skeleton width="35%" height="14px" />
+            <Skeleton width="20%" height="16px" />
+          </div>
+        </div>
+      </div>
+
+      <ul v-else-if="filteredSites.length > 0" class="flex flex-col gap-item-gap overflow-y-auto flex-1 min-h-[300px]">
         <li v-for="site in filteredSites" :key="site.id">
           <div class="panel p-panel-pad-compact site-item-panel flex items-center justify-between gap-panel-gap w-full" :class="{ 'is-disabled': Boolean(site.disabledAt), 'is-active': site.id === selectedSiteId }">
             <button type="button" class="site-select-btn flex-1 min-w-0 flex flex-col gap-inline-gap text-left" :disabled="Boolean(site.disabledAt)" @click="handleSelectSite(site)">
@@ -358,8 +368,23 @@ const confirmDeleteSite = async (site: Site) => {
     <hr class="divider is-vertical is-solid hidden lg:block self-stretch">
 
     <!-- 右ペイン: 現場詳細設定 -->
-    <section class="panel flex-1 min-w-0">
-      <EmptyState v-if="!selectedSite" icon="layout" variant="informational" title="現場が選択されていません" description="左側の現場一覧から、設定やデータ連携を行う現場を選択してください。" class="min-h-[400px] flex items-center justify-center" />
+    <section class="panel flex-1 min-w-0 min-h-[400px]">
+      <div v-if="isLoading" class="flex flex-col gap-panel-gap min-h-[400px]">
+        <div class="flex items-center justify-between">
+          <Skeleton width="200px" height="24px" />
+          <Skeleton width="120px" height="32px" />
+        </div>
+        <hr class="divider">
+        <Skeleton width="300px" height="36px" />
+        <div class="flex flex-col gap-form-row-gap max-w-xl">
+          <div v-for="j in 4" :key="`field-skel-${j}`" class="flex flex-col gap-inline-gap">
+            <Skeleton width="100px" height="16px" />
+            <Skeleton width="100%" height="40px" />
+          </div>
+        </div>
+      </div>
+
+      <EmptyState v-else-if="!selectedSite" icon="layout" variant="informational" title="現場が選択されていません" description="左側の現場一覧から、設定やデータ連携を行う現場を選択してください。" class="min-h-[400px] flex items-center justify-center" />
 
       <div v-else class="flex flex-col gap-panel-gap">
         <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
@@ -418,7 +443,7 @@ const confirmDeleteSite = async (site: Site) => {
 
         <!-- Excel連携タブ -->
         <div v-else-if="activeTab === 'integration'" class="flex flex-col gap-panel-gap">
-          <section class="excel-integration-panel flex flex-col gap-panel-gap p-panel-gap">
+          <section class="excel-integration-panel flex flex-col gap-panel-gap p-panel-pad">
             <header class="flex items-center justify-between">
               <h4 class="flex items-center gap-item-gap">
                 <Icon name="file-spreadsheet" />
@@ -621,7 +646,7 @@ const confirmDeleteSite = async (site: Site) => {
 
 .excel-integration-panel {
   border: 1px solid var(--color-border-subtle);
-  background-color: var(--color-bg-surface-subtle);
+  background-color: var(--surface-bg-elevated);
 }
 
 .integration-status-row {
@@ -640,7 +665,7 @@ const confirmDeleteSite = async (site: Site) => {
 
 .template-status-card {
   border: 1px solid var(--color-border-subtle);
-  background-color: var(--color-bg-surface-subtle);
+  background-color: var(--surface-bg-elevated);
 }
 
 .template-filename {
@@ -651,6 +676,6 @@ const confirmDeleteSite = async (site: Site) => {
 
 .excluded-keywords-card {
   border: 1px solid var(--color-border-subtle);
-  background-color: var(--color-bg-surface);
+  background-color: var(--surface-bg);
 }
 </style>

@@ -54,3 +54,27 @@ export type SiteSettings = {
   /** 現場固有の改行禁止ワードリスト */
   noBreakWords?: string[]
 }
+
+/**
+ * 改行禁止ワード取得・更新APIレスポンス
+ */
+export interface NoBreakWordsResponse {
+  success: boolean
+  words: string[]
+}
+
+/**
+ * 現場一覧取得APIレスポンス
+ */
+export interface AdminSitesResponse {
+  sites: Site[]
+  siteSettings: SiteSettings[]
+}
+
+/**
+ * 現場作成・更新APIレスポンス
+ */
+export interface SiteMutationResponse {
+  site: Site
+  settings: SiteSettings
+}

@@ -64,6 +64,7 @@ export function useMasterTemplates() {
       }
       formData.append('name', form.name)
       formData.append('logicType', form.logicType)
+      formData.append('logicFile', form.logicFile || '')
       formData.append('description', form.description || '')
       formData.append('isAllSites', String(form.isAllSites))
       formData.append('assignedSiteIds', JSON.stringify(form.assignedSiteIds || []))

@@ -64,6 +64,7 @@ export default <Config>{
         'form-col-gap': 'var(--space-form-col-gap)',
         'item-gap': 'var(--space-item-gap)',
         'inline-gap': 'var(--space-inline-gap)',
+        'micro-gap': 'var(--space-micro-gap)',
 
         // 寸法
         'sidebar-w': 'var(--sidebar-width)',

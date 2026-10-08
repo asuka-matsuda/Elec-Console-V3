@@ -20,6 +20,7 @@ const ALLOWED_SPACING_TOKENS = new Set([
   'form-col-gap',
   'item-gap',
   'inline-gap',
+  'micro-gap',
   'sidebar-w',
 ])
 
@@ -27,7 +28,7 @@ const SPACING_CLASS_REGEX = /^-?(p[trblxyse]?|m[trblxyse]?|gap(-[xy])?|space-[xy
 
 function extractTokens(classStr) {
   const tokens = []
-  const regex = /(!?[\w\-:]+(\[.+?\])?)/g
+  const regex = /(!?[\w\-.:]+(\[.+?\])?)/g
   let m
 
   while ((m = regex.exec(classStr)) !== null) {
@@ -47,7 +48,7 @@ export default {
       description: 'Enforce using strictly defined semantic spacing tokens in Vue templates',
     },
     messages: {
-      unauthorizedSpacing: '未定義の余白クラス「{{ token }}」は使用禁止です。プロジェクト定義済みのセマンティック変数（layout-pad, section-gap, panel-pad, panel-pad-compact, panel-gap, form-row-gap, form-col-gap, item-gap, inline-gap, 0, auto）を使用してください。',
+      unauthorizedSpacing: '未定義の余白クラス「{{ token }}」は使用禁止です。プロジェクト定義済みのセマンティック変数（layout-pad, section-gap, panel-pad, panel-pad-compact, panel-gap, form-row-gap, form-col-gap, item-gap, inline-gap, micro-gap, 0, auto）を使用してください。',
       forbiddenPanelPadding: '<Panel> に対する余白クラス「{{ token }}」の直接指定は禁止されています。余白は padding プロパティ（\'normal\' | \'compact\' | \'none\'）を使用してください。',
       forbiddenMargin: '要素間隔のためのマージン「{{ token }}」は禁止されています（Margin is harmful原則）。要素間の間隔は親コンテナの gap クラスを使用してください。margin はリセット（m-0）または端寄せ（ml-auto 等）のみ使用可能です。',
     },
@@ -123,6 +124,45 @@ export default {
       }
     }
 
+    function traverseExpression(expr, reportNode) {
+      if (!expr) return
+
+      if (expr.type === 'Literal' && typeof expr.value === 'string') {
+        checkClassString(expr.value, reportNode || expr)
+      }
+      else if (expr.type === 'TemplateLiteral') {
+        for (const quasi of expr.quasis) {
+          if (quasi.value?.raw) {
+            checkClassString(quasi.value.raw, reportNode || quasi)
+          }
+        }
+      }
+      else if (expr.type === 'ArrayExpression') {
+        for (const el of expr.elements) {
+          if (el) traverseExpression(el, el)
+        }
+      }
+      else if (expr.type === 'ObjectExpression') {
+        for (const prop of expr.properties) {
+          if (prop.key) {
+            const keyName = prop.key.name || prop.key.value
+
+            if (typeof keyName === 'string') {
+              checkClassString(keyName, prop.key)
+            }
+          }
+        }
+      }
+      else if (expr.type === 'ConditionalExpression') {
+        traverseExpression(expr.consequent, expr.consequent)
+        traverseExpression(expr.alternate, expr.alternate)
+      }
+      else if (expr.type === 'LogicalExpression') {
+        traverseExpression(expr.left, expr.left)
+        traverseExpression(expr.right, expr.right)
+      }
+    }
+
     const parserServices = context.sourceCode?.parserServices || context.parserServices
 
     if (!parserServices?.defineTemplateBodyVisitor) {
@@ -135,27 +175,7 @@ export default {
           checkClassString(node.value.value, node)
         }
         else if (node.directive && node.key.name?.name === 'bind' && node.key.argument?.name === 'class' && node.value?.expression) {
-          if (node.value.expression.type === 'Literal' && typeof node.value.expression.value === 'string') {
-            checkClassString(node.value.expression.value, node)
-          }
-          else if (node.value.expression.type === 'ArrayExpression') {
-            for (const el of node.value.expression.elements) {
-              if (el && el.type === 'Literal' && typeof el.value === 'string') {
-                checkClassString(el.value, el)
-              }
-            }
-          }
-          else if (node.value.expression.type === 'ObjectExpression') {
-            for (const prop of node.value.expression.properties) {
-              if (prop.key) {
-                const keyName = prop.key.name || prop.key.value
-
-                if (typeof keyName === 'string') {
-                  checkClassString(keyName, prop.key)
-                }
-              }
-            }
-          }
+          traverseExpression(node.value.expression, node)
         }
       },
     })

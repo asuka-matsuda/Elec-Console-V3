@@ -8,6 +8,7 @@ import type { MaybeRef } from 'vue'
 import { computed, toValue } from 'vue'
 
 import { useNuxtApp, useRoute, useState } from '#app'
+import type { NoBreakWordsResponse } from '#shared/types/site'
 import { STATE_KEYS } from '~/constants/storageKeys'
 import { applyNoBreakToText } from '~/utils/noBreak'
 
@@ -99,7 +100,7 @@ export function useNoBreakWords(explicitSiteId?: MaybeRef<string | null | undefi
     try {
       if (sId) {
         // 現場別エンドポイントから取得
-        const res = await $api<{ success: boolean, words: string[] }>(`/api/sites/${sId}/no-break-words`)
+        const res = await $api<NoBreakWordsResponse>(`/api/sites/${sId}/no-break-words`)
 
         if (res && res.success && Array.isArray(res.words)) {
           siteWordsMap.value = {
@@ -114,7 +115,7 @@ export function useNoBreakWords(explicitSiteId?: MaybeRef<string | null | undefi
       }
       else {
         // システム設定フォールバック
-        const res = await $api<{ success: boolean, words: string[] }>('/api/system-settings/no-break-words')
+        const res = await $api<NoBreakWordsResponse>('/api/system-settings/no-break-words')
 
         if (res && res.success && Array.isArray(res.words)) {
           siteWordsMap.value = {
@@ -149,7 +150,7 @@ export function useNoBreakWords(explicitSiteId?: MaybeRef<string | null | undefi
 
     try {
       if (sId) {
-        const res = await $api<{ success: boolean, words: string[] }>(`/api/sites/${sId}/no-break-words`, {
+        const res = await $api<NoBreakWordsResponse>(`/api/sites/${sId}/no-break-words`, {
           method: 'PUT',
           body: { words: newWords },
         })
@@ -168,7 +169,7 @@ export function useNoBreakWords(explicitSiteId?: MaybeRef<string | null | undefi
         }
       }
       else {
-        const res = await $api<{ success: boolean, words: string[] }>('/api/system-settings/no-break-words', {
+        const res = await $api<NoBreakWordsResponse>('/api/system-settings/no-break-words', {
           method: 'PUT',
           body: { words: newWords },
         })

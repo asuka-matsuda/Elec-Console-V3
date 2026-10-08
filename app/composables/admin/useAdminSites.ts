@@ -6,7 +6,7 @@
  */
 
 import { useNuxtApp, useState } from '#app'
-import type { Site, SiteSettings } from '#shared/types/site'
+import type { AdminSitesResponse, Site, SiteMutationResponse, SiteSettings } from '#shared/types/site'
 import { useAuth } from '~/composables/useAuth'
 import { STATE_KEYS } from '~/constants/storageKeys'
 import { SiteSettingsRepository, SitesRepository } from '~/utils/db'
@@ -54,7 +54,7 @@ export function useAdminSites() {
 
     // 2. ネットワーク経由で最新データを同期
     try {
-      const data = await $api<{ sites: Site[], siteSettings: SiteSettings[] }>(
+      const data = await $api<AdminSitesResponse>(
         '/api/sites',
       )
 
@@ -88,7 +88,7 @@ export function useAdminSites() {
 
   const createSite = async (site: Omit<Site, 'createdAt' | 'disabledAt'>) => {
     try {
-      const res = await $api<{ site: Site, settings: SiteSettings }>(
+      const res = await $api<SiteMutationResponse>(
         '/api/sites',
         {
           method: 'POST',
@@ -119,7 +119,7 @@ export function useAdminSites() {
     updates: Partial<Omit<Site, 'createdAt'>>,
   ) => {
     try {
-      const res = await $api<{ site: Site, settings: SiteSettings }>(
+      const res = await $api<SiteMutationResponse>(
         `/api/sites/${id}`,
         {
           method: 'PUT',
@@ -186,7 +186,7 @@ export function useAdminSites() {
     siteId: string,
     updates: Partial<Omit<SiteSettings, 'siteId'>>,
   ) => {
-    const res = await $api<{ site: Site, settings: SiteSettings }>(
+    const res = await $api<SiteMutationResponse>(
       `/api/sites/${siteId}`,
       {
         method: 'PUT',

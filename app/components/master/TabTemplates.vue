@@ -10,12 +10,10 @@ import { computed, onMounted, ref } from 'vue'
 import type {
   MasterReportTemplateForm,
   MasterReportTemplateItem,
-  ReportLogicType,
-  ReportTemplateKeyDefinition,
 } from '#shared/types/reportTemplate'
 import { useAdminSites } from '~/composables/admin/useAdminSites'
 import { useMasterTemplates } from '~/composables/master/useMasterTemplates'
-import { getReportLogicMeta, REPORT_LOGIC_OPTIONS } from '~/constants/reportTemplates'
+import { getLogicFileOptions, getReportLogicMeta, REPORT_LOGIC_OPTIONS } from '~/constants/reportTemplates'
 import type { MenuItem, TableColumn } from '~/types/components'
 import { formatShortDateTime } from '~/utils/date'
 
@@ -45,64 +43,46 @@ const editingExistingFile = ref<{ filename: string, size: number } | null>(null)
 const INITIAL_FORM: MasterReportTemplateForm = {
   name: '',
   logicType: 'tag',
-  description: '',
+  logicFile: 'kfc-3350',
   isAllSites: true,
   assignedSiteIds: [],
 }
 
 const formState = ref<MasterReportTemplateForm>({ ...INITIAL_FORM })
 
-// --- キー一覧モーダル状態 ---
-const isKeyModalOpen = ref(false)
-const selectedLogicType = ref<ReportLogicType>('tag')
-const selectedLogicTitle = ref('')
-const keySearchQuery = ref('')
+const logicFileOptions = computed(() => getLogicFileOptions(formState.value.logicType))
 
-const openKeyModal = (logicType: ReportLogicType, title?: string) => {
-  keySearchQuery.value = ''
-  selectedLogicType.value = logicType
-  selectedLogicTitle.value = title || getReportLogicMeta(logicType).name
-  isKeyModalOpen.value = true
+watch(
+  () => formState.value.logicType,
+  (newType) => {
+    const options = getLogicFileOptions(newType)
+
+    if (options.length > 0 && !options.some(o => o.value === formState.value.logicFile)) {
+      formState.value.logicFile = options[0]?.value || ''
+    }
+  },
+)
+
+const getLogicFileLabel = (type: string, fileKey?: string): string => {
+  const opts = getLogicFileOptions(type)
+  const found = opts.find(o => o.value === fileKey)
+
+  if (found) return found.label
+  if (!fileKey) return '-'
+
+  return fileKey.endsWith('.ts') ? fileKey : `${fileKey}.ts`
 }
 
-const currentLogicMeta = computed(() => getReportLogicMeta(selectedLogicType.value))
-
-const filteredKeys = computed<ReportTemplateKeyDefinition[]>(() => {
-  const keys = currentLogicMeta.value.availableKeys || []
-  const query = keySearchQuery.value.trim().toLowerCase()
-
-  if (!query) return keys
-
-  return keys.filter(
-    k =>
-      k.key.toLowerCase().includes(query)
-      || k.label.toLowerCase().includes(query)
-      || k.description.toLowerCase().includes(query)
-      || k.sample.toLowerCase().includes(query),
-  )
-})
-
-const keyColumns: TableColumn<ReportTemplateKeyDefinition>[] = [
-  { key: 'key', label: 'キー記法（クリックでコピー）', width: '220px' },
-  { key: 'label', label: '項目名', width: '180px' },
-  { key: 'description', label: '説明' },
-  { key: 'sample', label: 'サンプル値', width: '180px' },
-]
-
 const templateColumns: TableColumn<MasterReportTemplateItem>[] = [
-  { key: 'name', label: '帳票名 / 備考', minWidth: '220px' },
-  { key: 'logicType', label: '流し込みロジック', minWidth: '180px' },
-  { key: 'sites', label: '対象現場', minWidth: '200px' },
+  { key: 'name', label: '帳票名', minWidth: '180px' },
+  { key: 'logicType', label: 'ロジック種別', minWidth: '150px' },
+  { key: 'logicFile', label: '適用ロジックファイル', minWidth: '190px' },
+  { key: 'sites', label: '対象現場', minWidth: '160px' },
   { key: 'file', label: 'ひな形Excelファイル', width: '220px' },
   { key: 'actions', label: '操作', width: '170px', align: 'right' },
 ]
 
 const getRowMenuItems = (row: MasterReportTemplateItem): MenuItem[] => [
-  {
-    label: '使えるキー一覧…',
-    icon: 'key',
-    action: () => openKeyModal(row.logicType, row.name),
-  },
   {
     label: '設定を変更…',
     icon: 'edit',
@@ -117,16 +97,6 @@ const getRowMenuItems = (row: MasterReportTemplateItem): MenuItem[] => [
     action: () => confirmDelete(row),
   },
 ]
-
-const copyKey = async (tag: string) => {
-  try {
-    await navigator.clipboard.writeText(tag)
-    toast.success(`「${tag}」をコピーしました`)
-  }
-  catch {
-    toast.error('クリップボードへのコピーに失敗しました')
-  }
-}
 
 // --- モーダル操作 ---
 const openCreateModal = () => {
@@ -149,7 +119,7 @@ const openEditModal = (item: MasterReportTemplateItem) => {
   formState.value = {
     name: item.name,
     logicType: item.logicType,
-    description: item.description,
+    logicFile: item.logicFile || getLogicFileOptions(item.logicType)[0]?.value || '',
     isAllSites: item.isAllSites,
     assignedSiteIds: [...item.assignedSiteIds],
   }
@@ -247,18 +217,9 @@ onMounted(async () => {
         </div>
       </div>
 
-      <Table
-        :columns="templateColumns"
-        :data="items"
-        :loading="isLoading"
-        row-key="id"
-        empty-text="登録されている帳票テンプレートはありません。「帳票テンプレートを追加」ボタンからひな形Excelとロジックを登録してください。"
-      >
+      <Table :columns="templateColumns" :data="items" :loading="isLoading" row-key="id" empty-text="登録されている帳票テンプレートはありません。「帳票テンプレートを追加」ボタンからひな形Excelとロジックを登録してください。">
         <template #cell-name="{ row }">
-          <div class="flex flex-col gap-0.5">
-            <span class="tpl-title">{{ row.name }}</span>
-            <span v-if="row.description" class="desc-text">{{ row.description }}</span>
-          </div>
+          <span class="tpl-title">{{ row.name }}</span>
         </template>
 
         <template #cell-logicType="{ row }">
@@ -266,6 +227,10 @@ onMounted(async () => {
             <Icon :name="getReportLogicMeta(row.logicType).icon" size="sm" />
             <span>{{ getReportLogicMeta(row.logicType).name }}</span>
           </div>
+        </template>
+
+        <template #cell-logicFile="{ row }">
+          <span class="desc-text">{{ getLogicFileLabel(row.logicType, row.logicFile) }}</span>
         </template>
 
         <template #cell-sites="{ row }">
@@ -299,26 +264,19 @@ onMounted(async () => {
       <div class="flex flex-col gap-panel-gap">
         <div class="flex flex-col gap-inline-gap">
           <label for="tpl-name" class="label">帳票名（必須）</label>
-          <Input id="tpl-name" v-model="formState.name" placeholder="例: 線名札（A4判10面）、東京新築用 送電自主検査表" clearable />
+          <Input id="tpl-name" v-model="formState.name" placeholder="例: KFC-3350（本番用）、東京新築用 送電自主検査表" clearable />
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-panel-gap">
           <div class="flex flex-col gap-inline-gap">
-            <label for="tpl-logic" class="label">流し込みロジック種別</label>
+            <label for="tpl-logic" class="label">ロジック種別</label>
             <Select id="tpl-logic" v-model="formState.logicType" :options="REPORT_LOGIC_OPTIONS" />
           </div>
 
-          <div class="flex flex-col gap-inline-gap justify-end">
-            <div class="flex items-center justify-between">
-              <span class="desc-text">{{ getReportLogicMeta(formState.logicType).description }}</span>
-              <Button variant="tertiary" size="sm" icon="key" @click="openKeyModal(formState.logicType)">キー一覧を確認</Button>
-            </div>
+          <div class="flex flex-col gap-inline-gap">
+            <label for="tpl-logic-file" class="label">適用ロジックファイル</label>
+            <Select id="tpl-logic-file" v-model="formState.logicFile" :options="logicFileOptions" />
           </div>
-        </div>
-
-        <div class="flex flex-col gap-inline-gap">
-          <label for="tpl-desc" class="label">備考・補足説明（任意）</label>
-          <Input id="tpl-desc" v-model="formState.description" placeholder="用途や出力時の注意点などを記入できます" clearable />
         </div>
 
         <hr class="divider">
@@ -361,32 +319,6 @@ onMounted(async () => {
           </Button>
         </div>
 
-      </div>
-    </Modal>
-
-    <!-- キー辞書モーダル -->
-    <Modal v-model="isKeyModalOpen" :title="`【${selectedLogicTitle}】使用可能キー一覧`" icon="key" size="lg">
-      <div class="flex flex-col gap-panel-gap">
-        <Note variant="secondary" text="ひな形Excel内のセルに以下のキー記法（%キー名%）を半角で記述してください。クリックするとキーをクリップボードにコピーできます。" />
-
-        <div class="flex flex-wrap items-center justify-between gap-y-inline-gap gap-x-item-gap">
-          <Input v-model="keySearchQuery" placeholder="キー記法・項目名・説明で絞り込み..." icon="search" clearable size="sm" class="w-full sm:w-80" />
-          <small class="key-count-text">{{ filteredKeys.length }} / {{ currentLogicMeta.availableKeys.length }} 件表示</small>
-        </div>
-
-        <div class="max-h-[440px] overflow-y-auto">
-          <Table :columns="keyColumns" :data="filteredKeys" empty-text="該当するキーが見つかりません。">
-            <template #cell-key="{ row }">
-              <button type="button" class="key-tag-btn inline-flex items-center gap-inline-gap px-inline-gap" @click="copyKey(row.key)">
-                <code>{{ row.key }}</code>
-                <Icon name="copy" size="sm" />
-              </button>
-            </template>
-            <template #cell-sample="{ row }">
-              <span class="sample-text">{{ row.sample }}</span>
-            </template>
-          </Table>
-        </div>
       </div>
     </Modal>
   </div>
@@ -461,39 +393,5 @@ onMounted(async () => {
 .selected-file-badge {
   font-size: var(--font-size-xs);
   color: var(--color-text-main);
-}
-
-.key-tag-btn {
-  height: 1.75rem;
-  border: var(--border-width-base) solid var(--color-border);
-
-  color: var(--theme-accent);
-
-  background-color: var(--surface-bg-elevated);
-
-  transition: var(--transition-interactive);
-
-  @include state-interactive;
-
-  &:hover {
-    border-color: var(--theme-accent);
-    box-shadow: var(--shadow-glow-sm);
-  }
-
-  code {
-    font-family: var(--font-mono);
-    font-weight: var(--font-weight-bold);
-  }
-}
-
-.key-count-text {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-}
-
-.sample-text {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
 }
 </style>

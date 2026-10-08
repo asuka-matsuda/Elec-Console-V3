@@ -8,11 +8,10 @@
 
 import { createError, defineEventHandler, getRouterParam } from 'h3'
 
-import { requireAdminUser } from '../../../utils/auth'
+import { requireSiteAdmin } from '../../../utils/auth'
 import { prisma } from '../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  await requireAdminUser(event)
   const siteId = getRouterParam(event, 'siteId')
 
   if (!siteId) {
@@ -21,6 +20,8 @@ export default defineEventHandler(async (event) => {
       message: '現場IDが指定されていません。',
     })
   }
+
+  await requireSiteAdmin(event, siteId)
 
   const existing = await prisma.site.findUnique({
     where: { id: siteId },

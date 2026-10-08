@@ -18,6 +18,7 @@ import type {
   RemotePatternSummary,
 } from '#shared/types/remoteControl'
 import { CircuitsRepository } from '~/utils/db'
+import { getErrorMessage } from '~/utils/errors'
 import {
   buildGroupSummaries,
   buildPatternSummaries,
@@ -179,9 +180,7 @@ export function useRemoteControlSetting(
       }
     }
     catch (err: unknown) {
-      const e = err as Error
-
-      dataError.value = e.message || 'リモコン設定データの読み込みに失敗しました'
+      dataError.value = getErrorMessage(err, 'リモコン設定データの読み込みに失敗しました')
     }
     finally {
       isLoadingData.value = false
@@ -193,6 +192,7 @@ export function useRemoteControlSetting(
     if (!siteId.value) return
     isSaving.value = true
     saveMessage.value = null
+    const toast = useToast()
 
     try {
       await $api(`/api/sites/${siteId.value}/remote-control`, {
@@ -200,11 +200,13 @@ export function useRemoteControlSetting(
         body: config.value,
       })
       saveMessage.value = { type: 'success', text: 'リモコン設定を保存しました' }
+      toast.success('リモコン設定を保存しました')
     }
     catch (err: unknown) {
-      const e = err as Error
+      const msg = getErrorMessage(err, '保存に失敗しました')
 
-      saveMessage.value = { type: 'error', text: e.message || '保存に失敗しました' }
+      saveMessage.value = { type: 'error', text: msg }
+      toast.error(msg)
     }
     finally {
       isSaving.value = false
@@ -338,9 +340,7 @@ export function useRemoteControlSetting(
       }
     }
     catch (err: unknown) {
-      const e = err as Error
-
-      generateMessage.value = { type: 'error', text: e.message || '出力中にエラーが発生しました' }
+      generateMessage.value = { type: 'error', text: getErrorMessage(err, '出力中にエラーが発生しました') }
     }
     finally {
       isGenerating.value = false

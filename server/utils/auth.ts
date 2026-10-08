@@ -218,22 +218,19 @@ export async function requireAuthUser(event: H3Event): Promise<SafeUser> {
 }
 
 /**
- * 管理者権限必須ガード。未認証時は 401、非管理者の場合は 403 Forbidden を throw します。
- * master アカウント、または担当現場で管理者権限を持つユーザーを管理者と認定します。
+ * システム管理者権限必須ガード。未認証時は 401、非管理者の場合は 403 Forbidden を throw します。
+ * master アカウント、またはシステムロールが admin のユーザーを管理者と認定します。
  */
 export async function requireAdminUser(event: H3Event): Promise<SafeUser> {
   const user = await requireAuthUser(event)
 
-  const hasAdminPrivilege
-    = isSuperUser(user)
-      || user.role === 'admin'
-      || (user.siteAssignments?.some(sa => sa.role === 'admin') ?? false)
+  const hasAdminPrivilege = isSuperUser(user) || user.role === 'admin'
 
   if (!hasAdminPrivilege) {
     throw createError({
       statusCode: 403,
       statusMessage: 'Forbidden',
-      message: '管理者権限が必要です。',
+      message: 'システム管理者権限が必要です。',
     })
   }
 
@@ -260,6 +257,42 @@ export function canAccessSite(user: SafeUser, siteId: string): boolean {
 }
 
 /**
+ * 該当現場におけるユーザーのロール（権限）を取得
+ * - master アカウントは無条件で 'admin'
+ * - 現場アサイン情報（siteAssignments）にロールが定義されていればそれを優先
+ * - 定義がなければシステム基本ロール（user.role）、または 'worker'
+ * - 現場アクセス権がない場合は null
+ */
+export function getSiteRole(user: SafeUser, siteId: string): UserRole | null {
+  if (isSuperUser(user)) {
+    return 'admin'
+  }
+
+  if (!canAccessSite(user, siteId)) {
+    return null
+  }
+
+  const assignment = user.siteAssignments?.find(sa => sa.siteId === siteId)
+
+  if (assignment?.role) {
+    return assignment.role
+  }
+
+  return (user.role || 'worker') as UserRole
+}
+
+/**
+ * 特定現場における管理者権限（siteAdmin または master）を有しているか判定
+ */
+export function isSiteAdmin(user: SafeUser, siteId: string): boolean {
+  if (isSuperUser(user)) {
+    return true
+  }
+
+  return getSiteRole(user, siteId) === 'admin'
+}
+
+/**
  * 現場アクセス認可ガード (BOLA / IDOR 防御)
  * ユーザーが該当現場にアクセス可能であることを検証し、権限外の場合は 403 Forbidden を throw
  */
@@ -280,6 +313,75 @@ export async function requireSiteAccess(event: H3Event, siteId?: string): Promis
       statusCode: 403,
       statusMessage: 'Forbidden',
       message: 'この現場へのアクセス権限がありません。',
+    })
+  }
+
+  return user
+}
+
+/**
+ * 現場管理者権限必須ガード (BOLA / 権限昇格防御)
+ * master アカウント、または当該現場の管理者権限を持つユーザーのみ許可します。
+ */
+export async function requireSiteAdmin(event: H3Event, siteId?: string): Promise<SafeUser> {
+  const user = await requireAuthUser(event)
+  const resolvedSiteId = siteId || (getRouterParam(event, 'siteId') as string)
+
+  if (!resolvedSiteId) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Bad Request',
+      message: '現場IDが指定されていません。',
+    })
+  }
+
+  if (!isSiteAdmin(user, resolvedSiteId)) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: 'Forbidden',
+      message: 'この現場の管理者権限が必要です。',
+    })
+  }
+
+  return user
+}
+
+/**
+ * 現場ロール権限認可ガード (BFLA 防御)
+ * ユーザーが該当現場にアクセス可能であり、かつ指定されたロール（admin, worker 等）を有しているか検証します。
+ * 閲覧者（viewer）による更新操作等の遮断に使用します。
+ */
+export async function requireSiteRole(
+  event: H3Event,
+  allowedRoles: UserRole[],
+  siteId?: string,
+): Promise<SafeUser> {
+  const user = await requireAuthUser(event)
+  const resolvedSiteId = siteId || (getRouterParam(event, 'siteId') as string)
+
+  if (!resolvedSiteId) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Bad Request',
+      message: '現場IDが指定されていません。',
+    })
+  }
+
+  if (!canAccessSite(user, resolvedSiteId)) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: 'Forbidden',
+      message: 'この現場へのアクセス権限がありません。',
+    })
+  }
+
+  const role = getSiteRole(user, resolvedSiteId)
+
+  if (!role || !allowedRoles.includes(role)) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: 'Forbidden',
+      message: 'この操作を実行する権限がありません。閲覧専用アカウントでは変更できません。',
     })
   }
 
