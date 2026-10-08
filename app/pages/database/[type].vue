@@ -11,7 +11,7 @@ import DiagramDrum from '~/components/database/DiagramDrum.vue'
 import DiagramTerminal from '~/components/database/DiagramTerminal.vue'
 import { useDbFilter } from '~/composables/useDbFilter'
 import { useTableSort } from '~/composables/useTableSort'
-import { DATABASE_REGISTRY } from '~/constants/databaseRegistry'
+import { loadDatabaseConfig } from '~/constants/databaseRegistry'
 
 // ルート変更時にコンポーネントを確実に再初期化
 definePageMeta({
@@ -20,7 +20,7 @@ definePageMeta({
 
 const route = useRoute()
 const dbKey = String(route.params.type)
-const currentDb = DATABASE_REGISTRY[dbKey]
+const currentDb = await loadDatabaseConfig(dbKey)
 
 if (!currentDb) {
   throw createError({ statusCode: 404, statusMessage: 'データベースが見つかりません', fatal: true })

@@ -5,13 +5,22 @@
  * A4定型タグテンプレート（複数面配置）へデータを流し込みます。
  * 1ページの枠数を超えた場合は自動で改ページ・ブロック複製を行い、余剰枠のタグはクリアします。
  */
-import ExcelJS from 'exceljs'
+import type ExcelJS from 'exceljs'
 
 import type { CircuitItem } from '#shared/types/circuit'
+import {
+  extractBanMeisho,
+  extractBanShubetsu,
+  extractKairoBangou,
+  extractKairoMeisho,
+  extractKansenHantei,
+  extractKeiToName,
+} from '#shared/utils/circuitFields'
 import {
   cellValueToString,
   normalizeHeaderName,
 } from '#shared/utils/excelNormalize'
+import { getExcelJS } from '~/utils/excelHelper'
 
 export interface DynamicTagField {
   /** 見出し名そのまま (例: "盤名称", "回路名称", "ケーブル", "行き先") */
@@ -25,9 +34,13 @@ export interface DynamicTagField {
 }
 
 export interface DynamicCircuitRow {
-  /** 盤名称 */
+  /** 盤名称 (例: "1L-1") */
   banMeisho: string
-  /** 系統種別 (幹線 / 二次) */
+  /** 盤種別 (例: "電灯", "動力") */
+  banShubetsu?: string
+  /** 系統名 (例: "一般電灯盤No.1") */
+  keiToName?: string
+  /** 幹線可否 (幹線 / 二次) */
   keiTo: string
   /** 回路番号 */
   kairoBangou?: string
@@ -110,6 +123,7 @@ function formatCellToString(cell: ExcelJS.Cell): string {
 export async function extractTableFromExcel(
   excelBuffer: ArrayBuffer | Uint8Array,
 ): Promise<{ headers: DynamicTagField[], rows: DynamicCircuitRow[] }> {
+  const ExcelJS = await getExcelJS()
   const workbook = new ExcelJS.Workbook()
 
   await workbook.xlsx.load(excelBuffer as unknown as ExcelJS.Buffer)
@@ -197,37 +211,13 @@ export async function extractTableFromExcel(
 
     if (!hasData) return
 
-    // 盤名称・系統・回路番号・回路名称の特定（UIの絞り込み用プロパティ）
-    const findValueByKeywords = (keywords: string[]): string => {
-      for (const [colName, val] of Object.entries(values)) {
-        const norm = normalizeHeaderName(colName)
-
-        for (const kw of keywords) {
-          if (norm.includes(normalizeHeaderName(kw))) {
-            return val
-          }
-        }
-      }
-
-      return ''
-    }
-
-    const banMeisho = findValueByKeywords(['盤名称', '盤名', '盤']) || '未分類'
-    const kansenHanteiRaw = findValueByKeywords(['幹線判定', '幹線/二次側', '幹線'])
-    let keiTo: string
-
-    if (kansenHanteiRaw) {
-      const isKansen = kansenHanteiRaw === 'true' || kansenHanteiRaw === '1' || kansenHanteiRaw.includes('幹線')
-
-      keiTo = isKansen ? '幹線' : '二次'
-    }
-    else {
-      const rawKeiTo = findValueByKeywords(['系統'])
-
-      keiTo = rawKeiTo.includes('幹線') ? '幹線' : '二次'
-    }
-    const kairoBangou = findValueByKeywords(['回路番号', '回路no'])
-    const kairoMeisho = findValueByKeywords(['回路名称', '回路名', '負荷名称'])
+    // 盤名称・盤種別・系統名・幹線判定・回路番号・回路名称の特定（SSoT）
+    const banMeisho = extractBanMeisho(values)
+    const banShubetsu = extractBanShubetsu(values)
+    const keiToName = extractKeiToName(values)
+    const keiTo = extractKansenHantei(values)
+    const kairoBangou = extractKairoBangou(values)
+    const kairoMeisho = extractKairoMeisho(values)
 
     // サンプル値の更新（ヘッダープレビュー用）
     headers.forEach((h) => {
@@ -238,6 +228,8 @@ export async function extractTableFromExcel(
 
     rows.push({
       banMeisho,
+      banShubetsu,
+      keiToName,
       keiTo,
       kairoBangou,
       kairoMeisho,
@@ -302,9 +294,15 @@ export function convertCircuitsToDynamicRows(
       出力日時: exportDate,
     }
 
+    const rawKeiTo = c.keiTo?.trim() || ''
+    const kansenHantei = extractKansenHantei({ 系統: rawKeiTo, 幹線判定: rawKeiTo })
+    const keiToName = rawKeiTo.replace(/幹線|二次側?|系統/g, '').trim() || rawKeiTo || (c.banMeisho ? `${c.banMeisho}系` : '一般系統')
+
     return {
       banMeisho: c.banMeisho || '未分類',
-      keiTo: c.keiTo || '二次',
+      banShubetsu: c.banShubetsu || '電灯盤',
+      keiToName,
+      keiTo: kansenHantei,
       kairoBangou: c.kairoBangou || '',
       kairoMeisho: c.kairoMeisho || '',
       values,
@@ -515,6 +513,7 @@ export async function generateTagReportExcel(
     throw new Error('出力対象のデータ行がありません')
   }
 
+  const ExcelJS = await getExcelJS()
   const workbook = new ExcelJS.Workbook()
 
   await workbook.xlsx.load(templateBuffer as unknown as ExcelJS.Buffer)

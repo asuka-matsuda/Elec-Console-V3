@@ -138,6 +138,23 @@ export function useMasterTemplates() {
     }
   }
 
+  // ひな形Excelのバイナリバッファを取得（帳票生成用）
+  const fetchTemplateBuffer = async (templateId: string): Promise<ArrayBuffer | null> => {
+    try {
+      const blob = await $api<Blob>(`/api/master/templates/${templateId}/download`, {
+        responseType: 'blob',
+      })
+
+      return await blob.arrayBuffer()
+    }
+    catch (err) {
+      console.error('Failed to fetch template buffer:', err)
+      toast.error('ひな形Excelの取得に失敗しました')
+
+      return null
+    }
+  }
+
   // 帳票テンプレートの削除
   const deleteTemplate = async (templateId: string, templateName?: string) => {
     deletingId.value = templateId
@@ -171,6 +188,7 @@ export function useMasterTemplates() {
     fetchTemplates,
     saveTemplate,
     downloadTemplate,
+    fetchTemplateBuffer,
     deleteTemplate,
   }
 }

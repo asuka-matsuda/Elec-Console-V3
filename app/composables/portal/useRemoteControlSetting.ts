@@ -9,6 +9,7 @@ import type { MaybeRefOrGetter } from 'vue'
 import { computed, ref, toValue } from 'vue'
 
 import { useNuxtApp } from '#app'
+import type { CircuitItem } from '#shared/types/circuit'
 import type {
   RemoteCircuitItem,
   RemoteControlConfig,
@@ -16,10 +17,10 @@ import type {
   RemoteGroupSummary,
   RemotePatternSummary,
 } from '#shared/types/remoteControl'
+import { CircuitsRepository } from '~/utils/db'
 import {
   buildGroupSummaries,
   buildPatternSummaries,
-  extractRemoteCircuitsFromExcel,
   generateRemoteReportExcel,
 } from '~/utils/remoteReportExcel'
 
@@ -133,51 +134,48 @@ export function useRemoteControlSetting(
         remoteCircuits.value = res.circuits
       }
       else {
-        // サーバーから回路が返らなかった場合のフォールバック（ブラウザ側でのテンプレート抽出試行）
-        let loadedFromExcel = false
+        // サーバーから回路が返らなかった場合のフォールバック（IndexedDBローカル回路からスロット構築）
+        let localCircuits: CircuitItem[] = []
 
         try {
-          const resExcel = await fetch(`/api/sites/${siteId.value}/circuits/template`, {
-            credentials: 'same-origin',
-          })
-
-          if (resExcel.ok) {
-            const buf = await resExcel.arrayBuffer()
-            const extracted = await extractRemoteCircuitsFromExcel(buf)
-
-            if (extracted.length > 0) {
-              remoteCircuits.value = extracted
-              loadedFromExcel = true
-            }
-          }
+          localCircuits = await CircuitsRepository.getBySite(siteId.value)
         }
         catch {
           // ignore
         }
 
-        if (!loadedFromExcel && remoteCircuits.value.length === 0) {
-          const fallbackCircuits: RemoteCircuitItem[] = []
+        const circuitMap = new Map<string, CircuitItem>()
 
-          for (let ch = 0; ch <= 63; ch++) {
-            for (let sub = 1; sub <= 4; sub++) {
-              const addr = `${ch}-${sub}`
+        for (const c of localCircuits) {
+          const addr = c.fukaAddress?.trim()
 
-              fallbackCircuits.push({
-                id: `rc-fallback-1-${addr}`,
-                siteId: siteId.value,
-                uniqueKey: addr,
-                densoKeiTo: '1',
-                fukaAddress: addr,
-                banMeisho: '-',
-                kairoKigou: null,
-                kairoBangou: '-',
-                kairoMeisho: '空き',
-                isVacant: true,
-              })
-            }
+          if (addr) {
+            circuitMap.set(addr, c)
           }
-          remoteCircuits.value = fallbackCircuits
         }
+
+        const fallbackCircuits: RemoteCircuitItem[] = []
+
+        for (let ch = 0; ch <= 63; ch++) {
+          for (let sub = 1; sub <= 4; sub++) {
+            const addr = `${ch}-${sub}`
+            const matched = circuitMap.get(addr)
+
+            fallbackCircuits.push({
+              id: `rc-fallback-1-${addr}`,
+              siteId: siteId.value,
+              uniqueKey: addr,
+              densoKeiTo: matched?.densoKeiTo || '1',
+              fukaAddress: addr,
+              banMeisho: matched?.banMeisho || '-',
+              kairoKigou: matched?.kairoKigou || null,
+              kairoBangou: matched?.kairoBangou || '-',
+              kairoMeisho: matched?.kairoMeisho || (matched ? '-' : '空き'),
+              isVacant: !matched,
+            })
+          }
+        }
+        remoteCircuits.value = fallbackCircuits
       }
     }
     catch (err: unknown) {

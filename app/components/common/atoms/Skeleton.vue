@@ -72,24 +72,33 @@ const styleObject = computed(() => {
 
 <style scoped lang="scss">
 .skeleton {
+  position: relative;
+  overflow: hidden;
   display: inline-block;
   vertical-align: middle;
 
   &--standalone {
     border: var(--border-width-base) solid var(--color-border);
     border-radius: 0;
-
     background-color: var(--surface-bg-elevated);
-    background-image: linear-gradient(
-      90deg,
-      transparent 0%,
-      color-mix(in srgb, var(--color-overlay) 14%, transparent) 50%,
-      transparent 100%
-    );
-    background-size: 200% 100%;
 
-    &.is-animated {
-      animation: skeleton-pulse 1.8s ease-in-out infinite;
+    &.is-animated::after {
+      pointer-events: none;
+      will-change: transform;
+      content: '';
+
+      position: absolute;
+      inset: 0;
+      transform: translateX(-100%);
+
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        color-mix(in srgb, var(--color-overlay) 28%, transparent) 50%,
+        transparent 100%
+      );
+
+      animation: skeleton-shimmer-gpu 1.2s ease-in-out infinite;
     }
   }
 
@@ -111,27 +120,42 @@ const styleObject = computed(() => {
     .skeleton-overlay {
       pointer-events: none;
 
+      position: absolute;
+      inset: 0;
+
+      overflow: hidden;
+
       border-radius: 0;
 
       background-color: var(--surface-bg-elevated);
-      background-image: linear-gradient(
-        90deg,
-        transparent 0%,
-        color-mix(in srgb, var(--color-overlay) 14%, transparent) 50%,
-        transparent 100%
-      );
-      background-size: 200% 100%;
     }
 
-    &.is-animated .skeleton-overlay {
-      animation: skeleton-pulse 1.8s ease-in-out infinite;
+    &.is-animated .skeleton-overlay::after {
+      pointer-events: none;
+      will-change: transform;
+      content: '';
+
+      position: absolute;
+      inset: 0;
+      transform: translateX(-100%);
+
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        color-mix(in srgb, var(--color-overlay) 28%, transparent) 50%,
+        transparent 100%
+      );
+
+      animation: skeleton-shimmer-gpu 1.2s ease-in-out infinite;
     }
   }
 
   &.is-circle {
     border-radius: var(--radius-circle);
 
-    .skeleton-overlay {
+    .skeleton-overlay,
+    &--standalone::after,
+    .skeleton-overlay::after {
       border-radius: var(--radius-circle);
     }
   }
@@ -142,26 +166,20 @@ const styleObject = computed(() => {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .skeleton,
-  .skeleton-overlay {
-    background-image: none;
+  .skeleton--standalone::after,
+  .skeleton-overlay::after {
+    display: none;
     animation: none;
   }
 }
 
-@keyframes skeleton-pulse {
+@keyframes skeleton-shimmer-gpu {
   0% {
-    opacity: 0.6;
-    background-position: 200% 0;
-  }
-
-  50% {
-    opacity: 1;
+    transform: translateX(-100%);
   }
 
   100% {
-    opacity: 0.6;
-    background-position: -200% 0;
+    transform: translateX(100%);
   }
 }
 </style>

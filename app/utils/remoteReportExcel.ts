@@ -5,7 +5,7 @@
  * リモコン設定表テンプレート（アドレス表、グループ設定表、パターン設定表）へ
  * 盤名称・負荷名称・グループ割り当て・パターン割り当てを流し込みます。
  */
-import ExcelJS from 'exceljs'
+import type ExcelJS from 'exceljs'
 
 import type {
   RawRemoteRow,
@@ -19,8 +19,11 @@ import {
   cellValueToString,
   normalizeHeaderName,
 } from '#shared/utils/excelNormalize'
+import { getExcelJS } from '~/utils/excelHelper'
 
 import { formatDateTime } from './date'
+
+type ExcelJSModule = typeof ExcelJS
 
 /**
  * 回路台帳Excel（または原本Excel）から伝送系統ごとに 0-1〜63-4 の256スロットを構築
@@ -29,6 +32,7 @@ import { formatDateTime } from './date'
 export async function extractRemoteCircuitsFromExcel(
   excelBuffer: ArrayBuffer | Uint8Array,
 ): Promise<RemoteCircuitItem[]> {
+  const ExcelJS = await getExcelJS()
   const workbook = new ExcelJS.Workbook()
 
   await workbook.xlsx.load(excelBuffer as unknown as ExcelJS.Buffer)
@@ -309,6 +313,7 @@ export async function generateRemoteReportExcel(
 ): Promise<RemoteReportResult> {
   const { templateBuffer, circuits, config, siteName = '', exportTarget } = options
 
+  const ExcelJS = await getExcelJS()
   let workbook: ExcelJS.Workbook
 
   if (templateBuffer) {
@@ -401,7 +406,7 @@ export async function generateRemoteReportExcel(
   }
   else {
     // テンプレートが指定されていない場合: 新規ワークブックを自動生成
-    workbook = createNewRemoteReportWorkbook({
+    workbook = createNewRemoteReportWorkbook(ExcelJS, {
       circuits,
       config,
       siteName,
@@ -435,12 +440,15 @@ export async function generateRemoteReportExcel(
 /**
  * テンプレートなし時に新規ワークブックを自動生成（アドレス表、グループ、パターンの3パターンに対応）
  */
-function createNewRemoteReportWorkbook(options: {
-  circuits: RemoteCircuitItem[]
-  config: RemoteControlConfig
-  siteName: string
-  exportTarget?: RemoteExportTarget
-}): ExcelJS.Workbook {
+function createNewRemoteReportWorkbook(
+  ExcelJS: ExcelJSModule,
+  options: {
+    circuits: RemoteCircuitItem[]
+    config: RemoteControlConfig
+    siteName: string
+    exportTarget?: RemoteExportTarget
+  },
+): ExcelJS.Workbook {
   const { circuits, config, siteName, exportTarget } = options
   const workbook = new ExcelJS.Workbook()
   const now = new Date(Date.now())

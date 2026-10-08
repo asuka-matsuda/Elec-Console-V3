@@ -110,6 +110,24 @@ describe('tagReportExcel', () => {
     expect(result.rows[0].banMeisho).toBe('1L-1')
   })
 
+  it('extractTableFromExcel: 「配電盤MCCBNo.」等の列が前置されていても「盤名称」を誤認識せず正しく抽出できること', async () => {
+    const wb = new ExcelJS.Workbook()
+    const sheet = wb.addWorksheet('回路台帳')
+
+    // 列見出し: 「配電盤MCCBNo.」が「盤名称」より左にある場合
+    sheet.getRow(1).values = ['系統', '配電盤MCCBNo.', '配電盤遮断器容量', '盤名称', '回路名称']
+    sheet.getRow(2).values = ['一般電灯盤No.1', '1', '200', '1L-1', '照明回路']
+    sheet.getRow(3).values = ['一般電灯盤No.1', '2', '200', '1L-2', 'コンセント回路']
+
+    const buffer = await wb.xlsx.writeBuffer()
+    const result = await extractTableFromExcel(new Uint8Array(buffer))
+
+    expect(result.rows).toHaveLength(2)
+    // 配電盤MCCBNo.の "1" や "2" ではなく、盤名称列の "1L-1", "1L-2" が抽出されること
+    expect(result.rows[0].banMeisho).toBe('1L-1')
+    expect(result.rows[1].banMeisho).toBe('1L-2')
+  })
+
   it('resolveValueOfKey: 完全一致・動的列・全角半角正規化・出力日時を解決し、互換エイリアスや現場名は解決しないこと', () => {
     const row = {
       banMeisho: '1L-1',

@@ -35,4 +35,5 @@ storybook-static
 # Test outputs
 test-results/
 playwright-report/
+.tempmediaStorage/
 

@@ -11,9 +11,9 @@ test.describe('Offline Banner & Resilience Tests', () => {
     await page.goto('/reference/glossary')
     await page.waitForLoadState('networkidle')
 
-    const offlineBanner = page.locator('.offline-banner.offline')
+    const offlineText = page.locator('text=圏外（オフライン）で動作中')
 
-    await expect(offlineBanner).not.toBeVisible()
+    await expect(offlineText).not.toBeVisible()
 
     // Chrome DevTools Protocol (CDP) でブラウザの完全オフラインをエミュレート
     const cdp = await page.context().newCDPSession(page)
@@ -30,9 +30,8 @@ test.describe('Offline Banner & Resilience Tests', () => {
       window.dispatchEvent(new Event('offline'))
     })
 
-    // HUD警告バナーの出現を確認
-    await expect(offlineBanner).toBeVisible({ timeout: 5000 })
-    await expect(offlineBanner).toContainText('圏外（オフライン）で動作中')
+    // 警告バナーの出現を確認
+    await expect(offlineText).toBeVisible({ timeout: 5000 })
 
     // オンラインに復帰
     await cdp.send('Network.emulateNetworkConditions', {
@@ -46,9 +45,8 @@ test.describe('Offline Banner & Resilience Tests', () => {
     })
 
     // 復帰バナーが表示されることを確認
-    const onlineBanner = page.locator('.offline-banner.online')
+    const onlineText = page.locator('text=オンラインに復帰しました')
 
-    await expect(onlineBanner).toBeVisible({ timeout: 5000 })
-    await expect(onlineBanner).toContainText('オンラインに復帰しました')
+    await expect(onlineText).toBeVisible({ timeout: 5000 })
   })
 })

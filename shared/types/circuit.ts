@@ -103,6 +103,14 @@ export interface CircuitItem {
   /** 接機種別・接地線情報 */
   setsuchiList?: string | null
 
+  // --- リモコン・制御関連 ---
+  /** 負荷アドレス（0-1〜63-4等） */
+  fukaAddress?: string | null
+  /** 伝送系統（1, 2等） */
+  densoKeiTo?: string | null
+  /** リレー番号 */
+  relayNumber?: string | null
+
   // --- フェーズ1: 自主検査 ---
   /** フェーズ1: 外観・配線確認チェック完了フラグ */
   p1Kakunin: boolean

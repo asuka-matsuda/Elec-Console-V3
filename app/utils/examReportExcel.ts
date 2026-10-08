@@ -4,7 +4,7 @@
  * @description ユーザー指定のテンプレート（.xlsx または .xlsm）内の %タグ% を検出し、
  * 選択した盤の試験結果を反映。マクロ（VBA）を維持したまま、単一または複数盤の ZIP 形式で生成します。
  */
-import ExcelJS from 'exceljs'
+import type ExcelJS from 'exceljs'
 import JSZip from 'jszip'
 
 import type { CircuitItem } from '#shared/types/circuit'
@@ -16,6 +16,7 @@ import {
 } from '#shared/utils/soudenExam'
 import { generateCircuitSymbolPng } from '~/utils/circuitSymbolImage'
 import { formatDate } from '~/utils/date'
+import { getExcelJS } from '~/utils/excelHelper'
 
 export interface SelectedDevicesMap {
   megger?: MeasurementDevice | null
@@ -210,6 +211,7 @@ export async function generateExamReportExcel(options: ExamReportOptions): Promi
     return numA - numB
   })
 
+  const ExcelJS = await getExcelJS()
   const workbook = new ExcelJS.Workbook()
 
   await workbook.xlsx.load(templateBuffer as unknown as ExcelJS.Buffer)

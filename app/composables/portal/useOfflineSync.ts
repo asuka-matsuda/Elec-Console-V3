@@ -278,6 +278,15 @@ export function useOfflineSync(
     }
   }
 
+  // 全競合の一括解決
+  const resolveAllConflicts = async (resolution: 'overwrite' | 'discard') => {
+    const conflicts = queue.value.filter(q => q.status === 'conflict')
+
+    for (const item of conflicts) {
+      await resolveConflict(item.id, resolution)
+    }
+  }
+
   // 離脱時警告ハンドラ
   const handleBeforeUnload = (event: BeforeUnloadEvent) => {
     if (queue.value.length > 0) {
@@ -330,5 +339,6 @@ export function useOfflineSync(
     clearQueue,
     syncAll,
     resolveConflict,
+    resolveAllConflicts,
   }
 }

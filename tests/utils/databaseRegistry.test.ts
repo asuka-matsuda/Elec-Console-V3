@@ -1,18 +1,31 @@
 import { describe, expect, it } from 'vitest'
 
-import { DATABASE_REGISTRY } from '../../app/constants/databaseRegistry'
+import {
+  DATABASE_KEYS,
+  DATABASE_LOADERS,
+  loadDatabaseConfig,
+} from '../../app/constants/databaseRegistry'
 
 describe('databaseRegistry & Database Configuration', () => {
   const expectedKeys = ['cable-db', 'conduit-db', 'drum-db', 'rack-db', 'torque-db', 'terminal-db']
 
-  it('contains all standard database definitions', () => {
-    expect(Object.keys(DATABASE_REGISTRY)).toEqual(expectedKeys)
+  it('contains all standard database definitions in DATABASE_KEYS', () => {
+    expect(DATABASE_KEYS).toEqual(expectedKeys)
+    expect(Object.keys(DATABASE_LOADERS)).toEqual(expectedKeys)
   })
 
-  it.each(expectedKeys)('validates structure for database: %s', (key) => {
-    const config = DATABASE_REGISTRY[key]
+  it('returns null for unknown database key', async () => {
+    const config = await loadDatabaseConfig('unknown-db')
 
-    expect(config).toBeDefined()
+    expect(config).toBeNull()
+  })
+
+  it.each(expectedKeys)('validates structure for database: %s', async (key) => {
+    const config = await loadDatabaseConfig(key)
+
+    expect(config).not.toBeNull()
+    if (!config) return
+
     expect(config.title).toBeTruthy()
     expect(Array.isArray(config.data)).toBe(true)
     expect(config.data.length).toBeGreaterThan(0)
@@ -22,8 +35,12 @@ describe('databaseRegistry & Database Configuration', () => {
     expect(typeof config.placeholder).toBe('string')
   })
 
-  it('correctly formats cable data columns', () => {
-    const cableConfig = DATABASE_REGISTRY['cable-db']
+  it('correctly formats cable data columns', async () => {
+    const cableConfig = await loadDatabaseConfig('cable-db')
+
+    expect(cableConfig).not.toBeNull()
+    if (!cableConfig) return
+
     const sampleRow = {
       name: 'CVT 22',
       category: 'CVT',
@@ -45,8 +62,12 @@ describe('databaseRegistry & Database Configuration', () => {
     expect(tempCol?.format?.(sampleRow.baseTemp, sampleRow)).toBe('30℃ / 90℃')
   })
 
-  it('correctly formats terminal data columns', () => {
-    const terminalConfig = DATABASE_REGISTRY['terminal-db']
+  it('correctly formats terminal data columns', async () => {
+    const terminalConfig = await loadDatabaseConfig('terminal-db')
+
+    expect(terminalConfig).not.toBeNull()
+    if (!terminalConfig) return
+
     const sampleRow = {
       category: '5.5 mm²',
       name: 'R 5.5-5',

@@ -5,7 +5,7 @@
  * 系統（幹線/二次）や盤によるフィルタリング、およびダウンロード制御を提供します。
  */
 import type { MaybeRefOrGetter } from 'vue'
-import { computed, ref, toValue } from 'vue'
+import { computed, ref, toValue, watch } from 'vue'
 
 import { useNuxtApp } from '#app'
 import type { CircuitItem } from '#shared/types/circuit'
@@ -17,7 +17,6 @@ import {
   convertCircuitsToDynamicRows,
   type DynamicCircuitRow,
   type DynamicTagField,
-  extractTableFromExcel,
   generateTagReportExcel,
 } from '~/utils/tagReportExcel'
 
@@ -41,40 +40,80 @@ export function useTagReportPrint(
   const dynamicHeaders = ref<DynamicTagField[]>([])
   const dynamicRows = ref<DynamicCircuitRow[]>([])
 
-  const isLoadingData = ref(false)
+  const isLoadingData = ref(true)
   const dataError = ref<string | null>(null)
 
   // ユーザーがアップロードしたA4タグ用テンプレート
   const templateFile = ref<File | null>(null)
   const templateBuffer = ref<ArrayBuffer | null>(null)
 
-  // 絞り込み条件
-  const selectedKeiTo = ref<'幹線' | 'ALL' | '二次'>('幹線')
+  // 絞り込み条件（系統、盤種別、盤名称、幹線可否）
+  const selectedKeiTo = ref<string>('ALL')
+  const selectedBanShubetsu = ref<string>('ALL')
   const selectedBan = ref<string>('ALL')
+  const selectedKansen = ref<'ALL' | '幹線' | '二次'>('ALL')
   const flowDirection = ref<'z' | 'n'>('z')
 
   // 出力処理状態
   const isGenerating = ref(false)
   const message = ref<{ type: 'success' | 'error', text: string } | null>(null)
 
-  // 系統選択肢
-  const keiToOptions: SelectOption[] = [
-    { value: '幹線', label: '幹線のみ（推奨）' },
-    { value: 'ALL', label: 'すべての系統（幹線・二次）' },
-    { value: '二次', label: '二次側のみ' },
-  ]
+  // 1. 系統の一覧・選択肢
+  const keiToList = computed(() => {
+    const set = new Set<string>()
 
-  // 流し込み順選択肢
-  const flowDirectionOptions: SelectOption[] = [
-    { value: 'z', label: '左から右へ (Z順: 行優先)' },
-    { value: 'n', label: '上から下へ (N順: 列優先)' },
-  ]
+    for (const r of dynamicRows.value) {
+      if (r.keiToName?.trim()) {
+        set.add(r.keiToName.trim())
+      }
+    }
 
-  // 盤名称の一覧
+    return Array.from(set).sort()
+  })
+
+  const keiToOptions = computed<SelectOption[]>(() => [
+    { value: 'ALL', label: `全系統 (${keiToList.value.length})` },
+    ...keiToList.value.map(k => ({
+      value: k,
+      label: k,
+    })),
+  ])
+
+  // 2. 盤種別の一覧・選択肢（系統に連動）
+  const banShubetsuList = computed(() => {
+    const set = new Set<string>()
+
+    for (const r of dynamicRows.value) {
+      if (selectedKeiTo.value !== 'ALL' && r.keiToName && r.keiToName !== selectedKeiTo.value) {
+        continue
+      }
+      if (r.banShubetsu?.trim()) {
+        set.add(r.banShubetsu.trim())
+      }
+    }
+
+    return Array.from(set).sort()
+  })
+
+  const banShubetsuOptions = computed<SelectOption[]>(() => [
+    { value: 'ALL', label: `全種別 (${banShubetsuList.value.length})` },
+    ...banShubetsuList.value.map(s => ({
+      value: s,
+      label: s,
+    })),
+  ])
+
+  // 3. 盤名称の一覧・選択肢（系統および盤種別に連動）
   const banList = computed(() => {
     const set = new Set<string>()
 
     for (const r of dynamicRows.value) {
+      if (selectedKeiTo.value !== 'ALL' && r.keiToName && r.keiToName !== selectedKeiTo.value) {
+        continue
+      }
+      if (selectedBanShubetsu.value !== 'ALL' && r.banShubetsu && r.banShubetsu !== selectedBanShubetsu.value) {
+        continue
+      }
       if (r.banMeisho?.trim()) {
         set.add(r.banMeisho.trim())
       }
@@ -83,11 +122,16 @@ export function useTagReportPrint(
     return Array.from(set).sort()
   })
 
-  // 盤ごとの件数マップ
   const banCountMap = computed(() => {
     const map = new Map<string, number>()
 
     for (const r of dynamicRows.value) {
+      if (selectedKeiTo.value !== 'ALL' && r.keiToName && r.keiToName !== selectedKeiTo.value) {
+        continue
+      }
+      if (selectedBanShubetsu.value !== 'ALL' && r.banShubetsu && r.banShubetsu !== selectedBanShubetsu.value) {
+        continue
+      }
       const ban = r.banMeisho?.trim()
 
       if (ban) {
@@ -98,33 +142,68 @@ export function useTagReportPrint(
     return map
   })
 
-  // 盤選択肢
   const banOptions = computed<SelectOption[]>(() => [
     {
       value: 'ALL',
-      label: `全盤対象 (${banList.value.length}盤 / ${dynamicRows.value.length}回路)`,
+      label: `全盤 (${banList.value.length}盤)`,
     },
     ...banList.value.map(ban => ({
       value: ban,
-      label: `${ban} (${banCountMap.value.get(ban) || 0}回路)`,
+      label: `${ban} (${banCountMap.value.get(ban) || 0})`,
     })),
   ])
+
+  // 上位フィルター変更時に選択肢が無効になった場合の安全なリセット
+  watch(banShubetsuList, (validList) => {
+    if (selectedBanShubetsu.value !== 'ALL' && !validList.includes(selectedBanShubetsu.value)) {
+      selectedBanShubetsu.value = 'ALL'
+    }
+  })
+
+  watch(banList, (validList) => {
+    if (selectedBan.value !== 'ALL' && !validList.includes(selectedBan.value)) {
+      selectedBan.value = 'ALL'
+    }
+  })
+
+  // 4. 幹線可否の選択肢
+  const kansenOptions: SelectOption[] = [
+    { value: 'ALL', label: 'すべて（幹線・二次）' },
+    { value: '幹線', label: '幹線のみ' },
+    { value: '二次', label: '二次側のみ' },
+  ]
+
+  // 流し込み順選択肢
+  const flowDirectionOptions: SelectOption[] = [
+    { value: 'z', label: '行優先 (Z順)' },
+    { value: 'n', label: '列優先 (N順)' },
+  ]
 
   // 絞り込み後の行データ
   const filteredRows = computed(() => {
     return dynamicRows.value.filter((r) => {
-      // 系統フィルタ
-      if (selectedKeiTo.value !== 'ALL') {
-        const isTarget = selectedKeiTo.value === '幹線'
+      // 1. 系統
+      if (selectedKeiTo.value !== 'ALL' && r.keiToName && r.keiToName !== selectedKeiTo.value) {
+        return false
+      }
+
+      // 2. 盤種別
+      if (selectedBanShubetsu.value !== 'ALL' && r.banShubetsu && r.banShubetsu !== selectedBanShubetsu.value) {
+        return false
+      }
+
+      // 3. 盤名称
+      if (selectedBan.value !== 'ALL' && r.banMeisho !== selectedBan.value) {
+        return false
+      }
+
+      // 4. 幹線可否
+      if (selectedKansen.value !== 'ALL') {
+        const isTarget = selectedKansen.value === '幹線'
           ? r.keiTo.includes('幹線')
           : !r.keiTo.includes('幹線')
 
         if (!isTarget) return false
-      }
-
-      // 盤フィルタ
-      if (selectedBan.value !== 'ALL') {
-        if (r.banMeisho !== selectedBan.value) return false
       }
 
       return true
@@ -153,55 +232,38 @@ export function useTagReportPrint(
     }
   })
 
-  // 現場データ（Excel台帳および回路）の読み込み
+  // 現場データ（回路データ）の読み込み (Local-First: IndexedDB即座反映 -> 高速API同期)
   const fetchSiteData = async () => {
-    if (!siteId.value) return
+    if (!siteId.value) {
+      isLoadingData.value = false
+
+      return
+    }
     isLoadingData.value = true
     dataError.value = null
 
-    // 1. IndexedDB からローカル回路を即座に読み込み（フォールバック用）
     try {
-      const local = await CircuitsRepository.getBySite(siteId.value)
+      // 1. IndexedDB からローカル回路を即座に読み込み
+      try {
+        const local = await CircuitsRepository.getBySite(siteId.value)
 
-      if (local && local.length > 0) {
-        rawCircuits.value = local
-        const converted = convertCircuitsToDynamicRows(local, exportDate.value)
+        if (local && local.length > 0) {
+          rawCircuits.value = local
+          const converted = convertCircuitsToDynamicRows(local, exportDate.value)
 
-        dynamicHeaders.value = converted.headers
-        dynamicRows.value = converted.rows
-      }
-    }
-    catch (err) {
-      console.warn('[useTagReportPrint] Local circuits load failed', err)
-    }
-
-    // 2. 現場設定にExcel原本があれば、サーバーから取得して完全な動的ヘッダーと行データを抽出
-    let excelLoaded = false
-
-    try {
-      const res = await fetch(`/api/sites/${siteId.value}/circuits/template`)
-
-      if (res.ok) {
-        const buf = await res.arrayBuffer()
-        const extracted = await extractTableFromExcel(buf)
-
-        if (extracted.headers.length > 0 && extracted.rows.length > 0) {
-          dynamicHeaders.value = extracted.headers
-          dynamicRows.value = extracted.rows
-          excelLoaded = true
+          dynamicHeaders.value = converted.headers
+          dynamicRows.value = converted.rows
         }
       }
-    }
-    catch (err) {
-      console.info('[useTagReportPrint] No template excel or failed to load, fallback to DB circuits', err)
-    }
+      catch (err) {
+        console.warn('[useTagReportPrint] Local circuits load failed', err)
+      }
 
-    // 3. Excel原本が未ロードの場合、最新の回路APIからデータを取得して更新
-    if (!excelLoaded) {
+      // 2. サーバーAPIから最新の回路データを高速JSON取得して同期
       try {
         const res = await $api<{ circuits: CircuitItem[] }>(`/api/sites/${siteId.value}/circuits`)
 
-        if (res && res.circuits) {
+        if (res && res.circuits && res.circuits.length > 0) {
           rawCircuits.value = res.circuits
           await CircuitsRepository.putAll(res.circuits)
           const converted = convertCircuitsToDynamicRows(res.circuits, exportDate.value)
@@ -218,8 +280,9 @@ export function useTagReportPrint(
         }
       }
     }
-
-    isLoadingData.value = false
+    finally {
+      isLoadingData.value = false
+    }
   }
 
   // ユーザーによるテンプレートExcelファイルの選択
@@ -310,13 +373,19 @@ export function useTagReportPrint(
     dataError,
     templateFile,
     selectedKeiTo,
+    selectedBanShubetsu,
     selectedBan,
+    selectedKansen,
     flowDirection,
     isGenerating,
     message,
     banList,
     banOptions,
+    keiToList,
     keiToOptions,
+    banShubetsuList,
+    banShubetsuOptions,
+    kansenOptions,
     flowDirectionOptions,
     summary,
     fetchSiteData,
