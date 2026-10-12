@@ -26,7 +26,7 @@ const handleSelect = (item: TabItem) => {
 </script>
 
 <template>
-  <nav class="tabs flex gap-inline-gap overflow-x-auto" :class="[`tabs-${size}`, { 'is-disabled': disabled }]">
+  <nav class="tabs flex gap-inline-gap" :class="[`tabs-${size}`, { 'is-disabled': disabled }]">
     <button v-for="item in items" :key="String(item.value)" type="button" class="tabs-item relative z-[1] inline-flex items-center justify-center gap-inline-gap" :class="{ 'is-active': modelValue === item.value, 'is-disabled': disabled || item.disabled }" :disabled="disabled || item.disabled" @click="handleSelect(item)">
       <Icon v-if="item.icon" :name="item.icon" :size="iconSize" />
       <span>{{ item.label }}</span>
@@ -38,6 +38,7 @@ const handleSelect = (item: TabItem) => {
 <style scoped lang="scss">
 .tabs {
   box-sizing: border-box;
+  padding: 0 var(--space-1);
   border-radius: 0;
   box-shadow: inset 0 -1px 0 var(--color-border);
 
