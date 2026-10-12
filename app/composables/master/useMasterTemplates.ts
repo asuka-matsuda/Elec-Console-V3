@@ -17,7 +17,7 @@ export function useMasterTemplates() {
   const toast = useToast()
 
   const items = ref<MasterReportTemplateItem[]>([])
-  const isLoading = ref(false)
+  const isLoading = ref(true)
   const isSaving = ref(false)
   const deletingId = ref<string | null>(null)
   const downloadingId = ref<string | null>(null)

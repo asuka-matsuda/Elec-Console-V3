@@ -17,14 +17,18 @@ import { parseToAppException } from '~/utils/errors'
 export function useSoudenDashboard(siteIdRef: Ref<string> | string) {
   const { $api } = useNuxtApp()
   const stats = ref<SoudenStats | null>(null)
-  const isLoading = ref(false)
+  const isLoading = ref(true)
   const isImporting = ref(false)
   const error = ref<string | null>(null)
 
   const fetchStats = async () => {
     const siteId = unref(siteIdRef)
 
-    if (!siteId) return
+    if (!siteId) {
+      isLoading.value = false
+
+      return
+    }
 
     error.value = null
 
@@ -34,6 +38,7 @@ export function useSoudenDashboard(siteIdRef: Ref<string> | string) {
 
       if (localCircuits && localCircuits.length > 0) {
         stats.value = calculateSoudenStats(localCircuits)
+        isLoading.value = false
       }
       else {
         isLoading.value = true

@@ -40,7 +40,7 @@ export function useRemoteControlSetting(
 
   // 回路一覧（負荷アドレス付き）
   const remoteCircuits = ref<RemoteCircuitItem[]>([])
-  const isLoadingData = ref(false)
+  const isLoadingData = ref(true)
   const dataError = ref<string | null>(null)
 
   // 設定データ
@@ -112,7 +112,12 @@ export function useRemoteControlSetting(
 
   // データ初期ロード
   const fetchSiteRemoteData = async () => {
-    if (!siteId.value) return
+    if (!siteId.value) {
+      isLoadingData.value = false
+
+      return
+    }
+
     isLoadingData.value = true
     dataError.value = null
 

@@ -1,4 +1,4 @@
-﻿import { mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 
 import type { CircuitItem } from '#shared/types/circuit'
@@ -87,5 +87,25 @@ describe('PortalExamMinimap.vue', () => {
 
     expect(emitted).toBeTruthy()
     expect(emitted![0][0]).toEqual(mockCircuits[0])
+  })
+
+  it('renders skeleton tiles when loading is true', () => {
+    const wrapper = mount(PortalExamMinimap, {
+      props: {
+        circuits: mockCircuits,
+        phase: 1,
+        loading: true,
+      },
+      global: {
+        stubs: {
+          Skeleton: {
+            template: '<span class="skeleton-stub" />',
+          },
+        },
+      },
+    })
+
+    expect(wrapper.findAll('button').length).toBe(0)
+    expect(wrapper.findAll('.skeleton-stub').length).toBe(32)
   })
 })

@@ -20,6 +20,7 @@ const {
   tabs,
   currentTab,
   historyList,
+  isLoading,
   handleClearAll,
   openDeleteModal,
 } = useCalculationHistoryPage()
@@ -44,13 +45,28 @@ const getWeightResult = (entry: HistoryEntry) => (entry.rawResult ?? null) as un
   <div class="flex flex-col gap-panel-gap">
     <div class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap flex-wrap">
       <Tabs v-model="currentTab" :items="tabs" class="flex-1 min-w-0" />
-      <div v-if="historyList.length > 0" class="flex items-center gap-item-gap shrink-0">
+      <div v-if="!isLoading && historyList.length > 0" class="flex items-center gap-item-gap shrink-0">
         <Button variant="danger" size="sm" icon="trash-2" @click="handleClearAll">すべて削除する</Button>
       </div>
     </div>
 
     <ClientOnly>
-      <ul v-if="historyList.length > 0" class="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-panel-gap">
+      <div v-if="isLoading" class="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-panel-gap">
+        <div v-for="skeletonIndex in 4" :key="`history-skeleton-${skeletonIndex}`" class="panel history-panel flex flex-col gap-panel-gap">
+          <div class="flex flex-col gap-inline-gap">
+            <Skeleton width="6rem" height="0.85rem" />
+            <Skeleton width="10rem" height="1.4rem" />
+          </div>
+          <div class="flex flex-col gap-inline-gap">
+            <Skeleton width="100%" height="4rem" />
+          </div>
+          <div class="flex flex-col gap-inline-gap">
+            <Skeleton width="100%" height="3rem" />
+          </div>
+        </div>
+      </div>
+
+      <ul v-else-if="historyList.length > 0" class="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-panel-gap">
         <li v-for="entry in historyList" :key="entry.id">
           <article class="panel history-panel flex flex-col gap-panel-gap h-full" :class="[`is-${entry.status}`]">
             <header class="flex items-end justify-between">

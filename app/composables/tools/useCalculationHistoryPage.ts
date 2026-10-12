@@ -22,7 +22,7 @@ export function useCalculationHistoryPage() {
   const currentTab = ref('voltage')
   const { askConfirm } = useModal()
   const historyList = ref<HistoryEntry[]>([])
-  const isLoading = ref(false)
+  const isLoading = ref(true)
 
   const getApi = () => {
     try {

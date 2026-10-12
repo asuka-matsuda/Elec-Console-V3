@@ -36,7 +36,7 @@ describe('usePhaseExamBase', () => {
     expect(base.selectedBanShubetsu.value).toBe('ALL')
     expect(base.selectedBanMeisho.value).toBe('ALL')
     expect(base.circuits.value).toEqual([])
-    expect(base.isLoading.value).toBe(false)
+    expect(base.isLoading.value).toBe(true)
   })
 
   it('isThreePhase が三相・動力を正しく識別すること', () => {

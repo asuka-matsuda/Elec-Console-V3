@@ -6,10 +6,16 @@
 import type { CircuitItem } from '#shared/types/circuit'
 import { isPhaseComplete } from '#shared/utils/soudenExam'
 
-const props = defineProps<{
-  circuits: CircuitItem[]
-  phase: number
-}>()
+const props = withDefaults(
+  defineProps<{
+    circuits: CircuitItem[]
+    phase: number
+    loading?: boolean
+  }>(),
+  {
+    loading: false,
+  },
+)
 
 const emit = defineEmits<{
   (e: 'selectCircuit', circuit: CircuitItem): void
@@ -20,12 +26,21 @@ const getTileClass = (c: CircuitItem): string =>
 </script>
 
 <template>
-  <div class="flex flex-wrap gap-inline-gap max-h-24 overflow-y-auto overflow-x-hidden">
-    <button v-for="c in circuits" :key="c.id" type="button" class="minimap-tile w-2.5 h-2.5 hover:z-[2]" :class="getTileClass(c)" :title="c.kairoMeisho || c.id" @click="emit('selectCircuit', c)" />
+  <div class="minimap-container flex flex-wrap gap-inline-gap max-h-24 overflow-y-auto overflow-x-hidden">
+    <template v-if="loading">
+      <Skeleton v-for="i in 32" :key="`minimap-skeleton-${i}`" width="10px" height="10px" />
+    </template>
+    <template v-else-if="circuits && circuits.length > 0">
+      <button v-for="c in circuits" :key="c.id" type="button" class="minimap-tile w-2.5 h-2.5 hover:z-[2]" :class="getTileClass(c)" :title="c.kairoMeisho || c.id" @click="emit('selectCircuit', c)" />
+    </template>
   </div>
 </template>
 
 <style scoped lang="scss">
+.minimap-container {
+  min-height: 26px;
+}
+
 .minimap-tile {
   padding: 0;
   border: 1px solid var(--color-tile-empty-border);

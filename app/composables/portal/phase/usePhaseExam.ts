@@ -66,7 +66,7 @@ export function usePhaseExamBase(
   const panelOptions = ref<PanelOption[]>([])
   const serverPanelsWithIncompleteKansen = ref<string[]>([])
   const phase2ThresholdMegOhm = ref<number>(1.0)
-  const isLoading = ref(false)
+  const isLoading = ref(true)
   const isActionLoading = ref<Record<string, boolean>>({})
   const error = ref<string | null>(null)
 
@@ -120,7 +120,11 @@ export function usePhaseExamBase(
   const fetchCircuits = async (_forceRemote = false) => {
     const siteId = unref(siteIdRef)
 
-    if (!siteId) return
+    if (!siteId) {
+      isLoading.value = false
+
+      return
+    }
 
     error.value = null
 
@@ -140,6 +144,7 @@ export function usePhaseExamBase(
         if (panelOptions.value.length === 0) {
           panelOptions.value = derivePanelOptions(localCircuits)
         }
+        isLoading.value = false
       }
       else {
         isLoading.value = true

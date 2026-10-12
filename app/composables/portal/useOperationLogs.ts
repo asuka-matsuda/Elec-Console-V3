@@ -24,13 +24,17 @@ export function useOperationLogs(siteIdRef: Ref<string> | string) {
   const selectedTargetBan = ref<string>('ALL')
   const limit = ref<number>(100)
 
-  const isLoading = ref<boolean>(false)
+  const isLoading = ref<boolean>(true)
   const error = ref<string | null>(null)
 
   const fetchLogs = async () => {
     const siteId = unref(siteIdRef)
 
-    if (!siteId) return
+    if (!siteId) {
+      isLoading.value = false
+
+      return
+    }
 
     isLoading.value = true
     error.value = null
