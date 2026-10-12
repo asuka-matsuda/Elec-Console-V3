@@ -8,6 +8,8 @@
 
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
+import { getPhase2ActivePhases, isPhase2MeasurementsPass } from '#shared/utils/soudenExam'
+
 import { requireSiteRole } from '../../../../../utils/auth'
 import { atomicUpdateCircuit } from '../../../../../utils/optimisticLock'
 import { prisma } from '../../../../../utils/prisma'
@@ -28,6 +30,18 @@ export default defineEventHandler(async (event) => {
   const workerName = `${user.lastName} ${user.firstName}`.trim() || user.loginId
   const confirmedAt = body.clientConfirmedAt ? new Date(body.clientConfirmedAt) : new Date()
 
+  let isComplete = body.isComplete !== undefined ? Boolean(body.isComplete) : undefined
+
+  if (isComplete === undefined) {
+    const existing = await prisma.circuit.findFirst({
+      where: { id: circuitId, siteId },
+      select: { souShubetsu: true, haidenHoushiki: true },
+    })
+    const active = getPhase2ActivePhases(existing?.souShubetsu, existing?.haidenHoushiki)
+
+    isComplete = isPhase2MeasurementsPass(active, body.rStatus, body.sStatus, body.tStatus)
+  }
+
   const updated = await atomicUpdateCircuit({
     circuitId,
     siteId,
@@ -42,9 +56,7 @@ export default defineEventHandler(async (event) => {
       p2TStatus: body.tStatus !== undefined ? body.tStatus : undefined,
       p2Remarks: body.remarks !== undefined ? body.remarks : undefined,
       p2Worker: workerName,
-      p2IsComplete: body.isComplete !== undefined
-        ? Boolean(body.isComplete)
-        : (body.rStatus === 'OK' && body.sStatus === 'OK' && body.tStatus === 'OK'),
+      p2IsComplete: isComplete,
       p2ConfirmedAt: confirmedAt,
     },
   })

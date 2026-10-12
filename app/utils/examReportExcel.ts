@@ -10,6 +10,7 @@ import JSZip from 'jszip'
 import type { CircuitItem } from '#shared/types/circuit'
 import type { MeasurementDevice } from '#shared/types/measurementDevice'
 import {
+  getPhase2ActivePhases,
   isPhase1Complete,
   isPhase2Complete,
   isPhase3Complete,
@@ -158,9 +159,21 @@ const DETAIL_RESOLVERS: Record<string, (c: CircuitItem) => string | number> = {
   締付_T: c => evaluateShimePhase(c, 'T'),
   締付_E: c => evaluateShimePhase(c, 'E'),
   締付確認: c => (c.p1Mashishime ? '✔' : ''),
-  絶縁_R: c => c.zetsuenR ?? '-',
-  絶縁_S: c => c.zetsuenS ?? '-',
-  絶縁_T: c => c.zetsuenT ?? '-',
+  絶縁_R: (c) => {
+    const active = getPhase2ActivePhases(c.souShubetsu, c.haidenHoushiki)
+
+    return active.hasR ? (c.zetsuenR ?? '-') : '-'
+  },
+  絶縁_S: (c) => {
+    const active = getPhase2ActivePhases(c.souShubetsu, c.haidenHoushiki)
+
+    return active.hasS ? (c.zetsuenS ?? '-') : '-'
+  },
+  絶縁_T: (c) => {
+    const active = getPhase2ActivePhases(c.souShubetsu, c.haidenHoushiki)
+
+    return active.hasT ? (c.zetsuenT ?? '-') : '-'
+  },
   絶縁判定: c => (c.p2IsComplete ? 'OK' : c.p2ConfirmedAt ? 'NG' : '-'),
   電圧_RS: c => c.denatsuRs ?? '-',
   電圧_ST: c => c.denatsuSt ?? '-',

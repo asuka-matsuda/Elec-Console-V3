@@ -152,6 +152,121 @@ export interface VoltageToleranceRange {
   max: number
 }
 
+export interface Phase2ActivePhases {
+  hasR: boolean
+  hasS: boolean
+  hasT: boolean
+  labelR: string
+  labelS: string
+  labelT: string
+}
+
+/**
+ * 回路の相種別（souShubetsu）および配電方式（haidenHoushiki）に基づき、
+ * フェーズ2（絶縁抵抗測定）における各相（R-E, S(N)-E, T-E）の測定有効/無効および表示ラベルを判定します。
+ *
+ * @description
+ * 絶縁抵抗測定は大気・線間ではなく大地間（-E: Earth）を測定します。
+ * - RN (1Φ2W): R相(R-E)とN相(N-E)が測定対象、T相は対象外（-）
+ * - TN (1Φ2W): N相(N-E)とT相(T-E)が測定対象、R相は対象外（-）
+ * - RT (1Φ2W 200V): R相(R-E)とT相(T-E)が測定対象、S相は対象外（-）
+ * - RNT (1Φ3W): 全相が測定対象（R-E, N-E, T-E）
+ * - RST (3Φ3W): 全相が測定対象（R-E, S-E, T-E）
+ * - RS (1Φ2W 200V等): R相(R-E)とS相(S-E)が測定対象、T相は対象外（-）
+ * - ST: S相(S-E)とT相(T-E)が測定対象、R相は対象外（-）
+ */
+export function getPhase2ActivePhases(
+  souShubetsu?: string | null,
+  haidenHoushiki?: string | null,
+): Phase2ActivePhases {
+  const s = (souShubetsu || '').trim().toUpperCase()
+  const h = (haidenHoushiki || '').trim().toUpperCase()
+
+  // 1. souShubetsu に基づく明示的判定
+  if (s) {
+    const hasR = s.includes('R')
+    const hasS = s.includes('S') || s.includes('N')
+    const hasT = s.includes('T')
+    const isN = s.includes('N')
+
+    if (hasR || hasS || hasT) {
+      return {
+        hasR,
+        hasS,
+        hasT,
+        labelR: 'R-E',
+        labelS: isN ? 'N-E' : 'S-E',
+        labelT: 'T-E',
+      }
+    }
+  }
+
+  // 2. haidenHoushiki からのフォールバック
+  if (h.includes('1Φ2W') || h.includes('単相2線')) {
+    if (h.includes('200V')) {
+      return {
+        hasR: true,
+        hasS: false,
+        hasT: true,
+        labelR: 'R-E',
+        labelS: 'S-E',
+        labelT: 'T-E',
+      }
+    }
+
+    return {
+      hasR: true,
+      hasS: true,
+      hasT: false,
+      labelR: 'R-E',
+      labelS: 'N-E',
+      labelT: 'T-E',
+    }
+  }
+
+  if (h.includes('1Φ3W') || h.includes('単相3線')) {
+    return {
+      hasR: true,
+      hasS: true,
+      hasT: true,
+      labelR: 'R-E',
+      labelS: 'N-E',
+      labelT: 'T-E',
+    }
+  }
+
+  // デフォルト（三相または未指定）: 全相有効
+  return {
+    hasR: true,
+    hasS: true,
+    hasT: true,
+    labelR: 'R-E',
+    labelS: 'S-E',
+    labelT: 'T-E',
+  }
+}
+
+/**
+ * フェーズ2の測定ステータスから合格（完了）かどうかを判定します。
+ * 有効な相のみを判定対象とし、対象外の相は判定条件から除外します。
+ */
+export function isPhase2MeasurementsPass(
+  active: Phase2ActivePhases,
+  rStatus?: string | null,
+  sStatus?: string | null,
+  tStatus?: string | null,
+): boolean {
+  const hasAnyActive = active.hasR || active.hasS || active.hasT
+
+  if (!hasAnyActive) return false
+
+  const rOk = !active.hasR || rStatus === 'OK'
+  const sOk = !active.hasS || sStatus === 'OK'
+  const tOk = !active.hasT || tStatus === 'OK'
+
+  return rOk && sOk && tOk
+}
+
 /**
  * 回路が三相かどうかに応じた相ラベル（表示名）を取得します。
  * - 三相: R-S / S-T / R-T

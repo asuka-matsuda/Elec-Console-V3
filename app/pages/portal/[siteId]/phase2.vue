@@ -14,9 +14,10 @@ import { useTableSort } from '~/composables/useTableSort'
 import { PHASE2_TABLE_COLUMNS } from '~/constants/soudenConstants'
 import { formatShortDateTime } from '~/utils/date'
 import {
-  getCircuitPhaseLabels,
+  getPhase2ActivePhases,
   getPhase2Threshold,
   getSoudenRowClass,
+  isPhase2MeasurementsPass,
   parseNullableNumber,
 } from '~/utils/souden'
 import { scrollToTableRow } from '~/utils/table'
@@ -38,7 +39,6 @@ const {
   phase2ThresholdMegOhm,
   isLoading,
   isActionLoading,
-  isThreePhase,
   evalMegStatus,
   fetchCircuits,
   confirmPhase2,
@@ -106,12 +106,18 @@ interface Phase2RowForm {
 const isP1Complete = (circuit: CircuitItem) => isPhase1Complete(circuit)
 const isLocked = (circuit: CircuitItem) => !isP1Complete(circuit)
 
-const initRowForm = (circuit: CircuitItem): Phase2RowForm => ({
-  rVal: circuit.zetsuenR != null ? circuit.zetsuenR : '',
-  sVal: circuit.zetsuenS != null ? circuit.zetsuenS : '',
-  tVal: circuit.zetsuenT != null ? circuit.zetsuenT : '',
-  remarks: circuit.p2Remarks ?? '',
-})
+const getActivePhases = (circuit: CircuitItem) => getPhase2ActivePhases(circuit.souShubetsu, circuit.haidenHoushiki)
+
+const initRowForm = (circuit: CircuitItem): Phase2RowForm => {
+  const active = getActivePhases(circuit)
+
+  return {
+    rVal: active.hasR && circuit.zetsuenR != null ? circuit.zetsuenR : '',
+    sVal: active.hasS && circuit.zetsuenS != null ? circuit.zetsuenS : '',
+    tVal: active.hasT && circuit.zetsuenT != null ? circuit.zetsuenT : '',
+    remarks: circuit.p2Remarks ?? '',
+  }
+}
 
 const {
   getRowForm,
@@ -133,15 +139,14 @@ const {
   sortedData: sortedCircuits,
 } = useTableSort(filteredCircuits)
 
-const getPhaseLabels = (circuit: CircuitItem) => getCircuitPhaseLabels(isThreePhase(circuit))
-
 const handleFillAllOk = (circuit: CircuitItem) => {
   if (isRowDisabled(circuit)) return
   const form = getRowForm(circuit)
+  const active = getActivePhases(circuit)
 
-  form.rVal = 100
-  form.sVal = 100
-  form.tVal = 100
+  form.rVal = active.hasR ? 100 : ''
+  form.sVal = active.hasS ? 100 : ''
+  form.tVal = active.hasT ? 100 : ''
 }
 
 const evaluateStatus = (val: number | null, circuit: CircuitItem): 'OK' | 'NG' | null => {
@@ -171,16 +176,17 @@ const isComplete = (c: CircuitItem) => {
 
 const handleConfirmCircuit = (circuit: CircuitItem) => {
   const form = getRowForm(circuit)
+  const active = getActivePhases(circuit)
 
-  const rNum = parseNullableNumber(form.rVal)
-  const sNum = parseNullableNumber(form.sVal)
-  const tNum = parseNullableNumber(form.tVal)
+  const rNum = active.hasR ? parseNullableNumber(form.rVal) : null
+  const sNum = active.hasS ? parseNullableNumber(form.sVal) : null
+  const tNum = active.hasT ? parseNullableNumber(form.tVal) : null
 
-  const rStatus = evaluateStatus(rNum, circuit)
-  const sStatus = evaluateStatus(sNum, circuit)
-  const tStatus = evaluateStatus(tNum, circuit)
+  const rStatus = active.hasR ? evaluateStatus(rNum, circuit) : null
+  const sStatus = active.hasS ? evaluateStatus(sNum, circuit) : null
+  const tStatus = active.hasT ? evaluateStatus(tNum, circuit) : null
 
-  const isAllOk = rStatus === 'OK' && sStatus === 'OK' && tStatus === 'OK'
+  const isAllOk = isPhase2MeasurementsPass(active, rStatus, sStatus, tStatus)
 
   markConfirmedLocally(circuit)
 
@@ -270,29 +276,38 @@ onMounted(() => {
       </template>
 
       <template #cell-zetsuenR="{ row: circuit }">
-        <div class="flex flex-col items-center gap-inline-gap">
-          <span class="cell-label">{{ getPhaseLabels(circuit).phase1 }}</span>
+        <div v-if="getActivePhases(circuit).hasR" class="flex flex-col items-center gap-inline-gap">
+          <span class="cell-label">{{ getActivePhases(circuit).labelR }}</span>
           <Input v-model="getRowForm(circuit).rVal" type="number" step="0.01" inputmode="decimal" placeholder="100" :error="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).rVal, circuit.haidenHoushiki)" :disabled="isRowDisabled(circuit)" class="w-[85px]" @keydown.enter.prevent="handleConfirmCircuit(circuit)" />
           <span v-if="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).rVal, circuit.haidenHoushiki)" class="cell-warning-sub">基準値未満です</span>
           <Badge v-if="isConfirmed(circuit) && circuit.p2RStatus" :variant="circuit.p2RStatus === 'OK' ? 'green' : 'red'">{{ circuit.p2RStatus }}</Badge>
         </div>
+        <div v-else class="cell-inactive flex items-center justify-center">
+          <span class="cell-dash">-</span>
+        </div>
       </template>
 
       <template #cell-zetsuenS="{ row: circuit }">
-        <div class="flex flex-col items-center gap-inline-gap">
-          <span class="cell-label">{{ getPhaseLabels(circuit).phase2 }}</span>
+        <div v-if="getActivePhases(circuit).hasS" class="flex flex-col items-center gap-inline-gap">
+          <span class="cell-label">{{ getActivePhases(circuit).labelS }}</span>
           <Input v-model="getRowForm(circuit).sVal" type="number" step="0.01" inputmode="decimal" placeholder="100" :error="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).sVal, circuit.haidenHoushiki)" :disabled="isRowDisabled(circuit)" class="w-[85px]" @keydown.enter.prevent="handleConfirmCircuit(circuit)" />
           <span v-if="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).sVal, circuit.haidenHoushiki)" class="cell-warning-sub">基準値未満です</span>
           <Badge v-if="isConfirmed(circuit) && circuit.p2SStatus" :variant="circuit.p2SStatus === 'OK' ? 'green' : 'red'">{{ circuit.p2SStatus }}</Badge>
         </div>
+        <div v-else class="cell-inactive flex items-center justify-center">
+          <span class="cell-dash">-</span>
+        </div>
       </template>
 
       <template #cell-zetsuenT="{ row: circuit }">
-        <div class="flex flex-col items-center gap-inline-gap">
-          <span class="cell-label">{{ getPhaseLabels(circuit).phase3 }}</span>
+        <div v-if="getActivePhases(circuit).hasT" class="flex flex-col items-center gap-inline-gap">
+          <span class="cell-label">{{ getActivePhases(circuit).labelT }}</span>
           <Input v-model="getRowForm(circuit).tVal" type="number" step="0.01" inputmode="decimal" placeholder="100" :error="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).tVal, circuit.haidenHoushiki)" :disabled="isRowDisabled(circuit)" class="w-[85px]" @keydown.enter.prevent="handleConfirmCircuit(circuit)" />
           <span v-if="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).tVal, circuit.haidenHoushiki)" class="cell-warning-sub">基準値未満です</span>
           <Badge v-if="isConfirmed(circuit) && circuit.p2TStatus" :variant="circuit.p2TStatus === 'OK' ? 'green' : 'red'">{{ circuit.p2TStatus }}</Badge>
+        </div>
+        <div v-else class="cell-inactive flex items-center justify-center">
+          <span class="cell-dash">-</span>
         </div>
       </template>
 
@@ -356,6 +371,11 @@ onMounted(() => {
   font-family: var(--font-mono);
   font-size: var(--font-size-2xs);
   color: var(--color-text-muted);
+}
+
+.cell-inactive {
+  user-select: none;
+  min-height: 40px;
 }
 
 .textarea-remarks {

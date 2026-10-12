@@ -13,6 +13,8 @@ import type { Circuit } from '@prisma/client'
 import type ExcelJS from 'exceljs'
 import JSZip from 'jszip'
 
+import { getPhase2ActivePhases } from '#shared/utils/soudenExam'
+
 import { prisma } from '../prisma'
 import { setCellStringWithNewlines } from './cellFormat'
 import { type CircuitColumnMap, DEFAULT_CIRCUIT_COLUMN_MAP, makeCircuitKey } from './circuitMapping'
@@ -53,8 +55,10 @@ export function applyCircuitToRow(
 
   // Phase 2 書戻し
   if (c.p2ConfirmedAt || c.p2IsComplete) {
+    const active = getPhase2ActivePhases(c.souShubetsu, c.haidenHoushiki)
+
     // R相
-    if (colMap.zetsuenR !== undefined) {
+    if (colMap.zetsuenR !== undefined && active.hasR) {
       if (c.p2RStatus === '良好') {
         row.getCell(colMap.zetsuenR).value = c.keiTo === '幹線' ? 500 : 100
       }
@@ -64,7 +68,7 @@ export function applyCircuitToRow(
     }
 
     // S相
-    if (colMap.zetsuenS !== undefined) {
+    if (colMap.zetsuenS !== undefined && active.hasS) {
       if (c.p2SStatus === '良好') {
         row.getCell(colMap.zetsuenS).value = c.keiTo === '幹線' ? 500 : 100
       }
@@ -74,7 +78,7 @@ export function applyCircuitToRow(
     }
 
     // T相
-    if (colMap.zetsuenT !== undefined) {
+    if (colMap.zetsuenT !== undefined && active.hasT) {
       if (c.p2TStatus === '良好') {
         row.getCell(colMap.zetsuenT).value = c.keiTo === '幹線' ? 500 : 100
       }
@@ -754,8 +758,10 @@ export async function generateCircuitsExcelBuffer(
 
     // Phase 2 書戻し
     if (c.p2ConfirmedAt || c.p2IsComplete) {
+      const active = getPhase2ActivePhases(c.souShubetsu, c.haidenHoushiki)
+
       // R相
-      if (colMap.zetsuenR) {
+      if (colMap.zetsuenR && active.hasR) {
         const style = resolveStyle(colMap.zetsuenR, 'number')
 
         if (c.p2RStatus === '良好') {
@@ -768,7 +774,7 @@ export async function generateCircuitsExcelBuffer(
         }
       }
       // S相
-      if (colMap.zetsuenS) {
+      if (colMap.zetsuenS && active.hasS) {
         const style = resolveStyle(colMap.zetsuenS, 'number')
 
         if (c.p2SStatus === '良好') {
@@ -781,7 +787,7 @@ export async function generateCircuitsExcelBuffer(
         }
       }
       // T相
-      if (colMap.zetsuenT) {
+      if (colMap.zetsuenT && active.hasT) {
         const style = resolveStyle(colMap.zetsuenT, 'number')
 
         if (c.p2TStatus === '良好') {
