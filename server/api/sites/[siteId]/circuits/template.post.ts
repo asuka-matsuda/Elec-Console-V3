@@ -64,6 +64,28 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  const MAX_EXCEL_FILE_SIZE = 20 * 1024 * 1024 // 20MB
+
+  if (uploadedFile.data.length > MAX_EXCEL_FILE_SIZE) {
+    throw createError({
+      statusCode: 413,
+      statusMessage: 'Payload Too Large',
+      message: 'アップロード可能なファイルサイズは最大20MBまでです。',
+    })
+  }
+
+  if (
+    uploadedFile.data.length < 4
+    || uploadedFile.data[0] !== 0x50
+    || uploadedFile.data[1] !== 0x4B
+  ) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Bad Request',
+      message: '無効なファイル形式です。有効なExcelファイル（.xlsx / .xlsm）を指定してください。',
+    })
+  }
+
   const rawExt = path.extname(uploadedFile.filename || '').toLowerCase()
 
   if (rawExt !== '.xlsx' && rawExt !== '.xlsm') {

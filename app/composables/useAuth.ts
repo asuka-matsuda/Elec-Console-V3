@@ -13,8 +13,8 @@ import { STATE_KEYS } from '~/constants/storageKeys'
 import { generateSalt, hashPasswordClient, verifyPasswordClient } from '~/utils/crypto'
 import { AuthCacheRepository } from '~/utils/db'
 
-// オフライン猶予期間: 30日間
-const OFFLINE_AUTH_VALIDITY_DAYS = 30
+// オフライン猶予期間: 14日間（2週間）
+const OFFLINE_AUTH_VALIDITY_DAYS = 14
 
 export function useAuth() {
   const token = useCookie<string | null>('auth_token', {
@@ -83,7 +83,7 @@ export function useAuth() {
     return false
   }
 
-  const initAuth = async (force = false) => {
+  const initAuth = async (_force = false) => {
     const $api = getApiSafe()
 
     // 1. メモリに currentUser がなく、クライアント環境の場合、まず IndexedDB (AuthCacheRepository) から復元
@@ -108,8 +108,8 @@ export function useAuth() {
 
     if (!$api) return
 
-    // 2. トークンがある場合はサーバーへセッション検証を試みる
-    if (token.value && (!currentUser.value || force)) {
+    // 2. トークンがある場合はサーバーへセッション検証・最新状態の同期（SWRパターン: Stale-While-Revalidate）
+    if (token.value) {
       try {
         const data = await $api<{ success: boolean, user: User, serverTime?: string }>(
           '/api/auth/me',
@@ -119,21 +119,50 @@ export function useAuth() {
           currentUser.value = data.user
           isOfflineSession.value = false
           setServerTimeOffset(data.serverTime)
+
+          // サーバーの最新ユーザー情報で IndexedDB キャッシュも同期更新
+          if (import.meta.client) {
+            try {
+              const cached = await AuthCacheRepository.get(data.user.loginId)
+
+              if (cached) {
+                await AuthCacheRepository.put({
+                  ...cached,
+                  user: data.user,
+                  serverTimeOffset: serverTimeOffset.value,
+                })
+              }
+            }
+            catch (cacheErr) {
+              console.warn('[useAuth] Failed to sync auth cache with server state', cacheErr)
+            }
+          }
         }
         else if (!isOfflineSession.value) {
           logout()
         }
       }
-      catch (_err: unknown) {
-        // オフライン（圏外）またはネットワークエラー時はキャッシュから復元してセッションを維持
+      catch (err: unknown) {
+        // 401（未認証・セッション無効）時は正当にログアウト
+        const fetchErr = err as { statusCode?: number, status?: number }
+        const status = fetchErr?.statusCode || fetchErr?.status
+
+        if (status === 401) {
+          logout()
+
+          return
+        }
+
+        // オフライン（圏外）またはネットワークエラー時は復元済みキャッシュでセッションを維持
         if (import.meta.client) {
           isOfflineSession.value = true
-          // すでに currentUser が復元されていれば何もしない
+
+          // すでに currentUser が復元されていれば維持
           if (currentUser.value) {
             return
           }
 
-          // IndexedDB から復元を試行
+          // 未復元の場合は IndexedDB から復元を試行
           try {
             const cachedRecords = await AuthCacheRepository.getAll()
 
@@ -145,19 +174,17 @@ export function useAuth() {
               if (typeof latest.serverTimeOffset === 'number') {
                 serverTimeOffset.value = latest.serverTimeOffset
               }
-
-              return
             }
           }
           catch {
-            // パース失敗
+            // パース失敗無視
           }
         }
       }
     }
   }
 
-  const login = async (loginId: string, pass: string) => {
+  const login = async (loginId: string, pass: string, validForCurrentMonth = false) => {
     const trimmedId = loginId.trim()
     const $api = getApiSafe()
 
@@ -172,9 +199,10 @@ export function useAuth() {
           user: User
           mustChangePassword?: boolean
           serverTime?: string
+          expiresAt?: string
         }>('/api/auth/login', {
           method: 'POST',
-          body: { loginId: trimmedId, password: pass },
+          body: { loginId: trimmedId, password: pass, validForCurrentMonth },
         })
 
         if (response && response.success) {
@@ -189,7 +217,10 @@ export function useAuth() {
               const salt = generateSalt(16)
               const hash = await hashPasswordClient(pass, salt)
               const now = new Date()
-              const expiresAt = new Date(now.getTime() + OFFLINE_AUTH_VALIDITY_DAYS * 24 * 60 * 60 * 1000).toISOString()
+              const expiresAt = response.expiresAt
+                || (validForCurrentMonth
+                  ? new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999).toISOString()
+                  : new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString())
 
               await AuthCacheRepository.put({
                 loginId: response.user.loginId,
@@ -281,10 +312,14 @@ export function useAuth() {
     if (!$api) return { success: false, message: 'APIクライアントが初期化されていません。' }
 
     try {
-      await $api('/api/auth/password', {
+      const response = await $api<{ success: boolean, token?: string }>('/api/auth/password', {
         method: 'PUT',
         body: { newPassword, currentPassword },
       })
+
+      if (response?.token) {
+        token.value = response.token
+      }
 
       if (currentUser.value) {
         currentUser.value.requirePasswordReset = false

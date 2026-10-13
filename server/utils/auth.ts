@@ -36,6 +36,7 @@ interface TokenPayload {
   uid: string
   loginId: string
   role: string
+  pwdSig?: string
   iat: number
   exp: number
 }
@@ -92,14 +93,19 @@ function getAuthSecret(): string {
  * 有効期限: 7日間
  */
 export function generateAuthToken(
-  user: { id: string, loginId: string, role: string },
+  user: { id: string, loginId: string, role: string, password?: string },
   expiresInSeconds = 7 * 24 * 60 * 60,
 ): string {
   const now = Math.floor(Date.now() / 1000)
+  const pwdSig = user.password
+    ? crypto.createHash('sha256').update(user.password).digest('hex').substring(0, 16)
+    : undefined
+
   const payload: TokenPayload = {
     uid: user.id,
     loginId: user.loginId,
     role: user.role,
+    pwdSig,
     iat: now,
     exp: now + expiresInSeconds,
   }
@@ -184,6 +190,15 @@ export async function getAuthUser(event: H3Event): Promise<SafeUser | null> {
 
   if (!user || !user.isActive || user.loginId !== verified.loginId) {
     return null
+  }
+
+  // パスワード変更・初期化検知（パスワード変更後は古いセッショントークンを即座に失効させる）
+  if (verified.pwdSig && user.password) {
+    const currentPwdSig = crypto.createHash('sha256').update(user.password).digest('hex').substring(0, 16)
+
+    if (verified.pwdSig !== currentPwdSig) {
+      return null
+    }
   }
 
   const assignedSiteIds = user.assignedSites.map(s => s.id)

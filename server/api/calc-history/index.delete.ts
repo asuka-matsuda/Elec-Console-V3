@@ -7,16 +7,16 @@
 
 import { defineEventHandler, getQuery } from 'h3'
 
-import { getAuthUser } from '../../utils/auth'
+import { requireAuthUser } from '../../utils/auth'
 import { prisma } from '../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  const user = await getAuthUser(event)
+  const user = await requireAuthUser(event)
   const query = getQuery(event)
   const id = query.id as string | undefined
   const toolId = query.toolId as string | undefined
 
-  const settingKey = `calc_history_${user?.loginId || 'shared'}`
+  const settingKey = `calc_history_${user.loginId}`
 
   try {
     const setting = await prisma.systemSetting.findUnique({

@@ -6,9 +6,9 @@
  * @permission 認証済みユーザー
  */
 
-import { createError, defineEventHandler, readBody } from 'h3'
+import { createError, defineEventHandler, readBody, setCookie } from 'h3'
 
-import { requireAuthUser } from '../../utils/auth'
+import { generateAuthToken, requireAuthUser } from '../../utils/auth'
 import { hashPassword, verifyPassword } from '../../utils/password'
 import { prisma } from '../../utils/prisma'
 
@@ -64,7 +64,7 @@ export default defineEventHandler(async (event) => {
 
   const hashedPassword = hashPassword(newPassword)
 
-  await prisma.user.update({
+  const updatedUser = await prisma.user.update({
     where: { id: user.id },
     data: {
       password: hashedPassword,
@@ -72,5 +72,15 @@ export default defineEventHandler(async (event) => {
     },
   })
 
-  return { success: true }
+  // 新しいパスワードに対応する暗号署名付きセッショントークンを発行
+  const newToken = generateAuthToken(updatedUser)
+
+  setCookie(event, 'auth_token', newToken, {
+    path: '/',
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 60 * 60 * 24 * 7,
+  })
+
+  return { success: true, token: newToken }
 })

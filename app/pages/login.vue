@@ -17,6 +17,7 @@ const { login } = useAuth()
 const userId = ref('')
 const password = ref('')
 const showPassword = ref(false)
+const validForCurrentMonth = ref(false)
 const errorMessage = ref('')
 const isLoading = ref(false)
 
@@ -34,7 +35,7 @@ const handleLogin = async () => {
   isLoading.value = true
 
   try {
-    const result = await login(trimmedUserId, password.value)
+    const result = await login(trimmedUserId, password.value, validForCurrentMonth.value)
 
     if (result.success) {
       if (result.mustChangePassword) {
@@ -82,6 +83,16 @@ const handleLogin = async () => {
             </button>
           </template>
         </Input>
+      </div>
+
+      <!-- 当月内有効オプション -->
+      <div class="flex items-center">
+        <Checkbox
+          id="login-valid-current-month"
+          v-model="validForCurrentMonth"
+          label="当月内有効（当月末までログイン状態を保持）"
+          :disabled="isLoading"
+        />
       </div>
 
       <Button type="submit" variant="primary" size="lg" block :loading="isLoading">ログインする</Button>

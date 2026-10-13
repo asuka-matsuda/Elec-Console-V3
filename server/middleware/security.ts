@@ -132,8 +132,13 @@ export default defineEventHandler(async (event) => {
   // パターンB: 既に通行証Cookieを持っている端末
   const gateCookie = getCookie(event, 'elec_gate_pass')
 
-  if (gateCookie && gateCookie === expectedGateSignature) {
-    return
+  if (gateCookie && typeof gateCookie === 'string') {
+    const bufCookie = Buffer.from(gateCookie)
+    const bufExpected = Buffer.from(expectedGateSignature)
+
+    if (bufCookie.length === bufExpected.length && crypto.timingSafeEqual(bufCookie, bufExpected)) {
+      return
+    }
   }
 
   // パターンC: 既にログインセッショントークンを正当に持っている場合

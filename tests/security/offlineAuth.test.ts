@@ -53,7 +53,7 @@ describe('Offline Authentication (Web Crypto API & Local-First)', () => {
     const salt = generateSalt(16)
     const hash = await hashPasswordClient('offline-pass', salt)
     const now = new Date()
-    const expiresAt = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString()
+    const expiresAt = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000).toISOString()
 
     // 事前キャッシュを登録
     await AuthCacheRepository.put({
@@ -103,7 +103,7 @@ describe('Offline Authentication (Web Crypto API & Local-First)', () => {
     const salt = generateSalt(16)
     const hash = await hashPasswordClient('offline-pass', salt)
     const now = new Date()
-    const expiresAt = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000).toISOString()
+    const expiresAt = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000).toISOString()
     const simulatedOffsetMs = 5000 // 5秒のサーバー時刻オフセット
 
     await AuthCacheRepository.put({

@@ -21,10 +21,11 @@ import { validateRequestBody } from '../../utils/validation'
 const LoginBodySchema = z.object({
   loginId: z.string().min(1, 'ログインIDとパスワードを入力してください。'),
   password: z.string().min(1, 'ログインIDとパスワードを入力してください。'),
+  validForCurrentMonth: z.boolean().optional(),
 })
 
 export default defineEventHandler(async (event) => {
-  const { loginId, password } = await validateRequestBody(event, LoginBodySchema)
+  const { loginId, password, validForCurrentMonth } = await validateRequestBody(event, LoginBodySchema)
 
   const clientIp = getRequestIP(event, { xForwardedFor: true }) || '127.0.0.1'
   const ipKey = `login:ip:${clientIp}`
@@ -110,15 +111,28 @@ export default defineEventHandler(async (event) => {
     data: updateData,
   })
 
+  // セッション有効期限の算出（デフォルト: 当日限り24時間、当月内有効指定時: 当月末日23:59:59）
+  let expiresInSeconds = 24 * 60 * 60 // 24時間
+  let expiresAt = new Date(Date.now() + expiresInSeconds * 1000)
+
+  if (validForCurrentMonth) {
+    const now = new Date()
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999)
+    const remainingSeconds = Math.floor((endOfMonth.getTime() - now.getTime()) / 1000)
+
+    expiresInSeconds = Math.max(60, remainingSeconds)
+    expiresAt = endOfMonth
+  }
+
   // 暗号署名付きセッショントークンの発行
-  const token = generateAuthToken(user)
+  const token = generateAuthToken(user, expiresInSeconds)
 
   // クッキーにも安全な属性を付与して保存
   setCookie(event, 'auth_token', token, {
     path: '/',
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 60 * 60 * 24 * 7,
+    maxAge: expiresInSeconds,
   })
 
   const assignedSiteIds = user.assignedSites.map(s => s.id)
@@ -139,5 +153,7 @@ export default defineEventHandler(async (event) => {
     user: safeUser,
     mustChangePassword: user.requirePasswordReset,
     serverTime: new Date().toISOString(),
+    expiresAt: expiresAt.toISOString(),
+    expiresInSeconds,
   }
 })

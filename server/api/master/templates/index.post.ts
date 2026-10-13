@@ -118,12 +118,34 @@ export default defineEventHandler(async (event) => {
   }
 
   if (fileData && originalFilename) {
+    const MAX_TEMPLATE_SIZE = 20 * 1024 * 1024 // 20MB
+
+    if (fileData.length > MAX_TEMPLATE_SIZE) {
+      throw createError({
+        statusCode: 413,
+        statusMessage: 'Payload Too Large',
+        message: 'アップロード可能なファイルサイズは最大20MBまでです。',
+      })
+    }
+
     const ext = path.extname(originalFilename).toLowerCase()
 
     if (ext !== '.xlsx' && ext !== '.xlsm' && ext !== '.xls') {
       throw createError({
         statusCode: 400,
         message: 'Excelファイル形式（.xlsx, .xlsm, .xls）のみアップロード可能です',
+      })
+    }
+
+    // マジックバイト検証 (ZIP または OLE CFB)
+    const isZip = fileData.length >= 4 && fileData[0] === 0x50 && fileData[1] === 0x4B
+    const isOle = fileData.length >= 4 && fileData[0] === 0xD0 && fileData[1] === 0xCF
+
+    if (!isZip && !isOle) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: 'Bad Request',
+        message: '無効なファイル形式です。有効なExcelファイルを指定してください。',
       })
     }
   }

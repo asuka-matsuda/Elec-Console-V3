@@ -185,4 +185,20 @@ describe('Site Access Authorization (User Requirement: Only master has global si
     expect(getSiteRole(userWithAssignments, 'site-c')).toBeNull()
     expect(isSiteAdmin(userWithAssignments, 'site-c')).toBe(false)
   })
+
+  it('should include pwdSig in token when password is provided', () => {
+    const userWithPassword = {
+      id: 'user-pwd-1',
+      loginId: 'worker_pwd',
+      role: 'worker',
+      password: 'hashed-password-12345',
+    }
+
+    const token = generateAuthToken(userWithPassword)
+    const verified = verifyAuthToken(token)
+
+    expect(verified).not.toBeNull()
+    expect(verified?.pwdSig).toBeDefined()
+    expect(verified?.pwdSig).toHaveLength(16)
+  })
 })
