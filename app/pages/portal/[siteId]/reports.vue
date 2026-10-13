@@ -68,7 +68,7 @@ const availableTemplatesForCategory = computed(() => {
 const templateSelectOptions = computed<SelectOption[]>(() => {
   return availableTemplatesForCategory.value.map(t => ({
     value: t.id,
-    label: `${t.name} (${t.file.filename})`,
+    label: t.name,
   }))
 })
 
