@@ -41,16 +41,22 @@ export default defineNuxtConfig({
       ],
       script: [
         { src: '/theme-init.js' },
-        {
-          src: 'https://www.googletagmanager.com/gtag/js?id=G-PGXDEMZD7J',
-          async: true,
-        },
-        {
-          innerHTML: `window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-PGXDEMZD7J');`,
-        },
+        ...(process.env.NODE_ENV === 'production'
+          ? [
+              {
+                src: 'https://www.googletagmanager.com/gtag/js?id=G-PGXDEMZD7J',
+                async: true,
+              },
+              {
+                innerHTML: `if (window.location.hostname === 'app.mat-ope.com') {
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PGXDEMZD7J');
+}`,
+              },
+            ]
+          : []),
       ],
     },
   },
