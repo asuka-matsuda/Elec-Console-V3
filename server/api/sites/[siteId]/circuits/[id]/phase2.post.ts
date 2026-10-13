@@ -9,6 +9,7 @@
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { getPhase2ActivePhases, isPhase2MeasurementsPass } from '#shared/utils/soudenExam'
+import { getUserDisplayName } from '#shared/utils/user'
 
 import { requireSiteRole } from '../../../../../utils/auth'
 import { atomicUpdateCircuit } from '../../../../../utils/optimisticLock'
@@ -27,7 +28,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const body = await readBody(event)
-  const workerName = `${user.lastName} ${user.firstName}`.trim() || user.loginId
+  const workerName = getUserDisplayName(user)
   const confirmedAt = body.clientConfirmedAt ? new Date(body.clientConfirmedAt) : new Date()
 
   let isComplete = body.isComplete !== undefined ? Boolean(body.isComplete) : undefined

@@ -11,6 +11,9 @@ import path from 'node:path'
 
 import { createError, defineEventHandler, getHeader, getRouterParam, readBody, readMultipartFormData } from 'h3'
 
+import { sanitizeFilename } from '#shared/utils/filename'
+import { getUserDisplayName } from '#shared/utils/user'
+
 import { requireSiteRole } from '../../../../utils/auth'
 import { importCircuitsFromExcel } from '../../../../utils/excel/circuitImport'
 import { validateSafeExcelPath } from '../../../../utils/excel/safePath'
@@ -114,7 +117,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const workerName = `${user.lastName} ${user.firstName}`.trim() || user.loginId
+    const workerName = getUserDisplayName(user)
     const source = uploadedFile ? uploadedFile.data : targetPath
     const result = await importCircuitsFromExcel(
       siteId,
@@ -134,7 +137,7 @@ export default defineEventHandler(async (event) => {
 
       const rawExt = path.extname(uploadedFile.filename || '').toLowerCase()
       const ext = rawExt === '.xlsm' ? '.xlsm' : '.xlsx'
-      const baseName = path.basename(uploadedFile.filename || '回路台帳', rawExt).replace(/[\\/:*?"<>|]/g, '_')
+      const baseName = sanitizeFilename(path.basename(uploadedFile.filename || '回路台帳', rawExt), '回路台帳')
 
       effectiveFilePath = path.join(storageDir, `${baseName}${ext}`)
 

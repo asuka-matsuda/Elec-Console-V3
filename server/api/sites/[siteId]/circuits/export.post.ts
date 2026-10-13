@@ -8,6 +8,8 @@
 
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
+import { getUserDisplayName } from '#shared/utils/user'
+
 import { requireSiteRole } from '../../../../utils/auth'
 import { exportCircuitsToExcel } from '../../../../utils/excel/circuitExport'
 import { validateSafeExcelPath } from '../../../../utils/excel/safePath'
@@ -54,7 +56,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const workerName = `${user.lastName} ${user.firstName}`.trim() || user.loginId
+    const workerName = getUserDisplayName(user)
     const result = await exportCircuitsToExcel(siteId, targetPath, workerName)
 
     return {

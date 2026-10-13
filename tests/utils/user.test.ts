@@ -1,8 +1,6 @@
-import { describe, expect, it } from 'vitest'
+import { formatUserFullName, formatUserKana, getUserDisplayName } from '../../shared/utils/user'
 
-import { formatUserFullName, formatUserKana } from '../../app/utils/user'
-
-describe('app/utils/user.ts', () => {
+describe('shared/utils/user.ts', () => {
   describe('formatUserFullName', () => {
     it('姓と名が設定されている場合、半角スペース区切りで結合すること', () => {
       expect(formatUserFullName({ lastName: '松田', firstName: '飛鳥' })).toBe('松田 飛鳥')
@@ -41,6 +39,21 @@ describe('app/utils/user.ts', () => {
       expect(formatUserKana({ lastNameKana: '', firstNameKana: '' })).toBe('')
       expect(formatUserKana(null)).toBe('')
       expect(formatUserKana(undefined)).toBe('')
+    })
+  })
+
+  describe('getUserDisplayName', () => {
+    it('フルネームが存在する場合は姓名を返すこと', () => {
+      expect(getUserDisplayName({ lastName: '松田', firstName: '飛鳥', loginId: 'asuka' })).toBe('松田 飛鳥')
+    })
+
+    it('姓名がない場合はloginIdを返すこと', () => {
+      expect(getUserDisplayName({ lastName: '', firstName: '', loginId: 'asuka' })).toBe('asuka')
+    })
+
+    it('姓名もloginIdもない場合はフォールバックを返すこと', () => {
+      expect(getUserDisplayName({ lastName: '', firstName: '', loginId: '' })).toBe('現場作業者')
+      expect(getUserDisplayName(null, 'ゲスト')).toBe('ゲスト')
     })
   })
 })

@@ -28,10 +28,12 @@ export default defineEventHandler(async (event) => {
   const { loginId, password, validForCurrentMonth } = await validateRequestBody(event, LoginBodySchema)
 
   const clientIp = getRequestIP(event, { xForwardedFor: true }) || '127.0.0.1'
+  const trimmedLoginId = loginId.trim()
   const ipKey = `login:ip:${clientIp}`
-  const accountKey = `login:account:${loginId.trim()}`
+  const accountKey = `login:account:${clientIp}:${trimmedLoginId}`
+  const globalAccountKey = `login:global:${trimmedLoginId}`
 
-  // レートリミット（ブルートフォース保護）の二重チェック
+  // レートリミット（ブルートフォース保護）のチェック
   // 1. IP単位の過剰失敗チェック (15分に15回)
   const ipLimitStatus = checkRateLimit(ipKey, 15)
 
@@ -45,7 +47,8 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // 2. アカウント単位の連続失敗チェック (5回)
+  // 2. IP＋アカウント単位の連続失敗チェック (5回)
+  // 特定ユーザーのロックアウトDoSを防止するため、接続元IPと組み合わせたキーでブロック
   const accountLimitStatus = checkRateLimit(accountKey, 5)
 
   if (accountLimitStatus.isBlocked) {
@@ -53,27 +56,40 @@ export default defineEventHandler(async (event) => {
 
     throw createAppError({
       code: ErrorCode.SYS_RATE_LIMITED,
-      message: `該当アカウントのログイン試行回数が上限を超えました。安全のため約${remainingMinutes}分後に再度お試しください。`,
+      message: `ログイン試行回数が上限を超えました。安全のため約${remainingMinutes}分後に再度お試しください。`,
       details: { remainingMinutes },
     })
   }
 
+  // 3. 分散ブルートフォース対策: アカウント全体の失敗回数が多い場合は遅延を挿入（正規利用者の完全ロックアウトは回避）
+  const globalLimitStatus = checkRateLimit(globalAccountKey, 10)
+
+  if (globalLimitStatus.attemptsLeft <= 2) {
+    await new Promise(resolve => setTimeout(resolve, 1000))
+  }
+
   const user = await prisma.user.findUnique({
-    where: { loginId: loginId.trim() },
+    where: { loginId: trimmedLoginId },
     include: { assignedSites: true, siteAssignments: true },
   })
 
-  // ユーザーが存在しない場合
-  if (!user) {
+  // タイミング攻撃（Timing Attack）防止用ダミーハッシュ（PBKDF2-HMAC-SHA512 100,000回）
+  const DUMMY_HASH = 'pbkdf2:100000:a1b2c3d4e5f60718293a4b5c6d7e8f90:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef'
+
+  // ユーザーが存在しない場合でも同一の暗号計算時間を要するようにし、アカウント有無の列挙を阻止
+  const isValid = user ? verifyPassword(password, user.password) : verifyPassword(password, DUMMY_HASH)
+
+  if (!user || !isValid) {
     recordFailedAttempt(ipKey, 15)
     recordFailedAttempt(accountKey, 5)
+    recordFailedAttempt(globalAccountKey, 10)
     throw createAppError({
       code: ErrorCode.AUTH_INVALID_CREDENTIALS,
       message: 'ログインIDまたはパスワードが違います。',
     })
   }
 
-  // アカウント無効化チェック
+  // アカウント無効化チェック（パスワードが正しい正当な試行に対してのみ判定し、無効化ユーザーの露出を防止）
   if (!user.isActive) {
     throw createAppError({
       code: ErrorCode.AUTH_ACCOUNT_INACTIVE,
@@ -81,21 +97,10 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // パスワード検証（タイミングセーフ）
-  const isValid = verifyPassword(password, user.password)
-
-  if (!isValid) {
-    recordFailedAttempt(ipKey, 15)
-    recordFailedAttempt(accountKey, 5)
-    throw createAppError({
-      code: ErrorCode.AUTH_INVALID_CREDENTIALS,
-      message: 'ログインIDまたはパスワードが違います。',
-    })
-  }
-
   // 認証成功: レートリミットカウントをクリア
   clearRateLimit(accountKey)
   clearRateLimit(ipKey)
+  clearRateLimit(globalAccountKey)
 
   // 旧ハッシュ（10000回）の場合は新形式（100000回）へ自動アップグレード移行
   const updateData: { lastLoginAt: Date, password?: string } = {

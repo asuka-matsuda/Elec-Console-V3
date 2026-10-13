@@ -11,6 +11,9 @@ import path from 'node:path'
 
 import { createError, defineEventHandler, getHeader, getRouterParam, readMultipartFormData } from 'h3'
 
+import { sanitizeFilename } from '#shared/utils/filename'
+import { getUserDisplayName } from '#shared/utils/user'
+
 import { requireSiteRole } from '../../../../utils/auth'
 import { prisma } from '../../../../utils/prisma'
 
@@ -99,7 +102,7 @@ export default defineEventHandler(async (event) => {
 
   await fs.promises.mkdir(storageDir, { recursive: true })
 
-  const baseName = path.basename(uploadedFile.filename || '回路台帳', rawExt).replace(/[\\/:*?"<>|]/g, '_')
+  const baseName = sanitizeFilename(path.basename(uploadedFile.filename || '回路台帳', rawExt), '回路台帳')
   const targetFileName = `${baseName}${rawExt}`
   const targetFilePath = path.join(storageDir, targetFileName)
 
@@ -111,7 +114,7 @@ export default defineEventHandler(async (event) => {
     update: { excelPath: targetFilePath },
   })
 
-  const workerName = `${user.lastName} ${user.firstName}`.trim() || user.loginId
+  const workerName = getUserDisplayName(user)
 
   await prisma.operationLog.create({
     data: {

@@ -274,4 +274,18 @@ describe('tagReportExcel slot detection & boundary integrity', () => {
       }),
     ).rejects.toThrow('確定ロジックファイル（TS）が登録されていません')
   })
+
+  it('clusterConsecutiveNumbers properly clusters numbers based on gap', async () => {
+    const { clusterConsecutiveNumbers } = await import('../../shared/utils/tagSlotDetector')
+
+    expect(clusterConsecutiveNumbers([])).toEqual([])
+    expect(clusterConsecutiveNumbers([5])).toEqual([[5]])
+    expect(clusterConsecutiveNumbers([2, 3, 4, 9, 10, 16, 17, 18])).toEqual([
+      [2, 3, 4],
+      [9, 10],
+      [16, 17, 18],
+    ])
+    expect(clusterConsecutiveNumbers([1, 3, 5], 1)).toEqual([[1], [3], [5]])
+    expect(clusterConsecutiveNumbers([1, 3, 5], 2)).toEqual([[1, 3, 5]])
+  })
 })

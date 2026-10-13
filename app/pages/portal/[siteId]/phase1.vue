@@ -3,17 +3,16 @@
  * フェーズ1（回路確認・増締試験）画面
  * フェーズ1：回路確認・増締
  */
-import { computed, nextTick, onMounted, watch } from 'vue'
+import { computed, onMounted } from 'vue'
 
 import type { CircuitItem } from '#shared/types/circuit'
 import { usePhase1Exam } from '~/composables/portal/phase/usePhaseExam'
+import { usePhasePageSync } from '~/composables/portal/phase/usePhasePageSync'
 import { usePhaseTableForm } from '~/composables/portal/phase/usePhaseTableForm'
-import { useOfflineSync } from '~/composables/portal/useOfflineSync'
 import { useTableSort } from '~/composables/useTableSort'
 import { PHASE1_TABLE_COLUMNS } from '~/constants/soudenConstants'
 import { formatShortDateTime } from '~/utils/date'
 import { getSoudenRowClass } from '~/utils/souden'
-import { scrollToTableRow } from '~/utils/table'
 
 useHead({ title: 'フェーズ1：回路確認・増締 - Elec-Console' })
 
@@ -35,57 +34,13 @@ const {
   confirmPhase1,
 } = usePhase1Exam(siteId, initialKeiTo.value)
 
-const { lastSyncedAt } = useOfflineSync(siteId)
-
-watch(lastSyncedAt, (newVal) => {
-  if (newVal) {
-    fetchCircuits()
-  }
+const { handleSelectCircuit } = usePhasePageSync({
+  siteId,
+  selectedKeiTo,
+  selectedBanMeisho,
+  filteredCircuits,
+  fetchCircuits,
 })
-
-watch(
-  () => route.query.kei_to,
-  (newKeiTo) => {
-    if (newKeiTo && typeof newKeiTo === 'string') {
-      selectedKeiTo.value = newKeiTo
-      fetchCircuits()
-    }
-  },
-)
-
-watch(
-  () => route.query.ban,
-  (newBan) => {
-    if (newBan && typeof newBan === 'string') {
-      selectedBanMeisho.value = newBan
-    }
-    else {
-      selectedBanMeisho.value = 'ALL'
-    }
-  },
-  { immediate: true },
-)
-
-// 遷移時にクエリで指定された回路への自動スクロール＆ハイライト
-const targetCircuitId = computed(() => route.query.targetCircuit as string | undefined)
-
-watch(
-  [filteredCircuits, targetCircuitId],
-  ([newCircuits, targetId]) => {
-    if (targetId && newCircuits && newCircuits.some(c => c.id === targetId)) {
-      nextTick(() => {
-        setTimeout(() => {
-          scrollToTableRow(targetId, 2500)
-        }, 150)
-      })
-    }
-  },
-  { immediate: true },
-)
-
-const handleSelectCircuit = (circuit: CircuitItem) => {
-  scrollToTableRow(circuit.id)
-}
 
 interface Phase1RowForm {
   kakunin: boolean

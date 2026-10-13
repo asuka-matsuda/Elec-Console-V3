@@ -9,6 +9,7 @@ import JSZip from 'jszip'
 
 import type { CircuitItem } from '#shared/types/circuit'
 import type { MeasurementDevice } from '#shared/types/measurementDevice'
+import { sanitizeFilename } from '#shared/utils/filename'
 import {
   getPhase2ActivePhases,
   isPhase1Complete,
@@ -389,7 +390,7 @@ export async function generateExamReportExcel(options: ExamReportOptions): Promi
   const uint8 = await workbook.xlsx.writeBuffer()
   const isXlsm = Boolean(options.isXlsm)
   const ext = isXlsm ? 'xlsm' : 'xlsx'
-  const safeBanName = banMeisho.replace(/[\\/:*?"<>|]/g, '_')
+  const safeBanName = sanitizeFilename(banMeisho)
   const filename = `${safeBanName}_送電試験結果.${ext}`
 
   return {
@@ -439,7 +440,7 @@ export async function generateExamReportsZip(options: ExamReportZipOptions): Pro
     compressionOptions: { level: 6 },
   })
 
-  const safeSiteName = siteName.replace(/[\\/:*?"<>|]/g, '_')
+  const safeSiteName = sanitizeFilename(siteName, '現場')
   const filename = `${safeSiteName}_送電試験結果_${banMeishoList.length}盤.zip`
 
   return {

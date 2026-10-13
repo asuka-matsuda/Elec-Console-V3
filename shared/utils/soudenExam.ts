@@ -443,6 +443,44 @@ export function getPhaseDiffItems(
   const c = clientPayload || {}
   const diffs: PhaseDiffItem[] = []
 
+  const addValueDiff = (
+    key: string,
+    label: string,
+    serverVal: unknown,
+    clientVal: unknown,
+    unit: string,
+  ) => {
+    const format = (v: unknown) => (v != null && v !== '' ? `${v} ${unit}` : '-')
+
+    diffs.push({
+      key,
+      label: `${label} (${unit})`,
+      serverValue: format(serverVal),
+      clientValue: format(clientVal),
+      isDifferent: String(serverVal ?? '') !== String(clientVal ?? ''),
+    })
+  }
+
+  const addTextDiff = (
+    key: string,
+    label: string,
+    serverVal: unknown,
+    clientVal: unknown,
+  ) => {
+    const sStr = (serverVal as string) || ''
+    const cStr = (clientVal as string) || ''
+
+    if (sStr || cStr) {
+      diffs.push({
+        key,
+        label,
+        serverValue: sStr || '-',
+        clientValue: cStr || '-',
+        isDifferent: sStr !== cStr,
+      })
+    }
+  }
+
   if (phase === 1) {
     const sKakunin = Boolean(s.p1Kakunin)
     const cKakunin = Boolean(c.kakunin)
@@ -466,138 +504,21 @@ export function getPhaseDiffItems(
       isDifferent: sMashi !== cMashi,
     })
 
-    const sBikou = (s.p1Bikou as string) || ''
-    const cBikou = (c.bikou as string) || ''
-
-    if (sBikou || cBikou) {
-      diffs.push({
-        key: 'bikou',
-        label: '備考',
-        serverValue: sBikou || '-',
-        clientValue: cBikou || '-',
-        isDifferent: sBikou !== cBikou,
-      })
-    }
+    addTextDiff('bikou', '備考', s.p1Bikou, c.bikou)
   }
   else if (phase === 2) {
-    const formatMeg = (v: unknown) => (v != null && v !== '' ? `${v} MΩ` : '-')
-    const sR = s.zetsuenR
-    const cR = c.rVal
-
-    diffs.push({
-      key: 'rVal',
-      label: 'R相 (MΩ)',
-      serverValue: formatMeg(sR),
-      clientValue: formatMeg(cR),
-      isDifferent: String(sR ?? '') !== String(cR ?? ''),
-    })
-
-    const sS = s.zetsuenS
-    const cS = c.sVal
-
-    diffs.push({
-      key: 'sVal',
-      label: 'S相 (MΩ)',
-      serverValue: formatMeg(sS),
-      clientValue: formatMeg(cS),
-      isDifferent: String(sS ?? '') !== String(cS ?? ''),
-    })
-
-    const sT = s.zetsuenT
-    const cT = c.tVal
-
-    diffs.push({
-      key: 'tVal',
-      label: 'T相 (MΩ)',
-      serverValue: formatMeg(sT),
-      clientValue: formatMeg(cT),
-      isDifferent: String(sT ?? '') !== String(cT ?? ''),
-    })
-
-    const sKiroku = (s.zetsuenKirokuSha as string) || ''
-    const cKiroku = (c.kirokuSha as string) || ''
-
-    if (sKiroku || cKiroku) {
-      diffs.push({
-        key: 'kirokuSha',
-        label: '測定者',
-        serverValue: sKiroku || '-',
-        clientValue: cKiroku || '-',
-        isDifferent: sKiroku !== cKiroku,
-      })
-    }
-
-    const sBikou = (s.p2Bikou as string) || ''
-    const cBikou = (c.bikou as string) || ''
-
-    if (sBikou || cBikou) {
-      diffs.push({
-        key: 'bikou',
-        label: '備考',
-        serverValue: sBikou || '-',
-        clientValue: cBikou || '-',
-        isDifferent: sBikou !== cBikou,
-      })
-    }
+    addValueDiff('rVal', 'R相', s.zetsuenR, c.rVal, 'MΩ')
+    addValueDiff('sVal', 'S相', s.zetsuenS, c.sVal, 'MΩ')
+    addValueDiff('tVal', 'T相', s.zetsuenT, c.tVal, 'MΩ')
+    addTextDiff('kirokuSha', '測定者', s.zetsuenKirokuSha, c.kirokuSha)
+    addTextDiff('bikou', '備考', s.p2Bikou, c.bikou)
   }
   else if (phase === 3) {
-    const formatVolt = (v: unknown) => (v != null && v !== '' ? `${v} V` : '-')
-    const sRs = s.denatsuRs
-    const cRs = c.rs
-
-    diffs.push({
-      key: 'rs',
-      label: 'RS相 (V)',
-      serverValue: formatVolt(sRs),
-      clientValue: formatVolt(cRs),
-      isDifferent: String(sRs ?? '') !== String(cRs ?? ''),
-    })
-
-    const sSt = s.denatsuSt
-    const cSt = c.st
-
-    diffs.push({
-      key: 'st',
-      label: 'ST相 (V)',
-      serverValue: formatVolt(sSt),
-      clientValue: formatVolt(cSt),
-      isDifferent: String(sSt ?? '') !== String(cSt ?? ''),
-    })
-
-    const sRt = s.denatsuRt
-    const cRt = c.rt
-
-    diffs.push({
-      key: 'rt',
-      label: 'TR相 (V)',
-      serverValue: formatVolt(sRt),
-      clientValue: formatVolt(cRt),
-      isDifferent: String(sRt ?? '') !== String(cRt ?? ''),
-    })
-
-    const sKensou = (s.kensou as string) || ''
-    const cKensou = (c.kensou as string) || ''
-
-    diffs.push({
-      key: 'kensou',
-      label: '検相',
-      serverValue: sKensou || '-',
-      clientValue: cKensou || '-',
-      isDifferent: sKensou !== cKensou,
-    })
-
-    const sBikou = (s.p3Bikou as string) || ''
-    const cBikou = (c.bikou as string) || ''
-
-    if (sBikou || cBikou) {
-      diffs.push({
-        key: 'bikou',
-        label: '備考',
-        serverValue: sBikou || '-',
-        clientValue: cBikou || '-',
-        isDifferent: sBikou !== cBikou,
-      })
-    }
+    addValueDiff('rs', 'RS相', s.denatsuRs, c.rs, 'V')
+    addValueDiff('st', 'ST相', s.denatsuSt, c.st, 'V')
+    addValueDiff('rt', 'TR相', s.denatsuRt, c.rt, 'V')
+    addTextDiff('kensou', '検相', s.kensou, c.kensou)
+    addTextDiff('bikou', '備考', s.p3Bikou, c.bikou)
   }
 
   return diffs

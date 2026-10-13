@@ -7,6 +7,7 @@ export {
   formatDateTime,
   formatShortDateTime,
   formatTime,
+  getDateComponents,
   parseDateSafe,
 } from '#shared/utils/date'
 
@@ -15,43 +16,27 @@ export {
  */
 export const formatToDateInputString = (...args: [date?: unknown, fallback?: string]): string => {
   const [date, fallback = ''] = args
-
-  if (args.length === 0) {
-    const now = new Date()
-    const y = now.getFullYear()
-    const m = String(now.getMonth() + 1).padStart(2, '0')
-    const day = String(now.getDate()).padStart(2, '0')
-
-    return `${y}-${m}-${day}`
-  }
-
-  const d = parseDateSafe(date)
+  const d = args.length === 0 ? new Date() : parseDateSafe(date)
 
   if (!d) return fallback
 
-  const y = d.getFullYear()
-  const m = String(d.getMonth() + 1).padStart(2, '0')
-  const day = String(d.getDate()).padStart(2, '0')
+  const { year, month, day } = getDateComponents(d)
 
-  return `${y}-${m}-${day}`
+  return `${year}-${month}-${day}`
 }
 
 /**
  * 今日の日付文字列を YYYY-MM-DD 形式（<input type="date"> 用）で取得する
  */
-export const getTodayDateInput = (): string => formatToDateInputString(new Date())
+export const getTodayDateInput = (): string => formatToDateInputString()
 
 /**
  * Date オブジェクトを YYYY-MM-DDTHH:mm 形式の文字列に変換する
  */
 const formatToDateTimeInputString = (date: Date): string => {
-  const y = date.getFullYear()
-  const m = String(date.getMonth() + 1).padStart(2, '0')
-  const day = String(date.getDate()).padStart(2, '0')
-  const h = String(date.getHours()).padStart(2, '0')
-  const min = String(date.getMinutes()).padStart(2, '0')
+  const { year, month, day, hours, minutes } = getDateComponents(date)
 
-  return `${y}-${m}-${day}T${h}:${min}`
+  return `${year}-${month}-${day}T${hours}:${minutes}`
 }
 
 /**

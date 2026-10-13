@@ -8,13 +8,13 @@
 import { computed } from 'vue'
 
 import { useHead } from '#app'
+import { formatUserFullName, formatUserKana } from '#shared/utils/user'
 import { useAdminSites } from '~/composables/admin/useAdminSites'
 import { useAuth } from '~/composables/useAuth'
 import { usePasswordChange } from '~/composables/usePasswordChange'
 import { useSettings } from '~/composables/useSettings'
 import { USER_ROLE_CONFIG } from '~/constants/adminConstants'
 import { THEME_SWITCH_OPTIONS } from '~/constants/colors'
-import { formatUserFullName, formatUserKana } from '~/utils/user'
 
 useHead({ title: 'マイページ - Elec-Console' })
 

@@ -6,14 +6,34 @@
  * @permission 認証済みユーザー
  */
 
-import { createError, defineEventHandler, readBody, setCookie } from 'h3'
+import { createError, defineEventHandler, getRequestIP, readBody, setCookie } from 'h3'
+
+import { ErrorCode } from '#shared/types/errors'
 
 import { generateAuthToken, requireAuthUser } from '../../utils/auth'
+import { createAppError } from '../../utils/error'
 import { hashPassword, verifyPassword } from '../../utils/password'
 import { prisma } from '../../utils/prisma'
+import { checkRateLimit, clearRateLimit, recordFailedAttempt } from '../../utils/rateLimit'
 
 export default defineEventHandler(async (event) => {
   const authUser = await requireAuthUser(event)
+  const clientIp = getRequestIP(event, { xForwardedFor: true }) || '127.0.0.1'
+  const rateLimitKey = `password_change:${authUser.id}:${clientIp}`
+
+  // ブルートフォース保護（5回連続失敗でロック）
+  const limitStatus = checkRateLimit(rateLimitKey, 5)
+
+  if (limitStatus.isBlocked) {
+    const remainingMinutes = Math.ceil(limitStatus.remainingMs / 60000)
+
+    throw createAppError({
+      code: ErrorCode.SYS_RATE_LIMITED,
+      message: `パスワード変更の試行回数が上限を超えました。安全のため約${remainingMinutes}分後に再度お試しください。`,
+      details: { remainingMinutes },
+    })
+  }
+
   const body = await readBody(event)
   const { currentPassword, newPassword } = body || {}
 
@@ -46,6 +66,7 @@ export default defineEventHandler(async (event) => {
     }
 
     if (!verifyPassword(currentPassword, user.password)) {
+      recordFailedAttempt(rateLimitKey, 5)
       throw createError({
         statusCode: 401,
         statusMessage: 'Unauthorized',
@@ -81,6 +102,9 @@ export default defineEventHandler(async (event) => {
     secure: process.env.NODE_ENV === 'production',
     maxAge: 60 * 60 * 24 * 7,
   })
+
+  // 成功時: レートリミットをクリア
+  clearRateLimit(rateLimitKey)
 
   return { success: true, token: newToken }
 })

@@ -11,6 +11,7 @@ import { computed, ref, unref, watch } from 'vue'
 import { useNuxtApp } from '#app'
 import type { CircuitActionResponse, CircuitItem, CircuitsResponse, PanelOption } from '#shared/types/circuit'
 import { isPhaseComplete } from '#shared/utils/soudenExam'
+import { getUserDisplayName } from '#shared/utils/user'
 import { useOfflineSync } from '~/composables/portal/useOfflineSync'
 import { useAuth } from '~/composables/useAuth'
 import { CircuitsRepository, SiteSettingsRepository } from '~/utils/db'
@@ -395,11 +396,7 @@ export function usePhaseExamBase(
 
   // 作業者名の取得ヘルパー
   const getWorkerName = (): string => {
-    if (currentUser.value) {
-      return `${currentUser.value.lastName} ${currentUser.value.firstName}`.trim() || currentUser.value.loginId
-    }
-
-    return '現場作業者'
+    return getUserDisplayName(currentUser.value)
   }
 
   // ローカル回路配列の更新ヘルパー

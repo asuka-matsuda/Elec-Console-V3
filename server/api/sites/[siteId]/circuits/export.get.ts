@@ -10,6 +10,9 @@ import path from 'node:path'
 
 import { createError, defineEventHandler, getRouterParam, setHeader } from 'h3'
 
+import { sanitizeFilename } from '#shared/utils/filename'
+import { getUserDisplayName } from '#shared/utils/user'
+
 import { requireSiteAccess } from '../../../../utils/auth'
 import { generateCircuitsExcelBuffer } from '../../../../utils/excel/circuitExport'
 import { prisma } from '../../../../utils/prisma'
@@ -41,7 +44,7 @@ export default defineEventHandler(async (event) => {
   try {
     const { buffer, count, isXlsm, originalFileName } = await generateCircuitsExcelBuffer(siteId, site.settings?.excelPath)
 
-    const workerName = `${user.lastName} ${user.firstName}`.trim() || user.loginId
+    const workerName = getUserDisplayName(user)
 
     await prisma.operationLog.create({
       data: {
@@ -56,7 +59,7 @@ export default defineEventHandler(async (event) => {
 
     const fallbackName = site.settings?.excelPath
       ? path.basename(site.settings.excelPath)
-      : `${(site.name || '現場').replace(/[\\/:*?"<>|]/g, '_')}.${isXlsm ? 'xlsm' : 'xlsx'}`
+      : `${sanitizeFilename(site.name, '現場')}.${isXlsm ? 'xlsm' : 'xlsx'}`
     const rawFilename = originalFileName || fallbackName
     const encodedFilename = encodeURIComponent(rawFilename)
     const contentType = isXlsm

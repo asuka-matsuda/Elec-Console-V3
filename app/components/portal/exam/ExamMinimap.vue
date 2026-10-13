@@ -61,14 +61,13 @@ const getTileClass = (c: CircuitItem): string =>
 }
 
 .minimap-tile.is-excluded {
-  border-color: var(--color-tile-empty-border);
-  opacity: 0.85;
-  background-color: var(--color-tile-empty-bg);
+  border-color: var(--color-tile-excluded-border);
+  background-color: var(--color-tile-excluded-bg);
   background-image: linear-gradient(
     45deg,
     transparent calc(50% - 0.75px),
-    #fff calc(50% - 0.75px),
-    #fff calc(50% + 0.75px),
+    var(--color-text-muted) calc(50% - 0.75px),
+    var(--color-text-muted) calc(50% + 0.75px),
     transparent calc(50% + 0.75px)
   );
 }

@@ -8,6 +8,8 @@
 
 import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
 
+import { getUserDisplayName } from '#shared/utils/user'
+
 import { requireSiteRole } from '../../../../../../utils/auth'
 import { atomicUpdateCircuit } from '../../../../../../utils/optimisticLock'
 import { prisma } from '../../../../../../utils/prisma'
@@ -25,7 +27,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const body = await readBody(event).catch(() => ({}))
-  const workerName = `${user.lastName} ${user.firstName}`.trim() || user.loginId
+  const workerName = getUserDisplayName(user)
 
   const updated = await atomicUpdateCircuit({
     circuitId,

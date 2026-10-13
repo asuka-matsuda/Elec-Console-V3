@@ -108,7 +108,8 @@ export function renderMath(mathStr: string, isDisplay = true): string {
     return katex.renderToString(mathStr, {
       displayMode: isDisplay,
       throwOnError: false,
-      trust: true,
+      // XSS対策: 危険な \url や \href などのコマンドを遮断し、装飾用の \htmlClass のみ限定許可
+      trust: context => context.command === '\\htmlClass',
       strict: 'ignore',
     })
   }

@@ -12,6 +12,32 @@ import type ExcelJS from 'exceljs'
 import type { TagSlotDef } from '#shared/types/tagTemplate'
 import { cellValueToString } from '#shared/utils/excelNormalize'
 
+/**
+ * 昇順ソートされた数値配列を、指定ギャップを超える境界でクラスタリング
+ */
+export function clusterConsecutiveNumbers(numbers: number[], maxGap = 1): number[][] {
+  if (numbers.length === 0) return []
+
+  const bands: number[][] = []
+  let currentBand: number[] = [numbers[0]!]
+
+  for (let i = 1; i < numbers.length; i++) {
+    const prev = numbers[i - 1]!
+    const curr = numbers[i]!
+
+    if (curr - prev > maxGap) {
+      bands.push(currentBand)
+      currentBand = [curr]
+    }
+    else {
+      currentBand.push(curr)
+    }
+  }
+  bands.push(currentBand)
+
+  return bands
+}
+
 export function detectTagSlotsFromSheet(
   sheet: ExcelJS.Worksheet,
   flowDirection: 'z' | 'n' = 'z',
@@ -53,87 +79,36 @@ export function detectTagSlotsFromSheet(
   const uniqueRows = Array.from(new Set(detectedCells.map(c => c.row))).sort((a, b) => a - b)
   const uniqueCols = Array.from(new Set(detectedCells.map(c => c.col))).sort((a, b) => a - b)
 
-  // 行のクラスタリング（Row Bands / 縦の段）
-  // 枠と枠の間のギャップ（gap > 1）で段を分割
-  const rowBands: number[][] = []
-  let currentRowBand: number[] = [uniqueRows[0]!]
-
-  for (let i = 1; i < uniqueRows.length; i++) {
-    const prev = uniqueRows[i - 1]!
-    const curr = uniqueRows[i]!
-
-    if (curr - prev > 1) {
-      rowBands.push(currentRowBand)
-      currentRowBand = [curr]
-    }
-    else {
-      currentRowBand.push(curr)
-    }
-  }
-  rowBands.push(currentRowBand)
-
-  // 列のクラスタリング（Col Bands / 横の列グループ）
-  const colBands: number[][] = []
-  let currentColBand: number[] = [uniqueCols[0]!]
-
-  for (let i = 1; i < uniqueCols.length; i++) {
-    const prev = uniqueCols[i - 1]!
-    const curr = uniqueCols[i]!
-
-    if (curr - prev > 1) {
-      colBands.push(currentColBand)
-      currentColBand = [curr]
-    }
-    else {
-      currentColBand.push(curr)
-    }
-  }
-  colBands.push(currentColBand)
+  // 行・列のクラスタリング（枠と枠の間のギャップ gap > 1 で分割）
+  const rowBands = clusterConsecutiveNumbers(uniqueRows)
+  const colBands = clusterConsecutiveNumbers(uniqueCols)
 
   const slots: TagSlotDef[] = []
   let slotIndex = 0
 
-  if (flowDirection === 'z') {
-    // Z順: 行優先（横方向に各列 → 次の段へ）
-    for (const rBand of rowBands) {
-      for (const cBand of colBands) {
-        const slotCells = detectedCells
-          .filter(c => rBand.includes(c.row) && cBand.includes(c.col))
-          .sort((a, b) => (a.row !== b.row ? a.row - b.row : a.col - b.col))
+  // 流し込み順（Z順: 行優先、N順: 列優先）に応じた二次元走査
+  const primaryBands = flowDirection === 'z' ? rowBands : colBands
+  const secondaryBands = flowDirection === 'z' ? colBands : rowBands
 
-        if (slotCells.length > 0) {
-          slots.push({
-            slotIndex: slotIndex++,
-            cells: slotCells.map(c => ({
-              key: c.key,
-              row: c.row,
-              col: c.col,
-              rawText: c.rawText,
-            })),
-          })
-        }
-      }
-    }
-  }
-  else {
-    // N順: 列優先（縦方向に各段 → 次の列へ）
-    for (const cBand of colBands) {
-      for (const rBand of rowBands) {
-        const slotCells = detectedCells
-          .filter(c => rBand.includes(c.row) && cBand.includes(c.col))
-          .sort((a, b) => (a.row !== b.row ? a.row - b.row : a.col - b.col))
+  for (const pBand of primaryBands) {
+    for (const sBand of secondaryBands) {
+      const rBand = flowDirection === 'z' ? pBand : sBand
+      const cBand = flowDirection === 'z' ? sBand : pBand
 
-        if (slotCells.length > 0) {
-          slots.push({
-            slotIndex: slotIndex++,
-            cells: slotCells.map(c => ({
-              key: c.key,
-              row: c.row,
-              col: c.col,
-              rawText: c.rawText,
-            })),
-          })
-        }
+      const slotCells = detectedCells
+        .filter(c => rBand.includes(c.row) && cBand.includes(c.col))
+        .sort((a, b) => (a.row !== b.row ? a.row - b.row : a.col - b.col))
+
+      if (slotCells.length > 0) {
+        slots.push({
+          slotIndex: slotIndex++,
+          cells: slotCells.map(c => ({
+            key: c.key,
+            row: c.row,
+            col: c.col,
+            rawText: c.rawText,
+          })),
+        })
       }
     }
   }

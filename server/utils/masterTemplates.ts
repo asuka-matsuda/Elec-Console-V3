@@ -13,6 +13,7 @@ import type {
   ReportLogicType,
   ReportTemplateRegisteredFile,
 } from '#shared/types/reportTemplate'
+import { sanitizeFilename } from '#shared/utils/filename'
 
 const MASTER_TEMPLATES_DIR = path.resolve(process.cwd(), '.data', 'master-templates')
 const ITEMS_METADATA_FILE = path.resolve(MASTER_TEMPLATES_DIR, 'items.json')
@@ -147,7 +148,7 @@ export async function saveMasterTemplateItem(params: {
 
   // ファイルがアップロードされている場合
   if (params.fileBuffer && params.originalFilename) {
-    const rawBaseFilename = path.basename(params.originalFilename).replace(/[\\/:*?"<>|]/g, '_')
+    const rawBaseFilename = sanitizeFilename(path.basename(params.originalFilename))
     const rawExt = path.extname(rawBaseFilename).toLowerCase() || '.xlsx'
 
     // 既存ファイルの削除

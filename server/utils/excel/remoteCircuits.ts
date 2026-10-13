@@ -8,8 +8,9 @@ import fs from 'node:fs'
 
 import ExcelJS from 'exceljs'
 
-import type { RawRemoteRow, RemoteCircuitItem } from '#shared/types/remoteControl'
-import { cellValueToString, normalizeHeaderName } from '#shared/utils/excelNormalize'
+import type { RemoteCircuitItem } from '#shared/types/remoteControl'
+import { findPreferredWorksheet } from '#shared/utils/excelNormalize'
+import { extractRemoteCircuitsFromWorksheet } from '#shared/utils/remoteCircuits'
 
 import { prisma } from '../prisma'
 import { resolveExistingExcelPath } from './safePath'
@@ -25,153 +26,11 @@ async function extractRemoteCircuitsFromExcelBuffer(
 
   await workbook.xlsx.load(buffer as unknown as ExcelJS.Buffer)
 
-  let sheet = workbook.worksheets.find(s => /回路|盤|台帳|List/i.test(s.name))
+  const sheet = findPreferredWorksheet(workbook)
 
-  if (!sheet) {
-    sheet = workbook.worksheets[0]
-  }
   if (!sheet) return []
 
-  const HEADER_TARGETS = [
-    '伝送系統', '伝送',
-    '負荷アドレス', '負荷ｱﾄﾞﾚｽ', 'アドレス', 'ｱﾄﾞﾚｽ',
-    '盤名称', '分電盤名称', '盤名',
-    '回路記号',
-    '回路番号', '回路no',
-    '回路名称', '回路名', '負荷名称',
-    'リレー番号', 'ﾘﾚｰ番号', '機器番号',
-  ]
-  const targetNorms = new Set(HEADER_TARGETS.map(normalizeHeaderName))
-
-  let headerRowIndex = 1
-  let maxScore = -1
-  let maxColCount = 0
-  const scanLimit = Math.min(sheet.rowCount || 10, 10)
-
-  for (let r = 1; r <= scanLimit; r++) {
-    const row = sheet.getRow(r)
-    let score = 0
-    let count = 0
-
-    row.eachCell({ includeEmpty: false }, (cell) => {
-      const val = cellValueToString(cell.value)
-
-      if (val) {
-        count++
-        if (targetNorms.has(normalizeHeaderName(val))) {
-          score++
-        }
-      }
-    })
-
-    if (score > maxScore || (score === maxScore && count > maxColCount)) {
-      maxScore = score
-      maxColCount = count
-      headerRowIndex = r
-    }
-  }
-
-  const headerRow = sheet.getRow(headerRowIndex)
-  let densoKeiToCol = -1
-  let fukaAddressCol = -1
-  let banMeishoCol = -1
-  let kairoKigouCol = -1
-  let kairoBangouCol = -1
-  let kairoMeishoCol = -1
-  let relayNumberCol = -1
-
-  headerRow.eachCell({ includeEmpty: false }, (cell, colNumber) => {
-    const norm = normalizeHeaderName(cellValueToString(cell.value))
-
-    if (/伝送系統|伝送/.test(norm) && densoKeiToCol === -1) {
-      densoKeiToCol = colNumber
-    }
-    else if (/負荷アドレス|負荷ｱﾄﾞﾚｽ|アドレス|ｱﾄﾞﾚｽ/.test(norm) && fukaAddressCol === -1) {
-      fukaAddressCol = colNumber
-    }
-    else if (/盤名称|分電盤名称|盤名/.test(norm) && banMeishoCol === -1) {
-      banMeishoCol = colNumber
-    }
-    else if (/回路記号/.test(norm) && kairoKigouCol === -1) {
-      kairoKigouCol = colNumber
-    }
-    else if (/回路番号|回路no/.test(norm) && kairoBangouCol === -1) {
-      kairoBangouCol = colNumber
-    }
-    else if (/負荷名称|回路名称|回路名/.test(norm) && kairoMeishoCol === -1) {
-      kairoMeishoCol = colNumber
-    }
-    else if (/リレー番号|ﾘﾚｰ番号|機器番号/.test(norm) && relayNumberCol === -1) {
-      relayNumberCol = colNumber
-    }
-  })
-
-  if (fukaAddressCol === -1) {
-    return []
-  }
-
-  const circuitMap = new Map<string, RawRemoteRow>()
-  const densoSet = new Set<string>()
-  const dataStartRow = headerRowIndex + 1
-
-  sheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
-    if (rowNumber < dataStartRow) return
-
-    const addrRaw = cellValueToString(row.getCell(fukaAddressCol).value).trim()
-    const addr = normalizeHeaderName(addrRaw)
-
-    if (!addr || addr === '-' || addr === '0-0') return
-
-    const rawDenso = densoKeiToCol !== -1 ? cellValueToString(row.getCell(densoKeiToCol).value).trim() : ''
-    const denso = rawDenso || '1'
-
-    densoSet.add(denso)
-
-    const ban = banMeishoCol !== -1 ? cellValueToString(row.getCell(banMeishoCol).value).trim() : ''
-    const kigou = kairoKigouCol !== -1 ? cellValueToString(row.getCell(kairoKigouCol).value).trim() : ''
-    const no = kairoBangouCol !== -1 ? cellValueToString(row.getCell(kairoBangouCol).value).trim() : ''
-    const name = kairoMeishoCol !== -1 ? cellValueToString(row.getCell(kairoMeishoCol).value).trim() : ''
-    const relay = relayNumberCol !== -1 ? cellValueToString(row.getCell(relayNumberCol).value).trim() : ''
-
-    const key = `${denso}:${addr}`
-
-    circuitMap.set(key, {
-      banMeisho: ban || '-',
-      kairoKigou: kigou || null,
-      kairoBangou: no || '-',
-      kairoMeisho: name || '空き',
-      relayNumber: relay || undefined,
-    })
-  })
-
-  const densoList = densoSet.size > 0 ? Array.from(densoSet).sort() : ['1']
-  const circuits: RemoteCircuitItem[] = []
-
-  for (const denso of densoList) {
-    for (let ch = 0; ch <= 63; ch++) {
-      for (let sub = 1; sub <= 4; sub++) {
-        const addr = `${ch}-${sub}`
-        const key = `${denso}:${normalizeHeaderName(addr)}`
-        const matched = circuitMap.get(key)
-
-        circuits.push({
-          id: `rc-${denso}-${addr}`,
-          siteId,
-          uniqueKey: densoList.length > 1 ? `${denso}:${addr}` : addr,
-          densoKeiTo: denso,
-          fukaAddress: addr,
-          banMeisho: matched ? matched.banMeisho : '-',
-          kairoKigou: matched ? matched.kairoKigou : null,
-          kairoBangou: matched ? matched.kairoBangou : '-',
-          kairoMeisho: matched ? matched.kairoMeisho : '空き',
-          relayNumber: matched?.relayNumber,
-          isVacant: !matched,
-        })
-      }
-    }
-  }
-
-  return circuits
+  return extractRemoteCircuitsFromWorksheet(sheet, siteId)
 }
 
 /**

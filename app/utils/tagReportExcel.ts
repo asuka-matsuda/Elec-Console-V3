@@ -20,8 +20,11 @@ import {
 } from '#shared/utils/circuitFields'
 import {
   cellValueToString,
+  detectHeaderRowIndex,
+  findPreferredWorksheet,
   normalizeHeaderName,
 } from '#shared/utils/excelNormalize'
+import { sanitizeFilename } from '#shared/utils/filename'
 import { detectTagSlotsFromSheet } from '#shared/utils/tagSlotDetector'
 import { getExcelJS } from '~/utils/excelHelper'
 
@@ -138,47 +141,14 @@ export async function extractTableFromExcel(
   await workbook.xlsx.load(excelBuffer as unknown as ExcelJS.Buffer)
 
   // 1. 回路シートを検出（名前に「回路」「盤」が含まれるシート、なければ第1シート）
-  let sheet = workbook.worksheets.find(s => /回路|盤|台帳|List/i.test(s.name))
-
-  if (!sheet) {
-    sheet = workbook.worksheets[0]
-  }
+  const sheet = findPreferredWorksheet(workbook)
 
   if (!sheet) {
     return { headers: [], rows: [] }
   }
 
   // 2. ヘッダー行の検出（設備キーワードとの一致スコアを優先し、同点ならセル数、最初の候補を採用）
-  let headerRowIndex = 1
-  let maxScore = -1
-  let maxColCount = 0
-
-  const scanLimit = Math.min(sheet.rowCount || 10, 10)
-
-  for (let r = 1; r <= scanLimit; r++) {
-    const row = sheet.getRow(r)
-    let score = 0
-    let count = 0
-
-    row.eachCell({ includeEmpty: false }, (cell) => {
-      const val = cellValueToString(cell.value)
-
-      if (val) {
-        count++
-        const norm = normalizeHeaderName(val)
-
-        if (HEADER_KEYWORDS.some(kw => norm.includes(normalizeHeaderName(kw)))) {
-          score++
-        }
-      }
-    })
-
-    if (score > maxScore || (score === maxScore && count > maxColCount)) {
-      maxScore = score
-      maxColCount = count
-      headerRowIndex = r
-    }
-  }
+  const headerRowIndex = detectHeaderRowIndex(sheet, HEADER_KEYWORDS)
 
   const headerRow = sheet.getRow(headerRowIndex)
   const headerMap = new Map<number, string>()
@@ -570,7 +540,7 @@ export async function generateTagReportExcel(
 
   // 3. バッファ書き出し
   const outBuffer = await workbook.xlsx.writeBuffer()
-  const safeSiteName = (siteName || '現場').replace(/[\\/:*?"<>|]/g, '_')
+  const safeSiteName = sanitizeFilename(siteName, '現場')
   const filename = `${safeSiteName}_タグ線名札_${totalTags}件.xlsx`
 
   return {

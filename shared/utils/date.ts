@@ -27,6 +27,20 @@ export const parseDateSafe = (date: unknown): Date | null => {
 }
 
 /**
+ * Date オブジェクトからゼロ埋めされた各日時パーツを取得する（SSoT）
+ */
+export const getDateComponents = (d: Date) => {
+  return {
+    year: String(d.getFullYear()),
+    month: String(d.getMonth() + 1).padStart(2, '0'),
+    day: String(d.getDate()).padStart(2, '0'),
+    hours: String(d.getHours()).padStart(2, '0'),
+    minutes: String(d.getMinutes()).padStart(2, '0'),
+    seconds: String(d.getSeconds()).padStart(2, '0'),
+  }
+}
+
+/**
  * 日付フォーマット (YYYY/MM/DD)
  */
 export const formatDate = (date: unknown, fallback = '-'): string => {
@@ -34,11 +48,9 @@ export const formatDate = (date: unknown, fallback = '-'): string => {
 
   if (!d) return fallback
 
-  const y = d.getFullYear()
-  const m = String(d.getMonth() + 1).padStart(2, '0')
-  const day = String(d.getDate()).padStart(2, '0')
+  const { year, month, day } = getDateComponents(d)
 
-  return `${y}/${m}/${day}`
+  return `${year}/${month}/${day}`
 }
 
 /**
@@ -53,19 +65,13 @@ export const formatDateTime = (
 
   if (!d) return fallback
 
-  const y = d.getFullYear()
-  const m = String(d.getMonth() + 1).padStart(2, '0')
-  const day = String(d.getDate()).padStart(2, '0')
-  const h = String(d.getHours()).padStart(2, '0')
-  const min = String(d.getMinutes()).padStart(2, '0')
+  const { year, month, day, hours, minutes, seconds } = getDateComponents(d)
 
   if (options.withSeconds) {
-    const s = String(d.getSeconds()).padStart(2, '0')
-
-    return `${y}/${m}/${day} ${h}:${min}:${s}`
+    return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`
   }
 
-  return `${y}/${m}/${day} ${h}:${min}`
+  return `${year}/${month}/${day} ${hours}:${minutes}`
 }
 
 /**
@@ -76,12 +82,9 @@ export const formatShortDateTime = (date: unknown, fallback = '-'): string => {
 
   if (!d) return fallback
 
-  const m = String(d.getMonth() + 1).padStart(2, '0')
-  const day = String(d.getDate()).padStart(2, '0')
-  const h = String(d.getHours()).padStart(2, '0')
-  const min = String(d.getMinutes()).padStart(2, '0')
+  const { month, day, hours, minutes } = getDateComponents(d)
 
-  return `${m}/${day} ${h}:${min}`
+  return `${month}/${day} ${hours}:${minutes}`
 }
 
 /**
@@ -92,8 +95,7 @@ export const formatTime = (date: unknown, fallback = '-'): string => {
 
   if (!d) return fallback
 
-  const h = String(d.getHours()).padStart(2, '0')
-  const min = String(d.getMinutes()).padStart(2, '0')
+  const { hours, minutes } = getDateComponents(d)
 
-  return `${h}:${min}`
+  return `${hours}:${minutes}`
 }

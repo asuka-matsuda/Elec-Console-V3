@@ -49,39 +49,25 @@ export const kfc3350Template: TagTemplateDefinition = {
 
     // 静的フォールバック（引数なし単体テスト呼び出し時やプレースホルダー未検出時）
     const slots: TagSlotDef[] = []
+    let slotIndex = 0
 
-    if (flowDirection === 'z') {
-      let slotIndex = 0
+    const primaryList = flowDirection === 'z' ? FALLBACK_START_ROWS : FALLBACK_COLS
+    const secondaryList = flowDirection === 'z' ? FALLBACK_COLS : FALLBACK_START_ROWS
 
-      for (const startRow of FALLBACK_START_ROWS) {
-        for (const col of FALLBACK_COLS) {
-          slots.push({
-            slotIndex: slotIndex++,
-            cells: FALLBACK_FIELD_OFFSETS.map(f => ({
-              key: f.key,
-              row: startRow + f.offset,
-              col,
-              rawText: `%${f.key}%`,
-            })),
-          })
-        }
-      }
-    }
-    else {
-      let slotIndex = 0
+    for (const p of primaryList) {
+      for (const s of secondaryList) {
+        const startRow = flowDirection === 'z' ? p : s
+        const col = flowDirection === 'z' ? s : p
 
-      for (const col of FALLBACK_COLS) {
-        for (const startRow of FALLBACK_START_ROWS) {
-          slots.push({
-            slotIndex: slotIndex++,
-            cells: FALLBACK_FIELD_OFFSETS.map(f => ({
-              key: f.key,
-              row: startRow + f.offset,
-              col,
-              rawText: `%${f.key}%`,
-            })),
-          })
-        }
+        slots.push({
+          slotIndex: slotIndex++,
+          cells: FALLBACK_FIELD_OFFSETS.map(f => ({
+            key: f.key,
+            row: startRow + f.offset,
+            col,
+            rawText: `%${f.key}%`,
+          })),
+        })
       }
     }
 

@@ -8,6 +8,7 @@ import {
   formatToDateInputString,
   getTodayDateInput,
 } from '../../app/utils/date'
+import { formatSyncTimeString } from '../../server/utils/date'
 
 describe('date utils', () => {
   it('formatDate should format valid dates as YYYY/MM/DD', () => {
@@ -43,6 +44,14 @@ describe('date utils', () => {
     const d = new Date(2026, 7, 31, 14, 30)
 
     expect(formatTime(d)).toBe('14:30')
+  })
+
+  it('formatSyncTimeString should format sync times safely with fallback', () => {
+    const d = new Date(2026, 7, 31, 9, 5)
+
+    expect(formatSyncTimeString(d)).toBe('09:05')
+    expect(formatSyncTimeString(null)).toBe('--:--')
+    expect(formatSyncTimeString('invalid')).toBe('--:--')
   })
 
   it('formatToDateInputString should format Date as YYYY-MM-DD', () => {

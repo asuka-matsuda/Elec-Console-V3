@@ -9,6 +9,7 @@ import { computed, ref } from 'vue'
 
 import { useNuxtApp } from '#app'
 import type { Site } from '#shared/types/site'
+import { sanitizeFilename } from '#shared/utils/filename'
 import { getErrorMessage, parseToAppException } from '~/utils/errors'
 
 interface SyncResultInfo {
@@ -310,7 +311,7 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
       const blob = await response.blob()
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
-      const safeName = (site.value.name || '現場').replace(/[\\/:*?"<>|]/g, '_')
+      const safeName = sanitizeFilename(site.value?.name, '現場')
 
       // Content-Disposition からファイル名（拡張子）を取得
       const disposition = response.headers.get('content-disposition') || ''
