@@ -31,7 +31,7 @@ const getTileClass = (c: CircuitItem): string =>
       <Skeleton v-for="i in 32" :key="`minimap-skeleton-${i}`" width="10px" height="10px" />
     </template>
     <template v-else-if="circuits && circuits.length > 0">
-      <button v-for="c in circuits" :key="c.id" type="button" class="minimap-tile w-2.5 h-2.5 hover:z-[2]" :class="getTileClass(c)" :title="c.kairoMeisho || c.id" @click="emit('selectCircuit', c)" />
+      <button v-for="c in circuits" :key="c.id" type="button" class="minimap-tile w-2.5 h-2.5 hover:z-[2]" :class="getTileClass(c)" :title="`${c.kairoMeisho || c.id}${c.isExcluded ? ' (除外)' : ''}`" @click="emit('selectCircuit', c)" />
     </template>
   </div>
 </template>
@@ -61,8 +61,15 @@ const getTileClass = (c: CircuitItem): string =>
 }
 
 .minimap-tile.is-excluded {
-  border-color: var(--color-tile-excluded-border);
-  opacity: 0.5;
-  background-color: var(--color-tile-excluded-bg);
+  border-color: var(--color-tile-empty-border);
+  opacity: 0.85;
+  background-color: var(--color-tile-empty-bg);
+  background-image: linear-gradient(
+    45deg,
+    transparent calc(50% - 0.75px),
+    #fff calc(50% - 0.75px),
+    #fff calc(50% + 0.75px),
+    transparent calc(50% + 0.75px)
+  );
 }
 </style>

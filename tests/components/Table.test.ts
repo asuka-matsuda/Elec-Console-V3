@@ -337,4 +337,22 @@ describe('Table.vue', () => {
     expect(wrapper.find('th').attributes('role')).toBeUndefined()
     expect(wrapper.find('td').attributes('role')).toBeUndefined()
   })
+
+  it('各列の解決幅に基づき table 要素に min-width スタイルが適用されること', () => {
+    const fixedColumns: TableColumn<SampleUser>[] = [
+      { key: 'name', label: '名前', width: '200px' },
+      { key: 'role', label: '役職', width: '150px' },
+    ]
+
+    const wrapper = mount(Table, {
+      props: {
+        columns: fixedColumns,
+        data: sampleData,
+      },
+    })
+
+    const table = wrapper.find('table')
+
+    expect(table.attributes('style')).toContain('min-width: 350px')
+  })
 })

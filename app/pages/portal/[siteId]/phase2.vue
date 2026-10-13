@@ -312,19 +312,20 @@ onMounted(() => {
       </template>
 
       <template #cell-p2Remarks="{ row: circuit }">
-        <Textarea v-model="getRowForm(circuit).remarks" size="sm" :rows="1" auto-resize trim placeholder="備考" class="w-full textarea-remarks" :disabled="isRowDisabled(circuit)" />
+        <Textarea v-model="getRowForm(circuit).remarks" size="sm" :rows="1" auto-resize trim placeholder="備考" class="w-full textarea-remarks" :disabled="isConfirmed(circuit) || Boolean(isActionLoading[circuit.id])" />
       </template>
 
       <template #cell-actions="{ row: circuit }">
         <div class="cell-actions flex items-center justify-center gap-inline-gap whitespace-nowrap">
+          <Badge v-if="circuit.isExcluded" variant="gray">除外</Badge>
           <span v-if="isLocked(circuit)" class="text-note inline-flex items-center gap-inline-gap">⏸ P1未了</span>
           <template v-else-if="isConfirmed(circuit)">
             <Button variant="secondary" size="sm" suffix-icon="arrow-right" :to="`/portal/${circuit.siteId}/phase3?kei_to=${encodeURIComponent(circuit.keiTo || '幹線')}&targetCircuit=${encodeURIComponent(circuit.id)}`">フェーズ3へ進む</Button>
-            <Button variant="danger" size="sm" :disabled="circuit.isExcluded || Boolean(isActionLoading[circuit.id])" @click="handleClearLocally(circuit)">解除する</Button>
+            <Button variant="danger" size="sm" :disabled="Boolean(isActionLoading[circuit.id])" @click="handleClearLocally(circuit)">解除する</Button>
           </template>
           <template v-else>
-            <Button variant="secondary" size="sm" :disabled="circuit.isExcluded || Boolean(isActionLoading[circuit.id])" @click="handleFillAllOk(circuit)">全相をOKにする</Button>
-            <Button variant="primary" size="sm" :disabled="circuit.isExcluded" :loading="Boolean(isActionLoading[circuit.id])" @click="handleConfirmCircuit(circuit)">確定する</Button>
+            <Button variant="secondary" size="sm" :disabled="Boolean(isActionLoading[circuit.id])" @click="handleFillAllOk(circuit)">全相をOKにする</Button>
+            <Button variant="primary" size="sm" :loading="Boolean(isActionLoading[circuit.id])" @click="handleConfirmCircuit(circuit)">確定する</Button>
           </template>
         </div>
       </template>

@@ -347,17 +347,18 @@ onMounted(() => {
       </template>
 
       <template #cell-p3Remarks="{ row: circuit }">
-        <Textarea v-model="getRowForm(circuit).remarks" size="sm" :rows="1" auto-resize trim placeholder="備考" class="w-full textarea-remarks" :disabled="isRowDisabled(circuit)" />
+        <Textarea v-model="getRowForm(circuit).remarks" size="sm" :rows="1" auto-resize trim placeholder="備考" class="w-full textarea-remarks" :disabled="isConfirmed(circuit) || Boolean(isActionLoading[circuit.id])" />
       </template>
 
       <template #cell-actions="{ row: circuit }">
         <div class="cell-actions flex items-center justify-center gap-inline-gap whitespace-nowrap">
+          <Badge v-if="circuit.isExcluded" variant="gray">除外</Badge>
           <span v-if="isLocked(circuit)" class="text-note inline-flex items-center gap-inline-gap">⏸ P2未了</span>
           <template v-else-if="isConfirmed(circuit)">
             <Button variant="secondary" size="sm" suffix-icon="arrow-right" :to="getNextPhase1Path(circuit)">フェーズ1へ進む</Button>
-            <Button variant="danger" size="sm" :disabled="circuit.isExcluded || Boolean(isActionLoading[circuit.id])" @click="handleClearLocally(circuit)">解除する</Button>
+            <Button variant="danger" size="sm" :disabled="Boolean(isActionLoading[circuit.id])" @click="handleClearLocally(circuit)">解除する</Button>
           </template>
-          <Button v-else variant="primary" size="sm" :disabled="circuit.isExcluded || hasVoltageOutOfRangeError(circuit)" :loading="Boolean(isActionLoading[circuit.id])" @click="handleConfirmCircuit(circuit)">確定する</Button>
+          <Button v-else variant="primary" size="sm" :disabled="hasVoltageOutOfRangeError(circuit)" :loading="Boolean(isActionLoading[circuit.id])" @click="handleConfirmCircuit(circuit)">確定する</Button>
         </div>
       </template>
     </Table>

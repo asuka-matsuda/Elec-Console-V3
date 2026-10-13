@@ -169,11 +169,27 @@ const effectiveColumns = computed<ResolvedColumn[]>(() => {
     resolvedWidth: col.width || (col.minWidth ? (typeof col.minWidth === 'number' ? `${col.minWidth}px` : col.minWidth) : 'auto'),
   }))
 })
+
+// 各列の幅（resolvedWidth）の合計からテーブル全体の最小幅を算出
+// これにより、画面幅が狭い場合でも各列が強制縮小されて崩れるのを防ぎ、overflow-auto で自然に横スクロール可能にする
+const tableStyle = computed(() => {
+  let totalWidth = 0
+
+  for (const col of effectiveColumns.value) {
+    const px = parsePx(col.resolvedWidth)
+
+    if (px) {
+      totalWidth += px
+    }
+  }
+
+  return totalWidth > 0 ? { minWidth: `${totalWidth}px` } : undefined
+})
 </script>
 
 <template>
   <div class="table-wrapper overflow-auto">
-    <table class="min-w-full text-left table-fixed">
+    <table class="min-w-full text-left table-fixed" :style="tableStyle">
       <colgroup>
         <col v-for="col in effectiveColumns" :key="String(col.key)" :style="{ width: col.resolvedWidth }" />
       </colgroup>
@@ -355,7 +371,7 @@ td {
   }
 
   &.is-excluded {
-    opacity: 0.5;
+    background-color: color-mix(in srgb, var(--color-border) 25%, var(--surface-bg));
   }
 
   &.is-locked {
