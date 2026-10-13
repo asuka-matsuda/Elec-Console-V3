@@ -477,15 +477,15 @@ export async function generateTagReportExcel(
     )
   }
 
-  // 確定定義（TS）から決定論的にスロットを生成（推測ゼロ・完全安全）
-  const defSlots = matchedDef.getSlots(flowDirection)
+  // 確定定義（TS）から決定論的にスロットを生成（シートを渡してキー駆動検出）
+  const defSlots = matchedDef.getSlots(flowDirection, sheet)
 
   const slots: TagSlot[] = defSlots.map(s => ({
     slotIndex: s.slotIndex,
     cells: s.cells.map(c => ({
       row: c.row,
       col: c.col,
-      rawText: `%${c.key}%`,
+      rawText: c.rawText || `%${c.key}%`,
       tags: [c.key],
     })),
     minRow: Math.min(...s.cells.map(c => c.row)),

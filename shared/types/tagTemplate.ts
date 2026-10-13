@@ -5,6 +5,8 @@
  * TypeScriptで型安全に定義するためのインターフェース。
  */
 
+import type ExcelJS from 'exceljs'
+
 export interface TagSlotCellDef {
   /** 埋め込みキー（例: '回路番号', 'ケーブル', '配電方式', '系統', '回路名称'） */
   key: string
@@ -12,6 +14,8 @@ export interface TagSlotCellDef {
   row: number
   /** 列番号（1-indexed） */
   col: number
+  /** プレースホルダーの元文字列（例: '%回路番号%', 'No: %回路番号%'） */
+  rawText?: string
 }
 
 export interface TagSlotDef {
@@ -37,7 +41,8 @@ export interface TagTemplateDefinition {
    */
   match: (nameOrFilename: string) => boolean
   /**
-   * 指定された流し込み順（Z順: 行優先, N順: 列優先）に応じたスロット一覧を返す
+   * 指定された流し込み順（Z順: 行優先, N順: 列優先）に応じたスロット一覧を返す。
+   * ワークシート（sheet）が渡された場合、テンプレート内のキー（%キー名%）を動的に狙ってスロットを検出・構成する。
    */
-  getSlots: (flowDirection: 'z' | 'n') => TagSlotDef[]
+  getSlots: (flowDirection: 'z' | 'n', sheet?: ExcelJS.Worksheet) => TagSlotDef[]
 }

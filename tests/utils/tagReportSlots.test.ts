@@ -84,6 +84,69 @@ describe('tagReportExcel slot detection & boundary integrity', () => {
     expect(emptyCable == null || emptyCable === '').toBe(true)
   })
 
+  it('dynamically targets placeholders even when row order is customized and new keys are added', async () => {
+    const tplPath = path.resolve('.data/master-templates/tpl-1791363223062-sizpc.xlsx')
+    const wb = new ExcelJS.Workbook()
+
+    await wb.xlsx.readFile(tplPath)
+    const ws = wb.worksheets[0]!
+
+    // ユーザーによるフォーマット変更をシミュレート:
+    // 全スロットの枠内行順を入れ替え（Row +0: 回路名称, Row +1: 系統, Row +2: 盤名称(新規キー), Row +3: 回路番号, Row +4: ケーブル）
+    const startRows = [2, 9, 16, 23, 30, 37, 44, 51]
+    const cols = [2, 4, 6]
+
+    for (const r of startRows) {
+      for (const c of cols) {
+        ws.getCell(r, c).value = '%回路名称%'
+        ws.getCell(r + 1, c).value = '%系統%'
+        ws.getCell(r + 2, c).value = '%盤名称%'
+        ws.getCell(r + 3, c).value = '%回路番号%'
+        ws.getCell(r + 4, c).value = '%ケーブル%'
+      }
+    }
+
+    const modifiedBuffer = await wb.xlsx.writeBuffer()
+
+    const kansenCircuits = await prisma.circuit.findMany({
+      where: { siteId: 'test', keiTo: { contains: '幹線' } },
+      orderBy: { excelRow: 'asc' },
+    })
+
+    const { rows } = convertCircuitsToDynamicRows(kansenCircuits, '2026-10-08')
+
+    const result = await generateTagReportExcel({
+      templateBuffer: modifiedBuffer,
+      rows,
+      templateName: 'KFC-3350_カスタム.xlsx',
+      flowDirection: 'z',
+    })
+
+    const resultWb = new ExcelJS.Workbook()
+
+    await resultWb.xlsx.load(result.buffer)
+
+    // 1ページ目の1スロット目（Row 2..6, Col 2）を検証
+    const ws1 = resultWb.worksheets[0]!
+    const row0 = rows[0]!
+
+    // 固定セル番地ではなく、テンプレートに書かれたキーを狙って入っていること！
+    expect(ws1.getCell(2, 2).value).toBe(row0.values['回路名称']) // Row 2 は %回路名称% に変更したため回路名称が入る
+    expect(ws1.getCell(3, 2).value).toBe(row0.values['系統']) // Row 3 は %系統% に変更したため系統が入る
+    expect(ws1.getCell(4, 2).value).toBe(row0.values['盤名称']) // Row 4 は %盤名称% を新設したため盤名称が入る
+    expect(ws1.getCell(5, 2).value).toBe(row0.values['回路番号']) // Row 5 は %回路番号% に変更したため回路番号が入る
+    expect(ws1.getCell(6, 2).value).toBe(row0.values['ケーブル']) // Row 6 は %ケーブル% に変更したためケーブルが入る
+
+    // 3ページ目（シート3）の11枠目 (Row 23..27, Col 4) は余剰枠 -> プレースホルダーがすべてクリアされていること
+    const ws3 = resultWb.worksheets[2]!
+
+    expect(ws3.getCell(23, 4).value == null || ws3.getCell(23, 4).value === '').toBe(true)
+    expect(ws3.getCell(24, 4).value == null || ws3.getCell(24, 4).value === '').toBe(true)
+    expect(ws3.getCell(25, 4).value == null || ws3.getCell(25, 4).value === '').toBe(true)
+    expect(ws3.getCell(26, 4).value == null || ws3.getCell(26, 4).value === '').toBe(true)
+    expect(ws3.getCell(27, 4).value == null || ws3.getCell(27, 4).value === '').toBe(true)
+  })
+
   it('throws explicit error when template definition is not registered', async () => {
     const tplPath = path.resolve('.data/master-templates/tpl-1791363223062-sizpc.xlsx')
     const wb = new ExcelJS.Workbook()
