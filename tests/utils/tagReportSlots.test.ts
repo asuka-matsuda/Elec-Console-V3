@@ -147,6 +147,110 @@ describe('tagReportExcel slot detection & boundary integrity', () => {
     expect(ws3.getCell(27, 4).value == null || ws3.getCell(27, 4).value === '').toBe(true)
   })
 
+  it('correctly targets placeholders in real KFC-3350H 21-slot template starting at Row 14 (Col E, G, I)', async () => {
+    // ユーザーの実スクリーンショットと同じレイアウトのテンプレートを作成
+    const wb = new ExcelJS.Workbook()
+    const ws = wb.addWorksheet('KFC-3350H')
+
+    // 上部ヘッダー（Row 1〜13）
+    ws.getCell('F1').value = 'KFC-3350'
+    ws.getCell('D5').value = '普通用A4紙用（21枚分）'
+    ws.getCell('D7').value = '※厚紙の場合は原寸法より小さく切ってください'
+
+    // 縦7段（Row 14, 21, 28, 35, 42, 49, 56） × 横3列（Col 5[E], 7[G], 9[I]）
+    const startRows = [14, 21, 28, 35, 42, 49, 56]
+    const dataCols = [5, 7, 9] // E, G, I列
+    const headerCols = [4, 6, 8] // D, F, H列（見出し）
+
+    for (const r of startRows) {
+      // 見出し列の設定
+      for (const hc of headerCols) {
+        ws.getCell(r + 0, hc).value = '幹線No'
+        ws.getCell(r + 1, hc).value = 'ケーブル'
+        ws.getCell(r + 2, hc).value = '種別'
+        ws.getCell(r + 3, hc).value = '発点'
+        ws.getCell(r + 4, hc).value = '着点'
+        ws.getCell(r + 5, hc).value = '施工者'
+        ws.getCell(r + 6, hc).value = '施工年月日'
+      }
+
+      // データ列（プレースホルダー）の設定
+      for (const dc of dataCols) {
+        ws.getCell(r + 0, dc).value = '%回路番号%'
+        ws.getCell(r + 1, dc).value = '%ケーブル%'
+        ws.getCell(r + 2, dc).value = '%配電方式%'
+        ws.getCell(r + 3, dc).value = '%系統%'
+        ws.getCell(r + 4, dc).value = '%回路名称%'
+        ws.getCell(r + 5, dc).value = ''
+        ws.getCell(r + 6, dc).value = '2026年10月'
+      }
+    }
+
+    const tplBuffer = await wb.xlsx.writeBuffer()
+
+    const kansenCircuits = await prisma.circuit.findMany({
+      where: { siteId: 'test', keiTo: { contains: '幹線' } },
+      orderBy: { excelRow: 'asc' },
+    })
+
+    const { rows } = convertCircuitsToDynamicRows(kansenCircuits, '2026-10-08')
+
+    const result = await generateTagReportExcel({
+      templateBuffer: tplBuffer,
+      rows,
+      templateName: 'KFC-3350_本設用.xlsx',
+      flowDirection: 'z',
+    })
+
+    const resultWb = new ExcelJS.Workbook()
+
+    await resultWb.xlsx.load(result.buffer)
+
+    // 58件のデータ、21枠/ページなので 3ページ生成されること
+    expect(result.totalPages).toBe(3)
+    expect(resultWb.worksheets.length).toBe(3)
+
+    const ws1 = resultWb.worksheets[0]!
+
+    // 1. 上部ヘッダー（Row 1〜13）が無傷でそのまま残っていること！
+    expect(ws1.getCell('F1').value).toBe('KFC-3350')
+    expect(ws1.getCell('D5').value).toBe('普通用A4紙用（21枚分）')
+
+    // 2. 見出し列（D列: 4）が無傷でそのまま残っていること！
+    expect(ws1.getCell(14, 4).value).toBe('幹線No')
+    expect(ws1.getCell(15, 4).value).toBe('ケーブル')
+    expect(ws1.getCell(16, 4).value).toBe('種別')
+    expect(ws1.getCell(17, 4).value).toBe('発点')
+    expect(ws1.getCell(18, 4).value).toBe('着点')
+
+    // 3. 以前の誤爆箇所（Row 2, 9, 16... の B列: 2）に値が上書きされていないこと！
+    expect(ws1.getCell(2, 2).value == null || ws1.getCell(2, 2).value === '').toBe(true)
+    expect(ws1.getCell(9, 2).value == null || ws1.getCell(9, 2).value === '').toBe(true)
+
+    // 4. 正しいセル（Row 14〜18, Col E: 5）に1件目のデータが正確に流し込まれていること！
+    const r0 = rows[0]!
+
+    expect(ws1.getCell(14, 5).value).toBe(r0.values['回路番号'])
+    expect(ws1.getCell(15, 5).value).toBe(r0.values['ケーブル'])
+    expect(ws1.getCell(16, 5).value).toBe(r0.values['配電方式'])
+    expect(ws1.getCell(17, 5).value).toBe(r0.values['系統'])
+    expect(ws1.getCell(18, 5).value).toBe(r0.values['回路名称'])
+
+    // 5. 2件目のデータは Row 14〜18, Col G: 7 に入ること！
+    const r1 = rows[1]!
+
+    expect(ws1.getCell(14, 7).value).toBe(r1.values['回路番号'])
+    expect(ws1.getCell(15, 7).value).toBe(r1.values['ケーブル'])
+
+    // 6. 3ページ目の余剰枠（58件目以降）のプレースホルダーがクリアされていること！
+    const ws3 = resultWb.worksheets[2]!
+
+    // 3ページ目の16枠目（インデックス57 = 58件目）は入っている
+    // 17枠目（Row 56, Col 7）は余剰枠 -> プレースホルダーが消えていること
+    expect(ws3.getCell(56, 7).value == null || ws3.getCell(56, 7).value === '').toBe(true)
+    expect(ws3.getCell(57, 7).value == null || ws3.getCell(57, 7).value === '').toBe(true)
+  })
+
   it('throws explicit error when template definition is not registered', async () => {
     const tplPath = path.resolve('.data/master-templates/tpl-1791363223062-sizpc.xlsx')
     const wb = new ExcelJS.Workbook()

@@ -22,6 +22,7 @@ import {
   cellValueToString,
   normalizeHeaderName,
 } from '#shared/utils/excelNormalize'
+import { detectTagSlotsFromSheet } from '#shared/utils/tagSlotDetector'
 import { getExcelJS } from '~/utils/excelHelper'
 
 export interface DynamicTagField {
@@ -478,7 +479,11 @@ export async function generateTagReportExcel(
   }
 
   // 確定定義（TS）から決定論的にスロットを生成（シートを渡してキー駆動検出）
-  const defSlots = matchedDef.getSlots(flowDirection, sheet)
+  let defSlots = matchedDef.getSlots(flowDirection, sheet)
+
+  if (defSlots.length === 0) {
+    defSlots = detectTagSlotsFromSheet(sheet, flowDirection)
+  }
 
   const slots: TagSlot[] = defSlots.map(s => ({
     slotIndex: s.slotIndex,
