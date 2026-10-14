@@ -43,6 +43,7 @@ model Site {
   calendarSettings CalendarSettings?
   circuits         Circuit[]
   operationLogs    OperationLog[]
+  todos            Todo[]
 }
 
 model UserOnSite {
@@ -198,4 +199,18 @@ model SystemSetting {
   key       String   @unique
   value     String // JSON string
   updatedAt DateTime @updatedAt
+}
+
+model Todo {
+  id        String   @id @default(uuid())
+  siteId    String
+  userId    String
+  text      String
+  completed Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@index([siteId, userId])
 }
