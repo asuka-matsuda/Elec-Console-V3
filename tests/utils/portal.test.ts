@@ -87,6 +87,15 @@ describe('portal utils', () => {
       expect(isPhase1Complete({ p1ConfirmedAt: '2026-09-25T00:00:00Z', p1Kakunin: true, p1Mashishime: false })).toBe(false)
     })
 
+    it('isPhase1Complete (幹線): キュービクル側と負荷側の両端増締が完了している場合のみ true', () => {
+      // 幹線で両端完了
+      expect(isPhase1Complete({ keiTo: '幹線', p1ConfirmedAt: '2026-09-25T00:00:00Z', p1Kakunin: true, p1Mashishime: true, p1MashishimeCubicle: true })).toBe(true)
+      // 負荷側のみ完了（キュービクル側未完了）
+      expect(isPhase1Complete({ keiTo: '幹線', p1ConfirmedAt: '2026-09-25T00:00:00Z', p1Kakunin: true, p1Mashishime: true, p1MashishimeCubicle: false })).toBe(false)
+      // キュービクル側のみ完了（負荷側未完了）
+      expect(isPhase1Complete({ keiTo: '幹線', p1ConfirmedAt: '2026-09-25T00:00:00Z', p1Kakunin: true, p1Mashishime: false, p1MashishimeCubicle: true })).toBe(false)
+    })
+
     it('isPhase2Complete: p2ConfirmedAt と p2IsComplete が true の場合のみ true', () => {
       expect(isPhase2Complete({ p2ConfirmedAt: '2026-09-25T00:00:00Z', p2IsComplete: true })).toBe(true)
       expect(isPhase2Complete({ p2ConfirmedAt: null, p2IsComplete: true })).toBe(false)

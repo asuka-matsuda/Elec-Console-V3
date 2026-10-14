@@ -11,8 +11,10 @@ import type { CircuitItem, SoudenStats } from '../types/circuit'
  * 送電試験の判定対象となる回路オブジェクトの共通インターフェース
  */
 export type ExamJudgeableCircuit = {
+  keiTo?: string | null
   p1Kakunin?: boolean | null
   p1Mashishime?: boolean | null
+  p1MashishimeCubicle?: boolean | null
   p1ConfirmedAt?: Date | string | null
   p2IsComplete?: boolean | null
   p2ConfirmedAt?: Date | string | null
@@ -22,9 +24,16 @@ export type ExamJudgeableCircuit = {
 
 /**
  * フェーズ1（外観・配線確認および端子増締め）が完了しているかを判定
+ * ※幹線系統はキュービクル側・負荷側の両端増締め完了を必須とします
  */
 export function isPhase1Complete(c: ExamJudgeableCircuit): boolean {
-  return Boolean(c.p1ConfirmedAt && c.p1Kakunin && c.p1Mashishime)
+  if (!c.p1ConfirmedAt || !c.p1Kakunin) return false
+
+  if (c.keiTo === '幹線') {
+    return Boolean(c.p1Mashishime && c.p1MashishimeCubicle)
+  }
+
+  return Boolean(c.p1Mashishime)
 }
 
 /**

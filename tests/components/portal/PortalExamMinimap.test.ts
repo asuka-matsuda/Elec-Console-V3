@@ -18,6 +18,7 @@ describe('PortalExamMinimap.vue', () => {
       p1ConfirmedAt: '2026-09-10',
       p1Kakunin: true,
       p1Mashishime: true,
+      p1MashishimeCubicle: true,
     } as CircuitItem,
     {
       id: 'c2',

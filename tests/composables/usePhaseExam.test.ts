@@ -101,6 +101,7 @@ describe('usePhaseExamBase', () => {
         banMeisho: '1L-1',
         p1Kakunin: true,
         p1Mashishime: true,
+        p1MashishimeCubicle: true,
         p1ConfirmedAt: '2026-09-01T00:00:00Z',
         p2IsComplete: false,
       },

@@ -118,8 +118,10 @@ export interface CircuitItem {
   // --- フェーズ1: 自主検査 ---
   /** フェーズ1: 外観・配線確認チェック完了フラグ */
   p1Kakunin: boolean
-  /** フェーズ1: 端子増し締めチェック完了フラグ */
+  /** フェーズ1: 端子増し締めチェック完了フラグ（負荷側 / 二次側は盤増締） */
   p1Mashishime: boolean
+  /** フェーズ1: キュービクル側端子増し締めチェック完了フラグ（幹線専用） */
+  p1MashishimeCubicle?: boolean | null
   /** フェーズ1: 施工・確認担当作業員名 */
   p1Worker?: string | null
   /** フェーズ1: 確定日時 (ISO文字列) */

@@ -26,6 +26,7 @@ export interface PhaseExamFeedbackOptions {
 export interface ConfirmPhase1Payload {
   kakunin?: boolean
   mashishime?: boolean
+  mashishimeCubicle?: boolean
   remarks?: string
   [key: string]: unknown
 }
@@ -508,11 +509,15 @@ export function usePhaseExamBase(
     const finalMashishime = overrideData?.mashishime !== undefined
       ? Boolean(overrideData.mashishime)
       : Boolean(circuit.p1Mashishime)
-    const hasAnyCheck = finalKakunin || finalMashishime
+    const finalMashishimeCubicle = overrideData?.mashishimeCubicle !== undefined
+      ? Boolean(overrideData.mashishimeCubicle)
+      : Boolean(circuit.p1MashishimeCubicle)
+    const hasAnyCheck = finalKakunin || finalMashishime || finalMashishimeCubicle
 
     const payload: ConfirmPhase1Payload = {
       kakunin: finalKakunin,
       mashishime: finalMashishime,
+      mashishimeCubicle: finalMashishimeCubicle,
       remarks: overrideData?.remarks ?? circuit.p1Remarks ?? '',
       ...overrideData,
     }
@@ -523,6 +528,7 @@ export function usePhaseExamBase(
     const optimisticPatch: Partial<CircuitItem> = {
       p1Kakunin: finalKakunin,
       p1Mashishime: finalMashishime,
+      p1MashishimeCubicle: finalMashishimeCubicle,
       p1Remarks: String(payload.remarks || ''),
       p1ConfirmedAt: hasAnyCheck ? nowIso : null,
       p1Worker: hasAnyCheck ? workerName : null,

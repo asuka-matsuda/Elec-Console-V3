@@ -37,6 +37,7 @@ export default defineEventHandler(async (event) => {
     data: {
       p1Kakunin: false,
       p1Mashishime: false,
+      p1MashishimeCubicle: false,
       p1Worker: null,
       p1ConfirmedAt: null,
     },

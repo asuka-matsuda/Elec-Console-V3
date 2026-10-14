@@ -6,11 +6,13 @@
 import { computed, onMounted } from 'vue'
 
 import type { CircuitItem } from '#shared/types/circuit'
+import { isPhase1Complete } from '#shared/utils/soudenExam'
 import { usePhase1Exam } from '~/composables/portal/phase/usePhaseExam'
 import { usePhasePageSync } from '~/composables/portal/phase/usePhasePageSync'
 import { usePhaseTableForm } from '~/composables/portal/phase/usePhaseTableForm'
 import { useTableSort } from '~/composables/useTableSort'
 import { PHASE1_TABLE_COLUMNS } from '~/constants/soudenConstants'
+import type { TableColumn } from '~/types/components'
 import { formatShortDateTime } from '~/utils/date'
 import { getSoudenRowClass } from '~/utils/souden'
 
@@ -45,12 +47,14 @@ const { handleSelectCircuit } = usePhasePageSync({
 interface Phase1RowForm {
   kakunin: boolean
   mashishime: boolean
+  mashishimeCubicle: boolean
   remarks: string
 }
 
 const initRowForm = (c: CircuitItem): Phase1RowForm => ({
   kakunin: Boolean(c.p1Kakunin),
   mashishime: Boolean(c.p1Mashishime),
+  mashishimeCubicle: Boolean(c.p1MashishimeCubicle),
   remarks: c.p1Remarks ?? '',
 })
 
@@ -88,6 +92,7 @@ const handleConfirmCircuit = (circuit: CircuitItem) => {
   confirmPhase1(circuit, {
     kakunin: form.kakunin,
     mashishime: form.mashishime,
+    mashishimeCubicle: form.mashishimeCubicle,
     remarks: form.remarks,
   })
 }
@@ -95,8 +100,24 @@ const handleConfirmCircuit = (circuit: CircuitItem) => {
 const isComplete = (c: CircuitItem) => {
   if (!isConfirmed(c)) return false
 
-  return Boolean(c.p1Kakunin && c.p1Mashishime)
+  return isPhase1Complete(c)
 }
+
+const phase1Columns = computed<TableColumn<CircuitItem>[]>(() => {
+  const isKansen = selectedKeiTo.value === '幹線'
+
+  return PHASE1_TABLE_COLUMNS.map((col) => {
+    if (col.key === 'p1Kakunin') {
+      return {
+        ...col,
+        label: isKansen ? 'サイズ確認 / キュービクル / 負荷側' : 'サイズ確認 / 増締',
+        minWidth: isKansen ? '260px' : '150px',
+      }
+    }
+
+    return col
+  })
+})
 
 onMounted(() => {
   fetchCircuits()
@@ -144,7 +165,7 @@ onMounted(() => {
       </div>
     </section>
 
-    <Table v-model:sort-by="sortBy" v-model:sort-order="sortOrder" :columns="PHASE1_TABLE_COLUMNS" :data="sortedCircuits" :loading="isLoading" :skeleton-rows="8" :row-id="(row) => `row-${row.id}`" :row-class="(row) => getSoudenRowClass(row, { isComplete, editingRowId: null })" class="flex-1 min-h-[400px]">
+    <Table v-model:sort-by="sortBy" v-model:sort-order="sortOrder" :columns="phase1Columns" :data="sortedCircuits" :loading="isLoading" :skeleton-rows="8" :row-id="(row) => `row-${row.id}`" :row-class="(row) => getSoudenRowClass(row, { isComplete, editingRowId: null })" class="flex-1 min-h-[400px]">
       <template #cell-banMeisho="{ row: circuit }">
         <div class="flex flex-col gap-micro-gap min-w-0">
           <span class="ban-name">{{ circuit.banMeisho || '-' }}</span>
@@ -189,7 +210,13 @@ onMounted(() => {
         <Tooltip :text="getRowDisabledReason(circuit) || ''" :disabled="!isRowDisabled(circuit)">
           <div class="flex items-center justify-center gap-item-gap">
             <Checkbox v-model="getRowForm(circuit).kakunin" label="確認" color="var(--color-status-success)" :disabled="isRowDisabled(circuit)" />
-            <Checkbox v-model="getRowForm(circuit).mashishime" label="増締" color="var(--color-status-success)" :disabled="isRowDisabled(circuit)" />
+            <template v-if="circuit.keiTo === '幹線'">
+              <Checkbox v-model="getRowForm(circuit).mashishimeCubicle" label="キュービクル" color="var(--color-status-success)" :disabled="isRowDisabled(circuit)" />
+              <Checkbox v-model="getRowForm(circuit).mashishime" label="負荷側" color="var(--color-status-success)" :disabled="isRowDisabled(circuit)" />
+            </template>
+            <template v-else>
+              <Checkbox v-model="getRowForm(circuit).mashishime" label="増締" color="var(--color-status-success)" :disabled="isRowDisabled(circuit)" />
+            </template>
           </div>
         </Tooltip>
       </template>

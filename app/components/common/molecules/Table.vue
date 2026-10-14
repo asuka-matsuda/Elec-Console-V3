@@ -11,7 +11,7 @@
  * - 直角（border-radius: 0）サイバーサーフェス
  * - 支援アクセシビリティ属性（aria-*, role）はプロジェクト規約により除外
  */
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
 
 import type { TableColumn, TableProps, TableSortOrder } from '~/types/components'
 import { getTableCellValue, getTableRowKey } from '~/utils/table'
@@ -82,27 +82,8 @@ const getCellDisplayValue = (row: T, col: TableColumn<T>): unknown => {
 }
 
 // ============================================================================
-// Auto-sizing & Column Freeze（初回データ長フィット ＆ リロードまで列幅ロック）
+// Column Width & Horizontal Scroll Table Style
 // ============================================================================
-const estimateTextWidth = (text: unknown): number => {
-  if (text === null || text === undefined) return 0
-  const str = String(text).trim()
-  let width = 0
-
-  for (let i = 0; i < str.length; i++) {
-    const code = str.charCodeAt(i)
-
-    if ((code >= 0x3000 && code <= 0x9fff) || (code >= 0xff00 && code <= 0xffef)) {
-      width += 13
-    }
-    else {
-      width += 7.5
-    }
-  }
-
-  return width
-}
-
 const parsePx = (val?: string | number): number | null => {
   if (typeof val === 'number') return val
   if (!val) return null
@@ -115,58 +96,21 @@ interface ResolvedColumn extends TableColumn<T> {
   resolvedWidth: string
 }
 
-const lockedColumns = ref<ResolvedColumn[]>([])
+const resolveWidth = (col: TableColumn<T>): string => {
+  if (col.width) {
+    return typeof col.width === 'number' ? `${col.width}px` : col.width
+  }
+  if (col.minWidth) {
+    return typeof col.minWidth === 'number' ? `${col.minWidth}px` : col.minWidth
+  }
 
-const computeResolvedColumns = (): ResolvedColumn[] => {
-  const dataSample = (props.data || []).slice(0, 50)
-
-  return props.columns.map((col) => {
-    if (col.width) {
-      return { ...col, resolvedWidth: col.width }
-    }
-
-    const headerTextWidth = estimateTextWidth(col.label)
-    const headerExtra = (isSortable(col) ? 20 : 0) + 24
-    const minHeaderWidth = headerTextWidth + headerExtra
-
-    let maxDataWidth = 0
-
-    for (const row of dataSample) {
-      const cellVal = getCellValue(row, col.key)
-
-      if (cellVal !== null && cellVal !== undefined && cellVal !== '') {
-        maxDataWidth = Math.max(maxDataWidth, estimateTextWidth(cellVal) + 24)
-      }
-    }
-
-    const minW = parsePx(col.minWidth) ?? 80
-    const maxW = parsePx(col.maxWidth) ?? 480
-    const estimated = Math.max(minW, minHeaderWidth, maxDataWidth)
-    const clamped = Math.min(maxW, estimated)
-
-    return {
-      ...col,
-      resolvedWidth: `${Math.ceil(clamped)}px`,
-    }
-  })
+  return 'auto'
 }
 
-watch(
-  [() => props.columns, () => props.data],
-  ([newCols, newData], [oldCols, oldData]) => {
-    if (!lockedColumns.value.length || newData !== oldData || newCols !== oldCols) {
-      lockedColumns.value = computeResolvedColumns()
-    }
-  },
-  { immediate: true },
-)
-
 const effectiveColumns = computed<ResolvedColumn[]>(() => {
-  if (lockedColumns.value.length > 0) return lockedColumns.value
-
   return props.columns.map(col => ({
     ...col,
-    resolvedWidth: col.width || (col.minWidth ? (typeof col.minWidth === 'number' ? `${col.minWidth}px` : col.minWidth) : 'auto'),
+    resolvedWidth: resolveWidth(col),
   }))
 })
 

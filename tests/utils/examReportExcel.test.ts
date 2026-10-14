@@ -29,6 +29,7 @@ describe('examReportExcel', () => {
       setsuchiList: 'D種',
       p1Kakunin: true,
       p1Mashishime: true,
+      p1MashishimeCubicle: true,
       p1ConfirmedAt: '2026-09-20T10:00:00Z',
       p1Worker: '山田 太郎',
       p2IsComplete: true,

@@ -34,6 +34,7 @@ export interface CircuitColumnMap {
   p1Worker?: number
   p1ConfirmedAt?: number
   p1Remarks?: number
+  p1MashishimeCubicle?: number
   zetsuenR?: number
   zetsuenS?: number
   zetsuenT?: number
@@ -73,6 +74,7 @@ export const DEFAULT_CIRCUIT_COLUMN_MAP: CircuitColumnMap = {
   p1Worker: 24,
   p1ConfirmedAt: undefined,
   p1Remarks: 25,
+  p1MashishimeCubicle: undefined,
   zetsuenR: 26,
   zetsuenS: 27,
   zetsuenT: 28,
@@ -118,6 +120,7 @@ const HEADER_ALIASES: Record<keyof CircuitColumnMap, string[]> = {
   p1Worker: ['接続確認者', 'P1確認者', '確認者', 'P1作業者'],
   p1ConfirmedAt: ['確認日時', '接続確認日時', 'P1確認日時', 'P1日時', 'P1測定日時'],
   p1Remarks: ['備考1', 'P1備考', '接続備考'],
+  p1MashishimeCubicle: ['キュービクル増締', 'キュービクル側増締', '一次側増締', '電源側増締', 'キュービクル側'],
 
   // Phase 2 (書き戻し対象)
   zetsuenR: ['絶縁抵抗R', 'P2(R)', 'P2R', 'R相絶縁'],
@@ -213,6 +216,7 @@ export function detectCircuitColumns(sheet: ExcelJS.Worksheet): {
       || key === 'p1Worker'
       || key === 'p1ConfirmedAt'
       || key === 'p1Remarks'
+      || key === 'p1MashishimeCubicle'
       || key === 'zetsuenR'
       || key === 'zetsuenS'
       || key === 'zetsuenT'

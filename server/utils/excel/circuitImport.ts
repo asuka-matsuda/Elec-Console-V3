@@ -264,6 +264,7 @@ export async function importCircuitsFromExcel(
 
       p1Kakunin: Boolean(p1Worker),
       p1Mashishime: Boolean(p1Worker),
+      p1MashishimeCubicle: Boolean(getColVal(row, colMap.p1MashishimeCubicle)) || (keiTo === '幹線' && Boolean(p1Worker)),
       p1Worker,
       p1ConfirmedAt,
       p1Remarks: getColStr(row, colMap.p1Remarks) || null,
@@ -389,6 +390,7 @@ export async function importCircuitsFromExcel(
           // Phase 1
           p1Kakunin: existing.p1Kakunin || item.p1Kakunin,
           p1Mashishime: existing.p1Mashishime || item.p1Mashishime,
+          p1MashishimeCubicle: existing.p1MashishimeCubicle || item.p1MashishimeCubicle,
           p1Worker: existing.p1Worker || item.p1Worker,
           p1ConfirmedAt: existing.p1ConfirmedAt || item.p1ConfirmedAt,
           p1Remarks: existing.p1Remarks || item.p1Remarks,
