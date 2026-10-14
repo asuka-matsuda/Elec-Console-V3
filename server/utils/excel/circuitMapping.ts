@@ -11,6 +11,7 @@ import { normalizeHeaderName } from '#shared/utils/excelNormalize'
 import { normalizeNewlines } from './cellFormat'
 
 export interface CircuitColumnMap {
+  floor?: number
   banMeisho: number
   banShubetsu: number
   haidenHoushiki: number
@@ -49,6 +50,7 @@ export interface CircuitColumnMap {
 }
 
 export const DEFAULT_CIRCUIT_COLUMN_MAP: CircuitColumnMap = {
+  floor: undefined,
   banMeisho: 5,
   banShubetsu: 6,
   haidenHoushiki: 7,
@@ -91,6 +93,7 @@ export const DEFAULT_CIRCUIT_COLUMN_MAP: CircuitColumnMap = {
  */
 const HEADER_ALIASES: Record<keyof CircuitColumnMap, string[]> = {
   // 基本設計情報（読取用）
+  floor: ['フロア', '階', '階数', '設置階', '設置フロア', 'Floor', 'FLOOR'],
   banMeisho: ['盤名称', '分電盤名称', '盤名'],
   banShubetsu: ['盤種別', '種別'],
   haidenHoushiki: ['配電方式'],
@@ -201,7 +204,8 @@ export function detectCircuitColumns(sheet: ExcelJS.Worksheet): {
       colMap[key] = foundCol
     }
     else if (
-      key === 'keiToName'
+      key === 'floor'
+      || key === 'keiToName'
       || key === 'setsuchiManual'
       || key === 'setsuchiC'
       || key === 'setsuchiD'

@@ -102,6 +102,7 @@ model Circuit {
   id               String  @id @default(uuid())
   siteId           String
   excelRow         Int?
+  floor            String? // 設置フロア (例: 1F, 2F, B1F, 屋上 など)
   joutai           String?
   keiTo            String // 幹線 / 二次側
   keiToName        String? // 原本Excelの系統名（一般電灯盤No.1等）
@@ -158,6 +159,7 @@ model Circuit {
 
   @@index([siteId, banMeisho])
   @@index([siteId, keiTo])
+  @@index([siteId, floor])
 }
 
 model OperationLog {

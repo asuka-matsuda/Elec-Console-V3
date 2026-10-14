@@ -22,16 +22,37 @@ useHead({
 })
 
 const {
+  selectedFloor,
+  floorOptions,
   stats,
   isLoading,
   error,
   fetchStats,
 } = useSoudenDashboard(siteId)
 
-const SOUDEN_GROUPS = [
-  { keiTo: '幹線' as const, label: '幹線 全体', pctKey: 'trunkOverallPct' as const },
-  { keiTo: '二次側' as const, label: '二次側 全体', pctKey: 'secOverallPct' as const },
-]
+const gaugeLabel = computed(() => {
+  if (selectedFloor.value === 'ALL') {
+    return '全試験完了率'
+  }
+  if (selectedFloor.value === '__UNSET__') {
+    return 'フロア未設定 完了率'
+  }
+
+  return `${selectedFloor.value} 完了率`
+})
+
+const soudenGroups = computed(() => [
+  {
+    keiTo: '幹線' as const,
+    label: selectedFloor.value === 'ALL' ? '幹線 全体' : `${selectedFloor.value} 幹線`,
+    pctKey: 'trunkOverallPct' as const,
+  },
+  {
+    keiTo: '二次側' as const,
+    label: selectedFloor.value === 'ALL' ? '二次側 全体' : `${selectedFloor.value} 二次側`,
+    pctKey: 'secOverallPct' as const,
+  },
+])
 
 const getGroupData = (keiTo: '幹線' | '二次側', currentStats: SoudenStats) => {
   const isTrunk = keiTo === '幹線'
@@ -77,6 +98,7 @@ onMounted(() => {
         <div class="flex items-center gap-item-gap">
           <Skeleton width="18px" height="18px" />
           <Skeleton width="120px" height="24px" />
+          <Skeleton width="130px" height="32px" />
         </div>
         <div class="flex items-center gap-item-gap">
           <Skeleton width="80px" height="32px" />
@@ -121,10 +143,22 @@ onMounted(() => {
     <template v-else-if="stats">
       <section class="panel flex flex-col gap-panel-gap">
         <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap flex-wrap">
-          <h3 class="flex items-center gap-item-gap">
-            <Icon name="activity" />
-            <span>総合進捗</span>
-          </h3>
+          <div class="flex items-center gap-item-gap flex-wrap">
+            <h3 class="flex items-center gap-item-gap">
+              <Icon name="activity" />
+              <span>総合進捗</span>
+            </h3>
+            <div v-if="floorOptions.length > 1" class="flex items-center gap-inline-gap">
+              <label for="filter-souden-floor" class="shrink-0 label">フロア:</label>
+              <Select
+                id="filter-souden-floor"
+                v-model="selectedFloor"
+                :options="floorOptions"
+                size="sm"
+                class="w-36"
+              />
+            </div>
+          </div>
           <div v-if="siteId" class="flex items-center gap-item-gap flex-wrap">
             <PortalSyncStatusBadge :site-id="siteId" @synced="fetchStats" />
             <Button variant="secondary" size="sm" icon="printer" :to="`/portal/${siteId}/reports?tab=exam`">帳票を出力する</Button>
@@ -134,10 +168,10 @@ onMounted(() => {
         <hr class="divider">
 
         <div class="flex flex-col lg:flex-row items-center gap-panel-gap">
-          <Gauge class="shrink-0" :value="stats.totalPct" size="lg" label="全試験完了率" />
+          <Gauge class="shrink-0" :value="stats.totalPct" size="lg" :label="gaugeLabel" />
 
           <div class="flex flex-1 flex-col gap-panel-gap w-full">
-            <template v-for="(group, index) in SOUDEN_GROUPS" :key="group.keiTo">
+            <template v-for="(group, index) in soudenGroups" :key="group.keiTo">
               <div class="flex flex-col md:flex-row items-start md:items-center gap-panel-gap">
                 <Gauge class="shrink-0" :value="stats[group.pctKey]" size="md" :label="group.label" />
                 <ul class="flex flex-1 flex-col gap-form-row-gap w-full">
@@ -158,7 +192,7 @@ onMounted(() => {
                 </ul>
               </div>
 
-              <hr v-if="index < SOUDEN_GROUPS.length - 1" class="divider is-fade-center">
+              <hr v-if="index < soudenGroups.length - 1" class="divider is-fade-center">
             </template>
           </div>
         </div>

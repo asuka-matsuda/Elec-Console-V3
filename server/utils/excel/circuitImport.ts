@@ -188,6 +188,7 @@ export async function importCircuitsFromExcel(
     }
 
     const rawKeiToName = getColStr(row, colMap.keiToName) || null
+    const floor = getColStr(row, colMap.floor) || null
     const kansenRaw = getColVal(row, colMap.keiTo)
     const keiTo = isKansen(kansenRaw)
 
@@ -244,6 +245,7 @@ export async function importCircuitsFromExcel(
     parsedCircuits.push({
       siteId,
       excelRow: rowNumber,
+      floor,
       keiTo,
       keiToName: rawKeiToName,
       banShubetsu,
@@ -371,6 +373,7 @@ export async function importCircuitsFromExcel(
         id: existing.id,
         data: {
           excelRow: item.excelRow,
+          floor: item.floor ?? existing.floor,
           keiToName: item.keiToName,
           banShubetsu: item.banShubetsu,
           haidenHoushiki: item.haidenHoushiki,
