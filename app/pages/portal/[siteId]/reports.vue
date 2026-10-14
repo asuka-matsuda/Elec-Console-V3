@@ -14,7 +14,7 @@ import { useCurrentSite } from '~/composables/portal/useCurrentSite'
 import type { SelectOption, TabOption } from '~/types/components'
 import { formatShortDateTime } from '~/utils/date'
 
-type CategoryTab = 'tag' | 'exam' | 'remote'
+type CategoryTab = 'tag' | 'tepra' | 'exam' | 'remote'
 
 const route = useRoute()
 const router = useRouter()
@@ -40,19 +40,20 @@ const {
 } = useMasterTemplates()
 
 // --- 帳票カテゴリタブ ---
-const validTabs: CategoryTab[] = ['tag', 'exam', 'remote']
-const initialTab = (validTabs.includes(route.query.tab as CategoryTab) ? route.query.tab : 'tag') as CategoryTab
+const validTabs: CategoryTab[] = ['exam', 'remote', 'tag', 'tepra']
+const initialTab = (validTabs.includes(route.query.tab as CategoryTab) ? route.query.tab : 'exam') as CategoryTab
 const currentCategory = ref<CategoryTab>(initialTab)
 
 const categoryTabOptions = computed<TabOption<CategoryTab>[]>(() => {
-  const tagCount = masterTemplates.value.filter(t => t.logicType === 'tag' || t.logicType === 'socket-tepra').length
   const examCount = masterTemplates.value.filter(t => t.logicType === 'exam').length
   const remoteCount = masterTemplates.value.filter(t => t.logicType === 'remote').length
+  const tagCount = masterTemplates.value.filter(t => t.logicType === 'tag' || t.logicType === 'socket-tepra').length
 
   return [
-    { value: 'tag', label: '線名札・ラベル', icon: 'tag', badge: tagCount },
     { value: 'exam', label: '送電試験結果', icon: 'zap', badge: examCount },
     { value: 'remote', label: 'リモコン設定表', icon: 'sliders', badge: remoteCount },
+    { value: 'tag', label: '線名札・ラベル', icon: 'tag', badge: tagCount },
+    { value: 'tepra', label: 'コンセント用テプラ', icon: 'printer' },
   ]
 })
 
@@ -116,12 +117,17 @@ interface TabExpose {
 }
 
 const tagTabRef = ref<TabExpose | null>(null)
+const tepraTabRef = ref<TabExpose | null>(null)
 const examTabRef = ref<TabExpose | null>(null)
 const remoteTabRef = ref<TabExpose | null>(null)
 
 const tagCanExport = ref(false)
 const tagIsExporting = ref(false)
 const tagExportLabel = ref('Excelを出力する')
+
+const tepraCanExport = ref(false)
+const tepraIsExporting = ref(false)
+const tepraExportLabel = ref('Excelを出力する')
 
 const examCanExport = ref(false)
 const examIsExporting = ref(false)
@@ -132,41 +138,47 @@ const remoteIsExporting = ref(false)
 const remoteExportLabel = ref('Excelを出力する')
 
 const canExport = computed(() => {
-  if (currentCategory.value === 'tag') return tagCanExport.value
   if (currentCategory.value === 'exam') return examCanExport.value
   if (currentCategory.value === 'remote') return remoteCanExport.value
+  if (currentCategory.value === 'tag') return tagCanExport.value
+  if (currentCategory.value === 'tepra') return tepraCanExport.value
 
   return false
 })
 
 const isExporting = computed(() => {
-  if (currentCategory.value === 'tag') return tagIsExporting.value
   if (currentCategory.value === 'exam') return examIsExporting.value
   if (currentCategory.value === 'remote') return remoteIsExporting.value
+  if (currentCategory.value === 'tag') return tagIsExporting.value
+  if (currentCategory.value === 'tepra') return tepraIsExporting.value
 
   return false
 })
 
 const exportButtonLabel = computed(() => {
+  if (currentCategory.value === 'tepra') return tepraExportLabel.value
   if (!selectedTemplate.value) {
     return 'ひな形を選択してください'
   }
-  if (currentCategory.value === 'tag') return tagExportLabel.value
   if (currentCategory.value === 'exam') return examExportLabel.value
   if (currentCategory.value === 'remote') return remoteExportLabel.value
+  if (currentCategory.value === 'tag') return tagExportLabel.value
 
   return 'Excelを出力する'
 })
 
 const handleExport = async () => {
-  if (currentCategory.value === 'tag') {
-    await tagTabRef.value?.exportReport()
-  }
-  else if (currentCategory.value === 'exam') {
+  if (currentCategory.value === 'exam') {
     await examTabRef.value?.exportReport()
   }
   else if (currentCategory.value === 'remote') {
     await remoteTabRef.value?.exportReport()
+  }
+  else if (currentCategory.value === 'tag') {
+    await tagTabRef.value?.exportReport()
+  }
+  else if (currentCategory.value === 'tepra') {
+    await tepraTabRef.value?.exportReport()
   }
 }
 
@@ -183,15 +195,24 @@ onMounted(() => {
     <!-- 2. コントロールツールバー: 使用ひな形 ＆ 出力実行ボタン（タブの下・フラット） -->
     <div class="flex flex-wrap items-center justify-between gap-y-inline-gap gap-x-item-gap shrink-0 min-h-10">
       <div class="flex flex-wrap items-center gap-item-gap">
-        <div class="flex items-center gap-inline-gap">
-          <label for="template-select" class="shrink-0 label bold-label">使用ひな形:</label>
-          <Select id="template-select" v-model="selectedTemplateId" :options="templateSelectOptions" placeholder="ひな形を選択..." class="w-[320px]" />
+        <!-- テプラタブ時: テンプレート不要インジケーター -->
+        <div v-if="currentCategory === 'tepra'" class="flex items-center gap-inline-gap">
+          <Badge variant="blue" size="sm">テプラ専用仕様</Badge>
+          <span class="field-help-text">A列:盤名称 / B列:回路番号 / 盤ごとにシート分割（テンプレート不要・自動生成）</span>
         </div>
 
-        <div v-if="selectedTemplate" class="flex items-center gap-inline-gap">
-          <Button variant="secondary" icon="download" @click="downloadMasterTemplate(selectedTemplate.id, selectedTemplate.file.filename)">ひな形DL</Button>
-          <small class="field-help-text hidden sm:inline">({{ formatShortDateTime(selectedTemplate.file.updatedAt) }} 更新)</small>
-        </div>
+        <!-- その他タブ時: ひな形セレクトボックス -->
+        <template v-else>
+          <div class="flex items-center gap-inline-gap">
+            <label for="template-select" class="shrink-0 label bold-label">使用ひな形:</label>
+            <Select id="template-select" v-model="selectedTemplateId" :options="templateSelectOptions" placeholder="ひな形を選択..." class="w-[320px]" />
+          </div>
+
+          <div v-if="selectedTemplate" class="flex items-center gap-inline-gap">
+            <Button variant="secondary" icon="download" @click="downloadMasterTemplate(selectedTemplate.id, selectedTemplate.file.filename)">ひな形DL</Button>
+            <small class="field-help-text hidden sm:inline">({{ formatShortDateTime(selectedTemplate.file.updatedAt) }} 更新)</small>
+          </div>
+        </template>
       </div>
 
       <div class="flex items-center gap-item-gap shrink-0">
@@ -199,13 +220,14 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- ひな形が1件も割り当てられていない場合の注意表示 -->
-    <Note v-if="!isMasterLoading && availableTemplatesForCategory.length === 0" variant="warning" class="shrink-0" text="このカテゴリに割り当てられた公式ひな形がありません。マスター管理画面の「帳票ひな形管理」でひな形Excelを登録し、この現場に割り当ててください。" />
+    <!-- ひな形が1件も割り当てられていない場合の注意表示（テプラタブ以外） -->
+    <Note v-if="currentCategory !== 'tepra' && !isMasterLoading && availableTemplatesForCategory.length === 0" variant="warning" class="shrink-0" text="このカテゴリに割り当てられた公式ひな形がありません。マスター管理画面の「帳票ひな形管理」でひな形Excelを登録し、この現場に割り当ててください。" />
 
-    <!-- 各タブ画面 -->
-    <PortalTabTag v-if="currentCategory === 'tag'" ref="tagTabRef" :site-id="siteId" :site-name="siteName" :template="selectedTemplate" @update:can-export="tagCanExport = $event" @update:is-exporting="tagIsExporting = $event" @update:export-label="tagExportLabel = $event" />
-    <PortalTabExam v-else-if="currentCategory === 'exam'" ref="examTabRef" :site-id="siteId" :site-name="siteName" :template="selectedTemplate" :has-site-setting-excel="hasSiteSettingExcel" @update:can-export="examCanExport = $event" @update:is-exporting="examIsExporting = $event" @update:export-label="examExportLabel = $event" />
+    <!-- 各タブ画面（左から送電試験、リモコン、線名札、テプラ） -->
+    <PortalTabExam v-if="currentCategory === 'exam'" ref="examTabRef" :site-id="siteId" :site-name="siteName" :template="selectedTemplate" :has-site-setting-excel="hasSiteSettingExcel" @update:can-export="examCanExport = $event" @update:is-exporting="examIsExporting = $event" @update:export-label="examExportLabel = $event" />
     <PortalTabRemote v-else-if="currentCategory === 'remote'" ref="remoteTabRef" :site-id="siteId" :site-name="siteName" :template="selectedTemplate" @update:can-export="remoteCanExport = $event" @update:is-exporting="remoteIsExporting = $event" @update:export-label="remoteExportLabel = $event" />
+    <PortalTabTag v-else-if="currentCategory === 'tag'" ref="tagTabRef" :site-id="siteId" :site-name="siteName" :template="selectedTemplate" @update:can-export="tagCanExport = $event" @update:is-exporting="tagIsExporting = $event" @update:export-label="tagExportLabel = $event" />
+    <PortalTabTepra v-else-if="currentCategory === 'tepra'" ref="tepraTabRef" :site-id="siteId" :site-name="siteName" @update:can-export="tepraCanExport = $event" @update:is-exporting="tepraIsExporting = $event" @update:export-label="tepraExportLabel = $event" />
   </div>
 </template>
 
