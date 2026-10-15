@@ -44,7 +44,7 @@ export class AppException extends Error {
     this.name = 'AppException'
     this.code = code
     this.shortCode = options.shortCode || ERROR_SHORT_CODES[code] || 'E-SYS-999'
-    this.statusCode = options.statusCode || 500
+    this.statusCode = options.statusCode ?? 500
     this.details = options.details
     this.traceId = options.traceId
     this.originalError = options.originalError
@@ -222,4 +222,22 @@ export function getErrorMessage(err: unknown, fallback = '予期せぬエラー�
   }
 
   return fallback
+}
+
+/**
+ * エラーがネットワーク到達不能（オフライン・DNS解決失敗・通信切断・ゲートウェイ停止）によるものか判定します。
+ * 4xx（400/401/403/404/409/422）や通常の 500 アプリケーションエラーは false を返します。
+ */
+export function isNetworkError(err: unknown): boolean {
+  if (typeof navigator !== 'undefined' && !navigator.onLine) {
+    return true
+  }
+
+  const appErr = parseToAppException(err)
+
+  return (
+    appErr.is(ErrorCode.SYS_NETWORK_ERROR)
+    || appErr.is(ErrorCode.SYS_SERVER_UNAVAILABLE)
+    || appErr.statusCode === 0
+  )
 }

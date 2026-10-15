@@ -287,6 +287,8 @@ export interface InputProps {
   size?: InputSize
   /** 無効化状態 (デフォルト: false) */
   disabled?: boolean
+  /** 必須入力フラグ (デフォルト: false) */
+  required?: boolean
   /** 読み取り専用状態 (デフォルト: false) */
   readonly?: boolean
   /** エラー状態フラグ (デフォルト: false) */
@@ -368,6 +370,8 @@ export interface TextareaProps {
   placeholder?: string
   /** 無効化状態 (デフォルト: false) */
   disabled?: boolean
+  /** 必須入力フラグ (デフォルト: false) */
+  required?: boolean
   /** 読み取り専用状態 (デフォルト: false) */
   readonly?: boolean
   /** エラー状態フラグまたはエラーメッセージ (デフォルト: false) */

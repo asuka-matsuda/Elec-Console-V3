@@ -7,7 +7,7 @@
  * - Teleport により親の overflow: hidden によるクリッピングを完全回避
  * - タッチ端末でのタップ表示・画面外タップ検知に対応
  */
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, useSlots } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useSlots, watch } from 'vue'
 
 import type { TooltipPlacement, TooltipProps } from '~/types/components'
 
@@ -31,6 +31,17 @@ const isMounted = ref(false)
 const isTouchDevice = ref(false)
 const triggerRef = ref<HTMLElement | null>(null)
 const tooltipRef = ref<HTMLElement | null>(null)
+
+watch(tooltipRef, (el) => {
+  if (el && typeof el.showPopover === 'function') {
+    try {
+      el.showPopover()
+    }
+    catch {
+      // Popover API 非対応環境または状態遷移中の安全ガード
+    }
+  }
+})
 
 let enterTimer: ReturnType<typeof setTimeout> | null = null
 let leaveTimer: ReturnType<typeof setTimeout> | null = null
@@ -278,7 +289,7 @@ const tooltipStyle = computed(() => {
 
     <Teleport v-if="isMounted && !disabled && hasContent" to="body">
       <Transition name="tooltip">
-        <span v-if="isVisible" ref="tooltipRef" class="tooltip-bubble" :class="[`is-${actualPlacement}`, `is-type-${type}`, { 'has-arrow': !hideArrow }]" :style="tooltipStyle">
+        <span v-if="isVisible" ref="tooltipRef" popover="manual" class="tooltip-bubble" :class="[`is-${actualPlacement}`, `is-type-${type}`, { 'has-arrow': !hideArrow }]" :style="tooltipStyle">
           <slot name="content">{{ displayText }}</slot>
         </span>
       </Transition>
@@ -298,9 +309,11 @@ const tooltipStyle = computed(() => {
   user-select: none;
 
   position: fixed;
+  inset: unset;
 
   width: max-content;
   max-width: 280px;
+  margin: 0;
   padding: 0.35em 0.65em;
   border-radius: 0;
 
@@ -312,6 +325,10 @@ const tooltipStyle = computed(() => {
   white-space: pre-wrap;
 
   transition: opacity var(--duration-fast, 150ms) var(--ease-base, ease-out);
+
+  &:not(:popover-open) {
+    display: inline-block;
+  }
 
   // Geist デフォルト: 深いサイバーブラックサーフェス + 白テキスト
   &.is-type-default {

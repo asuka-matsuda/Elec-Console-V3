@@ -3,7 +3,7 @@
  * ケーブルラック幅選定計算画面
  * ケーブルラック選定ツールのコンポーネントです。強電・弱電ケーブルのリストと段積み数から最適なラック幅を選定します。
  */
-import { computed, onUnmounted, ref, watch } from 'vue'
+import { computed, watch } from 'vue'
 
 import { useRackCalculator } from '~/composables/tools/useRackCalculator'
 import { RACK_CABLE_COLUMNS } from '~/constants/cableConstants'
@@ -22,53 +22,16 @@ const {
   inputs,
   result,
   isSaveDisabled,
+  isShowingBasis,
+  isSaving,
+  handleSave,
   addStrongCable,
   removeStrongCable,
   addWeakCable,
   removeWeakCable,
-  handleSaveHistory,
   openResetModal,
   mathSteps,
 } = useRackCalculator()
-
-// 計算根拠の表示切り替え
-const isShowingBasis = ref(false)
-
-// 保存フィードバック
-const saveState = ref<'idle' | 'saving' | 'success' | 'error'>('idle')
-let resetTimer: ReturnType<typeof setTimeout> | null = null
-
-const clearTimer = () => {
-  if (resetTimer) {
-    clearTimeout(resetTimer)
-    resetTimer = null
-  }
-}
-
-onUnmounted(clearTimer)
-
-const handleSave = async () => {
-  if (isSaveDisabled.value || saveState.value !== 'idle') return
-
-  clearTimer()
-  saveState.value = 'saving'
-  try {
-    await handleSaveHistory()
-    saveState.value = 'success'
-    resetTimer = setTimeout(() => {
-      saveState.value = 'idle'
-      resetTimer = null
-    }, 2000)
-  }
-  catch (e) {
-    console.error('Save failed:', e)
-    saveState.value = 'error'
-    resetTimer = setTimeout(() => {
-      saveState.value = 'idle'
-      resetTimer = null
-    }, 3000)
-  }
-}
 
 const strongCategories = getCableCategories('strong')
 const weakCategories = getCableCategories('weak')
@@ -211,9 +174,9 @@ const handleRemoveCable = (id: string) => {
               </template>
 
               <template #cell-spec="{ row }">
-                <div class="stacked-cell flex flex-col gap-micro-gap items-end">
-                  <span class="main-text">{{ getCableSpec(row.cableIdx, row.count).text }}</span>
-                  <span v-if="getCableSpec(row.cableIdx, row.count).detail" class="sub-text">{{ getCableSpec(row.cableIdx, row.count).detail }}</span>
+                <div class="flex flex-col gap-micro-gap items-end">
+                  <strong>{{ getCableSpec(row.cableIdx, row.count).text }}</strong>
+                  <small v-if="getCableSpec(row.cableIdx, row.count).detail">{{ getCableSpec(row.cableIdx, row.count).detail }}</small>
                 </div>
               </template>
 
@@ -235,7 +198,7 @@ const handleRemoveCable = (id: string) => {
           </h3>
           <div class="flex items-center gap-item-gap">
             <Button v-if="mathSteps?.length" variant="tertiary" size="sm" :icon="isShowingBasis ? 'arrow-left' : 'circle-help'" @click="isShowingBasis = !isShowingBasis">{{ isShowingBasis ? '計算結果に戻る' : '計算根拠を表示' }}</Button>
-            <Button v-if="!isShowingBasis" variant="primary" size="sm" icon="save" :disabled="isSaveDisabled || saveState !== 'idle'" :loading="saveState === 'saving'" @click="handleSave">履歴に保存する</Button>
+            <Button v-if="!isShowingBasis" variant="primary" size="sm" icon="save" :disabled="isSaveDisabled || isSaving" :loading="isSaving" @click="handleSave">履歴に保存する</Button>
           </div>
         </header>
         <hr class="divider">
@@ -248,17 +211,3 @@ const handleRemoveCable = (id: string) => {
     </div>
   </div>
 </template>
-
-<style scoped lang="scss">
-.stacked-cell {
-  .main-text {
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-main);
-  }
-
-  .sub-text {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
-  }
-}
-</style>

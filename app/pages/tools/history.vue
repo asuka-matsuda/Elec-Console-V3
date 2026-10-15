@@ -52,7 +52,7 @@ const getWeightResult = (entry: HistoryEntry) => (entry.rawResult ?? null) as un
 
     <ClientOnly>
       <div v-if="isLoading" class="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-panel-gap">
-        <div v-for="skeletonIndex in 4" :key="`history-skeleton-${skeletonIndex}`" class="panel history-panel flex flex-col gap-panel-gap">
+        <div v-for="skeletonIndex in 4" :key="`history-skeleton-${skeletonIndex}`" class="panel flex flex-col gap-panel-gap">
           <div class="flex flex-col gap-inline-gap">
             <Skeleton width="6rem" height="0.85rem" />
             <Skeleton width="10rem" height="1.4rem" />
@@ -68,15 +68,16 @@ const getWeightResult = (entry: HistoryEntry) => (entry.rawResult ?? null) as un
 
       <ul v-else-if="historyList.length > 0" class="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-panel-gap">
         <li v-for="entry in historyList" :key="entry.id">
-          <article class="panel history-panel flex flex-col gap-panel-gap h-full" :class="[`is-${entry.status}`]">
-            <header class="flex items-end justify-between">
+          <article class="panel flex flex-col gap-panel-gap h-full" :class="[`is-${entry.status}`]">
+            <header class="flex flex-col gap-inline-gap">
               <div class="flex flex-col gap-inline-gap min-w-0">
-                <span class="text-date">{{ entry.timestamp }}</span>
-                <h3 class="flex items-center gap-item-gap text-title">
+                <time>{{ entry.timestamp }}</time>
+                <h4 class="flex items-center gap-item-gap">
                   <span>{{ entry.toolName }}</span>
-                  <small v-if="entry.mode" class="tool-mode">({{ entry.mode }})</small>
-                </h3>
+                  <small v-if="entry.mode">({{ entry.mode }})</small>
+                </h4>
               </div>
+              <hr class="divider">
             </header>
 
             <section class="flex flex-col gap-inline-gap min-h-0">
@@ -89,13 +90,11 @@ const getWeightResult = (entry: HistoryEntry) => (entry.rawResult ?? null) as un
               <ToolResultWeight v-else-if="entry.toolId === 'weight' && getWeightResult(entry)" :result="getWeightResult(entry)" />
 
               <template v-else>
-                <h4 class="section-title">
-                  計算結果
-                </h4>
-                <dl class="grid grid-cols-[auto_1fr] gap-x-panel-gap gap-y-inline-gap list-desc">
+                <span class="label">計算結果</span>
+                <dl class="grid grid-cols-[auto_1fr] gap-x-panel-gap gap-y-inline-gap">
                   <template v-for="(res, idx) in entry.results" :key="idx">
                     <dt class="whitespace-nowrap" :style="{ color: res.color, fontWeight: res.color ? 'bold' : 'normal' }">
-                      {{ res.label }}
+                      <small>{{ res.label }}</small>
                     </dt>
                     <dd class="text-right" :style="{ color: res.color, fontWeight: res.isMain || res.color ? 'bold' : 'normal' }">
                       {{ res.value }}
@@ -106,15 +105,13 @@ const getWeightResult = (entry: HistoryEntry) => (entry.rawResult ?? null) as un
             </section>
 
             <section class="flex flex-col gap-inline-gap min-h-0">
-              <h4 class="section-title">
-                入力条件
-              </h4>
-              <dl class="grid grid-cols-[auto_1fr] gap-x-panel-gap gap-y-inline-gap list-desc">
+              <span class="label">入力条件</span>
+              <dl class="grid grid-cols-[auto_1fr] gap-x-panel-gap gap-y-inline-gap">
                 <template v-for="(input, idx) in entry.inputs" :key="idx">
                   <dt class="whitespace-nowrap">
-                    {{ input.label }}
+                    <small>{{ input.label }}</small>
                   </dt>
-                  <dd class="text-right text-input-val">
+                  <dd class="text-right">
                     {{ input.value }}
                   </dd>
                 </template>
@@ -134,7 +131,7 @@ const getWeightResult = (entry: HistoryEntry) => (entry.rawResult ?? null) as un
 
       <template #fallback>
         <div class="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-panel-gap">
-          <div v-for="skeletonIndex in 4" :key="`history-skeleton-${skeletonIndex}`" class="panel history-panel flex flex-col gap-panel-gap">
+          <div v-for="skeletonIndex in 4" :key="`history-skeleton-${skeletonIndex}`" class="panel flex flex-col gap-panel-gap">
             <div class="flex flex-col gap-inline-gap">
               <Skeleton width="6rem" height="0.85rem" />
               <Skeleton width="10rem" height="1.4rem" />
@@ -151,45 +148,3 @@ const getWeightResult = (entry: HistoryEntry) => (entry.rawResult ?? null) as un
     </ClientOnly>
   </div>
 </template>
-
-<style scoped lang="scss">
-.history-panel {
-  header {
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .text-date {
-    font-size: var(--font-size-2xs);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-muted);
-  }
-
-  .text-title {
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-main);
-  }
-
-  .section-title {
-    border-left: 2px solid var(--color-category-tool);
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-main);
-  }
-
-  .list-desc {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-muted);
-  }
-
-  .text-input-val {
-    color: var(--color-text-main);
-  }
-}
-
-.tool-mode {
-  font-size: var(--font-size-sm);
-  font-weight: normal;
-  color: var(--color-text-secondary);
-}
-</style>

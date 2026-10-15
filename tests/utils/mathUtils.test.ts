@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { buildFormula, formatVal, hlNg, hlOk, hlVal, parseLegend, TEX_DANGER_CLASS, TEX_HL_CLASS, TEX_SUCCESS_CLASS } from '~/utils/math'
+import { buildFormula, formatVal, hlAccent, hlNg, hlOk, hlVal, parseLegend, TEX_DANGER_CLASS, TEX_HL_CLASS, TEX_SUCCESS_CLASS } from '~/utils/math'
 
 describe('mathUtils', () => {
   describe('hlVal', () => {

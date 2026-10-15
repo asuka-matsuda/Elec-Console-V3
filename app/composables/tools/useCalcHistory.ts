@@ -10,6 +10,7 @@ import { getCurrentInstance, onMounted, ref } from 'vue'
 import { useNuxtApp } from '#app'
 import { useAuth } from '~/composables/useAuth'
 import type { HistoryEntry } from '~/types/tools'
+import { generateUuid } from '~/utils/crypto'
 import { formatDateTime } from '~/utils/date'
 
 /**
@@ -33,7 +34,7 @@ export function useCalcHistory(toolKey: string) {
     }
   }
 
-  const fetchHistory = async () => {
+  const fetchHistory = async (targetToolId = toolId) => {
     const $api = getApi()
 
     if (!$api) return
@@ -41,15 +42,19 @@ export function useCalcHistory(toolKey: string) {
     isLoading.value = true
     try {
       const data = await $api<{ success: boolean, history: HistoryEntry[] }>(
-        `/api/calc-history?toolId=${toolId}`,
+        `/api/calc-history?toolId=${targetToolId}`,
       )
 
       if (data && data.history) {
         historyList.value = data.history
       }
+      else {
+        historyList.value = []
+      }
     }
     catch (e) {
-      console.warn(`[useCalcHistory] Failed to fetch history for ${toolId}:`, e)
+      console.warn(`[useCalcHistory] Failed to fetch history for ${targetToolId}:`, e)
+      historyList.value = []
     }
     finally {
       isLoading.value = false
@@ -67,7 +72,7 @@ export function useCalcHistory(toolKey: string) {
 
     const newEntry: HistoryEntry = {
       ...entry,
-      id: crypto.randomUUID(),
+      id: generateUuid(),
       timestamp: formattedDate,
     }
 
@@ -90,6 +95,7 @@ export function useCalcHistory(toolKey: string) {
       }
       catch (e) {
         console.error('[useCalcHistory] Failed to save history:', e)
+        throw e
       }
     }
   }
@@ -111,14 +117,14 @@ export function useCalcHistory(toolKey: string) {
     }
   }
 
-  const clearAll = async () => {
+  const clearAll = async (targetToolId = toolId) => {
     historyList.value = []
 
     const $api = getApi()
 
     if ($api) {
       try {
-        await $api(`/api/calc-history?toolId=${toolId}`, {
+        await $api(`/api/calc-history?toolId=${targetToolId}`, {
           method: 'DELETE',
         })
       }

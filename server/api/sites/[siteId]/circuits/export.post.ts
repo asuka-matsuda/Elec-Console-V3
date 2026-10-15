@@ -6,11 +6,13 @@
  * @permission 現場アクセス権限
  */
 
-import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
+import { defineEventHandler, getRouterParam, readBody } from 'h3'
 
+import { ErrorCode } from '#shared/types/errors'
 import { getUserDisplayName } from '#shared/utils/user'
 
 import { requireSiteRole } from '../../../../utils/auth'
+import { createAppError } from '../../../../utils/error'
 import { exportCircuitsToExcel } from '../../../../utils/excel/circuitExport'
 import { validateSafeExcelPath } from '../../../../utils/excel/safePath'
 import { prisma } from '../../../../utils/prisma'
@@ -21,8 +23,8 @@ export default defineEventHandler(async (event) => {
   const siteId = getRouterParam(event, 'siteId')
 
   if (!siteId) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: '現場IDが指定されていません',
     })
   }
@@ -39,17 +41,18 @@ export default defineEventHandler(async (event) => {
   }
 
   if (!targetPath) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: 'Excel連携ファイル保存先が設定されていません。現場設定にてExcelファイルの絶対パスを指定・保存してください。',
     })
   }
 
   try {
-    targetPath = validateSafeExcelPath(targetPath)
+    targetPath = validateSafeExcelPath(targetPath, siteId)
   }
   catch (pathErr: unknown) {
-    throw createError({
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       statusCode: 400,
       message: pathErr instanceof Error ? pathErr.message : '無効なファイルパスです',
     })
@@ -66,12 +69,15 @@ export default defineEventHandler(async (event) => {
     }
   }
   catch (error: unknown) {
+    if (error && typeof error === 'object' && 'statusCode' in error) {
+      throw error
+    }
+
     const err = error as Error
 
-    console.error('Failed to export circuits to Excel:', err)
-
-    throw createError({
-      statusCode: 500,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
+      statusCode: 400,
       message: err.message || 'Excelファイルへの書き戻しに失敗しました',
     })
   }

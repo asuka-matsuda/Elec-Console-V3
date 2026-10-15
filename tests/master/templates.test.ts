@@ -1,20 +1,40 @@
 /**
  * マスター帳票テンプレート管理の単体テスト
  */
-import { describe, expect, it } from 'vitest'
+import fs from 'node:fs'
+import path from 'node:path'
+
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import { REPORT_TEMPLATE_DEFINITIONS } from '../../app/constants/reportTemplates'
 import {
-  deleteMasterTemplate,
   deleteMasterTemplateItem,
   getAllMasterTemplateItems,
-  getAllMasterTemplatesMeta,
-  getMasterTemplateFilePath,
-  saveMasterTemplate,
+  getMasterTemplateItemFilePath,
   saveMasterTemplateItem,
 } from '../../server/utils/masterTemplates'
 
 describe('Master Templates Definition & Storage', () => {
+  const templatesDir = path.resolve(process.cwd(), '.data', 'master-templates')
+  const itemsJsonPath = path.join(templatesDir, 'items.json')
+  let originalItemsJson: string | null = null
+
+  beforeEach(() => {
+    originalItemsJson = fs.existsSync(itemsJsonPath)
+      ? fs.readFileSync(itemsJsonPath, 'utf-8')
+      : null
+  })
+
+  afterEach(() => {
+    if (originalItemsJson !== null) {
+      fs.mkdirSync(templatesDir, { recursive: true })
+      fs.writeFileSync(itemsJsonPath, originalItemsJson, 'utf-8')
+    }
+    else if (fs.existsSync(itemsJsonPath)) {
+      fs.unlinkSync(itemsJsonPath)
+    }
+  })
+
   it('should define all 4 required report template formats with keys', () => {
     expect(REPORT_TEMPLATE_DEFINITIONS).toHaveLength(4)
 
@@ -41,36 +61,32 @@ describe('Master Templates Definition & Storage', () => {
     const originalFilename = 'test-tepra-template.xlsx'
 
     // 保存
-    const saved = await saveMasterTemplate('socket-tepra', dummyBuffer, originalFilename)
+    const saved = await saveMasterTemplateItem({
+      id: 'tpl-socket-tepra-test',
+      name: 'テスト用テプラひな形',
+      logicType: 'socket-tepra',
+      fileBuffer: dummyBuffer,
+      originalFilename,
+    })
 
-    expect(saved.filename).toBe(originalFilename)
-    expect(saved.size).toBe(dummyBuffer.length)
+    expect(saved.file.filename).toBe(originalFilename)
+    expect(saved.file.size).toBe(dummyBuffer.length)
 
     // ファイルパス取得
-    const filePath = getMasterTemplateFilePath('socket-tepra')
+    const filePath = getMasterTemplateItemFilePath('tpl-socket-tepra-test')
 
     expect(filePath).toBeTruthy()
-    expect(filePath).toContain('socket-tepra.xlsx')
-
-    // 一覧メタデータ取得
-    const allMeta = getAllMasterTemplatesMeta()
-
-    expect(allMeta['socket-tepra']).toBeDefined()
-    expect(allMeta['socket-tepra'].filename).toBe(originalFilename)
+    expect(filePath).toContain('tpl-socket-tepra-test.xlsx')
 
     // 削除
-    const deleted = await deleteMasterTemplate('socket-tepra')
+    const deleted = await deleteMasterTemplateItem('tpl-socket-tepra-test')
 
     expect(deleted).toBe(true)
 
     // 削除後の確認
-    const afterDeletePath = getMasterTemplateFilePath('socket-tepra')
+    const afterDeletePath = getMasterTemplateItemFilePath('tpl-socket-tepra-test')
 
     expect(afterDeletePath).toBeNull()
-
-    const allMetaAfter = getAllMasterTemplatesMeta()
-
-    expect(allMetaAfter['socket-tepra']).toBeUndefined()
   })
 
   it('should support multi-template registration and site assignment filtering', async () => {
@@ -153,5 +169,12 @@ describe('Master Templates Definition & Storage', () => {
     })).rejects.toThrow('無効なテンプレートIDです')
 
     expect(await deleteMasterTemplateItem('../malicious')).toBe(false)
+  })
+
+  it('should throw an error instead of silently returning [] when items.json is corrupted', () => {
+    fs.mkdirSync(templatesDir, { recursive: true })
+    fs.writeFileSync(itemsJsonPath, '{corrupted json', 'utf-8')
+
+    expect(() => getAllMasterTemplateItems()).toThrow('マスターテンプレート定義ファイル')
   })
 })

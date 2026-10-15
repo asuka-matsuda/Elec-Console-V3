@@ -6,7 +6,7 @@
  */
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 
-import type { SiteAssignment, User, UserRole } from '#shared/types/auth'
+import type { SiteAssignment, SiteRole, User } from '#shared/types/auth'
 import { useAdminSites } from '~/composables/admin/useAdminSites'
 import { useAdminUsers } from '~/composables/admin/useAdminUsers'
 import { useModal } from '~/composables/useModal'
@@ -25,11 +25,10 @@ interface CreateUserFormState {
   firstName: string
   lastNameKana: string
   firstNameKana: string
-  role: UserRole
   requirePasswordReset: boolean
   assignedSiteIds: string[]
   siteAssignments?: SiteAssignment[]
-  [key: string]: string | boolean | string[] | SiteAssignment[] | UserRole | undefined
+  [key: string]: string | boolean | string[] | SiteAssignment[] | undefined
 }
 
 const INITIAL_CREATE_USER: CreateUserFormState = {
@@ -38,7 +37,6 @@ const INITIAL_CREATE_USER: CreateUserFormState = {
   firstName: '',
   lastNameKana: '',
   firstNameKana: '',
-  role: 'worker',
   requirePasswordReset: true,
   assignedSiteIds: [],
   siteAssignments: [],
@@ -90,7 +88,6 @@ const form = reactive({
   firstName: '',
   lastNameKana: '',
   firstNameKana: '',
-  role: 'worker' as UserRole,
   requirePasswordReset: false,
   assignedSiteIds: [] as string[],
   siteAssignments: [] as SiteAssignment[],
@@ -124,12 +121,11 @@ watch(
       form.firstName = newUserVal.firstName || ''
       form.lastNameKana = newUserVal.lastNameKana || ''
       form.firstNameKana = newUserVal.firstNameKana || ''
-      form.role = newUserVal.role || 'worker'
       form.requirePasswordReset = !!newUserVal.requirePasswordReset
       form.assignedSiteIds = [...(newUserVal.assignedSiteIds || [])]
       form.siteAssignments = newUserVal.siteAssignments
         ? newUserVal.siteAssignments.map(sa => ({ ...sa }))
-        : (newUserVal.assignedSiteIds || []).map(id => ({ siteId: id, role: newUserVal.role || 'worker' }))
+        : (newUserVal.assignedSiteIds || []).map(id => ({ siteId: id, role: 'worker' as SiteRole }))
     }
   },
   { immediate: true },
@@ -150,10 +146,10 @@ const isSiteAssigned = (siteId: string) => {
   return form.assignedSiteIds.includes(siteId)
 }
 
-const getSiteRole = (siteId: string): UserRole => {
+const getSiteRole = (siteId: string): SiteRole => {
   const found = form.siteAssignments.find(sa => sa.siteId === siteId)
 
-  return found?.role || form.role || 'worker'
+  return found?.role || 'worker'
 }
 
 const handleToggleSite = (siteId: string, assigned: unknown) => {
@@ -164,7 +160,7 @@ const handleToggleSite = (siteId: string, assigned: unknown) => {
       form.assignedSiteIds.push(siteId)
     }
     if (!form.siteAssignments.some(sa => sa.siteId === siteId)) {
-      form.siteAssignments.push({ siteId, role: form.role || 'worker' })
+      form.siteAssignments.push({ siteId, role: 'worker' })
     }
   }
   else {
@@ -174,7 +170,7 @@ const handleToggleSite = (siteId: string, assigned: unknown) => {
 }
 
 const handleSiteRoleChange = (siteId: string, newRole: unknown) => {
-  const role = newRole as UserRole
+  const role = newRole as SiteRole
   const found = form.siteAssignments.find(sa => sa.siteId === siteId)
 
   if (found) {
@@ -247,8 +243,12 @@ const handleCreateUser = async () => {
   }
 }
 
+const isMasterAccount = (user: User | null | undefined) => {
+  return user?.loginId === 'master' || user?.id === 'master'
+}
+
 const confirmDelete = async (row: User) => {
-  if (row.id === 'master') {
+  if (isMasterAccount(row)) {
     toast.warning('マスターユーザーは削除できません。')
 
     return
@@ -327,10 +327,11 @@ const confirmResetPassword = async (row: User) => {
             <div class="flex flex-col gap-inline-gap min-w-0 flex-1">
               <div class="flex items-center gap-item-gap min-w-0">
                 <span>{{ user.lastName }} {{ user.firstName }}</span>
+                <Badge v-if="isMasterAccount(user)" :variant="USER_ROLE_CONFIG.master.variant" class="shrink-0">{{ USER_ROLE_CONFIG.master.label }}</Badge>
                 <Badge v-if="user.requirePasswordReset" variant="red" class="shrink-0">PWリセット要</Badge>
               </div>
 
-              <div class="user-item-id">ID: {{ user.loginId || user.id }}</div>
+              <small><code>ID: {{ user.loginId || user.id }}</code></small>
             </div>
           </button>
         </li>
@@ -351,7 +352,7 @@ const confirmResetPassword = async (row: User) => {
             <Avatar :text="`${selectedUser.lastName} ${selectedUser.firstName}`" size="md" />
             <h3 class="flex flex-wrap items-center gap-item-gap">
               <span>{{ selectedUser.lastName }} {{ selectedUser.firstName }}</span>
-              <Badge :variant="USER_ROLE_CONFIG[selectedUser.role]?.variant">{{ USER_ROLE_CONFIG[selectedUser.role]?.label }}</Badge>
+              <Badge v-if="isMasterAccount(selectedUser)" :variant="USER_ROLE_CONFIG.master.variant">{{ USER_ROLE_CONFIG.master.label }}</Badge>
               <Badge v-if="selectedUser.requirePasswordReset" variant="red">PWリセット要</Badge>
               <small>(ID: {{ selectedUser.loginId || selectedUser.id }})</small>
             </h3>
@@ -359,7 +360,7 @@ const confirmResetPassword = async (row: User) => {
 
           <div class="flex flex-wrap items-center gap-item-gap">
             <Button variant="secondary" size="sm" @click="confirmResetPassword(selectedUser)">パスワードを初期化する</Button>
-            <Button variant="danger" size="sm" :disabled="selectedUser.id === 'master'" @click="confirmDelete(selectedUser)">削除する</Button>
+            <Button variant="danger" size="sm" :disabled="isMasterAccount(selectedUser)" @click="confirmDelete(selectedUser)">削除する</Button>
             <Button variant="primary" size="sm" icon="save" :loading="isSaving" @click="handleSaveUser">変更を保存する</Button>
           </div>
         </header>
@@ -400,20 +401,15 @@ const confirmResetPassword = async (row: User) => {
           </div>
 
           <div class="flex flex-col gap-inline-gap">
-            <label for="user-login-id" class="label">ログインID</label>
+            <label for="user-login-id" class="label">ログインID (変更不可)</label>
             <Input id="user-login-id" :model-value="selectedUser.loginId || selectedUser.id" disabled />
-          </div>
-
-          <div class="flex flex-col gap-inline-gap">
-            <label for="user-role" class="label">権限</label>
-            <Select id="user-role" v-model="form.role" :options="USER_ROLE_OPTIONS" :disabled="selectedUser.id === 'master'" />
           </div>
 
           <Checkbox v-model="form.requirePasswordReset" label="次回ログイン時にパスワード変更を要求する" />
 
           <div class="flex flex-col gap-inline-gap">
             <span class="label">最終ログイン日時</span>
-            <small class="last-login-time">{{ lastLoginText }}</small>
+            <small>{{ lastLoginText }}</small>
           </div>
         </div>
 
@@ -427,11 +423,11 @@ const confirmResetPassword = async (row: User) => {
           </header>
           <hr class="divider">
 
-          <small>このユーザーが参加・閲覧できる現場を選択してください。</small>
+          <small>このユーザーが参加・閲覧できる現場と、各現場での役割を選択してください。</small>
 
           <ul v-if="sites.length > 0" class="flex flex-col gap-item-gap">
             <li v-for="site in sites" :key="site.id">
-              <div class="assign-item flex items-center justify-between gap-panel-gap p-item-gap">
+              <div class="panel is-elevated p-panel-pad-compact flex items-center justify-between gap-panel-gap">
                 <Checkbox :model-value="isSiteAssigned(site.id)" :label="`${site.name} (${site.id})`" @update:model-value="handleToggleSite(site.id, $event)" />
 
                 <div v-if="isSiteAssigned(site.id)" class="w-36 shrink-0 flex flex-col">
@@ -453,7 +449,7 @@ const confirmResetPassword = async (row: User) => {
 
   <!-- 新規ユーザー登録モーダル -->
   <Modal v-model="isCreateModalOpen" title="新規ユーザー登録" icon="circle-plus">
-    <template #actions>
+    <template #footer>
       <Button @click="isCreateModalOpen = false">キャンセル</Button>
       <Button variant="primary" :loading="isCreatingUser" @click="handleCreateUser">ユーザーを登録する</Button>
     </template>
@@ -466,27 +462,9 @@ const confirmResetPassword = async (row: User) => {
         <Input :id="`create-user-${field.id}`" v-model="newUser[field.id]" :placeholder="field.placeholder" />
       </div>
 
-      <div class="flex flex-col gap-inline-gap">
-        <label for="create-user-role" class="label">権限</label>
-        <Select id="create-user-role" v-model="newUser.role" :options="USER_ROLE_OPTIONS" />
-      </div>
-
       <Checkbox v-model="newUser.requirePasswordReset" label="初回ログイン時にパスワード変更を要求する" />
     </form>
   </Modal>
 
   <PortalModalUserCredential v-model="isCredentialModalOpen" :user="credentialTarget" />
 </template>
-
-<style scoped lang="scss">
-.user-item-id,
-.last-login-time {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-}
-
-.assign-item {
-  border: var(--border-width-base) solid var(--color-border);
-  background-color: var(--surface-bg-elevated);
-}
-</style>

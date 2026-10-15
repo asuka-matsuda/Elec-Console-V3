@@ -1,6 +1,17 @@
 /**
  * ユーザーのログイン情報（ID/パスワード等）を印刷用ウィンドウで表示するユーティリティ
  */
+import { useToast } from '~/composables/useToast'
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 export const printUserCredential = (user: {
   lastName: string
   firstName: string
@@ -10,10 +21,14 @@ export const printUserCredential = (user: {
   const printWindow = window.open('', '_blank')
 
   if (!printWindow) {
-    alert('ポップアップブロックを解除してください。')
+    useToast().error('ポップアップブロックを解除してください。')
 
     return
   }
+
+  const safeFullName = escapeHtml(`${user.lastName} ${user.firstName}`.trim())
+  const safeLoginId = escapeHtml(user.loginId)
+  const safePassword = escapeHtml(user.initialPassword || '（既に設定済みです）')
 
   const html = `
     <!DOCTYPE html>
@@ -91,15 +106,15 @@ export const printUserCredential = (user: {
       <div class="box">
         <div class="item">
           <div class="label">氏名</div>
-          <div class="value">${user.lastName} ${user.firstName}</div>
+          <div class="value">${safeFullName}</div>
         </div>
         <div class="item">
           <div class="label">ログインID</div>
-          <div class="value">${user.loginId}</div>
+          <div class="value">${safeLoginId}</div>
         </div>
         <div class="item">
           <div class="label">初期パスワード</div>
-          <div class="value password">${user.initialPassword || '（既に設定済みです）'}</div>
+          <div class="value password">${safePassword}</div>
         </div>
       </div>
       

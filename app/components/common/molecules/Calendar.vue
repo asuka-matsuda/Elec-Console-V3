@@ -6,6 +6,7 @@
  */
 import { computed, ref } from 'vue'
 
+import { useAuth } from '~/composables/useAuth'
 import type { CalendarPreset, CalendarProps, DateRange } from '~/types/components'
 import { formatToDateInputString, getTodayDateInput, parseDateSafe } from '~/utils/date'
 
@@ -26,6 +27,8 @@ const emit = defineEmits<{
   select: [value: string | DateRange]
 }>()
 
+const { getAccurateNow } = useAuth()
+
 // 今日の日付 (YYYY-MM-DD)
 const todayStr = getTodayDateInput()
 
@@ -40,7 +43,7 @@ const getInitialYearMonth = (): { year: number, month: number } => {
     targetDateStr = model.value.start
   }
 
-  const d = parseDateSafe(targetDateStr) || parseDateSafe(todayStr) || new Date(2026, 9, 1)
+  const d = parseDateSafe(targetDateStr) || parseDateSafe(todayStr) || getAccurateNow()
 
   return { year: d.getFullYear(), month: d.getMonth() }
 }
@@ -81,7 +84,7 @@ const handleNextMonth = () => {
 }
 
 const handleGoToday = () => {
-  const d = parseDateSafe(todayStr) || new Date(2026, 9, 1)
+  const d = parseDateSafe(todayStr) || getAccurateNow()
 
   viewYear.value = d.getFullYear()
   viewMonth.value = d.getMonth()

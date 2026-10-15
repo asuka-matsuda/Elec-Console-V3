@@ -6,7 +6,7 @@
  * - 直角（border-radius: 0）サイバーパネルと直角アイテム
  * - 支援アクセシビリティ属性（aria-*, role）は規約により除外
  */
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import type { MenuItem, MenuProps } from '~/types/components'
 
@@ -25,6 +25,17 @@ const isMounted = ref(false)
 const triggerRef = ref<HTMLElement | null>(null)
 const menuRef = ref<HTMLElement | null>(null)
 const activeIndex = ref<number>(-1)
+
+watch(menuRef, (el) => {
+  if (el && typeof el.showPopover === 'function') {
+    try {
+      el.showPopover()
+    }
+    catch {
+      // Popover API 非対応環境または状態遷移中の安全ガード
+    }
+  }
+})
 
 const isUpward = ref(false)
 const isRightAligned = ref(false)
@@ -187,7 +198,7 @@ const menuStyle = computed(() => {
 
     <Teleport v-if="isMounted && items.length > 0" to="body">
       <Transition name="menu">
-        <div v-if="isOpen" ref="menuRef" class="menu-panel" :style="menuStyle">
+        <div v-if="isOpen" ref="menuRef" popover="manual" class="menu-panel" :style="menuStyle">
           <ul class="menu-list flex flex-col">
             <template v-for="(item, index) in items" :key="`${item.label}-${index}`">
               <li v-if="item.section" class="menu-section-header">
@@ -233,9 +244,11 @@ const menuStyle = computed(() => {
 <style scoped lang="scss">
 .menu-panel {
   position: fixed;
+  inset: unset;
 
   min-width: 140px;
   max-width: 260px;
+  margin: 0;
   padding: var(--space-0-5);
   border: var(--border-width-base) solid var(--color-border);
   border-radius: 0;
@@ -243,6 +256,10 @@ const menuStyle = computed(() => {
   background-color: var(--surface-bg-solid);
   backdrop-filter: blur(var(--blur-md));
   box-shadow: var(--shadow-elevation-md);
+
+  &:not(:popover-open) {
+    display: block;
+  }
 }
 
 .menu-enter-active,

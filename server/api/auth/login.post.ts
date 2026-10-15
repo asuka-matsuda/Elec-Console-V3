@@ -11,7 +11,8 @@ import { z } from 'zod'
 
 import { ErrorCode } from '#shared/types/errors'
 
-import { generateAuthToken } from '../../utils/auth'
+import { generateAuthToken, toSafeUser } from '../../utils/auth'
+import { getJstEndOfMonth } from '../../utils/date'
 import { createAppError } from '../../utils/error'
 import { hashPassword, needsRehash, verifyPassword } from '../../utils/password'
 import { prisma } from '../../utils/prisma'
@@ -103,12 +104,20 @@ export default defineEventHandler(async (event) => {
   clearRateLimit(globalAccountKey)
 
   // 旧ハッシュ（10000回）の場合は新形式（100000回）へ自動アップグレード移行
-  const updateData: { lastLoginAt: Date, password?: string } = {
+  const updateData: { lastLoginAt: Date, password?: string, role?: string } = {
     lastLoginAt: new Date(),
   }
 
   if (needsRehash(user.password)) {
-    updateData.password = hashPassword(password)
+    const newHash = hashPassword(password)
+
+    updateData.password = newHash
+    user.password = newHash
+  }
+
+  if (user.loginId === 'master' && user.role !== 'master') {
+    updateData.role = 'master'
+    user.role = 'master'
   }
 
   await prisma.user.update({
@@ -116,13 +125,13 @@ export default defineEventHandler(async (event) => {
     data: updateData,
   })
 
-  // セッション有効期限の算出（デフォルト: 当日限り24時間、当月内有効指定時: 当月末日23:59:59）
+  // セッション有効期限の算出（デフォルト: 当日限り24時間、当月内有効指定時: JST当月末日23:59:59.999）
   let expiresInSeconds = 24 * 60 * 60 // 24時間
   let expiresAt = new Date(Date.now() + expiresInSeconds * 1000)
 
   if (validForCurrentMonth) {
     const now = new Date()
-    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999)
+    const endOfMonth = getJstEndOfMonth(now)
     const remainingSeconds = Math.floor((endOfMonth.getTime() - now.getTime()) / 1000)
 
     expiresInSeconds = Math.max(60, remainingSeconds)
@@ -140,17 +149,7 @@ export default defineEventHandler(async (event) => {
     maxAge: expiresInSeconds,
   })
 
-  const assignedSiteIds = user.assignedSites.map(s => s.id)
-  const siteAssignments = user.assignedSites.map((s) => {
-    const match = user.siteAssignments.find(sa => sa.siteId === s.id)
-
-    return {
-      siteId: s.id,
-      role: match?.role || user.role || 'worker',
-    }
-  })
-  const { password: _dbPassword, assignedSites: _assignedSites, siteAssignments: _sa, ...restUser } = user
-  const safeUser = { ...restUser, assignedSiteIds, siteAssignments }
+  const safeUser = toSafeUser(user)
 
   return {
     success: true,

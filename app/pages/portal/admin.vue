@@ -13,6 +13,7 @@ import { useAdminUsers } from '~/composables/admin/useAdminUsers'
 import { useSiteExcelSync } from '~/composables/portal/useSiteExcelSync'
 import { useAuth } from '~/composables/useAuth'
 import { useModal } from '~/composables/useModal'
+import { useToast } from '~/composables/useToast'
 import {
   SITE_SETTINGS_TABS,
   SITE_STATUS_CONFIG,
@@ -46,6 +47,7 @@ const { isMaster, isSiteAdmin } = useAuth()
 const { sites, isLoading, fetchSites, createSite, toggleDisableSite, updateSite, deleteSite } = useAdminSites()
 const { users, fetchUsers } = useAdminUsers()
 const { askConfirm } = useModal()
+const toast = useToast()
 
 // --- 状態宣言（State） ---
 const selectedSiteId = ref<string | null>(null)
@@ -220,7 +222,7 @@ const handleSaveSite = async () => {
   catch (e: unknown) {
     const appErr = parseToAppException(e)
 
-    alert(appErr.getUserFacingMessage())
+    toast.error(appErr.getUserFacingMessage())
   }
   finally {
     isSaving.value = false
@@ -268,7 +270,7 @@ const handleCreateSite = async () => {
 }
 
 const confirmToggleDisable = async (row: Site) => {
-  const isCurrentlyDisabled = !row.disabledAt
+  const isCurrentlyDisabled = Boolean(row.disabledAt)
 
   const isConfirmed = await askConfirm({
     title: isCurrentlyDisabled ? '現場の有効化' : '現場の無効化',
@@ -305,7 +307,7 @@ const confirmDeleteSite = async (site: Site) => {
     catch (e: unknown) {
       const appErr = parseToAppException(e)
 
-      alert(appErr.getUserFacingMessage())
+      toast.error(appErr.getUserFacingMessage())
     }
     finally {
       isDeletingSite.value = false
@@ -325,7 +327,7 @@ const confirmDeleteSite = async (site: Site) => {
         </h3>
         <div class="flex items-center gap-item-gap">
           <Button variant="secondary" size="sm" icon="refresh-cw" :loading="isLoading" @click="fetchSites(true)">最新状態に更新</Button>
-          <Button variant="secondary" size="sm" icon="plus" @click="openCreateModal">現場を新規作成する</Button>
+          <Button v-if="isMaster" variant="secondary" size="sm" icon="plus" @click="openCreateModal">現場を新規作成する</Button>
         </div>
       </header>
       <hr class="divider">
@@ -345,19 +347,17 @@ const confirmDeleteSite = async (site: Site) => {
 
       <ul v-else-if="filteredSites.length > 0" class="flex flex-col gap-item-gap overflow-y-auto flex-1 min-h-[300px]">
         <li v-for="site in filteredSites" :key="site.id">
-          <div class="panel p-panel-pad-compact site-item-panel flex items-center justify-between gap-panel-gap w-full" :class="{ 'is-disabled': Boolean(site.disabledAt), 'is-active': site.id === selectedSiteId }">
-            <button type="button" class="site-select-btn flex-1 min-w-0 flex flex-col gap-inline-gap text-left" :disabled="Boolean(site.disabledAt)" @click="handleSelectSite(site)">
+          <div class="panel is-interactive p-panel-pad-compact flex items-center justify-between gap-panel-gap w-full" :class="{ 'is-disabled': Boolean(site.disabledAt), 'is-active': site.id === selectedSiteId }" @click="!site.disabledAt && handleSelectSite(site)">
+            <div class="flex-1 min-w-0 flex flex-col gap-inline-gap text-left">
               <div class="flex items-center gap-item-gap">
-                <span class="site-name">{{ site.name }}</span>
+                <strong>{{ site.name }}</strong>
                 <Badge :variant="SITE_STATUS_CONFIG[site.status]?.variant">{{ SITE_STATUS_CONFIG[site.status]?.label }}</Badge>
                 <Badge v-if="site.disabledAt" variant="red">無効</Badge>
               </div>
-              <div class="site-id">
-                ID: {{ site.id }}
-              </div>
-            </button>
+              <small>ID: <code>{{ site.id }}</code></small>
+            </div>
 
-            <Button class="shrink-0" size="sm" :variant="site.disabledAt ? 'secondary' : 'danger'" @click="confirmToggleDisable(site)">{{ site.disabledAt ? '有効化する' : '無効化する' }}</Button>
+            <Button v-if="isMaster" class="shrink-0" size="sm" :variant="site.disabledAt ? 'secondary' : 'danger'" @click.stop="confirmToggleDisable(site)">{{ site.disabledAt ? '有効化する' : '無効化する' }}</Button>
           </div>
         </li>
       </ul>
@@ -392,12 +392,12 @@ const confirmDeleteSite = async (site: Site) => {
             <Icon name="settings" />
             <span class="flex items-baseline gap-item-gap">
               <span>{{ selectedSite.name }}</span>
-              <span class="site-id">(ID: {{ selectedSite.id }})</span>
+              <small>(ID: <code>{{ selectedSite.id }}</code>)</small>
             </span>
           </h3>
 
           <div class="flex items-center gap-item-gap">
-            <Button variant="danger" size="sm" icon="trash-2" :loading="isDeletingSite" @click="confirmDeleteSite(selectedSite)">現場を削除する</Button>
+            <Button v-if="isMaster" variant="danger" size="sm" icon="trash-2" :loading="isDeletingSite" @click="confirmDeleteSite(selectedSite)">現場を削除する</Button>
             <Button variant="primary" size="sm" icon="save" :loading="isSaving" @click="handleSaveSite">変更を保存する</Button>
           </div>
         </header>
@@ -434,7 +434,7 @@ const confirmDeleteSite = async (site: Site) => {
             <span class="label">アサイン済作業者</span>
             <ul v-if="workerNames.length > 0" class="flex flex-wrap items-center gap-item-gap">
               <li v-for="worker in workerNames" :key="worker">
-                <span class="inline-flex items-center worker-name">{{ worker }}</span>
+                <Badge variant="gray">{{ worker }}</Badge>
               </li>
             </ul>
             <EmptyState v-else icon="users" title="アサインされている作業者はいません" description="ユーザー管理画面から作業者をアサインしてください。" />
@@ -443,7 +443,7 @@ const confirmDeleteSite = async (site: Site) => {
 
         <!-- Excel連携タブ -->
         <div v-else-if="activeTab === 'integration'" class="flex flex-col gap-panel-gap">
-          <section class="excel-integration-panel flex flex-col gap-panel-gap p-panel-pad">
+          <section class="panel is-elevated flex flex-col gap-panel-gap p-panel-pad">
             <header class="flex items-center justify-between">
               <h4 class="flex items-center gap-item-gap">
                 <Icon name="file-spreadsheet" />
@@ -453,13 +453,13 @@ const confirmDeleteSite = async (site: Site) => {
             </header>
             <hr class="divider">
 
-            <div class="integration-status-row flex flex-wrap items-center justify-between gap-item-gap">
-              <div class="flex items-center gap-item-gap desc-text">
+            <div class="flex flex-wrap items-center justify-between gap-item-gap py-inline-gap">
+              <div class="flex items-center gap-item-gap field-help-text">
                 <span class="label">登録台帳:</span>
-                <span v-if="hasExcelPath" class="template-filename">{{ currentExcelFileName }}</span>
-                <span v-else class="text-subtle">未登録（初回Excel取込時に自動保管・登録されます）</span>
+                <code v-if="hasExcelPath">{{ currentExcelFileName }}</code>
+                <span v-else>未登録（初回Excel取込時に自動保管・登録されます）</span>
               </div>
-              <small v-if="!hasExcelPath" class="status-tip">※ 初回Excelを取り込むと帳票出力が解禁されます</small>
+              <small v-if="!hasExcelPath">※ 初回Excelを取り込むと帳票出力が解禁されます</small>
             </div>
 
             <Dropzone v-model="selectedFile" accept=".xlsx, .xlsm, .xls" :disabled="isSyncing" @change="handleFileSelect" />
@@ -485,27 +485,27 @@ const confirmDeleteSite = async (site: Site) => {
               </Button>
             </div>
 
-            <div class="excluded-keywords-card flex flex-col gap-inline-gap p-item-gap">
+            <div class="panel is-sunken flex flex-col gap-inline-gap p-item-gap">
               <div class="flex items-center justify-between">
                 <span class="label flex items-center gap-item-gap">
                   <Icon name="filter" size="sm" />
                   <span>適用中の除外キーワード（台帳のSettingシート「除外ﾘｽﾄ」より自動同期）</span>
                 </span>
-                <Badge :variant="(selectedSite.excludedCircuits?.length || 0) > 0 ? 'default' : 'default'">
+                <Badge variant="default">
                   {{ selectedSite.excludedCircuits?.length || 0 }} 件
                 </Badge>
               </div>
               <ul v-if="selectedSite.excludedCircuits && selectedSite.excludedCircuits.length > 0" class="flex flex-wrap items-center gap-inline-gap">
-                <li v-for="(kw, idx) in selectedSite.excludedCircuits" :key="idx" class="excluded-keyword-badge">
-                  {{ kw }}
+                <li v-for="(kw, idx) in selectedSite.excludedCircuits" :key="idx">
+                  <Badge variant="gray" size="sm">{{ kw }}</Badge>
                 </li>
               </ul>
-              <small v-else class="text-subtle">
+              <small v-else class="field-help-text">
                 ※ Excel台帳の「Setting」シート内にある「除外ﾘｽﾄ」テーブルを取り込むと、該当キーワードを含む回路名称が自動で計算・試験対象から除外されます。
               </small>
             </div>
 
-            <p class="desc-text">
+            <p class="field-help-text">
               ※ 取込時のExcelファイル（.xlsx / .xlsm）はサーバーへ現場台帳として自動保管されます。Web上で入力された最新試験結果はマクロ・書式・数式を100%温存したまま出力帳票へ書き戻されます。
             </p>
           </section>
@@ -517,9 +517,9 @@ const confirmDeleteSite = async (site: Site) => {
           <Note v-else-if="syncResultData" variant="success" :title="syncResultData.title">
             <div class="flex flex-wrap items-center gap-item-gap">
               <template v-if="syncResultData.type === 'merge'">
-                <span>追加: <strong class="stat-count-add">+{{ syncResultData.createdCount ?? 0 }}</strong> 件</span>
-                <span>変更: <strong class="stat-count-mod">{{ syncResultData.updatedCount ?? 0 }}</strong> 件</span>
-                <small class="stat-count-total">全回路数: {{ syncResultData.count }} 件</small>
+                <span>追加: <strong>+{{ syncResultData.createdCount ?? 0 }}</strong> 件</span>
+                <span>変更: <strong>{{ syncResultData.updatedCount ?? 0 }}</strong> 件</span>
+                <small>全回路数: {{ syncResultData.count }} 件</small>
               </template>
               <template v-else-if="syncResultData.type === 'reset'">
                 <span>取込総数: <strong>{{ syncResultData.count }}</strong> 件</span>
@@ -537,7 +537,7 @@ const confirmDeleteSite = async (site: Site) => {
             </h4>
           </header>
           <hr class="divider">
-          <p class="desc-text">
+          <p class="field-help-text">
             テーブルの盤名称等で途中で改行させない単語を指定します（※「1-1」等の英数字ハイフンや「分電盤」等はシステムで自動処理されます）。
           </p>
 
@@ -558,11 +558,6 @@ const confirmDeleteSite = async (site: Site) => {
 
   <!-- 新規現場登録モーダル -->
   <Modal v-model="isCreateModalOpen" title="新規現場登録" icon="circle-plus">
-    <template #actions>
-      <Button @click="isCreateModalOpen = false">キャンセル</Button>
-      <Button variant="primary" :loading="isCreatingSite" @click="handleCreateSite">現場を作成する</Button>
-    </template>
-
     <form class="flex flex-col gap-form-row-gap" @submit.prevent="handleCreateSite">
       <div class="flex flex-col gap-inline-gap">
         <label for="create-site-id" class="label">現場ID (半角英数)</label>
@@ -579,103 +574,12 @@ const confirmDeleteSite = async (site: Site) => {
         </p>
       </div>
     </form>
+
+    <template #footer>
+      <div class="flex items-center justify-end gap-inline-gap w-full">
+        <Button variant="secondary" @click="isCreateModalOpen = false">キャンセル</Button>
+        <Button variant="primary" :loading="isCreatingSite" @click="handleCreateSite">現場を作成する</Button>
+      </div>
+    </template>
   </Modal>
 </template>
-
-<style scoped lang="scss">
-.site-item-panel {
-  transition: var(--transition-panel);
-}
-
-.site-select-btn {
-  padding: 0;
-  border: none;
-
-  font: inherit;
-  color: inherit;
-
-  background: transparent;
-
-  @include state-interactive;
-
-  &:hover:not(:disabled) .site-name {
-    color: var(--theme-accent);
-  }
-
-  @include state-disabled;
-}
-
-.site-name {
-  font-weight: var(--font-weight-medium);
-  transition: color var(--transition-fast);
-}
-
-.site-id {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-}
-
-.error-text {
-  font-size: var(--font-size-xs);
-  color: var(--color-status-danger);
-}
-
-.worker-name {
-  padding: 0.1em var(--space-inline-gap);
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-}
-
-.desc-text {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-}
-
-.stat-count-add {
-  color: var(--color-status-success);
-}
-
-.stat-count-mod {
-  color: var(--color-status-warning);
-}
-
-.stat-count-total {
-  color: var(--color-text-muted);
-}
-
-.excel-integration-panel {
-  border: 1px solid var(--color-border-subtle);
-  background-color: var(--surface-bg-elevated);
-}
-
-.integration-status-row {
-  padding: var(--space-inline-gap) 0;
-}
-
-.text-subtle {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-}
-
-.status-tip {
-  font-size: var(--font-size-xs);
-  color: var(--color-status-warning);
-}
-
-.template-status-card {
-  border: 1px solid var(--color-border-subtle);
-  background-color: var(--surface-bg-elevated);
-}
-
-.template-filename {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-sm);
-  color: var(--color-text-main);
-}
-
-.excluded-keywords-card {
-  border: 1px solid var(--color-border-subtle);
-  background-color: var(--surface-bg);
-}
-</style>

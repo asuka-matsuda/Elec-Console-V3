@@ -37,6 +37,7 @@ describe('Server Error Utilities (createAppError & generateTraceId)', () => {
     expect(getDefaultStatusCode(ErrorCode.USER_NOT_FOUND)).toBe(404)
     expect(getDefaultStatusCode(ErrorCode.USER_LOGIN_ID_DUPLICATE)).toBe(409)
     expect(getDefaultStatusCode(ErrorCode.CIRCUIT_VERSION_CONFLICT)).toBe(409)
+    expect(getDefaultStatusCode(ErrorCode.DB_UNIQUE_VIOLATION)).toBe(409)
     expect(getDefaultStatusCode(ErrorCode.SYS_RATE_LIMITED)).toBe(429)
     expect(getDefaultStatusCode(ErrorCode.SYS_INTERNAL_ERROR)).toBe(500)
     expect(getDefaultStatusCode(ErrorCode.SYS_UNKNOWN_ERROR)).toBe(500)
@@ -64,7 +65,7 @@ describe('Server Error Utilities (createAppError & generateTraceId)', () => {
     })
   })
 
-  it('should promote Prisma known errors (P2021, P2003, P2002) to structured DB error codes', () => {
+  it('should promote Prisma known errors (P2021, P2003, P2002, P2025) to structured DB error codes', () => {
     // P2021: テーブル未存在
     const errP2021 = { code: 'P2021', meta: { table: 'main.UserOnSite' } }
     const resP2021 = parsePrismaError(errP2021)
@@ -86,6 +87,13 @@ describe('Server Error Utilities (createAppError & generateTraceId)', () => {
 
     expect(resP2002).toBeDefined()
     expect(resP2002?.code).toBe(ErrorCode.DB_UNIQUE_VIOLATION)
+
+    // P2025: 対象レコード不在
+    const errP2025 = { code: 'P2025' }
+    const resP2025 = parsePrismaError(errP2025)
+
+    expect(resP2025).toBeDefined()
+    expect(resP2025?.code).toBe(ErrorCode.SYS_NOT_FOUND)
 
     // 未知のエラーコード
     expect(parsePrismaError({ code: 'P9999' })).toBeNull()

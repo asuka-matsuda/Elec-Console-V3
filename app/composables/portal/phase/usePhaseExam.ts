@@ -14,13 +14,13 @@ import { isPhaseComplete } from '#shared/utils/soudenExam'
 import { getUserDisplayName } from '#shared/utils/user'
 import { useOfflineSync } from '~/composables/portal/useOfflineSync'
 import { useAuth } from '~/composables/useAuth'
-import { CircuitsRepository, SiteSettingsRepository } from '~/utils/db'
-import { AppException, getErrorMessage } from '~/utils/errors'
+import { useToast } from '~/composables/useToast'
+import { CircuitsRepository } from '~/utils/db'
+import { AppException, getErrorMessage, isNetworkError } from '~/utils/errors'
 
 export interface PhaseExamFeedbackOptions {
   onConflict?: (message: string) => void
   onError?: (message: string) => void
-  onConfirmClear?: (message: string) => boolean | Promise<boolean>
 }
 
 export interface ConfirmPhase1Payload {
@@ -28,6 +28,7 @@ export interface ConfirmPhase1Payload {
   mashishime?: boolean
   mashishimeCubicle?: boolean
   remarks?: string
+  remarksOnly?: boolean
   [key: string]: unknown
 }
 
@@ -40,6 +41,7 @@ export interface ConfirmPhase2Payload {
   tStatus?: string | null
   remarks?: string
   isComplete?: boolean
+  remarksOnly?: boolean
 }
 
 export interface ConfirmPhase3Payload {
@@ -49,6 +51,7 @@ export interface ConfirmPhase3Payload {
   kensou?: string | null
   remarks?: string
   isComplete?: boolean
+  remarksOnly?: boolean
 }
 
 /**
@@ -66,37 +69,14 @@ export function usePhaseExamBase(
 
   const circuits = ref<CircuitItem[]>([])
   const panelOptions = ref<PanelOption[]>([])
-  const serverPanelsWithIncompleteKansen = ref<string[]>([])
-  const phase2ThresholdMegOhm = ref<number>(1.0)
   const isLoading = ref(true)
   const isActionLoading = ref<Record<string, boolean>>({})
   const error = ref<string | null>(null)
 
   const selectedKeiTo = ref<string>(initialKeiTo)
   const selectedBanShubetsu = ref<string>('ALL')
+  const selectedFloor = ref<string>('ALL')
   const selectedBanMeisho = ref<string>('ALL')
-
-  // ネットワーク・圏外エラー判定ヘルパー
-  const isNetworkError = (err: unknown): boolean => {
-    if (typeof navigator !== 'undefined' && !navigator.onLine) {
-      return true
-    }
-
-    const e = err as { name?: string, message?: string, statusCode?: number, status?: number }
-
-    if (e?.name === 'TypeError' && (e?.message?.includes('fetch') || e?.message?.includes('Network'))) {
-      return true
-    }
-
-    const status = e?.statusCode || e?.status
-
-    // ネットワーク未到達、ゲートウェイタイムアウト、サーバー一時障害はオフライン扱い
-    if (!status || status === 408 || status === 502 || status === 503 || status === 504) {
-      return true
-    }
-
-    return false
-  }
 
   // クライアント側の回路データから panelOptions を自動補完生成
   const derivePanelOptions = (items: CircuitItem[]): PanelOption[] => {
@@ -132,14 +112,7 @@ export function usePhaseExamBase(
 
     // 1. まずローカル IndexedDB から即座に読み込み (0ms / オフライン完全保証)
     try {
-      const [localCircuits, localSettings] = await Promise.all([
-        CircuitsRepository.getBySite(siteId),
-        SiteSettingsRepository.get(siteId),
-      ])
-
-      if (localSettings && typeof localSettings.phase2ThresholdMegOhm === 'number') {
-        phase2ThresholdMegOhm.value = localSettings.phase2ThresholdMegOhm
-      }
+      const localCircuits = await CircuitsRepository.getBySite(siteId)
 
       if (localCircuits && localCircuits.length > 0) {
         circuits.value = localCircuits
@@ -166,20 +139,6 @@ export function usePhaseExamBase(
       if (res && res.circuits) {
         circuits.value = res.circuits
         panelOptions.value = res.panelOptions || derivePanelOptions(res.circuits)
-        serverPanelsWithIncompleteKansen.value = res.panelsWithIncompleteKansen || []
-        if (typeof res.phase2ThresholdMegOhm === 'number') {
-          phase2ThresholdMegOhm.value = res.phase2ThresholdMegOhm
-
-          // 現場設定もローカル IndexedDB に保持
-          const existing = await SiteSettingsRepository.get(siteId)
-
-          if (existing) {
-            await SiteSettingsRepository.put({
-              ...existing,
-              phase2ThresholdMegOhm: res.phase2ThresholdMegOhm,
-            })
-          }
-        }
 
         // IndexedDB に最新マスターを非同期保存
         await CircuitsRepository.putAll(res.circuits)
@@ -213,25 +172,102 @@ export function usePhaseExamBase(
     }))
   })
 
-  // 系統切替時に盤種別・盤名称をALLへリセット
+  // 系統切替時に盤種別・エリア・盤名称をALLへリセット
   watch(selectedKeiTo, () => {
     selectedBanShubetsu.value = 'ALL'
+    selectedFloor.value = 'ALL'
     selectedBanMeisho.value = 'ALL'
   })
 
-  // 選択された種別に属する盤名称の選択肢リスト
-  const availableBanMeishoList = computed(() => {
-    const filtered = selectedBanShubetsu.value === 'ALL'
-      ? panelOptions.value
-      : panelOptions.value.filter(p => p.banShubetsu === selectedBanShubetsu.value)
+  // エリアの選択肢リスト（選択中の系統・盤種別に属する一意なエリアを自然順ソート）
+  const availableFloorList = computed(() => {
+    const targetCircuits = circuits.value.filter((c) => {
+      if (selectedKeiTo.value && selectedKeiTo.value !== 'ALL' && c.keiTo !== selectedKeiTo.value) {
+        return false
+      }
+      if (selectedBanShubetsu.value !== 'ALL' && c.banShubetsu !== selectedBanShubetsu.value) {
+        return false
+      }
+
+      return true
+    })
 
     const set = new Set<string>()
+    let hasUnset = false
 
-    filtered.forEach((p) => {
-      if (p.banMeisho) {
-        set.add(p.banMeisho)
+    for (const c of targetCircuits) {
+      const f = (c.floor || '').trim()
+
+      if (f) {
+        set.add(f)
       }
-    })
+      else {
+        hasUnset = true
+      }
+    }
+
+    const sorted = Array.from(set).sort((a, b) =>
+      a.localeCompare(b, 'ja', { numeric: true, sensitivity: 'base' }),
+    )
+
+    const options = [{ label: 'すべてのエリア', value: 'ALL' }]
+
+    for (const f of sorted) {
+      options.push({ label: f, value: f })
+    }
+
+    if (hasUnset && set.size > 0) {
+      options.push({ label: 'エリア未設定', value: '__UNSET__' })
+    }
+
+    return options
+  })
+
+  // 選択中エリアの整合性担保（存在しないエリアになった場合はALLへリセット）
+  watch(availableFloorList, (opts) => {
+    if (selectedFloor.value !== 'ALL' && !opts.some(o => o.value === selectedFloor.value)) {
+      selectedFloor.value = 'ALL'
+    }
+  })
+
+  // 選択された種別・エリアに属する盤名称の選択肢リスト
+  const availableBanMeishoList = computed(() => {
+    const set = new Set<string>()
+
+    if (circuits.value.length > 0) {
+      for (const c of circuits.value) {
+        if (selectedKeiTo.value && selectedKeiTo.value !== 'ALL' && c.keiTo !== selectedKeiTo.value) {
+          continue
+        }
+        if (selectedBanShubetsu.value !== 'ALL' && c.banShubetsu !== selectedBanShubetsu.value) {
+          continue
+        }
+        if (selectedFloor.value !== 'ALL') {
+          const floorVal = (c.floor || '').trim()
+
+          if (selectedFloor.value === '__UNSET__') {
+            if (floorVal) continue
+          }
+          else if (floorVal !== selectedFloor.value) {
+            continue
+          }
+        }
+        if (c.banMeisho) {
+          set.add(c.banMeisho)
+        }
+      }
+    }
+    else {
+      const filtered = selectedBanShubetsu.value === 'ALL'
+        ? panelOptions.value
+        : panelOptions.value.filter(p => p.banShubetsu === selectedBanShubetsu.value)
+
+      filtered.forEach((p) => {
+        if (p.banMeisho) {
+          set.add(p.banMeisho)
+        }
+      })
+    }
 
     const sorted = Array.from(set).sort((a, b) =>
       a.localeCompare(b, 'ja', { numeric: true, sensitivity: 'base' }),
@@ -242,7 +278,14 @@ export function usePhaseExamBase(
     return [{ label: 'すべての盤', value: 'ALL' }, ...list]
   })
 
-  // 系統・盤種別・盤名称でフィルタリングした表示用回路一覧
+  // エリア変更等で盤名称が選択肢から外れた場合はALLへリセット
+  watch(availableBanMeishoList, (opts) => {
+    if (selectedBanMeisho.value !== 'ALL' && !opts.some(o => o.value === selectedBanMeisho.value)) {
+      selectedBanMeisho.value = 'ALL'
+    }
+  })
+
+  // 系統・盤種別・エリア・盤名称でフィルタリングした表示用回路一覧
   const filteredCircuits = computed(() => {
     return circuits.value.filter((c) => {
       // 系統フィルタ (ALL以外の場合)
@@ -252,6 +295,17 @@ export function usePhaseExamBase(
 
       if (selectedBanShubetsu.value !== 'ALL' && c.banShubetsu !== selectedBanShubetsu.value) {
         return false
+      }
+
+      if (selectedFloor.value !== 'ALL') {
+        const floorVal = (c.floor || '').trim()
+
+        if (selectedFloor.value === '__UNSET__') {
+          if (floorVal) return false
+        }
+        else if (floorVal !== selectedFloor.value) {
+          return false
+        }
       }
 
       if (selectedBanMeisho.value !== 'ALL' && c.banMeisho !== selectedBanMeisho.value) {
@@ -311,46 +365,22 @@ export function usePhaseExamBase(
     }
   })
 
-  // 【Local-Firstリアクティブ計算】幹線未完了の盤リスト（進捗参照用）
-  const panelsWithIncompleteKansen = computed<string[]>({
-    get: () => {
-      const set = new Set<string>(serverPanelsWithIncompleteKansen.value)
-      const kansenCircuits = circuits.value.filter(c => c.keiTo === '幹線' && !c.isExcluded)
-
-      for (const c of kansenCircuits) {
-        if (!isPhaseComplete(c, 1) || !isPhaseComplete(c, 2) || !isPhaseComplete(c, 3)) {
-          set.add(c.banMeisho)
-        }
-      }
-
-      return Array.from(set)
-    },
-    set: (val: string[]) => {
-      serverPanelsWithIncompleteKansen.value = val
-    },
-  })
-
-  // 幹線を試験する前に二次側のチェックを行えるようにするため、幹線→二次側のロックは撤廃（常にfalse）
-  const isCircuitLocked = (_circuit: CircuitItem): boolean => false
-
   const notifyConflict = feedbackOptions?.onConflict || ((msg: string) => {
-    if (typeof window !== 'undefined' && typeof window.alert === 'function') {
-      window.alert(msg)
+    try {
+      useToast().warning(msg)
+    }
+    catch {
+      // Ignore in non-Nuxt test context
     }
   })
 
   const notifyError = feedbackOptions?.onError || ((msg: string) => {
-    if (typeof window !== 'undefined' && typeof window.alert === 'function') {
-      window.alert(msg)
+    try {
+      useToast().error(msg)
     }
-  })
-
-  const askConfirmClear = feedbackOptions?.onConfirmClear || ((msg: string) => {
-    if (typeof window !== 'undefined' && typeof window.confirm === 'function') {
-      return window.confirm(msg)
+    catch {
+      // Ignore in non-Nuxt test context
     }
-
-    return true
   })
 
   // 排他制御 (409 Conflict) エラーの共通ハンドリング
@@ -423,6 +453,8 @@ export function usePhaseExamBase(
 
     if (!siteId) return
 
+    const previousSnapshot: CircuitItem = { ...circuit }
+
     isActionLoading.value[circuit.id] = true
     const clientConfirmedAt = getAccurateNow().toISOString()
     const workerName = getWorkerName()
@@ -430,7 +462,7 @@ export function usePhaseExamBase(
     // 1. 【Local-First】 IndexedDB と UI メモリを即座に更新 (0ms レスポンス)
     const localPatch: Partial<CircuitItem> = {
       ...optimisticPatch,
-      ...(actionType === 'confirm' ? { clientConfirmedAt, workerName } : {}),
+      ...(actionType === 'confirm' && !payload.remarksOnly ? { clientConfirmedAt, workerName } : {}),
     }
 
     updateLocalCircuit(circuit.id, localPatch)
@@ -480,6 +512,10 @@ export function usePhaseExamBase(
     }
     catch (err: unknown) {
       if (await handleConflictError(circuit.id, err)) {
+        if (enqueuedRecord) {
+          await removeQueueItem(enqueuedRecord.id)
+        }
+
         return
       }
 
@@ -488,7 +524,15 @@ export function usePhaseExamBase(
         return { success: true, isOffline: true }
       }
 
-      const actionName = actionType === 'confirm' ? `確定` : `確定解除`
+      // ネットワークエラー以外の 4xx/5xx エラー時は楽観的更新をロールバックし、不正なキュー残留を防止
+      updateLocalCircuit(circuit.id, previousSnapshot)
+      await CircuitsRepository.put(previousSnapshot)
+
+      if (enqueuedRecord) {
+        await removeQueueItem(enqueuedRecord.id)
+      }
+
+      const actionName = payload.remarksOnly ? '備考保存' : (actionType === 'confirm' ? '確定' : '確定解除')
 
       notifyError(`${actionName}に失敗しました: ${getErrorMessage(err)}`)
       throw err
@@ -496,6 +540,24 @@ export function usePhaseExamBase(
     finally {
       isActionLoading.value[circuit.id] = false
     }
+  }
+
+  // --- 除外回路等の備考のみ保存アクション (Phase 1〜3 共通) ---
+  const saveExcludedRemarks = async (circuit: CircuitItem, remarks: string) => {
+    const trimmedRemarks = remarks.trim()
+    const optimisticPatch: Partial<CircuitItem>
+      = phaseNumber === 1
+        ? { p1Remarks: trimmedRemarks }
+        : phaseNumber === 2
+          ? { p2Remarks: trimmedRemarks }
+          : { p3Remarks: trimmedRemarks }
+
+    return executeCircuitAction(
+      circuit,
+      'confirm',
+      { remarks: trimmedRemarks, remarksOnly: true },
+      optimisticPatch,
+    )
   }
 
   // --- Phase 1 専用アクション ---
@@ -538,19 +600,13 @@ export function usePhaseExamBase(
   }
 
   // --- Phase 2 専用アクション ---
-  const evalMegStatus = (val: number | string | null | undefined): 'OK' | 'NG' | null => {
-    if (val === null || val === undefined || val === '') return null
-    const num = typeof val === 'number' ? val : parseFloat(String(val))
-
-    if (isNaN(num)) return null
-
-    return num >= phase2ThresholdMegOhm.value ? 'OK' : 'NG'
-  }
-
   const confirmPhase2 = async (
     circuit: CircuitItem,
     payload: ConfirmPhase2Payload,
   ) => {
+    const nowIso = getAccurateNow().toISOString()
+    const workerName = getWorkerName()
+
     const optimisticPatch: Partial<CircuitItem> = {
       zetsuenR: payload.rVal !== undefined ? payload.rVal : circuit.zetsuenR,
       zetsuenS: payload.sVal !== undefined ? payload.sVal : circuit.zetsuenS,
@@ -560,31 +616,11 @@ export function usePhaseExamBase(
       p2TStatus: payload.tStatus !== undefined ? payload.tStatus : circuit.p2TStatus,
       p2Remarks: payload.remarks !== undefined ? payload.remarks : circuit.p2Remarks,
       p2IsComplete: payload.isComplete !== undefined ? payload.isComplete : true,
+      p2ConfirmedAt: nowIso,
+      p2Worker: workerName,
     }
 
     return executeCircuitAction(circuit, 'confirm', payload as Record<string, unknown>, optimisticPatch)
-  }
-
-  const clearPhase2 = async (circuit: CircuitItem) => {
-    const isOk = await askConfirmClear(`盤「${circuit.banMeisho}」回路「${circuit.kairoBangou || circuit.kairoMeisho}」のフェーズ2確定を解除しますか？`)
-
-    if (!isOk) {
-      return
-    }
-
-    const optimisticPatch: Partial<CircuitItem> = {
-      zetsuenR: null,
-      zetsuenS: null,
-      zetsuenT: null,
-      p2RStatus: null,
-      p2SStatus: null,
-      p2TStatus: null,
-      p2Worker: null,
-      p2ConfirmedAt: null,
-      p2IsComplete: false,
-    }
-
-    return executeCircuitAction(circuit, 'clear', {}, optimisticPatch)
   }
 
   // --- Phase 3 専用アクション ---
@@ -592,6 +628,9 @@ export function usePhaseExamBase(
     circuit: CircuitItem,
     payload: ConfirmPhase3Payload,
   ) => {
+    const nowIso = getAccurateNow().toISOString()
+    const workerName = getWorkerName()
+
     const optimisticPatch: Partial<CircuitItem> = {
       denatsuRs: payload.rs !== undefined ? payload.rs : circuit.denatsuRs,
       denatsuSt: payload.st !== undefined ? payload.st : circuit.denatsuSt,
@@ -599,29 +638,11 @@ export function usePhaseExamBase(
       kensou: payload.kensou !== undefined ? payload.kensou : circuit.kensou,
       p3Remarks: payload.remarks !== undefined ? payload.remarks : circuit.p3Remarks,
       p3IsComplete: payload.isComplete !== undefined ? payload.isComplete : true,
+      p3ConfirmedAt: nowIso,
+      p3Worker: workerName,
     }
 
     return executeCircuitAction(circuit, 'confirm', payload as Record<string, unknown>, optimisticPatch)
-  }
-
-  const clearPhase3 = async (circuit: CircuitItem) => {
-    const isOk = await askConfirmClear(`盤「${circuit.banMeisho}」回路「${circuit.kairoBangou || circuit.kairoMeisho}」のフェーズ3確定を解除しますか？`)
-
-    if (!isOk) {
-      return
-    }
-
-    const optimisticPatch: Partial<CircuitItem> = {
-      denatsuRs: null,
-      denatsuSt: null,
-      denatsuRt: null,
-      kensou: null,
-      p3Worker: null,
-      p3ConfirmedAt: null,
-      p3IsComplete: false,
-    }
-
-    return executeCircuitAction(circuit, 'clear', {}, optimisticPatch)
   }
 
   return {
@@ -629,32 +650,28 @@ export function usePhaseExamBase(
     phaseNumber,
     circuits,
     panelOptions,
-    panelsWithIncompleteKansen,
-    phase2ThresholdMegOhm,
     isLoading,
     isActionLoading,
     error,
     selectedKeiTo,
     selectedBanShubetsu,
+    selectedFloor,
     selectedBanMeisho,
     availableShubetsuList,
     shubetsuTabOptions,
+    availableFloorList,
     availableBanMeishoList,
     filteredCircuits,
     phaseStats,
     fetchCircuits,
     isThreePhase,
-    isCircuitLocked,
     getWorkerName,
     getAccurateNow,
     executeCircuitAction,
-    askConfirmClear,
+    saveExcludedRemarks,
     confirmPhase1,
-    evalMegStatus,
     confirmPhase2,
-    clearPhase2,
     confirmPhase3,
-    clearPhase3,
   }
 }
 

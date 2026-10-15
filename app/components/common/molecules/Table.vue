@@ -86,41 +86,51 @@ const getCellDisplayValue = (row: T, col: TableColumn<T>): unknown => {
 // ============================================================================
 const parsePx = (val?: string | number): number | null => {
   if (typeof val === 'number') return val
-  if (!val) return null
-  const num = parseFloat(val)
+  if (!val || typeof val !== 'string') return null
+  const trimmed = val.trim()
+
+  if (trimmed.endsWith('%')) return null
+  const num = parseFloat(trimmed)
 
   return isNaN(num) ? null : num
 }
 
-interface ResolvedColumn extends TableColumn<T> {
-  resolvedWidth: string
+const formatCssSize = (val?: string | number): string | undefined => {
+  if (val === undefined || val === null || val === '') return undefined
+
+  return typeof val === 'number' ? `${val}px` : val
 }
 
-const resolveWidth = (col: TableColumn<T>): string => {
-  if (col.width) {
-    return typeof col.width === 'number' ? `${col.width}px` : col.width
-  }
-  if (col.minWidth) {
-    return typeof col.minWidth === 'number' ? `${col.minWidth}px` : col.minWidth
-  }
-
-  return 'auto'
+interface ResolvedColumn extends TableColumn<T> {
+  resolvedWidth: string
+  resolvedMinWidth?: string
 }
 
 const effectiveColumns = computed<ResolvedColumn[]>(() => {
-  return props.columns.map(col => ({
-    ...col,
-    resolvedWidth: resolveWidth(col),
-  }))
+  return props.columns.map((col) => {
+    const explicitWidth = formatCssSize(col.width)
+    const explicitMinWidth = formatCssSize(col.minWidth) ?? (explicitWidth && !explicitWidth.endsWith('%') ? explicitWidth : undefined)
+
+    return {
+      ...col,
+      resolvedWidth: explicitWidth ?? 'auto',
+      resolvedMinWidth: explicitMinWidth,
+    }
+  })
 })
 
-// 各列の幅（resolvedWidth）の合計からテーブル全体の最小幅を算出
-// これにより、画面幅が狭い場合でも各列が強制縮小されて崩れるのを防ぎ、overflow-auto で自然に横スクロール可能にする
+const getCellWidthStyle = (col: ResolvedColumn) => ({
+  width: col.resolvedWidth !== 'auto' ? col.resolvedWidth : undefined,
+  minWidth: col.resolvedMinWidth,
+})
+
+// 各列の最小幅（width または minWidth）の合計からテーブル全体の最小幅を算出
+// 画面幅が広い場合は w-full (width: 100%) で右端まで広がり、狭い場合は overflow-auto で自然に横スクロール可能にする
 const tableStyle = computed(() => {
   let totalWidth = 0
 
   for (const col of effectiveColumns.value) {
-    const px = parsePx(col.resolvedWidth)
+    const px = parsePx(col.width) ?? parsePx(col.minWidth)
 
     if (px) {
       totalWidth += px
@@ -133,14 +143,14 @@ const tableStyle = computed(() => {
 
 <template>
   <div class="table-wrapper overflow-auto">
-    <table class="min-w-full text-left table-fixed" :style="tableStyle">
+    <table class="w-full text-left" :style="tableStyle">
       <colgroup>
         <col v-for="col in effectiveColumns" :key="String(col.key)" :style="{ width: col.resolvedWidth }" />
       </colgroup>
 
       <thead>
         <tr>
-          <th v-for="col in effectiveColumns" :key="String(col.key)" class="sticky top-0 z-table-header p-item-gap align-middle" :class="{ 'is-sortable': isSortable(col), 'is-sorted': sortBy === col.key && sortOrder }" @click="handleSort(col)">
+          <th v-for="col in effectiveColumns" :key="String(col.key)" class="sticky top-0 z-table-header p-item-gap align-middle" :class="{ 'is-sortable': isSortable(col), 'is-sorted': sortBy === col.key && sortOrder }" :style="getCellWidthStyle(col)" @click="handleSort(col)">
             <div class="flex items-center gap-inline-gap w-full min-w-0" :class="col.align === 'center' ? 'justify-center' : col.align === 'right' ? 'justify-end' : 'justify-start'">
               <span class="header-label">
                 <slot :name="`header-${String(col.key)}`" :column="col">
@@ -156,7 +166,7 @@ const tableStyle = computed(() => {
       <tbody v-if="loading">
         <slot name="loading">
           <tr v-for="skeletonIndex in skeletonRows" :key="`skeleton-row-${skeletonIndex}`" class="table-row">
-            <td v-for="col in effectiveColumns" :key="`skeleton-col-${String(col.key)}`" class="p-item-gap align-middle" :class="[col.class, col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left']">
+            <td v-for="col in effectiveColumns" :key="`skeleton-col-${String(col.key)}`" class="p-item-gap align-middle" :class="[col.class, col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left']" :style="getCellWidthStyle(col)">
               <Skeleton :width="col.align === 'center' ? '40%' : '75%'" height="1.1rem" />
             </td>
           </tr>
@@ -165,7 +175,7 @@ const tableStyle = computed(() => {
 
       <tbody v-else-if="data && data.length > 0">
         <tr v-for="(row, index) in data" :id="rowId?.(row, index)" :key="getRowKey(row, index)" class="table-row relative z-[1]" :class="[rowClass?.(row, index), { 'is-interactive': interactiveRow }]" @click="handleRowClick(row, index, $event)">
-          <td v-for="col in effectiveColumns" :key="String(col.key)" class="p-item-gap align-middle" :class="[col.class, col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left', { 'is-truncate': col.truncate, 'is-empty': getCellValue(row, col.key) === null || getCellValue(row, col.key) === undefined || getCellValue(row, col.key) === '' }]">
+          <td v-for="col in effectiveColumns" :key="String(col.key)" class="p-item-gap align-middle" :class="[col.class, col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left', { 'is-truncate': col.truncate, 'is-empty': getCellValue(row, col.key) === null || getCellValue(row, col.key) === undefined || getCellValue(row, col.key) === '' }]" :style="getCellWidthStyle(col)">
             <slot v-if="$slots[`cell-${String(col.key)}`]" :name="`cell-${String(col.key)}`" :value="getCellValue(row, col.key)" :row="row" :index="index" :column="col" />
             <template v-else>
               {{ getCellDisplayValue(row, col) }}
@@ -270,9 +280,7 @@ td {
   font-variant-numeric: tabular-nums;
   line-height: var(--table-cell-line-height, 1.3);
   color: var(--color-text-main);
-  word-break: auto-phrase;
-  line-break: strict;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
 
   &:last-child {
     border-right: none;

@@ -8,21 +8,24 @@
 
 import { defineEventHandler, getQuery } from 'h3'
 
-import { requireAuthUser } from '../../../utils/auth'
-import { getAllMasterTemplateItems, getAllMasterTemplatesMeta } from '../../../utils/masterTemplates'
+import { canAccessSite, isSuperUser, requireAuthUser, requireSiteAccess } from '../../../utils/auth'
+import { getAllMasterTemplateItems } from '../../../utils/masterTemplates'
 
 export default defineEventHandler(async (event) => {
-  await requireAuthUser(event)
+  const user = await requireAuthUser(event)
 
   const query = getQuery(event)
   const siteId = query.siteId ? String(query.siteId) : undefined
 
-  // 旧仕様互換（テストや単一マップ取得用）
-  if (query.format === 'legacy') {
-    return getAllMasterTemplatesMeta()
+  if (siteId) {
+    await requireSiteAccess(event, siteId)
   }
 
-  const items = getAllMasterTemplateItems(siteId)
+  // siteId 未指定時の全件取得（サイト専用テンプレート含む）は master のみ許可。一般ユーザーは自身の担当現場または全現場共通のみにフィルタ
+  const allItems = getAllMasterTemplateItems(siteId)
+  const items = !siteId && !isSuperUser(user)
+    ? allItems.filter(item => item.isAllSites || (item.assignedSiteIds ?? []).some(sid => canAccessSite(user, sid)))
+    : allItems
 
   return { items }
 })

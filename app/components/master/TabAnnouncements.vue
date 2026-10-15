@@ -57,7 +57,7 @@ const columns: TableColumn<AnnouncementItem>[] = [
 <template>
   <section class="flex flex-col gap-panel-gap">
     <header class="flex flex-wrap items-center justify-between gap-panel-gap">
-      <small class="guide-text">ダッシュボードの「お知らせ」ウィジェットに掲載される情報を管理します。</small>
+      <small>ダッシュボードの「お知らせ」ウィジェットに掲載される情報を管理します。</small>
 
       <Button variant="primary" size="sm" icon="plus" @click="openModal()">お知らせを作成する</Button>
     </header>
@@ -71,7 +71,7 @@ const columns: TableColumn<AnnouncementItem>[] = [
     </Table>
 
     <Modal v-model="isEditModalOpen" :title="editingId ? '編集' : '新規作成'" icon="bell">
-      <template #actions>
+      <template #footer>
         <Button :disabled="isSaving" @click="isEditModalOpen = false">キャンセル</Button>
         <Button variant="primary" :loading="isSaving" @click="handleSave">保存する</Button>
       </template>
@@ -99,15 +99,3 @@ const columns: TableColumn<AnnouncementItem>[] = [
     </Modal>
   </section>
 </template>
-
-<style scoped lang="scss">
-.guide-text {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-}
-
-.error-text {
-  font-size: var(--font-size-xs);
-  color: var(--color-status-danger);
-}
-</style>

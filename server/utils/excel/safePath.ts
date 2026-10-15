@@ -10,7 +10,7 @@ import path from 'node:path'
 /**
  * Excelファイルパスの安全性を検証する (パストラバーサル・任意ファイル上書き・UNCパス攻撃防止)
  */
-export function validateSafeExcelPath(rawPath: string): string {
+export function validateSafeExcelPath(rawPath: string, siteId?: string): string {
   if (!rawPath || typeof rawPath !== 'string') {
     throw new Error('ファイルパスが指定されていません')
   }
@@ -60,45 +60,59 @@ export function validateSafeExcelPath(rawPath: string): string {
   }
 
   const normalized = path.normalize(cleaned)
-  const normalizedLower = normalized.toLowerCase()
+  // 6. サーバー管理領域（.data/templates）ホワイトリスト検証
+  const allowedRoot = path.resolve(process.cwd(), '.data', 'templates')
+  const safeSiteId = siteId && /^[a-zA-Z0-9_-]+$/.test(siteId) ? siteId : undefined
+  const allowedDir = safeSiteId ? path.resolve(allowedRoot, safeSiteId) : allowedRoot
 
-  // 6. 機密ディレクトリやシステムフォルダへのアクセス禁止
-  const forbiddenSegments = [
-    '\\.git',
-    '/\\.git',
-    '\\node_modules',
-    '/node_modules',
-    '\\.env',
-    '/\\.env',
-    '\\prisma',
-    '/prisma',
-    '\\server',
-    '/server',
-    '\\windows',
-    '/windows',
-    '\\system32',
-    '/system32',
-    '/etc',
-    '/usr',
-    '/bin',
-    '/sbin',
-  ]
+  const isInsideAllowed = (candidate: string): boolean => {
+    const rel = path.relative(allowedDir, candidate)
 
-  for (const seg of forbiddenSegments) {
-    if (normalizedLower.includes(seg)) {
-      throw new Error(`セキュリティ上の理由から、指定されたパスへのアクセスは許可されていません: ${seg}`)
+    return Boolean(rel) && !rel.startsWith('..') && !path.isAbsolute(rel)
+  }
+
+  let resolved = path.resolve(process.cwd(), normalized)
+
+  // 別環境（Windows ⇄ Linux 等）で保存された .data/templates 配下パスの自動正規化
+  if (!isInsideAllowed(resolved)) {
+    const markerMatch = normalized.replace(/\\/g, '/').match(/\.data\/templates\/(.+)$/i)
+
+    if (markerMatch?.[1]) {
+      const candidate = path.resolve(allowedRoot, markerMatch[1])
+
+      if (isInsideAllowed(candidate)) {
+        resolved = candidate
+      }
+    }
+    else if (safeSiteId) {
+      const candidateByBasename = path.resolve(allowedDir, path.basename(normalized))
+
+      if (isInsideAllowed(candidateByBasename) && fs.existsSync(candidateByBasename)) {
+        resolved = candidateByBasename
+      }
     }
   }
 
-  return normalized
+  if (!isInsideAllowed(resolved)) {
+    const relRoot = path.relative(allowedRoot, resolved)
+    const isInsideRoot = Boolean(relRoot) && !relRoot.startsWith('..') && !path.isAbsolute(relRoot)
+
+    if (safeSiteId && isInsideRoot) {
+      throw new Error('セキュリティ上の理由から、他の現場のテンプレート領域へのアクセスは許可されていません')
+    }
+
+    throw new Error('セキュリティ上の理由から、テンプレート保管領域（.data/templates）外のファイルパスへのアクセスは許可されていません')
+  }
+
+  return resolved
 }
 
 /**
  * 安全性を検証した上で、実在するExcelファイルパスを解決する。
  * （.xlsx で登録されているが実体が .xlsm の場合、またはその逆の拡張子ブレを自動フォールバック）
  */
-export function resolveExistingExcelPath(rawPath: string): string {
-  const safePath = validateSafeExcelPath(rawPath)
+export function resolveExistingExcelPath(rawPath: string, siteId?: string): string {
+  const safePath = validateSafeExcelPath(rawPath, siteId)
 
   // そのまま実在すればそれを採用
   if (fs.existsSync(safePath)) {

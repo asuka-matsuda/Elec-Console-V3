@@ -9,6 +9,7 @@ import { computed } from 'vue'
 import { useToolPage } from '~/composables/tools/useToolPage'
 import { cableData } from '~/constants/data/cableData'
 import { conduitData } from '~/constants/data/conduitData'
+import { generateUuid } from '~/utils/crypto'
 import type {
   ConduitCalcResult,
   ConduitInputs,
@@ -19,14 +20,12 @@ import {
 } from '~/utils/tools/conduit/conduitCalcLogic'
 import { mapConduitToHistory } from '~/utils/tools/conduit/historyMapper'
 
-const uuidv4 = () => crypto.randomUUID()
-
 const defaultInputs: ConduitInputs = {
   conduitCategory: '',
   customFillRate: 80,
   inputCables: [
     {
-      id: uuidv4(),
+      id: generateUuid(),
       category: '',
       cableIdx: '',
       count: 1,
@@ -38,6 +37,9 @@ export function useConduitCalculator() {
   const {
     inputs,
     result,
+    isShowingBasis,
+    isSaving,
+    handleSave,
     saveToHistory: saveHistory,
     resetInputs,
     openResetModal,
@@ -74,13 +76,13 @@ export function useConduitCalculator() {
   // useSessionStorageで初期化される際にidが重複しないようにする等の対処は必要に応じて行う
   if (!inputs.value.inputCables || inputs.value.inputCables.length === 0) {
     inputs.value.inputCables = [
-      { id: uuidv4(), category: '', cableIdx: '', count: 1 },
+      { id: generateUuid(), category: '', cableIdx: '', count: 1 },
     ]
   }
 
   function addCable() {
     inputs.value.inputCables.push({
-      id: uuidv4(),
+      id: generateUuid(),
       category: '',
       cableIdx: '',
       count: 1,
@@ -108,6 +110,9 @@ export function useConduitCalculator() {
     inputs,
     result,
     isSaveDisabled,
+    isShowingBasis,
+    isSaving,
+    handleSave,
     addCable,
     removeCable,
     reset: resetInputs,

@@ -8,12 +8,14 @@
 
 import path from 'node:path'
 
-import { createError, defineEventHandler, getHeader, readMultipartFormData } from 'h3'
+import { defineEventHandler, getHeader, readMultipartFormData } from 'h3'
 
+import { ErrorCode } from '#shared/types/errors'
 import type { ReportLogicType } from '#shared/types/reportTemplate'
 
 import { requireMasterUser } from '../../../utils/auth'
-import { saveMasterTemplateItem } from '../../../utils/masterTemplates'
+import { createAppError } from '../../../utils/error'
+import { getMasterTemplateItem, saveMasterTemplateItem } from '../../../utils/masterTemplates'
 
 const VALID_LOGIC_TYPES: ReportLogicType[] = ['tag', 'socket-tepra', 'exam', 'remote']
 
@@ -23,8 +25,8 @@ export default defineEventHandler(async (event) => {
   const contentType = getHeader(event, 'content-type') || ''
 
   if (!contentType.includes('multipart/form-data')) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: 'multipart/form-data 形式でファイルを送信してください',
     })
   }
@@ -32,8 +34,8 @@ export default defineEventHandler(async (event) => {
   const formData = await readMultipartFormData(event)
 
   if (!formData) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: 'フォームデータが見つかりません',
     })
   }
@@ -91,28 +93,35 @@ export default defineEventHandler(async (event) => {
   }
 
   if (!logicType || !VALID_LOGIC_TYPES.includes(logicType)) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: '有効な帳票ロジック種別（tag, socket-tepra, exam, remote）を指定してください',
     })
   }
 
   if (!name) {
-    // 未入力時はロジックに応じたデフォルト名
-    const defaultNames: Record<ReportLogicType, string> = {
-      'tag': '線名札（タグ枠）',
-      'socket-tepra': 'コンセント用テプラ元データ',
-      'exam': '送電試験結果成績書',
-      'remote': 'フル2線式リモコン設定表',
-    }
+    const existingItem = id ? getMasterTemplateItem(id) : null
 
-    name = defaultNames[logicType] || '帳票テンプレート'
+    if (existingItem?.name) {
+      name = existingItem.name
+    }
+    else {
+      // 未入力時はロジックに応じたデフォルト名
+      const defaultNames: Record<ReportLogicType, string> = {
+        'tag': '線名札（タグ枠）',
+        'socket-tepra': 'コンセント用テプラ元データ',
+        'exam': '送電試験結果成績書',
+        'remote': 'フル2線式リモコン設定表',
+      }
+
+      name = defaultNames[logicType] || '帳票テンプレート'
+    }
   }
 
   // 新規登録時はファイル必須
   if (!id && (!fileData || fileData.length === 0)) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: 'アップロードするExcelファイルを選択してください',
     })
   }
@@ -121,9 +130,9 @@ export default defineEventHandler(async (event) => {
     const MAX_TEMPLATE_SIZE = 20 * 1024 * 1024 // 20MB
 
     if (fileData.length > MAX_TEMPLATE_SIZE) {
-      throw createError({
+      throw createAppError({
+        code: ErrorCode.CIRCUIT_IMPORT_INVALID,
         statusCode: 413,
-        statusMessage: 'Payload Too Large',
         message: 'アップロード可能なファイルサイズは最大20MBまでです。',
       })
     }
@@ -131,7 +140,8 @@ export default defineEventHandler(async (event) => {
     const ext = path.extname(originalFilename).toLowerCase()
 
     if (ext !== '.xlsx' && ext !== '.xlsm' && ext !== '.xls') {
-      throw createError({
+      throw createAppError({
+        code: ErrorCode.CIRCUIT_IMPORT_INVALID,
         statusCode: 400,
         message: 'Excelファイル形式（.xlsx, .xlsm, .xls）のみアップロード可能です',
       })
@@ -142,9 +152,9 @@ export default defineEventHandler(async (event) => {
     const isOle = fileData.length >= 4 && fileData[0] === 0xD0 && fileData[1] === 0xCF
 
     if (!isZip && !isOle) {
-      throw createError({
+      throw createAppError({
+        code: ErrorCode.CIRCUIT_IMPORT_INVALID,
         statusCode: 400,
-        statusMessage: 'Bad Request',
         message: '無効なファイル形式です。有効なExcelファイルを指定してください。',
       })
     }

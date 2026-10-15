@@ -10,7 +10,7 @@ import { defineEventHandler, getRouterParam, readBody } from 'h3'
 
 import { ErrorCode } from '#shared/types/errors'
 
-import { requireMasterUser } from '../../utils/auth'
+import { requireMasterUser, toSafeUser } from '../../utils/auth'
 import { createAppError } from '../../utils/error'
 import { prisma } from '../../utils/prisma'
 
@@ -49,7 +49,7 @@ export default defineEventHandler(async (event) => {
         message: 'マスター管理者を無効化することはできません。',
       })
     }
-    if (body.role && body.role !== 'admin') {
+    if (body.role && body.role !== 'master' && body.role !== 'admin') {
       throw createAppError({
         code: ErrorCode.USER_MASTER_PROTECTED,
         message: 'マスター管理者の権限を降格することはできません。',
@@ -65,7 +65,7 @@ export default defineEventHandler(async (event) => {
         message: '自分自身のアカウントを無効化することはできません。',
       })
     }
-    if (body.role && body.role !== 'admin') {
+    if (body.role && body.role !== 'master' && body.role !== 'admin') {
       throw createAppError({
         code: ErrorCode.USER_SELF_DEMOTION_DENIED,
         message: '自分自身の管理者権限を剥奪することはできません。',
@@ -73,80 +73,66 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  // 最後の有効な管理者の無効化・降格の禁止
-  if (targetUser.role === 'admin' && (body.isActive === false || (body.role && body.role !== 'admin'))) {
-    const adminCount = await prisma.user.count({
-      where: { role: 'admin', isActive: true },
+  // ログインIDは1人1ID不変のため作成後の変更を禁止
+  if (body.loginId && body.loginId.trim() !== targetUser.loginId) {
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
+      message: 'ログインIDは作成後に変更できません。',
+      details: { field: 'loginId', value: body.loginId },
     })
-
-    if (adminCount <= 1) {
-      throw createAppError({
-        code: ErrorCode.USER_LAST_ADMIN_DENIED,
-        message: 'システム内に有効な管理者が1人のみのため、無効化または降格できません。',
-      })
-    }
   }
 
-  // loginId 変更時の重複チェック
-  if (body.loginId && body.loginId !== targetUser.loginId) {
-    const existing = await prisma.user.findUnique({
-      where: { loginId: body.loginId },
-    })
+  const validSiteRoles = new Set(['admin', 'worker', 'viewer'])
+  const siteAssignmentsInput: { siteId: string, role: string }[] | undefined = body.siteAssignments !== undefined
+    ? body.siteAssignments
+    : body.assignedSiteIds !== undefined
+      ? (body.assignedSiteIds || []).map((sid: string) => ({ siteId: sid, role: 'worker' }))
+      : undefined
 
-    if (existing) {
-      throw createAppError({
-        code: ErrorCode.USER_LOGIN_ID_DUPLICATE,
-        message: '指定されたログインIDは既に使用されています。',
-        details: { field: 'loginId', value: body.loginId },
-      })
+  if (siteAssignmentsInput) {
+    for (const sa of siteAssignmentsInput) {
+      if (!sa.siteId || (sa.role && !validSiteRoles.has(sa.role))) {
+        throw createAppError({
+          code: ErrorCode.SYS_VALIDATION_FAILED,
+          message: '現場の割り当てロールが不正です。',
+        })
+      }
     }
   }
-
-  const siteAssignmentsInput: { siteId: string, role: string }[] = body.siteAssignments
-    || (body.assignedSiteIds || []).map((sid: string) => ({ siteId: sid, role: 'worker' }))
-
-  const siteConnections = siteAssignmentsInput.map(sa => ({ id: sa.siteId }))
 
   const updatedUser = await prisma.$transaction(async (tx) => {
-    await tx.userOnSite.deleteMany({ where: { userId: id } })
+    if (siteAssignmentsInput !== undefined) {
+      await tx.userOnSite.deleteMany({ where: { userId: id } })
 
-    if (siteAssignmentsInput.length > 0) {
-      await tx.userOnSite.createMany({
-        data: siteAssignmentsInput.map(sa => ({
-          userId: id,
-          siteId: sa.siteId,
-          role: sa.role || 'worker',
-        })),
-      })
+      if (siteAssignmentsInput.length > 0) {
+        await tx.userOnSite.createMany({
+          data: siteAssignmentsInput.map(sa => ({
+            userId: id,
+            siteId: sa.siteId,
+            role: sa.role || 'worker',
+          })),
+        })
+      }
     }
 
     return tx.user.update({
       where: { id },
       data: {
-        loginId: body.loginId,
-        firstName: body.firstName,
-        lastName: body.lastName,
-        firstNameKana: body.firstNameKana,
-        lastNameKana: body.lastNameKana,
-        role: body.role,
-        email: body.email,
-        isActive: body.isActive,
-        assignedSites: { set: siteConnections },
+        firstName: body.firstName !== undefined ? String(body.firstName).trim() : undefined,
+        lastName: body.lastName !== undefined ? String(body.lastName).trim() : undefined,
+        firstNameKana: body.firstNameKana !== undefined ? (body.firstNameKana?.trim() || null) : undefined,
+        lastNameKana: body.lastNameKana !== undefined ? (body.lastNameKana?.trim() || null) : undefined,
+        role: targetUser.loginId === 'master' ? 'master' : 'worker',
+        email: body.email !== undefined ? (body.email?.trim() || null) : undefined,
+        isActive: body.isActive !== undefined ? Boolean(body.isActive) : undefined,
+        requirePasswordReset: body.requirePasswordReset !== undefined ? Boolean(body.requirePasswordReset) : undefined,
+        ...(siteAssignmentsInput !== undefined
+          ? { assignedSites: { set: siteAssignmentsInput.map(sa => ({ id: sa.siteId })) } }
+          : {}),
       },
       include: { assignedSites: true, siteAssignments: true },
     })
   })
 
-  const assignedSiteIds = updatedUser.assignedSites.map(s => s.id)
-  const siteAssignments = updatedUser.assignedSites.map((s) => {
-    const match = updatedUser.siteAssignments.find(sa => sa.siteId === s.id)
-
-    return {
-      siteId: s.id,
-      role: match?.role || updatedUser.role || 'worker',
-    }
-  })
-  const { password: _dbPassword, assignedSites: _assignedSites, siteAssignments: _sa, ...restUser } = updatedUser
-
-  return { ...restUser, assignedSiteIds, siteAssignments }
+  return toSafeUser(updatedUser)
 })

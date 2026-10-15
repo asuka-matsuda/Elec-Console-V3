@@ -6,9 +6,12 @@
  * @permission 現場アクセス権を持つ認証済みユーザー（master / アサイン作業員）
  */
 
-import { createError, defineEventHandler, getRouterParam } from 'h3'
+import { defineEventHandler, getRouterParam } from 'h3'
+
+import { ErrorCode } from '#shared/types/errors'
 
 import { requireSiteAccess } from '../../../utils/auth'
+import { createAppError } from '../../../utils/error'
 import { parseNoBreakWords } from '../../../utils/jsonFields'
 import { prisma } from '../../../utils/prisma'
 
@@ -16,8 +19,8 @@ export default defineEventHandler(async (event) => {
   const siteId = getRouterParam(event, 'siteId')
 
   if (!siteId) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: '現場IDが指定されていません。',
     })
   }

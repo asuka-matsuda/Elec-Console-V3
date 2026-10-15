@@ -24,7 +24,7 @@ import {
   findPreferredWorksheet,
   normalizeHeaderName,
 } from '#shared/utils/excelNormalize'
-import { sanitizeFilename } from '#shared/utils/filename'
+import { sanitizeFilename, sanitizeSheetName } from '#shared/utils/filename'
 import { detectTagSlotsFromSheet } from '#shared/utils/tagSlotDetector'
 import { getExcelJS } from '~/utils/excelHelper'
 
@@ -280,7 +280,7 @@ export function convertCircuitsToDynamicRows(
     return {
       id: c.id,
       banMeisho: c.banMeisho || '未分類',
-      banShubetsu: c.banShubetsu || '電灯盤',
+      banShubetsu: c.banShubetsu || '',
       keiToName,
       keiTo: kansenHantei,
       kairoBangou: c.kairoBangou || '',
@@ -399,11 +399,13 @@ function cloneWorksheet(
  * 複数ページ時のシート名を生成（Excelの31文字制限に対応）
  */
 function formatSheetName(baseName: string, pageIndex: number, totalPages: number): string {
-  if (totalPages === 1) return baseName
+  const sanitizedBase = sanitizeSheetName(baseName, 'Page')
+
+  if (totalPages === 1) return sanitizedBase
 
   const suffix = ` (${pageIndex + 1})`
   const maxBaseLen = Math.max(1, 31 - suffix.length)
-  const safeBase = (baseName || 'Page').slice(0, maxBaseLen)
+  const safeBase = sanitizedBase.slice(0, maxBaseLen)
 
   return `${safeBase}${suffix}`
 }

@@ -6,11 +6,10 @@
  */
 import { computed, onMounted, ref, watch } from 'vue'
 
-import type { RemoteExportTarget } from '#shared/types/remoteControl'
 import type { MasterReportTemplateItem } from '#shared/types/reportTemplate'
 import { useMasterTemplates } from '~/composables/master/useMasterTemplates'
 import { useRemoteControlSetting } from '~/composables/portal/useRemoteControlSetting'
-import type { RadioOption, SelectOption } from '~/types/components'
+import type { SelectOption } from '~/types/components'
 import { downloadBlob } from '~/utils/download'
 import { generateRemoteReportExcel } from '~/utils/remoteReportExcel'
 
@@ -40,15 +39,14 @@ const {
   fetchSiteRemoteData,
 } = useRemoteControlSetting(computed(() => props.siteId), { siteName: computed(() => props.siteName) })
 
-const remoteExportTarget = ref<RemoteExportTarget>('address')
 const remoteSelectedBan = ref<string>('ALL')
 const remoteSelectedDenso = ref<string>('ALL')
 
-const remoteExportTargetOptions: RadioOption<RemoteExportTarget>[] = [
-  { value: 'address', label: '① 負荷アドレス表' },
-  { value: 'group', label: '② グループ設定表' },
-  { value: 'pattern', label: '③ パターン設定表' },
-]
+const symbolEnabled = ref(true)
+const symbolWidth = ref(41)
+const symbolHeight = ref(24)
+
+const STORAGE_KEY_SYMBOL_SETTINGS = 'elec_remote_symbol_settings'
 
 const remoteBanOptions = computed<SelectOption[]>(() => [
   { value: 'ALL', label: `全盤対象 (${remoteCircuits.value.length}回路)` },
@@ -80,20 +78,32 @@ const canExport = computed(() => {
 })
 
 const exportButtonLabel = computed(() => {
-  const targetName = remoteExportTarget.value === 'address'
-    ? 'アドレス表'
-    : remoteExportTarget.value === 'group'
-      ? 'グループ設定表'
-      : 'パターン設定表'
-
   const banSuffix = remoteSelectedBan.value !== 'ALL' ? ` [${remoteSelectedBan.value}]` : ''
 
-  return `${targetName}${banSuffix} を出力する`
+  return `アドレス設定表${banSuffix} を出力する`
 })
 
 watch(canExport, val => emit('update:canExport', val), { immediate: true })
 watch(isExporting, val => emit('update:isExporting', val), { immediate: true })
 watch(exportButtonLabel, val => emit('update:exportLabel', val), { immediate: true })
+
+watch([symbolEnabled, symbolWidth, symbolHeight], () => {
+  if (typeof window !== 'undefined' && window.localStorage) {
+    try {
+      localStorage.setItem(
+        STORAGE_KEY_SYMBOL_SETTINGS,
+        JSON.stringify({
+          enabled: symbolEnabled.value,
+          width: symbolWidth.value,
+          height: symbolHeight.value,
+        }),
+      )
+    }
+    catch {
+      // ignore
+    }
+  }
+})
 
 const exportReport = async () => {
   const tpl = props.template
@@ -119,7 +129,13 @@ const exportReport = async () => {
       circuits: targetCircuits,
       config: remoteConfig.value,
       siteName: props.siteName,
-      exportTarget: remoteExportTarget.value,
+      exportTarget: 'address',
+      selectedDenso: remoteSelectedDenso.value,
+      symbolOptions: {
+        enabled: symbolEnabled.value,
+        width: symbolWidth.value,
+        height: symbolHeight.value,
+      },
     })
 
     downloadBlob(
@@ -148,50 +164,87 @@ defineExpose({
 
 onMounted(() => {
   fetchSiteRemoteData()
+
+  if (typeof window !== 'undefined' && window.localStorage) {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_SYMBOL_SETTINGS)
+
+      if (saved) {
+        const parsed = JSON.parse(saved)
+
+        if (typeof parsed.enabled === 'boolean') symbolEnabled.value = parsed.enabled
+        if (typeof parsed.width === 'number') symbolWidth.value = parsed.width
+        if (typeof parsed.height === 'number') symbolHeight.value = parsed.height
+      }
+    }
+    catch {
+      // ignore
+    }
+  }
 })
 </script>
 
 <template>
   <div class="flex flex-1 flex-col gap-panel-gap min-h-0 overflow-y-auto">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-panel-gap items-start">
-      <!-- 出力種別の選択 -->
-      <section class="panel flex flex-col gap-form-row-gap">
-        <header class="flex items-center gap-item-gap">
-          <Icon name="file-text" />
-          <h4 class="pane-title">1. 出力種別の選択</h4>
-        </header>
-        <hr class="divider">
-
-        <div class="flex flex-col gap-item-gap">
-          <Radio
-            v-for="opt in remoteExportTargetOptions"
-            :key="opt.value"
-            v-model="remoteExportTarget"
-            :value="opt.value"
-            :label="opt.label"
-            name="remote-target"
-          />
-        </div>
-        <small class="field-help-text">※現場で編成されたアドレス表、グループ設定表、またはパターン設定表から選んで出力します。</small>
-      </section>
-
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-panel-gap items-start">
       <!-- 盤・伝送系統の絞り込み (盤ごとに収めたい場合) -->
       <section class="panel flex flex-col gap-form-row-gap">
         <header class="flex items-center gap-item-gap">
           <Icon name="filter" />
-          <h4 class="pane-title">2. 対象盤・系統の指定</h4>
+          <h4>1. 対象盤・系統の指定</h4>
         </header>
         <hr class="divider">
 
         <div class="flex flex-col gap-inline-gap">
-          <label for="filter-remote-ban" class="label bold-label">盤で絞り込み</label>
+          <label for="filter-remote-ban" class="label">盤で絞り込み</label>
           <Select id="filter-remote-ban" v-model="remoteSelectedBan" :options="remoteBanOptions" class="w-full" />
-          <small class="field-help-text">※特定の盤に収めて出力したい場合は、対象の盤を選択してください。</small>
+          <small>※特定の盤に収めて出力したい場合は、対象の盤を選択してください。</small>
         </div>
 
         <div class="flex flex-col gap-inline-gap">
-          <label for="filter-remote-denso" class="label bold-label">伝送系統</label>
+          <label for="filter-remote-denso" class="label">伝送系統</label>
           <Select id="filter-remote-denso" v-model="remoteSelectedDenso" :options="remoteDensoOptions" class="w-full" />
+        </div>
+      </section>
+
+      <!-- 回路記号の印字設定 (アドレス設定表用) -->
+      <section class="panel flex flex-col gap-form-row-gap">
+        <header class="flex items-center gap-item-gap">
+          <Icon name="sliders" />
+          <h4>2. 回路記号の印字設定</h4>
+        </header>
+        <hr class="divider">
+
+        <div class="flex items-center justify-between">
+          <Toggle id="remote-symbol-toggle" v-model="symbolEnabled" label="回路記号を印字" size="sm" />
+        </div>
+
+        <div v-if="symbolEnabled" class="flex flex-col gap-form-row-gap">
+          <div class="grid grid-cols-2 gap-item-gap">
+            <div class="flex flex-col gap-micro-gap">
+              <label for="remote-symbol-w" class="label">横幅 (px)</label>
+              <Input
+                id="remote-symbol-w"
+                v-model.number="symbolWidth"
+                type="number"
+                :min="10"
+                :max="100"
+                size="sm"
+              />
+            </div>
+            <div class="flex flex-col gap-micro-gap">
+              <label for="remote-symbol-h" class="label">縦幅 (px)</label>
+              <Input
+                id="remote-symbol-h"
+                v-model.number="symbolHeight"
+                type="number"
+                :min="10"
+                :max="100"
+                size="sm"
+              />
+            </div>
+          </div>
+          <small>※回路番号セル（標準: 41×24px）の中央に背景透過で印字します。</small>
         </div>
       </section>
     </div>
@@ -201,75 +254,29 @@ onMounted(() => {
       <header class="flex items-center justify-between">
         <div class="flex items-center gap-item-gap">
           <Icon name="sliders" />
-          <h4 class="pane-title">リモコン編成サマリー</h4>
+          <h4>リモコン編成サマリー</h4>
         </div>
-        <span class="summary-text">
+        <small>
           出力対象負荷: <strong>{{ filteredRemoteCircuits.length }}</strong> 回路
-        </span>
+        </small>
       </header>
       <hr class="divider">
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-item-gap">
-        <div class="stat-box p-item-gap flex flex-col items-center justify-center">
-          <span class="stat-title">負荷アドレス</span>
-          <span class="stat-value">{{ filteredRemoteCircuits.length }} <small class="unit-text">件</small></span>
+        <div class="panel is-elevated p-panel-pad-compact flex flex-col items-center justify-center">
+          <small>負荷アドレス</small>
+          <h4>{{ filteredRemoteCircuits.length }} <small>件</small></h4>
         </div>
-        <div class="stat-box p-item-gap flex flex-col items-center justify-center">
-          <span class="stat-title">登録グループ</span>
-          <span class="stat-value is-accent">{{ Object.keys(remoteConfig.assignments).length }} <small class="unit-text">割当</small></span>
+        <div class="panel is-elevated p-panel-pad-compact flex flex-col items-center justify-center">
+          <small>登録グループ (Web確認用)</small>
+          <h4 style="color: var(--theme-accent)">{{ Object.keys(remoteConfig.assignments).length }} <small>割当</small></h4>
         </div>
-        <div class="stat-box p-item-gap flex flex-col items-center justify-center">
-          <span class="stat-title">登録パターン</span>
-          <span class="stat-value is-accent">{{ Object.values(remoteConfig.assignments).filter(a => a.patterns?.length).length }} <small class="unit-text">割当</small></span>
+        <div class="panel is-elevated p-panel-pad-compact flex flex-col items-center justify-center">
+          <small>登録パターン (Web確認用)</small>
+          <h4 style="color: var(--theme-accent)">{{ Object.values(remoteConfig.assignments).filter(a => a.patterns?.length).length }} <small>割当</small></h4>
         </div>
       </div>
+      <small>※Excel帳票出力は個別アドレス設定表のみ対応しています（グループ・パターン編成の設定・確認はWeb画面上で行えます）。</small>
     </section>
   </div>
 </template>
-
-<style scoped lang="scss">
-.bold-label {
-  font-weight: var(--font-weight-bold);
-}
-
-.pane-title {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-main);
-}
-
-.summary-text {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-
-  strong {
-    color: var(--color-text-main);
-  }
-}
-
-.stat-box {
-  min-height: 84px;
-  border: var(--border-width-base) solid var(--color-border);
-  background-color: var(--surface-bg-elevated);
-}
-
-.stat-title {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-}
-
-.stat-value {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-main);
-
-  &.is-accent {
-    color: var(--theme-accent);
-  }
-}
-
-.unit-text {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-}
-</style>

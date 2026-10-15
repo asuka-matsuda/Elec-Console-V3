@@ -6,12 +6,16 @@
  * @permission 現場アクセス権限
  */
 
-import { createError, defineEventHandler, getQuery, getRouterParam } from 'h3'
+import { defineEventHandler, getQuery, getRouterParam } from 'h3'
+
+import { ErrorCode } from '#shared/types/errors'
 
 import { requireSiteAccess } from '../../../../utils/auth'
+import { createAppError } from '../../../../utils/error'
 import { EXAM_LOGIC } from '../../../../utils/examLogic'
 import { parseExcludedCircuits } from '../../../../utils/jsonFields'
 import { prisma } from '../../../../utils/prisma'
+import { isCircuitExcluded } from '../../../../utils/stats'
 
 export default defineEventHandler(async (event) => {
   await requireSiteAccess(event)
@@ -19,8 +23,8 @@ export default defineEventHandler(async (event) => {
   const siteId = getRouterParam(event, 'siteId')
 
   if (!siteId) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: '現場IDが指定されていません',
     })
   }
@@ -78,10 +82,7 @@ export default defineEventHandler(async (event) => {
   const incompleteSet = new Set<string>()
 
   for (const t of trunkCircuits) {
-    const name = (t.kairoMeisho || '').trim()
-    const isExcluded = !name || excludedKeywords.some(kw => kw && name.includes(kw))
-
-    if (isExcluded) continue
+    if (isCircuitExcluded(t.kairoMeisho, excludedKeywords)) continue
 
     if (!EXAM_LOGIC.PHASE3.isComplete(t)) {
       incompleteSet.add(t.banMeisho)
@@ -120,21 +121,15 @@ export default defineEventHandler(async (event) => {
   })
 
   // 除外フラグの付与
-  const circuits = rawCircuits.map((c) => {
-    const name = (c.kairoMeisho || '').trim()
-    const isExcluded = !name || excludedKeywords.some(kw => kw && name.includes(kw))
-
-    return {
-      ...c,
-      isExcluded,
-    }
-  })
+  const circuits = rawCircuits.map(c => ({
+    ...c,
+    isExcluded: isCircuitExcluded(c.kairoMeisho, excludedKeywords),
+  }))
 
   return {
     circuits,
     panelOptions,
     panelsWithIncompleteKansen,
-    phase2ThresholdMegOhm: settings?.phase2ThresholdMegOhm ?? 1.0,
     total: circuits.length,
   }
 })

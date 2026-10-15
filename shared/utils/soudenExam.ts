@@ -513,21 +513,34 @@ export function getPhaseDiffItems(
       isDifferent: sMashi !== cMashi,
     })
 
-    addTextDiff('bikou', '備考', s.p1Bikou, c.bikou)
+    if (s.keiTo === '幹線' || s.p1MashishimeCubicle !== undefined || c.mashishimeCubicle !== undefined) {
+      const sCubicle = Boolean(s.p1MashishimeCubicle)
+      const cCubicle = Boolean(c.mashishimeCubicle)
+
+      diffs.push({
+        key: 'mashishimeCubicle',
+        label: 'キュービクル増締',
+        serverValue: sCubicle ? '済' : '未',
+        clientValue: cCubicle ? '済' : '未',
+        isDifferent: sCubicle !== cCubicle,
+      })
+    }
+
+    addTextDiff('bikou', '備考', s.p1Remarks ?? s.p1Bikou, c.remarks ?? c.bikou)
   }
   else if (phase === 2) {
     addValueDiff('rVal', 'R相', s.zetsuenR, c.rVal, 'MΩ')
     addValueDiff('sVal', 'S相', s.zetsuenS, c.sVal, 'MΩ')
     addValueDiff('tVal', 'T相', s.zetsuenT, c.tVal, 'MΩ')
-    addTextDiff('kirokuSha', '測定者', s.zetsuenKirokuSha, c.kirokuSha)
-    addTextDiff('bikou', '備考', s.p2Bikou, c.bikou)
+    addTextDiff('kirokuSha', '測定者', s.p2Worker ?? s.zetsuenKirokuSha, c.worker ?? c.kirokuSha)
+    addTextDiff('bikou', '備考', s.p2Remarks ?? s.p2Bikou, c.remarks ?? c.bikou)
   }
   else if (phase === 3) {
     addValueDiff('rs', 'RS相', s.denatsuRs, c.rs, 'V')
     addValueDiff('st', 'ST相', s.denatsuSt, c.st, 'V')
     addValueDiff('rt', 'TR相', s.denatsuRt, c.rt, 'V')
     addTextDiff('kensou', '検相', s.kensou, c.kensou)
-    addTextDiff('bikou', '備考', s.p3Bikou, c.bikou)
+    addTextDiff('bikou', '備考', s.p3Remarks ?? s.p3Bikou, c.remarks ?? c.bikou)
   }
 
   return diffs

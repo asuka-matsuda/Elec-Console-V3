@@ -5,11 +5,10 @@
  * LocalStorage は使用せず、サーバーAPI経由で一元管理されます。
  */
 
-import { getCurrentInstance, onMounted, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 
-import { useNuxtApp } from '#app'
+import { useCalcHistory } from '~/composables/tools/useCalcHistory'
 import { useModal } from '~/composables/useModal'
-import type { HistoryEntry } from '~/types/tools'
 
 const CALC_HISTORY_TABS = [
   { value: 'voltage', label: '電圧降下計算' },
@@ -21,70 +20,21 @@ const CALC_HISTORY_TABS = [
 export function useCalculationHistoryPage() {
   const currentTab = ref('voltage')
   const { askConfirm } = useModal()
-  const historyList = ref<HistoryEntry[]>([])
-  const isLoading = ref(true)
-
-  const getApi = () => {
-    try {
-      const { $api } = useNuxtApp()
-
-      return $api
-    }
-    catch {
-      return null
-    }
-  }
+  const {
+    historyList,
+    isLoading,
+    fetchHistory: fetchByTool,
+    deleteHistory,
+    clearAll,
+  } = useCalcHistory(currentTab.value)
 
   const fetchHistory = async () => {
-    const $api = getApi()
-
-    if (!$api) return
-
-    isLoading.value = true
-    try {
-      const data = await $api<{ success: boolean, history: HistoryEntry[] }>(
-        `/api/calc-history?toolId=${currentTab.value}`,
-      )
-
-      if (data && data.history) {
-        historyList.value = data.history
-      }
-      else {
-        historyList.value = []
-      }
-    }
-    catch (e) {
-      console.warn('[useCalculationHistoryPage] Failed to fetch history:', e)
-      historyList.value = []
-    }
-    finally {
-      isLoading.value = false
-    }
+    await fetchByTool(currentTab.value)
   }
 
   watch(currentTab, () => {
     fetchHistory()
   })
-
-  if (getCurrentInstance()) {
-    onMounted(() => {
-      fetchHistory()
-    })
-  }
-
-  const deleteHistory = async (id: string) => {
-    historyList.value = historyList.value.filter(item => item.id !== id)
-    const $api = getApi()
-
-    if ($api) {
-      try {
-        await $api(`/api/calc-history?id=${id}`, { method: 'DELETE' })
-      }
-      catch (e) {
-        console.error('[useCalculationHistoryPage] Failed to delete item:', e)
-      }
-    }
-  }
 
   const handleClearAll = async () => {
     const isConfirmed = await askConfirm({
@@ -95,17 +45,7 @@ export function useCalculationHistoryPage() {
     })
 
     if (isConfirmed) {
-      historyList.value = []
-      const $api = getApi()
-
-      if ($api) {
-        try {
-          await $api(`/api/calc-history?toolId=${currentTab.value}`, { method: 'DELETE' })
-        }
-        catch (e) {
-          console.error('[useCalculationHistoryPage] Failed to clear items:', e)
-        }
-      }
+      await clearAll(currentTab.value)
     }
   }
 

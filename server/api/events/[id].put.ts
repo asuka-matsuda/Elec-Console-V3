@@ -6,19 +6,30 @@
  * @permission 現場アクセス権限
  */
 
-import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
+import { defineEventHandler, getRouterParam } from 'h3'
+import { z } from 'zod'
 
-import { canAccessSite, getSiteRole, requireAuthUser } from '../../utils/auth'
+import { ErrorCode } from '#shared/types/errors'
+
+import { requireSiteRole } from '../../utils/auth'
+import { createAppError } from '../../utils/error'
 import { prisma } from '../../utils/prisma'
+import { validateRequestBody } from '../../utils/validation'
+
+const UpdateEventSchema = z.object({
+  title: z.string().trim().min(1, '予定タイトルを入力してください。'),
+  start: z.string().trim().min(1, '開始日時を指定してください。'),
+  end: z.string().nullable().optional(),
+  allDay: z.boolean().optional(),
+  type: z.string().optional(),
+})
 
 export default defineEventHandler(async (event) => {
-  const user = await requireAuthUser(event)
   const id = getRouterParam(event, 'id')
 
   if (!id) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request',
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: 'イベントIDが指定されていません。',
     })
   }
@@ -28,57 +39,25 @@ export default defineEventHandler(async (event) => {
   })
 
   if (!existingEvent) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Not Found',
+    throw createAppError({
+      code: ErrorCode.SYS_NOT_FOUND,
       message: '指定されたイベントが見つかりません。',
     })
   }
 
-  // 現場アクセス認可チェック
-  if (!canAccessSite(user, existingEvent.siteId)) {
-    throw createError({
-      statusCode: 403,
-      statusMessage: 'Forbidden',
-      message: 'この現場のイベントを更新する権限がありません。',
-    })
-  }
+  // 現場アクセス権・ロール（admin / worker）および現場有効状態を検証
+  await requireSiteRole(event, ['admin', 'worker'], existingEvent.siteId)
 
-  const role = getSiteRole(user, existingEvent.siteId)
+  const body = await validateRequestBody(event, UpdateEventSchema)
 
-  if (!role || role === 'viewer') {
-    throw createError({
-      statusCode: 403,
-      statusMessage: 'Forbidden',
-      message: 'この操作を実行する権限がありません。閲覧専用アカウントでは変更できません。',
-    })
-  }
-
-  try {
-    const body = await readBody(event)
-
-    const updated = await prisma.event.update({
-      where: { id },
-      data: {
-        title: body.title,
-        start: body.start,
-        end: body.end || null,
-        allDay: body.allDay ?? false,
-        type: body.type,
-      },
-    })
-
-    return updated
-  }
-  catch (error: unknown) {
-    if (error && typeof error === 'object' && 'statusCode' in error) {
-      throw error
-    }
-    console.error('API Error in [id].put.ts:', error)
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'Internal Server Error',
-      message: error instanceof Error ? error.message : 'イベントの更新に失敗しました。',
-    })
-  }
+  return prisma.event.update({
+    where: { id },
+    data: {
+      title: body.title,
+      start: body.start,
+      end: body.end || null,
+      allDay: body.allDay ?? false,
+      type: body.type || existingEvent.type,
+    },
+  })
 })

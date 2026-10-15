@@ -5,7 +5,6 @@
  */
 import { toTypedSchema } from '@vee-validate/zod'
 import { Field, useForm } from 'vee-validate'
-import { onUnmounted, ref } from 'vue'
 
 import { defaultForm, useVoltageCalculator } from '~/composables/tools/useVoltageCalculator'
 import { modeOptions } from '~/constants/toolOptions'
@@ -19,11 +18,13 @@ const {
   form,
   formFields,
   isSaveDisabled,
+  isShowingBasis,
+  isSaving,
+  handleSave,
   calcInputs,
   calcResult,
   mathSteps,
   openResetModal,
-  handleSaveHistory,
 } = useVoltageCalculator()
 
 const { resetForm: resetVeeValidate } = useForm({
@@ -38,45 +39,6 @@ const handleReset = async () => {
     resetVeeValidate({
       values: JSON.parse(JSON.stringify(defaultForm)),
     })
-  }
-}
-
-// 計算根拠の表示切り替え
-const isShowingBasis = ref(false)
-
-// 保存フィードバック
-const saveState = ref<'idle' | 'saving' | 'success' | 'error'>('idle')
-let resetTimer: ReturnType<typeof setTimeout> | null = null
-
-const clearTimer = () => {
-  if (resetTimer) {
-    clearTimeout(resetTimer)
-    resetTimer = null
-  }
-}
-
-onUnmounted(clearTimer)
-
-const handleSave = async () => {
-  if (isSaveDisabled.value || saveState.value !== 'idle') return
-
-  clearTimer()
-  saveState.value = 'saving'
-  try {
-    await handleSaveHistory()
-    saveState.value = 'success'
-    resetTimer = setTimeout(() => {
-      saveState.value = 'idle'
-      resetTimer = null
-    }, 2000)
-  }
-  catch (e) {
-    console.error('Save failed:', e)
-    saveState.value = 'error'
-    resetTimer = setTimeout(() => {
-      saveState.value = 'idle'
-      resetTimer = null
-    }, 3000)
   }
 }
 </script>
@@ -141,7 +103,7 @@ const handleSave = async () => {
           </h3>
           <div class="flex items-center gap-item-gap">
             <Button v-if="mathSteps?.length" variant="tertiary" size="sm" :icon="isShowingBasis ? 'arrow-left' : 'circle-help'" @click="isShowingBasis = !isShowingBasis">{{ isShowingBasis ? '計算結果に戻る' : '計算根拠を表示' }}</Button>
-            <Button v-if="!isShowingBasis" variant="primary" size="sm" icon="save" :disabled="isSaveDisabled || saveState !== 'idle'" :loading="saveState === 'saving'" @click="handleSave">履歴に保存する</Button>
+            <Button v-if="!isShowingBasis" variant="primary" size="sm" icon="save" :disabled="isSaveDisabled || isSaving" :loading="isSaving" @click="handleSave">履歴に保存する</Button>
           </div>
         </header>
         <hr class="divider">
@@ -154,11 +116,3 @@ const handleSave = async () => {
     </div>
   </div>
 </template>
-
-<style scoped lang="scss">
-.error-text {
-  margin: 0;
-  font-size: var(--font-size-xs);
-  color: var(--color-status-danger);
-}
-</style>

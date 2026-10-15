@@ -1,45 +1,85 @@
-import path from 'node:path'
-
-import { PrismaClient } from '@prisma/client'
 import ExcelJS from 'exceljs'
-import { afterAll, describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import { convertCircuitsToDynamicRows, generateTagReportExcel } from '../../app/utils/tagReportExcel'
 import { kfc3350Template } from '../../shared/templates/tag/kfc3350'
 
-const prisma = new PrismaClient()
+/**
+ * 外部ファイルや実行時DB状態に依存しない自己完結型の 58 件幹線回路フィクスチャを生成
+ */
+function buildKansenCircuitsFixture(count = 58) {
+  return Array.from({ length: count }, (_, idx) => {
+    const isLast = idx === count - 1
+
+    return {
+      id: `circuit-kansen-${idx + 1}`,
+      siteId: 'fixture-site',
+      excelRow: idx + 1,
+      keiTo: '幹線',
+      keiToName: isLast ? '一般･保安動力盤' : `電灯幹線系統-${idx + 1}`,
+      banShubetsu: isLast ? '動力' : '電灯',
+      banMeisho: isLast ? 'MP-58' : `1L-${idx + 1}`,
+      haidenHoushiki: isLast ? 'AC-GC 3Φ3W 200V' : 'AC 1Φ3W 100/200V',
+      souShubetsu: 'RST',
+      kairoKigou: null,
+      kairoBangou: isLast ? 'HP-105' : `L-${idx + 1}`,
+      kairoMeisho: isLast ? 'OP-1(2)' : `分電盤幹線-${idx + 1}`,
+      cableList: isLast ? 'CVT 150sq' : 'CVT 38sq',
+      setsuchiList: 'IV 14sq',
+    }
+  })
+}
+
+/**
+ * KFC-3350 標準24枠テンプレートのインメモリ Excel バッファを生成
+ */
+async function buildKfc3350StandardTemplateBuffer(customizeOrder = false): Promise<ArrayBuffer> {
+  const wb = new ExcelJS.Workbook()
+  const ws = wb.addWorksheet('Base')
+
+  ws.pageSetup.printArea = 'A2:F50'
+
+  const startRows = [2, 9, 16, 23, 30, 37, 44, 51]
+  const cols = [2, 4, 6]
+
+  for (const r of startRows) {
+    for (const c of cols) {
+      if (customizeOrder) {
+        ws.getCell(r, c).value = '%回路名称%'
+        ws.getCell(r + 1, c).value = '%系統%'
+        ws.getCell(r + 2, c).value = '%盤名称%'
+        ws.getCell(r + 3, c).value = '%回路番号%'
+        ws.getCell(r + 4, c).value = '%ケーブル%'
+      }
+      else {
+        ws.getCell(r, c).value = '%回路番号%'
+        ws.getCell(r + 1, c).value = '%ケーブル%'
+        ws.getCell(r + 2, c).value = '%配電方式%'
+        ws.getCell(r + 3, c).value = '%系統%'
+        ws.getCell(r + 4, c).value = '%回路名称%'
+      }
+    }
+  }
+
+  return wb.xlsx.writeBuffer()
+}
 
 describe('tagReportExcel slot detection & boundary integrity', () => {
-  afterAll(async () => {
-    await prisma.$disconnect()
-  })
-
   it('correctly generates all 24 slots with exactly 5 cells each in KFC-3350 definition', () => {
     const slots = kfc3350Template.getSlots('z')
 
     expect(slots.length).toBe(24)
 
-    // Verify all 24 slots have exactly 5 cells (回路番号, ケーブル, 配電方式, 系統, 回路名称)
     slots.forEach((slot, index) => {
       expect(slot.cells.length, `Slot ${index} should have 5 cells`).toBe(5)
     })
   })
 
   it('exports 58 circuits with deterministic KFC-3350 definition (Z-direction)', async () => {
-    const tplPath = path.resolve('.data/master-templates/tpl-1791363223062-sizpc.xlsx')
-    const wb = new ExcelJS.Workbook()
-
-    await wb.xlsx.readFile(tplPath)
-    const templateBuffer = await wb.xlsx.writeBuffer()
-
-    const kansenCircuits = await prisma.circuit.findMany({
-      where: { siteId: 'test', keiTo: { contains: '幹線' } },
-      orderBy: { excelRow: 'asc' },
-    })
-
+    const templateBuffer = await buildKfc3350StandardTemplateBuffer(false)
+    const kansenCircuits = buildKansenCircuitsFixture(58)
     const { rows } = convertCircuitsToDynamicRows(kansenCircuits, '2026-10-08')
 
-    // Deterministic export using templateName
     const result = await generateTagReportExcel({
       templateBuffer,
       rows,
@@ -48,13 +88,13 @@ describe('tagReportExcel slot detection & boundary integrity', () => {
     })
     const resultWb = new ExcelJS.Workbook()
 
-    await resultWb.xlsx.load(result.buffer)
+    await resultWb.xlsx.load(result.buffer as unknown as ExcelJS.Buffer)
 
     // 58回路（24枠/ページ）なので3シート作成される
     expect(resultWb.worksheets.length).toBe(3)
-    expect(resultWb.worksheets[0].name).toBe('Base (1)')
-    expect(resultWb.worksheets[1].name).toBe('Base (2)')
-    expect(resultWb.worksheets[2].name).toBe('Base (3)')
+    expect(resultWb.worksheets[0]?.name).toBe('Base (1)')
+    expect(resultWb.worksheets[1]?.name).toBe('Base (2)')
+    expect(resultWb.worksheets[2]?.name).toBe('Base (3)')
 
     // 各シートの印刷範囲（printArea）がそのまま100%維持されていること
     resultWb.worksheets.forEach((ws) => {
@@ -63,7 +103,7 @@ describe('tagReportExcel slot detection & boundary integrity', () => {
 
     // 3ページ目（シート3: KFC-3350 Z順）
     // 58番目の回路（インデックス 57 -> 3ページ目の10枠目、Row 23, Col 2）
-    const ws3 = resultWb.worksheets[2]
+    const ws3 = resultWb.worksheets[2]!
     const cCircuitNo = ws3.getCell(23, 2).value
     const cCable = ws3.getCell(24, 2).value
     const cVolt = ws3.getCell(25, 2).value
@@ -85,34 +125,8 @@ describe('tagReportExcel slot detection & boundary integrity', () => {
   })
 
   it('dynamically targets placeholders even when row order is customized and new keys are added', async () => {
-    const tplPath = path.resolve('.data/master-templates/tpl-1791363223062-sizpc.xlsx')
-    const wb = new ExcelJS.Workbook()
-
-    await wb.xlsx.readFile(tplPath)
-    const ws = wb.worksheets[0]!
-
-    // ユーザーによるフォーマット変更をシミュレート:
-    // 全スロットの枠内行順を入れ替え（Row +0: 回路名称, Row +1: 系統, Row +2: 盤名称(新規キー), Row +3: 回路番号, Row +4: ケーブル）
-    const startRows = [2, 9, 16, 23, 30, 37, 44, 51]
-    const cols = [2, 4, 6]
-
-    for (const r of startRows) {
-      for (const c of cols) {
-        ws.getCell(r, c).value = '%回路名称%'
-        ws.getCell(r + 1, c).value = '%系統%'
-        ws.getCell(r + 2, c).value = '%盤名称%'
-        ws.getCell(r + 3, c).value = '%回路番号%'
-        ws.getCell(r + 4, c).value = '%ケーブル%'
-      }
-    }
-
-    const modifiedBuffer = await wb.xlsx.writeBuffer()
-
-    const kansenCircuits = await prisma.circuit.findMany({
-      where: { siteId: 'test', keiTo: { contains: '幹線' } },
-      orderBy: { excelRow: 'asc' },
-    })
-
+    const modifiedBuffer = await buildKfc3350StandardTemplateBuffer(true)
+    const kansenCircuits = buildKansenCircuitsFixture(58)
     const { rows } = convertCircuitsToDynamicRows(kansenCircuits, '2026-10-08')
 
     const result = await generateTagReportExcel({
@@ -124,18 +138,17 @@ describe('tagReportExcel slot detection & boundary integrity', () => {
 
     const resultWb = new ExcelJS.Workbook()
 
-    await resultWb.xlsx.load(result.buffer)
+    await resultWb.xlsx.load(result.buffer as unknown as ExcelJS.Buffer)
 
     // 1ページ目の1スロット目（Row 2..6, Col 2）を検証
     const ws1 = resultWb.worksheets[0]!
     const row0 = rows[0]!
 
-    // 固定セル番地ではなく、テンプレートに書かれたキーを狙って入っていること！
-    expect(ws1.getCell(2, 2).value).toBe(row0.values['回路名称']) // Row 2 は %回路名称% に変更したため回路名称が入る
-    expect(ws1.getCell(3, 2).value).toBe(row0.values['系統']) // Row 3 は %系統% に変更したため系統が入る
-    expect(ws1.getCell(4, 2).value).toBe(row0.values['盤名称']) // Row 4 は %盤名称% を新設したため盤名称が入る
-    expect(ws1.getCell(5, 2).value).toBe(row0.values['回路番号']) // Row 5 は %回路番号% に変更したため回路番号が入る
-    expect(ws1.getCell(6, 2).value).toBe(row0.values['ケーブル']) // Row 6 は %ケーブル% に変更したためケーブルが入る
+    expect(ws1.getCell(2, 2).value).toBe(row0.values['回路名称'])
+    expect(ws1.getCell(3, 2).value).toBe(row0.values['系統'])
+    expect(ws1.getCell(4, 2).value).toBe(row0.values['盤名称'])
+    expect(ws1.getCell(5, 2).value).toBe(row0.values['回路番号'])
+    expect(ws1.getCell(6, 2).value).toBe(row0.values['ケーブル'])
 
     // 3ページ目（シート3）の11枠目 (Row 23..27, Col 4) は余剰枠 -> プレースホルダーがすべてクリアされていること
     const ws3 = resultWb.worksheets[2]!
@@ -148,7 +161,6 @@ describe('tagReportExcel slot detection & boundary integrity', () => {
   })
 
   it('correctly targets placeholders in real KFC-3350H 21-slot template starting at Row 14 (Col E, G, I)', async () => {
-    // ユーザーの実スクリーンショットと同じレイアウトのテンプレートを作成
     const wb = new ExcelJS.Workbook()
     const ws = wb.addWorksheet('KFC-3350H')
 
@@ -159,11 +171,10 @@ describe('tagReportExcel slot detection & boundary integrity', () => {
 
     // 縦7段（Row 14, 21, 28, 35, 42, 49, 56） × 横3列（Col 5[E], 7[G], 9[I]）
     const startRows = [14, 21, 28, 35, 42, 49, 56]
-    const dataCols = [5, 7, 9] // E, G, I列
-    const headerCols = [4, 6, 8] // D, F, H列（見出し）
+    const dataCols = [5, 7, 9]
+    const headerCols = [4, 6, 8]
 
     for (const r of startRows) {
-      // 見出し列の設定
       for (const hc of headerCols) {
         ws.getCell(r + 0, hc).value = '幹線No'
         ws.getCell(r + 1, hc).value = 'ケーブル'
@@ -174,7 +185,6 @@ describe('tagReportExcel slot detection & boundary integrity', () => {
         ws.getCell(r + 6, hc).value = '施工年月日'
       }
 
-      // データ列（プレースホルダー）の設定
       for (const dc of dataCols) {
         ws.getCell(r + 0, dc).value = '%回路番号%'
         ws.getCell(r + 1, dc).value = '%ケーブル%'
@@ -187,12 +197,7 @@ describe('tagReportExcel slot detection & boundary integrity', () => {
     }
 
     const tplBuffer = await wb.xlsx.writeBuffer()
-
-    const kansenCircuits = await prisma.circuit.findMany({
-      where: { siteId: 'test', keiTo: { contains: '幹線' } },
-      orderBy: { excelRow: 'asc' },
-    })
-
+    const kansenCircuits = buildKansenCircuitsFixture(58)
     const { rows } = convertCircuitsToDynamicRows(kansenCircuits, '2026-10-08')
 
     const result = await generateTagReportExcel({
@@ -204,30 +209,25 @@ describe('tagReportExcel slot detection & boundary integrity', () => {
 
     const resultWb = new ExcelJS.Workbook()
 
-    await resultWb.xlsx.load(result.buffer)
+    await resultWb.xlsx.load(result.buffer as unknown as ExcelJS.Buffer)
 
-    // 58件のデータ、21枠/ページなので 3ページ生成されること
     expect(result.totalPages).toBe(3)
     expect(resultWb.worksheets.length).toBe(3)
 
     const ws1 = resultWb.worksheets[0]!
 
-    // 1. 上部ヘッダー（Row 1〜13）が無傷でそのまま残っていること！
     expect(ws1.getCell('F1').value).toBe('KFC-3350')
     expect(ws1.getCell('D5').value).toBe('普通用A4紙用（21枚分）')
 
-    // 2. 見出し列（D列: 4）が無傷でそのまま残っていること！
     expect(ws1.getCell(14, 4).value).toBe('幹線No')
     expect(ws1.getCell(15, 4).value).toBe('ケーブル')
     expect(ws1.getCell(16, 4).value).toBe('種別')
     expect(ws1.getCell(17, 4).value).toBe('発点')
     expect(ws1.getCell(18, 4).value).toBe('着点')
 
-    // 3. 以前の誤爆箇所（Row 2, 9, 16... の B列: 2）に値が上書きされていないこと！
     expect(ws1.getCell(2, 2).value == null || ws1.getCell(2, 2).value === '').toBe(true)
     expect(ws1.getCell(9, 2).value == null || ws1.getCell(9, 2).value === '').toBe(true)
 
-    // 4. 正しいセル（Row 14〜18, Col E: 5）に1件目のデータが正確に流し込まれていること！
     const r0 = rows[0]!
 
     expect(ws1.getCell(14, 5).value).toBe(r0.values['回路番号'])
@@ -236,36 +236,22 @@ describe('tagReportExcel slot detection & boundary integrity', () => {
     expect(ws1.getCell(17, 5).value).toBe(r0.values['系統'])
     expect(ws1.getCell(18, 5).value).toBe(r0.values['回路名称'])
 
-    // 5. 2件目のデータは Row 14〜18, Col G: 7 に入ること！
     const r1 = rows[1]!
 
     expect(ws1.getCell(14, 7).value).toBe(r1.values['回路番号'])
     expect(ws1.getCell(15, 7).value).toBe(r1.values['ケーブル'])
 
-    // 6. 3ページ目の余剰枠（58件目以降）のプレースホルダーがクリアされていること！
     const ws3 = resultWb.worksheets[2]!
 
-    // 3ページ目の16枠目（インデックス57 = 58件目）は入っている
-    // 17枠目（Row 56, Col 7）は余剰枠 -> プレースホルダーが消えていること
     expect(ws3.getCell(56, 7).value == null || ws3.getCell(56, 7).value === '').toBe(true)
     expect(ws3.getCell(57, 7).value == null || ws3.getCell(57, 7).value === '').toBe(true)
   })
 
   it('throws explicit error when template definition is not registered', async () => {
-    const tplPath = path.resolve('.data/master-templates/tpl-1791363223062-sizpc.xlsx')
-    const wb = new ExcelJS.Workbook()
-
-    await wb.xlsx.readFile(tplPath)
-    const templateBuffer = await wb.xlsx.writeBuffer()
-
-    const kansenCircuits = await prisma.circuit.findMany({
-      where: { siteId: 'test', keiTo: { contains: '幹線' } },
-      orderBy: { excelRow: 'asc' },
-    })
-
+    const templateBuffer = await buildKfc3350StandardTemplateBuffer(false)
+    const kansenCircuits = buildKansenCircuitsFixture(5)
     const { rows } = convertCircuitsToDynamicRows(kansenCircuits, '2026-10-08')
 
-    // Non-matching templateName must throw without guessing
     await expect(
       generateTagReportExcel({
         templateBuffer,

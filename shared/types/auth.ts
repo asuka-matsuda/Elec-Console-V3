@@ -4,11 +4,13 @@
  * ユーザーモデル、ロール権限、サイトアサイン情報等を定義します。
  */
 
-export type UserRole = 'admin' | 'worker' | 'viewer'
+export type SiteRole = 'admin' | 'worker' | 'viewer'
+
+export type UserRole = 'master' | SiteRole
 
 export type SiteAssignment = {
   siteId: string
-  role: UserRole
+  role: SiteRole
 }
 
 export type User = {

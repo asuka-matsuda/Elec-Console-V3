@@ -15,6 +15,10 @@ import { PrismaClient } from '@prisma/client'
 const globalForPrisma = global as unknown as { prisma: PrismaClient }
 
 function createPrismaClient() {
+  if (process.env.DATABASE_URL) {
+    return new PrismaClient()
+  }
+
   let currentDir = process.cwd()
 
   try {
@@ -29,7 +33,6 @@ function createPrismaClient() {
     defaultPath,
     path.resolve(currentDir, '../../prisma/dev.db'),
     path.resolve(currentDir, '../../../prisma/dev.db'),
-    path.resolve('/root/elec-console/Elec-Console-V3/prisma/dev.db'),
   ]
   const existingPath: string = candidates.find(p => fs.existsSync(p)) ?? defaultPath
   const dbPath = existingPath.replace(/\\/g, '/')

@@ -19,10 +19,10 @@ import {
  * 追跡用 Trace ID の生成 (例: ERR-20260920-A1B2)
  */
 export function generateTraceId(): string {
-  const now = new Date()
-  const y = now.getFullYear()
-  const m = String(now.getMonth() + 1).padStart(2, '0')
-  const d = String(now.getDate()).padStart(2, '0')
+  const jstTime = new Date(Date.now() + 9 * 60 * 60 * 1000)
+  const y = jstTime.getUTCFullYear()
+  const m = String(jstTime.getUTCMonth() + 1).padStart(2, '0')
+  const d = String(jstTime.getUTCDate()).padStart(2, '0')
   const rand = crypto.randomBytes(2).toString('hex').toUpperCase()
 
   return `ERR-${y}${m}${d}-${rand}`
@@ -49,6 +49,7 @@ export function getDefaultStatusCode(code: ErrorCode): number {
       return 405
     case ErrorCode.USER_LOGIN_ID_DUPLICATE:
     case ErrorCode.CIRCUIT_VERSION_CONFLICT:
+    case ErrorCode.DB_UNIQUE_VIOLATION:
       return 409
     case ErrorCode.SYS_RATE_LIMITED:
       return 429
@@ -104,7 +105,7 @@ export function createAppError(params: CreateAppErrorParams) {
 }
 
 /**
- * Prisma の既知エラー（P2021: テーブル不存在, P2003: 外部キー制約違反, P2002: 一意制約違反）を
+ * Prisma の既知エラー（P2021: テーブル不存在, P2003: 外部キー制約違反, P2002: 一意制約違反, P2025: 対象レコード不在）を
  * アプリケーションの既知エラーコード（ErrorCode）へ昇格・マッピングするヘルパー
  */
 export function parsePrismaError(err: unknown): { code: ErrorCode, message: string } | null {
@@ -149,6 +150,12 @@ export function parsePrismaError(err: unknown): { code: ErrorCode, message: stri
         message: fieldStr
           ? `重複してはならない項目（${fieldStr}）が既に登録されています。`
           : '一意制約に違反するデータが既に登録されています。',
+      }
+    }
+    case 'P2025': {
+      return {
+        code: ErrorCode.SYS_NOT_FOUND,
+        message: DEFAULT_ERROR_MESSAGES[ErrorCode.SYS_NOT_FOUND],
       }
     }
     default:

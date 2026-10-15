@@ -72,7 +72,7 @@ export interface CircuitItem {
   siteId: string
   /** Excel台帳上の行番号 */
   excelRow?: number | null
-  /** 設置フロア (例: 1F, 2F, B1F 等) */
+  /** 設置エリア (例: 1F, 2F, B1F, 東エリア 等) */
   floor?: string | null
   /** 回路状態（使用中・予備等） */
   joutai?: string | null

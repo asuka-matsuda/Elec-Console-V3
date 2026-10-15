@@ -6,19 +6,20 @@
  * @permission 現場アクセス権限
  */
 
-import { createError, defineEventHandler, getRouterParam } from 'h3'
+import { defineEventHandler, getRouterParam } from 'h3'
 
-import { canAccessSite, getSiteRole, requireAuthUser } from '../../utils/auth'
+import { ErrorCode } from '#shared/types/errors'
+
+import { requireSiteRole } from '../../utils/auth'
+import { createAppError } from '../../utils/error'
 import { prisma } from '../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  const user = await requireAuthUser(event)
   const id = getRouterParam(event, 'id')
 
   if (!id) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request',
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: 'イベントIDが指定されていません。',
     })
   }
@@ -28,48 +29,18 @@ export default defineEventHandler(async (event) => {
   })
 
   if (!existingEvent) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Not Found',
+    throw createAppError({
+      code: ErrorCode.SYS_NOT_FOUND,
       message: '指定されたイベントが見つかりません。',
     })
   }
 
-  // 現場アクセス認可チェック
-  if (!canAccessSite(user, existingEvent.siteId)) {
-    throw createError({
-      statusCode: 403,
-      statusMessage: 'Forbidden',
-      message: 'この現場のイベントを削除する権限がありません。',
-    })
-  }
+  // 現場アクセス権・ロール（admin / worker）および現場有効状態を検証
+  await requireSiteRole(event, ['admin', 'worker'], existingEvent.siteId)
 
-  const role = getSiteRole(user, existingEvent.siteId)
+  await prisma.event.delete({
+    where: { id },
+  })
 
-  if (!role || role === 'viewer') {
-    throw createError({
-      statusCode: 403,
-      statusMessage: 'Forbidden',
-      message: 'この操作を実行する権限がありません。閲覧専用アカウントでは削除できません。',
-    })
-  }
-
-  try {
-    await prisma.event.delete({
-      where: { id },
-    })
-
-    return { success: true }
-  }
-  catch (error: unknown) {
-    if (error && typeof error === 'object' && 'statusCode' in error) {
-      throw error
-    }
-    console.error('API Error in [id].delete.ts:', error)
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'Internal Server Error',
-      message: error instanceof Error ? error.message : 'イベントの削除に失敗しました。',
-    })
-  }
+  return { success: true }
 })

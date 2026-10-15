@@ -116,9 +116,10 @@ useHead({
             </form>
 
             <ul v-if="todos.length > 0" class="overflow-y-auto flex flex-col gap-inline-gap max-h-[400px]">
-              <li v-for="todo in todos" :key="todo.id" class="todo-item flex items-center justify-between gap-item-gap p-item-gap">
+              <li v-for="todo in todos" :key="todo.id" class="panel is-elevated p-panel-pad-compact flex items-center justify-between gap-item-gap">
                 <Checkbox v-model="todo.completed">
-                  <span class="todo-label" :class="{ 'is-completed': todo.completed }">{{ todo.text }}</span>
+                  <del v-if="todo.completed">{{ todo.text }}</del>
+                  <span v-else>{{ todo.text }}</span>
                 </Checkbox>
                 <Button variant="danger" size="sm" icon="trash-2" @click="deleteTodo(todo.id)" />
               </li>
@@ -156,18 +157,3 @@ useHead({
     </div>
   </div>
 </template>
-
-<style scoped lang="scss">
-.todo-item {
-  background-color: var(--color-bg-hover);
-}
-
-.todo-label {
-  transition: var(--transition-base);
-
-  &.is-completed {
-    text-decoration: line-through;
-    opacity: 0.5;
-  }
-}
-</style>

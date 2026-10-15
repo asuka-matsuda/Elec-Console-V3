@@ -4,14 +4,14 @@
  * ユーザー管理、現場管理等の管理画面入力フィールドおよび選択肢設定を提供します。
  */
 
-import type { UserRole } from '#shared/types/auth'
+import type { SiteRole, UserRole } from '#shared/types/auth'
 import type { SiteStatus } from '#shared/types/site'
 import type { BadgeVariant, SelectOption } from '~/types/components'
 
 /**
- * ユーザー権限（ロール）選択肢
+ * 現場ごとのユーザー権限（ロール）選択肢
  */
-export const USER_ROLE_OPTIONS: SelectOption<UserRole>[] = [
+export const USER_ROLE_OPTIONS: SelectOption<SiteRole>[] = [
   { value: 'admin', label: '管理者 (admin)' },
   { value: 'worker', label: '作業者 (worker)' },
   { value: 'viewer', label: '閲覧者 (viewer)' },
@@ -21,6 +21,7 @@ export const USER_ROLE_OPTIONS: SelectOption<UserRole>[] = [
  * ユーザー権限（ロール）表示設定（バッジ表示用）
  */
 export const USER_ROLE_CONFIG: Record<UserRole, { label: string, color: string, variant: BadgeVariant }> = {
+  master: { label: 'マスター', color: 'var(--color-role-admin)', variant: 'purple' },
   admin: { label: '管理者', color: 'var(--color-role-admin)', variant: 'purple' },
   worker: { label: '作業者', color: 'var(--color-role-worker)', variant: 'blue' },
   viewer: { label: '閲覧者', color: 'var(--color-role-viewer)', variant: 'gray' },

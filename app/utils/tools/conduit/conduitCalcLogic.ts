@@ -7,7 +7,7 @@
 import type { CableData, ConduitData } from '~/types/database'
 import type { CableInputItem, MathStep } from '~/types/tools'
 import { findCableByIndexString, getEffectiveCableDiameter } from '~/utils/cable'
-import { buildFormula, formatVal, hlAccent, hlOk } from '~/utils/math'
+import { buildFormula, formatVal, hlAccent, hlNg, hlOk } from '~/utils/math'
 
 /**
  * 電線管サイズ計算入力パラメータ
@@ -179,23 +179,28 @@ export function calculateConduitSize(
     getAllowable: (c: ConduitData) => number,
   ) {
     for (const conduit of conduits) {
+      const pipeArea = Number(conduit.area)
+
+      if (pipeArea <= 0) continue
+
       const allowable = getAllowable(conduit)
 
       if (requiredArea <= allowable) {
         return {
           conduit,
-          fillPercent: (requiredArea / Number(conduit.area)) * 100,
+          fillPercent: (requiredArea / pipeArea) * 100,
           allowable,
           isOversize: false,
         }
       }
     }
 
+    const largestPipeArea = Number(largest!.area)
     const largestAllowable = getAllowable(largest!)
 
     return {
       conduit: largest!,
-      fillPercent: (requiredArea / Number(largest!.area)) * 100,
+      fillPercent: largestPipeArea > 0 ? (requiredArea / largestPipeArea) * 100 : 0,
       allowable: largestAllowable,
       isOversize: requiredArea > largestAllowable,
     }
@@ -337,8 +342,21 @@ export function generateConduitMathData(
     const size48Badge = hlAccent(`\\text{【 ${res.conduit48.size} 】}`)
     const sizeCustomBadge = hlAccent(`\\text{【 ${res.conduitCustom.size} 】}`)
     const passTag = hlOk('\\text{(適合)}')
+    const ngTag = hlNg('\\text{(不適合)}')
 
-    formula2 = `\\begin{aligned} &\\textbf{【 32\\%以下基準（異なる太さの電線等） 】} \\\\ &\\quad \\text{選定サイズ:} \\quad ${size32Badge} \\\\ &\\quad \\text{管スペック:} \\quad \\text{内径 } ${pipe32InnerD} \\text{ mm} \\quad (A_{\\text{pipe}} = ${pipe32Area} \\text{ mm}^2) \\\\ &\\quad \\text{許容断面積:} \\quad A_{allow} = ${pipe32Area} \\times 0.32 = ${allow32Str} \\text{ mm}^2 \\\\ &\\qquad (${allow32Str} \\text{ mm}^2 \\ge ${totalAreaStr} \\text{ mm}^2 \\quad ${passTag}) \\\\ &\\quad \\text{実計算占積率:} \\quad \\eta = \\frac{${totalAreaStr}}{${pipe32Area}} \\times 100 = ${fill32Str}\\% \\\\ &\\qquad (${fill32Str}\\% \\le 32.0\\% \\quad ${passTag}) \\\\[8pt] &\\textbf{【 48\\%以下基準（同じ太さの電線等） 】} \\\\ &\\quad \\text{選定サイズ:} \\quad ${size48Badge} \\\\ &\\quad \\text{管スペック:} \\quad \\text{内径 } ${pipe48InnerD} \\text{ mm} \\quad (A_{\\text{pipe}} = ${pipe48Area} \\text{ mm}^2) \\\\ &\\quad \\text{許容断面積:} \\quad A_{allow} = ${pipe48Area} \\times 0.48 = ${allow48Str} \\text{ mm}^2 \\\\ &\\qquad (${allow48Str} \\text{ mm}^2 \\ge ${totalAreaStr} \\text{ mm}^2 \\quad ${passTag}) \\\\ &\\quad \\text{実計算占積率:} \\quad \\eta = \\frac{${totalAreaStr}}{${pipe48Area}} \\times 100 = ${fill48Str}\\% \\\\ &\\qquad (${fill48Str}\\% \\le 48.0\\% \\quad ${passTag}) \\\\[8pt] &\\textbf{【 指定占積率(${rateStr}\\%以下) 】} \\\\ &\\quad \\text{選定サイズ:} \\quad ${sizeCustomBadge} \\\\ &\\quad \\text{管スペック:} \\quad \\text{内径 } ${pipeCustomInnerD} \\text{ mm} \\quad (A_{\\text{pipe}} = ${pipeCustomArea} \\text{ mm}^2) \\\\ &\\quad \\text{許容断面積:} \\quad A_{allow} = ${pipeCustomArea} \\times ${(customRate / 100).toFixed(2)} = ${allowCustomStr} \\text{ mm}^2 \\\\ &\\qquad (${allowCustomStr} \\text{ mm}^2 \\ge ${totalAreaStr} \\text{ mm}^2 \\quad ${passTag}) \\\\ &\\quad \\text{実計算占積率:} \\quad \\eta = \\frac{${totalAreaStr}}{${pipeCustomArea}} \\times 100 = ${fillCustomStr}\\% \\\\ &\\qquad (${fillCustomStr}\\% \\le ${customRate}.0\\% \\quad ${passTag}) \\end{aligned}`
+    const tag32 = res.isOversize32 ? ngTag : passTag
+    const cmp32Area = res.isOversize32 ? '\\lt' : '\\ge'
+    const cmp32Fill = res.isOversize32 ? '\\gt' : '\\le'
+
+    const tag48 = res.isOversize48 ? ngTag : passTag
+    const cmp48Area = res.isOversize48 ? '\\lt' : '\\ge'
+    const cmp48Fill = res.isOversize48 ? '\\gt' : '\\le'
+
+    const tagCustom = res.isOversizeCustom ? ngTag : passTag
+    const cmpCustomArea = res.isOversizeCustom ? '\\lt' : '\\ge'
+    const cmpCustomFill = res.isOversizeCustom ? '\\gt' : '\\le'
+
+    formula2 = `\\begin{aligned} &\\textbf{【 32\\%以下基準（異なる太さの電線等） 】} \\\\ &\\quad \\text{選定サイズ:} \\quad ${size32Badge} \\\\ &\\quad \\text{管スペック:} \\quad \\text{内径 } ${pipe32InnerD} \\text{ mm} \\quad (A_{\\text{pipe}} = ${pipe32Area} \\text{ mm}^2) \\\\ &\\quad \\text{許容断面積:} \\quad A_{allow} = ${pipe32Area} \\times 0.32 = ${allow32Str} \\text{ mm}^2 \\\\ &\\qquad (${allow32Str} \\text{ mm}^2 ${cmp32Area} ${totalAreaStr} \\text{ mm}^2 \\quad ${tag32}) \\\\ &\\quad \\text{実計算占積率:} \\quad \\eta = \\frac{${totalAreaStr}}{${pipe32Area}} \\times 100 = ${fill32Str}\\% \\\\ &\\qquad (${fill32Str}\\% ${cmp32Fill} 32.0\\% \\quad ${tag32}) \\\\[8pt] &\\textbf{【 48\\%以下基準（同じ太さの電線等） 】} \\\\ &\\quad \\text{選定サイズ:} \\quad ${size48Badge} \\\\ &\\quad \\text{管スペック:} \\quad \\text{内径 } ${pipe48InnerD} \\text{ mm} \\quad (A_{\\text{pipe}} = ${pipe48Area} \\text{ mm}^2) \\\\ &\\quad \\text{許容断面積:} \\quad A_{allow} = ${pipe48Area} \\times 0.48 = ${allow48Str} \\text{ mm}^2 \\\\ &\\qquad (${allow48Str} \\text{ mm}^2 ${cmp48Area} ${totalAreaStr} \\text{ mm}^2 \\quad ${tag48}) \\\\ &\\quad \\text{実計算占積率:} \\quad \\eta = \\frac{${totalAreaStr}}{${pipe48Area}} \\times 100 = ${fill48Str}\\% \\\\ &\\qquad (${fill48Str}\\% ${cmp48Fill} 48.0\\% \\quad ${tag48}) \\\\[8pt] &\\textbf{【 指定占積率(${rateStr}\\%以下) 】} \\\\ &\\quad \\text{選定サイズ:} \\quad ${sizeCustomBadge} \\\\ &\\quad \\text{管スペック:} \\quad \\text{内径 } ${pipeCustomInnerD} \\text{ mm} \\quad (A_{\\text{pipe}} = ${pipeCustomArea} \\text{ mm}^2) \\\\ &\\quad \\text{許容断面積:} \\quad A_{allow} = ${pipeCustomArea} \\times ${(customRate / 100).toFixed(2)} = ${allowCustomStr} \\text{ mm}^2 \\\\ &\\qquad (${allowCustomStr} \\text{ mm}^2 ${cmpCustomArea} ${totalAreaStr} \\text{ mm}^2 \\quad ${tagCustom}) \\\\ &\\quad \\text{実計算占積率:} \\quad \\eta = \\frac{${totalAreaStr}}{${pipeCustomArea}} \\times 100 = ${fillCustomStr}\\% \\\\ &\\qquad (${fillCustomStr}\\% ${cmpCustomFill} ${customRate}.0\\% \\quad ${tagCustom}) \\end{aligned}`
   }
 
   return [

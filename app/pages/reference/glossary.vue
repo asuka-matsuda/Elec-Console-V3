@@ -91,10 +91,10 @@ const resetFilters = () => {
       </ul>
 
       <div class="flex flex-col gap-inline-gap">
-        <span class="index-label">INDEX (読み・五十音)</span>
+        <span class="label">INDEX (読み・五十音)</span>
         <ul class="grid grid-cols-5 gap-inline-gap">
           <li v-for="kana in KANA_ROWS" :key="kana.value">
-            <button type="button" class="flex items-center justify-center w-full kana-btn" :class="{ 'is-active': activeKanas.includes(kana.value) }" :disabled="disabledKanaRows.has(kana.value)" @click="toggleKanaRow(kana.value)">{{ kana.label }}</button>
+            <Button size="sm" block :variant="activeKanas.includes(kana.value) ? 'primary' : 'secondary'" :disabled="disabledKanaRows.has(kana.value)" @click="toggleKanaRow(kana.value)">{{ kana.label }}</Button>
           </li>
         </ul>
       </div>
@@ -105,8 +105,8 @@ const resetFilters = () => {
         <article class="panel flex flex-col gap-panel-gap">
           <header class="flex items-center justify-between gap-item-gap">
             <div class="flex flex-col gap-inline-gap">
-              <span v-if="item.kana" class="kana">{{ item.kana }}</span>
-              <h2 class="term">{{ item.term }}</h2>
+              <small v-if="item.kana">{{ item.kana }}</small>
+              <h4>{{ item.term }}</h4>
             </div>
             <Badge :variant="TRADE_VARIANT_MAP[item.category] || 'gray'">{{ item.category }}</Badge>
           </header>
@@ -114,16 +114,16 @@ const resetFilters = () => {
           <hr class="divider is-fade-center">
 
           <div class="flex flex-col gap-inline-gap">
-            <p class="desc">{{ item.desc }}</p>
+            <p>{{ item.desc }}</p>
 
-            <dl v-if="item.related" class="meta flex flex-col gap-inline-gap p-panel-pad-compact">
-              <dt class="meta-label">関連用語</dt>
-              <dd class="meta-text">{{ item.related }}</dd>
+            <dl v-if="item.related" class="panel is-elevated p-panel-pad-compact flex flex-col gap-inline-gap">
+              <dt><small>関連用語</small></dt>
+              <dd>{{ item.related }}</dd>
             </dl>
 
-            <dl v-if="item.example" class="meta flex flex-col gap-inline-gap p-panel-pad-compact">
-              <dt class="meta-label">用例・備考</dt>
-              <dd class="meta-text">{{ item.example }}</dd>
+            <dl v-if="item.example" class="panel is-elevated p-panel-pad-compact flex flex-col gap-inline-gap">
+              <dt><small>用例・備考</small></dt>
+              <dd>{{ item.example }}</dd>
             </dl>
           </div>
         </article>
@@ -133,77 +133,3 @@ const resetFilters = () => {
     <EmptyState v-else icon="search" variant="no-results" title="該当する用語が見つかりません" description="検索キーワードまたは五十音・工種フィルターの条件を変更してください。" class="flex-1" />
   </div>
 </template>
-
-<style scoped lang="scss">
-.index-label {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-secondary);
-  letter-spacing: var(--tracking-wide);
-}
-
-.kana-btn {
-  height: 1.75rem;
-  padding: 0;
-  border: var(--border-width-base) solid var(--color-border);
-
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-muted);
-
-  background-color: var(--surface-bg-elevated);
-
-  transition: var(--transition-interactive);
-
-  @include state-interactive;
-
-  &:hover:not(:disabled, .is-active) {
-    border-color: var(--theme-accent);
-    color: var(--color-text-main);
-  }
-
-  &.is-active {
-    border-color: var(--theme-accent);
-    color: var(--theme-accent);
-    background-color: color-mix(in srgb, var(--theme-accent) 15%, transparent);
-    box-shadow: var(--shadow-glow-sm);
-  }
-
-  @include state-disabled;
-}
-
-.kana {
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-muted);
-}
-
-.term {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-main);
-}
-
-.desc {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  color: var(--color-text-secondary);
-}
-
-.meta {
-  margin: 0;
-  border: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 30%, transparent);
-  background-color: var(--surface-bg-elevated);
-}
-
-.meta-label {
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-muted);
-}
-
-.meta-text {
-  margin: 0;
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-}
-</style>

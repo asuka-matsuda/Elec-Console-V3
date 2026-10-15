@@ -47,12 +47,12 @@ export function getAmbientTempDerating(
   maxTempStr: string | number,
   ambientTemp: number | null,
 ): number {
-  if (!ambientTemp || isNaN(ambientTemp)) return 1.0
+  if (ambientTemp === null || ambientTemp === undefined || isNaN(ambientTemp)) return 1.0
   const base = parseFloat(String(baseTempStr))
   const max = parseFloat(String(maxTempStr))
 
-  if (isNaN(base) || isNaN(max)) return 1.0
-  if (ambientTemp >= max) return 0.1
+  if (isNaN(base) || isNaN(max) || max <= base) return 1.0
+  if (ambientTemp >= max) return 0
 
   return Math.sqrt((max - ambientTemp) / (max - base))
 }
@@ -122,15 +122,29 @@ function _calculateVoltageDrop(
   }
 
   const fixedCable = candidates[0] || null
-  const unit = fixedCable ? fixedCable.unit : 'sq'
+
+  if (!fixedCable) {
+    return {
+      optimal: null,
+      minAmpacityCable: null,
+      finalEffAmp: 0,
+      finalDropV: 0,
+      parallelCount: parallel,
+      convertedA: 0,
+      tempDerating: 1.0,
+      errorId: 'VOLTAGE_NO_MATCHING_CABLE',
+    }
+  }
+
+  const unit = fixedCable.unit || 'sq'
   const A = _getEquivalentSq(selectedSize || 0, unit)
 
-  const finalDropV = (sys.simpleK * L * I) / (1000 * (A * parallel))
+  const finalDropV = A > 0 && parallel > 0 ? (sys.simpleK * L * I) / (1000 * (A * parallel)) : 0
 
   let tempDerating = 1.0
   let finalEffAmp = 0
 
-  if (fixedCable && fixedCable.ampacity && fixedCable.ampacity !== '-') {
+  if (fixedCable.ampacity && fixedCable.ampacity !== '-') {
     tempDerating = getAmbientTempDerating(
       fixedCable.baseTemp || '',
       fixedCable.maxTemp || '',
@@ -144,18 +158,14 @@ function _calculateVoltageDrop(
   }
 
   return {
-    optimal: (fixedCable || {
-      category: cableType,
-      size: selectedSize || '',
-      unit: unit,
-    }) as CableData,
+    optimal: fixedCable,
     minAmpacityCable: fixedCable,
     finalEffAmp,
     finalDropV,
     parallelCount: parallel,
     convertedA: A,
     tempDerating,
-    errorId: finalEffAmp > 0 && I > finalEffAmp ? 'VOLTAGE_AMP_OVER' : undefined,
+    errorId: finalEffAmp <= 0 || I > finalEffAmp ? 'VOLTAGE_AMP_OVER' : undefined,
   }
 }
 
@@ -185,7 +195,7 @@ function _calculateSizeSelection(
     throw new Error('Invalid inputs')
 
   const maxDropV = sys.voltage * ((targetDrop || 0) / 100)
-  const A_req = (sys.simpleK * L * I) / (1000 * maxDropV * parallel)
+  const A_req = maxDropV > 0 && parallel > 0 ? (sys.simpleK * L * I) / (1000 * maxDropV * parallel) : Infinity
 
   let candidates = cables.filter(
     c => c.category === cableType && c.ampacity !== '-',
@@ -240,6 +250,7 @@ function _calculateSizeSelection(
     return {
       optimal: c,
       minAmpacityCable,
+      minAreaCable,
       finalEffAmp: totalEffAmp,
       finalDropV: finalDropV,
       parallelCount: parallel,
@@ -296,6 +307,7 @@ function _calculateSizeSelection(
   return {
     optimal,
     minAmpacityCable,
+    minAreaCable,
     finalEffAmp,
     finalDropV,
     parallelCount: parallel,

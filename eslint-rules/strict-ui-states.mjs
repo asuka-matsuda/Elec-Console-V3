@@ -66,7 +66,7 @@ export default {
       let clean = token
 
       if (clean.startsWith('!')) clean = clean.slice(1)
-      clean = clean.replace(/^(sm|md|lg|xl|2xl|hover|focus|focus-visible|active|disabled|open):/, '')
+      clean = clean.replace(/^(@?max-[\w-]+|@[\w-]+|xs|sm|md|lg|xl|2xl|hover|focus|focus-visible|active|disabled|open):/, '')
 
       if (clean === 'is-hover') {
         context.report({

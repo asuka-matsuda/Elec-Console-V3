@@ -20,7 +20,7 @@ const DECORATION_PATTERNS = [
   { category: 'フォントウェイト', regex: /^font-(thin|extralight|light|normal|medium|semibold|bold|extrabold|black)$/ },
   { category: 'フォントファミリー', regex: /^font-(sans|serif|mono)$/ },
   { category: '字間/行間', regex: /^(leading-|tracking-)/ },
-  { category: 'テキスト装飾', regex: /^(truncate|uppercase|lowercase|capitalize|normal-case|italic|not-italic|underline|line-through|no-underline|tabular-nums)$/ },
+  { category: 'テキスト装飾', regex: /^(uppercase|lowercase|capitalize|normal-case|italic|not-italic|underline|line-through|no-underline)$/ },
   { category: 'テキストカラー', regex: /^text-((\[var\(.+?\)\])|(\[color-mix.+?\])|white|black|transparent|current|slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)/ },
   { category: '背景カラー', regex: /^bg-((\[var\(.+?\)\])|(\[color-mix.+?\])|white|black|transparent|current|slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)/ },
   { category: '角丸', regex: /^rounded(-.+)?$/ },
@@ -68,7 +68,7 @@ export default {
 
       for (let token of tokens) {
         if (token.startsWith('!')) token = token.slice(1)
-        const cleanToken = token.replace(/^(sm|md|lg|xl|2xl|hover|focus|focus-visible|active|disabled):/, '')
+        const cleanToken = token.replace(/^(@?max-[\w-]+|@[\w-]+|xs|sm|md|lg|xl|2xl|hover|focus|focus-visible|active|disabled):/, '')
 
         cleanTokens.push({ raw: token, clean: cleanToken })
 

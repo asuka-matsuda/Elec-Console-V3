@@ -3,9 +3,12 @@
  * PUT /api/sites/:siteId/todos/:id
  */
 
-import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
+import { defineEventHandler, getRouterParam, readBody } from 'h3'
 
-import { requireSiteAccess } from '../../../../utils/auth'
+import { ErrorCode } from '#shared/types/errors'
+
+import { requireSiteRole } from '../../../../utils/auth'
+import { createAppError } from '../../../../utils/error'
 import { prisma } from '../../../../utils/prisma'
 
 interface UpdateTodoBody {
@@ -14,34 +17,43 @@ interface UpdateTodoBody {
 }
 
 export default defineEventHandler(async (event) => {
-  const user = await requireSiteAccess(event)
+  const user = await requireSiteRole(event, ['admin', 'worker'])
   const siteId = getRouterParam(event, 'siteId')
   const id = getRouterParam(event, 'id')
 
   if (!siteId || !id) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: 'パラメータが不足しています',
     })
   }
+
+  const userKeys = Array.from(new Set([user.id, user.loginId].filter(Boolean)))
 
   const todo = await prisma.todo.findUnique({
     where: { id },
   })
 
-  if (!todo || todo.siteId !== siteId || todo.userId !== user.loginId) {
-    throw createError({
-      statusCode: 404,
+  if (!todo || todo.siteId !== siteId || !userKeys.includes(todo.userId)) {
+    throw createAppError({
+      code: ErrorCode.SYS_NOT_FOUND,
       message: '対象のタスクが見つかりません',
     })
   }
 
-  const body = await readBody<UpdateTodoBody>(event)
+  const body: UpdateTodoBody = (await readBody<UpdateTodoBody>(event).catch(() => null)) || {}
+
+  if (body.text !== undefined && String(body.text).trim().length === 0) {
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
+      message: 'タスク内容を入力してください',
+    })
+  }
 
   const updated = await prisma.todo.update({
     where: { id },
     data: {
-      ...(body.text !== undefined ? { text: body.text } : {}),
+      ...(body.text !== undefined ? { text: String(body.text).trim() } : {}),
       ...(body.completed !== undefined ? { completed: Boolean(body.completed) } : {}),
     },
   })

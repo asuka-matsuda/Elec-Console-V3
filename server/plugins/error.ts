@@ -78,17 +78,33 @@ export default (nitroApp: NitroApp) => {
       return
     }
 
-    // 3. クライアントに返却する情報を安全にマスク
-    err.statusCode = statusCode
-    err.statusMessage = ErrorCode.SYS_UNKNOWN_ERROR
+    // 3. クライアントに返却する情報を安全にマスク（4xx はステータスに応じたコードとメッセージを保持）
+    const statusToCodeMap: Record<number, ErrorCode> = {
+      400: ErrorCode.SYS_VALIDATION_FAILED,
+      401: ErrorCode.AUTH_UNAUTHORIZED,
+      403: ErrorCode.AUTH_FORBIDDEN_ACTION,
+      404: ErrorCode.SYS_NOT_FOUND,
+      405: ErrorCode.SYS_METHOD_NOT_ALLOWED,
+      409: ErrorCode.CIRCUIT_VERSION_CONFLICT,
+      429: ErrorCode.SYS_RATE_LIMITED,
+    }
 
-    const safeMessage = statusCode === 404
-      ? (DEFAULT_ERROR_MESSAGES[ErrorCode.SYS_NOT_FOUND] || '指定されたリソースが見つかりません。')
-      : (DEFAULT_ERROR_MESSAGES[ErrorCode.SYS_UNKNOWN_ERROR] || '予期せぬシステムエラーが発生しました。')
+    const resolvedCode = statusToCodeMap[statusCode] || ErrorCode.SYS_UNKNOWN_ERROR
+    const isClientErrorWithMessage = statusCode >= 400
+      && statusCode < 500
+      && statusCode !== 404
+      && Boolean(err.message && err.message !== String(statusCode) && err.message !== err.statusMessage)
+
+    const safeMessage = isClientErrorWithMessage
+      ? err.message!
+      : (DEFAULT_ERROR_MESSAGES[resolvedCode] || '予期せぬシステムエラーが発生しました。')
+
+    err.statusCode = statusCode
+    err.statusMessage = resolvedCode
 
     const payload: ApiErrorPayload = {
-      code: statusCode === 404 ? ErrorCode.SYS_NOT_FOUND : ErrorCode.SYS_UNKNOWN_ERROR,
-      shortCode: statusCode === 404 ? ERROR_SHORT_CODES[ErrorCode.SYS_NOT_FOUND] : ERROR_SHORT_CODES[ErrorCode.SYS_UNKNOWN_ERROR],
+      code: resolvedCode,
+      shortCode: ERROR_SHORT_CODES[resolvedCode] || ERROR_SHORT_CODES[ErrorCode.SYS_UNKNOWN_ERROR],
       message: safeMessage,
       traceId,
     }

@@ -29,7 +29,7 @@ async function main() {
             lastName: masterDef.lastName,
             firstNameKana: masterDef.firstNameKana,
             lastNameKana: masterDef.lastNameKana,
-            role: masterDef.role || 'admin',
+            role: 'master',
             requirePasswordReset: masterDef.requirePasswordReset || false,
             email: masterDef.email || null,
             isActive: masterDef.isActive !== false,
@@ -37,6 +37,13 @@ async function main() {
           },
         })
         console.log('[Seed] Initial master administrator created successfully.')
+      }
+      else if (existingMaster.role !== 'master') {
+        await prisma.user.update({
+          where: { id: existingMaster.id },
+          data: { role: 'master' },
+        })
+        console.log('[Seed] Master administrator role normalized to master.')
       }
       else {
         console.log('[Seed] Master administrator already exists. Preserving existing record.')

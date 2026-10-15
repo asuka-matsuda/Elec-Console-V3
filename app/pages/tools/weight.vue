@@ -3,7 +3,7 @@
  * ケーブル重量・ドラム選定計算画面
  * ケーブル重量・ドラム選定ツールのページコンポーネントです。
  */
-import { computed, onUnmounted, ref, watch } from 'vue'
+import { computed, watch } from 'vue'
 
 import { useWeightCalculator } from '~/composables/tools/useWeightCalculator'
 import { getAvailableSizes, getCableCategories } from '~/utils/cable'
@@ -16,7 +16,9 @@ const {
   inputs,
   result,
   isSaveDisabled,
-  handleSaveHistory,
+  isShowingBasis,
+  isSaving,
+  handleSave,
   openResetModal,
   mathSteps,
 } = useWeightCalculator()
@@ -31,45 +33,6 @@ watch(
     inputs.value.cableIdx = ''
   },
 )
-
-// 計算根拠の表示切り替え
-const isShowingBasis = ref(false)
-
-// 保存フィードバック
-const saveState = ref<'idle' | 'saving' | 'success' | 'error'>('idle')
-let resetTimer: ReturnType<typeof setTimeout> | null = null
-
-const clearTimer = () => {
-  if (resetTimer) {
-    clearTimeout(resetTimer)
-    resetTimer = null
-  }
-}
-
-onUnmounted(clearTimer)
-
-const handleSave = async () => {
-  if (isSaveDisabled.value || saveState.value !== 'idle') return
-
-  clearTimer()
-  saveState.value = 'saving'
-  try {
-    await handleSaveHistory()
-    saveState.value = 'success'
-    resetTimer = setTimeout(() => {
-      saveState.value = 'idle'
-      resetTimer = null
-    }, 2000)
-  }
-  catch (e) {
-    console.error('Save failed:', e)
-    saveState.value = 'error'
-    resetTimer = setTimeout(() => {
-      saveState.value = 'idle'
-      resetTimer = null
-    }, 3000)
-  }
-}
 </script>
 
 <template>
@@ -117,7 +80,7 @@ const handleSave = async () => {
           </h3>
           <div class="flex items-center gap-item-gap">
             <Button v-if="mathSteps?.length" variant="tertiary" size="sm" :icon="isShowingBasis ? 'arrow-left' : 'circle-help'" @click="isShowingBasis = !isShowingBasis">{{ isShowingBasis ? '計算結果に戻る' : '計算根拠を表示' }}</Button>
-            <Button v-if="!isShowingBasis" variant="primary" size="sm" icon="save" :disabled="isSaveDisabled || saveState !== 'idle'" :loading="saveState === 'saving'" @click="handleSave">履歴に保存する</Button>
+            <Button v-if="!isShowingBasis" variant="primary" size="sm" icon="save" :disabled="isSaveDisabled || isSaving" :loading="isSaving" @click="handleSave">履歴に保存する</Button>
           </div>
         </header>
         <hr class="divider">

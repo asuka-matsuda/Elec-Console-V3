@@ -6,11 +6,12 @@
  */
 
 import { useSessionStorage } from '@vueuse/core'
-import { computed, getCurrentInstance } from 'vue'
+import { computed, getCurrentInstance, ref } from 'vue'
 import { onBeforeRouteLeave } from 'vue-router'
 
 import { useCalcHistory } from '~/composables/tools/useCalcHistory'
 import { useModal } from '~/composables/useModal'
+import { useToast } from '~/composables/useToast'
 import { STORAGE_KEYS } from '~/constants/storageKeys'
 import type { HistoryEntry } from '~/types/tools'
 
@@ -28,12 +29,16 @@ export function useToolPage<InputType, ResultType>(
   },
 ) {
   const { saveHistory } = useCalcHistory(STORAGE_KEYS.TOOL_HISTORY(toolId))
+  const toast = useToast()
   const sessionKey = `tool-inputs-${toolId}`
   const inputs = useSessionStorage<InputType>(
     sessionKey,
     defaultInputs,
     { mergeDefaults: true },
   )
+
+  const isShowingBasis = ref(false)
+  const isSaving = ref(false)
 
   if (getCurrentInstance()) {
     try {
@@ -75,6 +80,22 @@ export function useToolPage<InputType, ResultType>(
     }
   }
 
+  const handleSave = async () => {
+    if (isSaving.value) return
+
+    isSaving.value = true
+    try {
+      await saveToHistory()
+      toast.success('計算履歴に保存しました')
+    }
+    catch {
+      toast.error('履歴の保存に失敗しました')
+    }
+    finally {
+      isSaving.value = false
+    }
+  }
+
   const loadFromHistory = (entry: HistoryEntry) => {
     if (entry.toolName) {
       inputs.value = historyMapper.fromHistory(entry)
@@ -108,6 +129,9 @@ export function useToolPage<InputType, ResultType>(
   return {
     inputs,
     result,
+    isShowingBasis,
+    isSaving,
+    handleSave,
     handleSaveHistory: saveToHistory,
     saveToHistory,
     loadFromHistory,

@@ -93,9 +93,9 @@ export const DEFAULT_CIRCUIT_COLUMN_MAP: CircuitColumnMap = {
 /**
  * 各項目に対する認識見出し候補（エイリアス）リスト
  */
-const HEADER_ALIASES: Record<keyof CircuitColumnMap, string[]> = {
+export const HEADER_ALIASES: Record<keyof CircuitColumnMap, string[]> = {
   // 基本設計情報（読取用）
-  floor: ['フロア', '階', '階数', '設置階', '設置フロア', 'Floor', 'FLOOR'],
+  floor: ['エリア', '設置エリア', 'Area', 'AREA', 'フロア', '階', '階数', '設置階', '設置フロア', 'Floor', 'FLOOR'],
   banMeisho: ['盤名称', '分電盤名称', '盤名'],
   banShubetsu: ['盤種別', '種別'],
   haidenHoushiki: ['配電方式'],

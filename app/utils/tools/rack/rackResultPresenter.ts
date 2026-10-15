@@ -34,14 +34,11 @@ interface RackResultViewModel {
 
 interface RackResultPresenterParams {
   result: RackCalcResult | null | undefined
-  maxDepth?: number
-  mode?: 'strong' | 'weak'
 }
 
 function formatTierPanel(
   tier: RackTierResult | undefined,
   isEmpty: boolean,
-  _mode?: 'strong' | 'weak',
 ): RackTierPanelViewModel {
   const isTier2 = tier?.layers === 2
   const layers = isTier2 ? 2 : 1
@@ -117,8 +114,8 @@ export function formatRackResult(
   params: RackResultPresenterParams,
 ): RackResultViewModel {
   const { result } = params
-  const resolvedMaxDepth = result?.maxDepth ?? params.maxDepth ?? 80
-  const resolvedMode = result?.mode ?? params.mode ?? 'strong'
+  const resolvedMaxDepth = result?.maxDepth ?? 80
+  const resolvedMode = result?.mode ?? 'strong'
 
   const isSizeOver = Boolean(
     result?.tier1?.isSizeOver
@@ -128,8 +125,8 @@ export function formatRackResult(
   const isError = Boolean(result?.error) && !isSizeOver
   const isEmpty = isZeroOrNoInput || isError
 
-  const tier1 = formatTierPanel(result?.tier1, isEmpty, resolvedMode)
-  const tier2 = formatTierPanel(result?.tier2, isEmpty, resolvedMode)
+  const tier1 = formatTierPanel(result?.tier1, isEmpty)
+  const tier2 = formatTierPanel(result?.tier2, isEmpty)
 
   const wStrong = (resolvedMode === 'strong' ? result?.tier1?.wMain : result?.tier1?.wOther)?.toFixed(1) ?? '0.0'
   const wWeak = (resolvedMode === 'strong' ? result?.tier1?.wOther : result?.tier1?.wMain)?.toFixed(1) ?? '0.0'

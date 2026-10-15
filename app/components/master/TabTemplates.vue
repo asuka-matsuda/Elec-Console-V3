@@ -13,7 +13,12 @@ import type {
 } from '#shared/types/reportTemplate'
 import { useAdminSites } from '~/composables/admin/useAdminSites'
 import { useMasterTemplates } from '~/composables/master/useMasterTemplates'
-import { getLogicFileOptions, getReportLogicMeta, REPORT_LOGIC_OPTIONS } from '~/constants/reportTemplates'
+import {
+  getLogicFileOptions,
+  getReportLogicMeta,
+  REPORT_LOGIC_OPTIONS,
+  REPORT_TEMPLATE_DEFINITIONS,
+} from '~/constants/reportTemplates'
 import type { MenuItem, TableColumn } from '~/types/components'
 import { formatShortDateTime } from '~/utils/date'
 
@@ -200,7 +205,7 @@ onMounted(async () => {
 <template>
   <div class="flex flex-col gap-section-gap">
     <header class="flex flex-wrap items-center justify-between gap-panel-gap">
-      <small class="guide-text">現場ポータルからワンクリックで出力されるExcel帳票のひな形と現場割り当てを管理します。</small>
+      <small>現場ポータルからワンクリックで出力されるExcel帳票のひな形と現場割り当てを管理します。</small>
       <div class="flex items-center gap-inline-gap flex-wrap">
         <Button variant="secondary" size="sm" icon="refresh-cw" :loading="isLoading" @click="fetchTemplates()">最新状態に更新</Button>
         <Button variant="primary" size="sm" icon="plus" @click="openCreateModal">帳票テンプレートを追加</Button>
@@ -212,14 +217,14 @@ onMounted(async () => {
       <div class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap flex-wrap">
         <div class="flex items-center gap-item-gap">
           <Icon name="list" />
-          <h4 class="tpl-title">登録済み帳票一覧</h4>
+          <h4>登録済み帳票一覧</h4>
           <Badge size="sm" variant="gray">{{ items.length }}件</Badge>
         </div>
       </div>
 
       <Table :columns="templateColumns" :data="items" :loading="isLoading" row-key="id" empty-text="登録されている帳票テンプレートはありません。「帳票テンプレートを追加」ボタンからひな形Excelとロジックを登録してください。">
         <template #cell-name="{ row }">
-          <span class="tpl-title">{{ row.name }}</span>
+          <strong>{{ row.name }}</strong>
         </template>
 
         <template #cell-logicType="{ row }">
@@ -230,23 +235,23 @@ onMounted(async () => {
         </template>
 
         <template #cell-logicFile="{ row }">
-          <span class="desc-text">{{ getLogicFileLabel(row.logicType, row.logicFile) }}</span>
+          <small>{{ getLogicFileLabel(row.logicType, row.logicFile) }}</small>
         </template>
 
         <template #cell-sites="{ row }">
-          <span v-if="row.isAllSites" class="desc-text">全現場</span>
+          <span v-if="row.isAllSites">全現場</span>
           <div v-else-if="row.assignedSiteIds.length > 0" class="flex flex-wrap items-center gap-inline-gap">
-            <span v-for="sId in row.assignedSiteIds" :key="sId" class="site-chip">
+            <Badge v-for="sId in row.assignedSiteIds" :key="sId" size="sm" variant="gray">
               {{ getSiteName(sId) }}
-            </span>
+            </Badge>
           </div>
-          <span v-else class="desc-text text-muted">未割り当て</span>
+          <small v-else>未割り当て</small>
         </template>
 
         <template #cell-file="{ row }">
           <div class="flex flex-col">
-            <span class="file-name">{{ row.file.filename }}</span>
-            <small class="file-meta">({{ formatFileSize(row.file.size) }} / {{ formatShortDateTime(row.file.updatedAt) }})</small>
+            <strong><code>{{ row.file.filename }}</code></strong>
+            <small>({{ formatFileSize(row.file.size) }} / {{ formatShortDateTime(row.file.updatedAt) }})</small>
           </div>
         </template>
 
@@ -258,6 +263,35 @@ onMounted(async () => {
         </template>
       </Table>
     </div>
+
+    <!-- 利用可能なテンプレート置換キー一覧（リファレンス） -->
+    <Collapse title="利用可能なテンプレート置換キー一覧（Excelひな形作成リファレンス）">
+      <div class="flex flex-col gap-panel-gap">
+        <small>ひな形Excelファイルのセル内に以下の置換キーを記述しておくと、帳票出力時に現場の回路データや測定結果へ自動置換されます。</small>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-panel-gap">
+          <section v-for="def in REPORT_TEMPLATE_DEFINITIONS" :key="def.id" class="panel is-elevated p-panel-pad-compact flex flex-col gap-inline-gap">
+            <header class="flex items-center justify-between">
+              <div class="flex items-center gap-inline-gap">
+                <Icon :name="def.icon" size="sm" />
+                <strong>{{ def.name }}</strong>
+              </div>
+              <Badge size="sm" variant="gray">{{ def.category }}</Badge>
+            </header>
+            <small>{{ def.description }}</small>
+            <hr class="divider">
+            <ul class="flex flex-col gap-micro-gap">
+              <li v-for="k in def.availableKeys" :key="k.key" class="flex flex-wrap items-baseline justify-between gap-inline-gap">
+                <div class="flex items-baseline gap-inline-gap">
+                  <code>{{ k.key }}</code>
+                  <span>{{ k.label }}</span>
+                </div>
+                <small>{{ k.description }} (例: {{ k.sample }})</small>
+              </li>
+            </ul>
+          </section>
+        </div>
+      </div>
+    </Collapse>
 
     <!-- 登録・編集モーダル -->
     <Modal v-model="isFormModalOpen" :title="formMode === 'create' ? '帳票テンプレートの新規登録' : '帳票テンプレートの編集'" icon="file-spreadsheet" size="lg">
@@ -286,7 +320,7 @@ onMounted(async () => {
           <span class="label">現場割り当て設定</span>
           <Toggle v-model="formState.isAllSites" label="すべての現場で利用可能にする" description="有効にすると、今後追加される現場を含め全現場のポータルから出力できるようになります。" />
 
-          <div v-if="!formState.isAllSites" class="sites-select-box flex flex-col gap-inline-gap p-panel-pad-compact">
+          <div v-if="!formState.isAllSites" class="panel is-sunken p-panel-pad-compact flex flex-col gap-inline-gap">
             <span class="label">利用を許可する現場を選択（{{ formState.assignedSiteIds.length }}現場 選択中）:</span>
             <div v-if="sites.length > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-inline-gap max-h-48 overflow-y-auto">
               <Checkbox v-for="site in sites" :key="site.id" v-model="formState.assignedSiteIds" :value="site.id" :label="site.name" />
@@ -300,98 +334,26 @@ onMounted(async () => {
         <!-- ひな形Excelアップロード -->
         <div class="flex flex-col gap-inline-gap">
           <span class="label">{{ formMode === 'create' ? 'ひな形Excelファイル（必須）' : 'ひな形Excelファイルの差し替え（任意）' }}</span>
-          <div v-if="editingExistingFile && !selectedFile" class="existing-file-note p-inline-gap flex items-center justify-between">
-            <span class="desc-text">現在の登録ファイル: <strong>{{ editingExistingFile.filename }}</strong> ({{ formatFileSize(editingExistingFile.size) }})</span>
-            <span class="guide-text">※ 変更しない場合は再選択不要です</span>
+          <div v-if="editingExistingFile && !selectedFile" class="panel is-sunken p-panel-pad-compact flex items-center justify-between">
+            <span>現在の登録ファイル: <strong>{{ editingExistingFile.filename }}</strong> ({{ formatFileSize(editingExistingFile.size) }})</span>
+            <small>※ 変更しない場合は再選択不要です</small>
           </div>
           <Dropzone v-model="selectedFile" accept=".xlsx, .xlsm, .xls" @change="handleFileChange" />
-          <div v-if="selectedFile" class="selected-file-badge flex items-center gap-inline-gap">
+          <div v-if="selectedFile" class="flex items-center gap-inline-gap">
             <Icon name="check" style="color: var(--color-status-success)" />
-            <span>選択中のファイル: <strong>{{ selectedFile.name }}</strong> ({{ formatFileSize(selectedFile.size) }})</span>
+            <small>選択中のファイル: <strong>{{ selectedFile.name }}</strong> ({{ formatFileSize(selectedFile.size) }})</small>
           </div>
         </div>
+      </div>
 
-        <!-- アクションボタン -->
-        <div class="flex items-center justify-end gap-inline-gap pt-item-gap">
+      <template #footer>
+        <div class="flex items-center justify-end gap-inline-gap w-full">
           <Button variant="secondary" @click="isFormModalOpen = false">キャンセル</Button>
           <Button variant="primary" :loading="isSaving" @click="submitForm">
             {{ formMode === 'create' ? '登録する' : '変更を保存する' }}
           </Button>
         </div>
-
-      </div>
+      </template>
     </Modal>
   </div>
 </template>
-
-<style scoped lang="scss">
-.guide-text {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-}
-
-.desc-text {
-  font-size: var(--font-size-sm);
-  line-height: var(--line-height-base);
-  color: var(--color-text-secondary);
-}
-
-.tpl-title {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-main);
-}
-
-.file-info-box {
-  border: var(--border-width-base) solid var(--color-border);
-  background-color: var(--surface-bg-elevated);
-}
-
-.file-name {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-main);
-}
-
-.file-meta {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-}
-
-.site-chips-box {
-  border: var(--border-width-base) solid var(--color-border);
-  background-color: var(--surface-bg-sunken);
-}
-
-.site-chips-label {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-muted);
-}
-
-.site-chip {
-  padding: 0 var(--space-1);
-  border: var(--border-width-base) solid var(--color-border);
-
-  font-size: var(--font-size-xs);
-  color: var(--color-text-main);
-
-  background-color: var(--surface-bg-elevated);
-}
-
-.sites-select-box {
-  border: var(--border-width-base) solid var(--color-border);
-  background-color: var(--surface-bg-sunken);
-}
-
-.existing-file-note {
-  border: var(--border-width-base) solid var(--color-border);
-  background-color: var(--surface-bg-sunken);
-}
-
-.selected-file-badge {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-main);
-}
-</style>

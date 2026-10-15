@@ -37,15 +37,18 @@ const {
   circuits,
   filteredCircuits,
   shubetsuTabOptions,
+  availableFloorList,
   availableBanMeishoList,
   selectedKeiTo,
   selectedBanShubetsu,
+  selectedFloor,
   selectedBanMeisho,
   phaseStats,
   isLoading,
   isActionLoading,
   isThreePhase,
   fetchCircuits,
+  saveExcludedRemarks,
   confirmPhase3,
 } = usePhase3Exam(siteId, initialKeiTo.value)
 
@@ -145,7 +148,7 @@ const hasVoltageOutOfRangeError = (circuit: CircuitItem): boolean => {
 }
 
 const handleConfirmCircuit = (circuit: CircuitItem) => {
-  if (hasVoltageOutOfRangeError(circuit)) return
+  if (isRowDisabled(circuit) || hasVoltageOutOfRangeError(circuit)) return
 
   const form = getRowForm(circuit)
   const rsNum = parseNullableNumber(form.rs)
@@ -172,6 +175,12 @@ const handleConfirmCircuit = (circuit: CircuitItem) => {
     remarks: form.remarks,
     isComplete: isAllComplete,
   })
+}
+
+const handleSaveExcludedRemarks = (circuit: CircuitItem) => {
+  const form = getRowForm(circuit)
+
+  saveExcludedRemarks(circuit, form.remarks)
 }
 
 const getNextPhase1Path = (circuit: CircuitItem): string => {
@@ -217,11 +226,16 @@ onMounted(() => {
 
         <div class="flex flex-wrap items-center gap-form-col-gap">
           <div class="flex items-center gap-item-gap">
+            <label for="filter-area-p3" class="shrink-0 label">エリア:</label>
+            <Select id="filter-area-p3" v-model="selectedFloor" :options="availableFloorList" class="w-40" />
+          </div>
+
+          <div class="flex items-center gap-item-gap">
             <label for="filter-ban-p3" class="shrink-0 label">盤名称:</label>
             <Select id="filter-ban-p3" v-model="selectedBanMeisho" :options="availableBanMeishoList" class="w-40" />
           </div>
 
-          <span class="whitespace-nowrap count-label">
+          <span class="whitespace-nowrap field-help-text">
             対象回路: <strong>{{ phaseStats.allCount }}</strong> 件
           </span>
         </div>
@@ -234,10 +248,10 @@ onMounted(() => {
               <span>フェーズ3 進捗状況</span>
               <PortalSyncStatusBadge :site-id="siteId" />
             </div>
-            <div class="flex items-center gap-item-gap justify-end min-w-[160px] text-right">
+            <div class="flex items-center gap-item-gap justify-end min-w-[160px] text-right tabular-nums">
               <span><strong>{{ phaseStats.completed }}</strong> / {{ phaseStats.total }}</span>
               <span>({{ phaseStats.pct }}%)</span>
-              <small v-if="phaseStats.excluded > 0" class="excluded-count">(除外: {{ phaseStats.excluded }})</small>
+              <small v-if="phaseStats.excluded > 0">(除外: {{ phaseStats.excluded }})</small>
             </div>
           </div>
           <Progress :value="phaseStats.pct" />
@@ -250,8 +264,8 @@ onMounted(() => {
     <Table v-model:sort-by="sortBy" v-model:sort-order="sortOrder" :columns="PHASE3_TABLE_COLUMNS" :data="sortedCircuits" :loading="isLoading" :skeleton-rows="8" :row-id="(row) => `row-${row.id}`" :row-class="(row) => getSoudenRowClass(row, { isComplete, isCircuitLocked: isLocked, editingRowId: null })" class="flex-1 min-h-[400px]">
       <template #cell-banMeisho="{ row: circuit }">
         <div class="flex flex-col gap-micro-gap min-w-0">
-          <span class="ban-name">{{ circuit.banMeisho || '-' }}</span>
-          <span v-if="circuit.banShubetsu" class="ban-type">{{ circuit.banShubetsu }}</span>
+          <strong>{{ circuit.banMeisho || '-' }}</strong>
+          <small v-if="circuit.banShubetsu">{{ circuit.banShubetsu }}</small>
         </div>
       </template>
 
@@ -262,38 +276,38 @@ onMounted(() => {
       </template>
 
       <template #cell-kairoMeisho="{ row: circuit }">
-        <span class="circuit-meisho block" :title="circuit.kairoMeisho || ''">{{ circuit.kairoMeisho || '-' }}</span>
+        <span class="whitespace-pre block" :title="circuit.kairoMeisho || ''">{{ circuit.kairoMeisho || '-' }}</span>
       </template>
 
       <template #cell-p3ConfirmedAt="{ row: circuit }">
         <div v-if="circuit.p3Worker" class="flex flex-col items-center gap-micro-gap">
-          <span class="cell-worker">{{ circuit.p3Worker }}</span>
-          <span class="cell-date">{{ formatShortDateTime(circuit.p3ConfirmedAt) }}</span>
+          <strong>{{ circuit.p3Worker }}</strong>
+          <time>{{ formatShortDateTime(circuit.p3ConfirmedAt) }}</time>
         </div>
-        <span v-else class="cell-dash">-</span>
+        <small v-else>-</small>
       </template>
 
       <template #cell-denatsuRs="{ row: circuit }">
         <div class="flex flex-col items-center gap-inline-gap">
-          <span class="cell-label">{{ getPhaseLabels(circuit).phase1 }}</span>
+          <small>{{ getPhaseLabels(circuit).phase1 }}</small>
           <Input v-model="getRowForm(circuit).rs" type="number" step="any" inputmode="decimal" :placeholder="String(getVoltageRanges(circuit).phase1.target)" :error="!isRowDisabled(circuit) && isVoltageOutOfRange(getRowForm(circuit).rs, getVoltageRanges(circuit).phase1)" :disabled="isRowDisabled(circuit)" class="w-[85px]" @keydown.enter.prevent="handleConfirmCircuit(circuit)" />
-          <span v-if="!isRowDisabled(circuit) && isVoltageOutOfRange(getRowForm(circuit).rs, getVoltageRanges(circuit).phase1)" class="cell-warning-sub">±10%範囲外です</span>
+          <p v-if="!isRowDisabled(circuit) && isVoltageOutOfRange(getRowForm(circuit).rs, getVoltageRanges(circuit).phase1)" class="error-text whitespace-nowrap">±10%範囲外です</p>
         </div>
       </template>
 
       <template #cell-denatsuSt="{ row: circuit }">
         <div class="flex flex-col items-center gap-inline-gap">
-          <span class="cell-label">{{ getPhaseLabels(circuit).phase2 }}</span>
+          <small>{{ getPhaseLabels(circuit).phase2 }}</small>
           <Input v-model="getRowForm(circuit).st" type="number" step="any" inputmode="decimal" :placeholder="String(getVoltageRanges(circuit).phase2.target)" :error="!isRowDisabled(circuit) && isVoltageOutOfRange(getRowForm(circuit).st, getVoltageRanges(circuit).phase2)" :disabled="isRowDisabled(circuit)" class="w-[85px]" @keydown.enter.prevent="handleConfirmCircuit(circuit)" />
-          <span v-if="!isRowDisabled(circuit) && isVoltageOutOfRange(getRowForm(circuit).st, getVoltageRanges(circuit).phase2)" class="cell-warning-sub">±10%範囲外です</span>
+          <p v-if="!isRowDisabled(circuit) && isVoltageOutOfRange(getRowForm(circuit).st, getVoltageRanges(circuit).phase2)" class="error-text whitespace-nowrap">±10%範囲外です</p>
         </div>
       </template>
 
       <template #cell-denatsuRt="{ row: circuit }">
         <div class="flex flex-col items-center gap-inline-gap">
-          <span class="cell-label">{{ getPhaseLabels(circuit).phase3 }}</span>
+          <small>{{ getPhaseLabels(circuit).phase3 }}</small>
           <Input v-model="getRowForm(circuit).rt" type="number" step="any" inputmode="decimal" :placeholder="String(getVoltageRanges(circuit).phase3.target)" :error="!isRowDisabled(circuit) && isVoltageOutOfRange(getRowForm(circuit).rt, getVoltageRanges(circuit).phase3)" :disabled="isRowDisabled(circuit)" class="w-[85px]" @keydown.enter.prevent="handleConfirmCircuit(circuit)" />
-          <span v-if="!isRowDisabled(circuit) && isVoltageOutOfRange(getRowForm(circuit).rt, getVoltageRanges(circuit).phase3)" class="cell-warning-sub">±10%範囲外です</span>
+          <p v-if="!isRowDisabled(circuit) && isVoltageOutOfRange(getRowForm(circuit).rt, getVoltageRanges(circuit).phase3)" class="error-text whitespace-nowrap">±10%範囲外です</p>
         </div>
       </template>
 
@@ -302,13 +316,16 @@ onMounted(() => {
       </template>
 
       <template #cell-p3Remarks="{ row: circuit }">
-        <Textarea v-model="getRowForm(circuit).remarks" size="sm" :rows="1" auto-resize trim placeholder="備考" class="w-full textarea-remarks" :disabled="isConfirmed(circuit) || Boolean(isActionLoading[circuit.id])" />
+        <Textarea v-model="getRowForm(circuit).remarks" size="sm" :rows="1" auto-resize trim placeholder="備考" class="w-full" :disabled="(!circuit.isExcluded && isConfirmed(circuit)) || Boolean(isActionLoading[circuit.id])" />
       </template>
 
       <template #cell-actions="{ row: circuit }">
-        <div class="cell-actions flex items-center justify-center gap-inline-gap whitespace-nowrap">
-          <Badge v-if="circuit.isExcluded" variant="gray">除外</Badge>
-          <span v-if="isLocked(circuit)" class="text-note inline-flex items-center gap-inline-gap">⏸ P2未了</span>
+        <div class="flex items-center justify-center gap-inline-gap whitespace-nowrap">
+          <template v-if="circuit.isExcluded">
+            <Badge variant="gray">除外</Badge>
+            <Button variant="secondary" size="sm" :loading="Boolean(isActionLoading[circuit.id])" @click="handleSaveExcludedRemarks(circuit)">備考保存</Button>
+          </template>
+          <span v-else-if="isLocked(circuit)" class="inline-flex items-center gap-inline-gap">⏸ P2未了</span>
           <template v-else-if="isConfirmed(circuit)">
             <Button variant="secondary" size="sm" suffix-icon="arrow-right" :to="getNextPhase1Path(circuit)">フェーズ1へ進む</Button>
             <Button variant="danger" size="sm" :disabled="Boolean(isActionLoading[circuit.id])" @click="handleClearLocally(circuit)">解除する</Button>
@@ -319,77 +336,3 @@ onMounted(() => {
     </Table>
   </div>
 </template>
-
-<style scoped lang="scss">
-.count-label {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-}
-
-.excluded-count {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-}
-
-.ban-name {
-  overflow: hidden;
-  font-weight: var(--font-weight-bold);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.ban-type {
-  overflow: hidden;
-
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-muted);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.circuit-meisho {
-  font-size: inherit;
-  font-weight: var(--font-weight-normal);
-  line-height: 1.3;
-  color: var(--color-text-main);
-  white-space: pre-line;
-}
-
-.cell-worker {
-  color: var(--color-status-success);
-}
-
-.cell-date,
-.cell-dash {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-muted);
-}
-
-.textarea-remarks {
-  font-size: var(--font-size-xs);
-}
-
-.cell-label {
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-secondary);
-}
-
-.cell-warning-sub {
-  font-size: var(--font-size-2xs);
-  font-weight: var(--font-weight-medium);
-  line-height: 1.1;
-  color: var(--color-status-danger);
-  white-space: nowrap;
-}
-
-.cell-actions {
-  font-size: var(--font-size-xs);
-}
-
-.text-note {
-  font-size: inherit;
-  font-weight: var(--font-weight-normal);
-  color: var(--color-status-warning);
-}
-</style>

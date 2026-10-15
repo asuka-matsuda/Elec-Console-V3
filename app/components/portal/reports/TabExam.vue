@@ -6,11 +6,13 @@
  */
 import { computed, onMounted, ref, watch } from 'vue'
 
+import type { MeasurementDevice, MeasurementDeviceCategory } from '#shared/types/measurementDevice'
 import type { MasterReportTemplateItem } from '#shared/types/reportTemplate'
 import { useMasterTemplates } from '~/composables/master/useMasterTemplates'
 import { useExamReportPrint } from '~/composables/portal/useExamReportPrint'
 import { useMeasurementDevices } from '~/composables/portal/useMeasurementDevices'
 import type { SelectOption } from '~/types/components'
+import { generateUuid } from '~/utils/crypto'
 import { downloadBlob } from '~/utils/download'
 import { generateExamReportExcel, generateExamReportsZip } from '~/utils/examReportExcel'
 
@@ -34,9 +36,65 @@ const isExporting = ref(false)
 
 // 測定器情報
 const {
+  devices,
+  selectedMeggerId,
+  selectedVoltmeterId,
+  selectedPhaseDetectorId,
+  isDevicesModalOpen,
+  meggerOptions,
+  voltmeterOptions,
+  phaseDetectorOptions,
   selectedDevicesMap,
   fetchMeasurementDevices,
+  onDeviceSelectionChange,
+  onDevicesUpdated,
 } = useMeasurementDevices(computed(() => props.siteId))
+
+const deviceCategoryOptions: SelectOption[] = [
+  { value: 'megger', label: '絶縁抵抗計' },
+  { value: 'voltmeter', label: '電圧計' },
+  { value: 'phaseDetector', label: '検相器' },
+]
+
+const draftDevices = ref<MeasurementDevice[]>([])
+
+const openDevicesModal = () => {
+  draftDevices.value = devices.value.map(d => ({ ...d }))
+  isDevicesModalOpen.value = true
+}
+
+const addDraftDevice = (category: MeasurementDeviceCategory = 'megger') => {
+  draftDevices.value.push({
+    id: generateUuid(),
+    category,
+    maker: '',
+    model: '',
+    serialNumber: '',
+    calibrationDate: '',
+    note: '',
+  })
+}
+
+const removeDraftDevice = (id: string) => {
+  draftDevices.value = draftDevices.value.filter(d => d.id !== id)
+}
+
+const saveDraftDevices = () => {
+  const validDevices = draftDevices.value
+    .map(d => ({
+      ...d,
+      maker: d.maker.trim(),
+      model: d.model.trim(),
+      serialNumber: d.serialNumber.trim(),
+      calibrationDate: (d.calibrationDate || '').trim(),
+      note: (d.note || '').trim(),
+    }))
+    .filter(d => d.maker || d.model || d.serialNumber)
+
+  onDevicesUpdated(validDevices)
+  isDevicesModalOpen.value = false
+  toast.success('使用測定器台帳を保存しました')
+}
 
 // 送電試験回路データ
 const {
@@ -203,54 +261,51 @@ onMounted(() => {
       <section class="panel flex flex-col gap-form-row-gap">
         <header class="flex items-center gap-item-gap">
           <Icon name="sliders" />
-          <h4 class="pane-title">出力範囲の指定</h4>
+          <h4>出力範囲の指定</h4>
         </header>
         <hr class="divider">
 
         <div class="flex flex-col gap-inline-gap">
-          <label for="filter-exam-ban" class="label bold-label">出力対象の盤</label>
+          <label for="filter-exam-ban" class="label">出力対象の盤</label>
           <Select id="filter-exam-ban" v-model="selectedExamBan" :options="examBanOptions" class="w-full" />
-          <small class="field-help-text">※「全盤一括出力」を選択した場合は、全盤の試験結果をまとめたZIPアーカイブが出力されます。</small>
+          <small>※「全盤一括出力」を選択した場合は、全盤の試験結果をまとめたZIPアーカイブが出力されます。</small>
         </div>
 
         <div class="flex flex-col gap-inline-gap">
-          <label for="filter-exam-keito" class="label bold-label">対象系統の絞り込み</label>
+          <label for="filter-exam-keito" class="label">対象系統の絞り込み</label>
           <Select id="filter-exam-keito" v-model="selectedExamKeiTo" :options="examKeiToOptions" class="w-full" />
-          <small class="field-help-text">※幹線のみ、または二次側のみの試験結果に限定してExcelに出力できます。</small>
+          <small>※幹線のみ、または二次側のみの試験結果に限定してExcelに出力できます。</small>
         </div>
       </section>
 
-      <!-- 右ペイン: 測定器の紐付け確認 -->
+      <!-- 右ペイン: 測定器の紐付け・登録 -->
       <section class="panel flex flex-col gap-form-row-gap">
         <header class="flex items-center justify-between">
           <div class="flex items-center gap-item-gap">
             <Icon name="check-square" />
-            <h4 class="pane-title">使用測定器（校正管理連携）</h4>
+            <h4>使用測定器（校正管理連携）</h4>
           </div>
-          <Button size="sm" variant="tertiary" icon="settings" :to="`/portal/${siteId}`">現場設定で変更</Button>
+          <Button size="sm" variant="secondary" icon="settings" @click="openDevicesModal">測定器台帳を登録・編集</Button>
         </header>
         <hr class="divider">
 
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-item-gap">
-          <div class="device-card p-item-gap flex flex-col gap-micro-gap">
-            <span class="device-label">絶縁抵抗計</span>
-            <strong class="device-model">{{ selectedDevicesMap.megger?.model || '未設定' }}</strong>
-            <small class="device-meta">No. {{ selectedDevicesMap.megger?.serialNumber || '-' }}</small>
+        <div class="flex flex-col gap-form-row-gap">
+          <div class="flex flex-col gap-inline-gap">
+            <label for="select-device-megger" class="label">絶縁抵抗計</label>
+            <Select id="select-device-megger" v-model="selectedMeggerId" :options="meggerOptions" @update:model-value="onDeviceSelectionChange" />
           </div>
 
-          <div class="device-card p-item-gap flex flex-col gap-micro-gap">
-            <span class="device-label">電圧計</span>
-            <strong class="device-model">{{ selectedDevicesMap.voltmeter?.model || '未設定' }}</strong>
-            <small class="device-meta">No. {{ selectedDevicesMap.voltmeter?.serialNumber || '-' }}</small>
+          <div class="flex flex-col gap-inline-gap">
+            <label for="select-device-voltmeter" class="label">電圧計</label>
+            <Select id="select-device-voltmeter" v-model="selectedVoltmeterId" :options="voltmeterOptions" @update:model-value="onDeviceSelectionChange" />
           </div>
 
-          <div class="device-card p-item-gap flex flex-col gap-micro-gap">
-            <span class="device-label">検相器</span>
-            <strong class="device-model">{{ selectedDevicesMap.phaseDetector?.model || '未設定' }}</strong>
-            <small class="device-meta">No. {{ selectedDevicesMap.phaseDetector?.serialNumber || '-' }}</small>
+          <div class="flex flex-col gap-inline-gap">
+            <label for="select-device-phase" class="label">検相器</label>
+            <Select id="select-device-phase" v-model="selectedPhaseDetectorId" :options="phaseDetectorOptions" @update:model-value="onDeviceSelectionChange" />
           </div>
         </div>
-        <small class="field-help-text">※測定器データは試験結果Excelのヘッダー部へ自動的に差し込まれます。</small>
+        <small>※測定器データは試験結果Excelのヘッダー部へ自動的に差し込まれます。</small>
       </section>
     </div>
 
@@ -259,125 +314,102 @@ onMounted(() => {
       <header class="flex items-center justify-between">
         <div class="flex items-center gap-item-gap">
           <Icon name="database" />
-          <h4 class="pane-title">出力対象サマリー</h4>
+          <h4>出力対象サマリー</h4>
         </div>
-        <span class="summary-text">
+        <small>
           対象盤: <strong>{{ selectedExamBan === 'ALL' ? `${examBanList.length}盤` : selectedExamBan }}</strong> /
           対象回路数: <strong>{{ examTargetCircuits.length }}</strong> 回路
-        </span>
+        </small>
       </header>
       <hr class="divider">
 
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-item-gap">
-        <div class="stat-box p-item-gap flex flex-col justify-between gap-inline-gap">
-          <span class="stat-title">全対象回路</span>
+        <div class="panel is-elevated p-panel-pad-compact flex flex-col justify-between gap-inline-gap">
+          <small>全対象回路</small>
           <div class="flex items-baseline gap-inline-gap">
-            <span class="stat-value">{{ examTargetCircuits.length }}</span>
-            <span class="unit-text">回路</span>
+            <h4>{{ examTargetCircuits.length }}</h4>
+            <small>回路</small>
           </div>
-          <div class="stat-spacer" />
+          <div class="h-1" />
         </div>
 
-        <div class="stat-box p-item-gap flex flex-col justify-between gap-inline-gap">
+        <div class="panel is-elevated p-panel-pad-compact flex flex-col justify-between gap-inline-gap">
           <div class="flex items-center justify-between">
-            <span class="stat-title">Phase 1 確認済</span>
-            <span class="unit-text">{{ examP1Count }}/{{ examTargetCircuits.length }}</span>
+            <small>Phase 1 確認済</small>
+            <small>{{ examP1Count }}/{{ examTargetCircuits.length }}</small>
           </div>
-          <span class="stat-value is-accent">{{ examP1Count }}</span>
+          <h4 style="color: var(--theme-accent)">{{ examP1Count }}</h4>
           <Progress :value="examP1Count" :max="examTargetCircuits.length || 1" size="sm" dynamic-colors />
         </div>
 
-        <div class="stat-box p-item-gap flex flex-col justify-between gap-inline-gap">
+        <div class="panel is-elevated p-panel-pad-compact flex flex-col justify-between gap-inline-gap">
           <div class="flex items-center justify-between">
-            <span class="stat-title">Phase 2 絶縁測定済</span>
-            <span class="unit-text">{{ examP2Count }}/{{ examTargetCircuits.length }}</span>
+            <small>Phase 2 絶縁測定済</small>
+            <small>{{ examP2Count }}/{{ examTargetCircuits.length }}</small>
           </div>
-          <span class="stat-value is-accent">{{ examP2Count }}</span>
+          <h4 style="color: var(--theme-accent)">{{ examP2Count }}</h4>
           <Progress :value="examP2Count" :max="examTargetCircuits.length || 1" size="sm" dynamic-colors />
         </div>
 
-        <div class="stat-box p-item-gap flex flex-col justify-between gap-inline-gap">
+        <div class="panel is-elevated p-panel-pad-compact flex flex-col justify-between gap-inline-gap">
           <div class="flex items-center justify-between">
-            <span class="stat-title">Phase 3 送電完了</span>
-            <span class="unit-text">{{ examP3Count }}/{{ examTargetCircuits.length }}</span>
+            <small>Phase 3 送電完了</small>
+            <small>{{ examP3Count }}/{{ examTargetCircuits.length }}</small>
           </div>
-          <span class="stat-value is-accent">{{ examP3Count }}</span>
+          <h4 style="color: var(--theme-accent)">{{ examP3Count }}</h4>
           <Progress :value="examP3Count" :max="examTargetCircuits.length || 1" size="sm" dynamic-colors />
         </div>
       </div>
     </section>
+
+    <!-- 測定器台帳 登録・編集モーダル -->
+    <Modal v-model="isDevicesModalOpen" title="使用測定器台帳の登録・編集" icon="settings" size="lg">
+      <div class="flex flex-col gap-item-gap">
+        <div class="flex items-center justify-between">
+          <small>現場で使用する絶縁抵抗計・電圧計・検相器を登録します。</small>
+          <Button size="sm" variant="secondary" icon="plus" @click="addDraftDevice()">測定器を追加</Button>
+        </div>
+
+        <EmptyState v-if="draftDevices.length === 0" icon="sliders" title="登録されている測定器はありません" description="「測定器を追加」ボタンから現場で使用する計器を登録してください。" />
+
+        <ul v-else class="flex flex-col gap-item-gap max-h-[420px] overflow-y-auto">
+          <li v-for="dev in draftDevices" :key="dev.id" class="panel is-sunken p-panel-pad-compact flex flex-col gap-inline-gap">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-inline-gap">
+              <div class="flex flex-col gap-micro-gap">
+                <label :for="`dev-cat-${dev.id}`" class="label">種別</label>
+                <Select :id="`dev-cat-${dev.id}`" v-model="dev.category" :options="deviceCategoryOptions" size="sm" />
+              </div>
+              <div class="flex flex-col gap-micro-gap">
+                <label :for="`dev-maker-${dev.id}`" class="label">メーカー</label>
+                <Input :id="`dev-maker-${dev.id}`" v-model="dev.maker" placeholder="例: 日置電機" size="sm" />
+              </div>
+              <div class="flex flex-col gap-micro-gap">
+                <label :for="`dev-model-${dev.id}`" class="label">型式・モデル</label>
+                <Input :id="`dev-model-${dev.id}`" v-model="dev.model" placeholder="例: IR4052" size="sm" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-inline-gap items-end">
+              <div class="flex flex-col gap-micro-gap">
+                <label :for="`dev-sn-${dev.id}`" class="label">製造番号 (No.)</label>
+                <Input :id="`dev-sn-${dev.id}`" v-model="dev.serialNumber" placeholder="例: 12345678" size="sm" />
+              </div>
+              <div class="flex flex-col gap-micro-gap">
+                <label :for="`dev-cal-${dev.id}`" class="label">校正年月・有効期限</label>
+                <Input :id="`dev-cal-${dev.id}`" v-model="dev.calibrationDate" placeholder="例: 2026/04" size="sm" />
+              </div>
+              <Button variant="danger" size="sm" icon="trash-2" @click="removeDraftDevice(dev.id)">削除</Button>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <template #footer>
+        <div class="flex items-center justify-end gap-inline-gap w-full">
+          <Button variant="secondary" @click="isDevicesModalOpen = false">キャンセル</Button>
+          <Button variant="primary" icon="save" @click="saveDraftDevices">台帳を保存する</Button>
+        </div>
+      </template>
+    </Modal>
   </div>
 </template>
-
-<style scoped lang="scss">
-.bold-label {
-  font-weight: var(--font-weight-bold);
-}
-
-.pane-title {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-main);
-}
-
-.device-card {
-  min-height: 72px;
-  border: var(--border-width-base) solid var(--color-border);
-  background-color: var(--surface-bg-elevated);
-}
-
-.device-label {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-}
-
-.device-model {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-main);
-}
-
-.device-meta {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-}
-
-.summary-text {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-
-  strong {
-    color: var(--color-text-main);
-  }
-}
-
-.stat-box {
-  min-height: 84px;
-  border: var(--border-width-base) solid var(--color-border);
-  background-color: var(--surface-bg-elevated);
-}
-
-.stat-title {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-}
-
-.stat-value {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-main);
-
-  &.is-accent {
-    color: var(--theme-accent);
-  }
-}
-
-.stat-spacer {
-  height: 8px;
-}
-
-.unit-text {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-}
-</style>

@@ -204,7 +204,7 @@ onMounted(() => {
         <!-- その他タブ時: ひな形セレクトボックス -->
         <template v-else>
           <div class="flex items-center gap-inline-gap">
-            <label for="template-select" class="shrink-0 label bold-label">使用ひな形:</label>
+            <label for="template-select" class="shrink-0 label">使用ひな形:</label>
             <Select id="template-select" v-model="selectedTemplateId" :options="templateSelectOptions" placeholder="ひな形を選択..." class="w-[320px]" />
           </div>
 
@@ -230,9 +230,3 @@ onMounted(() => {
     <PortalTabTepra v-else-if="currentCategory === 'tepra'" ref="tepraTabRef" :site-id="siteId" :site-name="siteName" @update:can-export="tepraCanExport = $event" @update:is-exporting="tepraIsExporting = $event" @update:export-label="tepraExportLabel = $event" />
   </div>
 </template>
-
-<style scoped lang="scss">
-.bold-label {
-  font-weight: var(--font-weight-bold);
-}
-</style>

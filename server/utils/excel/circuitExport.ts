@@ -13,11 +13,12 @@ import type { Circuit } from '@prisma/client'
 import type ExcelJS from 'exceljs'
 import JSZip from 'jszip'
 
-import { getPhase2ActivePhases } from '#shared/utils/soudenExam'
+import { normalizeHeaderName } from '#shared/utils/excelNormalize'
+import { getPhase2ActivePhases, isPhase1Complete } from '#shared/utils/soudenExam'
 
 import { prisma } from '../prisma'
 import { setCellStringWithNewlines } from './cellFormat'
-import { type CircuitColumnMap, DEFAULT_CIRCUIT_COLUMN_MAP, makeCircuitKey } from './circuitMapping'
+import { type CircuitColumnMap, DEFAULT_CIRCUIT_COLUMN_MAP, HEADER_ALIASES, makeCircuitKey } from './circuitMapping'
 import { validateSafeExcelPath } from './safePath'
 
 /**
@@ -41,7 +42,7 @@ export function applyCircuitToRow(
   colMap: CircuitColumnMap = DEFAULT_CIRCUIT_COLUMN_MAP,
 ) {
   // Phase 1 書戻し
-  if (c.p1ConfirmedAt && c.p1Kakunin && c.p1Mashishime) {
+  if (isPhase1Complete(c)) {
     if (colMap.p1Worker !== undefined && c.p1Worker) {
       setCellStringWithNewlines(row.getCell(colMap.p1Worker), c.p1Worker)
     }
@@ -57,7 +58,6 @@ export function applyCircuitToRow(
   if (c.p2ConfirmedAt || c.p2IsComplete) {
     const active = getPhase2ActivePhases(c.souShubetsu, c.haidenHoushiki)
 
-    // R相
     if (colMap.zetsuenR !== undefined && active.hasR) {
       if (c.p2RStatus === '良好') {
         row.getCell(colMap.zetsuenR).value = c.keiTo === '幹線' ? 500 : 100
@@ -67,7 +67,6 @@ export function applyCircuitToRow(
       }
     }
 
-    // S相
     if (colMap.zetsuenS !== undefined && active.hasS) {
       if (c.p2SStatus === '良好') {
         row.getCell(colMap.zetsuenS).value = c.keiTo === '幹線' ? 500 : 100
@@ -77,7 +76,6 @@ export function applyCircuitToRow(
       }
     }
 
-    // T相
     if (colMap.zetsuenT !== undefined && active.hasT) {
       if (c.p2TStatus === '良好') {
         row.getCell(colMap.zetsuenT).value = c.keiTo === '幹線' ? 500 : 100
@@ -93,9 +91,9 @@ export function applyCircuitToRow(
     if (c.p2ConfirmedAt && colMap.p2ConfirmedAt !== undefined) {
       setCellDateTime(row.getCell(colMap.p2ConfirmedAt), c.p2ConfirmedAt)
     }
-    if (c.p2Remarks && colMap.p2Remarks !== undefined) {
-      setCellStringWithNewlines(row.getCell(colMap.p2Remarks), c.p2Remarks)
-    }
+  }
+  if (c.p2Remarks && colMap.p2Remarks !== undefined) {
+    setCellStringWithNewlines(row.getCell(colMap.p2Remarks), c.p2Remarks)
   }
 
   // Phase 3 書戻し
@@ -118,9 +116,9 @@ export function applyCircuitToRow(
     if (colMap.p3ConfirmedAt !== undefined) {
       setCellDateTime(row.getCell(colMap.p3ConfirmedAt), c.p3ConfirmedAt)
     }
-    if (colMap.p3Remarks !== undefined && c.p3Remarks) {
-      setCellStringWithNewlines(row.getCell(colMap.p3Remarks), c.p3Remarks)
-    }
+  }
+  if (c.p3Remarks && colMap.p3Remarks !== undefined) {
+    setCellStringWithNewlines(row.getCell(colMap.p3Remarks), c.p3Remarks)
   }
 }
 
@@ -185,7 +183,7 @@ function escapeXml(str: string | number | null | undefined): string {
     .replace(/'/g, '&apos;')
 }
 
-// 日時を Excel シリアル値（JST基準）に変換
+// 日時を Excel シリアル値（JST +09:00 基準）に変換
 function dateToExcelSerial(date: Date | string | null | undefined): number | null {
   if (!date) return null
   const d = date instanceof Date ? date : new Date(date)
@@ -193,8 +191,8 @@ function dateToExcelSerial(date: Date | string | null | undefined): number | nul
   if (isNaN(d.getTime())) return null
 
   const epoch = new Date(Date.UTC(1899, 11, 30))
-  const tzOffsetMs = d.getTimezoneOffset() * 60 * 1000
-  const localTime = d.getTime() - tzOffsetMs
+  const jstOffsetMs = 9 * 60 * 60 * 1000
+  const localTime = d.getTime() + jstOffsetMs
 
   return (localTime - epoch.getTime()) / 86400000
 }
@@ -345,7 +343,7 @@ export async function generateCircuitsExcelBuffer(
   baseFilePath?: string | null,
 ): Promise<GeneratedExcelResult> {
   let cleanPath = baseFilePath && typeof baseFilePath === 'string' && baseFilePath.trim()
-    ? validateSafeExcelPath(baseFilePath)
+    ? validateSafeExcelPath(baseFilePath, siteId)
     : ''
 
   // 1. 指定パスにファイルが見つからない場合、サーバーの保管ディレクトリ (.data/templates/${siteId}/) を走査
@@ -517,29 +515,48 @@ export async function generateCircuitsExcelBuffer(
     if ((hasP1 && hasP2) || (hasBan && hasP1)) {
       headerRowNumber = rNum
       const dynamicMap: ExportColumnMap = { ...colMap }
+      const normalizedHeaderToCol = new Map<string, string>()
 
       for (const [col, title] of Object.entries(foundHeaders)) {
-        if (title.includes('接続確認者') || (title.includes('確認者') && !title.includes('日時'))) dynamicMap.p1Worker = col
-        else if (title.includes('確認日時') && !title.includes('P2') && !title.includes('P3')) dynamicMap.p1ConfirmedAt = col
-        else if (title.includes('備考1') || title.includes('P1備考')) dynamicMap.p1Remarks = col
-        else if (title.includes('絶縁抵抗R') || title.includes('P2(R)')) dynamicMap.zetsuenR = col
-        else if (title.includes('絶縁抵抗S') || title.includes('P2(S)')) dynamicMap.zetsuenS = col
-        else if (title.includes('絶縁抵抗T') || title.includes('P2(T)')) dynamicMap.zetsuenT = col
-        else if (title.includes('絶縁抵抗測定者') || title.includes('P2測定者')) dynamicMap.p2Worker = col
-        else if (title.includes('絶縁抵抗測定日時') || title.includes('絶縁測定日時')) dynamicMap.p2ConfirmedAt = col
-        else if (title.includes('備考2') || title.includes('P2備考')) dynamicMap.p2Remarks = col
-        else if (title.includes('電圧RS') || title.includes('P3(RS)')) dynamicMap.denatsuRs = col
-        else if (title.includes('電圧ST') || title.includes('P3(ST)')) dynamicMap.denatsuSt = col
-        else if (title.includes('電圧RT') || title.includes('P3(RT)')) dynamicMap.denatsuRt = col
-        else if (title.includes('確認') || title.includes('検相')) dynamicMap.kensou = col
-        else if (title.includes('電圧測定者') || title.includes('P3測定者')) dynamicMap.p3Worker = col
-        else if (title.includes('電圧測定日時') || title.includes('P3測定日時')) dynamicMap.p3ConfirmedAt = col
-        else if (title.includes('備考3') || title.includes('P3備考')) dynamicMap.p3Remarks = col
-        else if (title.includes('盤名称') || title.includes('盤名')) dynamicMap.banMeishoCol = col
-        else if (title.includes('回路番号') || title.includes('回路No')) dynamicMap.kairoBangouCol = col
-        else if (title.includes('回路名称') || title.includes('回路名')) dynamicMap.kairoMeishoCol = col
-        else if (title.includes('幹線判定') || title.includes('系統')) dynamicMap.keiToCol = col
+        const norm = normalizeHeaderName(title)
+
+        if (norm) {
+          normalizedHeaderToCol.set(norm, col)
+        }
       }
+
+      const resolveByKey = (key: keyof CircuitColumnMap): string | undefined => {
+        const aliases = HEADER_ALIASES[key] || []
+
+        for (const alias of aliases) {
+          const matchedCol = normalizedHeaderToCol.get(normalizeHeaderName(alias))
+
+          if (matchedCol) return matchedCol
+        }
+
+        return undefined
+      }
+
+      dynamicMap.p1Worker = resolveByKey('p1Worker') || dynamicMap.p1Worker
+      dynamicMap.p1ConfirmedAt = resolveByKey('p1ConfirmedAt') || dynamicMap.p1ConfirmedAt
+      dynamicMap.p1Remarks = resolveByKey('p1Remarks') || dynamicMap.p1Remarks
+      dynamicMap.zetsuenR = resolveByKey('zetsuenR') || dynamicMap.zetsuenR
+      dynamicMap.zetsuenS = resolveByKey('zetsuenS') || dynamicMap.zetsuenS
+      dynamicMap.zetsuenT = resolveByKey('zetsuenT') || dynamicMap.zetsuenT
+      dynamicMap.p2Worker = resolveByKey('p2Worker') || dynamicMap.p2Worker
+      dynamicMap.p2ConfirmedAt = resolveByKey('p2ConfirmedAt') || dynamicMap.p2ConfirmedAt
+      dynamicMap.p2Remarks = resolveByKey('p2Remarks') || dynamicMap.p2Remarks
+      dynamicMap.denatsuRs = resolveByKey('denatsuRs') || dynamicMap.denatsuRs
+      dynamicMap.denatsuSt = resolveByKey('denatsuSt') || dynamicMap.denatsuSt
+      dynamicMap.denatsuRt = resolveByKey('denatsuRt') || dynamicMap.denatsuRt
+      dynamicMap.kensou = resolveByKey('kensou') || dynamicMap.kensou
+      dynamicMap.p3Worker = resolveByKey('p3Worker') || dynamicMap.p3Worker
+      dynamicMap.p3ConfirmedAt = resolveByKey('p3ConfirmedAt') || dynamicMap.p3ConfirmedAt
+      dynamicMap.p3Remarks = resolveByKey('p3Remarks') || dynamicMap.p3Remarks
+      dynamicMap.banMeishoCol = resolveByKey('banMeisho') || dynamicMap.banMeishoCol
+      dynamicMap.kairoBangouCol = resolveByKey('kairoBangou') || dynamicMap.kairoBangouCol
+      dynamicMap.kairoMeishoCol = resolveByKey('kairoMeisho') || dynamicMap.kairoMeishoCol
+      dynamicMap.keiToCol = resolveByKey('keiTo') || dynamicMap.keiToCol
 
       colMap = dynamicMap
       break
@@ -728,17 +745,17 @@ export async function generateCircuitsExcelBuffer(
       return representativeStringStyle
     }
 
-    // Phase 1 書戻し
-    if (colMap.p1Worker && c.p1Worker) {
-      rowXml = updateCellInRowXml(
-        rowXml,
-        `${colMap.p1Worker}${rowNumber}`,
-        { type: 'string', value: c.p1Worker },
-        resolveStyle(colMap.p1Worker, 'string'),
-      )
-    }
-    if (colMap.p1ConfirmedAt) {
-      if (c.p1ConfirmedAt && c.p1Kakunin && c.p1Mashishime) {
+    // Phase 1 書戻し（幹線は確認・キュービクル・負荷側の全チェック完了時のみ確認者・確認日時を書き戻す）
+    if (isPhase1Complete(c)) {
+      if (colMap.p1Worker && c.p1Worker) {
+        rowXml = updateCellInRowXml(
+          rowXml,
+          `${colMap.p1Worker}${rowNumber}`,
+          { type: 'string', value: c.p1Worker },
+          resolveStyle(colMap.p1Worker, 'string'),
+        )
+      }
+      if (colMap.p1ConfirmedAt && c.p1ConfirmedAt) {
         rowXml = updateCellInRowXml(
           rowXml,
           `${colMap.p1ConfirmedAt}${rowNumber}`,
@@ -816,14 +833,14 @@ export async function generateCircuitsExcelBuffer(
           resolveStyle(colMap.p2ConfirmedAt, 'date'),
         )
       }
-      if (colMap.p2Remarks && c.p2Remarks) {
-        rowXml = updateCellInRowXml(
-          rowXml,
-          `${colMap.p2Remarks}${rowNumber}`,
-          { type: 'string', value: c.p2Remarks },
-          resolveStyle(colMap.p2Remarks, 'string'),
-        )
-      }
+    }
+    if (colMap.p2Remarks && c.p2Remarks) {
+      rowXml = updateCellInRowXml(
+        rowXml,
+        `${colMap.p2Remarks}${rowNumber}`,
+        { type: 'string', value: c.p2Remarks },
+        resolveStyle(colMap.p2Remarks, 'string'),
+      )
     }
 
     // Phase 3 書戻し
@@ -876,14 +893,14 @@ export async function generateCircuitsExcelBuffer(
           resolveStyle(colMap.p3ConfirmedAt, 'date'),
         )
       }
-      if (colMap.p3Remarks && c.p3Remarks) {
-        rowXml = updateCellInRowXml(
-          rowXml,
-          `${colMap.p3Remarks}${rowNumber}`,
-          { type: 'string', value: c.p3Remarks },
-          resolveStyle(colMap.p3Remarks, 'string'),
-        )
-      }
+    }
+    if (colMap.p3Remarks && c.p3Remarks) {
+      rowXml = updateCellInRowXml(
+        rowXml,
+        `${colMap.p3Remarks}${rowNumber}`,
+        { type: 'string', value: c.p3Remarks },
+        resolveStyle(colMap.p3Remarks, 'string'),
+      )
     }
 
     updatedCount++
@@ -917,7 +934,7 @@ export async function exportCircuitsToExcel(
   rawFilePath: string,
   workerName: string = 'システム管理者',
 ): Promise<ExportCircuitResult> {
-  const filePath = validateSafeExcelPath(rawFilePath)
+  const filePath = validateSafeExcelPath(rawFilePath, siteId)
 
   if (!fs.existsSync(filePath)) {
     throw new Error(`Excelファイルが見つかりません: ${filePath}`)

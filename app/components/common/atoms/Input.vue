@@ -31,6 +31,7 @@ const {
   placeholder,
   size = 'md',
   disabled = false,
+  required = false,
   readonly = false,
   error = false,
   icon,
@@ -111,7 +112,7 @@ defineExpose({
       <slot name="prefix">{{ prefix }}</slot>
     </span>
 
-    <input :id="inputId" ref="inputRef" v-model="model" :type="type" :name="name" :placeholder="placeholder" :disabled="disabled" :readonly="readonly" :min="min" :max="max" :step="step" :inputmode="inputmode" :autocomplete="autocomplete" :maxlength="maxlength" class="form-control input-native flex-1" :class="{ 'is-disabled': disabled, 'is-readonly': readonly, 'is-error': error }" @blur="handleBlur" @focus="handleFocus" @change="emit('change', $event)">
+    <input :id="inputId" ref="inputRef" v-model="model" :type="type" :name="name" :placeholder="placeholder" :disabled="disabled" :required="required" :readonly="readonly" :min="min" :max="max" :step="step" :inputmode="inputmode" :autocomplete="autocomplete" :maxlength="maxlength" class="form-control input-native flex-1" :class="{ 'is-disabled': disabled, 'is-readonly': readonly, 'is-error': error }" @blur="handleBlur" @focus="handleFocus" @change="emit('change', $event)">
 
     <button v-if="clearable && hasValue && !disabled && !readonly" type="button" class="clear-btn inline-flex items-center justify-center shrink-0" :title="clearTitle" tabindex="-1" @mousedown.prevent @click.stop="handleClear">
       <Icon name="x" class="clear-icon" />

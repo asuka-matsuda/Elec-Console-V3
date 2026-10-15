@@ -17,3 +17,19 @@ export function sanitizeFilename(name?: string | null, fallback = 'ファイル'
 
   return cleaned || fallback
 }
+
+const FORBIDDEN_SHEET_NAME_CHARS = /[\\/?*[\]:]/g
+
+/**
+ * Excelのワークシート名として安全な文字列に変換（最大31文字・禁止文字除去）
+ */
+export function sanitizeSheetName(name?: string | null, fallback = 'Sheet'): string {
+  if (!name || typeof name !== 'string') {
+    return fallback.slice(0, 31)
+  }
+
+  const cleaned = name.replace(FORBIDDEN_SHEET_NAME_CHARS, '').trim()
+  const safe = cleaned || fallback
+
+  return safe.slice(0, 31)
+}

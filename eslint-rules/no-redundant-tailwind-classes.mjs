@@ -66,7 +66,7 @@ export default {
 
       for (let token of tokens) {
         if (token.startsWith('!')) token = token.slice(1)
-        const cleanToken = token.replace(/^(sm|md|lg|xl|2xl|hover|focus|focus-visible|active|disabled):/, '')
+        const cleanToken = token.replace(/^(@?max-[\w-]+|@[\w-]+|xs|sm|md|lg|xl|2xl|hover|focus|focus-visible|active|disabled):/, '')
 
         // 1. items-stretch
         if (cleanToken === 'items-stretch') {

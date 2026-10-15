@@ -10,7 +10,7 @@ import { defineEventHandler, readBody } from 'h3'
 
 import { ErrorCode } from '#shared/types/errors'
 
-import { requireMasterUser } from '../../utils/auth'
+import { requireMasterUser, toSafeUser } from '../../utils/auth'
 import { createAppError } from '../../utils/error'
 import { generateRandomPassword, hashPassword } from '../../utils/password'
 import { prisma } from '../../utils/prisma'
@@ -50,13 +50,30 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // パスワードが指定されていない場合は安全なランダム初期パスワードを生成
+  // パスワードが指定されている場合は8文字以上を要求し、未指定時は安全なランダム初期パスワードを生成
+  if (body.password !== undefined && body.password !== null && String(body.password).length > 0 && String(body.password).length < 8) {
+    throw createAppError({
+      code: ErrorCode.AUTH_PASSWORD_POLICY_VIOLATION,
+      message: '初期パスワードを指定する場合は8文字以上で設定してください。',
+    })
+  }
+
   const rawPassword = body.password ? String(body.password) : generateRandomPassword(10)
   const isGenerated = !body.password
   const initialPassword = isGenerated ? rawPassword : undefined
 
+  const validSiteRoles = new Set(['admin', 'worker', 'viewer'])
   const siteAssignmentsInput: { siteId: string, role: string }[] = body.siteAssignments
     || (body.assignedSiteIds || []).map((id: string) => ({ siteId: id, role: 'worker' }))
+
+  for (const sa of siteAssignmentsInput) {
+    if (!sa.siteId || (sa.role && !validSiteRoles.has(sa.role))) {
+      throw createAppError({
+        code: ErrorCode.SYS_VALIDATION_FAILED,
+        message: '現場の割り当てロールが不正です。',
+      })
+    }
+  }
 
   const siteConnections = siteAssignmentsInput.map(sa => ({ id: sa.siteId }))
 
@@ -69,7 +86,7 @@ export default defineEventHandler(async (event) => {
         lastName,
         firstNameKana: body.firstNameKana?.trim() || null,
         lastNameKana: body.lastNameKana?.trim() || null,
-        role: body.role || 'worker',
+        role: loginId === 'master' ? 'master' : 'worker',
         requirePasswordReset: body.requirePasswordReset ?? true,
         email: body.email?.trim() || null,
         isActive: body.isActive ?? true,
@@ -94,21 +111,8 @@ export default defineEventHandler(async (event) => {
     })
   })
 
-  const assignedSiteIds = newUser.assignedSites.map(s => s.id)
-  const siteAssignments = newUser.assignedSites.map((s) => {
-    const match = newUser.siteAssignments.find(sa => sa.siteId === s.id)
-
-    return {
-      siteId: s.id,
-      role: match?.role || newUser.role || 'worker',
-    }
-  })
-  const { password: _dbPassword, assignedSites: _assignedSites, siteAssignments: _sa, ...restUser } = newUser
-
   return {
-    ...restUser,
-    assignedSiteIds,
-    siteAssignments,
+    ...toSafeUser(newUser),
     initialPassword,
   }
 })

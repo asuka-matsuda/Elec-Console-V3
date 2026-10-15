@@ -228,7 +228,7 @@ const getAssignedPatterns = (uniqueKey: string, fukaAddr: string): string[] => {
 const currentBoardConfig = computed(() => {
   if (currentTab.value === 'groups') {
     return {
-      description: '各グループ（G1〜G127）に所属している負荷アドレスの一覧です。Excel出力時はこの一覧が半角スペース2つ区切りで自動反映されます。',
+      description: '各グループ（G1〜G127）に所属している負荷アドレスの一覧です（※グループ・パターン編成の確認はWeb画面上のみとなります。Excel帳票出力は個別アドレス設定表のみ対応しています）。',
       emptyIcon: 'box' as const,
       emptyTitle: 'グループ編成がありません',
       emptyDesc: '負荷アドレス一覧タブで回路を選択し、G番号を一括追加してください。',
@@ -244,7 +244,7 @@ const currentBoardConfig = computed(() => {
   }
   if (currentTab.value === 'patterns') {
     return {
-      description: '各パターン（P1 ON〜P16 OFF）に所属している負荷アドレスの一覧です。',
+      description: '各パターン（P1 ON〜P8 OFF）に所属している負荷アドレスの一覧です（※グループ・パターン編成の確認はWeb画面上のみとなります。Excel帳票出力は個別アドレス設定表のみ対応しています）。',
       emptyIcon: 'layout' as const,
       emptyTitle: 'パターン編成がありません',
       emptyDesc: '負荷アドレス一覧タブで回路を選択し、パターンを一括追加してください。',
@@ -300,22 +300,22 @@ onMounted(() => {
       </div>
 
       <!-- バルクツールバー（固定） -->
-      <div class="bulk-toolbar panel p-panel-pad-compact flex flex-wrap items-center justify-between gap-item-gap shrink-0">
+      <div class="panel is-sunken p-panel-pad-compact flex flex-wrap items-center justify-between gap-item-gap shrink-0">
         <div class="flex items-center gap-item-gap">
           <Checkbox v-model="isAllSelected" :indeterminate="isPartiallySelected" label="全選択" />
           <Toggle v-model="hideVacant" label="空きを除外" size="sm" />
-          <span class="selection-count">選択: {{ selectedAddresses.length }} / {{ displayedCircuits.length }}件</span>
+          <small>選択: {{ selectedAddresses.length }} / {{ displayedCircuits.length }}件</small>
         </div>
 
         <div class="flex flex-wrap items-center gap-inline-gap">
           <div class="flex items-center gap-inline-gap">
-            <span class="toolbar-label">G:</span>
+            <small>G:</small>
             <Input v-model="bulkGroupInput" type="number" placeholder="1〜127" class="w-20" />
             <Button size="sm" :disabled="selectedAddresses.length === 0 || !bulkGroupInput" @click="handleBulkAssignGroup">グループを追加</Button>
           </div>
 
           <div class="flex items-center gap-inline-gap">
-            <span class="toolbar-label">P:</span>
+            <small>P:</small>
             <Select v-model="bulkPatternInput" :options="patternOptions" class="w-28" />
             <Button size="sm" :disabled="selectedAddresses.length === 0" @click="handleBulkAssignPattern">パターンを追加</Button>
           </div>
@@ -335,7 +335,8 @@ onMounted(() => {
         </template>
 
         <template #cell-fukaAddress="{ row }">
-          <strong class="address-text" :class="{ 'is-vacant': row.isVacant }">{{ row.fukaAddress }}</strong>
+          <small v-if="row.isVacant"><code>{{ row.fukaAddress }}</code></small>
+          <strong v-else><code>{{ row.fukaAddress }}</code></strong>
         </template>
 
         <template #cell-densoKeiTo="{ row }">
@@ -343,28 +344,29 @@ onMounted(() => {
         </template>
 
         <template #cell-banMeisho="{ row }">
-          <span :class="{ 'is-vacant-text': row.isVacant }">{{ row.banMeisho }}</span>
+          <small v-if="row.isVacant">{{ row.banMeisho }}</small>
+          <span v-else>{{ row.banMeisho }}</span>
         </template>
 
         <template #cell-kairoBangou="{ row }">
-          <div v-if="!row.isVacant && (row.kairoBangou !== '-' || row.kairoKigou)" class="symbol-wrapper flex items-center justify-center">
+          <div v-if="!row.isVacant && (row.kairoBangou !== '-' || row.kairoKigou)" class="flex items-center justify-center min-h-[36px]">
             <CircuitSymbol :kigou="row.kairoKigou" :bangou="row.kairoBangou" />
           </div>
-          <span v-else class="empty-mark">-</span>
+          <small v-else>-</small>
         </template>
 
         <template #cell-kairoMeisho="{ row }">
           <Badge v-if="row.isVacant" variant="amber" size="sm">空き</Badge>
-          <span v-else class="meisho-text">{{ row.kairoMeisho }}</span>
+          <span v-else class="whitespace-pre-line">{{ row.kairoMeisho }}</span>
         </template>
 
         <template #cell-groups="{ row }">
           <div class="flex flex-wrap items-center gap-inline-gap">
             <span v-for="g in getAssignedGroups(row.uniqueKey, row.fukaAddress)" :key="g" class="inline-flex items-center gap-inline-gap">
               <Badge variant="purple">G{{ g }}</Badge>
-              <Button variant="tertiary" size="sm" icon="x" class="chip-remove-btn" @click.stop="removeGroup(row.uniqueKey, g)" />
+              <Button variant="tertiary" size="sm" icon="x" @click.stop="removeGroup(row.uniqueKey, g)" />
             </span>
-            <span v-if="getAssignedGroups(row.uniqueKey, row.fukaAddress).length === 0" class="empty-mark">-</span>
+            <small v-if="getAssignedGroups(row.uniqueKey, row.fukaAddress).length === 0">-</small>
           </div>
         </template>
 
@@ -372,9 +374,9 @@ onMounted(() => {
           <div class="flex flex-wrap items-center gap-inline-gap">
             <span v-for="p in getAssignedPatterns(row.uniqueKey, row.fukaAddress)" :key="p" class="inline-flex items-center gap-inline-gap">
               <Badge variant="amber">{{ p }}</Badge>
-              <Button variant="tertiary" size="sm" icon="x" class="chip-remove-btn" @click.stop="removePattern(row.uniqueKey, p)" />
+              <Button variant="tertiary" size="sm" icon="x" @click.stop="removePattern(row.uniqueKey, p)" />
             </span>
-            <span v-if="getAssignedPatterns(row.uniqueKey, row.fukaAddress).length === 0" class="empty-mark">-</span>
+            <small v-if="getAssignedPatterns(row.uniqueKey, row.fukaAddress).length === 0">-</small>
           </div>
         </template>
       </Table>
@@ -382,23 +384,23 @@ onMounted(() => {
 
     <!-- グループ編成 / パターン編成タブ -->
     <div v-else-if="currentBoardConfig" class="flex flex-1 flex-col gap-item-gap min-h-0">
-      <p class="tab-description shrink-0">
+      <p class="field-help-text shrink-0">
         {{ currentBoardConfig.description }}
       </p>
 
       <EmptyState v-if="currentBoardConfig.items.length === 0" :icon="currentBoardConfig.emptyIcon" :title="currentBoardConfig.emptyTitle" :description="currentBoardConfig.emptyDesc" />
 
-      <ul v-else class="board-grid grid grid-cols-1 md:grid-cols-2 gap-item-gap flex-1 min-h-0 overflow-y-auto">
-        <li v-for="card in currentBoardConfig.items" :key="card.key" class="board-card p-item-gap flex flex-col gap-inline-gap">
+      <ul v-else class="grid grid-cols-1 md:grid-cols-2 gap-item-gap flex-1 min-h-0 overflow-y-auto max-h-[560px]">
+        <li v-for="card in currentBoardConfig.items" :key="card.key" class="panel is-sunken p-item-gap flex flex-col gap-inline-gap">
           <div class="flex justify-between items-center">
-            <strong class="card-title" :class="card.isAccent ? 'is-accent' : 'is-warning'">{{ card.key }}</strong>
-            <span class="card-count">{{ card.count }}回路</span>
+            <strong><code>{{ card.key }}</code></strong>
+            <small>{{ card.count }}回路</small>
           </div>
 
           <div class="flex flex-wrap items-center gap-inline-gap">
             <span v-for="addr in card.addresses" :key="addr" class="inline-flex items-center gap-inline-gap">
               <Badge :variant="card.isAccent ? 'purple' : 'amber'">{{ addr }}</Badge>
-              <Button variant="tertiary" size="sm" icon="x" class="chip-remove-btn" @click="card.remove(addr)" />
+              <Button variant="tertiary" size="sm" icon="x" @click="card.remove(addr)" />
             </span>
           </div>
         </li>
@@ -406,97 +408,3 @@ onMounted(() => {
     </div>
   </div>
 </template>
-
-<style scoped lang="scss">
-.bulk-toolbar {
-  border: var(--border-width-base) solid var(--color-border);
-  background: var(--surface-bg-sunken);
-}
-
-.selection-count {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-}
-
-.toolbar-label {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-}
-
-.address-text {
-  font-family: var(--font-mono);
-  color: var(--theme-accent);
-
-  &.is-vacant {
-    color: var(--color-text-muted);
-    opacity: 0.6;
-  }
-}
-
-.system-tag {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-}
-
-.symbol-wrapper {
-  min-height: 2.2em;
-}
-
-.meisho-text {
-  white-space: pre-line;
-}
-
-.vacant-badge {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-  opacity: 0.7;
-}
-
-.is-vacant-text {
-  color: var(--color-text-muted);
-}
-
-.chip-remove-btn {
-  padding: 0.1em 0.3em;
-  font-size: var(--font-size-xs);
-  line-height: var(--line-height-tight);
-}
-
-.empty-mark {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-}
-
-.tab-description {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-}
-
-.board-grid {
-  overflow-y: auto;
-  max-height: 35rem;
-}
-
-.board-card {
-  border: var(--border-width-base) solid var(--color-border);
-  background: var(--surface-bg-sunken);
-}
-
-.card-title {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-base);
-
-  &.is-accent {
-    color: var(--theme-accent);
-  }
-
-  &.is-warning {
-    color: var(--color-status-warning);
-  }
-}
-
-.card-count {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-}
-</style>

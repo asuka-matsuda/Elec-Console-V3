@@ -6,9 +6,12 @@
  * @permission システム管理者限定
  */
 
-import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
+import { defineEventHandler, getRouterParam, readBody } from 'h3'
+
+import { ErrorCode } from '#shared/types/errors'
 
 import { requireMasterUser } from '../../../utils/auth'
+import { createAppError } from '../../../utils/error'
 import { prisma } from '../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
@@ -16,19 +19,17 @@ export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
 
   if (!id) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request',
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: 'IDが指定されていません。',
     })
   }
 
-  const body = await readBody<{ title?: string, date?: string, desc?: string }>(event)
+  const body = await readBody<{ title?: string, date?: string, desc?: string }>(event).catch(() => null)
 
   if (!body?.title?.trim() || !body?.date?.trim()) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request',
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: 'タイトルと日付は必須です。',
     })
   }
@@ -38,9 +39,8 @@ export default defineEventHandler(async (event) => {
   })
 
   if (!existing) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Not Found',
+    throw createAppError({
+      code: ErrorCode.SYS_NOT_FOUND,
       message: '指定されたお知らせが見つかりません。',
     })
   }

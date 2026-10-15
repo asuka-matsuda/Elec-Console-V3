@@ -196,7 +196,7 @@ function _getThermalLimitFormula(
     if (inputs.ambientTemp !== null) {
       kValue
         = result?.tempDerating
-          || getAmbientTempDerating(
+          ?? getAmbientTempDerating(
             targetCable.baseTemp || '',
             targetCable.maxTemp || '',
             inputs.ambientTemp,
@@ -231,10 +231,11 @@ function _getThermalLimitFormula(
   let finalSelectionLine = ''
 
   if (inputs.mode === 'size' && result?.optimal) {
-    const isUp = result.minAmpacityCable && result.optimal.size !== result.minAmpacityCable.size
+    const provCable = result.minAreaCable ?? result.minAmpacityCable
+    const isUp = provCable && result.optimal.size !== provCable.size
     const badge = hlAccent(`\\text{【 ${result.optimal.size} sq 】}`)
     const reasonStr = isUp
-      ? `\\\\ &\\quad \\text{※ 許容電流不足のため } ${result.minAmpacityCable?.size} \\text{ sq} \\rightarrow ${badge} \\text{ へサイズアップ}`
+      ? `\\\\ &\\quad \\text{※ 許容電流不足のため } ${provCable?.size} \\text{ sq} \\rightarrow ${badge} \\text{ へサイズアップ}`
       : `\\\\ &\\quad \\text{※ 仮選定サイズにて許容電流条件も適合}`
 
     finalSelectionLine = `\\\\[6pt] &\\textbf{【 最終推奨ケーブルサイズ 】} \\\\ &\\quad \\text{選定サイズ:} \\quad ${badge} ${reasonStr}`
@@ -301,7 +302,8 @@ function _getVoltageDropFormula(
       const calA_each = calA_total / N_val
 
       resultLine = calA_each.toFixed(2)
-      const provSize = result.minAmpacityCable ? result.minAmpacityCable.size : result.optimal.size
+      const provCable = result.minAreaCable ?? result.optimal
+      const provSize = provCable.size
       const badge = hlAccent(`\\text{【 ${provSize} sq 】}`)
       const passMark = hlOk('\\text{(適合)}')
 

@@ -117,17 +117,17 @@ onMounted(() => {
           <Skeleton width="120px" height="20px" />
         </template>
         <template v-else>
-          <span class="summary-text">
+          <small>
             対象回路: <strong>{{ summary.totalCircuits }}</strong> 件
-          </span>
-          <span class="summary-divider">/</span>
-          <span class="summary-text">
+          </small>
+          <small>/</small>
+          <small>
             シート数: <strong>{{ summary.totalSheets }}</strong> 盤
-          </span>
-          <span class="summary-divider">/</span>
-          <span class="summary-highlight">
-            テプラ印刷枚数: <strong>{{ summary.totalRows }}</strong> 枚
-          </span>
+          </small>
+          <small>/</small>
+          <small>
+            テプラ印刷枚数: <strong style="color: var(--theme-accent)">{{ summary.totalRows }}</strong> 枚
+          </small>
         </template>
       </div>
     </div>
@@ -143,16 +143,16 @@ onMounted(() => {
       class="flex-1 min-h-[400px] h-full"
     >
       <template #cell-banMeisho="{ row }">
-        <span class="ban-name-text">{{ row.banMeisho }}</span>
+        <strong>{{ row.banMeisho }}</strong>
       </template>
 
       <template #cell-kairoKigou="{ row }">
         <Badge v-if="row.kairoKigou" variant="blue" size="sm">{{ row.kairoKigou }}</Badge>
-        <span v-else class="placeholder-dash">-</span>
+        <small v-else>-</small>
       </template>
 
       <template #cell-kairoBangou="{ row }">
-        <span class="bangou-text">{{ row.kairoBangou }}</span>
+        <strong style="color: var(--theme-accent)"><code>{{ row.kairoBangou }}</code></strong>
       </template>
 
       <template #cell-kairoMeisho="{ row }">
@@ -160,67 +160,12 @@ onMounted(() => {
       </template>
 
       <template #cell-ukeguchiCount="{ row }">
-        <span class="ukeguchi-badge">{{ row.ukeguchiCount }} 口</span>
+        <span>{{ row.ukeguchiCount }} 口</span>
       </template>
 
       <template #cell-printCount="{ row }">
-        <span class="print-count-text">{{ row.ukeguchiCount }} 枚 (行複製)</span>
+        <small>{{ row.ukeguchiCount }} 枚 (行複製)</small>
       </template>
     </Table>
   </div>
 </template>
-
-<style scoped lang="scss">
-.ban-name-text {
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-main);
-}
-
-.bangou-text {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  color: var(--theme-accent);
-}
-
-.ukeguchi-badge {
-  display: inline-block;
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-main);
-}
-
-.print-count-text {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-}
-
-.summary-text {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-
-  strong {
-    color: var(--color-text-main);
-  }
-}
-
-.summary-divider {
-  font-size: var(--font-size-xs);
-  color: var(--color-border-subtle);
-}
-
-.summary-highlight {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-main);
-
-  strong {
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-bold);
-    color: var(--theme-accent);
-  }
-}
-
-.placeholder-dash {
-  color: var(--color-text-muted);
-}
-</style>

@@ -8,26 +8,25 @@
 
 import { defineEventHandler, getRouterParam } from 'h3'
 
+import { ErrorCode } from '#shared/types/errors'
+
 import { requireSiteAccess } from '../../../utils/auth'
+import { createAppError } from '../../../utils/error'
 import { prisma } from '../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
   await requireSiteAccess(event)
 
-  try {
-    const siteId = getRouterParam(event, 'siteId')
+  const siteId = getRouterParam(event, 'siteId')
 
-    if (!siteId) return []
-
-    const events = await prisma.event.findMany({
-      where: { siteId },
+  if (!siteId) {
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
+      message: '現場IDが指定されていません',
     })
-
-    return events
   }
-  catch (error) {
-    console.error('API Error in events.get.ts:', error)
 
-    return []
-  }
+  return prisma.event.findMany({
+    where: { siteId },
+  })
 })

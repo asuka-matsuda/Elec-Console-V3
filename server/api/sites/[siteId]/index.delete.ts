@@ -6,36 +6,44 @@
  * @permission システム管理者限定
  */
 
-import { createError, defineEventHandler, getRouterParam } from 'h3'
+import fs from 'node:fs'
+import path from 'node:path'
 
-import { requireSiteAdmin } from '../../../utils/auth'
+import { defineEventHandler, getRouterParam } from 'h3'
+
+import { ErrorCode } from '#shared/types/errors'
+
+import { requireMasterUser } from '../../../utils/auth'
+import { createAppError } from '../../../utils/error'
 import { prisma } from '../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
+  await requireMasterUser(event)
+
   const siteId = getRouterParam(event, 'siteId')
 
   if (!siteId) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: '現場IDが指定されていません。',
     })
   }
-
-  await requireSiteAdmin(event, siteId)
 
   const existing = await prisma.site.findUnique({
     where: { id: siteId },
   })
 
   if (!existing) {
-    throw createError({
-      statusCode: 404,
+    throw createAppError({
+      code: ErrorCode.SITE_NOT_FOUND,
       message: '削除対象の現場が見つかりません。',
     })
   }
 
-  // 関連データをトランザクション内で明示的・確実にカスケード削除（SQLiteの外部キー制約違反を防止）
+  // 関連データをトランザクション内で明示的・確実にカスケード削除
   await prisma.$transaction(async (tx) => {
+    await tx.todo.deleteMany({ where: { siteId } })
+    await tx.userOnSite.deleteMany({ where: { siteId } })
     await tx.circuit.deleteMany({ where: { siteId } })
     await tx.operationLog.deleteMany({ where: { siteId } })
     await tx.event.deleteMany({ where: { siteId } })
@@ -46,6 +54,13 @@ export default defineEventHandler(async (event) => {
       where: { id: siteId },
     })
   })
+
+  // ディスク上の現場用Excelテンプレートディレクトリも削除
+  const templateDir = path.resolve(process.cwd(), '.data', 'templates', siteId)
+
+  if (fs.existsSync(templateDir)) {
+    fs.rmSync(templateDir, { recursive: true, force: true })
+  }
 
   return { success: true }
 })

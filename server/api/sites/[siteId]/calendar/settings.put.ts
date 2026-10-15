@@ -8,7 +8,10 @@
 
 import { defineEventHandler, getRouterParam, readBody } from 'h3'
 
-import { requireSiteRole } from '../../../../utils/auth'
+import { ErrorCode } from '#shared/types/errors'
+
+import { requireSiteAdmin } from '../../../../utils/auth'
+import { createAppError } from '../../../../utils/error'
 import {
   parseCustomHolidays,
   parseEventTypes,
@@ -20,13 +23,18 @@ import {
 import { prisma } from '../../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  await requireSiteRole(event, ['admin', 'worker'])
+  await requireSiteAdmin(event)
 
   const siteId = getRouterParam(event, 'siteId')
 
-  if (!siteId) return null
+  if (!siteId) {
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
+      message: '現場IDが指定されていません',
+    })
+  }
 
-  const body = await readBody(event)
+  const body = (await readBody(event).catch(() => ({}))) || {}
 
   const eventTypesSerialized = serializeEventTypes(body.eventTypes)
   const holidayDaysSerialized = serializeHolidayDays(body.holidayDays)

@@ -30,16 +30,17 @@ const initialKeiTo = computed(() => (route.query.kei_to as string) || '幹線')
 const {
   filteredCircuits,
   shubetsuTabOptions,
+  availableFloorList,
   availableBanMeishoList,
   selectedKeiTo,
   selectedBanShubetsu,
+  selectedFloor,
   selectedBanMeisho,
   phaseStats,
-  phase2ThresholdMegOhm,
   isLoading,
   isActionLoading,
-  evalMegStatus,
   fetchCircuits,
+  saveExcludedRemarks,
   confirmPhase2,
 } = usePhase2Exam(siteId, initialKeiTo.value)
 
@@ -62,6 +63,7 @@ const isP1Complete = (circuit: CircuitItem) => isPhase1Complete(circuit)
 const isLocked = (circuit: CircuitItem) => !isP1Complete(circuit)
 
 const getActivePhases = (circuit: CircuitItem) => getPhase2ActivePhases(circuit.souShubetsu, circuit.haidenHoushiki)
+const getDefaultMegOhm = (circuit: CircuitItem): number => circuit.keiTo === '幹線' ? 500 : 100
 
 const initRowForm = (circuit: CircuitItem): Phase2RowForm => {
   const active = getActivePhases(circuit)
@@ -98,17 +100,17 @@ const handleFillAllOk = (circuit: CircuitItem) => {
   if (isRowDisabled(circuit)) return
   const form = getRowForm(circuit)
   const active = getActivePhases(circuit)
+  const okVal = getDefaultMegOhm(circuit)
 
-  form.rVal = active.hasR ? 100 : ''
-  form.sVal = active.hasS ? 100 : ''
-  form.tVal = active.hasT ? 100 : ''
+  form.rVal = active.hasR ? okVal : ''
+  form.sVal = active.hasS ? okVal : ''
+  form.tVal = active.hasT ? okVal : ''
 }
 
 const evaluateStatus = (val: number | null, circuit: CircuitItem): 'OK' | 'NG' | null => {
   if (val === null) return null
-  if (evalMegStatus) return evalMegStatus(val)
 
-  const threshold = phase2ThresholdMegOhm.value ?? getPhase2Threshold(circuit.haidenHoushiki)
+  const threshold = getPhase2Threshold(circuit.haidenHoushiki)
 
   return val >= threshold ? 'OK' : 'NG'
 }
@@ -120,9 +122,7 @@ const isBelowThreshold = (val: string | number, haidenHoushiki?: string | null):
 
   if (isNaN(num) || !isFinite(num)) return false
 
-  const threshold = phase2ThresholdMegOhm.value ?? getPhase2Threshold(haidenHoushiki)
-
-  return num < threshold
+  return num < getPhase2Threshold(haidenHoushiki)
 }
 
 const isComplete = (c: CircuitItem) => {
@@ -130,6 +130,7 @@ const isComplete = (c: CircuitItem) => {
 }
 
 const handleConfirmCircuit = (circuit: CircuitItem) => {
+  if (isRowDisabled(circuit)) return
   const form = getRowForm(circuit)
   const active = getActivePhases(circuit)
 
@@ -157,6 +158,12 @@ const handleConfirmCircuit = (circuit: CircuitItem) => {
   })
 }
 
+const handleSaveExcludedRemarks = (circuit: CircuitItem) => {
+  const form = getRowForm(circuit)
+
+  saveExcludedRemarks(circuit, form.remarks)
+}
+
 onMounted(() => {
   fetchCircuits()
 })
@@ -174,11 +181,16 @@ onMounted(() => {
 
         <div class="flex flex-wrap items-center gap-form-col-gap">
           <div class="flex items-center gap-item-gap">
+            <label for="filter-area-p2" class="shrink-0 label">エリア:</label>
+            <Select id="filter-area-p2" v-model="selectedFloor" :options="availableFloorList" class="w-40" />
+          </div>
+
+          <div class="flex items-center gap-item-gap">
             <label for="filter-ban-p2" class="shrink-0 label">盤名称:</label>
             <Select id="filter-ban-p2" v-model="selectedBanMeisho" :options="availableBanMeishoList" class="w-40" />
           </div>
 
-          <span class="whitespace-nowrap count-label">
+          <span class="whitespace-nowrap field-help-text">
             対象回路: <strong>{{ phaseStats.allCount }}</strong> 件
           </span>
         </div>
@@ -191,10 +203,10 @@ onMounted(() => {
               <span>フェーズ2 進捗状況</span>
               <PortalSyncStatusBadge :site-id="siteId" />
             </div>
-            <div class="flex items-center gap-item-gap justify-end min-w-[160px] text-right">
+            <div class="flex items-center gap-item-gap justify-end min-w-[160px] text-right tabular-nums">
               <span><strong>{{ phaseStats.completed }}</strong> / {{ phaseStats.total }}</span>
               <span>({{ phaseStats.pct }}%)</span>
-              <small v-if="phaseStats.excluded > 0" class="text-muted">(除外: {{ phaseStats.excluded }})</small>
+              <small v-if="phaseStats.excluded > 0">(除外: {{ phaseStats.excluded }})</small>
             </div>
           </div>
           <Progress :value="phaseStats.pct" />
@@ -207,8 +219,8 @@ onMounted(() => {
     <Table v-model:sort-by="sortBy" v-model:sort-order="sortOrder" :columns="PHASE2_TABLE_COLUMNS" :data="sortedCircuits" :loading="isLoading" :skeleton-rows="8" :row-id="(row) => `row-${row.id}`" :row-class="(row) => getSoudenRowClass(row, { isComplete, isCircuitLocked: isLocked, editingRowId: null })" class="flex-1 min-h-[400px]">
       <template #cell-banMeisho="{ row: circuit }">
         <div class="flex flex-col gap-micro-gap min-w-0">
-          <span class="ban-name">{{ circuit.banMeisho || '-' }}</span>
-          <span v-if="circuit.banShubetsu" class="ban-type">{{ circuit.banShubetsu }}</span>
+          <strong>{{ circuit.banMeisho || '-' }}</strong>
+          <small v-if="circuit.banShubetsu">{{ circuit.banShubetsu }}</small>
         </div>
       </template>
 
@@ -219,61 +231,64 @@ onMounted(() => {
       </template>
 
       <template #cell-kairoMeisho="{ row: circuit }">
-        <span class="circuit-meisho block" :title="circuit.kairoMeisho || ''">{{ circuit.kairoMeisho || '-' }}</span>
+        <span class="whitespace-pre block" :title="circuit.kairoMeisho || ''">{{ circuit.kairoMeisho || '-' }}</span>
       </template>
 
       <template #cell-p2ConfirmedAt="{ row: circuit }">
         <div v-if="circuit.p2Worker" class="flex flex-col items-center gap-micro-gap">
-          <span class="cell-worker">{{ circuit.p2Worker }}</span>
-          <span class="cell-date">{{ formatShortDateTime(circuit.p2ConfirmedAt) }}</span>
+          <strong>{{ circuit.p2Worker }}</strong>
+          <time>{{ formatShortDateTime(circuit.p2ConfirmedAt) }}</time>
         </div>
-        <span v-else class="cell-dash">-</span>
+        <small v-else>-</small>
       </template>
 
       <template #cell-zetsuenR="{ row: circuit }">
         <div v-if="getActivePhases(circuit).hasR" class="flex flex-col items-center gap-inline-gap">
-          <span class="cell-label">{{ getActivePhases(circuit).labelR }}</span>
-          <Input v-model="getRowForm(circuit).rVal" type="number" step="0.01" inputmode="decimal" placeholder="100" :error="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).rVal, circuit.haidenHoushiki)" :disabled="isRowDisabled(circuit)" class="w-[85px]" @keydown.enter.prevent="handleConfirmCircuit(circuit)" />
-          <span v-if="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).rVal, circuit.haidenHoushiki)" class="cell-warning-sub">基準値未満です</span>
+          <small>{{ getActivePhases(circuit).labelR }}</small>
+          <Input v-model="getRowForm(circuit).rVal" type="number" step="0.01" inputmode="decimal" :placeholder="String(getDefaultMegOhm(circuit))" :error="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).rVal, circuit.haidenHoushiki)" :disabled="isRowDisabled(circuit)" class="w-[85px]" @keydown.enter.prevent="handleConfirmCircuit(circuit)" />
+          <p v-if="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).rVal, circuit.haidenHoushiki)" class="error-text whitespace-nowrap">基準値未満です</p>
           <Badge v-if="isConfirmed(circuit) && circuit.p2RStatus" :variant="circuit.p2RStatus === 'OK' ? 'green' : 'red'">{{ circuit.p2RStatus }}</Badge>
         </div>
-        <div v-else class="cell-inactive flex items-center justify-center">
-          <span class="cell-dash">-</span>
+        <div v-else class="flex items-center justify-center min-h-[40px]">
+          <small>-</small>
         </div>
       </template>
 
       <template #cell-zetsuenS="{ row: circuit }">
         <div v-if="getActivePhases(circuit).hasS" class="flex flex-col items-center gap-inline-gap">
-          <span class="cell-label">{{ getActivePhases(circuit).labelS }}</span>
-          <Input v-model="getRowForm(circuit).sVal" type="number" step="0.01" inputmode="decimal" placeholder="100" :error="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).sVal, circuit.haidenHoushiki)" :disabled="isRowDisabled(circuit)" class="w-[85px]" @keydown.enter.prevent="handleConfirmCircuit(circuit)" />
-          <span v-if="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).sVal, circuit.haidenHoushiki)" class="cell-warning-sub">基準値未満です</span>
+          <small>{{ getActivePhases(circuit).labelS }}</small>
+          <Input v-model="getRowForm(circuit).sVal" type="number" step="0.01" inputmode="decimal" :placeholder="String(getDefaultMegOhm(circuit))" :error="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).sVal, circuit.haidenHoushiki)" :disabled="isRowDisabled(circuit)" class="w-[85px]" @keydown.enter.prevent="handleConfirmCircuit(circuit)" />
+          <p v-if="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).sVal, circuit.haidenHoushiki)" class="error-text whitespace-nowrap">基準値未満です</p>
           <Badge v-if="isConfirmed(circuit) && circuit.p2SStatus" :variant="circuit.p2SStatus === 'OK' ? 'green' : 'red'">{{ circuit.p2SStatus }}</Badge>
         </div>
-        <div v-else class="cell-inactive flex items-center justify-center">
-          <span class="cell-dash">-</span>
+        <div v-else class="flex items-center justify-center min-h-[40px]">
+          <small>-</small>
         </div>
       </template>
 
       <template #cell-zetsuenT="{ row: circuit }">
         <div v-if="getActivePhases(circuit).hasT" class="flex flex-col items-center gap-inline-gap">
-          <span class="cell-label">{{ getActivePhases(circuit).labelT }}</span>
-          <Input v-model="getRowForm(circuit).tVal" type="number" step="0.01" inputmode="decimal" placeholder="100" :error="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).tVal, circuit.haidenHoushiki)" :disabled="isRowDisabled(circuit)" class="w-[85px]" @keydown.enter.prevent="handleConfirmCircuit(circuit)" />
-          <span v-if="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).tVal, circuit.haidenHoushiki)" class="cell-warning-sub">基準値未満です</span>
+          <small>{{ getActivePhases(circuit).labelT }}</small>
+          <Input v-model="getRowForm(circuit).tVal" type="number" step="0.01" inputmode="decimal" :placeholder="String(getDefaultMegOhm(circuit))" :error="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).tVal, circuit.haidenHoushiki)" :disabled="isRowDisabled(circuit)" class="w-[85px]" @keydown.enter.prevent="handleConfirmCircuit(circuit)" />
+          <p v-if="!isRowDisabled(circuit) && isBelowThreshold(getRowForm(circuit).tVal, circuit.haidenHoushiki)" class="error-text whitespace-nowrap">基準値未満です</p>
           <Badge v-if="isConfirmed(circuit) && circuit.p2TStatus" :variant="circuit.p2TStatus === 'OK' ? 'green' : 'red'">{{ circuit.p2TStatus }}</Badge>
         </div>
-        <div v-else class="cell-inactive flex items-center justify-center">
-          <span class="cell-dash">-</span>
+        <div v-else class="flex items-center justify-center min-h-[40px]">
+          <small>-</small>
         </div>
       </template>
 
       <template #cell-p2Remarks="{ row: circuit }">
-        <Textarea v-model="getRowForm(circuit).remarks" size="sm" :rows="1" auto-resize trim placeholder="備考" class="w-full textarea-remarks" :disabled="isConfirmed(circuit) || Boolean(isActionLoading[circuit.id])" />
+        <Textarea v-model="getRowForm(circuit).remarks" size="sm" :rows="1" auto-resize trim placeholder="備考" class="w-full" :disabled="(!circuit.isExcluded && isConfirmed(circuit)) || Boolean(isActionLoading[circuit.id])" />
       </template>
 
       <template #cell-actions="{ row: circuit }">
-        <div class="cell-actions flex items-center justify-center gap-inline-gap whitespace-nowrap">
-          <Badge v-if="circuit.isExcluded" variant="gray">除外</Badge>
-          <span v-if="isLocked(circuit)" class="text-note inline-flex items-center gap-inline-gap">⏸ P1未了</span>
+        <div class="flex items-center justify-center gap-inline-gap whitespace-nowrap">
+          <template v-if="circuit.isExcluded">
+            <Badge variant="gray">除外</Badge>
+            <Button variant="secondary" size="sm" :loading="Boolean(isActionLoading[circuit.id])" @click="handleSaveExcludedRemarks(circuit)">備考保存</Button>
+          </template>
+          <span v-else-if="isLocked(circuit)" class="inline-flex items-center gap-inline-gap">⏸ P1未了</span>
           <template v-else-if="isConfirmed(circuit)">
             <Button variant="secondary" size="sm" suffix-icon="arrow-right" :to="`/portal/${circuit.siteId}/phase3?kei_to=${encodeURIComponent(circuit.keiTo || '幹線')}&targetCircuit=${encodeURIComponent(circuit.id)}`">フェーズ3へ進む</Button>
             <Button variant="danger" size="sm" :disabled="Boolean(isActionLoading[circuit.id])" @click="handleClearLocally(circuit)">解除する</Button>
@@ -287,77 +302,3 @@ onMounted(() => {
     </Table>
   </div>
 </template>
-
-<style scoped lang="scss">
-.count-label {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-}
-
-.ban-name {
-  overflow: hidden;
-  font-weight: var(--font-weight-bold);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.ban-type {
-  overflow: hidden;
-
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-muted);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.circuit-meisho {
-  font-size: inherit;
-  font-weight: var(--font-weight-normal);
-  line-height: 1.3;
-  color: var(--color-text-main);
-  white-space: pre-line;
-}
-
-.cell-worker {
-  color: var(--color-status-success);
-}
-
-.cell-date,
-.cell-dash {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-muted);
-}
-
-.cell-inactive {
-  user-select: none;
-  min-height: 40px;
-}
-
-.textarea-remarks {
-  font-size: var(--font-size-xs);
-}
-
-.cell-label {
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-secondary);
-}
-
-.cell-warning-sub {
-  font-size: var(--font-size-2xs);
-  font-weight: var(--font-weight-medium);
-  line-height: 1.1;
-  color: var(--color-status-danger);
-  white-space: nowrap;
-}
-
-.cell-actions {
-  font-size: var(--font-size-xs);
-}
-
-.text-note {
-  font-size: inherit;
-  font-weight: var(--font-weight-normal);
-  color: var(--color-status-warning);
-}
-</style>

@@ -17,35 +17,36 @@ export default defineEventHandler(async (event) => {
 
   const settingKey = `calc_history_${user.loginId}`
 
-  try {
-    const setting = await prisma.systemSetting.findUnique({
-      where: { key: settingKey },
-    })
+  const setting = await prisma.systemSetting.findUnique({
+    where: { key: settingKey },
+  })
 
-    if (!setting || !setting.value) {
-      return {
-        success: true,
-        history: [],
-      }
-    }
-
-    let items = JSON.parse(setting.value) as Array<{ id: string, toolId: string, timestamp: string }>
-
-    if (toolId) {
-      items = items.filter(item => item.toolId === toolId)
-    }
-
-    return {
-      success: true,
-      history: items,
-    }
-  }
-  catch (error) {
-    console.error('Failed to get calc-history:', error)
-
+  if (!setting || !setting.value) {
     return {
       success: true,
       history: [],
     }
+  }
+
+  let items: Array<{ id: string, toolId: string, timestamp: string }> = []
+
+  try {
+    const parsed = JSON.parse(setting.value)
+
+    if (Array.isArray(parsed)) {
+      items = parsed
+    }
+  }
+  catch {
+    items = []
+  }
+
+  if (toolId) {
+    items = items.filter(item => item.toolId === toolId)
+  }
+
+  return {
+    success: true,
+    history: items,
   }
 })

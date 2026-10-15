@@ -40,7 +40,7 @@ export async function loadSiteRemoteCircuits(siteId: string, rawExcelPath?: stri
   // 1. 原本Excelからの抽出を試行
   if (rawExcelPath) {
     try {
-      const safePath = resolveExistingExcelPath(rawExcelPath)
+      const safePath = resolveExistingExcelPath(rawExcelPath, siteId)
 
       if (fs.existsSync(safePath)) {
         const buffer = await fs.promises.readFile(safePath)
@@ -57,81 +57,76 @@ export async function loadSiteRemoteCircuits(siteId: string, rawExcelPath?: stri
   }
 
   // 2. DBのCircuitテーブルからフォールバック抽出
-  try {
-    const dbCircuits = await prisma.circuit.findMany({
-      where: { siteId },
-      select: {
-        id: true,
-        banMeisho: true,
-        kairoKigou: true,
-        kairoBangou: true,
-        kairoMeisho: true,
-      },
-      orderBy: { excelRow: 'asc' },
-    })
+  const dbCircuits = await prisma.circuit.findMany({
+    where: { siteId },
+    select: {
+      id: true,
+      banMeisho: true,
+      kairoKigou: true,
+      kairoBangou: true,
+      kairoMeisho: true,
+    },
+    orderBy: { excelRow: 'asc' },
+  })
 
-    if (dbCircuits.length > 0) {
-      // 負荷アドレスまたはリレー番号（例: 1-R1, 2-R5, または 1-1）を含む回路を収集
-      const circuitMap = new Map<string, typeof dbCircuits[0]>()
+  if (dbCircuits.length > 0) {
+    // 負荷アドレスまたはリレー番号（例: 1-R1, 2-R5, または 1-1）を含む回路を収集
+    const circuitMap = new Map<string, typeof dbCircuits[0]>()
 
-      for (const c of dbCircuits) {
-        if (!c.kairoBangou) continue
+    for (const c of dbCircuits) {
+      if (!c.kairoBangou) continue
 
-        // 1-R1 や 2-R4 のパターンからアドレス（チャンネル-サブ）を推測、または直接アドレス表記
-        const matchDirect = c.kairoBangou.match(/^(\d{1,2})-(\d)$/)
+      // 1-R1 や 2-R4 のパターンからアドレス（チャンネル-サブ）を推測、または直接アドレス表記
+      const matchDirect = c.kairoBangou.match(/^(\d{1,2})-(\d)$/)
 
-        if (matchDirect) {
-          const addr = `${matchDirect[1]}-${matchDirect[2]}`
+      if (matchDirect) {
+        const addr = `${matchDirect[1]}-${matchDirect[2]}`
+
+        circuitMap.set(addr, c)
+        continue
+      }
+
+      const matchRelay = c.kairoBangou.match(/R(\d+)/i)
+
+      if (matchRelay && matchRelay[1]) {
+        const relayNum = parseInt(matchRelay[1], 10)
+
+        if (!isNaN(relayNum) && relayNum >= 1 && relayNum <= 256) {
+          // リレー番号 1〜256 を 1-1〜64-4 へ変換 (ch = floor((num-1)/4)+1, sub = ((num-1)%4)+1)
+          const ch = Math.floor((relayNum - 1) / 4) + 1
+          const sub = ((relayNum - 1) % 4) + 1
+          const addr = `${ch}-${sub}`
 
           circuitMap.set(addr, c)
-          continue
         }
-
-        const matchRelay = c.kairoBangou.match(/R(\d+)/i)
-
-        if (matchRelay && matchRelay[1]) {
-          const relayNum = parseInt(matchRelay[1], 10)
-
-          if (!isNaN(relayNum) && relayNum >= 1 && relayNum <= 256) {
-            // リレー番号 1〜256 を 1-1〜64-4 へ変換 (ch = floor((num-1)/4)+1, sub = ((num-1)%4)+1)
-            const ch = Math.floor((relayNum - 1) / 4) + 1
-            const sub = ((relayNum - 1) % 4) + 1
-            const addr = `${ch}-${sub}`
-
-            circuitMap.set(addr, c)
-          }
-        }
-      }
-
-      if (circuitMap.size > 0) {
-        const circuits: RemoteCircuitItem[] = []
-
-        for (let ch = 0; ch <= 63; ch++) {
-          for (let sub = 1; sub <= 4; sub++) {
-            const addr = `${ch}-${sub}`
-            const matched = circuitMap.get(addr)
-
-            circuits.push({
-              id: matched ? matched.id : `rc-fallback-1-${addr}`,
-              siteId,
-              uniqueKey: addr,
-              densoKeiTo: '1',
-              fukaAddress: addr,
-              banMeisho: matched ? matched.banMeisho : '-',
-              kairoKigou: matched ? matched.kairoKigou : null,
-              kairoBangou: (matched && matched.kairoBangou) ? matched.kairoBangou : '-',
-              kairoMeisho: matched ? (matched.kairoMeisho || '空き') : '空き',
-              isVacant: !matched,
-            })
-          }
-        }
-
-        return circuits
       }
     }
-  }
-  catch (e) {
-    console.warn('[RemoteControl] Failed to fallback to DB circuits:', e)
+
+    if (circuitMap.size > 0) {
+      const circuits: RemoteCircuitItem[] = []
+
+      for (let ch = 0; ch <= 63; ch++) {
+        for (let sub = 1; sub <= 4; sub++) {
+          const addr = `${ch}-${sub}`
+          const matched = circuitMap.get(addr)
+
+          circuits.push({
+            id: matched ? matched.id : `rc-fallback-1-${addr}`,
+            siteId,
+            uniqueKey: addr,
+            densoKeiTo: '1',
+            fukaAddress: addr,
+            banMeisho: matched ? matched.banMeisho : '-',
+            kairoKigou: matched ? matched.kairoKigou : null,
+            kairoBangou: (matched && matched.kairoBangou) ? matched.kairoBangou : '-',
+            kairoMeisho: matched ? (matched.kairoMeisho || '空き') : '空き',
+            isVacant: !matched,
+          })
+        }
+      }
+
+      return circuits
+    }
   }
 
   // 3. どちらも無い場合はデフォルト256空きスロット

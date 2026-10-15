@@ -3,9 +3,12 @@
  * GET /api/sites/:siteId/tepra-circuits
  */
 
-import { createError, defineEventHandler, getRouterParam } from 'h3'
+import { defineEventHandler, getRouterParam } from 'h3'
+
+import { ErrorCode } from '#shared/types/errors'
 
 import { requireSiteAccess } from '../../../utils/auth'
+import { createAppError } from '../../../utils/error'
 import { loadSiteTepraCircuits } from '../../../utils/excel/tepraCircuits'
 import { prisma } from '../../../utils/prisma'
 
@@ -15,8 +18,8 @@ export default defineEventHandler(async (event) => {
   const siteId = getRouterParam(event, 'siteId')
 
   if (!siteId) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: '現場IDが指定されていません',
     })
   }

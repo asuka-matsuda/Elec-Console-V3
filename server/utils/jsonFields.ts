@@ -23,20 +23,30 @@ export function parseExcludedCircuits(raw?: string | null): string[] {
     const parsed = JSON.parse(raw)
 
     if (Array.isArray(parsed)) {
-      return parsed
-        .filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
-        .map(item => item.trim())
+      return Array.from(
+        new Set(
+          parsed
+            .filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+            .map(item => item.trim()),
+        ),
+      )
     }
 
     return []
   }
   catch {
-    // 万が一カンマ区切り文字列等が入っていた場合のフォールバック
-    if (raw.includes(',')) {
-      return raw.split(',').map(s => s.trim()).filter(Boolean)
+    const trimmed = raw.trim()
+
+    if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+      return []
     }
 
-    return raw.trim() ? [raw.trim()] : []
+    // 万が一カンマ区切り文字列等が入っていた場合のフォールバック
+    if (raw.includes(',')) {
+      return Array.from(new Set(raw.split(',').map(s => s.trim()).filter(Boolean)))
+    }
+
+    return trimmed ? [trimmed] : []
   }
 }
 
@@ -49,9 +59,13 @@ export function serializeExcludedCircuits(val: unknown): string | null {
   }
 
   if (Array.isArray(val)) {
-    const cleaned = val
-      .filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
-      .map(item => item.trim())
+    const cleaned = Array.from(
+      new Set(
+        val
+          .filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+          .map(item => item.trim()),
+      ),
+    )
 
     return cleaned.length > 0 ? JSON.stringify(cleaned) : null
   }
@@ -185,7 +199,7 @@ export function serializeCustomHolidays(val: unknown): string {
 }
 
 /**
- * 改行禁止ワードリスト（SiteSettings.noBreakWords）の安全なパース
+ * 改行禁止ワードリスト（SiteSettings.noBreakWords / SystemSetting.no_break_words）の安全なパース
  */
 export function parseNoBreakWords(raw?: string | null): string[] {
   if (!raw || typeof raw !== 'string') {
@@ -196,19 +210,29 @@ export function parseNoBreakWords(raw?: string | null): string[] {
     const parsed = JSON.parse(raw)
 
     if (Array.isArray(parsed)) {
-      return parsed
-        .filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+      const cleaned = parsed
+        .filter((item): item is string => typeof item === 'string')
         .map(item => item.trim())
+        .filter(item => item.length > 0 && item.length <= 100)
+
+      return Array.from(new Set(cleaned))
     }
 
     return []
   }
   catch {
     if (raw.includes(',')) {
-      return raw.split(',').map(s => s.trim()).filter(Boolean)
+      const cleaned = raw
+        .split(',')
+        .map(s => s.trim())
+        .filter(s => s.length > 0 && s.length <= 100)
+
+      return Array.from(new Set(cleaned))
     }
 
-    return raw.trim() ? [raw.trim()] : []
+    const trimmed = raw.trim()
+
+    return trimmed.length > 0 && trimmed.length <= 100 ? [trimmed] : []
   }
 }
 
@@ -221,9 +245,14 @@ export function serializeNoBreakWords(val: unknown): string | null {
   }
 
   if (Array.isArray(val)) {
-    const cleaned = val
-      .filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
-      .map(item => item.trim())
+    const cleaned = Array.from(
+      new Set(
+        val
+          .filter((item): item is string => typeof item === 'string')
+          .map(item => item.trim())
+          .filter(item => item.length > 0 && item.length <= 100),
+      ),
+    )
 
     return cleaned.length > 0 ? JSON.stringify(cleaned) : null
   }
@@ -250,7 +279,7 @@ export function serializeNoBreakWords(val: unknown): string | null {
       return serializeNoBreakWords(trimmed.split(',').map(s => s.trim()))
     }
 
-    return JSON.stringify([trimmed])
+    return trimmed.length <= 100 ? JSON.stringify([trimmed]) : null
   }
 
   return null
@@ -307,9 +336,11 @@ const DEFAULT_ASSIGNED_REPORTS = ['tag', 'socket-tepra', 'exam', 'remote']
 
 /**
  * 現場割り当て帳票（SiteSettings.assignedReports）の安全なパース
+ * 未設定（null / undefined / 空文字）の場合はデフォルト全帳票を返し、
+ * 明示的に空配列（"[]"）が保存されている場合は空配列 [] を返す
  */
 export function parseAssignedReports(raw?: string | null): string[] {
-  if (!raw || typeof raw !== 'string') {
+  if (!raw || typeof raw !== 'string' || !raw.trim()) {
     return [...DEFAULT_ASSIGNED_REPORTS]
   }
 
@@ -317,11 +348,9 @@ export function parseAssignedReports(raw?: string | null): string[] {
     const parsed = JSON.parse(raw)
 
     if (Array.isArray(parsed)) {
-      const filtered = parsed
+      return parsed
         .filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
         .map(item => item.trim())
-
-      return filtered.length > 0 ? filtered : [...DEFAULT_ASSIGNED_REPORTS]
     }
 
     return [...DEFAULT_ASSIGNED_REPORTS]
@@ -344,8 +373,44 @@ export function serializeAssignedReports(val: unknown): string | null {
       .filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
       .map(item => item.trim())
 
-    return cleaned.length > 0 ? JSON.stringify(cleaned) : null
+    return JSON.stringify(cleaned)
   }
 
   return null
+}
+
+/**
+ * 試験用計測器リスト（SiteSettings.measurementDevices）の安全なパース
+ */
+export function parseMeasurementDevices<T = Record<string, unknown>>(raw?: string | null): T[] {
+  if (!raw || typeof raw !== 'string') {
+    return []
+  }
+
+  try {
+    const parsed = JSON.parse(raw)
+
+    return Array.isArray(parsed) ? (parsed as T[]) : []
+  }
+  catch {
+    return []
+  }
+}
+
+/**
+ * 選択済み計測器IDマップ（SiteSettings.selectedDeviceIds）の安全なパース
+ */
+export function parseSelectedDeviceIds<T extends Record<string, unknown> = Record<string, string | null>>(raw?: string | null): T {
+  if (!raw || typeof raw !== 'string') {
+    return {} as T
+  }
+
+  try {
+    const parsed = JSON.parse(raw)
+
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? (parsed as T) : ({} as T)
+  }
+  catch {
+    return {} as T
+  }
 }

@@ -6,9 +6,12 @@
  * @permission マスター管理者限定
  */
 
-import { createError, defineEventHandler, getRouterParam } from 'h3'
+import { defineEventHandler, getRouterParam } from 'h3'
+
+import { ErrorCode } from '#shared/types/errors'
 
 import { requireMasterUser } from '../../../utils/auth'
+import { createAppError } from '../../../utils/error'
 import { deleteMasterTemplateItem } from '../../../utils/masterTemplates'
 
 export default defineEventHandler(async (event) => {
@@ -17,8 +20,8 @@ export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
 
   if (!id) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: 'テンプレートIDが指定されていません',
     })
   }
@@ -26,8 +29,8 @@ export default defineEventHandler(async (event) => {
   const deleted = await deleteMasterTemplateItem(id)
 
   if (!deleted) {
-    throw createError({
-      statusCode: 404,
+    throw createAppError({
+      code: ErrorCode.SYS_NOT_FOUND,
       message: '指定されたテンプレートファイルは登録されていません',
     })
   }

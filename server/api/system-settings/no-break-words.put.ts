@@ -6,9 +6,13 @@
  * @permission システム管理者限定
  */
 
-import { createError, defineEventHandler, readBody } from 'h3'
+import { defineEventHandler, readBody } from 'h3'
+
+import { ErrorCode } from '#shared/types/errors'
 
 import { requireMasterUser } from '../../utils/auth'
+import { createAppError } from '../../utils/error'
+import { parseNoBreakWords, serializeNoBreakWords } from '../../utils/jsonFields'
 import { prisma } from '../../utils/prisma'
 
 const SETTING_KEY = 'no_break_words'
@@ -18,34 +22,20 @@ export default defineEventHandler(async (event) => {
   await requireMasterUser(event)
 
   // 2. リクエストボディの取得とバリデーション
-  const body = await readBody<{ words?: unknown }>(event)
+  const body = await readBody<{ words?: unknown }>(event).catch(() => null)
 
   if (!body || !Array.isArray(body.words)) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request',
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: '改行禁止ワードの配列（words）が指定されていません。',
     })
   }
 
-  // 3. サニタイズ（トリム、空文字除外、重複排除）
-  const sanitizedWords: string[] = []
-  const seen = new Set<string>()
-
-  for (const item of body.words) {
-    if (typeof item === 'string') {
-      const trimmed = item.trim()
-
-      if (trimmed.length > 0 && trimmed.length <= 100 && !seen.has(trimmed)) {
-        seen.add(trimmed)
-        sanitizedWords.push(trimmed)
-      }
-    }
-  }
+  // 3. サニタイズ＆シリアライズ（トリム、空文字除外、100文字上限、重複排除）
+  const jsonValue = serializeNoBreakWords(body.words) ?? '[]'
+  const sanitizedWords = parseNoBreakWords(jsonValue)
 
   // 4. DB に upsert
-  const jsonValue = JSON.stringify(sanitizedWords)
-
   await prisma.systemSetting.upsert({
     where: { key: SETTING_KEY },
     update: { value: jsonValue },

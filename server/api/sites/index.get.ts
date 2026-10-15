@@ -15,10 +15,10 @@ import { prisma } from '../../utils/prisma'
 export default defineEventHandler(async (event) => {
   const user = await requireAuthUser(event)
 
-  // master（松田飛鳥氏）のみ全現場を閲覧可能。一般adminを含む他ユーザーは自身に割り当てられた現場のみに限定
+  // master（松田飛鳥氏）のみ全現場（無効化現場を含む）を閲覧可能。一般adminを含む他ユーザーは自身に割り当てられた有効な現場のみに限定
   const where = isSuperUser(user)
     ? {}
-    : { id: { in: user.assignedSiteIds } }
+    : { id: { in: user.assignedSiteIds }, disabledAt: null }
 
   const sites = await prisma.site.findMany({
     where,
@@ -40,10 +40,9 @@ export default defineEventHandler(async (event) => {
     },
   })
 
-  const siteIds = sites.map(s => s.id)
-  const siteSettings = await prisma.siteSettings.findMany({
-    where: isSuperUser(user) ? {} : { siteId: { in: siteIds } },
-  })
+  const siteSettings = sites
+    .map(s => s.settings)
+    .filter((s): s is NonNullable<typeof s> => s !== null)
 
   const mappedSites = sites.map((site) => {
     return {

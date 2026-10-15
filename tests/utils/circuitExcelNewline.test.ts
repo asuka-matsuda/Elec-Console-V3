@@ -134,6 +134,33 @@ describe('circuitExcel newline preservation', () => {
       expect(row.getCell(36).value).toBe('電圧確認済\r\n相回転OK')
       expect(row.getCell(36).alignment?.wrapText).toBe(true)
     })
+
+    it('does not write p1Worker for trunk circuit (幹線) when p1MashishimeCubicle is false', () => {
+      const workbook = new ExcelJS.Workbook()
+      const sheet = workbook.addWorksheet('Test')
+      const incompleteRow = sheet.getRow(5)
+      const completeRow = sheet.getRow(6)
+
+      const baseTrunkCircuit: Partial<Circuit> = {
+        id: 'trunk-1',
+        siteId: 'site-1',
+        keiTo: '幹線',
+        banMeisho: 'M-1',
+        kairoBangou: '1',
+        kairoMeisho: '幹線回路',
+        p1ConfirmedAt: new Date('2026-10-15T00:00:00Z'),
+        p1Kakunin: true,
+        p1Mashishime: true,
+        p1MashishimeCubicle: false,
+        p1Worker: '松田',
+      }
+
+      applyCircuitToRow(incompleteRow, baseTrunkCircuit as Circuit)
+      expect(incompleteRow.getCell(24).value).toBeNull()
+
+      applyCircuitToRow(completeRow, { ...baseTrunkCircuit, p1MashishimeCubicle: true } as Circuit)
+      expect(completeRow.getCell(24).value).toBe('松田')
+    })
   })
 
   describe('Roundtrip Excel buffer test', () => {

@@ -181,9 +181,6 @@ module.exports = {
       files: [
         'app/components/portal/calendar/Calendar.client.vue',
         'app/components/tool/MathBasis.vue',
-        'app/components/tool/MathLegend.vue',
-        'app/components/tool/ResultTile.vue',
-        'app/components/portal/exam/TableSoudenCircuit.vue',
       ],
       rules: {
         'selector-disallowed-list': [

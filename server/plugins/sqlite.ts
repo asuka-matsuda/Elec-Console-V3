@@ -15,7 +15,8 @@ export default defineNitroPlugin(async () => {
     await prisma.$queryRawUnsafe('PRAGMA journal_mode = WAL;')
     await prisma.$queryRawUnsafe('PRAGMA busy_timeout = 5000;')
     await prisma.$queryRawUnsafe('PRAGMA synchronous = NORMAL;')
-    console.log('[Database] SQLite WAL mode, busy_timeout (5000ms), and synchronous (NORMAL) enabled.')
+    await prisma.$queryRawUnsafe('PRAGMA foreign_keys = ON;')
+    console.log('[Database] SQLite WAL mode, busy_timeout (5000ms), synchronous (NORMAL), and foreign_keys (ON) enabled.')
   }
   catch (error) {
     console.warn('[Database] Failed to initialize SQLite PRAGMA settings:', error)

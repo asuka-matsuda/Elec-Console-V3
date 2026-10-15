@@ -8,12 +8,14 @@
 
 import path from 'node:path'
 
-import { createError, defineEventHandler, getRouterParam, setHeader } from 'h3'
+import { defineEventHandler, getRouterParam, setHeader } from 'h3'
 
+import { ErrorCode } from '#shared/types/errors'
 import { sanitizeFilename } from '#shared/utils/filename'
 import { getUserDisplayName } from '#shared/utils/user'
 
 import { requireSiteAccess } from '../../../../utils/auth'
+import { createAppError } from '../../../../utils/error'
 import { generateCircuitsExcelBuffer } from '../../../../utils/excel/circuitExport'
 import { prisma } from '../../../../utils/prisma'
 
@@ -23,8 +25,8 @@ export default defineEventHandler(async (event) => {
   const siteId = getRouterParam(event, 'siteId')
 
   if (!siteId) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: '現場IDが指定されていません',
     })
   }
@@ -35,8 +37,8 @@ export default defineEventHandler(async (event) => {
   })
 
   if (!site) {
-    throw createError({
-      statusCode: 404,
+    throw createAppError({
+      code: ErrorCode.SITE_NOT_FOUND,
       message: '指定された現場が見つかりません',
     })
   }
@@ -72,12 +74,15 @@ export default defineEventHandler(async (event) => {
     return buffer
   }
   catch (error: unknown) {
+    if (error && typeof error === 'object' && 'statusCode' in error) {
+      throw error
+    }
+
     const err = error as Error
 
-    console.error('Failed to generate Excel download buffer:', err)
-
-    throw createError({
-      statusCode: 500,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
+      statusCode: 400,
       message: err.message || 'Excel帳票の生成に失敗しました',
     })
   }

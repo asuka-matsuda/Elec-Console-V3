@@ -37,17 +37,12 @@ export const kfc3350Template: TagTemplateDefinition = {
   },
 
   getSlots: (flowDirection: 'z' | 'n', sheet?: ExcelJS.Worksheet): TagSlotDef[] => {
-    // ワークシートが渡された場合、セル内のプレースホルダーから動的スロット検出を最優先
-    // 枠数が21枠でも24枠でも、検出されたスロットをそのまま返却
+    // ワークシートが渡された場合、セル内のプレースホルダーから動的スロット検出を行う（未検出時は空配列を返し呼び出し元でエラー検知）
     if (sheet) {
-      const dynamicSlots = detectTagSlotsFromSheet(sheet, flowDirection)
-
-      if (dynamicSlots.length > 0) {
-        return dynamicSlots
-      }
+      return detectTagSlotsFromSheet(sheet, flowDirection)
     }
 
-    // 静的フォールバック（引数なし単体テスト呼び出し時やプレースホルダー未検出時）
+    // 静的レイアウト（引数なし単体テスト呼び出し時のみ）
     const slots: TagSlotDef[] = []
     let slotIndex = 0
 

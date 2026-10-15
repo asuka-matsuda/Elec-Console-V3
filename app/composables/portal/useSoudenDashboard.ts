@@ -20,10 +20,9 @@ export function useSoudenDashboard(siteIdRef: Ref<string> | string) {
   const allCircuits = ref<CircuitItem[]>([])
   const selectedFloor = ref<string>('ALL')
   const isLoading = ref(true)
-  const isImporting = ref(false)
   const error = ref<string | null>(null)
 
-  // フロア選択肢（一意なフロア一覧を自然順ソート）
+  // エリア選択肢（一意なエリア一覧を自然順ソート）
   const floorOptions = computed<SelectOption[]>(() => {
     const set = new Set<string>()
     let hasUnset = false
@@ -44,7 +43,7 @@ export function useSoudenDashboard(siteIdRef: Ref<string> | string) {
     )
 
     const options: SelectOption[] = [
-      { label: 'すべてのフロア', value: 'ALL' },
+      { label: 'すべてのエリア', value: 'ALL' },
     ]
 
     for (const f of sortedFloors) {
@@ -52,20 +51,20 @@ export function useSoudenDashboard(siteIdRef: Ref<string> | string) {
     }
 
     if (hasUnset && set.size > 0) {
-      options.push({ label: 'フロア未設定', value: '__UNSET__' })
+      options.push({ label: 'エリア未設定', value: '__UNSET__' })
     }
 
     return options
   })
 
-  // 選択中フロアの整合性担保（存在しないフロアが指定された場合はALLにリセット）
+  // 選択中エリアの整合性担保（存在しないエリアが指定された場合はALLにリセット）
   watch(floorOptions, (opts) => {
     if (selectedFloor.value !== 'ALL' && !opts.some(o => o.value === selectedFloor.value)) {
       selectedFloor.value = 'ALL'
     }
   })
 
-  // フロア絞り込み後の回路一覧
+  // エリア絞り込み後の回路一覧
   const filteredCircuits = computed<CircuitItem[]>(() => {
     if (selectedFloor.value === 'ALL') {
       return allCircuits.value
@@ -134,38 +133,6 @@ export function useSoudenDashboard(siteIdRef: Ref<string> | string) {
     }
   }
 
-  const importExcel = async (filePath?: string) => {
-    const siteId = unref(siteIdRef)
-
-    if (!siteId) return
-
-    isImporting.value = true
-    error.value = null
-
-    try {
-      const res = await $api<{ success: boolean, count: number }>(
-        `/api/sites/${siteId}/circuits/import`,
-        {
-          method: 'POST',
-          body: { filePath },
-        },
-      )
-
-      await fetchStats()
-
-      return res
-    }
-    catch (err: unknown) {
-      const appErr = parseToAppException(err)
-
-      error.value = appErr.getUserFacingMessage()
-      throw appErr
-    }
-    finally {
-      isImporting.value = false
-    }
-  }
-
   return {
     allCircuits,
     filteredCircuits,
@@ -173,9 +140,7 @@ export function useSoudenDashboard(siteIdRef: Ref<string> | string) {
     floorOptions,
     stats,
     isLoading,
-    isImporting,
     error,
     fetchStats,
-    importExcel,
   }
 }

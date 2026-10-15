@@ -1,132 +1,257 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-describe('Site Access Guard Logic (Client Route & Portal)', () => {
-  const masterUser = {
-    loginId: 'master',
-    role: 'admin',
-    assignedSiteIds: [] as string[],
-  }
+import {
+  generateAuthToken,
+  requireAuthUser,
+  requireMasterUser,
+  requireSiteAccess,
+  requireSiteAdmin,
+  requireSiteRole,
+} from '../../server/utils/auth'
+import { hashPassword } from '../../server/utils/password'
+import { prisma } from '../../server/utils/prisma'
+import { ErrorCode } from '../../shared/types/errors'
+import { createTestH3Event } from '../helpers/h3TestHelper'
 
-  const workerUserWithSites = {
-    loginId: 'worker1',
-    role: 'worker',
-    assignedSiteIds: ['site-tokyo', 'site-osaka'],
-  }
+describe('Site Access & Role Guards (server/utils/auth.ts の実関数検証)', () => {
+  const TEST_PREFIX = 'TEST_GUARD_'
+  const createdUserIds: string[] = []
+  const createdSiteIds: string[] = []
 
-  const workerUserNoSites = {
-    loginId: 'worker2',
-    role: 'worker',
-    assignedSiteIds: [] as string[],
-  }
+  let activeSiteId = ''
+  let disabledSiteId = ''
+  let unassignedSiteId = ''
 
-  const adminUserWithSites = {
-    loginId: 'admin1',
-    role: 'admin',
-    assignedSiteIds: ['site-tokyo'],
-  }
+  let masterToken = ''
+  let siteAdminToken = ''
+  let workerToken = ''
+  let viewerToken = ''
 
-  // auth.global.ts 内の現場アクセス判定ロジック
-  const checkSiteRouteAccess = (
-    user: { loginId: string, role: string, assignedSiteIds: string[] } | null,
-    targetSiteId: string,
-  ): { allowed: boolean, redirect?: string } => {
-    if (!user) return { allowed: false, redirect: '/login' }
+  beforeEach(async () => {
+    activeSiteId = `${TEST_PREFIX}ACTIVE_${Date.now()}`
+    disabledSiteId = `${TEST_PREFIX}DISABLED_${Date.now()}`
+    unassignedSiteId = `${TEST_PREFIX}UNASSIGNED_${Date.now()}`
 
-    const isMaster = user.loginId === 'master'
-    const assignedIds = user.assignedSiteIds || []
+    await prisma.site.createMany({
+      data: [
+        { id: activeSiteId, name: '稼働中現場', disabledAt: null },
+        { id: disabledSiteId, name: '無効化現場', disabledAt: new Date() },
+        { id: unassignedSiteId, name: '未アサイン現場', disabledAt: null },
+      ],
+    })
+    createdSiteIds.push(activeSiteId, disabledSiteId, unassignedSiteId)
 
-    if (!isMaster && !assignedIds.includes(targetSiteId)) {
-      return { allowed: false, redirect: '/portal' }
-    }
-
-    return { allowed: true }
-  }
-
-  // portal/index.vue 内の自動リダイレクト判定ロジック
-  const getAutoRedirectTarget = (
-    user: { loginId: string, role: string, assignedSiteIds: string[] } | null,
-    allSites: { id: string }[],
-    lastSiteId = '',
-  ): string | null => {
-    if (!user) return null
-
-    const isMaster = user.loginId === 'master'
-    const siteIds = user.assignedSiteIds || []
-
-    // 1. master アカウントは全現場特権
-    if (isMaster) {
-      if (lastSiteId && allSites.some(s => s.id === lastSiteId)) {
-        return `/portal/${lastSiteId}`
-      }
-      const firstSite = allSites[0]
-
-      return firstSite ? `/portal/${firstSite.id}` : null
-    }
-
-    // 2. 一般ユーザー（非master）はアサイン現場がある場合のみ転送
-    if (siteIds.length > 0) {
-      const targetSiteId = siteIds.includes(lastSiteId)
-        ? lastSiteId
-        : siteIds[0]
-
-      return `/portal/${targetSiteId}`
-    }
-
-    // 3. アサイン現場がない一般ユーザーはリダイレクトしない（未アサイン画面を表示）
-    return null
-  }
-
-  describe('Route Guard (/portal/:siteId/...) Access Check', () => {
-    it('master アカウントは未アサイン現場でもアクセスが許可されること', () => {
-      expect(checkSiteRouteAccess(masterUser, 'site-tokyo').allowed).toBe(true)
-      expect(checkSiteRouteAccess(masterUser, 'site-nagoya').allowed).toBe(true)
+    const master = await prisma.user.upsert({
+      where: { loginId: 'master' },
+      update: { isActive: true, role: 'master' },
+      create: {
+        loginId: 'master',
+        password: hashPassword('masterpass123'),
+        firstName: '飛鳥',
+        lastName: '松田',
+        role: 'master',
+        isActive: true,
+      },
     })
 
-    it('一般作業者はアサインされた現場のみ許可され、未アサイン現場は /portal にリダイレクトされること', () => {
-      expect(checkSiteRouteAccess(workerUserWithSites, 'site-tokyo').allowed).toBe(true)
-      expect(checkSiteRouteAccess(workerUserWithSites, 'site-osaka').allowed).toBe(true)
+    masterToken = generateAuthToken(master)
 
-      const blocked = checkSiteRouteAccess(workerUserWithSites, 'site-nagoya')
-
-      expect(blocked.allowed).toBe(false)
-      expect(blocked.redirect).toBe('/portal')
+    const siteAdmin = await prisma.user.create({
+      data: {
+        loginId: `${TEST_PREFIX}admin_${Date.now()}`,
+        password: hashPassword('adminpass123'),
+        firstName: '管理',
+        lastName: '現場',
+        role: 'worker',
+        isActive: true,
+        assignedSites: {
+          connect: [{ id: activeSiteId }, { id: disabledSiteId }],
+        },
+        siteAssignments: {
+          create: [
+            { siteId: activeSiteId, role: 'admin' },
+            { siteId: disabledSiteId, role: 'admin' },
+          ],
+        },
+      },
     })
 
-    it('アサイン現場が0件の一般作業者はどの現場へのアクセスも拒否され /portal にリダイレクトされること', () => {
-      const blocked = checkSiteRouteAccess(workerUserNoSites, 'site-tokyo')
+    createdUserIds.push(siteAdmin.id)
+    siteAdminToken = generateAuthToken(siteAdmin)
 
-      expect(blocked.allowed).toBe(false)
-      expect(blocked.redirect).toBe('/portal')
+    const worker = await prisma.user.create({
+      data: {
+        loginId: `${TEST_PREFIX}worker_${Date.now()}`,
+        password: hashPassword('workerpass123'),
+        firstName: '太郎',
+        lastName: '作業',
+        role: 'worker',
+        isActive: true,
+        assignedSites: {
+          connect: [{ id: activeSiteId }],
+        },
+        siteAssignments: {
+          create: [{ siteId: activeSiteId, role: 'worker' }],
+        },
+      },
     })
 
-    it('一般管理者（非masterのadmin）もアサイン現場のみに制限されること', () => {
-      expect(checkSiteRouteAccess(adminUserWithSites, 'site-tokyo').allowed).toBe(true)
+    createdUserIds.push(worker.id)
+    workerToken = generateAuthToken(worker)
 
-      const blocked = checkSiteRouteAccess(adminUserWithSites, 'site-osaka')
+    const viewer = await prisma.user.create({
+      data: {
+        loginId: `${TEST_PREFIX}viewer_${Date.now()}`,
+        password: hashPassword('viewerpass123'),
+        firstName: '次郎',
+        lastName: '閲覧',
+        role: 'worker',
+        isActive: true,
+        assignedSites: {
+          connect: [{ id: activeSiteId }],
+        },
+        siteAssignments: {
+          create: [{ siteId: activeSiteId, role: 'viewer' }],
+        },
+      },
+    })
 
-      expect(blocked.allowed).toBe(false)
-      expect(blocked.redirect).toBe('/portal')
+    createdUserIds.push(viewer.id)
+    viewerToken = generateAuthToken(viewer)
+  })
+
+  afterEach(async () => {
+    if (createdUserIds.length > 0) {
+      await prisma.userOnSite.deleteMany({ where: { userId: { in: createdUserIds } } })
+      await prisma.user.deleteMany({ where: { id: { in: createdUserIds } } })
+      createdUserIds.length = 0
+    }
+
+    if (createdSiteIds.length > 0) {
+      await prisma.userOnSite.deleteMany({ where: { siteId: { in: createdSiteIds } } })
+      await prisma.site.deleteMany({ where: { id: { in: createdSiteIds } } })
+      createdSiteIds.length = 0
+    }
+  })
+
+  describe('requireAuthUser & requireMasterUser', () => {
+    it('パスワード変更や無効化が起きた場合、発行済みトークンでも即座に401で拒否されること', async () => {
+      const tempUser = await prisma.user.create({
+        data: {
+          loginId: `${TEST_PREFIX}temp_${Date.now()}`,
+          password: hashPassword('OldPassword123'),
+          firstName: '一時',
+          lastName: 'ユーザー',
+          role: 'worker',
+          isActive: true,
+        },
+      })
+
+      createdUserIds.push(tempUser.id)
+      const token = generateAuthToken(tempUser)
+
+      // 初期状態では認証成功
+      const authed = await requireAuthUser(createTestH3Event({ token }))
+
+      expect(authed.id).toBe(tempUser.id)
+
+      // パスワード変更後は pwdSig 不一致で 401
+      await prisma.user.update({
+        where: { id: tempUser.id },
+        data: { password: hashPassword('NewPassword456') },
+      })
+
+      await expect(
+        requireAuthUser(createTestH3Event({ token })),
+      ).rejects.toMatchObject({
+        statusCode: 401,
+        statusMessage: ErrorCode.AUTH_UNAUTHORIZED,
+      })
+    })
+
+    it('requireMasterUser は master 以外の現場 admin を 403 AUTH_FORBIDDEN_ACTION で拒否すること', async () => {
+      const masterRes = await requireMasterUser(createTestH3Event({ token: masterToken }))
+
+      expect(masterRes.loginId).toBe('master')
+      expect(masterRes.role).toBe('master')
+
+      await expect(
+        requireMasterUser(createTestH3Event({ token: siteAdminToken })),
+      ).rejects.toMatchObject({
+        statusCode: 403,
+        statusMessage: ErrorCode.AUTH_FORBIDDEN_ACTION,
+      })
     })
   })
 
-  describe('Portal Index Auto-Redirect Policy', () => {
-    const allSites = [{ id: 'site-tokyo' }, { id: 'site-osaka' }]
+  describe('requireSiteAccess / requireSiteAdmin / requireSiteRole', () => {
+    it('未アサイン現場へのアクセスは master のみ許可され、現場 admin や worker は 403 AUTH_FORBIDDEN_ACTION となること', async () => {
+      const masterRes = await requireSiteAccess(createTestH3Event({ token: masterToken }), unassignedSiteId)
 
-    it('master は現場未アサインでも全現場リストから自動リダイレクトされること', () => {
-      expect(getAutoRedirectTarget(masterUser, allSites)).toBe('/portal/site-tokyo')
-      expect(getAutoRedirectTarget(masterUser, allSites, 'site-osaka')).toBe('/portal/site-osaka')
+      expect(masterRes.loginId).toBe('master')
+
+      await expect(
+        requireSiteAccess(createTestH3Event({ token: siteAdminToken }), unassignedSiteId),
+      ).rejects.toMatchObject({
+        statusCode: 403,
+        statusMessage: ErrorCode.AUTH_FORBIDDEN_ACTION,
+      })
+
+      await expect(
+        requireSiteAccess(createTestH3Event({ token: workerToken }), unassignedSiteId),
+      ).rejects.toMatchObject({
+        statusCode: 403,
+        statusMessage: ErrorCode.AUTH_FORBIDDEN_ACTION,
+      })
     })
 
-    it('一般ユーザーでアサイン現場がある場合はその現場へリダイレクトされること', () => {
-      expect(getAutoRedirectTarget(workerUserWithSites, allSites)).toBe('/portal/site-tokyo')
-      expect(getAutoRedirectTarget(workerUserWithSites, allSites, 'site-osaka')).toBe('/portal/site-osaka')
-      // アサイン外の lastSiteId は無視して最初のアサイン現場へ転送されること
-      expect(getAutoRedirectTarget(workerUserWithSites, allSites, 'site-nagoya')).toBe('/portal/site-tokyo')
+    it('無効化された現場(disabledAt !== null)は master のみ操作でき、アサイン済みの現場 admin でも 403 AUTH_FORBIDDEN_ACTION で拒否されること', async () => {
+      const masterRes = await requireSiteAccess(createTestH3Event({ token: masterToken }), disabledSiteId)
+
+      expect(masterRes.loginId).toBe('master')
+
+      await expect(
+        requireSiteAccess(createTestH3Event({ token: siteAdminToken }), disabledSiteId),
+      ).rejects.toMatchObject({
+        statusCode: 403,
+        statusMessage: ErrorCode.AUTH_FORBIDDEN_ACTION,
+      })
+
+      await expect(
+        requireSiteAdmin(createTestH3Event({ token: siteAdminToken }), disabledSiteId),
+      ).rejects.toMatchObject({
+        statusCode: 403,
+        statusMessage: ErrorCode.AUTH_FORBIDDEN_ACTION,
+      })
     })
 
-    it('一般ユーザーでアサイン現場がない場合は勝手にリダイレクトせず null（未アサイン画面表示）となること', () => {
-      expect(getAutoRedirectTarget(workerUserNoSites, allSites)).toBeNull()
-      expect(getAutoRedirectTarget(workerUserNoSites, allSites, 'site-tokyo')).toBeNull()
+    it('requireSiteRole([admin, worker]) は viewer を 403 AUTH_FORBIDDEN_ACTION でブロックし、worker と admin は許可すること', async () => {
+      const adminRes = await requireSiteRole(
+        createTestH3Event({ token: siteAdminToken }),
+        ['admin', 'worker'],
+        activeSiteId,
+      )
+
+      expect(adminRes.id).toBeTruthy()
+
+      const workerRes = await requireSiteRole(
+        createTestH3Event({ token: workerToken }),
+        ['admin', 'worker'],
+        activeSiteId,
+      )
+
+      expect(workerRes.id).toBeTruthy()
+
+      await expect(
+        requireSiteRole(
+          createTestH3Event({ token: viewerToken }),
+          ['admin', 'worker'],
+          activeSiteId,
+        ),
+      ).rejects.toMatchObject({
+        statusCode: 403,
+        statusMessage: ErrorCode.AUTH_FORBIDDEN_ACTION,
+      })
     })
   })
 })

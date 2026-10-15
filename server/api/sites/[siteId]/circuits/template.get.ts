@@ -8,9 +8,12 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { createError, defineEventHandler, getRouterParam, setHeader } from 'h3'
+import { defineEventHandler, getRouterParam, setHeader } from 'h3'
+
+import { ErrorCode } from '#shared/types/errors'
 
 import { requireSiteAccess } from '../../../../utils/auth'
+import { createAppError } from '../../../../utils/error'
 import { resolveExistingExcelPath } from '../../../../utils/excel/safePath'
 import { prisma } from '../../../../utils/prisma'
 
@@ -20,8 +23,8 @@ export default defineEventHandler(async (event) => {
   const siteId = getRouterParam(event, 'siteId')
 
   if (!siteId) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: '現場IDが指定されていません',
     })
   }
@@ -32,8 +35,8 @@ export default defineEventHandler(async (event) => {
   })
 
   if (!site) {
-    throw createError({
-      statusCode: 404,
+    throw createAppError({
+      code: ErrorCode.SITE_NOT_FOUND,
       message: '指定された現場が見つかりません',
     })
   }
@@ -41,17 +44,17 @@ export default defineEventHandler(async (event) => {
   const rawPath = site.settings?.excelPath
 
   if (!rawPath) {
-    throw createError({
-      statusCode: 404,
+    throw createAppError({
+      code: ErrorCode.SYS_NOT_FOUND,
       message: '現場設定にExcelファイルパスが設定されていません',
     })
   }
 
-  const safePath = resolveExistingExcelPath(rawPath)
+  const safePath = resolveExistingExcelPath(rawPath, siteId)
 
   if (!fs.existsSync(safePath)) {
-    throw createError({
-      statusCode: 404,
+    throw createAppError({
+      code: ErrorCode.SYS_NOT_FOUND,
       message: `設定されたExcelファイルが存在しません: ${safePath}`,
     })
   }

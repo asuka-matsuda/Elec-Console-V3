@@ -29,7 +29,7 @@ try {
   const vpsCmd = [
     'cd /root/Elec-Console-V3',
     'git pull origin main',
-    'npx prisma db push > /dev/null 2>&1 || true',
+    'npx prisma db push --accept-data-loss > /dev/null 2>&1 || true',
     'npx prisma generate > /dev/null 2>&1 || true',
     'chmod 666 prisma/dev.db* 2>/dev/null || true',
     'mkdir -p .output',

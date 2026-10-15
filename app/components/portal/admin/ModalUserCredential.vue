@@ -54,37 +54,39 @@ const handlePrint = () => {
 
 <template>
   <Modal v-model="isOpen" title="認証情報の発行完了" icon="circle-check">
-    <template #actions>
+    <template #footer>
       <Button variant="primary" @click="isOpen = false">完了する</Button>
     </template>
 
     <div v-if="user" class="flex flex-col gap-form-row-gap">
-      <p class="credential-desc">
-        以下のログイン情報を作業者へお伝えください。<br />
-        （初期パスワードはこの画面を閉じると二度と表示されません）
+      <p>
+        <small>
+          以下のログイン情報を作業者へお伝えください。<br />
+          （初期パスワードはこの画面を閉じると二度と表示されません）
+        </small>
       </p>
 
       <div class="flex flex-col gap-panel-gap">
         <div class="flex flex-col gap-inline-gap">
-          <span class="field-label">氏名</span>
-          <div class="user-value">
+          <span class="label">氏名</span>
+          <strong>
             {{ user.lastName }} {{ user.firstName }}
-          </div>
+          </strong>
         </div>
 
         <div class="flex flex-col gap-inline-gap">
-          <span class="field-label">ログインID</span>
-          <div class="user-value user-value-mono">
-            {{ user.loginId || user.id }}
-          </div>
+          <span class="label">ログインID</span>
+          <strong>
+            <code>{{ user.loginId || user.id }}</code>
+          </strong>
         </div>
 
         <div class="flex flex-col gap-inline-gap">
-          <span class="field-label">初期パスワード</span>
+          <span class="label">初期パスワード</span>
           <div class="flex items-center gap-item-gap">
-            <div class="user-value user-value-mono user-value-success flex-1">
-              {{ user.initialPassword || "（既に設定済みです）" }}
-            </div>
+            <strong class="flex-1" style="color: var(--color-status-success)">
+              <code>{{ user.initialPassword || "（既に設定済みです）" }}</code>
+            </strong>
             <Button v-if="user.initialPassword" variant="secondary" size="sm" :icon="isCopied ? 'check' : 'copy'" @click="handleCopyPassword">{{ isCopied ? 'コピー完了' : 'パスワードをコピー' }}</Button>
           </div>
         </div>
@@ -96,30 +98,3 @@ const handlePrint = () => {
     </div>
   </Modal>
 </template>
-
-<style scoped>
-.credential-desc {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-}
-
-.field-label {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-muted);
-}
-
-.user-value {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-main);
-}
-
-.user-value-mono {
-  font-family: var(--font-mono);
-}
-
-.user-value-success {
-  color: var(--color-status-success);
-}
-</style>

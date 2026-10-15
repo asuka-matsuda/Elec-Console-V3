@@ -10,6 +10,15 @@ const ALLOWED_MARGIN_SUFFIXES = new Set(['0', 'auto'])
 
 const ALLOWED_SPACING_TOKENS = new Set([
   '0',
+  '0.5',
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '8',
+  '10',
   'auto',
   'layout-pad',
   'section-gap',
@@ -48,7 +57,7 @@ export default {
       description: 'Enforce using strictly defined semantic spacing tokens in Vue templates',
     },
     messages: {
-      unauthorizedSpacing: '未定義の余白クラス「{{ token }}」は使用禁止です。プロジェクト定義済みのセマンティック変数（layout-pad, section-gap, panel-pad, panel-pad-compact, panel-gap, form-row-gap, form-col-gap, item-gap, inline-gap, micro-gap, 0, auto）を使用してください。',
+      unauthorizedSpacing: '未定義の余白クラス「{{ token }}」は使用禁止です。プロジェクト定義済みの余白トークン（layout-pad, section-gap, panel-pad, panel-pad-compact, panel-gap, form-row-gap, form-col-gap, item-gap, inline-gap, micro-gap, 0〜10, auto）を使用してください。',
       forbiddenPanelPadding: '<Panel> に対する余白クラス「{{ token }}」の直接指定は禁止されています。余白は padding プロパティ（\'normal\' | \'compact\' | \'none\'）を使用してください。',
       forbiddenMargin: '要素間隔のためのマージン「{{ token }}」は禁止されています（Margin is harmful原則）。要素間の間隔は親コンテナの gap クラスを使用してください。margin はリセット（m-0）または端寄せ（ml-auto 等）のみ使用可能です。',
     },
@@ -75,7 +84,7 @@ export default {
 
       for (let token of tokens) {
         if (token.startsWith('!')) token = token.slice(1)
-        const cleanToken = token.replace(/^(sm|md|lg|xl|2xl|hover|focus|focus-visible|active|disabled|open):/, '')
+        const cleanToken = token.replace(/^(@?max-[\w-]+|@[\w-]+|xs|sm|md|lg|xl|2xl|hover|focus|focus-visible|active|disabled|open):/, '')
 
         const match = cleanToken.match(SPACING_CLASS_REGEX)
 

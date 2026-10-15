@@ -79,13 +79,13 @@ const resolveMenuBadge = (item: MenuItem): { text: string, variant: BadgeVariant
           <li v-for="item in section.items" :key="item.text" class="flex">
             <component :is="!item.disabled && item.href ? NuxtLink : 'div'" :to="!item.disabled && item.href ? item.href : undefined" :disabled="Boolean(item.disabled)" class="panel is-interactive flex flex-col gap-panel-gap h-full w-full">
               <header v-if="item.icon || item.text || resolveMenuBadge(item)" class="flex items-center gap-item-gap min-w-0">
-                <Icon v-if="item.icon" :name="item.icon" class="tile-icon" />
-                <span v-if="item.text" class="flex-1 min-w-0 tile-title">{{ item.text }}</span>
+                <Icon v-if="item.icon" :name="item.icon" style="color: var(--theme-accent)" />
+                <strong v-if="item.text" class="flex-1 min-w-0" style="color: var(--theme-accent)">{{ item.text }}</strong>
                 <Badge v-if="resolveMenuBadge(item)" :variant="resolveMenuBadge(item)!.variant" class="shrink-0 ml-auto">{{ resolveMenuBadge(item)!.text }}</Badge>
               </header>
 
-              <p v-if="item.desc" class="tile-desc">
-                {{ item.desc }}
+              <p v-if="item.desc">
+                <small>{{ item.desc }}</small>
               </p>
             </component>
           </li>
@@ -105,7 +105,7 @@ const resolveMenuBadge = (item: MenuItem): { text: string, variant: BadgeVariant
         <hr class="divider">
 
         <div v-if="isDashboardPending" class="flex flex-col gap-item-gap">
-          <div v-for="skeletonIndex in 2" :key="`announcement-skeleton-${skeletonIndex}`" class="panel feed-card flex flex-col gap-inline-gap">
+          <div v-for="skeletonIndex in 2" :key="`announcement-skeleton-${skeletonIndex}`" class="panel flex flex-col gap-inline-gap">
             <Skeleton width="5rem" height="0.85rem" />
             <Skeleton width="85%" height="1.1rem" />
           </div>
@@ -114,11 +114,11 @@ const resolveMenuBadge = (item: MenuItem): { text: string, variant: BadgeVariant
         <div v-else class="flex flex-col gap-item-gap">
           <ul class="flex flex-col gap-item-gap">
             <li v-for="(item, index) in latestAnnouncements" :key="item.id ?? index">
-              <button type="button" class="panel is-interactive feed-card w-full flex flex-col gap-inline-gap text-left" @click="activeDetail = { item, type: 'announcement' }">
+              <button type="button" class="panel is-interactive w-full flex flex-col gap-inline-gap text-left" @click="activeDetail = { item, type: 'announcement' }">
                 <div class="flex items-center justify-between gap-item-gap w-full">
                   <time>{{ formatDate(item.date) }}</time>
                 </div>
-                <span class="feed-title">{{ item.title }}</span>
+                <strong>{{ item.title }}</strong>
               </button>
             </li>
           </ul>
@@ -126,11 +126,11 @@ const resolveMenuBadge = (item: MenuItem): { text: string, variant: BadgeVariant
           <Collapse v-if="olderAnnouncements.length > 0" :title="`過去のお知らせ (${olderAnnouncements.length}件)`" icon="history" card>
             <ul class="flex flex-col gap-item-gap max-h-[220px] overflow-y-auto">
               <li v-for="(item, index) in olderAnnouncements" :key="item.id ?? index">
-                <button type="button" class="panel is-interactive feed-card w-full flex flex-col gap-inline-gap text-left" @click="activeDetail = { item, type: 'announcement' }">
+                <button type="button" class="panel is-interactive w-full flex flex-col gap-inline-gap text-left" @click="activeDetail = { item, type: 'announcement' }">
                   <div class="flex items-center justify-between gap-item-gap w-full">
                     <time>{{ formatDate(item.date) }}</time>
                   </div>
-                  <span class="feed-title">{{ item.title }}</span>
+                  <strong>{{ item.title }}</strong>
                 </button>
               </li>
             </ul>
@@ -149,7 +149,7 @@ const resolveMenuBadge = (item: MenuItem): { text: string, variant: BadgeVariant
         <hr class="divider">
 
         <div v-if="isDashboardPending" class="flex flex-col gap-item-gap">
-          <div v-for="skeletonIndex in 2" :key="`history-skeleton-${skeletonIndex}`" class="panel feed-card flex flex-col gap-inline-gap">
+          <div v-for="skeletonIndex in 2" :key="`history-skeleton-${skeletonIndex}`" class="panel flex flex-col gap-inline-gap">
             <div class="flex items-center justify-between gap-item-gap">
               <Skeleton width="5rem" height="0.85rem" />
               <Skeleton width="3rem" height="0.85rem" />
@@ -161,12 +161,12 @@ const resolveMenuBadge = (item: MenuItem): { text: string, variant: BadgeVariant
         <div v-else class="flex flex-col gap-item-gap">
           <ul class="flex flex-col gap-item-gap">
             <li v-for="(item, index) in latestHistory" :key="item.id ?? index">
-              <button type="button" class="panel is-interactive feed-card w-full flex flex-col gap-inline-gap text-left" @click="activeDetail = { item, type: 'history' }">
+              <button type="button" class="panel is-interactive w-full flex flex-col gap-inline-gap text-left" @click="activeDetail = { item, type: 'history' }">
                 <div class="flex items-center justify-between gap-item-gap w-full">
                   <time>{{ formatDate(item.date) }}</time>
                   <Badge v-if="item.version" size="sm" variant="gray" class="shrink-0">{{ item.version }}</Badge>
                 </div>
-                <span class="feed-title">{{ item.title }}</span>
+                <strong>{{ item.title }}</strong>
               </button>
             </li>
           </ul>
@@ -174,12 +174,12 @@ const resolveMenuBadge = (item: MenuItem): { text: string, variant: BadgeVariant
           <Collapse v-if="olderHistory.length > 0" :title="`過去の更新履歴 (${olderHistory.length}件)`" icon="history" card>
             <ul class="flex flex-col gap-item-gap max-h-[220px] overflow-y-auto">
               <li v-for="(item, index) in olderHistory" :key="item.id ?? index">
-                <button type="button" class="panel is-interactive feed-card w-full flex flex-col gap-inline-gap text-left" @click="activeDetail = { item, type: 'history' }">
+                <button type="button" class="panel is-interactive w-full flex flex-col gap-inline-gap text-left" @click="activeDetail = { item, type: 'history' }">
                   <div class="flex items-center justify-between gap-item-gap w-full">
                     <time>{{ formatDate(item.date) }}</time>
                     <Badge v-if="item.version" size="sm" variant="gray" class="shrink-0">{{ item.version }}</Badge>
                   </div>
-                  <span class="feed-title">{{ item.title }}</span>
+                  <strong>{{ item.title }}</strong>
                 </button>
               </li>
             </ul>
@@ -190,10 +190,11 @@ const resolveMenuBadge = (item: MenuItem): { text: string, variant: BadgeVariant
 
     <Modal :model-value="Boolean(activeDetail)" :title="activeDetail?.type === 'announcement' ? 'お知らせ詳細' : '更新履歴詳細'" :icon="activeDetail?.type === 'announcement' ? 'bell' : 'clock'" close-text="閉じる" @update:model-value="!$event && (activeDetail = null)">
       <div v-if="activeDetail" class="flex flex-col gap-form-row-gap">
-        <header class="flex items-center justify-between gap-item-gap pb-item-gap" style="border-bottom: 1px solid var(--color-border)">
-          <small style="font-family: var(--font-mono)">{{ formatDate(activeDetail.item.date) }}</small>
+        <header class="flex items-center justify-between gap-item-gap">
+          <time>{{ formatDate(activeDetail.item.date) }}</time>
           <Badge v-if="'version' in activeDetail.item && activeDetail.item.version" size="sm" variant="gray">{{ activeDetail.item.version }}</Badge>
         </header>
+        <hr class="divider">
 
         <h4>
           {{ activeDetail.item.title }}
@@ -206,37 +207,3 @@ const resolveMenuBadge = (item: MenuItem): { text: string, variant: BadgeVariant
     </Modal>
   </div>
 </template>
-
-<style scoped lang="scss">
-.tile-icon {
-  color: var(--theme-accent);
-}
-
-.tile-title {
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  color: var(--theme-accent);
-  letter-spacing: var(--tracking-wide);
-}
-
-.tile-desc {
-  font-size: var(--font-size-xs);
-  line-height: var(--line-height-ui);
-  color: var(--color-text-muted);
-}
-
-.feed-card {
-  time {
-    font-family: var(--font-mono);
-    font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
-  }
-
-  .feed-title {
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-bold);
-    line-height: var(--line-height-tight);
-    color: var(--color-text-main);
-  }
-}
-</style>

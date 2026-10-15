@@ -78,7 +78,7 @@ const handleLogin = async () => {
         <label for="login-password" class="label">パスワード</label>
         <Input id="login-password" v-model="password" :type="showPassword ? 'text' : 'password'" placeholder="••••••••" icon="lock" :disabled="isLoading" autocomplete="current-password">
           <template #suffix>
-            <button type="button" tabindex="-1" class="password-toggle-btn" @mousedown.prevent @click="showPassword = !showPassword">
+            <button type="button" tabindex="-1" class="help-trigger" @mousedown.prevent @click="showPassword = !showPassword">
               <Icon :name="showPassword ? 'eye-off' : 'eye'" />
             </button>
           </template>
@@ -99,30 +99,3 @@ const handleLogin = async () => {
     </form>
   </div>
 </template>
-
-<style scoped lang="scss">
-.password-toggle-btn {
-  display: grid;
-  place-items: center;
-
-  padding: var(--space-1);
-  border: none;
-
-  color: var(--color-text-muted);
-
-  background: transparent;
-
-  transition: color var(--transition-fast);
-
-  @include state-interactive;
-
-  &:hover {
-    color: var(--color-text-main);
-  }
-
-  &:focus-visible {
-    color: var(--theme-accent);
-    outline: none;
-  }
-}
-</style>

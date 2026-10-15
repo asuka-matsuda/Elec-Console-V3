@@ -25,14 +25,17 @@ const initialKeiTo = computed(() => (route.query.kei_to as string) || '幹線')
 const {
   filteredCircuits,
   shubetsuTabOptions,
+  availableFloorList,
   availableBanMeishoList,
   selectedKeiTo,
   selectedBanShubetsu,
+  selectedFloor,
   selectedBanMeisho,
   phaseStats,
   isLoading,
   isActionLoading,
   fetchCircuits,
+  saveExcludedRemarks,
   confirmPhase1,
 } = usePhase1Exam(siteId, initialKeiTo.value)
 
@@ -73,7 +76,7 @@ const {
 
 const getRowDisabledReason = (circuit: CircuitItem): string | undefined => {
   if (isConfirmed(circuit)) return '確定済みのため入力はロックされています'
-  if (circuit.isExcluded) return '除外回路のため入力できません'
+  if (circuit.isExcluded) return '除外回路のため測定項目は入力できません（備考のみ保存可能）'
   if (isActionLoading.value[circuit.id]) return '通信処理中です'
 
   return undefined
@@ -86,6 +89,7 @@ const {
 } = useTableSort(filteredCircuits)
 
 const handleConfirmCircuit = (circuit: CircuitItem) => {
+  if (isRowDisabled(circuit)) return
   const form = getRowForm(circuit)
 
   markConfirmedLocally(circuit)
@@ -95,6 +99,12 @@ const handleConfirmCircuit = (circuit: CircuitItem) => {
     mashishimeCubicle: form.mashishimeCubicle,
     remarks: form.remarks,
   })
+}
+
+const handleSaveExcludedRemarks = (circuit: CircuitItem) => {
+  const form = getRowForm(circuit)
+
+  saveExcludedRemarks(circuit, form.remarks)
 }
 
 const isComplete = (c: CircuitItem) => {
@@ -135,11 +145,16 @@ onMounted(() => {
 
         <div class="flex flex-wrap items-center gap-form-col-gap">
           <div class="flex items-center gap-item-gap">
+            <label for="filter-area-p1" class="shrink-0 label">エリア:</label>
+            <Select id="filter-area-p1" v-model="selectedFloor" :options="availableFloorList" class="w-40" />
+          </div>
+
+          <div class="flex items-center gap-item-gap">
             <label for="filter-ban-p1" class="shrink-0 label">盤名称:</label>
             <Select id="filter-ban-p1" v-model="selectedBanMeisho" :options="availableBanMeishoList" class="w-40" />
           </div>
 
-          <span class="whitespace-nowrap count-label">
+          <span class="whitespace-nowrap field-help-text">
             対象回路: <strong>{{ phaseStats.allCount }}</strong> 件
           </span>
         </div>
@@ -152,10 +167,10 @@ onMounted(() => {
               <span>フェーズ1 進捗状況</span>
               <PortalSyncStatusBadge :site-id="siteId" />
             </div>
-            <div class="flex items-center gap-item-gap justify-end min-w-[160px] text-right">
+            <div class="flex items-center gap-item-gap justify-end min-w-[160px] text-right tabular-nums">
               <span><strong>{{ phaseStats.completed }}</strong> / {{ phaseStats.total }}</span>
               <span>({{ phaseStats.pct }}%)</span>
-              <small v-if="phaseStats.excluded > 0" class="text-muted">(除外: {{ phaseStats.excluded }})</small>
+              <small v-if="phaseStats.excluded > 0">(除外: {{ phaseStats.excluded }})</small>
             </div>
           </div>
           <Progress :value="phaseStats.pct" />
@@ -168,8 +183,8 @@ onMounted(() => {
     <Table v-model:sort-by="sortBy" v-model:sort-order="sortOrder" :columns="phase1Columns" :data="sortedCircuits" :loading="isLoading" :skeleton-rows="8" :row-id="(row) => `row-${row.id}`" :row-class="(row) => getSoudenRowClass(row, { isComplete, editingRowId: null })" class="flex-1 min-h-[400px]">
       <template #cell-banMeisho="{ row: circuit }">
         <div class="flex flex-col gap-micro-gap min-w-0">
-          <span class="ban-name">{{ circuit.banMeisho || '-' }}</span>
-          <span v-if="circuit.banShubetsu" class="ban-type">{{ circuit.banShubetsu }}</span>
+          <strong>{{ circuit.banMeisho || '-' }}</strong>
+          <small v-if="circuit.banShubetsu">{{ circuit.banShubetsu }}</small>
         </div>
       </template>
 
@@ -180,29 +195,29 @@ onMounted(() => {
       </template>
 
       <template #cell-kairoMeisho="{ row: circuit }">
-        <span class="circuit-meisho block" :title="circuit.kairoMeisho || ''">{{ circuit.kairoMeisho || '-' }}</span>
+        <span class="whitespace-pre block" :title="circuit.kairoMeisho || ''">{{ circuit.kairoMeisho || '-' }}</span>
       </template>
 
       <template #cell-shadankiShubetsu="{ row: circuit }">
-        <span v-if="circuit.shadankiShubetsu" class="cell-shadanki">{{ circuit.shadankiShubetsu }}</span>
-        <span v-else class="cell-dash">-</span>
+        <span v-if="circuit.shadankiShubetsu" class="whitespace-nowrap">{{ circuit.shadankiShubetsu }}</span>
+        <small v-else>-</small>
       </template>
 
       <template #cell-p1ConfirmedAt="{ row: circuit }">
         <div v-if="circuit.p1Worker" class="flex flex-col items-center gap-micro-gap">
-          <span class="cell-worker">{{ circuit.p1Worker }}</span>
-          <span class="cell-date">{{ formatShortDateTime(circuit.p1ConfirmedAt) }}</span>
+          <strong>{{ circuit.p1Worker }}</strong>
+          <time>{{ formatShortDateTime(circuit.p1ConfirmedAt) }}</time>
         </div>
-        <span v-else class="cell-dash">-</span>
+        <small v-else>-</small>
       </template>
 
       <template #cell-cableList="{ row: circuit }">
         <div class="flex flex-col gap-inline-gap">
           <div class="flex items-center gap-inline-gap">
-            <span class="cell-cable">{{ circuit.cableList || '-' }}</span>
-            <span v-if="circuit.haisenJousuu" class="cell-jousuu">× {{ circuit.haisenJousuu }}</span>
+            <span>{{ circuit.cableList || '-' }}</span>
+            <small v-if="circuit.haisenJousuu">× {{ circuit.haisenJousuu }}</small>
           </div>
-          <span class="cell-setsuchi" :title="circuit.setsuchiList || ''">{{ circuit.setsuchiList || '-' }}</span>
+          <small :title="circuit.setsuchiList || ''">{{ circuit.setsuchiList || '-' }}</small>
         </div>
       </template>
 
@@ -222,104 +237,22 @@ onMounted(() => {
       </template>
 
       <template #cell-p1Remarks="{ row: circuit }">
-        <Textarea v-model="getRowForm(circuit).remarks" size="sm" :rows="1" auto-resize trim placeholder="備考" class="w-full textarea-remarks" :disabled="isConfirmed(circuit) || Boolean(isActionLoading[circuit.id])" />
+        <Textarea v-model="getRowForm(circuit).remarks" size="sm" :rows="1" auto-resize trim placeholder="備考" class="w-full" :disabled="(!circuit.isExcluded && isConfirmed(circuit)) || Boolean(isActionLoading[circuit.id])" />
       </template>
 
       <template #cell-actions="{ row: circuit }">
-        <div class="cell-actions flex items-center justify-center gap-inline-gap whitespace-nowrap">
-          <Badge v-if="circuit.isExcluded" variant="gray">除外</Badge>
-          <template v-if="isConfirmed(circuit)">
-            <Button variant="secondary" size="sm" suffix-icon="arrow-right" :to="`/portal/${circuit.siteId}/phase2?kei_to=${encodeURIComponent(circuit.keiTo || '幹線')}&targetCircuit=${encodeURIComponent(circuit.id)}`">フェーズ2へ進む</Button>
-            <Button variant="danger" size="sm" :disabled="isActionLoading[circuit.id]" @click="handleClearLocally(circuit)">解除する</Button>
+        <div class="flex items-center justify-center gap-inline-gap whitespace-nowrap">
+          <template v-if="circuit.isExcluded">
+            <Badge variant="gray">除外</Badge>
+            <Button variant="secondary" size="sm" :loading="Boolean(isActionLoading[circuit.id])" @click="handleSaveExcludedRemarks(circuit)">備考保存</Button>
           </template>
-          <Button v-else variant="primary" size="sm" :loading="isActionLoading[circuit.id]" @click="handleConfirmCircuit(circuit)">確定する</Button>
+          <template v-else-if="isConfirmed(circuit)">
+            <Button variant="secondary" size="sm" suffix-icon="arrow-right" :to="`/portal/${circuit.siteId}/phase2?kei_to=${encodeURIComponent(circuit.keiTo || '幹線')}&targetCircuit=${encodeURIComponent(circuit.id)}`">フェーズ2へ進む</Button>
+            <Button variant="danger" size="sm" :disabled="Boolean(isActionLoading[circuit.id])" @click="handleClearLocally(circuit)">解除する</Button>
+          </template>
+          <Button v-else variant="primary" size="sm" :loading="Boolean(isActionLoading[circuit.id])" @click="handleConfirmCircuit(circuit)">確定する</Button>
         </div>
       </template>
     </Table>
   </div>
 </template>
-
-<style scoped lang="scss">
-.count-label {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-}
-
-.ban-name {
-  overflow: hidden;
-  font-weight: var(--font-weight-bold);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.ban-type {
-  overflow: hidden;
-
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-muted);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.circuit-meisho {
-  font-size: inherit;
-  font-weight: var(--font-weight-normal);
-  line-height: 1.3;
-  color: var(--color-text-main);
-  white-space: pre-line;
-}
-
-.cell-worker {
-  color: var(--color-status-success);
-}
-
-.cell-date,
-.cell-dash {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-muted);
-}
-
-.cell-cable {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-main);
-}
-
-.cell-shadanki {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-main);
-  white-space: nowrap;
-}
-
-.cell-jousuu {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-}
-
-.cell-setsuchi {
-  overflow: hidden;
-
-  max-width: 140px;
-
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-secondary);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.textarea-remarks {
-  font-size: var(--font-size-xs);
-}
-
-.cell-actions {
-  font-size: var(--font-size-xs);
-}
-
-.text-note {
-  font-size: inherit;
-  font-weight: var(--font-weight-normal);
-  color: var(--color-status-warning);
-}
-</style>

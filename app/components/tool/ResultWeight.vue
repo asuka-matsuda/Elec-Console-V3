@@ -5,38 +5,31 @@
  */
 import { computed } from 'vue'
 
-import type { BadgeVariant } from '~/types/components'
+import { RESULT_BADGE_VARIANT_MAP } from '~/constants/toolOptions'
 import type { WeightCalcResult } from '~/utils/tools/weight/weightCalcLogic'
 import { formatWeightResult } from '~/utils/tools/weight/weightResultPresenter'
 
 const props = defineProps<{
   result: WeightCalcResult | null
+  size?: 'sm' | 'md'
 }>()
 
 const vm = computed(() => formatWeightResult(props.result))
-
-const BADGE_VARIANT_MAP: Record<string, BadgeVariant> = {
-  danger: 'red',
-  warning: 'amber',
-  success: 'green',
-  neutral: 'gray',
-  empty: 'gray',
-}
 </script>
 
 <template>
-  <div class="flex flex-col gap-panel-gap">
-    <div class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="`is-${vm.panelStatus}`">
+  <div class="flex flex-1 flex-col min-h-0" :class="[size === 'sm' ? 'gap-item-gap is-sm' : 'gap-panel-gap']">
+    <div class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="[`is-${vm.panelStatus}`, size === 'sm' && 'is-sm']">
       <header class="tile-header flex items-center justify-center gap-inline-gap">
         <span>使用ドラム（想定）</span>
-        <Badge v-if="vm.badgeText" :variant="BADGE_VARIANT_MAP[vm.panelStatus]">{{ vm.badgeText }}</Badge>
+        <Badge v-if="vm.badgeText" :variant="RESULT_BADGE_VARIANT_MAP[vm.panelStatus]">{{ vm.badgeText }}</Badge>
       </header>
       <output class="tile-value flex items-center justify-center gap-item-gap">
         <span>{{ vm.displayDrum }}</span>
       </output>
     </div>
 
-    <div class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="`is-${vm.panelStatus}`">
+    <div class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="[`is-${vm.panelStatus}`, size === 'sm' && 'is-sm']">
       <header class="tile-header flex items-center justify-center gap-inline-gap">
         <span>総重量 (ケーブル+ドラム)</span>
       </header>
@@ -58,75 +51,3 @@ const BADGE_VARIANT_MAP: Record<string, BadgeVariant> = {
     </dl>
   </div>
 </template>
-
-<style scoped lang="scss">
-.result-tile {
-  padding: var(--space-2) var(--space-3);
-  border: var(--border-width-base) solid var(--color-border);
-
-  background: var(--surface-bg);
-  box-shadow: var(--shadow-sink);
-
-  transition: var(--transition-panel);
-
-  .tile-header {
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-main);
-    letter-spacing: var(--tracking-wide);
-  }
-
-  .tile-value {
-    font-family: var(--font-mono);
-    font-size: var(--font-size-3xl);
-    font-weight: var(--font-weight-bold);
-    font-variant-numeric: tabular-nums;
-    line-height: var(--line-height-tight);
-    color: var(--color-text-main);
-
-    .value-unit {
-      font-family: var(--font-base);
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-normal);
-      color: var(--color-text-secondary);
-    }
-  }
-
-  &.is-success { --status-color: var(--color-status-success); }
-  &.is-warning { --status-color: var(--color-status-warning); }
-  &.is-danger  { --status-color: var(--color-status-danger); }
-
-  &.is-success,
-  &.is-warning,
-  &.is-danger {
-    border-color: color-mix(in srgb, var(--status-color) 40%, transparent);
-
-    .tile-value {
-      color: var(--status-color);
-    }
-  }
-
-  &.is-empty {
-    opacity: 0.6;
-
-    .tile-value {
-      color: var(--color-text-muted);
-    }
-  }
-}
-
-.details-list {
-  font-size: var(--font-size-xs);
-  line-height: var(--line-height-ui);
-  color: var(--color-text-muted);
-
-  dt {
-    font-weight: var(--font-weight-normal);
-  }
-
-  .value {
-    font-variant-numeric: tabular-nums;
-    color: var(--color-text-main);
-  }
-}
-</style>

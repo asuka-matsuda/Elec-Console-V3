@@ -6,9 +6,12 @@
  * @permission マスター管理者限定
  */
 
-import { createError, defineEventHandler, getRouterParam } from 'h3'
+import { defineEventHandler, getRouterParam } from 'h3'
+
+import { ErrorCode } from '#shared/types/errors'
 
 import { requireMasterUser } from '../../../utils/auth'
+import { createAppError } from '../../../utils/error'
 import { generateRandomPassword, hashPassword } from '../../../utils/password'
 import { prisma } from '../../../utils/prisma'
 
@@ -17,9 +20,8 @@ export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
 
   if (!id) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request',
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: 'ユーザーIDが指定されていません。',
     })
   }
@@ -27,9 +29,8 @@ export default defineEventHandler(async (event) => {
   const user = await prisma.user.findUnique({ where: { id } })
 
   if (!user) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Not Found',
+    throw createAppError({
+      code: ErrorCode.USER_NOT_FOUND,
       message: 'ユーザーが見つかりません。',
     })
   }

@@ -84,4 +84,48 @@ describe('useTodo', () => {
     expect(todos.value.length).toBe(1)
     expect(todos.value[0].text).toBe('現場Aのタスク')
   })
+
+  it('PC等で削除されサーバー上から消えた同期済みToDoが、タブレット側のIndexedDBから復活せず削除されること', async () => {
+    const { useNuxtApp } = await import('#app')
+    const { TodosRepository } = await import('../../app/utils/db')
+    const mockApi = useNuxtApp().$api as ReturnType<typeof import('vitest').vi.fn>
+
+    // タブレット側のIndexedDBに、以前サーバーと同期済みだったタスク（todo-deleted-on-pc）が残っている状態を再現
+    await TodosRepository.put({
+      id: 'todo-deleted-on-pc',
+      siteId: 'site-sync',
+      userId: 'user-1',
+      text: 'PCで削除されたタスク',
+      completed: false,
+      createdAt: '2026-10-01T00:00:00.000Z',
+      updatedAt: '2026-10-01T00:00:00.000Z',
+      isSynced: true,
+    })
+
+    // サーバー上では既にPCから削除されており、空配列が返る
+    mockApi.mockClear()
+    mockApi.mockResolvedValue({
+      success: true,
+      todos: [],
+    })
+
+    const { todos, load } = useTodo('site-sync', 'user-1')
+
+    await load()
+
+    // 1. 同期済みキャッシュ（isSynced: true）は localTodos としてサーバーへ再送（復活）されないこと
+    expect(mockApi).toHaveBeenCalledWith(
+      '/api/sites/site-sync/todos/sync',
+      expect.objectContaining({
+        method: 'POST',
+        body: { localTodos: [] },
+      }),
+    )
+
+    // 2. タブレット側のメモリおよび IndexedDB からも削除されていること
+    expect(todos.value).toEqual([])
+    const remainingInIdb = await TodosRepository.getBySiteAndUser('site-sync', 'user-1')
+
+    expect(remainingInIdb).toEqual([])
+  })
 })

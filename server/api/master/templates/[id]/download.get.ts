@@ -9,19 +9,22 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { createError, defineEventHandler, getRouterParam, setHeader } from 'h3'
+import { defineEventHandler, getRouterParam, setHeader } from 'h3'
 
-import { requireAuthUser } from '../../../../utils/auth'
+import { ErrorCode } from '#shared/types/errors'
+
+import { canAccessSite, isSuperUser, requireAuthUser } from '../../../../utils/auth'
+import { createAppError } from '../../../../utils/error'
 import { getMasterTemplateItem, getMasterTemplateItemFilePath } from '../../../../utils/masterTemplates'
 
 export default defineEventHandler(async (event) => {
-  await requireAuthUser(event)
+  const user = await requireAuthUser(event)
 
   const id = getRouterParam(event, 'id')
 
   if (!id) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: 'テンプレートIDが指定されていません',
     })
   }
@@ -30,10 +33,21 @@ export default defineEventHandler(async (event) => {
   const filePath = getMasterTemplateItemFilePath(id)
 
   if (!item || !filePath || !fs.existsSync(filePath)) {
-    throw createError({
-      statusCode: 404,
+    throw createAppError({
+      code: ErrorCode.SYS_NOT_FOUND,
       message: '指定されたテンプレートファイルは登録されていません',
     })
+  }
+
+  if (!item.isAllSites && !isSuperUser(user)) {
+    const hasAccess = (item.assignedSiteIds ?? []).some(sid => canAccessSite(user, sid))
+
+    if (!hasAccess) {
+      throw createAppError({
+        code: ErrorCode.AUTH_FORBIDDEN_ACTION,
+        message: 'このテンプレートへのアクセス権限がありません',
+      })
+    }
   }
 
   const filename = encodeURIComponent(item.file.filename || path.basename(filePath))

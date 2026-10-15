@@ -21,20 +21,10 @@ import type {
   SocketTepraExcelResult,
   TepraCircuitItem,
 } from '#shared/types/socketTepra'
-import { sanitizeFilename } from '#shared/utils/filename'
+import { sanitizeFilename, sanitizeSheetName } from '#shared/utils/filename'
 import { getExcelJS } from '~/utils/excelHelper'
 
-/**
- * Excelのワークシート名として安全な文字列に変換
- * - 最大31文字
- * - 禁止文字 \ / ? * [ ] の除去
- */
-export function sanitizeSheetName(name: string, fallback = 'Sheet'): string {
-  const cleaned = name.replace(/[\\/?*[\]]/g, '').trim()
-  const safe = cleaned || fallback
-
-  return safe.slice(0, 31)
-}
+export { sanitizeSheetName }
 
 /**
  * テプラ用Excel帳票を生成

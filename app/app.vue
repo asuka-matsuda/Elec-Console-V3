@@ -40,7 +40,7 @@ if (import.meta.client) {
   </NuxtLayout>
 
   <Modal v-model="isConfirmOpen" :title="confirmTitle" align="center">
-    <template #actions>
+    <template #footer>
       <Button @click="onConfirmCancel">{{ confirmCancelText }}</Button>
       <Button :variant="confirmIntent" @click="onConfirmExecute">{{ confirmBtnText }}</Button>
     </template>

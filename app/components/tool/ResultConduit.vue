@@ -8,7 +8,7 @@
 import { computed } from 'vue'
 
 import { CONDUIT_UI_LABELS } from '~/constants/conduitConstants'
-import type { BadgeVariant } from '~/types/components'
+import { RESULT_BADGE_VARIANT_MAP } from '~/constants/toolOptions'
 import type { ConduitCalcResult } from '~/utils/tools/conduit/conduitCalcLogic'
 import { formatConduitResult } from '~/utils/tools/conduit/conduitResultPresenter'
 
@@ -18,14 +18,6 @@ const props = defineProps<{
 }>()
 
 const vm = computed(() => formatConduitResult(props.result))
-
-const BADGE_VARIANT_MAP: Record<string, BadgeVariant> = {
-  danger: 'red',
-  warning: 'amber',
-  success: 'green',
-  neutral: 'gray',
-  empty: 'gray',
-}
 </script>
 
 <template>
@@ -33,7 +25,7 @@ const BADGE_VARIANT_MAP: Record<string, BadgeVariant> = {
     <div class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="[`is-${vm.status32}`, size === 'sm' && 'is-sm']">
       <header class="tile-header flex items-center justify-center gap-inline-gap">
         <span>{{ CONDUIT_UI_LABELS.TITLE_32 }}</span>
-        <Badge v-if="vm.badge32" :variant="BADGE_VARIANT_MAP[vm.status32]">{{ vm.badge32 }}</Badge>
+        <Badge v-if="vm.badge32" :variant="RESULT_BADGE_VARIANT_MAP[vm.status32]">{{ vm.badge32 }}</Badge>
       </header>
       <output class="tile-value flex items-center justify-center gap-item-gap">
         <span>{{ vm.size32 }}</span>
@@ -44,7 +36,7 @@ const BADGE_VARIANT_MAP: Record<string, BadgeVariant> = {
     <div class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="[`is-${vm.status48}`, size === 'sm' && 'is-sm']">
       <header class="tile-header flex items-center justify-center gap-inline-gap">
         <span>{{ CONDUIT_UI_LABELS.TITLE_48 }}</span>
-        <Badge v-if="vm.badge48" :variant="BADGE_VARIANT_MAP[vm.status48]">{{ vm.badge48 }}</Badge>
+        <Badge v-if="vm.badge48" :variant="RESULT_BADGE_VARIANT_MAP[vm.status48]">{{ vm.badge48 }}</Badge>
       </header>
       <output class="tile-value flex items-center justify-center gap-item-gap">
         <span>{{ vm.size48 }}</span>
@@ -55,7 +47,7 @@ const BADGE_VARIANT_MAP: Record<string, BadgeVariant> = {
     <div class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="[`is-${vm.statusCustom}`, size === 'sm' && 'is-sm']">
       <header class="tile-header flex items-center justify-center gap-inline-gap">
         <span>{{ vm.titleCustom }}</span>
-        <Badge v-if="vm.badgeCustom" :variant="BADGE_VARIANT_MAP[vm.statusCustom]">{{ vm.badgeCustom }}</Badge>
+        <Badge v-if="vm.badgeCustom" :variant="RESULT_BADGE_VARIANT_MAP[vm.statusCustom]">{{ vm.badgeCustom }}</Badge>
       </header>
       <output class="tile-value flex items-center justify-center gap-item-gap">
         <span>{{ vm.sizeCustom }}</span>
@@ -71,69 +63,6 @@ const BADGE_VARIANT_MAP: Record<string, BadgeVariant> = {
 </template>
 
 <style scoped lang="scss">
-.result-tile {
-  padding: var(--space-2) var(--space-3);
-  border: var(--border-width-base) solid var(--color-border);
-
-  background: var(--surface-bg);
-  box-shadow: var(--shadow-sink);
-
-  transition: var(--transition-panel);
-
-  &.is-sm {
-    padding: var(--space-1) var(--space-2);
-
-    .tile-value {
-      font-size: var(--font-size-2xl);
-    }
-  }
-
-  .tile-header {
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-main);
-    letter-spacing: var(--tracking-wide);
-  }
-
-  .tile-value {
-    font-family: var(--font-mono);
-    font-size: var(--font-size-3xl);
-    font-weight: var(--font-weight-bold);
-    font-variant-numeric: tabular-nums;
-    line-height: var(--line-height-tight);
-    color: var(--color-text-main);
-
-    .value-sub {
-      font-family: var(--font-base);
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-normal);
-      color: var(--color-text-secondary);
-    }
-  }
-
-  &.is-success { --status-color: var(--color-status-success); }
-  &.is-warning { --status-color: var(--color-status-warning); }
-  &.is-danger  { --status-color: var(--color-status-danger); }
-
-  &.is-success,
-  &.is-warning,
-  &.is-danger {
-    border-color: color-mix(in srgb, var(--status-color) 40%, transparent);
-
-    .tile-value {
-      color: var(--status-color);
-    }
-  }
-
-  &.is-empty {
-    opacity: 0.6;
-
-    .tile-value {
-      color: var(--color-text-muted);
-    }
-  }
-}
-
 .conduit-notes {
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);

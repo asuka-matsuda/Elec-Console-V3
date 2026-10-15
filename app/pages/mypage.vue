@@ -48,7 +48,7 @@ const assignedSites = computed(() => {
 
       return {
         ...site,
-        role: assignment?.role || currentUser.value?.role || 'worker',
+        role: assignment?.role || 'worker',
       }
     })
 })
@@ -66,8 +66,8 @@ const assignedSites = computed(() => {
 
       <div v-if="!currentUser" class="flex items-center gap-panel-gap">
         <Skeleton circle width="2.5rem" class="shrink-0" />
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-panel-gap flex-1">
-          <div v-for="skeletonIndex in 3" :key="`profile-skeleton-${skeletonIndex}`" class="flex flex-col gap-inline-gap">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-panel-gap flex-1">
+          <div v-for="skeletonIndex in 2" :key="`profile-skeleton-${skeletonIndex}`" class="flex flex-col gap-inline-gap">
             <Skeleton width="3rem" height="0.85rem" />
             <Skeleton width="8rem" height="1.4rem" />
           </div>
@@ -77,32 +77,26 @@ const assignedSites = computed(() => {
       <div v-else class="flex flex-col gap-panel-gap">
         <div class="flex items-center gap-panel-gap">
           <Avatar :text="fullName" size="lg" />
-          <dl class="grid grid-cols-1 sm:grid-cols-3 gap-panel-gap flex-1">
+          <dl class="grid grid-cols-1 sm:grid-cols-2 gap-panel-gap flex-1">
             <div class="flex flex-col gap-inline-gap">
-              <dt class="profile-label">
+              <dt class="label">
                 氏名
               </dt>
               <dd class="flex flex-col">
-                <span class="profile-name">{{ fullName }}</span>
-                <span v-if="kana" class="profile-kana">{{ kana }}</span>
+                <div class="flex items-center gap-item-gap">
+                  <strong>{{ fullName }}</strong>
+                  <Badge v-if="currentUser.loginId === 'master'" :variant="USER_ROLE_CONFIG.master.variant">{{ USER_ROLE_CONFIG.master.label }}</Badge>
+                </div>
+                <small v-if="kana">{{ kana }}</small>
               </dd>
             </div>
 
             <div class="flex flex-col gap-inline-gap">
-              <dt class="profile-label">
+              <dt class="label">
                 ログインID
               </dt>
-              <dd class="profile-id">
-                {{ currentUser.loginId || currentUser.id }}
-              </dd>
-            </div>
-
-            <div class="flex flex-col gap-inline-gap">
-              <dt class="profile-label">
-                基本権限
-              </dt>
-              <dd class="flex items-center">
-                <Badge :variant="USER_ROLE_CONFIG[currentUser.role]?.variant">{{ USER_ROLE_CONFIG[currentUser.role]?.label || currentUser.role }}</Badge>
+              <dd>
+                <code>{{ currentUser.loginId || currentUser.id }}</code>
               </dd>
             </div>
           </dl>
@@ -111,17 +105,17 @@ const assignedSites = computed(() => {
         <hr class="divider">
 
         <div class="flex flex-col gap-item-gap">
-          <small class="profile-label">登録済現場</small>
+          <span class="label">登録済現場</span>
 
           <EmptyState v-if="assignedSites.length === 0" size="sm" icon="map-pin" title="登録されている現場はありません" description="管理者に現場へのアサインを依頼してください。" />
 
           <ul v-else class="flex flex-col gap-item-gap">
             <li v-for="site in assignedSites" :key="site.id">
-              <div class="site-row flex items-center justify-between gap-item-gap flex-wrap p-panel-pad-compact">
+              <div class="panel is-elevated p-panel-pad-compact flex items-center justify-between gap-item-gap flex-wrap">
                 <div class="flex items-center gap-item-gap flex-wrap">
                   <Icon name="map-pin" size="sm" />
-                  <span class="site-name">{{ site.name }}</span>
-                  <small class="site-id">({{ site.id }})</small>
+                  <strong>{{ site.name }}</strong>
+                  <small><code>({{ site.id }})</code></small>
                   <Badge :variant="USER_ROLE_CONFIG[site.role]?.variant">{{ USER_ROLE_CONFIG[site.role]?.label || site.role }}</Badge>
                 </div>
 
@@ -179,56 +173,8 @@ const assignedSites = computed(() => {
       <div class="flex flex-col gap-inline-gap">
         <span class="label">外観モード</span>
         <Switch v-model="themeMode" :options="THEME_SWITCH_OPTIONS" />
-        <span class="help-text">全体の明るさを切り替えます（ダークモード推奨）</span>
+        <small>全体の明るさを切り替えます（ダークモード推奨）</small>
       </div>
     </section>
   </div>
 </template>
-
-<style scoped lang="scss">
-.profile-label {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-muted);
-  letter-spacing: var(--tracking-wider);
-}
-
-.profile-name {
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-main);
-}
-
-.profile-kana {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-}
-
-.profile-id {
-  font-family: var(--font-mono);
-  color: var(--color-text-main);
-}
-
-.site-name {
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-main);
-}
-
-.site-row {
-  border: var(--border-width-base) solid var(--color-border);
-  background-color: var(--surface-bg-elevated);
-}
-
-.site-id {
-  color: var(--color-text-muted);
-}
-
-.error-text {
-  font-size: var(--font-size-xs);
-  color: var(--color-status-danger);
-}
-
-.help-text {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
-}
-</style>

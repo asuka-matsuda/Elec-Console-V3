@@ -36,14 +36,22 @@ function readItemsMetadata(): StoredItemsMetadata {
     return { items: [] }
   }
 
+  const raw = fs.readFileSync(ITEMS_METADATA_FILE, 'utf-8')
+
+  if (!raw.trim()) {
+    return { items: [] }
+  }
+
   try {
-    const raw = fs.readFileSync(ITEMS_METADATA_FILE, 'utf-8')
     const parsed = JSON.parse(raw)
 
     return Array.isArray(parsed?.items) ? parsed : { items: [] }
   }
-  catch {
-    return { items: [] }
+  catch (err) {
+    throw new Error(
+      `マスターテンプレート定義ファイルが破損しています: ${err instanceof Error ? err.message : String(err)}`,
+      { cause: err },
+    )
   }
 }
 
@@ -135,7 +143,6 @@ export async function saveMasterTemplateItem(params: {
   originalFilename?: string
 }): Promise<MasterReportTemplateItem> {
   const dir = getMasterTemplatesDir()
-  const meta = readItemsMetadata()
 
   if (params.id && !isValidTemplateId(params.id)) {
     throw new Error('無効なテンプレートIDです。半角英数字、ハイフン、アンダースコアのみ使用できます。')
@@ -144,7 +151,7 @@ export async function saveMasterTemplateItem(params: {
   const id = params.id || `tpl-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`
   const now = new Date().toISOString()
 
-  let fileInfo: ReportTemplateRegisteredFile
+  let uploadedFileInfo: ReportTemplateRegisteredFile | null = null
 
   // ファイルがアップロードされている場合
   if (params.fileBuffer && params.originalFilename) {
@@ -169,14 +176,21 @@ export async function saveMasterTemplateItem(params: {
 
     const stat = await fs.promises.stat(targetPath)
 
-    fileInfo = {
+    uploadedFileInfo = {
       filename: rawBaseFilename,
       size: stat.size,
       updatedAt: stat.mtime.toISOString(),
     }
   }
+
+  // 非同期ファイルI/O完了後に最新のメタデータを読み込んで更新（競合防止）
+  const meta = readItemsMetadata()
+  let fileInfo: ReportTemplateRegisteredFile
+
+  if (uploadedFileInfo) {
+    fileInfo = uploadedFileInfo
+  }
   else {
-    // 既存アイテムのファイル情報を維持
     const existing = meta.items.find(item => item.id === id)
 
     if (!existing) {
@@ -240,41 +254,4 @@ export async function deleteMasterTemplateItem(id: string): Promise<boolean> {
   }
 
   return false
-}
-
-// --- 旧互換関数（テストや既存呼び出しの保護） ---
-export function getAllMasterTemplatesMeta(): Record<string, ReportTemplateRegisteredFile> {
-  const items = getAllMasterTemplateItems()
-  const result: Record<string, ReportTemplateRegisteredFile> = {}
-
-  for (const item of items) {
-    result[item.id] = item.file
-  }
-
-  return result
-}
-
-export function getMasterTemplateFilePath(id: string): string | null {
-  return getMasterTemplateItemFilePath(id)
-}
-
-export async function saveMasterTemplate(
-  id: string,
-  fileBuffer: Buffer,
-  originalFilename: string,
-): Promise<ReportTemplateRegisteredFile> {
-  const item = await saveMasterTemplateItem({
-    id,
-    name: id,
-    logicType: (['tag', 'socket-tepra', 'exam', 'remote'].includes(id) ? id : 'tag') as ReportLogicType,
-    fileBuffer,
-    originalFilename,
-    isAllSites: true,
-  })
-
-  return item.file
-}
-
-export async function deleteMasterTemplate(id: string): Promise<boolean> {
-  return deleteMasterTemplateItem(id)
 }

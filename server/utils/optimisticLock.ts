@@ -60,6 +60,7 @@ interface AtomicUpdateCircuitParams {
   expectedVersion?: number | null
   expectedUpdatedAt?: string | null
   data: Prisma.CircuitUpdateManyMutationInput
+  tx?: Prisma.TransactionClient
 }
 
 /**
@@ -69,11 +70,12 @@ interface AtomicUpdateCircuitParams {
 export async function atomicUpdateCircuit(
   params: AtomicUpdateCircuitParams,
 ): Promise<Circuit> {
-  const { circuitId, siteId, expectedVersion, expectedUpdatedAt, data } = params
+  const { circuitId, siteId, expectedVersion, expectedUpdatedAt, data, tx } = params
+  const db = tx || prisma
 
   // 1. バージョン番号が渡されている場合は updateMany による 1 クエリ・アトミック更新を実行
   if (typeof expectedVersion === 'number') {
-    const result = await prisma.circuit.updateMany({
+    const result = await db.circuit.updateMany({
       where: {
         id: circuitId,
         siteId,
@@ -87,7 +89,7 @@ export async function atomicUpdateCircuit(
 
     if (result.count === 0) {
       // 更新件数が 0 件 = 対象が存在しない、またはバージョン不一致による競合
-      const currentCircuit = await prisma.circuit.findFirst({
+      const currentCircuit = await db.circuit.findFirst({
         where: { id: circuitId, siteId },
       })
 
@@ -107,13 +109,13 @@ export async function atomicUpdateCircuit(
       })
     }
 
-    return await prisma.circuit.findUniqueOrThrow({
+    return await db.circuit.findUniqueOrThrow({
       where: { id: circuitId },
     })
   }
 
-  // 2. expectedVersion が指定されていない場合は更新日時 (expectedUpdatedAt) による検証と更新
-  const circuit = await prisma.circuit.findFirst({
+  // 2. expectedVersion が指定されていない場合は更新日時 (expectedUpdatedAt) による検証と CAS 更新
+  const circuit = await db.circuit.findFirst({
     where: { id: circuitId, siteId },
   })
 
@@ -126,11 +128,40 @@ export async function atomicUpdateCircuit(
 
   checkOptimisticLock(circuit, expectedUpdatedAt)
 
-  return await prisma.circuit.update({
-    where: { id: circuitId },
+  const casResult = await db.circuit.updateMany({
+    where: {
+      id: circuitId,
+      siteId,
+      version: circuit.version,
+    },
     data: {
       ...data,
       version: { increment: 1 },
     },
+  })
+
+  if (casResult.count === 0) {
+    const latest = await db.circuit.findFirst({
+      where: { id: circuitId, siteId },
+    })
+
+    if (!latest) {
+      throw createAppError({
+        code: ErrorCode.CIRCUIT_NOT_FOUND,
+        message: '指定された回路が見つかりません。',
+      })
+    }
+
+    throw createAppError({
+      code: ErrorCode.CIRCUIT_VERSION_CONFLICT,
+      message: '他の作業者（または別端末）によってこの回路のデータが更新されています。最新のデータを反映しました。確認の上、再度実行してください。',
+      details: {
+        currentCircuit: latest,
+      },
+    })
+  }
+
+  return await db.circuit.findUniqueOrThrow({
+    where: { id: circuitId },
   })
 }

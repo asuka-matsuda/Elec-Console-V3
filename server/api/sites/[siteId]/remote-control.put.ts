@@ -3,10 +3,13 @@
  * PUT /api/sites/:siteId/remote-control
  */
 
-import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
+import { defineEventHandler, getRouterParam, readBody } from 'h3'
 
-import type { RemoteControlConfig } from '../../../../shared/types/remoteControl'
+import { ErrorCode } from '#shared/types/errors'
+import type { RemoteControlConfig } from '#shared/types/remoteControl'
+
 import { requireSiteRole } from '../../../utils/auth'
+import { createAppError } from '../../../utils/error'
 import { serializeRemoteControlConfig } from '../../../utils/jsonFields'
 import { prisma } from '../../../utils/prisma'
 
@@ -16,13 +19,20 @@ export default defineEventHandler(async (event) => {
   const siteId = getRouterParam(event, 'siteId')
 
   if (!siteId) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: '現場IDが指定されていません',
     })
   }
 
-  const body = await readBody<RemoteControlConfig>(event)
+  const body = await readBody<RemoteControlConfig>(event).catch(() => null)
+
+  if (!body || typeof body !== 'object') {
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
+      message: 'リクエストボディが不正です。',
+    })
+  }
 
   const serialized = serializeRemoteControlConfig(body)
 

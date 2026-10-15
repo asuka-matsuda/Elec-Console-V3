@@ -6,10 +6,13 @@
  * @permission 管理者・マスター限定
  */
 
-import { createError, defineEventHandler, getRouterParam } from 'h3'
+import { defineEventHandler, getRouterParam } from 'h3'
 import { z } from 'zod'
 
+import { ErrorCode } from '#shared/types/errors'
+
 import { requireSiteAdmin } from '../../../utils/auth'
+import { createAppError } from '../../../utils/error'
 import { parseNoBreakWords, serializeNoBreakWords } from '../../../utils/jsonFields'
 import { prisma } from '../../../utils/prisma'
 import { validateRequestBody } from '../../../utils/validation'
@@ -22,8 +25,8 @@ export default defineEventHandler(async (event) => {
   const siteId = getRouterParam(event, 'siteId')
 
   if (!siteId) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: '現場IDが指定されていません。',
     })
   }

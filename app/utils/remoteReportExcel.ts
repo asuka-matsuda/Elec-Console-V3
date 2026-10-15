@@ -1,11 +1,16 @@
 /**
  * リモコン設定表 Excel 帳票生成エンジン
  *
- * @description 回路台帳から負荷アドレス一覧を抽出し、
- * リモコン設定表テンプレート（アドレス表、グループ設定表、パターン設定表）へ
- * 盤名称・負荷名称・グループ割り当て・パターン割り当てを流し込みます。
+ * @description 回路台帳から抽出されたアドレスデータ（0-1〜63-4）を、
+ * 原本テンプレート（リモコン設定表）へ流し込みます。
+ *
+ * 【原本完全保護 Direct Template Engine】
+ * ExcelJS による再生成や後付け ZIP パッチを行わず、原本の OOXML / ZIP パッケージを
+ * 直接開いてデータセルと回路記号のみを規格完全準拠で注入します。
+ * これにより、印刷範囲（$A$1:$I$308）、44行ごとの手動改ページ、拡大縮小率、
+ * 条件付き書式（DXF）、および原本に存在する直線コネクタ図形を 100% 無傷で保護します。
  */
-import type ExcelJS from 'exceljs'
+import JSZip from 'jszip'
 
 import type {
   RemoteCircuitItem,
@@ -15,20 +20,14 @@ import type {
   RemotePatternSummary,
 } from '#shared/types/remoteControl'
 import {
-  cellValueToString,
   findPreferredWorksheet,
-  normalizeHeaderName,
 } from '#shared/utils/excelNormalize'
 import { extractRemoteCircuitsFromWorksheet } from '#shared/utils/remoteCircuits'
+import { generateCircuitSymbolPng } from '~/utils/circuitSymbolImage'
 import { getExcelJS } from '~/utils/excelHelper'
 
-import { formatDateTime } from './date'
-
-type ExcelJSModule = typeof ExcelJS
-
 /**
- * 回路台帳Excel（または原本Excel）から伝送系統ごとに 0-1〜63-4 の256スロットを構築
- * ヒットする回路は盤名称・回路記号・回路番号・負荷名称をマッピングし、ヒットしないアドレスは「空き」とする。
+ * 回路台帳Excelから伝送系統ごとに 0-1〜63-4 の256スロットを構築
  */
 export async function extractRemoteCircuitsFromExcel(
   excelBuffer: ArrayBuffer | Uint8Array,
@@ -36,7 +35,7 @@ export async function extractRemoteCircuitsFromExcel(
   const ExcelJS = await getExcelJS()
   const workbook = new ExcelJS.Workbook()
 
-  await workbook.xlsx.load(excelBuffer as unknown as ExcelJS.Buffer)
+  await workbook.xlsx.load(excelBuffer as unknown as Parameters<typeof workbook.xlsx.load>[0])
 
   const sheet = findPreferredWorksheet(workbook)
 
@@ -64,7 +63,6 @@ export function buildGroupSummaries(
       }
     }
 
-    // アドレスソート (例: 1-1, 1-2, 2-1 ...)
     addrs.sort((a, b) => {
       const [a1, a2] = a.split('-').map(Number)
       const [b1, b2] = b.split('-').map(Number)
@@ -78,7 +76,7 @@ export function buildGroupSummaries(
       groupNumber: g,
       groupKey,
       addresses: addrs,
-      addressText: addrs.join('  '), // 半角スペース2つ区切り
+      addressText: addrs.join('  '),
       remarks: config.groupRemarks?.[groupKey] || '',
     })
   }
@@ -127,12 +125,20 @@ export function buildPatternSummaries(
   return summaries
 }
 
+export interface RemoteSymbolOptions {
+  enabled?: boolean
+  width?: number
+  height?: number
+}
+
 export interface GenerateRemoteReportOptions {
   templateBuffer?: ArrayBuffer | Uint8Array | null
   circuits: RemoteCircuitItem[]
   config: RemoteControlConfig
   siteName?: string
   exportTarget?: RemoteExportTarget
+  selectedDenso?: string
+  symbolOptions?: RemoteSymbolOptions
 }
 
 export interface RemoteReportResult {
@@ -144,740 +150,375 @@ export interface RemoteReportResult {
 }
 
 /**
- * リモコン設定表 Excel 帳票を生成（アドレス表、グループ、パターンの3パターンに対応）
- * テンプレートExcelが指定された場合はそのテンプレートへ流し込み、
- * 指定されない場合は高品位な新規ワークブックを自動生成します。
+ * リモコン設定表 Excel 帳票を生成（Direct Template Engine 方式）
  */
 export async function generateRemoteReportExcel(
   options: GenerateRemoteReportOptions,
 ): Promise<RemoteReportResult> {
-  const { templateBuffer, circuits, config, siteName = '', exportTarget } = options
+  const { templateBuffer, circuits, config, siteName = '', selectedDenso, symbolOptions } = options
 
-  const ExcelJS = await getExcelJS()
-  let workbook: ExcelJS.Workbook
+  const configuredGroups = Object.values(config.assignments).filter(a => a.groups && a.groups.length > 0).length
+  const configuredPatterns = Object.values(config.assignments).filter(a => a.patterns && a.patterns.length > 0).length
 
-  if (templateBuffer) {
-    workbook = new ExcelJS.Workbook()
-    await workbook.xlsx.load(templateBuffer as unknown as ExcelJS.Buffer)
+  // 伝送系統フィルタの適用とアドレスマップの構築（fukaAddress: '0-1', '0-2', ...）
+  const filteredCircuits = selectedDenso
+    ? circuits.filter(c => !c.densoKeiTo || c.densoKeiTo === selectedDenso)
+    : circuits
 
-    // 回路のマップ構築（キー: fukaAddress, uniqueKey, denso:fukaAddress）
-    const circuitMap = new Map<string, RemoteCircuitItem>()
+  const circuitMap = new Map<string, RemoteCircuitItem>()
 
-    circuits.forEach((c) => {
+  filteredCircuits.forEach((c) => {
+    if (c.fukaAddress) {
       circuitMap.set(c.fukaAddress.trim(), c)
-      circuitMap.set(c.uniqueKey, c)
-      circuitMap.set(`${c.densoKeiTo}:${c.fukaAddress}`, c)
-    })
+    }
+  })
 
-    // グループ集計・パターン集計
-    const groupSummaries = buildGroupSummaries(config)
-    const patternSummaries = buildPatternSummaries(config)
+  // 1. テンプレートが存在する場合は Direct ZIP/XML Engine で原本を完全保護して直接書き込む
+  if (templateBuffer) {
+    const zip = await JSZip.loadAsync(templateBuffer)
 
-    const groupTextMap = new Map<string, string>()
-    const groupMeishoMap = new Map<string, string>()
+    // sharedStrings.xml の読み込み（A列のアドレスが共有文字列 t="s" の場合に対応）
+    const sharedStrings: string[] = []
+    const sharedStringsXml = await zip.file('xl/sharedStrings.xml')?.async('string')
 
-    groupSummaries.forEach((g) => {
-      groupTextMap.set(g.groupKey.toUpperCase(), g.addressText)
-      groupTextMap.set(String(g.groupNumber), g.addressText)
+    if (sharedStringsXml) {
+      const siMatches = sharedStringsXml.matchAll(/<si>([\s\S]*?)<\/si>/g)
 
-      const meishos = g.addresses
-        .map(addr => circuitMap.get(addr)?.kairoMeisho || '')
-        .filter(m => m && m !== '空き' && m !== '-')
-      const meishoText = meishos.join('  ')
+      for (const siMatch of siMatches) {
+        const textParts: string[] = []
+        const tMatches = (siMatch[1] || '').matchAll(/<t[^>]*>([\s\S]*?)<\/t>/g)
 
-      groupMeishoMap.set(g.groupKey.toUpperCase(), meishoText)
-      groupMeishoMap.set(String(g.groupNumber), meishoText)
-    })
-
-    const patternTextMap = new Map<string, string>()
-    const patternMeishoMap = new Map<string, string>()
-
-    patternSummaries.forEach((p) => {
-      patternTextMap.set(normalizeHeaderName(p.patternKey), p.addressText)
-
-      const meishos = p.addresses
-        .map(addr => circuitMap.get(addr)?.kairoMeisho || '')
-        .filter(m => m && m !== '空き' && m !== '-')
-
-      patternMeishoMap.set(normalizeHeaderName(p.patternKey), meishos.join('  '))
-    })
-
-    // 各シートの流し込み処理
-    workbook.worksheets.forEach((sheet) => {
-      const sName = sheet.name
-
-      // A. グループ設定表シートの処理
-      if (/ｸﾞﾙｰﾌﾟ|グループ/i.test(sName)) {
-        fillGroupSettingSheet(sheet, groupTextMap, groupMeishoMap, siteName)
-      }
-      // B. パターン設定表シートの処理
-      else if (/ﾊﾟﾀｰﾝ|パターン/i.test(sName)) {
-        fillPatternSettingSheet(sheet, patternTextMap, patternMeishoMap, siteName)
-      }
-      // C. アドレス表シートの処理
-      else if (/ｱﾄﾞﾚｽ表|アドレス表/i.test(sName)) {
-        fillAddressTableSheet(sheet, circuitMap, config, siteName)
-      }
-    })
-
-    // 3パターン指定時（'address' | 'group' | 'pattern'）に対象外シートを削除
-    if (exportTarget) {
-      const sheetsToRemove: ExcelJS.Worksheet[] = []
-
-      workbook.worksheets.forEach((sheet) => {
-        const sName = sheet.name
-        const isMatch
-          = (exportTarget === 'group' && /ｸﾞﾙｰﾌﾟ|グループ/i.test(sName))
-            || (exportTarget === 'pattern' && /ﾊﾟﾀｰﾝ|パターン/i.test(sName))
-            || (exportTarget === 'address' && /ｱﾄﾞﾚｽ表|アドレス表/i.test(sName))
-
-        if (!isMatch) {
-          sheetsToRemove.push(sheet)
+        for (const tm of tMatches) {
+          textParts.push(tm[1] || '')
         }
-      })
-
-      // 対象シートが存在する場合のみ他シートを削除（全削除で空ブックになるのを防ぐ）
-      if (sheetsToRemove.length < workbook.worksheets.length) {
-        sheetsToRemove.forEach((s) => {
-          workbook.removeWorksheet(s.id)
-        })
+        sharedStrings.push(textParts.join('').trim())
       }
     }
-  }
-  else {
-    // テンプレートが指定されていない場合: 新規ワークブックを自動生成
-    workbook = createNewRemoteReportWorkbook(ExcelJS, {
-      circuits,
-      config,
-      siteName,
-      exportTarget: exportTarget || 'address',
+
+    // 対象のワークシート XML を特定（sheet1.xml 等）
+    let sheetPath = 'xl/worksheets/sheet1.xml'
+    const sheetFiles = Object.keys(zip.files).filter(k => /^xl\/worksheets\/sheet\d+\.xml$/.test(k))
+
+    if (sheetFiles.length > 0 && !zip.file(sheetPath)) {
+      sheetPath = sheetFiles[0]!
+    }
+
+    let sheetXml = await zip.file(sheetPath)?.async('string')
+
+    if (!sheetXml) {
+      throw new Error('テンプレート内に有効なワークシートXMLが見つかりません')
+    }
+
+    const symbolRows: Array<{ r: number, kigou: string }> = []
+
+    // 行 5〜308（アドレス 0-1 〜 63-4 の計 256 回路）を直接走査・置換
+    sheetXml = sheetXml.replace(/<row[^>]*r="(\d+)"[\s\S]*?<\/row>/g, (rowStr, rStr) => {
+      const r = parseInt(rStr, 10)
+
+      if (r < 5 || r > 308) return rowStr
+
+      // A列のセルからアドレスを探す（インライン文字列 <t> または共有文字列 t="s" <v>）
+      const aCellMatch = rowStr.match(/<c r="A\d+"([^>]*)>([\s\S]*?)<\/c>/)
+      let addrFromCell = ''
+
+      if (aCellMatch) {
+        const cAttrs = aCellMatch[1] || ''
+        const cBody = aCellMatch[2] || ''
+        const tMatch = cBody.match(/<t[^>]*>([^<]+)<\/t>/)
+
+        if (tMatch && tMatch[1]) {
+          addrFromCell = tMatch[1].trim()
+        }
+        else if (/\bt="s"/.test(cAttrs)) {
+          const vMatch = cBody.match(/<v>(\d+)<\/v>/)
+
+          if (vMatch && vMatch[1]) {
+            const sstIdx = parseInt(vMatch[1], 10)
+
+            addrFromCell = sharedStrings[sstIdx] || ''
+          }
+        }
+      }
+
+      const offset = r - 5
+      const primary = Math.floor(offset / 4)
+      const secondary = (offset % 4) + 1
+      const calculatedAddr = `${primary}-${secondary}`
+      const addr = addrFromCell && /^\d+-\d+$/.test(addrFromCell) ? addrFromCell : calculatedAddr
+
+      const c = circuitMap.get(addr)
+
+      let banVal = ''
+      let bangouVal = ''
+      let relayVal = ''
+      let meishoVal = ''
+      let dousaVal = ''
+
+      if (c) {
+        banVal = c.banMeisho || ''
+
+        if (c.isVacant && !c.kairoBangou) {
+          // T/U余りスロット（盤名はあるが回路未割り当て）
+          bangouVal = '-'
+          relayVal = '-'
+          meishoVal = '-'
+          dousaVal = '-'
+        }
+        else {
+          bangouVal = c.kairoBangou || ''
+          relayVal = c.relayNumber || ''
+          // 回路名称の改行を半角スペースに正規化
+          meishoVal = c.kairoMeisho
+            ? c.kairoMeisho.replace(/[\r\n]+/g, ' ').replace(/\s+/g, ' ').trim()
+            : ''
+          // 動作良否: 入力行は「良」、回路番号が「-」なら「-」
+          dousaVal = bangouVal === '-' ? '-' : (bangouVal ? '良' : '')
+
+          if (symbolOptions?.enabled !== false && c.kairoKigou && bangouVal && bangouVal !== '-') {
+            symbolRows.push({ r, kigou: c.kairoKigou.trim() })
+          }
+        }
+      }
+
+      rowStr = updateXmlCell(rowStr, `C${r}`, banVal)
+      rowStr = updateXmlCell(rowStr, `D${r}`, bangouVal)
+      rowStr = updateXmlCell(rowStr, `E${r}`, relayVal)
+      rowStr = updateXmlCell(rowStr, `F${r}`, meishoVal)
+      rowStr = updateXmlCell(rowStr, `H${r}`, dousaVal)
+
+      return rowStr
     })
+
+    zip.file(sheetPath, sheetXml)
+
+    // 回路記号画像（PNG）の注入（既存の図形 ID と衝突しないよう一意に採番）
+    if (symbolRows.length > 0) {
+      await injectCircuitSymbolsIntoZip(zip, symbolRows, symbolOptions)
+    }
+
+    const outBuffer = await zip.generateAsync({ type: 'uint8array' })
+    const filename = `${siteName ? `${siteName}_` : ''}リモコン設定表.xlsx`
+
+    return {
+      buffer: outBuffer,
+      filename,
+      totalAddresses: circuitMap.size,
+      configuredGroups,
+      configuredPatterns,
+    }
   }
+
+  // 2. テンプレート未指定時（単体テスト等）の生成
+  return generateWorkbookFallback({
+    circuits: filteredCircuits,
+    config,
+    siteName,
+    configuredGroups,
+    configuredPatterns,
+  })
+}
+
+/**
+ * OOXML の row XML 内の指定セル（r="C5" 等）の値をインライン文字列または空セルに安全に更新
+ */
+function updateXmlCell(rowXml: string, cellRef: string, text: string): string {
+  const cellRegex = new RegExp(`<c r="${cellRef}"([^>]*)>([\\s\\S]*?)<\\/c>|<c r="${cellRef}"([^>]*)\\/>`)
+  const match = rowXml.match(cellRegex)
+
+  if (!match) return rowXml
+
+  // 既存のスタイル属性 (s="...") を温存
+  const attrStr = match[1] || match[3] || ''
+  const styleMatch = attrStr.match(/s="(\d+)"/)
+  const styleAttr = styleMatch ? ` s="${styleMatch[1]}"` : ''
+
+  if (!text) {
+    return rowXml.replace(
+      cellRegex,
+      `<c r="${cellRef}"${styleAttr} t="inlineStr"><is><t xml:space="preserve"></t></is></c>`,
+    )
+  }
+
+  const escapedText = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+
+  return rowXml.replace(
+    cellRegex,
+    `<c r="${cellRef}"${styleAttr} t="inlineStr"><is><t xml:space="preserve">${escapedText}</t></is></c>`,
+  )
+}
+
+const TRANSPARENT_1X1_PNG_BASE64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+
+/**
+ * ZIP 内の drawing1.xml に回路記号（Canvas PNG）を安全に注入
+ */
+async function injectCircuitSymbolsIntoZip(
+  zip: JSZip,
+  symbolRows: Array<{ r: number, kigou: string }>,
+  symbolOptions?: RemoteSymbolOptions,
+): Promise<void> {
+  let drawingXml = (await zip.file('xl/drawings/drawing1.xml')?.async('string')) || ''
+
+  if (!drawingXml) {
+    drawingXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<xdr:wsDr xmlns:xdr="http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"></xdr:wsDr>'
+  }
+
+  // 既存の図形 ID を走査し、最大 ID を取得（原本の斜線図形 id=38, 39 との衝突を完全に防止）
+  let maxId = 0
+  const idMatches = drawingXml.matchAll(/<xdr:cNvPr[^>]*\sid="(\d+)"/g)
+
+  for (const m of idMatches) {
+    const idNum = parseInt(m[1] || '0', 10)
+
+    if (idNum > maxId) maxId = idNum
+  }
+
+  const relsPath = 'xl/drawings/_rels/drawing1.xml.rels'
+  let relsXml = (await zip.file(relsPath)?.async('string')) || ''
+
+  if (!relsXml) {
+    relsXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">\n</Relationships>'
+  }
+
+  let nextRelId = 1
+  const existingRIds = relsXml.matchAll(/Id="rId(\d+)"/g)
+
+  for (const m of existingRIds) {
+    const rNum = parseInt(m[1] || '0', 10)
+
+    if (rNum >= nextRelId) nextRelId = rNum + 1
+  }
+
+  const symWidthPx = symbolOptions?.width && symbolOptions.width > 0 ? symbolOptions.width : 24
+  const symHeightPx = symbolOptions?.height && symbolOptions.height > 0 ? symbolOptions.height : 24
+  const cxEmu = Math.round(symWidthPx * 9525)
+  const cyEmu = Math.round(symHeightPx * 9525)
+
+  const symbolImageRelMap = new Map<string, string>()
+  const newAnchors: string[] = []
+
+  for (const { r, kigou } of symbolRows) {
+    if (!symbolImageRelMap.has(kigou)) {
+      const pngDataUrl = generateCircuitSymbolPng(kigou, {
+        width: Math.max(32, symWidthPx),
+        height: Math.max(24, symHeightPx),
+      })
+      const base64Data = pngDataUrl
+        ? pngDataUrl.replace(/^data:image\/png;base64,/, '')
+        : TRANSPARENT_1X1_PNG_BASE64
+      const sanitizedKigou = kigou.replace(/[^a-zA-Z0-9_-]/g, '_')
+      const mediaName = `symbol_${sanitizedKigou}.png`
+      const mediaPath = `xl/media/${mediaName}`
+
+      zip.file(mediaPath, base64Data, { base64: true })
+
+      const rId = `rId_sym_${nextRelId++}`
+      const newRel = `  <Relationship Id="${rId}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="../media/${mediaName}"/>`
+
+      relsXml = relsXml.replace('</Relationships>', `${newRel}\n</Relationships>`)
+      symbolImageRelMap.set(kigou, rId)
+    }
+
+    const rId = symbolImageRelMap.get(kigou)!
+    const shapeId = ++maxId
+
+    // D列（col=3）、該当行（r-1）に指定サイズ（EMU）で配置
+    // ECMA-376 規格に完全準拠（editAs なし）
+    const anchorXml = `  <xdr:oneCellAnchor>
+    <xdr:from>
+      <xdr:col>3</xdr:col>
+      <xdr:colOff>60000</xdr:colOff>
+      <xdr:row>${r - 1}</xdr:row>
+      <xdr:rowOff>10000</xdr:rowOff>
+    </xdr:from>
+    <xdr:ext cx="${cxEmu}" cy="${cyEmu}"/>
+    <xdr:pic>
+      <xdr:nvPicPr>
+        <xdr:cNvPr id="${shapeId}" name="Symbol ${kigou}"/>
+        <xdr:cNvPicPr>
+          <a:picLocks noChangeAspect="1"/>
+        </xdr:cNvPicPr>
+      </xdr:nvPicPr>
+      <xdr:blipFill>
+        <a:blip xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" r:embed="${rId}"/>
+        <a:stretch><a:fillRect/></a:stretch>
+      </xdr:blipFill>
+      <xdr:spPr>
+        <a:xfrm><a:off x="0" y="0"/><a:ext cx="${cxEmu}" cy="${cyEmu}"/></a:xfrm>
+        <a:prstGeom prst="rect"><a:avLst/></a:prstGeom>
+      </xdr:spPr>
+    </xdr:pic>
+    <xdr:clientData/>
+  </xdr:oneCellAnchor>`
+
+    newAnchors.push(anchorXml)
+  }
+
+  if (newAnchors.length > 0) {
+    drawingXml = drawingXml.replace('</xdr:wsDr>', `${newAnchors.join('\n')}\n</xdr:wsDr>`)
+    zip.file('xl/drawings/drawing1.xml', drawingXml)
+    zip.file(relsPath, relsXml)
+
+    let contentTypesXml = (await zip.file('[Content_Types].xml')?.async('string')) || ''
+
+    if (!contentTypesXml.includes('Extension="png"')) {
+      contentTypesXml = contentTypesXml.replace(
+        '</Types>',
+        '  <Default Extension="png" ContentType="image/png"/>\n</Types>',
+      )
+      zip.file('[Content_Types].xml', contentTypesXml)
+    }
+  }
+}
+
+/**
+ * テンプレートなし（またはテスト環境）用の最小フォールバック生成
+ */
+async function generateWorkbookFallback(context: {
+  circuits: RemoteCircuitItem[]
+  config: RemoteControlConfig
+  siteName: string
+  configuredGroups: number
+  configuredPatterns: number
+}): Promise<RemoteReportResult> {
+  const ExcelJS = await getExcelJS()
+  const workbook = new ExcelJS.Workbook()
+  const sheet = workbook.addWorksheet('アドレス設定表')
+
+  sheet.getRow(4).values = ['アドレス番号', '', '盤名称', '回路番号', 'リレー番号', '負荷名称', '', '動作確認']
+
+  context.circuits.forEach((c, idx) => {
+    const rowNum = 5 + idx
+    const isTuSpare = c.isVacant && !c.kairoBangou
+    const bangou = isTuSpare ? '-' : (c.kairoBangou || '')
+    const relay = isTuSpare ? '-' : (c.relayNumber || '')
+    const meisho = isTuSpare ? '-' : (c.kairoMeisho ? c.kairoMeisho.replace(/[\r\n]+/g, ' ').trim() : '')
+    const dousa = bangou === '-' ? '-' : (bangou ? '良' : '')
+
+    sheet.getRow(rowNum).values = [
+      c.fukaAddress || '',
+      '',
+      c.banMeisho || '',
+      bangou,
+      relay,
+      meisho,
+      '',
+      dousa,
+    ]
+  })
 
   const buffer = await workbook.xlsx.writeBuffer()
-  const groupSummaries = buildGroupSummaries(config)
-  const patternSummaries = buildPatternSummaries(config)
-  const configuredGroups = groupSummaries.filter(g => g.addresses.length > 0).length
-  const configuredPatterns = patternSummaries.filter(p => p.addresses.length > 0).length
-
-  let targetSuffix = 'リモコン設定表'
-
-  if (exportTarget === 'address') targetSuffix = 'リモコン設定表_アドレス表'
-  else if (exportTarget === 'group') targetSuffix = 'リモコン設定表_グループ設定'
-  else if (exportTarget === 'pattern') targetSuffix = 'リモコン設定表_パターン設定'
-
-  const filename = `${siteName ? `${siteName}_` : ''}${targetSuffix}_${circuits.length}件.xlsx`
+  const filename = `${context.siteName ? `${context.siteName}_` : ''}リモコン設定表.xlsx`
 
   return {
     buffer: new Uint8Array(buffer),
     filename,
-    totalAddresses: circuits.length,
-    configuredGroups,
-    configuredPatterns,
+    totalAddresses: context.circuits.length,
+    configuredGroups: context.configuredGroups,
+    configuredPatterns: context.configuredPatterns,
   }
-}
-
-/**
- * テンプレートなし時に新規ワークブックを自動生成（アドレス表、グループ、パターンの3パターンに対応）
- */
-function createNewRemoteReportWorkbook(
-  ExcelJS: ExcelJSModule,
-  options: {
-    circuits: RemoteCircuitItem[]
-    config: RemoteControlConfig
-    siteName: string
-    exportTarget?: RemoteExportTarget
-  },
-): ExcelJS.Workbook {
-  const { circuits, config, siteName, exportTarget } = options
-  const workbook = new ExcelJS.Workbook()
-  const now = new Date(Date.now())
-
-  workbook.creator = 'Elec-Console'
-  workbook.lastModifiedBy = 'Elec-Console'
-  workbook.created = now
-  workbook.modified = now
-
-  // 1. アドレス表シート
-  if (!exportTarget || exportTarget === 'address') {
-    createStandaloneAddressSheet(workbook, circuits, config, siteName)
-  }
-
-  // 2. グループ設定表シート
-  if (!exportTarget || exportTarget === 'group') {
-    createStandaloneGroupSheet(workbook, config, siteName)
-  }
-
-  // 3. パターン設定表シート
-  if (!exportTarget || exportTarget === 'pattern') {
-    createStandalonePatternSheet(workbook, config, siteName)
-  }
-
-  return workbook
-}
-
-const HEADER_FILL: ExcelJS.Fill = {
-  type: 'pattern',
-  pattern: 'solid',
-  fgColor: { argb: 'FF1E3A8A' }, // 濃紺
-}
-
-const HEADER_FONT: Partial<ExcelJS.Font> = {
-  name: 'Meiryo',
-  size: 10,
-  bold: true,
-  color: { argb: 'FFFFFFFF' },
-}
-
-const BORDER_STYLE: Partial<ExcelJS.Borders> = {
-  top: { style: 'thin', color: { argb: 'FFE2E8F0' } },
-  left: { style: 'thin', color: { argb: 'FFE2E8F0' } },
-  bottom: { style: 'thin', color: { argb: 'FFE2E8F0' } },
-  right: { style: 'thin', color: { argb: 'FFE2E8F0' } },
-}
-
-/**
- * 新規 アドレス表シートの生成
- */
-function createStandaloneAddressSheet(
-  workbook: ExcelJS.Workbook,
-  circuits: RemoteCircuitItem[],
-  config: RemoteControlConfig,
-  siteName: string,
-) {
-  const sheet = workbook.addWorksheet('アドレス表')
-
-  // タイトル行
-  sheet.mergeCells('A1:I1')
-  const titleCell = sheet.getCell('A1')
-
-  titleCell.value = `リモコン設定 アドレス表 ${siteName ? `[${siteName}]` : ''}`
-  titleCell.font = { name: 'Meiryo', size: 14, bold: true, color: { argb: 'FF0F172A' } }
-  titleCell.alignment = { vertical: 'middle', horizontal: 'left' }
-  sheet.getRow(1).height = 28
-
-  // サブヘッダー（出力日時など）
-  const timestamp = formatDateTime(new Date(Date.now()), '-', { withSeconds: true })
-
-  sheet.getCell('A2').value = `出力日時: ${timestamp} / 総アドレス数: ${circuits.length}件`
-  sheet.getCell('A2').font = { name: 'Meiryo', size: 9, color: { argb: 'FF64748B' } }
-  sheet.getRow(2).height = 18
-
-  // ヘッダー行
-  const headers = [
-    '系統',
-    '負荷アドレス',
-    '盤名称',
-    '記号',
-    '回路番号',
-    '負荷名称',
-    'リレー番号',
-    '設定グループ',
-    '設定パターン',
-  ]
-  const headerRow = sheet.getRow(3)
-
-  headerRow.values = headers
-  headerRow.height = 24
-  headerRow.eachCell((cell) => {
-    cell.fill = HEADER_FILL
-    cell.font = HEADER_FONT
-    cell.alignment = { vertical: 'middle', horizontal: 'center' }
-    cell.border = BORDER_STYLE
-  })
-
-  // 列幅定義
-  sheet.columns = [
-    { key: 'densoKeiTo', width: 8 },
-    { key: 'fukaAddress', width: 14 },
-    { key: 'banMeisho', width: 16 },
-    { key: 'kairoKigou', width: 10 },
-    { key: 'kairoBangou', width: 12 },
-    { key: 'kairoMeisho', width: 32 },
-    { key: 'relayNumber', width: 12 },
-    { key: 'groups', width: 20 },
-    { key: 'patterns', width: 24 },
-  ]
-
-  // データ行追加
-  circuits.forEach((c) => {
-    const assign = config.assignments[c.fukaAddress] || config.assignments[c.uniqueKey]
-    const gText = assign?.groups?.length ? assign.groups.map(g => `G${g}`).join(', ') : ''
-    const pText = assign?.patterns?.length ? assign.patterns.join(', ') : ''
-
-    const row = sheet.addRow([
-      c.densoKeiTo || '1',
-      c.fukaAddress,
-      c.banMeisho || '-',
-      c.kairoKigou || '',
-      c.kairoBangou || '-',
-      c.kairoMeisho || (c.isVacant ? '空き' : '-'),
-      assign?.relayNumber || c.relayNumber || '',
-      gText,
-      pText,
-    ])
-
-    row.height = 20
-    row.eachCell((cell, colNumber) => {
-      cell.font = { name: 'Meiryo', size: 9.5 }
-      cell.border = BORDER_STYLE
-
-      // センタリング設定
-      if ([1, 2, 4, 5, 7].includes(colNumber)) {
-        cell.alignment = { vertical: 'middle', horizontal: 'center' }
-      }
-      else {
-        cell.alignment = { vertical: 'middle', horizontal: 'left' }
-      }
-
-      // 空きスロットの場合は淡い文字色
-      if (c.isVacant) {
-        cell.font = { name: 'Meiryo', size: 9.5, color: { argb: 'FF94A3B8' } }
-      }
-    })
-  })
-}
-
-/**
- * 新規 グループ設定表シートの生成
- */
-function createStandaloneGroupSheet(
-  workbook: ExcelJS.Workbook,
-  config: RemoteControlConfig,
-  siteName: string,
-) {
-  const sheet = workbook.addWorksheet('グループ設定表')
-
-  sheet.mergeCells('A1:D1')
-  const titleCell = sheet.getCell('A1')
-
-  titleCell.value = `リモコン設定 グループ設定表 ${siteName ? `[${siteName}]` : ''}`
-  titleCell.font = { name: 'Meiryo', size: 14, bold: true, color: { argb: 'FF0F172A' } }
-  titleCell.alignment = { vertical: 'middle', horizontal: 'left' }
-  sheet.getRow(1).height = 28
-
-  const timestamp = formatDateTime(new Date(Date.now()), '-', { withSeconds: true })
-
-  sheet.getCell('A2').value = `出力日時: ${timestamp} (G1〜G127 対象アドレス一覧)`
-  sheet.getCell('A2').font = { name: 'Meiryo', size: 9, color: { argb: 'FF64748B' } }
-  sheet.getRow(2).height = 18
-
-  const headers = ['グループ番号', '対象負荷アドレス一覧', '登録数', '備考']
-  const headerRow = sheet.getRow(3)
-
-  headerRow.values = headers
-  headerRow.height = 24
-  headerRow.eachCell((cell) => {
-    cell.fill = HEADER_FILL
-    cell.font = HEADER_FONT
-    cell.alignment = { vertical: 'middle', horizontal: 'center' }
-    cell.border = BORDER_STYLE
-  })
-
-  sheet.columns = [
-    { key: 'groupKey', width: 14 },
-    { key: 'addressText', width: 44 },
-    { key: 'count', width: 10 },
-    { key: 'remarks', width: 24 },
-  ]
-
-  const summaries = buildGroupSummaries(config, 127)
-
-  summaries.forEach((g) => {
-    const row = sheet.addRow([
-      g.groupKey,
-      g.addressText,
-      g.addresses.length > 0 ? g.addresses.length : '',
-      g.remarks || '',
-    ])
-
-    row.height = 20
-    row.eachCell((cell, colNumber) => {
-      cell.font = { name: 'Meiryo', size: 9.5 }
-      cell.border = BORDER_STYLE
-
-      if (colNumber === 1 || colNumber === 3) {
-        cell.alignment = { vertical: 'middle', horizontal: 'center' }
-      }
-      else {
-        cell.alignment = { vertical: 'middle', horizontal: 'left' }
-      }
-
-      if (g.addresses.length === 0) {
-        cell.font = { name: 'Meiryo', size: 9.5, color: { argb: 'FF94A3B8' } }
-      }
-      else if (colNumber === 1) {
-        cell.font = { name: 'Meiryo', size: 9.5, bold: true, color: { argb: 'FF1D4ED8' } }
-      }
-    })
-  })
-}
-
-/**
- * 新規 パターン設定表シートの生成
- */
-function createStandalonePatternSheet(
-  workbook: ExcelJS.Workbook,
-  config: RemoteControlConfig,
-  siteName: string,
-) {
-  const sheet = workbook.addWorksheet('パターン設定表')
-
-  sheet.mergeCells('A1:E1')
-  const titleCell = sheet.getCell('A1')
-
-  titleCell.value = `リモコン設定 パターン設定表 ${siteName ? `[${siteName}]` : ''}`
-  titleCell.font = { name: 'Meiryo', size: 14, bold: true, color: { argb: 'FF0F172A' } }
-  titleCell.alignment = { vertical: 'middle', horizontal: 'left' }
-  sheet.getRow(1).height = 28
-
-  const timestamp = formatDateTime(new Date(Date.now()), '-', { withSeconds: true })
-
-  sheet.getCell('A2').value = `出力日時: ${timestamp} (P1〜P72 ON/OFF 対象アドレス一覧)`
-  sheet.getCell('A2').font = { name: 'Meiryo', size: 9, color: { argb: 'FF64748B' } }
-  sheet.getRow(2).height = 18
-
-  const headers = ['パターン番号', '動作', '対象負荷アドレス一覧', '登録数', '備考']
-  const headerRow = sheet.getRow(3)
-
-  headerRow.values = headers
-  headerRow.height = 24
-  headerRow.eachCell((cell) => {
-    cell.fill = HEADER_FILL
-    cell.font = HEADER_FONT
-    cell.alignment = { vertical: 'middle', horizontal: 'center' }
-    cell.border = BORDER_STYLE
-  })
-
-  sheet.columns = [
-    { key: 'patternKey', width: 14 },
-    { key: 'action', width: 10 },
-    { key: 'addressText', width: 44 },
-    { key: 'count', width: 10 },
-    { key: 'remarks', width: 24 },
-  ]
-
-  const summaries = buildPatternSummaries(config, 72)
-
-  summaries.forEach((p) => {
-    const isON = p.patternKey.endsWith('ON')
-    const action = isON ? 'ON' : 'OFF'
-    const row = sheet.addRow([
-      p.patternKey,
-      action,
-      p.addressText,
-      p.addresses.length > 0 ? p.addresses.length : '',
-      p.remarks || '',
-    ])
-
-    row.height = 20
-    row.eachCell((cell, colNumber) => {
-      cell.font = { name: 'Meiryo', size: 9.5 }
-      cell.border = BORDER_STYLE
-
-      if (colNumber === 1 || colNumber === 2 || colNumber === 4) {
-        cell.alignment = { vertical: 'middle', horizontal: 'center' }
-      }
-      else {
-        cell.alignment = { vertical: 'middle', horizontal: 'left' }
-      }
-
-      if (p.addresses.length === 0) {
-        cell.font = { name: 'Meiryo', size: 9.5, color: { argb: 'FF94A3B8' } }
-      }
-      else if (colNumber === 2) {
-        cell.font = {
-          name: 'Meiryo',
-          size: 9.5,
-          bold: true,
-          color: { argb: isON ? 'FFDC2626' : 'FF2563EB' },
-        }
-      }
-    })
-  })
-}
-
-/**
- * グループ設定表シートの流し込み
- */
-function fillGroupSettingSheet(
-  sheet: ExcelJS.Worksheet,
-  groupTextMap: Map<string, string>,
-  groupMeishoMap: Map<string, string>,
-  siteName: string,
-) {
-  // 件名ヘッダーの反映
-  sheet.eachRow({ includeEmpty: false }, (row) => {
-    row.eachCell({ includeEmpty: false }, (cell) => {
-      const val = cellValueToString(cell.value)
-
-      if (val === '件名' || val === '件　　名') {
-        const nextCell = row.getCell(cell.col + 1)
-
-        if (nextCell && siteName) {
-          nextCell.value = siteName
-        }
-      }
-    })
-  })
-
-  // 各行の走査: G番号の検出と、%アドレス% / %回路名称% セル（または対象アドレス列）への流し込み
-  sheet.eachRow({ includeEmpty: false }, (row) => {
-    let matchedGroupKey: string | null = null
-    let targetAddressCell: ExcelJS.Cell | null = null
-    let targetMeishoCell: ExcelJS.Cell | null = null
-
-    row.eachCell({ includeEmpty: false }, (cell) => {
-      const text = cellValueToString(cell.value).trim()
-
-      // G1, G2 ... の記号判定 (大文字G + 数字)
-      const m = text.match(/^G(\d+)$/i)
-
-      if (m) {
-        matchedGroupKey = `G${m[1]}`
-      }
-
-      // %アドレス% または %対象アドレス% タグの検出（全角・半角対応）
-      if (/[%％](?:アドレス|ｱﾄﾞﾚｽ|対象アドレス|対象ｱﾄﾞﾚｽ)[%％]/i.test(text)) {
-        targetAddressCell = cell
-      }
-
-      // %回路名称% または %負荷名称% タグの検出（全角・半角対応）
-      if (/[%％](?:回路名称|負荷名称|回路名|負荷名)[%％]/i.test(text)) {
-        targetMeishoCell = cell
-      }
-    })
-
-    if (matchedGroupKey) {
-      const addrText = groupTextMap.get(matchedGroupKey) || ''
-      const meishoText = groupMeishoMap.get(matchedGroupKey) || ''
-
-      // 1. %アドレス% タグがあれば最優先でそのセルへ書き込む
-      if (targetAddressCell) {
-        (targetAddressCell as ExcelJS.Cell).value = addrText
-      }
-      else {
-        // 2. タグがなければ、標準の「対象アドレス」列（通常C列/Col 3）へ書き込む
-        const col3Cell = row.getCell(3)
-
-        col3Cell.value = addrText
-      }
-
-      // 3. %回路名称% / %負荷名称% タグがあれば名称一覧を書き込む
-      if (targetMeishoCell) {
-        (targetMeishoCell as ExcelJS.Cell).value = meishoText
-      }
-
-      // 「動作確認 / 良否」列（通常Col 8）があれば、アドレスが存在する場合に「良」をセット
-      if (addrText) {
-        const actionCell = row.getCell(8)
-
-        if (actionCell && (!actionCell.value || actionCell.value === '良')) {
-          actionCell.value = '良'
-        }
-      }
-    }
-  })
-}
-
-/**
- * パターン設定表シートの流し込み
- */
-function fillPatternSettingSheet(
-  sheet: ExcelJS.Worksheet,
-  patternTextMap: Map<string, string>,
-  patternMeishoMap: Map<string, string>,
-  siteName: string,
-) {
-  sheet.eachRow({ includeEmpty: false }, (row) => {
-    row.eachCell({ includeEmpty: false }, (cell) => {
-      const val = cellValueToString(cell.value)
-
-      if (val === '件名' || val === '件　　名') {
-        const nextCell = row.getCell(cell.col + 1)
-
-        if (nextCell && siteName) {
-          nextCell.value = siteName
-        }
-      }
-    })
-  })
-
-  sheet.eachRow({ includeEmpty: false }, (row) => {
-    let matchedPatternKey: string | null = null
-    let targetAddressCell: ExcelJS.Cell | null = null
-    let targetMeishoCell: ExcelJS.Cell | null = null
-
-    row.eachCell({ includeEmpty: false }, (cell) => {
-      const text = cellValueToString(cell.value).trim()
-
-      // P1 ON, P1 OFF などの記号判定
-      const norm = normalizeHeaderName(text)
-
-      if (/^p\d+(on|off)$/.test(norm)) {
-        matchedPatternKey = norm
-      }
-
-      if (/[%％](?:アドレス|ｱﾄﾞﾚｽ|対象アドレス|対象ｱﾄﾞﾚｽ)[%％]/i.test(text)) {
-        targetAddressCell = cell
-      }
-
-      if (/[%％](?:回路名称|負荷名称|回路名|負荷名)[%％]/i.test(text)) {
-        targetMeishoCell = cell
-      }
-    })
-
-    if (matchedPatternKey) {
-      const addrText = patternTextMap.get(matchedPatternKey) || ''
-      const meishoText = patternMeishoMap.get(matchedPatternKey) || ''
-
-      if (targetAddressCell) {
-        (targetAddressCell as ExcelJS.Cell).value = addrText
-      }
-      else {
-        const col3Cell = row.getCell(3)
-
-        col3Cell.value = addrText
-      }
-
-      if (targetMeishoCell) {
-        (targetMeishoCell as ExcelJS.Cell).value = meishoText
-      }
-
-      if (addrText) {
-        const actionCell = row.getCell(8)
-
-        if (actionCell && (!actionCell.value || actionCell.value === '良')) {
-          actionCell.value = '良'
-        }
-      }
-    }
-  })
-}
-
-/**
- * アドレス表シートの流し込み
- */
-function fillAddressTableSheet(
-  sheet: ExcelJS.Worksheet,
-  circuitMap: Map<string, RemoteCircuitItem>,
-  config: RemoteControlConfig,
-  _siteName: string,
-) {
-  // ヘッダー行と各列のインデックス特定
-  let headerRowIndex = 3
-  let fukaAddrCol = -1
-  let banMeishoCol = -1
-  let kairoBangouCol = -1
-  let kairoMeishoCol = -1
-  let groupCol = -1
-  let relayCol = -1
-
-  for (let r = 1; r <= Math.min(sheet.rowCount || 5, 5); r++) {
-    const row = sheet.getRow(r)
-
-    row.eachCell({ includeEmpty: false }, (cell, colNumber) => {
-      const text = cellValueToString(cell.value)
-      const norm = normalizeHeaderName(text).replace(/[%％]/g, '')
-
-      if (/負荷アドレス|負荷ｱﾄﾞﾚｽ/.test(norm)) {
-        fukaAddrCol = colNumber
-        headerRowIndex = r
-      }
-      else if (/盤名称|盤名/.test(norm)) {
-        banMeishoCol = colNumber
-      }
-      else if (/回路番号/.test(norm)) {
-        kairoBangouCol = colNumber
-      }
-      else if (/負荷名称|回路名称/.test(norm)) {
-        kairoMeishoCol = colNumber
-      }
-      else if (/グループ設定|ｸﾞﾙｰﾌﾟ設定/.test(norm)) {
-        if (groupCol === -1) groupCol = colNumber
-      }
-      else if (/リレー番号|ﾘﾚｰ番号/.test(norm)) {
-        relayCol = colNumber
-      }
-    })
-    if (fukaAddrCol !== -1) break
-  }
-
-  if (fukaAddrCol === -1) return
-
-  // G1〜G127 のフラグ列マップ構築（例: Col 11 -> 1, Col 12 -> 2 ...）
-  const gColMap = new Map<number, number>()
-  const headerRow = sheet.getRow(headerRowIndex)
-
-  headerRow.eachCell({ includeEmpty: false }, (cell, colNumber) => {
-    const text = cellValueToString(cell.value).trim()
-    const m = text.match(/^G(\d+)$/i)
-
-    if (m && m[1]) {
-      gColMap.set(colNumber, parseInt(m[1], 10))
-    }
-  })
-
-  // 各データ行の走査
-  sheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
-    if (rowNumber <= headerRowIndex) return
-
-    const addrCell = row.getCell(fukaAddrCol)
-    const addr = cellValueToString(addrCell.value).trim()
-
-    if (!addr || addr === '-') return
-
-    const cItem = circuitMap.get(addr)
-    const assign = config.assignments[addr]
-
-    // 盤名称
-    if (banMeishoCol !== -1 && cItem?.banMeisho) {
-      row.getCell(banMeishoCol).value = cItem.banMeisho
-    }
-    // 回路番号
-    if (kairoBangouCol !== -1 && cItem?.kairoBangou) {
-      row.getCell(kairoBangouCol).value = cItem.kairoBangou
-    }
-    // 負荷名称 / 回路名称
-    if (kairoMeishoCol !== -1 && cItem?.kairoMeisho) {
-      row.getCell(kairoMeishoCol).value = cItem.kairoMeisho
-    }
-    // リレー番号
-    if (relayCol !== -1 && assign?.relayNumber) {
-      row.getCell(relayCol).value = assign.relayNumber
-    }
-
-    // グループ設定列（例: "1, 3"）
-    if (groupCol !== -1 && assign?.groups && assign.groups.length > 0) {
-      row.getCell(groupCol).value = assign.groups.join(', ')
-    }
-
-    // G1〜G127 列のフラグ設定
-    if (gColMap.size > 0 && assign?.groups) {
-      const gSet = new Set(assign.groups)
-
-      gColMap.forEach((gNum, colNum) => {
-        if (gSet.has(gNum)) {
-          row.getCell(colNum).value = true
-        }
-      })
-    }
-
-    // セル内に直接 %回路名称% や ％回路名称％ などのタグが残っている場合も置換
-    row.eachCell({ includeEmpty: false }, (cell) => {
-      const val = cell.value
-
-      if (typeof val === 'string' && (val.includes('%') || val.includes('％'))) {
-        let str = val
-
-        str = str.replace(/[%％](?:回路名称|負荷名称|回路名|負荷名)[%％]/g, cItem?.kairoMeisho || '')
-        str = str.replace(/[%％](?:盤名称|盤名)[%％]/g, cItem?.banMeisho || '')
-        str = str.replace(/[%％](?:回路番号)[%％]/g, cItem?.kairoBangou || '')
-        str = str.replace(/[%％](?:リレー番号|ﾘﾚｰ番号)[%％]/g, assign?.relayNumber || cItem?.relayNumber || '')
-        str = str.replace(/[%％](?:負荷アドレス|負荷ｱﾄﾞﾚｽ|アドレス|ｱﾄﾞﾚｽ)[%％]/g, addr)
-        str = str.replace(/[%％](?:グループ設定|ｸﾞﾙｰﾌﾟ設定)[%％]/g, assign?.groups?.length ? assign.groups.join(', ') : '')
-        cell.value = str
-      }
-    })
-  })
 }

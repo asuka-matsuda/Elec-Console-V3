@@ -55,12 +55,14 @@ export interface RackCalcResult {
 /**
  * ケーブル外径と条数から、外径降順のケーブル直径リストを生成する
  */
+const MAX_CABLE_COUNT_PER_ROW = 500
+
 function getCableDiameters(cables: RackCableInput[]): number[] {
   const diams: number[] = []
 
   for (const cable of cables) {
     const d = cable.d ?? 0
-    const n = cable.n ?? 0
+    const n = Math.min(Math.max(0, Math.floor(cable.n ?? 0)), MAX_CABLE_COUNT_PER_ROW)
 
     if (d > 0 && n > 0) {
       for (let i = 0; i < n; i++) {

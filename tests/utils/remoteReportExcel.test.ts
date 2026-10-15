@@ -1,4 +1,5 @@
 import ExcelJS from 'exceljs'
+import JSZip from 'jszip'
 import { describe, expect, it } from 'vitest'
 
 import type { RemoteCircuitItem, RemoteControlConfig } from '#shared/types/remoteControl'
@@ -98,84 +99,7 @@ describe('remoteReportExcel', () => {
     expect(c01.kairoBangou).toBe('-')
   })
 
-  it('generateRemoteReportExcel: 該当G/Pの%アドレス%セル（または対象列）へ正しく流し込まれること', async () => {
-    const templateWb = new ExcelJS.Workbook()
-
-    // 1. グループ設定表シート
-    const grpSheet = templateWb.addWorksheet('ｸﾞﾙｰﾌﾟ設定表')
-
-    grpSheet.getRow(3).values = ['グループ番号', '', '対象アドレス', '', '', '', '', '動作確認']
-    grpSheet.getRow(4).values = ['G1', '', '%アドレス%', '', '', '', '', '']
-    grpSheet.getRow(5).values = ['G2', '', '%アドレス%', '', '', '', '', '']
-
-    // 2. パターン設定表シート
-    const patSheet = templateWb.addWorksheet('ﾊﾟﾀｰﾝ設定表')
-
-    patSheet.getRow(3).values = ['ﾊﾟﾀｰﾝ番号', '', '対象アドレス', '', '', '', '', '動作確認']
-    patSheet.getRow(4).values = ['P1 ON', '', '%アドレス%', '', '', '', '', '']
-    patSheet.getRow(5).values = ['P1 OFF', '', '%アドレス%', '', '', '', '', '']
-
-    // 3. アドレス表シート
-    const adrSheet = templateWb.addWorksheet('ｱﾄﾞﾚｽ表')
-
-    adrSheet.getRow(3).values = ['管理番号', '盤名称', '回路番号', 'ﾘﾚｰ番号', '負荷ｱﾄﾞﾚｽ', '負荷名称', 'ｸﾞﾙｰﾌﾟ設定']
-    adrSheet.getRow(4).values = ['1', '', '', '', '1-1', '', '']
-    adrSheet.getRow(5).values = ['2', '', '', '', '1-2', '', '']
-
-    const templateBuffer = await templateWb.xlsx.writeBuffer()
-
-    const dummyCircuits: RemoteCircuitItem[] = [
-      { id: '1', siteId: 's1', banMeisho: '1L-1', kairoBangou: '1', kairoMeisho: '事務所照明', fukaAddress: '1-1' },
-      { id: '2', siteId: 's1', banMeisho: '1L-1', kairoBangou: '2', kairoMeisho: '倉庫照明', fukaAddress: '1-2' },
-    ]
-
-    const config: RemoteControlConfig = {
-      assignments: {
-        '1-1': { groups: [1, 2], patterns: ['P1 ON'] },
-        '1-2': { groups: [1], patterns: [] },
-      },
-    }
-
-    const result = await generateRemoteReportExcel({
-      templateBuffer,
-      circuits: dummyCircuits,
-      config,
-      siteName: 'テスト現場',
-    })
-
-    expect(result.totalAddresses).toBe(2)
-    expect(result.configuredGroups).toBe(2)
-    expect(result.configuredPatterns).toBe(1)
-
-    // 出力Excelを読み込んでセル値を検証
-    const outWb = new ExcelJS.Workbook()
-
-    await outWb.xlsx.load(result.buffer as unknown as ExcelJS.Buffer)
-
-    // グループ設定表の検証
-    const outGrp = outWb.getWorksheet('ｸﾞﾙｰﾌﾟ設定表')!
-
-    expect(outGrp.getCell('C4').value).toBe('1-1  1-2') // G1: 1-1, 1-2
-    expect(outGrp.getCell('H4').value).toBe('良')
-    expect(outGrp.getCell('C5').value).toBe('1-1') // G2: 1-1
-    expect(outGrp.getCell('H5').value).toBe('良')
-
-    // パターン設定表の検証
-    const outPat = outWb.getWorksheet('ﾊﾟﾀｰﾝ設定表')!
-
-    expect(outPat.getCell('C4').value).toBe('1-1') // P1 ON: 1-1
-    expect(outPat.getCell('H4').value).toBe('良')
-
-    // アドレス表の検証
-    const outAdr = outWb.getWorksheet('ｱﾄﾞﾚｽ表')!
-
-    expect(outAdr.getCell('B4').value).toBe('1L-1')
-    expect(outAdr.getCell('C4').value).toBe('1')
-    expect(outAdr.getCell('F4').value).toBe('事務所照明')
-    expect(outAdr.getCell('G4').value).toBe('1, 2')
-  })
-
-  it('generateRemoteReportExcel: テンプレートなしで新規ワークブックを生成し、アドレス表シートが正しく含まれること', async () => {
+  it('generateRemoteReportExcel: テンプレートなしで新規ワークブックを生成し、アドレス設定表シートが正しく含まれること', async () => {
     const dummyCircuits: RemoteCircuitItem[] = [
       { id: '1', siteId: 's1', uniqueKey: '1:0-1', densoKeiTo: '1', banMeisho: '-', kairoBangou: '-', kairoMeisho: '空き', fukaAddress: '0-1', isVacant: true },
       { id: '2', siteId: 's1', uniqueKey: '1:1-1', densoKeiTo: '1', banMeisho: '1L-1', kairoBangou: '1-R1', kairoMeisho: '事務所照明', fukaAddress: '1-1', isVacant: false },
@@ -191,66 +115,210 @@ describe('remoteReportExcel', () => {
       circuits: dummyCircuits,
       config,
       siteName: 'テスト現場',
-      exportTarget: 'address',
     })
 
     const wb = new ExcelJS.Workbook()
 
-    await wb.xlsx.load(result.buffer as unknown as ExcelJS.Buffer)
+    await wb.xlsx.load(result.buffer as unknown as Parameters<typeof wb.xlsx.load>[0])
 
-    expect(wb.worksheets.map(s => s.name)).toEqual(['アドレス表'])
+    expect(wb.worksheets.map(s => s.name)).toEqual(['アドレス設定表'])
+    expect(result.filename).toBe('テスト現場_リモコン設定表.xlsx')
 
-    const adrSheet = wb.getWorksheet('アドレス表')!
+    const adrSheet = wb.getWorksheet('アドレス設定表')!
 
-    expect(adrSheet.getCell('A1').value).toContain('リモコン設定 アドレス表 [テスト現場]')
-    expect(adrSheet.rowCount).toBeGreaterThanOrEqual(5) // タイトル + サブ + ヘッダー + 2データ行
+    expect(adrSheet.rowCount).toBeGreaterThanOrEqual(6)
   })
 
-  it('generateRemoteReportExcel: 3パターンの個別出力（アドレス表、グループ、パターン）が正しく行われること', async () => {
+  it('generateRemoteReportExcel: アドレス設定表シートで改行置換・T/U余り・完全空きスロット・回路記号配置が正しく動作すること', async () => {
+    const templateWb = new ExcelJS.Workbook()
+    const adrSheet = templateWb.addWorksheet('アドレス設定表')
+
+    // 4行目: ヘッダー
+    adrSheet.getRow(4).values = ['アドレス番号', '', '盤名称', '回路番号', 'リレー番号', '負荷名称']
+    // 5行目: 通常回路 (0-1)
+    adrSheet.getRow(5).values = ['0-1', '', '%盤名称%', '%回路番号%', '%リレー番号%', '%回路名称%']
+    // 6行目: T/U余り (0-2: 盤名あり・回路なし)
+    adrSheet.getRow(6).values = ['0-2', '', '%盤名称%', '%回路番号%', '%リレー番号%', '%回路名称%']
+    // 7行目: 完全空きスロット (0-3: 回路なし・盤名なし)
+    adrSheet.getRow(7).values = ['0-3', '', '%盤名称%', '%回路番号%', '%リレー番号%', '%回路名称%']
+
+    const templateBuffer = await templateWb.xlsx.writeBuffer()
+
     const dummyCircuits: RemoteCircuitItem[] = [
-      { id: '1', siteId: 's1', uniqueKey: '1:1-1', densoKeiTo: '1', banMeisho: '1L-1', kairoBangou: '1', kairoMeisho: '事務所', fukaAddress: '1-1', isVacant: false },
+      {
+        id: '1',
+        siteId: 's1',
+        banMeisho: '1L-1',
+        kairoBangou: '1',
+        kairoKigou: '丸',
+        kairoMeisho: '事務室\n照明\n(200V)',
+        fukaAddress: '0-1',
+        relayNumber: 'R1',
+        isVacant: false,
+      },
+      {
+        id: '2',
+        siteId: 's1',
+        banMeisho: '1L-1',
+        kairoBangou: '',
+        kairoMeisho: '',
+        fukaAddress: '0-2',
+        isVacant: true,
+      },
     ]
+
     const config: RemoteControlConfig = {
-      assignments: { '1-1': { groups: [1], patterns: ['P1 ON'] } },
+      assignments: {
+        '0-1': { groups: [1], patterns: [] },
+      },
     }
 
-    // 1. アドレス表のみ
-    const resAddr = await generateRemoteReportExcel({
+    const result = await generateRemoteReportExcel({
+      templateBuffer,
       circuits: dummyCircuits,
       config,
-      siteName: '現場A',
-      exportTarget: 'address',
+      siteName: 'テスト現場',
+      symbolOptions: {
+        enabled: true,
+        width: 41,
+        height: 24,
+      },
     })
-    const wbAddr = new ExcelJS.Workbook()
 
-    await wbAddr.xlsx.load(resAddr.buffer as unknown as ExcelJS.Buffer)
-    expect(wbAddr.worksheets.map(s => s.name)).toEqual(['アドレス表'])
-    expect(resAddr.filename).toContain('アドレス表')
+    const outWb = new ExcelJS.Workbook()
 
-    // 2. グループ設定表のみ
-    const resGrp = await generateRemoteReportExcel({
-      circuits: dummyCircuits,
-      config,
-      siteName: '現場A',
-      exportTarget: 'group',
+    await outWb.xlsx.load(result.buffer as unknown as ExcelJS.Buffer)
+    const outSheet = outWb.getWorksheet('アドレス設定表')!
+
+    expect(outSheet).toBeDefined()
+
+    // 5行目: 通常回路
+    expect(outSheet.getCell('C5').value).toBe('1L-1')
+    expect(outSheet.getCell('D5').value).toBe('1')
+    expect(outSheet.getCell('E5').value).toBe('R1')
+    // 回路名称の改行が半角スペースに置換されていること (回答1)
+    expect(outSheet.getCell('F5').value).toBe('事務室 照明 (200V)')
+
+    // 6行目: T/U余り (回答3: 盤名あり・回路なしは「-」)
+    expect(outSheet.getCell('C6').value).toBe('1L-1')
+    expect(outSheet.getCell('D6').value).toBe('-')
+    expect(outSheet.getCell('E6').value).toBe('-')
+    expect(outSheet.getCell('F6').value).toBe('-')
+
+    // 7行目: 完全空きスロット (回答3: 回路なし・盤名なしは空白)
+    expect(outSheet.getCell('C7').value ?? '').toBe('')
+    expect(outSheet.getCell('D7').value ?? '').toBe('')
+    expect(outSheet.getCell('E7').value ?? '').toBe('')
+    expect(outSheet.getCell('F7').value ?? '').toBe('')
+  })
+
+  it('generateRemoteReportExcel: Direct Template Engine による 100% 完全保護（印刷範囲・改ページ・原本図形・スタイル）をインメモリテンプレートで検証', async () => {
+    const templateZip = new JSZip()
+
+    templateZip.file('xl/styles.xml', '<styleSheet><numFmts count="1"/><fonts count="1"/><cellXfs count="1"/></styleSheet>')
+    templateZip.file('xl/workbook.xml', '<workbook><sheets><sheet name="アドレス設定表" sheetId="1" r:id="rId1"/></sheets><definedNames><definedName name="_xlnm.Print_Area" localSheetId="0">\'アドレス設定表\'!$A$1:$I$308</definedName></definedNames></workbook>')
+    templateZip.file('xl/worksheets/sheet1.xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+  <sheetData>
+    <row r="5">
+      <c r="A5" t="inlineStr"><is><t>0-1</t></is></c>
+      <c r="C5" s="10"/>
+      <c r="D5" s="10"/>
+      <c r="E5" s="10"/>
+      <c r="F5" s="10"/>
+      <c r="H5" s="10"/>
+    </row>
+    <row r="6">
+      <c r="A6" t="inlineStr"><is><t>0-2</t></is></c>
+      <c r="C6" s="10"/>
+      <c r="D6" s="10"/>
+      <c r="E6" s="10"/>
+      <c r="F6" s="10"/>
+      <c r="H6" s="10"/>
+    </row>
+  </sheetData>
+  <rowBreaks count="1" manualBreakCount="1">
+    <brk id="48" max="16383" man="1"/>
+  </rowBreaks>
+</worksheet>`)
+    templateZip.file('xl/drawings/drawing1.xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xdr:wsDr xmlns:xdr="http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
+  <xdr:twoCellAnchor><xdr:cxnSp><xdr:nvCxnSpPr><xdr:cNvPr id="38" name="Connector 38"/></xdr:nvCxnSpPr></xdr:cxnSp></xdr:twoCellAnchor>
+  <xdr:twoCellAnchor><xdr:cxnSp><xdr:nvCxnSpPr><xdr:cNvPr id="39" name="Connector 39"/></xdr:nvCxnSpPr></xdr:cxnSp></xdr:twoCellAnchor>
+</xdr:wsDr>`)
+
+    const templateBuffer = await templateZip.generateAsync({ type: 'nodebuffer' })
+
+    const result = await generateRemoteReportExcel({
+      templateBuffer,
+      circuits: [
+        {
+          uniqueKey: '1L-1-1',
+          densoKeiTo: '1',
+          fukaAddress: '0-1',
+          banMeisho: '1L-1',
+          kairoBangou: '1',
+          kairoMeisho: '事務室\n照明\n(200V)',
+          kairoKigou: 'dl',
+          relayNumber: 'R1',
+          isVacant: false,
+        },
+        {
+          uniqueKey: '1L-1-2',
+          densoKeiTo: '1',
+          fukaAddress: '0-2',
+          banMeisho: '1L-1',
+          kairoBangou: '',
+          kairoMeisho: '',
+          relayNumber: '',
+          isVacant: true, // T/U余り
+        },
+      ],
+      config: { assignments: {} } as RemoteControlConfig,
+      siteName: 'テスト現場',
+      symbolOptions: {
+        enabled: true,
+      },
     })
-    const wbGrp = new ExcelJS.Workbook()
 
-    await wbGrp.xlsx.load(resGrp.buffer as unknown as ExcelJS.Buffer)
-    expect(wbGrp.worksheets.map(s => s.name)).toEqual(['グループ設定表'])
-    expect(resGrp.filename).toContain('グループ設定')
+    const origZip = await JSZip.loadAsync(templateBuffer)
+    const outZip = await JSZip.loadAsync(result.buffer)
 
-    // 3. パターン設定表のみ
-    const resPat = await generateRemoteReportExcel({
-      circuits: dummyCircuits,
-      config,
-      siteName: '現場A',
-      exportTarget: 'pattern',
-    })
-    const wbPat = new ExcelJS.Workbook()
+    // 1. styles.xml が原本と 100% 同一（DXF や numFmt の改変・破壊がゼロ）
+    const origStyles = await origZip.file('xl/styles.xml')!.async('string')
+    const outStyles = await outZip.file('xl/styles.xml')!.async('string')
 
-    await wbPat.xlsx.load(resPat.buffer as unknown as ExcelJS.Buffer)
-    expect(wbPat.worksheets.map(s => s.name)).toEqual(['パターン設定表'])
-    expect(resPat.filename).toContain('パターン設定')
+    expect(outStyles).toBe(origStyles)
+
+    // 2. workbook.xml が原本と 100% 同一（印刷範囲 $A$1:$I$308 の改変・破壊がゼロ）
+    const origWbXml = await origZip.file('xl/workbook.xml')!.async('string')
+    const outWbXml = await outZip.file('xl/workbook.xml')!.async('string')
+
+    expect(outWbXml).toBe(origWbXml)
+
+    // 3. 改ページ (rowBreaks) が原本と 100% 同一（手動改ページの破壊がゼロ）
+    const origSheetXml = await origZip.file('xl/worksheets/sheet1.xml')!.async('string')
+    const outSheetXml = await outZip.file('xl/worksheets/sheet1.xml')!.async('string')
+    const origBreaks = origSheetXml.match(/<rowBreaks[\s\S]*?<\/rowBreaks>/)?.[0]
+    const outBreaks = outSheetXml.match(/<rowBreaks[\s\S]*?<\/rowBreaks>/)?.[0]
+
+    expect(outBreaks).toBe(origBreaks)
+
+    // 4. drawing1.xml に原本のコネクタ（id=38, 39）が温存され、新しい回路記号（id=40）が競合なく追加されていること
+    const outDrawing = await outZip.file('xl/drawings/drawing1.xml')!.async('string')
+
+    expect(outDrawing).toContain('id="38"')
+    expect(outDrawing).toContain('id="39"')
+    expect(outDrawing).toContain('id="40"')
+    expect(outDrawing).toContain('Symbol dl')
+
+    // 5. C5, D5, E5, F5, H5 および C6, D6, E6, F6, H6 のデータ検証
+    expect(outSheetXml).toContain('1L-1')
+    expect(outSheetXml).toContain('事務室 照明 (200V)') // 改行が半角スペースに整形
+    expect(outSheetXml).toContain('良') // 通常行の動作良否
+    expect(outSheetXml).toContain('R1')
+
+    // ファイル名がシンプルであること
+    expect(result.filename).toBe('テスト現場_リモコン設定表.xlsx')
   })
 })

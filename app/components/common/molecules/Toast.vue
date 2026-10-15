@@ -7,10 +7,37 @@
  * - インラインアクションボタン（action / cancel）をサポート
  * - 支援アクセシビリティ属性（aria-*, role）は規約により除外
  */
+import { nextTick, ref, watch } from 'vue'
+
 import { useToast } from '~/composables/useToast'
 import type { ToastItem, ToastType } from '~/types/components'
 
 const { toasts, remove } = useToast()
+const containerRef = ref<HTMLElement | null>(null)
+
+watch(
+  () => toasts.value.length,
+  (len) => {
+    if (len > 0) {
+      void nextTick(() => {
+        const el = containerRef.value
+
+        if (el && typeof el.showPopover === 'function') {
+          try {
+            if (el.matches(':popover-open')) {
+              el.hidePopover()
+            }
+            el.showPopover()
+          }
+          catch {
+            // Popover API 非対応環境または状態遷移中の安全ガード
+          }
+        }
+      })
+    }
+  },
+  { immediate: true },
+)
 
 const getToastIcon = (type: ToastType) => {
   switch (type) {
@@ -43,7 +70,7 @@ const handleCancel = async (toast: ToastItem) => {
 </script>
 
 <template>
-  <div class="toast-container fixed bottom-6 right-6 z-[1080] flex flex-col gap-item-gap max-w-sm w-full p-layout-pad">
+  <div ref="containerRef" popover="manual" class="toast-container fixed bottom-6 right-6 z-[1080] flex flex-col gap-item-gap max-w-sm w-full p-layout-pad">
     <TransitionGroup name="toast">
       <div v-for="toast in toasts" :key="toast.id" class="toast-card flex items-center justify-between gap-item-gap" :class="`is-${toast.type}`">
         <div class="flex items-center gap-inline-gap min-w-0 flex-1">
@@ -72,6 +99,17 @@ const handleCancel = async (toast: ToastItem) => {
 <style scoped lang="scss">
 .toast-container {
   pointer-events: none;
+
+  inset: auto 1.5rem 1.5rem auto;
+
+  margin: 0;
+  border: none;
+
+  background: transparent;
+
+  &:not(:popover-open) {
+    display: flex;
+  }
 }
 
 .toast-card {

@@ -78,6 +78,8 @@ export interface VoltageCalcResult {
   optimal: CableData | null
   /** 許容電流のみを満たす最小ケーブルデータ */
   minAmpacityCable: CableData | null
+  /** 電圧降下のみを満たす最小ケーブルデータ */
+  minAreaCable?: CableData | null
   /** 最終有効許容電流 (A) */
   finalEffAmp: number
   /** 最終電圧降下 (V) */

@@ -35,7 +35,7 @@ const gaugeLabel = computed(() => {
     return '全試験完了率'
   }
   if (selectedFloor.value === '__UNSET__') {
-    return 'フロア未設定 完了率'
+    return 'エリア未設定 完了率'
   }
 
   return `${selectedFloor.value} 完了率`
@@ -149,7 +149,7 @@ onMounted(() => {
               <span>総合進捗</span>
             </h3>
             <div v-if="floorOptions.length > 1" class="flex items-center gap-inline-gap">
-              <label for="filter-souden-floor" class="shrink-0 label">フロア:</label>
+              <label for="filter-souden-floor" class="shrink-0 label">エリア:</label>
               <Select
                 id="filter-souden-floor"
                 v-model="selectedFloor"
@@ -176,14 +176,14 @@ onMounted(() => {
                 <Gauge class="shrink-0" :value="stats[group.pctKey]" size="md" :label="group.label" />
                 <ul class="flex flex-1 flex-col gap-form-row-gap w-full">
                   <li v-for="item in getGroupData(group.keiTo, stats).phases" :key="item.phase" class="flex flex-col gap-inline-gap">
-                    <div class="phase-row-header flex items-center justify-between">
+                    <div class="flex items-center justify-between">
                       <div class="flex items-center gap-item-gap">
-                        <span class="phase-title">{{ item.title }}</span>
+                        <strong>{{ item.title }}</strong>
                         <Button v-if="siteId" variant="secondary" size="sm" :to="`/portal/${siteId}/phase${item.phase}?kei_to=${group.keiTo}`">試験を入力する</Button>
                       </div>
-                      <div class="phase-stat flex items-center gap-item-gap">
+                      <div class="flex items-center gap-item-gap tabular-nums">
                         <span><strong>{{ item.completed }}</strong> / {{ getGroupData(group.keiTo, stats).total }}</span>
-                        <span class="stat-pct">({{ item.pct }}%)</span>
+                        <strong>({{ item.pct }}%)</strong>
                         <small v-if="getGroupData(group.keiTo, stats).excluded > 0">(除外: {{ getGroupData(group.keiTo, stats).excluded }})</small>
                       </div>
                     </div>
@@ -200,24 +200,3 @@ onMounted(() => {
     </template>
   </div>
 </template>
-
-<style scoped lang="scss">
-.phase-row-header {
-  font-size: var(--font-size-xs);
-}
-
-.phase-title {
-  font-weight: var(--font-weight-medium, 500);
-  color: var(--color-text-main);
-}
-
-.phase-stat {
-  font-family: var(--font-mono);
-  color: var(--color-text-muted);
-
-  strong,
-  .stat-pct {
-    color: var(--color-text-main);
-  }
-}
-</style>

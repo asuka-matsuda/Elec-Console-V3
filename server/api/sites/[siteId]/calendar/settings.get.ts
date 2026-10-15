@@ -9,8 +9,10 @@
 import { defineEventHandler, getRouterParam } from 'h3'
 
 import { DEFAULT_CALENDAR_EVENT_TYPES } from '#shared/types/calendar'
+import { ErrorCode } from '#shared/types/errors'
 
 import { requireSiteAccess } from '../../../../utils/auth'
+import { createAppError } from '../../../../utils/error'
 import { parseCustomHolidays, parseEventTypes, parseHolidayDays } from '../../../../utils/jsonFields'
 import { prisma } from '../../../../utils/prisma'
 
@@ -19,7 +21,12 @@ export default defineEventHandler(async (event) => {
 
   const siteId = getRouterParam(event, 'siteId')
 
-  if (!siteId) return null
+  if (!siteId) {
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
+      message: '現場IDが指定されていません',
+    })
+  }
 
   const setting = await prisma.calendarSettings.findUnique({
     where: { siteId },

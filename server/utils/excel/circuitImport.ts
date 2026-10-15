@@ -12,6 +12,7 @@ import ExcelJS from 'exceljs'
 
 import { determineSetsuchiType } from '#shared/utils/soudenExam'
 
+import { serializeExcludedCircuits } from '../jsonFields'
 import { prisma } from '../prisma'
 import { getCellString, isKansen, parseP2Value } from './cellFormat'
 import { detectCircuitColumns, findCircuitSheet, makeCircuitKey } from './circuitMapping'
@@ -126,9 +127,12 @@ export async function importCircuitsFromExcel(
   workerName: string = 'システム管理者',
   mode: 'merge' | 'reset' = 'merge',
   fileNameHint?: string,
+  savedFilePath?: string,
 ): Promise<ImportCircuitResult> {
   const isBuffer = Buffer.isBuffer(rawSource)
-  const filePath = typeof rawSource === 'string' && rawSource.trim() ? validateSafeExcelPath(rawSource) : ''
+  const filePath = isBuffer
+    ? (savedFilePath ? validateSafeExcelPath(savedFilePath, siteId) : '')
+    : (typeof rawSource === 'string' && rawSource.trim() ? validateSafeExcelPath(rawSource, siteId) : '')
   const sourceLabel = isBuffer ? (fileNameHint ? `ファイル「${fileNameHint}」` : 'アップロードExcel') : `Excel(${filePath})`
 
   if (!isBuffer && !fs.existsSync(filePath)) {
@@ -205,19 +209,28 @@ export async function importCircuitsFromExcel(
 
     const p1Worker = getColStr(row, colMap.p1Worker) || null
     const p1DateRaw = getColVal(row, colMap.p1ConfirmedAt)
-    const p1ConfirmedAt = parseExcelDate(p1DateRaw) || (p1Worker ? new Date() : null)
+    const p1ConfirmedAt = parseExcelDate(p1DateRaw)
 
     const p2Worker = getColStr(row, colMap.p2Worker) || null
     const p2DateRaw = getColVal(row, colMap.p2ConfirmedAt)
-    const p2ConfirmedAt = parseExcelDate(p2DateRaw) || (p2Worker ? new Date() : null)
+    const p2ConfirmedAt = parseExcelDate(p2DateRaw)
 
     const p3Worker = getColStr(row, colMap.p3Worker) || null
     const p3DateRaw = getColVal(row, colMap.p3ConfirmedAt)
-    const p3ConfirmedAt = parseExcelDate(p3DateRaw) || (p3Worker ? new Date() : null)
+    const p3ConfirmedAt = parseExcelDate(p3DateRaw)
 
-    const vRs = parseFloat(getColStr(row, colMap.denatsuRs)) || null
-    const vSt = parseFloat(getColStr(row, colMap.denatsuSt)) || null
-    const vRt = parseFloat(getColStr(row, colMap.denatsuRt)) || null
+    const parseVoltage = (str: string): number | null => {
+      const trimmed = str.trim()
+
+      if (!trimmed) return null
+      const num = parseFloat(trimmed)
+
+      return Number.isFinite(num) ? num : null
+    }
+
+    const vRs = parseVoltage(getColStr(row, colMap.denatsuRs))
+    const vSt = parseVoltage(getColStr(row, colMap.denatsuSt))
+    const vRt = parseVoltage(getColStr(row, colMap.denatsuRt))
     const kensou = getColStr(row, colMap.kensou) || null
 
     const haidenHoushiki = getColStr(row, colMap.haidenHoushiki) || null
@@ -294,18 +307,19 @@ export async function importCircuitsFromExcel(
 
   // Setting シートの「除外ﾘｽﾄ」テーブルから除外キーワードを自動抽出
   const extractedExcludedKeywords = extractExcludedKeywordsFromWorkbook(workbook)
+  const serializedExcluded = serializeExcludedCircuits(extractedExcludedKeywords)
 
   const settingsUpdateData: Prisma.SiteSettingsUpdateInput = {}
 
   if (filePath) settingsUpdateData.excelPath = filePath
-  if (extractedExcludedKeywords.length > 0) {
-    settingsUpdateData.excludedCircuits = JSON.stringify(extractedExcludedKeywords)
+  if (serializedExcluded !== null) {
+    settingsUpdateData.excludedCircuits = serializedExcluded
   }
 
   const settingsCreateData: Prisma.SiteSettingsCreateInput = {
     site: { connect: { id: siteId } },
     excelPath: filePath || null,
-    excludedCircuits: extractedExcludedKeywords.length > 0 ? JSON.stringify(extractedExcludedKeywords) : null,
+    excludedCircuits: serializedExcluded,
   }
 
   if (mode === 'reset') {
@@ -369,6 +383,14 @@ export async function importCircuitsFromExcel(
     if (existing) {
       matchedExistingIds.add(existing.id)
 
+      const hasExistingP1 = Boolean(
+        existing.p1ConfirmedAt
+        || existing.p1Worker
+        || existing.p1Kakunin
+        || existing.p1Mashishime
+        || existing.p1MashishimeCubicle,
+      )
+
       // Web側で入力された試験結果は最優先で保持。Web側が未入力でExcel側に値がある場合のみ補完
       updatedCircuits.push({
         id: existing.id,
@@ -387,10 +409,10 @@ export async function importCircuitsFromExcel(
           setsuchiUmu: item.setsuchiUmu,
           setsuchiList: item.setsuchiList,
 
-          // Phase 1
-          p1Kakunin: existing.p1Kakunin || item.p1Kakunin,
-          p1Mashishime: existing.p1Mashishime || item.p1Mashishime,
-          p1MashishimeCubicle: existing.p1MashishimeCubicle || item.p1MashishimeCubicle,
+          // Phase 1（Web側で確定・一部チェック済みの場合は、未チェック項目の false も含めてWeb側の状態を厳密に維持）
+          p1Kakunin: hasExistingP1 ? existing.p1Kakunin : item.p1Kakunin,
+          p1Mashishime: hasExistingP1 ? existing.p1Mashishime : item.p1Mashishime,
+          p1MashishimeCubicle: hasExistingP1 ? existing.p1MashishimeCubicle : item.p1MashishimeCubicle,
           p1Worker: existing.p1Worker || item.p1Worker,
           p1ConfirmedAt: existing.p1ConfirmedAt || item.p1ConfirmedAt,
           p1Remarks: existing.p1Remarks || item.p1Remarks,

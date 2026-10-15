@@ -20,7 +20,7 @@ export const PHASE1_TABLE_COLUMNS: TableColumn<CircuitItem>[] = [
   { key: 'cableList', label: '配線 / 接地', minWidth: '150px' },
   { key: 'p1Kakunin', label: 'サイズ確認 / 増締', align: 'center', minWidth: '150px' },
   { key: 'actions', label: '操作', sortable: false, align: 'center', minWidth: '220px' },
-  { key: 'p1Remarks', label: '備考', minWidth: '140px' },
+  { key: 'p1Remarks', label: '備考', minWidth: '180px', width: '100%' },
   { key: 'p1ConfirmedAt', label: '測定者 / 日時', align: 'center', minWidth: '140px' },
 ]
 
@@ -35,7 +35,7 @@ export const PHASE2_TABLE_COLUMNS: TableColumn<CircuitItem>[] = [
   { key: 'zetsuenS', label: 'S（N）-E', align: 'center', minWidth: '85px' },
   { key: 'zetsuenT', label: 'T-E', align: 'center', minWidth: '85px' },
   { key: 'actions', label: '操作', sortable: false, align: 'center', minWidth: '220px' },
-  { key: 'p2Remarks', label: '備考', minWidth: '140px' },
+  { key: 'p2Remarks', label: '備考', minWidth: '180px', width: '100%' },
   { key: 'p2ConfirmedAt', label: '測定者 / 日時', align: 'center', minWidth: '140px' },
 ]
 
@@ -51,7 +51,7 @@ export const PHASE3_TABLE_COLUMNS: TableColumn<CircuitItem>[] = [
   { key: 'denatsuRt', label: '電圧3', align: 'center', minWidth: '85px' },
   { key: 'kensou', label: '検相 / 点灯', align: 'center', minWidth: '110px' },
   { key: 'actions', label: '操作', sortable: false, align: 'center', minWidth: '220px' },
-  { key: 'p3Remarks', label: '備考', minWidth: '140px' },
+  { key: 'p3Remarks', label: '備考', minWidth: '180px', width: '100%' },
   { key: 'p3ConfirmedAt', label: '測定者 / 日時', align: 'center', minWidth: '140px' },
 ]
 

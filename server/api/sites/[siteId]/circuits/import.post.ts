@@ -9,24 +9,26 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { createError, defineEventHandler, getHeader, getRouterParam, readBody, readMultipartFormData } from 'h3'
+import { defineEventHandler, getHeader, getRouterParam, readBody, readMultipartFormData } from 'h3'
 
+import { ErrorCode } from '#shared/types/errors'
 import { sanitizeFilename } from '#shared/utils/filename'
 import { getUserDisplayName } from '#shared/utils/user'
 
-import { requireSiteRole } from '../../../../utils/auth'
+import { requireSiteAdmin } from '../../../../utils/auth'
+import { createAppError } from '../../../../utils/error'
 import { importCircuitsFromExcel } from '../../../../utils/excel/circuitImport'
 import { validateSafeExcelPath } from '../../../../utils/excel/safePath'
 import { prisma } from '../../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  const user = await requireSiteRole(event, ['admin', 'worker'])
+  const user = await requireSiteAdmin(event)
 
   const siteId = getRouterParam(event, 'siteId')
 
   if (!siteId) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: '現場IDが指定されていません',
     })
   }
@@ -72,8 +74,8 @@ export default defineEventHandler(async (event) => {
   }
 
   if (!uploadedFile && !targetPath) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: 'Excelファイルが選択されていないか、連携ファイルの保存先パスが設定されていません。',
     })
   }
@@ -83,9 +85,9 @@ export default defineEventHandler(async (event) => {
     const MAX_EXCEL_FILE_SIZE = 20 * 1024 * 1024 // 20MB
 
     if (uploadedFile.data.length > MAX_EXCEL_FILE_SIZE) {
-      throw createError({
+      throw createAppError({
+        code: ErrorCode.CIRCUIT_IMPORT_INVALID,
         statusCode: 413,
-        statusMessage: 'Payload Too Large',
         message: 'アップロード可能なファイルサイズは最大20MBまでです。',
       })
     }
@@ -95,9 +97,9 @@ export default defineEventHandler(async (event) => {
       || uploadedFile.data[0] !== 0x50
       || uploadedFile.data[1] !== 0x4B
     ) {
-      throw createError({
+      throw createAppError({
+        code: ErrorCode.CIRCUIT_IMPORT_INVALID,
         statusCode: 400,
-        statusMessage: 'Bad Request',
         message: '無効なファイル形式です。有効なExcelファイル（.xlsx / .xlsm）を指定してください。',
       })
     }
@@ -106,10 +108,11 @@ export default defineEventHandler(async (event) => {
   // サーバー上のファイルパスを指定してインポートする場合、パスの安全性を検証
   if (!uploadedFile && targetPath) {
     try {
-      targetPath = validateSafeExcelPath(targetPath)
+      targetPath = validateSafeExcelPath(targetPath, siteId)
     }
     catch (pathErr: unknown) {
-      throw createError({
+      throw createAppError({
+        code: ErrorCode.SYS_VALIDATION_FAILED,
         statusCode: 400,
         message: pathErr instanceof Error ? pathErr.message : '無効なファイルパスです',
       })
@@ -117,17 +120,6 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const workerName = getUserDisplayName(user)
-    const source = uploadedFile ? uploadedFile.data : targetPath
-    const result = await importCircuitsFromExcel(
-      siteId,
-      source,
-      workerName,
-      mode,
-      uploadedFile?.filename,
-    )
-
-    // アップロードされたExcelファイルをサーバーのデータ領域に安全に保存し現場設定に紐付け
     let effectiveFilePath = targetPath
 
     if (uploadedFile) {
@@ -142,22 +134,18 @@ export default defineEventHandler(async (event) => {
       effectiveFilePath = path.join(storageDir, `${baseName}${ext}`)
 
       await fs.promises.writeFile(effectiveFilePath, uploadedFile.data)
-
-      await prisma.siteSettings.upsert({
-        where: { siteId },
-        create: {
-          siteId,
-          excelPath: effectiveFilePath,
-          excludedCircuits: result.excludedKeywords ? JSON.stringify(result.excludedKeywords) : null,
-        },
-        update: {
-          excelPath: effectiveFilePath,
-          ...(result.excludedKeywords && result.excludedKeywords.length > 0
-            ? { excludedCircuits: JSON.stringify(result.excludedKeywords) }
-            : {}),
-        },
-      })
     }
+
+    const workerName = getUserDisplayName(user)
+    const source = uploadedFile ? uploadedFile.data : targetPath
+    const result = await importCircuitsFromExcel(
+      siteId,
+      source,
+      workerName,
+      mode,
+      uploadedFile?.filename,
+      effectiveFilePath || undefined,
+    )
 
     return {
       success: true,
@@ -172,12 +160,15 @@ export default defineEventHandler(async (event) => {
     }
   }
   catch (error: unknown) {
+    if (error && typeof error === 'object' && 'statusCode' in error) {
+      throw error
+    }
+
     const err = error as Error
 
-    console.error('Failed to import circuits from Excel:', err)
-
-    throw createError({
-      statusCode: 500,
+    throw createAppError({
+      code: ErrorCode.CIRCUIT_IMPORT_INVALID,
+      statusCode: 400,
       message: err.message || 'Excelファイルの取り込みに失敗しました',
     })
   }

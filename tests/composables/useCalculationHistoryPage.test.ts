@@ -12,6 +12,12 @@ vi.mock('../../app/composables/useModal', () => ({
   }),
 }))
 
+vi.mock('~/composables/useAuth', () => ({
+  useAuth: () => ({
+    getAccurateNowIso: () => '2026-01-01T00:00:00.000Z',
+  }),
+}))
+
 vi.mock('#app', () => ({
   useNuxtApp: () => ({
     $api: mockApi,

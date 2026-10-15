@@ -78,11 +78,11 @@ describe('useSoudenDashboard - フロアフィルター', () => {
     const options = dashboard.floorOptions.value
 
     expect(options).toEqual([
-      { label: 'すべてのフロア', value: 'ALL' },
+      { label: 'すべてのエリア', value: 'ALL' },
       { label: '1F', value: '1F' },
       { label: '2F', value: '2F' },
       { label: '10F', value: '10F' },
-      { label: 'フロア未設定', value: '__UNSET__' },
+      { label: 'エリア未設定', value: '__UNSET__' },
     ])
   })
 

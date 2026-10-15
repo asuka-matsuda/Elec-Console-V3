@@ -1,11 +1,13 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  parseAssignedReports,
   parseCustomHolidays,
   parseEventTypes,
   parseExcludedCircuits,
   parseHolidayDays,
   parseNoBreakWords,
+  serializeAssignedReports,
   serializeCustomHolidays,
   serializeEventTypes,
   serializeExcludedCircuits,
@@ -30,11 +32,12 @@ describe('jsonFields - excludedCircuits', () => {
     expect(parseExcludedCircuits('予備, スペース, 空き')).toEqual(['予備', 'スペース', '空き'])
   })
 
-  it('破損データや null/undefined の場合は空配列を返すこと（例外を投げない）', () => {
+  it('破損データや null/undefined の場合は空配列を返すこと（破損JSON断片を混入させない）', () => {
     expect(parseExcludedCircuits(null)).toEqual([])
     expect(parseExcludedCircuits(undefined)).toEqual([])
     expect(parseExcludedCircuits('')).toEqual([])
-    expect(parseExcludedCircuits('{ broken json')).toEqual(['{ broken json'])
+    expect(parseExcludedCircuits('{ broken json')).toEqual([])
+    expect(parseExcludedCircuits('[ broken array')).toEqual([])
   })
 
   it('配列を正しく JSON 文字列にシリアライズできること', () => {
@@ -43,6 +46,16 @@ describe('jsonFields - excludedCircuits', () => {
     expect(serializeExcludedCircuits([])).toBeNull()
     expect(serializeExcludedCircuits(null)).toBeNull()
     expect(serializeExcludedCircuits(undefined)).toBeNull()
+  })
+})
+
+describe('jsonFields - assignedReports', () => {
+  it('空配列 [] をシリアライズした際に null ではなく "[]" として保持され、全帳票解除状態が復元できること', () => {
+    const serializedEmpty = serializeAssignedReports([])
+
+    expect(serializedEmpty).toBe('[]')
+    expect(parseAssignedReports(serializedEmpty)).toEqual([])
+    expect(parseAssignedReports(null)).toEqual(['tag', 'socket-tepra', 'exam', 'remote'])
   })
 })
 

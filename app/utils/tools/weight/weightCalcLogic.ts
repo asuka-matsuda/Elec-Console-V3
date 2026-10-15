@@ -49,15 +49,19 @@ export function calculateWeightAndDrum(
 ): WeightCalcResult {
   const { category, cableIdx, L_input } = inputs
 
-  if (L_input === null) throw new Error('Invalid inputs')
+  if (L_input === null || isNaN(L_input) || L_input <= 0) throw new Error('Invalid inputs')
 
   const cable = findCableByIndexString(cableIdx, cableData)
 
   if (!cable) return { error: true, reason: 'cable_not_found' }
 
   const diameter = getEffectiveCableDiameter(cable.diameter)
-
   const weightPerKm = Number(cable.weight)
+
+  if (diameter <= 0 || isNaN(weightPerKm) || weightPerKm <= 0) {
+    return { error: true, reason: 'cable_not_found' }
+  }
+
   const cableWeight = (weightPerKm * L_input) / 1000
 
   let bestDrum: DrumData | null = null

@@ -1,53 +1,25 @@
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 
 import withNuxt from './.nuxt/eslint.config.mjs'
-import noCardOrBoxNaming from './eslint-rules/no-card-or-box-naming.mjs'
 import noCommentedCode from './eslint-rules/no-commented-code.mjs'
 import noEventPassThrough from './eslint-rules/no-event-pass-through.mjs'
 import noHoverTransitionOverride from './eslint-rules/no-hover-transition-override.mjs'
 import noJsdocTypeAnnotations from './eslint-rules/no-jsdoc-type-annotations.mjs'
 import noLegacyCssVars from './eslint-rules/no-legacy-css-vars.mjs'
+import noPageScopedCss from './eslint-rules/no-page-scoped-css.mjs'
 import noPureAccessibility from './eslint-rules/no-pure-accessibility.mjs'
-import noRawHtmlElements from './eslint-rules/no-raw-html-elements.mjs'
 import noRedundantTailwindClasses from './eslint-rules/no-redundant-tailwind-classes.mjs'
 import noRedundantVueDefaults from './eslint-rules/no-redundant-vue-defaults.mjs'
 import noSlotForwarding from './eslint-rules/no-slot-forwarding.mjs'
 import noTailwindDecoration from './eslint-rules/no-tailwind-decoration.mjs'
-import noTemplateComments from './eslint-rules/no-template-comments.mjs'
 import noTrivialFacade from './eslint-rules/no-trivial-facade.mjs'
-import noUnsupportedSizeProp from './eslint-rules/no-unsupported-size-prop.mjs'
-import requireFileJsdoc from './eslint-rules/require-file-jsdoc.mjs'
-import strictAvatarUsage from './eslint-rules/strict-avatar-usage.mjs'
-import strictBadgeUsage from './eslint-rules/strict-badge-usage.mjs'
-import strictBannerUsage from './eslint-rules/strict-banner-usage.mjs'
-import strictBreadcrumbsUsage from './eslint-rules/strict-breadcrumbs-usage.mjs'
-import strictButtonUsage from './eslint-rules/strict-button-usage.mjs'
-import strictCheckboxUsage from './eslint-rules/strict-checkbox-usage.mjs'
-import strictDropzoneUsage from './eslint-rules/strict-dropzone-usage.mjs'
-import strictEmptyStateUsage from './eslint-rules/strict-empty-state-usage.mjs'
-import strictGaugeUsage from './eslint-rules/strict-gauge-usage.mjs'
+import strictComponentUsage from './eslint-rules/strict-component-usage.mjs'
 import strictIconUsage from './eslint-rules/strict-icon-usage.mjs'
-import strictInputUsage from './eslint-rules/strict-input-usage.mjs'
-import strictMenuUsage from './eslint-rules/strict-menu-usage.mjs'
-import strictModalUsage from './eslint-rules/strict-modal-usage.mjs'
-import strictNoteUsage from './eslint-rules/strict-note-usage.mjs'
-import strictProgressUsage from './eslint-rules/strict-progress-usage.mjs'
-import strictRadioUsage from './eslint-rules/strict-radio-usage.mjs'
 import strictResponsiveTokens from './eslint-rules/strict-responsive-tokens.mjs'
-import strictSelectUsage from './eslint-rules/strict-select-usage.mjs'
-import strictSkeletonUsage from './eslint-rules/strict-skeleton-usage.mjs'
 import strictSpacingTokens from './eslint-rules/strict-spacing-tokens.mjs'
-import strictSpinnerUsage from './eslint-rules/strict-spinner-usage.mjs'
 import strictStateManagement from './eslint-rules/strict-state-management.mjs'
 import strictStateMixins from './eslint-rules/strict-state-mixins.mjs'
-import strictSwitchUsage from './eslint-rules/strict-switch-usage.mjs'
-import strictTableUsage from './eslint-rules/strict-table-usage.mjs'
-import strictTabsUsage from './eslint-rules/strict-tabs-usage.mjs'
-import strictTextareaUsage from './eslint-rules/strict-textarea-usage.mjs'
 import strictTimeManagement from './eslint-rules/strict-time-management.mjs'
-import strictToastUsage from './eslint-rules/strict-toast-usage.mjs'
-import strictToggleUsage from './eslint-rules/strict-toggle-usage.mjs'
-import strictTooltipUsage from './eslint-rules/strict-tooltip-usage.mjs'
 import strictUiStates from './eslint-rules/strict-ui-states.mjs'
 
 export default withNuxt(
@@ -56,107 +28,50 @@ export default withNuxt(
       'simple-import-sort': simpleImportSort,
       'local': {
         rules: {
-          'no-tailwind-decoration': noTailwindDecoration,
+          'no-commented-code': noCommentedCode,
+          'no-event-pass-through': noEventPassThrough,
+          'no-hover-transition-override': noHoverTransitionOverride,
+          'no-jsdoc-type-annotations': noJsdocTypeAnnotations,
+          'no-legacy-css-vars': noLegacyCssVars,
+          'no-page-scoped-css': noPageScopedCss,
+          'no-pure-accessibility': noPureAccessibility,
           'no-redundant-tailwind-classes': noRedundantTailwindClasses,
           'no-redundant-vue-defaults': noRedundantVueDefaults,
-          'strict-spacing-tokens': strictSpacingTokens,
-          'no-hover-transition-override': noHoverTransitionOverride,
-          'no-legacy-css-vars': noLegacyCssVars,
-          'no-pure-accessibility': noPureAccessibility,
-          'no-template-comments': noTemplateComments,
-          'require-file-jsdoc': requireFileJsdoc,
-          'no-commented-code': noCommentedCode,
-          'no-card-or-box-naming': noCardOrBoxNaming,
-          'no-raw-html-elements': noRawHtmlElements,
-          'no-jsdoc-type-annotations': noJsdocTypeAnnotations,
+          'no-slot-forwarding': noSlotForwarding,
+          'no-tailwind-decoration': noTailwindDecoration,
           'no-trivial-facade': noTrivialFacade,
-          'no-unsupported-size-prop': noUnsupportedSizeProp,
+          'strict-component-usage': strictComponentUsage,
+          'strict-icon-usage': strictIconUsage,
+          'strict-responsive-tokens': strictResponsiveTokens,
+          'strict-spacing-tokens': strictSpacingTokens,
           'strict-state-management': strictStateManagement,
           'strict-state-mixins': strictStateMixins,
           'strict-time-management': strictTimeManagement,
           'strict-ui-states': strictUiStates,
-          'strict-badge-usage': strictBadgeUsage,
-          'strict-avatar-usage': strictAvatarUsage,
-          'strict-banner-usage': strictBannerUsage,
-          'strict-breadcrumbs-usage': strictBreadcrumbsUsage,
-          'strict-button-usage': strictButtonUsage,
-          'strict-checkbox-usage': strictCheckboxUsage,
-          'strict-dropzone-usage': strictDropzoneUsage,
-          'strict-empty-state-usage': strictEmptyStateUsage,
-          'strict-gauge-usage': strictGaugeUsage,
-          'strict-icon-usage': strictIconUsage,
-          'strict-input-usage': strictInputUsage,
-          'strict-menu-usage': strictMenuUsage,
-          'strict-modal-usage': strictModalUsage,
-          'strict-note-usage': strictNoteUsage,
-          'strict-progress-usage': strictProgressUsage,
-          'strict-radio-usage': strictRadioUsage,
-          'strict-responsive-tokens': strictResponsiveTokens,
-          'strict-select-usage': strictSelectUsage,
-          'strict-skeleton-usage': strictSkeletonUsage,
-          'strict-spinner-usage': strictSpinnerUsage,
-          'strict-switch-usage': strictSwitchUsage,
-          'strict-table-usage': strictTableUsage,
-          'strict-tabs-usage': strictTabsUsage,
-          'strict-textarea-usage': strictTextareaUsage,
-          'strict-toast-usage': strictToastUsage,
-          'strict-toggle-usage': strictToggleUsage,
-          'strict-tooltip-usage': strictTooltipUsage,
-          'no-event-pass-through': noEventPassThrough,
-          'no-slot-forwarding': noSlotForwarding,
         },
       },
     },
     rules: {
+      'local/no-commented-code': 'error',
       'local/no-event-pass-through': 'error',
-      'local/no-slot-forwarding': 'error',
-      'local/strict-responsive-tokens': ['error', { allowMobileFirst: true }],
-      'local/strict-gauge-usage': 'error',
-      'local/strict-icon-usage': 'error',
-      'local/strict-button-usage': 'error',
-      'local/no-tailwind-decoration': 'error',
+      'local/no-hover-transition-override': 'error',
+      'local/no-jsdoc-type-annotations': 'error',
+      'local/no-legacy-css-vars': 'error',
+      'local/no-page-scoped-css': 'error',
+      'local/no-pure-accessibility': 'error',
       'local/no-redundant-tailwind-classes': 'error',
       'local/no-redundant-vue-defaults': 'error',
-      'local/strict-spacing-tokens': 'error',
-      'local/no-hover-transition-override': 'error',
-      'local/no-legacy-css-vars': 'error',
-      'local/no-pure-accessibility': 'error',
-      'local/no-commented-code': 'error',
-      'local/no-jsdoc-type-annotations': 'error',
+      'local/no-slot-forwarding': 'error',
+      'local/no-tailwind-decoration': 'error',
       'local/no-trivial-facade': 'error',
+      'local/strict-component-usage': 'error',
+      'local/strict-icon-usage': 'error',
+      'local/strict-responsive-tokens': ['error', { allowMobileFirst: true }],
+      'local/strict-spacing-tokens': 'error',
       'local/strict-state-management': 'error',
       'local/strict-state-mixins': 'error',
       'local/strict-time-management': 'error',
       'local/strict-ui-states': 'error',
-      'local/strict-badge-usage': 'error',
-      'local/strict-avatar-usage': 'error',
-      'local/strict-banner-usage': 'error',
-      'local/strict-breadcrumbs-usage': 'error',
-      'local/strict-checkbox-usage': 'error',
-      'local/strict-dropzone-usage': 'error',
-      'local/strict-empty-state-usage': 'error',
-      'local/strict-input-usage': 'error',
-      'local/strict-menu-usage': 'error',
-      'local/strict-modal-usage': 'error',
-      'local/strict-note-usage': 'error',
-      'local/strict-progress-usage': 'error',
-      'local/strict-radio-usage': 'error',
-      'local/strict-select-usage': 'error',
-      'local/strict-skeleton-usage': 'error',
-      'local/strict-spinner-usage': 'error',
-      'local/strict-switch-usage': 'error',
-      'local/strict-table-usage': 'error',
-      'local/strict-tabs-usage': 'error',
-      'local/strict-textarea-usage': 'error',
-      'local/strict-toast-usage': 'error',
-      'local/strict-toggle-usage': 'error',
-      'local/strict-tooltip-usage': 'error',
-      // AI開発効率化のため無効化したルール
-      'local/no-raw-html-elements': 'off',
-      'local/no-card-or-box-naming': 'off',
-      'local/require-file-jsdoc': 'off',
-      'local/no-template-comments': 'off',
-      'local/no-unsupported-size-prop': 'off',
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
       'vue/block-order': ['error', {
@@ -187,7 +102,6 @@ export default withNuxt(
         markers: ['/'],
         exceptions: ['-', '+', '*'],
       }],
-      // Custom overrides
       'vue/no-v-html': 'off',
       'vue/no-multiple-template-root': 'off',
       'vue/require-default-prop': 'off',

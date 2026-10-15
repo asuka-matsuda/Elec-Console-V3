@@ -20,6 +20,8 @@ export interface TodoRecord {
   completed: boolean
   createdAt: string
   updatedAt: string
+  /** サーバーDBへ同期済みかどうか（false の場合のみオフライン新規作成タスクとして次回 sync で送信） */
+  isSynced?: boolean
 }
 
 /**

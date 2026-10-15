@@ -182,18 +182,6 @@ describe('useBreadcrumbs', () => {
     expect(accent.value).toBe('management')
   })
 
-  it('テンプレートキー一覧画面（/portal/:siteId/template-keys）で正しいパンくずが構築される', () => {
-    mockRoute.value = { path: '/portal/site-1/template-keys' }
-    const { items, accent } = useBreadcrumbs()
-
-    expect(items.value).toEqual([
-      { text: '現場管理', to: '/portal/admin' },
-      { text: '東京現場', to: '/portal/site-1' },
-      { text: 'テンプレートキー一覧' },
-    ])
-    expect(accent.value).toBe('management')
-  })
-
   it('未知の動的パスではセグメントの先頭大文字化フォールバックが機能する', () => {
     mockRoute.value = { path: '/unknown/dynamic-page' }
     const { items, accent } = useBreadcrumbs()

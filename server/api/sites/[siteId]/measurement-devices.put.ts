@@ -3,10 +3,14 @@
  * PUT /api/sites/:siteId/measurement-devices
  */
 
-import { createError, defineEventHandler, getRouterParam } from 'h3'
+import { defineEventHandler, getRouterParam } from 'h3'
 import { z } from 'zod'
 
+import { ErrorCode } from '#shared/types/errors'
+
 import { requireSiteRole } from '../../../utils/auth'
+import { createAppError } from '../../../utils/error'
+import { parseMeasurementDevices, parseSelectedDeviceIds } from '../../../utils/jsonFields'
 import { prisma } from '../../../utils/prisma'
 import { validateRequestBody } from '../../../utils/validation'
 
@@ -21,8 +25,8 @@ export default defineEventHandler(async (event) => {
   const siteId = getRouterParam(event, 'siteId')
 
   if (!siteId) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: '現場IDが指定されていません',
     })
   }
@@ -51,29 +55,8 @@ export default defineEventHandler(async (event) => {
     update: updateData,
   })
 
-  let devices = []
-  let selectedDeviceIds = {}
-
-  if (settings.measurementDevices) {
-    try {
-      devices = JSON.parse(settings.measurementDevices)
-    }
-    catch {
-      devices = []
-    }
-  }
-
-  if (settings.selectedDeviceIds) {
-    try {
-      selectedDeviceIds = JSON.parse(settings.selectedDeviceIds)
-    }
-    catch {
-      selectedDeviceIds = {}
-    }
-  }
-
   return {
-    devices,
-    selectedDeviceIds,
+    devices: parseMeasurementDevices(settings.measurementDevices),
+    selectedDeviceIds: parseSelectedDeviceIds(settings.selectedDeviceIds),
   }
 })

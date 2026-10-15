@@ -7,11 +7,13 @@
 import crypto from 'crypto'
 import fs from 'fs'
 import type { H3Event } from 'h3'
-import { createError, getCookie, getHeader, getRouterParam } from 'h3'
+import { getCookie, getHeader, getRouterParam } from 'h3'
 import path from 'path'
 
-import type { SiteAssignment, UserRole } from '#shared/types/auth'
+import type { SiteAssignment, SiteRole } from '#shared/types/auth'
+import { ErrorCode } from '#shared/types/errors'
 
+import { createAppError } from './error'
 import { prisma } from './prisma'
 
 export interface SafeUser {
@@ -90,7 +92,7 @@ function getAuthSecret(): string {
 
 /**
  * 暗号署名付きセッショントークンを生成する (HMAC-SHA256)
- * 有効期限: 7日間
+ * 有効期限: デフォルト7日間
  */
 export function generateAuthToken(
   user: { id: string, loginId: string, role: string, password?: string },
@@ -104,7 +106,7 @@ export function generateAuthToken(
   const payload: TokenPayload = {
     uid: user.id,
     loginId: user.loginId,
-    role: user.role,
+    role: user.loginId === 'master' ? 'master' : user.role,
     pwdSig,
     iat: now,
     exp: now + expiresInSeconds,
@@ -201,18 +203,47 @@ export async function getAuthUser(event: H3Event): Promise<SafeUser | null> {
     }
   }
 
+  return toSafeUser(user)
+}
+
+/**
+ * Prisma User エンティティ（assignedSites / siteAssignments 含む）から
+ * パスワードハッシュ等の機密情報を除外した SafeUser オブジェクトへ変換します。
+ */
+export function toSafeUser<
+  T extends {
+    id: string
+    loginId: string
+    firstName: string
+    lastName: string
+    firstNameKana: string | null
+    lastNameKana: string | null
+    role: string
+    requirePasswordReset: boolean
+    email: string | null
+    isActive: boolean
+    lastLoginAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    password?: string
+    assignedSites: Array<{ id: string }>
+    siteAssignments: Array<{ siteId: string, role: string }>
+  },
+>(user: T): SafeUser {
   const assignedSiteIds = user.assignedSites.map(s => s.id)
   const siteAssignments = user.assignedSites.map((s) => {
     const match = user.siteAssignments.find(sa => sa.siteId === s.id)
+    const fallbackRole = user.role === 'admin' || user.role === 'viewer' ? user.role : 'worker'
 
     return {
       siteId: s.id,
-      role: (match?.role || user.role || 'worker') as UserRole,
+      role: (match?.role || fallbackRole) as SiteRole,
     }
   })
   const { password: _dbPassword, assignedSites: _assignedSites, siteAssignments: _sa, ...restUser } = user
+  const resolvedRole = user.loginId === 'master' ? 'master' : (user.role || 'worker')
 
-  return { ...restUser, assignedSiteIds, siteAssignments }
+  return { ...restUser, role: resolvedRole, assignedSiteIds, siteAssignments }
 }
 
 /**
@@ -222,30 +253,9 @@ export async function requireAuthUser(event: H3Event): Promise<SafeUser> {
   const user = await getAuthUser(event)
 
   if (!user) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized',
+    throw createAppError({
+      code: ErrorCode.AUTH_UNAUTHORIZED,
       message: '認証が必要です。再度ログインしてください。',
-    })
-  }
-
-  return user
-}
-
-/**
- * システム管理者権限必須ガード。未認証時は 401、非管理者の場合は 403 Forbidden を throw します。
- * master アカウント、またはシステムロールが admin のユーザーを管理者と認定します。
- */
-export async function requireAdminUser(event: H3Event): Promise<SafeUser> {
-  const user = await requireAuthUser(event)
-
-  const hasAdminPrivilege = isSuperUser(user) || user.role === 'admin'
-
-  if (!hasAdminPrivilege) {
-    throw createError({
-      statusCode: 403,
-      statusMessage: 'Forbidden',
-      message: 'システム管理者権限が必要です。',
     })
   }
 
@@ -275,10 +285,9 @@ export function canAccessSite(user: SafeUser, siteId: string): boolean {
  * 該当現場におけるユーザーのロール（権限）を取得
  * - master アカウントは無条件で 'admin'
  * - 現場アサイン情報（siteAssignments）にロールが定義されていればそれを優先
- * - 定義がなければシステム基本ロール（user.role）、または 'worker'
  * - 現場アクセス権がない場合は null
  */
-export function getSiteRole(user: SafeUser, siteId: string): UserRole | null {
+export function getSiteRole(user: SafeUser, siteId: string): SiteRole | null {
   if (isSuperUser(user)) {
     return 'admin'
   }
@@ -293,7 +302,7 @@ export function getSiteRole(user: SafeUser, siteId: string): UserRole | null {
     return assignment.role
   }
 
-  return (user.role || 'worker') as UserRole
+  return (user.role === 'admin' || user.role === 'viewer' ? user.role : 'worker') as SiteRole
 }
 
 /**
@@ -308,28 +317,49 @@ export function isSiteAdmin(user: SafeUser, siteId: string): boolean {
 }
 
 /**
+ * 現場が無効化（disabledAt !== null）されていないか検証（master はバイパス）
+ */
+async function ensureSiteEnabled(user: SafeUser, siteId: string): Promise<void> {
+  if (isSuperUser(user)) {
+    return
+  }
+
+  const site = await prisma.site.findUnique({
+    where: { id: siteId },
+    select: { disabledAt: true },
+  })
+
+  if (site?.disabledAt) {
+    throw createAppError({
+      code: ErrorCode.AUTH_FORBIDDEN_ACTION,
+      message: 'この現場は現在無効化されているためアクセスできません。',
+    })
+  }
+}
+
+/**
  * 現場アクセス認可ガード (BOLA / IDOR 防御)
- * ユーザーが該当現場にアクセス可能であることを検証し、権限外の場合は 403 Forbidden を throw
+ * ユーザーが該当現場にアクセス可能であることを検証し、権限外または無効化現場の場合は 403 Forbidden を throw
  */
 export async function requireSiteAccess(event: H3Event, siteId?: string): Promise<SafeUser> {
   const user = await requireAuthUser(event)
   const resolvedSiteId = siteId || (getRouterParam(event, 'siteId') as string)
 
   if (!resolvedSiteId) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request',
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: '現場IDが指定されていません。',
     })
   }
 
   if (!canAccessSite(user, resolvedSiteId)) {
-    throw createError({
-      statusCode: 403,
-      statusMessage: 'Forbidden',
+    throw createAppError({
+      code: ErrorCode.AUTH_FORBIDDEN_ACTION,
       message: 'この現場へのアクセス権限がありません。',
     })
   }
+
+  await ensureSiteEnabled(user, resolvedSiteId)
 
   return user
 }
@@ -343,20 +373,20 @@ export async function requireSiteAdmin(event: H3Event, siteId?: string): Promise
   const resolvedSiteId = siteId || (getRouterParam(event, 'siteId') as string)
 
   if (!resolvedSiteId) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request',
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: '現場IDが指定されていません。',
     })
   }
 
   if (!isSiteAdmin(user, resolvedSiteId)) {
-    throw createError({
-      statusCode: 403,
-      statusMessage: 'Forbidden',
+    throw createAppError({
+      code: ErrorCode.AUTH_FORBIDDEN_ACTION,
       message: 'この現場の管理者権限が必要です。',
     })
   }
+
+  await ensureSiteEnabled(user, resolvedSiteId)
 
   return user
 }
@@ -368,24 +398,22 @@ export async function requireSiteAdmin(event: H3Event, siteId?: string): Promise
  */
 export async function requireSiteRole(
   event: H3Event,
-  allowedRoles: UserRole[],
+  allowedRoles: SiteRole[],
   siteId?: string,
 ): Promise<SafeUser> {
   const user = await requireAuthUser(event)
   const resolvedSiteId = siteId || (getRouterParam(event, 'siteId') as string)
 
   if (!resolvedSiteId) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request',
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: '現場IDが指定されていません。',
     })
   }
 
   if (!canAccessSite(user, resolvedSiteId)) {
-    throw createError({
-      statusCode: 403,
-      statusMessage: 'Forbidden',
+    throw createAppError({
+      code: ErrorCode.AUTH_FORBIDDEN_ACTION,
       message: 'この現場へのアクセス権限がありません。',
     })
   }
@@ -393,12 +421,13 @@ export async function requireSiteRole(
   const role = getSiteRole(user, resolvedSiteId)
 
   if (!role || !allowedRoles.includes(role)) {
-    throw createError({
-      statusCode: 403,
-      statusMessage: 'Forbidden',
+    throw createAppError({
+      code: ErrorCode.AUTH_FORBIDDEN_ACTION,
       message: 'この操作を実行する権限がありません。閲覧専用アカウントでは変更できません。',
     })
   }
+
+  await ensureSiteEnabled(user, resolvedSiteId)
 
   return user
 }
@@ -410,9 +439,8 @@ export async function requireMasterUser(event: H3Event): Promise<SafeUser> {
   const user = await requireAuthUser(event)
 
   if (!isSuperUser(user)) {
-    throw createError({
-      statusCode: 403,
-      statusMessage: 'Forbidden',
+    throw createAppError({
+      code: ErrorCode.AUTH_FORBIDDEN_ACTION,
       message: 'マスター権限が必要です。',
     })
   }

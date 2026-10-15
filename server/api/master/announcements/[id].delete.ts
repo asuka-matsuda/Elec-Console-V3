@@ -6,9 +6,12 @@
  * @permission システム管理者限定
  */
 
-import { createError, defineEventHandler, getRouterParam } from 'h3'
+import { defineEventHandler, getRouterParam } from 'h3'
+
+import { ErrorCode } from '#shared/types/errors'
 
 import { requireMasterUser } from '../../../utils/auth'
+import { createAppError } from '../../../utils/error'
 import { prisma } from '../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
@@ -16,10 +19,20 @@ export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
 
   if (!id) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request',
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: 'IDが指定されていません。',
+    })
+  }
+
+  const existing = await prisma.announcement.findUnique({
+    where: { id },
+  })
+
+  if (!existing) {
+    throw createAppError({
+      code: ErrorCode.SYS_NOT_FOUND,
+      message: '指定されたお知らせが見つかりません。',
     })
   }
 

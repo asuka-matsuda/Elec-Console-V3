@@ -12,6 +12,7 @@ import type { User } from '#shared/types/auth'
 import { STATE_KEYS } from '~/constants/storageKeys'
 import { generateSalt, hashPasswordClient, verifyPasswordClient } from '~/utils/crypto'
 import { AuthCacheRepository } from '~/utils/db'
+import { isNetworkError } from '~/utils/errors'
 
 // オフライン猶予期間: 14日間（2週間）
 const OFFLINE_AUTH_VALIDITY_DAYS = 14
@@ -61,32 +62,21 @@ export function useAuth() {
     return getAccurateNow().toISOString()
   }
 
-  // ネットワーク・圏外エラー判定ヘルパー
-  const isNetworkError = (err: unknown): boolean => {
-    if (typeof navigator !== 'undefined' && !navigator.onLine) {
-      return true
+  const initAuth = async (force = false) => {
+    if (!token.value) {
+      currentUser.value = null
+      isOfflineSession.value = false
+
+      return
     }
 
-    const e = err as { name?: string, message?: string, statusCode?: number, status?: number }
-
-    if (e?.name === 'TypeError' && (e?.message?.includes('fetch') || e?.message?.includes('Network'))) {
-      return true
+    if (currentUser.value && !force) {
+      return
     }
 
-    const status = e?.statusCode || e?.status
-
-    // ネットワーク未到達、ゲートウェイタイムアウト、サーバー一時障害はオフライン扱い
-    if (!status || status === 408 || status === 502 || status === 503 || status === 504) {
-      return true
-    }
-
-    return false
-  }
-
-  const initAuth = async (_force = false) => {
     const $api = getApiSafe()
 
-    // 1. メモリに currentUser がなく、クライアント環境の場合、まず IndexedDB (AuthCacheRepository) から復元
+    // 1. メモリに currentUser がなく、トークンが存在するクライアント環境の場合、まず IndexedDB (AuthCacheRepository) から復元
     if (!currentUser.value && import.meta.client) {
       try {
         const cachedRecords = await AuthCacheRepository.getAll()
@@ -109,76 +99,74 @@ export function useAuth() {
     if (!$api) return
 
     // 2. トークンがある場合はサーバーへセッション検証・最新状態の同期（SWRパターン: Stale-While-Revalidate）
-    if (token.value) {
-      try {
-        const data = await $api<{ success: boolean, user: User, serverTime?: string }>(
-          '/api/auth/me',
-        )
+    try {
+      const data = await $api<{ success: boolean, user: User, serverTime?: string }>(
+        '/api/auth/me',
+      )
 
-        if (data && data.success && data.user) {
-          currentUser.value = data.user
-          isOfflineSession.value = false
-          setServerTimeOffset(data.serverTime)
+      if (data && data.success && data.user) {
+        currentUser.value = data.user
+        isOfflineSession.value = false
+        setServerTimeOffset(data.serverTime)
 
-          // サーバーの最新ユーザー情報で IndexedDB キャッシュも同期更新
-          if (import.meta.client) {
-            try {
-              const cached = await AuthCacheRepository.get(data.user.loginId)
+        // サーバーの最新ユーザー情報で IndexedDB キャッシュも同期更新
+        if (import.meta.client) {
+          try {
+            const cached = await AuthCacheRepository.get(data.user.loginId)
 
-              if (cached) {
-                await AuthCacheRepository.put({
-                  ...cached,
-                  user: data.user,
-                  serverTimeOffset: serverTimeOffset.value,
-                })
-              }
-            }
-            catch (cacheErr) {
-              console.warn('[useAuth] Failed to sync auth cache with server state', cacheErr)
+            if (cached) {
+              await AuthCacheRepository.put({
+                ...cached,
+                user: data.user,
+                serverTimeOffset: serverTimeOffset.value,
+              })
             }
           }
-        }
-        else if (!isOfflineSession.value) {
-          logout()
+          catch (cacheErr) {
+            console.warn('[useAuth] Failed to sync auth cache with server state', cacheErr)
+          }
         }
       }
-      catch (err: unknown) {
-        // 401（未認証・セッション無効）時は正当にログアウト
-        const fetchErr = err as { statusCode?: number, status?: number }
-        const status = fetchErr?.statusCode || fetchErr?.status
+      else if (!isOfflineSession.value) {
+        logout()
+      }
+    }
+    catch (err: unknown) {
+      // 401（未認証・セッション無効）時は正当にログアウト
+      const fetchErr = err as { statusCode?: number, status?: number }
+      const status = fetchErr?.statusCode || fetchErr?.status
 
-        if (status === 401) {
-          logout()
+      if (status === 401) {
+        logout()
 
+        return
+      }
+
+      // オフライン（圏外）またはネットワークエラー時は復元済みキャッシュでセッションを維持
+      if (import.meta.client) {
+        isOfflineSession.value = true
+
+        // すでに currentUser が復元されていれば維持
+        if (currentUser.value) {
           return
         }
 
-        // オフライン（圏外）またはネットワークエラー時は復元済みキャッシュでセッションを維持
-        if (import.meta.client) {
-          isOfflineSession.value = true
+        // 未復元の場合は IndexedDB から復元を試行
+        try {
+          const cachedRecords = await AuthCacheRepository.getAll()
 
-          // すでに currentUser が復元されていれば維持
-          if (currentUser.value) {
-            return
-          }
+          if (cachedRecords.length > 0) {
+            cachedRecords.sort((a, b) => new Date(b.cachedAt).getTime() - new Date(a.cachedAt).getTime())
+            const latest = cachedRecords[0]!
 
-          // 未復元の場合は IndexedDB から復元を試行
-          try {
-            const cachedRecords = await AuthCacheRepository.getAll()
-
-            if (cachedRecords.length > 0) {
-              cachedRecords.sort((a, b) => new Date(b.cachedAt).getTime() - new Date(a.cachedAt).getTime())
-              const latest = cachedRecords[0]!
-
-              currentUser.value = latest.user
-              if (typeof latest.serverTimeOffset === 'number') {
-                serverTimeOffset.value = latest.serverTimeOffset
-              }
+            currentUser.value = latest.user
+            if (typeof latest.serverTimeOffset === 'number') {
+              serverTimeOffset.value = latest.serverTimeOffset
             }
           }
-          catch {
-            // パース失敗無視
-          }
+        }
+        catch {
+          // パース失敗無視
         }
       }
     }
@@ -266,6 +254,13 @@ export function useAuth() {
           return {
             success: false,
             message: 'オフライン環境です。事前にオンラインで一度ログインしたアカウントのみ利用できます。',
+          }
+        }
+
+        if (!cachedAuth.user.isActive) {
+          return {
+            success: false,
+            message: 'このアカウントは無効化されています。管理者にお問い合わせください。',
           }
         }
 
@@ -372,7 +367,6 @@ export function useAuth() {
   const isMaster = computed(() => currentUser.value?.loginId === 'master')
   const isAdmin = computed(() => {
     if (isMaster.value) return true
-    if (currentUser.value?.role === 'admin') return true
 
     return currentUser.value?.siteAssignments?.some(sa => sa.role === 'admin') ?? false
   })

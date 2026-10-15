@@ -6,11 +6,14 @@
  * @permission 現場アクセス権限
  */
 
-import { createError, defineEventHandler, getRouterParam, readBody } from 'h3'
+import { defineEventHandler, getRouterParam, readBody } from 'h3'
 
+import { ErrorCode } from '#shared/types/errors'
 import { getUserDisplayName } from '#shared/utils/user'
 
 import { requireSiteRole } from '../../../../../utils/auth'
+import { formatSyncTimeString, parseValidDate } from '../../../../../utils/date'
+import { createAppError } from '../../../../../utils/error'
 import { atomicUpdateCircuit } from '../../../../../utils/optimisticLock'
 import { prisma } from '../../../../../utils/prisma'
 
@@ -20,95 +23,105 @@ export default defineEventHandler(async (event) => {
   const circuitId = getRouterParam(event, 'id')
 
   if (!siteId || !circuitId) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: 'パラメータが不足しています',
     })
   }
 
-  const body = await readBody(event)
+  const body = (await readBody(event).catch(() => ({}))) || {}
   const workerName = getUserDisplayName(user)
 
-  const confirmedAt = body.clientConfirmedAt ? new Date(body.clientConfirmedAt) : new Date()
+  const confirmedAt = parseValidDate(body.clientConfirmedAt) || new Date()
+  const isRemarksOnly = Boolean(body.remarksOnly)
 
-  // 既存回路のチェック状態を取得（未指定時の保持）
-  const existingCircuit = await prisma.circuit.findUnique({
-    where: { id: circuitId },
-    select: { p1Kakunin: true, p1Mashishime: true, p1MashishimeCubicle: true, p1ConfirmedAt: true },
-  })
+  const updated = await prisma.$transaction(async (tx) => {
+    const updateData: Record<string, unknown> = {}
 
-  const finalKakunin = body.kakunin !== undefined ? Boolean(body.kakunin) : (existingCircuit?.p1Kakunin ?? false)
-  const finalMashishime = body.mashishime !== undefined ? Boolean(body.mashishime) : (existingCircuit?.p1Mashishime ?? false)
-  const finalMashishimeCubicle = body.mashishimeCubicle !== undefined ? Boolean(body.mashishimeCubicle) : (existingCircuit?.p1MashishimeCubicle ?? false)
-  const hasAnyCheck = finalKakunin || finalMashishime || finalMashishimeCubicle
+    if (!isRemarksOnly) {
+      // 既存回路のチェック状態を取得（未指定時の保持）
+      const existingCircuit = await tx.circuit.findFirst({
+        where: { id: circuitId, siteId },
+        select: { p1Kakunin: true, p1Mashishime: true, p1MashishimeCubicle: true, p1ConfirmedAt: true },
+      })
 
-  const updateData: Record<string, unknown> = {
-    p1Kakunin: finalKakunin,
-    p1Mashishime: finalMashishime,
-    p1MashishimeCubicle: finalMashishimeCubicle,
-    p1Worker: hasAnyCheck ? workerName : null,
-    p1ConfirmedAt: hasAnyCheck ? confirmedAt : null,
-  }
+      const finalKakunin = body.kakunin !== undefined ? Boolean(body.kakunin) : (existingCircuit?.p1Kakunin ?? false)
+      const finalMashishime = body.mashishime !== undefined ? Boolean(body.mashishime) : (existingCircuit?.p1Mashishime ?? false)
+      const finalMashishimeCubicle = body.mashishimeCubicle !== undefined ? Boolean(body.mashishimeCubicle) : (existingCircuit?.p1MashishimeCubicle ?? false)
+      const hasAnyCheck = finalKakunin || finalMashishime || finalMashishimeCubicle
 
-  if (body.remarks !== undefined) updateData.p1Remarks = body.remarks
-  if (body.modifiedFields !== undefined) {
-    updateData.p1ModifiedFields = typeof body.modifiedFields === 'string'
-      ? body.modifiedFields
-      : JSON.stringify(body.modifiedFields)
-  }
+      updateData.p1Kakunin = finalKakunin
+      updateData.p1Mashishime = finalMashishime
+      updateData.p1MashishimeCubicle = finalMashishimeCubicle
+      updateData.p1Worker = hasAnyCheck ? workerName : null
+      updateData.p1ConfirmedAt = hasAnyCheck ? confirmedAt : null
+    }
 
-  // 回路仕様の修正フィールド（互換性担保）
-  const CIRCUIT_SPEC_FIELDS = [
-    'haidenHoushiki',
-    'souShubetsu',
-    'shadankiShubetsu',
-    'shadankiYouryou',
-    'kairoBangou',
-    'kairoMeisho',
-    'cableList',
-    'haisenJousuu',
-    'setsuchiList',
-  ] as const
+    if (body.remarks !== undefined) updateData.p1Remarks = body.remarks
+    if (body.modifiedFields !== undefined) {
+      updateData.p1ModifiedFields = typeof body.modifiedFields === 'string'
+        ? body.modifiedFields
+        : JSON.stringify(body.modifiedFields)
+    }
 
-  for (const field of CIRCUIT_SPEC_FIELDS) {
-    if (body[field] !== undefined) updateData[field] = body[field]
-  }
+    // 回路仕様の修正フィールド（互換性担保）
+    const CIRCUIT_SPEC_FIELDS = [
+      'haidenHoushiki',
+      'souShubetsu',
+      'shadankiShubetsu',
+      'shadankiYouryou',
+      'kairoBangou',
+      'kairoMeisho',
+      'cableList',
+      'haisenJousuu',
+      'setsuchiList',
+    ] as const
 
-  const updated = await atomicUpdateCircuit({
-    circuitId,
-    siteId,
-    expectedVersion: typeof body.expectedVersion === 'number' ? body.expectedVersion : undefined,
-    expectedUpdatedAt: body.expectedUpdatedAt,
-    data: updateData,
-  })
+    for (const field of CIRCUIT_SPEC_FIELDS) {
+      if (body[field] !== undefined) updateData[field] = body[field]
+    }
 
-  // 操作ログの記録
-  const detailsParts: string[] = []
-
-  if (Array.isArray(body.modifiedFields) && body.modifiedFields.length > 0) {
-    detailsParts.push(`修正: ${body.modifiedFields.join(', ')}`)
-  }
-
-  if (body.remarks) {
-    detailsParts.push(`備考: ${body.remarks}`)
-  }
-
-  if (body.isOfflineSync) {
-    const syncTimeStr = formatSyncTimeString()
-
-    detailsParts.push(`[同期: ${syncTimeStr}]`)
-  }
-
-  await prisma.operationLog.create({
-    data: {
+    const updatedCircuit = await atomicUpdateCircuit({
+      circuitId,
       siteId,
-      worker: workerName,
-      timestamp: confirmedAt,
-      action: body.isOfflineSync ? 'フェーズ1 確定 (オフライン同期)' : 'フェーズ1 確定',
-      targetBan: updated.banMeisho,
-      targetKairo: updated.kairoBangou || updated.kairoMeisho || '',
-      details: detailsParts.join(' | ') || '接続確認・増締完了',
-    },
+      expectedVersion: typeof body.expectedVersion === 'number' ? body.expectedVersion : undefined,
+      expectedUpdatedAt: body.expectedUpdatedAt,
+      data: updateData,
+      tx,
+    })
+
+    // 操作ログの記録
+    const detailsParts: string[] = []
+
+    if (Array.isArray(body.modifiedFields) && body.modifiedFields.length > 0) {
+      detailsParts.push(`修正: ${body.modifiedFields.join(', ')}`)
+    }
+
+    if (body.remarks) {
+      detailsParts.push(`備考: ${body.remarks}`)
+    }
+
+    if (body.isOfflineSync) {
+      const syncTimeStr = formatSyncTimeString()
+
+      detailsParts.push(`[同期: ${syncTimeStr}]`)
+    }
+
+    const baseAction = isRemarksOnly ? 'フェーズ1 備考保存' : 'フェーズ1 確定'
+
+    await tx.operationLog.create({
+      data: {
+        siteId,
+        worker: workerName,
+        timestamp: confirmedAt,
+        action: body.isOfflineSync ? `${baseAction} (オフライン同期)` : baseAction,
+        targetBan: updatedCircuit.banMeisho,
+        targetKairo: updatedCircuit.kairoBangou || updatedCircuit.kairoMeisho || '',
+        details: detailsParts.join(' | ') || (isRemarksOnly ? '備考を保存しました' : '接続確認・増締完了'),
+      },
+    })
+
+    return updatedCircuit
   })
 
   return {

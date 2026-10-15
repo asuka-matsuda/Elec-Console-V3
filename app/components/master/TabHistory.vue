@@ -78,7 +78,7 @@ const columns: TableColumn<HistoryItem>[] = [
 <template>
   <section class="flex flex-col gap-panel-gap">
     <header class="flex flex-wrap items-center justify-between gap-panel-gap">
-      <small class="guide-text">ダッシュボードの「更新履歴」ウィジェットに掲載されるバージョン情報を管理します。</small>
+      <small>ダッシュボードの「更新履歴」ウィジェットに掲載されるバージョン情報を管理します。</small>
 
       <Button variant="primary" size="sm" icon="plus" @click="openModal()">更新履歴を作成する</Button>
     </header>
@@ -89,7 +89,7 @@ const columns: TableColumn<HistoryItem>[] = [
       </template>
 
       <template #cell-toolId="{ row }">
-        <span class="tool-name">{{ (row.toolId && toolMap.get(row.toolId)?.text) || 'システム全体' }}</span>
+        <small>{{ (row.toolId && toolMap.get(row.toolId)?.text) || 'システム全体' }}</small>
       </template>
 
       <template #cell-actions="{ row }">
@@ -100,7 +100,7 @@ const columns: TableColumn<HistoryItem>[] = [
     </Table>
 
     <Modal v-model="isEditModalOpen" :title="editingId ? '編集' : '新規作成'" icon="clock">
-      <template #actions>
+      <template #footer>
         <Button :disabled="isSaving" @click="isEditModalOpen = false">キャンセル</Button>
         <Button variant="primary" :loading="isSaving" @click="handleSave">保存する</Button>
       </template>
@@ -141,21 +141,3 @@ const columns: TableColumn<HistoryItem>[] = [
     </Modal>
   </section>
 </template>
-
-<style scoped lang="scss">
-.guide-text {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-}
-
-.tool-name {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
-}
-
-.error-text {
-  font-size: var(--font-size-xs);
-  color: var(--color-status-danger);
-}
-</style>

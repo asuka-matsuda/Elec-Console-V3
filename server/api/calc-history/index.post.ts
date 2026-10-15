@@ -42,48 +42,42 @@ export default defineEventHandler(async (event) => {
 
   const settingKey = `calc_history_${user.loginId}`
 
-  try {
-    const setting = await prisma.systemSetting.findUnique({
-      where: { key: settingKey },
-    })
+  const setting = await prisma.systemSetting.findUnique({
+    where: { key: settingKey },
+  })
 
-    let currentList: Array<{ id: string, toolId?: string, timestamp?: string }> = []
+  let currentList: Array<{ id: string, toolId?: string, timestamp?: string }> = []
 
-    if (setting?.value) {
-      try {
-        currentList = JSON.parse(setting.value)
-      }
-      catch {
-        currentList = []
+  if (setting?.value) {
+    try {
+      const parsed = JSON.parse(setting.value)
+
+      if (Array.isArray(parsed)) {
+        currentList = parsed
       }
     }
-
-    const newEntry = {
-      ...body,
-      id: body.id || randomUUID(),
-      timestamp: body.timestamp || new Date().toISOString(),
-    }
-
-    // 先頭に追加し、最大30件に制限
-    currentList = [newEntry, ...currentList.filter(item => item.id !== newEntry.id)].slice(0, 30)
-
-    await prisma.systemSetting.upsert({
-      where: { key: settingKey },
-      update: { value: JSON.stringify(currentList) },
-      create: { key: settingKey, value: JSON.stringify(currentList) },
-    })
-
-    return {
-      success: true,
-      entry: newEntry,
+    catch {
+      currentList = []
     }
   }
-  catch (error) {
-    console.error('Failed to save calc-history:', error)
 
-    return {
-      success: false,
-      error: '計算履歴の保存に失敗しました。',
-    }
+  const newEntry = {
+    ...body,
+    id: body.id || randomUUID(),
+    timestamp: body.timestamp || new Date().toISOString(),
+  }
+
+  // 先頭に追加し、最大30件に制限
+  currentList = [newEntry, ...currentList.filter(item => item.id !== newEntry.id)].slice(0, 30)
+
+  await prisma.systemSetting.upsert({
+    where: { key: settingKey },
+    update: { value: JSON.stringify(currentList) },
+    create: { key: settingKey, value: JSON.stringify(currentList) },
+  })
+
+  return {
+    success: true,
+    entry: newEntry,
   }
 })

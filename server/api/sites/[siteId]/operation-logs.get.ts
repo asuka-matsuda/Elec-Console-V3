@@ -6,9 +6,12 @@
  * @permission 現場アクセス権限
  */
 
-import { createError, defineEventHandler, getQuery, getRouterParam } from 'h3'
+import { defineEventHandler, getQuery, getRouterParam } from 'h3'
+
+import { ErrorCode } from '#shared/types/errors'
 
 import { requireSiteAccess } from '../../../utils/auth'
+import { createAppError } from '../../../utils/error'
 import { prisma } from '../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
@@ -17,14 +20,15 @@ export default defineEventHandler(async (event) => {
   const siteId = getRouterParam(event, 'siteId')
 
   if (!siteId) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: '現場IDが指定されていません',
     })
   }
 
   const query = getQuery(event)
-  const limit = query.limit ? parseInt(String(query.limit), 10) : 100
+  const parsedLimit = query.limit !== undefined ? parseInt(String(query.limit), 10) : 100
+  const limit = Number.isFinite(parsedLimit) && parsedLimit > 0 ? Math.min(parsedLimit, 500) : 100
   const worker = query.worker ? String(query.worker) : undefined
   const action = query.action ? String(query.action) : undefined
   const targetBan = query.targetBan ? String(query.targetBan) : undefined

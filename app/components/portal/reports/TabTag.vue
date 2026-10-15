@@ -69,6 +69,10 @@ const tagRowItems = computed<TagRowItem[]>(() => {
 
     return {
       ...r,
+      keiToName: r.keiToName || '-',
+      banShubetsu: r.banShubetsu || '-',
+      kairoBangou: kBangou || '-',
+      kairoMeisho: kMeisho || '-',
       uniqueKey,
       cableText,
       destinationText,
@@ -273,9 +277,9 @@ onMounted(() => {
         </template>
         <template v-else>
           <Checkbox v-model="isAllTagsSelected" :indeterminate="isPartialTagsSelected" label="全選択" />
-          <span class="selection-count">
+          <small>
             選択中: <strong>{{ selectedCountInDisplay }}</strong> / {{ displayedTagRows.length }} 回路
-          </span>
+          </small>
         </template>
       </div>
     </div>
@@ -290,67 +294,21 @@ onMounted(() => {
         <Checkbox v-model="selectedTagKeys" :value="row.uniqueKey" />
       </template>
 
-      <template #cell-keiToName="{ row }">
-        <span>{{ row.keiToName || '-' }}</span>
-      </template>
-
-      <template #cell-banShubetsu="{ row }">
-        <span>{{ row.banShubetsu || '-' }}</span>
-      </template>
-
       <template #cell-banMeisho="{ row }">
-        <span class="ban-cell-text">{{ row.banMeisho }}</span>
+        <strong>{{ row.banMeisho }}</strong>
       </template>
 
       <template #cell-keiTo="{ row }">
         <Badge :variant="row.keiTo.includes('幹線') ? 'blue' : 'gray'" size="sm">{{ row.keiTo }}</Badge>
       </template>
 
-      <template #cell-kairoBangou="{ row }">
-        <span>{{ row.kairoBangou || '-' }}</span>
-      </template>
-
-      <template #cell-kairoMeisho="{ row }">
-        <span class="meisho-cell-text">{{ row.kairoMeisho || '-' }}</span>
-      </template>
-
       <template #cell-cableText="{ row }">
-        <span class="cable-cell-text">{{ row.cableText }}</span>
+        <small><code>{{ row.cableText }}</code></small>
       </template>
 
       <template #cell-destinationText="{ row }">
-        <span class="dest-cell-text">{{ row.destinationText }}</span>
+        <small>{{ row.destinationText }}</small>
       </template>
     </Table>
   </div>
 </template>
-
-<style scoped lang="scss">
-.ban-cell-text {
-  font-weight: var(--font-weight-bold);
-}
-
-.meisho-cell-text {
-  font-weight: var(--font-weight-medium);
-}
-
-.cable-cell-text {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-}
-
-.dest-cell-text {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-}
-
-.selection-count {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-
-  strong {
-    color: var(--color-text-main);
-  }
-}
-</style>

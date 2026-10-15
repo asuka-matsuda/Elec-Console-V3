@@ -108,7 +108,7 @@ const handleSave = () => {
       <Toggle v-model="form.allDay" label="終日イベント" />
     </div>
 
-    <template #actions>
+    <template #footer>
       <Tooltip v-if="isEditing" text="予定を削除">
         <Button variant="danger" size="sm" icon="trash-2" @click="emit('delete')" />
       </Tooltip>
@@ -117,11 +117,3 @@ const handleSave = () => {
     </template>
   </Modal>
 </template>
-
-<style scoped lang="scss">
-.error-text {
-  margin: 0;
-  font-size: var(--font-size-xs);
-  color: var(--color-status-danger);
-}
-</style>

@@ -6,7 +6,7 @@
  * @permission 認証済みユーザー
  */
 
-import { createError, defineEventHandler, getRequestIP, readBody, setCookie } from 'h3'
+import { defineEventHandler, getRequestIP, readBody, setCookie } from 'h3'
 
 import { ErrorCode } from '#shared/types/errors'
 
@@ -38,9 +38,8 @@ export default defineEventHandler(async (event) => {
   const { currentPassword, newPassword } = body || {}
 
   if (!newPassword || typeof newPassword !== 'string' || newPassword.length < 8) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request',
+    throw createAppError({
+      code: ErrorCode.AUTH_PASSWORD_POLICY_VIOLATION,
       message: '新しいパスワードは8文字以上で設定してください。',
     })
   }
@@ -48,9 +47,8 @@ export default defineEventHandler(async (event) => {
   const user = await prisma.user.findUnique({ where: { id: authUser.id } })
 
   if (!user) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'User not found',
+    throw createAppError({
+      code: ErrorCode.USER_NOT_FOUND,
       message: 'ユーザーが見つかりません。',
     })
   }
@@ -58,26 +56,23 @@ export default defineEventHandler(async (event) => {
   // 初回強制リセット（requirePasswordReset === true）以外の通常パスワード変更時は、現在のパスワード入力を必須化して厳格検証
   if (!user.requirePasswordReset) {
     if (!currentPassword || typeof currentPassword !== 'string') {
-      throw createError({
-        statusCode: 400,
-        statusMessage: 'Bad Request',
+      throw createAppError({
+        code: ErrorCode.SYS_VALIDATION_FAILED,
         message: '現在のパスワードを入力してください。',
       })
     }
 
     if (!verifyPassword(currentPassword, user.password)) {
       recordFailedAttempt(rateLimitKey, 5)
-      throw createError({
-        statusCode: 401,
-        statusMessage: 'Unauthorized',
+      throw createAppError({
+        code: ErrorCode.AUTH_INVALID_CREDENTIALS,
         message: '現在のパスワードが間違っています。',
       })
     }
 
     if (currentPassword === newPassword) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: 'Bad Request',
+      throw createAppError({
+        code: ErrorCode.AUTH_PASSWORD_POLICY_VIOLATION,
         message: '現在のパスワードとは異なるパスワードを設定してください。',
       })
     }
@@ -93,14 +88,15 @@ export default defineEventHandler(async (event) => {
     },
   })
 
-  // 新しいパスワードに対応する暗号署名付きセッショントークンを発行
-  const newToken = generateAuthToken(updatedUser)
+  // 新しいパスワードに対応する暗号署名付きセッショントークンを発行（24時間有効期限に統一）
+  const expiresInSeconds = 24 * 60 * 60
+  const newToken = generateAuthToken(updatedUser, expiresInSeconds)
 
   setCookie(event, 'auth_token', newToken, {
     path: '/',
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 60 * 60 * 24 * 7,
+    maxAge: expiresInSeconds,
   })
 
   // 成功時: レートリミットをクリア

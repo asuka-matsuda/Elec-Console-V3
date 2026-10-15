@@ -18,40 +18,41 @@ export default defineEventHandler(async (event) => {
 
   const settingKey = `calc_history_${user.loginId}`
 
-  try {
-    const setting = await prisma.systemSetting.findUnique({
-      where: { key: settingKey },
-    })
+  const setting = await prisma.systemSetting.findUnique({
+    where: { key: settingKey },
+  })
 
-    if (!setting?.value) {
-      return { success: true }
-    }
-
-    let currentList = JSON.parse(setting.value) as Array<{ id: string, toolId?: string }>
-
-    if (id) {
-      currentList = currentList.filter(item => item.id !== id)
-    }
-    else if (toolId) {
-      currentList = currentList.filter(item => item.toolId !== toolId)
-    }
-    else {
-      currentList = []
-    }
-
-    await prisma.systemSetting.update({
-      where: { key: settingKey },
-      data: { value: JSON.stringify(currentList) },
-    })
-
+  if (!setting?.value) {
     return { success: true }
   }
-  catch (error) {
-    console.error('Failed to delete calc-history:', error)
 
-    return {
-      success: false,
-      error: '計算履歴の削除に失敗しました。',
+  let currentList: Array<{ id: string, toolId?: string }> = []
+
+  try {
+    const parsed = JSON.parse(setting.value)
+
+    if (Array.isArray(parsed)) {
+      currentList = parsed
     }
   }
+  catch {
+    currentList = []
+  }
+
+  if (id) {
+    currentList = currentList.filter(item => item.id !== id)
+  }
+  else if (toolId) {
+    currentList = currentList.filter(item => item.toolId !== toolId)
+  }
+  else {
+    currentList = []
+  }
+
+  await prisma.systemSetting.update({
+    where: { key: settingKey },
+    data: { value: JSON.stringify(currentList) },
+  })
+
+  return { success: true }
 })

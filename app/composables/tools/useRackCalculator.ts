@@ -8,6 +8,7 @@ import { computed } from 'vue'
 
 import { useToolPage } from '~/composables/tools/useToolPage'
 import { STANDARD_RACK_SIZES } from '~/constants/rackConstants'
+import { generateUuid } from '~/utils/crypto'
 import { mapRackToHistory } from '~/utils/tools/rack/historyMapper'
 import type { RackCalcResult } from '~/utils/tools/rack/rackCalcLogic'
 import {
@@ -25,10 +26,10 @@ const defaultInputs: RackInputs = {
   cableSpacing: 10,
   sideMargin: 60,
   strongCablesUI: [
-    { id: crypto.randomUUID(), category: '', cableIdx: '', count: 1 },
+    { id: generateUuid(), category: '', cableIdx: '', count: 1 },
   ],
   weakCablesUI: [
-    { id: crypto.randomUUID(), category: '', cableIdx: '', count: 1 },
+    { id: generateUuid(), category: '', cableIdx: '', count: 1 },
   ],
 }
 
@@ -36,6 +37,9 @@ export function useRackCalculator() {
   const {
     inputs,
     result,
+    isShowingBasis,
+    isSaving,
+    handleSave,
     saveToHistory: handleSaveHistory,
     resetInputs,
     openResetModal,
@@ -74,7 +78,7 @@ export function useRackCalculator() {
 
   function addStrongCable() {
     inputs.value.strongCablesUI.push({
-      id: crypto.randomUUID(),
+      id: generateUuid(),
       category: '',
       cableIdx: '',
       count: 1,
@@ -90,7 +94,7 @@ export function useRackCalculator() {
 
   function addWeakCable() {
     inputs.value.weakCablesUI.push({
-      id: crypto.randomUUID(),
+      id: generateUuid(),
       category: '',
       cableIdx: '',
       count: 1,
@@ -119,6 +123,9 @@ export function useRackCalculator() {
     maxDepth,
     result,
     isSaveDisabled,
+    isShowingBasis,
+    isSaving,
+    handleSave,
     addStrongCable,
     removeStrongCable,
     addWeakCable,

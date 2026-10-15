@@ -42,7 +42,7 @@ export async function loadSiteTepraCircuits(
 ): Promise<TepraCircuitItem[]> {
   if (rawExcelPath) {
     try {
-      const safePath = resolveExistingExcelPath(rawExcelPath)
+      const safePath = resolveExistingExcelPath(rawExcelPath, siteId)
 
       if (fs.existsSync(safePath)) {
         const buffer = await fs.promises.readFile(safePath)

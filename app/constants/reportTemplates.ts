@@ -75,18 +75,19 @@ export const REPORT_TEMPLATE_DEFINITIONS: ReportTemplateMeta[] = [
   },
   {
     id: 'remote',
-    name: 'フル2線式リモコン設定表',
+    name: 'リモコンアドレス設定表',
     category: '盤・伝送制御',
     icon: 'sliders',
     flowType: 'matrix',
-    description: 'フル2線式リモコンの負荷アドレス割当（1〜256）、編成グループ（G1〜G127）、編成パターン（P1〜P16）の設定表フォーマットへ自動転記します。',
+    description: 'フル2線式リモコンの負荷アドレス設定表（0-1〜63-4・盤名・回路番号・リレー番号・回路名称・回路記号配置）のフォーマットへ自動転記します。',
     availableKeys: [
-      { key: '%アドレス%', label: '負荷アドレス', description: '伝送ユニット個別アドレス', sample: '1-1' },
-      { key: '%グループ番号%', label: 'グループ番号', description: '所属グループ番号', sample: 'G1' },
-      { key: '%パターン番号%', label: 'パターン番号', description: '所属パターン番号', sample: 'P1' },
-      { key: '%負荷名称%', label: '負荷名称', description: '制御対象の照明器具等の名称', sample: '事務室北側ベースライト' },
-      { key: '%回路番号%', label: '連動回路番号', description: '分電盤内の接続回路', sample: 'L-1' },
-      { key: '%制御区分%', label: '制御区分', description: '個別 / グループ / パターンの種別', sample: 'グループ制御' },
+      { key: '%アドレス番号%', label: 'アドレス番号', description: '端末器アドレス番号（例: 0-1, 1-1）', sample: '0-1' },
+      { key: '%盤名称%', label: '盤名称', description: '接続されている電灯盤・動力盤の名称', sample: '1L-1' },
+      { key: '%回路番号%', label: '回路番号', description: '盤内の回路番号（セル中央に回路記号を背景透過配置）', sample: '1' },
+      { key: '%リレー番号%', label: 'リレー番号', description: '制御端末リレー番号', sample: 'R1' },
+      { key: '%回路名称%', label: '回路名称', description: '回路名称（改行は自動で半角スペースに整形）', sample: '事務室 照明 (200V)' },
+      { key: '%負荷名称%', label: '負荷名称', description: '制御対象の照明器具等の名称（回路名称と同義）', sample: '事務室 照明' },
+      { key: '%動作良否%', label: '動作良否', description: '動作確認結果（良 / - / 空白）', sample: '良' },
       { key: '%現場名%', label: '現場プロジェクト名', description: '現場名', sample: '新宿新築プロジェクト' },
       { key: '%出力日時%', label: '出力日時', description: '設定表出力年月日', sample: '2026/10/05' },
     ],
@@ -96,7 +97,7 @@ export const REPORT_TEMPLATE_DEFINITIONS: ReportTemplateMeta[] = [
 export const REPORT_LOGIC_OPTIONS = [
   { label: '線名札（タグ枠）', value: 'tag' as const },
   { label: '送電試験結果成績書', value: 'exam' as const },
-  { label: 'フル2線式リモコン設定表', value: 'remote' as const },
+  { label: 'リモコンアドレス設定表', value: 'remote' as const },
   { label: 'コンセント用テプラ元データ', value: 'socket-tepra' as const },
 ]
 

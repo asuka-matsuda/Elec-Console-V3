@@ -5,6 +5,16 @@
  * モード・相線式・負荷単位・力率などの選択肢オプションを定義します。
  */
 
+import type { BadgeVariant } from '~/types/components'
+
+export const RESULT_BADGE_VARIANT_MAP: Record<string, BadgeVariant> = {
+  danger: 'red',
+  warning: 'amber',
+  success: 'green',
+  neutral: 'gray',
+  empty: 'gray',
+}
+
 export const modeOptions = [
   { label: '電圧降下', value: 'drop', color: 'var(--color-category-tool)' },
   { label: '導体断面積', value: 'size', color: 'var(--color-category-tool)' },

@@ -1,16 +1,28 @@
-import JSZip from 'jszip'
-import { describe, expect, it } from 'vitest'
+import fs from 'node:fs'
+import path from 'node:path'
 
-describe('circuitExport safe OpenXML in-place patch verification', () => {
-  it('preserves vbaProject.bin and xml structure across JSZip patch cycles', async () => {
-    // 最小限のテスト用 .xlsm ZIP 構造をメモリ上でシミュレーション
+import JSZip from 'jszip'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+
+import { generateCircuitsExcelBuffer } from '../../server/utils/excel/circuitExport'
+import { prisma } from '../../server/utils/prisma'
+
+describe('circuitExport safe OpenXML in-place patch verification (generateCircuitsExcelBuffer 実関数検証)', () => {
+  const testSiteId = `TEST_EXPORT_PRESERVE_${Date.now()}`
+  const templateDir = path.resolve(process.cwd(), '.data', 'templates', testSiteId)
+  const templateFilePath = path.join(templateDir, 'master.xlsm')
+
+  beforeEach(async () => {
+    fs.mkdirSync(templateDir, { recursive: true })
+
+    // 最小限のテスト用 .xlsm ZIP 構造を生成してファイル保存
     const zip = new JSZip()
 
     zip.file('xl/vbaProject.bin', Buffer.from('MOCK_VBA_BINARY_DATA'))
     zip.file('xl/workbook.xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
   <sheets>
-    <sheet name="List" sheetId="1" r:id="rId1"/>
+    <sheet name="回路一覧" sheetId="1" r:id="rId1"/>
   </sheets>
 </workbook>`)
     zip.file('xl/_rels/workbook.xml.rels', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -27,37 +39,71 @@ describe('circuitExport safe OpenXML in-place patch verification', () => {
     zip.file('xl/worksheets/sheet1.xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
   <sheetData>
-    <row r="1">
-      <c r="A1" t="s"><v>0</v></c>
-      <c r="B1" t="s"><v>1</v></c>
-      <c r="C1" t="s"><v>2</v></c>
-      <c r="D1" t="s"><v>3</v></c>
+    <row r="5">
+      <c r="E5" t="s"><v>0</v></c>
+      <c r="M5" t="s"><v>1</v></c>
+      <c r="N5" t="s"><v>2</v></c>
+      <c r="X5" t="s"><v>3</v></c>
     </row>
-    <row r="2">
-      <c r="A2" s="5" t="inlineStr"><is><t>1L-1</t></is></c>
-      <c r="B2" s="5" t="inlineStr"><is><t>1</t></is></c>
-      <c r="C2" s="5" t="inlineStr"><is><t>電灯</t></is></c>
-      <c r="D2" s="33"/>
+    <row r="6">
+      <c r="E6" s="5" t="inlineStr"><is><t>1L-1</t></is></c>
+      <c r="M6" s="5" t="inlineStr"><is><t>1</t></is></c>
+      <c r="N6" s="5" t="inlineStr"><is><t>電灯回路A</t></is></c>
+      <c r="X6" s="33"/>
     </row>
   </sheetData>
 </worksheet>`)
 
-    const initialBuf = await zip.generateAsync({ type: 'nodebuffer' })
+    const buf = await zip.generateAsync({ type: 'nodebuffer' })
 
-    // パッチ処理を検証
-    const loadedZip = await JSZip.loadAsync(initialBuf)
+    fs.writeFileSync(templateFilePath, buf)
 
-    expect(Boolean(loadedZip.file('xl/vbaProject.bin'))).toBe(true)
+    await prisma.site.create({
+      data: {
+        id: testSiteId,
+        name: 'エクスポート保護検証現場',
+        settings: {
+          create: {
+            excelPath: path.join('.data', 'templates', testSiteId, 'master.xlsm'),
+          },
+        },
+      },
+    })
 
-    // セル D2 (スタイル s="33" を持つ空セル) に値を書き込む
-    let sheetXml = await loadedZip.file('xl/worksheets/sheet1.xml')!.async('text')
+    await prisma.circuit.create({
+      data: {
+        siteId: testSiteId,
+        excelRow: 6,
+        keiTo: '二次側',
+        banShubetsu: '電灯',
+        banMeisho: '1L-1',
+        kairoBangou: '1',
+        kairoMeisho: '電灯回路A',
+        p1Kakunin: true,
+        p1Mashishime: true,
+        p1Worker: '山田太郎',
+        p1ConfirmedAt: new Date('2026-10-15T01:30:00.000Z'),
+        p1Remarks: '現地確認済',
+      },
+    })
+  })
 
-    // s="33" を維持しながら <is><t>山田太郎</t></is> を設定
-    sheetXml = sheetXml.replace(/<c r="D2" s="33"\/>/, '<c r="D2" s="33" t="inlineStr"><is><t>山田太郎</t></is></c>')
-    loadedZip.file('xl/worksheets/sheet1.xml', sheetXml)
+  afterEach(async () => {
+    await prisma.circuit.deleteMany({ where: { siteId: testSiteId } })
+    await prisma.siteSettings.deleteMany({ where: { siteId: testSiteId } })
+    await prisma.site.deleteMany({ where: { id: testSiteId } })
+    if (fs.existsSync(templateDir)) {
+      fs.rmSync(templateDir, { recursive: true, force: true })
+    }
+  })
 
-    const finalBuf = await loadedZip.generateAsync({ type: 'nodebuffer' })
-    const finalZip = await JSZip.loadAsync(finalBuf)
+  it('generateCircuitsExcelBuffer が実関数で vbaProject.bin とセルスタイル s="33" を保持したまま試験結果を書き戻すこと', async () => {
+    const result = await generateCircuitsExcelBuffer(testSiteId)
+
+    expect(result.isXlsm).toBe(true)
+    expect(result.count).toBe(1)
+
+    const finalZip = await JSZip.loadAsync(result.buffer)
 
     // VBAProject が消失していないこと
     expect(Boolean(finalZip.file('xl/vbaProject.bin'))).toBe(true)
@@ -65,10 +111,11 @@ describe('circuitExport safe OpenXML in-place patch verification', () => {
 
     expect(vbaContent).toBe('MOCK_VBA_BINARY_DATA')
 
-    // スタイル s="33" が維持され、値が入っていること
+    // スタイル s="33" が維持され、確認者「山田太郎」が書き戻されていること
     const updatedSheetXml = await finalZip.file('xl/worksheets/sheet1.xml')!.async('text')
 
-    expect(updatedSheetXml).toContain('r="D2" s="33"')
+    expect(updatedSheetXml).toContain('r="X6"')
+    expect(updatedSheetXml).toContain('s="33"')
     expect(updatedSheetXml).toContain('山田太郎')
   })
 })

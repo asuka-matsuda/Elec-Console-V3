@@ -6,9 +6,12 @@
  * @permission 現場アクセス権限
  */
 
-import { createError, defineEventHandler, getRouterParam } from 'h3'
+import { defineEventHandler, getRouterParam } from 'h3'
+
+import { ErrorCode } from '#shared/types/errors'
 
 import { requireSiteAccess } from '../../../../utils/auth'
+import { createAppError } from '../../../../utils/error'
 import { getSoudenStats } from '../../../../utils/stats'
 
 export default defineEventHandler(async (event) => {
@@ -17,13 +20,11 @@ export default defineEventHandler(async (event) => {
   const siteId = getRouterParam(event, 'siteId')
 
   if (!siteId) {
-    throw createError({
-      statusCode: 400,
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: '現場IDが指定されていません',
     })
   }
 
-  const stats = await getSoudenStats(siteId)
-
-  return stats
+  return getSoudenStats(siteId)
 })

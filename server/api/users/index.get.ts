@@ -8,7 +8,7 @@
 
 import { defineEventHandler } from 'h3'
 
-import { requireMasterUser } from '../../utils/auth'
+import { requireMasterUser, toSafeUser } from '../../utils/auth'
 import { prisma } from '../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
@@ -18,18 +18,5 @@ export default defineEventHandler(async (event) => {
     include: { assignedSites: true, siteAssignments: true },
   })
 
-  return users.map((user) => {
-    const assignedSiteIds = user.assignedSites.map(s => s.id)
-    const siteAssignments = user.assignedSites.map((s) => {
-      const match = user.siteAssignments.find(sa => sa.siteId === s.id)
-
-      return {
-        siteId: s.id,
-        role: match?.role || user.role || 'worker',
-      }
-    })
-    const { password: _dbPassword, assignedSites: _assignedSites, siteAssignments: _sa, ...restUser } = user
-
-    return { ...restUser, assignedSiteIds, siteAssignments }
-  })
+  return users.map(toSafeUser)
 })

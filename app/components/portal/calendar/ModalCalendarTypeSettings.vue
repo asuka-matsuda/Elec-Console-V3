@@ -66,92 +66,78 @@ const getColorName = (colorHex?: string) => {
   <Modal v-model="isOpen" title="予定種別の設定" size="lg">
     <div class="flex flex-col gap-panel-gap w-full md:min-w-[500px]">
       <div class="flex items-center justify-between">
-        <p class="guide-text">
-          カレンダーに表示する予定種別とテーマカラーを設定します。
-        </p>
-        <span class="count-badge">全 {{ types.length }} 件</span>
+        <small>カレンダーに表示する予定種別とテーマカラーを設定します。</small>
+        <Badge size="sm" variant="gray">全 {{ types.length }} 件</Badge>
       </div>
 
       <ul class="flex flex-col gap-item-gap max-h-[440px] overflow-y-auto pr-inline-gap">
         <li
           v-for="(t, index) in types"
           :key="t.id"
-          class="type-item flex flex-col"
-          :class="{ 'is-palette-open': activePaletteId === t.id }"
-          :style="{ '--item-color': t.color }"
+          class="panel is-elevated flex flex-col gap-item-gap p-item-gap"
+          :style="{ borderLeft: `4px solid ${t.color}` }"
         >
-          <!-- コントロール行 -->
-          <div class="flex flex-col gap-inline-gap w-full p-item-gap">
-            <div class="flex items-center gap-item-gap w-full">
-              <!-- カラートリガーボタン（Geist調の直角ピル） -->
-              <button
-                type="button"
-                class="color-trigger-btn flex items-center gap-inline-gap shrink-0"
-                :class="{ 'is-active': activePaletteId === t.id }"
-                title="カラーパレットを開閉"
-                @click="togglePalette(t.id)"
-              >
-                <span class="color-chip" :style="{ backgroundColor: t.color }" />
-                <Icon
-                  name="chevron-down"
-                  class="trigger-icon"
-                  :class="{ 'is-rotated': activePaletteId === t.id }"
-                />
-              </button>
+          <div class="flex items-center gap-item-gap w-full">
+            <button
+              type="button"
+              class="panel is-interactive flex items-center gap-inline-gap px-item-gap h-10 shrink-0"
+              :class="{ 'is-active': activePaletteId === t.id }"
+              title="カラーパレットを開閉"
+              @click="togglePalette(t.id)"
+            >
+              <span class="w-3.5 h-3.5 shrink-0" :style="{ backgroundColor: t.color }" />
+              <Icon name="chevron-down" size="sm" />
+            </button>
 
-              <!-- 種別名入力 -->
-              <Input
-                v-model="t.name"
-                class="flex-1 min-w-0"
-                placeholder="種別名（例: 現場作業）"
-                required
-              />
+            <Input
+              v-model="t.name"
+              class="flex-1 min-w-0"
+              placeholder="種別名（例: 現場作業）"
+              required
+            />
 
-              <!-- カレンダー実物バッジプレビュー（デスクトップ） -->
-              <div
-                class="preview-badge shrink-0 hidden sm:flex items-center gap-inline-gap"
-                :style="{ '--badge-color': t.color }"
-                title="カレンダー上の表示プレビュー（クリックでカラー選択）"
-                @click="togglePalette(t.id)"
-              >
-                <span class="shrink-0 preview-time">09:00</span>
-                <span class="preview-name">{{ t.name.trim() || '種別名' }}</span>
-              </div>
+            <button
+              type="button"
+              class="panel is-interactive shrink-0 hidden sm:flex items-center gap-inline-gap px-item-gap py-inline-gap max-w-[180px]"
+              :style="{ borderColor: t.color }"
+              title="カレンダー上の表示プレビュー（クリックでカラー選択）"
+              @click="togglePalette(t.id)"
+            >
+              <time class="shrink-0">09:00</time>
+              <strong class="truncate">{{ t.name.trim() || '種別名' }}</strong>
+            </button>
 
-              <!-- 削除ボタン -->
-              <Button
-                v-if="types.length > 1"
-                variant="danger"
-                size="sm"
-                icon="trash-2"
-                class="shrink-0"
-                @click="handleRemoveType(index)"
-              />
-            </div>
-
-            <!-- モバイル表示時のインラインプレビュー -->
-            <div class="flex sm:hidden items-center justify-between gap-inline-gap">
-              <span class="preview-caption">プレビュー</span>
-              <div
-                class="preview-badge flex items-center gap-inline-gap"
-                :style="{ '--badge-color': t.color }"
-                title="カレンダー上の表示プレビュー（クリックでカラー選択）"
-                @click="togglePalette(t.id)"
-              >
-                <span class="shrink-0 preview-time">09:00</span>
-                <span class="preview-name">{{ t.name.trim() || '種別名' }}</span>
-              </div>
-            </div>
+            <Button
+              v-if="types.length > 1"
+              variant="danger"
+              size="sm"
+              icon="trash-2"
+              class="shrink-0"
+              @click="handleRemoveType(index)"
+            />
           </div>
 
-          <!-- 展開型カラーパレットトレイ（Geistコンソール調） -->
-          <div v-if="activePaletteId === t.id" class="palette-drawer p-item-gap">
-            <div class="flex items-center justify-between pb-inline-gap">
-              <span class="palette-caption">プリセットカラー</span>
-              <span class="palette-color-name">{{ getColorName(t.color) }}</span>
+          <div class="flex sm:hidden items-center justify-between gap-inline-gap">
+            <small>プレビュー</small>
+            <button
+              type="button"
+              class="panel is-interactive flex items-center gap-inline-gap px-item-gap py-inline-gap max-w-[180px]"
+              :style="{ borderColor: t.color }"
+              title="カレンダー上の表示プレビュー（クリックでカラー選択）"
+              @click="togglePalette(t.id)"
+            >
+              <time class="shrink-0">09:00</time>
+              <strong class="truncate">{{ t.name.trim() || '種別名' }}</strong>
+            </button>
+          </div>
+
+          <div v-if="activePaletteId === t.id" class="panel is-sunken p-item-gap flex flex-col gap-inline-gap">
+            <div class="flex items-center justify-between">
+              <small>プリセットカラー</small>
+              <code>{{ getColorName(t.color) }}</code>
             </div>
 
-            <div class="flex flex-wrap gap-inline-gap palette-grid">
+            <div class="flex flex-wrap gap-inline-gap">
               <Tooltip
                 v-for="preset in DEFAULT_COLOR_PRESETS"
                 :key="preset.value"
@@ -159,17 +145,14 @@ const getColorName = (colorHex?: string) => {
               >
                 <button
                   type="button"
-                  class="flex items-center justify-center palette-slot"
+                  class="panel is-interactive flex items-center justify-center w-7 h-7 p-0"
                   :class="{ 'is-active': t.color === preset.value }"
-                  :style="{ '--slot-color': preset.value }"
+                  :style="{ borderColor: t.color === preset.value ? preset.value : undefined }"
                   @click="selectColor(t, preset.value)"
                 >
-                  <span class="slot-dot" :style="{ backgroundColor: preset.value }" />
-                  <Icon
-                    v-if="t.color === preset.value"
-                    name="check"
-                    class="slot-check"
-                  />
+                  <span class="w-3.5 h-3.5 flex items-center justify-center" :style="{ backgroundColor: preset.value }">
+                    <Icon v-if="t.color === preset.value" name="check" size="sm" />
+                  </span>
                 </button>
               </Tooltip>
             </div>
@@ -182,183 +165,9 @@ const getColorName = (colorHex?: string) => {
       </div>
     </div>
 
-    <template #actions>
+    <template #footer>
       <Button @click="isOpen = false">キャンセル</Button>
       <Button variant="primary" icon="check" @click="handleSave">設定を保存する</Button>
     </template>
   </Modal>
 </template>
-
-<style scoped lang="scss">
-.guide-text {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-muted);
-}
-
-.count-badge {
-  padding: var(--space-0-5) var(--space-1-5);
-  border: var(--border-width-base) solid var(--color-border);
-
-  font-family: var(--font-mono);
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-muted);
-
-  background: var(--surface-bg-elevated);
-}
-
-.type-item {
-  border: var(--border-width-base) solid var(--color-border);
-  border-left: 4px solid var(--item-color, var(--color-border));
-  background: var(--surface-bg-elevated);
-  transition: var(--transition-panel);
-
-  &:hover {
-    border-color: color-mix(in srgb, var(--item-color, var(--color-border)) 40%, var(--color-border));
-  }
-
-  &.is-palette-open {
-    border-color: color-mix(in srgb, var(--item-color, var(--color-border)) 60%, var(--color-border));
-  }
-}
-
-.color-trigger-btn {
-  height: 40px;
-  padding: 0 var(--space-2);
-  border: var(--border-width-base) solid var(--color-border);
-  border-radius: 0;
-
-  color: var(--color-text-main);
-
-  background: var(--surface-bg);
-
-  transition: var(--transition-interactive);
-
-  @include state-interactive;
-
-  &:hover,
-  &.is-active {
-    border-color: var(--item-color, var(--theme-accent));
-    background: color-mix(in srgb, var(--item-color, var(--theme-accent)) 10%, var(--surface-bg));
-  }
-
-  .trigger-icon {
-    font-size: var(--font-size-xs);
-    color: var(--color-text-muted);
-    transition: transform var(--duration-fast) var(--ease-base);
-
-    &.is-rotated {
-      transform: rotate(180deg);
-    }
-  }
-}
-
-.color-chip {
-  width: 14px;
-  height: 14px;
-  border: 1px solid color-mix(in srgb, black 20%, transparent);
-  border-radius: var(--radius-circle);
-}
-
-.preview-caption {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-2xs);
-  color: var(--color-text-muted);
-}
-
-.preview-badge {
-  user-select: none;
-
-  max-width: 180px;
-  padding: var(--space-1) var(--space-2);
-  border: var(--border-width-base) solid var(--badge-color, var(--theme-accent));
-  border-radius: 0;
-
-  font-size: var(--font-size-xs);
-
-  background: color-mix(in srgb, var(--badge-color, var(--theme-accent)) 12%, var(--surface-bg-elevated));
-
-  transition: var(--transition-interactive);
-
-  @include state-interactive;
-
-  &:hover {
-    background: color-mix(in srgb, var(--badge-color, var(--theme-accent)) 22%, var(--surface-bg-elevated));
-  }
-
-  .preview-time {
-    font-family: var(--font-mono);
-    font-size: var(--font-size-2xs);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-muted);
-  }
-
-  .preview-name {
-    overflow: hidden;
-
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-main);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-}
-
-.palette-drawer {
-  border-top: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 60%, transparent);
-  background: color-mix(in srgb, var(--color-bg) 50%, var(--surface-bg-elevated));
-
-  .palette-caption {
-    font-family: var(--font-mono);
-    font-size: var(--font-size-2xs);
-    color: var(--color-text-muted);
-    letter-spacing: var(--tracking-wide);
-  }
-
-  .palette-color-name {
-    font-family: var(--font-mono);
-    font-size: var(--font-size-2xs);
-    color: var(--color-text-secondary);
-  }
-}
-
-.palette-slot {
-  position: relative;
-
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  border: var(--border-width-base) solid var(--color-border);
-  border-radius: 0;
-
-  background: var(--surface-bg);
-
-  transition: var(--transition-interactive);
-
-  @include state-interactive;
-
-  &:hover {
-    transform: translateY(-1px);
-    border-color: var(--slot-color);
-  }
-
-  &.is-active {
-    border-color: var(--slot-color);
-    background: color-mix(in srgb, var(--slot-color) 20%, var(--surface-bg));
-    outline: 1px solid var(--slot-color);
-    outline-offset: 1px;
-  }
-
-  .slot-dot {
-    width: 12px;
-    height: 12px;
-    border: 1px solid color-mix(in srgb, black 20%, transparent);
-    border-radius: var(--radius-circle);
-  }
-
-  .slot-check {
-    position: absolute;
-    font-size: var(--font-size-2xs);
-    color: white;
-    filter: drop-shadow(0 0 2px black);
-  }
-}
-</style>

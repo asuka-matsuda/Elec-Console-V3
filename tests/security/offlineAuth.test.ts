@@ -137,4 +137,58 @@ describe('Offline Authentication (Web Crypto API & Local-First)', () => {
     expect(accurateTime - localTime).toBeGreaterThanOrEqual(4900)
     expect(accurateTime - localTime).toBeLessThanOrEqual(5100)
   })
+
+  it('rejects offline login when cached credentials have expired or account is inactive', async () => {
+    const salt = generateSalt(16)
+    const hash = await hashPasswordClient('offline-pass', salt)
+    const now = new Date()
+    const expiredAt = new Date(now.getTime() - 60 * 1000).toISOString() // 1分前に期限切れ
+
+    await AuthCacheRepository.put({
+      loginId: 'test-worker',
+      user: {
+        id: 'u-1',
+        loginId: 'test-worker',
+        role: 'worker',
+        firstName: '太郎',
+        lastName: '現場',
+        isActive: true,
+        assignedSiteIds: ['site-01'],
+      },
+      passwordSalt: salt,
+      passwordHash: hash,
+      cachedAt: now.toISOString(),
+      expiresAt: expiredAt,
+    })
+
+    const { login } = useAuth()
+    const expiredResult = await login('test-worker', 'offline-pass')
+
+    expect(expiredResult.success).toBe(false)
+    expect(expiredResult.message).toContain('有効期限')
+
+    // 無効化ユーザー (isActive: false) の場合も拒否されること
+    const validExpiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString()
+
+    await AuthCacheRepository.put({
+      loginId: 'test-worker',
+      user: {
+        id: 'u-1',
+        loginId: 'test-worker',
+        role: 'worker',
+        firstName: '太郎',
+        lastName: '現場',
+        isActive: false,
+        assignedSiteIds: ['site-01'],
+      },
+      passwordSalt: salt,
+      passwordHash: hash,
+      cachedAt: now.toISOString(),
+      expiresAt: validExpiresAt,
+    })
+
+    const inactiveResult = await login('test-worker', 'offline-pass')
+
+    expect(inactiveResult.success).toBe(false)
+  })
 })

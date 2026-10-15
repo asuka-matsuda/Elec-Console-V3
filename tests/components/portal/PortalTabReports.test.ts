@@ -51,12 +51,26 @@ vi.mock('~/composables/portal/useExamReportPrint', () => ({
 
 vi.mock('~/composables/portal/useMeasurementDevices', () => ({
   useMeasurementDevices: () => ({
+    devices: ref([
+      { id: 'd1', category: 'megger', maker: 'HIOKI', model: 'IR4052-11', serialNumber: 'SN-001' },
+    ]),
+    selectedMeggerId: ref('d1'),
+    selectedVoltmeterId: ref(''),
+    selectedPhaseDetectorId: ref(''),
+    isDevicesModalOpen: ref(false),
+    meggerOptions: ref([
+      { value: 'd1', label: 'HIOKI IR4052-11 (SN-001)' },
+    ]),
+    voltmeterOptions: ref([]),
+    phaseDetectorOptions: ref([]),
     selectedDevicesMap: ref({
-      megger: { model: 'IR4052-11', serialNumber: 'SN-001' },
+      megger: { id: 'd1', category: 'megger', maker: 'HIOKI', model: 'IR4052-11', serialNumber: 'SN-001' },
       voltmeter: null,
       phaseDetector: null,
     }),
     fetchMeasurementDevices: vi.fn(),
+    onDeviceSelectionChange: vi.fn(),
+    onDevicesUpdated: vi.fn(),
   }),
 }))
 
@@ -101,7 +115,7 @@ describe('Portal Reports Tab Components', () => {
     expect(wrapper.text()).toContain('Phase 1 確認済')
   })
 
-  it('TabRemote renders export target radios and summary', () => {
+  it('TabRemote renders target selectors, symbol options, and summary', () => {
     const wrapper = mount(TabRemote, {
       props: {
         siteId: 'site-1',
@@ -110,7 +124,8 @@ describe('Portal Reports Tab Components', () => {
       },
     })
 
-    expect(wrapper.text()).toContain('1. 出力種別の選択')
+    expect(wrapper.text()).toContain('1. 対象盤・系統の指定')
+    expect(wrapper.text()).toContain('2. 回路記号の印字設定')
     expect(wrapper.text()).toContain('リモコン編成サマリー')
     expect(wrapper.text()).toContain('負荷アドレス')
   })

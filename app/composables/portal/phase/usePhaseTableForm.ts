@@ -22,15 +22,26 @@ export function usePhaseTableForm<TForm extends object>(
 ) {
   const rowForms = reactive<Record<string, TForm>>({})
   const unconfirmedRowIds = ref<Set<string>>(new Set())
+  const serverFormSnapshots = new Map<string, string>()
 
-  // 回路データ変更時にローカル状態を最新データと同期
+  // 回路データ変更時にローカル状態を最新データと同期（ローカル解除中や未確定の入力途中行は上書き保護）
   watch(
     () => toValue(options.circuits),
     (newCircuits) => {
-      unconfirmedRowIds.value.clear()
       if (!newCircuits) return
       for (const c of newCircuits) {
-        rowForms[c.id] = options.initForm(c)
+        const freshForm = options.initForm(c)
+        const freshJson = JSON.stringify(freshForm)
+        const currentForm = rowForms[c.id]
+        const lastServerJson = serverFormSnapshots.get(c.id)
+        const isDirty = currentForm !== undefined
+          && lastServerJson !== undefined
+          && JSON.stringify(currentForm) !== lastServerJson
+
+        if (!unconfirmedRowIds.value.has(c.id) && !isDirty) {
+          rowForms[c.id] = freshForm
+          serverFormSnapshots.set(c.id, freshJson)
+        }
       }
     },
     { immediate: true },
@@ -38,7 +49,10 @@ export function usePhaseTableForm<TForm extends object>(
 
   const getRowForm = (circuit: CircuitItem): TForm => {
     if (!rowForms[circuit.id]) {
-      rowForms[circuit.id] = options.initForm(circuit)
+      const freshForm = options.initForm(circuit)
+
+      rowForms[circuit.id] = freshForm
+      serverFormSnapshots.set(circuit.id, JSON.stringify(freshForm))
     }
 
     return rowForms[circuit.id]!
@@ -49,9 +63,12 @@ export function usePhaseTableForm<TForm extends object>(
     unconfirmedRowIds.value.add(circuit.id)
   }
 
-  // 確定ボタン押下時：ローカル解除マークを取り消す
+  // 確定ボタン押下時：ローカル解除マークを取り消し、現在のフォーム状態を基準スナップショットに反映
   const markConfirmedLocally = (circuit: CircuitItem) => {
     unconfirmedRowIds.value.delete(circuit.id)
+    if (rowForms[circuit.id]) {
+      serverFormSnapshots.set(circuit.id, JSON.stringify(rowForms[circuit.id]))
+    }
   }
 
   // 確定済み表示判定（ローカル解除されておらず、サーバー側で確定日時が存在すること）

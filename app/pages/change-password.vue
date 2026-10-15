@@ -61,7 +61,7 @@ const handleChangePassword = async () => {
   <div class="panel w-full max-w-[480px] min-h-[460px] flex flex-col gap-form-row-gap">
     <div class="flex flex-col gap-inline-gap">
       <h2 class="text-center">初回パスワード設定</h2>
-      <small class="subtitle-text text-center">セキュリティのため、システムから配布された初期パスワードを変更してください。</small>
+      <small class="text-center">セキュリティのため、システムから配布された初期パスワードを変更してください。</small>
     </div>
 
     <hr class="divider is-fade-center">
@@ -74,7 +74,7 @@ const handleChangePassword = async () => {
         <label for="new-password" class="label">新しいパスワード (8文字以上)</label>
         <Input id="new-password" v-model="password" :type="showPassword ? 'text' : 'password'" placeholder="新しいパスワード" icon="lock" :disabled="isLoading" autocomplete="new-password">
           <template #suffix>
-            <button type="button" tabindex="-1" class="password-toggle-btn" @mousedown.prevent @click="showPassword = !showPassword">
+            <button type="button" tabindex="-1" class="help-trigger" @mousedown.prevent @click="showPassword = !showPassword">
               <Icon :name="showPassword ? 'eye-off' : 'eye'" />
             </button>
           </template>
@@ -86,7 +86,7 @@ const handleChangePassword = async () => {
         <label for="confirm-password" class="label">新しいパスワード (確認用)</label>
         <Input id="confirm-password" v-model="passwordConfirm" :type="showPasswordConfirm ? 'text' : 'password'" placeholder="もう一度入力" icon="lock" :disabled="isLoading" autocomplete="new-password">
           <template #suffix>
-            <button type="button" tabindex="-1" class="password-toggle-btn" @mousedown.prevent @click="showPasswordConfirm = !showPasswordConfirm">
+            <button type="button" tabindex="-1" class="help-trigger" @mousedown.prevent @click="showPasswordConfirm = !showPasswordConfirm">
               <Icon :name="showPasswordConfirm ? 'eye-off' : 'eye'" />
             </button>
           </template>
@@ -97,35 +97,3 @@ const handleChangePassword = async () => {
     </form>
   </div>
 </template>
-
-<style scoped lang="scss">
-.subtitle-text {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-secondary);
-}
-
-.password-toggle-btn {
-  display: grid;
-  place-items: center;
-
-  padding: var(--space-1);
-  border: none;
-
-  color: var(--color-text-muted);
-
-  background: transparent;
-
-  transition: color var(--transition-fast);
-
-  @include state-interactive;
-
-  &:hover {
-    color: var(--color-text-main);
-  }
-
-  &:focus-visible {
-    color: var(--theme-accent);
-    outline: none;
-  }
-}
-</style>

@@ -50,21 +50,17 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // 最後の有効な管理者の削除禁止
-  if (targetUser.role === 'admin') {
-    const adminCount = await prisma.user.count({
-      where: { role: 'admin', isActive: true },
-    })
-
-    if (adminCount <= 1) {
-      throw createAppError({
-        code: ErrorCode.USER_LAST_ADMIN_DENIED,
-        message: 'システム内に有効な管理者が1人のみのため、削除できません。',
-      })
-    }
-  }
-
-  await prisma.user.delete({ where: { id } })
+  await prisma.$transaction([
+    prisma.todo.deleteMany({
+      where: {
+        OR: [
+          { userId: targetUser.loginId },
+          { userId: targetUser.id },
+        ],
+      },
+    }),
+    prisma.user.delete({ where: { id } }),
+  ])
 
   return { success: true }
 })

@@ -20,6 +20,7 @@ const {
   trim = false,
   placeholder,
   disabled = false,
+  required = false,
   readonly = false,
   error = false,
   maxlength,
@@ -86,7 +87,7 @@ defineExpose({
 </script>
 
 <template>
-  <textarea :id="textareaId" ref="textareaRef" v-model="model" :name="name" :rows="rows" :placeholder="placeholder" :disabled="disabled" :readonly="readonly" :maxlength="maxlength" :title="title" class="form-control relative z-[1] focus:z-[2] w-full" :class="[`textarea--${size}`, { 'is-error': isError, 'is-auto-resize': autoResize }, resizeClass]" @blur="handleBlur" @focus="emit('focus', $event)" @change="handleChange" />
+  <textarea :id="textareaId" ref="textareaRef" v-model="model" :name="name" :rows="rows" :placeholder="placeholder" :disabled="disabled" :required="required" :readonly="readonly" :maxlength="maxlength" :title="title" class="form-control relative z-[1] focus:z-[2] w-full" :class="[`textarea--${size}`, { 'is-error': isError, 'is-auto-resize': autoResize }, resizeClass]" @blur="handleBlur" @focus="emit('focus', $event)" @change="handleChange" />
 </template>
 
 <style scoped lang="scss">

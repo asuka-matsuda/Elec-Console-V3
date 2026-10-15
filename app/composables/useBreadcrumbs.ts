@@ -49,8 +49,6 @@ const PORTAL_SUB_FEATURES: Record<string, SubFeatureConfig> = {
   'reports': { title: '帳票出力' },
   'tag-print': { title: 'タグ出力' },
   'remote-control': { title: 'リモコン設定' },
-  'template-keys': { title: 'テンプレートキー一覧' },
-  'template-tags': { title: 'テンプレートキー一覧' },
 }
 
 function createMenuBreadcrumbs(section: MenuSection, item: MenuItem): BreadcrumbsData {

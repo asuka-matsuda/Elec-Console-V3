@@ -74,9 +74,9 @@ describe('voltageCalcLogic', () => {
       expect(factor).toBeCloseTo(0.816, 3)
     })
 
-    it('should return 0.1 if ambientTemp is greater than or equal to maxTemp', () => {
-      expect(getAmbientTempDerating(30, 60, 60)).toBe(0.1)
-      expect(getAmbientTempDerating(30, 60, 70)).toBe(0.1)
+    it('should return 0 if ambientTemp is greater than or equal to maxTemp', () => {
+      expect(getAmbientTempDerating(30, 60, 60)).toBe(0)
+      expect(getAmbientTempDerating(30, 60, 70)).toBe(0)
     })
   })
 

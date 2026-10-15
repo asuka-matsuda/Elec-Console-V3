@@ -76,10 +76,10 @@ const offlineBanner = computed(() => {
           <Button variant="tertiary" size="sm" icon="menu" @click="toggleSidebar" />
         </Tooltip>
         <NuxtLink to="/" class="flex items-center">
-          <div class="flex shrink-0 items-center gap-item-gap logo">
-            <Icon name="gauge" class="logo-icon" />
+          <h4 class="flex shrink-0 items-center gap-item-gap whitespace-nowrap">
+            <Icon name="gauge" style="color: var(--theme-accent)" />
             <span>Elec-Console</span>
-          </div>
+          </h4>
         </NuxtLink>
       </div>
 
@@ -108,35 +108,3 @@ const offlineBanner = computed(() => {
     </main>
   </div>
 </template>
-
-<style scoped lang="scss">
-.slide-enter-active,
-.slide-leave-active {
-  transition:
-    max-height var(--duration-base) var(--ease-base),
-    opacity var(--duration-fast) var(--ease-base);
-}
-
-.slide-enter-from,
-.slide-leave-to {
-  max-height: 0;
-  opacity: 0;
-}
-
-.app-header {
-  border-bottom: var(--border-width-base) solid var(--color-border);
-  background-color: var(--surface-bg);
-}
-
-.logo {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  color: var(--color-text-main);
-  white-space: nowrap;
-}
-
-.logo-icon {
-  color: var(--theme-accent);
-}
-</style>

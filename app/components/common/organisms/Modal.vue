@@ -66,7 +66,7 @@ watch(
           </h3>
 
           <slot name="actions">
-            <Button @click="handleClose">{{ closeText }}</Button>
+            <Button v-if="!$slots.footer" @click="handleClose">{{ closeText }}</Button>
           </slot>
         </slot>
       </header>

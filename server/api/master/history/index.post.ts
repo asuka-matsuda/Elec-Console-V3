@@ -6,19 +6,21 @@
  * @permission システム管理者限定
  */
 
-import { createError, defineEventHandler, readBody } from 'h3'
+import { defineEventHandler, readBody } from 'h3'
+
+import { ErrorCode } from '#shared/types/errors'
 
 import { requireMasterUser } from '../../../utils/auth'
+import { createAppError } from '../../../utils/error'
 import { prisma } from '../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
   await requireMasterUser(event)
-  const body = await readBody<{ version?: string, title?: string, date?: string, desc?: string, status?: string, toolId?: string }>(event)
+  const body = await readBody<{ version?: string, title?: string, date?: string, desc?: string, status?: string, toolId?: string }>(event).catch(() => null)
 
   if (!body?.version?.trim() || !body?.title?.trim() || !body?.date?.trim()) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request',
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
       message: 'バージョン、タイトル、日付は必須です。',
     })
   }
