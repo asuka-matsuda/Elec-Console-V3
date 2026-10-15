@@ -14,6 +14,7 @@ export interface CalendarEvent {
   end?: string
   allDay?: boolean
   type?: string
+  isMilestone?: boolean
 }
 
 /**
@@ -41,6 +42,8 @@ export interface EventFormData {
   end: string
   /** 終日フラグ */
   allDay: boolean
+  /** マイルストーンフラグ */
+  isMilestone?: boolean
 }
 
 /**
@@ -53,6 +56,8 @@ export interface CalendarSettings {
   holidayDays: number[]
   /** カスタム休日リスト (YYYY-MM-DD) */
   customHolidays: string[]
+  /** カスタム休日の名称マップ (key: YYYY-MM-DD, value: 5文字以内の休日名) */
+  customHolidayLabels?: Record<string, string>
 }
 
 /**

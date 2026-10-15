@@ -22,6 +22,7 @@ const CreateEventSchema = z.object({
   end: z.string().nullable().optional(),
   allDay: z.boolean().optional(),
   type: z.string().optional(),
+  isMilestone: z.boolean().optional(),
 })
 
 export default defineEventHandler(async (event) => {
@@ -37,15 +38,25 @@ export default defineEventHandler(async (event) => {
   }
 
   const body = await validateRequestBody(event, CreateEventSchema)
+  const isMilestone = Boolean(body.isMilestone || body.type === 'milestone')
 
-  return prisma.event.create({
+  const created = await prisma.event.create({
     data: {
       siteId,
       title: body.title,
-      start: body.start,
-      end: body.end || null,
-      allDay: body.allDay || false,
-      type: body.type || 'other',
+      start: isMilestone ? (body.start.split('T')[0] || body.start) : body.start,
+      end: isMilestone ? null : (body.end || null),
+      allDay: isMilestone ? true : (body.allDay || false),
+      type: isMilestone ? 'milestone' : (body.type || 'other'),
     },
   })
+
+  if (isMilestone) {
+    await prisma.$executeRaw`UPDATE "Event" SET "isMilestone" = 1 WHERE "id" = ${created.id}`
+  }
+
+  return {
+    ...created,
+    isMilestone,
+  }
 })

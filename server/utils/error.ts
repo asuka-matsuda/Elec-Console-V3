@@ -55,6 +55,8 @@ export function getDefaultStatusCode(code: ErrorCode): number {
       return 429
     case ErrorCode.SYS_INTERNAL_ERROR:
     case ErrorCode.SYS_UNKNOWN_ERROR:
+    case ErrorCode.DB_TABLE_NOT_FOUND:
+    case ErrorCode.DB_SCHEMA_MISMATCH:
       return 500
     case ErrorCode.SYS_SERVER_UNAVAILABLE:
       return 503
@@ -105,7 +107,7 @@ export function createAppError(params: CreateAppErrorParams) {
 }
 
 /**
- * Prisma の既知エラー（P2021: テーブル不存在, P2003: 外部キー制約違反, P2002: 一意制約違反, P2025: 対象レコード不在）を
+ * Prisma の既知エラー（P2021: テーブル不存在, P2022: カラム不存在, P2003: 外部キー制約違反, P2002: 一意制約違反, P2025: 対象レコード不在, PrismaClientValidationError: スキーマ不整合）を
  * アプリケーションの既知エラーコード（ErrorCode）へ昇格・マッピングするヘルパー
  */
 export function parsePrismaError(err: unknown): { code: ErrorCode, message: string } | null {
@@ -115,6 +117,27 @@ export function parsePrismaError(err: unknown): { code: ErrorCode, message: stri
   const causeRecord = (typeof errRecord.cause === 'object' && errRecord.cause !== null)
     ? (errRecord.cause as Record<string, unknown>)
     : null
+
+  const errName = String(errRecord.name || causeRecord?.name || '')
+  const errMessage = String(errRecord.message || causeRecord?.message || '')
+
+  // PrismaClientValidationError（スキーマ変更後に Prisma Client が再生成または再起動されていない場合等）を既知エラーへ昇格
+  if (
+    errName === 'PrismaClientValidationError'
+    || errMessage.includes('Unknown argument')
+    || errMessage.includes('Unknown field')
+    || errMessage.includes('no such column')
+  ) {
+    const fieldMatch = /Unknown (?:argument|field) `([^`]+)`/.exec(errMessage)
+    const fieldName = fieldMatch?.[1]
+
+    return {
+      code: ErrorCode.DB_SCHEMA_MISMATCH,
+      message: fieldName
+        ? `データベーススキーマ不整合（未反映フィールド: ${fieldName}）が発生しました。スキーマ同期およびサーバー再起動を実行してください。`
+        : DEFAULT_ERROR_MESSAGES[ErrorCode.DB_SCHEMA_MISMATCH],
+    }
+  }
 
   const target = ('code' in errRecord ? errRecord : causeRecord) as { code?: string, meta?: Record<string, unknown> } | null
 
@@ -129,6 +152,16 @@ export function parsePrismaError(err: unknown): { code: ErrorCode, message: stri
         message: table
           ? `データベーステーブル「${table}」が存在しません。スキーマ同期を実行してください。`
           : 'データベーステーブルが存在しません。スキーマ同期を実行してください。',
+      }
+    }
+    case 'P2022': {
+      const column = target.meta?.column as string | undefined
+
+      return {
+        code: ErrorCode.DB_SCHEMA_MISMATCH,
+        message: column
+          ? `データベースカラム「${column}」が存在しません。スキーマ同期を実行してください。`
+          : DEFAULT_ERROR_MESSAGES[ErrorCode.DB_SCHEMA_MISMATCH],
       }
     }
     case 'P2003': {

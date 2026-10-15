@@ -12,6 +12,7 @@ import type {
   EventFormData,
 } from '#shared/types/calendar'
 import { useModal } from '~/composables/useModal'
+import { useToast } from '~/composables/useToast'
 import { formatToDateInputString } from '~/utils/date'
 import { parseToAppException } from '~/utils/errors'
 
@@ -34,6 +35,7 @@ export function useCalendarEventForm({
   updateEvent,
   deleteEvent,
 }: UseCalendarEventFormOptions) {
+  const toast = useToast()
   const isModalOpen = ref(false)
   const isEditing = ref(false)
   const editingEventId = ref<string | null>(null)
@@ -44,20 +46,22 @@ export function useCalendarEventForm({
     start: '',
     end: '',
     allDay: false,
+    isMilestone: false,
   })
 
   const openCreateModal = (
     startStr: string,
     endStr: string,
     allDay: boolean,
+    isMilestone = false,
   ) => {
     isEditing.value = false
     editingEventId.value = null
 
-    const finalStart = startStr
-    let finalEnd = endStr
+    const finalStart = isMilestone ? (startStr.split('T')[0] || startStr) : startStr
+    let finalEnd = isMilestone ? finalStart : endStr
 
-    if (allDay && endStr) {
+    if (!isMilestone && allDay && endStr) {
       const d = new Date(endStr)
 
       d.setDate(d.getDate() - 1)
@@ -69,7 +73,8 @@ export function useCalendarEventForm({
       type: settings.value?.eventTypes?.[0]?.id || 'work',
       start: finalStart,
       end: finalEnd || finalStart,
-      allDay,
+      allDay: isMilestone ? true : allDay,
+      isMilestone,
     }
     isModalOpen.value = true
   }
@@ -80,15 +85,18 @@ export function useCalendarEventForm({
     startStr: string
     endStr: string
     allDay: boolean
-    extendedProps: { type?: string }
+    extendedProps: { type?: string, isMilestone?: boolean }
   }) => {
     isEditing.value = true
     editingEventId.value = calEvent.id
 
-    const finalStart = calEvent.startStr
-    let finalEnd = calEvent.endStr
+    const isMilestone = Boolean(calEvent.extendedProps?.isMilestone)
+    const finalStart = isMilestone
+      ? (calEvent.startStr.split('T')[0] || calEvent.startStr)
+      : calEvent.startStr
+    let finalEnd = isMilestone ? finalStart : calEvent.endStr
 
-    if (calEvent.allDay && calEvent.endStr) {
+    if (!isMilestone && calEvent.allDay && calEvent.endStr) {
       const d = new Date(calEvent.endStr)
 
       d.setDate(d.getDate() - 1)
@@ -100,7 +108,24 @@ export function useCalendarEventForm({
       type: calEvent.extendedProps.type || 'work',
       start: finalStart,
       end: finalEnd || finalStart,
-      allDay: calEvent.allDay,
+      allDay: isMilestone ? true : calEvent.allDay,
+      isMilestone,
+    }
+    isModalOpen.value = true
+  }
+
+  const openEditMilestone = (evt: CalendarEvent) => {
+    const startOnly = evt.start.split('T')[0] || evt.start
+
+    isEditing.value = true
+    editingEventId.value = evt.id
+    form.value = {
+      title: evt.title,
+      type: evt.type || settings.value?.eventTypes?.[0]?.id || 'work',
+      start: startOnly,
+      end: startOnly,
+      allDay: true,
+      isMilestone: Boolean(evt.isMilestone),
     }
     isModalOpen.value = true
   }
@@ -110,10 +135,14 @@ export function useCalendarEventForm({
   }
 
   const saveEvent = async (savedData: EventFormData) => {
-    let finalEnd: string | undefined = savedData.end
+    const isMilestone = Boolean(savedData.isMilestone)
+    const normalizedStart = isMilestone
+      ? (savedData.start.split('T')[0] || savedData.start)
+      : savedData.start
+    let finalEnd: string | undefined = isMilestone ? undefined : savedData.end
 
-    if (savedData.allDay && savedData.start && savedData.end) {
-      if (savedData.start === savedData.end) {
+    if (!isMilestone && savedData.allDay && normalizedStart && savedData.end) {
+      if (normalizedStart === savedData.end) {
         finalEnd = undefined
       }
       else {
@@ -129,18 +158,20 @@ export function useCalendarEventForm({
         await updateEvent(editingEventId.value, {
           title: savedData.title,
           type: savedData.type,
-          start: savedData.start,
+          start: normalizedStart,
           end: finalEnd,
-          allDay: savedData.allDay,
+          allDay: isMilestone ? true : savedData.allDay,
+          isMilestone,
         })
       }
       else {
         await createEvent({
           title: savedData.title,
           type: savedData.type,
-          start: savedData.start,
+          start: normalizedStart,
           end: finalEnd,
-          allDay: savedData.allDay,
+          allDay: isMilestone ? true : savedData.allDay,
+          isMilestone,
         })
       }
       isModalOpen.value = false
@@ -148,7 +179,7 @@ export function useCalendarEventForm({
     catch (e: unknown) {
       const appErr = parseToAppException(e)
 
-      alert(appErr.getUserFacingMessage())
+      toast.error(appErr.getUserFacingMessage())
     }
   }
 
@@ -173,7 +204,7 @@ export function useCalendarEventForm({
       catch (e: unknown) {
         const appErr = parseToAppException(e)
 
-        alert(appErr.getUserFacingMessage())
+        toast.error(appErr.getUserFacingMessage())
       }
     }
   }
@@ -185,6 +216,7 @@ export function useCalendarEventForm({
     form,
     openCreateModal,
     openEditModal,
+    openEditMilestone,
     closeModal,
     saveEvent,
     removeEvent,

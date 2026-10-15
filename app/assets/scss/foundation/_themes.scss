@@ -52,8 +52,9 @@
   --color-selection-outline: var(--color-category-main);
   --color-completed-row-bg: color-mix(in srgb, var(--color-status-success) 8%, transparent);
 
-  --color-calendar-saturday: hsl(212deg 90% 64%);
-  --color-calendar-sunday: hsl(356deg 82% 64%);
+  --color-calendar-saturday: hsl(196deg 92% 64%);
+  --color-calendar-sunday: hsl(8deg 86% 62%);
+  --color-calendar-custom-holiday: var(--color-accent-main);
 
   --color-role-admin: hsl(265deg 78% 68%);
   --color-role-worker: hsl(152deg 70% 50%);
@@ -190,8 +191,9 @@
   --color-selection-outline: var(--color-category-main);
   --color-completed-row-bg: color-mix(in srgb, var(--color-status-success) 8%, transparent);
 
-  --color-calendar-saturday: hsl(212deg 90% 46%);
-  --color-calendar-sunday: hsl(356deg 80% 46%);
+  --color-calendar-saturday: hsl(198deg 88% 42%);
+  --color-calendar-sunday: hsl(8deg 82% 48%);
+  --color-calendar-custom-holiday: var(--color-accent-main);
 
   --color-role-admin: hsl(265deg 75% 52%);
   --color-role-worker: hsl(152deg 78% 34%);

@@ -13,7 +13,12 @@ import { ErrorCode } from '#shared/types/errors'
 
 import { requireSiteAccess } from '../../../../utils/auth'
 import { createAppError } from '../../../../utils/error'
-import { parseCustomHolidays, parseEventTypes, parseHolidayDays } from '../../../../utils/jsonFields'
+import {
+  parseCustomHolidayLabels,
+  parseCustomHolidays,
+  parseEventTypes,
+  parseHolidayDays,
+} from '../../../../utils/jsonFields'
 import { prisma } from '../../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
@@ -40,6 +45,7 @@ export default defineEventHandler(async (event) => {
       eventTypes: parsedTypes.length > 0 ? parsedTypes : DEFAULT_CALENDAR_EVENT_TYPES,
       holidayDays: parseHolidayDays(setting.holidayDays),
       customHolidays: parseCustomHolidays(setting.customHolidays),
+      customHolidayLabels: parseCustomHolidayLabels(setting.customHolidays),
     }
   }
 
@@ -48,5 +54,6 @@ export default defineEventHandler(async (event) => {
     eventTypes: DEFAULT_CALENDAR_EVENT_TYPES,
     holidayDays: [0, 6],
     customHolidays: [],
+    customHolidayLabels: {},
   }
 })

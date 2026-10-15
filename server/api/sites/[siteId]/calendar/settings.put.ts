@@ -11,9 +11,10 @@ import { defineEventHandler, getRouterParam, readBody } from 'h3'
 import { DEFAULT_CALENDAR_EVENT_TYPES } from '#shared/types/calendar'
 import { ErrorCode } from '#shared/types/errors'
 
-import { requireSiteRole } from '../../../../utils/auth'
+import { requireSiteAdmin, requireSiteRole } from '../../../../utils/auth'
 import { createAppError } from '../../../../utils/error'
 import {
+  parseCustomHolidayLabels,
   parseCustomHolidays,
   parseEventTypes,
   parseHolidayDays,
@@ -24,8 +25,6 @@ import {
 import { prisma } from '../../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  await requireSiteRole(event, ['admin', 'worker'])
-
   const siteId = getRouterParam(event, 'siteId')
 
   if (!siteId) {
@@ -36,6 +35,18 @@ export default defineEventHandler(async (event) => {
   }
 
   const body = (await readBody(event).catch(() => ({}))) || {}
+
+  // 休日設定（holidayDays / customHolidays / customHolidayLabels）の変更は現場管理者（admin / master）のみ許可
+  if (
+    body.holidayDays !== undefined
+    || body.customHolidays !== undefined
+    || body.customHolidayLabels !== undefined
+  ) {
+    await requireSiteAdmin(event, siteId)
+  }
+  else {
+    await requireSiteRole(event, ['admin', 'worker'], siteId)
+  }
 
   const updateData: {
     eventTypes?: string
@@ -50,7 +61,7 @@ export default defineEventHandler(async (event) => {
     updateData.holidayDays = serializeHolidayDays(body.holidayDays)
   }
   if (body.customHolidays !== undefined) {
-    updateData.customHolidays = serializeCustomHolidays(body.customHolidays)
+    updateData.customHolidays = serializeCustomHolidays(body.customHolidays, body.customHolidayLabels)
   }
 
   const updated = await prisma.calendarSettings.upsert({
@@ -71,5 +82,6 @@ export default defineEventHandler(async (event) => {
     eventTypes: parsedTypes.length > 0 ? parsedTypes : DEFAULT_CALENDAR_EVENT_TYPES,
     holidayDays: parseHolidayDays(updated.holidayDays),
     customHolidays: parseCustomHolidays(updated.customHolidays),
+    customHolidayLabels: parseCustomHolidayLabels(updated.customHolidays),
   }
 })

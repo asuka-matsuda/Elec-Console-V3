@@ -26,7 +26,12 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  return prisma.event.findMany({
+  const rows = await prisma.event.findMany({
     where: { siteId },
   })
+
+  return rows.map(row => ({
+    ...row,
+    isMilestone: Boolean(row.isMilestone || row.type === 'milestone'),
+  }))
 })

@@ -6,7 +6,8 @@
  */
 import { computed, onMounted, reactive, ref, toRef, watch } from 'vue'
 
-import { useHead } from '#app'
+import { useHead, useNuxtApp, useState } from '#app'
+import type { CalendarSettings } from '#shared/types/calendar'
 import type { Site, SiteStatus } from '#shared/types/site'
 import { useAdminSites } from '~/composables/admin/useAdminSites'
 import { useAdminUsers } from '~/composables/admin/useAdminUsers'
@@ -18,8 +19,11 @@ import {
   SITE_SETTINGS_TABS,
   SITE_STATUS_CONFIG,
   SITE_STATUS_OPTIONS,
+  SITE_WEEKDAY_OPTIONS,
 } from '~/constants/adminConstants'
+import { STATE_KEYS } from '~/constants/storageKeys'
 import type { RadioOption } from '~/types/components'
+import { expandDateRange, formatDateWithWeekday } from '~/utils/date'
 import { parseToAppException } from '~/utils/errors'
 import { getAssignedWorkerNames } from '~/utils/portal'
 
@@ -43,6 +47,7 @@ const INITIAL_CREATE_SITE: CreateSiteFormState = {
   status: 'planning',
 }
 
+const { $api } = useNuxtApp()
 const { isMaster, isSiteAdmin } = useAuth()
 const { sites, isLoading, fetchSites, createSite, toggleDisableSite, updateSite, deleteSite } = useAdminSites()
 const { users, fetchUsers } = useAdminUsers()
@@ -135,11 +140,33 @@ const form = reactive({
   name: '',
   status: 'planning' as Site['status'],
   noBreakWords: [] as string[],
+  holidayDays: [0, 6] as number[],
+  customHolidays: [] as string[],
+  customHolidayLabels: {} as Record<string, string>,
 })
+
+const newHolidayStart = ref('')
+const newHolidayEnd = ref('')
+const newHolidayLabel = ref('')
 
 const workerNames = computed(() =>
   getAssignedWorkerNames(selectedSite.value?.id, users.value),
 )
+
+const fetchSiteHolidaySettings = async (siteId: string) => {
+  try {
+    const calSettings = await $api<CalendarSettings>(`/api/sites/${siteId}/calendar/settings`)
+
+    form.holidayDays = [...(calSettings.holidayDays ?? [0, 6])].sort((a, b) => a - b)
+    form.customHolidays = [...(calSettings.customHolidays ?? [])].sort()
+    form.customHolidayLabels = { ...(calSettings.customHolidayLabels ?? {}) }
+  }
+  catch {
+    form.holidayDays = [0, 6]
+    form.customHolidays = []
+    form.customHolidayLabels = {}
+  }
+}
 
 // --- 監視（Watch） ---
 watch(
@@ -159,11 +186,16 @@ watch(
 
 watch(
   selectedSite,
-  async (newSite) => {
-    if (newSite) {
+  async (newSite, oldSite) => {
+    if (newSite && newSite.id !== oldSite?.id) {
       form.name = newSite.name || ''
       form.status = newSite.status || 'planning'
       form.noBreakWords = [...(newSite.noBreakWords || [])]
+      newHolidayStart.value = ''
+      newHolidayEnd.value = ''
+      newHolidayLabel.value = ''
+
+      await fetchSiteHolidaySettings(newSite.id)
 
       if (users.value.length === 0) {
         await fetchUsers()
@@ -177,6 +209,9 @@ watch(
 onMounted(async () => {
   // 画面を開いたときは常に最新のサーバー状態を取得
   await fetchSites(true)
+  if (selectedSite.value) {
+    await fetchSiteHolidaySettings(selectedSite.value.id)
+  }
 })
 
 // --- アクションハンドラ（Actions） ---
@@ -194,6 +229,95 @@ const handleRemoveNoBreakWord = (index: number) => {
 
 const handleUpdateNoBreakWord = (index: number, val: string | number | null | undefined) => {
   form.noBreakWords[index] = String(val ?? '')
+}
+
+const persistSiteHolidaySettings = async (siteId: string, showSuccessToast = false) => {
+  try {
+    const updatedCal = await $api<CalendarSettings>(
+      `/api/sites/${siteId}/calendar/settings`,
+      {
+        method: 'PUT',
+        body: {
+          holidayDays: form.holidayDays,
+          customHolidays: form.customHolidays,
+          customHolidayLabels: form.customHolidayLabels,
+        },
+      },
+    )
+
+    form.holidayDays = [...(updatedCal.holidayDays ?? [0, 6])].sort((a, b) => a - b)
+    form.customHolidays = [...(updatedCal.customHolidays ?? [])].sort()
+    form.customHolidayLabels = { ...(updatedCal.customHolidayLabels ?? {}) }
+
+    const calState = useState<CalendarSettings | null>(
+      STATE_KEYS.CALENDAR_SETTINGS(siteId),
+      () => null,
+    )
+
+    calState.value = updatedCal
+
+    if (showSuccessToast) {
+      toast.success('休日設定を保存しました。')
+    }
+  }
+  catch (e: unknown) {
+    toast.error(parseToAppException(e).getUserFacingMessage())
+  }
+}
+
+const isWeekdayHoliday = (day: number): boolean => form.holidayDays.includes(day)
+
+const handleToggleWeekdayHoliday = async (day: number, checked: boolean) => {
+  const next = new Set(form.holidayDays)
+
+  if (checked) {
+    next.add(day)
+  }
+  else {
+    next.delete(day)
+  }
+  form.holidayDays = Array.from(next).sort((a, b) => a - b)
+
+  if (selectedSite.value) {
+    await persistSiteHolidaySettings(selectedSite.value.id, true)
+  }
+}
+
+const handleAddCustomHolidays = async () => {
+  if (!newHolidayStart.value) return
+
+  const dates = expandDateRange(newHolidayStart.value, newHolidayEnd.value)
+
+  if (dates.length === 0) return
+
+  const normalizedLabel = Array.from(newHolidayLabel.value.trim()).slice(0, 5).join('') || '休工'
+  const merged = new Set([...form.customHolidays, ...dates])
+  const nextLabels: Record<string, string> = { ...form.customHolidayLabels }
+
+  for (const d of dates) {
+    nextLabels[d] = normalizedLabel
+  }
+
+  form.customHolidays = Array.from(merged).sort()
+  form.customHolidayLabels = nextLabels
+  newHolidayStart.value = ''
+  newHolidayEnd.value = ''
+  newHolidayLabel.value = ''
+
+  if (selectedSite.value) {
+    await persistSiteHolidaySettings(selectedSite.value.id, true)
+  }
+}
+
+const handleRemoveCustomHoliday = async (dateStr: string) => {
+  form.customHolidays = form.customHolidays.filter(d => d !== dateStr)
+  const { [dateStr]: _removed, ...nextLabels } = form.customHolidayLabels
+
+  form.customHolidayLabels = nextLabels
+
+  if (selectedSite.value) {
+    await persistSiteHolidaySettings(selectedSite.value.id, true)
+  }
 }
 
 const handleSaveSite = async () => {
@@ -215,6 +339,11 @@ const handleSaveSite = async () => {
     const originalId = selectedSite.value.id
 
     await updateSite(originalId, payload)
+
+    const targetSiteId = payload.id && payload.id !== originalId ? payload.id : originalId
+
+    await persistSiteHolidaySettings(targetSiteId, false)
+
     if (payload.id && payload.id !== originalId) {
       selectedSiteId.value = payload.id
     }
@@ -526,6 +655,77 @@ const confirmDeleteSite = async (site: Site) => {
               </template>
             </div>
           </Note>
+        </div>
+
+        <!-- 休日設定タブ -->
+        <div v-else-if="activeTab === 'holidays'" class="flex flex-col gap-panel-gap max-w-2xl">
+          <section class="panel is-elevated flex flex-col gap-form-row-gap p-panel-pad">
+            <header class="flex items-center justify-between gap-item-gap">
+              <h4 class="flex items-center gap-item-gap">
+                <Icon name="calendar" />
+                <span>定休曜日の設定</span>
+              </h4>
+              <Badge variant="default">週 {{ form.holidayDays.length }} 日休工</Badge>
+            </header>
+            <hr class="divider">
+            <p class="field-help-text">
+              現場の定休曜日を選択します。選択した曜日は現場カレンダー上で休工日表示となり、マイルストーンの残り稼働日数（あと〇日）のカウントから除外されます。
+            </p>
+
+            <ul class="flex flex-wrap items-center gap-item-gap">
+              <li v-for="day in SITE_WEEKDAY_OPTIONS" :key="day.value" class="panel is-sunken p-panel-pad-compact">
+                <Checkbox
+                  :model-value="isWeekdayHoliday(day.value)"
+                  :label="day.label"
+                  @update:model-value="handleToggleWeekdayHoliday(day.value, Boolean($event))"
+                />
+              </li>
+            </ul>
+          </section>
+
+          <section class="panel is-elevated flex flex-col gap-form-row-gap p-panel-pad">
+            <header class="flex items-center justify-between gap-item-gap">
+              <h4 class="flex items-center gap-item-gap">
+                <Icon name="calendar" />
+                <span>特別休工日・連休期間の登録</span>
+              </h4>
+              <Badge variant="default">{{ form.customHolidays.length }} 日登録済</Badge>
+            </header>
+            <hr class="divider">
+            <p class="field-help-text">
+              GW・夏季休暇・年末年始・現場一斉休工日などを登録します。休日名（5文字以内）はカレンダー左上にバッジ表示されます（未入力時は「休工」）。終了日も指定すると期間内の日付を一括追加できます。
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-[1fr_1fr_1fr_auto] items-end gap-form-col-gap">
+              <div class="flex flex-col gap-inline-gap">
+                <label for="holiday-label-input" class="label">休日名（5文字以内）</label>
+                <Input id="holiday-label-input" v-model="newHolidayLabel" :maxlength="5" placeholder="例: 夏季休暇, GW, 休工" />
+              </div>
+              <div class="flex flex-col gap-inline-gap">
+                <label for="holiday-start-date" class="label">開始日（単日）</label>
+                <Input id="holiday-start-date" v-model="newHolidayStart" type="date" />
+              </div>
+              <div class="flex flex-col gap-inline-gap">
+                <label for="holiday-end-date" class="label">終了日（連休一括時）</label>
+                <Input id="holiday-end-date" v-model="newHolidayEnd" type="date" />
+              </div>
+              <Button variant="secondary" icon="plus" :disabled="!newHolidayStart" @click="handleAddCustomHolidays">
+                休工日を追加する
+              </Button>
+            </div>
+
+            <ul v-if="form.customHolidays.length > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-inline-gap max-h-[280px] overflow-y-auto">
+              <li v-for="dateStr in form.customHolidays" :key="dateStr" class="panel is-sunken p-panel-pad-compact flex items-center justify-between gap-inline-gap">
+                <div class="flex items-center gap-inline-gap min-w-0">
+                  <Badge variant="amber" size="sm">{{ form.customHolidayLabels[dateStr] || '休工' }}</Badge>
+                  <time class="truncate">{{ formatDateWithWeekday(dateStr) }}</time>
+                </div>
+                <Button variant="danger" size="sm" icon="trash-2" @click="handleRemoveCustomHoliday(dateStr)" />
+              </li>
+            </ul>
+
+            <EmptyState v-else icon="calendar" title="特別休工日は登録されていません" description="上の日付入力から単日または連休期間を追加できます。" />
+          </section>
         </div>
 
         <!-- 改行禁止ワードタブ -->

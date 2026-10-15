@@ -22,6 +22,7 @@ const UpdateEventSchema = z.object({
   end: z.string().nullable().optional(),
   allDay: z.boolean().optional(),
   type: z.string().optional(),
+  isMilestone: z.boolean().optional(),
 })
 
 export default defineEventHandler(async (event) => {
@@ -49,15 +50,30 @@ export default defineEventHandler(async (event) => {
   await requireSiteRole(event, ['admin', 'worker'], existingEvent.siteId)
 
   const body = await validateRequestBody(event, UpdateEventSchema)
+  const existingIsMilestone = Boolean(existingEvent.isMilestone || existingEvent.type === 'milestone')
+  const isMilestone = body.isMilestone ?? existingIsMilestone
+  const nextStart = body.start ?? existingEvent.start
+  const nextType = isMilestone
+    ? 'milestone'
+    : (body.type && body.type !== 'milestone'
+        ? body.type
+        : (existingEvent.type !== 'milestone' ? existingEvent.type : 'work'))
 
-  return prisma.event.update({
+  const updated = await prisma.event.update({
     where: { id },
     data: {
       title: body.title ?? existingEvent.title,
-      start: body.start ?? existingEvent.start,
-      end: body.end !== undefined ? (body.end || null) : existingEvent.end,
-      allDay: body.allDay ?? existingEvent.allDay,
-      type: body.type ?? existingEvent.type,
+      start: isMilestone ? (nextStart.split('T')[0] || nextStart) : nextStart,
+      end: isMilestone ? null : (body.end !== undefined ? (body.end || null) : existingEvent.end),
+      allDay: isMilestone ? true : (body.allDay ?? existingEvent.allDay),
+      type: nextType,
     },
   })
+
+  await prisma.$executeRaw`UPDATE "Event" SET "isMilestone" = ${isMilestone ? 1 : 0} WHERE "id" = ${id}`
+
+  return {
+    ...updated,
+    isMilestone,
+  }
 })

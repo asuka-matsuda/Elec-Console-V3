@@ -64,8 +64,22 @@ export const SITE_STATUS_CONFIG: Record<SiteStatus, { label: string, color: stri
 export const SITE_SETTINGS_TABS = [
   { value: 'basic', label: '基本情報', icon: 'info' },
   { value: 'integration', label: 'Excelデータ連携', icon: 'link' },
+  { value: 'holidays', label: '休日設定', icon: 'calendar' },
   { value: 'wordBreak', label: '改行禁止ワード', icon: 'type' },
 ]
+
+/**
+ * 現場定休曜日選択肢（0=日曜 〜 6=土曜）
+ */
+export const SITE_WEEKDAY_OPTIONS = [
+  { value: 0, label: '日曜日' },
+  { value: 1, label: '月曜日' },
+  { value: 2, label: '火曜日' },
+  { value: 3, label: '水曜日' },
+  { value: 4, label: '木曜日' },
+  { value: 5, label: '金曜日' },
+  { value: 6, label: '土曜日' },
+] as const
 
 /**
  * ユーザー詳細設定 タブ定義

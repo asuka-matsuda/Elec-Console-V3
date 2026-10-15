@@ -95,6 +95,25 @@ describe('Server Error Utilities (createAppError & generateTraceId)', () => {
     expect(resP2025).toBeDefined()
     expect(resP2025?.code).toBe(ErrorCode.SYS_NOT_FOUND)
 
+    // P2022: カラム未存在（スキーマ不整合）
+    const errP2022 = { code: 'P2022', meta: { column: 'main.Event.isMilestone' } }
+    const resP2022 = parsePrismaError(errP2022)
+
+    expect(resP2022).toBeDefined()
+    expect(resP2022?.code).toBe(ErrorCode.DB_SCHEMA_MISMATCH)
+    expect(resP2022?.message).toContain('Event.isMilestone')
+
+    // PrismaClientValidationError (Unknown argument): 古いPrismaクライアントのメモリキャッシュ不整合
+    const errValidation = {
+      name: 'PrismaClientValidationError',
+      message: 'Invalid `prisma.event.create()` invocation:\nUnknown argument `isMilestone`.',
+    }
+    const resValidation = parsePrismaError(errValidation)
+
+    expect(resValidation).toBeDefined()
+    expect(resValidation?.code).toBe(ErrorCode.DB_SCHEMA_MISMATCH)
+    expect(resValidation?.message).toContain('isMilestone')
+
     // 未知のエラーコード
     expect(parsePrismaError({ code: 'P9999' })).toBeNull()
     expect(parsePrismaError(new Error('general error'))).toBeNull()

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import {
   parseAssignedReports,
+  parseCustomHolidayLabels,
   parseCustomHolidays,
   parseEventTypes,
   parseExcludedCircuits,
@@ -125,6 +126,19 @@ describe('jsonFields - customHolidays', () => {
   it('シリアライズが正しく動作すること', () => {
     expect(serializeCustomHolidays(['2026-01-01'])).toBe(JSON.stringify(['2026-01-01']))
     expect(serializeCustomHolidays(null)).toBe('[]')
+  })
+
+  it('5文字以内の休日ラベル付きシリアライズ・パースが正しく動作すること', () => {
+    const serialized = serializeCustomHolidays(
+      ['2026-08-13', '2026-08-14'],
+      { '2026-08-13': '夏季休暇です', '2026-08-14': 'GW' },
+    )
+
+    expect(parseCustomHolidays(serialized)).toEqual(['2026-08-13', '2026-08-14'])
+    expect(parseCustomHolidayLabels(serialized)).toEqual({
+      '2026-08-13': '夏季休暇で', // 5文字に切り詰め
+      '2026-08-14': 'GW',
+    })
   })
 })
 

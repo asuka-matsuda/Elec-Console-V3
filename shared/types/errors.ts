@@ -32,6 +32,7 @@ export const ErrorCode = {
   DB_TABLE_NOT_FOUND: 'DB_TABLE_NOT_FOUND',
   DB_FOREIGN_KEY_VIOLATION: 'DB_FOREIGN_KEY_VIOLATION',
   DB_UNIQUE_VIOLATION: 'DB_UNIQUE_VIOLATION',
+  DB_SCHEMA_MISMATCH: 'DB_SCHEMA_MISMATCH',
 
   // --- 現場・回路・排他制御系 (CIRCUIT / SITE) ---
   SITE_NOT_FOUND: 'SITE_NOT_FOUND',
@@ -77,6 +78,7 @@ export const ERROR_SHORT_CODES: Record<ErrorCode, string> = {
   [ErrorCode.DB_TABLE_NOT_FOUND]: 'E-DB-001',
   [ErrorCode.DB_FOREIGN_KEY_VIOLATION]: 'E-DB-002',
   [ErrorCode.DB_UNIQUE_VIOLATION]: 'E-DB-003',
+  [ErrorCode.DB_SCHEMA_MISMATCH]: 'E-DB-004',
 
   // 現場・回路系
   [ErrorCode.SITE_NOT_FOUND]: 'E-SIT-001',
@@ -116,6 +118,7 @@ export const DEFAULT_ERROR_MESSAGES: Record<ErrorCode, string> = {
   [ErrorCode.DB_TABLE_NOT_FOUND]: 'データベーステーブルが見つかりません。スキーマ同期を実行してください。',
   [ErrorCode.DB_FOREIGN_KEY_VIOLATION]: '関連データが存在するため操作を完了できませんでした。',
   [ErrorCode.DB_UNIQUE_VIOLATION]: '一意制約に違反するデータが既に存在します。',
+  [ErrorCode.DB_SCHEMA_MISMATCH]: 'データベーススキーマまたはクライアント定義が最新ではありません。スキーマ同期またはサーバー再起動を実行してください。',
 
   [ErrorCode.SITE_NOT_FOUND]: '指定された現場が見つかりません。',
   [ErrorCode.CIRCUIT_NOT_FOUND]: '指定された回路が見つかりません。',
