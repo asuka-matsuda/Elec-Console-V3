@@ -17,8 +17,8 @@ import { prisma } from '../../utils/prisma'
 import { validateRequestBody } from '../../utils/validation'
 
 const UpdateEventSchema = z.object({
-  title: z.string().trim().min(1, '予定タイトルを入力してください。'),
-  start: z.string().trim().min(1, '開始日時を指定してください。'),
+  title: z.string().trim().min(1, '予定タイトルを入力してください。').optional(),
+  start: z.string().trim().min(1, '開始日時を指定してください。').optional(),
   end: z.string().nullable().optional(),
   allDay: z.boolean().optional(),
   type: z.string().optional(),
@@ -53,11 +53,11 @@ export default defineEventHandler(async (event) => {
   return prisma.event.update({
     where: { id },
     data: {
-      title: body.title,
-      start: body.start,
-      end: body.end || null,
-      allDay: body.allDay ?? false,
-      type: body.type || existingEvent.type,
+      title: body.title ?? existingEvent.title,
+      start: body.start ?? existingEvent.start,
+      end: body.end !== undefined ? (body.end || null) : existingEvent.end,
+      allDay: body.allDay ?? existingEvent.allDay,
+      type: body.type ?? existingEvent.type,
     },
   })
 })

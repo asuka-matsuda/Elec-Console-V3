@@ -3,12 +3,23 @@
  * 不正な JSON 文字列や破損データ、型違いが存在しても 500 エラーを起こさず安全にフォールバックします。
  */
 
-interface CalendarEventType {
+export interface CalendarEventType {
   id: string
-  label: string
+  name: string
   color: string
+  label?: string
+  colorVar?: string
   textColor?: string
   [key: string]: unknown
+}
+
+const LEGACY_COLOR_VAR_MAP: Record<string, string> = {
+  'category-main': '#2f81f7',
+  'status-warning': '#d29922',
+  'category-database': '#58a6ff',
+  'text-muted': '#8b949e',
+  'status-danger': '#f85149',
+  'status-success': '#3fb950',
 }
 
 /**
@@ -107,9 +118,31 @@ export function parseEventTypes(raw?: string | null): CalendarEventType[] {
     const parsed = JSON.parse(raw)
 
     if (Array.isArray(parsed)) {
-      return parsed.filter((item): item is CalendarEventType =>
-        Boolean(item && typeof item === 'object' && 'id' in item && 'label' in item),
-      )
+      return parsed
+        .filter((item): item is Record<string, unknown> =>
+          Boolean(
+            item
+            && typeof item === 'object'
+            && typeof (item as Record<string, unknown>).id === 'string'
+            && String((item as Record<string, unknown>).id).trim().length > 0
+            && (typeof (item as Record<string, unknown>).name === 'string'
+              || typeof (item as Record<string, unknown>).label === 'string'),
+          ),
+        )
+        .map((item) => {
+          const id = String(item.id).trim()
+          const name = String(item.name ?? item.label ?? '').trim()
+          const rawColor = typeof item.color === 'string' ? item.color.trim() : ''
+          const colorVar = typeof item.colorVar === 'string' ? item.colorVar.trim() : ''
+          const color = rawColor || (colorVar ? LEGACY_COLOR_VAR_MAP[colorVar] || '#2f81f7' : '#2f81f7')
+
+          return {
+            id,
+            name,
+            color,
+          }
+        })
+        .filter(item => item.name.length > 0)
     }
 
     return []
@@ -124,7 +157,9 @@ export function parseEventTypes(raw?: string | null): CalendarEventType[] {
  */
 export function serializeEventTypes(val: unknown): string {
   if (Array.isArray(val)) {
-    return JSON.stringify(val)
+    const normalized = parseEventTypes(JSON.stringify(val))
+
+    return JSON.stringify(normalized)
   }
 
   return '[]'

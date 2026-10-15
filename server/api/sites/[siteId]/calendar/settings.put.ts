@@ -8,9 +8,10 @@
 
 import { defineEventHandler, getRouterParam, readBody } from 'h3'
 
+import { DEFAULT_CALENDAR_EVENT_TYPES } from '#shared/types/calendar'
 import { ErrorCode } from '#shared/types/errors'
 
-import { requireSiteAdmin } from '../../../../utils/auth'
+import { requireSiteRole } from '../../../../utils/auth'
 import { createAppError } from '../../../../utils/error'
 import {
   parseCustomHolidays,
@@ -23,7 +24,7 @@ import {
 import { prisma } from '../../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  await requireSiteAdmin(event)
+  await requireSiteRole(event, ['admin', 'worker'])
 
   const siteId = getRouterParam(event, 'siteId')
 
@@ -36,28 +37,38 @@ export default defineEventHandler(async (event) => {
 
   const body = (await readBody(event).catch(() => ({}))) || {}
 
-  const eventTypesSerialized = serializeEventTypes(body.eventTypes)
-  const holidayDaysSerialized = serializeHolidayDays(body.holidayDays)
-  const customHolidaysSerialized = serializeCustomHolidays(body.customHolidays)
+  const updateData: {
+    eventTypes?: string
+    holidayDays?: string
+    customHolidays?: string
+  } = {}
+
+  if (body.eventTypes !== undefined) {
+    updateData.eventTypes = serializeEventTypes(body.eventTypes)
+  }
+  if (body.holidayDays !== undefined) {
+    updateData.holidayDays = serializeHolidayDays(body.holidayDays)
+  }
+  if (body.customHolidays !== undefined) {
+    updateData.customHolidays = serializeCustomHolidays(body.customHolidays)
+  }
 
   const updated = await prisma.calendarSettings.upsert({
     where: { siteId },
-    update: {
-      eventTypes: eventTypesSerialized,
-      holidayDays: holidayDaysSerialized,
-      customHolidays: customHolidaysSerialized,
-    },
+    update: updateData,
     create: {
       siteId,
-      eventTypes: eventTypesSerialized,
-      holidayDays: holidayDaysSerialized,
-      customHolidays: customHolidaysSerialized,
+      eventTypes: updateData.eventTypes ?? serializeEventTypes(DEFAULT_CALENDAR_EVENT_TYPES),
+      holidayDays: updateData.holidayDays ?? serializeHolidayDays([0, 6]),
+      customHolidays: updateData.customHolidays ?? serializeCustomHolidays([]),
     },
   })
 
+  const parsedTypes = parseEventTypes(updated.eventTypes)
+
   return {
     siteId: updated.siteId,
-    eventTypes: parseEventTypes(updated.eventTypes),
+    eventTypes: parsedTypes.length > 0 ? parsedTypes : DEFAULT_CALENDAR_EVENT_TYPES,
     holidayDays: parseHolidayDays(updated.holidayDays),
     customHolidays: parseCustomHolidays(updated.customHolidays),
   }

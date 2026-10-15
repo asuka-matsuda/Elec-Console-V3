@@ -29,11 +29,15 @@ const typeOptions = computed(() =>
   props.eventTypes.map(t => ({ label: t.name, value: t.id })),
 )
 
-// 初期データ変更時のみフォームとバリデーションを初期化
+// 初期データまたは種別一覧変更時にフォームとバリデーションを初期化
 watch(
-  () => props.initialData,
-  (newData) => {
-    form.value = { ...newData }
+  () => [props.initialData, props.eventTypes] as const,
+  ([newData, types]) => {
+    const validType = types.some(t => t.id === newData.type)
+      ? newData.type
+      : (types[0]?.id || newData.type)
+
+    form.value = { ...newData, type: validType }
     hasTitleError.value = false
   },
   { deep: true, immediate: true },

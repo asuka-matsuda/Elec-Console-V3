@@ -7,11 +7,16 @@
 import FullCalendar from '@fullcalendar/vue3'
 import { ref } from 'vue'
 
-import type { EventType } from '#shared/types/calendar'
+import {
+  DEFAULT_CALENDAR_EVENT_TYPES,
+  type EventType,
+} from '#shared/types/calendar'
 import { useCalendar } from '~/composables/portal/useCalendar'
 import { useCalendarEventForm } from '~/composables/portal/useCalendarEventForm'
 import { useCalendarOptions } from '~/composables/portal/useCalendarOptions'
+import { useToast } from '~/composables/useToast'
 import type { SwitchOption } from '~/types/components'
+import { parseToAppException } from '~/utils/errors'
 
 import ModalCalendarEvent from './ModalCalendarEvent.vue'
 import ModalCalendarTypeSettings from './ModalCalendarTypeSettings.vue'
@@ -26,6 +31,8 @@ const VIEW_SWITCH_OPTIONS: SwitchOption[] = [
   { value: 'dayGridMonth', label: '月表示', icon: 'calendar' },
   { value: 'listMonth', label: 'リスト', icon: 'list' },
 ]
+
+const toast = useToast()
 
 const {
   events,
@@ -102,7 +109,13 @@ const onViewChange = (val: string | number) => {
 const isTypeSettingsOpen = ref(false)
 
 const handleSaveEventTypes = async (newTypes: EventType[]) => {
-  await updateSettings({ eventTypes: newTypes })
+  try {
+    await updateSettings({ eventTypes: newTypes })
+    toast.success('予定種別の設定を保存しました。')
+  }
+  catch (e: unknown) {
+    toast.error(parseToAppException(e).getUserFacingMessage())
+  }
 }
 </script>
 
@@ -130,9 +143,9 @@ const handleSaveEventTypes = async (newTypes: EventType[]) => {
       <FullCalendar ref="fullCalendarRef" :options="calendarOptions" />
     </div>
 
-    <ModalCalendarEvent v-model="isModalOpen" :is-editing="isEditing" :event-types="settings?.eventTypes || []" :initial-data="form" @save="saveEvent" @delete="removeEvent" />
+    <ModalCalendarEvent v-model="isModalOpen" :is-editing="isEditing" :event-types="settings?.eventTypes?.length ? settings.eventTypes : DEFAULT_CALENDAR_EVENT_TYPES" :initial-data="form" @save="saveEvent" @delete="removeEvent" />
 
-    <ModalCalendarTypeSettings v-model="isTypeSettingsOpen" :event-types="settings?.eventTypes || []" @save="handleSaveEventTypes" />
+    <ModalCalendarTypeSettings v-model="isTypeSettingsOpen" :event-types="settings?.eventTypes?.length ? settings.eventTypes : DEFAULT_CALENDAR_EVENT_TYPES" @save="handleSaveEventTypes" />
   </div>
 </template>
 

@@ -34,24 +34,10 @@ export default defineEventHandler(async (event) => {
 
   if (setting) {
     const parsedTypes = parseEventTypes(setting.eventTypes)
-    // 旧 colorVar があれば HEX に変換
-    const colorVarMap: Record<string, string> = {
-      'category-main': '#2f81f7',
-      'status-warning': '#d29922',
-      'category-database': '#58a6ff',
-      'text-muted': '#8b949e',
-      'status-danger': '#f85149',
-      'status-success': '#3fb950',
-    }
-    const normalizedTypes = parsedTypes.map((t: { id: string, name?: string, label?: string, color?: string, colorVar?: string }) => ({
-      id: t.id,
-      name: t.name || t.label || '',
-      color: t.color || (t.colorVar ? colorVarMap[t.colorVar] || '#2f81f7' : '#2f81f7'),
-    }))
 
     return {
       siteId: setting.siteId,
-      eventTypes: normalizedTypes,
+      eventTypes: parsedTypes.length > 0 ? parsedTypes : DEFAULT_CALENDAR_EVENT_TYPES,
       holidayDays: parseHolidayDays(setting.holidayDays),
       customHolidays: parseCustomHolidays(setting.customHolidays),
     }

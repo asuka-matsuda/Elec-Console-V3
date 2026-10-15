@@ -87,6 +87,9 @@ export function useCalendar(siteId: string) {
       },
     )
 
+    if (res && (!res.eventTypes || res.eventTypes.length === 0)) {
+      res.eventTypes = DEFAULT_CALENDAR_EVENT_TYPES
+    }
     settings.value = res
   }
 

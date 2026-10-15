@@ -60,14 +60,27 @@ describe('jsonFields - assignedReports', () => {
 })
 
 describe('jsonFields - eventTypes', () => {
-  it('正常なイベント種別をパースできること', () => {
+  it('正常なイベント種別（name プロパティ）をパースできること', () => {
     const types = [
-      { id: 't1', label: '送電試験', color: '#ff0000' },
-      { id: 't2', label: '会議', color: '#00ff00' },
+      { id: 't1', name: '送電試験', color: '#ff0000' },
+      { id: 't2', name: '会議', color: '#00ff00' },
     ]
     const raw = JSON.stringify(types)
 
     expect(parseEventTypes(raw)).toEqual(types)
+  })
+
+  it('旧フォーマット（label / colorVar プロパティ）も name / color へ正規化してパースできること', () => {
+    const legacy = [
+      { id: 't1', label: '送電試験', colorVar: 'status-danger' },
+      { id: 't2', label: '会議', color: '#00ff00' },
+    ]
+    const raw = JSON.stringify(legacy)
+
+    expect(parseEventTypes(raw)).toEqual([
+      { id: 't1', name: '送電試験', color: '#f85149' },
+      { id: 't2', name: '会議', color: '#00ff00' },
+    ])
   })
 
   it('破損 JSON の場合は空配列へフォールバックすること', () => {
@@ -75,9 +88,9 @@ describe('jsonFields - eventTypes', () => {
     expect(parseEventTypes(null)).toEqual([])
   })
 
-  it('シリアライズが正しく動作すること', () => {
-    expect(serializeEventTypes([{ id: 't1', label: '試験', color: '#fff' }])).toBe(
-      JSON.stringify([{ id: 't1', label: '試験', color: '#fff' }]),
+  it('シリアライズが name 形式で正規化されて動作すること', () => {
+    expect(serializeEventTypes([{ id: 't1', name: '試験', color: '#fff' }])).toBe(
+      JSON.stringify([{ id: 't1', name: '試験', color: '#fff' }]),
     )
     expect(serializeEventTypes(null)).toBe('[]')
   })
