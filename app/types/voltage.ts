@@ -14,14 +14,8 @@ export interface SystemData {
   id: string
   /** 日本語表示名 */
   label: string
-  /** 特性タグ */
-  tags: string[]
   /** 基準公称電圧 (V) */
   voltage: number
-  /** 電圧降下算出係数 (単相2線: 35.6, 三相3線: 30.8 等) */
-  coefficient: number
-  /** 推奨心数 */
-  reqCores: string
   /** kW計算用除数 */
   kwDivisor: number
   /** 簡易計算定数 */
@@ -66,8 +60,6 @@ export interface VoltageCalcInputs {
   pf: number | null
   /** 計算可能状態フラグ */
   isReady: boolean
-  /** 未入力の必須項目名リスト */
-  missingFields: string[]
 }
 
 /**

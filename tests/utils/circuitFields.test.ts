@@ -1,14 +1,12 @@
 import { describe, expect, it } from 'vitest'
 
 import {
-  CIRCUIT_FIELD_ALIASES,
   extractBanMeisho,
   extractBanShubetsu,
   extractKairoBangou,
   extractKairoMeisho,
   extractKansenHantei,
   extractKeiToName,
-  findMatchingColumnIndex,
 } from '~~/shared/utils/circuitFields'
 
 describe('circuitFields (SSoT抽出ロジック)', () => {
@@ -52,22 +50,5 @@ describe('circuitFields (SSoT抽出ロジック)', () => {
 
     // 盤名称がない場合は fallback（未分類）
     expect(extractBanMeisho(row)).toBe('未分類')
-  })
-
-  it('findMatchingColumnIndex で完全一致列インデックスを優先検知すること', () => {
-    const headers = [
-      { name: 'No.', colIndex: 1 },
-      { name: '配電盤MCCBNo.', colIndex: 4 },
-      { name: '盤名称', colIndex: 6 },
-      { name: '盤種別', colIndex: 7 },
-    ]
-
-    const banIndex = findMatchingColumnIndex(headers, CIRCUIT_FIELD_ALIASES.banMeisho)
-
-    expect(banIndex).toBe(6)
-
-    const shubetsuIndex = findMatchingColumnIndex(headers, CIRCUIT_FIELD_ALIASES.banShubetsu)
-
-    expect(shubetsuIndex).toBe(7)
   })
 })

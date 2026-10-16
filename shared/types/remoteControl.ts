@@ -55,14 +55,3 @@ export interface RemotePatternSummary {
 }
 
 export type RemoteExportTarget = 'address' | 'group' | 'pattern'
-
-/**
- * リモコン回路台帳パース用の中間データ型
- */
-export interface RawRemoteRow {
-  banMeisho: string
-  kairoKigou: string | null
-  kairoBangou: string
-  kairoMeisho: string
-  relayNumber?: string
-}

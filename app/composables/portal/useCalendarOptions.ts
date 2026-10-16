@@ -10,6 +10,7 @@ import type {
   DayCellContentArg,
   EventClickArg,
   EventDropArg,
+  EventMountArg,
 } from '@fullcalendar/core'
 import jaLocale from '@fullcalendar/core/locales/ja'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -170,6 +171,16 @@ export function useCalendarOptions({
         }
 
         return classes
+      },
+
+      eventDidMount: (info: EventMountArg) => {
+        const color = info.event.extendedProps?.themeColor as string | undefined
+
+        if (color) {
+          info.el.style.setProperty('--event-color', color)
+          info.el.style.setProperty('--glow-color', color)
+          info.el.style.removeProperty('border-color')
+        }
       },
 
       select: onSelectDate,

@@ -11,17 +11,7 @@ import { findTagTemplateDefinition } from '#shared/templates/tag'
 import type { CircuitItem } from '#shared/types/circuit'
 import type { TagTemplateDefinition } from '#shared/types/tagTemplate'
 import {
-  extractBanMeisho,
-  extractBanShubetsu,
-  extractKairoBangou,
-  extractKairoMeisho,
-  extractKansenHantei,
-  extractKeiToName,
-} from '#shared/utils/circuitFields'
-import {
   cellValueToString,
-  detectHeaderRowIndex,
-  findPreferredWorksheet,
   normalizeHeaderName,
 } from '#shared/utils/excelNormalize'
 import { sanitizeFilename, sanitizeSheetName } from '#shared/utils/filename'
@@ -62,17 +52,14 @@ interface TagSlotCell {
   row: number
   col: number
   rawText: string
-  tags: string[]
 }
 
 interface TagSlot {
   slotIndex: number
   cells: TagSlotCell[]
-  minRow: number
-  minCol: number
 }
 
-export interface GenerateTagReportOptions {
+interface GenerateTagReportOptions {
   /** A4タグテンプレートのExcelバイナリ */
   templateBuffer: ArrayBuffer | Uint8Array
   /** 出力対象の回路データ行 */
@@ -89,134 +76,11 @@ export interface GenerateTagReportOptions {
   flowDirection?: 'z' | 'n'
 }
 
-export interface TagReportResult {
+interface TagReportResult {
   buffer: Uint8Array
   filename: string
   totalTags: number
   totalPages: number
-}
-
-/**
- * ヘッダー行を検出するための判定キーワード（代表的な設備見出し語）
- */
-const HEADER_KEYWORDS = [
-  '盤',
-  '回路',
-  '系統',
-  '幹線',
-  '電線',
-  'ケーブル',
-  '遮断器',
-  '容量',
-  '負荷',
-  '名称',
-  '番号',
-  '記号',
-]
-
-/**
- * セルから表示用文字列を安全に取得
- */
-function formatCellToString(cell: ExcelJS.Cell): string {
-  if (cell.value instanceof Date) {
-    return cellValueToString(cell.value)
-  }
-
-  if (cell.text && typeof cell.text === 'string' && cell.text.trim()) {
-    return cell.text.trim()
-  }
-
-  return cellValueToString(cell.value)
-}
-
-/**
- * 回路台帳Excel（または原本）からテーブル見出し（列名）と行データを動的に抽出
- */
-export async function extractTableFromExcel(
-  excelBuffer: ArrayBuffer | Uint8Array,
-): Promise<{ headers: DynamicTagField[], rows: DynamicCircuitRow[] }> {
-  const ExcelJS = await getExcelJS()
-  const workbook = new ExcelJS.Workbook()
-
-  await workbook.xlsx.load(excelBuffer as unknown as ExcelJS.Buffer)
-
-  // 1. 回路シートを検出（名前に「回路」「盤」が含まれるシート、なければ第1シート）
-  const sheet = findPreferredWorksheet(workbook)
-
-  if (!sheet) {
-    return { headers: [], rows: [] }
-  }
-
-  // 2. ヘッダー行の検出（設備キーワードとの一致スコアを優先し、同点ならセル数、最初の候補を採用）
-  const headerRowIndex = detectHeaderRowIndex(sheet, HEADER_KEYWORDS)
-
-  const headerRow = sheet.getRow(headerRowIndex)
-  const headerMap = new Map<number, string>()
-  const headers: DynamicTagField[] = []
-
-  headerRow.eachCell({ includeEmpty: false }, (cell, colNumber) => {
-    const text = cellValueToString(cell.value)
-
-    if (text) {
-      // 改行除去・トリム
-      const cleanHeader = text.replace(/[\r\n]+/g, ' ').trim()
-
-      headerMap.set(colNumber, cleanHeader)
-      headers.push({
-        key: cleanHeader,
-        tag: `%${cleanHeader}%`,
-        colIndex: colNumber,
-      })
-    }
-  })
-
-  // 3. データ行の走査
-  const rows: DynamicCircuitRow[] = []
-  const dataStartRow = headerRowIndex + 1
-
-  sheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
-    if (rowNumber < dataStartRow) return
-
-    const values: Record<string, string> = {}
-    let hasData = false
-
-    headerMap.forEach((headerName, colIndex) => {
-      const cell = row.getCell(colIndex)
-      const val = formatCellToString(cell)
-
-      if (val) hasData = true
-      values[headerName] = val
-    })
-
-    if (!hasData) return
-
-    // 盤名称・盤種別・系統名・幹線判定・回路番号・回路名称の特定（SSoT）
-    const banMeisho = extractBanMeisho(values)
-    const banShubetsu = extractBanShubetsu(values)
-    const keiToName = extractKeiToName(values)
-    const keiTo = extractKansenHantei(values)
-    const kairoBangou = extractKairoBangou(values)
-    const kairoMeisho = extractKairoMeisho(values)
-
-    // サンプル値の更新（ヘッダープレビュー用）
-    headers.forEach((h) => {
-      if (!h.sampleValue && values[h.key]) {
-        h.sampleValue = values[h.key]
-      }
-    })
-
-    rows.push({
-      banMeisho,
-      banShubetsu,
-      keiToName,
-      keiTo,
-      kairoBangou,
-      kairoMeisho,
-      values,
-    })
-  })
-
-  return { headers, rows }
 }
 
 /**
@@ -463,10 +327,7 @@ export async function generateTagReportExcel(
       row: c.row,
       col: c.col,
       rawText: c.rawText || `%${c.key}%`,
-      tags: [c.key],
     })),
-    minRow: Math.min(...s.cells.map(c => c.row)),
-    minCol: Math.min(...s.cells.map(c => c.col)),
   }))
 
   const slotsPerPage = slots.length

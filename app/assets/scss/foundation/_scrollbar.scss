@@ -19,8 +19,8 @@ main,
 
 // WebKit / Blink 詳細カスタマイズ
 ::-webkit-scrollbar {
-  width: var(--scrollbar-size, var(--space-2, 8px));
-  height: var(--scrollbar-size, var(--space-2, 8px));
+  width: var(--space-2, 8px);
+  height: var(--space-2, 8px);
 }
 
 ::-webkit-scrollbar-track {

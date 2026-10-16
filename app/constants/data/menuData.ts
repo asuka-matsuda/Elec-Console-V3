@@ -6,13 +6,6 @@
  */
 
 import type { IconName } from '~/constants/icons'
-import type { BadgeVariant } from '~/types/components'
-
-interface MenuBadge {
-  text: string
-  color?: string
-  variant?: BadgeVariant
-}
 
 export type MenuItem = {
   id?: string
@@ -21,11 +14,9 @@ export type MenuItem = {
   icon: IconName
   activePrefixes?: string[]
   desc?: string
-  disabled?: boolean
   masterOnly?: boolean
   adminOnly?: boolean
   version?: string
-  badge?: MenuBadge | string
 }
 
 export type MenuSection = {
@@ -57,7 +48,7 @@ export const menuData: MenuSection[] = [
         href: '/portal',
         icon: 'users',
         version: 'v1.0.0',
-        activePrefixes: ['/login', '/select-site', '/no-site', '/portal'],
+        activePrefixes: ['/login', '/portal'],
         desc: '現場情報の共有と試験進捗の管理。',
       },
       {

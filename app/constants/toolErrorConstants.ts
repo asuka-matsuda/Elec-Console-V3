@@ -36,31 +36,11 @@ export const TOOL_ERRORS: Record<string, ToolErrorInfo> = {
   },
 
   // ケーブルラック選定ツール
-  RACK_SIZE_OVER: {
-    id: 'RACK_SIZE_OVER',
-    title: 'ラック規格外',
-    message: '必要幅が最大規格幅（1200mm）を超過。',
-    suggestion: '2段敷設への変更、またはラック系統の分割を推奨。',
-  },
-  RACK_OVERFLOW: {
-    id: 'RACK_OVERFLOW',
-    title: 'ラック高さ不足',
-    message: '積載ケーブル外径がラック有効内寸高さを超過。',
-    suggestion: 'ラック高さの変更、または平置き（1段）への変更を推奨。',
-  },
   RACK_TIER2_NOT_APPLICABLE: {
     id: 'RACK_TIER2_NOT_APPLICABLE',
     title: '段積み不可',
     message: 'ケーブルが1本のみのため2段敷設不可。',
     suggestion: '1段敷設（平置き）の選択を推奨。',
-  },
-
-  // 配管選定ツール
-  CONDUIT_OVERSIZE: {
-    id: 'CONDUIT_OVERSIZE',
-    title: '配管規格外',
-    message: '許容占積率を満たす配管サイズが規格上限を超過。',
-    suggestion: '配管系統の分割、またはケーブルサイズの見直しを推奨。',
   },
 } as const
 

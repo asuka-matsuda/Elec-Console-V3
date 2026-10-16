@@ -50,7 +50,7 @@ export interface CircuitColumnMap {
   p3Remarks?: number
 }
 
-export const DEFAULT_CIRCUIT_COLUMN_MAP: CircuitColumnMap = {
+const DEFAULT_CIRCUIT_COLUMN_MAP: CircuitColumnMap = {
   floor: undefined,
   banMeisho: 5,
   banShubetsu: 6,

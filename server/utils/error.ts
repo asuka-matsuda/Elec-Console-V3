@@ -63,7 +63,6 @@ export function getDefaultStatusCode(code: ErrorCode): number {
     case ErrorCode.SYS_VALIDATION_FAILED:
     case ErrorCode.AUTH_PASSWORD_POLICY_VIOLATION:
     case ErrorCode.USER_SELF_DEMOTION_DENIED:
-    case ErrorCode.USER_LAST_ADMIN_DENIED:
     case ErrorCode.CIRCUIT_IMPORT_INVALID:
     default:
       return 400

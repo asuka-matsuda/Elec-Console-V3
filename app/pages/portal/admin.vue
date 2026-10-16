@@ -139,7 +139,6 @@ const currentExcelFileName = computed(() => {
 const form = reactive({
   name: '',
   status: 'planning' as Site['status'],
-  noBreakWords: [] as string[],
   holidayDays: [0, 6] as number[],
   customHolidays: [] as string[],
   customHolidayLabels: {} as Record<string, string>,
@@ -190,7 +189,6 @@ watch(
     if (newSite && newSite.id !== oldSite?.id) {
       form.name = newSite.name || ''
       form.status = newSite.status || 'planning'
-      form.noBreakWords = [...(newSite.noBreakWords || [])]
       newHolidayStart.value = ''
       newHolidayEnd.value = ''
       newHolidayLabel.value = ''
@@ -217,18 +215,6 @@ onMounted(async () => {
 // --- アクションハンドラ（Actions） ---
 const handleSelectSite = (site: Site) => {
   selectedSiteId.value = site.id
-}
-
-const handleAddNoBreakWord = () => {
-  form.noBreakWords.push('')
-}
-
-const handleRemoveNoBreakWord = (index: number) => {
-  form.noBreakWords.splice(index, 1)
-}
-
-const handleUpdateNoBreakWord = (index: number, val: string | number | null | undefined) => {
-  form.noBreakWords[index] = String(val ?? '')
 }
 
 const persistSiteHolidaySettings = async (siteId: string, showSuccessToast = false) => {
@@ -323,15 +309,10 @@ const handleRemoveCustomHoliday = async (dateStr: string) => {
 const handleSaveSite = async () => {
   if (!selectedSite.value) return
 
-  const parsedWords = form.noBreakWords
-    .map(w => w.trim())
-    .filter(w => w.length > 0)
-
   const payload: Site = {
     ...selectedSite.value,
     name: form.name.trim(),
     status: form.status,
-    noBreakWords: parsedWords,
   }
 
   isSaving.value = true
@@ -728,31 +709,6 @@ const confirmDeleteSite = async (site: Site) => {
 
             <EmptyState v-else icon="calendar" title="特別休工日は登録されていません" description="上の日付入力から単日または連休期間を追加できます。" />
           </section>
-        </div>
-
-        <!-- 改行禁止ワードタブ -->
-        <div v-else-if="activeTab === 'wordBreak'" class="flex flex-col gap-form-row-gap max-w-xl">
-          <header class="flex items-center gap-item-gap">
-            <h4 class="flex items-center gap-item-gap">
-              <Icon name="type" />
-              <span>改行禁止ワードの設定</span>
-            </h4>
-          </header>
-          <hr class="divider">
-          <p class="field-help-text">
-            テーブルの盤名称等で途中で改行させない単語を指定します（※「1-1」等の英数字ハイフンや「分電盤」等はシステムで自動処理されます）。
-          </p>
-
-          <ul v-if="form.noBreakWords.length > 0" class="flex flex-col gap-item-gap">
-            <li v-for="(word, idx) in form.noBreakWords" :key="idx" class="flex items-center gap-item-gap">
-              <Input :model-value="word" placeholder="例: 自動倉庫, 受変電設備" @update:model-value="handleUpdateNoBreakWord(idx, $event)" />
-              <Button icon="trash-2" variant="danger" size="sm" @click="handleRemoveNoBreakWord(idx)" />
-            </li>
-          </ul>
-
-          <EmptyState v-else icon="type" title="改行禁止ワードは設定されていません" description="現場固有の単語を追加すると、テーブル内で途中で改行されなくなります。" />
-
-          <Button icon="plus" size="sm" class="w-fit" @click="handleAddNoBreakWord">改行禁止ワードを追加する</Button>
         </div>
       </div>
     </section>

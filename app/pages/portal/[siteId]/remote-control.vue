@@ -45,9 +45,7 @@ const {
   assignPattern,
   removePattern,
   clearSelectedAssignments,
-} = useRemoteControlSetting(siteId, {
-  siteName,
-})
+} = useRemoteControlSetting(siteId)
 
 // --- 左ペイン（リモコン設定・編成）のローカル状態 ---
 type TabKey = 'addresses' | 'groups' | 'patterns'
@@ -236,7 +234,6 @@ const currentBoardConfig = computed(() => {
         key: g.groupKey,
         count: g.addresses.length,
         addresses: g.addresses,
-        color: 'var(--theme-accent)',
         isAccent: true,
         remove: (addr: string) => removeGroup(addr, g.groupNumber),
       })),
@@ -252,7 +249,6 @@ const currentBoardConfig = computed(() => {
         key: p.patternKey,
         count: p.addresses.length,
         addresses: p.addresses,
-        color: 'var(--color-status-warning)',
         isAccent: false,
         remove: (addr: string) => removePattern(addr, p.patternKey),
       })),

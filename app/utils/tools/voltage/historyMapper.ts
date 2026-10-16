@@ -15,7 +15,6 @@ import { getVoltageFormFields } from '~/utils/tools/voltage/voltageFormConfig'
  * 電圧降下の計算入出力を HistoryEntry 形式に変換する
  */
 export function mapVoltageToHistory(
-  toolName: string,
   inputs: VoltageCalcInputs,
   result: VoltageCalcResult | null,
 ): Omit<HistoryEntry, 'id' | 'timestamp'> {
@@ -106,7 +105,6 @@ export function mapVoltageToHistory(
     color?: string
   }[] = []
 
-  let mainResultText = 'エラー'
   let status: 'success' | 'error' | 'warning' = 'success'
 
   if (!result) {
@@ -127,6 +125,8 @@ export function mapVoltageToHistory(
     const hasError = isAmpOver || isDropOver || isSelectionOver
 
     if (hasError) status = 'error'
+
+    let mainResultText: string
 
     if (isSelectionOver) {
       const err = getToolError(result.errorId)
@@ -174,7 +174,6 @@ export function mapVoltageToHistory(
     toolName: isAuto ? 'ケーブルサイズ自動選定' : '電圧降下計算',
     mode: isAuto ? 'サイズ選定' : '電圧降下',
     status,
-    mainResultText,
     inputs: historyInputs,
     results: historyResults,
   }

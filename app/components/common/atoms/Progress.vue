@@ -62,6 +62,10 @@ const resolvedColor = computed(() => {
 }
 
 .progress-fill {
+  --glow-color: var(--progress-fg);
+
+  @include control-glow-tokens;
+
   border-radius: 0;
   background-color: var(--progress-fg);
   box-shadow: var(--shadow-glow-sm);

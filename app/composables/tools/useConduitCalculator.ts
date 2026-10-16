@@ -40,12 +40,9 @@ export function useConduitCalculator() {
     isShowingBasis,
     isSaving,
     handleSave,
-    saveToHistory: saveHistory,
-    resetInputs,
     openResetModal,
   } = useToolPage<ConduitInputs, ConduitCalcResult>(
     'conduit',
-    '配管サイズ自動選定',
     defaultInputs,
     inputs =>
       calculateConduitSize(
@@ -63,9 +60,6 @@ export function useConduitCalculator() {
           res!,
           inputs.customFillRate,
         )!,
-      fromHistory: () => {
-        return JSON.parse(JSON.stringify(defaultInputs))
-      },
     },
   )
 
@@ -115,10 +109,6 @@ export function useConduitCalculator() {
     handleSave,
     addCable,
     removeCable,
-    reset: resetInputs,
-    resetInputs,
-    saveHistory,
-    handleSaveHistory: saveHistory,
     openResetModal,
     mathSteps,
   }

@@ -7,7 +7,7 @@
 
 import type ExcelJS from 'exceljs'
 
-export interface TagSlotCellDef {
+interface TagSlotCellDef {
   /** 埋め込みキー（例: '回路番号', 'ケーブル', '配電方式', '系統', '回路名称'） */
   key: string
   /** 行番号（1-indexed, 1ページ目基準） */

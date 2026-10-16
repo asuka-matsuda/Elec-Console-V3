@@ -104,7 +104,6 @@ describe('voltageCalcLogic', () => {
         loadUnit: 'A',
         pf: 1.0,
         isReady: true,
-        missingFields: [],
       })
 
       expect(res).not.toBeNull()
@@ -136,7 +135,6 @@ describe('voltageCalcLogic', () => {
         loadUnit: 'A',
         pf: 1.0,
         isReady: true,
-        missingFields: [],
       })
 
       expect(res).not.toBeNull()
@@ -167,7 +165,6 @@ describe('voltageCalcLogic', () => {
         loadUnit: 'A',
         pf: 1.0,
         isReady: true,
-        missingFields: [],
       })
 
       expect(res).not.toBeNull()
@@ -199,7 +196,6 @@ describe('voltageCalcLogic', () => {
         loadUnit: 'A',
         pf: 1.0,
         isReady: true,
-        missingFields: [],
       })
 
       expect(res).not.toBeNull()

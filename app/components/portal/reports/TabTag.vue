@@ -46,10 +46,7 @@ const {
   flowDirection: tagFlowDirection,
   flowDirectionOptions: tagFlowDirectionOptions,
   fetchSiteData: fetchTagSiteData,
-} = useTagReportPrint(computed(() => props.siteId), {
-  siteName: computed(() => props.siteName),
-  templateName: computed(() => props.template?.logicFile || props.template?.name || props.template?.file?.filename),
-})
+} = useTagReportPrint(computed(() => props.siteId))
 
 interface TagRowItem extends DynamicCircuitRow {
   uniqueKey: string
@@ -221,8 +218,6 @@ const exportReport = async () => {
 
 defineExpose({
   exportReport,
-  canExport,
-  exportButtonLabel,
 })
 
 onMounted(() => {

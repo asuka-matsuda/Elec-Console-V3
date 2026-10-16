@@ -37,7 +37,7 @@ const {
   banList: remoteBanList,
   densoKeiToList: remoteDensoKeiToList,
   fetchSiteRemoteData,
-} = useRemoteControlSetting(computed(() => props.siteId), { siteName: computed(() => props.siteName) })
+} = useRemoteControlSetting(computed(() => props.siteId))
 
 const remoteSelectedBan = ref<string>('ALL')
 const remoteSelectedDenso = ref<string>('ALL')
@@ -158,8 +158,6 @@ const exportReport = async () => {
 
 defineExpose({
   exportReport,
-  canExport,
-  exportButtonLabel,
 })
 
 onMounted(() => {

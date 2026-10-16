@@ -10,7 +10,7 @@ import type { CircuitItem, SoudenStats } from '../types/circuit'
 /**
  * 送電試験の判定対象となる回路オブジェクトの共通インターフェース
  */
-export type ExamJudgeableCircuit = {
+type ExamJudgeableCircuit = {
   keiTo?: string | null
   p1Kakunin?: boolean | null
   p1Mashishime?: boolean | null
@@ -155,13 +155,13 @@ export function calculateSoudenStats(circuits: CircuitItem[]): SoudenStats {
   }
 }
 
-export interface VoltageToleranceRange {
+interface VoltageToleranceRange {
   target: number
   min: number
   max: number
 }
 
-export interface Phase2ActivePhases {
+interface Phase2ActivePhases {
   hasR: boolean
   hasS: boolean
   hasT: boolean
@@ -398,40 +398,6 @@ export function isPhase3KensouPass(
   return kensou === '良'
 }
 
-/**
- * オフライン同期待ちキューや差分表示用の測定値サマリー文字列を生成します。
- */
-export function formatPhaseValues(
-  phase: number,
-  data?: Record<string, unknown>,
-  isServer = false,
-): string {
-  if (!data) return '-'
-
-  if (phase === 1) {
-    const k = isServer ? data.p1Kakunin : data.kakunin
-    const m = isServer ? data.p1Mashishime : data.mashishime
-
-    return `確認: ${k ? '済' : '未'} / 増締: ${m ? '済' : '未'}`
-  }
-  if (phase === 2) {
-    const r = isServer ? data.zetsuenR : data.rVal
-    const s = isServer ? data.zetsuenS : data.sVal
-    const t = isServer ? data.zetsuenT : data.tVal
-
-    return `R: ${r ?? '-'}MΩ / S: ${s ?? '-'}MΩ / T: ${t ?? '-'}MΩ`
-  }
-  if (phase === 3) {
-    const rs = isServer ? data.denatsuRs : data.rs
-    const st = isServer ? data.denatsuSt : data.st
-    const rt = isServer ? data.denatsuRt : data.rt
-
-    return `RS: ${rs ?? '-'}V / ST: ${st ?? '-'}V / TR: ${rt ?? '-'}V`
-  }
-
-  return '-'
-}
-
 export interface PhaseDiffItem {
   key: string
   label: string
@@ -605,7 +571,7 @@ export function isElcbBreaker(shadankiShubetsu?: string | null): boolean {
 /**
  * 接地種別判定パラメータ
  */
-export interface DetermineSetsuchiParams {
+interface DetermineSetsuchiParams {
   setsuchiManual?: string | null
   setsuchiC?: string | null
   setsuchiD?: string | null

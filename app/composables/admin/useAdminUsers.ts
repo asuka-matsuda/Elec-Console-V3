@@ -8,16 +8,14 @@
 import { useNuxtApp, useState } from '#app'
 import type { User } from '#shared/types/auth'
 import { STATE_KEYS } from '~/constants/storageKeys'
-import { type AppException, parseToAppException } from '~/utils/errors'
+import { parseToAppException } from '~/utils/errors'
 
 export function useAdminUsers() {
   const users = useState<User[]>(STATE_KEYS.ADMIN_USERS, () => [])
-  const fetchError = useState<AppException | null>(STATE_KEYS.ADMIN_USERS_ERROR, () => null)
   const { $api } = useNuxtApp()
 
   const fetchUsers = async () => {
     try {
-      fetchError.value = null
       const data = await $api<User[]>('/api/users')
 
       users.value = data
@@ -25,7 +23,6 @@ export function useAdminUsers() {
     catch (e: unknown) {
       const appErr = parseToAppException(e)
 
-      fetchError.value = appErr
       console.error('Failed to fetch users:', appErr.getUserFacingMessage())
     }
   }
@@ -74,10 +71,6 @@ export function useAdminUsers() {
     }
   }
 
-  const assignSites = async (userId: string, siteIds: string[]) => {
-    await updateUser(userId, { assignedSiteIds: siteIds })
-  }
-
   const resetUserPassword = async (id: string) => {
     try {
       const data = await $api<{ success: boolean, initialPassword?: string }>(
@@ -98,12 +91,10 @@ export function useAdminUsers() {
 
   return {
     users,
-    fetchError,
     fetchUsers,
     createUser,
     updateUser,
     deleteUser,
-    assignSites,
     resetUserPassword,
   }
 }

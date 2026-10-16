@@ -78,10 +78,8 @@ export function useCurrentSite(siteIdSource: MaybeRefOrGetter<string>) {
   return {
     site,
     siteName,
-    sites,
     assignedSites,
     siteOptions,
     switchSite,
-    lastSiteId,
   }
 }

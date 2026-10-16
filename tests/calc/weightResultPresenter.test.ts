@@ -43,7 +43,6 @@ describe('weightResultPresenter', () => {
     expect(vm.panelStatus).toBe('success')
     expect(vm.displayDrum).toBe('D-12')
     expect(vm.displayTotalWeight).toBe('199.2')
-    expect(vm.warningText).toBe('')
     expect(vm.cableWeight).toBe('154.2')
     expect(vm.drumWeight).toBe('45')
     expect(vm.totalWeight).toBe('199.2') // 154.2 + 45.0

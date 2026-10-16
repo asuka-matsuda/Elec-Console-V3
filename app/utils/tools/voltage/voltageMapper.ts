@@ -94,8 +94,5 @@ export function mapFormToVoltageCalcInputs(
     loadUnit,
     pf,
     isReady: validationResult.success,
-    missingFields: validationResult.success
-      ? []
-      : validationResult.error.errors.map(e => String(e.path[0])),
   }
 }

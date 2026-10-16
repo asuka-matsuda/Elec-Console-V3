@@ -14,7 +14,6 @@
   --font-size-xl: 20px;
   --font-size-2xl: 24px;
   --font-size-3xl: 30px;
-  --font-size-4xl: 36px;
 
   --font-weight-normal: 400;
   --font-weight-medium: 500;
@@ -102,7 +101,6 @@
 
   --transition-fast: all var(--duration-fast) var(--ease-base);
   --transition-base: all var(--duration-base) var(--ease-base);
-  --transition-transform: transform var(--duration-base) var(--ease-base);
   --transition-colors:
     background-color var(--duration-fast) var(--ease-base),
     border-color var(--duration-fast) var(--ease-base),

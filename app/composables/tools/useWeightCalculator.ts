@@ -32,12 +32,9 @@ export function useWeightCalculator() {
     isShowingBasis,
     isSaving,
     handleSave,
-    saveToHistory: handleSaveHistory,
-    resetInputs,
     openResetModal,
   } = useToolPage<WeightCalcInputs, WeightCalcResult>(
     'weight',
-    'ドラムサイズ・重量計算',
     defaultInputs,
     (inputs) => {
       if (
@@ -53,7 +50,6 @@ export function useWeightCalculator() {
     },
     {
       toHistory: (inputs, res) => mapWeightToHistory(inputs, res!)!,
-      fromHistory: () => JSON.parse(JSON.stringify(defaultInputs)),
     },
   )
 
@@ -70,10 +66,7 @@ export function useWeightCalculator() {
     isShowingBasis,
     isSaving,
     handleSave,
-    reset: resetInputs,
-    resetInputs,
     openResetModal,
-    handleSaveHistory,
     mathSteps,
   }
 }

@@ -94,13 +94,8 @@ export function useModal(
     isOpen.value = false
   }
 
-  const closeConfirm = () => {
-    handleCancel()
-  }
-
   return {
     isOpen,
-    isPending: computed(() => isPending.value),
     title: computed(() => currentOptions.value.title || '確認'),
     message: computed(() => currentOptions.value.message || 'この操作を実行しますか？'),
     confirmText: computed(() => currentOptions.value.confirmText || '確定する'),
@@ -109,6 +104,5 @@ export function useModal(
     askConfirm,
     handleConfirm,
     handleCancel,
-    closeConfirm,
   }
 }

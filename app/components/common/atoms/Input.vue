@@ -174,7 +174,13 @@ defineExpose({
     --input-affix-gap: var(--space-3);
   }
 
-  &:hover:not(.is-disabled) {
+  &.is-error {
+    --glow-color: var(--color-status-danger);
+
+    border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
+  }
+
+  &:hover:not(.is-disabled, .is-readonly) {
     border-color: var(--glow-color);
     box-shadow: var(--shadow-glow-hover);
   }
@@ -183,12 +189,6 @@ defineExpose({
     border-color: color-mix(in srgb, var(--glow-color) 70%, transparent);
     outline: none;
     box-shadow: var(--shadow-glow-focus);
-  }
-
-  &.is-error {
-    --glow-color: var(--color-status-danger);
-
-    border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
   }
 
   &.is-readonly {

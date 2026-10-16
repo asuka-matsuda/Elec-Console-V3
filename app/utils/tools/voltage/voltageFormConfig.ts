@@ -17,7 +17,7 @@ import {
 import { getCableCategories } from '~/utils/cable'
 import type { VoltageFormState } from '~/utils/tools/voltage/voltageMapper'
 
-export type FormField = {
+type FormField = {
   id: keyof VoltageFormState
   label: string
   type: 'select' | 'input-select' | 'input-addon'

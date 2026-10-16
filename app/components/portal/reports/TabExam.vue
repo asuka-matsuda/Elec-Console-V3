@@ -20,7 +20,6 @@ interface Props {
   siteId: string
   siteName: string
   template: MasterReportTemplateItem | null
-  hasSiteSettingExcel: boolean
 }
 
 const props = defineProps<Props>()
@@ -100,13 +99,7 @@ const saveDraftDevices = () => {
 const {
   circuits: examCircuits,
   fetchCircuits: fetchExamCircuits,
-} = useExamReportPrint(
-  computed(() => props.siteId),
-  {
-    siteName: computed(() => props.siteName),
-    hasSiteSettingExcel: computed(() => props.hasSiteSettingExcel),
-  },
-)
+} = useExamReportPrint(computed(() => props.siteId))
 
 const selectedExamBan = ref<string>('ALL')
 const selectedExamKeiTo = ref<'ALL' | '幹線' | '二次'>('ALL')
@@ -244,8 +237,6 @@ const exportReport = async () => {
 
 defineExpose({
   exportReport,
-  canExport,
-  exportButtonLabel,
 })
 
 onMounted(() => {

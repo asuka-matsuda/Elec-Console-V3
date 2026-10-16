@@ -7,28 +7,9 @@
 import katex from 'katex'
 
 // アプリケーション全体で統一されたハイライト用クラス
-export const TEX_HL_CLASS = 'tex-color-accent'
-export const TEX_SUCCESS_CLASS = 'tex-status-success'
-export const TEX_DANGER_CLASS = 'tex-status-danger'
-
-/**
- * 数値をフォーマットし、指定されたCSSクラスでKaTeX用のhtmlClassコマンドでラップします。
- * 値が無効な場合（null/undefined/NaN）は、フォールバックの文字列（通常は変数名）をそのまま返します。
- */
-export function hlVal(
-  val: number | string | null | undefined,
-  fallback: string,
-  dec = 1,
-  className = TEX_HL_CLASS,
-): string {
-  if (val === null || val === undefined || val === '') return fallback
-  const num = parseFloat(String(val))
-
-  if (isNaN(num)) return fallback
-  const numStr = num % 1 === 0 ? num.toString() : num.toFixed(dec)
-
-  return `\\htmlClass{${className}}{${numStr}}`
-}
+const TEX_HL_CLASS = 'tex-color-accent'
+const TEX_SUCCESS_CLASS = 'tex-status-success'
+const TEX_DANGER_CLASS = 'tex-status-danger'
 
 /**
  * 数値を指定桁数でフォーマットします。ハイライトは行いません。

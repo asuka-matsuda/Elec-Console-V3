@@ -12,19 +12,6 @@ import { detectTagSlotsFromSheet } from '#shared/utils/tagSlotDetector'
  * - 固定セル番地（Row, Col決め打ち）は一切行わず、テンプレート内のキーを直接狙って置換します。
  */
 
-// 引数なしテスト互換用フォールバック
-const FALLBACK_COLS = [2, 4, 6]
-const FALLBACK_START_ROWS = [2, 9, 16, 23, 30, 37, 44, 51]
-const FALLBACK_FIELD_OFFSETS: { key: string, offset: number }[] = [
-  { key: '回路番号', offset: 0 },
-  { key: 'ケーブル', offset: 1 },
-  { key: '配電方式', offset: 2 },
-  { key: '系統', offset: 3 },
-  { key: '回路名称', offset: 4 },
-]
-
-export { detectTagSlotsFromSheet }
-
 export const kfc3350Template: TagTemplateDefinition = {
   id: 'kfc-3350',
   name: 'KFC-3350（A4線名札）',
@@ -37,35 +24,8 @@ export const kfc3350Template: TagTemplateDefinition = {
   },
 
   getSlots: (flowDirection: 'z' | 'n', sheet?: ExcelJS.Worksheet): TagSlotDef[] => {
-    // ワークシートが渡された場合、セル内のプレースホルダーから動的スロット検出を行う（未検出時は空配列を返し呼び出し元でエラー検知）
-    if (sheet) {
-      return detectTagSlotsFromSheet(sheet, flowDirection)
-    }
+    if (!sheet) return []
 
-    // 静的レイアウト（引数なし単体テスト呼び出し時のみ）
-    const slots: TagSlotDef[] = []
-    let slotIndex = 0
-
-    const primaryList = flowDirection === 'z' ? FALLBACK_START_ROWS : FALLBACK_COLS
-    const secondaryList = flowDirection === 'z' ? FALLBACK_COLS : FALLBACK_START_ROWS
-
-    for (const p of primaryList) {
-      for (const s of secondaryList) {
-        const startRow = flowDirection === 'z' ? p : s
-        const col = flowDirection === 'z' ? s : p
-
-        slots.push({
-          slotIndex: slotIndex++,
-          cells: FALLBACK_FIELD_OFFSETS.map(f => ({
-            key: f.key,
-            row: startRow + f.offset,
-            col,
-            rawText: `%${f.key}%`,
-          })),
-        })
-      }
-    }
-
-    return slots
+    return detectTagSlotsFromSheet(sheet, flowDirection)
   },
 }

@@ -24,7 +24,7 @@ export function useCalendar(siteId: string) {
   )
   const { $api } = useNuxtApp()
 
-  const { refresh: fetchEvents } = useAsyncData(
+  useAsyncData(
     `fetch-events-${siteId}`,
     async () => {
       const data = await $api<CalendarEvent[]>(`/api/sites/${siteId}/events`)
@@ -35,7 +35,7 @@ export function useCalendar(siteId: string) {
     },
   )
 
-  const { refresh: fetchSettings } = useAsyncData(
+  useAsyncData(
     `fetch-settings-${siteId}`,
     async () => {
       const data = await $api<CalendarSettings>(
@@ -96,8 +96,6 @@ export function useCalendar(siteId: string) {
   return {
     events,
     settings,
-    fetchEvents,
-    fetchSettings,
     createEvent,
     updateEvent,
     deleteEvent,

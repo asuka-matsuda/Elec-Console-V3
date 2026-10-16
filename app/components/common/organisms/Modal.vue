@@ -86,8 +86,6 @@ watch(
 
 <style scoped lang="scss">
 .modal {
-  --theme-accent: var(--color-category-main);
-
   pointer-events: none;
 
   transform: translateY(var(--space-2));
@@ -161,6 +159,10 @@ watch(
 }
 
 .modal-window {
+  --glow-color: var(--theme-accent);
+
+  @include control-glow-tokens;
+
   isolation: isolate;
 
   border: var(--border-width-base) solid var(--color-border);
@@ -168,7 +170,7 @@ watch(
 
   background-color: var(--surface-bg-elevated);
   backdrop-filter: blur(var(--blur-sm));
-  box-shadow: var(--shadow-modal);
+  box-shadow: var(--shadow-glow-ambient), var(--shadow-elevation-lg);
 }
 
 .modal-body {

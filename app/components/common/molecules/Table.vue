@@ -336,8 +336,8 @@ td {
   }
 
   &.is-highlighted {
-    background-color: var(--color-selection-bg);
-    outline: 2px solid var(--color-selection-outline);
+    background-color: color-mix(in srgb, var(--theme-accent) 14%, transparent);
+    outline: 2px solid var(--theme-accent);
     animation: row-pulse-highlight 2.5s ease-out;
   }
 
@@ -359,12 +359,12 @@ td.col-actions {
   }
 
   50% {
-    outline-color: var(--color-selection-outline);
-    box-shadow: inset 0 0 0 1px var(--color-selection-outline);
+    outline-color: var(--theme-accent);
+    box-shadow: inset 0 0 0 1px var(--theme-accent);
   }
 
   100% {
-    outline-color: var(--color-selection-outline);
+    outline-color: var(--theme-accent);
     box-shadow: none;
   }
 }

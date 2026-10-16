@@ -18,12 +18,12 @@ import { useToast } from '~/composables/useToast'
 import { CircuitsRepository } from '~/utils/db'
 import { AppException, getErrorMessage, isNetworkError } from '~/utils/errors'
 
-export interface PhaseExamFeedbackOptions {
+interface PhaseExamFeedbackOptions {
   onConflict?: (message: string) => void
   onError?: (message: string) => void
 }
 
-export interface ConfirmPhase1Payload {
+interface ConfirmPhase1Payload {
   kakunin?: boolean
   mashishime?: boolean
   mashishimeCubicle?: boolean
@@ -32,7 +32,7 @@ export interface ConfirmPhase1Payload {
   [key: string]: unknown
 }
 
-export interface ConfirmPhase2Payload {
+interface ConfirmPhase2Payload {
   rVal?: number | null
   sVal?: number | null
   tVal?: number | null
@@ -44,7 +44,7 @@ export interface ConfirmPhase2Payload {
   remarksOnly?: boolean
 }
 
-export interface ConfirmPhase3Payload {
+interface ConfirmPhase3Payload {
   rs?: number | null
   st?: number | null
   rt?: number | null
@@ -71,7 +71,6 @@ export function usePhaseExamBase(
   const panelOptions = ref<PanelOption[]>([])
   const isLoading = ref(true)
   const isActionLoading = ref<Record<string, boolean>>({})
-  const error = ref<string | null>(null)
 
   const selectedKeiTo = ref<string>(initialKeiTo)
   const selectedBanShubetsu = ref<string>('ALL')
@@ -108,8 +107,6 @@ export function usePhaseExamBase(
       return
     }
 
-    error.value = null
-
     // 1. まずローカル IndexedDB から即座に読み込み (0ms / オフライン完全保証)
     try {
       const localCircuits = await CircuitsRepository.getBySite(siteId)
@@ -144,11 +141,8 @@ export function usePhaseExamBase(
         await CircuitsRepository.putAll(res.circuits)
       }
     }
-    catch (err: unknown) {
-      // オフラインまたは通信失敗時は、ローカルにデータがあればエラーにしない
-      if (circuits.value.length === 0) {
-        error.value = getErrorMessage(err, '通信エラーが発生しました')
-      }
+    catch {
+      // オフラインまたは通信失敗時はローカルデータを維持
     }
     finally {
       isLoading.value = false
@@ -646,18 +640,13 @@ export function usePhaseExamBase(
   }
 
   return {
-    siteIdRef,
-    phaseNumber,
     circuits,
-    panelOptions,
     isLoading,
     isActionLoading,
-    error,
     selectedKeiTo,
     selectedBanShubetsu,
     selectedFloor,
     selectedBanMeisho,
-    availableShubetsuList,
     shubetsuTabOptions,
     availableFloorList,
     availableBanMeishoList,
@@ -665,9 +654,6 @@ export function usePhaseExamBase(
     phaseStats,
     fetchCircuits,
     isThreePhase,
-    getWorkerName,
-    getAccurateNow,
-    executeCircuitAction,
     saveExcludedRemarks,
     confirmPhase1,
     confirmPhase2,

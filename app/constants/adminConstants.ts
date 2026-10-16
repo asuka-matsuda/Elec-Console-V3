@@ -20,11 +20,11 @@ export const USER_ROLE_OPTIONS: SelectOption<SiteRole>[] = [
 /**
  * ユーザー権限（ロール）表示設定（バッジ表示用）
  */
-export const USER_ROLE_CONFIG: Record<UserRole, { label: string, color: string, variant: BadgeVariant }> = {
-  master: { label: 'マスター', color: 'var(--color-role-admin)', variant: 'purple' },
-  admin: { label: '管理者', color: 'var(--color-role-admin)', variant: 'purple' },
-  worker: { label: '作業者', color: 'var(--color-role-worker)', variant: 'blue' },
-  viewer: { label: '閲覧者', color: 'var(--color-role-viewer)', variant: 'gray' },
+export const USER_ROLE_CONFIG: Record<UserRole, { label: string, variant: BadgeVariant }> = {
+  master: { label: 'マスター', variant: 'purple' },
+  admin: { label: '管理者', variant: 'purple' },
+  worker: { label: '作業者', variant: 'blue' },
+  viewer: { label: '閲覧者', variant: 'gray' },
 }
 
 /**
@@ -51,11 +51,11 @@ export const SITE_STATUS_OPTIONS: SelectOption<SiteStatus>[] = [
 /**
  * 現場ステータス表示設定（バッジ表示用）
  */
-export const SITE_STATUS_CONFIG: Record<SiteStatus, { label: string, color: string, variant: BadgeVariant }> = {
-  planning: { label: '計画中', color: 'var(--color-text-muted)', variant: 'gray' },
-  in_progress: { label: '進行中', color: 'var(--theme-accent)', variant: 'blue' },
-  completed: { label: '完了', color: 'var(--color-status-success)', variant: 'green' },
-  on_hold: { label: '保留', color: 'var(--color-status-warning)', variant: 'amber' },
+export const SITE_STATUS_CONFIG: Record<SiteStatus, { label: string, variant: BadgeVariant }> = {
+  planning: { label: '計画中', variant: 'gray' },
+  in_progress: { label: '進行中', variant: 'blue' },
+  completed: { label: '完了', variant: 'green' },
+  on_hold: { label: '保留', variant: 'amber' },
 }
 
 /**
@@ -65,7 +65,6 @@ export const SITE_SETTINGS_TABS = [
   { value: 'basic', label: '基本情報', icon: 'info' },
   { value: 'integration', label: 'Excelデータ連携', icon: 'link' },
   { value: 'holidays', label: '休日設定', icon: 'calendar' },
-  { value: 'wordBreak', label: '改行禁止ワード', icon: 'type' },
 ]
 
 /**

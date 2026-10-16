@@ -6,17 +6,13 @@
  */
 
 import { useNuxtApp, useState } from '#app'
-import type { AdminSitesResponse, Site, SiteMutationResponse, SiteSettings } from '#shared/types/site'
+import type { AdminSitesResponse, Site, SiteMutationResponse } from '#shared/types/site'
 import { useAuth } from '~/composables/useAuth'
 import { STATE_KEYS } from '~/constants/storageKeys'
 import { SiteSettingsRepository, SitesRepository } from '~/utils/db'
 
 export function useAdminSites() {
   const sites = useState<Site[]>(STATE_KEYS.ADMIN_SITES, () => [])
-  const siteSettings = useState<SiteSettings[]>(
-    STATE_KEYS.ADMIN_SITE_SETTINGS,
-    () => [],
-  )
   const isLoaded = useState<boolean>(STATE_KEYS.ADMIN_SITES_LOADED, () => false)
   const isLoading = useState<boolean>(
     STATE_KEYS.ADMIN_SITES_LOADING,
@@ -28,7 +24,7 @@ export function useAdminSites() {
   // 初期データの取得 (手動・画面読込時に必ずサーバーから最新状態を取得)
   const fetchSites = async (force = false) => {
     if (isLoading.value) {
-      return { sites: sites.value, siteSettings: siteSettings.value }
+      return { sites: sites.value }
     }
 
     isLoading.value = true
@@ -36,14 +32,10 @@ export function useAdminSites() {
     // 1. 初回のみ IndexedDB から即座に読み込み（ゼロレイテンシ初期描画）
     if (!isLoaded.value && !force) {
       try {
-        const [localSites, localSettings] = await Promise.all([
-          SitesRepository.getAll(),
-          SiteSettingsRepository.getAll(),
-        ])
+        const localSites = await SitesRepository.getAll()
 
         if (localSites && localSites.length > 0) {
           sites.value = localSites
-          siteSettings.value = localSettings || []
           isLoaded.value = true
         }
       }
@@ -60,7 +52,6 @@ export function useAdminSites() {
 
       if (data) {
         sites.value = data.sites || []
-        siteSettings.value = data.siteSettings || []
         isLoaded.value = true
 
         // IndexedDB に保存
@@ -77,7 +68,7 @@ export function useAdminSites() {
     catch (err: unknown) {
       // オフライン時はローカルデータがあれば正常扱い
       if (sites.value.length > 0) {
-        return { sites: sites.value, siteSettings: siteSettings.value }
+        return { sites: sites.value }
       }
       throw err
     }
@@ -97,7 +88,6 @@ export function useAdminSites() {
       )
 
       sites.value.push(res.site)
-      siteSettings.value.push(res.settings)
       await Promise.all([
         SitesRepository.put(res.site),
         SiteSettingsRepository.put(res.settings),
@@ -132,9 +122,6 @@ export function useAdminSites() {
         await SitesRepository.put(res.site)
       }
       if (res.settings) {
-        siteSettings.value = siteSettings.value.map(set =>
-          set.siteId === id ? res.settings : set,
-        )
         await SiteSettingsRepository.put(res.settings)
       }
 
@@ -155,7 +142,6 @@ export function useAdminSites() {
     try {
       await $api(`/api/sites/${id}`, { method: 'DELETE' })
       sites.value = sites.value.filter(s => s.id !== id)
-      siteSettings.value = siteSettings.value.filter(s => s.siteId !== id)
       await Promise.all([
         SitesRepository.delete(id),
         SiteSettingsRepository.delete(id),
@@ -182,33 +168,8 @@ export function useAdminSites() {
     await updateSite(id, { disabledAt })
   }
 
-  const updateSettings = async (
-    siteId: string,
-    updates: Partial<Omit<SiteSettings, 'siteId'>>,
-  ) => {
-    const res = await $api<SiteMutationResponse>(
-      `/api/sites/${siteId}`,
-      {
-        method: 'PUT',
-        body: { settings: updates },
-      },
-    )
-
-    if (res.settings) {
-      siteSettings.value = siteSettings.value.map(set =>
-        set.siteId === siteId ? res.settings : set,
-      )
-      await SiteSettingsRepository.put(res.settings)
-    }
-  }
-
-  const getSettings = (siteId: string) => {
-    return siteSettings.value.find(s => s.siteId === siteId) || null
-  }
-
   return {
     sites,
-    siteSettings,
     isLoaded,
     isLoading,
     fetchSites,
@@ -216,7 +177,5 @@ export function useAdminSites() {
     updateSite,
     deleteSite,
     toggleDisableSite,
-    updateSettings,
-    getSettings,
   }
 }

@@ -20,8 +20,7 @@ const route = useRoute()
 const router = useRouter()
 
 const siteId = computed(() => route.params.siteId as string)
-const { site, siteName } = useCurrentSite(siteId)
-const hasSiteSettingExcel = computed(() => Boolean(site.value?.excelPath?.trim()))
+const { siteName } = useCurrentSite(siteId)
 
 const pageTitle = computed(() =>
   siteName.value ? `${siteName.value}_帳票出力` : '帳票出力',
@@ -224,7 +223,7 @@ onMounted(() => {
     <Note v-if="currentCategory !== 'tepra' && !isMasterLoading && availableTemplatesForCategory.length === 0" variant="warning" class="shrink-0" text="このカテゴリに割り当てられた公式ひな形がありません。マスター管理画面の「帳票ひな形管理」でひな形Excelを登録し、この現場に割り当ててください。" />
 
     <!-- 各タブ画面（左から送電試験、リモコン、線名札、テプラ） -->
-    <PortalTabExam v-if="currentCategory === 'exam'" ref="examTabRef" :site-id="siteId" :site-name="siteName" :template="selectedTemplate" :has-site-setting-excel="hasSiteSettingExcel" @update:can-export="examCanExport = $event" @update:is-exporting="examIsExporting = $event" @update:export-label="examExportLabel = $event" />
+    <PortalTabExam v-if="currentCategory === 'exam'" ref="examTabRef" :site-id="siteId" :site-name="siteName" :template="selectedTemplate" @update:can-export="examCanExport = $event" @update:is-exporting="examIsExporting = $event" @update:export-label="examExportLabel = $event" />
     <PortalTabRemote v-else-if="currentCategory === 'remote'" ref="remoteTabRef" :site-id="siteId" :site-name="siteName" :template="selectedTemplate" @update:can-export="remoteCanExport = $event" @update:is-exporting="remoteIsExporting = $event" @update:export-label="remoteExportLabel = $event" />
     <PortalTabTag v-else-if="currentCategory === 'tag'" ref="tagTabRef" :site-id="siteId" :site-name="siteName" :template="selectedTemplate" @update:can-export="tagCanExport = $event" @update:is-exporting="tagIsExporting = $event" @update:export-label="tagExportLabel = $event" />
     <PortalTabTepra v-else-if="currentCategory === 'tepra'" ref="tepraTabRef" :site-id="siteId" :site-name="siteName" @update:can-export="tepraCanExport = $event" @update:is-exporting="tepraIsExporting = $event" @update:export-label="tepraExportLabel = $event" />

@@ -88,14 +88,6 @@ export const SitesRepository = {
     return db.getAll('sites')
   },
 
-  async get(id: string): Promise<Site | undefined> {
-    const db = await getLocalDB()
-
-    if (!db) return undefined
-
-    return db.get('sites', id)
-  },
-
   async put(site: Site): Promise<void> {
     const db = await getLocalDB()
 
@@ -127,14 +119,6 @@ export const SitesRepository = {
  * 現場設定 (SiteSettings) リポジトリ
  */
 export const SiteSettingsRepository = {
-  async get(siteId: string): Promise<SiteSettings | undefined> {
-    const db = await getLocalDB()
-
-    if (!db) return undefined
-
-    return db.get('site_settings', siteId)
-  },
-
   async getAll(): Promise<SiteSettings[]> {
     const db = await getLocalDB()
 
@@ -180,25 +164,6 @@ export const CircuitsRepository = {
     if (!db) return []
 
     return db.getAllFromIndex('circuits', 'by_site', siteId)
-  },
-
-  async getBySiteAndKeiTo(siteId: string, keiTo: string): Promise<CircuitItem[]> {
-    const db = await getLocalDB()
-
-    if (!db) return []
-    if (!keiTo || keiTo === 'ALL') {
-      return db.getAllFromIndex('circuits', 'by_site', siteId)
-    }
-
-    return db.getAllFromIndex('circuits', 'by_site_keito', [siteId, keiTo])
-  },
-
-  async get(circuitId: string): Promise<CircuitItem | undefined> {
-    const db = await getLocalDB()
-
-    if (!db) return undefined
-
-    return db.get('circuits', circuitId)
   },
 
   async put(circuit: CircuitItem): Promise<void> {
@@ -261,21 +226,6 @@ export const CircuitsRepository = {
 
     return updated
   },
-
-  async clearSite(siteId: string): Promise<void> {
-    const db = await getLocalDB()
-
-    if (!db) return
-    const tx = db.transaction('circuits', 'readwrite')
-    const index = tx.store.index('by_site')
-    let cursor = await index.openCursor(siteId)
-
-    while (cursor) {
-      await cursor.delete()
-      cursor = await cursor.continue()
-    }
-    await tx.done
-  },
 }
 
 /**
@@ -318,15 +268,6 @@ export const OutboxRepository = {
     if (!db) return []
 
     return db.getAllFromIndex('sync_outbox', 'by_site', siteId)
-  },
-
-  async getPendingBySite(siteId: string): Promise<SyncOutboxRecord[]> {
-    const db = await getLocalDB()
-
-    if (!db) return []
-    const all = await db.getAllFromIndex('sync_outbox', 'by_site', siteId)
-
-    return all.filter(item => item.status !== 'conflict')
   },
 
   async enqueue(item: Omit<SyncOutboxRecord, 'id' | 'createdAt' | 'status'>): Promise<SyncOutboxRecord | undefined> {

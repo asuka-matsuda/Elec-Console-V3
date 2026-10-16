@@ -43,12 +43,9 @@ export function useVoltageCalculator() {
     isShowingBasis,
     isSaving,
     handleSave,
-    saveToHistory,
     openResetModal,
-    resetInputs,
   } = useToolPage<VoltageFormState, VoltageCalcResult | null>(
     'voltage',
-    '電圧降下・ケーブルサイズ選定',
     { ...defaultForm },
     (formInputs) => {
       const calcInputs = mapFormToVoltageCalcInputs(formInputs)
@@ -63,9 +60,8 @@ export function useVoltageCalculator() {
 
         if (!inputs.isReady || !res) return null
 
-        return mapVoltageToHistory('電圧降下・ケーブルサイズ選定', inputs, res)
+        return mapVoltageToHistory(inputs, res)
       },
-      fromHistory: () => JSON.parse(JSON.stringify(defaultForm)),
     },
   )
 
@@ -160,15 +156,8 @@ export function useVoltageCalculator() {
     isSaving,
     handleSave,
     openResetModal,
-    resetInputs,
-    handleSaveHistory: saveToHistory,
-    isSizeCalcMode,
-    isDropCalcMode,
-    computedAvailableSizes,
-    computedAvailableCores,
     calcInputs,
     calcResult,
     mathSteps,
-    isSinglePhase,
   }
 }

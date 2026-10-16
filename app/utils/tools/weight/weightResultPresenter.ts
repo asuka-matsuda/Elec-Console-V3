@@ -14,7 +14,6 @@ interface WeightResultViewModel {
   badgeText?: string
   displayDrum: string
   displayTotalWeight: string
-  warningText: string
   cableWeight: string
   drumWeight: string
   totalWeight: string
@@ -54,8 +53,6 @@ export function formatWeightResult(
     }
   }
 
-  const warningText = ''
-
   function totalWeightVal(res: WeightCalcResult) {
     const drumEmptyWeight = parseFloat(String(res.bestDrum?.weight || 0))
 
@@ -92,7 +89,6 @@ export function formatWeightResult(
     badgeText,
     displayDrum,
     displayTotalWeight,
-    warningText,
     cableWeight,
     drumWeight,
     totalWeight,

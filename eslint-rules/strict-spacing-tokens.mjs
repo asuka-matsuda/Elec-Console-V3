@@ -104,7 +104,6 @@ function collectElementClassStrings(vElement) {
 
 function hasPanelClass(vElement) {
   if (!vElement) return false
-  if (['Panel', 'AtomsPanel'].includes(vElement.rawName || vElement.name)) return true
   const classStrings = collectElementClassStrings(vElement)
 
   for (const str of classStrings) {

@@ -3,7 +3,7 @@
  * クライアントとサーバーの双方が参照する単一真実源です。
  */
 
-export interface NameableUser {
+interface NameableUser {
   firstName?: string | null
   lastName?: string | null
   firstNameKana?: string | null

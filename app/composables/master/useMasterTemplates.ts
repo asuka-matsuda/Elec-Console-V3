@@ -11,6 +11,7 @@ import type {
   MasterReportTemplateForm,
   MasterReportTemplateItem,
 } from '#shared/types/reportTemplate'
+import { downloadBlob } from '~/utils/download'
 
 export function useMasterTemplates() {
   const { $api } = useNuxtApp()
@@ -118,15 +119,7 @@ export function useMasterTemplates() {
         responseType: 'blob',
       })
 
-      const downloadUrl = window.URL.createObjectURL(blob)
-      const a = document.createElement('a')
-
-      a.href = downloadUrl
-      a.download = filename || 'template.xlsx'
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      window.URL.revokeObjectURL(downloadUrl)
+      downloadBlob(blob, filename || 'template.xlsx')
 
       toast.success('ひな形Excelをダウンロードしました')
     }

@@ -15,7 +15,7 @@ import {
   normalizeHeaderName,
 } from './excelNormalize'
 
-export const TEPRA_HEADER_TARGETS = [
+const TEPRA_HEADER_TARGETS = [
   '受口数',
   '盤名称',
   '分電盤名称',

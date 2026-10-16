@@ -20,10 +20,8 @@ import { validateSafeExcelPath } from '../../../utils/excel/safePath'
 import {
   parseAssignedReports,
   parseExcludedCircuits,
-  parseNoBreakWords,
   serializeAssignedReports,
   serializeExcludedCircuits,
-  serializeNoBreakWords,
 } from '../../../utils/jsonFields'
 import { prisma } from '../../../utils/prisma'
 
@@ -157,10 +155,6 @@ export default defineEventHandler(async (event) => {
     ? siteData.excludedCircuits
     : body?.settings?.excludedCircuits
 
-  const rawNoBreak = siteData.noBreakWords !== undefined
-    ? siteData.noBreakWords
-    : body?.settings?.noBreakWords
-
   const rawAssignedReports = siteData.assignedReports !== undefined
     ? siteData.assignedReports
     : body?.settings?.assignedReports
@@ -169,7 +163,6 @@ export default defineEventHandler(async (event) => {
 
   if (newExcelPath !== undefined) settingsUpdates.excelPath = newExcelPath
   if (rawExcluded !== undefined) settingsUpdates.excludedCircuits = serializeExcludedCircuits(rawExcluded)
-  if (rawNoBreak !== undefined) settingsUpdates.noBreakWords = serializeNoBreakWords(rawNoBreak)
   if (rawAssignedReports !== undefined) settingsUpdates.assignedReports = serializeAssignedReports(rawAssignedReports)
   if (body?.settings?.enablePhase3 !== undefined) {
     settingsUpdates.enablePhase3 = Boolean(body.settings.enablePhase3)
@@ -225,7 +218,6 @@ export default defineEventHandler(async (event) => {
     ...updatedSite,
     excelPath: settings?.excelPath || undefined,
     excludedCircuits: parseExcludedCircuits(settings?.excludedCircuits),
-    noBreakWords: parseNoBreakWords(settings?.noBreakWords),
     assignedReports: parseAssignedReports(settings?.assignedReports),
   }
 

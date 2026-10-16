@@ -99,7 +99,7 @@ const handleSave = () => {
 
       <div class="flex flex-col gap-inline-gap">
         <label for="calendar-event-title" class="label">
-          タイトル <span class="required-mark">*</span>
+          タイトル <span class="req-mark">*</span>
         </label>
         <Input id="calendar-event-title" v-model="form.title" :placeholder="form.isMilestone ? '受電・本送電、消防検査など' : '会議、送電試験など'" :error="hasTitleError" @update:model-value="hasTitleError = false" />
         <p v-if="hasTitleError" class="error-text">
@@ -114,7 +114,7 @@ const handleSave = () => {
 
       <div v-if="form.isMilestone" class="flex flex-col gap-inline-gap">
         <label for="calendar-event-start" class="label">
-          目標日 <span class="required-mark">*</span>
+          目標日 <span class="req-mark">*</span>
         </label>
         <Input id="calendar-event-start" v-model="form.start" type="date" required />
       </div>
@@ -123,7 +123,7 @@ const handleSave = () => {
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-form-col-gap">
           <div class="flex flex-col gap-inline-gap">
             <label for="calendar-event-start" class="label">
-              開始日時 <span class="required-mark">*</span>
+              開始日時 <span class="req-mark">*</span>
             </label>
             <Input id="calendar-event-start" :key="'start-' + form.allDay" v-model="form.start" :type="form.allDay ? 'date' : 'datetime-local'" required @change="handleStartChange" />
           </div>

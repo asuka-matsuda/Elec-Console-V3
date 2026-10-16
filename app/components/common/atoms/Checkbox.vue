@@ -46,7 +46,10 @@ watch(() => indeterminate, syncIndeterminate)
 
 const customStyle = computed(() => {
   if (color) {
-    return { '--control-checked-bg': color }
+    return {
+      '--control-checked-bg': color,
+      '--glow-color': color,
+    }
   }
 
   return undefined

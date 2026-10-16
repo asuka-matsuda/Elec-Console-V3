@@ -14,7 +14,7 @@ import type { CircuitItem } from '#shared/types/circuit'
 import { useOfflineSync } from '~/composables/portal/useOfflineSync'
 import { scrollToTableRow } from '~/utils/table'
 
-export interface UsePhasePageSyncOptions {
+interface UsePhasePageSyncOptions {
   siteId: Ref<string> | ComputedRef<string> | string
   selectedKeiTo: Ref<string>
   selectedBanMeisho: Ref<string>
@@ -81,6 +81,5 @@ export function usePhasePageSync(options: UsePhasePageSyncOptions) {
   return {
     handleSelectCircuit,
     targetCircuitId,
-    lastSyncedAt,
   }
 }

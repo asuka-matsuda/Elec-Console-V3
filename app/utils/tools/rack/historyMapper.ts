@@ -86,7 +86,6 @@ export function mapRackToHistory(
   return {
     toolName: 'ケーブルラック選定',
     status,
-    mainResultText: t1.selectedSize ? `W${t1.selectedSize}` : (t2.selectedSize ? `W${t2.selectedSize}` : '規格外'),
     inputs,
     results,
   }

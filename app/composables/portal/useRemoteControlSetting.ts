@@ -13,7 +13,6 @@ import type { CircuitItem } from '#shared/types/circuit'
 import type {
   RemoteCircuitItem,
   RemoteControlConfig,
-  RemoteExportTarget,
   RemoteGroupSummary,
   RemotePatternSummary,
 } from '#shared/types/remoteControl'
@@ -22,21 +21,14 @@ import { getErrorMessage } from '~/utils/errors'
 import {
   buildGroupSummaries,
   buildPatternSummaries,
-  generateRemoteReportExcel,
 } from '~/utils/remoteReportExcel'
-
-interface UseRemoteControlSettingOptions {
-  siteName?: MaybeRefOrGetter<string>
-}
 
 export function useRemoteControlSetting(
   siteIdSource: MaybeRefOrGetter<string>,
-  options: UseRemoteControlSettingOptions = {},
 ) {
   const { $api } = useNuxtApp()
 
   const siteId = computed(() => toValue(siteIdSource))
-  const siteName = computed(() => toValue(options.siteName) || '現場')
 
   // 回路一覧（負荷アドレス付き）
   const remoteCircuits = ref<RemoteCircuitItem[]>([])
@@ -50,21 +42,6 @@ export function useRemoteControlSetting(
     patternRemarks: {},
   })
   const isSaving = ref(false)
-  const saveMessage = ref<{ type: 'success' | 'error', text: string } | null>(null)
-
-  // テンプレートファイル管理（出力対象ごとに個別管理）
-  const templateFiles = ref<Record<RemoteExportTarget, File | null>>({
-    address: null,
-    group: null,
-    pattern: null,
-  })
-  const templateBuffers = ref<Record<RemoteExportTarget, ArrayBuffer | null>>({
-    address: null,
-    group: null,
-    pattern: null,
-  })
-  const isGenerating = ref(false)
-  const generateMessage = ref<{ type: 'success' | 'error', text: string } | null>(null)
 
   // 伝送系統一覧
   const densoKeiToList = computed(() => {
@@ -196,7 +173,6 @@ export function useRemoteControlSetting(
   const saveRemoteConfig = async () => {
     if (!siteId.value) return
     isSaving.value = true
-    saveMessage.value = null
     const toast = useToast()
 
     try {
@@ -204,13 +180,11 @@ export function useRemoteControlSetting(
         method: 'PUT',
         body: config.value,
       })
-      saveMessage.value = { type: 'success', text: 'リモコン設定を保存しました' }
       toast.success('リモコン設定を保存しました')
     }
     catch (err: unknown) {
       const msg = getErrorMessage(err, '保存に失敗しました')
 
-      saveMessage.value = { type: 'error', text: msg }
       toast.error(msg)
     }
     finally {
@@ -272,86 +246,6 @@ export function useRemoteControlSetting(
     })
   }
 
-  // 出力対象ターゲット（'address' | 'group' | 'pattern'）
-  const exportTarget = ref<RemoteExportTarget>('address')
-
-  // 現在選択中の出力対象のテンプレートファイル
-  const currentTemplateFile = computed(() => templateFiles.value[exportTarget.value])
-
-  // テンプレートファイル選択（対象ごとに設定）
-  const handleTemplateFileSelect = async (file: File | null, target?: RemoteExportTarget) => {
-    const t = target || exportTarget.value
-
-    templateFiles.value[t] = file
-    generateMessage.value = null
-    if (!file) {
-      templateBuffers.value[t] = null
-
-      return
-    }
-
-    try {
-      templateBuffers.value[t] = await file.arrayBuffer()
-    }
-    catch {
-      generateMessage.value = { type: 'error', text: 'テンプレートファイルの読み込みに失敗しました' }
-    }
-  }
-
-  // Excelダウンロード実行
-  const generateAndDownloadReport = async (overrideTarget?: RemoteExportTarget) => {
-    if (remoteCircuits.value.length === 0) {
-      generateMessage.value = { type: 'error', text: '出力対象の回路データが存在しません' }
-
-      return
-    }
-
-    const currentExportTarget = overrideTarget || exportTarget.value
-    const currentBuffer = templateBuffers.value[currentExportTarget]
-
-    if (!currentBuffer) {
-      generateMessage.value = { type: 'error', text: 'フォーマットExcelが指定されていません' }
-
-      return
-    }
-
-    isGenerating.value = true
-    generateMessage.value = null
-
-    try {
-      const result = await generateRemoteReportExcel({
-        templateBuffer: currentBuffer,
-        circuits: remoteCircuits.value,
-        config: config.value,
-        siteName: siteName.value,
-        exportTarget: currentExportTarget,
-      })
-
-      const blob = new Blob([result.buffer as BlobPart], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      })
-
-      downloadBlob(blob, result.filename)
-
-      let targetLabel = 'リモコン設定表'
-
-      if (currentExportTarget === 'address') targetLabel = 'アドレス表'
-      else if (currentExportTarget === 'group') targetLabel = 'グループ設定表'
-      else if (currentExportTarget === 'pattern') targetLabel = 'パターン設定表'
-
-      generateMessage.value = {
-        type: 'success',
-        text: `${targetLabel}を出力しました（${result.totalAddresses}件 / ${result.configuredGroups}グループ）`,
-      }
-    }
-    catch (err: unknown) {
-      generateMessage.value = { type: 'error', text: getErrorMessage(err, '出力中にエラーが発生しました') }
-    }
-    finally {
-      isGenerating.value = false
-    }
-  }
-
   return {
     remoteCircuits,
     banList,
@@ -360,16 +254,8 @@ export function useRemoteControlSetting(
     isLoadingData,
     dataError,
     isSaving,
-    saveMessage,
-    groupSummaries,
-    patternSummaries,
     activeGroups,
     activePatterns,
-    templateFiles,
-    templateFile: currentTemplateFile,
-    exportTarget,
-    isGenerating,
-    generateMessage,
     fetchSiteRemoteData,
     saveRemoteConfig,
     assignGroup,
@@ -377,7 +263,5 @@ export function useRemoteControlSetting(
     assignPattern,
     removePattern,
     clearSelectedAssignments,
-    handleTemplateFileSelect,
-    generateAndDownloadReport,
   }
 }

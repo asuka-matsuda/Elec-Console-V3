@@ -7,9 +7,7 @@ import phase2PostHandler from '../../server/api/sites/[siteId]/circuits/[id]/pha
 import phase3PostHandler from '../../server/api/sites/[siteId]/circuits/[id]/phase3.post'
 import circuitsGetHandler from '../../server/api/sites/[siteId]/circuits/index.get'
 import { generateAuthToken } from '../../server/utils/auth'
-import { applyCircuitToRow } from '../../server/utils/excel/circuitExport'
 import { importCircuitsFromExcel } from '../../server/utils/excel/circuitImport'
-import { DEFAULT_CIRCUIT_COLUMN_MAP } from '../../server/utils/excel/circuitMapping'
 import { hashPassword } from '../../server/utils/password'
 import { prisma } from '../../server/utils/prisma'
 import { ErrorCode } from '../../shared/types/errors'
@@ -323,27 +321,27 @@ describe('試験確定・解除 API (examLogic) および Excel 入出力の統�
       // Row 5: Header row matching HEADER_ALIASES
       const headerRow = ws.getRow(5)
 
-      headerRow.getCell(DEFAULT_CIRCUIT_COLUMN_MAP.banMeisho).value = '盤名称'
-      headerRow.getCell(DEFAULT_CIRCUIT_COLUMN_MAP.banShubetsu).value = '盤種別'
-      headerRow.getCell(DEFAULT_CIRCUIT_COLUMN_MAP.haidenHoushiki).value = '配電方式'
-      headerRow.getCell(DEFAULT_CIRCUIT_COLUMN_MAP.keiTo).value = '幹線/二次側'
-      headerRow.getCell(DEFAULT_CIRCUIT_COLUMN_MAP.souShubetsu).value = '相種別'
-      headerRow.getCell(DEFAULT_CIRCUIT_COLUMN_MAP.kairoBangou).value = '回路番号'
-      headerRow.getCell(DEFAULT_CIRCUIT_COLUMN_MAP.kairoMeisho).value = '回路名称'
-      headerRow.getCell(DEFAULT_CIRCUIT_COLUMN_MAP.zetsuenR!).value = '絶縁R'
+      headerRow.getCell(1).value = '盤名称'
+      headerRow.getCell(2).value = '盤種別'
+      headerRow.getCell(3).value = '配電方式'
+      headerRow.getCell(4).value = '幹線/二次側'
+      headerRow.getCell(5).value = '相種別'
+      headerRow.getCell(6).value = '回路番号'
+      headerRow.getCell(7).value = '回路名称'
+      headerRow.getCell(8).value = '絶縁R'
 
       rows.forEach((r, idx) => {
         const row = ws.getRow(6 + idx)
 
-        row.getCell(DEFAULT_CIRCUIT_COLUMN_MAP.banMeisho).value = r.banMeisho
-        row.getCell(DEFAULT_CIRCUIT_COLUMN_MAP.banShubetsu).value = r.banShubetsu
-        row.getCell(DEFAULT_CIRCUIT_COLUMN_MAP.haidenHoushiki).value = 'AC 1Φ2W 100V'
-        row.getCell(DEFAULT_CIRCUIT_COLUMN_MAP.keiTo).value = r.keiTo
-        row.getCell(DEFAULT_CIRCUIT_COLUMN_MAP.souShubetsu).value = r.souShubetsu
-        row.getCell(DEFAULT_CIRCUIT_COLUMN_MAP.kairoBangou).value = r.kairoBangou
-        row.getCell(DEFAULT_CIRCUIT_COLUMN_MAP.kairoMeisho).value = r.kairoMeisho
+        row.getCell(1).value = r.banMeisho
+        row.getCell(2).value = r.banShubetsu
+        row.getCell(3).value = 'AC 1Φ2W 100V'
+        row.getCell(4).value = r.keiTo
+        row.getCell(5).value = r.souShubetsu
+        row.getCell(6).value = r.kairoBangou
+        row.getCell(7).value = r.kairoMeisho
         if (r.zetsuenR !== undefined) {
-          row.getCell(DEFAULT_CIRCUIT_COLUMN_MAP.zetsuenR!).value = r.zetsuenR
+          row.getCell(8).value = r.zetsuenR
         }
       })
 
@@ -418,15 +416,6 @@ describe('試験確定・解除 API (examLogic) および Excel 入出力の統�
       expect(merged.p2RStatus).toBe('良好')
       expect(merged.p2Worker).toBe('田中')
       expect(merged.p2IsComplete).toBe(true)
-
-      // applyCircuitToRow で Excel 行に正しく書き戻されること（二次側良好 = 100MΩ）
-      const exportWb = new ExcelJS.Workbook()
-      const exportWs = exportWb.addWorksheet('回路一覧')
-      const targetRow = exportWs.getRow(6)
-
-      applyCircuitToRow(targetRow, merged, DEFAULT_CIRCUIT_COLUMN_MAP)
-      expect(targetRow.getCell(DEFAULT_CIRCUIT_COLUMN_MAP.zetsuenR!).value).toBe(100)
-      expect(targetRow.getCell(DEFAULT_CIRCUIT_COLUMN_MAP.p2Worker!).value).toBe('田中')
 
       // reset モードで再インポートすると試験結果がクリアされること
       await importCircuitsFromExcel(testSiteId, updatedBuffer, '管理者', 'reset', 'reset.xlsx')

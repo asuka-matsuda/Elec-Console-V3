@@ -204,6 +204,10 @@ defineExpose({
   font-size: var(--select-font-size);
   color: var(--color-text-main);
 
+  &.is-error {
+    --glow-color: var(--color-status-danger);
+  }
+
   // --- サイズ展開 (Geist準拠: sm 32px / md 40px / lg 48px) ---
   &.select--sm {
     --select-height: 32px;
@@ -232,6 +236,8 @@ defineExpose({
 }
 
 .custom-select__value {
+  @include control-glow-tokens;
+
   gap: var(--select-gap);
 
   height: var(--select-height);
@@ -287,6 +293,8 @@ defineExpose({
     var(--glow-color, var(--theme-accent)) 60%,
     transparent
   );
+
+  @include control-glow-tokens;
 
   inset: unset;
 

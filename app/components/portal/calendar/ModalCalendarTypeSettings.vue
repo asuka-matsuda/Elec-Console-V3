@@ -99,8 +99,8 @@ const getColorName = (colorHex?: string) => {
 
             <button
               type="button"
-              class="panel is-interactive p-panel-pad-compact shrink-0 hidden sm:flex items-center gap-inline-gap max-w-[180px]"
-              :style="{ borderColor: t.color }"
+              class="panel is-interactive is-active p-panel-pad-compact shrink-0 hidden sm:flex items-center gap-inline-gap max-w-[180px]"
+              :style="{ '--theme-accent': t.color, '--glow-color': t.color }"
               title="カレンダー上の表示プレビュー（クリックでカラー選択）"
               @click="togglePalette(t.id)"
             >
@@ -122,8 +122,8 @@ const getColorName = (colorHex?: string) => {
             <small>プレビュー</small>
             <button
               type="button"
-              class="panel is-interactive p-panel-pad-compact flex items-center gap-inline-gap max-w-[180px]"
-              :style="{ borderColor: t.color }"
+              class="panel is-interactive is-active p-panel-pad-compact flex items-center gap-inline-gap max-w-[180px]"
+              :style="{ '--theme-accent': t.color, '--glow-color': t.color }"
               title="カレンダー上の表示プレビュー（クリックでカラー選択）"
               @click="togglePalette(t.id)"
             >
@@ -148,7 +148,7 @@ const getColorName = (colorHex?: string) => {
                   type="button"
                   class="panel is-interactive flex items-center justify-center w-7 h-7 p-0"
                   :class="{ 'is-active': t.color === preset.value }"
-                  :style="{ borderColor: t.color === preset.value ? preset.value : undefined }"
+                  :style="{ '--theme-accent': preset.value, '--glow-color': preset.value }"
                   @click="selectColor(t, preset.value)"
                 >
                   <span class="w-3.5 h-3.5 flex items-center justify-center" :style="{ backgroundColor: preset.value }">

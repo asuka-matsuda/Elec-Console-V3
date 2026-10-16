@@ -4,9 +4,11 @@ import type { CircuitItem } from '#shared/types/circuit'
 
 import { useExamReportPrint } from '../../app/composables/portal/useExamReportPrint'
 
+const mockApi = vi.fn()
+
 vi.mock('#app', () => ({
   useNuxtApp: () => ({
-    $api: vi.fn(),
+    $api: mockApi,
   }),
 }))
 
@@ -17,25 +19,15 @@ describe('useExamReportPrint', () => {
     { id: 'c-3', banMeisho: '2F電灯盤', kairoMeisho: '会議室' },
   ]
 
-  it('aggregates ban list and circuit counts correctly', () => {
-    const {
-      circuits,
-      banList,
-      banCircuitCountMap,
-      banOptions,
-    } = useExamReportPrint('site-1')
+  it('fetches circuits from API and updates state', async () => {
+    mockApi.mockResolvedValueOnce({ circuits: sampleCircuits })
 
-    circuits.value = sampleCircuits as CircuitItem[]
+    const { circuits, fetchCircuits } = useExamReportPrint('site-1')
 
-    expect(banList.value).toEqual(['1F電灯盤', '2F電灯盤'])
-    expect(banCircuitCountMap.value.get('1F電灯盤')).toBe(2)
-    expect(banCircuitCountMap.value.get('2F電灯盤')).toBe(1)
+    await fetchCircuits()
 
-    // banOptions has 'ALL' + 2 bans
-    expect(banOptions.value).toHaveLength(3)
-    expect(banOptions.value[0].value).toBe('ALL')
-    expect(banOptions.value[0].label).toContain('2盤 / 3回路')
-    expect(banOptions.value[1].value).toBe('1F電灯盤')
-    expect(banOptions.value[1].label).toContain('2回路')
+    expect(mockApi).toHaveBeenCalledWith('/api/sites/site-1/circuits')
+    expect(circuits.value).toHaveLength(3)
+    expect(circuits.value[0]?.banMeisho).toBe('1F電灯盤')
   })
 })

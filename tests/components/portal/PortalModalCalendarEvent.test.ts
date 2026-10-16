@@ -141,12 +141,14 @@ describe('ModalCalendarEvent.vue', () => {
       },
     })
 
-    const toggle = wrapper.findComponent({ name: 'Toggle' })
+    const allDayToggle = wrapper
+      .findAllComponents({ name: 'Toggle' })
+      .find(c => c.props('label') === '終日イベント')
 
-    expect(toggle.exists()).toBe(true)
+    expect(allDayToggle).toBeDefined()
 
     // 終日をtrueに切り替え
-    await toggle.vm.$emit('update:modelValue', true)
+    await allDayToggle?.vm.$emit('update:modelValue', true)
 
     const saveBtn = wrapper.findAllComponents({ name: 'Button' }).find(b => b.text().includes('保存'))
 

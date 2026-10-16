@@ -40,12 +40,9 @@ export function useRackCalculator() {
     isShowingBasis,
     isSaving,
     handleSave,
-    saveToHistory: handleSaveHistory,
-    resetInputs,
     openResetModal,
   } = useToolPage<RackInputs, RackCalcResult>(
     'rack',
-    'ケーブルラック選定',
     defaultInputs,
     (inputs) => {
       const logicInputs = mapFormToRackCalcInputs(inputs)
@@ -68,12 +65,7 @@ export function useRackCalculator() {
           res!,
         )!
       },
-      fromHistory: () => JSON.parse(JSON.stringify(defaultInputs)),
     },
-  )
-
-  const maxDepth = computed(() =>
-    Math.max(1, (inputs.value.rackHeight ?? 0) - 20),
   )
 
   function addStrongCable() {
@@ -120,7 +112,6 @@ export function useRackCalculator() {
 
   return {
     inputs,
-    maxDepth,
     result,
     isSaveDisabled,
     isShowingBasis,
@@ -130,10 +121,7 @@ export function useRackCalculator() {
     removeStrongCable,
     addWeakCable,
     removeWeakCable,
-    reset: resetInputs,
-    resetInputs,
     openResetModal,
-    handleSaveHistory,
     mathSteps,
   }
 }

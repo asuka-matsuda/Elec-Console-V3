@@ -9,7 +9,7 @@ import type { CircuitItem } from '#shared/types/circuit'
 
 export * from '../../shared/utils/soudenExam'
 
-export interface SoudenRowClassOptions {
+interface SoudenRowClassOptions {
   isComplete?: (circuit: CircuitItem) => boolean
   isCircuitLocked?: (circuit: CircuitItem) => boolean
   editingRowId?: string | null

@@ -18,7 +18,7 @@ import { resolveExistingExcelPath } from './safePath'
 /**
  * 原本Excelバッファから受口数を持つテプラ回路一覧を抽出
  */
-export async function extractTepraCircuitsFromExcelBuffer(
+async function extractTepraCircuitsFromExcelBuffer(
   buffer: Buffer | Uint8Array,
   siteId: string = '',
 ): Promise<TepraCircuitItem[]> {

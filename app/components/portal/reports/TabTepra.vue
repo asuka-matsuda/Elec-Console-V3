@@ -64,8 +64,6 @@ const tableColumns: TableColumn<TepraTableRow>[] = [
 
 defineExpose({
   exportReport,
-  canExport,
-  exportButtonLabel,
 })
 
 onMounted(() => {

@@ -26,7 +26,6 @@ export const ErrorCode = {
   USER_LOGIN_ID_DUPLICATE: 'USER_LOGIN_ID_DUPLICATE',
   USER_MASTER_PROTECTED: 'USER_MASTER_PROTECTED',
   USER_SELF_DEMOTION_DENIED: 'USER_SELF_DEMOTION_DENIED',
-  USER_LAST_ADMIN_DENIED: 'USER_LAST_ADMIN_DENIED',
 
   // --- データベース・インフラ系 (DB) ---
   DB_TABLE_NOT_FOUND: 'DB_TABLE_NOT_FOUND',
@@ -72,7 +71,6 @@ export const ERROR_SHORT_CODES: Record<ErrorCode, string> = {
   [ErrorCode.USER_LOGIN_ID_DUPLICATE]: 'E-USR-002',
   [ErrorCode.USER_MASTER_PROTECTED]: 'E-USR-003',
   [ErrorCode.USER_SELF_DEMOTION_DENIED]: 'E-USR-004',
-  [ErrorCode.USER_LAST_ADMIN_DENIED]: 'E-USR-005',
 
   // データベース・インフラ系
   [ErrorCode.DB_TABLE_NOT_FOUND]: 'E-DB-001',
@@ -113,7 +111,6 @@ export const DEFAULT_ERROR_MESSAGES: Record<ErrorCode, string> = {
   [ErrorCode.USER_LOGIN_ID_DUPLICATE]: '指定されたログインIDは既に使用されています。',
   [ErrorCode.USER_MASTER_PROTECTED]: 'マスター管理者のアカウントは変更・削除・降格できません。',
   [ErrorCode.USER_SELF_DEMOTION_DENIED]: '自分自身のアカウントの無効化または管理者権限の剥奪はできません。',
-  [ErrorCode.USER_LAST_ADMIN_DENIED]: 'システム内に有効な管理者が1人のみのため、無効化または降格できません。',
 
   [ErrorCode.DB_TABLE_NOT_FOUND]: 'データベーステーブルが見つかりません。スキーマ同期を実行してください。',
   [ErrorCode.DB_FOREIGN_KEY_VIOLATION]: '関連データが存在するため操作を完了できませんでした。',

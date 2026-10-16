@@ -83,13 +83,6 @@ export class AppException extends Error {
   isConflict(): boolean {
     return this.code === ErrorCode.CIRCUIT_VERSION_CONFLICT || this.statusCode === 409
   }
-
-  /**
-   * 認証エラー（401 Unauthorized）か判定
-   */
-  isUnauthorized(): boolean {
-    return this.code === ErrorCode.AUTH_UNAUTHORIZED || this.statusCode === 401
-  }
 }
 
 /**

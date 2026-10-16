@@ -17,7 +17,6 @@ import type { HistoryEntry } from '~/types/tools'
 
 export function useToolPage<InputType, ResultType>(
   toolId: string,
-  _toolTitle: string,
   defaultInputs: InputType,
   calculateFn: (inputs: InputType) => ResultType,
   historyMapper: {
@@ -25,7 +24,6 @@ export function useToolPage<InputType, ResultType>(
       inputs: InputType,
       result: ResultType | null,
     ) => Omit<HistoryEntry, 'id' | 'timestamp'> | null
-    fromHistory: (entry: HistoryEntry) => InputType
   },
 ) {
   const { saveHistory } = useCalcHistory(STORAGE_KEYS.TOOL_HISTORY(toolId))
@@ -96,12 +94,6 @@ export function useToolPage<InputType, ResultType>(
     }
   }
 
-  const loadFromHistory = (entry: HistoryEntry) => {
-    if (entry.toolName) {
-      inputs.value = historyMapper.fromHistory(entry)
-    }
-  }
-
   const { askConfirm } = useModal()
 
   const resetInputs = () => {
@@ -132,10 +124,6 @@ export function useToolPage<InputType, ResultType>(
     isShowingBasis,
     isSaving,
     handleSave,
-    handleSaveHistory: saveToHistory,
-    saveToHistory,
-    loadFromHistory,
-    resetInputs,
     openResetModal,
   }
 }

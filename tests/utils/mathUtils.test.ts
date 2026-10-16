@@ -1,37 +1,8 @@
 import { describe, expect, it } from 'vitest'
 
-import { buildFormula, formatVal, hlAccent, hlNg, hlOk, hlVal, parseLegend, TEX_DANGER_CLASS, TEX_HL_CLASS, TEX_SUCCESS_CLASS } from '~/utils/math'
+import { buildFormula, formatVal, hlAccent, hlNg, hlOk, parseLegend } from '~/utils/math'
 
 describe('mathUtils', () => {
-  describe('hlVal', () => {
-    it('should format a valid number and wrap it with htmlClass', () => {
-      expect(hlVal(12.34, 'X')).toBe(`\\htmlClass{${TEX_HL_CLASS}}{12.3}`)
-      expect(hlVal(12.36, 'X')).toBe(`\\htmlClass{${TEX_HL_CLASS}}{12.4}`) // rounding check
-      expect(hlVal('12.34', 'X')).toBe(`\\htmlClass{${TEX_HL_CLASS}}{12.3}`)
-    })
-
-    it('should format an integer without decimal points', () => {
-      expect(hlVal(12, 'X')).toBe(`\\htmlClass{${TEX_HL_CLASS}}{12}`)
-      expect(hlVal('12', 'X')).toBe(`\\htmlClass{${TEX_HL_CLASS}}{12}`)
-    })
-
-    it('should format with custom decimal places', () => {
-      expect(hlVal(12.345, 'X', 2)).toBe(`\\htmlClass{${TEX_HL_CLASS}}{12.35}`)
-    })
-
-    it('should format with a custom class name', () => {
-      expect(hlVal(12.3, 'X', 1, 'custom-class')).toBe('\\htmlClass{custom-class}{12.3}')
-    })
-
-    it('should return fallback for invalid or empty values', () => {
-      expect(hlVal(null, 'FALLBACK')).toBe('FALLBACK')
-      expect(hlVal(undefined, 'FALLBACK')).toBe('FALLBACK')
-      expect(hlVal('', 'FALLBACK')).toBe('FALLBACK')
-      expect(hlVal('abc', 'FALLBACK')).toBe('FALLBACK')
-      expect(hlVal(NaN, 'FALLBACK')).toBe('FALLBACK')
-    })
-  })
-
   describe('formatVal', () => {
     it('should format a valid number without wrapping', () => {
       expect(formatVal(12.34, 'X')).toBe('12.3')
@@ -54,17 +25,17 @@ describe('mathUtils', () => {
 
   describe('hlOk / hlNg / hlAccent', () => {
     it('should wrap value with success class', () => {
-      expect(hlOk('OK')).toBe(`\\htmlClass{${TEX_SUCCESS_CLASS}}{OK}`)
-      expect(hlOk(100)).toBe(`\\htmlClass{${TEX_SUCCESS_CLASS}}{100}`)
+      expect(hlOk('OK')).toBe('\\htmlClass{tex-status-success}{OK}')
+      expect(hlOk(100)).toBe('\\htmlClass{tex-status-success}{100}')
     })
 
     it('should wrap value with danger class', () => {
-      expect(hlNg('NG')).toBe(`\\htmlClass{${TEX_DANGER_CLASS}}{NG}`)
-      expect(hlNg(0)).toBe(`\\htmlClass{${TEX_DANGER_CLASS}}{0}`)
+      expect(hlNg('NG')).toBe('\\htmlClass{tex-status-danger}{NG}')
+      expect(hlNg(0)).toBe('\\htmlClass{tex-status-danger}{0}')
     })
 
     it('should wrap value with accent class', () => {
-      expect(hlAccent('ACCENT')).toBe(`\\htmlClass{${TEX_HL_CLASS}}{ACCENT}`)
+      expect(hlAccent('ACCENT')).toBe('\\htmlClass{tex-color-accent}{ACCENT}')
     })
   })
 

@@ -11,7 +11,7 @@ import {
   normalizeHeaderName,
 } from './excelNormalize'
 
-export const REMOTE_HEADER_TARGETS = [
+const REMOTE_HEADER_TARGETS = [
   '伝送系統',
   '伝送',
   '負荷アドレス',

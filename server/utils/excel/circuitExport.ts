@@ -10,126 +10,15 @@ import fs from 'node:fs'
 import path from 'node:path'
 
 import type { Circuit } from '@prisma/client'
-import type ExcelJS from 'exceljs'
 import JSZip from 'jszip'
 
 import { normalizeHeaderName } from '#shared/utils/excelNormalize'
-import { getPhase2ActivePhases, isPhase1Complete } from '#shared/utils/soudenExam'
+import { getPhase2ActivePhases } from '#shared/utils/soudenExam'
 
 import { prisma } from '../prisma'
-import { setCellStringWithNewlines } from './cellFormat'
-import { type CircuitColumnMap, DEFAULT_CIRCUIT_COLUMN_MAP, HEADER_ALIASES, makeCircuitKey } from './circuitMapping'
-import { validateSafeExcelPath } from './safePath'
+import { HEADER_ALIASES, makeCircuitKey } from './circuitMapping'
 
-/**
- * セルに日時を設定し、yyyy/m/d h:mm 書式を適用する
- */
-function setCellDateTime(cell: ExcelJS.Cell, date: Date | string | null | undefined): void {
-  if (!date) return
-  const d = date instanceof Date ? date : new Date(date)
-
-  if (isNaN(d.getTime())) return
-  cell.value = d
-  cell.numFmt = 'yyyy/m/d h:mm'
-}
-
-/**
- * 回路データの各フェーズ試験結果を行セルへ書き戻す（ExcelJS行互換ユーティリティ）
- */
-export function applyCircuitToRow(
-  row: ExcelJS.Row,
-  c: Circuit,
-  colMap: CircuitColumnMap = DEFAULT_CIRCUIT_COLUMN_MAP,
-) {
-  // Phase 1 書戻し
-  if (isPhase1Complete(c)) {
-    if (colMap.p1Worker !== undefined && c.p1Worker) {
-      setCellStringWithNewlines(row.getCell(colMap.p1Worker), c.p1Worker)
-    }
-    if (colMap.p1ConfirmedAt !== undefined) {
-      setCellDateTime(row.getCell(colMap.p1ConfirmedAt), c.p1ConfirmedAt)
-    }
-  }
-  if (c.p1Remarks && colMap.p1Remarks !== undefined) {
-    setCellStringWithNewlines(row.getCell(colMap.p1Remarks), c.p1Remarks)
-  }
-
-  // Phase 2 書戻し
-  if (c.p2ConfirmedAt || c.p2IsComplete) {
-    const active = getPhase2ActivePhases(c.souShubetsu, c.haidenHoushiki)
-
-    if (colMap.zetsuenR !== undefined && active.hasR) {
-      if (c.p2RStatus === '良好') {
-        row.getCell(colMap.zetsuenR).value = c.keiTo === '幹線' ? 500 : 100
-      }
-      else if (c.zetsuenR !== null && c.zetsuenR !== undefined) {
-        row.getCell(colMap.zetsuenR).value = c.zetsuenR
-      }
-    }
-
-    if (colMap.zetsuenS !== undefined && active.hasS) {
-      if (c.p2SStatus === '良好') {
-        row.getCell(colMap.zetsuenS).value = c.keiTo === '幹線' ? 500 : 100
-      }
-      else if (c.zetsuenS !== null && c.zetsuenS !== undefined) {
-        row.getCell(colMap.zetsuenS).value = c.zetsuenS
-      }
-    }
-
-    if (colMap.zetsuenT !== undefined && active.hasT) {
-      if (c.p2TStatus === '良好') {
-        row.getCell(colMap.zetsuenT).value = c.keiTo === '幹線' ? 500 : 100
-      }
-      else if (c.zetsuenT !== null && c.zetsuenT !== undefined) {
-        row.getCell(colMap.zetsuenT).value = c.zetsuenT
-      }
-    }
-
-    if (c.p2Worker && colMap.p2Worker !== undefined) {
-      setCellStringWithNewlines(row.getCell(colMap.p2Worker), c.p2Worker)
-    }
-    if (c.p2ConfirmedAt && colMap.p2ConfirmedAt !== undefined) {
-      setCellDateTime(row.getCell(colMap.p2ConfirmedAt), c.p2ConfirmedAt)
-    }
-  }
-  if (c.p2Remarks && colMap.p2Remarks !== undefined) {
-    setCellStringWithNewlines(row.getCell(colMap.p2Remarks), c.p2Remarks)
-  }
-
-  // Phase 3 書戻し
-  if (c.p3ConfirmedAt) {
-    if (colMap.denatsuRs !== undefined && c.denatsuRs !== null && c.denatsuRs !== undefined) {
-      row.getCell(colMap.denatsuRs).value = c.denatsuRs
-    }
-    if (colMap.denatsuSt !== undefined && c.denatsuSt !== null && c.denatsuSt !== undefined) {
-      row.getCell(colMap.denatsuSt).value = c.denatsuSt
-    }
-    if (colMap.denatsuRt !== undefined && c.denatsuRt !== null && c.denatsuRt !== undefined) {
-      row.getCell(colMap.denatsuRt).value = c.denatsuRt
-    }
-    if (colMap.kensou !== undefined && c.kensou) {
-      setCellStringWithNewlines(row.getCell(colMap.kensou), c.kensou)
-    }
-    if (colMap.p3Worker !== undefined && c.p3Worker) {
-      setCellStringWithNewlines(row.getCell(colMap.p3Worker), c.p3Worker)
-    }
-    if (colMap.p3ConfirmedAt !== undefined) {
-      setCellDateTime(row.getCell(colMap.p3ConfirmedAt), c.p3ConfirmedAt)
-    }
-  }
-  if (c.p3Remarks && colMap.p3Remarks !== undefined) {
-    setCellStringWithNewlines(row.getCell(colMap.p3Remarks), c.p3Remarks)
-  }
-}
-
-interface ExportCircuitResult {
-  success: boolean
-  count: number
-  filePath: string
-  error?: string
-}
-
-export interface GeneratedExcelResult {
+interface GeneratedExcelResult {
   buffer: Buffer
   count: number
   isXlsm: boolean
@@ -923,41 +812,5 @@ export async function generateCircuitsExcelBuffer(
     count: updatedCount,
     isXlsm,
     originalFileName,
-  }
-}
-
-/**
- * Web上の最新試験結果を元Excelファイルに直接書き戻す（エクスポート）
- */
-export async function exportCircuitsToExcel(
-  siteId: string,
-  rawFilePath: string,
-  workerName: string = 'システム管理者',
-): Promise<ExportCircuitResult> {
-  const filePath = validateSafeExcelPath(rawFilePath, siteId)
-
-  if (!fs.existsSync(filePath)) {
-    throw new Error(`Excelファイルが見つかりません: ${filePath}`)
-  }
-
-  const { buffer, count } = await generateCircuitsExcelBuffer(siteId, filePath)
-
-  await fs.promises.writeFile(filePath, buffer)
-
-  await prisma.operationLog.create({
-    data: {
-      siteId,
-      worker: workerName,
-      action: 'Excel書戻し',
-      targetBan: '全体',
-      targetKairo: '一括書戻し',
-      details: `Excel(${filePath})へ${count}件の最新試験結果を安全に書き戻しました（マクロ・書式を完全保護）`,
-    },
-  })
-
-  return {
-    success: true,
-    count,
-    filePath,
   }
 }

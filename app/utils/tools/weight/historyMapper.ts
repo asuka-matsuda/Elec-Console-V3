@@ -67,7 +67,6 @@ export function mapWeightToHistory(
   return {
     toolName: 'ケーブル重量・ドラム選定',
     status,
-    mainResultText: `${result.cableWeight?.toFixed(1)}kg / ドラム: ${result.bestDrum ? result.bestDrum.id : '不可'}`,
     inputs,
     results,
   }

@@ -171,6 +171,8 @@ const effectiveCard = computed(() => {
 }
 
 .collapse-header {
+  @include control-glow-tokens;
+
   padding: var(--space-2) var(--space-3);
   border: none;
 

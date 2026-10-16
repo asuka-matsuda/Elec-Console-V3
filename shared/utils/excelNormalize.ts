@@ -50,11 +50,11 @@ export function cellValueToString(value: unknown): string {
 /**
  * 最小限の ExcelJS セル・行・ワークシート抽象型（ライブラリ非依存）
  */
-export interface MinimalCell {
+interface MinimalCell {
   value: unknown
 }
 
-export interface MinimalRow {
+interface MinimalRow {
   eachCell: (options: { includeEmpty: boolean }, callback: (cell: MinimalCell, colNumber: number) => void) => void
   getCell: (colNumber: number) => MinimalCell
 }
@@ -66,7 +66,7 @@ export interface MinimalWorksheet {
   eachRow?: (options: { includeEmpty: boolean }, callback: (row: MinimalRow, rowNumber: number) => void) => void
 }
 
-export interface MinimalWorkbook<T extends MinimalWorksheet = MinimalWorksheet> {
+interface MinimalWorkbook<T extends MinimalWorksheet = MinimalWorksheet> {
   worksheets: T[]
 }
 

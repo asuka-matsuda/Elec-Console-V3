@@ -10,55 +10,42 @@ import { computed, ref } from 'vue'
 import { useNuxtApp } from '#app'
 import type { Site } from '#shared/types/site'
 import { sanitizeFilename } from '#shared/utils/filename'
+import { downloadBlob } from '~/utils/download'
 import { getErrorMessage, parseToAppException } from '~/utils/errors'
 
 interface SyncResultInfo {
-  type: 'merge' | 'reset' | 'export'
+  type: 'merge' | 'reset'
   title: string
   count: number
   createdCount?: number
   updatedCount?: number
-  keptCount?: number
-  deletedCount?: number
-  message: string
 }
 
 interface UseSiteExcelSyncOptions {
   site: Ref<Site | null> | ComputedRef<Site | null>
-  getFilePath?: () => string
-  onPersistPath?: (filePath: string) => Promise<void>
 }
 
 /**
- * 現場ポータルの Excel インポート・エクスポート・直接ダウンロードを管理する Composable
+ * 現場ポータルの Excel インポート・直接ダウンロードを管理する Composable
  */
 export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
   const { $api } = useNuxtApp()
-  const { site, getFilePath, onPersistPath } = options
+  const { site } = options
 
   const selectedFile = ref<File | null>(null)
-  const templateFile = ref<File | null>(null)
   const showSyncMsg = ref(false)
   const syncMsg = ref('')
   const syncMsgType = ref<'success' | 'error' | 'info'>('info')
-  const syncAction = ref<'merge' | 'reset' | 'export' | 'download' | 'template' | null>(null)
+  const syncAction = ref<'merge' | 'reset' | 'download' | null>(null)
   const isSyncing = computed(() => syncAction.value !== null)
 
   const syncResultData = ref<SyncResultInfo | null>(null)
-  const isResultDialogOpen = ref(false)
 
   const handleFileSelect = (file: File | null) => {
     selectedFile.value = file
   }
 
-  const handleTemplateFileSelect = (file: File | null) => {
-    templateFile.value = file
-  }
-
   const resolvePath = (): string => {
-    if (getFilePath) {
-      return getFilePath()
-    }
     const raw = site.value?.excelPath?.trim() || ''
 
     return raw.replace(/^["']+|["']+$/g, '').trim()
@@ -103,8 +90,6 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
         count: number
         createdCount: number
         updatedCount: number
-        keptCount?: number
-        deletedCount?: number
         filePath?: string
       }>(`/api/sites/${site.value.id}/circuits/import`, {
         method: 'POST',
@@ -124,14 +109,6 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
         count: res.count,
         createdCount: res.createdCount,
         updatedCount: res.updatedCount,
-        keptCount: res.keptCount,
-        deletedCount: res.deletedCount,
-        message: `新しく追加された回路: ${res.createdCount}件\n基本情報が更新された回路: ${res.updatedCount}件`,
-      }
-      isResultDialogOpen.value = true
-
-      if (filePath && onPersistPath) {
-        await onPersistPath(filePath)
       }
     }
     catch (err: unknown) {
@@ -205,12 +182,6 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
         count: res.count,
         createdCount: res.count,
         updatedCount: 0,
-        message: `全 ${res.count} 件の回路情報を取り込みました。`,
-      }
-      isResultDialogOpen.value = true
-
-      if (filePath && onPersistPath) {
-        await onPersistPath(filePath)
       }
     }
     catch (err: unknown) {
@@ -229,66 +200,7 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
     }
   }
 
-  // 3. Excelへ書戻し (実エクスポート)
-  const handleExport = async () => {
-    if (!site.value?.id) return
-
-    const filePath = resolvePath()
-
-    if (!filePath) {
-      syncMsg.value = 'Excel連携ファイルの絶対パスを入力してください'
-      syncMsgType.value = 'error'
-      showSyncMsg.value = true
-
-      return
-    }
-
-    syncAction.value = 'export'
-    syncMsg.value = 'Web上の試験結果をExcelへ書戻し中...'
-    syncMsgType.value = 'info'
-    showSyncMsg.value = true
-
-    try {
-      const res = await $api<{ success: boolean, count: number }>(
-        `/api/sites/${site.value.id}/circuits/export`,
-        {
-          method: 'POST',
-          body: { filePath },
-        },
-      )
-
-      syncMsg.value = `Excelへ${res.count}件の最新試験結果を書き戻しました`
-      syncMsgType.value = 'success'
-
-      syncResultData.value = {
-        type: 'export',
-        title: 'Excel書戻しが完了しました',
-        count: res.count,
-        message: `Web上の最新試験結果（Phase 1〜3）${res.count}件をExcelファイルに書き戻しました。`,
-      }
-      isResultDialogOpen.value = true
-
-      if (onPersistPath) {
-        await onPersistPath(filePath)
-      }
-    }
-    catch (err: unknown) {
-      const appErr = parseToAppException(err)
-
-      syncMsg.value = appErr.getUserFacingMessage()
-      syncMsgType.value = 'error'
-    }
-    finally {
-      syncAction.value = null
-      setTimeout(() => {
-        if (syncMsgType.value === 'success') {
-          showSyncMsg.value = false
-        }
-      }, 7000)
-    }
-  }
-
-  // 4. ブラウザへ直接Excel帳票ダウンロード
+  // 3. ブラウザへ直接Excel帳票ダウンロード
   const handleDownloadExcel = async () => {
     if (!site.value?.id) return
 
@@ -298,19 +210,17 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
     showSyncMsg.value = true
 
     try {
-      const response = await fetch(`/api/sites/${site.value.id}/circuits/export`, {
+      const response = await $api.raw<Blob>(`/api/sites/${site.value.id}/circuits/export`, {
         method: 'GET',
+        responseType: 'blob',
       })
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => null)
+      const blob = response._data
 
-        throw new Error(errorData?.message || 'Excel帳票のダウンロードに失敗しました')
+      if (!blob) {
+        throw new Error('Excel帳票のダウンロードに失敗しました')
       }
 
-      const blob = await response.blob()
-      const url = window.URL.createObjectURL(blob)
-      const a = document.createElement('a')
       const safeName = sanitizeFilename(site.value?.name, '現場')
 
       // Content-Disposition からファイル名（拡張子）を取得
@@ -328,12 +238,7 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
         downloadFilename = originalName || `${safeName}.${isXlsm ? 'xlsm' : 'xlsx'}`
       }
 
-      a.href = url
-      a.download = downloadFilename
-      document.body.appendChild(a)
-      a.click()
-      window.URL.revokeObjectURL(url)
-      document.body.removeChild(a)
+      downloadBlob(blob, downloadFilename)
 
       syncMsg.value = 'Excel帳票のダウンロードが完了しました'
       syncMsgType.value = 'success'
@@ -352,72 +257,17 @@ export function useSiteExcelSync(options: UseSiteExcelSyncOptions) {
     }
   }
 
-  // 5. 帳票用Excelファイル（テンプレート）のみをサーバーに登録・差し替え
-  const handleUploadTemplate = async () => {
-    if (!site.value?.id || !templateFile.value) return
-
-    syncAction.value = 'template'
-    syncMsg.value = '帳票用Excelファイルをサーバーへ登録中...'
-    syncMsgType.value = 'info'
-    showSyncMsg.value = true
-
-    try {
-      const fd = new FormData()
-
-      fd.append('file', templateFile.value)
-
-      const res = await $api<{ success: boolean, filePath: string, filename: string, message: string }>(
-        `/api/sites/${site.value.id}/circuits/template`,
-        {
-          method: 'POST',
-          body: fd,
-        },
-      )
-
-      if (site.value) {
-        site.value.excelPath = res.filePath
-      }
-
-      syncMsg.value = res.message || 'Excelファイルを登録しました'
-      syncMsgType.value = 'success'
-      templateFile.value = null
-
-      if (onPersistPath) {
-        await onPersistPath(res.filePath)
-      }
-    }
-    catch (err: unknown) {
-      const appErr = parseToAppException(err)
-
-      syncMsg.value = appErr.getUserFacingMessage()
-      syncMsgType.value = 'error'
-    }
-    finally {
-      syncAction.value = null
-      setTimeout(() => {
-        if (syncMsgType.value === 'success') {
-          showSyncMsg.value = false
-        }
-      }, 5000)
-    }
-  }
-
   return {
     selectedFile,
-    templateFile,
     showSyncMsg,
     syncMsg,
     syncMsgType,
     syncAction,
     isSyncing,
     syncResultData,
-    isResultDialogOpen,
     handleFileSelect,
-    handleTemplateFileSelect,
     handleMergeSync,
     handleResetImport,
-    handleExport,
     handleDownloadExcel,
-    handleUploadTemplate,
   }
 }

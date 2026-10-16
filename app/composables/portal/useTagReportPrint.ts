@@ -8,47 +8,31 @@ import type { MaybeRefOrGetter } from 'vue'
 import { computed, ref, toValue, watch } from 'vue'
 
 import { useNuxtApp } from '#app'
-import type { CircuitItem, CircuitsResponse } from '#shared/types/circuit'
+import type { CircuitsResponse } from '#shared/types/circuit'
 import { useAuth } from '~/composables/useAuth'
 import type { SelectOption } from '~/types/components'
 import { formatToDateInputString } from '~/utils/date'
 import { CircuitsRepository } from '~/utils/db'
-import { getErrorMessage } from '~/utils/errors'
 import {
   convertCircuitsToDynamicRows,
   type DynamicCircuitRow,
   type DynamicTagField,
-  generateTagReportExcel,
 } from '~/utils/tagReportExcel'
-
-interface UseTagReportPrintOptions {
-  siteName?: MaybeRefOrGetter<string>
-  templateName?: MaybeRefOrGetter<string | undefined>
-}
 
 export function useTagReportPrint(
   siteIdSource: MaybeRefOrGetter<string>,
-  options: UseTagReportPrintOptions = {},
 ) {
   const { $api } = useNuxtApp()
   const { getAccurateNow } = useAuth()
 
   const siteId = computed(() => toValue(siteIdSource))
-  const siteName = computed(() => toValue(options.siteName) || '現場')
-  const templateName = computed(() => toValue(options.templateName))
   const exportDate = computed(() => formatToDateInputString(getAccurateNow()))
 
-  // 回路データおよび動的テーブルデータ
-  const rawCircuits = ref<CircuitItem[]>([])
+  // 動的テーブルデータ
   const dynamicHeaders = ref<DynamicTagField[]>([])
   const dynamicRows = ref<DynamicCircuitRow[]>([])
 
   const isLoadingData = ref(true)
-  const dataError = ref<string | null>(null)
-
-  // ユーザーがアップロードしたA4タグ用テンプレート
-  const templateFile = ref<File | null>(null)
-  const templateBuffer = ref<ArrayBuffer | null>(null)
 
   // 絞り込み条件（系統、盤種別、盤名称、幹線可否）
   const selectedKeiTo = ref<string>('ALL')
@@ -56,10 +40,6 @@ export function useTagReportPrint(
   const selectedBan = ref<string>('ALL')
   const selectedKansen = ref<'ALL' | '幹線' | '二次'>('ALL')
   const flowDirection = ref<'z' | 'n'>('z')
-
-  // 出力処理状態
-  const isGenerating = ref(false)
-  const message = ref<{ type: 'success' | 'error', text: string } | null>(null)
 
   // 1. 系統の一覧・選択肢
   const keiToList = computed(() => {
@@ -213,28 +193,6 @@ export function useTagReportPrint(
     })
   })
 
-  // サマリー集計
-  const summary = computed(() => {
-    let kansen = 0
-    let secondary = 0
-
-    for (const r of dynamicRows.value) {
-      if (r.keiTo.includes('幹線')) {
-        kansen++
-      }
-      else {
-        secondary++
-      }
-    }
-
-    return {
-      total: dynamicRows.value.length,
-      kansen,
-      secondary,
-      filteredTotal: filteredRows.value.length,
-    }
-  })
-
   // 現場データ（回路データ）の読み込み (Local-First: IndexedDB即座反映 -> 高速API同期)
   const fetchSiteData = async () => {
     if (!siteId.value) {
@@ -243,7 +201,6 @@ export function useTagReportPrint(
       return
     }
     isLoadingData.value = true
-    dataError.value = null
 
     try {
       // 1. IndexedDB からローカル回路を即座に読み込み
@@ -251,7 +208,6 @@ export function useTagReportPrint(
         const local = await CircuitsRepository.getBySite(siteId.value)
 
         if (local && local.length > 0) {
-          rawCircuits.value = local
           const converted = convertCircuitsToDynamicRows(local, exportDate.value)
 
           dynamicHeaders.value = converted.headers
@@ -267,7 +223,6 @@ export function useTagReportPrint(
         const res = await $api<CircuitsResponse>(`/api/sites/${siteId.value}/circuits`)
 
         if (res && res.circuits && res.circuits.length > 0) {
-          rawCircuits.value = res.circuits
           await CircuitsRepository.replaceForSite(siteId.value, res.circuits)
           const converted = convertCircuitsToDynamicRows(res.circuits, exportDate.value)
 
@@ -275,10 +230,8 @@ export function useTagReportPrint(
           dynamicRows.value = converted.rows
         }
       }
-      catch (err: unknown) {
-        if (dynamicRows.value.length === 0) {
-          dataError.value = getErrorMessage(err, '回路データの取得に失敗しました')
-        }
+      catch {
+        // オフラインまたはエラー時はローカルキャッシュを維持
       }
     }
     finally {
@@ -286,110 +239,19 @@ export function useTagReportPrint(
     }
   }
 
-  // ユーザーによるテンプレートExcelファイルの選択
-  const handleTemplateFileSelect = async (file: File | null) => {
-    templateFile.value = file
-    message.value = null
-    if (!file) {
-      templateBuffer.value = null
-
-      return
-    }
-
-    try {
-      const buffer = await file.arrayBuffer()
-
-      templateBuffer.value = buffer
-    }
-    catch (err) {
-      console.error('Failed to read template file buffer', err)
-      message.value = { type: 'error', text: 'テンプレートファイルの読み込みに失敗しました' }
-    }
-  }
-
-  // タグ帳票生成実行
-  const generateReport = async () => {
-    if (!templateBuffer.value) {
-      message.value = {
-        type: 'error',
-        text: 'タグ印刷用のフォーマット（テンプレートExcel）を選択してください',
-      }
-
-      return
-    }
-
-    if (filteredRows.value.length === 0) {
-      message.value = {
-        type: 'error',
-        text: '選択された条件に一致する出力対象データがありません',
-      }
-
-      return
-    }
-
-    isGenerating.value = true
-    message.value = null
-
-    try {
-      const result = await generateTagReportExcel({
-        templateBuffer: templateBuffer.value,
-        rows: filteredRows.value,
-        siteName: siteName.value,
-        templateName: templateName.value,
-        exportDate: exportDate.value,
-        flowDirection: flowDirection.value,
-      })
-
-      const blob = new Blob([result.buffer as unknown as BlobPart], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      })
-
-      downloadBlob(blob, result.filename)
-
-      message.value = {
-        type: 'success',
-        text: `${result.totalTags}件のタグ（全${result.totalPages}ページ）を出力しました`,
-      }
-    }
-    catch (err: unknown) {
-      console.error('Tag report generation failed', err)
-      message.value = {
-        type: 'error',
-        text: getErrorMessage(err, 'タグ帳票の生成に失敗しました'),
-      }
-    }
-    finally {
-      isGenerating.value = false
-    }
-  }
-
   return {
-    siteId,
-    siteName,
-    dynamicHeaders,
-    dynamicRows,
     filteredRows,
     isLoadingData,
-    dataError,
-    templateFile,
     selectedKeiTo,
     selectedBanShubetsu,
     selectedBan,
     selectedKansen,
     flowDirection,
-    isGenerating,
-    message,
-    banList,
     banOptions,
-    keiToList,
     keiToOptions,
-    banShubetsuList,
     banShubetsuOptions,
     kansenOptions,
     flowDirectionOptions,
-    summary,
     fetchSiteData,
-    handleTemplateFileSelect,
-    generateReport,
   }
 }

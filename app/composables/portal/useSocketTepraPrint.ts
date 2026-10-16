@@ -12,7 +12,6 @@ import { useNuxtApp } from '#app'
 import type { TepraCircuitItem } from '#shared/types/socketTepra'
 import type { SelectOption } from '~/types/components'
 import { downloadBlob } from '~/utils/download'
-import { getErrorMessage } from '~/utils/errors'
 import { generateSocketTepraExcel } from '~/utils/socketTepraExcel'
 
 interface UseSocketTepraPrintOptions {
@@ -31,7 +30,6 @@ export function useSocketTepraPrint(
 
   const rawCircuits = ref<TepraCircuitItem[]>([])
   const isLoadingData = ref(true)
-  const dataError = ref<string | null>(null)
   const hasExcelPath = ref(false)
 
   // 絞り込み条件（盤名称、回路記号）
@@ -151,7 +149,6 @@ export function useSocketTepraPrint(
     }
 
     isLoadingData.value = true
-    dataError.value = null
 
     try {
       const res = await $api<{
@@ -163,8 +160,8 @@ export function useSocketTepraPrint(
       rawCircuits.value = res.circuits || []
       hasExcelPath.value = res.hasExcelPath || false
     }
-    catch (err: unknown) {
-      dataError.value = getErrorMessage(err, 'テプラ用回路データの読み込みに失敗しました')
+    catch {
+      // ignore
     }
     finally {
       isLoadingData.value = false
@@ -202,10 +199,8 @@ export function useSocketTepraPrint(
   }
 
   return {
-    rawCircuits,
     filteredCircuits,
     isLoadingData,
-    dataError,
     hasExcelPath,
     selectedBan,
     banOptions,

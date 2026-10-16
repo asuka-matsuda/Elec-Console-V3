@@ -3,11 +3,11 @@ import JSZip from 'jszip'
 import { describe, expect, it } from 'vitest'
 
 import type { RemoteCircuitItem, RemoteControlConfig } from '#shared/types/remoteControl'
+import { extractRemoteCircuitsFromWorksheet } from '#shared/utils/remoteCircuits'
 
 import {
   buildGroupSummaries,
   buildPatternSummaries,
-  extractRemoteCircuitsFromExcel,
   generateRemoteReportExcel,
 } from '../../app/utils/remoteReportExcel'
 
@@ -61,7 +61,7 @@ describe('remoteReportExcel', () => {
     expect(p2Off.addresses).toEqual(['1-1'])
   })
 
-  it('extractRemoteCircuitsFromExcel: 伝送系統ごとに0-1〜63-4(全256スロット)を生成し、一致・空きを判定できること', async () => {
+  it('extractRemoteCircuitsFromWorksheet: 伝送系統ごとに0-1〜63-4(全256スロット)を生成し、一致・空きを判定できること', async () => {
     const wb = new ExcelJS.Workbook()
     const sheet = wb.addWorksheet('回路台帳')
 
@@ -70,8 +70,7 @@ describe('remoteReportExcel', () => {
     sheet.getRow(3).values = ['1', '1L-1', '', '2', '予備回路', '-', '']
     sheet.getRow(4).values = ['1', '1L-2', '二重丸', '2-R2', '荷役室照明', '2-1', 'R2']
 
-    const buffer = await wb.xlsx.writeBuffer()
-    const circuits = await extractRemoteCircuitsFromExcel(new Uint8Array(buffer))
+    const circuits = extractRemoteCircuitsFromWorksheet(sheet)
 
     // 0-1 〜 63-4 の256スロットが生成されること
     expect(circuits).toHaveLength(256)

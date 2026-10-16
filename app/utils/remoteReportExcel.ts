@@ -19,30 +19,8 @@ import type {
   RemoteGroupSummary,
   RemotePatternSummary,
 } from '#shared/types/remoteControl'
-import {
-  findPreferredWorksheet,
-} from '#shared/utils/excelNormalize'
-import { extractRemoteCircuitsFromWorksheet } from '#shared/utils/remoteCircuits'
 import { generateCircuitSymbolPng } from '~/utils/circuitSymbolImage'
 import { getExcelJS } from '~/utils/excelHelper'
-
-/**
- * 回路台帳Excelから伝送系統ごとに 0-1〜63-4 の256スロットを構築
- */
-export async function extractRemoteCircuitsFromExcel(
-  excelBuffer: ArrayBuffer | Uint8Array,
-): Promise<RemoteCircuitItem[]> {
-  const ExcelJS = await getExcelJS()
-  const workbook = new ExcelJS.Workbook()
-
-  await workbook.xlsx.load(excelBuffer as unknown as Parameters<typeof workbook.xlsx.load>[0])
-
-  const sheet = findPreferredWorksheet(workbook)
-
-  if (!sheet) return []
-
-  return extractRemoteCircuitsFromWorksheet(sheet)
-}
 
 /**
  * リモコン設定データからグループごとのアドレス集計一覧を算出
@@ -125,13 +103,13 @@ export function buildPatternSummaries(
   return summaries
 }
 
-export interface RemoteSymbolOptions {
+interface RemoteSymbolOptions {
   enabled?: boolean
   width?: number
   height?: number
 }
 
-export interface GenerateRemoteReportOptions {
+interface GenerateRemoteReportOptions {
   templateBuffer?: ArrayBuffer | Uint8Array | null
   circuits: RemoteCircuitItem[]
   config: RemoteControlConfig
@@ -141,7 +119,7 @@ export interface GenerateRemoteReportOptions {
   symbolOptions?: RemoteSymbolOptions
 }
 
-export interface RemoteReportResult {
+interface RemoteReportResult {
   buffer: Uint8Array
   filename: string
   totalAddresses: number

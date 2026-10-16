@@ -106,12 +106,6 @@ export async function useMasterCrud<T extends { id?: string | number }, F extend
     isEditModalOpen.value = true
   }
 
-  const closeModal = () => {
-    isEditModalOpen.value = false
-    formError.value = ''
-    resetErrors()
-  }
-
   const toast = useToast()
 
   const handleSave = async () => {
@@ -192,7 +186,6 @@ export async function useMasterCrud<T extends { id?: string | number }, F extend
   return {
     items,
     pending,
-    refresh,
     isEditModalOpen,
     isSaving,
     editingId,
@@ -200,7 +193,6 @@ export async function useMasterCrud<T extends { id?: string | number }, F extend
     form,
     fieldErrors,
     openModal,
-    closeModal,
     handleSave,
     handleDelete,
   }

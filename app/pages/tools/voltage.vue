@@ -68,7 +68,7 @@ const handleReset = async () => {
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-form-col-gap gap-y-form-row-gap">
             <template v-for="field in formFields" :key="field.id">
               <Field v-if="!field.showIf || field.showIf()" v-slot="{ errorMessage, meta, handleChange, handleBlur }" v-model="form[field.id]" :name="field.id">
-                <div :class="['flex flex-col gap-inline-gap', `js-field-${field.id}`]">
+                <div class="flex flex-col gap-inline-gap">
                   <label :for="`voltage-field-${field.id}`" class="label">{{ field.label }}</label>
 
                   <Select v-if="field.type === 'select'" :id="`voltage-field-${field.id}`" v-model="form[field.id]" :options="field.options || []" :placeholder="field.placeholder" :disabled="field.disabled" :error="meta.touched && !!errorMessage" @update:model-value="handleChange" @blur="handleBlur" />

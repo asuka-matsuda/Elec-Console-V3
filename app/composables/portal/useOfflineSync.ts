@@ -333,7 +333,6 @@ export function useOfflineSync(
     pendingCount,
     hasPending,
     conflictCount,
-    loadQueue,
     enqueue,
     removeQueueItem,
     clearQueue,

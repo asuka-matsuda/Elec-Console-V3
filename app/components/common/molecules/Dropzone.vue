@@ -118,6 +118,10 @@ const formatSize = (bytes: number): string => {
 
 <style scoped lang="scss">
 .dropzone {
+  --glow-color: var(--theme-accent);
+
+  @include control-glow-tokens;
+
   border: 2px dashed var(--color-border);
   border-radius: 0;
 
@@ -147,20 +151,24 @@ const formatSize = (bytes: number): string => {
     color: var(--color-text-muted);
   }
 
-  &:hover:not(.is-disabled),
+  &:hover:not(.is-disabled, .has-file),
   &.is-dragging {
-    border-color: var(--theme-accent);
-    background-color: color-mix(in srgb, var(--theme-accent) 6%, var(--surface-bg-elevated));
+    border-color: var(--glow-color);
+    background-color: color-mix(in srgb, var(--glow-color) 6%, var(--surface-bg-elevated));
+    box-shadow: var(--shadow-glow-hover);
 
     .upload-icon {
-      color: var(--theme-accent);
+      color: var(--glow-color);
     }
   }
 
   &.has-file {
+    --glow-color: var(--color-status-success);
+
     cursor: default;
-    border-color: var(--color-status-success);
+    border-color: var(--glow-color);
     border-style: solid;
+    box-shadow: var(--shadow-glow-sm);
 
     .file-name {
       overflow: hidden;
@@ -179,7 +187,7 @@ const formatSize = (bytes: number): string => {
     }
 
     .file-icon {
-      color: var(--color-status-success);
+      color: var(--glow-color);
     }
   }
 

@@ -11,15 +11,14 @@ import { formatWeightResult } from '~/utils/tools/weight/weightResultPresenter'
 
 const props = defineProps<{
   result: WeightCalcResult | null
-  size?: 'sm' | 'md'
 }>()
 
 const vm = computed(() => formatWeightResult(props.result))
 </script>
 
 <template>
-  <div class="flex flex-1 flex-col min-h-0" :class="[size === 'sm' ? 'gap-item-gap is-sm' : 'gap-panel-gap']">
-    <div class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="[`is-${vm.panelStatus}`, size === 'sm' && 'is-sm']">
+  <div class="flex flex-1 flex-col min-h-0 gap-panel-gap">
+    <div class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="[`is-${vm.panelStatus}`]">
       <header class="tile-header flex items-center justify-center gap-inline-gap">
         <span>使用ドラム（想定）</span>
         <Badge v-if="vm.badgeText" :variant="RESULT_BADGE_VARIANT_MAP[vm.panelStatus]">{{ vm.badgeText }}</Badge>
@@ -29,7 +28,7 @@ const vm = computed(() => formatWeightResult(props.result))
       </output>
     </div>
 
-    <div class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="[`is-${vm.panelStatus}`, size === 'sm' && 'is-sm']">
+    <div class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="[`is-${vm.panelStatus}`]">
       <header class="tile-header flex items-center justify-center gap-inline-gap">
         <span>総重量 (ケーブル+ドラム)</span>
       </header>

@@ -70,6 +70,5 @@ export function useCalculationHistoryPage() {
     fetchHistory,
     handleClearAll,
     openDeleteModal,
-    deleteHistory,
   }
 }

@@ -14,7 +14,6 @@ export interface WeightCalcInputs {
   category: string
   cableIdx: string
   L_input: number | null
-  K?: number | null
 }
 
 export interface WeightCalcResult {

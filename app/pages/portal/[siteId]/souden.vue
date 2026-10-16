@@ -160,7 +160,7 @@ onMounted(() => {
             </div>
           </div>
           <div v-if="siteId" class="flex items-center gap-item-gap flex-wrap">
-            <PortalSyncStatusBadge :site-id="siteId" @synced="fetchStats" />
+            <PortalSyncStatusBadge :site-id="siteId" />
             <Button variant="secondary" size="sm" icon="printer" :to="`/portal/${siteId}/reports?tab=exam`">帳票を出力する</Button>
             <Button variant="secondary" size="sm" icon="book-open" :to="`/portal/${siteId}/operation-logs`">操作ログを確認する</Button>
           </div>

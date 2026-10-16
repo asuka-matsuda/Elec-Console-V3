@@ -92,8 +92,6 @@ export function usePhaseTableForm<TForm extends object>(
   }
 
   return {
-    rowForms,
-    unconfirmedRowIds,
     getRowForm,
     handleClearLocally,
     markConfirmedLocally,

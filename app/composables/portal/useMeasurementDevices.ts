@@ -24,7 +24,6 @@ export function useMeasurementDevices(siteIdSource: MaybeRefOrGetter<string>) {
   const selectedVoltmeterId = ref<string>('')
   const selectedPhaseDetectorId = ref<string>('')
   const isDevicesModalOpen = ref(false)
-  const isLoadingDevices = ref(false)
 
   const buildDeviceOptions = (category: string) => [
     { value: '', label: '（指定なし / 未使用）' },
@@ -56,7 +55,6 @@ export function useMeasurementDevices(siteIdSource: MaybeRefOrGetter<string>) {
   const fetchMeasurementDevices = async () => {
     if (!siteId.value) return
 
-    isLoadingDevices.value = true
     try {
       const res = await $api<MeasurementDevicesApiResponse>(
         `/api/sites/${siteId.value}/measurement-devices`,
@@ -71,9 +69,6 @@ export function useMeasurementDevices(siteIdSource: MaybeRefOrGetter<string>) {
     }
     catch (err) {
       console.error('Failed to fetch measurement devices:', err)
-    }
-    finally {
-      isLoadingDevices.value = false
     }
   }
 
@@ -119,14 +114,11 @@ export function useMeasurementDevices(siteIdSource: MaybeRefOrGetter<string>) {
     selectedVoltmeterId,
     selectedPhaseDetectorId,
     isDevicesModalOpen,
-    isLoadingDevices,
     meggerOptions,
     voltmeterOptions,
     phaseDetectorOptions,
-    currentSelectedDevices,
     selectedDevicesMap,
     fetchMeasurementDevices,
-    saveSelectedDeviceIds,
     onDeviceSelectionChange,
     onDevicesUpdated,
   }

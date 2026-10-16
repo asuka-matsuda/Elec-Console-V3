@@ -21,7 +21,7 @@ const vm = computed(() => formatConduitResult(props.result))
 </script>
 
 <template>
-  <div class="flex flex-1 flex-col min-h-0" :class="[size === 'sm' ? 'gap-item-gap is-sm' : 'gap-panel-gap']">
+  <div class="flex flex-1 flex-col min-h-0" :class="[size === 'sm' ? 'gap-item-gap' : 'gap-panel-gap']">
     <div class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="[`is-${vm.status32}`, size === 'sm' && 'is-sm']">
       <header class="tile-header flex items-center justify-center gap-inline-gap">
         <span>{{ CONDUIT_UI_LABELS.TITLE_32 }}</span>

@@ -232,7 +232,7 @@ const getCustomHolidayLabel = (date: Date): string => {
               type="button"
               class="panel is-elevated is-interactive p-panel-pad-compact flex items-center gap-inline-gap milestone-chip"
               :class="{ 'is-past-milestone': m.isPast }"
-              :style="{ borderLeft: `3px solid ${m.color}` }"
+              :style="{ '--theme-accent': m.color, '--glow-color': m.color }"
               title="クリックで該当月へジャンプ（該当月表示中は編集モーダルを開きます）"
               @click="handleMilestoneClick(m)"
             >
@@ -276,8 +276,39 @@ const getCustomHolidayLabel = (date: Date): string => {
 <style scoped lang="scss">
 /* stylelint-disable property-disallowed-list -- FullCalendarライブラリ動的生成DOMの配置スタイリングのため例外許可 */
 .milestone-chip {
+  --glow-color: var(--theme-accent);
+
+  @include control-glow-tokens;
+
+  border-color: color-mix(in srgb, var(--glow-color) 42%, var(--color-border));
+  background-image: var(--surface-gradient-glow), var(--surface-gradient-base);
+  box-shadow: var(--surface-rim-accent), var(--shadow-glow-sm);
+
+  &::before {
+    content: "";
+
+    width: 6px;
+    height: 6px;
+    border-radius: var(--radius-circle);
+
+    background-color: var(--glow-color);
+    box-shadow: var(--shadow-glow-dot);
+  }
+
+  &:hover:not(.is-past-milestone) {
+    border-color: color-mix(in srgb, var(--glow-color) 75%, var(--color-border));
+    box-shadow: var(--surface-rim-accent), var(--shadow-glow-hover);
+  }
+
   &.is-past-milestone {
+    border-color: var(--color-border);
     opacity: 0.45;
+    background-image: var(--surface-gradient-base);
+    box-shadow: none;
+
+    &::before {
+      box-shadow: none;
+    }
   }
 }
 
@@ -366,31 +397,33 @@ const getCustomHolidayLabel = (date: Date): string => {
 
   /* イベントバッジ（シンプル化） */
   :deep(.fc-daygrid-event) {
+    --glow-color: var(--event-color, var(--theme-accent));
+
+    @include control-glow-tokens;
+
     margin-bottom: var(--space-0-5);
     padding: var(--space-0-5) var(--space-1);
-    border: var(--border-width-base) solid color-mix(in srgb, var(--fc-event-border-color, var(--theme-accent)) 45%, var(--color-border));
+    border: var(--border-width-base) solid color-mix(in srgb, var(--glow-color) 45%, var(--color-border));
     border-radius: 0;
 
     background:
       linear-gradient(
         90deg,
-        color-mix(in srgb, var(--fc-event-border-color, var(--theme-accent)) 18%, transparent) 0%,
-        color-mix(in srgb, var(--fc-event-border-color, var(--theme-accent)) 6%, var(--surface-bg-elevated)) 100%
+        color-mix(in srgb, var(--glow-color) 18%, transparent) 0%,
+        color-mix(in srgb, var(--glow-color) 6%, var(--surface-bg-elevated)) 100%
       );
+
+    transition: var(--transition-interactive);
 
     @include state-interactive;
 
     &.is-milestone {
-      --glow-color: var(--fc-event-border-color, var(--theme-accent));
-
-      @include control-glow-tokens;
-
-      border-color: color-mix(in srgb, var(--fc-event-border-color, var(--theme-accent)) 75%, var(--color-border));
+      border-color: color-mix(in srgb, var(--glow-color) 75%, var(--color-border));
       background:
         linear-gradient(
           90deg,
-          color-mix(in srgb, var(--fc-event-border-color, var(--theme-accent)) 28%, transparent) 0%,
-          color-mix(in srgb, var(--fc-event-border-color, var(--theme-accent)) 10%, var(--surface-bg-elevated)) 100%
+          color-mix(in srgb, var(--glow-color) 28%, transparent) 0%,
+          color-mix(in srgb, var(--glow-color) 10%, var(--surface-bg-elevated)) 100%
         );
       box-shadow: var(--shadow-glow-sm);
 
@@ -439,7 +472,14 @@ const getCustomHolidayLabel = (date: Date): string => {
     }
 
     &:hover {
-      background: color-mix(in srgb, var(--fc-event-border-color, var(--theme-accent)) 25%, var(--surface-bg-elevated));
+      border-color: var(--glow-color);
+      background:
+        linear-gradient(
+          90deg,
+          color-mix(in srgb, var(--glow-color) 32%, transparent) 0%,
+          color-mix(in srgb, var(--glow-color) 14%, var(--surface-bg-elevated)) 100%
+        );
+      box-shadow: var(--surface-rim-accent), var(--shadow-glow-hover);
     }
   }
 
@@ -452,13 +492,15 @@ const getCustomHolidayLabel = (date: Date): string => {
 
   /* ポップオーバー */
   :deep(.fc-popover) {
+    @include control-glow-tokens;
+
     z-index: var(--z-index-modal);
 
     border: var(--border-width-base) solid var(--color-border);
     border-radius: 0;
 
     background: var(--surface-bg-elevated);
-    box-shadow: var(--shadow-modal);
+    box-shadow: var(--shadow-glow-ambient), var(--shadow-elevation-lg);
 
     .fc-popover-header {
       padding: var(--space-1) var(--space-2);
@@ -483,8 +525,14 @@ const getCustomHolidayLabel = (date: Date): string => {
       background: var(--color-bg-hover);
     }
 
-    .fc-list-event:hover td {
-      background: var(--color-bg-hover);
+    .fc-list-event {
+      --glow-color: var(--event-color, var(--theme-accent));
+
+      @include state-interactive;
+
+      &:hover td {
+        background: color-mix(in srgb, var(--glow-color) 12%, var(--surface-bg-elevated));
+      }
     }
   }
 }

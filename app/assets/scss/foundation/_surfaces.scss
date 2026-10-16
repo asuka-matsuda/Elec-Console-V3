@@ -85,6 +85,11 @@ hr.divider,
   }
 }
 
+:has(.is-error) > .label,
+label.label:has(.is-error) {
+  --theme-accent: var(--color-status-danger);
+}
+
 div:focus-within > .label,
 :focus-within > .label,
 label.label:focus-within {
@@ -102,13 +107,11 @@ label.label:focus-within {
   }
 }
 
-.checkbox .label::before,
-.circular-gauge .label::before {
+.checkbox .label::before {
   content: none;
 }
 
-.req-mark,
-.required-mark {
+.req-mark {
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-none);
   color: var(--color-status-danger);
@@ -151,6 +154,8 @@ label.label:focus-within {
 }
 
 .panel {
+  --glow-color: var(--theme-accent);
+
   @include control-glow-tokens;
 
   isolation: isolate;
@@ -165,7 +170,6 @@ label.label:focus-within {
 
   transition: var(--transition-panel);
 
-  &.is-compact,
   &.p-panel-pad-compact {
     padding: var(--space-panel-pad-compact);
   }
@@ -187,6 +191,26 @@ label.label:focus-within {
     box-shadow: var(--shadow-sink);
   }
 
+  &.is-success {
+    --glow-color: var(--color-status-success);
+  }
+
+  &.is-warning {
+    --glow-color: var(--color-status-warning);
+  }
+
+  &.is-danger {
+    --glow-color: var(--color-status-danger);
+  }
+
+  &.is-success,
+  &.is-warning,
+  &.is-danger {
+    border-color: color-mix(in srgb, var(--glow-color) 36%, var(--color-border));
+    background-image: var(--surface-gradient-glow), var(--surface-gradient-base);
+    box-shadow: var(--surface-rim-highlight), var(--shadow-glow-ambient);
+  }
+
   &.is-interactive {
     position: relative;
 
@@ -206,7 +230,7 @@ label.label:focus-within {
     }
 
     &:hover {
-      border-color: color-mix(in srgb, var(--theme-accent) 55%, var(--color-border));
+      border-color: color-mix(in srgb, var(--glow-color) 55%, var(--color-border));
       box-shadow: var(--surface-rim-accent), var(--shadow-glow-hover);
 
       &::before {
@@ -216,7 +240,7 @@ label.label:focus-within {
 
     &:active {
       transform: scale(0.992);
-      border-color: var(--theme-accent);
+      border-color: var(--glow-color);
       box-shadow: var(--surface-rim-accent), var(--shadow-glow-active);
 
       &::before {
@@ -226,33 +250,13 @@ label.label:focus-within {
   }
 
   &.is-active {
-    border-color: color-mix(in srgb, var(--theme-accent) 75%, var(--color-border));
+    border-color: color-mix(in srgb, var(--glow-color) 75%, var(--color-border));
     background-image: var(--surface-gradient-glow), var(--surface-gradient-base);
     box-shadow: var(--surface-rim-accent), var(--shadow-glow-sm);
 
     &.is-interactive::before {
       opacity: 1;
     }
-  }
-
-  &.is-success {
-    --glow-color: var(--color-status-success);
-  }
-
-  &.is-warning {
-    --glow-color: var(--color-status-warning);
-  }
-
-  &.is-danger {
-    --glow-color: var(--color-status-danger);
-  }
-
-  &.is-success,
-  &.is-warning,
-  &.is-danger {
-    border-color: color-mix(in srgb, var(--glow-color) 36%, var(--color-border));
-    background-image: var(--surface-gradient-glow), var(--surface-gradient-base);
-    box-shadow: var(--surface-rim-highlight), var(--shadow-glow-ambient);
   }
 
   @include state-disabled;
@@ -300,6 +304,8 @@ label.label:focus-within {
 
 // 電設ツール計算結果タイル & 詳細リスト共通スタイル
 .result-tile {
+  --glow-color: var(--theme-accent);
+
   @include control-glow-tokens;
 
   padding: var(--space-2) var(--space-3);

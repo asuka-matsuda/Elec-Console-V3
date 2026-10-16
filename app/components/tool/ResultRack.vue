@@ -12,7 +12,6 @@ import { formatRackResult } from '~/utils/tools/rack/rackResultPresenter'
 
 const props = defineProps<{
   result: RackCalcResult | null
-  size?: 'sm' | 'md'
 }>()
 
 const vm = computed(() =>
@@ -23,8 +22,8 @@ const vm = computed(() =>
 </script>
 
 <template>
-  <div class="flex flex-1 flex-col min-h-0" :class="[size === 'sm' ? 'gap-item-gap is-sm' : 'gap-panel-gap']">
-    <div class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="[vm.isEmpty ? 'is-empty' : `is-${vm.tier1.panelStatus}`, size === 'sm' && 'is-sm']">
+  <div class="flex flex-1 flex-col min-h-0 gap-panel-gap">
+    <div class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="[vm.isEmpty ? 'is-empty' : `is-${vm.tier1.panelStatus}`]">
       <header class="tile-header flex items-center justify-center gap-inline-gap">
         <span>{{ vm.tier1.title }}</span>
         <Badge v-if="vm.tier1.badgeText" :variant="RESULT_BADGE_VARIANT_MAP[vm.tier1.panelStatus]">{{ vm.tier1.badgeText }}</Badge>
@@ -34,7 +33,7 @@ const vm = computed(() =>
       </output>
     </div>
 
-    <div class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="[vm.isEmpty ? 'is-empty' : `is-${vm.tier2.panelStatus}`, size === 'sm' && 'is-sm']">
+    <div class="result-tile flex flex-1 flex-col items-center justify-center gap-inline-gap w-full min-w-0" :class="[vm.isEmpty ? 'is-empty' : `is-${vm.tier2.panelStatus}`]">
       <header class="tile-header flex items-center justify-center gap-inline-gap">
         <span>{{ vm.tier2.title }}</span>
         <Badge v-if="vm.tier2.badgeText" :variant="RESULT_BADGE_VARIANT_MAP[vm.tier2.panelStatus]">{{ vm.tier2.badgeText }}</Badge>

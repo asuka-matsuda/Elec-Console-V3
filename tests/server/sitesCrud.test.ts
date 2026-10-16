@@ -209,7 +209,7 @@ describe('Sites CRUD API Handlers & Cascade Operations', () => {
       statusMessage: ErrorCode.AUTH_FORBIDDEN_ACTION,
     })
 
-    // Site admin CAN update site name, excludedCircuits, noBreakWords, and empty assignedReports: []
+    // Site admin CAN update site name, excludedCircuits, and empty assignedReports: []
     const adminUpdateEvent = createTestH3Event({
       method: 'PUT',
       user: siteAdminUser,
@@ -217,7 +217,6 @@ describe('Sites CRUD API Handlers & Cascade Operations', () => {
       body: {
         name: '管理者更新現場',
         excludedCircuits: ['予備', '欠番', '予備'],
-        noBreakWords: ['盤A', '盤B', '盤A'],
         assignedReports: [],
       },
     })
@@ -225,7 +224,6 @@ describe('Sites CRUD API Handlers & Cascade Operations', () => {
 
     expect(updatedRes.site.name).toBe('管理者更新現場')
     expect(updatedRes.site.excludedCircuits).toEqual(['予備', '欠番'])
-    expect(updatedRes.site.noBreakWords).toEqual(['盤A', '盤B'])
     // Empty array must be preserved as [] and NOT fall back to default 4 reports
     expect(updatedRes.site.assignedReports).toEqual([])
     // Returned site must include assigned users array

@@ -5,7 +5,6 @@ import type { CircuitItem } from '#shared/types/circuit'
 
 import {
   convertCircuitsToDynamicRows,
-  extractTableFromExcel,
   generateTagReportExcel,
   resolveValueOfKey,
 } from '../../app/utils/tagReportExcel'
@@ -38,93 +37,6 @@ describe('tagReportExcel', () => {
     expect(result.rows[0].values['ケーブル']).toBe('CVT 100sq')
     expect(result.rows[0].values['出力日時']).toBe('2026/10/05')
     expect(result.rows[0].values['現場名']).toBeUndefined()
-  })
-
-  it('extractTableFromExcel: Excelワークブックからテーブル見出しと行データを動的抽出できること', async () => {
-    const wb = new ExcelJS.Workbook()
-    const sheet = wb.addWorksheet('回路一覧')
-
-    // 1行目: ヘッダー（追加カスタム列「行き先」「施工フロア」を含む）
-    sheet.getRow(1).values = ['盤名称', '回路番号', '回路名称', '電線', '行き先', '施工フロア']
-    // 2行目: データ1
-    sheet.getRow(2).values = ['1L-1', '1', '電灯幹線', 'CVT 60sq', '2F事務室', '2F']
-    // 3行目: データ2
-    sheet.getRow(3).values = ['1P-1', '2', '空調幹線', 'CVT 100sq', 'R階室外機', 'RF']
-
-    const buffer = await wb.xlsx.writeBuffer()
-    const result = await extractTableFromExcel(new Uint8Array(buffer))
-
-    expect(result.headers.map(h => h.key)).toEqual([
-      '盤名称',
-      '回路番号',
-      '回路名称',
-      '電線',
-      '行き先',
-      '施工フロア',
-    ])
-    expect(result.rows).toHaveLength(2)
-    expect(result.rows[0].values['行き先']).toBe('2F事務室')
-    expect(result.rows[0].values['施工フロア']).toBe('2F')
-    expect(result.rows[1].values['電線']).toBe('CVT 100sq')
-  })
-
-  it('extractTableFromExcel: 文字列形式や日付・数値などのセル値を正しく抽出できること', async () => {
-    const wb = new ExcelJS.Workbook()
-    const sheet = wb.addWorksheet('回路一覧')
-
-    sheet.getRow(1).values = ['盤名称', '回路番号', '測定時間', '試験日']
-    sheet.getRow(2).values = ['1L-1', '1', '10:00', new Date('2026-09-20T00:00:00')]
-    sheet.getRow(3).values = ['1P-1', '2', '14:00', new Date('2026-09-21T00:00:00')]
-
-    const buffer = await wb.xlsx.writeBuffer()
-    const result = await extractTableFromExcel(new Uint8Array(buffer))
-
-    expect(result.rows[0].values['測定時間']).toBe('10:00')
-    expect(result.rows[0].values['試験日']).toBe('2026/09/20')
-    expect(result.rows[1].values['測定時間']).toBe('14:00')
-    expect(result.rows[1].values['試験日']).toBe('2026/09/21')
-  })
-
-  it('extractTableFromExcel: 大分類カテゴリ行がある場合も個別見出し行を特定し、「系統」の値（一般電灯盤No.1等）を正しく抽出できること', async () => {
-    const wb = new ExcelJS.Workbook()
-    const sheet = wb.addWorksheet('List')
-
-    // 1行目: エラー案内等
-    sheet.getRow(1).values = ['案内メッセージ']
-    // 2行目: 大分類カテゴリ
-    sheet.getRow(2).values = ['系統', '系統', '基本情報', '基本情報', '基本情報']
-    // 3行目: 個別列見出し
-    sheet.getRow(3).values = ['系統', '盤名称', '盤種別', '幹線判定', '回路名称']
-    // 4行目: データ
-    sheet.getRow(4).values = ['一般電灯盤No.1', '1L-1', '電灯', 'true', '幹線1L-1']
-
-    const buffer = await wb.xlsx.writeBuffer()
-    const result = await extractTableFromExcel(new Uint8Array(buffer))
-
-    expect(result.headers.map(h => h.key)).toEqual(['系統', '盤名称', '盤種別', '幹線判定', '回路名称'])
-    expect(result.rows).toHaveLength(1)
-    expect(result.rows[0].values['系統']).toBe('一般電灯盤No.1')
-    expect(result.rows[0].values['幹線判定']).toBe('true')
-    expect(result.rows[0].keiTo).toBe('幹線')
-    expect(result.rows[0].banMeisho).toBe('1L-1')
-  })
-
-  it('extractTableFromExcel: 「配電盤MCCBNo.」等の列が前置されていても「盤名称」を誤認識せず正しく抽出できること', async () => {
-    const wb = new ExcelJS.Workbook()
-    const sheet = wb.addWorksheet('回路台帳')
-
-    // 列見出し: 「配電盤MCCBNo.」が「盤名称」より左にある場合
-    sheet.getRow(1).values = ['系統', '配電盤MCCBNo.', '配電盤遮断器容量', '盤名称', '回路名称']
-    sheet.getRow(2).values = ['一般電灯盤No.1', '1', '200', '1L-1', '照明回路']
-    sheet.getRow(3).values = ['一般電灯盤No.1', '2', '200', '1L-2', 'コンセント回路']
-
-    const buffer = await wb.xlsx.writeBuffer()
-    const result = await extractTableFromExcel(new Uint8Array(buffer))
-
-    expect(result.rows).toHaveLength(2)
-    // 配電盤MCCBNo.の "1" や "2" ではなく、盤名称列の "1L-1", "1L-2" が抽出されること
-    expect(result.rows[0].banMeisho).toBe('1L-1')
-    expect(result.rows[1].banMeisho).toBe('1L-2')
   })
 
   it('resolveValueOfKey: 完全一致・動的列・全角半角正規化・出力日時を解決し、互換エイリアスや現場名は解決しないこと', () => {

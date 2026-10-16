@@ -9,7 +9,7 @@ import { resolveKairoSymbol } from '~/utils/kairo'
 /**
  * 回路記号の描画サイズ定義
  */
-export interface CircuitSymbolDimensions {
+interface CircuitSymbolDimensions {
   width?: number
   height?: number
 }

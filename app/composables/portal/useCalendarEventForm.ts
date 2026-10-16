@@ -212,12 +212,10 @@ export function useCalendarEventForm({
   return {
     isModalOpen,
     isEditing,
-    editingEventId,
     form,
     openCreateModal,
     openEditModal,
     openEditMilestone,
-    closeModal,
     saveEvent,
     removeEvent,
   }

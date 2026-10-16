@@ -2,7 +2,6 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import deleteTodoHandler from '../../server/api/sites/[siteId]/todos/[id].delete'
 import updateTodoHandler from '../../server/api/sites/[siteId]/todos/[id].put'
-import getTodosHandler from '../../server/api/sites/[siteId]/todos/index.get'
 import syncTodosHandler from '../../server/api/sites/[siteId]/todos/sync.post'
 import { hashPassword } from '../../server/utils/password'
 import { prisma } from '../../server/utils/prisma'
@@ -149,14 +148,12 @@ describe('Todos API Handlers (Sync, Update, Delete & Viewer Role Protection)', (
     }))
 
     // Verify workerUser's todo-sync-1 is untouched
-    const getRes = await getTodosHandler(createTestH3Event({
-      method: 'GET',
-      user: workerUser,
-      params: { siteId: testSiteId },
-    }))
+    const workerTodos = await prisma.todo.findMany({
+      where: { siteId: testSiteId, userId: { in: [workerUser.id, workerUser.loginId] } },
+    })
 
-    expect(getRes.todos).toHaveLength(1)
-    expect(getRes.todos[0].text).toBe('更新後タスク1')
+    expect(workerTodos).toHaveLength(1)
+    expect(workerTodos[0].text).toBe('更新後タスク1')
 
     // otherWorkerUser tries PUT /api/sites/:siteId/todos/todo-sync-1 -> 404 SYS_NOT_FOUND
     await expect(updateTodoHandler(createTestH3Event({
@@ -180,16 +177,7 @@ describe('Todos API Handlers (Sync, Update, Delete & Viewer Role Protection)', (
     expect(stillExists).not.toBeNull()
   })
 
-  it('blocks viewer role from mutating Todos (sync, PUT, DELETE) while allowing GET', async () => {
-    // Viewer can GET
-    const viewerGet = await getTodosHandler(createTestH3Event({
-      method: 'GET',
-      user: viewerUser,
-      params: { siteId: testSiteId },
-    }))
-
-    expect(viewerGet.success).toBe(true)
-
+  it('blocks viewer role from mutating Todos (sync, PUT, DELETE)', async () => {
     // Viewer cannot POST sync -> 403 AUTH_FORBIDDEN_ROLE
     await expect(syncTodosHandler(createTestH3Event({
       method: 'POST',

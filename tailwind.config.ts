@@ -32,7 +32,7 @@ export default <Config>{
     './app/layouts/**/*.vue',
     './app/pages/**/*.vue',
     './app/app.{vue,js,ts}',
-    './error.vue',
+    './app/error.vue',
   ],
   theme: {
     extend: {
@@ -70,14 +70,10 @@ export default <Config>{
         // 寸法
         'sidebar-w': 'var(--sidebar-width)',
       },
-      width: {
-        'sidebar-w': 'var(--sidebar-width)',
-      },
       zIndex: {
         'table-header': 'var(--z-index-table-header)',
         'sidebar-overlay': 'var(--z-index-sidebar-overlay)',
         'sidebar': 'var(--z-index-sidebar)',
-        'modal': 'var(--z-index-modal)',
         'select': 'var(--z-index-select)',
       },
     },

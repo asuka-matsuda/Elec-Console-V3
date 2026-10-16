@@ -65,8 +65,12 @@ async function buildKfc3350StandardTemplateBuffer(customizeOrder = false): Promi
 }
 
 describe('tagReportExcel slot detection & boundary integrity', () => {
-  it('correctly generates all 24 slots with exactly 5 cells each in KFC-3350 definition', () => {
-    const slots = kfc3350Template.getSlots('z')
+  it('correctly generates all 24 slots with exactly 5 cells each in KFC-3350 definition', async () => {
+    const buf = await buildKfc3350StandardTemplateBuffer(false)
+    const wb = new ExcelJS.Workbook()
+
+    await wb.xlsx.load(buf as unknown as ExcelJS.Buffer)
+    const slots = kfc3350Template.getSlots('z', wb.worksheets[0])
 
     expect(slots.length).toBe(24)
 

@@ -76,7 +76,6 @@ export function mapConduitToHistory(
   return {
     toolName: '配管サイズ自動選定',
     status,
-    mainResultText: `32%: ${size32Str} / 48%: ${size48Str} / ${rateStr}%: ${sizeCustomStr}`,
     inputs,
     results,
   }

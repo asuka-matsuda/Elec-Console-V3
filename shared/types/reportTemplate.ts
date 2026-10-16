@@ -6,7 +6,7 @@
 
 export type ReportLogicType = 'tag' | 'socket-tepra' | 'exam' | 'remote'
 
-export interface ReportTemplateKeyDefinition {
+interface ReportTemplateKeyDefinition {
   /** キー記法（例: "%盤名称%"） */
   key: string
   /** 項目名（例: "盤名称"） */
@@ -23,7 +23,7 @@ export interface ReportTemplateRegisteredFile {
   updatedAt: string
 }
 
-export interface ReportLogicMeta {
+interface ReportLogicMeta {
   id: ReportLogicType
   name: string
   description: string

@@ -3,7 +3,7 @@
  * 不正な JSON 文字列や破損データ、型違いが存在しても 500 エラーを起こさず安全にフォールバックします。
  */
 
-export interface CalendarEventType {
+interface CalendarEventType {
   id: string
   name: string
   color: string
@@ -342,93 +342,6 @@ export function serializeCustomHolidays(val: unknown, labels?: unknown): string 
   return JSON.stringify(
     uniqueDates.map(date => (labelMap[date] ? { date, label: labelMap[date] } : date)),
   )
-}
-
-/**
- * 改行禁止ワードリスト（SiteSettings.noBreakWords / SystemSetting.no_break_words）の安全なパース
- */
-export function parseNoBreakWords(raw?: string | null): string[] {
-  if (!raw || typeof raw !== 'string') {
-    return []
-  }
-
-  try {
-    const parsed = JSON.parse(raw)
-
-    if (Array.isArray(parsed)) {
-      const cleaned = parsed
-        .filter((item): item is string => typeof item === 'string')
-        .map(item => item.trim())
-        .filter(item => item.length > 0 && item.length <= 100)
-
-      return Array.from(new Set(cleaned))
-    }
-
-    return []
-  }
-  catch {
-    if (raw.includes(',')) {
-      const cleaned = raw
-        .split(',')
-        .map(s => s.trim())
-        .filter(s => s.length > 0 && s.length <= 100)
-
-      return Array.from(new Set(cleaned))
-    }
-
-    const trimmed = raw.trim()
-
-    return trimmed.length > 0 && trimmed.length <= 100 ? [trimmed] : []
-  }
-}
-
-/**
- * 改行禁止ワードリストの安全なシリアライズ
- */
-export function serializeNoBreakWords(val: unknown): string | null {
-  if (val === null || val === undefined) {
-    return null
-  }
-
-  if (Array.isArray(val)) {
-    const cleaned = Array.from(
-      new Set(
-        val
-          .filter((item): item is string => typeof item === 'string')
-          .map(item => item.trim())
-          .filter(item => item.length > 0 && item.length <= 100),
-      ),
-    )
-
-    return cleaned.length > 0 ? JSON.stringify(cleaned) : null
-  }
-
-  if (typeof val === 'string') {
-    const trimmed = val.trim()
-
-    if (!trimmed) return null
-
-    if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
-      try {
-        const parsed = JSON.parse(trimmed)
-
-        if (Array.isArray(parsed)) {
-          return serializeNoBreakWords(parsed)
-        }
-      }
-      catch {
-        // fall through
-      }
-    }
-
-    if (trimmed.includes(',')) {
-      return serializeNoBreakWords(trimmed.split(',').map(s => s.trim()))
-    }
-
-    return trimmed.length <= 100 ? JSON.stringify([trimmed]) : null
-  }
-
-  return null
 }
 
 /**

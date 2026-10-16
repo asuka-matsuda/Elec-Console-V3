@@ -10,7 +10,6 @@ import { computed, ref, unref, watch } from 'vue'
 
 import { useNuxtApp } from '#app'
 import type { OperationLogItem, OperationLogsResponse } from '#shared/types/operationLog'
-import { parseToAppException } from '~/utils/errors'
 
 export function useOperationLogs(siteIdRef: Ref<string> | string) {
   const { $api } = useNuxtApp()
@@ -25,7 +24,6 @@ export function useOperationLogs(siteIdRef: Ref<string> | string) {
   const limit = ref<number>(100)
 
   const isLoading = ref<boolean>(true)
-  const error = ref<string | null>(null)
 
   const fetchLogs = async () => {
     const siteId = unref(siteIdRef)
@@ -37,7 +35,6 @@ export function useOperationLogs(siteIdRef: Ref<string> | string) {
     }
 
     isLoading.value = true
-    error.value = null
 
     try {
       const params = new URLSearchParams()
@@ -67,10 +64,8 @@ export function useOperationLogs(siteIdRef: Ref<string> | string) {
         availableTargetBans.value = res.availableTargetBans || []
       }
     }
-    catch (err: unknown) {
-      const appErr = parseToAppException(err)
-
-      error.value = appErr.getUserFacingMessage()
+    catch {
+      // ignore
     }
     finally {
       isLoading.value = false
@@ -98,9 +93,6 @@ export function useOperationLogs(siteIdRef: Ref<string> | string) {
 
   return {
     logs,
-    availableWorkers,
-    availableActions,
-    availableTargetBans,
     workerOptions,
     actionOptions,
     targetBanOptions,
@@ -109,7 +101,6 @@ export function useOperationLogs(siteIdRef: Ref<string> | string) {
     selectedTargetBan,
     limit,
     isLoading,
-    error,
     fetchLogs,
   }
 }

@@ -9,7 +9,7 @@ import { normalizeHeaderName } from './excelNormalize'
 /**
  * 回路台帳の各主要フィールドに対応する認識エイリアス定義
  */
-export const CIRCUIT_FIELD_ALIASES = {
+const CIRCUIT_FIELD_ALIASES = {
   // 1. 系統
   keiTo: {
     exact: ['系統', '系統名', '親系統', '電源系統', '配電系統'],
@@ -34,16 +34,11 @@ export const CIRCUIT_FIELD_ALIASES = {
     fallback: ['幹線'],
     exclude: ['番号', '容量', 'サイズ'],
   },
-  // 回路番号・記号
+  // 回路番号
   kairoBangou: {
     exact: ['回路番号', '回路no', '回路no.', '回路№', '番号'],
     fallback: [],
     exclude: ['盤', 'mccb', '遮断器', 'リレー', '機器'],
-  },
-  kairoKigou: {
-    exact: ['回路記号', '記号'],
-    fallback: [],
-    exclude: ['盤', '遮断器'],
   },
   // 回路名称・負荷名称
   kairoMeisho: {
@@ -51,61 +46,9 @@ export const CIRCUIT_FIELD_ALIASES = {
     fallback: [],
     exclude: ['盤', '遮断器', 'ケーブル', '電線'],
   },
-  // リモコン関連
-  densoKeiTo: {
-    exact: ['伝送系統', '伝送系統名', '伝送'],
-    fallback: [],
-    exclude: [],
-  },
-  fukaAddress: {
-    exact: ['負荷アドレス', '負荷ｱﾄﾞﾚｽ', 'アドレス', 'ｱﾄﾞﾚｽ'],
-    fallback: [],
-    exclude: ['ip', 'mac'],
-  },
-  relayNumber: {
-    exact: ['リレー番号', 'ﾘﾚｰ番号', 'リレーno', '機器番号'],
-    fallback: [],
-    exclude: ['盤', '回路'],
-  },
-  // 設備仕様
-  haidenHoushiki: {
-    exact: ['配電方式'],
-    fallback: [],
-    exclude: [],
-  },
-  souShubetsu: {
-    exact: ['相種別'],
-    fallback: [],
-    exclude: [],
-  },
-  shadankiShubetsu: {
-    exact: ['遮断器種別'],
-    fallback: [],
-    exclude: [],
-  },
-  shadankiYouryou: {
-    exact: ['遮断器容量', '遮断器サイズ', '配電盤遮断器容量'],
-    fallback: [],
-    exclude: [],
-  },
-  cable: {
-    exact: ['ケーブル', 'ケーブルリスト', '電線', 'ｹｰﾌﾞﾙﾘｽﾄ'],
-    fallback: [],
-    exclude: ['条数', 'サイズ'],
-  },
-  haisenJousuu: {
-    exact: ['配線条数', '条数'],
-    fallback: [],
-    exclude: [],
-  },
-  setsuchiUmu: {
-    exact: ['接地有無', '接地'],
-    fallback: [],
-    exclude: ['種別', 'リスト', '手動', 'c種', 'd種'],
-  },
 } as const
 
-export interface AliasDefinition {
+interface AliasDefinition {
   exact: readonly string[]
   fallback?: readonly string[]
   exclude?: readonly string[]
@@ -114,7 +57,7 @@ export interface AliasDefinition {
 /**
  * 優先度ルールに基づき、列名マップから最適な値を抽出する共通関数
  */
-export function findValueByFieldAlias(
+function findValueByFieldAlias(
   values: Record<string, string>,
   aliasDef: AliasDefinition,
 ): string {
@@ -204,43 +147,4 @@ export function extractKairoBangou(values: Record<string, string>): string {
  */
 export function extractKairoMeisho(values: Record<string, string>): string {
   return findValueByFieldAlias(values, CIRCUIT_FIELD_ALIASES.kairoMeisho)
-}
-
-/**
- * ヘッダー名一覧から、指定フィールドに最もマッチする列インデックス（1-indexed）を検出する
- */
-export function findMatchingColumnIndex(
-  headers: Array<{ name: string, colIndex: number }>,
-  aliasDef: AliasDefinition,
-): number {
-  const normHeaders = headers.map(h => ({
-    ...h,
-    normName: normalizeHeaderName(h.name),
-  }))
-
-  // 1. 完全一致
-  for (const kw of aliasDef.exact) {
-    const normKw = normalizeHeaderName(kw)
-    const match = normHeaders.find(h => h.normName === normKw)
-
-    if (match) return match.colIndex
-  }
-
-  // 2. 部分一致（除外語なし）
-  const allKeywords = [...aliasDef.exact, ...(aliasDef.fallback || [])]
-  const excludeWords = (aliasDef.exclude || []).map(normalizeHeaderName)
-
-  for (const kw of allKeywords) {
-    const normKw = normalizeHeaderName(kw)
-
-    for (const h of normHeaders) {
-      const hasExclude = excludeWords.some(ex => h.normName.includes(ex))
-
-      if (!hasExclude && h.normName.includes(normKw)) {
-        return h.colIndex
-      }
-    }
-  }
-
-  return -1
 }

@@ -31,7 +31,10 @@ const handleChange = () => {
 
 const customStyle = computed(() => {
   if (props.color) {
-    return { '--control-checked-bg': props.color }
+    return {
+      '--control-checked-bg': props.color,
+      '--glow-color': props.color,
+    }
   }
 
   return undefined

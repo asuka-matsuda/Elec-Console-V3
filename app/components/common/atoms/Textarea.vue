@@ -138,12 +138,12 @@ defineExpose({
     border-color: color-mix(in srgb, var(--glow-color) 60%, transparent);
   }
 
-  &:hover {
+  &:hover:not(:disabled, :read-only, .is-readonly) {
     border-color: var(--glow-color);
     box-shadow: var(--shadow-glow-hover);
   }
 
-  &:active {
+  &:active:not(:disabled, :read-only, .is-readonly) {
     border-color: var(--glow-color);
     box-shadow: var(--shadow-glow-active);
   }

@@ -158,7 +158,7 @@ module.exports = {
       },
     },
     {
-      files: ['app/assets/scss/**/*.scss', 'error.vue'],
+      files: ['app/assets/scss/**/*.scss', 'app/error.vue'],
       rules: {
         'property-disallowed-list': [
           [
@@ -175,12 +175,11 @@ module.exports = {
     },
     // -------------------------------------------------------------------------
     // 【厳格規約】外部ライブラリ等の :deep 例外許可リスト
-    // ※ 外部パッケージ（FullCalendar, KaTeX）の描画要素や、スロット要素の装飾のみ登録。
+    // ※ 外部パッケージ（FullCalendar）の描画要素や、スロット要素の装飾のみ登録。
     // -------------------------------------------------------------------------
     {
       files: [
         'app/components/portal/calendar/Calendar.client.vue',
-        'app/components/tool/MathBasis.vue',
       ],
       rules: {
         'selector-disallowed-list': [

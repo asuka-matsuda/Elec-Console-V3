@@ -17,31 +17,6 @@ export function normalizeNewlines(str: string): string {
 }
 
 /**
- * セルにテキストを設定し、改行が含まれる場合は Excel 標準の \r\n に変換して wrapText: true を付与する
- */
-export function setCellStringWithNewlines(
-  cell: ExcelJS.Cell,
-  value: string | null | undefined,
-): void {
-  if (value === null || value === undefined) return
-  const str = String(value).trim()
-
-  if (!str) return
-
-  if (str.includes('\n')) {
-    // Windows/Excel標準の \r\n に揃え、セル内折り返し（wrapText: true）を有効化
-    cell.value = str.replace(/\r?\n/g, '\r\n')
-    cell.alignment = {
-      ...(cell.alignment || {}),
-      wrapText: true,
-    }
-  }
-  else {
-    cell.value = str
-  }
-}
-
-/**
  * 行から指定列番号のセル文字列を安全に取得（数式結果、リッチテキスト対応）
  */
 export function getCellString(row: ExcelJS.Row, colNumber: number): string {
