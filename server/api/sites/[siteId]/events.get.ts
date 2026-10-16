@@ -12,6 +12,7 @@ import { ErrorCode } from '#shared/types/errors'
 
 import { requireSiteAccess } from '../../../utils/auth'
 import { createAppError } from '../../../utils/error'
+import { parseEventAssignees } from '../../../utils/jsonFields'
 import { prisma } from '../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
@@ -32,6 +33,7 @@ export default defineEventHandler(async (event) => {
 
   return rows.map(row => ({
     ...row,
+    assignees: parseEventAssignees(row.assignees),
     isMilestone: Boolean(row.isMilestone || row.type === 'milestone'),
   }))
 })

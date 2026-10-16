@@ -14,6 +14,20 @@ import type { ReportLogicType } from './reportTemplate'
 export type SiteStatus = 'planning' | 'in_progress' | 'completed' | 'on_hold'
 
 /**
+ * 現場に割り当てられたメンバー基本情報
+ */
+export interface SiteMember {
+  id: string
+  loginId: string
+  firstName: string
+  lastName: string
+  firstNameKana?: string | null
+  lastNameKana?: string | null
+  role: string
+  isActive: boolean
+}
+
+/**
  * 現場基本情報エンティティ
  */
 export type Site = {
@@ -35,6 +49,8 @@ export type Site = {
   excludedCircuits?: string[]
   /** 現場にアサインされた作業員・試験員名リスト */
   workers?: string[]
+  /** 現場にアサインされたユーザー一覧 */
+  users?: SiteMember[]
   /** 現場で有効化・割り当てられた帳票リスト */
   assignedReports?: ReportLogicType[]
 }

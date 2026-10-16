@@ -10,9 +10,11 @@ import { defineEventHandler, getRouterParam } from 'h3'
 import { z } from 'zod'
 
 import { ErrorCode } from '#shared/types/errors'
+import { getUserDisplayName } from '#shared/utils/user'
 
 import { requireSiteRole } from '../../utils/auth'
 import { createAppError } from '../../utils/error'
+import { parseEventAssignees, serializeEventAssignees } from '../../utils/jsonFields'
 import { prisma } from '../../utils/prisma'
 import { validateRequestBody } from '../../utils/validation'
 
@@ -23,6 +25,9 @@ const UpdateEventSchema = z.object({
   allDay: z.boolean().optional(),
   type: z.string().optional(),
   isMilestone: z.boolean().optional(),
+  location: z.string().trim().nullable().optional(),
+  description: z.string().trim().nullable().optional(),
+  assignees: z.array(z.string()).optional(),
 })
 
 export default defineEventHandler(async (event) => {
@@ -47,12 +52,25 @@ export default defineEventHandler(async (event) => {
   }
 
   // 現場アクセス権・ロール（admin / worker）および現場有効状態を検証
-  await requireSiteRole(event, ['admin', 'worker'], existingEvent.siteId)
+  const user = await requireSiteRole(event, ['admin', 'worker'], existingEvent.siteId)
+  const actorName = getUserDisplayName(user)
 
   const body = await validateRequestBody(event, UpdateEventSchema)
   const existingIsMilestone = Boolean(existingEvent.isMilestone || existingEvent.type === 'milestone')
   const isMilestone = body.isMilestone ?? existingIsMilestone
   const nextStart = body.start ?? existingEvent.start
+  const normalizedStart = isMilestone ? (nextStart.split('T')[0] || nextStart) : nextStart
+  const normalizedEnd = isMilestone
+    ? null
+    : (body.end !== undefined ? (body.end || null) : existingEvent.end)
+
+  if (!isMilestone && normalizedEnd && normalizedStart > normalizedEnd) {
+    throw createAppError({
+      code: ErrorCode.SYS_VALIDATION_FAILED,
+      message: '終了日時は開始日時以降を指定してください。',
+    })
+  }
+
   const nextType = isMilestone
     ? 'milestone'
     : (body.type && body.type !== 'milestone'
@@ -63,17 +81,21 @@ export default defineEventHandler(async (event) => {
     where: { id },
     data: {
       title: body.title ?? existingEvent.title,
-      start: isMilestone ? (nextStart.split('T')[0] || nextStart) : nextStart,
-      end: isMilestone ? null : (body.end !== undefined ? (body.end || null) : existingEvent.end),
+      start: normalizedStart,
+      end: normalizedEnd,
       allDay: isMilestone ? true : (body.allDay ?? existingEvent.allDay),
       type: nextType,
+      isMilestone,
+      location: body.location !== undefined ? (body.location || null) : existingEvent.location,
+      description: body.description !== undefined ? (body.description || null) : existingEvent.description,
+      assignees: body.assignees !== undefined ? serializeEventAssignees(body.assignees) : existingEvent.assignees,
+      updatedBy: actorName,
     },
   })
 
-  await prisma.$executeRaw`UPDATE "Event" SET "isMilestone" = ${isMilestone ? 1 : 0} WHERE "id" = ${id}`
-
   return {
     ...updated,
+    assignees: parseEventAssignees(updated.assignees),
     isMilestone,
   }
 })

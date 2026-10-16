@@ -67,6 +67,11 @@ model Event {
   allDay      Boolean  @default(false)
   type        String?
   isMilestone Boolean  @default(false)
+  location    String?
+  description String?
+  assignees   String? // Stored as JSON string "['松田 飛鳥']"
+  createdBy   String?
+  updatedBy   String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

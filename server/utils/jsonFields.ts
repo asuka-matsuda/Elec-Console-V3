@@ -473,3 +473,13 @@ export function parseSelectedDeviceIds<T extends Record<string, unknown> = Recor
     return {} as T
   }
 }
+
+/**
+ * カレンダー予定の担当者名リスト（Event.assignees）の安全なパース
+ */
+export const parseEventAssignees = parseExcludedCircuits
+
+/**
+ * カレンダー予定の担当者名リスト（Event.assignees）の安全なシリアライズ
+ */
+export const serializeEventAssignees = serializeExcludedCircuits

@@ -41,6 +41,7 @@ const mockForm = ref({
 })
 const mockOpenCreateModal = vi.fn()
 const mockOpenEditModal = vi.fn()
+const mockDuplicateEvent = vi.fn()
 const mockSaveEvent = vi.fn()
 const mockRemoveEvent = vi.fn()
 
@@ -51,10 +52,13 @@ vi.mock('~/composables/portal/useCalendarEventForm', () => ({
     form: mockForm,
     openCreateModal: mockOpenCreateModal,
     openEditModal: mockOpenEditModal,
+    duplicateEvent: mockDuplicateEvent,
     saveEvent: mockSaveEvent,
     removeEvent: mockRemoveEvent,
   }),
 }))
+
+const mockGotoDate = vi.fn()
 
 let capturedOptionsConfig: {
   onEventDrop: (info: { event: { id: string, startStr: string, endStr?: string, allDay: boolean }, revert: () => void }) => Promise<void>
@@ -69,11 +73,13 @@ vi.mock('~/composables/portal/useCalendarOptions', () => ({
       fullCalendarRef: ref(null),
       currentTitle: ref('2026年9月'),
       currentView: ref('dayGridMonth'),
+      currentYearMonth: ref('2026-09'),
       calendarOptions: ref({ initialView: 'dayGridMonth' }),
       handlePrev: vi.fn(),
       handleNext: vi.fn(),
       handleToday: vi.fn(),
       handleViewChange: vi.fn(),
+      gotoDate: mockGotoDate,
     }
   },
 }))
@@ -87,7 +93,7 @@ vi.mock('@fullcalendar/vue3', () => ({
 }))
 
 describe('Calendar.client.vue', () => {
-  it('renders toolbar, panel with padding none, fullcalendar stub and modals', () => {
+  it('renders toolbar, panel with padding none, fullcalendar stub and modals without old milestone banner', () => {
     const wrapper = mount(CalendarClient, {
       props: { siteId: 'site-1' },
       global: {
@@ -106,6 +112,14 @@ describe('Calendar.client.vue', () => {
     // Toolbar タイトルが描画されていること
     expect(wrapper.find('.toolbar-title').text()).toBe('2026年9月')
 
+    // 旧マイルストーン帯（.milestone-chip）が廃止されていること
+    expect(wrapper.find('.milestone-chip').exists()).toBe(false)
+
+    // 「予定を追加」ボタンが存在すること
+    const createBtn = wrapper.findAllComponents({ name: 'Button' }).find(b => b.text().includes('予定を追加'))
+
+    expect(createBtn).toBeDefined()
+
     const panel = wrapper.find('.calendar-panel')
 
     expect(panel.exists()).toBe(true)
@@ -113,6 +127,34 @@ describe('Calendar.client.vue', () => {
 
     // FullCalendar スタブが存在すること
     expect(wrapper.find('.fc-stub').exists()).toBe(true)
+  })
+
+  it('opens create event modal when toolbar create button is clicked and supports year-month direct jump', async () => {
+    const wrapper = mount(CalendarClient, {
+      props: { siteId: 'site-1' },
+      global: {
+        stubs: {
+          Panel: true,
+          ModalCalendarEvent: true,
+          ModalCalendarTypeSettings: true,
+        },
+      },
+    })
+
+    const createBtn = wrapper.findAllComponents({ name: 'Button' }).find(b => b.text().includes('予定を追加'))
+
+    await createBtn!.trigger('click')
+    expect(mockOpenCreateModal).toHaveBeenCalled()
+
+    // 年月タイトルをクリックして年月ジャンプパネルを開く
+    await wrapper.find('.toolbar-title').trigger('click')
+    expect(wrapper.text()).toContain('移動先の年月を選択')
+
+    const decBtn = wrapper.findAll('button').find(b => b.text() === '12月')
+
+    expect(decBtn).toBeDefined()
+    await decBtn!.trigger('click')
+    expect(mockGotoDate).toHaveBeenCalledWith('2026-12-01')
   })
 
   it('opens type settings modal when toolbar button is clicked', async () => {

@@ -15,6 +15,13 @@ export interface CalendarEvent {
   allDay?: boolean
   type?: string
   isMilestone?: boolean
+  location?: string | null
+  description?: string | null
+  assignees?: string[]
+  createdBy?: string | null
+  updatedBy?: string | null
+  createdAt?: string
+  updatedAt?: string
 }
 
 /**
@@ -44,6 +51,20 @@ export interface EventFormData {
   allDay: boolean
   /** マイルストーンフラグ */
   isMilestone?: boolean
+  /** 場所・対象エリア */
+  location?: string
+  /** 備考・詳細メモ */
+  description?: string
+  /** 担当者名リスト */
+  assignees?: string[]
+  /** 登録者名（閲覧・編集時表示用） */
+  createdBy?: string | null
+  /** 最終更新者名（閲覧・編集時表示用） */
+  updatedBy?: string | null
+  /** 登録日時（閲覧・編集時表示用） */
+  createdAt?: string
+  /** 最終更新日時（閲覧・編集時表示用） */
+  updatedAt?: string
 }
 
 /**

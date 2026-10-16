@@ -47,6 +47,13 @@ export function useCalendarEventForm({
     end: '',
     allDay: false,
     isMilestone: false,
+    location: '',
+    description: '',
+    assignees: [],
+    createdBy: null,
+    updatedBy: null,
+    createdAt: undefined,
+    updatedAt: undefined,
   })
 
   const openCreateModal = (
@@ -58,11 +65,18 @@ export function useCalendarEventForm({
     isEditing.value = false
     editingEventId.value = null
 
-    const finalStart = isMilestone ? (startStr.split('T')[0] || startStr) : startStr
-    let finalEnd = isMilestone ? finalStart : endStr
+    const finalStart = isMilestone || allDay
+      ? (startStr.split('T')[0] || startStr)
+      : (startStr.includes('T') ? startStr.slice(0, 16) : startStr)
 
-    if (!isMilestone && allDay && endStr) {
-      const d = new Date(endStr)
+    let finalEnd = isMilestone
+      ? finalStart
+      : (allDay
+          ? (endStr.split('T')[0] || endStr)
+          : (endStr.includes('T') ? endStr.slice(0, 16) : endStr))
+
+    if (!isMilestone && allDay && finalEnd && finalEnd > finalStart) {
+      const d = new Date(finalEnd)
 
       d.setDate(d.getDate() - 1)
       finalEnd = formatToDateInputString(d)
@@ -75,6 +89,13 @@ export function useCalendarEventForm({
       end: finalEnd || finalStart,
       allDay: isMilestone ? true : allDay,
       isMilestone,
+      location: '',
+      description: '',
+      assignees: [],
+      createdBy: null,
+      updatedBy: null,
+      createdAt: undefined,
+      updatedAt: undefined,
     }
     isModalOpen.value = true
   }
@@ -85,19 +106,37 @@ export function useCalendarEventForm({
     startStr: string
     endStr: string
     allDay: boolean
-    extendedProps: { type?: string, isMilestone?: boolean }
+    extendedProps: {
+      type?: string
+      isMilestone?: boolean
+      location?: string | null
+      description?: string | null
+      assignees?: string[]
+      createdBy?: string | null
+      updatedBy?: string | null
+      createdAt?: string
+      updatedAt?: string
+    }
   }) => {
     isEditing.value = true
     editingEventId.value = calEvent.id
 
     const isMilestone = Boolean(calEvent.extendedProps?.isMilestone)
-    const finalStart = isMilestone
-      ? (calEvent.startStr.split('T')[0] || calEvent.startStr)
-      : calEvent.startStr
-    let finalEnd = isMilestone ? finalStart : calEvent.endStr
+    const rawStart = calEvent.startStr
+    const rawEnd = calEvent.endStr
 
-    if (!isMilestone && calEvent.allDay && calEvent.endStr) {
-      const d = new Date(calEvent.endStr)
+    const finalStart = isMilestone || calEvent.allDay
+      ? (rawStart.split('T')[0] || rawStart)
+      : (rawStart.includes('T') ? rawStart.slice(0, 16) : rawStart)
+
+    let finalEnd = isMilestone
+      ? finalStart
+      : (calEvent.allDay
+          ? (rawEnd.split('T')[0] || rawEnd)
+          : (rawEnd.includes('T') ? rawEnd.slice(0, 16) : rawEnd))
+
+    if (!isMilestone && calEvent.allDay && finalEnd && finalEnd > finalStart) {
+      const d = new Date(finalEnd)
 
       d.setDate(d.getDate() - 1)
       finalEnd = formatToDateInputString(d)
@@ -105,11 +144,20 @@ export function useCalendarEventForm({
 
     form.value = {
       title: calEvent.title,
-      type: calEvent.extendedProps.type || 'work',
+      type: calEvent.extendedProps?.type || 'work',
       start: finalStart,
       end: finalEnd || finalStart,
       allDay: isMilestone ? true : calEvent.allDay,
       isMilestone,
+      location: calEvent.extendedProps?.location || '',
+      description: calEvent.extendedProps?.description || '',
+      assignees: Array.isArray(calEvent.extendedProps?.assignees)
+        ? [...calEvent.extendedProps.assignees]
+        : [],
+      createdBy: calEvent.extendedProps?.createdBy ?? null,
+      updatedBy: calEvent.extendedProps?.updatedBy ?? null,
+      createdAt: calEvent.extendedProps?.createdAt,
+      updatedAt: calEvent.extendedProps?.updatedAt,
     }
     isModalOpen.value = true
   }
@@ -126,8 +174,32 @@ export function useCalendarEventForm({
       end: startOnly,
       allDay: true,
       isMilestone: Boolean(evt.isMilestone),
+      location: evt.location || '',
+      description: evt.description || '',
+      assignees: Array.isArray(evt.assignees) ? [...evt.assignees] : [],
+      createdBy: evt.createdBy ?? null,
+      updatedBy: evt.updatedBy ?? null,
+      createdAt: evt.createdAt,
+      updatedAt: evt.updatedAt,
     }
     isModalOpen.value = true
+  }
+
+  const duplicateEvent = (sourceData: EventFormData) => {
+    isEditing.value = false
+    editingEventId.value = null
+    form.value = {
+      ...sourceData,
+      title: sourceData.title.endsWith(' (コピー)')
+        ? sourceData.title
+        : `${sourceData.title} (コピー)`,
+      assignees: Array.isArray(sourceData.assignees) ? [...sourceData.assignees] : [],
+      createdBy: null,
+      updatedBy: null,
+      createdAt: undefined,
+      updatedAt: undefined,
+    }
+    toast.info('予定を複製しました。日時を確認して保存してください。')
   }
 
   const closeModal = () => {
@@ -153,26 +225,24 @@ export function useCalendarEventForm({
       }
     }
 
+    const payload = {
+      title: savedData.title,
+      type: savedData.type,
+      start: normalizedStart,
+      end: finalEnd,
+      allDay: isMilestone ? true : savedData.allDay,
+      isMilestone,
+      location: savedData.location?.trim() || null,
+      description: savedData.description?.trim() || null,
+      assignees: Array.isArray(savedData.assignees) ? savedData.assignees : [],
+    }
+
     try {
       if (isEditing.value && editingEventId.value) {
-        await updateEvent(editingEventId.value, {
-          title: savedData.title,
-          type: savedData.type,
-          start: normalizedStart,
-          end: finalEnd,
-          allDay: isMilestone ? true : savedData.allDay,
-          isMilestone,
-        })
+        await updateEvent(editingEventId.value, payload)
       }
       else {
-        await createEvent({
-          title: savedData.title,
-          type: savedData.type,
-          start: normalizedStart,
-          end: finalEnd,
-          allDay: isMilestone ? true : savedData.allDay,
-          isMilestone,
-        })
+        await createEvent(payload)
       }
       isModalOpen.value = false
     }
@@ -216,6 +286,7 @@ export function useCalendarEventForm({
     openCreateModal,
     openEditModal,
     openEditMilestone,
+    duplicateEvent,
     saveEvent,
     removeEvent,
   }

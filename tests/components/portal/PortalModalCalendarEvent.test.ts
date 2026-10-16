@@ -164,4 +164,76 @@ describe('ModalCalendarEvent.vue', () => {
       },
     ])
   })
+
+  it('displays audit info (createdBy / updatedBy) and emits duplicate event in edit mode', async () => {
+    const wrapper = mount(ModalCalendarEvent, {
+      props: {
+        modelValue: true,
+        isEditing: true,
+        eventTypes: dummyEventTypes,
+        siteMembers: ['松田 飛鳥', '佐藤 太郎'],
+        initialData: {
+          ...dummyInitialData,
+          location: '1F 電気室',
+          description: '検電器持参',
+          assignees: ['松田 飛鳥'],
+          createdBy: '松田 飛鳥',
+          updatedBy: '佐藤 太郎',
+          createdAt: '2026-09-20T09:00:00.000Z',
+          updatedAt: '2026-09-20T15:30:00.000Z',
+        },
+      },
+    })
+
+    expect(wrapper.text()).toContain('登録:')
+    expect(wrapper.text()).toContain('松田 飛鳥')
+    expect(wrapper.text()).toContain('最終更新:')
+    expect(wrapper.text()).toContain('佐藤 太郎')
+
+    const duplicateBtn = wrapper.findAllComponents({ name: 'Button' }).find(b => b.text().includes('複製'))
+
+    expect(duplicateBtn).toBeDefined()
+    await duplicateBtn?.trigger('click')
+    expect(wrapper.emitted('duplicate')).toBeTruthy()
+  })
+
+  it('validates that end date is not before start date', async () => {
+    const wrapper = mount(ModalCalendarEvent, {
+      props: {
+        modelValue: true,
+        isEditing: false,
+        eventTypes: dummyEventTypes,
+        initialData: {
+          ...dummyInitialData,
+          start: '2026-09-22T10:00',
+          end: '2026-09-21T09:00',
+        },
+      },
+    })
+
+    const saveBtn = wrapper.findAllComponents({ name: 'Button' }).find(b => b.text().includes('保存'))
+
+    await saveBtn?.trigger('click')
+    expect(wrapper.emitted('save')).toBeFalsy()
+    expect(wrapper.text()).toContain('終了日時は開始日時以降を指定してください')
+  })
+
+  it('hides edit/delete/save buttons when readonly is true', () => {
+    const wrapper = mount(ModalCalendarEvent, {
+      props: {
+        modelValue: true,
+        isEditing: true,
+        readonly: true,
+        eventTypes: dummyEventTypes,
+        initialData: dummyInitialData,
+      },
+    })
+
+    expect(wrapper.text()).toContain('予定の詳細')
+    const buttons = wrapper.findAllComponents({ name: 'Button' })
+
+    expect(buttons.find(b => b.text().includes('保存'))).toBeUndefined()
+    expect(buttons.find(b => b.props('icon') === 'trash-2')).toBeUndefined()
+    expect(buttons.find(b => b.text().includes('閉じる'))).toBeDefined()
+  })
 })
