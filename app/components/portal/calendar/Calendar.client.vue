@@ -18,12 +18,47 @@ import { type CalendarViewType, useCalendarOptions } from '~/composables/portal/
 import { useCurrentSite } from '~/composables/portal/useCurrentSite'
 import { useAuth } from '~/composables/useAuth'
 import { useToast } from '~/composables/useToast'
-import type { SwitchOption } from '~/types/components'
-import { formatToDateInputString } from '~/utils/date'
+import type { SwitchOption, TableColumn, TableSortOrder } from '~/types/components'
+import {
+  formatDateWithWeekday,
+  formatShortDateTime,
+  formatToDateInputString,
+} from '~/utils/date'
 import { parseToAppException } from '~/utils/errors'
 
 import ModalCalendarEvent from './ModalCalendarEvent.vue'
 import ModalCalendarTypeSettings from './ModalCalendarTypeSettings.vue'
+
+interface CalendarListRow {
+  id: string
+  title: string
+  start: string
+  end?: string
+  allDay: boolean
+  type: string
+  typeName: string
+  themeColor: string
+  isMilestone: boolean
+  isPast: boolean
+  isPersonal: boolean
+  startOnly: string
+  inclusiveEndOnly: string
+  dateLabel: string
+  timeLabel: string
+  remainingDays: number
+  countdownText: string
+  location: string | null
+  assignees: string[]
+  assigneesText: string | null
+  description: string | null
+  createdBy: string | null
+  updatedBy: string | null
+  createdAt?: string
+  updatedAt?: string
+  createdAtLabel: string
+  updatedAtLabel: string
+  sortPriority: number
+}
 
 const props = defineProps<{
   siteId: string
@@ -33,6 +68,23 @@ const VIEW_SWITCH_OPTIONS: SwitchOption[] = [
   { value: 'dayGridMonth', label: '月表示', icon: 'calendar' },
   { value: 'timeGridWeek', label: '週表示', icon: 'clock' },
   { value: 'listMonth', label: 'リスト', icon: 'list' },
+]
+
+const LIST_FILTER_OPTIONS: SwitchOption[] = [
+  { value: 'upcoming', label: '今日以降の予定' },
+  { value: 'all', label: 'すべての予定' },
+]
+
+const LIST_COLUMNS: TableColumn<CalendarListRow>[] = [
+  { key: 'start', label: '日時 / 期間', width: '190px', sortable: true },
+  { key: 'remainingDays', label: '残日数', width: '95px', align: 'center', sortable: true },
+  { key: 'typeName', label: '種別', width: '135px', sortable: true },
+  { key: 'title', label: '件名', minWidth: '180px', sortable: true },
+  { key: 'location', label: '場所・対象エリア', width: '140px', sortable: true, truncate: true },
+  { key: 'assigneesText', label: '担当者', width: '150px', truncate: true },
+  { key: 'description', label: '備考・メモ', minWidth: '180px', truncate: true },
+  { key: 'createdBy', label: '登録者', width: '140px', sortable: true },
+  { key: 'updatedBy', label: '更新者', width: '140px', sortable: true },
 ]
 
 const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const
@@ -77,6 +129,9 @@ const siteMembers = computed<string[]>(() => {
 const showSharedEvents = ref(true)
 const showPersonalEvents = ref(true)
 const selectedTypes = ref<string[]>([])
+const listFilterMode = ref<'upcoming' | 'all'>('upcoming')
+const listSortBy = ref<string | undefined>('start')
+const listSortOrder = ref<TableSortOrder>('asc')
 
 const isTypeSelected = (typeId: string): boolean => {
   return selectedTypes.value.includes(typeId)
@@ -132,6 +187,7 @@ const {
   currentTitle,
   currentView,
   currentYearMonth,
+  formattedEvents,
   calendarOptions,
   handlePrev,
   handleNext,
@@ -193,6 +249,151 @@ const {
   },
 })
 
+const formatEventTimeRangeLabel = (
+  startStr: string,
+  endStr: string | undefined,
+  allDay: boolean,
+  isMilestone: boolean,
+  startOnly: string,
+  inclusiveEndOnly: string,
+): string => {
+  if (allDay || isMilestone) {
+    if (inclusiveEndOnly > startOnly) {
+      return `〜 ${formatDateWithWeekday(inclusiveEndOnly)} (終日)`
+    }
+
+    return '終日'
+  }
+
+  const startTime = startStr.includes('T') ? (startStr.split('T')[1]?.slice(0, 5) || '') : ''
+  const endTime = endStr?.includes('T') ? (endStr.split('T')[1]?.slice(0, 5) || '') : ''
+
+  if (inclusiveEndOnly > startOnly) {
+    return `${startTime} 〜 ${formatDateWithWeekday(inclusiveEndOnly)} ${endTime}`.trim()
+  }
+
+  if (startTime && endTime) {
+    return `${startTime} - ${endTime}`
+  }
+
+  return startTime || '終日'
+}
+
+const sortedListRows = computed<CalendarListRow[]>(() => {
+  const rows: CalendarListRow[] = formattedEvents.value
+    .filter((evt) => {
+      if (listFilterMode.value === 'upcoming') {
+        return !evt.extendedProps.isPast
+      }
+
+      return true
+    })
+    .map((evt) => {
+      const props = evt.extendedProps
+      const allDay = Boolean(evt.allDay || props.isMilestone)
+      const assignees = Array.isArray(props.assignees) ? props.assignees : []
+
+      return {
+        id: evt.id,
+        title: evt.title,
+        start: evt.start,
+        end: evt.end,
+        allDay,
+        type: props.type || 'work',
+        typeName: props.typeName,
+        themeColor: props.themeColor,
+        isMilestone: props.isMilestone,
+        isPast: props.isPast,
+        isPersonal: props.isPersonal,
+        startOnly: props.startOnly,
+        inclusiveEndOnly: props.inclusiveEndOnly,
+        dateLabel: formatDateWithWeekday(props.startOnly),
+        timeLabel: formatEventTimeRangeLabel(
+          evt.start,
+          evt.end,
+          allDay,
+          props.isMilestone,
+          props.startOnly,
+          props.inclusiveEndOnly,
+        ),
+        remainingDays: props.remainingDays,
+        countdownText: props.countdownText,
+        location: props.location,
+        assignees,
+        assigneesText: assignees.length > 0 ? assignees.join(', ') : null,
+        description: props.description,
+        createdBy: props.createdBy,
+        updatedBy: props.updatedBy,
+        createdAt: props.createdAt,
+        updatedAt: props.updatedAt,
+        createdAtLabel: props.createdAt ? formatShortDateTime(props.createdAt) : '',
+        updatedAtLabel: props.updatedAt ? formatShortDateTime(props.updatedAt) : '',
+        sortPriority: props.sortPriority,
+      }
+    })
+
+  const key = listSortBy.value
+  const order = listSortOrder.value
+
+  if (!key || !order) {
+    return rows.sort((a, b) =>
+      a.start.localeCompare(b.start)
+      || (a.sortPriority - b.sortPriority)
+      || a.title.localeCompare(b.title, 'ja'),
+    )
+  }
+
+  const dir = order === 'asc' ? 1 : -1
+
+  return rows.sort((a, b) => {
+    if (key === 'remainingDays') {
+      const aVal = a.isPast ? Number.MAX_SAFE_INTEGER : a.remainingDays
+      const bVal = b.isPast ? Number.MAX_SAFE_INTEGER : b.remainingDays
+
+      if (aVal !== bVal) return (aVal - bVal) * dir
+    }
+    else if (key === 'start') {
+      const cmp = a.start.localeCompare(b.start)
+
+      if (cmp !== 0) return cmp * dir
+    }
+    else {
+      const k = key as keyof CalendarListRow
+      const aStr = String(a[k] ?? '')
+      const bStr = String(b[k] ?? '')
+      const cmp = aStr.localeCompare(bStr, 'ja')
+
+      if (cmp !== 0) return cmp * dir
+    }
+
+    return a.start.localeCompare(b.start)
+      || (a.sortPriority - b.sortPriority)
+      || a.title.localeCompare(b.title, 'ja')
+  })
+})
+
+const handleListRowClick = ({ row }: { row: CalendarListRow }) => {
+  openEditModal({
+    id: row.id,
+    title: row.title,
+    startStr: row.start,
+    endStr: row.end || row.start,
+    allDay: row.allDay,
+    extendedProps: {
+      type: row.type,
+      isMilestone: row.isMilestone,
+      isPersonal: row.isPersonal,
+      location: row.location,
+      description: row.description,
+      assignees: row.assignees,
+      createdBy: row.createdBy,
+      updatedBy: row.updatedBy,
+      createdAt: row.createdAt,
+      updatedAt: row.updatedAt,
+    },
+  })
+}
+
 const availableEventTypes = computed(() => {
   const custom = (settings.value?.eventTypes || []).filter(
     t => t.id !== 'milestone' && t.name !== 'マイルストーン',
@@ -235,7 +436,14 @@ const handleOpenCreateEvent = () => {
 }
 
 const onViewChange = (val: string | number) => {
+  if (val === 'listMonth') {
+    isYearMonthPickerOpen.value = false
+  }
   handleViewChange(val as CalendarViewType)
+}
+
+const onListFilterModeChange = (val: string | number) => {
+  listFilterMode.value = val as 'upcoming' | 'all'
 }
 
 const isTypeSettingsOpen = ref(false)
@@ -312,13 +520,18 @@ onUnmounted(() => {
   <div class="flex flex-col gap-panel-gap">
     <header class="calendar-toolbar flex flex-col gap-item-gap px-panel-pad py-2">
       <div class="flex flex-col md:flex-row items-center justify-between gap-item-gap">
-        <div class="flex items-center gap-inline-gap">
+        <div v-if="currentView !== 'listMonth'" class="flex items-center gap-inline-gap">
           <Button size="sm" icon="chevron-left" title="前へ" @click="handlePrev" />
           <Button size="sm" icon="chevron-right" title="次へ" @click="handleNext" />
           <Button size="sm" title="今日へ移動 (ショートカット: T)" @click="handleToday">今日へ移動</Button>
         </div>
+        <div v-else class="flex flex-wrap items-center gap-item-gap">
+          <Switch :model-value="listFilterMode" :options="LIST_FILTER_OPTIONS" size="sm" @change="onListFilterModeChange" />
+          <small>表示件数: <code>{{ sortedListRows.length }}件</code></small>
+        </div>
 
         <button
+          v-if="currentView !== 'listMonth'"
           type="button"
           class="panel is-interactive p-panel-pad-compact flex items-center gap-inline-gap order-first md:order-none"
           title="クリックして年月を直接指定"
@@ -329,6 +542,11 @@ onUnmounted(() => {
           </h3>
           <Icon :name="isYearMonthPickerOpen ? 'chevron-up' : 'chevron-down'" size="sm" />
         </button>
+        <div v-else class="order-first md:order-none">
+          <h3 class="toolbar-title">
+            {{ listFilterMode === 'upcoming' ? '今日以降の予定一覧' : 'すべての予定一覧' }}
+          </h3>
+        </div>
 
         <div class="flex flex-wrap items-center justify-end gap-item-gap">
           <Switch :model-value="currentView" :options="VIEW_SWITCH_OPTIONS" size="sm" @change="onViewChange" />
@@ -342,7 +560,7 @@ onUnmounted(() => {
       </div>
 
       <!-- 年月ダイレクトジャンプパネル -->
-      <div v-if="isYearMonthPickerOpen" class="panel is-sunken p-panel-pad-compact flex flex-col gap-inline-gap">
+      <div v-if="isYearMonthPickerOpen && currentView !== 'listMonth'" class="panel is-sunken p-panel-pad-compact flex flex-col gap-inline-gap">
         <div class="flex items-center justify-between gap-item-gap">
           <small>移動先の年月を選択</small>
           <div class="flex items-center gap-inline-gap">
@@ -427,7 +645,7 @@ onUnmounted(() => {
       </div>
     </header>
 
-    <div class="panel p-panel-pad-compact calendar-panel">
+    <div v-show="currentView !== 'listMonth'" class="panel p-panel-pad-compact calendar-panel">
       <FullCalendar ref="fullCalendarRef" :options="calendarOptions">
         <template #day-cell-content="arg">
           <Badge v-if="getCustomHolidayLabel(arg.date)" variant="amber" size="sm">
@@ -437,6 +655,64 @@ onUnmounted(() => {
         </template>
       </FullCalendar>
     </div>
+
+    <Table
+      v-if="currentView === 'listMonth'"
+      v-model:sort-by="listSortBy"
+      v-model:sort-order="listSortOrder"
+      :columns="LIST_COLUMNS"
+      :data="sortedListRows"
+      row-key="id"
+      interactive-row
+      empty-text="該当する予定がありません"
+      @row-click="handleListRowClick"
+    >
+      <template #cell-start="{ row }">
+        <div class="flex flex-col">
+          <span>{{ row.dateLabel }}</span>
+          <small>{{ row.timeLabel }}</small>
+        </div>
+      </template>
+
+      <template #cell-remainingDays="{ row }">
+        <small v-if="row.isPast">経過</small>
+        <Badge v-else-if="row.countdownText === '本日'" variant="danger" size="sm">
+          本日
+        </Badge>
+        <Badge v-else :variant="row.isMilestone ? 'danger' : 'teal'" size="sm">
+          {{ row.countdownText }}
+        </Badge>
+      </template>
+
+      <template #cell-typeName="{ row }">
+        <div class="flex items-center gap-inline-gap">
+          <span class="w-2 h-2 shrink-0" :style="{ backgroundColor: row.themeColor }" />
+          <span>{{ row.isMilestone ? '⚑ マイルストーン' : row.typeName }}</span>
+        </div>
+      </template>
+
+      <template #cell-title="{ row }">
+        <div class="flex items-center gap-inline-gap min-w-0">
+          <strong class="truncate">{{ row.title }}</strong>
+        </div>
+      </template>
+
+      <template #cell-createdBy="{ row }">
+        <div v-if="row.createdBy" class="flex flex-col">
+          <span>{{ row.createdBy }}</span>
+          <time v-if="row.createdAtLabel">{{ row.createdAtLabel }}</time>
+        </div>
+        <span v-else>-</span>
+      </template>
+
+      <template #cell-updatedBy="{ row }">
+        <div v-if="row.updatedBy" class="flex flex-col">
+          <span>{{ row.updatedBy }}</span>
+          <time v-if="row.updatedAtLabel">{{ row.updatedAtLabel }}</time>
+        </div>
+        <span v-else>-</span>
+      </template>
+    </Table>
 
     <ModalCalendarEvent
       v-model="isModalOpen"
@@ -623,24 +899,6 @@ onUnmounted(() => {
       }
     }
 
-    &[data-countdown] .fc-event-main::after {
-      content: attr(data-countdown);
-
-      flex-shrink: 0;
-
-      margin-left: auto;
-      padding: 0 var(--space-1);
-      border: var(--border-width-base) solid color-mix(in srgb, var(--glow-color) 60%, var(--color-border));
-
-      font-family: var(--font-mono);
-      font-size: var(--font-size-2xs);
-      font-weight: var(--font-weight-semibold);
-      font-variant-numeric: tabular-nums;
-      color: var(--color-text-main);
-
-      background-color: color-mix(in srgb, var(--glow-color) 24%, var(--surface-bg));
-    }
-
     &.is-past-milestone {
       opacity: 0.45;
     }
@@ -717,45 +975,6 @@ onUnmounted(() => {
       color: var(--theme-accent);
 
       background: var(--surface-bg);
-    }
-  }
-
-  /* リスト表示 */
-  :deep(.fc-list) {
-    border: none;
-
-    .fc-list-day-cushion {
-      padding: var(--space-1) var(--space-2);
-      color: var(--theme-accent);
-      background: var(--color-bg-hover);
-    }
-
-    .fc-list-event {
-      --glow-color: var(--event-color, var(--theme-accent));
-
-      @include state-interactive;
-
-      &.is-personal .fc-list-event-title a::before {
-        content: "[個人] ";
-
-        font-family: var(--font-mono);
-        font-size: var(--font-size-xs);
-        font-weight: var(--font-weight-semibold);
-        color: var(--glow-color);
-      }
-
-      &[data-countdown] .fc-list-event-title a::after {
-        content: " [" attr(data-countdown) "]";
-
-        font-family: var(--font-mono);
-        font-size: var(--font-size-xs);
-        font-weight: var(--font-weight-semibold);
-        color: var(--glow-color);
-      }
-
-      &:hover td {
-        background: color-mix(in srgb, var(--glow-color) 12%, var(--surface-bg-elevated));
-      }
     }
   }
 }

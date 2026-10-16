@@ -16,10 +16,9 @@ import jaLocale from '@fullcalendar/core/locales/ja'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import type { EventResizeDoneArg } from '@fullcalendar/interaction'
 import interactionPlugin from '@fullcalendar/interaction'
-import listPlugin from '@fullcalendar/list'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import type FullCalendar from '@fullcalendar/vue3'
-import { computed, type Ref, ref } from 'vue'
+import { computed, nextTick, type Ref, ref } from 'vue'
 
 import {
   type CalendarEvent,
@@ -49,6 +48,31 @@ interface UseCalendarOptionsConfig {
   onEventResize: (resizeInfo: EventResizeDoneArg) => Promise<void>
 }
 
+const getInclusiveEndDateStr = (
+  startStr: string,
+  endStr: string | undefined,
+  allDay: boolean | undefined,
+  isMilestone: boolean,
+): string => {
+  const startOnly = startStr.split('T')[0] || startStr
+
+  if (!endStr || isMilestone) return startOnly
+
+  const endOnly = endStr.split('T')[0] || startOnly
+
+  if (allDay && endOnly > startOnly) {
+    const d = new Date(endOnly)
+
+    if (!isNaN(d.getTime())) {
+      d.setDate(d.getDate() - 1)
+
+      return formatToDateInputString(d) || startOnly
+    }
+  }
+
+  return endOnly
+}
+
 /**
  * FullCalendar のオプション構成およびツールバー操作を管理するComposable
  */
@@ -75,7 +99,14 @@ export function useCalendarOptions({
   const handleToday = () => fullCalendarRef.value?.getApi().today()
   const handleViewChange = (view: CalendarViewType) => {
     currentView.value = view
-    fullCalendarRef.value?.getApi().changeView(view)
+    if (view !== 'listMonth') {
+      nextTick(() => {
+        const api = fullCalendarRef.value?.getApi()
+
+        api?.changeView(view)
+        api?.updateSize()
+      })
+    }
   }
 
   const gotoDate = (dateStr: string) => {
@@ -118,13 +149,22 @@ export function useCalendarOptions({
         const typeDef = availableTypes.find(t => t.id === evt.type)
         const color = isMilestone ? '#f85149' : (typeDef?.color || DEFAULT_COLOR)
         const startOnly = evt.start.split('T')[0] || evt.start
-        const isPastMilestone = isMilestone && startOnly < todayStr
-        const remainingDays = isMilestone && !isPastMilestone
-          ? calculateRemainingWorkingDays(todayStr, startOnly, holidayDays, customHolidays)
-          : -1
-        const countdownText = isMilestone && !isPastMilestone
-          ? (startOnly === todayStr ? '本日' : `あと${remainingDays}日`)
-          : ''
+        const inclusiveEndOnly = getInclusiveEndDateStr(evt.start, evt.end, evt.allDay, isMilestone)
+        const isPast = inclusiveEndOnly < todayStr
+        const isPastMilestone = isMilestone && isPast
+        const isTodayOrOngoing = startOnly <= todayStr && inclusiveEndOnly >= todayStr
+
+        const remainingDays = isPast
+          ? -1
+          : isTodayOrOngoing
+            ? 0
+            : calculateRemainingWorkingDays(todayStr, startOnly, holidayDays, customHolidays)
+
+        const countdownText = isPast
+          ? ''
+          : isTodayOrOngoing
+            ? '本日'
+            : `あと${remainingDays}日`
 
         const classNames: string[] = []
 
@@ -144,8 +184,11 @@ export function useCalendarOptions({
             typeName: isMilestone ? 'マイルストーン' : (typeDef?.name || '予定'),
             themeColor: color,
             isMilestone,
+            isPast,
             isPastMilestone,
             isPersonal,
+            startOnly,
+            inclusiveEndOnly,
             remainingDays,
             countdownText,
             location: evt.location || null,
@@ -166,7 +209,7 @@ export function useCalendarOptions({
     const customHolidays = settings.value?.customHolidays ?? []
 
     return {
-      plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin],
+      plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
       initialView: 'dayGridMonth',
       locale: jaLocale,
       events: formattedEvents.value,
@@ -197,7 +240,9 @@ export function useCalendarOptions({
       moreLinkContent: (args: { num: number }) => `+${args.num}件`,
       datesSet: (arg: { view: { title: string, type: string, currentStart: Date } }) => {
         currentTitle.value = arg.view.title
-        currentView.value = arg.view.type as CalendarViewType
+        if (currentView.value !== 'listMonth') {
+          currentView.value = arg.view.type as CalendarViewType
+        }
         if (arg.view.currentStart) {
           const y = arg.view.currentStart.getFullYear()
           const m = String(arg.view.currentStart.getMonth() + 1).padStart(2, '0')
@@ -251,20 +296,6 @@ export function useCalendarOptions({
         }
 
         const countdownText = props.countdownText as string | undefined
-        const mainEl = info.el.querySelector('.fc-event-main')
-        const listLinkEl = info.el.querySelector('.fc-list-event-title a')
-
-        if (countdownText) {
-          info.el.setAttribute('data-countdown', countdownText)
-          mainEl?.setAttribute('data-countdown', countdownText)
-          listLinkEl?.setAttribute('data-countdown', countdownText)
-        }
-        else {
-          info.el.removeAttribute('data-countdown')
-          mainEl?.removeAttribute('data-countdown')
-          listLinkEl?.removeAttribute('data-countdown')
-        }
-
         const scopeLabel = props.isPersonal ? '個人' : '共有'
         const tooltipLines: string[] = [
           `[${scopeLabel} / ${props.typeName || '予定'}] ${info.event.title}${countdownText ? ` (${countdownText})` : ''}`,
@@ -302,6 +333,7 @@ export function useCalendarOptions({
     currentTitle,
     currentView,
     currentYearMonth,
+    formattedEvents,
     calendarOptions,
     handlePrev,
     handleNext,
