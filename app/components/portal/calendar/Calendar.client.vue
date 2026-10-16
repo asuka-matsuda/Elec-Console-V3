@@ -193,11 +193,13 @@ const {
   },
 })
 
-const availableEventTypes = computed(() =>
-  settings.value?.eventTypes?.length
-    ? settings.value.eventTypes
-    : DEFAULT_CALENDAR_EVENT_TYPES,
-)
+const availableEventTypes = computed(() => {
+  const custom = (settings.value?.eventTypes || []).filter(
+    t => t.id !== 'milestone' && t.name !== 'マイルストーン',
+  )
+
+  return custom.length > 0 ? custom : DEFAULT_CALENDAR_EVENT_TYPES
+})
 
 const todayStr = computed(() => formatToDateInputString(getAccurateNow()))
 

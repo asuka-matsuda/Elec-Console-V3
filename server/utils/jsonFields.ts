@@ -142,7 +142,7 @@ export function parseEventTypes(raw?: string | null): CalendarEventType[] {
             color,
           }
         })
-        .filter(item => item.name.length > 0)
+        .filter(item => item.name.length > 0 && item.id !== 'milestone' && item.name !== 'マイルストーン')
     }
 
     return []
