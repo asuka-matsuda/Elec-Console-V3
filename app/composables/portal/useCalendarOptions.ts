@@ -251,12 +251,18 @@ export function useCalendarOptions({
         }
 
         const countdownText = props.countdownText as string | undefined
+        const mainEl = info.el.querySelector('.fc-event-main')
+        const listLinkEl = info.el.querySelector('.fc-list-event-title a')
 
         if (countdownText) {
           info.el.setAttribute('data-countdown', countdownText)
+          mainEl?.setAttribute('data-countdown', countdownText)
+          listLinkEl?.setAttribute('data-countdown', countdownText)
         }
         else {
           info.el.removeAttribute('data-countdown')
+          mainEl?.removeAttribute('data-countdown')
+          listLinkEl?.removeAttribute('data-countdown')
         }
 
         const scopeLabel = props.isPersonal ? '個人' : '共有'

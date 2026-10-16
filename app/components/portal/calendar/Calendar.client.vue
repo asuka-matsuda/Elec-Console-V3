@@ -628,6 +628,7 @@ onUnmounted(() => {
 
       flex-shrink: 0;
 
+      margin-left: auto;
       padding: 0 var(--space-1);
       border: var(--border-width-base) solid color-mix(in srgb, var(--glow-color) 60%, var(--color-border));
 
