@@ -5,7 +5,7 @@
  * FullCalendar（月表示・24時間週タイムライン・リスト表示）とツールバー、フィルタ、各種モーダルを統合します。
  */
 import FullCalendar from '@fullcalendar/vue3'
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 
 import {
   DEFAULT_CALENDAR_EVENT_TYPES,
@@ -62,6 +62,10 @@ interface CalendarListRow {
 
 const props = defineProps<{
   siteId: string
+}>()
+
+const emit = defineEmits<{
+  (e: 'viewChange', view: CalendarViewType): void
 }>()
 
 const VIEW_SWITCH_OPTIONS: SwitchOption[] = [
@@ -506,6 +510,14 @@ const handleKeydown = (e: KeyboardEvent) => {
     handleOpenCreateEvent()
   }
 }
+
+watch(
+  currentView,
+  (val) => {
+    emit('viewChange', val)
+  },
+  { immediate: true },
+)
 
 onMounted(() => {
   window.addEventListener('keydown', handleKeydown)

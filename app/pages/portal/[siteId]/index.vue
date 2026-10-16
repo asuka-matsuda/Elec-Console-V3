@@ -9,12 +9,14 @@ import { computed, onMounted, ref } from 'vue'
 
 import { useHead, useNuxtApp, useRoute } from '#app'
 import type { CircuitsResponse } from '#shared/types/circuit'
+import type { CalendarViewType } from '~/composables/portal/useCalendarOptions'
 import { useCurrentSite } from '~/composables/portal/useCurrentSite'
 import { useTodo } from '~/composables/portal/useTodo'
 import { CircuitsRepository } from '~/utils/db'
 
 const route = useRoute()
 const siteId = computed(() => route.params.siteId as string)
+const calendarView = ref<CalendarViewType>('dayGridMonth')
 
 const {
   site: currentSite,
@@ -75,10 +77,13 @@ useHead({
     </header>
     <hr class="divider">
 
-    <div class="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-section-gap items-start">
-      <section class="min-h-[500px]">
+    <div
+      class="grid grid-cols-1 gap-section-gap items-start"
+      :class="{ 'lg:grid-cols-[2fr_1fr]': calendarView !== 'listMonth' }"
+    >
+      <section class="min-h-[500px] min-w-0">
         <ClientOnly>
-          <PortalCalendar :site-id="siteId" />
+          <PortalCalendar :site-id="siteId" @view-change="calendarView = $event" />
           <template #fallback>
             <div class="panel flex flex-col gap-panel-gap min-h-[500px]">
               <div class="flex items-center justify-between">
@@ -97,7 +102,7 @@ useHead({
         </ClientOnly>
       </section>
 
-      <aside class="flex flex-col gap-panel-gap">
+      <aside v-if="calendarView !== 'listMonth'" class="flex flex-col gap-panel-gap">
         <ClientOnly>
           <section class="panel flex flex-col gap-form-row-gap">
             <header class="flex items-center gap-item-gap">
