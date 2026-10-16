@@ -192,7 +192,7 @@ defineExpose({
 
 <style scoped lang="scss">
 .custom-select {
-  --select-height: 40px;
+  --select-height: 32px;
   --select-font-size: var(--font-size-sm);
   --select-padding-x: var(--space-3);
   --select-gap: var(--space-2);
@@ -208,26 +208,26 @@ defineExpose({
     --glow-color: var(--color-status-danger);
   }
 
-  // --- サイズ展開 (Geist準拠: sm 32px / md 40px / lg 48px) ---
+  // --- サイズ展開 (高密度コンソール基準: sm 26px / md 32px / lg 38px) ---
   &.select--sm {
-    --select-height: 32px;
+    --select-height: 26px;
     --select-font-size: var(--font-size-xs);
     --select-padding-x: var(--space-2);
     --select-gap: var(--space-1);
   }
 
   &.select--md {
-    --select-height: 40px;
+    --select-height: 32px;
     --select-font-size: var(--font-size-sm);
     --select-padding-x: var(--space-3);
     --select-gap: var(--space-2);
   }
 
   &.select--lg {
-    --select-height: 48px;
+    --select-height: 38px;
     --select-font-size: var(--font-size-base);
     --select-padding-x: var(--space-4);
-    --select-gap: var(--space-3);
+    --select-gap: var(--space-2);
   }
 
   &[data-disabled="true"] {
@@ -299,7 +299,7 @@ defineExpose({
   inset: unset;
 
   margin: 0;
-  padding: var(--space-1);
+  padding: var(--space-0-5);
   border: var(--border-width-base) solid var(--dropdown-border-color);
   border-radius: 0; // 直角規約
 
@@ -355,8 +355,8 @@ defineExpose({
   overflow: hidden;
   gap: var(--space-2);
 
-  padding-block: var(--space-2);
-  padding-inline: var(--space-3);
+  padding-block: var(--space-1);
+  padding-inline: var(--space-2);
   border-radius: 0; // 直角規約
 
   font-size: inherit;

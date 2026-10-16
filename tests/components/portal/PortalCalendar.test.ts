@@ -253,4 +253,41 @@ describe('Calendar.client.vue', () => {
     })
     expect(resizeRevert).toHaveBeenCalled()
   })
+
+  it('supports shared/personal calendar checkboxes and multi-select event type filter chips', async () => {
+    const wrapper = mount(CalendarClient, {
+      props: { siteId: 'site-1' },
+      global: {
+        stubs: {
+          Panel: true,
+          ModalCalendarEvent: true,
+          ModalCalendarTypeSettings: true,
+        },
+      },
+    })
+
+    // 共有予定・個人予定のチェックボックスが表示されていること
+    expect(wrapper.text()).toContain('共有の予定（現場）')
+    expect(wrapper.text()).toContain('個人の予定（マイ予定）')
+
+    // 種別チップを複数同時選択できること（マイルストーン + 現場作業）
+    const milestoneChip = wrapper.findAll('button').find(b => b.text() === 'マイルストーン')
+    const workChip = wrapper.findAll('button').find(b => b.text() === '現場作業')
+    const allChip = wrapper.findAll('button').find(b => b.text() === 'すべて')
+
+    expect(allChip?.classes()).toContain('is-active')
+
+    await milestoneChip!.trigger('click')
+    await workChip!.trigger('click')
+
+    expect(milestoneChip?.classes()).toContain('is-active')
+    expect(workChip?.classes()).toContain('is-active')
+    expect(allChip?.classes()).not.toContain('is-active')
+
+    // 「すべて」をクリックすると選択解除されること
+    await allChip!.trigger('click')
+    expect(allChip?.classes()).toContain('is-active')
+    expect(milestoneChip?.classes()).not.toContain('is-active')
+    expect(workChip?.classes()).not.toContain('is-active')
+  })
 })

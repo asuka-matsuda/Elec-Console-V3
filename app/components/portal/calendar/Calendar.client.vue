@@ -74,7 +74,33 @@ const siteMembers = computed<string[]>(() => {
   return Array.from(names)
 })
 
-const activeTypeFilter = ref<string>('all')
+const showSharedEvents = ref(true)
+const showPersonalEvents = ref(true)
+const selectedTypes = ref<string[]>([])
+
+const isTypeSelected = (typeId: string): boolean => {
+  return selectedTypes.value.includes(typeId)
+}
+
+const toggleTypeFilter = (typeId: string) => {
+  const idx = selectedTypes.value.indexOf(typeId)
+
+  if (idx === -1) {
+    selectedTypes.value = [...selectedTypes.value, typeId]
+  }
+  else {
+    selectedTypes.value = selectedTypes.value.filter(id => id !== typeId)
+  }
+}
+
+const clearTypeFilter = () => {
+  selectedTypes.value = []
+}
+
+// 閲覧専用ロール時、または「個人の予定」のみにチェックが入っている時は新規作成の初期値を「個人予定」にする
+const shouldDefaultToPersonal = computed(() =>
+  isReadonly.value || (!showSharedEvents.value && showPersonalEvents.value),
+)
 
 const {
   events,
@@ -115,18 +141,25 @@ const {
 } = useCalendarOptions({
   events,
   settings,
-  activeTypeFilter,
+  selectedTypes,
+  showSharedEvents,
+  showPersonalEvents,
   readonly: isReadonly,
   onSelectDate: (selectInfo) => {
-    if (isReadonly.value) return
-    openCreateModal(selectInfo.startStr, selectInfo.endStr, selectInfo.allDay)
+    openCreateModal(
+      selectInfo.startStr,
+      selectInfo.endStr,
+      selectInfo.allDay,
+      false,
+      shouldDefaultToPersonal.value,
+    )
     selectInfo.view.calendar.unselect()
   },
   onEventClick: (clickInfo) => {
     openEditModal(clickInfo.event)
   },
   onEventDrop: async (dropInfo) => {
-    if (isReadonly.value) {
+    if (isReadonly.value && !dropInfo.event.extendedProps?.isPersonal) {
       dropInfo.revert()
 
       return
@@ -143,7 +176,7 @@ const {
     }
   },
   onEventResize: async (resizeInfo) => {
-    if (isReadonly.value) {
+    if (isReadonly.value && !resizeInfo.event.extendedProps?.isPersonal) {
       resizeInfo.revert()
 
       return
@@ -196,7 +229,7 @@ const handleSelectYearMonth = (month: number) => {
 }
 
 const handleOpenCreateEvent = () => {
-  openCreateModal(todayStr.value, todayStr.value, true, false)
+  openCreateModal(todayStr.value, todayStr.value, true, false, shouldDefaultToPersonal.value)
 }
 
 const onViewChange = (val: string | number) => {
@@ -258,7 +291,7 @@ const handleKeydown = (e: KeyboardEvent) => {
     e.preventDefault()
     handleViewChange('listMonth')
   }
-  else if ((key === 'c' || key === 'n') && !isReadonly.value) {
+  else if (key === 'c' || key === 'n') {
     e.preventDefault()
     handleOpenCreateEvent()
   }
@@ -300,7 +333,7 @@ onUnmounted(() => {
 
           <Button v-if="!isReadonly" size="sm" icon="settings" @click="isTypeSettingsOpen = true">種別設定を開く</Button>
 
-          <Button v-if="!isReadonly" variant="primary" size="sm" icon="plus" title="新しい予定を追加 (ショートカット: C)" @click="handleOpenCreateEvent">
+          <Button variant="primary" size="sm" icon="plus" title="新しい予定を追加 (ショートカット: C)" @click="handleOpenCreateEvent">
             予定を追加
           </Button>
         </div>
@@ -330,48 +363,65 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <!-- 種別・マイルストーン絞り込みバー -->
-      <div class="flex flex-wrap items-center gap-inline-gap pt-1 filter-bar">
-        <small class="flex items-center gap-micro-gap shrink-0">
-          <Icon name="filter" size="sm" />
-          <span>表示:</span>
-        </small>
-        <ul class="flex flex-wrap items-center gap-micro-gap">
-          <li>
-            <button
-              type="button"
-              class="panel is-interactive p-panel-pad-compact flex items-center gap-micro-gap"
-              :class="{ 'is-active': activeTypeFilter === 'all' }"
-              @click="activeTypeFilter = 'all'"
-            >
-              <small>すべて</small>
-            </button>
-          </li>
-          <li>
-            <button
-              type="button"
-              class="panel is-interactive p-panel-pad-compact flex items-center gap-micro-gap"
-              :class="{ 'is-active': activeTypeFilter === 'milestone' }"
-              :style="{ '--theme-accent': MILESTONE_COLOR, '--glow-color': MILESTONE_COLOR }"
-              @click="activeTypeFilter = activeTypeFilter === 'milestone' ? 'all' : 'milestone'"
-            >
-              <span class="w-2 h-2 shrink-0" :style="{ backgroundColor: MILESTONE_COLOR }" />
-              <small>マイルストーン</small>
-            </button>
-          </li>
-          <li v-for="t in availableEventTypes" :key="t.id">
-            <button
-              type="button"
-              class="panel is-interactive p-panel-pad-compact flex items-center gap-micro-gap"
-              :class="{ 'is-active': activeTypeFilter === t.id }"
-              :style="{ '--theme-accent': t.color, '--glow-color': t.color }"
-              @click="activeTypeFilter = activeTypeFilter === t.id ? 'all' : t.id"
-            >
-              <span class="w-2 h-2 shrink-0" :style="{ backgroundColor: t.color }" />
-              <small>{{ t.name }}</small>
-            </button>
-          </li>
-        </ul>
+      <!-- 予定表レイヤー（共有・個人）および種別マルチセレクト絞り込みバー -->
+      <div class="flex flex-col gap-inline-gap pt-1 filter-bar">
+        <div class="flex flex-wrap items-center gap-item-gap">
+          <small class="flex items-center gap-micro-gap shrink-0">
+            <Icon name="calendar" size="sm" />
+            <span>予定表:</span>
+          </small>
+          <ul class="flex flex-wrap items-center gap-item-gap">
+            <li>
+              <Checkbox v-model="showSharedEvents" label="共有の予定（現場）" />
+            </li>
+            <li>
+              <Checkbox v-model="showPersonalEvents" label="個人の予定（マイ予定）" />
+            </li>
+          </ul>
+        </div>
+
+        <div class="flex items-start gap-inline-gap">
+          <small class="flex items-center gap-micro-gap shrink-0 py-0.5">
+            <Icon name="filter" size="sm" />
+            <span>種別（複数選択可）:</span>
+          </small>
+          <ul class="flex flex-wrap items-center gap-micro-gap flex-1">
+            <li>
+              <button
+                type="button"
+                class="panel is-interactive p-panel-pad-compact flex items-center gap-micro-gap"
+                :class="{ 'is-active': selectedTypes.length === 0 }"
+                @click="clearTypeFilter"
+              >
+                <small>すべて</small>
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                class="panel is-interactive p-panel-pad-compact flex items-center gap-micro-gap"
+                :class="{ 'is-active': isTypeSelected('milestone') }"
+                :style="{ '--theme-accent': MILESTONE_COLOR, '--glow-color': MILESTONE_COLOR }"
+                @click="toggleTypeFilter('milestone')"
+              >
+                <span class="w-2 h-2 shrink-0" :style="{ backgroundColor: MILESTONE_COLOR }" />
+                <small>マイルストーン</small>
+              </button>
+            </li>
+            <li v-for="t in availableEventTypes" :key="t.id">
+              <button
+                type="button"
+                class="panel is-interactive p-panel-pad-compact flex items-center gap-micro-gap"
+                :class="{ 'is-active': isTypeSelected(t.id) }"
+                :style="{ '--theme-accent': t.color, '--glow-color': t.color }"
+                @click="toggleTypeFilter(t.id)"
+              >
+                <span class="w-2 h-2 shrink-0" :style="{ backgroundColor: t.color }" />
+                <small>{{ t.name }}</small>
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
     </header>
 
@@ -406,6 +456,10 @@ onUnmounted(() => {
 /* stylelint-disable property-disallowed-list -- FullCalendarライブラリ動的生成DOMの配置スタイリングのため例外許可 */
 .filter-bar {
   border-top: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 40%, transparent);
+
+  button.panel {
+    padding: var(--space-0-5) var(--space-2);
+  }
 }
 
 .calendar-panel {
@@ -552,6 +606,21 @@ onUnmounted(() => {
       }
     }
 
+    &.is-personal {
+      border-style: dashed;
+
+      .fc-event-title::before {
+        content: "[個人] ";
+        font-family: var(--font-mono);
+        font-size: var(--font-size-2xs);
+        color: var(--glow-color);
+      }
+
+      &.is-milestone .fc-event-title::before {
+        content: "⚑ [個人] ";
+      }
+    }
+
     &[data-countdown] .fc-event-main::after {
       content: attr(data-countdown);
 
@@ -663,6 +732,15 @@ onUnmounted(() => {
 
       @include state-interactive;
 
+      &.is-personal .fc-list-event-title a::before {
+        content: "[個人] ";
+
+        font-family: var(--font-mono);
+        font-size: var(--font-size-xs);
+        font-weight: var(--font-weight-semibold);
+        color: var(--glow-color);
+      }
+
       &[data-countdown] .fc-list-event-title a::after {
         content: " [" attr(data-countdown) "]";
 
@@ -682,6 +760,10 @@ onUnmounted(() => {
 .calendar-toolbar {
   border: var(--border-width-base) solid color-mix(in srgb, var(--color-border) 30%, transparent);
   background-color: var(--surface-bg);
+
+  button.panel {
+    padding: var(--space-0-5) var(--space-2);
+  }
 }
 
 .toolbar-title {

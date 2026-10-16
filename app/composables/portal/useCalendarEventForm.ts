@@ -47,6 +47,7 @@ export function useCalendarEventForm({
     end: '',
     allDay: false,
     isMilestone: false,
+    isPersonal: false,
     location: '',
     description: '',
     assignees: [],
@@ -61,6 +62,7 @@ export function useCalendarEventForm({
     endStr: string,
     allDay: boolean,
     isMilestone = false,
+    isPersonal = false,
   ) => {
     isEditing.value = false
     editingEventId.value = null
@@ -89,6 +91,7 @@ export function useCalendarEventForm({
       end: finalEnd || finalStart,
       allDay: isMilestone ? true : allDay,
       isMilestone,
+      isPersonal,
       location: '',
       description: '',
       assignees: [],
@@ -109,6 +112,7 @@ export function useCalendarEventForm({
     extendedProps: {
       type?: string
       isMilestone?: boolean
+      isPersonal?: boolean
       location?: string | null
       description?: string | null
       assignees?: string[]
@@ -122,6 +126,7 @@ export function useCalendarEventForm({
     editingEventId.value = calEvent.id
 
     const isMilestone = Boolean(calEvent.extendedProps?.isMilestone)
+    const isPersonal = Boolean(calEvent.extendedProps?.isPersonal)
     const rawStart = calEvent.startStr
     const rawEnd = calEvent.endStr
 
@@ -149,6 +154,7 @@ export function useCalendarEventForm({
       end: finalEnd || finalStart,
       allDay: isMilestone ? true : calEvent.allDay,
       isMilestone,
+      isPersonal,
       location: calEvent.extendedProps?.location || '',
       description: calEvent.extendedProps?.description || '',
       assignees: Array.isArray(calEvent.extendedProps?.assignees)
@@ -174,6 +180,7 @@ export function useCalendarEventForm({
       end: startOnly,
       allDay: true,
       isMilestone: Boolean(evt.isMilestone),
+      isPersonal: Boolean(evt.isPersonal),
       location: evt.location || '',
       description: evt.description || '',
       assignees: Array.isArray(evt.assignees) ? [...evt.assignees] : [],
@@ -208,6 +215,7 @@ export function useCalendarEventForm({
 
   const saveEvent = async (savedData: EventFormData) => {
     const isMilestone = Boolean(savedData.isMilestone)
+    const isPersonal = Boolean(savedData.isPersonal)
     const normalizedStart = isMilestone
       ? (savedData.start.split('T')[0] || savedData.start)
       : savedData.start
@@ -232,9 +240,10 @@ export function useCalendarEventForm({
       end: finalEnd,
       allDay: isMilestone ? true : savedData.allDay,
       isMilestone,
+      isPersonal,
       location: savedData.location?.trim() || null,
       description: savedData.description?.trim() || null,
-      assignees: Array.isArray(savedData.assignees) ? savedData.assignees : [],
+      assignees: isPersonal ? [] : (Array.isArray(savedData.assignees) ? savedData.assignees : []),
     }
 
     try {

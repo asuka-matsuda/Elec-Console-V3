@@ -119,7 +119,7 @@ const handleSelect = (item: TabItem) => {
 }
 
 .tabs-sm {
-  height: 32px;
+  height: 26px;
 
   .tabs-item {
     padding: 0 var(--space-2);
@@ -128,7 +128,7 @@ const handleSelect = (item: TabItem) => {
 }
 
 .tabs-md {
-  height: 40px;
+  height: 32px;
 
   .tabs-item {
     padding: 0 var(--space-3);
@@ -137,7 +137,7 @@ const handleSelect = (item: TabItem) => {
 }
 
 .tabs-lg {
-  height: 48px;
+  height: 38px;
 
   .tabs-item {
     padding: 0 var(--space-4);

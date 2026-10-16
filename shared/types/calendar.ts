@@ -8,7 +8,9 @@
  */
 export interface CalendarEvent {
   id: string
-  siteId: string
+  siteId?: string | null
+  userId?: string | null
+  isPersonal?: boolean
   title: string
   start: string
   end?: string
@@ -51,6 +53,8 @@ export interface EventFormData {
   allDay: boolean
   /** マイルストーンフラグ */
   isMilestone?: boolean
+  /** 個人予定フラグ（true=個人に紐づくマイ予定、false=現場共有予定） */
+  isPersonal?: boolean
   /** 場所・対象エリア */
   location?: string
   /** 備考・詳細メモ */

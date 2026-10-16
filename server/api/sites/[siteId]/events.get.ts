@@ -16,7 +16,7 @@ import { parseEventAssignees } from '../../../utils/jsonFields'
 import { prisma } from '../../../utils/prisma'
 
 export default defineEventHandler(async (event) => {
-  await requireSiteAccess(event)
+  const user = await requireSiteAccess(event)
 
   const siteId = getRouterParam(event, 'siteId')
 
@@ -28,11 +28,17 @@ export default defineEventHandler(async (event) => {
   }
 
   const rows = await prisma.event.findMany({
-    where: { siteId },
+    where: {
+      OR: [
+        { siteId, isPersonal: false },
+        { userId: user.id, isPersonal: true },
+      ],
+    },
   })
 
   return rows.map(row => ({
     ...row,
+    isPersonal: Boolean(row.isPersonal),
     assignees: parseEventAssignees(row.assignees),
     isMilestone: Boolean(row.isMilestone || row.type === 'milestone'),
   }))

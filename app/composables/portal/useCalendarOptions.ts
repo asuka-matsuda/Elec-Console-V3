@@ -39,7 +39,9 @@ export type CalendarViewType = 'dayGridMonth' | 'timeGridWeek' | 'listMonth'
 interface UseCalendarOptionsConfig {
   events: Ref<CalendarEvent[]>
   settings: Ref<CalendarSettings | null>
-  activeTypeFilter?: Ref<string>
+  selectedTypes?: Ref<string[]>
+  showSharedEvents?: Ref<boolean>
+  showPersonalEvents?: Ref<boolean>
   readonly?: Ref<boolean>
   onSelectDate: (selectInfo: DateSelectArg) => void
   onEventClick: (clickInfo: EventClickArg) => void
@@ -53,7 +55,9 @@ interface UseCalendarOptionsConfig {
 export function useCalendarOptions({
   events,
   settings,
-  activeTypeFilter,
+  selectedTypes,
+  showSharedEvents,
+  showPersonalEvents,
   readonly,
   onSelectDate,
   onEventClick,
@@ -89,20 +93,28 @@ export function useCalendarOptions({
     const availableTypes = settings.value?.eventTypes?.length
       ? settings.value.eventTypes
       : DEFAULT_CALENDAR_EVENT_TYPES
-    const filterVal = activeTypeFilter?.value || 'all'
+    const selectedTypeList = selectedTypes?.value ?? []
+    const includeShared = showSharedEvents?.value ?? true
+    const includePersonal = showPersonalEvents?.value ?? true
+    const isReadonly = Boolean(readonly?.value)
 
     return events.value
       .filter((evt) => {
-        if (!filterVal || filterVal === 'all') return true
+        const isPersonal = Boolean(evt.isPersonal)
+
+        if (isPersonal && !includePersonal) return false
+        if (!isPersonal && !includeShared) return false
+
+        if (selectedTypeList.length === 0) return true
         const isMilestone = Boolean(evt.isMilestone || evt.type === 'milestone')
 
-        if (filterVal === 'milestone') return isMilestone
-        if (isMilestone) return false
+        if (isMilestone) return selectedTypeList.includes('milestone')
 
-        return evt.type === filterVal
+        return Boolean(evt.type && selectedTypeList.includes(evt.type))
       })
       .map((evt) => {
         const isMilestone = Boolean(evt.isMilestone || evt.type === 'milestone')
+        const isPersonal = Boolean(evt.isPersonal)
         const typeDef = availableTypes.find(t => t.id === evt.type)
         const color = isMilestone ? '#f85149' : (typeDef?.color || DEFAULT_COLOR)
         const startOnly = evt.start.split('T')[0] || evt.start
@@ -118,9 +130,11 @@ export function useCalendarOptions({
 
         if (isMilestone) classNames.push('is-milestone')
         if (isPastMilestone) classNames.push('is-past-milestone')
+        if (isPersonal) classNames.push('is-personal')
 
         return {
           ...evt,
+          editable: !isReadonly || isPersonal,
           classNames,
           borderColor: color,
           backgroundColor: 'transparent',
@@ -131,6 +145,7 @@ export function useCalendarOptions({
             themeColor: color,
             isMilestone,
             isPastMilestone,
+            isPersonal,
             remainingDays,
             countdownText,
             location: evt.location || null,
@@ -149,7 +164,6 @@ export function useCalendarOptions({
   const calendarOptions = computed<CalendarOptions>(() => {
     const holidayDays = settings.value?.holidayDays ?? [0, 6]
     const customHolidays = settings.value?.customHolidays ?? []
-    const isReadonly = Boolean(readonly?.value)
 
     return {
       plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin],
@@ -175,8 +189,8 @@ export function useCalendarOptions({
         meridiem: false,
         hour12: false,
       },
-      editable: !isReadonly,
-      selectable: !isReadonly,
+      editable: true,
+      selectable: true,
       headerToolbar: false,
       dayMaxEvents: 3,
       moreLinkClick: 'popover' as const,
@@ -245,8 +259,9 @@ export function useCalendarOptions({
           info.el.removeAttribute('data-countdown')
         }
 
+        const scopeLabel = props.isPersonal ? '個人' : '共有'
         const tooltipLines: string[] = [
-          `[${props.typeName || '予定'}] ${info.event.title}${countdownText ? ` (${countdownText})` : ''}`,
+          `[${scopeLabel} / ${props.typeName || '予定'}] ${info.event.title}${countdownText ? ` (${countdownText})` : ''}`,
         ]
 
         if (props.location) {

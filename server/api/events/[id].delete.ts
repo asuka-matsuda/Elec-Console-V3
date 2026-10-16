@@ -10,7 +10,7 @@ import { defineEventHandler, getRouterParam } from 'h3'
 
 import { ErrorCode } from '#shared/types/errors'
 
-import { requireSiteRole } from '../../utils/auth'
+import { requireAuthUser, requireSiteRole } from '../../utils/auth'
 import { createAppError } from '../../utils/error'
 import { prisma } from '../../utils/prisma'
 
@@ -35,8 +35,20 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // 現場アクセス権・ロール（admin / worker）および現場有効状態を検証
-  await requireSiteRole(event, ['admin', 'worker'], existingEvent.siteId)
+  if (existingEvent.isPersonal) {
+    const user = await requireAuthUser(event)
+
+    if (existingEvent.userId !== user.id) {
+      throw createAppError({
+        code: ErrorCode.AUTH_FORBIDDEN_ACTION,
+        message: '他のユーザーの個人予定は削除できません。',
+      })
+    }
+  }
+  else {
+    // 現場アクセス権・ロール（admin / worker）および現場有効状態を検証
+    await requireSiteRole(event, ['admin', 'worker'], existingEvent.siteId || '')
+  }
 
   await prisma.event.delete({
     where: { id },

@@ -67,9 +67,9 @@ const computedSpinnerSize = computed(() => {
   --glow-color: var(--btn-secondary-border-hover);
 
   // サイズ変数（デフォルトは md）
-  --btn-height: 40px;
+  --btn-height: 32px;
   --btn-font-size: var(--font-size-sm);
-  --btn-padding-x: var(--space-4);
+  --btn-padding-x: var(--space-3);
   --btn-gap: var(--space-2);
 
   @include control-glow-tokens;
@@ -116,26 +116,26 @@ const computedSpinnerSize = computed(() => {
     box-shadow: var(--shadow-glow-active);
   }
 
-  // --- サイズ展開 (Geist 32px / 40px / 48px) ---
+  // --- サイズ展開 (高密度コンソール基準: sm 26px / md 32px / lg 38px) ---
   &--sm {
-    --btn-height: 32px;
+    --btn-height: 26px;
     --btn-font-size: var(--font-size-xs);
+    --btn-padding-x: var(--space-2);
+    --btn-gap: var(--space-1);
+  }
+
+  &--md {
+    --btn-height: 32px;
+    --btn-font-size: var(--font-size-sm);
     --btn-padding-x: var(--space-3);
     --btn-gap: var(--space-2);
   }
 
-  &--md {
-    --btn-height: 40px;
-    --btn-font-size: var(--font-size-sm);
+  &--lg {
+    --btn-height: 38px;
+    --btn-font-size: var(--font-size-base);
     --btn-padding-x: var(--space-4);
     --btn-gap: var(--space-2);
-  }
-
-  &--lg {
-    --btn-height: 48px;
-    --btn-font-size: var(--font-size-base);
-    --btn-padding-x: var(--space-6);
-    --btn-gap: var(--space-3);
   }
 
   // --- バリアント展開 ---

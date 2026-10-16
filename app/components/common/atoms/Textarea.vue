@@ -112,22 +112,22 @@ defineExpose({
 
   // --- Sizes ---
   &.textarea--sm {
-    min-height: 64px;
+    min-height: 52px;
     padding-block: var(--space-1);
     padding-inline: var(--space-2);
     font-size: var(--font-size-xs);
   }
 
   &.textarea--md {
-    min-height: 80px;
-    padding-block: var(--space-2);
+    min-height: 64px;
+    padding-block: var(--space-1);
     padding-inline: var(--space-3);
     font-size: var(--font-size-sm);
   }
 
   &.textarea--lg {
-    min-height: 96px;
-    padding-block: var(--space-3);
+    min-height: 80px;
+    padding-block: var(--space-2);
     padding-inline: var(--space-4);
     font-size: var(--font-size-base);
   }

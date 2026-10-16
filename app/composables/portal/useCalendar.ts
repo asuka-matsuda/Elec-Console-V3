@@ -65,7 +65,7 @@ export function useCalendar(siteId: string) {
   const updateEvent = async (id: string, updates: Partial<CalendarEvent>) => {
     const res = await $api<CalendarEvent>(`/api/events/${id}`, {
       method: 'PUT',
-      body: updates,
+      body: { siteId, ...updates },
     })
 
     if (res) {

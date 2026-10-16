@@ -73,7 +73,7 @@ const handleSelect = (option: SwitchOption) => {
   }
 
   &--sm {
-    height: 32px;
+    height: 26px;
 
     .switch-item {
       padding: 0 var(--space-2);
@@ -82,7 +82,7 @@ const handleSelect = (option: SwitchOption) => {
   }
 
   &--md {
-    height: 40px;
+    height: 32px;
 
     .switch-item {
       padding: 0 var(--space-3);
@@ -91,7 +91,7 @@ const handleSelect = (option: SwitchOption) => {
   }
 
   &--lg {
-    height: 48px;
+    height: 38px;
 
     .switch-item {
       padding: 0 var(--space-4);

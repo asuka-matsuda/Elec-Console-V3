@@ -218,13 +218,14 @@ describe('ModalCalendarEvent.vue', () => {
     expect(wrapper.text()).toContain('終了日時は開始日時以降を指定してください')
   })
 
-  it('hides edit/delete/save buttons when readonly is true', () => {
+  it('hides edit/delete/save buttons when readonly is true on shared event, but allows editing personal event', async () => {
     const wrapper = mount(ModalCalendarEvent, {
       props: {
         modelValue: true,
         isEditing: true,
         readonly: true,
         eventTypes: dummyEventTypes,
+        siteMembers: ['松田 飛鳥'],
         initialData: dummyInitialData,
       },
     })
@@ -235,5 +236,28 @@ describe('ModalCalendarEvent.vue', () => {
     expect(buttons.find(b => b.text().includes('保存'))).toBeUndefined()
     expect(buttons.find(b => b.props('icon') === 'trash-2')).toBeUndefined()
     expect(buttons.find(b => b.text().includes('閉じる'))).toBeDefined()
+
+    // 個人予定（isPersonal: true）の場合は readonly ロールでも保存・削除が可能で担当者欄は非表示
+    const personalWrapper = mount(ModalCalendarEvent, {
+      props: {
+        modelValue: true,
+        isEditing: true,
+        readonly: true,
+        eventTypes: dummyEventTypes,
+        siteMembers: ['松田 飛鳥'],
+        initialData: {
+          ...dummyInitialData,
+          isPersonal: true,
+        },
+      },
+    })
+
+    expect(personalWrapper.text()).toContain('予定の編集')
+    expect(personalWrapper.text()).toContain('個人の予定は登録した本人だけに表示され')
+    expect(personalWrapper.text()).not.toContain('担当者・関係者')
+    const personalButtons = personalWrapper.findAllComponents({ name: 'Button' })
+
+    expect(personalButtons.find(b => b.text().includes('保存'))).toBeDefined()
+    expect(personalButtons.find(b => b.props('icon') === 'trash-2')).toBeDefined()
   })
 })

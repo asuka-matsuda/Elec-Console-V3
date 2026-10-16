@@ -6,6 +6,7 @@
 import { computed, ref, watch } from 'vue'
 
 import type { EventFormData } from '#shared/types/calendar'
+import type { SwitchOption } from '~/types/components'
 import { adjustDateRangeForAllDay, calculateAutoEndDate, formatShortDateTime } from '~/utils/date'
 
 const isOpen = defineModel<boolean>({ default: false })
@@ -27,13 +28,28 @@ const form = ref<EventFormData>({ ...props.initialData })
 const hasTitleError = ref(false)
 const hasDateError = ref(false)
 
+// 個人予定であれば viewer ロールでも作成・編集・削除が可能
+const canEdit = computed(() => !props.readonly || Boolean(form.value.isPersonal))
+
+const scopeOptions = computed<SwitchOption[]>(() => [
+  { value: 'shared', label: '共有の予定（現場）', icon: 'users', disabled: Boolean(props.readonly) },
+  { value: 'personal', label: '個人の予定（マイ予定）', icon: 'user' },
+])
+
+const currentScope = computed(() => (form.value.isPersonal ? 'personal' : 'shared'))
+
+const handleScopeChange = (val: string | number) => {
+  if (!canEdit.value) return
+  form.value.isPersonal = val === 'personal'
+}
+
 // 種別選択肢のキャッシュ（毎描画時のインライン map 生成を引き算）
 const typeOptions = computed(() =>
   props.eventTypes.map(t => ({ label: t.name, value: t.id })),
 )
 
 const modalTitle = computed(() => {
-  if (props.readonly) {
+  if (!canEdit.value) {
     return form.value.isMilestone ? 'マイルストーンの詳細' : '予定の詳細'
   }
 
@@ -136,7 +152,7 @@ const handleDuplicate = () => {
 }
 
 const handleSave = () => {
-  if (props.readonly) return
+  if (!canEdit.value) return
 
   if (!form.value.title.trim()) {
     hasTitleError.value = true
@@ -164,7 +180,21 @@ const handleSave = () => {
 <template>
   <Modal v-model="isOpen" :title="modalTitle">
     <div class="flex flex-col gap-form-row-gap">
-      <Toggle v-model="form.isMilestone" label="マイルストーン（重要工程期日）として登録" :disabled="props.readonly" />
+      <div class="flex flex-col gap-inline-gap">
+        <span class="label">登録先予定表</span>
+        <Switch
+          :model-value="currentScope"
+          :options="scopeOptions"
+          size="sm"
+          :disabled="!canEdit"
+          @change="handleScopeChange"
+        />
+        <small v-if="form.isPersonal" class="field-help-text">
+          個人の予定は登録した本人だけに表示され、現場を切り替えても全現場のカレンダーに共通表示されます。
+        </small>
+      </div>
+
+      <Toggle v-model="form.isMilestone" label="マイルストーン（重要工程期日）として登録" :disabled="!canEdit" />
 
       <div class="flex flex-col gap-inline-gap">
         <label for="calendar-event-title" class="label">
@@ -175,7 +205,7 @@ const handleSave = () => {
           v-model="form.title"
           :placeholder="form.isMilestone ? '受電・本送電、消防検査など' : '会議、送電試験など'"
           :error="hasTitleError"
-          :disabled="props.readonly"
+          :disabled="!canEdit"
           @update:model-value="hasTitleError = false"
         />
         <p v-if="hasTitleError" class="error-text">
@@ -185,14 +215,14 @@ const handleSave = () => {
 
       <div v-if="!form.isMilestone" class="flex flex-col gap-inline-gap">
         <label for="calendar-event-type" class="label">予定種別</label>
-        <Select id="calendar-event-type" v-model="form.type" :options="typeOptions" :disabled="props.readonly" />
+        <Select id="calendar-event-type" v-model="form.type" :options="typeOptions" :disabled="!canEdit" />
       </div>
 
       <div v-if="form.isMilestone" class="flex flex-col gap-inline-gap">
         <label for="calendar-event-start" class="label">
           目標日 <span class="req-mark">*</span>
         </label>
-        <Input id="calendar-event-start" v-model="form.start" type="date" required :disabled="props.readonly" />
+        <Input id="calendar-event-start" v-model="form.start" type="date" required :disabled="!canEdit" />
       </div>
 
       <template v-else>
@@ -206,7 +236,7 @@ const handleSave = () => {
               :key="'start-' + form.allDay"
               v-model="form.start"
               :type="form.allDay ? 'date' : 'datetime-local'"
-              :disabled="props.readonly"
+              :disabled="!canEdit"
               required
               @change="handleStartChange"
             />
@@ -219,7 +249,7 @@ const handleSave = () => {
               v-model="form.end"
               :type="form.allDay ? 'date' : 'datetime-local'"
               :error="hasDateError"
-              :disabled="props.readonly"
+              :disabled="!canEdit"
               @update:model-value="handleEndChange"
             />
           </div>
@@ -229,7 +259,7 @@ const handleSave = () => {
           終了日時は開始日時以降を指定してください
         </p>
 
-        <Toggle v-model="form.allDay" label="終日イベント" :disabled="props.readonly" />
+        <Toggle v-model="form.allDay" label="終日イベント" :disabled="!canEdit" />
       </template>
 
       <div class="flex flex-col gap-inline-gap">
@@ -239,19 +269,19 @@ const handleSave = () => {
           v-model="form.location"
           icon="map-pin"
           placeholder="1F 電気室、2F 電灯盤、現場事務所など"
-          :disabled="props.readonly"
+          :disabled="!canEdit"
           clearable
         />
       </div>
 
-      <div v-if="siteMembers && siteMembers.length > 0" class="flex flex-col gap-inline-gap">
+      <div v-if="!form.isPersonal && siteMembers && siteMembers.length > 0" class="flex flex-col gap-inline-gap">
         <span class="label">担当者・関係者</span>
         <ul class="flex flex-wrap gap-item-gap">
           <li v-for="member in siteMembers" :key="member">
             <Checkbox
               :model-value="isAssigned(member)"
               :label="member"
-              :disabled="props.readonly"
+              :disabled="!canEdit"
               @update:model-value="toggleAssignee(member, $event)"
             />
           </li>
@@ -265,7 +295,7 @@ const handleSave = () => {
           v-model="form.description"
           :rows="3"
           placeholder="集合場所、持参物、立会者名、注意事項など"
-          :disabled="props.readonly"
+          :disabled="!canEdit"
         />
       </div>
 
@@ -288,14 +318,14 @@ const handleSave = () => {
     </div>
 
     <template #footer>
-      <Tooltip v-if="isEditing && !props.readonly" text="削除">
+      <Tooltip v-if="isEditing && canEdit" text="削除">
         <Button variant="danger" size="sm" icon="trash-2" @click="emit('delete')" />
       </Tooltip>
-      <Tooltip v-if="isEditing && !props.readonly" text="この予定を複製して新規作成">
+      <Tooltip v-if="isEditing && canEdit" text="この予定を複製して新規作成">
         <Button variant="secondary" size="sm" icon="copy" @click="handleDuplicate">複製</Button>
       </Tooltip>
-      <Button @click="isOpen = false">{{ props.readonly ? '閉じる' : 'キャンセル' }}</Button>
-      <Button v-if="!props.readonly" variant="primary" icon="check" @click="handleSave">保存する</Button>
+      <Button @click="isOpen = false">{{ !canEdit ? '閉じる' : 'キャンセル' }}</Button>
+      <Button v-if="canEdit" variant="primary" icon="check" @click="handleSave">保存する</Button>
     </template>
   </Modal>
 </template>

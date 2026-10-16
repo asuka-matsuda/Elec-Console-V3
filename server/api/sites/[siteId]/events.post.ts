@@ -12,7 +12,7 @@ import { z } from 'zod'
 import { ErrorCode } from '#shared/types/errors'
 import { getUserDisplayName } from '#shared/utils/user'
 
-import { requireSiteRole } from '../../../utils/auth'
+import { requireSiteAccess, requireSiteRole } from '../../../utils/auth'
 import { createAppError } from '../../../utils/error'
 import { parseEventAssignees, serializeEventAssignees } from '../../../utils/jsonFields'
 import { prisma } from '../../../utils/prisma'
@@ -25,14 +25,13 @@ const CreateEventSchema = z.object({
   allDay: z.boolean().optional(),
   type: z.string().optional(),
   isMilestone: z.boolean().optional(),
+  isPersonal: z.boolean().optional(),
   location: z.string().trim().nullable().optional(),
   description: z.string().trim().nullable().optional(),
   assignees: z.array(z.string()).optional(),
 })
 
 export default defineEventHandler(async (event) => {
-  const user = await requireSiteRole(event, ['admin', 'worker'])
-
   const siteId = getRouterParam(event, 'siteId')
 
   if (!siteId) {
@@ -43,6 +42,13 @@ export default defineEventHandler(async (event) => {
   }
 
   const body = await validateRequestBody(event, CreateEventSchema)
+  const isPersonal = Boolean(body.isPersonal)
+
+  // 個人予定は現場閲覧権があれば誰でも自身の予定として登録可能、現場共有予定は admin / worker のみ登録可能
+  const user = isPersonal
+    ? await requireSiteAccess(event, siteId)
+    : await requireSiteRole(event, ['admin', 'worker'], siteId)
+
   const isMilestone = Boolean(body.isMilestone || body.type === 'milestone')
   const actorName = getUserDisplayName(user)
 
@@ -58,7 +64,9 @@ export default defineEventHandler(async (event) => {
 
   const created = await prisma.event.create({
     data: {
-      siteId,
+      siteId: isPersonal ? null : siteId,
+      userId: user.id,
+      isPersonal,
       title: body.title,
       start: normalizedStart,
       end: normalizedEnd,
@@ -67,7 +75,7 @@ export default defineEventHandler(async (event) => {
       isMilestone,
       location: body.location || null,
       description: body.description || null,
-      assignees: serializeEventAssignees(body.assignees),
+      assignees: isPersonal ? null : serializeEventAssignees(body.assignees),
       createdBy: actorName,
       updatedBy: actorName,
     },
@@ -75,6 +83,7 @@ export default defineEventHandler(async (event) => {
 
   return {
     ...created,
+    isPersonal,
     assignees: parseEventAssignees(created.assignees),
     isMilestone,
   }
