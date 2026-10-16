@@ -28,8 +28,8 @@ withDefaults(defineProps<BreadcrumbsProps>(), {
 <style scoped lang="scss">
 .breadcrumbs {
   font-size: var(--font-size-sm);
-  line-height: var(--line-height-base);
-  letter-spacing: var(--tracking-wide);
+  line-height: var(--line-height-ui);
+  letter-spacing: var(--tracking-normal);
   white-space: nowrap;
 }
 
@@ -37,19 +37,23 @@ withDefaults(defineProps<BreadcrumbsProps>(), {
   color: var(--color-text-muted);
 
   &.is-active {
+    @include control-glow-tokens;
+
     font-weight: var(--font-weight-medium);
     color: var(--theme-accent);
 
     &.has-cursor::after {
       content: "";
 
-      width: var(--space-1);
-      height: var(--space-3);
+      width: 6px;
+      height: 6px;
       margin-inline-start: var(--space-1);
+      border-radius: var(--radius-circle);
 
       background-color: var(--theme-accent);
+      box-shadow: var(--shadow-glow-dot);
 
-      animation: ui-cursor-blink 1s step-end infinite;
+      animation: ui-cursor-blink 2s ease-in-out infinite;
     }
   }
 
@@ -87,7 +91,7 @@ withDefaults(defineProps<BreadcrumbsProps>(), {
   }
 
   50% {
-    opacity: 0;
+    opacity: 0.35;
   }
 }
 </style>

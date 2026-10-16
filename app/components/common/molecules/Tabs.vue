@@ -48,6 +48,8 @@ const handleSelect = (item: TabItem) => {
 }
 
 .tabs-item {
+  @include control-glow-tokens;
+
   box-sizing: border-box;
   height: 100%;
   margin-bottom: 0;
@@ -83,10 +85,10 @@ const handleSelect = (item: TabItem) => {
     font-weight: var(--font-weight-semibold);
     color: var(--color-text-main);
     background:
-      linear-gradient(
-        to top,
-        color-mix(in srgb, var(--theme-accent) 8%, transparent) 0%,
-        transparent 70%
+      radial-gradient(
+        ellipse at 50% 100%,
+        color-mix(in srgb, var(--theme-accent) 18%, transparent) 0%,
+        transparent 75%
       );
 
     &::after {
@@ -103,11 +105,11 @@ const handleSelect = (item: TabItem) => {
         linear-gradient(
           90deg,
           transparent 0%,
-          var(--theme-accent) 20%,
-          var(--theme-accent) 80%,
+          var(--theme-accent) 18%,
+          var(--theme-accent) 82%,
           transparent 100%
         );
-      box-shadow: var(--shadow-glow-active);
+      box-shadow: var(--shadow-glow-sm);
     }
   }
 

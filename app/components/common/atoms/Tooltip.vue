@@ -319,8 +319,8 @@ const tooltipStyle = computed(() => {
 
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
-  line-height: var(--line-height-tight);
-  letter-spacing: 0.01em;
+  line-height: var(--line-height-ui);
+  letter-spacing: var(--tracking-normal);
   overflow-wrap: break-word;
   white-space: pre-wrap;
 

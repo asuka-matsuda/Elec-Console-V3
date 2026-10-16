@@ -66,53 +66,45 @@ const normalizedVariant = computed(() => {
 
 <style scoped lang="scss">
 .note {
-  --note-accent: var(--color-border-subtle);
+  --note-accent: var(--color-border);
   --note-text: var(--color-text-main);
-  --note-bg: var(--surface-bg-solid);
+  --glow-color: var(--note-accent);
+
+  @include control-glow-tokens;
 
   padding: var(--space-panel-pad-compact);
-  border: var(--border-width-base) solid var(--note-accent);
+  border: var(--border-width-base) solid color-mix(in srgb, var(--note-accent) 32%, var(--color-border));
   border-radius: 0;
-  background-color: var(--note-bg);
+
+  background-color: var(--surface-bg);
+  background-image: var(--surface-gradient-glow), var(--surface-gradient-base);
+  backdrop-filter: blur(var(--blur-sm));
+  box-shadow: var(--surface-rim-highlight), var(--shadow-glow-ambient);
 
   &.is-secondary {
-    --note-accent: var(--color-border);
+    --note-accent: var(--color-border-hover);
     --note-text: var(--color-text-main);
-    --note-bg: var(--surface-bg-solid);
-
-    &.is-fill {
-      --note-bg: var(--surface-bg-elevated);
-    }
   }
 
   &.is-success {
     --note-accent: var(--color-status-success);
     --note-text: var(--color-status-success);
-    --note-bg: color-mix(in srgb, var(--color-status-success) 8%, var(--surface-bg-solid));
-
-    &.is-fill {
-      --note-bg: color-mix(in srgb, var(--color-status-success) 16%, var(--surface-bg-solid));
-    }
   }
 
   &.is-warning {
     --note-accent: var(--color-status-warning);
     --note-text: var(--color-status-warning);
-    --note-bg: color-mix(in srgb, var(--color-status-warning) 8%, var(--surface-bg-solid));
-
-    &.is-fill {
-      --note-bg: color-mix(in srgb, var(--color-status-warning) 16%, var(--surface-bg-solid));
-    }
   }
 
   &.is-error {
     --note-accent: var(--color-status-danger);
     --note-text: var(--color-status-danger);
-    --note-bg: color-mix(in srgb, var(--color-status-danger) 8%, var(--surface-bg-solid));
+  }
 
-    &.is-fill {
-      --note-bg: color-mix(in srgb, var(--color-status-danger) 16%, var(--surface-bg-solid));
-    }
+  &.is-fill {
+    border-color: color-mix(in srgb, var(--note-accent) 50%, var(--color-border));
+    background-color: color-mix(in srgb, var(--note-accent) 10%, var(--surface-bg-elevated));
+    box-shadow: var(--surface-rim-accent), var(--shadow-glow-sm);
   }
 }
 
@@ -122,8 +114,8 @@ const normalizedVariant = computed(() => {
 
 .note-title {
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui);
   color: var(--note-text);
 }
 

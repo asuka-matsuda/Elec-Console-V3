@@ -69,16 +69,14 @@ const getWeightResult = (entry: HistoryEntry) => (entry.rawResult ?? null) as un
       <ul v-else-if="historyList.length > 0" class="grid grid-cols-1 sm:grid-cols-[repeat(auto-fill,minmax(360px,1fr))] gap-panel-gap">
         <li v-for="entry in historyList" :key="entry.id">
           <article class="panel flex flex-col gap-panel-gap h-full" :class="[`is-${entry.status}`]">
-            <header class="flex flex-col gap-inline-gap">
-              <div class="flex flex-col gap-inline-gap min-w-0">
-                <time>{{ entry.timestamp }}</time>
-                <h4 class="flex items-center gap-item-gap">
-                  <span>{{ entry.toolName }}</span>
-                  <small v-if="entry.mode">({{ entry.mode }})</small>
-                </h4>
-              </div>
-              <hr class="divider">
+            <header class="flex flex-col gap-inline-gap min-w-0">
+              <time>{{ entry.timestamp }}</time>
+              <h4 class="flex items-center gap-item-gap">
+                <span>{{ entry.toolName }}</span>
+                <small v-if="entry.mode">({{ entry.mode }})</small>
+              </h4>
             </header>
+            <hr class="divider">
 
             <section class="flex flex-col gap-inline-gap min-h-0">
               <ToolResultVoltage v-if="entry.toolId === 'voltage' && getVoltageInputs(entry) && getVoltageResult(entry)" :inputs="getVoltageInputs(entry)!" :result="getVoltageResult(entry)" size="sm" />
@@ -93,11 +91,12 @@ const getWeightResult = (entry: HistoryEntry) => (entry.rawResult ?? null) as un
                 <span class="label">計算結果</span>
                 <dl class="grid grid-cols-[auto_1fr] gap-x-panel-gap gap-y-inline-gap">
                   <template v-for="(res, idx) in entry.results" :key="idx">
-                    <dt class="whitespace-nowrap" :style="{ color: res.color, fontWeight: res.color ? 'bold' : 'normal' }">
+                    <dt class="whitespace-nowrap">
                       <small>{{ res.label }}</small>
                     </dt>
-                    <dd class="text-right" :style="{ color: res.color, fontWeight: res.isMain || res.color ? 'bold' : 'normal' }">
-                      {{ res.value }}
+                    <dd class="text-right tabular-nums">
+                      <strong v-if="res.isMain || res.color">{{ res.value }}</strong>
+                      <span v-else>{{ res.value }}</span>
                     </dd>
                   </template>
                 </dl>
@@ -111,7 +110,7 @@ const getWeightResult = (entry: HistoryEntry) => (entry.rawResult ?? null) as un
                   <dt class="whitespace-nowrap">
                     <small>{{ input.label }}</small>
                   </dt>
-                  <dd class="text-right">
+                  <dd class="text-right tabular-nums">
                     {{ input.value }}
                   </dd>
                 </template>

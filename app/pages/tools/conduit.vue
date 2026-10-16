@@ -42,7 +42,7 @@ const getCableSpec = formatConduitCableSpec
       <section class="panel flex flex-1 flex-col gap-panel-gap min-h-0">
         <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
           <h3 class="flex items-center gap-item-gap">
-            <Icon name="edit" style="color: var(--color-category-tool)" />
+            <Icon name="edit" variant="accent" />
             <span>条件入力</span>
           </h3>
           <div class="flex items-center gap-item-gap">
@@ -100,7 +100,7 @@ const getCableSpec = formatConduitCableSpec
       <section class="panel flex flex-1 flex-col gap-panel-gap min-h-0">
         <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
           <h3 class="flex items-center gap-item-gap">
-            <Icon :name="isShowingBasis ? 'book' : 'check-square'" style="color: var(--color-category-tool)" />
+            <Icon :name="isShowingBasis ? 'book' : 'check-square'" variant="accent" />
             <span>{{ isShowingBasis ? '計算根拠' : '計算結果・選定結果' }}</span>
           </h3>
           <div class="flex items-center gap-item-gap">

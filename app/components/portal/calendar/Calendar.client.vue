@@ -200,7 +200,7 @@ const getCustomHolidayLabel = (date: Date): string => {
 
 <template>
   <div class="flex flex-col gap-panel-gap">
-    <header class="calendar-toolbar flex flex-col md:flex-row items-center justify-between gap-item-gap px-panel-pad py-item-gap">
+    <header class="calendar-toolbar flex flex-col md:flex-row items-center justify-between gap-item-gap px-panel-pad py-2">
       <div class="flex items-center gap-inline-gap">
         <Button size="sm" icon="chevron-left" @click="handlePrev" />
         <Button size="sm" icon="chevron-right" @click="handleNext" />
@@ -230,7 +230,7 @@ const getCustomHolidayLabel = (date: Date): string => {
           <li v-for="m in milestones" :key="m.id">
             <button
               type="button"
-              class="panel is-elevated is-interactive px-item-gap py-inline-gap flex items-center gap-inline-gap milestone-chip"
+              class="panel is-elevated is-interactive p-panel-pad-compact flex items-center gap-inline-gap milestone-chip"
               :class="{ 'is-past-milestone': m.isPast }"
               :style="{ borderLeft: `3px solid ${m.color}` }"
               title="クリックで該当月へジャンプ（該当月表示中は編集モーダルを開きます）"
@@ -295,7 +295,7 @@ const getCustomHolidayLabel = (date: Date): string => {
   /* 曜日ヘッダー文字 */
   :deep(.fc-col-header-cell-cushion) {
     font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-medium);
     color: var(--color-text-main);
   }
 
@@ -321,7 +321,9 @@ const getCustomHolidayLabel = (date: Date): string => {
 
       width: 100%;
 
+      font-family: var(--font-mono);
       font-size: var(--font-size-xs);
+      font-variant-numeric: tabular-nums;
       color: var(--color-text-main);
     }
 
@@ -346,7 +348,7 @@ const getCustomHolidayLabel = (date: Date): string => {
       background-color: color-mix(in srgb, var(--color-calendar-custom-holiday) 8%, var(--surface-bg-sunken));
 
       .fc-daygrid-day-number {
-        font-weight: var(--font-weight-bold);
+        font-weight: var(--font-weight-semibold);
         color: var(--color-calendar-custom-holiday);
       }
     }
@@ -366,19 +368,34 @@ const getCustomHolidayLabel = (date: Date): string => {
   :deep(.fc-daygrid-event) {
     margin-bottom: var(--space-0-5);
     padding: var(--space-0-5) var(--space-1);
-    border: var(--border-width-base) solid var(--fc-event-border-color, var(--theme-accent));
+    border: var(--border-width-base) solid color-mix(in srgb, var(--fc-event-border-color, var(--theme-accent)) 45%, var(--color-border));
     border-radius: 0;
 
-    background: color-mix(in srgb, var(--fc-event-border-color, var(--theme-accent)) 12%, var(--surface-bg-elevated));
+    background:
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--fc-event-border-color, var(--theme-accent)) 18%, transparent) 0%,
+        color-mix(in srgb, var(--fc-event-border-color, var(--theme-accent)) 6%, var(--surface-bg-elevated)) 100%
+      );
 
     @include state-interactive;
 
     &.is-milestone {
-      border-left-width: 3px;
-      background: color-mix(in srgb, var(--fc-event-border-color, var(--theme-accent)) 22%, var(--surface-bg-elevated));
+      --glow-color: var(--fc-event-border-color, var(--theme-accent));
+
+      @include control-glow-tokens;
+
+      border-color: color-mix(in srgb, var(--fc-event-border-color, var(--theme-accent)) 75%, var(--color-border));
+      background:
+        linear-gradient(
+          90deg,
+          color-mix(in srgb, var(--fc-event-border-color, var(--theme-accent)) 28%, transparent) 0%,
+          color-mix(in srgb, var(--fc-event-border-color, var(--theme-accent)) 10%, var(--surface-bg-elevated)) 100%
+        );
+      box-shadow: var(--shadow-glow-sm);
 
       .fc-event-title {
-        font-weight: var(--font-weight-bold);
+        font-weight: var(--font-weight-semibold);
 
         &::before {
           content: "⚑ ";
@@ -404,7 +421,8 @@ const getCustomHolidayLabel = (date: Date): string => {
 
       font-family: var(--font-mono);
       font-size: var(--font-size-2xs);
-      font-weight: var(--font-weight-bold);
+      font-weight: var(--font-weight-medium);
+      font-variant-numeric: tabular-nums;
       color: var(--color-text-muted);
     }
 
@@ -428,7 +446,7 @@ const getCustomHolidayLabel = (date: Date): string => {
   /* 「+○件」展開リンク */
   :deep(.fc-daygrid-more-link) {
     font-size: var(--font-size-2xs);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--theme-accent);
   }
 
@@ -448,7 +466,7 @@ const getCustomHolidayLabel = (date: Date): string => {
       border-radius: 0;
 
       font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-bold);
+      font-weight: var(--font-weight-semibold);
       color: var(--theme-accent);
 
       background: var(--surface-bg);

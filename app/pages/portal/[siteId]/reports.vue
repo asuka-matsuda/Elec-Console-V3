@@ -188,7 +188,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-1 flex-col gap-item-gap min-h-0 h-full">
+  <div class="flex flex-1 flex-col gap-panel-gap min-h-0 h-full">
     <!-- 1. 最上部タブナビゲーション（画面全幅・下線が右端まで通る） -->
     <Tabs v-model="currentCategory" :items="categoryTabOptions" class="shrink-0" />
 

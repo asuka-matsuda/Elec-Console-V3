@@ -115,7 +115,7 @@ const effectiveCard = computed(() => {
     >
       <div class="flex items-center gap-item-gap min-w-0 flex-1">
         <Icon v-if="icon || $slots.icon" :name="icon || 'folder'" size="sm" class="collapse-icon" />
-        <div class="flex flex-col min-w-0 flex-1">
+        <div class="flex flex-col gap-micro-gap min-w-0 flex-1">
           <div class="collapse-title flex items-center gap-inline-gap min-w-0">
             <slot name="title">{{ title }}</slot>
           </div>
@@ -171,7 +171,7 @@ const effectiveCard = computed(() => {
 }
 
 .collapse-header {
-  padding: var(--space-item-gap) var(--space-panel-gap);
+  padding: var(--space-2) var(--space-3);
   border: none;
 
   color: var(--color-text-main);
@@ -204,7 +204,6 @@ const effectiveCard = computed(() => {
 }
 
 .collapse-subtitle {
-  margin-top: 2px;
   font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
 }
@@ -223,7 +222,7 @@ const effectiveCard = computed(() => {
 }
 
 .collapse-body {
-  padding: var(--space-item-gap) var(--space-panel-gap) var(--space-panel-gap);
+  padding: var(--space-3);
   border-top: var(--border-width-base) solid var(--color-border-subtle, var(--color-border));
   color: var(--color-text-secondary);
 }

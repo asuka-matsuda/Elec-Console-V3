@@ -258,28 +258,30 @@ onMounted(() => {
   <div class="flex flex-1 flex-col gap-panel-gap min-h-0 overflow-y-auto">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-panel-gap items-start">
       <!-- 左ペイン: 出力範囲・系統指定 -->
-      <section class="panel flex flex-col gap-form-row-gap">
+      <section class="panel flex flex-col gap-panel-gap">
         <header class="flex items-center gap-item-gap">
           <Icon name="sliders" />
           <h4>出力範囲の指定</h4>
         </header>
         <hr class="divider">
 
-        <div class="flex flex-col gap-inline-gap">
-          <label for="filter-exam-ban" class="label">出力対象の盤</label>
-          <Select id="filter-exam-ban" v-model="selectedExamBan" :options="examBanOptions" class="w-full" />
-          <small>※「全盤一括出力」を選択した場合は、全盤の試験結果をまとめたZIPアーカイブが出力されます。</small>
-        </div>
+        <div class="flex flex-col gap-form-row-gap">
+          <div class="flex flex-col gap-inline-gap">
+            <label for="filter-exam-ban" class="label">出力対象の盤</label>
+            <Select id="filter-exam-ban" v-model="selectedExamBan" :options="examBanOptions" class="w-full" />
+            <small>※「全盤一括出力」を選択した場合は、全盤の試験結果をまとめたZIPアーカイブが出力されます。</small>
+          </div>
 
-        <div class="flex flex-col gap-inline-gap">
-          <label for="filter-exam-keito" class="label">対象系統の絞り込み</label>
-          <Select id="filter-exam-keito" v-model="selectedExamKeiTo" :options="examKeiToOptions" class="w-full" />
-          <small>※幹線のみ、または二次側のみの試験結果に限定してExcelに出力できます。</small>
+          <div class="flex flex-col gap-inline-gap">
+            <label for="filter-exam-keito" class="label">対象系統の絞り込み</label>
+            <Select id="filter-exam-keito" v-model="selectedExamKeiTo" :options="examKeiToOptions" class="w-full" />
+            <small>※幹線のみ、または二次側のみの試験結果に限定してExcelに出力できます。</small>
+          </div>
         </div>
       </section>
 
       <!-- 右ペイン: 測定器の紐付け・登録 -->
-      <section class="panel flex flex-col gap-form-row-gap">
+      <section class="panel flex flex-col gap-panel-gap">
         <header class="flex items-center justify-between">
           <div class="flex items-center gap-item-gap">
             <Icon name="check-square" />
@@ -310,7 +312,7 @@ onMounted(() => {
     </div>
 
     <!-- 出力サマリー・対象回路プレビュー -->
-    <section class="panel flex flex-col gap-item-gap">
+    <section class="panel flex flex-col gap-panel-gap">
       <header class="flex items-center justify-between">
         <div class="flex items-center gap-item-gap">
           <Icon name="database" />
@@ -324,39 +326,49 @@ onMounted(() => {
       <hr class="divider">
 
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-item-gap">
-        <div class="panel is-elevated p-panel-pad-compact flex flex-col justify-between gap-inline-gap">
-          <small>全対象回路</small>
-          <div class="flex items-baseline gap-inline-gap">
-            <h4>{{ examTargetCircuits.length }}</h4>
-            <small>回路</small>
-          </div>
-          <div class="h-1" />
+        <div class="result-tile is-sm flex flex-col justify-between gap-inline-gap">
+          <header class="tile-header flex items-center justify-between">
+            <span>全対象回路</span>
+          </header>
+          <output class="tile-value flex items-baseline gap-inline-gap">
+            <span>{{ examTargetCircuits.length }}</span>
+            <span class="value-unit">回路</span>
+          </output>
         </div>
 
-        <div class="panel is-elevated p-panel-pad-compact flex flex-col justify-between gap-inline-gap">
-          <div class="flex items-center justify-between">
-            <small>Phase 1 確認済</small>
+        <div class="result-tile is-sm flex flex-col justify-between gap-inline-gap">
+          <header class="tile-header flex items-center justify-between">
+            <span>Phase 1 確認済</span>
             <small>{{ examP1Count }}/{{ examTargetCircuits.length }}</small>
-          </div>
-          <h4 style="color: var(--theme-accent)">{{ examP1Count }}</h4>
+          </header>
+          <output class="tile-value flex items-baseline gap-inline-gap">
+            <span>{{ examP1Count }}</span>
+            <span class="value-unit">回路</span>
+          </output>
           <Progress :value="examP1Count" :max="examTargetCircuits.length || 1" size="sm" dynamic-colors />
         </div>
 
-        <div class="panel is-elevated p-panel-pad-compact flex flex-col justify-between gap-inline-gap">
-          <div class="flex items-center justify-between">
-            <small>Phase 2 絶縁測定済</small>
+        <div class="result-tile is-sm flex flex-col justify-between gap-inline-gap">
+          <header class="tile-header flex items-center justify-between">
+            <span>Phase 2 絶縁測定済</span>
             <small>{{ examP2Count }}/{{ examTargetCircuits.length }}</small>
-          </div>
-          <h4 style="color: var(--theme-accent)">{{ examP2Count }}</h4>
+          </header>
+          <output class="tile-value flex items-baseline gap-inline-gap">
+            <span>{{ examP2Count }}</span>
+            <span class="value-unit">回路</span>
+          </output>
           <Progress :value="examP2Count" :max="examTargetCircuits.length || 1" size="sm" dynamic-colors />
         </div>
 
-        <div class="panel is-elevated p-panel-pad-compact flex flex-col justify-between gap-inline-gap">
-          <div class="flex items-center justify-between">
-            <small>Phase 3 送電完了</small>
+        <div class="result-tile is-sm flex flex-col justify-between gap-inline-gap">
+          <header class="tile-header flex items-center justify-between">
+            <span>Phase 3 送電完了</span>
             <small>{{ examP3Count }}/{{ examTargetCircuits.length }}</small>
-          </div>
-          <h4 style="color: var(--theme-accent)">{{ examP3Count }}</h4>
+          </header>
+          <output class="tile-value flex items-baseline gap-inline-gap">
+            <span>{{ examP3Count }}</span>
+            <span class="value-unit">回路</span>
+          </output>
           <Progress :value="examP3Count" :max="examTargetCircuits.length || 1" size="sm" dynamic-colors />
         </div>
       </div>
@@ -405,10 +417,8 @@ onMounted(() => {
       </div>
 
       <template #footer>
-        <div class="flex items-center justify-end gap-inline-gap w-full">
-          <Button variant="secondary" @click="isDevicesModalOpen = false">キャンセル</Button>
-          <Button variant="primary" icon="save" @click="saveDraftDevices">台帳を保存する</Button>
-        </div>
+        <Button variant="secondary" @click="isDevicesModalOpen = false">キャンセル</Button>
+        <Button variant="primary" icon="save" @click="saveDraftDevices">台帳を保存する</Button>
       </template>
     </Modal>
   </div>

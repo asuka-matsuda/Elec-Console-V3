@@ -127,7 +127,7 @@ defineExpose({
 
 <style scoped lang="scss">
 .input-container {
-  --input-height: 2.5rem; // md: 40px
+  --input-height: 40px;
   --input-font-size: var(--font-size-sm);
   --input-padding-x: var(--space-3);
   --input-affix-gap: var(--space-2);
@@ -154,21 +154,21 @@ defineExpose({
 
   // --- サイズ展開 (Geist準拠: sm 32px / md 40px / lg 48px) ---
   &.input--sm {
-    --input-height: 2rem; // 32px
+    --input-height: 32px;
     --input-font-size: var(--font-size-xs);
     --input-padding-x: var(--space-2);
     --input-affix-gap: var(--space-1);
   }
 
   &.input--md {
-    --input-height: 2.5rem; // 40px
+    --input-height: 40px;
     --input-font-size: var(--font-size-sm);
     --input-padding-x: var(--space-3);
     --input-affix-gap: var(--space-2);
   }
 
   &.input--lg {
-    --input-height: 3rem; // 48px
+    --input-height: 48px;
     --input-font-size: var(--font-size-base);
     --input-padding-x: var(--space-4);
     --input-affix-gap: var(--space-3);

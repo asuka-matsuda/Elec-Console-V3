@@ -63,6 +63,7 @@ const assignedSites = computed(() => {
           <span>アカウント情報</span>
         </h3>
       </header>
+      <hr class="divider">
 
       <div v-if="!currentUser" class="flex items-center gap-panel-gap">
         <Skeleton circle width="2.5rem" class="shrink-0" />
@@ -115,7 +116,7 @@ const assignedSites = computed(() => {
                 <div class="flex items-center gap-item-gap flex-wrap">
                   <Icon name="map-pin" size="sm" />
                   <strong>{{ site.name }}</strong>
-                  <small><code>({{ site.id }})</code></small>
+                  <code>{{ site.id }}</code>
                   <Badge :variant="USER_ROLE_CONFIG[site.role]?.variant">{{ USER_ROLE_CONFIG[site.role]?.label || site.role }}</Badge>
                 </div>
 
@@ -134,6 +135,7 @@ const assignedSites = computed(() => {
           <span>パスワード変更</span>
         </h3>
       </header>
+      <hr class="divider">
 
       <form class="flex flex-col gap-form-row-gap" @submit.prevent="handleChangePassword">
         <Note v-if="isSuccess" variant="success">パスワードを変更しました</Note>
@@ -156,7 +158,7 @@ const assignedSites = computed(() => {
           <Input id="my-confirm-password" v-model="confirmPassword" type="password" placeholder="もう一度入力" autocomplete="new-password" :disabled="isLoading" />
         </div>
 
-        <div class="flex items-center justify-end pt-inline-gap">
+        <div class="flex items-center justify-end">
           <Button type="submit" variant="primary" icon="check" :loading="isLoading">パスワードを変更する</Button>
         </div>
       </form>
@@ -169,6 +171,7 @@ const assignedSites = computed(() => {
           <span>表示設定</span>
         </h3>
       </header>
+      <hr class="divider">
 
       <div class="flex flex-col gap-inline-gap">
         <span class="label">外観モード</span>

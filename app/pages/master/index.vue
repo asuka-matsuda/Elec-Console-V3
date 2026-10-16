@@ -49,7 +49,7 @@ const MASTER_TABS: TabOption<MasterTabKey>[] = [
 </script>
 
 <template>
-  <div class="flex flex-col gap-section-gap">
+  <div class="flex flex-col gap-panel-gap">
     <Tabs :model-value="activeTab" :items="MASTER_TABS" @update:model-value="switchTab" />
 
     <div class="flex flex-col gap-panel-gap">

@@ -188,27 +188,29 @@ onMounted(() => {
   <div class="flex flex-1 flex-col gap-panel-gap min-h-0 overflow-y-auto">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-panel-gap items-start">
       <!-- 盤・伝送系統の絞り込み (盤ごとに収めたい場合) -->
-      <section class="panel flex flex-col gap-form-row-gap">
+      <section class="panel flex flex-col gap-panel-gap">
         <header class="flex items-center gap-item-gap">
           <Icon name="filter" />
           <h4>1. 対象盤・系統の指定</h4>
         </header>
         <hr class="divider">
 
-        <div class="flex flex-col gap-inline-gap">
-          <label for="filter-remote-ban" class="label">盤で絞り込み</label>
-          <Select id="filter-remote-ban" v-model="remoteSelectedBan" :options="remoteBanOptions" class="w-full" />
-          <small>※特定の盤に収めて出力したい場合は、対象の盤を選択してください。</small>
-        </div>
+        <div class="flex flex-col gap-form-row-gap">
+          <div class="flex flex-col gap-inline-gap">
+            <label for="filter-remote-ban" class="label">盤で絞り込み</label>
+            <Select id="filter-remote-ban" v-model="remoteSelectedBan" :options="remoteBanOptions" class="w-full" />
+            <small>※特定の盤に収めて出力したい場合は、対象の盤を選択してください。</small>
+          </div>
 
-        <div class="flex flex-col gap-inline-gap">
-          <label for="filter-remote-denso" class="label">伝送系統</label>
-          <Select id="filter-remote-denso" v-model="remoteSelectedDenso" :options="remoteDensoOptions" class="w-full" />
+          <div class="flex flex-col gap-inline-gap">
+            <label for="filter-remote-denso" class="label">伝送系統</label>
+            <Select id="filter-remote-denso" v-model="remoteSelectedDenso" :options="remoteDensoOptions" class="w-full" />
+          </div>
         </div>
       </section>
 
       <!-- 回路記号の印字設定 (アドレス設定表用) -->
-      <section class="panel flex flex-col gap-form-row-gap">
+      <section class="panel flex flex-col gap-panel-gap">
         <header class="flex items-center gap-item-gap">
           <Icon name="sliders" />
           <h4>2. 回路記号の印字設定</h4>
@@ -250,7 +252,7 @@ onMounted(() => {
     </div>
 
     <!-- 出力サマリー -->
-    <section class="panel flex flex-col gap-item-gap">
+    <section class="panel flex flex-col gap-panel-gap">
       <header class="flex items-center justify-between">
         <div class="flex items-center gap-item-gap">
           <Icon name="sliders" />
@@ -263,17 +265,32 @@ onMounted(() => {
       <hr class="divider">
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-item-gap">
-        <div class="panel is-elevated p-panel-pad-compact flex flex-col items-center justify-center">
-          <small>負荷アドレス</small>
-          <h4>{{ filteredRemoteCircuits.length }} <small>件</small></h4>
+        <div class="result-tile is-sm flex flex-col items-center justify-center gap-inline-gap">
+          <header class="tile-header">
+            負荷アドレス
+          </header>
+          <output class="tile-value flex items-baseline gap-inline-gap">
+            <span>{{ filteredRemoteCircuits.length }}</span>
+            <span class="value-unit">件</span>
+          </output>
         </div>
-        <div class="panel is-elevated p-panel-pad-compact flex flex-col items-center justify-center">
-          <small>登録グループ (Web確認用)</small>
-          <h4 style="color: var(--theme-accent)">{{ Object.keys(remoteConfig.assignments).length }} <small>割当</small></h4>
+        <div class="result-tile is-sm flex flex-col items-center justify-center gap-inline-gap">
+          <header class="tile-header">
+            登録グループ (Web確認用)
+          </header>
+          <output class="tile-value flex items-baseline gap-inline-gap">
+            <span>{{ Object.keys(remoteConfig.assignments).length }}</span>
+            <span class="value-unit">割当</span>
+          </output>
         </div>
-        <div class="panel is-elevated p-panel-pad-compact flex flex-col items-center justify-center">
-          <small>登録パターン (Web確認用)</small>
-          <h4 style="color: var(--theme-accent)">{{ Object.values(remoteConfig.assignments).filter(a => a.patterns?.length).length }} <small>割当</small></h4>
+        <div class="result-tile is-sm flex flex-col items-center justify-center gap-inline-gap">
+          <header class="tile-header">
+            登録パターン (Web確認用)
+          </header>
+          <output class="tile-value flex items-baseline gap-inline-gap">
+            <span>{{ Object.values(remoteConfig.assignments).filter(a => a.patterns?.length).length }}</span>
+            <span class="value-unit">割当</span>
+          </output>
         </div>
       </div>
       <small>※Excel帳票出力は個別アドレス設定表のみ対応しています（グループ・パターン編成の設定・確認はWeb画面上で行えます）。</small>

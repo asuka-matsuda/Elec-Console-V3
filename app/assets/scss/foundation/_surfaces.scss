@@ -59,10 +59,10 @@ hr.divider,
   align-items: center;
 
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui);
   color: var(--color-text-secondary);
-  letter-spacing: var(--tracking-wide);
+  letter-spacing: var(--tracking-normal);
 
   transition: var(--transition-colors);
 
@@ -72,11 +72,14 @@ hr.divider,
     content: "";
 
     display: inline-block;
+    flex-shrink: 0;
 
-    width: var(--space-0-5);
-    height: 0.85em;
+    width: 5px;
+    height: 5px;
+    border-radius: var(--radius-circle);
 
-    background-color: color-mix(in srgb, var(--glow-color) 55%, var(--color-border));
+    background-color: color-mix(in srgb, var(--glow-color) 65%, var(--color-border));
+    box-shadow: 0 0 6px color-mix(in srgb, var(--glow-color) 35%, transparent);
 
     transition: var(--transition-fast);
   }
@@ -86,14 +89,16 @@ div:focus-within > .label,
 :focus-within > .label,
 label.label:focus-within {
   color: var(--theme-accent, var(--color-text-main));
-  text-shadow: 0 0 8px color-mix(in srgb, var(--theme-accent, var(--color-category-main)) 35%, transparent);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--theme-accent, var(--color-category-main)) 35%, transparent);
 
   &::before {
-    transform: scaleY(1.3);
-    background-color: var(--theme-accent, var(--color-category-main));
-    box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--theme-accent, var(--color-category-main)) 70%, transparent),
-      0 0 8px color-mix(in srgb, var(--theme-accent, var(--color-category-main)) 60%, transparent);
+    --glow-color: var(--theme-accent, var(--color-category-main));
+
+    @include control-glow-tokens;
+
+    transform: scale(1.25);
+    background-color: var(--glow-color);
+    box-shadow: var(--shadow-glow-dot);
   }
 }
 
@@ -105,13 +110,21 @@ label.label:focus-within {
 .req-mark,
 .required-mark {
   font-weight: var(--font-weight-bold);
-  line-height: 1;
+  line-height: var(--line-height-none);
   color: var(--color-status-danger);
+}
+
+.field-help-text {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-ui);
+  color: var(--color-text-muted);
 }
 
 .error-text {
   margin: 0;
   font-size: var(--font-size-xs);
+  line-height: var(--line-height-ui);
   color: var(--color-status-danger);
 }
 
@@ -123,7 +136,7 @@ label.label:focus-within {
   padding: 0;
   border: none;
 
-  line-height: 1;
+  line-height: var(--line-height-none);
   color: var(--color-text-muted);
 
   background: transparent;
@@ -138,12 +151,15 @@ label.label:focus-within {
 }
 
 .panel {
+  @include control-glow-tokens;
+
   isolation: isolate;
 
   padding: var(--space-panel-pad);
   border: var(--border-width-base) solid var(--color-border);
 
   background-color: var(--surface-bg);
+  background-image: var(--surface-gradient-base);
   backdrop-filter: blur(var(--blur-sm));
   box-shadow: var(--surface-rim-highlight), var(--shadow-elevation-sm);
 
@@ -160,11 +176,14 @@ label.label:focus-within {
 
   &.is-elevated {
     background-color: var(--surface-bg-elevated);
-    box-shadow: none;
+    background-image: var(--surface-gradient-base);
+    backdrop-filter: blur(var(--blur-sm));
+    box-shadow: var(--surface-rim-highlight);
   }
 
   &.is-sunken {
     background-color: var(--surface-bg-sunken);
+    background-image: none;
     box-shadow: var(--shadow-sink);
   }
 
@@ -181,18 +200,13 @@ label.label:focus-within {
       inset: 0;
 
       opacity: 0;
-      background: linear-gradient(
-        135deg,
-        color-mix(in srgb, var(--theme-accent) 10%, transparent) 0%,
-        color-mix(in srgb, var(--theme-accent) 3%, transparent) 45%,
-        transparent 80%
-      );
+      background: var(--surface-gradient-glow);
 
       transition: opacity var(--duration-base) var(--ease-base);
     }
 
     &:hover {
-      border-color: color-mix(in srgb, var(--theme-accent) 70%, var(--color-border));
+      border-color: color-mix(in srgb, var(--theme-accent) 55%, var(--color-border));
       box-shadow: var(--surface-rim-accent), var(--shadow-glow-hover);
 
       &::before {
@@ -212,98 +226,33 @@ label.label:focus-within {
   }
 
   &.is-active {
-    border-color: var(--theme-accent);
+    border-color: color-mix(in srgb, var(--theme-accent) 75%, var(--color-border));
+    background-image: var(--surface-gradient-glow), var(--surface-gradient-base);
     box-shadow: var(--surface-rim-accent), var(--shadow-glow-sm);
 
     &.is-interactive::before {
       opacity: 1;
-      background: linear-gradient(
-        135deg,
-        color-mix(in srgb, var(--theme-accent) 14%, transparent) 0%,
-        color-mix(in srgb, var(--theme-accent) 6%, transparent) 50%,
-        transparent 95%
-      );
     }
   }
 
-  @include state-disabled;
-}
-
-
-.tabs {
-  border-bottom: var(--border-width-base) solid var(--color-border);
-}
-
-.tabs-item {
-  position: relative;
-  z-index: 1;
-
-  display: inline-flex;
-  gap: var(--space-2);
-  align-items: center;
-  justify-content: center;
-
-  margin-bottom: -1px;
-  padding: 0.5em 0.9em;
-  border: none;
-  border-bottom: var(--border-width-thick, 2px) solid transparent;
-
-  font-size: inherit;
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
-
-  background: transparent;
-
-  transition: var(--transition-interactive);
-
-  @include state-interactive;
-
-  &:hover:not(:disabled, .is-active) {
-    color: var(--color-text-main);
-    background:
-      linear-gradient(
-        to bottom,
-        color-mix(in srgb, var(--color-overlay) 6%, transparent) 0%,
-        transparent 100%
-      );
+  &.is-success {
+    --glow-color: var(--color-status-success);
   }
 
-  &:focus-visible {
-    outline: none;
-    box-shadow: var(--shadow-glow-focus);
+  &.is-warning {
+    --glow-color: var(--color-status-warning);
   }
 
-  &.is-active {
-    border-bottom-color: transparent;
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-text-main);
-    background:
-      linear-gradient(
-        to top,
-        color-mix(in srgb, var(--theme-accent) 8%, transparent) 0%,
-        transparent 70%
-      );
+  &.is-danger {
+    --glow-color: var(--color-status-danger);
+  }
 
-    &::after {
-      content: "";
-
-      position: absolute;
-      right: 0;
-      bottom: -1px;
-      left: 0;
-
-      height: var(--border-width-thick, 2px);
-
-      background:
-        linear-gradient(
-          90deg,
-          transparent 0%,
-          var(--theme-accent) 20%,
-          var(--theme-accent) 80%,
-          transparent 100%
-        );
-      box-shadow: var(--shadow-glow-sm);
-    }
+  &.is-success,
+  &.is-warning,
+  &.is-danger {
+    border-color: color-mix(in srgb, var(--glow-color) 36%, var(--color-border));
+    background-image: var(--surface-gradient-glow), var(--surface-gradient-base);
+    box-shadow: var(--surface-rim-highlight), var(--shadow-glow-ambient);
   }
 
   @include state-disabled;
@@ -313,6 +262,8 @@ label.label:focus-within {
 .app-header {
   border-bottom: var(--border-width-base) solid var(--color-border);
   background-color: var(--surface-bg);
+  background-image: var(--surface-gradient-base);
+  backdrop-filter: blur(var(--blur-md));
 }
 
 .slide-enter-active,
@@ -349,10 +300,12 @@ label.label:focus-within {
 
 // 電設ツール計算結果タイル & 詳細リスト共通スタイル
 .result-tile {
+  @include control-glow-tokens;
+
   padding: var(--space-2) var(--space-3);
   border: var(--border-width-base) solid var(--color-border);
 
-  background: var(--surface-bg);
+  background: var(--surface-gradient-base), var(--surface-bg);
   box-shadow: var(--shadow-sink);
 
   transition: var(--transition-panel);
@@ -368,7 +321,8 @@ label.label:focus-within {
   .tile-header {
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
-    color: var(--color-text-main);
+    line-height: var(--line-height-ui);
+    color: var(--color-text-secondary);
     letter-spacing: var(--tracking-wide);
   }
 
@@ -379,6 +333,7 @@ label.label:focus-within {
     font-variant-numeric: tabular-nums;
     line-height: var(--line-height-tight);
     color: var(--color-text-main);
+    letter-spacing: var(--tracking-tight);
 
     .value-unit,
     .value-sep,
@@ -387,6 +342,7 @@ label.label:focus-within {
       font-size: var(--font-size-sm);
       font-weight: var(--font-weight-normal);
       color: var(--color-text-secondary);
+      letter-spacing: var(--tracking-normal);
     }
   }
 
@@ -405,10 +361,15 @@ label.label:focus-within {
   &.is-success,
   &.is-warning,
   &.is-danger {
-    border-color: color-mix(in srgb, var(--status-color) 40%, transparent);
+    --glow-color: var(--status-color);
+
+    border-color: color-mix(in srgb, var(--status-color) 38%, var(--color-border));
+    background: var(--surface-gradient-glow), var(--surface-bg);
+    box-shadow: var(--shadow-glow-ambient), var(--shadow-sink);
 
     .tile-value {
       color: var(--status-color);
+      text-shadow: 0 0 12px color-mix(in srgb, var(--status-color) 28%, transparent);
     }
   }
 

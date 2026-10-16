@@ -77,7 +77,7 @@ const offlineBanner = computed(() => {
         </Tooltip>
         <NuxtLink to="/" class="flex items-center">
           <h4 class="flex shrink-0 items-center gap-item-gap whitespace-nowrap">
-            <Icon name="gauge" style="color: var(--theme-accent)" />
+            <Icon name="gauge" variant="accent" />
             <span>Elec-Console</span>
           </h4>
         </NuxtLink>
@@ -101,7 +101,7 @@ const offlineBanner = computed(() => {
     <main class="flex flex-1 flex-col min-h-0 overflow-y-auto p-layout-pad gap-panel-gap">
       <Breadcrumbs :items="breadcrumbItems" />
       <slot />
-      <footer class="mt-auto flex flex-col items-center gap-item-gap pt-layout-pad text-center">
+      <footer class="mt-auto flex flex-col items-center gap-item-gap text-center">
         <hr class="divider is-fade-center">
         <small>&copy; {{ currentYear }} Mat.Operate &amp; Gemini 3.8 Flash. / Elec-Console All rights reserved.</small>
       </footer>

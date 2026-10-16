@@ -59,7 +59,7 @@ const iconComponent = computed(() => {
   }
 
   &.is-accent {
-    color: var(--theme-accent, var(--color-accent-main));
+    color: var(--section-accent, var(--theme-accent, var(--color-accent-main)));
   }
 
   &.is-success {

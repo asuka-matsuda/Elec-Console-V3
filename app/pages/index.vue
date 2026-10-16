@@ -69,7 +69,7 @@ const resolveMenuBadge = (item: MenuItem): { text: string, variant: BadgeVariant
       <section v-for="section in dashboardSections" :key="section.heading" class="flex flex-col gap-panel-gap" :style="`--theme-accent: var(--color-category-${section.accent || 'main'})`">
         <header>
           <h2 class="flex items-center gap-item-gap">
-            <Icon v-if="section.icon" :name="section.icon" style="color: var(--theme-accent)" />
+            <Icon v-if="section.icon" :name="section.icon" variant="accent" />
             <span>{{ section.heading }}</span>
           </h2>
         </header>
@@ -79,8 +79,8 @@ const resolveMenuBadge = (item: MenuItem): { text: string, variant: BadgeVariant
           <li v-for="item in section.items" :key="item.text" class="flex">
             <component :is="!item.disabled && item.href ? NuxtLink : 'div'" :to="!item.disabled && item.href ? item.href : undefined" :disabled="Boolean(item.disabled)" class="panel is-interactive flex flex-col gap-panel-gap h-full w-full">
               <header v-if="item.icon || item.text || resolveMenuBadge(item)" class="flex items-center gap-item-gap min-w-0">
-                <Icon v-if="item.icon" :name="item.icon" style="color: var(--theme-accent)" />
-                <strong v-if="item.text" class="flex-1 min-w-0" style="color: var(--theme-accent)">{{ item.text }}</strong>
+                <Icon v-if="item.icon" :name="item.icon" variant="accent" />
+                <strong v-if="item.text" class="flex-1 min-w-0">{{ item.text }}</strong>
                 <Badge v-if="resolveMenuBadge(item)" :variant="resolveMenuBadge(item)!.variant" class="shrink-0 ml-auto">{{ resolveMenuBadge(item)!.text }}</Badge>
               </header>
 
@@ -98,14 +98,14 @@ const resolveMenuBadge = (item: MenuItem): { text: string, variant: BadgeVariant
       <section class="flex flex-col gap-panel-gap">
         <header>
           <h3 class="flex items-center gap-item-gap">
-            <Icon name="bell" style="color: var(--theme-accent)" />
+            <Icon name="bell" variant="accent" />
             <span>お知らせ</span>
           </h3>
         </header>
         <hr class="divider">
 
         <div v-if="isDashboardPending" class="flex flex-col gap-item-gap">
-          <div v-for="skeletonIndex in 2" :key="`announcement-skeleton-${skeletonIndex}`" class="panel flex flex-col gap-inline-gap">
+          <div v-for="skeletonIndex in 2" :key="`announcement-skeleton-${skeletonIndex}`" class="panel p-panel-pad-compact flex flex-col gap-inline-gap">
             <Skeleton width="5rem" height="0.85rem" />
             <Skeleton width="85%" height="1.1rem" />
           </div>
@@ -114,7 +114,7 @@ const resolveMenuBadge = (item: MenuItem): { text: string, variant: BadgeVariant
         <div v-else class="flex flex-col gap-item-gap">
           <ul class="flex flex-col gap-item-gap">
             <li v-for="(item, index) in latestAnnouncements" :key="item.id ?? index">
-              <button type="button" class="panel is-interactive w-full flex flex-col gap-inline-gap text-left" @click="activeDetail = { item, type: 'announcement' }">
+              <button type="button" class="panel is-interactive p-panel-pad-compact w-full flex flex-col gap-inline-gap text-left" @click="activeDetail = { item, type: 'announcement' }">
                 <div class="flex items-center justify-between gap-item-gap w-full">
                   <time>{{ formatDate(item.date) }}</time>
                 </div>
@@ -126,7 +126,7 @@ const resolveMenuBadge = (item: MenuItem): { text: string, variant: BadgeVariant
           <Collapse v-if="olderAnnouncements.length > 0" :title="`過去のお知らせ (${olderAnnouncements.length}件)`" icon="history" card>
             <ul class="flex flex-col gap-item-gap max-h-[220px] overflow-y-auto">
               <li v-for="(item, index) in olderAnnouncements" :key="item.id ?? index">
-                <button type="button" class="panel is-interactive w-full flex flex-col gap-inline-gap text-left" @click="activeDetail = { item, type: 'announcement' }">
+                <button type="button" class="panel is-interactive p-panel-pad-compact w-full flex flex-col gap-inline-gap text-left" @click="activeDetail = { item, type: 'announcement' }">
                   <div class="flex items-center justify-between gap-item-gap w-full">
                     <time>{{ formatDate(item.date) }}</time>
                   </div>
@@ -142,14 +142,14 @@ const resolveMenuBadge = (item: MenuItem): { text: string, variant: BadgeVariant
       <section class="flex flex-col gap-panel-gap">
         <header>
           <h3 class="flex items-center gap-item-gap">
-            <Icon name="clock" style="color: var(--theme-accent)" />
+            <Icon name="clock" variant="accent" />
             <span>更新履歴</span>
           </h3>
         </header>
         <hr class="divider">
 
         <div v-if="isDashboardPending" class="flex flex-col gap-item-gap">
-          <div v-for="skeletonIndex in 2" :key="`history-skeleton-${skeletonIndex}`" class="panel flex flex-col gap-inline-gap">
+          <div v-for="skeletonIndex in 2" :key="`history-skeleton-${skeletonIndex}`" class="panel p-panel-pad-compact flex flex-col gap-inline-gap">
             <div class="flex items-center justify-between gap-item-gap">
               <Skeleton width="5rem" height="0.85rem" />
               <Skeleton width="3rem" height="0.85rem" />
@@ -161,7 +161,7 @@ const resolveMenuBadge = (item: MenuItem): { text: string, variant: BadgeVariant
         <div v-else class="flex flex-col gap-item-gap">
           <ul class="flex flex-col gap-item-gap">
             <li v-for="(item, index) in latestHistory" :key="item.id ?? index">
-              <button type="button" class="panel is-interactive w-full flex flex-col gap-inline-gap text-left" @click="activeDetail = { item, type: 'history' }">
+              <button type="button" class="panel is-interactive p-panel-pad-compact w-full flex flex-col gap-inline-gap text-left" @click="activeDetail = { item, type: 'history' }">
                 <div class="flex items-center justify-between gap-item-gap w-full">
                   <time>{{ formatDate(item.date) }}</time>
                   <Badge v-if="item.version" size="sm" variant="gray" class="shrink-0">{{ item.version }}</Badge>
@@ -174,7 +174,7 @@ const resolveMenuBadge = (item: MenuItem): { text: string, variant: BadgeVariant
           <Collapse v-if="olderHistory.length > 0" :title="`過去の更新履歴 (${olderHistory.length}件)`" icon="history" card>
             <ul class="flex flex-col gap-item-gap max-h-[220px] overflow-y-auto">
               <li v-for="(item, index) in olderHistory" :key="item.id ?? index">
-                <button type="button" class="panel is-interactive w-full flex flex-col gap-inline-gap text-left" @click="activeDetail = { item, type: 'history' }">
+                <button type="button" class="panel is-interactive p-panel-pad-compact w-full flex flex-col gap-inline-gap text-left" @click="activeDetail = { item, type: 'history' }">
                   <div class="flex items-center justify-between gap-item-gap w-full">
                     <time>{{ formatDate(item.date) }}</time>
                     <Badge v-if="item.version" size="sm" variant="gray" class="shrink-0">{{ item.version }}</Badge>

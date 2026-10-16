@@ -98,19 +98,23 @@ const shouldShowText = computed(() => {
   .gauge-value {
     font-family: var(--font-mono);
     font-weight: var(--font-weight-bold);
-    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    line-height: var(--line-height-none);
     color: var(--color-text-main);
+    letter-spacing: var(--tracking-tight);
   }
 
   .gauge-number {
-    font-size: var(--font-size-xl);
+    font-size: var(--font-size-lg);
   }
 
   .gauge-unit {
     margin-inline-start: var(--space-0-5);
+
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-normal);
     color: var(--color-text-secondary);
+    letter-spacing: var(--tracking-normal);
   }
 
   .gauge-label {
@@ -121,7 +125,7 @@ const shouldShowText = computed(() => {
 
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
-    line-height: 1;
+    line-height: var(--line-height-none);
     color: var(--color-text-muted);
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -132,6 +136,7 @@ const shouldShowText = computed(() => {
 
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-ui);
     color: var(--color-text-secondary);
     white-space: nowrap;
   }
@@ -155,7 +160,7 @@ const shouldShowText = computed(() => {
     --gauge-stroke: 6;
 
     .gauge-number {
-      font-size: var(--font-size-xl);
+      font-size: var(--font-size-lg);
     }
   }
 
@@ -164,7 +169,7 @@ const shouldShowText = computed(() => {
     --gauge-stroke: 5;
 
     .gauge-number {
-      font-size: var(--font-size-4xl);
+      font-size: var(--font-size-3xl);
     }
 
     .gauge-unit {

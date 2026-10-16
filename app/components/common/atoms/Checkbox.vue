@@ -114,11 +114,13 @@ const customStyle = computed(() => {
     &:checked ~ .box,
     &:indeterminate ~ .box {
       border-color: var(--control-checked-bg);
-      background-color: var(--control-checked-bg);
-      box-shadow: var(--shadow-glow-active);
+      background-color: color-mix(in srgb, var(--control-checked-bg) 24%, var(--surface-bg-elevated));
+      background-image: var(--surface-gradient-base);
+      box-shadow: var(--surface-rim-accent), var(--shadow-glow-sm);
 
       .icon {
         transform: scale(1);
+        color: var(--control-checked-bg);
         opacity: 1;
       }
     }
@@ -143,7 +145,7 @@ const customStyle = computed(() => {
     width: 0.875rem;
     height: 0.875rem;
 
-    color: var(--control-checked-icon);
+    color: var(--control-checked-bg);
 
     opacity: 0;
 

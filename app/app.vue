@@ -45,9 +45,7 @@ if (import.meta.client) {
       <Button :variant="confirmIntent" @click="onConfirmExecute">{{ confirmBtnText }}</Button>
     </template>
 
-    <div class="py-item-gap">
-      {{ confirmMessage }}
-    </div>
+    <p>{{ confirmMessage }}</p>
   </Modal>
 
   <Toast />

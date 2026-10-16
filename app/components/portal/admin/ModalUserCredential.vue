@@ -76,17 +76,18 @@ const handlePrint = () => {
 
         <div class="flex flex-col gap-inline-gap">
           <span class="label">ログインID</span>
-          <strong>
+          <div>
             <code>{{ user.loginId || user.id }}</code>
-          </strong>
+          </div>
         </div>
 
         <div class="flex flex-col gap-inline-gap">
           <span class="label">初期パスワード</span>
           <div class="flex items-center gap-item-gap">
-            <strong class="flex-1" style="color: var(--color-status-success)">
-              <code>{{ user.initialPassword || "（既に設定済みです）" }}</code>
-            </strong>
+            <div class="flex-1">
+              <code v-if="user.initialPassword">{{ user.initialPassword }}</code>
+              <small v-else>（既に設定済みです）</small>
+            </div>
             <Button v-if="user.initialPassword" variant="secondary" size="sm" :icon="isCopied ? 'check' : 'copy'" @click="handleCopyPassword">{{ isCopied ? 'コピー完了' : 'パスワードをコピー' }}</Button>
           </div>
         </div>

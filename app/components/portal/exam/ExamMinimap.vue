@@ -42,6 +42,10 @@ const getTileClass = (c: CircuitItem): string =>
 }
 
 .minimap-tile {
+  --glow-color: var(--color-status-success);
+
+  @include control-glow-tokens;
+
   padding: 0;
   border: 1px solid var(--color-tile-empty-border);
   background-color: var(--color-tile-empty-bg);
@@ -57,7 +61,8 @@ const getTileClass = (c: CircuitItem): string =>
 
 .minimap-tile.is-completed {
   border-color: var(--color-status-success);
-  background-color: var(--color-status-success);
+  background-color: color-mix(in srgb, var(--color-status-success) 38%, var(--surface-bg-elevated));
+  box-shadow: var(--shadow-glow-sm);
 }
 
 .minimap-tile.is-excluded {

@@ -292,7 +292,7 @@ const isPresetActive = (preset: CalendarPreset): boolean => {
 <template>
   <div class="calendar panel" :class="[`calendar--${size}`, `calendar--${layout}`, layout === 'stacked' ? 'flex-col' : '', { 'is-disabled': disabled }]">
     <!-- プリセット一覧 (horizontal: 左カラム / stacked: 上部行) -->
-    <div v-if="presets.length > 0" class="calendar-presets flex gap-inline-gap" :class="layout === 'horizontal' ? 'flex-col pr-panel-gap border-r' : 'flex-wrap pb-panel-gap border-b'">
+    <div v-if="presets.length > 0" class="calendar-presets flex gap-inline-gap" :class="layout === 'horizontal' ? 'flex-col pr-3 border-r' : 'flex-wrap pb-3 border-b'">
       <Button
         v-for="preset in presets"
         :key="preset.label"
@@ -387,9 +387,9 @@ const isPresetActive = (preset: CalendarPreset): boolean => {
 
 .calendar-title {
   font-size: var(--cal-font-size);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text-main);
-  letter-spacing: var(--tracking-wide);
+  letter-spacing: var(--tracking-normal);
 }
 
 .calendar-weekday {
@@ -408,6 +408,8 @@ const isPresetActive = (preset: CalendarPreset): boolean => {
 }
 
 .calendar-cell {
+  @include control-glow-tokens;
+
   position: relative;
 
   width: var(--cal-cell-size);
@@ -418,6 +420,7 @@ const isPresetActive = (preset: CalendarPreset): boolean => {
 
   font-family: var(--font-mono);
   font-size: var(--cal-font-size);
+  font-variant-numeric: tabular-nums;
   color: var(--color-text-main);
 
   background: transparent;
@@ -446,24 +449,21 @@ const isPresetActive = (preset: CalendarPreset): boolean => {
   // 今日の表示（控えめな枠線または太字）
   &.is-today:not(.is-picked, .is-range-start, .is-range-end) {
     border-color: color-mix(in srgb, var(--theme-accent) 50%, transparent);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
   }
 
-  // 単一選択
-  &.is-picked {
-    border-color: var(--theme-accent);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-on-emphasis);
-    background-color: var(--theme-accent);
-  }
-
-  // 期間選択の始点・終点
+  // 単一選択・期間選択の始点・終点
+  &.is-picked,
   &.is-range-start,
   &.is-range-end {
     border-color: var(--theme-accent);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-on-emphasis);
-    background-color: var(--theme-accent);
+
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-main);
+
+    background-color: color-mix(in srgb, var(--theme-accent) 26%, var(--surface-bg-elevated));
+    background-image: var(--surface-gradient-base);
+    box-shadow: var(--surface-rim-accent), var(--shadow-glow-sm);
   }
 
   // 期間選択の範囲内

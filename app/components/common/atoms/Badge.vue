@@ -46,16 +46,18 @@ const normalizedVariant = computed(() => {
 
   user-select: none;
 
-  border: var(--border-width-base) solid color-mix(in srgb, var(--badge-color) 35%, transparent);
+  border: var(--border-width-base) solid color-mix(in srgb, var(--badge-color) 32%, transparent);
 
   font-family: var(--font-mono);
   font-weight: var(--font-weight-semibold);
-  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  line-height: var(--line-height-none);
   color: var(--badge-color);
   letter-spacing: var(--tracking-wide);
   white-space: nowrap;
 
   background-color: color-mix(in srgb, var(--badge-color) 12%, transparent);
+  background-image: var(--surface-gradient-base);
 
   // --- Sizes ---
   &--sm {
@@ -114,9 +116,10 @@ const normalizedVariant = computed(() => {
   }
 
   &--inverted {
-    border-color: transparent;
-    color: var(--color-main-bg);
-    background-color: var(--color-text-main);
+    border-color: color-mix(in srgb, var(--color-text-main) 45%, transparent);
+    color: var(--color-text-main);
+    background-color: color-mix(in srgb, var(--color-text-main) 14%, var(--surface-bg-elevated));
+    box-shadow: var(--surface-rim-highlight);
   }
 
   .badge-icon {

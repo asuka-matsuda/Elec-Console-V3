@@ -268,7 +268,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-1 flex-col gap-item-gap h-full min-h-0">
+  <div class="flex flex-1 flex-col gap-panel-gap h-full min-h-0">
     <Note v-if="dataError" variant="error" :text="dataError" class="shrink-0" />
 
     <!-- 最上部ツールバー: タブ ＆ 設定保存ボタン（固定） -->
@@ -280,7 +280,7 @@ onMounted(() => {
     </div>
 
     <!-- 負荷アドレス一覧タブ -->
-    <div v-if="currentTab === 'addresses'" class="flex flex-1 flex-col gap-item-gap min-h-0">
+    <div v-if="currentTab === 'addresses'" class="flex flex-1 flex-col gap-panel-gap min-h-0">
       <!-- フィルターバー（固定） -->
       <div class="panel p-panel-pad-compact grid grid-cols-1 gap-item-gap shrink-0" :class="densoKeiToList.length > 1 ? 'sm:grid-cols-3' : 'sm:grid-cols-2'">
         <div v-if="densoKeiToList.length > 1" class="flex flex-col gap-inline-gap">
@@ -335,8 +335,7 @@ onMounted(() => {
         </template>
 
         <template #cell-fukaAddress="{ row }">
-          <small v-if="row.isVacant"><code>{{ row.fukaAddress }}</code></small>
-          <strong v-else><code>{{ row.fukaAddress }}</code></strong>
+          <code>{{ row.fukaAddress }}</code>
         </template>
 
         <template #cell-densoKeiTo="{ row }">
@@ -383,7 +382,7 @@ onMounted(() => {
     </div>
 
     <!-- グループ編成 / パターン編成タブ -->
-    <div v-else-if="currentBoardConfig" class="flex flex-1 flex-col gap-item-gap min-h-0">
+    <div v-else-if="currentBoardConfig" class="flex flex-1 flex-col gap-panel-gap min-h-0">
       <p class="field-help-text shrink-0">
         {{ currentBoardConfig.description }}
       </p>
@@ -391,9 +390,9 @@ onMounted(() => {
       <EmptyState v-if="currentBoardConfig.items.length === 0" :icon="currentBoardConfig.emptyIcon" :title="currentBoardConfig.emptyTitle" :description="currentBoardConfig.emptyDesc" />
 
       <ul v-else class="grid grid-cols-1 md:grid-cols-2 gap-item-gap flex-1 min-h-0 overflow-y-auto max-h-[560px]">
-        <li v-for="card in currentBoardConfig.items" :key="card.key" class="panel is-sunken p-item-gap flex flex-col gap-inline-gap">
+        <li v-for="card in currentBoardConfig.items" :key="card.key" class="panel is-sunken p-panel-pad-compact flex flex-col gap-inline-gap">
           <div class="flex justify-between items-center">
-            <strong><code>{{ card.key }}</code></strong>
+            <code>{{ card.key }}</code>
             <small>{{ card.count }}回路</small>
           </div>
 

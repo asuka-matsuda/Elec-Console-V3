@@ -70,7 +70,7 @@ const handleCancel = async (toast: ToastItem) => {
 </script>
 
 <template>
-  <div ref="containerRef" popover="manual" class="toast-container fixed bottom-6 right-6 z-[1080] flex flex-col gap-item-gap max-w-sm w-full p-layout-pad">
+  <div ref="containerRef" popover="manual" class="toast-container fixed z-[1080] flex flex-col gap-item-gap max-w-sm w-full">
     <TransitionGroup name="toast">
       <div v-for="toast in toasts" :key="toast.id" class="toast-card flex items-center justify-between gap-item-gap" :class="`is-${toast.type}`">
         <div class="flex items-center gap-inline-gap min-w-0 flex-1">
@@ -100,9 +100,10 @@ const handleCancel = async (toast: ToastItem) => {
 .toast-container {
   pointer-events: none;
 
-  inset: auto 1.5rem 1.5rem auto;
+  inset: auto var(--space-layout-pad) var(--space-layout-pad) auto;
 
   margin: 0;
+  padding: 0;
   border: none;
 
   background: transparent;
@@ -114,19 +115,23 @@ const handleCancel = async (toast: ToastItem) => {
 
 .toast-card {
   --toast-accent: var(--theme-accent);
+  --glow-color: var(--toast-accent);
+
+  @include control-glow-tokens;
 
   pointer-events: auto;
 
   padding: var(--space-panel-pad-compact);
-  border: var(--border-width-base) solid var(--toast-accent);
+  border: var(--border-width-base) solid color-mix(in srgb, var(--toast-accent) 38%, var(--color-border));
   border-radius: 0;
 
   background-color: var(--surface-bg-solid);
+  background-image: var(--surface-gradient-glow), var(--surface-gradient-base);
   backdrop-filter: blur(var(--blur-md));
-  box-shadow: var(--shadow-elevation-md);
+  box-shadow: var(--surface-rim-highlight), var(--shadow-glow-ambient), var(--shadow-elevation-md);
 
   &.is-default {
-    --toast-accent: var(--color-border-subtle);
+    --toast-accent: var(--color-border-hover);
   }
 
   &.is-info {

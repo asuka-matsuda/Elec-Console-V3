@@ -192,7 +192,7 @@ defineExpose({
 
 <style scoped lang="scss">
 .custom-select {
-  --select-height: 2.5rem; // md: 40px
+  --select-height: 40px;
   --select-font-size: var(--font-size-sm);
   --select-padding-x: var(--space-3);
   --select-gap: var(--space-2);
@@ -206,21 +206,21 @@ defineExpose({
 
   // --- サイズ展開 (Geist準拠: sm 32px / md 40px / lg 48px) ---
   &.select--sm {
-    --select-height: 2rem; // 32px
+    --select-height: 32px;
     --select-font-size: var(--font-size-xs);
     --select-padding-x: var(--space-2);
     --select-gap: var(--space-1);
   }
 
   &.select--md {
-    --select-height: 2.5rem; // 40px
+    --select-height: 40px;
     --select-font-size: var(--font-size-sm);
     --select-padding-x: var(--space-3);
     --select-gap: var(--space-2);
   }
 
   &.select--lg {
-    --select-height: 3rem; // 48px
+    --select-height: 48px;
     --select-font-size: var(--font-size-base);
     --select-padding-x: var(--space-4);
     --select-gap: var(--space-3);

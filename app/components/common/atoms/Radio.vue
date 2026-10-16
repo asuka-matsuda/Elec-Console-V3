@@ -127,11 +127,13 @@ const customStyle = computed(() => {
 
   &.is-checked .circle {
     border-color: var(--control-checked-bg);
-    box-shadow: var(--shadow-glow-active);
+    background-color: color-mix(in srgb, var(--control-checked-bg) 18%, var(--surface-bg-elevated));
+    box-shadow: var(--shadow-glow-sm);
 
     .dot {
       transform: scale(1);
       opacity: 1;
+      box-shadow: var(--shadow-glow-dot);
     }
   }
 

@@ -41,7 +41,7 @@ const vm = computed(() =>
       </header>
       <output class="tile-value flex items-center justify-center gap-item-gap">
         <span v-if="vm.tier2.isApplicable">{{ vm.tier2.displaySize }}</span>
-        <span v-else class="not-applicable py-inline-gap">{{ vm.tier2.notApplicableText }}</span>
+        <span v-else class="not-applicable py-1">{{ vm.tier2.notApplicableText }}</span>
       </output>
     </div>
 

@@ -52,7 +52,7 @@ const { sortBy, sortOrder, sortedData } = useTableSort(filteredData)
 
     <Note variant="secondary" text="注記: 掲載データはJISおよび内線規程等に基づく標準規格値です。選定にあたってはメーカー仕様書も併せてご確認ください。" />
 
-    <section class="panel flex flex-col gap-form-row-gap">
+    <section class="panel flex flex-col gap-panel-gap">
       <header class="flex items-center justify-between">
         <h3 class="flex items-center gap-item-gap">
           <Icon name="search" />
@@ -62,6 +62,7 @@ const { sortBy, sortOrder, sortedData } = useTableSort(filteredData)
           <Button size="sm" icon="circle-dot" @click="isDiagramOpen = true">寸法図解を確認する</Button>
         </div>
       </header>
+      <hr class="divider">
 
       <Input v-model="searchQuery" :placeholder="currentDb.placeholder" icon="search" clearable />
 

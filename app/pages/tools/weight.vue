@@ -43,7 +43,7 @@ watch(
       <section class="panel flex flex-1 flex-col gap-panel-gap min-h-0">
         <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
           <h3 class="flex items-center gap-item-gap">
-            <Icon name="edit" style="color: var(--color-category-tool)" />
+            <Icon name="edit" variant="accent" />
             <span>条件入力</span>
           </h3>
           <div class="flex items-center gap-item-gap">
@@ -52,7 +52,7 @@ watch(
         </header>
         <hr class="divider">
 
-        <form class="flex flex-1 flex-col min-h-0 overflow-y-auto" @submit.prevent>
+        <form class="flex flex-1 flex-col gap-form-row-gap min-h-0 overflow-y-auto" @submit.prevent>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-form-col-gap gap-y-form-row-gap">
             <div class="flex flex-col gap-inline-gap">
               <label for="weight-category" class="label">ケーブル種別</label>
@@ -75,7 +75,7 @@ watch(
       <section class="panel flex flex-1 flex-col gap-panel-gap min-h-0">
         <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
           <h3 class="flex items-center gap-item-gap">
-            <Icon :name="isShowingBasis ? 'book' : 'check-square'" style="color: var(--color-category-tool)" />
+            <Icon :name="isShowingBasis ? 'book' : 'check-square'" variant="accent" />
             <span>{{ isShowingBasis ? '計算根拠' : '計算結果・選定結果' }}</span>
           </h3>
           <div class="flex items-center gap-item-gap">

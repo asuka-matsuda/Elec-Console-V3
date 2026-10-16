@@ -53,6 +53,7 @@ export default <Config>{
         '6': 'var(--space-6, 24px)',
         '8': 'var(--space-8, 32px)',
         '10': 'var(--space-10, 40px)',
+        '12': 'var(--space-12, 48px)',
 
         // セマンティック余白
         'layout-pad': 'var(--space-layout-pad)',

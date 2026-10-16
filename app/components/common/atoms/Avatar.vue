@@ -94,7 +94,7 @@ const fallbackText = computed(() => {
 
     font-family: var(--font-mono);
     font-weight: var(--font-weight-semibold);
-    line-height: 1;
+    line-height: var(--line-height-none);
     text-transform: uppercase;
     letter-spacing: var(--tracking-wide);
   }

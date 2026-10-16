@@ -483,7 +483,9 @@ const confirmDeleteSite = async (site: Site) => {
                 <Badge :variant="SITE_STATUS_CONFIG[site.status]?.variant">{{ SITE_STATUS_CONFIG[site.status]?.label }}</Badge>
                 <Badge v-if="site.disabledAt" variant="red">無効</Badge>
               </div>
-              <small>ID: <code>{{ site.id }}</code></small>
+              <div>
+                <code>{{ site.id }}</code>
+              </div>
             </div>
 
             <Button v-if="isMaster" class="shrink-0" size="sm" :variant="site.disabledAt ? 'secondary' : 'danger'" @click.stop="confirmToggleDisable(site)">{{ site.disabledAt ? '有効化する' : '無効化する' }}</Button>
@@ -519,9 +521,9 @@ const confirmDeleteSite = async (site: Site) => {
         <header class="flex items-center justify-between gap-y-inline-gap gap-x-item-gap">
           <h3 class="flex items-center gap-item-gap">
             <Icon name="settings" />
-            <span class="flex items-baseline gap-item-gap">
+            <span class="flex items-center gap-item-gap">
               <span>{{ selectedSite.name }}</span>
-              <small>(ID: <code>{{ selectedSite.id }}</code>)</small>
+              <code>{{ selectedSite.id }}</code>
             </span>
           </h3>
 
@@ -572,7 +574,7 @@ const confirmDeleteSite = async (site: Site) => {
 
         <!-- Excel連携タブ -->
         <div v-else-if="activeTab === 'integration'" class="flex flex-col gap-panel-gap">
-          <section class="panel is-elevated flex flex-col gap-panel-gap p-panel-pad">
+          <section class="flex flex-col gap-panel-gap">
             <header class="flex items-center justify-between">
               <h4 class="flex items-center gap-item-gap">
                 <Icon name="file-spreadsheet" />
@@ -582,7 +584,7 @@ const confirmDeleteSite = async (site: Site) => {
             </header>
             <hr class="divider">
 
-            <div class="flex flex-wrap items-center justify-between gap-item-gap py-inline-gap">
+            <div class="flex flex-wrap items-center justify-between gap-item-gap">
               <div class="flex items-center gap-item-gap field-help-text">
                 <span class="label">登録台帳:</span>
                 <code v-if="hasExcelPath">{{ currentExcelFileName }}</code>
@@ -614,7 +616,7 @@ const confirmDeleteSite = async (site: Site) => {
               </Button>
             </div>
 
-            <div class="panel is-sunken flex flex-col gap-inline-gap p-item-gap">
+            <div class="panel is-sunken p-panel-pad-compact flex flex-col gap-inline-gap">
               <div class="flex items-center justify-between">
                 <span class="label flex items-center gap-item-gap">
                   <Icon name="filter" size="sm" />
@@ -658,8 +660,8 @@ const confirmDeleteSite = async (site: Site) => {
         </div>
 
         <!-- 休日設定タブ -->
-        <div v-else-if="activeTab === 'holidays'" class="flex flex-col gap-panel-gap max-w-2xl">
-          <section class="panel is-elevated flex flex-col gap-form-row-gap p-panel-pad">
+        <div v-else-if="activeTab === 'holidays'" class="flex flex-col gap-section-gap max-w-2xl">
+          <section class="flex flex-col gap-form-row-gap">
             <header class="flex items-center justify-between gap-item-gap">
               <h4 class="flex items-center gap-item-gap">
                 <Icon name="calendar" />
@@ -683,7 +685,7 @@ const confirmDeleteSite = async (site: Site) => {
             </ul>
           </section>
 
-          <section class="panel is-elevated flex flex-col gap-form-row-gap p-panel-pad">
+          <section class="flex flex-col gap-form-row-gap">
             <header class="flex items-center justify-between gap-item-gap">
               <h4 class="flex items-center gap-item-gap">
                 <Icon name="calendar" />
@@ -776,10 +778,8 @@ const confirmDeleteSite = async (site: Site) => {
     </form>
 
     <template #footer>
-      <div class="flex items-center justify-end gap-inline-gap w-full">
-        <Button variant="secondary" @click="isCreateModalOpen = false">キャンセル</Button>
-        <Button variant="primary" :loading="isCreatingSite" @click="handleCreateSite">現場を作成する</Button>
-      </div>
+      <Button variant="secondary" @click="isCreateModalOpen = false">キャンセル</Button>
+      <Button variant="primary" :loading="isCreatingSite" @click="handleCreateSite">現場を作成する</Button>
     </template>
   </Modal>
 </template>

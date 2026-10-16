@@ -70,17 +70,18 @@ const getColorName = (colorHex?: string) => {
         <Badge size="sm" variant="gray">全 {{ types.length }} 件</Badge>
       </div>
 
-      <ul class="flex flex-col gap-item-gap max-h-[440px] overflow-y-auto pr-inline-gap">
+      <ul class="flex flex-col gap-item-gap max-h-[440px] overflow-y-auto">
         <li
           v-for="(t, index) in types"
           :key="t.id"
-          class="panel is-elevated flex flex-col gap-item-gap p-item-gap"
-          :style="{ borderLeft: `4px solid ${t.color}` }"
+          class="panel is-elevated p-panel-pad-compact flex flex-col gap-item-gap"
+          :class="{ 'is-active': activePaletteId === t.id }"
+          :style="{ '--theme-accent': t.color, '--glow-color': t.color }"
         >
           <div class="flex items-center gap-item-gap w-full">
             <button
               type="button"
-              class="panel is-interactive flex items-center gap-inline-gap px-item-gap h-10 shrink-0"
+              class="panel is-interactive p-panel-pad-compact flex items-center gap-inline-gap h-10 shrink-0"
               :class="{ 'is-active': activePaletteId === t.id }"
               title="カラーパレットを開閉"
               @click="togglePalette(t.id)"
@@ -98,7 +99,7 @@ const getColorName = (colorHex?: string) => {
 
             <button
               type="button"
-              class="panel is-interactive shrink-0 hidden sm:flex items-center gap-inline-gap px-item-gap py-inline-gap max-w-[180px]"
+              class="panel is-interactive p-panel-pad-compact shrink-0 hidden sm:flex items-center gap-inline-gap max-w-[180px]"
               :style="{ borderColor: t.color }"
               title="カレンダー上の表示プレビュー（クリックでカラー選択）"
               @click="togglePalette(t.id)"
@@ -121,7 +122,7 @@ const getColorName = (colorHex?: string) => {
             <small>プレビュー</small>
             <button
               type="button"
-              class="panel is-interactive flex items-center gap-inline-gap px-item-gap py-inline-gap max-w-[180px]"
+              class="panel is-interactive p-panel-pad-compact flex items-center gap-inline-gap max-w-[180px]"
               :style="{ borderColor: t.color }"
               title="カレンダー上の表示プレビュー（クリックでカラー選択）"
               @click="togglePalette(t.id)"
@@ -131,7 +132,7 @@ const getColorName = (colorHex?: string) => {
             </button>
           </div>
 
-          <div v-if="activePaletteId === t.id" class="panel is-sunken p-item-gap flex flex-col gap-inline-gap">
+          <div v-if="activePaletteId === t.id" class="panel is-sunken p-panel-pad-compact flex flex-col gap-inline-gap">
             <div class="flex items-center justify-between">
               <small>プリセットカラー</small>
               <code>{{ getColorName(t.color) }}</code>

@@ -150,7 +150,7 @@ const tableStyle = computed(() => {
 
       <thead>
         <tr>
-          <th v-for="col in effectiveColumns" :key="String(col.key)" class="sticky top-0 z-table-header p-item-gap align-middle" :class="{ 'is-sortable': isSortable(col), 'is-sorted': sortBy === col.key && sortOrder }" :style="getCellWidthStyle(col)" @click="handleSort(col)">
+          <th v-for="col in effectiveColumns" :key="String(col.key)" class="sticky top-0 z-table-header p-2 align-middle" :class="{ 'is-sortable': isSortable(col), 'is-sorted': sortBy === col.key && sortOrder }" :style="getCellWidthStyle(col)" @click="handleSort(col)">
             <div class="flex items-center gap-inline-gap w-full min-w-0" :class="col.align === 'center' ? 'justify-center' : col.align === 'right' ? 'justify-end' : 'justify-start'">
               <span class="header-label">
                 <slot :name="`header-${String(col.key)}`" :column="col">
@@ -166,7 +166,7 @@ const tableStyle = computed(() => {
       <tbody v-if="loading">
         <slot name="loading">
           <tr v-for="skeletonIndex in skeletonRows" :key="`skeleton-row-${skeletonIndex}`" class="table-row">
-            <td v-for="col in effectiveColumns" :key="`skeleton-col-${String(col.key)}`" class="p-item-gap align-middle" :class="[col.class, col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left']" :style="getCellWidthStyle(col)">
+            <td v-for="col in effectiveColumns" :key="`skeleton-col-${String(col.key)}`" class="p-2 align-middle" :class="[col.class, col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left']" :style="getCellWidthStyle(col)">
               <Skeleton :width="col.align === 'center' ? '40%' : '75%'" height="1.1rem" />
             </td>
           </tr>
@@ -175,7 +175,7 @@ const tableStyle = computed(() => {
 
       <tbody v-else-if="data && data.length > 0">
         <tr v-for="(row, index) in data" :id="rowId?.(row, index)" :key="getRowKey(row, index)" class="table-row relative z-[1]" :class="[rowClass?.(row, index), { 'is-interactive': interactiveRow }]" @click="handleRowClick(row, index, $event)">
-          <td v-for="col in effectiveColumns" :key="String(col.key)" class="p-item-gap align-middle" :class="[col.class, col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left', { 'is-truncate': col.truncate, 'is-empty': getCellValue(row, col.key) === null || getCellValue(row, col.key) === undefined || getCellValue(row, col.key) === '' }]" :style="getCellWidthStyle(col)">
+          <td v-for="col in effectiveColumns" :key="String(col.key)" class="p-2 align-middle" :class="[col.class, col.align === 'center' ? 'text-center' : col.align === 'right' ? 'text-right' : 'text-left', { 'is-truncate': col.truncate, 'is-empty': getCellValue(row, col.key) === null || getCellValue(row, col.key) === undefined || getCellValue(row, col.key) === '' }]" :style="getCellWidthStyle(col)">
             <slot v-if="$slots[`cell-${String(col.key)}`]" :name="`cell-${String(col.key)}`" :value="getCellValue(row, col.key)" :row="row" :index="index" :column="col" />
             <template v-else>
               {{ getCellDisplayValue(row, col) }}
@@ -199,6 +199,8 @@ const tableStyle = computed(() => {
 
 <style scoped lang="scss">
 .table-wrapper {
+  @include control-glow-tokens;
+
   border: var(--border-width-base) solid var(--color-border);
   border-radius: 0;
   background-color: var(--surface-bg);
@@ -213,16 +215,17 @@ const tableStyle = computed(() => {
 // ヘッダーセル
 th {
   height: var(--table-cell-min-height, 36px);
-  border-right: var(--border-width-base) solid var(--color-border);
-  border-bottom: var(--border-width-thick) solid var(--color-border);
+  border-right: var(--border-width-base) solid var(--color-border-subtle);
+  border-bottom: var(--border-width-base) solid var(--color-border);
 
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui);
   color: var(--color-text-secondary);
   white-space: nowrap;
 
   background-color: var(--surface-bg-elevated);
+  background-image: var(--surface-gradient-base);
   backdrop-filter: blur(var(--blur-md));
 
   &:last-child {
@@ -246,6 +249,7 @@ th {
   &.is-sorted {
     border-bottom-color: var(--theme-accent);
     color: var(--color-text-main);
+    box-shadow: var(--surface-rim-accent);
   }
 
   .header-label {
@@ -268,17 +272,17 @@ th {
 // データセル
 td {
   height: var(--table-cell-min-height, 36px);
-  border-right: var(--border-width-base) solid var(--color-border);
+  border-right: var(--border-width-base) solid var(--color-border-subtle);
   border-bottom: var(
     --table-cell-border-bottom,
-    var(--border-width-base) solid color-mix(in srgb, var(--color-border) 70%, var(--color-text-muted) 30%)
+    var(--border-width-base) solid var(--color-border)
   );
 
   font-family: var(--font-mono);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-normal, 400);
   font-variant-numeric: tabular-nums;
-  line-height: var(--table-cell-line-height, 1.3);
+  line-height: var(--line-height-ui);
   color: var(--color-text-main);
   white-space: nowrap;
 
@@ -306,14 +310,15 @@ td {
         background:
           linear-gradient(
             to right,
-            color-mix(in srgb, var(--theme-accent) 7%, transparent) 0%,
-            color-mix(in srgb, var(--theme-accent) 1%, transparent) 40%,
-            transparent 70%
+            color-mix(in srgb, var(--theme-accent) 10%, transparent) 0%,
+            color-mix(in srgb, var(--theme-accent) 3%, transparent) 45%,
+            transparent 85%
           );
+        box-shadow: var(--surface-rim-accent);
       }
 
       &:active {
-        background-color: color-mix(in srgb, var(--theme-accent) 10%, transparent);
+        background-color: color-mix(in srgb, var(--theme-accent) 12%, transparent);
       }
     }
   }

@@ -203,7 +203,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-section-gap">
+  <div class="flex flex-col gap-panel-gap">
     <header class="flex flex-wrap items-center justify-between gap-panel-gap">
       <small>現場ポータルからワンクリックで出力されるExcel帳票のひな形と現場割り当てを管理します。</small>
       <div class="flex items-center gap-inline-gap flex-wrap">
@@ -249,8 +249,8 @@ onMounted(async () => {
         </template>
 
         <template #cell-file="{ row }">
-          <div class="flex flex-col">
-            <strong><code>{{ row.file.filename }}</code></strong>
+          <div class="flex flex-col items-start gap-micro-gap">
+            <code>{{ row.file.filename }}</code>
             <small>({{ formatFileSize(row.file.size) }} / {{ formatShortDateTime(row.file.updatedAt) }})</small>
           </div>
         </template>
@@ -340,19 +340,17 @@ onMounted(async () => {
           </div>
           <Dropzone v-model="selectedFile" accept=".xlsx, .xlsm, .xls" @change="handleFileChange" />
           <div v-if="selectedFile" class="flex items-center gap-inline-gap">
-            <Icon name="check" style="color: var(--color-status-success)" />
+            <Icon name="check" variant="success" />
             <small>選択中のファイル: <strong>{{ selectedFile.name }}</strong> ({{ formatFileSize(selectedFile.size) }})</small>
           </div>
         </div>
       </div>
 
       <template #footer>
-        <div class="flex items-center justify-end gap-inline-gap w-full">
-          <Button variant="secondary" @click="isFormModalOpen = false">キャンセル</Button>
-          <Button variant="primary" :loading="isSaving" @click="submitForm">
-            {{ formMode === 'create' ? '登録する' : '変更を保存する' }}
-          </Button>
-        </div>
+        <Button variant="secondary" @click="isFormModalOpen = false">キャンセル</Button>
+        <Button variant="primary" :loading="isSaving" @click="submitForm">
+          {{ formMode === 'create' ? '登録する' : '変更を保存する' }}
+        </Button>
       </template>
     </Modal>
   </div>

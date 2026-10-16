@@ -91,14 +91,14 @@ onMounted(() => {
     <nav class="flex-1 min-h-0 overflow-y-auto flex flex-col gap-panel-gap p-panel-pad-compact" @click="closeSidebar">
       <template v-for="section in menuData" :key="section.id">
         <section v-if="getVisibleItems(section.items).length > 0" class="flex flex-col gap-inline-gap" :style="{ '--section-accent': `var(--color-category-${section.accent || 'main'})` }">
-          <h5 v-if="section.globalNavHeading || section.heading" class="flex items-center gap-item-gap px-item-gap py-micro-gap nav-heading">
+          <h5 v-if="section.globalNavHeading || section.heading" class="flex items-center gap-item-gap px-2 py-0.5 nav-heading">
             <Icon v-if="section.icon" :name="section.icon" size="sm" variant="accent" />
             <span>{{ section.globalNavHeading || section.heading }}</span>
           </h5>
 
           <ul class="flex flex-col gap-inline-gap">
             <li v-for="item in getVisibleItems(section.items)" :key="item.href">
-              <NuxtLink :to="item.href" class="w-full flex items-center gap-item-gap py-inline-gap px-panel-pad-compact" :class="{ 'is-active': isItemActive(item) }">
+              <NuxtLink :to="item.href" class="w-full flex items-center gap-item-gap py-1 px-panel-pad-compact" :class="{ 'is-active': isItemActive(item) }">
                 <Icon :name="item.icon" size="md" />
                 <span>{{ item.text }}</span>
               </NuxtLink>
@@ -136,6 +136,8 @@ aside {
   border-right: var(--border-width-base) solid var(--color-border);
 
   background-color: var(--surface-bg-solid);
+  background-image: var(--surface-gradient-base);
+  backdrop-filter: blur(var(--blur-md));
   box-shadow: var(--shadow-nav);
 
   transition: transform var(--duration-slow) var(--ease-base);
@@ -160,28 +162,60 @@ aside {
   }
 
   a {
+    --glow-color: var(--section-accent);
+
+    @include control-glow-tokens;
+
+    position: relative;
+
     border: var(--border-width-base) solid transparent;
 
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
-    line-height: var(--line-height-tight);
+    line-height: var(--line-height-ui);
     color: var(--color-text-secondary);
-    letter-spacing: var(--tracking-wide);
+    letter-spacing: var(--tracking-normal);
 
     transition: var(--transition-interactive);
 
     &:hover,
     &:focus-visible {
+      border-color: color-mix(in srgb, var(--section-accent) 28%, transparent);
       color: var(--color-text-main);
-      background-color: color-mix(in srgb, var(--section-accent) 8%, transparent);
+      background:
+        linear-gradient(
+          90deg,
+          color-mix(in srgb, var(--section-accent) 10%, transparent) 0%,
+          transparent 85%
+        );
     }
 
     &:active,
     &.is-active {
-      border-color: color-mix(in srgb, var(--section-accent) 55%, transparent);
+      border-color: color-mix(in srgb, var(--section-accent) 48%, var(--color-border));
+
       font-weight: var(--font-weight-semibold);
       color: var(--color-text-main);
-      background-color: color-mix(in srgb, var(--section-accent) 12%, transparent);
+
+      background:
+        linear-gradient(
+          90deg,
+          color-mix(in srgb, var(--section-accent) 16%, transparent) 0%,
+          color-mix(in srgb, var(--section-accent) 4%, transparent) 60%,
+          transparent 100%
+        );
+      box-shadow: var(--shadow-glow-sm);
+
+      &::before {
+        content: "";
+
+        width: 6px;
+        height: 6px;
+        border-radius: var(--radius-circle);
+
+        background-color: var(--section-accent);
+        box-shadow: var(--shadow-glow-dot);
+      }
     }
   }
 }

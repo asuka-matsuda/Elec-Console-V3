@@ -76,7 +76,8 @@ watch(
         <slot />
       </div>
 
-      <footer v-if="$slots.footer" class="modal-footer flex items-center justify-end gap-item-gap pt-panel-pad">
+      <hr v-if="$slots.footer" class="divider">
+      <footer v-if="$slots.footer" class="modal-footer flex items-center justify-end gap-item-gap">
         <slot name="footer" />
       </footer>
     </div>
@@ -173,9 +174,5 @@ watch(
 .modal-body {
   line-height: var(--line-height-base);
   color: var(--color-text-secondary);
-}
-
-.modal-footer {
-  border-top: var(--border-width-base) solid var(--color-border);
 }
 </style>

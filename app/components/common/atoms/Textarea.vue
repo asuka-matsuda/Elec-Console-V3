@@ -102,7 +102,6 @@ defineExpose({
   border-radius: 0;
 
   font-family: inherit;
-  font-variant-numeric: tabular-nums;
   line-height: var(--line-height-base);
   color: var(--color-text-main);
 
@@ -113,23 +112,23 @@ defineExpose({
 
   // --- Sizes ---
   &.textarea--sm {
-    min-height: calc(var(--control-height-ratio) * 2.8em);
-    padding-block: 0.35em;
-    padding-inline: 0.8em;
+    min-height: 64px;
+    padding-block: var(--space-1);
+    padding-inline: var(--space-2);
     font-size: var(--font-size-xs);
   }
 
   &.textarea--md {
-    min-height: calc(var(--control-height-ratio) * 3.5em);
-    padding-block: 0.5em;
-    padding-inline: 1em;
+    min-height: 80px;
+    padding-block: var(--space-2);
+    padding-inline: var(--space-3);
     font-size: var(--font-size-sm);
   }
 
   &.textarea--lg {
-    min-height: calc(var(--control-height-ratio) * 4.2em);
-    padding-block: 0.65em;
-    padding-inline: 1.2em;
+    min-height: 96px;
+    padding-block: var(--space-3);
+    padding-inline: var(--space-4);
     font-size: var(--font-size-base);
   }
 
@@ -171,8 +170,8 @@ defineExpose({
   &.is-auto-resize {
     resize: none;
     field-sizing: content;
-    min-height: calc(var(--control-height-ratio) * 1.3em);
-    padding-block: 0.35em;
+    min-height: 32px;
+    padding-block: var(--space-1);
   }
 
   @include state-disabled;

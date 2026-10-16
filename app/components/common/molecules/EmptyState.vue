@@ -75,7 +75,6 @@ const {
 
     .actions {
       gap: var(--space-2);
-      margin-top: var(--space-1);
     }
   }
 
@@ -103,7 +102,6 @@ const {
 
     .actions {
       gap: var(--space-3);
-      margin-top: var(--space-2);
     }
   }
 
@@ -131,7 +129,6 @@ const {
 
     .actions {
       gap: var(--space-4);
-      margin-top: var(--space-3);
     }
   }
 

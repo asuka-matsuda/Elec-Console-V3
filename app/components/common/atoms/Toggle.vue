@@ -96,7 +96,7 @@ const handleChange = () => {
     }
 
     .toggle-icon {
-      font-size: 0.65rem;
+      font-size: var(--font-size-2xs);
     }
   }
 
@@ -118,7 +118,7 @@ const handleChange = () => {
     }
 
     .toggle-icon {
-      font-size: 0.75rem;
+      font-size: var(--font-size-xs);
     }
   }
 
@@ -140,7 +140,7 @@ const handleChange = () => {
     }
 
     .toggle-icon {
-      font-size: 0.875rem;
+      font-size: var(--font-size-sm);
     }
   }
 
@@ -171,6 +171,10 @@ const handleChange = () => {
 }
 
 .toggle-track {
+  --glow-color: var(--toggle-accent);
+
+  @include control-glow-tokens;
+
   position: relative;
 
   width: 2.75rem;
@@ -185,9 +189,9 @@ const handleChange = () => {
   transition: var(--transition-interactive);
 
   .toggle.is-active & {
-    border-color: var(--toggle-accent);
-    background-color: color-mix(in srgb, var(--toggle-accent) 25%, var(--surface-bg-sunken));
-    box-shadow: var(--shadow-glow-active);
+    border-color: color-mix(in srgb, var(--toggle-accent) 65%, var(--color-border));
+    background-color: color-mix(in srgb, var(--toggle-accent) 18%, var(--surface-bg-sunken));
+    box-shadow: var(--shadow-glow-sm);
   }
 
   .toggle:focus-within & {
@@ -196,6 +200,10 @@ const handleChange = () => {
 }
 
 .toggle-thumb {
+  --glow-color: var(--toggle-accent);
+
+  @include control-glow-tokens;
+
   width: 1.15rem;
   height: 1.15rem;
   border: var(--border-width-base) solid var(--color-border);
@@ -209,8 +217,8 @@ const handleChange = () => {
 
   .toggle.is-active & {
     border-color: var(--toggle-accent);
-    background-color: var(--toggle-accent);
-    box-shadow: var(--shadow-glow-focus);
+    background-color: color-mix(in srgb, var(--toggle-accent) 82%, var(--color-text-main));
+    box-shadow: var(--shadow-glow-dot);
   }
 }
 
@@ -220,13 +228,13 @@ const handleChange = () => {
 
 .toggle-label {
   font-weight: var(--font-weight-medium);
-  line-height: var(--leading-tight);
+  line-height: var(--line-height-ui);
   color: var(--color-text-main);
 }
 
 .toggle-description {
   font-size: var(--font-size-xs);
-  line-height: var(--leading-normal);
+  line-height: var(--line-height-base);
   color: var(--color-text-muted);
 }
 </style>

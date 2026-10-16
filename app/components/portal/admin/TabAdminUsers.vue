@@ -331,7 +331,9 @@ const confirmResetPassword = async (row: User) => {
                 <Badge v-if="user.requirePasswordReset" variant="red" class="shrink-0">PWリセット要</Badge>
               </div>
 
-              <small><code>ID: {{ user.loginId || user.id }}</code></small>
+              <div>
+                <code>{{ user.loginId || user.id }}</code>
+              </div>
             </div>
           </button>
         </li>
@@ -437,7 +439,7 @@ const confirmResetPassword = async (row: User) => {
             </li>
           </ul>
 
-          <div v-if="sites.length > 0" class="flex items-center justify-end pt-inline-gap">
+          <div v-if="sites.length > 0" class="flex items-center justify-end">
             <Button variant="primary" size="sm" icon="save" :loading="isSaving" @click="handleSaveUser">現場アサインを保存する</Button>
           </div>
 

@@ -67,7 +67,7 @@ const BARS = Array.from({ length: 12 }, (_, i) => ({
   --spinner-size: 24px;
   --spinner-color: currentcolor;
 
-  line-height: var(--leading-none);
+  line-height: var(--line-height-none);
   vertical-align: middle;
 }
 
@@ -96,6 +96,7 @@ const BARS = Array.from({ length: 12 }, (_, i) => ({
 
 .spinner-label {
   font-size: var(--font-size-xs);
+  line-height: var(--line-height-ui);
   color: var(--color-text-muted);
 }
 

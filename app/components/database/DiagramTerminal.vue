@@ -27,7 +27,7 @@ const SPECS = [
 
 <template>
   <div class="terminal-diagram flex flex-col gap-panel-gap">
-    <div class="diagram-svg-container w-full overflow-x-auto">
+    <div class="panel is-sunken p-panel-pad-compact w-full overflow-x-auto">
       <div class="diagram-svg-inner mx-auto">
         <svg viewBox="0 0 430 220" class="diagram-svg" xmlns="http://www.w3.org/2000/svg">
           <defs>
@@ -91,7 +91,7 @@ const SPECS = [
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-item-gap">
-      <div v-for="item in SPECS" :key="item.symbol" class="diagram-spec-panel flex flex-col gap-inline-gap">
+      <div v-for="item in SPECS" :key="item.symbol" class="panel p-panel-pad-compact flex flex-col gap-inline-gap">
         <div class="flex items-center gap-inline-gap">
           <span class="spec-symbol inline-flex items-center justify-center" :style="{ color: item.color, borderColor: `color-mix(in srgb, ${item.color} 40%, transparent)`, backgroundColor: `color-mix(in srgb, ${item.color} 15%, transparent)` }">{{ item.symbol }}</span>
           <span class="spec-title">{{ item.title }}</span>
@@ -108,12 +108,6 @@ const SPECS = [
   width: 100%;
 }
 
-.diagram-svg-container {
-  padding: var(--space-panel-pad-compact);
-  border: var(--border-width-base) solid var(--color-border);
-  background-color: var(--surface-bg-solid);
-}
-
 .diagram-svg-inner {
   width: 100%;
   max-width: 480px;
@@ -122,12 +116,6 @@ const SPECS = [
 .diagram-svg {
   width: 100%;
   height: auto;
-}
-
-.diagram-spec-panel {
-  padding: var(--space-panel-pad-compact);
-  border: var(--border-width-base) solid var(--color-border);
-  background-color: var(--surface-bg);
 }
 
 .spec-symbol {
@@ -144,7 +132,7 @@ const SPECS = [
 
 .spec-title {
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text-main);
 }
 

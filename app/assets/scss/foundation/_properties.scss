@@ -6,29 +6,30 @@
   --font-mono: "Roboto Mono", ui-monospace, monospace;
 
   --font-size-2xs: 10px;
-  --font-size-xs: 11px;
-  --font-size-sm: 12px;
+  --font-size-xs: 12px;
+  --font-size-sm: 13px;
   --font-size-base: 14px;
-  --font-size-md: 15px;
-  --font-size-lg: 16px;
-  --font-size-xl: 18px;
-  --font-size-2xl: 20px;
-  --font-size-3xl: 24px;
-  --font-size-4xl: 30px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+  --font-size-4xl: 36px;
 
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
-  --line-height-tight: 1.2;
+  --line-height-none: 1;
+  --line-height-tight: 1.25;
   --line-height-ui: 1.4;
   --line-height-base: 1.6;
 
   --tracking-tight: -0.02em;
   --tracking-normal: 0em;
   --tracking-wide: 0.02em;
-  --tracking-wider: 0.05em;
+  --tracking-wider: 0.04em;
 
   // ==========================================================================
   // 2. レイアウト & 余白 (Layout & Spacing)
@@ -47,11 +48,13 @@
   --space-10: 40px;
   --space-12: 48px;
 
-  // Semantic Spacings
+  // Semantic Spacings — Padding (p-* 専用)
   --space-layout-pad: clamp(var(--space-3), 2vw, var(--space-6));
-  --space-section-gap: clamp(var(--space-5), 2.5vw, var(--space-8));
   --space-panel-pad: clamp(var(--space-3), 1.5vw, var(--space-5));
   --space-panel-pad-compact: var(--space-3);
+
+  // Semantic Spacings — Gap (gap-* / space-* 専用)
+  --space-section-gap: clamp(var(--space-5), 2.5vw, var(--space-8));
   --space-panel-gap: clamp(var(--space-2), 1.2vw, var(--space-4));
   --space-form-row-gap: var(--space-4);
   --space-form-col-gap: var(--space-4);
@@ -62,7 +65,6 @@
   // ==========================================================================
   // 3. コントロール寸法 & アイコン寸法 (Control & Icon Dimensions)
   // ==========================================================================
-  --control-height-ratio: 2.6;
   --table-cell-min-height: 36px;
 
   --icon-size-sm: 14px;

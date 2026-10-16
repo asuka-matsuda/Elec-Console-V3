@@ -15,14 +15,14 @@ defineProps<{
 
 <template>
   <div v-if="steps?.length" class="flex flex-col gap-panel-gap">
-    <div v-for="(step, index) in steps" :key="index" class="panel flex flex-col gap-inline-gap">
+    <div v-for="(step, index) in steps" :key="index" class="panel flex flex-col gap-item-gap">
       <h4 v-if="step.title">
         {{ step.title }}
       </h4>
 
-      <div class="math-expr min-w-0 overflow-x-auto py-inline-gap" v-html="renderMath(step.tex, true)" />
+      <div class="math-expr min-w-0 overflow-x-auto" v-html="renderMath(step.tex, true)" />
 
-      <div v-if="step.legend && parseLegend(step.legend).length > 0" class="math-legend flex flex-col gap-inline-gap pt-inline-gap">
+      <div v-if="step.legend && parseLegend(step.legend).length > 0" class="math-legend flex flex-col gap-inline-gap">
         <span class="legend-title">【凡例】</span>
         <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-panel-gap gap-y-inline-gap">
           <div v-for="(v, i) in parseLegend(step.legend)" :key="i" class="flex items-baseline gap-item-gap min-w-0">
@@ -42,11 +42,12 @@ defineProps<{
 }
 
 .math-legend {
+  padding-top: var(--space-2);
   border-top: 1px dashed var(--color-border);
   font-size: var(--font-size-2xs);
 
   .legend-title {
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-text-secondary);
   }
 

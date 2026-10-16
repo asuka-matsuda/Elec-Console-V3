@@ -84,12 +84,13 @@ const computedSpinnerSize = computed(() => {
 
   font-size: var(--btn-font-size);
   font-weight: var(--font-weight-medium);
-  line-height: var(--line-height-tight);
+  line-height: var(--line-height-ui);
   color: var(--btn-text);
   text-decoration: none;
-  letter-spacing: var(--tracking-wide);
+  letter-spacing: var(--tracking-normal);
 
   background-color: var(--btn-bg);
+  background-image: var(--surface-gradient-base);
   box-shadow: var(--surface-rim-highlight), var(--shadow-elevation-sm);
 
   transition: var(--transition-interactive);
@@ -140,15 +141,20 @@ const computedSpinnerSize = computed(() => {
   // --- バリアント展開 ---
   // Primary (ブランドサーフェス発光型)
   &--primary {
-    --btn-bg: var(--btn-primary-bg);
-    --btn-border: var(--btn-primary-border);
-    --btn-border-hover: var(--btn-primary-border-hover);
-    --btn-bg-hover: var(--btn-primary-bg-hover);
-    --btn-bg-active: var(--btn-primary-bg-active);
-    --btn-text: var(--btn-primary-text);
-    --glow-color: var(--btn-primary-border-hover);
+    --btn-bg: color-mix(in srgb, var(--theme-accent) 12%, var(--surface-bg-elevated));
+    --btn-border: color-mix(in srgb, var(--theme-accent) 50%, transparent);
+    --btn-border-hover: var(--theme-accent);
+    --btn-bg-hover: color-mix(in srgb, var(--theme-accent) 20%, var(--surface-bg-elevated));
+    --btn-bg-active: color-mix(in srgb, var(--theme-accent) 28%, var(--surface-bg-elevated));
+    --btn-text: var(--theme-accent);
+    --glow-color: var(--theme-accent);
 
     font-weight: var(--font-weight-semibold);
+    box-shadow: var(--surface-rim-accent), var(--shadow-glow-sm);
+
+    &:hover {
+      box-shadow: var(--surface-rim-accent), var(--shadow-glow-hover);
+    }
   }
 
   // Secondary (標準枠線ボタン)
@@ -172,6 +178,7 @@ const computedSpinnerSize = computed(() => {
     --btn-text: var(--color-text-main);
     --glow-color: transparent;
 
+    background-image: none;
     box-shadow: none;
 
     &:hover {

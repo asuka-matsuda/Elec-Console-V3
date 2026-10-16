@@ -140,8 +140,7 @@ const handleResolveAll = async (resolution: 'overwrite' | 'discard') => {
               <code>{{ diff.serverValue }}</code>
             </template>
             <template #cell-clientValue="{ row: diff }">
-              <strong v-if="diff.isDifferent"><code>{{ diff.clientValue }}</code></strong>
-              <code v-else>{{ diff.clientValue }}</code>
+              <code>{{ diff.clientValue }}</code>
             </template>
             <template #cell-status="{ row: diff }">
               <Badge v-if="diff.isDifferent" variant="amber">差異</Badge>
@@ -173,7 +172,7 @@ const handleResolveAll = async (resolution: 'overwrite' | 'discard') => {
         </p>
 
         <ul class="overflow-y-auto flex flex-col gap-inline-gap max-h-[220px]">
-          <li v-for="item in queue" :key="item.id" class="panel is-elevated flex items-center gap-item-gap px-item-gap py-inline-gap">
+          <li v-for="item in queue" :key="item.id" class="panel is-elevated p-panel-pad-compact flex items-center gap-item-gap">
             <Badge variant="teal">P{{ item.phase }}</Badge>
             <strong>{{ item.banMeisho }}</strong>
             <small class="flex-1">{{ item.kairoBangou }} {{ item.kairoMeisho }}</small>

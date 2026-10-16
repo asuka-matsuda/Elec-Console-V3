@@ -47,6 +47,13 @@
    - `<del>`：完了済みタスク等の取り消し線・減光表示
    - `.error-text`：フォームバリデーションエラー等の赤色警告テキスト
 
+4. **CSS カスタムプロパティのスコープ評価と動的グロートークン規約（`:root` 青色固定バグ防止）**
+   - CSS 仕様上、`:root`（`app/assets/scss/foundation/_themes.scss`）で `var(--theme-accent)` や `var(--glow-color)` を参照して定義された派生トークン（`--shadow-glow-*`, `--surface-rim-accent`, `--surface-gradient-glow`, `--btn-primary-*` 等）は、**宣言された `:root` 時点の `--theme-accent`（＝デフォルトの青色 `--color-category-main`）で計算・確定された値**が子要素へ継承されます。
+   - そのため、`default.vue` や `index.vue` の各セクション等で `--theme-accent` や `--glow-color` を動的に切り替える構造において、子要素が `:root` の派生トークンをそのまま参照すると、親のカテゴリー色が無視されて常に青色で発光するバグが発生します。
+   - **必須ルール**:
+     1. `--shadow-glow-*`、`--surface-rim-accent`、`--surface-gradient-glow` を使用するすべてのサーフェス（`.panel`, `.result-tile`, `.label` 等）およびインタラクティブコンポーネントのルート（または対象セレクタ）では、**必ず `@include control-glow-tokens;`（`app/assets/scss/foundation/mixins/_states.scss`）を呼び出し、要素自身のスコープで派生トークンを再計算させること**。
+     2. コンポーネント内で `--theme-accent` に依存する背景色や枠線色を定義する場合、`:root` で確定済みの二次変数（`--btn-primary-bg` 等）をそのまま参照せず、要素ローカルで `color-mix(in srgb, var(--theme-accent) ..., ...)` を評価するか、`@include control-glow-tokens;` を併用すること。
+
 ---
 
 ## 4. HTML仕様・アクセシビリティ規約

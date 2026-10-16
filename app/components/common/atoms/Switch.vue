@@ -73,35 +73,44 @@ const handleSelect = (option: SwitchOption) => {
   }
 
   &--sm {
+    height: 32px;
+
     .switch-item {
-      padding: 0.25em 0.6em;
+      padding: 0 var(--space-2);
       font-size: var(--font-size-xs);
     }
   }
 
   &--md {
+    height: 40px;
+
     .switch-item {
-      padding: 0.35em 0.8em;
+      padding: 0 var(--space-3);
       font-size: var(--font-size-sm);
     }
   }
 
   &--lg {
+    height: 48px;
+
     .switch-item {
-      padding: 0.5em 1em;
+      padding: 0 var(--space-4);
       font-size: var(--font-size-base);
     }
   }
 }
 
 .switch-item {
+  @include control-glow-tokens;
+
   user-select: none;
 
+  height: 100%;
   border: var(--border-width-base) solid transparent;
   border-radius: 0;
 
   font-weight: var(--font-weight-medium);
-  line-height: var(--leading-tight);
+  line-height: var(--line-height-ui);
   color: var(--color-text-muted);
   white-space: nowrap;
 
@@ -117,13 +126,14 @@ const handleSelect = (option: SwitchOption) => {
   }
 
   &.is-active {
-    border-color: var(--theme-accent);
+    border-color: color-mix(in srgb, var(--theme-accent) 60%, var(--color-border));
 
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-text-main);
 
-    background-color: var(--surface-bg-raised);
-    box-shadow: var(--shadow-glow-active);
+    background-color: var(--surface-bg-elevated);
+    background-image: var(--surface-gradient-base);
+    box-shadow: var(--surface-rim-accent), var(--shadow-glow-sm);
   }
 
   &.is-disabled {

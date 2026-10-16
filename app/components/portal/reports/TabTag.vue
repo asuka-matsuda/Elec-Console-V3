@@ -231,7 +231,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-1 flex-col gap-item-gap min-h-0">
+  <div class="flex flex-1 flex-col gap-panel-gap min-h-0">
     <!-- フィルター & 選択操作バー（固定） -->
     <div class="panel p-panel-pad-compact flex flex-wrap items-center justify-between gap-item-gap shrink-0">
       <div class="flex flex-wrap items-center gap-item-gap">
@@ -270,7 +270,7 @@ onMounted(() => {
       </div>
 
       <!-- 全選択 / 選択件数カウンター（高さ固定でスケルトンと表示後のレイアウトシフトを100%防止） -->
-      <div class="flex items-center gap-item-gap min-h-control-sm shrink-0 min-w-[210px] justify-end">
+      <div class="flex items-center gap-item-gap min-h-8 shrink-0 min-w-[210px] justify-end">
         <template v-if="isLoadingTagData">
           <Skeleton width="64px" height="18px" />
           <Skeleton width="120px" height="18px" />
@@ -303,7 +303,7 @@ onMounted(() => {
       </template>
 
       <template #cell-cableText="{ row }">
-        <small><code>{{ row.cableText }}</code></small>
+        <code>{{ row.cableText }}</code>
       </template>
 
       <template #cell-destinationText="{ row }">

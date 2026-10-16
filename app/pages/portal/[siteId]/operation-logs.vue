@@ -41,22 +41,22 @@ onMounted(() => {
     <!-- フィルター & 操作ツールバー -->
     <div class="panel p-panel-pad-compact flex flex-wrap items-center gap-panel-gap">
       <div class="flex items-center gap-inline-gap">
-        <label for="filter-worker" class="shrink-0">作業者</label>
+        <label for="filter-worker" class="shrink-0 label">作業者</label>
         <Select id="filter-worker" v-model="selectedWorker" :options="workerOptions" class="min-w-[140px]" />
       </div>
 
       <div class="flex items-center gap-inline-gap">
-        <label for="filter-action" class="shrink-0">アクション</label>
+        <label for="filter-action" class="shrink-0 label">アクション</label>
         <Select id="filter-action" v-model="selectedAction" :options="actionOptions" class="min-w-[140px]" />
       </div>
 
       <div class="flex items-center gap-inline-gap">
-        <label for="filter-target-ban" class="shrink-0">盤</label>
+        <label for="filter-target-ban" class="shrink-0 label">盤</label>
         <Select id="filter-target-ban" v-model="selectedTargetBan" :options="targetBanOptions" class="min-w-[140px]" />
       </div>
 
       <div class="flex items-center gap-inline-gap">
-        <label for="filter-limit" class="shrink-0">表示件数</label>
+        <label for="filter-limit" class="shrink-0 label">表示件数</label>
         <Select id="filter-limit" v-model="limit" :options="OPERATION_LOG_LIMIT_OPTIONS" class="min-w-[90px]" />
       </div>
 

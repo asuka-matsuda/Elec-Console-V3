@@ -74,7 +74,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-1 flex-col gap-item-gap min-h-0">
+  <div class="flex flex-1 flex-col gap-panel-gap min-h-0">
     <!-- 原本Excel未設定時のインライン警告 -->
     <Note
       v-if="!isLoadingData && !hasExcelPath"
@@ -126,7 +126,7 @@ onMounted(() => {
           </small>
           <small>/</small>
           <small>
-            テプラ印刷枚数: <strong style="color: var(--theme-accent)">{{ summary.totalRows }}</strong> 枚
+            テプラ印刷枚数: <strong>{{ summary.totalRows }}</strong> 枚
           </small>
         </template>
       </div>
@@ -152,7 +152,7 @@ onMounted(() => {
       </template>
 
       <template #cell-kairoBangou="{ row }">
-        <strong style="color: var(--theme-accent)"><code>{{ row.kairoBangou }}</code></strong>
+        <code>{{ row.kairoBangou }}</code>
       </template>
 
       <template #cell-kairoMeisho="{ row }">

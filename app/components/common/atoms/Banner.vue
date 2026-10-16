@@ -32,7 +32,7 @@ const resolvedIcon = computed(() => icon || defaultIcons[variant] || 'info')
 </script>
 
 <template>
-  <div class="banner w-full flex items-center justify-between gap-item-gap py-inline-gap px-panel-pad" :class="`banner--${variant}`">
+  <div class="banner w-full flex items-center justify-between gap-item-gap py-1 px-panel-pad" :class="`banner--${variant}`">
     <div class="flex items-center gap-item-gap min-w-0">
       <Icon :name="resolvedIcon" size="sm" class="banner-icon" />
       <div class="flex items-center gap-item-gap flex-wrap min-w-0">
@@ -55,14 +55,20 @@ const resolvedIcon = computed(() => icon || defaultIcons[variant] || 'info')
 <style scoped lang="scss">
 .banner {
   --banner-color: var(--color-text-muted);
+  --glow-color: var(--banner-color);
 
-  border-bottom: var(--border-width-base) solid color-mix(in srgb, var(--banner-color) 40%, transparent);
+  @include control-glow-tokens;
+
+  border-bottom: var(--border-width-base) solid color-mix(in srgb, var(--banner-color) 35%, var(--color-border));
 
   font-size: var(--font-size-xs);
-  line-height: var(--line-height-tight);
+  line-height: var(--line-height-ui);
   color: var(--banner-color);
 
-  background-color: color-mix(in srgb, var(--banner-color) 12%, var(--surface-bg-solid));
+  background-color: var(--surface-bg);
+  background-image: var(--surface-gradient-glow), var(--surface-gradient-base);
+  backdrop-filter: blur(var(--blur-md));
+  box-shadow: var(--shadow-glow-ambient);
 
   &--gray {
     --banner-color: var(--color-text-muted);
@@ -85,7 +91,7 @@ const resolvedIcon = computed(() => icon || defaultIcons[variant] || 'info')
   }
 
   .banner-title {
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--color-text-main);
   }
 

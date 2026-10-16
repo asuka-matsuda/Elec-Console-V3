@@ -56,7 +56,7 @@ const displayText = computed(() => (props.bangou != null && props.bangou !== '' 
   width: 2.5em;
   height: 2.5em;
   font-size: 0.95em;
-  line-height: 1;
+  line-height: var(--line-height-none);
 
   .circuit-svg {
     pointer-events: none;
@@ -67,8 +67,9 @@ const displayText = computed(() => (props.bangou != null && props.bangou !== '' 
 
   .circuit-text {
     font-family: var(--font-mono, monospace);
-    font-weight: 500;
-    line-height: 1;
+    font-weight: var(--font-weight-medium);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--line-height-none);
     color: var(--color-text-main);
   }
 }
